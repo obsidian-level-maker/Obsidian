@@ -1588,6 +1588,10 @@ function Quest_make_quests()
   -- create cycles now, before theming logic kicks in...
   Connect_cycles()
 
+  each H in LEVEL.halls do
+    H:calc_lev_along()
+  end
+
 
   Quest_assign_room_themes()
 

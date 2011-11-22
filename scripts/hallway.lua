@@ -38,8 +38,8 @@ class HALLWAY
   double_fork : SECTION    -- only present for double hallways.
   double_dir  : direction
 
-  belong_room : ROOM  -- the room that this hallway connects to
-                      -- without any locked door in-between.
+---##  neighbor : ROOM / HALL  -- the room this hallway connects to without
+---##                          -- any locked door in-between.
 
   cross_limit : { low, high }  -- a limitation of crossover heights
 
@@ -148,6 +148,26 @@ function HALLWAY_CLASS.dump_path(H)
   end
 
   gui.debugf("}\n\n")
+end
+
+
+function HALLWAY_CLASS.calc_lev_along(H)
+  local parent
+
+  each D in H.conns do
+    local N = D:neighbor(H)
+
+    if N.visit_id < H.visit_id then
+      parent = N
+      break
+    end
+  end
+
+  if parent and parent.lev_along then
+    H.lev_along = parent.lev_along
+  else
+    H.lev_along = rand.pick { 0.3, 0.5, 0.7 }
+  end
 end
 
 

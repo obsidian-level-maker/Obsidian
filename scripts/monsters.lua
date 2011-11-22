@@ -943,7 +943,7 @@ function Monsters_in_room(L)
     local toughness = LEVEL.episode.index + LEVEL.ep_along * 4
 
     -- each room is tougher too
-    toughness = toughness + R.lev_along
+    toughness = toughness + L.lev_along
 
     -- spice it up
     toughness = toughness + gui.random() ^ 2
@@ -971,7 +971,7 @@ function Monsters_in_room(L)
       assert(qty)
 
       -- tend to have more monsters in later rooms and levels
-      qty = qty * (2 + R.lev_along + LEVEL.ep_along) / 4
+      qty = qty * (2 + L.lev_along + LEVEL.ep_along) / 4
     end
 
     -- game specific adjustment
@@ -985,7 +985,7 @@ function Monsters_in_room(L)
 
     -- less in hallways
     if L.kind == "hallway" then
-      qty = qty * rand.pick { 0.4, 0.6, 0.8 }
+      qty = qty * (1 - gui.random() ^ 2)
 
     -- more in EXIT or KEY rooms (extra boost in small rooms)
     elseif L.purpose then
@@ -1099,7 +1099,7 @@ function Monsters_in_room(L)
     assert(info.level)
 
     if not L.purpose then
-      local max_level = LEVEL.max_level * R.lev_along
+      local max_level = LEVEL.max_level * L.lev_along
       if max_level < 2 then max_level = 2 end
 
       if info.level > max_level then
@@ -1117,7 +1117,7 @@ function Monsters_in_room(L)
     local d = info.density or 1
     
     -- level check
-    local max_level = LEVEL.max_level * R.lev_along
+    local max_level = LEVEL.max_level * L.lev_along
     if max_level < 2 then max_level = 2 end
 
     if info.level > max_level then
@@ -1199,7 +1199,7 @@ function Monsters_in_room(L)
     assert(base_num)
 
     if L.kind == "hallway" then
-      return rand.sel(50, 2, 1)
+      return rand.sel(35, 2, 1)
     end
 
     -- adjust the base number to account for room size
@@ -2052,6 +2052,10 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     assert(not L.scenic)
 
+    if L.kind == "hallway" and #L.sections == 1 then
+      return rand.odds(90)
+    end
+
     if L.purpose == "START" and not L.has_raising_start then
       return false
     end
@@ -2068,9 +2072,6 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   L.fight_stats  = make_empty_stats()
 
   L.big_item_spots = {} -- FIXME table.deep_copy(R.mon_spots)
-
-  -- FIXME!!!
-  if L.kind == "hallway" then return end
 
   L.toughness = calc_toughness()
   L.firepower = Player_firepower()
