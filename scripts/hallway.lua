@@ -86,6 +86,11 @@ function HALLWAY_CLASS.new()
     conns    = {}
     sections = {}
     chunks   = {}
+
+    mon_spots  = {}
+    item_spots = {}
+    cage_spots = {}
+    trap_spots = {}
   }
   table.set_class(H, HALLWAY_CLASS)
 

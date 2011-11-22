@@ -1341,9 +1341,9 @@ end
 
 
   -- spots [FIXME : do it properly]
-  if C.room and not C.content.kind and not C.stair and not C.liquid and not x_hall
+  if (C.room or C.hall) and not C.content.kind and not C.stair and not C.liquid and not x_hall
   then
-    local R = C.room
+    local L = C.room or C.hall
 
 --[[
     -- solidify brushes from prefabs
@@ -1393,14 +1393,14 @@ end
       spot.z1 = f_h
       spot.z2 = f_h2 or (spot.z1 + 200)  -- FIXME
 
-      table.insert(R.mon_spots, spot)
+      table.insert(L.mon_spots, spot)
     end
 
     each spot in item_spots do
       spot.z1 = f_h
       spot.z2 = f_h2 or (spot.z1 + 64)
 
-      table.insert(R.item_spots, spot)
+      table.insert(L.item_spots, spot)
     end
 
 --[[ TEST

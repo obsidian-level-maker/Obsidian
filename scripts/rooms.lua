@@ -103,10 +103,10 @@ function ROOM_CLASS.new(shape)
 
     num_windows = 0
 
-    cage_spots = {}
-    trap_spots = {}
     mon_spots  = {}
     item_spots = {}
+    cage_spots = {}
+    trap_spots = {}
 
     prefabs = {}
     blocks  = {}

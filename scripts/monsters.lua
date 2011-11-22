@@ -186,9 +186,9 @@ function Player_give_map_stuff()
 end
 
 
-function Player_give_room_stuff(R)
-  if R.weapons and not PARAM.hexen_weapons then
-    each name in R.weapons do
+function Player_give_room_stuff(L)
+  if L.weapons and not PARAM.hexen_weapons then
+    each name in L.weapons do
       Player_give_weapon(name)
     end
   end
@@ -593,6 +593,8 @@ function Monsters_distribute_stats()
 
   ---| Monsters_distribute_stats |---
 
+  -- Note: we don't distribute to or from hallways
+
   gui.debugf("--- Monsters_distribute_stats ---\n")
 
   each R in LEVEL.rooms do
@@ -615,12 +617,12 @@ end
 
 function Monsters_do_pickups()
 
-  local function sort_spots(R)
-    rand.shuffle(R.item_spots)
+  local function sort_spots(L)
+    rand.shuffle(L.item_spots)
   end
 
 
-  local function decide_pickup(R, stat, qty)
+  local function decide_pickup(L, stat, qty)
     local item_tab = {}
 
     for name,info in pairs(GAME.PICKUPS) do
@@ -630,14 +632,9 @@ function Monsters_do_pickups()
       then
         item_tab[name] = info.prob
 
-        if R.purpose == "START" and info.start_prob then
+        if L.purpose == "START" and info.start_prob then
           item_tab[name] = info.start_prob
         end
-
----###    local each_qty = info.give[1].health or info.give[1].count
----###    local min_num  = (info.cluster and info.cluster[1]) or 1
----###    local max_num  = (info.cluster and info.cluster[2]) or 1
----###    if each_qty * max_num > qty then prob = prob / 20 end
       end
     end
 
@@ -669,7 +666,7 @@ function Monsters_do_pickups()
   end
 
 
-  local function select_pickups(R, item_list, stat, qty, hmodel)
+  local function select_pickups(L, item_list, stat, qty, hmodel)
 gui.debugf("Initial %s = %1.1f\n", stat, hmodel.stats[stat] or 0)
 
     -- subtract any previous gotten stuff
@@ -679,7 +676,7 @@ gui.debugf("Initial %s = %1.1f\n", stat, hmodel.stats[stat] or 0)
     -- more ammo in start room
     local excess = 0
 
-    if R.purpose == "START" and R:has_weapon_using_ammo(stat) then
+    if L.purpose == "START" and L:has_weapon_using_ammo(stat) then
       if qty > 0 then
         excess = (OB_CONFIG.strength == "crazy" ? 1.2 ; 0.6) * qty
       end
@@ -693,7 +690,7 @@ gui.debugf("Initial %s = %1.1f\n", stat, hmodel.stats[stat] or 0)
     qty = qty + excess
 
     while qty > 0 do
-      local item, count = decide_pickup(R, stat, qty)
+      local item, count = decide_pickup(L, stat, qty)
       table.insert(item_list, { item=item, count=count, random=gui.random() })
       
       if stat == "health" then
@@ -777,9 +774,9 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
   end
 
 
-  local function find_cluster_spot(R, prev_spots, item_name)
+  local function find_cluster_spot(L, prev_spots, item_name)
     if #prev_spots == 0 then
-      local spot = table.remove(R.item_spots, 1)
+      local spot = table.remove(L.item_spots, 1)
       table.insert(prev_spots, spot)
       return spot
     end
@@ -788,8 +785,8 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
     local best_dist
 
     -- FIXME: optimise this!
-    for index = 1,#R.item_spots do
-      local spot = R.item_spots[index]
+    for index = 1,#L.item_spots do
+      local spot = L.item_spots[index]
       local dist = 9e9
 
       each prev in prev_spots do
@@ -808,7 +805,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
 
     assert(best_idx)
 
-    local spot = table.remove(R.item_spots, best_idx)
+    local spot = table.remove(L.item_spots, best_idx)
 
     if #prev_spots >= 3 then
       table.remove(prev_spots, 1)
@@ -820,16 +817,16 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
   end
 
 
-  local function place_item_list(R, item_list, CL)
+  local function place_item_list(L, item_list, CL)
     for _,pair in ipairs(item_list) do
       local item  = pair.item
       local count = pair.count
       local spot
 
-      if item.big_item and not table.empty(R.big_item_spots) then
+      if item.big_item and not table.empty(L.big_item_spots) then
         assert(count == 1)
 
-        spot = table.remove(R.big_item_spots)
+        spot = table.remove(L.big_item_spots)
         spot.x, spot.y = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
         spot.z = spot.z1
 
@@ -843,12 +840,12 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
       local prev_spots = {}
 
       for i = 1,count do
-        if table.empty(R.item_spots) then
+        if table.empty(L.item_spots) then
           gui.printf("Unable to place items: %s x %d\n", item.name, count+1-i)
           break;
         end
 
-        local spot = find_cluster_spot(R, prev_spots, item.name)
+        local spot = find_cluster_spot(L, prev_spots, item.name)
 
         if PARAM.tiled then
           Tiler_add_entity(item.name, spot.block_x, spot.block_y)
@@ -859,26 +856,26 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
 
           -- reuse spots if they run out (except in Wolf3D)
           spot.used = true
-          table.insert(R.item_spots, spot)
+          table.insert(L.item_spots, spot)
         end
       end
     end
   end
 
 
-  local function pickups_for_hmodel(R, CL, hmodel)
+  local function pickups_for_hmodel(L, CL, hmodel)
     if table.empty(GAME.PICKUPS) then
       return
     end
 
-    local stats = R.fight_stats[CL]
+    local stats = L.fight_stats[CL]
     local item_list = {}
 
     for stat,qty in pairs(stats) do
       if qty > 0 then
-        select_pickups(R, item_list, stat, qty, hmodel)
+        select_pickups(L, item_list, stat, qty, hmodel)
 
-        gui.debugf("Item list for %s:%1.1f [%s] @ %s\n", stat,qty, CL, R:tostr())
+        gui.debugf("Item list for %s:%1.1f [%s] @ %s\n", stat,qty, CL, L:tostr())
 
         for _,pair in ipairs(item_list) do
           local item = pair.item
@@ -888,24 +885,24 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
       end
     end
 
-    sort_spots(R)
+    sort_spots(L)
 
     -- place large clusters before small ones
     table.sort(item_list, function(A,B) return (A.count + A.random) > (B.count + B.random) end)
 
     -- kludge to add some backpacks to DOOM maps
     -- TODO: better system for "nice start items" or so
-    if R.purpose == "START" and GAME.ENTITIES["backpack"] then
+    if L.purpose == "START" and GAME.ENTITIES["backpack"] then
       table.insert(item_list, 1, { item={ name="backpack", big_item=true }, count=1 })
     end
 
-    place_item_list(R, item_list, CL)
+    place_item_list(L, item_list, CL)
   end
 
 
-  local function pickups_in_room(R)
+  local function pickups_in_room(L)
     for CL,hmodel in pairs(LEVEL.hmodels) do
-      pickups_for_hmodel(R, CL, hmodel)
+      pickups_for_hmodel(L, CL, hmodel)
     end
   end
 
@@ -914,15 +911,18 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
 
   gui.debugf("--- Monsters_do_pickups ---\n")
 
-  each R in LEVEL.rooms do
-    if R.kind != "stairwell" and R.kind != "smallexit" then
-      pickups_in_room(R)
+  each Z in LEVEL.zones do
+    each L in Z.rooms do
+      pickups_in_room(L)
     end
   end
 end
 
 
-function Monsters_in_room(R)
+function Monsters_in_room(L)
+
+  local R = L  -- FIXME: REMOVE (when hallway monsters work)
+
 
   local CAGE_REUSE_FACTORS = { 5, 20, 60, 200 }
 
@@ -985,7 +985,7 @@ function Monsters_in_room(R)
     -- more in EXIT or KEY rooms (extra boost in small rooms)
     local is_small = (R.svolume <= 20)
 
-    if R.purpose then
+    if L.purpose then
       qty = qty * rand.pick { 1.6, 1.8, 2.1 }
 
       if is_small then qty = qty * 1.25 end
@@ -1075,11 +1075,11 @@ function Monsters_in_room(R)
     if THEME.monster_prefs then
       prob = prob * (THEME.monster_prefs[name] or 1)
     end
-    if R.theme.monster_prefs then
-      prob = prob * (R.theme.monster_prefs[name] or 1)
+    if L.theme.monster_prefs then
+      prob = prob * (L.theme.monster_prefs[name] or 1)
     end
 
-    if R.kind == "outdoor" or R.semi_outdoor then
+    if L.kind == "outdoor" or L.semi_outdoor then
       prob = prob * (info.outdoor_factor or 1)
     end
 
@@ -1093,7 +1093,7 @@ function Monsters_in_room(R)
     -- level check (harder monsters occur in later rooms)
     assert(info.level)
 
-    if not R.purpose then
+    if not L.purpose then
       local max_level = LEVEL.max_level * R.lev_along
       if max_level < 2 then max_level = 2 end
 
@@ -1127,7 +1127,7 @@ function Monsters_in_room(R)
 
     local toughness = 1  -- FIXME
 
-    local time   = info.health / R.firepower
+    local time   = info.health / L.firepower
     local damage = info.damage * time
 
     if info.attack == "melee" then
@@ -1397,12 +1397,12 @@ function Monsters_in_room(R)
     local info = GAME.MONSTERS[mon]
 
     -- handle replacements
-    if LEVEL.mon_replacement[mon] and not R.no_replacement then
+    if LEVEL.mon_replacement[mon] and not L.no_replacement then
       mon  = rand.key_by_probs(LEVEL.mon_replacement[mon])
       info = assert(GAME.MONSTERS[mon])
     end
 
-    table.insert(R.monster_list, info)
+    table.insert(L.monster_list, info)
 
     -- minimum skill needed for the monster to appear
     local skill = calc_min_skill(all_skills)
@@ -1505,10 +1505,10 @@ function Monsters_in_room(R)
   local function split_huge_spots(max_size)
     if PARAM.tiled then return end
 
-    local list = R.mon_spots
+    local list = L.mon_spots
 
     -- recreate the spot list
-    R.mon_spots = {}
+    L.mon_spots = {}
 
     for _,spot in ipairs(list) do
       local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
@@ -1519,7 +1519,7 @@ function Monsters_in_room(R)
       assert(XN > 0 and YN > 0)
 
       if XN < 2 and YN < 2 then
-        table.insert(R.mon_spots, spot)
+        table.insert(L.mon_spots, spot)
       else
         for x = 1,XN do for y = 1,YN do
           local x1 = spot.x1 + (x - 1) * w / XN
@@ -1533,7 +1533,7 @@ function Monsters_in_room(R)
           new_spot.x1 = int(x1) ; new_spot.y1 = int(y1)
           new_spot.x2 = int(x2) ; new_spot.y2 = int(y2)
 
-          table.insert(R.mon_spots, new_spot)
+          table.insert(L.mon_spots, new_spot)
         end end
       end
     end
@@ -1541,7 +1541,7 @@ function Monsters_in_room(R)
 
 
   local function split_spot(index, r, near_to)
-    local spot = table.remove(R.mon_spots, index)
+    local spot = table.remove(L.mon_spots, index)
 
     if PARAM.tiled then return spot end
 
@@ -1573,7 +1573,7 @@ function Monsters_in_room(R)
         remain.x2 = spot.x2 - r2
       end
 
-      table.insert(R.mon_spots, remain)
+      table.insert(L.mon_spots, remain)
     end
 
     if h >= r2 + 64 then
@@ -1595,7 +1595,7 @@ function Monsters_in_room(R)
         remain.y2 = spot.y2 - r2
       end
 
-      table.insert(R.mon_spots, remain)
+      table.insert(L.mon_spots, remain)
     end
 
     w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
@@ -1611,7 +1611,7 @@ function Monsters_in_room(R)
 
     local poss_spots = {}
 
-    for index,spot in ipairs(R.mon_spots) do
+    for index,spot in ipairs(L.mon_spots) do
       local fit_num = mon_fits(mon, spot)
       if fit_num > 0 then
 
@@ -1715,7 +1715,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- total number of monsters wanted
     local qty = calc_quantity()
 
-    local want_total = tally_spots(R.mon_spots)
+    local want_total = tally_spots(L.mon_spots)
 
     want_total = int(want_total * qty / 100 + gui.random())
 
@@ -1753,7 +1753,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     end
 
 
-    while not table.empty(pal2) and not table.empty(R.mon_spots) do
+    while not table.empty(pal2) and not table.empty(L.mon_spots) do
       local mon = rand.key_by_probs(pal2)
       local info = GAME.MONSTERS[mon]
 
@@ -1858,7 +1858,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
 
   local function fill_cages(enviro, spot_list, room_pal)
-    if table.empty(R.cage_spots) then return end
+    if table.empty(L.cage_spots) then return end
 
     local used_mons = {}
 
@@ -1883,9 +1883,9 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       palette = room_palette()
     end
 
-    local barrel_chance = (R.kind == "building" ? 15 ; 2)
-    if R.natural then barrel_chance = 3 end
-    if R.hallway then barrel_chance = 5 end
+    local barrel_chance = (L.kind == "building" ? 15 ; 2)
+--!!    if R.natural then barrel_chance = 3 end
+--!!    if R.hallway then barrel_chance = 5 end
 
     if STYLE.barrels == "heaps" or rand.odds( 5) then barrel_chance = barrel_chance * 4 + 10 end
     if STYLE.barrels == "few"   or rand.odds(25) then barrel_chance = barrel_chance / 4 end
@@ -1894,7 +1894,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     -- sometimes prevent monster replacements
     if rand.odds(40) or OB_CONFIG.strength == "crazy" then
-      R.no_replacement = true
+      L.no_replacement = true
     end
 
     -- FIXME: add barrels even when no monsters in room
@@ -1906,10 +1906,10 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- this value keeps track of the number of "normal" monsters
     -- (i.e. monsters not in cages or traps).  Later we use this
     -- value to only give monster drops for accessible monsters.
-    R.normal_count = #R.monster_list
+    L.normal_count = #L.monster_list
 
-    fill_cages("cage", R.cage_spots, palette)
-    fill_cages("trap", R.trap_spots, palette)
+    fill_cages("cage", L.cage_spots, palette)
+    fill_cages("trap", L.trap_spots, palette)
   end
 
 
@@ -1987,13 +1987,13 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
 
   local function battle_for_class(CL, hmodel)
-    local mon_list = R.monster_list
+    local mon_list = L.monster_list
 
     local weap_list = collect_weapons(hmodel)
 
-    local stats = R.fight_stats[CL]
+    local stats = L.fight_stats[CL]
 
-    gui.debugf("Fight Simulator @ %s  class: %s\n", R:tostr(), CL)
+    gui.debugf("Fight Simulator @ %s  class: %s\n", L:tostr(), CL)
 
     gui.debugf("weapons = \n")
     for _,info in ipairs(weap_list) do
@@ -2010,16 +2010,16 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
 --  gui.debugf("adjusted result = \n%s\n", table.tostr(stats,1))
 
-    give_monster_drops(hmodel, mon_list, R.normal_count)
+    give_monster_drops(hmodel, mon_list, L.normal_count)
 
     subtract_stuff_we_have(stats, hmodel)
   end
 
 
   local function sim_battle()
-    assert(R.monster_list)
+    assert(L.monster_list)
 
-    if #R.monster_list >= 1 then
+    if #L.monster_list >= 1 then
       for CL,hmodel in pairs(LEVEL.hmodels) do
         battle_for_class(CL, hmodel)
       end
@@ -2032,12 +2032,12 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       return false
     end
 
-    if R.kind == "stairwell" then return false end
-    if R.kind == "smallexit" then return false end
+--!!    if R.kind == "stairwell" then return false end
+--!!    if R.kind == "smallexit" then return false end
 
-    assert(R.kind != "scenic")
+    assert(not L.scenic)
 
-    if R.purpose == "START" and not R.has_raising_start then
+    if L.purpose == "START" and not L.has_raising_start then
       return false
     end
 
@@ -2047,17 +2047,20 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
   ---| Monsters_in_room |---
 
-  gui.debugf("Monsters_in_room @ %s\n", R:tostr())
+  gui.debugf("Monsters_in_room @ %s\n", L:tostr())
 
-  R.monster_list = {}
-  R.fight_stats  = make_empty_stats()
+  L.monster_list = {}
+  L.fight_stats  = make_empty_stats()
 
-  R.big_item_spots = {} -- FIXME table.deep_copy(R.mon_spots)
+  L.big_item_spots = {} -- FIXME table.deep_copy(R.mon_spots)
 
-  R.toughness = calc_toughness()
-  R.firepower = Player_firepower()
+  -- FIXME!!!
+  if L.kind == "hallway" then return end
 
-  gui.debugf("Firepower = %1.3f\n", R.firepower)
+  L.toughness = calc_toughness()
+  L.firepower = Player_firepower()
+
+  gui.debugf("Firepower = %1.3f\n", L.firepower)
 
   if should_add_monsters() then
     add_monsters()
@@ -2112,8 +2115,11 @@ function Monsters_make_battles()
 
   each R in LEVEL.rooms do
     Player_give_room_stuff(R)
-
     Monsters_in_room(R)
+  end
+
+  each H in LEVEL.halls do
+    Monsters_in_room(H)
   end
 
   Monsters_show_stats()
