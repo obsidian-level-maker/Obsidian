@@ -276,7 +276,7 @@ gui.debugf("\nmake_branch\n\n")
     assert(not info.D1.L2.zone)
 
     info.D1.L1.quest:add_room_or_hall(info.D1.L2)
-    info.D1.L1.zone :add_room        (info.D1.L2)
+    info.D1.L1.zone :add_room_or_hall(info.D1.L2)
   end
 end
 

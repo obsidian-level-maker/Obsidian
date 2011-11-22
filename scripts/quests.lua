@@ -185,7 +185,7 @@ function ZONE_CLASS.remove(Z)
 end
 
 
-function ZONE_CLASS.add_room(Z, R)
+function ZONE_CLASS.add_room_or_hall(Z, R)
   R.zone = Z
 
   table.insert(Z.rooms, R)
@@ -206,7 +206,7 @@ function ZONE_CLASS.merge(Z1, Z2)
 
   -- transfer the rooms and halls
   each L in Z2.rooms do
-    Z1:add_room(L)
+    Z1:add_room_or_hall(L)
   end
 
   Z1:calc_volume()
@@ -944,7 +944,7 @@ end
 gui.debugf("Created %s\n", Z:tostr())
     end
 
-    Z:add_room(L)
+    Z:add_room_or_hall(L)
 gui.debugf("Added %s --> %s\n", L:tostr(), Z:tostr())
 
     each exit in Quest_get_exits(L) do
@@ -1344,7 +1344,8 @@ function Quest_make_quests()
 
     L.dudded = true
 
-    quest:add_room_or_hall(L)
+     quest:add_room_or_hall(L)
+    L.zone:add_room_or_hall(L)
 
     if L.kind != "hallway" then
       table.insert(LEVEL.rooms, L)
@@ -1387,7 +1388,8 @@ function Quest_make_quests()
   local function quest_flow(L, quest)
 -- gui.debugf("quest_flow @ %s : %s\n", L:tostr(), quest:tostr())
 
-    quest:add_room_or_hall(L)
+     quest:add_room_or_hall(L)
+    L.zone:add_room_or_hall(L)
 
     if L.kind != "hallway" then
       table.insert(LEVEL.rooms, L)
@@ -1530,8 +1532,12 @@ function Quest_make_quests()
   local function create_quests()
     local Q = QUEST_CLASS.new(LEVEL.start_room)
 
-    -- room list will be rebuilt in visit order
+    -- room lists will be rebuilt in visit order
     LEVEL.rooms = {}
+
+    each Z in LEVEL.zones do
+      Z.rooms = {}
+    end
 
     if THEME.switches and THEME.keys then
       quest_flow(Q.start, Q)
