@@ -985,7 +985,7 @@ function Monsters_in_room(L)
 
     -- less in hallways
     if L.kind == "hallway" then
-      qty = qty * (1 - gui.random() ^ 2)
+      qty = qty * rand.pick { 0.6, 0.8, 1.1 }
 
     -- more in EXIT or KEY rooms (extra boost in small rooms)
     elseif L.purpose then
@@ -1710,6 +1710,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     if info.health <= 500 and rand.odds(30) then horde = horde + 1 end
     if info.health <= 100 then horde = horde + rand.index_by_probs { 90, 40, 10, 3, 0.5 } end
+
+    if L.kind == "hallway" then horde = horde + 1 end
     
     return horde
   end
