@@ -752,6 +752,115 @@ function Simple_render_cave(R)
 
   local cave_tex = R.wall_mat or "_ERROR"
 
+  -- the delta map specifies how to move each corner of the 64x64 cells
+  -- (where the cells form a continuous mesh).
+  local delta_x_map
+  local delta_y_map
+
+  local dw = cave.w + 1
+  local dh = cave.h + 1
+
+
+  local function corner_nb(x, y, dir)
+    -- FIXME !!!!
+  end
+
+
+  local function analyse_corner(x, y)
+    --  A | B
+    --  --+--
+    --  C | D
+
+    local A = corner_nb(x, y, 7)
+    local B = corner_nb(x, y, 9)
+    local C = corner_nb(x, y, 1)
+    local D = corner_nb(x, y, 3)
+
+    -- don't move a corner at edge of room
+    if not A or not B or not C or not D then
+      return
+    end
+
+    -- solid cells always override floor cells
+    if A == "#" or B == "#" or C == "#" or D == "#" then
+      A = (A == "#")
+      B = (B == "#")
+      C = (C == "#")
+      D = (D == "#")
+    else
+      -- otherwise pick highest floor (since that can block a lower floor)
+      local max_h = math.max(A, B, C, D) - 2
+
+      A = (A > max_h)
+      B = (B > max_h)
+      C = (C > max_h)
+      D = (D > max_h)
+    end
+
+    -- no need to move when all cells are the same
+    if A == B and A == C and A == D then
+      return
+    end
+
+    local x_mul = 1
+    local y_mul = 1
+
+    -- flip horizontally and/or vertically to ease analysis
+    if not A then
+      A, B = B, A
+      C, D = D, C
+      x_mul = -1
+    end
+
+    if not A then
+      A, C = C, A
+      B, D = D, B
+      y_mul = -1
+    end
+      
+    assert(A)
+
+    --- ANALYSE! ---
+
+    if not B and not C and not D then
+      -- sticking out corner
+      if rand.odds(90) then delta_x_map[x][y] = -16 * x_mul end
+      if rand.odds(90) then delta_y_map[x][y] = -16 * y_mul end
+
+    elseif B and not C and not D then
+      -- horizontal wall
+      if rand.odds(55) then delta_y_map[x][y] = -24 * y_mul end
+
+    elseif C and not B and not D then
+      -- vertical wall
+      if rand.odds(55) then delta_x_map[x][y] = -24 * x_mul end
+
+    elseif D and not B and not C then
+      -- checkerboard
+      -- (not moving it : this situation should not occur)
+
+    else
+      -- sticking out empty corner
+      -- expand a bit, but not enough to block player movement
+          if not B then y_mul = -y_mul
+      elseif not C then x_mul = -x_mul
+      end
+
+      if rand.odds(90) then delta_x_map[x][y] = 12 * x_mul end
+      if rand.odds(90) then delta_y_map[x][y] = 12 * y_mul end
+    end
+  end
+
+
+  local function create_delta_map()
+    delta_x_map = table.array_2D(dw, dh)
+    delta_y_map = table.array_2D(dw, dh)
+
+    for x = 1,dw do for y = 1,dh do
+      analyse_corner(x, y)
+    end end
+  end
+
 
   local function choose_tex(last, tab)
     local tex = rand.key_by_probs(tab)
@@ -960,8 +1069,10 @@ do return end ----!!!!!!!
   end
 
 
-  ---| Simple_connect_and_render |---
+  ---| Simple_render_cave |---
   
+  create_delta_map()
+
   render_walls()
 
   each A in R.areas do
