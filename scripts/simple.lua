@@ -577,11 +577,10 @@ function Simple_create_areas(R)
 
         AREA.floor_map = step
 
-        -- !!! FIXME: PROPERLY DETERMINE WHO TOUCHES WHO
-        if prev_A then
-          prev_A:add_touching(AREA)
-            AREA:add_touching(prev_A)
-        end
+---##        if prev_A then
+---##          prev_A:add_touching(AREA)
+---##            AREA:add_touching(prev_A)
+---##        end
 
         prev_A = AREA
       end
@@ -627,6 +626,60 @@ function Simple_create_areas(R)
   end
 
 
+  local function create_area_map()
+    -- create a map where each cell refers to an AREA, or is NIL.
+
+    local area_map = CAVE_CLASS.blank_copy(R.cave_map)
+
+    local W = R.cave_map.w
+    local H = R.cave_map.h
+
+    each A in R.areas do
+      for x = 1,W do for y = 1,H do
+        if (A.floor_map.cells[x][y] or 0) > 0 then
+          area_map.cells[x][y] = A
+        end
+      end end
+    end
+
+    R.area_map = area_map
+  end
+
+
+  local function determine_touching_areas()
+    local W = R.cave_map.w
+    local H = R.cave_map.h
+
+    local area_map = R.area_map
+
+    for x = 1,W do for y = 1,H do
+      local A1 = area_map.cells[x][y]
+
+      if not A1 then continue end
+
+      for dir = 2,8,2 do
+        local nx, ny = geom.nudge(x, y, dir)
+
+        if not area_map:valid_cell(nx, ny) then continue end
+
+        local A2 = area_map.cells[nx][ny]
+
+        if A2 and A2 != A1 then
+          A1:add_touching(A2)
+          A2:add_touching(A1)
+        end
+      end
+    end end
+
+    -- verify all areas touch at least one other
+    if #R.areas > 1 then
+      each A in R.areas do
+        assert(not table.empty(A.touching))
+      end
+    end
+  end
+
+
   ---| Simple_create_areas |---
 
   if false then
@@ -640,6 +693,10 @@ function Simple_create_areas(R)
       error("Cave steps failed to cover all important chunks\n")
     end
   end
+
+  create_area_map()
+
+  determine_touching_areas()
 
 --[[ debugging
   each A in R.areas do
