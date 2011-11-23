@@ -820,22 +820,27 @@ function Simple_render_cave(R)
       return
     end
 
-    local x_mul = 1
-    local y_mul = 1
+    local x_mul =  1
+    local y_mul = -1
 
     -- flip horizontally and/or vertically to ease analysis
-    if not A then
+    if not A and B then
       A, B = B, A
       C, D = D, C
       x_mul = -1
-    end
 
-    if not A then
+    elseif not A and C then
       A, C = C, A
       B, D = D, B
-      y_mul = -1
+      y_mul = 1
+
+    elseif not A and D then
+      A, D = D, A
+      B, C = C, B
+      x_mul = -1
+      y_mul =  1
     end
-      
+
     assert(A)
 
     --- ANALYSE! ---
@@ -882,7 +887,7 @@ function Simple_render_cave(R)
   end
 
 
-  local function brush_for_cell(cx, cy)
+  local function brush_for_cell(x, y)
     local bx = cave.base_x + (x - 1) * 64
     local by = cave.base_y + (y - 1) * 64
 
@@ -902,6 +907,8 @@ function Simple_render_cave(R)
 
       table.insert(coords, { x=fx, y=fy })
     end
+
+    return coords
   end
 
 
@@ -1071,7 +1078,7 @@ do return end ----!!!!!!!
     local w_mat = cave_tex
 
     for x = 1,cave.w do for y = 1,cave.h do
-      if (cave:get(x, y) or 0) <= 0 then
+      if (cave:get(x, y) or 0) > 0 then
         local brush = brush_for_cell(x, y)
 
         Brush_set_mat(brush, w_mat, w_mat)
@@ -1085,27 +1092,14 @@ do return end ----!!!!!!!
   local function render_floor_ceil(A)
     assert(A.floor_map)
 
-    A.floor_map.square = false  --!!!
-    A.floor_map.expand = true
-
-    local data =
-    {
-      f_h = A.floor_h + 2
-      c_h = A.floor_h + 122
-
-      f_mat = cave_tex
-      c_mat = cave_tex
-    }
-
     local f_mat = cave_tex
     local c_mat = cave_tex
 
     local f_h = A.floor_h
     local c_h = f_h + 192  -- FIXME
 
-    A.floor_map:render(FC_brush, data)
     for x = 1,cave.w do for y = 1,cave.h do
-      if (A.floor_map:get(x, y) or 0) <= 0 then
+      if (A.floor_map:get(x, y) or 0) > 0 then
         local f_brush = brush_for_cell(x, y)
         local c_brush = brush_for_cell(x, y)
 
@@ -1115,7 +1109,8 @@ do return end ----!!!!!!!
         Brush_set_mat(f_brush, f_mat, f_mat)
         Brush_set_mat(c_brush, c_mat, c_mat)
 
-        brush_helper(brush)
+        brush_helper(f_brush)
+        brush_helper(c_brush)
       end
     end end
   end
