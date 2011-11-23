@@ -8,54 +8,29 @@ Current Work
 TEST: hyperlink code in Windows
 
 
+QUAKE:
+  -  creating dud faces? (an extent becomes ZERO)
+
+
 Theme System:
 
 !!!  split current room themes into smaller ones
 
 
 Hallways:
->>>> don't assume all chunks can be open to each other
-     (i.e. there is a distinct path, put walls everywhere else)
+  -  decide walls properly (i.e. no hall_path[dir])
 
->>>>>> fix chunk alignment in hallway connections
+  -  make some chunk-size prefabs and use them
 
-DONE:  proper chunk size (in other side) when one side is a JUNCTION
-
-  !!  monsters / items in hallways
-
-  !!!  determine ceiling heights properly
-
-DONE: get double halls working again
+  !!  determine ceiling heights properly
 
   -  get big junctions working again
 
-  -  get "merging" of one hallway into another working again
-
-  -  ability to merge the section of a "simple" hallway into
-     one of the rooms [especially to make a "Porch"].
-
 
 Caves:
-  !!!!  fix spurious diagonals (at corners of room)
-
-  !!!!  use "shrinky" mode for steps too
-
-        ALGORITHM: for each cell which shrinks (including solid walls)
-                   find a floor cell to use.  Add that cell into floor
-                   _BUT_ ensure that it never shrinks itself.
-
-  >>  newbie_map  : generate separate pass, check for <= 0 cells
-
-  DONE:  CHUNKS: don't build floor/ceil if cave
-  DONE:  handle disconnected areas
-  DONE:  fill any unconnected empty areas
-  DONE:  optimise touch_chunk with bbox check
-
   !!!!  spots for monsters and items
 
   >>>  get the diagonalisation working again (on FLOORS too)
-
-  !!  determine touching lists
 
   >>  proper floor and ceiling textures
 

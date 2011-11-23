@@ -112,10 +112,14 @@ Teleporters:
 
 Hallways:
 
--  Special Hallway #1 : surround half the room, entrance either side
--  Special Hallway #2 : surround a corner of large room, two entrances
--  Special Hallway #3 : surround a room completely.
--  Special Hallway #4 : diagonal from one to another (alloc '+' shape)
+  -  get "merging" of one hallway into another working again
+
+  -  ability to merge the section of a "simple" hallway into
+     one of the rooms [especially to make a "Porch"].
+
+DONE: Special Hallway #1 : surround half the room, entrance either side
+  -   Special Hallway #3 : surround a room completely.
+  -   Special Hallway #4 : diagonal from one to another (alloc '+' shape)
 
 
 Hallway Theming:
