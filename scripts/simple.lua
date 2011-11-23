@@ -760,9 +760,27 @@ function Simple_render_cave(R)
   local dw = cave.w + 1
   local dh = cave.h + 1
 
+  local B_CORNERS = { 1,3,9,7 }
 
-  local function corner_nb(x, y, dir)
-    -- FIXME !!!!
+
+  local function grab_cell(x, y)
+    if not cave:valid_cell(x, y) then
+      return nil
+    end
+
+    local C = cave:get(x, y)
+
+    -- in some places we build nothing (e.g. other rooms)
+    if C == nil then return nil end
+
+    -- check for a solid cell
+    if C > 0 then return "#" end
+
+    -- otherwise there should be a floor area here
+    local A = R.area_map:get(x, y)
+    assert(A)
+
+    return assert(A.floor_h)
   end
 
 
@@ -771,12 +789,12 @@ function Simple_render_cave(R)
     --  --+--
     --  C | D
 
-    local A = corner_nb(x, y, 7)
-    local B = corner_nb(x, y, 9)
-    local C = corner_nb(x, y, 1)
-    local D = corner_nb(x, y, 3)
+    local A = grab_cell(x-1, y)
+    local B = grab_cell(x,   y)
+    local C = grab_cell(x-1, y-1)
+    local D = grab_cell(x,   y-1)
 
-    -- don't move a corner at edge of room
+    -- never move a corner at edge of room
     if not A or not B or not C or not D then
       return
     end
@@ -840,14 +858,14 @@ function Simple_render_cave(R)
       -- (not moving it : this situation should not occur)
 
     else
-      -- sticking out empty corner
+      -- an empty corner
       -- expand a bit, but not enough to block player movement
           if not B then y_mul = -y_mul
       elseif not C then x_mul = -x_mul
       end
 
-      if rand.odds(90) then delta_x_map[x][y] = 12 * x_mul end
-      if rand.odds(90) then delta_y_map[x][y] = 12 * y_mul end
+      if rand.odds(80) then delta_x_map[x][y] = 12 * x_mul end
+      if rand.odds(80) then delta_y_map[x][y] = 12 * y_mul end
     end
   end
 
@@ -856,9 +874,34 @@ function Simple_render_cave(R)
     delta_x_map = table.array_2D(dw, dh)
     delta_y_map = table.array_2D(dw, dh)
 
+    if square_cave then return end
+
     for x = 1,dw do for y = 1,dh do
       analyse_corner(x, y)
     end end
+  end
+
+
+  local function brush_for_cell(cx, cy)
+    local bx = cave.base_x + (x - 1) * 64
+    local by = cave.base_y + (y - 1) * 64
+
+    local coords = { }
+
+    each side in B_CORNERS do
+      local dx, dy = geom.delta(side)
+
+      local fx = bx + (dx < 0 ? 0 ; 64)
+      local fy = by + (dy < 0 ? 0 ; 64)
+
+      local cx = x + (dx < 0 ? 0 ; 1)
+      local cy = y + (dy < 0 ? 0 ; 1)
+
+      fx = fx + (delta_x_map[cx][cy] or 0)
+      fy = fy + (delta_y_map[cx][cy] or 0)
+
+      table.insert(coords, { x=fx, y=fy })
+    end
   end
 
 
@@ -912,37 +955,11 @@ function Simple_render_cave(R)
   end
 
 
-  local function render_walls()
+  local function render_walls_OLD()
 
     --- DO WALLS ---
 
     local data = { w_mat = cave_tex }
-
---[[
-    if R.is_lake then
-      local liq_mat = Mat_lookup(LEVEL.liquid.mat)
-      data.delta_f = rand.sel(70, -48, -72)
-      data.f_h = cave_floor_h + 8
-      data.ftex = liq_mat.f or liq_mat.t
-    end
-
-    if R.outdoor and not R.is_lake and cave_floor_h + 144 < SKY_H and rand.odds(88) then
-      data.f_h = R.cave_floor_h + rand.sel(65, 80, 144)
-    end
-
-    if PARAM.outdoor_shadows and R.outdoor and not R.is_lake then
-  --!!!!!    data.shadow_info = get_light(-1)
-    end
---]]
-
-    -- grab walkway now (before main cave is modified)
-
----!!!!!!  local walkway = cave:copy_island(cave.empty_id)
-
-
-    if THEME.square_caves or true then   --@@@@@@
-      cave.square = true
-    end
 
     cave:render(WALL_brush, data)
 
@@ -1050,6 +1067,21 @@ do return end ----!!!!!!!
   end
 
 
+  local function render_walls()
+    local w_mat = cave_tex
+
+    for x = 1,cave.w do for y = 1,cave.h do
+      if (cave:get(x, y) or 0) <= 0 then
+        local brush = brush_for_cell(x, y)
+
+        Brush_set_mat(brush, w_mat, w_mat)
+
+        brush_helper(brush)
+      end
+    end end
+  end
+
+
   local function render_floor_ceil(A)
     assert(A.floor_map)
 
@@ -1065,7 +1097,27 @@ do return end ----!!!!!!!
       c_mat = cave_tex
     }
 
+    local f_mat = cave_tex
+    local c_mat = cave_tex
+
+    local f_h = A.floor_h
+    local c_h = f_h + 192  -- FIXME
+
     A.floor_map:render(FC_brush, data)
+    for x = 1,cave.w do for y = 1,cave.h do
+      if (A.floor_map:get(x, y) or 0) <= 0 then
+        local f_brush = brush_for_cell(x, y)
+        local c_brush = brush_for_cell(x, y)
+
+        Brush_add_top   (f_brush, f_h)
+        Brush_add_bottom(c_brush, c_h)
+
+        Brush_set_mat(f_brush, f_mat, f_mat)
+        Brush_set_mat(c_brush, c_mat, c_mat)
+
+        brush_helper(brush)
+      end
+    end end
   end
 
 

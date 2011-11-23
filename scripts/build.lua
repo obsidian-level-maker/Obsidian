@@ -289,6 +289,16 @@ function Brush_bbox(brush)
 end
 
 
+function Brush_add_top(brush, z, mat)
+  table.insert(brush, { t=z, mat=mat })
+end
+
+
+function Brush_add_bottom(brush, z, mat)
+  table.insert(brush, { b=z, mat=mat })
+end
+
+
 function Brush_get_b(brush)
   for _,C in ipairs(brush) do
     if C.b then return C.b end
