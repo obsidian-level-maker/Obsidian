@@ -330,6 +330,11 @@ Caves:
 +  fix monster spots
 +  fix pickup spots
 
++  support Cross-Overs
+   -  handle the Room's height limitation
+   -  create channels by lowering the floor cells
+   -  for bridges, ensure ceiling cells are high enough
+
 
 Natural areas:
   -  height changes?

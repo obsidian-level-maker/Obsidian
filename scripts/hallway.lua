@@ -616,6 +616,9 @@ function Hallway_test_branch(start_K, start_dir, mode)
     -- if re-entering a room, must be the same one!
     if stats.crossover and N.room != stats.crossover then return false end
 
+    -- !!!! FIXME: caves are not yet Cross-Over friendly
+    if N.room.kind == "cave" then return false end
+
     return true
   end
 

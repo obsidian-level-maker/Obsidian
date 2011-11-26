@@ -420,7 +420,6 @@ function Simple_create_areas(R)
 
 
     local function touch_a_chunk(C)
-stderrf("touch_a_chunk: %s\n", tostring(C))
       table.insert(touched_chunks, C)
 
       table.kill_elem(cover_chunks, C)
@@ -520,8 +519,6 @@ stderrf("touch_a_chunk: %s\n", tostring(C))
 
 
     local function grow_an_area(cx, cy, prev_A)
-
-stderrf("grow_an_area @ (%d %d)\n", cx, cy)
 
 -- free:dump("Free:")
 
@@ -677,7 +674,6 @@ step:dump("Step:")
     grow_step_areas()
 
     if #cover_chunks > 0 then
-stderrf("cover_chunks:\n%s\n", table.tostr(cover_chunks))
       error("Cave steps failed to cover all important chunks\n")
     end
   end
