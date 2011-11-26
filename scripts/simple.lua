@@ -315,6 +315,7 @@ end
 function Simple_create_areas(R)
 
   local cover_chunks
+  local chunk_map
 
 
   local function one_big_area()
@@ -341,9 +342,40 @@ function Simple_create_areas(R)
     cover_chunks = {}
 
     each C in R.chunks do
-      if C.foobage == "important" or C.foobage == "conn" then
+      if C.foobage == "important" or C.foobage == "conn" or
+         C.foobage == "crossover"
+      then
         table.insert(cover_chunks, C)
       end
+    end
+  end
+
+
+  local function add_chunk_to_map(C)
+    for x = C.cave_x1, C.cave_x2 do
+      for y = C.cave_y1, C.cave_y2 do
+        chunk_map.cells[x][y] = C
+      end
+    end
+  end
+
+
+  local function remove_chunk_from_map(C)
+    for x = C.cave_x1, C.cave_x2 do
+      for y = C.cave_y1, C.cave_y2 do
+        chunk_map.cells[x][y] = nil
+      end
+    end
+  end
+
+
+  local function create_chunk_map()
+    collect_cover_chunks()
+
+    chunk_map = CAVE_CLASS.blank_copy(R.cave_map)
+
+    each C in cover_chunks do
+      add_chunk_to_map(C)
     end
   end
 
@@ -351,7 +383,7 @@ function Simple_create_areas(R)
   local cave_floor_h = 0 ---  assert(A.chunks[1].floor_h)
 
 
-  local function step_test()
+  local function grow_step_areas()
 
     local pos_list = { }
 
@@ -376,6 +408,8 @@ function Simple_create_areas(R)
     local cx1, cy1
     local cx2, cy2
 
+    local touched_chunks
+    
 
     -- mark free areas with zero instead of negative [TODO: make into a cave method]
     for fx = 1,cw do for fy = 1,ch do
@@ -385,20 +419,62 @@ function Simple_create_areas(R)
     end end
 
 
+    local function touch_a_chunk(C)
+stderrf("touch_a_chunk: %s\n", tostring(C))
+      table.insert(touched_chunks, C)
+
+      table.kill_elem(cover_chunks, C)
+
+      remove_chunk_from_map(C)
+
+      -- add the whole chunk to the current step
+      for x = C.cave_x1, C.cave_x2 do
+        for y = C.cave_y1, C.cave_y2 do
+          s_cel[x][y] = 1
+          f_cel[x][y] = 1
+
+          size = size + 1
+        end
+      end
+
+      -- update bbox
+      cx1 = math.min(cx1, C.cave_x1)
+      cy1 = math.min(cy1, C.cave_y1)
+
+      cx2 = math.max(cx2, C.cave_x2)
+      cy2 = math.max(cy2, C.cave_y2)
+    end
+
+
+    local function grow_add(x, y)
+      s_cel[x][y] = 1
+      f_cel[x][y] = 1
+
+      size = size + 1
+
+      -- update bbox
+      if x < cx1 then cx1 = x end
+      if x > cx2 then cx2 = x end
+
+      if y < cy1 then cy1 = y end
+      if y > cy2 then cy2 = y end
+
+      if chunk_map.cells[x][y] then
+        touch_a_chunk(chunk_map.cells[x][y])
+      end
+    end
+
+
     local function grow_horiz(y, prob)
       for x = cx1, cx2 do
         if x > 1 and s_cel[x][y] == 1 and s_cel[x-1][y] == 0 and f_cel[x-1][y] == 0 and rand.odds(prob) then
-          s_cel[x-1][y] = 1
-          f_cel[x-1][y] = 1
-          size = size + 1
+          grow_add(x-1, y)
         end
       end
 
       for x = cx2, cx1, -1 do
         if x < cw and s_cel[x][y] == 1 and s_cel[x+1][y] == 0 and f_cel[x+1][y] == 0 and rand.odds(prob) then
-          s_cel[x+1][y] = 1
-          f_cel[x+1][y] = 1
-          size = size + 1
+          grow_add(x+1, y)
         end
       end
     end
@@ -407,17 +483,13 @@ function Simple_create_areas(R)
     local function grow_vert(x, prob)
       for y = cy1, cy2 do
         if y > 1 and s_cel[x][y] == 1 and s_cel[x][y-1] == 0 and f_cel[x][y-1] == 0 and rand.odds(prob) then
-          s_cel[x][y-1] = 1
-          f_cel[x][y-1] = 1
-          size = size + 1
+          grow_add(x, y-1)
         end
       end
 
       for y = cy2, cy1, -1 do
         if y < ch and s_cel[x][y] == 1 and s_cel[x][y+1] == 0 and f_cel[x][y+1] == 0 and rand.odds(prob) then
-          s_cel[x][y+1] = 1
-          f_cel[x][y+1] = 1
-          size = size + 1
+          grow_add(x, y+1)
         end
       end
     end
@@ -431,86 +503,9 @@ function Simple_create_areas(R)
       for x = cx1, cx2 do
         grow_vert(x, prob)
       end
-
-      -- expand bbox
-      if cx1 > 1  then cx1 = cx1 - 1 end
-      if cy1 > 1  then cy1 = cy1 - 1 end
-
-      if cx2 < cw then cx2 = cx2 + 1 end
-      if cy2 < ch then cy2 = cy2 + 1 end
     end
 
 
-    local function chunk_touches_step(C)
-      -- early out by checking the bbox
-      if C.cave_x1 > cx2 or C.cave_x2 < cx1 or
-         C.cave_y1 > cy2 or C.cave_y2 < cy1
-      then
-        return "no"
-      end
-
-      local hit  = 0
-      local miss = 0
-
-      for x = C.cave_x1, C.cave_x2 do
-        for y = C.cave_y1, C.cave_y2 do
-          if s_cel[x][y] == 1 then
-            hit = hit + 1
-          else
-            miss = miss + 1
-          end
-        end
-      end
-
-      if hit == 0 then return "no" end
-
-      if miss == 0 then return "cover" end
-
-      return "partial"
-    end
-
-
-    local function test_cover_chunks(finished_chunks)
-      -- Note: the growth here can cause more chunks to be touched,
-      --       hence need to repeat the test when that happens.
-      repeat
-        local grew = false
-
-        for index = #cover_chunks, 1, -1 do
-          local C = cover_chunks[index]
-
-          local what = chunk_touches_step(C)
-
-          if what == "no" then continue end
-
-          -- while the step only partially covers the chunk, keep growing it
-          -- (this should always stop, but limit the loop just in case)
-          for loop = 1,30 do
-            if what == "cover" then break end
-
-            if loop == 30 then
-              gui.printf("WARNING: failed to cover a chunk\n")
-            end
-
-            grow_it(100)
-
-            grew = true
---step:dump("After touching growth")
-
-            what = chunk_touches_step(C)
-            assert(what != "no")
-          end
-
-          -- chunk is now covered, add to area and remove from list
-          table.insert(finished_chunks, C)
-
-          table.remove(cover_chunks, index)
-        end
-
-      until not grew
-    end
-
-    
     local function merge_step(prev)
       -- meh, need this functions because union() method does not
       --      consider '0' as a valid value.
@@ -526,6 +521,8 @@ function Simple_create_areas(R)
 
     local function grow_an_area(cx, cy, prev_A)
 
+stderrf("grow_an_area @ (%d %d)\n", cx, cy)
+
 -- free:dump("Free:")
 
       step  = CAVE_CLASS.blank_copy(free)
@@ -533,15 +530,17 @@ function Simple_create_areas(R)
 
       step:set_all(0)
 
-      -- set initial point
-      s_cel[cx][cy] = 1
-      f_cel[cx][cy] = 1
-      size = 1
+      size = 0
+
+      touched_chunks = {}
 
       cx1 = cx ; cx2 = cx
       cy1 = cy ; cy2 = cy
 
-      local count = 4  ---!!!  rand.pick { 2,2,3,3, 4,4,5,5, 8,12,20 }
+      -- set initial point
+      grow_add(cx, cy)
+
+      local count = rand.pick { 3, 4, 5 }
 
       grow_it(100)
 
@@ -549,23 +548,16 @@ function Simple_create_areas(R)
         grow_it(50)
       end
 
-      if size < 4 then grow_it(100) end
+      if size < 4 or #touched_chunks > 0 then
+        grow_it(100)
+        grow_it(40)
+      end
 
--- step:dump("Step before:")
-
-      -- check if the step overlaps any important chunk.
-      -- these will require the step to keep growing to cover the chunk,
-      -- and the chunk gets added to the AREA's chunk list (which is
-      -- vital for height distribution ETC).
-      local chunks = {}
-
-      test_cover_chunks(chunks)
-
--- step:dump("Step after:")
+step:dump("Step:")
 
       -- when the step is too small, merge it into previous area
       if size < 4 and prev_A then
-        
+
         merge_step(prev_A.floor_map)
 
       else
@@ -577,15 +569,10 @@ function Simple_create_areas(R)
 
         AREA.floor_map = step
 
----##        if prev_A then
----##          prev_A:add_touching(AREA)
----##            AREA:add_touching(prev_A)
----##        end
-
         prev_A = AREA
       end
 
-      each C in chunks do
+      each C in touched_chunks do
         table.insert(prev_A.chunks, C)
 
         C.area = prev_A
@@ -685,11 +672,12 @@ function Simple_create_areas(R)
   if false then
     one_big_area()
   else
-    collect_cover_chunks()
+    create_chunk_map()
 
-    step_test()
+    grow_step_areas()
 
     if #cover_chunks > 0 then
+stderrf("cover_chunks:\n%s\n", table.tostr(cover_chunks))
       error("Cave steps failed to cover all important chunks\n")
     end
   end
