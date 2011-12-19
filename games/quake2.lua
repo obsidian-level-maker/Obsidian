@@ -133,8 +133,7 @@ QUAKE2.ENTITIES =
 
 QUAKE2.PARAMETERS =
 {
-  -- FIXME: verify this for QUAKE II
-  map_limit = 8000
+  map_limit = 8000  -- verified (limit of C/S protocol)
 
   centre_map = true
 
