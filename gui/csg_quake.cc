@@ -1767,6 +1767,37 @@ static void CreateClusters(quake_group_c & group)
 }
 
 
+static void RemoveSolidNodes(quake_node_c * node)
+{
+  // this is mainly for Darkplaces, which throws a wobbly fit if a
+  // node has the same front and back (even if it's the solid leaf).
+
+  if (node->front_N)
+  {
+    RemoveSolidNodes(node->front_N);
+
+    if (node->front_N->front_L == qk_solid_leaf &&
+        node->front_N->back_L  == qk_solid_leaf)
+    {
+      node->front_L = qk_solid_leaf;
+      node->front_N = NULL;
+    }
+  }
+
+  if (node->back_N)
+  {
+    RemoveSolidNodes(node->back_N);
+
+    if (node->back_N->front_L == qk_solid_leaf &&
+        node->back_N->back_L  == qk_solid_leaf)
+    {
+      node->back_L = qk_solid_leaf;
+      node->back_N = NULL;
+    }
+  }
+}
+
+
 void CSG_QUAKE_Build()
 {
   LogPrintf("QUAKE CSG...\n");
@@ -1796,6 +1827,8 @@ void CSG_QUAKE_Build()
   qk_solid_leaf->index = 0;
 
   qk_bsp_root = Partition_Group(GROUP);
+
+  RemoveSolidNodes(qk_bsp_root);
 
   SYS_ASSERT(qk_bsp_root);
 }
