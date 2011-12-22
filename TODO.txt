@@ -5,13 +5,6 @@ OBLIGE TODO
 Current Work
 ------------
 
-TEST: hyperlink code in Windows
-
-
-QUAKE:
-  -  creating dud faces? (an extent becomes ZERO)
-
-
 Theme System:
 
 !!!  split current room themes into smaller ones
@@ -24,15 +17,11 @@ Hallways:
 
   !!  determine ceiling heights properly
 
-  -  get big junctions working again
-
 
 Caves:
   !!!!  spots for monsters and items
 
-  >>>  get the diagonalisation working again (on FLOORS too)
-
-  >>  proper floor and ceiling textures
+  -  proper floor and ceiling textures
 
   -  better floors, liquid areas
 
@@ -40,8 +29,6 @@ Caves:
 
   -  create a large area (or two) by merging areas together
      [OR: pre-allocate a large chunk / reclaimed junction]
-
-  DONE:  QUAKE: avoid caves for intermission camera
 
 
 

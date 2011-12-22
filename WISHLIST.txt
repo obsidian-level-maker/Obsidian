@@ -93,6 +93,10 @@ Theme System:
 
   -  if keys are left over, can use them for non-Zone locks
 
+  -  IDEA: "minor" theme, like rare theme but can be repeated in a zone
+
+  -  IDEA: cycle through dominant themes by quest
+
 
 Hexen:
    !!  BOSS map : require the 2/3 hub keys to access boss room
@@ -111,6 +115,8 @@ Teleporters:
 
 
 Hallways:
+
+  +  get big junctions working again
 
   -  get "merging" of one hallway into another working again
 
