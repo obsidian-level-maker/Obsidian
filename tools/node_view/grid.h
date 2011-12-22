@@ -31,11 +31,6 @@ public:
   void SetPos(double new_x, double new_y);
   // changes the current position.
 
-  void SetPath(path_c *p) { path = p; }
-  //  give a path for the grid to draw
-
-  void ClearPath() { SetPath(NULL); }
-
   void FitBBox(double lx, double ly, double hx, double hy);
   // set zoom and position so that the bounding area fits.
 
@@ -99,8 +94,6 @@ private:
   int bbox_MODE;
   int miniseg_MODE;
   int shade_MODE;
-
-  path_c *path;
 
   static const int MAX_ROUTE = 2000;
 

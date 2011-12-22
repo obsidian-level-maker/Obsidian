@@ -36,7 +36,7 @@ W_Grid::W_Grid(int X, int Y, int W, int H, const char *label) :
     mid_x(0), mid_y(0),
     grid_MODE(1), partition_MODE(1), bbox_MODE(1),
     miniseg_MODE(2), shade_MODE(1),
-    path(NULL), route_len(0)
+    route_len(0)
 {
   visit_route = new char[MAX_ROUTE];
 }
@@ -165,9 +165,6 @@ void W_Grid::draw()
 
   if (partition_MODE == 2)
     draw_all_partitions();
-
-  if (path)
-    draw_path();
 
   fl_pop_clip();
 }
@@ -604,6 +601,7 @@ void W_Grid::draw_line(double x1, double y1, double x2, double y2)
 
 void W_Grid::draw_path()
 {
+#if 0
   int p;
 
   // first, render the lines
@@ -633,6 +631,7 @@ void W_Grid::draw_path()
 
     fl_rect(wx-1, wy-1, 3, 3);
   }
+#endif
 }
 
 void W_Grid::scroll(int dx, int dy)
