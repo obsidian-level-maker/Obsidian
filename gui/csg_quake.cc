@@ -43,6 +43,8 @@
 
 #define FACE_MAX_SIZE  240
 
+#define NODE_DEBUG  1
+
 
 //------------------------------------------------------------------------
 //  NEW LOGIC
@@ -1581,8 +1583,29 @@ static quake_node_c * Partition_Z(quake_group_c & group, qCluster_c *cluster)
 }
 
 
+#if (NODE_DEBUG == 1)
+static const char * leaf_to_string(quake_leaf_c *L, quake_node_c *N)
+{
+  if (L == qk_solid_leaf)
+    return "SOLID";
+
+  // this doesn't actually occur
+  if (L)
+    return "WTF";
+
+  // for the nodeviewer, a "leaf" is when we hit Partition_Z
+  if (fabs(N->plane.nz) > 0.5)
+    return StringPrintf("LEAF");
+
+  return StringPrintf("N:%p", N);
+}
+#endif
+
+
 static quake_node_c * Partition_Group(quake_group_c & group,
-                                      qCluster_c *reached_cluster = NULL)
+                                      qCluster_c *reached_cluster = NULL,
+                                      quake_node_c *parent = NULL,
+                                      int parent_side = 0)
 {
   SYS_ASSERT(! group.sides.empty());
 
@@ -1604,12 +1627,23 @@ static quake_node_c * Partition_Group(quake_group_c & group,
     // the front should never be empty
     SYS_ASSERT(! front.sides.empty());
 
-    new_node->front_N = Partition_Group(front, reached_cluster);
+#if (NODE_DEBUG == 1)
+    LogPrintf("partition %p (%1.2f %1.2f) (%1.2f %1.2f)\n", new_node,
+               part.x1, part.y1, part.x2, part.y2);
+#endif
+
+    new_node->front_N = Partition_Group(front, reached_cluster, new_node, 0);
 
     if (back.sides.empty())
       new_node->back_L = Solid_Leaf(back);
     else
-      new_node->back_N = Partition_Group(back, reached_cluster);
+      new_node->back_N = Partition_Group(back, reached_cluster, new_node, 1);
+
+#if (NODE_DEBUG == 1)
+    LogPrintf("part_info %p = %s / %s\n", new_node,
+            leaf_to_string(new_node->front_L, new_node->front_N),
+            leaf_to_string(new_node-> back_L, new_node-> back_N));
+#endif
 
     // input group has been consumed now 
 
@@ -1618,6 +1652,18 @@ static quake_node_c * Partition_Group(quake_group_c & group,
   else
   {
     SYS_ASSERT(reached_cluster);
+
+#if (NODE_DEBUG == 1)
+    SYS_ASSERT(parent);
+    LogPrintf("side_group @ %p : %d = %u\n", parent, parent_side, group.sides.size());
+
+    for (unsigned int i = 0 ; i < group.sides.size() ; i++)
+    {
+      const quake_side_c *S = group.sides[i];
+      LogPrintf("  side %p : (%1.2f %1.2f) (%1.2f %1.2f) in %p\n",
+                S, S->x1, S->y1, S->x2, S->y2, S->snag ? S->snag->region : NULL);
+    }
+#endif
 
     return Partition_Z(group, reached_cluster);
   }
@@ -1826,7 +1872,11 @@ void CSG_QUAKE_Build()
   qk_solid_leaf = new quake_leaf_c(MEDIUM_SOLID);
   qk_solid_leaf->index = 0;
 
-  qk_bsp_root = Partition_Group(GROUP);
+  qk_bsp_root = Partition_Group(GROUP, NULL, NULL, 0);
+
+#if (NODE_DEBUG == 1)
+  LogPrintf("root = %p\n", qk_bsp_root);
+#endif
 
   RemoveSolidNodes(qk_bsp_root);
 
