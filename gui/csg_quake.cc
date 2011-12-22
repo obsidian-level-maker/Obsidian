@@ -554,6 +554,8 @@ static bool TestIntersectionOpen(std::vector<intersect_t> & cuts,
 {
   unsigned int i;
 
+  const double ANG_EPSILON = 1e-5;
+
   // if have sitting with same dir : not open
   for (i = first ; i <= last ; i++)
     if (cuts[i].kind == K1_SITTING && cuts[i].dir == dir)
@@ -580,14 +582,16 @@ static bool TestIntersectionOpen(std::vector<intersect_t> & cuts,
         angle = 180 - angle;
     }
 
-    if (fabs(angle) < fabs(cl_angle))
+    if (fabs(angle) + ANG_EPSILON < fabs(cl_angle))
     {
       closest  = i;
       cl_angle = angle;
     }
-    // it is normal for two segs to touch at a partition but face
-    // opposite directions.  it is important here to pick the OPEN one.
-    else if (angle == cl_angle && cuts[i].dir == dir)
+
+    // it is normal for two segs to touch at a partition at the same
+    // place but facing opposite directions.  The _vital_ thing here
+    // is to pick the OPEN one.
+    else if (fabs(angle - cl_angle) < ANG_EPSILON && cuts[i].dir == dir)
     {
       closest = i;
     }
@@ -616,8 +620,14 @@ static void MergeIntersections(std::vector<intersect_t> & cuts,
     while (last+1 < cuts.size() && cuts[last+1].q_dist == cuts[first].q_dist)
       last++;
 
+/// LogPrintf("DIST %1.0f [%d..%d]\n", cuts[first].along, first, last);
+
     bool backward = TestIntersectionOpen(cuts, first, last, -1);
     bool forward  = TestIntersectionOpen(cuts, first, last, +1);
+
+/// LogPrintf("--> backward:%s forward:%s\n",
+///          backward ? "OPEN" : "closed",
+///           forward ? "OPEN" : "closed");
 
     intersect_t new_cut;
 
@@ -642,13 +652,13 @@ static void CreateMiniSides(std::vector<intersect_t> & cuts,
 {
   std::sort(cuts.begin(), cuts.end(), intersect_qdist_Compare());
 
-// DumpIntersections(cuts, "Intersection List");
+///   DumpIntersections(cuts, "Intersection List");
 
   std::vector<intersect_t> merged;
 
   MergeIntersections(cuts, merged);
 
-// DumpIntersections(merged, "Merged List");
+///   DumpIntersections(merged, "Merged List");
 
   for (unsigned int i = 0 ; i+1 < merged.size() ; i++)
   {
@@ -1871,6 +1881,10 @@ void CSG_QUAKE_Build()
 
   qk_solid_leaf = new quake_leaf_c(MEDIUM_SOLID);
   qk_solid_leaf->index = 0;
+
+#if (NODE_DEBUG == 1)
+  LogPrintf("begin_node_stuff\n");
+#endif
 
   qk_bsp_root = Partition_Group(GROUP, NULL, NULL, 0);
 
