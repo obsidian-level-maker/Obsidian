@@ -109,6 +109,11 @@ leaf_c * qk_solid_leaf;
 
 static std::map< std::string, node_c* >  node_map;
 
+static bool found_beginning;
+
+
+//------------------------------------------------------------------------
+
 
 static bool parse_partition(FILE *fp, char *line)
 {
@@ -318,6 +323,15 @@ static bool process_line(FILE *fp)
   if (buffer[0] == '#')
     return true;
 
+  if (! found_beginning)
+  {
+    if (strncmp(buffer, "begin_node_stuff", 16) != 0)
+      return true;
+
+    found_beginning = true;
+    return true;
+  }
+
   if (strncmp(buffer, "partition", 9) == 0)
     return parse_partition(fp, buffer);
   
@@ -347,6 +361,9 @@ void LoadLevel(const char *filename)
   { }
 
   fclose(fp);
+
+  if (! found_beginning)
+    FatalError("No node info found\n");
 
   if (! qk_root_node)
     FatalError("No root node\n");
