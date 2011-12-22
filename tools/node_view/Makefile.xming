@@ -1,11 +1,10 @@
 #
-#  GL-Node Viewer
+#  Node Viewer
 #
 #  GNU Makefile for WIN32, using CROSS-COMPILER on Linux
 #
 
 PROGRAM=NodeView.exe
-SRC_DIR=nodeview
 
 LIB_LOC=/home/aapted/ebuild
 

@@ -1,11 +1,10 @@
 #
-#  GL-Node Viewer
+#  Node Viewer
 #
 #  Makefile for Unix/FLTK
 #
 
-BIN=nodeview
-SRC_DIR=nodeview
+PROGRAM=node_view
 
 FLTK_DIR=/home/aapted/other/fltk-1.1.10
 
@@ -36,16 +35,16 @@ OBJS=./main.o     \
 
 # ----- TARGETS ------------------------------------------------------
 
-all:    $(BIN)
+all:    $(PROGRAM)
 
 clean:
-	rm -f $(BIN) *.o core core.* ERRS nv_debug.txt
+	rm -f $(PROGRAM) *.o core core.* ERRS nv_debug.txt
 
-$(BIN): $(OBJS)
-	$(CXX) $(CFLAGS) $(OBJS) -o $(BIN) $(LDFLAGS) $(LIBS)
+$(PROGRAM): $(OBJS)
+	$(CXX) $(CFLAGS) $(OBJS) -o $(PROGRAM) $(LDFLAGS) $(LIBS)
 
 bin: all
-	strip --strip-unneeded $(BIN)
+	strip --strip-unneeded $(PROGRAM)
 
 .PHONY: all clean bin install
 
