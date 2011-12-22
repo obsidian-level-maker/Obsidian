@@ -138,7 +138,7 @@ int main(int argc, char **argv)
     guix_win->info->SetMap("E1M1");
     guix_win->info->SetNodes("GL");  // FIXME: node version
 
-    guix_win->info->SetNodeIndex(0);
+    guix_win->info->SetNodeIndex(qk_root_node->name);
 
     // run the GUI until the user quits
     while (! guix_win->want_quit)

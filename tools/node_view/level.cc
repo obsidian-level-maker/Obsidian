@@ -77,7 +77,7 @@ child_c::~child_c()
 }
 
 
-node_c::node_c() : front(), back()
+node_c::node_c() : name(NULL), front(), back()
 {
 }
 
@@ -129,6 +129,8 @@ static bool parse_partition(FILE *fp, char *line)
     FatalError("Node already exists in: %s\n", line);
   
   node_c *nd = new node_c;
+
+  nd->name = strdup(node_name);
 
   nd->x1 = x1;
   nd->y1 = y1;

@@ -62,7 +62,7 @@ W_Info::W_Info(int X, int Y, int W, int H, const char *label) :
  
   Y += 16;
 
-  ns_index = new Fl_Output(X+74, Y, 80, 22, "Node #    ");
+  ns_index = new Fl_Output(X+74, Y, 96, 22, "Node #    ");
   ns_index->align(FL_ALIGN_LEFT);
   add(ns_index);
 
@@ -242,14 +242,10 @@ void W_Info::SetZoom(float zoom_mul)
 }
 
 
-void W_Info::SetNodeIndex(int index)
+void W_Info::SetNodeIndex(const char *name)
 {
-  char buffer[60];
-
-  sprintf(buffer, "%d", index);
-  
   ns_index->label("Node #    ");
-  ns_index->value(buffer);
+  ns_index->value(name);
 
   seg_label->hide();
   seg_list->hide();

@@ -924,7 +924,7 @@ void W_Grid::new_node_or_sub(void)
   }
   else
   {
-    guix_win->info->SetNodeIndex(0);
+    guix_win->info->SetNodeIndex(cur_nd->name);
     guix_win->info->SetPartition(cur_nd);
   }
 

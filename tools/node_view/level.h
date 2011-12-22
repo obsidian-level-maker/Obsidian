@@ -80,6 +80,8 @@ public:
 class node_c
 {
 public:
+  const char *name;
+
   double x1, y1;
   double x2, y2;
 

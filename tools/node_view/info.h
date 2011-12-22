@@ -66,7 +66,7 @@ public:
   void SetNodes(const char *type);
   void SetZoom(float zoom_mul);
 
-  void SetNodeIndex(int index);
+  void SetNodeIndex(const char *name);
   void SetSubsectorIndex(int index);
   void SetCurBBox(const bbox_t *bbox);
   void SetPartition(const node_c *part);
