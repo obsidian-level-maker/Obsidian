@@ -43,7 +43,7 @@
 
 #define FACE_MAX_SIZE  240
 
-#define NODE_DEBUG  1
+#define NODE_DEBUG  0
 
 
 //------------------------------------------------------------------------
