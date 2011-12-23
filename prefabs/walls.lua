@@ -34,6 +34,31 @@ PREFAB.WALL =
 }
 
 
+PREFAB.SKY_FENCE =
+{
+  fitted = "xy"
+
+  brushes =
+  {
+    {
+      { x =   0, y =  0, mat = "_SKY" }
+      { x = 192, y =  0, mat = "_SKY" }
+      { x = 192, y = 16, mat = "_SKY" }
+      { x =   0, y = 16, mat = "_SKY" }
+      { b = 80, delta_z=-16, mat = "_SKY" }
+    }
+
+    {
+      { x =   0, y =  0, mat = "?wall" }
+      { x = 192, y =  0, mat = "?wall" }
+      { x = 192, y = 16, mat = "?wall" }
+      { x =   0, y = 16, mat = "?wall" }
+      { t = 64, mat = "?wall" }
+    }
+  }
+}
+
+
 PREFAB.PICTURE =
 {
   fitted = "xy"
