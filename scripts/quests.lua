@@ -468,7 +468,7 @@ function Quest_assign_room_themes()
   end
 
 
-  local function extent_for_room_kind(kind, A, B, C)
+  local function extent_for_room_kind(kind, A, B)
     local qty = total_of_room_kind(kind)
 
     -- rough calculation of room area per zone
@@ -476,8 +476,7 @@ function Quest_assign_room_themes()
 
         if qty < A then EXTENT_TAB[kind] = 0
     elseif qty < B then EXTENT_TAB[kind] = 1
-    elseif qty < C then EXTENT_TAB[kind] = 2
-    else                EXTENT_TAB[kind] = 3
+    else                EXTENT_TAB[kind] = 2
     end
 
     gui.debugf("EXTENT_TAB[%s] --> %d (qty:%1.1f)\n", kind, EXTENT_TAB[kind], qty)
@@ -485,10 +484,10 @@ function Quest_assign_room_themes()
 
 
   local function determine_extents()
-    extent_for_room_kind("building", 3, 8, 14)
-    extent_for_room_kind("cave",     3, 8, 14)
-    extent_for_room_kind("outdoor",  3, 8, 14)
-    extent_for_room_kind("hallway",  3, 6, 10)
+    extent_for_room_kind("building", 3, 8)
+    extent_for_room_kind("cave",     3, 8)
+    extent_for_room_kind("outdoor",  3, 8)
+    extent_for_room_kind("hallway",  3, 6)
   end
 
 
@@ -512,6 +511,10 @@ function Quest_assign_room_themes()
 
 
   local function dominant_themes_for_kind(kind, extent)
+    if THEME.max_dominant_themes then
+      extent = math.min(extent, THEME.max_dominant_themes)
+    end
+
     -- figure out which table to use
     local tab_name = kind .. "s"
     local tab = THEME[tab_name]
