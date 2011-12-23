@@ -3241,17 +3241,6 @@ DOOM2.LEVEL_THEMES =
     caves     = { Tech2_cave=50 }
     outdoors  = { Tech2_outdoors=50 }
 
-    facades =
-    {
-      STARTAN3=35, STARG2=30, STARTAN2=25, STARG3=18,
-      STARBR2=5, STARGR2=10, STARG1=5, STARG2=5,
-      BROWN1=15, STONE=15, BLAKWAL1=5, BLAKWAL2=5,
-      BROWNGRN=10, BROWN96=8, GRAY5=1, GRAY7=3,
-
-      BRONZE1=5, BRONZE3=10,
-      METAL2=25, STONE2=10, STONE3=10,
-    }
-
     __exit = -- FIXME : move this stuff into a skin
     {
       walls =
