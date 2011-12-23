@@ -1670,6 +1670,62 @@ function Rooms_place_gates()
 end
 
 
+
+function Rooms_allocate_to_edges()
+  -- create fake building pieces in the space between a building and
+  -- the edge of the map.
+
+  local function try_grow_at(S, dir, pass)
+    local N = S:neighbor(dir)
+    assert(N)
+
+    if not (N.room or N.hall or N.scenic) then return end
+
+    if N.grow_pass and N.grow_pass == pass then return end
+
+    S.scenic = N.scenic or N.room or N.hall
+    S.grow_pass = pass
+
+    S.edge_of_map = false
+  end
+
+
+  local function process(pass)
+    for x = 1, SEED_W do for y = 1, SEED_H do
+      local S = SEEDS[x][y]
+
+      if S.hall or S.room or S.scenic then continue end
+
+      local px = x / SEED_W
+      local py = y / (SEED_H-4)
+
+      if S.edge_of_map then
+        local DIRS = {}
+
+        if px < 0.2 then table.insert(DIRS, 6) end
+        if px > 0.8 then table.insert(DIRS, 4) end
+        if py < 0.2 then table.insert(DIRS, 8) end
+        if py > 0.8 then table.insert(DIRS, 2) end
+
+        each dir in DIRS do
+          try_grow_at(S, dir, pass)
+        end
+      end
+    end end
+  end
+
+
+  ---| Rooms_grow_building_at_edges |---
+
+  for pass = 1, 4 do
+    process(pass)
+  end
+
+--- Plan_dump_rooms("Grown Map:")
+end
+
+
+
 function Rooms_build_all()
 
   gui.printf("\n--==| Build Rooms |==--\n\n")
@@ -1685,6 +1741,10 @@ function Rooms_build_all()
   Areas_handle_connections()
   Areas_important_stuff()
   Areas_flesh_out()
+
+  Seed_flood_fill_edges()
+
+  Rooms_allocate_to_edges()
 
   if PARAM.tiled then
     -- this is as far as we go for TILE based games

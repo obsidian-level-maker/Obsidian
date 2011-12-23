@@ -140,7 +140,7 @@ end
 
 
 
-function Seed_flood_fill_edges__OLD()
+function Seed_flood_fill_edges()
   local active = {}
 
   for x = 1,SEED_W do for y = 1,SEED_H do
@@ -150,16 +150,18 @@ function Seed_flood_fill_edges__OLD()
     end
   end end -- for x, y
 
-  while not table.empty(active) do
+  while #active > 0 do
     local new_active = {}
 
-    for _,S in ipairs(active) do for side = 2,8,2 do
-      local N = S:neighbor(side)
-      if N and not N.edge_of_map and not N.free and not N.room and not N.hall then
-        N.edge_of_map = true
-        table.insert(new_active, N)
+    each S in active do
+      for side = 2,8,2 do
+        local N = S:neighbor(side)
+        if N and not N.edge_of_map and not N.free and not N.room and not N.hall then
+          N.edge_of_map = true
+          table.insert(new_active, N)
+        end
       end
-    end end -- for S, side
+    end -- S
 
     active = new_active
   end
