@@ -1345,8 +1345,8 @@ stderrf("TRYING....................\n")
       
       AREA.size = C:seed_volume()
       AREA.rand = gui.random()
-      AREA.min_size = rand.sel(50, 3, 4)
-      AREA.max_size = 20 --!!! math.min(R.svolume * X, Y)
+      AREA.min_size = 4
+      AREA.max_size = math.min(R.svolume * 0.3, 8)
 
       AREA.foobage = C.foobage
 
@@ -1848,6 +1848,43 @@ stderrf("TRYING....................\n")
   end
 
 
+  local function pick_floor_tex(R, A)
+    local source = R.theme.floors or THEME.floors
+
+    if not source then
+      error("missing floor materials in theme")
+    end
+    
+    local tab = table.copy(source)
+
+    -- try hard to prevent two touching areas from having the same floor
+    each name,prob in source do
+      local used = false
+
+      each A2 in A.touching do
+        if A2.floor_mat == name then
+          used = true ; break
+        end
+      end
+
+      if used then
+        tab[name] = tab[name] / 100
+      end
+    end
+
+    A.floor_mat = rand.key_by_probs(tab)
+  end
+
+
+  local function floor_textures(R)
+    if R.kind == "cave" then return end
+
+    each A in R.areas do
+      pick_floor_tex(R, A)
+    end
+  end
+
+
   local function crossover_room(R)
     local hall = R.crossover_hall
 
@@ -1909,6 +1946,8 @@ stderrf("TRYING....................\n")
     end
 
     finish_heights(R)
+
+    floor_textures(R)
 
     hallway_heights(R)
     crossover_room(R)

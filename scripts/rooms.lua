@@ -573,9 +573,9 @@ function Rooms_select_textures()
 
     L.wall_mat = rand.key_by_probs(tab)
 
-    if L.wall_mat == "_FACADE" then
-      L.wall_mat = assert(L.zone.facade_mat)
-    end
+---##  if L.wall_mat == "_FACADE" then
+---##    L.wall_mat = assert(L.zone.facade_mat)
+---##  end
 
     if L.theme.floors then
       L.floor_mat = rand.key_by_probs(L.theme.floors)

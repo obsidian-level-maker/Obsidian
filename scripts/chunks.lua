@@ -935,7 +935,7 @@ function CHUNK_CLASS.build(C)
 
   if C.room then
     w_mat = assert(C.room.wall_mat)
-    f_mat = C.room:pick_floor_mat(f_h)  -- FIXME !!!!!  decide this EARLIER
+    f_mat = (C.area ? C.area.floor_mat ; w_mat)
     c_mat = C.room:pick_ceil_mat()
 
   elseif C.hall then  -- FIXME !!!!!  decide this EARLIER
