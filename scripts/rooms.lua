@@ -1691,7 +1691,20 @@ function Rooms_fill_unused_seeds()
     S.grow_pass = pass
 
     S.edge_of_map = false
-  end
+
+if S.scenic.kind != "outdoor" then
+  local mat
+  if S.scenic.zone then mat = S.scenic.zone.facade_mat end
+  if not mat then mat = S.scenic.facade_mat end
+  if not mat then mat = S.scenic.main_tex end
+  if not mat then mat = "_ERROR" end
+
+  local brush = Brush_new_quad(S.x1, S.y1, S.x2, S.y2)
+  Brush_set_mat(brush, mat)
+  brush_helper(brush)
+end
+
+end
 
 
   local function process(pass)
@@ -1746,6 +1759,10 @@ function Rooms_fill_unused_seeds()
     if not mat then return false end
 
     S.filler = { mat=mat }
+
+local brush = Brush_new_quad(S.x1, S.y1, S.x2, S.y2)
+Brush_set_mat(brush, mat)
+brush_helper(brush)
 
     return true
   end
