@@ -2670,21 +2670,30 @@ DOOM.ROOM_THEMES =
   {
     walls =
     {
-      STARTAN3=60, STARG3=40, STARG3=10,
+      STARTAN3=60
+      STARG3=40
+      STARG3=10
     }
 
     floors =
     {
-      FLOOR4_8=50, FLOOR5_3=30,
-      FLOOR3_3=20, FLOOR0_3=30,
-      SLIME15=10, SLIME16=10,
-      FLAT4=15,
+      FLOOR4_8=50
+      FLOOR5_3=30
+      FLOOR3_3=20
+      FLOOR0_3=30
+      SLIME15=10
+      SLIME16=10
+      FLAT4=15
     }
 
     ceilings =
     {
-      CEIL3_6=20, CEIL3_1=20, FLAT4=20,
-      CEIL4_3=10, CEIL5_2=10, FLAT9=30,
+      CEIL3_6=20,
+      CEIL3_1=20,
+      FLAT4=20,
+      CEIL4_3=10,
+      CEIL5_2=10,
+      FLAT9=30,
     }
   }
 
@@ -2692,21 +2701,29 @@ DOOM.ROOM_THEMES =
   {
     walls =
     {
-      STARTAN2=50, STARBR2=15,
+      STARTAN2=50,
+      STARBR2=15,
     }
 
     floors =
     {
-      FLOOR4_8=50, FLOOR5_3=30,
-      FLOOR3_3=20, FLOOR0_3=30,
-      SLIME15=10, SLIME16=10,
+      FLOOR4_8=50,
+      FLOOR5_3=30,
+      FLOOR3_3=20,
+      FLOOR0_3=30,
+      SLIME15=10,
+      SLIME16=10,
       FLAT4=15,
     }
 
     ceilings =
     {
-      CEIL3_6=20, CEIL3_1=20, FLAT4=20,
-      CEIL4_3=10, CEIL5_2=10, FLAT9=30,
+      CEIL3_6=20,
+      CEIL3_1=20,
+      FLAT4=20,
+      CEIL4_3=10,
+      CEIL5_2=10,
+      FLAT9=30,
     }
   }
 
@@ -2716,21 +2733,28 @@ DOOM.ROOM_THEMES =
 
     walls =
     {
-      STARGR2=50, STARGR1=5
+      STARGR2=50,
     }
 
     floors =
     {
-      FLOOR4_8=50, FLOOR5_3=30,
-      FLOOR3_3=20, FLOOR0_3=30,
-      SLIME15=10, SLIME16=10,
+      FLOOR4_8=50,
+      FLOOR5_3=30,
+      FLOOR3_3=20,
+      FLOOR0_3=30,
+      SLIME15=10,
+      SLIME16=10,
       FLAT4=15,
     }
 
     ceilings =
     {
-      CEIL3_6=20, CEIL3_1=20, FLAT4=20,
-      CEIL4_3=10, CEIL5_2=10, FLAT9=30,
+      CEIL3_5=20,
+      CEIL3_1=20,
+      FLAT4=20,
+      CEIL4_3=10,
+      CEIL5_2=10,
+      FLAT9=30,
     }
   }
 
@@ -2781,8 +2805,10 @@ DOOM.ROOM_THEMES =
   {
     naturals =
     {
-      ASHWALL=50,  ASHWALL4=50,
-      SP_ROCK1=50, GRAYVINE=50,
+      ASHWALL=50,
+      ASHWALL4=50,
+      SP_ROCK1=50,
+      GRAYVINE=50,
       TEKWALL4=3,
     }
   }
@@ -2791,16 +2817,49 @@ DOOM.ROOM_THEMES =
   {
     floors =
     {
-      BROWN1=50, BRICK12=20,
-      SLIME14=20, SLIME16=20,
-      STONE2=40, STONE3=40,
-      FLOOR4_8=10, FLOOR5_4=20,
+      BROWN1=50,
+      BRICK12=20,
+      SLIME14=20,
+      SLIME16=20,
+      STONE3=40,
+      FLOOR4_8=10,
+      FLOOR5_4=20,
     }
 
     naturals =
     {
-      ASHWALL=50,  ASHWALL4=50,
+      ASHWALL=50,
+      ASHWALL4=50,
       SP_ROCK1=50,
+    }
+  }
+
+  Tech2_hallway =
+  {
+    walls =
+    {
+      TEKWALL6 = 50,
+      TEKGREN1 = 50,
+      BROWNPIP = 20,
+      PIPWAL2 = 50,
+      STARGR1 = 10,
+    }
+
+    floors =
+    {
+      FLAT14 = 50,
+      FLAT1 = 20,
+      FLOOR0_2 = 20,
+      FLOOR1_6 = 5,
+    }
+
+    ceilings =
+    {
+      CEIL3_5=30,
+      CEIL3_6=50,
+      CEIL3_1=50,
+      RROCK03=50,
+      TLITE6_5=10
     }
   }
 
@@ -2842,7 +2901,8 @@ DOOM.ROOM_THEMES =
 
     floors =
     {
-      FLAT1=50, MFLR8_1=50,
+      FLAT1=50,
+      MFLR8_1=50,
     }
 
     ceilings =
@@ -2883,7 +2943,8 @@ DOOM.ROOM_THEMES =
 
     ceilings =
     {
-      CEIL1_1=50, FLAT5_1=50,
+      CEIL1_1=50,
+      FLAT5_1=50,
     }
   }
 
@@ -2891,14 +2952,27 @@ DOOM.ROOM_THEMES =
   {
     square_caves = true
 
-    naturals = { ROCK4=50, SP_ROCK1=10 }
+    naturals =
+    {
+      ROCK4=50,
+      SP_ROCK1=10
+    }
   }
 
   Wolf_outdoors =
   {
-    floors = { MFLR8_1=20, FLAT1_1=10, RROCK13=20 }
+    floors =
+    {
+      MFLR8_1=20,
+      FLAT1_1=10,
+      RROCK13=20
+    }
 
-    naturals = { ROCK4=50, SP_ROCK1=10 }
+    naturals =
+    {
+      ROCK4=50,
+      SP_ROCK1=10
+    }
   }
 }
 
@@ -3237,7 +3311,7 @@ DOOM2.LEVEL_THEMES =
                   Tech2_stargrey=10,
                   Tech2_tekgren=20, Tech2_metal2=10,
                 }
---  hallways  = { Tech2_hallway=50 }
+    hallways  = { Tech2_hallway=50 }
     caves     = { Tech2_cave=50 }
     outdoors  = { Tech2_outdoors=50 }
 
