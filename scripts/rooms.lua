@@ -1671,9 +1671,13 @@ end
 
 
 
-function Rooms_allocate_to_edges()
+function Rooms_fill_unused_seeds()
+
+  -- first bit : handle edges
   -- create fake building pieces in the space between a building and
   -- the edge of the map.
+
+  -- second bit : handle stuff in middle
 
   local function try_grow_at(S, dir, pass)
     local N = S:neighbor(dir)
@@ -1715,11 +1719,67 @@ function Rooms_allocate_to_edges()
   end
 
 
-  ---| Rooms_grow_building_at_edges |---
+  local function fill(S)
+    local best_mat
+    local good_mat
+    local bad_mat
+    local worst_mat
+
+    for dir = 2,8,2 do
+      local N = S:neighbor(dir)
+
+      if not N then continue end
+
+      if N.hall then
+        good_mat = N.hall.zone.facade_mat
+      elseif N.room and N.room == "building" then
+        best_mat = N.room.zone.facade_mat or N.room.main_tex
+      elseif N.filler then
+        bad_mat = assert(N.filler.mat)
+      elseif N.room then
+        worst_mat = N.room.zone.facade_mat or N.room.main_tex
+      end
+    end
+
+    local mat = best_mat or good_mat or bad_mat or worst_mat
+
+    if not mat then return false end
+
+    S.filler = { mat=mat }
+
+    return true
+  end
+
+
+  ---| Rooms_fill_unused_seeds |---
 
   for pass = 1, 4 do
     process(pass)
   end
+
+  ----->
+
+  local active = {}
+
+  for x = 1, SEED_W do for y = 1, SEED_H do
+    local S = SEEDS[x][y]
+    if not (S.free or S.room or S.hall or S.scenic) then
+      table.insert(active, S)
+    end
+  end end
+
+  for loop = 1,20 do
+    if #active == 0 then break end
+
+    local new_active = {}
+
+    each S in active do
+      if not fill(S) then
+        table.insert(new_active, S)
+      end
+    end
+  end
+
 
 --- Plan_dump_rooms("Grown Map:")
 end
@@ -1744,7 +1804,7 @@ function Rooms_build_all()
 
   Seed_flood_fill_edges()
 
-  Rooms_allocate_to_edges()
+  Rooms_fill_unused_seeds()
 
   if PARAM.tiled then
     -- this is as far as we go for TILE based games
