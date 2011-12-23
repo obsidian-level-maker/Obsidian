@@ -3334,37 +3334,88 @@ DOOM.ROOM_THEMES =
 
   ---- Miscellaneous ---------------------
 
-  Wolfenstein_room =
+  Wolf_cells =
   {
     walls =
     {
-      ZZWOLF1=40, ZZWOLF11=20, ZZWOLF9=40,
-      ZZWOLF5=30,
+      ZZWOLF9=50
     }
 
     floors =
     {
-      FLAT5_1=50, FLAT1=50, FLAT3=50, FLAT18=30,
-      FLAT1_2=15,
+      FLAT1=50
     }
 
     ceilings =
     {
-      CEIL5_1=30, CEIL5_2=30, CEIL3_5=30,
-      FLAT5_3=10, FLAT5_5=20,
+      FLAT1=50
     }
   }
 
-  Wolfenstein_cave =
+  Wolf_stein =
+  {
+    walls =
+    {
+      ZZWOLF1=50,
+    }
+
+    floors =
+    {
+      FLAT1=50, MFLR8_1=50,
+    }
+
+    ceilings =
+    {
+      FLAT1=50
+    }
+  }
+
+  Wolf_brick =
+  {
+    walls =
+    {
+      ZZWOLF11=50,
+    }
+
+    floors =
+    {
+      FLAT1=50
+    }
+
+    ceilings =
+    {
+      FLAT5_3=30,
+    }
+  }
+
+  Wolf_hall =
+  {
+    walls =
+    {
+      ZZWOLF5=50,
+    }
+
+    floors =
+    {
+      CEIL5_1=50,
+    }
+
+    ceilings =
+    {
+      CEIL1_1=50, FLAT5_1=50,
+    }
+  }
+
+  Wolf_cave =
   {
     square_caves = true
 
     naturals = { ROCK4=50, SP_ROCK1=10 }
   }
 
-  Wolfenstein_outdoors =
+  Wolf_outdoors =
   {
-    floors = { MFLR8_1=20, FLAT1_1=10, RROCK04=20 }
+    floors = { MFLR8_1=20, FLAT1_1=10, RROCK13=20 }
 
     naturals = { ROCK4=50, SP_ROCK1=10 }
   }
@@ -3935,16 +3986,15 @@ DOOM2.LEVEL_THEMES =
   {
     prob = 10,
 
-    buildings = { Wolfenstein_room=50 }
+    max_dominant_themes = 1
 
-    caves = { Wolfenstein_cave=50 }
+    buildings = { Wolf_cells=50, Wolf_brick=30, Wolf_stein=50 }
 
-    outdoors = { Wolfenstein_outdoors=50 }
+    caves = { Wolf_cave=50 }
 
-    facades =
-    {
-      ZZWOLF1=50, ZZWOLF11=40, ZZWOLF9=20,
-    }
+    outdoors = { Wolf_outdoors=50 }
+
+    hallways = { Wolf_hall=50 }
 
     __pictures = { eagle1=50, hitler1=10 }
 
