@@ -1180,12 +1180,23 @@ end
     if LINK and LINK.conn and LINK.conn.lock and LINK.C1 == C then
       local lock = LINK.conn.lock
 
+      local C2 = LINK.C2
+      local L2 = C2.room or C2.hall
+      local L1 = C .room or C .hall
+      assert(L2)
+      assert(L1.wall_mat)
+      assert(L2.wall_mat)
+
       local edge_fabs = Layout_possible_prefab_from_list(THEME.locked_doors, "edge", lock.key, lock.switch)
 
       local name = rand.key_by_probs(edge_fabs)
 
       local skin  = assert(GAME.SKINS[name])
-      local skin2 = { inner=w_matname, outer=w_matname, wall=w_matname }
+
+      local skin2 = { wall = L1.wall_mat, outer = L2.wall_mat }
+
+      if L1.kind == "outdoor" then skin2.wall  = L2.zone.facade_mat or L2.wall_mat end
+      if L2.kind == "outdoor" then skin2.outer = L1.zone.facade_mat or L1.wall_mat end
 
       local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
                                      0, long, 32, 32)
