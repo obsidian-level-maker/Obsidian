@@ -1802,12 +1802,110 @@ brush_helper(brush)
 end
 
 
+function Rooms_do_outdoor_borders()
+
+  local function make_sky_fence(R, S, dir)
+    local skin = R.skin
+    assert(skin)
+
+    local sky_fence_h = assert(R.floor_max_h)
+
+    local skin2 = { sky_h = R.sky_h - sky_fence_h }
+
+stderrf("sky fence at (%d %d) : z (%d %d)\n", S.x1, S.y1, sky_fence_h, R.sky_h)
+    local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, sky_fence_h, dir)
+
+    Fabricate("SKY_FENCE", T, { skin, skin2 })
+  end
+
+
+  local function make_sky_corner(R, S, dir)
+    local skin = R.skin
+    assert(skin)
+
+    local sky_fence_h = assert(R.floor_max_h)
+
+    local skin2 = { sky_h = R.sky_h - sky_fence_h }
+
+        if dir == 9 then dir = 2
+    elseif dir == 1 then dir = 8
+    elseif dir == 7 then dir = 6
+    elseif dir == 3 then dir = 4
+    end
+
+    local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, sky_fence_h, dir)
+
+    Fabricate("SKY_CORNER", T, { skin, skin2 })
+  end
+
+
+  local function handle_spot(R, S, dir)
+    local N = S:neighbor(dir)
+    assert(N)
+
+    if N.room == R then return end
+
+    if N.hall or N.room or N.scenic then return end
+
+    if N.edge_of_map then
+      if geom.is_corner(dir) then
+        make_sky_corner(R, N, dir)
+      else
+        make_sky_fence(R, N, dir)
+      end
+      
+      N.edge_of_map = nil
+      return
+    end
+
+    table.insert(R.fake_buildings, { N=N, dir=dir })
+  end
+
+
+  local function scan_room(R)
+R.sky_h = 1500
+    R.fake_buildings = {}
+
+    for pass = 1,2 do
+      for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
+        local S = SEEDS[sx][sy]
+        
+        if S.room != R then continue end
+
+        if pass == 1 then
+          for dir = 2,8,2 do
+            handle_spot(R, S, dir)
+          end
+        else
+          for dir = 1,9,2 do if dir != 5 then
+            handle_spot(R, S, dir)
+          end end
+        end
+
+      end end
+    end
+  end
+
+
+  ---| Rooms_do_outdoor_borders |---
+
+  each R in LEVEL.rooms do
+    if R.kind == "outdoor" then
+      scan_room(R)
+    end
+  end
+end
+
+
+
 
 function Rooms_build_all()
 
   gui.printf("\n--==| Build Rooms |==--\n\n")
 
   gui.prog_step("Rooms");
+
+  Seed_flood_fill_edges()
 
   Rooms_select_textures()
 
@@ -1819,9 +1917,7 @@ function Rooms_build_all()
   Areas_important_stuff()
   Areas_flesh_out()
 
-  Seed_flood_fill_edges()
-
-  Rooms_fill_unused_seeds()
+  Rooms_do_outdoor_borders()
 
   if PARAM.tiled then
     -- this is as far as we go for TILE based games

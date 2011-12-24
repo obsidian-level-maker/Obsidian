@@ -145,6 +145,9 @@ function Seed_flood_fill_edges()
 
   for x = 1,SEED_W do for y = 1,SEED_H do
     local S = SEEDS[x][y]
+    if S.room or S.hall or S.scenic then
+      S.edge_of_map = nil
+    end
     if S.edge_of_map then
       table.insert(active, S)
     end

@@ -273,6 +273,7 @@ function CHUNK_CLASS.against_map_edge(C, dir)
 
   for sx = sx1,sx2 do for sy = sy1,sy2 do
     if SEEDS[sx][sy].free then return true end
+--#  if SEEDS[sx][sy].edge_of_map then return true end
   end end
 
   return false
@@ -1135,12 +1136,11 @@ function CHUNK_CLASS.build(C)
       elseif (C.hall and C.hall.street) or
              (C.room and C.room.kind == "outdoor")
       then
-        -- only build wall at edge of map
-        -- (allow building walls to show through)
+        -- only build walls at edge of map
+        -- (otherwise allow building walls to show through)
         if C:against_map_edge(dir) then
-          brush = Brush_new_quad(bx1, by1, bx2, by2)
-          Brush_set_tex(brush, w_mat.t)
-          raw_add_brush(brush)
+--[[
+--]]
         else
           wall_deep = 0
         end
