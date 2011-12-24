@@ -922,10 +922,6 @@ function CHUNK_CLASS.build(C)
   local x2, y2 = C.x2, C.y2
 
 
-  -- !!!!!!! testing junk
-  if C.hall then f_h = f_h + rand.irange(-11,11) end
-
-
   -- Spot stuff : begin with "clear" rectangle (contents = 0).
   --              walls and high barriers get removed (contents = 1)
   --              as well as other unusable places (contents = 2).
