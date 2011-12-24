@@ -2870,6 +2870,145 @@ DOOM.ROOM_THEMES =
 
   ---- Urban / City / Earth ---------------------
 
+  Urban_panel =
+  {
+    walls =
+    {
+      PANEL6 = 50
+      PANEL8 = 50
+      PANEL3 = 50
+    }
+
+    floors =
+    {
+      FLAT1 = 50
+    }
+
+    ceilings =
+    {
+      FLAT1 = 50
+    }
+  }
+
+  Urban_bigbrik =
+  {
+    walls =
+    {
+      BIGBRIK1 = 50
+      BIGBRIK2 = 50
+    }
+
+    floors =
+    {
+      FLAT1 = 50
+    }
+
+    ceilings =
+    {
+      FLAT1 = 50
+    }
+  }
+
+  Urban_brick =
+  {
+    walls =
+    {
+      BRICK5  = 50
+      BRICK7  = 30
+      BRICK9  = 20
+      BRICK12 = 30
+      BRICK11 = 3
+    }
+
+    floors =
+    {
+      FLAT1 = 50
+    }
+
+    ceilings =
+    {
+      FLAT1 = 50
+    }
+  }
+
+  Urban_stone =
+  {
+    walls =
+    {
+      STONE2 = 50
+      STONE3 = 50
+    }
+
+    floors =
+    {
+      FLAT1 = 50
+    }
+
+    ceilings =
+    {
+      FLAT1 = 50
+    }
+  }
+
+  Urban_hallway =
+  {
+    walls =
+    {
+      BIGBRIK1 = 50
+      BIGBRIK2 = 50
+      BRICK10  = 50
+      BRICK11  = 10
+      WOOD9    = 50
+      PANEL1   = 50
+      PANEL7   = 30
+      STUCCO3  = 30
+    }
+
+    floors =
+    {
+      FLAT5_1 = 50
+      FLAT8   = 50
+      FLAT5_4 = 50
+      MFLR8_1 = 50
+    }
+
+    ceilings =
+    {
+      CEIL1_1 = 30
+      MFLR8_1 = 50
+      FLAT1   = 30
+    }
+  }
+
+  Urban_cave =
+  {
+    naturals =
+    {
+      ASHWALL  = 50
+      ASHWALL4 = 50
+      BSTONE1  = 15
+      ZIMMER5  = 15
+      ROCK3    = 70
+    }
+  }
+
+  Urban_outdoors =
+  {
+    floors =
+    {
+      STONE = 50
+      FLAT5_2 = 50
+    }
+
+    naturals =
+    {
+      ASHWALL  = 50
+      ASHWALL4 = 50
+      BSTONE1  = 15
+      ZIMMER5  = 15
+      ROCK3    = 70
+    }
+  }
 
 
   ---- Miscellaneous ---------------------
@@ -3486,19 +3625,11 @@ DOOM2.LEVEL_THEMES =
 
     liquids = { water=90, slime=40, lava=20, blood=7, nukage=2 }
 
-    buildings = { Urban_room=50 }
+    buildings = { Urban_panel=20, Urban_brick=50, Urban_bigbrik=50,
+                  Urban_stone=60 }
+    hallways  = { Urban_hallway=50 }
     caves     = { Urban_cave=50 }
     outdoors  = { Urban_outdoors=50 }
-
-    facades =
-    {
-      BIGBRIK1=35, BIGBRIK2=35, BRICK1=15, BROVINE2=5,
-      BLAKWAL1=25, BLAKWAL2=25, BRWINDOW=10, BROWNGRN=4,
-      BRICK5=10, BRICK7=35, BRICK8=5, BRICK2=10, GRAY7=3,
-      BRICK10=5, BRICK11=8, BRICK12=8, BRICK4=10, METAL2=3,
-      STONE3=15, STONE2=15, STUCCO=5, BRONZE1=5, BRONZE3=5,
-      BRICK6=10, BRICK9=10,
-    }
 
     __logos = { carve=40, pill=25, neon=50 }
 
@@ -4680,7 +4811,7 @@ UNFINISHED["doom_flesh"] =
 }
 
 
-UNFINISHED["doom_urban"] =
+OB_THEMES["doom_urban"] =
 {
   label = "Urban"
   priority = 6
