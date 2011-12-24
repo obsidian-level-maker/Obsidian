@@ -2841,7 +2841,7 @@ DOOM.ROOM_THEMES =
       TEKWALL6 = 50,
       TEKGREN1 = 50,
       BROWNPIP = 20,
-      PIPWAL2 = 50,
+      PIPEWAL2 = 50,
       STARGR1 = 10,
     }
 
