@@ -1345,8 +1345,8 @@ stderrf("TRYING....................\n")
       
       AREA.size = C:seed_volume()
       AREA.rand = gui.random()
-      AREA.min_size = 4
-      AREA.max_size = math.min(R.svolume * 0.3, 8)
+      AREA.min_size = 7
+      AREA.max_size = 24
 
       AREA.foobage = C.foobage
 
