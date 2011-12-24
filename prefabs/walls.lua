@@ -46,7 +46,7 @@ PREFAB.SKY_FENCE =
       { x = 192, y =  0, mat = "_SKY" }
       { x = 192, y = 16, mat = "_SKY" }
       { x =   0, y = 16, mat = "_SKY" }
-      { b = 380, delta_z=-16, mat = "_SKY" }
+      { b = 80, delta_z=-16, mat = "_SKY" }
     }
 
     {
@@ -66,11 +66,6 @@ PREFAB.SKY_FENCE =
       { b = "?sky_h", mat = "_SKY" }
     }
   }
-
-  entities =
-  {
-    { x = 96, y = 96, z = 100, ent = "potion" }
-  }
 }
 
 
@@ -88,7 +83,7 @@ PREFAB.SKY_CORNER =
       { x = 192, y = 192, mat = "_SKY" }
       { x =   0, y = 192, mat = "_SKY" }
       { x =   0, y = 176, mat = "_SKY" }
-      { b = 380, delta_z=-16, mat = "_SKY" }
+      { b = 80, delta_z=-16, mat = "_SKY" }
     }
 
     {

@@ -1812,7 +1812,6 @@ function Rooms_do_outdoor_borders()
 
     local skin2 = { sky_h = R.sky_h - sky_fence_h }
 
-stderrf("sky fence at (%d %d) : z (%d %d)\n", S.x1, S.y1, sky_fence_h, R.sky_h)
     local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, sky_fence_h, dir)
 
     Fabricate("SKY_FENCE", T, { skin, skin2 })
@@ -1863,7 +1862,6 @@ stderrf("sky fence at (%d %d) : z (%d %d)\n", S.x1, S.y1, sky_fence_h, R.sky_h)
 
 
   local function scan_room(R)
-R.sky_h = 1500
     R.fake_buildings = {}
 
     for pass = 1,2 do
