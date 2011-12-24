@@ -2701,8 +2701,8 @@ DOOM.ROOM_THEMES =
   {
     walls =
     {
-      STARTAN2=50,
-      STARBR2=15,
+      STARTAN2 = 50
+      STARBR2  = 40
     }
 
     floors =
