@@ -1440,7 +1440,7 @@ function Plan_expand_rooms()
     -- Note: we deliberately don't try every possibility
     --       (allow some free space for traps or secrets)
 
-    for loop = 1,MAP_W do
+    for loop = 1,10 do
       rand.shuffle(visits)
 
       each K in visits do
@@ -1744,6 +1744,8 @@ function Plan_dump_rooms(title, match_kind)
   local function seed_to_char(sx, sy)
     local S = SEEDS[sx][sy]
 
+    if S.edge_of_map then return "/" end
+
     if S.section and S.section.hall then return "#" end
 
     local R = S.room
@@ -1754,7 +1756,7 @@ function Plan_dump_rooms(title, match_kind)
 
     local n = 1 + ((R.id - 1) % 26)
 
-    if R.shape == "odd" then --!!! R.kind == (match_kind or "outdoor") then
+    if R.kind == "outdoor" then
       return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
     else
       return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
