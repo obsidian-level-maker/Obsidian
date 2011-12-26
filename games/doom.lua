@@ -2866,6 +2866,90 @@ DOOM.ROOM_THEMES =
 
   ----- Hell / Gothic -------------------------
 
+  Hell2_hotbrick =
+  {
+    walls =
+    {
+      SP_HOT1 = 50
+    }
+
+    floors =
+    {
+      FLAT10   = 50
+      FLOOR7_1 = 50
+    }
+
+    ceilings =
+    {
+      FLOOR6_1 = 20
+      FLOOR6_2 = 20
+    }
+  }
+
+  Hell2_marble =
+  {
+    walls =
+    {
+      MARBLE2 = 50
+    }
+
+    floors =
+    {
+      FLAT10   = 50
+      FLOOR7_1 = 50
+    }
+
+    ceilings =
+    {
+      FLOOR6_1 = 20
+      FLOOR6_2 = 20
+    }
+  }
+
+  Hell2_hallway =
+  {
+    walls =
+    {
+      MARBGRAY = 80
+      GSTVINE1 = 40
+      GSTVINE2 = 40
+    }
+
+    floors =
+    {
+      FLAT1 = 50
+    }
+
+    ceilings =
+    {
+      FLAT1 = 50
+    }
+  }
+
+  Hell2_cave =
+  {
+    naturals =
+    {
+      ROCKRED1 = 50
+      SP_ROCK1 = 25
+      GSTVINE2 = 25
+    }
+  }
+
+  Hell2_outdoors =
+  {
+    floors =
+    {
+      BROWN1=50,
+    }
+
+    naturals =
+    {
+      ROCKRED1 = 50
+      SP_ROCK1 = 30
+      ASHWALL4 = 50
+    }
+  }
 
 
   ---- Urban / City / Earth ---------------------
@@ -3546,13 +3630,14 @@ DOOM2.LEVEL_THEMES =
   {
     prob = 50,
 
-    liquids = { lava=30, blood=90, nukage=5 }
+    liquids = { lava=90, blood=40, nukage=5 }
 
     keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
 
-    buildings = { D2_Marble_room=50 }
-    outdoors  = { D2_Marble_outdoors=50 }
-    caves     = { D2_Hell_cave=50 }
+    buildings = { Hell2_hotbrick=50, Hell2_marble=50 }
+    hallways  = { Hell2_hallway=50 }
+    outdoors  = { Hell2_outdoors=50 }
+    caves     = { Hell2_cave=50 }
 
     FIXME_switch_doors = { Door_pink = 50, Door_vine = 50 }
 
@@ -3579,11 +3664,11 @@ DOOM2.LEVEL_THEMES =
   }
 
 
-  doom_hell2 =
+  Hmmm_doom_hell2 =
   {
     prob = 25,
 
-    liquids = { lava=90, blood=40, slime=10 }
+    liquids = { lava=40, blood=90, slime=10 }
 
     keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
 
@@ -4792,7 +4877,7 @@ UNFINISHED["doom_deimos"] =
   mixed_prob = 30
 }
 
-UNFINISHED["doom_hell"] =
+OB_THEMES["doom_hell"] =
 {
   label = "Hell"
   priority = 4
