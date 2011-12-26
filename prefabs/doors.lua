@@ -131,6 +131,102 @@ PREFAB.ARCH2 =  -- BORKED : NEED WALK BRUSHES
 }
 
 
+PREFAB.FAT_ARCH1 =
+{
+  fitted = "xy"
+
+  defaults =
+  {
+    outer = "?wall"
+  }
+
+  brushes =
+  {
+    -- floor
+    {
+      { x =  24, y =   0, mat = "?floor" }
+      { x = 192, y =   0, mat = "?floor" }
+      { x = 192, y = 192, mat = "?floor" }
+      { x =  24, y = 192, mat = "?floor" }
+      { t = 0, mat = "?floor" }
+    }
+
+    -- left picture (FIXME)
+    {
+      { x =  0, y =   0, mat = "?wall" }
+      { x = 24, y =   0, mat = "?wall" }
+      { x = 24, y = 192, mat = "?outer" }
+      { x =  0, y = 192, mat = "?outer" }
+    }
+
+    -- right picture (FIXME)
+    {
+      { x = 168, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?outer" }
+      { x = 192, y = 192, mat = "?outer" }
+      { x = 168, y = 192, mat = "?wall"  }
+    }
+
+    -- curved ceiling
+    {
+      { x = 24, y =   0, mat = "?wall" }
+      { x = 44, y =   0, mat = "?wall" }
+      { x = 44, y = 192, mat = "?wall"  }
+      { x = 24, y = 192, mat = "?outer" }
+      { b = 128, mat = "?wall" }
+    }
+
+    {
+      { x = 44, y =   0, mat = "?wall" }
+      { x = 64, y =   0, mat = "?wall" }
+      { x = 64, y = 192, mat = "?wall"  }
+      { x = 44, y = 192, mat = "?outer" }
+      { b = 176, mat = "?wall" }
+    }
+
+    {
+      { x = 64, y =   0, mat = "?wall" }
+      { x = 84, y =   0, mat = "?wall" }
+      { x = 84, y = 192, mat = "?wall"  }
+      { x = 72, y = 192, mat = "?outer" }
+      { b = 208, mat = "?wall" }
+    }
+
+    {
+      { x =  84, y =   0, mat = "?wall" }
+      { x = 108, y =   0, mat = "?wall" }
+      { x = 108, y = 192, mat = "?wall"  }
+      { x =  84, y = 192, mat = "?outer" }
+      { b = 224, mat = "?wall" }
+    }
+
+    {
+      { x = 108, y =   0, mat = "?wall" }
+      { x = 128, y =   0, mat = "?wall" }
+      { x = 128, y = 192, mat = "?wall"  }
+      { x = 128, y = 192, mat = "?outer" }
+      { b = 208, mat = "?wall" }
+    }
+
+    {
+      { x = 128, y =   0, mat = "?wall" }
+      { x = 148, y =   0, mat = "?wall" }
+      { x = 148, y = 192, mat = "?wall"  }
+      { x = 128, y = 192, mat = "?outer" }
+      { b = 176, mat = "?wall" }
+    }
+
+    {
+      { x = 148, y =   0, mat = "?wall" }
+      { x = 168, y =   0, mat = "?wall" }
+      { x = 168, y = 192, mat = "?wall"  }
+      { x = 148, y = 192, mat = "?outer" }
+      { b = 128, mat = "?wall" }
+    }
+  }
+}
+
+
 PREFAB.QUAKE_ARCH =  -- BORKED : NEED WALK BRUSHES
 {
   fitted = "xy"
