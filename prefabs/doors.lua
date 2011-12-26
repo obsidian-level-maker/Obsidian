@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2010 Andrew Apted
+--  Copyright (C) 2010-2011 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -151,7 +151,7 @@ PREFAB.FAT_ARCH1 =
       { t = 0, mat = "?floor" }
     }
 
-    -- left picture (FIXME)
+    -- left side
     {
       { x =  0, y =   0, mat = "?wall" }
       { x = 24, y =   0, mat = "?wall" }
@@ -159,7 +159,7 @@ PREFAB.FAT_ARCH1 =
       { x =  0, y = 192, mat = "?outer" }
     }
 
-    -- right picture (FIXME)
+    -- right side
     {
       { x = 168, y =   0, mat = "?wall" }
       { x = 192, y =   0, mat = "?outer" }
@@ -173,55 +173,55 @@ PREFAB.FAT_ARCH1 =
       { x = 44, y =   0, mat = "?wall" }
       { x = 44, y = 192, mat = "?wall"  }
       { x = 24, y = 192, mat = "?outer" }
-      { b = 128, mat = "?wall" }
+      { b = 96, mat = "?wall" }
     }
 
     {
       { x = 44, y =   0, mat = "?wall" }
       { x = 64, y =   0, mat = "?wall" }
       { x = 64, y = 192, mat = "?wall"  }
-      { x = 44, y = 192, mat = "?outer" }
-      { b = 176, mat = "?wall" }
+      { x = 44, y = 192, mat = "?wall" }
+      { b = 128, mat = "?wall" }
     }
 
     {
       { x = 64, y =   0, mat = "?wall" }
       { x = 84, y =   0, mat = "?wall" }
       { x = 84, y = 192, mat = "?wall"  }
-      { x = 72, y = 192, mat = "?outer" }
-      { b = 208, mat = "?wall" }
+      { x = 64, y = 192, mat = "?wall" }
+      { b = 156, mat = "?wall" }
     }
 
     {
       { x =  84, y =   0, mat = "?wall" }
       { x = 108, y =   0, mat = "?wall" }
       { x = 108, y = 192, mat = "?wall"  }
-      { x =  84, y = 192, mat = "?outer" }
-      { b = 224, mat = "?wall" }
+      { x =  84, y = 192, mat = "?wall" }
+      { b = 164, mat = "?wall" }
     }
 
     {
       { x = 108, y =   0, mat = "?wall" }
       { x = 128, y =   0, mat = "?wall" }
       { x = 128, y = 192, mat = "?wall"  }
-      { x = 128, y = 192, mat = "?outer" }
-      { b = 208, mat = "?wall" }
+      { x = 108, y = 192, mat = "?wall" }
+      { b = 156, mat = "?wall" }
     }
 
     {
       { x = 128, y =   0, mat = "?wall" }
       { x = 148, y =   0, mat = "?wall" }
       { x = 148, y = 192, mat = "?wall"  }
-      { x = 128, y = 192, mat = "?outer" }
-      { b = 176, mat = "?wall" }
+      { x = 128, y = 192, mat = "?wall" }
+      { b = 128, mat = "?wall" }
     }
 
     {
       { x = 148, y =   0, mat = "?wall" }
       { x = 168, y =   0, mat = "?wall" }
       { x = 168, y = 192, mat = "?wall"  }
-      { x = 148, y = 192, mat = "?outer" }
-      { b = 128, mat = "?wall" }
+      { x = 148, y = 192, mat = "?wall" }
+      { b = 96, mat = "?wall" }
     }
   }
 }

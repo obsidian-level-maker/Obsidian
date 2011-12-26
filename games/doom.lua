@@ -1899,6 +1899,14 @@ DOOM.SKINS =
     _deep   = 64
   }
 
+  Fat_Arch1 =
+  {
+    _prefab = "FAT_ARCH1"
+    _where  = "chunk"
+
+    pic = "SW1SATYR"    
+  }
+
 
   ----| DOORS |----
 
