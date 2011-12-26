@@ -846,6 +846,21 @@ function CHUNK_CLASS.unpack_parts(C, filter_field)
 end
 
 
+function CHUNK_CLASS.inner_outer_mat(C, L1, L2)
+  assert(L1)
+  assert(L2)
+
+  assert(L1.wall_mat)
+  assert(L2.wall_mat)
+
+  local skin2 = { wall = L1.wall_mat, outer = L2.wall_mat }
+
+  if L1.kind == "outdoor" then skin2.wall  = L2.zone.facade_mat or L2.wall_mat end
+  if L2.kind == "outdoor" then skin2.outer = L1.zone.facade_mat or L1.wall_mat end
+
+  return skin2
+end
+
 
 function CHUNK_CLASS.build_scenic(C)
   if C.prefab_skin then
@@ -876,12 +891,37 @@ function CHUNK_CLASS.build_scenic(C)
 end
 
 
+function CHUNK_CLASS.build_fat_arch(C)
+  
+  local LINK, dir
+  for s = 2,8,2 do
+    if C.link[s] then LINK = C.link[s] ; dir = s ; break end
+  end
+  assert(dir)
+
+  local L1 = LINK.C1.room or LINK.C1.hall
+  local L2 = LINK.C2.room or LINK.C2.hall
+  
+  local skin1 = GAME.SKINS["Fat_Arch1"]  -- FIXME
+  local skin2 = C:inner_outer_mat(L1, L2)
+
+  local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, dir)
+
+  Fabricate(skin1._prefab, T, { skin1, skin2 })
+end
+
 
 function CHUNK_CLASS.build(C)
   if C.scenic then
     C:build_scenic()
     return
   end
+
+if C.hall and #C.hall.sections == 1 and GAME.SKINS.Fat_Arch1 then
+  C:build_fat_arch()
+  return
+end
+
 
   -- Ugh dirty hack
   if C.room and C.room.kind == "cave" and C.filler then return end
@@ -1184,8 +1224,6 @@ end
       local L2 = C2.room or C2.hall
       local L1 = C .room or C .hall
       assert(L2)
-      assert(L1.wall_mat)
-      assert(L2.wall_mat)
 
       local edge_fabs = Layout_possible_prefab_from_list(THEME.locked_doors, "edge", lock.key, lock.switch)
 
@@ -1193,10 +1231,7 @@ end
 
       local skin  = assert(GAME.SKINS[name])
 
-      local skin2 = { wall = L1.wall_mat, outer = L2.wall_mat }
-
-      if L1.kind == "outdoor" then skin2.wall  = L2.zone.facade_mat or L2.wall_mat end
-      if L2.kind == "outdoor" then skin2.outer = L1.zone.facade_mat or L1.wall_mat end
+      local skin2 = C:inner_outer_mat(L1, L2)
 
       local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
                                      0, long, 32, 32)
