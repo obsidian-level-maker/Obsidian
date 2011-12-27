@@ -99,6 +99,8 @@ function Seed_init(map_W, map_H, free_W, free_H)
   SEED_W = W
   SEED_H = H
 
+  SEED_TOP = map_H
+
   SEEDS = table.array_2D(SEED_W, SEED_H)
 
   BASE_X = 0

@@ -917,10 +917,11 @@ function CHUNK_CLASS.build(C)
     return
   end
 
+--[[
 if C.hall and #C.hall.sections == 1 and GAME.SKINS.Fat_Arch1 then
   C:build_fat_arch()
   return
-end
+end --]]
 
 
   -- Ugh dirty hack

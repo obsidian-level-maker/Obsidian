@@ -1804,6 +1804,62 @@ end
 
 function Rooms_do_outdoor_borders()
 
+  local function fake_building_from_spot(sx, sy, dir)
+    local S = SEEDS[sx][sy]
+
+    if not S.edge_of_map then return end
+
+    local B
+    local count
+
+    -- look for a building near the edge
+    for i = 1,3 do
+      local N = S:neighbor(dir, i)
+
+      if not N then return end
+
+      if N.hall then B = N.hall ; count = i ; break end
+
+      if N.room then
+        if N.room.kind == "outdoor" then return end
+
+        B = N.room ; count = i ; break
+      end
+
+      if not N.edge_of_map then return end
+    end
+
+    -- no building found?
+    if not B then return end
+
+    local mat = assert(B.zone.facade_mat or B.wall_mat)
+
+    for i = 1,count do
+      local N = S:neighbor(dir, i-1)
+      
+      N.edge_of_map = nil
+
+      -- temp crud
+      local brush = Brush_new_quad(N.x1, N.y1, N.x2, N.y2)
+      Brush_set_mat(brush, mat)
+      brush_helper(brush)
+    end
+  end
+
+
+  local function fake_buildings_at_edge()
+    for sx = 1, SEED_W do
+      fake_building_from_spot(sx, 1, 8)
+      fake_building_from_spot(sx, SEED_TOP, 2)
+    end
+
+    for sy = 1, SEED_TOP do
+      fake_building_from_spot(1, sy, 6)
+      fake_building_from_spot(SEED_W, sy, 4)
+    end
+  end
+
+
   local function make_sky_fence(R, S, dir)
     local skin = R.skin
     assert(skin)
@@ -1887,6 +1943,10 @@ function Rooms_do_outdoor_borders()
 
   ---| Rooms_do_outdoor_borders |---
 
+  fake_buildings_at_edge()
+
+do return end
+
   each R in LEVEL.rooms do
     if R.kind == "outdoor" then
       scan_room(R)
@@ -1905,6 +1965,8 @@ function Rooms_build_all()
 
   Seed_flood_fill_edges()
 
+  Plan_dump_rooms("Edges")
+
   Rooms_select_textures()
 
 ---!!!  Rooms_setup_symmetry()
@@ -1916,6 +1978,8 @@ function Rooms_build_all()
   Areas_flesh_out()
 
   Rooms_do_outdoor_borders()
+
+  Plan_dump_rooms("Edges2")
 
   if PARAM.tiled then
     -- this is as far as we go for TILE based games
