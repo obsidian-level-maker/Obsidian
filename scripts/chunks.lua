@@ -1078,7 +1078,7 @@ end --]]
 
     Fabricate(skin._prefab, T, { skin0, skin, skin2 })
 
-  else
+  elseif not (C.room and C.room.kind == "cave") then
     f_mat = Mat_lookup(f_matname)
     f_tex = f_mat.f or f_mat.t
 
