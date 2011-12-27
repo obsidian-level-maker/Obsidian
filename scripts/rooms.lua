@@ -1671,6 +1671,20 @@ end
 
 
 
+function ROOM_CLASS.add_cage_or_trap(R, fab)
+  local spots = Fab_read_spots(fab)
+
+  each spot in spots do
+    if spot.kind == "cage" then
+      table.insert(R.cage_spots, spot)
+    elseif spot.kind == "trap" then
+      table.insert(R.trap_spots, spot)
+    end
+  end
+end
+
+
+
 function Rooms_fill_unused_seeds()
 
   -- first bit : handle edges
@@ -1825,7 +1839,10 @@ mat = rand.pick { "COMPBLUE", "SFALL1", "DBRAIN1",
       local f_h = R.sky_h - 192
       local skin2 = { sky_h=R.sky_h - f_h, wall=mat }
       local T = Trans.box_transform(x1, y1, x2, y2, f_h, 10 - dir)
-      Fabricate(skin1._prefab, T, { skin1, skin2 })
+
+      local fab = Fabricate(skin1._prefab, T, { skin1, skin2 })
+
+      R:add_cage_or_trap(fab)
       return
     end
   end

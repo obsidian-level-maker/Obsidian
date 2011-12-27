@@ -1810,7 +1810,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
       if STYLE.mon_variety == "none" and not LEVEL.global_pal[mon] then continue end
 
-      if not mon_fits(mon, spot) then continue end
+      if mon_fits(mon, spot) <= 0 then continue end
 
       -- prefer monsters not in the room palette
       if room_pal[mon] then prob = prob / 100 end
@@ -1879,7 +1879,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     local used_mons = {}
 
-    for _,spot in ipairs(spot_list) do
+    each spot in spot_list do
       local mon = decide_cage_monster(enviro, spot, room_pal, used_mons)
 
       if mon then
