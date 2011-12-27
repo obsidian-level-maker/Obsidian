@@ -1802,6 +1802,27 @@ brush_helper(brush)
 end
 
 
+
+function Rooms_fake_building(sx1, sy1, sx2, sy2, dir, B, faces_room)
+  local x1 = SEEDS[sx1][sy1].x1
+  local y1 = SEEDS[sx1][sy1].y1
+
+  local x2 = SEEDS[sx2][sy2].x2
+  local y2 = SEEDS[sx2][sy2].y2
+
+  local mat = assert(B.zone.facade_mat or B.wall_mat)
+--[[
+mat = rand.pick { "COMPBLUE", "SFALL1", "DBRAIN1",
+                  "COMPSPAN", "ASHWALL7", "SILVER2",
+                  "ZIMMER8",  "TEKBRON1", "BRICK11", "LITE3" }
+--]]
+  local brush = Brush_new_quad(x1, y1, x2, y2)
+  Brush_set_mat(brush, mat)
+  brush_helper(brush)
+end
+
+
+
 function Rooms_do_outdoor_borders()
 
   local function fake_building_from_spot(sx, sy, dir)
@@ -1832,17 +1853,12 @@ function Rooms_do_outdoor_borders()
     -- no building found?
     if not B then return end
 
-    local mat = assert(B.zone.facade_mat or B.wall_mat)
-
     for i = 1,count do
       local N = S:neighbor(dir, i-1)
       
       N.edge_of_map = nil
 
-      -- temp crud
-      local brush = Brush_new_quad(N.x1, N.y1, N.x2, N.y2)
-      Brush_set_mat(brush, mat)
-      brush_helper(brush)
+      Rooms_fake_building(N.sx, N.sy, N.sx, N.sy, geom.LEFT[dir], B, false)
     end
   end
 
@@ -1904,11 +1920,11 @@ function Rooms_do_outdoor_borders()
 
     if N.edge_of_map then
       if geom.is_corner(dir) then
-        make_sky_corner(R, N, dir)
+--!!!!  make_sky_corner(R, N, dir)
       else
-        make_sky_fence(R, N, dir)
+--!!!!  make_sky_fence(R, N, dir)
       end
-      
+
       N.edge_of_map = nil
       return
     end
@@ -1931,12 +1947,141 @@ function Rooms_do_outdoor_borders()
             handle_spot(R, S, dir)
           end
         else
-          for dir = 1,9,2 do if dir != 5 then
-            handle_spot(R, S, dir)
-          end end
+---          for dir = 1,9,2 do if dir != 5 then
+---            handle_spot(R, S, dir)
+---          end end
         end
 
       end end
+    end
+  end
+
+
+  local function touches_start(list, info)
+    local T = list[1]
+
+    if geom.is_vert(T.dir) then
+      return (info.N.sy == T.N.sy) and
+             (info.N.sx == T.N.sx - 1)
+    else
+      return (info.N.sx == T.N.sx) and
+             (info.N.sy == T.N.sy - 1)
+    end
+  end
+
+
+  local function touches_end(list, info)
+    local T = list[#list]
+
+    if geom.is_vert(T.dir) then
+      return (info.N.sy == T.N.sy) and
+             (info.N.sx == T.N.sx + 1)
+    else
+      return (info.N.sx == T.N.sx) and
+             (info.N.sy == T.N.sy + 1)
+    end
+  end
+
+
+  local function collect_fake_row(R)
+    -- find a group of touching seeds which would become a fake building
+
+    if table.empty(R.fake_buildings) then return nil end
+
+    local list = {}
+    local dir
+
+    list[1] = table.remove(R.fake_buildings)
+
+    local added
+
+    repeat
+      added = false
+
+      for index = #R.fake_buildings, 1, -1 do
+        local info = R.fake_buildings[index]
+
+        if info.dir != list[1].dir then continue end
+
+        if touches_start(list, info) then
+          table.remove(R.fake_buildings, index)
+          table.insert(list, 1, info)
+          added = true
+        elseif touches_end(list, info) then
+          table.remove(R.fake_buildings, index)
+          table.insert(list, info)
+          added = true
+        end
+      end
+
+    until not added
+
+    return list
+  end
+
+
+  local function building_on_side_of_row(row, sx1, sy1, sx2, sy2, delta)
+    local sx, sy
+    local dir = row[1].dir  -- dir faces out of room
+
+    if geom.is_vert(dir) then
+      sx = (delta < 0 ? sx1 - 1 ; sx2 + 1)
+      sy = sy1
+    else
+      sx = sx1
+      sy = (delta < 0 ? sy1 - 1 ; sy2 + 1)
+    end
+
+    if Seed_valid(sx, sy) then
+      local S = SEEDS[sx][sy]
+
+      if S.room then return S.room end
+      if S.hall then return S.hall end
+    end
+
+    -- try behind it
+    if geom.is_vert(dir) then
+      sx = (delta < 0 ? sx1 ; sx2)
+      sy = sy1
+    else
+      sx = sx1
+      sy = (delta < 0 ? sy1 ; sy2)
+    end
+
+    sx, sy = geom.nudge(sx, sy, dir)
+
+    if Seed_valid(sx, sy) then
+      local S = SEEDS[sx][sy]
+
+      if S.room then return S.room end
+      if S.hall then return S.hall end
+    end
+
+    return nil
+  end
+
+
+  local function make_the_fake(R)
+    while not table.empty(R.fake_buildings) do
+      local row = collect_fake_row(R)
+      assert(row)
+
+      local dir = 10 - row[1].dir
+
+      local sx1 = row[1].N.sx
+      local sy1 = row[1].N.sy
+
+      local sx2 = row[#row].N.sx
+      local sy2 = row[#row].N.sy
+
+      assert(sx1 <= sx2)
+      assert(sy1 <= sy2)
+
+      -- look for a building on each side
+      local B = building_on_side_of_row(row, sx1, sy1, sx2, sy2, -1) or
+                building_on_side_of_row(row, sx1, sy1, sx2, sy2,  1)
+
+      Rooms_fake_building(sx1, sy1, sx2, sy2, dir, B or R, true)
     end
   end
 
@@ -1945,15 +2090,13 @@ function Rooms_do_outdoor_borders()
 
   fake_buildings_at_edge()
 
-do return end
-
   each R in LEVEL.rooms do
     if R.kind == "outdoor" then
       scan_room(R)
+      make_the_fake(R)
     end
   end
 end
-
 
 
 
