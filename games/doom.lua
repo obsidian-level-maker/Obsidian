@@ -2434,6 +2434,18 @@ DOOM.SKINS =
   }
 
 
+  ---| CAGES |---
+
+  Fat_Cage1 =
+  {
+    _prefab = "FAT_CAGE1"
+    _where  = "chunk"
+
+    rail = "MIDBARS3"    
+  }
+
+
+
   ---| PICTURES |---
 
   Pic_Chrissy1 =

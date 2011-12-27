@@ -1803,7 +1803,7 @@ end
 
 
 
-function Rooms_fake_building(sx1, sy1, sx2, sy2, dir, B, faces_room)
+function Rooms_fake_building(R, sx1, sy1, sx2, sy2, dir, B, faces_room)
   local x1 = SEEDS[sx1][sy1].x1
   local y1 = SEEDS[sx1][sy1].y1
 
@@ -1816,6 +1816,20 @@ mat = rand.pick { "COMPBLUE", "SFALL1", "DBRAIN1",
                   "COMPSPAN", "ASHWALL7", "SILVER2",
                   "ZIMMER8",  "TEKBRON1", "BRICK11", "LITE3" }
 --]]
+
+  -- cage test
+  if R and faces_room and rand.odds(90) then
+    local skin1 = GAME.SKINS["Fat_Cage1"]
+
+    if skin1 then
+      local f_h = R.sky_h - 192
+      local skin2 = { sky_h=R.sky_h - f_h, wall=mat }
+      local T = Trans.box_transform(x1, y1, x2, y2, f_h, 10 - dir)
+      Fabricate(skin1._prefab, T, { skin1, skin2 })
+      return
+    end
+  end
+
   local brush = Brush_new_quad(x1, y1, x2, y2)
   Brush_set_mat(brush, mat)
   brush_helper(brush)
@@ -1858,7 +1872,7 @@ function Rooms_do_outdoor_borders()
       
       N.edge_of_map = nil
 
-      Rooms_fake_building(N.sx, N.sy, N.sx, N.sy, geom.LEFT[dir], B, false)
+      Rooms_fake_building(nil, N.sx, N.sy, N.sx, N.sy, geom.LEFT[dir], B, false)
     end
   end
 
@@ -2081,7 +2095,7 @@ function Rooms_do_outdoor_borders()
       local B = building_on_side_of_row(row, sx1, sy1, sx2, sy2, -1) or
                 building_on_side_of_row(row, sx1, sy1, sx2, sy2,  1)
 
-      Rooms_fake_building(sx1, sy1, sx2, sy2, dir, B or R, true)
+      Rooms_fake_building(R, sx1, sy1, sx2, sy2, dir, B or R, true)
     end
   end
 
