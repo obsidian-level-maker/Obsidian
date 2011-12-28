@@ -1889,6 +1889,15 @@ DOOM.SKINS =
   }
 
 
+  ----| WALLS / CORNERS |----
+
+  Fat_Outside_Corner1 =
+  {
+    _prefab = "FAT_CORNER_DIAG"
+    _where  = "chunk"
+  }
+
+
   ----| ARCHES |----
 
   Arch1 =

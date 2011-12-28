@@ -40,6 +40,54 @@ PREFAB.CORNER =
 }
 
 
+PREFAB.FAT_CORNER_DIAG =
+{
+  fitted = "xy"
+
+  defaults =
+  {
+    ground = "?wall"
+  }
+
+  brushes =
+  {
+    -- solid part
+    {
+      { x =   0, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?wall" }
+      { x = 192, y =  96, mat = "?wall" }
+      { x =  96, y = 192, mat = "?wall" }
+      { x =   0, y = 192, mat = "?wall" }
+    }
+
+    -- ground bit
+    {
+      { x = 192, y =  96, mat = "?ground", blocking=1 }
+      { x = 192, y = 192, mat = "?ground", blocking=1 }
+      { x =  96, y = 192, mat = "?ground", blocking=1 }
+      { t = 0, mat = "?ground" }
+    }
+
+    -- sky
+    {
+      { m = "sky" }
+      { x = 192, y =  96, mat = "_SKY", blocking=1 }
+      { x = 192, y = 192, mat = "_SKY", blocking=1 }
+      { x =  96, y = 192, mat = "_SKY", blocking=1 }
+      { t = "?sky_h", mat = "_SKY" }
+    }
+
+    -- player clip (for Quake)
+    {
+      { m = "clip" }
+      { x = 192, y =  96 }
+      { x = 192, y = 192 }
+      { x =  96, y = 192 }
+    }
+  }
+}
+
+
 PREFAB.CORNER_DIAGONAL =
 {
   fitted = "xy"

@@ -1818,6 +1818,11 @@ end
 
 
 function Rooms_fake_building(R, sx1, sy1, sx2, sy2, dir, B, faces_room)
+  -- mark it
+  for sx = sx1,sx2 do for sy = sy1,sy2 do
+    SEEDS[sx][sy].fake = true
+  end end
+
   local x1 = SEEDS[sx1][sy1].x1
   local y1 = SEEDS[sx1][sy1].y1
 
@@ -1850,6 +1855,28 @@ mat = rand.pick { "COMPBLUE", "SFALL1", "DBRAIN1",
   local brush = Brush_new_quad(x1, y1, x2, y2)
   Brush_set_mat(brush, mat)
   brush_helper(brush)
+end
+
+
+
+function Rooms_fake_corner(R, S, corner, B)
+stderrf("FAKE CORNER @ %s corner:%d\n", S:tostr(), corner)
+
+  -- mark it
+  S.fake = true
+
+  local mat = assert(B.zone.facade_mat or B.wall_mat)
+
+  local f_h = 0
+
+  local T = Trans.corner_transform(S.x1, S.y1, S.x2, S.y2, f_h, corner, 192, 192)
+
+  local skin1 = GAME.SKINS["Fat_Outside_Corner1"]
+  assert(skin1)
+
+  local skin2 = { sky_h=R.sky_h - f_h, wall=mat }
+
+  Fabricate(skin1._prefab, T, { skin1, skin2 })
 end
 
 
@@ -1947,7 +1974,7 @@ function Rooms_do_outdoor_borders()
 
     if N.room == R then return end
 
-    if N.hall or N.room or N.scenic then return end
+    if N.hall or N.room or N.scenic or N.fake then return end
 
     if N.edge_of_map then
       if geom.is_corner(dir) then
@@ -1984,6 +2011,53 @@ function Rooms_do_outdoor_borders()
         end
 
       end end
+    end
+  end
+
+
+  local function check_fake_corner(S)
+    local open_dirs = {}
+
+    for dir = 2,8,2 do
+      local N = S:neighbor(dir)
+
+      if N and N.room and N.room.kind == "outdoor" then
+        table.insert(open_dirs, dir)
+      end
+    end
+
+    --!!!! FIXME: special handling if >= 3
+    if #open_dirs != 2 then return nil end
+
+    local dir1 = open_dirs[1]
+    local dir2 = open_dirs[2]
+
+    if dir1 > dir2 then dir1, dir2 = dir2, dir1 end
+
+    -- FIXME: special handling for dir1 == (10 - dir2)
+
+    if dir1 == 2 and dir2 == 4 then return 1 end
+    if dir1 == 2 and dir2 == 6 then return 3 end
+    if dir1 == 4 and dir2 == 8 then return 7 end
+    if dir1 == 6 and dir2 == 8 then return 9 end
+
+    return nil
+  end
+
+
+  local function handle_fake_corners(R)
+    for index = #R.fake_buildings, 1, -1 do
+      local S = R.fake_buildings[index].N
+
+      local corner = check_fake_corner(S)
+
+      if corner then
+        table.remove(R.fake_buildings, index)
+
+        local B = R  --FIXME!!!!
+
+        Rooms_fake_corner(R, S, corner, B)
+      end
     end
   end
 
@@ -2124,6 +2198,7 @@ function Rooms_do_outdoor_borders()
   each R in LEVEL.rooms do
     if R.kind == "outdoor" then
       scan_room(R)
+      handle_fake_corners(R)
       make_the_fake(R)
     end
   end
