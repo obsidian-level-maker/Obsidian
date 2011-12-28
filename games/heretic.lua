@@ -1633,6 +1633,8 @@ HERETIC.NAME_THEMES =
 
 HERETIC.ROOM_THEMES =
 {
+  ---- URBAN THEME -----------------
+
   Urban_generic =
   {
     walls =
@@ -1652,27 +1654,102 @@ HERETIC.ROOM_THEMES =
     }
   }
 
-  Castle_generic =
+
+  ---- CASTLE THEME -----------------
+
+  Castle_green =
   {
     walls =
     {
-      CSTLRCK=50, GRNBLOK1=20, MOSSRCK1=20,
-      SQPEB1=20, TRISTON1=20,
+      GRNBLOK1 = 50
+      MOSSRCK1 = 50
     }
 
     floors =
     {
-      FLAT503=20, FLAT507=10, FLAT520=10, FLAT521=10,
-      FLOOR00=10, FLOOR03=20, FLOOR07=10,
-      FLAT523=20,
+      FLOOR19 = 20
+      FLOOR27 = 50
+      FLAT520 = 50
+      FLAT521 = 50
     }
 
     ceilings =
     {
-      FLAT520=20, FLAT521=10, FLAT508=15,
-      FLOOR20=25, FLOOR29=10,
+      FLOOR05 = 50
+      FLAT512 = 50
     }
   }
+
+  Castle_gray =
+  {
+    walls =
+    {
+      CSTLRCK  = 50
+      TRISTON1 = 50
+    }
+
+    floors =
+    {
+      FLAT503 = 50
+      FLAT522 = 50
+      FLOOR10 = 50
+    }
+
+    ceilings =
+    {
+      FLOOR04 = 50
+      FLAT520 = 50
+    }
+  }
+
+  Castle_orange =
+  {
+    walls =
+    {
+      SQPEB2   = 50
+      TRISTON2 = 50
+    }
+
+    floors =
+    {
+      FLOOR01 = 50
+      FLOOR03 = 50
+      FLOOR06 = 20
+    }
+
+    ceilings =
+    {
+      FLAT523 = 50
+      FLOOR17 = 50
+    }
+  }
+
+  Castle_hallway =
+  {
+    walls =
+    {
+      GRSTNPB  = 60
+      SANDSQ2  = 20
+      SNDCHNKS = 20
+    }
+
+    floors =
+    {
+      FLOOR00 = 50
+      FLOOR18 = 50
+      FLAT521 = 50
+      FLAT506 = 50
+    }
+
+    ceilings =
+    {
+      FLAT523 = 50
+    }
+  }
+
+
+
+  ---- OTHER STUFF ------------------
 
   Cave_generic =
   {
@@ -1681,6 +1758,7 @@ HERETIC.ROOM_THEMES =
       LOOSERCK=20, LAVA1=20, BRWNRCKS=20
     }
   }
+
 
   Outdoors_generic =
   {
@@ -1726,7 +1804,11 @@ HERETIC.LEVEL_THEMES =
 
     liquids = { lava=50, magma=20, sludge=3 }
 
-    buildings = { Castle_generic=50 }
+    buildings = { Castle_green=50, Castle_gray=50,
+                  Castle_orange=50
+                }
+
+    hallways = { Castle_hallway=50 }
 
     caves = { Cave_generic=50 }
 
@@ -1736,88 +1818,6 @@ HERETIC.LEVEL_THEMES =
 
     --TODO: more stuff
   }
-
-
---[[
-  heretic_cave1 =  -- Keep this ???  Nope !
-  {
-    prob = 50
-
-    building_walls = 
-    {
-      LOOSERCK=20, LAVA1=20, BRWNRCKS=20,
-    }
-
-    building_floors =
-    {
-      FLOOR01=20, FLAT516=20, FLAT516=20,
-    }
-
-    building_ceilings =
-    {
-      FLOOR01=20, FLAT516=20, FLAT506=20,
-    }
-
-    courtyard_floors =
-    {
-      LOOSERCK=50, RCKSNMUD=50, LAVA1=50,
-      FLAT516=50, FLAT510=50, FLAT516=50,
-    }
-
-  }
---]]
-
-
---[[ FIXME: good old stuff
-
-  --- City (E1 Castle) is both indoors and outdoors
-  CITY =
-  {
-    room_probs=
-    {
-      PLAIN=50,
-    }
-    has_outdoors = true,
-  }
-  --- Cave (used in Hell) is both outdoors and indoors
-  CAVE =
-  {
-    room_probs=
-    {
-      PLAIN=50,
-    }
-    has_outdoors = true,
-  }
-  --- Dome is a variation on City used in E3
-  DOME =
-  {
-    room_probs=
-    {
-      PLAIN=50,
-    }
-    has_outdoors = true,
-  }
-  --- Egypt is a sandy-looking theme used in E4
-  EGYPT =
-  {
-    room_probs=
-    {
-      PLAIN=50,
-    }
-    has_outdoors = true,
-  }
-  --- Garish is a surrealistic very garish theme of blue and some red;
-  --- used in E5
-  GARISH =
-  {
-    room_probs=
-    {
-      PLAIN=50,
-    }
-    has_outdoors = true,
-  }
-
---]]
 }
 
 
