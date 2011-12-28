@@ -1635,22 +1635,91 @@ HERETIC.ROOM_THEMES =
 {
   ---- URBAN THEME -----------------
 
-  Urban_generic =
+  Urban_house1 =
   {
     walls =
     {
-      SANDSQ2=50, GRSTNPB=50, WOODWL=10,
-      CTYSTUC4=80, CTYSTCI2=80, TRISTON2=20,
+      CTYSTCI2 = 20
+      CTYSTCI4 = 40
     }
 
     floors =
     {
-      FLOOR06=50, FLOOR03=50, FLOOR00=50, FLOOR10=50,
+      FLOOR03 = 50
+      FLOOR06 = 50
+      FLOOR10 = 50
     }
 
     ceilings =
     {
-      FLOOR11=50, FLOOR03=30, FLOOR04=30, FLOOR12=50,
+      FLAT521 = 50
+      FLAT523 = 50
+    }
+  }
+
+  Urban_house2 =
+  {
+    walls =
+    {
+      CTYSTUC4 = 50
+    }
+
+    floors =
+    {
+      FLOOR03 = 50
+      FLOOR06 = 50
+      FLOOR10 = 50
+    }
+
+    ceilings =
+    {
+      FLAT521 = 50
+      FLAT523 = 50
+    }
+  }
+
+  Urban_stone =
+  {
+    walls =
+    {
+      GRSTNPB = 50
+    }
+
+    floors =
+    {
+      FLOOR00 = 50
+      FLOOR19 = 50
+      FLAT522 = 50
+      FLAT523 = 50
+    }
+
+    ceilings =
+    {
+      FLAT520 = 50
+      FLAT523 = 50
+    }
+  }
+
+  Urban_wood =
+  {
+    walls =
+    {
+      WOODWL = 50
+    }
+
+    floors =
+    {
+      FLAT508 = 20
+      FLOOR11 = 20
+      FLOOR03 = 50
+      FLOOR06 = 50
+    }
+
+    ceilings =
+    {
+      FLOOR10 = 50
+      FLOOR11 = 30
+      FLOOR01 = 50
     }
   }
 
@@ -1785,13 +1854,15 @@ HERETIC.LEVEL_THEMES =
 
     liquids = { water=50, sludge=15, lava=4 }
 
-    buildings = { Urban_generic=50 }
+    buildings = { Urban_house1=30, Urban_house2=30,
+                  Urban_wood=30, Urban_stone=50
+                }
+
+    hallways = { Castle_hallway=50 }  -- FIXME
 
     caves = { Cave_generic=50 }
 
     outdoors = { Outdoors_generic=50 }
-
-    -- hallways = { blah }
 
     --TODO: more stuff
 
