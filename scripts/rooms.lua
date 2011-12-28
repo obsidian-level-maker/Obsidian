@@ -1867,7 +1867,7 @@ stderrf("FAKE CORNER @ %s corner:%d\n", S:tostr(), corner)
 
   local mat = assert(B.zone.facade_mat or B.wall_mat)
 
-  local f_h = 0
+  local f_h = -512
 
   local T = Trans.corner_transform(S.x1, S.y1, S.x2, S.y2, f_h, corner, 192, 192)
 
@@ -2036,10 +2036,10 @@ function Rooms_do_outdoor_borders()
 
     -- FIXME: special handling for dir1 == (10 - dir2)
 
-    if dir1 == 2 and dir2 == 4 then return 1 end
-    if dir1 == 2 and dir2 == 6 then return 3 end
-    if dir1 == 4 and dir2 == 8 then return 7 end
-    if dir1 == 6 and dir2 == 8 then return 9 end
+    if dir1 == 2 and dir2 == 4 then return 9 end
+    if dir1 == 2 and dir2 == 6 then return 7 end
+    if dir1 == 4 and dir2 == 8 then return 3 end
+    if dir1 == 6 and dir2 == 8 then return 1 end
 
     return nil
   end

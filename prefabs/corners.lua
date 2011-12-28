@@ -55,34 +55,34 @@ PREFAB.FAT_CORNER_DIAG =
     {
       { x =   0, y =   0, mat = "?wall" }
       { x = 192, y =   0, mat = "?wall" }
-      { x = 192, y =  96, mat = "?wall" }
-      { x =  96, y = 192, mat = "?wall" }
+      { x = 192, y =  64, mat = "?wall" }
+      { x =  64, y = 192, mat = "?wall" }
       { x =   0, y = 192, mat = "?wall" }
     }
 
     -- ground bit
     {
-      { x = 192, y =  96, mat = "?ground", blocking=1 }
-      { x = 192, y = 192, mat = "?ground", blocking=1 }
-      { x =  96, y = 192, mat = "?ground", blocking=1 }
+      { x = 192, y =  64, mat = "?ground", blocked=1 }
+      { x = 192, y = 192, mat = "?ground", blocked=1 }
+      { x =  64, y = 192, mat = "?ground", blocked=1 }
       { t = 0, mat = "?ground" }
     }
 
     -- sky
     {
       { m = "sky" }
-      { x = 192, y =  96, mat = "_SKY", blocking=1 }
-      { x = 192, y = 192, mat = "_SKY", blocking=1 }
-      { x =  96, y = 192, mat = "_SKY", blocking=1 }
-      { t = "?sky_h", mat = "_SKY" }
+      { x = 192, y =  64, mat = "_SKY", blocked=1 }
+      { x = 192, y = 192, mat = "_SKY", blocked=1 }
+      { x =  64, y = 192, mat = "_SKY", blocked=1 }
+      { b = "?sky_h", mat = "_SKY" }
     }
 
     -- player clip (for Quake)
     {
       { m = "clip" }
-      { x = 192, y =  96 }
+      { x = 192, y =  64 }
       { x = 192, y = 192 }
-      { x =  96, y = 192 }
+      { x =  64, y = 192 }
     }
   }
 }
