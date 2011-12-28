@@ -1831,11 +1831,11 @@ DOOM.SKINS =
     y_offset=0
   }
 
-  Exit_switch2 =
+  Exit_tech_pillar =
   {
     _prefab = "EXIT_PILLAR",
 
-    switch = "SW1BLUE"
+    switch = "SW1COMP"
     exit = "EXITSIGN"
     exitside = "COMPSPAN"
     special = 11
@@ -1847,6 +1847,17 @@ DOOM.SKINS =
     _prefab = "EXIT_PILLAR",
 
     switch = { SW1LION=60, SW1GARG=30 }
+    exit = "EXITSIGN"
+    exitside = "COMPSPAN"
+    special = 11
+    tag = 0
+  }
+
+  Exit_urban_pillar =
+  {
+    _prefab = "EXIT_PILLAR",
+
+    switch = "SW1WDMET"
     exit = "EXITSIGN"
     exitside = "COMPSPAN"
     special = 11
@@ -2570,7 +2581,7 @@ DOOM.THEME_DEFAULTS =
 {
   starts = { Start_basic = 50 }
 
-  exits = { Exit_switch2 = 50 }
+  exits = { Exit_tech_pillar = 50 }
 
   pedestals = { Pedestal_1 = 50 }
 
@@ -2633,11 +2644,6 @@ DOOM.THEME_DEFAULTS =
 
   -- FIXME: should not be separated, have 'environment' fields
   out_crates = { wood=50, ick=50 }
-
-  -- FIXME: next three should not be separated
-  __exits = { demon_pillar2=50 }
-  __small_exits = { tech_small=50 }
-  __out_exits = { tech_outdoor=50 }
 
   bars = { bar_silver=50 }
 
@@ -3681,7 +3687,7 @@ DOOM2.LEVEL_THEMES =
 
     FIXME_switch_doors = { Door_pink = 50, Door_vine = 50 }
 
-    exits = { Exit_demon_pillar = 50 }
+    exits = { Exit_demon_pillar=50 }
 
     logos = { carve=90, pill=50, neon=5 }
 
@@ -3703,6 +3709,7 @@ DOOM2.LEVEL_THEMES =
   }
 
 
+  -- AJA: not sure whether to keep this
   Hmmm_doom_hell2 =
   {
     prob = 25,
@@ -3754,6 +3761,8 @@ DOOM2.LEVEL_THEMES =
     hallways  = { Urban_hallway=50 }
     caves     = { Urban_cave=50 }
     outdoors  = { Urban_outdoors=50 }
+
+    exits = { Exit_urban_pillar=50 }
 
     __logos = { carve=40, pill=25, neon=50 }
 
