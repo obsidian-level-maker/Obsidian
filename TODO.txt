@@ -5,9 +5,23 @@ OBLIGE TODO
 Current Work
 ------------
 
+>>>  fake buildings : ensure only built ONCE at a seed
+
+!!  fix the sky fences in places where they don't belong
+    
+    also : can be unused gap between two outdoor rooms, 
+           but only one room "grabs" the gap for a sky border
+
+-  automatic "sky" brushes (if no 'm' coord and b/t material is "_SKY")
+
+
 Theme System:
 
-!!!  split current room themes into smaller ones
+-  proper room themes for QUAKE
+
+-  HERETIC
+
+-  QUAKE II
 
 
 Hallways:
@@ -30,9 +44,6 @@ Caves:
   -  create a large area (or two) by merging areas together
      [OR: pre-allocate a large chunk / reclaimed junction]
 
-
-
-REVIEW: how strength setting affects monster room palettes
 
 
 -----------------------------------------------------------------
