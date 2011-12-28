@@ -1842,6 +1842,17 @@ DOOM.SKINS =
     tag = 0
   }
 
+  Exit_demon_pillar =
+  {
+    _prefab = "EXIT_PILLAR",
+
+    switch = { SW1LION=60, SW1GARG=30 }
+    exit = "EXITSIGN"
+    exitside = "COMPSPAN"
+    special = 11
+    tag = 0
+  }
+
 
   ----| STAIRS |----
 
@@ -3670,8 +3681,7 @@ DOOM2.LEVEL_THEMES =
 
     FIXME_switch_doors = { Door_pink = 50, Door_vine = 50 }
 
-    OLD__exits = { skin_pillar=40, skull_pillar=20,
-      demon_pillar2=10, demon_pillar3=10 }
+    exits = { Exit_demon_pillar = 50 }
 
     logos = { carve=90, pill=50, neon=5 }
 
