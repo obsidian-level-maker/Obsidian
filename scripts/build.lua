@@ -70,11 +70,11 @@ HEXEN_ACTIONS =
 }
 
 
-function raw_add_brush(coords)
-  gui.add_brush(coords)
+function raw_add_brush(brush)
+  gui.add_brush(brush)
 
   if GAME.add_brush_func then
-     GAME.add_brush_func(coords)
+     GAME.add_brush_func(brush)
   end
 end
 
@@ -133,18 +133,18 @@ function Brush_collect_flags(C)
 end
 
 
-function brush_helper(coords)
-  local mode = coords[1].m
+function brush_helper(brush)
+  local mode = brush[1].m
 
   -- light and rail brushes only make sense for 2.5D games
   if mode == "light" and not PARAM.light_brushes then return end
   if mode == "rail"  and not PARAM.rails then return end
 
-  each C in coords do
+  each C in brush do
     Brush_collect_flags(C)
   end
 
-  raw_add_brush(coords)
+  raw_add_brush(brush)
 end
 
 
@@ -519,8 +519,8 @@ function Mat_similar(A, B)
 end
 
 
-function Brush_set_tex(coords, wall, flat)
-  each C in coords do
+function Brush_set_tex(brush, wall, flat)
+  each C in brush do
     if wall and C.x and not C.tex then
       C.tex = wall
     end
@@ -531,7 +531,7 @@ function Brush_set_tex(coords, wall, flat)
 end
 
 
-function Brush_set_mat(coords, wall, flat)
+function Brush_set_mat(brush, wall, flat)
   if wall then
     wall = Mat_lookup(wall)
     wall = assert(wall.t)
@@ -542,7 +542,7 @@ function Brush_set_mat(coords, wall, flat)
     flat = flat.f or assert(flat.t)
   end
 
-  Brush_set_tex(coords, wall, flat)
+  Brush_set_tex(brush, wall, flat)
 end
 
 
@@ -1066,7 +1066,7 @@ function Trans.process_skins(...)
     -- fields starting with an underscore are ignored, to allow for
     -- special fields in the skin.
 
-    for _,name in ipairs(keys) do
+    each name in keys do
       local value = Trans.SKIN[name]
 
       if type(value) == "table" and not string.match(name, "^_") then
@@ -1407,8 +1407,8 @@ function Fab_apply_skins(fab, list)
   -- FIXME: move the code here
   Trans.process_skins(GLOBAL_SKIN_DEFAULTS,
                       GAME.SKIN_DEFAULTS,
+                      THEME.skin_defaults,
                       fab.defaults,
-                      THEME.defaults,
                       list[1], list[2], list[3],
                       list[4], list[5], list[6],
                       list[7], list[8], list[9])
@@ -1568,15 +1568,15 @@ function Fab_transform_XY(fab, T)
 
   -- apply the coordinate transform to all parts of the prefab
 
-  for _,B in ipairs(fab.brushes) do
+  each B in fab.brushes do
     brush_xy(B)
   end
 
-  for _,E in ipairs(fab.entities) do
+  each E in fab.entities do
     entity_xy(E)
   end
 
-  for _,M in ipairs(fab.models) do
+  each M in fab.models do
     model_xy(M)
     entity_xy(M.entity)
   end
@@ -1686,15 +1686,15 @@ function Fab_transform_Z(fab, T)
 
   -- apply the coordinate transform to all parts of the prefab
 
-  for _,B in ipairs(fab.brushes) do
+  each B in fab.brushes do
     brush_z(B)
   end
 
-  for _,E in ipairs(fab.entities) do
+  each E in fab.entities do
     entity_z(E)
   end
 
-  for _,M in ipairs(fab.models) do
+  each M in fab.models do
     model_z(M)
   end
 
@@ -1703,22 +1703,18 @@ end
 
 
 
-function Fab_composition(fab, parent_skin)
+function Fab_composition(parent, parent_skin)
   -- handles "prefab" brushes, replacing them with the brushes of
-  -- the sub-prefab, and adding its entities and models.
+  -- the child prefab, and adding all its entities and models.
   --
   -- This function must be called before the parent fab has been
   -- transformed, as we merely transform the child fab to fit into
   -- the untransformed brush.
 
-  local function insert_sub(brush)
-    local skin_name = assert(brush[1].skin)
-    local skin      = assert(GAME.SKINS[skin_name])
-    local fab_name  = assert(skin._prefab)
+  local function transform_child(brush, fab_name, skin, dir)
+    local child = Fab_create(fab_name)
 
-    local sub = Fab_create(fab_name)
-
-    Fab_apply_skins(sub, { parent_skin, skin })
+    Fab_apply_skins(child, { parent_skin, skin })
 
     -- FIXME: support arbitrary rectangles (rotation etc)
 
@@ -1727,21 +1723,21 @@ function Fab_composition(fab, parent_skin)
     local low_z  = Brush_get_b(brush)
     local high_z = Brush_get_t(brush)  -- not used (Fixme?)
 
-    local T = Trans.box_transform(bx1, by1, bx2, by2, low_z, 2)
+    local T = Trans.box_transform(bx1, by1, bx2, by2, low_z, dir)
      
-    Fab_transform_XY(sub, T)
-    Fab_transform_Z (sub, T)
+    Fab_transform_XY(child, T)
+    Fab_transform_Z (child, T)
 
-    for _,B in ipairs(sub.brushes) do
-      table.insert(fab.brushes, B)
+    each B in child.brushes do
+      table.insert(parent.brushes, B)
     end
 
-    for _,E in ipairs(sub.entities) do
-      table.insert(fab.entities, E)
+    each E in child.entities do
+      table.insert(parent.entities, E)
     end
 
-    for _,M in ipairs(sub.models) do
-      table.insert(fab.models, M)
+    each M in child.models do
+      table.insert(parent.models, M)
     end
 
     sub = nil
@@ -1750,13 +1746,17 @@ function Fab_composition(fab, parent_skin)
 
   ---| Fab_composition |---
 
-  for index = #fab.brushes,1,-1 do
-    local B = fab.brushes[index]
+  for index = #parent.brushes,1,-1 do
+    local B = parent.brushes[index]
 
     if B[1].m == "prefab" then
-      table.remove(fab.brushes, index)
+      table.remove(parent.brushes, index)
 
-      insert_sub(B)
+      local child_name = assert(B[1].prefab)
+      local child_skin = {}
+      local child_dir  = B[1].dir or 2
+
+      transform_child(B, child_name, child_skin, child_dir)
     end
   end
 end
@@ -1838,7 +1838,7 @@ function Fab_read_spots(fab)
 
   local list = {}
 
-  for _,B in ipairs(fab.brushes) do
+  each B in fab.brushes do
     if B[1].m == "spot" then
       add_spot(list, B)
     end
