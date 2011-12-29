@@ -24,6 +24,10 @@ require 'util'
 
 GLOBAL_SKIN_DEFAULTS =
 {
+  outer = "?wall"
+  floor = "?wall"
+  ceil  = "?floor"
+
   tag = ""
   special = ""
   light = ""
@@ -1028,33 +1032,30 @@ end
 ------------------------------------------------------------------------
 
 
-function is_subst(value)
+function Trans.is_subst(value)
   return type(value) == "string" and string.match(value, "^[?]")
 end
 
 
-function Trans.substitute(value)
-  if not is_subst(value) then
+function Trans.substitute(SKIN, value)
+  if not Trans.is_subst(value) then
     return value
   end
 
-  return Trans.SKIN[string.sub(value, 2)]
+  return SKIN[string.sub(value, 2)]
 end
 
 
-function Trans.process_skins(...)
+function Trans.process_skins(list)
+
+  local SKIN = {}
 
   local function misc_stuff()
-    -- standard defaults
-    Trans.SKIN["floor"] = "?wall"
-    Trans.SKIN["ceil"]  = "?floor"
-    Trans.SKIN["outer"] = "?wall"
-
     -- these are useful for conditional brushes/ents
     if GAME.format == "doom" or GAME.format == "nukem" then
-      Trans.SKIN["doomy"] = 1
+      SKIN["doomy"] = 1
     else
-      Trans.SKIN["quakey"] = 1
+      SKIN["quakey"] = 1
     end
   end
 
@@ -1067,25 +1068,25 @@ function Trans.process_skins(...)
     -- special fields in the skin.
 
     each name in keys do
-      local value = Trans.SKIN[name]
+      local value = SKIN[name]
 
       if type(value) == "table" and not string.match(name, "^_") then
         if table.size(value) == 0 then
           error("process_skins: random table is empty: " .. tostring(name))
         end
 
-        Trans.SKIN[name] = rand.key_by_probs(value)
+        SKIN[name] = rand.key_by_probs(value)
       end
     end
   end
 
 
   local function function_pass(keys)
-    for _,name in ipairs(keys) do
-      local value = Trans.SKIN[name]
+    each name in keys do
+      local func = SKIN[name]
 
-      if type(value) == "function" then
-        Trans.SKIN = value(Trans.SKIN)
+      if type(func) == "function" then
+        SKIN[name] = func(SKIN)
       end
     end
   end
@@ -1096,19 +1097,19 @@ function Trans.process_skins(...)
 
     -- look for unresolved substitutions first
     for _,name in ipairs(keys) do
-      local value = Trans.SKIN[name]
+      local value = SKIN[name]
 
-      if is_subst(value) then
-        local ref = Trans.substitute(value)
+      if Trans.is_subst(value) then
+        local ref = Trans.substitute(SKIN, value)
 
         if ref and type(ref) == "function" then
           error("Substitution references a function: " .. value)
         end
 
-        if ref and is_subst(ref) then
+        if ref and Trans.is_subst(ref) then
           -- need to resolve the other one first
         else
-          Trans.SKIN[name] = ref
+          SKIN[name] = ref
           changes = changes + 1
         end
       end
@@ -1120,32 +1121,27 @@ function Trans.process_skins(...)
 
   ---| Trans.process_skins |---
 
-  Trans.SKIN = {}
-
   misc_stuff()
 
-  for i = 1,20 do
-    local skin = select(i, ...)
-
-    if skin then
-      table.merge(Trans.SKIN, skin)
-    end
-  end
+  each skin_tab in list do
+    table.merge(SKIN, skin_tab)
+  end 
 
   -- Note: iterate over a copy of the key names, since we cannot
   --       safely modify a table while iterating through it.
-  local keys = table.keys(Trans.SKIN)
+  local keys = table.keys(SKIN)
 
   random_pass(keys)
 
   for loop = 1,20 do
     if subst_pass(keys) == 0 then
       function_pass(keys)
-      return;
+      return SKIN
     end
   end
 
-  gui.debugf("\nSKIN =\n%s\n\n", table.tostr(Trans.SKIN, 1))
+  -- failed !
+  gui.debugf("\nSKIN =\n%s\n\n", table.tostr(SKIN, 1))
 
   error("process_skins: cannot resolve refs")
 end
@@ -1195,13 +1191,17 @@ end
 
 
 function Fab_apply_skins(fab, list)
+  -- perform skin substitutions on everything in the prefab.
+  -- Note that the 'list' parameter is modified.
+
+  local SKIN
 
   local function do_substitutions(t)
-    for _,k in ipairs(table.keys(t)) do
+    each k in table.keys(t) do
       local v = t[k]
 
       if type(v) == "string" then
-        v = Trans.substitute(v)
+        v = Trans.substitute(SKIN, v)
 
         if v == nil then
           if name == "required" then v = false end
@@ -1227,7 +1227,7 @@ function Fab_apply_skins(fab, list)
 
 
   local function process_materials(brush)
-    for _,C in ipairs(brush) do
+    each C in brush do
       if C.mat then
         local mat = Mat_lookup(C.mat)
         assert(mat and mat.t)
@@ -1404,28 +1404,28 @@ function Fab_apply_skins(fab, list)
 
   fab.state = "skinned"
 
-  -- FIXME: move the code here
-  Trans.process_skins(GLOBAL_SKIN_DEFAULTS,
-                      GAME.SKIN_DEFAULTS,
-                      THEME.skin_defaults,
-                      fab.defaults,
-                      list[1], list[2], list[3],
-                      list[4], list[5], list[6],
-                      list[7], list[8], list[9])
+  -- add the standard skin tables into the list
+  if fab.defaults        then table.insert(list, 1, fab.defaults) end
+  if THEME.skin_defaults then table.insert(list, 1, THEME.skin_defaults) end
+  if GAME.SKIN_DEFAULTS  then table.insert(list, 1, GAME.SKIN_DEFAULTS) end
+
+  table.insert(list, 1, GLOBAL_SKIN_DEFAULTS)
+
+  SKIN = Trans.process_skins(list)
 
   -- defaults are applied, don't need it anymore
   fab.defaults = nil
 
-  if Trans.SKIN._tags then
-    for i = 1, Trans.SKIN._tags do
+  if SKIN._tags then
+    for i = 1, SKIN._tags do
       local name = "tag"
       if i >= 2 then name = name .. i end
-      Trans.SKIN[name] = Plan_alloc_id("tag")
+      SKIN[name] = Plan_alloc_id("tag")
     end
   end
 
   if fab.team_models then
-    Trans.SKIN.team = Plan_alloc_id("team")
+    SKIN.team = Plan_alloc_id("team")
   end
 
   -- perform substitutions (values beginning with '?' are skin refs)
@@ -1437,16 +1437,15 @@ function Fab_apply_skins(fab, list)
   -- lookup entity names
   do_entities(fab)
 
-  local parent_skin = Trans.SKIN
-  Trans.SKIN = nil
-
   -- handle "prefab" brushes.  NOTE: recursive
-  Fab_composition(fab, parent_skin)
+  Fab_composition(fab, SKIN)
 
   -- find bounding box (in prefab space)
   determine_bbox(fab)
 
   brush_stuff()
+
+  SKIN = nil
 end
 
 
@@ -1705,11 +1704,11 @@ end
 
 function Fab_composition(parent, parent_skin)
   -- handles "prefab" brushes, replacing them with the brushes of
-  -- the child prefab, and adding all its entities and models.
+  -- the child prefab (transformed to fit into the "prefab" brush),
+  -- and adding all the child's entities and models too.
   --
-  -- This function must be called before the parent fab has been
-  -- transformed, as we merely transform the child fab to fit into
-  -- the untransformed brush.
+  -- This function is called by Fab_apply_skins() and never needs
+  -- to be called by other code.
 
   local function transform_child(brush, fab_name, skin, dir)
     local child = Fab_create(fab_name)
@@ -1740,7 +1739,7 @@ function Fab_composition(parent, parent_skin)
       table.insert(parent.models, M)
     end
 
-    sub = nil
+    child = nil
   end
 
 
@@ -1753,7 +1752,7 @@ function Fab_composition(parent, parent_skin)
       table.remove(parent.brushes, index)
 
       local child_name = assert(B[1].prefab)
-      local child_skin = {}
+      local child_skin = B[1].skin or {}
       local child_dir  = B[1].dir or 2
 
       transform_child(B, child_name, child_skin, child_dir)
