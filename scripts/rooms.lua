@@ -1872,7 +1872,11 @@ stderrf("FAKE CORNER @ %s corner:%d\n", S:tostr(), corner)
   local T = Trans.corner_transform(S.x1, S.y1, S.x2, S.y2, f_h, corner, 192, 192)
 
   local skin1 = GAME.SKINS["Fat_Outside_Corner1"]
-  assert(skin1)
+
+  if not skin1 then
+    Rooms_fake_building(R, S.sx, S.sy, S.sx, S.sy, geom.LEFT_45[corner], B, false)
+    return
+  end
 
   local skin2 = { sky_h=R.sky_h - f_h, wall=mat }
 
