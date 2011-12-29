@@ -393,6 +393,9 @@ PREFAB.DOOR =
     key   = "?wall"
     step  = "?wall"
 
+    -- Heretic stuff
+    statue_ent = "none"
+
     -- Hexen stuff
     act = ""
     speed = 32
@@ -459,6 +462,12 @@ PREFAB.DOOR =
       { x = 178, y = 48, mat = "?key",   peg=1, x_offset=0, y_offset=0 }
       { x = 160, y = 32, mat = "?track", peg=1, x_offset=0, y_offset=0 }
     }
+  }
+
+  entities =
+  {
+    { ent = "?statue_ent", x =  24, y = 56, z = 0 }
+    { ent = "?statue_ent", x = 168, y = -8, z = 0 }
   }
 }
 

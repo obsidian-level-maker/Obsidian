@@ -504,6 +504,8 @@ HERETIC.SKINS =
     track = "METL2"
     special = 34
     tag = 0  -- kind_mult=26
+
+    statue_ent = "yellow_statue"
   }
 
   Locked_green =
@@ -521,6 +523,8 @@ HERETIC.SKINS =
     track = "METL2"
     special = 33
     tag = 0  -- kind_mult=26
+
+    statue_ent = "green_statue"
   }
 
   Locked_blue =
@@ -538,6 +542,8 @@ HERETIC.SKINS =
     track = "METL2"
     special = 32
     tag = 0  -- kind_mult=26
+
+    statue_ent = "blue_statue"
   }
 
 
