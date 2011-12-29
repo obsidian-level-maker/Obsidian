@@ -1279,8 +1279,6 @@ function Fab_apply_skins(fab, list)
     local name = E.ent
     assert(name)
 
-    local info = GAME.ENTITIES[name]
-
     if name == "none" then
       return false
     end
@@ -1288,6 +1286,8 @@ function Fab_apply_skins(fab, list)
     if PARAM.light_brushes and (name == "light" or name == "sun") then
       return false
     end
+
+    local info = GAME.ENTITIES[name]
 
     if not info then
       error("No such entity: " .. tostring(name))
