@@ -820,6 +820,11 @@ function Hallway_add_doubles()
     local D1 = find_conn_for_double(K, dir)
     if not D1 then return false end
 
+    -- don't have a pair of keyed doors if the game uses up keys
+    if PARAM.lose_keys and D1.lock and D1.lock.kind == "KEY" then
+      return false
+    end
+
     -- less chance if entrance was locked 
     local entry_D = find_conn_for_double(K, 10 - dir)
 
