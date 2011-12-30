@@ -506,3 +506,103 @@ PREFAB.TECH_DITTO_1 =
   }
 }
 
+
+PREFAB.HALLWAY_S_BEND =
+{
+  defaults =
+  {
+    torch_ent = "none"
+step = "STEP1"
+  }
+
+  brushes =
+  {
+    -- left/top walls
+    {
+      { x =   0, y =   0, mat = "?wall" }
+      { x =  32, y =   0, mat = "?wall" }
+      { x =  32, y =  64, mat = "?wall" }
+      { x =   0, y =  64, mat = "?outer" }
+    }
+
+    {
+      { x =   0, y =  64, mat = "?wall" }
+      { x =  32, y =  64, mat = "?wall" }
+      { x =  64, y = 128, mat = "?wall" }
+      { x =   0, y = 128, mat = "?outer" }
+    }
+
+    {
+      { x =   0, y = 128, mat = "?wall" }
+      { x =  64, y = 128, mat = "?wall" }
+      { x = 128, y = 160, mat = "?wall" }
+      { x = 128, y = 192, mat = "?outer" }
+      { x =   0, y = 192, mat = "?outer" }
+    }
+
+    {
+      { x = 128, y = 160, mat = "?wall" }
+      { x = 384, y = 160, mat = "?wall" }
+      { x = 384, y = 192, mat = "?outer" }
+      { x = 128, y = 192, mat = "?wall" }
+    }
+
+    {
+      { x = 384, y = 160, mat = "?wall" }
+      { x = 408, y = 168, mat = "?wall" }
+      { x = 416, y = 192, mat = "?outer" }
+      { x = 384, y = 192, mat = "?wall" }
+    }
+
+    -- right/bottom walls
+
+    {
+      { x = 160, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?wall" }
+      { x = 192, y =  32, mat = "?wall" }
+      { x = 168, y =  24, mat = "?wall" }
+    }
+
+    -- FIXME: THE REST
+
+    -- steps
+    {
+      { x =  32, y =   0, mat = "?step" }
+      { x = 160, y =   0, mat = "?step" }
+      { x =  32, y =  64, mat = "?step" }
+      { t =  8 }
+    }
+
+    {
+      { x =  32, y =  64, mat = "?step" }
+      { x = 160, y =   0, mat = "?step" }
+      { x = 168, y =  24, mat = "?step" }
+      { x =  64, y = 128, mat = "?step" }
+      { t = 16 }
+    }
+
+    {
+      { x =  64, y = 128, mat = "?step" }
+      { x = 168, y =  24, mat = "?step" }
+      { x = 192, y =  32, mat = "?step" }
+      { x = 128, y = 160, mat = "?step" }
+      { t =  8 }
+    }
+
+    {
+      { x = 128, y = 160, mat = "?step" }
+      { x = 192, y =  32, mat = "?step" }
+      { x = 224, y =  32, mat = "?step" }
+      { x = 224, y = 160, mat = "?step" }
+      { t =  8 }
+    }
+
+    -- FIXME: THE REST
+  }
+
+  entities =
+  {
+    ent = "?torch_ent", x = 288, y = 40, z = 64
+  }
+}
+
