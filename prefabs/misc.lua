@@ -836,14 +836,14 @@ PREFAB.HALLWAY_3D_STAIRCASE =
 
     {
       { x =  24, y = 192, mat = "?wall" }
-      { x =  32, y = 240, mat = "?wall" }
-      { x =  24, y = 240, mat = "?wall" }
+      { x =  32, y = 256, mat = "?wall" }
+      { x =  24, y = 256, mat = "?wall" }
       { t = 176 }
     }
 
     {
-      { x =  24, y = 240, mat = "?wall" }
-      { x =  32, y = 240, mat = "?wall" }
+      { x =  24, y = 256, mat = "?wall" }
+      { x =  32, y = 256, mat = "?wall" }
       { x =  72, y = 312, mat = "?wall" }
       { x =  24, y = 360, mat = "?wall" }
       { t = 176 }
@@ -852,14 +852,14 @@ PREFAB.HALLWAY_3D_STAIRCASE =
     {
       { x =  24, y = 360, mat = "?wall" }
       { x =  72, y = 312, mat = "?wall" }
-      { x = 144, y = 352, mat = "?wall" }
-      { x = 144, y = 360, mat = "?wall" }
+      { x = 128, y = 352, mat = "?wall" }
+      { x = 128, y = 360, mat = "?wall" }
       { t = 176 }
     }
 
     {
-      { x = 144, y = 360, mat = "?wall" }
-      { x = 144, y = 352, mat = "?wall" }
+      { x = 128, y = 360, mat = "?wall" }
+      { x = 128, y = 352, mat = "?wall" }
       { x = 192, y = 360, mat = "?wall" }
       { t = 176 }
     }
@@ -868,12 +868,12 @@ PREFAB.HALLWAY_3D_STAIRCASE =
       { x =  24, y = 192, mat = "?wall" }
       { x = 168, y = 192, mat = "?wall" }
       { x = 168, y = 200, mat = "?wall" }
-      { x =  32, y = 240, mat = "?wall" }
+      { x =  32, y = 256, mat = "?wall" }
       { t = 12, mat = "?floor" }
     }
 
     {
-      { x =  32, y = 240, mat = "?wall" }
+      { x =  32, y = 256, mat = "?wall" }
       { x = 168, y = 200, mat = "?wall" }
       { x = 176, y = 208, mat = "?wall" }
       { x =  72, y = 312, mat = "?wall" }
@@ -884,12 +884,12 @@ PREFAB.HALLWAY_3D_STAIRCASE =
       { x =  72, y = 312, mat = "?wall" }
       { x = 176, y = 208, mat = "?wall" }
       { x = 184, y = 216, mat = "?wall" }
-      { x = 144, y = 352, mat = "?wall" }
+      { x = 128, y = 352, mat = "?wall" }
       { t = 36, mat = "?floor" }
     }
 
     {
-      { x = 144, y = 352, mat = "?wall" }
+      { x = 128, y = 352, mat = "?wall" }
       { x = 184, y = 216, mat = "?wall" }
       { x = 192, y = 216, mat = "?wall" }
       { x = 192, y = 360, mat = "?wall" }
@@ -899,37 +899,37 @@ PREFAB.HALLWAY_3D_STAIRCASE =
     -- bottom left quadrant
 
     {
-      { x = 144, y =  32, mat = "?wall" }
-      { x = 144, y =  24, mat = "?wall" }
+      { x = 128, y =  32, mat = "?wall" }
+      { x = 128, y =  24, mat = "?wall" }
       { x = 192, y =  24, mat = "?wall" }
       { b = 124, mat = "?ceil" }
     }
 
     {
       { x =  24, y =  24, mat = "?wall" }
-      { x = 144, y =  24, mat = "?wall" }
-      { x = 144, y =  32, mat = "?wall" }
+      { x = 128, y =  24, mat = "?wall" }
+      { x = 128, y =  32, mat = "?wall" }
       { x =  72, y =  72, mat = "?wall" }
       { b = 136, mat = "?ceil" }
     }
 
     {
-      { x =  24, y = 144, mat = "?wall" }
+      { x =  24, y = 128, mat = "?wall" }
       { x =  24, y =  24, mat = "?wall" }
       { x =  72, y =  72, mat = "?wall" }
-      { x =  32, y = 144, mat = "?wall" }
+      { x =  32, y = 128, mat = "?wall" }
       { b = 148, mat = "?ceil" }
     }
 
     {
       { x =  24, y = 192, mat = "?wall" }
-      { x =  24, y = 144, mat = "?wall" }
-      { x =  32, y = 144, mat = "?wall" }
+      { x =  24, y = 128, mat = "?wall" }
+      { x =  32, y = 128, mat = "?wall" }
       { b = 160, mat = "?ceil" }
     }
 
     {
-      { x = 144, y =  32, mat = "?wall" }
+      { x = 128, y =  32, mat = "?wall" }
       { x = 192, y =  24, mat = "?wall" }
       { x = 192, y = 168, mat = "?wall" }
       { x = 184, y = 168, mat = "?wall" }
@@ -937,7 +937,7 @@ PREFAB.HALLWAY_3D_STAIRCASE =
       { t = 156, mat = "?floor" }
     }
     {
-      { x = 144, y =  32, mat = "?wall" }
+      { x = 128, y =  32, mat = "?wall" }
       { x = 192, y =  24, mat = "?wall" }
       { x = 192, y = 168, mat = "?wall" }
       { x = 184, y = 168, mat = "?wall" }
@@ -946,7 +946,7 @@ PREFAB.HALLWAY_3D_STAIRCASE =
 
     {
       { x =  72, y =  72, mat = "?wall" }
-      { x = 144, y =  32, mat = "?wall" }
+      { x = 128, y =  32, mat = "?wall" }
       { x = 184, y = 168, mat = "?wall" }
       { x = 176, y = 176, mat = "?wall" }
       { b = 136, mat = "?ceil"  }
@@ -954,14 +954,14 @@ PREFAB.HALLWAY_3D_STAIRCASE =
     }
     {
       { x =  72, y =  72, mat = "?wall" }
-      { x = 144, y =  32, mat = "?wall" }
+      { x = 128, y =  32, mat = "?wall" }
       { x = 184, y = 168, mat = "?wall" }
       { x = 176, y = 176, mat = "?wall" }
       { b = 296, mat = "?ceil"  }
     }
 
     {
-      { x =  32, y = 144, mat = "?wall" }
+      { x =  32, y = 128, mat = "?wall" }
       { x =  72, y =  72, mat = "?wall" }
       { x = 176, y = 176, mat = "?wall" }
       { x = 168, y = 184, mat = "?wall" }
@@ -969,7 +969,7 @@ PREFAB.HALLWAY_3D_STAIRCASE =
       { t = 180, mat = "?floor" }
     }
     {
-      { x =  32, y = 144, mat = "?wall" }
+      { x =  32, y = 128, mat = "?wall" }
       { x =  72, y =  72, mat = "?wall" }
       { x = 176, y = 176, mat = "?wall" }
       { x = 168, y = 184, mat = "?wall" }
@@ -978,7 +978,7 @@ PREFAB.HALLWAY_3D_STAIRCASE =
 
     {
       { x =  24, y = 192, mat = "?wall" }
-      { x =  32, y = 144, mat = "?wall" }
+      { x =  32, y = 128, mat = "?wall" }
       { x = 168, y = 184, mat = "?wall" }
       { x = 168, y = 192, mat = "?wall" }
       { b = 160, mat = "?ceil"  }
@@ -986,7 +986,7 @@ PREFAB.HALLWAY_3D_STAIRCASE =
     }
     {
       { x =  24, y = 192, mat = "?wall" }
-      { x =  32, y = 144, mat = "?wall" }
+      { x =  32, y = 128, mat = "?wall" }
       { x = 168, y = 184, mat = "?wall" }
       { x = 168, y = 192, mat = "?wall" }
       { b = 320, mat = "?ceil"  }
@@ -996,56 +996,56 @@ PREFAB.HALLWAY_3D_STAIRCASE =
 
     {
       { x = 192, y = 360, mat = "?wall" }
-      { x = 240, y = 352, mat = "?wall" }
-      { x = 240, y = 384, mat = "?outer" }
+      { x = 256, y = 352, mat = "?wall" }
+      { x = 256, y = 384, mat = "?outer" }
       { x = 192, y = 384, mat = "?wall" }
     }
 
     {
-      { x = 240, y = 352, mat = "?wall" }
+      { x = 256, y = 352, mat = "?wall" }
       { x = 312, y = 312, mat = "?wall" }
       { x = 384, y = 384, mat = "?outer" }
-      { x = 240, y = 384, mat = "?wall" }
+      { x = 256, y = 384, mat = "?wall" }
     }
 
     {
       { x = 312, y = 312, mat = "?wall" }
-      { x = 352, y = 240, mat = "?wall" }
-      { x = 384, y = 240, mat = "?outer" }
+      { x = 352, y = 256, mat = "?wall" }
+      { x = 384, y = 256, mat = "?outer" }
       { x = 384, y = 384, mat = "?wall" }
     }
 
     {
-      { x = 352, y = 240, mat = "?wall" }
+      { x = 352, y = 256, mat = "?wall" }
       { x = 360, y = 192, mat = "?wall" }
       { x = 384, y = 192, mat = "?outer" }
-      { x = 384, y = 240, mat = "?wall" }
+      { x = 384, y = 256, mat = "?wall" }
     }
 
     {
       { x = 192, y = 360, mat = "?wall" }
       { x = 192, y = 216, mat = "?wall" }
       { x = 200, y = 216, mat = "?wall" }
-      { x = 240, y = 352, mat = "?wall" }
+      { x = 256, y = 352, mat = "?wall" }
       { t = 60, mat = "?floor" }
     }
     {
       { x = 192, y = 360, mat = "?wall" }
       { x = 192, y = 216, mat = "?wall" }
       { x = 200, y = 216, mat = "?wall" }
-      { x = 240, y = 352, mat = "?wall" }
+      { x = 256, y = 352, mat = "?wall" }
       { b = 188, mat = "?ceil" }
     }
 
     {
-      { x = 240, y = 352, mat = "?wall" }
+      { x = 256, y = 352, mat = "?wall" }
       { x = 200, y = 216, mat = "?wall" }
       { x = 208, y = 208, mat = "?wall" }
       { x = 312, y = 312, mat = "?wall" }
       { t = 72, mat = "?floor" }
     }
     {
-      { x = 240, y = 352, mat = "?wall" }
+      { x = 256, y = 352, mat = "?wall" }
       { x = 200, y = 216, mat = "?wall" }
       { x = 208, y = 208, mat = "?wall" }
       { x = 312, y = 312, mat = "?wall" }
@@ -1056,26 +1056,26 @@ PREFAB.HALLWAY_3D_STAIRCASE =
       { x = 312, y = 312, mat = "?wall" }
       { x = 208, y = 208, mat = "?wall" }
       { x = 216, y = 200, mat = "?wall" }
-      { x = 352, y = 240, mat = "?wall" }
+      { x = 352, y = 256, mat = "?wall" }
       { t = 84, mat = "?floor" }
     }
     {
       { x = 312, y = 312, mat = "?wall" }
       { x = 208, y = 208, mat = "?wall" }
       { x = 216, y = 200, mat = "?wall" }
-      { x = 352, y = 240, mat = "?wall" }
+      { x = 352, y = 256, mat = "?wall" }
       { b = 212, mat = "?ceil" }
     }
 
     {
-      { x = 352, y = 240, mat = "?wall" }
+      { x = 352, y = 256, mat = "?wall" }
       { x = 216, y = 200, mat = "?wall" }
       { x = 216, y = 192, mat = "?wall" }
       { x = 360, y = 192, mat = "?wall" }
       { t = 96, mat = "?floor" }
     }
     {
-      { x = 352, y = 240, mat = "?wall" }
+      { x = 352, y = 256, mat = "?wall" }
       { x = 216, y = 200, mat = "?wall" }
       { x = 216, y = 192, mat = "?wall" }
       { x = 360, y = 192, mat = "?wall" }
@@ -1086,43 +1086,43 @@ PREFAB.HALLWAY_3D_STAIRCASE =
 
     {
       { x = 360, y = 192, mat = "?wall" }
-      { x = 352, y = 144, mat = "?wall" }
-      { x = 384, y = 144, mat = "?outer" }
+      { x = 352, y = 128, mat = "?wall" }
+      { x = 384, y = 128, mat = "?outer" }
       { x = 384, y = 192, mat = "?wall" }
     }
 
     {
-      { x = 352, y = 144, mat = "?wall" }
+      { x = 352, y = 128, mat = "?wall" }
       { x = 312, y =  72, mat = "?wall" }
       { x = 384, y =   0, mat = "?outer" }
-      { x = 384, y = 144, mat = "?wall" }
+      { x = 384, y = 128, mat = "?wall" }
     }
 
     {
       { x = 312, y =  72, mat = "?wall" }
-      { x = 240, y =  32, mat = "?wall" }
-      { x = 240, y =   0, mat = "?wall" }
+      { x = 256, y =  32, mat = "?wall" }
+      { x = 256, y =   0, mat = "?wall" }
       { x = 384, y =   0, mat = "?wall" }
     }
 
     {
-      { x = 240, y =  32, mat = "?wall" }
+      { x = 256, y =  32, mat = "?wall" }
       { x = 192, y =  24, mat = "?wall" }
       { x = 192, y =   0, mat = "?wall" }
-      { x = 240, y =   0, mat = "?wall" }
+      { x = 256, y =   0, mat = "?wall" }
     }
 
     {
       { x = 216, y = 192, mat = "?wall" }
       { x = 216, y = 184, mat = "?wall" }
-      { x = 352, y = 144, mat = "?wall" }
+      { x = 352, y = 128, mat = "?wall" }
       { x = 360, y = 192, mat = "?wall" }
       { t = 108, mat = "?floor" }
     }
     {
       { x = 216, y = 192, mat = "?wall" }
       { x = 216, y = 184, mat = "?wall" }
-      { x = 352, y = 144, mat = "?wall" }
+      { x = 352, y = 128, mat = "?wall" }
       { x = 360, y = 192, mat = "?wall" }
       { b = 236, mat = "?ceil" }
     }
@@ -1131,28 +1131,28 @@ PREFAB.HALLWAY_3D_STAIRCASE =
       { x = 216, y = 184, mat = "?wall" }
       { x = 208, y = 176, mat = "?wall" }
       { x = 312, y =  72, mat = "?wall" }
-      { x = 352, y = 144, mat = "?wall" }
+      { x = 352, y = 128, mat = "?wall" }
       { t = 120, mat = "?floor" }
     }
     {
       { x = 216, y = 184, mat = "?wall" }
       { x = 208, y = 176, mat = "?wall" }
       { x = 312, y =  72, mat = "?wall" }
-      { x = 352, y = 144, mat = "?wall" }
+      { x = 352, y = 128, mat = "?wall" }
       { b = 248, mat = "?ceil" }
     }
     
     {
       { x = 208, y = 176, mat = "?wall" }
       { x = 200, y = 168, mat = "?wall" }
-      { x = 240, y =  32, mat = "?wall" }
+      { x = 256, y =  32, mat = "?wall" }
       { x = 312, y =  72, mat = "?wall" }
       { t = 132, mat = "?floor" }
     }
     {
       { x = 208, y = 176, mat = "?wall" }
       { x = 200, y = 168, mat = "?wall" }
-      { x = 240, y =  32, mat = "?wall" }
+      { x = 256, y =  32, mat = "?wall" }
       { x = 312, y =  72, mat = "?wall" }
       { b = 260, mat = "?ceil" }
     }
@@ -1161,14 +1161,14 @@ PREFAB.HALLWAY_3D_STAIRCASE =
       { x = 200, y = 168, mat = "?wall" }
       { x = 192, y = 168, mat = "?wall" }
       { x = 192, y =  24, mat = "?wall" }
-      { x = 240, y =  32, mat = "?wall" }
+      { x = 256, y =  32, mat = "?wall" }
       { t = 144, mat = "?floor" }
     }
     {
       { x = 200, y = 168, mat = "?wall" }
       { x = 192, y = 168, mat = "?wall" }
       { x = 192, y =  24, mat = "?wall" }
-      { x = 240, y =  32, mat = "?wall" }
+      { x = 256, y =  32, mat = "?wall" }
       { b = 272, mat = "?ceil" }
     }
   }
