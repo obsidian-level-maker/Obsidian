@@ -460,7 +460,7 @@ end
 
 function Hallway_test_branch(start_K, start_dir, mode)
 
-  local function test_off_hall(MID)
+  local function test_nearby_hallway(MID)
     if not (MID.hall or (MID.room and MID.room.street)) then return end
 
     if not Connect_is_possible(start_K.room, MID.hall or MID.room, mode) then return end
@@ -585,8 +585,6 @@ function Hallway_test_branch(start_K, start_dir, mode)
     LEVEL.best_conn.score = score
     LEVEL.best_conn.stats = stats
     LEVEL.best_conn.merge_K = (merge ? end_K ; nil)
-
---stderrf(">>>>>>>>>> best now @ %s : score:%1.2f\n", H:tostr(), score)
   end
 
 
@@ -723,7 +721,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
   -- if neighbor section is used, nothing is possible except
   -- branching off a nearby hallway.
   if MID.used then
-    test_off_hall(MID)
+    test_nearby_hallway(MID)
     return
   end
 
@@ -731,6 +729,9 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
   if STYLE.hallways == "none"  then quota = 0 end
   if STYLE.hallways == "heaps" then quota = 6 end
+
+  -- when normal connection logic has failed, allow long hallways
+  if mode == "emergency" then quota = 8 end
 
   hall_flow(MID, 10 - start_dir, {}, {}, quota)
 end

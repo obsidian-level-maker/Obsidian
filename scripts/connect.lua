@@ -127,26 +127,34 @@ function CONN_CLASS.k_coord(D)
 end
 
 
-------------------------------------------------------------------------
-
-
-function Connect_decide_start_room()
-  each R in LEVEL.rooms do
-    R.start_score = R:eval_start()
-
-    gui.debugf("Start score @ %s (seeds:%d) --> %1.3f\n", R:tostr(), R.sw * R.sh, R.start_score)
+function CONN_CLASS.add_it(D)
+  gui.printf("Connecting %s --> %s : %s\n", D.L1:tostr(), D.L2:tostr(), D.kind or "????")
+  gui.debugf("group %d --> %d\n", D.L1.conn_group, D.L2.conn_group)
+  if D.K1 and D.K2 then
+    gui.debugf("via %s --> %s\n", D.K1:tostr(), D.K2:tostr())
   end
 
-  local room, index = table.pick_best(LEVEL.rooms,
-    function(A, B) return A.start_score > B.start_score end)
+  if D.L1.conn_group != D.L2.conn_group then
+    Connect_merge_groups(D.L1.conn_group, D.L2.conn_group)
+  end
 
-  gui.printf("Start room: %s\n", room:tostr())
+  table.insert(LEVEL.conns, D)
 
-  LEVEL.start_room = room
+  table.insert(D.L1.conns, D)
+  table.insert(D.L2.conns, D)
 
-  room.purpose = "START"
+  if D.kind != "teleporter" then
+    D.K1.num_conn = D.K1.num_conn + 1
+    D.K2.num_conn = D.K2.num_conn + 1
+
+    -- hallway stuff
+    if D.K1.hall then D.K1.hall_path[D.dir1] = D.L2 end
+    if D.K2.hall then D.K2.hall_path[D.dir2] = D.L1 end
+  end
 end
 
+
+------------------------------------------------------------------------
 
 
 function Connect_is_possible(L1, L2, mode)
@@ -160,12 +168,9 @@ function Connect_is_possible(L1, L2, mode)
     return false
   end
 
-  -- only connect TO a street
-  if L1.street then return false end
-
   -- Note: require R1's group to be less than R2, which ensures that
   --       a connection between two rooms is only tested _once_.
-  if mode == "normal" and
+  if mode != "cycle" and
      L1.kind != "hallway" and
      L2.kind != "hallway" and
      not L2.street
@@ -196,39 +201,8 @@ end
 
 
 
-function CONN_CLASS.add_it(D)
-  gui.printf("Connecting %s --> %s : %s\n", D.L1:tostr(), D.L2:tostr(), D.kind or "????")
-  gui.debugf("group %d --> %d\n", D.L1.conn_group, D.L2.conn_group)
-  if D.K1 and D.K2 then
-    gui.debugf("via %s --> %s\n", D.K1:tostr(), D.K2:tostr())
-  end
-
-  if D.L1.conn_group != D.L2.conn_group then
-    Connect_merge_groups(D.L1.conn_group, D.L2.conn_group)
-  end
-
-  table.insert(LEVEL.conns, D)
-
-  table.insert(D.L1.conns, D)
-  table.insert(D.L2.conns, D)
-
-  if D.kind != "teleporter" then
-    D.K1.num_conn = D.K1.num_conn + 1
-    D.K2.num_conn = D.K2.num_conn + 1
-
-    -- hallway stuff
-    if D.K1.hall then D.K1.hall_path[D.dir1] = D.L2 end
-    if D.K2.hall then D.K2.hall_path[D.dir2] = D.L1 end
-  end
-end
-
-
 function Connect_make_branch(mode)
-gui.debugf("\nmake_branch\n\n")
   local info = LEVEL.best_conn
-
--- if mode == "cycle" then stderrf(">>>>>>>>>>>>>>>> CYCLE score:%1.2f\n", info.score) end
-   if info.stats.crossover then stderrf(">>>>>>>>>>>>> CROSSOVER score:%1.2f\n", info.score) end
 
   -- merge new hall into an existing one?
   if info.merge_K then
@@ -246,7 +220,7 @@ gui.debugf("\nmake_branch\n\n")
     info.D2 = nil
   end
 
-  -- must add hallway to level list now (so that merge_groups can find it)
+  -- must add hallway to level now (so that merge_groups can find it)
   if info.hall then
     info.hall:add_it()
 
@@ -374,22 +348,44 @@ function Connect_scan_sections(mode, min_score)
 
     if K.kind != "section" then continue end
 
+    -- only connect TO a street (never FROM one)
+    if K.room.street then continue end
+
     for dir = 2,8,2 do
       Hallway_test_branch(K, dir, mode)
     end
 
     -- this function can be expensive, so check for user abort
-    if gui.abort() then return end
+    if gui.abort() then return true end
   end end
 
-  -- failed to find any connection?
+  -- failed to make any connection?
   if not LEVEL.best_conn.D1 then
-    if mode == "cycle" then return end
-    Plan_dump_rooms("Failed Map:")
-    error("Connection failure: separate groups exist")
+    return false
   end
 
   Connect_make_branch(mode)
+
+  return true  -- OK
+end
+
+
+
+function Connect_decide_start_room()
+  each R in LEVEL.rooms do
+    R.start_score = R:eval_start()
+
+    gui.debugf("Start score @ %s (seeds:%d) --> %1.3f\n", R:tostr(), R.sw * R.sh, R.start_score)
+  end
+
+  local room, index = table.pick_best(LEVEL.rooms,
+    function(A, B) return A.start_score > B.start_score end)
+
+  gui.printf("Start room: %s\n", room:tostr())
+
+  LEVEL.start_room = room
+
+  room.purpose = "START"
 end
 
 
@@ -463,7 +459,11 @@ function Connect_rooms()
 
   -- add connections until all rooms are reachable
   while count_groups() >= 2 do
-    Connect_scan_sections("normal", -999)
+    if not Connect_scan_sections("normal", -999) then
+      if not Connect_scan_sections("emergency", -99999) then
+        error("Failed to connect all rooms")
+      end
+    end
 
     if gui.abort() then return end
   end
