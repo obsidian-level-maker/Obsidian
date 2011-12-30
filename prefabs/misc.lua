@@ -516,7 +516,7 @@ PREFAB.HALLWAY_S_BEND =
     upper = "?ceil"
 
     torch_ent = "none"
-    style = 6  -- or 7 or 8
+    style = 1
   }
 
   brushes =
@@ -745,9 +745,11 @@ PREFAB.HALLWAY_S_BEND =
 
   entities =
   {
-    { ent = "?torch_ent", x = 288, y = 40, z = 64 }
+    { ent = "?torch_ent", x = 288, y = 152, z = 64 }
 
-    { ent = "light", x = 288, y = 40, z = 96, light = 128, style = "?style" }
+    { ent = "light", x = 288, y = 152, z = 96,
+      light = 128, radius = 192, style = "?style"
+    }
   }
 }
 
