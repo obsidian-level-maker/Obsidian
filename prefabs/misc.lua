@@ -880,16 +880,84 @@ PREFAB.HALLWAY_3D_STAIRCASE =
       { t = 48, mat = "?floor" }
     }
 
-
-  -- TEMP STUFF
+    -- bottom left quadrant
 
     {
-      { x =   0, y =   0, mat = "?wall" }
+      { x =  24, y =   0, mat = "?wall" }
       { x = 192, y =   0, mat = "?wall" }
-      { x = 192, y = 192, mat = "?wall" }
-      { x =   0, y = 192, mat = "?wall" }
-      { b = 328, mat = "?ceil" }
+      { x = 192, y =  24, mat = "?wall" }
+      { x =  24, y =  24, mat = "?wall" }
+      { b = 132, mat = "?ceil" }
     }
+
+    {
+      { x = 144, y =  32, mat = "?wall" }
+      { x = 144, y =  24, mat = "?wall" }
+      { x = 192, y =  24, mat = "?wall" }
+      { b = 124, mat = "?ceil" }
+    }
+
+    {
+      { x =  24, y =  24, mat = "?wall" }
+      { x = 144, y =  24, mat = "?wall" }
+      { x = 144, y =  32, mat = "?wall" }
+      { x =  72, y =  72, mat = "?wall" }
+      { b = 136, mat = "?ceil" }
+    }
+
+    {
+      { x =  24, y = 144, mat = "?wall" }
+      { x =  24, y =  24, mat = "?wall" }
+      { x =  72, y =  72, mat = "?wall" }
+      { x =  32, y = 144, mat = "?wall" }
+      { b = 148, mat = "?ceil" }
+    }
+
+    {
+      { x =  24, y = 192, mat = "?wall" }
+      { x =  24, y = 144, mat = "?wall" }
+      { x =  32, y = 144, mat = "?wall" }
+      { b = 160, mat = "?ceil" }
+    }
+
+    {
+      { x = 144, y =  32, mat = "?wall" }
+      { x = 192, y =  24, mat = "?wall" }
+      { x = 192, y = 168, mat = "?wall" }
+      { x = 184, y = 168, mat = "?wall" }
+      { b = 124, mat = "?ceil"  }
+      { t = 156, mat = "?floor" }
+    }
+
+    {
+      { x =  72, y =  72, mat = "?wall" }
+      { x = 144, y =  32, mat = "?wall" }
+      { x = 184, y = 168, mat = "?wall" }
+      { x = 176, y = 176, mat = "?wall" }
+      { b = 136, mat = "?ceil"  }
+      { t = 168, mat = "?floor" }
+    }
+
+    {
+      { x =  32, y = 144, mat = "?wall" }
+      { x =  72, y =  72, mat = "?wall" }
+      { x = 176, y = 176, mat = "?wall" }
+      { x = 168, y = 184, mat = "?wall" }
+      { b = 148, mat = "?ceil"  }
+      { t = 180, mat = "?floor" }
+    }
+
+    {
+      { x =  24, y = 192, mat = "?wall" }
+      { x =  32, y = 144, mat = "?wall" }
+      { x = 168, y = 184, mat = "?wall" }
+      { x = 168, y = 192, mat = "?wall" }
+      { b = 160, mat = "?ceil"  }
+      { t = 192, mat = "?floor" }
+    }
+
+
+  -- TEMP STUFF
 
     {
       { x = 192, y =   0, mat = "?wall" }
@@ -931,6 +999,9 @@ PREFAB.HALLWAY_3D_STAIRCASE =
     { ent = "light", x = 192, y = 40, z = 224,
       light = 192, radius = 320, style = "?style"
     }
+
+      --!!!! REMOVE TEMP
+      { ent = "player1", x = 96, y = -40, z = 32, angle = 90 }
   }
 }
 
