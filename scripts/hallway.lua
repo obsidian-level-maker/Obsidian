@@ -492,9 +492,11 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
 
   local function test_hall_conn(end_K, end_dir, visited, stats)
-    if not (end_K.room or end_K.hall) then return end
+    local L2 = end_K.room or end_K.hall
 
-    if not Connect_is_possible(start_K.room, end_K.room or end_K.hall, mode) then return end
+    if not L2 then return end
+
+    if not Connect_is_possible(start_K.room, L2, mode) then return end
 
     -- only connect to a big junction straight off a room
     if end_K.kind == "big_junc" and #visited != 1 then return end
@@ -533,11 +535,25 @@ function Hallway_test_branch(start_K, start_dir, mode)
       merge = false
     end
 
+    -- prefer cycles between the same quest
+    local next_quest
 
-    -- minor tendency for longer halls.
-    -- [I don't think that hallway length should be a major factor in
-    --  deciding whether to make a hallway or not]
-    score = score + #visited / 5.4
+    if mode == "cycle" and start_K.room.quest != L2.quest then
+      next_quest = start_K.room.quest
+
+      if L2.quest.id > next_quest.id then
+        next_quest = L2.quest
+      end
+
+      -- never make them if it would need a keyed door, but the game
+      -- uses up keys (so need key for original door).
+      assert(next_quest.entry_conn)
+      assert(next_quest.entry_conn.lock)
+
+      if next_quest.entry_conn.lock.kind == "KEY" and PARAM.lose_keys then return end
+
+      score = score - 40
+    end
 
 
     -- score is now computed : test it
@@ -585,6 +601,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
     LEVEL.best_conn.score = score
     LEVEL.best_conn.stats = stats
     LEVEL.best_conn.merge_K = (merge ? end_K ; nil)
+    LEVEL.best_conn.next_quest = next_quest
   end
 
 

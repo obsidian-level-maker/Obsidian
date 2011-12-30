@@ -158,14 +158,21 @@ end
 
 
 function Connect_is_possible(L1, L2, mode)
+  if L1 == L2 then return false end
+
   if mode == "cycle" then
     if L1.kind == "hallway" then return false end
     if L2.kind == "hallway" then return false end
+
+    return true
+--[[
+    if L1.quest != L2.quest then return true end
 
     if L1.next_in_quest == L2 then return true end
     if L1.next_in_quest and L1.next_in_quest.next_in_quest == L2 then return true end
 
     return false
+--]]
   end
 
   -- Note: require R1's group to be less than R2, which ensures that
@@ -251,6 +258,20 @@ function Connect_make_branch(mode)
 
     info.D1.L1.quest:add_room_or_hall(info.D1.L2)
     info.D1.L1.zone :add_room_or_hall(info.D1.L2)
+
+    -- handle quest difference : need to lock door
+
+    if info.next_quest then
+stderrf("next_quest\n")
+      assert(info.D2)  -- assuming hallway (two conns)
+
+      local next_quest = info.next_quest
+
+      assert(next_quest.entry_conn)
+      assert(next_quest.entry_conn.lock)
+
+      info.D2.lock = next_quest.entry_conn.lock
+    end
   end
 end
 
@@ -489,23 +510,6 @@ end
 function Connect_cycles()
   
   -- TODO: describe cycles........
-
-
-  local function next_door_to_existing(R, K, dir) -- FIXME: not used, need to do it in new system
-    for dist = 1,1 do
-      local N1 = K:neighbor(geom.RIGHT[dir], dist)
-      local N2 = K:neighbor(geom. LEFT[dir], dist)
-
-      each D in R.conns do
-        if D.dir1 == dir and D.K1 and (D.K1 == N1 or D.K1 == N2) then
-          return true
-        end
-      end
-    end
-
-    return false
-  end
-
 
   local function find_room(D)
     local L = D.L2

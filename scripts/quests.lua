@@ -44,9 +44,8 @@ class QUEST
 
   zone : ZONE
 
-  parent : QUEST  -- the quest which this one branched off (if any)
-
-  parent_room : ROOM / HALL  -- the room or hall branched off
+  entry_conn : CONN  -- the connection used to enter this quest
+                     -- Only nil for the very first quest
 
   volume : number  -- size of quest (sum of tvols)
 }
@@ -1474,8 +1473,7 @@ function Quest_make_quests()
 
     local new_Q = QUEST_CLASS.new(lock.conn.L2)
 
-    new_Q.parent = old_Q
-    new_Q.parent_room = old_room
+    new_Q.entry_conn = lock.conn
 
 -- gui.debugf("new %s branches off %s\n", new_Q:tostr(), old_Q:tostr())
 
