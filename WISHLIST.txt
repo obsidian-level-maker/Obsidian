@@ -36,10 +36,6 @@ OBLIGE WISH-LIST
 ----------------------------------------------------------------
 
 Miscellaneous:
-  +  when deciding outdoors, have a section quota
-
-  +  special logic to merge THEME_DEFAULTS tables??
-
   +  when traversibility in a room is poor (exit near entrance),
      make the exit into a switched door and put a switch at other
      end of room.
@@ -86,8 +82,6 @@ Miscellaneous:
   -  IDEA: levels get inherently tougher to beat over a megawad
            [assume player's skill increases].
 
-  -  log-print CSG stats (e.g. linedef count, plane count, etc)
-
 
 Theme System:
 
@@ -96,13 +90,6 @@ Theme System:
   -  IDEA: "minor" theme, like rare theme but can be repeated in a zone
 
   -  IDEA: cycle through dominant themes by quest
-
-
-Hexen:
-   !!  BOSS map : require the 2/3 hub keys to access boss room
-                 NOTE: could use them to restrict progress along chain
-
-   +   BOSS map : actually add the bosses (whatever else is needed)
 
 
 Teleporters:
@@ -392,11 +379,6 @@ Pictures:
     ceiling (above doors and low periphs).
 
 
-Possible Options:
--  glBSP section:
-   -  more accurate nodes (slower)
-   -  pack sidedefs
-
 
 Cycles:
   +  less chance if R2 (skipped room) is large
@@ -425,12 +407,67 @@ Void stuff:
   -  good for cages!
 
 
-Cancellation:
-  +  can abort monster code (Fight sim) midstream 
-  -  can abort CSG_BSP() midstream
-  -  can abort DOOM / Duke processing midstream
-  -  can abort Quake I / II BSP generation midstream
-  -  can abort Q1_ClippingHull() midstream
+----------------------------------------------------------------
+  MISCELLANEOUS
+----------------------------------------------------------------
+
++  diagonal chunks
+
+-  exit via teleporter pad or holes in floor
+
+-  raising bridges (activate by a switch)
+
+++  put in some Cyberdemons or Spider Masterminds
+
+-  at each room, pick 2-3 (rarer: 1,4) monster types
+   then decide how many of each one (for each skill).
+
+-  monster adjustment: don't just increase toughness, actually
+   create _more_ monsters.
+
+-  IDEA: treat groups of rooms (esp: multi starts and forked
+         paths) as a SINGLE BATTLE ARENA.
+
+-  cage monsters: don't put hitscan snipers up really high.
+
+
+-  in some (esp. large) rooms, sometimes try to always go up 
+   or always go down.  Rarely: do it for whole level
+
+-  CSG: clipping rectangles (typically a room)
+
+-  friendly monsters
+
+-  a module to randomly change DOOM monster / weapon stats via
+   DEHACKED / DDF / DECORATE.
+
+
+Batch Mode:
+
++  detect invalid game=XXX (etc) keywords
+
+-  handle theme=tech (find the "doom_tech" entry)
+
+
+Secrets:
+
+-  fix battle simulator to ignore stuff got in secrets
+   (push state onto stack, pop afterwards).
+
+-  different item probs, e.g. invuln & berserk are good
+
+
+Co-op mode:
+
+-  "checkpoint" areas that players pass through, with loads of
+   ammunition or health, enough to allow players to restock
+
+
+Name generator:
+
+-  create random weird-looking words for names of Bosses, planets
+   or whatever.  Use them multiple times over an episode or game
+   to make it seem like there is a actual story to the maps.
 
 
 ----------------------------------------------------------------
@@ -447,6 +484,24 @@ IDEA:
 
 Console:
   +  display lists better
+
+Cancellation:
+  +  can abort monster code (Fight sim) midstream 
+  -  can abort CSG_BSP() midstream
+  -  can abort DOOM / Duke processing midstream
+  -  can abort Quake I / II BSP generation midstream
+  -  can abort Q1_ClippingHull() midstream
+
+
+----------------------------------------------------------------
+  DOCUMENTATION / WEB SITE
+----------------------------------------------------------------
+
+-  new "RUNNING THE MAPS" section ?
+
+-  To reset all settings, simply delete this file: CONFIG.txt
+
+[etc.... merge WEB_TODO.txt into here...]
 
 
 ----------------------------------------------------------------
@@ -503,6 +558,8 @@ NO:  CSG DOOM: support entity.light
 
 -  only use separated teleporters in large rooms (kvol >= 3)
 
+-  log-print CSG stats (e.g. linedef count, plane count, etc)
+
 -  generate episode names (M_EPI# etc).
 
 -  Rail brushes: support fake 3D bridges
@@ -512,8 +569,6 @@ NO:  CSG DOOM: support entity.light
 
 -  make light level of windows (esp. outdoor -> outdoor)
    slightly lower than surrounds.
-
-.  build our own REJECT lump (use vis info like Quake)
 
 -  support lightning in ZDoom etc (via MAPINFO)
 
@@ -591,26 +646,23 @@ Sam's suggestions:
   HEXEN
 ----------------------------------------------------------------
 
+!!  BOSS map : require the 2/3 hub keys to access boss room
+               NOTE: could use them to restrict progress along chain
+
++   BOSS map : actually add the bosses (whatever else is needed)
+
 !! fix weapons, which should be spawned for each class 
 
 !! proper hub system
 
 +  separate prefab for switched vs locked doors
+   [why?]
 
 +  support more skies
 
 +  put 'fighter only' bit on fighter's weapons, etc..
 
-?? way to automatically give prefabs a tag?
-
--  IDEA: have a DEFAULT_ARGS table for each line special,
-         so that prefabs (etc) aren't cluttered with arguments.
-
--  need arg1 .. arg5 in faces, Lua code to assign tag number
-
--  need exit teleporter in final Hub.
-
--  make teleporter gates bi-directional.
+-  need exit teleporter in final Hub
 
 
 ----------------------------------------------------------------
@@ -750,81 +802,25 @@ Sam's suggestions:
 
 
 ----------------------------------------------------------------
-  DOCUMENTATION / WEB SITE
-----------------------------------------------------------------
-
--  new "RUNNING THE MAPS" section ?
-
--  To reset all settings, simply delete this file: CONFIG.txt
-
-[etc.... merge WEB_TODO.txt into here...]
-
-
-----------------------------------------------------------------
-  MISCELLANEOUS
-----------------------------------------------------------------
-
-+  in batch mode, detect invalid game=XXX (etc) keywords
-
--  in batch mode, handle theme=tech (find the "doom_tech" entry)
-
-
-Secrets:
-
--  fix battle simulator to ignore stuff got in secrets
-   (push state onto stack, pop afterwards).
-
--  different item probs, e.g. invuln & berserk are good
-
-
-Co-op mode:
-
--  "checkpoint" areas that players pass through, with loads of
-   ammunition or health, enough to allow players to restock
-
-
-Name generator:
-
--  create random weird-looking words for names of Bosses, planets
-   or whatever.  Use them multiple times over an episode or game
-   to make it seem like there is a actual story to the maps.
-
-
-++  put in some Cyberdemons or Spider Masterminds
-
--  at each room, pick 2-3 (rarer: 1,4) monster types
-   then decide how many of each one (for each skill).
-
--  monster adjustment: don't just increase toughness, actually
-   create _more_ monsters.
-
--  IDEA: treat groups of rooms (esp: multi starts and forked
-         paths) as a SINGLE BATTLE ARENA.
-
--  cage monsters: don't put hitscan snipers up really high.
-
-
-----------------------------------------------------------------
   PIPE DREAMS
 ----------------------------------------------------------------
 
-+  diagonal chunks
++  make Oblige easier to mod
 
->>  teleporters!   (RED is two-way, WHITE is one-way)
-
-+  make Oblige easier to mod.
-
-+  generate the Boss maps (don't use prebuilt).
++  generate the Boss maps (don't use prebuilt)
 
 -  deathmatch and CTF maps
+      5130 = "Blue flag"
+      5131 = "Red flag"
+      5080 = "Blue Start"      
+      5081 = "Red Start"
 
--  raising bridges (activate by a switch)
-
--  light up levels (a la quake).
-
--  exit via teleporter pad or holes in floor
+-  light up DOOM (etc) levels in a Quake-like way
 
 -  improved use of liquids.
+
+-  have a table listing a quantized HSV for each texture/flat
+   and make aesthetic decisions using it.
 
 -  fight simulator: take amount of cover into account
 
@@ -874,34 +870,6 @@ Name generator:
       20+ cacodemons.
       5-15 mancubi
       5-15 arachnatrons
-
--  CTF maps (boomctf) :
-       5130 = "Blue flag";
-       5131 = "Red flag";
-       5080 = "Blue Start"      
-       5081 = "Red Start"
-
-
-----------------------------------------------------------------
-  IDEAS AND BRAINSTORMS
-----------------------------------------------------------------
-
-+  Composition of prefabs
-
--  in some (esp. large) rooms, sometimes try to always go up 
-   or always go down.  Rarely: do it for whole level
-
--  module help / explanations ?? (appear above the options)
-
--  CSG: clipping rectangles (typically a room)
-
--  friendly monsters
-
--  a module to randomly change DOOM monster / weapon stats via
-   DEHACKED / DDF / DECORATE.
-
->>  have a table listing a quantized HSV for each texture/flat
-    and make aesthetic decisions using it.
 
 
 
