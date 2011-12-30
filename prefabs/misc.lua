@@ -758,6 +758,8 @@ PREFAB.HALLWAY_3D_STAIRCASE =
 {
   fitted = "xy"
 
+  -- x_ranges = { {24,1}, {144,0}, {24,1} }
+
   defaults =
   {
     upper  = "?ceil"
