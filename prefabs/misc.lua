@@ -761,12 +761,10 @@ PREFAB.HALLWAY_3D_STAIRCASE =
   defaults =
   {
     upper  = "?ceil"
-    pillar = "?wall"
+    pillar = "?ceil"
 
     torch_ent = "none"
     style = 1
-
-outer = "CITY2_5"
   }
 
   brushes =
@@ -800,20 +798,36 @@ outer = "CITY2_5"
       { t =  8, mat = "?floor" }
     }
 
+    {
+      { x =  24, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?wall" }
+      { x = 192, y =  24, mat = "?wall" }
+      { x =  24, y =  24, mat = "?wall" }
+      { b = 132, mat = "?ceil" }
+    }
+
     -- exit
     {
       { x =  24, y = 192, mat = "?wall" }
       { x = 192, y = 192, mat = "?wall" }
-      { x = 192, y = 384, mat = "?wall" }
-      { x =  24, y = 384, mat = "?wall" }
+      { x = 192, y = 360, mat = "?outer" }
+      { x =  24, y = 360, mat = "?wall" }
       { b = 172, mat = "?ceil" }
+      { t = 204, mat = "?floor" }
+    }
+
+    {
+      { x =  24, y = 360, mat = "?wall" }
+      { x = 192, y = 360, mat = "?wall" }
+      { x = 192, y = 384, mat = "?outer" }
+      { x =  24, y = 384, mat = "?wall" }
       { t = 204, mat = "?floor" }
     }
 
     {
       { x =  24, y = 192, mat = "?wall" }
       { x = 192, y = 192, mat = "?wall" }
-      { x = 192, y = 384, mat = "?wall" }
+      { x = 192, y = 384, mat = "?outer" }
       { x =  24, y = 384, mat = "?wall" }
       { b = 328, mat = "?ceil" }
     }
@@ -885,14 +899,6 @@ outer = "CITY2_5"
     -- bottom left quadrant
 
     {
-      { x =  24, y =   0, mat = "?wall" }
-      { x = 192, y =   0, mat = "?wall" }
-      { x = 192, y =  24, mat = "?wall" }
-      { x =  24, y =  24, mat = "?wall" }
-      { b = 132, mat = "?ceil" }
-    }
-
-    {
       { x = 144, y =  32, mat = "?wall" }
       { x = 144, y =  24, mat = "?wall" }
       { x = 192, y =  24, mat = "?wall" }
@@ -930,6 +936,13 @@ outer = "CITY2_5"
       { b = 124, mat = "?ceil"  }
       { t = 156, mat = "?floor" }
     }
+    {
+      { x = 144, y =  32, mat = "?wall" }
+      { x = 192, y =  24, mat = "?wall" }
+      { x = 192, y = 168, mat = "?wall" }
+      { x = 184, y = 168, mat = "?wall" }
+      { b = 284, mat = "?ceil" }
+    }
 
     {
       { x =  72, y =  72, mat = "?wall" }
@@ -938,6 +951,13 @@ outer = "CITY2_5"
       { x = 176, y = 176, mat = "?wall" }
       { b = 136, mat = "?ceil"  }
       { t = 168, mat = "?floor" }
+    }
+    {
+      { x =  72, y =  72, mat = "?wall" }
+      { x = 144, y =  32, mat = "?wall" }
+      { x = 184, y = 168, mat = "?wall" }
+      { x = 176, y = 176, mat = "?wall" }
+      { b = 296, mat = "?ceil"  }
     }
 
     {
@@ -948,6 +968,13 @@ outer = "CITY2_5"
       { b = 148, mat = "?ceil"  }
       { t = 180, mat = "?floor" }
     }
+    {
+      { x =  32, y = 144, mat = "?wall" }
+      { x =  72, y =  72, mat = "?wall" }
+      { x = 176, y = 176, mat = "?wall" }
+      { x = 168, y = 184, mat = "?wall" }
+      { b = 308, mat = "?ceil"  }
+    }
 
     {
       { x =  24, y = 192, mat = "?wall" }
@@ -956,6 +983,13 @@ outer = "CITY2_5"
       { x = 168, y = 192, mat = "?wall" }
       { b = 160, mat = "?ceil"  }
       { t = 192, mat = "?floor" }
+    }
+    {
+      { x =  24, y = 192, mat = "?wall" }
+      { x =  32, y = 144, mat = "?wall" }
+      { x = 168, y = 184, mat = "?wall" }
+      { x = 168, y = 192, mat = "?wall" }
+      { b = 320, mat = "?ceil"  }
     }
 
     -- top right quadrant
@@ -1137,25 +1171,27 @@ outer = "CITY2_5"
       { x = 240, y =  32, mat = "?wall" }
       { b = 272, mat = "?ceil" }
     }
-    
   }
 
   entities =
   {
-    { ent = "?torch_ent", x = 192, y = 344, z = 96 }
+    { ent = "?torch_ent", x = 40, y = 192, z = 48 }
 
-    { ent = "light", x = 192, y = 344, z = 128,
-      light = 192, radius = 320, style = "?style"
+    { ent = "light", x = 56, y = 192, z = 80,
+      light = 160, radius = 320, style = "?style"
     }
 
-    { ent = "?torch_ent", x = 192, y = 40, z = 192 }
+    { ent = "?torch_ent", x = 344, y = 192, z = 144 }
 
-    { ent = "light", x = 192, y = 40, z = 224,
-      light = 192, radius = 320, style = "?style"
+    { ent = "light", x = 328, y = 192, z = 172,
+      light = 160, radius = 320, style = "?style"
     }
 
-      --!!!! REMOVE TEMP
-      { ent = "player1", x = 96, y = -40, z = 32, angle = 90 }
+    { ent = "?torch_ent", x = 40, y = 192, z = 236 }
+
+    { ent = "light", x = 56, y = 192, z = 268,
+      light = 160, radius = 320, style = "?style"
+    }
   }
 }
 
