@@ -47,8 +47,6 @@ Teleporters:
 -  able to place separate entry and exit spots
    (especially for Quake and Quake II)
 
--  ability to link two (far apart) areas via teleporters  
-
 -  more games : Hexen (X_012) and Chex Quest 1/2/3
 
 
@@ -156,12 +154,11 @@ Facades:
 
 
 Quests:
-
 -  currently broken if no switches
    -  have a lock limit, if over then mark branches as "dead_wood"
    -  keep track of number of "branches to go"
 
-Idea: "single minis" : a single room (not too big, kvolume <= 2)
+IDEA: "single minis" : a single room (not too big, kvolume <= 2)
       which contains something nice to get (weapon, powerup, etc).
 
       NO ---> go with the "STORAGE" idiom instead
@@ -218,6 +215,7 @@ Caves:
    --> create a distance map
 
 +  fix monster spots
+
 +  fix pickup spots
 
 +  support Cross-Overs
@@ -364,13 +362,7 @@ Weapons:
 
 -  raising bridges (activate by a switch)
 
-++  put in some Cyberdemons or Spider Masterminds
-
--  at each room, pick 2-3 (rarer: 1,4) monster types
-   then decide how many of each one (for each skill).
-
--  monster adjustment: don't just increase toughness, actually
-   create _more_ monsters.
++  put in some Cyberdemons or Spider Masterminds
 
 -  IDEA: treat groups of rooms (esp: multi starts and forked
          paths) as a SINGLE BATTLE ARENA.
@@ -390,14 +382,12 @@ Weapons:
 
 
 Batch Mode:
-
 +  detect invalid game=XXX (etc) keywords
 
 -  handle theme=tech (find the "doom_tech" entry)
 
 
 Secrets:
-
 -  fix battle simulator to ignore stuff got in secrets
    (push state onto stack, pop afterwards).
 
@@ -405,13 +395,11 @@ Secrets:
 
 
 Co-op mode:
-
 -  "checkpoint" areas that players pass through, with loads of
    ammunition or health, enough to allow players to restock
 
 
 Name generator:
-
 -  create random weird-looking words for names of Bosses, planets
    or whatever.  Use them multiple times over an episode or game
    to make it seem like there is a actual story to the maps.
