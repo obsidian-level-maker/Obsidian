@@ -956,6 +956,96 @@ PREFAB.HALLWAY_3D_STAIRCASE =
       { t = 192, mat = "?floor" }
     }
 
+    -- top right quadrant
+
+    {
+      { x = 192, y = 360, mat = "?wall" }
+      { x = 240, y = 352, mat = "?wall" }
+      { x = 240, y = 384, mat = "?outer" }
+      { x = 192, y = 384, mat = "?wall" }
+    }
+
+    {
+      { x = 240, y = 352, mat = "?wall" }
+      { x = 312, y = 312, mat = "?wall" }
+      { x = 384, y = 384, mat = "?outer" }
+      { x = 240, y = 384, mat = "?wall" }
+    }
+
+    {
+      { x = 312, y = 312, mat = "?wall" }
+      { x = 352, y = 240, mat = "?wall" }
+      { x = 384, y = 240, mat = "?outer" }
+      { x = 384, y = 384, mat = "?wall" }
+    }
+
+    {
+      { x = 352, y = 240, mat = "?wall" }
+      { x = 360, y = 192, mat = "?wall" }
+      { x = 384, y = 192, mat = "?outer" }
+      { x = 384, y = 240, mat = "?wall" }
+    }
+
+    {
+      { x = 192, y = 360, mat = "?wall" }
+      { x = 192, y = 216, mat = "?wall" }
+      { x = 200, y = 216, mat = "?wall" }
+      { x = 240, y = 352, mat = "?wall" }
+      { t = 60, mat = "?floor" }
+    }
+    {
+      { x = 192, y = 360, mat = "?wall" }
+      { x = 192, y = 216, mat = "?wall" }
+      { x = 200, y = 216, mat = "?wall" }
+      { x = 240, y = 352, mat = "?wall" }
+      { b = 184, mat = "?ceil" }
+    }
+
+    {
+      { x = 240, y = 352, mat = "?wall" }
+      { x = 200, y = 216, mat = "?wall" }
+      { x = 208, y = 208, mat = "?wall" }
+      { x = 312, y = 312, mat = "?wall" }
+      { t = 72, mat = "?floor" }
+    }
+    {
+      { x = 240, y = 352, mat = "?wall" }
+      { x = 200, y = 216, mat = "?wall" }
+      { x = 208, y = 208, mat = "?wall" }
+      { x = 312, y = 312, mat = "?wall" }
+      { b = 196, mat = "?ceil" }
+    }
+
+    {
+      { x = 312, y = 312, mat = "?wall" }
+      { x = 208, y = 208, mat = "?wall" }
+      { x = 216, y = 200, mat = "?wall" }
+      { x = 352, y = 240, mat = "?wall" }
+      { t = 84, mat = "?floor" }
+    }
+    {
+      { x = 312, y = 312, mat = "?wall" }
+      { x = 208, y = 208, mat = "?wall" }
+      { x = 216, y = 200, mat = "?wall" }
+      { x = 352, y = 240, mat = "?wall" }
+      { b = 208, mat = "?ceil" }
+    }
+
+    {
+      { x = 352, y = 240, mat = "?wall" }
+      { x = 216, y = 200, mat = "?wall" }
+      { x = 216, y = 192, mat = "?wall" }
+      { x = 360, y = 192, mat = "?wall" }
+      { t = 96, mat = "?floor" }
+    }
+    {
+      { x = 352, y = 240, mat = "?wall" }
+      { x = 216, y = 200, mat = "?wall" }
+      { x = 216, y = 192, mat = "?wall" }
+      { x = 360, y = 192, mat = "?wall" }
+      { b = 220, mat = "?ceil" }
+    }
+
 
   -- TEMP STUFF
 
