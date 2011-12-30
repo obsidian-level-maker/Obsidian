@@ -513,8 +513,10 @@ PREFAB.HALLWAY_S_BEND =
 
   defaults =
   {
+    upper = "?ceil"
+
     torch_ent = "none"
-step = "STEP1"
+    style = 6  -- or 7 or 8
   }
 
   brushes =
@@ -557,7 +559,6 @@ step = "STEP1"
     }
 
     -- right/bottom walls
-
     {
       { x = 160, y =   0, mat = "?wall" }
       { x = 192, y =   0, mat = "?wall" }
@@ -596,20 +597,20 @@ step = "STEP1"
 
     -- steps
     {
-      { x =  32, y =   0, mat = "?floor" }
+      { x =  32, y =   0, mat = "?step", y_offset=0, peg=1 }
       { x = 160, y =   0, mat = "?floor" }
       { x =  32, y =  64, mat = "?floor" }
       { t =  8, mat = "?floor" }
     }
     {
       { x =  32, y =   0, mat = "?ceil" }
-      { x = 160, y =   0, mat = "?ceil" }
+      { x = 160, y =   0, mat = "?upper", y_offset=0, peg=1 }
       { x =  32, y =  64, mat = "?ceil" }
       { b =  104, mat = "?ceil" }
     }
 
     {
-      { x =  32, y =  64, mat = "?floor" }
+      { x =  32, y =  64, mat = "?step", y_offset=0, peg=1 }
       { x = 160, y =   0, mat = "?floor" }
       { x = 168, y =  24, mat = "?floor" }
       { x =  64, y = 128, mat = "?floor" }
@@ -618,13 +619,13 @@ step = "STEP1"
     {
       { x =  32, y =  64, mat = "?ceil" }
       { x = 160, y =   0, mat = "?ceil" }
-      { x = 168, y =  24, mat = "?ceil" }
+      { x = 168, y =  24, mat = "?upper", y_offset=0, peg=1 }
       { x =  64, y = 128, mat = "?ceil" }
       { b = 112, mat = "?ceil" }
     }
 
     {
-      { x =  64, y = 128, mat = "?floor" }
+      { x =  64, y = 128, mat = "?step", y_offset=0, peg=1 }
       { x = 168, y =  24, mat = "?floor" }
       { x = 192, y =  32, mat = "?floor" }
       { x = 128, y = 160, mat = "?floor" }
@@ -633,13 +634,13 @@ step = "STEP1"
     {
       { x =  64, y = 128, mat = "?ceil" }
       { x = 168, y =  24, mat = "?ceil" }
-      { x = 192, y =  32, mat = "?ceil" }
+      { x = 192, y =  32, mat = "?upper", y_offset=0, peg=1 }
       { x = 128, y = 160, mat = "?ceil" }
       { b = 120, mat = "?ceil" }
     }
 
     {
-      { x = 128, y = 160, mat = "?floor" }
+      { x = 128, y = 160, mat = "?step", y_offset=0, peg=1 }
       { x = 192, y =  32, mat = "?floor" }
       { x = 224, y =  32, mat = "?floor" }
       { x = 224, y = 160, mat = "?floor" }
@@ -648,58 +649,58 @@ step = "STEP1"
     {
       { x = 128, y = 160, mat = "?ceil" }
       { x = 192, y =  32, mat = "?ceil" }
-      { x = 224, y =  32, mat = "?ceil" }
+      { x = 224, y =  32, mat = "?upper", y_offset=0, peg=1 }
       { x = 224, y = 160, mat = "?ceil" }
       { b = 128, mat = "?ceil" }
     }
 
     {
+      { x = 224, y = 160, mat = "?step", y_offset=0, peg=1 }
       { x = 224, y =  32, mat = "?floor" }
       { x = 288, y =  32, mat = "?floor" }
       { x = 288, y = 160, mat = "?floor" }
-      { x = 224, y = 160, mat = "?floor" }
       { t = 40, mat = "?floor" }
     }
     {
-      { x = 224, y =  32, mat = "?ceil" }
-      { x = 288, y =  32, mat = "?ceil" }
-      { x = 288, y = 160, mat = "?ceil" }
       { x = 224, y = 160, mat = "?ceil" }
+      { x = 224, y =  32, mat = "?ceil" }
+      { x = 288, y =  32, mat = "?upper", y_offset=0, peg=1 }
+      { x = 288, y = 160, mat = "?ceil" }
       { b = 136, mat = "?ceil" }
     }
 
     {
+      { x = 288, y = 160, mat = "?step", y_offset=0, peg=1 }
       { x = 288, y =  32, mat = "?floor" }
       { x = 352, y =  32, mat = "?floor" }
       { x = 352, y = 160, mat = "?floor" }
-      { x = 288, y = 160, mat = "?floor" }
       { t = 48, mat = "?floor" }
     }
     {
-      { x = 288, y =  32, mat = "?ceil" }
-      { x = 352, y =  32, mat = "?ceil" }
-      { x = 352, y = 160, mat = "?ceil" }
       { x = 288, y = 160, mat = "?ceil" }
+      { x = 288, y =  32, mat = "?ceil" }
+      { x = 352, y =  32, mat = "?upper", y_offset=0, peg=1 }
+      { x = 352, y = 160, mat = "?ceil" }
       { b = 144, mat = "?ceil" }
     }
 
     {
+      { x = 352, y = 160, mat = "?step", y_offset=0, peg=1 }
       { x = 352, y =  32, mat = "?floor" }
       { x = 448, y =  32, mat = "?floor" }
       { x = 384, y = 160, mat = "?floor" }
-      { x = 352, y = 160, mat = "?floor" }
       { t = 56, mat = "?floor" }
     }
     {
-      { x = 352, y =  32, mat = "?ceil" }
-      { x = 448, y =  32, mat = "?ceil" }
-      { x = 384, y = 160, mat = "?ceil" }
       { x = 352, y = 160, mat = "?ceil" }
+      { x = 352, y =  32, mat = "?ceil" }
+      { x = 448, y =  32, mat = "?upper", y_offset=0, peg=1 }
+      { x = 384, y = 160, mat = "?ceil" }
       { b = 152, mat = "?ceil" }
     }
 
     {
-      { x = 384, y = 160, mat = "?floor" }
+      { x = 384, y = 160, mat = "?step", y_offset=0, peg=1 }
       { x = 448, y =  32, mat = "?floor" }
       { x = 512, y =  64, mat = "?floor" }
       { x = 408, y = 168, mat = "?floor" }
@@ -708,13 +709,13 @@ step = "STEP1"
     {
       { x = 384, y = 160, mat = "?ceil" }
       { x = 448, y =  32, mat = "?ceil" }
-      { x = 512, y =  64, mat = "?ceil" }
+      { x = 512, y =  64, mat = "?upper", y_offset=0, peg=1 }
       { x = 408, y = 168, mat = "?ceil" }
       { b = 160, mat = "?ceil" }
     }
 
     {
-      { x = 408, y = 168, mat = "?floor" }
+      { x = 408, y = 168, mat = "?step", y_offset=0, peg=1 }
       { x = 512, y =  64, mat = "?floor" }
       { x = 544, y = 128, mat = "?floor" }
       { x = 416, y = 192, mat = "?floor" }
@@ -723,28 +724,30 @@ step = "STEP1"
     {
       { x = 408, y = 168, mat = "?ceil" }
       { x = 512, y =  64, mat = "?ceil" }
-      { x = 544, y = 128, mat = "?ceil" }
+      { x = 544, y = 128, mat = "?upper", y_offset=0, peg=1 }
       { x = 416, y = 192, mat = "?ceil" }
       { b = 168, mat = "?ceil" }
     }
 
     {
-      { x = 416, y = 192, mat = "?floor" }
+      { x = 416, y = 192, mat = "?step", y_offset=0, peg=1 }
       { x = 544, y = 128, mat = "?floor" }
-      { x = 544, y = 192, mat = "?floor" }
+      { x = 544, y = 192, mat = "?outer" }
       { t = 80, mat = "?floor" }
     }
     {
       { x = 416, y = 192, mat = "?ceil" }
       { x = 544, y = 128, mat = "?ceil" }
-      { x = 544, y = 192, mat = "?ceil" }
+      { x = 544, y = 192, mat = "?outer" }
       { b = 176, mat = "?ceil" }
     }
   }
 
   entities =
   {
-    ent = "?torch_ent", x = 288, y = 40, z = 64
+    { ent = "?torch_ent", x = 288, y = 40, z = 64 }
+
+    { ent = "light", x = 288, y = 40, z = 96, light = 128, style = "?style" }
   }
 }
 
