@@ -70,7 +70,6 @@ PREFAB.FAT_CORNER_DIAG =
 
     -- sky
     {
-      { m = "sky" }
       { x = 192, y =  64, mat = "_SKY", blocked=1 }
       { x = 192, y = 192, mat = "_SKY", blocked=1 }
       { x =  64, y = 192, mat = "_SKY", blocked=1 }

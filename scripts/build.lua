@@ -550,6 +550,15 @@ function Brush_set_mat(brush, wall, flat)
 end
 
 
+function Brush_has_sky(brush)
+  each C in brush do
+    if C.mat == "_SKY" then return true end
+  end
+
+  return false
+end
+
+
 ------------------------------------------------------------------------
 
 
@@ -1227,6 +1236,11 @@ function Fab_apply_skins(fab, list)
 
 
   local function process_materials(brush)
+    -- check if it should be a sky brush
+    if not brush[1].m and Brush_has_sky(brush) then
+      table.insert(brush, 1, { m="sky" })
+    end
+
     each C in brush do
       if C.mat then
         local mat = Mat_lookup(C.mat)
@@ -1263,11 +1277,11 @@ function Fab_apply_skins(fab, list)
 
 
   local function do_materials(fab)
-    for _,B in ipairs(fab.brushes) do
+    each B in fab.brushes do
       process_materials(B)
     end
 
-    for _,M in ipairs(fab.models) do
+    each M in fab.models do
       process_model_face(M.x_face, false)
       process_model_face(M.y_face, false)
       process_model_face(M.z_face, true)
@@ -1384,14 +1398,14 @@ function Fab_apply_skins(fab, list)
 
 
   local function brush_stuff()
-    for _,B in ipairs(fab.brushes) do
+    each B in fab.brushes do
       if not B[1].m then
         table.insert(B, 1, { m="solid" })
       end
 
       B[1].fab = fab
-      
-      for _,C in ipairs(B) do
+
+      each C in B do
         Brush_collect_flags(C)
       end
     end

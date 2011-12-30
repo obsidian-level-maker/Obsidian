@@ -41,7 +41,6 @@ PREFAB.SKY_FENCE =
   brushes =
   {
     {
-      { m = "sky" },
       { x =   0, y =  0, mat = "_SKY" }
       { x = 192, y =  0, mat = "_SKY" }
       { x = 192, y = 16, mat = "_SKY" }
@@ -58,7 +57,6 @@ PREFAB.SKY_FENCE =
     }
 
     {
-      { m = "sky" },
       { x =   0, y =   0, mat = "_SKY" }
       { x = 192, y =   0, mat = "_SKY" }
       { x = 192, y = 192, mat = "_SKY" }
@@ -77,7 +75,6 @@ PREFAB.SKY_CORNER =
   {
 
     {
-      { m = "sky" },
       { x = 176, y =   0, mat = "_SKY" }
       { x = 192, y =   0, mat = "_SKY" }
       { x = 192, y = 192, mat = "_SKY" }
@@ -95,7 +92,6 @@ PREFAB.SKY_CORNER =
     }
 
     {
-      { m = "sky" },
       { x =   0, y =   0, mat = "_SKY" }
       { x = 192, y =   0, mat = "_SKY" }
       { x = 192, y = 192, mat = "_SKY" }
