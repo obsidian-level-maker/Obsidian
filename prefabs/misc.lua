@@ -765,6 +765,8 @@ PREFAB.HALLWAY_3D_STAIRCASE =
 
     torch_ent = "none"
     style = 1
+
+outer = "CITY2_5"
   }
 
   brushes =
@@ -998,7 +1000,7 @@ PREFAB.HALLWAY_3D_STAIRCASE =
       { x = 192, y = 216, mat = "?wall" }
       { x = 200, y = 216, mat = "?wall" }
       { x = 240, y = 352, mat = "?wall" }
-      { b = 184, mat = "?ceil" }
+      { b = 188, mat = "?ceil" }
     }
 
     {
@@ -1013,7 +1015,7 @@ PREFAB.HALLWAY_3D_STAIRCASE =
       { x = 200, y = 216, mat = "?wall" }
       { x = 208, y = 208, mat = "?wall" }
       { x = 312, y = 312, mat = "?wall" }
-      { b = 196, mat = "?ceil" }
+      { b = 200, mat = "?ceil" }
     }
 
     {
@@ -1028,7 +1030,7 @@ PREFAB.HALLWAY_3D_STAIRCASE =
       { x = 208, y = 208, mat = "?wall" }
       { x = 216, y = 200, mat = "?wall" }
       { x = 352, y = 240, mat = "?wall" }
-      { b = 208, mat = "?ceil" }
+      { b = 212, mat = "?ceil" }
     }
 
     {
@@ -1043,37 +1045,99 @@ PREFAB.HALLWAY_3D_STAIRCASE =
       { x = 216, y = 200, mat = "?wall" }
       { x = 216, y = 192, mat = "?wall" }
       { x = 360, y = 192, mat = "?wall" }
-      { b = 220, mat = "?ceil" }
+      { b = 224, mat = "?ceil" }
     }
 
-
-  -- TEMP STUFF
+    -- bottom right quadrant
 
     {
-      { x = 192, y =   0, mat = "?wall" }
+      { x = 360, y = 192, mat = "?wall" }
+      { x = 352, y = 144, mat = "?wall" }
+      { x = 384, y = 144, mat = "?outer" }
+      { x = 384, y = 192, mat = "?wall" }
+    }
+
+    {
+      { x = 352, y = 144, mat = "?wall" }
+      { x = 312, y =  72, mat = "?wall" }
+      { x = 384, y =   0, mat = "?outer" }
+      { x = 384, y = 144, mat = "?wall" }
+    }
+
+    {
+      { x = 312, y =  72, mat = "?wall" }
+      { x = 240, y =  32, mat = "?wall" }
+      { x = 240, y =   0, mat = "?wall" }
       { x = 384, y =   0, mat = "?wall" }
-      { x = 384, y = 384, mat = "?wall" }
-      { x = 192, y = 384, mat = "?wall" }
-      { t =  60, mat = "?floor" }
     }
 
     {
+      { x = 240, y =  32, mat = "?wall" }
+      { x = 192, y =  24, mat = "?wall" }
       { x = 192, y =   0, mat = "?wall" }
-      { x = 384, y =   0, mat = "?wall" }
-      { x = 384, y = 384, mat = "?wall" }
-      { x = 192, y = 384, mat = "?wall" }
-      { b = 328, mat = "?ceil" }
+      { x = 240, y =   0, mat = "?wall" }
     }
 
---[[
     {
-      { x =   0, y =   0, mat = "?X" }
-      { x =   0, y =   0, mat = "?X" }
-      { x =   0, y =   0, mat = "?X" }
-      { x =   0, y =   0, mat = "?X" }
+      { x = 216, y = 192, mat = "?wall" }
+      { x = 216, y = 184, mat = "?wall" }
+      { x = 352, y = 144, mat = "?wall" }
+      { x = 360, y = 192, mat = "?wall" }
+      { t = 108, mat = "?floor" }
     }
---]]
-
+    {
+      { x = 216, y = 192, mat = "?wall" }
+      { x = 216, y = 184, mat = "?wall" }
+      { x = 352, y = 144, mat = "?wall" }
+      { x = 360, y = 192, mat = "?wall" }
+      { b = 236, mat = "?ceil" }
+    }
+    
+    {
+      { x = 216, y = 184, mat = "?wall" }
+      { x = 208, y = 176, mat = "?wall" }
+      { x = 312, y =  72, mat = "?wall" }
+      { x = 352, y = 144, mat = "?wall" }
+      { t = 120, mat = "?floor" }
+    }
+    {
+      { x = 216, y = 184, mat = "?wall" }
+      { x = 208, y = 176, mat = "?wall" }
+      { x = 312, y =  72, mat = "?wall" }
+      { x = 352, y = 144, mat = "?wall" }
+      { b = 248, mat = "?ceil" }
+    }
+    
+    {
+      { x = 208, y = 176, mat = "?wall" }
+      { x = 200, y = 168, mat = "?wall" }
+      { x = 240, y =  32, mat = "?wall" }
+      { x = 312, y =  72, mat = "?wall" }
+      { t = 132, mat = "?floor" }
+    }
+    {
+      { x = 208, y = 176, mat = "?wall" }
+      { x = 200, y = 168, mat = "?wall" }
+      { x = 240, y =  32, mat = "?wall" }
+      { x = 312, y =  72, mat = "?wall" }
+      { b = 260, mat = "?ceil" }
+    }
+    
+    {
+      { x = 200, y = 168, mat = "?wall" }
+      { x = 192, y = 168, mat = "?wall" }
+      { x = 192, y =  24, mat = "?wall" }
+      { x = 240, y =  32, mat = "?wall" }
+      { t = 144, mat = "?floor" }
+    }
+    {
+      { x = 200, y = 168, mat = "?wall" }
+      { x = 192, y = 168, mat = "?wall" }
+      { x = 192, y =  24, mat = "?wall" }
+      { x = 240, y =  32, mat = "?wall" }
+      { b = 272, mat = "?ceil" }
+    }
+    
   }
 
   entities =
