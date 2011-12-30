@@ -161,30 +161,45 @@ PREFAB.FAT_CAGE1 =
       { x =   0, y = 16, mat = "?wall" }
     }
 
+    -- walls each side
+    {
+      { x =  0, y =   0, mat = "?wall" }
+      { x = 16, y =   0, mat = "?wall" }
+      { x = 16, y = 192, mat = "?wall" }
+      { x =  0, y = 192, mat = "?wall" }
+    }
+
+    {
+      { x = 176, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?wall" }
+      { x = 192, y = 192, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+    }
+
     -- platform
     {
-      { x =   0, y =  16, mat = "?wall" }
-      { x = 192, y =  16, mat = "?wall" }
-      { x = 192, y = 192, mat = "?wall" }
-      { x =   0, y = 192, mat = "?wall" }
+      { x =  16, y =  16, mat = "?wall" }
+      { x = 176, y =  16, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+      { x =  16, y = 192, mat = "?wall" }
       { t = 0, mat = "?wall" }
     }
 
     {
-      { x =   0, y =  16, mat = "_SKY" }
-      { x = 192, y =  16, mat = "_SKY" }
-      { x = 192, y = 192, mat = "_SKY" }
-      { x =   0, y = 192, mat = "_SKY" }
+      { x =  16, y =  16, mat = "_SKY" }
+      { x = 176, y =  16, mat = "_SKY" }
+      { x = 176, y = 192, mat = "_SKY" }
+      { x =  16, y = 192, mat = "_SKY" }
       { b = "?sky_h", mat = "_SKY" }
     }
 
     -- railing
     {
       { m = "rail" }
-      { x =   0, y =  16 }
-      { x = 192, y =  16 }
-      { x = 192, y = 192, mat = "?rail", blocked=1 }
-      { x =   0, y = 192 }
+      { x =  16, y =  16 }
+      { x = 176, y =  16 }
+      { x = 176, y = 192, mat = "?rail", blocked=1 }
+      { x =  16, y = 192 }
       { b = 0  }
       { t = 128 }
     }
@@ -192,10 +207,10 @@ PREFAB.FAT_CAGE1 =
     -- monster spot
     {
       { m = "spot", spot_kind = "cage", angle = 90 }
-      { x =  16, y =  32 }
-      { x = 176, y =  32 }
-      { x = 176, y = 176 }
-      { x =  16, y = 176 }
+      { x =  24, y =  32 }
+      { x = 168, y =  32 }
+      { x = 168, y = 176 }
+      { x =  24, y = 176 }
       { b =   0 }
       { t = 192 }
     }
