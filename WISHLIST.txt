@@ -35,80 +35,30 @@ OBLIGE WISH-LIST
   LEVEL STUFF
 ----------------------------------------------------------------
 
-Miscellaneous:
-  +  when traversibility in a room is poor (exit near entrance),
-     make the exit into a switched door and put a switch at other
-     end of room.
-
-  -  try position-based monster ordering for fight simulator
-
-  -  in a large (multi-section) room, if any section has no "events"
-     (a connection or switch or key or major item) then give it a
-     nice pickup item (etc) or at least a walk space.
-
-  -  "mini stairs" : two areas have largish height diff (2-4 * step)
-     and the "stair" is a short intrusion in the side of the lower
-     chunk (say no more than 32 units deep, a prefab).
-
-  -  3D bridges can be 3D stairs [use better area touching rule]
-
-  -  3D chunk stuff : use z_low and z_high fields
-
-  -  double or triple switches: each one raises a 24 unit stair,
-     but player can only traverse stairs when ALL are raised.
-     Might work best if stairs are parallel to height diff.
-
-  -  ensure sky heights are higher than neighboring indoor rooms.
-
-  -  prevent escapes over fences/windows near key pedestals (etc) by
-     raising the height of the fences/windows there.
-
-  -  brush conditionals:  if_true="?doomy"  if_false="?foobie"
-
-  -  can disable the custom levels
-
-  -  more than one theme per episode.
-
-  -  smarter choosing health items, especially when health target is very high
-
-  -  rarity for bfg10k and railgun for Skulltag
-
-  ?  PARAM.angle_format = "pyr"  -- for pitch/yaw/roll
-
-  -  lifts often assume meshing up at 90 degree turns
-
-  -  IDEA: STYLE to control # of lifts
-
-  -  IDEA: levels get inherently tougher to beat over a megawad
-           [assume player's skill increases].
-
-
 Theme System:
+-  if keys are left over, can use them for non-Zone locks
 
-  -  if keys are left over, can use them for non-Zone locks
+-  IDEA: "minor" theme, like rare theme but can be repeated in a zone
 
-  -  IDEA: "minor" theme, like rare theme but can be repeated in a zone
-
-  -  IDEA: cycle through dominant themes by quest
+-  IDEA: cycle through dominant themes by quest
 
 
 Teleporters:
-  -  able to place separate entry and exit spots
-     (especially for Quake and Quake II)
+-  able to place separate entry and exit spots
+   (especially for Quake and Quake II)
 
-  -  ability to link two (far apart) areas via teleporters  
+-  ability to link two (far apart) areas via teleporters  
 
-  -  more games : Hexen (X_012) and Chex Quest 1/2/3
+-  more games : Hexen (X_012) and Chex Quest 1/2/3
 
 
 Hallways:
++  get big junctions working again
 
-  +  get big junctions working again
+-  get "merging" of one hallway into another working again
 
-  -  get "merging" of one hallway into another working again
-
-  -  ability to merge the section of a "simple" hallway into
-     one of the rooms [especially to make a "Porch"].
+-  ability to merge the section of a "simple" hallway into
+   one of the rooms [especially to make a "Porch"].
 
 DONE: Special Hallway #1 : surround half the room, entrance either side
   -   Special Hallway #3 : surround a room completely.
@@ -124,58 +74,7 @@ Hallway Theming:
   PANCASE2 would fit well for Doom2 Urban hallways.
 
 
-DOOM Shadow Algorithm:
-
-1. give light brushes a 2D origin point (optional, if not present then
-   the light is coming down from ceiling or up from floor)
-
-2. test for intersections with nearby solid brushes.
-   IF a side intersects with the light brush
-   AND the light origin is on the correct side
-   THEN split the light brush into 3 (at most) pieces
-        (i.e. subtract the shadow area from the light brush)
-
-3. a simpler alternative would be to change the light model
-   to use simple addition of all light brushes, and merely
-   create a shadow brush (at the intersection side) which cancels
-   out the original light brush.
-
-
-Starting Items:
-  -  backpack (etc) chance is based on ep_along
-
->>>>  weapons: have a level field, don't get them if too early
-               (except perhaps in secrets)
-
-
-Storage Rooms:
-  -  actually use them for, um, storage
-
-  -  prefer adding weapons into these STORAGE rooms
-     (rather than another room in the quest, ESPECIALLY solution room)
-
-
-Weapons:
-  +  update some games (Chex Quest etc) with 'level' fields,
-     removing 'rarity' fields and most 'start_prob' fields.
-
-  -  update Immoral Conduct module too
-
-
-Monsters:
-  -  give each monster a "class" field (e.g. class="undead")
-     and have a strong tendency to use the same class of
-     monster for the fodder in a room (or group of rooms).
-
-  -  support "Swarms" : a group of 3-N monsters (either a
-     single monster or 2-3 of a certain class), and place
-     all the monsters close to each other, perhaps even
-     have swarm patterns.
-
-  +  in later levels, low-level monsters should be used in bigger swarms
-
-
-Hollows:
+Hollow IDEA:
    a "hollow" is an open space under the floor of a normal AREA,
    turning that AREA into a 3D platform.
    
@@ -196,65 +95,64 @@ Hollows:
 
 
 Intrusions:
-  -  this idea is that part of a room is reserved for the player
-     to travel through in an earlier or later quest.  If the
-     quest is earlier, then the player is prevented from entering
-     that room (due to blocking railings or being too low down).
+-  this idea is that part of a room is reserved for the player
+   to travel through in an earlier or later quest.  If the
+   quest is earlier, then the player is prevented from entering
+   that room (due to blocking railings or being too low down).
 
-     It's like a kind of window, except the intrusion is built
-     as if it were part of the room you look into.  It may work
-     best in Quake games where the intrusion is a 3D walkway.
+   It's like a kind of window, except the intrusion is built
+   as if it were part of the room you look into.  It may work
+   best in Quake games where the intrusion is a 3D walkway.
 
-  +  implement them by "adopting" a hallway consisting of
-     HORIZ + JUNC + VERT (around corner of the room)
++  implement them by "adopting" a hallway consisting of
+   HORIZ + JUNC + VERT (around corner of the room)
 
-  -  could potentially adopt the whole section
-     [OR any seeds which are not part of the room paths]
+-  could potentially adopt the whole section
+   [OR any seeds which are not part of the room paths]
 
-  Q/ keep as a "hallway" or create an "area" ?
-  A/ turn into an area
+Q/ keep as a "hallway" or create an "area" ?
+A/ turn into an area
 
 
 CrossOvers:
-  +  build the bridges / channels using prefabs
++  build the bridges / channels using prefabs
 
-  -  sometimes make a dramatic height difference
+-  sometimes make a dramatic height difference
 
-  -  fix hallway vertical gaps
+-  fix hallway vertical gaps
 
-  +  make a moving platform in Quake 1/2 maps
++  make a moving platform in Quake 1/2 maps
 
-  -  a version with arches underneath
+-  a version with arches underneath
 
-  -  pillars holding up the bridge
+-  pillars holding up the bridge
 
-  -  bridges which increase height (e.g. stair in middle)
+-  bridges which increase height (e.g. stair in middle)
 
-  -  channels which decrease height  [via prefab??]
+-  channels which decrease height  [via prefab??]
 
-  ?  give areas near incompatible height a 'target_h' field
+?  give areas near incompatible height a 'target_h' field
 
-  -  exclude some areas from height limitation.
-     These areas must be outside a certain bbox, a bbox including the
-     starting area and all crossovers chunks.
+-  exclude some areas from height limitation.
+   These areas must be outside a certain bbox, a bbox including the
+   starting area and all crossovers chunks.
 
-     Better yet, give these areas a less restrictive limitation
-     (based on how far the player may jump/fall from a high height)
-     For channels, can remove the limitation.
-
+   Better yet, give these areas a less restrictive limitation
+   (based on how far the player may jump/fall from a high height)
+   For channels, can remove the limitation.
 
 
 Porches:
-  -  this is 3 or more seeds around a door from outside->inside
-     with a non-sky ceiling and some pillars and a raised floor.
+-  this is 3 or more seeds around a door from outside->inside
+   with a non-sky ceiling and some pillars and a raised floor.
 
 
 Facades:
-  -  would be nice to "smooth" any odd-one-outs
+-  would be nice to "smooth" any odd-one-outs
 
-  -  ability to ensure both inner/outer are the same
-     [perhaps a room_theme setting]
-     [or: special keyword in building_walls]
+-  ability to ensure both inner/outer are the same
+   [perhaps a room_theme setting]
+   [or: special keyword in building_walls]
 
 
 Quests:
@@ -284,32 +182,31 @@ Idea: "single minis" : a single room (not too big, kvolume <= 2)
 
 
 Street Mode:
-  +  limit number of locked rooms:
-     (a) if too many rooms, merge some
-     (b) make some rooms be optional (storehouses or weapon)
-     (c) connect some rooms via bridges
-  
-  -  fix the sky glitch (pieces jutting inside a room)
++  limit number of locked rooms:
+   (a) if too many rooms, merge some
+   (b) make some rooms be optional (storehouses or weapon)
+   (c) connect some rooms via bridges
 
-  -  better looking "streets" (via prefabs and SKINs) ?
+-  fix the sky glitch (pieces jutting inside a room)
 
-  -  fix the "big junc" situation, good place for a fountain
+-  better looking "streets" (via prefabs and SKINs) ?
 
-  -  a raised outdoory room might be cool
+-  fix the "big junc" situation, good place for a fountain
 
-  -  25% of the time  : keep the outer ring
-     25% of the time  : expand all rooms into outer ring
-     rest of the time : expand corner rooms 50%, side rooms 33%
+-  a raised outdoory room might be cool
 
-  -  allow outdoor rooms
+-  25% of the time  : keep the outer ring
+   25% of the time  : expand all rooms into outer ring
+   rest of the time : expand corner rooms 50%, side rooms 33%
 
-  -  allow big monsters in the street [c.f. MAP12]
+-  allow outdoor rooms
 
-  -  limit caves to being in corner of map, expanded
+-  allow big monsters in the street [c.f. MAP12]
+
+-  limit caves to being in corner of map, expanded
 
 
 Caves:
-
 -  improve the jaggy edge algorithm (support corner triangles)
 
 -  re-instate size check (on main empty region), and remove the
@@ -343,73 +240,123 @@ Natural areas:
      (probably need a new prefab for this)
 
 
-
 Lighting:
   -  support w_face.light (maybe even have 'light' in MATERIALS ?)
-
-  FIX: shadows on outdoor crates: CRATE_W_SHADOW prefab?
 
 
 Planner:
 -  review / improve 'emergency' connections
 
 
-Windows:
-  - better patterns:
-    (1) flank door mode
-    (2) every second seed mode
-
-  - put in indoor children rooms which don't connect to parent
-
-
 Ceilings:
-  + or a criss-cross of beams, especially with pillars or
-    low opposite sides.  [NOTE: can mess up lifts!]
+- put several small light fittings/sky holes with
+  simple patterns (e.g. inner 2x2 seeds, or outer corners)
 
-  - put several small light fittings/sky holes with
-    simple patterns (e.g. inner 2x2 seeds, or outer corners)
+- big room with no sky neighbours: have a huge sky hole
 
-  - big room with no sky neighbours: have a huge sky hole
-
-  - mega sky holes (two in one, esp. outer has F_SKY1)
+- mega sky holes (two in one, esp. outer has F_SKY1)
 
 
 Pictures:
-  - implement "billboards", pictures which jut down from the
-    ceiling (above doors and low periphs).
-
+- implement "billboards", pictures which jut down from the
+  ceiling (above doors and low periphs).
 
 
 Cycles:
-  +  less chance if R2 (skipped room) is large
++  less chance if R2 (skipped room) is large
 
-  -  create "teleporter cycles" i.e. if R1 -> R2 -> R3 and one
-     connection is a teleporter, try add teleporter from R1 -> R3.
+-  create "teleporter cycles" i.e. if R1 -> R2 -> R3 and one
+   connection is a teleporter, try add teleporter from R1 -> R3.
 
-  -  prevent using section next door to existing conn & same direction
-     [maybe prevent same dir altogether except in "heaps"]
+-  prevent using section next door to existing conn & same direction
+   [maybe prevent same dir altogether except in "heaps"]
 
 
 Mazes:
-
 -  invert maze + thin_out + cave_render --> interesting walkway
                                             (e.g. over lava)
 
-Void stuff:
-  !! test for 'is_walk'
-  -  only indoors
-  -  shaped room: put in "middle" section (of L, T, plus)
-     (require two in S or H shapes)
-  -  3x3 room: sometimes one in middle section
-  -  other rooms: use the annexed junctions
-  -  create a 3x3 (or 4x4) chunk and this is the middle of chunk
-     (2x2 possible too, not touching room edge)
-  -  good for cages!
+
+----------------------------------------------------------------
+  MONSTERS / ITEMS
+----------------------------------------------------------------
+
++  in later levels, low-level monsters should be used in bigger swarms
+
+-  support "Swarms" : a group of 3-N monsters (either a
+   single monster or 2-3 of a certain class), and place
+   all the monsters close to each other, perhaps even
+   have swarm patterns.
+
+IDEA: give each monster a "class" field (e.g. class="undead")
+      and have a strong tendency to use the same class of
+      monster for the fodder in a room (or group of rooms).
+
+
+Starting Items:
+-  backpack (etc) chance is based on ep_along
+
+
+Storage Rooms:
+-  actually use them for, um, storage
+
+-  prefer adding weapons into these STORAGE rooms
+   (rather than another room in the quest, ESPECIALLY solution room)
+
+
+Weapons:
++  update some games (Chex Quest etc) with 'level' fields,
+   removing 'rarity' fields and most 'start_prob' fields.
+
+-  update Immoral Conduct module too
 
 
 ----------------------------------------------------------------
   MISCELLANEOUS
 ----------------------------------------------------------------
+
++  when traversibility in a room is poor (exit near entrance),
+   make the exit into a switched door and put a switch at other
+   end of room.
+
+-  try position-based monster ordering for fight simulator
+
+-  in a large (multi-section) room, if any section has no "events"
+   (a connection or switch or key or major item) then give it a
+   nice pickup item (etc) or at least a walk space.
+
+-  "mini stairs" : two areas have largish height diff (2-4 * step)
+   and the "stair" is a short intrusion in the side of the lower
+   chunk (say no more than 32 units deep, a prefab).
+
+-  3D bridges can be 3D stairs [use better area touching rule]
+
+-  3D chunk stuff : use z_low and z_high fields
+
+-  double or triple switches: each one raises a 24 unit stair,
+   but player can only traverse stairs when ALL are raised.
+   Might work best if stairs are parallel to height diff.
+
+-  ensure sky heights are higher than neighboring indoor rooms.
+
+-  prevent escapes over fences/windows near key pedestals (etc) by
+   raising the height of the fences/windows there.
+
+-  brush conditionals:  if_true="?doomy"  if_false="?foobie"
+
+-  can disable the pre-built levels
+
+-  smarter choosing health items, especially when health target is very high
+
+-  rarity for bfg10k and railgun for Skulltag
+
+-  lifts often assume meshing up at 90 degree turns
+
+-  IDEA: STYLE to control # of lifts
+
+-  IDEA: levels get inherently tougher to beat over a megawad
+         [assume player's skill increases].
+
 
 +  diagonal chunks
 
@@ -581,6 +528,23 @@ NO:  CSG DOOM: support entity.light
    345 = 0,   Plane_Align (2, 2)  // Slope back floor and ceiling
    346 = 0,   Plane_Align (2, 1)  // Slope b.f. and f.c.
    347 = 0,   Plane_Align (1, 2)  // Slope f.f. and b.c.
+
+
+DOOM Shadow Algorithm:
+
+1. give light brushes a 2D origin point (optional, if not present then
+   the light is coming down from ceiling or up from floor)
+
+2. test for intersections with nearby solid brushes.
+   IF a side intersects with the light brush
+   AND the light origin is on the correct side
+   THEN split the light brush into 3 (at most) pieces
+        (i.e. subtract the shadow area from the light brush)
+
+3. a simpler alternative would be to change the light model
+   to use simple addition of all light brushes, and merely
+   create a shadow brush (at the intersection side) which cancels
+   out the original light brush.
 
 
 ----------------------------------------------------------------
@@ -875,30 +839,30 @@ Sam's suggestions:
 
 MUSIC RE-ORDERING
 
-   *  Doom 1: shuffle each episode
+*  Doom 1: shuffle each episode
 
-   *  Doom 2: if one episode (or less), pick random tracks and
-              ensure that no two tracks have the same three-letter
-              prefix.
+*  Doom 2: if one episode (or less), pick random tracks and
+           ensure that no two tracks have the same three-letter
+           prefix.
 
-   *  Doom 2, full game: shuffle tracks, loop a few times looking
-                         for repeats (same three-letter prefix in a
-                         row) and move one to random spot.
+*  Doom 2, full game: shuffle tracks, loop a few times looking
+                      for repeats (same three-letter prefix in a
+                      row) and move one to random spot.
 
-   -  BOOM: [MUSIC] section in BEX
+-  BOOM: [MUSIC] section in BEX
 
-          [MUSIC]
-          ROMERO = RUNNIN
-          RUNNIN = STALKS
-          STALKS = ROMERO
+       [MUSIC]
+       ROMERO = RUNNIN
+       RUNNIN = STALKS
+       STALKS = ROMERO
 
-   -  EDGE native:  DDFPLAY lump:
-   
-          <PLAYLISTS>
-          [01]
-          MUSICINFO=MUS:LUMP:"D_RUNNIN";
+-  EDGE native:  DDFPLAY lump:
 
-   -  ZDoom : via MAPINFO: music D_RUNNING
+       <PLAYLISTS>
+       [01]
+       MUSICINFO=MUS:LUMP:"D_RUNNIN";
+
+-  ZDoom : via MAPINFO: music D_RUNNING
 
 
 

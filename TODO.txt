@@ -19,31 +19,30 @@ Theme System:
 
 -  proper room themes for QUAKE
 
--  HERETIC
-
 -  QUAKE II
 
 
 Hallways:
-  -  decide walls properly (i.e. no hall_path[dir])
+!!!  emergency mode : no quota on hall length
 
-  -  make some chunk-size prefabs and use them
+-  decide walls properly (i.e. no hall_path[dir])
 
-  !!  determine ceiling heights properly
+-  make some chunk-size prefabs and use them
+
+!!  determine ceiling heights properly
 
 
 Caves:
-  !!!!  spots for monsters and items
+!!!!  spots for monsters and items
 
-  -  proper floor and ceiling textures
+-  proper floor and ceiling textures
 
-  -  better floors, liquid areas
+-  better floors, liquid areas
 
-  -  better ceilings, chance of sky
+-  better ceilings, chance of sky
 
-  -  create a large area (or two) by merging areas together
-     [OR: pre-allocate a large chunk / reclaimed junction]
-
+-  create a large area (or two) by merging areas together
+   [OR: pre-allocate a large chunk / reclaimed junction]
 
 
 -----------------------------------------------------------------
