@@ -763,7 +763,7 @@ PREFAB.HALLWAY_FORK =
     -- entrance
     {
       { x = 208, y =  16, mat = "?wall" }
-      { x = 208, y =   0, mat = "?wall" }
+      { x = 208, y =   0, mat = "?step", y_offset=0, peg=1 }
       { x = 368, y =   0, mat = "?wall" }
       { x = 368, y =  16, mat = "?wall" }
       { x = 288, y = 120, mat = "?wall" }
@@ -773,15 +773,15 @@ PREFAB.HALLWAY_FORK =
       { x = 208, y =  16, mat = "?wall" }
       { x = 208, y =   0, mat = "?wall" }
       { x = 368, y =   0, mat = "?wall" }
-      { x = 368, y =  16, mat = "?wall" }
-      { x = 288, y = 120, mat = "?wall" }
+      { x = 368, y =  16, mat = "?upper", y_offset=0, peg=1 }
+      { x = 288, y = 120, mat = "?upper", y_offset=0, peg=1 }
       { b = 140, mat = "?ceil" }
     }
 
     -- first step
     {
       { x = 180, y =  30, mat = "?wall" }
-      { x = 208, y =  16, mat = "?wall" }
+      { x = 208, y =  16, mat = "?step", y_offset=0, peg=1 }
       { x = 288, y = 120, mat = "?wall" }
       { x = 260, y = 134, mat = "?wall" }
       { t = 24, mat = "?floor" }
@@ -790,12 +790,12 @@ PREFAB.HALLWAY_FORK =
       { x = 180, y =  30, mat = "?wall" }
       { x = 208, y =  16, mat = "?wall" }
       { x = 288, y = 120, mat = "?wall" }
-      { x = 260, y = 134, mat = "?wall" }
+      { x = 260, y = 134, mat = "?upper", y_offset=0, peg=1 }
       { b = 152, mat = "?ceil" }
     }
 
     {
-      { x = 288, y = 120, mat = "?wall" }
+      { x = 288, y = 120, mat = "?step", y_offset=0, peg=1 }
       { x = 368, y =  16, mat = "?wall" }
       { x = 396, y =  30, mat = "?wall" }
       { x = 316, y = 134, mat = "?wall" }
@@ -804,7 +804,7 @@ PREFAB.HALLWAY_FORK =
     {
       { x = 288, y = 120, mat = "?wall" }
       { x = 368, y =  16, mat = "?wall" }
-      { x = 396, y =  30, mat = "?wall" }
+      { x = 396, y =  30, mat = "?upper", y_offset=0, peg=1 }
       { x = 316, y = 134, mat = "?wall" }
       { b = 152, mat = "?ceil" }
     }
@@ -812,7 +812,7 @@ PREFAB.HALLWAY_FORK =
     -- second step
     {
       { x = 152, y =  44, mat = "?wall" }
-      { x = 180, y =  30, mat = "?wall" }
+      { x = 180, y =  30, mat = "?step", y_offset=0, peg=1 }
       { x = 260, y = 134, mat = "?wall" }
       { x = 232, y = 148, mat = "?wall" }
       { t = 36, mat = "?floor" }
@@ -821,22 +821,29 @@ PREFAB.HALLWAY_FORK =
       { x = 152, y =  44, mat = "?wall" }
       { x = 180, y =  30, mat = "?wall" }
       { x = 260, y = 134, mat = "?wall" }
-      { x = 232, y = 148, mat = "?wall" }
+      { x = 232, y = 148, mat = "?upper", y_offset=0, peg=1 }
       { b = 164, mat = "?ceil" }
     }
 
     {
-      { x = 316, y = 134, mat = "?wall" }
+      { x = 316, y = 134, mat = "?step", y_offset=0, peg=1 }
       { x = 396, y =  30, mat = "?wall" }
       { x = 424, y =  44, mat = "?wall" }
       { x = 344, y = 148, mat = "?wall" }
       { t = 36, mat = "?floor" }
     }
+    {
+      { x = 316, y = 134, mat = "?wall" }
+      { x = 396, y =  30, mat = "?wall" }
+      { x = 424, y =  44, mat = "?upper", y_offset=0, peg=1 }
+      { x = 344, y = 148, mat = "?wall" }
+      { b = 164, mat = "?ceil" }
+    }
 
     -- third step
     {
       { x = 124, y =  58, mat = "?wall" }
-      { x = 152, y =  44, mat = "?wall" }
+      { x = 152, y =  44, mat = "?step", y_offset=0, peg=1 }
       { x = 232, y = 148, mat = "?wall" }
       { x = 204, y = 162, mat = "?wall" }
       { t = 48, mat = "?floor" }
@@ -845,12 +852,12 @@ PREFAB.HALLWAY_FORK =
       { x = 124, y =  58, mat = "?wall" }
       { x = 152, y =  44, mat = "?wall" }
       { x = 232, y = 148, mat = "?wall" }
-      { x = 204, y = 162, mat = "?wall" }
+      { x = 204, y = 162, mat = "?upper", y_offset=0, peg=1 }
       { b = 176, mat = "?ceil" }
     }
 
     {
-      { x = 344, y = 148, mat = "?wall" }
+      { x = 344, y = 148, mat = "?step", y_offset=0, peg=1 }
       { x = 424, y =  44, mat = "?wall" }
       { x = 452, y =  58, mat = "?wall" }
       { x = 372, y = 162, mat = "?wall" }
@@ -859,7 +866,7 @@ PREFAB.HALLWAY_FORK =
     {
       { x = 344, y = 148, mat = "?wall" }
       { x = 424, y =  44, mat = "?wall" }
-      { x = 452, y =  58, mat = "?wall" }
+      { x = 452, y =  58, mat = "?upper", y_offset=0, peg=1 }
       { x = 372, y = 162, mat = "?wall" }
       { b = 176, mat = "?ceil" }
     }
@@ -867,7 +874,7 @@ PREFAB.HALLWAY_FORK =
     -- fourth step
     {
       { x =  96, y =  72, mat = "?wall" }
-      { x = 124, y =  58, mat = "?wall" }
+      { x = 124, y =  58, mat = "?step", y_offset=0, peg=1 }
       { x = 204, y = 162, mat = "?wall" }
       { x = 176, y = 176, mat = "?wall" }
       { t = 60, mat = "?floor" }
@@ -876,12 +883,12 @@ PREFAB.HALLWAY_FORK =
       { x =  96, y =  72, mat = "?wall" }
       { x = 124, y =  58, mat = "?wall" }
       { x = 204, y = 162, mat = "?wall" }
-      { x = 176, y = 176, mat = "?wall" }
+      { x = 176, y = 176, mat = "?upper", y_offset=0, peg=1 }
       { b = 188, mat = "?ceil" }
     }
 
     {
-      { x = 372, y = 162, mat = "?wall" }
+      { x = 372, y = 162, mat = "?step", y_offset=0, peg=1 }
       { x = 452, y =  58, mat = "?wall" }
       { x = 480, y =  72, mat = "?wall" }
       { x = 400, y = 176, mat = "?wall" }
@@ -890,7 +897,7 @@ PREFAB.HALLWAY_FORK =
     {
       { x = 372, y = 162, mat = "?wall" }
       { x = 452, y =  58, mat = "?wall" }
-      { x = 480, y =  72, mat = "?wall" }
+      { x = 480, y =  72, mat = "?upper", y_offset=0, peg=1 }
       { x = 400, y = 176, mat = "?wall" }
       { b = 188, mat = "?ceil" }
     }
@@ -899,7 +906,7 @@ PREFAB.HALLWAY_FORK =
     {
       { x =  32, y = 192, mat = "?wall" }
       { x =  32, y = 104, mat = "?wall" }
-      { x =  96, y =  72, mat = "?wall" }
+      { x =  96, y =  72, mat = "?step", y_offset=0, peg=1 }
       { x = 176, y = 176, mat = "?wall" }
       { x = 176, y = 192, mat = "?outer" }
       { t = 72, mat = "?floor" }
@@ -915,7 +922,7 @@ PREFAB.HALLWAY_FORK =
 
     {
       { x = 400, y = 192, mat = "?wall" }
-      { x = 400, y = 176, mat = "?wall" }
+      { x = 400, y = 176, mat = "?step", y_offset=0, peg=1 }
       { x = 480, y =  72, mat = "?wall" }
       { x = 544, y = 104, mat = "?wall" }
       { x = 544, y = 192, mat = "?outer" }
