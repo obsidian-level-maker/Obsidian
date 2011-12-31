@@ -658,12 +658,116 @@ PREFAB.QUAKE_SECRET_NICHE_1 =
 
   entities =
   {
-    { ent = "?item",  x =  96, y = 96, z = 12 }
-    { ent = "?item2", x =  48, y = 64, z = 12 }
-    { ent = "?item3", x = 144, y = 64, z = 12 }
-    { ent = "?item4", x =  96, y = 64, z = 12 }
+    { ent = "?item",  x =  96, y = 104, z = 12 }
+    { ent = "?item2", x =  48, y =  72, z = 12 }
+    { ent = "?item3", x = 144, y =  72, z = 12 }
+    { ent = "?item4", x =  96, y =  72, z = 12 }
 
     { ent = "light", x = 96, y = 96, z = 3, light = 128, style = "?style" }
+  }
+}
+
+
+PREFAB.SECRET_NICHE_W_JUMPS =
+{
+  fitted = "xy"
+
+  brushes =
+  {
+    -- wall behind it
+    {
+      { x =   0, y =  0, mat = "?outer" }
+      { x = 192, y =  0, mat = "?outer" }
+      { x = 192, y = 64, mat = "?wall" }
+      { x =   0, y = 64, mat = "?outer" }
+    }
+
+    -- left side wall
+    {
+      { x =   0, y =  64, mat = "?wall" }
+      { x = 112, y =  64, mat = "?wall" }
+      { x = 112, y = 192, mat = "?wall" }
+      { x =   0, y = 192, mat = "?outer" }
+    }
+
+    -- right side wall
+    {
+      { x = 176, y =  64, mat = "?wall" }
+      { x = 192, y =  64, mat = "?outer" }
+      { x = 192, y = 192, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+    }
+
+    -- floor
+    {
+      { x = 112, y =  64, mat = "?wall" }
+      { x = 176, y =  64, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+      { x = 112, y = 192, mat = "?wall" }
+      { t = 200, mat = "?floor" }
+    }
+
+    -- ceiling
+    {
+      { x = 112, y =  64, mat = "?wall" }
+      { x = 176, y =  64, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+      { x = 112, y = 192, mat = "?wall" }
+      { b = 296, mat = "?ceil" }
+    }
+
+    -- the jumps  [these poke outside the bbox]
+    {
+      { m = "solid", outlier = 1 }
+      { x = 48, y = 192, mat = "?wall" }
+      { x = 64, y = 192, mat = "?wall" }
+      { x = 64, y = 200, mat = "?wall" }
+      { x = 48, y = 200, mat = "?wall" }
+      { t = 40, mat = "?wall" }
+    }
+    {
+      { m = "solid", outlier = 1 }
+      { x = 64, y = 192, mat = "?wall" }
+      { x = 80, y = 192, mat = "?wall" }
+      { x = 80, y = 200, mat = "?wall" }
+      { x = 64, y = 200, mat = "?wall" }
+      { t = 80, mat = "?wall" }
+      { b = 48, mat = "?wall" }
+    }
+    {
+      { m = "solid", outlier = 1 }
+      { x = 80, y = 192, mat = "?wall" }
+      { x = 96, y = 192, mat = "?wall" }
+      { x = 96, y = 200, mat = "?wall" }
+      { x = 80, y = 200, mat = "?wall" }
+      { t = 120, mat = "?wall" }
+      { b =  88, mat = "?wall" }
+    }
+    {
+      { m = "solid", outlier = 1 }
+      { x =  96, y = 192, mat = "?wall" }
+      { x = 112, y = 192, mat = "?wall" }
+      { x = 112, y = 200, mat = "?wall" }
+      { x =  96, y = 200, mat = "?wall" }
+      { t = 160, mat = "?wall" }
+      { b = 128, mat = "?wall" }
+    }
+    {
+      { m = "solid", outlier = 1 }
+      { x = 112, y = 192, mat = "?wall" }
+      { x = 128, y = 192, mat = "?wall" }
+      { x = 128, y = 200, mat = "?wall" }
+      { x = 112, y = 200, mat = "?wall" }
+      { t = 200, mat = "?wall" }
+      { b = 168, mat = "?wall" }
+    }
+  }
+  
+  -- the well-earned item
+
+  entities =
+  {
+    { ent = "?item", x = 144, y = 128, z = 212 }
   }
 }
 
