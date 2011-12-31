@@ -467,6 +467,13 @@ PREFAB.SECRET_NICHE_1 =
     item4 = "none"
 
     secret_wall = "?wall"
+
+    special = 31
+    effect  = 17
+
+    -- Hexen stuff
+    act = ""
+    speed = 32
   }
 
   brushes =
@@ -482,44 +489,65 @@ PREFAB.SECRET_NICHE_1 =
     -- left side wall
     {
       { x =  0, y =  16, mat = "?wall" }
-      { x = 16, y =  16, mat = "?wall" }
-      { x = 16, y = 192, mat = "?wall" }
+      { x = 32, y =  16, mat = "?wall", peg=1 }
+      { x = 32, y = 192, mat = "?wall" }
       { x =  0, y = 192, mat = "?outer" }
+    }
+
+    {
+      { x = 32, y =  16, mat = "?wall" }
+      { x = 64, y =  16, mat = "?wall" }
+      { x = 32, y =  80, mat = "?wall" }
     }
 
     -- right side wall
     {
-      { x = 176, y =  16, mat = "?wall" }
+      { x = 160, y =  16, mat = "?wall" }
       { x = 192, y =  16, mat = "?outer" }
       { x = 192, y = 192, mat = "?wall" }
-      { x = 176, y = 192, mat = "?wall" }
+      { x = 160, y = 192, mat = "?wall", peg=1 }
+    }
+
+    {
+      { x = 128, y =  16, mat = "?wall" }
+      { x = 160, y =  16, mat = "?wall" }
+      { x = 160, y =  80, mat = "?wall" }
     }
 
     -- floor
     {
-      { x =  16, y =  16, mat = "?floor" }
-      { x = 176, y =  16, mat = "?floor" }
-      { x = 176, y = 192, mat = "?floor" }
-      { x =  16, y = 192, mat = "?floor" }
-      { t = 0, mat = "?floor" }
+      { x =  32, y =  16, mat = "?wall" }
+      { x = 160, y =  16, mat = "?wall" }
+      { x = 160, y = 192, mat = "?wall" }
+      { x =  32, y = 192, mat = "?wall" }
+      { t = 8, mat = "?floor" }
     }
 
     -- ceiling
     {
-      { x =  16, y =  16, mat = "?ceil" }
-      { x = 176, y =  16, mat = "?ceil" }
-      { x = 176, y = 176, mat = "?ceil" }
-      { x =  16, y = 176, mat = "?ceil" }
-      { b = 128, mat = "?ceil" }
+      { x =  32, y =  16, mat = "?wall" }
+      { x = 160, y =  16, mat = "?wall" }
+      { x = 160, y = 176, mat = "?wall" }
+      { x =  32, y = 176, mat = "?wall" }
+      { b = 136, mat = "?ceil" }
     }
 
     -- opening part
     {
-      { x =  16, y = 176, mat = "?wall" }
-      { x = 176, y = 192, mat = "?wall" }
-      { x = 176, y = 192, mat = "?secret_wall", special="?special", act="?act", arg1="?tag", arg2="?speed", peg=1, y_offset=19 }
-      { x =  16, y = 176, mat = "?wall" }
-      { b = 24, delta_z=-24, mat = "?wall", tag = "?tag" }
+      { x =  32, y = 176, mat = "?wall" }
+      { x = 160, y = 176, mat = "?wall" }
+      { x = 160, y = 192, mat = "?secret_wall", special="?special", act="?act", arg1="?tag", arg2="?speed", peg=1, y_offset=19 }
+      { x =  32, y = 192, mat = "?wall" }
+      { b = 32, delta_z=-23, mat = "?wall", tag = "?tag" }
+    }
+
+    -- lighting
+    {
+      { m = "light", add = 64, effect = "?effect" }
+      { x =  32, y =  16 }
+      { x = 160, y =  16 }
+      { x = 160, y = 192 }
+      { x =  32, y = 192 }
     }
   }
   
@@ -527,10 +555,10 @@ PREFAB.SECRET_NICHE_1 =
 
   entities =
   {
-    { ent = "?item",  x =  96, y =  96, z = 0 }
-    { ent = "?item2", x =  48, y = 128, z = 0 }
-    { ent = "?item3", x = 144, y = 128, z = 0 }
-    { ent = "?item4", x =  96, y = 128, z = 0 }
+    { ent = "?item",  x =  96, y = 96, z = 0 }
+    { ent = "?item2", x =  48, y = 64, z = 0 }
+    { ent = "?item3", x = 144, y = 64, z = 0 }
+    { ent = "?item4", x =  96, y = 64, z = 0 }
   }
 }
 
