@@ -120,6 +120,8 @@ QUAKE.ENTITIES =
   wall = { id="func_wall",  kind="other", r=1, h=1, pass=true }
   button = { id="func_button", kind="other", r=1, h=1, pass=true }
 
+  secret_door = { id="func_door_secret", kind="other", r=1, h=1, pass=true }
+
   camera = { id="info_intermission", kind="other", r=1, h=1, pass=true }
   spiker = { id="trap_spikeshooter", kind="other", r=1, h=1, pass=true }
 }

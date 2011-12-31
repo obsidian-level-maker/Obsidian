@@ -555,10 +555,115 @@ PREFAB.SECRET_NICHE_1 =
 
   entities =
   {
-    { ent = "?item",  x =  96, y = 96, z = 0 }
-    { ent = "?item2", x =  48, y = 64, z = 0 }
-    { ent = "?item3", x = 144, y = 64, z = 0 }
-    { ent = "?item4", x =  96, y = 64, z = 0 }
+    { ent = "?item",  x =  96, y = 96, z = 8 }
+    { ent = "?item2", x =  48, y = 64, z = 8 }
+    { ent = "?item3", x = 144, y = 64, z = 8 }
+    { ent = "?item4", x =  96, y = 64, z = 8 }
+  }
+}
+
+
+PREFAB.QUAKE_SECRET_NICHE_1 =
+{
+  fitted = "xy"
+
+  defaults =
+  {
+    item2 = "none"
+    item3 = "none"
+    item4 = "none"
+
+    secret_wall = "?wall"
+
+    style = 7
+  }
+
+  brushes =
+  {
+    -- wall behind it
+    {
+      { x =   0, y =  0, mat = "?outer" }
+      { x = 192, y =  0, mat = "?outer" }
+      { x = 192, y = 16, mat = "?wall" }
+      { x =   0, y = 16, mat = "?outer" }
+    }
+
+    -- left side wall
+    {
+      { x =  0, y =  16, mat = "?wall" }
+      { x = 32, y =  16, mat = "?wall" }
+      { x = 32, y = 192, mat = "?wall" }
+      { x =  0, y = 192, mat = "?outer" }
+    }
+
+    {
+      { x = 32, y =  16, mat = "?wall" }
+      { x = 64, y =  16, mat = "?wall" }
+      { x = 32, y =  80, mat = "?wall" }
+    }
+
+    -- right side wall
+    {
+      { x = 160, y =  16, mat = "?wall" }
+      { x = 192, y =  16, mat = "?outer" }
+      { x = 192, y = 192, mat = "?wall" }
+      { x = 160, y = 192, mat = "?wall" }
+    }
+
+    {
+      { x = 128, y =  16, mat = "?wall" }
+      { x = 160, y =  16, mat = "?wall" }
+      { x = 160, y =  80, mat = "?wall" }
+    }
+
+    -- floor
+    {
+      { x =  32, y =  16, mat = "?wall" }
+      { x = 160, y =  16, mat = "?wall" }
+      { x = 160, y = 192, mat = "?wall" }
+      { x =  32, y = 192, mat = "?wall" }
+      { t = 8, mat = "?floor" }
+    }
+
+    -- ceiling
+    {
+      { x =  32, y =  16, mat = "?wall" }
+      { x = 160, y =  16, mat = "?wall" }
+      { x = 160, y = 192, mat = "?wall" }
+      { x =  32, y = 192, mat = "?wall" }
+      { b = 136, mat = "?ceil" }
+    }
+  }
+
+  -- opening part
+
+  models =
+  {
+    {
+      x1 =  32, x2 = 160, x_face = { mat="METAL1_2" }
+      y1 = 176, y2 = 192, y_face = { mat="?secret_wall" }
+      z1 =  10, z2 = 138, z_face = { mat="METAL1_2" }
+
+      entity =
+      {
+        ent = "secret_door"
+        angles = "270 0 0"
+        sounds = 1
+        spawnflags = 0
+      }
+    }
+  }
+  
+  -- the juicy item
+
+  entities =
+  {
+    { ent = "?item",  x =  96, y = 96, z = 12 }
+    { ent = "?item2", x =  48, y = 64, z = 12 }
+    { ent = "?item3", x = 144, y = 64, z = 12 }
+    { ent = "?item4", x =  96, y = 64, z = 12 }
+
+    { ent = "light", x = 96, y = 96, z = 3, light = 128, style = "?style" }
   }
 }
 
