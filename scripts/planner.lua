@@ -190,6 +190,11 @@ function SECTION_CLASS.touches_edge(K)
 end
 
 
+function SECTION_CLASS.clear_expanded(K)
+  K.expanded_dirs = nil
+end
+
+
 function SECTION_CLASS.set_expanded(K, dir)
   if not K.expanded_dirs then
     K.expanded_dirs = {}
@@ -1350,7 +1355,9 @@ function Plan_expand_rooms()
     end
 
     local N = K:neighbor(dir)
-    if not N or N.used then return false end
+
+    if not N  then return false end
+    if N.used then return false end
 
     return true -- OK
   end
@@ -1408,6 +1415,15 @@ function Plan_expand_rooms()
   end
 
 
+  local function clear_expanded_dirs()
+    for mx = 1,MAP_W do for my = 1,MAP_H do
+      local K = SECTIONS[mx*2][my*2]
+
+      K:clear_expanded()
+    end end
+  end
+
+
   local function nudge_rooms()
     local visits  = {}
     local narrows = {}
@@ -1416,7 +1432,7 @@ function Plan_expand_rooms()
       local K = SECTIONS[mx*2][my*2]
 
       if K.room then
-        table.insert(visits, K)
+        table.insert(visits, { K=K, dirs={2,4,6,8} })
 
         if K.sh == 2 then
           table.insert(narrows, { K=K, dir=2 })
@@ -1430,21 +1446,22 @@ function Plan_expand_rooms()
       end
     end end
 
-    -- do a single pass to try and expand very narrow rooms
+    -- do an initial pass to try and expand very narrow rooms
     rand.shuffle(narrows)
 
     each spot in narrows do
       try_nudge_section(spot.K, spot.dir)
     end
 
-    -- Note: we deliberately don't try every possibility
-    --       (allow some free space for traps or secrets)
+    clear_expanded_dirs()
 
-    for loop = 1,10 do
+    for loop = 1,4 do
       rand.shuffle(visits)
 
-      each K in visits do
-        try_nudge_section(K, rand.dir())
+      each V in visits do
+        local dir = table.remove(V.dirs, rand.irange(1, #V.dirs))
+
+        try_nudge_section(V.K, dir)
       end
     end
   end

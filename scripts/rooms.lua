@@ -2243,5 +2243,12 @@ function Rooms_build_all()
   Rooms_blow_chunks()
   Rooms_add_sun()
   Rooms_intermission_camera()
+
+
+--[[ DEBUG
+local T = Trans.box_transform(18*192, 8*192, 21*192, 9*192, 24, 2)
+local skin = { wall="STARTAN3", ceil="COMPBLUE", floor="MFLR8_2", outer="COMPBLUE", upper="CRACKLE2", step="STEP1" }
+Fabricate("HALLWAY_FORK", T, { skin })
+--]]
 end
 
