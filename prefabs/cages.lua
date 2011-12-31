@@ -452,3 +452,85 @@ PREFAB.TRAP_CLOSET_DOOM =
   }
 }
 
+
+----------------------------------------------------------------
+
+
+PREFAB.SECRET_NICHE_1 =
+{
+  fitted = "xy"
+
+  defaults =
+  {
+    item2 = "none"
+    item3 = "none"
+    item4 = "none"
+
+    secret_wall = "?wall"
+  }
+
+  brushes =
+  {
+    -- wall behind it
+    {
+      { x =   0, y =  0, mat = "?outer" }
+      { x = 192, y =  0, mat = "?outer" }
+      { x = 192, y = 16, mat = "?wall" }
+      { x =   0, y = 16, mat = "?outer" }
+    }
+
+    -- left side wall
+    {
+      { x =  0, y =  16, mat = "?wall" }
+      { x = 16, y =  16, mat = "?wall" }
+      { x = 16, y = 192, mat = "?wall" }
+      { x =  0, y = 192, mat = "?outer" }
+    }
+
+    -- right side wall
+    {
+      { x = 176, y =  16, mat = "?wall" }
+      { x = 192, y =  16, mat = "?outer" }
+      { x = 192, y = 192, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+    }
+
+    -- floor
+    {
+      { x =  16, y =  16, mat = "?floor" }
+      { x = 176, y =  16, mat = "?floor" }
+      { x = 176, y = 192, mat = "?floor" }
+      { x =  16, y = 192, mat = "?floor" }
+      { t = 0, mat = "?floor" }
+    }
+
+    -- ceiling
+    {
+      { x =  16, y =  16, mat = "?ceil" }
+      { x = 176, y =  16, mat = "?ceil" }
+      { x = 176, y = 176, mat = "?ceil" }
+      { x =  16, y = 176, mat = "?ceil" }
+      { b = 128, mat = "?ceil" }
+    }
+
+    -- opening part
+    {
+      { x =  16, y = 176, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+      { x = 176, y = 192, mat = "?secret_wall", special="?special", act="?act", arg1="?tag", arg2="?speed", peg=1, y_offset=19 }
+      { x =  16, y = 176, mat = "?wall" }
+      { b = 24, delta_z=-24, mat = "?wall", tag = "?tag" }
+    }
+  }
+  
+  -- the juicy item
+
+  entities =
+  {
+    { ent = "?item",  x =  96, y =  96, z = 0 }
+    { ent = "?item2", x =  48, y = 128, z = 0 }
+    { ent = "?item3", x = 144, y = 128, z = 0 }
+    { ent = "?item4", x =  96, y = 128, z = 0 }
+  }
+}
+
