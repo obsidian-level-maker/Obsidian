@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2010 Andrew Apted
+--  Copyright (C) 2010-2011 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -520,7 +520,7 @@ PREFAB.SECRET_NICHE_1 =
       { x = 160, y =  16, mat = "?wall" }
       { x = 160, y = 192, mat = "?wall" }
       { x =  32, y = 192, mat = "?wall" }
-      { t = 8, mat = "?floor" }
+      { t = 8, mat = "?floor", special = 9 }
     }
 
     -- ceiling
