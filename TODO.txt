@@ -5,14 +5,13 @@ OBLIGE TODO
 Current Work
 ------------
 
->>>  fake buildings : ensure only built ONCE at a seed
 
-!!  fix the sky fences in places where they don't belong
-    
-    also : can be unused gap between two outdoor rooms, 
-           but only one room "grabs" the gap for a sky border
+Outdoor Borders:
 
--  automatic "sky" brushes (if no 'm' coord and b/t material is "_SKY")
+DONE: ensure every zone gets a facade_mat
+
+-  properly pick the facade for fake buildings
+
 
 
 Theme System:
