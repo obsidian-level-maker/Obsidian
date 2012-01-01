@@ -1862,6 +1862,12 @@ function Rooms_outdoor_borders()
         break
       end
 
+      if N.scenic then
+        building = LEVEL.rooms[1] -- FIXME
+        count = i
+        break
+      end
+
       if not N.edge_of_map then return end
     end
 
