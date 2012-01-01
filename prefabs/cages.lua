@@ -635,10 +635,9 @@ PREFAB.QUAKE_SECRET_NICHE_1 =
     }
   }
 
-  -- opening part
-
   models =
   {
+    -- opening part
     {
       x1 =  32, x2 = 160, x_face = { mat="METAL1_2" }
       y1 = 176, y2 = 192, y_face = { mat="?secret_wall" }
@@ -652,8 +651,20 @@ PREFAB.QUAKE_SECRET_NICHE_1 =
         spawnflags = 0
       }
     }
+
+    -- show the message and count as a secret
+    {
+      x1 =  32, x2 = 160, x_face = { mat="TRIGGER" }
+      y1 =  32, y2 = 176, y_face = { mat="TRIGGER" }
+      z1 =   8, z2 = 136, z_face = { mat="TRIGGER" }
+
+      entity =
+      {
+        ent = "secret"
+      }
+    }
   }
-  
+
   -- the juicy item
 
   entities =
@@ -762,7 +773,23 @@ PREFAB.SECRET_NICHE_W_JUMPS =
       { b = 168, mat = "?wall" }
     }
   }
-  
+
+  -- show the message and count as a secret
+
+  models =
+  {
+    {
+      x1 = 112, x2 = 176, x_face = { mat="TRIGGER" }
+      y1 =  64, y2 = 176, y_face = { mat="TRIGGER" }
+      z1 = 200, z2 = 296, z_face = { mat="TRIGGER" }
+
+      entity =
+      {
+        ent = "secret"
+      }
+    }
+  }
+
   -- the well-earned item
 
   entities =
