@@ -1930,54 +1930,62 @@ function Rooms_outdoor_borders()
   end
 
 
-  local function handle_spot(R, S, dir)
+  local function handle_side(R, S, dir)
     local N = S:neighbor(dir)
     assert(N)
 
-    if N.room == R then return end
+    if not N.edge_of_map then return false end
 
-    if N.hall or N.room or N.scenic then return end
+    assert(not N:used())
 
-    if N.edge_of_map then
-      if geom.is_corner(dir) then
---!!!!  make_sky_corner(R, N, dir)
-      else
---!!!!  make_sky_fence(R, N, dir)
-      end
+    make_sky_fence(R, N, dir)
 
-      N.edge_of_map = nil
-      return
-    end
+    return true
+  end
 
-    table.insert(R.fake_buildings, { N=N, dir=dir })
+
+  local function handle_corner(R, S, dir)
+    local N = S:neighbor(dir)
+    assert(N)
+
+    if not N.edge_of_map then return false end
+
+    assert(not N:used())
+
+    make_sky_corner(R, N, dir)
+
+    return true
   end
 
 
   local function scan_room(R)
-    R.fake_buildings = {}
-
-    for pass = 1,2 do
-      for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
-        local S = SEEDS[sx][sy]
+    for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
         
-        if S.room != R then continue end
+      if S.room != R then continue end
 
-        if pass == 1 then
-          for dir = 2,8,2 do
-            handle_spot(R, S, dir)
-          end
-        else
----          for dir = 1,9,2 do if dir != 5 then
----            handle_spot(R, S, dir)
----          end end
+      local which_dirs = {}
+
+      for dir = 2,8,2 do
+        if handle_side(R, S, dir) then
+          which_dirs[dir] = true
         end
+      end
 
-      end end
-    end
+      -- check for corners
+      for corner = 1,9,2 do if corner ~= 5 then
+        if which_dirs[geom.LEFT_45 [corner]] and
+           which_dirs[geom.RIGHT_45[corner]]
+        then
+          handle_corner(R, S, corner)
+        end
+      end end  -- corner
+
+    end end -- sx, sy
   end
 
 
-  local function check_fake_corner(S)
+  local function OLD__check_fake_corner(S)
     local open_dirs = {}
 
     for dir = 2,8,2 do
@@ -2007,7 +2015,7 @@ function Rooms_outdoor_borders()
   end
 
 
-  local function handle_fake_corners(R)
+  local function OLD__handle_fake_corners(R)
     for index = #R.fake_buildings, 1, -1 do
       local S = R.fake_buildings[index].N
 
@@ -2024,7 +2032,7 @@ function Rooms_outdoor_borders()
   end
 
 
-  local function touches_start(list, info)
+  local function OLD__touches_start(list, info)
     local T = list[1]
 
     if geom.is_vert(T.dir) then
@@ -2037,7 +2045,7 @@ function Rooms_outdoor_borders()
   end
 
 
-  local function touches_end(list, info)
+  local function OLD__touches_end(list, info)
     local T = list[#list]
 
     if geom.is_vert(T.dir) then
@@ -2050,7 +2058,7 @@ function Rooms_outdoor_borders()
   end
 
 
-  local function collect_fake_row(R)
+  local function OLD__collect_fake_row(R)
     -- find a group of touching seeds which would become a fake building
 
     if table.empty(R.fake_buildings) then return nil end
@@ -2087,7 +2095,7 @@ function Rooms_outdoor_borders()
   end
 
 
-  local function building_on_side_of_row(row, sx1, sy1, sx2, sy2, delta)
+  local function OLD__building_on_side_of_row(row, sx1, sy1, sx2, sy2, delta)
     local sx, sy
     local dir = row[1].dir  -- dir faces out of room
 
@@ -2128,7 +2136,7 @@ function Rooms_outdoor_borders()
   end
 
 
-  local function make_the_fake(R)
+  local function OLD__make_the_fake(R)
     while not table.empty(R.fake_buildings) do
       local row = collect_fake_row(R)
       assert(row)
@@ -2165,14 +2173,9 @@ function Rooms_outdoor_borders()
 
   scan_for_unused_seeds(2)
 
---!!!!!!!!
-do return end
-
   each R in LEVEL.rooms do
     if R.kind == "outdoor" then
       scan_room(R)
-      handle_fake_corners(R)
-      make_the_fake(R)
     end
   end
 end
@@ -2193,10 +2196,11 @@ function Rooms_build_all()
 
   Areas_handle_connections()
   Areas_important_stuff()
+  Areas_flesh_out()
 
   Rooms_outdoor_borders()
 
-  Areas_flesh_out()
+  -- Rooms_indoor_walls()
 
   if PARAM.tiled then
     -- this is as far as we go for TILE based games
