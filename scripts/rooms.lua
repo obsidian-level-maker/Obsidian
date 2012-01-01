@@ -573,10 +573,6 @@ function Rooms_select_textures()
 
     L.wall_mat = rand.key_by_probs(tab)
 
----##  if L.wall_mat == "_FACADE" then
----##    L.wall_mat = assert(L.zone.facade_mat)
----##  end
-
     if L.theme.floors then
       L.floor_mat = rand.key_by_probs(L.theme.floors)
     end
@@ -1698,7 +1694,7 @@ function Rooms_fake_building(R, sx1, sy1, sx2, sy2, dir, B, faces_room, mat)
   local x2 = SEEDS[sx2][sy2].x2
   local y2 = SEEDS[sx2][sy2].y2
 
-  mat = mat or assert(B.zone.facade_mat or B.wall_mat)
+  mat = mat or assert(B.zone.facade_mat)
 --[[
 mat = rand.pick { "COMPBLUE", "SFALL1", "DBRAIN1",
                   "COMPSPAN", "ASHWALL7", "SILVER2",
@@ -1735,7 +1731,7 @@ stderrf("FAKE CORNER @ %s corner:%d\n", S:tostr(), corner)
   S.scenic = true
   S.edge_of_map = nil
 
-  local mat = assert(B.zone.facade_mat or B.wall_mat)
+  local mat = assert(B.zone.facade_mat)
 
   local f_h = -512
 

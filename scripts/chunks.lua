@@ -855,8 +855,8 @@ function CHUNK_CLASS.inner_outer_mat(C, L1, L2)
 
   local skin2 = { wall = L1.wall_mat, outer = L2.wall_mat }
 
-  if L1.kind == "outdoor" then skin2.wall  = L2.zone.facade_mat or L2.wall_mat end
-  if L2.kind == "outdoor" then skin2.outer = L1.zone.facade_mat or L1.wall_mat end
+  if L1.kind == "outdoor" then skin2.wall  = L2.zone.facade_mat end
+  if L2.kind == "outdoor" then skin2.outer = L1.zone.facade_mat end
 
   return skin2
 end
