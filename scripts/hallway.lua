@@ -223,11 +223,13 @@ function HALLWAY_CLASS.alloc_chunk(H, K, sx1, sy1, sx2, sy2)
 
   C:install()
 
+--[[
   for sx = sx1,sx2 do for sy = sy1,sy2 do
     local S = SEEDS[sx][sy]
     assert(not S.room and not S.hall)
     S.hall = H
   end end
+--]]
 
   return C
 end

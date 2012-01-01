@@ -1685,142 +1685,11 @@ end
 
 
 
-function Rooms_fill_unused_seeds()
-
-  -- first bit : handle edges
-  -- create fake building pieces in the space between a building and
-  -- the edge of the map.
-
-  -- second bit : handle stuff in middle
-
-  local function try_grow_at(S, dir, pass)
-    local N = S:neighbor(dir)
-    assert(N)
-
-    if not (N.room or N.hall or N.scenic) then return end
-
-    if N.grow_pass and N.grow_pass == pass then return end
-
-    S.scenic = N.scenic or N.room or N.hall
-    S.grow_pass = pass
-
-    S.edge_of_map = false
-
-if S.scenic.kind != "outdoor" then
-  local mat
-  if S.scenic.zone then mat = S.scenic.zone.facade_mat end
-  if not mat then mat = S.scenic.facade_mat end
-  if not mat then mat = S.scenic.main_tex end
-  if not mat then mat = "_ERROR" end
-
-  local brush = Brush_new_quad(S.x1, S.y1, S.x2, S.y2)
-  Brush_set_mat(brush, mat)
-  brush_helper(brush)
-end
-
-end
-
-
-  local function process(pass)
-    for x = 1, SEED_W do for y = 1, SEED_H do
-      local S = SEEDS[x][y]
-
-      if S.hall or S.room or S.scenic then continue end
-
-      local px = x / SEED_W
-      local py = y / (SEED_H-4)
-
-      if S.edge_of_map then
-        local DIRS = {}
-
-        if px < 0.2 then table.insert(DIRS, 6) end
-        if px > 0.8 then table.insert(DIRS, 4) end
-        if py < 0.2 then table.insert(DIRS, 8) end
-        if py > 0.8 then table.insert(DIRS, 2) end
-
-        each dir in DIRS do
-          try_grow_at(S, dir, pass)
-        end
-      end
-    end end
-  end
-
-
-  local function fill(S)
-    local best_mat
-    local good_mat
-    local bad_mat
-    local worst_mat
-
-    for dir = 2,8,2 do
-      local N = S:neighbor(dir)
-
-      if not N then continue end
-
-      if N.hall then
-        good_mat = N.hall.zone.facade_mat
-      elseif N.room and N.room == "building" then
-        best_mat = N.room.zone.facade_mat or N.room.main_tex
-      elseif N.filler then
-        bad_mat = assert(N.filler.mat)
-      elseif N.room then
-        worst_mat = N.room.zone.facade_mat or N.room.main_tex
-      end
-    end
-
-    local mat = best_mat or good_mat or bad_mat or worst_mat
-
-    if not mat then return false end
-
-    S.filler = { mat=mat }
-
-local brush = Brush_new_quad(S.x1, S.y1, S.x2, S.y2)
-Brush_set_mat(brush, mat)
-brush_helper(brush)
-
-    return true
-  end
-
-
-  ---| Rooms_fill_unused_seeds |---
-
-  for pass = 1, 4 do
-    process(pass)
-  end
-
-  ----->
-
-  local active = {}
-
-  for x = 1, SEED_W do for y = 1, SEED_H do
-    local S = SEEDS[x][y]
-    if not (S.free or S.room or S.hall or S.scenic) then
-      table.insert(active, S)
-    end
-  end end
-
-  for loop = 1,20 do
-    if #active == 0 then break end
-
-    local new_active = {}
-
-    each S in active do
-      if not fill(S) then
-        table.insert(new_active, S)
-      end
-    end
-  end
-
-
---- Plan_dump_rooms("Grown Map:")
-end
-
-
-
-function Rooms_fake_building(R, sx1, sy1, sx2, sy2, dir, B, faces_room)
+function Rooms_fake_building(R, sx1, sy1, sx2, sy2, dir, B, faces_room, mat)
   -- mark it
   for sx = sx1,sx2 do for sy = sy1,sy2 do
-    SEEDS[sx][sy].fake = true
+    SEEDS[sx][sy].scenic = true
+    SEEDS[sx][sy].edge_of_map = nil
   end end
 
   local x1 = SEEDS[sx1][sy1].x1
@@ -1829,7 +1698,7 @@ function Rooms_fake_building(R, sx1, sy1, sx2, sy2, dir, B, faces_room)
   local x2 = SEEDS[sx2][sy2].x2
   local y2 = SEEDS[sx2][sy2].y2
 
-  local mat = assert(B.zone.facade_mat or B.wall_mat)
+  mat = mat or assert(B.zone.facade_mat or B.wall_mat)
 --[[
 mat = rand.pick { "COMPBLUE", "SFALL1", "DBRAIN1",
                   "COMPSPAN", "ASHWALL7", "SILVER2",
@@ -1863,7 +1732,8 @@ function Rooms_fake_corner(R, S, corner, B)
 stderrf("FAKE CORNER @ %s corner:%d\n", S:tostr(), corner)
 
   -- mark it
-  S.fake = true
+  S.scenic = true
+  S.edge_of_map = nil
 
   local mat = assert(B.zone.facade_mat or B.wall_mat)
 
@@ -1902,7 +1772,7 @@ function Rooms_outdoor_borders()
   --      [at this point, all 'edge_of_map' seeds should only touch
   --       a single outdoor room]
   --
-  --  (4) find all unused seeds which border ONE outdoor room,
+  --  (4) find all unused non-edge seeds which border ONE outdoor room,
   --      place fake buildings there.  Same code for step (1) but with
   --      a different check and probably different prefabs.
   --
@@ -1911,42 +1781,101 @@ function Rooms_outdoor_borders()
   --      a seed places a fence in two directions (e.g. 2 and 4).
   --
 
+  local function scan_for_unused_seeds(pass)
+    for sx = 1, SEED_W do for sy = 1, SEED_TOP do
+      local S = SEEDS[sx][sy]
+
+      if S:used() then continue end
+
+      if pass == 2 and S.edge_of_map then continue end
+
+      local outdoors = {}
+
+      for dir = 2,8,2 do
+        local N = S:neighbor(dir)
+
+        if N and N.room and N.room.kind == "outdoor" then
+          table.add_unique(outdoors, N.room)
+        end
+      end
+
+      if (pass == 1 and #outdoors >= 2) or
+         (pass == 2 and #outdoors == 1)
+      then
+        local mat = (pass == 1 ? "LAVA1" ; "SFALL1")
+
+        -- FIXME : too simple
+        Rooms_fake_building(nil, S.sx, S.sy, S.sx, S.sy, 2, LEVEL.rooms[1], false, mat)
+
+        S.edge_of_map = nil
+      end
+    end end
+  end
+
+
+  local function check_touches_outdoor(S, dir)
+    -- we check 90 degrees to the left and right of 'dir'.
+    -- if found, returns the direction.
+
+    local dir1 = geom. LEFT[dir]
+    local dir2 = geom.RIGHT[dir]
+
+    local P1 = S:neighbor(dir1)
+    local P2 = S:neighbor(dir2)
+
+    if P1 and P1.room and P1.room.kind == "outdoor" then return dir1 end
+    if P2 and P2.room and P2.room.kind == "outdoor" then return dir2 end
+
+    return nil
+  end
+
+
   local function fake_building_from_edge(sx, sy, dir, max_dist)
     local S = SEEDS[sx][sy]
 
     if not S.edge_of_map then return end
 
-    local B
-    local count
+    local count  -- number of seeds from edge to fill
+    local building
 
-    local start_dist
+    local outdoor_dir = check_touches_outdoor(S, dir)
 
     -- look for a building near the edge
     for i = 1,max_dist do
       local N = S:neighbor(dir, i)
 
-      if not N then break end
+      if not N then return end
 
-      if N.hall then B = N.hall ; count = i ; break end
+      if not outdoor_dir then
+        outdoor_dir = check_touches_outdoor(N, dir)
+      end
+
+      if N.hall then
+        building = N.hall ; count = i
+        break
+      end
 
       if N.room then
         if N.room.kind == "outdoor" then return end
 
-        B = N.room ; count = i ; break
+        building = N.room ; count = i
+        break
       end
 
       if not N.edge_of_map then return end
     end
 
     -- no building found?
-    if not B then return end
+    if not building then return end
 
+    -- no need for fake buildings when no outdoor neighbors
+    if not outdoor_dir then return end
+
+    -- TODO: larger groups (depends on which seeds touch outdoor rooms)
     for i = 1,count do
       local N = S:neighbor(dir, i-1)
       
-      N.edge_of_map = nil
-
-      Rooms_fake_building(nil, N.sx, N.sy, N.sx, N.sy, geom.LEFT[dir], B, false)
+      Rooms_fake_building(nil, N.sx, N.sy, N.sx, N.sy, geom.LEFT[dir], building, false, "COMPBLUE")
     end
   end
 
@@ -2007,7 +1936,7 @@ function Rooms_outdoor_borders()
 
     if N.room == R then return end
 
-    if N.hall or N.room or N.scenic or N.fake then return end
+    if N.hall or N.room or N.scenic then return end
 
     if N.edge_of_map then
       if geom.is_corner(dir) then
@@ -2230,7 +2159,11 @@ function Rooms_outdoor_borders()
 
 -- Plan_dump_rooms("Edges of Map:")
 
+  scan_for_unused_seeds(1)
+
   analyse_edges()
+
+  scan_for_unused_seeds(2)
 
 --!!!!!!!!
 do return end

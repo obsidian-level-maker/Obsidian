@@ -85,6 +85,11 @@ function SEED_CLASS.mid_point(S)
 end
 
 
+function SEED_CLASS.used(S)
+  return S.room or S.hall or S.scenic
+end
+
+
 --------------------------------------------------------------------
 
 
@@ -147,9 +152,11 @@ function Seed_flood_fill_edges()
 
   for x = 1,SEED_W do for y = 1,SEED_H do
     local S = SEEDS[x][y]
-    if S.section and S.section.used then
+
+    if S:used() then
       S.edge_of_map = nil
     end
+
     if S.edge_of_map then
       table.insert(active, S)
     end
@@ -161,7 +168,8 @@ function Seed_flood_fill_edges()
     each S in active do
       for side = 2,8,2 do
         local N = S:neighbor(side)
-        if N and not N.edge_of_map and not N.free and not (N.section and N.section.used) then
+
+        if N and not N.edge_of_map and not N.free and not N:used() then
           N.edge_of_map = true
           table.insert(new_active, N)
         end

@@ -95,6 +95,11 @@ end
 function SECTION_CLASS.set_hall(K, H)
   assert(not K.used)
   K.hall = H ; K.used = true
+
+  -- TODO: review this (wrong place?)
+  for sx = K.sx1, K.sx2 do for sy = K.sy1, K.sy2 do
+    SEEDS[sx][sy].hall = H
+  end end
 end
 
 function SECTION_CLASS.set_crossover(K, H)
