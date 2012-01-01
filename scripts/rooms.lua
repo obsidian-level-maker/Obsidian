@@ -1885,9 +1885,33 @@ end
 
 
 
-function Rooms_do_outdoor_borders()
+function Rooms_outdoor_borders()
+  --
+  --  BORDER ALGORITHM
+  --
+  --  (1) find all unused seeds which border TWO outdoor rooms (or more).
+  --      place fake buildings there ('scenic' field in seeds).
+  --
+  --  (2) flood fill the 'edge_of_map' flag in seeds.
+  --
+  --      [any fake buildings will prevent the flag spreading]
+  --
+  --  (3) analyse from edge : if hit an indoor (or fake) AND touches
+  --      an outdoor room, then place fake buildings all the way to edge.
+  --
+  --      [at this point, all 'edge_of_map' seeds should only touch
+  --       a single outdoor room]
+  --
+  --  (4) find all unused seeds which border ONE outdoor room,
+  --      place fake buildings there.  Same code for step (1) but with
+  --      a different check and probably different prefabs.
+  --
+  --  (5) scan around edges of each outdoor room, place sky fences
+  --      in unused 'edge_of_map' seeds.  Place sky corners only where
+  --      a seed places a fence in two directions (e.g. 2 and 4).
+  --
 
-  local function fake_building_from_spot(sx, sy, dir)
+  local function fake_building_from_edge(sx, sy, dir, max_dist)
     local S = SEEDS[sx][sy]
 
     if not S.edge_of_map then return end
@@ -1895,11 +1919,13 @@ function Rooms_do_outdoor_borders()
     local B
     local count
 
+    local start_dist
+
     -- look for a building near the edge
-    for i = 1,3 do
+    for i = 1,max_dist do
       local N = S:neighbor(dir, i)
 
-      if not N then return end
+      if not N then break end
 
       if N.hall then B = N.hall ; count = i ; break end
 
@@ -1925,15 +1951,18 @@ function Rooms_do_outdoor_borders()
   end
 
 
-  local function fake_buildings_at_edge()
-    for sx = 1, SEED_W do
-      fake_building_from_spot(sx, 1, 8)
-      fake_building_from_spot(sx, SEED_TOP, 2)
+  local function analyse_edges()
+    local max_w = int(SEED_W   / 2)
+    local max_h = int(SEED_TOP / 2)
+
+    for sx = 2, SEED_W-1 do
+      fake_building_from_edge(sx, 1, 8, max_h)
+      fake_building_from_edge(sx, SEED_TOP, 2, max_h)
     end
 
-    for sy = 1, SEED_TOP do
-      fake_building_from_spot(1, sy, 6)
-      fake_building_from_spot(SEED_W, sy, 4)
+    for sy = 2, SEED_TOP-1 do
+      fake_building_from_edge(1, sy, 6, max_w)
+      fake_building_from_edge(SEED_W, sy, 4, max_w)
     end
   end
 
@@ -2197,7 +2226,14 @@ function Rooms_do_outdoor_borders()
 
   ---| Rooms_do_outdoor_borders |---
 
-  fake_buildings_at_edge()
+  Seed_flood_fill_edges()
+
+-- Plan_dump_rooms("Edges of Map:")
+
+  analyse_edges()
+
+--!!!!!!!!
+do return end
 
   each R in LEVEL.rooms do
     if R.kind == "outdoor" then
@@ -2216,10 +2252,6 @@ function Rooms_build_all()
 
   gui.prog_step("Rooms");
 
-  Seed_flood_fill_edges()
-
-  Plan_dump_rooms("Edges")
-
   Rooms_select_textures()
 
 ---!!!  Rooms_setup_symmetry()
@@ -2228,11 +2260,10 @@ function Rooms_build_all()
 
   Areas_handle_connections()
   Areas_important_stuff()
+
+  Rooms_outdoor_borders()
+
   Areas_flesh_out()
-
-  Rooms_do_outdoor_borders()
-
-  Plan_dump_rooms("Edges2")
 
   if PARAM.tiled then
     -- this is as far as we go for TILE based games
@@ -2246,9 +2277,9 @@ function Rooms_build_all()
 
 
 --[[ DEBUG
-local T = Trans.box_transform(18*192, 8*192, 21*192, 9*192, 24, 2)
-local skin = { wall="STARTAN3", ceil="COMPBLUE", floor="MFLR8_2", outer="COMPBLUE", upper="CRACKLE2", step="STEP1" }
-Fabricate("HALLWAY_FORK", T, { skin })
+local T = Trans.box_transform(-7*192, -6*192, -6*192, -5*192, 448, 2)
+local skin = { item="quad", wall="TECH08_2", outer="CITY6_3" }
+Fabricate("SECRET_NICHE_W_JUMPS", T, { skin })
 --]]
 end
 
