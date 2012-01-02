@@ -41,17 +41,17 @@ PREFAB.SKY_FENCE =
   brushes =
   {
     {
-      { x =   0, y =  0, mat = "_SKY" }
-      { x = 192, y =  0, mat = "_SKY" }
+      { x =   0, y =  0, mat = "_SKY", draw_never=1 }
+      { x = 192, y =  0, mat = "_SKY", draw_never=1 }
       { x = 192, y = 16, mat = "_SKY" }
-      { x =   0, y = 16, mat = "_SKY" }
+      { x =   0, y = 16, mat = "_SKY", draw_never=1 }
       { b = 80, delta_z=-16, mat = "_SKY" }
     }
 
     {
       { x =   0, y =   0, mat = "?wall" }
       { x = 192, y =   0, mat = "?wall" }
-      { x = 192, y = 192, mat = "?wall" }
+      { x = 192, y = 192, mat = "?wall", blocked=1 }
       { x =   0, y = 192, mat = "?wall" }
       { t = 64, mat = "?wall" }
     }
@@ -75,10 +75,10 @@ PREFAB.SKY_CORNER =
   {
 
     {
-      { x = 176, y =   0, mat = "_SKY" }
-      { x = 192, y =   0, mat = "_SKY" }
-      { x = 192, y = 192, mat = "_SKY" }
-      { x =   0, y = 192, mat = "_SKY" }
+      { x = 176, y =   0, mat = "_SKY", draw_never=1 }
+      { x = 192, y =   0, mat = "_SKY", draw_never=1 }
+      { x = 192, y = 192, mat = "_SKY", draw_never=1 }
+      { x =   0, y = 192, mat = "_SKY", draw_never=1 }
       { x =   0, y = 176, mat = "_SKY" }
       { b = 80, delta_z=-16, mat = "_SKY" }
     }
