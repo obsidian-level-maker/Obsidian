@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2011 Andrew Apted
+--  Copyright (C) 2006-2012 Andrew Apted
 --  Copyright (C)      2008 Sam Trenholme
 --
 --  This program is free software; you can redistribute it and/or
@@ -89,7 +89,7 @@ HERETIC.ENTITIES =
 
   --- powerups ---
   bag     = { id=8,  kind="pickup", r=20,h=16, pass=true }
-  wings   = { id=23, kind="pickup", r=20,h=16, pass=true }
+  wings   = { id=83, kind="pickup", r=20,h=16, pass=true }
   ovum    = { id=30, kind="pickup", r=20,h=16, pass=true }
   torch   = { id=33, kind="pickup", r=20,h=16, pass=true }
   bomb    = { id=34, kind="pickup", r=20,h=16, pass=true }
