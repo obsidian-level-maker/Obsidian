@@ -550,26 +550,44 @@ function Hallway_test_branch(start_K, start_dir, mode)
     end
 
     -- prefer cycles between the same quest
-    local next_quest
+    local need_lock
 
     if mode == "cycle" and
        (L1.quest != L2.quest or
---        L1.purpose == "SOLUTION" or
---        L2.purpose == "SOLUTION"
-          false)
+        L1.purpose == "SOLUTION" or
+        L2.purpose == "SOLUTION")
     then                    
-      next_quest = L1.quest
 
-      if L2.quest.id > next_quest.id then
-        next_quest = L2.quest
+      if L1.quest != L2.quest then
+stderrf("next_quest\n")
+
+        local next_quest = L1.quest
+
+        if L2.quest.id > next_quest.id then
+          next_quest = L2.quest
+        end
+
+        assert(next_quest.entry_conn)
+
+        need_lock = assert(next_quest.entry_conn.lock)
+
+      else
+        -- shortcut out of a key room
+        assert(not (L1.purpose == "SOLUTION" and L2.purpose == "SOLUTION"))
+
+        if L1.purpose == "SOLUTION" then
+          need_lock = assert(L1.purpose_lock)
+        else
+          assert(L2.purpose == "SOLUTION")
+          need_lock = assert(L2.purpose_lock)
+        end
       end
 
       -- never make them if it would need a keyed door, but the game
       -- uses up keys (since key is needed for original door).
-      assert(next_quest.entry_conn)
-      assert(next_quest.entry_conn.lock)
-
-      if next_quest.entry_conn.lock.kind == "KEY" and PARAM.lose_keys then return end
+      if need_lock.kind == "KEY" and PARAM.lose_keys then
+        return
+      end
 
       score = score - 40
     end
@@ -616,13 +634,8 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
     -- handle quest difference : need to lock door
 
-    if next_quest then
-stderrf("next_quest\n")
-
-      assert(next_quest.entry_conn)
-      assert(next_quest.entry_conn.lock)
-
-      D2.lock = next_quest.entry_conn.lock
+    if need_lock then
+      D2.lock = need_lock
     end
 
 
