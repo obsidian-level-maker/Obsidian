@@ -271,19 +271,6 @@ function Connect_make_branch(mode)
     info.D1.L1.quest:add_room_or_hall(info.D1.L2)
     info.D1.L1.zone :add_room_or_hall(info.D1.L2)
 
-    -- handle quest difference : need to lock door
-
-    if info.next_quest then
-stderrf("next_quest\n")
-      assert(info.D2)  -- assuming hallway (two conns)
-
-      local next_quest = info.next_quest
-
-      assert(next_quest.entry_conn)
-      assert(next_quest.entry_conn.lock)
-
-      info.D2.lock = next_quest.entry_conn.lock
-    end
   end
 end
 
