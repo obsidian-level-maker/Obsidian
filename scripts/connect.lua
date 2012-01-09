@@ -164,15 +164,27 @@ function Connect_is_possible(L1, L2, mode)
     if L1.kind == "hallway" then return false end
     if L2.kind == "hallway" then return false end
 
+    -- no shortcuts to the exit please
+    -- [FIXME: unless other room already connected to exit]
+    if L1.purpose == "EXIT" then return false end
+    if L2.purpose == "EXIT" then return false end
+
+    -- [FUTURE Todo: allow _one_way_ cycles to earlier room]
+
+    if L1.quest == L2.quest then
+
+      -- don't add cycles to rooms with teleporters
+      if L1.kind != "hallway" and L1:has_teleporter() then return false end
+      if L2.kind != "hallway" and L2:has_teleporter() then return false end
+
+    else  -- different quests
+
+      if L1.purpose == "SOLUTION" then return false end
+      if L2.purpose == "SOLUTION" then return false end
+
+    end
+
     return true
---[[
-    if L1.quest != L2.quest then return true end
-
-    if L1.next_in_quest == L2 then return true end
-    if L1.next_in_quest and L1.next_in_quest.next_in_quest == L2 then return true end
-
-    return false
---]]
   end
 
   -- Note: require R1's group to be less than R2, which ensures that
