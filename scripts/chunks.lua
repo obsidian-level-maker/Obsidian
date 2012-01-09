@@ -1146,6 +1146,9 @@ end --]]
       if dir == 6 then bx1 = bx2 - thick end
 
       if C.link[dir] then
+
+-------->  nothing needed now
+--[[
         local LINK = C.link[dir]
 
         local cx1, cy1, cx2, cy2 = bx1, by1, bx2, by2
@@ -1169,6 +1172,7 @@ end --]]
           Brush_set_tex(brush, w_mat.t)
           raw_add_brush(brush)
         end
+--]]
 
       elseif (C.hall and C.hall.street) or
              (C.room and C.room.kind == "outdoor")
