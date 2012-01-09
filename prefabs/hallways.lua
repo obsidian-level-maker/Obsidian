@@ -1214,3 +1214,78 @@ PREFAB.HALL_BASIC_I_STAIR =
 }
 
 
+PREFAB.HALL_BASIC_I_WINDOW =
+{
+  fitted = "xy"
+
+  brushes =
+  {
+    -- left side window
+    {
+      { x =   0, y =   0, mat = "?wall" }
+      { x =  16, y =   0, mat = "?wall" }
+      { x =  16, y =  32, mat = "?wall" }
+      { x =   0, y =  32, mat = "?outer" }
+    }
+
+    {
+      { x =   0, y =  32, mat = "?wall" }
+      { x =  16, y =  32, mat = "?wall" }
+      { x =  16, y = 160, mat = "?wall" }
+      { x =   0, y = 160, mat = "?outer" }
+      { t = 32 }
+    }
+
+    {
+      { x =   0, y =  32, mat = "?wall" }
+      { x =  16, y =  32, mat = "?wall" }
+      { x =  16, y = 160, mat = "?wall" }
+      { x =   0, y = 160, mat = "?outer" }
+      { b = 96 }
+    }
+
+    {
+      { x =   0, y = 160, mat = "?wall" }
+      { x =  16, y = 160, mat = "?wall" }
+      { x =  16, y = 192, mat = "?wall" }
+      { x =   0, y = 192, mat = "?outer" }
+    }
+
+    -- player clip (cannot go through the gap)
+    {
+      { m = "clip" }
+      { x =   0, y =  32 }
+      { x =  16, y =  32 }
+      { x =  16, y = 160 }
+      { x =   0, y = 160 }
+    }
+
+    -- right wall
+    {
+      { x = 176, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?outer" }
+      { x = 192, y = 192, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+    }
+
+    -- floor
+    {
+      { x =  16, y =   0, mat = "?wall" }
+      { x = 176, y =   0, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+      { x =  16, y = 192, mat = "?wall" }
+      { t = 0, mat = "?floor" }
+    }
+
+    -- ceiling
+    {
+      { x =  16, y =   0, mat = "?wall" }
+      { x = 176, y =   0, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+      { x =  16, y = 192, mat = "?wall" }
+      { b = 128, mat = "?ceil" }
+    }
+  }
+}
+
+
