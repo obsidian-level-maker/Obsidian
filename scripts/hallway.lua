@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2011 Andrew Apted
+--  Copyright (C) 2011-2012 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -241,6 +241,15 @@ function HALLWAY_CLASS.try_filler_chunk(H, K, sx1, sy1, sx2, sy2,
   if sx2 > K.sx2 or sy2 > K.sy2 then return end
 
   if H:can_alloc_chunk(sx1, sy1, sx2, sy2) then
+    -- TESTING....
+    if sx2 < ux1 or sy2 < uy1 or sx1 > ux2 or sy1 > uy2 then
+      for sx = sx1,sx2 do for sy = sy1,sy2 do
+        SEEDS[sx][sy].hall = nil
+      end end
+
+      return
+    end
+
     local C = H:alloc_chunk(K, sx1, sy1, sx2, sy2)
     C.filler = true
 
@@ -334,13 +343,15 @@ function HALLWAY_CLASS.filler_chunks(H)
   each K in H.sections do
     H:filler_chunks_in_section(K)
 
--- verify all went well
+-- verify all went well  : OBSOLETE
+--[[
 for sx = K.sx1, K.sx2 do for sy = K.sy1, K.sy2 do
   local S = SEEDS[sx][sy]
   if not S.chunk then
     stderrf("WTF: no chunk in %s @ %s\n", H:tostr(), K:tostr())
   end
 end end
+--]]
 
   end
 end
