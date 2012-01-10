@@ -544,9 +544,11 @@ function Connect_cycles()
   if STYLE.cycles != "none" then
     prepare_cycles()
 
-    local quota = 5 ---FIXME
+    local quota = style_sel("cycles", 0, 0.3, 1, 5)
 
-    if STYLE.cycles == "heaps" then quota = 30 end
+    quota = int(quota * MAP_W + gui.random())
+
+    gui.printf("Cycle quota: %d\n", quota)
 
     for i = 1,quota do
       Connect_scan_sections("cycle", 0)

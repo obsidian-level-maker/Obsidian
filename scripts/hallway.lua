@@ -559,8 +559,6 @@ function Hallway_test_branch(start_K, start_dir, mode)
     then                    
 
       if L1.quest != L2.quest then
-stderrf("next_quest\n")
-
         local next_quest = L1.quest
 
         if L2.quest.id > next_quest.id then
