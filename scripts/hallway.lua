@@ -218,6 +218,7 @@ function HALLWAY_CLASS.alloc_chunk(H, K, sx1, sy1, sx2, sy2)
 
   C.hall = H
   C.section = K
+  C.hall_link = {}
 
   table.insert(H.chunks, C)
 
@@ -279,7 +280,7 @@ function HALLWAY_CLASS.section_has_chunk(H, K)
 end
 
 
-function HALLWAY_CLASS.used_section_length(H, K, dir)
+function HALLWAY_CLASS.used_section_length__OLD(H, K, dir)
   local p1 =  999
   local p2 = -999
 
@@ -392,8 +393,53 @@ function HALLWAY_CLASS.add_middle_chunk(H, K)
 end
 
 
-function HALLWAY_CLASS.add_gap_chunk(H, K, side)
-  -- FIXME
+function HALLWAY_CLASS.add_edge_chunk(H, K, side)
+  if not H:is_side_connected(K, side) then
+    return
+  end
+
+  -- determine how much space is on the given side (may be none)
+  local seeds
+
+  each C in H.chunks do
+    if C.section == K then
+
+      local dist
+
+      if side == 2 then dist = C.sy1 - K.sy1 end
+      if side == 8 then dist = K.sy2 - C.sy2 end
+      if side == 4 then dist = C.sx1 - K.sx1 end
+      if side == 6 then dist = K.sx2 - C.sx2 end
+
+      assert(dist)
+      assert(dist >= 0)
+
+      if dist == 0 then
+        -- no space, hence no new chunk
+        return
+      end
+
+      if seeds and dist < seeds then
+         seeds = dist
+      end
+    end
+  end
+
+  if not seeds then
+    error("add_edge_chunk failed (no chunks in section?)")
+  end
+
+  local sx1, sy1 = K.sx1, K.sy1
+  local sx2, sy2 = K.sx2, K.sy2
+
+  if side == 2 then sy2 = sy1 + (dist - 1) end
+  if side == 8 then sy1 = sy2 - (dist - 1) end
+  if side == 4 then sx2 = sx1 + (dist - 1) end
+  if side == 6 then sx1 = sx2 - (dist - 1) end
+
+  assert(H:can_alloc_chunk(sx1, sy1, sx2, sy2))
+
+  local C = H:alloc_chunk(K, sx1, sy1, sx2, sy2)
 end
 
 
@@ -410,24 +456,67 @@ function HALLWAY_CLASS.create_chunks(H)
   end
 
   -- at here, the only chunks we need now are ones which fill the gaps
-  -- at either end of a horizontal or vertical section (but only when
+  -- at either edge of a horizontal or vertical section (but only when
   -- that side touches another section in the same hallway).
 
   each K in H.sections do
     if K.kind == "horiz" then
-      H:add_gap_chunk(K, 4)
-      H:add_gap_chunk(K, 6)
+      H:add_edge_chunk(K, 4)
+      H:add_edge_chunk(K, 6)
 
     elseif K.kind == "vert" then
-      H:add_gap_chunk(K, 2)
-      H:add_gap_chunk(K, 8)
+      H:add_edge_chunk(K, 2)
+      H:add_edge_chunk(K, 8)
     end
   end
 end
 
 
+function HALLWAY_CLASS.try_link_chunk(H, C, dir)
+  -- already linked?
+  if C.link[dir] or C.hall_link[dir] then
+    return
+  end
+
+  local C2 = C:good_neighbor(dir)
+
+  if not C2 then return end
+
+  if C2.hall != H then return end
+
+  -- OK !!
+
+  C .hall_link[dir] = C2
+  C2.hall_link[10 - dir] = C
+end
+
+
 function HALLWAY_CLASS.link_chunks(H)
-  -- FIXME
+  each C in H.chunks do
+    -- only check links inside and at edges of horizontal or vertical
+    -- sections.  This will handle junctions OK, since junctions always
+    -- touch such sections (i.e. two junctions never directly touch).
+
+    -- This logic should handle big junctions properly too, since we
+    -- want the link recorded even though there can be a difference in
+    -- the size of the "spoke" chunks and the "big_junc" chunk.
+
+    if C.section.kind == "horiz" then
+      H:try_link_chunk(C, 4)
+      H:try_link_chunk(C, 6)
+    
+    elseif C.section.kind == "vert" then
+      H:try_link_chunk(C, 2)
+      H:try_link_chunk(C, 8)
+    end
+  end
+
+  -- verify all chunks have sane linkage
+  each C in H.chunks do
+    if table.size(C.link) + table.size(C.hall_link) < 2 then
+      error("hallway chunk has bad linkage")
+    end
+  end
 end
 
 
