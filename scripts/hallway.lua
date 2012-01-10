@@ -681,11 +681,6 @@ stderrf("next_quest\n")
   end
 
 
-  local TEST_DIRS_NONE  = {}
-  local TEST_DIRS_VERT  = { [4]=true, [6]=true }
-  local TEST_DIRS_HORIZ = { [2]=true, [8]=true }
-
-
   local function hall_flow(K, from_dir, visited, stats, quota)
     assert(K)
 
@@ -703,21 +698,19 @@ stderrf("next_quest\n")
 
 --stderrf("hall_flow: visited @ %s from:%d\n", K:tostr(), from_dir)
 --stderrf("{\n")
+
+    -- FIXME REVIEW: this too soon?? (before the orig_kind checks)
     table.insert(visited, K)
 
     if K.kind == "big_junc" then
       stats.big_junc = K
     end
 
-    local test_dirs
     local is_junction
 
-    if K.orig_kind == "vert" then
-      test_dirs = TEST_DIRS_VERT
-    elseif K.orig_kind == "horiz" then
-      test_dirs = TEST_DIRS_HORIZ
+    if K.orig_kind == "vert" or K.orig_kind == "horiz" then
+      -- ok
     elseif K.orig_kind == "junction" or K.kind == "big_junc" then
-      test_dirs = TEST_DIRS_NONE
       is_junction = true
     else
       return  -- not a hallway section
@@ -730,8 +723,6 @@ stderrf("next_quest\n")
       local N = K:neighbor(dir)
       if not N then continue end
 
-      -- FIXME: disabled test_dirs[] logic for now -- review this!!
-      -- !!! if test_dirs[dir] or (true and K.kind != "big_junc") then  
       if K.kind != "big_junc" and not K.used then
 --stderrf("  testing conn @ dir:%d\n", dir)
         test_hall_conn(N, 10 - dir, visited, stats)
@@ -1132,9 +1123,7 @@ entry_conn:dump()
     H:limit_crossed_room()
   end
 
-  if H.street then
-    H.height = 512
-  elseif H.is_cycle or H.crossover then
+  if H.is_cycle or H.crossover then
     H.height = 384  -- FIXME: temp crud
   elseif H.outdoor then
     H.height = 256
