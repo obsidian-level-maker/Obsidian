@@ -172,8 +172,7 @@ PREFAB.GUARDED_PEDESTAL =
     peg = ""
 
     bar_xo = 0
-    bar_delta = 128
-    bar_special = 0
+    bar_delta = 256
   }
 
   brushes =
@@ -197,59 +196,59 @@ PREFAB.GUARDED_PEDESTAL =
     }
 
     {
-      { x = -32, y = -64, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x = -16, y = -64, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x = -16, y = -48, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x = -32, y = -48, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -32, y = -64, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -16, y = -64, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -16, y = -48, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -32, y = -48, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
       { t = 80, delta_z = "?bar_delta", mat = "?bar", tag = "?tag" }
     }
 
     {
-      { x =  16, y =  48, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x =  32, y =  48, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x =  32, y =  64, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x =  16, y =  64, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  16, y =  48, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  32, y =  48, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  32, y =  64, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  16, y =  64, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
       { t = 80, delta_z = "?bar_delta", mat = "?bar", tag = "?tag" }
     }
 
     {
-      { x = -32, y =  48, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x = -16, y =  48, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x = -16, y =  64, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x = -32, y =  64, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -32, y =  48, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -16, y =  48, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -16, y =  64, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -32, y =  64, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
       { t = 80, delta_z = "?bar_delta", mat = "?bar", tag = "?tag" }
     }
 
     -- lowering bars : left and right
     {
-      { x = -64, y =  16, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x = -48, y =  16, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x = -48, y =  32, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x = -64, y =  32, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -64, y =  16, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -48, y =  16, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -48, y =  32, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -64, y =  32, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
       { t = 80, delta_z = "?bar_delta", mat = "?bar", tag = "?tag" }
     }
 
     {
-      { x = -64, y = -32, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x = -48, y = -32, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x = -48, y = -16, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x = -64, y = -16, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -64, y = -32, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -48, y = -32, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -48, y = -16, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -64, y = -16, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
       { t = 80, delta_z = "?bar_delta", mat = "?bar", tag = "?tag" }
     }
 
     {
-      { x =  48, y =  16, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x =  64, y =  16, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x =  64, y =  32, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x =  48, y =  32, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  48, y =  16, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  64, y =  16, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  64, y =  32, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  48, y =  32, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
       { t = 80, delta_z = "?bar_delta", mat = "?bar", tag = "?tag" }
     }
 
     {
-      { x =  48, y = -32, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x =  64, y = -32, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x =  64, y = -16, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x =  48, y = -16, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  48, y = -32, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  64, y = -32, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  64, y = -16, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  48, y = -16, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
       { t = 80, delta_z = "?bar_delta", mat = "?bar", tag = "?tag" }
     }
   }
