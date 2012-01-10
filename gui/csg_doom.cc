@@ -781,9 +781,13 @@ static void DM_MakeSector(region_c *R)
   S->f_h = I_ROUND(B->t.z + f_delta);
   S->c_h = I_ROUND(T->b.z + c_delta);
 
-  if (S->c_h < S->f_h)
-      S->c_h = S->f_h;
+  // when delta-ing up the floor, limit it to the ceiling
+  // (this can be important in outdoor rooms)
+  if (f_delta > (fabs(c_delta) + 7) && S->f_h > S->c_h)
+    S->f_h = S->c_h;
 
+  if (S->c_h < S->f_h)
+    S->c_h = S->f_h;
 
   S->f_tex = f_face->getStr("tex", dummy_plane_tex.c_str());
   S->c_tex = c_face->getStr("tex", dummy_plane_tex.c_str());
