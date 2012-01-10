@@ -358,6 +358,9 @@ end
 
 
 function HALLWAY_CLASS.add_middle_chunk(H, K)
+  -- skip crossovers
+  if K.room then return end
+
   local sx1, sy1 = K.sx1, K.sy1
   local sx2, sy2 = K.sx2, K.sy2
 
@@ -419,7 +422,7 @@ function HALLWAY_CLASS.add_edge_chunk(H, K, side)
         return
       end
 
-      if seeds and dist < seeds then
+      if not seeds or dist < seeds then
          seeds = dist
       end
     end
@@ -432,10 +435,10 @@ function HALLWAY_CLASS.add_edge_chunk(H, K, side)
   local sx1, sy1 = K.sx1, K.sy1
   local sx2, sy2 = K.sx2, K.sy2
 
-  if side == 2 then sy2 = sy1 + (dist - 1) end
-  if side == 8 then sy1 = sy2 - (dist - 1) end
-  if side == 4 then sx2 = sx1 + (dist - 1) end
-  if side == 6 then sx1 = sx2 - (dist - 1) end
+  if side == 2 then sy2 = sy1 + (seeds - 1) end
+  if side == 8 then sy1 = sy2 - (seeds - 1) end
+  if side == 4 then sx2 = sx1 + (seeds - 1) end
+  if side == 6 then sx1 = sx2 - (seeds - 1) end
 
   assert(H:can_alloc_chunk(sx1, sy1, sx2, sy2))
 
@@ -517,6 +520,19 @@ function HALLWAY_CLASS.link_chunks(H)
       error("hallway chunk has bad linkage")
     end
   end
+end
+
+
+function HALLWAY_CLASS.update_seeds_for_chunks(H)
+  -- TODO: bbox of hallway
+
+  for sx = 1,SEED_W do for sy = 1,SEED_TOP do
+    local S = SEEDS[sx][sy]
+
+    if S.hall == H and not S.chunk then
+      S.hall = nil
+    end
+  end end
 end
 
 
@@ -1251,6 +1267,8 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
 
   H:create_chunks()
   H:  link_chunks()
+
+  H:update_seeds_for_chunks()
 
   each C in H.chunks do
     if C.crossover_hall then
