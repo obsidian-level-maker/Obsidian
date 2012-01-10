@@ -45,10 +45,10 @@ PREFAB.PEDESTAL =
   entities =
   {
     -- the item itself
-    { x = 0, y = 0, z = "?height", ent = "?item", angle = "?angle" }
+    { ent = "?item", x = 0, y = 0, z = "?height", angle = "?angle" }
 
     -- light source
-    { x= 0, y = 0, z = 32, ent = "light", light = "?light", style = "?style" }
+    { ent = "light", x = 0, y = 0, z = 32, light = "?light", style = "?style" }
   }
 }
 
@@ -131,10 +131,10 @@ PREFAB.OCTO_PEDESTAL =
   entities =
   {
     -- the item itself
-    { x = 0, y = 0, z = 16, ent = "?item", angle = "?angle" }
+    { ent = "?item", x = 0, y = 0, z = 16, angle = "?angle" }
 
     -- light source
-    { x= 0, y = 0, z = 40, ent = "light", light = "?light", style = "?style" }
+    { ent = "light", x = 0, y = 0, z = 40, light = "?light", style = "?style" }
   }
 }
 
@@ -154,7 +154,110 @@ PREFAB.LOWERING_PEDESTAL =
 
   entities =
   {
-    { x = 0, y = 0, z = 128, ent = "?item" }
+    { ent = "?item", x = 0, y = 0, z = 128 }
+  }
+}
+
+
+PREFAB.GUARDED_PEDESTAL =
+{
+  defaults =
+  {
+    height = 8
+    light  = 60
+    angle  = 0
+
+    x_offset = ""
+    y_offset = ""
+    peg = ""
+
+    bar_xo = 0
+    bar_delta = 128
+    bar_special = 0
+  }
+
+  brushes =
+  {
+    -- the pedestal
+    {
+      { x = -32, y = -32, mat = "?side", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x =  32, y = -32, mat = "?side", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x =  32, y =  32, mat = "?side", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x = -32, y =  32, mat = "?side", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { t = "?height", mat = "?top", light = "?light" }
+    }
+
+    -- lowering bars : bottom and top
+    {
+      { x =  16, y = -64, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  32, y = -64, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  32, y = -48, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  16, y = -48, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { t = 80, delta_z = "?bar_delta", mat = "?bar", tag = "?tag" }
+    }
+
+    {
+      { x = -32, y = -64, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -16, y = -64, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -16, y = -48, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -32, y = -48, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { t = 80, delta_z = "?bar_delta", mat = "?bar", tag = "?tag" }
+    }
+
+    {
+      { x =  16, y =  48, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  32, y =  48, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  32, y =  64, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  16, y =  64, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { t = 80, delta_z = "?bar_delta", mat = "?bar", tag = "?tag" }
+    }
+
+    {
+      { x = -32, y =  48, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -16, y =  48, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -16, y =  64, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -32, y =  64, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { t = 80, delta_z = "?bar_delta", mat = "?bar", tag = "?tag" }
+    }
+
+    -- lowering bars : left and right
+    {
+      { x = -64, y =  16, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -48, y =  16, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -48, y =  32, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -64, y =  32, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { t = 80, delta_z = "?bar_delta", mat = "?bar", tag = "?tag" }
+    }
+
+    {
+      { x = -64, y = -32, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -48, y = -32, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -48, y = -16, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x = -64, y = -16, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { t = 80, delta_z = "?bar_delta", mat = "?bar", tag = "?tag" }
+    }
+
+    {
+      { x =  48, y =  16, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  64, y =  16, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  64, y =  32, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  48, y =  32, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { t = 80, delta_z = "?bar_delta", mat = "?bar", tag = "?tag" }
+    }
+
+    {
+      { x =  48, y = -32, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  64, y = -32, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  64, y = -16, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  48, y = -16, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { t = 80, delta_z = "?bar_delta", mat = "?bar", tag = "?tag" }
+    }
+  }
+
+  entities =
+  {
+    -- the item itself
+    { ent = "?item", x = 0, y = 0, z = "?height", angle = "?angle" }
   }
 }
 
