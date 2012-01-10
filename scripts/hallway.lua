@@ -424,13 +424,6 @@ end
 
 
 function HALLWAY_CLASS.build(H)
-  -- FIXME !!!!
-  if not H.height then
-    H.height = 768
-    each C in H.chunks do C.floor_h = C.floor_h or 0 end
-    H:choose_textures()
-  end
-
   each C in H.chunks do
     if not C.crossover_hall then
       C:build()
@@ -977,7 +970,6 @@ function Hallway_add_doubles()
 end
 
 
-
 function Hallway_add_streets()
   if LEVEL.special != "street" then return end
 
@@ -1012,19 +1004,6 @@ end
 
 
 --------------------------------------------------------------------
-
-
-function HALLWAY_CLASS.choose_textures(H)
----##  H.wall_tex  = rand.key_by_probs(H.zone.hallway_walls)
----##  H.floor_tex = rand.key_by_probs(H.zone.hallway_floors)
----##  H.ceil_tex  = rand.key_by_probs(H.zone.hallway_ceilings)
----##
----##  if H.outdoor then
----##    H.floor_tex = rand.key_by_probs(THEME.street_floors or THEME.courtyard_floors or THEME.building_floors)
----##  end
-
-  H.trimmed = rand.sel(50)
-end
 
 
 function HALLWAY_CLASS.set_cross_mode(H)
@@ -1080,11 +1059,9 @@ function HALLWAY_CLASS.limit_crossed_room(H)
 end
 
 
-function HALLWAY_CLASS.flesh_out(H, entry_conn)
+function HALLWAY_CLASS.floor_stuff(H, entry_conn)
   ---- if H.done_heights then return end
 
-gui.debugf("FLESH OUT : %s\n", H:tostr())
-entry_conn:dump()
   assert(not H.done_heights)
 
   H.done_heights = true
@@ -1105,6 +1082,8 @@ entry_conn:dump()
   H.min_floor_h = entry_h
   H.max_floor_h = entry_h
 
+  H.height = 768  -- FIXME RUBBISH REMOVE IT
+
   assert(H.chunks)
 
   H:filler_chunks()
@@ -1120,17 +1099,5 @@ entry_conn:dump()
   if H.crossover then
     H:limit_crossed_room()
   end
-
-  if H.is_cycle or H.crossover then
-    H.height = 384  -- FIXME: temp crud
-  elseif H.outdoor then
-    H.height = 256
-  elseif rand.odds(10) then
-    H.height = 80
-  else
-    H.height = rand.sel(50, 128, 176)
-  end
-
-  H:choose_textures()
 end
 

@@ -1693,7 +1693,7 @@ function Areas_flesh_out()
       if D.L1 == L and D.L2.kind == "hallway" and D.kind != "double_R" then
         local hall = D.L2
 
-        hall:flesh_out(D)
+        hall:floor_stuff(D)
 
         -- recursively handle hallway networks
         hallway_heights(hall)
