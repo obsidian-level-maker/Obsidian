@@ -86,11 +86,10 @@ end
 
 
 function Areas_handle_connections()
-  --[[
-  -- this creates the chunks in a room where it connects to a
-  -- hallway or another room, and sets up the link[] entries in
-  -- the chunks.
-  --]]
+
+  -- this creates the connection chunks in each room and hallway
+  -- where it connects to another room or hallway, and sets up the
+  -- link[] entries in the chunks.
 
   local function chunk_for_double(K, dir, sx, sy)
     local sx1, sy1 = K.sx1, K.sy1
@@ -329,6 +328,12 @@ end
 
 
 function Areas_important_stuff()
+
+  -- this places the "important" stuff (keys, switches, teleporters)
+  -- into the rooms.  It also creates a path between all the connection
+  -- chunks and important chunks (the main point of that path is so we
+  -- know which parts of the room can be used for non-walkable stuff
+  -- like liquids, thick walls, cages etc).
 
   local function init_seed(R, S)
     for dir = 2,4,2 do
@@ -600,64 +605,6 @@ function Areas_important_stuff()
   end
 
 
-  local function OLD__pick_tele_spot(R, other_K)
-    -- FIXME: broken???
-
-    local loc_list = {}
-
-    for x = R.kx1,R.kx2 do for y = R.ky1,R.ky2 do
-      local K = SECTIONS[x][y]
-      if K.room == R then
-        local score
-        
-        if other_K then
-          score = geom.dist(x, y, other_K.kx, other_K.ky)
-        else
-          score = R:dist_to_closest_conn(K) or 9
-        end
-
-        if K.num_conn == 0 and K != other_K then
-          score = score + 11
-        end
-
-        score = score + gui.random() / 5
-
-        table.insert(loc_list, { K=K, score=score })
-      end
-    end end -- x, y
-
-    local loc = table.pick_best(loc_list,
-        function(A, B) return A.score > B.score end)
-
-    return loc.K  
-  end
-
-
-  local function OLD__place_one_tele(R)
-    -- we choose two sections, one for outgoing teleporter and one
-    -- for the returning spot.
-
-    local out_K = pick_tele_spot(R)
-    local in_K  = pick_tele_spot(R, out_K)
-
-    out_K.teleport_out = true
-     in_K.teleport_in  = true
-
-    return out_K
-  end
-
-
-  local function OLD__place_teleporters()
-    -- determine which section(s) of each room to use for teleporters
-    each D in LEVEL.conns do
-      if D.kind == "teleporter" then
-        if not D.K1 then D.K1 = place_one_tele(D.R1) end
-        if not D.K2 then D.K2 = place_one_tele(D.R2) end
-      end
-    end
-  end
-
-
   local function extra_stuff(R)
 
     -- this function is meant to ensure good traversibility in a room.
@@ -791,6 +738,11 @@ end
 
 function Areas_flesh_out()
 
+  -- this creates the actual walkable areas in each room, making sure
+  -- they are connected in a way that ensures the player can reach
+  -- all the connections and importants.  It also adds in scenic stuff
+  -- like liquids, thick walls, pillars (etc).
+
   local pass_h = GAME.ENTITIES.player1.h + (PARAM.step_height or 16) + 8
 
 
@@ -804,37 +756,6 @@ function Areas_flesh_out()
     -- Note: only applies to walkable chunks
 
     -- TODO
-  end
-
-
-  local function OLD_void_check_place(R, d, sx, sy)
-    for nx = sx-d, sx+d do for ny = sy-d, sy+d do
-      local S = SEEDS[nx][ny]
-
-      if S.room != R then return false end
-
-      if S.chunk or S.void then return false end
-    end end
-
-    return true -- OK --
-  end
-
-
-  local function OLD_void_find_spots(R, d, skip_sx, skip_sy)
-    local spots = {}
-
-    for sx = R.sx1+d, R.sx2-d do
-      if skip_sx[sx] then continue end
-
-      for sy = R.sy1+d, R.sy2-d do
-      if skip_sy[sy] then continue end
-
-      if void_check_place(R, d, sx, sy) then
-        table.insert(spots, SEEDS[sx][sy])
-      end
-    end end
-
-    return spots
   end
 
 
@@ -861,120 +782,6 @@ stderrf("(%d %d) .. (%d %d)\n", K.sx1, K.sy1, K.sx2, K.sy2)
     end end
 
     return true
-  end
-
-
-  local function OLD_try_void_in_corners(K)
-    each corner in { 1,3,7,9 } do
-      local sx, sy = geom.pick_corner(corner, K.sx1, K.sy1, K.sx2, K.sy2)
-
-      if not K.room:can_alloc_chunk(sx, sy, sx, sy) then
-        return false
-      end
-    end
-
-    -- actually do it
-
-    each corner in { 1,3,7,9 } do
-      local sx, sy = geom.pick_corner(corner, K.sx1, K.sy1, K.sx2, K.sy2)
-
-      SEEDS[sx][sy].void = true
-    end
-
-    return true
-  end
-
-
-  local function OLD_void_in_shaped_room(R)
-    for kx = R.kx1, R.kx2 do for ky = R.ky1, R.ky2 do
-      local K = SECTIONS[kx][ky]
-
-      if K.room != R then continue end
-      
-      local num  = K:same_neighbors()
-      local mask = K:same_room_mask()
-      
-      if num >= 3 or mask == 3 or mask == 6 or mask == 9 or mask == 12 then
-        try_void_in_section(K)
-      end
-    end end
-  end
-
-
-  local function OLD_void_in_rect_room(R)
-    if (R.kw % 2) != 1 then return end
-    if (R.kh % 2) != 1 then return end
-
-    -- get middle section
-    local kx = R.kx1 + int(R.kw / 2)
-    local ky = R.ky1 + int(R.kh / 2)
-
-    local K = SECTIONS[kx][ky]
-
-    if K.room != R then return end
-    if K.kind != "section" then return end
-
-    -- test condition for four voids
-    local count = 0
-
-    for dir = 1,9 do if dir != 5 then
-      local N = K:neighbor(dir)
-      if N.room == R then
-        count = count + 1
-      end
-    end end
-
-    -- if junctions on all four corners, put void there
-    if count == 8 and K.sw >= 4 and K.sh >= 4 then
-stderrf("TRYING....................\n")
-      if try_void_in_corners(K) then
-        return
-      end
-    end
-
-    try_void_in_section(K) 
-  end
-
-
-  local function OLD_void_in_odd_room(R)
-    -- TODO: use the annexed junctions
-  end
-
-
-
-  local function OLD_void_islands(R)
-    if R.outdoor then return end
-
-    if R.shape == "rect" then
-      void_in_rect_room(R)
-    elseif R.shape == "odd" then
-      void_in_odd_room(R)
-    else
-      void_in_shaped_room(R)
-    end
-
---[[  OLD METHOD
-    local quota = 5
-    local dist  = 2
-
-    if R.outdoor then quota = 1 ; dist = 3 end
-
-    local skip_sx = {}
-    local skip_sy = {}
-
-    for i = 1,quota do
-      local spots = void_find_spots(R, dist, skip_sx, skip_sy)
-      if table.empty(spots) then return end
-      local S = rand.pick(spots)
-      S.void = true
-
-      -- prevent voids which are aligned (or nearly) to this one
-      for k = -1,1 do
-        skip_sx[S.sx + k] = true
-        skip_sy[S.sy + k] = true
-      end
-    end
---]]
   end
 
 
@@ -1278,7 +1085,7 @@ stderrf("TRYING....................\n")
   --
   -- +  when a room has a visited crossover, limit area heights
   --    (e.g. bridge : max_h, channel : min_h) and the entry
-  --    hallway must account for that too
+  --    hallway must account for that too.
   --
   -- +  when a room has unvisited crossover, determine height
   --    using room's min/max floor_h and the entry hallway of the
