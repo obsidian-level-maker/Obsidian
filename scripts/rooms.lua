@@ -2204,12 +2204,6 @@ function Rooms_build_all()
 
   -- Rooms_indoor_walls()
 
-  if PARAM.tiled then
-    -- this is as far as we go for TILE based games
-    Tiler_layout_all()
-    return
-  end
-
   Rooms_blow_chunks()
   Rooms_add_sun()
   Rooms_intermission_camera()

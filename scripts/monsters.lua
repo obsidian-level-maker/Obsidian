@@ -500,13 +500,6 @@ function Monsters_dist_between_spots(A, B)
   local dist_x = 0
   local dist_y = 0
 
-  if PARAM.tiled then
-    dist_x = math.abs(A.block_x - B.block_x)
-    dist_y = math.abs(A.block_y - B.block_y)
-
-    return geom.dist(0, 0, dist_x, dist_y) * 32
-  end
-
       if A.x1 > B.x2 then dist_x = A.x1 - B.x2
   elseif A.x2 < B.x1 then dist_x = B.x1 - A.x2
   end
@@ -847,17 +840,14 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
 
         local spot = find_cluster_spot(L, prev_spots, item.name)
 
-        if PARAM.tiled then
-          Tiler_add_entity(item.name, spot.block_x, spot.block_y)
-        else
-          local x, y = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
+        local x, y = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
 
-          place_item(item.name, x, y, spot.z1)
+        place_item(item.name, x, y, spot.z1)
 
-          -- reuse spots if they run out (except in Wolf3D)
-          spot.used = true
-          table.insert(L.item_spots, spot)
-        end
+        -- reuse spots if they run out (except in Wolf3D)
+        spot.used = true
+        table.insert(L.item_spots, spot)
+
       end
     end
   end
@@ -1012,9 +1002,6 @@ function Monsters_in_room(L)
     -- This is meant to give a rough estimate, and assumes each monster
     -- fits in a 64x64 square and there is no height restrictions.
     -- We can adjust for the real monster size later.
-
-    -- simple for Wolf3D :-)
-    if PARAM.tiled then return #spot_list end
 
     local count = 0
 
@@ -1452,9 +1439,6 @@ function Monsters_in_room(L)
 
 
   local function mon_fits(mon, spot)
-    -- in tiled games, each spot can hold a single monster (no more, no less)
-    if PARAM.tiled then return 1 end
-
     local ent  = GAME.ENTITIES[mon]
 
     -- FIXME !!!
@@ -1470,12 +1454,6 @@ function Monsters_in_room(L)
 
 
   local function place_in_spot(mon, spot, all_skills)
-    -- tiled games like Wolf3D do their own thing
-    if PARAM.tiled then
-      Tiler_add_monster(mon, spot, calc_min_skill(all_skills))
-      return
-    end
-
     local ent = GAME.ENTITIES[mon]
 
     local x, y = geom.box_mid (spot.x1, spot.y1, spot.x2, spot.y2)
@@ -1518,8 +1496,6 @@ function Monsters_in_room(L)
 
 
   local function split_huge_spots(max_size)
-    if PARAM.tiled then return end
-
     local list = L.mon_spots
 
     -- recreate the spot list
@@ -1557,8 +1533,6 @@ function Monsters_in_room(L)
 
   local function split_spot(index, r, near_to)
     local spot = table.remove(L.mon_spots, index)
-
-    if PARAM.tiled then return spot end
 
     local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
 
