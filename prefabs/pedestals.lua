@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2010 Andrew Apted
+--  Copyright (C) 2010-2012 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -159,6 +159,8 @@ PREFAB.LOWERING_PEDESTAL =
 }
 
 
+-- Note: this must be used in a large chunk (2x2 seeds), otherwise it can
+-- block player movement.  For a single seed, use a lowering pedestal.
 PREFAB.GUARDED_PEDESTAL =
 {
   defaults =
@@ -188,10 +190,10 @@ PREFAB.GUARDED_PEDESTAL =
 
     -- lowering bars : bottom and top
     {
-      { x =  16, y = -64, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x =  32, y = -64, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x =  32, y = -48, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
-      { x =  16, y = -48, mat = "?bar", special="?bar_special", tag="?tag", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  16, y = -64, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  32, y = -64, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  32, y = -48, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
+      { x =  16, y = -48, mat = "?bar", peg=1, x_offset="?bar_xo", y_offset=0 },
       { t = 80, delta_z = "?bar_delta", mat = "?bar", tag = "?tag" }
     }
 
