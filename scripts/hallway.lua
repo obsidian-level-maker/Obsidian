@@ -200,230 +200,6 @@ function HALLWAY_CLASS.setup_path(H)
 end
 
 
-function HALLWAY_CLASS.can_alloc_chunk(H, sx1, sy1, sx2, sy2)
-  for sx = sx1,sx2 do for sy = sy1,sy2 do
-    local S = SEEDS[sx][sy]
-    if S.chunk then return false end
-  end end
-
-  return true
-end
-
-
-function HALLWAY_CLASS.alloc_chunk(H, K, sx1, sy1, sx2, sy2)
-  assert(K.sx1 <= sx1 and sx1 <= sx2 and sx2 <= K.sx2)
-  assert(K.sy1 <= sy1 and sy1 <= sy2 and sy2 <= K.sy2)
-
-  local C = CHUNK_CLASS.new(sx1, sy1, sx2, sy2)
-
-  C.hall = H
-  C.section = K
-  C.hall_link = {}
-
-  table.insert(H.chunks, C)
-
-  C:install()
-
-  return C
-end
-
-
-function HALLWAY_CLASS.is_side_connected(H, K, dir)
-  -- returns true if the given side of the section connects to another
-  -- section in this hallway.
-
-  return K.hall_link[dir] == H
-end
-
-
-function HALLWAY_CLASS.section_has_chunk(H, K)
-  each C in H.chunks do
-    if K:contains_chunk(C) then return true end
-  end
-
-  return false
-end
-
-
-function HALLWAY_CLASS.add_middle_chunk(H, K)
-  -- skip crossovers
-  if K.room then return end
-
-  local sx1, sy1 = K.sx1, K.sy1
-  local sx2, sy2 = K.sx2, K.sy2
-
-  if K.kind == "junction" or K.kind == "big_junc" or rand.odds(20) then
-
-    -- use the whole section
-
-  elseif K.kind == "horiz" then
-
-    if K.sw >= 5 then
-      sx1 = sx1 + 2
-      sx2 = sx2 - 2
-    elseif K.sw >= 3 then
-      sx1 = sx1 + 1
-      sx2 = sx2 - 1
-    end
-
-  elseif K.kind == "vert" then
-
-    if K.sh >= 5 then
-      sy1 = sy1 + 2
-      sy2 = sy2 - 2
-    elseif K.sh >= 3 then
-      sy1 = sy1 + 1
-      sy2 = sy2 - 1
-    end
-
-  else
-    error("add_middle_chunk: unknown section kind: " .. tostring(K.kind))
-  end
-
-  local C = H:alloc_chunk(K, sx1, sy1, sx2, sy2)
-end
-
-
-function HALLWAY_CLASS.add_edge_chunk(H, K, side)
-  if not H:is_side_connected(K, side) then
-    return
-  end
-
-  -- determine how much space is on the given side (may be none)
-  local seeds
-
-  each C in H.chunks do
-    if C.section == K then
-
-      local dist
-
-      if side == 2 then dist = C.sy1 - K.sy1 end
-      if side == 8 then dist = K.sy2 - C.sy2 end
-      if side == 4 then dist = C.sx1 - K.sx1 end
-      if side == 6 then dist = K.sx2 - C.sx2 end
-
-      assert(dist)
-      assert(dist >= 0)
-
-      if dist == 0 then
-        -- no space, hence no new chunk
-        return
-      end
-
-      if not seeds or dist < seeds then
-         seeds = dist
-      end
-    end
-  end
-
-  if not seeds then
-    error("add_edge_chunk failed (no chunks in section?)")
-  end
-
-  local sx1, sy1 = K.sx1, K.sy1
-  local sx2, sy2 = K.sx2, K.sy2
-
-  if side == 2 then sy2 = sy1 + (seeds - 1) end
-  if side == 8 then sy1 = sy2 - (seeds - 1) end
-  if side == 4 then sx2 = sx1 + (seeds - 1) end
-  if side == 6 then sx1 = sx2 - (seeds - 1) end
-
-  assert(H:can_alloc_chunk(sx1, sy1, sx2, sy2))
-
-  local C = H:alloc_chunk(K, sx1, sy1, sx2, sy2)
-end
-
-
-function HALLWAY_CLASS.create_chunks(H)
-  -- the hallway will already have some chunks (from connections).
-  -- this will create the remaining chunks, AND link the chunks together
-  -- (i.e. create the CHUNK.hall_link[] tables).
-
-  -- every section will get at least one chunk
-  each K in H.sections do
-    if not H:section_has_chunk(K) then
-      H:add_middle_chunk(K)
-    end
-  end
-
-  -- at here, the only chunks we need now are ones which fill the gaps
-  -- at either edge of a horizontal or vertical section (but only when
-  -- that side touches another section in the same hallway).
-
-  each K in H.sections do
-    if K.kind == "horiz" then
-      H:add_edge_chunk(K, 4)
-      H:add_edge_chunk(K, 6)
-
-    elseif K.kind == "vert" then
-      H:add_edge_chunk(K, 2)
-      H:add_edge_chunk(K, 8)
-    end
-  end
-end
-
-
-function HALLWAY_CLASS.try_link_chunk(H, C, dir)
-  -- already linked?
-  if C.link[dir] or C.hall_link[dir] then
-    return
-  end
-
-  local C2 = C:good_neighbor(dir)
-
-  if not C2 then return end
-
-  if C2.hall != H then return end
-
-  -- OK !!
-
-  C .hall_link[dir] = C2
-  C2.hall_link[10 - dir] = C
-end
-
-
-function HALLWAY_CLASS.link_chunks(H)
-  each C in H.chunks do
-    -- only check links inside and at edges of horizontal or vertical
-    -- sections.  This will handle junctions OK, since junctions always
-    -- touch such sections (i.e. two junctions never directly touch).
-
-    -- This logic should handle big junctions properly too, since we
-    -- want the link recorded even though there can be a difference in
-    -- the size of the "spoke" chunks and the "big_junc" chunk.
-
-    if C.section.kind == "horiz" then
-      H:try_link_chunk(C, 4)
-      H:try_link_chunk(C, 6)
-    
-    elseif C.section.kind == "vert" then
-      H:try_link_chunk(C, 2)
-      H:try_link_chunk(C, 8)
-    end
-  end
-
-  -- verify all chunks have sane linkage
-  each C in H.chunks do
-    if table.size(C.link) + table.size(C.hall_link) < 2 then
-      error("hallway chunk has bad linkage")
-    end
-  end
-end
-
-
-function HALLWAY_CLASS.update_seeds_for_chunks(H)
-  -- TODO: bbox of hallway
-
-  for sx = 1,SEED_W do for sy = 1,SEED_TOP do
-    local S = SEEDS[sx][sy]
-
-    if S.hall == H and not S.chunk then
-      S.hall = nil
-    end
-  end end
-end
-
-
 function HALLWAY_CLASS.add_it(H)
   table.insert(LEVEL.halls, H)
 
@@ -1071,6 +847,231 @@ end
 
 
 --------------------------------------------------------------------
+
+
+function HALLWAY_CLASS.can_alloc_chunk(H, sx1, sy1, sx2, sy2)
+  for sx = sx1,sx2 do for sy = sy1,sy2 do
+    local S = SEEDS[sx][sy]
+    if S.chunk then return false end
+  end end
+
+  return true
+end
+
+
+function HALLWAY_CLASS.alloc_chunk(H, K, sx1, sy1, sx2, sy2)
+  assert(K.sx1 <= sx1 and sx1 <= sx2 and sx2 <= K.sx2)
+  assert(K.sy1 <= sy1 and sy1 <= sy2 and sy2 <= K.sy2)
+
+  local C = CHUNK_CLASS.new(sx1, sy1, sx2, sy2)
+
+  C.hall = H
+  C.section = K
+  C.hall_link = {}
+
+  table.insert(H.chunks, C)
+
+  C:install()
+
+  return C
+end
+
+
+function HALLWAY_CLASS.is_side_connected(H, K, dir)
+  -- returns true if the given side of the section connects to another
+  -- section in this hallway.
+
+  return K.hall_link[dir] == H
+end
+
+
+function HALLWAY_CLASS.section_has_chunk(H, K)
+  each C in H.chunks do
+    if K:contains_chunk(C) then return true end
+  end
+
+  return false
+end
+
+
+function HALLWAY_CLASS.add_middle_chunk(H, K)
+  -- skip crossovers
+  if K.room then return end
+
+  local sx1, sy1 = K.sx1, K.sy1
+  local sx2, sy2 = K.sx2, K.sy2
+
+  if K.kind == "junction" or K.kind == "big_junc" or rand.odds(20) then
+
+    -- use the whole section
+
+  elseif K.kind == "horiz" then
+
+    if K.sw >= 5 then
+      sx1 = sx1 + 2
+      sx2 = sx2 - 2
+    elseif K.sw >= 3 then
+      sx1 = sx1 + 1
+      sx2 = sx2 - 1
+    end
+
+  elseif K.kind == "vert" then
+
+    if K.sh >= 5 then
+      sy1 = sy1 + 2
+      sy2 = sy2 - 2
+    elseif K.sh >= 3 then
+      sy1 = sy1 + 1
+      sy2 = sy2 - 1
+    end
+
+  else
+    error("add_middle_chunk: unknown section kind: " .. tostring(K.kind))
+  end
+
+  local C = H:alloc_chunk(K, sx1, sy1, sx2, sy2)
+end
+
+
+function HALLWAY_CLASS.add_edge_chunk(H, K, side)
+  if not H:is_side_connected(K, side) then
+    return
+  end
+
+  -- determine how much space is on the given side (may be none)
+  local seeds
+
+  each C in H.chunks do
+    if C.section == K then
+
+      local dist
+
+      if side == 2 then dist = C.sy1 - K.sy1 end
+      if side == 8 then dist = K.sy2 - C.sy2 end
+      if side == 4 then dist = C.sx1 - K.sx1 end
+      if side == 6 then dist = K.sx2 - C.sx2 end
+
+      assert(dist)
+      assert(dist >= 0)
+
+      if dist == 0 then
+        -- no space, hence no new chunk
+        return
+      end
+
+      if not seeds or dist < seeds then
+         seeds = dist
+      end
+    end
+  end
+
+  if not seeds then
+    error("add_edge_chunk failed (no chunks in section?)")
+  end
+
+  local sx1, sy1 = K.sx1, K.sy1
+  local sx2, sy2 = K.sx2, K.sy2
+
+  if side == 2 then sy2 = sy1 + (seeds - 1) end
+  if side == 8 then sy1 = sy2 - (seeds - 1) end
+  if side == 4 then sx2 = sx1 + (seeds - 1) end
+  if side == 6 then sx1 = sx2 - (seeds - 1) end
+
+  assert(H:can_alloc_chunk(sx1, sy1, sx2, sy2))
+
+  local C = H:alloc_chunk(K, sx1, sy1, sx2, sy2)
+end
+
+
+function HALLWAY_CLASS.create_chunks(H)
+  -- the hallway will already have some chunks (from connections).
+  -- this will create the remaining chunks, AND link the chunks together
+  -- (i.e. create the CHUNK.hall_link[] tables).
+
+  -- every section will get at least one chunk
+  each K in H.sections do
+    if not H:section_has_chunk(K) then
+      H:add_middle_chunk(K)
+    end
+  end
+
+  -- at here, the only chunks we need now are ones which fill the gaps
+  -- at either edge of a horizontal or vertical section (but only when
+  -- that side touches another section in the same hallway).
+
+  each K in H.sections do
+    if K.kind == "horiz" then
+      H:add_edge_chunk(K, 4)
+      H:add_edge_chunk(K, 6)
+
+    elseif K.kind == "vert" then
+      H:add_edge_chunk(K, 2)
+      H:add_edge_chunk(K, 8)
+    end
+  end
+end
+
+
+function HALLWAY_CLASS.try_link_chunk(H, C, dir)
+  -- already linked?
+  if C.link[dir] or C.hall_link[dir] then
+    return
+  end
+
+  local C2 = C:good_neighbor(dir)
+
+  if not C2 then return end
+
+  if C2.hall != H then return end
+
+  -- OK !!
+
+  C .hall_link[dir] = C2
+  C2.hall_link[10 - dir] = C
+end
+
+
+function HALLWAY_CLASS.link_chunks(H)
+  each C in H.chunks do
+    -- only check links inside and at edges of horizontal or vertical
+    -- sections.  This will handle junctions OK, since junctions always
+    -- touch such sections (i.e. two junctions never directly touch).
+
+    -- This logic should handle big junctions properly too, since we
+    -- want the link recorded even though there can be a difference in
+    -- the size of the "spoke" chunks and the "big_junc" chunk.
+
+    if C.section.kind == "horiz" then
+      H:try_link_chunk(C, 4)
+      H:try_link_chunk(C, 6)
+    
+    elseif C.section.kind == "vert" then
+      H:try_link_chunk(C, 2)
+      H:try_link_chunk(C, 8)
+    end
+  end
+
+  -- verify all chunks have sane linkage
+  each C in H.chunks do
+    if table.size(C.link) + table.size(C.hall_link) < 2 then
+      error("hallway chunk has bad linkage")
+    end
+  end
+end
+
+
+function HALLWAY_CLASS.update_seeds_for_chunks(H)
+  -- TODO: bbox of hallway
+
+  for sx = 1,SEED_W do for sy = 1,SEED_TOP do
+    local S = SEEDS[sx][sy]
+
+    if S.hall == H and not S.chunk then
+      S.hall = nil
+    end
+  end end
+end
+
 
 
 function HALLWAY_CLASS.set_cross_mode(H)
