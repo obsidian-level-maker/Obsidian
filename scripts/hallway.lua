@@ -224,42 +224,7 @@ function HALLWAY_CLASS.alloc_chunk(H, K, sx1, sy1, sx2, sy2)
 
   C:install()
 
---[[
-  for sx = sx1,sx2 do for sy = sy1,sy2 do
-    local S = SEEDS[sx][sy]
-    assert(not S.room and not S.hall)
-    S.hall = H
-  end end
---]]
-
   return C
-end
-
-
-function HALLWAY_CLASS.try_filler_chunk(H, K, sx1, sy1, sx2, sy2,
-                                              ux1, uy1, ux2, uy2)
-  if sx1 < K.sx1 or sy1 < K.sy1 then return end
-  if sx2 > K.sx2 or sy2 > K.sy2 then return end
-
-  if H:can_alloc_chunk(sx1, sy1, sx2, sy2) then
-    -- TESTING....
-    if sx2 < ux1 or sy2 < uy1 or sx1 > ux2 or sy1 > uy2 then
-      for sx = sx1,sx2 do for sy = sy1,sy2 do
-        SEEDS[sx][sy].hall = nil
-      end end
-
-      return
-    end
-
-    local C = H:alloc_chunk(K, sx1, sy1, sx2, sy2)
-    C.filler = true
-
-    -- is chunk outside of used area?
-    if sx2 < ux1 or sy2 < uy1 or sx1 > ux2 or sy1 > uy2 then
-      C.scenic = true
-      C.mat = H.zone.facade_mat or H.wall_mat --- rand.pick { "CRACKLE4", "COMPBLUE", "ZIMMER8", "ASHWALL" }
-    end
-  end
 end
 
 
@@ -277,83 +242,6 @@ function HALLWAY_CLASS.section_has_chunk(H, K)
   end
 
   return false
-end
-
-
-function HALLWAY_CLASS.used_section_length__OLD(H, K, dir)
-  local p1 =  999
-  local p2 = -999
-
-  each p_dir,where in K.hall_link do
-    if where == H and geom.is_parallel(dir, p_dir) then
-      local p
-      if p_dir == 2 then p = K.sy1 end
-      if p_dir == 8 then p = K.sy2 end
-      if p_dir == 4 then p = K.sx1 end
-      if p_dir == 6 then p = K.sx2 end
-      assert(p)
-
-      p1 = math.min(p1, p)
-      p2 = math.max(p2, p)
-    end
-  end
-
-  each D in H.conns do
-    if D.K1 == K or D.K2 == K then
-      local C = (D.K1 == K ? D.C1 ; D.C2)
-      assert(C)
-
-      p1 = math.min(p1, geom.vert_sel(dir, C.sy1, C.sx1))
-      p2 = math.max(p2, geom.vert_sel(dir, C.sy2, C.sx2))
-    end
-  end
-
-  if p1 > p2 then
-stderrf("p1 > p2 !!!!\n")
-    if geom.is_vert(dir) then
-      return K.sy1, K.sy2
-    else
-      return K.sx1, K.sx2
-    end
-  end
-
-  return p1, p2
-end
-
-
-function HALLWAY_CLASS.filler_chunks_in_section(H, K)
-  -- ignore crossovers
-  if K.room then return end
-
-  -- junctions _always_ become a single chunk
-  if K.kind == "junction" then
-    H:try_filler_chunk(K, K.sx1, K.sy1, K.sx2, K.sy2,
-                          K.sx1, K.sy1, K.sx2, K.sy2)
-    return
-  end
-
-  local sx1, sy1 = K.sx1, K.sy1
-  local sx2, sy2 = K.sx2, K.sy2
-
-  if K.kind == "vert" then
-    local used_y1, used_y2 = H:used_section_length(K, 2)
-
-    for sy = sy1, sy2 do
-      H:try_filler_chunk(K, sx1, sy, sx2, sy+1,  sx1, used_y1, sx2, used_y2)
-      H:try_filler_chunk(K, sx1, sy, sx2, sy,    sx1, used_y1, sx2, used_y2)
-    end
-
-  elseif K.kind == "horiz" then
-    local used_x1, used_x2 = H:used_section_length(K, 4)
-
-    for sx = sx1, sx2 do
-      H:try_filler_chunk(K, sx, sy1, sx+1, sy2,  used_x1, sy1, used_x2, sy2)
-      H:try_filler_chunk(K, sx, sy1, sx,   sy2,  used_x1, sy1, used_x2, sy2)
-    end
-
-  else
-    error("WTF @ filler_chunks_in_section")
-  end
 end
 
 
