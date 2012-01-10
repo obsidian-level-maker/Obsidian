@@ -137,7 +137,7 @@ function HALLWAY_CLASS.dump_path(H)
     local line = ""
 
     for dir = 2,8,2 do
-      local L = K.hall_path[dir]
+      local L = K.hall_link[dir]
 
       if L then
         line = line .. string.format("[%d] --> %s  ", dir, L:tostr())
@@ -192,8 +192,8 @@ function HALLWAY_CLASS.setup_path(H)
     else error("weird hallway path")
     end
 
-    K1.hall_path[dir] = H
-    K2.hall_path[10 - dir] = H
+    K1.hall_link[dir] = H
+    K2.hall_link[10 - dir] = H
   end
 
   -- NOTE: path leading "off" the hallway is handled by CONN:add_it()
@@ -266,7 +266,7 @@ function HALLWAY_CLASS.used_section_length(H, K, dir)
   local p1 =  999
   local p2 = -999
 
-  each p_dir,where in K.hall_path do
+  each p_dir,where in K.hall_link do
     if where == H and geom.is_parallel(dir, p_dir) then
       local p
       if p_dir == 2 then p = K.sy1 end
@@ -342,17 +342,6 @@ end
 function HALLWAY_CLASS.filler_chunks(H)
   each K in H.sections do
     H:filler_chunks_in_section(K)
-
--- verify all went well  : OBSOLETE
---[[
-for sx = K.sx1, K.sx2 do for sy = K.sy1, K.sy2 do
-  local S = SEEDS[sx][sy]
-  if not S.chunk then
-    stderrf("WTF: no chunk in %s @ %s\n", H:tostr(), K:tostr())
-  end
-end end
---]]
-
   end
 end
 
@@ -909,21 +898,21 @@ function Hallway_add_doubles()
     left_K:set_hall(H) ; right_K:set_hall(H)
 
     -- update path through the sections
-    K.hall_path[dir] = nil
-    K.hall_path[left_dir]  = H
-    K.hall_path[right_dir] = H
+    K.hall_link[dir] = nil
+    K.hall_link[left_dir]  = H
+    K.hall_link[right_dir] = H
 
-     left_J.hall_path[dir] = H
-    right_J.hall_path[dir] = H
+     left_J.hall_link[dir] = H
+    right_J.hall_link[dir] = H
 
-     left_J.hall_path[right_dir] = H
-    right_J.hall_path[ left_dir] = H
+     left_J.hall_link[right_dir] = H
+    right_J.hall_link[ left_dir] = H
 
-     left_K.hall_path[10-dir] = H
-    right_K.hall_path[10-dir] = H
+     left_K.hall_link[10-dir] = H
+    right_K.hall_link[10-dir] = H
 
-     left_K.hall_path[right_dir] = room_K.room
-    right_K.hall_path[ left_dir] = room_K.room
+     left_K.hall_link[right_dir] = room_K.room
+    right_K.hall_link[ left_dir] = room_K.room
 
     return true
   end

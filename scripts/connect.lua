@@ -50,7 +50,6 @@ class CONN
 
   score : number
   
-  hall_path : list(DIR)
 }
 
 
@@ -148,8 +147,8 @@ function CONN_CLASS.add_it(D)
     D.K2.num_conn = D.K2.num_conn + 1
 
     -- hallway stuff
-    if D.K1.hall then D.K1.hall_path[D.dir1] = D.L2 end
-    if D.K2.hall then D.K2.hall_path[D.dir2] = D.L1 end
+    if D.K1.hall then D.K1.hall_link[D.dir1] = D.L2 end
+    if D.K2.hall then D.K2.hall_link[D.dir2] = D.L1 end
   end
 end
 

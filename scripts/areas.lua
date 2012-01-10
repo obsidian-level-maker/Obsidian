@@ -289,7 +289,7 @@ function Areas_handle_connections()
     each K1 in H.sections do
       if not K1.room then continue end
 
-      each dir,_ in K1.hall_path do
+      each dir,_ in K1.hall_link do
         local K2 = K1:neighbor(dir)
 
         if not K2.hall then continue end

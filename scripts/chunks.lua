@@ -47,6 +47,10 @@ class CHUNK
 
   liquid : bool
 
+  hall_link[dir] : CHUNK   -- non-nil means this hallway chunk is
+                           -- connected to another chunk in same hall
+                           -- (other conns are handled by link[])
+
   crossover_hall : HALLWAY
 
   adjuster_dir   -- normally NIL
