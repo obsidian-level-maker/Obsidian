@@ -133,7 +133,7 @@ function Areas_handle_connections()
     -- function on two touching sections will provide two chunks
     -- which touch each other.
 
-    -- result chunk only occupies a single seed.  Enlarging the
+    -- result chunk normally occupies a single seed.  Enlarging the
     -- chunk (to make wider doors etc) can be done after all the
     -- connections and importants have been given chunks.
 
@@ -211,7 +211,7 @@ function Areas_handle_connections()
     -- prefer to build door on the room side
     if C1.hall and C2.room then
       C1, C2 = C2, C1
-      dir    = 10 - dir
+      dir = 10 - dir
     end
 
     gui.debugf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
@@ -739,15 +739,15 @@ end
 function Areas_flesh_out()
 
   -- this creates the actual walkable areas in each room, making sure
-  -- they are connected in a way that ensures the player can reach
-  -- all the connections and importants.  It also adds in scenic stuff
-  -- like liquids, thick walls, pillars (etc).
+  -- that ensures the player can traverse the room, i.e. reach all the
+  -- connections and importants.  It also adds in scenic stuff like
+  -- liquids, thick walls, pillars (etc).
 
   local pass_h = GAME.ENTITIES.player1.h + (PARAM.step_height or 16) + 8
 
 
   local function expand_chunks(R)
-    -- so far all chunks are only a single seed in size.
+    -- so far most chunks are only a single seed in size.
     -- this function can make them bigger, for reasons like:
     --   (a) to make a centered doorway
     --   (b) use a complex pedestal for a key or switch
@@ -756,32 +756,6 @@ function Areas_flesh_out()
     -- Note: only applies to walkable chunks
 
     -- TODO
-  end
-
-
-  local function OLD_try_void_in_section(K)
-    if K.sw < 3 then return false end
-    if K.sh < 3 then return false end
-
-    if K.sw == 4 and K.sh <= 4 then return false end
-    if K.sw <= 4 and K.sh == 4 then return false end
-
-stderrf("(%d %d) .. (%d %d)\n", K.sx1, K.sy1, K.sx2, K.sy2)
-    local sx1 = math.i_mid(K.sx1, K.sx2)
-    local sx2 = math.i_mid(K.sx1, K.sx2 + 1)
-    local sy1 = math.i_mid(K.sy1, K.sy2)
-    local sy2 = math.i_mid(K.sy1, K.sy2 + 1)
-
-    -- check if seeds are usable 
-    if not K.room:can_alloc_chunk(sx1-1, sy1-1, sx2+1, sy2+1) then
-      return false
-    end
-
-    for sx = sx1,sx2 do for sy = sy1,sy2 do
-      SEEDS[sx][sy].void = true
-    end end
-
-    return true
   end
 
 
