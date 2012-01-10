@@ -196,7 +196,7 @@ function HALLWAY_CLASS.setup_path(H)
     K2.hall_link[10 - dir] = H
   end
 
-  -- NOTE: path leading "off" the hallway is handled by CONN:add_it()
+  -- NOTE: links leading "off" the hallway are handled by CONN:add_it()
 end
 
 
@@ -259,6 +259,23 @@ function HALLWAY_CLASS.try_filler_chunk(H, K, sx1, sy1, sx2, sy2,
       C.mat = H.zone.facade_mat or H.wall_mat --- rand.pick { "CRACKLE4", "COMPBLUE", "ZIMMER8", "ASHWALL" }
     end
   end
+end
+
+
+function HALLWAY_CLASS.is_side_connected(H, K, dir)
+  -- returns true if the given side of the section connects to another
+  -- section in this hallway.
+
+  return K.hall_link[dir] == H
+end
+
+
+function HALLWAY_CLASS.section_has_chunk(H, K)
+  each C in H.chunks do
+    if K:contains_chunk(C) then return true end
+  end
+
+  return false
 end
 
 
@@ -339,10 +356,78 @@ function HALLWAY_CLASS.filler_chunks_in_section(H, K)
 end
 
 
-function HALLWAY_CLASS.filler_chunks(H)
-  each K in H.sections do
-    H:filler_chunks_in_section(K)
+function HALLWAY_CLASS.add_middle_chunk(H, K)
+  local sx1, sy1 = K.sx1, K.sy1
+  local sx2, sy2 = K.sx2, K.sy2
+
+  if K.kind == "junction" or K.kind == "big_junc" or rand.odds(20) then
+
+    -- use the whole section
+
+  elseif K.kind == "horiz" then
+
+    if K.sw >= 5 then
+      sx1 = sx1 + 2
+      sx2 = sx2 - 2
+    elseif K.sw >= 3 then
+      sx1 = sx1 + 1
+      sx2 = sx2 - 1
+    end
+
+  elseif K.kind == "vert" then
+
+    if K.sh >= 5 then
+      sy1 = sy1 + 2
+      sy2 = sy2 - 2
+    elseif K.sh >= 3 then
+      sy1 = sy1 + 1
+      sy2 = sy2 - 1
+    end
+
+  else
+    error("add_middle_chunk: unknown section kind: " .. tostring(K.kind))
   end
+
+  local C = H:alloc_chunk(K, sx1, sy1, sx2, sy2)
+end
+
+
+function HALLWAY_CLASS.add_gap_chunk(H, K, side)
+  -- FIXME
+end
+
+
+function HALLWAY_CLASS.create_chunks(H)
+  -- the hallway will already have some chunks (from connections).
+  -- this will create the remaining chunks, AND link the chunks together
+  -- (i.e. create the CHUNK.hall_link[] tables).
+
+  -- every section will get at least one chunk
+  each K in H.sections do
+    if not H:section_has_chunk(K) then
+      H:add_middle_chunk(K)
+    end
+  end
+
+  -- at here, the only chunks we need now are ones which fill the gaps
+  -- at either end of a horizontal or vertical section (but only when
+  -- that side touches another section in the same hallway).
+
+  each K in H.sections do
+    if K.kind == "horiz" then
+      H:add_gap_chunk(K, 4)
+      H:add_gap_chunk(K, 6)
+
+    elseif K.kind == "vert" then
+      H:add_gap_chunk(K, 2)
+      H:add_gap_chunk(K, 8)
+    end
+  end
+end
+
+
+function HALLWAY_CLASS.link_chunks(H)
+  -- FIXME
 end
 
 
@@ -1075,7 +1160,8 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
 
   assert(H.chunks)
 
-  H:filler_chunks()
+  H:create_chunks()
+  H:  link_chunks()
 
   each C in H.chunks do
     if C.crossover_hall then

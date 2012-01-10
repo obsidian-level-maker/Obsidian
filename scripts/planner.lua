@@ -38,7 +38,6 @@ class SECTION
 
   room : ROOM
   hall : HALLWAY
-  conn : CONN
 
   num_conn  -- number of connections
 
@@ -192,6 +191,12 @@ function SECTION_CLASS.touches_edge(K)
   end
 
   return false
+end
+
+
+function SECTION_CLASS.contains_chunk(K, C)
+  return (C.sx1 >= K.sx1) and (C.sx2 <= K.sx2) and
+         (C.sy1 >= K.sy1) and (C.sy2 <= K.sy2)
 end
 
 
@@ -587,11 +592,6 @@ function Plan_dump_sections(title)
   local function section_char(x, y)
     local K = SECTIONS[x][y]
     if not K then return ' ' end
-
-    if K.conn then
-      local CONN_SYMS = { [2]="v", [8]="^", [4]="<", [6]=">" }
-      return CONN_SYMS[K.conn.dir1] or "?"
-    end
 
     if K.hall then return '#' end
     if K.kind == "junction" then return '+' end
