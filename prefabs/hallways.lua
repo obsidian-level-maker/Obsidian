@@ -17,6 +17,15 @@
 --  GNU General Public License for more details.
 --
 ----------------------------------------------------------------
+--
+--  Hallway pieces use the following letters:
+--
+--     I : straight through, travel N/S, walls on E/W sides
+--     C : corner, travel N and E, walls on S and W sides
+--     T : T junction: travel N/E/W, wall on S side
+--     P : plus shape: travel in all four directions
+--
+----------------------------------------------------------------
 
 
 PREFAB.HALLWAY_S_BEND =
