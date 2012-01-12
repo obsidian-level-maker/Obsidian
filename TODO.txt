@@ -6,11 +6,14 @@ Current Work
 ------------
 
 
+
 Outdoor Borders:
 
 DONE: ensure every zone gets a facade_mat
 
 -  properly pick the facade for fake buildings
+
+-  outdoor wall extender: 64x64 block with torch on top
 
 
 
@@ -22,13 +25,30 @@ Theme System:
 
 
 Hallways:
-!!!  emergency mode : no quota on hall length
++  get merging working again
 
--  decide walls properly (i.e. no hall_path[dir])
++  get big_junctions working again (with prefabs!)
+   Note: requires merging first.
 
--  make some chunk-size prefabs and use them
+DONE:  emergency mode : no quota on hall length
 
-!!  determine ceiling heights properly
+>>>  make some chunk-size prefabs and use them
+
+-  hallway_pieces =   -- in a hallway theme or level theme
+   {
+     Tech_hall_I = 50
+     Tech_hall_I_STAIR = 10
+     Tech_hall_C = 50
+     Tech_hall_T = 50
+   }
+
+-  HALL_BASIC_C_LIGHT
+
+?  HALL_BASIC_I_DBLWIN
+
+??  decide walls properly (i.e. no hall_path[dir])
+
+??  determine ceiling heights properly
 
 
 Caves:
