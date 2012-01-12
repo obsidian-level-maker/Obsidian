@@ -638,24 +638,29 @@ function Plan_add_big_junctions()
 
     local K = SECTIONS[mx*2][my*2]
 
-    -- less chance at edges (even less at corners)
+    -- less chance at edges (even less at corners).
+    -- that's because we want three or four connections.
     if (mx == 1 or mx == MAP_W) and rand.odds(25) then return false end
     if (my == 1 or my == MAP_H) and rand.odds(25) then return false end
 
     -- don't want anyone touching our junc!
     for dx = -1,1 do for dy = -1,1 do
+      -- allow diagonal touching in one direction only
+      if dx == dy then continue end
+
       local nx, ny = mx + dx, my + dy
+
       if Section_is_valid(nx*2, ny*2) then
         local N = SECTIONS[nx*2][ny*2]
+
         if N and N.kind == "big_junc" then return false end
       end
     end end -- dx, dy
 
-    -- less chance if section is large
-    local size = int((K.sw + K.sh + 1) / 2)
-    local prob = math.clamp(2, size, 6) * 10 - 15
-
-    if rand.odds(prob) then return false end
+    -- width and height must be 3 or 4 seeds (2 is too small, 5 or more
+    -- would cause big_junc prefabs to not mesh with the hallway bits).
+    if K.sw < 3 or K.sw > 4 then return false end
+    if K.sh < 3 or K.sh > 4 then return false end
 
     -- OK --
 
