@@ -1298,3 +1298,73 @@ PREFAB.HALL_BASIC_I_WINDOW =
 }
 
 
+----------------------------------------------------------------
+
+
+PREFAB.JUNCTION_TEST =
+{
+  fitted = "xy"
+
+  -- these ranges allow the prefab to expand from 3 seeds to 4 seeds
+  -- and still mesh up properly with the nearby hallway pieces.
+  x_ranges = { {192,0}, {192,1}, {192,0} }
+  y_ranges = { {192,0}, {192,1}, {192,0} }
+
+  brushes =
+  {
+    -- south west corner
+    {
+      { x =   0, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?wall" }
+      { x = 102, y =  64, mat = "?wall" }
+      { x =  64, y = 192, mat = "?wall" }
+      { x =   0, y = 192, mat = "?wall" }
+    }
+
+    -- south east corner
+    {
+      { x = 576, y =   0, mat = "?wall" }
+      { x = 576, y = 192, mat = "?wall" }
+      { x = 502, y = 192, mat = "?wall" }
+      { x = 384, y =  64, mat = "?wall" }
+      { x = 384, y =   0, mat = "?wall" }
+    }
+
+    -- north west corner
+    {
+      { x =   0, y = 576, mat = "?wall" }
+      { x =   0, y = 384, mat = "?wall" }
+      { x =  64, y = 384, mat = "?wall" }
+      { x = 192, y = 502, mat = "?wall" }
+      { x = 192, y = 576, mat = "?wall" }
+    }
+
+    -- north east corner
+    {
+      { x = 576, y = 576, mat = "?wall" }
+      { x = 384, y = 576, mat = "?wall" }
+      { x = 384, y = 502, mat = "?wall" }
+      { x = 502, y = 384, mat = "?wall" }
+      { x = 576, y = 384, mat = "?wall" }
+    }
+
+    -- floor
+    {
+      { x =   0, y =   0, mat = "?wall" }
+      { x = 576, y =   0, mat = "?wall" }
+      { x = 576, y = 576, mat = "?wall" }
+      { x =   0, y = 576, mat = "?wall" }
+      { t = 0, mat = "?floor" }
+    }
+
+    -- ceiling
+    {
+      { x =   0, y =   0, mat = "?wall" }
+      { x = 576, y =   0, mat = "?wall" }
+      { x = 576, y = 576, mat = "?wall" }
+      { x =   0, y = 576, mat = "?wall" }
+      { t = 256, mat = "?ceiling" }
+    }
+  }
+}
+
