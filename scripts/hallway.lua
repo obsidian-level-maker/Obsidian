@@ -922,7 +922,7 @@ function HALLWAY_CLASS.section_has_chunk(H, K)
 end
 
 
-function HALLWAY_CLASS.add_middle_chunk(H, K)
+function HALLWAY_CLASS.try_add_middle_chunk(H, K)
   -- skip crossovers
   if K.room then return end
 
@@ -930,7 +930,6 @@ function HALLWAY_CLASS.add_middle_chunk(H, K)
   local sx2, sy2 = K.sx2, K.sy2
 
   if K.kind == "junction" or K.kind == "big_junc" or rand.odds(20) then
-
     -- use the whole section
 
   elseif K.kind == "horiz" then
@@ -954,8 +953,14 @@ function HALLWAY_CLASS.add_middle_chunk(H, K)
     end
 
   else
-    error("add_middle_chunk: unknown section kind: " .. tostring(K.kind))
+    return
   end
+
+  if not H:can_alloc_chunk(sx1, sy1, sx2, sy2) then
+    return
+  end
+
+  -- OK --
 
   local C = H:alloc_chunk(K, sx1, sy1, sx2, sy2)
 end
@@ -1018,9 +1023,7 @@ function HALLWAY_CLASS.create_chunks(H)
 
   -- every section will get at least one chunk
   each K in H.sections do
-    if not H:section_has_chunk(K) then
-      H:add_middle_chunk(K)
-    end
+    H:try_add_middle_chunk(K)
   end
 
   -- at here, the only chunks we need now are ones which fill the gaps
@@ -1087,8 +1090,8 @@ function HALLWAY_CLASS.link_chunks(H)
   -- verify all chunks have sane linkage
   each C in H.chunks do
     if table.size(C.link) + table.size(C.hall_link) < 2 then
-      stderrf("hallway %s has bad linkage @ %s\n", H:tostr(), C:tostr())
---!!!!  error("bad linkage"
+      gui.debugf("hallway %s has bad linkage @ %s\n", H:tostr(), C:tostr())
+      error("bad linkage in hallway")
     end
   end
 end
