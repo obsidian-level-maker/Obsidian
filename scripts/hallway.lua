@@ -375,9 +375,9 @@ function Hallway_test_branch(start_K, start_dir, mode)
     -- only connect to a big junction straight off a room
     if end_K.kind == "big_junc" and #visited != 1 then return end
 
-    -- never connect to double hallways or crossovers
+    -- never connect to crossovers
     -- (TODO: allow crossovers but NOT AT SECTION THAT TOUCHES CROSSED ROOM)
-    if end_K.hall and (end_K.hall.double_fork or end_K.hall.crossover) then return end
+    if end_K.hall and end_K.hall.crossover then return end
 
     -- crossovers must be distinct (not same as start or end)
     if stats.crossover and end_K.room == stats.crossover then return end
@@ -807,19 +807,13 @@ function Hallway_add_doubles()
 
 
   local function try_add_double(H)
-    local big_K = H.big_junc
-
-    if not (#H.sections == 1 or big_K) then return end
+    if #H.sections != 1 then return end
 
     local SIDES = { 2,4,6,8 }
     rand.shuffle(SIDES)
 
     each dir in SIDES do
       local K = H.sections[1]
-
-      if big_K then
-        K = big_K:neighbor(dir)  
-      end
 
       if try_add_at_section(H, K, dir) then
         return true
@@ -1093,7 +1087,8 @@ function HALLWAY_CLASS.link_chunks(H)
   -- verify all chunks have sane linkage
   each C in H.chunks do
     if table.size(C.link) + table.size(C.hall_link) < 2 then
-      error("hallway chunk has bad linkage")
+      stderrf("hallway %s has bad linkage @ %s\n", H:tostr(), C:tostr())
+--!!!!  error("bad linkage"
     end
   end
 end
