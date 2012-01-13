@@ -934,11 +934,32 @@ function CHUNK_CLASS.build_fat_arch(C)
 end
 
 
+function CHUNK_CLASS.build_big_junc(C)
+  local hall = assert(C.hall)
+
+  local skin1 = GAME.SKINS["Junc_Test"]
+ 
+  -- FIXME !!!  floor=xxx, ceil=xxx
+  local skin2 = { wall=hall.wall_mat }
+
+  local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, 2)
+
+  Fabricate(skin1._prefab, T, { skin1, skin2 })
+end
+
+
 function CHUNK_CLASS.build(C)
   if C.scenic then
     C:build_scenic()
     return
   end
+
+-- TEST TEST !!!!!!
+  if C.section and C.section.kind == "big_junc" then
+    C:build_big_junc();
+    return
+  end
+
 
 --[[
 if C.hall and #C.hall.sections == 1 and GAME.SKINS.Fat_Arch1 then

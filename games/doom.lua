@@ -2417,6 +2417,17 @@ DOOM.SKINS =
   }
 
 
+  ---| HALLWAY PIECES |---
+
+  Junc_Test =
+  {
+    _prefab = "JUNCTION_TEST"
+    _where  = "chunk"  -- FIXME: big_junc
+
+    ceil = "LAVA1"
+  }
+
+
   ---| TELEPORTERS |---
 
   Teleporter1 =
