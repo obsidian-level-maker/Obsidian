@@ -232,6 +232,25 @@ function CHUNK_CLASS.good_neighbor(C1, dir)
 end
 
 
+function CHUNK_CLASS.middle_neighbor(C1, dir)
+  -- returns the neighbor that touches the middle seed on the given side.
+  -- If there is an even number of seeds, then only one of the middle
+  -- pair of seeds is checked (which one is undefined).
+
+  local nx = math.i_mid(C1.sx1, C1.sx2)
+  local ny = math.i_mid(C1.sy1, C1.sy2)
+
+  if dir == 2 then ny = C1.sy1 - 1 end
+  if dir == 8 then ny = C1.sy2 + 1 end
+  if dir == 4 then nx = C1.sx1 - 1 end
+  if dir == 6 then nx = C1.sx2 + 1 end
+
+  if not Seed_valid(nx, ny) then return nil end
+
+  return SEEDS[nx][ny].chunk
+end
+
+
 function CHUNK_CLASS.classify_edge(C, dir)
   local sx1, sy1, sx2, sy2 = geom.side_coords(dir, C.sx1, C.sy1, C.sx2, C.sy2)
 
