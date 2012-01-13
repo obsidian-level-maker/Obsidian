@@ -35,6 +35,24 @@ OBLIGE WISH-LIST
   LEVEL STUFF
 ----------------------------------------------------------------
 
+Outdoor Idioms:
++  at edge of map, have rocky/jagged shape
+   (needed where caves border outdoor room too)
+
++  grassy area with water pool
+
++  large areas with water/blood, must be lowest area
+   (especially good for Heretic maps)
+
++  overhangs (building extensions with pillars)
+
++  bridge over a river of lava/nukage
+
++  tower in corner of map (monster cage, possibly enterable)
+
++  gazebo in centre with a nice item (or purpose)
+
+
 Theme System:
 -  if keys are left over, can use them for non-Zone locks
 
