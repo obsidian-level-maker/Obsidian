@@ -171,16 +171,16 @@ function HALLWAY_CLASS.calc_lev_along(H)
 end
 
 
-function HALLWAY_CLASS.setup_path(H)
+function HALLWAY_CLASS.setup_path(H, sections)
   -- because big_junc get merged [FIXME: LOGIC for MERGE + PATH]
   if H.big_junc then return end
 
   -- the 'sections' list is the same as 'visited' list, and contains
   -- each visited section from one end to the other.  
 
-  for i = 1, #H.sections-1 do
-    local K1 = H.sections[i]
-    local K2 = H.sections[i+1]
+  for i = 1, #sections-1 do
+    local K1 = sections[i]
+    local K2 = sections[i+1]
 
     -- figure out direction
     local dir
@@ -200,6 +200,21 @@ function HALLWAY_CLASS.setup_path(H)
 end
 
 
+function HALLWAY_CLASS.add_sections(H, sections)
+  each K in sections do
+    -- an already used section can only be a crossover
+    if K.used then
+      assert(K.room)
+      assert(H.crossover)
+
+      K:set_crossover(H)
+    else
+      K:set_hall(H)
+    end
+  end
+end
+
+
 function HALLWAY_CLASS.add_it(H)
   table.insert(LEVEL.halls, H)
 
@@ -212,17 +227,7 @@ function HALLWAY_CLASS.add_it(H)
   end
 
   -- mark sections as used
-  each K in H.sections do
-    -- an already used section can only be a crossover
-    if K.used then
-      assert(K.room)
-      assert(H.crossover)
-
-      K:set_crossover(H)
-    else
-      K:set_hall(H)
-    end
-  end
+  H:add_sections(H.sections)
 
   if #H.sections > 1 then
     LEVEL.hall_quota = LEVEL.hall_quota - #H.sections
@@ -230,14 +235,30 @@ function HALLWAY_CLASS.add_it(H)
 end
 
 
-function HALLWAY_CLASS.merge_it(old_H, new_H)
-  -- gui.debugf("MERGING %s into %s\n", new_H:tostr(), old_H:tostr())
+function HALLWAY_CLASS.merge_it(old_H, new_H, via_conn)
+stderrf("MERGING %s into %s\n", new_H:tostr(), old_H:tostr())
 
   assert(old_H != new_H)
+
+  assert(via_conn.L1 == new_H)
+  assert(via_conn.L2 == old_H)
 
   assert(not old_H.crossover)
   assert(not new_H.crossover)
 
+  -- do the equivalent of add_it()
+  old_H:add_sections(new_H.sections)
+
+  -- create the path on new hallway, but refer to old hallway
+  old_H:setup_path(new_H.sections)
+
+  -- update the path for the connection from OLD --> NEW
+  local dir = assert(via_conn.dir2)
+
+  via_conn.K2.hall_link[dir]      = old_H
+  via_conn.K1.hall_link[10 - dir] = old_H
+
+  -- transfer the sections
   each K in new_H.sections do
     table.insert(old_H.sections, K)
   end
@@ -245,6 +266,7 @@ function HALLWAY_CLASS.merge_it(old_H, new_H)
   LEVEL.hall_quota = LEVEL.hall_quota - #new_H.sections
 
   -- the new_H object is never used again
+  new_H.id       = nil
   new_H.sections = nil
   new_H.chunks   = nil
 end
@@ -328,7 +350,8 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
     local D1 = CONN_CLASS.new("normal", MID.hall or MID.room, start_K.room, 10 - start_dir)
 
-    D1.K1 = MID ; D1.K2 = start_K
+    D1.K1 = MID
+    D1.K2 = start_K
 
 
     LEVEL.best_conn.D1 = D1
@@ -336,7 +359,8 @@ function Hallway_test_branch(start_K, start_dir, mode)
     LEVEL.best_conn.hall  = nil
     LEVEL.best_conn.score = score
     LEVEL.best_conn.stats = {}
-    LEVEL.best_conn.merge_K = nil
+    LEVEL.best_conn.merge = nil
+    LEVEL.best_conn.onto_hall_K = MID
   end
 
 
@@ -352,12 +376,17 @@ function Hallway_test_branch(start_K, start_dir, mode)
     if end_K.kind == "big_junc" and #visited != 1 then return end
 
     -- never connect to double hallways or crossovers
+    -- (TODO: allow crossovers but NOT AT SECTION THAT TOUCHES CROSSED ROOM)
     if end_K.hall and (end_K.hall.double_fork or end_K.hall.crossover) then return end
 
     -- crossovers must be distinct (not same as start or end)
     if stats.crossover and end_K.room == stats.crossover then return end
 
-    local merge = false --FIXME !!!!! rand.odds(70)
+    local merge = false
+
+    if end_K.hall and rand.odds(95) then
+      merge = true
+    end
 
     local score1 = start_K:eval_exit(start_dir)
     local score2 =   end_K:eval_exit(  end_dir)
@@ -449,21 +478,23 @@ function Hallway_test_branch(start_K, start_dir, mode)
       H.crossover = stats.crossover
     end
 
-    if not end_K.hall or end_K.hall.crossover then
+    if merge and end_K.hall.crossover then
       merge = false
     end
 
 
     local D1 = CONN_CLASS.new("normal", L1, H, start_dir)
 
-    D1.K1 = start_K ; D1.K2 = H.sections[1]
+    D1.K1 = start_K
+    D1.K2 = H.sections[1]
 
 
     -- Note: some code assumes that D2.L2 is the destination room/hall
 
     local D2 = CONN_CLASS.new("normal", H, L2, 10 - end_dir)
 
-    D2.K1 = table.last(H.sections) ; D2.K2 = end_K
+    D2.K1 = table.last(H.sections)
+    D2.K2 = end_K
 
 
     -- handle quest difference : need to lock door
@@ -478,7 +509,8 @@ function Hallway_test_branch(start_K, start_dir, mode)
     LEVEL.best_conn.hall  = H
     LEVEL.best_conn.score = score
     LEVEL.best_conn.stats = stats
-    LEVEL.best_conn.merge_K = (merge ? end_K ; nil)
+    LEVEL.best_conn.merge = merge
+    LEVEL.best_conn.onto_hall_K = (end_K.hall ? end_K ; nil)
   end
 
 
@@ -733,14 +765,16 @@ function Hallway_add_doubles()
     -- restore previous connection order
     -- [this is needed now that doubles are done _after_ quests]
     if need_swap then
-      D1:swap() ; D2:swap()
+      D1:swap()
+      D2:swap()
     end
 
     -- make sure new connection has the same lock
     D2.lock = D1.lock
     
     -- peer them up (not needed ATM, might be useful someday)
-    D1.peer = D2 ; D2.peer = D1
+    D1.peer = D2
+    D2.peer = D1
 
     D2:add_it()
 

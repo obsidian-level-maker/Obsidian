@@ -51,10 +51,6 @@ Teleporters:
 
 
 Hallways:
-+  get big junctions working again
-
--  get "merging" of one hallway into another working again
-
 -  ability to merge the section of a "simple" hallway into
    one of the rooms [especially to make a "Porch"].
 
