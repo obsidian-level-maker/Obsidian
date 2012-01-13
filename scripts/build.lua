@@ -1800,6 +1800,9 @@ function Fab_render(fab)
 
   each B in fab.brushes do
     if CSG_BRUSHES[B[1].m] then
+      --- DEBUG AID:
+      --- stderrf("brush %d/%d\n", _index, #fab.brushes)
+
       raw_add_brush(B)
     end
   end
