@@ -1316,7 +1316,7 @@ PREFAB.JUNCTION_TEST =
     {
       { x =   0, y =   0, mat = "?wall" }
       { x = 192, y =   0, mat = "?wall" }
-      { x = 102, y =  64, mat = "?wall" }
+      { x = 192, y =  64, mat = "?wall" }
       { x =  64, y = 192, mat = "?wall" }
       { x =   0, y = 192, mat = "?wall" }
     }
@@ -1363,7 +1363,7 @@ PREFAB.JUNCTION_TEST =
       { x = 576, y =   0, mat = "?wall" }
       { x = 576, y = 576, mat = "?wall" }
       { x =   0, y = 576, mat = "?wall" }
-      { t = 256, mat = "?ceiling" }
+      { b = 256, mat = "?ceil" }
     }
   }
 }
