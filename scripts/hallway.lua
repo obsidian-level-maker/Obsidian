@@ -402,7 +402,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
       score = score + 120
       merge = true
     elseif stats.big_junc then
-      score = score + 60
+      score = score + 80
       merge = false
     end
 
@@ -1052,8 +1052,8 @@ function HALLWAY_CLASS.try_link_chunk(H, C, dir)
     return
   end
 
-  local C2 = C:good_neighbor(dir)
-
+  local C2 = C:middle_neighbor(dir)
+  
   if not C2 then return end
 
   if C2.hall != H then return end
@@ -1082,6 +1082,11 @@ function HALLWAY_CLASS.link_chunks(H)
     elseif C.section.kind == "vert" then
       H:try_link_chunk(C, 2)
       H:try_link_chunk(C, 8)
+
+    elseif C.section.kind == "big_junc" then
+      for dir = 2,8,2 do
+        H:try_link_chunk(C, dir)
+      end
     end
   end
 
