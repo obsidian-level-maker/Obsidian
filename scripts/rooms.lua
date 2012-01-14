@@ -74,10 +74,11 @@ class ROOM
 
   cave_map : CAVE  -- the generated cave / maze
 
-  --- plan_sp code only:
+  conn_group : number  -- traversibility group (used for Connect logic)
 
-  group_id : number  -- traversibility group
-
+  sky_group : number  -- outdoor rooms which directly touch will belong
+                      -- to the same sky_group (unless a solid wall is
+                      -- enforced, e.g. between zones).
 }
 
 
@@ -89,6 +90,14 @@ class FENCE
   R1 : ROOM   -- room containing the fence
   R2 : ROOM   -- the other room
 
+}
+
+
+class SKY_GROUP
+{
+  rooms : list(ROOM)
+
+  sky_h : number  -- the final sky height for the group
 }
 
 
@@ -799,29 +808,100 @@ end
 
 
 function Rooms_synchronise_skies()
-  -- make sure that any two outdoor rooms which touch have the same sky_h
 
-  for loop = 1,10 do
+  -- this makes sure that any two outdoor rooms which touch will belong
+  -- to the same sky_group and hence get the same sky height.
+
+  local outdoor_rooms = {}
+
+
+  local function init_sky_groups()
+    each R in LEVEL.rooms do
+      if R.kind == "outdoor" then
+        table.insert(outdoor_rooms, R)
+        R.sky_group = _index
+      end
+    end
+  end
+
+
+  local function merge_groups(id1, id2)
+    if id1 > id2 then id1,id2 = id2,id1 end
+
+    gui.debugf("merge_sky_groups: %d --> %d\n", id2, id1)
+
+    each R in outdoor_rooms do
+      if R.sky_group == id2 then
+        R.sky_group = id1
+      end
+    end
+  end
+
+
+  local function spread_sky_groups()
+    -- returns true if there was a change, false on no changes.
+
+    -- TODO: we may need to include the simple (one section) hallways
+    --       between two outdoor rooms, as it might be nice to allow
+    --       some "open top" prefabs to connect them.
+
     local changes = false
 
-    for x = 1,SECTION_W do for y = 1,SECTION_H do
-      local K = SECTIONS[x][y]
-      if K and K.room and K.room.sky_h then
-        for side = 2,8,2 do
-          local N = K:neighbor(side)
-          if N and N.room and N.room != K.room and N.room.sky_h and
-             K.room.sky_h != N.room.sky_h
-          then
-            K.room.sky_h = math.max(K.room.sky_h, N.room.sky_h)
-            N.room.sky_h = K.room.sky_h
-            changes = true
-          end
-        end -- for side
-      end
-    end end -- for x, y
+    for kx = 1,SECTION_W do for ky = 1,SECTION_H do
+      local K = SECTIONS[kx][ky]
 
-    if not changes then break; end
-  end -- for loop
+      if not (K and K.room and K.room.kind == "outdoor") then
+        continue
+      end
+
+      -- only need to test south and west
+      for dir = 2,4,2 do
+        local N = K:neighbor(dir)
+
+        if not (N and N.room and N.room.kind == "outdoor") then
+          continue
+        end
+
+        if N.room.sky_group != K.room.sky_group then
+          merge_groups(N.room.sky_group, K.room.sky_group)
+        end
+
+        changes = true
+
+      end -- for dir
+    end end -- for kx, ky
+
+    return changes
+  end
+
+
+  ---| Rooms_synchronise_skies |---
+
+  init_sky_groups()
+
+  for loop = 1,20 do
+    if not spread_sky_groups() then
+      break;
+    end
+  end
+
+  -- collect all the sky groups
+  LEVEL.sky_groups = {}
+
+  gui.debugf("\nSky group list:\n")
+
+  each R in outdoor_rooms do
+    gui.debugf("%d @ %s\n", R.sky_group, R:tostr())
+
+    local group = LEVEL.sky_groups[R.sky_group]
+
+    if not group then
+      group = { rooms={} }
+      LEVEL.sky_groups[R.sky_group] = group
+    end
+
+    table.insert(group.rooms, R)
+  end
 end
 
 
@@ -2256,6 +2336,7 @@ function Rooms_build_all()
   Areas_flesh_out()
 
   Rooms_outdoor_borders()
+  Rooms_synchronise_skies()
 
   -- Rooms_indoor_walls()
 
