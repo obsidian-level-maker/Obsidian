@@ -334,6 +334,8 @@ function Hallway_test_branch(start_K, start_dir, mode)
   local function test_nearby_hallway(MID)
     if not (MID.hall or (MID.room and MID.room.street)) then return end
 
+    if MID.hall and MID.hall.big_junc then return false end
+
     if not Connect_is_possible(start_K.room, MID.hall or MID.room, mode) then return end
 
     local score = -100 - MID.num_conn - gui.random()
@@ -374,6 +376,9 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
     -- only connect to a big junction straight off a room
     if end_K.kind == "big_junc" and #visited != 1 then return end
+
+    -- never connect to the hallway "spokes" off a big junction
+    if end_K.kind != "big_junc" and end_K.hall and end_K.hall.big_junc then return end
 
     -- never connect to crossovers
     -- (TODO: allow crossovers but NOT AT SECTION THAT TOUCHES CROSSED ROOM)
