@@ -286,7 +286,32 @@ function CHUNK_CLASS.classify_edge(C, dir)
 end
 
 
-function CHUNK_CLASS.against_map_edge(C, dir)
+function CHUNK_CLASS.need_fence(C, dir)
+  assert(C.room)
+
+  local sx1, sy1, sx2, sy2 = geom.side_coords(dir, C.sx1, C.sy1, C.sx2, C.sy2)
+
+  sx1, sy1 = geom.nudge(sx1, sy1, dir)
+  sx2, sy2 = geom.nudge(sx2, sy2, dir)
+
+  if not Seed_valid(sx1, sy1) then return false end
+
+  for sx = sx1,sx2 do for sy = sy1,sy2 do
+    local S = SEEDS[sx][sy]
+
+    if S.room and S.room.kind == "outdoor" and S.room != C.room then
+      local fence = C.room.fences[S.room.id]
+
+      if fence then return true end
+    end
+
+  end end
+
+  return false
+end
+
+
+function CHUNK_CLASS.against_map_edge(C, dir)  -- TODO: REMOVE, OLD
   local sx1, sy1, sx2, sy2 = geom.side_coords(dir, C.sx1, C.sy1, C.sx2, C.sy2)
 
   sx1, sy1 = geom.nudge(sx1, sy1, dir)
@@ -885,6 +910,37 @@ function CHUNK_CLASS.inner_outer_mat(C, L1, L2)
 end
 
 
+function CHUNK_CLASS.build_wall(C, dir, f_h)
+  local long = geom.vert_sel(dir, C.x2 - C.x1, C.y2 - C.y1)
+  local deep = 24
+
+  local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
+                                 0, long, deep, 0)
+
+  local skin = (C.room and C.room.skin) or (C.hall and C.hall.skin)
+  assert(skin)
+  assert(skin.facade)
+
+  Fabricate("WALL", T, { skin })
+end
+
+
+function CHUNK_CLASS.build_fence(C, dir)
+  local long = geom.vert_sel(dir, C.x2 - C.x1, C.y2 - C.y1)
+  local deep = 16
+
+  local fence_h = C.room.floor_max_h + PARAM.jump_height
+
+  local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, fence_h, dir,
+                                 0, long, deep, 0)
+
+--  local skin1 = assert(GAME.SKINS["Fence_1"])  --!!!!
+  local skin2 = assert(C.room.skin)
+
+  Fabricate("FENCE", T, { skin2 })
+end
+
+
 function CHUNK_CLASS.build_scenic(C)
   if C.prefab_skin then
     local skin0 = {}
@@ -1218,6 +1274,11 @@ end --]]
         end
 --]]
 
+      elseif C.room and C.room.kind == "outdoor" and
+             C:need_fence(dir) then
+
+        C:build_fence(dir)
+
       elseif (C.hall and C.hall.street) or
              (C.room and C.room.kind == "outdoor")
       then
@@ -1233,14 +1294,7 @@ end --]]
       else
         -- SOLID WALL
 
-        local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
-                                       0, long, thick, 0)
-
-        local skin = (C.room and C.room.skin) or (C.hall and C.hall.skin)
-        assert(skin)
-        assert(skin.facade)
-
-        Fabricate("WALL", T, { skin })
+        C:build_wall(dir, f_h)
 
 --[[ HALLWAY WINDOW TEST
 local C2 = C:good_neighbor(dir)

@@ -25,6 +25,7 @@ require 'util'
 GLOBAL_SKIN_DEFAULTS =
 {
   outer = "?wall"
+  fence = "?wall"
   floor = "?wall"
   ceil  = "?floor"
 
