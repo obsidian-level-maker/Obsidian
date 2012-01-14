@@ -2034,23 +2034,6 @@ function Rooms_outdoor_borders()
   end
 
 
-  local function OLD__handle_fake_corners(R)
-    for index = #R.fake_buildings, 1, -1 do
-      local S = R.fake_buildings[index].N
-
-      local corner = check_fake_corner(S)
-
-      if corner then
-        table.remove(R.fake_buildings, index)
-
-        local B = R  --FIXME!!!!
-
-        Rooms_fake_corner(R, S, corner, B)
-      end
-    end
-  end
-
-
   local function OLD__touches_start(list, info)
     local T = list[1]
 
