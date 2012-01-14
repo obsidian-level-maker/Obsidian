@@ -2419,6 +2419,14 @@ DOOM.SKINS =
 
   ---| HALLWAY PIECES |---
 
+  Hall_Test =
+  {
+    _prefab = "HALL_BASIC_P"
+    _where  = "chunk"  -- FIXME: hall (?)
+
+    ceil = "NUKAGE1"
+  }
+
   Junc_Test =
   {
     _prefab = "JUNCTION_TEST"

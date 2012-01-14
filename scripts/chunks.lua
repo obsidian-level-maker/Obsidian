@@ -990,10 +990,11 @@ function CHUNK_CLASS.build_fat_arch(C)
 end
 
 
-function CHUNK_CLASS.build_big_junc(C)
+function CHUNK_CLASS.build_big_junc(C, skin_name)
   local hall = assert(C.hall)
 
-  local skin1 = GAME.SKINS["Junc_Test"]
+  local skin1 = GAME.SKINS[skin_name]
+  assert(skin1)
  
   -- FIXME !!!  floor=xxx, ceil=xxx
   local skin2 = { wall=hall.wall_mat }
@@ -1012,7 +1013,14 @@ function CHUNK_CLASS.build(C)
 
 -- TEST TEST !!!!!!
   if C.section and C.section.kind == "big_junc" then
-    C:build_big_junc();
+    C:build_big_junc("Junc_Test");
+    return
+  end
+
+  if C.hall then
+    C:build_big_junc("Hall_Test");
+
+    -- FIXME FIXME : NO LOCKED DOORS !!!!!
     return
   end
 
