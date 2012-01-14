@@ -1096,6 +1096,63 @@ PREFAB.HALL_BASIC_T =
 }
 
 
+PREFAB.HALL_BASIC_P =
+{
+  fitted = "xy"
+
+  brushes =
+  {
+    -- bottom corner pieces
+    {
+      { x =   0, y =   0, mat = "?wall" }
+      { x =  16, y =   0, mat = "?wall" }
+      { x =  16, y =  16, mat = "?wall" }
+      { x =   0, y =  16, mat = "?wall" }
+    }
+
+    {
+      { x = 176, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?wall" }
+      { x = 192, y =  16, mat = "?wall" }
+      { x = 176, y =  16, mat = "?wall" }
+    }
+
+    -- top corner pieces
+    {
+      { x =   0, y = 176, mat = "?wall" }
+      { x =  16, y = 176, mat = "?wall" }
+      { x =  16, y = 192, mat = "?wall" }
+      { x =   0, y = 192, mat = "?wall" }
+    }
+
+    {
+      { x = 176, y = 176, mat = "?wall" }
+      { x = 192, y = 176, mat = "?wall" }
+      { x = 192, y = 192, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+    }
+
+    -- floor
+    {
+      { x =   0, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?wall" }
+      { x = 192, y = 192, mat = "?wall" }
+      { x =   0, y = 192, mat = "?wall" }
+      { t = 0, mat = "?floor" }
+    }
+
+    -- ceiling
+    {
+      { x =   0, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?wall" }
+      { x = 192, y = 192, mat = "?wall" }
+      { x =   0, y = 192, mat = "?wall" }
+      { b = 128, mat = "?ceil" }
+    }
+  }
+}
+
+
 PREFAB.HALL_BASIC_I_STAIR =
 {
   fitted = "xy"
