@@ -1556,9 +1556,6 @@ end
 function Plan_decide_outdoors()
 
   local function score_room(R)
-    -- TODO: relax this (room will have fences around it)
-    if LEVEL.special == "street" then return -1 end
-
     -- too small ?
     if R.svolume < 8 then return -1 end
 
@@ -1572,7 +1569,9 @@ function Plan_decide_outdoors()
 
     score = score + 10 * what
 
-    return score + 25 * gui.random() ^ 2
+    score = score + 25 * gui.random() ^ 2
+
+    return score
   end
 
   
