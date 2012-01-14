@@ -3,6 +3,14 @@ VARIOUS NOTES & IDEAS
 =====================
 
 
+Misc
+----
+
+-  windows and fences DO NOT straddle, and outdoor rooms ARE NOT
+   responsible for the outdoor facade of buildings.
+
+
+
 Connections
 -----------
 
@@ -342,4 +350,39 @@ EXTRA GRAPHICS
 
      NULL // end marker
    }
+
+
+
+MUSIC RE-ORDERING
+-----------------
+
+Track Selection:
+
+*  Doom 1: shuffle each episode
+
+*  Doom 2: if one episode (or less), pick random tracks and
+           ensure that no two tracks have the same three-letter
+           prefix.
+
+*  Doom 2, full game: shuffle tracks, loop a few times looking
+                      for repeats (same three-letter prefix in a
+                      row) and move one to random spot.
+
+Mechanism:
+
+-  BOOM: [MUSIC] section in BEX
+
+       [MUSIC]
+       ROMERO = RUNNIN
+       RUNNIN = STALKS
+       STALKS = ROMERO
+
+-  EDGE native:  DDFPLAY lump:
+
+       <PLAYLISTS>
+       [01]
+       MUSICINFO=MUS:LUMP:"D_RUNNIN";
+
+-  ZDoom : via MAPINFO: music D_RUNNING
+
 

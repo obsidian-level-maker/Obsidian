@@ -2,7 +2,7 @@
 OBLIGE WISH-LIST
 ================
 
-*  get more games working (Heretic, Hexen etc)
+*  get more games working (Hexen, Duke Nukem 3D, etc)
 
 *  support for Traps, Cages, Secrets, Powerups
 
@@ -331,6 +331,8 @@ Weapons:
    make the exit into a switched door and put a switch at other
    end of room.
 
++  One-way Routes (see doc/Various_Notes.txt)
+
 -  try position-based monster ordering for fight simulator
 
 -  in a large (multi-section) room, if any section has no "events"
@@ -368,6 +370,8 @@ Weapons:
 
 -  IDEA: levels get inherently tougher to beat over a megawad
          [assume player's skill increases].
+
++  Music Re-ordering (see doc/Various_Notes.txt)
 
 
 +  diagonal chunks
@@ -836,36 +840,6 @@ Sam's suggestions:
       20+ cacodemons.
       5-15 mancubi
       5-15 arachnatrons
-
-
-
-MUSIC RE-ORDERING
-
-*  Doom 1: shuffle each episode
-
-*  Doom 2: if one episode (or less), pick random tracks and
-           ensure that no two tracks have the same three-letter
-           prefix.
-
-*  Doom 2, full game: shuffle tracks, loop a few times looking
-                      for repeats (same three-letter prefix in a
-                      row) and move one to random spot.
-
--  BOOM: [MUSIC] section in BEX
-
-       [MUSIC]
-       ROMERO = RUNNIN
-       RUNNIN = STALKS
-       STALKS = ROMERO
-
--  EDGE native:  DDFPLAY lump:
-
-       <PLAYLISTS>
-       [01]
-       MUSICINFO=MUS:LUMP:"D_RUNNIN";
-
--  ZDoom : via MAPINFO: music D_RUNNING
-
 
 
 EDGE: gui.property("solid_exfloor", 400)
