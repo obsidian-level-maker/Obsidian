@@ -470,7 +470,7 @@ function CHUNK_CLASS.eval_camera(C)
 
   info.x2 = mid_x
   info.y2 = mid_y
-  info.z2 = R.floor_min_h - 64
+  info.z2 = R.min_floor_h - 64
 
   info.score = dist + gui.random() * 200
 
@@ -929,7 +929,7 @@ function CHUNK_CLASS.build_fence(C, dir)
   local long = geom.vert_sel(dir, C.x2 - C.x1, C.y2 - C.y1)
   local deep = 16
 
-  local fence_h = C.room.floor_max_h + PARAM.jump_height
+  local fence_h = C.room.max_floor_h + PARAM.jump_height
 
   local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, fence_h, dir,
                                  0, long, deep, 0)
@@ -1039,7 +1039,7 @@ end --]]
     f_h = x_hall.floor_h
     x_hall = nil
   elseif C.liquid then
-    f_h = C.room.floor_min_h - (PARAM.deep_liquids ? 96 ; 24)
+    f_h = C.room.min_floor_h - (PARAM.deep_liquids ? 96 ; 24)
   else
     f_h = assert(C.floor_h)
   end

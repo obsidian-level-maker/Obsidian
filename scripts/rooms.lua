@@ -1919,7 +1919,7 @@ function Rooms_outdoor_borders()
     local skin = R.skin
     assert(skin)
 
-    local sky_fence_h = assert(R.floor_max_h)
+    local sky_fence_h = assert(R.max_floor_h)
 
     local skin2 = { sky_h = R.sky_h - sky_fence_h }
 
@@ -1933,7 +1933,7 @@ function Rooms_outdoor_borders()
     local skin = R.skin
     assert(skin)
 
-    local sky_fence_h = assert(R.floor_max_h)
+    local sky_fence_h = assert(R.max_floor_h)
 
     local skin2 = { sky_h = R.sky_h - sky_fence_h }
 
@@ -2213,7 +2213,7 @@ function Rooms_decide_fences()
 
     -- at here, R1 is an earlier quest than R2
 
-    if R1.floor_max_h + PARAM.jump_height + 30 < R2.floor_max_h then
+    if R1.max_floor_h + PARAM.jump_height + 30 < R2.max_floor_h then
       -- cannot reach R2 from R1 due to height difference
       return
     end

@@ -1604,8 +1604,8 @@ function Areas_flesh_out()
 
   local function finish_heights(R)
     -- find minimum and maximum heights
-    R.floor_min_h = R.entry_h
-    R.floor_max_h = R.entry_h
+    R.min_floor_h = R.entry_h
+    R.max_floor_h = R.entry_h
 
     -- validate : all areas got a height
     each A in R.areas do
@@ -1620,8 +1620,8 @@ function Areas_flesh_out()
 
         local h = C.floor_h
 
-        R.floor_min_h = math.min(R.floor_min_h, h)
-        R.floor_max_h = math.max(R.floor_max_h, h)
+        R.min_floor_h = math.min(R.min_floor_h, h)
+        R.max_floor_h = math.max(R.max_floor_h, h)
       end
     end
 
@@ -1675,8 +1675,8 @@ function Areas_flesh_out()
     if hall.done_heights then return end
 
     -- TODO: analyse nearby chunks to get min/max floor_h
-    local min_h = R.floor_min_h
-    local max_h = R.floor_max_h
+    local min_h = R.min_floor_h
+    local max_h = R.max_floor_h
 
     local diff = hall:cross_diff()
 
@@ -1736,7 +1736,7 @@ function Areas_flesh_out()
 
 
   local function prepare_ceiling(R)
-    local h = R.crossover_max_h or R.floor_max_h
+    local h = R.crossover_max_h or R.max_floor_h
 
     h = h + rand.pick { 128, 192, 256, 320, 384 }
 

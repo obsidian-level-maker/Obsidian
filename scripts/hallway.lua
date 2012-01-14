@@ -375,6 +375,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
     if not Connect_is_possible(L1, L2, mode) then return end
 
     -- only connect to a big junction straight off a room
+    -- TODO: allow two big junctions to connect [update planner restrictions too]
     if end_K.kind == "big_junc" and #visited != 1 then return end
 
     -- never connect to the hallway "spokes" off a big junction
