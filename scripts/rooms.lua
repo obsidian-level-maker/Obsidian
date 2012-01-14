@@ -66,13 +66,28 @@ class ROOM
 
   weapons : list(NAME)  -- weapons to add into room
 
-  floor_h, ceil_h : number
+  fences[ROOM ID] : FENCE  -- what fences that this room has to make
+                           -- at the border to other outdoor rooms.
+                           -- NIL for none.
+
+???  floor_h, ceil_h : number
 
   cave_map : CAVE  -- the generated cave / maze
 
   --- plan_sp code only:
 
   group_id : number  -- traversibility group
+
+}
+
+
+class FENCE
+{
+  kind : keyword   -- "none"   : can allow player to fall off
+                   -- "solid"  : make solid wall (no shared sky)
+
+  R1 : ROOM   -- room containing the fence
+  R2 : ROOM   -- the other room
 
 }
 
@@ -99,7 +114,9 @@ function ROOM_CLASS.new(shape)
     middles = {}
     spaces = {}
     floor_mats = {}
+
     gates = {}
+    fences = {}
 
     num_windows = 0
 
@@ -2178,6 +2195,61 @@ function Rooms_outdoor_borders()
   each R in LEVEL.rooms do
     if R.kind == "outdoor" then
       scan_room(R)
+    end
+  end
+end
+
+
+
+function Rooms_decide_fences()
+
+  local function check_room_pair(R1, R2, S, N)
+    if R1.quest == R2.quest then return end
+
+    if R1.quest.id > R2.quest.id then
+      R1, R2 = R2, R1
+       S, N  =  N, S
+    end
+
+    -- at here, R1 is an earlier quest than R2
+
+    if R1.floor_max_h < R2.floor_max_h + PARAM.jump_height + 30 then
+      -- cannot reach R2 from R1 due to height difference
+      return
+    end
+ 
+stderrf("need fence @ %s (bordering %s)\n", R1:tostr(), R2:tostr())
+
+    R1.fences[R2.id] = { kind="low", R1=R1, R2=R2 }
+  end
+
+
+  local function do_fences(R)
+    for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
+      if S.room != R then continue end
+
+      -- only check two directions (south and west)
+      for dir = 2,4,2 do
+        local N = S:neighbor(dir)
+
+        if not N or not N.room or N.room == R then continue end
+
+        if N.room.kind != "outdoor" then continue end
+
+        check_room_pair(R, N.room, S, N) 
+      end
+    end end
+  end
+
+
+  ---| Rooms_decide_fences |---
+
+stderrf("Rooms_decide_fences.........\n")
+
+  each R in LEVEL.rooms do
+    if R.kind == "outdoor" then
+      do_fences(R)
     end
   end
 end

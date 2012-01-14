@@ -1788,6 +1788,9 @@ function Areas_flesh_out()
 
   each R in LEVEL.rooms do expand_chunks(R) end
   each R in LEVEL.rooms do floor_stuff(R) end
+
+  Rooms_decide_fences()
+
 --each R in LEVEL.rooms do decide_windows(R) end
   each R in LEVEL.rooms do ceiling_stuff(R) end
 end
