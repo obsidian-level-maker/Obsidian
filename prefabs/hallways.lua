@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2011 Andrew Apted
+--  Copyright (C) 2011-2012 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -21,9 +21,11 @@
 --  Hallway pieces use the following letters:
 --
 --     I : straight through, travel N/S, walls on E/W sides
---     C : corner, travel N and E, walls on S and W sides
---     T : T junction: travel N/E/W, wall on S side
+--     C : corner, travel S and E, walls on N and W sides
+--     T : T junction: travel S/E/W, wall on N side
 --     P : plus shape: travel in all four directions
+--
+--  They have one thing in common : can always travel south.
 --
 ----------------------------------------------------------------
 
@@ -1001,7 +1003,7 @@ PREFAB.HALL_BASIC_C =
 
   brushes =
   {
-    -- left wall
+    -- west wall
     {
       { x =   0, y =   0, mat = "?wall" }
       { x =  16, y =  16, mat = "?wall" }
@@ -1009,20 +1011,20 @@ PREFAB.HALL_BASIC_C =
       { x =   0, y = 192, mat = "?outer" }
     }
 
-    -- bottom wall
+    -- north wall
     {
-      { x =   0, y =   0, mat = "?wall" }
-      { x = 192, y =   0, mat = "?outer" }
-      { x = 192, y =  16, mat = "?wall" }
-      { x =  16, y =  16, mat = "?wall" }
+      { x =   0, y = 176, mat = "?wall" }
+      { x = 192, y = 176, mat = "?outer" }
+      { x = 192, y = 192, mat = "?wall" }
+      { x =  16, y = 192, mat = "?wall" }
     }
 
-    -- little top/right corner piece
+    -- little SE corner piece
     {
-      { x = 176, y = 176, mat = "?wall" }
-      { x = 192, y = 176, mat = "?wall" }
-      { x = 192, y = 192, mat = "?wall" }
-      { x = 176, y = 192, mat = "?wall" }
+      { x = 176, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?wall" }
+      { x = 192, y =  16, mat = "?wall" }
+      { x = 176, y =  16, mat = "?wall" }
     }
 
     -- floor
@@ -1052,44 +1054,44 @@ PREFAB.HALL_BASIC_T =
 
   brushes =
   {
-    -- bottom wall
-    {
-      { x =   0, y =   0, mat = "?wall" }
-      { x = 192, y =   0, mat = "?outer" }
-      { x = 192, y =  16, mat = "?wall" }
-      { x =   0, y =  16, mat = "?wall" }
-    }
-
-    -- top corner pieces
+    -- north wall
     {
       { x =   0, y = 176, mat = "?wall" }
-      { x =  16, y = 176, mat = "?wall" }
-      { x =  16, y = 192, mat = "?wall" }
+      { x = 192, y = 176, mat = "?wall" }
+      { x = 192, y = 192, mat = "?outer" }
       { x =   0, y = 192, mat = "?wall" }
     }
 
+    -- corner pieces
     {
-      { x = 176, y = 176, mat = "?wall" }
-      { x = 192, y = 176, mat = "?wall" }
-      { x = 192, y = 192, mat = "?wall" }
-      { x = 176, y = 192, mat = "?wall" }
+      { x =   0, y =   0, mat = "?wall" }
+      { x =  16, y =   0, mat = "?wall" }
+      { x =  16, y =  16, mat = "?wall" }
+      { x =   0, y =  16, mat = "?wall" }
+    }
+
+    {
+      { x = 176, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?wall" }
+      { x = 192, y =  16, mat = "?wall" }
+      { x = 176, y =  16, mat = "?wall" }
     }
 
     -- floor
     {
-      { x =   0, y =  16, mat = "?wall" }
-      { x = 192, y =  16, mat = "?wall" }
-      { x = 192, y = 192, mat = "?wall" }
-      { x =   0, y = 192, mat = "?wall" }
+      { x =   0, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?wall" }
+      { x = 192, y = 176, mat = "?wall" }
+      { x =   0, y = 176, mat = "?wall" }
       { t = 0, mat = "?floor" }
     }
 
     -- ceiling
     {
-      { x =   0, y =  16, mat = "?wall" }
-      { x = 192, y =  16, mat = "?wall" }
-      { x = 192, y = 192, mat = "?wall" }
-      { x =   0, y = 192, mat = "?wall" }
+      { x =   0, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?wall" }
+      { x = 192, y = 176, mat = "?wall" }
+      { x =   0, y = 176, mat = "?wall" }
       { b = 128, mat = "?ceil" }
     }
   }
