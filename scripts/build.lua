@@ -1279,6 +1279,43 @@ function Fab_apply_skins(fab, list)
   end
 
 
+  local function has_failing_condition(tab)
+    -- tab can be: a brush (the 'm' table), a model or an entity.
+    -- the 'only_if' field will also be removed now.
+
+    if tab.only_if == nil then
+      return false
+    end
+
+    local bool_val = Trans.to_boolean(tab.only_if)
+
+    tab.only_if = nil
+
+    return (bool_val == 0)
+  end
+
+
+  local function do_conditionals(fab)
+    -- brushes....
+    for index = #fab.brushes, 1, -1 do
+      local B = fab.brushes[index]
+      if B[1].m and has_failing_condition(B[1]) then
+        table.remove(fab.brushes, index)
+      end
+    end
+
+    -- models....
+    for index = #fab.models, 1, -1 do
+      local M = fab.models[index]
+      if has_failing_condition(M) then
+        table.remove(fab.models, index)
+      end
+    end
+
+    -- NOTE: entities are done below (in do_entities)
+  end
+
+
   local function process_materials(brush)
     -- check if it should be a sky brush
     if not brush[1].m and Brush_has_sky(brush) then
@@ -1375,7 +1412,7 @@ function Fab_apply_skins(fab, list)
       local E = fab.entities[index]
 
       -- we allow entities to be unknown, removing them from the list
-      if not process_entity(E) then
+      if has_failing_condition(E) or not process_entity(E) then
         table.remove(fab.entities, index)
       end
     end
@@ -1488,6 +1525,9 @@ function Fab_apply_skins(fab, list)
 
   -- perform substitutions (values beginning with '?' are skin refs)
   do_substitutions(fab)
+
+  -- remove brushes (etc) which fail their conditional test 
+  do_conditionals(fab)
 
   -- convert 'mat' fields to 'tex' fields
   do_materials(fab)
