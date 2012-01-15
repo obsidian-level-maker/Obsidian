@@ -1043,7 +1043,16 @@ end
 
 
 function Trans.is_subst(value)
-  return type(value) == "string" and string.match(value, "^%?")
+  return type(value) == "string" and string.match(value, "^[!?]")
+end
+
+
+function Trans.to_boolean(value)
+  if (value == "" or value == "0" or value == 0 or value == false) then
+    return 0
+  end
+
+  return 1
 end
 
 
@@ -1055,13 +1064,13 @@ function Trans.substitute(SKIN, value)
   -- a simple substitution is just: "?varname"
   -- a more complex one has an operator: "?varname+3",  "?foo==1"
 
-  local var_name, op, number = string.match(value, "%?([%w_]*)(%p*)(%-?[%d.]*)");
+  local neg, var_name, op, number = string.match(value, "(.)([%w_]*)(%p*)(%-?[%d.]*)");
 
   if var_name == "" then var_name = nil end
   if op       == "" then op       = nil end
   if number   == "" then number   = nil end
 
-  if not var_name or (op and not number) then
+  if not var_name or (op and not number) or (op and neg == '!') then
     error("bad substitution: " .. tostring(value));
   end
 
@@ -1072,8 +1081,12 @@ function Trans.substitute(SKIN, value)
     return value
   end
 
+  -- apply the boolean negation
+  if neg == '!' then
+    return 1 - Trans.to_boolean(value)
+
   -- apply the operator
-  if op then
+  elseif op then
     value  = 0 + value
     number = 0 + number
 
