@@ -1043,7 +1043,7 @@ end
 
 
 function Trans.is_subst(value)
-  return type(value) == "string" and string.match(value, "^[?]")
+  return type(value) == "string" and string.match(value, "^%?")
 end
 
 
@@ -1052,7 +1052,41 @@ function Trans.substitute(SKIN, value)
     return value
   end
 
-  return SKIN[string.sub(value, 2)]
+  -- a simple substitution is just: "?varname"
+  -- a more complex one has an operator: "?varname+3",  "?foo==1"
+
+  local var_name, op, number = string.match(value, "%?([%w_]*)(%p*)(%-?[%d.]*)");
+
+  if var_name == "" then var_name = nil end
+  if op       == "" then op       = nil end
+  if number   == "" then number   = nil end
+
+  if not var_name or (op and not number) then
+    error("bad substitution: " .. tostring(value));
+  end
+
+  -- first lookup variable name, abort if not present
+  value = SKIN[var_name]
+
+  if value == nil or Trans.is_subst(value) then
+    return value
+  end
+
+  -- apply the operator
+  if op then
+    value  = 0 + value
+    number = 0 + number
+
+    if op == "+" then return value + number end
+    if op == "-" then return value - number end
+
+    if op == "==" then return (value == number ? 1 ; 0) end
+    if op == "!=" then return (value != number ? 1 ; 0) end
+
+    error("bad subst operator: " .. tostring(op))
+  end
+
+  return value
 end
 
 
@@ -1212,10 +1246,6 @@ function Fab_apply_skins(fab, list)
 
       if type(v) == "string" then
         v = Trans.substitute(SKIN, v)
-
-        if v == nil then
-          if name == "required" then v = false end
-        end
 
         if v == nil then
           error(string.format("Prefab: missing value for %s = \"%s\"",
