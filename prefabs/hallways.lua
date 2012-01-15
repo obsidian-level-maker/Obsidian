@@ -1006,17 +1006,17 @@ PREFAB.HALL_BASIC_C =
     -- west wall
     {
       { x =   0, y =   0, mat = "?wall" }
-      { x =  16, y =  16, mat = "?wall" }
-      { x =  16, y = 192, mat = "?wall" }
+      { x =  16, y =   0, mat = "?wall" }
+      { x =  16, y = 176, mat = "?wall" }
       { x =   0, y = 192, mat = "?outer" }
     }
 
     -- north wall
     {
-      { x =   0, y = 176, mat = "?wall" }
-      { x = 192, y = 176, mat = "?outer" }
-      { x = 192, y = 192, mat = "?wall" }
-      { x =  16, y = 192, mat = "?wall" }
+      { x =   0, y = 192, mat = "?wall" }
+      { x =  16, y = 176, mat = "?wall" }
+      { x = 192, y = 176, mat = "?wall" }
+      { x = 192, y = 192, mat = "?outer" }
     }
 
     -- little SE corner piece
@@ -1029,19 +1029,19 @@ PREFAB.HALL_BASIC_C =
 
     -- floor
     {
-      { x =  16, y =  16, mat = "?wall" }
-      { x = 192, y =  16, mat = "?wall" }
-      { x = 192, y = 192, mat = "?wall" }
-      { x =  16, y = 192, mat = "?wall" }
+      { x =  16, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?wall" }
+      { x = 192, y = 176, mat = "?wall" }
+      { x =  16, y = 176, mat = "?wall" }
       { t = 0, mat = "?floor" }
     }
 
     -- ceiling
     {
-      { x =  16, y =  16, mat = "?wall" }
-      { x = 192, y =  16, mat = "?wall" }
-      { x = 192, y = 192, mat = "?wall" }
-      { x =  16, y = 192, mat = "?wall" }
+      { x =  16, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?wall" }
+      { x = 192, y = 176, mat = "?wall" }
+      { x =  16, y = 176, mat = "?wall" }
       { b = 128, mat = "?ceil" }
     }
   }
