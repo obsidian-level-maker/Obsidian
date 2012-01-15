@@ -356,7 +356,7 @@ Weapons:
 -  prevent escapes over fences/windows near key pedestals (etc) by
    raising the height of the fences/windows there.
 
--  brush conditionals:  if_true="?doomy"  if_false="?foobie"
+DONE: brush conditionals:  if_true="?doomy"  if_false="?foobie"
 
 -  can disable the pre-built levels
 
