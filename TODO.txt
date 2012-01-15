@@ -5,11 +5,18 @@ OBLIGE TODO
 Current Work
 ------------
 
++  automatic repeating of prefabs
+   x_repeat=192 : means we require: x_size / N >= x_repeat (for highest N)
+
+   allow it to happen with prefab composition too
+
+
+Fence stuff
+
+-  review
 
 
 Outdoor Borders:
-
-DONE: ensure every zone gets a facade_mat
 
 -  properly pick the facade for fake buildings
 
@@ -25,14 +32,24 @@ Theme System:
 
 
 Hallways:
-+  get merging working again
 
-+  get big_junctions working again (with prefabs!)
-   Note: requires merging first.
++  issue: no locked doors between two hallways
+          (guess it ain't happening now since we merge 99% of the time)
+ 
+!!  no adjusters (need lifty prefabs / skins)
 
-DONE:  emergency mode : no quota on hall length
++  ability to have stairs / lifts
 
->>>  make some chunk-size prefabs and use them
+>>>  big junction prefabs!
+
+     -  need to select I/C/T/P versions of a skin
+        (using same mechanism as for normal hallway pieces)
+
+     -  need _either_ I/C/T/P versions of each prefab
+             _or_     a mechanism to use a single prefab (CONDITIONAL STUFF)
+                      [can be done using height variables]
+
+>>>  hallway prefabs
 
 -  hallway_pieces =   -- in a hallway theme or level theme
    {
@@ -49,6 +66,15 @@ DONE:  emergency mode : no quota on hall length
 ??  decide walls properly (i.e. no hall_path[dir])
 
 ??  determine ceiling heights properly
+
++  flat mismatch where hallways meet rooms
+   (a) have a step (ideally not flush with wall)
+   (b) put a door there
+
+WISH: outdoor hallways (wall on one side, fence on other side, sky top)
+      [may be easier to convert hallway into a room]
+      hard part: ensuring such a hallway stays above nearby room(s)
+      hmmm, could also work bordering an _indoor_ room (no sky)
 
 
 Caves:
@@ -88,9 +114,6 @@ Next WIP Goals
    -  must decide after all heights are done
 
    -  need to harmonize sky heights
-
-   -  windows and fences DO NOT straddle, and outdoor rooms ARE NOT
-      responsible for the outdoor facade of buildings.
 
 +  sky borders in outdoor rooms
 
