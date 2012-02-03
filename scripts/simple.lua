@@ -641,7 +641,7 @@ step:dump("Step:")
 
       if not A1 then continue end
 
-      for dir = 2,8,2 do
+      for dir = 2,4,2 do
         local nx, ny = geom.nudge(x, y, dir)
 
         if not area_map:valid_cell(nx, ny) then continue end
@@ -695,12 +695,18 @@ end
 
 function Simple_connect_all_areas(R)
 
-  local z_dir = 1
+  local z_change_prob = 10
+  if rand.odds(10) then z_change_prob = 40 end
+  if rand.odds(15) then z_change_prob =  0 end
 
-  local function recurse(A)
+  local function recurse(A, z_dir)
     assert(A.floor_h)
 
     if not A.touching then return end
+
+    if rand.odds(z_change_prob) then
+      z_dir = - z_dir
+    end
 
     each N in A.touching do
       if not N.floor_h then
@@ -717,7 +723,7 @@ function Simple_connect_all_areas(R)
     entity_helper("light", x, y, z, { light=128, _radius=rad })
   end
 
-        recurse(N)
+        recurse(N, z_dir)
       end
     end
   end
@@ -725,7 +731,9 @@ function Simple_connect_all_areas(R)
 
   ---| Simple_connect_all_areas |---
 
-  recurse(R.entry_area)
+  local z_dir = rand.sel(35, 1, -1)
+
+  recurse(R.entry_area, z_dir)
 end
 
 
@@ -1077,10 +1085,10 @@ do return end ----!!!!!!!
     assert(A.floor_map)
 
     local f_mat = cave_tex
-    local c_mat = cave_tex
+    local c_mat = "_SKY"
 
     local f_h = A.floor_h
-    local c_h = f_h + 192  -- FIXME
+    local c_h = R.max_floor_h + 192
 
     for x = 1,cave.w do for y = 1,cave.h do
       if (A.floor_map:get(x, y) or 0) > 0 then
@@ -1092,6 +1100,10 @@ do return end ----!!!!!!!
 
         Brush_set_mat(f_brush, f_mat, f_mat)
         Brush_set_mat(c_brush, c_mat, c_mat)
+
+        if c_mat == "_SKY" then
+          table.insert(c_brush, 1, { m="sky" })
+        end
 
         brush_helper(f_brush)
         brush_helper(c_brush)

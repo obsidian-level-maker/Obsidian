@@ -1721,14 +1721,17 @@ function Areas_flesh_out()
     
     if R.kind == "cave" then
       Simple_connect_all_areas(R)
-      Simple_render_cave(R)
     else
       connect_all_areas(R)
     end
 
     finish_heights(R)
 
-    floor_textures(R)
+    if R.kind == "cave" then
+      Simple_render_cave(R)
+    else
+      floor_textures(R)
+    end
 
     hallway_heights(R)
     crossover_room(R)
