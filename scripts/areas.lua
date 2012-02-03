@@ -82,6 +82,23 @@ function AREA_CLASS.set_floor(A, floor_h)
 end
 
 
+function AREA_CLASS.shrink_bbox_for_room_edges(A, x1, y1, x2, y2)
+  local R = assert(A.room)
+
+  local rx1 = SEEDS[R.sx1][R.sy1].x1 + 40
+  local ry1 = SEEDS[R.sx1][R.sy1].y1 + 40
+  local rx2 = SEEDS[R.sx2][R.sy2].x2 - 40
+  local ry2 = SEEDS[R.sx2][R.sy2].y2 - 40
+
+  if x1 < rx1 then x1 = rx1 end
+  if y1 < ry1 then y1 = ry1 end
+  if x2 > rx2 then x2 = rx2 end
+  if y2 > ry2 then y2 = ry2 end
+
+  return x1,y1, x2,y2
+end
+
+
 function AREA_CLASS.chunk_bbox(A)
   local x1, y1 =  9e9,  9e9
   local x2, y2 = -9e9, -9e9
@@ -96,47 +113,12 @@ function AREA_CLASS.chunk_bbox(A)
   assert(x1 < x2)
   assert(y1 < y2)
 
-  return x1,y1, x2,y2
+  return A:shrink_bbox_for_room_edges(x1,y1, x2,y2)
 end
 
 
-function AREA_CLASS.determine_spots(A)
-      
+function AREA_CLASS.grab_spots(A)
   local L = A.room
-
-  -- Spot stuff : begin with "clear" rectangle (contents = 0).
-  --              walls and high barriers get removed (contents = 1)
-  --              as well as other unusable places (contents = 2).
-
-  local x1, y1, x2, y2 = A:chunk_bbox()
-
-  -- little bit of padding for extra safety
-  gui.spots_begin(x1+4, y1+4, x2-4, y2-4, 2)
-
-
-  each C in A.chunks do
-    if C.content.kind or C.stair or C.liquid then
-      continue
-    end
-
-    local poly = Brush_new_quad(C.x1, C.y1, C.x2, C.y2)
-
-    gui.spots_fill_poly(poly, 0)
-  end
-
-
---[[
-    -- TODO solidify brushes from prefabs (including WALLS !!!)
-    for _,fab in ipairs(R.prefabs) do
-      remove_prefab(fab)
-    end
-
-    -- TODO remove solid decor entities
-    for _,dec in ipairs(R.decor) do
-      remove_decor(dec)
-    end
---]]
-
 
   local item_spots = {}
 
@@ -160,8 +142,6 @@ function AREA_CLASS.determine_spots(A)
 
   gui.spots_get_mons(mon_spots)
 
-  gui.spots_end()
-
 
   if table.empty(item_spots) and mon_spots[1] then
     table.insert(item_spots, mon_spots[1])
@@ -182,6 +162,56 @@ function AREA_CLASS.determine_spots(A)
 
     table.insert(L.mon_spots, spot)
   end
+end
+
+
+function AREA_CLASS.determine_spots(A)
+      
+  local L = A.room
+
+  -- Spot stuff : begin with "clear" rectangle (contents = 0).
+  --              walls and high barriers get removed (contents = 1)
+  --              as well as other unusable places (contents = 2).
+
+  local x1, y1, x2, y2 = A:chunk_bbox()
+
+  -- little bit of padding for extra safety
+  gui.spots_begin(x1+4, y1+4, x2-4, y2-4, 2)
+
+
+  each C in A.chunks do
+    local poly = Brush_new_quad(C.x1, C.y1, C.x2, C.y2)
+
+    -- WHY THIS DONT WORK!!!
+    if C.liquid then
+      gui.spots_fill_poly(poly, 1)
+      continue
+    end
+
+    if C.content.kind or C.stair then
+      continue
+    end
+
+    gui.spots_fill_poly(poly, 0)
+  end
+
+
+--[[
+    -- TODO solidify brushes from prefabs (including WALLS !!!)
+    for _,fab in ipairs(R.prefabs) do
+      remove_prefab(fab)
+    end
+
+    -- TODO remove solid decor entities
+    for _,dec in ipairs(R.decor) do
+      remove_decor(dec)
+    end
+--]]
+
+
+  A:grab_spots()
+
+  gui.spots_end()
 end
 
 
