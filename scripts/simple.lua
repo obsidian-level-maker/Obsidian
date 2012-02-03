@@ -1081,6 +1081,21 @@ do return end ----!!!!!!!
   end
 
 
+  local function area_cell_bbox(A)
+    -- TODO: this is whole cave, ideally have just the area
+
+    local x1 = cave.base_x + 40
+    local y1 = cave.base_y + 40
+
+    local x2 = x1 + cave.w * 64 - 40
+    local y2 = y1 + cave.w * 64 - 40
+
+    return x1,y1, x2,y2
+
+--  return A:shrink_bbox_for_room_edges(x1,y1, x2,y2)
+  end
+
+
   local function render_floor_ceil(A)
     assert(A.floor_map)
 
@@ -1090,8 +1105,16 @@ do return end ----!!!!!!!
     local f_h = A.floor_h
     local c_h = R.max_floor_h + 192
 
+    A.ceil_h = c_h
+
+    -- Spot stuff
+    local x1, y1, x2, y2 = area_cell_bbox(A)
+
+    gui.spots_begin(x1+4, y1+4, x2-4, y2-4, 2)
+
     for x = 1,cave.w do for y = 1,cave.h do
       if (A.floor_map:get(x, y) or 0) > 0 then
+
         local f_brush = brush_for_cell(x, y)
         local c_brush = brush_for_cell(x, y)
 
@@ -1105,10 +1128,27 @@ do return end ----!!!!!!!
           table.insert(c_brush, 1, { m="sky" })
         end
 
+        gui.spots_fill_poly(f_brush, 0)
+
         brush_helper(f_brush)
         brush_helper(c_brush)
+
+        -- handle walls (Spot stuff)
+        for dir = 2,8,2 do
+          local nx, ny = geom.nudge(x, y, dir)
+          if cave:valid_cell(nx, ny) and R.area_map:get(nx, ny) != A then
+            local is_wall = (R.area_map:get(nx, ny) == nil)
+            local poly = brush_for_cell(nx, ny)
+            gui.spots_fill_poly(poly, (is_wall ? 1 ; 2))
+          end
+        end
+
       end
     end end
+
+    A:grab_spots()
+
+    gui.spots_end()
   end
 
 
