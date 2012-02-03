@@ -1139,14 +1139,6 @@ end --]]
   local x2, y2 = C.x2, C.y2
 
 
-  -- Spot stuff : begin with "clear" rectangle (contents = 0).
-  --              walls and high barriers get removed (contents = 1)
-  --              as well as other unusable places (contents = 2).
-
-  -- little bit of padding for extra safety
-  gui.spots_begin(x1+4, y1+4, x2-4, y2-4, 0)
-
-
   if C.room then
     w_mat = assert(C.room.wall_mat)
     f_mat = (C.area ? C.area.floor_mat ; w_mat)
@@ -1380,6 +1372,7 @@ end
 --]]
       end
 
+--[[ !!!!!!!
       -- spot stuff  [FIXME: TEMP HACK]
       bx1, by1, bx2, by2 = x1,y1, x2,y2
 
@@ -1390,8 +1383,8 @@ end
 
       brush = Brush_new_quad(bx1, by1, bx2, by2)
       gui.spots_fill_poly(brush, (C.link[dir] ? 2 ; 1));
+--]]
     end
-
 
     -- locked doors
     local LINK = C.link[dir]
@@ -1561,78 +1554,6 @@ end
   end
 
 
-  -- spots [FIXME : do it properly]
-  if (C.room or C.hall) and not C.content.kind and not C.stair and not C.liquid and not x_hall
-  then
-    local L = C.room or C.hall
-
---[[
-    -- solidify brushes from prefabs
-    for _,fab in ipairs(R.prefabs) do
-      remove_prefab(fab)
-    end
-
-    -- remove solid decor entities
-    for _,dec in ipairs(R.decor) do
-      remove_decor(dec)
-    end
-
-    -- mark edges with neighboring floors
-    for _,F in ipairs(R.all_floors) do
-      if F != floor then
-        remove_neighbor_floor(floor, F)
-      end
-    end
---]]
-
-    -- use local lists, since we will process multiple floors
-    local item_spots = {}
-    local mon_spots  = {}
-
-    gui.spots_get_items(item_spots)
-
-    -- mark exclusion zones (e.g. area around a teleporter)
-    -- do it _after_ getting the item spots
-    if C.room and C.room.exclusion_zones then
-      each zone in C.room.exclusion_zones do
-        local brush = Brush_new_quad(zone.x1, zone.y1, zone.x2, zone.y2)
-        gui.spots_fill_poly(brush, 2)
-      end
-    end
-
---  gui.spots_dump("Spot grid")
-
-    gui.spots_get_mons(mon_spots)
-
-    if table.empty(item_spots) and mon_spots[1] then
-      table.insert(item_spots, mon_spots[1])
-    end
-
-    -- set Z positions
-
-    each spot in mon_spots do
-      spot.z1 = f_h
-      spot.z2 = f_h2 or (spot.z1 + 200)  -- FIXME
-
-      table.insert(L.mon_spots, spot)
-    end
-
-    each spot in item_spots do
-      spot.z1 = f_h
-      spot.z2 = f_h2 or (spot.z1 + 64)
-
-      table.insert(L.item_spots, spot)
-    end
-
---[[ TEST
-    each spot in R.item_spots do
-      entity_helper("potion", spot.x1 + 8, spot.y1 + 8, 0)
-    end
---]]
-  end
-
-
-  gui.spots_end()
 
 
   -- TEST CRUD : pillars

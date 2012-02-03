@@ -82,6 +82,109 @@ function AREA_CLASS.set_floor(A, floor_h)
 end
 
 
+function AREA_CLASS.chunk_bbox(A)
+  local x1, y1 =  9e9,  9e9
+  local x2, y2 = -9e9, -9e9
+
+  each C in A.chunks do
+    x1 = math.min(x1, C.x1)
+    y1 = math.min(y1, C.y1)
+    x2 = math.max(x2, C.x2)
+    y2 = math.max(y2, C.y2)
+  end
+
+  assert(x1 < x2)
+  assert(y1 < y2)
+
+  return x1,y1, x2,y2
+end
+
+
+function AREA_CLASS.determine_spots(A)
+      
+  local L = A.room
+
+  -- Spot stuff : begin with "clear" rectangle (contents = 0).
+  --              walls and high barriers get removed (contents = 1)
+  --              as well as other unusable places (contents = 2).
+
+  local x1, y1, x2, y2 = A:chunk_bbox()
+
+  -- little bit of padding for extra safety
+  gui.spots_begin(x1+4, y1+4, x2-4, y2-4, 2)
+
+
+  each C in A.chunks do
+    if C.content.kind or C.stair or C.liquid then
+      continue
+    end
+
+    local poly = Brush_new_quad(C.x1, C.y1, C.x2, C.y2)
+
+    gui.spots_fill_poly(poly, 0)
+  end
+
+
+--[[
+    -- TODO solidify brushes from prefabs (including WALLS !!!)
+    for _,fab in ipairs(R.prefabs) do
+      remove_prefab(fab)
+    end
+
+    -- TODO remove solid decor entities
+    for _,dec in ipairs(R.decor) do
+      remove_decor(dec)
+    end
+--]]
+
+
+  local item_spots = {}
+
+  gui.spots_get_items(item_spots)
+
+
+  -- mark exclusion zones (e.g. area around a teleporter)
+  -- do it _after_ getting the item spots
+
+  if L.exclusion_zones then
+    each zone in L.exclusion_zones do
+      local poly = Brush_new_quad(zone.x1, zone.y1, zone.x2, zone.y2)
+      gui.spots_fill_poly(poly, 2)
+    end
+  end
+
+--  gui.spots_dump("Spot grid")
+
+
+  local mon_spots  = {}
+
+  gui.spots_get_mons(mon_spots)
+
+  gui.spots_end()
+
+
+  if table.empty(item_spots) and mon_spots[1] then
+    table.insert(item_spots, mon_spots[1])
+  end
+
+  -- add to room, set Z positions
+
+  each spot in item_spots do
+    spot.z1 = A.floor_h
+    spot.z2 = A.ceil_h or (spot.z1 + 64)
+
+    table.insert(L.item_spots, spot)
+  end
+
+  each spot in mon_spots do
+    spot.z1 = A.floor_h
+    spot.z2 = A.ceil_h  or (spot.z1 + 200)  -- FIXME
+
+    table.insert(L.mon_spots, spot)
+  end
+end
+
+
 ----------------------------------------------------------------
 
 
@@ -1727,14 +1830,33 @@ function Areas_flesh_out()
 
     finish_heights(R)
 
-    if R.kind == "cave" then
-      Simple_render_cave(R)
-    else
+    if R.kind != "cave" then
       floor_textures(R)
     end
 
     hallway_heights(R)
     crossover_room(R)
+  end
+
+
+  local function determine_spots(R)
+    -- Note: for caves this is done during render phase
+
+    each A in R.areas do
+      A:determine_spots()
+    end
+  end
+
+
+  local function tizzy_up_room(R)
+
+    -- TODO add "area" prefabs now (e.g. crates, cages, bookcases)
+
+    if R.kind == "cave" then
+      Simple_render_cave(R)
+    else
+      determine_spots(R)
+    end
   end
 
 
@@ -1796,5 +1918,6 @@ function Areas_flesh_out()
 
 --each R in LEVEL.rooms do decide_windows(R) end
   each R in LEVEL.rooms do ceiling_stuff(R) end
+  each R in LEVEL.rooms do tizzy_up_room(R) end
 end
 
