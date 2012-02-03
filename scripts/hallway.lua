@@ -389,7 +389,9 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
     local merge = false
 
-    if end_K.hall and rand.odds(95) then
+    -- Note: currently require all hallways to merge, since there's no
+    --       logic for placing locked doors between hallway prefabs
+    if end_K.hall then -- and rand.odds(95) then
       merge = true
     end
 
@@ -409,6 +411,8 @@ function Hallway_test_branch(start_K, start_dir, mode)
     elseif stats.big_junc then
       score = score + 80
       merge = false
+
+      if end_K.hall then return end
     end
 
     if stats.crossover then
@@ -417,6 +421,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
       each K in visited do if K.used then len = len + 1 end end
       score = score + (len ^ 0.25) * factor
       merge = false
+      if end_K.hall then return end
     end
 
     -- prefer cycles between the same quest
