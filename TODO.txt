@@ -77,19 +77,6 @@ WISH: outdoor hallways (wall on one side, fence on other side, sky top)
       hmmm, could also work bordering an _indoor_ room (no sky)
 
 
-Caves:
-!!!!  spots for monsters and items
-
--  proper floor and ceiling textures
-
--  better floors, liquid areas
-
--  better ceilings, chance of sky
-
--  create a large area (or two) by merging areas together
-   [OR: pre-allocate a large chunk / reclaimed junction]
-
-
 -----------------------------------------------------------------
 
 
@@ -97,8 +84,6 @@ Next WIP Goals
 ==============
 
 +  hallway stuff sorted out
-
-+  cave stuff sorted out
 
 +  theme stuff sorted out
 
