@@ -1001,6 +1001,12 @@ PREFAB.HALL_BASIC_C =
 {
   fitted = "xy"
 
+  defaults =
+  {
+    torch_ent = "none"
+    style = 1
+  }
+
   brushes =
   {
     -- west wall
@@ -1043,6 +1049,15 @@ PREFAB.HALL_BASIC_C =
       { x = 192, y = 176, mat = "?wall" }
       { x =  16, y = 176, mat = "?wall" }
       { b = 128, mat = "?ceil" }
+    }
+  }
+
+  entities =
+  {
+    { ent = "?torch_ent", x = 24, y = 168, z = 48 }
+
+    { ent = "light", x = 48, y = 144, z = 64,
+      light = 200, radius = 480, style = "?style"
     }
   }
 }
