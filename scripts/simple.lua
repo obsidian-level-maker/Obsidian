@@ -1099,8 +1099,8 @@ do return end ----!!!!!!!
   local function render_floor_ceil(A)
     assert(A.floor_map)
 
-    local f_mat = A.room.floor_mat   or cave_tex
-    local c_mat = A.room.ceiling_mat or cave_tex
+    local f_mat = R.floor_mat   or cave_tex
+    local c_mat = R.ceiling_mat or cave_tex
 
     local f_h = A.floor_h
     local c_h = R.max_floor_h + rand.pick { 128, 192,192,192, 288 }
@@ -1158,14 +1158,102 @@ do return end ----!!!!!!!
   end
 
 
+  local function heights_near_island(island)
+    local min_floor =  9e9
+    local max_ceil  = -9e9
+  
+    for x = 1,cave.w do for y = 1,cave.h do
+      if ((island:get(x, y) or 0) > 0) then
+        for dir = 2,8,2 do
+          local nx, ny = geom.nudge(x, y, dir)
+
+          if not island:valid_cell(nx, ny) then continue end
+
+          local A = R.area_map:get(nx, ny)
+          if not A then continue end
+
+          min_floor = math.min(min_floor, A.floor_h)
+          max_ceil  = math.max(max_ceil , A.ceil_h)
+        end
+      end
+    end end
+
+    assert(min_floor < max_ceil)
+
+    return min_floor, max_ceil
+  end
+
+
+  local function render_liquid_area(island)
+    -- create a lava/nukage pit
+
+stderrf("render_liquid_area !!!!!!!!!!1\n")
+    local f_mat = R.floor_mat   or cave_tex
+    local c_mat = R.ceiling_mat or cave_tex
+
+    local f_h, c_h = heights_near_island(island)
+
+    f_h = f_h - 24
+    c_h = c_h + 64
+
+    -- TODO: fireballs for Quake
+
+    for x = 1,cave.w do for y = 1,cave.h do
+
+      if ((island:get(x, y) or 0) > 0) then
+
+        -- do not render a wall here
+        cave:set(x, y, 0)
+
+        local f_brush = brush_for_cell(x, y)
+        local c_brush = brush_for_cell(x, y)
+
+        if PARAM.deep_liquids then
+          -- FIXME
+        else
+          Brush_add_top   (f_brush, f_h)
+          Brush_add_bottom(c_brush, c_h)
+
+          -- damaging (FIXME)
+          f_brush[#f_brush].special = 16
+
+          local l_mat = LEVEL.liquid.mat
+
+          Brush_set_mat(f_brush, l_mat, l_mat)
+          Brush_set_mat(c_brush, c_mat, c_mat)
+
+          brush_helper(f_brush)
+          brush_helper(c_brush)
+        end
+      end
+
+    end end -- x, y
+  end
+
+
+  local function add_liquid_pools()
+    if not LEVEL.liquid then return end
+
+    local prob = 70  -- FIXME
+
+    each island in cave.islands do
+      if rand.odds(prob) then
+        render_liquid_area(island)
+      end
+    end
+  end
+
+
   ---| Simple_render_cave |---
   
   create_delta_map()
 
-  render_walls()
-
   each A in R.areas do
     render_floor_ceil(A)
   end
+
+  add_liquid_pools()
+
+  render_walls()
 end
 
