@@ -1190,6 +1190,7 @@ do return end ----!!!!!!!
 stderrf("render_liquid_area !!!!!!!!!!1\n")
     local f_mat = R.floor_mat   or cave_tex
     local c_mat = R.ceiling_mat or cave_tex
+    local l_mat = LEVEL.liquid.mat
 
     local f_h, c_h = heights_near_island(island)
 
@@ -1209,22 +1210,39 @@ stderrf("render_liquid_area !!!!!!!!!!1\n")
         local c_brush = brush_for_cell(x, y)
 
         if PARAM.deep_liquids then
-          -- FIXME
+          Brush_add_top(f_brush, f_h-128)
+          Brush_set_mat(f_brush, f_mat, f_mat)
+
+          brush_helper(f_brush)
+
+          local l_brush = brush_for_cell(x, y)
+
+          table.insert(l_brush, 1, { m="liquid", medium=LEVEL.liquid.medium })
+
+          Brush_add_top(l_brush, f_h)
+          Brush_set_mat(l_brush, "_LIQUID", "_LIQUID")
+
+          brush_helper(l_brush)
+
+          -- TODO: lighting
+
         else
-          Brush_add_top   (f_brush, f_h)
-          Brush_add_bottom(c_brush, c_h)
+          Brush_add_top(f_brush, f_h)
 
           -- damaging (FIXME)
           f_brush[#f_brush].special = 16
 
-          local l_mat = LEVEL.liquid.mat
-
           Brush_set_mat(f_brush, l_mat, l_mat)
-          Brush_set_mat(c_brush, c_mat, c_mat)
 
           brush_helper(f_brush)
-          brush_helper(c_brush)
         end
+
+        -- common ceiling code
+
+        Brush_add_bottom(c_brush, c_h)
+        Brush_set_mat(c_brush, c_mat, c_mat)
+
+        brush_helper(c_brush)
       end
 
     end end -- x, y
