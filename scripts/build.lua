@@ -1372,7 +1372,10 @@ function Fab_apply_skins(fab, list)
 
   local function process_entity(E)
     local name = E.ent
-    assert(name)
+
+    if not name then
+      error("prefab entity with missing 'ent' field")
+    end
 
     if name == "none" then
       return false
