@@ -990,29 +990,7 @@ function CHUNK_CLASS.build_fat_arch(C)
 end
 
 
-function CHUNK_CLASS.build_big_junc(C, skin_name, dir)
-  local hall = assert(C.hall)
-
-  local skin1 = GAME.SKINS[skin_name]
-  assert(skin1)
- 
-  -- FIXME !!!  floor=xxx, ceil=xxx
-  local skin2 = { wall=hall.wall_mat }
-
-  local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, dir or 2)
-
-  Fabricate(skin1._prefab, T, { skin1, skin2 })
-
-
---!!!!!!!
-local mx, my = C:mid_point()
-entity_helper("dummy", mx, my, 24)
-end
-
-
-function CHUNK_CLASS.build_hall_piece(C)
-  -- FIXME: determine prefabs much earlier (HALLWAY.floor_stuff)
-
+function CHUNK_CLASS.calc_hall_piece_kind(C)
   local link_str = ""
 
   for dir = 2,8,2 do
@@ -1023,53 +1001,71 @@ function CHUNK_CLASS.build_hall_piece(C)
 
   assert(link_str != "")
 
-  local h_kind
-  local h_dir = 2
-
   -- straight through
   if link_str == "28" then
-    h_kind = "I"
+    return "I", 2
+
   elseif link_str == "46" then
-    h_kind = "I"
-    h_dir = 4
+    return "I", 4
   
   -- corner
   elseif link_str == "26" then
-    h_kind = "C"
+    return "C", 2
+
   elseif link_str == "24" then
-    h_kind = "C"
-    h_dir  = 4
+    return "C", 4
+
   elseif link_str == "48" then
-    h_kind = "C"
-    h_dir  = 8
+    return "C", 8
+
   elseif link_str == "68" then
-    h_kind = "C"
-    h_dir  = 6
+    return "C", 6
   
   -- T junction
   elseif link_str == "246" then
-    h_kind = "T"
+    return "T", 2
+
   elseif link_str == "248" then
-    h_kind = "T"
-    h_dir  = 4
+    return "T", 4
+
   elseif link_str == "268" then
-    h_kind = "T"
-    h_dir  = 6
+    return "T", 6
+
   elseif link_str == "468" then
-    h_kind = "T"
-    h_dir  = 8
+    return "T", 8
 
   -- plus shape, all four directions
   elseif link_str == "2468" then
-    h_kind = "P"
+    return "P", 2
 
   else
     error("WEIRD HALLWAY LINK_STR: " .. link_str)
   end
+end
 
-  local skin_name = "Hall_Test_" .. h_kind
 
-  C:build_big_junc(skin_name, h_dir)
+function CHUNK_CLASS.build_hall_piece(C, skin_name)
+  -- FIXME: determine prefabs much earlier (HALLWAY.floor_stuff)
+
+  local h_kind, h_dir = C:calc_hall_piece_kind()
+
+  skin_name = skin_name .. "_" .. h_kind
+
+  local hall = assert(C.hall)
+
+  local skin1 = GAME.SKINS[skin_name]
+  assert(skin1)
+ 
+  -- FIXME !!!  floor=xxx, ceil=xxx
+  local skin2 = { wall=hall.wall_mat }
+
+  local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, h_dir or 2)
+
+  Fabricate(skin1._prefab, T, { skin1, skin2 })
+
+--!!!!!!!
+local mx, my = C:mid_point()
+entity_helper("dummy", mx, my, 24)
 end
 
 
@@ -1081,12 +1077,12 @@ function CHUNK_CLASS.build(C)
 
 -- TEST TEST !!!!!!
   if C.section and C.section.kind == "big_junc" then
-    C:build_big_junc("Junc_Test");
+    C:build_hall_piece("Junc_Test");
     return
   end
 
   if C.hall then
-    C:build_hall_piece();
+    C:build_hall_piece("Hall_Test");
 
     -- FIXME FIXME : NO LOCKED DOORS !!!!!
     return

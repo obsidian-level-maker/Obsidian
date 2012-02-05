@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2011 Andrew Apted
+--  Copyright (C) 2006-2012 Andrew Apted
 --  Copyright (C)      2011 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -1009,7 +1009,32 @@ QUAKE.SKINS =
     _where  = "chunk"
   }
 
-  Junc_Test =
+
+  Junc_Test_I =
+  {
+    _prefab = "JUNCTION_TEST"
+    _where  = "chunk"  -- FIXME: big_junc
+
+    ceil = "LAVA1"
+  }
+
+  Junc_Test_C =
+  {
+    _prefab = "JUNCTION_TEST"
+    _where  = "chunk"  -- FIXME: big_junc
+
+    ceil = "LAVA1"
+  }
+
+  Junc_Test_T =
+  {
+    _prefab = "JUNCTION_TEST"
+    _where  = "chunk"  -- FIXME: big_junc
+
+    ceil = "LAVA1"
+  }
+
+  Junc_Test_P =
   {
     _prefab = "JUNCTION_TEST"
     _where  = "chunk"  -- FIXME: big_junc
