@@ -1099,11 +1099,17 @@ do return end ----!!!!!!!
   local function render_floor_ceil(A)
     assert(A.floor_map)
 
-    local f_mat = cave_tex
-    local c_mat = "_SKY"
+    local f_mat = A.room.floor_mat   or cave_tex
+    local c_mat = A.room.ceiling_mat or cave_tex
 
     local f_h = A.floor_h
-    local c_h = R.max_floor_h + 192
+    local c_h = R.max_floor_h + rand.pick { 128, 192,192,192, 288 }
+
+    if c_mat == "_SKY" then
+      c_h = R.max_floor_h + 192
+    elseif rand.odds(25) then
+      c_h = R.max_floor_h + 400
+    end
 
     A.ceil_h = c_h
 
