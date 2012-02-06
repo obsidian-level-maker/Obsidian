@@ -990,7 +990,7 @@ function CHUNK_CLASS.build_fat_arch(C)
 end
 
 
-function CHUNK_CLASS.calc_hall_piece_kind(C)
+function CHUNK_CLASS.categorize_hall_piece(C)
   local link_str = ""
 
   for dir = 2,8,2 do
@@ -1047,7 +1047,7 @@ end
 function CHUNK_CLASS.build_hall_piece(C, skin_name)
   -- FIXME: determine prefabs much earlier (HALLWAY.floor_stuff)
 
-  local h_kind, h_dir = C:calc_hall_piece_kind()
+  local h_kind, h_dir = C:categorize_hall_piece()
 
   skin_name = skin_name .. "_" .. h_kind
 

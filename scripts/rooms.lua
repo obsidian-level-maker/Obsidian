@@ -1790,7 +1790,7 @@ end
 
 
 
-function Rooms_fake_building(R, sx1, sy1, sx2, sy2, dir, B, faces_room, mat)
+function Rooms_fake_building(sx1, sy1, sx2, sy2, kind, dir, face_room, mat)
   -- mark it
   for sx = sx1,sx2 do for sy = sy1,sy2 do
     SEEDS[sx][sy].scenic = true
@@ -1803,25 +1803,27 @@ function Rooms_fake_building(R, sx1, sy1, sx2, sy2, dir, B, faces_room, mat)
   local x2 = SEEDS[sx2][sy2].x2
   local y2 = SEEDS[sx2][sy2].y2
 
-  mat = mat or assert(B.zone.facade_mat)
---[[
-mat = rand.pick { "COMPBLUE", "SFALL1", "DBRAIN1",
-                  "COMPSPAN", "ASHWALL7", "SILVER2",
-                  "ZIMMER8",  "TEKBRON1", "BRICK11", "LITE3" }
---]]
+if kind == "F" then mat = "COMPBLUE"
+elseif kind == "C" then mat = "SFALL1"
+elseif kind == "T" then mat = "LAVA1" ; stderrf("fake T !!!\n")
+elseif kind == "P" then mat = "LITE3" ; stderrf("fake PPPPPP !!!!!!\n")
+else assert(kind == "X") ; mat = "METAL2"
+end
+
+stderrf("Rooms_fake_building @ (%d %d) .. (%d %d) : %s\n", sx1, sy1, sx2, sy2, mat)
 
   -- cage test
-  if R and faces_room and rand.odds(90) then
+  if face_room and rand.odds(90) and false then
     local skin1 = GAME.SKINS["Fat_Cage1"]
 
     if skin1 then
-      local f_h = R.sky_h - 192
-      local skin2 = { sky_h=R.sky_h - f_h, wall=mat }
+      local f_h = face_room.sky_h - 192
+      local skin2 = { sky_h=face_room.sky_h - f_h, wall=mat }
       local T = Trans.box_transform(x1, y1, x2, y2, f_h, 10 - dir)
 
       local fab = Fabricate(skin1._prefab, T, { skin1, skin2 })
 
-      R:add_cage_or_trap(fab)
+      face_room:add_cage_or_trap(fab)
       return
     end
   end
@@ -1833,7 +1835,7 @@ end
 
 
 
-function Rooms_fake_corner(R, S, corner, B)
+function OLD_____Rooms_fake_corner(R, S, corner, B)
 stderrf("FAKE CORNER @ %s corner:%d\n", S:tostr(), corner)
 
   -- mark it
@@ -1849,7 +1851,7 @@ stderrf("FAKE CORNER @ %s corner:%d\n", S:tostr(), corner)
   local skin1 = GAME.SKINS["Fat_Outside_Corner1"]
 
   if not skin1 then
-    Rooms_fake_building(R, S.sx, S.sy, S.sx, S.sy, geom.LEFT_45[corner], B, false)
+    Rooms_fake_building(S.sx, S.sy, S.sx, S.sy, geom.LEFT_45[corner], B, false)
     return
   end
 
@@ -1910,7 +1912,7 @@ function Rooms_outdoor_borders()
         local mat = (pass == 1 ? "LAVA1" ; "SFALL1")
 
         -- FIXME : too simple
-        Rooms_fake_building(nil, S.sx, S.sy, S.sx, S.sy, 2, LEVEL.rooms[1], false, mat)
+--!!!!!!        Rooms_fake_building(S.sx, S.sy, S.sx, S.sy, "P", 2, nil, mat)
 
         S.edge_of_map = nil
       end
@@ -1920,7 +1922,8 @@ function Rooms_outdoor_borders()
 
   local function check_touches_outdoor(S, dir)
     -- we check 90 degrees to the left and right of 'dir'.
-    -- if found, returns the direction.
+    -- if found, returns a table mapping DIR --> ROOM.
+    -- otherwise returns NIL.
 
     local dir1 = geom. LEFT[dir]
     local dir2 = geom.RIGHT[dir]
@@ -1928,10 +1931,88 @@ function Rooms_outdoor_borders()
     local P1 = S:neighbor(dir1)
     local P2 = S:neighbor(dir2)
 
-    if P1 and P1.room and P1.room.kind == "outdoor" then return dir1 end
-    if P2 and P2.room and P2.room.kind == "outdoor" then return dir2 end
+    local touch1 = P1 and P1.room and P1.room.kind == "outdoor"
+    local touch2 = P2 and P2.room and P2.room.kind == "outdoor"
+
+    if touch1 or touch2 then
+      local dirs = {}
+
+      if touch1 then dirs[dir1] = P1.room end
+      if touch2 then dirs[dir2] = P2.room end
+
+      return dirs
+    end
 
     return nil
+  end
+
+  
+  local function are_touches_same(T1, T2)
+    for dir = 2,8,2 do
+      if (T1[dir] and 1) != (T2[dir] and 1) then
+        return false
+      end
+    end
+
+    return true
+  end
+
+
+  local function categorize_touches(T)
+    local str = ""
+
+    for dir = 2,8,2 do
+      if T[dir] then str = str .. dir end
+    end
+stderrf("categorize_touches --> '%s'\nFrom: %s\n", str, table.tostr(T))
+
+    -- facing one side
+    if str == "2" then
+      return "F", 2
+
+    elseif str == "4" then
+      return "F", 4
+
+    elseif str == "6" then
+      return "F", 6
+
+    elseif str == "8" then
+      return "F", 8
+
+    -- corner
+    elseif str == "26" then
+      return "C", 2
+
+    elseif str == "24" then
+      return "C", 4
+
+    elseif str == "48" then
+      return "C", 8
+
+    elseif str == "68" then
+      return "C", 6
+    
+    -- T junction
+    elseif str == "246" then
+      return "T", 2
+
+    elseif str == "248" then
+      return "T", 4
+
+    elseif str == "268" then
+      return "T", 6
+
+    elseif str == "468" then
+      return "T", 8
+
+    -- all four directions
+    elseif str == "2468" then
+      return "P", 2
+
+    -- everything else
+    else
+      return "X", 2
+    end
   end
 
 
@@ -1943,7 +2024,9 @@ function Rooms_outdoor_borders()
     local count  -- number of seeds from edge to fill
     local building
 
-    local outdoor_dir = check_touches_outdoor(S, dir)
+    local touches = {}
+
+    touches[1] = check_touches_outdoor(S, dir)
 
     -- look for a building near the edge
     for i = 1,max_dist do
@@ -1951,9 +2034,7 @@ function Rooms_outdoor_borders()
 
       if not N then return end
 
-      if not outdoor_dir then
-        outdoor_dir = check_touches_outdoor(N, dir)
-      end
+      touches[i+1] = check_touches_outdoor(N, dir)
 
       if N.hall then
         building = N.hall ; count = i
@@ -1961,6 +2042,7 @@ function Rooms_outdoor_borders()
       end
 
       if N.room then
+        -- hit an outdoor room, this case is handled by other code
         if N.room.kind == "outdoor" then return end
 
         building = N.room ; count = i
@@ -1979,14 +2061,43 @@ function Rooms_outdoor_borders()
     -- no building found?
     if not building then return end
 
-    -- no need for fake buildings when no outdoor neighbors
-    if not outdoor_dir then return end
-
-    -- TODO: larger groups (depends on which seeds touch outdoor rooms)
     for i = 1,count do
-      local N = S:neighbor(dir, i-1)
+      local N1 = S:neighbor(dir, i-1)
+      local N2 = S:neighbor(dir, i)
+
+      if not touches[i] then
+        Rooms_fake_building(N1.sx, N1.sy, N1.sx, N1.sy, "X", 2,
+                            nil, building.zone.facade_mat)
+      else
+
+        local dir1 = geom.LEFT [dir]
+        local dir2 = geom.RIGHT[dir]
+
+        local R1 = touches[i][dir1]
+        local R2 = touches[i][dir2]
+
+        local t_kind, t_dir = categorize_touches(touches[i])
+
+stderrf("categorize_touches --> %s %d\n", t_kind, t_dir)
+        local face_room = (t_kind == "F") and (R1 or R2)
+
+
+        local sx1, sy1 = N1.sx, N1.sy
+        local sx2, sy2 = N1.sx, N1.sy
+
+        if are_touches_same(touches[i], touches[i+1]) then
+          touches[i+1] = nil
+
+          sx1 = math.min(sx1, N2.sx)
+          sy1 = math.min(sy1, N2.sy)
+
+          sx2 = math.max(sx2, N2.sx)
+          sy2 = math.max(sy2, N2.sy)
+        end
       
-      Rooms_fake_building(nil, N.sx, N.sy, N.sx, N.sy, geom.LEFT[dir], building, false, "COMPBLUE")
+        Rooms_fake_building(sx1, sy1, sx2, sy2, t_kind, t_dir,
+                            face_room, building.zone.facade_mat)
+      end
     end
   end
 
