@@ -1810,9 +1810,7 @@ elseif kind == "P" then mat = "LITE3" ; stderrf("fake PPPPPP !!!!!!\n")
 else assert(kind == "X") ; mat = "METAL2"
 end
 
-if kind == "C" then
-stderrf("Rooms_fake_building @ (%d %d) .. (%d %d) : %s\n", sx1, sy1, sx2, sy2, kind)
-end
+-- stderrf("Rooms_fake_building @ (%d %d) .. (%d %d) : %s\n", sx1, sy1, sx2, sy2, kind)
 
   -- cage test
   if face_room and rand.odds(90) and false then
@@ -2060,8 +2058,8 @@ function Rooms_outdoor_borders()
       end
 
       if N.scenic then
-        building = LEVEL.rooms[1] -- FIXME
-        count = i
+        -- FIXME: remember previous fake building, grab it here
+        building = LEVEL.rooms[1] ; count = i
         break
       end
 
@@ -2075,26 +2073,22 @@ function Rooms_outdoor_borders()
       local N1 = S:neighbor(dir, i-1)
       local N2 = S:neighbor(dir, i)
 
-      if not touches[i] then
+      if touches[i] == "skip" then
+        continue
+
+      elseif not touches[i] then
         Rooms_fake_building(N1.sx, N1.sy, N1.sx, N1.sy, "X", 2,
                             nil, building.zone.facade_mat)
       else
 
-        local dir1 = geom.LEFT [dir]
-        local dir2 = geom.RIGHT[dir]
-
-        local R1 = touches[i][dir1]
-        local R2 = touches[i][dir2]
-
+        -- Note: a bit overkill, always "F" with current logic
         local t_kind, t_dir = categorize_touches(touches[i])
-
-stderrf("categorize_touches --> %s %d\n", t_kind, t_dir)
 
         local sx1, sy1 = N1.sx, N1.sy
         local sx2, sy2 = N1.sx, N1.sy
 
-        if are_touches_same(touches[i], touches[i+1]) then
-          touches[i+1] = nil
+        if i < count and are_touches_same(touches[i], touches[i+1]) then
+          touches[i+1] = "skip"
 
           sx1 = math.min(sx1, N2.sx)
           sy1 = math.min(sy1, N2.sy)
@@ -2102,9 +2096,14 @@ stderrf("categorize_touches --> %s %d\n", t_kind, t_dir)
           sx2 = math.max(sx2, N2.sx)
           sy2 = math.max(sy2, N2.sy)
         end
-      
+
+        local dir1 = geom.LEFT [dir]
+        local dir2 = geom.RIGHT[dir]
+
+        local face_room = touches[i][dir1] or touches[i][dir2]
+
         Rooms_fake_building(sx1, sy1, sx2, sy2, t_kind, t_dir,
-                            R1 or R2, building.zone.facade_mat)
+                            face_room, building.zone.facade_mat)
       end
     end
   end
