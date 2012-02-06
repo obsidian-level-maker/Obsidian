@@ -1810,7 +1810,9 @@ elseif kind == "P" then mat = "LITE3" ; stderrf("fake PPPPPP !!!!!!\n")
 else assert(kind == "X") ; mat = "METAL2"
 end
 
-stderrf("Rooms_fake_building @ (%d %d) .. (%d %d) : %s\n", sx1, sy1, sx2, sy2, mat)
+if kind == "C" then
+stderrf("Rooms_fake_building @ (%d %d) .. (%d %d) : %s\n", sx1, sy1, sx2, sy2, kind)
+end
 
   -- cage test
   if face_room and rand.odds(90) and false then
@@ -1888,83 +1890,14 @@ function Rooms_outdoor_borders()
   --      a seed places a fence in two directions (e.g. 2 and 4).
   --
 
-  local function scan_for_unused_seeds(pass)
-    for sx = 1, SEED_W do for sy = 1, SEED_TOP do
-      local S = SEEDS[sx][sy]
-
-      if S:used() then continue end
-
-      if pass == 2 and S.edge_of_map then continue end
-
-      local outdoors = {}
-
-      for dir = 2,8,2 do
-        local N = S:neighbor(dir)
-
-        if N and N.room and N.room.kind == "outdoor" then
-          table.add_unique(outdoors, N.room)
-        end
-      end
-
-      if (pass == 1 and #outdoors >= 2) or
-         (pass == 2 and #outdoors == 1)
-      then
-        local mat = (pass == 1 ? "LAVA1" ; "SFALL1")
-
-        -- FIXME : too simple
---!!!!!!        Rooms_fake_building(S.sx, S.sy, S.sx, S.sy, "P", 2, nil, mat)
-
-        S.edge_of_map = nil
-      end
-    end end
-  end
-
-
-  local function check_touches_outdoor(S, dir)
-    -- we check 90 degrees to the left and right of 'dir'.
-    -- if found, returns a table mapping DIR --> ROOM.
-    -- otherwise returns NIL.
-
-    local dir1 = geom. LEFT[dir]
-    local dir2 = geom.RIGHT[dir]
-
-    local P1 = S:neighbor(dir1)
-    local P2 = S:neighbor(dir2)
-
-    local touch1 = P1 and P1.room and P1.room.kind == "outdoor"
-    local touch2 = P2 and P2.room and P2.room.kind == "outdoor"
-
-    if touch1 or touch2 then
-      local dirs = {}
-
-      if touch1 then dirs[dir1] = P1.room end
-      if touch2 then dirs[dir2] = P2.room end
-
-      return dirs
-    end
-
-    return nil
-  end
-
-  
-  local function are_touches_same(T1, T2)
-    for dir = 2,8,2 do
-      if (T1[dir] and 1) != (T2[dir] and 1) then
-        return false
-      end
-    end
-
-    return true
-  end
-
-
   local function categorize_touches(T)
     local str = ""
 
     for dir = 2,8,2 do
       if T[dir] then str = str .. dir end
     end
-stderrf("categorize_touches --> '%s'\nFrom: %s\n", str, table.tostr(T))
+
+    assert(str != "")
 
     -- facing one side
     if str == "2" then
@@ -2013,6 +1946,83 @@ stderrf("categorize_touches --> '%s'\nFrom: %s\n", str, table.tostr(T))
     else
       return "X", 2
     end
+  end
+
+
+  local function scan_for_unused_seeds(pass)
+    for sx = 1, SEED_W do for sy = 1, SEED_TOP do
+      local S = SEEDS[sx][sy]
+
+      if S:used() then continue end
+
+      if pass == 2 and S.edge_of_map then continue end
+
+      local outdoors = {}
+      local touches  = {}
+
+      for dir = 2,8,2 do
+        local N = S:neighbor(dir)
+
+        if N and N.room and N.room.kind == "outdoor" then
+          table.add_unique(outdoors, N.room)
+          touches[dir] = N.room
+        end
+      end
+
+      if (pass == 1 and #outdoors >= 2) or
+         (pass == 2 and #outdoors == 1)
+      then
+        local t_kind, t_dir = categorize_touches(touches)
+
+        local face_room = rand.pick(outdoors)
+
+        --!!!!!!!!!1
+        local mat = (pass == 1 ? "LAVA1" ; "SFALL1")
+
+        -- FIXME : too simple
+        Rooms_fake_building(S.sx, S.sy, S.sx, S.sy, t_kind, t_dir, face_room, mat)
+
+        S.edge_of_map = nil
+      end
+    end end
+  end
+
+
+  local function check_touches_outdoor(S, dir)
+    -- we check 90 degrees to the left and right of 'dir'.
+    -- if found, returns a table mapping DIR --> ROOM.
+    -- otherwise returns NIL.
+
+    local dir1 = geom. LEFT[dir]
+    local dir2 = geom.RIGHT[dir]
+
+    local P1 = S:neighbor(dir1)
+    local P2 = S:neighbor(dir2)
+
+    local touch1 = P1 and P1.room and P1.room.kind == "outdoor"
+    local touch2 = P2 and P2.room and P2.room.kind == "outdoor"
+
+    if touch1 or touch2 then
+      local dirs = {}
+
+      if touch1 then dirs[dir1] = P1.room end
+      if touch2 then dirs[dir2] = P2.room end
+
+      return dirs
+    end
+
+    return nil
+  end
+
+  
+  local function are_touches_same(T1, T2)
+    for dir = 2,8,2 do
+      if (T1[dir] and 1) != (T2[dir] and 1) then
+        return false
+      end
+    end
+
+    return true
   end
 
 
@@ -2079,8 +2089,6 @@ stderrf("categorize_touches --> '%s'\nFrom: %s\n", str, table.tostr(T))
         local t_kind, t_dir = categorize_touches(touches[i])
 
 stderrf("categorize_touches --> %s %d\n", t_kind, t_dir)
-        local face_room = (t_kind == "F") and (R1 or R2)
-
 
         local sx1, sy1 = N1.sx, N1.sy
         local sx2, sy2 = N1.sx, N1.sy
@@ -2096,7 +2104,7 @@ stderrf("categorize_touches --> %s %d\n", t_kind, t_dir)
         end
       
         Rooms_fake_building(sx1, sy1, sx2, sy2, t_kind, t_dir,
-                            face_room, building.zone.facade_mat)
+                            R1 or R2, building.zone.facade_mat)
       end
     end
   end
