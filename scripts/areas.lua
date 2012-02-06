@@ -1908,6 +1908,21 @@ function Areas_flesh_out()
   end
 
 
+  local function sync_sky_heights()
+    each R in LEVEL.rooms do
+      if R.sky_group then
+        R.sky_group.h = math.max(R.sky_group.h or -999, R.sky_h)
+      end
+    end
+
+    each R in LEVEL.rooms do
+      if R.sky_group then
+        R.sky_h = R.sky_group.h
+      end
+    end
+  end
+
+
   local function can_make_window(K, dir)
     local N = K:neighbor(dir)
 
@@ -1948,6 +1963,9 @@ function Areas_flesh_out()
 
 --each R in LEVEL.rooms do decide_windows(R) end
   each R in LEVEL.rooms do ceiling_stuff(R) end
+
+  sync_sky_heights()
+
   each R in LEVEL.rooms do tizzy_up_room(R) end
 end
 

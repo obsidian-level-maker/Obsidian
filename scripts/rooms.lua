@@ -816,7 +816,7 @@ end
 
 
 
-function Rooms_synchronise_skies()
+function Rooms_collect_sky_groups()
 
   -- this makes sure that any two outdoor rooms which touch will belong
   -- to the same sky_group and hence get the same sky height.
@@ -910,6 +910,9 @@ function Rooms_synchronise_skies()
     end
 
     table.insert(group.rooms, R)
+
+    -- change the ID number to a group reference
+    R.sky_group = group
   end
 end
 
@@ -1363,7 +1366,7 @@ function Rooms_intermission_camera()
 
   each R in LEVEL.rooms do
     if R.purpose != "START" and R.purpose != "EXIT" and
-       R.kind != "cave" and R.kind != "hallway"
+       R.kind != "cave" and R.kind != "hallway" and not R.street
     then
       if not room or (R.kvolume > room.kvolume) then
         room = R
@@ -2340,12 +2343,13 @@ function Rooms_build_all()
 
   Rooms_place_gates()
 
+  Rooms_collect_sky_groups()
+
   Areas_handle_connections()
   Areas_important_stuff()
   Areas_flesh_out()
 
   Rooms_outdoor_borders()
-  Rooms_synchronise_skies()
 
   -- Rooms_indoor_walls()
 
