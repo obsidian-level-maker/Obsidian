@@ -1793,11 +1793,14 @@ end
 
 
 
-function Rooms_fake_building(sx1, sy1, sx2, sy2, kind, dir, face_room, mat)
+function Rooms_fake_building(sx1, sy1, sx2, sy2, kind, dir, face_room, zone)
   -- mark it
   for sx = sx1,sx2 do for sy = sy1,sy2 do
-    SEEDS[sx][sy].scenic = true
-    SEEDS[sx][sy].edge_of_map = nil
+    local S = SEEDS[sx][sy]
+
+    S.scenic = true
+    S.fake_zone = zone
+    S.edge_of_map = nil
   end end
 
   local x1 = SEEDS[sx1][sy1].x1
@@ -1806,13 +1809,16 @@ function Rooms_fake_building(sx1, sy1, sx2, sy2, kind, dir, face_room, mat)
   local x2 = SEEDS[sx2][sy2].x2
   local y2 = SEEDS[sx2][sy2].y2
 
+  local mat = assert(zone.facade_mat)
+
+--[[
 if kind == "F" then mat = "COMPBLUE"
 elseif kind == "C" then mat = "SFALL1"
 elseif kind == "T" then mat = "LAVA1" ; stderrf("fake T !!!\n")
 elseif kind == "P" then mat = "LITE3" ; stderrf("fake PPPPPP !!!!!!\n")
 else assert(kind == "X") ; mat = "METAL2"
 end
-
+--]]
 -- stderrf("Rooms_fake_building @ (%d %d) .. (%d %d) : %s\n", sx1, sy1, sx2, sy2, kind)
 
   -- cage test
@@ -1960,13 +1966,27 @@ function Rooms_outdoor_borders()
 
       local outdoors = {}
       local touches  = {}
+      local zone
 
       for dir = 2,8,2 do
         local N = S:neighbor(dir)
 
-        if N and N.room and N.room.kind == "outdoor" then
+        if not N then continue end
+
+        if N.room and N.room.kind == "outdoor" then
           table.add_unique(outdoors, N.room)
           touches[dir] = N.room
+        end
+
+        local N_zone
+
+        if N.room and N.room.kind != "outdoor" then N_zone = N.room.zone
+        elseif N.hall then N_zone = N.hall.zone
+        elseif N.fake_zone then N_zone = N.fake_zone
+        end
+
+        if N_zone and (not zone or N_zone.id < zone.id) then
+          zone = N_zone
         end
       end
 
@@ -1977,13 +1997,8 @@ function Rooms_outdoor_borders()
 
         local face_room = rand.pick(outdoors)
 
-        --!!!!!!!!!1
-        local mat = (pass == 1 ? "LAVA1" ; "SFALL1")
-
-        -- FIXME : too simple
-        Rooms_fake_building(S.sx, S.sy, S.sx, S.sy, t_kind, t_dir, face_room, mat)
-
-        S.edge_of_map = nil
+        Rooms_fake_building(S.sx, S.sy, S.sx, S.sy, t_kind, t_dir,
+                            face_room, zone or face_room.zone)
       end
     end end
   end
@@ -2081,7 +2096,7 @@ function Rooms_outdoor_borders()
 
       elseif not touches[i] then
         Rooms_fake_building(N1.sx, N1.sy, N1.sx, N1.sy, "X", 2,
-                            nil, building.zone.facade_mat)
+                            nil, building.zone)
       else
 
         -- Note: a bit overkill, always "F" with current logic
@@ -2106,7 +2121,7 @@ function Rooms_outdoor_borders()
         local face_room = touches[i][dir1] or touches[i][dir2]
 
         Rooms_fake_building(sx1, sy1, sx2, sy2, t_kind, t_dir,
-                            face_room, building.zone.facade_mat)
+                            face_room, building.zone)
       end
     end
   end
@@ -2371,7 +2386,6 @@ function Rooms_outdoor_borders()
       local B = building_on_side_of_row(row, sx1, sy1, sx2, sy2, -1) or
                 building_on_side_of_row(row, sx1, sy1, sx2, sy2,  1)
 
-      Rooms_fake_building(R, sx1, sy1, sx2, sy2, dir, B or R, true)
     end
   end
 
