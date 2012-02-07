@@ -5,10 +5,9 @@ OBLIGE TODO
 Current Work
 ------------
 
-+  automatic repeating of prefabs
-   x_repeat=192 : means we require: x_size / N >= x_repeat (for highest N)
+>>>  light_globe and flame entities for QUAKE
 
-   allow it to happen with prefab composition too
+>>>  big junction test: FIX HOLES
 
 
 Fence stuff
@@ -20,15 +19,6 @@ Outdoor Borders:
 
 -  properly pick the facade for fake buildings
 
--  outdoor wall extender: 64x64 block with torch on top
-
-
-
-Theme System:
-
--  proper room themes for QUAKE
-
--  QUAKE II
 
 
 Hallways:
@@ -42,34 +32,35 @@ Hallways:
 
 >>>  big junction prefabs!
 
-     -  need to select I/C/T/P versions of a skin
+  DONE: need to select I/C/T/P versions of a skin
         (using same mechanism as for normal hallway pieces)
 
      -  need _either_ I/C/T/P versions of each prefab
              _or_     a mechanism to use a single prefab (CONDITIONAL STUFF)
                       [can be done using height variables]
 
->>>  hallway prefabs
+Idea: GAME.HALLWAY_GROUPS
 
--  hallway_pieces =   -- in a hallway theme or level theme
-   {
-     Tech_hall_I = 50
-     Tech_hall_I_STAIR = 10
-     Tech_hall_C = 50
-     Tech_hall_T = 50
-   }
+      basic =
+      {
+        Hall_basic_I = 50
+        Hall_basic_V = 50
+        Hall_basic_S = 50
 
--  HALL_BASIC_C_LIGHT
+        Hall_basic_C = 50
+        Hall_basic_T = 50
+        Hall_basic_P = 50
 
-?  HALL_BASIC_I_DBLWIN
+        Junc_basic_I = 50
+        Junc_basic_C = 50
+        Junc_basic_T = 50
+        Junc_basic_P = 50
+      }
 
-??  decide walls properly (i.e. no hall_path[dir])
+      IN LEVEL THEME:
 
-??  determine ceiling heights properly
+      hall_groups = { basic=50, curvilicious=50 }
 
-+  flat mismatch where hallways meet rooms
-   (a) have a step (ideally not flush with wall)
-   (b) put a door there
 
 WISH: outdoor hallways (wall on one side, fence on other side, sky top)
       [may be easier to convert hallway into a room]
@@ -103,6 +94,26 @@ Next WIP Goals
 +  sky borders in outdoor rooms
 
 -  ARCH_W_WINDOW
+
+
+
++  automatic repeating of prefabs
+   x_repeat=192 : means we require: x_size / N >= x_repeat (for highest N)
+
+   allow it to happen with prefab composition too
+
+-  outdoor wall extender: 64x64 block with torch on top
+
++  flat mismatch where hallways meet rooms
+   (a) have a step (ideally not flush with wall)
+   (b) put a door there
+   (c) use floor texture in hallway (only works at one end)
+
+Theme System:
+
+-  proper room themes for QUAKE
+
+-  QUAKE II
 
 
 -----------------------------------------------------------------

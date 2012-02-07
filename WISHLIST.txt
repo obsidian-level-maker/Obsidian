@@ -680,7 +680,9 @@ Sam's suggestions:
    -  support multiple WD2 files : gui.quake_add_textures
    -  create OBLIGE logos : gui.quake_make_logo()
 
--  for the missing WAD message: a clickable hyperlink
++  flame cages
+
+DONE: for the missing WAD message: a clickable hyperlink
 
 -  support colored lighting (FitzQuake, Darkplaces, etc).
    - add an entry in the pack called "maps/xxx.lit", which
