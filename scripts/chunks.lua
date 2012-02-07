@@ -1056,16 +1056,20 @@ function CHUNK_CLASS.build_hall_piece(C, skin_name)
   local skin1 = GAME.SKINS[skin_name]
   assert(skin1)
  
-  -- FIXME !!!  floor=xxx, ceil=xxx
-  local skin2 = { wall=hall.wall_mat }
+  local skin0 = { wall  = hall.wall_mat,
+                  floor = hall.floor_mat,
+                  ceil  = hall.ceil_mat,
+                  outer = hall.zone.facade_mat
+                }
 
   local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, h_dir or 2)
 
-  Fabricate(skin1._prefab, T, { skin1, skin2 })
+  Fabricate(skin1._prefab, T, { skin0, skin1 })
 
---!!!!!!!
+--[[
 local mx, my = C:mid_point()
 entity_helper("dummy", mx, my, 24)
+--]]
 end
 
 
@@ -1143,7 +1147,7 @@ end --]]
   elseif C.hall then  -- FIXME !!!!!  decide this EARLIER
     w_mat = assert(C.hall.wall_mat)
     f_mat = assert(C.hall.floor_mat)
-    c_mat = assert(C.hall.ceiling_mat)
+    c_mat = assert(C.hall.ceil_mat)
 
     c_h = f_h + C.hall.height
   else

@@ -43,7 +43,7 @@ class HALLWAY
 
   cross_limit : { low, high }  -- a limitation of crossover heights
 
-  wall_mat, floor_mat, ceiling_mat 
+  wall_mat, floor_mat, ceil_mat 
 }
 
 --------------------------------------------------------------]]

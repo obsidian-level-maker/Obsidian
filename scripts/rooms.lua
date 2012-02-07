@@ -418,13 +418,13 @@ end
 
 function ROOM_CLASS.pick_ceil_mat(R)
 -- FIXME !!!!
-do return assert(R.ceiling_mat or R.wall_mat) end
+do return assert(R.ceil_mat or R.wall_mat) end
 
-  if not R.ceiling_mat then
-    R.ceiling_mat = rand.key_by_probs(R.zone.building_ceilings)
+  if not R.ceil_mat then
+    R.ceil_mat = rand.key_by_probs(R.zone.building_ceilings)
   end
 
-  return R.ceiling_mat
+  return R.ceil_mat
 end
 
 
@@ -600,7 +600,7 @@ function Rooms_select_textures()
     L.wall_mat = rand.key_by_probs(tab)
 
     if L.kind == "cave" then
-      L.ceiling_mat = rand.sel(20, "_SKY", L.wall_mat)
+      L.ceil_mat = rand.sel(20, "_SKY", L.wall_mat)
       for loop = 1,2 do
         L.floor_mat = rand.key_by_probs(L.theme.floors or tab)
         if L.floor_mat != L.wall_mat then break; end
@@ -609,12 +609,15 @@ function Rooms_select_textures()
 
     if L.theme.floors then
       L.floor_mat = rand.key_by_probs(L.theme.floors)
+    else
+      L.floor_mat = L.wall_mat
     end
 
     if L.theme.ceilings then
-      L.ceiling_mat = rand.key_by_probs(L.theme.ceilings)
+      L.ceil_mat = rand.key_by_probs(L.theme.ceilings)
+    else
+      L.ceil_mat = L.wall_mat
     end
-
   end 
 
 

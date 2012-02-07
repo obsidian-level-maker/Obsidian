@@ -1099,8 +1099,8 @@ do return end ----!!!!!!!
   local function render_floor_ceil(A)
     assert(A.floor_map)
 
-    local f_mat = R.floor_mat   or cave_tex
-    local c_mat = R.ceiling_mat or cave_tex
+    local f_mat = R.floor_mat or cave_tex
+    local c_mat = R.ceil_mat  or cave_tex
 
     local f_h = A.floor_h
     local c_h = R.max_floor_h + rand.pick { 128, 192,192,192, 288 }
@@ -1188,8 +1188,8 @@ do return end ----!!!!!!!
     -- create a lava/nukage pit
 
 stderrf("render_liquid_area !!!!!!!!!!1\n")
-    local f_mat = R.floor_mat   or cave_tex
-    local c_mat = R.ceiling_mat or cave_tex
+    local f_mat = R.floor_mat or cave_tex
+    local c_mat = R.ceil_mat  or cave_tex
     local l_mat = LEVEL.liquid.mat
 
     local f_h, c_h = heights_near_island(island)
