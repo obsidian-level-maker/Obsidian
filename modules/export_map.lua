@@ -98,7 +98,9 @@ function EXPORT_MAP.add_entity(ent, model)
   -- entity lines are not output directly, but stored instead
   export_printf("{\n")
 
+  local classname
   local origin
+  local light
 
   each key, value in ent do
 
@@ -112,18 +114,34 @@ function EXPORT_MAP.add_entity(ent, model)
     -- ignore any model reference
     if key == "model" then continue end
 
-    local key2 = key
+    -- grab the classname
+    if key == "id" then
+      classname = value
+      continue
+    end
 
-    if key2 == "id" then key2 = "classname" end
+    -- convert lights
+    if key == "light" then
+      light = (0 + value) * 2.2
+      continue
+    end
 
-    if key2 == "_radius" then key2 = "light" elseif key2 == "light" then continue end
+    export_printf("\"%s\" \"%s\"\n", tostring(key), tostring(value))
+  end
 
-    export_printf("\"%s\" \"%s\"\n", tostring(key2), tostring(value))
+
+  if classname then
+    export_printf("\"classname\" \"%s\"\n", classname)
   end
 
   if origin then
     export_printf("\"origin\" \"%d %d %d\"\n", origin.x or 0, origin.y or 0, origin.z or 0)
   end
+
+  if light then
+    export_printf("\"light\" \"%d\"\n", light)
+  end
+
 
   if model then
     local def_tex = "_ERROR"
