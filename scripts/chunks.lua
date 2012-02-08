@@ -1162,7 +1162,7 @@ end --]]
     end
 
   else
-    light = rand.irange(40, 100)
+    light = rand.irange(100, 200)
     if C.hall then light = light * 0.5 end
   end
 
@@ -1550,9 +1550,8 @@ end
   if light > 0 and GAME.format != "doom" then
     local x, y = C:mid_point()
     local z = rand.irange(64, c_h-32)
-    entity_helper("light", x, y, z, { light=light, _radius=400 })
+    entity_helper("light", x, y, z, { light=light })
   end
-
 
 
 

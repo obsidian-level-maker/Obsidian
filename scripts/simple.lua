@@ -719,8 +719,8 @@ function Simple_connect_all_areas(R)
     local x = assert(N.light_x)
     local y = assert(N.light_y)
     local z = N.floor_h + rand.pick { 40,60,80 }
-    local rad = rand.pick { 100, 200, 300 }
-    entity_helper("light", x, y, z, { light=128, _radius=rad })
+    local rad = rand.pick { 70, 110, 150 }
+    entity_helper("light", x, y, z, { light=light })
   end
 
         recurse(N, z_dir)

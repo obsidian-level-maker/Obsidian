@@ -42,6 +42,8 @@
 #define DEFAULT_LIGHTLEVEL  300  // as per the Quake 'light' tool
 #define DEFAULT_SUNLEVEL    30
 
+#define DEFAULT_FACTOR  2.0  // radius multiplier
+
 #define LOW_LIGHT  20
 
 
@@ -633,7 +635,9 @@ static void QCOM_FindLights()
     float default_level = (light.kind == LTK_Sun) ? DEFAULT_SUNLEVEL : DEFAULT_LIGHTLEVEL;
 
     float level  = E->props.getDouble("light", default_level);
-    light.radius = E->props.getDouble("_radius", level);
+    float factor = E->props.getDouble("_factor", DEFAULT_FACTOR);
+
+    light.radius = level * factor;
 
     if (level < 1 || light.radius < 1)
       continue;
