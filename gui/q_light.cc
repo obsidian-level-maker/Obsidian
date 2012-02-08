@@ -655,12 +655,24 @@ static inline void Bump(int s, int t, int W, int value)
 static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light, int pass)
 {
   // first pass is normal lights, other passes are for styled lights
-  if ((light.style ? 1 : 0) != (pass ? 1 : 0))
-    return;
+  if (pass == 0)
+  {
+    if (light.style)
+      return;
+  }
+  else
+  {
+    if (light.style == 0)
+      return;
 
-  // skip light if we have already handled its style
-  if (lt_current_style > 0 && lmap->hasStyle(lt_current_style))
-    return;
+    // skip light if we processed that style in an earlier pass
+    if (lt_current_style < 0 && lmap->hasStyle(light.style))
+      return;
+
+    // skip light unless it matches the current style
+    if (lt_current_style > 0 && light.style != lt_current_style)
+      return;
+  }
 
   // skip lights which are behind the face
   float perp = lt_plane_normal[0] * light.x +
@@ -746,9 +758,9 @@ void QCOM_LightFace(quake_face_c *F)
 
   for (int pass = 0 ; pass < 4 ; pass++)
   {
-    ClearLightBuffer(pass ? 0 : LOW_LIGHT);
-
     lt_current_style = (pass == 0) ? 0 : -1;
+
+    ClearLightBuffer(pass ? 0 : LOW_LIGHT);
 
     for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
     {
