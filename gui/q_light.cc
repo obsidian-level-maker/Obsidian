@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2010  Andrew Apted
+//  Copyright (C) 2006-2012  Andrew Apted
 //  Copyright (C) 1996-1997  Id Software, Inc.
 //
 //  This program is free software; you can redistribute it and/or
@@ -58,6 +58,8 @@ qLightmap_c::qLightmap_c(int w, int h, int value) :
   if (width * height > SMALL_LIGHTMAP)
     samples = new byte[width * height];
 
+  current_pos = samples;
+
   styles[0] = 0;
   styles[1] = styles[2] = styles[3] = 255;  // unused
 
@@ -79,12 +81,23 @@ void qLightmap_c::Fill(int value)
 }
 
 
-void qLightmap_c::AddStyle(byte style)
+bool qLightmap_c::hasStyle(byte style) const
+{
+  if (style == 0)
+    return true;
+
+  return (styles[1] == style) ||
+         (styles[2] == style) ||
+         (styles[3] == style);
+}
+
+
+bool qLightmap_c::AddStyle(byte style)
 {
   SYS_ASSERT(! isFlat());
 
   if (num_styles > 4)
-    return;
+    return false;
 
   styles[num_styles] = style;
 
@@ -98,6 +111,10 @@ void qLightmap_c::AddStyle(byte style)
     delete[] samples;
 
   samples = new_samples;
+
+  current_pos = samples + width * height * (num_styles-1);
+
+  return true;
 }
 
 
@@ -144,6 +161,8 @@ void qLightmap_c::Flatten()
 
     samples = data;
   }
+
+  current_pos = NULL;
 }
 
 
@@ -299,6 +318,8 @@ static int lt_tex_mins[2];
 static quake_vertex_c lt_points[18*18*4];
 
 static int blocklights[18*18*4];  // * 4 for oversampling
+
+static int lt_current_style;
 
 
 static void CalcFaceVectors(quake_face_c *F)
@@ -481,7 +502,7 @@ void qLightmap_c::Store_Normal()
   const int *src   = &blocklights[0];
   const int *s_end = src + (width * height);
 
-  byte *dest = samples + (width * height * (num_styles-1));
+  byte *dest = current_pos;
 
   while (src < s_end)
   {
@@ -633,8 +654,12 @@ static inline void Bump(int s, int t, int W, int value)
 
 static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light, int pass)
 {
-  // first pass is normal lights, second pass is styled lights
-  if ((light.style ? 1 : 0) != pass)
+  // first pass is normal lights, other passes are for styled lights
+  if ((light.style ? 1 : 0) != (pass ? 1 : 0))
+    return;
+
+  // skip light if we have already handled its style
+  if (lt_current_style > 0 && lmap->hasStyle(lt_current_style))
     return;
 
   // skip lights which are behind the face
@@ -664,14 +689,7 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light, int pass
   }
 
 
-  // add style to lightmap if not already there
-  if (light.style && lmap->num_styles < 2)
-      lmap->AddStyle(light.style);
-
-  // ignore light if style is different (OUCH!)
-  if (light.style && lmap->styles[1] != light.style)
-    return;
-
+  bool hit_it = false;
 
   for (int t = 0 ; t < lt_H ; t++)
   for (int s = 0 ; s < lt_W ; s++)
@@ -680,6 +698,8 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light, int pass
 
     if (! QCOM_TraceRay(V.x, V.y, V.z, light.x, light.y, light.z))
       continue;
+
+    hit_it = true;
 
     if (light.kind == LTK_Sun)
     {
@@ -697,6 +717,19 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light, int pass
       }
     }
   }
+
+  // don't create a new style in the lightmap if the light never
+  // touched the face (e.g. when on the other side of a wall).
+
+  if (! hit_it)
+    return;
+
+  if (lt_current_style < 0)
+  {
+    lt_current_style = light.style;
+
+    lmap->AddStyle(light.style);
+  }
 }
 
 
@@ -711,16 +744,18 @@ void QCOM_LightFace(quake_face_c *F)
 
   CalcPoints();
 
-  for (int pass = 0 ; pass < 2 ; pass++)
+  for (int pass = 0 ; pass < 4 ; pass++)
   {
     ClearLightBuffer(pass ? 0 : LOW_LIGHT);
+
+    lt_current_style = (pass == 0) ? 0 : -1;
 
     for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
     {
       QCOM_ProcessLight(F->lmap, qk_all_lights[i], pass);
     }
 
-    if (pass == 0 || (pass == 1 && F->lmap->num_styles == 2))
+    if (lt_current_style >= 0)
       F->lmap->Store();
   }
 }
@@ -809,6 +844,8 @@ void QCOM_LightAllFaces()
 
       if (main_action >= MAIN_CANCEL)
         break;
+
+      // fprintf(stderr, "lit %d faces (of %u)\n", lit_faces, qk_all_faces.size());
     }
   }
 

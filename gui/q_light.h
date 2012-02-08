@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2010 Andrew Apted
+//  Copyright (C) 2006-2012 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -37,6 +37,7 @@ public:
   int num_styles;
 
   byte * samples;
+  byte * current_pos;
 
   // for small maps, store data directly here
   byte data[SMALL_LIGHTMAP];
@@ -69,13 +70,16 @@ public:
     if (raw < 0)   raw = 0;
     if (raw > 255) raw = 255;
 
-    // FIXME: UGH  UGH  UGH  !!!
-    samples[t * width + s + (num_styles-1)*width*height] = raw;
+    current_pos[t * width + s] = raw;
   }
 
-  void AddStyle(byte style);
+  bool hasStyle(byte style) const;
 
-  void Store();  // transfer from blocklights[] array
+  // returns false if too many styles
+  bool AddStyle(byte style);
+
+  // transfer from blocklights[] array
+  void Store();
 
   void CalcScore();
 
