@@ -23,8 +23,8 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __UTIL_ENDIAN_H__
-#define __UTIL_ENDIAN_H__
+#ifndef __SYS_ENDIAN_H__
+#define __SYS_ENDIAN_H__
 
 
 // ---- determine byte order ----
@@ -157,7 +157,7 @@ static inline float UT_SwapFloat(float x)
 #endif
 
 
-#endif // __UTIL_ENDIAN_H__
+#endif // __SYS_ENDIAN_H__
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
