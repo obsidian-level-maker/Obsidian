@@ -1921,16 +1921,16 @@ function Rooms_outdoor_borders()
 
     -- corner
     elseif str == "26" then
-      return "C", 2
+      return "C", 6
 
     elseif str == "24" then
-      return "C", 4
+      return "C", 2
 
     elseif str == "48" then
-      return "C", 8
+      return "C", 4
 
     elseif str == "68" then
-      return "C", 6
+      return "C", 8
     
     -- T junction
     elseif str == "246" then

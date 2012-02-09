@@ -21,7 +21,7 @@
 --  Hallway pieces use the following letters:
 --
 --     I : straight through, travel N/S, walls on E/W sides
---     C : corner, travel S and E, walls on N and W sides
+--     C : corner, travel S and W, walls on N and E sides
 --     T : T junction: travel S/E/W, wall on N side
 --     P : plus shape: travel in all four directions
 --
@@ -1009,54 +1009,54 @@ PREFAB.HALL_BASIC_C =
 
   brushes =
   {
-    -- west wall
+    -- east wall
     {
-      { x =   0, y =   0, mat = "?wall" }
-      { x =  16, y =   0, mat = "?wall", y_offset=0 }
-      { x =  16, y = 176, mat = "?wall" }
-      { x =   0, y = 192, mat = "?outer" }
+      { x = 176, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?outer" }
+      { x = 192, y = 192, mat = "?wall" }
+      { x = 176, y = 176, mat = "?wall", y_offset=0 }
     }
 
     -- north wall
     {
-      { x =   0, y = 192, mat = "?wall" }
-      { x =  16, y = 176, mat = "?wall", y_offset=0 }
-      { x = 192, y = 176, mat = "?wall" }
+      { x =   0, y = 176, mat = "?wall", y_offset=0 }
+      { x = 176, y = 176, mat = "?wall" }
       { x = 192, y = 192, mat = "?outer" }
+      { x =   0, y = 192, mat = "?wall" }
     }
 
-    -- little SE corner piece
+    -- little SW corner piece
     {
-      { x = 176, y =   0, mat = "?wall", y_offset=0 }
-      { x = 192, y =   0, mat = "?wall", y_offset=0 }
-      { x = 192, y =  16, mat = "?wall", y_offset=0 }
-      { x = 176, y =  16, mat = "?wall", y_offset=0 }
+      { x =  0, y =   0, mat = "?wall", y_offset=0 }
+      { x = 16, y =   0, mat = "?wall", y_offset=0 }
+      { x = 16, y =  16, mat = "?wall", y_offset=0 }
+      { x =  0, y =  16, mat = "?wall", y_offset=0 }
     }
 
     -- floor
     {
-      { x =  16, y =   0, mat = "?wall" }
-      { x = 192, y =   0, mat = "?wall" }
-      { x = 192, y = 176, mat = "?wall" }
-      { x =  16, y = 176, mat = "?wall" }
+      { x =   0, y =   0, mat = "?wall" }
+      { x = 176, y =   0, mat = "?wall" }
+      { x = 176, y = 176, mat = "?wall" }
+      { x =   0, y = 176, mat = "?wall" }
       { t = 0, mat = "?floor" }
     }
 
     -- ceiling
     {
-      { x =  16, y =   0, mat = "?wall" }
-      { x = 192, y =   0, mat = "?wall" }
-      { x = 192, y = 176, mat = "?wall" }
-      { x =  16, y = 176, mat = "?wall" }
+      { x =   0, y =   0, mat = "?wall" }
+      { x = 176, y =   0, mat = "?wall" }
+      { x = 176, y = 176, mat = "?wall" }
+      { x =   0, y = 176, mat = "?wall" }
       { b = 128, mat = "?ceil" }
     }
   }
 
   entities =
   {
-    { ent = "?torch_ent", x = 24, y = 168, z = 48 }
+    { ent = "?torch_ent", x = 168, y = 168, z = 48 }
 
-    { ent = "light", x = 48, y = 144, z = 64,
+    { ent = "light", x = 144, y = 144, z = 64,
       light = 200, style = "?style"
     }
   }
