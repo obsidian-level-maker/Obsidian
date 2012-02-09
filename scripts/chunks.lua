@@ -991,56 +991,13 @@ end
 
 
 function CHUNK_CLASS.categorize_hall_piece(C)
-  local link_str = ""
+  local cat, dir = Trans.categorize_linkage(
+      C.link[2] or C.hall_link[2], C.link[4] or C.hall_link[4],
+      C.link[6] or C.hall_link[6], C.link[8] or C.hall_link[8]);
 
-  for dir = 2,8,2 do
-    if C.link[dir] or C.hall_link[dir] then
-      link_str = link_str .. dir
-    end
-  end
+  assert(cat != "N" and cat != "F")
 
-  assert(link_str != "")
-
-  -- straight through
-  if link_str == "28" then
-    return "I", 2
-
-  elseif link_str == "46" then
-    return "I", 4
-  
-  -- corner
-  elseif link_str == "26" then
-    return "C", 6
-
-  elseif link_str == "24" then
-    return "C", 2
-
-  elseif link_str == "48" then
-    return "C", 4
-
-  elseif link_str == "68" then
-    return "C", 8
-  
-  -- T junction
-  elseif link_str == "246" then
-    return "T", 2
-
-  elseif link_str == "248" then
-    return "T", 4
-
-  elseif link_str == "268" then
-    return "T", 6
-
-  elseif link_str == "468" then
-    return "T", 8
-
-  -- plus shape, all four directions
-  elseif link_str == "2468" then
-    return "P", 2
-
-  else
-    error("WEIRD HALLWAY LINK_STR: " .. link_str)
-  end
+  return cat, dir
 end
 
 

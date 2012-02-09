@@ -1898,61 +1898,11 @@ function Rooms_outdoor_borders()
   --
 
   local function categorize_touches(T)
-    local str = ""
+    local cat, dir = Trans.categorize_linkage(T[2], T[4], T[6], T[8])
+     
+    assert(cat != "N")
 
-    for dir = 2,8,2 do
-      if T[dir] then str = str .. dir end
-    end
-
-    assert(str != "")
-
-    -- facing one side
-    if str == "2" then
-      return "F", 2
-
-    elseif str == "4" then
-      return "F", 4
-
-    elseif str == "6" then
-      return "F", 6
-
-    elseif str == "8" then
-      return "F", 8
-
-    -- corner
-    elseif str == "26" then
-      return "C", 6
-
-    elseif str == "24" then
-      return "C", 2
-
-    elseif str == "48" then
-      return "C", 4
-
-    elseif str == "68" then
-      return "C", 8
-    
-    -- T junction
-    elseif str == "246" then
-      return "T", 2
-
-    elseif str == "248" then
-      return "T", 4
-
-    elseif str == "268" then
-      return "T", 6
-
-    elseif str == "468" then
-      return "T", 8
-
-    -- all four directions
-    elseif str == "2468" then
-      return "P", 2
-
-    -- everything else
-    else
-      return "X", 2
-    end
+    return cat, dir
   end
 
 
