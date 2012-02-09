@@ -39,7 +39,7 @@
 #include "csg_quake.h"
 
 
-#define DEFAULT_LIGHTLEVEL  300  // as per the Quake 'light' tool
+#define DEFAULT_LIGHTLEVEL  150
 #define DEFAULT_SUNLEVEL    30
 
 #define DEFAULT_FACTOR  2.0  // radius multiplier
