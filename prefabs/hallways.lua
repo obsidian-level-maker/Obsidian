@@ -1384,42 +1384,80 @@ PREFAB.JUNCTION_TEST =
   x_ranges = { {192,0}, {192,1}, {192,0} }
   y_ranges = { {192,0}, {192,1}, {192,0} }
 
+  defaults =
+  {
+    light_ent = "light"
+
+    north_wall_q = 0
+     east_wall_q = 0
+     west_wall_q = 0
+
+    style = { [0]=90, [9]=5 }
+  }
+
   brushes =
   {
     -- south west corner
     {
-      { x =   0, y =   0, mat = "?wall" }
-      { x = 192, y =   0, mat = "?wall" }
-      { x = 192, y =  64, mat = "?wall" }
-      { x =  64, y = 192, mat = "?wall" }
-      { x =   0, y = 192, mat = "?wall" }
+      { x =   0, y =   0, mat = "?wall", y_offset=0 }
+      { x = 192, y =   0, mat = "?wall", y_offset=0 }
+      { x = 192, y =  64, mat = "?wall", y_offset=0 }
+      { x =  64, y = 192, mat = "?wall", y_offset=0 }
+      { x =   0, y = 192, mat = "?wall", y_offset=0 }
     }
 
     -- south east corner
     {
-      { x = 576, y =   0, mat = "?wall" }
-      { x = 576, y = 192, mat = "?wall" }
-      { x = 502, y = 192, mat = "?wall" }
-      { x = 384, y =  64, mat = "?wall" }
-      { x = 384, y =   0, mat = "?wall" }
+      { x = 576, y =   0, mat = "?wall", y_offset=0 }
+      { x = 576, y = 192, mat = "?wall", y_offset=0 }
+      { x = 502, y = 192, mat = "?wall", y_offset=0 }
+      { x = 384, y =  64, mat = "?wall", y_offset=0 }
+      { x = 384, y =   0, mat = "?wall", y_offset=0 }
     }
 
     -- north west corner
     {
-      { x =   0, y = 576, mat = "?wall" }
-      { x =   0, y = 384, mat = "?wall" }
-      { x =  64, y = 384, mat = "?wall" }
-      { x = 192, y = 502, mat = "?wall" }
-      { x = 192, y = 576, mat = "?wall" }
+      { x =   0, y = 576, mat = "?wall", y_offset=0 }
+      { x =   0, y = 384, mat = "?wall", y_offset=0 }
+      { x =  64, y = 384, mat = "?wall", y_offset=0 }
+      { x = 192, y = 502, mat = "?wall", y_offset=0 }
+      { x = 192, y = 576, mat = "?wall", y_offset=0 }
     }
 
     -- north east corner
     {
-      { x = 576, y = 576, mat = "?wall" }
-      { x = 384, y = 576, mat = "?wall" }
-      { x = 384, y = 502, mat = "?wall" }
-      { x = 502, y = 384, mat = "?wall" }
-      { x = 576, y = 384, mat = "?wall" }
+      { x = 576, y = 576, mat = "?wall", y_offset=0 }
+      { x = 384, y = 576, mat = "?wall", y_offset=0 }
+      { x = 384, y = 502, mat = "?wall", y_offset=0 }
+      { x = 502, y = 384, mat = "?wall", y_offset=0 }
+      { x = 576, y = 384, mat = "?wall", y_offset=0 }
+    }
+
+    -- north wall (conditional)
+    {
+      { m = "solid", only_if = "?north_wall_q==1" }
+      { x = 192, y = 544, mat = "?wall", y_offset=0 }
+      { x = 384, y = 544, mat = "?wall", y_offset=0 }
+      { x = 384, y = 576, mat = "?wall", y_offset=0 }
+      { x = 192, y = 576, mat = "?wall", y_offset=0 }
+    }
+
+    -- west wall (conditional)
+    {
+      { m = "solid", only_if = "?west_wall_q==1" }
+      { x =   0, y = 192, mat = "?wall", y_offset=0 }
+      { x =  32, y = 192, mat = "?wall", y_offset=0 }
+      { x =  32, y = 384, mat = "?wall", y_offset=0 }
+      { x =   0, y = 384, mat = "?wall", y_offset=0 }
+    }
+
+    -- east wall (conditional)
+    {
+      { m = "solid", only_if = "?east_wall_q==1" }
+      { x = 544, y = 192, mat = "?wall", y_offset=0 }
+      { x = 576, y = 192, mat = "?wall", y_offset=0 }
+      { x = 576, y = 384, mat = "?wall", y_offset=0 }
+      { x = 544, y = 384, mat = "?wall", y_offset=0 }
     }
 
     -- floor
@@ -1433,12 +1471,54 @@ PREFAB.JUNCTION_TEST =
 
     -- ceiling
     {
-      { x =   0, y =   0, mat = "?wall" }
-      { x = 576, y =   0, mat = "?wall" }
-      { x = 576, y = 576, mat = "?wall" }
-      { x =   0, y = 576, mat = "?wall" }
+      { x =   0, y =   0, mat = "?ceil" }
+      { x = 576, y =   0, mat = "?ceil" }
+      { x = 576, y = 192, mat = "?ceil" }
+      { x =   0, y = 192, mat = "?ceil" }
       { b = 256, mat = "?ceil" }
     }
+
+    {
+      { x =   0, y = 384, mat = "?ceil" }
+      { x = 576, y = 384, mat = "?ceil" }
+      { x = 576, y = 576, mat = "?ceil" }
+      { x =   0, y = 576, mat = "?ceil" }
+      { b = 256, mat = "?ceil" }
+    }
+
+    {
+      { x =   0, y = 192, mat = "?ceil" }
+      { x = 192, y = 192, mat = "?ceil" }
+      { x = 192, y = 384, mat = "?ceil" }
+      { x =   0, y = 384, mat = "?ceil" }
+      { b = 256, mat = "?ceil" }
+    }
+
+    {
+      { x = 384, y = 192, mat = "?ceil" }
+      { x = 576, y = 192, mat = "?ceil" }
+      { x = 576, y = 384, mat = "?ceil" }
+      { x = 384, y = 384, mat = "?ceil" }
+      { b = 256, mat = "?ceil" }
+    }
+
+    -- sky hole
+    {
+      { m = "solid" }
+      { x = 192, y = 192, mat = "?hole" }
+      { x = 384, y = 192, mat = "?hole" }
+      { x = 384, y = 384, mat = "?hole" }
+      { x = 192, y = 384, mat = "?hole" }
+      { b = 288, mat = "?hole" }
+    }
+  }
+
+  entities =
+  {
+    { ent = "?light_ent", x = 240, y = 240, z = 192, light = 120, _factor=2, style="?style" }
+    { ent = "?light_ent", x = 336, y = 240, z = 192, light = 120, _factor=2, style="?style" }
+    { ent = "?light_ent", x = 240, y = 336, z = 192, light = 120, _factor=2, style="?style" }
+    { ent = "?light_ent", x = 336, y = 336, z = 192, light = 120, _factor=2, style="?style" }
   }
 }
 

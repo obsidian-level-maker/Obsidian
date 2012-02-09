@@ -1013,33 +1013,43 @@ QUAKE.SKINS =
   Junc_Test_I =
   {
     _prefab = "JUNCTION_TEST"
-    _where  = "chunk"  -- FIXME: big_junc
+    _where  = "big_junc"
 
-    ceil = "LAVA1"
+    hole = "WINDOW1_3"
+
+    east_q = 1
+    west_q = 1
   }
 
   Junc_Test_C =
   {
     _prefab = "JUNCTION_TEST"
-    _where  = "chunk"  -- FIXME: big_junc
+    _where  = "big_junc"
 
-    ceil = "LAVA1"
+    hole = "WINDOW1_3"
+
+    north_q = 1
+     east_q = 1
   }
 
   Junc_Test_T =
   {
     _prefab = "JUNCTION_TEST"
-    _where  = "chunk"  -- FIXME: big_junc
+    _where  = "big_junc"
 
-    ceil = "LAVA1"
+    hole = "WINDOW1_3"
+
+    north_q = 1
   }
 
   Junc_Test_P =
   {
     _prefab = "JUNCTION_TEST"
-    _where  = "chunk"  -- FIXME: big_junc
+    _where  = "big_junc"
 
-    ceil = "LAVA1"
+    hole = "WINDOW1_3"
+
+    -- leave all walls open
   }
 
 
