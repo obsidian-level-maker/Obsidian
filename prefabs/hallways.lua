@@ -1435,7 +1435,7 @@ PREFAB.JUNCTION_TEST =
 
     -- north wall (conditional)
     {
-      { m = "solid", only_if = "?north_wall_q==1" }
+      { m = "solid", only_if = "?north_wall_q" }
       { x = 192, y = 544, mat = "?wall", y_offset=0 }
       { x = 384, y = 544, mat = "?wall", y_offset=0 }
       { x = 384, y = 576, mat = "?wall", y_offset=0 }
@@ -1444,7 +1444,7 @@ PREFAB.JUNCTION_TEST =
 
     -- west wall (conditional)
     {
-      { m = "solid", only_if = "?west_wall_q==1" }
+      { m = "solid", only_if = "?west_wall_q" }
       { x =   0, y = 192, mat = "?wall", y_offset=0 }
       { x =  32, y = 192, mat = "?wall", y_offset=0 }
       { x =  32, y = 384, mat = "?wall", y_offset=0 }
@@ -1453,7 +1453,7 @@ PREFAB.JUNCTION_TEST =
 
     -- east wall (conditional)
     {
-      { m = "solid", only_if = "?east_wall_q==1" }
+      { m = "solid", only_if = "?east_wall_q" }
       { x = 544, y = 192, mat = "?wall", y_offset=0 }
       { x = 576, y = 192, mat = "?wall", y_offset=0 }
       { x = 576, y = 384, mat = "?wall", y_offset=0 }

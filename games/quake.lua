@@ -1017,8 +1017,8 @@ QUAKE.SKINS =
 
     hole = "WINDOW1_3"
 
-    east_q = 1
-    west_q = 1
+    east_wall_q = 1
+    west_wall_q = 1
   }
 
   Junc_Test_C =
@@ -1028,8 +1028,8 @@ QUAKE.SKINS =
 
     hole = "WINDOW1_3"
 
-    north_q = 1
-     east_q = 1
+    north_wall_q = 1
+     east_wall_q = 1
   }
 
   Junc_Test_T =
@@ -1039,7 +1039,7 @@ QUAKE.SKINS =
 
     hole = "WINDOW1_3"
 
-    north_q = 1
+    north_wall_q = 1
   }
 
   Junc_Test_P =
