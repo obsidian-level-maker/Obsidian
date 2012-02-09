@@ -1057,7 +1057,7 @@ PREFAB.HALL_BASIC_C =
     { ent = "?torch_ent", x = 168, y = 168, z = 48 }
 
     { ent = "light", x = 144, y = 144, z = 64,
-      light = 200, style = "?style"
+      light = 150, style = "?style"
     }
   }
 }
