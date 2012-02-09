@@ -271,7 +271,7 @@ PREFAB.HALLWAY_S_BEND =
     { ent = "?torch_ent", x = 288, y = 152, z = 64 }
 
     { ent = "light", x = 288, y = 152, z = 96,
-      light = 144, radius = 224, style = "?style"
+      light = 144, style = "?style"
     }
   }
 }
@@ -703,19 +703,19 @@ PREFAB.HALLWAY_3D_STAIRCASE =
     { ent = "?torch_ent", x = 40, y = 192, z = 48 }
 
     { ent = "light", x = 56, y = 192, z = 80,
-      light = 160, radius = 320, style = "?style"
+      light = 160, style = "?style"
     }
 
     { ent = "?torch_ent", x = 344, y = 192, z = 144 }
 
     { ent = "light", x = 328, y = 192, z = 172,
-      light = 160, radius = 320, style = "?style"
+      light = 160, style = "?style"
     }
 
     { ent = "?torch_ent", x = 40, y = 192, z = 236 }
 
     { ent = "light", x = 56, y = 192, z = 268,
-      light = 160, radius = 320, style = "?style"
+      light = 160, style = "?style"
     }
   }
 }
@@ -1057,7 +1057,7 @@ PREFAB.HALL_BASIC_C =
     { ent = "?torch_ent", x = 24, y = 168, z = 48 }
 
     { ent = "light", x = 48, y = 144, z = 64,
-      light = 200, radius = 480, style = "?style"
+      light = 200, style = "?style"
     }
   }
 }

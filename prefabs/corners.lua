@@ -111,7 +111,6 @@ PREFAB.CORNER_DIAG_W_TORCH =
   defaults =
   {
     light = 128
-    radius = 320
     style = 0
   }
 
@@ -132,7 +131,7 @@ PREFAB.CORNER_DIAG_W_TORCH =
     { x = 40.5, y = 40.5, z = 40, ent = "torch", light = 0, }
 
     { x = 48, y = 48, z = 48, ent = "light",
-      light = "?light", _radius = "?radius", style = "?style",
+      light = "?light", style = "?style",
     }
   }
 }
