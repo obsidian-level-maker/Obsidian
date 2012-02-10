@@ -2443,13 +2443,13 @@ DOOM.SKINS =
     _where  = "hallway"
   }
 
-  Hall_Test_I_StairXX =
+  Hall_Test_I_Stair =
   {
     _prefab = "HALL_BASIC_I_STAIR"
     _where  = "hallway"
   }
 
-  Hall_Test_I_Stair =  --!!!! I_Lift
+  Hall_Test_I_Lift =
   {
     _prefab = "HALL_BASIC_I_LIFT"
     _where  = "hallway"
