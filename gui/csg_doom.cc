@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2010 Andrew Apted
+//  Copyright (C) 2006-2012 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -1196,14 +1196,6 @@ static void DM_MakeLine(region_c *R, snag_c *S)
   }
 
 
-  // determine lower left corner (for dummy sectors)
-  if (x1 < map_bound_x1) map_bound_x1 = x1;
-  if (x2 < map_bound_x1) map_bound_x1 = x2;
-
-  if (y1 < map_bound_y1) map_bound_y1 = y1;
-  if (y2 < map_bound_y1) map_bound_y1 = y2;
-
-
   doom_sector_c *front = dm_sectors[R->index];
   doom_sector_c *back  = NULL;
 
@@ -1216,6 +1208,14 @@ static void DM_MakeLine(region_c *R, snag_c *S)
   // skip the line if same on both sides, except when it has a rail
   if (front == back && !rail)
     return;
+
+
+  // update map's bounding box
+  if (x1 < map_bound_x1) map_bound_x1 = x1;
+  if (x2 < map_bound_x1) map_bound_x1 = x2;
+
+  if (y1 < map_bound_y1) map_bound_y1 = y1;
+  if (y2 < map_bound_y1) map_bound_y1 = y2;
 
 
   doom_linedef_c *L = new doom_linedef_c;
