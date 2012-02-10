@@ -673,8 +673,7 @@ function Plan_add_big_junctions()
   ---| Plan_add_big_junctions |---
 
   -- decide how many big hallway junctions to make
-  local prob = style_sel("big_juncs", 0, 20, 40, 75) *
-               style_sel("hallways",  0, 0.7, 1.0, 1.2)
+  local prob = style_sel("big_juncs", 0, 25, 50, 80)
 
   if prob < 1 then return end
 
