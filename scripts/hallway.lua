@@ -1125,20 +1125,32 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
 
   C.floor_h = floor_h
 
-  if C.h_kind == "I" then
+  if C.h_kind == "I" and rand.odds(75) then
     C.h_extra = "stair"
-    C.h_dir   = from_dir
+    C.h_dir   = (z_dir < 0 ? 10 - from_dir ; from_dir)
 
-    floor_h = floor_h + 128
+    floor_h = floor_h + 60 * z_dir
+
+    -- stairs and lifts assume we have the lowest height
+    if z_dir < 0 then
+      C.floor_h = floor_h
+    end
   end
 
-  for dir = 2,8,2 do
+  if (C.h_kind == "C" or C.h_kind == "P") and rand.odds(15) then
+    z_dir = -z_dir
+  end
+
+  local did_a_branch = false
+
+  each dir in rand.dir_list() do
     if dir == from_dir then continue end
 
     local C2 = C.hall_link[dir]
 
     if C2 and not seen[C2] then
       H:stair_flow(C2, 10 - dir, floor_h, z_dir, seen)
+      did_a_branch = true
     end
 
     local LINK = C.link[dir]
@@ -1148,6 +1160,10 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
       if C3 == C then C3 = C.link[dir].C2 end
 
       C3.floor_h = floor_h
+    end
+
+    if did_a_branch and rand.odds(50) then
+      z_dir = -z_dir
     end
   end
 end
