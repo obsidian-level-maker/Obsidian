@@ -1012,6 +1012,7 @@ function CHUNK_CLASS.build_hall_piece(C)
   local skin_name = base_name .. "_" .. h_kind
 
   if C.h_extra == "stair" then skin_name = skin_name .. "_Stair" end
+  if C.h_extra == "lift"  then skin_name = skin_name .. "_Lift" end
 
   local hall = assert(C.hall)
 
@@ -1025,6 +1026,8 @@ function CHUNK_CLASS.build_hall_piece(C)
                 }
 
   local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, h_dir or 2)
+
+  T.scale_z = C.h_scale_z
 
   Fabricate(skin1._prefab, T, { skin0, skin1 })
 
