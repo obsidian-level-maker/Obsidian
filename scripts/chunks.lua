@@ -1001,12 +1001,17 @@ function CHUNK_CLASS.categorize_hall_piece(C)
 end
 
 
-function CHUNK_CLASS.build_hall_piece(C, skin_name)
+function CHUNK_CLASS.build_hall_piece(C)
   -- FIXME: determine prefabs much earlier (HALLWAY.floor_stuff)
+  local base_name = "Hall_Test"
+  if C.section.kind == "big_junc" then base_name = "Junc_Test" end
 
-  local h_kind, h_dir = C:categorize_hall_piece()
+  local h_kind, h_dir = C.h_kind, C.h_dir
+  assert(h_kind)
 
-  skin_name = skin_name .. "_" .. h_kind
+  local skin_name = base_name .. "_" .. h_kind
+
+  if C.h_extra == "stair" then skin_name = skin_name .. "_Stair" end
 
   local hall = assert(C.hall)
 
@@ -1037,13 +1042,8 @@ function CHUNK_CLASS.build(C)
   end
 
 -- TEST TEST !!!!!!
-  if C.section and C.section.kind == "big_junc" then
-    C:build_hall_piece("Junc_Test");
-    return
-  end
-
   if C.hall then
-    C:build_hall_piece("Hall_Test");
+    C:build_hall_piece();
 
     -- FIXME FIXME : NO LOCKED DOORS !!!!!
     return

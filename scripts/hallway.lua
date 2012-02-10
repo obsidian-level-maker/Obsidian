@@ -1103,6 +1103,43 @@ function HALLWAY_CLASS.link_chunks(H)
       gui.debugf("hallway %s has bad linkage @ %s\n", H:tostr(), C:tostr())
       error("bad linkage in hallway")
     end
+
+    -- and categorize the hallway piece needed
+    if not C.crossover_hall then
+      C.h_kind, C.h_dir = C:categorize_hall_piece()
+    end
+  end
+end
+
+
+function HALLWAY_CLASS.stair_flow(H, C, floor_h, z_dir, from_dir, seen)
+  -- recursively flow through the hallway, adding stairs (etc) 
+
+  -- only the "I" pieces can become stairs or lifts
+  -- (everything else must have no height changes)
+  -- FIXME: allow height changes at big junctions
+
+  C.floor_h = floor_h
+
+  if C.h_kind == "I" then
+    C.h_extra = "stair"
+    floor_h = floor_h + 60
+  end
+
+  for dir = 2,8,2 do
+    local C2 = C.hall_link[dir]
+
+    if C2 and not seen[C2] then
+      seen[C2] = true
+
+      H:stair_flow(C2, floor_h, z_dir, dir, seen)
+    end
+
+    local C3 = C.link[dir]
+
+    if C3 then
+      C3.floor_h = floor_h
+    end
   end
 end
 
@@ -1193,10 +1230,6 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
 -- stderrf("applied cross_limit: entry_h --> %d\n", entry_h)
   end
 
-  H.floor_h = entry_h
-  H.min_floor_h = entry_h
-  H.max_floor_h = entry_h
-
   H.height = 768  -- FIXME RUBBISH REMOVE IT
 
   assert(H.chunks)
@@ -1206,11 +1239,20 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
 
   H:update_seeds_for_chunks()
 
+  -- general vertical direction
+  local z_dir = rand.sel(50, 1, -1)
+
+  H:stair_flow(entry_C, entry_h, z_dir, entry_conn.dir1, {})
+
+  H.min_floor_h = entry_h
+  H.max_floor_h = entry_h
+
   each C in H.chunks do
-    if C.crossover_hall then
-      C.crossover_floor_h = entry_h  -- meh
-    else
-      C.floor_h = entry_h
+    assert(C.floor_h)
+
+    if not C.crossover_hall then
+      H.min_floor_h = math.min(H.min_floor_h, C.floor_h)
+      H.max_floor_h = math.max(H.max_floor_h, C.floor_h)
     end
   end
 
