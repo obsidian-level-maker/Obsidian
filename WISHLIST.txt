@@ -9,7 +9,7 @@ OBLIGE WISH-LIST
 *  add in more scenery: lamps, computers etc
 
 
-*  get cave code working again
+YAY!!! DONE!!  get cave code working again
 
 *  escapable slime pits
 
@@ -218,42 +218,16 @@ Street Mode:
 
 
 Caves:
--  improve the jaggy edge algorithm (support corner triangles)
-
--  re-instate size check (on main empty region), and remove the
-   other empty regions.
-
-+  fix spot_for_wotsit
-
--  furthest_point() : away from N points (conns)
-   --> create a distance map
-
-+  fix monster spots
-
-+  fix pickup spots
-
 +  support Cross-Overs
    -  handle the Room's height limitation
    -  create channels by lowering the floor cells
    -  for bridges, ensure ceiling cells are high enough
 
+-  support "Lakes" again
 
-Natural areas:
-  -  height changes?
+-  MIDVINE sometimes used at cave transitions
+   (probably need a new prefab for this)
 
-  -  better bordering with outdoor areas, how??
-
-  -  support last layer being a deep liquid or even solid,
-     this requires monster/pickup spots to be done later
-
-  -  windows facing landscapes : clear the cave in front
-
-  -  MIDVINE sometimes used at cave transitions
-     (probably need a new prefab for this)
-
-
-Lighting:
-  -  support w_face.light (maybe even have 'light' in MATERIALS ?)
 
 
 Planner:
@@ -709,7 +683,7 @@ DONE: for the missing WAD message: a clickable hyperlink
 
 -  create faces from stacked brushes behind a gap (cf. oa_dm7)
 
--  Option to create _debugging_ MAP file
+DONE:  module to create _debugging_ MAP file
 
 -  Option for shrinking textures by half (scaled in-map)
    which would only require 1/4 of the lightmap space

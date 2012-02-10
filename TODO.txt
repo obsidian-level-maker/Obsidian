@@ -7,7 +7,10 @@ Current Work
 
 >>>  light_globe and flame entities for QUAKE
 
->>>  big junction test: FIX HOLES
+VERIFY :  big junction test: FIX HOLES
+
+
+!!!  fix stuck monsters (boundaries of area chunks)
 
 
 Fence stuff
@@ -17,7 +20,7 @@ Fence stuff
 
 Outdoor Borders:
 
--  properly pick the facade for fake buildings
+-  cages !!
 
 
 
@@ -39,7 +42,7 @@ Hallways:
              _or_     a mechanism to use a single prefab (CONDITIONAL STUFF)
                       [can be done using height variables]
 
-Idea: GAME.HALLWAY_GROUPS
+Idea: HALLWAY_GROUPS
 
       basic =
       {
@@ -96,6 +99,8 @@ Next WIP Goals
 -  ARCH_W_WINDOW
 
 
+
+-  automatically create bridges over channels
 
 +  automatic repeating of prefabs
    x_repeat=192 : means we require: x_size / N >= x_repeat (for highest N)
