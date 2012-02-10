@@ -1129,7 +1129,7 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
     C.h_extra = "stair"
     C.h_dir   = from_dir
 
-    floor_h = floor_h + 60
+    floor_h = floor_h + 128
   end
 
   for dir = 2,8,2 do

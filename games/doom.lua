@@ -2425,12 +2425,6 @@ DOOM.SKINS =
     _where  = "hallway"
   }
 
-  Hall_Test_I_Stair =
-  {
-    _prefab = "HALL_BASIC_I_STAIR"
-    _where  = "hallway"
-  }
-
   Hall_Test_C =
   {
     _prefab = "HALL_BASIC_C"
@@ -2449,6 +2443,28 @@ DOOM.SKINS =
     _where  = "hallway"
   }
 
+  Hall_Test_I_StairXX =
+  {
+    _prefab = "HALL_BASIC_I_STAIR"
+    _where  = "hallway"
+  }
+
+  Hall_Test_I_Stair =  --!!!! I_Lift
+  {
+    _prefab = "HALL_BASIC_I_LIFT"
+    _where  = "hallway"
+    _tags   = 1
+
+    lift = "SUPPORT3"
+    top  = { STEP_F1=50, STEP_F2=50 }
+
+    raise_W1 = 130
+    lower_WR = 88  -- 120
+    lower_SR = 62  -- 123
+  }
+
+
+  ---| BIG JUNCTIONS |---
 
   Junc_Test_I =
   {

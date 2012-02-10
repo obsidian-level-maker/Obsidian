@@ -1297,6 +1297,99 @@ PREFAB.HALL_BASIC_I_STAIR =
 }
 
 
+PREFAB.HALL_BASIC_I_LIFT =
+{
+  fitted = "xy"
+
+  defaults =
+  {
+    speed = 32
+    delay = 105
+  }
+
+  brushes =
+  {
+    -- left wall
+    {
+      { x =   0, y =   0, mat = "?wall" }
+      { x =  16, y =   0, mat = "?wall" }
+      { x =  16, y = 192, mat = "?wall" }
+      { x =   0, y = 192, mat = "?outer" }
+    }
+
+    -- right wall
+    {
+      { x = 176, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?outer" }
+      { x = 192, y = 192, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+    }
+
+    -- ceiling
+    {
+      { x =  16, y =   0, mat = "?wall" }
+      { x = 176, y =   0, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+      { x =  16, y = 192, mat = "?wall" }
+      { b = 256, mat = "?ceil" }
+    }
+
+    
+    -- low floor
+    {
+      { x =  16, y =  0, mat = "?wall" }
+      { x = 176, y =  0, mat = "?wall" }
+      { x = 176, y = 32, mat = "?wall" }
+      { x =  16, y = 32, mat = "?wall" }
+      { t = 0, mat = "?floor" }
+    }
+
+    -- high floor
+    {
+      { x =  16, y =   0, mat = "?floor" }
+      { x =  32, y =  32, mat = "?floor" }
+      { x =  32, y = 160, mat = "?floor" }
+      { x =  16, y = 160, mat = "?floor" }
+      { t = 128, mat = "?floor" }
+    }
+
+    {
+      { x = 160, y =  32, mat = "?floor" }
+      { x = 176, y =   0, mat = "?floor" }
+      { x = 176, y = 160, mat = "?floor" }
+      { x = 160, y = 160, mat = "?floor" }
+      { t = 128, mat = "?floor" }
+    }
+
+    {
+      { x =  16, y = 160, mat = "?floor" }
+      { x = 176, y = 160, mat = "?floor" }
+      { x = 176, y = 192, mat = "?floor" }
+      { x =  16, y = 192, mat = "?floor" }
+      { t = 128, mat = "?floor" }
+    }
+
+    -- lift itself
+    {
+      { x =  32, y =  32, mat = "?lift", special="?lower_SR", act="SR", tag="?tag", arg1="?tag", arg2="?speed", arg3="?delay", peg=1, x_offset=0, y_offset=0 }
+      { x = 160, y =  32, mat = "?lift", special="?lower_WR", act="WR", tag="?tag", arg1="?tag", arg2="?speed", arg3="?delay", peg=1, x_offset=0, y_offset=0 }
+      { x = 160, y = 160, mat = "?lift", special="?lower_WR", act="WR", tag="?tag", arg1="?tag", arg2="?speed", arg3="?delay", peg=1, x_offset=0, y_offset=0 }
+      { x =  32, y = 160, mat = "?lift", special="?lower_WR", act="WR", tag="?tag", arg1="?tag", arg2="?speed", arg3="?delay", peg=1, x_offset=0, y_offset=0 }
+      { t =   8, mat = "?top", tag = "?tag" }
+    }
+
+    -- trigger to go up
+    {
+      { m = "rail" }
+      { x =  40, y =  80, special="?raise_W1", act="W1", tag="?tag", arg1="?tag", arg2="?speed", arg3="?delay" }
+      { x = 152, y =  80 }
+      { x = 152, y = 112 }
+      { x =  40, y = 112 }
+    }
+  }
+}
+
+
 PREFAB.HALL_BASIC_I_WINDOW =
 {
   fitted = "xy"
