@@ -1761,7 +1761,7 @@ end
 
 ------------------------------------------------------------
 
-OB_GAMES["chex1"] =
+UNFINISHED["chex1"] =
 {
   label = "Chex Quest"
   format = "doom"
