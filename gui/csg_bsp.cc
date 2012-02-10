@@ -1093,7 +1093,11 @@ static void SplitGroup(group_c & group, bool reached_chunk = false)
 static void MergeSnags(snag_c *A, snag_c *B)
 {
   SYS_ASSERT(A->region);
-  SYS_ASSERT(A->region == B->region);
+  SYS_ASSERT(B->region);
+
+/// -AJA- Hmmmm: why should this be true? (I forget)
+///
+/// SYS_ASSERT(A->region == B->region);
 
   if (! B->mini)
   {
