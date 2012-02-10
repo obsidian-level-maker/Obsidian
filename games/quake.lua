@@ -986,13 +986,13 @@ QUAKE.SKINS =
   Hall_Test_I =
   {
     _prefab = "HALL_BASIC_I"
-    _where  = "chunk"  -- FIXME: hall
+    _where  = "hallway"
   }
 
   Hall_Test_C =
   {
     _prefab = "HALL_BASIC_C"
-    _where  = "chunk"
+    _where  = "hallway"
 
     torch_ent = "torch"
   }
@@ -1000,13 +1000,13 @@ QUAKE.SKINS =
   Hall_Test_T =
   {
     _prefab = "HALL_BASIC_T"
-    _where  = "chunk"
+    _where  = "hallway"
   }
 
   Hall_Test_P =
   {
     _prefab = "HALL_BASIC_P"
-    _where  = "chunk"
+    _where  = "hallway"
   }
 
 
