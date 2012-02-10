@@ -989,6 +989,12 @@ QUAKE.SKINS =
     _where  = "hallway"
   }
 
+  Hall_Test_I_Stair =
+  {
+    _prefab = "HALL_BASIC_I_STAIR"
+    _where  = "hallway"
+  }
+
   Hall_Test_C =
   {
     _prefab = "HALL_BASIC_C"
