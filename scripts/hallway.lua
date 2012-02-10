@@ -1112,8 +1112,12 @@ function HALLWAY_CLASS.link_chunks(H)
 end
 
 
-function HALLWAY_CLASS.stair_flow(H, C, floor_h, z_dir, from_dir, seen)
+function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
   -- recursively flow through the hallway, adding stairs (etc) 
+
+--- stderrf("stair_flow @ %s | %s\n", H:tostr(), C:tostr())
+
+  seen[C] = true
 
   -- only the "I" pieces can become stairs or lifts
   -- (everything else must have no height changes)
@@ -1123,21 +1127,26 @@ function HALLWAY_CLASS.stair_flow(H, C, floor_h, z_dir, from_dir, seen)
 
   if C.h_kind == "I" then
     C.h_extra = "stair"
+    C.h_dir   = from_dir
+
     floor_h = floor_h + 60
   end
 
   for dir = 2,8,2 do
+    if dir == from_dir then continue end
+
     local C2 = C.hall_link[dir]
 
     if C2 and not seen[C2] then
-      seen[C2] = true
-
-      H:stair_flow(C2, floor_h, z_dir, dir, seen)
+      H:stair_flow(C2, 10 - dir, floor_h, z_dir, seen)
     end
 
-    local C3 = C.link[dir]
+    local LINK = C.link[dir]
 
-    if C3 then
+    if LINK then
+      local C3 = C.link[dir].C1
+      if C3 == C then C3 = C.link[dir].C2 end
+
       C3.floor_h = floor_h
     end
   end
@@ -1223,6 +1232,7 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
 
   local entry_C = assert(entry_conn.C2)
   local entry_h = assert(entry_conn.C1.floor_h)
+  local entry_dir = entry_conn.dir1
 
   if H.cross_limit then
     if entry_h < H.cross_limit[1] then entry_h = H.cross_limit[1] end
@@ -1242,7 +1252,7 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
   -- general vertical direction
   local z_dir = rand.sel(50, 1, -1)
 
-  H:stair_flow(entry_C, entry_h, z_dir, entry_conn.dir1, {})
+  H:stair_flow(entry_C, 10 - entry_dir, entry_h, z_dir, {})
 
   H.min_floor_h = entry_h
   H.max_floor_h = entry_h

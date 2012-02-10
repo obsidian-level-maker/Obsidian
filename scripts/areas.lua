@@ -1685,7 +1685,7 @@ function Areas_flesh_out()
 
     if R.entry_conn then
       C = assert(R.entry_conn.C2)
-      h = assert(R.entry_conn.C1.floor_h)
+      h = assert(C.floor_h)
 
       assert(C.room == R)
 
