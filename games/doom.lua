@@ -2447,33 +2447,43 @@ DOOM.SKINS =
   Junc_Test_I =
   {
     _prefab = "JUNCTION_TEST"
-    _where  = "chunk"  -- FIXME: big_junc
+    _where  = "big_junc"
 
-    ceil = "LAVA1"
+    hole = "_SKY"
+
+    east_wall_q = 1
+    west_wall_q = 1
   }
 
   Junc_Test_C =
   {
     _prefab = "JUNCTION_TEST"
-    _where  = "chunk"  -- FIXME: big_junc
+    _where  = "big_junc"
 
-    ceil = "LAVA1"
+    hole = "_SKY"
+
+    north_wall_q = 1
+     east_wall_q = 1
   }
 
   Junc_Test_T =
   {
     _prefab = "JUNCTION_TEST"
-    _where  = "chunk"  -- FIXME: big_junc
+    _where  = "big_junc"
 
-    ceil = "LAVA1"
+    hole = "_SKY"
+
+    north_wall_q = 1
   }
 
   Junc_Test_P =
   {
     _prefab = "JUNCTION_TEST"
-    _where  = "chunk"  -- FIXME: big_junc
+    _where  = "big_junc"
 
-    ceil = "LAVA1"
+    hole = "_SKY"
+
+    -- leave all walls open
   }
 
 
