@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2010 Andrew Apted
+//  Copyright (C) 2006-2012 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -53,7 +53,10 @@ void Default_Location(void)
     last_file[len+1] = 0;
   }
 
-  strcat(last_file, "TEST");
+  char base[32];
+  sprintf(base, "OB_TEST");  //  "OB_%3x", OBLIGE_HEX_VER);
+
+  strcat(last_file, base);
 
   LogPrintf("default_location: [%s]\n\n", last_file);
 }
