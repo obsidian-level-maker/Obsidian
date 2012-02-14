@@ -1683,7 +1683,7 @@ function Areas_flesh_out()
   local function entry_chunk_and_height(R)
     local C, floor_h
 
-    if R.entry_conn then
+    if R.entry_conn and R.entry_conn.kind != "teleporter" then
       C = assert(R.entry_conn.C2)
       h = assert(C.floor_h)
 
