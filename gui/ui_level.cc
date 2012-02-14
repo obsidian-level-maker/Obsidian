@@ -25,6 +25,7 @@
 
 #include "lib_util.h"
 #include "m_lua.h"
+#include "main.h"
 
 
 #define MY_GREEN  fl_rgb_color(0,166,0)
@@ -40,7 +41,8 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
  
   box(FL_THIN_UP_BOX);
 
-  color(BUILD_BG, BUILD_BG);
+  if (! alternate_look)
+    color(BUILD_BG, BUILD_BG);
 
 
   int y_step = 6 + KF;

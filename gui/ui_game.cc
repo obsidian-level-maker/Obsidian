@@ -25,6 +25,7 @@
 
 #include "lib_signal.h"
 #include "lib_util.h"
+#include "main.h"
 #include "m_lua.h"
 
 
@@ -38,7 +39,8 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
  
   box(FL_THIN_UP_BOX);
 
-  color(BUILD_BG, BUILD_BG);
+  if (! alternate_look)
+    color(BUILD_BG, BUILD_BG);
 
   int y_step = 6 + KF;
 

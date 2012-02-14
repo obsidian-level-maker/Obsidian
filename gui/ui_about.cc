@@ -160,7 +160,9 @@ UI_About::UI_About(int W, int H, const char *label) :
   Fl_Group *darkish = new Fl_Group(0, cy, W, H-cy);
   darkish->end();
   darkish->box(FL_FLAT_BOX);
-  darkish->color(BUILD_BG, BUILD_BG);
+  if (! alternate_look)
+    darkish->color(BUILD_BG, BUILD_BG);
+
   add(darkish);
 
   // finally add an "OK" button
@@ -292,7 +294,9 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
   callback(callback_Quit, this);
 
   box(FL_THIN_UP_BOX);
-  color(BUILD_BG, BUILD_BG);
+
+  if (! alternate_look)
+    color(BUILD_BG, BUILD_BG);
 
 
   int y_step = 6 + KF;
@@ -314,7 +318,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
   cy += heading->h() + y_step;
   
 
-  opt_alt_look = new Fl_Check_Button(cx, cy, 24, 24, "Basic Skin (requires a restart)");
+  opt_alt_look = new Fl_Check_Button(cx, cy, 24, 24, "Alternate Look (requires a restart)");
   opt_alt_look->align(FL_ALIGN_RIGHT);
   opt_alt_look->value(alternate_look ? 1 : 0);
   opt_alt_look->callback(callback_AltLook, this);
@@ -402,7 +406,9 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
   Fl_Group *darkish = new Fl_Group(0, H-dh, W, dh);
   darkish->end();
   darkish->box(FL_FLAT_BOX);
-  darkish->color(BUILD_BG, BUILD_BG);
+  if (! alternate_look)
+    darkish->color(BUILD_BG, BUILD_BG);
+
   add(darkish);
 
 

@@ -27,6 +27,7 @@
 
 
 #define INACTIVE_BG  fl_gray_ramp(5)
+#define INACTIVE_BG2  fl_gray_ramp(14)
 
 #define ABORT_COLOR  fl_color_cube(3,1,1)
 
@@ -42,7 +43,8 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
  
   box(FL_THIN_UP_BOX);
 
-  color(BUILD_BG, BUILD_BG);
+  if (! alternate_look)
+    color(BUILD_BG, BUILD_BG);
 
   status_label[0] = 0;
 
@@ -106,7 +108,9 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
   status = new Fl_Box(FL_FLAT_BOX, x+12, cy, w-22, 24+KF*2, "Ready to go!");
   status->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
-  status->color(FL_DARK2, FL_DARK2);
+
+  if (! alternate_look)
+    status->color(FL_DARK2, FL_DARK2);
 
   add(status);
 
@@ -116,7 +120,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   progress = new Fl_Progress(x+14+KF*2, cy, w-28-KF*4, 20);
   progress->align(FL_ALIGN_INSIDE);
   progress->box(FL_FLAT_BOX);
-  progress->color(INACTIVE_BG, FL_BLACK);
+  progress->color(alternate_look ? INACTIVE_BG2 : INACTIVE_BG, FL_BLACK);
   progress->value(0.0);
   progress->labelsize(16);
 
@@ -166,12 +170,15 @@ void UI_Build::Prog_Init(int node_perc, const char *extra_steps)
   progress->maximum(1.0);
 
   progress->value(0.0);
-  progress->color(FL_BACKGROUND_COLOR, PROGRESS_FG);
+  progress->color(alternate_look ? FL_BLACK : FL_BACKGROUND_COLOR, PROGRESS_FG);
+
+  if (alternate_look)
+    progress->labelcolor(FL_WHITE);
 }
 
 void UI_Build::Prog_Finish()
 {
-  progress->color(INACTIVE_BG, FL_BLACK);
+  progress->color(alternate_look ? INACTIVE_BG2 : INACTIVE_BG, FL_BLACK);
   progress->value(0.0);
   progress->label("");
 }
@@ -222,7 +229,7 @@ void UI_Build::Prog_Nodes(int pos, int limit)
   if (! node_begun)
   {
     node_begun = true;
-    progress->color(FL_BACKGROUND_COLOR, NODE_PROGRESS_FG);
+    progress->selection_color(NODE_PROGRESS_FG);
   }
 
   float val = pos / (float)limit;

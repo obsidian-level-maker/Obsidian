@@ -25,6 +25,7 @@
 
 #include "lib_util.h"
 #include "m_lua.h"
+#include "main.h"
 
 
 #define MY_PURPLE  fl_rgb_color(208,0,208)
@@ -58,7 +59,9 @@ UI_Module::UI_Module(int x, int y, int w, int h,
   resizable(NULL);
 
   box(FL_THIN_UP_BOX);
-  color(BUILD_BG, BUILD_BG);
+
+  if (! alternate_look)
+    color(BUILD_BG, BUILD_BG);
 
   mod_button = new Fl_Check_Button(x+5, y+4, w-20, 24+KF*2, label);
 
@@ -226,7 +229,8 @@ UI_CustomMods::UI_CustomMods(int x, int y, int w, int h, const char *label) :
   sbar = new Fl_Scrollbar(mx+mw, my, Fl::scrollbar_size(), mh);
   sbar->callback(callback_Scroll, this);
 
-  sbar->color(FL_DARK3+1, FL_DARK3+1);
+  if (! alternate_look)
+    sbar->color(FL_DARK3+1, FL_DARK3+1);
 
   add(sbar);
 

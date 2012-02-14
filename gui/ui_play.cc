@@ -26,6 +26,7 @@
 #include "lib_signal.h"
 #include "lib_util.h"
 #include "m_lua.h"
+#include "main.h"
 
 
 #define MY_RED  fl_rgb_color(224,0,0)
@@ -41,7 +42,8 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
  
   box(FL_THIN_UP_BOX);
 
-  color(BUILD_BG, BUILD_BG);
+  if (! alternate_look)
+    color(BUILD_BG, BUILD_BG);
 
 
   int y_step = 6 + KF;
