@@ -1129,7 +1129,9 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
     C.h_extra = "stair"
     C.h_dir   = (z_dir < 0 ? 10 - from_dir ; from_dir)
 
-    floor_h = floor_h + 60 * z_dir
+    C.h_scale_z = rand.pick { 1.0, 1.5, 2.0 }
+
+    floor_h = floor_h + C.h_scale_z * 60 * z_dir
 
     -- stairs and lifts assume we have the lowest height
     if z_dir < 0 then
