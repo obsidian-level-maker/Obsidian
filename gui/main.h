@@ -52,6 +52,7 @@ main_action_kind_e;
 extern int main_action;
 
 // Misc Options
+extern bool alternate_look;
 extern bool create_backups;
 extern bool hide_module_panel;
 extern bool debug_messages;

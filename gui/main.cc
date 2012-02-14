@@ -55,6 +55,7 @@ bool batch_mode = false;
 
 const char *batch_output_file = NULL;
 
+bool alternate_look = false;
 bool create_backups = true;
 bool hide_module_panel = false;
 bool debug_messages = false;
@@ -204,19 +205,18 @@ bool Main_BackupFile(const char *filename, const char *ext)
 
 void Main_SetupFLTK()
 {
-  bool custom_colors = true;
   bool hires_adapt = true;
 
   Fl::visual(FL_RGB);
 
-  if (custom_colors)
+  if (! alternate_look)
   {
     Fl::background(236, 232, 228);
     Fl::background2(255, 255, 255);
     Fl::foreground(0, 0, 0);
+  
+    Fl::scheme("plastic");
   }
-
-  Fl::scheme("plastic");
 
   screen_w = Fl::w();
   screen_h = Fl::h();
@@ -240,6 +240,11 @@ void Main_SetupFLTK()
   FL_NORMAL_SIZE = 14 + KF * 2;
 
   fl_message_font(FL_HELVETICA /* _BOLD */, 18);
+
+  // load icons for file chooser
+#ifndef WIN32
+  Fl_File_Icon::load_system_icons();
+#endif
 }
 
 
@@ -530,9 +535,6 @@ int main(int argc, char **argv)
   }
 
 
-  if (! batch_mode)
-    Main_SetupFLTK();
-
   Determine_WorkingPath(argv[0]);
   Determine_InstallPath(argv[0]);
 
@@ -565,12 +567,9 @@ int main(int argc, char **argv)
 
   LogEnableDebug(debug_messages);
 
-  // load icons for file chooser
-#ifndef WIN32
-  if (! batch_mode)
-    Fl_File_Icon::load_system_icons();
-#endif
 
+  if (! batch_mode)
+    Main_SetupFLTK();
 
   const char *config_file = NULL;
   
@@ -647,10 +646,13 @@ int main(int argc, char **argv)
     }
 
     // kill the stupid bright background of the "plastic" scheme
-    delete Fl::scheme_bg_;
-    Fl::scheme_bg_ = NULL;
+    if (! alternate_look)
+    {
+      delete Fl::scheme_bg_;
+      Fl::scheme_bg_ = NULL;
 
-    main_win->image(NULL);
+      main_win->image(NULL);
+    }
 
     Fl::add_handler(Main_key_handler);
 

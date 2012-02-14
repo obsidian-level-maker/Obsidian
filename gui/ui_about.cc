@@ -206,6 +206,7 @@ class UI_OptionsWin : public Fl_Window
 private:
   bool want_quit;
 
+  Fl_Check_Button *opt_alt_look;
   Fl_Check_Button *opt_modules;
   Fl_Check_Button *opt_backups;
   Fl_Check_Button *opt_debug;
@@ -234,6 +235,13 @@ private:
     UI_OptionsWin *that = (UI_OptionsWin *)data;
 
     that->want_quit = true;
+  }
+
+  static void callback_AltLook(Fl_Widget *w, void *data)
+  {
+    UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+    alternate_look = that->opt_alt_look->value() ? true : false;
   }
 
   static void callback_Backups(Fl_Widget *w, void *data)
@@ -292,7 +300,45 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
   int cx = x() + 24 + KF*3;
   int cy = y() + y_step;
 
-  Fl_Box *heading = new Fl_Box(FL_NO_BOX, x()+6, cy, W-12, 24, "Miscellaneous Options");
+  Fl_Box *heading;
+  
+
+  heading = new Fl_Box(FL_NO_BOX, x()+6, cy, W-12, 24, "GUI Options");
+  heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+  heading->labeltype(FL_NORMAL_LABEL);
+  heading->labelfont(FL_HELVETICA_BOLD);
+  heading->labelsize(FL_NORMAL_SIZE + 2);
+
+  add(heading);
+
+  cy += heading->h() + y_step;
+  
+
+  opt_alt_look = new Fl_Check_Button(cx, cy, 24, 24, "Basic Skin (requires a restart)");
+  opt_alt_look->align(FL_ALIGN_RIGHT);
+  opt_alt_look->value(alternate_look ? 1 : 0);
+  opt_alt_look->callback(callback_AltLook, this);
+
+  add(opt_alt_look);
+
+  cy += opt_alt_look->h() + y_step;
+
+
+  opt_modules = new Fl_Check_Button(cx, cy, 24, 24, "Hide Modules Panel (same as F5 key)");
+  opt_modules->align(FL_ALIGN_RIGHT);
+  opt_modules->value(hide_module_panel ? 1 : 0);
+  opt_modules->callback(callback_Modules, this);
+
+  add(opt_modules);
+
+  cy += opt_modules->h() + y_step;
+
+
+//----------------
+  
+  cy += 8;
+
+  heading = new Fl_Box(FL_NO_BOX, x()+6, cy, W-12, 24, "File Options");
   heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
   heading->labeltype(FL_NORMAL_LABEL);
   heading->labelfont(FL_HELVETICA_BOLD);
@@ -313,16 +359,6 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
   cy += opt_backups->h() + y_step;
 
 
-  opt_modules = new Fl_Check_Button(cx, cy, 24, 24, "Hide Modules Panel (same as F5 key)");
-  opt_modules->align(FL_ALIGN_RIGHT);
-  opt_modules->value(hide_module_panel ? 1 : 0);
-  opt_modules->callback(callback_Modules, this);
-
-  add(opt_modules);
-
-  cy += opt_modules->h() + y_step;
-
-
   opt_debug = new Fl_Check_Button(cx, cy, 24, 24, "Debugging Messages (in LOGS.txt)");
   opt_debug->align(FL_ALIGN_RIGHT);
   opt_debug->value(debug_messages ? 1 : 0);
@@ -331,8 +367,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
   add(opt_debug);
 
   cy += opt_debug->h() + y_step;
-
   
+
 //----------------
 
   cy += 8;
