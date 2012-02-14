@@ -1106,7 +1106,7 @@ function HALLWAY_CLASS.link_chunks(H)
 
     -- and categorize the hallway piece needed
     if not C.crossover_hall then
-      C.h_kind, C.h_dir = C:categorize_hall_piece()
+      C.h_shape, C.h_dir = C:categorize_hall_piece()
     end
   end
 end
@@ -1121,11 +1121,12 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
 
   -- only the "I" pieces can become stairs or lifts
   -- (everything else must have no height changes)
+
   -- FIXME: allow height changes at big junctions
 
   C.floor_h = floor_h
 
-  if C.h_kind == "I" and rand.odds(75) then
+  if C.h_shape == "I" and rand.odds(75) then
     C.h_extra = "stair"
     C.h_dir   = (z_dir < 0 ? 10 - from_dir ; from_dir)
 
@@ -1139,7 +1140,7 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
     end
   end
 
-  if (C.h_kind == "C" or C.h_kind == "P") and rand.odds(15) then
+  if (C.h_shape == "C" or C.h_shape == "P") and rand.odds(15) then
     z_dir = -z_dir
   end
 

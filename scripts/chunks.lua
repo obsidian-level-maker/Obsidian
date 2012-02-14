@@ -1006,10 +1006,10 @@ function CHUNK_CLASS.build_hall_piece(C)
   local base_name = "Hall_Test"
   if C.section.kind == "big_junc" then base_name = "Junc_Test" end
 
-  local h_kind, h_dir = C.h_kind, C.h_dir
-  assert(h_kind)
+  local h_shape, h_dir = C.h_shape, C.h_dir
+  assert(h_shape)
 
-  local skin_name = base_name .. "_" .. h_kind
+  local skin_name = base_name .. "_" .. h_shape
 
   if C.h_extra == "stair" then skin_name = skin_name .. "_Stair" end
   if C.h_extra == "lift"  then skin_name = skin_name .. "_Lift" end
