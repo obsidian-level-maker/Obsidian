@@ -307,7 +307,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
   Fl_Box *heading;
   
 
-  heading = new Fl_Box(FL_NO_BOX, x()+6, cy, W-12, 24, "GUI Options");
+  heading = new Fl_Box(FL_NO_BOX, x()+6, cy, W-12, 24, "Appearance");
   heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
   heading->labeltype(FL_NORMAL_LABEL);
   heading->labelfont(FL_HELVETICA_BOLD);

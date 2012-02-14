@@ -508,7 +508,9 @@ public:
 
     sbar = new Fl_Scrollbar(x + w - sb_w, y, sb_w, h);
     sbar->callback(callback_Scroll, this);
-    sbar->color(FL_DARK3+1, FL_DARK3+1);
+
+    if (! alternate_look)
+      sbar->color(FL_DARK3+1, FL_DARK3+1);
 
     add(sbar);
 
