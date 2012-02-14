@@ -51,6 +51,7 @@ CHANGES (since 3.57)
 - new 'Extreme' option for level size
 - support for simple 3D bridges within rooms
 - improved infighting logic in the Fight Simulator
+- new 'Alternative Look' option
 
 + customised Lua language:
   - commas are optional at end of line in data tables
