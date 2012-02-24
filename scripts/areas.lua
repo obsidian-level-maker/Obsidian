@@ -59,6 +59,11 @@ function AREA_CLASS.tostr(A)
 end
 
 
+function AREA_CLASS.add_chunk(A, C)
+  table.insert(A.chunks, C)
+end
+
+
 function AREA_CLASS.touches(A, A2)
   each N in A.touching do
     if A2 == N then return true end
@@ -1718,12 +1723,76 @@ function Areas_flesh_out()
 
 
   local function seeds_to_chunks(R, AREA, seeds)
-    -- FIXME !!!!!
+    local list = table.copy(seeds)
+
+    while not table.empty(list) do
+      local S = table.remove(list)
+      local C
+
+      if S.chunk then
+        -- existing chunk
+        C = S.chunk
+
+        AREA:add_chunk(C)
+
+        -- remove other seeds in this chunk from the list
+        for sx = C.sx1, C.sx2 do for sy = C.sy1, C.sy2 do
+          table.kill_elem(list, SEEDS[sx][sy])
+        end end
+
+      else
+        -- create a new chunk
+
+        local sx1, sy1 = S.sx, S.sy
+        local sx2, sy2 = S.sx, S.sy
+
+        -- FIXME !!!! try to make a bigger chunk
+
+        -- remove other seeds from the list
+        if sx2 > sx1 or sy2 > sy1 then
+          for sx = sx1, sx2 do for sy = sy1, sy2 do
+            table.kill_elem(list, SEEDS[sx][sy])
+          end end
+        end
+
+        assert(R:can_alloc_chunk(sx1,sy1, sx2,sy2))
+
+        C = R:alloc_chunk(sx1,sy1, sx2,sy2)
+
+        AREA:add_chunk(C)
+      end
+
+    end
   end
 
 
-  local function find_start_for_area(R)
-    -- FIXME !!!!!
+  local function find_start_for_area(R, unfilled_seeds)
+    rand.shuffle(unfilled_seeds)
+
+    local best_S
+    local best_C, best_dir
+
+    local DIRS = { 2,4,6,8 }
+
+    each S in unfilled_seeds do
+      assert(S.unfilled)
+      assert(not S.chunk)
+
+      rand.shuffle(DIRS)
+
+      each dir in DIRS do
+        if not S:same_room(dir) then continue end
+
+        local N = S:neighbor(dir)
+
+        if not (N.chunk and N.chunk.floor_h) then continue end
+
+        -- FIXME !!!!  evaluate it, pick best
+        return S, N, 10 - dir
+      end
+    end
+
+    return nil  -- nothing found
   end
 
 
@@ -1744,7 +1813,7 @@ function Areas_flesh_out()
       if not start_S then return false end
 
     else
-      start_S, from_C, from_dir = find_start_for_area(R)
+      start_S, from_C, from_dir = find_start_for_area(R, unfilled_seeds)
 
       if not start_S then
         error("failed to create new area")
@@ -1779,6 +1848,16 @@ function Areas_flesh_out()
       S.unfilled = nil
       table.kill_elem(unfilled_seeds, S)
     end
+
+
+-- TEMP DEBUG : show connection point
+-- [[
+    if from_C then
+      local mx, my = from_C:mid_point()
+      mx, my = geom.nudge(mx, my, from_dir, 72)
+      entity_helper("candle", mx, my, C.floor_h or 0)
+    end
+--]]
 
     return true  -- OK
   end
