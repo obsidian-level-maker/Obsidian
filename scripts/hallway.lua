@@ -1149,19 +1149,21 @@ function HALLWAY_CLASS.find_double_peer(H, C)
     end
 
     if is_fork then
-      -- require same width, and one either side of fork section
+      -- require same width, one either side of fork section, and not touching
 
       if is_vert then
         if (C.sx2 - C.sx1) == (D.sx2 - D.sx1) and
            C.sx1 == H.double_fork.sx1 and
-           D.sx2 == H.double_fork.sx2
+           D.sx2 == H.double_fork.sx2 and
+           D.sx1 > C.sx2 + 1
         then
           return D
         end
       else -- horiz
         if (C.sy2 - C.sy1) == (D.sy2 - D.sy1) and
            C.sy1 == H.double_fork.sy1 and
-           D.sy2 == H.double_fork.sy2
+           D.sy2 == H.double_fork.sy2 and
+           D.sy1 > C.sy2 + 1
         then
           return D
         end
@@ -1213,10 +1215,9 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
   then
     -- reverse Z direction in a double hallway when hit the fork section,
     -- which means the other side mirrors the first side
-    if C.double_peer and C.section == H.double_fork and
-       C.double_peer.floor_h
-    then
+    if C.double_peer and C.double_peer.floor_h and not H.flipped_double then
       z_dir = -z_dir
+      H.flipped_double = true
     end
 
     C.h_extra = "stair"
