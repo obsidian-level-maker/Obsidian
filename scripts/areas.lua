@@ -999,7 +999,7 @@ function Areas_flesh_out()
     if R.kw < 2 or R.kh < 2 then return end
 
     -- do it more often in large rooms
-    local prob = (R.svolume >= 36 ? 75 ; 25)
+    local prob = (R.svolume >= 36 ? 90 ; 25)
     if not rand.odds(prob) then return end
 
     local whole = rand.odds(2)
@@ -1229,14 +1229,14 @@ function Areas_flesh_out()
   end
 
 
-  local function create_areas(R)
+  local function OLD__create_areas(R)
     -- the seeds which are left over from the previous allocations
     -- should form a contiguous area which ensures traversibility
     -- between all walk spots (doorways, switches, etc).
     --
     -- the task here is to allocate these seeds into chunks,
     -- organizing them into a number of separate floor areas
-    -- (generally of different heights) and stairs between them.
+    -- (with different heights) and place stairs between them.
 
     -- group chunks into areas
     local area_tab = {}
@@ -1664,7 +1664,7 @@ function Areas_flesh_out()
   end
 
 
-  local function connect_all_areas(R)
+  local function OLD__connect_all_areas(R)
     while true do
       -- find an area which is not connected, but touches one which is,
       -- then connect those two.
@@ -1677,6 +1677,123 @@ function Areas_flesh_out()
 
       connect_areas(A1, A2)
     end
+  end
+
+
+  local function grow_area(R, seeds)
+    -- FIXME !!!!
+  end
+
+
+  local function seeds_to_chunks(R, AREA, seeds)
+  end
+
+
+  local function find_start_for_extra_area(R)
+  end
+
+
+  local function create_area(R, mode, unfilled_seeds)
+    -- seed to begin new area
+    local start_S
+
+    -- chunk that new area branches off (none for first one)
+    local from_C, from_dir
+
+
+    if table.empty(R.areas) then
+      start_S = SEEDS[R.entry_C.sx1][R.entry_C.sy1]
+
+    elseif mode == "extra" then
+      start_S, from_C, from_dir = nil --!!! find_start_for_EXTRA_area(R)
+
+      if not start_S then return false end
+
+    else
+      start_S, from_C, from_dir = find_start_for_area(R)
+
+      if not start_S then
+        error("failed to create new area")
+      end
+    end
+
+    -- create the new area now
+
+    local AREA = AREA_CLASS.new("floor", R)
+
+    table.insert(R.areas, AREA)
+
+    if not from_C then
+      AREA.floor_h = R.entry_h
+    else
+      AREA.floor_h = from_C.area.floor_h + rand.pick { 8,16,24,32 }
+    end
+
+    -- grow it
+
+    local seeds = {}
+
+    if not start_S.chunk then
+      table.insert(seeds, start_S)
+    else
+      local C = start_S.chunk
+
+      for sx = C.sx1, C.sx2 do for sy = C.sy1, C.sy2 do
+        table.insert(seeds, SEEDS[sx][sy])
+      end end
+    end
+
+    for i = 1,11 do
+      grow_area(R, seeds)
+    end
+
+    seeds_to_chunks(R, AREA, seeds)
+
+    return true  -- OK
+  end
+
+
+  local function connect_all_areas(R)
+    -- this also creates the areas too!
+
+    -- collect all the seeds we need to fill
+    -- include the allocated chunks too (one seed is enough)
+    local unfilled_count = {}
+
+    for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
+
+      if S.room == R and R:can_alloc_chunk(sx, sy, sx, sy) then
+        S.unfilled = true
+        table.insert(unfilled_seeds, S)
+      end
+    end end
+
+    each C in R.chunks do
+      if not C.scenic then
+        local S = SEEDS[C.sx1][C.sy1]
+        S.unfilled = true
+        table.insert(unfilled_seeds, S)
+      end
+    end
+
+    -- first pass : ensure all seeds are filled by new areas
+    while not table.empty(unfilled_seeds) do
+      create_area(R, "normal", unfilled_seeds)
+    end
+
+    -- second pass : some extra floors (mainly for the Quake games)
+    local extra = (R.sw + R.sh) / 3
+
+    for loop = 1,extra do
+      if not create_area(R, "extra") then break; end
+    end
+
+    -- done!
+
+    set_all_touching(R)
+
+    R:dump_areas(R)
   end
 
 
@@ -1717,8 +1834,6 @@ function Areas_flesh_out()
 
     local entry_C, entry_h = entry_chunk_and_height(R)
 
-    local entry_area = assert(entry_C.area)
-
     if not R:in_floor_limit(entry_h) then
       gui.debugf("WARNING !!!! entry_h not in floor_limit\n")
 
@@ -1732,9 +1847,7 @@ function Areas_flesh_out()
 
     R.entry_h    = entry_h
     R.entry_C    = entry_C
-    R.entry_area = entry_area
 
-    entry_area:set_floor(entry_h)
   end
 
 
@@ -1846,13 +1959,17 @@ function Areas_flesh_out()
       Simple_create_areas(R)
     else
       decorative_chunks(R)
-      filler_chunks(R)
-      create_areas(R)
+---###  filler_chunks(R)
+---###  create_areas(R)
     end
 
     initial_height(R)
     
     if R.kind == "cave" then
+      local entry_area = assert(entry_C.area)
+      R.entry_area = entry_area
+      entry_area:set_floor(R.entry_h)
+
       Simple_connect_all_areas(R)
     else
       connect_all_areas(R)
