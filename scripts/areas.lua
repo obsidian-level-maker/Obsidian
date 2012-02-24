@@ -1316,7 +1316,7 @@ function Areas_flesh_out()
 
     set_all_touching(R)
 
-    R:dump_areas(R)
+    R:dump_areas()
   end
 
 
@@ -1687,6 +1687,14 @@ function Areas_flesh_out()
   end
 
 
+  local function dump_seed_list(title, list)
+    gui.debugf("%s\n", title)
+    each S in list do
+      gui.debugf("  %s\n", S:tostr())
+    end
+  end
+
+
   local function add_seed_or_chunk(list, S)
     if S.chunk then
       local C = S.chunk
@@ -1736,7 +1744,7 @@ stderrf("seeds_to_chunks for %s\n", AREA:tostr())
         -- existing chunk
         C = S.chunk
 
-        AREA:add_chunk(C)
+stderrf("__ add %s\n", C:tostr())
 
         -- remove other seeds in this chunk from the list
         for sx = C.sx1, C.sx2 do for sy = C.sy1, C.sy2 do
@@ -1758,13 +1766,13 @@ stderrf("seeds_to_chunks for %s\n", AREA:tostr())
           end end
         end
 
+stderrf("__ create (%d %d) .. (%d %d)\n", sx1, sy1, sx2, sy2)
         assert(R:can_alloc_chunk(sx1,sy1, sx2,sy2))
 
         C = R:alloc_chunk(sx1,sy1, sx2,sy2)
-
-        AREA:add_chunk(C)
       end
 
+      AREA:add_chunk(C)
     end
   end
 
@@ -1789,6 +1797,8 @@ stderrf("find_start_for_area @ %s : %d unfilled\n", R:tostr(), #unfilled_seeds)
 
         local N = S:neighbor(dir)
 
+stderrf("__ trying %s dir:%d\n", S:tostr(), dir)
+
         if not (N.chunk and N.chunk.area) then continue end
 
         -- FIXME !!!!  evaluate it, pick best
@@ -1812,6 +1822,8 @@ stderrf("find_start_for_area @ %s : %d unfilled\n", R:tostr(), #unfilled_seeds)
     if table.empty(R.areas) then
       start_S = SEEDS[R.entry_C.sx1][R.entry_C.sy1]
 
+stderrf("---> start:%s (entry_C = %s)\n", start_S:tostr(), R.entry_C:tostr())
+
     elseif mode == "extra" then
       start_S, from_C, from_dir = nil --!!! find_start_for_EXTRA_area(R)
 
@@ -1821,8 +1833,11 @@ stderrf("find_start_for_area @ %s : %d unfilled\n", R:tostr(), #unfilled_seeds)
       start_S, from_C, from_dir = find_start_for_area(R, unfilled_seeds)
 
       if not start_S then
+R:dump_areas()
         error("failed to create new area")
       end
+
+stderrf("---> start:%s from:%s dir:%d\n", start_S:tostr(), from_C:tostr(), from_dir)
     end
 
     -- create the new area now
@@ -1841,12 +1856,14 @@ stderrf("find_start_for_area @ %s : %d unfilled\n", R:tostr(), #unfilled_seeds)
       grow_area(R, seeds)
     end
 
-    seeds_to_chunks(R, AREA, seeds)
+dump_seed_list("grown seeds", seeds)
 
     each S in seeds do
       S.unfilled = nil
       table.kill_elem(unfilled_seeds, S)
     end
+
+    seeds_to_chunks(R, AREA, seeds)
 
     -- determine new height
 
@@ -1891,12 +1908,15 @@ stderrf("connect_all_areas BEGIN\n")
     end end
 
     each C in R.chunks do
-      if not C.scenic then
+      if not (C.scenic or C.liquid) then
         local S = SEEDS[C.sx1][C.sy1]
         S.unfilled = R
         table.insert(unfilled_seeds, S)
       end
     end
+
+dump_seed_list("unfilled", unfilled_seeds)
+
 
     -- first pass : ensure all seeds are filled by new areas
     while not table.empty(unfilled_seeds) do
@@ -1915,7 +1935,7 @@ stderrf("creating area (%d unfilled)\n", #unfilled_seeds)
 
     set_all_touching(R)
 
-    R:dump_areas(R)
+    R:dump_areas()
 stderrf("connect_all_areas DONE\n")
   end
 
@@ -1936,10 +1956,10 @@ stderrf("connect_all_areas DONE\n")
       -- TODO: if R.purpose == "START" then find_start_chunk
       --       elseif R.has_teleporter() then find_tele_chunk
       -- [BETTER: have R.entry_chunk field]
-      
----##      repeat
-      C = rand.pick(R.chunks)
----##      until C.area
+
+      repeat
+        C = rand.pick(R.chunks)
+      until not (C.scenic or C.liquid)
 
       if R.floor_limit then
         h = rand.sel(50, R.floor_limit[1], R.floor_limit[2])
