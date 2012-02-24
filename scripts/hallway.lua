@@ -22,7 +22,7 @@
 
 class HALLWAY
 {
-  kind : keyword  --  "hallway"
+  kind : keyword  --  "hallway"  -- FIXME unused, REMOVE??
 
   id : number (for debugging)
 
@@ -36,7 +36,7 @@ class HALLWAY
   crossover : ROOM
 
   double_fork : SECTION    -- only present for double hallways.
-  double_dir  : direction
+  double_dir  : direction  -- dir at the single end (into hallway)
 
 ---##  neighbor : ROOM / HALL  -- the room this hallway connects to without
 ---##                          -- any locked door in-between.
@@ -749,6 +749,7 @@ function Hallway_add_doubles()
     gui.debugf("Double hallway @ %s dir:%d\n", K:tostr(), dir)
 
     H.double_fork = K
+    H.double_dir  = dir
 
     room_K.room.double_K   = room_K
     room_K.room.double_dir = left_dir
@@ -783,10 +784,17 @@ function Hallway_add_doubles()
     D2.lock = D1.lock
     
     -- peer them up (not needed ATM, might be useful someday)
-    D1.peer = D2
-    D2.peer = D1
+    D1.double_peer = D2
+    D2.double_peer = D1
 
     D2:add_it()
+
+    -- peer up the sections too
+     left_J.double_peer = right_J
+    right_J.double_peer =  left_J
+
+     left_K.double_peer = right_K
+    right_K.double_peer =  left_K
 
     -- add new sections to hallway
     H:add_section(left_J) ; H:add_section(right_J)
@@ -939,7 +947,10 @@ function HALLWAY_CLASS.try_add_middle_chunk(H, K)
   local sx1, sy1 = K.sx1, K.sy1
   local sx2, sy2 = K.sx2, K.sy2
 
-  if K.kind == "junction" or K.kind == "big_junc" or rand.odds(20) then
+--FIXME !!!!!!!!
+  if K.kind == "junction" or K.kind == "big_junc" or
+   --[[  K.double_peer or --]] rand.odds(20)
+  then
     -- use the whole section
 
   elseif K.kind == "horiz" then
@@ -1112,6 +1123,77 @@ function HALLWAY_CLASS.link_chunks(H)
 end
 
 
+function HALLWAY_CLASS.find_double_peer(H, C)
+  local is_fork = (C.section == H.double_fork)
+  local is_vert = geom.is_vert(H.double_dir)
+
+  each D in H.chunks do
+
+    if D == C then continue end
+    if not D.section then continue end
+    if D.double_peer then continue end
+
+    if D.section.double_peer and
+       D.section.double_peer == C.section and
+       not is_fork
+    then
+      assert(C != D)
+
+      -- check that both chunks are aligned
+
+      if is_vert then
+        if C.sy1 == D.sy1 and C.sy2 == D.sy2 then return D end
+      else
+        if C.sx1 == D.sx1 and C.sx2 == D.sx2 then return D end
+      end
+    end
+
+    if is_fork then
+      -- require same width, and one either side of fork section
+
+      if is_vert then
+        if (C.sx2 - C.sx1) == (D.sx2 - D.sx1) and
+           C.sx1 == H.double_fork.sx1 and
+           D.sx2 == H.double_fork.sx2
+        then
+          return D
+        end
+      else -- horiz
+        if (C.sy2 - C.sy1) == (D.sy2 - D.sy1) and
+           C.sy1 == H.double_fork.sy1 and
+           D.sy2 == H.double_fork.sy2
+        then
+          return D
+        end
+      end
+    end
+
+  end
+end
+
+
+function HALLWAY_CLASS.peer_double_chunks(H)
+  if not H.double_fork then return end
+
+  gui.debugf("peer_double_chunks @ %s\n", H:tostr())
+
+  each C in H.chunks do
+    if not C.section then continue end
+    if C.double_peer then continue end
+
+    if C.section.double_peer or C.section == H.double_fork then
+      local D = H:find_double_peer(C)
+
+      if D then
+gui.debugf("   found %s <--> %s\n", C:tostr(), D:tostr())
+        C.double_peer = D
+        D.double_peer = C
+      end
+    end
+  end
+end
+
+
 function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
   -- recursively flow through the hallway, adding stairs (etc) 
 
@@ -1122,17 +1204,27 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
   -- only the "I" pieces can become stairs or lifts
   -- (everything else must have no height changes)
 
-  -- FIXME: allow height changes at big junctions
+  -- FIXME: allow height changes at big junctions (specified by the skin)
 
   C.floor_h = floor_h
 
-  if C.h_shape == "I" and rand.odds(75) then
+  if C.h_shape == "I" and (rand.odds(70) or C.double_peer) and
+     (not H.double_fork or C.double_peer)
+  then
+    -- reverse Z direction in a double hallway when hit the fork section,
+    -- which means the other side mirrors the first side
+    if C.double_peer and C.section == H.double_fork and
+       C.double_peer.floor_h
+    then
+      z_dir = -z_dir
+    end
+
     C.h_extra = "stair"
     C.h_dir   = (z_dir < 0 ? 10 - from_dir ; from_dir)
 
-    C.h_scale_z = rand.pick { 1.0, 1.5, 2.0 }
+    ---TEST:  C.h_scale_z = rand.pick { 1.0, 1.5, 2.0 }
 
-    floor_h = floor_h + C.h_scale_z * 60 * z_dir
+    floor_h = floor_h + (C.h_scale_z or 1) * 60 * z_dir
 
     -- stairs and lifts assume we have the lowest height
     if z_dir < 0 then
@@ -1140,7 +1232,7 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
     end
   end
 
-  if (C.h_shape == "C" or C.h_shape == "P") and rand.odds(15) then
+  if (C.h_shape == "C" or C.h_shape == "P") and rand.odds(15) and not H.double_fork then
     z_dir = -z_dir
   end
 
@@ -1165,7 +1257,7 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
       C3.floor_h = floor_h
     end
 
-    if did_a_branch and rand.odds(50) then
+    if did_a_branch and rand.odds(50) and not H.double_fork then
       z_dir = -z_dir
     end
   end
@@ -1267,6 +1359,7 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
   H:  link_chunks()
 
   H:update_seeds_for_chunks()
+  H:peer_double_chunks()
 
   -- general vertical direction
   local z_dir = rand.sel(50, 1, -1)
