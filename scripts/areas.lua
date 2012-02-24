@@ -1842,9 +1842,6 @@ function Areas_flesh_out()
     R.areas = {}
 
     if R.kind == "cave" then
-      -- FIXME: don't really need these chunks [used to clear cave]
-      filler_chunks(R)
-
       Simple_cave_or_maze(R)
       Simple_create_areas(R)
     else

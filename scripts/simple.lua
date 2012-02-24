@@ -56,8 +56,8 @@ function Simple_cave_or_maze(R)
   end
 
 
-  local function set_side(C, side, value)
-    local x1,y1, x2,y2 = geom.side_coords(side, C.cave_x1,C.cave_y1, C.cave_x2,C.cave_y2)
+  local function set_side(cx1, cy1, cx2, cy2, side, value)
+    local x1,y1, x2,y2 = geom.side_coords(side, cx1,cy1, cx2,cy2)
 
     for cx = x1,x2 do for cy = y1,y2 do
       map:set(cx, cy, value)
@@ -132,20 +132,6 @@ function Simple_cave_or_maze(R)
 
 
   local function create_map()
----##  local sx1, sx2 = 999, -999
----##  local sy1, sy2 = 999, -999
----##
----##  each C in R.chunks do
----##    sx1 = math.min(sx1, C.sx1)
----##    sy1 = math.min(sy1, C.sy1)
----##
----##    sx2 = math.max(sx2, C.sx2)
----##    sy2 = math.max(sy2, C.sy2)
----##  end
----##
----##  assert(sx1 <= sx2)
----##  assert(sy1 <= sy2)
-
     R.cave_base_x = SEEDS[R.sx1][R.sy1].x1
     R.cave_base_y = SEEDS[R.sx1][R.sy1].y1
 
@@ -163,28 +149,44 @@ function Simple_cave_or_maze(R)
 
 
   local function mark_boundaries()
-    each C in R.chunks do
-      if C.void or C.scenic or C.cross_junc then continue end
+    for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
 
-      map:fill(C.cave_x1, C.cave_y1, C.cave_x2, C.cave_y2, 0)
+      if S.room != R then continue end
+
+      local C = S.chunk
+
+      if C and (C.void or C.scenic or C.cross_junc) then continue end
+
+      local cx = (sx - R.sx1) * 3 + 1
+      local cy = (sy - R.sy1) * 3 + 1
+
+      map:fill(cx, cy, cx+2, cy+2, 0)
 
       for dir = 2,8,2 do
-        if not C:similar_neighbor(dir) and not C.link[dir] and
-           not (C.foobage == "important")
+        if not S:same_room(dir) and not (C and C.link[dir]) and
+           not (C and C.foobage == "important")
         then
-          set_side(C, dir, (R.is_lake ? -1 ; 1))
+          set_side(cx, cy, cx+2, cy+2, dir, (R.is_lake ? -1 ; 1))
         end
       end
-    end
+    end end -- sx, sy
   end
 
 
   local function clear_walks()
-    each C in R.chunks do
-      if C:has_walk() and rand.odds(25) then
+    for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
 
-        for cx = C.cave_x1, C.cave_x2 do
-          for cy = C.cave_y1, C.cave_y2 do
+      if S.room != R then continue end
+
+      if S.is_walk and rand.odds(25) then
+
+        local cx = (sx - R.sx1) * 3 + 1
+        local cy = (sy - R.sy1) * 3 + 1
+
+        for cx = cx, cx+2 do
+          for cy = cy, cy+2 do
             if map:get(cx, cy) == 0 and rand.odds(25) then
               map:set(cx, cy, -1)
             end
@@ -192,7 +194,7 @@ function Simple_cave_or_maze(R)
         end
 
       end
-    end
+    end end -- sx, sy
   end
 
 
@@ -667,6 +669,7 @@ step:dump("Step:")
   ---| Simple_create_areas |---
 
   if false then
+    -- FIXME: this probably broken!  (since no more filler chunks)
     one_big_area()
   else
     create_chunk_map()
