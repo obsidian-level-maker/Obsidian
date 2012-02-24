@@ -1680,16 +1680,50 @@ function Areas_flesh_out()
   end
 
 
+  local function add_seed_or_chunk(list, S)
+    if S.chunk then
+      local C = S.chunk
+
+      for sx = C.sx1, C.sx2 do for sy = C.sy1, C.sy2 do
+        table.insert(list, SEEDS[sx][sy])
+      end end
+
+    else
+      table.insert(list, S)
+    end
+  end
+
+
   local function grow_area(R, seeds)
-    -- FIXME !!!!
+    -- this is temporary crud
+
+    local dir = rand.dir()
+
+    for loop = 1,3 do
+      rand.shuffle(seeds)
+
+      each S in seeds do
+        local N = S:neighbor(dir)
+
+        if not N then continue end
+        if N.unfilled != R then continue end
+
+        add_seed_or_chunk(seeds, N)
+
+        -- we updated the 'seeds' table (which we are iterating over), so stop
+        break;
+      end
+    end
   end
 
 
   local function seeds_to_chunks(R, AREA, seeds)
+    -- FIXME !!!!!
   end
 
 
-  local function find_start_for_extra_area(R)
+  local function find_start_for_area(R)
+    -- FIXME !!!!!
   end
 
 
@@ -1733,21 +1767,18 @@ function Areas_flesh_out()
 
     local seeds = {}
 
-    if not start_S.chunk then
-      table.insert(seeds, start_S)
-    else
-      local C = start_S.chunk
+    add_seed_or_chunk(seeds, start_S)
 
-      for sx = C.sx1, C.sx2 do for sy = C.sy1, C.sy2 do
-        table.insert(seeds, SEEDS[sx][sy])
-      end end
-    end
-
-    for i = 1,11 do
+    for i = 1,5 do
       grow_area(R, seeds)
     end
 
     seeds_to_chunks(R, AREA, seeds)
+
+    each S in seeds do
+      S.unfilled = nil
+      table.kill_elem(unfilled_seeds, S)
+    end
 
     return true  -- OK
   end
@@ -1764,7 +1795,7 @@ function Areas_flesh_out()
       local S = SEEDS[sx][sy]
 
       if S.room == R and R:can_alloc_chunk(sx, sy, sx, sy) then
-        S.unfilled = true
+        S.unfilled = R
         table.insert(unfilled_seeds, S)
       end
     end end
@@ -1772,7 +1803,7 @@ function Areas_flesh_out()
     each C in R.chunks do
       if not C.scenic then
         local S = SEEDS[C.sx1][C.sy1]
-        S.unfilled = true
+        S.unfilled = R
         table.insert(unfilled_seeds, S)
       end
     end
