@@ -1709,24 +1709,28 @@ function Areas_flesh_out()
   end
 
 
-  local function grow_area(R, seeds)
+  local function grow_area(R, seeds, DIRS)
     -- this is temporary crud
 
-    local dir = rand.dir()
+    rand.shuffle(seeds)
+    rand.shuffle(DIRS)
 
-    for loop = 1,3 do
-      rand.shuffle(seeds)
+    for index = 1,#seeds do
+      each dir in DIRS do
 
-      each S in seeds do
+        if rand.odds(35) then continue end
+
+        local S = seeds[index]
         local N = S:neighbor(dir)
 
         if not N then continue end
         if N.unfilled != R then continue end
 
+        -- Eek!  unset the 'unfilled' flag here?
+        if table.has_elem(seeds, N) then continue end
+
         add_seed_or_chunk(seeds, N)
 
-        -- we updated the 'seeds' table (which we are iterating over), so stop
-        break;
       end
     end
   end
@@ -1852,8 +1856,10 @@ stderrf("---> start:%s from:%s dir:%d\n", start_S:tostr(), from_C:tostr(), from_
 
     add_seed_or_chunk(seeds, start_S)
 
-    for i = 1,5 do
-      grow_area(R, seeds)
+    local DIRS = { 2,4,6,8 }
+
+    for i = 1,4 do
+      grow_area(R, seeds, DIRS)
     end
 
 dump_seed_list("grown seeds", seeds)
@@ -2108,7 +2114,7 @@ stderrf("connect_all_areas DONE\n")
     initial_height(R)
     
     if R.kind == "cave" then
-      local entry_area = assert(entry_C.area)
+      local entry_area = assert(R.entry_C.area)
       R.entry_area = entry_area
       entry_area:set_floor(R.entry_h)
 
