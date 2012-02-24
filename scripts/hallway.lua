@@ -1158,7 +1158,7 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
 
     local LINK = C.link[dir]
 
-    if LINK then
+    if LINK and not (LINK.conn and LINK.conn.kind == "double_R") then
       local C3 = C.link[dir].C1
       if C3 == C then C3 = C.link[dir].C2 end
 
