@@ -1685,7 +1685,10 @@ function Areas_flesh_out()
 
     if R.entry_conn and R.entry_conn.kind != "teleporter" then
       C = assert(R.entry_conn.C2)
-      h = assert(C.floor_h)
+
+---# if not C.floor_h then stderrf("No floor @ %s in %s\n", C:tostr(), R:tostr()) end
+
+      h = assert(C.floor_h)  ---# or -777)
 
       assert(C.room == R)
 

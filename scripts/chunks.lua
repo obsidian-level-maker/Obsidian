@@ -1104,6 +1104,10 @@ end --]]
     f_mat = (C.area ? C.area.floor_mat ; w_mat)
     c_mat = C.room:pick_ceil_mat()
 
+    if f_h == -777 then
+      f_mat = "RROCK01"
+    end
+
   elseif C.hall then  -- FIXME !!!!!  decide this EARLIER
     w_mat = assert(C.hall.wall_mat)
     f_mat = assert(C.hall.floor_mat)
