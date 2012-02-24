@@ -60,6 +60,8 @@ end
 
 
 function AREA_CLASS.add_chunk(A, C)
+  C.area = A
+
   table.insert(A.chunks, C)
 end
 
@@ -1726,6 +1728,7 @@ function Areas_flesh_out()
     local list = table.copy(seeds)
 
     while not table.empty(list) do
+stderrf("seeds_to_chunks for %s\n", AREA:tostr())
       local S = table.remove(list)
       local C
 
@@ -1769,6 +1772,8 @@ function Areas_flesh_out()
   local function find_start_for_area(R, unfilled_seeds)
     rand.shuffle(unfilled_seeds)
 
+stderrf("find_start_for_area @ %s : %d unfilled\n", R:tostr(), #unfilled_seeds)
+
     local best_S
     local best_C, best_dir
 
@@ -1776,7 +1781,6 @@ function Areas_flesh_out()
 
     each S in unfilled_seeds do
       assert(S.unfilled)
-      assert(not S.chunk)
 
       rand.shuffle(DIRS)
 
@@ -1785,10 +1789,10 @@ function Areas_flesh_out()
 
         local N = S:neighbor(dir)
 
-        if not (N.chunk and N.chunk.floor_h) then continue end
+        if not (N.chunk and N.chunk.area) then continue end
 
         -- FIXME !!!!  evaluate it, pick best
-        return S, N, 10 - dir
+        return S, N.chunk, 10 - dir
       end
     end
 
@@ -1801,7 +1805,8 @@ function Areas_flesh_out()
     local start_S
 
     -- chunk that new area branches off (none for first one)
-    local from_C, from_dir
+    local from_C
+    local from_dir  -- direction towards start_S
 
 
     if table.empty(R.areas) then
@@ -1826,12 +1831,6 @@ function Areas_flesh_out()
 
     table.insert(R.areas, AREA)
 
-    if not from_C then
-      AREA.floor_h = R.entry_h
-    else
-      AREA.floor_h = from_C.area.floor_h + rand.pick { 8,16,24,32 }
-    end
-
     -- grow it
 
     local seeds = {}
@@ -1849,13 +1848,24 @@ function Areas_flesh_out()
       table.kill_elem(unfilled_seeds, S)
     end
 
+    -- determine new height
+
+    local floor_h
+
+    if not from_C then
+      floor_h = R.entry_h
+    else
+      floor_h = from_C.area.floor_h + rand.pick { 8,16,24,32 }
+    end
+
+    AREA:set_floor(floor_h)
 
 -- TEMP DEBUG : show connection point
 -- [[
     if from_C then
       local mx, my = from_C:mid_point()
       mx, my = geom.nudge(mx, my, from_dir, 72)
-      entity_helper("candle", mx, my, C.floor_h or 0)
+      entity_helper("candle", mx, my, 0)
     end
 --]]
 
@@ -1864,11 +1874,12 @@ function Areas_flesh_out()
 
 
   local function connect_all_areas(R)
+stderrf("connect_all_areas BEGIN\n")
     -- this also creates the areas too!
 
     -- collect all the seeds we need to fill
     -- include the allocated chunks too (one seed is enough)
-    local unfilled_count = {}
+    local unfilled_seeds = {}
 
     for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
       local S = SEEDS[sx][sy]
@@ -1889,6 +1900,7 @@ function Areas_flesh_out()
 
     -- first pass : ensure all seeds are filled by new areas
     while not table.empty(unfilled_seeds) do
+stderrf("creating area (%d unfilled)\n", #unfilled_seeds)
       create_area(R, "normal", unfilled_seeds)
     end
 
@@ -1904,6 +1916,7 @@ function Areas_flesh_out()
     set_all_touching(R)
 
     R:dump_areas(R)
+stderrf("connect_all_areas DONE\n")
   end
 
 
@@ -1924,9 +1937,9 @@ function Areas_flesh_out()
       --       elseif R.has_teleporter() then find_tele_chunk
       -- [BETTER: have R.entry_chunk field]
       
-      repeat
-        C = rand.pick(R.chunks)
-      until C.area
+---##      repeat
+      C = rand.pick(R.chunks)
+---##      until C.area
 
       if R.floor_limit then
         h = rand.sel(50, R.floor_limit[1], R.floor_limit[2])
@@ -1940,7 +1953,7 @@ function Areas_flesh_out()
 
 
   local function initial_height(R)
---- stderrf("initial_height in %s\n", R:tostr())
+    stderrf("initial_height in %s\n", R:tostr())
 
     local entry_C, entry_h = entry_chunk_and_height(R)
 
@@ -1955,9 +1968,8 @@ function Areas_flesh_out()
     -- !!!! FIXME: entry hallway will need to compensate (have a stair or whatever)
     end
 
-    R.entry_h    = entry_h
-    R.entry_C    = entry_C
-
+    R.entry_h = entry_h
+    R.entry_C = entry_C
   end
 
 
