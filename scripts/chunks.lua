@@ -1029,7 +1029,11 @@ function CHUNK_CLASS.build_hall_piece(C)
 
   T.scale_z = C.h_scale_z
 
-  Fabricate(skin1._prefab, T, { skin0, skin1 })
+  local fab = Fabricate(skin1._prefab, T, { skin0, skin1 })
+
+  if fab.has_spots then
+    Rooms_distribute_spots(hall, Fab_read_spots(fab))
+  end
 
 --[[
 local mx, my = C:mid_point()

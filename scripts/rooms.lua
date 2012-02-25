@@ -550,6 +550,20 @@ function ROOM_CLASS.dump_areas(R)
 end
 
 
+function Rooms_distribute_spots(L, list)
+  each spot in list do
+    if spot.kind == "cage" then
+      table.insert(L.cage_spots, spot)
+    elseif spot.kind == "trap" then
+      table.insert(L.trap_spots, spot)
+    else
+      table.insert(L.mon_spots, spot)
+    end
+  end
+end
+
+
+
 ----------------------------------------------------------------
 
 

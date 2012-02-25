@@ -1982,7 +1982,8 @@ function Fab_read_spots(fab)
 
     if Brush_is_quad(B) then
       x1,y1, x2,y2 = Brush_bbox(B)
-      for _,C in ipairs(B) do
+
+      each C in B do
         if C.b then z1 = C.b end
         if C.t then z2 = C.t end
       end
@@ -1992,14 +1993,17 @@ function Fab_read_spots(fab)
       error("Unimplemented: cage spots on rotated prefabs")
     end
 
+    if not z1 or not z2 then
+      error("monster spot brush is missing t/b coord")
+    end
+
     local SPOT =
     {
-      kind  = B[1].spot_kind,
-      angle = B[1].angle,
+      kind  = B[1].spot_kind
+      angle = B[1].angle
 
-      x1 = assert(x1), x2 = assert(x2),
-      y1 = assert(y1), y2 = assert(y2),
-      z1 = assert(z1), z2 = assert(z2),
+      x1 = x1, y1 = y1, z1 = z1
+      x2 = x2, y2 = y2, z2 = z2
     }
 
     table.insert(list, SPOT)
