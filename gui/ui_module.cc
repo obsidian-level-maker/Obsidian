@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2012 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -235,12 +235,15 @@ UI_CustomMods::UI_CustomMods(int x, int y, int w, int h, const char *label) :
   add(sbar);
 
 
-  mod_pack = new My_ClipGroup(mx, my, mw, mh, "\nCustom Modules");
+  mod_pack = new My_ClipGroup(mx, my, mw, mh, "\n\n\n\n\nCustom Modules");
   mod_pack->end();
 
   mod_pack->align(FL_ALIGN_INSIDE);
   mod_pack->labeltype(FL_NORMAL_LABEL);
   mod_pack->labelsize(FL_NORMAL_SIZE+6);
+
+  if (alternate_look)
+    mod_pack->labelcolor(FL_DARK1);
 
   mod_pack->box(FL_FLAT_BOX);
   mod_pack->color(WINDOW_BG);  
