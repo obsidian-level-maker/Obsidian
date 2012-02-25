@@ -1016,6 +1016,10 @@ function CHUNK_CLASS.build_hall_piece(C)
 
   local hall = assert(C.hall)
 
+if OB_CONFIG.game == "doom2" and skin_name == "Junc_Test_C" then
+  skin_name = "Junc_Nukey_C"
+end
+
   local skin1 = GAME.SKINS[skin_name]
   assert(skin1)
  

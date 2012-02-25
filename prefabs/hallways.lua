@@ -1649,26 +1649,27 @@ PREFAB.JUNCTION_NUKEY_C =
 
   defaults =
   {
+    support_ox = 0
   }
 
   brushes =
   {
     -- floor
     {
-      { x =  16, y =   0, mat = "_LIQUID" }
-      { x = 576, y = 560, mat = "_LIQUID" }
-      { x = 576, y = 560, mat = "_LIQUID" }
-      { x =  16, y =   0, mat = "_LIQUID" }
+      { x =   0, y =   0, mat = "_LIQUID" }
+      { x = 560, y =   0, mat = "_LIQUID" }
+      { x = 560, y = 560, mat = "_LIQUID" }
+      { x =   0, y = 560, mat = "_LIQUID" }
       { t = -16, mat = "_LIQUID" }
     }
 
     -- ceiling
     {
-      { x =  16, y =   0, mat = "?wall" }
-      { x = 576, y = 560, mat = "?wall" }
-      { x = 576, y = 560, mat = "?wall" }
-      { x =  16, y =   0, mat = "?wall" }
-      { b = 152, mat = "?ceil" }
+      { x =   0, y =   0, mat = "?wall" }
+      { x = 560, y =   0, mat = "?wall" }
+      { x = 560, y = 560, mat = "?wall" }
+      { x =   0, y = 560, mat = "?wall" }
+      { b = 176, mat = "?ceil" }
     }
 
     -- supports near exits
@@ -1687,24 +1688,24 @@ PREFAB.JUNCTION_NUKEY_C =
     }
 
     {
-      { x =   0, y = 176, mat = "?support", x_offset=24 }
-      { x =  16, y = 176, mat = "?support", x_offset=24 }
-      { x =  16, y = 192, mat = "?support", x_offset=24 }
-      { x =   0, y = 192, mat = "?support", x_offset=24 }
+      { x =   0, y = 176, mat = "?support", x_offset="?support_ox" }
+      { x =  16, y = 176, mat = "?support", x_offset="?support_ox" }
+      { x =  16, y = 192, mat = "?support", x_offset="?support_ox" }
+      { x =   0, y = 192, mat = "?support", x_offset="?support_ox" }
     }
 
     {
-      { x =   0, y = 384, mat = "?support", x_offset=24 }
-      { x =  16, y = 384, mat = "?support", x_offset=24 }
-      { x =  16, y = 400, mat = "?support", x_offset=24 }
-      { x =   0, y = 400, mat = "?support", x_offset=24 }
+      { x =   0, y = 384, mat = "?support", x_offset="?support_ox" }
+      { x =  16, y = 384, mat = "?support", x_offset="?support_ox" }
+      { x =  16, y = 400, mat = "?support", x_offset="?support_ox" }
+      { x =   0, y = 400, mat = "?support", x_offset="?support_ox" }
     }
 
     -- south west corner
     {
       { x =   0, y =   0, mat = "?wall" }
+      { x = 176, y =   0, mat = "?wall" }
       { x = 176, y =  16, mat = "?wall" }
-      { x = 176, y =  64, mat = "?wall" }
       { x =  64, y =  64, mat = "?wall" }
     }
 
@@ -1789,7 +1790,7 @@ PREFAB.JUNCTION_NUKEY_C =
       { x = 544, y = 544, mat = "?wall" }
     }
 
-    -- islands
+    -- islands #1
     {
       { x =  80, y = 280, mat = "?floor" }
       { x = 160, y = 264, mat = "?floor" }
@@ -1802,6 +1803,18 @@ PREFAB.JUNCTION_NUKEY_C =
     }
 
     {
+      { m = "light", add=48 }
+      { x =  80, y = 280 }
+      { x = 160, y = 264 }
+      { x = 248, y = 312 }
+      { x = 248, y = 400 }
+      { x = 160, y = 456 }
+      { x =  80, y = 416 }
+      { x =  56, y = 360 }
+    }
+
+    -- islands #2
+    {
       { x = 296, y =  88, mat = "?floor" }
       { x = 384, y =  72, mat = "?floor" }
       { x = 432, y = 128, mat = "?floor" }
@@ -1810,6 +1823,34 @@ PREFAB.JUNCTION_NUKEY_C =
       { x = 280, y = 232, mat = "?floor" }
       { x = 264, y = 160, mat = "?floor" }
       { t = 0, mat = "?floor" }
+    }
+
+    {
+      { m = "light", add=48 }
+      { x = 296, y =  88 }
+      { x = 384, y =  72 }
+      { x = 432, y = 128 }
+      { x = 432, y = 200 }
+      { x = 360, y = 248 }
+      { x = 280, y = 232 }
+      { x = 264, y = 160 }
+    }
+
+    -- lamps in ceiling
+    {
+      { x = 128, y = 320, mat = "?lamp" }
+      { x = 192, y = 320, mat = "?lamp" }
+      { x = 192, y = 384, mat = "?lamp" }
+      { x = 128, y = 384, mat = "?lamp" }
+      { b = 160, mat = "?lamp" }
+    }
+
+    {
+      { x = 320, y = 128, mat = "?lamp" }
+      { x = 384, y = 128, mat = "?lamp" }
+      { x = 384, y = 192, mat = "?lamp" }
+      { x = 320, y = 192, mat = "?lamp" }
+      { b = 160, mat = "?lamp" }
     }
   }
 }

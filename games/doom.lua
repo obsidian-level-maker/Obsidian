@@ -2509,6 +2509,19 @@ DOOM.SKINS =
   }
 
 
+  Junc_Nukey_C =
+  {
+    _prefab = "JUNCTION_NUKEY_C"
+    _where  = "big_junc"
+    _liquid = 1
+
+    support = "SUPPORT2"
+    support_ox = 24
+
+    lamp = { TLITE6_5=50, TLITE6_6=10, TLITE6_1=10, FLOOR1_7=5 }
+  }
+
+
   ---| TELEPORTERS |---
 
   Teleporter1 =
