@@ -88,21 +88,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
   cy += strength->h() + y_step;
 
-  cy += y_step + y_step/2 - 1;
-
-
-  powers = new UI_RChoice(cx, cy, cw, ch, "Powerups: ");
-  powers->align(FL_ALIGN_LEFT);
-  powers->selection_color(MY_RED);
-  powers->callback(callback_Powers, this);
-
-  setup_Powers();
-
-  add(powers);
-
-  cy += powers->h() + y_step;
-
-  cy += y_step + y_step/2 - 1;
+  cy += y_step + y_step; //  /2 - 1;
 
 
   health = new UI_RChoice(cx, cy, cw, ch, "Health: ");
@@ -127,6 +113,20 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   add(ammo);
   
   cy += ammo->h() + y_step;
+
+//  cy += y_step + y_step/2 - 1;
+
+
+  powers = new UI_RChoice(cx, cy, cw, ch, "Powerups: ");
+  powers->align(FL_ALIGN_LEFT);
+  powers->selection_color(MY_RED);
+  powers->callback(callback_Powers, this);
+
+  setup_Powers();
+
+  add(powers);
+
+  cy += powers->h() + y_step;
 
 
 //  DebugPrintf("UI_Play: final h = %d\n", cy - y);
