@@ -993,6 +993,17 @@ PREFAB.HALL_BASIC_I =
       { x =  16, y = 192, mat = "?wall" }
       { b = 128, mat = "?ceil" }
     }
+
+    -- da monsters
+    {
+      { m = "spot" }
+      { x =  24, y =  24 }
+      { x = 168, y =  24 }
+      { x = 168, y = 168 }
+      { x =  24, y = 168 }
+      { b = 0 }
+      { t = 124 }
+    }
   }
 }
 
@@ -1049,6 +1060,17 @@ PREFAB.HALL_BASIC_C =
       { x = 176, y = 176, mat = "?wall" }
       { x =   0, y = 176, mat = "?wall" }
       { b = 128, mat = "?ceil" }
+    }
+
+    -- monster spot
+    {
+      { m = "spot" }
+      { x =   8, y =   8 }
+      { x = 168, y =   8 }
+      { x = 168, y = 168 }
+      { x =   8, y = 168 }
+      { b = 0 }
+      { t = 124 }
     }
   }
 
