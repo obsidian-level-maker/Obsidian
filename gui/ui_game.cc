@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2011 Andrew Apted
+//  Copyright (C) 2006-2012 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -60,25 +60,6 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
   cy += heading->h() + y_step;
 
 
-  seed = new Fl_Int_Input(cx, cy, 60+KF*4, 24+KF*2, "Seed: ");
-  seed->align(FL_ALIGN_LEFT);
-  seed->selection_color(FL_BLUE);
-  seed->maximum_size(5);
-  seed->callback(callback_Seed, this);
-  seed->value("1");
-
-  bump = new Fl_Button(x + w - 80-KF*4, cy, 66+KF*4, 24+KF*2, "Bump");
-  bump->callback(callback_Bump, this);
-
-  add(seed);
-
-  add(bump);
-
-  cy += seed->h() + y_step;
-
-  cy += y_step + y_step/2;
-
-
   int cw = 130 + KF * 14;
   int ch = 24 + KF*2;
 
@@ -129,6 +110,27 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
 
   cy += length->h() + y_step;
 
+  cy += y_step + y_step/2;
+
+
+  seed = new Fl_Int_Input(cx, cy, 60+KF*6, 24+KF*2, "Seed: ");
+  seed->align(FL_ALIGN_LEFT);
+  seed->selection_color(FL_BLUE);
+  seed->maximum_size(5);
+  seed->callback(callback_Seed, this);
+  seed->value("1");
+
+  bump = new Fl_Button(cx + cw - (64+KF*4), cy, 24+KF*4, 24+KF*2, "+");
+  bump->labelsize(FL_NORMAL_SIZE+2);
+  bump->callback(callback_Bump, this);
+
+  add(seed);
+
+  add(bump);
+
+  cy += seed->h() + y_step;
+
+
 
 //  DebugPrintf("UI_Game: final h = %d\n", cy - y);
 
@@ -150,7 +152,7 @@ void UI_Game::SetSeed(u32_t new_val)
 {
   char num_buf[40];
 
-  sprintf(num_buf, "%05d", new_val % 100000);
+  sprintf(num_buf, "%06d", new_val % 1000000);
 
   seed->value(num_buf);
 
@@ -171,7 +173,7 @@ void UI_Game::StaleSeed(u32_t old_val)
   u32_t usage = IntHash(val) % 100;
 
   // when the day is the same, simply Bump the old value
-  if ((val/43200) % 1000 == (old_val/100) % 1000)
+  if ((val/43200) % 10000 == (old_val/100) % 10000)
     usage = (old_val+1) % 100;
 
   SetSeed((val/43200) * 100 + usage);
