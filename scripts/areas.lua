@@ -60,6 +60,8 @@ end
 
 
 function AREA_CLASS.add_chunk(A, C)
+
+stderrf("AREA_CLASS.add_chunk: %s --> %s\n", A:tostr(), C:tostr())
   C.area = A
 
   table.insert(A.chunks, C)
@@ -1901,7 +1903,7 @@ stderrf("connect_all_areas BEGIN\n")
     -- this also creates the areas too!
 
     -- collect all the seeds we need to fill
-    -- include the allocated chunks too (one seed is enough)
+    -- include the allocated chunks too
     local unfilled_seeds = {}
 
     for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
@@ -1915,13 +1917,15 @@ stderrf("connect_all_areas BEGIN\n")
 
     each C in R.chunks do
       if not (C.scenic or C.liquid) then
-        local S = SEEDS[C.sx1][C.sy1]
-        S.unfilled = R
-        table.insert(unfilled_seeds, S)
+        for sx = C.sx1, C.sx2 do for sy = C.sy1, C.sy2 do
+          local S = SEEDS[sx][sy]
+          S.unfilled = R
+          table.insert(unfilled_seeds, S)
+        end end
       end
     end
 
-dump_seed_list("unfilled", unfilled_seeds)
+dump_seed_list("unfilled @ " .. R:tostr(), unfilled_seeds)
 
 
     -- first pass : ensure all seeds are filled by new areas

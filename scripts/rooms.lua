@@ -522,18 +522,19 @@ function ROOM_CLASS.dump_areas(R)
     if not S.chunk then return '!' end
 
     if S.chunk.liquid then return '~' end
+    if S.chunk.scenic then return '#' end
 
     local A = S.chunk.area
 
-    if not A then return '#' end
-    if not A.debug_id then return '?' end
+    if not A then return '.' end
+    if not A.id then return '?' end
 
-    local n = 1 + ((A.debug_id - 1) % 26)
+    local n = 1 + ((A.id - 1) % 26)
 
     return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
   end
 
-  gui.debugf("AREAS IN %s:\n", R:tostr())
+  gui.debugf("AREAS IN %s @ (%d %d) :\n", R:tostr(), R.sx1, R.sy1)
 
   for y = R.sy2, R.sy1, -1 do
     local line = "  "
