@@ -733,7 +733,7 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
   if (effect == 0)
     S->light -= max_sub;
 
-  S->light = CLAMP(96, S->light, 255);
+  S->light = CLAMP(80, S->light, 255);
 
   // hack to force complete darkness (Fixme ?)
   if (effect == 0 && max_sub >= 255)
