@@ -235,12 +235,12 @@ UI_CustomMods::UI_CustomMods(int x, int y, int w, int h, const char *label) :
   add(sbar);
 
 
-  mod_pack = new My_ClipGroup(mx, my, mw, mh, "\n\n\n\n\nCustom Modules");
+  mod_pack = new My_ClipGroup(mx, my, mw, mh, "\n\n\n\nCustom Modules");
   mod_pack->end();
 
   mod_pack->align(FL_ALIGN_INSIDE);
   mod_pack->labeltype(FL_NORMAL_LABEL);
-  mod_pack->labelsize(FL_NORMAL_SIZE+6);
+  mod_pack->labelsize(FL_NORMAL_SIZE+8);
 
   if (alternate_look)
     mod_pack->labelcolor(FL_DARK1);
