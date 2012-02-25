@@ -5,12 +5,25 @@ OBLIGE TODO
 Current Work
 ------------
 
->>>  light_globe and flame entities for QUAKE
+!!!  connection failure with:
 
-VERIFY :  big junction test: FIX HOLES
+     ./Oblige -b TEST.wad -d only=map04 seed=906 length=few
 
 
-!!!  fix stuck monsters (boundaries of area chunks)
+>>>  stairs for new area code
+
+
+!!  fix street mode  (broken by room-room doors)
+    (entry chunk not getting a floor_h)
+
+
+!!!!  fix stuck monsters (boundaries of area chunks)
+
+
++  double hallways STILL busted (entry from the single end I guess)
+
+REVIEW entry_conn, entry_h mechanism  (want just entry_C.floor_h to be set already)
+
 
 
 Fence stuff
@@ -20,18 +33,26 @@ Fence stuff
 
 Outdoor Borders:
 
--  cages !!
++  fix for ugly sky in outdoor room near a hallway
+   (mark those seeds, detect in from_edge pass)
+
++  cages !!
+
+Idea: for outdoor bordering, have earlier pass to set the facade_mat
+      in _all_ unused seeds (grow existing buildings)
 
 
 
 Hallways:
+
+!!  monsters and items (YET AGAIN)
 
 +  issue: no locked doors between two hallways
           (guess it ain't happening now since we merge 99% of the time)
  
 !!  no adjusters (need lifty prefabs / skins)
 
-+  ability to have stairs / lifts
+>>>  ability to have stairs / lifts
 
 >>>  big junction prefabs!
 
@@ -42,7 +63,7 @@ Hallways:
              _or_     a mechanism to use a single prefab (CONDITIONAL STUFF)
                       [can be done using height variables]
 
-Idea: HALLWAY_GROUPS
++  HALLWAY_GROUPS
 
       basic =
       {
@@ -99,6 +120,13 @@ Next WIP Goals
 -  ARCH_W_WINDOW
 
 
+
+!!?!!  LOCKED DOORS IN A WHOLE SEED/CHUNK
+
+-  light_globe and flame entities for QUAKE
+
+-  in prefab skins: '_long = 23' means 2 to 3 seeds wide
+                    '_deep = 14' means 1 to 4 seeds deep
 
 -  automatically create bridges over channels
 
