@@ -1852,6 +1852,92 @@ PREFAB.JUNCTION_NUKEY_C =
       { x = 320, y = 192, mat = "?lamp" }
       { b = 160, mat = "?lamp" }
     }
+
+    -- nukage hole in wall
+    {
+      { x = 432, y = 512, mat = "_LIQUID" }
+      { x = 512, y = 432, mat = "_LIQUID" }
+      { x = 528, y = 448, mat = "_LIQUID" }
+      { x = 448, y = 528, mat = "_LIQUID" }
+      { t = 88, mat = "_LIQUID" }
+    }
+    {
+      { x = 432, y = 512, mat = "?wall" }
+      { x = 512, y = 432, mat = "?wall" }
+      { x = 528, y = 448, mat = "?wall" }
+      { x = 448, y = 528, mat = "?wall" }
+      { b = 136, mat = "?ceil" }
+    }
+    {
+      { m = "light", sub=16 }
+      { x = 432, y = 512 }
+      { x = 512, y = 432 }
+      { x = 528, y = 448 }
+      { x = 448, y = 528 }
+    }
+
+    {
+      { x = 448, y = 528, mat = "_LIQUID" }
+      { x = 528, y = 448, mat = "_LIQUID" }
+      { x = 544, y = 464, mat = "_LIQUID" }
+      { x = 464, y = 544, mat = "_LIQUID" }
+      { t = 88, mat = "_LIQUID" }
+    }
+    {
+      { x = 448, y = 528, mat = "?wall" }
+      { x = 528, y = 448, mat = "?wall" }
+      { x = 544, y = 464, mat = "?wall" }
+      { x = 464, y = 544, mat = "?wall" }
+      { b = 136, mat = "?ceil" }
+    }
+    {
+      { m = "light", sub=32 }
+      { x = 448, y = 528 }
+      { x = 528, y = 448 }
+      { x = 544, y = 464 }
+      { x = 464, y = 544 }
+    }
+    
+    {
+      { x = 464, y = 544, mat = "_LIQUID" }
+      { x = 544, y = 464, mat = "_LIQUID" }
+      { x = 560, y = 480, mat = "_LIQUID" }
+      { x = 480, y = 560, mat = "_LIQUID" }
+      { t = 88, mat = "_LIQUID" }
+    }
+    {
+      { x = 464, y = 544, mat = "?wall" }
+      { x = 544, y = 464, mat = "?wall" }
+      { x = 560, y = 480, mat = "?wall" }
+      { x = 480, y = 560, mat = "?wall" }
+      { b = 136, mat = "?ceil" }
+    }
+    {
+      { m = "light", sub=48 }
+      { x = 464, y = 544 }
+      { x = 544, y = 464 }
+      { x = 560, y = 480 }
+      { x = 480, y = 560 }
+    }
+
+    {
+      { x = 480, y = 560, mat = "_LIQUID" }
+      { x = 560, y = 480, mat = "_LIQUID" }
+      { x = 544, y = 544, mat = "_LIQUID" }
+      { t = 88, mat = "_LIQUID" }
+    }
+    {
+      { x = 480, y = 560, mat = "?wall" }
+      { x = 560, y = 480, mat = "?wall" }
+      { x = 544, y = 544, mat = "?wall" }
+      { b = 136, mat = "?ceil" }
+    }
+    {
+      { m = "light", sub=64 }
+      { x = 480, y = 560 }
+      { x = 560, y = 480 }
+      { x = 544, y = 544 }
+    }
   }
 }
 
