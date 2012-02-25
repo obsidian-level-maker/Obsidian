@@ -1637,3 +1637,180 @@ PREFAB.JUNCTION_TEST =
   }
 }
 
+
+PREFAB.JUNCTION_NUKEY_C =
+{
+  fitted = "xy"
+
+  -- these ranges allow the prefab to expand from 3 seeds to 4 seeds
+  -- and still mesh up properly with the nearby hallway pieces.
+  x_ranges = { {192,0}, {192,1}, {192,0} }
+  y_ranges = { {192,0}, {192,1}, {192,0} }
+
+  defaults =
+  {
+  }
+
+  brushes =
+  {
+    -- floor
+    {
+      { x =  16, y =   0, mat = "_LIQUID" }
+      { x = 576, y = 560, mat = "_LIQUID" }
+      { x = 576, y = 560, mat = "_LIQUID" }
+      { x =  16, y =   0, mat = "_LIQUID" }
+      { t = -16, mat = "_LIQUID" }
+    }
+
+    -- ceiling
+    {
+      { x =  16, y =   0, mat = "?wall" }
+      { x = 576, y = 560, mat = "?wall" }
+      { x = 576, y = 560, mat = "?wall" }
+      { x =  16, y =   0, mat = "?wall" }
+      { b = 152, mat = "?ceil" }
+    }
+
+    -- supports near exits
+    {
+      { x = 176, y =   0, mat = "?support", x_offset=24 }
+      { x = 192, y =   0, mat = "?support", x_offset=24 }
+      { x = 192, y =  16, mat = "?support", x_offset=24 }
+      { x = 176, y =  16, mat = "?support", x_offset=24 }
+    }
+
+    {
+      { x = 384, y =   0, mat = "?support", x_offset=24 }
+      { x = 400, y =   0, mat = "?support", x_offset=24 }
+      { x = 400, y =  16, mat = "?support", x_offset=24 }
+      { x = 384, y =  16, mat = "?support", x_offset=24 }
+    }
+
+    {
+      { x =   0, y = 176, mat = "?support", x_offset=24 }
+      { x =  16, y = 176, mat = "?support", x_offset=24 }
+      { x =  16, y = 192, mat = "?support", x_offset=24 }
+      { x =   0, y = 192, mat = "?support", x_offset=24 }
+    }
+
+    {
+      { x =   0, y = 384, mat = "?support", x_offset=24 }
+      { x =  16, y = 384, mat = "?support", x_offset=24 }
+      { x =  16, y = 400, mat = "?support", x_offset=24 }
+      { x =   0, y = 400, mat = "?support", x_offset=24 }
+    }
+
+    -- south west corner
+    {
+      { x =   0, y =   0, mat = "?wall" }
+      { x = 176, y =  16, mat = "?wall" }
+      { x = 176, y =  64, mat = "?wall" }
+      { x =  64, y =  64, mat = "?wall" }
+    }
+
+    {
+      { x =   0, y =   0, mat = "?wall" }
+      { x =  64, y =  64, mat = "?wall" }
+      { x =  16, y = 176, mat = "?wall" }
+      { x =   0, y = 176, mat = "?wall" }
+    }
+
+    -- north side
+    {
+      { x =   0, y = 400, mat = "?wall" }
+      { x =  16, y = 400, mat = "?wall" }
+      { x = 104, y = 520, mat = "?wall" }
+      { x = 104, y = 576, mat = "?wall" }
+      { x =   0, y = 576, mat = "?wall" }
+    }
+
+    {
+      { x = 104, y = 520, mat = "?wall" }
+      { x = 264, y = 560, mat = "?wall" }
+      { x = 264, y = 576, mat = "?wall" }
+      { x = 104, y = 576, mat = "?wall" }
+    }
+
+    {
+      { x = 264, y = 560, mat = "?wall" }
+      { x = 432, y = 512, mat = "?wall" }
+      { x = 432, y = 576, mat = "?wall" }
+      { x = 264, y = 576, mat = "?wall" }
+    }
+
+    {
+      { x = 432, y = 512, mat = "?wall" }
+      { x = 480, y = 560, mat = "?wall" }
+      { x = 480, y = 576, mat = "?wall" }
+      { x = 432, y = 576, mat = "?wall" }
+    }
+
+    {
+      { x = 480, y = 560, mat = "?wall" }
+      { x = 544, y = 544, mat = "?wall" }
+      { x = 576, y = 576, mat = "?wall" }
+      { x = 480, y = 576, mat = "?wall" }
+    }
+
+    -- east side
+    {
+      { x = 400, y =  16, mat = "?wall" }
+      { x = 400, y =   0, mat = "?wall" }
+      { x = 576, y =   0, mat = "?wall" }
+      { x = 576, y =  96, mat = "?wall" }
+      { x = 528, y =  96, mat = "?wall" }
+    }
+
+    {
+      { x = 528, y =  96, mat = "?wall" }
+      { x = 576, y =  96, mat = "?wall" }
+      { x = 576, y = 280, mat = "?wall" }
+      { x = 560, y = 280, mat = "?wall" }
+    }
+
+    {
+      { x = 560, y = 280, mat = "?wall" }
+      { x = 576, y = 280, mat = "?wall" }
+      { x = 576, y = 432, mat = "?wall" }
+      { x = 512, y = 432, mat = "?wall" }
+    }
+
+    {
+      { x = 512, y = 432, mat = "?wall" }
+      { x = 576, y = 432, mat = "?wall" }
+      { x = 576, y = 480, mat = "?wall" }
+      { x = 560, y = 480, mat = "?wall" }
+    }
+
+    {
+      { x = 560, y = 480, mat = "?wall" }
+      { x = 576, y = 480, mat = "?wall" }
+      { x = 576, y = 576, mat = "?wall" }
+      { x = 544, y = 544, mat = "?wall" }
+    }
+
+    -- islands
+    {
+      { x =  80, y = 280, mat = "?floor" }
+      { x = 160, y = 264, mat = "?floor" }
+      { x = 248, y = 312, mat = "?floor" }
+      { x = 248, y = 400, mat = "?floor" }
+      { x = 160, y = 456, mat = "?floor" }
+      { x =  80, y = 416, mat = "?floor" }
+      { x =  56, y = 360, mat = "?floor" }
+      { t = 0, mat = "?floor" }
+    }
+
+    {
+      { x = 296, y =  88, mat = "?floor" }
+      { x = 384, y =  72, mat = "?floor" }
+      { x = 432, y = 128, mat = "?floor" }
+      { x = 432, y = 200, mat = "?floor" }
+      { x = 360, y = 248, mat = "?floor" }
+      { x = 280, y = 232, mat = "?floor" }
+      { x = 264, y = 160, mat = "?floor" }
+      { t = 0, mat = "?floor" }
+    }
+  }
+}
+
