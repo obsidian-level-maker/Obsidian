@@ -1806,7 +1806,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   end
 
 
-  local function fill_cage_area(mon, spot)
+  local function fill_cage_area(mon, spot, qty)
     local ent = assert(GAME.ENTITIES[mon])
 
     -- determine maximum number that will fit
@@ -1838,7 +1838,11 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     rand.shuffle(list)
 
-    for i = 1,count do
+    -- apply quantity (i.e. user settings)
+    local want = int(count * qty / 150 + gui.random())
+    want = math.max(want, (count < 5 ? 1 ; 2))
+
+    for i = 1,want do
       -- ensure first monster in always present
       local all_skills = (i == 1)
       local loc = list[i]
@@ -1851,13 +1855,15 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   local function fill_cages(enviro, spot_list, room_pal)
     if table.empty(L.cage_spots) then return end
 
+    local qty = calc_quantity()
+
     local used_mons = {}
 
     each spot in spot_list do
       local mon = decide_cage_monster(enviro, spot, room_pal, used_mons)
 
       if mon then
-        fill_cage_area(mon, spot)
+        fill_cage_area(mon, spot, qty)
 
         used_mons[mon] = 1
       end
