@@ -605,7 +605,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
       end
 
       -- too many hallways already?
-      if quota < 1 or LEVEL.hall_quota < 1 then continue end
+      if quota < 1 then continue end
 
       -- limit length of big junctions
       if stats.big_junc and #visited >= 3 then continue end
@@ -622,7 +622,9 @@ function Hallway_test_branch(start_K, start_dir, mode)
         do_cross = true
       end
 
-      if (not is_junction) or K.used or geom.is_perpendic(dir, from_dir) then --- or N.kind == "big_junc" then
+      if (not is_junction) or K.used or geom.is_perpendic(dir, from_dir) or
+         K.kind == "big_junc" or mode == "emergency"
+      then
 
 --stderrf("  recursing @ dir:%d\n", dir)
         local new_stats = table.copy(stats)
@@ -656,6 +658,8 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
   if STYLE.hallways == "none"  then quota = 0 end
   if STYLE.hallways == "heaps" then quota = 6 end
+
+  quota = math.min(quota, LEVEL.hall_quota)
 
   -- when normal connection logic has failed, allow long hallways
   if mode == "emergency" then quota = 8 end
@@ -1210,7 +1214,8 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
 
   C.floor_h = floor_h
 
-  if C.h_shape == "I" and (rand.odds(70) or C.double_peer) and
+  if C.h_shape == "I" and C.section.kind != "big_junc" and
+     (rand.odds(70) or C.double_peer) and
      (not H.double_fork or C.double_peer)
   then
     -- reverse Z direction in a double hallway when hit the fork section,
