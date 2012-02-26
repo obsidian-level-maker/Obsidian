@@ -1832,7 +1832,9 @@ function Rooms_fake_building(sx1, sy1, sx2, sy2, kind, dir, face_room, zone)
   -- cages!
   local cage_prob = style_sel("cages", 0, 5, 17, 65)
 
-  if face_room and THEME.fat_cages and rand.odds(cage_prob) then
+  if face_room and face_room.purpose != "START" and
+     THEME.fat_cages and rand.odds(cage_prob)
+  then
     if not LEVEL.fat_cage_kind then
       LEVEL.fat_cage_kind = rand.key_by_probs(THEME.fat_cages)
     end
