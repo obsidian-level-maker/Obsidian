@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2010-2011 Andrew Apted
+--  Copyright (C) 2010-2012 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -176,7 +176,7 @@ PREFAB.FAT_CAGE1 =
       { x = 176, y = 192, mat = "?wall" }
     }
 
-    -- platform
+    -- floor
     {
       { x =  16, y =  16, mat = "?wall" }
       { x = 176, y =  16, mat = "?wall" }
@@ -190,7 +190,7 @@ PREFAB.FAT_CAGE1 =
       { x = 176, y =  16, mat = "_SKY" }
       { x = 176, y = 192, mat = "_SKY" }
       { x =  16, y = 192, mat = "_SKY" }
-      { b = "?sky_h", mat = "_SKY" }
+      { b = "?sky_ofs", mat = "_SKY" }
     }
 
     -- railing
@@ -211,6 +211,100 @@ PREFAB.FAT_CAGE1 =
       { x = 168, y =  32 }
       { x = 168, y = 176 }
       { x =  24, y = 176 }
+      { b =   0 }
+      { t = 192 }
+    }
+  }
+}
+
+
+PREFAB.FAT_CAGE_W_BARS =
+{
+  fitted = "xy"
+
+  brushes =
+  {
+    -- wall behind it
+    {
+      { x =   0, y =  0, mat = "?wall" }
+      { x = 192, y =  0, mat = "?wall" }
+      { x = 192, y = 24, mat = "?wall" }
+      { x =   0, y = 24, mat = "?wall" }
+    }
+
+    -- walls each side
+    {
+      { x =  0, y =   0, mat = "?wall" }
+      { x = 16, y =   0, mat = "?wall" }
+      { x = 16, y = 192, mat = "?wall" }
+      { x =  0, y = 192, mat = "?wall" }
+    }
+
+    {
+      { x = 176, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?wall" }
+      { x = 192, y = 192, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+    }
+
+    -- floor and ceiling
+    {
+      { x =  16, y =  16, mat = "?wall" }
+      { x = 176, y =  16, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall", blocked=1 }
+      { x =  16, y = 192, mat = "?wall" }
+      { t = 0, mat = "?wall" }
+    }
+
+    {
+      { x =  16, y =  16, mat = "?wall" }
+      { x = 176, y =  16, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+      { x =  16, y = 192, mat = "?wall" }
+      { b = 192, mat = "?wall" }
+    }
+
+    -- bars
+    {
+      { m = "detail" }
+      { x =  92, y = 176, mat = "bar" }
+      { x = 100, y = 176, mat = "bar" }
+      { x = 100, y = 184, mat = "bar" }
+      { x =  92, y = 184, mat = "bar" }
+    }
+
+    {
+      { m = "detail" }
+      { x =  52, y = 176, mat = "bar" }
+      { x =  60, y = 176, mat = "bar" }
+      { x =  60, y = 184, mat = "bar" }
+      { x =  52, y = 184, mat = "bar" }
+    }
+
+    {
+      { m = "detail" }
+      { x = 132, y = 176, mat = "bar" }
+      { x = 140, y = 176, mat = "bar" }
+      { x = 140, y = 184, mat = "bar" }
+      { x = 132, y = 184, mat = "bar" }
+    }
+
+    -- clipping
+    {
+      { m = "clip" }
+      { x =  16, y = 168 }
+      { x = 176, y = 168 }
+      { x = 176, y = 192 }
+      { x =  16, y = 192 }
+    }
+
+    -- monster spot
+    {
+      { m = "spot", spot_kind = "cage", angle = 90 }
+      { x =  24, y =  32 }
+      { x = 168, y =  32 }
+      { x = 168, y = 164 }
+      { x =  24, y = 164 }
       { b =   0 }
       { t = 192 }
     }

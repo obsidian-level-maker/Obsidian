@@ -1097,6 +1097,17 @@ QUAKE.SKINS =
   }
 
 
+  ---| CAGES |---
+
+  Fat_Cage_W_Bars =
+  {
+    _prefab = "FAT_CAGE_W_BARS"
+    _where  = "chunk"
+
+    bar = "METAL1_1"
+  }
+
+
   ---| DECORATION |---
 
   TechLamp =
