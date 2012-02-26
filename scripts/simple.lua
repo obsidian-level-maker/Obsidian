@@ -1190,7 +1190,6 @@ do return end ----!!!!!!!
   local function render_liquid_area(island)
     -- create a lava/nukage pit
 
-stderrf("render_liquid_area !!!!!!!!!!1\n")
     local f_mat = R.floor_mat or cave_tex
     local c_mat = R.ceil_mat  or cave_tex
     local l_mat = LEVEL.liquid.mat

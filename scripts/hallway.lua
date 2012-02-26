@@ -951,9 +951,8 @@ function HALLWAY_CLASS.try_add_middle_chunk(H, K)
   local sx1, sy1 = K.sx1, K.sy1
   local sx2, sy2 = K.sx2, K.sy2
 
---FIXME !!!!!!!!
   if K.kind == "junction" or K.kind == "big_junc" or
-   --[[  K.double_peer or --]] rand.odds(20)
+     K.double_peer or rand.odds(20)
   then
     -- use the whole section
 
