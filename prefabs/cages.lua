@@ -267,26 +267,26 @@ PREFAB.FAT_CAGE_W_BARS =
     -- bars
     {
       { m = "detail" }
-      { x =  92, y = 176, mat = "bar" }
-      { x = 100, y = 176, mat = "bar" }
-      { x = 100, y = 184, mat = "bar" }
-      { x =  92, y = 184, mat = "bar" }
+      { x =  92, y = 176, mat = "?bar" }
+      { x = 100, y = 176, mat = "?bar" }
+      { x = 100, y = 184, mat = "?bar" }
+      { x =  92, y = 184, mat = "?bar" }
     }
 
     {
       { m = "detail" }
-      { x =  52, y = 176, mat = "bar" }
-      { x =  60, y = 176, mat = "bar" }
-      { x =  60, y = 184, mat = "bar" }
-      { x =  52, y = 184, mat = "bar" }
+      { x =  52, y = 176, mat = "?bar" }
+      { x =  60, y = 176, mat = "?bar" }
+      { x =  60, y = 184, mat = "?bar" }
+      { x =  52, y = 184, mat = "?bar" }
     }
 
     {
       { m = "detail" }
-      { x = 132, y = 176, mat = "bar" }
-      { x = 140, y = 176, mat = "bar" }
-      { x = 140, y = 184, mat = "bar" }
-      { x = 132, y = 184, mat = "bar" }
+      { x = 132, y = 176, mat = "?bar" }
+      { x = 140, y = 176, mat = "?bar" }
+      { x = 140, y = 184, mat = "?bar" }
+      { x = 132, y = 184, mat = "?bar" }
     }
 
     -- clipping
