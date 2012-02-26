@@ -5,30 +5,12 @@ OBLIGE TODO
 Current Work
 ------------
 
-!!!  connection failure with:
-
-     ./Oblige -b TEST.wad -d only=map04 seed=906 length=few
-
 
 >>>  stairs for new area code
 
 
-!!  fix street mode  (broken by room-room doors)
-    (entry chunk not getting a floor_h)
-
-
 !!!!  fix stuck monsters (boundaries of area chunks)
 
-
-+  double hallways STILL busted (entry from the single end I guess)
-
-REVIEW entry_conn, entry_h mechanism  (want just entry_C.floor_h to be set already)
-
-
-
-Fence stuff
-
--  review
 
 
 Outdoor Borders:
@@ -38,30 +20,66 @@ Outdoor Borders:
 
 +  cages !!
 
-Idea: for outdoor bordering, have earlier pass to set the facade_mat
-      in _all_ unused seeds (grow existing buildings)
-
 
 
 Hallways:
 
-!!  monsters and items (YET AGAIN)
+!!!  no adjusters (for Cycles and Crossovers)
 
-+  issue: no locked doors between two hallways
-          (guess it ain't happening now since we merge 99% of the time)
- 
-!!  no adjusters (need lifty prefabs / skins)
 
->>>  ability to have stairs / lifts
+WISH: outdoor hallways (wall on one side, fence on other side, sky top)
+      [may be easier to convert hallway into a room]
+      hard part: ensuring such a hallway stays above nearby room(s)
+      hmmm, could also work bordering an _indoor_ room (no sky)
 
->>>  big junction prefabs!
 
-  DONE: need to select I/C/T/P versions of a skin
-        (using same mechanism as for normal hallway pieces)
+-----------------------------------------------------------------
 
-     -  need _either_ I/C/T/P versions of each prefab
-             _or_     a mechanism to use a single prefab (CONDITIONAL STUFF)
-                      [can be done using height variables]
+
+Short-Term Goals
+================
+
++  hallway stuff sorted out
+
++  theme stuff sorted out
+
++  windows
+
+   -  must decide after all heights are done
+
+
+
+!!?!!  LOCKED DOORS IN A WHOLE SEED/CHUNK
+
+-  review Fence code
+
+-  light_globe and flame entities for QUAKE
+
+-  in prefab skins: '_long = 23' means 2 to 3 seeds wide
+                    '_deep = 14' means 1 to 4 seeds deep
+
+-  ARCH_W_WINDOW prefab (window above archway)
+
+-  automatically create bridges over channels
+
++  automatic repeating of prefabs
+   x_repeat=192 : means we require: x_size / N >= x_repeat (for highest N)
+
+   allow it to happen with prefab composition too
+
+-  outdoor wall extender: 64x64 block with torch on top
+
+Idea: for outdoor bordering, have earlier pass to set the facade_mat
+      in _all_ unused seeds (grow existing buildings)
+
++  flat mismatch where hallways meet rooms
+   (a) have a step (ideally not flush with wall)
+   (b) put a door there
+   (c) use floor texture in hallway (only works at one end)
+
+Hallways:
+
++  double hallways STILL busted (entry from the non-forky end)
 
 +  HALLWAY_GROUPS
 
@@ -84,63 +102,6 @@ Hallways:
       IN LEVEL THEME:
 
       hall_groups = { basic=50, curvilicious=50 }
-
-
-WISH: outdoor hallways (wall on one side, fence on other side, sky top)
-      [may be easier to convert hallway into a room]
-      hard part: ensuring such a hallway stays above nearby room(s)
-      hmmm, could also work bordering an _indoor_ room (no sky)
-
-
------------------------------------------------------------------
-
-
-Next WIP Goals
-==============
-
-+  hallway stuff sorted out
-
-+  theme stuff sorted out
-
-
-+  proper building facades
-
-   -  create "scenic" chunks in unused seeds as part of a building 
-
-   -  narrowify floor and ceiling parts next to a wall
-
-+  windows and fences
-
-   -  must decide after all heights are done
-
-   -  need to harmonize sky heights
-
-+  sky borders in outdoor rooms
-
--  ARCH_W_WINDOW
-
-
-
-!!?!!  LOCKED DOORS IN A WHOLE SEED/CHUNK
-
--  light_globe and flame entities for QUAKE
-
--  in prefab skins: '_long = 23' means 2 to 3 seeds wide
-                    '_deep = 14' means 1 to 4 seeds deep
-
--  automatically create bridges over channels
-
-+  automatic repeating of prefabs
-   x_repeat=192 : means we require: x_size / N >= x_repeat (for highest N)
-
-   allow it to happen with prefab composition too
-
--  outdoor wall extender: 64x64 block with torch on top
-
-+  flat mismatch where hallways meet rooms
-   (a) have a step (ideally not flush with wall)
-   (b) put a door there
-   (c) use floor texture in hallway (only works at one end)
 
 Theme System:
 
