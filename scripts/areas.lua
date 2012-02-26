@@ -2089,7 +2089,7 @@ stderrf("connect_all_areas DONE\n")
   end
 
 
-  local function hallway_heights(L)
+  local function outgoing_heights(L)
     each D in L.conns do
       if D.L1 == L and D.L2.kind == "hallway" and D.kind != "double_R" then
         local hall = D.L2
@@ -2097,7 +2097,16 @@ stderrf("connect_all_areas DONE\n")
         hall:floor_stuff(D)
 
         -- recursively handle hallway networks
-        hallway_heights(hall)
+        outgoing_heights(hall)
+      end
+
+      -- for direct room-to-room connections (Street mode)
+      if D.L1 == L and L.kind != "hallway" and D.L2.kind != "hallway" then
+        assert(D.C1)
+        assert(D.C2)
+        assert(D.C1.floor_h)
+
+        D.C2.floor_h = D.C1.floor_h
       end
     end
   end
@@ -2133,7 +2142,7 @@ stderrf("connect_all_areas DONE\n")
       floor_textures(R)
     end
 
-    hallway_heights(R)
+    outgoing_heights(R)
     crossover_room(R)
   end
 
