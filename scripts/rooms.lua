@@ -1827,30 +1827,41 @@ function Rooms_fake_building(sx1, sy1, sx2, sy2, kind, dir, face_room, zone)
 
   local mat = assert(zone.facade_mat)
 
---[[
-if kind == "F" then mat = "COMPBLUE"
-elseif kind == "C" then mat = "SFALL1"
-elseif kind == "T" then mat = "LAVA1" ; stderrf("fake T !!!\n")
-elseif kind == "P" then mat = "LITE3" ; stderrf("fake PPPPPP !!!!!!\n")
-else assert(kind == "X") ; mat = "METAL2"
-end
---]]
 -- stderrf("Rooms_fake_building @ (%d %d) .. (%d %d) : %s\n", sx1, sy1, sx2, sy2, kind)
 
-  -- cage test
-  if face_room and rand.odds(90) and false then
-    local skin1 = GAME.SKINS["Fat_Cage1"]
+  -- cages!
+  local cage_prob = style_sel("cages", 0, 5, 17, 65)
 
-    if skin1 then
-      local f_h = face_room.sky_h - 192
-      local skin2 = { sky_h=face_room.sky_h - f_h, wall=mat }
-      local T = Trans.box_transform(x1, y1, x2, y2, f_h, 10 - dir)
-
-      local fab = Fabricate(skin1._prefab, T, { skin1, skin2 })
-
-      face_room:add_cage_or_trap(fab)
-      return
+  if face_room and THEME.fat_cages and rand.odds(cage_prob) then
+    if not LEVEL.fat_cage_kind then
+      LEVEL.fat_cage_kind = rand.key_by_probs(THEME.fat_cages)
     end
+
+    local skin1 = assert(GAME.SKINS[LEVEL.fat_cage_kind])
+
+    -- FIXME: use nearby floors 
+    local f_h = face_room.max_floor_h + 48
+    local c_h = face_room.sky_h
+
+    local cage_h = skin1._cage_h or 208  -- FIXME
+
+    gui.debugf("Trying cage @ %s: f_h=%d c_h=%d\n", face_room:tostr(), f_h, c_h)
+
+    if f_h - c_h >= cage_h then
+      if not R.cage_floor_h then
+        R.cage_floor_h = rand.sel(75, f_h, c_h - cage_h)
+      end
+      f_h = R.cage_floor_h
+    end
+    
+    local skin2 = { sky_ofs=face_room.sky_h - f_h, wall=mat }
+
+    local T = Trans.box_transform(x1, y1, x2, y2, f_h, 10 - dir)
+
+    local fab = Fabricate(skin1._prefab, T, { skin1, skin2 })
+
+    face_room:add_cage_or_trap(fab)
+    return
   end
 
   local brush = Brush_new_quad(x1, y1, x2, y2)

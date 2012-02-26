@@ -1159,6 +1159,8 @@ QUAKE.THEME_DEFAULTS =
 
   fences = { Fence1 = 50 }
 
+  fat_cages = { Fat_Cage_W_Bars = 50 }
+
   logos = { carve=50 }
 
   indoor_fabs = { TechLamp = 50, RoundPillar = 50 }
