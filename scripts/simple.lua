@@ -718,7 +718,7 @@ function Simple_connect_all_areas(R)
         N:set_floor(new_h)
 
 -- LIGHTING TEST CRAP
-  if GAME.format != "doom" then
+  if GAME.format != "doom" and R.ceil_mat != "_SKY" then
     local x = assert(N.light_x)
     local y = assert(N.light_y)
     local z = N.floor_h + rand.pick { 40,60,80 }

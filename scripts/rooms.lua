@@ -615,23 +615,24 @@ function Rooms_select_textures()
     L.wall_mat = rand.key_by_probs(tab)
 
     if L.kind == "cave" then
-      L.ceil_mat = rand.sel(20, "_SKY", L.wall_mat)
+      L.ceil_mat = rand.sel(15, "_SKY", L.wall_mat)
       for loop = 1,2 do
         L.floor_mat = rand.key_by_probs(L.theme.floors or tab)
         if L.floor_mat != L.wall_mat then break; end
       end
-    end
-
-    if L.theme.floors then
-      L.floor_mat = rand.key_by_probs(L.theme.floors)
+    
     else
-      L.floor_mat = L.wall_mat
-    end
+      if L.theme.floors then
+        L.floor_mat = rand.key_by_probs(L.theme.floors)
+      else
+        L.floor_mat = L.wall_mat
+      end
 
-    if L.theme.ceilings then
-      L.ceil_mat = rand.key_by_probs(L.theme.ceilings)
-    else
-      L.ceil_mat = L.wall_mat
+      if L.theme.ceilings then
+        L.ceil_mat = rand.key_by_probs(L.theme.ceilings)
+      else
+        L.ceil_mat = L.wall_mat
+      end
     end
   end 
 
