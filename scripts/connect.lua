@@ -201,6 +201,20 @@ end
 
 
 
+function Connect_dump_groups()
+  gui.debugf("Connect groups:\n")
+
+  each R in LEVEL.rooms do
+    gui.debugf("  %s = %d\n", R:tostr(), R.conn_group or -1)
+  end
+
+  each H in LEVEL.halls do
+    gui.debugf("  %s = %d\n", H:tostr(), H.conn_group or -1)
+  end
+end
+
+
+
 function Connect_merge_groups(id1, id2)
   if id1 > id2 then id1,id2 = id2,id1 end
 
@@ -482,6 +496,8 @@ function Connect_rooms()
   while count_groups() >= 2 do
     if not Connect_scan_sections("normal", -999) then
       if not Connect_scan_sections("emergency", -99999) then
+        Plan_dump_rooms("Current Map:")
+        Connect_dump_groups()
         error("Failed to connect all rooms")
       end
     end
