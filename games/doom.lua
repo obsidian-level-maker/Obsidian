@@ -2725,7 +2725,7 @@ DOOM.THEME_DEFAULTS =
 
   fences = { Fence1 = 50 }
 
-  fat_cages = { Fat_Cage1 = 50, Fat_Cage_W_Bars = 3 }
+  fat_cages = { Fat_Cage1 = 50, Fat_Cage_W_Bars = 8 }
 
   outdoor_decor = { big_tree=50, burnt_tree=10, brown_stub=10 }
 
