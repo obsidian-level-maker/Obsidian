@@ -1018,7 +1018,7 @@ QUAKE.SKINS =
 
   Junc_Test_I =
   {
-    _prefab = "JUNCTION_TEST"
+    _prefab = "JUNCTION_OCTO"
     _where  = "big_junc"
 
     hole = "WINDOW1_3"
@@ -1029,7 +1029,7 @@ QUAKE.SKINS =
 
   Junc_Test_C =
   {
-    _prefab = "JUNCTION_TEST"
+    _prefab = "JUNCTION_OCTO"
     _where  = "big_junc"
 
     hole = "WINDOW1_3"
@@ -1040,7 +1040,7 @@ QUAKE.SKINS =
 
   Junc_Test_T =
   {
-    _prefab = "JUNCTION_TEST"
+    _prefab = "JUNCTION_OCTO"
     _where  = "big_junc"
 
     hole = "WINDOW1_3"
@@ -1050,7 +1050,7 @@ QUAKE.SKINS =
 
   Junc_Test_P =
   {
-    _prefab = "JUNCTION_TEST"
+    _prefab = "JUNCTION_OCTO"
     _where  = "big_junc"
 
     hole = "WINDOW1_3"

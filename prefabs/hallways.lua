@@ -1490,7 +1490,7 @@ PREFAB.HALL_BASIC_I_WINDOW =
 ----------------------------------------------------------------
 
 
-PREFAB.JUNCTION_TEST =
+PREFAB.JUNCTION_OCTO =
 {
   fitted = "xy"
 
