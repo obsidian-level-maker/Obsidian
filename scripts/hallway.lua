@@ -1214,7 +1214,7 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
   C.floor_h = floor_h
 
   if C.h_shape == "I" and C.section.kind != "big_junc" and
-     (rand.odds(70) or C.double_peer) and
+     (rand.odds(H.stair_prob) or C.double_peer) and
      (not H.double_fork or C.double_peer)
   then
     -- reverse Z direction in a double hallway when hit the fork section,
@@ -1368,6 +1368,8 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
 
   -- general vertical direction
   local z_dir = rand.sel(50, 1, -1)
+
+  H.stair_prob = 60
 
   H:stair_flow(entry_C, 10 - entry_dir, entry_h, z_dir, {})
 
