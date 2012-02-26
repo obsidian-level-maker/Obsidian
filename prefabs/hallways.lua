@@ -1196,6 +1196,11 @@ PREFAB.HALL_BASIC_I_STAIR =
 {
   fitted = "xy"
 
+  defaults =
+  {
+    step = "?floor"
+  }
+
   brushes =
   {
     -- left wall
@@ -1225,15 +1230,15 @@ PREFAB.HALL_BASIC_I_STAIR =
 
     {
       { x =  16, y =   0, mat = "?wall" }
-      { x = 176, y =   0, mat = "?wall" }
-      { x = 176, y =  32, mat = "?wall" }
-      { x =  16, y =  32, mat = "?wall" }
+      { x = 176, y =   0, mat = "?ceil" }
+      { x = 176, y =  32, mat = "?ceil" }
+      { x =  16, y =  32, mat = "?ceil" }
       { b = 128, mat = "?ceil" }
     }
 
     -- step 2
     {
-      { x =  16, y =  32, mat = "?wall" }
+      { x =  16, y =  32, mat = "?step", y_offset=0, peg=1 }
       { x = 176, y =  32, mat = "?wall" }
       { x = 176, y =  64, mat = "?wall" }
       { x =  16, y =  64, mat = "?wall" }
@@ -1241,16 +1246,16 @@ PREFAB.HALL_BASIC_I_STAIR =
     }
 
     {
-      { x =  16, y =  32, mat = "?wall" }
-      { x = 176, y =  32, mat = "?wall" }
-      { x = 176, y =  64, mat = "?wall" }
-      { x =  16, y =  64, mat = "?wall" }
+      { x =  16, y =  32, mat = "?ceil" }
+      { x = 176, y =  32, mat = "?ceil" }
+      { x = 176, y =  64, mat = "?ceil" }
+      { x =  16, y =  64, mat = "?ceil" }
       { b = 140, mat = "?ceil" }
     }
 
     -- step 3
     {
-      { x =  16, y =  64, mat = "?wall" }
+      { x =  16, y =  64, mat = "?step", y_offset=0, peg=1 }
       { x = 176, y =  64, mat = "?wall" }
       { x = 176, y =  96, mat = "?wall" }
       { x =  16, y =  96, mat = "?wall" }
@@ -1258,16 +1263,16 @@ PREFAB.HALL_BASIC_I_STAIR =
     }
 
     {
-      { x =  16, y =  64, mat = "?wall" }
-      { x = 176, y =  64, mat = "?wall" }
-      { x = 176, y =  96, mat = "?wall" }
-      { x =  16, y =  96, mat = "?wall" }
+      { x =  16, y =  64, mat = "?ceil" }
+      { x = 176, y =  64, mat = "?ceil" }
+      { x = 176, y =  96, mat = "?ceil" }
+      { x =  16, y =  96, mat = "?ceil" }
       { b = 152, mat = "?ceil" }
     }
 
     -- step 4
     {
-      { x =  16, y =  96, mat = "?wall" }
+      { x =  16, y =  96, mat = "?step", y_offset=0, peg=1 }
       { x = 176, y =  96, mat = "?wall" }
       { x = 176, y = 128, mat = "?wall" }
       { x =  16, y = 128, mat = "?wall" }
@@ -1275,16 +1280,16 @@ PREFAB.HALL_BASIC_I_STAIR =
     }
 
     {
-      { x =  16, y =  96, mat = "?wall" }
-      { x = 176, y =  96, mat = "?wall" }
-      { x = 176, y = 128, mat = "?wall" }
-      { x =  16, y = 128, mat = "?wall" }
+      { x =  16, y =  96, mat = "?ceil" }
+      { x = 176, y =  96, mat = "?ceil" }
+      { x = 176, y = 128, mat = "?ceil" }
+      { x =  16, y = 128, mat = "?ceil" }
       { b = 164, mat = "?ceil" }
     }
 
     -- step 5
     {
-      { x =  16, y = 128, mat = "?wall" }
+      { x =  16, y = 128, mat = "?step", y_offset=0, peg=1 }
       { x = 176, y = 128, mat = "?wall" }
       { x = 176, y = 160, mat = "?wall" }
       { x =  16, y = 160, mat = "?wall" }
@@ -1292,16 +1297,16 @@ PREFAB.HALL_BASIC_I_STAIR =
     }
 
     {
-      { x =  16, y = 128, mat = "?wall" }
-      { x = 176, y = 128, mat = "?wall" }
-      { x = 176, y = 160, mat = "?wall" }
-      { x =  16, y = 160, mat = "?wall" }
+      { x =  16, y = 128, mat = "?ceil" }
+      { x = 176, y = 128, mat = "?ceil" }
+      { x = 176, y = 160, mat = "?ceil" }
+      { x =  16, y = 160, mat = "?ceil" }
       { b = 176, mat = "?ceil" }
     }
 
     -- step 6
     {
-      { x =  16, y = 160, mat = "?wall" }
+      { x =  16, y = 160, mat = "?step", y_offset=0, peg=1 }
       { x = 176, y = 160, mat = "?wall" }
       { x = 176, y = 192, mat = "?wall" }
       { x =  16, y = 192, mat = "?wall" }
@@ -1309,10 +1314,10 @@ PREFAB.HALL_BASIC_I_STAIR =
     }
 
     {
-      { x =  16, y = 160, mat = "?wall" }
-      { x = 176, y = 160, mat = "?wall" }
+      { x =  16, y = 160, mat = "?ceil" }
+      { x = 176, y = 160, mat = "?ceil" }
       { x = 176, y = 192, mat = "?wall" }
-      { x =  16, y = 192, mat = "?wall" }
+      { x =  16, y = 192, mat = "?ceil" }
       { b = 188, mat = "?ceil" }
     }
   }
@@ -1482,6 +1487,73 @@ PREFAB.HALL_BASIC_I_WINDOW =
       { x = 176, y = 192, mat = "?wall" }
       { x =  16, y = 192, mat = "?wall" }
       { b = 128, mat = "?ceil" }
+    }
+  }
+}
+
+
+----------------------------------------------------------------
+
+
+PREFAB.HALL_OUTDOORSY_I =
+{
+  fitted = "xy"
+
+  defaults =
+  {
+    fence = "?wall"
+
+    sky_ofs = 256
+    fence_h = 32
+  }
+
+  brushes =
+  {
+    -- ceiling
+    {
+      { x =   0, y =   0, mat = "_SKY" }
+      { x = 192, y =   0, mat = "_SKY" }
+      { x = 192, y = 192, mat = "_SKY" }
+      { x =   0, y = 192, mat = "_SKY" }
+      { b = "?sky_ofs", mat = "_SKY" }
+    }
+
+    -- floor
+    {
+      { x =   0, y =   0, mat = "?floor" }
+      { x = 192, y =   0, mat = "?floor" }
+      { x = 192, y = 192, mat = "?floor" }
+      { x =   0, y = 192, mat = "?floor" }
+      { t = 0, mat = "?floor" }
+    }
+
+    -- left side
+    {
+      { x =   0, y =  16, mat = "?fence" }
+      { x =  16, y =  16, mat = "?fence" }
+      { x =  16, y = 176, mat = "?fence" }
+      { x =   0, y = 176, mat = "?fence" }
+      { t = "?fence_h", mat = "?fence" }
+    }
+
+    -- right side
+    {
+      { x = 176, y =  16, mat = "?fence" }
+      { x = 192, y =  16, mat = "?fence" }
+      { x = 192, y = 176, mat = "?fence" }
+      { x = 176, y = 176, mat = "?fence" }
+      { t = "?fence_h", mat = "?fence" }
+    }
+
+    -- da monsters
+    {
+      { m = "spot" }
+      { x =  24, y =  24 }
+      { x = 168, y =  24 }
+      { x = 168, y = 168 }
+      { x =  24, y = 168 }
+      { b = 0 }
+      { t = "?sky_ofs" }
     }
   }
 }
