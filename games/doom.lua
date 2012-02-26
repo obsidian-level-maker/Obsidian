@@ -2447,6 +2447,8 @@ DOOM.SKINS =
   {
     _prefab = "HALL_BASIC_I_STAIR"
     _where  = "hallway"
+
+    step = "STEP3"
   }
 
   Hall_Test_I_Lift =
