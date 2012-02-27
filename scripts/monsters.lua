@@ -1392,8 +1392,11 @@ function Monsters_in_room(L)
   end
 
 
-  local function place_monster(mon, x, y, z, all_skills)
-    local angle  = monster_angle(x, y, z)
+  local function place_monster(mon, x, y, z, angle, all_skills)
+    if not angle then
+      angle = monster_angle(x, y, z)
+    end
+
     local ambush = rand.sel(70, 1, 0)
 
     local info = GAME.MONSTERS[mon]
@@ -1473,7 +1476,7 @@ function Monsters_in_room(L)
       y = y + rand.range(-dy, dy)
     end
 
-    place_monster(mon, x, y, z, all_skills)
+    place_monster(mon, x, y, z, nil, all_skills)
 
 --[[
     local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
@@ -1817,11 +1820,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     assert(w >= 1 and h >= 1)
 
-    local d = ent.cage_density or ent.density or 1
-    local f = gui.random()
-
-    local count = int(w * h * d + f * f)
-    count = math.clamp(1, count, w*h)
+    local total = w * h
 
     -- generate list of coordinates to use
     local list = {}
@@ -1829,8 +1828,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     for mx = 1,w do for my = 1,h do
       local loc =
       {
-        x = spot.x1 + ent.r * 2.2 * (mx-0.5),
-        y = spot.y1 + ent.r * 2.2 * (my-0.5),
+        x = spot.x1 + ent.r * 2.2 * (mx-0.5)
+        y = spot.y1 + ent.r * 2.2 * (my-0.5)
         z = spot.z1
       }
       table.insert(list, loc)
@@ -1838,19 +1837,23 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     rand.shuffle(list)
 
-    -- apply quantity (i.e. user settings)
-    local qty = calc_quantity()
-    local want = int(count * qty / 100 + gui.random())
-    want = math.clamp(1, want, count)
+    -- determine quantity, applying user settings
+    local qty = calc_quantity() * 1.4
 
-    gui.debugf("monsters_in_cage: %d (from %d) qty=%1.1f\n", want, count, qty)
+    local d = ent.cage_density or 1
+    local f = gui.random()
+
+    local want = int(total * d * qty / 100 + f * f * 2)
+    want = math.clamp(1, want, total)
+
+    gui.debugf("monsters_in_cage: %d (of %d) qty=%1.1f\n", want, total, qty)
 
     for i = 1,want do
-      -- ensure first monster in always present
+      -- ensure first monster in present in all skills
       local all_skills = (i == 1)
       local loc = list[i]
 
-      place_monster(mon, loc.x, loc.y, loc.z, all_skills)
+      place_monster(mon, loc.x, loc.y, loc.z, spot.angle, all_skills)
     end
   end
 
