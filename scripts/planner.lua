@@ -1642,6 +1642,12 @@ end
 function Plan_decide_caves()
 
   local function score_room(R)
+    -- sometimes turn surrounder room into a big cave
+    if R.is_surrounder and rand.odds(style_sel("caves", 0, 15, 35, 90)) then
+      R.kind = "cave"
+      return -1  -- ignore it now
+    end
+
     -- too small ?
     if R.svolume < 24 then return -1 end
 
