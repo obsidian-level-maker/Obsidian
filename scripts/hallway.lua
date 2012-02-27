@@ -1224,6 +1224,7 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
   C.floor_h = floor_h
 
   if C.h_shape == "I" and C.section.kind != "big_junc" and
+     not C.crossover_hall and
      (rand.odds(H.stair_prob) or C.double_peer) and
      (not H.double_fork or C.double_peer)
   then
@@ -1250,6 +1251,8 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
   if (C.h_shape == "C" or C.h_shape == "P") and rand.odds(15) and not H.double_fork then
     z_dir = -z_dir
   end
+
+  -- recursively handle branches
 
   local did_a_branch = false
 
@@ -1279,7 +1282,60 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
 end
 
 
-function HALLWAY_CLASS.cycle_flow(H, start_C, from_dir, start_z, seen)
+function HALLWAY_CLASS.cycle_flow(H, C, from_dir, z, i_deltas, seen)
+  -- Note: this code will only work on a simple (non-forked) hallway
+
+  seen[C] = true
+
+  C.floor_h = z
+
+  if C.h_shape == "I" and C.section.kind != "big_junc" and
+     not C.crossover_hall
+  then
+    local dz = table.remove(i_deltas, 1)
+    local abs_dz = math.abs(dz)
+    local z_dir = (dz < 0 ? -1 ; 1)
+
+    -- only need a stair if distance is too big for player to climb
+    if abs_dz > PARAM.step_height then
+
+      C.h_dir = (dz < 0 ? 10 - from_dir ; from_dir)
+      
+      -- need a lift?
+      if abs_dz > 80 + PARAM.step_height then
+        C.h_extra = "lift"
+      else
+        C.h_extra = "stair"
+      end
+
+      z = z + dz
+
+    else
+
+      -- accumulate unused delta into next one
+      if dz != 0 and #i_deltas > 0 then
+        i_deltas[1] = i_deltas[1] + dz
+      end
+    end
+
+  end
+
+
+  -- handle rest of hallway
+
+  each dir in rand.dir_list() do
+    if dir == from_dir then continue end
+
+    local C2 = C.hall_link[dir]
+
+    if C2 and not seen[C2] then
+      H:cycle_flow(C2, 10 - dir, z, i_deltas, seen)
+    end
+  end
+end
+
+
+function HALLWAY_CLASS.handle_cycle(H, start_C, from_dir, start_z)
   -- find exit chunk
   local exit_C
   local exit_dir
@@ -1308,6 +1364,7 @@ function HALLWAY_CLASS.cycle_flow(H, start_C, from_dir, start_z, seen)
   local z_diff = exit_z - start_z
 
 
+  -- stairs can only be placed in the "I" pieces -- collect them
   local i_pieces = {}
 
   each C2 in H.chunks do
@@ -1316,15 +1373,20 @@ function HALLWAY_CLASS.cycle_flow(H, start_C, from_dir, start_z, seen)
     end
   end
 
+  
+  -- the delta we want for each i_piece (can be zero)
+  local i_deltas = {}
+
+  if #i_pieces > 0 then
+    for n = 1,#i_pieces do
+      i_deltas[n] = z_diff / #i_pieces
+    end
+  end
+
 gui.debugf("Bicycle @ %s : %d --> %d  (%d i_pieces)\n",
            H:tostr(), start_z, exit_z, #i_pieces);
 
-
--- TEMP CRUD
-each C in H.chunks do
-C.floor_h = start_z
-end
-
+  H:cycle_flow(start_C, from_dir, start_z, i_deltas, {})
 end
 
 
@@ -1425,7 +1487,7 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
   H:peer_double_chunks()
 
   if H.is_cycle then
-    H:cycle_flow(entry_C, 10 - entry_dir, entry_h, {})
+    H:handle_cycle(entry_C, 10 - entry_dir, entry_h)
   else
     -- general vertical direction
     local z_dir = rand.sel(50, 1, -1)
