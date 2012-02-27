@@ -9,17 +9,7 @@ Current Work
 >>>  stairs for new area code
 
 
-!!!!  fix stuck monsters (boundaries of area chunks)
-
-
-
-Outdoor Borders:
-
-+  fix for ugly sky in outdoor room near a hallway
-   (mark those seeds, detect in from_edge pass)
-
-+  cages !!
-
+-  build lock doorways completely on room side
 
 
 Hallways:
@@ -49,6 +39,11 @@ Short-Term Goals
 
 
 
++  fix for ugly sky in outdoor room near a hallway
+   (mark those seeds, detect in from_edge pass)
+
++  fix monsters stuck in doors / corners of chunks
+
 !!?!!  LOCKED DOORS IN A WHOLE SEED/CHUNK
 
 -  review Fence code
@@ -57,8 +52,6 @@ Short-Term Goals
 
 -  in prefab skins: '_long = 23' means 2 to 3 seeds wide
                     '_deep = 14' means 1 to 4 seeds deep
-
--  ARCH_W_WINDOW prefab (window above archway)
 
 -  automatically create bridges over channels
 

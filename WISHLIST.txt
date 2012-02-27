@@ -332,6 +332,8 @@ Weapons:
 
 DONE: brush conditionals:  if_true="?doomy"  if_false="?foobie"
 
+-  ARCH_W_WINDOW prefab (window above archway)
+
 -  can disable the pre-built levels
 
 -  smarter choosing health items, especially when health target is very high
