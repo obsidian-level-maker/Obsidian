@@ -1081,9 +1081,6 @@ if C.hall and #C.hall.sections == 1 and GAME.SKINS.Fat_Arch1 then
 end --]]
 
 
-  -- Ugh dirty hack   @@@@@@
-  if C.room and C.room.kind == "cave" and C.filler then return end
-
   local f_h
   local c_h
   local c_medium = "solid"
