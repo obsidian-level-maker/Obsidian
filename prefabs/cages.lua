@@ -186,11 +186,11 @@ PREFAB.FAT_CAGE1 =
     }
 
     {
-      { x =  16, y =  16, mat = "_SKY" }
-      { x = 176, y =  16, mat = "_SKY" }
-      { x = 176, y = 192, mat = "_SKY" }
-      { x =  16, y = 192, mat = "_SKY" }
-      { b = "?sky_ofs", mat = "_SKY" }
+      { x =  16, y =  16, mat = "?wall" }
+      { x = 176, y =  16, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+      { x =  16, y = 192, mat = "?wall" }
+      { b = 192, mat = "?wall" }
     }
 
     -- railing
