@@ -1586,38 +1586,38 @@ PREFAB.JUNCTION_OCTO =
   {
     -- south west corner
     {
-      { x =   0, y =   0, mat = "?wall", y_offset=0 }
+      { x =   0, y =   0, mat = "?outer" }
       { x = 192, y =   0, mat = "?wall", y_offset=0 }
       { x = 192, y =  64, mat = "?wall", y_offset=0 }
       { x =  64, y = 192, mat = "?wall", y_offset=0 }
-      { x =   0, y = 192, mat = "?wall", y_offset=0 }
+      { x =   0, y = 192, mat = "?outer" }
     }
 
     -- south east corner
     {
-      { x = 576, y =   0, mat = "?wall", y_offset=0 }
+      { x = 576, y =   0, mat = "?outer" }
       { x = 576, y = 192, mat = "?wall", y_offset=0 }
-      { x = 502, y = 192, mat = "?wall", y_offset=0 }
+      { x = 512, y = 192, mat = "?wall", y_offset=0 }
       { x = 384, y =  64, mat = "?wall", y_offset=0 }
-      { x = 384, y =   0, mat = "?wall", y_offset=0 }
+      { x = 384, y =   0, mat = "?outer" }
     }
 
     -- north west corner
     {
-      { x =   0, y = 576, mat = "?wall", y_offset=0 }
+      { x =   0, y = 576, mat = "?outer" }
       { x =   0, y = 384, mat = "?wall", y_offset=0 }
       { x =  64, y = 384, mat = "?wall", y_offset=0 }
-      { x = 192, y = 502, mat = "?wall", y_offset=0 }
-      { x = 192, y = 576, mat = "?wall", y_offset=0 }
+      { x = 192, y = 512, mat = "?wall", y_offset=0 }
+      { x = 192, y = 576, mat = "?outer" }
     }
 
     -- north east corner
     {
-      { x = 576, y = 576, mat = "?wall", y_offset=0 }
+      { x = 576, y = 576, mat = "?outer" }
       { x = 384, y = 576, mat = "?wall", y_offset=0 }
-      { x = 384, y = 502, mat = "?wall", y_offset=0 }
-      { x = 502, y = 384, mat = "?wall", y_offset=0 }
-      { x = 576, y = 384, mat = "?wall", y_offset=0 }
+      { x = 384, y = 512, mat = "?wall", y_offset=0 }
+      { x = 512, y = 384, mat = "?wall", y_offset=0 }
+      { x = 576, y = 384, mat = "?outer" }
     }
 
     -- north wall (conditional)
@@ -1625,7 +1625,7 @@ PREFAB.JUNCTION_OCTO =
       { m = "solid", only_if = "?north_wall_q" }
       { x = 192, y = 544, mat = "?wall", y_offset=0 }
       { x = 384, y = 544, mat = "?wall", y_offset=0 }
-      { x = 384, y = 576, mat = "?wall", y_offset=0 }
+      { x = 384, y = 576, mat = "?outer" }
       { x = 192, y = 576, mat = "?wall", y_offset=0 }
     }
 
@@ -1635,14 +1635,14 @@ PREFAB.JUNCTION_OCTO =
       { x =   0, y = 192, mat = "?wall", y_offset=0 }
       { x =  32, y = 192, mat = "?wall", y_offset=0 }
       { x =  32, y = 384, mat = "?wall", y_offset=0 }
-      { x =   0, y = 384, mat = "?wall", y_offset=0 }
+      { x =   0, y = 384, mat = "?outer" }
     }
 
     -- east wall (conditional)
     {
       { m = "solid", only_if = "?east_wall_q" }
       { x = 544, y = 192, mat = "?wall", y_offset=0 }
-      { x = 576, y = 192, mat = "?wall", y_offset=0 }
+      { x = 576, y = 192, mat = "?outer" }
       { x = 576, y = 384, mat = "?wall", y_offset=0 }
       { x = 544, y = 384, mat = "?wall", y_offset=0 }
     }
@@ -1775,7 +1775,7 @@ PREFAB.JUNCTION_NUKEY_C =
 
     -- south west corner
     {
-      { x =   0, y =   0, mat = "?wall" }
+      { x =   0, y =   0, mat = "?outer" }
       { x = 176, y =   0, mat = "?wall" }
       { x = 176, y =  16, mat = "?wall" }
       { x =  64, y =  64, mat = "?wall" }
@@ -1785,7 +1785,7 @@ PREFAB.JUNCTION_NUKEY_C =
       { x =   0, y =   0, mat = "?wall" }
       { x =  64, y =  64, mat = "?wall" }
       { x =  16, y = 176, mat = "?wall" }
-      { x =   0, y = 176, mat = "?wall" }
+      { x =   0, y = 176, mat = "?outer" }
     }
 
     -- north side
@@ -1793,71 +1793,71 @@ PREFAB.JUNCTION_NUKEY_C =
       { x =   0, y = 400, mat = "?wall" }
       { x =  16, y = 400, mat = "?wall" }
       { x = 104, y = 520, mat = "?wall" }
-      { x = 104, y = 576, mat = "?wall" }
-      { x =   0, y = 576, mat = "?wall" }
+      { x = 104, y = 576, mat = "?outer" }
+      { x =   0, y = 576, mat = "?outer" }
     }
 
     {
       { x = 104, y = 520, mat = "?wall" }
       { x = 264, y = 560, mat = "?wall" }
-      { x = 264, y = 576, mat = "?wall" }
+      { x = 264, y = 576, mat = "?outer" }
       { x = 104, y = 576, mat = "?wall" }
     }
 
     {
       { x = 264, y = 560, mat = "?wall" }
       { x = 432, y = 512, mat = "?wall" }
-      { x = 432, y = 576, mat = "?wall" }
+      { x = 432, y = 576, mat = "?outer" }
       { x = 264, y = 576, mat = "?wall" }
     }
 
     {
       { x = 432, y = 512, mat = "?wall" }
       { x = 480, y = 560, mat = "?wall" }
-      { x = 480, y = 576, mat = "?wall" }
+      { x = 480, y = 576, mat = "?outer" }
       { x = 432, y = 576, mat = "?wall" }
     }
 
     {
       { x = 480, y = 560, mat = "?wall" }
       { x = 544, y = 544, mat = "?wall" }
-      { x = 576, y = 576, mat = "?wall" }
+      { x = 576, y = 576, mat = "?outer" }
       { x = 480, y = 576, mat = "?wall" }
     }
 
     -- east side
     {
       { x = 400, y =  16, mat = "?wall" }
-      { x = 400, y =   0, mat = "?wall" }
-      { x = 576, y =   0, mat = "?wall" }
+      { x = 400, y =   0, mat = "?outer" }
+      { x = 576, y =   0, mat = "?outer" }
       { x = 576, y =  96, mat = "?wall" }
       { x = 528, y =  96, mat = "?wall" }
     }
 
     {
       { x = 528, y =  96, mat = "?wall" }
-      { x = 576, y =  96, mat = "?wall" }
+      { x = 576, y =  96, mat = "?outer" }
       { x = 576, y = 280, mat = "?wall" }
       { x = 560, y = 280, mat = "?wall" }
     }
 
     {
       { x = 560, y = 280, mat = "?wall" }
-      { x = 576, y = 280, mat = "?wall" }
+      { x = 576, y = 280, mat = "?outer" }
       { x = 576, y = 432, mat = "?wall" }
       { x = 512, y = 432, mat = "?wall" }
     }
 
     {
       { x = 512, y = 432, mat = "?wall" }
-      { x = 576, y = 432, mat = "?wall" }
+      { x = 576, y = 432, mat = "?outer" }
       { x = 576, y = 480, mat = "?wall" }
       { x = 560, y = 480, mat = "?wall" }
     }
 
     {
       { x = 560, y = 480, mat = "?wall" }
-      { x = 576, y = 480, mat = "?wall" }
+      { x = 576, y = 480, mat = "?outer" }
       { x = 576, y = 576, mat = "?wall" }
       { x = 544, y = 544, mat = "?wall" }
     }
