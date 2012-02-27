@@ -2098,7 +2098,10 @@ stderrf("connect_all_areas DONE\n")
       if D.L1 == L and D.L2.kind == "hallway" and D.kind != "double_R" then
         local hall = D.L2
 
-        hall:floor_stuff(D)
+        -- cycles hallways are done after everything else
+        if not hall.is_cycle then
+          hall:floor_stuff(D)
+        end
 
         -- recursively handle hallway networks
         outgoing_heights(hall)
@@ -2111,6 +2114,17 @@ stderrf("connect_all_areas DONE\n")
         assert(D.C1.floor_h)
 
         D.C2.floor_h = D.C1.floor_h
+      end
+    end
+  end
+
+
+  local function outgoing_cycles(L)
+    each D in L.conns do
+      if D.L1 == L and D.L2.kind == "hallway" and D.L2.is_cycle then
+        local hall = D.L2
+
+        hall:floor_stuff(D)
       end
     end
   end
@@ -2240,6 +2254,7 @@ stderrf("connect_all_areas DONE\n")
 
   each R in LEVEL.rooms do expand_chunks(R) end
   each R in LEVEL.rooms do floor_stuff(R) end
+  each R in LEVEL.rooms do outgoing_cycles(R) end
 
   Rooms_decide_fences()
 

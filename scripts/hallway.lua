@@ -34,6 +34,7 @@ class HALLWAY
 
   big_junc  : SECTION
   crossover : ROOM
+  is_cycle  : boolean
 
   double_fork : SECTION    -- only present for double hallways.
   double_dir  : direction  -- dir at the single end (into hallway)
@@ -386,16 +387,20 @@ function Hallway_test_branch(start_K, start_dir, mode)
     if end_K.kind != "big_junc" and end_K.hall and end_K.hall.big_junc then return end
 
     -- never connect to crossovers
-    -- (TODO: allow crossovers but NOT AT SECTION THAT TOUCHES CROSSED ROOM)
     if end_K.hall and end_K.hall.crossover then return end
 
     -- crossovers must be distinct (not same as start or end)
     if stats.crossover and end_K.room == stats.crossover then return end
 
+    -- cycles must connect two rooms, not hallways
+    -- (that's because we don't want to merge and forget the cycle-ness)
+    -- TODO: relax this to allow connecting onto a big junction
+    if end_K.hall then return end
+
     local merge = false
 
-    -- Note: currently require all hallways to merge, since there's no
-    --       logic for placing locked doors between hallway prefabs
+    -- Note: currently _REQUIRE_ all hallways to merge, since there's no
+    --       logic for placing locked doors between two hallway prefabs
     if end_K.hall then -- and rand.odds(95) then
       merge = true
     end
@@ -1274,6 +1279,55 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
 end
 
 
+function HALLWAY_CLASS.cycle_flow(H, start_C, from_dir, start_z, seen)
+  -- find exit chunk
+  local exit_C
+  local exit_dir
+
+  each C in H.chunks do
+    for dir = 2,8,2 do
+      if C.link[dir] and not (C == start_C and dir == from_dir) then
+        exit_C   = C
+        exit_dir = dir
+        break
+      end
+    end
+  end
+
+  if not exit_C then
+    error("cannot find exit from cycle hallway")
+  end
+
+  -- determine the target height
+  local LINK = exit_C.link[exit_dir]
+
+  local room_C = (LINK.C1 == exit_C ? LINK.C2 ; LINK.C1)
+
+  local exit_z = assert(room_C.floor_h)
+
+  local z_diff = exit_z - start_z
+
+
+  local i_pieces = {}
+
+  each C2 in H.chunks do
+    if not C2.crossover_hall then
+      if C2.h_shape == "I" then table.insert(i_pieces, C2) end
+    end
+  end
+
+gui.debugf("Bicycle @ %s : %d --> %d  (%d i_pieces)\n",
+           H:tostr(), start_z, exit_z, #i_pieces);
+
+
+-- TEMP CRUD
+each C in H.chunks do
+C.floor_h = start_z
+end
+
+end
+
+
 function HALLWAY_CLASS.update_seeds_for_chunks(H)
   -- TODO: bbox of hallway
 
@@ -1285,7 +1339,6 @@ function HALLWAY_CLASS.update_seeds_for_chunks(H)
     end
   end end
 end
-
 
 
 function HALLWAY_CLASS.set_cross_mode(H)
@@ -1371,12 +1424,16 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
   H:update_seeds_for_chunks()
   H:peer_double_chunks()
 
-  -- general vertical direction
-  local z_dir = rand.sel(50, 1, -1)
+  if H.is_cycle then
+    H:cycle_flow(entry_C, 10 - entry_dir, entry_h, {})
+  else
+    -- general vertical direction
+    local z_dir = rand.sel(50, 1, -1)
 
-  H.stair_prob = 60
+    H.stair_prob = 60
 
-  H:stair_flow(entry_C, 10 - entry_dir, entry_h, z_dir, {})
+    H:stair_flow(entry_C, 10 - entry_dir, entry_h, z_dir, {})
+  end
 
   H.min_floor_h = entry_h
   H.max_floor_h = entry_h
