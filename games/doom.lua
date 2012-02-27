@@ -3119,6 +3119,15 @@ DOOM.ROOM_THEMES =
 
   Urban_panel =
   {
+    facades =
+    {
+      BIGBRIK1 = 30
+      BLAKWAL2 = 10
+      MODWALL3 = 10
+      PANEL7   = 10
+      CEMENT7  = 5
+    }
+
     walls =
     {
       PANEL6 = 50
