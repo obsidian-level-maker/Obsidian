@@ -340,7 +340,12 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
     local score = -100 - MID.num_conn - gui.random()
 
-    if MID.hall and MID.hall.crossover then score = score - 500 end
+    -- try damn hard to _not_ connect to crossover hallways
+    if MID.hall and MID.hall.crossover then
+      if mode != "emergency" then return false end
+
+      score = score - 500
+    end
 
 
     -- score is now computed : test it
