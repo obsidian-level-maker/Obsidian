@@ -191,17 +191,21 @@ function AREA_CLASS.determine_spots(A)
   each C in A.chunks do
     local poly = Brush_new_quad(C.x1, C.y1, C.x2, C.y2)
 
-    -- WHY THIS DONT WORK!!!
-    if C.liquid then
-      gui.spots_fill_poly(poly, 1)
-      continue
-    end
-
-    if C.content.kind or C.stair then
+    if C.content.kind or C.stair or C.liquid then
       continue
     end
 
     gui.spots_fill_poly(poly, 0)
+
+    for dir = 2,8,2 do
+      local edge_k = C:classify_edge(dir)
+
+      if edge_k == "same" then continue end
+
+      local fill_k = (edge_k == "wall" or edge_k == "liquid" ? 1 ; 2)
+
+      gui.spots_fill_poly(C:quad_for_edge(dir, 16), fill_k)
+    end
   end
 
 

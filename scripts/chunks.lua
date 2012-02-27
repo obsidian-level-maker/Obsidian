@@ -311,6 +311,19 @@ function CHUNK_CLASS.need_fence(C, dir)
 end
 
 
+function CHUNK_CLASS.quad_for_edge(C, dir, thick)
+  local x1, y1 = C.x1, C.y1
+  local x2, y2 = C.x2, C.y2
+
+  if dir == 2 then y2 = y1 + thick end
+  if dir == 8 then y1 = y2 - thick end
+  if dir == 4 then x2 = x1 + thick end
+  if dir == 6 then x1 = x2 - thick end
+
+  return Brush_new_quad(x1, y1, x2, y2)
+end
+
+
 function CHUNK_CLASS.against_map_edge(C, dir)  -- TODO: REMOVE, OLD
   local sx1, sy1, sx2, sy2 = geom.side_coords(dir, C.sx1, C.sy1, C.sx2, C.sy2)
 
@@ -1068,7 +1081,7 @@ if C.hall and #C.hall.sections == 1 and GAME.SKINS.Fat_Arch1 then
 end --]]
 
 
-  -- Ugh dirty hack
+  -- Ugh dirty hack   @@@@@@
   if C.room and C.room.kind == "cave" and C.filler then return end
 
   local f_h
