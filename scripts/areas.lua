@@ -1880,7 +1880,7 @@ dump_seed_list("grown seeds", seeds)
     if not from_C then
       floor_h = R.entry_h
     else
-      floor_h = from_C.area.floor_h + rand.pick { 8,16,24,32 }
+      floor_h = from_C.area.floor_h + rand.pick { 8,12,16,24 }
     end
 
     AREA:set_floor(floor_h)
