@@ -1242,7 +1242,7 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
 
     floor_h = floor_h + (C.h_scale_z or 1) * 60 * z_dir
 
-    -- stairs and lifts assume we have the lowest height
+    -- stairs and lifts require chunk has the lowest height
     if z_dir < 0 then
       C.floor_h = floor_h
     end
@@ -1289,6 +1289,8 @@ function HALLWAY_CLASS.cycle_flow(H, C, from_dir, z, i_deltas, seen)
 
   C.floor_h = z
 
+  local climb_h = math.min(PARAM.jump_height, 32)
+
   if C.h_shape == "I" and C.section.kind != "big_junc" and
      not C.crossover_hall
   then
@@ -1297,19 +1299,25 @@ function HALLWAY_CLASS.cycle_flow(H, C, from_dir, z, i_deltas, seen)
     local z_dir = (dz < 0 ? -1 ; 1)
 
     -- only need a stair if distance is too big for player to climb
-    if abs_dz > PARAM.step_height then
+    if abs_dz > climb_h then
 
       C.h_dir = (dz < 0 ? 10 - from_dir ; from_dir)
       
       -- need a lift?
       if abs_dz > 80 + PARAM.step_height then
         C.h_extra = "lift"
+        C.h_scale_z = abs_dz / 128
       else
         C.h_extra = "stair"
+        C.h_scale_z = math.min(abs_dz, 80) / 60
       end
 
       z = z + dz
 
+      -- stairs and lifts require chunk has the lowest height
+      if z_dir < 0 then
+        C.floor_h = z
+      end
     else
 
       -- accumulate unused delta into next one
