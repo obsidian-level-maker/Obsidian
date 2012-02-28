@@ -1,8 +1,8 @@
 
-OBLIGE 4.15-WIP
+OBLIGE 4.23-WIP
 ===============
 
-by Andrew Apted.  June 2011
+by Andrew Apted.  February 2012
 
 
 ** PREFACE **
@@ -63,7 +63,7 @@ COPYRIGHT and LICENSE
 
   OBLIGE Level Maker
 
-  Copyright (C) 2006-2011 Andrew Apted
+  Copyright (C) 2006-2012 Andrew Apted
 
   OBLIGE is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published
