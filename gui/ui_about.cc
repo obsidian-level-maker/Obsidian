@@ -25,13 +25,10 @@
 #include "main.h"
 
 
-#if 1
-# define TITLE_COLOR  fl_color_cube(3,0,1)
-# define INFO_COLOR   fl_color_cube(3,6,0)
-#else
-# define TITLE_COLOR  FL_BLUE
-# define INFO_COLOR  fl_color_cube(0,6,4)
-#endif
+#define TITLE_COLOR  fl_color_cube(3,0,1)
+
+#define INFO_COLOR   fl_color_cube(3,6,0)
+#define INFO_COLOR2  fl_rgb_color(255, 255, 144)
 
 
 class UI_About : public Fl_Window
@@ -139,7 +136,7 @@ UI_About::UI_About(int W, int H, const char *label) :
   box = new Fl_Box(pad, cy, W-pad-pad, H-172, Text);
   box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
   box->box(FL_UP_BOX);
-  box->color(INFO_COLOR);
+  box->color(alternate_look ? INFO_COLOR2 : INFO_COLOR);
   add(box);
 
   cy += box->h() + 10;
