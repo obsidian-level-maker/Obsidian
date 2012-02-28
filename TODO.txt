@@ -9,18 +9,9 @@ Current Work
 >>>  stairs for new area code
 
 
--  build lock doorways completely on room side
+-  fix texture on side of lock doors (which assumed straddling)
 
-
-Hallways:
-
-!!!  no adjusters (for Cycles and Crossovers)
-
-
-WISH: outdoor hallways (wall on one side, fence on other side, sky top)
-      [may be easier to convert hallway into a room]
-      hard part: ensuring such a hallway stays above nearby room(s)
-      hmmm, could also work bordering an _indoor_ room (no sky)
++  GUI : migrate to FLTK 1.3.0
 
 
 -----------------------------------------------------------------
@@ -38,6 +29,8 @@ Short-Term Goals
    -  must decide after all heights are done
 
 
+
+REVIEW: adjuster stuff 
 
 +  fix for ugly sky in outdoor room near a hallway
    (mark those seeds, detect in from_edge pass)
@@ -95,6 +88,11 @@ Hallways:
       IN LEVEL THEME:
 
       hall_groups = { basic=50, curvilicious=50 }
+
+WISH: outdoor hallways (wall on one side, fence on other side, sky top)
+      [may be easier to convert hallway into a room]
+      hard part: ensuring such a hallway stays above nearby room(s)
+      hmmm, could also work bordering an _indoor_ room (no sky)
 
 Theme System:
 
