@@ -355,7 +355,9 @@ function Areas_handle_connections()
     assert(C2)
 
     -- prefer to build door on the room side
-    if C1.hall and C2.room then
+    if (C1.hall and C2.room) or
+       (C1.room and C1.room.street)
+    then
       C1, C2 = C2, C1
       dir = 10 - dir
     end
