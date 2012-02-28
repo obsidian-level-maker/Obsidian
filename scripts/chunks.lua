@@ -1412,33 +1412,6 @@ end
       wall_deep = 32
     end
 
-
-    -- street mode : make buildings appear to have different heights
-    if C.hall and C.hall.street and not C:similar_neighbor(dir) then
-      local bx1, by1, bx2, by2 = x1,y1, x2,y2
-
-      if dir == 2 then by2 = by1 + (wall_deep + 16) end
-      if dir == 8 then by1 = by2 - (wall_deep + 16) end
-      if dir == 4 then bx2 = bx1 + (wall_deep + 16) end
-      if dir == 6 then bx1 = bx2 - (wall_deep + 16) end
-
-      -- handle corners : extend sideways
-      if geom.is_vert(dir) then
-        bx1 = bx1 - 32 ; bx2 = bx2 + 32
-      else
-        by1 = by1 - 32 ; by2 = by2 + 32
-      end
-
-      local sky_h = f_h + C:get_street_sky_h(dir)
-
-      c_mat = Mat_lookup("_SKY")
-      brush = Brush_new_quad(bx1, by1, bx2, by2)
-      Brush_set_tex(brush, c_mat.t)
-      table.insert(brush, 1, { m="sky" })
-      table.insert(brush, { b=sky_h, tex=c_mat.f or c_mat.t })
-      raw_add_brush(brush)
-    end
-
   end -- dir
 
 
