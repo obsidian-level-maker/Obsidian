@@ -995,6 +995,15 @@ QUAKE.SKINS =
     _where  = "hallway"
   }
 
+  Hall_Test_I_Lift =
+  {
+    _prefab = "HALL_BASIC_I_LIFT_QUAKE"
+    _where  = "hallway"
+    _tags   = 1
+
+    lift = "MET5_1"
+  }
+
   Hall_Test_C =
   {
     _prefab = "HALL_BASIC_C"

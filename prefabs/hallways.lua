@@ -1417,6 +1417,88 @@ PREFAB.HALL_BASIC_I_LIFT =
 }
 
 
+PREFAB.HALL_BASIC_I_LIFT_QUAKE =
+{
+  fitted = "xy"
+
+  -- the ranges ensure the lift mapmodel stays 128x128
+  -- (otherwise could exceed the limit of 240 for extents)
+  x_ranges = { {32,1}, {128,0}, {32,1} }
+  y_ranges = { {32,1}, {128,0}, {32,1} }
+  z_ranges = { {128,1}, {16,0}, {112,1} }
+
+  defaults =
+  {
+    lift_flags = ""
+  }
+
+  brushes =
+  {
+    -- left wall
+    {
+      { x =   0, y =   0, mat = "?wall" }
+      { x =  16, y =   0, mat = "?wall" }
+      { x =  16, y = 192, mat = "?wall" }
+      { x =   0, y = 192, mat = "?outer" }
+    }
+
+    -- right wall
+    {
+      { x = 176, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?outer" }
+      { x = 192, y = 192, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+    }
+
+    -- ceiling
+    {
+      { x =  16, y =   0, mat = "?wall" }
+      { x = 176, y =   0, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+      { x =  16, y = 192, mat = "?wall" }
+      { b = 256, mat = "?ceil" }
+    }
+
+    
+    -- low floor
+    {
+      { x =  16, y =   0, mat = "?wall" }
+      { x = 176, y =   0, mat = "?wall" }
+      { x = 176, y = 160, mat = "?wall" }
+      { x =  16, y = 160, mat = "?wall" }
+      { t = 0, mat = "?floor" }
+    }
+
+    -- high floor
+    {
+      { x =  16, y = 160, mat = "?floor" }
+      { x = 176, y = 160, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+      { x =  16, y = 192, mat = "?wall" }
+      { t = 128, mat = "?floor" }
+    }
+  }
+
+  models =
+  {
+    -- lift itself
+    {
+      x1 =  32, x2 = 160, x_face = { mat="?lift" }
+      y1 =  32, y2 = 160, y_face = { mat="?lift" }
+      z1 = 128, z2 = 144, z_face = { mat="?lift" }
+
+      delta_z = -8 
+
+      entity =
+      {
+        ent = "lift", sounds = 2, height = 128,
+        spawnflags = "?lift_flags"
+      }
+    }
+  }
+}
+
+
 PREFAB.HALL_BASIC_I_WINDOW =
 {
   fitted = "xy"

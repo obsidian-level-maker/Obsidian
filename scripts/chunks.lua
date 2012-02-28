@@ -1034,7 +1034,9 @@ if OB_CONFIG.game == "doom2" and skin_name == "Junc_Test_C" and LEVEL.liquid and
 end
 
   local skin1 = GAME.SKINS[skin_name]
-  assert(skin1)
+  if not skin1 then
+    error("missing hallway piece: " .. tostring(skin_name))
+  end
  
   local skin0 = { wall  = hall.wall_mat,
                   floor = hall.floor_mat,
