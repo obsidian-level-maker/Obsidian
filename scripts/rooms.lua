@@ -2407,7 +2407,7 @@ function Rooms_decide_fences()
       return
     end
  
-stderrf("need fence @ %s (bordering %s)\n", R1:tostr(), R2:tostr())
+-- stderrf("need fence @ %s (bordering %s)\n", R1:tostr(), R2:tostr())
 
     R1.fences[R2.id] = { kind="low", R1=R1, R2=R2 }
   end
@@ -2434,7 +2434,7 @@ stderrf("need fence @ %s (bordering %s)\n", R1:tostr(), R2:tostr())
 
   ---| Rooms_decide_fences |---
 
-stderrf("Rooms_decide_fences.........\n")
+  gui.debugf("Rooms_decide_fences.........\n")
 
   each R in LEVEL.rooms do
     if R.kind == "outdoor" then
