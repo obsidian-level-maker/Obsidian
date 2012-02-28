@@ -146,7 +146,7 @@ GLOBAL_STYLE_LIST =
   pictures   = { few=10, some=50, heaps=10 }
   lakes      = { few=60, heaps=10 }
 
-  cages      = { none=50, few=30, some=30, heaps=7 }
+  cages      = { none=50, few=50, some=30, heaps=10 }
   crates     = { none=20, some=40, heaps=10 }
   bridges    = { none=10, some=40 }
 

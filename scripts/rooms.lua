@@ -1830,7 +1830,7 @@ function Rooms_fake_building(sx1, sy1, sx2, sy2, kind, dir, face_room, zone)
 -- stderrf("Rooms_fake_building @ (%d %d) .. (%d %d) : %s\n", sx1, sy1, sx2, sy2, kind)
 
   -- cages!
-  local cage_prob = style_sel("cages", 0, 5, 17, 65)
+  local cage_prob = style_sel("cages", 0, 10, 30, 80)
 
   if face_room and face_room.purpose != "START" and
      THEME.fat_cages and rand.odds(cage_prob)
