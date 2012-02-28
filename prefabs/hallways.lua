@@ -1361,7 +1361,6 @@ PREFAB.HALL_BASIC_I_LIFT =
       { b = 256, mat = "?ceil" }
     }
 
-    
     -- low floor
     {
       { x =  16, y =  0, mat = "?wall" }
@@ -1425,7 +1424,7 @@ PREFAB.HALL_BASIC_I_LIFT_QUAKE =
   -- (otherwise could exceed the limit of 240 for extents)
   x_ranges = { {32,1}, {128,0}, {32,1} }
   y_ranges = { {32,1}, {128,0}, {32,1} }
-  z_ranges = { {128,1}, {16,0}, {112,1} }
+  z_ranges = { {256,1} }
 
   defaults =
   {
@@ -1459,7 +1458,6 @@ PREFAB.HALL_BASIC_I_LIFT_QUAKE =
       { b = 256, mat = "?ceil" }
     }
 
-    
     -- low floor
     {
       { x =  16, y =   0, mat = "?wall" }
@@ -1487,7 +1485,7 @@ PREFAB.HALL_BASIC_I_LIFT_QUAKE =
       y1 =  32, y2 = 160, y_face = { mat="?lift" }
       z1 = 128, z2 = 144, z_face = { mat="?lift" }
 
-      delta_z = -8 
+      delta_z = -8
 
       entity =
       {
