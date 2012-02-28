@@ -537,6 +537,9 @@ function Hallway_test_branch(start_K, start_dir, mode)
   local function can_begin_crossover(K, N, stats)
     if not PARAM.bridges then return false end
 
+--!!!!!!!!!! CROSSOVERS CURRENTLY DISABLED
+do return false end
+
     if STYLE.crossovers == "none" then return false end
 
     -- never do crossovers for cycles (TODO: review this)
