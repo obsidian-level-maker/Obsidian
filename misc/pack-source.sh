@@ -36,14 +36,10 @@ cp -av $src/gui/*.[chr]* $dest/gui
 cp -av $src/gui/*.ico $dest/gui
 cp -av $src/Makefile.* $dest/
 
-mkdir $dest/qsavetex
-cp -av $src/qsavetex/*.[ch]* $dest/qsavetex
-cp -av $src/qsavetex/Makefile* $dest/qsavetex
-
-mkdir $dest/vis_viewer
-cp -av $src/vis_viewer/*.[ch]* $dest/vis_viewer
-cp -av $src/vis_viewer/Makefile* $dest/vis_viewer
-cp -av $src/vis_viewer/DATA* $dest/vis_viewer
+mkdir $dest/tools
+mkdir $dest/tools/qsavetex
+cp -av $src/tools/qsavetex/*.[ch]* $dest/tools/qsavetex
+cp -av $src/tools/qsavetex/Makefile* $dest/tools/qsavetex
 
 mkdir $dest/misc
 cp -av $src/misc/pack*.sh $dest/misc

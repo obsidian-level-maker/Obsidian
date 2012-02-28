@@ -72,10 +72,10 @@ mkdir $dest/tools
 if [ $mode == "linux" ]
 then
 cp -av $src/Oblige $dest
-cp -av $src/qsavetex/qsavetex $dest/tools
+cp -av $src/tools/qsavetex/qsavetex $dest/tools
 else
 cp -av $src/Oblige.exe $dest
-cp -av $src/qsavetex/qsavetex.exe $dest/tools
+cp -av $src/tools/qsavetex/qsavetex.exe $dest/tools
 fi
 
 #
