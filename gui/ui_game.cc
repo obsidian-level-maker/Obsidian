@@ -159,9 +159,11 @@ void UI_Game::SetSeed(u32_t new_val)
   ob_set_config("seed", seed->value());
 }
 
+#define TIME_CALC  (u32_t)time(NULL) ^ 0x44444444
+
 void UI_Game::FreshSeed()
 {
-  u32_t val   = (u32_t)time(NULL);
+  u32_t val   = TIME_CALC;
   u32_t usage = IntHash(val) % 100;
 
   SetSeed((val/43200) * 100 + usage);
@@ -169,7 +171,7 @@ void UI_Game::FreshSeed()
 
 void UI_Game::StaleSeed(u32_t old_val)
 {
-  u32_t val   = (u32_t)time(NULL);
+  u32_t val   = TIME_CALC;
   u32_t usage = IntHash(val) % 100;
 
   // when the day is the same, simply Bump the old value
