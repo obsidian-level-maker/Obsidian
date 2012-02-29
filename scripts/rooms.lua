@@ -2084,7 +2084,7 @@ function Rooms_outdoor_borders()
         local sx1, sy1 = N1.sx, N1.sy
         local sx2, sy2 = N1.sx, N1.sy
 
-        if i < count and are_touches_same(touches[i], touches[i+1]) then
+        if i < count and touches[i+1] and are_touches_same(touches[i], touches[i+1]) then
           touches[i+1] = "skip"
 
           sx1 = math.min(sx1, N2.sx)
