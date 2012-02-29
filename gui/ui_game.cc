@@ -159,6 +159,7 @@ void UI_Game::SetSeed(u32_t new_val)
   ob_set_config("seed", seed->value());
 }
 
+// the xor here is to prevent the first digit of seed being zero
 #define TIME_CALC  (u32_t)time(NULL) ^ 0x44444444
 
 void UI_Game::FreshSeed()
