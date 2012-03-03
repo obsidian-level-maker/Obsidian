@@ -2851,7 +2851,7 @@ DOOM.ROOM_THEMES =
 
     ceilings =
     {
-      CEIL3_6=20,
+      CEIL3_5=20,
       CEIL3_1=20,
       FLAT4=20,
       CEIL4_3=10,
@@ -2881,7 +2881,7 @@ DOOM.ROOM_THEMES =
 
     ceilings =
     {
-      CEIL3_6=20,
+      CEIL3_5=20,
       CEIL3_1=20,
       FLAT4=20,
       CEIL4_3=10,
@@ -3018,8 +3018,8 @@ DOOM.ROOM_THEMES =
 
     ceilings =
     {
-      CEIL3_5=30,
-      CEIL3_6=50,
+      CEIL3_5=50,
+      CEIL3_6=20,
       CEIL3_1=50,
       RROCK03=50,
       TLITE6_5=10
