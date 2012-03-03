@@ -2035,17 +2035,12 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       return false
     end
 
---!!    if R.kind == "stairwell" then return false end
---!!    if R.kind == "smallexit" then return false end
+    if L.no_monsters then return false end
 
     assert(not L.scenic)
 
     if L.kind == "hallway" and #L.sections == 1 then
       return rand.odds(90)
-    end
-
-    if L.purpose == "START" and not L.has_raising_start then
-      return false
     end
 
     return true
