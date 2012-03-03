@@ -9,9 +9,7 @@
 # how programs under Windows often work.  Use 'Makefile.unixy'
 # if you want the more traditional kind of installation.
 #
-# NOTE: the Lua library must be compiled as C++
-#
-# NOTE 2: FLTK is statically linked in this version
+# NOTE: FLTK is statically linked in this version
 #
 
 PROGRAM=Oblige

@@ -4,8 +4,6 @@
 #
 # GNU Makefile for WIN32, using CROSS-COMPILER on Linux
 #
-# NOTE: the Lua library must be compiled as C++
-#
 
 PROGRAM=Oblige.exe
 

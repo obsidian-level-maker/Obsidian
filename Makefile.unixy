@@ -9,9 +9,7 @@
 # The script and data files can be overridden by files in the
 # $HOME/.oblige directory.
 #
-# NOTE: the Lua library must be compiled as C++
-#
-# NOTE 2: a system-wide FLTK library is assumed
+# NOTE: a system-wide FLTK library is assumed
 #
 
 PROGRAM=oblige
