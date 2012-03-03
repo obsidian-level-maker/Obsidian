@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2011 Andrew Apted
+//  Copyright (C) 2006-2012 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -28,9 +28,9 @@
 #endif
 
 #if (FL_MAJOR_VERSION != 1 ||  \
-     FL_MINOR_VERSION != 1 ||  \
-     FL_PATCH_VERSION < 7)
-#error "Require FLTK version 1.1.7 or later"
+     FL_MINOR_VERSION != 3 ||  \
+     FL_PATCH_VERSION < 0)
+#error "Require FLTK version 1.3.0 or later"
 #endif
 
 

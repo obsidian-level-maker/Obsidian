@@ -19,7 +19,7 @@ CXX=g++
 LIB_LOC=lib_linux
 OBJ_DIR=obj_linux
 
-FLTK_DIR=$(LIB_LOC)/fltk-1.1.10
+FLTK_DIR=$(LIB_LOC)/fltk-1.3.0
 
 OPTIMISE=-O0 -g3
 
@@ -31,8 +31,9 @@ OS=UNIX
 
 FLTK_FLAGS=-I$(FLTK_DIR)
 FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
-          $(FLTK_DIR)/lib/libfltk.a \
-          -lX11 -lXext -lpng -ljpeg
+	  $(FLTK_DIR)/lib/libfltk.a \
+	  -lXext -lXft -lfontconfig -lXinerama -lX11 \
+	  -lpng -ljpeg
 
 CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Iglbsp_src $(FLTK_FLAGS)
 LDFLAGS=-L/usr/X11R6/lib

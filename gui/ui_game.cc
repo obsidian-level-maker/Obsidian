@@ -113,14 +113,14 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
   cy += y_step + y_step/2;
 
 
-  seed = new Fl_Int_Input(cx, cy, 60+KF*6, 24+KF*2, "Seed: ");
+  seed = new Fl_Int_Input(cx, cy, 66+KF*6, 24+KF*2, "Seed: ");
   seed->align(FL_ALIGN_LEFT);
   seed->selection_color(FL_BLUE);
   seed->maximum_size(5);
   seed->callback(callback_Seed, this);
   seed->value("1");
 
-  bump = new Fl_Button(cx + cw - (64+KF*4), cy, 24+KF*4, 24+KF*2, "+");
+  bump = new Fl_Button(cx + cw - (60+KF*4), cy, 24+KF*4, 24+KF*2, "+");
   bump->labelsize(FL_NORMAL_SIZE+2);
   bump->callback(callback_Bump, this);
 
