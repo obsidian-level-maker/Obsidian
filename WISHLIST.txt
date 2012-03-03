@@ -403,6 +403,8 @@ Name generator:
   GUI and C++ CODE
 ----------------------------------------------------------------
 
++  an option for more compact GUI (fit on 640x480 screen)
+
 IDEA:
   - move main loop of OBLIGE into Lua (e.g. ob_main_loop)
   - C++ can queue commands to perform, fetched by the Lua loop

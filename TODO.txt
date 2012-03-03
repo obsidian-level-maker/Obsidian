@@ -6,8 +6,46 @@ Current Work
 ------------
 
 
+New Starting Logic
+
+-  three main kinds:
+
+   CLOSET : you begin in a very small room, which is connected to a
+            larger room, often by a door.  The closet would only
+            contain one or two pickups, e.g. a nice health item and
+            (if you're lucky) a weapon.
+
+   SIDE   : you begin in the side or corner of a large-ish room,
+            with nothing particularly special about the start position
+            (except say a pedestal).
+            
+            There are no monsters which can see you (and usually none you
+            can see either).  Again, only a couple of items nearby.
+            The starting weapon and ammo will be further away.
+
+   MIDDLE : you begin in the middle of a large room, and often have
+            to get moving to fight or avoid the monsters scattered
+            around.  There is usually some useful pickups nearby,
+            especially a starting weapon. 
+
+
 >>>  stairs for new area code
 
+
+-  revert quadratic monster formula : bad for "full" game
+
+
+
++  a _size field for prefabs, format is { long1,deep1, long2,deep2 }
+   and can be just { long,deep } for fixed-sized prefabs.
+
+
+!!  replaceable brushes in prefabs
+
+
++  BUG: stairs in cycles can be too low to pass
+
+-  fix fat doors (x_ranges)
 
 -  fix texture on side of lock doors (which assumed straddling)
 
