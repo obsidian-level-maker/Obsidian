@@ -317,16 +317,33 @@ function ROOM_CLASS.dist_to_closest_conn(R, K, side)
 end
 
 
+function ROOM_CLASS.touches_map_edge(R)
+  if R.kx1 <= 2 or R.kx2 >= SECTION_W-1 then return true end
+  if R.ky1 <= 2 or R.ky2 >= SECTION_H-1 then return true end
+
+  return false
+end
+
+
 function ROOM_CLASS.eval_start(R)
-  local cost = R.sw * R.sh
+  local score = gui.random() * 10
 
-  cost = cost + #R.conns * 40
+  -- really want a room touching the edge of the map
+  -- (since that gives two seeds for the start prefab)
+  if R:touches_map_edge() then score = score + 100 end
 
-  if R:has_teleporter() then cost = cost + 100 end
+  -- not too big !!
+  if R.svolume <= 70 then score = score + 10 end
 
-  cost = cost + 10 * gui.random() ^ 2
+  -- not too small
+  if R.svolume >= 12 then score = score + 2 end
 
-  return 999 - cost  -- turn cost into a score
+  -- prefer an unusual shape
+  if R.shape != "rect" then score = score + 4 end
+
+  --??  if not R:has_teleporter() then score = score + 8 end
+
+  return score
 end
 
 
