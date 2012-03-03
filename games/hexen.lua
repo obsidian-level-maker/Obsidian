@@ -1529,6 +1529,100 @@ HEXEN.SKINS =
   }
 
 
+  ---| HALLWAY PIECES |---
+
+  Hall_Test_I =
+  {
+    _prefab = "HALL_BASIC_I"
+    _where  = "hallway"
+  }
+
+  Hall_Test_C =
+  {
+    _prefab = "HALL_BASIC_C"
+    _where  = "hallway"
+  }
+
+  Hall_Test_T =
+  {
+    _prefab = "HALL_BASIC_T"
+    _where  = "hallway"
+  }
+
+  Hall_Test_P =
+  {
+    _prefab = "HALL_BASIC_P"
+    _where  = "hallway"
+  }
+
+  Hall_Test_I_Stair =
+  {
+    _prefab = "HALL_BASIC_I_STAIR"
+    _where  = "hallway"
+
+    step = "STEP3"
+  }
+
+  Hall_Test_I_Lift =
+  {
+    _prefab = "HALL_BASIC_I_LIFT"
+    _where  = "hallway"
+    _tags   = 1
+
+    lift = "SUPPORT3"
+    top  = { STEP_F1=50, STEP_F2=50 }
+
+    raise_W1 = 130
+    lower_WR = 88  -- 120
+    lower_SR = 62  -- 123
+  }
+
+
+  ---| BIG JUNCTIONS |---
+
+  Junc_Test_I =
+  {
+    _prefab = "JUNCTION_OCTO"
+    _where  = "big_junc"
+
+    hole = "_SKY"
+
+    east_wall_q = 1
+    west_wall_q = 1
+  }
+
+  Junc_Test_C =
+  {
+    _prefab = "JUNCTION_OCTO"
+    _where  = "big_junc"
+
+    hole = "_SKY"
+
+    north_wall_q = 1
+     east_wall_q = 1
+  }
+
+  Junc_Test_T =
+  {
+    _prefab = "JUNCTION_OCTO"
+    _where  = "big_junc"
+
+    hole = "_SKY"
+
+    north_wall_q = 1
+  }
+
+  Junc_Test_P =
+  {
+    _prefab = "JUNCTION_OCTO"
+    _where  = "big_junc"
+
+    hole = "_SKY"
+
+    -- leave all walls open
+  }
+
+
   ---| TELEPORTERS |---
 
   Hub_Gate =
@@ -4881,7 +4975,7 @@ end
 
 ------------------------------------------------------------
 
-UNFINISHED["hexen"] =
+OB_GAMES["hexen"] =
 {
   label = "Hexen"
 
