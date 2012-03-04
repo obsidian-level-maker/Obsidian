@@ -22,7 +22,7 @@
 
 class HALLWAY
 {
-  kind : keyword  --  "hallway"  -- FIXME unused, REMOVE??
+  kind : keyword  -- "hallway"  (differentiates from room types)
 
   id : number (for debugging)
 

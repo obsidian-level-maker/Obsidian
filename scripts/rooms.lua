@@ -82,6 +82,19 @@ class ROOM
 }
 
 
+class CLOSET
+{
+  kind : keyword  -- "closet"  (differentiates from room types)
+
+  closet_kind : keyword  -- "START", "EXIT"
+                         -- "secret", "trap"
+
+  room : ROOM  -- parent room
+
+  entry_conn : CONN  -- connection to parent room
+}
+
+
 class FENCE
 {
   kind : keyword   -- "none"   : can allow player to fall off
