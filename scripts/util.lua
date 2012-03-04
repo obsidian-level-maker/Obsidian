@@ -797,6 +797,16 @@ function geom.bbox_sanitize(bbox)
 end
 
 
+function geom.long_deep(w, h, dir)
+  if dir == 2 or dir == 8 then
+    return w, h
+  elseif dir == 4 or dir == 6 then
+    return h, w
+  else
+    error("geom.long_deep: bad dir: " .. tostring(dir))
+  end
+end
+
 function geom.side_coords(side, x1,y1, x2,y2, ofs)
   if not ofs then ofs = 0 end
 
