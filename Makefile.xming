@@ -12,7 +12,7 @@ CXX=i586-mingw32msvc-g++
 LIB_LOC=lib_win32
 OBJ_DIR=obj_win32
 
-FLTK_DIR=$(LIB_LOC)/fltk-1.1.10
+FLTK_DIR=$(LIB_LOC)/fltk-1.3.0
 ZLIB_DIR=$(LIB_LOC)/zlib-1.2.3
 
 OPTIMISE=-O2
@@ -24,9 +24,8 @@ OS=WIN32
 #--- Internal stuff from here -----------------------------------
 
 FLTK_FLAGS=-I$(FLTK_DIR)
-## FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
-##           $(FLTK_DIR)/lib/libfltk.a
-FLTK_LIBS=$(FLTK_DIR)/lib/libfltk.a
+FLTK_LIBS=$(FLTK_DIR)/mingw/lib/libfltk_images.a \
+	  $(FLTK_DIR)/mingw/lib/libfltk.a
 
 ZLIB_FLAGS=-I$(ZLIB_DIR)
 ZLIB_LIBS=$(ZLIB_DIR)/libz.a

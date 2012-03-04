@@ -33,7 +33,7 @@ REQUIRED LIBRARIES
 Zlib (v1.2.3 or later)
   http://www.zlib.net/
 
-FLTK (Fast Light Tool Kit) : v1.1.10
+FLTK (Fast Light Tool Kit) : v1.3.0
   http://www.fltk.org/
 
 FLTK may require: libpng, jpeglib, zlib
@@ -48,21 +48,20 @@ FLTK BUILDING HINTS
            --disable-localjpeg --disable-localzlib --disable-localpng
 
 (2) Win32 cross-compile:
-    (a) copy makefiles/Makefile.mingw --> ./Makefile
-    (b) copy makefiles/makeinclude.mingw --> ./makeinclude
-    (c) copy makefiles/config.mingw --> ./config.h
+    (a) read README.CMake.txt and copy the cross-compiling snippet
+        in there to a file: Toolchain-mingw32.cmake
 
-    (d) in makeinclude: add 'i586-mingw32msvc-' prefix to
-        gcc, g++, ar and ranlib.
-    (e) in makeinclude: use '-ruv' instead of 'cr' for ar command.
-    (f) in makeinclude: remove $(IMAGELIBS) from LINKFLTKIMG line.
-    (g) in makeinclude: comment out .SILENT directive.
-    (h) in makeinclude: remove -fno-exceptions
+    (b) edit Toolchain-mingw32.cmake and set the proper paths for
+        the cross-compiling tools (for me: i586-mingw32msvc)
 
-    (i) in config.h: set HAVE_GL and HAVE_GL_GLU to 0.
-        comment out HAVE_LIBPNG, HAVE_LIBJPEG, HAVE_LIBZ.
-        comment out HAVE_LONG_LONG.
+    (c) mkdir mingw ; cd mingw
 
-    (j) in Makefile: remove the 'makeinclude' and 'configure' targets.
-    (k) in Makefile: remove $(IMAGEDIRS) and 'fluid' from DIRS variable.
+    (d) cmake -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw32.cmake \
+        CMAKE_BUILD_TYPE=Release -DOPTION_USE_GL=OFF -DOPTION_USE_THREADS=OFF
+
+    (e) make
+
+    Note that the build fails when it gets to some stuff which require
+    FLUID to process some .fl files.  That doesn't matter since the
+    needed libraries (in mingw/lib) have been built by then.
 
