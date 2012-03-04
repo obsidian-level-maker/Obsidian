@@ -132,6 +132,11 @@ function CHUNK_CLASS.install(C)
 end
 
 
+function CHUNK_CLASS.long_deep(C, dir)
+  return geom.long_deep(C.x2 - C.x1, C.y2 - C.y1, dir)
+end
+
+
 function CHUNK_CLASS.joining_chunks(C, dir)
   local list = {}
 

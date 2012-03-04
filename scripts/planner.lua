@@ -117,6 +117,11 @@ function SECTION_CLASS.update_size(K)
 end
 
 
+function SECTION_CLASS.long_deep(K, dir)
+  return geom.long_deep(K.sw, K.sh, dir)
+end
+
+
 function Section_is_valid(x, y)
   return 1 <= x and x <= SECTION_W and
          1 <= y and y <= SECTION_H
