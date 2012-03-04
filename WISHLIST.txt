@@ -405,6 +405,8 @@ Name generator:
 
 +  an option for more compact GUI (fit on 640x480 screen)
 
+-  simplify ui_chooser logic --> use Fl_Native_File_Chooser
+
 IDEA:
   - move main loop of OBLIGE into Lua (e.g. ob_main_loop)
   - C++ can queue commands to perform, fetched by the Lua loop
