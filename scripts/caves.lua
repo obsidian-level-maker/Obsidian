@@ -518,7 +518,6 @@ function CAVE_CLASS.solidify_pockets(cave)
 
     if not pocket_id then break end
 
-stderrf("FOUND POCKET %d\n", pocket_id)
     local REG = cave.regions[pocket_id]
     assert(REG)
 
