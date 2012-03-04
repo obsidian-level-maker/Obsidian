@@ -1015,19 +1015,16 @@ function Areas_flesh_out()
     local prob = (R.svolume >= 36 ? 90 ; 25)
     if not rand.odds(prob) then return end
 
-    local whole = rand.odds(2)
     local edges = rand.odds(20)
     local cages = rand.odds(20)  -- FIXME: (a) check cage palette  (b) STYLE
-
-    if whole then cages = false end
 
     each K in R.sections do
       local is_junc = (K.orig_kind == "junction")
       local is_edge =  K:touches_edge()
 
-      if not is_junc and not whole then continue end
+      if not is_junc then continue end
 
-      if is_edge and not (edges or whole) then continue end
+      if is_edge and not edges then continue end
 
       -- TODO: if cages and not is_edge then cage_up_section(K) else
 
