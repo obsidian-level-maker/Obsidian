@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2010-2011 Andrew Apted
+--  Copyright (C) 2010-2012 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -437,7 +437,6 @@ PREFAB.DOOR =
       { x = 14, y =  0, mat = "?outer" }
       { x = 14, y = 48, mat = "?wall" }
       { x =  0, y = 48, mat = "?wall" }
-      { x =  0, y = 24, mat = "?outer" }
     }
 
     {
@@ -450,8 +449,7 @@ PREFAB.DOOR =
     -- right side
     {
       { x = 178, y =  0, mat = "?outer" }
-      { x = 192, y =  0, mat = "?outer" }
-      { x = 192, y = 24, mat = "?wall" }
+      { x = 192, y =  0, mat = "?wall" }
       { x = 192, y = 48, mat = "?wall" }
       { x = 178, y = 48, mat = "?outer" }
     }
