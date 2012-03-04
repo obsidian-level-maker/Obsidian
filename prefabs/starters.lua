@@ -81,3 +81,167 @@ PREFAB.START_LEDGE =
   }
 }
 
+
+PREFAB.START_CLOSET =
+{
+  defaults =
+  {
+    door_h = 112
+
+    pic = "?wall"
+    pic_ox = 0
+    pic_oy = 0
+
+    support = "?wall"
+    support_ox = 0
+
+    track = "?wall"
+    track_ox = 0
+
+    step_c = "?ceil"
+
+    -- Hexen stuff
+    act = ""
+    speed = 32
+  }
+
+  brushes =
+  {
+    -- wall behind it
+    {
+      { x =   0, y = 0, mat = "?outer" }
+      { x = 192, y = 0, mat = "?outer" }
+      { x = 192, y = 8, mat = "?outer" }
+      { x = 128, y = 8, mat = "?pic", x_offset="?pic_ox", y_offset="?pic_oy" }
+      { x =  64, y = 8, mat = "?outer" }
+      { x =   0, y = 8, mat = "?outer" }
+    }
+
+    -- floor
+    {
+      { x =  16, y =   8, mat = "?wall" }
+      { x = 176, y =   8, mat = "?wall" }
+      { x = 176, y = 144, mat = "?wall" }
+      { x =  16, y = 144, mat = "?wall" }
+      { t = 0, mat = "?floor" }
+    }
+
+    -- ceiling
+    {
+      { x =  16, y =   8, mat = "?wall" }
+      { x = 176, y =   8, mat = "?wall" }
+      { x = 176, y = 144, mat = "?wall" }
+      { x =  16, y = 144, mat = "?wall" }
+      { b = 128, mat = "?ceil" }
+    }
+
+    -- left side wall
+    {
+      { x =  0, y =   8, mat = "?wall" }
+      { x = 64, y =   8, mat = "?wall" }
+      { x = 16, y = 104, mat = "?wall" }
+      { x =  0, y = 104, mat = "?outer" }
+    }
+
+    {
+      { x =  0, y = 104, mat = "?wall" }
+      { x = 16, y = 104, mat = "?wall" }
+      { x = 32, y = 144, mat = "?wall" }
+      { x =  0, y = 144, mat = "?outer" }
+    }
+
+    -- right side wall
+    {
+      { x = 128, y =   8, mat = "?wall" }
+      { x = 192, y =   8, mat = "?outer" }
+      { x = 192, y = 104, mat = "?wall" }
+      { x = 176, y = 104, mat = "?wall" }
+    }
+
+    {
+      { x = 176, y = 104, mat = "?wall" }
+      { x = 192, y = 104, mat = "?outer" }
+      { x = 192, y = 144, mat = "?wall" }
+      { x = 160, y = 144, mat = "?wall" }
+    }
+
+    -- left side of door
+    {
+      { x =  0, y = 144, mat = "?wall" }
+      { x = 32, y = 144, mat = "?support", x_offset="?support_ox", y_offset=0 }
+      { x = 32, y = 160, mat = "?wall" }
+      { x =  0, y = 160, mat = "?outer" }
+    }
+
+    {
+      { x =  0, y = 160, mat = "?wall" }
+      { x = 32, y = 160, mat = "?track", x_offset="?track_ox", y_offset=0 }
+      { x = 32, y = 176, mat = "?wall" }
+      { x =  0, y = 176, mat = "?outer" }
+    }
+
+    {
+      { x =  0, y = 176, mat = "?wall" }
+      { x = 32, y = 176, mat = "?support", x_offset="?support_ox", y_offset=0 }
+      { x = 32, y = 192, mat = "?wall" }
+      { x =  0, y = 192, mat = "?outer" }
+    }
+
+    -- right side of door
+    {
+      { x = 160, y = 144, mat = "?wall" }
+      { x = 192, y = 144, mat = "?outer" }
+      { x = 192, y = 160, mat = "?wall" }
+      { x = 160, y = 160, mat = "?support", x_offset="?support_ox", y_offset=0 }
+    }
+
+    {
+      { x = 160, y = 160, mat = "?wall" }
+      { x = 192, y = 160, mat = "?outer" }
+      { x = 192, y = 176, mat = "?wall" }
+      { x = 160, y = 176, mat = "?track", x_offset="?track_ox", y_offset=0 }
+    }
+
+    {
+      { x = 160, y = 176, mat = "?wall" }
+      { x = 192, y = 176, mat = "?outer" }
+      { x = 192, y = 192, mat = "?wall" }
+      { x = 160, y = 192, mat = "?support", x_offset="?support_ox", y_offset=0 }
+    }
+
+    -- step
+    {
+      { x =  32, y = 144, mat = "?wall" }
+      { x = 160, y = 144, mat = "?wall" }
+      { x = 160, y = 192, mat = "?wall" }
+      { x =  32, y = 192, mat = "?wall" }
+      { t = 8, mat = "?step" }
+    }
+
+    {
+      { x =  32, y = 144, mat = "?wall" }
+      { x = 160, y = 144, mat = "?wall" }
+      { x = 160, y = 192, mat = "?wall" }
+      { x =  32, y = 192, mat = "?wall" }
+      { b = "?door_h+8", mat = "?step_c" }
+    }
+
+    -- door itself
+    {
+      { x =  32, y = 160, mat = "?door", special="?special", act="?act", arg1="?tag", arg2="?speed", peg=1, x_offset=0, y_offset=0 }
+      { x = 160, y = 160, mat = "?door", special="?special", act="?act", arg1="?tag", arg2="?speed", peg=1, x_offset=0, y_offset=0 }
+      { x = 160, y = 176, mat = "?door", special="?special", act="?act", arg1="?tag", arg2="?speed", peg=1, x_offset=0, y_offset=0 }
+      { x =  32, y = 176, mat = "?door", special="?special", act="?act", arg1="?tag", arg2="?speed", peg=1, x_offset=0, y_offset=0 }
+      { b = 24, delta_z=-16, mat = "?door", tag = "?tag" }
+    }
+  }
+
+  entities =
+  {
+    { x =  96, y =  40, z = 8, ent = "player1", angle = 90 }
+    { x =  56, y =  80, z = 8, ent = "player2", angle = 90 }
+    { x = 136, y =  80, z = 8, ent = "player3", angle = 90 }
+    { x =  96, y =  80, z = 8, ent = "player4", angle = 90 }
+  }
+}
+
