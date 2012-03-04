@@ -25,6 +25,7 @@ class CONN
   kind   : keyword  -- "normal"
                     -- "double_L", "double_R"
                     -- "teleporter"
+                    -- "closet" (e.g. starting niche)
   lock   : LOCK
 
   id : number  -- debugging aid
@@ -43,9 +44,7 @@ class CONN
               -- dir1 leading out of L1 / K1 / C1
               -- dir2 leading out of L2 / K2 / C2
 
-  conn_h  -- floor height for connection
-
-  
+ 
   --- POSSIBLE_CONN ---
 
   score : number

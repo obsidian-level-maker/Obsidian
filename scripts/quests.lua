@@ -740,13 +740,11 @@ end
 
 
 
-function Quest_get_exits(L, no_teleporters)
+function Quest_get_exits(L)
   local exits = {}
 
   each D in L.conns do
-    if D.L1 == L and D.kind != "double_R" and
-       (not no_teleporters or D.kind != "teleporter")
-    then
+    if D.L1 == L and not (D.kind == "double_R" or D.kind == "closet") then
       table.insert(exits, D)
     end
   end
@@ -1198,6 +1196,7 @@ function Quest_make_quests()
 -- gui.debugf("add_lock: LOCK_%d to %s\n", LOCK.tag, D.L2:tostr())
 
     assert(D.kind != "double_L")
+    assert(D.kind != "closet")
 
     -- keep newest locks at the front of the active list
     table.insert(active_locks, 1, LOCK)
