@@ -406,7 +406,7 @@ end
 
 
 
-function Connect_decide_start_room()
+function Connect_start_room()
   each R in LEVEL.rooms do
     R.start_score = R:eval_start()
 
@@ -421,6 +421,10 @@ function Connect_decide_start_room()
   LEVEL.start_room = room
 
   room.purpose = "START"
+
+  if LEVEL.special != "street" then
+    Rooms_add_start_closet(room)
+  end
 end
 
 
@@ -492,6 +496,8 @@ function Connect_rooms()
 
   Connect_teleporters()
 
+  Connect_start_room()
+
   -- add connections until all rooms are reachable
   while count_groups() >= 2 do
     if not Connect_scan_sections("normal", -999) then
@@ -504,8 +510,6 @@ function Connect_rooms()
 
     if gui.abort() then return end
   end
-
-  Connect_decide_start_room()
 
   -- update connections so that 'src' and 'dest' follow the natural
   -- flow of the level, i.e. player always walks src -> dest (except

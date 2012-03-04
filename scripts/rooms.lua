@@ -1085,6 +1085,91 @@ end
 
 ------------------------------------------------------------------------
 
+
+function Rooms_find_closet_spot(R, want_deep)
+
+  local function eval_closet_spot(K, dir)
+    -- returns a score, or negative value if not possible at all
+    -- 'K' parameter is a section in the room
+
+    local N = K:neighbor(dir)
+
+    if  not N then return -1 end
+    if N.used then return -1 end
+
+    local score = gui.random() * 10
+
+    local long, deep = N:long_deep(dir)
+
+    score = score + deep * 8
+
+    -- prefer edge of map (leave interior hallway channels free)
+    if (geom.is_horiz(dir) and (N.kx == 1 or N.kx == SECTION_W)) or
+       (geom. is_vert(dir) and (N.ky == 1 or N.ky == SECTION_W))
+    then
+      score = score + 50
+    end
+
+    return score
+  end
+
+  --- Rooms_find_closet_spot ---
+
+  local deep = (want_deep ? 2 ; 1)
+
+  local best
+  local best_score = -9e9
+
+  each K in R.sections do
+    for dir = 2,8,2 do
+      local score = eval_closet_spot(K, dir)
+
+stderrf("eval_closet_spot @ %s dir:%d --> %1.1f\n", K:tostr(), dir, score)
+      if score >= 0 and score > best_score then
+        best = { K=K, dir=dir }
+        best_score = score
+      end
+    end
+  end
+
+  if best then
+    return best.K, best.dir
+  end
+
+  return nil
+end
+
+
+function Rooms_add_start_closet(R)
+stderrf("Rooms_add_start_closet @ %s\n", R:tostr())
+
+--[[ !!!!
+  if not THEME.start_closets then return end
+
+  local skin_name = rand.key_by_probs(THEME.start_closets)
+  local skin1 = assert(GAME.SKINS[skin_name])
+--]]
+
+  -- pick location to attach closet to room
+
+  local K, dir = Rooms_find_closet_spot(R, "deep")
+
+stderrf("K = %s\n", tostring(K))
+  if not K then return end
+
+  local N = K:neighbor(dir)
+
+  N.closet = { kind="START", dir=10 - dir, skin1=skin1 }
+  N.used = true
+
+  K.closet_dir = dir
+
+  R.has_start_closet = true
+
+stderrf("START CLOSET @ %s dir:%d\n", N:tostr(), 10-dir)
+end
+
+
 function Rooms_dists_from_entrance()
 
   local function spread_entry_dist(R)
