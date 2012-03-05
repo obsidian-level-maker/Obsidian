@@ -84,6 +84,8 @@ PREFAB.START_LEDGE =
 
 PREFAB.START_CLOSET =
 {
+  y_ranges = { {144,1}, {48,0} }
+
   defaults =
   {
     door_h = 112
@@ -99,6 +101,10 @@ PREFAB.START_CLOSET =
     track_ox = 0
 
     step_c = "?ceil"
+
+    item1 = "none"
+    item2 = "none"
+    item3 = "?item2"
 
     -- Hexen stuff
     act = ""
@@ -238,10 +244,14 @@ PREFAB.START_CLOSET =
 
   entities =
   {
-    { x =  96, y =  40, z = 8, ent = "player1", angle = 90 }
-    { x =  56, y =  80, z = 8, ent = "player2", angle = 90 }
-    { x = 136, y =  80, z = 8, ent = "player3", angle = 90 }
-    { x =  96, y =  80, z = 8, ent = "player4", angle = 90 }
+    { ent = "player1", x =  96, y = 40, z = 8, angle = 90 }
+    { ent = "player2", x =  56, y = 80, z = 8, angle = 90 }
+    { ent = "player3", x = 136, y = 80, z = 8, angle = 90 }
+    { ent = "player4", x =  96, y = 80, z = 8, angle = 90 }
+
+    { ent = "?item1", x =  96, y = 120, z = 8, angle = 90 }
+    { ent = "?item2", x =  56, y = 120, z = 8, angle = 90 }
+    { ent = "?item3", x = 136, y = 120, z = 8, angle = 90 }
   }
 }
 
