@@ -86,7 +86,7 @@ end
 
 
 function SEED_CLASS.used(S)
-  return S.room or S.hall or S.scenic
+  return S.room or S.hall or S.scenic or S.chunk
 end
 
 
