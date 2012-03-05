@@ -1813,6 +1813,24 @@ DOOM.SKINS =
     wall = "CRACKLE2"
   }
 
+  Start_Closet =
+  {
+    _prefab = "START_CLOSET"
+    _where  = "chunk"
+    _size   = { 192,192, 384,384 }
+    _aspect = { 0.9, 2.2 }
+
+    step = "FLAT1"
+
+    door = "BIGDOOR1"
+    track = "DOORTRAK"
+
+    support = "SUPPORT2"
+    support_ox = 24
+
+    item1 = "shotty"
+  }
+
 
   ----| EXITS |----
 

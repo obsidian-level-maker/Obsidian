@@ -84,6 +84,8 @@ PREFAB.START_LEDGE =
 
 PREFAB.START_CLOSET =
 {
+  fitted = "xy"
+
   y_ranges = { {144,1}, {48,0} }
 
   defaults =
@@ -125,19 +127,19 @@ PREFAB.START_CLOSET =
 
     -- floor
     {
-      { x =  16, y =   8, mat = "?wall" }
-      { x = 176, y =   8, mat = "?wall" }
-      { x = 176, y = 144, mat = "?wall" }
-      { x =  16, y = 144, mat = "?wall" }
+      { x =   8, y =   8, mat = "?wall" }
+      { x = 184, y =   8, mat = "?wall" }
+      { x = 184, y = 144, mat = "?wall" }
+      { x =   8, y = 144, mat = "?wall" }
       { t = 0, mat = "?floor" }
     }
 
     -- ceiling
     {
-      { x =  16, y =   8, mat = "?wall" }
-      { x = 176, y =   8, mat = "?wall" }
-      { x = 176, y = 144, mat = "?wall" }
-      { x =  16, y = 144, mat = "?wall" }
+      { x =   8, y =   8, mat = "?wall" }
+      { x = 184, y =   8, mat = "?wall" }
+      { x = 184, y = 144, mat = "?wall" }
+      { x =   8, y = 144, mat = "?wall" }
       { b = 128, mat = "?ceil" }
     }
 

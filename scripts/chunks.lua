@@ -1080,6 +1080,8 @@ function CHUNK_CLASS.build(C)
     return
   end
 
+  assert(not C.closet)
+
 
 --[[
 if C.hall and #C.hall.sections == 1 and GAME.SKINS.Fat_Arch1 then

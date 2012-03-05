@@ -93,6 +93,11 @@ class CLOSET
 
   entry_conn : CONN  -- connection to parent room
 
+  dir : 2/4/6/8
+
+  chunk : CHUNK
+
+
 ???   sx1, sy1, sx2, sy2  -- \ Seed range
 ???   sw, sh, svolume     -- /
 }
@@ -621,6 +626,22 @@ end
 
 function CLOSET_CLASS.tostr(CL)
   return string.format("CLOSET_%d", CL.id)
+end
+
+
+function CLOSET_CLASS.build(CL)
+  local C = assert(CL.chunk)
+
+  local skin_name = "Start_Closet"  --!!!  check THEME.start_closets etc
+
+  local skin0 = CL.parent.skin
+  local skin1 = assert(GAME.SKINS[skin_name])
+
+  assert(C.floor_h)
+
+  local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h, CL.dir)
+
+  Fabricate(skin1._prefab, T, { skin0, skin1 })
 end
 
 
@@ -1205,8 +1226,8 @@ function ROOM_CLASS.add_closet(R, closet_kind)
 
   gui.debugf("%s @ %s dir:%d\n", CL:tostr(), N:tostr(), 10-dir)
 
-  CL.section = N
   CL.dir = 10 - dir
+  CL.section = N
 
   CL.conn_group = R.conn_group  -- keep D:add_it() happy
 
@@ -1598,6 +1619,10 @@ function Rooms_blow_chunks()
 
   each H in LEVEL.halls do
     H:build()
+  end
+
+  each CL in LEVEL.closets do
+    CL:build()
   end
 end
 

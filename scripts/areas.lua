@@ -349,7 +349,9 @@ function Areas_handle_connections()
         C = K.room:alloc_chunk(sx1, sy1, sx2, sy2)
       end
 
-      C.foobage = "conn"
+      if not K.closet then
+        C.foobage = "conn"
+      end
 
       S.chunk = C  -- FIXME: REVIEW THIS (C:install does it, no?)
     end
