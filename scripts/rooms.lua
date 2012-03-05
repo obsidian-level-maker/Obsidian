@@ -639,7 +639,7 @@ function CLOSET_CLASS.build(CL)
 
   assert(C.floor_h)
 
-  local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h, CL.dir)
+  local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h, 10 - CL.dir)
 
   Fabricate(skin1._prefab, T, { skin0, skin1 })
 end
@@ -2238,7 +2238,7 @@ function Rooms_outdoor_borders()
         break
       end
 
-      if N.scenic then
+      if N.scenic or N.chunk then
         -- FIXME: remember previous fake building, grab it here
         building = LEVEL.rooms[1] ; count = i
         break

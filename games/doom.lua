@@ -1828,7 +1828,11 @@ DOOM.SKINS =
     support = "SUPPORT2"
     support_ox = 24
 
-    item1 = "shotty"
+    special = 31  -- open and stay open
+    tag = 0
+
+    item1 = "bullet_box"
+    item2 = "stimpack"
   }
 
 
