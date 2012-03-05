@@ -332,6 +332,15 @@ function Areas_handle_connections()
 
         C = K.hall:alloc_chunk(K, sx1, sy1, sx2, sy2)
 
+      -- closet
+      elseif K.closet then
+        C = CHUNK_CLASS.new(sx1, sy1, sx2, sy2)
+
+        C:install()
+
+        C.closet = K.closet
+        C.closet.chunk = C
+
       -- double hall chunk
       elseif K.room and is_double then
         C = chunk_for_double(K, dir, sx1, sy1)
@@ -341,7 +350,8 @@ function Areas_handle_connections()
       end
 
       C.foobage = "conn"
-      S.chunk = C
+
+      S.chunk = C  -- FIXME: REVIEW THIS (C:install does it, no?)
     end
 
     return C
@@ -620,6 +630,9 @@ function Areas_important_stuff()
 
 
   local function add_purpose(R)
+    if R.purpose == "START" and R.has_start_closet then return end
+    if R.purpose == "EXIT"  and R.has_exit_closet  then return end
+
     local C = spot_for_wotsit(R)
 
     C.content.kind = R.purpose

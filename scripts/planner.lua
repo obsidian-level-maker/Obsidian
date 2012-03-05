@@ -111,6 +111,11 @@ function SECTION_CLASS.set_big_junc(K)
   K.kind = "big_junc" ; K.used = true
 end
 
+function SECTION_CLASS.set_closet(K, CL)
+  assert(not K.used)
+  K.closet = CL ; K.used = true
+end
+
 
 function SECTION_CLASS.update_size(K)
   K.sw, K.sh = geom.group_size(K.sx1, K.sy1, K.sx2, K.sy2)
@@ -1954,6 +1959,7 @@ function Plan_create_rooms()
   LEVEL.conns = {}
   LEVEL.halls = {}
   LEVEL.scenics = {}
+  LEVEL.closets = {}
 
   Plan_choose_liquid()
 

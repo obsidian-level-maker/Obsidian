@@ -141,7 +141,7 @@ function CONN_CLASS.add_it(D)
   table.insert(D.L1.conns, D)
   table.insert(D.L2.conns, D)
 
-  if D.kind != "teleporter" then
+  if not (D.kind == "teleporter" or D.kind == "closet") then
     D.K1.num_conn = D.K1.num_conn + 1
     D.K2.num_conn = D.K2.num_conn + 1
 
@@ -422,7 +422,9 @@ function Connect_start_room()
   room.purpose = "START"
 
   if LEVEL.special != "street" then
-    Rooms_add_start_closet(room)
+    room:add_closet("START")
+
+    --????  Hmmm, should clear room.purpose ??
   end
 end
 
@@ -460,6 +462,8 @@ function Connect_rooms()
 
     visited[L] = true
 
+    if L.kind == "closet" then return end
+
     if L.kind != "hallway" then
       table.insert(LEVEL.rooms, L)
     end
@@ -494,7 +498,6 @@ function Connect_rooms()
   Hallway_add_streets()
 
   Connect_teleporters()
-
   Connect_start_room()
 
   -- add connections until all rooms are reachable
@@ -549,7 +552,7 @@ function Connect_cycles()
 
     each R in LEVEL.rooms do
       each D in R.conns do
-        if D.L1 == R and not D.lock and D.kind != "teleporter" then
+        if D.L1 == R and not D.lock and not (D.kind == "teleporter" or D.kind == "closet") then
           R.next_in_quest = find_room(D)
           assert(R.quest == R.next_in_quest.quest)
           break

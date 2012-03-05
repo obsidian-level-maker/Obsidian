@@ -89,9 +89,12 @@ class CLOSET
   closet_kind : keyword  -- "START", "EXIT"
                          -- "secret", "trap"
 
-  room : ROOM  -- parent room
+  parent : ROOM  -- parent room
 
   entry_conn : CONN  -- connection to parent room
+
+???   sx1, sy1, sx2, sy2  -- \ Seed range
+???   sw, sh, svolume     -- /
 }
 
 
@@ -592,6 +595,33 @@ function Rooms_distribute_spots(L, list)
   end
 end
 
+
+----------------------------------------------------------------
+
+
+CLOSET_CLASS = {}
+
+function CLOSET_CLASS.new(kind, parent)
+  local CL =
+  {
+    id = Plan_alloc_id("closet")
+    kind = "closet"
+    closet_kind = kind
+
+    parent = parent
+
+    conns = {}
+  }
+
+  table.set_class(CL, CLOSET_CLASS)
+  table.insert(LEVEL.closets, CL)
+  return CL
+end
+
+
+function CLOSET_CLASS.tostr(CL)
+  return string.format("CLOSET_%d", CL.id)
+end
 
 
 ----------------------------------------------------------------
@@ -1099,7 +1129,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Rooms_find_closet_spot(R, want_deep)
+function ROOM_CLASS.find_closet_spot(R, want_deep)
 
   local function eval_closet_spot(K, dir)
     -- returns a score, or negative value if not possible at all
@@ -1126,7 +1156,7 @@ function Rooms_find_closet_spot(R, want_deep)
     return score
   end
 
-  --- Rooms_find_closet_spot ---
+  --- find_closet_spot ---
 
   local deep = (want_deep ? 2 ; 1)
 
@@ -1153,33 +1183,47 @@ stderrf("eval_closet_spot @ %s dir:%d --> %1.1f\n", K:tostr(), dir, score)
 end
 
 
-function Rooms_add_start_closet(R)
-stderrf("Rooms_add_start_closet @ %s\n", R:tostr())
+function ROOM_CLASS.add_closet(R, closet_kind)
 
---[[ !!!!
-  if not THEME.start_closets then return end
+--!!!!  if not THEME.start_closets then return end
 
+
+--[[ FIXME DO LATER : when chunk size is known
   local skin_name = rand.key_by_probs(THEME.start_closets)
   local skin1 = assert(GAME.SKINS[skin_name])
 --]]
 
   -- pick location to attach closet to room
+  local K, dir = R:find_closet_spot(R, "deep")
 
-  local K, dir = Rooms_find_closet_spot(R, "deep")
-
-stderrf("K = %s\n", tostring(K))
   if not K then return end
 
   local N = K:neighbor(dir)
 
-  N.closet = { kind="START", dir=10 - dir, skin1=skin1 }
-  N.used = true
+  -- create closet object
+  local CL = CLOSET_CLASS.new(closet_kind, R)
 
-  K.closet_dir = dir
+  gui.debugf("%s @ %s dir:%d\n", CL:tostr(), N:tostr(), 10-dir)
 
-  R.has_start_closet = true
+  CL.section = N
+  CL.dir = 10 - dir
 
-stderrf("START CLOSET @ %s dir:%d\n", N:tostr(), 10-dir)
+  CL.conn_group = R.conn_group  -- keep D:add_it() happy
+
+  -- mark section as used
+  N:set_closet(CL)
+
+  -- create connection
+  local D = CONN_CLASS.new("closet", R, CL, dir)
+
+  D.K1 = K
+  D.K2 = N
+
+  D:add_it()
+
+  -- tell other code not to put place player start / exit pillar
+  if closet_kind == "START" then R.has_start_closet = true end
+  if closet_kind == "EXIT"  then R.has_exit_closet  = true end
 end
 
 
