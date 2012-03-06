@@ -88,3 +88,6 @@ const char *ReplaceExtension(const char *filename, const char *ext);
 const char *FileBaseName(const char *filename);
 
 #endif /* __BRUSHER_UTIL_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

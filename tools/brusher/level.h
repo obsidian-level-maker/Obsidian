@@ -350,3 +350,6 @@ raw_hexen_thing_t;
 
 
 #endif /* __BRUSHER_LEVEL_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

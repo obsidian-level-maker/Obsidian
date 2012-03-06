@@ -358,3 +358,5 @@ uint32_g Endian_U32(uint32_g x)
     return x;
 }
 
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

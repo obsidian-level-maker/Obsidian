@@ -343,3 +343,6 @@ const char *FileBaseName(const char *filename)
 
   return filename;
 }
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

@@ -512,3 +512,5 @@ wad_c *wad_c::Load(const char *filename)
   return wad;
 }
 
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

@@ -127,3 +127,5 @@ int main(int argc, char **argv)
   return 0;  // success!
 }
 
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

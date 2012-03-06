@@ -19,7 +19,6 @@
 #ifndef __BRUSHER_DEFS_H__
 #define __BRUSHER_DEFS_H__
 
-
 //
 //  SYSTEM INCLUDES
 //
@@ -42,7 +41,6 @@
 #include <string>
 #include <vector>
 
-
 //
 //  LOCAL INCLUDES
 //
@@ -54,3 +52,6 @@
 extern FILE *map_fp;
 
 #endif /* __BRUSHER_DEFS_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

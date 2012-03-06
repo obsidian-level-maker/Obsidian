@@ -86,3 +86,6 @@ void AssertFail(const char *msg, ...);
 
 
 #endif /* __BRUSHER_SYSTEM_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab

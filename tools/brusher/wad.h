@@ -173,3 +173,6 @@ raw_wad_entry_t;
 
 
 #endif /* __BRUSHER_WAD_H__ */
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab
