@@ -4,13 +4,13 @@
 #  Makefile for Unix
 #
 
-PROG=doom2obj
+PROGRAM=brusher
 
 CC=gcc
 CXX=g++
 CFLAGS= -g3 -Wall -DUNIX
 CXXFLAGS=$(CFLAGS)
-LDFLAGS=-L/usr/X11R6/lib
+LDFLAGS=
 LIBS=-lm
 
 OBJS=./main.o     \
@@ -22,16 +22,18 @@ OBJS=./main.o     \
 
 # ----- TARGETS ------------------------------------------------------
 
-all:    $(PROG)
+all:    $(PROGRAM)
 
 clean:
-	rm -f $(PROG) *.o core core.* ERRS d2b_debug.txt
+	rm -f $(PROGRAM) *.o core core.* ERRS debug.txt
 
-$(PROG): $(OBJS)
-	$(CXX) $(CFLAGS) $(OBJS) -o $(PROG) $(LDFLAGS) $(LIBS)
+$(PROGRAM): $(OBJS)
+	$(CXX) $(CFLAGS) $(OBJS) -o $(PROGRAM) $(LDFLAGS) $(LIBS)
 
 bin: all
-	strip --strip-unneeded $(PROG)
+	strip --strip-unneeded $(PROGRAM)
 
 .PHONY: all clean bin install
 
+#--- editor settings ------------
+# vi:ts=8:sw=8:noexpandtab

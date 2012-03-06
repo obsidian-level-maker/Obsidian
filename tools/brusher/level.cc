@@ -116,8 +116,6 @@ sector_c::sector_c(int _idx, const raw_sector_t *raw) :
   light   = UINT16(raw->light);
   special = UINT16(raw->special);
   tag     = SINT16(raw->tag);
-
-  floor_slope = ceil_slope = NULL;
 }
 
 sector_c::~sector_c()
@@ -434,23 +432,6 @@ void GetLinedefsHexen(wad_c *base)
   {
     lev_linedefs.Set(i, new linedef_c(i, raw));
   }
-}
-
-
-static vertex_c *FindVertex16(uint16_g index)
-{
-  if (index & 0x8000)
-    return lev_gl_verts.Get(index & 0x7FFF);
-
-  return lev_vertices.Get(index);
-}
-
-static vertex_c *FindVertex32(int index)
-{
-  if (index & IS_GL_VERTEX)
-    return lev_gl_verts.Get(index & ~IS_GL_VERTEX);
-
-  return lev_vertices.Get(index);
 }
 
 

@@ -117,8 +117,8 @@ int main(int argc, char **argv)
   if (! map_fp)
     FatalError("Unable to create output file: result.obj\n");
 
-  Brush_ConvertSectors();
-  Brush_ConvertWalls();
+//  Brush_ConvertSectors();
+//  Brush_ConvertWalls();
 
   fclose(map_fp);
 

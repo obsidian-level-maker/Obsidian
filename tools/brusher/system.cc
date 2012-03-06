@@ -120,7 +120,7 @@ void ArgvInit(int argc, const char **argv)
   for (int i = 0; i < arg_count; i++)
   {
     const char *cur = argv[i];
-    SYS_NULL_CHECK(cur);
+    SYS_ASSERT(cur);
 
 #ifdef MACOSX
     // ignore MacOS X rubbish
@@ -203,7 +203,7 @@ bool ArgvIsOption(int index)
   SYS_ASSERT(index < arg_count);
 
   const char *str = arg_list[index];
-  SYS_NULL_CHECK(str);
+  SYS_ASSERT(str);
 
   return (str[0] == '-');
 }
