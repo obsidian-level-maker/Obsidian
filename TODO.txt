@@ -29,11 +29,31 @@ New Starting Logic
             especially a starting weapon. 
 
 
+Brusher Tool:
+
++  better method to mark infinitely tall brushes
+   (allow creating stuff like pedestals which have no ceiling)
+
++  don't add an XY vertex if in the middle of a straight (vert/horiz)
+   line and same texture (etc) on each side.
+
+-  the first vertex should be one with lowest X (primary criterion)
+   and then lowest Y (secondary criterion).
+
++  for islands, skip floor or ceiling brush if has same height/tex/etc
+   as the surrounding area
+
++  entities : determine Z properly (find sector)
+
+-  ensure brushes are convex (all angles <= 180)
+
+-  svn:ignore
+
+
 >>>  stairs for new area code
 
 
--  revert quadratic monster formula : bad for "full" game
-
+-  REVIEW: quadratic monster formula : bad for "full" game
 
 
 +  a _size field for prefabs, format is { long1,deep1, long2,deep2 }
@@ -42,14 +62,12 @@ New Starting Logic
 
 !!  replaceable brushes in prefabs
 
+    +  use this mechanism to place windows and pictures
+
 
 +  BUG: stairs in cycles can be too low to pass
 
 -  fix fat doors (x_ranges)
-
--  fix texture on side of lock doors (which assumed straddling)
-
-+  GUI : migrate to FLTK 1.3.0
 
 
 -----------------------------------------------------------------

@@ -349,6 +349,10 @@ DONE: brush conditionals:  if_true="?doomy"  if_false="?foobie"
 
 +  Music Re-ordering (see doc/Various_Notes.txt)
 
++  ability to replace music using MUS/OGG/MP3 from a bunch of files
+   placed in a certain folder (e.g. "music/").  Needs a Lua API to
+   read a directory.
+
 
 +  diagonal chunks
 
