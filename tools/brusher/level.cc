@@ -458,9 +458,9 @@ bool TraceLineLoop(linedef_c * ld, int side, lineloop_c& loop)
 
 	while (cur_vert != final_vert)
 	{
-		int next_line = -1;
-		int next_vert = -1;
-		int next_side =  0;
+		linedef_c * next_line = NULL;
+		vertex_c  * next_vert = NULL;
+		int next_side = 0;
 
 		double best_angle = 9999;
 
@@ -470,35 +470,35 @@ bool TraceLineLoop(linedef_c * ld, int side, lineloop_c& loop)
 
 		for (int n = 0 ; n < lev_linedefs.num ; n++)
 		{
-			const linedef_c * N = lev_linedefs.Get(n);
+			linedef_c * N = lev_linedefs.Get(n);
 
 			if (N->start != cur_vert && N->end != cur_vert)
 				continue;
 
-			if (n == ld)
+			if (N == ld)
 				continue;
 
-			int other_vert;
+			vertex_c * other_vert;
 			int which_side;
 
 			if (N->start == cur_vert)
 			{
 				other_vert = N->end;
-				which_side = +1;
+				which_side = SIDE_RIGHT;
 			}
 			else  // (N->end == cur_vert)
 			{
 				other_vert = N->start;
-				which_side = -1;
+				which_side = SIDE_LEFT;
 			}
 
 			// found adjoining linedef
 
 			double angle = AngleBetweenLines(prev_vert, cur_vert, other_vert);
 
-			if (next_line < 0 || angle < best_angle)
+			if (!next_line || angle < best_angle)
 			{
-				next_line = n;
+				next_line = N;
 				next_vert = other_vert;
 				next_side = which_side;
 
@@ -514,7 +514,7 @@ bool TraceLineLoop(linedef_c * ld, int side, lineloop_c& loop)
 #endif
 
 		// No next line?  Path cannot be closed
-		if (next_line < 0)
+		if (! next_line)
 			return false;
 
 		// Line already seen?  Under normal circumstances this won't
