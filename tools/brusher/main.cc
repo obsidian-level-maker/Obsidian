@@ -51,7 +51,7 @@ static void WriteBrush(lineloop_c& loop, char kind, int z = 0, const char *flat 
 {
   fprintf(output_fp, "    {\n");
 
-  for (unsigned int k = 0 ; k < loop.lines.size() ; k++)
+  for (int k = (int)loop.lines.size() - 1 ; k >= 0 ; k--)
   {
     linedef_c *ld = loop.lines[k];
     int side      = loop.sides[k];
@@ -63,7 +63,7 @@ static void WriteBrush(lineloop_c& loop, char kind, int z = 0, const char *flat 
 
     if (! (ld->left && ld->right))
     {
-      sd = (ld->right ? ld->right : ld->left);
+      sidedef_c *sd = (ld->right ? ld->right : ld->left);
 
       SYS_ASSERT(sd);
 
@@ -109,6 +109,10 @@ static void ProcessLoop(linedef_c *ld, int side, bool& have_one)
     error_count += 1;
     return;
   }
+
+  // ignore the outside loop of islands
+  if (loop.faces_outward)
+    return;
 
   // determine sector
   sector_c * sec = loop.GetSector();
