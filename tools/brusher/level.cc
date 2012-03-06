@@ -399,6 +399,30 @@ bool lineloop_c::get_just_line(linedef_c * ld) const
 }
 
 
+sector_c * lineloop_c::GetSector() const
+{
+  linedef_c *ld = lines[0];
+
+  sidedef_c *sd = (sides[0] > 0 ? ld->right : ld->left);
+
+  if (! sd)
+    return NULL;
+
+  return sd->sector;
+}
+
+
+void lineloop_c::MarkAsProcessed()
+{
+  for (unsigned int k = 0 ; k < lines.size() ; k++)
+  {
+    int mask = (sides[k] < 0 ? 2 : 1);
+
+    lines[k]->traced_sides |= mask;
+  }
+}
+
+
 double AngleBetweenLines(const vertex_c *A,
                          const vertex_c *B,
                          const vertex_c *C)

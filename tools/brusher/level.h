@@ -376,6 +376,10 @@ public:
 	// test if the given line/side combo is in the loop
 	bool get(linedef_c * ld, int side) const;
 	bool get_just_line(linedef_c * ld) const;
+
+  sector_c * GetSector() const;
+
+  void MarkAsProcessed();
 };
 
 

@@ -47,11 +47,19 @@ static void ShowHelp()
 static int error_count = 0;
 
 
-static void ProcessLoop(linedef_c *ld, int side)
+static void WriteBrush(lineloop_c& loop, char kind, int z = 0, const char *flat = NULL)
+{
+  fprintf(output_fp, "    {\n");
+  fprintf(output_fp, "      STUFF\n");
+  fprintf(output_fp, "    }\n");
+}
+
+
+static void ProcessLoop(linedef_c *ld, int side, bool& have_one)
 {
   lineloop_c loop;
 
-// fprintf(stderr, "tracing %d @ %d\n", ld->index, side);
+// DebugPrintf("tracing %d @ %d\n", ld->index, side);
 
   if (! TraceLineLoop(ld, side, loop))
   {
@@ -59,16 +67,43 @@ static void ProcessLoop(linedef_c *ld, int side)
     return;
   }
 
+  // determine sector
+  sector_c * sec = loop.GetSector();
+
+  SYS_ASSERT(sec);
+
   // mark all lines in the loop as processed
   loop.MarkAsProcessed();
 
-  // FIXME: convert loop into a brush
+  if (have_one)
+    fprintf(output_fp, "\n");
+
+  have_one = true;
+
+  // convert loop into a brush
+
+  if (sec->ceil_h <= sec->floor_h)
+  {
+    // solid area, no top or bottom
+    WriteBrush(loop, 'x');
+  }
+  else
+  {
+    WriteBrush(loop, 't', sec->floor_h, sec->floor_tex);
+    WriteBrush(loop, 'b', sec-> ceil_h, sec-> ceil_tex);
+  }
 }
 
 
 static bool AnalyseLevel()
 {
   printf("\nAnalysing level...\n");
+
+  fprintf(output_fp, "PREFAB.XXX =\n{\n");
+  fprintf(output_fp, "  brushes =\n");
+  fprintf(output_fp, "  {\n");
+
+  bool have_one = false;
 
   for (int n = 0 ; n < lev_linedefs.num ; n++)
   {
@@ -87,9 +122,12 @@ static bool AnalyseLevel()
       if (side > 0 && ! ld->right) continue;
       if (side < 0 && ! ld->left)  continue;
 
-      ProcessLoop(ld, side);
+      ProcessLoop(ld, side, have_one);
     }
   }
+
+  fprintf(output_fp, "  }\n");
+  fprintf(output_fp, "}\n");
 
   if (error_count > 0)
     printf("\nTotal errors: %d\n", error_count);
