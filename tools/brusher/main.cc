@@ -20,24 +20,25 @@
 #include "main.h"
 
 
-FILE *map_fp;
+#define DEFAULT_OUT_NAME  "output.lua"
+
+FILE *output_fp;
 
 
-static void ShowTitle(void)
+static void ShowTitle()
 {
   printf(
     "\n"
     " /--------------------------------\\\n"
-    "|  Brusher  (C) 2012 Andrew Apted  |\n"
+    "(  Brusher  (C) 2012 Andrew Apted  )\n"
     " \\--------------------------------/\n"
+    "\n"
   );
 }
 
-static void ShowInfo(void)
+static void ShowHelp()
 {
-  printf(
-    "Info...\n\n"
-  );
+  printf("USAGE: brusher file.wad [ -o output.lua ]\n\n");
 }
 
 
@@ -56,73 +57,85 @@ int main(int argc, char **argv)
   InitDebug(ArgvFind(0, "debug") >= 0);
   InitEndian();
 
-  if (ArgvFind('?', NULL) >= 0 || ArgvFind('h', "help") >= 0)
+  ShowTitle();
+
+  if (ArgvFind('?', NULL) >= 0 || ArgvFind('h', "help") >= 0 || arg_count == 0)
   {
-    ShowTitle();
-    ShowInfo();
+    ShowHelp();
     exit(1);
   }
 
-  const char *filename = "doom2.wad";
+  // get input filename
 
-  if (arg_count > 0 && ! ArgvIsOption(0))
-    filename = arg_list[0];
-  else
+  if (! (arg_count > 0 && ! ArgvIsOption(0)))
+    FatalError("Missing input filename!\n");
+
+  const char *input_name = arg_list[0];
+
+
+  // get output filename
+
+  const char *output_name = DEFAULT_OUT_NAME;
+
   {
     int params;
-    int idx = ArgvFind(0, "file", &params);
+    int idx = ArgvFind('o', "output", &params);
 
-    if (idx >= 0 && params >= 1)
-      filename = arg_list[idx + 1];
+    if (idx >= 0)
+    {
+      if (params < 1)
+        FatalError("Missing output filename!\n");
+
+      output_name = arg_list[idx + 1];
+    }
+    else
+    {
+      // FIXME: use input name, replace extension with "lua"
+    }
   }
 
-  if (CheckExtension(filename, "gwa"))
-    FatalError("Main file must be a normal WAD (not GWA).\n");
 
-  the_wad = wad_c::Load(filename);
-  if (!the_wad)
-    FatalError("Unable to read WAD file: %s\n", filename);
+  the_wad = wad_c::Load(input_name);
 
-  const char *gwa_name = ReplaceExtension(filename, "gwa");
+  if (! the_wad)
+    FatalError("Unable to read WAD file: %s\n", input_name);
 
-  if (FileExists(gwa_name))
-  {
-    the_gwa = wad_c::Load(gwa_name);
-    if (!the_gwa)
-      FatalError("Unable to read GWA file: %s\n", gwa_name);
-  }
 
-  const char *level_name = NULL;
+  // determine level to load (usually just the first one)
+
+  const char *level_name = the_wad->FirstLevelName();
+
   {
     int params;
     int idx = ArgvFind(0, "warp", &params);
 
     if (idx >= 0 && params >= 1)
       level_name = arg_list[idx + 1];
-
-    if (! level_name)
-    {
-      level_name = the_wad->FirstLevelName();
-
-      if (! level_name)
-        FatalError("Unable to find ANY level in WAD.\n");
-    }
   }
 
+
+  printf("Loading '%s' from file: %s\n", level_name, input_name);
 
   LoadLevel(level_name);
 
 
-  map_fp = fopen("result.obj", "w");
-  if (! map_fp)
-    FatalError("Unable to create output file: result.obj\n");
+  output_fp = fopen(output_name, "w");
+
+  if (! output_fp)
+    FatalError("Unable to create output file!\n");
+
+  printf("Created output file: %s\n", output_name);
+
 
 //  Brush_ConvertSectors();
 //  Brush_ConvertWalls();
 
-  fclose(map_fp);
+  fclose(output_fp);
 
   TermDebug();
+
+  printf("\n");
+  printf("All done.\n");
 
   return 0;  // success!
 }

@@ -49,7 +49,7 @@
 #include "wad.h"
 #include "level.h"
 
-extern FILE *map_fp;
+extern FILE *output_fp;
 
 #endif /* __BRUSHER_DEFS_H__ */
 
