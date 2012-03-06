@@ -23,11 +23,6 @@
 #define DEBUG_BSP       0
 
 
-// per-level variables
-
-bool lev_doing_hexen;
-
-
 #define LEVELARRAY(TYPE, BASEVAR, NAMESTR)  \
     container_tp<TYPE> BASEVAR(NAMESTR);
 
@@ -40,10 +35,6 @@ LEVELARRAY(thing_c,   lev_things,   "thing")
 
 
 /* ----- reading routines ------------------------------ */
-
-// forward decls
-void GetLinedefsHexen(wad_c *base);
-void GetThingsHexen(wad_c *base);
 
 vertex_c::vertex_c(int _idx, const raw_vertex_t *raw) : lines()
 {
@@ -65,8 +56,13 @@ vertex_c::~vertex_c()
 {
 }
 
+void vertex_c::AddLine(linedef_c *L)
+{
+  lines.push_back(L);
+}
 
-void GetVertices(wad_c *base)
+
+void LoadVertices(wad_c *base)
 {
   lump_c *lump = base->FindLumpInLevel("VERTEXES");
   int count = -1;
@@ -78,7 +74,7 @@ void GetVertices(wad_c *base)
   }
 
 # if DEBUG_LOAD
-  PrintDebug("GetVertices: num = %d\n", count);
+  PrintDebug("LoadVertices: num = %d\n", count);
 # endif
 
   if (!lump || count == 0)
@@ -95,8 +91,7 @@ void GetVertices(wad_c *base)
 }
 
 
-sector_c::sector_c(int _idx, const raw_sector_t *raw) :
-            extrafloors(), ef_lines(), liquids()
+sector_c::sector_c(int _idx, const raw_sector_t *raw)
 {
   index = _idx;
 
@@ -123,7 +118,7 @@ sector_c::~sector_c()
 }
 
 
-void GetSectors(wad_c *base)
+void LoadSectors(wad_c *base)
 {
   int count = -1;
   lump_c *lump = base->FindLumpInLevel("SECTORS");
@@ -138,7 +133,7 @@ void GetSectors(wad_c *base)
     FatalError("Couldn't find any Sectors");
 
 # if DEBUG_LOAD
-  PrintDebug("GetSectors: num = %d\n", count);
+  PrintDebug("LoadSectors: num = %d\n", count);
 # endif
 
   lev_sectors.Allocate(count);
@@ -165,33 +160,13 @@ thing_c::thing_c(int _idx, const raw_thing_t *raw)
   height  = 0;
 }
 
-thing_c::thing_c(int _idx, const raw_hexen_thing_t *raw)
-{
-  index = _idx;
-
-  x = SINT16(raw->x);
-  y = SINT16(raw->y);
-
-  type    = UINT16(raw->type);
-  options = UINT16(raw->options);
-
-  angle   = SINT16(raw->angle);
-  height  = SINT16(raw->height);
-}
-
 thing_c::~thing_c()
 {
 }
 
 
-void GetThings(wad_c *base)
+void LoadThings(wad_c *base)
 {
-  if (lev_doing_hexen)
-  {
-    GetThingsHexen(base);
-    return;
-  }
-  
   int count = -1;
   lump_c *lump = base->FindLumpInLevel("THINGS");
 
@@ -210,46 +185,12 @@ void GetThings(wad_c *base)
   }
 
 # if DEBUG_LOAD
-  PrintDebug("GetThings: num = %d\n", count);
+  PrintDebug("LoadThings: num = %d\n", count);
 # endif
 
   lev_things.Allocate(count);
 
   raw_thing_t *raw = (raw_thing_t *) lump->data;
-
-  for (int i = 0; i < count; i++, raw++)
-  {
-    lev_things.Set(i, new thing_c(i, raw));
-  }
-}
-
-
-void GetThingsHexen(wad_c *base)
-{
-  int count = -1;
-  lump_c *lump = base->FindLumpInLevel("THINGS");
-
-  if (lump)
-  {
-    base->CacheLump(lump);
-    count = lump->length / sizeof(raw_hexen_thing_t);
-  }
-
-  if (!lump || count == 0)
-  {
-    // Note: no error if no things exist, even though technically a map
-    // will be unplayable without the player starts.
-    PrintWarn("Couldn't find any Things");
-    return;
-  }
-
-# if DEBUG_LOAD
-  PrintDebug("GetThingsHexen: num = %d\n", count);
-# endif
-
-  lev_things.Allocate(count);
-
-  raw_hexen_thing_t *raw = (raw_hexen_thing_t *) lump->data;
 
   for (int i = 0; i < count; i++, raw++)
   {
@@ -280,7 +221,7 @@ sidedef_c::~sidedef_c()
 {
 }
 
-void GetSidedefs(wad_c *base)
+void LoadSidedefs(wad_c *base)
 {
   int count = -1;
   lump_c *lump = base->FindLumpInLevel("SIDEDEFS");
@@ -295,7 +236,7 @@ void GetSidedefs(wad_c *base)
     FatalError("Couldn't find any Sidedefs");
 
 # if DEBUG_LOAD
-  PrintDebug("GetSidedefs: num = %d\n", count);
+  PrintDebug("LoadSidedefs: num = %d\n", count);
 # endif
 
   lev_sidedefs.Allocate(count);
@@ -325,7 +266,10 @@ linedef_c::linedef_c(int _idx, const raw_linedef_t *raw)
   index = _idx;
 
   start = lev_vertices.Get(UINT16(raw->start));
-  end   = lev_vertices.Get(UINT16(raw->end));
+    end = lev_vertices.Get(UINT16(raw->end));
+
+  start->AddLine(this);
+    end->AddLine(this);
 
   /* check for zero-length line */
   zero_len = (fabs(start->x - end->x) < DIST_EPSILON) && 
@@ -341,45 +285,13 @@ linedef_c::linedef_c(int _idx, const raw_linedef_t *raw)
   left  = SafeLookupSidedef(UINT16(raw->sidedef2));
 }
 
-linedef_c::linedef_c(int _idx, const raw_hexen_linedef_t *raw)
-{
-  index = _idx;
-
-  start = lev_vertices.Get(UINT16(raw->start));
-  end   = lev_vertices.Get(UINT16(raw->end));
-
-  // check for zero-length line
-  zero_len = (fabs(start->x - end->x) < DIST_EPSILON) && 
-             (fabs(start->y - end->y) < DIST_EPSILON);
-
-  flags = UINT16(raw->flags);
-  type  = UINT8(raw->type);
-  tag   = 0;
-
-  /* read specials */
-  for (int j = 0; j < 5; j++)
-    specials[j] = UINT8(raw->specials[j]);
-
-  // -JL- Added missing twosided flag handling that caused a broken reject
-  two_sided = (flags & LINEFLAG_TWO_SIDED) ? true : false;
-
-  right = SafeLookupSidedef(UINT16(raw->sidedef1));
-  left  = SafeLookupSidedef(UINT16(raw->sidedef2));
-}
-
 linedef_c::~linedef_c()
 {
 }
 
 
-void GetLinedefs(wad_c *base)
+void LoadLinedefs(wad_c *base)
 {
-  if (lev_doing_hexen)
-  {
-    GetLinedefsHexen(base);
-    return;
-  }
-  
   int count = -1;
   lump_c *lump = base->FindLumpInLevel("LINEDEFS");
 
@@ -393,40 +305,12 @@ void GetLinedefs(wad_c *base)
     FatalError("Couldn't find any Linedefs");
 
 # if DEBUG_LOAD
-  PrintDebug("GetLinedefs: num = %d\n", count);
+  PrintDebug("LoadLinedefs: num = %d\n", count);
 # endif
 
   lev_linedefs.Allocate(count);
 
   raw_linedef_t *raw = (raw_linedef_t *) lump->data;
-
-  for (int i = 0; i < count; i++, raw++)
-  {
-    lev_linedefs.Set(i, new linedef_c(i, raw));
-  }
-}
-
-void GetLinedefsHexen(wad_c *base)
-{
-  int count = -1;
-  lump_c *lump = base->FindLumpInLevel("LINEDEFS");
-
-  if (lump)
-  {
-    base->CacheLump(lump);
-    count = lump->length / sizeof(raw_hexen_linedef_t);
-  }
-
-  if (!lump || count == 0)
-    FatalError("Couldn't find any Linedefs");
-
-# if DEBUG_LOAD
-  PrintDebug("GetLinedefsHexen: num = %d\n", count);
-# endif
-
-  lev_linedefs.Allocate(count);
-
-  raw_hexen_linedef_t *raw = (raw_hexen_linedef_t *) lump->data;
 
   for (int i = 0; i < count; i++, raw++)
   {
@@ -445,14 +329,11 @@ void LoadLevel(const char *level_name)
   if (! the_wad->FindLevel(level_name))
     FatalError("Unable to find level: %s\n", level_name);
 
-  // -JL- Identify Hexen mode by presence of BEHAVIOR lump
-  lev_doing_hexen = (the_wad->FindLumpInLevel("BEHAVIOR") != NULL);
-
-  GetVertices(the_wad);
-  GetSectors(the_wad);
-  GetSidedefs(the_wad);
-  GetLinedefs(the_wad);
-  GetThings(the_wad);
+  LoadVertices(the_wad);
+  LoadSectors(the_wad);
+  LoadSidedefs(the_wad);
+  LoadLinedefs(the_wad);
+  LoadThings(the_wad);
 
 /// PrintMsg("Loaded %d vertices, %d sectors, %d sides, %d lines, %d things\n", 
 ///     num_vertices, num_sectors, num_sidedefs, num_linedefs, num_things);
@@ -466,6 +347,207 @@ void FreeLevel(void)
   lev_sidedefs.FreeAll();
   lev_sectors.FreeAll();
   lev_things.FreeAll();
+}
+
+
+/* ----- analysis stuff ------------------------------ */
+
+
+lineloop_c::lineloop_c() :
+	lines(), sides(), faces_outward(false)
+{ }
+
+
+lineloop_c::~lineloop_c()
+{
+	clear();
+}
+
+
+void lineloop_c::clear()
+{
+	lines.clear();
+	sides.clear();
+
+	faces_outward = false;
+}
+
+
+void lineloop_c::push_back(linedef_c * ld, int side)
+{
+	lines.push_back(ld);
+	sides.push_back(side);
+}
+
+
+bool lineloop_c::get(linedef_c * ld, int side) const
+{
+	for (unsigned int k = 0 ; k < lines.size() ; k++)
+		if (lines[k] == ld && sides[k] == side)
+			return true;
+
+	return false;
+}
+
+
+bool lineloop_c::get_just_line(linedef_c * ld) const
+{
+	for (unsigned int k = 0 ; k < lines.size() ; k++)
+		if (lines[k] == ld)
+			return true;
+
+	return false;
+}
+
+
+double AngleBetweenLines(const vertex_c *A,
+                         const vertex_c *B,
+                         const vertex_c *C)
+{
+	int a_dx = B->x - A->x;
+	int a_dy = B->y - A->y;
+
+	int c_dx = B->x - C->x;
+	int c_dy = B->y - C->y;
+
+	double AB_angle = (a_dx == 0) ? (a_dy >= 0 ? 90 : -90) : atan2(a_dy, a_dx) * 180 / M_PI;
+	double CB_angle = (c_dx == 0) ? (c_dy >= 0 ? 90 : -90) : atan2(c_dy, c_dx) * 180 / M_PI;
+
+	double result = CB_angle - AB_angle;
+
+	while (result >= 360.0)
+		result -= 360.0;
+
+	while (result < 0)
+		result += 360.0;
+
+	return result;
+}
+
+
+bool TraceLineLoop(linedef_c * ld, int side, lineloop_c& loop)
+{
+	loop.clear();
+
+	vertex_c * cur_vert;
+	vertex_c * prev_vert;
+
+	if (side == SIDE_RIGHT)
+	{
+		cur_vert  = ld->end;
+		prev_vert = ld->start;
+	}
+	else
+	{
+		cur_vert  = ld->start;
+		prev_vert = ld->end;
+	}
+
+	vertex_c * final_vert = prev_vert;
+
+#ifdef DEBUG_PATH
+	fprintf(stderr, "TRACE PATH: line:%d  side:%d  cur:%d  final:%d\n",
+			ld, side, cur_vert, final_vert);
+#endif
+
+	// compute the average angle
+	double average_angle = 0;
+
+	// add the starting line
+	loop.push_back(ld, side);
+
+	while (cur_vert != final_vert)
+	{
+		int next_line = -1;
+		int next_vert = -1;
+		int next_side =  0;
+
+		double best_angle = 9999;
+
+		// Look for the next linedef in the path.  It's the linedef which
+		// uses the current vertex, not the same as the current line, and
+		// has the smallest interior angle.
+
+		for (int n = 0 ; n < lev_linedefs.num ; n++)
+		{
+			const linedef_c * N = lev_linedefs.Get(n);
+
+			if (N->start != cur_vert && N->end != cur_vert)
+				continue;
+
+			if (n == ld)
+				continue;
+
+			int other_vert;
+			int which_side;
+
+			if (N->start == cur_vert)
+			{
+				other_vert = N->end;
+				which_side = +1;
+			}
+			else  // (N->end == cur_vert)
+			{
+				other_vert = N->start;
+				which_side = -1;
+			}
+
+			// found adjoining linedef
+
+			double angle = AngleBetweenLines(prev_vert, cur_vert, other_vert);
+
+			if (next_line < 0 || angle < best_angle)
+			{
+				next_line = n;
+				next_vert = other_vert;
+				next_side = which_side;
+
+				best_angle = angle;
+			}
+
+			// continue the search...
+		}
+
+#ifdef DEBUG_PATH
+		fprintf(stderr, "PATH NEXT: line:%d  side:%d  vert:%d  angle:%1.6f\n",
+				next_line, next_side, next_vert, best_angle);
+#endif
+
+		// No next line?  Path cannot be closed
+		if (next_line < 0)
+			return false;
+
+		// Line already seen?  Under normal circumstances this won't
+		// happen, but it _can_ happen and indicates a non-closed
+		// structure
+		if (loop.get_just_line(next_line))
+			return false;
+
+		ld   = next_line;
+		side = next_side;
+
+		prev_vert = cur_vert;
+		cur_vert  = next_vert;
+
+		average_angle += best_angle;
+
+		// add the next line
+		loop.push_back(ld, side);
+	}
+
+	// this might happen if there are overlapping linedefs
+	if (loop.lines.size() < 3)
+		return false;
+
+	average_angle = average_angle / (double)loop.lines.size();
+
+	loop.faces_outward = (average_angle >= 180.0);
+
+#ifdef DEBUG_PATH
+	fprintf(stderr, "PATH CLOSED!  average_angle:%1.2f\n", average_angle);
+#endif
+
+	return true;
 }
 
 //--- editor settings ---

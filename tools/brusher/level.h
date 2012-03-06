@@ -143,9 +143,11 @@ public:
   // linedefs that touch this vertex
   std::vector<linedef_c *> lines;
 
-  vertex_c(int _idx, const raw_vertex_t *raw);
-  vertex_c(int _idx, const raw_v2_vertex_t *raw);
+   vertex_c(int _idx, const raw_vertex_t *raw);
+   vertex_c(int _idx, const raw_v2_vertex_t *raw);
   ~vertex_c();
+
+  void AddLine(linedef_c *L);
 };
 
 #define IS_GL_VERTEX  (1 << 30)
@@ -170,12 +172,7 @@ public:
   int special;
   int tag;
 
-  std::vector<sector_c *> extrafloors;
-  std::vector<linedef_c *>   ef_lines;
-
-  std::vector<sector_c *> liquids;
-
-  sector_c(int _idx, const raw_sector_t *raw);
+   sector_c(int _idx, const raw_sector_t *raw);
   ~sector_c();
 };
 
@@ -228,8 +225,7 @@ public:
   // length lines has occurred.
   int index;
 
-  linedef_c(int _idx, const raw_linedef_t *raw);
-  linedef_c(int _idx, const raw_hexen_linedef_t *raw);
+   linedef_c(int _idx, const raw_linedef_t *raw);
   ~linedef_c();
 };
 
@@ -249,8 +245,7 @@ public:
   // Always valid (thing indices never change).
   int index;
 
-  thing_c(int _idx, const raw_thing_t *raw);
-  thing_c(int _idx, const raw_hexen_thing_t *raw);
+   thing_c(int _idx, const raw_thing_t *raw);
   ~thing_c();
 };
 
@@ -344,6 +339,44 @@ void LoadLevel(const char *name);
 void FreeLevel(void);
 
 
+/* ------------ Line loops ------------------------*/
+
+#define SIDE_LEFT   -1
+#define SIDE_RIGHT  +1
+
+class lineloop_c
+{
+public:
+	// This contains the linedefs in the line loop, beginning with
+	// the first line and going in order until the last line.  There
+	// will be at least 3 lines in the loop, and the same linedef
+	// cannot occur more than onces.
+	std::vector< linedef_c * > lines;
+
+	// This contains which side of the linedefs in 'lines'.
+	// Guaranteed to be the same size as 'lines'.
+	// Each value is either SIDE_LEFT or SIDE_RIGHT.
+	std::vector< int > sides;
+
+	//  true if the lines face outward (average angle > 180 degrees)
+	// false if the lines face  inward (average angle < 180 degrees)
+	bool faces_outward;
+
+public:
+	 lineloop_c();
+	~lineloop_c();
+
+	void clear();
+
+	void push_back(linedef_c * ld, int side);
+
+	// test if the given line/side combo is in the loop
+	bool get(linedef_c * ld, int side) const;
+	bool get_just_line(linedef_c * ld) const;
+};
+
+
+bool TraceLineLoop(linedef_c * ld, int side, lineloop_c& loop);
 
 
 #endif /* __BRUSHER_LEVEL_H__ */
