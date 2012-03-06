@@ -20,6 +20,112 @@
 #define __BRUSHER_LEVEL_H__
 
 
+/* ----- The level structures ---------------------- */
+
+typedef struct raw_vertex_s
+{
+  sint16_g x, y;
+}
+raw_vertex_t;
+
+typedef struct raw_v2_vertex_s
+{
+  sint32_g x, y;
+}
+raw_v2_vertex_t;
+
+
+typedef struct raw_linedef_s
+{
+  uint16_g start;     // from this vertex...
+  uint16_g end;       // ... to this vertex
+  uint16_g flags;     // linedef flags (impassible, etc)
+  uint16_g type;      // linedef type (0 for none, 97 for teleporter, etc)
+  sint16_g tag;       // this linedef activates the sector with same tag
+  uint16_g sidedef1;  // right sidedef
+  uint16_g sidedef2;  // left sidedef (only if this line adjoins 2 sectors)
+}
+raw_linedef_t;
+
+typedef struct raw_hexen_linedef_s
+{
+  uint16_g start;        // from this vertex...
+  uint16_g end;          // ... to this vertex
+  uint16_g flags;        // linedef flags (impassible, etc)
+  uint8_g  type;         // linedef type
+  uint8_g  specials[5];  // hexen specials
+  uint16_g sidedef1;     // right sidedef
+  uint16_g sidedef2;     // left sidedef
+}
+raw_hexen_linedef_t;
+
+#define LINEFLAG_TWO_SIDED  4
+
+#define HEXTYPE_POLY_START     1
+#define HEXTYPE_POLY_EXPLICIT  5
+
+
+typedef struct raw_sidedef_s
+{
+  sint16_g x_offset;  // X offset for texture
+  sint16_g y_offset;  // Y offset for texture
+
+  char upper_tex[8];  // texture name for the part above
+  char lower_tex[8];  // texture name for the part below
+  char mid_tex[8];    // texture name for the regular part
+
+  uint16_g sector;    // adjacent sector
+}
+raw_sidedef_t;
+
+
+typedef struct raw_sector_s
+{
+  sint16_g floor_h;   // floor height
+  sint16_g ceil_h;    // ceiling height
+
+  char floor_tex[8];  // floor texture
+  char ceil_tex[8];   // ceiling texture
+
+  uint16_g light;     // light level (0-255)
+  uint16_g special;   // special behaviour (0 = normal, 9 = secret, ...)
+  sint16_g tag;       // sector activated by a linedef with same tag
+}
+raw_sector_t;
+
+
+typedef struct raw_thing_s
+{
+  sint16_g x, y;      // position of thing
+  sint16_g angle;     // angle thing faces (degrees)
+  uint16_g type;      // type of thing
+  uint16_g options;   // when appears, deaf, etc..
+}
+raw_thing_t;
+
+
+// -JL- Hexen thing definition
+typedef struct raw_hexen_thing_s
+{
+  sint16_g tid;       // thing tag id (for scripts/specials)
+  sint16_g x, y;      // position
+  sint16_g height;    // start height above floor
+  sint16_g angle;     // angle thing faces
+  uint16_g type;      // type of thing
+  uint16_g options;   // when appears, deaf, dormant, etc..
+
+  uint8_g special;    // special type
+  uint8_g arg[5];     // special arguments
+} 
+raw_hexen_thing_t;
+
+#define PO_ANCHOR_TYPE      3000
+#define PO_SPAWN_TYPE       3001
+#define PO_SPAWNCRUSH_TYPE  3002
+
+
+/* ----- Class representations ---------------------- */
+
 class sector_c;
 class linedef_c;
 
@@ -63,9 +169,6 @@ public:
   int light;
   int special;
   int tag;
-
-  slope_c *floor_slope;
-  slope_c *ceil_slope;
 
   std::vector<sector_c *> extrafloors;
   std::vector<linedef_c *>   ef_lines;
@@ -227,14 +330,10 @@ public:
     extern container_tp<TYPE> BASEVAR;
 
 EXTERN_LEVELARRAY(vertex_c,  lev_vertices)
-EXTERN_LEVELARRAY(vertex_c,  lev_gl_verts)
 EXTERN_LEVELARRAY(linedef_c, lev_linedefs)
 EXTERN_LEVELARRAY(sidedef_c, lev_sidedefs)
 EXTERN_LEVELARRAY(sector_c,  lev_sectors)
 EXTERN_LEVELARRAY(thing_c,   lev_things)
-EXTERN_LEVELARRAY(seg_c,     lev_segs)
-EXTERN_LEVELARRAY(subsec_c,  lev_subsecs)
-EXTERN_LEVELARRAY(node_c,    lev_nodes)
 
 /* ----- function prototypes ----------------------- */
 
@@ -245,108 +344,6 @@ void LoadLevel(const char *name);
 void FreeLevel(void);
 
 
-/* ----- The level structures ---------------------- */
-
-typedef struct raw_vertex_s
-{
-  sint16_g x, y;
-}
-raw_vertex_t;
-
-typedef struct raw_v2_vertex_s
-{
-  sint32_g x, y;
-}
-raw_v2_vertex_t;
-
-
-typedef struct raw_linedef_s
-{
-  uint16_g start;     // from this vertex...
-  uint16_g end;       // ... to this vertex
-  uint16_g flags;     // linedef flags (impassible, etc)
-  uint16_g type;      // linedef type (0 for none, 97 for teleporter, etc)
-  sint16_g tag;       // this linedef activates the sector with same tag
-  uint16_g sidedef1;  // right sidedef
-  uint16_g sidedef2;  // left sidedef (only if this line adjoins 2 sectors)
-}
-raw_linedef_t;
-
-typedef struct raw_hexen_linedef_s
-{
-  uint16_g start;        // from this vertex...
-  uint16_g end;          // ... to this vertex
-  uint16_g flags;        // linedef flags (impassible, etc)
-  uint8_g  type;         // linedef type
-  uint8_g  specials[5];  // hexen specials
-  uint16_g sidedef1;     // right sidedef
-  uint16_g sidedef2;     // left sidedef
-}
-raw_hexen_linedef_t;
-
-#define LINEFLAG_TWO_SIDED  4
-
-#define HEXTYPE_POLY_START     1
-#define HEXTYPE_POLY_EXPLICIT  5
-
-
-typedef struct raw_sidedef_s
-{
-  sint16_g x_offset;  // X offset for texture
-  sint16_g y_offset;  // Y offset for texture
-
-  char upper_tex[8];  // texture name for the part above
-  char lower_tex[8];  // texture name for the part below
-  char mid_tex[8];    // texture name for the regular part
-
-  uint16_g sector;    // adjacent sector
-}
-raw_sidedef_t;
-
-
-typedef struct raw_sector_s
-{
-  sint16_g floor_h;   // floor height
-  sint16_g ceil_h;    // ceiling height
-
-  char floor_tex[8];  // floor texture
-  char ceil_tex[8];   // ceiling texture
-
-  uint16_g light;     // light level (0-255)
-  uint16_g special;   // special behaviour (0 = normal, 9 = secret, ...)
-  sint16_g tag;       // sector activated by a linedef with same tag
-}
-raw_sector_t;
-
-
-typedef struct raw_thing_s
-{
-  sint16_g x, y;      // position of thing
-  sint16_g angle;     // angle thing faces (degrees)
-  uint16_g type;      // type of thing
-  uint16_g options;   // when appears, deaf, etc..
-}
-raw_thing_t;
-
-
-// -JL- Hexen thing definition
-typedef struct raw_hexen_thing_s
-{
-  sint16_g tid;       // thing tag id (for scripts/specials)
-  sint16_g x, y;      // position
-  sint16_g height;    // start height above floor
-  sint16_g angle;     // angle thing faces
-  uint16_g type;      // type of thing
-  uint16_g options;   // when appears, deaf, dormant, etc..
-
-  uint8_g special;    // special type
-  uint8_g arg[5];     // special arguments
-} 
-raw_hexen_thing_t;
-
-#define PO_ANCHOR_TYPE      3000
-#define PO_SPAWN_TYPE       3001
-#define PO_SPAWNCRUSH_TYPE  3002
 
 
 #endif /* __BRUSHER_LEVEL_H__ */
