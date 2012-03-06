@@ -47,6 +47,26 @@ static void ShowHelp()
 static int error_count = 0;
 
 
+static void ProcessThings()
+{
+  fprintf(output_fp, "\n");
+  fprintf(output_fp, "  entities =\n");
+  fprintf(output_fp, "  {\n");
+
+  for (int n = 0 ; n < lev_things.num ; n++)
+  {
+    thing_c *th = lev_things.Get(n);
+
+    int z = 0;  // FIXME !!!!  determine z from sector
+
+    fprintf(output_fp, "    { ent = \"type%d\", x = %d, y = %d, z = %d, angle = %d }\n",
+            th->type, th->x, th->y, z, th->angle);
+  }
+
+  fprintf(output_fp, "  }\n");
+}
+
+
 static void WriteBrush(lineloop_c& loop, char kind, int z = 0, const char *flat = NULL)
 {
   fprintf(output_fp, "    {\n");
@@ -174,6 +194,10 @@ static bool AnalyseLevel()
   }
 
   fprintf(output_fp, "  }\n");
+
+  if (lev_things.num > 0)
+    ProcessThings();
+
   fprintf(output_fp, "}\n");
 
   if (error_count > 0)
