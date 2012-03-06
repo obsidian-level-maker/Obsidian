@@ -56,7 +56,31 @@ static void WriteBrush(lineloop_c& loop, char kind, int z = 0, const char *flat 
     linedef_c *ld = loop.lines[k];
     int side      = loop.sides[k];
 
-    const char *tex = "WALL";  //!!!!
+    // determine texture
+    const char *tex;
+
+    // use opposite side if it exists
+
+    if (! (ld->left && ld->right))
+    {
+      sd = (ld->right ? ld->right : ld->left);
+
+      SYS_ASSERT(sd);
+
+      tex = sd->mid_tex;
+    }
+    else
+    {
+      sidedef_c *sd = (side > 0 ? ld->left : ld->right);
+
+      if (kind == 'b')
+        tex = sd->upper_tex;
+      else
+        tex = sd->lower_tex;
+    }
+
+    if (tex[0] == '-')
+      tex = "wall0";
 
     double x = (side > 0) ? ld->start->x : ld->end->x;
     double y = (side > 0) ? ld->start->y : ld->end->y;
