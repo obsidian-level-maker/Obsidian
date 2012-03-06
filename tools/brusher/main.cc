@@ -42,6 +42,61 @@ static void ShowHelp()
 }
 
 
+//------------------------------------------------------------------------
+
+static int error_count = 0;
+
+
+static void ProcessLoop(linedef_c *ld, int side)
+{
+  lineloop_c loop;
+
+// fprintf(stderr, "tracing %d @ %d\n", ld->index, side);
+
+  if (! TraceLineLoop(ld, side, loop))
+  {
+    error_count += 1;
+    return;
+  }
+
+  // mark all lines in the loop as processed
+  loop.MarkAsProcessed();
+
+  // FIXME: convert loop into a brush
+}
+
+
+static bool AnalyseLevel()
+{
+  printf("\nAnalysing level...\n");
+
+  for (int n = 0 ; n < lev_linedefs.num ; n++)
+  {
+    linedef_c * ld = lev_linedefs.Get(n);
+
+    for (int side_idx = 0 ; side_idx < 2 ; side_idx++)
+    {
+      int side = side_idx ? SIDE_LEFT : SIDE_RIGHT;
+      int mask = (1 << side_idx);
+
+      // already processed?
+      if (ld->traced_sides & mask)
+        continue;
+
+      // skip second side on one-sided linedefs
+      if (side > 0 && ! ld->right) continue;
+      if (side < 0 && ! ld->left)  continue;
+
+      ProcessLoop(ld, side);
+    }
+  }
+
+  if (error_count > 0)
+    printf("\nTotal errors: %d\n", error_count);
+
+  return (error_count == 0);
+}
+
 
 //------------------------------------------------------------------------
 //  MAIN PROGRAM
@@ -107,7 +162,7 @@ int main(int argc, char **argv)
 
   {
     int params;
-    int idx = ArgvFind(0, "warp", &params);
+    int idx = ArgvFind('w', "warp", &params);
 
     if (idx >= 0 && params >= 1)
       level_name = arg_list[idx + 1];
@@ -127,17 +182,19 @@ int main(int argc, char **argv)
   printf("Created output file: %s\n", output_name);
 
 
-//  Brush_ConvertSectors();
-//  Brush_ConvertWalls();
+  bool ok = AnalyseLevel();
+
 
   fclose(output_fp);
 
   TermDebug();
 
-  printf("\n");
-  printf("All done.\n");
+  if (ok)
+    printf("\nOK.\n");
+  else
+    printf("\nFAILED!\n");
 
-  return 0;  // success!
+  return (ok ? 0 : 3);
 }
 
 //--- editor settings ---

@@ -261,10 +261,9 @@ static sidedef_c *SafeLookupSidedef(uint16_g num)
 }
 
 
-linedef_c::linedef_c(int _idx, const raw_linedef_t *raw)
+linedef_c::linedef_c(int _idx, const raw_linedef_t *raw) :
+  index(_idx), traced_sides(0)
 {
-  index = _idx;
-
   start = lev_vertices.Get(UINT16(raw->start));
     end = lev_vertices.Get(UINT16(raw->end));
 

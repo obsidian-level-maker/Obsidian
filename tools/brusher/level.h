@@ -225,6 +225,9 @@ public:
   // length lines has occurred.
   int index;
 
+  // which sides we have processed : bit 0 for RIGHT, bit 1 for LEFT
+  int traced_sides;
+
    linedef_c(int _idx, const raw_linedef_t *raw);
   ~linedef_c();
 };
