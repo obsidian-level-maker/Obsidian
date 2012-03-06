@@ -30,7 +30,7 @@ static void ShowTitle()
   printf(
     "\n"
     " /--------------------------------\\\n"
-    "(  Brusher  (C) 2012 Andrew Apted  )\n"
+    "(  BRUSHER  (C) 2012 Andrew Apted  )\n"
     " \\--------------------------------/\n"
     "\n"
   );
@@ -50,7 +50,26 @@ static int error_count = 0;
 static void WriteBrush(lineloop_c& loop, char kind, int z = 0, const char *flat = NULL)
 {
   fprintf(output_fp, "    {\n");
-  fprintf(output_fp, "      STUFF\n");
+
+  for (unsigned int k = 0 ; k < loop.lines.size() ; k++)
+  {
+    linedef_c *ld = loop.lines[k];
+    int side      = loop.sides[k];
+
+    const char *tex = "WALL";  //!!!!
+
+    double x = (side > 0) ? ld->start->x : ld->end->x;
+    double y = (side > 0) ? ld->start->y : ld->end->y;
+
+    fprintf(output_fp, "      { x = %3d, y = %3d, mat = \"%s\" }\n", 
+            I_ROUND(x), I_ROUND(y), tex);
+  }
+
+  if (kind == 't' || kind == 'b')
+  {
+    fprintf(output_fp, "      { %c = %d, mat = \"%s\" }\n", kind, z, flat);
+  }
+
   fprintf(output_fp, "    }\n");
 }
 
