@@ -69,6 +69,15 @@ static void ProcessThings()
 
 static void WriteBrush(lineloop_c& loop, char kind, int z = 0, const char *flat = NULL)
 {
+  // recognise certain flats to mean "skip this brush"
+  if (flat &&
+      (strcmp(flat, "LAVA4") == 0 ||
+       strcmp(flat, "FLATHUH4") == 0 ||
+       strcmp(flat, "X_004") == 0) )
+  {
+    return;
+  }
+
   fprintf(output_fp, "    {\n");
 
   int first = loop.IndexWithLowestX();
