@@ -408,7 +408,7 @@ int lineloop_c::IndexWithLowestX() const
 	for (unsigned int i = 0 ; i < lines.size() ; i++)
   {
     int x = GetX(i);
-    int y = GetX(i);
+    int y = GetY(i);
 
     if (best < 0 || x < best_x || (x == best_x && y < best_y))
     {
@@ -439,7 +439,7 @@ sector_c * lineloop_c::GetSector() const
 
 vertex_c * lineloop_c::GetVertex(int index) const
 {
-  if (sides[index] > 0)
+  if (sides[index] < 0)
     return lines[index]->start;
   else
     return lines[index]->end;
