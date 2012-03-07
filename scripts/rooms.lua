@@ -1165,9 +1165,12 @@ function ROOM_CLASS.find_closet_spot(R, want_deep)
 
     local long, deep = N:long_deep(dir)
 
+    -- FIXME: sections at the edges can go 1 seed deeper
+
     score = score + deep * 8
 
     -- prefer edge of map (leave interior hallway channels free)
+    -- FIXME but only for START / EXIT closets
     if (geom.is_horiz(dir) and (N.kx == 1 or N.kx == SECTION_W)) or
        (geom. is_vert(dir) and (N.ky == 1 or N.ky == SECTION_W))
     then
@@ -1179,7 +1182,7 @@ function ROOM_CLASS.find_closet_spot(R, want_deep)
 
   --- find_closet_spot ---
 
-  local deep = (want_deep ? 2 ; 1)
+  local deep = (want_deep ? 2 ; 1)  -- FIXME!! not used yet
 
   local best
   local best_score = -9e9
@@ -1215,7 +1218,9 @@ function ROOM_CLASS.add_closet(R, closet_kind)
 --]]
 
   -- pick location to attach closet to room
-  local K, dir = R:find_closet_spot(R, "deep")
+  local want_deep = (kind == "START" or kind == "EXIT" or rand.odds(10))
+
+  local K, dir = R:find_closet_spot(R, want_deep)
 
   if not K then return end
 
@@ -1246,6 +1251,27 @@ function ROOM_CLASS.add_closet(R, closet_kind)
   if closet_kind == "START" then R.has_start_closet = true end
   if closet_kind == "EXIT"  then R.has_exit_closet  = true end
 end
+
+
+
+function Rooms_add_closets()
+  -- handle exit room first (give it priority)
+  LEVEL.exit_room:add_closet("EXIT");
+
+  -- do the other kinds of closets now, visitings rooms in random order
+  local room_list = table.copy(LEVEL.rooms)
+
+  for loop = 1,4 do
+    rand.shuffle(room_list)
+
+    each R in room_list do
+      local kind = rand.sel(75, "trap", "secret")
+
+      R:add_closet(kind)
+    end
+  end      
+end
+
 
 
 function Rooms_dists_from_entrance()

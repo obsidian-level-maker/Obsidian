@@ -1618,6 +1618,8 @@ function Quest_make_quests()
   end
 
 
+  Rooms_add_closets()
+
   Plan_expand_rooms()
   Plan_dump_rooms("Expanded Map:")
 
