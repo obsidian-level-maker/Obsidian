@@ -204,7 +204,11 @@ static void ProcessThings()
   {
     thing_c *th = lev_things.Get(n);
 
-    int z = 0;  // FIXME !!!!  determine z from sector
+    // determine z height from sector
+
+    sector_c *sec = SectorAtPoint(th->x, th->y);
+
+    int z = sec ? sec->floor_h : 0;
 
     fprintf(output_fp, "    { ent = \"%s\", x = %d, y = %d, z = %d, angle = %d }\n",
             NameForThingType(th->type), th->x, th->y, z, th->angle);
