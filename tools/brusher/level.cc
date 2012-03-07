@@ -399,6 +399,31 @@ bool lineloop_c::get_just_line(linedef_c * ld) const
 }
 
 
+int lineloop_c::IndexWithLowestX() const
+{
+  int best = -1;
+  int best_x = 99999;
+  int best_y = 99999;
+
+	for (unsigned int i = 0 ; i < lines.size() ; i++)
+  {
+    int x = GetX(i);
+    int y = GetX(i);
+
+    if (best < 0 || x < best_x || (x == best_x && y < best_y))
+    {
+      best   = i;
+      best_x = x;
+      best_y = y;
+    }
+  }
+
+  SYS_ASSERT(best >= 0);
+
+  return best;
+}
+
+
 sector_c * lineloop_c::GetSector() const
 {
   linedef_c *ld = lines[0];
@@ -409,6 +434,52 @@ sector_c * lineloop_c::GetSector() const
     return NULL;
 
   return sd->sector;
+}
+
+
+vertex_c * lineloop_c::GetVertex(int index) const
+{
+  if (sides[index] > 0)
+    return lines[index]->start;
+  else
+    return lines[index]->end;
+}
+
+
+int lineloop_c::GetX(int index) const
+{
+  return I_ROUND(GetVertex(index)->x);
+}
+
+int lineloop_c::GetY(int index) const
+{
+  return I_ROUND(GetVertex(index)->y);
+}
+
+
+void lineloop_c::GetProps(int index, char bkind, const char **tex)
+{
+    // use opposite side if it exists
+    linedef_c *ld = lines[index];
+    int side      = sides[index];
+
+    if (! (ld->left && ld->right))
+    {
+      sidedef_c *sd = (ld->right ? ld->right : ld->left);
+
+      SYS_ASSERT(sd);
+
+      *tex = sd->mid_tex;
+    }
+    else
+    {
+      sidedef_c *sd = (side > 0 ? ld->left : ld->right);
+
+      if (bkind == 'b')
+        *tex = sd->upper_tex;
+      else
+        *tex = sd->lower_tex;
+    }
 }
 
 

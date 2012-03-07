@@ -71,42 +71,38 @@ static void WriteBrush(lineloop_c& loop, char kind, int z = 0, const char *flat 
 {
   fprintf(output_fp, "    {\n");
 
-  for (int k = (int)loop.lines.size() - 1 ; k >= 0 ; k--)
+  int first = loop.IndexWithLowestX();
+
+  for (int n = 0 ; n < (int)loop.lines.size() ; n++)
   {
-    linedef_c *ld = loop.lines[k];
-    int side      = loop.sides[k];
+    int k = first - n;
+
+    if (k < 0)
+      k += (int)loop.lines.size();
+
+    SYS_ASSERT(k >= 0);
+    SYS_ASSERT(k < (int)loop.lines.size());
+
+    int k2 = k - 1;
+
+    if (k2 < 0)
+      k2 += (int)loop.lines.size();
 
     // determine texture
     const char *tex;
+    const char *tex2;
+    
+    loop.GetProps(k,  kind, &tex);
+    loop.GetProps(k2, kind, &tex2);
 
-    // use opposite side if it exists
+    if (tex[0]  == '-') tex  = "wall0";
+    if (tex2[0] == '-') tex2 = "wall0";
 
-    if (! (ld->left && ld->right))
-    {
-      sidedef_c *sd = (ld->right ? ld->right : ld->left);
-
-      SYS_ASSERT(sd);
-
-      tex = sd->mid_tex;
-    }
-    else
-    {
-      sidedef_c *sd = (side > 0 ? ld->left : ld->right);
-
-      if (kind == 'b')
-        tex = sd->upper_tex;
-      else
-        tex = sd->lower_tex;
-    }
-
-    if (tex[0] == '-')
-      tex = "wall0";
-
-    double x = (side > 0) ? ld->start->x : ld->end->x;
-    double y = (side > 0) ? ld->start->y : ld->end->y;
+    int x = loop.GetX(k);
+    int y = loop.GetY(k);
 
     fprintf(output_fp, "      { x = %3d, y = %3d, mat = \"%s\" }\n", 
-            I_ROUND(x), I_ROUND(y), tex);
+            x, y, tex);
   }
 
   if (kind == 't' || kind == 'b')

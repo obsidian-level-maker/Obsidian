@@ -377,7 +377,15 @@ public:
 	bool get(linedef_c * ld, int side) const;
 	bool get_just_line(linedef_c * ld) const;
 
+  int IndexWithLowestX() const;
+
   sector_c * GetSector() const;
+  vertex_c * GetVertex(int index) const;
+
+  int GetX(int index) const;
+  int GetY(int index) const;
+
+  void GetProps(int index, char bkind, const char **tex);
 
   void MarkAsProcessed();
 };
