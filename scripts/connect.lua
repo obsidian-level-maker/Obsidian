@@ -585,8 +585,5 @@ function Connect_cycles()
   each H in LEVEL.halls do
     H:dump_path()
   end
-
-  Plan_expand_rooms()
-  Plan_dump_rooms("Expanded Map:")
 end
 

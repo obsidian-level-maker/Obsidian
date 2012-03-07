@@ -1618,6 +1618,10 @@ function Quest_make_quests()
   end
 
 
+  Plan_expand_rooms()
+  Plan_dump_rooms("Expanded Map:")
+
+
   Quest_assign_room_themes()
 
   Quest_add_weapons()
