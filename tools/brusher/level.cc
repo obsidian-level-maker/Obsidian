@@ -644,5 +644,63 @@ bool TraceLineLoop(linedef_c * ld, int side, lineloop_c& loop)
 	return true;
 }
 
+
+linedef_c * ClosestLine(int x, int y, int *side)
+{
+  linedef_c * best_match = NULL;
+	float       best_dist  = 9e9;
+
+	for (int n = 0 ; n < lev_linedefs.num ; n++)
+	{
+    linedef_c *ld = lev_linedefs.Get(n);
+
+		int ly1 = (int)ld->start->y;
+		int ly2 = (int)ld->end->y;
+
+		// does the linedef cross the horizontal ray?
+		if ( (ly1 > y) == (ly2 > y) )
+			continue;
+
+		// ignore purely horizontal lines
+		if (ly1 == ly2)
+			continue;
+
+		int lx1 = (int)ld->start->x;
+		int lx2 = (int)ld->end->x;
+
+		float dist = lx1 - x + (lx2 - lx1) * (y - ly1) / (float)(ly2 - ly1);
+
+		if (fabs(dist) > 0.1 && fabs(dist) < best_dist)
+		{
+			best_match = ld;
+			best_dist  = fabs(dist);
+
+      if ( (ly1 > ly2) == (dist > 0) )
+        *side = SIDE_RIGHT;
+      else
+        *side = SIDE_LEFT;
+		}
+	}
+
+	return best_match;
+}
+
+
+sector_c * SectorAtPoint(int x, int y)
+{
+  int side;
+  linedef_c *ld = ClosestLine(x, y, &side);
+
+  if (! ld)
+    return NULL;
+
+  sidedef_c *sd = (side > 0) ? ld->right : ld->left;
+
+  if (! sd)
+    return NULL;
+
+  return sd->sector;
+}
+
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
