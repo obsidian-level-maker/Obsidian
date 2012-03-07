@@ -73,6 +73,10 @@ static void WriteBrush(lineloop_c& loop, char kind, int z = 0, const char *flat 
 
   int first = loop.IndexWithLowestX();
 
+  const char *last_tex = NULL;
+  int last_x = -1;
+  int last_y = -1;
+
   for (int n = 0 ; n < (int)loop.lines.size() ; n++)
   {
     int k = first - n;
@@ -101,8 +105,25 @@ static void WriteBrush(lineloop_c& loop, char kind, int z = 0, const char *flat 
     int x = loop.GetX(k);
     int y = loop.GetY(k);
 
+    int x2 = loop.GetX(k2);
+    int y2 = loop.GetY(k2);
+
+    // skip this vertex if not needed, i.e. it's in the middle of an
+    // axis-aligned line and the properties are same as previous one.
+    if (last_tex &&
+        strcmp(last_tex, tex) == 0 &&
+        ( (last_x == x && x == x2) ||
+          (last_y == y && y == y2)))
+    {
+      continue;
+    }
+
     fprintf(output_fp, "      { x = %3d, y = %3d, mat = \"%s\" }\n", 
             x, y, tex);
+
+    last_tex = tex;
+    last_x = x;
+    last_y = y;
   }
 
   if (kind == 't' || kind == 'b')
