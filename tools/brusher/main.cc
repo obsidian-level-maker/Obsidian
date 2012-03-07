@@ -42,6 +42,153 @@ static void ShowHelp()
 }
 
 
+typedef struct
+{
+  int type;
+  const char *name;
+}
+thing_name_t;
+
+static thing_name_t doom_thing_names[] =
+{
+  {    1, "player1" },
+  {    2, "player2" },
+  {    3, "player3" },
+  {    4, "player4" },
+  {   11, "dm_player" },
+  {   14, "teleport_spot" },
+  { 3004, "zombie" },
+  {    9, "shooter" },
+  {   65, "gunner" },
+  { 3001, "imp" },
+  { 3005, "caco" },
+  {   66, "revenant" },
+  {   69, "knight" },
+  { 3003, "baron" },
+  {   67, "mancubus" },
+  {   68, "arach" },
+  {   71, "pain" },
+  {   64, "vile" },
+  { 3002, "demon" },
+  {   58, "spectre" },
+  { 3006, "skull" },
+  {   84, "ss_dude" },
+  {   72, "keen" },
+  {    7, "Mastermind" },
+  {   16, "Cyberdemon" },
+  {   13, "kc_red" },
+  {    6, "kc_yellow" },
+  {    5, "kc_blue" },
+  {   38, "ks_red" },
+  {   39, "ks_yellow" },
+  {   40, "ks_blue" },
+  { 2001, "shotty" },
+  {   82, "super" },
+  { 2002, "chain" },
+  { 2003, "launch" },
+  { 2004, "plasma" },
+  { 2005, "saw" },
+  { 2006, "bfg" },
+  {    8, "backpack" },
+  {   83, "mega" },
+  { 2022, "invul" },
+  { 2023, "berserk" },
+  { 2024, "invis" },
+  { 2025, "suit" },
+  { 2026, "map" },
+  { 2045, "goggle" },
+  { 2014, "potion" },
+  { 2011, "stimpack" },
+  { 2012, "medikit" },
+  { 2013, "soul" },
+  { 2015, "helmet" },
+  { 2018, "green_armor" },
+  { 2019, "blue_armor" },
+  { 2007, "bullets" },
+  { 2048, "bullet_box" },
+  { 2008, "shells" },
+  { 2049, "shell_box" },
+  { 2010, "rockets" },
+  { 2046, "rocket_box" },
+  { 2047, "cells" },
+  {   17, "cell_pack" },
+  { 2028, "lamp" },
+  {   85, "mercury_lamp" },
+  {   86, "short_lamp" },
+  {   48, "tech_column" },
+  {   34, "candle" },
+  {   35, "candelabra" },
+  {   70, "burning_barrel" },
+  {   44, "blue_torch" },
+  {   55, "blue_torch_sm" },
+  {   45, "green_torch" },
+  {   56, "green_torch_sm" },
+  {   46, "red_torch" },
+  {   57, "red_torch_sm" },
+  { 2035, "barrel" },
+  {   30, "green_pillar" },
+  {   31, "green_column" },
+  {   36, "green_column_hrt" },
+  {   32, "red_pillar" },
+  {   33, "red_column" },
+  {   37, "red_column_skl" },
+  {   43, "burnt_tree" },
+  {   47, "brown_stub" },
+  {   54, "big_tree" },
+  {   41, "evil_eye" },
+  {   42, "skull_rock" },
+  {   27, "skull_pole" },
+  {   28, "skull_kebab" },
+  {   29, "skull_cairn" },
+  {   25, "impaled_human" },
+  {   26, "impaled_twitch" },
+  {   73, "gutted_victim1" },
+  {   74, "gutted_victim2" },
+  {   75, "gutted_torso1" },
+  {   76, "gutted_torso2" },
+  {   77, "gutted_torso3" },
+  {   78, "gutted_torso4" },
+  {   59, "hang_arm_pair" },
+  {   60, "hang_leg_pair" },
+  {   61, "hang_leg_gone" },
+  {   62, "hang_leg" },
+  {   63, "hang_twitching" },
+  {   24, "gibs" },
+  {   10, "gibbed_player" },
+  {   79, "pool_blood_1" },
+  {   80, "pool_blood_2" },
+  {   81, "pool_brains" },
+  {   15, "dead_player" },
+  {   18, "dead_zombie" },
+  {   19, "dead_shooter" },
+  {   20, "dead_imp" },
+  {   21, "dead_demon" },
+  {   22, "dead_caco" },
+  {   23, "dead_skull" },
+  {   88, "brain_boss" },
+  {   89, "brain_shooter" },
+  {   87, "brain_target" },
+
+  // the end
+  { -1, NULL }
+};
+
+static const char *NameForThingType(int type)
+{
+  for (int i = 0 ; doom_thing_names[i].name ; i++)
+  {
+    if (doom_thing_names[i].type == type)
+      return doom_thing_names[i].name;
+  }
+
+  static char buffer[40];
+
+  sprintf(buffer, "type%d", type);
+
+  return buffer;
+}
+
+
 //------------------------------------------------------------------------
 
 static int error_count = 0;
@@ -59,8 +206,8 @@ static void ProcessThings()
 
     int z = 0;  // FIXME !!!!  determine z from sector
 
-    fprintf(output_fp, "    { ent = \"type%d\", x = %d, y = %d, z = %d, angle = %d }\n",
-            th->type, th->x, th->y, z, th->angle);
+    fprintf(output_fp, "    { ent = \"%s\", x = %d, y = %d, z = %d, angle = %d }\n",
+            NameForThingType(th->type), th->x, th->y, z, th->angle);
   }
 
   fprintf(output_fp, "  }\n");
