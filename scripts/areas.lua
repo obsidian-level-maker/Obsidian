@@ -334,6 +334,15 @@ function Areas_handle_connections()
 
       -- closet
       elseif K.closet then
+        local long, deep = K:long_deep(dir)
+
+        if deep >= 2 then
+          if dir == 2 then sy2 = sy2 + 1 end
+          if dir == 8 then sy1 = sy1 - 1 end
+          if dir == 4 then sx2 = sx2 + 1 end
+          if dir == 6 then sx1 = sx1 - 1 end
+        end
+
         C = CHUNK_CLASS.new(sx1, sy1, sx2, sy2)
 
         C:install()
