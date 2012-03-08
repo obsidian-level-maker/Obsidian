@@ -54,9 +54,11 @@ Outdoor Idioms:
 
 
 Theme System:
++  IDEA: different monster palettes in each zone
+
 -  if keys are left over, can use them for non-Zone locks
 
--  IDEA: "minor" theme, like rare theme but can be repeated in a zone
+DONE:  "minor" theme, like rare theme but can be repeated in a zone
 
 -  IDEA: cycle through dominant themes by quest
 
