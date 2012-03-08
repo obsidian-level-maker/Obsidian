@@ -5,6 +5,12 @@ OBLIGE TODO
 Current Work
 ------------
 
+>>>  need a way for a room theme (if not level theme) to say
+     "hallways should use (or not) same theme as a connected room"
+     (perhaps with priorities? Nah, KISS)
+
+>>>  hallways field in room themes : allow use in caves/outdoor too
+
 
 Closets:
 
@@ -26,6 +32,12 @@ Closets:
 -  GATE closets for Hexen
 
 -  FAKE closets
+
+-  HALL closets
+
+-  MONSTER closets
+
+-  BROOM closets
 
 
 
