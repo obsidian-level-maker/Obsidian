@@ -1818,7 +1818,6 @@ DOOM.SKINS =
     _prefab = "START_CLOSET"
     _where  = "chunk"
     _size   = { 192,192, 384,384 }
-    _aspect = { 0.9, 2.2 }
 
     step = "FLAT1"
 
