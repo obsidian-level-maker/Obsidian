@@ -604,7 +604,7 @@ function Quest_assign_room_themes()
   end
 
 
-  local function assign_theme(L, index)
+  local function assign_room_theme(L, try_rare)
     local theme_list = L.zone.themes[L.kind]
     local  prev_list = L.zone.previous[L.kind]
 
@@ -613,7 +613,7 @@ function Quest_assign_room_themes()
 
     local theme_name
 
-    if (index % 2) == 0 and rand.odds(30) then
+    if try_rare then
       theme_name = pick_rare_room(L)
     end
 
@@ -653,12 +653,53 @@ function Quest_assign_room_themes()
 
     if not L.theme.rarity then
       table.insert(prev_list, 1, theme_name)
+    elseif L.theme.rarity == "minor" then
+      -- do nothing
     elseif L.theme.rarity == "zone" then
       L.zone.rare_used[theme_name] = 1
     elseif L.theme.rarity == "level" then
       LEVEL.rare_used[theme_name] = 1
     elseif L.theme.rarity == "episode" then
       EPISODE.rare_used[theme_name] = 1
+    end
+  end
+
+
+  local function assign_hall_theme(H)
+    local conn_rooms = {}
+
+    each D in H.conns do
+      local L = D:neighbor(H)
+
+      if L.kind == "building" then  -- TODO: caves
+        table.insert(conn_rooms, L)
+      end
+    end
+
+    -- mini-halls just use the theme of the connected room
+    -- (unless between two outdoor rooms)
+    -- FIXME!!!! a way to FORCE this for larger halls
+    if #H.sections == 1 and #conn_rooms > 0 then
+      H.theme = conn_rooms[1].theme
+      return
+    end
+
+    -- see if any room themes specify hallways
+    -- (TODO: consider if this list needs sorting, e.g. by visit_id)
+    local theme_name = H.zone.themes[H.kind][1]
+
+    each R in conn_rooms do
+      if R.theme.hallways then
+        theme_name = rand.key_by_probs(R.theme.hallways)
+      end
+    end
+
+    assert(theme_name)
+
+    H.theme = GAME.ROOM_THEMES[theme_name]
+
+    if not H.theme then
+      error("No such room theme: " .. tostring(theme_name))
     end
   end
 
@@ -732,10 +773,13 @@ function Quest_assign_room_themes()
 
   dump_dominant_themes()
 
-  each Z in LEVEL.zones do
-    each R in Z.rooms do
-      assign_theme(R, _index)
-    end
+  each R in LEVEL.rooms do
+    local rare_ok = (_index % 2 == 0) and rand.odds(THEME.rare_prob or 30)
+    assign_room_theme(R, rare_ok)
+  end
+
+  each H in LEVEL.halls do
+    assign_hall_theme(H)
   end
 
   select_facades_for_zones()

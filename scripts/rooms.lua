@@ -632,7 +632,7 @@ end
 function CLOSET_CLASS.build(CL)
   local C = assert(CL.chunk)
 
-  local skin_name = "Start_Closet"  --!!!  check THEME.start_closets etc
+  local skin_name = "Start_Closet"  --!!!  check CL.closet_kind, THEME specific list
 
   local skin0 = CL.parent.skin
   local skin1 = assert(GAME.SKINS[skin_name])
@@ -642,6 +642,20 @@ function CLOSET_CLASS.build(CL)
   local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h, 10 - CL.dir)
 
   Fabricate(skin1._prefab, T, { skin0, skin1 })
+
+--[[
+  -- experiment !!
+  if CL.parent.kind == "outdoor" and C.floor_h + 208 < CL.parent.sky_h then
+    local sky_h = C.floor_h + 192
+
+    brush = Brush_new_quad(C.x1-16, C.y1-16, C.x2+16, C.y2+16, sky_h)
+
+    Brush_set_mat(brush, "_SKY", "_SKY")
+    table.insert(brush, 1, { m="sky" })
+
+    brush_helper(brush)
+  end
+--]]
 end
 
 
@@ -1191,7 +1205,8 @@ function ROOM_CLASS.find_closet_spot(R, want_deep)
     for dir = 2,8,2 do
       local score = eval_closet_spot(K, dir)
 
-stderrf("eval_closet_spot @ %s dir:%d --> %1.1f\n", K:tostr(), dir, score)
+-- stderrf("eval_closet_spot @ %s dir:%d --> %1.1f\n", K:tostr(), dir, score)
+
       if score >= 0 and score > best_score then
         best = { K=K, dir=dir }
         best_score = score
@@ -1255,6 +1270,7 @@ end
 
 
 function Rooms_add_closets()
+
   -- handle exit room first (give it priority)
   LEVEL.exit_room:add_closet("EXIT");
 
