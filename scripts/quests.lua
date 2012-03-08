@@ -53,11 +53,19 @@ class QUEST
 
 class ZONE
 {
-  -- a zone is a group of quests    FIXME: MORE INFO
+  -- a zone is a group of quests forming a large part of the level.
+  -- the whole level might be a single zone.  Zones are generally
+  -- connected via _Keyed_ doors, whereas all the puzzles inside a
+  -- zone are switched doors.
+  --
+  -- Zones are also meant to have a distinctive look, e.g. each one
+  -- has a difference facade for buildings, and inside have different
+  -- room themes, hallway themes (etc), perhaps even a different
+  -- monster palette.
 
   id : number
 
-  rooms : list(ROOM)
+  rooms : list(ROOM / HALL)
 
   volume : number  -- total of all rooms
 
@@ -446,20 +454,23 @@ end
 function Quest_assign_room_themes()
  
   -- figure out how many room themes to use for each kind of room.
-  -- keys are room kinds ("building" etc) and value is number of themes
-  -- per ZONE, where 0 means the whole level.
+  -- table keys are room kinds ("building" etc) and value is number of
+  -- themes per ZONE, where zero means the whole level.
   local EXTENT_TAB = {}
 
   local function total_of_room_kind(kind)
-    if kind == "hallway" then
-      return #LEVEL.halls * 0.7
-    end
-
     local total = 0
 
-    each R in LEVEL.rooms do
-      if R.kind == kind then
-        total = total + R.base_tvol
+    if kind == "hallway" then
+      each H in LEVEL.halls do
+        total = total + (H.base_tvol or 0.4)
+      end
+
+    else
+      each R in LEVEL.rooms do
+        if R.kind == kind then
+          total = total + R.base_tvol
+        end
       end
     end
 
@@ -485,8 +496,8 @@ function Quest_assign_room_themes()
   local function determine_extents()
     extent_for_room_kind("building", 3, 8)
     extent_for_room_kind("cave",     3, 8)
-    extent_for_room_kind("outdoor",  3, 8)
-    extent_for_room_kind("hallway",  3, 6)
+    extent_for_room_kind("outdoor",  3, 12)
+    extent_for_room_kind("hallway",  3, 20)
   end
 
 
@@ -760,11 +771,12 @@ function calc_travel_volumes(L, zoney)
 
   local vol
 
-  -- larger rooms have bigger volume 
-  if L.kind == "hallway" then
-    vol = 0.2
-  else
+  if L.kind != "hallway" then
+    -- larger rooms have bigger volume 
     vol = 1 + L.svolume / 50
+  else
+    vol = #L.sections / 8 - 0.1  -- very low for mini-halls
+    assert(vol > 0)
   end
 
   L.base_tvol = vol
