@@ -1885,6 +1885,16 @@ DOOM.SKINS =
     tag = 0
   }
 
+  Exit_Closet =
+  {
+    _prefab = "EXIT_CLOSET"
+    _where  = "chunk"
+    _size   = { 192,192, 384,384 }
+
+    door  = "EXITDOOR"
+    track = "DOORTRAK"
+  }
+
 
   ----| STAIRS |----
 

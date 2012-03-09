@@ -39,6 +39,8 @@ Closets:
 
 -  BROOM closets
 
+-  VOID closets
+
 
 
 New Starting Logic

@@ -632,7 +632,16 @@ end
 function CLOSET_CLASS.build(CL)
   local C = assert(CL.chunk)
 
-  local skin_name = "Start_Closet"  --!!!  check CL.closet_kind, THEME specific list
+  local skin_name
+
+  --!!!  check CL.closet_kind, THEME specific list
+  if CL.closet_kind == "START" then
+    skin_name = "Start_Closet"
+  else
+    skin_name = "Exit_Closet"
+    -- FIXME !!!! REMOVE CRUD CRUD
+    CL.dir = 10 - CL.dir
+  end
 
   local skin0 = CL.parent.skin
   local skin1 = assert(GAME.SKINS[skin_name])

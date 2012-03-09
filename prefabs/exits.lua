@@ -312,8 +312,7 @@ door_special = 1
 
   entities =
   {
-    -- FIXME "?item"
-    { ent = "player1", x = 96, y = 128, z = 8 }
+    { ent = "?item", x = 96, y = 128, z = 8 }
   }
 }
 
