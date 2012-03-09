@@ -2787,6 +2787,8 @@ DOOM.THEME_DEFAULTS =
 
   fences = { Fence1 = 50 }
 
+  hallway_groups = { Basic_hall = 50, Thin_hall = 20 }
+
   fat_cages = { Fat_Cage1 = 50, Fat_Cage_W_Bars = 8 }
 
   outdoor_decor = { big_tree=50, burnt_tree=10, brown_stub=10 }
@@ -2882,6 +2884,38 @@ DOOM.NAME_THEMES =
       {
         ["UAC Crisis"]=30
       }
+    }
+  }
+}
+
+
+DOOM.HALLWAY_GROUPS =
+{
+  Basic_hall =
+  {
+    pieces =
+    {
+      Hall_Basic_I = 50
+      Hall_Basic_C = 50
+      Hall_Basic_T = 50
+      Hall_Basic_P = 50
+
+      Hall_Basic_I_Stair = 20
+      Hall_Basic_I_Lift  = 2
+    }
+  }
+
+  Thin_hall =
+  {
+    pieces =
+    {
+      Hall_Thin_I = 50
+      Hall_Thin_C = 50
+      Hall_Thin_T = 50
+      Hall_Basic_P = 50  -- TODO
+
+      Hall_Thin_I_Stair = 20
+      Hall_Basic_I_Lift  = 2  -- TODO
     }
   }
 }
