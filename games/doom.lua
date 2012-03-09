@@ -2497,6 +2497,37 @@ DOOM.SKINS =
   }
 
 
+  Hall_Thin_I =
+  {
+    _prefab = "HALL_THIN_I"
+    _where  = "hallway"
+  }
+
+  Hall_Thin_C =
+  {
+    _prefab = "HALL_THIN_C"
+    _where  = "hallway"
+  }
+
+  Hall_Thin_T =
+  {
+    _prefab = "HALL_THIN_T"
+    _where  = "hallway"
+  }
+
+  -- TODO: Hall_Thin_P
+
+  Hall_Thin_I_Stair =
+  {
+    _prefab = "HALL_THIN_I_STAIR"
+    _where  = "hallway"
+
+    step = "STEP1"
+  }
+
+  -- TODO: Hall_Thin_I_Lift
+
+
   ---| BIG JUNCTIONS |---
 
   Junc_Test_I =
