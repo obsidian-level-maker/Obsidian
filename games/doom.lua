@@ -2453,35 +2453,30 @@ DOOM.SKINS =
   Hall_Basic_I =
   {
     _prefab = "HALL_BASIC_I"
-    _where  = "hallway"
     _shape  = "I"
   }
 
   Hall_Basic_C =
   {
     _prefab = "HALL_BASIC_C"
-    _where  = "hallway"
     _shape  = "C"
   }
 
   Hall_Basic_T =
   {
     _prefab = "HALL_BASIC_T"
-    _where  = "hallway"
     _shape  = "T"
   }
 
   Hall_Basic_P =
   {
     _prefab = "HALL_BASIC_P"
-    _where  = "hallway"
     _shape  = "P"
   }
 
   Hall_Basic_I_Stair =
   {
     _prefab = "HALL_BASIC_I_STAIR"
-    _where  = "hallway"
     _shape  = "IS"
 
     step = "STEP3"
@@ -2490,7 +2485,6 @@ DOOM.SKINS =
   Hall_Basic_I_Lift =
   {
     _prefab = "HALL_BASIC_I_LIFT"
-    _where  = "hallway"
     _shape  = "IL"
     _tags   = 1
 
@@ -2506,21 +2500,18 @@ DOOM.SKINS =
   Hall_Thin_I =
   {
     _prefab = "HALL_THIN_I"
-    _where  = "hallway"
     _shape  = "I"
   }
 
   Hall_Thin_C =
   {
     _prefab = "HALL_THIN_C"
-    _where  = "hallway"
     _shape  = "C"
   }
 
   Hall_Thin_T =
   {
     _prefab = "HALL_THIN_T"
-    _where  = "hallway"
     _shape  = "T"
   }
 
@@ -2529,7 +2520,6 @@ DOOM.SKINS =
   Hall_Thin_I_Stair =
   {
     _prefab = "HALL_THIN_I_STAIR"
-    _where  = "hallway"
     _shape  = "IS"
 
     step = "STEP1"
@@ -2540,10 +2530,9 @@ DOOM.SKINS =
 
   ---| BIG JUNCTIONS |---
 
-  Junc_Test_I =
+  Junc_Octo_I =
   {
     _prefab = "JUNCTION_OCTO"
-    _where  = "big_junc"
     _shape  = "I"
 
     hole = "_SKY"
@@ -2552,10 +2541,9 @@ DOOM.SKINS =
     west_wall_q = 1
   }
 
-  Junc_Test_C =
+  Junc_Octo_C =
   {
     _prefab = "JUNCTION_OCTO"
-    _where  = "big_junc"
     _shape  = "C"
 
     hole = "_SKY"
@@ -2564,10 +2552,9 @@ DOOM.SKINS =
      east_wall_q = 1
   }
 
-  Junc_Test_T =
+  Junc_Octo_T =
   {
     _prefab = "JUNCTION_OCTO"
-    _where  = "big_junc"
     _shape  = "T"
 
     hole = "_SKY"
@@ -2575,10 +2562,9 @@ DOOM.SKINS =
     north_wall_q = 1
   }
 
-  Junc_Test_P =
+  Junc_Octo_P =
   {
     _prefab = "JUNCTION_OCTO"
-    _where  = "big_junc"
     _shape  = "P"
 
     hole = "_SKY"
@@ -2590,7 +2576,6 @@ DOOM.SKINS =
   Junc_Nukey_C =
   {
     _prefab = "JUNCTION_NUKEY_C"
-    _where  = "big_junc"
     _liquid = 1
     _shape  = "C"
 
@@ -2803,6 +2788,16 @@ DOOM.THEME_DEFAULTS =
   fences = { Fence1 = 50 }
 
   hallway_groups = { basic = 50, thin = 20 }
+
+  big_junctions =
+  {
+    Junc_Octo_I = 50
+    Junc_Octo_C = 50
+    Junc_Octo_T = 50
+    Junc_Octo_P = 50
+
+    Junc_Nukey_C = 5
+  }
 
   fat_cages = { Fat_Cage1 = 50, Fat_Cage_W_Bars = 8 }
 
