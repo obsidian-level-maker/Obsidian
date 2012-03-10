@@ -1019,67 +1019,13 @@ function CHUNK_CLASS.categorize_hall_piece(C)
 end
 
 
-function CHUNK_CLASS.build_hall_piece(C)
-  -- FIXME: determine prefabs much earlier (HALLWAY.floor_stuff)
-  local base_name = "Hall_Basic"
-  if C.section.kind == "big_junc" then base_name = "Junc_Test" end
-
-  local h_shape, h_dir = C.h_shape, C.h_dir
-  assert(h_shape)
-
-  local skin_name = base_name .. "_" .. h_shape
-
-  if C.h_extra == "stair" then skin_name = skin_name .. "_Stair" end
-  if C.h_extra == "lift"  then skin_name = skin_name .. "_Lift" end
-
-  local hall = assert(C.hall)
-
-if OB_CONFIG.game == "doom2" and skin_name == "Junc_Test_C" and LEVEL.liquid and rand.odds(20) then
-  skin_name = "Junc_Nukey_C"
-end
-
-  local skin1 = GAME.SKINS[skin_name]
-  if not skin1 then
-    error("missing hallway piece: " .. tostring(skin_name))
-  end
- 
-  local skin0 = { wall  = hall.wall_mat,
-                  floor = hall.floor_mat,
-                  ceil  = hall.ceil_mat,
-                  outer = hall.zone.facade_mat
-                }
-
-  local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, h_dir or 2)
-
-  T.scale_z = C.h_scale_z
-
-  local fab = Fabricate(skin1._prefab, T, { skin0, skin1 })
-
-  if fab.has_spots then
-    Rooms_distribute_spots(hall, Fab_read_spots(fab))
-  end
-
---[[
-local mx, my = C:mid_point()
-entity_helper("dummy", mx, my, 24)
---]]
-end
-
-
 function CHUNK_CLASS.build(C)
   if C.scenic then
     C:build_scenic()
     return
   end
 
--- TEST TEST !!!!!!
-  if C.hall then
-    C:build_hall_piece();
-
-    -- FIXME FIXME : NO LOCKED DOORS !!!!!
-    return
-  end
-
+  assert(not C.hall)
   assert(not C.closet)
 
 

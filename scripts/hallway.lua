@@ -289,10 +289,132 @@ end
 ---?? end
 
 
+function HALLWAY_CLASS.pick_group(H)
+  if H.group_name then
+    return
+  end
+
+  -- use a single style per zone  [REVIEW THIS]
+  if not H.zone.hallway_group then
+    local group_tab = H.theme.hallway_groups or THEME.hallway_groups
+
+    H.zone.hallway_group = rand.key_by_probs(group_tab)
+  end
+
+  local group_name = H.zone.hallway_group
+
+  H.group = GAME.HALLWAY_GROUPS[group_name]
+
+  if not H.group then
+    error("Missing hallway group: " .. tostring(group_name))
+  end
+end
+
+
+-- TODO: move this (probably build.lua)
+function prefab_size_check(skin, long, deep)
+  if not skin._size then return true end
+
+  if skin._size[3] then
+    return (long > skin._size[1] - 1) and (deep > skin._size[2] - 1) and
+           (long < skin._size[3] + 1) and (deep < skin._size[4] + 1)
+  else
+    return (math.abs(long - skin._size[1]) < 1) and
+           (math.abs(deep - skin._size[2]) < 1) and
+  end
+end
+
+
+function HALLWAY_CLASS.select_piece(H, C)
+  local shape = C.h_shape
+
+  if C.h_extra == "stair" then shape = "S" end
+  if C.h_extra == "lift"  then shape = "V" end
+
+  -- find all skins which match this mode (etc)
+  local tab = {}
+
+  each name,prob in H.group do
+    local skin = GAME.SKINS[name]
+    if not name then
+      error("No such hallway skin: " .. tostring(name))
+    end
+
+    if skin._shape != shape then continue end
+  
+    local long, deep = geom.long_deep(C.x2 - C.x1, C.y2 - C.y1, C.h_dir)
+
+    if skin._size and not prefab_size_check(skin, long, deep) then continue end
+
+    -- a match!
+    tab[name] = prob
+  end
+
+  if table.empty(tab) then
+    error("No matching hallway piece at " .. C:tostr())
+  end
+
+  local skin_name = rand.key_by_probs(tab)
+
+  return GAME.SKINS[skin_name]
+end
+
+
+function HALLWAY_CLASS.build_hall_piece(H, C)
+  local base_name = C.hall.group_name
+
+  local h_shape, h_dir = C.h_shape, C.h_dir
+  assert(h_shape)
+
+-- FIXME: TEST CRUD, DO IT PROPERLY
+if C.section.kind == "big_junc" then
+  base_name = "Junc_Test"
+end
+
+  local skin_name = base_name .. "_" .. h_shape
+
+
+  local hall = assert(C.hall)
+
+-- FIXME: TEST CRUD, DO IT PROPERLY
+if OB_CONFIG.game == "doom2" and skin_name == "Junc_Test_C" and LEVEL.liquid and rand.odds(20) then
+  skin_name = "Junc_Nukey_C"
+end
+
+  local skin1 = GAME.SKINS[skin_name]
+  if not skin1 then
+    error("missing hallway piece: " .. tostring(skin_name))
+  end
+ 
+  local skin0 = { wall  = hall.wall_mat,
+                  floor = hall.floor_mat,
+                  ceil  = hall.ceil_mat,
+                  outer = hall.zone.facade_mat
+                }
+
+  local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, h_dir or 2)
+
+  T.scale_z = C.h_scale_z
+
+  local fab = Fabricate(skin1._prefab, T, { skin0, skin1 })
+
+  if fab.has_spots then
+    Rooms_distribute_spots(hall, Fab_read_spots(fab))
+  end
+
+--[[
+local mx, my = C:mid_point()
+entity_helper("dummy", mx, my, 24)
+--]]
+end
+
+
 function HALLWAY_CLASS.build(H)
+  H:pick_group()
+
   each C in H.chunks do
     if not C.crossover_hall then
-      C:build()
+      H:build_hall_piece(C)
     end
   end
 end
