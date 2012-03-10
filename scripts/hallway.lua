@@ -290,11 +290,7 @@ end
 
 
 function HALLWAY_CLASS.pick_group(H)
-  if H.group_name then
-    return
-  end
-
-  -- use a single style per zone  [REVIEW THIS]
+  -- use a single style per zone
   if not H.zone.hallway_group then
     local group_tab = H.theme.hallway_groups or THEME.hallway_groups
 
@@ -334,7 +330,14 @@ function HALLWAY_CLASS.select_piece(H, C)
   -- find all skins which match this mode (etc)
   local tab = {}
 
-  each name,prob in H.group.pieces do
+  local source_tab = H.group.pieces
+
+  if C.section.kind == "big_junc" then
+    source_tab = H.group.big_junctions or THEME.big_junctions
+    assert(source_tab)
+  end
+
+  each name,prob in source_tab do
     local skin = GAME.SKINS[name]
 
     if not skin then
@@ -360,12 +363,6 @@ end
 
 
 function HALLWAY_CLASS.build_hall_piece(H, C)
-
--- FIXME
-if C.section.kind == "big_junc" then
-  return --!!!!!!
-end
-
   local skin_name = H:select_piece(C)
 
   local skin1 = GAME.SKINS[skin_name]
@@ -395,8 +392,6 @@ end
 
 
 function HALLWAY_CLASS.build(H)
-  H:pick_group()
-
   each C in H.chunks do
     if not C.crossover_hall then
       H:build_hall_piece(C)
@@ -1603,6 +1598,8 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
 
   H:update_seeds_for_chunks()
   H:peer_double_chunks()
+
+  H:pick_group()
 
   if H.is_cycle then
     H:handle_cycle(entry_C, 10 - entry_dir, entry_h)

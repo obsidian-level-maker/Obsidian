@@ -684,7 +684,10 @@ function Plan_add_big_junctions()
   -- decide how many big hallway junctions to make
   local prob = style_sel("big_juncs", 0, 25, 50, 80)
 
-  if prob < 1 then return end
+  if not THEME.big_junctions or prob < 1 then
+    gui.printf("Big junctions: disabled\n")
+    return
+  end
 
   local visits = Plan_get_visit_list()
 
