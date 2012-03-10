@@ -2129,20 +2129,10 @@ PREFAB.HALL_THIN_I =
 
     {
       { x =   0, y =   0, mat = "?wall" }
-      { x =  64, y = 160, mat = "?wall" }
+      { x =  64, y =   0, mat = "?wall" }
       { x =  64, y = 192, mat = "?wall" }
-      { x =   0, y =   2, mat = "?wall" }
+      { x =   0, y = 192, mat = "?wall" }
     }
-  }
-
-  entities =
-  {
-    { ent = "imp", x = 160, y = 128, z = -128, angle = 180 }
-    { ent = "imp", x = 160, y = 64, z = -128, angle = 180 }
-    { ent = "imp", x = 32, y = 64, z = -128, angle = 0 }
-    { ent = "imp", x = 32, y = 128, z = -128, angle = 0 }
-    { ent = "medikit", x = 160, y = 96, z = -128, angle = 180 }
-    { ent = "medikit", x = 32, y = 96, z = -128, angle = 0 }
   }
 }
 
