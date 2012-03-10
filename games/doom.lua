@@ -2454,30 +2454,35 @@ DOOM.SKINS =
   {
     _prefab = "HALL_BASIC_I"
     _where  = "hallway"
+    _shape  = "I"
   }
 
   Hall_Basic_C =
   {
     _prefab = "HALL_BASIC_C"
     _where  = "hallway"
+    _shape  = "C"
   }
 
   Hall_Basic_T =
   {
     _prefab = "HALL_BASIC_T"
     _where  = "hallway"
+    _shape  = "T"
   }
 
   Hall_Basic_P =
   {
     _prefab = "HALL_BASIC_P"
     _where  = "hallway"
+    _shape  = "P"
   }
 
   Hall_Basic_I_Stair =
   {
     _prefab = "HALL_BASIC_I_STAIR"
     _where  = "hallway"
+    _shape  = "IS"
 
     step = "STEP3"
   }
@@ -2486,6 +2491,7 @@ DOOM.SKINS =
   {
     _prefab = "HALL_BASIC_I_LIFT"
     _where  = "hallway"
+    _shape  = "IL"
     _tags   = 1
 
     lift = "SUPPORT3"
@@ -2501,18 +2507,21 @@ DOOM.SKINS =
   {
     _prefab = "HALL_THIN_I"
     _where  = "hallway"
+    _shape  = "I"
   }
 
   Hall_Thin_C =
   {
     _prefab = "HALL_THIN_C"
     _where  = "hallway"
+    _shape  = "C"
   }
 
   Hall_Thin_T =
   {
     _prefab = "HALL_THIN_T"
     _where  = "hallway"
+    _shape  = "T"
   }
 
   -- TODO: Hall_Thin_P
@@ -2521,6 +2530,7 @@ DOOM.SKINS =
   {
     _prefab = "HALL_THIN_I_STAIR"
     _where  = "hallway"
+    _shape  = "IS"
 
     step = "STEP1"
   }
@@ -2534,6 +2544,7 @@ DOOM.SKINS =
   {
     _prefab = "JUNCTION_OCTO"
     _where  = "big_junc"
+    _shape  = "I"
 
     hole = "_SKY"
 
@@ -2545,6 +2556,7 @@ DOOM.SKINS =
   {
     _prefab = "JUNCTION_OCTO"
     _where  = "big_junc"
+    _shape  = "C"
 
     hole = "_SKY"
 
@@ -2556,6 +2568,7 @@ DOOM.SKINS =
   {
     _prefab = "JUNCTION_OCTO"
     _where  = "big_junc"
+    _shape  = "T"
 
     hole = "_SKY"
 
@@ -2566,6 +2579,7 @@ DOOM.SKINS =
   {
     _prefab = "JUNCTION_OCTO"
     _where  = "big_junc"
+    _shape  = "P"
 
     hole = "_SKY"
 
@@ -2578,6 +2592,7 @@ DOOM.SKINS =
     _prefab = "JUNCTION_NUKEY_C"
     _where  = "big_junc"
     _liquid = 1
+    _shape  = "C"
 
     support = "SUPPORT2"
     support_ox = 24
