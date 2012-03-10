@@ -320,7 +320,7 @@ function prefab_size_check(skin, long, deep)
            (long < skin._size[3] + 1) and (deep < skin._size[4] + 1)
   else
     return (math.abs(long - skin._size[1]) < 1) and
-           (math.abs(deep - skin._size[2]) < 1) and
+           (math.abs(deep - skin._size[2]) < 1)
   end
 end
 
@@ -328,15 +328,16 @@ end
 function HALLWAY_CLASS.select_piece(H, C)
   local shape = C.h_shape
 
-  if C.h_extra == "stair" then shape = "S" end
-  if C.h_extra == "lift"  then shape = "V" end
+  if C.h_extra == "stair" then shape = shape .. "S" end
+  if C.h_extra == "lift"  then shape = shape .. "L" end
 
   -- find all skins which match this mode (etc)
   local tab = {}
 
-  each name,prob in H.group do
+  each name,prob in H.group.pieces do
     local skin = GAME.SKINS[name]
-    if not name then
+
+    if not skin then
       error("No such hallway skin: " .. tostring(name))
     end
 
@@ -354,52 +355,36 @@ function HALLWAY_CLASS.select_piece(H, C)
     error("No matching hallway piece at " .. C:tostr())
   end
 
-  local skin_name = rand.key_by_probs(tab)
-
-  return GAME.SKINS[skin_name]
+  return rand.key_by_probs(tab)
 end
 
 
 function HALLWAY_CLASS.build_hall_piece(H, C)
-  local base_name = C.hall.group_name
 
-  local h_shape, h_dir = C.h_shape, C.h_dir
-  assert(h_shape)
-
--- FIXME: TEST CRUD, DO IT PROPERLY
+-- FIXME
 if C.section.kind == "big_junc" then
-  base_name = "Junc_Test"
+  return --!!!!!!
 end
 
-  local skin_name = base_name .. "_" .. h_shape
-
-
-  local hall = assert(C.hall)
-
--- FIXME: TEST CRUD, DO IT PROPERLY
-if OB_CONFIG.game == "doom2" and skin_name == "Junc_Test_C" and LEVEL.liquid and rand.odds(20) then
-  skin_name = "Junc_Nukey_C"
-end
+  local skin_name = H:select_piece(C)
 
   local skin1 = GAME.SKINS[skin_name]
-  if not skin1 then
-    error("missing hallway piece: " .. tostring(skin_name))
-  end
+  assert(skin1)
  
-  local skin0 = { wall  = hall.wall_mat,
-                  floor = hall.floor_mat,
-                  ceil  = hall.ceil_mat,
-                  outer = hall.zone.facade_mat
+  local skin0 = { wall  = H.wall_mat,
+                  floor = H.floor_mat,
+                  ceil  = H.ceil_mat,
+                  outer = H.zone.facade_mat
                 }
 
-  local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, h_dir or 2)
+  local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, C.h_dir or 2)
 
   T.scale_z = C.h_scale_z
 
   local fab = Fabricate(skin1._prefab, T, { skin0, skin1 })
 
   if fab.has_spots then
-    Rooms_distribute_spots(hall, Fab_read_spots(fab))
+    Rooms_distribute_spots(H, Fab_read_spots(fab))
   end
 
 --[[
