@@ -983,19 +983,19 @@ QUAKE.SKINS =
 
   ---| HALLWAY PIECES |---
 
-  Hall_Test_I =
+  Hall_Basic_I =
   {
     _prefab = "HALL_BASIC_I"
     _where  = "hallway"
   }
 
-  Hall_Test_I_Stair =
+  Hall_Basic_I_Stair =
   {
     _prefab = "HALL_BASIC_I_STAIR"
     _where  = "hallway"
   }
 
-  Hall_Test_I_Lift =
+  Hall_Basic_I_Lift =
   {
     _prefab = "HALL_BASIC_I_LIFT_QUAKE"
     _where  = "hallway"
@@ -1004,7 +1004,7 @@ QUAKE.SKINS =
     lift = "MET5_1"
   }
 
-  Hall_Test_C =
+  Hall_Basic_C =
   {
     _prefab = "HALL_BASIC_C"
     _where  = "hallway"
@@ -1012,20 +1012,20 @@ QUAKE.SKINS =
     torch_ent = "torch"
   }
 
-  Hall_Test_T =
+  Hall_Basic_T =
   {
     _prefab = "HALL_BASIC_T"
     _where  = "hallway"
   }
 
-  Hall_Test_P =
+  Hall_Basic_P =
   {
     _prefab = "HALL_BASIC_P"
     _where  = "hallway"
   }
 
 
-  Junc_Test_I =
+  Junc_Basic_I =
   {
     _prefab = "JUNCTION_OCTO"
     _where  = "big_junc"

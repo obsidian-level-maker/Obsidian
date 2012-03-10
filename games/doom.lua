@@ -2450,31 +2450,31 @@ DOOM.SKINS =
 
   ---| HALLWAY PIECES |---
 
-  Hall_Test_I =
+  Hall_Basic_I =
   {
     _prefab = "HALL_BASIC_I"
     _where  = "hallway"
   }
 
-  Hall_Test_C =
+  Hall_Basic_C =
   {
     _prefab = "HALL_BASIC_C"
     _where  = "hallway"
   }
 
-  Hall_Test_T =
+  Hall_Basic_T =
   {
     _prefab = "HALL_BASIC_T"
     _where  = "hallway"
   }
 
-  Hall_Test_P =
+  Hall_Basic_P =
   {
     _prefab = "HALL_BASIC_P"
     _where  = "hallway"
   }
 
-  Hall_Test_I_Stair =
+  Hall_Basic_I_Stair =
   {
     _prefab = "HALL_BASIC_I_STAIR"
     _where  = "hallway"
@@ -2482,7 +2482,7 @@ DOOM.SKINS =
     step = "STEP3"
   }
 
-  Hall_Test_I_Lift =
+  Hall_Basic_I_Lift =
   {
     _prefab = "HALL_BASIC_I_LIFT"
     _where  = "hallway"
@@ -2787,7 +2787,7 @@ DOOM.THEME_DEFAULTS =
 
   fences = { Fence1 = 50 }
 
-  hallway_groups = { Basic_hall = 50, Thin_hall = 20 }
+  hallway_groups = { basic = 50, thin = 20 }
 
   fat_cages = { Fat_Cage1 = 50, Fat_Cage_W_Bars = 8 }
 
@@ -2891,7 +2891,7 @@ DOOM.NAME_THEMES =
 
 DOOM.HALLWAY_GROUPS =
 {
-  Basic_hall =
+  basic =
   {
     pieces =
     {
@@ -2905,7 +2905,7 @@ DOOM.HALLWAY_GROUPS =
     }
   }
 
-  Thin_hall =
+  thin =
   {
     pieces =
     {

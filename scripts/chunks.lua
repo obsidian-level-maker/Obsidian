@@ -1021,7 +1021,7 @@ end
 
 function CHUNK_CLASS.build_hall_piece(C)
   -- FIXME: determine prefabs much earlier (HALLWAY.floor_stuff)
-  local base_name = "Hall_Test"
+  local base_name = "Hall_Basic"
   if C.section.kind == "big_junc" then base_name = "Junc_Test" end
 
   local h_shape, h_dir = C.h_shape, C.h_dir

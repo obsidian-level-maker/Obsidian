@@ -1547,31 +1547,31 @@ HEXEN.SKINS =
 
   ---| HALLWAY PIECES |---
 
-  Hall_Test_I =
+  Hall_Basic_I =
   {
     _prefab = "HALL_BASIC_I"
     _where  = "hallway"
   }
 
-  Hall_Test_C =
+  Hall_Basic_C =
   {
     _prefab = "HALL_BASIC_C"
     _where  = "hallway"
   }
 
-  Hall_Test_T =
+  Hall_Basic_T =
   {
     _prefab = "HALL_BASIC_T"
     _where  = "hallway"
   }
 
-  Hall_Test_P =
+  Hall_Basic_P =
   {
     _prefab = "HALL_BASIC_P"
     _where  = "hallway"
   }
 
-  Hall_Test_I_Stair =
+  Hall_Basic_I_Stair =
   {
     _prefab = "HALL_BASIC_I_STAIR"
     _where  = "hallway"
@@ -1579,12 +1579,13 @@ HEXEN.SKINS =
     step = "STEP3"
   }
 
-  Hall_Test_I_Lift =
+  Hall_Basic_I_Lift =
   {
     _prefab = "HALL_BASIC_I_LIFT"
     _where  = "hallway"
     _tags   = 1
 
+    -- FIXME: this is doom stuff, need Hexen stuff
     lift = "SUPPORT3"
     top  = { STEP_F1=50, STEP_F2=50 }
 
