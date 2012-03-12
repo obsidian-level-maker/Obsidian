@@ -331,6 +331,8 @@ PREFAB.EXIT_CLOSET =
     door_special = 1
     door_tag = 0
 
+    key_ox = 0
+
     item1 = "none"
     item2 = "none"
     item3 = "?item2"
@@ -341,144 +343,143 @@ PREFAB.EXIT_CLOSET =
   brushes =
   {
     {
-      { x =  32, y = 192, mat = "STARBR2" }
-      { x =  64, y = 160, mat = "STARBR2" }
-      { x = 128, y = 160, mat = "STARBR2" }
-      { x = 160, y = 192, mat = "?wall" }
-      { t = 0, mat = "FLOOR0_2" }
-    }
-    {
-      { x =  32, y = 192, mat = "STARBR2" }
-      { x =  64, y = 160, mat = "STARBR2" }
-      { x = 128, y = 160, mat = "STARBR2" }
-      { x = 160, y = 192, mat = "?wall" }
-      { b = 128, mat = "FLOOR0_2" }
-    }
-
-    {
-      { x =  64, y = 112, mat = "STARBR2" }
-      { x = 128, y = 112, mat = "EXITDOOR" }
-      { x = 128, y = 128, mat = "DOORTRAK" }
-      { x = 128, y = 144, mat = "EXITDOOR" }
-      { x = 128, y = 160, mat = "STARBR2" }
-      { x =  64, y = 160, mat = "EXITDOOR" }
-      { x =  64, y = 144, mat = "DOORTRAK" }
-      { x =  64, y = 128, mat = "EXITDOOR" }
-      { t = 0, mat = "FLOOR0_2" }
-    }
-    {
-      { x =  64, y = 112, mat = "STARBR2" }
-      { x = 128, y = 112, mat = "EXITDOOR" }
-      { x = 128, y = 128, mat = "DOORTRAK" }
-      { x = 128, y = 144, mat = "EXITDOOR" }
-      { x = 128, y = 160, mat = "STARBR2" }
-      { x =  64, y = 160, mat = "EXITDOOR" }
-      { x =  64, y = 144, mat = "DOORTRAK" }
-      { x =  64, y = 128, mat = "EXITDOOR" }
-      { b = 72, mat = "FLOOR0_2" }
-    }
-
-    {
-      { x = 128, y = 112, mat = "STARBR2" }
-      { x = 192, y = 112, mat = "BLAKWAL1" }
-      { x = 192, y = 192, mat = "?wall" }
-      { x = 160, y = 192, mat = "STARBR2" }
-      { x = 128, y = 160, mat = "EXITDOOR" }
-      { x = 128, y = 144, mat = "DOORTRAK" }
-      { x = 128, y = 128, mat = "EXITDOOR" }
-    }
-
-    {
-      { x =   0, y = 112, mat = "STARBR2" }
-      { x =  64, y = 112, mat = "EXITDOOR" }
-      { x =  64, y = 128, mat = "DOORTRAK" }
-      { x =  64, y = 144, mat = "EXITDOOR" }
-      { x =  64, y = 160, mat = "STARBR2" }
       { x =  32, y = 192, mat = "?wall" }
-      { x =   0, y = 192, mat = "BLAKWAL1" }
+      { x =  64, y = 160, mat = "?wall" }
+      { x = 128, y = 160, mat = "?wall" }
+      { x = 160, y = 192, mat = "?wall" }
+      { t = 0, mat = "?floor" }
+    }
+    {
+      { x =  32, y = 192, mat = "?wall" }
+      { x =  64, y = 160, mat = "?wall" }
+      { x = 128, y = 160, mat = "?wall" }
+      { x = 160, y = 192, mat = "?wall" }
+      { b = 128, mat = "?floor" }
     }
 
     {
-      { x =  24, y =  24, mat = "STARBR2" }
-      { x =  40, y =   8, mat = "STARBR2" }
-      { x = 152, y =   8, mat = "STARBR2" }
-      { x = 168, y =  24, mat = "STARBR2" }
-      { x = 168, y =  96, mat = "STARBR2" }
-      { x = 152, y = 112, mat = "STARBR2" }
-      { x =  40, y = 112, mat = "STARBR2" }
-      { x =  24, y =  96, mat = "STARBR2" }
-      { t = 0, mat = "FLOOR0_2" }
+      { x =  64, y = 112, mat = "?inner" }
+      { x = 128, y = 112, mat = "?wall" }
+      { x = 128, y = 160, mat = "?wall" }
+      { x =  64, y = 160, mat = "?wall" }
+      { t = 0, mat = "?floor" }
     }
     {
-      { x =  24, y =  24, mat = "STARBR2" }
-      { x =  40, y =   8, mat = "STARBR2" }
-      { x = 152, y =   8, mat = "STARBR2" }
-      { x = 168, y =  24, mat = "STARBR2" }
-      { x = 168, y =  96, mat = "STARBR2" }
-      { x = 152, y = 112, mat = "STARBR2" }
-      { x =  40, y = 112, mat = "STARBR2" }
-      { x =  24, y =  96, mat = "STARBR2" }
-      { b = 128, mat = "TLITE6_5" }
+      { x =  64, y = 112, mat = "?inner" }
+      { x = 128, y = 112, mat = "?inner" }
+      { x = 128, y = 128, mat = "?inner" }
+      { x =  64, y = 128, mat = "?inner" }
+      { b = 72, mat = "?inner" }
     }
-
     {
-      { x = 152, y = 112, mat = "STARBR2" }
-      { x = 168, y =  96, mat = "STARBR2" }
-      { x = 192, y =  96, mat = "BLAKWAL1" }
-      { x = 192, y = 112, mat = "STARBR2" }
+      { x =  64, y = 128, mat = "?wall" }
+      { x = 128, y = 128, mat = "?wall" }
+      { x = 128, y = 160, mat = "?wall" }
+      { x =  64, y = 160, mat = "?wall" }
+      { b = 72, mat = "?wall" }
     }
 
     {
-      { x = 152, y =   0, mat = "BLAKWAL1" }
-      { x = 192, y =   0, mat = "BLAKWAL1" }
-      { x = 192, y =  24, mat = "STARBR2" }
-      { x = 168, y =  24, mat = "STARBR2" }
-      { x = 152, y =   8, mat = "STARBR2" }
+      { x = 128, y = 112, mat = "?inner" }
+      { x = 192, y = 112, mat = "?outer" }
+      { x = 192, y = 192, mat = "?wall" }
+      { x = 160, y = 192, mat = "?wall" }
+      { x = 128, y = 160, mat = "?key", x_offset="?key_ox", y_offset=0, peg=1 }
+      { x = 128, y = 144, mat = "?track", x_offset=0, y_offset=0, peg=1 }
+      { x = 128, y = 128, mat = "?key", x_offset="?key_ox", y_offset=0, peg=1 }
     }
 
     {
-      { x =   0, y =  24, mat = "STARBR2" }
-      { x =  24, y =  24, mat = "STARBR2" }
-      { x =  24, y =  96, mat = "STARBR2" }
-      { x =   0, y =  96, mat = "BLAKWAL1" }
+      { x =   0, y = 112, mat = "?inner" }
+      { x =  64, y = 112, mat = "?key", x_offset="?key_ox", y_offset=0, peg=1 }
+      { x =  64, y = 128, mat = "?track", x_offset=0, y_offset=0, peg=1 }
+      { x =  64, y = 144, mat = "?key", x_offset="?key_ox", y_offset=0, peg=1 }
+      { x =  64, y = 160, mat = "?wall" }
+      { x =  32, y = 192, mat = "?wall" }
+      { x =   0, y = 192, mat = "?outer" }
     }
 
     {
-      { x =   0, y =  96, mat = "STARBR2" }
-      { x =  24, y =  96, mat = "STARBR2" }
-      { x =  40, y = 112, mat = "STARBR2" }
-      { x =   0, y = 112, mat = "BLAKWAL1" }
+      { x =  24, y =  24, mat = "?inner" }
+      { x =  40, y =   8, mat = "?inner" }
+      { x = 152, y =   8, mat = "?inner" }
+      { x = 168, y =  24, mat = "?inner" }
+      { x = 168, y =  96, mat = "?inner" }
+      { x = 152, y = 112, mat = "?inner" }
+      { x =  40, y = 112, mat = "?inner" }
+      { x =  24, y =  96, mat = "?inner" }
+      { t = 0, mat = "?floor" }
+    }
+    {
+      { x =  24, y =  24, mat = "?inner" }
+      { x =  40, y =   8, mat = "?inner" }
+      { x = 152, y =   8, mat = "?inner" }
+      { x = 168, y =  24, mat = "?inner" }
+      { x = 168, y =  96, mat = "?inner" }
+      { x = 152, y = 112, mat = "?inner" }
+      { x =  40, y = 112, mat = "?inner" }
+      { x =  24, y =  96, mat = "?inner" }
+      { b = 128, mat = "?ceil" }
     }
 
     {
-      { x =   0, y =   0, mat = "BLAKWAL1" }
-      { x =  40, y =   0, mat = "STARBR2" }
-      { x =  40, y =   8, mat = "STARBR2" }
-      { x =  24, y =  24, mat = "STARBR2" }
-      { x =   0, y =  24, mat = "BLAKWAL1" }
+      { x = 152, y = 112, mat = "?inner" }
+      { x = 168, y =  96, mat = "?inner" }
+      { x = 192, y =  96, mat = "?outer" }
+      { x = 192, y = 112, mat = "?inner" }
     }
 
     {
-      { x =  40, y =   0, mat = "BLAKWAL1" }
-      { x = 152, y =   0, mat = "STARBR2" }
-      { x = 152, y =   8, mat = "STARBR2" }
-      { x =  40, y =   8, mat = "STARBR2" }
+      { x = 152, y =   0, mat = "?outer" }
+      { x = 192, y =   0, mat = "?outer" }
+      { x = 192, y =  24, mat = "?inner" }
+      { x = 168, y =  24, mat = "?inner" }
+      { x = 152, y =   8, mat = "?inner" }
     }
 
     {
-      { x = 168, y =  24, mat = "STARBR2" }
-      { x = 192, y =  24, mat = "BLAKWAL1" }
-      { x = 192, y =  96, mat = "STARBR2" }
-      { x = 168, y =  96, mat = "STARBR2" }
+      { x =   0, y =  24, mat = "?inner" }
+      { x =  24, y =  24, mat = "?inner" }
+      { x =  24, y =  96, mat = "?inner" }
+      { x =   0, y =  96, mat = "?outer" }
+    }
+
+    {
+      { x =   0, y =  96, mat = "?inner" }
+      { x =  24, y =  96, mat = "?inner" }
+      { x =  40, y = 112, mat = "?inner" }
+      { x =   0, y = 112, mat = "?outer" }
+    }
+
+    {
+      { x =   0, y =   0, mat = "?outer" }
+      { x =  40, y =   0, mat = "?inner" }
+      { x =  40, y =   8, mat = "?inner" }
+      { x =  24, y =  24, mat = "?inner" }
+      { x =   0, y =  24, mat = "?outer" }
+    }
+
+    {
+      { x =  40, y =   0, mat = "?outer" }
+      { x = 152, y =   0, mat = "?inner" }
+      { x = 152, y =   8, mat = "?inner" }
+      { x =  40, y =   8, mat = "?inner" }
+    }
+
+    {
+      { x = 168, y =  24, mat = "?inner" }
+      { x = 192, y =  24, mat = "?outer" }
+      { x = 192, y =  96, mat = "?inner" }
+      { x = 168, y =  96, mat = "?inner" }
     }
 
     -- the door itself
     {
-      { x =  64, y = 128, mat = "EXITDOOR", special="?door_special", tag="?door_tag", x_offset=0, y_offset=0, peg=1 }
-      { x = 128, y = 128, mat = "STARTAN3" }
-      { x = 128, y = 144, mat = "EXITDOOR", special="?door_special", tag="?door_tag", x_offset=0, y_offset=0, peg=1  }
-      { x =  64, y = 144, mat = "STARTAN3" }
-      { b = 16, delta_z=-16, mat = "FLAT23" }
+      { x =  64, y = 128, mat = "?door", special="?door_special", tag="?door_tag", x_offset=0, y_offset=0, peg=1 }
+      { x = 128, y = 128, mat = "?door" }
+      { x = 128, y = 144, mat = "?door", special="?door_special", tag="?door_tag", x_offset=0, y_offset=0, peg=1  }
+      { x =  64, y = 144, mat = "?door" }
+      { b = 16, delta_z=-16, mat = "?door" }
     }
 
     -- exit sign

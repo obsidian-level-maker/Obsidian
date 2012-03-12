@@ -1893,6 +1893,12 @@ DOOM.SKINS =
 
     door  = "EXITDOOR"
     track = "DOORTRAK"
+    key   = "EXITDOOR"
+    key_ox = 112
+
+    inner = "STARGR1"
+    ceil  = "TLITE6_5"
+
     exit = "EXITSIGN"
     exitside = "COMPSPAN"
 
