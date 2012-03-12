@@ -1901,9 +1901,14 @@ DOOM.SKINS =
 
     exit = "EXITSIGN"
     exitside = "COMPSPAN"
+    switch  = "SW1COMM"
+    sw_side = "SHAWN2"
 
     special = 11
     tag = 0
+
+    item1 = "medikit"
+    item2 = "shells"
   }
 
 

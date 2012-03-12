@@ -154,169 +154,6 @@ PREFAB.OUTDOOR_EXIT_SWITCH =  -- BORKED : NEEDS WALK BRUSHES
 }
 
 
-PREFAB.EXIT_CLOSET_old =  -- FIXME REMOVE
-{
-  fitted = "xy"
-
-  defaults =
-  {
-    key = "?wall"
-
-door_special = 1
-
-    item = "none"
-  }
-
-  brushes =
-  {
-    -- outer walls
-    {
-      { x = 0, y =   0, mat = "?outer" }
-      { x = 8, y =   0, mat = "?outer" }
-      { x = 8, y = 192, mat = "?outer" }
-      { x = 0, y = 192, mat = "?outer" }
-    }
-
-    {
-      { x = 184, y =   0, mat = "?outer" }
-      { x = 192, y =   0, mat = "?outer" }
-      { x = 192, y = 192, mat = "?outer" }
-      { x = 184, y = 192, mat = "?outer" }
-    }
-
-    {
-      { x =   8, y = 184, mat = "?outer" }
-      { x = 184, y = 184, mat = "?outer" }
-      { x = 184, y = 192, mat = "?outer" }
-      { x =   8, y = 192, mat = "?outer" }
-    }
-
-    {
-      { x =   8, y =  0, mat = "?outer" }
-      { x = 184, y =  0, mat = "?outer" }
-      { x = 184, y = 48, mat = "?outer" }
-      { x =   8, y = 48, mat = "?outer" }
-      { t = 0, mat = "?outer" }
-    }
-
-    {
-      { x =   8, y =   0, mat = "?outer" }
-      { x = 184, y =   0, mat = "?outer" }
-      { x = 184, y =  48, mat = "?outer" }
-      { x =   8, y =  48, mat = "?outer" }
-      { b = 128, mat = "?outer" }
-    }
-
-    -- inner walls
-    {
-      { x =  8, y =  80, mat = "?wall" }
-      { x = 16, y =  80, mat = "?wall" }
-      { x = 16, y = 184, mat = "?wall" }
-      { x =  8, y = 184, mat = "?wall" }
-    }
-
-    {
-      { x = 176, y =  80, mat = "?wall" }
-      { x = 184, y =  80, mat = "?wall" }
-      { x = 184, y = 184, mat = "?wall" }
-      { x = 176, y = 184, mat = "?wall" }
-    }
-
-    {
-      { x =   8, y =  48, mat = "?floor" }
-      { x = 184, y =  48, mat = "?floor" }
-      { x = 184, y = 184, mat = "?floor" }
-      { x =   8, y = 184, mat = "?floor" }
-      { t = 0, mat = "?floor" }
-    }
-
-    {
-      { x =   8, y =  48, mat = "?ceil" }
-      { x = 184, y =  48, mat = "?ceil" }
-      { x = 184, y = 184, mat = "?ceil" }
-      { x =   8, y = 184, mat = "?ceil" }
-      { b = 128, mat = "?ceil", light=0.75 }
-    }
-
-    -- the switch iteslf
---[[
-    {
-      { x =  16, y = 176, mat = "?wall" }
-      { x =  88, y = 176, mat = "?trim",  peg=1, x_offset=0, y_offset=0 }
-      { x =  96, y = 176, mat = "?switch", special="?special", peg=0, x_offset=0, y_offset=0 }
-      { x = 160, y = 176, mat = "?trim",  peg=1, x_offset=0, y_offset=0 }
-      { x = 168, y = 176, mat = "?wall" }
-      { x = 240, y = 176, mat = "?wall" }
-      { x = 240, y = 184, mat = "?wall" }
-      { x =  16, y = 184, mat = "?wall" }
-    }
---]]
-
-    -- door itself
-    {
-      { x = 128, y = 48, mat = "?door", special="?door_special", peg=1, x_offset=0, y_offset=0 }
-      { x = 128, y = 64, mat = "?door", special="?door_special", peg=1, x_offset=0, y_offset=0 }
-      { x =  64, y = 64, mat = "?door", special="?door_special", peg=1, x_offset=0, y_offset=0 }
-      { x =  64, y = 48, mat = "EXITDOOR", special="?door_special", peg=1, x_offset=0, y_offset=0 }
-      { b = 16, delta_z=-16, mat = "?door" }
-    }
-
-    {
-      { x = 128, y = 32, mat = "?wall" }
-      { x = 128, y = 80, mat = "?wall" }
-      { x =  64, y = 80, mat = "?wall" }
-      { x =  64, y = 32, mat = "?outer" }
-      { b = 72, mat = "?outer", light=0.75 }
-    }
-
-    -- side of door
-    {
-      { x =  0, y =  80, mat = "?outer" }
-      { x =  0, y =   1, mat = "?outer" }
-      { x = 32, y =   1, mat = "?outer" }
-      { x = 64, y =  32, mat = "?key", peg=1, x_offset=0, y_offset=0 }
-      { x = 64, y =  48, mat = "?track", peg=1, x_offset=0, y_offset=0 }
-      { x = 64, y =  64, mat = "?key", peg=1, x_offset=0, y_offset=0 }
-      { x = 64, y =  80, mat = "?wall" }
-    }
-
-    {
-      { x = 192, y =  80, mat = "?wall" }
-      { x = 128, y =  80, mat = "?key", peg=1, x_offset=0, y_offset=0 }
-      { x = 128, y =  64, mat = "?track", peg=1, x_offset=0, y_offset=0 }
-      { x = 128, y =  48, mat = "?key", peg=1, x_offset=0, y_offset=0 }
-      { x = 128, y =  32, mat = "?outer" }
-      { x = 160, y =   1, mat = "?outer" }
-      { x = 192, y =   1, mat = "?outer" }
-    }
-
---[[
-    -- exit signs
-    {
-      { x = 60, y =  -8, mat = "?exitside" }
-      { x = 68, y = -16, mat = "?exit", peg=1, x_offset=0, y_offset=0 }
-      { x = 96, y =   0, mat = "?exitside" }
-      { x = 88, y =   8, mat = "?exitside" }
-      { b = 112, mat = "?exitside" }
-    }
-
-    {
-      { x = 196, y =  -8, mat = "?exitside" }
-      { x = 168, y =   8, mat = "?exitside" }
-      { x = 160, y =   0, mat = "?exit", peg=1, x_offset=0, y_offset=0 }
-      { x = 188, y = -16, mat = "?exitside" }
-      { b = 112, mat = "?exitside" }
-    }
---]]
-  }
-
-  entities =
-  {
-    { ent = "?item", x = 96, y = 128, z = 8 }
-  }
-}
-
-
 PREFAB.EXIT_CLOSET =
 {
   fitted = "xy"
@@ -326,7 +163,8 @@ PREFAB.EXIT_CLOSET =
 
   defaults =
   {
-    key = "?wall"
+    key   = "?wall"
+    inner = "?wall"
 
     door_special = 1
     door_tag = 0
@@ -354,7 +192,7 @@ PREFAB.EXIT_CLOSET =
       { x =  64, y = 160, mat = "?wall" }
       { x = 128, y = 160, mat = "?wall" }
       { x = 160, y = 192, mat = "?wall" }
-      { b = 128, mat = "?floor" }
+      { b = 112, mat = "?floor" }
     }
 
     {
@@ -484,28 +322,28 @@ PREFAB.EXIT_CLOSET =
 
     -- exit sign
     {
-      { x =  80, y = 168, mat = "?exitside" }
-      { x = 112, y = 168, mat = "?exitside" }
-      { x = 112, y = 176, mat = "?exit", x_offset=0, y_offset=0, peg=1 }
-      { x =  80, y = 176, mat = "?exitside" }
-      { b = 112, mat = "CEIL5_1" }
+      { x =  80, y = 172, mat = "?exitside" }
+      { x = 112, y = 172, mat = "?exitside" }
+      { x = 112, y = 180, mat = "?exit", x_offset=0, y_offset=0, peg=1 }
+      { x =  80, y = 180, mat = "?exitside" }
+      { b = 96, mat = "?exitside" }
     }
 
     -- the switch
     {
-      { x =  64, y =  16, mat = "SHAWN2" }
-      { x = 128, y =  16, mat = "SHAWN2" }
-      { x = 128, y =  24, mat = "SW1COMM", special="?special", act="?act", tag="?tag", x_offset=0, y_offset=0, peg=1 }
-      { x =  64, y =  24, mat = "SHAWN2" }
-      { t = 64, mat = "FLAT23" }
+      { x =  64, y =  16, mat = "?sw_side" }
+      { x = 128, y =  16, mat = "?sw_side" }
+      { x = 128, y =  24, mat = "?switch", special="?special", act="?act", tag="?tag", x_offset=0, y_offset=0, peg=1 }
+      { x =  64, y =  24, mat = "?sw_side" }
+      { t = 64, mat = "?sw_side" }
     }
   }
 
   entities =
   {
-    { ent = "medikit", x =  96, y = 64, z = 0, angle = 90 }
-    { ent = "shells",  x =  48, y = 48, z = 0, angle = 90 }
-    { ent = "shells",  x = 144, y = 48, z = 0, angle = 90 }
+    { ent = "?item1", x =  96, y = 64, z = 0, angle = 90 }
+    { ent = "?item2", x =  48, y = 48, z = 0, angle = 90 }
+    { ent = "?item3", x = 144, y = 48, z = 0, angle = 90 }
   }
 }
 
