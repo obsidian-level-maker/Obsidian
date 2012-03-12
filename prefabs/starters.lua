@@ -257,3 +257,75 @@ PREFAB.START_CLOSET =
   }
 }
 
+
+PREFAB.START_SKY_CLOSET =
+{
+  fitted = "xy"
+
+  brushes =
+  {
+    {
+      { x =   0, y =  32, mat = "?wall" }
+      { x =  32, y =  32, mat = "?wall" }
+      { x =  32, y = 192, mat = "?wall" }
+      { x =   0, y = 192, mat = "?wall" }
+      { t = 64, mat = "?wall" }
+    }
+
+    {
+      { x =   0, y =   0, mat = "_SKY" }
+      { x = 192, y =   0, mat = "_SKY" }
+      { x = 192, y = 192, mat = "_SKY" }
+      { x =   0, y = 192, mat = "_SKY" }
+      { b = 256, mat = "_SKY" } --FIXME ?sky_h
+    }
+
+    {
+      { x =   0, y =   0, mat = "_SKY" }
+      { x = 192, y =   0, mat = "_SKY" }
+      { x = 192, y =  16, mat = "_SKY" }
+      { x =   0, y =  16, mat = "_SKY" }
+      { b = 80, mat = "_SKY" }
+    }
+
+    {
+      { x = 160, y =  32, mat = "ASHWALL" }
+      { x = 192, y =  32, mat = "ASHWALL" }
+      { x = 192, y = 192, mat = "ASHWALL" }
+      { x = 160, y = 192, mat = "ASHWALL" }
+      { t = 64, mat = "ASHWALL" }
+    }
+
+    {
+      { x =   0, y =   0, mat = "ASHWALL" }
+      { x = 192, y =   0, mat = "ASHWALL" }
+      { x = 192, y =  32, mat = "ASHWALL" }
+      { x =   0, y =  32, mat = "ASHWALL" }
+      { t = 64, mat = "ASHWALL" }
+    }
+
+    {
+      { x =  32, y = 176, mat = "BIGDOOR5", peg=1, x_offset=0, y_offset=0, special=23, act="", tag="?tag" }
+      { x = 160, y = 176, mat = "BIGDOOR5", peg=1, x_offset=0, y_offset=0,  }
+      { x = 160, y = 192, mat = "BIGDOOR5", peg=1, x_offset=0, y_offset=0,  }
+      { x =  32, y = 192, mat = "BIGDOOR5", peg=1, x_offset=0, y_offset=0,  }
+      { t = 80, mat = "CEIL5_2", tag = "?tag" }
+    }
+
+    {
+      { x =  32, y =  32, mat = "ASHWALL2" }
+      { x = 160, y =  32, mat = "ASHWALL2" }
+      { x = 160, y = 176, mat = "STARTAN3" }
+      { x =  32, y = 176, mat = "ASHWALL2" }
+      { t = 0, mat = "ASHWALL" }
+    }
+  }
+
+  entities =
+  {
+    { ent = "player1", x =  96, y = 64,  z = 0, angle = 90 }
+    { ent = "player3", x = 136, y = 64,  z = 0, angle = 90 }
+    { ent = "player2", x =  56, y = 64,  z = 0, angle = 90 }
+    { ent = "player4", x = 136, y = 104, z = 0, angle = 90 }
+  }
+}
