@@ -1896,8 +1896,15 @@ DOOM.SKINS =
     key   = "EXITDOOR"
     key_ox = 112
 
-    inner = "STARGR1"
-    ceil  = "TLITE6_5"
+    -- NOTE: this is very Techy!
+    inner = { STARGR2=30, STARBR2=30, STARTAN2=30,
+              METAL4=15,  PIPE2=15,  SLADWALL=15,
+              TEKWALL4=50 }
+
+    ceil  = { TLITE6_5=40, TLITE6_6=20, GRNLITE1=20,
+              CEIL4_3=10, SLIME15=10 }
+
+    floor2 = { FLAT4=20, FLOOR0_1=20, FLOOR0_3=20, FLOOR1_1=20 }
 
     exit = "EXITSIGN"
     exitside = "COMPSPAN"

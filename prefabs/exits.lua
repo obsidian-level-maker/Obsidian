@@ -196,18 +196,11 @@ PREFAB.EXIT_CLOSET =
     }
 
     {
-      { x =  64, y = 112, mat = "?inner" }
-      { x = 128, y = 112, mat = "?wall" }
+      { x =  64, y = 128, mat = "?inner" }
+      { x = 128, y = 128, mat = "?wall" }
       { x = 128, y = 160, mat = "?wall" }
       { x =  64, y = 160, mat = "?wall" }
       { t = 0, mat = "?floor" }
-    }
-    {
-      { x =  64, y = 112, mat = "?inner" }
-      { x = 128, y = 112, mat = "?inner" }
-      { x = 128, y = 128, mat = "?inner" }
-      { x =  64, y = 128, mat = "?inner" }
-      { b = 72, mat = "?inner" }
     }
     {
       { x =  64, y = 128, mat = "?wall" }
@@ -217,6 +210,22 @@ PREFAB.EXIT_CLOSET =
       { b = 72, mat = "?wall" }
     }
 
+    {
+      { x =  64, y = 112, mat = "?inner" }
+      { x = 128, y = 112, mat = "?wall" }
+      { x = 128, y = 128, mat = "?wall" }
+      { x =  64, y = 128, mat = "?wall" }
+      { t = 0, mat = "?floor2" }
+    }
+    {
+      { x =  64, y = 112, mat = "?inner" }
+      { x = 128, y = 112, mat = "?inner" }
+      { x = 128, y = 128, mat = "?inner" }
+      { x =  64, y = 128, mat = "?inner" }
+      { b = 72, mat = "?inner" }
+    }
+
+    -- sides of door
     {
       { x = 128, y = 112, mat = "?inner" }
       { x = 192, y = 112, mat = "?outer" }
@@ -246,7 +255,7 @@ PREFAB.EXIT_CLOSET =
       { x = 152, y = 112, mat = "?inner" }
       { x =  40, y = 112, mat = "?inner" }
       { x =  24, y =  96, mat = "?inner" }
-      { t = 0, mat = "?floor" }
+      { t = 0, mat = "?floor2" }
     }
     {
       { x =  24, y =  24, mat = "?inner" }
