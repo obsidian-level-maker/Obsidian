@@ -2528,6 +2528,37 @@ DOOM.SKINS =
   -- TODO: Hall_Thin_I_Lift
 
 
+  Hall_Cavey_I =
+  {
+    _prefab = "HALL_CAVEY_I"
+    _shape  = "I"
+  }
+
+  Hall_Cavey_C =
+  {
+    _prefab = "HALL_CAVEY_C"
+    _shape  = "C"
+  }
+
+  Hall_Cavey_T =
+  {
+    _prefab = "HALL_CAVEY_T"
+    _shape  = "T"
+  }
+
+  Hall_Cavey_P =
+  {
+    _prefab = "HALL_CAVEY_P"
+    _shape  = "P"
+  }
+
+  Hall_Cavey_I_Stair =
+  {
+    _prefab = "HALL_CAVEY_I_STAIR"
+    _shape  = "IS"
+  }
+
+
   ---| BIG JUNCTIONS |---
 
   Junc_Octo_I =
@@ -2787,7 +2818,7 @@ DOOM.THEME_DEFAULTS =
 
   fences = { Fence1 = 50 }
 
-  hallway_groups = { basic = 50, thin = 20 }
+  hallway_groups = { basic = 50, thin = 20, cavey = 999 }
 
   big_junctions =
   {
@@ -2928,6 +2959,21 @@ DOOM.HALLWAY_GROUPS =
       Hall_Basic_I_Lift  = 2  -- TODO
     }
   }
+
+  cavey =
+  {
+    pieces =
+    {
+      Hall_Cavey_I = 50
+      Hall_Cavey_C = 50
+      Hall_Cavey_T = 50
+      Hall_Cavey_P = 50
+
+      Hall_Cavey_I_Stair = 20
+      Hall_Basic_I_Lift  = 2   -- TODO
+    }
+  }
+
 }
 
 

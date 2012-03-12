@@ -2555,3 +2555,671 @@ PREFAB.HALL_THIN_I_STAIR =
     }
   }
 }
+
+
+----------------------------------------------------------------
+
+
+PREFAB.HALL_CAVEY_I =
+{
+  fitted = "xy"
+
+  brushes =
+  {
+    {
+      { x =   0, y =  32, mat = "ASHWALL4" }
+      { x =  16, y =  48, mat = "ASHWALL4" }
+      { x =  40, y = 160, mat = "ASHWALL4" }
+      { x =  32, y = 192, mat = "BLAKWAL1" }
+      { x =   0, y = 192, mat = "BLAKWAL1" }
+    }
+
+    {
+      { x =  16, y =  48, mat = "ASHWALL4" }
+      { x = 144, y =  32, mat = "ASHWALL4" }
+      { x = 160, y =  48, mat = "ASHWALL4" }
+      { x = 128, y = 128, mat = "ASHWALL4" }
+      { x =  40, y = 160, mat = "ASHWALL4" }
+      { t = 0, mat = "RROCK04" }
+    }
+    {
+      { x =  16, y =  48, mat = "ASHWALL4" }
+      { x = 144, y =  32, mat = "ASHWALL4" }
+      { x = 160, y =  48, mat = "ASHWALL4" }
+      { x = 128, y = 128, mat = "ASHWALL4" }
+      { x =  40, y = 160, mat = "ASHWALL4" }
+      { b = 112, mat = "FLAT5_8" }
+    }
+
+    {
+      { x =  16, y =  48, mat = "ASHWALL4" }
+      { x =  32, y =   0, mat = "BLAKWAL1" }
+      { x = 160, y =   0, mat = "ASHWALL4" }
+      { x = 144, y =  32, mat = "ASHWALL4" }
+      { t = 0, mat = "RROCK04" }
+    }
+    {
+      { x =  16, y =  48, mat = "ASHWALL4" }
+      { x =  32, y =   0, mat = "BLAKWAL1" }
+      { x = 160, y =   0, mat = "ASHWALL4" }
+      { x = 144, y =  32, mat = "ASHWALL4" }
+      { b = 112, mat = "FLAT5_8" }
+    }
+
+    {
+      { x = 144, y =  32, mat = "ASHWALL4" }
+      { x = 160, y =   0, mat = "BLAKWAL1" }
+      { x = 192, y =   0, mat = "BLAKWAL1" }
+      { x = 192, y =  32, mat = "ASHWALL4" }
+      { x = 160, y =  48, mat = "ASHWALL4" }
+    }
+
+    {
+      { x = 128, y = 128, mat = "ASHWALL4" }
+      { x = 160, y =  48, mat = "ASHWALL4" }
+      { x = 192, y =  32, mat = "BLAKWAL1" }
+      { x = 192, y = 192, mat = "BLAKWAL1" }
+      { x = 160, y = 192, mat = "ASHWALL4" }
+    }
+
+    {
+      { x =   0, y =   0, mat = "BLAKWAL1" }
+      { x =  32, y =   0, mat = "ASHWALL4" }
+      { x =  16, y =  48, mat = "ASHWALL4" }
+      { x =   0, y =  32, mat = "BLAKWAL1" }
+    }
+
+    {
+      { x =  32, y = 192, mat = "ASHWALL4" }
+      { x =  40, y = 160, mat = "ASHWALL4" }
+      { x = 128, y = 128, mat = "ASHWALL4" }
+      { x = 160, y = 192, mat = "BLAKWAL1" }
+      { t = 0, mat = "RROCK04" }
+    }
+    {
+      { x =  32, y = 192, mat = "ASHWALL4" }
+      { x =  40, y = 160, mat = "ASHWALL4" }
+      { x = 128, y = 128, mat = "ASHWALL4" }
+      { x = 160, y = 192, mat = "BLAKWAL1" }
+      { b = 112, mat = "FLAT5_8" }
+    }
+  }
+}
+
+
+PREFAB.HALL_CAVEY_C =
+{
+  fitted = "xy"
+
+  brushes =
+  {
+    {
+      { x =   0, y = 160, mat = "ASHWALL4" }
+      { x =  64, y = 128, mat = "ASHWALL4" }
+      { x =  96, y = 160, mat = "STARTAN3" }
+      { x =  96, y = 192, mat = "BLAKWAL1" }
+      { x =   0, y = 192, mat = "BLAKWAL1" }
+    }
+
+    {
+      { x =  64, y = 128, mat = "STARTAN3" }
+      { x = 160, y = 112, mat = "ASHWALL4" }
+      { x = 160, y = 144, mat = "ASHWALL4" }
+      { x =  96, y = 160, mat = "ASHWALL4" }
+      { t = 0, mat = "RROCK04" }
+    }
+    {
+      { x =  64, y = 128, mat = "STARTAN3" }
+      { x = 160, y = 112, mat = "ASHWALL4" }
+      { x = 160, y = 144, mat = "ASHWALL4" }
+      { x =  96, y = 160, mat = "ASHWALL4" }
+      { b = 112, mat = "FLAT5_8" }
+    }
+
+    {
+      { x = 160, y = 112, mat = "ASHWALL4" }
+      { x = 184, y =  64, mat = "ASHWALL4" }
+      { x = 192, y =  64, mat = "BLAKWAL1" }
+      { x = 192, y = 192, mat = "ASHWALL4" }
+      { x = 160, y = 144, mat = "ASHWALL4" }
+    }
+
+    {
+      { x =  32, y =   0, mat = "BLAKWAL1" }
+      { x = 160, y =   0, mat = "ASHWALL4" }
+      { x = 184, y =  64, mat = "ASHWALL4" }
+      { x =  48, y =  32, mat = "ASHWALL4" }
+      { t = 0, mat = "RROCK04" }
+    }
+    {
+      { x =  32, y =   0, mat = "BLAKWAL1" }
+      { x = 160, y =   0, mat = "ASHWALL4" }
+      { x = 184, y =  64, mat = "ASHWALL4" }
+      { x =  48, y =  32, mat = "ASHWALL4" }
+      { b = 112, mat = "FLAT5_8" }
+    }
+
+    {
+      { x =   0, y =   0, mat = "BLAKWAL1" }
+      { x =  32, y =   0, mat = "ASHWALL4" }
+      { x =  48, y =  32, mat = "ASHWALL4" }
+      { x =  32, y =  48, mat = "ASHWALL4" }
+      { x =   0, y =  32, mat = "BLAKWAL1" }
+    }
+
+    {
+      { x =   0, y =  32, mat = "ASHWALL4" }
+      { x =  32, y =  48, mat = "ASHWALL4" }
+      { x =  64, y = 128, mat = "ASHWALL4" }
+      { x =   0, y = 160, mat = "BLAKWAL1" }
+      { t = 0, mat = "RROCK04" }
+    }
+    {
+      { x =   0, y =  32, mat = "ASHWALL4" }
+      { x =  32, y =  48, mat = "ASHWALL4" }
+      { x =  64, y = 128, mat = "ASHWALL4" }
+      { x =   0, y = 160, mat = "BLAKWAL1" }
+      { b = 112, mat = "FLAT5_8" }
+    }
+
+    {
+      { x = 160, y =   0, mat = "BLAKWAL1" }
+      { x = 192, y =   0, mat = "BLAKWAL1" }
+      { x = 192, y =  64, mat = "ASHWALL4" }
+      { x = 184, y =  64, mat = "ASHWALL4" }
+    }
+
+    {
+      { x =  96, y = 160, mat = "ASHWALL4" }
+      { x = 160, y = 144, mat = "ASHWALL4" }
+      { x = 192, y = 192, mat = "BLAKWAL1" }
+      { x =  96, y = 192, mat = "STARTAN3" }
+    }
+
+    {
+      { x =  32, y =  48, mat = "ASHWALL4" }
+      { x =  48, y =  32, mat = "ASHWALL4" }
+      { x = 184, y =  64, mat = "ASHWALL4" }
+      { x = 160, y = 112, mat = "STARTAN3" }
+      { x =  64, y = 128, mat = "ASHWALL4" }
+      { t = 0, mat = "RROCK04" }
+    }
+    {
+      { x =  32, y =  48, mat = "ASHWALL4" }
+      { x =  48, y =  32, mat = "ASHWALL4" }
+      { x = 184, y =  64, mat = "ASHWALL4" }
+      { x = 160, y = 112, mat = "STARTAN3" }
+      { x =  64, y = 128, mat = "ASHWALL4" }
+      { b = 112, mat = "FLAT5_8" }
+    }
+  }
+}
+
+
+PREFAB.HALL_CAVEY_T =
+{
+  fitted = "xy"
+
+  brushes =
+  {
+    {
+      { x =   0, y = 160, mat = "ASHWALL4" }
+      { x =  48, y = 184, mat = "ASHWALL4" }
+      { x =  48, y = 192, mat = "BLAKWAL1" }
+      { x =   0, y = 192, mat = "BLAKWAL1" }
+    }
+
+    {
+      { x =   0, y =  32, mat = "ASHWALL4" }
+      { x =  32, y =   0, mat = "BLAKWAL1" }
+      { x = 160, y =   0, mat = "ASHWALL4" }
+      { x = 144, y =  32, mat = "STARTAN3" }
+      { t = 0, mat = "RROCK04" }
+    }
+    {
+      { x =   0, y =  32, mat = "ASHWALL4" }
+      { x =  32, y =   0, mat = "BLAKWAL1" }
+      { x = 160, y =   0, mat = "ASHWALL4" }
+      { x = 144, y =  32, mat = "STARTAN3" }
+      { b = 112, mat = "FLAT5_8" }
+    }
+
+    {
+      { x = 144, y =  32, mat = "ASHWALL4" }
+      { x = 160, y =   0, mat = "BLAKWAL1" }
+      { x = 192, y =   0, mat = "BLAKWAL1" }
+      { x = 192, y =  32, mat = "ASHWALL4" }
+      { x = 160, y =  48, mat = "ASHWALL4" }
+    }
+
+    {
+      { x = 160, y =  48, mat = "ASHWALL4" }
+      { x = 192, y =  32, mat = "BLAKWAL1" }
+      { x = 192, y = 160, mat = "ASHWALL4" }
+      { x = 160, y = 144, mat = "ASHWALL4" }
+      { t = 0, mat = "RROCK04" }
+    }
+    {
+      { x = 160, y =  48, mat = "ASHWALL4" }
+      { x = 192, y =  32, mat = "BLAKWAL1" }
+      { x = 192, y = 160, mat = "ASHWALL4" }
+      { x = 160, y = 144, mat = "ASHWALL4" }
+      { b = 112, mat = "FLAT5_8" }
+    }
+
+    {
+      { x =   0, y =   0, mat = "BLAKWAL1" }
+      { x =  32, y =   0, mat = "ASHWALL4" }
+      { x =   0, y =  32, mat = "BLAKWAL1" }
+    }
+
+    {
+      { x =   0, y =  32, mat = "STARTAN3" }
+      { x = 144, y =  32, mat = "ASHWALL4" }
+      { x = 160, y =  48, mat = "ASHWALL4" }
+      { x = 160, y = 144, mat = "ASHWALL4" }
+      { x =  48, y = 184, mat = "ASHWALL4" }
+      { x =   0, y = 160, mat = "BLAKWAL1" }
+      { t = 0, mat = "RROCK04" }
+    }
+    {
+      { x =   0, y =  32, mat = "STARTAN3" }
+      { x = 144, y =  32, mat = "ASHWALL4" }
+      { x = 160, y =  48, mat = "ASHWALL4" }
+      { x = 160, y = 144, mat = "ASHWALL4" }
+      { x =  48, y = 184, mat = "ASHWALL4" }
+      { x =   0, y = 160, mat = "BLAKWAL1" }
+      { b = 112, mat = "FLAT5_8" }
+    }
+
+    {
+      { x = 160, y = 144, mat = "ASHWALL4" }
+      { x = 192, y = 160, mat = "BLAKWAL1" }
+      { x = 192, y = 192, mat = "BLAKWAL1" }
+      { x = 160, y = 192, mat = "ASHWALL4" }
+    }
+
+    {
+      { x =  48, y = 184, mat = "ASHWALL4" }
+      { x = 160, y = 144, mat = "ASHWALL4" }
+      { x = 160, y = 192, mat = "BLAKWAL1" }
+      { x =  48, y = 192, mat = "ASHWALL4" }
+    }
+  }
+}
+
+
+PREFAB.HALL_CAVEY_P =
+{
+  fitted = "xy"
+
+  brushes =
+  {
+    {
+      { x =   0, y =   0, mat = "BLAKWAL1" }
+      { x =  32, y =   0, mat = "ASHWALL4" }
+      { x =  48, y =  32, mat = "ASHWALL4" }
+      { x =   0, y =  48, mat = "BLAKWAL1" }
+    }
+
+    {
+      { x = 160, y =   0, mat = "ASHWALL4" }
+      { x = 192, y =  32, mat = "BLAKWAL1" }
+      { x = 192, y = 160, mat = "ASHWALL4" }
+      { x = 160, y = 128, mat = "STARTAN3" }
+      { t = 0, mat = "RROCK04" }
+    }
+    {
+      { x = 160, y =   0, mat = "ASHWALL4" }
+      { x = 192, y =  32, mat = "BLAKWAL1" }
+      { x = 192, y = 160, mat = "ASHWALL4" }
+      { x = 160, y = 128, mat = "STARTAN3" }
+      { b = 112, mat = "FLAT5_8" }
+    }
+
+    {
+      { x = 136, y = 136, mat = "ASHWALL4" }
+      { x = 160, y = 128, mat = "ASHWALL4" }
+      { x = 192, y = 160, mat = "BLAKWAL1" }
+      { x = 192, y = 192, mat = "BLAKWAL1" }
+      { x = 160, y = 192, mat = "ASHWALL4" }
+      { x = 136, y = 168, mat = "ASHWALL4" }
+    }
+
+    {
+      { x =  24, y = 168, mat = "ASHWALL4" }
+      { x =  48, y =  32, mat = "STARTAN3" }
+      { x = 136, y =  32, mat = "STARTAN3" }
+      { x = 136, y = 136, mat = "ASHWALL4" }
+      { x = 136, y = 168, mat = "ASHWALL4" }
+      { t = 0, mat = "RROCK04" }
+    }
+    {
+      { x =  24, y = 168, mat = "ASHWALL4" }
+      { x =  48, y =  32, mat = "STARTAN3" }
+      { x = 136, y =  32, mat = "STARTAN3" }
+      { x = 136, y = 136, mat = "ASHWALL4" }
+      { x = 136, y = 168, mat = "ASHWALL4" }
+      { b = 112, mat = "FLAT5_8" }
+    }
+
+    {
+      { x = 160, y =   0, mat = "BLAKWAL1" }
+      { x = 192, y =   0, mat = "BLAKWAL1" }
+      { x = 192, y =  32, mat = "ASHWALL4" }
+    }
+
+    {
+      { x =  32, y =   0, mat = "BLAKWAL1" }
+      { x = 160, y =   0, mat = "STARTAN3" }
+      { x = 160, y =  32, mat = "STARTAN3" }
+      { x =  48, y =  32, mat = "ASHWALL4" }
+      { t = 0, mat = "RROCK04" }
+    }
+    {
+      { x =  32, y =   0, mat = "BLAKWAL1" }
+      { x = 160, y =   0, mat = "STARTAN3" }
+      { x = 160, y =  32, mat = "STARTAN3" }
+      { x =  48, y =  32, mat = "ASHWALL4" }
+      { b = 112, mat = "FLAT5_8" }
+    }
+
+    {
+      { x =   0, y = 160, mat = "ASHWALL4" }
+      { x =  24, y = 168, mat = "ASHWALL4" }
+      { x =  32, y = 192, mat = "BLAKWAL1" }
+      { x =   0, y = 192, mat = "BLAKWAL1" }
+    }
+
+    {
+      { x =   0, y =  48, mat = "ASHWALL4" }
+      { x =  48, y =  32, mat = "ASHWALL4" }
+      { x =  24, y = 168, mat = "ASHWALL4" }
+      { x =   0, y = 160, mat = "BLAKWAL1" }
+      { t = 0, mat = "RROCK04" }
+    }
+    {
+      { x =   0, y =  48, mat = "ASHWALL4" }
+      { x =  48, y =  32, mat = "ASHWALL4" }
+      { x =  24, y = 168, mat = "ASHWALL4" }
+      { x =   0, y = 160, mat = "BLAKWAL1" }
+      { b = 112, mat = "FLAT5_8" }
+    }
+
+    {
+      { x = 136, y =  32, mat = "STARTAN3" }
+      { x = 160, y =  32, mat = "STARTAN3" }
+      { x = 160, y = 128, mat = "ASHWALL4" }
+      { x = 136, y = 136, mat = "STARTAN3" }
+      { t = 0, mat = "RROCK04" }
+    }
+    {
+      { x = 136, y =  32, mat = "STARTAN3" }
+      { x = 160, y =  32, mat = "STARTAN3" }
+      { x = 160, y = 128, mat = "ASHWALL4" }
+      { x = 136, y = 136, mat = "STARTAN3" }
+      { b = 112, mat = "FLAT5_8" }
+    }
+
+    {
+      { x =  24, y = 168, mat = "ASHWALL4" }
+      { x = 136, y = 168, mat = "ASHWALL4" }
+      { x = 160, y = 192, mat = "BLAKWAL1" }
+      { x =  32, y = 192, mat = "ASHWALL4" }
+      { t = 0, mat = "RROCK04" }
+    }
+    {
+      { x =  24, y = 168, mat = "ASHWALL4" }
+      { x = 136, y = 168, mat = "ASHWALL4" }
+      { x = 160, y = 192, mat = "BLAKWAL1" }
+      { x =  32, y = 192, mat = "ASHWALL4" }
+      { b = 112, mat = "FLAT5_8" }
+    }
+  }
+}
+
+
+PREFAB.HALL_CAVEY_I_STAIR =
+{
+  fitted = "xy"
+
+  brushes =
+  {
+    {
+      { x =   0, y = 128, mat = "STARTAN3" }
+      { x =  16, y = 128, mat = "ASHWALL4" }
+      { x =  32, y = 152, mat = "ASHWALL4" }
+      { x =  32, y = 192, mat = "BLAKWAL1" }
+      { x =   0, y = 192, mat = "BLAKWAL1" }
+    }
+
+    {
+      { x =  24, y =  16, mat = "ZIMMER3" }
+      { x =  72, y =  32, mat = "STARTAN3" }
+      { x =  88, y =  48, mat = "ASHWALL7" }
+      { x =  40, y =  64, mat = "ASHWALL4" }
+      { t = 12, mat = "RROCK04" }
+    }
+    {
+      { x =  24, y =  16, mat = "ASHWALL" }
+      { x =  72, y =  32, mat = "ASHWALL" }
+      { x =  88, y =  48, mat = "ASHWALL" }
+      { x =  40, y =  64, mat = "ASHWALL" }
+      { b = 124, mat = "FLAT5_8" }
+    }
+
+    {
+      { x =   0, y =  32, mat = "ASHWALL4" }
+      { x =  24, y =  16, mat = "ASHWALL4" }
+      { x =  40, y =  64, mat = "ASHWALL4" }
+      { x =  32, y =  96, mat = "ASHWALL4" }
+      { x =  16, y = 128, mat = "STARTAN3" }
+      { x =   0, y = 128, mat = "BLAKWAL1" }
+    }
+
+    {
+      { x = 120, y =   0, mat = "BLAKWAL1" }
+      { x = 160, y =   0, mat = "ASHWALL4" }
+      { x = 168, y =  32, mat = "ASHWALL7" }
+      { x = 120, y =  16, mat = "STARTAN3" }
+      { t = 0, mat = "RROCK04" }
+    }
+    {
+      { x = 120, y =   0, mat = "BLAKWAL1" }
+      { x = 160, y =   0, mat = "ASHWALL4" }
+      { x = 168, y =  32, mat = "ASHWALL" }
+      { x = 120, y =  16, mat = "STARTAN3" }
+      { b = 112, mat = "FLAT5_8" }
+    }
+
+    {
+      { x = 160, y =   0, mat = "BLAKWAL1" }
+      { x = 192, y =   0, mat = "BLAKWAL1" }
+      { x = 192, y =  32, mat = "ASHWALL4" }
+      { x = 168, y =  32, mat = "ASHWALL4" }
+    }
+
+    {
+      { x = 144, y =  56, mat = "ASHWALL4" }
+      { x = 168, y =  32, mat = "ASHWALL4" }
+      { x = 192, y =  32, mat = "BLAKWAL1" }
+      { x = 192, y = 128, mat = "STARTAN3" }
+      { x = 176, y = 128, mat = "ASHWALL4" }
+      { x = 152, y = 104, mat = "ASHWALL4" }
+    }
+
+    {
+      { x =   0, y =   0, mat = "BLAKWAL1" }
+      { x =  32, y =   0, mat = "ASHWALL4" }
+      { x =  24, y =  16, mat = "ASHWALL4" }
+      { x =   0, y =  32, mat = "BLAKWAL1" }
+    }
+
+    {
+      { x = 144, y = 160, mat = "ASHWALL4" }
+      { x = 176, y = 128, mat = "STARTAN3" }
+      { x = 192, y = 128, mat = "BLAKWAL1" }
+      { x = 192, y = 192, mat = "BLAKWAL1" }
+      { x = 160, y = 192, mat = "ASHWALL4" }
+    }
+
+    {
+      { x =  64, y = 176, mat = "ZIMMER3" }
+      { x = 112, y = 152, mat = "ZIMMER3" }
+      { x = 144, y = 160, mat = "ASHWALL4" }
+      { x = 160, y = 192, mat = "BLAKWAL1" }
+      { x =  64, y = 192, mat = "STARTAN3" }
+      { t = 60, mat = "RROCK04" }
+    }
+    {
+      { x =  64, y = 176, mat = "ASHWALL" }
+      { x = 112, y = 152, mat = "ASHWALL" }
+      { x = 144, y = 160, mat = "ASHWALL4" }
+      { x = 160, y = 192, mat = "BLAKWAL1" }
+      { x =  64, y = 192, mat = "STARTAN3" }
+      { b = 172, mat = "FLAT5_8" }
+    }
+
+    {
+      { x =  24, y =  16, mat = "ASHWALL4" }
+      { x =  32, y =   0, mat = "BLAKWAL1" }
+      { x = 120, y =   0, mat = "STARTAN3" }
+      { x = 120, y =  16, mat = "ASHWALL7" }
+      { x =  72, y =  32, mat = "ASHWALL7" }
+      { t = 0, mat = "RROCK04" }
+    }
+    {
+      { x =  24, y =  16, mat = "ASHWALL4" }
+      { x =  32, y =   0, mat = "BLAKWAL1" }
+      { x = 120, y =   0, mat = "STARTAN3" }
+      { x = 120, y =  16, mat = "ASHWALL" }
+      { x =  72, y =  32, mat = "ASHWALL" }
+      { b = 112, mat = "FLAT5_8" }
+    }
+
+    {
+      { x =  80, y = 112, mat = "ZIMMER3" }
+      { x = 176, y = 128, mat = "ASHWALL4" }
+      { x = 144, y = 160, mat = "ASHWALL7" }
+      { x = 112, y = 152, mat = "STARTAN3" }
+      { t = 48, mat = "RROCK04" }
+    }
+    {
+      { x =  80, y = 112, mat = "ASHWALL" }
+      { x = 176, y = 128, mat = "ASHWALL" }
+      { x = 144, y = 160, mat = "ASHWALL" }
+      { x = 112, y = 152, mat = "ASHWALL" }
+      { b = 160, mat = "FLAT5_8" }
+    }
+
+    {
+      { x =  32, y = 152, mat = "ZIMMER3" }
+      { x =  64, y = 176, mat = "STARTAN3" }
+      { x =  64, y = 192, mat = "BLAKWAL1" }
+      { x =  32, y = 192, mat = "ASHWALL4" }
+      { t = 60, mat = "RROCK04" }
+    }
+    {
+      { x =  32, y = 152, mat = "ASHWALL" }
+      { x =  64, y = 176, mat = "STARTAN3" }
+      { x =  64, y = 192, mat = "BLAKWAL1" }
+      { x =  32, y = 192, mat = "ASHWALL4" }
+      { b = 172, mat = "FLAT5_8" }
+    }
+
+    {
+      { x =  16, y = 128, mat = "ZIMMER3" }
+      { x =  80, y = 112, mat = "STARTAN3" }
+      { x = 112, y = 152, mat = "ASHWALL7" }
+      { x =  64, y = 176, mat = "ASHWALL7" }
+      { x =  32, y = 152, mat = "ASHWALL4" }
+      { t = 48, mat = "RROCK04" }
+    }
+    {
+      { x =  16, y = 128, mat = "ASHWALL" }
+      { x =  80, y = 112, mat = "ASHWALL" }
+      { x = 112, y = 152, mat = "ASHWALL" }
+      { x =  64, y = 176, mat = "ASHWALL" }
+      { x =  32, y = 152, mat = "ASHWALL" }
+      { b = 156, mat = "FLAT5_8" }
+    }
+
+    {
+      { x =  80, y = 112, mat = "STARTAN3" }
+      { x = 104, y =  80, mat = "ZIMMER3" }
+      { x = 152, y = 104, mat = "ASHWALL4" }
+      { x = 176, y = 128, mat = "ASHWALL7" }
+      { t = 36, mat = "RROCK04" }
+    }
+    {
+      { x =  80, y = 112, mat = "ASHWALL" }
+      { x = 104, y =  80, mat = "ASHWALL" }
+      { x = 152, y = 104, mat = "ASHWALL" }
+      { x = 176, y = 128, mat = "ASHWALL" }
+      { b = 148, mat = "FLAT5_8" }
+    }
+
+    {
+      { x =  16, y = 128, mat = "ASHWALL4" }
+      { x =  32, y =  96, mat = "ZIMMER3" }
+      { x = 104, y =  80, mat = "STARTAN3" }
+      { x =  80, y = 112, mat = "ASHWALL7" }
+      { t = 36, mat = "RROCK04" }
+    }
+    {
+      { x =  16, y = 128, mat = "ASHWALL" }
+      { x =  32, y =  96, mat = "ASHWALL" }
+      { x = 104, y =  80, mat = "ASHWALL" }
+      { x =  80, y = 112, mat = "ASHWALL" }
+      { b = 156, mat = "FLAT5_8" }
+    }
+
+    {
+      { x =  88, y =  48, mat = "ZIMMER3" }
+      { x = 144, y =  56, mat = "ASHWALL4" }
+      { x = 152, y = 104, mat = "ASHWALL7" }
+      { x = 104, y =  80, mat = "STARTAN3" }
+      { t = 24, mat = "RROCK04" }
+    }
+    {
+      { x =  88, y =  48, mat = "ASHWALL" }
+      { x = 144, y =  56, mat = "ASHWALL" }
+      { x = 152, y = 104, mat = "ASHWALL" }
+      { x = 104, y =  80, mat = "ASHWALL" }
+      { b = 124, mat = "FLAT5_8" }
+    }
+
+    {
+      { x =  32, y =  96, mat = "ASHWALL4" }
+      { x =  40, y =  64, mat = "ZIMMER3" }
+      { x =  88, y =  48, mat = "STARTAN3" }
+      { x = 104, y =  80, mat = "ASHWALL7" }
+      { t = 24, mat = "RROCK04" }
+    }
+    {
+      { x =  32, y =  96, mat = "ASHWALL" }
+      { x =  40, y =  64, mat = "ASHWALL" }
+      { x =  88, y =  48, mat = "ASHWALL" }
+      { x = 104, y =  80, mat = "ASHWALL" }
+      { b = 136, mat = "FLAT5_8" }
+    }
+
+    {
+      { x =  72, y =  32, mat = "ZIMMER3" }
+      { x = 120, y =  16, mat = "ZIMMER3" }
+      { x = 168, y =  32, mat = "ASHWALL4" }
+      { x = 144, y =  56, mat = "ASHWALL7" }
+      { x =  88, y =  48, mat = "STARTAN3" }
+      { t = 12, mat = "RROCK04" }
+    }
+    {
+      { x =  72, y =  32, mat = "ASHWALL" }
+      { x = 120, y =  16, mat = "ASHWALL" }
+      { x = 168, y =  32, mat = "ASHWALL" }
+      { x = 144, y =  56, mat = "ASHWALL" }
+      { x =  88, y =  48, mat = "ASHWALL" }
+      { b = 124, mat = "FLAT5_8" }
+    }
+  }
+}
+
