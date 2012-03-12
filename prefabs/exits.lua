@@ -154,7 +154,7 @@ PREFAB.OUTDOOR_EXIT_SWITCH =  -- BORKED : NEEDS WALK BRUSHES
 }
 
 
-PREFAB.EXIT_CLOSET =
+PREFAB.EXIT_CLOSET_old =  -- FIXME REMOVE
 {
   fitted = "xy"
 
@@ -313,6 +313,198 @@ door_special = 1
   entities =
   {
     { ent = "?item", x = 96, y = 128, z = 8 }
+  }
+}
+
+
+PREFAB.EXIT_CLOSET =
+{
+  fitted = "xy"
+
+  x_ranges = { {16,1}, {160,0}, {16,1} }
+  y_ranges = { {32,0}, {48,1},  {112,0} }
+
+  defaults =
+  {
+    key = "?wall"
+
+    door_special = 1
+    door_tag = 0
+
+    item1 = "none"
+    item2 = "none"
+    item3 = "?item2"
+
+    act = ""
+  }
+
+  brushes =
+  {
+    {
+      { x =  32, y = 192, mat = "STARBR2" }
+      { x =  64, y = 160, mat = "STARBR2" }
+      { x = 128, y = 160, mat = "STARBR2" }
+      { x = 160, y = 192, mat = "?wall" }
+      { t = 0, mat = "FLOOR0_2" }
+    }
+    {
+      { x =  32, y = 192, mat = "STARBR2" }
+      { x =  64, y = 160, mat = "STARBR2" }
+      { x = 128, y = 160, mat = "STARBR2" }
+      { x = 160, y = 192, mat = "?wall" }
+      { b = 128, mat = "FLOOR0_2" }
+    }
+
+    {
+      { x =  64, y = 112, mat = "STARBR2" }
+      { x = 128, y = 112, mat = "EXITDOOR" }
+      { x = 128, y = 128, mat = "DOORTRAK" }
+      { x = 128, y = 144, mat = "EXITDOOR" }
+      { x = 128, y = 160, mat = "STARBR2" }
+      { x =  64, y = 160, mat = "EXITDOOR" }
+      { x =  64, y = 144, mat = "DOORTRAK" }
+      { x =  64, y = 128, mat = "EXITDOOR" }
+      { t = 0, mat = "FLOOR0_2" }
+    }
+    {
+      { x =  64, y = 112, mat = "STARBR2" }
+      { x = 128, y = 112, mat = "EXITDOOR" }
+      { x = 128, y = 128, mat = "DOORTRAK" }
+      { x = 128, y = 144, mat = "EXITDOOR" }
+      { x = 128, y = 160, mat = "STARBR2" }
+      { x =  64, y = 160, mat = "EXITDOOR" }
+      { x =  64, y = 144, mat = "DOORTRAK" }
+      { x =  64, y = 128, mat = "EXITDOOR" }
+      { b = 72, mat = "FLOOR0_2" }
+    }
+
+    {
+      { x = 128, y = 112, mat = "STARBR2" }
+      { x = 192, y = 112, mat = "BLAKWAL1" }
+      { x = 192, y = 192, mat = "?wall" }
+      { x = 160, y = 192, mat = "STARBR2" }
+      { x = 128, y = 160, mat = "EXITDOOR" }
+      { x = 128, y = 144, mat = "DOORTRAK" }
+      { x = 128, y = 128, mat = "EXITDOOR" }
+    }
+
+    {
+      { x =   0, y = 112, mat = "STARBR2" }
+      { x =  64, y = 112, mat = "EXITDOOR" }
+      { x =  64, y = 128, mat = "DOORTRAK" }
+      { x =  64, y = 144, mat = "EXITDOOR" }
+      { x =  64, y = 160, mat = "STARBR2" }
+      { x =  32, y = 192, mat = "?wall" }
+      { x =   0, y = 192, mat = "BLAKWAL1" }
+    }
+
+    {
+      { x =  24, y =  24, mat = "STARBR2" }
+      { x =  40, y =   8, mat = "STARBR2" }
+      { x = 152, y =   8, mat = "STARBR2" }
+      { x = 168, y =  24, mat = "STARBR2" }
+      { x = 168, y =  96, mat = "STARBR2" }
+      { x = 152, y = 112, mat = "STARBR2" }
+      { x =  40, y = 112, mat = "STARBR2" }
+      { x =  24, y =  96, mat = "STARBR2" }
+      { t = 0, mat = "FLOOR0_2" }
+    }
+    {
+      { x =  24, y =  24, mat = "STARBR2" }
+      { x =  40, y =   8, mat = "STARBR2" }
+      { x = 152, y =   8, mat = "STARBR2" }
+      { x = 168, y =  24, mat = "STARBR2" }
+      { x = 168, y =  96, mat = "STARBR2" }
+      { x = 152, y = 112, mat = "STARBR2" }
+      { x =  40, y = 112, mat = "STARBR2" }
+      { x =  24, y =  96, mat = "STARBR2" }
+      { b = 128, mat = "TLITE6_5" }
+    }
+
+    {
+      { x = 152, y = 112, mat = "STARBR2" }
+      { x = 168, y =  96, mat = "STARBR2" }
+      { x = 192, y =  96, mat = "BLAKWAL1" }
+      { x = 192, y = 112, mat = "STARBR2" }
+    }
+
+    {
+      { x = 152, y =   0, mat = "BLAKWAL1" }
+      { x = 192, y =   0, mat = "BLAKWAL1" }
+      { x = 192, y =  24, mat = "STARBR2" }
+      { x = 168, y =  24, mat = "STARBR2" }
+      { x = 152, y =   8, mat = "STARBR2" }
+    }
+
+    {
+      { x =   0, y =  24, mat = "STARBR2" }
+      { x =  24, y =  24, mat = "STARBR2" }
+      { x =  24, y =  96, mat = "STARBR2" }
+      { x =   0, y =  96, mat = "BLAKWAL1" }
+    }
+
+    {
+      { x =   0, y =  96, mat = "STARBR2" }
+      { x =  24, y =  96, mat = "STARBR2" }
+      { x =  40, y = 112, mat = "STARBR2" }
+      { x =   0, y = 112, mat = "BLAKWAL1" }
+    }
+
+    {
+      { x =   0, y =   0, mat = "BLAKWAL1" }
+      { x =  40, y =   0, mat = "STARBR2" }
+      { x =  40, y =   8, mat = "STARBR2" }
+      { x =  24, y =  24, mat = "STARBR2" }
+      { x =   0, y =  24, mat = "BLAKWAL1" }
+    }
+
+    {
+      { x =  40, y =   0, mat = "BLAKWAL1" }
+      { x = 152, y =   0, mat = "STARBR2" }
+      { x = 152, y =   8, mat = "STARBR2" }
+      { x =  40, y =   8, mat = "STARBR2" }
+    }
+
+    {
+      { x = 168, y =  24, mat = "STARBR2" }
+      { x = 192, y =  24, mat = "BLAKWAL1" }
+      { x = 192, y =  96, mat = "STARBR2" }
+      { x = 168, y =  96, mat = "STARBR2" }
+    }
+
+    -- the door itself
+    {
+      { x =  64, y = 128, mat = "EXITDOOR", special="?door_special", tag="?door_tag", x_offset=0, y_offset=0, peg=1 }
+      { x = 128, y = 128, mat = "STARTAN3" }
+      { x = 128, y = 144, mat = "EXITDOOR", special="?door_special", tag="?door_tag", x_offset=0, y_offset=0, peg=1  }
+      { x =  64, y = 144, mat = "STARTAN3" }
+      { b = 16, delta_z=-16, mat = "FLAT23" }
+    }
+
+    -- exit sign
+    {
+      { x =  80, y = 168, mat = "?exitside" }
+      { x = 112, y = 168, mat = "?exitside" }
+      { x = 112, y = 176, mat = "?exit", x_offset=0, y_offset=0, peg=1 }
+      { x =  80, y = 176, mat = "?exitside" }
+      { b = 112, mat = "CEIL5_1" }
+    }
+
+    -- the switch
+    {
+      { x =  64, y =  16, mat = "SHAWN2" }
+      { x = 128, y =  16, mat = "SHAWN2" }
+      { x = 128, y =  24, mat = "SW1COMM", special="?special", act="?act", tag="?tag", x_offset=0, y_offset=0, peg=1 }
+      { x =  64, y =  24, mat = "SHAWN2" }
+      { t = 64, mat = "FLAT23" }
+    }
+  }
+
+  entities =
+  {
+    { ent = "medikit", x =  96, y = 64, z = 0, angle = 90 }
+    { ent = "shells",  x =  48, y = 48, z = 0, angle = 90 }
+    { ent = "shells",  x = 144, y = 48, z = 0, angle = 90 }
   }
 }
 

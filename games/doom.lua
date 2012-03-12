@@ -1893,6 +1893,11 @@ DOOM.SKINS =
 
     door  = "EXITDOOR"
     track = "DOORTRAK"
+    exit = "EXITSIGN"
+    exitside = "COMPSPAN"
+
+    special = 11
+    tag = 0
   }
 
 

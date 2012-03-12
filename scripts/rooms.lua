@@ -639,8 +639,6 @@ function CLOSET_CLASS.build(CL)
     skin_name = "Start_Closet"
   else
     skin_name = "Exit_Closet"
-    -- FIXME !!!! REMOVE CRUD CRUD
-    CL.dir = 10 - CL.dir
   end
 
   local skin0 = CL.parent.skin
