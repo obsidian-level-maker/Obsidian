@@ -189,6 +189,34 @@ static const char *NameForThingType(int type)
 }
 
 
+static const char * flat_mapping[] =
+{
+  "F_SKY1", "_SKY",  "F_SKY", "_SKY",
+
+  // TODO: liquids
+
+  NULL, NULL
+};
+
+static const char * texture_mapping[] =
+{
+  // TODO: liquids
+
+  NULL, NULL
+};
+
+static const char * ApplyMapping(const char **tab, const char *orig)
+{
+  for (; *tab ; tab += 2)
+  {
+    if (strcmp(tab[0], orig) == 0)
+      return tab[1];
+  }
+
+  return orig;
+}
+
+
 //------------------------------------------------------------------------
 
 static int error_count = 0;
@@ -229,6 +257,9 @@ static void WriteBrush(lineloop_c& loop, char kind, int z = 0, const char *flat 
     return;
   }
 
+  if (flat)
+    flat = ApplyMapping(flat_mapping, flat);
+
   fprintf(output_fp, "    {\n");
 
   int first = loop.IndexWithLowestX();
@@ -261,6 +292,9 @@ static void WriteBrush(lineloop_c& loop, char kind, int z = 0, const char *flat 
 
     if (tex[0]  == '-') tex  = "wall0";
     if (tex2[0] == '-') tex2 = "wall0";
+
+    tex  = ApplyMapping(texture_mapping, tex);
+    tex2 = ApplyMapping(texture_mapping, tex2);
 
     int x = loop.GetX(k);
     int y = loop.GetY(k);
