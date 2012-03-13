@@ -946,6 +946,9 @@ function Hallway_add_doubles()
   local function try_add_double(H)
     if #H.sections != 1 then return end
 
+    -- never create for cycles, it complicates the height adjusting logic too much
+    if H.is_cycle then return end
+
     local SIDES = { 2,4,6,8 }
     rand.shuffle(SIDES)
 
