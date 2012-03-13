@@ -12,9 +12,16 @@ Current Work
 >>>  hallways field in room themes : allow use in caves/outdoor too
 
 
-Closets:
+-  honor '_liquid=1' in junction skins (ETC ETC)
 
-??  call them "niches" instead ??
+-  Exit closets: select them from 'THEME.exits'
+
+-  Start closets: select them from 'THEME.starts'
+
+-  EXIT_CLOSET prefab for HERETIC
+
+
+Closets:
 
 ?  look bad when used off outdoor room and between two sky_fences,
    make special ones just for this scenario ?
@@ -68,24 +75,11 @@ New Starting Logic
 
 Brusher Tool:
 
-DONE: don't add an XY vertex if in the middle of a straight (vert/horiz)
-      line and same texture (etc) on each side.
-
-DONE: the first vertex should be one with lowest X (primary criterion)
-      and then lowest Y (secondary criterion).
-
-DONE: a method to mark ceiling or floor as not needed
-      (allow creating stuff like pedestals which have no ceiling)
+!!  ensure brushes are convex (all angles <= 180)
 
 +  create a skin table too
 
--  ensure brushes are convex (all angles <= 180)
-
-DONE: entities : determine Z properly (find sector)
-
-DONE: entities have proper names (player1, medikit, etc...)
-
-DONE: svn:ignore
++  convert nukage textures --> _LIQUID
 
 
 >>>  stairs for new area code

@@ -53,6 +53,11 @@ Outdoor Idioms:
 +  gazebo in centre with a nice item (or purpose)
 
 
+Closets:
+-  support START_SKY_CLOSET, need to recognise when a closet lies
+   between two outdoor border prefabs.
+
+
 Theme System:
 +  IDEA: different monster palettes in each zone
 
