@@ -1885,7 +1885,7 @@ DOOM.SKINS =
     tag = 0
   }
 
-  Exit_Closet =
+  Exit_Closet_Tech =
   {
     _prefab = "EXIT_CLOSET"
     _where  = "chunk"
@@ -1896,7 +1896,6 @@ DOOM.SKINS =
     key   = "EXITDOOR"
     key_ox = 112
 
-    -- NOTE: this is very Techy!
     inner = { STARGR2=30, STARBR2=30, STARTAN2=30,
               METAL4=15,  PIPE2=15,  SLADWALL=15,
               TEKWALL4=50 }
@@ -1910,6 +1909,37 @@ DOOM.SKINS =
     exitside = "COMPSPAN"
     switch  = "SW1COMM"
     sw_side = "SHAWN2"
+
+    special = 11
+    tag = 0
+
+    item1 = "medikit"
+    item2 = "shells"
+  }
+
+  Exit_Closet =  --  _Hell
+  {
+    _prefab = "EXIT_CLOSET"
+    _where  = "chunk"
+    _size   = { 192,192, 384,384 }
+
+    door  = "EXITDOOR"
+    track = "DOORTRAK"
+    key   = "SUPPORT3"  -- SLADWALL
+    key_ox = 24
+
+    inner = { MARBGRAY=40, SP_HOT1=20, REDWALL=10,
+              SKINMET1=10, SLOPPY2=10 }
+
+    ceil = { FLAT5_6=20, LAVA1=5, FLAT10=10, FLOOR6_1=10 }
+
+    floor2  = { SLIME09=10, FLOOR7_2=20, FLAT5_2=10, FLAT5_8=10 }
+
+    exit = "EXITSIGN"
+    exitside = "COMPSPAN"
+    switch  = { SW1LION=10, SW1SATYR=30, SW1GARG=20 }
+    sw_side = "METAL"
+    sw_oy   = 56
 
     special = 11
     tag = 0

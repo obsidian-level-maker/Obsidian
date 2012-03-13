@@ -171,6 +171,9 @@ PREFAB.EXIT_CLOSET =
 
     key_ox = 0
 
+    sw_ox = 0
+    sw_oy = 0
+
     item1 = "none"
     item2 = "none"
     item3 = "?item2"
@@ -342,7 +345,7 @@ PREFAB.EXIT_CLOSET =
     {
       { x =  64, y =  16, mat = "?sw_side" }
       { x = 128, y =  16, mat = "?sw_side" }
-      { x = 128, y =  24, mat = "?switch", special="?special", act="?act", tag="?tag", x_offset=0, y_offset=0, peg=1 }
+      { x = 128, y =  24, mat = "?switch", special="?special", act="?act", tag="?tag", x_offset="?sw_ox", y_offset="?sw_oy", peg=1 }
       { x =  64, y =  24, mat = "?sw_side" }
       { t = 64, mat = "?sw_side" }
     }
