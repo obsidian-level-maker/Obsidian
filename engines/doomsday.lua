@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008,2010 Andrew Apted
+--  Copyright (C) 2008,2012 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -20,7 +20,7 @@
 
 OB_ENGINES["doomsday"] =
 {
-  label = "Doomsday 1.8.6"
+  label = "Doomsday"
 
   -- not yet BOOM compatible
 
