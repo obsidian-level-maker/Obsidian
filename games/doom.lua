@@ -1888,7 +1888,6 @@ DOOM.SKINS =
   Exit_Closet_Tech =
   {
     _prefab = "EXIT_CLOSET"
-    _where  = "chunk"
     _size   = { 192,192, 384,384 }
 
     door  = "EXITDOOR"
@@ -1917,15 +1916,14 @@ DOOM.SKINS =
     item2 = "shells"
   }
 
-  Exit_Closet =  --  _Hell
+  Exit_Closet_Hell =
   {
     _prefab = "EXIT_CLOSET"
-    _where  = "chunk"
     _size   = { 192,192, 384,384 }
 
     door  = "EXITDOOR"
     track = "DOORTRAK"
-    key   = "SUPPORT3"  -- SLADWALL
+    key   = "SUPPORT3"
     key_ox = 24
 
     inner = { MARBGRAY=40, SP_HOT1=20, REDWALL=10,
@@ -1940,6 +1938,38 @@ DOOM.SKINS =
     switch  = { SW1LION=10, SW1SATYR=30, SW1GARG=20 }
     sw_side = "METAL"
     sw_oy   = 56
+
+    special = 11
+    tag = 0
+
+    item1 = "medikit"
+    item2 = "shells"
+  }
+
+  Exit_Closet =  --  _Urban
+  {
+    _prefab = "EXIT_CLOSET"
+    _size   = { 192,192, 384,384 }
+
+    door  = "EXITDOOR"
+    track = "DOORTRAK"
+    key   = "SUPPORT3"
+    key_ox = 24
+
+    inner = { BIGBRIK3=20, WOOD9=10, STONE=10, WOODMET1=35,
+              CEMENT8=5, PANEL6=20 }
+    
+    ceil = { RROCK04=20, RROCK13=20, RROCK03=10, 
+             FLAT10=20, FLOOR6_2=10, FLAT4=20 }
+
+    floor2  = { FLAT5_2=30, CEIL5_1=15, CEIL4_2=15,
+                MFLR8_1=15, RROCK18=25, RROCK12=20 }
+
+    exit = "EXITSIGN"
+    exitside = "COMPSPAN"
+    switch  = { SW1BRNGN=30, SW1ROCK=10, SW1SLAD=20, SW1TEK=20 }
+    sw_side = "BROWNGRN"
+    sw_oy   = 60
 
     special = 11
     tag = 0

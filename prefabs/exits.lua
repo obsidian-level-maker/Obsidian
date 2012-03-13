@@ -199,7 +199,7 @@ PREFAB.EXIT_CLOSET =
     }
 
     {
-      { x =  64, y = 128, mat = "?inner" }
+      { x =  64, y = 128, mat = "?inner", y_offset=0 }
       { x = 128, y = 128, mat = "?wall" }
       { x = 128, y = 160, mat = "?wall" }
       { x =  64, y = 160, mat = "?wall" }
@@ -214,23 +214,23 @@ PREFAB.EXIT_CLOSET =
     }
 
     {
-      { x =  64, y = 112, mat = "?inner" }
+      { x =  64, y = 112, mat = "?inner", y_offset=0 }
       { x = 128, y = 112, mat = "?wall" }
       { x = 128, y = 128, mat = "?wall" }
       { x =  64, y = 128, mat = "?wall" }
       { t = 0, mat = "?floor2" }
     }
     {
-      { x =  64, y = 112, mat = "?inner" }
-      { x = 128, y = 112, mat = "?inner" }
-      { x = 128, y = 128, mat = "?inner" }
-      { x =  64, y = 128, mat = "?inner" }
-      { b = 72, mat = "?inner" }
+      { x =  64, y = 112, mat = "?inner", y_offset=0 }
+      { x = 128, y = 112, mat = "?inner", y_offset=0 }
+      { x = 128, y = 128, mat = "?inner", y_offset=0 }
+      { x =  64, y = 128, mat = "?inner", y_offset=0 }
+      { b = 72, mat = "?inner", y_offset=0 }
     }
 
     -- sides of door
     {
-      { x = 128, y = 112, mat = "?inner" }
+      { x = 128, y = 112, mat = "?inner", y_offset=0 }
       { x = 192, y = 112, mat = "?outer" }
       { x = 192, y = 192, mat = "?wall" }
       { x = 160, y = 192, mat = "?wall" }
@@ -240,7 +240,7 @@ PREFAB.EXIT_CLOSET =
     }
 
     {
-      { x =   0, y = 112, mat = "?inner" }
+      { x =   0, y = 112, mat = "?inner", y_offset=0 }
       { x =  64, y = 112, mat = "?key", x_offset="?key_ox", y_offset=0, peg=1 }
       { x =  64, y = 128, mat = "?track", x_offset=0, y_offset=0, peg=1 }
       { x =  64, y = 144, mat = "?key", x_offset="?key_ox", y_offset=0, peg=1 }
@@ -250,77 +250,77 @@ PREFAB.EXIT_CLOSET =
     }
 
     {
-      { x =  24, y =  24, mat = "?inner" }
-      { x =  40, y =   8, mat = "?inner" }
-      { x = 152, y =   8, mat = "?inner" }
-      { x = 168, y =  24, mat = "?inner" }
-      { x = 168, y =  96, mat = "?inner" }
-      { x = 152, y = 112, mat = "?inner" }
-      { x =  40, y = 112, mat = "?inner" }
-      { x =  24, y =  96, mat = "?inner" }
+      { x =  24, y =  24, mat = "?inner", y_offset=0 }
+      { x =  40, y =   8, mat = "?inner", y_offset=0 }
+      { x = 152, y =   8, mat = "?inner", y_offset=0 }
+      { x = 168, y =  24, mat = "?inner", y_offset=0 }
+      { x = 168, y =  96, mat = "?inner", y_offset=0 }
+      { x = 152, y = 112, mat = "?inner", y_offset=0 }
+      { x =  40, y = 112, mat = "?inner", y_offset=0 }
+      { x =  24, y =  96, mat = "?inner", y_offset=0 }
       { t = 0, mat = "?floor2" }
     }
     {
-      { x =  24, y =  24, mat = "?inner" }
-      { x =  40, y =   8, mat = "?inner" }
-      { x = 152, y =   8, mat = "?inner" }
-      { x = 168, y =  24, mat = "?inner" }
-      { x = 168, y =  96, mat = "?inner" }
-      { x = 152, y = 112, mat = "?inner" }
-      { x =  40, y = 112, mat = "?inner" }
-      { x =  24, y =  96, mat = "?inner" }
+      { x =  24, y =  24, mat = "?inner", y_offset=0 }
+      { x =  40, y =   8, mat = "?inner", y_offset=0 }
+      { x = 152, y =   8, mat = "?inner", y_offset=0 }
+      { x = 168, y =  24, mat = "?inner", y_offset=0 }
+      { x = 168, y =  96, mat = "?inner", y_offset=0 }
+      { x = 152, y = 112, mat = "?inner", y_offset=0 }
+      { x =  40, y = 112, mat = "?inner", y_offset=0 }
+      { x =  24, y =  96, mat = "?inner", y_offset=0 }
       { b = 128, mat = "?ceil" }
     }
 
     {
-      { x = 152, y = 112, mat = "?inner" }
-      { x = 168, y =  96, mat = "?inner" }
+      { x = 152, y = 112, mat = "?inner", y_offset=0 }
+      { x = 168, y =  96, mat = "?inner", y_offset=0 }
       { x = 192, y =  96, mat = "?outer" }
-      { x = 192, y = 112, mat = "?inner" }
+      { x = 192, y = 112, mat = "?inner", y_offset=0 }
     }
 
     {
       { x = 152, y =   0, mat = "?outer" }
       { x = 192, y =   0, mat = "?outer" }
-      { x = 192, y =  24, mat = "?inner" }
-      { x = 168, y =  24, mat = "?inner" }
-      { x = 152, y =   8, mat = "?inner" }
+      { x = 192, y =  24, mat = "?inner", y_offset=0 }
+      { x = 168, y =  24, mat = "?inner", y_offset=0 }
+      { x = 152, y =   8, mat = "?inner", y_offset=0 }
     }
 
     {
-      { x =   0, y =  24, mat = "?inner" }
-      { x =  24, y =  24, mat = "?inner" }
-      { x =  24, y =  96, mat = "?inner" }
+      { x =   0, y =  24, mat = "?inner", y_offset=0 }
+      { x =  24, y =  24, mat = "?inner", y_offset=0 }
+      { x =  24, y =  96, mat = "?inner", y_offset=0 }
       { x =   0, y =  96, mat = "?outer" }
     }
 
     {
-      { x =   0, y =  96, mat = "?inner" }
-      { x =  24, y =  96, mat = "?inner" }
-      { x =  40, y = 112, mat = "?inner" }
+      { x =   0, y =  96, mat = "?inner", y_offset=0 }
+      { x =  24, y =  96, mat = "?inner", y_offset=0 }
+      { x =  40, y = 112, mat = "?inner", y_offset=0 }
       { x =   0, y = 112, mat = "?outer" }
     }
 
     {
       { x =   0, y =   0, mat = "?outer" }
-      { x =  40, y =   0, mat = "?inner" }
-      { x =  40, y =   8, mat = "?inner" }
-      { x =  24, y =  24, mat = "?inner" }
+      { x =  40, y =   0, mat = "?inner", y_offset=0 }
+      { x =  40, y =   8, mat = "?inner", y_offset=0 }
+      { x =  24, y =  24, mat = "?inner", y_offset=0 }
       { x =   0, y =  24, mat = "?outer" }
     }
 
     {
       { x =  40, y =   0, mat = "?outer" }
-      { x = 152, y =   0, mat = "?inner" }
-      { x = 152, y =   8, mat = "?inner" }
-      { x =  40, y =   8, mat = "?inner" }
+      { x = 152, y =   0, mat = "?inner", y_offset=0 }
+      { x = 152, y =   8, mat = "?inner", y_offset=0 }
+      { x =  40, y =   8, mat = "?inner", y_offset=0 }
     }
 
     {
-      { x = 168, y =  24, mat = "?inner" }
+      { x = 168, y =  24, mat = "?inner", y_offset=0 }
       { x = 192, y =  24, mat = "?outer" }
-      { x = 192, y =  96, mat = "?inner" }
-      { x = 168, y =  96, mat = "?inner" }
+      { x = 192, y =  96, mat = "?inner", y_offset=0 }
+      { x = 168, y =  96, mat = "?inner", y_offset=0 }
     }
 
     -- the door itself
