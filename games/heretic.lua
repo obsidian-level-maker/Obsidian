@@ -581,6 +581,55 @@ HERETIC.SKINS =
   }
 
 
+  ---| HALLWAY PIECES |---
+
+  Hall_Basic_I =
+  {
+    _prefab = "HALL_BASIC_I"
+    _shape  = "I"
+  }
+
+  Hall_Basic_C =
+  {
+    _prefab = "HALL_BASIC_C"
+    _shape  = "C"
+  }
+
+  Hall_Basic_T =
+  {
+    _prefab = "HALL_BASIC_T"
+    _shape  = "T"
+  }
+
+  Hall_Basic_P =
+  {
+    _prefab = "HALL_BASIC_P"
+    _shape  = "P"
+  }
+
+  Hall_Basic_I_Stair =
+  {
+    _prefab = "HALL_BASIC_I_STAIR"
+    _shape  = "IS"
+
+--    step = "STEP3"
+  }
+
+  Hall_Basic_I_Lift =
+  {
+    _prefab = "HALL_BASIC_I_LIFT"
+    _shape  = "IL"
+    _tags   = 1
+
+    lift = "DOORSTON"
+    top  = "FLOOR08"
+
+-- DOES NOT WORK: raise_W1 = 22
+    lower_WR = 88  -- 120
+    lower_SR = 62  -- 123
+  }
+
+
   ---| TELEPORTERS |---
 
   Teleporter1 =
@@ -1614,6 +1663,8 @@ HERETIC.THEME_DEFAULTS =
 
   logos = { carve=50, pill=50 }
 
+  hallway_groups = { basic = 50 }
+
 
 --FIXME TEMP STUFF
   cave_walls = { BRWNRCKS=10, LAVA1=20, LOOSERCK=20,
@@ -1634,6 +1685,24 @@ HERETIC.THEME_DEFAULTS =
 HERETIC.NAME_THEMES =
 {
   -- TODO
+}
+
+
+HERETIC.HALLWAY_GROUPS =
+{
+  basic =
+  {
+    pieces =
+    {
+      Hall_Basic_I = 50
+      Hall_Basic_C = 50
+      Hall_Basic_T = 50
+      Hall_Basic_P = 50
+
+      Hall_Basic_I_Stair = 20
+      Hall_Basic_I_Lift  = 2
+    }
+  }
 }
 
 
@@ -2473,7 +2542,7 @@ end
 
 ------------------------------------------------------------
 
-UNFINISHED["heretic"] =
+OB_GAMES["heretic"] =
 {
   label = "Heretic"
 
