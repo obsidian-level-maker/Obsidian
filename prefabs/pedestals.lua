@@ -385,3 +385,346 @@ PREFAB.HEXEN_TRIPLE =
   }
 }
 
+
+PREFAB.ITEM_CLOSET =
+{
+  fitted = "xy"
+
+  defaults =
+  {
+  }
+
+  brushes =
+  {
+    {
+      { x =   0, y =  80, mat = "STARTAN3" }
+      { x =  16, y =  80, mat = "TEKLITE" }
+      { x =  16, y = 184, mat = "DOORSTOP" }
+      { x =  16, y = 192, mat = "SP_HOT1" }
+      { x =   0, y = 192, mat = "BLAKWAL1" }
+    }
+
+    {
+      { x = 128, y =   0, mat = "BLAKWAL1" }
+      { x = 192, y =   0, mat = "BLAKWAL1" }
+      { x = 192, y =  80, mat = "STARTAN3" }
+      { x = 176, y =  80, mat = "TEKLITE" }
+      { x = 128, y =  32, mat = "STARTAN3" }
+    }
+
+    {
+      { x =   0, y =   0, mat = "BLAKWAL1" }
+      { x =  64, y =   0, mat = "STARTAN3" }
+      { x =  64, y =  32, mat = "TEKLITE" }
+      { x =  16, y =  80, mat = "STARTAN3" }
+      { x =   0, y =  80, mat = "BLAKWAL1" }
+    }
+
+    {
+      { x = 176, y =  80, mat = "STARTAN3" }
+      { x = 192, y =  80, mat = "BLAKWAL1" }
+      { x = 192, y = 192, mat = "SP_HOT1" }
+      { x = 176, y = 192, mat = "DOORSTOP" }
+      { x = 176, y = 184, mat = "TEKLITE" }
+    }
+
+    {
+      { x =  16, y = 184, mat = "STARTAN3" }
+      { x =  48, y = 184, mat = "SP_HOT1" }
+      { x =  48, y = 192, mat = "BLAKWAL1" }
+      { x =  16, y = 192, mat = "SP_HOT1" }
+      { t = 56, mat = "FLAT5_7" }
+    }
+    {
+      { x =  16, y = 184, mat = "STARTAN3" }
+      { x =  48, y = 184, mat = "SP_HOT1" }
+      { x =  48, y = 192, mat = "BLAKWAL1" }
+      { x =  16, y = 192, mat = "SP_HOT1" }
+      { b = 192, mat = "CEIL1_2" }
+    }
+
+    {
+      { x =  16, y =  80, mat = "SP_HOT1" }
+      { x =  64, y =  32, mat = "SP_HOT1" }
+      { x = 128, y =  32, mat = "SP_HOT1" }
+      { x = 176, y =  80, mat = "SP_HOT1" }
+      { x = 176, y = 112, mat = "STARTAN3" }
+      { x = 144, y = 144, mat = "STARTAN3" }
+      { x = 104, y = 144, mat = "SP_HOT1" }
+      { x =  88, y = 144, mat = "STARTAN3" }
+      { x =  48, y = 144, mat = "STARTAN3" }
+      { x =  16, y = 112, mat = "SP_HOT1" }
+      { t = 56, mat = "FLAT5_7" }
+    }
+    {
+      { x =  16, y =  80, mat = "SP_HOT1" }
+      { x =  64, y =  32, mat = "SP_HOT1" }
+      { x = 128, y =  32, mat = "SP_HOT1" }
+      { x = 176, y =  80, mat = "SP_HOT1" }
+      { x = 176, y = 112, mat = "STARTAN3" }
+      { x = 144, y = 144, mat = "STARTAN3" }
+      { x =  48, y = 144, mat = "STARTAN3" }
+      { x =  16, y = 112, mat = "SP_HOT1" }
+      { b = 192, mat = "CEIL1_2" }
+    }
+
+    {
+      { x =  64, y =   0, mat = "BLAKWAL1" }
+      { x = 128, y =   0, mat = "STARTAN3" }
+      { x = 128, y =  32, mat = "TEKLITE" }
+      { x =  64, y =  32, mat = "STARTAN3" }
+    }
+
+    {
+      { x = 144, y = 184, mat = "STARTAN3" }
+      { x = 176, y = 184, mat = "SP_HOT1" }
+      { x = 176, y = 192, mat = "BLAKWAL1" }
+      { x = 144, y = 192, mat = "SP_HOT1" }
+      { t = 56, mat = "FLAT5_7" }
+    }
+    {
+      { x = 144, y = 184, mat = "STARTAN3" }
+      { x = 176, y = 184, mat = "SP_HOT1" }
+      { x = 176, y = 192, mat = "BLAKWAL1" }
+      { x = 144, y = 192, mat = "SP_HOT1" }
+      { b = 192, mat = "CEIL1_2" }
+    }
+
+    {
+      { x =  48, y = 184, mat = "STEP1" }
+      { x = 144, y = 184, mat = "STARTAN3" }
+      { x = 144, y = 192, mat = "BLAKWAL1" }
+      { x =  48, y = 192, mat = "STARTAN3" }
+      { t = 8, mat = "CEIL5_1" }
+    }
+    {
+      { x =  48, y = 184, mat = "STARTAN3" }
+      { x = 144, y = 184, mat = "STARTAN3" }
+      { x = 144, y = 192, mat = "BLAKWAL1" }
+      { x =  48, y = 192, mat = "STARTAN3" }
+      { b = 192, mat = "CEIL1_2" }
+    }
+
+    {
+      { x =  48, y = 184, mat = "STARTAN3" }
+      { x =  56, y = 176, mat = "STEP1" }
+      { x = 136, y = 176, mat = "STARTAN3" }
+      { x = 144, y = 184, mat = "STEPTOP" }
+      { t = 16, mat = "CEIL5_1" }
+    }
+    {
+      { x =  48, y = 184, mat = "STARTAN3" }
+      { x =  56, y = 176, mat = "STARTAN3" }
+      { x = 136, y = 176, mat = "STARTAN3" }
+      { x = 144, y = 184, mat = "STARTAN3" }
+      { b = 192, mat = "CEIL1_2" }
+    }
+
+    {
+      { x =  16, y = 168, mat = "STARTAN3" }
+      { x =  56, y = 168, mat = "SP_HOT1" }
+      { x =  56, y = 176, mat = "SP_HOT1" }
+      { x =  48, y = 184, mat = "STARTAN3" }
+      { x =  16, y = 184, mat = "SP_HOT1" }
+      { t = 56, mat = "FLAT5_7" }
+    }
+    {
+      { x =  16, y = 168, mat = "STARTAN3" }
+      { x =  56, y = 168, mat = "SP_HOT1" }
+      { x =  56, y = 176, mat = "SP_HOT1" }
+      { x =  48, y = 184, mat = "STARTAN3" }
+      { x =  16, y = 184, mat = "SP_HOT1" }
+      { b = 192, mat = "CEIL1_2" }
+    }
+
+    {
+      { x =  56, y = 168, mat = "STEP1" }
+      { x = 136, y = 168, mat = "STARTAN3" }
+      { x = 136, y = 176, mat = "STEPTOP" }
+      { x =  56, y = 176, mat = "STARTAN3" }
+      { t = 24, mat = "CEIL5_1" }
+    }
+    {
+      { x =  56, y = 168, mat = "STARTAN3" }
+      { x = 136, y = 168, mat = "STARTAN3" }
+      { x = 136, y = 176, mat = "STARTAN3" }
+      { x =  56, y = 176, mat = "STARTAN3" }
+      { b = 192, mat = "CEIL1_2" }
+    }
+
+    {
+      { x = 136, y = 168, mat = "STARTAN3" }
+      { x = 176, y = 168, mat = "SP_HOT1" }
+      { x = 176, y = 184, mat = "STARTAN3" }
+      { x = 144, y = 184, mat = "SP_HOT1" }
+      { x = 136, y = 176, mat = "SP_HOT1" }
+      { t = 56, mat = "FLAT5_7" }
+    }
+    {
+      { x = 136, y = 168, mat = "STARTAN3" }
+      { x = 176, y = 168, mat = "SP_HOT1" }
+      { x = 176, y = 184, mat = "STARTAN3" }
+      { x = 144, y = 184, mat = "SP_HOT1" }
+      { x = 136, y = 176, mat = "SP_HOT1" }
+      { b = 192, mat = "CEIL1_2" }
+    }
+
+    {
+      { x =  56, y = 168, mat = "STARTAN3" }
+      { x =  64, y = 160, mat = "STEP1" }
+      { x = 128, y = 160, mat = "STARTAN3" }
+      { x = 136, y = 168, mat = "STEPTOP" }
+      { t = 32, mat = "CEIL5_1" }
+    }
+    {
+      { x =  56, y = 168, mat = "STARTAN3" }
+      { x =  64, y = 160, mat = "STARTAN3" }
+      { x = 128, y = 160, mat = "STARTAN3" }
+      { x = 136, y = 168, mat = "STARTAN3" }
+      { b = 192, mat = "CEIL1_2" }
+    }
+
+    {
+      { x =  16, y = 112, mat = "STARTAN3" }
+      { x =  48, y = 144, mat = "STARTAN3" }
+      { x =  56, y = 152, mat = "STARTAN3" }
+      { x =  64, y = 160, mat = "SP_HOT1" }
+      { x =  56, y = 168, mat = "STARTAN3" }
+      { x =  16, y = 168, mat = "SP_HOT1" }
+      { t = 56, mat = "FLAT5_7" }
+    }
+    {
+      { x =  16, y = 112, mat = "STARTAN3" }
+      { x =  48, y = 144, mat = "STARTAN3" }
+      { x =  56, y = 152, mat = "STARTAN3" }
+      { x =  64, y = 160, mat = "SP_HOT1" }
+      { x =  56, y = 168, mat = "STARTAN3" }
+      { x =  16, y = 168, mat = "SP_HOT1" }
+      { b = 192, mat = "CEIL1_2" }
+    }
+
+    {
+      { x =  64, y = 160, mat = "STARTAN3" }
+      { x =  72, y = 152, mat = "STEP1" }
+      { x = 120, y = 152, mat = "STARTAN3" }
+      { x = 128, y = 160, mat = "STEPTOP" }
+      { t = 40, mat = "CEIL5_1" }
+    }
+    {
+      { x =  64, y = 160, mat = "STARTAN3" }
+      { x =  72, y = 152, mat = "STARTAN3" }
+      { x = 120, y = 152, mat = "STARTAN3" }
+      { x = 128, y = 160, mat = "STARTAN3" }
+      { b = 192, mat = "CEIL1_2" }
+    }
+
+    {
+      { x = 128, y = 160, mat = "STARTAN3" }
+      { x = 136, y = 152, mat = "STARTAN3" }
+      { x = 144, y = 144, mat = "STARTAN3" }
+      { x = 176, y = 112, mat = "SP_HOT1" }
+      { x = 176, y = 168, mat = "STARTAN3" }
+      { x = 136, y = 168, mat = "SP_HOT1" }
+      { t = 56, mat = "FLAT5_7" }
+    }
+    {
+      { x = 128, y = 160, mat = "STARTAN3" }
+      { x = 136, y = 152, mat = "STARTAN3" }
+      { x = 144, y = 144, mat = "STARTAN3" }
+      { x = 176, y = 112, mat = "SP_HOT1" }
+      { x = 176, y = 168, mat = "STARTAN3" }
+      { x = 136, y = 168, mat = "SP_HOT1" }
+      { b = 192, mat = "CEIL1_2" }
+    }
+
+    {
+      { x =  56, y = 152, mat = "STARTAN3" }
+      { x =  72, y = 152, mat = "SP_HOT1" }
+      { x =  64, y = 160, mat = "STARTAN3" }
+      { t = 56, mat = "FLAT5_7" }
+    }
+    {
+      { x =  56, y = 152, mat = "STARTAN3" }
+      { x =  72, y = 152, mat = "SP_HOT1" }
+      { x =  64, y = 160, mat = "STARTAN3" }
+      { b = 192, mat = "CEIL1_2" }
+    }
+
+    {
+      { x =  72, y = 152, mat = "STARTAN3" }
+      { x =  88, y = 144, mat = "STEP1" }
+      { x = 104, y = 144, mat = "STARTAN3" }
+      { x = 120, y = 152, mat = "STEPTOP" }
+      { t = 48, mat = "CEIL5_1" }
+    }
+    {
+      { x =  72, y = 152, mat = "STARTAN3" }
+      { x =  88, y = 144, mat = "STARTAN3" }
+      { x = 104, y = 144, mat = "STARTAN3" }
+      { x = 120, y = 152, mat = "STARTAN3" }
+      { b = 192, mat = "CEIL1_2" }
+    }
+
+    {
+      { x = 120, y = 152, mat = "STARTAN3" }
+      { x = 136, y = 152, mat = "STARTAN3" }
+      { x = 128, y = 160, mat = "SP_HOT1" }
+      { t = 56, mat = "FLAT5_7" }
+    }
+    {
+      { x = 120, y = 152, mat = "STARTAN3" }
+      { x = 136, y = 152, mat = "STARTAN3" }
+      { x = 128, y = 160, mat = "SP_HOT1" }
+      { b = 192, mat = "CEIL1_2" }
+    }
+
+    {
+      { x =  48, y = 144, mat = "STARTAN3" }
+      { x =  88, y = 144, mat = "SP_HOT1" }
+      { x =  72, y = 152, mat = "STARTAN3" }
+      { x =  56, y = 152, mat = "STARTAN3" }
+      { t = 56, mat = "FLAT5_7" }
+    }
+    {
+      { x =  48, y = 144, mat = "STARTAN3" }
+      { x =  88, y = 144, mat = "SP_HOT1" }
+      { x =  72, y = 152, mat = "STARTAN3" }
+      { x =  56, y = 152, mat = "STARTAN3" }
+      { b = 192, mat = "CEIL1_2" }
+    }
+
+    {
+      { x = 104, y = 144, mat = "STARTAN3" }
+      { x = 144, y = 144, mat = "STARTAN3" }
+      { x = 136, y = 152, mat = "STARTAN3" }
+      { x = 120, y = 152, mat = "SP_HOT1" }
+      { t = 56, mat = "FLAT5_7" }
+    }
+    {
+      { x = 104, y = 144, mat = "STARTAN3" }
+      { x = 144, y = 144, mat = "STARTAN3" }
+      { x = 136, y = 152, mat = "STARTAN3" }
+      { x = 120, y = 152, mat = "SP_HOT1" }
+      { b = 192, mat = "CEIL1_2" }
+    }
+
+    -- the pedestal
+    {
+      { x =  64, y =  80, mat = "GRAY1" }
+      { x =  80, y =  64, mat = "GRAY1" }
+      { x = 112, y =  64, mat = "GRAY1" }
+      { x = 128, y =  80, mat = "GRAY1" }
+      { x = 128, y = 112, mat = "GRAY1" }
+      { x = 112, y = 128, mat = "GRAY1" }
+      { x =  80, y = 128, mat = "GRAY1" }
+      { x =  64, y = 112, mat = "GRAY1" }
+      { t = 72, mat = "FLAT22" }
+    }
+  }
+
+  entities =
+  {
+    { ent = "?item", x = 96, y = 96, z = 72, angle = 90 }
+  }
+}
+

@@ -1951,7 +1951,7 @@ DOOM.SKINS =
     item2 = "shells"
   }
 
-  Exit_Closet =  --  _Urban
+  Exit_Closet_Urban =
   {
     _prefab = "EXIT_CLOSET"
     _size   = { 192,192, 384,384 }
@@ -1983,6 +1983,15 @@ DOOM.SKINS =
     item1 = "medikit"
     item2 = "shells"
   }
+
+
+Exit_Closet =  --  _Urban
+{
+  _prefab = "ITEM_CLOSET"
+  _size   = { 192,192, 384,384 }
+
+  item = "soul"
+}
 
 
   ----| STAIRS |----
