@@ -1037,7 +1037,7 @@ HACX.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _switches = { sw_blue=1 }
+    _switch = "sw_blue"
     _long = 192
     _deep = 32
 
@@ -1055,7 +1055,7 @@ HACX.SKINS =
   {
     _prefab = "SMALL_SWITCH"
     _where  = "chunk"
-    _switches = { sw_blue=1 }
+    _switch = "sw_blue"
 
     switch_h = 64
     switch = "SW1CMT"

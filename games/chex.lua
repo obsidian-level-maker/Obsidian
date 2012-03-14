@@ -1051,7 +1051,7 @@ CHEX.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _switches = { sw_alum=1 }
+    _switch = "sw_alum"
     _long = 192
     _deep = 32
 
@@ -1069,7 +1069,7 @@ CHEX.SKINS =
   {
     _prefab = "SMALL_SWITCH"
     _where  = "chunk"
-    _switches = { sw_alum=1 }
+    _switch = "sw_alum"
 
     switch_h = 64
     switch = "SW_METAL"

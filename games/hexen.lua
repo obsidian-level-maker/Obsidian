@@ -1515,7 +1515,7 @@ HEXEN.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _switches = { sw_steel=1 }
+    _switch = "sw_steel"
     _long = 192
     _deep = 32
 
@@ -1531,7 +1531,7 @@ HEXEN.SKINS =
   {
     _prefab = "SMALL_SWITCH"
     _where  = "chunk"
-    _switches = { sw_steel=1 }
+    _switch = "sw_steel"
 
     switch_h = 32
     switch = "SW51_OFF"

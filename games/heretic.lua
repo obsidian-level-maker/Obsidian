@@ -582,7 +582,7 @@ HERETIC.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _switches = { sw_metal=1 }
+    _switch = "sw_metal"
     _long = 192
     _deep = 32
 
@@ -598,7 +598,7 @@ HERETIC.SKINS =
   {
     _prefab = "SMALL_SWITCH"
     _where  = "chunk"
-    _switches = { sw_metal=1 }
+    _switch = "sw_metal"
 
     switch_h = 64
     switch = "SW1OFF"

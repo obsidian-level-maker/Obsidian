@@ -1624,7 +1624,7 @@ QUAKE2.SKINS =
   {
     _prefab = "QUAKE_DOOR"
     _where  = "edge"
-    _switches = { sw_foo=1 }
+    _switch = "sw_foo"
     _long = 192
     _deep = 32
 
@@ -1637,7 +1637,7 @@ QUAKE2.SKINS =
   {
     _prefab = "QUAKE_FLOOR_SWITCH"
     _where  = "chunk"
-    _switches = { sw_foo=1 }
+    _switch = "sw_foo"
 
     switch = "FLOORSW0"
     side   = "METAL1_1"
