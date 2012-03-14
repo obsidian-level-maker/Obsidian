@@ -624,9 +624,13 @@ HERETIC.SKINS =
     lift = "DOORSTON"
     top  = "FLOOR08"
 
--- DOES NOT WORK: raise_W1 = 22
-    lower_WR = 88  -- 120
-    lower_SR = 62  -- 123
+    lift_h = 128
+    lift_delta = -8
+    q_trigger = 0
+
+    raise_W1 = 0
+    lower_WR = 88
+    lower_SR = 62
   }
 
 

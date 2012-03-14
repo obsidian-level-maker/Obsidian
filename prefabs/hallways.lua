@@ -1330,6 +1330,10 @@ PREFAB.HALL_BASIC_I_LIFT =
 
   defaults =
   {
+    lift_h = 0
+    lift_delta = 8
+    q_trigger = 1
+
     speed = 32
     delay = 105
   }
@@ -1401,12 +1405,12 @@ PREFAB.HALL_BASIC_I_LIFT =
       { x = 160, y =  32, mat = "?lift", special="?lower_WR", act="WR", tag="?tag", arg1="?tag", arg2="?speed", arg3="?delay", peg=1, x_offset=0, y_offset=0 }
       { x = 160, y = 160, mat = "?lift", special="?lower_WR", act="WR", tag="?tag", arg1="?tag", arg2="?speed", arg3="?delay", peg=1, x_offset=0, y_offset=0 }
       { x =  32, y = 160, mat = "?lift", special="?lower_WR", act="WR", tag="?tag", arg1="?tag", arg2="?speed", arg3="?delay", peg=1, x_offset=0, y_offset=0 }
-      { t =   8, mat = "?top", tag = "?tag" }
+      { t = "?lift_h", delta_z = "?lift_delta", mat = "?top", tag = "?tag" }
     }
 
     -- trigger to go up
     {
-      { m = "rail" }
+      { m = "rail", only_if="?q_trigger" }
       { x =  40, y =  80, special="?raise_W1", act="W1", tag="?tag", arg1="?tag", arg2="?speed", arg3="?delay" }
       { x = 152, y =  80 }
       { x = 152, y = 112 }
