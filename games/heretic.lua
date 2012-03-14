@@ -427,6 +427,35 @@ HERETIC.SKINS =
     tag = 0
   }
 
+  Exit_Closet =
+  {
+    _prefab = "EXIT_CLOSET"
+    _size   = { 192,192, 384,384 }
+
+    door  = "DOOREXIT"
+    door_h = 96
+    track = "METL2"
+    key   = "METL2"
+
+    inner  = "METL2"
+    ceil   = "FLOOR19"
+    floor2 = "FLOOR19"
+
+    switch  = "SW2OFF"
+    sw_side = "METL2"
+    sw_oy   = 32
+
+    q_sign = 0
+    exit = "METL2"
+    exitside = "METL2"
+
+    special = 11
+    tag = 0
+
+    item2 = "h_vial"
+  }
+
+
 
   ----| KEY |----
 

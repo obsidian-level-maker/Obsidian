@@ -173,6 +173,7 @@ PREFAB.EXIT_CLOSET =
 
     door_special = 1
     door_tag = 0
+    door_h = 72
 
     key_ox = 0
 
@@ -217,7 +218,7 @@ PREFAB.EXIT_CLOSET =
       { x = 128, y = 128, mat = "?wall" }
       { x = 128, y = 160, mat = "?wall" }
       { x =  64, y = 160, mat = "?wall" }
-      { b = 72, mat = "?wall" }
+      { b = "?door_h", mat = "?wall" }
     }
 
     {
@@ -232,7 +233,7 @@ PREFAB.EXIT_CLOSET =
       { x = 128, y = 112, mat = "?inner", y_offset=0 }
       { x = 128, y = 128, mat = "?inner", y_offset=0 }
       { x =  64, y = 128, mat = "?inner", y_offset=0 }
-      { b = 72, mat = "?inner", y_offset=0 }
+      { b = "?door_h", mat = "?inner", y_offset=0 }
     }
 
     -- sides of door
