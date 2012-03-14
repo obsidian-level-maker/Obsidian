@@ -2248,7 +2248,7 @@ DOOM.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { kc_blue=1 }
+    _key    = "kc_blue"
     _long   = 192
     _deep   = 32
 
@@ -2269,7 +2269,7 @@ DOOM.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { kc_yellow=1 }
+    _key    = "kc_yellow"
     _long   = 192
     _deep   = 32
 
@@ -2290,7 +2290,7 @@ DOOM.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { kc_red=1 }
+    _key    = "kc_red"
     _long   = 192
     _deep   = 32
 
@@ -2312,7 +2312,7 @@ DOOM.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { ks_blue=1 }
+    _key    = "ks_blue"
     _long   = 192
     _deep   = 32
 
@@ -2335,7 +2335,7 @@ DOOM.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { ks_yellow=1 }
+    _key    = "ks_yellow"
     _long   = 192
     _deep   = 32
 
@@ -2358,7 +2358,7 @@ DOOM.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { ks_red=1 }
+    _key    = "ks_red"
     _long   = 192
     _deep   = 32
 

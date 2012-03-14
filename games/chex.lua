@@ -989,7 +989,7 @@ CHEX.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { k_blue=1 }
+    _key    = "k_blue"
     _long   = 192
     _deep   = 32
 
@@ -1008,7 +1008,7 @@ CHEX.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { k_yellow=1 }
+    _key    = "k_yellow"
     _long   = 192
     _deep   = 32
 
@@ -1028,7 +1028,7 @@ CHEX.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { k_red=1 }
+    _key    = "k_red"
     _long   = 192
     _deep   = 32
 

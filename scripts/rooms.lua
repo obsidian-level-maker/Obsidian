@@ -1706,8 +1706,12 @@ function Rooms_filter_skins(tab_name, tab, reqs)
 
     if skin._liquid and not LEVEL.liquid then return false end
 
-    if reqs.key    and (not skin._keys     or not skin._keys[reqs.key])        then return false end
-    if reqs.switch and (not skin._switches or not skin._switches[reqs.switch]) then return false end
+    if skin._key != reqs.key then return false end
+
+    if skin._switch != reqs.switch then
+      if not (reqs.switch and skin._switches) then return false end
+      if not skin._switches[reqs.switch] then return false end
+    end
 
     return true
   end

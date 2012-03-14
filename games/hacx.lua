@@ -975,7 +975,7 @@ HACX.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { kz_blue=1 }
+    _key    = "kz_blue"
     _long   = 192
     _deep   = 32
 
@@ -994,7 +994,7 @@ HACX.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { kz_yellow=1 }
+    _key    = "kz_yellow"
     _long   = 192
     _deep   = 32
 
@@ -1014,7 +1014,7 @@ HACX.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { kz_red=1 }
+    _key    = "kz_red"
     _long   = 192
     _deep   = 32
 

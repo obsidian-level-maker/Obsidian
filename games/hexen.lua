@@ -1303,7 +1303,7 @@ HEXEN.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { k_axe=1 }
+    _key    = "k_axe"
     _tags = 1
     _long = 192
     _deep = 32
@@ -1322,7 +1322,7 @@ HEXEN.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { k_cave=1 }
+    _key    = "k_cave"
     _tags = 1
     _long = 192
     _deep = 32
@@ -1341,7 +1341,7 @@ HEXEN.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { k_castle=1 }
+    _key    = "k_castle"
     _tags = 1
     _long = 192
     _deep = 32
@@ -1360,7 +1360,7 @@ HEXEN.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { k_dungeon=1 }
+    _key    = "k_dungeon"
     _tags = 1
     _long = 192
     _deep = 32
@@ -1379,7 +1379,7 @@ HEXEN.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { k_emerald=1 }
+    _key    = "k_emerald"
     _tags = 1
     _long = 192
     _deep = 32
@@ -1398,7 +1398,7 @@ HEXEN.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { k_fire=1 }
+    _key    = "k_fire"
     _tags = 1
     _long = 192
     _deep = 32
@@ -1417,7 +1417,7 @@ HEXEN.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { k_horn=1 }
+    _key    = "k_horn"
     _tags = 1
     _long = 192
     _deep = 32
@@ -1436,7 +1436,7 @@ HEXEN.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { k_rusty=1 }
+    _key    = "k_rusty"
     _tags = 1
     _long = 192
     _deep = 32
@@ -1455,7 +1455,7 @@ HEXEN.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { k_swamp=1 }
+    _key    = "k_swamp"
     _tags = 1
     _long = 192
     _deep = 32
@@ -1474,7 +1474,7 @@ HEXEN.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { k_silver=1 }
+    _key    = "k_silver"
     _tags = 1
     _long = 192
     _deep = 32
@@ -1493,7 +1493,7 @@ HEXEN.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { k_steel=1 }
+    _key    = "k_steel"
     _tags = 1
     _long = 192
     _deep = 32

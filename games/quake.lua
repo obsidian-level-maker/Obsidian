@@ -925,7 +925,7 @@ QUAKE.SKINS =
   {
     _prefab = "QUAKE_DOOR"
     _where  = "edge"
-    _keys = { k_silver=1 }
+    _key    = "k_silver"
     _long = 192
     _deep = 32
 
@@ -937,7 +937,7 @@ QUAKE.SKINS =
   {
     _prefab = "QUAKE_DOOR"
     _where  = "edge"
-    _keys = { k_gold=1 }
+    _key    = "k_gold"
     _long = 192
     _deep = 32
 
