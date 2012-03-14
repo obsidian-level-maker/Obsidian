@@ -30,14 +30,14 @@ PREFAB.EXIT_PILLAR =
 
   brushes =
   {
-    -- floor underneath
-    {
-      { x = -96, y = -96, mat = "?floor" }
-      { x =  96, y = -96, mat = "?floor" }
-      { x =  96, y =  96, mat = "?floor" }
-      { x = -96, y =  96, mat = "?floor" }
-      { t = 8, mat = "?floor" }
-    }
+---##    -- floor underneath
+---##    {
+---##      { x = -96, y = -96, mat = "?floor" }
+---##      { x =  96, y = -96, mat = "?floor" }
+---##      { x =  96, y =  96, mat = "?floor" }
+---##      { x = -96, y =  96, mat = "?floor" }
+---##      { t = 8, mat = "?floor" }
+---##    }
 
     -- pillar itself
     {
@@ -45,7 +45,7 @@ PREFAB.EXIT_PILLAR =
       { x =  32, y = -32, mat = "?switch", special="?special", act="?act", tag="?tag", arg1="?next_map", peg=1, x_offset=0, y_offset=0 }
       { x =  32, y =  32, mat = "?switch", special="?special", act="?act", tag="?tag", arg1="?next_map", peg=1, x_offset=0, y_offset=0 }
       { x = -32, y =  32, mat = "?switch", special="?special", act="?act", tag="?tag", arg1="?next_map", peg=1, x_offset=0, y_offset=0 }
-      { t = 136, mat = "?switch" }
+      { t = 128, mat = "?switch" }
     }
 
     -- exit signs
@@ -55,7 +55,7 @@ PREFAB.EXIT_PILLAR =
       { x = -32, y = 60, mat = "?exitside" }
       { x = -40, y = 68, mat = "?exit", peg=1, x_offset=0, y_offset=0 }
       { x = -68, y = 52, mat = "?exitside" }
-      { t = 24, light = 0.82, mat = "?exitside" }
+      { t = 16, light = 0.82, mat = "?exitside" }
     }
 
     {
@@ -64,7 +64,7 @@ PREFAB.EXIT_PILLAR =
       { x = 68, y = 52, mat = "?exit", peg=1, x_offset=0, y_offset=0 }
       { x = 40, y = 68, mat = "?exitside" }
       { x = 32, y = 60, mat = "?exitside" }
-      { t = 24, light = 0.82, mat = "?exitside" }
+      { t = 16, light = 0.82, mat = "?exitside" }
     }
 
     {
@@ -73,7 +73,7 @@ PREFAB.EXIT_PILLAR =
       { x = -68, y = -52, mat = "?exit", peg=1, x_offset=0, y_offset=0 }
       { x = -40, y = -68, mat = "?exitside" }
       { x = -32, y = -60, mat = "?exitside" }
-      { t = 24, light = 0.82, mat = "?exitside" }
+      { t = 16, light = 0.82, mat = "?exitside" }
     }
 
     {
@@ -82,7 +82,7 @@ PREFAB.EXIT_PILLAR =
       { x = 32, y = -60, mat = "?exitside" }
       { x = 40, y = -68, mat = "?exit", peg=1, x_offset=0, y_offset=0 }
       { x = 68, y = -52, mat = "?exitside" }
-      { t = 24, light = 0.82, mat = "?exitside" }
+      { t = 16, light = 0.82, mat = "?exitside" }
     }
   }
 }
