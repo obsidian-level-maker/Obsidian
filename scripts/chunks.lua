@@ -614,7 +614,7 @@ function CHUNK_CLASS.content_switch(C)
   skin2.target = string.format("switch%d", skin2.tag)
 
   local edge_fabs = Rooms_filter_skins("switch_fabs", THEME.switch_fabs,
-                    { where="chunk", key=lock.key, switch=lock.switch })
+                    { where="middle", key=lock.key, switch=lock.switch })
 
   local name  = rand.key_by_probs(edge_fabs)
   local skin1 = assert(GAME.SKINS[name])

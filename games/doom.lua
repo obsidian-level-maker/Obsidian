@@ -1816,7 +1816,7 @@ DOOM.SKINS =
   Start_Closet =
   {
     _prefab = "START_CLOSET"
-    _where  = "chunk"
+    _where  = "closet"
     _size   = { 192,192, 384,384 }
 
     step = "FLAT1"
@@ -1855,6 +1855,7 @@ DOOM.SKINS =
   Exit_tech_pillar =
   {
     _prefab = "EXIT_PILLAR",
+    _where  = "middle"
 
     switch = "SW1COMP"
     exit = "EXITSIGN"
@@ -1867,6 +1868,7 @@ DOOM.SKINS =
   Exit_demon_pillar =
   {
     _prefab = "EXIT_PILLAR",
+    _where  = "middle"
 
     switch = { SW1LION=60, SW1GARG=30 }
     exit = "EXITSIGN"
@@ -1879,6 +1881,7 @@ DOOM.SKINS =
   Exit_urban_pillar =
   {
     _prefab = "EXIT_PILLAR",
+    _where  = "middle"
 
     switch = "SW1WDMET"
     exit = "EXITSIGN"
@@ -1891,6 +1894,7 @@ DOOM.SKINS =
   Exit_Closet_Tech =
   {
     _prefab = "EXIT_CLOSET"
+    _where  = "closet"
     _size   = { 192,192, 384,384 }
 
     door  = "EXITDOOR"
@@ -1923,6 +1927,7 @@ DOOM.SKINS =
   Exit_Closet_Hell =
   {
     _prefab = "EXIT_CLOSET"
+    _where  = "closet"
     _size   = { 192,192, 384,384 }
 
     door  = "EXITDOOR"
@@ -1954,6 +1959,7 @@ DOOM.SKINS =
   Exit_Closet_Urban =
   {
     _prefab = "EXIT_CLOSET"
+    _where  = "closet"
     _size   = { 192,192, 384,384 }
 
     door  = "EXITDOOR"
@@ -1985,9 +1991,10 @@ DOOM.SKINS =
   }
 
 
-Exit_Closet =  --  _Urban
+Exit_Closet =  -- FIXME: Item_Closet1
 {
   _prefab = "ITEM_CLOSET"
+  _where  = "closet"
   _size   = { 192,192, 384,384 }
 
   item = "soul"
@@ -1999,14 +2006,14 @@ Exit_Closet =  --  _Urban
   Stair_Up1 =
   {
     _prefab = "STAIR_6"
-    _where  = "chunk"
+    _where  = "floor"
     _deltas = { 32,48,48,64,64,80 }
   }
 
   Stair_Down1 =
   {
     _prefab = "NICHE_STAIR_8"
-    _where  = "chunk"
+    _where  = "floor"
     _deltas = { -32,-48,-64,-64,-80,-96 }
   }
 
@@ -2014,7 +2021,7 @@ Exit_Closet =  --  _Urban
   Lift_Up1 =  -- Rusty
   {
     _prefab = "LIFT_UP"
-    _where  = "chunk"
+    _where  = "floor"
     _tags   = 1
     _deltas = { 96,128,160,192 }
 
@@ -2028,7 +2035,7 @@ Exit_Closet =  --  _Urban
   Lift_Down1 =  -- Shiny
   {
     _prefab = "LIFT_DOWN"
-    _where  = "chunk"
+    _where  = "floor"
     _tags   = 1
     _deltas = { -96,-128,-160,-192 }
 
@@ -2105,7 +2112,7 @@ Exit_Closet =  --  _Urban
   Pedestal_1 =
   {
     _prefab = "PEDESTAL"
-    _where  = "chunk"
+    _where  = "middle"
 
     top  = "CEIL1_2"
     side = "METAL"
@@ -2413,7 +2420,7 @@ Exit_Closet =  --  _Urban
   Switch_blue1 =
   {
     _prefab = "SMALL_SWITCH"
-    _where  = "chunk"
+    _where  = "middle"
     _switch = "sw_blue"
     _long   = 192
     _deep   = 48
@@ -2452,7 +2459,7 @@ Exit_Closet =  --  _Urban
   Switch_red1 =
   {
     _prefab = "SMALL_SWITCH"
-    _where  = "chunk"
+    _where  = "middle"
     _switch = "sw_red"
     _long   = 192
     _deep   = 48
@@ -2491,7 +2498,7 @@ Exit_Closet =  --  _Urban
   Switch_pink1 =
   {
     _prefab = "SMALL_SWITCH"
-    _where  = "chunk"
+    _where  = "middle"
     _switch = "sw_pink"
     _long   = 192
     _deep   = 48
@@ -2531,7 +2538,7 @@ Exit_Closet =  --  _Urban
   Switch_vine1 =
   {
     _prefab = "SMALL_SWITCH"
-    _where  = "chunk"
+    _where  = "middle"
     _switch = "sw_vine"
     _long   = 192
     _deep   = 48
@@ -2720,7 +2727,7 @@ Exit_Closet =  --  _Urban
   Teleporter1 =
   {
     _prefab = "TELEPORT_PAD"
-    _where  = "chunk"
+    _where  = "middle"
 
     top  = { GATE1=60, GATE2=60, GATE3=30 }
     side = "METAL"
