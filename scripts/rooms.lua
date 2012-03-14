@@ -1698,42 +1698,41 @@ end
 
 
 
-function Layout_possible_prefab_from_list(tab, where, req_key, req_sw)
-
+function Rooms_filter_skins(tab_name, tab, reqs)
   assert(tab)
-
+  
   local function match(skin)
-    -- TODO: more sophisticated matches (prefab.environment)
+    if reqs.where and skin._where != reqs.where then return false end
 
-    if skin._where != where then return false end
+    if skin._liquid and not LEVEL.liquid then return false end
 
-    if req_key and (not skin._keys     or not skin._keys[req_key])    then return false end
-    if req_sw  and (not skin._switches or not skin._switches[req_sw]) then return false end
+    if reqs.key    and (not skin._keys     or not skin._keys[reqs.key])        then return false end
+    if reqs.switch and (not skin._switches or not skin._switches[reqs.switch]) then return false end
 
     return true
   end
 
   local result = {}
 
-  for name,prob in pairs(tab) do
+  each name,prob in tab do
     local skin = GAME.SKINS[name]
 
     if not skin then
-      -- FIXME: WARNING or ERROR ??
-      error("no such skin: " .. tostring(name))
-    else
-      if match(skin) then
-        result[name] = prob
-      end
+      error("No such skin: " .. tostring(name) .. " in: " .. tab_name)
+    end
+
+    if match(skin) then
+      result[name] = prob
     end
   end
 
   if table.empty(result) then
-    error("No matching prefab for door (etc)")
+    error("No matching prefab for: " .. tab_name)
   end
 
   return result
 end
+
 
 
 function Layout_possible_fab_group(usage, list, req_key)
