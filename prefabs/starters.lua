@@ -329,3 +329,147 @@ PREFAB.START_SKY_CLOSET =
     { ent = "player4", x = 136, y = 104, z = 0, angle = 90 }
   }
 }
+
+
+PREFAB.START_FALLOFF =
+{
+  fitted = "xy"
+
+  defaults =
+  {
+    item = "stimpack"  -- FIXME: MOVE TO SKIN
+  }
+
+  brushes =
+  {
+    {
+      { x =   0, y =   0, mat = "BLAKWAL1" }
+      { x =   8, y =   0, mat = "STARTAN3" }
+      { x =   8, y =  48, mat = "MARBLE2" }
+      { x =   8, y = 192, mat = "BLAKWAL1" }
+      { x =   0, y = 192, mat = "BLAKWAL1" }
+    }
+
+    {
+      { x = 184, y =   0, mat = "BLAKWAL1" }
+      { x = 192, y =   0, mat = "BLAKWAL1" }
+      { x = 192, y = 192, mat = "BLAKWAL1" }
+      { x = 184, y = 192, mat = "MARBLE2" }
+      { x = 184, y =  48, mat = "STARTAN3" }
+    }
+
+    {
+      { x =   8, y = 168, mat = "STARTAN3" }
+      { x = 184, y = 168, mat = "STARTAN3" }
+      { x = 184, y = 192, mat = "BLAKWAL1" }
+      { x =   8, y = 192, mat = "STARTAN3" }
+      { t = 0, mat = "FLAT1" }
+    }
+    {
+      { x =   8, y = 168, mat = "MARBLE2" }
+      { x = 184, y = 168, mat = "STARTAN3" }
+      { x = 184, y = 192, mat = "BLAKWAL1" }
+      { x =   8, y = 192, mat = "STARTAN3" }
+      { b = 128, mat = "FLAT10" }
+    }
+
+    {
+      { x =   8, y =  48, mat = "STARTAN3" }
+      { x =  40, y =  16, mat = "STARTAN3" }
+      { x = 152, y =  16, mat = "STARTAN3" }
+      { x = 184, y =  48, mat = "STARTAN3" }
+      { x = 184, y = 120, mat = "MARBLE2" }
+      { x =   8, y = 120, mat = "STARTAN3" }
+      { t = 64, mat = "FLAT1" }
+    }
+    {
+      { x =   8, y =  48, mat = "STARTAN3" }
+      { x =  40, y =  16, mat = "STARTAN3" }
+      { x = 152, y =  16, mat = "STARTAN3" }
+      { x = 184, y =  48, mat = "STARTAN3" }
+      { x = 184, y = 120, mat = "MARBLE2" }
+      { x =   8, y = 120, mat = "STARTAN3" }
+      { b = 192, mat = "FLAT10" }
+    }
+
+    {
+      { x =   8, y =   0, mat = "BLAKWAL1" }
+      { x =  40, y =   0, mat = "STARTAN3" }
+      { x =  40, y =  16, mat = "MARBLE2" }
+      { x =   8, y =  48, mat = "STARTAN3" }
+    }
+
+    {
+      { x =  40, y =   0, mat = "BLAKWAL1" }
+      { x = 152, y =   0, mat = "STARTAN3" }
+      { x = 152, y =  16, mat = "MARBLE2" }
+      { x =  40, y =  16, mat = "STARTAN3" }
+    }
+
+    {
+      { x = 152, y =   0, mat = "BLAKWAL1" }
+      { x = 184, y =   0, mat = "STARTAN3" }
+      { x = 184, y =  48, mat = "MARBLE2" }
+      { x = 152, y =  16, mat = "STARTAN3" }
+    }
+
+    {
+      { x =   8, y = 120, mat = "STARTAN3" }
+      { x = 184, y = 120, mat = "STARTAN3" }
+      { x = 184, y = 136, mat = "STARTAN3" }
+      { x =   8, y = 136, mat = "STARTAN3" }
+      { t = 0, mat = "FLAT1" }
+    }
+    {
+      { x =   8, y = 120, mat = "MARBLE2" }
+      { x = 184, y = 120, mat = "STARTAN3" }
+      { x = 184, y = 136, mat = "STARTAN3" }
+      { x =   8, y = 136, mat = "STARTAN3" }
+      { b = 176, mat = "FLAT10" }
+    }
+
+    {
+      { x =   8, y = 152, mat = "STARTAN3" }
+      { x = 184, y = 152, mat = "STARTAN3" }
+      { x = 184, y = 168, mat = "STARTAN3" }
+      { x =   8, y = 168, mat = "STARTAN3" }
+      { t = 0, mat = "FLAT1" }
+    }
+    {
+      { x =   8, y = 152, mat = "MARBLE2" }
+      { x = 184, y = 152, mat = "STARTAN3" }
+      { x = 184, y = 168, mat = "STARTAN3" }
+      { x =   8, y = 168, mat = "STARTAN3" }
+      { b = 144, mat = "FLAT10" }
+    }
+
+    {
+      { x =   8, y = 136, mat = "STARTAN3" }
+      { x = 184, y = 136, mat = "STARTAN3" }
+      { x = 184, y = 152, mat = "STARTAN3" }
+      { x =   8, y = 152, mat = "STARTAN3" }
+      { t = 0, mat = "FLAT1" }
+    }
+    {
+      { x =   8, y = 136, mat = "MARBLE2" }
+      { x = 184, y = 136, mat = "STARTAN3" }
+      { x = 184, y = 152, mat = "STARTAN3" }
+      { x =   8, y = 152, mat = "STARTAN3" }
+      { b = 160, mat = "FLAT10" }
+    }
+  }
+
+  entities =
+  {
+    { ent = "player1", x = 120, y = 56, z = 64, angle = 90 }
+    { ent = "player2", x =  72, y = 56, z = 64, angle = 90 }
+    { ent = "player3", x =  32, y = 80, z = 64, angle = 90 }
+    { ent = "player4", x = 162, y = 80, z = 64, angle = 90 }
+
+    { ent = "?item", x =  40, y = 144, z = 0, angle = 90 }
+    { ent = "?item", x =  80, y = 144, z = 0, angle = 90 }
+    { ent = "?item", x = 120, y = 144, z = 0, angle = 90 }
+    { ent = "?item", x = 160, y = 144, z = 0, angle = 90 }
+  }
+}
+
