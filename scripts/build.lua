@@ -2037,6 +2037,19 @@ function Fabricate(name, T, skins)
 end
 
 
+function Fab_size_check(skin, long, deep)
+  if not skin._size then return true end
+
+  if skin._size[3] then
+    return (long > skin._size[1] - 1) and (deep > skin._size[2] - 1) and
+           (long < skin._size[3] + 1) and (deep < skin._size[4] + 1)
+  else
+    return (math.abs(long - skin._size[1]) < 1) and
+           (math.abs(deep - skin._size[2]) < 1)
+  end
+end
+
+
 ------------------------------------------------------------------------
 
 
