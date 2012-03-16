@@ -204,6 +204,9 @@ static const char * flat_mapping[] =
 
 static const char * texture_mapping[] =
 {
+  "BLAKWAL1", "?outer",
+  "BLAKWAL2", "?outer",
+
   "SFALL1", "_LIQUID",
   "SFALL2", "_LIQUID",
   "SFALL3", "_LIQUID",
@@ -212,7 +215,15 @@ static const char * texture_mapping[] =
   NULL, NULL
 };
 
-static const char * ApplyMapping(const char **tab, const char *orig)
+
+static std::map< std::string, int > used_floors;
+static std::map< std::string, int > used_ceils;
+static std::map< std::string, int > used_walls;
+
+
+static const char * ApplyMapping(const char *orig, const char **tab,
+                                 std::map< std::string, int > & used,
+                                 const char *prefix)
 {
   for (; *tab ; tab += 2)
   {
@@ -220,7 +231,24 @@ static const char * ApplyMapping(const char **tab, const char *orig)
       return tab[1];
   }
 
-  return orig;
+  if (false)  // no skin
+    return orig;
+
+
+  std::string orig2(orig);
+
+  if (used.find(orig2) == used.end())
+  {
+    used[orig2] = (int) used.size();
+  }
+
+  int val = (int) used[orig2];
+
+  static char buffer[100];
+
+  sprintf(buffer, "?%s%d", prefix, val);
+
+  return strdup(buffer);
 }
 
 
@@ -265,7 +293,12 @@ static void WriteBrush(lineloop_c& loop, char kind, int z = 0, const char *flat 
   }
 
   if (flat)
-    flat = ApplyMapping(flat_mapping, flat);
+  {
+    if (kind == 'b')
+      flat = ApplyMapping(flat, flat_mapping, used_ceils, "ccc");
+    else
+      flat = ApplyMapping(flat, flat_mapping, used_floors, "ff");
+  }
 
   fprintf(output_fp, "    {\n");
 
@@ -297,11 +330,11 @@ static void WriteBrush(lineloop_c& loop, char kind, int z = 0, const char *flat 
     loop.GetProps(k,  kind, &tex);
     loop.GetProps(k2, kind, &tex2);
 
-    if (tex[0]  == '-') tex  = "wall0";
-    if (tex2[0] == '-') tex2 = "wall0";
+    if (tex[0]  == '-') tex  = "?wall";
+    if (tex2[0] == '-') tex2 = "?wall";
 
-    tex  = ApplyMapping(texture_mapping, tex);
-    tex2 = ApplyMapping(texture_mapping, tex2);
+    tex  = ApplyMapping(tex,  texture_mapping, used_walls, "w");
+    tex2 = ApplyMapping(tex2, texture_mapping, used_walls, "w");
 
     int x = loop.GetX(k);
     int y = loop.GetY(k);
