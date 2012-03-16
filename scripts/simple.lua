@@ -348,6 +348,9 @@ function Simple_create_areas(R)
          C.foobage == "crossover"
       then
         table.insert(cover_chunks, C)
+
+        C.no_floor = true
+        C.no_ceil  = true
       end
     end
   end

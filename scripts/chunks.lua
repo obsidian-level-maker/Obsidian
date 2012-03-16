@@ -1159,7 +1159,10 @@ end --]]
 
   local f_matname = f_mat
 
-  if C.stair then
+  if C.no_floor then
+    -- do nothing (e.g. caves)
+
+  elseif C.stair then
     local skin = C.stair.skin
 
     local delta_h = C.stair.C2.floor_h - C.stair.C1.floor_h
@@ -1205,17 +1208,22 @@ end --]]
   c_mat = Mat_lookup(c_matname)
   c_tex = c_mat.f or c_mat.t
 
-  brush = Brush_new_quad(C.x1, C.y1, C.x2, C.y2)
+  if C.no_ceil then
+    -- do nothing (e.g. caves)
 
-  if c_medium == "sky" then
-    table.insert(brush, 1, { m="sky" })
+  else
+    brush = Brush_new_quad(C.x1, C.y1, C.x2, C.y2)
+
+    if c_medium == "sky" then
+      table.insert(brush, 1, { m="sky" })
+    end
+
+    Brush_set_tex(brush, c_mat.t)
+
+    table.insert(brush, { b=c_h, tex=c_tex })
+
+    raw_add_brush(brush)
   end
-
-  Brush_set_tex(brush, c_mat.t)
-
-  table.insert(brush, { b=c_h, tex=c_tex })
-
-  raw_add_brush(brush)
 
 
   if not C.ceil_h then C.ceil_h = c_h end  -- meh, crud
