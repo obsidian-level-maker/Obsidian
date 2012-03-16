@@ -1698,14 +1698,25 @@ end
 
 
 
-function Rooms_filter_skins(tab_name, tab, reqs)
+function Rooms_filter_skins(L, tab_name, tab, reqs)
   assert(tab)
   
   local function match(skin)
+    -- placement check
     if reqs.where and skin._where != reqs.where then return false end
 
+    -- building type checks
+    if L then
+      if skin._cave     and skin._cave     != Trans.to_boolean(L.kind == "cave")     then return false end
+      if skin._outdoor  and skin._outdoor  != Trans.to_boolean(L.kind == "outdoor")  then return false end
+      if skin._building and skin._building != Trans.to_boolean(L.kind == "building") then return false end
+      if skin._hallway  and skin._hallway  != Trans.to_boolean(L.kind == "hallway")  then return false end
+    end
+
+    -- liquid check
     if skin._liquid and not LEVEL.liquid then return false end
 
+    -- key and switch check
     if skin._key != reqs.key then return false end
 
     if skin._switch != reqs.switch then

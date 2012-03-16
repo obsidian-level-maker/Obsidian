@@ -613,10 +613,11 @@ function CHUNK_CLASS.content_switch(C)
   
   skin2.target = string.format("switch%d", skin2.tag)
 
-  local edge_fabs = Rooms_filter_skins("switch_fabs", THEME.switch_fabs,
-                    { where="middle", key=lock.key, switch=lock.switch })
+  local poss_skins = Rooms_filter_skins(C.room or C.hall, 
+                       "switch_fabs", THEME.switch_fabs,
+                       { where="middle", key=lock.key, switch=lock.switch })
 
-  local name  = rand.key_by_probs(edge_fabs)
+  local name  = rand.key_by_probs(poss_skins)
   local skin1 = assert(GAME.SKINS[name])
 
   local mx, my = C:mid_point()
@@ -1335,10 +1336,11 @@ end
       local L1 = C .room or C .hall
       assert(L2)
 
-      local edge_fabs = Rooms_filter_skins("locked_doors", THEME.locked_doors,
-                                           { where="edge", key=lock.key, switch=lock.switch })
+      local poss_skins = Rooms_filter_skins(C.room or C.hall,
+                            "locked_doors", THEME.locked_doors,
+                            { where="edge", key=lock.key, switch=lock.switch })
 
-      local name = rand.key_by_probs(edge_fabs)
+      local name = rand.key_by_probs(poss_skins)
 
       local skin  = assert(GAME.SKINS[name])
 
