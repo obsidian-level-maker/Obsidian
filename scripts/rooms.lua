@@ -1705,6 +1705,11 @@ function Rooms_filter_skins(L, tab_name, tab, reqs)
     -- placement check
     if reqs.where and skin._where != reqs.where then return false end
 
+    -- size check
+    if skin._size and reqs.long and not Fab_size_check(skin, reqs.long, reqs.deep) then
+      return false
+    end
+
     -- building type checks
     if L then
       if skin._cave     and skin._cave     != convert_bool(L.kind == "cave")     then return false end
@@ -1723,6 +1728,9 @@ function Rooms_filter_skins(L, tab_name, tab, reqs)
       if not (reqs.switch and skin._switches) then return false end
       if not skin._switches[reqs.switch] then return false end
     end
+
+    -- hallway stuff
+    if skin._shape != reqs.shape then return false end
 
     return true
   end

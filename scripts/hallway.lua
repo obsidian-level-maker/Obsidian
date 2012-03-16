@@ -314,8 +314,6 @@ function HALLWAY_CLASS.select_piece(H, C)
   if C.h_extra == "lift"  then shape = shape .. "L" end
 
   -- find all skins which match this mode (etc)
-  local tab = {}
-
   local source_tab = H.group.pieces
 
   if C.section.kind == "big_junc" then
@@ -323,26 +321,16 @@ function HALLWAY_CLASS.select_piece(H, C)
     assert(source_tab)
   end
 
-  each name,prob in source_tab do
-    local skin = GAME.SKINS[name]
+  local long, deep = geom.long_deep(C.x2 - C.x1, C.y2 - C.y1, C.h_dir)
 
-    if not skin then
-      error("No such hallway skin: " .. tostring(name))
-    end
+  local reqs =
+  {
+    shape = shape
+    long  = long
+    deep  = deep
+  }
 
-    if skin._shape != shape then continue end
-  
-    local long, deep = geom.long_deep(C.x2 - C.x1, C.y2 - C.y1, C.h_dir)
-
-    if skin._size and not Fab_size_check(skin, long, deep) then continue end
-
-    -- a match!
-    tab[name] = prob
-  end
-
-  if table.empty(tab) then
-    error("No matching hallway piece at " .. C:tostr())
-  end
+  local tab = Rooms_filter_skins(H, "hallway_group", source_tab, reqs)
 
   return rand.key_by_probs(tab)
 end
