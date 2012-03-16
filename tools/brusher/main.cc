@@ -191,16 +191,23 @@ static const char *NameForThingType(int type)
 
 static const char * flat_mapping[] =
 {
-  "F_SKY1", "_SKY",  "F_SKY", "_SKY",
+  "F_SKY1", "_SKY",
+  "F_SKY",  "_SKY",
 
-  // TODO: liquids
+  "NUKAGE1", "_LIQUID",
+  "NUKAGE2", "_LIQUID",
+  "NUKAGE3", "_LIQUID",
+  "NUKAGE4", "_LIQUID",
 
   NULL, NULL
 };
 
 static const char * texture_mapping[] =
 {
-  // TODO: liquids
+  "SFALL1", "_LIQUID",
+  "SFALL2", "_LIQUID",
+  "SFALL3", "_LIQUID",
+  "SFALL4", "_LIQUID",
 
   NULL, NULL
 };
