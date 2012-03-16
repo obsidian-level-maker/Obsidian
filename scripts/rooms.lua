@@ -1707,10 +1707,10 @@ function Rooms_filter_skins(L, tab_name, tab, reqs)
 
     -- building type checks
     if L then
-      if skin._cave     and skin._cave     != Trans.to_boolean(L.kind == "cave")     then return false end
-      if skin._outdoor  and skin._outdoor  != Trans.to_boolean(L.kind == "outdoor")  then return false end
-      if skin._building and skin._building != Trans.to_boolean(L.kind == "building") then return false end
-      if skin._hallway  and skin._hallway  != Trans.to_boolean(L.kind == "hallway")  then return false end
+      if skin._cave     and skin._cave     != convert_bool(L.kind == "cave")     then return false end
+      if skin._outdoor  and skin._outdoor  != convert_bool(L.kind == "outdoor")  then return false end
+      if skin._building and skin._building != convert_bool(L.kind == "building") then return false end
+      if skin._hallway  and skin._hallway  != convert_bool(L.kind == "hallway")  then return false end
     end
 
     -- liquid check

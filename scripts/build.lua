@@ -1115,15 +1115,6 @@ function Trans.is_subst(value)
 end
 
 
-function Trans.to_boolean(value)
-  if (value == "" or value == "0" or value == 0 or value == false) then
-    return 0
-  end
-
-  return 1
-end
-
-
 function Trans.substitute(SKIN, value)
   if not Trans.is_subst(value) then
     return value
@@ -1151,7 +1142,7 @@ function Trans.substitute(SKIN, value)
 
   -- apply the boolean negation
   if neg == '!' then
-    return 1 - Trans.to_boolean(value)
+    return 1 - convert_bool(value)
 
   -- apply the operator
   elseif op then
@@ -1355,11 +1346,11 @@ function Fab_apply_skins(fab, list)
       return false
     end
 
-    local bool_val = Trans.to_boolean(tab.only_if)
+    local result = (convert_bool(tab.only_if) == 0)
 
     tab.only_if = nil
 
-    return (bool_val == 0)
+    return result
   end
 
 

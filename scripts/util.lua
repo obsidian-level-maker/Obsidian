@@ -25,6 +25,14 @@ function int(val)
   return math.floor(val)
 end
 
+function convert_bool(value)
+  if value == nil or value == false or value == 0 or value == "" or value == "0" then
+    return 0
+  else
+    return 1
+  end
+end
+
 function sel(cond, yes_val, no_val)
   -- a poor man's ?: operator
   -- NOTE: both expressions are evaluated!
