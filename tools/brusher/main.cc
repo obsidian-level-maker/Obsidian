@@ -239,10 +239,12 @@ static const char * ApplyMapping(const char *orig, const char **tab,
 
   if (used.find(orig2) == used.end())
   {
-    used[orig2] = (int) used.size();
+    int val = 1 + (int) used.size();
+
+    used[orig2] = val;
   }
 
-  int val = (int) used[orig2];
+  int val = used[orig2];
 
   static char buffer[100];
 
@@ -413,6 +415,32 @@ static void ProcessLoop(linedef_c *ld, int side, bool& have_one)
 }
 
 
+static void WriteSkin()
+{
+  fprintf(output_fp, "\n\n");
+
+  fprintf(output_fp, "  XXX_Skin =\n");
+  fprintf(output_fp, "  {\n");
+  fprintf(output_fp, "    _prefab = \"XXX\"\n");
+  fprintf(output_fp, "\n");
+
+  std::map< std::string, int >::iterator MI;
+
+  for (MI = used_walls.begin() ; MI != used_walls.end() ; MI++)
+    fprintf(output_fp, "    w%d = \"%s\"\n", MI->second, MI->first.c_str());
+
+  fprintf(output_fp, "\n");
+
+  for (MI = used_floors.begin() ; MI != used_floors.end() ; MI++)
+    fprintf(output_fp, "    ff%d = \"%s\"\n", MI->second, MI->first.c_str());
+
+  for (MI = used_ceils.begin() ; MI != used_ceils.end() ; MI++)
+    fprintf(output_fp, "    ccc%d = \"%s\"\n", MI->second, MI->first.c_str());
+
+  fprintf(output_fp, "  }\n\n");
+}
+
+
 static bool AnalyseLevel()
 {
   printf("\nAnalysing level...\n");
@@ -450,6 +478,8 @@ static bool AnalyseLevel()
     ProcessThings();
 
   fprintf(output_fp, "}\n");
+
+  WriteSkin();
 
   if (error_count > 0)
     printf("\nTotal errors: %d\n", error_count);
