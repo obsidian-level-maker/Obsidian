@@ -1817,7 +1817,8 @@ DOOM.SKINS =
   {
     _prefab = "START_CLOSET"
     _where  = "closet"
-    _size   = { 192,192, 384,384 }
+    _long   = { 192,384 }
+    _deep   = { 192,384 }
 
     step = "FLAT1"
 
@@ -1895,7 +1896,8 @@ DOOM.SKINS =
   {
     _prefab = "EXIT_CLOSET"
     _where  = "closet"
-    _size   = { 192,192, 384,384 }
+    _long   = { 192,384 }
+    _deep   = { 192,384 }
 
     door  = "EXITDOOR"
     track = "DOORTRAK"
@@ -1928,7 +1930,8 @@ DOOM.SKINS =
   {
     _prefab = "EXIT_CLOSET"
     _where  = "closet"
-    _size   = { 192,192, 384,384 }
+    _long   = { 192,384 }
+    _deep   = { 192,384 }
 
     door  = "EXITDOOR"
     track = "DOORTRAK"
@@ -1960,7 +1963,8 @@ DOOM.SKINS =
   {
     _prefab = "EXIT_CLOSET"
     _where  = "closet"
-    _size   = { 192,192, 384,384 }
+    _long   = { 192,384 }
+    _deep   = { 192,384 }
 
     door  = "EXITDOOR"
     track = "DOORTRAK"
@@ -2112,7 +2116,8 @@ DOOM.SKINS =
   {
     _prefab = "ITEM_CLOSET"
     _where  = "closet"
-    _size   = { 192,192, 384,384 }
+    _long   = { 192,384 }
+    _deep   = { 192,384 }
 
     item = "soul"
   }
@@ -2121,7 +2126,8 @@ DOOM.SKINS =
   {
     _prefab = "SECRET_NICHE_1"
     _where  = "closet"
-    _size   = { 192,192, 384,384 }
+    _long   = { 192,384 }
+    _deep   = { 192,384 }
 
     item = "invul"
   }

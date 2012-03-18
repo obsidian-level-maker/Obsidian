@@ -431,7 +431,8 @@ HERETIC.SKINS =
   {
     _prefab = "EXIT_CLOSET"
     _where  = "closet"
-    _size   = { 192,192, 384,384 }
+    _long   = { 192,384 }
+    _deep   = { 192,384 }
 
     door  = "DOOREXIT"
     door_h = 96
