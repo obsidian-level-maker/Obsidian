@@ -379,14 +379,14 @@ PREFAB.DOOR =
 {
   fitted = "xy"
 
-  x_ranges = { {32,1}, {128,0,"?width"}, {32,1} }
-
-  z_ranges = { {128,0,"?height"} }
+  x_ranges = { {8,1}, {24,0}, {128,0,"?door_w"}, {24,0}, {8,1} }
+  y_ranges = { {16,1}, {16,0}, {16,1} }
+  z_ranges = { {8,0}, {128,0,"?door_h"} }
 
   defaults =
   {
-    width  = 128
-    height = 128
+    door_w = 128
+    door_h = 128
 
     outer = "?wall"
     frame = "?wall"
@@ -404,22 +404,22 @@ PREFAB.DOOR =
 
   brushes =
   {
-    -- frame
-    {
-      { x =   4, y =  0, mat = "?outer" }
-      { x = 188, y =  0, mat = "?outer" }
-      { x = 188, y = 48, mat = "?wall" }
-      { x =   4, y = 48, mat = "?outer" }
-      { b = 136, mat = "?frame" }
-    }
-
     -- step
     {
-      { x =   4, y =  0, mat = "?step" }
-      { x = 188, y =  0, mat = "?step" }
-      { x = 188, y = 48, mat = "?step" }
-      { x =   4, y = 48, mat = "?step" }
+      { x =  32, y =  0, mat = "?step" }
+      { x = 160, y =  0, mat = "?step" }
+      { x = 160, y = 48, mat = "?step" }
+      { x =  32, y = 48, mat = "?step" }
       { t = 8, mat = "?step", light = 0.7 }
+    }
+
+    -- frame
+    {
+      { x =  32, y =  0, mat = "?outer" }
+      { x = 160, y =  0, mat = "?outer" }
+      { x = 160, y = 48, mat = "?wall" }
+      { x =  32, y = 48, mat = "?outer" }
+      { b = 136, mat = "?frame" }
     }
 
     -- door itself
@@ -434,31 +434,68 @@ PREFAB.DOOR =
     -- left side
     {
       { x =  0, y =  0, mat = "?outer" }
-      { x = 14, y =  0, mat = "?outer" }
-      { x = 14, y = 48, mat = "?wall" }
-      { x =  0, y = 48, mat = "?wall" }
+      { x =  8, y =  0, mat = "?wall" }
+      { x =  8, y = 24, mat = "?wall" }
+      { x =  0, y = 24, mat = "?wall" }
     }
 
     {
-      { x = 14, y =  0, mat = "?key",   peg=1, x_offset=0, y_offset=0 }
+      { x =  8, y =  0, mat = "?outer" }
+      { x = 32, y =  0, mat = "?key",   peg=1, x_offset=0, y_offset=0 }
       { x = 32, y = 16, mat = "?track", peg=1, x_offset=0, y_offset=0 }
       { x = 32, y = 32, mat = "?key",   peg=1, x_offset=0, y_offset=0 }
-      { x = 14, y = 48, mat = "?key",   peg=1, x_offset=0, y_offset=0 }
+      { x = 32, y = 48, mat = "?wall" }
+      { x =  8, y = 24, mat = "?wall" }
     }
 
     -- right side
     {
-      { x = 178, y =  0, mat = "?outer" }
+      { x = 184, y =  0, mat = "?outer" }
       { x = 192, y =  0, mat = "?wall" }
-      { x = 192, y = 48, mat = "?wall" }
-      { x = 178, y = 48, mat = "?outer" }
+      { x = 192, y = 24, mat = "?wall" }
+      { x = 184, y = 24, mat = "?wall" }
     }
 
     {
-      { x = 160, y = 16, mat = "?key",   peg=1, x_offset=0, y_offset=0 }
-      { x = 178, y =  0, mat = "?key",   peg=1, x_offset=0, y_offset=0 }
-      { x = 178, y = 48, mat = "?key",   peg=1, x_offset=0, y_offset=0 }
+      { x = 160, y = 48, mat = "?key",   peg=1, x_offset=0, y_offset=0 }
       { x = 160, y = 32, mat = "?track", peg=1, x_offset=0, y_offset=0 }
+      { x = 160, y = 16, mat = "?key",   peg=1, x_offset=0, y_offset=0 }
+      { x = 160, y =  0, mat = "?outer" }
+      { x = 184, y =  0, mat = "?outer" }
+      { x = 184, y = 24, mat = "?wall" }
+    }
+
+    -- lighting
+    {
+      { m = "light", add = 32 }
+      { x =  32, y =  0 }
+      { x = 160, y =  0 }
+      { x = 160, y = 48 }
+      { x =  32, y = 48 }
+    }
+
+--[[
+    {
+      { m = "light", add = 16 }
+      { x =  32, y =   0 }
+      { x =  88, y = -56 }
+      { x = 104, y = -56 }
+      { x = 160, y =   0 }
+    }
+    {
+      { m = "light", add = 16 }
+      { x =  32, y = 48 }
+      { x = 160, y = 48 }
+      { x = 104, y = 104 }
+      { x =  88, y = 104 }
+    }
+--]]
+
+    -- bounding box
+    {
+      { m = "bbox" }
+      { b = 0 }
+      { t = 136 }
     }
   }
 

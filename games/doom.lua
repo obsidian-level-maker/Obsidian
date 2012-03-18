@@ -2050,50 +2050,7 @@ DOOM.SKINS =
   }
 
 
-  ----| ARCHES |----
-
-  Arch1 =
-  {
-    _prefab = "ARCH"
-    _where  = "edge"
-    _long   = 192
-    _deep   = 64
-  }
-
-  Fat_Arch1 =
-  {
-    _prefab = "FAT_ARCH1"
-    _where  = "chunk"
-
-    pic = "SW1SATYR"    
-  }
-
-
-  ----| DOORS |----
-
-  Door_silver =
-  {
-    _prefab = "DOOR"
-    _where  = "edge"
-    _long   = 192
-    _deep   = 64
-
-    width=128
-    height=72
-
-    door="BIGDOOR1"
-    track="DOORTRAK"
-    key="LITE3"
-    step="STEP4"
-
-    x_offset=0
-    y_offset=0
-    special=1
-    tag=0
-  }
-
-
-  ----| KEY |----
+  ----| ITEM / KEY |----
 
   Item_niche =
   {
@@ -2131,6 +2088,50 @@ DOOM.SKINS =
 
     item = "invul"
   }
+
+
+  ----| ARCHES |----
+
+  Arch1 =
+  {
+    _prefab = "ARCH"
+    _where  = "edge"
+    _long   = 192
+    _deep   = 64
+  }
+
+  Fat_Arch1 =
+  {
+    _prefab = "FAT_ARCH1"
+    _where  = "chunk"
+
+    pic = "SW1SATYR"    
+  }
+
+
+  ----| DOORS |----
+
+  Door_silver =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _long   = 192
+    _deep   = 48
+
+    door_w = 128
+    door_h = 72
+
+    door  = "BIGDOOR1"
+    track = "DOORTRAK"
+    key   = "LITE3"
+    step  = "STEP4"
+
+    x_offset = 0
+    y_offset = 0
+    special = 1
+    tag = 0
+  }
+
 
 --[[
   OLD_sw_blue2 =
@@ -2280,17 +2281,18 @@ DOOM.SKINS =
     _where  = "edge"
     _key    = "kc_blue"
     _long   = 192
-    _deep   = 32
+    _deep   = 48
 
-    w = 128
-    h = 112
+    door_w = 128
     door_h = 112
+
     key = "DOORBLU"
     door = "BIGDOOR3"
     door_c = "FLOOR7_2"
     step = "STEP4"
     track = "DOORTRAK"
-    frame = "FLAT18"
+---##    frame = "FLAT18"
+
     special = 32
     tag = 0  -- kind_mult=26
   }
@@ -2301,17 +2303,17 @@ DOOM.SKINS =
     _where  = "edge"
     _key    = "kc_yellow"
     _long   = 192
-    _deep   = 32
+    _deep   = 48
 
-    w = 128
-    h = 112
+    door_w = 128
     door_h = 112
+
     key = "DOORYEL"
     door = "BIGDOOR4"
     door_c = "FLOOR3_3"
     step = "STEP4"
     track = "DOORTRAK"
-    frame = "FLAT4"
+---##    frame = "FLAT4"
     special = 34
     tag = 0  -- kind_mult=27
   }
@@ -2322,18 +2324,17 @@ DOOM.SKINS =
     _where  = "edge"
     _key    = "kc_red"
     _long   = 192
-    _deep   = 32
+    _deep   = 48
 
-    w = 128
-    h = 112
+    door_w = 128
+    door_h = 112
 
     key = "DOORRED"
-    door_h = 112
     door = "BIGDOOR2"
     door_c = "FLAT1"
     step = "STEP4"
     track = "DOORTRAK"
-    frame = "FLAT18"
+---##    frame = "FLAT18"
     special = 33
     tag = 0  -- kind_mult=28
   }
@@ -2344,11 +2345,11 @@ DOOM.SKINS =
     _where  = "edge"
     _key    = "ks_blue"
     _long   = 192
-    _deep   = 32
+    _deep   = 48
 
-    w = 128
-    h = 112
+    door_w = 128
     door_h = 112
+
     key = "DOORBLU2"
     key_ox = 4
     key_oy = -10
@@ -2356,7 +2357,7 @@ DOOM.SKINS =
     door_c = "FLOOR7_2"
     step = "STEP4"
     track = "DOORTRAK"
-    frame = "FLAT18"
+---##    frame = "FLAT18"
     special = 32
     tag = 0  -- kind_mult=26
   }
@@ -2367,11 +2368,11 @@ DOOM.SKINS =
     _where  = "edge"
     _key    = "ks_yellow"
     _long   = 192
-    _deep   = 32
+    _deep   = 48
 
-    w = 128
-    h = 112
+    door_w = 128
     door_h = 112
+
     key = "DOORYEL2"
     key_ox = 4
     key_oy = -10
@@ -2379,7 +2380,7 @@ DOOM.SKINS =
     door_c = "FLOOR3_3"
     step = "STEP4"
     track = "DOORTRAK"
-    frame = "FLAT4"
+---##    frame = "FLAT4"
     special = 34
     tag = 0  -- kind_mult=27
   }
@@ -2390,11 +2391,11 @@ DOOM.SKINS =
     _where  = "edge"
     _key    = "ks_red"
     _long   = 192
-    _deep   = 32
+    _deep   = 48
 
-    w = 128
-    h = 112
+    door_w = 128
     door_h = 112
+
     key = "DOORRED2"
     key_ox = 4
     key_oy = -10
@@ -2402,7 +2403,7 @@ DOOM.SKINS =
     door_c = "FLAT1"
     step = "STEP4"
     track = "DOORTRAK"
-    frame = "FLAT18"
+---##    frame = "FLAT18"
     special = 33
     tag = 0  -- kind_mult=28
   }
@@ -2416,17 +2417,17 @@ DOOM.SKINS =
     _where  = "edge"
     _switch = "sw_blue"
     _long = 192
-    _deep = 32
+    _deep = 48
 
-    w = 128
-    h = 112
+    door_w = 128
+    door_h = 112
 
     key = "COMPBLUE"
     door = "BIGDOOR3"
     door_c = "FLOOR7_2"
     step = "COMPBLUE"
     track = "DOORTRAK"
-    frame = "FLAT14"
+---##    frame = "FLAT14"
     door_h = 112
     special = 0
   }
@@ -2436,8 +2437,6 @@ DOOM.SKINS =
     _prefab = "SMALL_SWITCH"
     _where  = "middle"
     _switch = "sw_blue"
-    _long   = 192
-    _deep   = 48
 
     switch_h = 64
     switch = "SW1BLUE"
@@ -2455,17 +2454,17 @@ DOOM.SKINS =
     _where  = "edge"
     _switch = "sw_red"
     _long = 192
-    _deep = 32
+    _deep = 48
 
-    w = 128
-    h = 112
+    door_w = 128
+    door_h = 112
 
     key = "REDWALL"
     door = "BIGDOOR2"
     door_c = "FLAT1"
     step = "REDWALL"
     track = "DOORTRAK"
-    frame = "FLAT5_3"
+---##    frame = "FLAT5_3"
     door_h = 112
     special = 0
   }
@@ -2475,8 +2474,6 @@ DOOM.SKINS =
     _prefab = "SMALL_SWITCH"
     _where  = "middle"
     _switch = "sw_red"
-    _long   = 192
-    _deep   = 48
 
     switch_h = 64
     switch = "SW1HOT"
@@ -2494,17 +2491,17 @@ DOOM.SKINS =
     _where  = "edge"
     _switch = "sw_pink"
     _long   = 192
-    _deep   = 32
+    _deep   = 48
 
-    w = 128
-    h = 112
+    door_w = 128
+    door_h = 112
 
     key = "SKINFACE"
     door = "BIGDOOR4"
     door_c = "FLOOR7_2"
     step = "SKINFACE"
     track = "DOORTRAK"
-    frame = "SKINFACE"
+---##    frame = "SKINFACE"
     door_h = 112
     special = 0
   }
@@ -2514,8 +2511,6 @@ DOOM.SKINS =
     _prefab = "SMALL_SWITCH"
     _where  = "middle"
     _switch = "sw_pink"
-    _long   = 192
-    _deep   = 48
 
     switch_h = 64
     switch = "SW1SKIN"
@@ -2527,24 +2522,23 @@ DOOM.SKINS =
   }
 
 
-
   Door_SW_vine =
   {
     _prefab = "DOOR"
     _where  = "edge"
     _switch = "sw_vine"
     _long   = 192
-    _deep   = 32
+    _deep   = 48
 
-    w = 128
-    h = 112
+    door_w = 128
+    door_h = 112
 
     key = "GRAYVINE"
     door = "BIGDOOR4"
     door_c = "FLOOR7_2"
     step = "GRAYVINE"
     track = "DOORTRAK"
-    frame = "FLAT1"
+---##    frame = "FLAT1"
     door_h = 112
     special = 0
   }
@@ -2554,8 +2548,6 @@ DOOM.SKINS =
     _prefab = "SMALL_SWITCH"
     _where  = "middle"
     _switch = "sw_vine"
-    _long   = 192
-    _deep   = 48
 
     switch_h = 64
     switch = "SW1VINE"
@@ -2763,7 +2755,7 @@ DOOM.SKINS =
     _prefab = "WINDOW"
     _where  = "edge"
     _long   = 192
-    _deep   = 32
+    _deep   = 24
 
     track = "SHAWN2"
   }

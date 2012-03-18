@@ -1287,7 +1287,7 @@ end --]]
       local skin2 = C:inner_outer_mat(L1, L2)
 
       local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
-                                     0, long, 48, 0)
+                                     0, long, skin._deep or 48, 0)
 
       if lock.kind == "KEY" then
         -- Quake II bits
