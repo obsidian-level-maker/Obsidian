@@ -2073,6 +2073,8 @@ function Fab_size_check(skin, long, deep)
       if aspect > skin._aspect[2] * 1.05 then return false end
     end
   end
+
+  return true  -- OK --
 end
 
 
