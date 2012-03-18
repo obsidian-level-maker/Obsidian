@@ -2040,23 +2040,37 @@ end
 function Fab_size_check(skin, long, deep)
   -- the 'long' and 'deep' parameters can be nil : means anything is OK
 
-  local TOLERANCE = 0.5
-
   if long and skin._long then
     if type(skin._long) == "number" then
-      if math.abs(long - skin._long) >= TOLERANCE then return false end
+      if math.abs(long - skin._long) > 0.1 then return false end
     else
-      if long <= skin._long[1] - TOLERANCE then return false end
-      if long >= skin._long[2] + TOLERANCE then return false end
+      if long < skin._long[1] - 0.1 then return false end
+      if long > skin._long[2] + 0.1 then return false end
     end
   end
 
   if deep and skin._deep then
     if type(skin._deep) == "number" then
-      if math.abs(deep - skin._deep) >= TOLERANCE then return false end
+      if math.abs(deep - skin._deep) > 0.1 then return false end
     else
-      if deep <= skin._deep[1] - TOLERANCE then return false end
-      if deep >= skin._deep[2] + TOLERANCE then return false end
+      if deep < skin._deep[1] - 0.1 then return false end
+      if deep > skin._deep[2] + 0.1 then return false end
+    end
+  end
+
+  if skin._aspect then
+    -- we don't know the target size, so cannot guarantee any aspect ratio
+    if not (long and deep) then return false end
+
+    local aspect = long / deep
+
+    if type(skin._aspect) == "number" then
+      aspect = aspect / skin._aspect
+      -- fair bit of lee-way here
+      if aspect < 0.9 or aspect > 1.1 then return false end
+    else
+      if aspect < skin._aspect[1] * 0.95 then return false end
+      if aspect > skin._aspect[2] * 1.05 then return false end
     end
   end
 end
