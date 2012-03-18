@@ -1024,7 +1024,7 @@ function Trans.create_groups(size_list, pf_min, pf_max)
     G.low  = pf_pos ; pf_pos = pf_pos + G.size
     G.high = pf_pos
 
-    G.weight = S[2] or 1
+    G.weight = S[2]
 
     if S[3] then
       G.size2 = S[3]

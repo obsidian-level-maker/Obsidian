@@ -379,7 +379,7 @@ PREFAB.DOOR =
 {
   fitted = "xy"
 
-  x_ranges = { {32}, {128,0,"?width"}, {32} }
+  x_ranges = { {32,1}, {128,0,"?width"}, {32,1} }
 
   z_ranges = { {128,0,"?height"} }
 
