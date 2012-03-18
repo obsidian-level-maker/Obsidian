@@ -2038,14 +2038,26 @@ end
 
 
 function Fab_size_check(skin, long, deep)
-  if not skin._size then return true end
+  -- the 'long' and 'deep' parameters can be nil : means anything is OK
 
-  if skin._size[3] then
-    return (long > skin._size[1] - 1) and (deep > skin._size[2] - 1) and
-           (long < skin._size[3] + 1) and (deep < skin._size[4] + 1)
-  else
-    return (math.abs(long - skin._size[1]) < 1) and
-           (math.abs(deep - skin._size[2]) < 1)
+  local TOLERANCE = 0.5
+
+  if long and skin._long then
+    if type(skin._long) == "number" then
+      if math.abs(long - skin._long) >= TOLERANCE then return false end
+    else
+      if long <= skin._long[1] - TOLERANCE then return false end
+      if long >= skin._long[2] + TOLERANCE then return false end
+    end
+  end
+
+  if deep and skin._deep then
+    if type(skin._deep) == "number" then
+      if math.abs(deep - skin._deep) >= TOLERANCE then return false end
+    else
+      if deep <= skin._deep[1] - TOLERANCE then return false end
+      if deep >= skin._deep[2] + TOLERANCE then return false end
+    end
   end
 end
 
