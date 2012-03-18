@@ -15,6 +15,8 @@ YAY!!! DONE!!  get cave code working again
 
 *  symmetrical rooms
 
+*  texture coord system: u(1/2), v(1/2) fields
+
 
 ----------------------------------------------------------------
   OTHER GAMES
@@ -82,6 +84,14 @@ Hallways:
 DONE: Special Hallway #1 : surround half the room, entrance either side
   -   Special Hallway #3 : surround a room completely.
   -   Special Hallway #4 : diagonal from one to another (alloc '+' shape)
+
++  flat mismatch where hallways meet rooms
+   (a) have a step (ideally not flush with wall)
+   (b) put a door there
+   (c) use floor texture in hallway (only works at one end)
+
+IDEA: a way to associate a skin with a hallway group
+   (an extra skin, "underneath" the actual skin for a hallway piece)
 
 
 Hallway Theming:
@@ -313,6 +323,11 @@ Weapons:
    end of room.
 
 +  One-way Routes (see doc/Various_Notes.txt)
+
++  system for texture coordinates:
+
+     x_offset is alternate term for u1  [u2 can be absent]
+     y_offset is alternate term for v1 or v2  (depends on 'peg' flag)
 
 -  try position-based monster ordering for fight simulator
 

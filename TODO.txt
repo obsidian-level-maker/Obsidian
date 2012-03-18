@@ -7,18 +7,14 @@ Current Work
 
 >>>  need a way for a room theme (if not level theme) to say
      "hallways should use (or not) same theme as a connected room"
-     (perhaps with priorities? Nah, KISS)
 
 >>>  hallways field in room themes : allow use in caves/outdoor too
 
 
--  honor '_liquid=1' in junction skins (ETC ETC)
 
 -  Exit closets: select them from 'THEME.exits'
 
 -  Start closets: select them from 'THEME.starts'
-
--  EXIT_CLOSET prefab for HERETIC
 
 
 Closets:
@@ -28,25 +24,17 @@ Closets:
 
 +  EXIT closets
 
--  SECRET closetes
+-  SECRET closets
 
 -  ITEM closets
 
 -  TELEPORTER closets
 
--  WATER closets
-
 -  GATE closets for Hexen
-
--  FAKE closets
 
 -  HALL closets
 
 -  MONSTER closets
-
--  BROOM closets
-
--  VOID closets
 
 
 
@@ -54,12 +42,12 @@ New Starting Logic
 
 -  three main kinds:
 
-   NICHE  : you begin in a very small room, which is connected to a
+   CLOSET : you begin in a very small room, which is connected to a
             larger room, often by a door.  The closet would only
             contain one or two pickups, e.g. a nice health item and
             (if you're lucky) a weapon.
 
-   CORNER : you begin in the side or corner of a large-ish room,
+   SIDE :   you begin in the side or corner of a large-ish room,
             with nothing particularly special about the start position
             (except say a pedestal).
             
@@ -67,7 +55,7 @@ New Starting Logic
             can see either).  Again, only a couple of items nearby.
             The starting weapon and ammo will be further away.
 
-   MAYHEM : you begin in the middle of a large room, and often have
+   MIDDLE : you begin in the middle of a large room, and often have
             to get moving to fight or avoid the monsters scattered
             around.  There is usually some useful pickups nearby,
             especially a starting weapon. 
@@ -77,19 +65,8 @@ Brusher Tool:
 
 !!  ensure brushes are convex (all angles <= 180)
 
-+  create a skin table too
-
-+  convert nukage textures --> _LIQUID
-
-
->>>  stairs for new area code
-
 
 -  REVIEW: quadratic monster formula : bad for "full" game
-
-
-+  a _size field for prefabs, format is { long1,deep1, long2,deep2 }
-   and can be just { long,deep } for fixed-sized prefabs.
 
 
 !!  replaceable brushes in prefabs
@@ -112,10 +89,6 @@ Short-Term Goals
 
 +  theme stuff sorted out
 
-+  windows
-
-   -  must decide after all heights are done
-
 
 
 REVIEW: adjuster stuff 
@@ -131,9 +104,6 @@ REVIEW: adjuster stuff
 
 -  light_globe and flame entities for QUAKE
 
--  in prefab skins: '_long = 23' means 2 to 3 seeds wide
-                    '_deep = 14' means 1 to 4 seeds deep
-
 -  automatically create bridges over channels
 
 +  automatic repeating of prefabs
@@ -146,36 +116,11 @@ REVIEW: adjuster stuff
 Idea: for outdoor bordering, have earlier pass to set the facade_mat
       in _all_ unused seeds (grow existing buildings)
 
-+  flat mismatch where hallways meet rooms
-   (a) have a step (ideally not flush with wall)
-   (b) put a door there
-   (c) use floor texture in hallway (only works at one end)
-
 Hallways:
 
 +  double hallways STILL busted (entry from the non-forky end)
 
-+  HALLWAY_GROUPS
-
-      basic =
-      {
-        Hall_basic_I = 50
-        Hall_basic_V = 50
-        Hall_basic_S = 50
-
-        Hall_basic_C = 50
-        Hall_basic_T = 50
-        Hall_basic_P = 50
-
-        Junc_basic_I = 50
-        Junc_basic_C = 50
-        Junc_basic_T = 50
-        Junc_basic_P = 50
-      }
-
-      IN LEVEL THEME:
-
-      hall_groups = { basic=50, curvilicious=50 }
+>>>  HALLWAY_GROUPS
 
 WISH: outdoor hallways (wall on one side, fence on other side, sky top)
       [may be easier to convert hallway into a room]
@@ -195,24 +140,19 @@ Theme System:
 Release Goals
 =============
 
--  pictures in walls
++  windows
 
--  diagonal corners
+   -  must decide after all heights are done
+
++  pictures in walls
 
 -  secret niches
 
--  cages (in the void chunks)
+-  cages
 
 -  normal doors
 
-?  system for texture coordinates:
+-  better ceilings, some ceiling lights
 
-     u1..v2 for texture coords on brushes
-
-     x_offset is alternate term for u1  [u2 can be absent]
-     y_offset is alternate term for v1 or v2  (depends on 'peg' flag)
-
-?  better ceilings, some ceiling lights
-
-?  better exits
+-  better exits
 
