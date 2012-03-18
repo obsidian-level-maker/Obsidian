@@ -1244,93 +1244,25 @@ end --]]
   w_mat = Mat_lookup(w_matname)
   w_tex = w_mat.t
 
-  local thick = 16
-
   for dir = 2,8,2 do
-    local wall_deep = thick
-
     local long = geom.vert_sel(dir, C.x2 - C.x1, C.y2 - C.y1)
 
-
     if not C:similar_neighbor(dir) then
-      local bx1, by1, bx2, by2 = x1,y1, x2,y2
-
-      if dir == 2 then by2 = by1 + thick end
-      if dir == 8 then by1 = by2 - thick end
-      if dir == 4 then bx2 = bx1 + thick end
-      if dir == 6 then bx1 = bx2 - thick end
 
       if C.link[dir] then
+        -- nothing
 
--------->  nothing needed now
---[[
-        local LINK = C.link[dir]
+      elseif C.room and C.room.kind == "outdoor" then
 
-        local cx1, cy1, cx2, cy2 = bx1, by1, bx2, by2
-
-        if geom.is_vert(dir) then
-          bx2 = assert(LINK.x1)
-          cx1 = assert(LINK.x2)
-        else
-          by2 = assert(LINK.y1)
-          cy1 = assert(LINK.y2)
-        end
-
-        if bx2 > bx1 then
-          brush = Brush_new_quad(bx1, by1, bx2, by2)
-          Brush_set_tex(brush, w_mat.t)
-          raw_add_brush(brush)
-        end
-
-        if cx2 > cx1 then
-          brush = Brush_new_quad(cx1, cy1, cx2, cy2)
-          Brush_set_tex(brush, w_mat.t)
-          raw_add_brush(brush)
-        end
---]]
-
-      elseif C.room and C.room.kind == "outdoor" and
-             C:need_fence(dir) then
-
-        C:build_fence(dir)
-
-      elseif (C.hall and C.hall.street) or
-             (C.room and C.room.kind == "outdoor")
-      then
-        -- only build walls at edge of map
-        -- (otherwise allow building walls to show through)
-        if C:against_map_edge(dir) then
---[[
---]]
-        else
-          wall_deep = 0
+        if C:need_fence(dir) then
+          C:build_fence(dir)
         end
 
       else
         -- SOLID WALL
-
         C:build_wall(dir, f_h)
-
---[[ HALLWAY WINDOW TEST
-local C2 = C:good_neighbor(dir)
-if C2 and (C.hall or C2.hall) then
-table.insert(brush, { t=f_h+48, tex=w_mat.f or w_mat.t })
-end
---]]
       end
 
---[[ !!!!!!!
-      -- spot stuff  [FIXME: TEMP HACK]
-      bx1, by1, bx2, by2 = x1,y1, x2,y2
-
-      if dir == 2 then by2 = by1 + 40 end
-      if dir == 8 then by1 = by2 - 40 end
-      if dir == 4 then bx2 = bx1 + 40 end
-      if dir == 6 then bx1 = bx2 - 40 end
-
-      brush = Brush_new_quad(bx1, by1, bx2, by2)
-      gui.spots_fill_poly(brush, (C.link[dir] ? 2 ; 1));
---]]
     end
 
     -- locked doors
@@ -1356,7 +1288,6 @@ end
 
       local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
                                      0, long, 48, 0)
-      wall_deep = 48
 
       if lock.kind == "KEY" then
         -- Quake II bits
@@ -1374,30 +1305,7 @@ end
       Fabricate(skin._prefab, T, { skin, skin2 })
     end
 
-
-    if LINK and LINK.conn and wall_deep < 32 then
-      wall_deep = 32
-    end
-
   end -- dir
-
-
-  -- corners
-  if C.section and C.section.kind == "big_junc" then
-    local size = 192 -- math.min((C.x2 - C.x1), (C.y2 - C.y1))
-    size = int(size / 3)
-
-    for corner = 1,9,2 do if corner != 5 then
-      local bx1 = (corner == 1 or corner == 7 ? C.x1 ; C.x2 - size)
-      local by1 = (corner == 1 or corner == 3 ? C.y1 ; C.y2 - size)
-      local bx2 = (corner == 1 or corner == 7 ? C.x1 + size ; C.x2)
-      local by2 = (corner == 1 or corner == 3 ? C.y1 + size ; C.y2)
-
-      brush = Brush_new_quad(bx1, by1, bx2, by2)
-      Brush_set_tex(brush, c_mat.t)
-      raw_add_brush(brush)
-    end end
-  end
 
 
   -- crossover
@@ -1475,25 +1383,5 @@ end
     entity_helper("light", x, y, z, { light=light })
   end
 
-
-
-  -- TEST CRUD : pillars
-
-  if ent != "player1" and C.section and false then
-    local hx = 777 -- C.section:mid_HX()
-    local hy = 888 -- C.section:mid_HY()
-
-    if C.hx == hx and C.hy == hy then
-
-      local mx = math.i_mid(x1, x2)
-      local my = math.i_mid(y1, y2)
-      
-      local T = Trans.spot_transform(mx, my, f_h, 0)
-
-      local skin1 = { pillar="TEKWALL4" }
-
-      Fabricate("ROUND_PILLAR", T, { skin1 })
-    end
-  end
 end
 
