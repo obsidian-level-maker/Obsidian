@@ -1706,9 +1706,7 @@ function Rooms_filter_skins(L, tab_name, tab, reqs)
     if reqs.where and skin._where != reqs.where then return false end
 
     -- size check
-    if skin._size and reqs.long and not Fab_size_check(skin, reqs.long, reqs.deep) then
-      return false
-    end
+    if not Fab_size_check(skin, reqs.long, reqs.deep) then return false end
 
     -- building type checks
     if L then
