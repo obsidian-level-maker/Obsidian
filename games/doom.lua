@@ -1891,7 +1891,7 @@ DOOM.SKINS =
     tag = 0
   }
 
-  Exit_Closet_Tech =
+  Exit_Closet =  -- _Tech
   {
     _prefab = "EXIT_CLOSET"
     _where  = "closet"
@@ -1989,16 +1989,6 @@ DOOM.SKINS =
     item1 = "medikit"
     item2 = "shells"
   }
-
-
-Exit_Closet =  -- FIXME: Item_Closet1
-{
-  _prefab = "ITEM_CLOSET"
-  _where  = "closet"
-  _size   = { 192,192, 384,384 }
-
-  item = "soul"
-}
 
 
   ----| STAIRS |----
@@ -2116,6 +2106,24 @@ Exit_Closet =  -- FIXME: Item_Closet1
 
     top  = "CEIL1_2"
     side = "METAL"
+  }
+
+  Item_Closet =
+  {
+    _prefab = "ITEM_CLOSET"
+    _where  = "closet"
+    _size   = { 192,192, 384,384 }
+
+    item = "soul"
+  }
+
+  Secret_Closet =
+  {
+    _prefab = "SECRET_NICHE_1"
+    _where  = "closet"
+    _size   = { 192,192, 384,384 }
+
+    item = "invul"
   }
 
 --[[
