@@ -973,7 +973,7 @@ QUAKE.SKINS =
   Switch_floor1 =
   {
     _prefab = "QUAKE_FLOOR_SWITCH"
-    _where  = "chunk"
+    _where  = "middle"
     _switch = "sw_foo"
 
     switch = "BUTNN"
@@ -986,28 +986,13 @@ QUAKE.SKINS =
   Hall_Basic_I =
   {
     _prefab = "HALL_BASIC_I"
-    _where  = "hallway"
-  }
-
-  Hall_Basic_I_Stair =
-  {
-    _prefab = "HALL_BASIC_I_STAIR"
-    _where  = "hallway"
-  }
-
-  Hall_Basic_I_Lift =
-  {
-    _prefab = "HALL_BASIC_I_LIFT_QUAKE"
-    _where  = "hallway"
-    _tags   = 1
-
-    lift = "MET5_1"
+    _shape  = "I"
   }
 
   Hall_Basic_C =
   {
     _prefab = "HALL_BASIC_C"
-    _where  = "hallway"
+    _shape  = "C"
 
     torch_ent = "torch"
   }
@@ -1015,20 +1000,35 @@ QUAKE.SKINS =
   Hall_Basic_T =
   {
     _prefab = "HALL_BASIC_T"
-    _where  = "hallway"
+    _shape  = "T"
   }
 
   Hall_Basic_P =
   {
     _prefab = "HALL_BASIC_P"
-    _where  = "hallway"
+    _shape  = "P"
+  }
+
+  Hall_Basic_I_Stair =
+  {
+    _prefab = "HALL_BASIC_I_STAIR"
+    _shape  = "IS"
+  }
+
+  Hall_Basic_I_Lift =
+  {
+    _prefab = "HALL_BASIC_I_LIFT_QUAKE"
+    _shape  = "IL"
+    _tags   = 1
+
+    lift = "MET5_1"
   }
 
 
-  Junc_Basic_I =
+  Junc_Octo_I =
   {
     _prefab = "JUNCTION_OCTO"
-    _where  = "big_junc"
+    _shape  = "I"
 
     hole = "WINDOW1_3"
 
@@ -1036,10 +1036,10 @@ QUAKE.SKINS =
     west_wall_q = 1
   }
 
-  Junc_Test_C =
+  Junc_Octo_C =
   {
     _prefab = "JUNCTION_OCTO"
-    _where  = "big_junc"
+    _shape  = "C"
 
     hole = "WINDOW1_3"
 
@@ -1047,20 +1047,20 @@ QUAKE.SKINS =
      east_wall_q = 1
   }
 
-  Junc_Test_T =
+  Junc_Octo_T =
   {
     _prefab = "JUNCTION_OCTO"
-    _where  = "big_junc"
+    _shape  = "T"
 
     hole = "WINDOW1_3"
 
     north_wall_q = 1
   }
 
-  Junc_Test_P =
+  Junc_Octo_P =
   {
     _prefab = "JUNCTION_OCTO"
-    _where  = "big_junc"
+    _shape  = "P"
 
     hole = "WINDOW1_3"
 
@@ -1168,6 +1168,16 @@ QUAKE.THEME_DEFAULTS =
 
   fences = { Fence1 = 50 }
 
+  hallway_groups = { basic = 50 }
+
+  big_junctions =
+  {
+    Junc_Octo_I = 50
+    Junc_Octo_C = 50
+    Junc_Octo_T = 50
+    Junc_Octo_P = 50
+  }
+
   fat_cages = { Fat_Cage_W_Bars = 50 }
 
   logos = { carve=50 }
@@ -1183,6 +1193,24 @@ QUAKE.THEME_DEFAULTS =
 QUAKE.NAME_THEMES =
 {
   -- TODO
+}
+
+
+QUAKE.HALLWAY_GROUPS =
+{
+  basic =
+  {
+    pieces =
+    {
+      Hall_Basic_I = 50
+      Hall_Basic_C = 50
+      Hall_Basic_T = 50
+      Hall_Basic_P = 50
+
+      Hall_Basic_I_Stair = 20
+      Hall_Basic_I_Lift  = 2
+    }
+  }
 }
 
 

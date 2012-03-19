@@ -1307,7 +1307,7 @@ HEXEN.SKINS =
   Switch_1 =
   {
     _prefab = "SMALL_SWITCH"
-    _where  = "chunk"
+    _where  = "middle"
     _switch = "sw_steel"
 
     switch_h = 32
@@ -1410,31 +1410,31 @@ HEXEN.SKINS =
   Hall_Basic_I =
   {
     _prefab = "HALL_BASIC_I"
-    _where  = "hallway"
+    _shape  = "I"
   }
 
   Hall_Basic_C =
   {
     _prefab = "HALL_BASIC_C"
-    _where  = "hallway"
+    _shape  = "C"
   }
 
   Hall_Basic_T =
   {
     _prefab = "HALL_BASIC_T"
-    _where  = "hallway"
+    _shape  = "T"
   }
 
   Hall_Basic_P =
   {
     _prefab = "HALL_BASIC_P"
-    _where  = "hallway"
+    _shape  = "P"
   }
 
   Hall_Basic_I_Stair =
   {
     _prefab = "HALL_BASIC_I_STAIR"
-    _where  = "hallway"
+    _shape  = "IS"
 
     step = "STEP3"
   }
@@ -1442,7 +1442,7 @@ HEXEN.SKINS =
   Hall_Basic_I_Lift =
   {
     _prefab = "HALL_BASIC_I_LIFT"
-    _where  = "hallway"
+    _shape  = "IL"
     _tags   = 1
 
     -- FIXME: this is doom stuff, need Hexen stuff
@@ -1457,10 +1457,10 @@ HEXEN.SKINS =
 
   ---| BIG JUNCTIONS |---
 
-  Junc_Test_I =
+  Junc_Octo_I =
   {
     _prefab = "JUNCTION_OCTO"
-    _where  = "big_junc"
+    _shape  = "I"
 
     hole = "_SKY"
 
@@ -1468,10 +1468,10 @@ HEXEN.SKINS =
     west_wall_q = 1
   }
 
-  Junc_Test_C =
+  Junc_Octo_C =
   {
     _prefab = "JUNCTION_OCTO"
-    _where  = "big_junc"
+    _shape  = "C"
 
     hole = "_SKY"
 
@@ -1479,20 +1479,20 @@ HEXEN.SKINS =
      east_wall_q = 1
   }
 
-  Junc_Test_T =
+  Junc_Octo_T =
   {
     _prefab = "JUNCTION_OCTO"
-    _where  = "big_junc"
+    _shape  = "T"
 
     hole = "_SKY"
 
     north_wall_q = 1
   }
 
-  Junc_Test_P =
+  Junc_Octo_P =
   {
     _prefab = "JUNCTION_OCTO"
-    _where  = "big_junc"
+    _shape  = "P"
 
     hole = "_SKY"
 
@@ -1531,8 +1531,6 @@ HEXEN.LIQUIDS =
 }
 
 
-
-
 HEXEN.IMAGES =
 {
   { wall = "BRASS3", w=128, h=128, glow=true }
@@ -1562,28 +1560,6 @@ HEXEN.PICS =
   glass1 = { wall = "GLASS01",  w=64,  h=128 }
   glass3 = { wall = "GLASS03",  w=64,  h=128 }
   glass5 = { wall = "GLASS05",  w=64,  h=128 }
-}
-
-
-HEXEN.ROOMS =
-{
-  PLAIN =
-  {
-  }
-
-  HALLWAY =
-  {
-    room_heights = { [96]=50, [128]=50 }
-    door_probs   = { out_diff=75, combo_diff=50, normal=5 }
-    window_probs = { out_diff=1, combo_diff=1, normal=1 }
-    space_range  = { 20, 65 }
-  }
- 
-  SCENIC =
-  {
-  }
-
-  -- TODO: check in-game level names for ideas
 }
 
 
@@ -1620,6 +1596,16 @@ HEXEN.THEME_DEFAULTS =
                    Locked_horn = 50, Locked_rusty = 50, Locked_silver = 50,
                    Locked_swamp = 50, Locked_steel = 50,
                    Door_SW_1 = 50 }
+
+  hallway_groups = { basic = 50 }
+
+  big_junctions =
+  {
+    Junc_Octo_I = 50
+    Junc_Octo_C = 50
+    Junc_Octo_T = 50
+    Junc_Octo_P = 50
+  }
 
   -- TODO everything else
 }
@@ -1846,6 +1832,24 @@ HEXEN.NAME_THEMES =
     }
   }
   -- TODO more(?)
+}
+
+
+HEXEN.HALLWAY_GROUPS =
+{
+  basic =
+  {
+    pieces =
+    {
+      Hall_Basic_I = 50
+      Hall_Basic_C = 50
+      Hall_Basic_T = 50
+      Hall_Basic_P = 50
+
+      Hall_Basic_I_Stair = 20
+      Hall_Basic_I_Lift  = 2
+    }
+  }
 }
 
 
