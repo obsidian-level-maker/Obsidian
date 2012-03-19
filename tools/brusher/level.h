@@ -395,6 +395,8 @@ bool TraceLineLoop(linedef_c * ld, int side, lineloop_c& loop);
 
 sector_c * SectorAtPoint(int x, int y);
 
+double AngleBetweenLines(int ax, int ay, int bx, int by, int cx, int cy);
+
 
 #endif /* __BRUSHER_LEVEL_H__ */
 

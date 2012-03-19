@@ -354,6 +354,21 @@ static void WriteBrush(lineloop_c& loop, char kind, int z = 0, const char *flat 
       continue;
     }
 
+    if (n > 0)
+    {
+      double angle = AngleBetweenLines(x2, y2, x, y, last_x, last_y);
+
+      /// fprintf(stderr, "angle = %1.0f\n", angle);
+
+      if (angle > 180.001)
+      {
+        fprintf(stderr, "ERROR: non-convex brush @ (%d %d)\n", x, y);
+        fprintf(output_fp, "      -- ERROR: THIS COORD IS NON-CONVEX:\n");
+
+        error_count += 1;
+      }
+    }
+
     fprintf(output_fp, "      { x = %3d, y = %3d, mat = \"%s\" }\n", 
             x, y, tex);
 
@@ -379,6 +394,9 @@ static void ProcessLoop(linedef_c *ld, int side, bool& have_one)
 
   if (! TraceLineLoop(ld, side, loop))
   {
+    fprintf(stderr, "ERROR: broken geometry @ line #%d\n", ld->index);
+    fprintf(output_fp, "\n!!!  ERROR: broken geometry @ line #%d  !!!\n\n", ld->index);
+
     error_count += 1;
     return;
   }
@@ -482,7 +500,13 @@ static bool AnalyseLevel()
   WriteSkin();
 
   if (error_count > 0)
+  {
     printf("\nTotal errors: %d\n", error_count);
+
+    fprintf(output_fp, "\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+    fprintf(output_fp,   "!!!!!! %d errors occurred !!!!!!\n", error_count);
+    fprintf(output_fp,   "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n");
+  }
 
   return (error_count == 0);
 }

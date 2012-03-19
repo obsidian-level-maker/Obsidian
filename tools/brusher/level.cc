@@ -494,15 +494,13 @@ void lineloop_c::MarkAsProcessed()
 }
 
 
-double AngleBetweenLines(const vertex_c *A,
-                         const vertex_c *B,
-                         const vertex_c *C)
+double AngleBetweenLines(int ax, int ay, int bx, int by, int cx, int cy)
 {
-	int a_dx = B->x - A->x;
-	int a_dy = B->y - A->y;
+	int a_dx = bx - ax;
+	int a_dy = by - ay;
 
-	int c_dx = B->x - C->x;
-	int c_dy = B->y - C->y;
+	int c_dx = bx - cx;
+	int c_dy = by - cy;
 
 	double AB_angle = (a_dx == 0) ? (a_dy >= 0 ? 90 : -90) : atan2(a_dy, a_dx) * 180 / M_PI;
 	double CB_angle = (c_dx == 0) ? (c_dy >= 0 ? 90 : -90) : atan2(c_dy, c_dx) * 180 / M_PI;
@@ -516,6 +514,14 @@ double AngleBetweenLines(const vertex_c *A,
 		result += 360.0;
 
 	return result;
+}
+
+
+double AngleBetweenLines(const vertex_c *A,
+                         const vertex_c *B,
+                         const vertex_c *C)
+{
+  return AngleBetweenLines(A->x, A->y,  B->x, B->y,  C->x, C->y);
 }
 
 
