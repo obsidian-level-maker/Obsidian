@@ -89,7 +89,7 @@ DOOM.ENTITIES =
   invis    = { id=2024, kind="pickup", r=20,h=16, pass=true }
   suit     = { id=2025, kind="pickup", r=20,h=60, pass=true }
   map      = { id=2026, kind="pickup", r=20,h=16, pass=true }
-  goggle   = { id=2045, kind="pickup", r=20,h=16, pass=true }
+  goggles  = { id=2045, kind="pickup", r=20,h=16, pass=true }
 
   potion   = { id=2014, kind="pickup", r=20,h=16, pass=true }
   stimpack = { id=2011, kind="pickup", r=20,h=16, pass=true }
@@ -3084,7 +3084,7 @@ DOOM.HALLWAY_GROUPS =
       Hall_Thin_I_Stair = 20
       Hall_Basic_I_Lift  = 2  -- TODO
 
-      Hall_Thin_I_Bulge = 50
+      Hall_Thin_I_Bulge = 70
     }
   }
 
