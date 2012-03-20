@@ -5,65 +5,17 @@ OBLIGE TODO
 Current Work
 ------------
 
->>>  need a way for a room theme (if not level theme) to say
-     "hallways should use (or not) same theme as a connected room"
 
->>>  hallways field in room themes : allow use in caves/outdoor too
+Hallways:
 
-
-
--  Exit closets: select them from 'THEME.exits'
-
--  Start closets: select them from 'THEME.starts'
+-  support '_in_between' for a hallway piece, must occur between two
+   other hallway pieces (and different from current piece).
 
 
 Closets:
 
-?  look bad when used off outdoor room and between two sky_fences,
-   make special ones just for this scenario ?
+-  proper texturing for outdoor closets
 
-+  EXIT closets
-
--  SECRET closets
-
--  ITEM closets
-
--  TELEPORTER closets
-
--  GATE closets for Hexen
-
--  HALL closets
-
--  MONSTER closets
-
-
-
-New Starting Logic
-
--  three main kinds:
-
-   CLOSET : you begin in a very small room, which is connected to a
-            larger room, often by a door.  The closet would only
-            contain one or two pickups, e.g. a nice health item and
-            (if you're lucky) a weapon.
-
-   SIDE :   you begin in the side or corner of a large-ish room,
-            with nothing particularly special about the start position
-            (except say a pedestal).
-            
-            There are no monsters which can see you (and usually none you
-            can see either).  Again, only a couple of items nearby.
-            The starting weapon and ammo will be further away.
-
-   MIDDLE : you begin in the middle of a large room, and often have
-            to get moving to fight or avoid the monsters scattered
-            around.  There is usually some useful pickups nearby,
-            especially a starting weapon. 
-
-
-Brusher Tool:
-
-!!  ensure brushes are convex (all angles <= 180)
 
 
 -  REVIEW: quadratic monster formula : bad for "full" game
@@ -76,7 +28,7 @@ Brusher Tool:
 
 +  BUG: stairs in cycles can be too low to pass
 
--  fix fat doors (x_ranges)
++  fix fat doors (x_ranges) : QUAKE
 
 
 -----------------------------------------------------------------
@@ -91,16 +43,14 @@ Short-Term Goals
 
 
 
+REVIEW: Fence code
+
 REVIEW: adjuster stuff 
 
-+  fix for ugly sky in outdoor room near a hallway
+-  fix for ugly sky in outdoor room near a hallway
    (mark those seeds, detect in from_edge pass)
 
-+  fix monsters stuck in doors / corners of chunks
-
-!!?!!  LOCKED DOORS IN A WHOLE SEED/CHUNK
-
--  review Fence code
+-  fix monsters stuck in doors / corners of chunks
 
 -  light_globe and flame entities for QUAKE
 
@@ -111,16 +61,9 @@ REVIEW: adjuster stuff
 
    allow it to happen with prefab composition too
 
--  outdoor wall extender: 64x64 block with torch on top
-
 Idea: for outdoor bordering, have earlier pass to set the facade_mat
       in _all_ unused seeds (grow existing buildings)
 
-Hallways:
-
-+  double hallways STILL busted (entry from the non-forky end)
-
->>>  HALLWAY_GROUPS
 
 WISH: outdoor hallways (wall on one side, fence on other side, sky top)
       [may be easier to convert hallway into a room]

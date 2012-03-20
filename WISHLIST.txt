@@ -37,6 +37,29 @@ YAY!!! DONE!!  get cave code working again
   LEVEL STUFF
 ----------------------------------------------------------------
 
+New Starting Logic
+
+-  three main kinds:
+
+   CLOSET : you begin in a very small room, which is connected to a
+            larger room, often by a door.  The closet would only
+            contain one or two pickups, e.g. a nice health item and
+            (if you're lucky) a weapon.
+
+   SIDE :   you begin in the side or corner of a large-ish room,
+            with nothing particularly special about the start position
+            (except say a pedestal).
+            
+            There are no monsters which can see you (and usually none you
+            can see either).  Again, only a couple of items nearby.
+            The starting weapon and ammo will be further away.
+
+   MIDDLE : you begin in the middle of a large room, and often have
+            to get moving to fight or avoid the monsters scattered
+            around.  There is usually some useful pickups nearby,
+            especially a starting weapon. 
+
+
 Outdoor Idioms:
 +  at edge of map, have rocky/jagged shape
    (needed where caves border outdoor room too)
@@ -59,6 +82,22 @@ Closets:
 -  support START_SKY_CLOSET, need to recognise when a closet lies
    between two outdoor border prefabs.
 
+-  START closets 
+
+-  EXIT closets
+
+-  SECRET closets
+
+-  ITEM closets
+
+-  TELEPORTER closets
+
+-  GATE closets for Hexen
+
+-  HALL closets
+
+-  MONSTER closets
+
 
 Theme System:
 +  IDEA: different monster palettes in each zone
@@ -78,6 +117,8 @@ Teleporters:
 
 
 Hallways:
++  double hallways STILL busted (entry from the non-forky end)
+
 -  ability to merge the section of a "simple" hallway into
    one of the rooms [especially to make a "Porch"].
 
@@ -92,6 +133,11 @@ DONE: Special Hallway #1 : surround half the room, entrance either side
 
 IDEA: a way to associate a skin with a hallway group
    (an extra skin, "underneath" the actual skin for a hallway piece)
+
+-  need a way for a room theme (if not level theme) to say
+   "hallways should use (or not) same theme as a connected room"
+
+-  hallways field in room themes : allow use in caves/outdoor too
 
 
 Hallway Theming:
@@ -328,6 +374,10 @@ Weapons:
 
      x_offset is alternate term for u1  [u2 can be absent]
      y_offset is alternate term for v1 or v2  (depends on 'peg' flag)
+
++  DOORS (LOCKED TOO) in a whole mini-hall
+
+-  outdoor wall extender: 64x64 block with torch on top
 
 -  try position-based monster ordering for fight simulator
 
