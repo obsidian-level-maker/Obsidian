@@ -1244,7 +1244,7 @@ function ROOM_CLASS.add_closet(R, closet_kind)
 
   local K, dir = R:find_closet_spot(R, want_deep)
 
-  if not K then return end
+  if not K then return false end
 
   local N = K:neighbor(dir)
 
@@ -1272,6 +1272,8 @@ function ROOM_CLASS.add_closet(R, closet_kind)
   -- tell other code not to put place player start / exit pillar
   if closet_kind == "START" then R.has_start_closet = true end
   if closet_kind == "EXIT"  then R.has_exit_closet  = true end
+
+  return true
 end
 
 
