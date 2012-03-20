@@ -1299,7 +1299,7 @@ function Rooms_add_closets()
     rand.shuffle(room_list)
 
     each R in room_list do
-      local kind = rand.key_by_probs { TRAP=60, SECRET=20, ITEM=20 }
+      local kind = rand.key_by_probs { TRAP=60, SECRET=10, ITEM=20 }
 
       R:add_closet(kind)
     end

@@ -2087,7 +2087,8 @@ DOOM.SKINS =
     _long   = { 192,384 }
     _deep   = { 192,384 }
 
-    item = "invul"
+    item = { backpack=50, blue_armor=50, soul=30, berserk=30,
+             invul=10, invis=10, map=10, goggles=5 }
   }
 
 
@@ -2919,6 +2920,8 @@ DOOM.THEME_DEFAULTS =
                    Locked_ks_blue=50, Locked_ks_red=50, Locked_ks_yellow=50,
                    Door_SW_blue = 50, Door_SW_red = 50,
                    Door_SW_pink = 50, Door_SW_vine = 50 }
+
+  secrets = { Secret_Closet = 50 }
 
   arches = { Arch1 = 50 }
 
