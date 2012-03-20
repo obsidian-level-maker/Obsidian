@@ -2429,7 +2429,7 @@ DOOM.SKINS =
     door_c = "FLOOR7_2"
     step = "COMPBLUE"
     track = "DOORTRAK"
----##    frame = "FLAT14"
+    frame = "FLAT14"
     door_h = 112
     special = 0
   }
@@ -2466,7 +2466,7 @@ DOOM.SKINS =
     door_c = "FLAT1"
     step = "REDWALL"
     track = "DOORTRAK"
----##    frame = "FLAT5_3"
+    frame = "FLAT5_3"
     door_h = 112
     special = 0
   }
@@ -2503,7 +2503,7 @@ DOOM.SKINS =
     door_c = "FLOOR7_2"
     step = "SKINFACE"
     track = "DOORTRAK"
----##    frame = "SKINFACE"
+    frame = "SKINFACE"
     door_h = 112
     special = 0
   }
@@ -2540,7 +2540,7 @@ DOOM.SKINS =
     door_c = "FLOOR7_2"
     step = "GRAYVINE"
     track = "DOORTRAK"
----##    frame = "FLAT1"
+    frame = "FLAT1"
     door_h = 112
     special = 0
   }
