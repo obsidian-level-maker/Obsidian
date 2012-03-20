@@ -332,6 +332,15 @@ function HALLWAY_CLASS.select_piece(H, C)
 
   local tab = Rooms_filter_skins(H, "hallway_group", source_tab, reqs)
 
+  -- handle pieces that should only occur in-between other pieces
+  each name in table.keys(tab) do
+    local skin = GAME.SKINS[name]
+
+    if skin._in_between and (not H.last_piece or H.last_piece == name) then
+      tab[name] = nil
+    end
+  end
+
   return rand.key_by_probs(tab)
 end
 
@@ -357,6 +366,8 @@ function HALLWAY_CLASS.build_hall_piece(H, C)
   if fab.has_spots then
     Rooms_distribute_spots(H, Fab_read_spots(fab))
   end
+
+  H.last_piece = skin_name
 
 --[[
 local mx, my = C:mid_point()
