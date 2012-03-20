@@ -2630,6 +2630,12 @@ DOOM.SKINS =
 
   -- TODO: Hall_Thin_P
 
+  Hall_Thin_I_Bend =
+  {
+    _prefab = "HALL_THIN_I_BEND"
+    _shape  = "I"
+  }
+
   Hall_Thin_I_Bulge =
   {
     _prefab = "HALL_THIN_I_BULGE"
@@ -3085,6 +3091,7 @@ DOOM.HALLWAY_GROUPS =
       Hall_Basic_I_Lift  = 2  -- TODO
 
       Hall_Thin_I_Bulge = 70
+      Hall_Thin_I_Bend  = 20
     }
   }
 
