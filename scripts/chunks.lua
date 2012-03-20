@@ -550,8 +550,10 @@ function CHUNK_CLASS.do_big_item(C, item_name)
     return
   end
 
-  local name  = rand.key_by_probs(THEME.pedestals)
-  local skin1 = assert(GAME.SKINS[name])
+  local list  = Rooms_filter_skins(C.room or C.hall, "pedestals", THEME.pedestals,
+                                   { where="middle" })
+  local name  = rand.key_by_probs(list)
+  local skin1 = GAME.SKINS[name]
 
   local skin2 = { item = item_name }
   local skin0 = { wall = C.room.wall_mat }
@@ -564,8 +566,11 @@ end
 
 
 function CHUNK_CLASS.content_start(C)
-  local name  = rand.key_by_probs(THEME.starts)
-  local skin1 = assert(GAME.SKINS[name])
+  local list = Rooms_filter_skins(C.room or C.hall, "starts", THEME.starts,
+                                  { where="middle" })
+
+  local name  = rand.key_by_probs(list)
+  local skin1 = GAME.SKINS[name]
 
   local mx, my = C:mid_point()
 
@@ -578,8 +583,10 @@ end
 
 
 function CHUNK_CLASS.content_exit(C)
-  local name  = rand.key_by_probs(THEME.exits)
-  local skin1 = assert(GAME.SKINS[name])
+  local list = Rooms_filter_skins(C.room or C.hall, "exits", THEME.exits,
+                                  { where="middle" })
+  local name = rand.key_by_probs(list)
+  local skin1 = GAME.SKINS[name]
 
   local mx, my = C:mid_point()
 
@@ -631,7 +638,9 @@ end
 function CHUNK_CLASS.content_teleporter(C)
   local conn = assert(C.content.teleporter)
 
-  local name  = rand.key_by_probs(THEME.teleporters)
+  local list  = Rooms_filter_skins(C.room or C.hall, "teleporters", THEME.teleporters,
+                                   { where="middle" })
+  local name  = rand.key_by_probs(list)
   local skin1 = assert(GAME.SKINS[name])
 
   local skin0 = { wall = C.room.wall_mat }
@@ -663,7 +672,9 @@ end
 
 
 function CHUNK_CLASS.content_hub_gate(C)
-  local name  = rand.key_by_probs(THEME.hub_gates)
+  local list  = Rooms_filter_skins(C.room or C.hall, "hub_gates", THEME.hub_gates,
+                                   { where="middle" })
+  local name  = rand.key_by_probs(list)
   local skin1 = assert(GAME.SKINS[name])
 
   local skin0 = { wall = C.room.wall_mat }
