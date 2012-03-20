@@ -2929,7 +2929,7 @@ DOOM.THEME_DEFAULTS =
 
   fences = { Fence1 = 50 }
 
-  hallway_groups = { basic = 50, thin = 20, cavey = 999 }
+  hallway_groups = { basic = 50, thin = 20 }  -- TODO: cavey
 
   big_junctions =
   {
