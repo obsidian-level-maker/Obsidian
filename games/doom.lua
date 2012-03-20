@@ -2644,7 +2644,7 @@ DOOM.SKINS =
     _deep   = { 192,384 }
     _in_between = 1
 
-    lamp = { TLITE6_1=50, CEIL1_2=10, FLAT2=10, FLAT22=2, FLOOR1_7=2 }
+    lamp = "TLITE6_1"
   }
 
   Hall_Thin_I_Stair =
