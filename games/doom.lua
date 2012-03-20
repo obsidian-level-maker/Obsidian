@@ -1799,6 +1799,7 @@ DOOM.SKINS =
   Start_basic =
   {
     _prefab = "START_SPOT"
+    _where  = "middle"
 
     top = "O_BOLT"
   }
@@ -2898,9 +2899,9 @@ DOOM.SKINS =
 
 DOOM.THEME_DEFAULTS =
 {
-  starts = { Start_basic = 50 }
+  starts = { Start_basic = 10, Start_Closet = 70 }
 
-  exits = { Exit_tech_pillar = 50 }
+  exits = { Exit_tech_pillar = 10, Exit_Closet = 70 }
 
   pedestals = { Pedestal_1 = 50 }
 

@@ -632,14 +632,7 @@ end
 function CLOSET_CLASS.build(CL)
   local C = assert(CL.chunk)
 
-  local skin_name
-
-  --!!!  check CL.closet_kind, THEME specific list
-  if CL.closet_kind == "START" then
-    skin_name = "Start_Closet"
-  else
-    skin_name = "Exit_Closet"
-  end
+  local skin_name = rand.key_by_probs(CL.skins)
 
   local skin0 = CL.parent.skin
   local skin1 = assert(GAME.SKINS[skin_name])
@@ -1230,14 +1223,26 @@ end
 
 
 function ROOM_CLASS.add_closet(R, closet_kind)
+  local source_tab
 
---!!!!  if not THEME.start_closets then return end
+      if closet_kind == "START" then source_tab = THEME.starts
+  elseif closet_kind == "EXIT"  then source_tab = THEME.exits
+  elseif closet_kind == "ITEM"  then source_tab = THEME.pedestals
+  elseif closet_kind == "TRAP"  then source_tab = THEME.traps
+  elseif closet_kind == "SECRET" then source_tab = THEME.secrets
+  elseif closet_kind == "TELEPORTER" then source_tab = THEME.teleporters
+  elseif closet_kind == "HUB_GATE" then source_tab = THEME.hub_gates
+  else
+    error("Bad closet kind: " .. tostring(closet_kind))
+  end
 
+  if not source_tab then return false end
 
---[[ FIXME DO LATER : when chunk size is known
-  local skin_name = rand.key_by_probs(THEME.start_closets)
-  local skin1 = assert(GAME.SKINS[skin_name])
---]]
+  local list = Rooms_filter_skins(R, closet_kind .. "-closets", source_tab,
+                                  { where="closet" }, "empty_ok")
+
+  if table.empty(list) then return false end
+
 
   -- pick location to attach closet to room
   local want_deep = (kind == "START" or kind == "EXIT" or rand.odds(10))
@@ -1245,6 +1250,11 @@ function ROOM_CLASS.add_closet(R, closet_kind)
   local K, dir = R:find_closet_spot(R, want_deep)
 
   if not K then return false end
+
+  -- !!!! FIXME : only pick prefabs that can fit
+  -- local long, deep = blah....
+  -- list = Rooms_filter_skins(R, closet_kind .. "-closets", list,
+  --                           { where="closet", long=long, deep=deep })
 
   local N = K:neighbor(dir)
 
@@ -1255,6 +1265,7 @@ function ROOM_CLASS.add_closet(R, closet_kind)
 
   CL.dir = 10 - dir
   CL.section = N
+  CL.skins = list
 
   CL.conn_group = R.conn_group  -- keep D:add_it() happy
 
@@ -1269,10 +1280,6 @@ function ROOM_CLASS.add_closet(R, closet_kind)
 
   D:add_it()
 
-  -- tell other code not to put place player start / exit pillar
-  if closet_kind == "START" then R.has_start_closet = true end
-  if closet_kind == "EXIT"  then R.has_exit_closet  = true end
-
   return true
 end
 
@@ -1281,16 +1288,18 @@ end
 function Rooms_add_closets()
 
   -- handle exit room first (give it priority)
-  LEVEL.exit_room:add_closet("EXIT");
+  if LEVEL.exit_room:add_closet("EXIT") then
+    LEVEL.exit_room.has_exit_closet = true
+  end
 
-  -- do the other kinds of closets now, visitings rooms in random order
+  -- do the other kinds of closets now, visiting rooms in random order
   local room_list = table.copy(LEVEL.rooms)
 
   for loop = 1,4 do
     rand.shuffle(room_list)
 
     each R in room_list do
-      local kind = rand.sel(75, "trap", "secret")
+      local kind = rand.key_by_probs { TRAP=60, SECRET=20, ITEM=20 }
 
       R:add_closet(kind)
     end
@@ -1700,7 +1709,7 @@ end
 
 
 
-function Rooms_filter_skins(L, tab_name, tab, reqs)
+function Rooms_filter_skins(L, tab_name, tab, reqs, empty_ok)
   assert(tab)
   
   local function match(skin)
@@ -1749,7 +1758,7 @@ function Rooms_filter_skins(L, tab_name, tab, reqs)
     end
   end
 
-  if table.empty(result) then
+  if table.empty(result) and not empty_ok then
     error("No matching prefab for: " .. tab_name)
   end
 

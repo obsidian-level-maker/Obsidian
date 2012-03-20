@@ -422,7 +422,10 @@ function Connect_start_room()
   room.purpose = "START"
 
   if LEVEL.special != "street" then
-    room:add_closet("START")
+
+    if room:add_closet("START") then
+      room.has_start_closet = true
+    end
 
     --????  Hmmm, should clear room.purpose ??
   end
