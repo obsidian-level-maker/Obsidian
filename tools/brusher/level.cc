@@ -177,12 +177,7 @@ void LoadThings(wad_c *base)
   }
 
   if (!lump || count == 0)
-  {
-    // Note: no error if no things exist, even though technically a map
-    // will be unplayable without the player starts.
-    PrintWarn("Couldn't find any Things");
     return;
-  }
 
 # if DEBUG_LOAD
   PrintDebug("LoadThings: num = %d\n", count);

@@ -492,7 +492,7 @@ wad_c *wad_c::Load(const char *filename)
 
   if (! wad->in_file)
   {
-    PrintWarn("Cannot open WAD file %s : %s", filename, strerror(errno));
+    PrintWarn("Cannot open WAD file %s : %s\n", filename, strerror(errno));
     return NULL;
   }
 
