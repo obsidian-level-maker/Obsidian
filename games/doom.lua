@@ -2630,6 +2630,17 @@ DOOM.SKINS =
 
   -- TODO: Hall_Thin_P
 
+  Hall_Thin_I_Bulge =
+  {
+    _prefab = "HALL_THIN_I_BULGE"
+    _shape  = "I"
+    _long   = 192
+    _deep   = { 192,384 }
+    _in_between = 1
+
+    lamp = { TLITE6_1=50, CEIL1_2=10, FLAT2=10, FLAT22=2, FLOOR1_7=2 }
+  }
+
   Hall_Thin_I_Stair =
   {
     _prefab = "HALL_THIN_I_STAIR"
@@ -2933,7 +2944,7 @@ DOOM.THEME_DEFAULTS =
 
   fences = { Fence1 = 50 }
 
-  hallway_groups = { basic = 50, thin = 20 }  -- TODO: cavey
+  hallway_groups = { basic = 50, thin = 15 }  -- TODO: cavey
 
   big_junctions =
   {
@@ -3072,6 +3083,8 @@ DOOM.HALLWAY_GROUPS =
 
       Hall_Thin_I_Stair = 20
       Hall_Basic_I_Lift  = 2  -- TODO
+
+      Hall_Thin_I_Bulge = 50
     }
   }
 

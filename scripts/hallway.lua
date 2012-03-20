@@ -1584,7 +1584,7 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
     -- general vertical direction
     local z_dir = rand.sel(50, 1, -1)
 
-    H.stair_prob = 60
+    H.stair_prob = 50
 
     H:stair_flow(entry_C, 10 - entry_dir, entry_h, z_dir, {})
   end
