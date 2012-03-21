@@ -2854,10 +2854,12 @@ DOOM.SKINS =
     _prefab = "JUNCTION_NUKEY_C"
     _liquid = 1
     _shape  = "C"
-    _long   = 192
-    _deep   = 192
+    _long   = 576
+    _deep   = 576
 
-    support = "SUPPORT2"
+    island = { FLOOR3_3=50, FLOOR0_3=50, MFLR8_2=10 }
+    ceil   = { CEIL5_1=30, FLAT10=10, CEIL3_5=40, CEIL4_2=30 }
+    support = "SUPPORT3"
     support_ox = 24
 
     lamp = { TLITE6_5=50, TLITE6_6=10, TLITE6_1=10, FLOOR1_7=5 }
@@ -3086,7 +3088,7 @@ DOOM.THEME_DEFAULTS =
     Junc_Octo_T = 50
     Junc_Octo_P = 50
 
-    Junc_Nukey_C = 10
+    Junc_Nukey_C = 40  -- size restriction means this is fairly rare
   }
 
   fat_cages = { Fat_Cage1 = 50, Fat_Cage_W_Bars = 8 }

@@ -321,14 +321,14 @@ PREFAB.JUNCTION_NUKEY_C =
 
     -- islands #1
     {
-      { x =  80, y = 280, mat = "?floor" }
-      { x = 160, y = 264, mat = "?floor" }
-      { x = 248, y = 312, mat = "?floor" }
-      { x = 248, y = 400, mat = "?floor" }
-      { x = 160, y = 456, mat = "?floor" }
-      { x =  80, y = 416, mat = "?floor" }
-      { x =  56, y = 360, mat = "?floor" }
-      { t = 0, mat = "?floor" }
+      { x =  80, y = 280, mat = "?island" }
+      { x = 160, y = 264, mat = "?island" }
+      { x = 248, y = 312, mat = "?island" }
+      { x = 248, y = 400, mat = "?island" }
+      { x = 160, y = 456, mat = "?island" }
+      { x =  80, y = 416, mat = "?island" }
+      { x =  56, y = 360, mat = "?island" }
+      { t = 0, mat = "?island" }
     }
 
     {
@@ -344,14 +344,14 @@ PREFAB.JUNCTION_NUKEY_C =
 
     -- islands #2
     {
-      { x = 296, y =  88, mat = "?floor" }
-      { x = 384, y =  72, mat = "?floor" }
-      { x = 432, y = 128, mat = "?floor" }
-      { x = 432, y = 200, mat = "?floor" }
-      { x = 360, y = 248, mat = "?floor" }
-      { x = 280, y = 232, mat = "?floor" }
-      { x = 264, y = 160, mat = "?floor" }
-      { t = 0, mat = "?floor" }
+      { x = 296, y =  88, mat = "?island" }
+      { x = 384, y =  72, mat = "?island" }
+      { x = 432, y = 128, mat = "?island" }
+      { x = 432, y = 200, mat = "?island" }
+      { x = 360, y = 248, mat = "?island" }
+      { x = 280, y = 232, mat = "?island" }
+      { x = 264, y = 160, mat = "?island" }
+      { t = 0, mat = "?island" }
     }
 
     {
