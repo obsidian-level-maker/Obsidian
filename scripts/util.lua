@@ -394,26 +394,26 @@ end
 function table.expand_copies(t)
 
   local function expand_it(name, sub)
-    if not sub.copy then return end
+    if not sub._copy then return end
 
     if sub.__expanding then
       error("Cyclic copy ref in: " .. name)
     end
 
-    local orig = t[sub.copy]
+    local orig = t[sub._copy]
     if not orig then
-      error("Unknown copy ref: " .. tostring(sub.copy) .. " in: " .. name)
+      error("Unknown copy ref: " .. tostring(sub._copy) .. " in: " .. name)
     end
 
     sub.__expanding = true
 
     -- recursively expand the original
-    expand_it(sub.copy, orig)
+    expand_it(sub._copy, orig)
 
     table.merge_missing(sub, orig)
 
     sub.__expanding = nil
-    sub.copy = nil
+    sub._copy = nil
   end
 
   --| expand_copies |--

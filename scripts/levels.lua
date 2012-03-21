@@ -392,6 +392,8 @@ function Levels_setup()
   table.merge_missing(PARAM, GLOBAL_PARAMETERS)
 
   table.name_up(PREFAB)
+
+  table.expand_copies(GAME.SKINS)
 end
 
 
