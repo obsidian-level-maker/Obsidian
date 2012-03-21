@@ -52,6 +52,7 @@ CHANGES (since 3.57)
 - support for simple 3D bridges within rooms
 - improved infighting logic in the Fight Simulator
 
+- new 'Messed Up' theme setting
 - new 'Alternative Look' option
 - moved the Seed setting, and increased to 6 digits
 - Seed is automatically bumped after a successful build
