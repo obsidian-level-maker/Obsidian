@@ -2889,7 +2889,7 @@ DOOM.SKINS =
   {
     _prefab = "TELEPORT_CLOSET"
     _where  = "closet"
-    _long   = 192
+--!!!!  _long   = 192
 
     tele = "GATE4"
     tele_side = "METAL"
@@ -3090,7 +3090,7 @@ DOOM.THEME_DEFAULTS =
 
   doors = { Door_silver = 50 }
 
-  teleporters = { Teleporter1 = 50 }
+  teleporters = { Teleporter1 = 10, Teleporter_Closet = 80 }
 
   windows = { Window1 = 50 }
 

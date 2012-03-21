@@ -722,16 +722,10 @@ function Areas_important_stuff()
 
 
   local function add_teleporter(R)
-    local conn
+    if R.has_teleporter_closet then return end
+
+    local conn = R:get_teleport_conn()
     
-    each D in R.conns do
-      if D.kind == "teleporter" then
-        conn = D ; break
-      end
-    end
-
-    assert(conn)
-
     local C = spot_for_wotsit(R)
 
     C.content.kind = "TELEPORTER"
@@ -1981,6 +1975,8 @@ dump_seed_list("grown seeds", seeds)
       --       elseif R.has_teleporter() then find_tele_chunk
       -- [BETTER: have R.entry_chunk field]
 
+      assert(#R.chunks > 0)
+
       repeat
         C = rand.pick(R.chunks)
       until not (C.scenic or C.liquid)
@@ -2117,8 +2113,10 @@ dump_seed_list("grown seeds", seeds)
         outgoing_heights(hall)
       end
 
-      -- for direct room-to-room connections (Street mode)
-      if D.L1 == L and L.kind != "hallway" and D.L2.kind != "hallway" then
+      -- for direct room-to-room connections (Street mode, Closets)
+      if D.L1 == L and D.kind != "teleporter" and
+         L.kind != "hallway" and D.L2.kind != "hallway"
+      then
         assert(D.C1)
         assert(D.C2)
         assert(D.C1.floor_h)

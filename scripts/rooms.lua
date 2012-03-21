@@ -307,6 +307,16 @@ function ROOM_CLASS.has_teleporter(R)
   return false
 end
 
+function ROOM_CLASS.get_teleport_conn(R)
+  each D in R.conns do
+    if D.kind == "teleporter" then
+      return D
+    end
+  end
+
+  error("cannot find teleport conn")
+end
+
 
 function ROOM_CLASS.has_weapon_using_ammo(R, ammo)
   if R.weapons and not PARAM.hexen_weapons then
@@ -636,6 +646,7 @@ function CLOSET_CLASS.build(CL)
 
   local skin0 = table.copy(CL.parent.skin)
   local skin1 = assert(GAME.SKINS[skin_name])
+  local skin2 = {}
 
   -- FIXME !!  get floor texture from touching area
 
@@ -644,11 +655,26 @@ function CLOSET_CLASS.build(CL)
     skin0.wall = CL.parent.zone.facade_mat
   end
 
+  if CL.closet_kind == "TELEPORTER" then
+    local conn = CL.parent:get_teleport_conn()
+
+    if conn.L1 == CL.parent then
+      skin2. in_tag = conn.tele_tag2
+      skin2.out_tag = conn.tele_tag1
+    else
+      skin2. in_tag = conn.tele_tag1
+      skin2.out_tag = conn.tele_tag2
+    end
+
+    skin2. in_target = string.format("tele%d", skin2. in_tag)
+    skin2.out_target = string.format("tele%d", skin2.out_tag)
+  end
+
   assert(C.floor_h)
 
   local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h, 10 - CL.dir)
 
-  Fabricate(skin1._prefab, T, { skin0, skin1 })
+  Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
 
 --[[
   -- experiment !!
@@ -1298,6 +1324,17 @@ function Rooms_add_closets()
   if LEVEL.exit_room:add_closet("EXIT") then
     LEVEL.exit_room.has_exit_closet = true
   end
+
+  -- now do teleporters
+  each R in LEVEL.rooms do
+    if R:has_teleporter() then
+      if R:add_closet("TELEPORTER") then
+        R.has_teleporter_closet = true
+      end
+    end
+  end
+
+  -- TODO ITEM / SECRET closets in start room
 
   -- do the other kinds of closets now, visiting rooms in random order
   local room_list = table.copy(LEVEL.rooms)
