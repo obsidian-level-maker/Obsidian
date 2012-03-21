@@ -289,15 +289,74 @@ end
 ---?? end
 
 
+function HALLWAY_CLASS.check_sky_hall(H)
+  local info = {}
+
+  local sky_count = 0
+  local total     = 0
+
+  each C in H.chunks do
+    if not C.crossover_hall and not (C.h_shape == "P" or C.h_shape == "T") then
+
+      local touches_sky
+
+      for dir = 2,8,2 do
+        if C:neighbor_info(dir, info, "sky_only") then
+          touches_sky = true
+        end
+      end -- dir
+
+      if touches_sky then sky_count = sky_count + 1 end
+      total = total + 1
+    end
+  end
+
+stderrf("check_sky_hall @ %s : %d/%d\nfloor range (%d..%d)\n%s\n\n",
+        H:tostr(), sky_count, total,
+        H.min_floor_h, H.max_floor_h,
+        table.tostr(info))
+
+  -- Requirements:
+  --   (1) sky_count >= MAX(1, total / 2)
+  --   (2) hallway floor >= neighbor floors
+  --   (3) hallway ceil  <= neighbor ceilings
+
+  if sky_count >= math.max(1, total / 2) and
+     info.f_max and H.min_floor_h >= info.f_max and
+     info.c_min and H.max_floor_h + 80 <= info.c_min
+  then
+    return true
+  end
+
+  return false
+end
+
+
 function HALLWAY_CLASS.pick_group(H)
   -- use a single style per zone
-  if not H.zone.hallway_group then
-    local group_tab = H.theme.hallway_groups or THEME.hallway_groups
+  local group_tab = H.theme.hallway_groups or THEME.hallway_groups
 
+  if not H.zone.hallway_group then
     H.zone.hallway_group = rand.key_by_probs(group_tab)
   end
 
   local group_name = H.zone.hallway_group
+
+  -- check for "sky halls"
+  if H:check_sky_hall() then
+    local tab = {}
+
+    each name,prob in group_tab do
+      if group.sky_hall then
+        tab[name] = prob
+      end
+    end
+
+    if not table.empty(tab) then
+      group_name = rand.key_by_probs(tab)
+stderrf("USING SKY GROUP : %s !!!!!!!!!!\n", group_name)
+    end
+  end
 
   H.group = GAME.HALLWAY_GROUPS[group_name]
 
@@ -1586,8 +1645,6 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
 
   H:update_seeds_for_chunks()
   H:peer_double_chunks()
-
-  H:pick_group()
 
   if H.is_cycle then
     H:handle_cycle(entry_C, 10 - entry_dir, entry_h)

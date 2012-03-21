@@ -1713,6 +1713,10 @@ end
 
 function Rooms_blow_chunks()
 
+  each H in LEVEL.halls do
+    H:pick_group()
+  end
+
   each R in LEVEL.rooms do
     each C in R.chunks do
       C:build()

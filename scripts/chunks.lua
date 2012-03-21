@@ -291,6 +291,41 @@ function CHUNK_CLASS.classify_edge(C, dir)
 end
 
 
+function CHUNK_CLASS.neighbor_info(C, dir, info, sky_only)
+  local sx1, sy1, sx2, sy2 = geom.side_coords(dir, C.sx1, C.sy1, C.sx2, C.sy2)
+
+  sx1, sy1 = geom.nudge(sx1, sy1, dir)
+  sx2, sy2 = geom.nudge(sx2, sy2, dir)
+
+  if not Seed_valid(sx1, sy1) then return nil end
+
+  local touch_sky
+
+  for sx = sx1,sx2 do for sy = sy1,sy2 do
+    local C = SEEDS[sx][sy].chunk
+
+    if not C then return nil end
+
+    if C.room and C.room.kind == "outdoor" then
+      info.sky = true
+      touch_sky = true
+    elseif sky_only then
+      continue
+    end
+
+    if C.floor_h then info.f_min = math.min(info.f_min or  9999, C.floor_h) end
+    if C.floor_h then info.f_max = math.max(info.f_max or -9999, C.floor_h) end
+
+    local ceil_h = C.ceil_h or (C.room and C.room.sky_h)
+
+    if ceil_h then info.c_min = math.min(info.c_min or  9999, ceil_h) end
+    if ceil_h then info.c_max = math.max(info.c_max or -9999, ceil_h) end
+  end end
+
+  return touch_sky
+end
+
+
 function CHUNK_CLASS.need_fence(C, dir)
   assert(C.room)
 
