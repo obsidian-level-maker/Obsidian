@@ -482,8 +482,8 @@ function Hallway_test_branch(start_K, start_dir, mode)
     -- cycles must connect two rooms, not hallways
     -- (that's because we don't want to merge and forget the cycle-ness)
     -- TODO: relax this to allow connecting onto a big junction
-    if end_K.hall then return end
-
+    if mode == "cycle" and end_K.hall then return end
+    
     local merge = false
 
     -- Note: currently _REQUIRE_ all hallways to merge, since there's no
