@@ -487,8 +487,8 @@ function Levels_choose_themes()
   gui.printf("\n")
 
   -- the user can specify the main theme
-  if OB_CONFIG.theme != "mixed" and OB_CONFIG.theme != "original" and
-     OB_CONFIG.theme != "psycho"
+  if OB_CONFIG.theme != "mixed" and OB_CONFIG.theme != "mess" and
+     OB_CONFIG.theme != "original" and OB_CONFIG.theme != "psycho"
   then
     each L in GAME.levels do
       set_level_theme(L, OB_CONFIG.theme)
@@ -497,6 +497,8 @@ function Levels_choose_themes()
     return
   end
 
+  
+  -- Psycheledic : pick randomly, honor the 'psycho_prob' field
   if OB_CONFIG.theme == "psycho" then
     local prob_tab = {}
     for name,info in pairs(OB_THEMES) do
@@ -523,11 +525,11 @@ function Levels_choose_themes()
     return
   end
 
-  -- Mix It Up : choose a theme for each episode
-  local episode_list = {}
+
+  -- collect usable themes
+  local prob_tab = {}
   local total = 0
 
-  local prob_tab = {}
   for name,info in pairs(OB_THEMES) do
     if info.shown and info.mixed_prob then
       prob_tab[name] = info.mixed_prob
@@ -536,6 +538,20 @@ function Levels_choose_themes()
   end
 
   assert(total > 0)
+
+
+  -- Messed Up : every level is purely random
+  if OB_CONFIG.theme == "mess" then
+    each L in GAME.levels do
+      set_level_theme(L, rand.key_by_probs(prob_tab))
+    end
+
+    return
+  end
+
+
+  -- A Bit Mixed : choose a theme for each episode
+  local episode_list = {}
 
   if OB_CONFIG.theme == "original" and GAME.ORIGINAL_THEMES then
     total = math.max(total, # GAME.ORIGINAL_THEMES)

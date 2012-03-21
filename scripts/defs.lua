@@ -55,12 +55,18 @@ OB_ENGINES["nolimit"] =
 OB_THEMES["original"] =
 {
   label = "As Original",
-  priority = -97,
+  priority = -96,
 }
 
 OB_THEMES["mixed"] =
 {
-  label = "Mix It Up",
+  label = "A Bit Mixed",
+  priority = -97,
+}
+
+OB_THEMES["mess"] =
+{
+  label = "Messed Up",
   priority = -98,
 }
 
