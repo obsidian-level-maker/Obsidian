@@ -2873,7 +2873,7 @@ DOOM.SKINS =
     _prefab = "TELEPORT_PAD"
     _where  = "middle"
 
-    top  = { GATE1=60, GATE2=60, GATE3=30 }
+    tele = { GATE1=60, GATE2=60, GATE3=30 }
     side = "METAL"
 
     x_offset = 0
@@ -2881,7 +2881,7 @@ DOOM.SKINS =
     peg = 1
 
     special = 97
-    top_special = 8
+    effect = 8
     light = 255
   }
 
@@ -2889,6 +2889,7 @@ DOOM.SKINS =
   {
     _prefab = "TELEPORT_CLOSET"
     _where  = "closet"
+    _long   = 192
 
     tele = "GATE4"
     tele_side = "METAL"
@@ -2897,6 +2898,8 @@ DOOM.SKINS =
     floor = "CEIL3_3"
     ceil  = "CEIL3_3"
     step  = "STEP1"
+
+    special = 97
   }
 
 
@@ -3052,7 +3055,7 @@ DOOM.THEME_DEFAULTS =
 {
   starts = { Start_basic = 10, Start_Closet = 70 }
 
-  exits = { Exit_tech_pillar = 10, Teleporter_Closet = 70 } --!!!!
+  exits = { Exit_tech_pillar = 10, Exit_Closet = 70 }
 
   pedestals = { Pedestal_1 = 50 }
 
