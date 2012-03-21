@@ -191,6 +191,190 @@ PREFAB.TELEPORT_PAD =
 }
 
 
+PREFAB.TELEPORT_CLOSET =
+{
+  fitted = "xy"
+
+  x_ranges = { {16,1}, {160,0}, {16,1} }
+  y_ranges = { {16,1}, {176,0} }
+
+  defaults =
+  {
+    effect = 8
+
+in_tag = 0  -- REMOVE
+out_tag = 0
+  }
+
+  brushes =
+  {
+    {
+      { x = 128, y =   0, mat = "?outer" }
+      { x = 192, y =   0, mat = "?outer" }
+      { x = 192, y =  64, mat = "?wall" }
+      { x = 176, y =  64, mat = "?inner" }
+      { x = 128, y =  16, mat = "?wall" }
+    }
+
+    {
+      { x =   0, y = 112, mat = "?wall" }
+      { x =  16, y = 112, mat = "?inner" }
+      { x =  40, y = 144, mat = "?inner" }
+      { x =  32, y = 160, mat = "?inner" }
+      { x =  24, y = 176, mat = "?inner" }
+      { x =  16, y = 192, mat = "?wall" }
+      { x =   0, y = 192, mat = "?outer" }
+    }
+
+    {
+      { x = 152, y = 144, mat = "?inner" }
+      { x = 176, y = 112, mat = "?wall" }
+      { x = 192, y = 112, mat = "?outer" }
+      { x = 192, y = 192, mat = "?wall" }
+      { x = 176, y = 192, mat = "?inner" }
+      { x = 168, y = 176, mat = "?inner" }
+      { x = 160, y = 160, mat = "?inner" }
+    }
+
+    {
+      { x =   0, y =   0, mat = "?outer" }
+      { x =  64, y =   0, mat = "?wall" }
+      { x =  64, y =  16, mat = "?inner" }
+      { x =  16, y =  64, mat = "?wall" }
+      { x =   0, y =  64, mat = "?outer" }
+    }
+
+    {
+      { x =  16, y = 192, mat = "?wall" }
+      { x =  24, y = 176, mat = "?wall" }
+      { x = 168, y = 176, mat = "?wall" }
+      { x = 176, y = 192, mat = "?step", peg=1, y_offset=0  }
+      { t = 8, mat = "?floor" }
+    }
+    {
+      { x =  16, y = 192, mat = "?wall" }
+      { x =  24, y = 176, mat = "?wall" }
+      { x = 168, y = 176, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+      { b = 192, mat = "?ceil" }
+    }
+
+    {
+      { x =  24, y = 176, mat = "?wall" }
+      { x =  32, y = 160, mat = "?wall" }
+      { x = 160, y = 160, mat = "?wall" }
+      { x = 168, y = 176, mat = "?step", peg=1, y_offset=0 }
+      { t = 16, mat = "?floor" }
+    }
+    {
+      { x =  24, y = 176, mat = "?wall" }
+      { x =  32, y = 160, mat = "?wall" }
+      { x = 160, y = 160, mat = "?wall" }
+      { x = 168, y = 176, mat = "?wall" }
+      { b = 192, mat = "?ceil" }
+    }
+
+    {
+      { x =  32, y = 160, mat = "?wall" }
+      { x =  40, y = 144, mat = "?wall" }
+      { x = 152, y = 144, mat = "?wall" }
+      { x = 160, y = 160, mat = "?step", peg=1, y_offset=0  }
+      { t = 24, mat = "?floor" }
+    }
+    {
+      { x =  32, y = 160, mat = "?wall" }
+      { x =  40, y = 144, mat = "?wall" }
+      { x = 152, y = 144, mat = "?wall" }
+      { x = 160, y = 160, mat = "?wall" }
+      { b = 160, mat = "?ceil" }
+    }
+
+    {
+      { x =  16, y =  64, mat = "?wall" }
+      { x =  64, y =  16, mat = "?wall" }
+      { x = 128, y =  16, mat = "?wall" }
+      { x = 176, y =  64, mat = "?wall" }
+      { x = 176, y = 112, mat = "?wall" }
+      { x = 152, y = 144, mat = "?wall" }
+      { x =  40, y = 144, mat = "?wall" }
+      { x =  16, y = 112, mat = "?wall" }
+      { t = 24, mat = "?floor" }
+    }
+    {
+      { x =  16, y =  64, mat = "?wall" }
+      { x =  64, y =  16, mat = "?wall" }
+      { x = 128, y =  16, mat = "?wall" }
+      { x = 176, y =  64, mat = "?wall" }
+      { x = 176, y = 112, mat = "?wall" }
+      { x = 152, y = 144, mat = "?wall" }
+      { x =  40, y = 144, mat = "?wall" }
+      { x =  16, y = 112, mat = "?wall" }
+      { b = 160, mat = "?ceil" }
+    }
+    {
+      { m = "light", add = 255, effect = "?effect" }
+      { x =  16, y =  64 }
+      { x =  64, y =  16 }
+      { x = 128, y =  16 }
+      { x = 176, y =  64 }
+      { x = 176, y = 112 }
+      { x = 152, y = 144 }
+      { x =  40, y = 144 }
+      { x =  16, y = 112 }
+    }
+
+    {
+      { x =  64, y =  64, mat = "?tele_side", special="?special", tag="?out_tag", peg=1, y_offset=0 }
+      { x = 128, y =  64, mat = "?tele_side", special="?special", tag="?out_tag", peg=1, y_offset=0  }
+      { x = 128, y = 128, mat = "?tele_side", special="?special", tag="?out_tag", peg=1, y_offset=0  }
+      { x =  64, y = 128, mat = "?tele_side", special="?special", tag="?out_tag", peg=1, y_offset=0  }
+      { t = 40, mat = "?tele" }
+    }
+    {
+      { x =  64, y =  64, mat = "?tele_side" }
+      { x = 128, y =  64, mat = "?tele_side" }
+      { x = 128, y = 128, mat = "?tele_side" }
+      { x =  64, y = 128, mat = "?tele_side" }
+      { b = 144, mat = "?tele", tag = "?in_tag" }
+    }
+    {
+      { m = "light", add = 255 }
+      { x =  64, y =  64, mat = "?tele_side" }
+      { x = 128, y =  64, mat = "?tele_side" }
+      { x = 128, y = 128, mat = "?tele_side" }
+      { x =  64, y = 128, mat = "?tele_side" }
+      { b = 144, mat = "?tele", tag = "?in_tag" }
+    }
+
+    {
+      { x =  64, y =   0, mat = "?outer" }
+      { x = 128, y =   0, mat = "?wall" }
+      { x = 128, y =  16, mat = "?inner" }
+      { x =  64, y =  16, mat = "?wall" }
+    }
+
+    {
+      { x =   0, y =  64, mat = "?wall" }
+      { x =  16, y =  64, mat = "?inner" }
+      { x =  16, y = 112, mat = "?wall" }
+      { x =   0, y = 112, mat = "?outer" }
+    }
+
+    {
+      { x = 176, y =  64, mat = "?wall" }
+      { x = 192, y =  64, mat = "?outer" }
+      { x = 192, y = 112, mat = "?wall" }
+      { x = 176, y = 112, mat = "?inner" }
+    }
+  }
+
+  entities =
+  {
+    { ent = "teleport_spot", x = 96, y = 96, z = 40, angle = 90 }
+  }
+}
+
+
 PREFAB.HEXEN_GATE =
 {
   brushes =

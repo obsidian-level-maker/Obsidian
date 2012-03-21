@@ -2885,6 +2885,20 @@ DOOM.SKINS =
     light = 255
   }
 
+  Teleporter_Closet =
+  {
+    _prefab = "TELEPORT_CLOSET"
+    _where  = "closet"
+
+    tele = "GATE4"
+    tele_side = "METAL"
+
+    inner = "REDWALL"
+    floor = "CEIL3_3"
+    ceil  = "CEIL3_3"
+    step  = "STEP1"
+  }
+
 
   ---| WINDOWS |---
 
@@ -3038,7 +3052,7 @@ DOOM.THEME_DEFAULTS =
 {
   starts = { Start_basic = 10, Start_Closet = 70 }
 
-  exits = { Exit_tech_pillar = 10, Exit_Closet = 70 }
+  exits = { Exit_tech_pillar = 10, Teleporter_Closet = 70 } --!!!!
 
   pedestals = { Pedestal_1 = 50 }
 
