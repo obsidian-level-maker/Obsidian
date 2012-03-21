@@ -2739,6 +2739,8 @@ DOOM.SKINS =
     _prefab = "JUNCTION_NUKEY_C"
     _liquid = 1
     _shape  = "C"
+    _long   = 192
+    _deep   = 192
 
     support = "SUPPORT2"
     support_ox = 24
@@ -2959,7 +2961,7 @@ DOOM.THEME_DEFAULTS =
     Junc_Octo_T = 50
     Junc_Octo_P = 50
 
-    Junc_Nukey_C = 5
+    Junc_Nukey_C = 10
   }
 
   fat_cages = { Fat_Cage1 = 50, Fat_Cage_W_Bars = 8 }
