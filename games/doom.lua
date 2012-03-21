@@ -2293,7 +2293,6 @@ DOOM.SKINS =
     door_c = "FLOOR7_2"
     step = "STEP4"
     track = "DOORTRAK"
----##    frame = "FLAT18"
 
     special = 32
     tag = 0  -- kind_mult=26
@@ -2315,7 +2314,7 @@ DOOM.SKINS =
     door_c = "FLOOR3_3"
     step = "STEP4"
     track = "DOORTRAK"
----##    frame = "FLAT4"
+
     special = 34
     tag = 0  -- kind_mult=27
   }
@@ -2336,7 +2335,7 @@ DOOM.SKINS =
     door_c = "FLAT1"
     step = "STEP4"
     track = "DOORTRAK"
----##    frame = "FLAT18"
+
     special = 33
     tag = 0  -- kind_mult=28
   }
@@ -2359,7 +2358,7 @@ DOOM.SKINS =
     door_c = "FLOOR7_2"
     step = "STEP4"
     track = "DOORTRAK"
----##    frame = "FLAT18"
+
     special = 32
     tag = 0  -- kind_mult=26
   }
@@ -2382,7 +2381,7 @@ DOOM.SKINS =
     door_c = "FLOOR3_3"
     step = "STEP4"
     track = "DOORTRAK"
----##    frame = "FLAT4"
+
     special = 34
     tag = 0  -- kind_mult=27
   }
@@ -2405,9 +2404,77 @@ DOOM.SKINS =
     door_c = "FLAT1"
     step = "STEP4"
     track = "DOORTRAK"
----##    frame = "FLAT18"
+
     special = 33
     tag = 0  -- kind_mult=28
+  }
+
+  -- narrow versions of above doors
+
+  Locked_kc_blue_NAR =
+  {
+    _copy = "Locked_kc_blue"
+    _narrow = 1
+
+    door_w = 64
+    door_h = 72
+    door   = "DOOR3"
+    door_c = "FLAT1"
+  }
+
+  Locked_kc_yellow_NAR =
+  {
+    _copy = "Locked_kc_yellow"
+    _narrow = 1
+
+    door_w = 64
+    door_h = 72
+    door   = "DOOR3"
+    door_c = "FLAT1"
+  }
+
+  Locked_kc_red_NAR =
+  {
+    _copy = "Locked_kc_red"
+    _narrow = 1
+
+    door_w = 64
+    door_h = 72
+    door   = "DOOR3"
+    door_c = "FLAT1"
+  }
+
+  Locked_ks_blue_NAR =
+  {
+    _copy = "Locked_ks_blue"
+    _narrow = 1
+
+    door_w = 64
+    door_h = 72
+    door   = "DOOR3"
+    door_c = "FLAT1"
+  }
+
+  Locked_ks_yellow_NAR =
+  {
+    _copy = "Locked_ks_yellow"
+    _narrow = 1
+
+    door_w = 64
+    door_h = 72
+    door   = "DOOR3"
+    door_c = "FLAT1"
+  }
+
+  Locked_ks_red_NAR =
+  {
+    _copy = "Locked_ks_red"
+    _narrow = 1
+
+    door_w = 64
+    door_h = 72
+    door   = "DOOR3"
+    door_c = "FLAT1"
   }
 
 
@@ -2432,6 +2499,17 @@ DOOM.SKINS =
     frame = "FLAT14"
     door_h = 112
     special = 0
+  }
+
+  Door_SW_blue_NAR =
+  {
+    _copy = "Door_SW_blue"
+    _narrow = 1
+
+    door_w = 64
+    door_h = 72
+    door   = "DOOR1"
+    door_c = "FLAT23"
   }
 
   Switch_blue1 =
@@ -2471,6 +2549,17 @@ DOOM.SKINS =
     special = 0
   }
 
+  Door_SW_red_NAR =
+  {
+    _copy = "Door_SW_red"
+    _narrow = 1
+
+    door_w = 64
+    door_h = 72
+    door   = "DOOR1"
+    door_c = "FLAT23"
+  }
+
   Switch_red1 =
   {
     _prefab = "SMALL_SWITCH"
@@ -2508,6 +2597,17 @@ DOOM.SKINS =
     special = 0
   }
 
+  Door_SW_pink_NAR =
+  {
+    _copy = "Door_SW_pink"
+    _narrow = 1
+
+    door_w = 64
+    door_h = 72
+    door   = "DOOR1"
+    door_c = "FLAT23"
+  }
+
   Switch_pink1 =
   {
     _prefab = "SMALL_SWITCH"
@@ -2543,6 +2643,17 @@ DOOM.SKINS =
     frame = "FLAT1"
     door_h = 112
     special = 0
+  }
+
+  Door_SW_vine_NAR =
+  {
+    _copy = "Door_SW_vine"
+    _narrow = 1
+
+    door_w = 64
+    door_h = 72
+    door   = "DOOR1"
+    door_c = "FLAT23"
   }
 
   Switch_vine1 =
@@ -2935,10 +3046,20 @@ DOOM.THEME_DEFAULTS =
   switch_fabs  = { Switch_blue1=50, Switch_red1=50,
                    Switch_pink1=50, Switch_vine1=50 }
 
-  locked_doors = { Locked_kc_blue=50, Locked_kc_red=50, Locked_kc_yellow=50,
-                   Locked_ks_blue=50, Locked_ks_red=50, Locked_ks_yellow=50,
+  locked_doors = { Locked_kc_blue = 50,   Locked_ks_blue = 50,
+                   Locked_kc_red = 50,    Locked_ks_red = 50,
+                   Locked_kc_yellow = 50, Locked_ks_yellow = 50,
+
                    Door_SW_blue = 50, Door_SW_red = 50,
-                   Door_SW_pink = 50, Door_SW_vine = 50 }
+                   Door_SW_pink = 50, Door_SW_vine = 50,
+
+                   Locked_kc_blue_NAR = 3,   Locked_ks_blue_NAR = 3,
+                   Locked_kc_red_NAR = 3,    Locked_ks_red_NAR = 3,
+                   Locked_kc_yellow_NAR = 3, Locked_ks_yellow_NAR = 3,
+                     
+                   Door_SW_blue_NAR = 3, Door_SW_red_NAR = 3,
+                   Door_SW_pink_NAR = 3, Door_SW_vine_NAR = 3
+                 }
 
   secrets = { Secret_Closet = 50 }
 
@@ -3082,6 +3203,8 @@ DOOM.HALLWAY_GROUPS =
 
   thin =
   {
+    narrow = 1
+
     pieces =
     {
       Hall_Thin_I = 50
