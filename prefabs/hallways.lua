@@ -1196,27 +1196,57 @@ PREFAB.HALL_BASIC_I_STAIR =
 {
   fitted = "xy"
 
+  y_ranges = { {16,0}, {160,1}, {16,0} }
+
   defaults =
   {
     step = "?floor"
+    support = "?wall"
+    support_ox = 0
   }
 
   brushes =
   {
     -- left wall
     {
+      { x =   0, y =  16, mat = "?wall" }
+      { x =  16, y =  16, mat = "?wall" }
+      { x =  16, y = 176, mat = "?wall" }
+      { x =   0, y = 176, mat = "?outer" }
+    }
+
+    {
       { x =   0, y =   0, mat = "?wall" }
-      { x =  16, y =   0, mat = "?wall" }
+      { x =  16, y =   0, mat = "?support", x_offset="?support_ox", y_offset=0 }
+      { x =  16, y =  16, mat = "?wall" }
+      { x =   0, y =  16, mat = "?outer" }
+    }
+    {
+      { x =   0, y = 176, mat = "?wall" }
+      { x =  16, y = 176, mat = "?support", x_offset="?support_ox", y_offset=0 }
       { x =  16, y = 192, mat = "?wall" }
       { x =   0, y = 192, mat = "?outer" }
     }
 
     -- right wall
     {
+      { x = 176, y =  16, mat = "?wall" }
+      { x = 192, y =  16, mat = "?outer" }
+      { x = 192, y = 176, mat = "?wall" }
+      { x = 176, y = 176, mat = "?wall" }
+    }
+
+    {
       { x = 176, y =   0, mat = "?wall" }
       { x = 192, y =   0, mat = "?outer" }
+      { x = 192, y =  16, mat = "?wall" }
+      { x = 176, y =  16, mat = "?support", x_offset="?support_ox", y_offset=0 }
+    }
+    {
+      { x = 176, y = 176, mat = "?wall" }
+      { x = 192, y = 176, mat = "?outer" }
       { x = 192, y = 192, mat = "?wall" }
-      { x = 176, y = 192, mat = "?wall" }
+      { x = 176, y = 192, mat = "?support", x_offset="?support_ox", y_offset=0 }
     }
 
     -- step 1

@@ -2704,6 +2704,8 @@ DOOM.SKINS =
     _shape  = "IS"
 
     step = "STEP3"
+    support = "SUPPORT2"
+    support_ox = 24
   }
 
   Hall_Basic_I_Lift =
