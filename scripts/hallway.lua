@@ -301,7 +301,7 @@ function HALLWAY_CLASS.check_sky_hall(H)
       local touches_sky
 
       for dir = 2,8,2 do
-        if C:neighbor_info(dir, info, "sky_only") then
+        if not C.link[dir] and C:neighbor_info(dir, info, "sky_only") then
           touches_sky = true
         end
       end -- dir
@@ -311,17 +311,15 @@ function HALLWAY_CLASS.check_sky_hall(H)
     end
   end
 
+--[[ DEBUG
 stderrf("check_sky_hall @ %s : %d/%d\nfloor range (%d..%d)\n%s\n\n",
         H:tostr(), sky_count, total,
         H.min_floor_h, H.max_floor_h,
         table.tostr(info))
+--]]
 
   -- Requirements:
-  --   (1) sky_count >= MAX(1, total / 2)
-  --   (2) hallway floor >= neighbor floors
-  --   (3) hallway ceil  <= neighbor ceilings
-
-  if sky_count >= math.max(1, total / 2) and
+  if sky_count >= math.max(1, total / 3) and
      info.f_max and H.min_floor_h >= info.f_max and
      info.c_min and H.max_floor_h + 80 <= info.c_min
   then
@@ -342,13 +340,15 @@ function HALLWAY_CLASS.pick_group(H)
 
   local group_name = H.zone.hallway_group
 
-  -- check for "sky halls"
+  -- check for "sky halls"   [FUCK ME, SIMPLIFY THIS!!!]
   if H:check_sky_hall() then
     local tab = {}
 
-    each name,prob in group_tab do
+    each name,group in GAME.HALLWAY_GROUPS do
+--    local group = ...
+
       if group.sky_hall then
-        tab[name] = prob
+        tab[name] = 50
       end
     end
 

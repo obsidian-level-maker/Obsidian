@@ -2804,6 +2804,30 @@ DOOM.SKINS =
   }
 
 
+  Sky_Hall_I =
+  {
+    _prefab = "SKY_HALL_I"
+    _shape  = "I"
+  }
+
+  Sky_Hall_C =
+  {
+    _prefab = "SKY_HALL_C"
+    _shape  = "C"
+
+    support = "SUPPORT3"
+    torch_ent = "green_torch_sm"
+  }
+
+  Sky_Hall_I_Stair =
+  {
+    _prefab = "SKY_HALL_I_STAIR"
+    _shape  = "IS"
+
+    step = "STEP5"
+  }
+
+
   ---| BIG JUNCTIONS |---
 
   Junc_Octo_I =
@@ -3257,6 +3281,22 @@ DOOM.HALLWAY_GROUPS =
     }
   }
 
+  skier =
+  {
+    sky_hall = 1  -- need to border outdoor rooms
+
+    pieces =
+    {
+      Sky_Hall_I = 50
+      Sky_Hall_C = 50
+      Sky_Hall_I_Stair = 50
+
+      Hall_Basic_T = 50  -- use indoor versions for these
+      Hall_Basic_P = 50  --
+
+      Hall_Basic_I_Lift = 2   -- TODO: sky version
+    }
+  }
 }
 
 
