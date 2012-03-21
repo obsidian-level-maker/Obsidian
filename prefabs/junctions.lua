@@ -153,7 +153,7 @@ PREFAB.JUNCTION_OCTO =
       { x = 384, y = 192, mat = "?hole" }
       { x = 384, y = 384, mat = "?hole" }
       { x = 192, y = 384, mat = "?hole" }
-      { b = 288, mat = "?hole" }
+      { b = 304, mat = "?hole" }
     }
   }
 
