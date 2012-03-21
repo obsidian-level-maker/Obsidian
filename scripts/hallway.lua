@@ -323,7 +323,7 @@ stderrf("check_sky_hall @ %s : %d/%d\nfloor range (%d..%d)\n%s\n\n",
      info.f_max and H.min_floor_h >= info.f_max and
      info.c_min and H.max_floor_h + 80 <= info.c_min
   then
-    return true
+    return true, info.c_min
   end
 
   return false
@@ -341,21 +341,14 @@ function HALLWAY_CLASS.pick_group(H)
   local group_name = H.zone.hallway_group
 
   -- check for "sky halls"   [FUCK ME, SIMPLIFY THIS!!!]
-  if H:check_sky_hall() then
-    local tab = {}
+  local able, sky_h = H:check_sky_hall()
 
-    each name,group in GAME.HALLWAY_GROUPS do
---    local group = ...
+  if able and THEME.sky_halls then
+    group_name = rand.key_by_probs(THEME.sky_halls)
 
-      if group.sky_hall then
-        tab[name] = 50
-      end
-    end
+    H.sky_hall_sky_h = sky_h
 
-    if not table.empty(tab) then
-      group_name = rand.key_by_probs(tab)
 stderrf("USING SKY GROUP : %s !!!!!!!!!!\n", group_name)
-    end
   end
 
   H.group = GAME.HALLWAY_GROUPS[group_name]
@@ -415,6 +408,14 @@ function HALLWAY_CLASS.build_hall_piece(H, C)
                   ceil  = H.ceil_mat,
                   outer = H.zone.facade_mat
                 }
+
+  if H.sky_hall_sky_h then
+    skin0.sky_h = H.sky_hall_sky_h - (C.floor_h or 0)
+
+    if C.h_scale_z then
+      skin0.sky_h = skin0.sky_h / C.h_scale_z
+    end
+  end
 
   local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, C.h_dir or 2)
 

@@ -3301,21 +3301,25 @@ PREFAB.SKY_HALL_I =
 {
   fitted = "xy"
 
+  x_ranges = { {16,0}, {160,1}, {16,0} }
+
   brushes =
   {
+    -- the sky
+    {
+      { x =   0, y =   0, mat = "_SKY" }
+      { x = 192, y =   0, mat = "_SKY" }
+      { x = 192, y = 192, mat = "_SKY" }
+      { x =   0, y = 192, mat = "_SKY" }
+      { b = "?sky_h", mat = "_SKY" }
+    }
+
     {
       { x =   0, y =   0, mat = "?outer" }
       { x =  16, y =   0, mat = "?floor" }
       { x =  16, y = 192, mat = "?outer" }
       { x =   0, y = 192, mat = "?outer" }
       { t = 40, mat = "?floor" }
-    }
-    {
-      { x =   0, y =   0, mat = "?outer" }
-      { x =  16, y =   0, mat = "?floor" }
-      { x =  16, y = 192, mat = "?outer" }
-      { x =   0, y = 192, mat = "?outer" }
-      { b = 1024, mat = "_SKY" }
     }
 
     {
@@ -3324,13 +3328,6 @@ PREFAB.SKY_HALL_I =
       { x = 192, y = 192, mat = "?outer" }
       { x = 176, y = 192, mat = "?floor" }
       { t = 40, mat = "?floor" }
-    }
-    {
-      { x = 176, y =   0, mat = "?outer" }
-      { x = 192, y =   0, mat = "?outer" }
-      { x = 192, y = 192, mat = "?outer" }
-      { x = 176, y = 192, mat = "?floor" }
-      { b = 1024, mat = "_SKY" }
     }
 
     {
@@ -3340,13 +3337,6 @@ PREFAB.SKY_HALL_I =
       { x =  16, y = 192, mat = "?floor" }
       { t = 0, mat = "?floor" }
     }
-    {
-      { x =  16, y =   0, mat = "?outer" }
-      { x = 176, y =   0, mat = "?floor" }
-      { x = 176, y = 192, mat = "?outer" }
-      { x =  16, y = 192, mat = "?floor" }
-      { b = 1024, mat = "_SKY" }
-    }
   }
 }
 
@@ -3355,21 +3345,26 @@ PREFAB.SKY_HALL_C =
 {
   fitted = "xy"
 
+  x_ranges = { {32,0}, {128,1}, {32,0} }
+  y_ranges = { {32,0}, {128,1}, {32,0} }
+
   brushes =
   {
+    -- the sky
+    {
+      { x =   0, y =   0, mat = "_SKY" }
+      { x = 192, y =   0, mat = "_SKY" }
+      { x = 192, y = 192, mat = "_SKY" }
+      { x =   0, y = 192, mat = "_SKY" }
+      { b = "?sky_h", mat = "_SKY" }
+    }
+
     {
       { x =   0, y = 176, mat = "?floor" }
       { x = 160, y = 176, mat = "?floor" }
       { x = 160, y = 192, mat = "?outer" }
       { x =   0, y = 192, mat = "?outer" }
       { t = 40, mat = "?floor" }
-    }
-    {
-      { x =   0, y = 176, mat = "?floor" }
-      { x = 160, y = 176, mat = "?floor" }
-      { x = 160, y = 192, mat = "?outer" }
-      { x =   0, y = 192, mat = "?outer" }
-      { b = 1024, mat = "_SKY" }
     }
 
     {
@@ -3379,13 +3374,6 @@ PREFAB.SKY_HALL_C =
       { x = 176, y = 160, mat = "?floor" }
       { t = 40, mat = "?floor" }
     }
-    {
-      { x = 176, y =   0, mat = "?outer" }
-      { x = 192, y =   0, mat = "?outer" }
-      { x = 192, y = 160, mat = "?floor" }
-      { x = 176, y = 160, mat = "?floor" }
-      { b = 1024, mat = "_SKY" }
-    }
 
     {
       { x =   0, y =   0, mat = "?outer" }
@@ -3393,13 +3381,6 @@ PREFAB.SKY_HALL_C =
       { x =  16, y =  16, mat = "?floor" }
       { x =   0, y =  16, mat = "?outer" }
       { t = 40, mat = "?floor" }
-    }
-    {
-      { x =   0, y =   0, mat = "?outer" }
-      { x =  16, y =   0, mat = "?floor" }
-      { x =  16, y =  16, mat = "?floor" }
-      { x =   0, y =  16, mat = "?outer" }
-      { b = 1024, mat = "_SKY" }
     }
 
     {
@@ -3410,14 +3391,6 @@ PREFAB.SKY_HALL_C =
       { x = 160, y = 192, mat = "?support" }
       { t = 80, mat = "?support" }
     }
-    {
-      { x = 160, y = 176, mat = "?support" }
-      { x = 176, y = 160, mat = "?support" }
-      { x = 192, y = 160, mat = "?outer" }
-      { x = 192, y = 192, mat = "?outer" }
-      { x = 160, y = 192, mat = "?support" }
-      { b = 1024, mat = "_SKY" }
-    }
 
     {
       { x =  16, y =   0, mat = "?outer" }
@@ -3427,14 +3400,6 @@ PREFAB.SKY_HALL_C =
       { x =  16, y = 176, mat = "?floor" }
       { t = 0, mat = "?floor" }
     }
-    {
-      { x =  16, y =   0, mat = "?outer" }
-      { x = 176, y =   0, mat = "?floor" }
-      { x = 176, y = 160, mat = "?floor" }
-      { x = 160, y = 176, mat = "?floor" }
-      { x =  16, y = 176, mat = "?floor" }
-      { b = 1024, mat = "_SKY" }
-    }
 
     {
       { x =   0, y =  16, mat = "?floor" }
@@ -3442,13 +3407,6 @@ PREFAB.SKY_HALL_C =
       { x =  16, y = 176, mat = "?floor" }
       { x =   0, y = 176, mat = "?outer" }
       { t = 0, mat = "?floor" }
-    }
-    {
-      { x =   0, y =  16, mat = "?floor" }
-      { x =  16, y =  16, mat = "?floor" }
-      { x =  16, y = 176, mat = "?floor" }
-      { x =   0, y = 176, mat = "?outer" }
-      { b = 1024, mat = "_SKY" }
     }
   }
 
@@ -3463,21 +3421,25 @@ PREFAB.SKY_HALL_I_STAIR =
 {
   fitted = "xy"
 
+  x_ranges = { {16,0}, {160,1}, {16,0} }
+
   brushes =
   {
+    -- the sky
+    {
+      { x =   0, y =   0, mat = "_SKY" }
+      { x = 192, y =   0, mat = "_SKY" }
+      { x = 192, y = 192, mat = "_SKY" }
+      { x =   0, y = 192, mat = "_SKY" }
+      { b = "?sky_h", mat = "_SKY" }
+    }
+
     {
       { x =   0, y = 112, mat = "?floor" }
       { x =  16, y = 112, mat = "?floor" }
       { x =  16, y = 192, mat = "?outer" }
       { x =   0, y = 192, mat = "?outer" }
       { t = 100, mat = "?floor" }
-    }
-    {
-      { x =   0, y = 112, mat = "?floor" }
-      { x =  16, y = 112, mat = "?floor" }
-      { x =  16, y = 192, mat = "?outer" }
-      { x =   0, y = 192, mat = "?outer" }
-      { b = 1024, mat = "_SKY" }
     }
 
     {
@@ -3487,13 +3449,6 @@ PREFAB.SKY_HALL_I_STAIR =
       { x = 176, y =  48, mat = "?floor" }
       { t = 40, mat = "?floor" }
     }
-    {
-      { x = 176, y =   0, mat = "?outer" }
-      { x = 192, y =   0, mat = "?outer" }
-      { x = 192, y =  48, mat = "?floor" }
-      { x = 176, y =  48, mat = "?floor" }
-      { b = 1024, mat = "_SKY" }
-    }
 
     {
       { x =   0, y =   0, mat = "?outer" }
@@ -3502,13 +3457,6 @@ PREFAB.SKY_HALL_I_STAIR =
       { x =   0, y =  48, mat = "?outer" }
       { t = 40, mat = "?floor" }
     }
-    {
-      { x =   0, y =   0, mat = "?outer" }
-      { x =  16, y =   0, mat = "?floor" }
-      { x =  16, y =  48, mat = "?floor" }
-      { x =   0, y =  48, mat = "?outer" }
-      { b = 1024, mat = "_SKY" }
-    }
 
     {
       { x = 176, y = 112, mat = "?floor" }
@@ -3516,13 +3464,6 @@ PREFAB.SKY_HALL_I_STAIR =
       { x = 192, y = 192, mat = "?outer" }
       { x = 176, y = 192, mat = "?floor" }
       { t = 100, mat = "?floor" }
-    }
-    {
-      { x = 176, y = 112, mat = "?floor" }
-      { x = 192, y = 112, mat = "?outer" }
-      { x = 192, y = 192, mat = "?outer" }
-      { x = 176, y = 192, mat = "?floor" }
-      { b = 1024, mat = "_SKY" }
     }
 
     {
@@ -3532,13 +3473,6 @@ PREFAB.SKY_HALL_I_STAIR =
       { x =  16, y = 192, mat = "?floor" }
       { t = 60, mat = "?floor" }
     }
-    {
-      { x =  16, y = 128, mat = "?step" }
-      { x = 176, y = 128, mat = "?floor" }
-      { x = 176, y = 192, mat = "?outer" }
-      { x =  16, y = 192, mat = "?floor" }
-      { b = 1024, mat = "_SKY" }
-    }
 
     {
       { x =  16, y =   0, mat = "?outer" }
@@ -3546,13 +3480,6 @@ PREFAB.SKY_HALL_I_STAIR =
       { x = 176, y =  64, mat = "?floor" }
       { x =  16, y =  64, mat = "?floor" }
       { t = 0, mat = "?floor" }
-    }
-    {
-      { x =  16, y =   0, mat = "?outer" }
-      { x = 176, y =   0, mat = "?floor" }
-      { x = 176, y =  64, mat = "?floor" }
-      { x =  16, y =  64, mat = "?floor" }
-      { b = 1024, mat = "_SKY" }
     }
 
     {
@@ -3562,13 +3489,6 @@ PREFAB.SKY_HALL_I_STAIR =
       { x =  16, y =  80, mat = "?floor" }
       { t = 12, mat = "?floor" }
     }
-    {
-      { x =  16, y =  64, mat = "?step" }
-      { x = 176, y =  64, mat = "?floor" }
-      { x = 176, y =  80, mat = "?floor" }
-      { x =  16, y =  80, mat = "?floor" }
-      { b = 1024, mat = "_SKY" }
-    }
 
     {
       { x =   0, y =  64, mat = "?floor" }
@@ -3577,13 +3497,6 @@ PREFAB.SKY_HALL_I_STAIR =
       { x =   0, y =  80, mat = "?outer" }
       { t = 64, mat = "?floor" }
     }
-    {
-      { x =   0, y =  64, mat = "?floor" }
-      { x =  16, y =  64, mat = "?floor" }
-      { x =  16, y =  80, mat = "?floor" }
-      { x =   0, y =  80, mat = "?outer" }
-      { b = 1024, mat = "_SKY" }
-    }
 
     {
       { x = 176, y =  64, mat = "?floor" }
@@ -3591,13 +3504,6 @@ PREFAB.SKY_HALL_I_STAIR =
       { x = 192, y =  80, mat = "?floor" }
       { x = 176, y =  80, mat = "?floor" }
       { t = 64, mat = "?floor" }
-    }
-    {
-      { x = 176, y =  64, mat = "?floor" }
-      { x = 192, y =  64, mat = "?outer" }
-      { x = 192, y =  80, mat = "?floor" }
-      { x = 176, y =  80, mat = "?floor" }
-      { b = 1024, mat = "_SKY" }
     }
 
     {
@@ -3607,13 +3513,6 @@ PREFAB.SKY_HALL_I_STAIR =
       { x =  16, y =  96, mat = "?floor" }
       { t = 24, mat = "?floor" }
     }
-    {
-      { x =  16, y =  80, mat = "?step" }
-      { x = 176, y =  80, mat = "?floor" }
-      { x = 176, y =  96, mat = "?floor" }
-      { x =  16, y =  96, mat = "?floor" }
-      { b = 1024, mat = "_SKY" }
-    }
 
     {
       { x =   0, y =  80, mat = "?floor" }
@@ -3622,13 +3521,6 @@ PREFAB.SKY_HALL_I_STAIR =
       { x =   0, y =  96, mat = "?outer" }
       { t = 76, mat = "?floor" }
     }
-    {
-      { x =   0, y =  80, mat = "?floor" }
-      { x =  16, y =  80, mat = "?floor" }
-      { x =  16, y =  96, mat = "?floor" }
-      { x =   0, y =  96, mat = "?outer" }
-      { b = 1024, mat = "_SKY" }
-    }
 
     {
       { x = 176, y =  80, mat = "?floor" }
@@ -3636,13 +3528,6 @@ PREFAB.SKY_HALL_I_STAIR =
       { x = 192, y =  96, mat = "?floor" }
       { x = 176, y =  96, mat = "?floor" }
       { t = 76, mat = "?floor" }
-    }
-    {
-      { x = 176, y =  80, mat = "?floor" }
-      { x = 192, y =  80, mat = "?outer" }
-      { x = 192, y =  96, mat = "?floor" }
-      { x = 176, y =  96, mat = "?floor" }
-      { b = 1024, mat = "_SKY" }
     }
 
     {
@@ -3652,13 +3537,6 @@ PREFAB.SKY_HALL_I_STAIR =
       { x =  16, y = 112, mat = "?floor" }
       { t = 36, mat = "?floor" }
     }
-    {
-      { x =  16, y =  96, mat = "?step" }
-      { x = 176, y =  96, mat = "?floor" }
-      { x = 176, y = 112, mat = "?floor" }
-      { x =  16, y = 112, mat = "?floor" }
-      { b = 1024, mat = "_SKY" }
-    }
 
     {
       { x =   0, y =  96, mat = "?floor" }
@@ -3667,13 +3545,6 @@ PREFAB.SKY_HALL_I_STAIR =
       { x =   0, y = 112, mat = "?outer" }
       { t = 88, mat = "?floor" }
     }
-    {
-      { x =   0, y =  96, mat = "?floor" }
-      { x =  16, y =  96, mat = "?floor" }
-      { x =  16, y = 112, mat = "?floor" }
-      { x =   0, y = 112, mat = "?outer" }
-      { b = 1024, mat = "_SKY" }
-    }
 
     {
       { x = 176, y =  96, mat = "?floor" }
@@ -3681,13 +3552,6 @@ PREFAB.SKY_HALL_I_STAIR =
       { x = 192, y = 112, mat = "?floor" }
       { x = 176, y = 112, mat = "?floor" }
       { t = 88, mat = "?floor" }
-    }
-    {
-      { x = 176, y =  96, mat = "?floor" }
-      { x = 192, y =  96, mat = "?outer" }
-      { x = 192, y = 112, mat = "?floor" }
-      { x = 176, y = 112, mat = "?floor" }
-      { b = 1024, mat = "_SKY" }
     }
 
     {
@@ -3697,13 +3561,6 @@ PREFAB.SKY_HALL_I_STAIR =
       { x =  16, y = 128, mat = "?floor" }
       { t = 48, mat = "?floor" }
     }
-    {
-      { x =  16, y = 112, mat = "?step" }
-      { x = 176, y = 112, mat = "?floor" }
-      { x = 176, y = 128, mat = "?floor" }
-      { x =  16, y = 128, mat = "?floor" }
-      { b = 1024, mat = "_SKY" }
-    }
 
     {
       { x = 176, y =  48, mat = "?floor" }
@@ -3712,13 +3569,6 @@ PREFAB.SKY_HALL_I_STAIR =
       { x = 176, y =  64, mat = "?floor" }
       { t = 52, mat = "?floor" }
     }
-    {
-      { x = 176, y =  48, mat = "?floor" }
-      { x = 192, y =  48, mat = "?outer" }
-      { x = 192, y =  64, mat = "?floor" }
-      { x = 176, y =  64, mat = "?floor" }
-      { b = 1024, mat = "_SKY" }
-    }
 
     {
       { x =   0, y =  48, mat = "?floor" }
@@ -3726,13 +3576,6 @@ PREFAB.SKY_HALL_I_STAIR =
       { x =  16, y =  64, mat = "?floor" }
       { x =   0, y =  64, mat = "?outer" }
       { t = 52, mat = "?floor" }
-    }
-    {
-      { x =   0, y =  48, mat = "?floor" }
-      { x =  16, y =  48, mat = "?floor" }
-      { x =  16, y =  64, mat = "?floor" }
-      { x =   0, y =  64, mat = "?outer" }
-      { b = 1024, mat = "_SKY" }
     }
   }
 }

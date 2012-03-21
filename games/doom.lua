@@ -3122,6 +3122,8 @@ DOOM.THEME_DEFAULTS =
 
   hallway_groups = { basic = 50, thin = 15 }  -- TODO: cavey
 
+  sky_halls = { skier = 50 }
+
   big_junctions =
   {
     Junc_Octo_I = 50
@@ -3283,8 +3285,6 @@ DOOM.HALLWAY_GROUPS =
 
   skier =
   {
-    sky_hall = 1  -- need to border outdoor rooms
-
     pieces =
     {
       Sky_Hall_I = 50
