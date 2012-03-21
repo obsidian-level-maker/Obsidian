@@ -1287,9 +1287,16 @@ end --]]
       local L1 = C .room or C .hall
       assert(L2)
 
+      local reqs = { where="edge", key=lock.key, switch=lock.switch }
+
+      if ( C.hall and  C.hall.group.narrow) or
+         (C2.hall and C2.hall.group.narrow)
+      then
+        reqs.narrow = 1
+      end
+
       local poss_skins = Rooms_filter_skins(C.room or C.hall,
-                            "locked_doors", THEME.locked_doors,
-                            { where="edge", key=lock.key, switch=lock.switch })
+                            "locked_doors", THEME.locked_doors, reqs)
 
       local name = rand.key_by_probs(poss_skins)
 

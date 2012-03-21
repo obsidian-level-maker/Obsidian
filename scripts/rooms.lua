@@ -1741,6 +1741,8 @@ function Rooms_filter_skins(L, tab_name, tab, reqs, empty_ok)
     -- hallway stuff
     if skin._shape != reqs.shape then return false end
 
+    if reqs.narrow and not skin._narrow then return false end
+
     return true
   end
 
