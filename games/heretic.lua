@@ -672,7 +672,7 @@ HERETIC.SKINS =
     _prefab = "TELEPORT_PAD"
     _where  = "chunk"
 
-    top  = "FLTTELE1"
+    tele = "FLTTELE1"
     side = "SQPEB1"
 
     glitter_obj = "glitter_red"
@@ -682,7 +682,7 @@ HERETIC.SKINS =
     peg = 1
 
     special = 97
-    top_special = 8
+    effect = 8
     light = 255
   }
 

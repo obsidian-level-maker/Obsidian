@@ -1074,7 +1074,7 @@ HACX.SKINS =
     _prefab = "TELEPORT_PAD"
     _where  = "chunk"
 
-    top  = "TELEPORT"
+    tele = "TELEPORT"
     side = "TELEPORT"
 
     x_offset = 0
@@ -1082,7 +1082,7 @@ HACX.SKINS =
     peg = 1
 
     special = 97
-    top_special = 8
+    effect = 8
     light = 255
   }
 
