@@ -2737,6 +2737,8 @@ DOOM.SKINS =
   {
     _prefab = "HALL_THIN_T"
     _shape  = "T"
+
+    lamp_ent = "lamp"
   }
 
   -- TODO: Hall_Thin_P

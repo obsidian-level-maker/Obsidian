@@ -1802,6 +1802,11 @@ PREFAB.HALL_THIN_T =
   x_ranges = { {64,1}, {64,0}, {64,1} }
   y_ranges = { {64,1}, {64,0}, {64,1} }
 
+  defaults =
+  {
+    lamp_ent = "none"
+  }
+
   brushes =
   {
     {
@@ -1886,6 +1891,16 @@ PREFAB.HALL_THIN_T =
       { x =  50, y = 128, mat = "?wall" }
       { b = 72, mat = "?ceil" }
     }
+    {
+      { m = "light", add = 48 }
+      { x =  50, y =  88 }
+      { x =  96, y =  72 }
+      { x = 142, y =  86 }
+      { x = 142, y = 128 }
+      { x = 112, y = 152 }
+      { x =  80, y = 152 }
+      { x =  50, y = 128 }
+    }
 
     {
       { x =  50, y = 128, mat = "?wall" }
@@ -1910,6 +1925,14 @@ PREFAB.HALL_THIN_T =
       { x =  96, y =  72, mat = "?wall" }
       { b = 72, mat = "?ceil" }
     }
+    {
+      { m = "light", add = 32 }
+      { x =  96, y =  24 }
+      { x = 128, y =  24 }
+      { x = 142, y =  50 }
+      { x = 142, y =  86 }
+      { x =  96, y =  72 }
+    }
 
     {
       { x =  24, y =  64, mat = "?wall" }
@@ -1922,6 +1945,12 @@ PREFAB.HALL_THIN_T =
       { x =  50, y =  50, mat = "?wall" }
       { x =  50, y = 128, mat = "?wall" }
       { b = 72, mat = "?ceil" }
+    }
+    {
+      { m = "light", add = 32 }
+      { x =  24, y =  64 }
+      { x =  50, y =  50 }
+      { x =  50, y = 128 }
     }
 
     {
@@ -1940,6 +1969,14 @@ PREFAB.HALL_THIN_T =
       { x =  50, y =  88, mat = "?wall" }
       { b = 72, mat = "?ceil" }
     }
+    {
+      { m = "light", add = 32 }
+      { x =  50, y =  50 }
+      { x =  64, y =  24 }
+      { x =  96, y =  24 }
+      { x =  96, y =  72 }
+      { x =  50, y =  88 }
+    }
 
     {
       { x = 142, y =  50, mat = "?wall" }
@@ -1952,6 +1989,12 @@ PREFAB.HALL_THIN_T =
       { x = 168, y =  64, mat = "?wall" }
       { x = 142, y = 128, mat = "?wall" }
       { b = 72, mat = "?ceil" }
+    }
+    {
+      { m = "light", add = 32 }
+      { x = 142, y =  50 }
+      { x = 168, y =  64 }
+      { x = 142, y = 128 }
     }
 
     {
@@ -1986,7 +2029,7 @@ PREFAB.HALL_THIN_T =
 
   entities =
   {
-    { ent = "lamp", x = 96, y = 140, z = 0, angle = 270 }
+    { ent = "?lamp_ent", x = 96, y = 140, z = 0, angle = 270 }
   }
 }
 
