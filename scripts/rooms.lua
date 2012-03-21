@@ -634,8 +634,15 @@ function CLOSET_CLASS.build(CL)
 
   local skin_name = rand.key_by_probs(CL.skins)
 
-  local skin0 = CL.parent.skin
+  local skin0 = table.copy(CL.parent.skin)
   local skin1 = assert(GAME.SKINS[skin_name])
+
+  -- FIXME !!  get floor texture from touching area
+
+  if CL.parent.kind == "outdoor" then
+    -- FIXME: this won't match neighboring walls
+    skin0.wall = CL.parent.zone.facade_mat
+  end
 
   assert(C.floor_h)
 
