@@ -661,19 +661,12 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
                                csg_property_set_c *f_face,
                                csg_property_set_c *c_face)
 {
-  // FIXME: HACK for doors which cross two rooms
-  //        (prevent splitting due to different ambients)
-  if (S->f_h >= S->c_h)
-  {
-    S->light = 176;
-    return;
-  }
-
   // final light value for the sector is the 'ambient' lighting
   // in a room PLUS the greatest additive light brush MINUS the
   // greatest subtractive (shadow) brush.
 
-  S->light = 144;  // sane default
+  // ambient default (FIXME: make default 128)
+  S->light = (S->misc_flags & SEC_IS_SKY) ? 192 : 144;
 
   int max_add = 0;
   int max_sub = 0;
