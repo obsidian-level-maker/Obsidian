@@ -374,7 +374,13 @@ void Cookie_ParseArguments(void)
 
     const char *eq_pos = strchr(arg, '=');
     if (! eq_pos)
+    {
+      // allow module names to omit the (rather useless) value
+      if (arg[0] == '@')
+        Cookie_SetValue(arg, "1");
+
       continue;
+    }
 
     // split argument into name/value pair
     int eq_offset = (eq_pos - arg);
