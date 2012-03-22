@@ -3025,7 +3025,14 @@ DOOM.SKINS =
     _prefab = "JUNCTION_NUKE_PIPES"
     _shape  = "P"
 
-    metal = "METAL"
+    main_wall = "BLAKWAL1"
+    high_ceil = "CEIL4_1"
+    low_ceil = "COMPSPAN"
+    low_floor = "FLOOR7_1"  -- CEIL5_1
+
+    trim = "METAL"
+    lite = "LITE3"
+    pipe = "METAL4"
   }
 
   Junc_Nuke_Pipes_I =
