@@ -874,11 +874,12 @@ PREFAB.JUNCTION_CIRCLE =
 
   entities =
   {
-    { ent = "red_torch", x = 480, y = 480, z = 0, angle = 225 }
-    { ent = "red_torch", x = 96, y = 480, z = 0, angle = 315 }
-    { ent = "red_torch", x = 96, y = 96, z = 0, angle = 45 }
-    { ent = "red_torch", x = 480, y = 96, z = 0, angle = 135 }
-    { ent = "evil_eye", x = 288, y = 288, z = 56, angle = 90 }
+    { ent = "?torch_ent",  x = 480, y = 480, z = 0, angle = 225 }
+    { ent = "?torch_ent",  x =  96, y = 480, z = 0, angle = 315 }
+    { ent = "?torch_ent",  x =  96, y =  96, z = 0, angle =  45 }
+    { ent = "?torch_ent",  x = 480, y =  96, z = 0, angle = 135 }
+
+    { ent = "?plinth_ent", x = 288, y = 288, z = 56, angle = 90 }
   }
 }
 

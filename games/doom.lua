@@ -2892,7 +2892,7 @@ DOOM.SKINS =
 
   Junc_Circle_gothic_P =
   {
-    _prefab = "JUNC_CIRCLE"
+    _prefab = "JUNCTION_CIRCLE"
     _shape  = "P"
 
     floor  = "CEIL3_5"
@@ -2905,6 +2905,8 @@ DOOM.SKINS =
 
     billboard = "SW2SATYR"
     bill_side = "METAL"
+    bill_oy   = 52
+
     torch_ent = "red_torch"
   }
 
@@ -2923,6 +2925,45 @@ DOOM.SKINS =
   Junc_Circle_gothic_T =
   {
     _copy  = "Junc_Circle_gothic_P"
+    _shape = "T"
+  }
+
+
+  Junc_Circle_tech_P =
+  {
+    _prefab = "JUNCTION_CIRCLE"
+    _shape  = "P"
+
+    floor  = "CEIL3_5"
+    circle = "CEIL3_3"
+    step   = "STEP6"
+
+    plinth = "TEKWALL4"
+    plinth_top = "CEIL5_2"
+    plinth_ent = "evil_eye"
+
+    billboard = { COMPSTA2=50, COMPSTA1=10 }
+    bill_side = "FLAT23"
+    bill_oy   = 0
+
+    torch_ent = "mercury_lamp"
+  }
+
+  Junc_Circle_tech_I =
+  {
+    _copy  = "Junc_Circle_tech_P"
+    _shape = "I"
+  }
+
+  Junc_Circle_tech_C =
+  {
+    _copy  = "Junc_Circle_tech_P"
+    _shape = "C"
+  }
+
+  Junc_Circle_tech_T =
+  {
+    _copy  = "Junc_Circle_tech_P"
     _shape = "T"
   }
 
@@ -3170,10 +3211,10 @@ DOOM.THEME_DEFAULTS =
 
     Junc_Nukey_C = 40  -- size restriction means this is fairly rare
 
-    Junc_Circle_gothic_I = 200
-    Junc_Circle_gothic_C = 200
-    Junc_Circle_gothic_T = 200
-    Junc_Circle_gothic_P = 200
+    Junc_Circle_tech_I = 200
+    Junc_Circle_tech_C = 200
+    Junc_Circle_tech_T = 200
+    Junc_Circle_tech_P = 200
   }
 
   fat_cages = { Fat_Cage1 = 50, Fat_Cage_W_Bars = 8 }
