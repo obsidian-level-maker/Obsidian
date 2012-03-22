@@ -2914,18 +2914,26 @@ DOOM.SKINS =
   {
     _copy  = "Junc_Circle_gothic_P"
     _shape = "I"
+
+    east_h = 0
+    west_h = 0
   }
 
   Junc_Circle_gothic_C =
   {
     _copy  = "Junc_Circle_gothic_P"
     _shape = "C"
+
+    east_h = 0
+    north_h = 0
   }
 
   Junc_Circle_gothic_T =
   {
     _copy  = "Junc_Circle_gothic_P"
     _shape = "T"
+
+    north_h = 0
   }
 
 
@@ -2953,18 +2961,26 @@ DOOM.SKINS =
   {
     _copy  = "Junc_Circle_tech_P"
     _shape = "I"
+
+    east_h = 0
+    west_h = 0
   }
 
   Junc_Circle_tech_C =
   {
     _copy  = "Junc_Circle_tech_P"
     _shape = "C"
+
+    east_h = 0
+    north_h = 0
   }
 
   Junc_Circle_tech_T =
   {
     _copy  = "Junc_Circle_tech_P"
     _shape = "T"
+
+    north_h = 0
   }
 
 
