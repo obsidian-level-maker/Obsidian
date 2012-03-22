@@ -82,6 +82,8 @@ Closets:
 -  support START_SKY_CLOSET, need to recognise when a closet lies
    between two outdoor border prefabs.
 
++  set 'floor' material to match touching area
+
 -  START closets 
 
 -  EXIT closets
@@ -100,6 +102,10 @@ Closets:
 
 
 Theme System:
++  proper room themes for QUAKE
+
+-  proper room themes for QUAKE II
+
 +  IDEA: different monster palettes in each zone
 
 -  if keys are left over, can use them for non-Zone locks
@@ -118,6 +124,8 @@ Teleporters:
 
 Hallways:
 +  double hallways STILL busted (entry from the non-forky end)
+
+-  a more generic system for the '_narrow' skin field.
 
 -  ability to merge the section of a "simple" hallway into
    one of the rooms [especially to make a "Porch"].
@@ -138,6 +146,12 @@ IDEA: a way to associate a skin with a hallway group
    "hallways should use (or not) same theme as a connected room"
 
 -  hallways field in room themes : allow use in caves/outdoor too
+
+
+Sky Halls:
+-  if a hallway is "simply" connected (no lock) to an outdoor room
+   [or other.quest < hallway.quest]
+   then relax rule about f_h >= other.f_max
 
 
 Hallway Theming:
@@ -186,10 +200,13 @@ Intrusions:
    [OR any seeds which are not part of the room paths]
 
 Q/ keep as a "hallway" or create an "area" ?
-A/ turn into an area
 
 
 CrossOvers:
+++  get the working again!
+
+-  automatically create bridges over channels
+
 +  build the bridges / channels using prefabs
 
 -  sometimes make a dramatic height difference
@@ -379,6 +396,9 @@ Weapons:
 
 -  outdoor wall extender: 64x64 block with torch on top
 
+-  fix for ugly sky in outdoor room near a hallway
+   (mark those seeds, detect in from_edge pass)
+
 -  try position-based monster ordering for fight simulator
 
 -  in a large (multi-section) room, if any section has no "events"
@@ -541,6 +561,8 @@ NO: implement 2D array access: [x, y] --> [x][y]
 
     Also allow light brushes to eat other ones in certain cases
     (e.g. a shadow brush may override a low-level light brush).
+
++  support 'light' in a 't'/'b' coord as automatic light brush
 
 -  move light brush intensity value to props[] 
 

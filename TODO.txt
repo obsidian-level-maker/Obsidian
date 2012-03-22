@@ -6,16 +6,13 @@ Current Work
 ------------
 
 
-Hallways:
+>>>  big_junctions table: omit the '_P' suffixes
 
--  support '_in_between' for a hallway piece, must occur between two
-   other hallway pieces (and different from current piece).
+>>  theme for JUNCTION_CIRCLE fabs
+
 
 
 Closets:
-
--  proper texturing for outdoor closets
-
 
 
 -  REVIEW: quadratic monster formula : bad for "full" game
@@ -25,8 +22,6 @@ Closets:
 
     +  use this mechanism to place windows and pictures
 
-
-+  BUG: stairs in cycles can be too low to pass
 
 +  fix fat doors (x_ranges) : QUAKE
 
@@ -47,34 +42,19 @@ REVIEW: Fence code
 
 REVIEW: adjuster stuff 
 
--  fix for ugly sky in outdoor room near a hallway
-   (mark those seeds, detect in from_edge pass)
-
 -  fix monsters stuck in doors / corners of chunks
 
 -  light_globe and flame entities for QUAKE
-
--  automatically create bridges over channels
 
 +  automatic repeating of prefabs
    x_repeat=192 : means we require: x_size / N >= x_repeat (for highest N)
 
    allow it to happen with prefab composition too
 
-Idea: for outdoor bordering, have earlier pass to set the facade_mat
-      in _all_ unused seeds (grow existing buildings)
++  for outdoor bordering, have earlier pass to set the facade_mat
+   in _all_ unused seeds (grow existing buildings)
 
-
-WISH: outdoor hallways (wall on one side, fence on other side, sky top)
-      [may be easier to convert hallway into a room]
-      hard part: ensuring such a hallway stays above nearby room(s)
-      hmmm, could also work bordering an _indoor_ room (no sky)
-
-Theme System:
-
--  proper room themes for QUAKE
-
--  QUAKE II
++  BUG: stairs in cycles can be too low to pass
 
 
 -----------------------------------------------------------------
@@ -89,7 +69,7 @@ Release Goals
 
 +  pictures in walls
 
--  secret niches
+>>  secret niches
 
 -  cages
 
