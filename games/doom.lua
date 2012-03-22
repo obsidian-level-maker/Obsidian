@@ -2984,6 +2984,42 @@ DOOM.SKINS =
   }
 
 
+  Junc_Spokey_P =
+  {
+    _prefab = "JUNCTION_SPOKEY"
+    _shape  = "P"
+
+    metal = "METAL"
+    floor = "FLOOR0_3"
+  }
+
+  Junc_Spokey_I =
+  {
+    _copy  = "Junc_Spokey_P"
+    _shape = "I"
+
+    east_h = 0
+    west_h = 0
+  }
+
+  Junc_Spokey_C =
+  {
+    _copy  = "Junc_Spokey_P"
+    _shape = "C"
+
+    east_h = 0
+    north_h = 0
+  }
+
+  Junc_Spokey_T =
+  {
+    _copy  = "Junc_Spokey_P"
+    _shape = "T"
+
+    north_h = 0
+  }
+
+
   ---| TELEPORTERS |---
 
   Teleporter1 =
@@ -3227,10 +3263,15 @@ DOOM.THEME_DEFAULTS =
 
     Junc_Nukey_C = 40  -- size restriction means this is fairly rare
 
-    Junc_Circle_tech_I = 200
-    Junc_Circle_tech_C = 200
-    Junc_Circle_tech_T = 200
-    Junc_Circle_tech_P = 200
+    Junc_Spokey_I = 10
+    Junc_Spokey_C = 10
+    Junc_Spokey_T = 10
+    Junc_Spokey_P = 10
+
+    Junc_Circle_tech_I = 40  -- FIXME gothic versions (in theme)
+    Junc_Circle_tech_C = 40
+    Junc_Circle_tech_T = 40
+    Junc_Circle_tech_P = 40
   }
 
   fat_cages = { Fat_Cage1 = 50, Fat_Cage_W_Bars = 8 }

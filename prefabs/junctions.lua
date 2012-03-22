@@ -19,7 +19,7 @@
 ----------------------------------------------------------------
 
 
-PREFAB.JUNCTION_OCTO2 =
+PREFAB.JUNCTION_OCTO =
 {
   fitted = "xy"
 
@@ -889,17 +889,19 @@ PREFAB.JUNCTION_CIRCLE =
 }
 
 
-PREFAB.JUNCTION_OCTO =  -- FIXME _SPOKEY
+PREFAB.JUNCTION_SPOKEY =
 {
   fitted = "xy"
 
   defaults =
   {
-    metal = "METAL"
-
---  floor = "FLOOR0_3"
     hole = "_SKY"
     hole_light = ""
+
+    north_h = 192
+    south_h = 192
+    east_h  = 192
+    west_h  = 192
   }
 
   brushes =
@@ -995,7 +997,7 @@ PREFAB.JUNCTION_OCTO =  -- FIXME _SPOKEY
       { x = 384, y =   0, mat = "?wall" }
       { x = 384, y =  16, mat = "?wall" }
       { x = 192, y =  16, mat = "?wall" }
-      { b = 192, mat = "?wall" }
+      { b = "?south_h", mat = "?wall" }
     }
 
     {
@@ -1017,7 +1019,7 @@ PREFAB.JUNCTION_OCTO =  -- FIXME _SPOKEY
       { x = 576, y = 192, mat = "?outer" }
       { x = 576, y = 384, mat = "?wall" }
       { x = 560, y = 384, mat = "?wall" }
-      { b = 192, mat = "?wall" }
+      { b = "?east_h", mat = "?wall" }
     }
 
     {
@@ -1039,7 +1041,7 @@ PREFAB.JUNCTION_OCTO =  -- FIXME _SPOKEY
       { x = 384, y = 560, mat = "?wall" }
       { x = 384, y = 576, mat = "?outer" }
       { x = 192, y = 576, mat = "?wall" }
-      { b = 192, mat = "?wall" }
+      { b = "?north_h", mat = "?wall" }
     }
 
     {
@@ -1061,7 +1063,7 @@ PREFAB.JUNCTION_OCTO =  -- FIXME _SPOKEY
       { x =  16, y = 192, mat = "?wall" }
       { x =  16, y = 384, mat = "?wall" }
       { x =   0, y = 384, mat = "?outer" }
-      { b = 192, mat = "?wall" }
+      { b = "?west_h", mat = "?wall" }
     }
 
     {
