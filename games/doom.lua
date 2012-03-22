@@ -2890,6 +2890,43 @@ DOOM.SKINS =
   }
 
 
+  Junc_Circle_gothic_P =
+  {
+    _prefab = "JUNC_CIRCLE"
+    _shape  = "P"
+
+    floor  = "CEIL3_5"
+    circle = "CEIL3_3"
+    step   = "STEP6"
+
+    plinth = "MARBGRAY"
+    plinth_top = "FLOOR7_2"
+    plinth_ent = "evil_eye"
+
+    billboard = "SW2SATYR"
+    bill_side = "METAL"
+    torch_ent = "red_torch"
+  }
+
+  Junc_Circle_gothic_I =
+  {
+    _copy  = "Junc_Circle_gothic_P"
+    _shape = "I"
+  }
+
+  Junc_Circle_gothic_C =
+  {
+    _copy  = "Junc_Circle_gothic_P"
+    _shape = "C"
+  }
+
+  Junc_Circle_gothic_T =
+  {
+    _copy  = "Junc_Circle_gothic_P"
+    _shape = "T"
+  }
+
+
   ---| TELEPORTERS |---
 
   Teleporter1 =
@@ -3132,6 +3169,11 @@ DOOM.THEME_DEFAULTS =
     Junc_Octo_P = 50
 
     Junc_Nukey_C = 40  -- size restriction means this is fairly rare
+
+    Junc_Circle_gothic_I = 200
+    Junc_Circle_gothic_C = 200
+    Junc_Circle_gothic_T = 200
+    Junc_Circle_gothic_P = 200
   }
 
   fat_cages = { Fat_Cage1 = 50, Fat_Cage_W_Bars = 8 }
