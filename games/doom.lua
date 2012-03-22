@@ -3020,6 +3020,41 @@ DOOM.SKINS =
   }
 
 
+  Junc_Nuke_Pipes_P =
+  {
+    _prefab = "JUNCTION_NUKE_PIPES"
+    _shape  = "P"
+
+    metal = "METAL"
+  }
+
+  Junc_Nuke_Pipes_I =
+  {
+    _copy  = "Junc_Nuke_Pipes_P"
+    _shape = "I"
+
+    east_h = -24
+    west_h = -24
+  }
+
+  Junc_Nuke_Pipes_C =
+  {
+    _copy  = "Junc_Nuke_Pipes_P"
+    _shape = "C"
+
+    east_h  = -24
+    north_h = -24
+  }
+
+  Junc_Nuke_Pipes_T =
+  {
+    _copy  = "Junc_Nuke_Pipes_P"
+    _shape = "T"
+
+    north_h = -24
+  }
+
+
   ---| TELEPORTERS |---
 
   Teleporter1 =
@@ -3262,6 +3297,11 @@ DOOM.THEME_DEFAULTS =
     Junc_Octo_P = 50
 
     Junc_Nukey_C = 40  -- size restriction means this is fairly rare
+
+    Junc_Nuke_Pipes_I = 600
+    Junc_Nuke_Pipes_C = 600
+    Junc_Nuke_Pipes_T = 600
+    Junc_Nuke_Pipes_P = 600
 
     Junc_Spokey_I = 10
     Junc_Spokey_C = 10
