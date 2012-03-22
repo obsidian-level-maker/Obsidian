@@ -228,7 +228,7 @@ which normally cannot fit in a single seed.
 <div id="palette" class="gloss_term">
 Palette
 </div><div class="gloss_define">
-This means a selection of of certain things, especially monsters.
+This means a selection of certain things, especially monsters.
 Each room has its own monster palette, and only those monsters
 will be used in that room.
 There is also a "global" palette which controls what monsters
