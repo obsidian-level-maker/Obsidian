@@ -1364,7 +1364,7 @@ PREFAB.JUNCTION_NUKE_PIPES =
 
     ccc5 = "CEIL3_3"
     ccc3 = "CEIL5_1"
-    high_ceil = "FLAT1"
+    high_ceil = "CEIL4_1"
     ccc2 = "FLOOR7_1"
 
     east_h  = 128
@@ -1381,6 +1381,14 @@ PREFAB.JUNCTION_NUKE_PIPES =
       { x = 576, y = 576, mat = "_LIQUID" }
       { x =   0, y = 576, mat = "_LIQUID" }
       { t = -16, mat = "_LIQUID" }
+    }
+
+    {
+      { x =   0, y =   0, mat = "?high_ceil" }
+      { x = 576, y =   0, mat = "?high_ceil" }
+      { x = 576, y = 576, mat = "?high_ceil" }
+      { x =   0, y = 576, mat = "?high_ceil" }
+      { b = 256, mat = "?high_ceil" }
     }
 
     {
@@ -1438,13 +1446,6 @@ PREFAB.JUNCTION_NUKE_PIPES =
       { x =   8, y = 320, mat = "?w1" }
       { t = 0, mat = "?ff1" }
     }
-    {
-      { x =   8, y = 256, mat = "?w5" }
-      { x = 224, y = 256, mat = "?w1" }
-      { x = 224, y = 320, mat = "?w5" }
-      { x =   8, y = 320, mat = "?w1" }
-      { b = 256, mat = "?high_ceil" }
-    }
 
     {
       { x = 192, y = 568, mat = "?w1" }
@@ -1464,17 +1465,6 @@ PREFAB.JUNCTION_NUKE_PIPES =
       { x = 256, y = 352, mat = "?w4" }
       { x = 224, y = 320, mat = "?w5" }
       { t = 0, mat = "?ff1" }
-    }
-    {
-      { x = 224, y = 256, mat = "?w5" }
-      { x = 256, y = 224, mat = "?w5" }
-      { x = 320, y = 224, mat = "?w5" }
-      { x = 352, y = 256, mat = "?w5" }
-      { x = 352, y = 320, mat = "?w5" }
-      { x = 320, y = 352, mat = "?w5" }
-      { x = 256, y = 352, mat = "?w5" }
-      { x = 224, y = 320, mat = "?w5" }
-      { b = 256, mat = "?high_ceil" }
     }
 
     {
@@ -1512,13 +1502,6 @@ PREFAB.JUNCTION_NUKE_PIPES =
       { x = 320, y = 568, mat = "?w1" }
       { x = 256, y = 568, mat = "?w4" }
       { t = 0, mat = "?ff1" }
-    }
-    {
-      { x = 256, y = 352, mat = "?w1" }
-      { x = 320, y = 352, mat = "?w5" }
-      { x = 320, y = 568, mat = "?w1" }
-      { x = 256, y = 568, mat = "?w5" }
-      { b = 256, mat = "?high_ceil" }
     }
 
     {
@@ -1582,13 +1565,6 @@ PREFAB.JUNCTION_NUKE_PIPES =
       { x = 568, y = 320, mat = "?w4" }
       { x = 352, y = 320, mat = "?w1" }
       { t = 0, mat = "?ff1" }
-    }
-    {
-      { x = 352, y = 256, mat = "?w5" }
-      { x = 568, y = 256, mat = "?w1" }
-      { x = 568, y = 320, mat = "?w5" }
-      { x = 352, y = 320, mat = "?w1" }
-      { b = 256, mat = "?high_ceil" }
     }
 
     {
@@ -1711,13 +1687,6 @@ PREFAB.JUNCTION_NUKE_PIPES =
       { x = 256, y = 224, mat = "?w4" }
       { t = 0, mat = "?ff1" }
     }
-    {
-      { x = 256, y =   8, mat = "?w1" }
-      { x = 320, y =   8, mat = "?w5" }
-      { x = 320, y = 224, mat = "?w1" }
-      { x = 256, y = 224, mat = "?w5" }
-      { b = 256, mat = "?high_ceil" }
-    }
 
     {
       { x =   0, y =  64, mat = "?w1" }
@@ -1832,6 +1801,38 @@ PREFAB.JUNCTION_NUKE_PIPES =
       { x = 512, y = 544, mat = "?metal" }
       { x = 512, y = 568, mat = "?metal" }
       { x =  64, y = 568, mat = "?metal" }
+      { b = 176, mat = "?metal" }
+    }
+
+    {
+      { x =  32, y = 512, mat = "?metal" }
+      { x =  32, y = 488, mat = "?metal" }
+      { x =  88, y = 544, mat = "?metal" }
+      { x =  64, y = 544, mat = "?metal" }
+      { b = 176, mat = "?metal" }
+    }
+
+    {
+      { x =  32, y =  88, mat = "?metal" }
+      { x =  32, y =  64, mat = "?metal" }
+      { x =  64, y =  32, mat = "?metal" }
+      { x =  88, y =  32, mat = "?metal" }
+      { b = 176, mat = "?metal" }
+    }
+
+    {
+      { x = 488, y = 544, mat = "?metal" }
+      { x = 544, y = 488, mat = "?metal" }
+      { x = 544, y = 512, mat = "?metal" }
+      { x = 512, y = 544, mat = "?metal" }
+      { b = 176, mat = "?metal" }
+    }
+
+    {
+      { x = 488, y =  32, mat = "?metal" }
+      { x = 512, y =  32, mat = "?metal" }
+      { x = 544, y =  64, mat = "?metal" }
+      { x = 544, y =  88, mat = "?metal" }
       { b = 176, mat = "?metal" }
     }
 
