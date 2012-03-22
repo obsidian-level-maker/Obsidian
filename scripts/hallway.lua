@@ -237,7 +237,7 @@ end
 
 
 function HALLWAY_CLASS.merge_it(old_H, new_H, via_conn)
-stderrf("MERGING %s into %s\n", new_H:tostr(), old_H:tostr())
+-- stderrf("MERGING %s into %s\n", new_H:tostr(), old_H:tostr())
 
   assert(old_H != new_H)
 
