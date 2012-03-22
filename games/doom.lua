@@ -3305,10 +3305,10 @@ DOOM.THEME_DEFAULTS =
 
     Junc_Nukey_C = 40  -- size restriction means this is fairly rare
 
-    Junc_Nuke_Pipes_I = 600
-    Junc_Nuke_Pipes_C = 600
-    Junc_Nuke_Pipes_T = 600
-    Junc_Nuke_Pipes_P = 600
+    Junc_Nuke_Pipes_I = 14
+    Junc_Nuke_Pipes_C = 14
+    Junc_Nuke_Pipes_T = 14
+    Junc_Nuke_Pipes_P = 14
 
     Junc_Spokey_I = 10
     Junc_Spokey_C = 10
