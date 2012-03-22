@@ -1343,22 +1343,28 @@ PREFAB.JUNCTION_NUKE_PIPES =
 {
   fitted = "xy"
 
+  -- these ranges allow the prefab to expand from 3 seeds to 4 seeds
+  -- and still mesh up properly with the nearby hallway pieces.
+  x_ranges = { {192,0}, {192,1}, {192,0} }
+  y_ranges = { {192,0}, {192,1}, {192,0} }
+
   defaults =
   {
+    metal = "METAL"
+
     w5 = "BROWNHUG"
     w4 = "COMPSPAN"
     w2 = "LITE3"
-    w3 = "METAL"
     w7 = "METAL4"
     w6 = "_LIQUID"
     w1 = "BLAKWAL1"
 
     ff2 = "CEIL3_3"
     ff1 = "CEIL5_1"
+
     ccc5 = "CEIL3_3"
     ccc3 = "CEIL5_1"
-    ccc1 = "CEIL5_2"
-    ccc4 = "FLOOR0_1"
+    high_ceil = "FLAT1"
     ccc2 = "FLOOR7_1"
 
     east_h  = 128
@@ -1390,14 +1396,6 @@ PREFAB.JUNCTION_NUKE_PIPES =
       { x =  32, y = 512, mat = "?w1" }
       { x =  32, y = 520, mat = "?w1" }
       { x =   0, y = 520, mat = "?outer" }
-    }
-
-    {
-      { x =   8, y = 320, mat = "?w3" }
-      { x =  32, y = 320, mat = "?w3" }
-      { x =  32, y = 512, mat = "?w1" }
-      { x =   8, y = 512, mat = "?w1" }
-      { b = 176, mat = "?ccc1" }
     }
 
     {
@@ -1445,7 +1443,7 @@ PREFAB.JUNCTION_NUKE_PIPES =
       { x = 224, y = 256, mat = "?w1" }
       { x = 224, y = 320, mat = "?w5" }
       { x =   8, y = 320, mat = "?w1" }
-      { b = 256, mat = "?ccc4" }
+      { b = 256, mat = "?high_ceil" }
     }
 
     {
@@ -1476,7 +1474,7 @@ PREFAB.JUNCTION_NUKE_PIPES =
       { x = 320, y = 352, mat = "?w5" }
       { x = 256, y = 352, mat = "?w5" }
       { x = 224, y = 320, mat = "?w5" }
-      { b = 256, mat = "?ccc4" }
+      { b = 256, mat = "?high_ceil" }
     }
 
     {
@@ -1509,14 +1507,6 @@ PREFAB.JUNCTION_NUKE_PIPES =
     }
 
     {
-      { x =  64, y = 544, mat = "?w3" }
-      { x = 256, y = 544, mat = "?w3" }
-      { x = 256, y = 568, mat = "?w1" }
-      { x =  64, y = 568, mat = "?w1" }
-      { b = 176, mat = "?ccc1" }
-    }
-
-    {
       { x = 256, y = 352, mat = "?w1" }
       { x = 320, y = 352, mat = "?w4" }
       { x = 320, y = 568, mat = "?w1" }
@@ -1528,7 +1518,7 @@ PREFAB.JUNCTION_NUKE_PIPES =
       { x = 320, y = 352, mat = "?w5" }
       { x = 320, y = 568, mat = "?w1" }
       { x = 256, y = 568, mat = "?w5" }
-      { b = 256, mat = "?ccc4" }
+      { b = 256, mat = "?high_ceil" }
     }
 
     {
@@ -1551,14 +1541,6 @@ PREFAB.JUNCTION_NUKE_PIPES =
       { x = 576, y = 512, mat = "?outer" }
       { x = 576, y = 520, mat = "?w1" }
       { x = 544, y = 520, mat = "?w1" }
-    }
-
-    {
-      { x = 544, y = 320, mat = "?w3" }
-      { x = 568, y = 320, mat = "?w1" }
-      { x = 568, y = 512, mat = "?w1" }
-      { x = 544, y = 512, mat = "?w3" }
-      { b = 176, mat = "?ccc1" }
     }
 
     {
@@ -1606,7 +1588,7 @@ PREFAB.JUNCTION_NUKE_PIPES =
       { x = 568, y = 256, mat = "?w1" }
       { x = 568, y = 320, mat = "?w5" }
       { x = 352, y = 320, mat = "?w1" }
-      { b = 256, mat = "?ccc4" }
+      { b = 256, mat = "?high_ceil" }
     }
 
     {
@@ -1639,14 +1621,6 @@ PREFAB.JUNCTION_NUKE_PIPES =
     }
 
     {
-      { x = 320, y = 544, mat = "?w3" }
-      { x = 512, y = 544, mat = "?w1" }
-      { x = 512, y = 568, mat = "?w1" }
-      { x = 320, y = 568, mat = "?w3" }
-      { b = 176, mat = "?ccc1" }
-    }
-
-    {
       { x = 568, y = 384, mat = "?w1" }
       { x = 576, y = 384, mat = "?outer" }
       { x = 576, y = 512, mat = "?w1" }
@@ -1666,14 +1640,6 @@ PREFAB.JUNCTION_NUKE_PIPES =
       { x =  32, y =  56, mat = "?w1" }
       { x =  32, y =  64, mat = "?w1" }
       { x =   0, y =  64, mat = "?outer" }
-    }
-
-    {
-      { x =   8, y =  64, mat = "?w1" }
-      { x =  32, y =  64, mat = "?w3" }
-      { x =  32, y = 256, mat = "?w3" }
-      { x =   8, y = 256, mat = "?w1" }
-      { b = 176, mat = "?ccc1" }
     }
 
     {
@@ -1739,14 +1705,6 @@ PREFAB.JUNCTION_NUKE_PIPES =
     }
 
     {
-      { x =  64, y =   8, mat = "?w1" }
-      { x = 256, y =   8, mat = "?w3" }
-      { x = 256, y =  32, mat = "?w3" }
-      { x =  64, y =  32, mat = "?w1" }
-      { b = 176, mat = "?ccc1" }
-    }
-
-    {
       { x = 256, y =   8, mat = "?w1" }
       { x = 320, y =   8, mat = "?w4" }
       { x = 320, y = 224, mat = "?w1" }
@@ -1758,7 +1716,7 @@ PREFAB.JUNCTION_NUKE_PIPES =
       { x = 320, y =   8, mat = "?w5" }
       { x = 320, y = 224, mat = "?w1" }
       { x = 256, y = 224, mat = "?w5" }
-      { b = 256, mat = "?ccc4" }
+      { b = 256, mat = "?high_ceil" }
     }
 
     {
@@ -1781,14 +1739,6 @@ PREFAB.JUNCTION_NUKE_PIPES =
       { x = 576, y =  56, mat = "?outer" }
       { x = 576, y =  64, mat = "?w1" }
       { x = 544, y =  64, mat = "?w1" }
-    }
-
-    {
-      { x = 544, y =  64, mat = "?w1" }
-      { x = 568, y =  64, mat = "?w1" }
-      { x = 568, y = 256, mat = "?w3" }
-      { x = 544, y = 256, mat = "?w3" }
-      { b = 176, mat = "?ccc1" }
     }
 
     {
@@ -1846,18 +1796,43 @@ PREFAB.JUNCTION_NUKE_PIPES =
     }
 
     {
-      { x = 320, y =   8, mat = "?w1" }
-      { x = 512, y =   8, mat = "?w1" }
-      { x = 512, y =  32, mat = "?w3" }
-      { x = 320, y =  32, mat = "?w3" }
-      { b = 176, mat = "?ccc1" }
-    }
-
-    {
       { x = 568, y =  64, mat = "?w1" }
       { x = 576, y =  64, mat = "?outer" }
       { x = 576, y = 192, mat = "?w1" }
       { x = 568, y = 192, mat = "?w1" }
+    }
+
+    -- ceiling trim
+    {
+      { x =  64, y =   8, mat = "?metal" }
+      { x = 512, y =   8, mat = "?metal" }
+      { x = 512, y =  32, mat = "?metal" }
+      { x =  64, y =  32, mat = "?metal" }
+      { b = 176, mat = "?metal" }
+    }
+
+    {
+      { x =   8, y =  64, mat = "?metal" }
+      { x =  32, y =  64, mat = "?metal" }
+      { x =  32, y = 512, mat = "?metal" }
+      { x =   8, y = 512, mat = "?metal" }
+      { b = 176, mat = "?metal" }
+    }
+
+    {
+      { x = 544, y =  64, mat = "?metal" }
+      { x = 568, y =  64, mat = "?metal" }
+      { x = 568, y = 512, mat = "?metal" }
+      { x = 544, y = 512, mat = "?metal" }
+      { b = 176, mat = "?metal" }
+    }
+
+    {
+      { x =  64, y = 544, mat = "?metal" }
+      { x = 512, y = 544, mat = "?metal" }
+      { x = 512, y = 568, mat = "?metal" }
+      { x =  64, y = 568, mat = "?metal" }
+      { b = 176, mat = "?metal" }
     }
 
     -- falling nukage
@@ -1871,6 +1846,8 @@ PREFAB.JUNCTION_NUKE_PIPES =
       { x = 156, y = 156, mat = "?w6" }
       { x = 144, y = 160, mat = "?w6" }
       { x = 132, y = 156, mat = "?w6" }
+      { t = 112 }
+      { b = -16 }
     }
 
     {
@@ -1919,32 +1896,65 @@ PREFAB.JUNCTION_NUKE_PIPES =
     -- lighting
     {
       { m = "light", add = 128 }
-      { x =  40, y =  64 }
-      { x =  64, y =  40 }
+      { x =  32, y =  64 }
+      { x =  32, y =  56 }
+      { x =  56, y =  32 }
+      { x =  64, y =  32 }
       { x = 224, y = 112 }
       { x = 224, y = 176 }
       { x = 176, y = 224 }
       { x = 112, y = 224 }
     }
+    {
+      { m = "light", add = 32 }
+      { x =  32, y =  64 }
+      { x =  64, y =  32 }
+      { x = 256, y =  64 }
+      { x = 256, y = 224 }
+      { x = 224, y = 256 }
+      { x =  64, y = 256 }
+    }
 
     {
       { m = "light", add = 128 }
-      { x =  40, y = 512 }
+      { x =  32, y = 520 }
+      { x =  32, y = 512 }
       { x = 112, y = 352 }
       { x = 176, y = 352 }
       { x = 224, y = 400 }
       { x = 224, y = 464 }
-      { x =  64, y = 536 }
+      { x =  64, y = 544 }
+      { x =  56, y = 544 }
+    }
+    {
+      { m = "light", add = 32 }
+      { x =  32, y = 512 }
+      { x =  64, y = 320 }
+      { x = 224, y = 320 }
+      { x = 256, y = 352 }
+      { x = 256, y = 512 }
+      { x =  64, y = 544 }
     }
 
     {
       { m = "light", add = 128 }
       { x = 352, y = 112 }
-      { x = 512, y =  40 }
-      { x = 536, y =  64 }
+      { x = 512, y =  32 }
+      { x = 520, y =  32 }
+      { x = 544, y =  56 }
+      { x = 544, y =  64 }
       { x = 464, y = 224 }
       { x = 400, y = 224 }
       { x = 352, y = 176 }
+    }
+    {
+      { m = "light", add = 32 }
+      { x = 512, y =  32 }
+      { x = 544, y =  64 }
+      { x = 512, y = 256 }
+      { x = 352, y = 256 }
+      { x = 320, y = 224 }
+      { x = 320, y =  64 }
     }
 
     {
@@ -1952,9 +1962,20 @@ PREFAB.JUNCTION_NUKE_PIPES =
       { x = 352, y = 400 }
       { x = 400, y = 352 }
       { x = 464, y = 352 }
-      { x = 536, y = 512 }
-      { x = 512, y = 536 }
+      { x = 544, y = 512 }
+      { x = 544, y = 520 }
+      { x = 520, y = 544 }
+      { x = 512, y = 544 }
       { x = 352, y = 464 }
+    }
+    {
+      { m = "light", add = 32 }
+      { x = 544, y = 512 }
+      { x = 512, y = 544 }
+      { x = 320, y = 512 }
+      { x = 320, y = 352 }
+      { x = 352, y = 320 }
+      { x = 512, y = 320 }
     }
 
   }
