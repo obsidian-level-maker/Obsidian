@@ -1854,7 +1854,7 @@ DOOM.SKINS =
     y_offset=0
   }
 
-  Exit_tech_pillar =
+  Exit_Pillar_tech =
   {
     _prefab = "EXIT_PILLAR",
     _where  = "middle"
@@ -1867,7 +1867,7 @@ DOOM.SKINS =
     tag = 0
   }
 
-  Exit_demon_pillar =
+  Exit_Pillar_gothic =
   {
     _prefab = "EXIT_PILLAR",
     _where  = "middle"
@@ -1880,7 +1880,7 @@ DOOM.SKINS =
     tag = 0
   }
 
-  Exit_urban_pillar =
+  Exit_Pillar_urban =
   {
     _prefab = "EXIT_PILLAR",
     _where  = "middle"
@@ -1893,7 +1893,7 @@ DOOM.SKINS =
     tag = 0
   }
 
-  Exit_Closet =  -- _Tech
+  Exit_Closet_tech =
   {
     _prefab = "EXIT_CLOSET"
     _where  = "closet"
@@ -1927,7 +1927,7 @@ DOOM.SKINS =
     item2 = "shells"
   }
 
-  Exit_Closet_Hell =
+  Exit_Closet_hell =
   {
     _prefab = "EXIT_CLOSET"
     _where  = "closet"
@@ -1960,7 +1960,7 @@ DOOM.SKINS =
     item2 = "shells"
   }
 
-  Exit_Closet_Urban =
+  Exit_Closet_urban =
   {
     _prefab = "EXIT_CLOSET"
     _where  = "closet"
@@ -2873,11 +2873,11 @@ DOOM.SKINS =
   }
 
 
-  Junc_Nukey_C =
+  Junc_Nuke_Islands =
   {
     _prefab = "JUNCTION_NUKEY_C"
-    _liquid = 1
     _shape  = "C"
+    _liquid = 1
     _long   = 576
     _deep   = 576
 
@@ -3251,7 +3251,7 @@ DOOM.THEME_DEFAULTS =
 {
   starts = { Start_basic = 10, Start_Closet = 70 }
 
-  exits = { Exit_tech_pillar = 10, Exit_Closet = 70 }
+  exits = { Exit_Pillar_tech = 10, Exit_Closet_tech = 70 }
 
   pedestals = { Pedestal_1 = 50 }
 
@@ -3260,6 +3260,7 @@ DOOM.THEME_DEFAULTS =
 
   keys = { kc_red=50, kc_blue=50, kc_yellow=50 }
 
+  -- TODO: sw_wood  sw_marble
   switches = { sw_blue=50, sw_red=50, sw_pink=20, sw_vine=20 }
 
   switch_fabs  = { Switch_blue1=50, Switch_red1=50,
@@ -3298,27 +3299,11 @@ DOOM.THEME_DEFAULTS =
 
   big_junctions =
   {
-    Junc_Octo_I = 50
-    Junc_Octo_C = 50
-    Junc_Octo_T = 50
-    Junc_Octo_P = 50
-
-    Junc_Nukey_C = 40  -- size restriction means this is fairly rare
-
-    Junc_Nuke_Pipes_I = 14
-    Junc_Nuke_Pipes_C = 14
-    Junc_Nuke_Pipes_T = 14
-    Junc_Nuke_Pipes_P = 14
-
-    Junc_Spokey_I = 10
-    Junc_Spokey_C = 10
-    Junc_Spokey_T = 10
-    Junc_Spokey_P = 10
-
-    Junc_Circle_tech_I = 40  -- FIXME gothic versions (in theme)
-    Junc_Circle_tech_C = 40
-    Junc_Circle_tech_T = 40
-    Junc_Circle_tech_P = 40
+    Junc_Octo = 50
+    Junc_Nuke_Pipes = 14
+    Junc_Nuke_Islands = 40  -- size restriction means this is fairly rare
+    Junc_Spokey = 10
+    Junc_Circle_tech = 40
   }
 
   fat_cages = { Fat_Cage1 = 50, Fat_Cage_W_Bars = 8 }
@@ -4372,35 +4357,6 @@ DOOM2.LEVEL_THEMES =
     caves     = { Tech2_cave=50 }
     outdoors  = { Tech2_outdoors=50 }
 
-    __exit = -- FIXME : move this stuff into a skin
-    {
-      walls =
-      {
-        METAL2=50, STARTAN2=50, STARG1=50,
-        TEKWALL4=50, PIPEWAL2=50,
-        TEKGREN1=50, SPACEW2=50, STARBR2=50,
-
-        METAL2=50, PIPEWAL2=50, TEKGREN1=50, SPACEW2=50,
-      }
-      floors =
-      {
-        FLOOR0_3=50, FLOOR5_2=50
-      }
-      ceilings =
-      {
-        TLITE6_6=50, TLITE6_5=50, FLAT17=50,
-        FLOOR1_7=50, CEIL4_3=50,
-
-        GRNLITE1=20,
-      }
-      switches =
-      {
-        SW1METAL=50, SW1LION=50, SW1BRN2=50, SW1BRNGN=50,
-        SW1GRAY=50, SW1MOD1=50, SW1SLAD=50, SW1STRTN=50,
-        SW1TEK=50, SW1STON1=50
-      }
-    }
-
     OLD__doors =
     {
       silver=20, silver_fast=33, silver_once=2,
@@ -4449,8 +4405,6 @@ DOOM2.LEVEL_THEMES =
     crates = { crate1=50, crate2=50, comp=70, lite5=20,
       space=90, mod=15 }
 
-    OLD__exits = { skull_pillar=50, stone_pillar=5 }
-
     monster_prefs = { arach=2.0 }
 
     style_list =
@@ -4473,9 +4427,15 @@ DOOM2.LEVEL_THEMES =
     outdoors  = { Hell2_outdoors=50 }
     caves     = { Hell2_cave=50 }
 
-    FIXME_switch_doors = { Door_pink = 50, Door_vine = 50 }
+    big_junctions =
+    {
+      Junc_Octo = 50
+      Junc_Nuke_Pipes = 5
+      Junc_Spokey = 10
+      Junc_Circle_gothic = 40
+    }
 
-    exits = { Exit_demon_pillar=50 }
+    exits = { Exit_Closet_hell = 50, Exit_Pillar_gothic = 10 }
 
     logos = { carve=90, pill=50, neon=5 }
 
@@ -4550,7 +4510,16 @@ DOOM2.LEVEL_THEMES =
     caves     = { Urban_cave=50 }
     outdoors  = { Urban_outdoors=50 }
 
-    exits = { Exit_urban_pillar=50 }
+    exits = { Exit_Closet_urban=50, Exit_Pillar_urban=10,
+              Exit_Pillar_gothic=3 }
+
+    big_junctions =
+    {
+      Junc_Octo = 50
+      Junc_Nuke_Pipes = 5
+      Junc_Spokey = 10
+      Junc_Circle_gothic = 40
+    }
 
     __logos = { carve=40, pill=25, neon=50 }
 
@@ -4559,8 +4528,6 @@ DOOM2.LEVEL_THEMES =
       eagle1=40, hitler1=10,
       marbfac2=3, marbfac3=3,
     }
-
-    OLD__exits = { demon_pillar2=20, demon_pillar3=20, stone_pillar=30, }
 
     lifts = { shiny=20, platform=20, rusty=50 }
 
