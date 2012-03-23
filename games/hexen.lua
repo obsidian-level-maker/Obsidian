@@ -1455,6 +1455,30 @@ HEXEN.SKINS =
   }
 
 
+  Sky_Hall_I =
+  {
+    _prefab = "SKY_HALL_I"
+    _shape  = "I"
+  }
+
+  Sky_Hall_C =
+  {
+    _prefab = "SKY_HALL_C"
+    _shape  = "C"
+
+    support = "PILLAR01"
+    torch_ent = "brass_brazier"
+  }
+
+  Sky_Hall_I_Stair =
+  {
+    _prefab = "SKY_HALL_I_STAIR"
+    _shape  = "IS"
+
+--??    step = "STEP5"
+  }
+
+
   ---| BIG JUNCTIONS |---
 
   Junc_Octo_I =
@@ -1598,6 +1622,8 @@ HEXEN.THEME_DEFAULTS =
                    Door_SW_1 = 50 }
 
   hallway_groups = { basic = 50 }
+
+  sky_halls = { skier = 50 }
 
   big_junctions =
   {
@@ -1845,6 +1871,21 @@ HEXEN.HALLWAY_GROUPS =
 
       Hall_Basic_I_Stair = 20
       Hall_Basic_I_Lift  = 2
+    }
+  }
+
+  skier =
+  {
+    pieces =
+    {
+      Sky_Hall_I = 50
+      Sky_Hall_C = 50
+      Sky_Hall_I_Stair = 50
+
+      Hall_Basic_T = 50  -- use indoor versions for these
+      Hall_Basic_P = 50  --
+
+      Hall_Basic_I_Lift = 2   -- TODO: sky version
     }
   }
 }

@@ -1033,6 +1033,33 @@ QUAKE.SKINS =
   }
 
 
+  Sky_Hall_I =
+  {
+    _prefab = "SKY_HALL_I"
+    _shape  = "I"
+  }
+
+  Sky_Hall_C =
+  {
+    _prefab = "SKY_HALL_C"
+    _shape  = "C"
+
+    support = "METAL1_1"
+    torch_ent = "globe"
+  }
+
+  Sky_Hall_I_Stair =
+  {
+    _prefab = "SKY_HALL_I_STAIR"
+    _shape  = "IS"
+
+--??    step = "STEP5"
+  }
+
+
+
+  ---| BIG JUNCTIONS |---
+
   Junc_Octo_I =
   {
     _prefab = "JUNCTION_OCTO"
@@ -1178,6 +1205,8 @@ QUAKE.THEME_DEFAULTS =
 
   hallway_groups = { basic = 50 }
 
+  sky_halls = { skier = 50 }
+
   big_junctions =
   {
     Junc_Octo = 50
@@ -1214,6 +1243,21 @@ QUAKE.HALLWAY_GROUPS =
 
       Hall_Basic_I_Stair = 20
       Hall_Basic_I_Lift  = 2
+    }
+  }
+
+  skier =
+  {
+    pieces =
+    {
+      Sky_Hall_I = 50
+      Sky_Hall_C = 50
+      Sky_Hall_I_Stair = 50
+
+      Hall_Basic_T = 50  -- use indoor versions for these
+      Hall_Basic_P = 50  --
+
+      Hall_Basic_I_Lift = 2   -- TODO: sky version
     }
   }
 }

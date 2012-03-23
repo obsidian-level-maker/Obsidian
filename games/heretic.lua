@@ -409,6 +409,7 @@ HERETIC.SKINS =
   Start_basic =
   {
     _prefab = "START_SPOT"
+    _where  = "middle"
 
     top = "O_BOLT"
   }
@@ -419,6 +420,7 @@ HERETIC.SKINS =
   Exit_switch =
   {
     _prefab = "EXIT_PILLAR",
+    _where  = "middle"
 
     switch = "SW2OFF"
     exit = "MOSAIC1"
@@ -663,6 +665,33 @@ HERETIC.SKINS =
     lower_WR = 88
     lower_SR = 62
   }
+
+
+  Sky_Hall_I =
+  {
+    _prefab = "SKY_HALL_I"
+    _shape  = "I"
+  }
+
+  Sky_Hall_C =
+  {
+    _prefab = "SKY_HALL_C"
+    _shape  = "C"
+
+    support = "METL1"
+    torch_ent = "serpent_torch"
+  }
+
+  Sky_Hall_I_Stair =
+  {
+    _prefab = "SKY_HALL_I_STAIR"
+    _shape  = "IS"
+
+--??    step = "STEP5"
+  }
+
+
+  ---| BIG JUNCTIONS |---
 
 
   ---| TELEPORTERS |---
@@ -1700,6 +1729,7 @@ HERETIC.THEME_DEFAULTS =
 
   hallway_groups = { basic = 50 }
 
+  sky_halls = { skier = 50 }
 
 --FIXME TEMP STUFF
   cave_walls = { BRWNRCKS=10, LAVA1=20, LOOSERCK=20,
@@ -1736,6 +1766,21 @@ HERETIC.HALLWAY_GROUPS =
 
       Hall_Basic_I_Stair = 20
       Hall_Basic_I_Lift  = 2
+    }
+  }
+
+  skier =
+  {
+    pieces =
+    {
+      Sky_Hall_I = 50
+      Sky_Hall_C = 50
+      Sky_Hall_I_Stair = 50
+
+      Hall_Basic_T = 50  -- use indoor versions for these
+      Hall_Basic_P = 50  --
+
+      Hall_Basic_I_Lift = 2   -- TODO: sky version
     }
   }
 }
