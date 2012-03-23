@@ -854,6 +854,7 @@ HEXEN.SKINS =
   Start_basic =
   {
     _prefab = "START_SPOT"
+    _where  = "middle"
 
     top = "O_BOLT"
   }
@@ -881,6 +882,7 @@ HEXEN.SKINS =
   Exit_switch =
   {
     _prefab = "EXIT_PILLAR",
+    _where  = "middle"
 
     switch = "SEWER06"
     exit = "PLAT01"
@@ -988,7 +990,7 @@ HEXEN.SKINS =
   Weapon2_Set =
   {
     _prefab = "HEXEN_TRIPLE"
-    _where  = "chunk"
+    _where  = "middle"
 
     side = "CRATE05"
     base = "F_082"
@@ -1001,7 +1003,7 @@ HEXEN.SKINS =
   Weapon3_Set =
   {
     _prefab = "HEXEN_TRIPLE"
-    _where  = "chunk"
+    _where  = "middle"
 
     side = "CRATE05"
     base = "F_082"
@@ -1014,7 +1016,7 @@ HEXEN.SKINS =
   Piece1_Set =
   {
     _prefab = "HEXEN_TRIPLE"
-    _where  = "chunk"
+    _where  = "middle"
 
     side = "CRATE05"
     base = "F_082"
@@ -1027,7 +1029,7 @@ HEXEN.SKINS =
   Piece2_Set =
   {
     _prefab = "HEXEN_TRIPLE"
-    _where  = "chunk"
+    _where  = "middle"
 
     side = "CRATE05"
     base = "F_082"
@@ -1040,7 +1042,7 @@ HEXEN.SKINS =
   Piece3_Set =
   {
     _prefab = "HEXEN_TRIPLE"
-    _where  = "chunk"
+    _where  = "middle"
 
     side = "CRATE05"
     base = "F_082"
@@ -1529,7 +1531,7 @@ HEXEN.SKINS =
   Hub_Gate =
   {
     _prefab = "HEXEN_GATE"
-    _where  = "chunk"
+    _where  = "middle"
 
     frame = "WOOD01"
   }
