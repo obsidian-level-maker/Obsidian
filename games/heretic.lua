@@ -466,7 +466,7 @@ HERETIC.SKINS =
   Pedestal_1 =
   {
     _prefab = "PEDESTAL"
-    _where  = "chunk"
+    _where  = "middle"
 
     top  = "FLAT500"
     side = "SAINT1"
@@ -601,7 +601,7 @@ HERETIC.SKINS =
   Switch_1 =
   {
     _prefab = "SMALL_SWITCH"
-    _where  = "chunk"
+    _where  = "middle"
     _switch = "sw_metal"
 
     switch_h = 64
@@ -699,7 +699,7 @@ HERETIC.SKINS =
   Teleporter1 =
   {
     _prefab = "TELEPORT_PAD"
-    _where  = "chunk"
+    _where  = "middle"
 
     tele = "FLTTELE1"
     side = "SQPEB1"
