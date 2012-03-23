@@ -90,19 +90,27 @@ QUAKE.ENTITIES =
   -- scenery
   barrel     = { id="misc_explobox",  kind="scenery", r=30, h=80 }
   explode_bg = { id="misc_explobox2", kind="scenery", r=30, h=40 }
-
   crucified  = { id="monster_zombie", spawnflags=1, kind="scenery", r=32, h=64 }
+
+  -- light sources
   torch      = { id="light_torch_small_walltorch",  kind="scenery", r=30, h=60, pass=true }
+  globe      = { id="light_globe", kind="scenery", r=10, h=10, pass=true }
+  flame1     = { id="light_flame_small_white", kind="scenery", r=10, h=10, pass=true }
+  flame2     = { id="light_flame_small_yellow", kind="scenery", r=10, h=10, pass=true }
+  flame3     = { id="light_flame_large_yellow", kind="scenery", r=10, h=10, pass=true }
 
   fireball   = { id="misc_fireball",  kind="scenery", r=10, h=10, pass=true }
 
   -- ambient sounds
   snd_computer = { id="ambient_comp_hum",  kind="scenery", r=30, h=30, pass=true }
+  snd_buzz     = { id="ambient_light_buzz",kind="scenery", r=30, h=30, pass=true }
+  snd_buzz2    = { id="ambient_flouro_buzz",kind="scenery", r=30, h=30, pass=true }
   snd_drip     = { id="ambient_drip",      kind="scenery", r=30, h=30, pass=true }
   snd_drone    = { id="ambient_drone",     kind="scenery", r=30, h=30, pass=true }
   snd_wind     = { id="ambient_suck_wind", kind="scenery", r=30, h=30, pass=true }
   snd_swamp1   = { id="ambient_swamp1",    kind="scenery", r=30, h=30, pass=true }
   snd_swamp2   = { id="ambient_swamp2",    kind="scenery", r=30, h=30, pass=true }
+  snd_thunder  = { id="ambient_thunder",   kind="scenery", r=30, h=30, pass=true }
 
   -- special
 
