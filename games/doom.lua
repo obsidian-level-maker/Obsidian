@@ -1923,8 +1923,8 @@ DOOM.SKINS =
     special = 11
     tag = 0
 
-    item1 = "medikit"
-    item2 = "shells"
+    item1 = { none=40, stimpack=50, medikit=20, potion=10 }
+    item2 = { none=40, shells=50, clip=40, rocket=30 }
   }
 
   Exit_Closet_hell =
@@ -1956,8 +1956,8 @@ DOOM.SKINS =
     special = 11
     tag = 0
 
-    item1 = "medikit"
-    item2 = "shells"
+    item1 = { none=40, stimpack=50, medikit=20, potion=10 }
+    item2 = { none=40, shells=50, clip=40, rocket=30 }
   }
 
   Exit_Closet_urban =
@@ -1991,8 +1991,8 @@ DOOM.SKINS =
     special = 11
     tag = 0
 
-    item1 = "medikit"
-    item2 = "shells"
+    item1 = { none=40, stimpack=50, medikit=20, potion=10 }
+    item2 = { none=40, shells=50, clip=40, rocket=30 }
   }
 
 
