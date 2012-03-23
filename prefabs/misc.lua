@@ -159,7 +159,7 @@ PREFAB.TELEPORT_PAD =
 {
   defaults =
   {
-    glitter_obj = "none"
+    effect_ent = "none"
   }
 
   brushes =
@@ -186,7 +186,7 @@ PREFAB.TELEPORT_PAD =
   entities =
   {
     { ent="teleport_spot", x = 0, y = 0, z = 16, angle=90 }
-    { ent="?glitter_obj",  x = 0, y = 0, z = 24 }
+    { ent="?effect_ent",   x = 0, y = 0, z = 24 }
   }
 }
 

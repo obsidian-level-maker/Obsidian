@@ -675,7 +675,7 @@ HERETIC.SKINS =
     tele = "FLTTELE1"
     side = "SQPEB1"
 
-    glitter_obj = "glitter_red"
+    effect_ent = "glitter_red"
 
     x_offset = 0
     y_offset = 0
