@@ -369,8 +369,22 @@ function HALLWAY_CLASS.select_piece(H, C)
   local source_tab = H.group.pieces
 
   if C.section.kind == "big_junc" then
-    source_tab = H.group.big_junctions or THEME.big_junctions
-    assert(source_tab)
+    local biggies = H.group.big_junctions or THEME.big_junctions
+    assert(biggies)
+
+    -- expand the table, checking that skins exist
+    source_tab = {}
+
+    local SUFFIXES = { "_I", "_C", "_T", "_P" }
+
+    each name,prob in biggies do
+      each suffix in SUFFIXES do
+        local full_name = name .. suffix
+        if GAME.SKINS[full_name] then
+          source_tab[full_name] = prob
+        end
+      end
+    end
   end
 
   local long, deep = geom.long_deep(C.x2 - C.x1, C.y2 - C.y1, C.h_dir)
