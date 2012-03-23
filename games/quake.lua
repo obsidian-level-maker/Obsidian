@@ -794,6 +794,7 @@ QUAKE.SKINS =
   Start_basic =
   {
     _prefab = "START_SPOT"
+    _where  = "middle"
 
     top = "O_BOLT"
   }
@@ -812,6 +813,7 @@ QUAKE.SKINS =
   Exit_basic =
   {
     _prefab = "QUAKE_EXIT_PAD"
+    _where  = "middle"
 
     pad  = "TELE_TOP"
     side = "METAL1_1"
@@ -905,7 +907,7 @@ QUAKE.SKINS =
   Pedestal_tech =
   {
     _prefab = "PEDESTAL"
-    _where  = "chunk"
+    _where  = "middle"
 
     top  = "LIGHT1_7"
     side = "METAL1_2"
@@ -917,7 +919,7 @@ QUAKE.SKINS =
   Pedestal_gothic =
   {
     _prefab = "PEDESTAL"
-    _where  = "chunk"
+    _where  = "middle"
 
     top  = "WINDOW1_4"  -- METAL6_4
     side = "TECH02_5"   -- METAL5_8
@@ -1108,7 +1110,7 @@ QUAKE.SKINS =
   Teleporter1 =
   {
     _prefab = "QUAKE_TELEPORTER"
-    _where  = "chunk"
+    _where  = "middle"
 
     frame = "MET5_1"
   }
