@@ -293,7 +293,7 @@ HERETIC.MATERIALS =
   FLOOR01  = { f="FLOOR01", t="LOOSERCK", color=0x1b110b }
   FLOOR03  = { f="FLOOR03", t="CSTLRCK",  color=0x343434 }
   FLOOR04  = { f="FLOOR04", t="CSTLRCK",  color=0x393a39 }
-  FLOOR05  = { f="FLOOR05", t="MOSSROCK", color=0x283e23 }
+  FLOOR05  = { f="FLOOR05", t="MOSSRCK1", color=0x283e23 }
   FLOOR06  = { f="FLOOR06", t="SANDSQ2",  color=0x956139 }
   FLOOR07  = { f="FLOOR07", t="MOSAIC1",  color=0x676679 }
   FLOOR08  = { f="FLOOR08", t="CHAINSD",  color=0x2f2d2b }
