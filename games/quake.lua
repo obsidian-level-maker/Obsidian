@@ -1172,10 +1172,7 @@ QUAKE.THEME_DEFAULTS =
 
   big_junctions =
   {
-    Junc_Octo_I = 50
-    Junc_Octo_C = 50
-    Junc_Octo_T = 50
-    Junc_Octo_P = 50
+    Junc_Octo = 50
   }
 
   fat_cages = { Fat_Cage_W_Bars = 50 }
