@@ -3423,6 +3423,11 @@ PREFAB.SKY_HALL_I_STAIR =
 
   x_ranges = { {16,0}, {160,1}, {16,0} }
 
+  defaults =
+  {
+    step = "?floor"
+  }
+
   brushes =
   {
     -- the sky
