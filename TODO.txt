@@ -6,13 +6,37 @@ Current Work
 ------------
 
 
->>>  big_junctions table: omit the '_P' suffixes
+AREA ALGORITHM #627
+===================
 
->>  theme for JUNCTION_CIRCLE fabs
+(1) there are "virtual height ranges" (VHR) numbered 1 to 9.
+    at the end of the algorithm they will get actual heights
+    (most simplistic way is to multiply the number by 128).
 
+(2) AREA = a VHR number occupying a group of contiguous seeds.
+    In truly 3D games, areas can overlap other ones with a
+    different VHR (perhaps prefer a diff >= 2).
+    In 2.5D games (without extrafloors), areas cannot overlap.
 
+(3) two areas which touch or overlap MUST NOT have the same VHR.
 
-Closets:
+(4) began by adding zero or more areas in the middle of a room
+    (e.g. around reclaimed junctions).
+    These islands should not touch.
+    Give them VHR numbers in the range 4 to 6.
+ 
+(5) add areas to remaining space, ensuring that each new area
+    does not use the same VHR number as any areas that it touches
+    or overlaps.  Repeat until all seeds in the room are used
+    (and perhaps a few more times for 3D areas).
+
+    Can merge an area into an existing one if the new area would
+    be too small, so long as existing area is not going to touch
+    another area with same VHR number.
+
+(6) in a room with a crossover, VHR #1 is reserved for a channel
+    and VHR #9 is reserved for a bridge.
+    The shapes of those areas can be arbitrary.
 
 
 -  REVIEW: quadratic monster formula : bad for "full" game
@@ -32,27 +56,17 @@ Closets:
 Short-Term Goals
 ================
 
-+  hallway stuff sorted out
 
-+  theme stuff sorted out
-
-
-
-REVIEW: Fence code
+REVIEW: Fence code  [some Street mode rooms lack fences]
 
 REVIEW: adjuster stuff 
 
 -  fix monsters stuck in doors / corners of chunks
 
--  light_globe and flame entities for QUAKE
-
 +  automatic repeating of prefabs
    x_repeat=192 : means we require: x_size / N >= x_repeat (for highest N)
 
    allow it to happen with prefab composition too
-
-+  for outdoor bordering, have earlier pass to set the facade_mat
-   in _all_ unused seeds (grow existing buildings)
 
 +  BUG: stairs in cycles can be too low to pass
 
@@ -77,5 +91,8 @@ Release Goals
 
 -  better ceilings, some ceiling lights
 
--  better exits
+>>  better exits
+
+Closets:
++  allow closet to be smaller than chunk, fill extra space with void
 

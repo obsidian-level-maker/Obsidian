@@ -60,6 +60,13 @@ New Starting Logic
             especially a starting weapon. 
 
 
+Outdoor Borders:
++  review logic, find better way (without the 'edge_of_map' flag)
+
++  for outdoor bordering, have earlier pass to set the facade_mat
+   in _all_ unused seeds (grow existing buildings)
+
+
 Outdoor Idioms:
 +  at edge of map, have rocky/jagged shape
    (needed where caves border outdoor room too)
@@ -304,6 +311,8 @@ Caves:
    -  for bridges, ensure ceiling cells are high enough
 
 -  support "Lakes" again
+
+-  get V3 style working again, use it sometimes
 
 -  MIDVINE sometimes used at cave transitions
    (probably need a new prefab for this)
