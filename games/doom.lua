@@ -104,7 +104,7 @@ DOOM.ENTITIES =
   bullet_box = { id=2048, kind="pickup", r=20,h=16, pass=true }
   shells     = { id=2008, kind="pickup", r=20,h=16, pass=true }
   shell_box  = { id=2049, kind="pickup", r=20,h=16, pass=true }
-  rockets    = { id=2010, kind="pickup", r=20,h=16, pass=true }
+  rocket     = { id=2010, kind="pickup", r=20,h=16, pass=true }
   rocket_box = { id=2046, kind="pickup", r=20,h=16, pass=true }
   cells      = { id=2047, kind="pickup", r=20,h=16, pass=true }
   cell_pack  = { id=  17, kind="pickup", r=20,h=16, pass=true }
@@ -1923,8 +1923,8 @@ DOOM.SKINS =
     special = 11
     tag = 0
 
-    item1 = { none=40, stimpack=50, medikit=20, potion=10 }
-    item2 = { none=40, shells=50, clip=40, rocket=30 }
+    item1 = { stimpack=50, medikit=20, soul=1, none=30 }
+    item2 = { shells=50, bullets=40, rocket=30, potion=20 }
   }
 
   Exit_Closet_hell =
@@ -1956,8 +1956,8 @@ DOOM.SKINS =
     special = 11
     tag = 0
 
-    item1 = { none=40, stimpack=50, medikit=20, potion=10 }
-    item2 = { none=40, shells=50, clip=40, rocket=30 }
+    item1 = { stimpack=50, medikit=20, soul=1, none=30 }
+    item2 = { shells=50, bullets=40, rocket=30, potion=20 }
   }
 
   Exit_Closet_urban =
@@ -1991,8 +1991,8 @@ DOOM.SKINS =
     special = 11
     tag = 0
 
-    item1 = { none=40, stimpack=50, medikit=20, potion=10 }
-    item2 = { none=40, shells=50, clip=40, rocket=30 }
+    item1 = { stimpack=50, medikit=20, soul=1, none=30 }
+    item2 = { shells=50, bullets=40, rocket=30, potion=20 }
   }
 
 
@@ -3482,28 +3482,34 @@ DOOM.ROOM_THEMES =
     {
       STARTAN3=60
       STARG3=40
-      STARG3=10
+      STARG1=10
     }
 
     floors =
     {
       FLOOR4_8=50
+      FLOOR5_1 = 20
       FLOOR5_3=30
       FLOOR3_3=20
+      FLOOR0_1 = 20
+      FLOOR0_2 = 20
       FLOOR0_3=30
       SLIME15=10
       SLIME16=10
-      FLAT4=15
+      FLAT4 = 15
+      FLOOR1_1 = 8
     }
 
     ceilings =
     {
+      CEIL3_3 = 15
       CEIL3_5=20,
       CEIL3_1=20,
       FLAT4=20,
+      CEIL4_2 = 10,
       CEIL4_3=10,
-      CEIL5_2=10,
-      FLAT9=30,
+      CEIL5_1=10,
+      FLAT9=15,
     }
   }
 
@@ -3518,8 +3524,11 @@ DOOM.ROOM_THEMES =
     floors =
     {
       FLOOR4_8=50,
+      FLOOR5_1 = 25,
       FLOOR5_3=30,
       FLOOR3_3=20,
+      FLOOR0_1 = 20,
+      FLOOR0_2 = 15,
       FLOOR0_3=30,
       SLIME15=10,
       SLIME16=10,
@@ -3528,12 +3537,16 @@ DOOM.ROOM_THEMES =
 
     ceilings =
     {
+      CEIL3_1 = 20,
+      CEIL3_2 = 20,
       CEIL3_5=20,
       CEIL3_1=20,
       FLAT4=20,
       CEIL4_3=10,
+      CEIL5_1 = 15,
       CEIL5_2=10,
       FLAT9=30,
+      FLAT19 = 20,
     }
   }
 
@@ -3549,9 +3562,11 @@ DOOM.ROOM_THEMES =
     floors =
     {
       FLOOR4_8=50,
+      FLOOR5_1 = 20,
       FLOOR5_3=30,
       FLOOR3_3=20,
       FLOOR0_3=30,
+      FLOOR0_5 = 15,
       SLIME15=10,
       SLIME16=10,
       FLAT4=15,
@@ -3565,6 +3580,7 @@ DOOM.ROOM_THEMES =
       CEIL4_3=10,
       CEIL5_2=10,
       FLAT9=30,
+      SLIME14 = 10,
     }
   }
 
@@ -3577,7 +3593,10 @@ DOOM.ROOM_THEMES =
 
     floors =
     {
-      FLAT14 = 50
+      FLAT14 = 60
+      FLOOR0_3 = 20
+      FLOOR3_3 = 40
+      FLOOR5_1 = 20
     }
 
     ceilings =
@@ -3599,8 +3618,11 @@ DOOM.ROOM_THEMES =
       FLAT3 = 50,
       FLOOR0_1 = 30,
       FLOOR4_5 = 20,
+      FLOOR4_6 = 20,
       FLOOR7_1 = 15,
       FLAT4 = 5
+      SLIME15 = 20,
+      SLIME14 = 20,
     }
 
     ceilings =
@@ -3608,6 +3630,8 @@ DOOM.ROOM_THEMES =
       CEIL5_1 = 40
       CEIL5_2 = 40
       SLIME15 = 40
+      CEIL4_1 = 20
+      SLIME14 = 40
     }
   }
 
@@ -3615,11 +3639,16 @@ DOOM.ROOM_THEMES =
   {
     naturals =
     {
-      ASHWALL=50,
-      ASHWALL4=50,
       SP_ROCK1=50,
       GRAYVINE=50,
       TEKWALL4=3,
+      ASHWALL  = 50
+      ASHWALL4 = 50
+      ASHWALL6  = 10
+      TANROCK7  = 10
+      ZIMMER1  = 15
+      ZIMMER3  = 20
+      ZIMMER7  = 15
     }
   }
 
@@ -3634,6 +3663,8 @@ DOOM.ROOM_THEMES =
       STONE3=40,
       FLOOR4_8=10,
       FLOOR5_4=20,
+      GRASS1=40,   -- MOVE TO naturals
+      FLOOR5_4=20,
     }
 
     naturals =
@@ -3641,6 +3672,12 @@ DOOM.ROOM_THEMES =
       ASHWALL=50,
       ASHWALL4=50,
       SP_ROCK1=50,
+      ASHWALL6  = 20
+      TANROCK4  = 15
+      ZIMMER2  = 15
+      ZIMMER4  = 15
+      ZIMMER8  = 5
+      ROCK5  = 20
     }
   }
 
@@ -3653,14 +3690,20 @@ DOOM.ROOM_THEMES =
       BROWNPIP = 20,
       PIPEWAL2 = 50,
       STARGR1 = 10,
+      STARBR2 = 10
+      PIPE2 = 15
+      PIPE4 = 15
+      TEKWALL4 = 10
     }
 
     floors =
     {
       FLAT14 = 50,
+      FLOOR4_8 = 15
       FLAT1 = 20,
       FLOOR0_2 = 20,
       FLOOR1_6 = 5,
+      CEIL4_1 = 20
     }
 
     ceilings =
@@ -3670,6 +3713,8 @@ DOOM.ROOM_THEMES =
       CEIL3_1=50,
       RROCK03=50,
       TLITE6_5=10
+      CEIL4_2 = 20
+      GRNLITE1 = 20
     }
   }
 
@@ -3685,14 +3730,20 @@ DOOM.ROOM_THEMES =
 
     floors =
     {
+      FLAT5_3 = 30
       FLAT10   = 50
+      FLAT1  = 20
       FLOOR7_1 = 50
+      FLAT5_7 = 10
+      FLAT5_8 = 10
     }
 
     ceilings =
     {
       FLOOR6_1 = 20
       FLOOR6_2 = 20
+      FLAT10 = 15
+      FLAT5_3 = 10
     }
   }
 
@@ -3700,19 +3751,27 @@ DOOM.ROOM_THEMES =
   {
     walls =
     {
+      MARBLE1  = 20
       MARBLE2 = 50
+      MARBLE3  = 50
     }
 
     floors =
     {
-      FLAT10   = 50
-      FLOOR7_1 = 50
+      FLAT10   = 25
+      FLOOR7_1 = 30
+      DEM1_5  = 50
+      DEM1_6  = 30
+      FLOOR7_2  = 30
     }
 
     ceilings =
     {
+      FLOOR7_2  = 50
+      DEM1_5  = 20
       FLOOR6_1 = 20
       FLOOR6_2 = 20
+      MFLR8_4  = 15
     }
   }
 
@@ -3723,16 +3782,27 @@ DOOM.ROOM_THEMES =
       MARBGRAY = 80
       GSTVINE1 = 40
       GSTVINE2 = 40
+      GSTONE1  = 20
+      SKINMET1 = 10
+      SKINMET2 = 10
     }
 
     floors =
     {
       FLAT1 = 50
+      DEM1_6  = 30
+      FLOOR7_1  = 20
+      FLOOR7_2  = 25
+      FLAT10  = 20
     }
 
     ceilings =
     {
       FLAT1 = 50
+      SFLR6_1 = 20
+      SFLR6_4 = 20
+      FLAT5_2 = 10
+      FLOOR7_2 = 20
     }
   }
 
@@ -3743,6 +3813,9 @@ DOOM.ROOM_THEMES =
       ROCKRED1 = 50
       SP_ROCK1 = 25
       GSTVINE2 = 25
+      ZIMMER1  = 15
+      SKIN2 = 10
+      FIREBLU1 = 12
     }
   }
 
@@ -3750,49 +3823,79 @@ DOOM.ROOM_THEMES =
   {
     floors =
     {
-      BROWN1=50,
+      FLOOR6_2 = 10
+      FLAT5_7 = 20
+      FLAT5_8 = 10
+      RROCK03 = 30  -- REMOVE
+      RROCK04 = 30  -- REMOVE
+      RROCK09 = 15  -- REMOVE
     }
 
     naturals =
     {
       ROCKRED1 = 50
       SP_ROCK1 = 30
-      ASHWALL4 = 50
+      ASHWALL  = 30
+      ASHWALL3  = 25
+      ASHWALL6  = 20
+      ASHWALL7  = 15
+      ASHWALL4 = 30
+      SKIN2 = 10
+      SKSNAKE1 = 30
+      SKSNAKE2 = 30
     }
   }
 
 
   ---- Urban / City / Earth ---------------------
 
+--PANEL7 looks silly as a facade --Chris
+
   Urban_panel =
   {
     facades =
     {
       BIGBRIK1 = 30
+      BIGBRIK2 = 15
       BLAKWAL2 = 10
+      MODWALL1 = 20
       MODWALL3 = 10
-      PANEL7   = 10
       CEMENT7  = 5
+      CEMENT9 = 5
+      METAL2 = 3
     }
 
     walls =
     {
       PANEL6 = 50
       PANEL8 = 50
+      PANEL9 = 30
+      PANEL7 = 20
       PANEL3 = 50
+      PANEL2 = 50
+      PANCASE2 = 30
     }
 
     floors =
     {
+      FLOOR0_2 = 15
+      FLOOR5_3 = 20
+      FLOOR5_4 = 15
       FLAT1_1 = 50
       FLAT4 = 50
       FLAT1 = 30
       FLAT8 = 10
+      FLAT5_5 = 30
+      FLAT5 = 20
     }
 
     ceilings =
     {
       FLAT1 = 50
+      CEIL1_1 = 20
+      FLAT5_2 = 20
+      CEIL3_3 = 10
+      RROCK10 = 20
     }
   }
 
@@ -3806,14 +3909,24 @@ DOOM.ROOM_THEMES =
 
     floors =
     {
+      FLOOR0_1 = 20
       FLAT1_1 = 50
+      FLOOR0_3 = 20
       FLAT5_1 = 50
+      FLAT5_2 = 20
       FLAT1 = 30
+      FLAT5 = 15
+      FLOOR5_4 = 10
     }
 
     ceilings =
     {
       FLAT1 = 50
+      RROCK10 = 20
+      RROCK14 = 20
+      MFLR8_1 = 10
+      CEIL1_1 = 15
+      FLAT5_2 = 10
     }
   }
 
@@ -3821,23 +3934,41 @@ DOOM.ROOM_THEMES =
   {
     walls =
     {
+      BRICK1 = 10
+      BRICK2  = 15
       BRICK5  = 50
+      BRICK6  = 20
       BRICK7  = 30
+      BRICK8  = 15
       BRICK9  = 20
       BRICK12 = 30
       BRICK11 = 3
+      BRICK10  = 5
     }
 
     floors =
     {
+      FLOOR0_1 = 20
+      FLOOR0_2 = 20
+      FLOOR0_3 = 20
+      FLOOR4_6 = 20
+      FLOOR5_3 = 25
       FLAT8 = 50
       FLAT5_1 = 50
+      FLAT5_2 = 30
+      FLAT5_4 = 20
+      FLAT5_5 = 30
       FLAT1 = 30
     }
 
     ceilings =
     {
       FLAT1 = 50
+      FLAT5_4 = 20
+      FLAT8 = 15
+      RROCK10 = 20
+      RROCK14 = 20
+      SLIME13 = 5
     }
   }
 
@@ -3854,11 +3985,20 @@ DOOM.ROOM_THEMES =
       FLAT1_2 = 50
       FLAT5_2 = 50
       FLAT1 = 50
+      FLAT8 = 20
+      FLAT5_4 = 35
+      FLAT5_5 = 20
+      FLAT5_1 = 50
+      SLIME15 = 15
     }
 
     ceilings =
     {
       FLAT1 = 50
+      CEIL1_1 = 20
+      MFLR8_1 = 30
+      CELL3_5 = 25
+      FLAT5_4 = 20
     }
   }
 
@@ -3870,23 +4010,33 @@ DOOM.ROOM_THEMES =
       BIGBRIK2 = 50
       BRICK10  = 50
       BRICK11  = 10
+      WOOD1    = 50
+      WOOD12   = 50
       WOOD9    = 50
+      WOODVERT = 50
       PANEL1   = 50
       PANEL7   = 30
+      STUCCO  = 30
+      STUCCO1  = 30
       STUCCO3  = 30
     }
 
     floors =
     {
       FLAT5_1 = 50
+      FLAT5_2 = 20
       FLAT8   = 50
       FLAT5_4 = 50
       MFLR8_1 = 50
+      FLOOR5_3 = 20
+      FLAT5 = 20
     }
 
     ceilings =
     {
       CEIL1_1 = 30
+      FLAT5_2 = 25
+      CEIL3_5 = 20
       MFLR8_1 = 50
       FLAT1   = 30
     }
@@ -4079,30 +4229,6 @@ DOOM1.LEVEL_THEMES =
 
     bars = { bar_silver=50, bar_gray=50 }
 
-    __exit =  -- FIXME
-    {
-      walls =
-      {
-        STARTAN2=50, STARG1=50,
-        TEKWALL4=50, STARBR2=50
-      }
-      floors =
-      {
-        FLOOR0_3=50, FLOOR5_2=50
-      }
-      ceilings =
-      {
-        TLITE6_6=50, TLITE6_5=50, FLAT17=50,
-        FLOOR1_7=50, CEIL4_3=50
-      }
-      switches =
-      {
-        SW1METAL=50, SW1LION=50, SW1BRN2=50, SW1BRNGN=50,
-        SW1GRAY=50,  SW1SLAD=50, SW1STRTN=50,
-        SW1STON1=50
-      }
-    }
-
     OLD__doors =
     {
       silver=20, silver_fast=33, silver_once=2,
@@ -4173,30 +4299,6 @@ DOOM1.LEVEL_THEMES =
     OLD__switches = { sw_blue=50, sw_hot=50 }
 
     bars = { bar_silver=50, bar_gray=50 }
-
-    __exit =  -- FIXME
-    {
-      walls =
-      {
-        STARTAN2=50, STARG1=50,
-        TEKWALL4=50, STARBR2=50
-      }
-      floors =
-      {
-        FLOOR0_3=50, FLOOR5_2=50
-      }
-      ceilings =
-      {
-        TLITE6_6=50, TLITE6_5=50, FLAT17=50,
-        FLOOR1_7=50, CEIL4_3=50
-      }
-      switches =
-      {
-        SW1METAL=50, SW1LION=50, SW1BRN2=50, SW1BRNGN=50,
-        SW1GRAY=50,  SW1SLAD=50, SW1STRTN=50,
-        SW1STON1=50
-      }
-    }
 
     OLD__doors =
     {
@@ -5166,7 +5268,7 @@ DOOM.PICKUPS =
     give = { {ammo="shell",count=20} }
   }
 
-  rockets =
+  rocket =
   {
     prob = 10
     cluster = { 4,7 }
