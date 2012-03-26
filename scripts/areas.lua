@@ -900,6 +900,132 @@ end
 ----------------------------------------------------------------
 
 
+function Areas_create_all_areas(R)
+
+  local min_size = 2 + R.map_volume * 2
+  local max_size = 8 + R.map_volume * 4
+
+  local total_seeds = 0
+  local  used_seeds = 0
+
+  local area = array_2D(SEED_W, SEED_H)
+
+
+  local function init()
+    for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
+      if S.room == R then
+        S.v_areas = {}
+        total_seeds = total_seeds + 1
+      end
+    end
+  end
+
+  
+  local function clear()
+    for y = 1, SEED_H do
+      if not table.empty(area[y]) then
+        area[y] = {}
+      end
+    end
+  end
+
+
+  local function try_MIDDLE(junc, v)
+  end
+
+
+  local function try_CORNER(corner, v)
+  end
+
+
+  local function try_EDGE(side, v)
+  end
+
+
+  local function try_TWO_SIDE(corner, v, extend)
+  end
+
+
+  local function try_THREE_SIDE(side, v, extend)
+    local L_side = geom.LEFT [side]
+    local R_side = geom.RIGHT[side]
+  end
+
+
+  local function try_RANDOM(v)
+  end
+
+
+  local function grow_the_rest()
+  end
+
+
+  --| Areas_create_all_areas |---
+
+  local SIDES   = { 2,4,6,8 }
+  local CORNERS = { 1,3,7,9 }
+
+  init()
+ 
+  each K in R.sections do
+    if (K.orig_kind == "junction") and not K:touches_edge() then
+      try_MIDDLE(junc, rand.pick { 3,4,4,5,5,5,6,6 })
+    end
+  end
+
+  for loop = 1,16 do  
+    local extend = (loop >= 11)
+    local v = rand.pick { 3,4,5,5,6,6,6,7,7 }
+
+    if rand.odds(75) then
+      -- nothing
+    elseif rand.odds(75) then
+      try_TWO_SIDE(rand.dir(), v, extend)
+    else
+      try_THREE_SIDE(rand.dir(), v, extend)
+    end
+  end
+
+  for loop = 1,4 do
+    if rand.odds(25) then
+      try_RANDOM(rand.irange(4,6))
+    end
+  end
+
+  for loop = 1,16 do
+    local v = rand.pick { 3,3,3,4,4,4,4,5,5,5,6,6,7 }
+
+    if rand.odds(50) then
+      -- nothing
+    elseif rand.odds(50) then
+      try_CORNER(rand.pick(CORNERS), v)
+    else
+      try_EDGE(rand.dir(), v)
+    end
+  end
+
+  for loop = 1, R.map_volume + 1 do
+    try_RANDOM(rand.irange(4,6))
+  end
+
+  -- must have created at least one area by now
+  if used_seeds == 0 then
+    error("failed to create any areas at all")
+  end
+
+  for loop = 1,200 do
+    if used_seeds >= total_seeds then break end
+
+    if loop = 200 then
+      error("failed to create areas in some seeds")
+    end
+
+    grow_the_rest()
+  end
+end
+
+
 function Areas_flesh_out()
 
   -- this creates the actual walkable areas in each room, making sure
@@ -1089,39 +1215,6 @@ function Areas_flesh_out()
     return false
   end
 
-
-  local function filler_chunks(R)
-    for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
-      local S = SEEDS[sx][sy]
-      if S.room == R and R:can_alloc_chunk(sx, sy, sx, sy) then
-        
-        local W, H = 1, 1
-        local do_x_match = rand.sel(50, 0, 1)
-
-        local EXPAND_PROBS = { 50, 18, 5 }
-
-        for pass = 1,6 do
-          local do_x = ((pass % 2) == do_x_match)
-          local expand_prob = EXPAND_PROBS[int((pass + 1) / 2)]
-
-          if not rand.odds(expand_prob) then continue end
-
-          if do_x and R:can_alloc_chunk(sx, sy, sx+W, sy+H-1) and
-                  not crosses_corner(sx, sy, sx+W, sy+H-1)
-          then
-            W = W + 1
-          elseif not do_x and R:can_alloc_chunk(sx, sy, sx+W-1, sy+H) and
-                          not crosses_corner(sx, sy, sx+W-1, sy+H)
-          then
-            H = H + 1
-          end
-        end
-
-        local C = R:alloc_chunk(sx, sy, sx+W-1, sy+H-1)
-        C.filler = true
-      end
-    end end
-  end
 
 
   local function merge_areas(C, N, area_tab)
@@ -1943,7 +2036,7 @@ dump_seed_list("grown seeds", seeds)
     end
 
     -- second pass : some extra floors (mainly for the Quake games)
-    local extra = (R.sw + R.sh) / 3
+    local extra = int((R.sw + R.sh) / 9 + gui.random() * 2)
 
     for loop = 1,extra do
       if not create_area(R, "extra") then break; end
@@ -2144,10 +2237,6 @@ dump_seed_list("grown seeds", seeds)
     if R.kind == "cave" then
       Simple_cave_or_maze(R)
       Simple_create_areas(R)
-    else
-      decorative_chunks(R)
----###  filler_chunks(R)
----###  create_areas(R)
     end
 
     initial_height(R)
