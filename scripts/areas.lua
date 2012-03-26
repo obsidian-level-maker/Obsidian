@@ -908,7 +908,10 @@ function Areas_create_all_areas(R)
   local total_seeds = 0
   local  used_seeds = 0
 
-  local area = array_2D(SEED_W, SEED_H)
+  local used_vhrs = {}
+
+  local area = array_2D(R.sx2, R.sy2)
+  local area_size
 
 
   local function init()
@@ -918,20 +921,137 @@ function Areas_create_all_areas(R)
         S.v_areas = {}
         total_seeds = total_seeds + 1
       end
-    end
+    end end
   end
 
   
   local function clear()
-    for y = 1, SEED_H do
+    for y = R.sy1, R.sy2 do
       if not table.empty(area[y]) then
         area[y] = {}
       end
     end
+
+    area_size = 0
+  end
+
+
+  local function install(v)
+    used_vhrs[v] = true
+
+    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
+      if area[x][y] then
+        local S = SEEDS[x][y]
+
+        if table.empty(S.v_areas) then
+          used_seeds = used_seeds + 1
+        end
+
+        assert(not S.v_areas[v])
+        S.v_areas[v] = true
+      end
+    end end
+  end
+
+
+  local function test(x, y, v)
+    local sx1, sy1 = x, y
+    local sx2, sy2 = x, y
+
+    -- must expand range to whole chunk if present
+    local C = SEEDS[x][y].chunk
+
+    if C then
+      sx1, sy1 = C.sx1, C.sy1
+      sx2, sy2 = C.sx2, C.sy2
+    end
+
+    for nx = sx1,sx2 do for ny = sy1,sy2 do
+      if not SEEDS[nx][ny].can_add_vhr(v) then
+        return false
+      end
+    end end
+
+    return true
+  end
+
+
+  local function set(x, y)
+    local sx1, sy1 = x, y
+    local sx2, sy2 = x, y
+
+    -- must expand range to whole chunk if present
+    local C = SEEDS[x][y].chunk
+
+    if C then
+      sx1, sy1 = C.sx1, C.sy1
+      sx2, sy2 = C.sx2, C.sy2
+    end
+
+    for nx = sx1,sx2 do for ny = sy1,sy2 do
+      if not area[nx][ny] then
+        area[nx][ny] = true
+        area_size = area_size + 1
+      end
+    end end
+  end
+
+
+  local function test_box(x1, y1, x2, y2, v)
+    for x = x1,x2 do for y = y1,y2 do
+      if not test(x, y, v) then return false end
+    end end
+
+    return true
+  end
+
+
+  local function set_box(x1, y1, x2, y2)
+    for x = x1,x2 do for y = y1,y2 do
+      set(x, y)
+    end end
+  end
+
+
+  local function test_box_no_edge(x1, y1, x2, y2, v)
+    for x = x1,x2 do for y = y1,y2 do
+      if SEEDS[x][y].room != R then return false end
+      if SEEDS[x][y]:edge_of_room() then return false end
+      if not test(x, y, v) then return false end
+    end end
+
+    return true
   end
 
 
   local function try_MIDDLE(junc, v)
+    clear()
+
+    -- initial size
+    local sx1, sy1 = junc.sx1, junc.sy1
+    local sx2, sy2 = junc.sx2, junc.sy2
+
+    if not test_box(sx1, sy1, sx2, sy2) then return end
+
+    set_box(sx1, sy1, sx2, sy2)
+
+    -- try growing it  [FIXME: try each direction individually]
+    for loop = 1,2 do
+      sx1 = sx1 - 1 ; sx2 = sx2 + 1
+      sy1 = sy1 - 1 ; sy2 = sy2 + 1
+
+      local new_vol = (sx2 - sx1 + 1) * (sy2 - sy1 + 1)
+
+      if new_vol > max_size then break end
+
+      if test_box_no_edge(sx1, sy1, sx2, sy2) then
+        set_box(sx1, sy1, sx2, sy2)
+      end
+    end
+
+    if area_size >= min_size then
+      install(v)
+    end
   end
 
 
@@ -944,20 +1064,96 @@ function Areas_create_all_areas(R)
 
 
   local function try_TWO_SIDE(corner, v, extend)
+    local L_side = geom. LEFT_45[side]
+    local R_side = geom.RIGHT_45[side]
   end
 
 
   local function try_THREE_SIDE(side, v, extend)
-    local L_side = geom.LEFT [side]
+    local L_side = geom. LEFT[side]
     local R_side = geom.RIGHT[side]
   end
 
 
+  local function grow_random(bbox)
+    -- TODO
+  end
+
+
   local function try_RANDOM(v)
+    if used_seeds >= total_seeds then return end
+
+    local unused_seeds = {}
+
+    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y]
+      if S.room == R and table.empty(S.v_areas) then
+        table.insert(unused_seeds, S)
+      end
+    end end
+
+    assert(#unused_seeds == total_seeds - used_seeds)
+
+    local first
+    
+    for loop = 1,10 do
+      first = rand.pick(unused_seeds)
+
+      if test(first.sx, first.sy, v) then break end
+
+      first = nil
+    end
+
+    if not first then return end
+
+    clear()
+
+    local x = first.sx
+    local y = first.sy
+
+    set(x, y)
+
+    local bbox = { x1=x, y1=y, x2=x, y2=y }
+
+    local target_size = math.min(rand.irange(min_size, max_size),
+                                 rand.irange(min_size, max_size))
+
+    while area_size < target_size do
+      if not grow_random(bbox) then return end
+    end
+
+    install(v)
   end
 
 
   local function grow_the_rest()
+    local unused_seeds = {}
+
+    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y]
+      if S.room == R and table.empty(S.v_areas) then
+        table.insert(unused_seeds, S)
+      end
+    end end
+
+    assert(#unused_seeds == total_seeds - used_seeds)
+
+    rand.shuffle(unused_seeds)
+
+    local SIDES = { 2,4,6,8 }
+
+-- TODO: perhaps honor the 'can_add_vhr' result (except in emergency mode)
+
+    each S in list do
+      rand.shuffle(SIDES)
+
+      each dir in SIDES do
+        local N = S:neighbor(dir)
+        if N and N.room == R and not table.empty(N.v_areas) then
+          S.v_areas = N.v_areas  -- FIXME: TOO SIMPLE
+        end
+      end
+    end
   end
 
 
@@ -1017,7 +1213,7 @@ function Areas_create_all_areas(R)
   for loop = 1,200 do
     if used_seeds >= total_seeds then break end
 
-    if loop = 200 then
+    if loop == 200 then
       error("failed to create areas in some seeds")
     end
 
