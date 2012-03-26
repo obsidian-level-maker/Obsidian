@@ -90,6 +90,35 @@ function SEED_CLASS.used(S)
 end
 
 
+function SEED_CLASS.edge_of_room(S)
+  for dir = 2,8,2 do
+    if not S:same_room(dir) then
+      return false
+    end
+  end
+
+  return true
+end
+
+
+function SEED_CLASS.can_add_vhr(S, R, v)
+  if S.room != R then return false end
+
+  for dx = -1,1 do for dy = -1,1 do
+    local nx = S.sx + dx
+    local ny = S.sy + dy
+
+    if not Seed_valid(nx, ny) then continue end
+
+    local N = SEEDS[nx][ny]
+
+    if N.v_areas[v] then return false end
+  end end
+
+  return true
+end
+
+
 --------------------------------------------------------------------
 
 
