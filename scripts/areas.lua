@@ -910,7 +910,7 @@ function Areas_create_all_areas(R)
 
   local used_vhrs = {}
 
-  local area = array_2D(R.sx2, R.sy2)
+  local area = table.array_2D(R.sx2, R.sy2)
   local area_size
 
 
@@ -926,9 +926,9 @@ function Areas_create_all_areas(R)
 
   
   local function clear()
-    for y = R.sy1, R.sy2 do
-      if not table.empty(area[y]) then
-        area[y] = {}
+    for x = R.sx1, R.sx2 do
+      if not table.empty(area[x]) then
+        area[x] = {}
       end
     end
 
@@ -943,20 +943,23 @@ function Areas_create_all_areas(R)
 
     for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
       if area[x][y] then
+stderrf("installing (%d %d)\n", x, y)
         local S = SEEDS[x][y]
+        assert(S.room == R)
 
         if table.empty(S.v_areas) then
           used_seeds = used_seeds + 1
         end
 
         assert(not S.v_areas[v])
-        S.v_areas[v] = true
+        S.v_areas[v] = true  --  = AREA
       end
     end end
   end
 
 
   local function test(x, y, v)
+assert(Seed_valid(x, y))
     local sx1, sy1 = x, y
     local sx2, sy2 = x, y
 
@@ -969,7 +972,7 @@ function Areas_create_all_areas(R)
     end
 
     for nx = sx1,sx2 do for ny = sy1,sy2 do
-      if not SEEDS[nx][ny].can_add_vhr(v) then
+      if not SEEDS[nx][ny]:can_add_vhr(R, v) then
         return false
       end
     end end
@@ -1061,13 +1064,13 @@ function Areas_create_all_areas(R)
 
 
   local function try_MIDDLE(junc, v)
-    clear()
-
     -- initial size
     local sx1, sy1 = junc.sx1, junc.sy1
     local sx2, sy2 = junc.sx2, junc.sy2
 
     if not test_box(sx1, sy1, sx2, sy2) then return end
+
+    clear()
 
     set_box(sx1, sy1, sx2, sy2)
 
@@ -1136,21 +1139,24 @@ function Areas_create_all_areas(R)
         local N = S:neighbor(dir)
         if not N or N.room != R then continue end
 
-        if area[N.sx][N.sy] then continue end
+        local nx, ny = N.sx, N.sy
 
-        if not test(N.sx, N.sy, v) then continue end
+        if area[nx][ny] then continue end
+
+        if not test(nx, ny, v) then continue end
 
         possible = true
 
         if rand.odds(prob) then
-          set(x, y)
+stderrf("setting (%d %d)\n", nx, ny)
+          set(nx, ny)
 
           -- update bbox!
-          if x < bbox.x1 then bbox.x1 = x end
-          if x > bbox.x2 then bbox.x2 = x end
+          if nx < bbox.x1 then bbox.x1 = nx end
+          if nx > bbox.x2 then bbox.x2 = nx end
 
-          if y < bbox.y1 then bbox.y1 = y end
-          if y > bbox.y2 then bbox.y2 = y end
+          if ny < bbox.y1 then bbox.y1 = ny end
+          if ny > bbox.y2 then bbox.y2 = ny end
         end
       end
     end
@@ -1161,7 +1167,7 @@ function Areas_create_all_areas(R)
 
   local function random_spread(bbox, v)
     each dir in rand.dir_list() do
-      if random_spread_in_dir(bbox, dir, 50, v) then
+      if random_spread_in_dir(bbox, dir, 100, v) then
         return true
       end
     end
@@ -1171,6 +1177,7 @@ function Areas_create_all_areas(R)
 
 
   local function try_RANDOM(v)
+stderrf("try_RANDOM begin, v=%d\n", v)
     if used_seeds >= total_seeds then return end
 
     local unused_seeds = {}
@@ -1189,6 +1196,7 @@ function Areas_create_all_areas(R)
     for loop = 1,10 do
       first = rand.pick(unused_seeds)
 
+stderrf("  loop: %d  test(%d %d)\n", loop, first.sx, first.sy)
       if test(first.sx, first.sy, v) then break end
 
       first = nil
@@ -1196,6 +1204,7 @@ function Areas_create_all_areas(R)
 
     if not first then return end
 
+stderrf("  first = %s\n", first:tostr())
     clear()
 
     local x = first.sx
@@ -1207,7 +1216,10 @@ function Areas_create_all_areas(R)
 
     while area_size < min_size do
       -- abort if cannot reach the minimum size
-      if not random_spread(bbox, v) then return end
+      if not random_spread(bbox, v) then 
+stderrf("  random_spread failed\n")
+      return end
+stderrf("  random_spread OK, area_size --> %d\n", area_size)
     end
 
     while rand.odds(90) and area_size < max_size * 0.7 do
@@ -1230,28 +1242,34 @@ function Areas_create_all_areas(R)
       end
     end end
 
+-- stderrf("unused:%d == %d - %d\n", #unused_seeds, total_seeds, used_seeds)
     assert(#unused_seeds == total_seeds - used_seeds)
 
     rand.shuffle(unused_seeds)
 
     local SIDES = { 2,4,6,8 }
 
--- TODO: perhaps honor the 'can_add_vhr' result (except in emergency mode)
-
-    each S in list do
+    each S in unused_seeds do
       rand.shuffle(SIDES)
 
       each dir in SIDES do
         local N = S:neighbor(dir)
         if N and N.room == R and not table.empty(N.v_areas) then
-          S.v_areas = N.v_areas  -- FIXME: TOO SIMPLE
+          -- FIXME: TOO SIMPLE
+stderrf("copying %s from %s\n", S:tostr(), N:tostr())
+          S.v_areas = N.v_areas
+          used_seeds = used_seeds + 1
+          break
         end
       end
     end
   end
 
 
-  --| Areas_create_all_areas |---
+  ---| Areas_create_all_areas |----
+
+stderrf("Areas_create_all_areas @ %s : (%d %d) .. (%d %d)\n",
+        R:tostr(), R.sx1, R.sy1, R.sx2, R.sy2)
 
   local SIDES   = { 2,4,6,8 }
   local CORNERS = { 1,3,7,9 }
@@ -1260,7 +1278,7 @@ function Areas_create_all_areas(R)
  
   each K in R.sections do
     if (K.orig_kind == "junction") and not K:touches_edge() then
-      try_MIDDLE(junc, rand.pick { 3,4,4,5,5,5,6,6 })
+      try_MIDDLE(K, rand.pick { 3,4,4,5,5,5,6,6 })
     end
   end
 
@@ -1304,6 +1322,10 @@ function Areas_create_all_areas(R)
     error("failed to create any areas at all")
   end
 
+dump()
+
+  --- FINAL PASS : fill gaps by expanding from neighbors ---
+
   for loop = 1,200 do
     if used_seeds >= total_seeds then break end
 
@@ -1315,7 +1337,17 @@ function Areas_create_all_areas(R)
   end
 
   dump()
+
+  -- VALIDATION
+
+  for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
+    local S = SEEDS[x][y]
+    if S.room == R and table.empty(S.v_areas) then
+      error("failed to create area @ " .. S:tostr())
+    end
+  end end
 end
+
 
 
 function Areas_flesh_out()

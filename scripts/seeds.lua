@@ -111,6 +111,7 @@ function SEED_CLASS.can_add_vhr(S, R, v)
     if not Seed_valid(nx, ny) then continue end
 
     local N = SEEDS[nx][ny]
+    if N.room != R then continue end
 
     if N.v_areas[v] then return false end
   end end
