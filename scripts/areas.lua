@@ -939,6 +939,8 @@ function Areas_create_all_areas(R)
   local function install(v)
     used_vhrs[v] = true
 
+    -- FIXME: create a new 'AREA' object here!
+
     for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
       if area[x][y] then
         local S = SEEDS[x][y]
@@ -1024,6 +1026,40 @@ function Areas_create_all_areas(R)
   end
 
 
+  local function dump_vhr(v)
+    for y = R.sy2, R.sy1, -1 do
+      local line = "  "
+
+      for x = R.sx1, R.sx2 do
+        local S = SEEDS[x][y]
+
+        if S.room != R then
+          line = line .. " "
+        elseif S.v_areas[v] then
+          line = line .. v
+        else
+          line = line .. "."
+        end
+      end
+
+      gui.debugf("%s\n", line)
+    end
+
+    gui.debugf("\n");
+  end
+
+
+  local function dump()
+    gui.debugf("Virtual Areas in %s\n", R:tostr())
+
+    for v = 1,9 do
+      if used_vhrs[v] then
+        dump_vhr(v)
+      end
+    end
+  end
+
+
   local function try_MIDDLE(junc, v)
     clear()
 
@@ -1049,9 +1085,15 @@ function Areas_create_all_areas(R)
       end
     end
 
-    if area_size >= min_size then
-      install(v)
+    if area_size < min_size then
+      return
     end
+
+    stderrf("try_MIDDLE @ v=%d size=%d\n", v, area_size)
+
+    install(v)
+
+    -- TODO: try to surround this one
   end
 
 
@@ -1075,8 +1117,56 @@ function Areas_create_all_areas(R)
   end
 
 
-  local function grow_random(bbox)
-    -- TODO
+  local function random_spread_in_dir(bbox, dir, prob, v)
+    -- returns FALSE only if nothing was possible
+    local possible = false
+
+    local x1, x2, xdir = bbox.x1, bbox.x2, 1
+    local y1, y2, ydir = bbox.y1, bbox.y2, 1
+
+    -- prevent run-on
+    if dir == 6 then x1, x2 = x2, x1 ; xdir = -1 end
+    if dir == 8 then y1, y2 = y2, y1 ; ydir = -1 end
+
+    for y = y1, y2, ydir do
+      for x = x1, x2, xdir do
+        local S = SEEDS[x][y]
+        if S.room != R then continue end
+
+        local N = S:neighbor(dir)
+        if not N or N.room != R then continue end
+
+        if area[N.sx][N.sy] then continue end
+
+        if not test(N.sx, N.sy, v) then continue end
+
+        possible = true
+
+        if rand.odds(prob) then
+          set(x, y)
+
+          -- update bbox!
+          if x < bbox.x1 then bbox.x1 = x end
+          if x > bbox.x2 then bbox.x2 = x end
+
+          if y < bbox.y1 then bbox.y1 = y end
+          if y > bbox.y2 then bbox.y2 = y end
+        end
+      end
+    end
+
+    return possible
+  end
+
+
+  local function random_spread(bbox, v)
+    each dir in rand.dir_list() do
+      if random_spread_in_dir(bbox, dir, 50, v) then
+        return true
+      end
+    end
+
+    return false
   end
 
 
@@ -1115,12 +1205,16 @@ function Areas_create_all_areas(R)
 
     local bbox = { x1=x, y1=y, x2=x, y2=y }
 
-    local target_size = math.min(rand.irange(min_size, max_size),
-                                 rand.irange(min_size, max_size))
-
-    while area_size < target_size do
-      if not grow_random(bbox) then return end
+    while area_size < min_size do
+      -- abort if cannot reach the minimum size
+      if not random_spread(bbox, v) then return end
     end
+
+    while rand.odds(90) and area_size < max_size * 0.7 do
+      random_spread(bbox, v)
+    end
+
+    stderrf("try_RANDOM @ v=%d size=%d\n", v, area_size)
 
     install(v)
   end
@@ -1201,7 +1295,7 @@ function Areas_create_all_areas(R)
     end
   end
 
-  for loop = 1, R.map_volume + 1 do
+  for loop = 1, R.map_volume + 2 do
     try_RANDOM(rand.irange(4,6))
   end
 
@@ -1219,6 +1313,8 @@ function Areas_create_all_areas(R)
 
     grow_the_rest()
   end
+
+  dump()
 end
 
 
@@ -2445,6 +2541,8 @@ dump_seed_list("grown seeds", seeds)
       Simple_connect_all_areas(R)
     else
       connect_all_areas(R)
+
+      Areas_create_all_areas(R)
     end
 
     finish_heights(R)
