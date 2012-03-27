@@ -1271,7 +1271,7 @@ stderrf("  random_spread OK, area_size --> %d\n", area_size)
     local SIDES = { 2,4,6,8 }
 
     each S in unused_seeds do
-      if can_void and not S.is_walk and rand.odds(100) then
+      if can_void and not S.is_walk and not S.chunk and rand.odds(100) then
         S.void = true
         used_seeds = used_seeds + 1
         continue
@@ -1331,13 +1331,11 @@ stderrf("copying %s from %s\n", S:tostr(), N:tostr())
     local cur  = low
     local gaps = 0
 
-    while low <= high do
-      if used_vhrs[low] then
-        mapping[low] = cur
-        low = low + 1
+    for v = low,high do
+      if used_vhrs[v] then
+        mapping[v] = cur
         cur = cur + 1
       else
-        low = low + 1
         gaps = gaps + 1
       end
     end
@@ -1351,6 +1349,105 @@ stderrf("copying %s from %s\n", S:tostr(), N:tostr())
       if mapping[v] and mapping[v] != v then
         remap_vhr(v, mapping[v])
       end
+    end
+
+    R.vhr1 = mapping[low]
+    R.vhr2 = R.vhr1 + table.size(mapping) - 1
+  end
+
+
+  local function chunk_set_vhr(C, v)
+    assert(not C.vhr)
+
+    C.vhr = v
+  end
+
+
+  local function assign_chunks_to_vhrs()
+    -- logic here is to try to place one chunk in the lowest area, and
+    -- one chunk in the highest area, and the remaining chunks in the
+    -- least used virtual areas.
+
+    local occ_vhrs = {}
+
+    local low_chunks  = {}
+    local high_chunks = {}
+
+    each C in R.chunks do
+      local S = SEEDS[C.sx1][C.sy1]
+
+      -- if only one choice, use it
+      if table.size(S.v_areas) == 1 then
+        local v = next(S.v_areas)
+        chunk_set_vhr(C, v)
+        occ_vhrs[v] = true
+        continue
+      end
+
+      if S.v_areas[R.vhr1] then table.insert( low_chunks, C) end
+      if S.v_areas[R.vhr2] then table.insert(high_chunks, C) end
+    end
+
+    -- we need to handle case like: low = { X Y }  high = { X }
+    -- hence we handle the shortest table first.
+
+    for pass = 1,2 do
+      local C, v
+
+      if (pass == 1) == (#low_chunks < #high_chunks) then
+
+        -- LOW
+        if not occ_vhrs[R.vhr1] and #low_chunks > 0 then
+          C = rand.element(low_chunks)
+          v = R.vhr1
+        end
+      
+      else
+
+        -- HIGH
+        if not occ_vhrs[R.vhr2] and #high_chunks > 0 then
+          C = rand.element(high_chunks)
+          v = R.vhr2
+        end
+      end
+
+      if C then
+        chunk_set_vhr(C, v)
+        occ_vhrs[v] = true
+
+        table.kill_elem( low_chunks, C)
+        table.kill_elem(high_chunks, C)
+      end
+    end
+
+    -- assign all other chunks  [TODO: take area size into account]
+    local tab = {}
+
+    for v = 1,9 do
+      if used_vhrs[v] then
+        tab[v] = (occ_vhrs[v] ? 10 ; 60)
+      end
+    end
+
+    each C in R.chunks do
+      if C.vhr then continue end
+
+      local S = SEEDS[C.sx1][C.sy1]
+
+      -- filter probabilities based on areas that chunk may exist in
+      local tab2 = table.copy(tab)
+      for v = 1,9 do
+        if not S.v_areas[v] then tab2[v] = nil end
+      end
+
+      assert(not table.empty(tab2))
+
+      local v = rand.key_by_probs(tab2)
+
+      chunk_set_vhr(C, v)
+      occ_vhrs[v] = true
+
+      tab[v] = tab[v] / 20  -- prefer another layer 
     end
   end
 
@@ -1426,6 +1523,8 @@ stderrf("Areas_create_all_areas @ %s : (%d %d) .. (%d %d)\n",
   gap_removal()
 
   dump()
+
+  assign_chunks_to_vhrs()
 
   -- VALIDATION
 
