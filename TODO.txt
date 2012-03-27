@@ -6,6 +6,9 @@ Current Work
 ------------
 
 
+(-:  mini_halls = { MiniHall_Archy = 50 }
+
+
 AREA ALGORITHM #627
 ===================
 
@@ -34,9 +37,27 @@ AREA ALGORITHM #627
     be too small, so long as existing area is not going to touch
     another area with same VHR number.
 
-(6) in a room with a crossover, VHR #1 is reserved for a channel
-    and VHR #9 is reserved for a bridge.
+(6) VHR #1 is reserved for a crossover channel / low intrusion
+    VHR #9 is reserved for a crossover bridge / high intrusion
     The shapes of those areas can be arbitrary.
+
+
+!!  actually create AREA objects, store in SEED.v_areas
+
++  try_TWO_SIDE()
++  try_THREE_SIDE()
++  try_CORNER()
++  try_EDGE()
+
+-  put VOID in non-walk left-overs
+
+-  when expanding a new area (A) which overlaps another (B), then
+   have a kind of slow-down when A starts to overlap too much of B
+   (especially when more than half of A is overlapping B).
+
+?  try to surround a newly installed area with a new one
+   with a VHR +/-1 from the previous.
+
 
 
 -  REVIEW: quadratic monster formula : bad for "full" game

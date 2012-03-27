@@ -1356,6 +1356,16 @@ stderrf("copying %s from %s\n", S:tostr(), N:tostr())
   end
 
 
+  local function VALIDATE()
+    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y]
+      if S.room == R and table.empty(S.v_areas) and not S.void then
+        error("failed to create area @ " .. S:tostr())
+      end
+    end end
+  end
+
+
   local function chunk_set_vhr(C, v)
     assert(not C.vhr)
 
@@ -1452,6 +1462,29 @@ stderrf("copying %s from %s\n", S:tostr(), N:tostr())
   end
 
 
+  local function connect_areas()
+    -- connect areas via stairs or lifts.
+
+    -- GOALS HERE:
+    -- (1) prevent / minimise stairs with a big height difference
+    --     [ideally all differences are 1 VHR]
+    --
+    -- (2) stair has 1 seed before it, 2 after it, e.g.  4 4> 5 5
+    --
+    -- (3) before and after seeds are not stairs (strong preference)
+    --     or importants (medium preference)
+    --
+    -- (4) stair is far away from any chunks
+    --
+    -- (5) slight preference for stairs _along_ a wall / void
+
+    -- ALGORITHM: connect smallest area to a neighbor, until all
+    --            areas are connected.  Score each stair spot.
+
+    -- FIXME
+  end
+
+
   ---| Areas_create_all_areas |----
 
 stderrf("Areas_create_all_areas @ %s : (%d %d) .. (%d %d)\n",
@@ -1524,16 +1557,11 @@ stderrf("Areas_create_all_areas @ %s : (%d %d) .. (%d %d)\n",
 
   dump()
 
+  VALIDATE()
+
   assign_chunks_to_vhrs()
 
-  -- VALIDATION
-
-  for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
-    local S = SEEDS[x][y]
-    if S.room == R and table.empty(S.v_areas) and not S.void then
-      error("failed to create area @ " .. S:tostr())
-    end
-  end end
+  connect_areas()
 end
 
 
