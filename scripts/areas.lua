@@ -1380,7 +1380,7 @@ stderrf("copying %s from %s\n", S:tostr(), N:tostr())
       if table.size(S.v_areas) == 1 then
         local v = next(S.v_areas)
         chunk_set_vhr(C, v)
-        occ_vhrs[v] = true
+        occ_vhrs[v] = (occ_vhrs[v] or 0) + 1
         continue
       end
 
@@ -1398,7 +1398,7 @@ stderrf("copying %s from %s\n", S:tostr(), N:tostr())
 
         -- LOW
         if not occ_vhrs[R.vhr1] and #low_chunks > 0 then
-          C = rand.element(low_chunks)
+          C = rand.pick(low_chunks)
           v = R.vhr1
         end
       
@@ -1406,14 +1406,14 @@ stderrf("copying %s from %s\n", S:tostr(), N:tostr())
 
         -- HIGH
         if not occ_vhrs[R.vhr2] and #high_chunks > 0 then
-          C = rand.element(high_chunks)
+          C = rand.pick(high_chunks)
           v = R.vhr2
         end
       end
 
       if C then
         chunk_set_vhr(C, v)
-        occ_vhrs[v] = true
+        occ_vhrs[v] = (occ_vhrs[v] or 0) + 1
 
         table.kill_elem( low_chunks, C)
         table.kill_elem(high_chunks, C)
@@ -1445,7 +1445,7 @@ stderrf("copying %s from %s\n", S:tostr(), N:tostr())
       local v = rand.key_by_probs(tab2)
 
       chunk_set_vhr(C, v)
-      occ_vhrs[v] = true
+      occ_vhrs[v] = (occ_vhrs[v] or 0) + 1
 
       tab[v] = tab[v] / 20  -- prefer another layer 
     end
