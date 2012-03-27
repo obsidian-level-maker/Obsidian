@@ -1293,6 +1293,68 @@ stderrf("copying %s from %s\n", S:tostr(), N:tostr())
   end
 
 
+  local function remap_vhr(src_v, dest_v)
+    gui.debugf("remap_vhr %d --> %d\n", src_v, dest_v)
+
+    assert(not used_vhrs[dest_v])
+
+    used_vhrs[dest_v] = used_vhrs[src_v]
+    used_vhrs[ src_v] = nil
+
+    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y]
+      if S and S.room == R and S.v_areas[src_v] then
+        assert(not S.v_areas[dest_v])
+        S.v_areas[dest_v] = S.v_areas[src_v]
+        S.v_areas[ src_v] = nil
+      end
+    end end
+  end
+
+
+  local function gap_removal()
+    -- ensure that the VHR numbers have no gaps (e.g. 3,4,6 --> 3,4,5)
+    local mapping = {}
+
+    -- determine lowest and highest VHRs
+    local low
+    local high
+
+    for v = 1,9 do
+      if used_vhrs[v] then
+        if not low then low = v end
+        high = v
+      end
+    end
+
+    -- create a mapping where the destination numbers are contiguous
+    local cur  = low
+    local gaps = 0
+
+    while low <= high do
+      if used_vhrs[low] then
+        mapping[low] = cur
+        low = low + 1
+        cur = cur + 1
+      else
+        low = low + 1
+        gaps = gaps + 1
+      end
+    end
+
+    assert(table.size(used_vhrs) == table.size(mapping))
+
+    if gaps == 0 then return end
+
+    -- apply the mapping
+    for v = 1,9 do
+      if mapping[v] and mapping[v] != v then
+        remap_vhr(v, mapping[v])
+      end
+    end
+  end
+
+
   ---| Areas_create_all_areas |----
 
 stderrf("Areas_create_all_areas @ %s : (%d %d) .. (%d %d)\n",
@@ -1360,6 +1422,8 @@ stderrf("Areas_create_all_areas @ %s : (%d %d) .. (%d %d)\n",
 
     grow_the_rest()
   end
+
+  gap_removal()
 
   dump()
 
