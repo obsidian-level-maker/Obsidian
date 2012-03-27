@@ -914,6 +914,19 @@ function Areas_create_all_areas(R)
   local area_size
 
 
+  local VHR_DECAY = { 20,10,10, 6,6,6, 10,10,20 }
+
+  local function pick_vhr(tab)
+    each v,usage in used_vhrs do
+      if tab[v] then
+        tab[v] = tab[v] / (VHR_DECAY[v] ^ usage)
+      end
+    end
+
+    return rand.index_by_probs(tab)
+  end
+
+
   local function init()
     for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
       local S = SEEDS[sx][sy]
@@ -937,7 +950,7 @@ function Areas_create_all_areas(R)
 
 
   local function install(v)
-    used_vhrs[v] = true
+    used_vhrs[v] = (used_vhrs[v] or 0) + 1
 
     -- FIXME: create a new 'AREA' object here!
 
@@ -1136,6 +1149,8 @@ assert(Seed_valid(x, y))
         local S = SEEDS[x][y]
         if S.room != R then continue end
 
+        if not area[x][y] then continue end
+
         local N = S:neighbor(dir)
         if not N or N.room != R then continue end
 
@@ -1167,7 +1182,7 @@ stderrf("setting (%d %d)\n", nx, ny)
 
   local function random_spread(bbox, v)
     each dir in rand.dir_list() do
-      if random_spread_in_dir(bbox, dir, 100, v) then
+      if random_spread_in_dir(bbox, dir, 35, v) then
         return true
       end
     end
@@ -1222,7 +1237,7 @@ stderrf("  random_spread failed\n")
 stderrf("  random_spread OK, area_size --> %d\n", area_size)
     end
 
-    while rand.odds(90) and area_size < max_size * 0.7 do
+    while rand.odds(95) and area_size < max_size * 0.8 do
       random_spread(bbox, v)
     end
 
@@ -1278,13 +1293,13 @@ stderrf("Areas_create_all_areas @ %s : (%d %d) .. (%d %d)\n",
  
   each K in R.sections do
     if (K.orig_kind == "junction") and not K:touches_edge() then
-      try_MIDDLE(K, rand.pick { 3,4,4,5,5,5,6,6 })
+      try_MIDDLE(K, pick_vhr { 0,1,3, 7,9,5, 0,0,0})
     end
   end
 
   for loop = 1,16 do  
     local extend = (loop >= 11)
-    local v = rand.pick { 3,4,5,5,6,6,6,7,7 }
+    local v = pick_vhr { 0,0,0, 3,6,9, 5,1,0 }
 
     if rand.odds(75) then
       -- nothing
@@ -1297,12 +1312,12 @@ stderrf("Areas_create_all_areas @ %s : (%d %d) .. (%d %d)\n",
 
   for loop = 1,4 do
     if rand.odds(25) then
-      try_RANDOM(rand.irange(4,6))
+      try_RANDOM(pick_vhr { 0,0,1, 7,9,7, 1,0,0 })
     end
   end
 
   for loop = 1,16 do
-    local v = rand.pick { 3,3,3,4,4,4,4,5,5,5,6,6,7 }
+    local v = pick_vhr { 0,1,5, 9,9,9, 5,1,0 }
 
     if rand.odds(50) then
       -- nothing
@@ -1314,7 +1329,7 @@ stderrf("Areas_create_all_areas @ %s : (%d %d) .. (%d %d)\n",
   end
 
   for loop = 1, R.map_volume + 2 do
-    try_RANDOM(rand.irange(4,6))
+    try_RANDOM(pick_vhr { 0,0,3, 7,9,7, 3,0,0 })
   end
 
   -- must have created at least one area by now

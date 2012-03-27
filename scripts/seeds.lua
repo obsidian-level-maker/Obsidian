@@ -29,7 +29,9 @@ class SEED
   room : ROOM
   hall : HALLWAY
 
-  chunk : CHUNK
+  chunk : CHUNK  -- connection/important chunk
+
+  chunks[v_area] : CHUNK
 
   cost[DIR]  -- used when marking paths
 
@@ -54,7 +56,7 @@ BASE_Y = 0
 SEED_CLASS = {}
 
 function SEED_CLASS.new(x, y)
-  local S = { sx=x, sy=y, cost={} }
+  local S = { sx=x, sy=y, cost={}, chunks={} }
   table.set_class(S, SEED_CLASS)
   return S
 end
