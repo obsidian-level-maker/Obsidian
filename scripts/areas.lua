@@ -959,6 +959,7 @@ function Areas_create_all_areas(R)
 stderrf("installing (%d %d)\n", x, y)
         local S = SEEDS[x][y]
         assert(S.room == R)
+        assert(not S.void)
 
         if table.empty(S.v_areas) then
           used_seeds = used_seeds + 1
@@ -1053,6 +1054,8 @@ assert(Seed_valid(x, y))
           line = line .. " "
         elseif S.v_areas[v] then
           line = line .. v
+        elseif S.void then
+          line = line .. "#"
         else
           line = line .. "."
         end
@@ -1252,7 +1255,7 @@ stderrf("  random_spread OK, area_size --> %d\n", area_size)
 
     for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
       local S = SEEDS[x][y]
-      if S.room == R and table.empty(S.v_areas) then
+      if S.room == R and table.empty(S.v_areas) and not S.void then
         table.insert(unused_seeds, S)
       end
     end end
@@ -1262,14 +1265,23 @@ stderrf("  random_spread OK, area_size --> %d\n", area_size)
 
     rand.shuffle(unused_seeds)
 
+    local can_void = true
+    if R.kind == "outdoor" then can_void = false end
+
     local SIDES = { 2,4,6,8 }
 
     each S in unused_seeds do
+      if can_void and not S.is_walk and rand.odds(100) then
+        S.void = true
+        used_seeds = used_seeds + 1
+        continue
+      end
+
       rand.shuffle(SIDES)
 
       each dir in SIDES do
         local N = S:neighbor(dir)
-        if N and N.room == R and not table.empty(N.v_areas) then
+        if N and N.room == R and not table.empty(N.v_areas) and not N.void then
           -- FIXME: TOO SIMPLE
 stderrf("copying %s from %s\n", S:tostr(), N:tostr())
           S.v_areas = N.v_areas
@@ -1337,8 +1349,6 @@ stderrf("Areas_create_all_areas @ %s : (%d %d) .. (%d %d)\n",
     error("failed to create any areas at all")
   end
 
-dump()
-
   --- FINAL PASS : fill gaps by expanding from neighbors ---
 
   for loop = 1,200 do
@@ -1357,7 +1367,7 @@ dump()
 
   for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
     local S = SEEDS[x][y]
-    if S.room == R and table.empty(S.v_areas) then
+    if S.room == R and table.empty(S.v_areas) and not S.void then
       error("failed to create area @ " .. S:tostr())
     end
   end end
