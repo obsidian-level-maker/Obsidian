@@ -1627,6 +1627,8 @@ stderrf("Areas_create_all_areas @ %s : (%d %d) .. (%d %d)\n",
 
   gap_removal()
 
+  R.used_vhrs = used_vhrs
+
   dump()
 
   VALIDATE()
@@ -1662,6 +1664,8 @@ function Areas_connect_all_areas(R)
 
 
   local function init()
+    R.stairs = {}
+
     each AR in R.areas do
       AR.conn_group = _index
     end
@@ -1761,6 +1765,8 @@ function Areas_connect_all_areas(R)
     table.kill_elem(poss_seeds, S)
     table.kill_elem(poss_seeds, N)
 
+    table.insert(R.stairs, stair_info)
+
     return true
   end
 
@@ -1776,7 +1782,81 @@ function Areas_connect_all_areas(R)
       error("unable to connect areas in room!")
     end
   end
+end
 
+
+
+function Areas_height_realization(R)
+  --
+  -- the virtual becomes reality, and it happens here
+  --
+
+  local function assign_floor(v, floor_h)
+    if v < 1 or v > 9 then return end
+
+    each AR in R.areas do
+      if AR.vhr == v then
+        AR.floor_h = floor_h
+      end
+    end
+  end
+
+
+  ---| Areas_height_realization |---
+
+  assert(R.entry_h)
+
+  assert(R.entry_C)
+  assert(R.entry_C.area)
+  assert(R.entry_C.area.vhr)
+ 
+  local base_v = R.entry_C.area.vhr
+
+  assign_floor(base_v, R.entry_h)
+
+  for i = 1,9 do
+    assign_floor(base_v + i, R.entry_h + i * 128)
+    assign_floor(base_v - i, R.entry_h - i * 128)
+  end
+end
+
+
+
+function Areas_chunk_it_up_baby(R)
+
+  -- TODO : make bigger chunks
+
+  local function chunkify_area(AR)
+    for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
+      local S = SEEDS[sx][sy]
+
+      if S.room != R then continue end
+      if S.void or S.chunk then continue end
+        
+      if S.v_areas[AR.vhr] != AR then continue end
+
+      local C = CHUNK_CLASS.new(sx, sy, sx, sy)
+
+      C.room = R
+      C.area = AR
+
+      C:set_coords()
+
+      table.insert( R.chunks, C)
+      table.insert(AR.chunks, C)
+    end end
+  end
+
+  ---| Areas_chunk_it_up_baby |---
+
+  each AR in R.areas do
+    chunkify_area(AR)
+
+    -- this takes care of other chunks too (conns & importants)
+    each C in AR.chunks do
+      C.floor_h = AR.floor_h
+    end
+  end
 end
 
 
@@ -3005,6 +3085,8 @@ dump_seed_list("grown seeds", seeds)
     else
       Areas_create_all_areas(R)
       Areas_connect_all_areas(R)
+      Areas_height_realization(R)
+      Areas_chunk_it_up_baby(R)
     end
 
     finish_heights(R)
