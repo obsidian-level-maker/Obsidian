@@ -957,13 +957,11 @@ function Areas_create_all_areas(R)
 
     AREA.vhr = v
     AREA.size = area_size
-    AREA.seeds = {}
-    
-    table.insert(R.areas2, AREA)
+
+    table.insert(R.areas, AREA)
 
     for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
       if area[x][y] then
-stderrf("installing (%d %d)\n", x, y)
         local S = SEEDS[x][y]
         assert(S.room == R)
         assert(not S.void)
@@ -974,8 +972,6 @@ stderrf("installing (%d %d)\n", x, y)
 
         assert(not S.v_areas[v])
         S.v_areas[v] = AREA
-
-        table.insert(AREA.seeds, S)
       end
     end end
   end
@@ -1175,7 +1171,6 @@ assert(Seed_valid(x, y))
         possible = true
 
         if rand.odds(prob) then
-stderrf("setting (%d %d)\n", nx, ny)
           set(nx, ny)
 
           -- update bbox!
@@ -1259,29 +1254,30 @@ stderrf("  random_spread OK, area_size --> %d\n", area_size)
   end
 
 
-  local function merge_areas(new_A, old_A)
-    local v = new_A.vhr
-    assert(v == old_A.vhr)
+  local function merge_areas(new_AR, old_AR)
+stderrf("merge_areas %s --> %s\n", new_AR:tostr(), old_AR:tostr())
+    local v = new_AR.vhr
+    assert(v == old_AR.vhr)
 
-    new_A.size = new_A.size + old_A.size
-    old_A.size = 0
+    new_AR.size = new_AR.size + old_AR.size
+    old_AR.size = 0
 
-    table.kill_elem(R.areas2, old_A)
+    table.kill_elem(R.areas, old_AR)
 
-    each S in old_A.seeds do
-      assert(S.v_areas[v] == old_A)
-      S.v_areas[v] = new_A
-      table.insert(new_A.seeds, S)
+    each C in old_AR.chunks do
+      assert(C.area == old_AR)
+      C.area = new_AR
+      table.insert(new_AR.chunks, C)
     end
 
-    each C in old_A.chunks do
-      assert(C.area2 == old_A)
-      C.area2 = new_A
-      table.insert(new_A.chunks, C)
-    end
+    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y]
+      if S.room == R and S.v_areas and S.v_areas[v] == old_AR then
+        S.v_areas[v] = new_AR
+      end
+    end end
 
-    old_A.chunks = nil
-    old_A.seeds  = nil
+    old_AR.chunks = nil
   end
 
 
@@ -1402,7 +1398,7 @@ stderrf("  random_spread OK, area_size --> %d\n", area_size)
       end
     end end
 
-    each AREA in R.areas2 do
+    each AREA in R.areas do
       if AREA.vhr == src_v then
         AREA.vhr = dest_v
       end
@@ -1465,7 +1461,7 @@ stderrf("  random_spread OK, area_size --> %d\n", area_size)
 
 
   local function chunk_set_vhr(C, AREA)
-    C.area2 = AREA
+    C.area = AREA
     table.insert(AREA.chunks, C)
   end
 
@@ -1539,7 +1535,7 @@ stderrf("  random_spread OK, area_size --> %d\n", area_size)
     end
 
     each C in R.chunks do
-      if C.area2 then continue end
+      if C.area then continue end
 
       local S = SEEDS[C.sx1][C.sy1]
 
@@ -1565,8 +1561,6 @@ stderrf("  random_spread OK, area_size --> %d\n", area_size)
 
 stderrf("Areas_create_all_areas @ %s : (%d %d) .. (%d %d)\n",
         R:tostr(), R.sx1, R.sy1, R.sx2, R.sy2)
-
-  R.areas2 = {}  -- FIXME: TEMP, REMOVE
 
   local SIDES   = { 2,4,6,8 }
   local CORNERS = { 1,3,7,9 }
@@ -1668,14 +1662,14 @@ function Areas_connect_all_areas(R)
 
 
   local function init()
-    each AR in R.areas2 do
+    each AR in R.areas do
       AR.conn_group = _index
     end
 
     for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
       local S = SEEDS[sx][sy]
 
-      if S.room == S and not S.void and not S.chunk then
+      if S.room == R and not S.void and not S.chunk then
         table.insert(poss_seeds, S)
       end
     end end
@@ -1685,7 +1679,7 @@ function Areas_connect_all_areas(R)
   local function highest_group()
     local g = 0
 
-    each AR in R.areas2 do
+    each AR in R.areas do
       g = math.max(g, AR.conn_group)
     end
 
@@ -1694,9 +1688,9 @@ function Areas_connect_all_areas(R)
 
 
   local function merge(id1, id2)
-    if id1 > id2 then id1, id2 = id2, id1 end
+    if id1 > id2 then id1,id2 = id2,id1 end
 
-    each AR in LEVEL.rooms do
+    each AR in R.areas do
       if AR.conn_group == id2 then
         AR.conn_group = id1
       end
@@ -1709,11 +1703,11 @@ function Areas_connect_all_areas(R)
 
     local v_diff = math.abs(A1.vhr - A2.vhr)
 
-    local score = (9 - v_diff) * 100
+    local score = (10 - v_diff) * 10
 
     -- TODO : THE OTHER CRITERIA
 
-    -- bit of randomness as a tie-breaker
+    -- bit of randomness is a tie-breaker
     return score + gui.random()
   end
 
@@ -1735,6 +1729,8 @@ function Areas_connect_all_areas(R)
 
             local score = score_spot(S, N, dir, A1, A2)
 
+--stderrf("score_spot @ %s dir:%d --> %1.2f\n", S:tostr(), dir, score)
+
             if score >= 0 and (not best or score > best.score) then
               best = { S=S, dir=dir, A1=A1, A2=A2, score=score }
             end
@@ -1753,7 +1749,7 @@ function Areas_connect_all_areas(R)
     local A1  = best.A1
     local A2  = best.A2
 
-    gui.debugf("Added stair @ %s dir:%d  %s --> %s\n", S, dir, A1:tostr(), A2:tostr())
+    gui.debugf("Added stair @ %s dir:%d  %s --> %s\n", S:tostr(), dir, A1:tostr(), A2:tostr())
 
     merge(A1.conn_group, A2.conn_group)
 
@@ -1976,7 +1972,7 @@ function Areas_flesh_out()
 
 
 
-  local function merge_areas(C, N, area_tab)
+  local function XXX__merge_areas(C, N, area_tab)
     assert(C.area != N.area)
 
     if C.area.id > N.area.id then
@@ -2758,7 +2754,7 @@ dump_seed_list("grown seeds", seeds)
   end
 
 
-  local function connect_all_areas(R)
+  local function XXX__connect_all_areas(R)
 -- stderrf("connect_all_areas BEGIN\n")
     -- this also creates the areas too!
 
@@ -3007,8 +3003,6 @@ dump_seed_list("grown seeds", seeds)
 
       Simple_connect_all_areas(R)
     else
-      connect_all_areas(R)
-
       Areas_create_all_areas(R)
       Areas_connect_all_areas(R)
     end
