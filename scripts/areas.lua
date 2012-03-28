@@ -956,6 +956,8 @@ function Areas_create_all_areas(R)
     local AREA = AREA_CLASS.new("floor", R)
 
     AREA.vhr = v
+    AREA.size = area_size
+    AREA.seeds = {}
     
     table.insert(R.areas2, AREA)
 
@@ -972,6 +974,8 @@ stderrf("installing (%d %d)\n", x, y)
 
         assert(not S.v_areas[v])
         S.v_areas[v] = AREA
+
+        table.insert(AREA.seeds, S)
       end
     end end
   end
@@ -1259,26 +1263,25 @@ stderrf("  random_spread OK, area_size --> %d\n", area_size)
     local v = new_A.vhr
     assert(v == old_A.vhr)
 
+    new_A.size = new_A.size + old_A.size
+    old_A.size = 0
+
     table.kill_elem(R.areas2, old_A)
 
-    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
-      local S = SEEDS[x][y]
-      if S.room == R and not S.void and S.v_areas[v] == old_A then
-        S.v_areas[v] = new_A
-      end
-    end end
-
-    each C in R.chunks do
-      if C.area2 == old_A then
-        C.area2 = new_A
-      end
+    each S in old_A.seeds do
+      assert(S.v_areas[v] == old_A)
+      S.v_areas[v] = new_A
+      table.insert(new_A.seeds, S)
     end
 
     each C in old_A.chunks do
+      assert(C.area2 == old_A)
+      C.area2 = new_A
       table.insert(new_A.chunks, C)
     end
 
     old_A.chunks = nil
+    old_A.seeds  = nil
   end
 
 
@@ -1558,29 +1561,6 @@ stderrf("  random_spread OK, area_size --> %d\n", area_size)
   end
 
 
-  local function connect_areas()
-    -- connect areas via stairs or lifts.
-
-    -- GOALS HERE:
-    -- (1) prevent / minimise stairs with a big height difference
-    --     [ideally all differences are 1 VHR]
-    --
-    -- (2) stair has 1 seed before it, 2 after it, e.g.  4 4> 5 5
-    --
-    -- (3) before and after seeds are not stairs (strong preference)
-    --     or importants (medium preference)
-    --
-    -- (4) stair is far away from any chunks
-    --
-    -- (5) slight preference for stairs _along_ a wall / void
-
-    -- ALGORITHM: connect smallest area to a neighbor, until all
-    --            areas are connected.  Score each stair spot.
-
-    -- FIXME
-  end
-
-
   ---| Areas_create_all_areas |----
 
 stderrf("Areas_create_all_areas @ %s : (%d %d) .. (%d %d)\n",
@@ -1658,8 +1638,149 @@ stderrf("Areas_create_all_areas @ %s : (%d %d) .. (%d %d)\n",
   VALIDATE()
 
   assign_chunks_to_vhrs()
+end
 
-  connect_areas()
+
+
+function Areas_connect_all_areas(R)
+  --
+  -- Connects areas via stairs or lifts.
+  --
+
+  -- GOALS HERE:
+  -- (1) prevent / minimise stairs with a big height difference
+  --     [ideally all differences are 1 VHR]
+  --
+  -- (2) stair has 1 seed before it, 2 after it, e.g.  4 4> <5 5
+  --
+  -- (3) before and after seeds are not stairs (strong preference)
+  --     or importants (medium preference)
+  --
+  -- (4) stair is far away from any chunks
+  --
+  -- (5) slight preference for stairs _along_ a wall / void
+
+
+  -- ALGORITHM: connect smallest area to a neighbor, until all
+  --            areas are connected.  Score each stair spot.
+
+  local poss_seeds = {}
+
+
+  local function init()
+    each AR in R.areas2 do
+      AR.conn_group = _index
+    end
+
+    for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
+      local S = SEEDS[sx][sy]
+
+      if S.room == S and not S.void and not S.chunk then
+        table.insert(poss_seeds, S)
+      end
+    end end
+  end
+
+
+  local function highest_group()
+    local g = 0
+
+    each AR in R.areas2 do
+      g = math.max(g, AR.conn_group)
+    end
+
+    return g
+  end
+
+
+  local function merge(id1, id2)
+    if id1 > id2 then id1, id2 = id2, id1 end
+
+    each AR in LEVEL.rooms do
+      if AR.conn_group == id2 then
+        AR.conn_group = id1
+      end
+    end
+  end
+
+
+  local function score_spot(S, N, dir, A1, A2)
+    local N = S:neighbor(dir)
+
+    local v_diff = math.abs(A1.vhr - A2.vhr)
+
+    local score = (9 - v_diff) * 100
+
+    -- TODO : THE OTHER CRITERIA
+
+    -- bit of randomness as a tie-breaker
+    return score + gui.random()
+  end
+
+
+  local function make_a_connection()
+    local best
+
+    each S in poss_seeds do
+      for dir = 2,8,2 do
+        local N = S:neighbor(dir)
+
+        if not (N and N.room == R) then continue end
+        if N.void then continue end
+        if N.stair_info then continue end
+
+        each v1,A1 in S.v_areas do
+          each v2,A2 in N.v_areas do
+            if v1 == v2 then continue end
+
+            local score = score_spot(S, N, dir, A1, A2)
+
+            if score >= 0 and (not best or score > best.score) then
+              best = { S=S, dir=dir, A1=A1, A2=A2, score=score }
+            end
+          end
+        end
+
+      end
+    end
+
+    if not best then return false end
+
+    -- place stair
+
+    local S   = best.S
+    local dir = best.dir
+    local A1  = best.A1
+    local A2  = best.A2
+
+    gui.debugf("Added stair @ %s dir:%d  %s --> %s\n", S, dir, A1:tostr(), A2:tostr())
+
+    merge(A1.conn_group, A2.conn_group)
+
+    local N = S:neighbor(dir)
+
+    S.stair_info = best
+    N.stair_from = 10 - dir
+
+    table.kill_elem(poss_seeds, S)
+    table.kill_elem(poss_seeds, N)
+
+    return true
+  end
+
+
+  ---| Areas_connect_all_areas |----
+
+  gui.debugf("Areas_connect_all_areas @ %s\n", R:tostr())
+
+  init()
+
+  while highest_group() > 1 do
+    if not make_a_connection() then
+      error("unable to connect areas in room!")
+    end
+  end
+
 end
 
 
@@ -2889,6 +3010,7 @@ dump_seed_list("grown seeds", seeds)
       connect_all_areas(R)
 
       Areas_create_all_areas(R)
+      Areas_connect_all_areas(R)
     end
 
     finish_heights(R)
