@@ -952,7 +952,12 @@ function Areas_create_all_areas(R)
   local function install(v)
     used_vhrs[v] = (used_vhrs[v] or 0) + 1
 
-    -- FIXME: create a new 'AREA' object here!
+    -- create a new area object here
+    local AREA = AREA_CLASS.new("floor", R)
+
+    AREA.vhr = v
+    
+    table.insert(R.areas2, AREA)
 
     for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
       if area[x][y] then
@@ -966,7 +971,7 @@ stderrf("installing (%d %d)\n", x, y)
         end
 
         assert(not S.v_areas[v])
-        S.v_areas[v] = true  --  = AREA
+        S.v_areas[v] = AREA
       end
     end end
   end
@@ -1250,6 +1255,101 @@ stderrf("  random_spread OK, area_size --> %d\n", area_size)
   end
 
 
+  local function merge_areas(new_A, old_A)
+    local v = new_A.vhr
+    assert(v == old_A.vhr)
+
+    table.kill_elem(R.areas2, old_A)
+
+    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y]
+      if S.room == R and not S.void and S.v_areas[v] == old_A then
+        S.v_areas[v] = new_A
+      end
+    end end
+
+    each C in R.chunks do
+      if C.area2 == old_A then
+        C.area2 = new_A
+      end
+    end
+
+    each C in old_A.chunks do
+      table.insert(new_A.chunks, C)
+    end
+
+    old_A.chunks = nil
+  end
+
+
+  local function try_grow_from_neighbors(S)
+    -- collect possible areas
+    local poss_areas = {}
+
+    for dir = 2,8,2 do
+      local N = S:neighbor(dir)
+      if N and N.room == R and not N.void and not table.empty(N.v_areas) then
+        each v,AREA in N.v_areas do
+          table.add_unique(poss_areas, AREA)
+        end
+      end
+    end
+
+    if table.empty(poss_areas) then return false end
+
+    -- if more than one possibility, try to pick one that does not require a merge
+    if #poss_areas >= 2 then
+      local poss2 = {}
+
+      each AR in poss_areas do
+        if test(S.sx, S.sy, AR.vhr) then
+          table.insert(poss2, AR)
+        end
+      end
+
+      if #poss2 > 0 then
+        poss_areas = poss2
+      end
+    end
+
+    assert(#poss_areas > 0)
+
+    -- install the area in the seed/s
+    local AREA = rand.pick(poss_areas)
+    local v    = AREA.vhr
+
+    local sx1, sy1 = S.sx, S.sy
+    local sx2, sy2 = S.sx, S.sy
+
+    -- must expand range to whole chunk if present
+    local C = S.chunk
+
+    if C then
+      sx1, sy1 = C.sx1, C.sy1
+      sx2, sy2 = C.sx2, C.sy2
+    end
+
+    for x = sx1,sx2 do for y = sy1,sy2 do
+      local S2 = SEEDS[x][y]
+      assert(table.empty(S2.v_areas))
+      used_seeds = used_seeds + 1
+      S2.v_areas[v] = AREA
+
+      -- may need to merge areas
+      for dir = 2,8,2 do
+        local N2 = S:neighbor(dir)
+        if N2 and N2.room == R and not N2.void and 
+           N2.v_areas[v] and N2.v_areas[v] != AREA
+        then
+          merge_areas(AREA, N2.v_areas[v])
+        end
+      end
+    end end
+
+    return true
+  end
+
+
   local function grow_the_rest()
     local unused_seeds = {}
 
@@ -1268,8 +1368,6 @@ stderrf("  random_spread OK, area_size --> %d\n", area_size)
     local can_void = true
     if R.kind == "outdoor" then can_void = false end
 
-    local SIDES = { 2,4,6,8 }
-
     each S in unused_seeds do
       if can_void and not S.is_walk and not S.chunk and rand.odds(100) then
         S.void = true
@@ -1277,17 +1375,8 @@ stderrf("  random_spread OK, area_size --> %d\n", area_size)
         continue
       end
 
-      rand.shuffle(SIDES)
-
-      each dir in SIDES do
-        local N = S:neighbor(dir)
-        if N and N.room == R and not table.empty(N.v_areas) and not N.void then
-          -- FIXME: TOO SIMPLE
-stderrf("copying %s from %s\n", S:tostr(), N:tostr())
-          S.v_areas = N.v_areas
-          used_seeds = used_seeds + 1
-          break
-        end
+      if try_grow_from_neighbors(S) then
+        break
       end
     end
   end
@@ -1309,6 +1398,12 @@ stderrf("copying %s from %s\n", S:tostr(), N:tostr())
         S.v_areas[ src_v] = nil
       end
     end end
+
+    each AREA in R.areas2 do
+      if AREA.vhr == src_v then
+        AREA.vhr = dest_v
+      end
+    end
   end
 
 
@@ -1366,10 +1461,9 @@ stderrf("copying %s from %s\n", S:tostr(), N:tostr())
   end
 
 
-  local function chunk_set_vhr(C, v)
-    assert(not C.vhr)
-
-    C.vhr = v
+  local function chunk_set_vhr(C, AREA)
+    C.area2 = AREA
+    table.insert(AREA.chunks, C)
   end
 
 
@@ -1388,8 +1482,8 @@ stderrf("copying %s from %s\n", S:tostr(), N:tostr())
 
       -- if only one choice, use it
       if table.size(S.v_areas) == 1 then
-        local v = next(S.v_areas)
-        chunk_set_vhr(C, v)
+        local v, AREA = next(S.v_areas)
+        chunk_set_vhr(C, AREA)
         occ_vhrs[v] = (occ_vhrs[v] or 0) + 1
         continue
       end
@@ -1422,7 +1516,9 @@ stderrf("copying %s from %s\n", S:tostr(), N:tostr())
       end
 
       if C then
-        chunk_set_vhr(C, v)
+        local S = SEEDS[C.sx1][C.sy1]
+        chunk_set_vhr(C, assert(S.v_areas[v]))
+
         occ_vhrs[v] = (occ_vhrs[v] or 0) + 1
 
         table.kill_elem( low_chunks, C)
@@ -1440,7 +1536,7 @@ stderrf("copying %s from %s\n", S:tostr(), N:tostr())
     end
 
     each C in R.chunks do
-      if C.vhr then continue end
+      if C.area2 then continue end
 
       local S = SEEDS[C.sx1][C.sy1]
 
@@ -1454,7 +1550,7 @@ stderrf("copying %s from %s\n", S:tostr(), N:tostr())
 
       local v = rand.key_by_probs(tab2)
 
-      chunk_set_vhr(C, v)
+      chunk_set_vhr(C, assert(S.v_areas[v]))
       occ_vhrs[v] = (occ_vhrs[v] or 0) + 1
 
       tab[v] = tab[v] / 20  -- prefer another layer 
@@ -1489,6 +1585,8 @@ stderrf("copying %s from %s\n", S:tostr(), N:tostr())
 
 stderrf("Areas_create_all_areas @ %s : (%d %d) .. (%d %d)\n",
         R:tostr(), R.sx1, R.sy1, R.sx2, R.sy2)
+
+  R.areas2 = {}  -- FIXME: TEMP, REMOVE
 
   local SIDES   = { 2,4,6,8 }
   local CORNERS = { 1,3,7,9 }
