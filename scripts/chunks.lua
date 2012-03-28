@@ -1105,7 +1105,7 @@ end --]]
     f_h = assert(C.floor_h)
   end
 
-  c_h = (C.bridge_h or f_h) + 384
+  c_h = (C.bridge_h or f_h) + 128 - 16
 
   if x_hall then
     if x_hall.cross_mode == "channel" then f_h = x_hall.floor_h end
@@ -1247,6 +1247,7 @@ end --]]
     Brush_set_tex(brush, f_mat.t)
 
     table.insert(brush, { t=f_h, tex=f_tex, special=f_special })
+    table.insert(brush, { b=f_h-8, tex=f_tex })
 
     raw_add_brush(brush)
   end
@@ -1271,6 +1272,7 @@ end --]]
     Brush_set_tex(brush, c_mat.t)
 
     table.insert(brush, { b=c_h, tex=c_tex })
+    table.insert(brush, { t=c_h+8, tex=c_tex })
 
     raw_add_brush(brush)
   end
