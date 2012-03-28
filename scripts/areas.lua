@@ -957,6 +957,7 @@ function Areas_create_all_areas(R)
 
     AREA.vhr = v
     AREA.size = area_size
+    AREA.touching = {}     -- FIXME: never updated
 
     table.insert(R.areas, AREA)
 
