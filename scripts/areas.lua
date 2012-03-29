@@ -1767,6 +1767,20 @@ function Areas_connect_all_areas(R)
 
     table.insert(R.stairs, stair_info)
 
+-- TEST
+if S.v_areas[A2.vhr] and math.abs(A1.vhr - A2.vhr) == 1 and
+   N.v_areas[A1.vhr] and N.v_areas[A2.vhr]
+then
+  --  for pass = 1,2 do
+  --  local dir2 = (pass == 1 ? geom.RIGHT[dir] ; geom.LEFT[dir])
+  --  local N = S:neighbor(dir2)
+  --  if N and N.room == R and N.v_areas and N.v_areas[A1.vhr] and N.v_areas[A2.vhr] then
+
+  local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, math.min(A1.floor_h, A2.floor_h), 10 - dir)
+  Fabricate("STAIR_180", T, { R.skin })
+  S.wtf_bbq = true
+end
+
     return true
   end
 
@@ -1858,7 +1872,7 @@ function Areas_chunk_it_up_baby(R)
       local S = SEEDS[sx][sy]
 
       if S.room != R then continue end
-      if S.void or S.chunk then continue end
+      if S.void or S.chunk or S.wtf_bbq then continue end
         
       if S.v_areas[AR.vhr] != AR then continue end
 
@@ -3113,8 +3127,8 @@ dump_seed_list("grown seeds", seeds)
       Simple_connect_all_areas(R)
     else
       Areas_create_all_areas(R)
-      Areas_connect_all_areas(R)
       Areas_height_realization(R)
+      Areas_connect_all_areas(R)
       Areas_chunk_it_up_baby(R)
     end
 
