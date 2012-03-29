@@ -1729,6 +1729,8 @@ function Areas_connect_all_areas(R)
           each v2,A2 in N.v_areas do
             if v1 == v2 then continue end
 
+            if A1.conn_group == A2.conn_group then continue end
+
             local score = score_spot(S, N, dir, A1, A2)
 
 --stderrf("score_spot @ %s dir:%d --> %1.2f\n", S:tostr(), dir, score)
