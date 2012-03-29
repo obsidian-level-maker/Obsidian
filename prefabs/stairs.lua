@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2010-2011 Andrew Apted
+--  Copyright (C) 2010-2012 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -561,6 +561,177 @@ PREFAB.QUAKE_LIFT_DOWN =
         ent = "lift", sounds = 2, height = 128,
         spawnflags = "?lift_flags"
       }
+    }
+  }
+}
+
+
+PREFAB.STAIR_180 =
+{
+  fitted = "xy"
+
+  defaults =
+  {
+    step = "?wall"
+  }
+
+  brushes =
+  {
+    {
+      { x =   0, y =   0, mat = "?outer" }
+      { x =  16, y =   0, mat = "?wall" }
+      { x =  16, y = 192, mat = "?wall" }
+      { x =   0, y = 192, mat = "?outer" }
+    }
+
+    {
+      { x = 176, y =   0, mat = "?outer" }
+      { x = 192, y =   0, mat = "?outer" }
+      { x = 192, y = 192, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+    }
+
+    {
+      { x =  16, y = 176, mat = "?wall" }
+      { x =  88, y = 176, mat = "?wall" }
+      { x =  88, y = 192, mat = "?wall" }
+      { x =  16, y = 192, mat = "?wall" }
+      { t = 0, mat = "?floor" }
+    }
+
+    {
+      { x =  16, y =  16, mat = "?wall" }
+      { x = 176, y =  16, mat = "?wall" }
+      { x = 176, y =  80, mat = "?wall" }
+      { x =  88, y =  80, mat = "?step" }
+      { x =  16, y =  80, mat = "?wall" }
+      { t = 56, mat = "?floor" }
+    }
+    {
+      { x =  16, y =  16, mat = "?wall" }
+      { x = 176, y =  16, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+      { x =  16, y = 192, mat = "?wall" }
+      { b = 224, mat = "?wall" }
+    }
+
+    {
+      { x =  16, y =   0, mat = "?outer" }
+      { x = 176, y =   0, mat = "?wall" }
+      { x = 176, y =  16, mat = "?wall" }
+      { x =  16, y =  16, mat = "?wall" }
+    }
+
+    {
+      { x = 104, y = 176, mat = "?step" }
+      { x = 176, y = 176, mat = "?wall" }
+      { x = 176, y = 192, mat = "?wall" }
+      { x = 104, y = 192, mat = "?wall" }
+      { t = 112, mat = "?floor" }
+    }
+
+    {
+      { x =  88, y =  80, mat = "?wall" }
+      { x = 104, y =  80, mat = "?wall" }
+      { x = 104, y = 192, mat = "?wall" }
+      { x =  88, y = 192, mat = "?wall" }
+      { t = 128, mat = "?floor" }
+    }
+
+    {
+      { x =  16, y =  80, mat = "?wall" }
+      { x =  88, y =  80, mat = "?wall" }
+      { x =  88, y =  96, mat = "?step" }
+      { x =  16, y =  96, mat = "?wall" }
+      { t = 48, mat = "?floor" }
+    }
+
+    {
+      { x = 104, y =  80, mat = "?step" }
+      { x = 176, y =  80, mat = "?wall" }
+      { x = 176, y =  96, mat = "?wall" }
+      { x = 104, y =  96, mat = "?wall" }
+      { t = 64, mat = "?floor" }
+    }
+
+    {
+      { x =  16, y = 160, mat = "?wall" }
+      { x =  88, y = 160, mat = "?wall" }
+      { x =  88, y = 176, mat = "?step" }
+      { x =  16, y = 176, mat = "?wall" }
+      { t = 8, mat = "?floor" }
+    }
+
+    {
+      { x =  16, y = 144, mat = "?wall" }
+      { x =  88, y = 144, mat = "?wall" }
+      { x =  88, y = 160, mat = "?step" }
+      { x =  16, y = 160, mat = "?wall" }
+      { t = 16, mat = "?floor" }
+    }
+
+    {
+      { x =  16, y = 128, mat = "?wall" }
+      { x =  88, y = 128, mat = "?wall" }
+      { x =  88, y = 144, mat = "?step" }
+      { x =  16, y = 144, mat = "?wall" }
+      { t = 24, mat = "?floor" }
+    }
+
+    {
+      { x =  16, y = 112, mat = "?wall" }
+      { x =  88, y = 112, mat = "?wall" }
+      { x =  88, y = 128, mat = "?step" }
+      { x =  16, y = 128, mat = "?wall" }
+      { t = 32, mat = "?floor" }
+    }
+
+    {
+      { x =  16, y =  96, mat = "?wall" }
+      { x =  88, y =  96, mat = "?wall" }
+      { x =  88, y = 112, mat = "?step" }
+      { x =  16, y = 112, mat = "?wall" }
+      { t = 40, mat = "?floor" }
+    }
+
+    {
+      { x = 104, y =  96, mat = "?step" }
+      { x = 176, y =  96, mat = "?wall" }
+      { x = 176, y = 112, mat = "?wall" }
+      { x = 104, y = 112, mat = "?wall" }
+      { t = 72, mat = "?floor" }
+    }
+
+    {
+      { x = 104, y = 112, mat = "?step" }
+      { x = 176, y = 112, mat = "?wall" }
+      { x = 176, y = 128, mat = "?wall" }
+      { x = 104, y = 128, mat = "?wall" }
+      { t = 80, mat = "?floor" }
+    }
+
+    {
+      { x = 104, y = 128, mat = "?step" }
+      { x = 176, y = 128, mat = "?wall" }
+      { x = 176, y = 144, mat = "?wall" }
+      { x = 104, y = 144, mat = "?wall" }
+      { t = 88, mat = "?floor" }
+    }
+
+    {
+      { x = 104, y = 144, mat = "?step" }
+      { x = 176, y = 144, mat = "?wall" }
+      { x = 176, y = 160, mat = "?wall" }
+      { x = 104, y = 160, mat = "?wall" }
+      { t = 96, mat = "?floor" }
+    }
+
+    {
+      { x = 104, y = 160, mat = "?step" }
+      { x = 176, y = 160, mat = "?wall" }
+      { x = 176, y = 176, mat = "?wall" }
+      { x = 104, y = 176, mat = "?wall" }
+      { t = 104, mat = "?floor" }
     }
   }
 }
