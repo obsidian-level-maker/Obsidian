@@ -122,6 +122,24 @@ function SEED_CLASS.can_add_vhr(S, R, v)
 end
 
 
+function SEED_CLASS.above_vhr(S, vhr)
+  for v = vhr+1, 9 do
+    if S.v_areas[v] then return v end
+  end
+
+  return nil
+end
+
+
+function SEED_CLASS.below_vhr(S, vhr)
+  for v = vhr-1, 1, -1 do
+    if S.v_areas[v] then return v end
+  end
+
+  return nil
+end
+
+
 --------------------------------------------------------------------
 
 

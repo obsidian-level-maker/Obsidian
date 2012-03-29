@@ -1239,10 +1239,7 @@ stderrf("  first = %s\n", first:tostr())
 
     while area_size < min_size do
       -- abort if cannot reach the minimum size
-      if not random_spread(bbox, v) then 
-stderrf("  random_spread failed\n")
-      return end
-stderrf("  random_spread OK, area_size --> %d\n", area_size)
+      if not random_spread(bbox, v) then return end
     end
 
     while rand.odds(95) and area_size < max_size * 0.8 do
@@ -1792,14 +1789,32 @@ function Areas_height_realization(R)
   -- the virtual becomes reality, and it happens here
   --
 
+  local max_floor_h = R.entry_h
+
   local function assign_floor(v, floor_h)
     if v < 1 or v > 9 then return end
 
     each AR in R.areas do
       if AR.vhr == v then
         AR.floor_h = floor_h
+        max_floor_h = math.max(max_floor_h, AR.floor_h)
       end
     end
+  end
+
+  local function assign_ceil(v, ceil_h)
+    if v < 1 or v > 9 then return false end
+
+    local seen = false
+
+    each AR in R.areas do
+      if AR.vhr == v then
+        AR.ceil_h = ceil_h
+        seen = true
+      end
+    end
+
+    return seen
   end
 
 
@@ -1818,6 +1833,15 @@ function Areas_height_realization(R)
   for i = 1,9 do
     assign_floor(base_v + i, R.entry_h + i * 128)
     assign_floor(base_v - i, R.entry_h - i * 128)
+  end
+
+  -- ceilings too
+  local ceil_h = max_floor_h + 192
+
+  for v = 9,1,-1 do
+    if assign_ceil(v, ceil_h) then
+      ceil_h = ceil_h + 128
+    end
   end
 end
 
@@ -1842,6 +1866,8 @@ function Areas_chunk_it_up_baby(R)
       C.area = AR
 
       C:set_coords()
+
+      if S:above_vhr(AR.vhr) then C.no_ceil = true end
 
       table.insert( R.chunks, C)
       table.insert(AR.chunks, C)

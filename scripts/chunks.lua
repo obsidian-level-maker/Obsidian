@@ -1105,7 +1105,7 @@ end --]]
     f_h = assert(C.floor_h)
   end
 
-  c_h = (C.bridge_h or f_h) + 128 - 16
+  c_h = (C.area and C.area.ceil_h) or C.ceil_h or ((C.bridge_h or f_h) + 128 - 16)
 
   if x_hall then
     if x_hall.cross_mode == "channel" then f_h = x_hall.floor_h end
