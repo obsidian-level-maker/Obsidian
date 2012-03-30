@@ -360,6 +360,8 @@ end
 
 
 function HALLWAY_CLASS.select_piece(H, C)
+  if C.skin_name then return C.skin_name end
+
   local shape = C.h_shape
 
   if C.h_extra == "stair" then shape = shape .. "S" end
@@ -1436,8 +1438,8 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
     local LINK = C.link[dir]
 
     if LINK and not (LINK.conn and LINK.conn.kind == "double_R") then
-      local C3 = C.link[dir].C1
-      if C3 == C then C3 = C.link[dir].C2 end
+      local C3 = LINK.C1
+      if C3 == C then C3 = LINK.C2 end
 
       C3.floor_h = floor_h
     end
@@ -1447,6 +1449,54 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
     end
   end
 end
+
+
+
+function HALLWAY_CLASS.mini_flow(H, C, from_dir, floor_h)
+  H.is_mini_hall = true
+
+  C.floor_h = floor_h
+
+  local dir = 10 - from_dir
+
+  assert(C.h_shape == "I")
+
+  local reqs = {}  -- FIXME !!
+
+  local tab = Rooms_filter_skins(H, "mini_halls", THEME.mini_halls, reqs)
+
+  C.skin_name = rand.key_by_probs(tab)
+
+stderrf("USING MINI HALL : %s !!!!!!!!!!\n", C.skin_name)
+
+  C.h_dir = dir
+
+
+  --[[ FIXME
+    floor_h = floor_h + delta_h
+
+    -- stairs and lifts require chunk has the lowest height
+    if z_dir < 0 then
+      C.floor_h = floor_h
+    end
+  --]]
+
+
+  -- update next room
+
+  local LINK = C.link[dir]
+
+  assert(LINK)
+  assert(LINK.conn)
+
+  if LINK and not (LINK.conn and LINK.conn.kind == "double_R") then
+    local C3 = LINK.C1
+    if C3 == C then C3 = C.link[dir].C2 end
+
+    C3.floor_h = floor_h
+  end
+end
+
 
 
 function HALLWAY_CLASS.cycle_flow(H, C, from_dir, z, i_deltas, seen)
@@ -1663,6 +1713,8 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
 
   if H.is_cycle then
     H:handle_cycle(entry_C, 10 - entry_dir, entry_h)
+  elseif #H.sections == 1 and THEME.mini_halls and rand.odds(THEME.mini_hall_prob or 100) then
+    H:mini_flow(entry_C, 10 - entry_dir, entry_h)
   else
     -- general vertical direction
     local z_dir = rand.sel(50, 1, -1)

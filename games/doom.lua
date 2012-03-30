@@ -2102,10 +2102,11 @@ DOOM.SKINS =
     _deep   = 64
   }
 
-  Fat_Arch1 =
+  MiniHall_Arch1 =
   {
     _prefab = "FAT_ARCH1"
     _where  = "chunk"
+    _delta  = 0
 
     pic = "SW1SATYR"    
   }
@@ -3294,6 +3295,8 @@ DOOM.THEME_DEFAULTS =
   fences = { Fence1 = 50 }
 
   hallway_groups = { basic = 50, thin = 15 }  -- TODO: cavey
+
+  mini_halls = { MiniHall_Arch1 = 50 }
 
   sky_halls = { skier = 50 }
 
