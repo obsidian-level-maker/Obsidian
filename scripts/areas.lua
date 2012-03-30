@@ -903,7 +903,7 @@ end
 function Areas_create_all_areas(R)
 
   local min_size = 2 + R.map_volume * 2
-  local max_size = 8 + R.map_volume * 4
+  local max_size = int(R.svolume * 0.7)
 
   local total_seeds = 0
   local  used_seeds = 0
@@ -914,12 +914,12 @@ function Areas_create_all_areas(R)
   local area_size
 
 
-  local VHR_DECAY = { 20,10,10, 6,6,6, 10,10,20 }
+  local VHR_DECAY = { 10,10,10, 4,4,4, 10,10,10 }
 
   local function pick_vhr(tab)
     each v,usage in used_vhrs do
       if tab[v] then
-        tab[v] = tab[v] / (VHR_DECAY[v] ^ usage)
+--      tab[v] = tab[v] / (VHR_DECAY[v] ^ usage)
       end
     end
 
@@ -1242,7 +1242,7 @@ stderrf("  first = %s\n", first:tostr())
       if not random_spread(bbox, v) then return end
     end
 
-    while rand.odds(95) and area_size < max_size * 0.8 do
+    while rand.odds(80) and area_size < max_size * 0.8 do
       random_spread(bbox, v)
     end
 
@@ -1872,8 +1872,9 @@ function Areas_chunk_it_up_baby(R)
       local S = SEEDS[sx][sy]
 
       if S.room != R then continue end
-      if S.void or S.chunk or S.wtf_bbq then continue end
-        
+      if S.chunk and S.chunk.area == AR then continue end
+      if S.void or S.wtf_bbq then continue end
+
       if S.v_areas[AR.vhr] != AR then continue end
 
       local C = CHUNK_CLASS.new(sx, sy, sx, sy)
