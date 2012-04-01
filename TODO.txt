@@ -6,7 +6,24 @@ Current Work
 ------------
 
 
-(-:  mini_halls = { MiniHall_Archy = 50 }
+++  think about how "mini halls" and "groups" interact
+
+    --> groups only apply to connected hallways (2+ sections)
+    
+    --> mini_halls connect two rooms, or a room and big junction
+
+    i.e. they are mutually exclusive
+
+
++  number of areas per room:
+
+   max = 1 + (svolume ^ 0.5) / 2
+
+   if max > 9 then max = 9 end
+
+   count = rand.irange(int(max / 2), int(max))
+
+
 
 
 AREA ALGORITHM #627
@@ -42,7 +59,13 @@ AREA ALGORITHM #627
     The shapes of those areas can be arbitrary.
 
 
-!!  actually create AREA objects, store in SEED.v_areas
++  place importants AFTER deciding major areas, and do A* pathing
+   separately for each area.
+
+
+IDEA:  require vhr diff >= 2 before overlapping virtual areas
+
+DONE:  actually create AREA objects, store in SEED.v_areas
 
 +  try_TWO_SIDE()
 +  try_THREE_SIDE()
