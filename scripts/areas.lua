@@ -1947,7 +1947,9 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
       local score = gui.random()
 
       for dir = 2,8,2 do
-        if grid_neighbor(G, dir) then
+        local N = grid_neighbor(G, dir)
+
+        if N and N.used then
           score = score + 10
           break
         end
@@ -1968,6 +1970,10 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
       local AREA = AREA_CLASS.new("floor", R)
 
       AREA.vhr = rand.irange(min_vhr, max_vhr)
+
+      AREA.touching = {}     -- FIXME: never updated
+
+      table.insert(R.areas, AREA)
 
       return AREA
     end
@@ -1995,6 +2001,7 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
     end
 
     if table.empty(areas) then
+Areas_dump_vhr(R)
       error("failed to find any height in grid neighbors")
     end
 
@@ -2110,6 +2117,7 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
   local function fill_a_spot()
     local G = find_free_spot()
 
+stderrf("fill_a_spot @ (%d %d)\n", G.gx, G.gy)
     if not pick_a_pattern(G) then
       install_PLAIN(G)
     end
