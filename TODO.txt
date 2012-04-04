@@ -15,14 +15,12 @@ Current Work
     i.e. they are mutually exclusive
 
 
-+  number of areas per room:
++  mini hall 'outdoors = nn' field (can be 0, 1 or 2 --> number of rooms)
 
-   max = 1 + (svolume ^ 0.5) / 2
 
-   if max > 9 then max = 9 end
+PATTERN AREA LOGIC:
 
-   count = rand.irange(int(max / 2), int(max))
-
+>>>  ability to test and install patterns
 
 
 
@@ -59,18 +57,17 @@ AREA ALGORITHM #627
     The shapes of those areas can be arbitrary.
 
 
-+  place importants AFTER deciding major areas, and do A* pathing
-   separately for each area.
+!!!  have 'z1_cap' and 'z2_cap' fields in a chunk, ensure all
+     prefabs use it -- perhaps: Trans.set_cap(), Trans.clear_cap()
 
+++  place importants AFTER deciding major areas, and do A* pathing
+    separately for each area.
 
-IDEA:  require vhr diff >= 2 before overlapping virtual areas
-
-DONE:  actually create AREA objects, store in SEED.v_areas
-
-+  try_TWO_SIDE()
-+  try_THREE_SIDE()
-+  try_CORNER()
-+  try_EDGE()
++  continue with unpatterned area logic:
+   -  try_TWO_SIDE()
+   -  try_THREE_SIDE()
+   -  try_CORNER()
+   -  try_EDGE()
 
 -  put VOID in non-walk left-overs
 
