@@ -64,9 +64,9 @@ OB_THEMES["mixed"] =
   priority = -97,
 }
 
-OB_THEMES["mess"] =
+OB_THEMES["jumble"] =
 {
-  label = "Messed Up",
+  label = "Jumbled Up",
   priority = -98,
 }
 
