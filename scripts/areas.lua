@@ -1846,6 +1846,25 @@ function Areas_create_with_patterns(R)
   end
 
 
+  local function grid_for_box(sx1, sy1, sx2, sy2)
+    for mx = 1,MAP_W do
+      for my = 1,MAP_H do
+        local G = grid[mx][my]
+
+        if not G then continue end
+
+        if G.sx1 <= sx1 and sx2 <= G.sx2 and
+           G.sy1 <= sy1 and sy2 <= G.sy2
+        then
+          return G
+        end
+      end
+    end
+
+    return nil  -- stray chunk
+  end
+
+
   local function verify_grid(G)
     assert(Seed_valid(G.sx1, G.sy1))
     assert(Seed_valid(G.sx2, G.sy2))
@@ -1887,6 +1906,7 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
         sx1 = K.sx1 ; sy1 = K.sy1
         sx2 = K.sx2 ; sy2 = K.sy2
 
+        chunks = {}
         strays = {}
       }
 
@@ -1918,6 +1938,18 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
 
       verify_grid(G)
     end end
+
+    -- collect chunks
+    each C in R.chunks do
+      local G = grid_for_box(C.sx1, C.sy1, C.sx2, C.sy2)
+
+      if G then
+        table.insert(G.chunks, C)
+      else
+        --???  FIXME
+      end
+    end
+
   end
 
 
@@ -1928,6 +1960,8 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
     -- here we figure out which part of the grid they should copy.
 
     -- FIXME
+
+    -- NOTE TOO : "stray chunks" are possible, handle it
   end
 
 
@@ -2031,6 +2065,21 @@ Areas_dump_vhr(R)
   end
 
 
+  local function symmetry_match(pat, axis)
+    return (pat.symmetry == axis) or (pat.symmetry == "xy")
+  end
+
+
+  local function matching_sizes(...)
+    -- FIXME !!!
+    return { }
+  end
+
+
+  -- current transform
+  local TR = {}
+
+
   local function test_or_install_pattern(G, info, DO_IT)
 
     -- NOTE: must check chunks (require same area on chunk, don't put void on chunks), 
@@ -2043,6 +2092,39 @@ Areas_dump_vhr(R)
 
   local function try_pattern(G, pat)
     -- FIXME !!!
+
+    local sw, sh = geom.group_size(G.sx1, G.sy1, G.sx2, G.sy2)
+
+    for transpose = 0, 1 do
+    
+      TR.transpose = (transpose == 1)
+
+      TR.long = (TR.transpose ? sh ; sw)
+      TR.deep = (TR.transpose ? sh ; sw)
+
+      each x_size in matching_sizes(pat.x_sizes, TR.long) do
+      each y_size in matching_sizes(pat.y_sizes, TR.deep) do
+
+        for x_flip = 0, (symmetry_match(pat, "x") ? 1 ; 0) do
+        for y_flip = 0, (symmetry_match(pat, "y") ? 1 ; 0) do
+
+          TR.x_flip = (x_flip == 1)
+          TR.y_flip = (y_flip == 1)
+
+          convert_structure(pat, x_size, y_size)
+
+          if test_or_install_pattern(xxx, false) then
+             test_or_install_pattern(xxx, true)
+             return true
+          end
+
+        end -- x_flip
+        end -- y_flip
+
+      end -- x_size
+      end -- y_size
+
+    end -- transpose
 
     return false 
   end
