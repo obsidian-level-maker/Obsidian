@@ -1799,7 +1799,7 @@ end
 
 
 
-function Areas_create_via_fabs(R)
+function Areas_create_with_patterns(R)
   local max_areas
 
   local min_vhr
@@ -1951,17 +1951,12 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
   end
 
 
-  local function pick_a_pattern(G)
-    -- FIXME !!!!!!
-
-    return nil
-  end
-
-
   local function get_PLAIN_vhr(G)
     if g_used == 0 then
       return rand.irange(min_vhr, max_vhr)
     end
+
+    -- when g_used > 0, this grid spot must be adjacent to already filled stuff
 
     local vhr_counts = {}
 
@@ -1995,12 +1990,57 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
 
   local function apply_PLAIN(G)
     -- hardest part here is determine which VHR to use
+    local vhr = get_PLAIN_vhr(G)
 
-
+    -- FIXME !!!!
   end
 
 
-  local function apply_pattern(G, P)
+  local function test_or_apply_pattern(G, info, DO_IT)
+  end
+
+
+  local function try_pattern(G, pat)
+  end
+
+
+  local function can_use_pat(G, pat)
+    -- this does very basic checks to eliminate patterns early on
+
+    -- FIXME : do a basic size check
+
+    local prob = pat.prob or 50
+
+    return prob
+  end
+
+
+  local function pick_a_pattern(G)
+    local tab = {}
+
+    each name,pat in AREA_PATTERNS do
+      -- filter out patterns that definitely cannot be used
+      local prob = can_use_pat(G, pat)
+
+      if prob > 0 then
+        tab[name] = prob
+      end
+    end
+
+    -- try patterns until something works or we run out of them
+    while not table.empty(tab) do
+      local name = rand.key_by_probs(tab)
+      tab[name] = nil
+
+      local pat = AREA_PATTERNS[name]
+
+      if try_apply_pattern(G, pat) then
+        return true
+      end
+    end
+
+    -- nothing was possible
+    return false
   end
 
 
@@ -2014,11 +2054,7 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
   local function fill_a_spot()
     local G = find_free_spot()
 
-    local P = pick_a_pattern(G)
-
-    if P then
-      apply_pattern(G, P)
-    else
+    if not pick_a_pattern(G) then
       apply_PLAIN(G)
     end
 
@@ -2028,7 +2064,7 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
   end
 
 
-  ---| Areas_create_via_fabs |---
+  ---| Areas_create_with_patterns |---
 
   number_of_areas()
   
@@ -3371,7 +3407,7 @@ dump_seed_list("grown seeds", seeds)
 
       Simple_connect_all_areas(R)
     else
-      Areas_create_via_fabs(R)
+      Areas_create_with_patterns(R)
 --      Areas_height_realization(R)
 --      Areas_chunk_it_up_baby(R)
     end
