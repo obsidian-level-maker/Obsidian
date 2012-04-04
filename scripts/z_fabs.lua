@@ -22,22 +22,6 @@ AREA_PATTERNS =
 {
 
 
-PLAIN =
-{
-  prob = 10
-
-  area1 =
-  {
-    "#"
-  }
-
-  x_sizes = { "1", "2", "3", "4" }
-  y_sizes = { "1", "2", "3", "4" }
-
-  symmetry = "xy"
-}
-
-
 EXTEND_1 =
 {
   prob = 50
