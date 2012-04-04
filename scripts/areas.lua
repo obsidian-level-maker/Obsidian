@@ -1800,6 +1800,128 @@ end
 
 
 
+function Areas_create_via_fabs(R)
+  local max_areas
+
+  local min_vhr
+  local max_vhr
+
+  local grid
+
+
+  local function number_of_areas()
+    -- determine maximum # of areas
+    max_area = int(1 + (R.svolume ^ 0.5) / 2)
+    if max_area > 9 then max_area = 9 end
+
+    if R.crossover_hall then
+      max_area = math.min(max_area, 7)
+    end
+
+    min_vhr = 5 - int(max_area / 2)
+    max_vhr = min_vhr + max_area - 1
+  end
+
+
+  local function grid_neighbor(G, dir)
+    local nx, ny = geom.nudge(G.gx, G.gy, dir)
+
+    if nx < 1 or ny < 1 or nx > grid.w or ny > grid.h then return nil end
+
+    return grid[nx][ny]
+  end
+
+
+  local function verify_grid(G)
+    assert(Seed_valid(G.sx1, G.sy1))
+    assert(Seed_valid(G.sx2, G.sy2))
+
+stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
+        G.gx, G.gy, R:tostr(),  G.sx1, G.sy1, G.sx2, G.sy2)
+
+    for sx = G.sx1, G.sx2 do
+      for sy = G.sy1, G.sy2 do
+        local S = SEEDS[sx][sy]
+
+        if S.room != R then
+          error("grid cell overflowed @ " .. S:tostr())
+        end
+      end
+    end
+  end
+
+
+  local function create_grid()
+    -- subdivide room into an MxN grid of areas
+    
+    grid = table.array_2D(MAP_W, MAP_H)
+
+    for mx = 1,MAP_W do for my = 1,MAP_H do
+      local K = SECTIONS[mx*2][my*2]
+
+      if K.room == R then
+        grid[mx][my] =
+        {
+          gx = mx ; gy = my
+
+          K = K
+
+          sx1 = K.sx1 ; sy1 = K.sy1
+          sx2 = K.sx2 ; sy2 = K.sy2
+
+          strays = {}
+        }
+      end
+    end end
+
+    -- close gaps between neighbors (the reclaimed VERT/HORIZ/JUNC sections)
+
+    for mx = 1,MAP_W do for my = 1,MAP_H do
+      local G = grid[mx][my]
+
+      if not G then continue end
+
+      for dir = 2,8,2 do
+        local N  = grid_neighbor(G, dir)
+        local K2 = G.K:neighbor(dir)
+
+        if N and dir == 6 then G.sx2 = N.sx1 - 1 end
+        if N and dir == 8 then G.sy2 = N.sy1 - 1 end
+
+        if not N and K2 and K2.room == R then
+          if dir == 4 then G.sx1 = K2.sx1 end
+          if dir == 6 then G.sx2 = K2.sx2 end
+
+          if dir == 2 then G.sy1 = K2.sy1 end
+          if dir == 8 then G.sy2 = K2.sy2 end
+        end
+      end
+
+      verify_grid(G)
+    end end
+  end
+
+
+  local function assign_stray_seeds()
+    -- some seeds may not be covered by the grid.
+    -- they will be copied from a nearby grid seed.
+
+    -- here we figure out which part of the grid they should copy.
+
+    -- FIXME
+  end
+
+
+  ---| Areas_create_via_fabs |---
+
+  number_of_areas()
+  
+  create_grid()
+  assign_stray_seeds()
+end
+
+
+
 function Areas_height_realization(R)
   --
   -- the virtual becomes reality, and it happens here
@@ -2058,6 +2180,8 @@ function Areas_flesh_out()
 
   local function decorative_chunks(R)
     -- this does scenic stuff like cages, nukage pits, etc...
+
+-- TODO: this is not used, redo the void pillars
 
     void_in_room(R)
 
@@ -3118,7 +3242,7 @@ dump_seed_list("grown seeds", seeds)
       Simple_create_areas(R)
     end
 
-    initial_height(R)
+--!!!    initial_height(R)
     
     if R.kind == "cave" then
       local entry_area = assert(R.entry_C.area)
@@ -3127,12 +3251,12 @@ dump_seed_list("grown seeds", seeds)
 
       Simple_connect_all_areas(R)
     else
-      Areas_create_all_areas(R)
-      Areas_height_realization(R)
-      Areas_connect_all_areas(R)
-      Areas_chunk_it_up_baby(R)
+      Areas_create_via_fabs(R)
+--      Areas_height_realization(R)
+--      Areas_chunk_it_up_baby(R)
     end
 
+--[[
     finish_heights(R)
 
     if R.kind != "cave" then
@@ -3141,6 +3265,7 @@ dump_seed_list("grown seeds", seeds)
 
     outgoing_heights(R)
     crossover_room(R)
+--]]
   end
 
 
