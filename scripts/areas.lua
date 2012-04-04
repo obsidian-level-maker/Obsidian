@@ -931,7 +931,6 @@ function Areas_create_all_areas(R)
     for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
       local S = SEEDS[sx][sy]
       if S.room == R then
-        S.v_areas = {}
         total_seeds = total_seeds + 1
       end
     end end
@@ -1808,10 +1807,14 @@ function Areas_create_via_fabs(R)
 
   local grid
 
+  local g_total
+  local g_used
+
 
   local function number_of_areas()
     -- determine maximum # of areas
     max_area = int(1 + (R.svolume ^ 0.5) / 2)
+    if max_area < 1 then max_area = 1 end
     if max_area > 9 then max_area = 9 end
 
     if R.crossover_hall then
@@ -1856,22 +1859,27 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
     
     grid = table.array_2D(MAP_W, MAP_H)
 
+    g_total = 0
+    g_used  = 0
+
     for mx = 1,MAP_W do for my = 1,MAP_H do
       local K = SECTIONS[mx*2][my*2]
 
-      if K.room == R then
-        grid[mx][my] =
-        {
-          gx = mx ; gy = my
+      if K.room != R then continue end
 
-          K = K
+      grid[mx][my] =
+      {
+        gx = mx ; gy = my
 
-          sx1 = K.sx1 ; sy1 = K.sy1
-          sx2 = K.sx2 ; sy2 = K.sy2
+        K = K
 
-          strays = {}
-        }
-      end
+        sx1 = K.sx1 ; sy1 = K.sy1
+        sx2 = K.sx2 ; sy2 = K.sy2
+
+        strays = {}
+      }
+
+      g_total = g_total + 1
     end end
 
     -- close gaps between neighbors (the reclaimed VERT/HORIZ/JUNC sections)
@@ -1912,12 +1920,124 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
   end
 
 
+  local function find_free_spot()
+    -- we want a grid spot next to an already used spot
+
+    local best
+    local best_score
+
+    for mx = 1,MAP_W do for my = 1,MAP_H do
+      local G = grid[mx][my]
+
+      if not G then continue end
+
+      if G.used then continue end
+
+      local score = gui.random()
+
+      for dir = 2,8,2 do
+        if grid_neighbor(dir) then
+          score = score + 10
+          break
+        end
+      end
+
+      if not best or score > best_score then
+        best = G
+      end
+    end end
+    
+    return assert(best)
+  end
+
+
+  local function pick_a_pattern(G)
+    -- FIXME !!!!!!
+
+    return nil
+  end
+
+
+  local function get_PLAIN_vhr(G)
+    if g_used == 0 then
+      return rand.irange(min_vhr, max_vhr)
+    end
+
+    local vhr_counts = {}
+
+    for sx = G.sx1, G.sx2 do
+      for sy = G.sy1, g.sy2 do
+        local S = SEEDS[sx][sy]
+
+        for dir = 2,8,2 do
+          local N = S:neighbor(dir)
+
+          if not (N and N.room == R) then continue end
+
+          if geom.inside_box(N.sx, N.sy, G.sx1,G.sy1, G.sx2,G.sy2) then continue end
+
+          each v,_ in N.v_areas do
+            vhr_counts[v] = (vhr_counts[v] or 0) + 1
+          end
+        end
+      end
+    end
+
+    if table.empty(vhr_counts) then
+      error("failed to find any height in grid neighbors")
+    end
+
+    -- TODO: pick the least used VHR to-date
+
+    return rand.element(table.keys(vhr_counts))
+  end
+
+
+  local function apply_PLAIN(G)
+    -- hardest part here is determine which VHR to use
+
+
+  end
+
+
+  local function apply_pattern(G, P)
+  end
+
+
+  local function update_strays(G)
+    each S in G.strays do
+      -- FIXME
+    end
+  end
+
+
+  local function fill_a_spot()
+    local G = find_free_spot()
+
+    local P = pick_a_pattern(G)
+
+    if P then
+      apply_pattern(G, P)
+    else
+      apply_PLAIN(G)
+    end
+
+    update_strays(G)
+
+    g_used = g_used + 1
+  end
+
+
   ---| Areas_create_via_fabs |---
 
   number_of_areas()
   
   create_grid()
   assign_stray_seeds()
+
+  while g_used < g_total do
+    fill_a_spot()
+  end
 end
 
 

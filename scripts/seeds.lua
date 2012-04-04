@@ -56,7 +56,7 @@ BASE_Y = 0
 SEED_CLASS = {}
 
 function SEED_CLASS.new(x, y)
-  local S = { sx=x, sy=y, cost={}, chunks={} }
+  local S = { sx=x, sy=y, cost={}, chunks={}, v_areas={} }
   table.set_class(S, SEED_CLASS)
   return S
 end
