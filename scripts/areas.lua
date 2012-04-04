@@ -900,6 +900,60 @@ end
 ----------------------------------------------------------------
 
 
+function Areas_dump_vhr(R)
+
+  local function check_vhr(v)
+    for y = R.sy2, R.sy1, -1 do
+      for x = R.sx1, R.sx2 do
+        local S = SEEDS[x][y]
+
+        if S.room == R and S.v_areas[v] then
+          return true
+        end
+      end
+    end
+
+    return false
+  end
+
+
+  local function dump_vhr(v)
+    for y = R.sy2, R.sy1, -1 do
+      local line = "  "
+
+      for x = R.sx1, R.sx2 do
+        local S = SEEDS[x][y]
+
+        if S.room != R then
+          line = line .. " "
+        elseif S.v_areas[v] then
+          line = line .. v
+        elseif S.void then
+          line = line .. "#"
+        else
+          line = line .. "."
+        end
+      end
+
+      gui.debugf("%s\n", line)
+    end
+
+    gui.debugf("\n");
+  end
+
+
+  ---| Areas_dump_vhr |---
+
+  gui.debugf("Virtual Areas in %s\n", R:tostr())
+
+  for v = 9,1,-1 do
+    if check_vhr(v) then
+      dump_vhr(v)
+    end
+  end
+end
+
+
 function Areas_create_all_areas(R)
 
   local min_size = 2 + R.map_volume * 2
@@ -1045,42 +1099,6 @@ assert(Seed_valid(x, y))
     end end
 
     return true
-  end
-
-
-  local function dump_vhr(v)
-    for y = R.sy2, R.sy1, -1 do
-      local line = "  "
-
-      for x = R.sx1, R.sx2 do
-        local S = SEEDS[x][y]
-
-        if S.room != R then
-          line = line .. " "
-        elseif S.v_areas[v] then
-          line = line .. v
-        elseif S.void then
-          line = line .. "#"
-        else
-          line = line .. "."
-        end
-      end
-
-      gui.debugf("%s\n", line)
-    end
-
-    gui.debugf("\n");
-  end
-
-
-  local function dump()
-    gui.debugf("Virtual Areas in %s\n", R:tostr())
-
-    for v = 1,9 do
-      if used_vhrs[v] then
-        dump_vhr(v)
-      end
-    end
   end
 
 
@@ -1936,7 +1954,7 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
       local score = gui.random()
 
       for dir = 2,8,2 do
-        if grid_neighbor(dir) then
+        if grid_neighbor(G, dir) then
           score = score + 10
           break
         end
@@ -1944,6 +1962,7 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
 
       if not best or score > best_score then
         best = G
+        best_score = score
       end
     end end
     
@@ -1951,17 +1970,21 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
   end
 
 
-  local function get_PLAIN_vhr(G)
+  local function get_PLAIN_area(G)
     if g_used == 0 then
-      return rand.irange(min_vhr, max_vhr)
+      local AREA = AREA_CLASS.new("floor", R)
+
+      AREA.vhr = rand.irange(min_vhr, max_vhr)
+
+      return AREA
     end
 
     -- when g_used > 0, this grid spot must be adjacent to already filled stuff
 
-    local vhr_counts = {}
+    local areas = {}
 
     for sx = G.sx1, G.sx2 do
-      for sy = G.sy1, g.sy2 do
+      for sy = G.sy1, G.sy2 do
         local S = SEEDS[sx][sy]
 
         for dir = 2,8,2 do
@@ -1971,32 +1994,44 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
 
           if geom.inside_box(N.sx, N.sy, G.sx1,G.sy1, G.sx2,G.sy2) then continue end
 
-          each v,_ in N.v_areas do
-            vhr_counts[v] = (vhr_counts[v] or 0) + 1
+          each v,AR in N.v_areas do
+            table.add_unique(areas, AR)
           end
         end
       end
     end
 
-    if table.empty(vhr_counts) then
+    if table.empty(areas) then
       error("failed to find any height in grid neighbors")
     end
 
-    -- TODO: pick the least used VHR to-date
+    -- TODO: pick the least used VHR so far
 
-    return rand.element(table.keys(vhr_counts))
+    local AREA = rand.pick(areas)
+
+    return AREA
   end
 
 
-  local function apply_PLAIN(G)
-    -- hardest part here is determine which VHR to use
-    local vhr = get_PLAIN_vhr(G)
+  local function install_PLAIN(G)
+    local AREA = get_PLAIN_area(G)
+    local v = AREA.vhr
 
-    -- FIXME !!!!
+    for sx = G.sx1, G.sx2 do
+      for sy = G.sy1, G.sy2 do
+
+        local S = SEEDS[sx][sy]
+        assert(S.room == R)
+        assert(not S.void)
+        assert(not S.v_areas[v])
+
+        S.v_areas[v] = AREA
+      end
+    end
   end
 
 
-  local function test_or_apply_pattern(G, info, DO_IT)
+  local function test_or_install_pattern(G, info, DO_IT)
   end
 
 
@@ -2005,11 +2040,30 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
 
 
   local function can_use_pat(G, pat)
+    --
     -- this does very basic checks to eliminate patterns early on
+    --
 
-    -- FIXME : do a basic size check
+    -- room kind check
+    if pat.room_kind and pat.room_kind != R.kind then return -1 end
+
+    -- 3D check
+    -- FIXME: if pat.overlap and not (3D GAME) then return -1 end
+
+    -- basic size check
+    -- FIXME !!
+
+    if pat.extender and g_used == 0 then return -1 end
+
+    -- TODO: symmetry tests
+
+    -- nothing to extend?
+    if pat.extender and g_used == 0 then return -1 end
 
     local prob = pat.prob or 50
+
+    -- (Todo: could modify probability based on certain factors, e.g.
+    --        whether pattern was used already in this room)
 
     return prob
   end
@@ -2034,7 +2088,7 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
 
       local pat = AREA_PATTERNS[name]
 
-      if try_apply_pattern(G, pat) then
+      if try_pattern(G, pat) then
         return true
       end
     end
@@ -2055,10 +2109,12 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
     local G = find_free_spot()
 
     if not pick_a_pattern(G) then
-      apply_PLAIN(G)
+      install_PLAIN(G)
     end
 
     update_strays(G)
+
+    G.used = true
 
     g_used = g_used + 1
   end
@@ -2074,6 +2130,8 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
   while g_used < g_total do
     fill_a_spot()
   end
+
+  Areas_dump_vhr(R)
 end
 
 
@@ -3398,7 +3456,7 @@ dump_seed_list("grown seeds", seeds)
       Simple_create_areas(R)
     end
 
---!!!    initial_height(R)
+    initial_height(R)
     
     if R.kind == "cave" then
       local entry_area = assert(R.entry_C.area)
@@ -3408,11 +3466,10 @@ dump_seed_list("grown seeds", seeds)
       Simple_connect_all_areas(R)
     else
       Areas_create_with_patterns(R)
---      Areas_height_realization(R)
---      Areas_chunk_it_up_baby(R)
+      Areas_height_realization(R)
+      Areas_chunk_it_up_baby(R)
     end
 
---[[
     finish_heights(R)
 
     if R.kind != "cave" then
@@ -3421,7 +3478,6 @@ dump_seed_list("grown seeds", seeds)
 
     outgoing_heights(R)
     crossover_room(R)
---]]
   end
 
 
