@@ -1811,8 +1811,7 @@ end
 
 
 function Areas_create_with_patterns(R)
-  local max_areas
-
+  local num_vhr
   local min_vhr
   local max_vhr
 
@@ -1824,16 +1823,16 @@ function Areas_create_with_patterns(R)
 
   local function number_of_areas()
     -- determine maximum # of areas
-    max_area = int(1 + (R.svolume ^ 0.5) / 2)
-    if max_area < 1 then max_area = 1 end
-    if max_area > 9 then max_area = 9 end
+    num_vhr = int(1 + (R.svolume ^ 0.5) / 2)
+    if num_vhr < 1 then num_vhr = 1 end
+    if num_vhr > 9 then num_vhr = 9 end
 
     if R.crossover_hall then
-      max_area = math.min(max_area, 7)
+      num_vhr = math.min(num_vhr, 7)
     end
 
-    min_vhr = 5 - int(max_area / 2)
-    max_vhr = min_vhr + max_area - 1
+    min_vhr = 5 - int(num_vhr / 2)
+    max_vhr = min_vhr + num_vhr - 1
   end
 
 
@@ -1935,6 +1934,9 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
           if dir == 8 then G.sy2 = K2.sy2 end
         end
       end
+
+      -- determine size
+      G.sw, G.sh = geom.group_size(G.sx1, G.sy1, G.sx2, G.sy2)
 
       verify_grid(G)
     end end
@@ -2065,14 +2067,64 @@ Areas_dump_vhr(R)
   end
 
 
-  local function symmetry_match(pat, axis)
-    return (pat.symmetry == axis) or (pat.symmetry == "xy")
+  -------- PATTERN STUFF --------->>
+
+
+  local function str_size(s)
+    local size = 0
+
+    for i = 1,#s do
+      local ch = string.sub(s, i, i)
+      size = size + (0 + ch)
+    end
+
+    return size
   end
 
 
-  local function matching_sizes(...)
-    -- FIXME !!!
-    return { }
+  local function set_pattern_min_max(pat)
+    if not pat.min_size then
+      local min_size =  999
+      local max_size = -999
+
+      for pass = 1,2 do
+        local sizes = (pass == 1 ? pat.x_sizes ; pat.y_sizes)
+        
+        each s in sizes do
+          local w = str_size(s)
+
+          min_size = math.min(min_size, w)
+          max_size = math.max(max_size, w)
+        end
+      end
+
+      assert(min_size <= max_size)
+
+      pat.min_size = min_size
+      pat.max_size = max_size
+    end
+
+-- gui.debugf("MIN_MAX of %s = %d..%d\n", pat.name, pat.min_size, pat.max_size)
+
+    return pat.min_size, pat.max_size
+  end
+
+
+  local function matching_sizes(sizes, w)
+    local list = {}
+    
+    each s in sizes do
+      if str_size(s) == w then
+        table.insert(list, s)
+      end
+    end
+
+    return list
+  end
+
+
+  local function symmetry_match(pat, axis)
+    return (pat.symmetry == axis) or (pat.symmetry == "xy")
   end
 
 
@@ -2091,16 +2143,13 @@ Areas_dump_vhr(R)
 
 
   local function try_pattern(G, pat)
-    -- FIXME !!!
-
-    local sw, sh = geom.group_size(G.sx1, G.sy1, G.sx2, G.sy2)
 
     for transpose = 0, 1 do
     
       TR.transpose = (transpose == 1)
 
-      TR.long = (TR.transpose ? sh ; sw)
-      TR.deep = (TR.transpose ? sh ; sw)
+      TR.long = (TR.transpose ? G.sh ; G.sw)
+      TR.deep = (TR.transpose ? G.sh ; G.sw)
 
       each x_size in matching_sizes(pat.x_sizes, TR.long) do
       each y_size in matching_sizes(pat.y_sizes, TR.deep) do
@@ -2139,17 +2188,21 @@ Areas_dump_vhr(R)
     if pat.room_kind and pat.room_kind != R.kind then return -1 end
 
     -- 3D check
-    -- FIXME: if pat.overlap and not (3D GAME) then return -1 end
+    if pat.overlap and not PARAM.extra_floors then return -1 end
 
     -- basic size check
-    -- FIXME !!
+    set_pattern_min_max(pat)
 
-    if pat.extender and g_used == 0 then return -1 end
+    if pat.min_size > math.max(G.sw, G.sh) then return -1 end
+    if pat.max_size < math.min(G.sw, G.sh) then return -1 end
 
-    -- TODO: symmetry tests
+    -- check number of areas
+    if pat["area" .. (num_vhr + 1)] then return -1 end
 
     -- nothing to extend?
     if pat.extender and g_used == 0 then return -1 end
+
+    -- TODO: symmetry tests
 
     local prob = pat.prob or 50
 
