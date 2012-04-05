@@ -2094,16 +2094,16 @@ Areas_dump_vhr(R)
     local AREA = get_PLAIN_area(G)
     local v = AREA.vhr
 
-    for sx = G.sx1, G.sx2 do
-      for sy = G.sy1, G.sy2 do
+    for x = G.sx1, G.sx2 do
+    for y = G.sy1, G.sy2 do
+      local S = SEEDS[x][y]
 
-        local S = SEEDS[sx][sy]
-        assert(S.room == R)
-        assert(not S.void)
-        assert(not S.v_areas[v])
+      assert(S.room == R)
+      assert(not S.void)
+      assert(not S.v_areas[v])
 
-        S.v_areas[v] = AREA
-      end
+      S.v_areas[v] = AREA
+    end
     end
   end
 
@@ -2250,16 +2250,22 @@ Areas_dump_vhr(R)
 
         local ELEM = { ch = morph_char(ch) }
 
+        local base_x = str_pos_at(x_size, x)
+        local base_y = str_pos_at(y_size, y)
+
         for dx = 0, str_pos_size(x_size, x) - 1 do
         for dy = 0, str_pos_size(y_size, y) - 1 do
          
             -- target coordinates
-            local tx = str_pos_at(x_size, x) + dx
-            local ty = str_pos_at(y_size, y) + dy
+            local tx = base_x + dx
+            local ty = base_y + dy
 
             tx, ty = morph_coord(tx, ty)
 
-            assert(geom.inside_box(tx, ty, G.sx1,G.sy1, G.sx2,G.sy2))
+            -- validation
+            local sx = G.sx1 + tx - 1
+            local sy = G.sy1 + ty - 1
+            assert(geom.inside_box(sx, sy, G.sx1,G.sy1, G.sx2,G.sy2))
 
             TR[name][tx][ty] = ELEM
         end
@@ -2272,13 +2278,52 @@ Areas_dump_vhr(R)
   end
 
 
-  local function test_or_install_pattern(G, info, DO_IT)
+  local function test_or_install_pattern(G, pat, DO_IT)
 
     -- NOTE: must check chunks (require same area on chunk, don't put void on chunks), 
-                                
-    -- FIXME !!!
 
-    return false 
+    for ar_index = 1, pat.num_areas do
+      local structure = TR["area" .. ar_index]
+      assert(structure)
+
+      local v = min_vhr + ar_index - 1  -- FIXME !!!!! TEMP SHITE
+      
+      -- FIXME: extend areas from neighbor grid spots !!!!!!
+      local AREA
+      if DO_IT then
+        AREA = AREA_CLASS.new("floor", R)
+        AREA.vhr = v
+        AREA.touching = {}     -- FIXME: never updated
+
+        table.insert(R.areas, AREA)
+      end
+
+
+      for x = 1, G.sw do
+      for y = 1, G.sh do
+        local ELEM = structure[x][y]
+
+        if ELEM.ch == ' ' then continue end
+
+        local sx = G.sx1 + x - 1
+        local sy = G.sy1 + y - 1
+
+        local S = SEEDS[sx][sy]
+
+        if DO_IT then
+          assert(S.room == R)
+          assert(not S.void)
+          assert(not S.v_areas[v])
+
+          S.v_areas[v] = AREA
+        end
+
+      end
+      end
+
+    end -- ar_index
+
+    return true  -- OK 
   end
 
 
@@ -2289,7 +2334,7 @@ Areas_dump_vhr(R)
       TR.transpose = (transpose == 1)
 
       TR.long = (TR.transpose ? G.sh ; G.sw)
-      TR.deep = (TR.transpose ? G.sh ; G.sw)
+      TR.deep = (TR.transpose ? G.sw ; G.sh)
 
       each x_size in matching_sizes(pat.x_sizes, TR.long) do
       each y_size in matching_sizes(pat.y_sizes, TR.deep) do
@@ -2300,11 +2345,12 @@ Areas_dump_vhr(R)
           TR.x_flip = (x_flip == 1)
           TR.y_flip = (y_flip == 1)
 
-          convert_structure(pat, x_size, y_size)
+          convert_structure(G, pat, x_size, y_size)
 
-          if test_or_install_pattern(xxx, false) then
-             test_or_install_pattern(xxx, true)
-             return true
+          if test_or_install_pattern(G, pat, false) then
+            -- Yay, success
+            test_or_install_pattern(G, pat, true)
+            return true
           end
 
         end -- x_flip
