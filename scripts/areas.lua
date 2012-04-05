@@ -2329,9 +2329,13 @@ Areas_dump_vhr(R)
 
   local function try_pattern(G, pat)
 
+    local t_rand = rand.sel(50, 0, 1)
+    local x_rand = rand.sel(50, 0, 1)
+    local y_rand = rand.sel(50, 0, 1)
+
     for transpose = 0, 1 do
     
-      TR.transpose = (transpose == 1)
+      TR.transpose = (transpose == t_rand)
 
       TR.long = (TR.transpose ? G.sh ; G.sw)
       TR.deep = (TR.transpose ? G.sw ; G.sh)
@@ -2342,8 +2346,8 @@ Areas_dump_vhr(R)
         for x_flip = 0, (symmetry_match(pat, "x") ? 1 ; 0) do
         for y_flip = 0, (symmetry_match(pat, "y") ? 1 ; 0) do
 
-          TR.x_flip = (x_flip == 1)
-          TR.y_flip = (y_flip == 1)
+          TR.x_flip = (x_flip == x_rand)
+          TR.y_flip = (y_flip == y_rand)
 
           convert_structure(G, pat, x_size, y_size)
 
