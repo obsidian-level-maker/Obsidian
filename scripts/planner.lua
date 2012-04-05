@@ -1775,6 +1775,11 @@ function Plan_make_seeds()
 
   ---| Plan_make_seeds |---
 
+  -- meh! (needed since this function is called multiple times)
+  each R in LEVEL.rooms do
+    R.svolume = 0
+  end
+
   for kx = 1,SECTION_W do for ky = 1,SECTION_H do
     fill_section(kx, ky)
   end end
