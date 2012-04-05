@@ -1874,6 +1874,9 @@ function Areas_create_with_patterns(R)
 
     min_vhr = 5 - int(num_vhr / 2)
     max_vhr = min_vhr + num_vhr - 1
+
+gui.debugf("number_of_areas @ %s svol:%d --> %d [VHR %d .. %d]\n",
+           R:tostr(), R.svolume, num_vhr, min_vhr, max_vhr)
   end
 
 
@@ -2282,26 +2285,52 @@ Areas_dump_vhr(R)
   end
 
 
+  local function rand_vhr_list(pat)
+    local list = {}
+
+    local low  = min_vhr
+    local high = max_vhr - pat.num_areas + 1
+
+    assert(high >= low)  -- ensured by can_use_pat()
+
+    for i = low, high do
+      table.insert(list, i)
+    end
+
+    rand.shuffle(list)
+
+    return list
+  end
+
+
   local function test_or_install_pattern(G, pat, mode)
 
-    each C in G.chunks do
-      C.poss_vhrs = {}
+stderrf("test_or_install_pattern: %s %s\n", mode, pat.name)
+    local vhr_areas = {}
+
+    if mode == "test" then
+      each C in G.chunks do
+        C.poss_vhrs = {}
+      end
     end
 
     for ar_index = 1, pat.num_areas do
       local structure = TR["area" .. ar_index]
       assert(structure)
 
-      local v = min_vhr + ar_index - 1  -- FIXME !!!!! TEMP SHITE
+      local v = TR.base_vhr + ar_index - 1
       
       -- FIXME: extend areas from neighbor grid spots !!!!!!
       local AREA
+
       if mode == "install" then
         AREA = AREA_CLASS.new("floor", R)
         AREA.vhr = v
         AREA.touching = {}     -- FIXME: never updated
 
         table.insert(R.areas, AREA)
+
+        vhr_areas[v] = AREA
       end
 
 
@@ -2327,7 +2356,7 @@ Areas_dump_vhr(R)
       end
       end
 
-      -- chunk handling [require chunk fits in an area, not clobbered by stair or void]
+      -- chunk handling [require chunk fully fits in an area]
       if mode == "test" then
         each C in G.chunks do
 
@@ -2341,8 +2370,11 @@ Areas_dump_vhr(R)
 
             local ELEM = structure[x][y]
 
-            if ELEM.ch != "#" then
+            if ELEM.ch == ' ' then
               ok = false ; break
+
+            elseif ELEM.ch != "#" then
+              return false  -- FAIL, chunk is clobbered (by void etc)
             end
 
           end
@@ -2357,7 +2389,15 @@ Areas_dump_vhr(R)
 
     end -- ar_index
 
-    if mode == "install" then
+
+    if mode == "test" then
+      each C in G.chunks do
+        if table.empty(C.poss_vhrs) then
+          return false  -- FAIL
+        end
+      end
+
+    else -- mode == "install"
       each C in G.chunks do
         local v = rand.pick(C.poss_vhrs)
 
@@ -2377,6 +2417,8 @@ Areas_dump_vhr(R)
     local x_rand = rand.sel(50, 0, 1)
     local y_rand = rand.sel(50, 0, 1)
 
+    local vhr_list = rand_vhr_list(pat)
+
     for transpose = 0, 1 do
     
       TR.transpose = (transpose == t_rand)
@@ -2395,11 +2437,17 @@ Areas_dump_vhr(R)
 
           convert_structure(G, pat, x_size, y_size)
 
-          if test_or_install_pattern(G, pat, "test") then
-            -- Yay, success
-            test_or_install_pattern(G, pat, "install")
-            return true
-          end
+          each vhr in vhr_list do
+
+            TR.base_vhr = vhr
+
+            if test_or_install_pattern(G, pat, "test") then
+              -- Yay, success
+              test_or_install_pattern(G, pat, "install")
+              return true
+            end
+
+          end -- vhr
 
         end -- x_flip
         end -- y_flip
