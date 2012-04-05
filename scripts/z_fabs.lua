@@ -22,6 +22,7 @@ AREA_PATTERNS =
 {
 
 
+--[[
 EXTEND_1 =
 {
   prob = 50
@@ -40,6 +41,7 @@ EXTEND_1 =
 
   symmetry = "x"
 }
+--]]
 
 
 RECT_1 =

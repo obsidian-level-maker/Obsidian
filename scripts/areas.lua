@@ -229,6 +229,47 @@ end
 ----------------------------------------------------------------
 
 
+X_MIRROR_CHARS =
+{
+  ['<'] = '>', ['>'] = '<',
+  ['/'] = '%', ['%'] = '/',
+  ['Z'] = 'N', ['N'] = 'Z',
+  ['L'] = 'J', ['J'] = 'L',
+  ['F'] = 'T', ['T'] = 'F',
+}
+
+Y_MIRROR_CHARS =
+{
+  ['v'] = '^', ['^'] = 'v',
+  ['/'] = '%', ['%'] = '/',
+  ['Z'] = 'N', ['N'] = 'Z',
+  ['L'] = 'F', ['F'] = 'L',
+  ['J'] = 'T', ['T'] = 'J',
+}
+
+TRANSPOSE_DIRS = { 1,4,7,2,5,8,3,6,9 }
+
+TRANSPOSE_CHARS =
+{
+  ['<'] = 'v', ['v'] = '<',
+  ['>'] = '^', ['^'] = '>',
+  ['/'] = 'Z', ['Z'] = '/',
+  ['%'] = 'N', ['N'] = '%',
+  ['-'] = '|', ['|'] = '-',
+  ['!'] = '=', ['='] = '!',
+  ['F'] = 'J', ['J'] = 'F',
+}
+
+STAIR_DIRS =
+{
+  ['<'] = 4, ['>'] = 6,
+  ['v'] = 2, ['^'] = 8,
+}
+
+
+----------------------------------------------------------------
+
+
 function Areas_handle_connections()
 
   -- this creates the connection chunks in each room and hallway
@@ -2070,12 +2111,30 @@ Areas_dump_vhr(R)
   -------- PATTERN STUFF --------->>
 
 
-  local function str_size(s)
+  local function str_pos_size(s, i)
+    local ch = string.sub(s, i, i)
+
+    return 0 + ch
+  end
+
+
+  local function str_pos_at(s, i)
+    local pos = 1
+
+    while i > 1 do
+      i = i - 1
+      pos = pos + str_pos_size(s, i)
+    end
+
+    return pos
+  end
+
+
+  local function str_total_size(s)
     local size = 0
 
     for i = 1,#s do
-      local ch = string.sub(s, i, i)
-      size = size + (0 + ch)
+      size = size + str_pos_size(s, i)
     end
 
     return size
@@ -2083,6 +2142,8 @@ Areas_dump_vhr(R)
 
 
   local function set_pattern_min_max(pat)
+    -- determines number of areas too
+
     if not pat.min_size then
       local min_size =  999
       local max_size = -999
@@ -2091,7 +2152,7 @@ Areas_dump_vhr(R)
         local sizes = (pass == 1 ? pat.x_sizes ; pat.y_sizes)
         
         each s in sizes do
-          local w = str_size(s)
+          local w = str_total_size(s)
 
           min_size = math.min(min_size, w)
           max_size = math.max(max_size, w)
@@ -2102,6 +2163,12 @@ Areas_dump_vhr(R)
 
       pat.min_size = min_size
       pat.max_size = max_size
+
+      pat.num_areas = 1
+
+      while pat["area" .. (pat.num_areas + 1)] do
+        pat.num_areas = pat.num_areas + 1
+      end
     end
 
 -- gui.debugf("MIN_MAX of %s = %d..%d\n", pat.name, pat.min_size, pat.max_size)
@@ -2114,7 +2181,7 @@ Areas_dump_vhr(R)
     local list = {}
     
     each s in sizes do
-      if str_size(s) == w then
+      if str_total_size(s) == w then
         table.insert(list, s)
       end
     end
@@ -2130,6 +2197,79 @@ Areas_dump_vhr(R)
 
   -- current transform
   local TR = {}
+
+
+  local function morph_coord(x, y)
+    if TR.x_flip then x = TR.long - x + 1 end
+    if TR.y_flip then y = TR.deep - y + 1 end
+
+    if TR.transpose then return y, x end
+
+    return x, y
+  end
+
+  local function morph_dir(dir)
+    if TR.x_flip and is_horiz(dir) then dir = 10-dir end
+    if TR.y_flip and is_vert(dir)  then dir = 10-dir end
+
+    if TR.transpose then dir = TRANSPOSE_DIRS[dir] end
+
+    return dir
+  end
+
+  local function morph_char(ch)
+    if TR.x_flip then ch = X_MIRROR_CHARS[ch] or ch end
+    if TR.y_flip then ch = Y_MIRROR_CHARS[ch] or ch end
+
+    if TR.transpose then ch = TRANSPOSE_CHARS[ch] or ch end
+
+    return ch
+  end
+
+
+  local function convert_structure(G, pat, x_size, y_size)
+    local stru_w = #x_size
+    local stru_h = #y_size
+
+    for ar_index = 1, pat.num_areas do
+      local name = "area" .. ar_index
+      local structure = pat[name]
+
+      TR[name] = table.array_2D(G.sw, G.sh)
+
+      -- source coordinates
+      for x = 1, stru_w do
+      for y = 1, stru_h do
+
+        local line = structure[stru_h + 1 - y]
+        if not line or #line != stru_w then
+          error("bad structure in z_fab: " .. pat.name)
+        end
+
+        local ch = string.sub(line, x, x)
+
+        local ELEM = { ch = morph_char(ch) }
+
+        for dx = 0, str_pos_size(x_size, x) - 1 do
+        for dy = 0, str_pos_size(y_size, y) - 1 do
+         
+            -- target coordinates
+            local tx = str_pos_at(x_size, x) + dx
+            local ty = str_pos_at(y_size, y) + dy
+
+            tx, ty = morph_coord(tx, ty)
+
+            assert(geom.inside_box(tx, ty, G.sx1,G.sy1, G.sx2,G.sy2))
+
+            TR[name][tx][ty] = ELEM
+        end
+        end -- dx, dy
+
+      end
+      end  -- x, y
+
+    end  -- ar_index
+  end
 
 
   local function test_or_install_pattern(G, info, DO_IT)
