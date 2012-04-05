@@ -2105,6 +2105,10 @@ Areas_dump_vhr(R)
       S.v_areas[v] = AREA
     end
     end
+
+    each C in G.chunks do
+      AREA:add_chunk(C)
+    end
   end
 
 
@@ -2278,9 +2282,11 @@ Areas_dump_vhr(R)
   end
 
 
-  local function test_or_install_pattern(G, pat, DO_IT)
+  local function test_or_install_pattern(G, pat, mode)
 
-    -- NOTE: must check chunks (require same area on chunk, don't put void on chunks), 
+    each C in G.chunks do
+      C.poss_vhrs = {}
+    end
 
     for ar_index = 1, pat.num_areas do
       local structure = TR["area" .. ar_index]
@@ -2290,7 +2296,7 @@ Areas_dump_vhr(R)
       
       -- FIXME: extend areas from neighbor grid spots !!!!!!
       local AREA
-      if DO_IT then
+      if mode == "install" then
         AREA = AREA_CLASS.new("floor", R)
         AREA.vhr = v
         AREA.touching = {}     -- FIXME: never updated
@@ -2310,7 +2316,7 @@ Areas_dump_vhr(R)
 
         local S = SEEDS[sx][sy]
 
-        if DO_IT then
+        if mode == "install" then
           assert(S.room == R)
           assert(not S.void)
           assert(not S.v_areas[v])
@@ -2321,7 +2327,45 @@ Areas_dump_vhr(R)
       end
       end
 
+      -- chunk handling [require chunk fits in an area, not clobbered by stair or void]
+      if mode == "test" then
+        each C in G.chunks do
+
+          local ok = true
+
+          for sx = C.sx1, C.sx2 do
+          for sy = C.sy1, C.sy2 do
+            
+            local x = sx - G.sx1 + 1
+            local y = sy - G.sy1 + 1
+
+            local ELEM = structure[x][y]
+
+            if ELEM.ch != "#" then
+              ok = false ; break
+            end
+
+          end
+          end
+
+          if ok then
+            table.insert(C.poss_vhrs, v)
+          end
+
+        end
+      end
+
     end -- ar_index
+
+    if mode == "install" then
+      each C in G.chunks do
+        local v = rand.pick(C.poss_vhrs)
+
+        local AREA = assert(vhr_areas[v])
+
+        AREA:add_chunk(C)
+      end
+    end
 
     return true  -- OK 
   end
@@ -2351,9 +2395,9 @@ Areas_dump_vhr(R)
 
           convert_structure(G, pat, x_size, y_size)
 
-          if test_or_install_pattern(G, pat, false) then
+          if test_or_install_pattern(G, pat, "test") then
             -- Yay, success
-            test_or_install_pattern(G, pat, true)
+            test_or_install_pattern(G, pat, "install")
             return true
           end
 
@@ -2468,7 +2512,8 @@ stderrf("fill_a_spot @ (%d %d)\n", G.gx, G.gy)
 
   Areas_dump_vhr(R)
 
-  Areas_assign_chunks_to_vhrs(R)
+  -- DONT NEED THIS (we assign chunks when installing the pattern)
+  -- Areas_assign_chunks_to_vhrs(R)
 end
 
 
