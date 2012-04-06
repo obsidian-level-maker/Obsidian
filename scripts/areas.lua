@@ -2645,8 +2645,8 @@ function Areas_height_realization(R)
   assign_floor(base_v, R.entry_h)
 
   for i = 1,9 do
-    assign_floor(base_v + i, R.entry_h + i * 128)
-    assign_floor(base_v - i, R.entry_h - i * 128)
+    assign_floor(base_v + i, R.entry_h + i * 64)
+    assign_floor(base_v - i, R.entry_h - i * 64)
   end
 
   -- ceilings too

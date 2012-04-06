@@ -71,7 +71,7 @@ RECT_1 =
 
 RECT_2 =
 {
-  prob = 50
+  prob = 20
 
   area1 =
   {
