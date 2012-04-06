@@ -1922,6 +1922,8 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
         if S.room != R then
           error("grid cell overflowed @ " .. S:tostr())
         end
+
+        S.grid = G
       end
     end
   end
@@ -2305,14 +2307,17 @@ Areas_dump_vhr(R)
 
   local function test_or_install_pattern(G, pat, mode)
 
-stderrf("test_or_install_pattern: %s %s\n", mode, pat.name)
+-- stderrf("test_or_install_pattern: %s %s\n", mode, pat.name)
     local vhr_areas = {}
 
     if mode == "test" then
+      G.link_areas = {}  -- table [VHR] : list(AREA)
+
       each C in G.chunks do
         C.poss_vhrs = {}
       end
     end
+
 
     for ar_index = 1, pat.num_areas do
       local structure = TR["area" .. ar_index]
@@ -2320,15 +2325,18 @@ stderrf("test_or_install_pattern: %s %s\n", mode, pat.name)
 
       local v = TR.base_vhr + ar_index - 1
       
-      -- FIXME: extend areas from neighbor grid spots !!!!!!
       local AREA
 
       if mode == "install" then
-        AREA = AREA_CLASS.new("floor", R)
-        AREA.vhr = v
-        AREA.touching = {}     -- FIXME: never updated
+        if G.link_areas[v] then
+          AREA = rand.pick(G.link_areas[v])  -- TODO : evaluate them (e.g. pick smallest)
+        else
+          AREA = AREA_CLASS.new("floor", R)
+          AREA.vhr = v
+          AREA.touching = {}     -- FIXME: never updated
 
-        table.insert(R.areas, AREA)
+          table.insert(R.areas, AREA)
+        end
 
         vhr_areas[v] = AREA
       end
@@ -2351,6 +2359,22 @@ stderrf("test_or_install_pattern: %s %s\n", mode, pat.name)
           assert(not S.v_areas[v])
 
           S.v_areas[v] = AREA
+        end
+
+        -- see what neighboring areas we can link with
+        if mode == "test" then
+          for dir = 2,8,2 do
+            local N = S:neighbor(dir)
+            if not (N and N.room == R) then continue end
+            if N.void then continue end
+            if not (N.grid and N.grid.used) then continue end
+            assert(N.grid != G)
+            
+            if N.v_areas[v] then
+              if not G.link_areas[v] then G.link_areas[v] = {} end
+              table.add_unique(G.link_areas[v], N.v_areas[v])
+            end
+          end
         end
 
       end
@@ -2388,6 +2412,14 @@ stderrf("test_or_install_pattern: %s %s\n", mode, pat.name)
       end
 
     end -- ar_index
+
+
+    -- nothing to link with?
+    if mode == "test" then
+      if g_used > 0 and table.empty(G.link_areas) then
+        return false -- FAIL
+      end
+    end
 
 
     if mode == "test" then
