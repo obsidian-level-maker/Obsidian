@@ -1862,9 +1862,6 @@ function Areas_create_with_patterns(R)
   local min_vhr
   local max_vhr
 
-  local grid
-
-  local g_total
   local g_used
 
 
@@ -1886,34 +1883,6 @@ gui.debugf("number_of_areas @ %s svol:%d --> %d [VHR %d .. %d]\n",
   end
 
 
-  local function grid_neighbor(G, dir)
-    local nx, ny = geom.nudge(G.gx, G.gy, dir)
-
-    if nx < 1 or ny < 1 or nx > grid.w or ny > grid.h then return nil end
-
-    return grid[nx][ny]
-  end
-
-
-  local function grid_for_box(sx1, sy1, sx2, sy2)
-    for mx = 1,MAP_W do
-      for my = 1,MAP_H do
-        local G = grid[mx][my]
-
-        if not G then continue end
-
-        if G.sx1 <= sx1 and sx2 <= G.sx2 and
-           G.sy1 <= sy1 and sy2 <= G.sy2
-        then
-          return G
-        end
-      end
-    end
-
-    return nil  -- stray chunk
-  end
-
-
   local function can_alloc_grid(sx1, sy1, sx2, sy2)
     if not Seed_valid(sx1, sy1) or
        not Seed_valid(sx2, sy2)
@@ -1921,14 +1890,23 @@ gui.debugf("number_of_areas @ %s svol:%d --> %d [VHR %d .. %d]\n",
       return false
     end
 
-    for sx = G.sx1, G.sx2 do
-      for sy = G.sy1, G.sy2 do
+    for sx = sx1, sx2 do
+      for sy = sy1, sy2 do
         local S = SEEDS[sx][sy]
 
         if S.room != R or S.grid or S.void then
           return false
         end
       end
+    end
+
+    -- look for chunks which overlap the box (some inside and some outside)
+    each C in R.chunks do
+      if C.sx2 < sx1 or C.sx1 > sx2 then continue end
+      if C.sy2 < sy1 or C.sy1 > sy2 then continue end
+
+      if C.sx1 < sx1 or C.sx2 > sx2 then return false end
+      if C.sy1 < sy1 or C.sy2 > sy2 then return false end
     end
 
     return true
@@ -1959,19 +1937,15 @@ gui.debugf("number_of_areas @ %s svol:%d --> %d [VHR %d .. %d]\n",
       end
     end
 
---FIXME
---[[
     -- collect chunks
     each C in R.chunks do
-      local G = grid_for_box(C.sx1, C.sy1, C.sx2, C.sy2)
+      if C.sx2 < sx1 or C.sx1 > sx2 then continue end
+      if C.sy2 < sy1 or C.sy1 > sy2 then continue end
 
-      if G then
-        table.insert(G.chunks, C)
-      else
-        --???  FIXME
-      end
+      table.insert(G.chunks, C)
+
+      C.grid = G
     end
---]]
 
     return G
   end
@@ -2019,9 +1993,47 @@ gui.debugf("number_of_areas @ %s svol:%d --> %d [VHR %d .. %d]\n",
 
     --- step 2 : turn any remaining spaces into grids ---
 
+    each C in R.chunks do
+      if not C.scenic and not C.grid then
+        assert(can_alloc_grid(C.sx1, C.sy1, C.sx2, C.sy2))
+        C.grid = alloc_grid(C.sx1, C.sy1, C.sx2, C.sy2)
+
+        table.insert(C.grid.chunks, C)
+      end
+    end
+
     for sx = R.sx1, R.sx2 do
       for sy = R.sy1, R.sy2 do
-        -- FIXME
+        local S = SEEDS[sx][sy]
+
+        if S.room != R then continue end
+        if S.void then continue end
+
+        -- already allocated?
+        if S.grid then continue end
+
+        local sx1, sy1 = sx, sy
+        local sx2, sy2 = sx, sy
+
+        -- try to expand on each four sides, upto 4 times
+        for loop = 1,4 do
+          for dir = 2,8,2 do
+            local tx1, ty1 = sx1, sy1
+            local tx2, ty2 = sx2, sy2
+
+            if dir == 2 then ty1 = ty1 - 1 end
+            if dir == 8 then ty2 = ty2 + 1 end
+            if dir == 4 then tx1 = tx1 - 1 end
+            if dir == 6 then tx2 = tx2 + 1 end
+
+            if can_alloc_grid(tx1, ty1, tx2, ty2) then
+              sx1, sy1 = tx1, ty1
+              sx2, sy2 = tx2, ty2
+            end
+          end
+        end
+
+        alloc_grid(sx1, sy1, sx2, sy2)
       end
     end
   end
@@ -2600,7 +2612,6 @@ Areas_dump_vhr(R)
   local function fill_a_spot()
     local G = find_free_spot()
 
-stderrf("fill_a_spot @ (%d %d)\n", G.gx, G.gy)
     if not pick_a_pattern(G) then
       install_PLAIN(G)
     end
@@ -2615,9 +2626,9 @@ stderrf("fill_a_spot @ (%d %d)\n", G.gx, G.gy)
 
   number_of_areas()
   
-  create_grid()
+  create_grids()
 
-  while g_used < g_total do
+  while g_used < #R.grids do
     fill_a_spot()
   end
 
