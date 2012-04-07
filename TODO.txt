@@ -15,12 +15,36 @@ Current Work
     i.e. they are mutually exclusive
 
 
-+  mini hall 'outdoors = nn' field (can be 0, 1 or 2 --> number of rooms)
++  mini hall room connection control:
+      _num_outdoor  = 0 / 1 / 2
+      _num_building = 0 / 1 / 2
+      _num_cave     = 0 / 1 / 2
+
+      Hmmm, same as _outdoor = 0/1, _building = 0/1 etc ??
 
 
 PATTERN AREA LOGIC:
 
+!!  de-grid-ify latest logic
+    Instead: any part of a room can be a "grid" (including a single seed)
+             and can find grid via SEED.grid field
+             automatically handle grids < 3x3 in size as "PLAIN"
+
+    ALSO: create chunks when installing a pattern (or "PLAIN")
+
+!!!  stairs
+
++  allow the two area creation methods to co-exist, the grid system
+   can take over after e.g. doing a bunch of try_XXX stuff.
+
+   [YES! : grid system replaces the grow_random stuff]
+
+
 >>>  ability to test and install patterns
+
+??  when chunk positioning fails, no need to try other VHRs
+
++  support the "anchor" table
 
 
 
