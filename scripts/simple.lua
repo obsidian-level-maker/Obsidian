@@ -565,8 +565,6 @@ step:dump("Step:")
       else
         local AREA = AREA_CLASS.new("floor", R) 
 
-        AREA.touching = {}
-
         table.insert(R.areas, AREA)
 
         AREA.floor_map = step

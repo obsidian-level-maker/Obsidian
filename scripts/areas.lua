@@ -34,7 +34,7 @@ class AREA
 
   size : number of seeds occupied
 
-  touching : list(AREA)
+  touching : list(AREA)   -- NOTE: only used by cave code ATM
 
   floor_h  -- floor height
 
@@ -48,7 +48,14 @@ class AREA
 AREA_CLASS = {}
 
 function AREA_CLASS.new(kind, room)
-  local A = { kind=kind, id=Plan_alloc_id("area"), room=room, chunks={} }
+  local A =
+  {
+    id = Plan_alloc_id("area")
+    kind = kind
+    room = room
+    chunks = {}
+    touching = {}
+  }
   table.set_class(A, AREA_CLASS)
   return A
 end
@@ -1141,7 +1148,6 @@ function Areas_create_all_areas(R)
 
     AREA.vhr = v
     AREA.size = area_size
-    AREA.touching = {}     -- FIXME: never updated
 
     table.insert(R.areas, AREA)
 
@@ -2053,8 +2059,6 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
 
       AREA.vhr = rand.irange(min_vhr, max_vhr)
 
-      AREA.touching = {}     -- FIXME: never updated
-
       table.insert(R.areas, AREA)
 
       return AREA
@@ -2333,7 +2337,6 @@ Areas_dump_vhr(R)
         else
           AREA = AREA_CLASS.new("floor", R)
           AREA.vhr = v
-          AREA.touching = {}     -- FIXME: never updated
 
           table.insert(R.areas, AREA)
         end
@@ -3820,21 +3823,6 @@ dump_seed_list("grown seeds", seeds)
     end
     
     local tab = table.copy(source)
-
-    -- try hard to prevent two touching areas from having the same floor
-    each name,prob in source do
-      local used = false
-
-      each A2 in A.touching do
-        if A2.floor_mat == name then
-          used = true ; break
-        end
-      end
-
-      if used then
-        tab[name] = tab[name] / 100
-      end
-    end
 
     A.floor_mat = rand.key_by_probs(tab)
   end
