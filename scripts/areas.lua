@@ -1914,85 +1914,53 @@ gui.debugf("number_of_areas @ %s svol:%d --> %d [VHR %d .. %d]\n",
   end
 
 
-  local function verify_grid(G)
-    assert(Seed_valid(G.sx1, G.sy1))
-    assert(Seed_valid(G.sx2, G.sy2))
-
-stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
-        G.gx, G.gy, R:tostr(),  G.sx1, G.sy1, G.sx2, G.sy2)
+  local function can_alloc_grid(sx1, sy1, sx2, sy2)
+    if not Seed_valid(sx1, sy1) or
+       not Seed_valid(sx2, sy2)
+    then
+      return false
+    end
 
     for sx = G.sx1, G.sx2 do
       for sy = G.sy1, G.sy2 do
         local S = SEEDS[sx][sy]
 
-        if S.room != R then
-          error("grid cell overflowed @ " .. S:tostr())
+        if S.room != R or S.grid or S.void then
+          return false
         end
+      end
+    end
+
+    return true
+  end
+
+
+  local function alloc_grid(sx1, sy1, sx2, sy2)
+    local G =
+    {
+      sx1 = sx1 , sy1 = sy1
+      sx2 = sx2 , sy2 = sy2
+
+      chunks = {}
+    }
+
+    -- determine size
+    G.sw, G.sh = geom.group_size(G.sx1, G.sy1, G.sx2, G.sy2)
+
+    -- add to room
+    table.insert(R.grids, G)
+
+    -- update seeds
+    for sx = G.sx1, G.sx2 do
+      for sy = G.sy1, G.sy2 do
+        local S = SEEDS[sx][sy]
 
         S.grid = G
       end
     end
-  end
 
-
-  local function create_grid()
-    -- subdivide room into an MxN grid of areas
-    
-    grid = table.array_2D(MAP_W, MAP_H)
-
-    g_total = 0
-    g_used  = 0
-
-    for mx = 1,MAP_W do for my = 1,MAP_H do
-      local K = SECTIONS[mx*2][my*2]
-
-      if K.room != R then continue end
-
-      grid[mx][my] =
-      {
-        gx = mx ; gy = my
-
-        K = K
-
-        sx1 = K.sx1 ; sy1 = K.sy1
-        sx2 = K.sx2 ; sy2 = K.sy2
-
-        chunks = {}
-        strays = {}
-      }
-
-      g_total = g_total + 1
-    end end
-
-    -- close gaps between neighbors (the reclaimed VERT/HORIZ/JUNC sections)
-
-    for mx = 1,MAP_W do for my = 1,MAP_H do
-      local G = grid[mx][my]
-
-      if not G then continue end
-
-      for dir = 2,8,2 do
-        local N  = grid_neighbor(G, dir)
-        local K2 = G.K:neighbor(dir)
-
-        if N and dir == 6 then G.sx2 = N.sx1 - 1 end
-        if N and dir == 8 then G.sy2 = N.sy1 - 1 end
-
-        if not N and K2 and K2.room == R then
-          if dir == 4 then G.sx1 = K2.sx1 end
-          if dir == 6 then G.sx2 = K2.sx2 end
-
-          if dir == 2 then G.sy1 = K2.sy1 end
-          if dir == 8 then G.sy2 = K2.sy2 end
-        end
-      end
-
-      -- determine size
-      G.sw, G.sh = geom.group_size(G.sx1, G.sy1, G.sx2, G.sy2)
-
-      verify_grid(G)
-    end end
-
+--FIXME
+--[[
     -- collect chunks
     each C in R.chunks do
       local G = grid_for_box(C.sx1, C.sy1, C.sx2, C.sy2)
@@ -2003,19 +1971,97 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
         --???  FIXME
       end
     end
+--]]
 
+    return G
   end
 
 
-  local function assign_stray_seeds()
-    -- some seeds may not be covered by the grid.
-    -- they will be copied from a nearby grid seed.
+  local function create_grids()
+    R.grids = {}
 
-    -- here we figure out which part of the grid they should copy.
+    g_used  = 0
 
-    -- FIXME
+    --- step 1 : create grids from sections ---
 
-    -- NOTE TOO : "stray chunks" are possible, handle it
+    each K in R.sections do
+      if K.orig_kind != "section" then continue end
+
+      if K.room != R then continue end
+
+      local sx1, sy1 = K.sx1, K.sy1
+      local sx2, sy2 = K.sx2, K.sy2
+
+      if not can_alloc_grid(sx1, sy1, sx2, sy2) then continue end
+
+      -- try to expand on each four sides
+      -- (deliberately NOT randomised here)
+
+      for dir = 2,8,2 do
+        local tx1, ty1 = sx1, sy1
+        local tx2, ty2 = sx2, sy2
+
+        if dir == 2 then ty1 = ty1 - 1 end
+        if dir == 8 then ty2 = ty2 + 1 end
+        if dir == 4 then tx1 = tx1 - 1 end
+        if dir == 6 then tx2 = tx2 + 1 end
+
+        if can_alloc_grid(tx1, ty1, tx2, ty2) then
+          sx1, sy1 = tx1, ty1
+          sx2, sy2 = tx2, ty2
+        end
+      end
+
+      local G = alloc_grid(sx1, sy1, sx2, sy2)
+
+      G.section = K
+    end
+
+    --- step 2 : turn any remaining spaces into grids ---
+
+    for sx = R.sx1, R.sx2 do
+      for sy = R.sy1, R.sy2 do
+        -- FIXME
+      end
+    end
+  end
+
+
+  local function valid_and_used(sx, sy)
+    if not Seed_valid(sx, sy) then
+      return false
+    end
+
+    local S = SEEDS[sx][sy]
+
+    if S.room != R then return false end
+
+    if not S.grid then return false end
+
+    return S.grid.used
+  end
+
+
+  local function used_grid_neighbors(G)
+    local count = 0
+
+    for pass = 1,2 do
+      for sx = G.sx1, G.sx2 do
+        local sy = (pass == 1 ? G.sy1 - 1 ; G.sy2 + 1)
+        if valid_and_used(sx, sy) then
+          count = count + 1
+        end
+      end
+
+      for sy = G.sy1, G.sy2 do
+        local sx = (pass == 1 ? G.sx1 - 1 ; G.sx2 + 1)
+        if valid_and_used(sx, sy) then
+          count = count + 1
+        end
+      end
+    end
+
+    return count
   end
 
 
@@ -2025,29 +2071,21 @@ stderrf("Grid[%d %d] in %s = (%d %d) .. (%d %d)\n",
     local best
     local best_score
 
-    for mx = 1,MAP_W do for my = 1,MAP_H do
-      local G = grid[mx][my]
-
-      if not G then continue end
-
+    each G in R.grids do
+      if not G  then continue end
       if G.used then continue end
 
-      local score = gui.random()
+      local score = used_grid_neighbors(G)
 
-      for dir = 2,8,2 do
-        local N = grid_neighbor(G, dir)
+      if score > 6 then score = 6 end
 
-        if N and N.used then
-          score = score + 10
-          break
-        end
-      end
+      score = score + gui.random()
 
       if not best or score > best_score then
         best = G
         best_score = score
       end
-    end end
+    end
     
     return assert(best)
   end
@@ -2559,13 +2597,6 @@ Areas_dump_vhr(R)
   end
 
 
-  local function update_strays(G)
-    each S in G.strays do
-      -- FIXME
-    end
-  end
-
-
   local function fill_a_spot()
     local G = find_free_spot()
 
@@ -2573,8 +2604,6 @@ stderrf("fill_a_spot @ (%d %d)\n", G.gx, G.gy)
     if not pick_a_pattern(G) then
       install_PLAIN(G)
     end
-
-    update_strays(G)
 
     G.used = true
 
@@ -2587,7 +2616,6 @@ stderrf("fill_a_spot @ (%d %d)\n", G.gx, G.gy)
   number_of_areas()
   
   create_grid()
-  assign_stray_seeds()
 
   while g_used < g_total do
     fill_a_spot()
