@@ -2189,13 +2189,9 @@ Areas_dump_vhr(R)
       if sw == 2 and sh == 2 and SEEDS[x+1][y+1].chunk then sh = 1 end 
 
       local C = CHUNK_CLASS.new(x, y, sx + sw - 1, sy + sh - 1)
-
       C:set_coords()
-
       if S:above_vhr(AREA.vhr) then C.no_ceil = true end
-
       AREA:add_chunk(C)
-
       C.room = R ; table.insert(R.chunks, C)
 
       -- mark seeds
@@ -2350,17 +2346,20 @@ Areas_dump_vhr(R)
 
         local ch = string.sub(line, x, x)
 
-        local ELEM = { ch = morph_char(ch) }
+        local elem_x = str_pos_at(x_size, x)
+        local elem_y = str_pos_at(y_size, y)
 
-        local base_x = str_pos_at(x_size, x)
-        local base_y = str_pos_at(y_size, y)
+        local elem_w = str_pos_size(x_size, x)
+        local elem_h = str_pos_size(y_size, y)
 
-        for dx = 0, str_pos_size(x_size, x) - 1 do
-        for dy = 0, str_pos_size(y_size, y) - 1 do
+        local ELEM = { ch = morph_char(ch), w = elem_w, h = elem_h }
+
+        for dx = 0, elem_w - 1 do
+        for dy = 0, elem_h - 1 do
          
             -- target coordinates
-            local tx = base_x + dx
-            local ty = base_y + dy
+            local tx = elem_x + dx
+            local ty = elem_y + dy
 
             tx, ty = morph_coord(tx, ty)
 
@@ -2401,13 +2400,20 @@ Areas_dump_vhr(R)
   local function test_or_install_pattern(G, pat, mode)
 
 -- stderrf("test_or_install_pattern: %s %s\n", mode, pat.name)
-    local vhr_areas = {}
 
     if mode == "test" then
       G.link_areas = {}  -- table [VHR] : list(AREA)
 
       each C in G.chunks do
         C.poss_vhrs = {}
+      end
+    end
+
+    -- need to decide _now_ the VHR where existing chunks will go
+    -- (so we know where new chunks can be created)
+    if mode == "install" then
+      each C in G.chunks do
+        C.vhr = rand.pick(C.poss_vhrs)
       end
     end
 
@@ -2430,7 +2436,11 @@ Areas_dump_vhr(R)
           table.insert(R.areas, AREA)
         end
 
-        vhr_areas[v] = AREA
+        each C in G.chunks do
+          if C.vhr == v then
+            AREA:add_chunk(C)
+          end
+        end
       end
 
 
@@ -2445,13 +2455,44 @@ Areas_dump_vhr(R)
 
         local S = SEEDS[sx][sy]
 
+
         if mode == "install" then
+          -- create area
+
           assert(S.room == R)
           assert(not S.void)
           assert(not S.v_areas[v])
 
           S.v_areas[v] = AREA
+
+          -- create chunks : prefer one element = one chunk
+          --                 (this is _REQUIRED_ for stairs)
+
+          if not ELEM.chunk then
+            ELEM.bad = check_elem_clobbers_chunk()
+          end
+
+          if ELEM.bad and not (S.chunk and S.chunk.vhr == v) then
+
+            -- create a chunk for each seed [TODO: try bigger sizes]
+            local C = CHUNK_CLASS.new(sx, sy, sx, sy)
+            C:set_coords()
+            if S:above_vhr(AREA.vhr) then C.no_ceil = true end
+            AREA:add_chunk(C)
+            C.room = R ; table.insert(R.chunks, C)
+
+          elseif not ELEM.chunk then
+
+            local C = CHUNK_CLASS.new(sx, sy, sx + ELEM.w - 1, sy + ELEM.h - 1)
+            C:set_coords()
+            if S:above_vhr(AREA.vhr) then C.no_ceil = true end
+            AREA:add_chunk(C)
+            C.room = R ; table.insert(R.chunks, C)
+            
+            ELEM.chunk = C
+          end
         end
+
 
         -- see what neighboring areas we can link with
         if mode == "test" then
@@ -2472,7 +2513,7 @@ Areas_dump_vhr(R)
       end
       end
 
-      -- chunk handling [require chunk fully fits in an area]
+      -- require existing chunks (conns, etc) to fully fit into the area
       if mode == "test" then
         each C in G.chunks do
 
@@ -2490,7 +2531,7 @@ Areas_dump_vhr(R)
               ok = false ; break
 
             elseif ELEM.ch != "#" then
-              return false  -- FAIL, chunk is clobbered (by void etc)
+              return false  -- FAIL, chunk is clobbered (by stair, void, etc)
             end
 
           end
@@ -2519,15 +2560,6 @@ Areas_dump_vhr(R)
         if table.empty(C.poss_vhrs) then
           return false  -- FAIL
         end
-      end
-
-    else -- mode == "install"
-      each C in G.chunks do
-        local v = rand.pick(C.poss_vhrs)
-
-        local AREA = assert(vhr_areas[v])
-
-        AREA:add_chunk(C)
       end
     end
 
