@@ -18,9 +18,8 @@
 --
 ----------------------------------------------------------------
 --
---  STAIRS ALWAYS GO UP!
---
---  Hence the south side (dir = 2) is always the highest side
+--  Stairs travel NORTH to SOUTH, the north side (dir = 8) is low
+--  and the south side (dir = 2) is always t he highest side
 --  in the raw (unrotated) prefab.  
 --
 ----------------------------------------------------------------
