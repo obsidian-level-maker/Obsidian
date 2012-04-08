@@ -1689,6 +1689,8 @@ stderrf("Areas_create_all_areas @ %s : (%d %d) .. (%d %d)\n",
   VALIDATE()
 
   Areas_assign_chunks_to_vhrs(R)
+
+  Areas_chunk_it_up_baby(R)
 end
 
 
@@ -2119,21 +2121,21 @@ gui.debugf("number_of_areas @ %s svol:%d --> %d [VHR %d .. %d]\n",
     local areas = {}
 
     for sx = G.sx1, G.sx2 do
-      for sy = G.sy1, G.sy2 do
-        local S = SEEDS[sx][sy]
+    for sy = G.sy1, G.sy2 do
+      local S = SEEDS[sx][sy]
 
-        for dir = 2,8,2 do
-          local N = S:neighbor(dir)
+      for dir = 2,8,2 do
+        local N = S:neighbor(dir)
 
-          if not (N and N.room == R) then continue end
+        if not (N and N.room == R) then continue end
 
-          if geom.inside_box(N.sx, N.sy, G.sx1,G.sy1, G.sx2,G.sy2) then continue end
+        if geom.inside_box(N.sx, N.sy, G.sx1,G.sy1, G.sx2,G.sy2) then continue end
 
-          each v,AR in N.v_areas do
-            table.add_unique(areas, AR)
-          end
+        each v,AR in N.v_areas do
+          table.add_unique(areas, AR)
         end
       end
+    end
     end
 
     if table.empty(areas) then
@@ -2153,6 +2155,7 @@ Areas_dump_vhr(R)
     local AREA = get_PLAIN_area(G)
     local v = AREA.vhr
 
+    -- update seeds
     for x = G.sx1, G.sx2 do
     for y = G.sy1, G.sy2 do
       local S = SEEDS[x][y]
@@ -2165,8 +2168,44 @@ Areas_dump_vhr(R)
     end
     end
 
+    -- transfer existing chunks
     each C in G.chunks do
       AREA:add_chunk(C)
+    end
+
+    -- create new chunks
+    for x = G.sx1, G.sx2 do
+    for y = G.sy1, G.sy2 do
+      local S = SEEDS[x][y]
+
+      if S.chunk or S.plain_chunk then continue end
+
+      -- try to make bigger chunks
+      local sw, sh = 1, 1
+
+      if x > 1 and x < G.sx2 and not SEEDS[x+1][y].chunk then sw = 2 end
+      if y > 1 and y < G.sy2 and not SEEDS[x][y+1].chunk then sh = 2 end
+
+      if sw == 2 and sh == 2 and SEEDS[x+1][y+1].chunk then sh = 1 end 
+
+      local C = CHUNK_CLASS.new(x, y, sx + sw - 1, sy + sh - 1)
+
+      C:set_coords()
+
+      if S:above_vhr(AREA.vhr) then C.no_ceil = true end
+
+      AREA:add_chunk(C)
+
+      C.room = R ; table.insert(R.chunks, C)
+
+      -- mark seeds
+      for sx = C.sx1, C.sx2 do
+      for sy = C.sy1, C.sy2 do
+        SEEDS[sx][sy].plain_chunk = true
+      end
+      end
+
+    end
     end
   end
 
@@ -2697,6 +2736,13 @@ function Areas_height_realization(R)
   for v = 9,1,-1 do
     if assign_ceil(v, ceil_h) then
       ceil_h = ceil_h + 128
+    end
+  end
+
+  -- update chunks [ASSUMES: chunks already exist]
+  each AR in R.areas do
+    each C in AR.chunks do
+      C.floor_h = assert(AR.floor_h)
     end
   end
 end
@@ -3957,7 +4003,6 @@ stderrf("outgoing_heights : DIRECT %s --> %s\n", D.L1:tostr(), D.L2:tostr())
     else
       Areas_create_with_patterns(R)
       Areas_height_realization(R)
-      Areas_chunk_it_up_baby(R)
     end
 
     finish_heights(R)
