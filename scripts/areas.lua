@@ -2352,7 +2352,7 @@ Areas_dump_vhr(R)
         local elem_w = str_pos_size(x_size, x)
         local elem_h = str_pos_size(y_size, y)
 
-        local ELEM = { ch = morph_char(ch), w = elem_w, h = elem_h }
+        local ELEM = { ch = morph_char(ch) }
 
         for dx = 0, elem_w - 1 do
         for dy = 0, elem_h - 1 do
@@ -2369,6 +2369,12 @@ Areas_dump_vhr(R)
             assert(geom.inside_box(sx, sy, G.sx1,G.sy1, G.sx2,G.sy2))
 
             TR[name][tx][ty] = ELEM
+
+            -- determine final location of this element
+            ELEM.sx1 = math.min(sx, ELEM.sx1 or sx)
+            ELEM.sy1 = math.min(sy, ELEM.sy1 or sy)
+            ELEM.sx2 = math.max(sx, ELEM.sx2 or sx)
+            ELEM.sy2 = math.max(sy, ELEM.sy2 or sy)
         end
         end -- dx, dy
 
@@ -2397,13 +2403,12 @@ Areas_dump_vhr(R)
   end
 
 
-  local function check_elem_clobbers_chunk(G, sx, sy, sw, sh)
-    local sx2 = sx + sw - 1
-    local sy2 = sy + sh - 1
-
+  local function check_elem_clobbers_chunk(G, v, ELEM)
     each C in G.chunks do
-      if C.sx2 < sx or C.sx1 > sx2 then continue end
-      if C.sy2 < sy or C.sy1 > sy2 then continue end
+      if C.vhr != v then continue end
+
+      if C.sx2 < ELEM.sx1 or C.sx1 > ELEM.sx2 then continue end
+      if C.sy2 < ELEM.sy1 or C.sy1 > ELEM.sy2 then continue end
 
       return true
     end
@@ -2430,6 +2435,8 @@ Areas_dump_vhr(R)
       each C in G.chunks do
         C.vhr = rand.pick(C.poss_vhrs)
       end
+
+stderrf("install_pattern: %s in %s\n", pat.name, R:tostr())
     end
 
 
@@ -2487,22 +2494,25 @@ Areas_dump_vhr(R)
           --       the element first, and sets either 'bad' or 'chunk'
           --       field to control how to process the other seeds.
 
-          if not ELEM.chunk then
-            ELEM.bad = check_elem_clobbers_chunk(G, sx, sy, ELEM.w, ELEM.h)
+          if not ELEM.bad and not ELEM.chunk then
+            ELEM.bad = check_elem_clobbers_chunk(G, v, ELEM)
           end
 
-          if ELEM.bad and not (S.chunk and S.chunk.vhr == v) then
-
-            -- create a chunk for each seed [TODO: try bigger sizes]
-            local C = CHUNK_CLASS.new(sx, sy, sx, sy)
-            C:set_coords()
-            if S:above_vhr(AREA.vhr) then C.no_ceil = true end
-            AREA:add_chunk(C)
-            C.room = R ; table.insert(R.chunks, C)
+          if ELEM.bad then
+          
+            if not (S.chunk and S.chunk.vhr == v) then
+              -- create a chunk for each seed [TODO: try bigger sizes]
+              local C = CHUNK_CLASS.new(sx, sy, sx, sy)
+              C:set_coords()
+              if S:above_vhr(AREA.vhr) then C.no_ceil = true end
+              AREA:add_chunk(C)
+              C.room = R ; table.insert(R.chunks, C)
+            end
 
           elseif not ELEM.chunk then
 
-            local C = CHUNK_CLASS.new(sx, sy, sx + ELEM.w - 1, sy + ELEM.h - 1)
+            -- create a chunk for whole element
+            local C = CHUNK_CLASS.new(ELEM.sx1, ELEM.sy1, ELEM.sx2, ELEM.sy2)
             C:set_coords()
             if S:above_vhr(AREA.vhr) then C.no_ceil = true end
             AREA:add_chunk(C)
