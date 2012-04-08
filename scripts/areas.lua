@@ -2188,7 +2188,7 @@ Areas_dump_vhr(R)
 
       if sw == 2 and sh == 2 and SEEDS[x+1][y+1].chunk then sh = 1 end 
 
-      local C = CHUNK_CLASS.new(x, y, sx + sw - 1, sy + sh - 1)
+      local C = CHUNK_CLASS.new(x, y, x + sw - 1, y + sh - 1)
       C:set_coords()
       if S:above_vhr(AREA.vhr) then C.no_ceil = true end
       AREA:add_chunk(C)
@@ -2397,6 +2397,21 @@ Areas_dump_vhr(R)
   end
 
 
+  local function check_elem_clobbers_chunk(G, sx, sy, sw, sh)
+    local sx2 = sx + sw - 1
+    local sy2 = sy + sh - 1
+
+    each C in G.chunks do
+      if C.sx2 < sx or C.sx1 > sx2 then continue end
+      if C.sy2 < sy or C.sy1 > sy2 then continue end
+
+      return true
+    end
+
+    return nil
+  end
+
+
   local function test_or_install_pattern(G, pat, mode)
 
 -- stderrf("test_or_install_pattern: %s %s\n", mode, pat.name)
@@ -2468,8 +2483,12 @@ Areas_dump_vhr(R)
           -- create chunks : prefer one element = one chunk
           --                 (this is _REQUIRED_ for stairs)
 
+          -- Note: this logic assumes we process the bottom left seed of
+          --       the element first, and sets either 'bad' or 'chunk'
+          --       field to control how to process the other seeds.
+
           if not ELEM.chunk then
-            ELEM.bad = check_elem_clobbers_chunk()
+            ELEM.bad = check_elem_clobbers_chunk(G, sx, sy, ELEM.w, ELEM.h)
           end
 
           if ELEM.bad and not (S.chunk and S.chunk.vhr == v) then
