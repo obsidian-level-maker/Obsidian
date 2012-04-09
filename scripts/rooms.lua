@@ -518,6 +518,22 @@ function ROOM_CLASS.alloc_chunk(R, sx1, sy1, sx2, sy2)
 end
 
 
+function ROOM_CLASS:straddles_concave_corner(R, sx1, sy1, sx2, sy2)
+  -- assumes all seeds in the range belong to this room
+
+  assert(R.sx1 <= sx1 and sx2 <= R.sx2)
+  assert(R.sy1 <= sy1 and sy2 <= R.sy2)
+
+  assert(SEEDS[sx1][sy1].room == R)
+  assert(SEEDS[sx2][sy2].room == R)
+
+  return (SEEDS[sx1][sy1]:same_room(2) != SEEDS[sx2][sy1]:same_room(2)) or
+         (SEEDS[sx1][sy2]:same_room(8) != SEEDS[sx2][sy2]:same_room(8)) or
+         (SEEDS[sx1][sy1]:same_room(4) != SEEDS[sx1][sy2]:same_room(4)) or
+         (SEEDS[sx2][sy1]:same_room(6) != SEEDS[sx2][sy2]:same_room(6))
+end
+
+
 function ROOM_CLASS.add_exclusion_zone(R, x1, y1, x2, y2, extra_dist)
   local ZONE =
   {
