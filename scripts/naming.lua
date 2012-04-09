@@ -28,11 +28,10 @@
 --
 ----------------------------------------------------------------
 
-require 'util'
-
 namelib = {}
 
-GLOBAL_NAME_THEMES =
+
+namelib.NAME_THEMES =
 {
   COMMON =
   {
@@ -1708,13 +1707,13 @@ end
 
 function namelib.merge_theme(theme_name)
   -- verify the theme name
-  if not GLOBAL_NAME_THEMES[theme_name] then
+  if not namelib.NAME_THEMES[theme_name] then
     error("namelib.generate: unknown theme: " .. tostring(theme_name))
   end
 
   local theme = {}
 
-  local sources = { GLOBAL_NAME_THEMES, GAME.NAME_THEMES or {} }
+  local sources = { namelib.NAME_THEMES, GAME.NAME_THEMES or {} }
 
   -- always merge in the "COMMON" theme before the main one
   each S in sources do
