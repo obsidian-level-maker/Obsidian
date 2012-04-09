@@ -2447,7 +2447,7 @@ Areas_dump_vhr(R)
         C.vhr = rand.pick(C.poss_vhrs)
       end
 
-stderrf("install_pattern: %s in %s\n", pat.name, R:tostr())
+-- stderrf("install_pattern: %s in %s\n", pat.name, R:tostr())
     end
 
 
@@ -2487,6 +2487,14 @@ stderrf("install_pattern: %s in %s\n", pat.name, R:tostr())
         local sy = G.sy1 + y - 1
 
         local S = SEEDS[sx][sy]
+
+
+        -- prevent stairs or diagonals from being split at concave corners
+        if mode == "test" and ELEM.ch != '#' and
+           R:straddles_concave_corner(ELEM.sx1, ELEM.sy1, ELEM.sx2, ELEM.sy2)
+        then
+          return false -- FAIL
+        end
 
 
         if mode == "install" then
