@@ -518,7 +518,7 @@ function ROOM_CLASS.alloc_chunk(R, sx1, sy1, sx2, sy2)
 end
 
 
-function ROOM_CLASS:straddles_concave_corner(R, sx1, sy1, sx2, sy2)
+function ROOM_CLASS.straddles_concave_corner(R, sx1, sy1, sx2, sy2)
   -- assumes all seeds in the range belong to this room
 
   assert(R.sx1 <= sx1 and sx2 <= R.sx2)
