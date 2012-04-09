@@ -18,10 +18,10 @@
 --
 ----------------------------------------------------------------
 
-require 'defs'
-require 'util'
+require "defs"
+require "util"
 
-require 'levels'
+require "levels"
 
 -- require 'Profiler'  -- Pepperfish's
 

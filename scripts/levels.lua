@@ -93,26 +93,26 @@ class HUB_LINK
 
 --------------------------------------------------------------]]
 
-require 'defs'
-require 'util'
+require "defs"
+require "util"
 
-require 'planner'
-require 'connect'
-require 'quests'
-require 'caves'
+require "planner"
+require "connect"
+require "quests"
+require "caves"
 
-require 'seeds'
-require 'build'
-require 'chunks'
-require 'simple'
-require 'hallway'
-require 'z_fabs'
+require "seeds"
+require "build"
+require "chunks"
+require "simple"
+require "hallway"
+require "z_fabs"
 
-require 'areas'
-require 'rooms'
-require 'fight'
-require 'monsters'
-require 'naming'
+require "areas"
+require "rooms"
+require "fight"
+require "monsters"
+require "naming"
 
 
 GLOBAL_STYLE_LIST =
@@ -489,7 +489,7 @@ function Levels_choose_themes()
   gui.printf("\n")
 
   -- the user can specify the main theme
-  if OB_CONFIG.theme != "mixed" and OB_CONFIG.theme != "mess" and
+  if OB_CONFIG.theme != "mixed" and OB_CONFIG.theme != "jumble" and
      OB_CONFIG.theme != "original" and OB_CONFIG.theme != "psycho"
   then
     each L in GAME.levels do
@@ -542,8 +542,8 @@ function Levels_choose_themes()
   assert(total > 0)
 
 
-  -- Messed Up : every level is purely random
-  if OB_CONFIG.theme == "mess" then
+  -- Jumbled Up : every level is purely random
+  if OB_CONFIG.theme == "jumble" then
     each L in GAME.levels do
       set_level_theme(L, rand.key_by_probs(prob_tab))
     end
