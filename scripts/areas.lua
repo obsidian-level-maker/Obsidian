@@ -2414,6 +2414,20 @@ Areas_dump_vhr(R)
   end
 
 
+  local function handle_stair(stair_ch, C)
+    local dir = STAIR_DIRS[stair_ch]
+
+    if not dir then return end  -- not a stair
+
+    C.stair =
+    {
+      C1  = C
+      dir = dir
+      skin = assert(GAME.SKINS["Stair_Up1"])  -- FIXME !!!
+    }
+  end
+
+
   local function check_elem_clobbers_chunk(G, v, ELEM)
     each C in G.chunks do
       if C.vhr != v then continue end
@@ -2543,6 +2557,8 @@ Areas_dump_vhr(R)
             C.room = R ; table.insert(R.chunks, C)
             
             ELEM.chunk = C
+
+            handle_stair(ELEM.ch, C)
           end
         end
 
@@ -2828,6 +2844,11 @@ function Areas_height_realization(R)
   each AR in R.areas do
     each C in AR.chunks do
       C.floor_h = assert(AR.floor_h)
+
+      if C.stair then
+        C.stair.delta_h = 64
+        C.stair.low_h = C.floor_h
+      end      
     end
   end
 end

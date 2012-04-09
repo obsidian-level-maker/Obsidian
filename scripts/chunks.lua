@@ -1212,11 +1212,11 @@ end --]]
   elseif C.stair then
     local skin = C.stair.skin
 
-    local delta_h = C.stair.C2.floor_h - C.stair.C1.floor_h
+    local delta_h = C.stair.delta_h or (C.stair.C2.floor_h - C.stair.C1.floor_h)
 
     local skin0 = { side=f_matname, step=f_matname, top=f_matname, floor=f_matname, wall=f_matname }
 
-    local low_h = math.min(C.stair.C1.floor_h, C.stair.C2.floor_h)
+    local low_h = C.stair.low_h or (math.min(C.stair.C1.floor_h, C.stair.C2.floor_h))
     local dir   = C.stair.dir
 
     -- stair prefabs always go upwards, rotate 180 when going down
