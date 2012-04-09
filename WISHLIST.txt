@@ -512,6 +512,8 @@ Name generator:
 
 -  simplify ui_chooser logic --> use Fl_Native_File_Chooser
 
+-  consistently use single quotes for single characters
+
 IDEA:
   - move main loop of OBLIGE into Lua (e.g. ob_main_loop)
   - C++ can queue commands to perform, fetched by the Lua loop

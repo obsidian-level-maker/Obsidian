@@ -21,7 +21,7 @@ CHANGES (since 3.57)
 - backup files now use the .OLD extension
 
 + support for "shaped" rooms (L, T, plus, etc)
-+ worked on teleporters
++ support for teleporters
 
 - more naming goodies, thanks to Mr Chris
 - preliminary work on Hexen II and Half-Life
@@ -49,10 +49,10 @@ CHANGES (since 3.57)
 + ability to make multiple paths between rooms
 + worked on "cross-overs" (a bridge through another room)
 - new 'Extreme' option for level size
-- support for simple 3D bridges within rooms
+?? support for simple 3D bridges within rooms
 - improved infighting logic in the Fight Simulator
 
-- new 'Messed Up' theme setting
+- new 'Jumbled Up' theme setting
 - new 'Alternative Look' option
 - moved the Seed setting, and increased to 6 digits
 - Seed is automatically bumped after a successful build
