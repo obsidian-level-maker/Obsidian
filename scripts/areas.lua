@@ -2506,8 +2506,13 @@ stderrf("install_pattern: %s in %s\n", pat.name, R:tostr())
           --       field to control how to process the other seeds.
 
           if not ELEM.bad and not ELEM.chunk then
-            ELEM.bad = check_elem_clobbers_chunk(G, v, ELEM)
+            if check_elem_clobbers_chunk(G, v, ELEM) or
+               R:straddles_concave_corner(ELEM.sx1, ELEM.sy1, ELEM.sx2, ELEM.sy2)
+            then
+              ELEM.bad = true
+            end
           end
+
 
           if ELEM.bad then
           
