@@ -18,9 +18,6 @@
 --
 ----------------------------------------------------------------
 
-require 'defs'
-require 'util'
-
 
 GLOBAL_SKIN_DEFAULTS =
 {

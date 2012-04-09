@@ -54,9 +54,6 @@ class CONN
 
 --------------------------------------------------------------]]
 
-require 'defs'
-require 'util'
-
 
 CONN_CLASS = {}
 

@@ -68,9 +68,6 @@ evolves about same rate IN TERMS OF # MONSTERS ADDED.
 
 --------------------------------------------------------------]]
 
-require 'defs'
-require 'util'
-
 
 MONSTER_QUANTITIES =
 {

@@ -73,10 +73,6 @@ class HALLWAY
 -- 
 
 
-require 'defs'
-require 'util'
-
-
 HALLWAY_CLASS = {}
 
 function HALLWAY_CLASS.new()

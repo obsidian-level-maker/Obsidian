@@ -75,9 +75,6 @@ TODO: this routine should accept some information
 
 ----------------------------------------------------------------]]
 
-require 'defs'
-require 'util'
-
 
 function Fight_Simulator(monsters, weapons, weap_prefs, stats)
 

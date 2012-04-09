@@ -124,9 +124,6 @@ class SKY_GROUP
 
 ----------------------------------------------------------------]]
 
-require 'defs'
-require 'util'
-
 
 ROOM_CLASS = {}
 

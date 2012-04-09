@@ -92,9 +92,6 @@ class PART
 
 --------------------------------------------------------------]]
 
-require 'defs'
-require 'util'
-
 
 CHUNK_CLASS = {}
 

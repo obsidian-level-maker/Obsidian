@@ -52,9 +52,6 @@ class SECTION
 
 ----------------------------------------------------------------]]
 
-require 'defs'
-require 'util'
-
 
 MAP_W = 0  -- number of non-hallway sections
 MAP_H = 0  --

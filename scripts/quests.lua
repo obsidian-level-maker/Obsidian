@@ -94,9 +94,6 @@ class LOCK
 
 --------------------------------------------------------------]]
 
-require 'defs'
-require 'util'
-
 
 QUEST_CLASS = {}
 

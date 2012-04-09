@@ -42,9 +42,6 @@ class SEED
 
 --------------------------------------------------------------]]
 
-require 'defs'
-require 'util'
-
 
 SEED_W = 0
 SEED_H = 0
