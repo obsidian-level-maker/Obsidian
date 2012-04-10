@@ -30,15 +30,38 @@ ABSOLUTION.ENTITIES =
 
   dm_player     = { id=11, kind="other", r=16,h=56 }
   teleport_spot = { id=14, kind="other", r=16,h=56 }
+  voodoo_doll   = { id=88, kind="other", r=16,h=56 }
 
   --- monsters ---
+  zombie    = { id=3004,kind="monster", r=20,h=56 }
+  shooter   = { id=9,   kind="monster", r=20,h=56 }
+  demon     = { id=3002,kind="monster", r=20,h=56 }
+  imp       = { id=3001,kind="monster", r=20,h=56 }
+  skull     = { id=3006,kind="monster", r=16,h=56 }
+
+  caco      = { id=3005,kind="monster", r=31,h=56 }
+  knight    = { id=69,  kind="monster", r=24,h=64 }
+  baron     = { id=3003,kind="monster", r=24,h=64 }
+  mancubus  = { id=67,  kind="monster", r=48,h=64 }
+  arach     = { id=68,  kind="monster", r=66,h=64 }
+  pain      = { id=71,  kind="monster", r=31,h=56 }
+
+  nm_demon  = { id=72,  kind="monster", r=32,h=56 }
+  nm_imp    = { id=400, kind="monster", r=30,h=56 }
+  nm_caco   = { id=66,  kind="monster", r=20,h=56 }
 
   --- bosses ---
+  CyberDemon  = { id=16,   kind="monster", r=40,h=80 }
+  MotherDemon = { id=5000, kind="monster", r=20,h=80 }
 
   --- keys ---
-  k_yellow   = { id=80, kind="pickup", r=20,h=16, pass=true }
-  k_green    = { id=73, kind="pickup", r=20,h=16, pass=true }
-  k_blue     = { id=79, kind="pickup", r=20,h=16, pass=true }
+  kc_red     = { id=13, kind="pickup", r=20,h=16, pass=true }
+  kc_yellow  = { id=6,  kind="pickup", r=20,h=16, pass=true }
+  kc_blue    = { id=5,  kind="pickup", r=20,h=16, pass=true }
+
+  ks_red     = { id=38, kind="pickup", r=20,h=16, pass=true }
+  ks_yellow  = { id=39, kind="pickup", r=20,h=16, pass=true }
+  ks_blue    = { id=40, kind="pickup", r=20,h=16, pass=true }
 
   --- weapons ---
 
@@ -66,7 +89,7 @@ ABSOLUTION.PARAMETERS =
 
   max_name_length = 28
 
-  skip_monsters = { 20,30 }
+  skip_monsters = { 10,30 }
 
   time_factor   = 1.0
   damage_factor = 1.0
@@ -516,6 +539,175 @@ ABSOLUTION.LEVEL_THEMES =
 
 ABSOLUTION.MONSTERS =
 {
+  zombie =
+  {
+    level = 1
+    prob = 40
+    health = 20
+    damage = 4
+    attack = "hitscan"
+    give = { {ammo="bullet",count=5} }
+    density = 1.5
+    infights = true
+  }
+
+  shooter =
+  {
+    level = 2
+    prob = 50
+    health = 30
+    damage = 10
+    attack = "hitscan"
+    give = { {weapon="shotty"}, {ammo="shell",count=4} }
+    species = "zombie"
+    infights = true
+  }
+
+  imp =
+  {
+    level = 1
+    prob = 60
+    health = 60
+    damage = 20
+    attack = "missile"
+  }
+
+  nm_imp =
+  {
+    level = 2
+    prob = 10
+    health = 60
+    damage = 20
+    attack = "missile"
+    invis = true
+    species = "imp"
+  }
+
+  skull =
+  {
+    level = 3
+    prob = 16
+    health = 100
+    damage = 7
+    attack = "melee"
+    density = 0.5
+    float = true
+    weap_prefs = { launch=0.2 }
+    infights = true
+  }
+
+  demon =
+  {
+    level = 1
+    prob = 35
+    health = 150
+    damage = 25
+    attack = "melee"
+    weap_prefs = { launch=0.5 }
+  }
+
+  nm_demon =
+  {
+    level = 2
+    prob = 10
+    health = 150
+    damage = 25
+    attack = "melee"
+    invis = true
+    outdoor_factor = 3.0
+    weap_prefs = { launch=0.2 }
+    species = "demon"
+  }
+
+  caco =
+  {
+    level = 3
+    prob = 40
+    health = 400
+    damage = 35
+    attack = "missile"
+    density = 0.5
+    float = true
+  }
+
+  nm_caco =
+  {
+    level = 4
+    prob = 10
+    health = 400
+    damage = 35
+    attack = "missile"
+    density = 0.5
+    float = true
+    invis = true
+    weap_prefs = { launch=0.2 }
+    species = "caco"
+  }
+
+  knight =
+  {
+    level = 5
+    prob = 60
+    skip_prob = 90
+    crazy_prob = 40
+    health = 500
+    damage = 45
+    attack = "missile"
+    density = 0.7
+    species = "baron"
+  }
+
+  baron =
+  {
+    level = 7
+    prob = 20
+    health = 1000
+    damage = 45
+    attack = "missile"
+    density = 0.5
+    weap_prefs = { bfg=3.0 }
+  }
+
+  mancubus =
+  {
+    level = 6
+    prob = 37
+    health = 600
+    damage = 70
+    attack = "missile"
+    density = 0.6
+  }
+
+  arach =
+  {
+    level = 6
+    prob = 25
+    health = 500
+    damage = 70
+    attack = "missile"
+    density = 0.8
+  }
+
+  pain =
+  {
+    level = 6
+    prob = 8
+    crazy_prob = 15
+    skip_prob = 180
+    health = 700
+    damage = 20
+    attack = "missile"
+    density = 0.2
+    never_promote = true
+    float = true
+    weap_prefs = { launch=0.2 }
+  }
+
+
+  -- BOSSES --
+
+  -- TODO: CyberDemon
+  -- TODO: MotherDemon
 }
 
 
