@@ -487,10 +487,11 @@ function Mat_lookup(name)
 
   local mat = GAME.MATERIALS[name]
 
-  -- special handling for DOOM switches
+  -- special handling for DOOM / HERETIC switches
   if not mat and string.sub(name,1,3) == "SW2" then
-    mat = GAME.MATERIALS["SW1" .. string.sub(name,4)]
-    if mat then
+    local sw1_name = "SW1" .. string.sub(name,4)
+    mat = GAME.MATERIALS[sw1_name]
+    if mat and mat.t == sw1_name then
       mat = { t=name, f=mat.f }  -- create new SW2XXX material
       GAME.MATERIALS[name] = mat
     end
