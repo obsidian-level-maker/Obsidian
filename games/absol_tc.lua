@@ -141,12 +141,20 @@ ABSOLUTION.MATERIALS =
 {
   -- special materials --
 
-  _ERROR = { t="WOODWL",  f="FLOOR10" }
-  _SKY   = { t="CHAINSD", f="F_SKY1"  }
+  _ERROR = { t="TILEA796", f="FTILEA79" }
+  _SKY   = { t="TILEA796", f="F_SKY1"  }
 
   -- general purpose --
 
   -- walls --
+
+  X_WALL = { t="TILE5CD3", f="FTILEA79" }
+
+  X_DOOR = { t="TILE0CAC", f="FTILEA79" }
+
+  KEY_RED    = { t="TILE7448", f="FTILEA79" }
+  KEY_YELLOW = { t="TILE6D7A", f="FTILEA79" }
+  KEY_BLUE   = { t="TILE31A4", f="FTILEA79" }
 
 
   -- switches --
@@ -154,30 +162,39 @@ ABSOLUTION.MATERIALS =
 
   -- floors --
 
+  X_FLOOR = { f="FTILEC79", t="TILEA796" }
+  X_CEIL  = { f="FTILEEBD", t="TILEA796" }
+
+
 
   -- rails --
 
 
   -- liquids / animated --
 
+  L_WATER  = { f="FTILE080", t="TILED7C9", sane=1 }
+  L_NUKAGE = { f="FTILE2CA", t="TILE0830", sane=1 }
+  L_MAGMA  = { f="FTILE0A5", t="TILEB361", sane=1 }
+  L_LAVA   = { f="FTILE5A0", t="TILE5A0F", sane=1 }
+  L_LAVA2  = { f="FTILE33A", t="TILE33A7", sane=1 }
+
 
   -- other --
 
----  O_PILL   = { t="SKULLSB2", f="O_PILL",  sane=1 }
----  O_BOLT   = { t="DOORWOOD", f="O_BOLT",  sane=1 }
----  O_CARVE  = { t="CHAINSD",  f="O_CARVE", sane=1 }
+---  O_PILL   = { t="?", f="O_PILL",  sane=1 }
+---  O_BOLT   = { t="?", f="O_BOLT",  sane=1 }
+---  O_CARVE  = { t="?", f="O_CARVE", sane=1 }
 }
 
 
 ABSOLUTION.LIQUIDS =
 {
-  water  = { mat="FLTFLWW1", color=0x282fcc, light=0.65, special=0 }
-  water2 = { mat="FLTWAWA1", color=0x282fcc, light=0.65, special=0 }
-  sludge = { mat="FLTSLUD1", color=0x3e453d, light=0.65, special=16, damage=20 }
-  lava   = { mat="FLATHUH1", color=0x851b00, light=0.75, special=16, damage=20 }
-  magma  = { mat="FLTLAVA1", color=0x442b2b, light=0.65, special=16, damage=20 }
+  water  = { mat="L_WATER",  special=0 }
+  nukage = { mat="L_NUKAGE", special=16, damage=20 }
+--  magma  = { mat="L_MAGMA",  special=16, damage=20 }
+  lava   = { mat="L_LAVA",   special=16, damage=20 }
+  lava2  = { mat="L_LAVA2",  special=16, damage=20 }
 }
-
 
 
 ----------------------------------------------------------------
@@ -304,59 +321,53 @@ ABSOLUTION.SKINS =
 
   Locked_yellow =
   {
-    _prefab = "DOOR"   -- FIXME: heretic prefab with key statue
+    _prefab = "DOOR"
     _where  = "edge"
-    _key    = "k_yellow"
+    _key    = "kc_yellow"
     _long = 192
     _deep = 32
 
     w = 128
     h = 112
     door_h = 112
-    door = "DOORSTON"
+    door = "X_DOOR"
     track = "METL2"
     special = 34
     tag = 0  -- kind_mult=26
-
-    statue_ent = "yellow_statue"
   }
 
-  Locked_green =
+  Locked_red =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _key    = "k_green"
+    _key    = "kc_red"
     _long = 192
     _deep = 32
 
     w = 128
     h = 112
     door_h = 112
-    door = "DOORSTON"
+    door = "X_DOOR"
     track = "METL2"
     special = 33
     tag = 0  -- kind_mult=26
-
-    statue_ent = "green_statue"
   }
 
   Locked_blue =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _key    = "k_blue"
+    _key    = "kc_blue"
     _long = 192
     _deep = 32
 
     w = 128
     h = 112
     door_h = 112
-    door = "DOORSTON"
+    door = "X_DOOR"
     track = "METL2"
     special = 32
     tag = 0  -- kind_mult=26
-
-    statue_ent = "blue_statue"
   }
 
 
@@ -461,8 +472,6 @@ ABSOLUTION.SKINS =
     tele = "FLTTELE1"
     side = "SQPEB1"
 
-    effect_ent = "glitter_red"
-
     x_offset = 0
     y_offset = 0
     peg = 1
@@ -489,15 +498,13 @@ ABSOLUTION.THEME_DEFAULTS =
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50,
              Lift_Up1 = 2, Lift_Down1 = 2 }
 
-  -- according to Borsuk, locked doors should always appear in the
-  -- following order: Yellow ==> Green ==> Blue.
-  keys = { k_yellow=9000, k_green=90, k_blue=1 }
+  keys = { kc_red=50, kc_yellow=50, kc_blue=50 }
 
   switches = { sw_metal=50 }
 
   switch_fabs = { Switch_1=50 }
 
-  locked_doors = { Locked_yellow=50, Locked_green=50, Locked_blue=50,
+  locked_doors = { Locked_yellow=50, Locked_red=50, Locked_blue=50,
                    Door_SW_1=50 }
 
   teleporters = { Teleporter1=50 }
@@ -543,6 +550,38 @@ ABSOLUTION.ROOM_THEMES =
 {
   ---- TECH THEME -----------------
 
+  Tech_test =
+  {
+    walls =
+    {
+      X_WALL=50
+    }
+
+    floors =
+    {
+      X_FLOOR=50
+    }
+
+    ceilings =
+    {
+      X_CEIL=50
+    }
+  }
+
+
+  Outdoor_junk =
+  {
+    floors =
+    {
+      X_FLOOR=50
+    }
+
+    naturals =
+    {
+      L_MAGMA=20
+    }
+  }
+
 
   ---- OTHER STUFF ------------------
 
@@ -555,15 +594,14 @@ ABSOLUTION.LEVEL_THEMES =
   {
     prob = 50
 
-    liquids = { water=50, sludge=15, lava=4 }
+    liquids = { nukage=60, water=20, lava=10 }
 
-    buildings = { Tech_generic=50 }
+    buildings = { Tech_test=50 }
 
-    hallways = { Castle_hallway=50 }  -- FIXME
+--    hallways = { Castle_hallway=50 }  -- FIXME
 
-    caves = { Cave_generic=50 }
-
-    outdoors = { Outdoors_generic=50 }
+    caves    = { Outdoor_junk=50 }
+    outdoors = { Outdoor_junk=50 }
 
     --TODO: more stuff
 
