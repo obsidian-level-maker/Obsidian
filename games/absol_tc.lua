@@ -64,12 +64,24 @@ ABSOLUTION.ENTITIES =
   ks_blue    = { id=40, kind="pickup", r=20,h=16, pass=true }
 
   --- weapons ---
+  shotty = { id=2001, kind="pickup", r=20,h=16, pass=true }
+  super  = { id=  82, kind="pickup", r=20,h=16, pass=true }
+  chain  = { id=2002, kind="pickup", r=20,h=16, pass=true }
+  launch = { id=2003, kind="pickup", r=20,h=16, pass=true }
+  plasma = { id=2004, kind="pickup", r=20,h=16, pass=true }
+  saw    = { id=2005, kind="pickup", r=20,h=16, pass=true }
+  bfg    = { id=2006, kind="pickup", r=20,h=16, pass=true }
+  laser  = { id=2009, kind="pickup", r=20,h=16, pass=true }
 
   --- ammo ---
 
   --- health ---
 
   --- powerups ---
+
+  laser_key1 = { id=4000, kind="pickup", r=20,h=16, pass=true }
+  laser_key2 = { id=4001, kind="pickup", r=20,h=16, pass=true }
+  laser_key3 = { id=4002, kind="pickup", r=20,h=16, pass=true }
 
   --- scenery ---
 
@@ -539,6 +551,8 @@ ABSOLUTION.LEVEL_THEMES =
 
 ABSOLUTION.MONSTERS =
 {
+  -- FIXME: VERIFY ALL THIS STUFF IN THE DEDs !!!
+
   zombie =
   {
     level = 1
@@ -713,6 +727,143 @@ ABSOLUTION.MONSTERS =
 
 ABSOLUTION.WEAPONS =
 {
+  -- FIXME: VERIFY ALL THIS STUFF IN THE DEDs !!!
+
+  fist =
+  {
+    attack = "melee"
+    rate = 1.5
+    damage = 10
+  }
+
+  saw =
+  {
+    level = 1
+    pref = 3
+    add_prob = 2
+    attack = "melee"
+    rate = 8.7
+    damage = 10
+  }
+
+  berserk =
+  {
+    level = 5
+    pref = 10
+    add_prob = 5
+    attack = "melee"
+    rate = 1.5
+    damage = 90
+    give = { {health=70} }
+  }
+
+  pistol =
+  {
+    pref = 5
+    attack = "hitscan"
+    rate = 1.8
+    damage = 10
+    ammo = "bullet"
+    per = 1
+  }
+
+  chain =
+  {
+    level = 1
+    pref = 70
+    add_prob = 35
+    attack = "hitscan"
+    rate = 8.5
+    damage = 10
+    ammo = "bullet"
+    per = 1
+    give = { {ammo="bullet",count=20} }
+  }
+
+  shotty =
+  {
+    level = 1
+    pref = 70
+    add_prob = 10
+    start_prob = 60
+    attack = "hitscan"
+    rate = 0.9
+    damage = 70
+    splash = { 0,10 }
+    ammo = "shell"
+    per = 1
+    give = { {ammo="shell",count=8} }
+  }
+
+  super =
+  {
+    level = 4
+    pref = 50
+    add_prob = 20
+    start_prob = 60
+    attack = "hitscan"
+    rate = 0.6
+    damage = 170
+    splash = { 0,30 }
+    ammo = "shell"
+    per = 2
+    give = { {ammo="shell",count=8} }
+  }
+
+  launch =
+  {
+    level = 3
+    pref = 50
+    add_prob = 25
+    attack = "missile"
+    rate = 1.7
+    damage = 80
+    splash = { 50,20,5 }
+    ammo = "rocket"
+    per = 1
+    give = { {ammo="rocket",count=2} }
+  }
+
+  plasma =
+  {
+    level = 5
+    pref = 30
+    add_prob = 13
+    attack = "missile"
+    rate = 11
+    damage = 20
+    ammo = "cell"
+    per = 1
+    give = { {ammo="cell",count=40} }
+  }
+
+  bfg =
+  {
+    level = 7
+    pref = 15
+    add_prob = 20
+    attack = "missile"
+    rate = 0.65  -- tweaked value, normally 0.8
+    damage = 300
+    splash = {70,70,70,70, 70,70,70,70, 70,70,70,70}
+    ammo = "cell"
+    per = 40
+    give = { {ammo="cell",count=40} }
+  }
+
+  laser =
+  {
+    level = 9
+    pref = 15
+    add_prob = 20
+    attack = "missile"
+    rate = 0.65
+    damage = 300
+    splash = {70,70,70,70, 70,70,70,70, 70,70,70,70}
+    ammo = "cell"
+    per = 40
+    give = { {ammo="cell",count=40} }
+  }
 }
 
 
