@@ -23,16 +23,16 @@ Current Work
 
 PATTERN AREA LOGIC:
 
-!!!!  ensure chunks do not straddle concave corner of room
+DONE: ensure chunks do not straddle concave corner of room
       (for patterns, disallow whole pattern if a stair or diagonal
        straddles the corner)
 
-DONE:  de-grid-ify latest logic
+DONE: de-grid-ify latest logic
     Instead: any part of a room can be a "grid" (including a single seed)
              and can find grid via SEED.grid field
              automatically handle grids < 3x3 in size as "PLAIN"
 
-!!   ALSO: create chunks when installing a pattern (or "PLAIN")
+DONE: create chunks when installing a pattern (or "PLAIN")
 
 !!!  stairs
 
@@ -47,7 +47,7 @@ DONE:  de-grid-ify latest logic
    require neighboring 2+ VHRS with a difference >= 2
    (or both in one seed).
  
-+  support the "anchor" table
+?  support the "anchor" table
 
 
 
