@@ -148,7 +148,7 @@ ABSOLUTION.MATERIALS =
 
   -- walls --
 
-  X_WALL = { t="TILE5CD3", f="FTILEA79" }
+  X_WALL = { t="TILEADAC", f="FTILEA79" }
 
   X_DOOR = { t="TILE0CAC", f="FTILEA79" }
 
@@ -162,9 +162,8 @@ ABSOLUTION.MATERIALS =
 
   -- floors --
 
-  X_FLOOR = { f="FTILEC79", t="TILEA796" }
-  X_CEIL  = { f="FTILEEBD", t="TILEA796" }
-
+  X_FLOOR = { f="SPECIAL5", t="TILE1436" }
+  X_CEIL  = { f="FTILEC79", t="TILEA796" }
 
 
   -- rails --
