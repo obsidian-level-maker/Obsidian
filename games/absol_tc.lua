@@ -74,10 +74,35 @@ ABSOLUTION.ENTITIES =
   laser  = { id=2009, kind="pickup", r=20,h=16, pass=true }
 
   --- ammo ---
+  bullets    = { id=2007, kind="pickup", r=20,h=16, pass=true }
+  rocket     = { id=2010, kind="pickup", r=20,h=16, pass=true }
+  shells     = { id=2008, kind="pickup", r=20,h=16, pass=true }
+  cells      = { id=2047, kind="pickup", r=20,h=16, pass=true }
 
-  --- health ---
+  bullet_box = { id=2048, kind="pickup", r=20,h=16, pass=true }
+  shell_box  = { id=2049, kind="pickup", r=20,h=16, pass=true }
+  rocket_box = { id=2046, kind="pickup", r=20,h=16, pass=true }
+  cell_pack  = { id=  17, kind="pickup", r=20,h=16, pass=true }
+
+  --- health / armor ---
+  potion   = { id=2014, kind="pickup", r=20,h=16, pass=true }
+  stimpack = { id=2011, kind="pickup", r=20,h=16, pass=true }
+  medikit  = { id=2012, kind="pickup", r=20,h=16, pass=true }
+  soul     = { id=2013, kind="pickup", r=20,h=16, pass=true }
+
+  helmet      = { id=2015, kind="pickup", r=20,h=16, pass=true }
+  green_armor = { id=2018, kind="pickup", r=20,h=16, pass=true }
+  blue_armor  = { id=2019, kind="pickup", r=20,h=16, pass=true }
+  mega        = { id=  83, kind="pickup", r=20,h=16, pass=true }
 
   --- powerups ---
+  backpack = { id=   8, kind="pickup", r=20,h=16, pass=true }
+  invul    = { id=2022, kind="pickup", r=20,h=16, pass=true }
+  berserk  = { id=2023, kind="pickup", r=20,h=16, pass=true }
+  invis    = { id=2024, kind="pickup", r=20,h=16, pass=true }
+  suit     = { id=2025, kind="pickup", r=20,h=60, pass=true }
+  map      = { id=2026, kind="pickup", r=20,h=16, pass=true }
+  goggles  = { id=2045, kind="pickup", r=20,h=16, pass=true }
 
   laser_key1 = { id=4000, kind="pickup", r=20,h=16, pass=true }
   laser_key2 = { id=4001, kind="pickup", r=20,h=16, pass=true }
@@ -871,14 +896,115 @@ ABSOLUTION.PICKUPS =
 {
   -- HEALTH --
 
+  potion =
+  {
+    prob = 20
+    cluster = { 4,7 }
+    give = { {health=1} }
+  }
 
+  stimpack =
+  {
+    prob = 60
+    cluster = { 2,5 }
+    give = { {health=10} }
+  }
+
+  medikit =
+  {
+    prob = 100
+    give = { {health=25} }
+  }
+
+  soul =
+  {
+    prob = 3
+    big_item = true
+    start_prob = 5
+    give = { {health=150} }
+  }
 
   -- ARMOR --
 
+  helmet =
+  {
+    prob = 10
+    armor = true
+    cluster = { 4,7 }
+    give = { {health=1} }
+  }
 
+  green_armor =
+  {
+    prob = 5
+    armor = true
+    big_item = true
+    start_prob = 80
+    give = { {health=30} }
+  }
+
+  blue_armor =
+  {
+    prob = 2
+    armor = true
+    big_item = true
+    start_prob = 30
+    give = { {health=80} }
+  }
 
   -- AMMO --
 
+  bullets =
+  {
+    prob = 10
+    cluster = { 2,5 }
+    give = { {ammo="bullet",count=10} }
+  }
+
+  bullet_box =
+  {
+    prob = 40
+    give = { {ammo="bullet",count=50} }
+  }
+
+  shells =
+  {
+    prob = 20
+    cluster = { 2,5 }
+    give = { {ammo="shell",count=4} }
+  }
+
+  shell_box =
+  {
+    prob = 40
+    give = { {ammo="shell",count=20} }
+  }
+
+  rocket =
+  {
+    prob = 10
+    cluster = { 4,7 }
+    give = { {ammo="rocket",count=1} }
+  }
+
+  rocket_box =
+  {
+    prob = 40
+    give = { {ammo="rocket",count=5} }
+  }
+
+  cells =
+  {
+    prob = 20
+    cluster = { 2,5 }
+    give = { {ammo="cell",count=20} }
+  }
+
+  cell_pack =
+  {
+    prob = 40
+    give = { {ammo="cell",count=100} }
+  }
 }
 
 
