@@ -127,6 +127,8 @@ function CHUNK_CLASS.install(C)
     end
 
     S.chunk = C
+
+    table.insert(S.chunks, C)
   end end
 
   C:set_coords()
@@ -303,21 +305,23 @@ function CHUNK_CLASS.neighbor_info(C, dir, info, sky_only)
   local touch_sky
 
   for sx = sx1,sx2 do for sy = sy1,sy2 do
-    local C = SEEDS[sx][sy].chunk
+    local N = SEEDS[sx][sy].chunk
 
-    if not C then return nil end
+    if not N then N = SEEDS[sx][sy].chunks[1] end
 
-    if C.room and C.room.kind == "outdoor" then
+    if not N then return nil end
+
+    if N.room and N.room.kind == "outdoor" then
       info.sky = true
       touch_sky = true
     elseif sky_only then
       continue
     end
 
-    if C.floor_h then info.f_min = math.min(info.f_min or  9999, C.floor_h) end
-    if C.floor_h then info.f_max = math.max(info.f_max or -9999, C.floor_h) end
+    if N.floor_h then info.f_min = math.min(info.f_min or  9999, N.floor_h) end
+    if N.floor_h then info.f_max = math.max(info.f_max or -9999, N.floor_h) end
 
-    local ceil_h = C.ceil_h or (C.room and C.room.sky_h)
+    local ceil_h = N.ceil_h or (N.room and N.room.sky_h)
 
     if ceil_h then info.c_min = math.min(info.c_min or  9999, ceil_h) end
     if ceil_h then info.c_max = math.max(info.c_max or -9999, ceil_h) end
@@ -977,7 +981,7 @@ function CHUNK_CLASS.inner_outer_mat(C, L1, L2)
 end
 
 
-function CHUNK_CLASS.build_wall(C, dir, f_h)
+function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
   local long = geom.vert_sel(dir, C.x2 - C.x1, C.y2 - C.y1)
   local deep = 24
 
@@ -988,6 +992,21 @@ function CHUNK_CLASS.build_wall(C, dir, f_h)
   assert(skin)
 
   skin.outer = assert(skin.facade)
+
+  -- WINDOWS !!!!
+  local info = {}
+
+  if C:neighbor_info(dir, info, "sky_only") and
+     info.f_max and info.f_max <= f_h and
+     info.c_min and info.c_min >= c_h
+  then
+    -- use an "XYZ" fitted transform
+    T.add_z    = f_h
+    T.fitted_z = c_h - f_h
+
+    Fabricate("WINDOW", T, { skin })
+    return
+  end
 
   Fabricate("WALL", T, { skin })
 end
@@ -1310,7 +1329,7 @@ end --]]
 
       else
         -- SOLID WALL
-        C:build_wall(dir, f_h)
+        C:build_wall(dir, f_h, c_h)
       end
 
     end

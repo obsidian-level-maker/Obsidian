@@ -25,7 +25,7 @@
 
 PREFAB.WINDOW =
 {
-  fitted = "xy"
+  fitted = "xyz"
 
   x_ranges = { {64,1}, {64,4}, {64,1} }
 
@@ -72,6 +72,13 @@ PREFAB.WINDOW =
       { x = 128, y = 32, mat = "?wall" }
       { x =  64, y = 32, mat = "?wall" }
       { b = 96, mat = "?frame" }
+    }
+
+    -- bounding on Z axis
+    {
+      { m = "bbox" }
+      { b = 0 }
+      { t = 128 }
     }
   }
 }

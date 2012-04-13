@@ -2209,6 +2209,7 @@ Areas_dump_vhr(R)
       for sx = C.sx1, C.sx2 do
       for sy = C.sy1, C.sy2 do
         SEEDS[sx][sy].plain_chunk = true
+        table.insert(SEEDS[sx][sy].chunks, C)
       end
       end
 
@@ -2545,6 +2546,7 @@ Areas_dump_vhr(R)
               if S:above_vhr(AREA.vhr) then C.no_ceil = true end
               AREA:add_chunk(C)
               C.room = R ; table.insert(R.chunks, C)
+              table.insert(S.chunks, C)
             end
 
           elseif not ELEM.chunk then
@@ -2555,7 +2557,13 @@ Areas_dump_vhr(R)
             if S:above_vhr(AREA.vhr) then C.no_ceil = true end
             AREA:add_chunk(C)
             C.room = R ; table.insert(R.chunks, C)
-            
+
+            for sx = C.sx1, C.sx2 do
+            for sy = C.sy1, C.sy2 do
+              table.insert(SEEDS[sx][sy].chunks, C)
+            end
+            end
+
             ELEM.chunk = C
 
             handle_stair(ELEM.ch, C)
