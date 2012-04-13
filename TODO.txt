@@ -21,27 +21,14 @@ Current Work
       _cave = 0 / 1
 
 
+Outdoor rooms: begin with whole space as "natural", create "constructed"
+               intrusions into that space.
+
+
 PATTERN AREA LOGIC:
 
-DONE: ensure chunks do not straddle concave corner of room
-      (for patterns, disallow whole pattern if a stair or diagonal
-       straddles the corner)
-
-DONE: de-grid-ify latest logic
-    Instead: any part of a room can be a "grid" (including a single seed)
-             and can find grid via SEED.grid field
-             automatically handle grids < 3x3 in size as "PLAIN"
-
-DONE: create chunks when installing a pattern (or "PLAIN")
-
-!!!  stairs
-
-?  allow the two area creation methods to co-exist, the grid system
-   can take over after e.g. doing a bunch of try_XXX stuff.
-
-   [YES! : grid system replaces the grow_random stuff]
-
-   Although stairs may be an issue
+??  allow the two area creation methods to co-exist, the grid system
+    can take over after e.g. doing a bunch of try_XXX stuff.
 
 -  sometimes with "PLAIN" fill, have two levels (two VHRs)
    require neighboring 2+ VHRS with a difference >= 2
@@ -49,39 +36,6 @@ DONE: create chunks when installing a pattern (or "PLAIN")
  
 ?  support the "anchor" table
 
-
-
-AREA ALGORITHM #627
-===================
-
-(1) there are "virtual height ranges" (VHR) numbered 1 to 9.
-    at the end of the algorithm they will get actual heights
-    (most simplistic way is to multiply the number by 128).
-
-(2) AREA = a VHR number occupying a group of contiguous seeds.
-    In truly 3D games, areas can overlap other ones with a
-    different VHR (perhaps prefer a diff >= 2).
-    In 2.5D games (without extrafloors), areas cannot overlap.
-
-(3) two areas which touch or overlap MUST NOT have the same VHR.
-
-(4) began by adding zero or more areas in the middle of a room
-    (e.g. around reclaimed junctions).
-    These islands should not touch.
-    Give them VHR numbers in the range 4 to 6.
- 
-(5) add areas to remaining space, ensuring that each new area
-    does not use the same VHR number as any areas that it touches
-    or overlaps.  Repeat until all seeds in the room are used
-    (and perhaps a few more times for 3D areas).
-
-    Can merge an area into an existing one if the new area would
-    be too small, so long as existing area is not going to touch
-    another area with same VHR number.
-
-(6) VHR #1 is reserved for a crossover channel / low intrusion
-    VHR #9 is reserved for a crossover bridge / high intrusion
-    The shapes of those areas can be arbitrary.
 
 
 !!!  have 'z1_cap' and 'z2_cap' fields in a chunk, ensure all
@@ -96,7 +50,7 @@ AREA ALGORITHM #627
    -  try_CORNER()
    -  try_EDGE()
 
--  put VOID in non-walk left-overs
+?  put VOID in non-walk left-overs
 
 -  when expanding a new area (A) which overlaps another (B), then
    have a kind of slow-down when A starts to overlap too much of B
