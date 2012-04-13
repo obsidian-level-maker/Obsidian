@@ -25,10 +25,10 @@ PREFAB.WALL =
   brushes =
   {
     {
-      { x =   0, y =  0, mat = "?facade" }
+      { x =   0, y =  0, mat = "?outer" }
       { x = 192, y =  0, mat = "?wall" }
-      { x = 192, y = 16, mat = "?wall" }
-      { x =   0, y = 16, mat = "?wall" }
+      { x = 192, y = 24, mat = "?wall" }
+      { x =   0, y = 24, mat = "?wall" }
     }
   }
 }

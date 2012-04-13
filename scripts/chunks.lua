@@ -986,7 +986,8 @@ function CHUNK_CLASS.build_wall(C, dir, f_h)
 
   local skin = (C.room and C.room.skin) or (C.hall and C.hall.skin)
   assert(skin)
-  assert(skin.facade)
+
+  skin.outer = assert(skin.facade)
 
   Fabricate("WALL", T, { skin })
 end
