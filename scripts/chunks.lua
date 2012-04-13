@@ -994,15 +994,14 @@ function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
   skin.outer = assert(skin.facade)
 
   -- WINDOWS !!!!
-  local info = {}
+  local info = { f_max = f_h, c_min = c_h }
 
   if C:neighbor_info(dir, info, "sky_only") and
-     info.f_max and info.f_max <= f_h and
-     info.c_min and info.c_min >= c_h
+     info.c_min - info.f_max >= 64
   then
     -- use an "XYZ" fitted transform
-    T.add_z    = f_h
-    T.fitted_z = c_h - f_h
+    T.add_z    = info.f_max
+    T.fitted_z = info.c_min - info.f_max
 
     Fabricate("WINDOW", T, { skin })
     return
