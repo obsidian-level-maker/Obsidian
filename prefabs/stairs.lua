@@ -208,6 +208,194 @@ PREFAB.NICHE_STAIR_8 =
 }
 
 
+PREFAB.STAIR_W_SIDES =
+{
+  fitted = "xy"
+
+  brushes =
+  {
+    {
+      { x =  48, y =   0, mat = "?wall" }
+      { x = 144, y =   0, mat = "?wall" }
+      { x = 144, y =  16, mat = "?step", y_offset=0, peg=1 }
+      { x =  48, y =  16, mat = "?wall" }
+      { t = 56, mat = "?top" }
+    }
+
+    {
+      { x =  48, y =  76, mat = "?wall" }
+      { x = 144, y =  76, mat = "?wall" }
+      { x = 144, y =  88, mat = "?step", y_offset=0, peg=1 }
+      { x =  48, y =  88, mat = "?wall" }
+      { t = 8, mat = "?top" }
+    }
+
+    {
+      { x =  32, y =  76, mat = "?metal" }
+      { x =  48, y =  76, mat = "?metal" }
+      { x =  48, y =  88, mat = "?metal" }
+      { x =  32, y =  88, mat = "?metal" }
+      { t = 40, mat = "?metal" }
+    }
+
+    {
+      { x = 144, y =   0, mat = "?metal" }
+      { x = 160, y =   0, mat = "?metal" }
+      { x = 160, y =  28, mat = "?metal" }
+      { x = 144, y =  28, mat = "?metal" }
+      { t = 80, mat = "?metal" }
+    }
+
+    {
+      { x =  32, y =  88, mat = "?metal" }
+      { x =  48, y =  88, mat = "?metal" }
+      { x =  48, y = 104, mat = "?metal" }
+      { x =  32, y = 104, mat = "?metal" }
+      { t = 32, mat = "?metal" }
+    }
+
+    {
+      { x =  32, y =   0, mat = "?metal" }
+      { x =  48, y =   0, mat = "?metal" }
+      { x =  48, y =  28, mat = "?metal" }
+      { x =  32, y =  28, mat = "?metal" }
+      { t = 80, mat = "?metal" }
+    }
+
+    {
+      { x = 144, y =  76, mat = "?metal" }
+      { x = 160, y =  76, mat = "?metal" }
+      { x = 160, y =  88, mat = "?metal" }
+      { x = 144, y =  88, mat = "?metal" }
+      { t = 40, mat = "?metal" }
+    }
+
+    {
+      { x = 144, y =  88, mat = "?metal" }
+      { x = 160, y =  88, mat = "?metal" }
+      { x = 160, y = 104, mat = "?metal" }
+      { x = 144, y = 104, mat = "?metal" }
+      { t = 32, mat = "?metal" }
+    }
+
+    {
+      { x =  48, y =  64, mat = "?wall" }
+      { x = 144, y =  64, mat = "?wall" }
+      { x = 144, y =  76, mat = "?step", y_offset=0, peg=1 }
+      { x =  48, y =  76, mat = "?wall" }
+      { t = 16, mat = "?top" }
+    }
+
+    {
+      { x =  32, y =  64, mat = "?metal" }
+      { x =  48, y =  64, mat = "?metal" }
+      { x =  48, y =  76, mat = "?metal" }
+      { x =  32, y =  76, mat = "?metal" }
+      { t = 48, mat = "?metal" }
+    }
+
+    {
+      { x =  48, y =  52, mat = "?wall" }
+      { x = 144, y =  52, mat = "?wall" }
+      { x = 144, y =  64, mat = "?step", y_offset=0, peg=1 }
+      { x =  48, y =  64, mat = "?wall" }
+      { t = 24, mat = "?top" }
+    }
+
+    {
+      { x =  32, y =  52, mat = "?metal" }
+      { x =  48, y =  52, mat = "?metal" }
+      { x =  48, y =  64, mat = "?metal" }
+      { x =  32, y =  64, mat = "?metal" }
+      { t = 56, mat = "?metal" }
+    }
+
+    {
+      { x = 144, y =  64, mat = "?metal" }
+      { x = 160, y =  64, mat = "?metal" }
+      { x = 160, y =  76, mat = "?metal" }
+      { x = 144, y =  76, mat = "?metal" }
+      { t = 48, mat = "?metal" }
+    }
+
+    {
+      { x =  48, y =  40, mat = "?wall" }
+      { x = 144, y =  40, mat = "?wall" }
+      { x = 144, y =  52, mat = "?step", y_offset=0, peg=1 }
+      { x =  48, y =  52, mat = "?wall" }
+      { t = 32, mat = "?top" }
+    }
+
+    {
+      { x =  32, y =  40, mat = "?metal" }
+      { x =  48, y =  40, mat = "?metal" }
+      { x =  48, y =  52, mat = "?metal" }
+      { x =  32, y =  52, mat = "?metal" }
+      { t = 64, mat = "?metal" }
+    }
+
+    {
+      { x = 144, y =  52, mat = "?metal" }
+      { x = 160, y =  52, mat = "?metal" }
+      { x = 160, y =  64, mat = "?metal" }
+      { x = 144, y =  64, mat = "?metal" }
+      { t = 56, mat = "?metal" }
+    }
+
+    {
+      { x =  48, y =  28, mat = "?wall" }
+      { x = 144, y =  28, mat = "?wall" }
+      { x = 144, y =  40, mat = "?step", y_offset=0, peg=1 }
+      { x =  48, y =  40, mat = "?wall" }
+      { t = 40, mat = "?top" }
+    }
+
+    {
+      { x =  32, y =  28, mat = "?metal" }
+      { x =  48, y =  28, mat = "?metal" }
+      { x =  48, y =  40, mat = "?metal" }
+      { x =  32, y =  40, mat = "?metal" }
+      { t = 72, mat = "?metal" }
+    }
+
+    {
+      { x = 144, y =  40, mat = "?wall" }
+      { x = 160, y =  40, mat = "?metal" }
+      { x = 160, y =  52, mat = "?metal" }
+      { x = 144, y =  52, mat = "?metal" }
+      { t = 64, mat = "?metal" }
+    }
+
+    {
+      { x =  48, y =  16, mat = "?wall" }
+      { x = 144, y =  16, mat = "?wall" }
+      { x = 144, y =  28, mat = "?step", y_offset=0, peg=1 }
+      { x =  48, y =  28, mat = "?wall" }
+      { t = 48, mat = "?top" }
+    }
+
+    {
+      { x = 144, y =  28, mat = "?metal" }
+      { x = 160, y =  28, mat = "?metal" }
+      { x = 160, y =  40, mat = "?metal" }
+      { x = 144, y =  40, mat = "?metal" }
+      { t = 72, mat = "?metal" }
+    }
+
+-- [[    -- surrounding floor  FIXME: keep???
+    {
+      { x =   0, y=   0, mat = "?floor" }
+      { x = 192, y=   0, mat = "?floor" }
+      { x = 192, y= 192, mat = "?floor" }
+      { x =   0, y= 192, mat = "?floor" }
+      { t = 0, mat = "?floor" }
+    }
+--]]
+  }
+}
+
+
+
 PREFAB.LOW_CURVE_STAIR =
 {
   brushes =

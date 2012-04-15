@@ -2005,6 +2005,16 @@ DOOM.SKINS =
     _deltas = { 32,48,48,64,64,80 }
   }
 
+  Stair_Up2 =
+  {
+    _prefab = "STAIR_W_SIDES"
+    _where  = "floor"
+
+    metal = "METAL"
+    step  = "STEP1"
+    top   = "FLOOR0_1"
+  }
+
   Stair_Down1 =
   {
     _prefab = "NICHE_STAIR_8"
