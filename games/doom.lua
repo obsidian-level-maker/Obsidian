@@ -2015,6 +2015,15 @@ DOOM.SKINS =
     top   = "FLOOR0_1"
   }
 
+  Stair_Up3 =
+  {
+    _prefab = "STAIR_TRIANGLE"
+    _where  = "floor"
+
+    step = "STEP1"
+    top = "FLOOR0_1"
+  }
+
   Stair_Down1 =
   {
     _prefab = "NICHE_STAIR_8"

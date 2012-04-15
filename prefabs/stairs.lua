@@ -396,6 +396,61 @@ PREFAB.STAIR_W_SIDES =
 
 
 
+PREFAB.STAIR_TRIANGLE =
+{
+  fitted = "xy"
+
+  brushes =
+  {
+    {
+      { x =  16, y =   0, mat = "?top" }
+      { x = 176, y =   0, mat = "?step", peg=1, y_offset=0 }
+      { x =  96, y = 160, mat = "?step", peg=1, y_offset=0 }
+      { t = 12, mat = "?top" }
+    }
+
+    {
+      { x =  32, y =   0, mat = "?top" }
+      { x = 160, y =   0, mat = "?step", peg=1, y_offset=0 }
+      { x =  96, y = 128, mat = "?step", peg=1, y_offset=0 }
+      { t = 24, mat = "?top" }
+    }
+
+    {
+      { x =  48, y =   0, mat = "?top" }
+      { x = 144, y =   0, mat = "?step", peg=1, y_offset=0 }
+      { x =  96, y =  96, mat = "?step", peg=1, y_offset=0 }
+      { t = 36, mat = "?top" }
+    }
+
+    {
+      { x =  64, y =   0, mat = "?top" }
+      { x = 128, y =   0, mat = "?step", peg=1, y_offset=0 }
+      { x =  96, y =  64, mat = "?step", peg=1, y_offset=0 }
+      { t = 48, mat = "?top" }
+    }
+
+    {
+      { x =  80, y =   0, mat = "?top" }
+      { x = 112, y =   0, mat = "?step", peg=1, y_offset=0 }
+      { x =  96, y =  32, mat = "?step", peg=1, y_offset=0 }
+      { t = 60, mat = "?top" }
+    }
+
+-- [[    -- surrounding floor  FIXME: keep???
+    {
+      { x =   0, y=   0, mat = "?floor" }
+      { x = 192, y=   0, mat = "?floor" }
+      { x = 192, y= 192, mat = "?floor" }
+      { x =   0, y= 192, mat = "?floor" }
+      { t = 0, mat = "?floor" }
+    }
+--]]
+  }
+}
+
+
+
 PREFAB.LOW_CURVE_STAIR =
 {
   brushes =
