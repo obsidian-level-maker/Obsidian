@@ -2024,6 +2024,15 @@ DOOM.SKINS =
     top = "FLOOR0_1"
   }
 
+  Stair_Up4 =
+  {
+    _prefab = "STAIR_CIRCLE"
+    _where  = "floor"
+
+    step = "STEP5"
+    top  = "FLOOR0_2"
+  }
+
   Stair_Down1 =
   {
     _prefab = "NICHE_STAIR_8"

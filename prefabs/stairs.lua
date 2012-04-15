@@ -450,6 +450,66 @@ PREFAB.STAIR_TRIANGLE =
 }
 
 
+PREFAB.STAIR_CIRCLE =
+{
+  fitted = "xy"
+
+  brushes =
+  {
+    {
+      { x =  12, y =   0, mat = "?top" }
+      { x = 180, y =   0, mat = "?step", y_offset=0, peg=1 }
+      { x = 172, y =  48, mat = "?step", y_offset=0, peg=1 }
+      { x = 144, y =  80, mat = "?step", y_offset=0, peg=1 }
+      { x = 112, y =  96, mat = "?step", y_offset=0, peg=1 }
+      { x =  80, y =  96, mat = "?step", y_offset=0, peg=1 }
+      { x =  48, y =  80, mat = "?step", y_offset=0, peg=1 }
+      { x =  20, y =  48, mat = "?step", y_offset=0, peg=1 }
+      { t = 13, mat = "?top" }
+    }
+
+    {
+      { x =  32, y =   0, mat = "?top" }
+      { x = 160, y =   0, mat = "?step", peg=1, y_offset=0 }
+      { x = 152, y =  36, mat = "?step", peg=1, y_offset=0 }
+      { x = 128, y =  60, mat = "?step", peg=1, y_offset=0 }
+      { x =  96, y =  68, mat = "?step", peg=1, y_offset=0 }
+      { x =  64, y =  60, mat = "?step", peg=1, y_offset=0 }
+      { x =  40, y =  36, mat = "?step", peg=1, y_offset=0 }
+      { t = 26, mat = "?top" }
+    }
+
+    {
+      { x =  52, y =   0, mat = "?top" }
+      { x = 140, y =   0, mat = "?step", peg=1, y_offset=0 }
+      { x = 128, y =  32, mat = "?step", peg=1, y_offset=0 }
+      { x =  96, y =  44, mat = "?step", peg=1, y_offset=0 }
+      { x =  64, y =  32, mat = "?step", peg=1, y_offset=0 }
+      { t = 39, mat = "?top" }
+    }
+
+    {
+      { x =  72, y =   0, mat = "?top" }
+      { x = 120, y =   0, mat = "?step", peg=1, y_offset=0 }
+      { x = 112, y =  16, mat = "?step", peg=1, y_offset=0 }
+      { x =  96, y =  24, mat = "?step", peg=1, y_offset=0 }
+      { x =  80, y =  16, mat = "?step", peg=1, y_offset=0 }
+      { t = 52, mat = "?top" }
+    }
+
+-- [[    -- surrounding floor  FIXME: keep???
+    {
+      { x =   0, y=   0, mat = "?floor" }
+      { x = 192, y=   0, mat = "?floor" }
+      { x = 192, y= 192, mat = "?floor" }
+      { x =   0, y= 192, mat = "?floor" }
+      { t = 0, mat = "?floor" }
+    }
+--]]
+  }
+}
+
+
 
 PREFAB.LOW_CURVE_STAIR =
 {
