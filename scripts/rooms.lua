@@ -2729,7 +2729,7 @@ function Rooms_decide_fences()
 
     -- at here, R1 is an earlier quest than R2
 
-    if R1.max_floor_h + PARAM.jump_height + 30 < R2.max_floor_h then
+    if R1.max_floor_h + PARAM.jump_height + 14 < R2.min_floor_h then
       -- cannot reach R2 from R1 due to height difference
       return
     end
