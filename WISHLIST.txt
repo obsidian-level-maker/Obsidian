@@ -15,7 +15,7 @@ YAY!!! DONE!!  get cave code working again
 
 *  symmetrical rooms
 
-*  texture coord system: u(1/2), v(1/2) fields
+*  texture coord system (see docs/Tex_Coords.txt)
 
 
 ----------------------------------------------------------------
