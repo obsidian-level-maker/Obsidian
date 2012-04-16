@@ -12,7 +12,8 @@ then the texture is axis aligned and 1:1 scale)
 
 side texture: u1 and/or u2 in brush sides
               v1 and/or v2 in brush sides
-(if only one of a pair: other is computed from length of side, i.e. 1:1 scale)
+(if only one of v1/v2 is present, other is computed from brush height)
+(u2 can be absent, but u2 without u1 is not supported)
 (can put v1 in t coord, v2 in b coords, for default value of all sides)
 
 new coord kind: zv = height, used with v1 or v2 to vertically anchor

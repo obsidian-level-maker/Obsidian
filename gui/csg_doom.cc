@@ -1002,8 +1002,8 @@ static doom_sidedef_c * DM_MakeSidedef(
       if (lower->face.getInt("peg"))
         *l_peg = true;
 
-      int ox = lower->face.getInt("x_offset", IVAL_NONE);
-      int oy = lower->face.getInt("y_offset", IVAL_NONE);
+      int ox = lower->face.getInt("u1", IVAL_NONE);
+      int oy = lower->face.getInt("v1", IVAL_NONE);
 
       if (ox != IVAL_NONE)
         SD->x_offset = CalcXOffset(snag, lower, ox);
@@ -1039,14 +1039,14 @@ static doom_sidedef_c * DM_MakeSidedef(
     {
       *l_peg = false;
       SD->mid = rail->face.getStr("tex", "-");
-      r_ox = rail->face.getInt("x_offset", r_ox);
+      r_ox = rail->face.getInt("u1", r_ox);
     }
 
-    int l_ox = lower->face.getInt("x_offset", IVAL_NONE);
-    int l_oy = lower->face.getInt("y_offset", IVAL_NONE);
+    int l_ox = lower->face.getInt("u1", IVAL_NONE);
+    int l_oy = lower->face.getInt("v1", IVAL_NONE);
 
-    int u_ox = upper->face.getInt("x_offset", IVAL_NONE);
-    int u_oy = upper->face.getInt("y_offset", IVAL_NONE);
+    int u_ox = upper->face.getInt("u1", IVAL_NONE);
+    int u_oy = upper->face.getInt("v1", IVAL_NONE);
 
     if (r_ox != IVAL_NONE)
       SD->x_offset = CalcXOffset(snag, rail,  r_ox);

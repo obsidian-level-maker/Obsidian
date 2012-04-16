@@ -1548,6 +1548,10 @@ function Fab_apply_skins(fab, list)
 
       each C in B do
         Brush_collect_flags(C)
+
+        -- convert X/Y offsets
+        if C.x_offset then C.u1 = C.x_offset ; C.x_offset = nil end
+        if C.y_offset then C.v1 = C.y_offset ; C.y_offset = nil end
       end
     end
   end
