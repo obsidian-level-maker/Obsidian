@@ -65,6 +65,9 @@ class CHUNK
 
   z_low, z_high   -- vertical range of chunk
                   -- if absent, assume chunk requires whole Z range
+
+  prefabs  -- list of prefabs which touch this chunk
+           -- (only need ones which affect monster / item placement)
 }
 
 
@@ -96,7 +99,16 @@ class PART
 CHUNK_CLASS = {}
 
 function CHUNK_CLASS.new(sx1, sy1, sx2, sy2)
-  local C = { sx1=sx1, sy1=sy1, sx2=sx2, sy2=sy2, content={}, parts={}, link={} }
+  local C =
+  {
+    sx1=sx1, sy1=sy1
+    sx2=sx2, sy2=sy2
+    
+    content = {}
+    parts = {}
+    link = {}
+    prefabs = {}
+  }
   table.set_class(C, CHUNK_CLASS)
   return C
 end
