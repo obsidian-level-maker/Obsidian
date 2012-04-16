@@ -6,33 +6,6 @@ Current Work
 ------------
 
 
-TEXTURE COORDINATE SYSTEM
-
-bottom texture: bu, bv fields in sides
-top    texture: tu, tv fields in sides
-(usually in every side, but if only a single one: axis aligned and 1:1 scale)
-
-side texture: u1 and/or u2 in sides
-              v1 and/or v2 in sides
-(if only one of a pair: other is computed from length of side, i.e. 1:1 scale)
-(can put v1 in t coord, v2 in b coords, for default value in sides)
-
-new coord kind: vz = height, used with v1 or v2 to vertically anchor
-all the side textures to a certain height (unless the provide v1 or v2).
-
-x_offset is synonym for u1
-y_offset is synonym for v1
-
-DOOM and other games don't support scaling.  When both u1 and u2, or
-v1 and v2 are present on brush sides, only u1 or v1 are used.
-Similarly any floor/ceiling texture coordinates are ignored.
-
-The 'peg' flag is only for DOOM-based engines, causing the texture to
-move with the sector's floor or ceiling -- needed for doors and lifts.
-This flag will change how texturing is applied (in the DOOM engine),
-but has no effect on how the final y_offset is computed.
-
-
 >>>  stairs / lift : standardize height stuff
 
 
