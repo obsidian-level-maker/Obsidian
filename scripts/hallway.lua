@@ -424,16 +424,16 @@ function HALLWAY_CLASS.build_hall_piece(H, C)
   if H.sky_hall_sky_h then
     skin0.sky_h = H.sky_hall_sky_h - (C.floor_h or 0)
 
-    if C.h_scale_z then
-      skin0.sky_h = skin0.sky_h / C.h_scale_z
-    end
+---###  if C.h_scale_z then
+---###    skin0.sky_h = skin0.sky_h / C.h_scale_z
+---###  end
   end
 
   local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, C.h_dir or 2)
 
-  T.scale_z = C.h_scale_z
+  local skin2 = { stair_h = C.h_stair_h }
 
-  local fab = Fabricate(skin1._prefab, T, { skin0, skin1 })
+  local fab = Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
 
   if fab.has_spots then
     Rooms_distribute_spots(H, Fab_read_spots(fab))
@@ -1403,9 +1403,12 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
     C.h_extra = "stair"
     C.h_dir   = (z_dir < 0 ? 10 - from_dir ; from_dir)
 
-    ---TEST:  C.h_scale_z = rand.pick { 1.0, 1.5, 2.0 }
+    -- FIXME: pick stair kind ("short" / "medium" / "tall" / "lift")
 
-    floor_h = floor_h + (C.h_scale_z or 1) * 60 * z_dir
+    C.h_stair_kind = "medium"
+    C.h_stair_h = 64
+
+    floor_h = floor_h + C.h_stair_h * z_dir
 
     -- stairs and lifts require chunk has the lowest height
     if z_dir < 0 then

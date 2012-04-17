@@ -1196,6 +1196,7 @@ PREFAB.HALL_BASIC_I_STAIR =
 {
   fitted = "xy"
 
+  z_ranges = { {60,0,"?stair_h"}, {128,0} }
   y_ranges = { {16,0}, {160,1}, {16,0} }
 
   defaults =

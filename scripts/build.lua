@@ -1318,8 +1318,7 @@ function Fab_apply_skins(fab, list)
         v = Trans.substitute(SKIN, v)
 
         if v == nil then
-          error(string.format("Prefab: missing value for %s = \"%s\"",
-                              tostring(k), t[k]))
+          error(string.format("Prefab: missing value for \"%s\"", t[k]))
         end
 
         -- empty strings are the way to specify NIL
