@@ -29,6 +29,8 @@ PREFAB.STAIR_6 =
 {
   fitted = "xy"
 
+  z_ranges = { {128,0,"?stair_h"} }
+
   brushes =
   {
     {
@@ -83,6 +85,13 @@ PREFAB.STAIR_6 =
       { x = 144, y = 72, mat = "?step", peg=1, x_offset=0, y_offset=0 }
       { x =  48, y = 72, mat = "?side" }
       { t = 18, mat = "?top" }
+    }
+
+    -- bounding box on Z axis
+    {
+      { m = "bbox" }
+      { b = 0 }
+      { t = 128 }
     }
 
 -- [[    -- surrounding floor  FIXME: keep???

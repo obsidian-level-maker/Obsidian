@@ -2854,8 +2854,8 @@ function Areas_height_realization(R)
       C.floor_h = assert(AR.floor_h)
 
       if C.stair then
-        C.stair.delta_h = 64
-        C.stair.low_h = C.floor_h
+        C.stair.low_h  = C.floor_h
+        C.stair.high_h = C.floor_h + 64  -- FIXME
       end      
     end
   end
