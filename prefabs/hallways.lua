@@ -2069,6 +2069,7 @@ PREFAB.HALL_THIN_I_STAIR =
 {
   fitted = "xy"
 
+  z_ranges = { {60,0,"?stair_h"}, {116,0} }
   x_ranges = { {64,1}, {64,0}, {64,1} }
 
   brushes =
@@ -3054,6 +3055,8 @@ PREFAB.HALL_CAVEY_I_STAIR =
 {
   fitted = "xy"
 
+  z_ranges = { {60,0,"?stair_h"}, {96,0} }
+
   brushes =
   {
     {
@@ -3422,6 +3425,7 @@ PREFAB.SKY_HALL_I_STAIR =
 {
   fitted = "xy"
 
+  z_ranges = { {60,0,"?stair_h"}, {68,0}, {256,0} }
   x_ranges = { {16,0}, {160,1}, {16,0} }
 
   defaults =
@@ -3437,7 +3441,7 @@ PREFAB.SKY_HALL_I_STAIR =
       { x = 192, y =   0, mat = "_SKY" }
       { x = 192, y = 192, mat = "_SKY" }
       { x =   0, y = 192, mat = "_SKY" }
-      { b = "?sky_h", mat = "_SKY" }
+      { b = 384, mat = "_SKY" }
     }
 
     {

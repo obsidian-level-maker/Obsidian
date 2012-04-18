@@ -1522,10 +1522,10 @@ function HALLWAY_CLASS.cycle_flow(H, C, from_dir, z, i_deltas, seen)
       -- need a lift?
       if abs_dz > 80 + PARAM.step_height then
         C.h_extra = "lift"
-        C.h_scale_z = abs_dz / 128
+        C.h_stair_h = abs_dz
       else
         C.h_extra = "stair"
-        C.h_scale_z = math.min(abs_dz, 80) / 60
+        C.h_stair_h = math.min(abs_dz, 80)
       end
 
       z = z + dz
