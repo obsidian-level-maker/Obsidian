@@ -1401,7 +1401,7 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
       local e = geom.LEFT[s]
       local n = 10 - s
 
-      local from_h = skin._heights[from_dir]
+      local from_h = skin._heights[from_dir / 2]
 
       floor_heights[s] = floor_h + skin._heights[1] - from_h
       floor_heights[e] = floor_h + skin._heights[2] - from_h
