@@ -1397,16 +1397,20 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
       -- from a different direction that it faces (from_dir != C.h_dir).
 
       local s = C.h_dir
-      local w = geom.RIGHT[s]
-      local e = geom.LEFT[s]
+      local e = geom.RIGHT[s]
+      local w = geom.LEFT[s]
       local n = 10 - s
 
-      local from_h = skin._heights[from_dir / 2]
+      floor_heights[s] = skin._heights[1]
+      floor_heights[e] = skin._heights[2]
+      floor_heights[w] = skin._heights[3]
+      floor_heights[n] = skin._heights[4]
 
-      floor_heights[s] = floor_h + skin._heights[1] - from_h
-      floor_heights[e] = floor_h + skin._heights[2] - from_h
-      floor_heights[w] = floor_h + skin._heights[3] - from_h
-      floor_heights[n] = floor_h + skin._heights[4] - from_h
+      local from_h = floor_heights[from_dir]
+
+      for dir = 2,8,2 do
+        floor_heights[dir] = floor_h + floor_heights[dir] - from_h
+      end
 
       floor_h = floor_heights[s]
     end
