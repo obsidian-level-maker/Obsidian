@@ -703,7 +703,7 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
       effect = delta = 0;  // clear previous fx
     }
 
-    if (add >= max_add)
+    if (add > 0 && add >= max_add)
     {
       int val = B->props.getInt("effect");
 
@@ -721,9 +721,9 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
     csg_property_set_c *P = (f == 0) ? f_face : c_face;
 
     int add = P->getInt("light_add");
+    int sub = P->getInt("light_sub");
 
-    // this logic means that the highest 'add' brush can also supply
-    // a lighting effect (a sector special) and delta difference.
+    max_sub = MAX(max_sub, sub);
 
     if (add > max_add)
     {
@@ -731,7 +731,7 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
       effect = delta = 0;  // clear previous fx
     }
 
-    if (add >= max_add)
+    if (add > 0 && add >= max_add)
     {
       int val = P->getInt("light_effect");
 
