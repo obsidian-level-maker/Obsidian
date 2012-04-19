@@ -364,10 +364,10 @@ function HALLWAY_CLASS.select_piece(H, C)
   if C.h_extra == "lift"  then shape = shape .. "L" end
 
   -- find all skins which match this mode (etc)
-  local source_tab = H.group.pieces
+  local source_tab = H.group and H.group.pieces
 
   if C.section.kind == "big_junc" then
-    local biggies = H.group.big_junctions or THEME.big_junctions
+    local biggies = (H.group and H.group.big_junctions) or THEME.big_junctions
     assert(biggies)
 
     -- expand the table, checking that skins exist
@@ -1381,10 +1381,40 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
 
   seen[C] = true
 
+  local floor_heights = {}  -- indexed by [dir]
+
+  if C.section.kind == "big_junc" then
+    C.skin_name = H:select_piece(C)
+
+    local skin = assert(GAME.SKINS[C.skin_name])
+
+    -- allow height changes at big junctions (specified by the skin)
+
+    if skin._heights then
+      assert(skin._heights[4])
+      
+      -- this is complicated by the fact that we can enter the junction
+      -- from a different direction that it faces (from_dir != C.h_dir).
+
+      local s = C.h_dir
+      local w = geom.RIGHT[s]
+      local e = geom.LEFT[s]
+      local n = 10 - s
+
+      local from_h = skin._heights[from_dir]
+
+      floor_heights[s] = floor_h + skin._heights[1] - from_h
+      floor_heights[e] = floor_h + skin._heights[2] - from_h
+      floor_heights[w] = floor_h + skin._heights[3] - from_h
+      floor_heights[n] = floor_h + skin._heights[4] - from_h
+
+      floor_h = floor_heights[s]
+    end
+  end
+
+
   -- only the "I" pieces can become stairs or lifts
   -- (everything else must have no height changes)
-
-  -- FIXME: allow height changes at big junctions (specified by the skin)
 
   C.floor_h = floor_h
 
@@ -1425,12 +1455,14 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
   local did_a_branch = false
 
   each dir in rand.dir_list() do
+    local f_h = floor_heights[dir] or floor_h
+
     if dir == from_dir then continue end
 
     local C2 = C.hall_link[dir]
 
     if C2 and not seen[C2] then
-      H:stair_flow(C2, 10 - dir, floor_h, z_dir, seen)
+      H:stair_flow(C2, 10 - dir, f_h, z_dir, seen)
       did_a_branch = true
     end
 
@@ -1440,7 +1472,7 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
       local C3 = LINK.C1
       if C3 == C then C3 = LINK.C2 end
 
-      C3.floor_h = floor_h
+      C3.floor_h = f_h
     end
 
     if did_a_branch and rand.odds(50) and not H.double_fork then
