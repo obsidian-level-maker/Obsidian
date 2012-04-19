@@ -665,7 +665,7 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
   // in a room PLUS the greatest additive light brush MINUS the
   // greatest subtractive (shadow) brush.
 
-  // ambient default (FIXME: make default 128)
+  // ambient default (FIXME: make non-sky default 128)
   S->light = (S->misc_flags & SEC_IS_SKY) ? 192 : 144;
 
   int max_add = 0;
@@ -711,6 +711,34 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
       {
         effect = val;
         delta  = B->props.getInt("delta", -63);
+      }
+    }
+  }
+
+  // check faces too (keywords have a 'light_' prefix here)
+  for (unsigned int f = 0 ; f < 2 ; f++)
+  {
+    csg_property_set_c *P = (f == 0) ? f_face : c_face;
+
+    int add = P->getInt("light_add");
+
+    // this logic means that the highest 'add' brush can also supply
+    // a lighting effect (a sector special) and delta difference.
+
+    if (add > max_add)
+    {
+      max_add = add;
+      effect = delta = 0;  // clear previous fx
+    }
+
+    if (add >= max_add)
+    {
+      int val = P->getInt("light_effect");
+
+      if (val > 0)
+      {
+        effect = val;
+        delta  = P->getInt("light_delta", -63);
       }
     }
   }
