@@ -3091,6 +3091,36 @@ DOOM.SKINS =
   }
 
 
+  Junc_Ledge_T =
+  {
+    _prefab = "JUNCTION_LEDGE_1"
+    _shape  = "T"
+    _heights = { 0,64,64,64 }
+
+    floor1 = "FLOOR0_1"
+    ceil1  = "CEIL3_5"
+
+    floor2 = "FLAT4"
+    ceil2  = "FLAT5_3"
+    low_trim = "GRAY7"
+    high_trim = "METAL"
+
+    support = "METAL2"
+    step = "STEP1"
+    top = "CEIL5_1"
+
+    lamp_ent = "lamp"
+  }
+
+  Junc_Ledge_P =
+  {
+    _copy = "Junc_Ledge_T"
+    _shape  = "P"
+
+    north_h = 64
+  }
+
+
   ---| TELEPORTERS |---
 
   Teleporter1 =
@@ -3330,6 +3360,8 @@ DOOM.THEME_DEFAULTS =
 
   big_junctions =
   {
+    Junc_Ledge = 999
+
     Junc_Octo = 50
     Junc_Nuke_Pipes = 14
     Junc_Nuke_Islands = 40  -- size restriction means this is fairly rare
