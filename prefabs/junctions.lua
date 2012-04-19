@@ -2109,7 +2109,7 @@ PREFAB.JUNCTION_LEDGE_1 =
       { x = 176, y = 176, mat = "?wall" }
       { x = 176, y = 272, mat = "?wall" }
       { x =  32, y = 272, mat = "?wall" }
-      { b = 192, mat = "?ceil2" }
+      { b = 192, mat = "?ceil2", light_add=32 }
     }
 
     {
@@ -2157,7 +2157,7 @@ PREFAB.JUNCTION_LEDGE_1 =
       { x = 544, y = 272, mat = "?wall" }
       { x = 544, y = 512, mat = "?wall" }
       { x = 512, y = 512, mat = "?wall" }
-      { b = 192, mat = "?ceil2" }
+      { b = 192, mat = "?ceil2", light_add=32 }
     }
 
     {
@@ -2188,7 +2188,7 @@ PREFAB.JUNCTION_LEDGE_1 =
       { x = 240, y = 400, mat = "?wall" }
       { x = 192, y = 544, mat = "?wall" }
       { x =  64, y = 544, mat = "?wall" }
-      { b = 192, mat = "?ceil2" }
+      { b = 192, mat = "?ceil2", light_add=32 }
     }
 
     {
@@ -2456,7 +2456,7 @@ PREFAB.JUNCTION_LEDGE_1 =
       { x = 240, y = 400, mat = "?wall" }
       { x = 336, y = 400, mat = "?wall" }
       { x = 384, y = 544, mat = "?wall" }
-      { b = 192, mat = "?ceil2" }
+      { b = 192, mat = "?ceil2", light_add=32 }
     }
 
     {
@@ -2473,7 +2473,7 @@ PREFAB.JUNCTION_LEDGE_1 =
       { x = 544, y =  80, mat = "?wall" }
       { x = 544, y = 272, mat = "?wall" }
       { x = 400, y = 272, mat = "?wall" }
-      { b = 192, mat = "?ceil2" }
+      { b = 192, mat = "?ceil2", light_add=32 }
     }
 
     {
@@ -2488,7 +2488,7 @@ PREFAB.JUNCTION_LEDGE_1 =
       { x =  64, y = 272, mat = "?wall" }
       { x =  64, y = 512, mat = "?wall" }
       { x =  32, y = 512, mat = "?wall" }
-      { b = 192, mat = "?ceil2" }
+      { b = 192, mat = "?ceil2", light_add=32 }
     }
 
     {
@@ -2520,7 +2520,7 @@ PREFAB.JUNCTION_LEDGE_1 =
       { x = 512, y = 272, mat = "?wall" }
       { x = 512, y = 544, mat = "?wall" }
       { x = 384, y = 544, mat = "?wall" }
-      { b = 192, mat = "?ceil2" }
+      { b = 192, mat = "?ceil2", light_add=32 }
     }
 
     {
