@@ -3096,6 +3096,7 @@ DOOM.SKINS =
     _prefab = "JUNCTION_LEDGE_1"
     _shape  = "T"
     _heights = { 0,64,64,64 }
+    _floors  = { "floor1", "floor2", "floor2", "floor2" }
 
     floor1 = "FLOOR0_1"
     ceil1  = "CEIL3_5"
@@ -3103,7 +3104,7 @@ DOOM.SKINS =
     floor2 = "FLAT4"
     ceil2  = "FLAT5_3"
     low_trim = "GRAY7"
-    high_trim = "METAL"
+    high_trim = "GRAY7"
 
     support = "METAL2"
     step = "STEP1"
@@ -3126,6 +3127,16 @@ DOOM.SKINS =
     _prefab = "JUNCTION_WELL_1"
     _shape  = "I"
     _heights = { 0,-84,84,168 }
+
+    brick  = "BIGBRIK2"
+    top    = "MFLR8_1"
+    floor1 = "BIGBRIK1"
+    step   = "ROCK3"
+
+    gore_ent  = "skull_pole"
+
+    torch_ent = { blue_torch_sm=50, blue_torch=50,
+                  red_torch_sm=10,  red_torch=10 }
   }
 
   Junc_Well_T =
@@ -4709,7 +4720,7 @@ DOOM2.LEVEL_THEMES =
 
     big_junctions =
     {
-      Junc_Well = 999
+      Junc_Well = 9999
 
       Junc_Octo = 50
       Junc_Nuke_Pipes = 5

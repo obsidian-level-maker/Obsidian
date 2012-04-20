@@ -2595,3 +2595,882 @@ PREFAB.JUNCTION_LEDGE_1 =
   }
 }
 
+
+PREFAB.JUNCTION_WELL_1 =
+{
+  fitted = "xy"
+
+  defaults =
+  {
+    gore_ent  = ""
+    torch_ent = ""
+  }
+
+  brushes =
+  {
+    {
+      { x =   0, y = 552, mat = "?brick" }
+      { x =   8, y = 552, mat = "_LIQUID" }
+      { x =  24, y = 568, mat = "?brick" }
+      { x =  24, y = 576, mat = "?outer" }
+      { x =   0, y = 576, mat = "?outer" }
+    }
+
+    {
+      { x = 472, y =   0, mat = "?outer" }
+      { x = 576, y =   0, mat = "?outer" }
+      { x = 576, y = 104, mat = "?brick" }
+      { x = 520, y = 104, mat = "?brick" }
+      { x = 496, y =  80, mat = "?brick" }
+      { x = 472, y =  56, mat = "?brick" }
+    }
+
+    {
+      { x =   0, y =   0, mat = "?outer" }
+      { x = 104, y =   0, mat = "?brick" }
+      { x = 104, y =  56, mat = "?brick" }
+      { x =  80, y =  80, mat = "?brick" }
+      { x =  56, y = 104, mat = "?brick" }
+      { x =   0, y = 104, mat = "?outer" }
+    }
+
+    {
+      { x = 472, y = 520, mat = "?brick" }
+      { x = 496, y = 496, mat = "?brick" }
+      { x = 520, y = 472, mat = "?brick" }
+      { x = 576, y = 472, mat = "?outer" }
+      { x = 576, y = 576, mat = "?outer" }
+      { x = 472, y = 576, mat = "?brick" }
+    }
+
+    {
+      { x =  16, y = 384, mat = "?step" }
+      { x = 157, y = 320, mat = "?floor1" }
+      { x = 171, y = 351, mat = "?floor1" }
+      { x =  45, y = 455, mat = "?brick" }
+      { t = -96, mat = "?floor1" }
+    }
+    {
+      { x =  16, y = 384, mat = "?step" }
+      { x = 157, y = 320, mat = "?top" }
+      { x = 171, y = 351, mat = "?step" }
+      { x =  45, y = 455, mat = "?brick" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x =   0, y = 384, mat = "?brick" }
+      { x =  16, y = 384, mat = "?brick" }
+      { x =  45, y = 455, mat = "?brick" }
+      { x =  32, y = 480, mat = "?brick" }
+      { x =  16, y = 496, mat = "?brick" }
+      { x =   0, y = 496, mat = "?outer" }
+    }
+
+    {
+      { x = 329, y = 418, mat = "?floor1" }
+      { x = 354, y = 407, mat = "?step" }
+      { x = 432, y = 544, mat = "?brick" }
+      { x = 384, y = 560, mat = "?brick" }
+      { t = 156, mat = "?floor1" }
+    }
+    {
+      { x = 329, y = 418, mat = "?top" }
+      { x = 354, y = 407, mat = "?step" }
+      { x = 432, y = 544, mat = "?brick" }
+      { x = 384, y = 560, mat = "?brick" }
+      { b = 384, mat = "?brick", light_add=16 }
+    }
+
+    {
+      { x = 384, y = 560, mat = "?brick" }
+      { x = 432, y = 544, mat = "?brick" }
+      { x = 432, y = 576, mat = "?outer" }
+      { x = 384, y = 576, mat = "?brick" }
+    }
+
+    {
+      { x = 418, y = 224, mat = "?step" }
+      { x = 544, y = 144, mat = "?brick" }
+      { x = 560, y = 192, mat = "?brick" }
+      { x = 427, y = 246, mat = "?floor1" }
+      { t = 72, mat = "?floor1" }
+    }
+    {
+      { x = 418, y = 224, mat = "?step" }
+      { x = 544, y = 144, mat = "?brick" }
+      { x = 560, y = 192, mat = "?brick" }
+      { x = 427, y = 246, mat = "?top" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x = 544, y = 144, mat = "?brick" }
+      { x = 576, y = 144, mat = "?outer" }
+      { x = 576, y = 192, mat = "?brick" }
+      { x = 560, y = 192, mat = "?brick" }
+    }
+
+    {
+      { x = 144, y =  32, mat = "?brick" }
+      { x = 192, y =  16, mat = "?brick" }
+      { x = 255, y = 148, mat = "?floor1" }
+      { x = 233, y = 157, mat = "?step" }
+      { t = -12, mat = "?floor1" }
+    }
+    {
+      { x = 144, y =  32, mat = "?brick" }
+      { x = 192, y =  16, mat = "?brick" }
+      { x = 255, y = 148, mat = "?top" }
+      { x = 233, y = 157, mat = "?step" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x = 144, y =   0, mat = "?outer" }
+      { x = 192, y =   0, mat = "?brick" }
+      { x = 192, y =  16, mat = "?brick" }
+      { x = 144, y =  32, mat = "?brick" }
+    }
+
+    {
+      { x =   0, y = 192, mat = "?brick" }
+      { x =  16, y = 192, mat = "?brick" }
+      { x =   8, y = 288, mat = "?brick" }
+      { x =   0, y = 288, mat = "?outer" }
+      { t = -84, mat = "?floor1" }
+    }
+    {
+      { x =   0, y = 192, mat = "?brick" }
+      { x =  16, y = 192, mat = "?brick" }
+      { x =   8, y = 288, mat = "?brick" }
+      { x =   0, y = 288, mat = "?outer" }
+      { b = 44, mat = "?brick" }
+    }
+
+    {
+      { x = 560, y = 384, mat = "?brick" }
+      { x = 568, y = 288, mat = "?brick" }
+      { x = 576, y = 288, mat = "?outer" }
+      { x = 576, y = 384, mat = "?brick" }
+      { t = 84, mat = "?floor1" }
+    }
+    {
+      { x = 560, y = 384, mat = "?brick" }
+      { x = 568, y = 288, mat = "?brick" }
+      { x = 576, y = 288, mat = "?outer" }
+      { x = 576, y = 384, mat = "?brick" }
+      { b = 212, mat = "?brick" }
+    }
+
+    {
+      { x = 427, y = 320, mat = "?floor1" }
+      { x = 433, y = 288, mat = "?step" }
+      { x = 568, y = 288, mat = "?brick" }
+      { x = 560, y = 384, mat = "?step" }
+      { t = 84, mat = "?floor1" }
+    }
+    {
+      { x = 427, y = 320, mat = "?top" }
+      { x = 433, y = 288, mat = "?brick" }
+      { x = 568, y = 288, mat = "?brick" }
+      { x = 560, y = 384, mat = "?step" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x = 560, y = 192, mat = "?brick" }
+      { x = 576, y = 192, mat = "?outer" }
+      { x = 576, y = 288, mat = "?brick" }
+      { x = 568, y = 288, mat = "?brick" }
+      { t = 84, mat = "?floor1" }
+    }
+    {
+      { x = 560, y = 192, mat = "?brick" }
+      { x = 576, y = 192, mat = "?outer" }
+      { x = 576, y = 288, mat = "?brick" }
+      { x = 568, y = 288, mat = "?brick" }
+      { b = 212, mat = "?brick" }
+    }
+
+    {
+      { x = 391, y = 376, mat = "?floor1" }
+      { x = 405, y = 361, mat = "?step" }
+      { x = 520, y = 472, mat = "?brick" }
+      { x = 496, y = 496, mat = "?brick" }
+      { x = 443, y = 437, mat = "?brick" }
+      { t = 120, mat = "?floor1", light_add=32 }
+    }
+    {
+      { x = 391, y = 376, mat = "?top" }
+      { x = 405, y = 361, mat = "?step" }
+      { x = 520, y = 472, mat = "?brick" }
+      { x = 496, y = 496, mat = "?brick" }
+      { x = 443, y = 437, mat = "?brick" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x = 544, y = 432, mat = "?brick" }
+      { x = 560, y = 384, mat = "?brick" }
+      { x = 576, y = 384, mat = "?outer" }
+      { x = 576, y = 432, mat = "?brick" }
+    }
+
+    {
+      { x =   8, y = 288, mat = "?brick" }
+      { x =  16, y = 192, mat = "?brick" }
+      { x = 157, y = 246, mat = "?floor1" }
+      { x = 151, y = 288, mat = "?step" }
+      { t = -84, mat = "?floor1" }
+    }
+    {
+      { x =   8, y = 288, mat = "?brick" }
+      { x =  16, y = 192, mat = "?brick" }
+      { x = 157, y = 246, mat = "?top" }
+      { x = 151, y = 288, mat = "?brick" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x =   0, y = 288, mat = "?brick" }
+      { x =   8, y = 288, mat = "?brick" }
+      { x =  16, y = 384, mat = "?brick" }
+      { x =   0, y = 384, mat = "?outer" }
+      { t = -84, mat = "?floor1" }
+    }
+    {
+      { x =   0, y = 288, mat = "?brick" }
+      { x =   8, y = 288, mat = "?brick" }
+      { x =  16, y = 384, mat = "?brick" }
+      { x =   0, y = 384, mat = "?outer" }
+      { b = 44, mat = "?brick" }
+    }
+
+    {
+      { x =  56, y = 104, mat = "?brick" }
+      { x =  80, y =  80, mat = "?brick" }
+      { x = 137, y = 133, mat = "?brick" }
+      { x = 118, y = 155, mat = "?step" }
+      { t = -48, mat = "?floor1" }
+    }
+    {
+      { x =  56, y = 104, mat = "?brick" }
+      { x =  80, y =  80, mat = "?brick" }
+      { x = 137, y = 133, mat = "?brick" }
+      { x = 118, y = 155, mat = "?step" }
+      { b = 384, mat = "?brick", light_add=48 }
+    }
+
+    {
+      { x =   0, y = 144, mat = "?brick" }
+      { x =  32, y = 144, mat = "?brick" }
+      { x =  16, y = 192, mat = "?brick" }
+      { x =   0, y = 192, mat = "?outer" }
+    }
+
+    {
+      { x = 288, y =   0, mat = "?outer" }
+      { x = 384, y =   0, mat = "?brick" }
+      { x = 384, y =  16, mat = "?brick" }
+      { x = 288, y =   8, mat = "?brick" }
+      { t = 0, mat = "?floor1" }
+    }
+    {
+      { x = 288, y =   0, mat = "?outer" }
+      { x = 384, y =   0, mat = "?brick" }
+      { x = 384, y =  16, mat = "?brick" }
+      { x = 288, y =   8, mat = "?brick" }
+      { b = 128, mat = "?brick" }
+    }
+
+    {
+      { x = 192, y = 560, mat = "?brick" }
+      { x = 288, y = 568, mat = "?brick" }
+      { x = 288, y = 576, mat = "?outer" }
+      { x = 192, y = 576, mat = "?brick" }
+      { t = 168, mat = "?floor1" }
+    }
+    {
+      { x = 192, y = 560, mat = "?brick" }
+      { x = 288, y = 568, mat = "?brick" }
+      { x = 288, y = 576, mat = "?outer" }
+      { x = 192, y = 576, mat = "?brick" }
+      { b = 296, mat = "?brick" }
+    }
+
+    {
+      { x =  72, y = 560, mat = "?brick" }
+      { x =  88, y = 545, mat = "?brick" }
+      { x = 121, y = 527, mat = "?brick" }
+      { x = 192, y = 560, mat = "?brick" }
+      { x = 192, y = 576, mat = "?outer" }
+      { x =  72, y = 576, mat = "?brick" }
+    }
+
+    {
+      { x = 192, y = 560, mat = "?floor1" }
+      { x = 255, y = 418, mat = "?floor1" }
+      { x = 288, y = 425, mat = "?brick" }
+      { x = 288, y = 568, mat = "?brick" }
+      { t = 168, mat = "?floor1" }
+    }
+    {
+      { x = 192, y = 560, mat = "?step" }
+      { x = 255, y = 418, mat = "?top" }
+      { x = 288, y = 425, mat = "?brick" }
+      { x = 288, y = 568, mat = "?brick" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x = 288, y = 568, mat = "?brick" }
+      { x = 384, y = 560, mat = "?brick" }
+      { x = 384, y = 576, mat = "?outer" }
+      { x = 288, y = 576, mat = "?brick" }
+      { t = 168, mat = "?floor1" }
+    }
+    {
+      { x = 288, y = 568, mat = "?brick" }
+      { x = 384, y = 560, mat = "?brick" }
+      { x = 384, y = 576, mat = "?outer" }
+      { x = 288, y = 576, mat = "?brick" }
+      { b = 296, mat = "?brick" }
+    }
+
+    {
+      { x = 288, y =   8, mat = "?brick" }
+      { x = 384, y =  16, mat = "?brick" }
+      { x = 329, y = 148, mat = "?floor1" }
+      { x = 288, y = 142, mat = "?brick" }
+      { t = 0, mat = "?floor1" }
+    }
+    {
+      { x = 288, y =   8, mat = "?brick" }
+      { x = 384, y =  16, mat = "?brick" }
+      { x = 329, y = 148, mat = "?top" }
+      { x = 288, y = 142, mat = "?brick" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x = 192, y =   0, mat = "?outer" }
+      { x = 288, y =   0, mat = "?brick" }
+      { x = 288, y =   8, mat = "?brick" }
+      { x = 192, y =  16, mat = "?brick" }
+      { t = 0, mat = "?floor1" }
+    }
+    {
+      { x = 192, y =   0, mat = "?outer" }
+      { x = 288, y =   0, mat = "?brick" }
+      { x = 288, y =   8, mat = "?brick" }
+      { x = 192, y =  16, mat = "?brick" }
+      { b = 128, mat = "?brick" }
+    }
+
+    {
+      { x = 372, y = 170, mat = "?step" }
+      { x = 472, y =  56, mat = "?brick" }
+      { x = 496, y =  80, mat = "?brick" }
+      { x = 390, y = 185, mat = "?floor1" }
+      { t = 36, mat = "?floor1" }
+    }
+    {
+      { x = 372, y = 170, mat = "?step" }
+      { x = 472, y =  56, mat = "?brick" }
+      { x = 496, y =  80, mat = "?brick" }
+      { x = 390, y = 185, mat = "?top" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x = 384, y =   0, mat = "?outer" }
+      { x = 432, y =   0, mat = "?brick" }
+      { x = 432, y =  32, mat = "?brick" }
+      { x = 384, y =  16, mat = "?brick" }
+    }
+
+    {
+      { x = 151, y = 288, mat = "?brick" }
+      { x = 157, y = 246, mat = "?brick" }
+      { x = 167, y = 224, mat = "?brick" }
+      { x = 177, y = 205, mat = "?brick" }
+      { x = 194, y = 185, mat = "?brick" }
+      { x = 214, y = 169, mat = "?brick" }
+      { x = 233, y = 157, mat = "?brick" }
+      { x = 255, y = 148, mat = "?brick" }
+      { x = 288, y = 142, mat = "?brick" }
+      { x = 329, y = 148, mat = "?brick" }
+      { x = 352, y = 158, mat = "?brick" }
+      { x = 372, y = 170, mat = "?brick" }
+      { x = 390, y = 185, mat = "?brick" }
+      { x = 406, y = 204, mat = "?brick" }
+      { x = 418, y = 224, mat = "?brick" }
+      { x = 427, y = 246, mat = "?brick" }
+      { x = 433, y = 288, mat = "?brick" }
+      { x = 427, y = 320, mat = "?brick" }
+      { x = 416, y = 343, mat = "?brick" }
+      { x = 405, y = 361, mat = "?brick" }
+      { x = 391, y = 376, mat = "?brick" }
+      { x = 374, y = 393, mat = "?brick" }
+      { x = 354, y = 407, mat = "?brick" }
+      { x = 329, y = 418, mat = "?brick" }
+      { x = 288, y = 425, mat = "?brick" }
+      { x = 255, y = 418, mat = "?brick" }
+      { x = 222, y = 402, mat = "?brick" }
+      { x = 171, y = 351, mat = "?brick" }
+      { x = 157, y = 320, mat = "?brick" }
+      { t = -108, mat = "_LIQUID" }
+    }
+    {
+      { x = 151, y = 288, mat = "?brick" }
+      { x = 157, y = 246, mat = "?brick" }
+      { x = 167, y = 224, mat = "?brick" }
+      { x = 177, y = 205, mat = "?brick" }
+      { x = 194, y = 185, mat = "?brick" }
+      { x = 214, y = 169, mat = "?brick" }
+      { x = 233, y = 157, mat = "?brick" }
+      { x = 255, y = 148, mat = "?brick" }
+      { x = 288, y = 142, mat = "?brick" }
+      { x = 329, y = 148, mat = "?brick" }
+      { x = 352, y = 158, mat = "?brick" }
+      { x = 372, y = 170, mat = "?brick" }
+      { x = 390, y = 185, mat = "?brick" }
+      { x = 406, y = 204, mat = "?brick" }
+      { x = 418, y = 224, mat = "?brick" }
+      { x = 427, y = 246, mat = "?brick" }
+      { x = 433, y = 288, mat = "?brick" }
+      { x = 427, y = 320, mat = "?brick" }
+      { x = 416, y = 343, mat = "?brick" }
+      { x = 405, y = 361, mat = "?brick" }
+      { x = 391, y = 376, mat = "?brick" }
+      { x = 374, y = 393, mat = "?brick" }
+      { x = 354, y = 407, mat = "?brick" }
+      { x = 329, y = 418, mat = "?brick" }
+      { x = 288, y = 425, mat = "?brick" }
+      { x = 255, y = 418, mat = "?brick" }
+      { x = 222, y = 402, mat = "?brick" }
+      { x = 171, y = 351, mat = "?brick" }
+      { x = 157, y = 320, mat = "?brick" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x = 118, y = 155, mat = "?brick" }
+      { x = 137, y = 133, mat = "?brick" }
+      { x = 194, y = 185, mat = "?floor1" }
+      { x = 177, y = 205, mat = "?step" }
+      { t = -48, mat = "?floor1", light_add=32 }
+    }
+    {
+      { x = 118, y = 155, mat = "?brick" }
+      { x = 137, y = 133, mat = "?brick" }
+      { x = 194, y = 185, mat = "?top" }
+      { x = 177, y = 205, mat = "?step" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x =  45, y = 455, mat = "?brick" }
+      { x = 171, y = 351, mat = "?floor1" }
+      { x = 222, y = 402, mat = "?brick" }
+      { x = 121, y = 527, mat = "?brick" }
+      { t = -108, mat = "_LIQUID" }
+    }
+    {
+      { x =  45, y = 455, mat = "?brick" }
+      { x = 171, y = 351, mat = "?top" }
+      { x = 222, y = 402, mat = "?brick" }
+      { x = 121, y = 527, mat = "?brick" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x = 192, y =  16, mat = "?brick" }
+      { x = 288, y =   8, mat = "?brick" }
+      { x = 288, y = 142, mat = "?floor1" }
+      { x = 255, y = 148, mat = "?step" }
+      { t = 0, mat = "?floor1" }
+    }
+    {
+      { x = 192, y =  16, mat = "?brick" }
+      { x = 288, y =   8, mat = "?brick" }
+      { x = 288, y = 142, mat = "?top" }
+      { x = 255, y = 148, mat = "?step" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x = 329, y = 148, mat = "?step" }
+      { x = 384, y =  16, mat = "?brick" }
+      { x = 432, y =  32, mat = "?brick" }
+      { x = 352, y = 158, mat = "?floor1" }
+      { t = 12, mat = "?floor1" }
+    }
+    {
+      { x = 329, y = 148, mat = "?step" }
+      { x = 384, y =  16, mat = "?brick" }
+      { x = 432, y =  32, mat = "?brick" }
+      { x = 352, y = 158, mat = "?top" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x = 390, y = 185, mat = "?step" }
+      { x = 496, y =  80, mat = "?brick" }
+      { x = 520, y = 104, mat = "?brick" }
+      { x = 406, y = 204, mat = "?floor1" }
+      { t = 48, mat = "?floor1" }
+    }
+    {
+      { x = 390, y = 185, mat = "?step" }
+      { x = 496, y =  80, mat = "?brick" }
+      { x = 520, y = 104, mat = "?brick" }
+      { x = 406, y = 204, mat = "?top" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x = 427, y = 246, mat = "?step" }
+      { x = 560, y = 192, mat = "?brick" }
+      { x = 568, y = 288, mat = "?brick" }
+      { x = 433, y = 288, mat = "?floor1" }
+      { t = 84, mat = "?floor1" }
+    }
+    {
+      { x = 427, y = 246, mat = "?step" }
+      { x = 560, y = 192, mat = "?brick" }
+      { x = 568, y = 288, mat = "?brick" }
+      { x = 433, y = 288, mat = "?top" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x = 416, y = 343, mat = "?floor1" }
+      { x = 427, y = 320, mat = "?step" }
+      { x = 560, y = 384, mat = "?brick" }
+      { x = 544, y = 432, mat = "?brick" }
+      { t = 96, mat = "?floor1" }
+    }
+    {
+      { x = 416, y = 343, mat = "?top" }
+      { x = 427, y = 320, mat = "?brick" }
+      { x = 560, y = 384, mat = "?brick" }
+      { x = 544, y = 432, mat = "?brick" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x = 374, y = 393, mat = "?floor1" }
+      { x = 391, y = 376, mat = "?step" }
+      { x = 443, y = 437, mat = "?brick" }
+      { x = 423, y = 456, mat = "?brick" }
+      { t = 132, mat = "?floor1", light_add=32 }
+    }
+    {
+      { x = 374, y = 393, mat = "?top" }
+      { x = 391, y = 376, mat = "?step" }
+      { x = 443, y = 437, mat = "?brick" }
+      { x = 423, y = 456, mat = "?brick" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x = 288, y = 425, mat = "?floor1" }
+      { x = 329, y = 418, mat = "?step" }
+      { x = 384, y = 560, mat = "?brick" }
+      { x = 288, y = 568, mat = "?brick" }
+      { t = 168, mat = "?floor1" }
+    }
+    {
+      { x = 288, y = 425, mat = "?top" }
+      { x = 329, y = 418, mat = "?step" }
+      { x = 384, y = 560, mat = "?brick" }
+      { x = 288, y = 568, mat = "?brick" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x = 121, y = 527, mat = "?floor1" }
+      { x = 222, y = 402, mat = "?floor1" }
+      { x = 255, y = 418, mat = "?brick" }
+      { x = 192, y = 560, mat = "?brick" }
+      { t = -80, mat = "?floor1" }
+    }
+    {
+      { x = 121, y = 527, mat = "?brick" }
+      { x = 222, y = 402, mat = "?top" }
+      { x = 255, y = 418, mat = "?brick" }
+      { x = 192, y = 560, mat = "?brick" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x =   8, y = 288, mat = "?brick" }
+      { x = 151, y = 288, mat = "?floor1" }
+      { x = 157, y = 320, mat = "?step" }
+      { x =  16, y = 384, mat = "?brick" }
+      { t = -84, mat = "?floor1" }
+    }
+    {
+      { x =   8, y = 288, mat = "?brick" }
+      { x = 151, y = 288, mat = "?top" }
+      { x = 157, y = 320, mat = "?brick" }
+      { x =  16, y = 384, mat = "?brick" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x =  16, y = 192, mat = "?brick" }
+      { x =  32, y = 144, mat = "?brick" }
+      { x = 167, y = 224, mat = "?floor1" }
+      { x = 157, y = 246, mat = "?step" }
+      { t = -72, mat = "?floor1" }
+    }
+    {
+      { x =  16, y = 192, mat = "?brick" }
+      { x =  32, y = 144, mat = "?brick" }
+      { x = 167, y = 224, mat = "?top" }
+      { x = 157, y = 246, mat = "?step" }
+      { b = 384, mat = "?brick", light_add=16 }
+    }
+
+    {
+      { x =  80, y =  80, mat = "?brick" }
+      { x = 104, y =  56, mat = "?brick" }
+      { x = 214, y = 169, mat = "?floor1" }
+      { x = 194, y = 185, mat = "?step" }
+      { x = 137, y = 133, mat = "?step" }
+      { t = -36, mat = "?floor1" }
+    }
+    {
+      { x =  80, y =  80, mat = "?brick" }
+      { x = 104, y =  56, mat = "?brick" }
+      { x = 214, y = 169, mat = "?top" }
+      { x = 194, y = 185, mat = "?step" }
+      { x = 137, y = 133, mat = "?step" }
+      { b = 384, mat = "?brick", light_add=32 }
+    }
+
+    {
+      { x = 354, y = 407, mat = "?floor1" }
+      { x = 374, y = 393, mat = "?step" }
+      { x = 423, y = 456, mat = "?step" }
+      { x = 472, y = 520, mat = "?brick" }
+      { x = 432, y = 544, mat = "?brick" }
+      { t = 144, mat = "?floor1", light_add=32 }
+    }
+    {
+      { x = 354, y = 407, mat = "?top" }
+      { x = 374, y = 393, mat = "?step" }
+      { x = 423, y = 456, mat = "?step" }
+      { x = 472, y = 520, mat = "?brick" }
+      { x = 432, y = 544, mat = "?brick" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x = 432, y = 544, mat = "?brick" }
+      { x = 472, y = 520, mat = "?brick" }
+      { x = 472, y = 576, mat = "?outer" }
+      { x = 432, y = 576, mat = "?brick" }
+    }
+
+    {
+      { x = 423, y = 456, mat = "?brick" }
+      { x = 443, y = 437, mat = "?step" }
+      { x = 496, y = 496, mat = "?brick" }
+      { x = 472, y = 520, mat = "?brick" }
+      { t = 132, mat = "?floor1", light_add=48 }
+    }
+    {
+      { x = 423, y = 456, mat = "?brick" }
+      { x = 443, y = 437, mat = "?step" }
+      { x = 496, y = 496, mat = "?brick" }
+      { x = 472, y = 520, mat = "?brick" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x = 405, y = 361, mat = "?floor1" }
+      { x = 416, y = 343, mat = "?step" }
+      { x = 544, y = 432, mat = "?brick" }
+      { x = 520, y = 472, mat = "?brick" }
+      { t = 108, mat = "?floor1" }
+    }
+    {
+      { x = 405, y = 361, mat = "?top" }
+      { x = 416, y = 343, mat = "?step" }
+      { x = 544, y = 432, mat = "?brick" }
+      { x = 520, y = 472, mat = "?brick" }
+      { b = 384, mat = "?brick", light_add=16 }
+    }
+
+    {
+      { x = 520, y = 472, mat = "?brick" }
+      { x = 544, y = 432, mat = "?brick" }
+      { x = 576, y = 432, mat = "?outer" }
+      { x = 576, y = 472, mat = "?brick" }
+    }
+
+    {
+      { x = 406, y = 204, mat = "?step" }
+      { x = 520, y = 104, mat = "?brick" }
+      { x = 544, y = 144, mat = "?brick" }
+      { x = 418, y = 224, mat = "?floor1" }
+      { t = 60, mat = "?floor1" }
+    }
+    {
+      { x = 406, y = 204, mat = "?step" }
+      { x = 520, y = 104, mat = "?brick" }
+      { x = 544, y = 144, mat = "?brick" }
+      { x = 418, y = 224, mat = "?top" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x = 520, y = 104, mat = "?brick" }
+      { x = 576, y = 104, mat = "?outer" }
+      { x = 576, y = 144, mat = "?brick" }
+      { x = 544, y = 144, mat = "?brick" }
+    }
+
+    {
+      { x = 352, y = 158, mat = "?step" }
+      { x = 432, y =  32, mat = "?brick" }
+      { x = 472, y =  56, mat = "?brick" }
+      { x = 372, y = 170, mat = "?floor1" }
+      { t = 24, mat = "?floor1" }
+    }
+    {
+      { x = 352, y = 158, mat = "?step" }
+      { x = 432, y =  32, mat = "?brick" }
+      { x = 472, y =  56, mat = "?brick" }
+      { x = 372, y = 170, mat = "?top" }
+      { b = 384, mat = "?brick" }
+    }
+
+    {
+      { x = 432, y =   0, mat = "?outer" }
+      { x = 472, y =   0, mat = "?brick" }
+      { x = 472, y =  56, mat = "?brick" }
+      { x = 432, y =  32, mat = "?brick" }
+    }
+
+    {
+      { x = 104, y =  56, mat = "?brick" }
+      { x = 144, y =  32, mat = "?brick" }
+      { x = 233, y = 157, mat = "?floor1" }
+      { x = 214, y = 169, mat = "?step" }
+      { t = -24, mat = "?floor1" }
+    }
+    {
+      { x = 104, y =  56, mat = "?brick" }
+      { x = 144, y =  32, mat = "?brick" }
+      { x = 233, y = 157, mat = "?top" }
+      { x = 214, y = 169, mat = "?step" }
+      { b = 384, mat = "?brick", light_add=16 }
+    }
+
+    {
+      { x = 104, y =   0, mat = "?outer" }
+      { x = 144, y =   0, mat = "?brick" }
+      { x = 144, y =  32, mat = "?brick" }
+      { x = 104, y =  56, mat = "?brick" }
+    }
+
+    {
+      { x =  32, y = 144, mat = "?brick" }
+      { x =  56, y = 104, mat = "?brick" }
+      { x = 118, y = 155, mat = "?brick" }
+      { x = 177, y = 205, mat = "?floor1" }
+      { x = 167, y = 224, mat = "?step" }
+      { t = -60, mat = "?floor1" }
+    }
+    {
+      { x =  32, y = 144, mat = "?brick" }
+      { x =  56, y = 104, mat = "?brick" }
+      { x = 118, y = 155, mat = "?brick" }
+      { x = 177, y = 205, mat = "?top" }
+      { x = 167, y = 224, mat = "?step" }
+      { b = 384, mat = "?brick", light_add=32 }
+    }
+
+    {
+      { x =   0, y = 104, mat = "?brick" }
+      { x =  56, y = 104, mat = "?brick" }
+      { x =  32, y = 144, mat = "?brick" }
+      { x =   0, y = 144, mat = "?outer" }
+    }
+
+    {
+      { x =  32, y = 480, mat = "?brick" }
+      { x =  45, y = 455, mat = "?brick" }
+      { x = 121, y = 527, mat = "?brick" }
+      { x =  88, y = 545, mat = "?brick" }
+      { t = -108, mat = "_LIQUID" }
+    }
+    {
+      { x =  32, y = 480, mat = "?brick" }
+      { x =  45, y = 455, mat = "?brick" }
+      { x = 121, y = 527, mat = "?brick" }
+      { x =  88, y = 545, mat = "?brick" }
+      { b = 280, mat = "?brick" }
+    }
+
+    {
+      { x =  16, y = 496, mat = "?brick" }
+      { x =  32, y = 480, mat = "_LIQUID" }
+      { x =  88, y = 545, mat = "?brick" }
+      { x =  72, y = 560, mat = "?brick" }
+      { t = 232, mat = "_LIQUID" }
+    }
+    {
+      { x =  16, y = 496, mat = "?brick" }
+      { x =  32, y = 480, mat = "?brick" }
+      { x =  88, y = 545, mat = "?brick" }
+      { x =  72, y = 560, mat = "?brick" }
+      { b = 280, mat = "?brick" }
+    }
+
+    {
+      { x =   8, y = 552, mat = "?brick" }
+      { x =  16, y = 496, mat = "?brick" }
+      { x =  72, y = 560, mat = "?brick" }
+      { x =  24, y = 568, mat = "?brick" }
+      { t = 232, mat = "_LIQUID" }
+    }
+    {
+      { x =   8, y = 552, mat = "?brick" }
+      { x =  16, y = 496, mat = "?brick" }
+      { x =  72, y = 560, mat = "?brick" }
+      { x =  24, y = 568, mat = "?brick" }
+      { b = 280, mat = "?brick" }
+    }
+
+    {
+      { x =   0, y = 496, mat = "?brick" }
+      { x =  16, y = 496, mat = "?brick" }
+      { x =   8, y = 552, mat = "?brick" }
+      { x =   0, y = 552, mat = "?outer" }
+    }
+
+    {
+      { x =  24, y = 568, mat = "?brick" }
+      { x =  72, y = 560, mat = "?brick" }
+      { x =  72, y = 576, mat = "?outer" }
+      { x =  24, y = 576, mat = "?brick" }
+    }
+  }
+
+  entities =
+  {
+    { ent = "?torch_ent", x =  89, y = 106, z = -48, angle = 45 }
+    { ent = "?torch_ent", x = 474, y = 491, z = 132, angle = 225 }
+
+    { ent = "?gore_ent", x = 176, y = 528, z = -80, angle = 270 }
+    { ent = "?gore_ent", x = 192, y = 472, z = -80, angle = 270 }
+    { ent = "?gore_ent", x = 224, y = 440, z = -80, angle = 270 }
+  }
+}
+
