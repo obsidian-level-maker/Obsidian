@@ -6,18 +6,34 @@ Current Work
 ------------
 
 
+>>>  thin_hall_o   (can be all four shapes)
+
+
+
+make 3D bridges in rooms in the logic that decides what AREA the
+pattern will extend -- look for a bridge which can cross the gap.
+
+
+>>>  big_junction hallways : use 'mini_halls' instead of a hallway group
+
+
 >>>  stairs / lift : standardize height stuff
 
-     _stair_mode = 
-       "small"    32 unit stair  (down to 24, up to 40)
+     _stair_kind = 
+       "short"    32 unit stair  (down to 24, up to 40)
        "medium"   64 unit stair  (down to 48, up to 80)
-       "big"     128 unit stair  (down to 88, up to 160)
-       "lift"    can be any size (but prefab must be 128)
+       "tall"    128 unit stair  (down to 88, up to 160)
+
+       "lift"    can be any size
 
      Q/ how to vertically scale stair prefabs so that the last stair
         reaches the target height, but leaves room for player to walk?
      
      A/ z_ranges = { {128,0,"?height"}, {...} }
+
+
+Sky Halls: only build the floor bits in prefab -- do sky separately
+
 
 
 ++  think about how "mini halls" and "groups" interact

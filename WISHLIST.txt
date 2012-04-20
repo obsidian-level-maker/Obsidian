@@ -37,6 +37,9 @@ YAY!!! DONE!!  get cave code working again
   LEVEL STUFF
 ----------------------------------------------------------------
 
+!!  RADICAL IDEA : __ALL__ fitted prefabs are "xyz" mode
+                   i.e. always supply a 3D bounding box
+
 New Starting Logic
 
 -  three main kinds:
@@ -136,6 +139,8 @@ Hallways:
 
 -  ability to merge the section of a "simple" hallway into
    one of the rooms [especially to make a "Porch"].
+
+-  big junctions: _floors[] to set floors of connected mini-hall
 
 DONE: Special Hallway #1 : surround half the room, entrance either side
   -   Special Hallway #3 : surround a room completely.
