@@ -3126,6 +3126,7 @@ DOOM.SKINS =
   {
     _prefab = "JUNCTION_WELL_1"
     _shape  = "P"
+    _liquid = 1
     _heights = { 0,-84,84,168 }
 
     brick  = "BIGBRIK2"
