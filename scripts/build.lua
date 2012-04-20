@@ -917,64 +917,64 @@ end
 function Trans.categorize_linkage(dir2, dir4, dir6, dir8)
   local link_str = ""
 
-  if dir2 then link_str = link_str .. "2" end
-  if dir4 then link_str = link_str .. "4" end
-  if dir6 then link_str = link_str .. "6" end
-  if dir8 then link_str = link_str .. "8" end
+  if dir2 then link_str = link_str .. '2' end
+  if dir4 then link_str = link_str .. '4' end
+  if dir6 then link_str = link_str .. '6' end
+  if dir8 then link_str = link_str .. '8' end
 
   -- nothing?
   if link_str == "" then
-    return "N", 2
+    return 'N', 2
 
   -- facing one direction
   elseif link_str == "2" then
-    return "F", 2
+    return 'F', 2
 
   elseif link_str == "4" then
-    return "F", 4
+    return 'F', 4
 
   elseif link_str == "6" then
-    return "F", 6
+    return 'F', 6
 
   elseif link_str == "8" then
-    return "F", 8
+    return 'F', 8
 
   -- straight through
   elseif link_str == "28" then
-    return "I", 2
+    return 'I', 2
 
   elseif link_str == "46" then
-    return "I", 4
+    return 'I', 4
   
   -- corner
   elseif link_str == "26" then
-    return "C", 6
+    return 'C', 6
 
   elseif link_str == "24" then
-    return "C", 2
+    return 'C', 2
 
   elseif link_str == "48" then
-    return "C", 4
+    return 'C', 4
 
   elseif link_str == "68" then
-    return "C", 8
+    return 'C', 8
   
   -- T junction
   elseif link_str == "246" then
-    return "T", 2
+    return 'T', 2
 
   elseif link_str == "248" then
-    return "T", 4
+    return 'T', 4
 
   elseif link_str == "268" then
-    return "T", 6
+    return 'T', 6
 
   elseif link_str == "468" then
-    return "T", 8
+    return 'T', 8
 
   -- plus shape, all four directions
   elseif link_str == "2468" then
-    return "P", 2
+    return 'P', 2
 
   else
     error("categorize_linkage failed on: " .. link_str)
