@@ -3121,6 +3121,26 @@ DOOM.SKINS =
   }
 
 
+  Junc_Well_I =
+  {
+    _prefab = "JUNCTION_WELL_1"
+    _shape  = "I"
+    _heights = { 0,-84,84,168 }
+  }
+
+  Junc_Well_T =
+  {
+    _copy = "Junc_Well_I"
+    _shape  = "T"
+  }
+
+  Junc_Well_P =
+  {
+    _copy = "Junc_Well_I"
+    _shape  = "P"
+  }
+
+
   ---| TELEPORTERS |---
 
   Teleporter1 =
@@ -4689,6 +4709,8 @@ DOOM2.LEVEL_THEMES =
 
     big_junctions =
     {
+      Junc_Well = 999
+
       Junc_Octo = 50
       Junc_Nuke_Pipes = 5
       Junc_Spokey = 10
