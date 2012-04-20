@@ -3122,10 +3122,10 @@ DOOM.SKINS =
   }
 
 
-  Junc_Well_I =
+  Junc_Well_P =
   {
     _prefab = "JUNCTION_WELL_1"
-    _shape  = "I"
+    _shape  = "P"
     _heights = { 0,-84,84,168 }
 
     brick  = "BIGBRIK2"
@@ -3141,14 +3141,19 @@ DOOM.SKINS =
 
   Junc_Well_T =
   {
-    _copy = "Junc_Well_I"
+    _copy = "Junc_Well_P"
     _shape  = "T"
+
+    north_h = 296  -- closed
   }
 
-  Junc_Well_P =
+  Junc_Well_I =
   {
-    _copy = "Junc_Well_I"
-    _shape  = "P"
+    _copy = "Junc_Well_P"
+    _shape  = "I"
+
+    east_h =  84  -- closed
+    west_h = -84  --
   }
 
 

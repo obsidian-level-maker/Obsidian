@@ -2604,6 +2604,10 @@ PREFAB.JUNCTION_WELL_1 =
   {
     gore_ent  = ""
     torch_ent = ""
+
+    north_h = 168  -- vs 296
+     east_h =  84  -- vs 212
+     west_h = -84  -- vs  44
   }
 
   brushes =
@@ -2738,7 +2742,7 @@ PREFAB.JUNCTION_WELL_1 =
       { x =  16, y = 192, mat = "?brick" }
       { x =   8, y = 288, mat = "?brick" }
       { x =   0, y = 288, mat = "?outer" }
-      { t = -84, mat = "?floor1" }
+      { t = "?west_h", mat = "?floor1" }
     }
     {
       { x =   0, y = 192, mat = "?brick" }
@@ -2753,7 +2757,7 @@ PREFAB.JUNCTION_WELL_1 =
       { x = 568, y = 288, mat = "?brick" }
       { x = 576, y = 288, mat = "?outer" }
       { x = 576, y = 384, mat = "?brick" }
-      { t = 84, mat = "?floor1" }
+      { t = "?east_h", mat = "?floor1" }
     }
     {
       { x = 560, y = 384, mat = "?brick" }
@@ -2783,7 +2787,7 @@ PREFAB.JUNCTION_WELL_1 =
       { x = 576, y = 192, mat = "?outer" }
       { x = 576, y = 288, mat = "?brick" }
       { x = 568, y = 288, mat = "?brick" }
-      { t = 84, mat = "?floor1" }
+      { t = "?east_h", mat = "?floor1" }
     }
     {
       { x = 560, y = 192, mat = "?brick" }
@@ -2837,7 +2841,7 @@ PREFAB.JUNCTION_WELL_1 =
       { x =   8, y = 288, mat = "?brick" }
       { x =  16, y = 384, mat = "?brick" }
       { x =   0, y = 384, mat = "?outer" }
-      { t = -84, mat = "?floor1" }
+      { t = "?west_h", mat = "?floor1" }
     }
     {
       { x =   0, y = 288, mat = "?brick" }
@@ -2889,7 +2893,7 @@ PREFAB.JUNCTION_WELL_1 =
       { x = 288, y = 568, mat = "?brick" }
       { x = 288, y = 576, mat = "?outer" }
       { x = 192, y = 576, mat = "?brick" }
-      { t = 168, mat = "?floor1" }
+      { t = "?north_h", mat = "?floor1" }
     }
     {
       { x = 192, y = 560, mat = "?brick" }
@@ -2928,7 +2932,7 @@ PREFAB.JUNCTION_WELL_1 =
       { x = 384, y = 560, mat = "?brick" }
       { x = 384, y = 576, mat = "?outer" }
       { x = 288, y = 576, mat = "?brick" }
-      { t = 168, mat = "?floor1" }
+      { t = "?north_h", mat = "?floor1" }
     }
     {
       { x = 288, y = 568, mat = "?brick" }
@@ -3430,7 +3434,7 @@ PREFAB.JUNCTION_WELL_1 =
       { x =  32, y = 480, mat = "?brick" }
       { x =  88, y = 545, mat = "?brick" }
       { x =  72, y = 560, mat = "?brick" }
-      { b = 280, mat = "?brick" }
+      { b = 280, mat = "?brick", light_sub=16 }
     }
 
     {
@@ -3445,7 +3449,7 @@ PREFAB.JUNCTION_WELL_1 =
       { x =  16, y = 496, mat = "?brick" }
       { x =  72, y = 560, mat = "?brick" }
       { x =  24, y = 568, mat = "?brick" }
-      { b = 280, mat = "?brick" }
+      { b = 280, mat = "?brick", light_sub=40 }
     }
 
     {
