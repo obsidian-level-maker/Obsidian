@@ -53,9 +53,6 @@ class CHUNK
 
   crossover_hall : HALLWAY
 
-  adjuster_dir   -- normally NIL
-                 -- set for height adjusters : direction to other height
-
   max_deep[DIR]   -- the maximum distance an edge (or corner) prefab can
                   -- intrude into this chunk.
 
@@ -826,57 +823,6 @@ end
 
 
 
-function CHUNK_CLASS.cycle_stair(C, dir, N)
-  local dir = C.adjuster_dir
-
-  local LINK = C.link[dir]
-
-  assert(LINK)
-  assert(LINK.C1 == C or LINK.C2 == C)
-
-  local N = (LINK.C1 == C ? LINK.C2 ; LINK.C1)
-
-if N.floor_h then C.adjust_ceil_h = N.floor_h + 160 end
-
-  -- FIXME: this don't work since stair handling will use N.floor_h
-  --        but we need to use the bridge height here.
-  if C.hall and C.crossover then return end
-
-  if math.abs(N.floor_h - C.floor_h) <= (PARAM.jump_height or PARAM.step_height) then
-    return
-  end
-
-  -- this is temporary crud
-
-  local stair_name
-  local  lift_name
-
-  if N.floor_h > C.floor_h then
-    stair_name = "Stair_Up1"
-     lift_name =  "Lift_Up1"
-  else
-    stair_name = "Stair_Down1"
-     lift_name =  "Lift_Down1"
-  end
-
-  local skin = GAME.SKINS[stair_name]
-  if not skin then return end
-
-  if math.abs(N.floor_h - C.floor_h) > 128 then
-    skin = GAME.SKINS[lift_name] or skin
-  end
-
-  C.stair =
-  {
-    C1 = C
-    C2 = N
-    dir = dir
-    skin = skin
-  }
-end
-
-
-
 function CHUNK_CLASS.unpack_parts(C, filter_field)
   -- returns a list of rectangles which represent the area of the
   -- chunk _minus_ the areas of the parts.
@@ -1221,15 +1167,6 @@ end --]]
         f_special = 16  --- FIXME: LEVEL.liquid.special
       end
     end
-  end
-
-
-  -- cruddy handling of cycle/crossover height differences
-  if C.adjuster_dir then
-    C:cycle_stair()
-
-    -- Fixme: more hackitude....
-    if C.adjust_ceil_h then c_h = math.max(c_h, C.adjust_ceil_h) end
   end
 
 

@@ -269,22 +269,6 @@ function HALLWAY_CLASS.merge_it(old_H, new_H, via_conn)
 end
 
 
----?? function HALLWAY_CLASS.add_adjuster(H, D)
----??   each C in H.chunks do
----??     for dir = 2,8,2 do
----??       local LINK = C.links[dir]
----?? 
----??       if LINK and LINK.conn == D then
----??         C.adjuster_dir = dir
----??         return
----??       end
----??     end
----??   end
----?? 
----??   error("Cannot find chunk for adjuster")
----?? end
-
-
 function HALLWAY_CLASS.check_sky_hall(H)
   local info = {}
 
