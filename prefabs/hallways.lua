@@ -2638,16 +2638,11 @@ PREFAB.HALL_THIN_OH =
 
   defaults =
   {
-    niche = "DOORSTOP"
-    wall = "STARG2"
-    wall = "STARTAN3"
-    pillar = "WOODMET1"
+    torch_ent = ""
 
-    torch_ent = "red_torch_sm"
-
-    effect = 17
-
---  torch_ent = ""
+    north_h = 0
+     east_h = 0
+     west_h = 0
   }
 
   brushes =
@@ -2657,7 +2652,7 @@ PREFAB.HALL_THIN_OH =
       { x = 224, y = 352, mat = "?wall" }
       { x = 224, y = 384, mat = "?outer" }
       { x = 160, y = 384, mat = "?wall" }
-      { t = 0, mat = "?floor" }
+      { t = "?north_h", mat = "?floor" }
     }
     {
       { x = 160, y = 352, mat = "?wall" }
@@ -2760,7 +2755,7 @@ PREFAB.HALL_THIN_OH =
       { x = 112, y = 280, mat = "?wall" }
       { x =  80, y = 256, mat = "?wall" }
       { x =  48, y = 232, mat = "?wall" }
-      { t = 0, mat = "?floor", light_add=48, light_effect="?effect" }
+      { t = 0, mat = "?floor", light_add=48 }
     }
     {
       { x =  32, y = 192, mat = "?wall" }
@@ -2797,7 +2792,7 @@ PREFAB.HALL_THIN_OH =
       { x =  32, y = 192, mat = "?wall" }
       { x =  48, y = 232, mat = "?wall" }
       { x =   0, y = 224, mat = "?outer" }
-      { t = 0, mat = "?floor" }
+      { t = "?west_h", mat = "?floor" }
     }
     {
       { x =   0, y = 192, mat = "?wall" }
@@ -2812,7 +2807,7 @@ PREFAB.HALL_THIN_OH =
       { x =  48, y = 152, mat = "?wall" }
       { x =  32, y = 192, mat = "?wall" }
       { x =   0, y = 192, mat = "?outer" }
-      { t = 0, mat = "?floor" }
+      { t = "?west_h", mat = "?floor" }
     }
     {
       { x =   0, y = 160, mat = "?wall" }
@@ -2857,7 +2852,7 @@ PREFAB.HALL_THIN_OH =
       { x = 352, y = 192, mat = "?wall" }
       { x = 384, y = 192, mat = "?outer" }
       { x = 384, y = 224, mat = "?wall" }
-      { t = 0, mat = "?floor" }
+      { t = "?east_h", mat = "?floor" }
     }
     {
       { x = 336, y = 232, mat = "?wall" }
@@ -2872,7 +2867,7 @@ PREFAB.HALL_THIN_OH =
       { x = 384, y = 160, mat = "?outer" }
       { x = 384, y = 192, mat = "?wall" }
       { x = 352, y = 192, mat = "?wall" }
-      { t = 0, mat = "?floor" }
+      { t = "?east_h", mat = "?floor" }
     }
     {
       { x = 336, y = 152, mat = "?wall" }
@@ -2922,7 +2917,7 @@ PREFAB.HALL_THIN_OH =
       { x =  80, y = 256, mat = "?wall" }
       { x = 112, y = 280, mat = "?wall" }
       { x =  80, y = 320, mat = "?wall" }
-      { b = 112, mat = "?niche", light_add=64 }
+      { b = 112, mat = "?niche", light_add=64, light_effect="?effect" }
     }
 
     {
@@ -2937,7 +2932,7 @@ PREFAB.HALL_THIN_OH =
       { x = 304, y = 256, mat = "?wall" }
       { x = 336, y = 296, mat = "?wall" }
       { x = 304, y = 320, mat = "?wall" }
-      { b = 112, mat = "?niche", light_add=64 }
+      { b = 112, mat = "?niche", light_add=64, light_effect="?effect" }
     }
 
     {
@@ -2960,7 +2955,7 @@ PREFAB.HALL_THIN_OH =
       { x = 304, y =  64, mat = "?wall" }
       { x = 336, y =  88, mat = "?wall" }
       { x = 304, y = 128, mat = "?wall" }
-      { b = 112, mat = "?niche", light_add=64 }
+      { b = 112, mat = "?niche", light_add=64, light_effect="?effect" }
     }
 
     {
@@ -2983,7 +2978,7 @@ PREFAB.HALL_THIN_OH =
       { x =  80, y =  64, mat = "?wall" }
       { x = 112, y = 104, mat = "?wall" }
       { x =  80, y = 128, mat = "?wall" }
-      { b = 112, mat = "?niche", light_add=64 }
+      { b = 112, mat = "?niche", light_add=64, light_effect="?effect" }
     }
   }
 

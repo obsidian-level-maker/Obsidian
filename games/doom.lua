@@ -2798,6 +2798,13 @@ DOOM.SKINS =
     _long   = 384
     _deep   = 384
     _in_between = 1
+
+    pillar = { WOODMET1=70, TEKLITE=20, SLADWALL=20 }
+    niche  = "DOORSTOP"
+
+    torch_ent = { red_torch_sm=50, green_torch_sm=10 }
+
+    effect = 17
   }
 
   Hall_Thin_I_Oh =
@@ -2806,7 +2813,7 @@ DOOM.SKINS =
     _shape = "I"
 
     east_h = 128
-    west_H = 128
+    west_h = 128
   }
 
   Hall_Thin_C_Oh =
@@ -3573,10 +3580,10 @@ DOOM.HALLWAY_GROUPS =
       Hall_Thin_I_Bulge = 70
       Hall_Thin_I_Bend  = 20
 
-      Hall_Thin_I_Oh = 25
-      Hall_Thin_C_Oh = 50
-      Hall_Thin_T_Oh = 100
-      Hall_Thin_P_Oh = 100
+      Hall_Thin_I_Oh = 10
+      Hall_Thin_C_Oh = 25
+      Hall_Thin_T_Oh = 40
+      Hall_Thin_P_Oh = 70
     }
   }
 
