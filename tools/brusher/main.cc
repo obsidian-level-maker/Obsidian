@@ -283,7 +283,8 @@ static void ProcessThings()
 }
 
 
-static void WriteBrush(lineloop_c& loop, char kind, int z = 0, const char *flat = NULL)
+static void WriteBrush(lineloop_c& loop, char kind, int z = 0, const char *flat = NULL,
+                       int light_add = 0)
 {
   // recognise certain flats to mean "skip this brush"
   if (flat &&
@@ -379,7 +380,15 @@ static void WriteBrush(lineloop_c& loop, char kind, int z = 0, const char *flat 
 
   if (kind == 't' || kind == 'b')
   {
-    fprintf(output_fp, "      { %c = %d, mat = \"%s\" }\n", kind, z, flat);
+    char light_str[80];
+      light_str[0] = 0;
+
+    if (light_add > 0)
+      sprintf(light_str, ", light_add=%d", light_add);
+    else if (light_add < 0)
+      sprintf(light_str, ", light_sub=%d", -light_add);
+
+    fprintf(output_fp, "      { %c = %d, mat = \"%s\"%s }\n", kind, z, flat, light_str);
   }
 
   fprintf(output_fp, "    }\n");
@@ -427,8 +436,10 @@ static void ProcessLoop(linedef_c *ld, int side, bool& have_one)
   }
   else
   {
+    int light_add = sec->light - 144;
+
     WriteBrush(loop, 't', sec->floor_h, sec->floor_tex);
-    WriteBrush(loop, 'b', sec-> ceil_h, sec-> ceil_tex);
+    WriteBrush(loop, 'b', sec-> ceil_h, sec-> ceil_tex, light_add);
   }
 }
 
