@@ -1359,6 +1359,8 @@ PREFAB.HALL_BASIC_I_LIFT =
 {
   fitted = "xy"
 
+  z_ranges = { {128,0,"?stair_h"}, {128,0} }
+
   defaults =
   {
     lift_h = 0
@@ -1459,7 +1461,8 @@ PREFAB.HALL_BASIC_I_LIFT_QUAKE =
   -- (otherwise could exceed the limit of 240 for extents)
   x_ranges = { {32,1}, {128,0}, {32,1} }
   y_ranges = { {32,1}, {128,0}, {32,1} }
-  z_ranges = { {256,1} }
+
+  z_ranges = { {128,0,"?stair_h" }, {128,0} }
 
   defaults =
   {
