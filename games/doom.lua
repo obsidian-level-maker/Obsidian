@@ -2791,6 +2791,41 @@ DOOM.SKINS =
     lamp = "TLITE6_1"
   }
 
+  Hall_Thin_P_Oh =
+  {
+    _prefab = "HALL_THIN_OH"
+    _shape  = "P"
+    _long   = 384
+    _deep   = 384
+    _in_between = 1
+  }
+
+  Hall_Thin_I_Oh =
+  {
+    _copy  = "Hall_Thin_P_Oh"
+    _shape = "I"
+
+    east_h = 128
+    west_H = 128
+  }
+
+  Hall_Thin_C_Oh =
+  {
+    _copy  = "Hall_Thin_P_Oh"
+    _shape = "C"
+
+    east_h  = 128
+    north_h = 128
+  }
+
+  Hall_Thin_T_Oh =
+  {
+    _copy  = "Hall_Thin_P_Oh"
+    _shape = "T"
+
+    north_h = 128
+  }
+
   Hall_Thin_I_Stair =
   {
     _prefab = "HALL_THIN_I_STAIR"
@@ -3531,13 +3566,17 @@ DOOM.HALLWAY_GROUPS =
       Hall_Thin_I = 50
       Hall_Thin_C = 50
       Hall_Thin_T = 50
-      Hall_Basic_P = 50  -- TODO
 
       Hall_Thin_I_Stair = 20
       Hall_Basic_I_Lift  = 2  -- TODO
 
       Hall_Thin_I_Bulge = 70
       Hall_Thin_I_Bend  = 20
+
+      Hall_Thin_I_Oh = 25
+      Hall_Thin_C_Oh = 50
+      Hall_Thin_T_Oh = 100
+      Hall_Thin_P_Oh = 100
     }
   }
 
