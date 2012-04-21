@@ -6,14 +6,6 @@ Current Work
 ------------
 
 
->>>  thin_hall_o   (can be all four shapes)
-
-
-
-make 3D bridges in rooms in the logic that decides what AREA the
-pattern will extend -- look for a bridge which can cross the gap.
-
-
 >>>  big_junction hallways : use 'mini_halls' instead of a hallway group
 
 
@@ -109,16 +101,12 @@ Short-Term Goals
 ================
 
 
-REVIEW: adjuster stuff 
-
 -  fix monsters stuck in doors / corners of chunks
 
 +  automatic repeating of prefabs
    x_repeat=192 : means we require: x_size / N >= x_repeat (for highest N)
 
    allow it to happen with prefab composition too
-
-+  BUG: stairs in cycles can be too low to pass
 
 
 -----------------------------------------------------------------

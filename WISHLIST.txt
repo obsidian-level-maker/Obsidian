@@ -39,6 +39,7 @@ YAY!!! DONE!!  get cave code working again
 
 !!  RADICAL IDEA : __ALL__ fitted prefabs are "xyz" mode
                    i.e. always supply a 3D bounding box
+                   Plus: automatic padding for too-small prefabs
 
 New Starting Logic
 
@@ -135,6 +136,8 @@ Teleporters:
 Hallways:
 +  double hallways STILL busted (entry from the non-forky end)
 
++  fix the '_in_between' flag (assumes a chunk order, but needs to check links)
+
 -  a more generic system for the '_narrow' skin field.
 
 -  ability to merge the section of a "simple" hallway into
@@ -217,6 +220,9 @@ Q/ keep as a "hallway" or create an "area" ?
 CrossOvers:
 ++  get the working again!
 
++  support "Crossover Junctions" which have a low path from S -> N
+   and a bridge (etc) going E -> W.
+
 -  automatically create bridges over channels
 
 +  build the bridges / channels using prefabs
@@ -249,6 +255,12 @@ CrossOvers:
 Porches:
 -  this is 3 or more seeds around a door from outside->inside
    with a non-sky ceiling and some pillars and a raised floor.
+
+
+Bridges:
++  get 3D bridges working again: in the logic that decides what AREA
+   the new pattern will extend -- look for a possible bridge.
+   Q/ do bridges span two areas, or form part of one single area?
 
 
 Facades:
@@ -437,6 +449,9 @@ Weapons:
    raising the height of the fences/windows there.
 
 DONE: brush conditionals:  if_true="?doomy"  if_false="?foobie"
+
+-  IDEA: size conditionals : only_if_x=">320"  (really >= 320)
+                             only_if_z="<128"
 
 -  ARCH_W_WINDOW prefab (window above archway)
 
