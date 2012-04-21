@@ -2644,9 +2644,10 @@ PREFAB.HALL_THIN_OH =
     pillar = "WOODMET1"
 
     torch_ent = "red_torch_sm"
---    wall = "MARBGRAY"
---    floor = "FLOOR0_1"
---    ceil = "CEIL3_5"
+
+    effect = 17
+
+--  torch_ent = ""
   }
 
   brushes =
@@ -2759,7 +2760,7 @@ PREFAB.HALL_THIN_OH =
       { x = 112, y = 280, mat = "?wall" }
       { x =  80, y = 256, mat = "?wall" }
       { x =  48, y = 232, mat = "?wall" }
-      { t = 0, mat = "?floor" }
+      { t = 0, mat = "?floor", light_add=48, light_effect="?effect" }
     }
     {
       { x =  32, y = 192, mat = "?wall" }
@@ -2833,7 +2834,7 @@ PREFAB.HALL_THIN_OH =
       { x = 160, y =  32, mat = "?wall" }
       { x = 224, y =  32, mat = "?wall" }
       { x = 240, y =  80, mat = "?wall" }
-      { b = 128, mat = "?ceil" }
+      { b = 128, mat = "?ceil", light_add=24 }
     }
 
     {
@@ -2848,7 +2849,7 @@ PREFAB.HALL_THIN_OH =
       { x = 240, y = 304, mat = "?wall" }
       { x = 224, y = 352, mat = "?wall" }
       { x = 160, y = 352, mat = "?wall" }
-      { b = 128, mat = "?ceil" }
+      { b = 128, mat = "?ceil", light_add=24 }
     }
 
     {
@@ -2921,7 +2922,7 @@ PREFAB.HALL_THIN_OH =
       { x =  80, y = 256, mat = "?wall" }
       { x = 112, y = 280, mat = "?wall" }
       { x =  80, y = 320, mat = "?wall" }
-      { b = 112, mat = "?niche" }
+      { b = 112, mat = "?niche", light_add=64 }
     }
 
     {
@@ -2936,7 +2937,7 @@ PREFAB.HALL_THIN_OH =
       { x = 304, y = 256, mat = "?wall" }
       { x = 336, y = 296, mat = "?wall" }
       { x = 304, y = 320, mat = "?wall" }
-      { b = 112, mat = "?niche" }
+      { b = 112, mat = "?niche", light_add=64 }
     }
 
     {
@@ -2959,7 +2960,7 @@ PREFAB.HALL_THIN_OH =
       { x = 304, y =  64, mat = "?wall" }
       { x = 336, y =  88, mat = "?wall" }
       { x = 304, y = 128, mat = "?wall" }
-      { b = 112, mat = "?niche" }
+      { b = 112, mat = "?niche", light_add=64 }
     }
 
     {
@@ -2982,16 +2983,16 @@ PREFAB.HALL_THIN_OH =
       { x =  80, y =  64, mat = "?wall" }
       { x = 112, y = 104, mat = "?wall" }
       { x =  80, y = 128, mat = "?wall" }
-      { b = 112, mat = "?niche" }
+      { b = 112, mat = "?niche", light_add=64 }
     }
   }
 
   entities =
   {
-    { ent = "?torch_ent", x = 80, y = 288, z = 32, angle = 315 }
+    { ent = "?torch_ent", x =  80, y = 288, z = 32, angle = 315 }
     { ent = "?torch_ent", x = 304, y = 288, z = 32, angle = 225 }
-    { ent = "?torch_ent", x = 304, y = 96, z = 32, angle = 135 }
-    { ent = "?torch_ent", x = 80, y = 96, z = 32, angle = 45 }
+    { ent = "?torch_ent", x = 304, y =  96, z = 32, angle = 135 }
+    { ent = "?torch_ent", x =  80, y =  96, z = 32, angle = 45 }
   }
 }
 
