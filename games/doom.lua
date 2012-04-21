@@ -3580,10 +3580,10 @@ DOOM.HALLWAY_GROUPS =
       Hall_Thin_I_Bulge = 70
       Hall_Thin_I_Bend  = 20
 
-      Hall_Thin_I_Oh = 10
-      Hall_Thin_C_Oh = 25
-      Hall_Thin_T_Oh = 40
-      Hall_Thin_P_Oh = 70
+      Hall_Thin_I_Oh = 5
+      Hall_Thin_C_Oh = 5
+      Hall_Thin_T_Oh = 20
+      Hall_Thin_P_Oh = 50
     }
   }
 
