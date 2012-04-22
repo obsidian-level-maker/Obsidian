@@ -27,12 +27,11 @@ PREFAB.WINDOW =
 {
   fitted = "xyz"
 
-  x_ranges = { {64,1}, {64,4}, {64,1} }
+  x_ranges = { {32,1}, {64,1}, {32,1} }
+  z_ranges = { {32,1}, {64,1}, {32,2} }
 
   defaults =
   {
-    outer = "?wall"
-    track = "?wall"
     frame = "?wall"
   }
 
@@ -41,37 +40,106 @@ PREFAB.WINDOW =
     -- right side
     {
       { x =  0, y =  0, mat = "?outer" }
-      { x = 64, y =  0, mat = "?track" }
-      { x = 64, y = 32, mat = "?wall" }
-      { x =  0, y = 32, mat = "?wall" }
-      { x =  0, y = 16, mat = "?outer" }
+      { x = 32, y =  0, mat = "?frame" }
+      { x = 32, y = 24, mat = "?wall" }
+      { x =  0, y = 24, mat = "?wall" }
     }
 
     -- left side
     {
-      { x = 128, y =  0, mat = "?outer" }
-      { x = 192, y =  0, mat = "?outer" }
-      { x = 192, y = 16, mat = "?wall" }
-      { x = 192, y = 32, mat = "?wall" }
-      { x = 128, y = 32, mat = "?track" }
+      { x =  96, y =  0, mat = "?outer" }
+      { x = 128, y =  0, mat = "?wall" }
+      { x = 128, y = 24, mat = "?wall" }
+      { x =  96, y = 24, mat = "?frame" }
     }
 
     -- bottom
     {
-      { x =  64, y =  0, mat = "?outer" }
-      { x = 128, y =  0, mat = "?wall" }
-      { x = 128, y = 32, mat = "?wall" }
-      { x =  64, y = 32, mat = "?wall" }
+      { x = 32, y =  0, mat = "?outer" }
+      { x = 96, y =  0, mat = "?wall" }
+      { x = 96, y = 24, mat = "?wall" }
+      { x = 32, y = 24, mat = "?wall" }
       { t = 32, mat = "?frame" }
     }
 
     -- top
     {
-      { x =  64, y =  0, mat = "?outer" }
+      { x = 32, y =  0, mat = "?outer" }
+      { x = 96, y =  0, mat = "?wall" }
+      { x = 96, y = 24, mat = "?wall" }
+      { x = 32, y = 24, mat = "?wall" }
+      { b = 96, mat = "?frame", light_add=32 }
+    }
+
+    -- bounding on Z axis
+    {
+      { m = "bbox" }
+      { b = 0 }
+      { t = 128 }
+    }
+  }
+}
+
+
+PREFAB.PICTURE_WINDOW =
+{
+  fitted = "xyz"
+
+  x_ranges = { {32,1}, {64,0,"?pic_w"}, {32,1} }
+  z_ranges = { {32,1}, {64,0,"?pic_h"}, {32,3} }
+
+  defaults =
+  {
+    frame = "?wall"
+
+    pic_w = 64
+    pic_h = 64
+  }
+
+  brushes =
+  {
+    -- right side
+    {
+      { x =  0, y =  0, mat = "?outer" }
+      { x = 32, y =  0, mat = "?frame" }
+      { x = 32, y = 24, mat = "?wall" }
+      { x =  0, y = 24, mat = "?wall" }
+    }
+
+    -- left side
+    {
+      { x =  96, y =  0, mat = "?outer" }
       { x = 128, y =  0, mat = "?wall" }
-      { x = 128, y = 32, mat = "?wall" }
-      { x =  64, y = 32, mat = "?wall" }
-      { b = 96, mat = "?frame" }
+      { x = 128, y = 24, mat = "?wall" }
+      { x =  96, y = 24, mat = "?frame" }
+    }
+
+    -- bottom
+    {
+      { x = 32, y =  0, mat = "?outer" }
+      { x = 96, y =  0, mat = "?wall" }
+      { x = 96, y = 24, mat = "?wall" }
+      { x = 32, y = 24, mat = "?wall" }
+      { t = 32, mat = "?frame" }
+    }
+
+    -- top
+    {
+      { x = 32, y =  0, mat = "?outer" }
+      { x = 96, y =  0, mat = "?wall" }
+      { x = 96, y = 24, mat = "?wall" }
+      { x = 32, y = 24, mat = "?wall" }
+      { b = 96, mat = "?frame", light_add=32 }
+    }
+
+    -- fake bit (picture)
+    {
+      { x = 32, y = 12, mat = "?pic" }
+      { x = 96, y = 12, mat = "?pic" }
+      { x = 96, y = 16, mat = "?pic" }
+      { x = 32, y = 16, mat = "?pic" }
+      { t = 96, mat = "?pic" }
+      { b = 32, mat = "?pic" }
     }
 
     -- bounding on Z axis
