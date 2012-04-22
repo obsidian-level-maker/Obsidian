@@ -8,6 +8,13 @@ Current Work
 
 >>>  big_junction hallways : use 'mini_halls' instead of a hallway group
 
+     also: some control over them
+     (a) disable (or prefer) certain height diffs
+     (b) disable doors (since big junction has a door there)
+         [extends to doors at room/mini_hall connection]
+     (c) can provide a skin with 'floor', 'wall' and/or 'ceil' materials
+     (d) can specify other keywords which must be preset or absent in the skin
+
 
 >>>  stairs / lift : standardize height stuff
 
@@ -34,70 +41,40 @@ DONE:  Sky Halls: only build the floor bits in prefab -- do sky separately
       _cave = 0 / 1
 
 
-Outdoor rooms: begin with whole space as "natural", create "constructed"
-               intrusions into that space.
-
-
-PATTERN AREA LOGIC:
-
-??  allow the two area creation methods to co-exist, the grid system
-    can take over after e.g. doing a bunch of try_XXX stuff.
-
--  sometimes with "PLAIN" fill, have two levels (two VHRs)
-   require neighboring 2+ VHRS with a difference >= 2
-   (or both in one seed).
- 
-?  support the "anchor" table
-
-
+3D Areas:
 
 !!!  have 'z1_cap' and 'z2_cap' fields in a chunk, ensure all
      prefabs use it -- perhaps: Trans.set_cap(), Trans.clear_cap()
-
-++  place importants AFTER deciding major areas, and do A* pathing
-    separately for each area.
-
-+  continue with unpatterned area logic:
-   -  try_TWO_SIDE()
-   -  try_THREE_SIDE()
-   -  try_CORNER()
-   -  try_EDGE()
-
-?  put VOID in non-walk left-overs
-
--  when expanding a new area (A) which overlaps another (B), then
-   have a kind of slow-down when A starts to overlap too much of B
-   (especially when more than half of A is overlapping B).
-
-?  try to surround a newly installed area with a new one
-   with a VHR +/-1 from the previous.
-
 
 
 -  REVIEW: quadratic monster formula : bad for "full" game
 
 
-!!  replaceable brushes in prefabs
-
-    +  use this mechanism to place windows and pictures
-
-
-+  fix fat doors (x_ranges) : QUAKE
-
-
------------------------------------------------------------------
+PATTERN LOGIC : skip patterns if (a) multiple levels,
+                                 (b) 2+ chunks in that grid and all of them would
+                                     end up in the same vhr
+                              OR (b2) one chunk in grid but ends up at same vhr
+                                      as all previously assigned chunks in room
 
 
-Short-Term Goals
-================
-
-
--  fix monsters stuck in doors / corners of chunks
+Prefab system:
 
 +  automatic repeating of prefabs
    x_repeat=192 : means we require: x_size / N >= x_repeat (for highest N)
 
-   allow it to happen with prefab composition too
+   do it in apply_skins, after Fab_composition
+   copy (and offset) all the brushes, entities and (ideally) models
+   also: if x_ranges (etc), expand that by N times too
+
+   WISH: the ability to split entities -- e.g. player closets
+
+   WISH: allow it to happen with prefab composition too
+
+
+
+-  fix monsters stuck in doors / corners of chunks
+
++  fix fat doors (x_ranges) : QUAKE
 
 
 -----------------------------------------------------------------
@@ -114,11 +91,11 @@ Release Goals
 
 >>  secret niches
 
--  cages
-
 -  normal doors
 
--  better ceilings, some ceiling lights
+-  ceiling prefabs (esp. light fixtures)
+
+-  floor prefabs (crates are great, cages are all the rage)
 
 >>  better exits
 
