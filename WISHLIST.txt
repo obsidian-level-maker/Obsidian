@@ -261,6 +261,7 @@ Bridges:
 +  get 3D bridges working again: in the logic that decides what AREA
    the new pattern will extend -- look for a possible bridge.
    Q/ do bridges span two areas, or form part of one single area?
+   A/ two distinct areas
 
 
 Facades:

@@ -11,21 +11,12 @@ Current Work
 
 >>>  stairs / lift : standardize height stuff
 
-     _stair_kind = 
-       "short"    32 unit stair  (down to 24, up to 40)
-       "medium"   64 unit stair  (down to 48, up to 80)
-       "tall"    128 unit stair  (down to 88, up to 160)
+     _stair_kind = "short" / "medium" / "tall" / "lift"
 
-       "lift"    can be any size
-
-     Q/ how to vertically scale stair prefabs so that the last stair
-        reaches the target height, but leaves room for player to walk?
-     
-     A/ z_ranges = { {128,0,"?height"}, {...} }
+     z_ranges = { {128,0,"?height"}, ... }  in prefab to make it reach target height
 
 
-Sky Halls: only build the floor bits in prefab -- do sky separately
-
+DONE:  Sky Halls: only build the floor bits in prefab -- do sky separately
 
 
 ++  think about how "mini halls" and "groups" interact
@@ -115,11 +106,11 @@ Short-Term Goals
 Release Goals
 =============
 
-+  windows
+>>  windows
 
    -  must decide after all heights are done
 
-+  pictures in walls
+>>  pictures in walls
 
 >>  secret niches
 
