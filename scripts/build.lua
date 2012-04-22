@@ -594,8 +594,8 @@ Trans.TRANSFORM =
 --[[
 struct GROUP
 {
-  low,  high,  size   : original range
-  low2, high2, size2  : new range
+  low,  high,  size   : the original coordinate range
+  low2, high2, size2  : the new coordinate range
 
   weight  : relative weight of this group (in relation to others).
             needed for setting up the groups, but not for using them.
@@ -914,6 +914,12 @@ function Trans.edge_transform(x1,y1, x2,y2, z, side, long1, long2, out, back)
 end
 
 
+function Trans.set_fitted_z(T, z1, z2)
+  T.add_z    = z1
+  T.fitted_z = z2 - z1
+end
+
+
 function Trans.categorize_linkage(dir2, dir4, dir6, dir8)
   local link_str = ""
 
@@ -983,16 +989,16 @@ end
 
 
 
-function Trans.create_groups(size_list, pf_min, pf_max)
+function Trans.create_groups(ranges, pf_min, pf_max)
 
   -- pf_min and pf_max are in the 'prefab' space (i.e. before any
   -- stretching or shrinkin is done).
 
   assert(pf_min and pf_max)
 
-  local groups={ }
+  local groups = { }
 
-  if not size_list then
+  if not ranges then
     local G =
     {
       low  = pf_min
@@ -1010,11 +1016,11 @@ function Trans.create_groups(size_list, pf_min, pf_max)
 
   -- create groups
 
-  assert(#size_list >= 1)
+  assert(#ranges >= 1)
 
   local pf_pos = pf_min
 
-  each S in size_list do
+  each S in ranges do
     local G = { }
 
     G.size = S[1]
@@ -1045,25 +1051,26 @@ end
 
 
 function Trans.fitted_group_targets(groups, low2, high2)
-  if not groups then return end  -- ugh
-
   local extra = high2 - low2
-  local total_weight = 0
+  local extra_weight = 0
 
   each G in groups do
-    if G.size2 then extra = extra - G.size2 end
-    total_weight = total_weight + G.weight
+    extra = extra - (G.size2 or G.size)
+
+    if not G.size2 then
+      extra_weight = extra_weight + G.weight
+    end
   end
 
   local pos2 = low2
 
   each G in groups do
     if not G.size2 then
-      G.size2 = extra * G.weight / total_weight
+      G.size2 = G.size + extra * G.weight / extra_weight
+    end
 
-      if G.size2 <= 1 then
-        error("Prefab does not fit!")
-      end
+    if G.size2 <= 1 then
+      error("Prefab does not fit!")
     end
 
     G.low2  = pos2 ; pos2 = pos2 + G.size2
@@ -1076,19 +1083,33 @@ end
 
 
 function Trans.loose_group_targets(groups, scale)
+
+  -- TODO: TEST THIS CODE !!!
+
   local total_size  = 0
   local total_size2 = 0
 
-  local total_weight = 0
+  local extra_weight = 0
 
   each G in groups do
-    total_weight = total_weight + G.weight
+    if not G.size2 then
+      G.weight = G.weight * (scale - 1)
+      extra_weight = extra_weight + G.weight
+    end
   end
 
   each G in groups do
     if not G.size2 then
-      assert(G.weight > 0)
-      G.size2 = G.size * (G.weight / total_weight) * scale
+      if extra_weight > 1 then
+        assert(G.weight > 0)
+        G.size2 = G.size * (1 + G.weight / extra_weight)
+      else
+        G.size2 = G.size
+      end
+    end
+
+    if G.size2 <= 1 then
+      error("Prefab does not fit!")
     end
 
     total_size  = total_size  + G.size 
@@ -1672,6 +1693,7 @@ function Fab_transform_XY(fab, T)
   local groups_x = Trans.create_groups(fab.x_ranges, bbox.x1, bbox.x2)
   local groups_y = Trans.create_groups(fab.y_ranges, bbox.y1, bbox.y2)
 
+
   Trans.TRANSFORM.groups_x = groups_x
   Trans.TRANSFORM.groups_y = groups_y
 
@@ -1830,7 +1852,9 @@ function Fab_transform_Z(fab, T)
       error("Fitted prefab must have lowest Z coord at 0")
     end
 
-    Trans.fitted_group_targets(groups_z, 0, T.fitted_z)
+    if groups_z then
+      Trans.fitted_group_targets(groups_z, 0, T.fitted_z)
+    end
 
   else  -- "loose" mode
 
