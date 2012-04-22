@@ -957,11 +957,20 @@ function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
   if C:neighbor_info(dir, info, "sky_only") and
      info.c_min - info.f_max >= 64
   then
-    -- use an "XYZ" fitted transform
-    T.add_z    = info.f_max
-    T.fitted_z = info.c_min - info.f_max
+    Trans.set_fitted_z(T, info.f_max, info.c_min)
 
     Fabricate("WINDOW", T, { skin })
+    return
+  end
+
+  -- walls and windows use an "XYZ" fitted transform
+  Trans.set_fitted_z(T, f_h, c_h)
+
+  -- PICTURES!!!
+  if c_h >= f_h + 128 then
+    local skin2 = assert(GAME.SKINS["Pic_Logo2"])
+
+    Fabricate(skin2._prefab, T, { skin, skin2 })
     return
   end
 
