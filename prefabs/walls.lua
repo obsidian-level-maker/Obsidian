@@ -20,7 +20,7 @@
 
 PREFAB.WALL =
 {
-  fitted = "xy"
+  fitted = "xyz"
 
   brushes =
   {
@@ -102,22 +102,26 @@ PREFAB.SKY_CORNER =
 }
 
 
+
 PREFAB.PICTURE =
 {
-  fitted = "xy"
+  fitted = "xyz"
 
-  x_ranges = { {64,1}, {64,0,"?width"}, {64,1} }
+  x_ranges = { {16,1}, {64,0,"?pic_w"}, {16,1} }
   y_ranges = { {8,1}, {8,0} }
-  z_ranges = { {32,0}, {64,0,"?height"} }
+  z_ranges = { {32,1}, {64,0,"?pic_h"}, {32,7} }
 
   defaults =
   {
-    width  = 64
-    height = 64
+    pic_w = 64
+    pic_h = 64
 
-    side = "?wall"
+    frame = "?wall"
 
-    special = 0
+    light  = ""
+    scroll = ""
+    effect = ""
+
     x_offset = 0
     y_offset = 0
     peg = 0
@@ -127,70 +131,61 @@ PREFAB.PICTURE =
   {
     -- wall behind picture
     {
-      { x =   0, y =  0, mat = "?wall" }
-      { x = 192, y =  0, mat = "?wall" }
-      { x = 192, y =  4, mat = "?wall" }
-      { x =   0, y =  4, mat = "?wall" }
-
-      { b = 0 }  --<<  FIXME: hack
+      { x =  0, y =  0, mat = "?outer" }
+      { x = 96, y =  0, mat = "?wall" }
+      { x = 96, y =  4, mat = "?wall" }
+      { x =  0, y =  4, mat = "?wall" }
     }
 
     -- picture itself
     {
-      { x =  64, y =  4 }
-      { x = 128, y =  4 }
-      { x = 128, y =  8, mat = "?pic", peg="?peg", x_offset="?x_offset", y_offset="?y_offset", special="?special" }
-      { x =  64, y =  8 }
+      { x = 16, y =  4, mat = "?wall" }
+      { x = 80, y =  4, mat = "?wall"  }
+      { x = 80, y =  8, mat = "?pic", peg="?peg", x_offset="?x_offset", y_offset="?y_offset", special="?scroll" }
+      { x = 16, y =  8, mat = "?wall"  }
       { b = 32 }
       { t = 96 }
     }
 
     -- right side wall
     {
-      { x = 0, y =  4, mat = "?wall" }
-      { x = 8, y =  4, mat = "?wall" }
-      { x = 8, y = 16, mat = "?wall" }
-      { x = 0, y = 16, mat = "?wall" }
-    }
-
-    {
-      { x =  8, y =  4, mat = "?wall" }
-      { x = 64, y =  4, mat = "?side" }
-      { x = 64, y = 16, mat = "?wall" }
-      { x =  8, y = 16, mat = "?side" }
+      { x =  0, y =  4, mat = "?wall" }
+      { x = 16, y =  4, mat = "?frame" }
+      { x = 16, y = 16, mat = "?wall" }
+      { x =  0, y = 16, mat = "?wall" }
     }
 
     -- left side wall
     {
-      { x = 184, y =  4, mat = "?wall" }
-      { x = 192, y =  4, mat = "?wall" }
-      { x = 192, y = 16, mat = "?wall" }
-      { x = 184, y = 16, mat = "?wall" }
-    }
-
-    {
-      { x = 128, y =  4, mat = "?wall" }
-      { x = 184, y =  4, mat = "?side" }
-      { x = 184, y = 16, mat = "?wall" }
-      { x = 128, y = 16, mat = "?side" }
+      { x = 80, y =  4, mat = "?wall" }
+      { x = 96, y =  4, mat = "?wall" }
+      { x = 96, y = 16, mat = "?wall" }
+      { x = 80, y = 16, mat = "?frame" }
     }
 
     -- frame bottom
     {
-      { x =  64, y =  4, mat = "?wall" }
-      { x = 128, y =  4, mat = "?wall" }
-      { x = 128, y = 16, mat = "?wall", blocked=1 }
-      { x =  64, y = 16, mat = "?wall" }
-      { t = 32, mat = "?floor" }
+      { x = 16, y =  8, mat = "?wall" }
+      { x = 80, y =  8, mat = "?wall" }
+      { x = 80, y = 16, mat = "?wall", blocked=1 }
+      { x = 16, y = 16, mat = "?wall" }
+      { t = 32, mat = "?frame" }
     }
 
     -- frame top
     {
-      { x =  64, y =  4, mat = "?wall" }
-      { x = 128, y =  4, mat = "?wall" }
-      { x = 128, y = 16, mat = "?wall", blocked=1 }
-      { x =  64, y = 16, mat = "?wall" }
-      { b = 96, mat = "?floor", light = "?light"  }
+      { x = 16, y =  8, mat = "?wall" }
+      { x = 80, y =  8, mat = "?wall" }
+      { x = 80, y = 16, mat = "?wall", blocked=1 }
+      { x = 16, y = 16, mat = "?wall" }
+      { b = 96, mat = "?frame", light_add="?light", light_effect="?effect" }
+    }
+
+    -- bounds on Z axis
+    {
+      { m = "bbox" }
+      { b = 0 }
+      { t = 128 }
     }
   }
 }
