@@ -1461,12 +1461,14 @@ HEXEN.SKINS =
   {
     _prefab = "SKY_HALL_I"
     _shape  = "I"
+    _need_sky = 1
   }
 
   Sky_Hall_C =
   {
     _prefab = "SKY_HALL_C"
     _shape  = "C"
+    _need_sky = 1
 
     support = "PILLAR01"
     torch_ent = "brass_brazier"
@@ -1476,6 +1478,7 @@ HEXEN.SKINS =
   {
     _prefab = "SKY_HALL_I_STAIR"
     _shape  = "IS"
+    _need_sky = 1
 
 --??    step = "STEP5"
   }

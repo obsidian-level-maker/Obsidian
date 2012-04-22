@@ -303,10 +303,10 @@ stderrf("check_sky_hall @ %s : %d/%d\nfloor range (%d..%d)\n%s\n\n",
      info.f_max and H.min_floor_h >= info.f_max and
      info.c_min and H.max_floor_h + 80 <= info.c_min
   then
-    return true, info.c_min
+    return info.c_min
   end
 
-  return false
+  return nil  -- not possible
 end
 
 
@@ -320,10 +320,10 @@ function HALLWAY_CLASS.pick_group(H)
 
   local group_name = H.zone.hallway_group
 
-  -- check for "sky halls"   [FUCK ME, SIMPLIFY THIS!!!]
-  local able, sky_h = H:check_sky_hall()
+  -- check for "sky halls"
+  local sky_h = H:check_sky_hall()
 
-  if able and THEME.sky_halls then
+  if sky_h and THEME.sky_halls then
     group_name = rand.key_by_probs(THEME.sky_halls)
 
     H.sky_hall_sky_h = sky_h
@@ -405,14 +405,6 @@ function HALLWAY_CLASS.build_hall_piece(H, C)
                   outer = H.zone.facade_mat
                 }
 
-  if H.sky_hall_sky_h then
-    skin0.sky_h = H.sky_hall_sky_h - (C.floor_h or 0)
-
----###  if C.h_scale_z then
----###    skin0.sky_h = skin0.sky_h / C.h_scale_z
----###  end
-  end
-
   local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, C.h_dir or 2)
 
   local skin2 = { stair_h = C.h_stair_h }
@@ -424,6 +416,16 @@ function HALLWAY_CLASS.build_hall_piece(H, C)
   end
 
   H.last_piece = skin_name
+
+  -- the sky is done separately for "Sky Hall" pieces
+  if H.sky_hall_sky_h and skin1._need_sky then
+    local brush = Brush_new_quad(C.x1, C.y1, C.x2, C.y2, H.sky_hall_sky_h)
+
+    Brush_set_mat(brush, "_SKY", "_SKY")
+    table.insert(brush, 1, { m="sky" })
+
+    brush_helper(brush)
+  end
 
 --[[
 local mx, my = C:mid_point()

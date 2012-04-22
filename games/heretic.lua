@@ -671,12 +671,14 @@ HERETIC.SKINS =
   {
     _prefab = "SKY_HALL_I"
     _shape  = "I"
+    _need_sky = 1
   }
 
   Sky_Hall_C =
   {
     _prefab = "SKY_HALL_C"
     _shape  = "C"
+    _need_sky = 1
 
     support = "METL1"
     torch_ent = "serpent_torch"
@@ -686,6 +688,7 @@ HERETIC.SKINS =
   {
     _prefab = "SKY_HALL_I_STAIR"
     _shape  = "IS"
+    _need_sky = 1
 
 --??    step = "STEP5"
   }

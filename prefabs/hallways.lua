@@ -3672,15 +3672,6 @@ PREFAB.SKY_HALL_I =
 
   brushes =
   {
-    -- the sky
-    {
-      { x =   0, y =   0, mat = "_SKY" }
-      { x = 192, y =   0, mat = "_SKY" }
-      { x = 192, y = 192, mat = "_SKY" }
-      { x =   0, y = 192, mat = "_SKY" }
-      { b = "?sky_h", mat = "_SKY" }
-    }
-
     {
       { x =   0, y =   0, mat = "?outer" }
       { x =  16, y =   0, mat = "?floor" }
@@ -3717,15 +3708,6 @@ PREFAB.SKY_HALL_C =
 
   brushes =
   {
-    -- the sky
-    {
-      { x =   0, y =   0, mat = "_SKY" }
-      { x = 192, y =   0, mat = "_SKY" }
-      { x = 192, y = 192, mat = "_SKY" }
-      { x =   0, y = 192, mat = "_SKY" }
-      { b = "?sky_h", mat = "_SKY" }
-    }
-
     {
       { x =   0, y = 176, mat = "?floor" }
       { x = 160, y = 176, mat = "?floor" }
@@ -3788,7 +3770,7 @@ PREFAB.SKY_HALL_I_STAIR =
 {
   fitted = "xy"
 
-  z_ranges = { {60,0,"?stair_h"}, {68,0}, {256,0} }
+  z_ranges = { {60,0,"?stair_h"}, {40,0} }
   x_ranges = { {16,0}, {160,1}, {16,0} }
 
   defaults =
@@ -3798,15 +3780,6 @@ PREFAB.SKY_HALL_I_STAIR =
 
   brushes =
   {
-    -- the sky
-    {
-      { x =   0, y =   0, mat = "_SKY" }
-      { x = 192, y =   0, mat = "_SKY" }
-      { x = 192, y = 192, mat = "_SKY" }
-      { x =   0, y = 192, mat = "_SKY" }
-      { b = 384, mat = "_SKY" }
-    }
-
     {
       { x =   0, y = 112, mat = "?floor" }
       { x =  16, y = 112, mat = "?floor" }

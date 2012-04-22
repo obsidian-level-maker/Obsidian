@@ -2879,12 +2879,14 @@ DOOM.SKINS =
   {
     _prefab = "SKY_HALL_I"
     _shape  = "I"
+    _need_sky = 1
   }
 
   Sky_Hall_C =
   {
     _prefab = "SKY_HALL_C"
     _shape  = "C"
+    _need_sky = 1
 
     support = "SUPPORT3"
     torch_ent = "green_torch_sm"
@@ -2894,6 +2896,7 @@ DOOM.SKINS =
   {
     _prefab = "SKY_HALL_I_STAIR"
     _shape  = "IS"
+    _need_sky = 1
 
     step = "STEP5"
   }
