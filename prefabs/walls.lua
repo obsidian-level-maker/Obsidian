@@ -109,7 +109,7 @@ PREFAB.PICTURE =
 
   x_ranges = { {16,1}, {64,0,"?pic_w"}, {16,1} }
   y_ranges = { {8,1}, {8,0} }
-  z_ranges = { {32,1}, {64,0,"?pic_h"}, {32,7} }
+  z_ranges = { {32,1}, {64,0,"?pic_h"}, {32,3} }
 
   defaults =
   {
