@@ -18,9 +18,16 @@
 --
 ----------------------------------------------------------------
 --
---  Stairs travel NORTH to SOUTH, the north side (dir = 8) is low
---  and the south side (dir = 2) is always t he highest side
---  in the raw (unrotated) prefab.  
+--  Stairs travel NORTH to SOUTH, north side (dir = 8) is lowest
+--  and south side (dir = 2) is highest side in the unrotated
+--  prefab.
+--
+--  There are four main kinds:
+--     "short"    32 unit stair  (down to 24, up to 40)
+--     "medium"   64 unit stair  (down to 48, up to 80)
+--     "tall"    128 unit stair  (down to 88, up to 160)
+--
+--     "lift"    can be any size >= 40
 --
 ----------------------------------------------------------------
 
