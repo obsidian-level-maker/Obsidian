@@ -3287,40 +3287,17 @@ DOOM.SKINS =
 
   ---| PICTURES |---
 
-  Pic_Chrissy1 =
-  {
-    _prefab = "PICTURE"
-    _where  = "edge"
-    _long   = 192
-    _deep   = 32
-
-    pic = "O_MISC"
-    width  = 128
-    height = 128
-  }
-
-  Pic_Chrissy2 =
-  {
-    _prefab = "PICTURE"
-    _where  = "edge"
-    _long   = 192
-    _deep   = 32
-
-    pic = "O_NEON"
-    width  = 128
-    height = 128
-  }
-
   Pic_Logo1 =
   {
     _prefab = "PICTURE"
     _where  = "edge"
     _long   = 192
-    _deep   = 32
 
-    pic = "O_PILL"
-    width  = 128
-    height = 32
+    pic   = "O_PILL"
+    pic_w = 128
+    pic_h = 32
+
+    light = 64
   }
 
   Pic_Logo2 =
@@ -3328,11 +3305,12 @@ DOOM.SKINS =
     _prefab = "PICTURE"
     _where  = "edge"
     _long   = 192
-    _deep   = 32
 
-    pic = "O_CARVE"
-    width  = 64
-    height = 64
+    pic   = "O_CARVE"
+    pic_w = 64
+    pic_h = 64
+
+    light = 64
   }
 
 
