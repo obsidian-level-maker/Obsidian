@@ -2075,6 +2075,43 @@ end
 
 
 
+function Rooms_ambient_lighting()
+
+  local function colorise_loc(L)
+
+    local color = rand.irange(10000,10137)
+
+    each C in L.chunks do
+      raw_add_brush(
+      {
+        { m = "light", color = color }
+        { x = C.x1, y = C.y1 }
+        { x = C.x2, y = C.y1 }
+        { x = C.x2, y = C.y2 }
+        { x = C.x1, y = C.y2 }
+      })
+    end
+  end
+
+
+  ---| Rooms_ambient_lighting |---
+
+  if not PARAM.light_brushes then
+    return
+  end
+
+if OB_CONFIG.game != "absolution" then return end
+
+  each R in LEVEL.rooms do
+    colorise_loc(R)
+  end
+
+  each H in LEVEL.halls do
+    colorise_loc(H)
+  end
+end
+
+
 ----------------------------------------------------------------
 
 
@@ -2791,6 +2828,7 @@ function Rooms_build_all()
   Areas_flesh_out()
 
   Rooms_outdoor_borders()
+  Rooms_ambient_lighting()
 
   -- Rooms_indoor_walls()
 
