@@ -674,6 +674,10 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
   int effect = 0;
   int delta  = 0;
 
+  // Doom 64 TC support : colored sectors
+  // this value is a sector type, and has lowest priority
+  int color = 0;
+
   for (unsigned int i = 0 ; i < R->brushes.size() ; i++)
   {
     csg_brush_c *B = R->brushes[i];
@@ -690,7 +694,16 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
     int sub = B->props.getInt("sub");
 
     if (ambient > 0)
+    {
       S->light = ambient;
+    }
+
+    {
+      int c = B->props.getInt("color");
+
+      if (c > 0)
+        color = c;
+    }
 
     max_sub = MAX(max_sub, sub);
 
@@ -710,7 +723,7 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
       if (val > 0)
       {
         effect = val;
-        delta  = B->props.getInt("delta", -63);
+        delta  = B->props.getInt("delta");
       }
     }
   }
@@ -738,14 +751,14 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
       if (val > 0)
       {
         effect = val;
-        delta  = P->getInt("light_delta", -63);
+        delta  = P->getInt("light_delta");
       }
     }
   }
 
   // an existing sector special overrides the lighting effect
   if (S->special > 0)
-    effect = 0;
+    effect = color = 0;
 
   // additive component
   S->light += max_add;
@@ -756,14 +769,20 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
 
   S->light = CLAMP(80, S->light, 255);
 
-  // hack to force complete darkness (Fixme ?)
+  // hack to force complete darkness
   if (effect == 0 && max_sub >= 255)
     S->light = 0;
 
   if (effect > 0)
   {
     S->special = effect;
-    S->light2  = CLAMP(1, S->light + delta, 255);
+    
+    if (delta)
+      S->light2 = CLAMP(1, S->light + delta, 255);
+  }
+  else if (color > 0)
+  {
+    S->special = color;
   }
 }
 
