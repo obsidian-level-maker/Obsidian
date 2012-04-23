@@ -30,6 +30,13 @@ PREFAB.WALL =
       { x = 192, y = 24, mat = "?wall" }
       { x =   0, y = 24, mat = "?wall" }
     }
+
+    -- bounds on Z axis
+    {
+      { m = "bbox" }
+      { b = 0 }
+      { t = 128 }
+    }
   }
 }
 
