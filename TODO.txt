@@ -6,6 +6,9 @@ Current Work
 ------------
 
 
+>>>  fences at inter-room chunk edges
+
+
 >>>  big_junction hallways : use 'mini_halls' instead of a hallway group
 
      also: some control over them
@@ -18,12 +21,9 @@ Current Work
 
 >>>  stairs / lift : standardize height stuff
 
-     _stair_kind = "short" / "medium" / "tall" / "lift"
+     _elevation = "short" / "medium" / "tall" / "lift"
 
      z_ranges = { {128,0,"?height"}, ... }  in prefab to make it reach target height
-
-
-DONE:  Sky Halls: only build the floor bits in prefab -- do sky separately
 
 
 ++  think about how "mini halls" and "groups" interact
@@ -47,9 +47,6 @@ DONE:  Sky Halls: only build the floor bits in prefab -- do sky separately
      prefabs use it -- perhaps: Trans.set_cap(), Trans.clear_cap()
 
 
--  REVIEW: quadratic monster formula : bad for "full" game
-
-
 PATTERN LOGIC : skip patterns if (a) multiple levels,
                                  (b) 2+ chunks in that grid and all of them would
                                      end up in the same vhr
@@ -57,22 +54,7 @@ PATTERN LOGIC : skip patterns if (a) multiple levels,
                                       as all previously assigned chunks in room
 
 
-Prefab system:
-
-+  automatic repeating of prefabs
-   x_repeat=192 : means we require: x_size / N >= x_repeat (for highest N)
-
-   do it in apply_skins, after Fab_composition
-   copy (and offset) all the brushes, entities and (ideally) models
-   also: if x_ranges (etc), expand that by N times too
-
-   WISH: the ability to split entities -- e.g. player closets
-
-   WISH: allow it to happen with prefab composition too
-
-
-
--  fix monsters stuck in doors / corners of chunks
++  fix monsters stuck in doors / corners of chunks
 
 +  fix fat doors (x_ranges) : QUAKE
 
@@ -91,13 +73,15 @@ Release Goals
 
 >>  secret niches
 
--  normal doors
+-  normal doors  [c.f. mini-hall doors]
 
 -  ceiling prefabs (esp. light fixtures)
 
 -  floor prefabs (crates are great, cages are all the rage)
 
 >>  better exits
+
+-  liquid areas
 
 Closets:
 +  allow closet to be smaller than chunk, fill extra space with void

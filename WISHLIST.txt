@@ -196,6 +196,17 @@ IDEA: a way to associate a skin with a hallway group
 -  hallways field in room themes : allow use in caves/outdoor too
 
 
+Prefab system:
++  automatic repeating of prefabs
+   x_repeat=192 : means we require: x_size / N >= x_repeat (for highest N)
+
+   do it in apply_skins, after Fab_composition
+   copy (and offset) all the brushes, entities and (ideally) models
+   also: if x_ranges (etc), expand that by N times too
+
+   WISH: support it with prefab composition too
+
+
 Sky Halls:
 -  if a hallway is "simply" connected (no lock) to an outdoor room
    [or other.quest < hallway.quest]
@@ -406,6 +417,9 @@ Mazes:
 ----------------------------------------------------------------
   MONSTERS / ITEMS
 ----------------------------------------------------------------
+
+++  REVIEW the 'mon_along' calculation, ideally take it out of
+    the game specific code (can modify it via PARAM or THEME).
 
 +  in later levels, low-level monsters should be used in bigger swarms
 
