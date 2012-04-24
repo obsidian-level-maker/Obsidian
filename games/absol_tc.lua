@@ -164,10 +164,12 @@ ABSOLUTION.MATERIALS =
   KEY_YELLOW = { t="TILE6D7A", f="FTILEA79" }
   KEY_BLUE   = { t="TILE31A4", f="FTILEA79" }
 
-  SW_DOOR = { t="TILE4507", f="FTILEA79" }
+  REMOTE_DOOR = { t="TILE4507", f="FTILEA79" }
 
 
   -- switches --
+
+  SW1EXIT = { t="SW1EXIT", f="FTILEA79" }
 
 
   -- floors --
@@ -398,7 +400,7 @@ ABSOLUTION.SKINS =
 
     w = 128
     h = 112
-    door = "SW_DOOR"
+    door = "REMOTE_DOOR"
     track = "TRACK"
     door_h = 112
     special = 0
@@ -411,11 +413,11 @@ ABSOLUTION.SKINS =
     _switch = "sw_metal"
 
     switch_h = 64
-    switch = "SW1OFF"
+    switch = "SW1EXIT"
     side = "METL2"
     base = "METL2"
-    x_offset = 0
-    y_offset = 32
+    x_offset = 192
+    y_offset = 64
     special = 103
   }
 
