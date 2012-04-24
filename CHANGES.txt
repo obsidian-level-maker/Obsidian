@@ -16,6 +16,18 @@ CHANGES (since 3.57)
 + Quake visibility!
 + Quake II works!
 
++ Hexen works!
++ much improved Hexen themes, thanks to blackjar
++ proper Hub system for Hexen
+
+- support FreeDoom 0.7
+- basic support for HacX 1.2
+- basic support for Chex Quest 1, 2 and 3
+- support for Absolution, the Doom64 TC
+- preliminary support for Harmony
+- DOOM themes for Episodes 2 and 4, courtesy Mr Chris
+- monsters are progressive over a full game in DOOM 2
+
 - improved progress bar and status messages
 - output file is deleted if an error occurs
 - backup files now use the .OLD extension
@@ -33,26 +45,15 @@ CHANGES (since 3.57)
 - monster control modules for Heretic, Quake, Quake II
 - support for liquids in Quake and Quake II
 - support reading and writing PK3 files
-- an exporter to .MAP format to help debugging
-
-+ Hexen works!
-+ much improved Hexen themes, thanks to blackjar
-+ proper Hub system for Hexen
-
-- support FreeDoom 0.7
-- basic support for HacX 1.2
-- basic support for Chex Quest 1, 2 and 3
-- preliminary support for Harmony
-- DOOM themes for Episodes 2 and 4, courtesy Mr Chris
-- monsters are progressive over a full game in DOOM 2
+- an exporter to .MAP format
 
 + ability to make multiple paths between rooms
-+ worked on "cross-overs" (a bridge through another room)
-- new 'Extreme' option for level size
+- worked on "cross-overs" (a bridge through another room)
 ?? support for simple 3D bridges within rooms
 - improved infighting logic in the Fight Simulator
 
 - new 'Jumbled Up' theme setting
+- new 'Extreme' option for level size
 - new 'Alternative Look' option
 - moved the Seed setting, and increased to 6 digits
 - Seed is automatically bumped after a successful build
