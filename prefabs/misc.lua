@@ -159,6 +159,7 @@ PREFAB.TELEPORT_PAD =
 {
   defaults =
   {
+    side = "?tele"
     effect_ent = "none"
   }
 

@@ -150,11 +150,13 @@ ABSOLUTION.MATERIALS =
 
   X_WALL = { t="TILEADAC", f="FTILEA79" }
 
+  HALL_A = { t="TILEAA3B", f="FTILEA79" }
+
 
   -- doors --
 
-  TRACK  = { t="TILE7CFA", f="FTILEA79" }
-  TRACK2 = { t="TILED839", f="FTILEA79" }
+  TRACK  = { t="TILE7CFA", f="CUSTOMCD" }
+  TRACK2 = { t="TILED839", f="CUSTOMCD" }
 
   DOOR1 = { t="TILED4A9", f="FTILEA79" }
 
@@ -181,6 +183,45 @@ ABSOLUTION.MATERIALS =
   -- rails --
 
 
+  -- urban --
+
+  BRICK1 = { t="TILE0365", f="" }
+  BRICK2 = { t="TILE7D22", f="" }
+
+  BRICK_MOSS = { t="TILE7F58", f="" }
+
+  FLAT1 = { t="TILEEC99", f="FTILEF60" }
+
+  STONES   = { t="TILE4269", f="X" }
+  STONES_R = { t="TILE6D76", f="X" }
+  BR_STONE = { t="TILE72B6", f="X" }
+
+  STONES2  = { t="TILE8D65", f="X" }
+
+  BLOCKS   = { t="TILE747D", f="X" }
+
+  WOOD  = { t="TILE1BB5", f="CUSTOM29" }
+  WOOD2 = { t="TILEE56B", f="CUSTOMGK" }
+
+
+  -- naturals --
+
+  GRASS1 = { t="TILED5FC", f="CUSTOMBD" }
+  GRASS2 = { t="TILED5FB", f="CUSTOMBE" }
+
+  DARK_ROCK  = { t="TILE0538", f="CUSTOM10" }
+  DARK_ROCK2 = { t="TILECB62", f="FTILECB6" }
+
+  LITE_ROCK  = { t="TILE1CB1", f="FTILE1CB" }
+  LITE_ROCK2 = { t="TILE9344", f="FTILE934" }
+
+  BROWN_ROCK = { t="TILE1CE0", f="FTILE1CE" }
+  GRAY_ROCK  = { t="TILED628", f="CUSTOMAU" }
+
+  DIRT      = { t="TILE4E99", f="FTILE4E9" }
+  GRAY_DIRT = { t="TILEA301", f="FTILEA30" }
+
+
   -- liquids / animated --
 
   L_WATER  = { f="FTILE080", t="TILED7C9", sane=1 }
@@ -188,6 +229,10 @@ ABSOLUTION.MATERIALS =
   L_MAGMA  = { f="FTILE0A5", t="TILEB361", sane=1 }
   L_LAVA   = { f="FTILE5A0", t="TILE5A0F", sane=1 }
   L_LAVA2  = { f="FTILE33A", t="TILE33A7", sane=1 }
+
+  PORTAL_X = { f="XPORTAL1", t="TILEAA3B", sane=1 }
+  PORTAL_Y = { f="YPORTAL1", t="TILEAA3B", sane=1 }
+  PORTAL_Z = { f="ZPORTAL1", t="TILEAA3B", sane=1 }
 
 
   -- other --
@@ -486,8 +531,7 @@ ABSOLUTION.SKINS =
     _prefab = "TELEPORT_PAD"
     _where  = "middle"
 
-    tele = "FLTTELE1"
-    side = "SQPEB1"
+    tele = "PORTAL_Z"
 
     x_offset = 0
     y_offset = 0
@@ -590,12 +634,18 @@ ABSOLUTION.ROOM_THEMES =
   {
     floors =
     {
-      X_FLOOR=50
+      GRASS2=50
+      WOOD=50
+      DARK_ROCK2=50
+      LITE_ROCK1=20
     }
 
     naturals =
     {
-      L_MAGMA=20
+      DARK_ROCK2=50
+      LITE_ROCK1=20
+      WOOD=40
+      L_MAGMA=50
     }
   }
 
