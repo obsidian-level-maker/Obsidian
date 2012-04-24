@@ -400,6 +400,9 @@ PREFAB.DOOR =
     act = ""
     speed = 32
     keynum = ""
+
+    -- Doom64 TC stuff
+    color = ""
   }
 
   brushes =
@@ -419,7 +422,7 @@ PREFAB.DOOR =
       { x = 160, y =  0, mat = "?outer" }
       { x = 160, y = 48, mat = "?wall" }
       { x =  32, y = 48, mat = "?outer" }
-      { b = 136, mat = "?frame" }
+      { b = 136, mat = "?frame", light_add = 32, special = "?color" }
     }
 
     -- door itself
@@ -428,7 +431,7 @@ PREFAB.DOOR =
       { x = 160, y = 16, mat = "?door", special="?special", act="?act", arg1="?tag", arg2="?speed", arg4="?keynum", peg=1, x_offset=0, y_offset=0 }
       { x = 160, y = 32, mat = "?door", special="?special", act="?act", arg1="?tag", arg2="?speed", arg4="?keynum", peg=1, x_offset=0, y_offset=0 }
       { x =  32, y = 32, mat = "?door", special="?special", act="?act", arg1="?tag", arg2="?speed", arg4="?keynum", peg=1, x_offset=0, y_offset=0 }
-      { b = 24, delta_z=-16, mat = "?door", light = 0.7, tag = "?tag" }
+      { b = 24, delta_z=-16, mat = "?door", tag = "?tag", light_add = 32 }
     }
 
     -- left side
@@ -463,15 +466,6 @@ PREFAB.DOOR =
       { x = 160, y =  0, mat = "?outer" }
       { x = 184, y =  0, mat = "?outer" }
       { x = 184, y = 24, mat = "?wall" }
-    }
-
-    -- lighting
-    {
-      { m = "light", add = 32 }
-      { x =  32, y =  0 }
-      { x = 160, y =  0 }
-      { x = 160, y = 48 }
-      { x =  32, y = 48 }
     }
 
 --[[

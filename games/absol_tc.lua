@@ -150,11 +150,21 @@ ABSOLUTION.MATERIALS =
 
   X_WALL = { t="TILEADAC", f="FTILEA79" }
 
-  X_DOOR = { t="TILE0CAC", f="FTILEA79" }
+
+  -- doors --
+
+  TRACK  = { t="TILE7CFA", f="FTILEA79" }
+  TRACK2 = { t="TILED839", f="FTILEA79" }
+
+  DOOR1 = { t="TILED4A9", f="FTILEA79" }
+
+  SPLIT_DOOR1 = { t="TILE0CAC", f="FTILEA79" }
 
   KEY_RED    = { t="TILE7448", f="FTILEA79" }
   KEY_YELLOW = { t="TILE6D7A", f="FTILEA79" }
   KEY_BLUE   = { t="TILE31A4", f="FTILEA79" }
+
+  SW_DOOR = { t="TILE4507", f="FTILEA79" }
 
 
   -- switches --
@@ -234,7 +244,7 @@ ABSOLUTION.SKINS =
 
     door  = "DOOREXIT"
     door_h = 96
-    track = "METL2"
+    track = "TRACK"
     key   = "METL2"
 
     inner  = "METL2"
@@ -324,15 +334,17 @@ ABSOLUTION.SKINS =
     _where  = "edge"
     _key    = "kc_yellow"
     _long = 192
-    _deep = 32
+    _deep = 48
 
-    w = 128
-    h = 112
-    door_h = 112
-    door = "X_DOOR"
-    track = "METL2"
+    door_w = 128
+    door_h = 128
+
+    door = "DOOR1"
+    key = "KEY_YELLOW"
+    track = "TRACK"
     special = 34
-    tag = 0  -- kind_mult=26
+    tag = 0
+    color = 9997
   }
 
   Locked_red =
@@ -341,15 +353,17 @@ ABSOLUTION.SKINS =
     _where  = "edge"
     _key    = "kc_red"
     _long = 192
-    _deep = 32
+    _deep = 48
 
-    w = 128
-    h = 112
-    door_h = 112
-    door = "X_DOOR"
-    track = "METL2"
+    door_w = 128
+    door_h = 128
+
+    door = "DOOR1"
+    key = "KEY_RED"
+    track = "TRACK"
     special = 33
-    tag = 0  -- kind_mult=26
+    tag = 0
+    color = 9998
   }
 
   Locked_blue =
@@ -358,15 +372,17 @@ ABSOLUTION.SKINS =
     _where  = "edge"
     _key    = "kc_blue"
     _long = 192
-    _deep = 32
+    _deep = 48
 
-    w = 128
-    h = 112
-    door_h = 112
-    door = "X_DOOR"
-    track = "METL2"
+    door_w = 128
+    door_h = 128
+
+    door = "DOOR1"
+    key = "KEY_BLUE"
+    track = "TRACK"
     special = 32
-    tag = 0  -- kind_mult=26
+    tag = 0
+    color = 9999
   }
 
 
@@ -382,8 +398,8 @@ ABSOLUTION.SKINS =
 
     w = 128
     h = 112
-    door = "DMNMSK"
-    track = "METL2"
+    door = "SW_DOOR"
+    track = "TRACK"
     door_h = 112
     special = 0
   }
