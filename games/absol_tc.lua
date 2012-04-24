@@ -146,6 +146,7 @@ ABSOLUTION.MATERIALS =
 
   -- general purpose --
 
+
   -- walls --
 
   X_WALL = { t="TILEADAC", f="FTILEA79" }
@@ -168,10 +169,12 @@ ABSOLUTION.MATERIALS =
 
   REMOTE_DOOR = { t="TILE4507", f="FTILEA79" }
 
+  EXIT_SIGN = { t="TILEC6E3", f="FTILEC1B" }
+
 
   -- switches --
 
-  SW1EXIT = { t="SW1EXIT", f="FTILEA79" }
+  SW1EXIT = { t="SW1EXIT", f="FTILE06A" }
 
 
   -- floors --
@@ -185,10 +188,10 @@ ABSOLUTION.MATERIALS =
 
   -- urban --
 
-  BRICK1 = { t="TILE0365", f="" }
-  BRICK2 = { t="TILE7D22", f="" }
+  BRICK1 = { t="TILE0365", f="FTILE0365" }
+  BRICK2 = { t="TILE7D22", f="NEW17" }
 
-  BRICK_MOSS = { t="TILE7F58", f="" }
+  BRICK_MOSS = { t="TILE7F58", f="FTILE7F5" }
 
   FLAT1 = { t="TILEEC99", f="FTILEF60" }
 
@@ -275,11 +278,14 @@ ABSOLUTION.SKINS =
     _prefab = "EXIT_PILLAR",
     _where  = "middle"
 
-    switch = "SW2OFF"
-    exit = "MOSAIC1"
-    exitside = "MOSAIC1"
+    switch = "SW1EXIT"
+
     special = 11
     tag = 0
+
+    q_sign = 1
+    exit = "EXIT_SIGN"
+    exitside = "BRICK1"
   }
 
   Exit_Closet =
@@ -303,15 +309,12 @@ ABSOLUTION.SKINS =
     sw_oy   = 32
 
     q_sign = 0
-    exit = "METL2"
-    exitside = "METL2"
 
     special = 11
     tag = 0
 
     item2 = "h_vial"
   }
-
 
 
   ----| KEY |----
@@ -681,7 +684,7 @@ ABSOLUTION.LEVEL_THEMES =
 
 ABSOLUTION.MONSTERS =
 {
-  -- FIXME: VERIFY ALL THIS STUFF IN THE DEDs !!!
+  -- TODO: verify the 'damage' fields (check source code)
 
   zombie =
   {
@@ -858,7 +861,8 @@ ABSOLUTION.MONSTERS =
 
 ABSOLUTION.WEAPONS =
 {
-  -- FIXME: VERIFY ALL THIS STUFF IN THE DEDs !!!
+  -- TODO: verify all this stuff in the deds / source code
+  --       [ESPECIALLY the laser weapon]
 
   fist =
   {
