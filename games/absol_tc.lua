@@ -723,6 +723,7 @@ ABSOLUTION.MONSTERS =
     health = 60
     damage = 20
     attack = "missile"
+    density = 0.5
     invis = true
     species = "imp"
   }
@@ -731,7 +732,7 @@ ABSOLUTION.MONSTERS =
   {
     level = 3
     prob = 16
-    health = 100
+    health = 50
     damage = 7
     attack = "melee"
     density = 0.5
@@ -754,11 +755,11 @@ ABSOLUTION.MONSTERS =
   {
     level = 2
     prob = 10
-    health = 150
+    health = 500
     damage = 25
     attack = "melee"
+    density = 0.5
     invis = true
-    outdoor_factor = 3.0
     weap_prefs = { launch=0.2 }
     species = "demon"
   }
@@ -778,7 +779,7 @@ ABSOLUTION.MONSTERS =
   {
     level = 4
     prob = 10
-    health = 400
+    health = 700
     damage = 35
     attack = "missile"
     density = 0.5
@@ -829,7 +830,7 @@ ABSOLUTION.MONSTERS =
     health = 500
     damage = 70
     attack = "missile"
-    density = 0.8
+    density = 0.5
   }
 
   pain =
@@ -838,7 +839,7 @@ ABSOLUTION.MONSTERS =
     prob = 8
     crazy_prob = 15
     skip_prob = 180
-    health = 700
+    health = 600  -- 400 + skulls
     damage = 20
     attack = "missile"
     density = 0.2
