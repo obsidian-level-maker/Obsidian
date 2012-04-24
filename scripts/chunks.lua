@@ -32,6 +32,8 @@ class CHUNK
   section : SECTION
   hx, hy  --  coordinates of chunk in section
 
+  area : AREA
+
   content : table   -- kind field can be: "START", "EXIT", "KEY", "SWITCH",
                     --                    "WEAPON", "TELEPORTER", "GATE"
 
@@ -169,7 +171,7 @@ function CHUNK_CLASS.joining_chunks(C, dir)
 end
 
 
-function CHUNK_CLASS.same_area(C, dir)
+function CHUNK_CLASS.lower_area_can_fence(C, dir)
   assert(C.area)
 
   local sx1, sy1, sx2, sy2 = geom.side_coords(dir, C.sx1, C.sy1, C.sx2, C.sy2)
@@ -180,9 +182,13 @@ function CHUNK_CLASS.same_area(C, dir)
   for sx = sx1,sx2 do for sy = sy1,sy2 do
     local S = SEEDS[sx][sy]
 
-    if not (S and S.chunk) then return false end
+    if S.room != C.room then return false end
 
-    if S.chunk.area != C.area then return false end
+    each C2 in S.chunks do
+      if C2.floor_h >= C.floor_h then return false end
+
+      if C2.stair and C2.stair.dir == (10 - dir) then return false end
+    end
   end end
 
   return true
@@ -967,7 +973,7 @@ function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
   Trans.set_fitted_z(T, f_h, c_h)
 
   -- PICTURES!!!
-  if c_h >= f_h + 128 then
+  if c_h >= f_h + 128 and false then
     local skin2 = assert(GAME.SKINS["Pic_Logo2"])
 
     Fabricate(skin2._prefab, T, { skin, skin2 })
@@ -1283,7 +1289,18 @@ end --]]
         C:build_wall(dir, f_h, c_h)
       end
 
+    else
+      -- EXPERIMENT : inter-area fences
+
+      if C.room and C.room.kind != "cave" and
+         C.area and C:lower_area_can_fence(dir) and
+         not (C.stair and C.stair.dir == dir)
+      then
+        C:build_fence(dir)
+      end
+
     end
+
 
     -- locked doors
     local LINK = C.link[dir]
