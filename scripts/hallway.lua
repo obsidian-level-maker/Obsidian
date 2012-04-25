@@ -324,8 +324,6 @@ function HALLWAY_CLASS.pick_group(H)
     group_name = rand.key_by_probs(THEME.sky_halls)
 
     H.sky_hall_sky_h = sky_h
-
-stderrf("USING SKY GROUP : %s !!!!!!!!!!\n", group_name)
   end
 
   H.group = GAME.HALLWAY_GROUPS[group_name]
@@ -1412,7 +1410,7 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
 
   C.floor_h = floor_h
 
-  if C.h_shape == "I" and not H.big_junc and
+  if C.h_shape == "I" and not (H.big_junc or H.mini_hall) and
      not C.crossover_hall and
      (rand.odds(H.stair_prob) or C.double_peer) and
      (not H.double_fork or C.double_peer)
