@@ -3414,7 +3414,7 @@ DOOM.THEME_DEFAULTS =
 
   hallway_groups = { basic = 50, thin = 15 }  -- TODO: cavey
 
-  mini_halls = { MiniHall_Arch1 = 50 }
+  mini_halls = { Hall_Basic_I = 50 }
 
   sky_halls = { skier = 50 }
 
@@ -4665,6 +4665,8 @@ DOOM2.LEVEL_THEMES =
     outdoors  = { Hell2_outdoors=50 }
     caves     = { Hell2_cave=50 }
 
+    mini_halls = { MiniHall_Arch1 = 50 }
+
     big_junctions =
     {
       Junc_Octo = 50
@@ -4750,6 +4752,8 @@ DOOM2.LEVEL_THEMES =
 
     exits = { Exit_Closet_urban=50, Exit_Pillar_urban=10,
               Exit_Pillar_gothic=3 }
+
+    mini_halls = { MiniHall_Arch1 = 50 }
 
     big_junctions =
     {
