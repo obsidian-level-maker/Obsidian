@@ -182,6 +182,8 @@ ABSOLUTION.MATERIALS =
   X_FLOOR = { f="SPECIAL5", t="TILE1436" }
   X_CEIL  = { f="FTILEC79", t="TILEA796" }
 
+  PEDESTAL = { f="CUSTOMN", t="TILE1A3E" }
+
 
   -- rails --
 
@@ -324,8 +326,11 @@ ABSOLUTION.SKINS =
     _prefab = "PEDESTAL"
     _where  = "middle"
 
-    top  = "FLAT500"
-    side = "SAINT1"
+    top = "PEDESTAL"
+
+    light  = 96
+    effect = 8
+    fx_delta = -32
   }
 
 

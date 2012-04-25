@@ -22,13 +22,20 @@ PREFAB.PEDESTAL =
 {
   defaults =
   {
+    side = "?top"
+
     height = 8
-    light  = 60
-    style  = ""
-    angle  = 0
+
     x_offset = ""
     y_offset = ""
     peg = ""
+
+    light  = 64
+    effect = 0
+    fx_delta = ""
+    style  = ""
+
+    angle  = 0
   }
 
   brushes =
@@ -38,7 +45,7 @@ PREFAB.PEDESTAL =
       { x =  32, y = -32, mat = "?side", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
       { x =  32, y =  32, mat = "?side", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
       { x = -32, y =  32, mat = "?side", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
-      { t = "?height", mat = "?top", light = "?light" }
+      { t = "?height", mat = "?top", light_add="?light", light_effect="?effect", light_delta="?fx_delta" }
     }
   }
 
@@ -47,7 +54,7 @@ PREFAB.PEDESTAL =
     -- the item itself
     { ent = "?item", x = 0, y = 0, z = "?height", angle = "?angle" }
 
-    -- light source
+    -- light source (Quake etc)
     { ent = "light", x = 0, y = 0, z = 32, light = "?light", style = "?style" }
   }
 }
