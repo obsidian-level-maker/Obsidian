@@ -2,11 +2,40 @@
 OBLIGE TODO
 ===========
 
-Current Work
-------------
+
+Next WIP Goals
+--------------
+
+(1) Pictures:
+
+    (a) select a picture to use in each area (possibly none)
+    (b) honor STYLES.pictures
+
+(2) Hallways:
+
+    (a) use mini_halls for big junctions
+    (b) fix 'outer' texture on narrow hallway pieces
+
+(3) 3D patterns in Quake:
+
+    (a) have 'z1_cap' and 'z2_cap' fields in a chunk, ensure all
+        prefabs use it -- perhaps: Trans.set_cap(), Trans.clear_cap()
+
+(4) Closets:
+
+    (a) tone down the secret closets - honor STYLE.secrets
+    (b) make secret closets aligned with walls (extra 24 units)
+    (c) pad narrow teleporter closets in a wider space
+
+(5) Get main games in a usable state:
+
+    (a) Heretic
+    (b) Hexen
+    (c) Quake
+    (d) Absolution
 
 
->>>  fences at inter-room chunk edges
+-----------------------------------------------------------------
 
 
 >>>  big_junction hallways : use 'mini_halls' instead of a hallway group
@@ -42,10 +71,6 @@ Current Work
 
 
 3D Areas:
-
-!!!  have 'z1_cap' and 'z2_cap' fields in a chunk, ensure all
-     prefabs use it -- perhaps: Trans.set_cap(), Trans.clear_cap()
-
 
 PATTERN LOGIC : skip patterns if (a) multiple levels,
                                  (b) 2+ chunks in that grid and all of them would
