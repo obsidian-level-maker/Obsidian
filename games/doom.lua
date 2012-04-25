@@ -3290,7 +3290,7 @@ DOOM.SKINS =
 
   ---| PICTURES |---
 
-  Pic_Logo1 =
+  Pic_Pill =
   {
     _prefab = "PICTURE"
     _where  = "edge"
@@ -3303,7 +3303,7 @@ DOOM.SKINS =
     light = 64
   }
 
-  Pic_Logo2 =
+  Pic_Carve =
   {
     _prefab = "PICTURE"
     _where  = "edge"
@@ -3314,6 +3314,96 @@ DOOM.SKINS =
     pic_h = 64
 
     light = 64
+  }
+
+  Pic_Neon =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "O_NEON"
+    pic_w = 128
+    pic_h = 128
+
+    light = 64
+    effect = 8
+    fx_delta = -64
+  }
+
+
+  Pic_Computer =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = { COMPSTA1=50, COMPSTA2=50 }
+    pic_w = 128
+    pic_h = 128
+
+    light = 48
+    effect = { [0]=90, [1]=5 }  -- sometimes blink
+    fx_delta = -47
+  }
+
+  Pic_Silver3 =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "SILVER3"
+    pic_w = 64
+    pic_h = 128
+
+    light = 48
+    effect = { [0]=90, [1]=5 }  -- sometimes blink
+    fx_delta = -47
+  }
+
+  Pic_TekWall =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = { TEKWALL1=50, TEKWALL4=50 }
+    pic_w = 144
+    pic_h = 128
+
+    light = 32
+    scroll = 48
+  }
+
+  Pic_LiteGlow =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 64
+
+    pic   = { LITE3=90, LITEBLU4=20 }
+    pic_w = 32
+    pic_h = 128
+
+    light = 64
+    effect = { [8]=90, [17]=5 }  -- sometimes flicker
+    fx_delta = -63
+  }
+
+  Pic_LiteFlash =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 64
+
+    pic   = "LITE3"
+    pic_w = 32
+    pic_h = 128
+
+    light = 64
+    effect = { [1]=90, [2]=20 }
+    fx_delta = -63
   }
 
 
@@ -3431,6 +3521,8 @@ DOOM.THEME_DEFAULTS =
 
   fat_cages = { Fat_Cage1 = 50, Fat_Cage_W_Bars = 8 }
 
+  logos = { Pic_Pill=50, Pic_Carve=50, Pic_Neon=50 }
+
   outdoor_decor = { big_tree=50, burnt_tree=10, brown_stub=10 }
 
   indoor_decor = { barrel=60, burning_barrel=20,
@@ -3444,19 +3536,12 @@ DOOM.THEME_DEFAULTS =
                   Crate1=10, Crate2=10, 
                   CrateICK=10, CrateWOOD=10 }
 
-  piccies = { Pic_Chrissy1=40, Pic_Chrissy2=5,
-              Pic_Logo1=20, Pic_Logo2=10 }
-
   --------- OLD CRUD --------> > >
 
   outer_fences = { BROWN144=50, STONE2=30, BROWNHUG=10,
                    BROVINE2=10, GRAYVINE=10, ICKWALL3=2,
                    GRAY1=10, STONE=20,
                  }
-
-  logos = { carve=50, pill=50, neon=50 }
-
-  pictures = { tekwall4=10 }
 
   -- FIXME: should not be separated (environment = "liquid" ??)
   liquid_pics = { pois1=70, pois2=30 }
@@ -4626,18 +4711,13 @@ DOOM2.LEVEL_THEMES =
 
     big_pillars = { big_red=50, big_blue=50 }
 
-    logos = { carve=5, pill=50, neon=50 }
-
     pictures =
     {
-      shawn1=10, tekwall1=4, tekwall4=2,
-      lite5=30, lite5_05blink=10, lite5_10blink=10,
-      liteblu4=30, liteblu4_05sync=10, liteblu4_10sync=10,
-      compsta1=40, compsta1_blink=4,
-      compsta2=40, compsta2_blink=4,
-      redwall=5,
-
-      silver3=20, spacewall=20,
+      Pic_Computer = 70
+      Pic_TekWall = 10
+      Pic_Silver3 = 15
+      Pic_LiteGlow = 20
+      Pic_LiteFlash = 20
     }
 
     crates = { crate1=50, crate2=50, comp=70, lite5=20,
