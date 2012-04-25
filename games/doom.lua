@@ -3332,6 +3332,8 @@ DOOM.SKINS =
   }
 
 
+  -- techy --
+
   Pic_Computer =
   {
     _prefab = "PICTURE"
@@ -3355,7 +3357,8 @@ DOOM.SKINS =
 
     pic   = "SILVER3"
     pic_w = 64
-    pic_h = 128
+    pic_h = 96
+    y_offset = 16
 
     light = 48
     effect = { [0]=90, [1]=5 }  -- sometimes blink
@@ -3371,6 +3374,7 @@ DOOM.SKINS =
     pic   = { TEKWALL1=50, TEKWALL4=50 }
     pic_w = 144
     pic_h = 128
+    y_offset = 24
 
     light = 32
     scroll = 48
@@ -3404,6 +3408,66 @@ DOOM.SKINS =
     light = 64
     effect = { [1]=90, [2]=20 }
     fx_delta = -63
+  }
+
+  -- hellish --
+
+  Pic_FireWall =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "FIREWALL"
+    pic_w = 128
+    pic_h = 112
+
+    light = 64
+--  effect = 17
+--  fx_delta = -16
+  }
+
+  Pic_MarbFace =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = { MARBFAC2=50, MARBFAC3=50, MARBFACE=20 }
+    pic_w = 128
+    pic_h = 128
+
+    light = 32
+  }
+
+  Pic_SkinScroll =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "SKINFACE"
+    pic_w = 144
+    pic_h = 80
+    
+    y_offset = 24
+
+    light = 32
+    scroll = 48
+  }
+
+  Pic_FaceScroll =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "SP_FACE1"
+    pic_w = 144
+    pic_h = 96
+
+    light = 32
+    scroll = 48
   }
 
 
@@ -3520,8 +3584,6 @@ DOOM.THEME_DEFAULTS =
   }
 
   fat_cages = { Fat_Cage1 = 50, Fat_Cage_W_Bars = 8 }
-
-  logos = { Pic_Pill=50, Pic_Carve=50, Pic_Neon=50 }
 
   outdoor_decor = { big_tree=50, burnt_tree=10, brown_stub=10 }
 
@@ -4557,7 +4619,7 @@ DOOM1.LEVEL_THEMES =
 
     FIXME_switch_doors = { Door_pink = 50, Door_vine = 50 }
 
-    logos = { carve=90, pill=50, neon=5 }
+    __logos = { carve=90, pill=50, neon=5 }
 
     pictures =
     {
@@ -4711,6 +4773,8 @@ DOOM2.LEVEL_THEMES =
 
     big_pillars = { big_red=50, big_blue=50 }
 
+    logos = { Pic_Carve=10, Pic_Pill=70, Pic_Neon=40 }
+
     pictures =
     {
       Pic_Computer = 70
@@ -4757,12 +4821,14 @@ DOOM2.LEVEL_THEMES =
 
     exits = { Exit_Closet_hell = 50, Exit_Pillar_gothic = 10 }
 
-    logos = { carve=90, pill=50, neon=5 }
+    logos = { Pic_Carve=90, Pic_Pill=50, Pic_Neon=5 }
 
     pictures =
     {
-      marbface=10, skinface=10, firewall=20,
-      spdude1=4, spdude2=4, spdude5=3, spine=2,
+      Pic_MarbFace = 40
+      Pic_FireWall = 30
+      Pic_SkinScroll = 10
+      Pic_FaceScroll = 10
     }
 
     big_pillars = { big_red=50, sloppy=20, sloppy2=20, }
@@ -4845,7 +4911,7 @@ DOOM2.LEVEL_THEMES =
       Junc_Circle_gothic = 40
     }
 
-    __logos = { carve=40, pill=25, neon=50 }
+    logos = { Pic_Carve=40, Pic_Pill=25, Pic_Neon=50 }
 
     __pictures =
     {

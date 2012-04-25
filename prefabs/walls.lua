@@ -126,8 +126,9 @@ PREFAB.PICTURE =
     frame = "?wall"
 
     light  = ""
-    scroll = ""
     effect = ""
+    fx_delta = ""
+    scroll = ""
 
     x_offset = 0
     y_offset = 0
@@ -185,7 +186,7 @@ PREFAB.PICTURE =
       { x = 80, y =  8, mat = "?wall" }
       { x = 80, y = 16, mat = "?wall", blocked=1 }
       { x = 16, y = 16, mat = "?wall" }
-      { b = 96, mat = "?frame", light_add="?light", light_effect="?effect" }
+      { b = 96, mat = "?frame", light_add="?light", light_effect="?effect", light_delta="?fx_delta" }
     }
 
     -- bounds on Z axis
