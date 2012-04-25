@@ -2079,7 +2079,9 @@ function Rooms_ambient_lighting()
 
   local function colorise_loc(L)
 
+    -- FIXME: pick color from a list (e.g. ROOM_THEME.colors or THEME.colors)
     local color = rand.irange(10000,10137)
+    if color == 10014 then color = color + 1 end
 
     each C in L.chunks do
       raw_add_brush(
