@@ -32,6 +32,31 @@
 ----------------------------------------------------------------
 
 
+PREFAB.MINI_STAIR_1A =
+{
+  -- a single step, meant to sit where a hallway meets a room
+
+  fitted = "xy"
+
+  defaults =
+  {
+    step_h = 8
+  }
+
+  brushes =
+  {
+    {
+      { x =   0, y =  0, mat = "?step", peg=1, x_offset=0, y_offset=0 }
+      { x = 192, y =  0, mat = "?step", peg=1, x_offset=0, y_offset=0 }
+      { x = 160, y = 32, mat = "?step", peg=1, x_offset=0, y_offset=0 }
+      { x =  32, y = 32, mat = "?step", peg=1, x_offset=0, y_offset=0 }
+      { t = "?step_h", mat = "?floor" }
+    }
+  }
+}
+
+
+
 PREFAB.STAIR_6 =
 {
   fitted = "xy"
