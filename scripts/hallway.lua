@@ -39,9 +39,6 @@ class HALLWAY
   double_fork : SECTION    -- only present for double hallways.
   double_dir  : direction  -- dir at the single end (into hallway)
 
----##  neighbor : ROOM / HALL  -- the room this hallway connects to without
----##                          -- any locked door in-between.
-
   cross_limit : { low, high }  -- a limitation of crossover heights
 
   wall_mat, floor_mat, ceil_mat 
@@ -347,11 +344,24 @@ function HALLWAY_CLASS.select_piece(H, C)
   if C.h_extra == "stair" then shape = shape .. "S" end
   if C.h_extra == "lift"  then shape = shape .. "L" end
 
+  local long, deep = geom.long_deep(C.x2 - C.x1, C.y2 - C.y1, C.h_dir)
+
+  local reqs =
+  {
+    shape = shape
+    long  = long
+    deep  = deep
+  }
+
   -- find all skins which match this mode (etc)
   local source_tab = H.group and H.group.pieces
 
+  if H.mini_hall or H.big_junc then
+    source_tab = THEME.mini_halls
+  end
+
   if C.section.kind == "big_junc" then
-    local biggies = (H.group and H.group.big_junctions) or THEME.big_junctions
+    local biggies = THEME.big_junctions
     assert(biggies)
 
     -- expand the table, checking that skins exist
@@ -369,14 +379,7 @@ function HALLWAY_CLASS.select_piece(H, C)
     end
   end
 
-  local long, deep = geom.long_deep(C.x2 - C.x1, C.y2 - C.y1, C.h_dir)
-
-  local reqs =
-  {
-    shape = shape
-    long  = long
-    deep  = deep
-  }
+  assert(source_tab)
 
   local tab = Rooms_filter_skins(H, "hallway_group", source_tab, reqs)
 
@@ -1360,6 +1363,7 @@ gui.debugf("   found %s <--> %s\n", C:tostr(), D:tostr())
 end
 
 
+
 function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
   -- recursively flow through the hallway, adding stairs (etc) 
 
@@ -1408,7 +1412,7 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
 
   C.floor_h = floor_h
 
-  if C.h_shape == "I" and C.section.kind != "big_junc" and
+  if C.h_shape == "I" and not H.big_junc and
      not C.crossover_hall and
      (rand.odds(H.stair_prob) or C.double_peer) and
      (not H.double_fork or C.double_peer)
@@ -1468,53 +1472,6 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
     if did_a_branch and rand.odds(50) and not H.double_fork then
       z_dir = -z_dir
     end
-  end
-end
-
-
-
-function HALLWAY_CLASS.mini_flow(H, C, from_dir, floor_h)
-  H.is_mini_hall = true
-
-  C.floor_h = floor_h
-
-  local dir = 10 - from_dir
-
-  assert(C.h_shape == "I")
-
-  local reqs = {}  -- FIXME !!
-
-  local tab = Rooms_filter_skins(H, "mini_halls", THEME.mini_halls, reqs)
-
-  C.skin_name = rand.key_by_probs(tab)
-
-stderrf("USING MINI HALL : %s !!!!!!!!!!\n", C.skin_name)
-
-  C.h_dir = dir
-
-
-  --[[ FIXME
-    floor_h = floor_h + delta_h
-
-    -- stairs and lifts require chunk has the lowest height
-    if z_dir < 0 then
-      C.floor_h = floor_h
-    end
-  --]]
-
-
-  -- update next room
-
-  local LINK = C.link[dir]
-
-  assert(LINK)
-  assert(LINK.conn)
-
-  if LINK and not (LINK.conn and LINK.conn.kind == "double_R") then
-    local C3 = LINK.C1
-    if C3 == C then C3 = C.link[dir].C2 end
-
-    C3.floor_h = floor_h
   end
 end
 
@@ -1581,6 +1538,7 @@ function HALLWAY_CLASS.cycle_flow(H, C, from_dir, z, i_deltas, seen)
 end
 
 
+
 function HALLWAY_CLASS.handle_cycle(H, start_C, from_dir, start_z)
   -- find exit chunk
   local exit_C
@@ -1636,6 +1594,7 @@ gui.debugf("Bicycle @ %s : %d --> %d  (%d i_pieces)\n",
 end
 
 
+
 function HALLWAY_CLASS.update_seeds_for_chunks(H)
   -- TODO: bbox of hallway
 
@@ -1647,6 +1606,7 @@ function HALLWAY_CLASS.update_seeds_for_chunks(H)
     end
   end end
 end
+
 
 
 function HALLWAY_CLASS.set_cross_mode(H)
@@ -1673,6 +1633,7 @@ function HALLWAY_CLASS.set_cross_mode(H)
 end
 
 
+
 function HALLWAY_CLASS.cross_diff(H)
   assert(H.cross_mode)
 
@@ -1682,6 +1643,7 @@ function HALLWAY_CLASS.cross_diff(H)
     return (PARAM.jump_height or 24) + rand.pick { 40, 40, 64, 64, 96, 128 }
   end
 end
+
 
 
 function HALLWAY_CLASS.limit_crossed_room(H)
@@ -1700,6 +1662,7 @@ function HALLWAY_CLASS.limit_crossed_room(H)
     R.floor_limit = { max_h + diff, 9999 }
   end
 end
+
 
 
 function HALLWAY_CLASS.floor_stuff(H, entry_conn)
@@ -1726,22 +1689,25 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
 
   assert(H.chunks)
 
+  if #H.sections == 1 and not H.is_cycle then
+    H.mini_hall = true
+  end
+
   H:create_chunks()
   H:  link_chunks()
 
   H:update_seeds_for_chunks()
   H:peer_double_chunks()
 
+  H.stair_prob = 50
+
+  -- general vertical direction
+  local z_dir = rand.sel(50, 1, -1)
+
   if H.is_cycle then
     H:handle_cycle(entry_C, 10 - entry_dir, entry_h)
-  elseif #H.sections == 1 and THEME.mini_halls and rand.odds(THEME.mini_hall_prob or 100) then
-    H:mini_flow(entry_C, 10 - entry_dir, entry_h)
+
   else
-    -- general vertical direction
-    local z_dir = rand.sel(50, 1, -1)
-
-    H.stair_prob = 50
-
     H:stair_flow(entry_C, 10 - entry_dir, entry_h, z_dir, {})
   end
 

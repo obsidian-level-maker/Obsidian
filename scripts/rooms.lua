@@ -1822,6 +1822,10 @@ function Rooms_filter_skins(L, tab_name, tab, reqs, empty_ok)
   end
 
   if table.empty(result) and not empty_ok then
+    gui.debugf("Rooms_filter_skins:\n")
+    gui.debugf("skins = \n%s\n", table.tostr(tab))
+    gui.debugf("reqs = \n%s\n", table.tostr(reqs))
+
     error("No matching prefab for: " .. tab_name)
   end
 

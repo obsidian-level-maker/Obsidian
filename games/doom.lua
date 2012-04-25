@@ -2133,7 +2133,7 @@ DOOM.SKINS =
   MiniHall_Arch1 =
   {
     _prefab = "FAT_ARCH1"
-    _where  = "chunk"
+    _shape  = "I"
     _delta  = 0
 
     pic = "SW1SATYR"    
