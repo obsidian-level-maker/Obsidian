@@ -49,7 +49,7 @@ CHANGES (since 3.57)
 
 + ability to make multiple paths between rooms
 - worked on "cross-overs" (a bridge through another room)
-?? support for simple 3D bridges within rooms
+- preliminary support for truely 3D room layouts
 - improved infighting logic in the Fight Simulator
 
 - new 'Jumbled Up' theme setting

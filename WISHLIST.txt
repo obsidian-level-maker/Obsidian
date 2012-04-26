@@ -9,8 +9,6 @@ OBLIGE WISH-LIST
 *  add in more scenery: lamps, computers etc
 
 
-YAY!!! DONE!!  get cave code working again
-
 *  escapable slime pits
 
 *  symmetrical rooms
@@ -471,6 +469,9 @@ Weapons:
 IDEA:  replaceable brushes in prefabs.
        Use this mechanism to place windows and pictures
        (especially in hallways)
+
+IDEA: "weak texturing" (especially on floors) which will try to
+      use a texturing from adjoining floor (via a certain side).
 
 -  outdoor wall extender: 64x64 block with torch on top
 

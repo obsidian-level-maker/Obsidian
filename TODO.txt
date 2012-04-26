@@ -2,19 +2,22 @@
 OBLIGE TODO
 ===========
 
+>>>  'outer' on hallway pieces
 
 Next WIP Goals
 --------------
 
 (1) Pictures:
 
-    (a) select a picture to use in each area (possibly none)
-    (b) honor STYLES.pictures
+  DONE: select a picture to use in each area (possibly none)
+  DONE: honor STYLES.pictures
+  DONE: create skins from old V3 / V2 stuff
 
 (2) Hallways:
 
-    (a) use mini_halls for big junctions
+    DONE: use mini_halls for big junctions
     (b) fix 'outer' texture on narrow hallway pieces
+    (c) fix sky-hall crackle -- mark seeds for fake building
 
 (3) 3D patterns in Quake:
 
@@ -23,19 +26,24 @@ Next WIP Goals
 
 (4) Closets:
 
-    (a) tone down the secret closets - honor STYLE.secrets
+  DONE: tone down the secret closets - honor STYLE.secrets
     (b) make secret closets aligned with walls (extra 24 units)
-    (c) pad narrow teleporter closets in a wider space
+    (c) make teleporters a single seed wide (no stretching)
 
-(5) Get main games in a usable state:
+(5) Get QUAKE working well
 
-    (a) Heretic
-    (b) Hexen
-    (c) Quake
-    (d) Absolution
+(6) Get HERETIC working well
+
+(7) Get HEXEN working
+
+(8) Get ABSOLUTION working
 
 
 -----------------------------------------------------------------
+
+
++  have "hallway arches", specified in hallway groups, used in
+   indoor rooms when the hallway meets the room.
 
 
 >>>  big_junction hallways : use 'mini_halls' instead of a hallway group
@@ -68,6 +76,8 @@ Next WIP Goals
       _outdoor = 0 / 1
       _building = 0 / 1
       _cave = 0 / 1
+
++  support height-changing mini-halls
 
 
 3D Areas:
