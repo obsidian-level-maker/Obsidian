@@ -3240,7 +3240,6 @@ function Areas_flesh_out()
       if D.L1 == L and D.kind != "teleporter" and
          L.kind != "hallway" and D.L2.kind != "hallway"
       then
-stderrf("outgoing_heights : DIRECT %s --> %s\n", D.L1:tostr(), D.L2:tostr())
         assert(D.C1)
         assert(D.C2)
         assert(D.C1.floor_h)

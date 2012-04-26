@@ -740,6 +740,55 @@ function Quest_assign_room_themes()
   end
 
 
+  local function pictures_for_zones()
+    each Z in LEVEL.zones do
+      Z.logo_name = rand.key_by_probs(THEME.logos)
+    end
+
+    if not THEME.pictures or STYLE.pictures == "none" then
+      return
+    end
+
+    each Z in LEVEL.zones do
+      Z.pictures = {}
+    end
+
+    -- distribute the pictures amongst the zones
+    local names = table.keys(THEME.pictures)
+
+    rand.shuffle(names)
+
+    for loop = 1,4 do
+      if table.empty(names) then break end
+
+      each Z in LEVEL.zones do
+        if rand.odds(65) then
+          local name = table.remove(names, 1)
+          Z.pictures[name] = THEME.pictures[name]
+        end
+
+        if table.empty(names) then break end
+      end
+    end
+
+    -- ensure each zone has at least one picture
+    names = table.keys(THEME.pictures)
+
+    each Z in LEVEL.zones do
+      local name = rand.pick(names)
+
+      Z.pictures[name] = THEME.pictures[name]
+    end
+
+    -- [[ debugging
+    gui.debugf("Pictures for zones:\n")
+    each Z in LEVEL.zones do
+      gui.debugf("%s =\n%s\n", Z:tostr(), table.tostr(Z.pictures))
+    end
+    --]]
+  end
+
+
   local function select_facades_for_zones()
     local seen = {}
 
@@ -780,6 +829,7 @@ function Quest_assign_room_themes()
   end
 
   select_facades_for_zones()
+  pictures_for_zones()
 
   each Z in LEVEL.zones do
     gui.printf("Facade for %s : %s\n", Z:tostr(), Z.facade_mat or "none!!")
