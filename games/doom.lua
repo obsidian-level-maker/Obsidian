@@ -3433,7 +3433,20 @@ DOOM.SKINS =
     _where  = "edge"
     _long   = 192
 
-    pic   = { MARBFAC2=50, MARBFAC3=50, MARBFACE=20 }
+    pic   = { MARBFAC2=50, MARBFAC3=50 }
+    pic_w = 128
+    pic_h = 128
+
+    light = 16
+  }
+
+  Pic_DemonicFace =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "MARBFACE"
     pic_w = 128
     pic_h = 128
 
@@ -4825,7 +4838,7 @@ DOOM2.LEVEL_THEMES =
 
     big_pillars = { big_red=50, big_blue=50 }
 
-    logos = { Pic_Carve=10, Pic_Pill=70, Pic_Neon=40 }
+    logos = { Pic_Carve=10, Pic_Pill=90, Pic_Neon=50 }
 
     pictures =
     {
@@ -4878,6 +4891,7 @@ DOOM2.LEVEL_THEMES =
     pictures =
     {
       Pic_MarbFace = 40
+      Pic_DemonicFace = 20
       Pic_FireWall = 30
       Pic_SkinScroll = 10
       Pic_FaceScroll = 10
@@ -4963,12 +4977,17 @@ DOOM2.LEVEL_THEMES =
       Junc_Circle_gothic = 40
     }
 
-    logos = { Pic_Carve=40, Pic_Pill=25, Pic_Neon=50 }
+    logos = { Pic_Carve=30, Pic_Pill=30, Pic_Neon=70 }
 
-    __pictures =
+    pictures =
     {
-      eagle1=40, hitler1=10,
-      marbfac2=3, marbfac3=3,
+      Pic_MetalFace = 50
+      Pic_MetalFaceLit = 50
+      Pic_MarbFace = 25
+
+      Pic_Eagle = 20
+      Pic_Wreath = 20
+      Pic_Adolf = 2
     }
 
     lifts = { shiny=20, platform=20, rusty=50 }
