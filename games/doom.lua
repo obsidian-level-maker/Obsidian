@@ -3470,6 +3470,58 @@ DOOM.SKINS =
     scroll = 48
   }
 
+  -- urban --
+
+  Pic_Adolf =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "ZZWOLF7"
+    pic_w = 128
+    pic_h = 128
+
+    light = 16
+  }
+
+  Pic_Eagle =
+  {
+    _copy = "Pic_Adolf"
+
+    pic = "ZZWOLF6"
+  }
+
+  Pic_Wreath =
+  {
+    _copy = "Pic_Adolf"
+
+    pic = "ZZWOLF13"
+  }
+
+  Pic_MetalFace =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = { SW1SATYR=50, SW1GARG=50, SW1LION=50 }
+    pic_w = 64
+    pic_h = 72
+    y_offset = 56
+
+    light = 16
+  }
+
+  Pic_MetalFaceLit =
+  {
+    _copy = "Pic_MetalFace"
+
+    pic = { SW2SATYR=50, SW2GARG=50, SW2LION=50 }
+
+    light = 32
+  }
+
 
   ---| DECORATION |---
 
