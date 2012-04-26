@@ -24,7 +24,6 @@ PREFAB.ARCH =
 
   defaults =
   {
-    outer = "?wall"
     track = "?wall"
     step  = "?floor"
   }
@@ -137,23 +136,22 @@ PREFAB.FAT_ARCH1 =
 
   defaults =
   {
-    outer = "?wall"
   }
 
   brushes =
   {
     -- floor
     {
-      { x =  24, y =   0, mat = "?floor" }
-      { x = 192, y =   0, mat = "?floor" }
-      { x = 192, y = 192, mat = "?floor" }
-      { x =  24, y = 192, mat = "?floor" }
+      { x =  24, y =   0, mat = "?outer" }
+      { x = 192, y =   0, mat = "?outer" }
+      { x = 192, y = 192, mat = "?outer" }
+      { x =  24, y = 192, mat = "?outer" }
       { t = 0, mat = "?floor" }
     }
 
     -- left side
     {
-      { x =  0, y =   0, mat = "?wall" }
+      { x =  0, y =   0, mat = "?outer" }
       { x = 24, y =   0, mat = "?wall" }
       { x = 24, y = 192, mat = "?outer" }
       { x =  0, y = 192, mat = "?outer" }
@@ -161,7 +159,7 @@ PREFAB.FAT_ARCH1 =
 
     -- right side
     {
-      { x = 168, y =   0, mat = "?wall" }
+      { x = 168, y =   0, mat = "?outer" }
       { x = 192, y =   0, mat = "?outer" }
       { x = 192, y = 192, mat = "?outer" }
       { x = 168, y = 192, mat = "?wall"  }
@@ -169,57 +167,57 @@ PREFAB.FAT_ARCH1 =
 
     -- curved ceiling
     {
-      { x = 24, y =   0, mat = "?wall" }
+      { x = 24, y =   0, mat = "?outer" }
       { x = 44, y =   0, mat = "?wall" }
-      { x = 44, y = 192, mat = "?wall"  }
+      { x = 44, y = 192, mat = "?outer" }
       { x = 24, y = 192, mat = "?outer" }
       { b = 96, mat = "?wall" }
     }
 
     {
-      { x = 44, y =   0, mat = "?wall" }
+      { x = 44, y =   0, mat = "?outer" }
       { x = 64, y =   0, mat = "?wall" }
-      { x = 64, y = 192, mat = "?wall"  }
+      { x = 64, y = 192, mat = "?outer" }
       { x = 44, y = 192, mat = "?wall" }
       { b = 128, mat = "?wall" }
     }
 
     {
-      { x = 64, y =   0, mat = "?wall" }
+      { x = 64, y =   0, mat = "?outer" }
       { x = 84, y =   0, mat = "?wall" }
-      { x = 84, y = 192, mat = "?wall"  }
+      { x = 84, y = 192, mat = "?outer" }
       { x = 64, y = 192, mat = "?wall" }
       { b = 156, mat = "?wall" }
     }
 
     {
-      { x =  84, y =   0, mat = "?wall" }
+      { x =  84, y =   0, mat = "?outer" }
       { x = 108, y =   0, mat = "?wall" }
-      { x = 108, y = 192, mat = "?wall"  }
+      { x = 108, y = 192, mat = "?outer" }
       { x =  84, y = 192, mat = "?wall" }
       { b = 164, mat = "?wall" }
     }
 
     {
-      { x = 108, y =   0, mat = "?wall" }
+      { x = 108, y =   0, mat = "?outer" }
       { x = 128, y =   0, mat = "?wall" }
-      { x = 128, y = 192, mat = "?wall"  }
+      { x = 128, y = 192, mat = "?outer" }
       { x = 108, y = 192, mat = "?wall" }
       { b = 156, mat = "?wall" }
     }
 
     {
-      { x = 128, y =   0, mat = "?wall" }
+      { x = 128, y =   0, mat = "?outer" }
       { x = 148, y =   0, mat = "?wall" }
-      { x = 148, y = 192, mat = "?wall"  }
+      { x = 148, y = 192, mat = "?outer" }
       { x = 128, y = 192, mat = "?wall" }
       { b = 128, mat = "?wall" }
     }
 
     {
-      { x = 148, y =   0, mat = "?wall" }
+      { x = 148, y =   0, mat = "?outer" }
       { x = 168, y =   0, mat = "?wall" }
-      { x = 168, y = 192, mat = "?wall"  }
+      { x = 168, y = 192, mat = "?outer" }
       { x = 148, y = 192, mat = "?wall" }
       { b = 96, mat = "?wall" }
     }
@@ -302,7 +300,6 @@ PREFAB.ARCH_W_STAIR =  --  BORKED : Replace flavored brushes with "hole" brush,
   defaults =
   {
     top = "?step"
-    outer = "?wall"
   }
 
   brushes =
@@ -388,7 +385,6 @@ PREFAB.DOOR =
     door_w = 128
     door_h = 128
 
-    outer = "?wall"
     frame = "?wall"
     key   = "?wall"
     step  = "?wall"
@@ -509,8 +505,6 @@ PREFAB.QUAKE_DOOR =
 
   defaults =
   {
-    outer = "?wall"
-
     door = "DR05_2"
     step = "?wall"
 
@@ -718,7 +712,6 @@ PREFAB.QUAKE2_KEY_DOOR =
   defaults =
   {
     step  = "?wall"
-    outer = "?wall"
     track = "?wall"
     metal = "METAL1_2"
 
