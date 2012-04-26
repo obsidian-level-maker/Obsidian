@@ -1270,12 +1270,13 @@ end
 
 function ROOM_CLASS.add_closet(R, closet_kind)
   local source_tab
+  local style_name
 
       if closet_kind == "START" then source_tab = THEME.starts
   elseif closet_kind == "EXIT"  then source_tab = THEME.exits
   elseif closet_kind == "ITEM"  then source_tab = THEME.pedestals
-  elseif closet_kind == "TRAP"  then source_tab = THEME.traps
-  elseif closet_kind == "SECRET" then source_tab = THEME.secrets
+  elseif closet_kind == "TRAP"  then source_tab = THEME.traps ; style_name = "traps"
+  elseif closet_kind == "SECRET" then source_tab = THEME.secrets ; style_name = "secrets"
   elseif closet_kind == "TELEPORTER" then source_tab = THEME.teleporters
   elseif closet_kind == "HUB_GATE" then source_tab = THEME.hub_gates
   else
@@ -1283,6 +1284,12 @@ function ROOM_CLASS.add_closet(R, closet_kind)
   end
 
   if not source_tab then return false end
+
+  -- check styles
+  if style_name then
+    local prob = style_sel(style_name, 0, 35, 70, 99)
+    if not rand.odds(prob) then return false end
+  end
 
   local list = Rooms_filter_skins(R, closet_kind .. "-closets", source_tab,
                                   { where="closet" }, "empty_ok")
