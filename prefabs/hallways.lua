@@ -1705,7 +1705,7 @@ PREFAB.HALL_THIN_I =
 
     {
       { x = 128, y =   0, mat = "?wall" }
-      { x = 192, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?outer" }
       { x = 192, y = 192, mat = "?wall" }
       { x = 128, y = 192, mat = "?wall" }
     }
@@ -1714,7 +1714,7 @@ PREFAB.HALL_THIN_I =
       { x =   0, y =   0, mat = "?wall" }
       { x =  64, y =   0, mat = "?wall" }
       { x =  64, y = 192, mat = "?wall" }
-      { x =   0, y = 192, mat = "?wall" }
+      { x =   0, y = 192, mat = "?outer" }
     }
   }
 }
@@ -1732,7 +1732,7 @@ PREFAB.HALL_THIN_C =
     {
       { x =   0, y = 128, mat = "?wall" }
       { x =  64, y = 128, mat = "?wall" }
-      { x =  64, y = 192, mat = "?wall" }
+      { x =  64, y = 192, mat = "?outer" }
       { x =   0, y = 192, mat = "?wall" }
     }
 
@@ -1754,7 +1754,7 @@ PREFAB.HALL_THIN_C =
     {
       { x = 108, y = 108, mat = "?wall" }
       { x = 128, y =  64, mat = "?wall" }
-      { x = 192, y =  64, mat = "?wall" }
+      { x = 192, y =  64, mat = "?outer" }
       { x = 192, y = 192, mat = "?wall" }
     }
 
@@ -1799,7 +1799,7 @@ PREFAB.HALL_THIN_C =
 
     {
       { x = 128, y =   0, mat = "?wall" }
-      { x = 192, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?outer" }
       { x = 192, y =  64, mat = "?wall" }
       { x = 128, y =  64, mat = "?wall" }
     }
@@ -1807,7 +1807,7 @@ PREFAB.HALL_THIN_C =
     {
       { x =  64, y = 128, mat = "?wall" }
       { x = 108, y = 108, mat = "?wall" }
-      { x = 192, y = 192, mat = "?wall" }
+      { x = 192, y = 192, mat = "?outer" }
       { x =  64, y = 192, mat = "?wall" }
     }
 
@@ -1846,7 +1846,7 @@ PREFAB.HALL_THIN_T =
     {
       { x =   0, y = 128, mat = "?wall" }
       { x =  50, y = 128, mat = "?wall" }
-      { x =  50, y = 192, mat = "?wall" }
+      { x =  50, y = 192, mat = "?outer" }
       { x =   0, y = 192, mat = "?wall" }
     }
 
@@ -1901,7 +1901,7 @@ PREFAB.HALL_THIN_T =
     {
       { x = 142, y = 128, mat = "?wall" }
       { x = 192, y = 128, mat = "?wall" }
-      { x = 192, y = 192, mat = "?wall" }
+      { x = 192, y = 192, mat = "?outer" }
       { x = 142, y = 192, mat = "?wall" }
     }
 
@@ -1939,7 +1939,7 @@ PREFAB.HALL_THIN_T =
     {
       { x =  50, y = 128, mat = "?wall" }
       { x =  80, y = 152, mat = "?wall" }
-      { x =  80, y = 192, mat = "?wall" }
+      { x =  80, y = 192, mat = "?outer" }
       { x =  50, y = 192, mat = "?wall" }
     }
 
@@ -2049,14 +2049,14 @@ PREFAB.HALL_THIN_T =
     {
       { x = 112, y = 152, mat = "?wall" }
       { x = 142, y = 128, mat = "?wall" }
-      { x = 142, y = 192, mat = "?wall" }
+      { x = 142, y = 192, mat = "?outer" }
       { x = 112, y = 192, mat = "?wall" }
     }
 
     {
       { x =  80, y = 152, mat = "?wall" }
       { x = 112, y = 152, mat = "?wall" }
-      { x = 112, y = 192, mat = "?wall" }
+      { x = 112, y = 192, mat = "?outer" }
       { x =  80, y = 192, mat = "?wall" }
     }
   }
@@ -2094,7 +2094,7 @@ PREFAB.HALL_THIN_I_STAIR =
 
     {
       { x = 128, y =   0, mat = "?wall" }
-      { x = 192, y =   0, mat = "?wall" }
+      { x = 192, y =   0, mat = "?outer" }
       { x = 192, y = 192, mat = "?wall" }
       { x = 128, y = 192, mat = "?wall" }
     }
@@ -2103,7 +2103,7 @@ PREFAB.HALL_THIN_I_STAIR =
       { x =   0, y =   0, mat = "?wall" }
       { x =  64, y =   0, mat = "?wall" }
       { x =  64, y = 192, mat = "?wall" }
-      { x =   0, y = 192, mat = "?wall" }
+      { x =   0, y = 192, mat = "?outer" }
     }
 
     {
