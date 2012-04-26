@@ -2720,6 +2720,12 @@ Areas_dump_vhr(R)
         tab[name] = prob
       end
     end
+    
+    -- sometimes use no pattern (less likely for large grids)
+    local plain_prob = 40 - (G.sw + G.sh) * 3
+    if rand.odds(plain_prob) then
+      return false
+    end
 
     -- try patterns until something works or we run out of them
     while not table.empty(tab) do
