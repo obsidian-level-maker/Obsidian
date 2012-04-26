@@ -3198,8 +3198,8 @@ DOOM.SKINS =
     _copy = "Junc_Well_P"
     _shape  = "I"
 
-    east_h =  84  -- closed
-    west_h = -84  --
+    east_h = 212  -- closed
+    west_h =  44  --
   }
 
 
