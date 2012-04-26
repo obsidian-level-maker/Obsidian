@@ -3386,13 +3386,20 @@ DOOM.SKINS =
     _where  = "edge"
     _long   = 64
 
-    pic   = { LITE3=90, LITEBLU4=20 }
+    pic   = "LITE3"
     pic_w = 32
     pic_h = 128
 
     light = 64
     effect = { [8]=90, [17]=5 }  -- sometimes flicker
     fx_delta = -63
+  }
+
+  Pic_LiteGlowBlue =
+  {
+    _copy = "Pic_LiteGlow"
+
+    pic = "LITEBLU4"
   }
 
   Pic_LiteFlash =
@@ -4844,8 +4851,10 @@ DOOM2.LEVEL_THEMES =
     {
       Pic_Computer = 70
       Pic_TekWall = 10
-      Pic_Silver3 = 15
+      Pic_Silver3 = 25
+
       Pic_LiteGlow = 20
+      Pic_LiteGlowBlue = 10
       Pic_LiteFlash = 20
     }
 
