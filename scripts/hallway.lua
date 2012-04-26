@@ -731,6 +731,9 @@ do return false end
     -- a room (i.e. ROOM --> MID --> BIG_JUNC).
     if K.kind == "big_junc" and #visited != 1 then return end
 
+    -- no big junctions for cycles
+    if K.kind == "big_junc" and mode == "cycle" then return end
+
 --stderrf("hall_flow: visited @ %s from:%d\n", K:tostr(), from_dir)
 --stderrf("{\n")
 
