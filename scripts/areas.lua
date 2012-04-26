@@ -233,6 +233,24 @@ function AREA_CLASS.determine_spots(A)
 end
 
 
+function AREA_CLASS.decide_picture(A)
+  if (not LEVEL.has_logo) or rand.odds((A.room.has_logo ? 10 ; 30)) then
+    A.pic_name = assert(A.room.zone.logo_name)
+
+    A.room.has_logo = true
+     LEVEL.has_logo = true
+
+    return
+  end
+
+  local prob = style_sel("pictures", 0, 25, 50, 90)
+
+  if A.room.zone.pictures and rand.odds(prob) then
+    A.pic_name = rand.key_by_probs(A.room.zone.pictures)
+  end
+end
+
+
 ----------------------------------------------------------------
 
 
@@ -3305,6 +3323,10 @@ function Areas_flesh_out()
   local function tizzy_up_room(R)
 
     -- TODO add "area" prefabs now (e.g. crates, cages, bookcases)
+
+    each A in R.areas do
+      A:decide_picture()
+    end
 
     if R.kind == "cave" then
       Simple_render_cave(R)

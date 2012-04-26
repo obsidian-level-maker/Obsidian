@@ -973,8 +973,12 @@ function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
   Trans.set_fitted_z(T, f_h, c_h)
 
   -- PICTURES!!!
-  if c_h >= f_h + 128 and false then
-    local skin2 = assert(GAME.SKINS["Pic_Logo2"])
+  local pic_prob = style_sel("pictures", 0, 20, 40, 90)
+  if c_h >= f_h + 128 and C.area and C.area.pic_name and rand.odds(pic_prob) then
+    local skin2 = GAME.SKINS[C.area.pic_name]
+    if not skin2 then
+      error("No such picture skin: " .. tostring(C.area.pic_name))
+    end
 
     Fabricate(skin2._prefab, T, { skin, skin2 })
     return
