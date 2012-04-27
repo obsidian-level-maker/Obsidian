@@ -879,7 +879,7 @@ HEXEN.SKINS =
 
   ----| EXITS |----
 
-  Exit_switch =
+  Exit_Pillar =
   {
     _prefab = "EXIT_PILLAR",
     _where  = "middle"
@@ -953,6 +953,48 @@ HEXEN.SKINS =
 
     walk_kind   = 62
     switch_kind = 62
+  }
+
+
+  ---| PICTURES |---
+
+  Pic_Carve =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "O_CARVE"
+    pic_w = 64
+    pic_h = 64
+
+    light = 64
+  }
+
+  Pic_Pill =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "O_PILL"
+    pic_w = 128
+    pic_h = 32
+
+    light = 64
+  }
+
+  Pic_Bolt =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "O_BOLT"
+    pic_w = 64
+    pic_h = 64
+
+    light = 64
   }
 
 
@@ -1594,9 +1636,9 @@ HEXEN.PICS =
 
 HEXEN.THEME_DEFAULTS =
 {
-  starts = { Start_basic = 50 }
+  starts = { Start_basic = 20, Start_Closet = 90 }
 
-  exits = { Exit_switch = 50 }
+  exits = { Exit_Pillar = 50 }
 
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50,
               Lift_Up1 = 1,   Lift_Down1 = 1 }
@@ -1625,6 +1667,10 @@ HEXEN.THEME_DEFAULTS =
                    Locked_horn = 50, Locked_rusty = 50, Locked_silver = 50,
                    Locked_swamp = 50, Locked_steel = 50,
                    Door_SW_1 = 50 }
+
+  logos = { Pic_Carve=50, Pic_Bolt=25, Pic_Pill=15 }
+
+  mini_halls = { Hall_Basic_I = 50 }
 
   hallway_groups = { basic = 50 }
 
