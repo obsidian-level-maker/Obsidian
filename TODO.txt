@@ -2,8 +2,6 @@
 OBLIGE TODO
 ===========
 
->>>  'outer' on hallway pieces
-
 Next WIP Goals
 --------------
 
@@ -15,9 +13,9 @@ Next WIP Goals
 
 (2) Hallways:
 
-    DONE: use mini_halls for big junctions
-    (b) fix 'outer' texture on narrow hallway pieces
-    (c) fix sky-hall crackle -- mark seeds for fake building
+  DONE: use mini_halls for big junctions
+  DONE: fix 'outer' texture on narrow hallway pieces
+  DONE: fix sky-hall crackle -- mark seeds for fake building
 
 (3) 3D patterns in Quake:
 
@@ -27,12 +25,13 @@ Next WIP Goals
 (4) Closets:
 
   DONE: tone down the secret closets - honor STYLE.secrets
-    (b) make secret closets aligned with walls (extra 24 units)
+  DONE: make closets aligned with walls (extra 24 units)
     (c) make teleporters a single seed wide (no stretching)
 
 (5) Get QUAKE working well
 
 (6) Get HERETIC working well
+    (a) fake windows w/ stain glass
 
 (7) Get HEXEN working
 
@@ -43,7 +42,7 @@ Next WIP Goals
 
 
 +  have "hallway arches", specified in hallway groups, used in
-   indoor rooms when the hallway meets the room.
+   indoor rooms where the hallway meets the room.
 
 
 >>>  big_junction hallways : use 'mini_halls' instead of a hallway group
