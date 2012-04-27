@@ -414,10 +414,30 @@ HERETIC.SKINS =
     top = "O_BOLT"
   }
 
+  Start_Closet =
+  {
+    _prefab = "START_CLOSET"
+    _where  = "closet"
+    _long   = { 192,384 }
+    _deep   = { 192,384 }
+
+    step = "FLAT520"
+
+    door = "DOORSTON"
+    track = "METL2"
+
+    special = 31  -- open and stay open
+    tag = 0
+
+    item1 = "arrow"
+    item2 = "h_vial"
+  }
+
+
 
   ----| EXITS |----
 
-  Exit_switch =
+  Exit_Pillar =
   {
     _prefab = "EXIT_PILLAR",
     _where  = "middle"
@@ -1730,9 +1750,9 @@ HERETIC.PICS =
 
 HERETIC.THEME_DEFAULTS =
 {
-  starts = { Start_basic = 50 }
+  starts = { Start_basic = 20, Start_Closet = 90 }
 
-  exits = { Exit_switch = 50 }
+  exits = { Exit_Pillar = 10, Exit_Closet = 90 }
 
   pedestals = { Pedestal_1 = 50 }
 
