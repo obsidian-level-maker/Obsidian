@@ -196,7 +196,7 @@ PREFAB.TELEPORT_CLOSET =
 {
   fitted = "xy"
 
-  x_ranges = { {16,1}, {160,0}, {16,1} }
+  x_ranges = { {16,0}, {160,0}, {16,1} }
   y_ranges = { {16,1}, {176,0} }
 
   defaults =
