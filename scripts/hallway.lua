@@ -1700,7 +1700,7 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
   H:update_seeds_for_chunks()
   H:peer_double_chunks()
 
-  H.stair_prob = 50
+  H.stair_prob = 35
 
   -- general vertical direction
   local z_dir = rand.sel(50, 1, -1)
