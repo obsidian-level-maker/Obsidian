@@ -685,7 +685,19 @@ function CLOSET_CLASS.build(CL)
 
   assert(C.floor_h)
 
-  local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h, 10 - CL.dir)
+  local x1, y1, x2, y2 = C.x1, C.y1, C.x2, C.y2
+
+  -- align indoor closets with wall  [FIXME: remove hack for teleporters]
+  if CL.parent.kind != "outdoor" and
+     CL.closet_kind != "TELEPORTER"
+  then
+    if CL.dir == 2 then y1 = y1 - 24 end
+    if CL.dir == 4 then x1 = x1 - 24 end
+    if CL.dir == 6 then x2 = x2 + 24 end
+    if CL.dir == 8 then y2 = y2 + 24 end
+  end
+
+  local T = Trans.box_transform(x1, y1, x2, y2, C.floor_h, 10 - CL.dir)
 
   Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
 
