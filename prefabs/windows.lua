@@ -134,10 +134,10 @@ PREFAB.PICTURE_WINDOW =
 
     -- fake bit (picture)
     {
-      { x = 32, y = 12, mat = "?pic" }
-      { x = 96, y = 12, mat = "?pic" }
-      { x = 96, y = 16, mat = "?pic" }
-      { x = 32, y = 16, mat = "?pic" }
+      { x = 32, y = 12, mat = "?pic", x_offset=0, y_offset=0 }
+      { x = 96, y = 12, mat = "?pic", x_offset=0, y_offset=0 }
+      { x = 96, y = 16, mat = "?pic", x_offset=0, y_offset=0 }
+      { x = 32, y = 16, mat = "?pic", x_offset=0, y_offset=0 }
       { t = 96, mat = "?pic" }
       { b = 32, mat = "?pic" }
     }

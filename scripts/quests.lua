@@ -743,6 +743,7 @@ function Quest_assign_room_themes()
   local function pictures_for_zones()
     each Z in LEVEL.zones do
       Z.logo_name = rand.key_by_probs(THEME.logos)
+      Z.fake_windows = rand.odds(25)
     end
 
     if not THEME.pictures or STYLE.pictures == "none" then
