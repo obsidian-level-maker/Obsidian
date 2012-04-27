@@ -2200,13 +2200,15 @@ end
 
 function Rooms_fake_building(sx1, sy1, sx2, sy2, kind, dir, face_room, zone)
   -- mark it
-  for sx = sx1,sx2 do for sy = sy1,sy2 do
+  for sx = sx1, sx2 do
+  for sy = sy1, sy2 do
     local S = SEEDS[sx][sy]
 
     S.scenic = true
     S.fake_zone = zone
     S.edge_of_map = nil
-  end end
+  end
+  end
 
   local x1 = SEEDS[sx1][sy1].x1
   local y1 = SEEDS[sx1][sy1].y1
@@ -2758,6 +2760,21 @@ function Rooms_outdoor_borders()
   end
 
 
+  local function fill_remaining_seeds()
+    -- this is mainly to fix the borders of Sky Halls
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_TOP do
+      local S = SEEDS[sx][sy]
+
+      if S:used() then continue end
+
+      Rooms_fake_building(sx, sy, sx, sy, 'P', nil, nil, LEVEL.zones[1])
+    end
+    end
+  end
+
+
   ---| Rooms_do_outdoor_borders |---
 
   Seed_flood_fill_edges()
@@ -2775,6 +2792,8 @@ function Rooms_outdoor_borders()
       scan_room(R)
     end
   end
+
+  fill_remaining_seeds()
 end
 
 
