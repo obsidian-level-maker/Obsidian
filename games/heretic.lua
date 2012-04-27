@@ -460,6 +460,34 @@ HERETIC.SKINS =
   }
 
 
+  ---| PICTURES |---
+
+  Pic_Carve =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "O_CARVE"
+    pic_w = 64
+    pic_h = 64
+
+    light = 64
+  }
+
+  Pic_Pill =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "O_PILL"
+    pic_w = 128
+    pic_h = 32
+
+    light = 64
+  }
+
 
   ----| KEY |----
 
@@ -528,11 +556,11 @@ HERETIC.SKINS =
     _where  = "edge"
     _key    = "k_yellow"
     _long = 192
-    _deep = 32
+    _deep = 48
 
-    w = 128
-    h = 112
+    door_w = 128
     door_h = 112
+
     door = "DOORSTON"
     track = "METL2"
     special = 34
@@ -547,11 +575,11 @@ HERETIC.SKINS =
     _where  = "edge"
     _key    = "k_green"
     _long = 192
-    _deep = 32
+    _deep = 48
 
-    w = 128
-    h = 112
+    door_w = 128
     door_h = 112
+
     door = "DOORSTON"
     track = "METL2"
     special = 33
@@ -566,11 +594,11 @@ HERETIC.SKINS =
     _where  = "edge"
     _key    = "k_blue"
     _long = 192
-    _deep = 32
+    _deep = 48
 
-    w = 128
-    h = 112
+    door_w = 128
     door_h = 112
+
     door = "DOORSTON"
     track = "METL2"
     special = 32
@@ -588,10 +616,11 @@ HERETIC.SKINS =
     _where  = "edge"
     _switch = "sw_metal"
     _long = 192
-    _deep = 32
+    _deep = 48
 
-    w = 128
-    h = 112
+    door_w = 128
+    door_h = 112
+
     door = "DMNMSK"
     track = "METL2"
     door_h = 112
@@ -1728,9 +1757,11 @@ HERETIC.THEME_DEFAULTS =
 
   doors = { d_wood=50, d_demon=15 }
 
-  logos = { carve=50, pill=50 }
+  logos = { Pic_Carve=50, Pic_Pill=15 }
 
   hallway_groups = { basic = 50 }
+
+  mini_halls = { Hall_Basic_I = 50 }
 
   sky_halls = { skier = 50 }
 
