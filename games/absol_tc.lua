@@ -1161,7 +1161,7 @@ ABSOLUTION.PLAYER_MODEL =
 
 
 function ABSOLUTION.get_levels()
-  local MAP_NUM = 11
+  local MAP_NUM = 10
 
   if OB_CONFIG.length == "single" then MAP_NUM = 1  end
   if OB_CONFIG.length == "few"    then MAP_NUM = 4  end
@@ -1169,7 +1169,7 @@ function ABSOLUTION.get_levels()
 
   local EP_NUM = 1
 
-  if MAP_NUM > 11 then EP_NUM = 2 end
+  if MAP_NUM > 10 then EP_NUM = 2 end
   if MAP_NUM > 30 then EP_NUM = 3 end
 
   -- create episode info...
@@ -1190,12 +1190,12 @@ function ABSOLUTION.get_levels()
     local ep_index
     local ep_along
 
-    if map >= 31 then
+    if map > 30 then
       ep_index = 2 ; ep_along = 0.35
-    elseif map >= 21 then
+    elseif map > 20 then
       ep_index = 3 ; ep_along = (map - 20) / 10
-    elseif map >= 12 then
-      ep_index = 2 ; ep_along = (map - 11) / 9
+    elseif map > 10 then
+      ep_index = 2 ; ep_along = (map - 10) / 10
     else
       ep_index = 1 ; ep_along = map / 11
     end
