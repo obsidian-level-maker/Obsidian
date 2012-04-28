@@ -1993,22 +1993,7 @@ function Fab_repetition_X(fab, T)
   end
 
 
-  ---| Fab_repetition_X |---
-
-  if not fab.x_repeat then return end
-
-  if not T.fitted_x then
-    error("x_repeat used in loose prefab")
-  end
-
-  local count = math.floor(T.fitted_x / fab.x_repeat)
-
-  if count <= 1 then return end
-
-  for pass = 1,count-1 do
-    local x_offset = pass * fab.bbox.x2
-    local y_offset = 0
-
+  local function replicate_w_offsets(x_offset, y_offset)
     -- cannot use 'each B in' since we are changing the list (adding new ones)
     for index = 1, #fab.brushes do
       local B = fab.brushes[index]
@@ -2024,6 +2009,26 @@ function Fab_repetition_X(fab, T)
       local E = fab.entities[index]
       copy_entity(E, x_offset, y_offset)
     end
+  end
+
+
+  ---| Fab_repetition_X |---
+
+  if not fab.x_repeat then return end
+
+  if not T.fitted_x then
+    error("x_repeat used in loose prefab")
+  end
+
+  local count = math.ceil(T.fitted_x / fab.x_repeat)
+
+  if count <= 1 then return end
+
+  for pass = 1,count-1 do
+    local x_offset = pass * fab.bbox.x2
+    local y_offset = 0
+
+    replicate_w_offsets(x_offset, y_offset)
   end
 
   -- update bbox
