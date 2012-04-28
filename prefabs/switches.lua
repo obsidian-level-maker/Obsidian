@@ -56,6 +56,61 @@ PREFAB.SMALL_SWITCH =
 }
 
 
+PREFAB.SWITCH_TINY =
+{
+  defaults =
+  {
+    base = "?wall"
+    pillar = "?wall"
+
+    switch_h = 32
+
+    x_offset = 0
+    y_offset = 0
+
+    act = ""
+    speed = 16
+
+    light1 = 32
+    light2 = 48
+  }
+
+  brushes =
+  {
+    {
+      { x = -44, y = -16, mat = "?base" }
+      { x = -28, y = -32, mat = "?base" }
+      { x =  28, y = -32, mat = "?base" }
+      { x =  44, y = -16, mat = "?base" }
+      { x =  44, y =  16, mat = "?base" }
+      { x =  28, y =  32, mat = "?base" }
+      { x = -28, y =  32, mat = "?base" }
+      { x = -44, y =  16, mat = "?base" }
+      { t = 8, mat = "?base", light_add="?light1" }
+    }
+
+    {
+      { x = -32, y =   0, mat = "?pillar" }
+      { x = -20, y = -20, mat = "?pillar" }
+      { x =  20, y = -20, mat = "?pillar" }
+      { x =  32, y =   0, mat = "?pillar" }
+      { x =  20, y =  20, mat = "?pillar" }
+      { x = -20, y =  20, mat = "?pillar" }
+      { t = 34, mat = "?pillar", light_add="?light2"  }
+    }
+
+    {
+      { x = -16, y =  -8, mat = "?switch", special="?special", act="?act", tag="?tag", arg1="?tag", arg2="?speed", x_offset="x_offset", peg=1, y_offset="?y_offset" }
+      { x =  16, y =  -8, mat = "?side" }
+      { x =  16, y =   8, mat = "?side" }
+      { x = -16, y =   8, mat = "?side" }
+      { t = "?switch_h+34", mat = "?side" }
+    }
+  }
+}
+
+
+
 PREFAB.QUAKE_FLOOR_SWITCH =
 {
   defaults =
