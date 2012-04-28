@@ -620,6 +620,18 @@ function Trans.modify(what, value)
 end
 
 
+function Trans.set_cap(z1, z2)
+  -- either z1 or z2 can be nil
+  Trans.z1_cap = z1
+  Trans.z2_cap = z2
+end
+
+function Trans.clear_cap()
+  Trans.z1_cap = nil
+  Trans.z2_cap = nil
+end
+
+
 function Trans.dump(title)
   -- debugging aid : show current transform
 
@@ -1771,14 +1783,25 @@ end
 function Fab_transform_Z(fab, T)
 
   local function brush_z(brush)
+    local b, t
+
     each C in brush do
-      if C.b  then C.b  = Trans.apply_z(C.b)  end
-      if C.t  then C.t  = Trans.apply_z(C.t)  end
+      if C.b  then C.b  = Trans.apply_z(C.b)  ; b = C.b end
+      if C.t  then C.t  = Trans.apply_z(C.t)  ; t = C.t end
       if C.zv then C.zv = Trans.apply_z(C.zv) end
 
       if Trans.mirror_z then
         C.b, C.t = C.t, C.b
       end
+    end
+
+    -- apply capping
+    if Trans.z1_cap and not b and (not t or t > Trans.z1_cap) then
+      table.insert(brush, { b = Trans.z1_cap })
+    end
+
+    if Trans.z2_cap and not t and (not b or b < Trans.z2_cap) then
+      table.insert(brush, { t = Trans.z2_cap })
     end
   end
 
