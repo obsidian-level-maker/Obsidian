@@ -2100,11 +2100,27 @@ end
 
 function Rooms_ambient_lighting()
 
-  local function colorise_loc(L)
+  -- FIXME: probably should pick colors from a list (e.g. ROOM_THEME.colors or THEME.colors)
 
-    -- FIXME: pick color from a list (e.g. ROOM_THEME.colors or THEME.colors)
+  local function rand_color()
     local color = rand.irange(10000,10137)
     if color == 10014 then color = color + 1 end
+    return color
+  end
+
+
+  local function colorise_loc(L)
+    local color
+
+    if L.kind == "outdoor" then
+      color = LEVEL.outdoor_color
+
+    elseif L.kind == "hallway" then
+      color = L.zone.hall_color
+
+    else
+      color = rand_color()
+    end
 
     each C in L.chunks do
       raw_add_brush(
@@ -2125,7 +2141,16 @@ function Rooms_ambient_lighting()
     return
   end
 
-if OB_CONFIG.game != "absolution" then return end
+  -- At the moment this code only colorises rooms for the Doom64 TC
+  if OB_CONFIG.game != "absolution" then return end
+
+  -- whole level has a single outdoor color
+  LEVEL.outdoor_color = rand_color()
+
+  -- each zone gets a hall color
+  each Z in LEVEL.zones do
+    Z.hall_color = rand_color()
+  end
 
   each R in LEVEL.rooms do
     colorise_loc(R)

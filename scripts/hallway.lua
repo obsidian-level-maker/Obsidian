@@ -355,7 +355,7 @@ function HALLWAY_CLASS.select_piece(H, C)
   local source_tab = H.group and H.group.pieces
 
   if H.mini_hall or H.big_junc then
-    source_tab = THEME.mini_halls
+    source_tab = assert(THEME.mini_halls)
   end
 
   if C.section.kind == "big_junc" then
