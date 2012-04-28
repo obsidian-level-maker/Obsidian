@@ -160,6 +160,7 @@ ABSOLUTION.MATERIALS =
   TRACK2 = { t="TILED839", f="CUSTOMCD" }
 
   DOOR1 = { t="TILED4A9", f="FTILEA79" }
+  DOOR2 = { t="TILE55F3", f="FTILEA79" }
 
   SPLIT_DOOR1 = { t="TILE0CAC", f="FTILEA79" }
 
@@ -273,10 +274,29 @@ ABSOLUTION.SKINS =
     top = "O_BOLT"
   }
 
+  Start_Closet =
+  {
+    _prefab = "START_CLOSET"
+    _where  = "closet"
+    _long   = { 192,384 }
+    _deep   = { 192,384 }
+
+    step = "FLAT1"
+
+    door = "DOOR2"
+    track = "TRACK2"
+
+    special = 31  -- open and stay open
+    tag = 0
+
+    item1 = "bullet_box"
+    item2 = "stimpack"
+  }
+
 
   ----| EXITS |----
 
-  Exit_switch =
+  Exit_Pillar =
   {
     _prefab = "EXIT_PILLAR",
     _where  = "middle"
@@ -575,9 +595,9 @@ ABSOLUTION.SKINS =
 
 ABSOLUTION.THEME_DEFAULTS =
 {
-  starts = { Start_basic = 50 }
+  starts = { Start_basic = 10, Start_Closet = 90 }
 
-  exits = { Exit_switch = 50 }
+  exits = { Exit_Pillar = 50 }
 
   pedestals = { Pedestal_1 = 50 }
 
