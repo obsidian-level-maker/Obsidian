@@ -1000,6 +1000,16 @@ HEXEN.SKINS =
 
   ----| ITEMS / KEYS |----
 
+  Pedestal_1 =
+  {
+    _prefab = "PEDESTAL"
+    _where  = "middle"
+
+    top  = "F_084"
+    side = "CASTLE07"
+  }
+
+
 --[[ TODO
   pedestal_ITEM =
   {
@@ -1639,6 +1649,8 @@ HEXEN.THEME_DEFAULTS =
   starts = { Start_basic = 20, Start_Closet = 90 }
 
   exits = { Exit_Pillar = 50 }
+
+  pedestals = { Pedestal_1 = 50 }
 
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50,
               Lift_Up1 = 1,   Lift_Down1 = 1 }
