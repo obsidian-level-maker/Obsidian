@@ -183,7 +183,7 @@ PREFAB.START_CLOSET =
 
     {
       { x =  0, y = 160, mat = "?wall" }
-      { x = 32, y = 160, mat = "?track", x_offset="?track_ox", y_offset=0 }
+      { x = 32, y = 160, mat = "?track", x_offset="?track_ox", peg=1, y_offset=0 }
       { x = 32, y = 176, mat = "?wall" }
       { x =  0, y = 176, mat = "?outer" }
     }
@@ -207,7 +207,7 @@ PREFAB.START_CLOSET =
       { x = 160, y = 160, mat = "?wall" }
       { x = 192, y = 160, mat = "?outer" }
       { x = 192, y = 176, mat = "?wall" }
-      { x = 160, y = 176, mat = "?track", x_offset="?track_ox", y_offset=0 }
+      { x = 160, y = 176, mat = "?track", x_offset="?track_ox", peg=1, y_offset=0 }
     }
 
     {
@@ -237,9 +237,9 @@ PREFAB.START_CLOSET =
     -- door itself
     {
       { x =  32, y = 160, mat = "?door", special="?special", act="?act", arg1="?tag", arg2="?speed", peg=1, x_offset=0, y_offset=0 }
-      { x = 160, y = 160, mat = "?door", special="?special", act="?act", arg1="?tag", arg2="?speed", peg=1, x_offset=0, y_offset=0 }
+      { x = 160, y = 160, mat = "?door" }
       { x = 160, y = 176, mat = "?door", special="?special", act="?act", arg1="?tag", arg2="?speed", peg=1, x_offset=0, y_offset=0 }
-      { x =  32, y = 176, mat = "?door", special="?special", act="?act", arg1="?tag", arg2="?speed", peg=1, x_offset=0, y_offset=0 }
+      { x =  32, y = 176, mat = "?door" }
       { b = 24, delta_z=-16, mat = "?door", tag = "?tag" }
     }
   }
