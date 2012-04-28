@@ -676,7 +676,7 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
 
   // Doom 64 TC support : colored sectors
   // this value is a sector type, and has lowest priority
-  int color = 0;
+  int color = -1;
 
   for (unsigned int i = 0 ; i < R->brushes.size() ; i++)
   {
@@ -701,7 +701,7 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
     {
       int c = B->props.getInt("color");
 
-      if (c > 0)
+      if (c >= 0)
         color = c;
     }
 
@@ -754,6 +754,11 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
         delta  = P->getInt("light_delta");
       }
     }
+
+    int c = P->getInt("light_color", -1);
+
+    if (c >= 0)
+      color = c;
   }
 
   // an existing sector special overrides the lighting effect
