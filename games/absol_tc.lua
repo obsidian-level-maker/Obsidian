@@ -146,6 +146,10 @@ ABSOLUTION.MATERIALS =
 
   -- general purpose --
 
+  METAL = { t="TILEA796", f="FTILEA79" }
+  CLANG = { t="TILE6885", f="FTILE688" }
+  RUST  = { t="TILE6860", f="FTILE686" }
+
 
   -- walls --
 
@@ -321,14 +325,13 @@ ABSOLUTION.SKINS =
     door  = "DOOREXIT"
     door_h = 96
     track = "TRACK"
-    key   = "METL2"
 
     inner  = "METL2"
     ceil   = "FLOOR19"
     floor2 = "FLOOR19"
 
     switch  = "SW2OFF"
-    sw_side = "METL2"
+    sw_side = "METAL"
     sw_oy   = 32
 
     q_sign = 0
@@ -336,7 +339,7 @@ ABSOLUTION.SKINS =
     special = 11
     tag = 0
 
-    item2 = "h_vial"
+    item1 = "stimpack"
   }
 
 
@@ -504,8 +507,9 @@ ABSOLUTION.SKINS =
 
     switch_h = 64
     switch = "SW1EXIT"
-    side = "METL2"
-    base = "METL2"
+    side = "METAL"
+    base = "CLANG"
+
     x_offset = 192
     y_offset = 64
     special = 103
@@ -684,13 +688,13 @@ ABSOLUTION.ROOM_THEMES =
       GRASS2=50
       WOOD=50
       DARK_ROCK2=50
-      LITE_ROCK1=20
+      LITE_ROCK =20
     }
 
     naturals =
     {
       DARK_ROCK2=50
-      LITE_ROCK1=20
+      LITE_ROCK2=20
       WOOD=40
       L_MAGMA=50
     }
