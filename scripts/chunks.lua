@@ -965,16 +965,17 @@ function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
   then
     Trans.set_fitted_z(T, info.f_max, info.c_min)
 
-    -- FIXME: big hack !!!
-    if OB_CONFIG.game == "heretic" and C.room and C.room.zone.fake_windows 
+    -- FIXME: big hack !!!!!
+    if (OB_CONFIG.game == "heretic" or OB_CONFIG.game == "hexen") and C.room and C.room.zone.fake_windows 
        and c_h >= f_h + 200
     then
       local skin2 = { pic="STNGLS1", pic_w=128, pic_h=128 }
       Fabricate("PICTURE_WINDOW", T, { skin, skin2 })
-    else
+      return
+    elseif LEVEL.special == "street" and rand.odds(31) then
       Fabricate("WINDOW", T, { skin })
+      return
     end
-    return
   end
 
   -- walls and windows use an "XYZ" fitted transform
