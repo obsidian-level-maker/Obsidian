@@ -23,32 +23,32 @@ ABSOLUTION = { }
 ABSOLUTION.ENTITIES =
 {
   --- player stuff ---
-  player1 = { id=1, kind="other", r=16,h=56 }
-  player2 = { id=2, kind="other", r=16,h=56 }
-  player3 = { id=3, kind="other", r=16,h=56 }
-  player4 = { id=4, kind="other", r=16,h=56 }
+  player1 = { id=1, kind="other", r=18,h=56 }
+  player2 = { id=2, kind="other", r=18,h=56 }
+  player3 = { id=3, kind="other", r=18,h=56 }
+  player4 = { id=4, kind="other", r=18,h=56 }
 
-  dm_player     = { id=11, kind="other", r=16,h=56 }
-  teleport_spot = { id=14, kind="other", r=16,h=56 }
-  voodoo_doll   = { id=88, kind="other", r=16,h=56 }
+  dm_player     = { id=11, kind="other", r=18,h=56 }
+  teleport_spot = { id=14, kind="other", r=18,h=56 }
+  voodoo_doll   = { id=88, kind="other", r=18,h=56 }
 
   --- monsters ---
-  zombie    = { id=3004,kind="monster", r=20,h=56 }
-  shooter   = { id=9,   kind="monster", r=20,h=56 }
-  demon     = { id=3002,kind="monster", r=20,h=56 }
-  imp       = { id=3001,kind="monster", r=20,h=56 }
+  zombie    = { id=3004,kind="monster", r=31,h=72 }
+  shooter   = { id=9,   kind="monster", r=31,h=72 }
+  demon     = { id=3002,kind="monster", r=32,h=56 }
+  imp       = { id=3001,kind="monster", r=32,h=72 }
   skull     = { id=3006,kind="monster", r=16,h=56 }
 
-  caco      = { id=3005,kind="monster", r=31,h=56 }
-  knight    = { id=69,  kind="monster", r=24,h=64 }
-  baron     = { id=3003,kind="monster", r=24,h=64 }
-  mancubus  = { id=67,  kind="monster", r=48,h=64 }
-  arach     = { id=68,  kind="monster", r=66,h=64 }
+  caco      = { id=3005,kind="monster", r=39,h=88 }
+  knight    = { id=69,  kind="monster", r=32,h=80 }
+  baron     = { id=3003,kind="monster", r=32,h=80 }
+  mancubus  = { id=67,  kind="monster", r=64,h=80 }
+  arach     = { id=68,  kind="monster", r=64,h=64 }
   pain      = { id=71,  kind="monster", r=31,h=56 }
 
   nm_demon  = { id=72,  kind="monster", r=32,h=56 }
-  nm_imp    = { id=400, kind="monster", r=30,h=56 }
-  nm_caco   = { id=66,  kind="monster", r=20,h=56 }
+  nm_imp    = { id=400, kind="monster", r=32,h=72 }
+  nm_caco   = { id=66,  kind="monster", r=39,h=88 }
 
   --- bosses ---
   CyberDemon  = { id=16,   kind="monster", r=40,h=80 }
