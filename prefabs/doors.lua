@@ -409,7 +409,7 @@ PREFAB.DOOR =
       { x = 160, y =  0, mat = "?step" }
       { x = 160, y = 48, mat = "?step" }
       { x =  32, y = 48, mat = "?step" }
-      { t = 8, mat = "?step", light = 0.7 }
+      { t = 8, mat = "?step", light_add = 32, special = "?color" }
     }
 
     -- frame
@@ -418,7 +418,7 @@ PREFAB.DOOR =
       { x = 160, y =  0, mat = "?outer" }
       { x = 160, y = 48, mat = "?wall" }
       { x =  32, y = 48, mat = "?outer" }
-      { b = 136, mat = "?frame", light_add = 32, special = "?color" }
+      { b = 136, mat = "?frame" }
     }
 
     -- door itself
@@ -427,7 +427,7 @@ PREFAB.DOOR =
       { x = 160, y = 16, mat = "?door", special="?special", act="?act", arg1="?tag", arg2="?speed", arg4="?keynum", peg=1, x_offset=0, y_offset=0 }
       { x = 160, y = 32, mat = "?door", special="?special", act="?act", arg1="?tag", arg2="?speed", arg4="?keynum", peg=1, x_offset=0, y_offset=0 }
       { x =  32, y = 32, mat = "?door", special="?special", act="?act", arg1="?tag", arg2="?speed", arg4="?keynum", peg=1, x_offset=0, y_offset=0 }
-      { b = 24, delta_z=-16, mat = "?door", tag = "?tag", light_add = 32 }
+      { b = 24, delta_z=-16, mat = "?door", tag = "?tag" }
     }
 
     -- left side
