@@ -1082,12 +1082,7 @@ function CHUNK_CLASS.build(C)
   assert(not C.hall)
   assert(not C.closet)
 
-
---[[
-if C.hall and #C.hall.sections == 1 and GAME.SKINS.Fat_Arch1 then
-  C:build_fat_arch()
-  return
-end --]]
+  Trans.set_cap(C.z1_cap, C.z2_cap)
 
 
   local f_h
@@ -1234,7 +1229,10 @@ end --]]
     Brush_set_tex(brush, f_mat.t)
 
     table.insert(brush, { t=f_h, tex=f_tex, special=f_special })
-    table.insert(brush, { b=f_h-8, tex=f_tex })
+
+    if C.z1_cap then
+      table.insert(brush, { b=C.z1_cap, tex=f_tex })
+    end
 
     raw_add_brush(brush)
   end
@@ -1259,9 +1257,12 @@ end --]]
     Brush_set_tex(brush, c_mat.t)
 
     table.insert(brush, { b=c_h, tex=c_tex })
-    table.insert(brush, { t=c_h+8, tex=c_tex })
 
-    raw_add_brush(brush)
+    if C.z2_cap then
+      table.insert(brush, { t=C.z2_cap, tex=f_tex })
+    end
+
+    brush_helper(brush)
   end
 
 
@@ -1387,7 +1388,7 @@ end --]]
     table.insert(brush, { t=h,    tex=f_tex })
     table.insert(brush, { b=h-16, tex=f_tex })
 
-    raw_add_brush(brush)
+    brush_helper(brush)
   end
 
   if x_hall and x_hall.cross_mode == "channel" then
@@ -1417,7 +1418,7 @@ end --]]
       table.insert(brush, { t=h,    tex=f_tex })
       table.insert(brush, { b=h-16, tex=f_tex })
 
-      raw_add_brush(brush)
+      brush_helper(brush)
     end end -- sx, sy
   end
 
@@ -1440,5 +1441,7 @@ end --]]
     entity_helper("light", x, y, z, { light=light })
   end
 
+
+  Trans.clear_cap()
 end
 

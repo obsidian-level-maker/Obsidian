@@ -1796,11 +1796,11 @@ function Fab_transform_Z(fab, T)
     end
 
     -- apply capping
-    if Trans.z1_cap and not b and (not t or t > Trans.z1_cap) then
+    if Trans.z1_cap and not b and (not t or t.t > Trans.z1_cap) then
       table.insert(brush, { b = Trans.z1_cap })
     end
 
-    if Trans.z2_cap and not t and (not b or b < Trans.z2_cap) then
+    if Trans.z2_cap and not t and (not b or b.b < Trans.z2_cap) then
       table.insert(brush, { t = Trans.z2_cap })
     end
   end
