@@ -242,9 +242,10 @@ ABSOLUTION.MATERIALS =
 
   -- other --
 
----  O_PILL   = { t="?", f="O_PILL",  sane=1 }
----  O_BOLT   = { t="?", f="O_BOLT",  sane=1 }
----  O_CARVE  = { t="?", f="O_CARVE", sane=1 }
+  O_CARVE  = { t="TILE0009", f="TILEAA3B", sane=1 }
+  O_BOLT   = { t="TILE0004", f="TILEAA3B", sane=1 }
+  O_PILL   = { t="TILE0000", f="TILEAA3B", sane=1 }
+  O_NEON   = { t="TILE0005", f="TILEAA3B", sane=1 }
 }
 
 
@@ -331,6 +332,22 @@ ABSOLUTION.SKINS =
     light  = 96
     effect = 8
     fx_delta = -32
+  }
+
+
+  ----| PICTURES |----
+
+  Pic_Carve =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = { O_PILL=200, O_CARVE=20, O_NEON=1, O_BOLT=1 }
+    pic_w = 64
+    pic_h = 64
+
+    light = 16
   }
 
 
@@ -578,14 +595,16 @@ ABSOLUTION.THEME_DEFAULTS =
 
   teleporters = { Teleporter1=50 }
 
+  logos = { Pic_Carve = 50 }
+
+  hallway_groups = { basic = 50 }
+
+  mini_halls = { Hall_Basic_I = 50 }
+
 
   steps = { step1=50 }
 
   doors = { d_wood=50, d_demon=15 }
-
-  logos = { carve=50, pill=50 }
-
-  hallway_groups = { basic = 50 }
 
 }
 
