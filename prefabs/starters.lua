@@ -102,6 +102,7 @@ PREFAB.START_CLOSET =
     track = "?wall"
     track_ox = 0
 
+    step   = "?wall"
     step_c = "?ceil"
 
     item1 = "none"
@@ -240,8 +241,11 @@ PREFAB.START_CLOSET =
       { x = 160, y = 160, mat = "?door" }
       { x = 160, y = 176, mat = "?door", special="?special", act="?act", arg1="?tag", arg2="?speed", peg=1, x_offset=0, y_offset=0 }
       { x =  32, y = 176, mat = "?door" }
-      { b = 24, delta_z=-16, mat = "?door", tag = "?tag" }
+      { b = 24, delta_z=-16, mat = "?door", tag = "?tag", light_color = 0 }
     }
+
+    -- Note: the 'light_color' above is a hack to prevent door splits
+    --       due to color mismatch.
   }
 
   entities =
