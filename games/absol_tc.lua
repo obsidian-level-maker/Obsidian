@@ -151,13 +151,6 @@ ABSOLUTION.MATERIALS =
   RUST  = { t="TILE6860", f="FTILE686" }
 
 
-  -- walls --
-
-  X_WALL = { t="TILEADAC", f="FTILEA79" }
-
-  HALL_A = { t="TILEAA3B", f="FTILEA79" }
-
-
   -- doors --
 
   TRACK  = { t="TILE7CFA", f="CUSTOMCD" }
@@ -190,7 +183,20 @@ ABSOLUTION.MATERIALS =
   PEDESTAL = { f="CUSTOMN", t="TILE1A3E" }
 
 
-  -- rails --
+  -- tech --
+
+  X_WALL = { t="TILEADAC", f="FTILEA79" }
+
+  HALL_A = { t="TILEAA3B", f="FTILEA79" }
+
+  COMPUTER1 = { t="BFALL1",   f="FTILEA79" }
+  COMPUTER2 = { t="FIREMAG1", f="FTILEA79" }
+  COMPUTER3 = { t="TILEFB85", f="FTILEA79" }
+  COMPUTER4 = { t="TILECF11", f="FTILEA79" }
+
+  LIGHT     = { t="TILE4BB3", f="FTILE4BB" }
+  RED_LIGHT = { t="TILE7424", f="FTILEA79" }
+  GRN_LIGHT = { t="TILE10D0", f="FTILEA79" }
 
 
   -- urban --
@@ -243,6 +249,9 @@ ABSOLUTION.MATERIALS =
   PORTAL_X = { f="XPORTAL1", t="TILEAA3B", sane=1 }
   PORTAL_Y = { f="YPORTAL1", t="TILEAA3B", sane=1 }
   PORTAL_Z = { f="ZPORTAL1", t="TILEAA3B", sane=1 }
+
+
+  -- rails --
 
 
   -- other --
@@ -371,6 +380,87 @@ ABSOLUTION.SKINS =
     pic_h = 64
 
     light = 16
+  }
+
+
+  Pic_Computer1 =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "COMPUTER1"
+    pic_w = 128
+    pic_h = 64
+
+    y_offset = { [64]=80, [0]=20 }
+
+    light = 32
+  }
+
+  Pic_Computer2 =
+  {
+    _copy = "Pic_Computer1"
+
+    pic = "COMPUTER2"
+
+    x_offset = { [0]=50, [64]=50 }
+  }
+
+  Pic_RedLight =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "RED_LIGHT"
+    pic_w = 32
+    pic_h = 128
+
+    light = 32
+    effect = 10004
+  }
+
+  Pic_GreenLight =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "GRN_LIGHT"
+    pic_w = 32
+    pic_h = 96
+
+    light = 32
+    effect = 10005
+  }
+
+  Pic_PurpleLight =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "LIGHT"
+    pic_w = 64
+    pic_h = 64
+
+    light = 32
+    effect = 9995
+  }
+
+  Pic_BlueLight =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "LIGHT"
+    pic_w = 32
+    pic_h = 128
+
+    light = 32
+    effect = 10009
   }
 
 
@@ -620,6 +710,10 @@ ABSOLUTION.THEME_DEFAULTS =
   teleporters = { Teleporter1=50 }
 
   logos = { Pic_Carve = 50 }
+
+  pictures = { Pic_Computer1 = 60, Pic_Computer2 = 60,
+               Pic_RedLight = 30, Pic_BlueLight = 30,
+               Pic_GreenLight = 30, Pic_PurpleLight = 30 }
 
   hallway_groups = { basic = 50 }
 
