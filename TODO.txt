@@ -26,14 +26,18 @@ Next WIP Goals
 
   DONE: tone down the secret closets - honor STYLE.secrets
   DONE: make closets aligned with walls (extra 24 units)
-    (c) make teleporters a single seed wide (no stretching)
+  DONE: make teleporters a single seed wide (no stretching)
 
 (5) Get QUAKE working well
 
 (6) Get HERETIC working well
-    (a) fake windows w/ stain glass
+    DONE: fake windows w/ stain glass
 
 (7) Get HEXEN working
+    DONE: item pedestal
+    DONE: start closet
+    DONE: stained glass windows
+    (c) decent switch
 
 (8) Get ABSOLUTION working
 

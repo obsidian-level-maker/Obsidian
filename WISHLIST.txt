@@ -195,14 +195,9 @@ IDEA: a way to associate a skin with a hallway group
 
 
 Prefab system:
-+  automatic repeating of prefabs
-   x_repeat=192 : means we require: x_size / N >= x_repeat (for highest N)
+-  implement 'y_repeat' and 'z_repeat'
 
-   do it in apply_skins, after Fab_composition
-   copy (and offset) all the brushes, entities and (ideally) models
-   also: if x_ranges (etc), expand that by N times too
-
-   WISH: support it with prefab composition too
+   WISH: support repetition with prefab composition too
 
 
 Sky Halls:
