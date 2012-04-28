@@ -1350,30 +1350,45 @@ HEXEN.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _switch = "sw_steel"
+    _switches = { sw_demon=1, sw_moon=1 }
     _long = 192
     _deep = 32
 
-    w = 128
-    h = 112
+    door_w = 128
     door_h = 112
+
     door = "BRASS1"
     track = "STEEL08"
     special = 0
   }
 
-  Switch_1 =
+  Switch_demon =
   {
-    _prefab = "SMALL_SWITCH"
+    _prefab = "SWITCH_TINY"
     _where  = "middle"
-    _switch = "sw_steel"
+    _switch = "sw_demon"
 
-    switch_h = 32
     switch = "SW51_OFF"
-    side = "STEEL07"
-    base = "STEEL07"
-    x_offset = 0
-    y_offset = 0
+    switch_h = 32
+
+    side = "PLAT01"
+    base = "WINN01"
+
+    special = 11
+    act = "S1"
+  }
+
+  Switch_moon =
+  {
+    _prefab = "SWITCH_TINY"
+    _where  = "middle"
+    _switch = "sw_moon"
+
+    switch = "SW52_OFF"
+    switch_h = 32
+
+    side = "PLAT01"
+    base = "WOOD01"
 
     special = 11
     act = "S1"
@@ -1421,19 +1436,6 @@ HEXEN.SKINS =
     }
   }
 
-  switch_demon =
-  {
-    prefab = "SWITCH_NICHE_TINY",
-    add_mode = "wall",
-    skin =
-    {
-      switch_w="SW51_OFF",
-      switch_h=32, x_offset=0, y_offset=0,
-
-      kind = { id=11, act="S1", args={"tag", 2 } }
-    }
-  }
-
   switch_chain =
   {
     prefab = "SWITCH_NICHE_HEXEN",
@@ -1447,19 +1449,6 @@ HEXEN.SKINS =
     }
   }
 
-  switch_moon =
-  {
-    prefab = "SWITCH_FLOOR_TINY_PED",
-    add_mode = "island",
-    skin =
-    {
-      switch_w="SW52_OFF", side_w="FIRE06", ped_w="FIRE06",
-      switch_f="F_012", ped_f="F_012",
-      switch_h=32, x_offset=0, y_offset=0,
-
-      kind = { id=11, act="S1", args={"tag", 2 } }
-    }
-  }
 --]]
 
 
@@ -1494,7 +1483,7 @@ HEXEN.SKINS =
     _prefab = "HALL_BASIC_I_STAIR"
     _shape  = "IS"
 
-    step = "STEP3"
+--    step = "STEP3"
   }
 
   Hall_Basic_I_Lift =
@@ -1674,9 +1663,9 @@ HEXEN.THEME_DEFAULTS =
 
   hub_gates = { Hub_Gate = 50 }
 
-  switches = { sw_steel = 50 }
+  switches = { sw_demon = 50, sw_moon = 40 }
 
-  switch_fabs = { Switch_1 = 50 }
+  switch_fabs = { Switch_demon = 50, Switch_moon = 50 }
 
   locked_doors = { Locked_axe = 50, Locked_cave = 50, Locked_castle = 50,
                    Locked_dungeon = 50, Locked_emerald = 50, Locked_fire = 50,

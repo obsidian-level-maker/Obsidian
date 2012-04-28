@@ -61,7 +61,7 @@ PREFAB.SWITCH_TINY =
   defaults =
   {
     base = "?wall"
-    pillar = "?wall"
+    pillar = "?base"
 
     switch_h = 32
 
