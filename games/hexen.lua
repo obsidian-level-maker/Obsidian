@@ -862,17 +862,18 @@ HEXEN.SKINS =
   Start_Closet =
   {
     _prefab = "START_CLOSET"
-    _where  = "chunk"
+    _where  = "closet"
     _long   = { 192,384 }
     _deep   = { 192,384 }
 
     step = "F_082"
 
-    door = "D_STEEL"
+    door = "DOOR51"
     track = "STEEL08"
     door_h = 128
 
-    special = 31  -- open and stay open
+    special = 11  -- open and stay open
+    act = "S1"
     tag = 0
   }
 

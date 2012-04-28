@@ -724,13 +724,7 @@ function Areas_important_stuff()
     
     elseif R.purpose == "EXIT" and LEVEL.hub_links then
       -- goal of chain levels is gate to next level
-      local chain_link
-
-      each link in LEVEL.hub_links do
-        if link.src.name == LEVEL.name then
-          chain_link = link ; break
-        end
-      end
+      local chain_link = Hub_find_link("EXIT")
 
       if chain_link and chain_link.kind == "chain" then
         C.content.kind = "GATE"
@@ -742,13 +736,7 @@ function Areas_important_stuff()
 
     if R.purpose == "START" and LEVEL.hub_links then
       -- beginning of each level (except start) is a hub gate
-      local from_link
-
-      each link in LEVEL.hub_links do
-        if link.dest.name == LEVEL.name then
-          from_link = link ; break
-        end
-      end
+      local from_link = Hub_find_link("START")
 
       if from_link then
         C.content.kind = "GATE"

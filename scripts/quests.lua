@@ -1951,3 +1951,18 @@ function Hub_assign_pieces(epi, pieces)
   end 
 end
 
+
+function Hub_find_link(kind)
+  each link in LEVEL.hub_links do
+    if kind == "START" and link.dest.name == LEVEL.name then
+      return link
+    end
+
+    if kind == "EXIT" and link.src.name == LEVEL.name then
+      return link
+    end
+  end
+
+  return nil  -- none
+end
+
