@@ -37,9 +37,14 @@ Next WIP Goals
     DONE: item pedestal
     DONE: start closet
     DONE: stained glass windows
-    (c) decent switch
+    DONE: decent switch
 
 (8) Get ABSOLUTION working
+    (a) create logo images
+    (b) make some picture skins (computer, etc)
+    (c) a few decent room themes
+    (d) a decent hallway theme
+    (e) Start_Closet
 
 
 -----------------------------------------------------------------
@@ -100,12 +105,7 @@ PATTERN LOGIC : skip patterns if (a) multiple levels,
 -----------------------------------------------------------------
 
 
-Release Goals
-=============
-
 >>  windows
-
-   -  must decide after all heights are done
 
 >>  pictures in walls
 
