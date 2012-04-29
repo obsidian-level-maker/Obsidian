@@ -2,49 +2,23 @@
 OBLIGE TODO
 ===========
 
+>>> x_repeat should be a skin thang
+
+
 Next WIP Goals
 --------------
-
-(1) Pictures:
-
-  DONE: select a picture to use in each area (possibly none)
-  DONE: honor STYLES.pictures
-  DONE: create skins from old V3 / V2 stuff
-
-(2) Hallways:
-
-  DONE: use mini_halls for big junctions
-  DONE: fix 'outer' texture on narrow hallway pieces
-  DONE: fix sky-hall crackle -- mark seeds for fake building
 
 (3) 3D patterns in Quake:
 
     (a) have 'z1_cap' and 'z2_cap' fields in a chunk, ensure all
         prefabs use it -- perhaps: Trans.set_cap(), Trans.clear_cap()
 
-(4) Closets:
-
-  DONE: tone down the secret closets - honor STYLE.secrets
-  DONE: make closets aligned with walls (extra 24 units)
-  DONE: make teleporters a single seed wide (no stretching)
-
 (5) Get QUAKE working well
-
-(6) Get HERETIC working well
-    DONE: fake windows w/ stain glass
-
-(7) Get HEXEN working
-    DONE: item pedestal
-    DONE: start closet
-    DONE: stained glass windows
-    DONE: decent switch
+    ???
 
 (8) Get ABSOLUTION working
-    (a) create logo images
-    (b) make some picture skins (computer, etc)
     (c) a few decent room themes
     (d) a decent hallway theme
-    (e) Start_Closet
 
 
 -----------------------------------------------------------------
