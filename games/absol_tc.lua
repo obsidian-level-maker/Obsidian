@@ -816,7 +816,7 @@ ABSOLUTION.ROOM_THEMES =
 {
   ---- TECH THEME -----------------
 
-  Tech_test =
+  Tech_room =
   {
     walls =
     {
@@ -911,8 +911,7 @@ ABSOLUTION.LEVEL_THEMES =
 
     liquids = { nukage=60, water=20, lava=10 }
 
-    buildings = { Tech_test=50 }
-
+    buildings = { Tech_room=50 }
     hallways  = { Tech_hallway=50 }
 
     caves    = { Outdoor_junk=50 }
