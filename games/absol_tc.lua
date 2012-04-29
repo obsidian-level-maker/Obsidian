@@ -182,10 +182,10 @@ ABSOLUTION.MATERIALS =
   FLOOR_1  = { f="SPECIAL5", t="TILE1436" }
   FLOOR_2  = { f="FTILEEBD", t="TILEEBDC" }
   FLOOR_3  = { f="FTILEC79", t="TILEA796" }
-
+  FLOOR_4  = { f="FTILE2CF", t="TILE2CFF" }
 
   HEXFLOOR = { f="FTILED88", t="TILED88E" }
-  GRNFLOOR = { f="FTILE573", t="TILEC5BC" }
+  GRNFLOOR = { f="SPECIALK", t="TILEC5BC" }
 
   FLOOR_X1 = { f="FTILE7C1", t="TILE7C1E" }
 
@@ -194,7 +194,9 @@ ABSOLUTION.MATERIALS =
   DARK_X1 = { f="FTILEB38", t="TILEB38C" }
 
 
-  CEIL_1 = { t="FTILEFA4", t="TILEFA49" }
+  CEIL_1 = { f="FTILEFA4", t="TILEFA49" }
+  CEIL_2 = { f="FTILEE57", t="TILEE574" }
+  CEIL_3 = { f="FTILED5F", t="TILED5F0" }
 
   PEDESTAL = { f="CUSTOMN", t="TILE1A3E" }
 
@@ -202,6 +204,11 @@ ABSOLUTION.MATERIALS =
   -- tech --
 
   WALL_1 = { t="TILEADAC", f="FTILEA79" }
+  WALL_2 = { t="TILED0C9", f="CUSTOM51" }
+  WALL_3 = { t="TILESCT1", f="FTILEB45" }
+  WALL_4 = { t="TILE9FC9", f="FTILE9FC" }
+  WALL_5 = { t="TILE7E3B", f="CUSTOMB" }
+  WALL_6 = { t="TILE2292", f="CUSTOM2" }
 
   HALLWAY_1 = { t="TILE83B7", f="CUSTOM60" }
   HALLWAY_2 = { t="TILEAA3B", f="FTILEA79" }
@@ -813,17 +820,29 @@ ABSOLUTION.ROOM_THEMES =
   {
     walls =
     {
-      WALL_1=50
+      WALL_1 = 50
+      WALL_2 = 50
+      WALL_3 = 50
+      WALL_4 = 20
+      WALL_5 = 20
+      WALL_6 = 80
     }
 
     floors =
     {
-      FLOOR_1=50
+      HEXFLOOR = 50
+      FLOOR_2 = 10
+      FLOOR_3 = 50
+      FLOOR_4 = 50
+      WALL_6 = 20
     }
 
     ceilings =
     {
-      FLOOR_3=50
+      CEIL_2 = 50
+      CEIL_3 = 20
+      FLOOR_1 = 30
+      GREEN_HEX = 20
     }
   }
 
