@@ -1304,10 +1304,11 @@ function CHUNK_CLASS.build(C)
       end
 
     else
-      -- EXPERIMENT : inter-area fences
+      -- EXPERIMENT : internal fences
 
       if C.room and C.room.kind != "cave" and
-         C.area and C:lower_area_can_fence(dir) and
+         C.area and C.area.use_fence and
+         C:lower_area_can_fence(dir) and
          not (C.stair and C.stair.dir == dir)
       then
         C:build_fence(dir)

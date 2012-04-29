@@ -243,7 +243,7 @@ function AREA_CLASS.decide_picture(A)
     return
   end
 
-  local prob = style_sel("pictures", 0, 25, 50, 90)
+  local prob = style_sel("pictures", 0, 30, 60, 90)
 
   if A.room.zone.pictures and rand.odds(prob) then
     A.pic_name = rand.key_by_probs(A.room.zone.pictures)
@@ -3314,6 +3314,7 @@ function Areas_flesh_out()
 
     each A in R.areas do
       A:decide_picture()
+      A.use_fence = rand.odds(80)
     end
 
     if R.kind == "cave" then
