@@ -2115,8 +2115,8 @@ function Rooms_ambient_lighting()
     if L.kind == "outdoor" then
       color = LEVEL.outdoor_color
 
-    elseif L.kind == "hallway" then
-      color = L.zone.hall_color
+--- elseif L.kind == "hallway" then
+---   color = L.zone.hall_color
 
     else
       color = rand_color()
