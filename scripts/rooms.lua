@@ -2109,7 +2109,7 @@ function Rooms_ambient_lighting()
   end
 
 
-  local function colorise_loc(L)
+  local function colorize_loc(L)
     local color
 
     if L.kind == "outdoor" then
@@ -2122,15 +2122,38 @@ function Rooms_ambient_lighting()
       color = rand_color()
     end
 
-    each C in L.chunks do
-      raw_add_brush(
-      {
-        { m = "light", color = color }
-        { x = C.x1, y = C.y1 }
-        { x = C.x2, y = C.y1 }
-        { x = C.x2, y = C.y2 }
-        { x = C.x1, y = C.y2 }
-      })
+    -- caves aren't made of chunks, need special logic for them
+    if L.kind == "cave" then
+
+      for sx = L.sx1, L.sx2 do
+      for sy = L.sy1, L.sy2 do
+        local S = SEEDS[sx][sy]
+
+        if S.room != L then continue end
+
+        raw_add_brush(
+        {
+          { m = "light", color = color }
+          { x = S.x1, y = S.y1 }
+          { x = S.x2, y = S.y1 }
+          { x = S.x2, y = S.y2 }
+          { x = S.x1, y = S.y2 }
+        })
+      end
+      end
+
+    else
+
+      each C in L.chunks do
+        raw_add_brush(
+        {
+          { m = "light", color = color }
+          { x = C.x1, y = C.y1 }
+          { x = C.x2, y = C.y1 }
+          { x = C.x2, y = C.y2 }
+          { x = C.x1, y = C.y2 }
+        })
+      end
     end
   end
 
@@ -2141,7 +2164,7 @@ function Rooms_ambient_lighting()
     return
   end
 
-  -- At the moment this code only colorises rooms for the Doom64 TC
+  -- At the moment this code only colorizes rooms for the Doom64 TC
   if OB_CONFIG.game != "absolution" then return end
 
   -- whole level has a single outdoor color
@@ -2153,11 +2176,11 @@ function Rooms_ambient_lighting()
   end
 
   each R in LEVEL.rooms do
-    colorise_loc(R)
+    colorize_loc(R)
   end
 
   each H in LEVEL.halls do
-    colorise_loc(H)
+    colorize_loc(H)
   end
 end
 
