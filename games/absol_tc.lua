@@ -146,9 +146,10 @@ ABSOLUTION.MATERIALS =
 
   -- general purpose --
 
-  METAL = { t="TILEA796", f="FTILEA79" }
-  CLANG = { t="TILE6885", f="FTILE688" }
-  RUST  = { t="TILE6860", f="FTILE686" }
+  METAL  = { t="TILEA796", f="FTILEA79" }
+  CLANG  = { t="TILE6885", f="FTILE688" }
+  RUST   = { t="TILE6860", f="FTILE686" }
+  COPPER = { t="TILE391D", f="FTILE391" }
 
 
   -- doors --
@@ -177,17 +178,36 @@ ABSOLUTION.MATERIALS =
 
   -- floors --
 
-  X_FLOOR = { f="SPECIAL5", t="TILE1436" }
-  X_CEIL  = { f="FTILEC79", t="TILEA796" }
+  FLOOR_1  = { f="SPECIAL5", t="TILE1436" }
+  FLOOR_2  = { f="FTILEEBD", t="TILEEBDC" }
+  FLOOR_3  = { f="FTILEC79", t="TILEA796" }
+
+
+  HEXFLOOR = { f="FTILED88", t="TILED88E" }
+  GRNFLOOR = { f="FTILE573", t="TILEC5BC" }
+
+  FLOOR_X1 = { f="FTILE7C1", t="TILE7C1E" }
+
+  GREEN_HEX = { f="SPECIALI", t="TILEC5BC" }
+
+  DARK_X1 = { f="FTILEB38", t="TILEB38C" }
+
+
+  CEIL_1 = { t="FTILEFA4", t="TILEFA49" }
 
   PEDESTAL = { f="CUSTOMN", t="TILE1A3E" }
 
 
   -- tech --
 
-  X_WALL = { t="TILEADAC", f="FTILEA79" }
+  WALL_1 = { t="TILEADAC", f="FTILEA79" }
 
-  HALL_A = { t="TILEAA3B", f="FTILEA79" }
+  HALLWAY_1 = { t="TILE83B7", f="CUSTOM60" }
+  HALLWAY_2 = { t="TILEAA3B", f="FTILEA79" }
+  HALLWAY_3 = { t="TILE3479", f="CUSTOM55" }
+  HALLWAY_4 = { t="TILE7B5E", f="CUSTOM55" }
+  HALLWAY_5 = { t="TILE572B", f="FTILEADA" }
+  HALLWAY_6 = { t="TILEEE57", f="FTILEEE5" }
 
   COMPUTER1 = { t="BFALL1",   f="FTILEA79" }
   COMPUTER2 = { t="FIREMAG1", f="FTILEA79" }
@@ -792,17 +812,48 @@ ABSOLUTION.ROOM_THEMES =
   {
     walls =
     {
-      X_WALL=50
+      WALL_1=50
     }
 
     floors =
     {
-      X_FLOOR=50
+      FLOOR_1=50
     }
 
     ceilings =
     {
-      X_CEIL=50
+      FLOOR_3=50
+    }
+  }
+
+
+  Tech_hallway =
+  {
+    walls =
+    {
+      HALLWAY_1 = 50
+      HALLWAY_2 = 50
+      HALLWAY_3 = 50
+      HALLWAY_4 = 50
+      HALLWAY_5 = 50
+      HALLWAY_6 = 50
+    }
+
+    floors =
+    {
+      FLOOR_X1 = 50
+      COPPER   = 50
+      FLOOR_2  = 30
+      CLANG    = 15
+      GRNFLOOR = 10
+    }
+
+    ceilings =
+    {
+      CEIL_1 = 20
+      COPPER = 40
+      DARK_X1 = 20
+      GREEN_HEX = 10
     }
   }
 
@@ -842,7 +893,7 @@ ABSOLUTION.LEVEL_THEMES =
 
     buildings = { Tech_test=50 }
 
---    hallways = { Castle_hallway=50 }  -- FIXME
+    hallways  = { Tech_hallway=50 }
 
     caves    = { Outdoor_junk=50 }
     outdoors = { Outdoor_junk=50 }
