@@ -256,10 +256,10 @@ ABSOLUTION.MATERIALS =
 
   -- other --
 
-  O_CARVE  = { t="TILE0009", f="TILEAA3B", sane=1 }
-  O_BOLT   = { t="TILE0004", f="TILEAA3B", sane=1 }
-  O_PILL   = { t="TILE0000", f="TILEAA3B", sane=1 }
-  O_NEON   = { t="TILE0005", f="TILEAA3B", sane=1 }
+  O_PILL   = { t="CEMENT1",  f="O_PILL",   sane=1 }
+  O_BOLT   = { t="CEMENT2",  f="O_BOLT",   sane=1 }
+  O_RELIEF = { t="CEMENT3",  f="O_RELIEF", sane=1 }
+  O_CARVE  = { t="CEMENT4",  f="O_CARVE",  sane=1 }
 }
 
 
@@ -375,11 +375,43 @@ ABSOLUTION.SKINS =
     _where  = "edge"
     _long   = 192
 
-    pic   = { O_PILL=200, O_CARVE=20, O_NEON=1, O_BOLT=1 }
+    pic   = "O_CARVE"
     pic_w = 64
     pic_h = 64
 
-    light = 16
+    light = 32
+    effect = 1  -- this is mainly to get white light
+    fx_delta = -8
+  }
+
+  Pic_Bolt =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "O_BOLT"
+    pic_w = 64
+    pic_h = 64
+
+    light = 32
+    effect = 1  -- this is mainly to get white light
+    fx_delta = -8
+  }
+
+  Pic_Pill =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "O_PILL"
+    pic_w = 128
+    pic_h = 32
+
+    light = 32
+    effect = 1  -- this is mainly to get white light
+    fx_delta = -8
   }
 
 
@@ -709,7 +741,7 @@ ABSOLUTION.THEME_DEFAULTS =
 
   teleporters = { Teleporter1=50 }
 
-  logos = { Pic_Carve = 50 }
+  logos = { Pic_Carve = 20, Pic_Pill = 60, Pic_Bolt = 5 }
 
   pictures = { Pic_Computer1 = 60, Pic_Computer2 = 60,
                Pic_RedLight = 30, Pic_BlueLight = 30,
@@ -1353,6 +1385,75 @@ function ABSOLUTION.get_levels()
 end
 
 
+function ABSOLUTION.make_cool_gfx()
+  local WHITE =
+  {
+    0, 3, 6, 9, 12, 15, 18, 20, 22
+  }
+
+  local GREEN =
+  {
+    0, 127, 125, 123, 121, 119, 117, 113    
+  }
+
+  local RED =
+  {
+    0, 223, 221, 219, 217, 215, 213, 211, 209
+  }
+
+  local BLUE =
+  {
+    0, 63, 61, 59, 57, 55, 53, 51
+  }
+
+  local BROWN =
+  {
+    0, 143, 141, 139, 137, 135, 133, 131
+  }
+
+  local BRONZE =
+  {
+    0, 159, 157, 155, 153, 151, 149, 147, 145
+  }
+
+  local PINK =
+  {
+    0, 207, 205, 203, 201, 199, 197, 195, 193
+  }
+
+
+
+  local colmaps =
+  {
+    WHITE, RED, GREEN, BLUE,
+    BROWN, BRONZE, PINK
+  }
+
+  rand.shuffle(colmaps)
+
+  gui.set_colormap(1, colmaps[1])
+  gui.set_colormap(2, colmaps[2])
+  gui.set_colormap(3, colmaps[3])
+  gui.set_colormap(4, colmaps[4])
+
+  -- patches (CEMENT1 .. CEMENT4)
+  gui.wad_logo_gfx("WALL52_1", "p", "PILL",   128,128, 1)
+  gui.wad_logo_gfx("WALL53_1", "p", "BOLT",   128,128, 2)
+  gui.wad_logo_gfx("WALL55_1", "p", "RELIEF", 128,128, 3)
+  gui.wad_logo_gfx("WALL54_1", "p", "CARVE",  128,128, 4)
+
+  -- flats
+  gui.wad_logo_gfx("O_PILL",   "f", "PILL",   64,64, 1)
+  gui.wad_logo_gfx("O_BOLT",   "f", "BOLT",   64,64, 2)
+  gui.wad_logo_gfx("O_RELIEF", "f", "RELIEF", 64,64, 3)
+  gui.wad_logo_gfx("O_CARVE",  "f", "CARVE",  64,64, 4)
+end
+
+
+function ABSOLUTION.all_done()
+  ABSOLUTION.make_cool_gfx()
+end
+
 
 ------------------------------------------------------------
 
@@ -1370,8 +1471,10 @@ OB_GAMES["absolution"] =
   hooks =
   {
     get_levels = ABSOLUTION.get_levels
+    all_done   = ABSOLUTION.all_done
   }
 }
+
 
 OB_THEMES["absolution_tech"] =
 {
@@ -1379,5 +1482,13 @@ OB_THEMES["absolution_tech"] =
   for_games = { absolution=1 }
   name_theme = "TECH"
   mixed_prob = 50
+}
+
+UNFINISHED["absolution_hell"] =
+{
+  label = "Hell"
+  for_games = { absolution=1 }
+  name_theme = "GOTHIC"
+  mixed_prob = 40
 }
 
