@@ -979,7 +979,7 @@ QUAKE.SKINS =
     _where  = "edge"
     _long   = 192
 
-    pic   = { TWALL2_1=50, TWALL2_2=50 }
+    pic   = { TWALL2_1=50, TWALL2_2=15 }
     pic_w = 64
     pic_h = 128
 
@@ -997,6 +997,7 @@ QUAKE.SKINS =
     pic_h = 128
 
     light = 192
+    effect = { [0]=50, [10]=15, [4]=5 }
   }
 
   Pic_Light03 =
