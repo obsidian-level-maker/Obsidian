@@ -94,8 +94,9 @@ static void Q1_ClearMipTex(void)
   Q1_AddMipTex("error");   // #0
   Q1_AddMipTex("missing"); // #1
   Q1_AddMipTex("o_carve"); // #2
+  Q1_AddMipTex("o_bolt");  // #3
 
-  num_custom_tex = 3;
+  num_custom_tex = 4;
 }
 
 
@@ -158,7 +159,8 @@ static void CreateDummyMip(qLump_c *lump, const char *name, int pix1, int pix2)
 }
 
 
-static void CreateLogoMip(qLump_c *lump, const char *name, const byte *data)
+static void CreateLogoMip(qLump_c *lump, const char *name, const byte *data,
+                          const byte *colors)
 {
   SYS_ASSERT(strlen(name) < 16);
 
@@ -183,22 +185,15 @@ static void CreateLogoMip(qLump_c *lump, const char *name, const byte *data)
 
   lump->Append(&mm_tex, sizeof(mm_tex));
 
-
   size = 64;
   int scale = 1;
-
-  static byte colormap[8] =
-  {
-    // 0, 16, 97, 101, 105, 109, 243, 243
-    16, 97, 103, 109, 243, 243, 243, 243
-  };
 
   for (int i = 0 ; i < MIP_LEVELS ; i++)
   {
     for (int y = 0 ; y < size ; y++)
     for (int x = 0 ; x < size ; x++)
     {
-      byte pixel = colormap[data[(63-y*scale)*64 + x*scale] >> 5];
+      byte pixel = colors[data[(y*scale)*64 + x*scale] >> 5];
 
       lump->Append(&pixel, 1);
     }
@@ -211,6 +206,16 @@ static void CreateLogoMip(qLump_c *lump, const char *name, const byte *data)
 
 static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name)
 {
+  static byte relief_colors[8] =  // yellow range
+  {
+    207, 205, 203, 201, 199, 197, 195, 193
+  };
+
+  static byte bolt_colors[8] =  // blue range
+  {
+    0, 223, 222, 221, 219, 217, 214, 211
+  };
+
   if (strcmp(name, "error") == 0)
   {
     CreateDummyMip(lump, name, 210, 231);
@@ -223,7 +228,12 @@ static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name)
   }
   if (strcmp(name, "o_carve") == 0)  // TEMP STUFF !!!!
   {
-    CreateLogoMip(lump, name, logo_RELIEF.data);
+    CreateLogoMip(lump, name, logo_RELIEF.data, relief_colors);
+    return;
+  }
+  if (strcmp(name, "o_bolt") == 0)  // TEMP STUFF !!!!
+  {
+    CreateLogoMip(lump, name, logo_BOLT.data, bolt_colors);
     return;
   }
 
