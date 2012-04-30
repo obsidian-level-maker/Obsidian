@@ -754,31 +754,31 @@ function Quest_assign_room_themes()
       Z.pictures = {}
     end
 
-    -- distribute the pictures amongst the zones
+    --- distribute the pictures amongst the zones ---
+
     local names = table.keys(THEME.pictures)
+
+    assert(#names >= 1)
+
+    -- ensure there are enough pictures to go round
+    while table.size(names) < #LEVEL.zones do
+      names = table.append(names, table.copy(names))
+    end
 
     rand.shuffle(names)
 
-    for loop = 1,4 do
-      if table.empty(names) then break end
-
-      each Z in LEVEL.zones do
-        if rand.odds(65) then
-          local name = table.remove(names, 1)
-          Z.pictures[name] = THEME.pictures[name]
-        end
-
-        if table.empty(names) then break end
-      end
+    each Z in LEVEL.zones do
+      local name = table.remove(names, 1)
+      Z.pictures[name] = THEME.pictures[name]
     end
 
-    -- ensure each zone has at least one picture
+    -- one extra picture per zone (unless already there)
     names = table.keys(THEME.pictures)
 
     each Z in LEVEL.zones do
       local name = rand.pick(names)
 
-      Z.pictures[name] = THEME.pictures[name]
+      Z.pictures[name] = THEME.pictures[name] / 4
     end
 
     -- [[ debugging
