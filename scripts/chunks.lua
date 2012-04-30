@@ -972,7 +972,7 @@ function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
       local skin2 = { pic="STNGLS1", pic_w=128, pic_h=128 }
       Fabricate("PICTURE_WINDOW", T, { skin, skin2 })
       return
-    elseif LEVEL.special == "street" and rand.odds(31) then
+    elseif LEVEL.special != "street" or rand.odds(31) then
       Fabricate("WINDOW", T, { skin })
       return
     end
