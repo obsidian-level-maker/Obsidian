@@ -2,8 +2,6 @@
 OBLIGE TODO
 ===========
 
->>> x_repeat should be a skin thang
-
 
 Next WIP Goals
 --------------
@@ -13,15 +11,18 @@ Next WIP Goals
     (a) have 'z1_cap' and 'z2_cap' fields in a chunk, ensure all
         prefabs use it -- perhaps: Trans.set_cap(), Trans.clear_cap()
 
-(5) Get QUAKE working well
-    ???
+        Problem: chunks may partially overlap!
 
-(8) Get ABSOLUTION working
-    (c) a few decent room themes
-    (d) a decent hallway theme
+(5) Get QUAKE working well
+    DONE: some tech pictures
+    DONE: some castley pictures
+    - hack to get pictures aligned correctly (e.g. "hack_picture" keyword)
 
 
 -----------------------------------------------------------------
+
+
++  x_repeat should be a skin thang
 
 
 +  have "hallway arches", specified in hallway groups, used in
