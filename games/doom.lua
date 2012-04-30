@@ -720,6 +720,7 @@ DOOM2.MATERIALS =
   BSTONE2  = { t="BSTONE2",  f="RROCK12",  color=0x48351d }
   BSTONE3  = { t="BSTONE3",  f="RROCK12",  color=0x4d371f }
 
+  CEMENT7  = { t="CEMENT7",  f="FLAT19",  color=0x746f59 }
   CEMENT9  = { t="CEMENT9",  f="FLAT19",  color=0x746f59 }
   CRACKLE2 = { t="CRACKLE2", f="RROCK01", color=0x74240b }
   CRACKLE4 = { t="CRACKLE4", f="RROCK02", color=0x55472a }
@@ -4206,7 +4207,7 @@ DOOM.ROOM_THEMES =
       BLAKWAL2 = 10
       MODWALL1 = 20
       MODWALL3 = 10
-      CEMENT7  = 5
+      CEMENT7 = 5
       CEMENT9 = 5
       METAL2 = 3
     }
