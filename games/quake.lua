@@ -678,7 +678,7 @@ QUAKE.MATERIALS =
 
   -- Oblige specific textures
   O_CARVE    = { t="o_carve" }
-  O_BOLT     = { t="o_carve" }
+  O_BOLT     = { t="o_bolt"  }
 
 
   BUTTON = { t="+0button" }
@@ -891,7 +891,7 @@ QUAKE.SKINS =
   }
 
 
-  ----| KEY |----
+  ----| ITEM / KEY |----
 
   Item_niche =
   {
@@ -926,6 +926,35 @@ QUAKE.SKINS =
 
     light = 160
     style = 11
+  }
+
+
+  ----| PICTURES |----
+
+  Pic_Carve =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "O_CARVE"
+    pic_w = 64
+    pic_h = 64
+
+    light = 64
+  }
+
+  Pic_Bolt =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "O_BOLT"
+    pic_w = 64
+    pic_h = 64
+
+    light = 64
   }
 
 
@@ -1204,11 +1233,9 @@ QUAKE.THEME_DEFAULTS =
 
   teleporters = { Teleporter1 = 50 }
 
-  windows = { Window1 = 50 }
-
-  fences = { Fence1 = 50 }
-
   hallway_groups = { basic = 50 }
+
+  mini_halls = { Hall_Basic_I = 50 }
 
   sky_halls = { skier = 50 }
 
@@ -1217,9 +1244,15 @@ QUAKE.THEME_DEFAULTS =
     Junc_Octo = 50
   }
 
-  fat_cages = { Fat_Cage_W_Bars = 50 }
+  logos = { Pic_Carve = 50, Pic_Bolt = 100 }
 
-  logos = { carve=50 }
+
+
+  windows = { Window1 = 50 }
+
+  fences = { Fence1 = 50 }
+
+  fat_cages = { Fat_Cage_W_Bars = 50 }
 
   indoor_fabs = { TechLamp = 50, RoundPillar = 50 }
 
@@ -1296,6 +1329,7 @@ QUAKE.ROOM_THEMES =
     }
   }
 
+
   Castle_generic =
   {
     walls =
@@ -1328,6 +1362,7 @@ QUAKE.ROOM_THEMES =
     }
   }
 
+
   Cave_generic =
   {
     naturals =
@@ -1337,6 +1372,7 @@ QUAKE.ROOM_THEMES =
       GRAVE01_3=10, WSWAMP1_2=20, 
     }
   }
+
 
   Outdoors_generic =
   {
@@ -1372,21 +1408,13 @@ QUAKE.LEVEL_THEMES =
 
     buildings = { Base_generic=50 }
 
+    -- hallways = { blah }
+
     caves = { Cave_generic=50 }
 
     outdoors = { Outdoors_generic=50 }
 
---[[
-    hallways = { Hallway_generic=50 }
 
-    xx_hallway =
-    {
-      -- FIXME
-      walls = { TECH02_1=10 }
-      floors = { AFLOOR1_4=10 }
-      ceilings = { AFLOOR1_4=10 }
-    }
---]]
 
     -- TODO: lots more stuff...
   }
