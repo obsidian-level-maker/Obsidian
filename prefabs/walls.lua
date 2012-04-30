@@ -200,7 +200,7 @@ PREFAB.PICTURE =
   entities =
   {
     -- lighting in Quake engines
-    { ent = "light", x = 32, y = 32, z = 64,
+    { ent = "light", x = 16, y = 20, z = 64,
       light = "?light", style = "?effect"
     }
   }
