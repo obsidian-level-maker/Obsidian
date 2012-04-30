@@ -958,6 +958,172 @@ QUAKE.SKINS =
   }
 
 
+  -- tech --
+
+  Pic_Computer1 =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "COMP1_6"
+    pic_w = 64
+    pic_h = 64
+
+    light = 64
+  }
+
+  Pic_Computer2 =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = { TWALL2_1=50, TWALL2_2=50 }
+    pic_w = 64
+    pic_h = 128
+
+    light = 64
+  }
+
+  Pic_Light07 =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "TLIGHT07"
+    pic_w = 64
+    pic_h = 128
+
+    light = 192
+  }
+
+  Pic_Light03 =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "TLIGHT03"
+    pic_w = 32
+    pic_h = 64
+
+    light = 192
+  }
+
+
+  -- gothic --
+
+  Pic_StainGlass =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = { WINDOW01_1=50, WINDOW01_2=50, WINDOW01_3=50 }
+    pic_w = 64
+    pic_h = 128  -- !! FIXME should be 192
+
+    light = 96
+  }
+
+  Pic_StainGlass2 =
+  {
+    _copy = "Pic_StainGlass"
+
+    pic = { WINDOW02_1=50, WINDOW01_4=50 }
+  }
+
+  Pic_Window3 =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "WINDOW1_3"
+    pic_w = 64
+    pic_h = 64
+
+    light = 96
+  }
+
+  Pic_WoodCarve =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "WOOD1_8"
+    pic_w = 64
+    pic_h = 64
+
+    light = 32
+  }
+
+  Pic_YellowLight3 =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "LIGHT1_3"
+    pic_w = 64
+    pic_h = 64
+
+    light = 128
+  }
+
+  Pic_CrossLight =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "LIGHT3_6"
+    pic_w = 32
+    pic_h = 64
+
+    light = 128
+  }
+
+
+  Pic_Demon =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "DEM4_4"
+    pic_w = 64
+    pic_h = 64
+
+    light = 48
+  }
+
+  Pic_DemonLit =
+  {
+    _copy = "Pic_Demon"
+
+    pic = "DEM5_3"
+
+    light = 128
+  }
+
+  Pic_BloodyHead =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "METALT1_7"
+    pic_w = 64
+    pic_h = 64
+
+    light = 32
+  }
+
+
   --- LOCKED DOORS ---
 
   Locked_silver =
@@ -1414,6 +1580,13 @@ QUAKE.LEVEL_THEMES =
 
     outdoors = { Outdoors_generic=50 }
 
+    pictures =
+    {
+      Pic_Computer1 = 40
+      Pic_Computer2 = 40
+      Pic_Light07 = 90
+      Pic_Light03 = 20
+    }
 
 
     -- TODO: lots more stuff...
@@ -1439,6 +1612,21 @@ QUAKE.LEVEL_THEMES =
     outdoors = { Outdoors_generic=50 }
 
     pedestals = { Pedestal_gothic=50 }
+
+    pictures =
+    {
+      Pic_StainGlass  = 60
+      Pic_StainGlass2 = 10
+      Pic_WoodCarve = 10
+      Pic_Window3 = 30
+
+      Pic_Demon = 20
+      Pic_DemonLit = 20
+      Pic_BloodyHead = 20
+      Pic_YellowLight3 = 20
+      Pic_CrossLight = 20
+    }
+
 
     -- TODO: lots more stuff...
   }
