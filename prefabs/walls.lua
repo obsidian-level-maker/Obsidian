@@ -114,7 +114,7 @@ PREFAB.PICTURE =
 {
   fitted = "xyz"
 
-  x_ranges = { {16,1}, {64,0,"?pic_w"}, {16,1} }
+  x_ranges = { {8,1}, {16,0,"?pic_w"}, {8,1} }
   y_ranges = { {8,1}, {8,0} }
   z_ranges = { {32,1}, {64,0,"?pic_h"}, {32,7} }
 
@@ -140,17 +140,17 @@ PREFAB.PICTURE =
     -- wall behind picture
     {
       { x =  0, y =  0, mat = "?outer" }
-      { x = 96, y =  0, mat = "?wall" }
-      { x = 96, y =  4, mat = "?wall" }
+      { x = 32, y =  0, mat = "?wall" }
+      { x = 32, y =  4, mat = "?wall" }
       { x =  0, y =  4, mat = "?wall" }
     }
 
     -- picture itself
     {
-      { x = 16, y =  4, mat = "?wall" }
-      { x = 80, y =  4, mat = "?wall"  }
-      { x = 80, y =  8, mat = "?pic", peg="?peg", x_offset="?x_offset", y_offset="?y_offset", special="?scroll" }
-      { x = 16, y =  8, mat = "?wall"  }
+      { x =  8, y =  4, mat = "?wall" }
+      { x = 24, y =  4, mat = "?wall"  }
+      { x = 24, y =  8, mat = "?pic", peg="?peg", x_offset="?x_offset", y_offset="?y_offset", special="?scroll" }
+      { x =  8, y =  8, mat = "?wall"  }
       { b = 32 }
       { t = 96 }
     }
@@ -158,34 +158,34 @@ PREFAB.PICTURE =
     -- right side wall
     {
       { x =  0, y =  4, mat = "?wall" }
-      { x = 16, y =  4, mat = "?frame" }
-      { x = 16, y = 16, mat = "?wall" }
+      { x =  8, y =  4, mat = "?frame" }
+      { x =  8, y = 16, mat = "?wall" }
       { x =  0, y = 16, mat = "?wall" }
     }
 
     -- left side wall
     {
-      { x = 80, y =  4, mat = "?wall" }
-      { x = 96, y =  4, mat = "?wall" }
-      { x = 96, y = 16, mat = "?wall" }
-      { x = 80, y = 16, mat = "?frame" }
+      { x = 24, y =  4, mat = "?wall" }
+      { x = 32, y =  4, mat = "?wall" }
+      { x = 32, y = 16, mat = "?wall" }
+      { x = 24, y = 16, mat = "?frame" }
     }
 
     -- frame bottom
     {
-      { x = 16, y =  8, mat = "?wall" }
-      { x = 80, y =  8, mat = "?wall" }
-      { x = 80, y = 16, mat = "?wall", blocked=1 }
-      { x = 16, y = 16, mat = "?wall" }
+      { x =  8, y =  8, mat = "?wall" }
+      { x = 24, y =  8, mat = "?wall" }
+      { x = 24, y = 16, mat = "?wall", blocked=1 }
+      { x =  8, y = 16, mat = "?wall" }
       { t = 32, mat = "?frame" }
     }
 
     -- frame top
     {
-      { x = 16, y =  8, mat = "?wall" }
-      { x = 80, y =  8, mat = "?wall" }
-      { x = 80, y = 16, mat = "?wall", blocked=1 }
-      { x = 16, y = 16, mat = "?wall" }
+      { x =  8, y =  8, mat = "?wall" }
+      { x = 24, y =  8, mat = "?wall" }
+      { x = 24, y = 16, mat = "?wall", blocked=1 }
+      { x =  8, y = 16, mat = "?wall" }
       { b = 96, mat = "?frame", light_add="?light", light_effect="?effect", light_delta="?fx_delta" }
     }
 
@@ -194,6 +194,14 @@ PREFAB.PICTURE =
       { m = "bbox" }
       { b = 0 }
       { t = 128 }
+    }
+  }
+
+  entities =
+  {
+    -- lighting in Quake engines
+    { ent = "light", x = 32, y = 32, z = 64,
+      light = "?light", style = "?effect"
     }
   }
 }
