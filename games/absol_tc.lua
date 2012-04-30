@@ -284,10 +284,9 @@ ABSOLUTION.MATERIALS =
 
   -- other --
 
-  O_PILL   = { t="CEMENT1",  f="O_PILL",   sane=1 }
-  O_BOLT   = { t="CEMENT2",  f="O_BOLT",   sane=1 }
-  O_RELIEF = { t="CEMENT3",  f="O_RELIEF", sane=1 }
-  O_CARVE  = { t="CEMENT4",  f="O_CARVE",  sane=1 }
+  O_PILL   = { t="TILEEB33",  f="FTILEA79",  sane=1 }
+  O_CARVE  = { t="TILE0000",  f="FTILEA79",  sane=1 }
+  O_BOLT   = { t="TILE0009",  f="FTILEA79",  sane=1 }
 }
 
 
@@ -1506,17 +1505,17 @@ function ABSOLUTION.make_cool_gfx()
   gui.set_colormap(3, colmaps[3])
   gui.set_colormap(4, colmaps[4])
 
-  -- patches (CEMENT1 .. CEMENT4)
-  gui.wad_logo_gfx("WALL52_1", "p", "PILL",   128,128, 1)
-  gui.wad_logo_gfx("WALL53_1", "p", "BOLT",   128,128, 2)
-  gui.wad_logo_gfx("WALL55_1", "p", "RELIEF", 128,128, 3)
-  gui.wad_logo_gfx("WALL54_1", "p", "CARVE",  128,128, 4)
+  -- patches
+  gui.wad_logo_gfx("TILEEB33", "p", "PILL",   128,128, 1)
+  gui.wad_logo_gfx("TILE0000", "p", "CARVE",   64, 64, 2)
+  gui.wad_logo_gfx("TILE0009", "p", "BOLT",    64, 64, 3)
 
   -- flats
+--[[ DISABLED : the Absolution.exe does not handle it (mucks up graphics)
   gui.wad_logo_gfx("O_PILL",   "f", "PILL",   64,64, 1)
-  gui.wad_logo_gfx("O_BOLT",   "f", "BOLT",   64,64, 2)
-  gui.wad_logo_gfx("O_RELIEF", "f", "RELIEF", 64,64, 3)
-  gui.wad_logo_gfx("O_CARVE",  "f", "CARVE",  64,64, 4)
+  gui.wad_logo_gfx("O_CARVE",  "f", "CARVE",  64,64, 2)
+  gui.wad_logo_gfx("O_BOLT",   "f", "BOLT",   64,64, 3)
+--]]
 end
 
 
