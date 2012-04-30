@@ -243,7 +243,7 @@ function AREA_CLASS.decide_picture(A)
     return
   end
 
-  local prob = style_sel("pictures", 0, 30, 60, 90)
+  local prob = style_sel("pictures", 0, 50, 85, 99)
 
   if A.room.zone.pictures and rand.odds(prob) then
     A.pic_name = rand.key_by_probs(A.room.zone.pictures)
