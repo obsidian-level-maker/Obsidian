@@ -3646,7 +3646,7 @@ DOOM.THEME_DEFAULTS =
 
   big_junctions =
   {
-    Junc_Ledge = 999
+    Junc_Ledge = 99
 
     Junc_Octo = 50
     Junc_Nuke_Pipes = 14
@@ -4978,7 +4978,7 @@ DOOM2.LEVEL_THEMES =
 
     big_junctions =
     {
-      Junc_Well = 9999
+      Junc_Well = 99
 
       Junc_Octo = 50
       Junc_Nuke_Pipes = 5
