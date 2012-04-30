@@ -1096,7 +1096,7 @@ QUAKE.SKINS =
 
     pic   = "DEM4_4"
     pic_w = 64
-    pic_h = 64
+    pic_h = 128
 
     light = 48
   }
