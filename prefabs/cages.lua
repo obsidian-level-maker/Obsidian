@@ -473,6 +473,136 @@ PREFAB.CAGE_3D_WALL_1 =
 }
 
 
+
+PREFAB.FAT_CAGE_PILLAR =
+{
+  fitted = "xyz"
+
+  z_range = { {16,1}, {240,0}, {16,7} }
+
+  defaults =
+  {
+    floor0 = "SLADWALL"
+    ceil0  = "SLADWALL"
+
+    support = "METAL"
+    side = "WOOD5"
+
+    floor2 = "CEIL4_2"
+    ceil2 = "FLAT1"
+    trim = "CEIL5_1"
+
+    lamp = "TLITE6_4"
+    lamp_side = "STEP5"
+
+    light = 100
+  }
+
+  brushes =
+  {
+    {
+      { x =   0, y =   0, mat = "?floor0" }
+      { x = 192, y =   0, mat = "?floor0" }
+      { x = 192, y = 192, mat = "?floor0" }
+      { x =   0, y = 192, mat = "?floor0" }
+      { t = 16, mat = "?floor0" }
+    }
+    {
+      { x =   0, y =   0, mat = "?ceil0" }
+      { x = 192, y =   0, mat = "?ceil0" }
+      { x = 192, y = 192, mat = "?ceil0" }
+      { x =   0, y = 192, mat = "?ceil0" }
+      { b = 256, mat = "?ceil0" }
+    }
+
+    {
+      { x =   8, y =   8, mat = "?side" }
+      { x = 184, y =   8, mat = "?side" }
+      { x = 184, y = 184, mat = "?side" }
+      { x =   8, y = 184, mat = "?side" }
+      { t = 80, mat = "?trim" }
+    }
+    {
+      { x =   8, y =   8, mat = "?side" }
+      { x = 184, y =   8, mat = "?side" }
+      { x = 184, y = 184, mat = "?side" }
+      { x =   8, y = 184, mat = "?side" }
+      { b = 192, mat = "?trim", light_add=32 }
+    }
+
+    {
+      { x =  16, y = 160, mat = "?support" }
+      { x =  32, y = 160, mat = "?support" }
+      { x =  32, y = 176, mat = "?support" }
+      { x =  16, y = 176, mat = "?support" }
+    }
+
+    {
+      { x =  16, y =  16, mat = "?support" }
+      { x = 176, y =  16, mat = "?support" }
+      { x = 176, y = 176, mat = "?support" }
+      { x =  16, y = 176, mat = "?support" }
+      { t = 80, mat = "?floor2" }
+    }
+    {
+      { x =  16, y =  16, mat = "?support" }
+      { x = 176, y =  16, mat = "?support" }
+      { x = 176, y = 176, mat = "?support" }
+      { x =  16, y = 176, mat = "?support" }
+      { b = 192, mat = "?ceil2", light_add=32 }
+    }
+
+    {
+      { x =  64, y =  64, mat = "?floor2" }
+      { x = 128, y =  64, mat = "?floor2" }
+      { x = 128, y = 128, mat = "?floor2" }
+      { x =  64, y = 128, mat = "?floor2" }
+      { t = 80, mat = "?floor2" }
+    }
+    {
+      { x =  64, y =  64, mat = "?lamp_side" }
+      { x = 128, y =  64, mat = "?lamp_side" }
+      { x = 128, y = 128, mat = "?lamp_side" }
+      { x =  64, y = 128, mat = "?lamp_side" }
+      { b = 184, mat = "?lamp", light_add=64 }
+    }
+
+    {
+      { x = 160, y = 160, mat = "?support" }
+      { x = 176, y = 160, mat = "?support" }
+      { x = 176, y = 176, mat = "?support" }
+      { x = 160, y = 176, mat = "?support" }
+    }
+
+    {
+      { x = 160, y =  16, mat = "?support" }
+      { x = 176, y =  16, mat = "?support" }
+      { x = 176, y =  32, mat = "?support" }
+      { x = 160, y =  32, mat = "?support" }
+    }
+
+    {
+      { x =  16, y =  16, mat = "?support" }
+      { x =  32, y =  16, mat = "?support" }
+      { x =  32, y =  32, mat = "?support" }
+      { x =  16, y =  32, mat = "?support" }
+    }
+
+    -- Z bounding box
+    {
+      { m = "bbox" }
+      { b = 0 }
+      { t = 272 }
+    }
+  }
+
+  entities =
+  {
+    { ent = "light", x = 96, y = 96, z = 168, light = "?light" }
+  }
+}
+
+
 ------------------------------------------------------------------------
 
 
