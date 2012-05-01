@@ -877,6 +877,13 @@ QUAKE.SKINS =
     _deep   = 64
   }
 
+  MiniHall_Arch1 =
+  {
+    _prefab = "FAT_ARCH1"
+    _shape  = "I"
+    _delta  = 0
+  }
+
 
   ----| DOORS |----
 
@@ -1611,6 +1618,8 @@ QUAKE.LEVEL_THEMES =
     caves = { Cave_generic=50 }
 
     outdoors = { Outdoors_generic=50 }
+
+    mini_halls = { MiniHall_Arch1 = 50 }
 
     pedestals = { Pedestal_gothic=50 }
 
