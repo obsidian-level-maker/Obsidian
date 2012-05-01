@@ -6,6 +6,19 @@ OBLIGE TODO
 Next WIP Goals
 --------------
 
+(5) Get QUAKE working well
+    DONE: some tech pictures
+    DONE: some castley pictures
+    - widen some computers
+    - hack to get pictures aligned correctly (e.g. "hack_picture" keyword)
+    DONE: MiniHall_Arch in castle theme
+    - wider locked door with key pics on side (via composition)
+    - key pic for normal locked door (above it)
+
+
+-----------------------------------------------------------------
+
+
 (3) 3D patterns in Quake:
 
     (a) have 'z1_cap' and 'z2_cap' fields in a chunk, ensure all
@@ -13,16 +26,13 @@ Next WIP Goals
 
         Problem: chunks may partially overlap!
 
-(5) Get QUAKE working well
-    DONE: some tech pictures
-    DONE: some castley pictures
-    - hack to get pictures aligned correctly (e.g. "hack_picture" keyword)
-
-
------------------------------------------------------------------
+        Solution: prevent chunks from spanning two "sub areas"
+                  (sub areas have same floor height but different ceilings)
 
 
 +  x_repeat should be a skin thang
+
+-  use 'pictures' in room themes, if exists
 
 
 +  have "hallway arches", specified in hallway groups, used in
@@ -44,15 +54,6 @@ Next WIP Goals
      _elevation = "short" / "medium" / "tall" / "lift"
 
      z_ranges = { {128,0,"?height"}, ... }  in prefab to make it reach target height
-
-
-++  think about how "mini halls" and "groups" interact
-
-    --> groups only apply to connected hallways (2+ sections)
-    
-    --> mini_halls connect two rooms, or a room and big junction
-
-    i.e. they are mutually exclusive
 
 
 +  mini hall room connection control:
