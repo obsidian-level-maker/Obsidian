@@ -492,9 +492,10 @@ PREFAB.FAT_CAGE_PILLAR =
     ceil2 = "FLAT1"
     trim = "CEIL5_1"
 
+    use_lamp = 1
+
     lamp = "TLITE6_4"
     lamp_side = "STEP5"
-
     light = 100
   }
 
@@ -553,13 +554,7 @@ PREFAB.FAT_CAGE_PILLAR =
     }
 
     {
-      { x =  64, y =  64, mat = "?floor2" }
-      { x = 128, y =  64, mat = "?floor2" }
-      { x = 128, y = 128, mat = "?floor2" }
-      { x =  64, y = 128, mat = "?floor2" }
-      { t = 80, mat = "?floor2" }
-    }
-    {
+      { m = "detail", only_if = "?use_lamp" }
       { x =  64, y =  64, mat = "?lamp_side" }
       { x = 128, y =  64, mat = "?lamp_side" }
       { x = 128, y = 128, mat = "?lamp_side" }
