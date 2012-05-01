@@ -346,7 +346,7 @@ ABSOLUTION.SKINS =
     special = 11
     tag = 0
 
-    q_sign = 1
+    use_sign = 1
     exit = "EXIT_SIGN"
     exitside = "BRICK1"
   }
@@ -370,7 +370,7 @@ ABSOLUTION.SKINS =
     sw_side = "METAL"
     sw_oy   = 32
 
-    q_sign = 0
+    use_sign = 0
 
     special = 11
     tag = 0

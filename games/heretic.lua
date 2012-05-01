@@ -469,7 +469,7 @@ HERETIC.SKINS =
     sw_side = "METL2"
     sw_oy   = 32
 
-    q_sign = 0
+    use_sign = 0
     exit = "METL2"
     exitside = "METL2"
 

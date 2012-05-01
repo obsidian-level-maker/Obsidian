@@ -28,7 +28,7 @@ PREFAB.EXIT_PILLAR =
     act = ""
     next_map = ""
 
-    q_sign = 0
+    use_sign = 0
 
     exit = "?wall"
     exitside = "?wall"
@@ -47,7 +47,7 @@ PREFAB.EXIT_PILLAR =
 
     -- exit signs
     {
-      { m = "solid", only_if = "?q_sign" }
+      { m = "solid", only_if = "?use_sign" }
       { x = -60, y = 44, mat = "?exitside" }
       { x = -32, y = 60, mat = "?exitside" }
       { x = -40, y = 68, mat = "?exit", peg=1, x_offset=0, y_offset=0 }
@@ -56,7 +56,7 @@ PREFAB.EXIT_PILLAR =
     }
 
     {
-      { m = "solid", only_if = "?q_sign" }
+      { m = "solid", only_if = "?use_sign" }
       { x = 60, y = 44, mat = "?exitside" }
       { x = 68, y = 52, mat = "?exit", peg=1, x_offset=0, y_offset=0 }
       { x = 40, y = 68, mat = "?exitside" }
@@ -65,7 +65,7 @@ PREFAB.EXIT_PILLAR =
     }
 
     {
-      { m = "solid", only_if = "?q_sign" }
+      { m = "solid", only_if = "?use_sign" }
       { x = -60, y = -44, mat = "?exitside" }
       { x = -68, y = -52, mat = "?exit", peg=1, x_offset=0, y_offset=0 }
       { x = -40, y = -68, mat = "?exitside" }
@@ -74,7 +74,7 @@ PREFAB.EXIT_PILLAR =
     }
 
     {
-      { m = "solid", only_if = "?q_sign" }
+      { m = "solid", only_if = "?use_sign" }
       { x = 60, y = -44, mat = "?exitside" }
       { x = 32, y = -60, mat = "?exitside" }
       { x = 40, y = -68, mat = "?exit", peg=1, x_offset=0, y_offset=0 }
@@ -185,7 +185,7 @@ PREFAB.EXIT_CLOSET =
 
     act = ""
 
-    q_sign = 0
+    use_sign = 0
   }
 
   brushes =
@@ -356,7 +356,7 @@ PREFAB.EXIT_CLOSET =
 
     -- exit sign
     {
-      { m = "solid", only_if = "?q_sign" }
+      { m = "solid", only_if = "?use_sign" }
       { x =  80, y = 172, mat = "?exitside" }
       { x = 112, y = 172, mat = "?exitside" }
       { x = 112, y = 180, mat = "?exit", x_offset=0, y_offset=0, peg=1 }

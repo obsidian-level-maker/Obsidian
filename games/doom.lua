@@ -1863,7 +1863,7 @@ DOOM.SKINS =
     switch = "SW1COMP"
     exit = "EXITSIGN"
     exitside = "COMPSPAN"
-    q_sign = 1
+    use_sign = 1
     special = 11
     tag = 0
   }
@@ -1876,7 +1876,7 @@ DOOM.SKINS =
     switch = { SW1LION=60, SW1GARG=30 }
     exit = "EXITSIGN"
     exitside = "COMPSPAN"
-    q_sign = 1
+    use_sign = 1
     special = 11
     tag = 0
   }
@@ -1889,7 +1889,7 @@ DOOM.SKINS =
     switch = "SW1WDMET"
     exit = "EXITSIGN"
     exitside = "COMPSPAN"
-    q_sign = 1
+    use_sign = 1
     special = 11
     tag = 0
   }
@@ -1915,9 +1915,10 @@ DOOM.SKINS =
 
     floor2 = { FLAT4=20, FLOOR0_1=20, FLOOR0_3=20, FLOOR1_1=20 }
 
+    use_sign = 1
     exit = "EXITSIGN"
     exitside = "COMPSPAN"
-    q_sign = 1
+
     switch  = "SW1COMM"
     sw_side = "SHAWN2"
 
@@ -1947,9 +1948,10 @@ DOOM.SKINS =
 
     floor2  = { SLIME09=10, FLOOR7_2=20, FLAT5_2=10, FLAT5_8=10 }
 
+    use_sign = 1
     exit = "EXITSIGN"
     exitside = "COMPSPAN"
-    q_sign = 1
+
     switch  = { SW1LION=10, SW1SATYR=30, SW1GARG=20 }
     sw_side = "METAL"
     sw_oy   = 56
@@ -1982,9 +1984,10 @@ DOOM.SKINS =
     floor2  = { FLAT5_2=30, CEIL5_1=15, CEIL4_2=15,
                 MFLR8_1=15, RROCK18=25, RROCK12=20 }
 
+    use_sign = 1
     exit = "EXITSIGN"
     exitside = "COMPSPAN"
-    q_sign = 1
+
     switch  = { SW1BRNGN=30, SW1ROCK=10, SW1SLAD=20, SW1TEK=20 }
     sw_side = "BROWNGRN"
     sw_oy   = 60
