@@ -149,7 +149,7 @@ PREFAB.PICTURE =
     {
       { x =  8, y =  4, mat = "?wall" }
       { x = 24, y =  4, mat = "?wall"  }
-      { x = 24, y =  8, mat = "?pic", peg="?peg", x_offset="?x_offset", y_offset="?y_offset", special="?scroll" }
+      { x = 24, y =  8, mat = "?pic", peg="?peg", x_offset="?x_offset", y_offset="?y_offset", special="?scroll", hack_align=1 }
       { x =  8, y =  8, mat = "?wall"  }
       { b = 32 }
       { t = 96 }
