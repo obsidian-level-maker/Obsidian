@@ -964,7 +964,8 @@ QUAKE.SKINS =
     pic_w = 64
     pic_h = 128
 
-    light = 192
+    light = 128  -- TODO: larger (e.g. 192 or 256)
+
     effect = { [0]=50, [10]=15, [4]=5 }
   }
 
@@ -978,7 +979,7 @@ QUAKE.SKINS =
     pic_w = 32
     pic_h = 64
 
-    light = 192
+    light = 128
   }
 
 
@@ -1553,7 +1554,7 @@ QUAKE.LEVEL_THEMES =
     {
       Pic_Computer1 = 40
       Pic_Computer2 = 40
-      Pic_Light07 = 90
+      Pic_Light07 = 70
       Pic_Light03 = 20
     }
 
