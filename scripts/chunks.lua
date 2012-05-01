@@ -997,11 +997,17 @@ function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
 end
 
 
-function CHUNK_CLASS.build_fence(C, dir)
+function CHUNK_CLASS.build_fence(C, dir, low_fence)
   local long = geom.vert_sel(dir, C.x2 - C.x1, C.y2 - C.y1)
   local deep = 16
 
-  local fence_h = C.room.max_floor_h + PARAM.jump_height
+  local fence_h  -- Note: bottom of the fence
+
+  if low_fence then
+    fence_h = C.area.floor_h + 8
+  else
+    fence_h = C.room.max_floor_h + PARAM.jump_height
+  end
 
   local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, fence_h, dir,
                                  0, long, deep, 0)
@@ -1311,7 +1317,7 @@ function CHUNK_CLASS.build(C)
          C:lower_area_can_fence(dir) and
          not (C.stair and C.stair.dir == dir)
       then
-        C:build_fence(dir)
+        C:build_fence(dir, "low")
       end
 
     end
