@@ -755,33 +755,6 @@ QUAKE.LIQUIDS =
 ----------------------------------------------------------------
 
 
-QUAKE.EXITS =
-{
-  exit_pad =
-  {
-    h=128,
-    switch_w="SW1SKULL",
-    exit_w="EXITSIGN", exit_h=16,
-    exitside="COMPSPAN",
-  }
-}
-
-
-QUAKE.PICTURES =
-{
-  carve =
-  {
-    count=1,
-    pic_w="O_CARVE", width=64, height=64, raise=64,
-    x_offset=0, y_offset=0,
-    side_t="METAL", floor="CEIL5_2", depth=8, 
-    light=0.7,
-  }
-}
-
-
-----------------------------------------------------------------
-
 QUAKE.SKIN_DEFAULTS =
 {
 }
@@ -817,18 +790,6 @@ QUAKE.SKINS =
 
     pad  = "TELE_TOP"
     side = "METAL1_1"
-  }
-
-  WALL_EXIT =
-  {
-    _prefab = "QUAKE_WALL_EXIT"  -- QUAKE_WALL_EXIT
-    _where  = "edge"
-    _long   = 192
-    _deep   = 64
-
-    pad = "TELE_TOP"
-
-    metal = "METAL1_1"
   }
 
 
