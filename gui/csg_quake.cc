@@ -1216,6 +1216,21 @@ static void DoCreateWallFace(quake_node_c *node, quake_leaf_c *leaf,
 
   F->SetupMatrix(&node->plane);
 
+  // FIXME: temporary hack for aligned pictures
+  if (face_props->getInt("hack_align"))
+  {
+    if (fabs(node->plane.nx) > 0.5)
+    {
+      F->s[3] = - bvert->y;
+    }
+    else
+    {
+      F->s[3] = - bvert->x;
+    }
+
+    F->t[3] = bvert->parent->t.z;
+  }
+
   node->AddFace(F);
   leaf->AddFace(F);
 
