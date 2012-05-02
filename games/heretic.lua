@@ -509,6 +509,109 @@ HERETIC.SKINS =
   }
 
 
+  Pic_Banner5 =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 288
+
+    pic   = "BANNER5"
+    pic_w = 64
+    pic_h = 128
+
+    light = 32
+  }
+
+  Pic_Banner7 =
+  {
+    _copy = "Pic_Banner5"
+
+    pic = { BANNER7=50, BANNER8=50 }
+  }
+
+  Pic_Saint =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "SAINT1"
+    pic_w = { [64]=50, [128]=50 }
+    pic_h = 128
+
+    light = 32
+  }
+
+  Pic_Mosaic5 =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "MOSAIC5"
+    pic_w = 64
+    pic_h = 128
+
+    light = 32
+  }
+
+  Pic_GrinSkull =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "GRSKULL3"
+    pic_w = 128
+    pic_h = 128
+
+    light = 32
+  }
+
+  Pic_Eagle =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "GRSTNPBW"
+    pic_w = 128
+    pic_h = 44
+
+    y_offset = 52
+
+    light = 32
+  }
+
+
+  BigPic_ChainMan =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 288
+
+    pic   = "CHAINMAN"
+    pic_w = 256
+    pic_h = 128
+
+    light = 32
+  }
+
+  BigPic_Horses =
+  {
+    _copy = "BigPic_ChainMan"
+
+    pic = "HORSES1"
+  }
+
+  BigPic_Sky =
+  {
+    _copy = "BigPic_ChainMan"
+
+    pic = "SKY2"
+  }
+
+
   ----| KEY |----
 
   Pedestal_1 =
@@ -1778,6 +1881,17 @@ HERETIC.THEME_DEFAULTS =
   doors = { d_wood=50, d_demon=15 }
 
   logos = { Pic_Carve=50, Pic_Pill=15 }
+
+  pictures =
+  {
+    Pic_Banner5 = 30
+    Pic_Banner7 = 30
+    Pic_Mosaic5 = 5
+
+    Pic_GrinSkull = 50
+    Pic_Saint = 60
+    Pic_Eagle = 40
+  }
 
   hallway_groups = { basic = 50 }
 
