@@ -1043,7 +1043,7 @@ function CHUNK_CLASS.build_scenic(C)
 end
 
 
-function CHUNK_CLASS.build_door(C, dir, LINK, long)
+function CHUNK_CLASS.build_door(C, dir, LINK, f_h, c_h, long)
   local lock = LINK.conn.lock
 
   local C2 = LINK.C2
@@ -1063,8 +1063,7 @@ function CHUNK_CLASS.build_door(C, dir, LINK, long)
                         "locked_doors", THEME.locked_doors, reqs)
 
   local name = rand.key_by_probs(poss_skins)
-
-  local skin  = assert(GAME.SKINS[name])
+  local skin = assert(GAME.SKINS[name])
 
   local skin2 = C:inner_outer_mat(L1, L2)
 
@@ -1366,7 +1365,7 @@ function CHUNK_CLASS.build(C)
     local LINK = C.link[dir]
 
     if LINK and LINK.conn and LINK.conn.lock and LINK.C1 == C then
-      C:build_door(dir, LINK, long)
+      C:build_door(dir, LINK, f_h, c_h, long)
     end
 
   end -- dir
