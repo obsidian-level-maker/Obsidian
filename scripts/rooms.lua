@@ -545,6 +545,22 @@ function ROOM_CLASS.add_exclusion_zone(R, kind, x1, y1, x2, y2, extra_dist)
 end
 
 
+function ROOM_CLASS.find_nonfacing_spot(R, x1, y1, x2, y2)
+  each zone in R.exclusion_zones do
+    if zone.kind == "nonfacing" and
+       geom.boxes_overlap(x1,y1, x2,y2, zone.x1,zone.y1, zone.x2,zone.y2)
+    then
+      local x = (zone.x1 + zone.x2) / 2
+      local y = (zone.y1 + zone.y2) / 2
+
+      return { x = x, y = y }
+    end
+  end
+
+  return nil  -- nothing touches
+end
+
+
 function ROOM_CLASS.num_crossovers(R)
   if R.crossover_hall then return 1 end
 

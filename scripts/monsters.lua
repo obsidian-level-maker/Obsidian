@@ -1339,32 +1339,35 @@ function Monsters_in_room(L)
   end
 
 
-  local function monster_angle(x, y, z)
+  local function monster_angle(spot, x, y, z)
     -- TODO: sometimes make all monsters (or a certain type) face
     --       the same direction, or look towards the entrance, or
     --       towards the guard_spot.
 
----    if rand.odds(40) then
-      return rand.irange(0,7) * 45
----    end
-
---[[  TODO
-    local delta = rand.irange(-1,1) * 45
-
-    if R.sh > R.sw then
-      if S.sy > (R.sy1 + R.sy2) / 2 then 
-        return 270 + delta
-      else
-        return 90 + delta
-      end
-    else
-      if S.sx > (R.sx1 + R.sx2) / 2 then 
-        return 180 + delta
-      else
-        return sel(delta < 0, 315, delta)
-      end
+    if spot.angle then
+      return spot.angle
     end
---]]
+
+    local face = spot.face or spot.face_away
+
+    if face then
+      local away = (face == spot.face_away)
+
+      local dir = geom.closest_dir(face.x - x, face.y - y)
+
+      if away then
+        dir = 10 - dir
+      end
+
+      local angle = geom.ANGLES[dir]
+
+      local delta = rand.irange(-1,1) * 45
+
+      return geom.angle_add(angle, delta)
+    end
+
+    -- fallback : purely random angle
+    return rand.irange(0,7) * 45
   end
 
 
@@ -1387,10 +1390,8 @@ function Monsters_in_room(L)
   end
 
 
-  local function place_monster(mon, x, y, z, angle, all_skills)
-    if not angle then
-      angle = monster_angle(x, y, z)
-    end
+  local function place_monster(mon, spot, x, y, z, all_skills)
+    local angle = monster_angle(spot, x, y, z)
 
     local ambush = rand.sel(70, 1, 0)
 
@@ -1471,7 +1472,7 @@ function Monsters_in_room(L)
       y = y + rand.range(-dy, dy)
     end
 
-    place_monster(mon, x, y, z, nil, all_skills)
+    place_monster(mon, spot, x, y, z, all_skills)
 
 --[[
     local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
@@ -1848,7 +1849,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       local all_skills = (i == 1)
       local loc = list[i]
 
-      place_monster(mon, loc.x, loc.y, loc.z, spot.angle, all_skills)
+      place_monster(mon, spot, loc.x, loc.y, loc.z, all_skills)
     end
   end
 

@@ -142,12 +142,10 @@ function AREA_CLASS.grab_spots(A)
   -- mark exclusion zones (e.g. area around a teleporter)
   -- do it _after_ getting the item spots
 
-  if L.exclusion_zones then
-    each zone in L.exclusion_zones do
-      if zone.kind == "empty" then
-        local poly = Brush_new_quad(zone.x1, zone.y1, zone.x2, zone.y2)
-        gui.spots_fill_poly(poly, 2)
-      end
+  each zone in L.exclusion_zones do
+    if zone.kind == "empty" then
+      local poly = Brush_new_quad(zone.x1, zone.y1, zone.x2, zone.y2)
+      gui.spots_fill_poly(poly, 2)
     end
   end
 
@@ -175,6 +173,8 @@ function AREA_CLASS.grab_spots(A)
   each spot in mon_spots do
     spot.z1 = A.floor_h
     spot.z2 = A.ceil_h  or (spot.z1 + 200)  -- FIXME
+
+    spot.face_away = L:find_nonfacing_spot(spot.x1, spot.y1, spot.x2, spot.y2)
 
     table.insert(L.mon_spots, spot)
   end
@@ -699,8 +699,8 @@ function Areas_important_stuff()
 
     -- no monsters near start spot, please
     if R.purpose == "START" then
-      R:add_exclusion_zone("empty",  C.x1, C.y1, C.x2, C.y2, 144)
-      R:add_exclusion_zone("facing", C.x1, C.y1, C.x2, C.y2, 768)
+      R:add_exclusion_zone("empty",     C.x1, C.y1, C.x2, C.y2, 144)
+      R:add_exclusion_zone("nonfacing", C.x1, C.y1, C.x2, C.y2, 768)
     end
 
     if R.purpose == "SOLUTION" then
@@ -781,8 +781,8 @@ function Areas_important_stuff()
 
     -- prevent monsters being close to it (in target room)
     if R == conn.L2 then
-      R:add_exclusion_zone("empty",  C.x1, C.y1, C.x2, C.y2, 144)
-      R:add_exclusion_zone("facing", C.x1, C.y1, C.x2, C.y2, 768)
+      R:add_exclusion_zone("empty",     C.x1, C.y1, C.x2, C.y2, 144)
+      R:add_exclusion_zone("nonfacing", C.x1, C.y1, C.x2, C.y2, 768)
     end
   end
 
