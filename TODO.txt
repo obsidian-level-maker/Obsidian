@@ -7,16 +7,7 @@ OBLIGE TODO
 Next WIP Goals
 --------------
 
-DONE:  in a non-closet start room, monster exclusion zone +
-       monster non-facing zone
-
-(5) Get QUAKE working well
-    DONE: some tech pictures
-    DONE: some castley pictures
-    DONE: widen some computers
-    DONE: hack to get pictures aligned correctly
-    DONE: MiniHall_Arch in castle theme
-    - wider locked door with key pics on side (via composition)
+all done!
 
 
 -----------------------------------------------------------------
@@ -32,6 +23,13 @@ DONE:  in a non-closet start room, monster exclusion zone +
         Solution: prevent chunks from spanning two "sub areas"
                   (sub areas have same floor height but different ceilings)
 
+
+Issue with prefab composition? x/y/z_ranges of a child prefab is only
+honored when it is inserted into the parent, NOT when the combined
+prefab is inserted into the target space.
+
+
++  doors are walls, hence should be XYZ fitted
 
 +  x_repeat should be a skin thang
 
