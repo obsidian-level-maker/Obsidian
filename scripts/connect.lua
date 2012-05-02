@@ -419,14 +419,13 @@ function Connect_start_room()
   room.purpose = "START"
 
   if LEVEL.special != "street" and
-     not (LEVEL.hub_links and Hub_find_link("START"))
+     not (LEVEL.hub_links and Hub_find_link("START")) and
+     rand.odds(80)
   then
 
     if room:add_closet("START") then
       room.has_start_closet = true
     end
-
-    --????  Hmmm, should clear room.purpose ??
   end
 end
 
