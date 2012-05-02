@@ -503,7 +503,7 @@ PREFAB.QUAKE_DOOR =
 
   team_models = true
 
-  x_ranges = { {8,1}, {24,0}, {128,0}, {24,0}, {8,1} }
+  x_ranges = { {16,1}, {160,0}, {16,1} }
 
   defaults =
   {
@@ -511,6 +511,7 @@ PREFAB.QUAKE_DOOR =
     step = "?wall"
 
     door_flags = 0
+    metal = "METAL1_2"
   }
 
   brushes =
@@ -548,16 +549,15 @@ PREFAB.QUAKE_DOOR =
       { x = 160, y = 48, mat = "?wall" }
       { x = 160, y = 24, mat = "?outer" }
     }
-
   }
 
   models =
   {
     -- left side
     {
-      x1 = 32, x2 = 96,  x_face = { mat="METAL1_2" }
+      x1 = 32, x2 = 96,  x_face = { mat="?metal" }
       y1 = 16, y2 = 32,  y_face = { mat="?door", u1=0, u2=64, v1=2, v2=150 }
-      z1 =  8, z2 = 136, z_face = { mat="METAL1_2" }
+      z1 =  8, z2 = 136, z_face = { mat="?metal" }
 
       entity =
       {
@@ -570,9 +570,9 @@ PREFAB.QUAKE_DOOR =
 
     -- right side
     {
-      x1 = 96, x2 = 160, x_face = { mat="METAL1_2" }
+      x1 = 96, x2 = 160, x_face = { mat="?metal" }
       y1 = 16, y2 =  32, y_face = { mat="?door", u1=64, u2=128, v1=2, v2=150 }
-      z1 =  8, z2 = 136, z_face = { mat="METAL1_2" }
+      z1 =  8, z2 = 136, z_face = { mat="?metal" }
 
       entity =
       {
