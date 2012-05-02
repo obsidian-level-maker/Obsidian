@@ -1919,8 +1919,8 @@ function Fab_composition(parent, parent_skin)
   -- This function is called by Fab_apply_skins() and never needs
   -- to be called by other code.
 
-  local function transform_child(brush, fab_name, skin, dir)
-    local child = Fab_create(fab_name)
+  local function transform_child(brush, skin, dir)
+    local child = Fab_create(skin._prefab)
 
     Fab_apply_skins(child, { parent_skin, skin })
 
@@ -1960,11 +1960,15 @@ function Fab_composition(parent, parent_skin)
     if B[1].m == "prefab" then
       table.remove(parent.brushes, index)
 
-      local child_name = assert(B[1].prefab)
-      local child_skin = B[1].skin or {}
+      local child_name = assert(B[1].skin)
+      local child_skin = GAME.SKINS[child_name]
       local child_dir  = B[1].dir or 2
 
-      transform_child(B, child_name, child_skin, child_dir)
+      if not child_skin then
+        error("prefab compostion: no such skin: " .. tostring(child_name))
+      end
+
+      transform_child(B, child_skin, child_dir)
     end
   end
 end
