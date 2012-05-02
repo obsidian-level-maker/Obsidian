@@ -503,7 +503,7 @@ PREFAB.QUAKE_DOOR =
 
   team_models = true
 
-  x_ranges = { {16,1}, {160,0}, {16,1} }
+  x_ranges = { {8,1}, {128,0}, {8,1} }
 
   defaults =
   {
@@ -518,44 +518,44 @@ PREFAB.QUAKE_DOOR =
   {
     -- step
     {
-      { x =  32, y =  0, mat = "?step" }
-      { x = 160, y =  0, mat = "?step" }
-      { x = 160, y = 48, mat = "?step" }
-      { x =  32, y = 48, mat = "?step" }
+      { x =   8, y =  0, mat = "?step" }
+      { x = 136, y =  0, mat = "?step" }
+      { x = 136, y = 48, mat = "?step" }
+      { x =   8, y = 48, mat = "?step" }
       { t = 8, mat = "?step" }
     }
 
     -- door frame
     {
-      { x = 0,  y =  0, mat = "?outer" }
-      { x = 32, y =  0, mat = "?outer" }
-      { x = 32, y = 24, mat = "?wall" }
-      { x = 32, y = 48, mat = "?wall" }
-      { x = 0,  y = 48, mat = "?wall" }
+      { x =  0, y =  0, mat = "?outer" }
+      { x =  8, y =  0, mat = "?outer" }
+      { x =  8, y = 24, mat = "?wall" }
+      { x =  8, y = 48, mat = "?wall" }
+      { x =  0, y = 48, mat = "?wall" }
     }
 
     {
-      { x = 32,  y =  0, mat = "?outer" }
-      { x = 160, y =  0, mat = "?wall" }
-      { x = 160, y = 48, mat = "?wall" }
-      { x = 32,  y = 48, mat = "?wall" }
+      { x =   8, y =  0, mat = "?outer" }
+      { x = 136, y =  0, mat = "?wall" }
+      { x = 136, y = 48, mat = "?wall" }
+      { x =   8, y = 48, mat = "?wall" }
       { b = 136, mat = "?wall" }
     }
 
     {
-      { x = 160, y =  0, mat = "?outer" }
-      { x = 192, y =  0, mat = "?wall" }
-      { x = 192, y = 48, mat = "?wall" }
-      { x = 160, y = 48, mat = "?wall" }
-      { x = 160, y = 24, mat = "?outer" }
+      { x = 136, y =  0, mat = "?outer" }
+      { x = 144, y =  0, mat = "?wall" }
+      { x = 144, y = 48, mat = "?wall" }
+      { x = 136, y = 48, mat = "?wall" }
+      { x = 136, y = 24, mat = "?outer" }
     }
   }
 
   models =
   {
-    -- left side
+    -- left door
     {
-      x1 = 32, x2 = 96,  x_face = { mat="?metal" }
+      x1 =  8, x2 = 72,  x_face = { mat="?metal" }
       y1 = 16, y2 = 32,  y_face = { mat="?door", u1=0, u2=64, v1=2, v2=150 }
       z1 =  8, z2 = 136, z_face = { mat="?metal" }
 
@@ -568,9 +568,9 @@ PREFAB.QUAKE_DOOR =
       }
     }
 
-    -- right side
+    -- right door
     {
-      x1 = 96, x2 = 160, x_face = { mat="?metal" }
+      x1 = 72, x2 = 136, x_face = { mat="?metal" }
       y1 = 16, y2 =  32, y_face = { mat="?door", u1=64, u2=128, v1=2, v2=150 }
       z1 =  8, z2 = 136, z_face = { mat="?metal" }
 
@@ -589,6 +589,9 @@ PREFAB.QUAKE_DOOR_W_KEY_PIC =
   fitted = "xy"
 
   team_models = true
+
+  -- this keeps the door 128 units wide and the pics 32 units wide
+  x_ranges = { {24,1},{32,0},{24,1}, {144,0}, {24,1},{32,0},{24,1} }
 
   brushes =
   {
@@ -617,8 +620,8 @@ PREFAB.QUAKE_DOOR_W_KEY_PIC =
     {
       { m = "prefab", skin = "?door_sub" }
       { x =  80, y =  0 }
-      { x = 272, y =  0 }
-      { x = 272, y = 48 }
+      { x = 224, y =  0 }
+      { x = 224, y = 48 }
       { x =  80, y = 48 }
       { b = 0 }
     }
@@ -626,20 +629,20 @@ PREFAB.QUAKE_DOOR_W_KEY_PIC =
     -- right
     {
       { m = "prefab", skin = "?key_sub", dir = 8 }
-      { x = 272, y =  0 }
-      { x = 352, y =  0 }
-      { x = 352, y = 24 }
-      { x = 272, y = 24 }
+      { x = 224, y =  0 }
+      { x = 304, y =  0 }
+      { x = 304, y = 24 }
+      { x = 224, y = 24 }
       { b = 0 }
       { t = 128 }
     }
 
     {
       { m = "prefab", skin = "?key_sub", dir = 2 }
-      { x = 272, y = 24 }
-      { x = 352, y = 24 }
-      { x = 352, y = 48 }
-      { x = 272, y = 48 }
+      { x = 224, y = 24 }
+      { x = 304, y = 24 }
+      { x = 304, y = 48 }
+      { x = 224, y = 48 }
       { b = 0 }
       { t = 128 }
     }
