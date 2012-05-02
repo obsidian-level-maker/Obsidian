@@ -2197,19 +2197,19 @@ function Fab_size_check(skin, long, deep)
 
   if long and skin._long then
     if type(skin._long) == "number" then
-      if math.abs(long - skin._long) > 0.1 then return false end
+      if long < skin._long then return false end
     else
-      if long < skin._long[1] - 0.1 then return false end
-      if long > skin._long[2] + 0.1 then return false end
+      if long < skin._long[1] then return false end
+      if long > skin._long[2] then return false end
     end
   end
 
   if deep and skin._deep then
     if type(skin._deep) == "number" then
-      if math.abs(deep - skin._deep) > 0.1 then return false end
+      if deep < skin._deep then return false end
     else
-      if deep < skin._deep[1] - 0.1 then return false end
-      if deep > skin._deep[2] + 0.1 then return false end
+      if deep < skin._deep[1] then return false end
+      if deep > skin._deep[2] then return false end
     end
   end
 
