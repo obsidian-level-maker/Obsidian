@@ -2,18 +2,21 @@
 OBLIGE TODO
 ===========
 
+>>> FAT_CAGE_PILLAR
 
 Next WIP Goals
 --------------
 
+DONE:  in a non-closet start room, monster exclusion zone +
+       monster non-facing zone
+
 (5) Get QUAKE working well
     DONE: some tech pictures
     DONE: some castley pictures
-    - widen some computers
-    - hack to get pictures aligned correctly (e.g. "hack_picture" keyword)
+    DONE: widen some computers
+    DONE: hack to get pictures aligned correctly
     DONE: MiniHall_Arch in castle theme
     - wider locked door with key pics on side (via composition)
-    - key pic for normal locked door (above it)
 
 
 -----------------------------------------------------------------
@@ -33,6 +36,13 @@ Next WIP Goals
 +  x_repeat should be a skin thang
 
 -  use 'pictures' in room themes, if exists
+
+
++  Need logic to decide how to light up a room (windows vs wall
+   lights vs ceilings lights etc).
+
+-  separate (or at least mark) pictures that serve as main light
+   sources for an area / room.  [QUAKE]
 
 
 +  have "hallway arches", specified in hallway groups, used in

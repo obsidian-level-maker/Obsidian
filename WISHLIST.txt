@@ -2,14 +2,14 @@
 OBLIGE WISH-LIST
 ================
 
-*  get more games working (Hexen, Duke Nukem 3D, etc)
+*  get more games working (see below)
 
 *  support for Traps, Cages, Secrets, Powerups
 
 *  add in more scenery: lamps, computers etc
 
 
-*  escapable slime pits
+*  liquid areas (escapable too)
 
 *  symmetrical rooms
 
