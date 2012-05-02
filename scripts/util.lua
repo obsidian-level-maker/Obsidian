@@ -664,6 +664,16 @@ function geom.is_perpendic(dir1, dir2)
 end
 
 
+function geom.angle_add(A, B)
+  -- result ranges from 0 to 360
+  local D = A + B
+
+  while D <    0 do D = D + 360 end
+  while D >= 360 do D = D - 360 end
+
+  return D
+end
+
 function geom.angle_diff(A, B)
   -- A + result = B
   -- result ranges from -180 to +180
