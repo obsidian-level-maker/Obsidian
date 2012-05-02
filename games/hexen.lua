@@ -458,6 +458,7 @@ HEXEN.MATERIALS =
   SPAWN01  = { t="SPAWN01",  f="F_042", color=0x2f302f }
   SPAWN05  = { t="SPAWN05",  f="F_042", color=0x30302f }
   SPAWN08  = { t="SPAWN08",  f="F_065", color=0x201c17 }
+  SPAWN10  = { t="SPAWN10",  f="F_065", color=0x201c17 }
   SPAWN11  = { t="SPAWN11",  f="F_078", color=0x202920 }
   SPAWN13  = { t="SPAWN13",  f="F_042", color=0x3e3f3d }
   STEEL01  = { t="STEEL01",  f="F_074", color=0x372417 }
@@ -999,6 +1000,114 @@ HEXEN.SKINS =
     pic_h = 64
 
     light = 64
+  }
+
+
+  Pic_DemonCross =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "SPAWN10"
+    pic_w = 128
+    pic_h = 128
+
+    light = 32
+  }
+
+  Pic_DemonFace =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "MONK23"
+    pic_w = 128
+    pic_h = 128
+
+    light = 32
+  }
+
+  Pic_DemonFace2 =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "SPAWN13"
+    pic_w = 64
+    pic_h = 64
+
+    light = 32
+  }
+
+  Pic_DemonFace3 =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "FIRE14"
+    pic_w = 64
+    pic_h = 56
+
+    y_offset = 40
+
+    light = 32
+  }
+
+  Pic_Dragon =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = { MONK09=50, MONK11=50 }
+    pic_w = 128
+    pic_h = 64
+
+    y_offset = 48
+
+    light = 32
+  }
+
+  Pic_Doggy =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "MONK08"
+    pic_w = 88
+    pic_h = 84
+
+    x_offset = 20
+    y_offset = 20
+
+    light = 32
+  }
+
+  Pic_SwordGuy =
+  {
+    _copy = "Pic_Doggy"
+
+    pic = "TOMB06"
+  }
+
+  Pic_Saint =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "WINNOW02"
+    pic_w = 96
+    pic_h = 128
+
+    x_offset = 16
+
+    light = 32
   }
 
 
@@ -1674,6 +1783,19 @@ HEXEN.THEME_DEFAULTS =
                    Door_SW_1 = 50 }
 
   logos = { Pic_Carve=50, Pic_Bolt=25, Pic_Pill=15 }
+
+  pictures =
+  {
+    Pic_DemonCross = 40
+    Pic_DemonFace = 15
+    Pic_DemonFace2 = 10
+    Pic_DemonFace3 = 5
+
+    Pic_Dragon = 50
+    Pic_Doggy = 20
+    Pic_SwordGuy = 30
+    Pic_Saint = 30
+  }
 
   mini_halls = { Hall_Basic_I = 50 }
 
@@ -5636,7 +5758,7 @@ OB_THEMES["hexen_ice"] =
   label = "Ice"
   for_games = { hexen=1 }
   name_theme = "GOTHIC"
-  mixed_prob = 20
+  mixed_prob = 10
 }
 
 OB_THEMES["hexen_swamp"] =
