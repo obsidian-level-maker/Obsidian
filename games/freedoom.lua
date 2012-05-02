@@ -27,8 +27,6 @@ FREEDOOM = { }
 
 function FREEDOOM.setup()
 
-  GAME.sky_info = FREEDOOM.SKY_INFO
-
   -- FreeDOOM is lacking some scenery sprites
 
   GAME.ENTITIES.hang_arm_pair = nil
