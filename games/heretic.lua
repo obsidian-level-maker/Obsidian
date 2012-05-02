@@ -366,41 +366,8 @@ HERETIC.LIQUIDS =
 }
 
 
-
-HERETIC.STEPS =  -- OLD STUFF
-{
-  step1 = { step_w="STEP1", side_w="BROWNHUG", top_f="FLOOR7_1" }
-}
-
-
-HERETIC.PICTURES =  -- OLD STUFF
-{
-  -- Note: this includes pictures that only work on DOOM1 or DOOM2.
-  -- It is not a problem, because the game-specific sub-themes will
-  -- only reference the appropriate entries.
-
-  pill =
-  {
-    count=1,
-    pic_w="O_PILL", width=128, height=32, raise=16,
-    x_offset=0, y_offset=0,
-    side_t="METL2", floor="FLOOR30", depth=8, 
-    light=0.7,
-  }
-
-  carve =
-  {
-    count=1,
-    pic_w="O_CARVE", width=64, height=64,
-    x_offset=0, y_offset=0,
-    side_t="METL2", floor="FLOOR30", depth=8, 
-    light=0.7,
-  }
-
-}
-
-
 ----------------------------------------------------------------
+
 
 HERETIC.SKINS =
 {

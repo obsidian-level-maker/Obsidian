@@ -1702,24 +1702,8 @@ QUAKE2.SKINS =
 } -- end of QUAKE2.SKINS
 
 
-
 ----------------------------------------------------------------
 
-
-QUAKE2.PICTURES =
-{
-  carve =
-  {
-    count=1,
-    pic_w="O_CARVE", width=64, height=64, raise=64,
-    x_offset=0, y_offset=0,
-    side_t="METAL", floor="CEIL5_2", depth=8, 
-    light=0.7,
-  }
-}
-
-
-----------------------------------------------------------------
 
 QUAKE2.THEME_DEFAULTS =
 {
