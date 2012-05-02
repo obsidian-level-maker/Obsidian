@@ -2956,11 +2956,12 @@ DOOM.SKINS =
     _prefab = "JUNCTION_NUKEY_C"
     _shape  = "C"
     _liquid = 1
-    _long   = 576
-    _deep   = 576
+    _long   = { 576,576 }
+    _deep   = { 576,576 }
 
     island = { FLOOR3_3=50, FLOOR0_3=50, MFLR8_2=10 }
     ceil   = { CEIL5_1=30, FLAT10=10, CEIL3_5=40, CEIL4_2=30 }
+
     support = "SUPPORT3"
     support_ox = 24
 
@@ -3650,11 +3651,11 @@ DOOM.THEME_DEFAULTS =
 
   big_junctions =
   {
-    Junc_Ledge = 99
+    Junc_Ledge = 60
 
     Junc_Octo = 50
     Junc_Nuke_Pipes = 14
-    Junc_Nuke_Islands = 40  -- size restriction means this is fairly rare
+    Junc_Nuke_Islands = 70  -- size restriction means this is fairly rare
     Junc_Spokey = 10
     Junc_Circle_tech = 40
   }
