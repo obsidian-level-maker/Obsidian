@@ -1445,7 +1445,6 @@ QUAKE.THEME_DEFAULTS =
     Locked_gold_wide = 900
 
     Door_SW_1 = 50
-    Door_SW_wide = 900
   }
 
   arches = { Arch1 = 50 }
