@@ -3651,8 +3651,7 @@ DOOM.THEME_DEFAULTS =
 
   big_junctions =
   {
-    Junc_Ledge = 60
-
+    Junc_Ledge = 80
     Junc_Octo = 50
     Junc_Nuke_Pipes = 14
     Junc_Nuke_Islands = 70  -- size restriction means this is fairly rare

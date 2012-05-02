@@ -1123,10 +1123,10 @@ QUAKE.SKINS =
 
   Locked_silver_wide =
   {
-    _prefab = "QUAKE_DOOR"
+    _prefab = "QUAKE_DOOR_W_KEY_PIC"
     _where  = "edge"
     _key    = "k_silver"
-    _long = 192
+    _long = 320
     _deep = 48
 
     door_sub = "Locked_silver"
@@ -1135,10 +1135,10 @@ QUAKE.SKINS =
 
   Locked_gold_wide =
   {
-    _prefab = "QUAKE_DOOR"
+    _prefab = "QUAKE_DOOR_W_KEY_PIC"
     _where  = "edge"
     _key    = "k_silver"
-    _long = 192
+    _long = 320
     _deep = 48
 
     door_sub = "Locked_gold"
