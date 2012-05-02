@@ -531,16 +531,17 @@ function ROOM_CLASS.straddles_concave_corner(R, sx1, sy1, sx2, sy2)
 end
 
 
-function ROOM_CLASS.add_exclusion_zone(R, x1, y1, x2, y2, extra_dist)
-  local ZONE =
+function ROOM_CLASS.add_exclusion_zone(R, kind, x1, y1, x2, y2, extra_dist)
+  local zone =
   {
+    kind = kind
     x1 = x1 - (extra_dist or 0)
     y1 = y1 - (extra_dist or 0)
     x2 = x2 + (extra_dist or 0)
     y2 = y2 + (extra_dist or 0)
   }
 
-  table.insert(R.exclusion_zones, ZONE)
+  table.insert(R.exclusion_zones, zone)
 end
 
 

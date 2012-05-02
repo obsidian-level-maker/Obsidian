@@ -718,11 +718,6 @@ function CHUNK_CLASS.content_teleporter(C)
 
 
   Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
-
-  -- prevent monsters being close to it (in target room)
-  if C.room and conn.L2 == C.room then
-    C.room:add_exclusion_zone(C.x1, C.y1, C.x2, C.y2, 288)
-  end
 end
 
 

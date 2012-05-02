@@ -144,8 +144,10 @@ function AREA_CLASS.grab_spots(A)
 
   if L.exclusion_zones then
     each zone in L.exclusion_zones do
-      local poly = Brush_new_quad(zone.x1, zone.y1, zone.x2, zone.y2)
-      gui.spots_fill_poly(poly, 2)
+      if zone.kind == "empty" then
+        local poly = Brush_new_quad(zone.x1, zone.y1, zone.x2, zone.y2)
+        gui.spots_fill_poly(poly, 2)
+      end
     end
   end
 
@@ -695,6 +697,12 @@ function Areas_important_stuff()
 
     C.content.kind = R.purpose
 
+    -- no monsters near start spot, please
+    if R.purpose == "START" then
+      R:add_exclusion_zone("empty",  C.x1, C.y1, C.x2, C.y2, 144)
+      R:add_exclusion_zone("facing", C.x1, C.y1, C.x2, C.y2, 768)
+    end
+
     if R.purpose == "SOLUTION" then
       local lock = assert(R.purpose_lock)
 
@@ -769,6 +777,12 @@ function Areas_important_stuff()
         if conn.L1 == R then conn.C1 = C
     elseif conn.L2 == R then conn.C2 = C
     else   error("add_teleporter failure (bad conn?)")
+    end
+
+    -- prevent monsters being close to it (in target room)
+    if R == conn.L2 then
+      R:add_exclusion_zone("empty",  C.x1, C.y1, C.x2, C.y2, 144)
+      R:add_exclusion_zone("facing", C.x1, C.y1, C.x2, C.y2, 768)
     end
   end
 
