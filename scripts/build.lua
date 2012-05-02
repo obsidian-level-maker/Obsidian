@@ -1924,15 +1924,19 @@ function Fab_composition(parent, parent_skin)
 
     Fab_apply_skins(child, { parent_skin, skin })
 
-    -- FIXME: support arbitrary rectangles (rotation etc)
+    -- TODO: support arbitrary rectangles (rotation etc)
 
     local bx1, by1, bx2, by2 = Brush_bbox(brush)
 
     local low_z  = Brush_get_b(brush)
-    local high_z = Brush_get_t(brush)  -- not used (Fixme?)
+    local high_z = Brush_get_t(brush)
 
     local T = Trans.box_transform(bx1, by1, bx2, by2, low_z, dir)
      
+    if child.fitted and string.find(child.fitted, "z") then
+      Trans.set_fitted_z(T, low_z, high_z)
+    end
+
     Fab_transform_XY(child, T)
     Fab_transform_Z (child, T)
 
