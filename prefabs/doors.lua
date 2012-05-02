@@ -594,11 +594,21 @@ PREFAB.QUAKE_DOOR_W_KEY_PIC =
   {
     -- left
     {
-      { m = "prefab", skin = "?key_sub" }
+      { m = "prefab", skin = "?key_sub", dir = 8 }
       { x =  0, y =  0 }
-      { x = 64, y =  0 }
-      { x = 64, y = 24 }
+      { x = 80, y =  0 }
+      { x = 80, y = 24 }
       { x =  0, y = 24 }
+      { b = 0 }
+      { t = 128 }
+    }
+
+    {
+      { m = "prefab", skin = "?key_sub", dir = 2 }
+      { x =  0, y = 24 }
+      { x = 80, y = 24 }
+      { x = 80, y = 48 }
+      { x =  0, y = 48 }
       { b = 0 }
       { t = 128 }
     }
@@ -606,23 +616,34 @@ PREFAB.QUAKE_DOOR_W_KEY_PIC =
     -- door
     {
       { m = "prefab", skin = "?door_sub" }
-      { x =  64, y =  0 }
-      { x = 256, y =  0 }
-      { x = 256, y = 48 }
-      { x =  64, y = 48 }
+      { x =  80, y =  0 }
+      { x = 272, y =  0 }
+      { x = 272, y = 48 }
+      { x =  80, y = 48 }
       { b = 0 }
     }
 
     -- right
     {
-      { m = "prefab", skin = "?key_sub" }
-      { x = 256, y =  0 }
-      { x = 320, y =  0 }
-      { x = 320, y = 24 }
-      { x = 256, y = 24 }
+      { m = "prefab", skin = "?key_sub", dir = 8 }
+      { x = 272, y =  0 }
+      { x = 352, y =  0 }
+      { x = 352, y = 24 }
+      { x = 272, y = 24 }
       { b = 0 }
       { t = 128 }
     }
+
+    {
+      { m = "prefab", skin = "?key_sub", dir = 2 }
+      { x = 272, y = 24 }
+      { x = 352, y = 24 }
+      { x = 352, y = 48 }
+      { x = 272, y = 48 }
+      { b = 0 }
+      { t = 128 }
+    }
+
   }
 }
 

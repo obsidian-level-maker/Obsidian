@@ -1172,18 +1172,6 @@ QUAKE.SKINS =
     effect = 5
   }
 
-  Pic_Gears =
-  {
-    _prefab = "PICTURE"
-    _where  = "edge"
-    
-    pic = "KEY03_3"
-    pic_w = 32
-    pic_h = 32
-
-    light = 32
-  }
-
 
   ----| SWITCHED DOORS |---- 
 
@@ -1199,6 +1187,31 @@ QUAKE.SKINS =
     message = "Find the button dude!"
     wait = -1
   }
+
+  Door_SW_wide =
+  {
+    _prefab = "QUAKE_DOOR_W_KEY_PIC"
+    _where  = "edge"
+    _switch = "sw_foo"
+    _long = 320
+    _deep = 32
+
+    door_sub = "Door_SW_1"
+     key_sub = "Pic_Gears"
+  }
+
+  Pic_Gears =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    
+    pic = "KEY03_3"
+    pic_w = 64
+    pic_h = 64
+
+    light = 64
+  }
+
 
   Switch_1_Edge =
   {
@@ -1424,8 +1437,16 @@ QUAKE.THEME_DEFAULTS =
 
   switch_fabs = { Switch_floor1 = 50 }
 
-  locked_doors = { Locked_silver = 50, Locked_gold = 50,
-                   Door_SW_1 = 50 }
+  locked_doors =
+  {
+    Locked_silver = 50
+    Locked_gold = 50
+    Locked_silver_wide = 900
+    Locked_gold_wide = 900
+
+    Door_SW_1 = 50
+    Door_SW_wide = 900
+  }
 
   arches = { Arch1 = 50 }
 
