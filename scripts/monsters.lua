@@ -908,8 +908,6 @@ end
 
 function Monsters_in_room(L)
 
-  local R = L  -- FIXME: REMOVE (when hallway monsters work)
-
 
   local CAGE_REUSE_FACTORS = { 5, 20, 60, 200 }
 
