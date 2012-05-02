@@ -781,7 +781,7 @@ function Areas_important_stuff()
 
     -- prevent monsters being close to it (in target room)
     if R == conn.L2 then
-      R:add_exclusion_zone("empty",     C.x1, C.y1, C.x2, C.y2, 144)
+      R:add_exclusion_zone("empty",     C.x1, C.y1, C.x2, C.y2, 224)
       R:add_exclusion_zone("nonfacing", C.x1, C.y1, C.x2, C.y2, 768)
     end
   end
