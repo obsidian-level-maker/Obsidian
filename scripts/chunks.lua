@@ -1043,6 +1043,51 @@ function CHUNK_CLASS.build_scenic(C)
 end
 
 
+function CHUNK_CLASS.build_door(C, dir, LINK, long)
+  local lock = LINK.conn.lock
+
+  local C2 = LINK.C2
+  local L2 = C2.room or C2.hall
+  local L1 = C .room or C .hall
+  assert(L2)
+
+  local reqs = { where="edge", long=long, key=lock.key, switch=lock.switch }
+
+  if ( C.hall and  C.hall.group.narrow) or
+     (C2.hall and C2.hall.group.narrow)
+  then
+    reqs.narrow = 1
+  end
+
+  local poss_skins = Rooms_filter_skins(C.room or C.hall,
+                        "locked_doors", THEME.locked_doors, reqs)
+
+  local name = rand.key_by_probs(poss_skins)
+
+  local skin  = assert(GAME.SKINS[name])
+
+  local skin2 = C:inner_outer_mat(L1, L2)
+
+  local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
+                                 0, long, skin._deep or 48, 0)
+
+  if lock.kind == "KEY" then
+    -- Quake II bits
+    skin2.keyname = lock.key
+    skin2.targetname = "door" .. Plan_alloc_id("door")
+
+  elseif lock.kind == "SWITCH" then
+    skin2.tag = lock.tag
+    skin2.targetname = string.format("switch%d", skin2.tag)
+
+  else
+    error("Unknown lock kind: " .. tostring(lock.kind))
+  end
+
+  Fabricate(skin._prefab, T, { skin, skin2 })
+end
+
+
 function CHUNK_CLASS.build_fat_arch(C)
   
   local LINK, dir
@@ -1314,7 +1359,6 @@ function CHUNK_CLASS.build(C)
       then
         C:build_fence(dir, "low")
       end
-
     end
 
 
@@ -1322,47 +1366,7 @@ function CHUNK_CLASS.build(C)
     local LINK = C.link[dir]
 
     if LINK and LINK.conn and LINK.conn.lock and LINK.C1 == C then
-      local lock = LINK.conn.lock
-
-      local C2 = LINK.C2
-      local L2 = C2.room or C2.hall
-      local L1 = C .room or C .hall
-      assert(L2)
-
-      local reqs = { where="edge", key=lock.key, switch=lock.switch }
-
-      if ( C.hall and  C.hall.group.narrow) or
-         (C2.hall and C2.hall.group.narrow)
-      then
-        reqs.narrow = 1
-      end
-
-      local poss_skins = Rooms_filter_skins(C.room or C.hall,
-                            "locked_doors", THEME.locked_doors, reqs)
-
-      local name = rand.key_by_probs(poss_skins)
-
-      local skin  = assert(GAME.SKINS[name])
-
-      local skin2 = C:inner_outer_mat(L1, L2)
-
-      local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
-                                     0, long, skin._deep or 48, 0)
-
-      if lock.kind == "KEY" then
-        -- Quake II bits
-        skin2.keyname = lock.key
-        skin2.targetname = "door" .. Plan_alloc_id("door")
-
-      elseif lock.kind == "SWITCH" then
-        skin2.tag = lock.tag
-        skin2.targetname = string.format("switch%d", skin2.tag)
-
-      else
-        error("Unknown lock kind: " .. tostring(lock.kind))
-      end
-
-      Fabricate(skin._prefab, T, { skin, skin2 })
+      C:build_door(dir, LINK, long)
     end
 
   end -- dir
