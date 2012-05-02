@@ -503,6 +503,8 @@ PREFAB.QUAKE_DOOR =
 
   team_models = true
 
+  x_ranges = { {8,1}, {24,0}, {128,0}, {24,0}, {8,1} }
+
   defaults =
   {
     door = "DR05_2"
@@ -582,10 +584,11 @@ PREFAB.QUAKE_DOOR =
 }
 
 
-PREFAB.QUAKE_DOOR_W_KEY_PIC =  -- Experiment of prefab composition
+PREFAB.QUAKE_DOOR_W_KEY_PIC =
 {
   fitted = "xy"
-  team_models = true,
+
+  team_models = true
 
   brushes =
   {
@@ -594,9 +597,10 @@ PREFAB.QUAKE_DOOR_W_KEY_PIC =  -- Experiment of prefab composition
       { m = "prefab", skin = "?key_sub" }
       { x =  0, y =  0 }
       { x = 64, y =  0 }
-      { x = 64, y = 48 }
-      { x =  0, y = 48 }
-      { b = 32 }
+      { x = 64, y = 24 }
+      { x =  0, y = 24 }
+      { b = 0 }
+      { t = 128 }
     }
 
     -- door
@@ -614,9 +618,10 @@ PREFAB.QUAKE_DOOR_W_KEY_PIC =  -- Experiment of prefab composition
       { m = "prefab", skin = "?key_sub" }
       { x = 256, y =  0 }
       { x = 320, y =  0 }
-      { x = 320, y = 48 }
-      { x = 256, y = 48 }
-      { b = 32 }
+      { x = 320, y = 24 }
+      { x = 256, y = 24 }
+      { b = 0 }
+      { t = 128 }
     }
   }
 }

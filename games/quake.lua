@@ -1102,7 +1102,7 @@ QUAKE.SKINS =
     _where  = "edge"
     _key    = "k_silver"
     _long = 192
-    _deep = 32
+    _deep = 48
 
     door = "DOOR01_2"
     door_flags = 16  -- 16 = DOOR_SILVER_KEY
@@ -1114,10 +1114,74 @@ QUAKE.SKINS =
     _where  = "edge"
     _key    = "k_gold"
     _long = 192
-    _deep = 32
+    _deep = 48
 
     door = "DOOR01_2"
-    door_flags = 8,  -- 8 = DOOR_GOLD_KEY
+    door_flags = 8   -- 8 = DOOR_GOLD_KEY
+  }
+
+
+  Locked_silver_wide =
+  {
+    _prefab = "QUAKE_DOOR"
+    _where  = "edge"
+    _key    = "k_silver"
+    _long = 192
+    _deep = 48
+
+    door_sub = "Locked_silver"
+    key_sub  = "Pic_SilverKey"
+  }
+
+  Locked_gold_wide =
+  {
+    _prefab = "QUAKE_DOOR"
+    _where  = "edge"
+    _key    = "k_silver"
+    _long = 192
+    _deep = 48
+
+    door_sub = "Locked_gold"
+    key_sub  = "Pic_GoldKey"
+  }
+
+
+  Pic_SilverKey =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    
+    pic = "KEY03_1"
+    pic_w = 32
+    pic_h = 32
+
+    light = 64
+    effect = 5
+  }
+
+  Pic_GoldKey =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    
+    pic = "KEY03_2"
+    pic_w = 32
+    pic_h = 32
+
+    light = 64
+    effect = 5
+  }
+
+  Pic_Gears =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    
+    pic = "KEY03_3"
+    pic_w = 32
+    pic_h = 32
+
+    light = 32
   }
 
 
