@@ -962,7 +962,7 @@ function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
 
     -- FIXME: big hack !!!!!
     if (OB_CONFIG.game == "heretic" or OB_CONFIG.game == "hexen") and C.room and C.room.zone.fake_windows 
-       and c_h >= f_h + 200
+       and info.c_min - info.f_max >= 200
     then
       local skin2 = { pic="STNGLS1", pic_w=128, pic_h=128 }
       Fabricate("PICTURE_WINDOW", T, { skin, skin2 })
