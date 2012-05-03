@@ -632,13 +632,15 @@ function Trans.clear_cap()
 end
 
 
-function Trans.dump(title)
+function Trans.dump(T, title)
   -- debugging aid : show current transform
 
-  gui.debugf("%s:\n", title or "Current Transform")
+  gui.debugf("%s:\n", title or "Transform")
 
-  local T = Trans.TRANSFORM
-  assert(T)
+  if not T then
+    T = Trans.TRANSFORM
+    assert(T)
+  end
 
   if T.mirror_x then gui.debugf("  mirror_x = %1.0f\n", T.mirror_x) end
   if T.mirror_y then gui.debugf("  mirror_y = %1.0f\n", T.mirror_y) end
