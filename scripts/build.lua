@@ -2056,7 +2056,7 @@ function Fab_repetition_X(fab, T)
     error("x_repeat used in loose prefab")
   end
 
-  local count = math.ceil(T.fitted_x / fab.x_repeat)
+  local count = math.floor(T.fitted_x / fab.x_repeat)
 
   if count <= 1 then return end
 
