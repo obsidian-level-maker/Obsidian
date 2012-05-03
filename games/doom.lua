@@ -4346,8 +4346,8 @@ DOOM.ROOM_THEMES =
     {
       FLAT1 = 50
       CEIL1_1 = 20
+      CEIL3_5 = 25
       MFLR8_1 = 30
-      CELL3_5 = 25
       FLAT5_4 = 20
     }
   }
