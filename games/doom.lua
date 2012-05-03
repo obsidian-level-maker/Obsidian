@@ -3390,6 +3390,7 @@ DOOM.SKINS =
     _prefab = "PICTURE"
     _where  = "edge"
     _long   = 64
+    _repeat = 96
 
     pic   = "LITE3"
     pic_w = 32
