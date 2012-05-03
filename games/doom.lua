@@ -1976,7 +1976,7 @@ DOOM.SKINS =
     key_ox = 24
 
     inner = { BIGBRIK3=20, WOOD9=10, STONE=10, WOODMET1=35,
-              CEMENT8=5, PANEL6=20 }
+              CEMENT9=5, PANEL6=20 }
     
     ceil = { RROCK04=20, RROCK13=20, RROCK03=10, 
              FLAT10=20, FLOOR6_2=10, FLAT4=20 }
@@ -3640,6 +3640,8 @@ DOOM.THEME_DEFAULTS =
 
   teleporters = { Teleporter1 = 10, Teleporter_Closet = 80 }
 
+  logos = { Pic_Carve=50, Pic_Pill=50, Pic_Neon=20 }
+
   windows = { Window1 = 50 }
 
   fences = { Fence1 = 50 }
@@ -4734,7 +4736,7 @@ DOOM1.LEVEL_THEMES =
     caves     = { D1_Hell_cave=50 }
 
 
-    logos = { carve=90, pill=50, neon=5 }
+    __logos = { carve=90, pill=50, neon=5 }
 
     pictures =
     {
