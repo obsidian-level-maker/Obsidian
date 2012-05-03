@@ -54,7 +54,7 @@ void Default_Location(void)
   }
 
   char base[32];
-  sprintf(base, "OB_TEST");  //  "OB_%3x", OBLIGE_HEX_VER);
+  sprintf(base, "OBTEST");  //  "OB%3x", OBLIGE_HEX_VER);
 
   strcat(last_file, base);
 
