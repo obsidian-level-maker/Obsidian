@@ -1987,6 +1987,10 @@ end
 
 function Fab_repetition_X(fab, T)
 
+  local orig_brushes  = #fab.brushes
+  local orig_models   = #fab.models
+  local orig_entities = #fab.entities
+
   local function copy_brush(B, x_offset, y_offset)
     local B2 = {}
 
@@ -2032,17 +2036,17 @@ function Fab_repetition_X(fab, T)
 
   local function replicate_w_offsets(x_offset, y_offset)
     -- cannot use 'each B in' since we are changing the list (adding new ones)
-    for index = 1, #fab.brushes do
+    for index = 1, orig_brushes do
       local B = fab.brushes[index]
       copy_brush(B, x_offset, y_offset)
     end
 
-    for index = 1, #fab.models do
+    for index = 1, orig_models do
       local M = fab.models[index]
       copy_model(M, x_offset, y_offset)
     end
 
-    for index = 1, #fab.entities do
+    for index = 1, orig_entities do
       local E = fab.entities[index]
       copy_entity(E, x_offset, y_offset)
     end
