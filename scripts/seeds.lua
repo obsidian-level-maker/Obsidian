@@ -85,7 +85,7 @@ end
 
 
 function SEED_CLASS.used(S)
-  return S.room or S.hall or S.scenic or S.chunk
+  return S.room or S.hall or S.scenic or S.chunk or not table.empty(S.chunks)
 end
 
 

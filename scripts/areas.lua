@@ -2184,19 +2184,19 @@ Areas_dump_vhr(R)
       -- try to make bigger chunks
       local sw, sh = 1, 1
 
-      if x > 1 and x < G.sx2 and not SEEDS[x+1][y].chunk and
+      if x > 1 and x < G.sx2 and not SEEDS[x+1][y]:used() and
          not R:straddles_concave_corner(x, y, x + sw, y + sh - 1)
       then
         sw = 2
       end
 
-      if y > 1 and y < G.sy2 and not SEEDS[x][y+1].chunk and
+      if y > 1 and y < G.sy2 and not SEEDS[x][y+1]:used() and
          not R:straddles_concave_corner(x, y, x + sw - 1, y + sh)
       then
         sh = 2
       end
 
-      if sw == 2 and sh == 2 and SEEDS[x+1][y+1].chunk then
+      if sw == 2 and sh == 2 and SEEDS[x+1][y+1]:used() then
         sh = 1
       end 
 
