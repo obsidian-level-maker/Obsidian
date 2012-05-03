@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2010 Andrew Apted
+--  Copyright (C) 2006-2012 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -269,15 +269,20 @@ end
 
 ----------------------------------------------------------------
 
-UNFINISHED["tnt"] =
+OB_GAMES["tnt"] =
 {
   label = "TNT Evilution"
 
   extends = "doom2"
+
+  tables =
+  {
+    TNT
+  }
 }
 
 
-OB_THEMES["tnt_egypt"] =
+UNFINISHED["tnt_egypt"] =
 {
   ref = "EGYPT"
   label = "Egypt"
