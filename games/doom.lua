@@ -3791,6 +3791,8 @@ DOOM.HALLWAY_GROUPS =
       Hall_Thin_C_Oh = 5
       Hall_Thin_T_Oh = 20
       Hall_Thin_P_Oh = 50
+
+      Hall_Basic_P = 1  -- TODO (needed since Hall_Thin_P_Oh is large)
     }
   }
 
