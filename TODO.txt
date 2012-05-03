@@ -2,13 +2,6 @@
 OBLIGE TODO
 ===========
 
->>> FAT_CAGE_PILLAR
-
-Next WIP Goals
---------------
-
-all done!
-
 
 -----------------------------------------------------------------
 
@@ -29,11 +22,15 @@ honored when it is inserted into the parent, NOT when the combined
 prefab is inserted into the target space.
 
 
-+  doors are walls, hence should be XYZ fitted
+-  FAT_CAGE_PILLAR
+
+-  doors are walls, hence should be XYZ fitted
 
 +  x_repeat should be a skin thang
 
 -  use 'pictures' in room themes, if exists
+
+-  do mirroring in prefab space (only really need X)
 
 
 +  Need logic to decide how to light up a room (windows vs wall
@@ -82,8 +79,6 @@ PATTERN LOGIC : skip patterns if (a) multiple levels,
 
 
 +  fix monsters stuck in doors / corners of chunks
-
-+  fix fat doors (x_ranges) : QUAKE
 
 
 -----------------------------------------------------------------
