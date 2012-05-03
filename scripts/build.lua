@@ -1639,6 +1639,11 @@ function Fab_apply_skins(fab, list)
 
   brush_stuff()
 
+  -- grab repeat vars from skin
+  fab.x_repeat = SKIN._x_repeat
+  fab.y_repeat = SKIN._y_repeat
+  fab.z_repeat = SKIN._z_repeat
+
   SKIN = nil
 end
 
