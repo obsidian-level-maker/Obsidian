@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2012 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -114,13 +114,25 @@ void UI_MiniMap::MapFinish()
 
 void UI_MiniMap::MapCorner(int x, int y, int dx, int dy)
 {
+  // we want to match the nearby background, but the "plastic" scheme
+  // changes the color in a way we cannot easily duplicate.  This is an
+  // approximation and may not work on different OSes.
+  Fl_Color nearby_bg = fl_color_average(BUILD_BG, FL_WHITE, 0.5);
+
   u8_t r, g, b;
 
-  Fl::get_color(BUILD_BG, r, g, b);
+  Fl::get_color(nearby_bg, r, g, b);
 
   RawPixel(x+dx*0, y+dy*0, r, g, b);
+  RawPixel(x+dx*1, y+dy*1, r, g, b);
+
   RawPixel(x+dx*1, y+dy*0, r, g, b);
+  RawPixel(x+dx*2, y+dy*0, r, g, b);
+  RawPixel(x+dx*3, y+dy*0, r, g, b);
+
   RawPixel(x+dx*0, y+dy*1, r, g, b);
+  RawPixel(x+dx*0, y+dy*2, r, g, b);
+  RawPixel(x+dx*0, y+dy*3, r, g, b);
 }
 
 
