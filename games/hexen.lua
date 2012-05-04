@@ -2856,7 +2856,7 @@ HEXEN.ROOM_THEMES =
       X_FIRE01=30
     }
     
-    hallways  = { Fire_room=50 }
+    hallways = { Fire_room1=50 }
   }
 
   Fire_outdoors =
