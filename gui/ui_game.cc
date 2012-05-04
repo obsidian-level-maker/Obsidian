@@ -116,7 +116,7 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
   seed = new Fl_Int_Input(cx, cy, 66+KF*6, 24+KF*2, "Seed: ");
   seed->align(FL_ALIGN_LEFT);
   seed->selection_color(FL_BLUE);
-  seed->maximum_size(5);
+  seed->maximum_size(6);
   seed->callback(callback_Seed, this);
   seed->value("1");
 
