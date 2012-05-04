@@ -99,6 +99,8 @@ public:
 
   csg_brush_c *liquid;
 
+  bool degenerate;
+
   // used by DOOM and QUAKE Clipping (etc)
   int index;
 

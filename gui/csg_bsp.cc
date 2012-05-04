@@ -257,13 +257,13 @@ brush_vert_c * snag_c::FindBrushVert(const csg_brush_c *B)
 //------------------------------------------------------------------------
 
 region_c::region_c() : snags(), brushes(), entities(), gaps(),
-                       liquid(NULL), index(-1)
+                       liquid(NULL), degenerate(false), index(-1)
 { }
 
 
 region_c::region_c(const region_c& other) :
     snags(), brushes(), entities(), gaps(),
-    liquid(NULL), index(-1)
+    liquid(NULL), degenerate(false), index(-1)
 {
   for (unsigned int i = 0 ; i < other.brushes.size() ; i++)
     brushes.push_back(other.brushes[i]);
@@ -894,8 +894,9 @@ static void DivideOneRegion(region_c *R, partition_c *part,
 
   // --- add the mini snags ---
 
-  SYS_ASSERT(along_max > along_min + SNAG_EPSILON);
+  // FIXME: SYS_ASSERT(along_max > along_min + SNAG_EPSILON);
 
+  if (along_max > along_min + SNAG_EPSILON);
   {
     double x1, y1;
     double x2, y2;
@@ -910,12 +911,18 @@ static void DivideOneRegion(region_c *R, partition_c *part,
   // check if new regions are degenerate, don't keep them
 
   if (R->snags.size() < 3)
+  {
+    R->degenerate = true;
     LogPrintf("WARNING: region degenerated (%u snags)\n", R->snags.size());
+  }
   else
     front.AddRegion(R);
 
   if (N->snags.size() < 3)
+  {
+    N->degenerate = true;
     LogPrintf("WARNING: region degenerated (%u snags)\n", N->snags.size());
+  }
   else
     back.AddRegion(N);
 }
@@ -1269,10 +1276,17 @@ static void CollectAllSnags(std::vector<snag_c *> & list)
   {
     region_c *R = all_regions[i];
 
+    if (R->degenerate)
+      continue;
+
     for (unsigned k = 0 ; k < R->snags.size() ; k++)
-      // ensure it got merged (false for degenerate regions)
-      if (R->snags[k]->region)
-        list.push_back(R->snags[k]);
+    {
+      snag_c *S = R->snags[k];
+
+      SYS_ASSERT(S->region);
+
+      list.push_back(S);
+    }
   }
 }
 
@@ -1359,13 +1373,18 @@ static void RemoveDeadRegions()
   {
     region_c *R = local_list[i];
 
-    if (! R->snags.empty())
+    bool dead = R->snags.empty() || R->degenerate;
+
+    if (! dead)
     {
       all_regions.push_back(R);
       continue;
     }
 
     lost_ents += (int)R->entities.size();
+
+    // snags exist in the all_snags vector, don't free them twice
+    R->snags.clear();
 
     delete R;
   }
@@ -1536,10 +1555,15 @@ static void BuildNeighborMap()
       snag_c *S = R->snags[k];
       snag_c *T = S->partner;
 
+      if (! S->region)
+        continue;
+
       if (! T || ! T->region)
         continue;
 
-      SYS_ASSERT(T->region != R);
+      // FIXME??  SYS_ASSERT(T->region != R);
+      if (T->region == R)
+        continue;
 
       // no need to repeat the checks (only do one side)
       if (T->region >= R)
