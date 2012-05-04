@@ -750,13 +750,16 @@ static void DivideOneSnag(snag_c *S, partition_c *part,
                           double *along_min, double *along_max)
 {
 	// get relationship of lines to each other
-	double a = PerpDist(S->x1,S->y1, part->x1,part->y1,part->x2,part->y2);
-	double b = PerpDist(S->x2,S->y2, part->x1,part->y1,part->x2,part->y2);
+	double a = PerpDist(S->x1,S->y1, part->x1,part->y1, part->x2,part->y2);
+	double b = PerpDist(S->x2,S->y2, part->x1,part->y1, part->x2,part->y2);
 
 	int a_side = (a < -SNAG_EPSILON) ? -1 : (a > SNAG_EPSILON) ? +1 : 0;
 	int b_side = (b < -SNAG_EPSILON) ? -1 : (b > SNAG_EPSILON) ? +1 : 0;
 
   // THIS SHOULD NOT HAPPEN
+  // [regions are convex, therefore a side sitting on the partition means
+  //  the whole region lies completely on one side of the partition, and
+  //  TestSide() should have detected that]
   if (a_side == 0 && b_side == 0)
   {
     // TODO: a softer landing
@@ -1836,22 +1839,9 @@ static void AddMiniMapLine(region_c *R, snag_c *S)
     if (fabs(f1 - f2) < 0.1 && fabs(c1 - c2) < 0.1)
       return;
 
-    if (MIN(c1, c2) < MAX(f1, f2) + 52.5)
-    {
-      r = 255; g = 0; b = 0;
-    }
-    else if (fabs(f1 - f2) > 24.5)
-    {
-      r = 0; g = 255; b = 160;
-    }
-    else if (fabs(c1 - c2) > 30.5)
-    {
-      r = 96; g = 192; b = 255;
-    }
-    else
-    {
-      r = g = b = 160;
-    }
+    r = 96;
+    g = 160;
+    b = 224;
   }
 
   main_win->build_box->mini_map->DrawLine(x1,y1, x2,y2, r,g,b);
