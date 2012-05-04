@@ -1182,7 +1182,7 @@ do return end ----!!!!!!!
       end
     end end
 
-    assert(min_floor < max_ceil)
+--!!!! FIXME  assert(min_floor < max_ceil)
 
     return min_floor, max_ceil
   end
@@ -1196,6 +1196,9 @@ do return end ----!!!!!!!
     local l_mat = LEVEL.liquid.mat
 
     local f_h, c_h = heights_near_island(island)
+
+    -- FIXME!! should not happen
+    if f_h >= c_h then return end
 
     f_h = f_h - 24
     c_h = c_h + 64
