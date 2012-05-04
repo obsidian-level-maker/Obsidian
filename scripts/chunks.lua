@@ -734,7 +734,7 @@ function CHUNK_CLASS.content_hub_gate(C)
   skin2.  dest_id  = C.content.dest_id
   skin2.  dest_map = C.content.dest_map
 
-stderrf("content_hub_gate: to map %d : %d --> %d\n", skin2.dest_map, skin2.source_id, skin2.dest_id)
+-- stderrf("content_hub_gate: to map %d : %d --> %d\n", skin2.dest_map, skin2.source_id, skin2.dest_id)
 
 ---FIXME Hexen II and Quake II support
 ---??  skin2. in_target = string.format("tele%d", skin2. in_tag)
