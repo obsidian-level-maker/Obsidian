@@ -226,6 +226,8 @@ ABSOLUTION.MATERIALS =
   RED_LIGHT = { t="TILE7424", f="FTILEA79" }
   GRN_LIGHT = { t="TILE10D0", f="FTILEA79" }
 
+  PLAT_SIDE = { t="TILEE747", f="FTILE1D2" }
+
 
   -- urban --
 
@@ -705,8 +707,8 @@ ABSOLUTION.SKINS =
     _shape  = "IL"
     _tags   = 1
 
-    lift = "DOORSTON"
-    top  = "FLOOR08"
+    lift = "PLAT_SIDE"
+    top  = "PLAT_SIDE"
 
     lift_h = 128
     lift_delta = -8
