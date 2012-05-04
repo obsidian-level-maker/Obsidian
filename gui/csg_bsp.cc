@@ -314,6 +314,20 @@ bool region_c::RemoveSnag(snag_c *S)
 }
 
 
+void region_c::DebugDump()
+{
+  DebugPrintf("Region %p: has %u snags\n", this, snags.size());
+
+  for (unsigned int i = 0 ; i < snags.size() ; i++)
+  {
+    snag_c *S = snags[i];
+
+    DebugPrintf("  %d: Snag %p (%1.4f %1.4f) -> (%1.4f %1.4f)\n",
+                i, S, S->x1, S->y1, S->x2, S->y2);
+  }
+}
+
+
 void region_c::AddBrush(csg_brush_c *P)
 {
   brushes.push_back(P);
@@ -587,9 +601,9 @@ static bool OnSameLine(double x1,double y1, double x2,double y2,
 }
 
 
-static bool RegionHasFlattened(region_c *R)
+bool region_c::HasFlattened() const
 {
-  SYS_ASSERT(! R->snags.empty());
+  SYS_ASSERT(! snags.empty());
 
   unsigned int k;
 
@@ -598,9 +612,9 @@ static bool RegionHasFlattened(region_c *R)
 
   // step 1: find a left-most and right-most coordinate
 
-  for (k = 0 ; k < R->snags.size() ; k++)
+  for (k = 0 ; k < snags.size() ; k++)
   {
-    snag_c *S = R->snags[k];
+    snag_c *S = snags[k];
 
     if (S->x1 < left_x) { left_x = S->x1; left_y = S->y1; }
     if (S->x2 < left_x) { left_x = S->x2; left_y = S->y2; }
@@ -616,9 +630,9 @@ static bool RegionHasFlattened(region_c *R)
   if (fabs(right_x - left_x) < DIST)
     return true;
 
-  for (k = 0 ; k < R->snags.size() ; k++)
+  for (k = 0 ; k < snags.size() ; k++)
   {
-    snag_c *S = R->snags[k];
+    snag_c *S = snags[k];
 
     if (! OnSameLine(left_x,left_y, right_x,right_y, S, DIST))
       return false;
@@ -682,7 +696,7 @@ static void CreateRegion(group_c & root, csg_brush_c *P)
   }
 
   if (R->snags.size() < 3 || max_qx <= min_qx || max_qy <= min_qy ||
-      RegionHasFlattened(R))
+      R->HasFlattened())
   {
     // degenerate region : skip it
     delete R;
@@ -760,20 +774,11 @@ static void DivideOneSnag(snag_c *S, partition_c *part,
   // [regions are convex, therefore a side sitting on the partition means
   //  the whole region lies completely on one side of the partition, and
   //  TestSide() should have detected that]
+  // HOWEVER: sometimes regions are a tiny bit broken
   if (a_side == 0 && b_side == 0)
   {
-    // TODO: a softer landing
-    Main_FatalError("DivideOneSnag: region contains snag along partition line!\n");
-
-#if 0
 		// this snag runs along the same line as the partition.
 		// check whether it goes in the same direction or the opposite.
-    S->on_node = true;
-
-    // FIXME: is this correct??
-    if (S->partner)
-      S->partner->on_node = true;
-
 		if (VectorSameDir(part->x2 - part->x1, part->y2 - part->y1,
                       S->x2 - S->x1, S->y2 - S->y1))
 		{
@@ -783,8 +788,8 @@ static void DivideOneSnag(snag_c *S, partition_c *part,
 		{
       back->AddSnag(S);
 		}
+
 		return;
-#endif
   }
 
 
@@ -846,6 +851,8 @@ static void DivideOneSnag(snag_c *S, partition_c *part,
 static void DivideOneRegion(region_c *R, partition_c *part,
                             group_c & front, group_c & back)
 {
+  SYS_ASSERT(! R->snags.empty());
+
   int side = R->TestSide(part);
 
   if (side > 0)
@@ -882,8 +889,8 @@ static void DivideOneRegion(region_c *R, partition_c *part,
     DivideOneSnag(S, part, R, N, &along_min, &along_max);
   }
 
-  front.AddRegion(R);
-   back.AddRegion(N);
+  SYS_ASSERT(! R->snags.empty());
+  SYS_ASSERT(! N->snags.empty());
 
   // --- add the mini snags ---
 
@@ -896,12 +903,21 @@ static void DivideOneRegion(region_c *R, partition_c *part,
     AlongCoord(along_min, part->x1,part->y1, part->x2,part->y2, &x1, &y1);
     AlongCoord(along_max, part->x1,part->y1, part->x2,part->y2, &x2, &y2);
 
-    snag_c *front_S = new snag_c(x1,y1, x2,y2, part);
-    snag_c * back_S = new snag_c(x2,y2, x1,y1, part);
-
-    R->AddSnag(front_S);
-    N->AddSnag(back_S);
+    R->AddSnag(new snag_c(x1,y1, x2,y2, part));
+    N->AddSnag(new snag_c(x2,y2, x1,y1, part));
   }
+
+  // check if new regions are degenerate, don't keep them
+
+  if (R->snags.size() < 3)
+    LogPrintf("WARNING: region degenerated (%u snags)\n", R->snags.size());
+  else
+    front.AddRegion(R);
+
+  if (N->snags.size() < 3)
+    LogPrintf("WARNING: region degenerated (%u snags)\n", N->snags.size());
+  else
+    back.AddRegion(N);
 }
 
 
@@ -1254,7 +1270,9 @@ static void CollectAllSnags(std::vector<snag_c *> & list)
     region_c *R = all_regions[i];
 
     for (unsigned k = 0 ; k < R->snags.size() ; k++)
-      list.push_back(R->snags[k]);
+      // ensure it got merged (false for degenerate regions)
+      if (R->snags[k]->region)
+        list.push_back(R->snags[k]);
   }
 }
 
@@ -1317,17 +1335,10 @@ static void AddBoundingRegion(group_c & group)
   // create the dummy region
   region_c *R = new region_c;
 
-  snag_c *snags[4];
-
-  snags[0] = new snag_c(map_x1, map_y1, map_x1, map_y2, NULL);
-  snags[1] = new snag_c(map_x1, map_y2, map_x2, map_y2, NULL);
-  snags[2] = new snag_c(map_x2, map_y2, map_x2, map_y1, NULL);
-  snags[3] = new snag_c(map_x2, map_y1, map_x1, map_y1, NULL);
-
-  for (int n = 0 ; n < 4 ; n++)
-  {
-    R->snags.push_back(snags[n]);
-  }
+  R->AddSnag(new snag_c(map_x1, map_y1, map_x1, map_y2, NULL));
+  R->AddSnag(new snag_c(map_x1, map_y2, map_x2, map_y2, NULL));
+  R->AddSnag(new snag_c(map_x2, map_y2, map_x2, map_y1, NULL));
+  R->AddSnag(new snag_c(map_x2, map_y1, map_x1, map_y1, NULL));
 
   group.AddRegion(R);
 
@@ -1747,6 +1758,7 @@ void CSG_BSP(double grid, bool is_clip_hull)
 
   group_c root;
 
+  // create a region for every brush
   for (unsigned int i = 0 ; i < all_brushes.size() ; i++)
     CreateRegion(root, all_brushes[i]);
 

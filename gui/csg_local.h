@@ -135,7 +135,11 @@ public:
   // this requires CSG_SortBrushes() to have been called earlier
   bool HasSameBrushes(const region_c *other) const;
 
+  bool HasFlattened() const;
+
   void ClockwiseSnags();
+
+  void DebugDump();
 };
 
 
