@@ -686,9 +686,7 @@ PREFAB.SECRET_NICHE_1 =
     item4 = "none"
 
     secret_wall = "?wall"
-
-    special = 31
-    effect  = 17
+    secret_kind = 9
 
     -- Hexen stuff
     act = ""
@@ -739,7 +737,7 @@ PREFAB.SECRET_NICHE_1 =
       { x = 160, y =  16, mat = "?wall" }
       { x = 160, y = 192, mat = "?wall" }
       { x =  32, y = 192, mat = "?wall" }
-      { t = 8, mat = "?floor", special = 9 }
+      { t = 8, mat = "?floor" }
     }
 
     -- ceiling
@@ -755,18 +753,27 @@ PREFAB.SECRET_NICHE_1 =
     {
       { x =  32, y = 176, mat = "?wall" }
       { x = 160, y = 176, mat = "?wall" }
-      { x = 160, y = 192, mat = "?secret_wall", special="?special", act="?act", arg1="?tag", arg2="?speed", peg=1, y_offset=19 }
+      { x = 160, y = 192, mat = "?secret_wall", special="?special", tag="?tag", act="?act", arg1="?tag", arg2="?speed", peg=1, y_offset=19 }
       { x =  32, y = 192, mat = "?wall" }
       { b = 32, delta_z=-23, mat = "?wall", tag = "?tag" }
     }
 
     -- lighting
     {
-      { m = "light", add = 64, effect = "?effect" }
-      { x =  32, y =  16 }
-      { x = 160, y =  16 }
+      { m = "light", add = 48 }
+      { x =  32, y = 176 }
+      { x = 160, y = 176 }
       { x = 160, y = 192 }
       { x =  32, y = 192 }
+    }
+
+    -- secret (abusing a light brush for this)
+    {
+      { m = "light", add = 32, effect = "?secret_kind" }
+      { x =  32, y =  16 }
+      { x = 160, y =  16 }
+      { x = 160, y = 176 }
+      { x =  32, y = 176 }
     }
   }
   

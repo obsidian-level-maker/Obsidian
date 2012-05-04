@@ -2116,11 +2116,14 @@ DOOM.SKINS =
   {
     _prefab = "SECRET_NICHE_1"
     _where  = "closet"
+    _tags   = 1
     _long   = { 192,384 }
     _deep   = { 192,384 }
 
     item = { backpack=50, blue_armor=50, soul=30, berserk=30,
              invul=10, invis=10, map=10, goggles=5 }
+
+    special = 103  -- open and stay open
   }
 
 
