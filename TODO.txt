@@ -6,6 +6,10 @@ OBLIGE TODO
 -----------------------------------------------------------------
 
 
+!!  REVIEW the 'mon_along' calculation, ideally take it out of
+    the game specific code (can modify it via PARAM or THEME).
+
+
 (3) 3D patterns in Quake:
 
     (a) have 'z1_cap' and 'z2_cap' fields in a chunk, ensure all
@@ -21,6 +25,8 @@ Issue with prefab composition? x/y/z_ranges of a child prefab is only
 honored when it is inserted into the parent, NOT when the combined
 prefab is inserted into the target space.
 
+
++  HEXEN and QUAKE : fix hallway lifts
 
 -  FAT_CAGE_PILLAR
 
@@ -39,9 +45,14 @@ prefab is inserted into the target space.
 -  separate (or at least mark) pictures that serve as main light
    sources for an area / room.  [QUAKE]
 
+Idea: GAME.SCOPED_VARS table which is like styles but (a) fields can
+      be used in prefabs (b) a _scope field can be "zone", "level",
+      "room", "episode" -- value remains constant over that scope.
 
 +  have "hallway arches", specified in hallway groups, used in
    indoor rooms where the hallway meets the room.
+
+-  prevent jumping over sky-hall sides (esp. QUAKE and HEXEN)
 
 
 >>>  big_junction hallways : use 'mini_halls' instead of a hallway group

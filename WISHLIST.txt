@@ -411,9 +411,6 @@ Mazes:
   MONSTERS / ITEMS
 ----------------------------------------------------------------
 
-++  REVIEW the 'mon_along' calculation, ideally take it out of
-    the game specific code (can modify it via PARAM or THEME).
-
 +  in later levels, low-level monsters should be used in bigger swarms
 
 -  support "Swarms" : a group of 3-N monsters (either a
