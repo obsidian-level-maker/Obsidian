@@ -1137,7 +1137,7 @@ QUAKE.SKINS =
   {
     _prefab = "QUAKE_DOOR_W_KEY_PIC"
     _where  = "edge"
-    _key    = "k_silver"
+    _key    = "k_gold"
     _long = 320
     _deep = 48
 
