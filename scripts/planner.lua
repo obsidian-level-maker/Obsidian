@@ -339,7 +339,7 @@ function Plan_decide_map_size()
 
   if ob_size == "mixed" then
     W = 2 + rand.index_by_probs { 1,4,7,4,2,1 }
-    H = 2 + rand.index_by_probs { 4,7,4,2,1 }
+    H = 1 + rand.index_by_probs { 1,4,7,4,2,1 }
 
     if W < H then W, H = H, W end
 
@@ -350,15 +350,15 @@ function Plan_decide_map_size()
     if n < 1 then n = 1 end
     if n > 9 then n = 9 end
 
-    local WIDTHS  = { 3,4,4, 5,5,6, 6,7,7 }
-    local HEIGHTS = { 3,3,4, 4,5,5, 6,6,7 }
+    local WIDTHS  = { 3,3,4, 4,5,6, 6,7,8 }
+    local HEIGHTS = { 2,3,3, 4,4,5, 5,6,6 }
 
     W = WIDTHS[n]
     H = HEIGHTS[n]
 
   else
-    local WIDTHS  = { small=4, regular=6, large=9, extreme=12 }
-    local HEIGHTS = { small=3, regular=4, large=6, extreme=11 }
+    local WIDTHS  = { tiny=3, small=4, regular=6, large=9, extreme=12 }
+    local HEIGHTS = { tiny=2, small=3, regular=4, large=6, extreme=11 }
 
     W = WIDTHS[ob_size]
     H = HEIGHTS[ob_size]
@@ -678,6 +678,8 @@ function Plan_add_big_junctions()
 
   ---| Plan_add_big_junctions |---
 
+  local small_level = (MAP_W + MAP_H <= 5)
+
   -- decide how many big hallway junctions to make
   local prob = style_sel("big_juncs", 0, 25, 50, 80)
 
@@ -689,7 +691,10 @@ function Plan_add_big_junctions()
   local visits = Plan_get_visit_list()
 
   each V in visits do
-    try_make_big_junc(V.mx, V.my, prob)
+    local did_it = try_make_big_junc(V.mx, V.my, prob)
+
+    -- limit of one big junction in a small level
+    if small_level and did_it then break; end
   end
 end
 
@@ -1293,15 +1298,22 @@ function Plan_add_special_rooms()
 
     room.is_surrounder = true
 
+    local x1, x2 = 1, MAP_W
+    local y1, y2 = 1, MAP_H
+
+    if MAP_W >= 6  then x2 = x2 - 1 end
+    if MAP_W >= 8  then x1 = x1 + 1 end
+    if MAP_W >= 10 then x1 = x1 + 1 end
+
+    if MAP_H >= 6 then y2 = y2 - 1 end
+    if MAP_H >= 8 then y1 = y1 + 1 end
+
     for mx = 1,MAP_W do for my = 1,MAP_H do
-      if not (mx == 1 or mx == MAP_W or my == 1 or my == MAP_H) then
-        continue
+      if mx == x1 or mx == x2 or my == y1 or my == y2 then
+        local K = SECTIONS[mx*2][my*2]
+        assert(not K.room)
+        K:set_room(room)
       end
-
-      local K = SECTIONS[mx*2][my*2]
-      assert(not K.room)
-
-      K:set_room(room)
     end end
 
     Plan_dump_sections("Sections for surrounder:")
