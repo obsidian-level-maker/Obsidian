@@ -2,12 +2,40 @@
 OBLIGE TODO
 ===========
 
+Current Goals:
+
+(1) improve the monster progression, which does not ramp up quickly
+    enough over a "full" game.
+
+(2) ensure hallways have monster/item spots
+
+(3) add normal doors, probably as "mini halls"
+
+(4) add some floor/ceiling prefabs:
+      (a) crates
+      (b) ceiling lights
+      (c) pillars
+
+(5) secret exits
+
+(6) get some of the other games working, especially Doom 1 and Quake 2,
+    and possibly Harmony and/or HacX too.
+    Some stuff for TNT/Evilution and Plutonia would be a bonus.
+
+DONE: can disable pre-built levels
+
+Bug : progress bar jumps for MAP31/MAP32
+
+Bug : double halls
+
 
 -----------------------------------------------------------------
 
 
 !!  REVIEW the 'mon_along' calculation, ideally take it out of
     the game specific code (can modify it via PARAM or THEME).
+
+-  check health and ammo distribution (too much in start room?)
 
 
 (3) 3D patterns in Quake:
