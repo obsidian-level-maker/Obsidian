@@ -1322,6 +1322,27 @@ function Plan_add_special_rooms()
   end
 
 
+  local function secret_exit_room()
+    local K
+
+    -- pick a spot
+    repeat
+      local mx = rand.sel(50, 2, MAP_W-1)
+      local my = rand.irange(1, MAP_H)
+
+      K = SECTIONS[mx*2][my*2]
+    until not K.room
+
+    local room = ROOM_CLASS.new("odd")
+
+    room.purpose = "SECRET_EXIT"
+
+    K:set_room(room)
+
+    gui.debugf("Secret exit is %s @ %s\n", room:tostr(), K:tostr())
+  end
+
+
   ---| Plan_add_special_rooms |---
 
   if LEVEL.special == "surround" then
@@ -1329,7 +1350,11 @@ function Plan_add_special_rooms()
 
   elseif LEVEL.special == "wagon" then
     central_hub_room()
+  end
 
+  -- secret exit
+  if LEVEL.secret_exit then
+    secret_exit_room()
   end
 end
 
@@ -1580,6 +1605,9 @@ function Plan_decide_outdoors()
   local function score_room(R)
     -- too small ?
     if R.svolume < 8 then return -1 end
+
+    -- never for secret exit
+    if R.purpose == "SECRET_EXIT" then return -1 end
 
     local score = R.svolume
 
