@@ -5707,7 +5707,7 @@ DOOM.SECRET_EXITS =
   E3M6 = true
   E4M2 = true
 
-  MAP16 = true
+  MAP15 = true
   MAP31 = true
 }
 
