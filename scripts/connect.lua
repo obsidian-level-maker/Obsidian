@@ -511,7 +511,6 @@ function Connect_rooms()
   Levels_invoke_hook("connect_rooms")
 
   Hallway_prepare()
-  Hallway_add_streets()
 
   Connect_teleporters()
   Connect_start_room()
@@ -522,6 +521,8 @@ function Connect_rooms()
       error("Failed to connect secret exit")
     end
   end
+
+  Hallway_add_streets()
 
   -- add connections until all rooms are reachable
   while count_groups() >= 2 do

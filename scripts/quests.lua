@@ -1371,6 +1371,7 @@ function Quest_make_quests()
 
   local function add_solution(R)
     assert(R.kind != "hallway")
+    assert(not R.purpose)  -- especially: secret exit
 
     if table.empty(active_locks) then
 -- gui.debugf("add_solution: EXIT\n")
@@ -1618,6 +1619,8 @@ function Quest_make_quests()
 
   local function no_quest_mode(start, quest)
     -- this is used when there are no quests (except to find the exit)
+
+    -- FIXME: can merrily overwrite a secret exit room
 
     local leaf = storage_flow(start, quest)
 
