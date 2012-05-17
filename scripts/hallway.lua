@@ -354,6 +354,10 @@ function HALLWAY_CLASS.select_piece(H, C)
   -- find all skins which match this mode (etc)
   local source_tab = H.group and H.group.pieces
 
+  if H.mini_hall and H.is_secret then
+    return "Secret_Mini"  -- FIXME: THEME.secret_halls
+  end
+
   if H.mini_hall or H.big_junc then
     source_tab = assert(THEME.mini_halls)
   end
@@ -405,6 +409,15 @@ function HALLWAY_CLASS.build_hall_piece(H, C)
                   ceil  = H.ceil_mat,
                   outer = H.zone.facade_mat
                 }
+
+  -- hack for secret exits -- need hallway piece to blend in
+  if H.mini_hall and H.is_secret then
+    if H.off_room.kind == "outdoor" then
+      skin0.wall = skin0.outer
+    else
+      skin0.wall = H.off_room.wall_mat
+    end
+  end
 
   local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, C.h_dir or 2)
 
@@ -657,6 +670,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
     if mode == "secret_exit" then
       H.is_secret = true
+      H.off_room  = L2
     end
 
     if stats.crossover then
