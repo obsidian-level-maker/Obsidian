@@ -1027,6 +1027,8 @@ function Quest_create_zones()
 
       if L2.zone then continue end
 
+      if exit.kind == "secret" then continue end
+
       if L2 == child and exit.kind == "teleporter" then return false end
 
       count = count + 1
@@ -1521,6 +1523,14 @@ function Quest_make_quests()
 
     local exits = Quest_get_exits(L)
 
+    -- handle secrets
+    each D in table.copy(exits) do
+      if D.kind == "secret" then
+        table.kill_elem(exits, D)
+        storage_flow(D.L2, quest)
+      end
+    end
+
     if #exits > 0 then
 
       --- branching room ---
@@ -1556,7 +1566,7 @@ function Quest_make_quests()
       L.exit_conn = free_exit
 
       -- turn some branches into storage
-      each D in exits do
+      each D in table.copy(exits) do
         if D.L2.travel_vol < 1.9 and rand.odds(50) then
           table.kill_elem(exits, D)
 
