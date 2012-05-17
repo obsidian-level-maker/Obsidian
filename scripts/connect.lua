@@ -155,12 +155,14 @@ end
 function Connect_is_possible(L1, L2, mode)
   if L1 == L2 then return false end
 
+  -- never to secret rooms (that is handled elsewhere)
+  if L2.purpose == "SECRET_EXIT" then return false end
+
   if mode == "cycle" then
     if L1.kind == "hallway" then return false end
     if L2.kind == "hallway" then return false end
 
     -- no shortcuts to the exit please
-    -- [FIXME: unless other room already connected to exit]
     if L1.purpose == "EXIT" then return false end
     if L2.purpose == "EXIT" then return false end
 
@@ -382,6 +384,9 @@ function Connect_scan_sections(mode, min_score)
     -- only connect TO a street (never FROM one)
     if K.room.street then continue end
 
+    -- ignore secret rooms
+    if K.room.purpose == "SECRET_EXIT" then continue end
+
     for dir = 2,8,2 do
       Hallway_test_branch(K, dir, mode)
     end
@@ -403,13 +408,21 @@ end
 
 
 function Connect_start_room()
+  local locs = {}
+
   each R in LEVEL.rooms do
     R.start_score = R:eval_start()
 
     gui.debugf("Start score @ %s (seeds:%d) --> %1.3f\n", R:tostr(), R.sw * R.sh, R.start_score)
+
+    if R.start_score >= 0 then
+      table.insert(locs, R)
+    end
   end
 
-  local room, index = table.pick_best(LEVEL.rooms,
+  assert(#locs > 0)
+
+  local room, index = table.pick_best(locs,
     function(A, B) return A.start_score > B.start_score end)
 
   gui.printf("Start room: %s\n", room:tostr())

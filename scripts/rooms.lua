@@ -354,6 +354,9 @@ end
 
 
 function ROOM_CLASS.eval_start(R)
+  -- already has a purpose? (e.g. secret exit room)
+  if R.purpose then return -1 end
+
   local score = gui.random() * 10
 
   -- really want a room touching the edge of the map
@@ -378,6 +381,9 @@ end
 function ROOM_CLASS.eval_teleporter(R)
   -- can only have one teleporter per room
   if R:has_teleporter() then return -1 end
+
+  -- not in a secret exit room
+  if R.purpose == "SECRET_EXIT" then return -1 end
 
   -- room too small?
   if R.sw < 3 or R.sh < 3 or R.svolume < 10 then return -1 end
