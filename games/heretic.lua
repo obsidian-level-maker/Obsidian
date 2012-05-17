@@ -2602,6 +2602,15 @@ HERETIC.PLAYER_MODEL =
 
 ------------------------------------------------------------
 
+HERETIC.SECRET_EXITS =
+{
+  E1M6 = true
+  E2M4 = true
+  E3M4 = true
+  E4M4 = true
+  E5M3 = true
+}
+
 HERETIC.EPISODES =
 {
   episode1 =
@@ -2609,7 +2618,6 @@ HERETIC.EPISODES =
     theme = "CITY"
     boss = "Ironlich"
     sky_light = 0.65
-    secret_exits = { "E1M6" }
   }
 
   episode2 =
@@ -2617,7 +2625,6 @@ HERETIC.EPISODES =
     theme = "CITY"
     boss = "Maulotaur"
     sky_light = 0.75
-    secret_exits = { "E2M4" }
   }
 
   episode3 =
@@ -2625,7 +2632,6 @@ HERETIC.EPISODES =
     theme = "CITY"
     boss = "D_sparil"
     sky_light = 0.75
-    secret_exits = { "E3M4" }
   }
 
   episode4 =
@@ -2633,7 +2639,6 @@ HERETIC.EPISODES =
     theme = "CITY"
     boss = "Ironlich"
     sky_light = 0.50
-    secret_exits = { "E4M4" }
   }
 
   episode5 =
@@ -2641,7 +2646,6 @@ HERETIC.EPISODES =
     theme = "CITY"
     boss = "Maulotaur"
     sky_light = 0.65
-    secret_exits = { "E5M3" }
   }
 }
 
@@ -2685,6 +2689,9 @@ function HERETIC.get_levels()
 
       table.insert( EPI.levels, LEV)
       table.insert(GAME.levels, LEV)
+
+      LEV.secret_exit = GAME.SECRET_EXITS[LEV.name]
+
     end -- for map
 
   end -- for episode
