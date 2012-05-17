@@ -5700,30 +5700,38 @@ DOOM.PLAYER_MODEL =
 }
 
 
+DOOM.SECRET_EXITS =
+{
+  E1M3 = true
+  E2M5 = true
+  E3M6 = true
+  E4M2 = true
+
+  MAP16 = true
+  MAP31 = true
+}
+
+
 DOOM1.EPISODES =
 {
   episode1 =
   {
     sky_light = 0.85
-    secret_exits = { "E1M3" }
   }
 
   episode2 =
   {
     sky_light = 0.65
-    secret_exits = { "E2M5" }
   }
 
   episode3 =
   {
     sky_light = 0.75
-    secret_exits = { "E3M6" }
   }
 
   episode4 =
   {
     sky_light = 0.75
-    secret_exits = { "E4M2" }
   }
 }
 
@@ -5737,7 +5745,6 @@ DOOM2.EPISODES =
   episode2 =
   {
     sky_light = 0.50
-    secret_exits = { "MAP16", "MAP31" }
   }
 
   episode3 =
@@ -5833,6 +5840,8 @@ function DOOM1.get_levels()
 
       table.insert( EPI.levels, LEV)
       table.insert(GAME.levels, LEV)
+
+      LEV.secret_exit = GAME.SECRET_EXITS[LEV.name]
 
       if OB_CONFIG.length == "few" then
 ---!!!  LEV.episode = few_episodes[map]
@@ -5930,6 +5939,8 @@ function DOOM2.get_levels()
 
     table.insert( EPI.levels, LEV)
     table.insert(GAME.levels, LEV)
+
+    LEV.secret_exit = GAME.SECRET_EXITS[LEV.name]
 
     if map == 31 or map == 32 then
       -- secret levels are easy
