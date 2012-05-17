@@ -2913,9 +2913,10 @@ DOOM.SKINS =
   {
     _prefab = "SECRET_MINI"
     _shape  = "I"
+    _tags   = 1
 
-    pic = "WOOD4"
-    pic_f = "FLAT5_1"
+    pic   = "O_NEON"
+    inner = "COMPSPAN"
     metal = "METAL"
   }
 

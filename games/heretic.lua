@@ -813,6 +813,18 @@ HERETIC.SKINS =
   }
 
 
+  Secret_Mini =
+  {
+    _prefab = "SECRET_MINI"
+    _shape  = "I"
+    _tags   = 1
+
+    pic   = "STNGLS2"
+    inner = "SNDCHNKS"
+    metal = "METL2"
+  }
+
+
   ---| BIG JUNCTIONS |---
 
 

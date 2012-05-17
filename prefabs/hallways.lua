@@ -3939,6 +3939,7 @@ PREFAB.SECRET_MINI =
 
   defaults =
   {
+    special = 23
   }
 
   brushes =
@@ -3983,7 +3984,7 @@ PREFAB.SECRET_MINI =
       { x = 176, y = 176, mat = "?wall" }
       { x = 176, y = 192, mat = "?wall" }
       { x =  16, y = 192, mat = "?wall" }
-      { b = 176, mat = "?wall" }
+      { b = 176, mat = "?wall", light_add=16 }
     }
 
     {
@@ -3998,14 +3999,14 @@ PREFAB.SECRET_MINI =
       { x = 176, y =   0, mat = "?wall" }
       { x = 176, y =  16, mat = "?wall" }
       { x =  16, y =  16, mat = "?wall" }
-      { b = 176, mat = "?wall" }
+      { b = 176, mat = "?wall", light_add=16 }
     }
 
     {
       { x =   0, y =  16, mat = "?wall" }
       { x =  16, y =  16, mat = "?metal" }
       { x =  32, y =  16, mat = "?metal" }
-      { x =  32, y =  32, mat = "?outer" }
+      { x =  32, y =  32, mat = "?inner" }
       { x =  32, y = 160, mat = "?metal" }
       { x =  32, y = 176, mat = "?metal" }
       { x =  16, y = 176, mat = "?wall" }
@@ -4015,31 +4016,31 @@ PREFAB.SECRET_MINI =
     {
       { x =  32, y =  16, mat = "?metal" }
       { x = 160, y =  16, mat = "?wall" }
-      { x = 160, y =  32, mat = "?pic" }
+      { x = 160, y =  32, mat = "?wall" }
       { x =  32, y =  32, mat = "?wall" }
-      { t = 32, mat = "?metal" }
+      { t = 32, mat = "?metal", light_add=32 }
     }
     {
       { x =  32, y =  16, mat = "?metal" }
       { x = 160, y =  16, mat = "?wall" }
-      { x = 160, y =  32, mat = "?pic" }
+      { x = 160, y =  32, mat = "?wall" }
       { x =  32, y =  32, mat = "?wall" }
       { b = 160, mat = "?metal" }
     }
 
     {
-      { x =  32, y =  32, mat = "?pic" }
-      { x = 160, y =  32, mat = "?wall" }
-      { x = 160, y = 160, mat = "?pic" }
-      { x =  32, y = 160, mat = "?wall" }
-      { t = 152, delta_z = 1, mat = "?pic_f" }
+      { x =  32, y =  32, mat = "?pic", special="?special", tag="?tag", x_offset=0, y_offset=0, peg=1 }
+      { x = 160, y =  32, mat = "?pic" }
+      { x = 160, y = 160, mat = "?pic", special="?special", tag="?tag", x_offset=0, y_offset=0, peg=1 }
+      { x =  32, y = 160, mat = "?pic" }
+      { t = 152, delta_z = 8, mat = "?inner", tag="?tag", special=9 }
     }
     {
-      { x =  32, y =  32, mat = "?pic" }
+      { x =  32, y =  32, mat = "?wall" }
       { x = 160, y =  32, mat = "?wall" }
-      { x = 160, y = 160, mat = "?pic" }
+      { x = 160, y = 160, mat = "?wall" }
       { x =  32, y = 160, mat = "?wall" }
-      { b = 160, mat = "?pic_f" }
+      { b = 160, mat = "?inner" }
     }
 
     {
@@ -4049,23 +4050,23 @@ PREFAB.SECRET_MINI =
       { x = 192, y = 176, mat = "?wall" }
       { x = 176, y = 176, mat = "?metal" }
       { x = 160, y = 176, mat = "?metal" }
-      { x = 160, y = 160, mat = "?outer" }
+      { x = 160, y = 160, mat = "?inner" }
       { x = 160, y =  32, mat = "?metal" }
     }
 
     {
-      { x =  32, y = 160, mat = "?pic" }
+      { x =  32, y = 160, mat = "?wall" }
       { x = 160, y = 160, mat = "?wall" }
       { x = 160, y = 176, mat = "?metal" }
       { x =  32, y = 176, mat = "?wall" }
       { t = 32, mat = "?metal" }
     }
     {
-      { x =  32, y = 160, mat = "?pic" }
+      { x =  32, y = 160, mat = "?wall" }
       { x = 160, y = 160, mat = "?wall" }
       { x = 160, y = 176, mat = "?metal" }
       { x =  32, y = 176, mat = "?wall" }
-      { b = 160, mat = "?metal" }
+      { b = 160, mat = "?metal", light_add=32 }
     }
   }
 }
