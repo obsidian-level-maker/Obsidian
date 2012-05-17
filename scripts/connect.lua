@@ -22,7 +22,7 @@
 
 class CONN
 {
-  kind   : keyword  -- "normal"
+  kind   : keyword  -- "normal", "secret"
                     -- "double_L", "double_R"
                     -- "teleporter"
                     -- "closet" (e.g. starting niche)
@@ -384,8 +384,10 @@ function Connect_scan_sections(mode, min_score)
     -- only connect TO a street (never FROM one)
     if K.room.street then continue end
 
-    -- ignore secret rooms
-    if K.room.purpose == "SECRET_EXIT" then continue end
+    -- ignore secret exits in normal mode, require them in secret mode
+    if (mode == "secret_exit") != (K.room.purpose == "SECRET_EXIT") then
+      continue
+    end
 
     for dir = 2,8,2 do
       Hallway_test_branch(K, dir, mode)
@@ -513,6 +515,11 @@ function Connect_rooms()
 
   Connect_teleporters()
   Connect_start_room()
+
+  -- secret exit must be done first
+  if not Connect_scan_sections("secret_exit", -9999) then
+    error("Failed to connect secret exit")
+  end
 
   -- add connections until all rooms are reachable
   while count_groups() >= 2 do

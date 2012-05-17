@@ -526,6 +526,10 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
     if not Connect_is_possible(L1, L2, mode) then return end
 
+    -- currently we only connect to secret rooms via a mini-hall
+    -- TODO: relax this
+    if mode == "secret_exit" and #visited != 1 then return end
+
     -- only connect to a big junction straight off a room
     if end_K.kind == "big_junc" and #visited != 1 then return end
 
@@ -569,6 +573,16 @@ function Hallway_test_branch(start_K, start_dir, mode)
       merge = false
 
       if end_K.hall then return end
+    end
+
+    -- prefer secret exits DO NOT connect to the start room
+    if mode == "secret_exit" then
+      if L2.purpose == "START" then
+        score = score - 300
+      end
+      if L2.kind == "outdoor" then
+        score = score - 50
+      end
     end
 
     if stats.crossover then
@@ -662,8 +676,13 @@ function Hallway_test_branch(start_K, start_dir, mode)
     D2.K1 = table.last(H.sections)
     D2.K2 = end_K
 
+    -- need a secret door?
+    if mode == "secret_exit" then
+      D2.kind = "secret"
+    end
 
-    -- handle quest difference : need to lock door
+
+    -- handle quest difference : need to lock door (cycles only)
 
     if need_lock then
       D2.lock = need_lock
