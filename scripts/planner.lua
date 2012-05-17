@@ -350,14 +350,14 @@ function Plan_decide_map_size()
     if n < 1 then n = 1 end
     if n > 9 then n = 9 end
 
-    local WIDTHS  = { 3,3,3, 4,5,6, 6,8,8 }
+    local WIDTHS  = { 3,3,3, 4,5,6, 6,7,7 }
     local HEIGHTS = { 2,2,3, 3,4,4, 5,5,6 }
 
     W = WIDTHS[n]
     H = HEIGHTS[n]
 
   else
-    local WIDTHS  = { tiny=3, small=4, regular=6, large=9, extreme=12 }
+    local WIDTHS  = { tiny=3, small=4, regular=6, large=8, extreme=12 }
     local HEIGHTS = { tiny=2, small=3, regular=4, large=6, extreme=10 }
 
     W = WIDTHS[ob_size]
