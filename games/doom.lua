@@ -2909,6 +2909,25 @@ DOOM.SKINS =
   }
 
 
+  Secret_Mini =
+  {
+    _prefab = "SECRET_MINI"
+    _shape  = "I"
+
+    w2 = "METAL"
+    w1 = "STARTAN3"
+    w3 = "TEKWALL1"
+    w4 = "WOOD4"
+
+    ff2 = "CEIL5_2"
+    ff1 = "FLAT1"
+    ff3 = "FLAT5_1"
+    ccc2 = "CEIL5_2"
+    ccc1 = "FLAT1"
+    ccc3 = "FLAT5_1"
+  }
+
+
   ---| BIG JUNCTIONS |---
 
   Junc_Octo_I =
