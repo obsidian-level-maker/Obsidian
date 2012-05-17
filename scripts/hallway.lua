@@ -1463,7 +1463,7 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
   then
     -- reverse Z direction in a double hallway when hit the fork section,
     -- which means the other side mirrors the first side
-    if C.double_peer and C.double_peer.floor_h and not H.flipped_double then
+    if C.double_peer and C.double_peer.floor_h and H.need_flip and not H.flipped_double then
       z_dir = -z_dir
       H.flipped_double = true
     end
@@ -1722,6 +1722,10 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
   local entry_C = assert(entry_conn.C2)
   local entry_h = assert(entry_conn.C1.floor_h)
   local entry_dir = entry_conn.dir1
+
+  if entry_conn.kind == "double_L" or entry_conn.kind == "double_R" then
+    H.need_flip = true
+  end
 
   if H.cross_limit then
     if entry_h < H.cross_limit[1] then entry_h = H.cross_limit[1] end
