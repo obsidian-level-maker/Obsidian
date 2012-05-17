@@ -5915,7 +5915,7 @@ function DOOM2.get_levels()
     local ep_along
 
     if map > 30 then
-      ep_index = 2 ; ep_along = 0.35
+      ep_index = 3 ; ep_along = 0.35
     elseif map > 20 then
       ep_index = 3 ; ep_along = (map - 20) / 10
     elseif map > 11 then
