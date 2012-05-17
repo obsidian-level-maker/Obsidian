@@ -655,6 +655,12 @@ function CHUNK_CLASS.content_exit(C)
     skin2.special = 75
   end
 
+  -- FIXME: hack for secret exits (assumes DOOM/HERETIC)
+  --        instead should have THEME.secret_exits and custom skins
+  if C.content.kind == "SECRET_EXIT" then
+    skin2.special = 51
+  end
+
   Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
 end
 
@@ -799,7 +805,7 @@ function CHUNK_CLASS.do_content(C)
   if kind == "START" then
     C:content_start()
 
-  elseif kind == "EXIT" then
+  elseif kind == "EXIT" or kind == "SECRET_EXIT" then
     C:content_exit()
 
   elseif kind == "KEY" then
