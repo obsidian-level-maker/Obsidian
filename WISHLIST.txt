@@ -721,6 +721,19 @@ DOOM Shadow Algorithm:
 
 
 ----------------------------------------------------------------
+  DOOM 64
+----------------------------------------------------------------
+
+!!  transition to make levels for Doom64 EX, not the TC.
+
+    +  need to create the different WAD format
+    +  need to bundle the special glbsp-based node builder
+    +  need to pack created wad files into the final wad
+
++  a new theme (Urban / Hell) 
+
+
+----------------------------------------------------------------
   HACX
 ----------------------------------------------------------------
 
