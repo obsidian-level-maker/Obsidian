@@ -38,6 +38,7 @@ CHANGES (since 3.57)
 
 + support for "shaped" rooms (L, T, plus, etc)
 + support for teleporters
+- secret exits are created again
 
 - fixed Quake collision issues
 - new more reliable CSG code
