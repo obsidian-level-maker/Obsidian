@@ -517,8 +517,10 @@ function Connect_rooms()
   Connect_start_room()
 
   -- secret exit must be done first
-  if not Connect_scan_sections("secret_exit", -9999) then
-    error("Failed to connect secret exit")
+  if LEVEL.secret_exit then
+    if not Connect_scan_sections("secret_exit", -9999) then
+      error("Failed to connect secret exit")
+    end
   end
 
   -- add connections until all rooms are reachable
