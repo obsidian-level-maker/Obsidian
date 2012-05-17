@@ -358,7 +358,7 @@ function Plan_decide_map_size()
 
   else
     local WIDTHS  = { tiny=3, small=4, regular=6, large=9, extreme=12 }
-    local HEIGHTS = { tiny=2, small=3, regular=4, large=6, extreme=11 }
+    local HEIGHTS = { tiny=2, small=3, regular=4, large=6, extreme=10 }
 
     W = WIDTHS[ob_size]
     H = HEIGHTS[ob_size]
@@ -367,7 +367,9 @@ function Plan_decide_map_size()
       error("Unknown size keyword: " .. tostring(ob_size))
     end
 
-    if rand.odds(30) then W = W - 1 end
+    if rand.odds(35) and not LEVEL.secret_exit then
+      W = W - 1
+    end
   end
 
 
