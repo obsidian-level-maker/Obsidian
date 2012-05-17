@@ -536,7 +536,8 @@ function Hallway_test_branch(start_K, start_dir, mode)
     -- never connect to the hallway "spokes" off a big junction
     if end_K.kind != "big_junc" and end_K.hall and end_K.hall.big_junc then return end
 
-    -- never connect to crossovers
+    -- never connect to secret halls or crossovers
+    if end_K.hall and end_K.hall.is_secret then return end
     if end_K.hall and end_K.hall.crossover then return end
 
     -- crossovers must be distinct (not same as start or end)
@@ -652,6 +653,10 @@ function Hallway_test_branch(start_K, start_dir, mode)
       H.big_junc = end_K
     else
       H.big_junc = stats.big_junc
+    end
+
+    if mode == "secret_exit" then
+      H.is_secret = true
     end
 
     if stats.crossover then
@@ -914,6 +919,11 @@ function Hallway_add_doubles()
     -- fixme: this should not fail
     local D1 = find_conn_for_double(K, dir)
     if not D1 then return false end
+
+    -- never from/to secret exits
+    if D1.L1.purpose == "SECRET_EXIT" or
+       D1.L2.purpose == "SECRET_EXIT"
+    then return false end
 
     -- don't have a pair of keyed doors if the game uses up keys
     if PARAM.lose_keys and D1.lock and D1.lock.kind == "KEY" then
