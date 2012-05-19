@@ -2514,6 +2514,19 @@ DOOM.SKINS =
   }
 
 
+  MiniHall_Door_tech =
+  {
+    _prefab = "MINI_DOOR1"
+
+    door   = { BIGDOOR3=50, BIGDOOR4=40, BIGDOOR2=15 }
+    track  = "DOORTRAK"
+    step   = "STEP4"
+    metal  = "DOORSTOP"
+    lite   = "LITE5"
+    c_lite = "TLITE6_1"
+  }
+
+
   ---| SWITCHED DOORS |---
 
   Door_SW_blue =
@@ -3663,7 +3676,7 @@ DOOM.THEME_DEFAULTS =
 
   hallway_groups = { basic = 50, thin = 15 }  -- TODO: cavey
 
-  mini_halls = { Hall_Basic_I = 50 }
+  mini_halls = { Hall_Basic_I = 50, MiniHall_Door_tech = 25 }
 
   sky_halls = { skier = 50 }
 

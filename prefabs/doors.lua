@@ -1065,3 +1065,263 @@ PREFAB.BARS =  -- BORKED : NEED WALK BRUSHES
 }
 
 
+PREFAB.MINI_DOOR1 =
+{
+  x_ranges = { {8,1}, {176,0}, {8,1} }
+  y_ranges = { {184,0}, {8,1} }
+
+  defaults =
+  {
+  }
+
+  brushes =
+  {
+    {
+      { x =   0, y = 168, mat = "?wall" }
+      { x =   8, y = 168, mat = "?metal" }
+      { x =  16, y = 168, mat = "?wall" }
+      { x =  16, y = 192, mat = "?outer" }
+      { x =   0, y = 192, mat = "?outer" }
+    }
+
+    {
+      { x = 176, y =   0, mat = "?outer" }
+      { x = 192, y =   0, mat = "?outer" }
+      { x = 192, y =  64, mat = "?wall" }
+      { x = 176, y =  64, mat = "?wall" }
+    }
+
+    {
+      { x =   0, y =   0, mat = "?outer" }
+      { x =  16, y =   0, mat = "?wall" }
+      { x =  16, y =  64, mat = "?wall" }
+      { x =   0, y =  64, mat = "?outer" }
+    }
+
+    {
+      { x = 176, y = 168, mat = "?metal" }
+      { x = 184, y = 168, mat = "?wall" }
+      { x = 192, y = 168, mat = "?outer" }
+      { x = 192, y = 192, mat = "?outer" }
+      { x = 176, y = 192, mat = "?wall" }
+    }
+
+    {
+      { x =  16, y = 168, mat = "?wall" }
+      { x =  48, y = 136, mat = "?wall" }
+      { x = 144, y = 136, mat = "?wall" }
+      { x = 176, y = 168, mat = "?wall" }
+      { x = 176, y = 192, mat = "?outer" }
+      { x =  16, y = 192, mat = "?wall" }
+      { t = 0, mat = "?floor" }
+    }
+    {
+      { x =  16, y = 168, mat = "?wall" }
+      { x =  48, y = 136, mat = "?wall" }
+      { x = 144, y = 136, mat = "?wall" }
+      { x = 176, y = 168, mat = "?wall" }
+      { x = 176, y = 192, mat = "?outer" }
+      { x =  16, y = 192, mat = "?wall" }
+      { b = 168, mat = "?ceil", light_add=16 }
+    }
+
+    {
+      { x =  16, y =   0, mat = "?outer" }
+      { x = 176, y =   0, mat = "?wall" }
+      { x = 176, y =  32, mat = "?wall" }
+      { x = 144, y =  64, mat = "?wall" }
+      { x =  48, y =  64, mat = "?wall" }
+      { x =  16, y =  32, mat = "?wall" }
+      { t = 0, mat = "?floor" }
+    }
+    {
+      { x =  16, y =   0, mat = "?outer" }
+      { x = 176, y =   0, mat = "?wall" }
+      { x = 176, y =  32, mat = "?wall" }
+      { x = 144, y =  64, mat = "?wall" }
+      { x =  48, y =  64, mat = "?wall" }
+      { x =  16, y =  32, mat = "?wall" }
+      { b = 152, mat = "?ceil", light_add=32 }
+    }
+
+    {
+      { x =  16, y = 128, mat = "?wall" }
+      { x =  32, y = 104, mat = "?wall" }
+      { x =  48, y = 136, mat = "?step" }
+      { x =  16, y = 168, mat = "?wall" }
+      { t = 8, mat = "?step" }
+    }
+    {
+      { x =  16, y = 128, mat = "?wall" }
+      { x =  32, y = 104, mat = "?wall" }
+      { x =  48, y = 136, mat = "?wall" }
+      { x =  16, y = 168, mat = "?wall" }
+      { b = 120, mat = "?wall", light_add=48 }
+    }
+
+    {
+      { x =   0, y =  64, mat = "?wall" }
+      { x =  16, y =  64, mat = "?wall" }
+      { x =  32, y =  88, mat = "?track" }
+      { x =  32, y = 104, mat = "?wall" }
+      { x =  16, y = 128, mat = "?wall" }
+      { x =   0, y = 128, mat = "?outer" }
+    }
+
+    {
+      { x =  40, y =  88, mat = "?door" }
+      { x = 152, y =  88, mat = "?door" }
+      { x = 152, y = 104, mat = "?door" }
+      { x =  40, y = 104, mat = "?door" }
+      { b = 24, delta_z=-16, mat = "?door", light_add=32 }
+    }
+
+    {
+      { x = 144, y = 136, mat = "?wall" }
+      { x = 160, y = 104, mat = "?wall" }
+      { x = 176, y = 128, mat = "?wall" }
+      { x = 176, y = 168, mat = "?step" }
+      { t = 8, mat = "?step" }
+    }
+    {
+      { x = 144, y = 136, mat = "?wall" }
+      { x = 160, y = 104, mat = "?wall" }
+      { x = 176, y = 128, mat = "?wall" }
+      { x = 176, y = 168, mat = "?wall" }
+      { b = 120, mat = "?wall", light_add=48 }
+    }
+
+    {
+      { x = 160, y =  88, mat = "?wall" }
+      { x = 176, y =  64, mat = "?wall" }
+      { x = 192, y =  64, mat = "?outer" }
+      { x = 192, y = 128, mat = "?wall" }
+      { x = 176, y = 128, mat = "?wall" }
+      { x = 160, y = 104, mat = "?track" }
+    }
+
+    {
+      { x =  16, y =  32, mat = "?step" }
+      { x =  48, y =  64, mat = "?wall" }
+      { x =  32, y =  88, mat = "?wall" }
+      { x =  16, y =  64, mat = "?wall" }
+      { t = 8, mat = "?step" }
+    }
+    {
+      { x =  16, y =  32, mat = "?wall" }
+      { x =  48, y =  64, mat = "?wall" }
+      { x =  32, y =  88, mat = "?wall" }
+      { x =  16, y =  64, mat = "?wall" }
+      { b = 120, mat = "?wall", light_add=32 }
+    }
+
+    {
+      { x = 144, y =  64, mat = "?step" }
+      { x = 176, y =  32, mat = "?wall" }
+      { x = 176, y =  64, mat = "?wall" }
+      { x = 160, y =  88, mat = "?wall" }
+      { t = 8, mat = "?step" }
+    }
+    {
+      { x = 144, y =  64, mat = "?wall" }
+      { x = 176, y =  32, mat = "?wall" }
+      { x = 176, y =  64, mat = "?wall" }
+      { x = 160, y =  88, mat = "?wall" }
+      { b = 120, mat = "?wall", light_add=32 }
+    }
+
+    {
+      { x =   0, y = 128, mat = "?wall" }
+      { x =  16, y = 128, mat = "?wall" }
+      { x =  16, y = 136, mat = "?metal" }
+      { x =   8, y = 136, mat = "?wall" }
+      { x =   0, y = 136, mat = "?outer" }
+    }
+
+    {
+      { x = 176, y = 128, mat = "?wall" }
+      { x = 192, y = 128, mat = "?outer" }
+      { x = 192, y = 136, mat = "?wall" }
+      { x = 184, y = 136, mat = "?metal" }
+      { x = 176, y = 136, mat = "?wall" }
+    }
+
+    {
+      { x =   8, y = 136, mat = "?wall" }
+      { x =  16, y = 136, mat = "?wall" }
+      { x =  16, y = 168, mat = "?wall" }
+      { x =   8, y = 168, mat = "?wall" }
+      { t = 40, mat = "?metal" }
+    }
+    {
+      { x =   8, y = 136, mat = "?wall" }
+      { x =  16, y = 136, mat = "?wall" }
+      { x =  16, y = 168, mat = "?wall" }
+      { x =   8, y = 168, mat = "?wall" }
+      { b = 96, mat = "?metal", light_add=64 }
+    }
+
+    {
+      { x =  32, y =  88, mat = "?wall" }
+      { x =  48, y =  64, mat = "?step" }
+      { x = 144, y =  64, mat = "?wall" }
+      { x = 160, y =  88, mat = "?wall" }
+      { x = 160, y = 104, mat = "?wall" }
+      { x = 144, y = 136, mat = "?step" }
+      { x =  48, y = 136, mat = "?wall" }
+      { x =  32, y = 104, mat = "?wall" }
+      { t = 8, mat = "?step" }
+    }
+    {
+      { x =  32, y =  88, mat = "?wall" }
+      { x =  48, y =  64, mat = "?wall" }
+      { x = 144, y =  64, mat = "?wall" }
+      { x = 160, y =  88, mat = "?wall" }
+      { x = 160, y = 104, mat = "?wall" }
+      { x = 144, y = 136, mat = "?wall" }
+      { x =  48, y = 136, mat = "?wall" }
+      { x =  32, y = 104, mat = "?wall" }
+      { b = 120, mat = "?wall", light_add=32 }
+    }
+
+    {
+      { x = 176, y = 136, mat = "?wall" }
+      { x = 184, y = 136, mat = "?wall" }
+      { x = 184, y = 168, mat = "?wall" }
+      { x = 176, y = 168, mat = "?wall" }
+      { t = 40, mat = "?metal" }
+    }
+    {
+      { x = 176, y = 136, mat = "?wall" }
+      { x = 184, y = 136, mat = "?wall" }
+      { x = 184, y = 168, mat = "?wall" }
+      { x = 176, y = 168, mat = "?wall" }
+      { b = 96, mat = "?metal", light_add=64 }
+    }
+
+    {
+      { x =  56, y =  32, mat = "?wall" }
+      { x =  80, y =   8, mat = "?wall" }
+      { x = 112, y =   8, mat = "?wall" }
+      { x = 136, y =  32, mat = "?wall" }
+      { x = 112, y =  56, mat = "?wall" }
+      { x =  80, y =  56, mat = "?wall" }
+      { b = 160, mat = "?c_lite", light_add=48 }
+    }
+
+    {
+      { x =   0, y = 136, mat = "?wall" }
+      { x =   8, y = 136, mat = "?lite" }
+      { x =   8, y = 168, mat = "?wall" }
+      { x =   0, y = 168, mat = "?outer" }
+    }
+
+    {
+      { x = 184, y = 136, mat = "?wall" }
+      { x = 192, y = 136, mat = "?outer" }
+      { x = 192, y = 168, mat = "?wall" }
+      { x = 184, y = 168, mat = "?lite" }
+    }
+  }
+}
+
