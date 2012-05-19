@@ -1319,7 +1319,7 @@ PREFAB.MINI_DOOR1 =
 
     {
       { x =   0, y = 136, mat = "?wall2" }
-      { x =   8, y = 136, mat = "?lite" }
+      { x =   8, y = 136, mat = "?lite", x_offset=0, y_offset=0 }
       { x =   8, y = 168, mat = "?wall2" }
       { x =   0, y = 168, mat = "?outer" }
     }
@@ -1328,7 +1328,7 @@ PREFAB.MINI_DOOR1 =
       { x = 184, y = 136, mat = "?wall2" }
       { x = 192, y = 136, mat = "?outer" }
       { x = 192, y = 168, mat = "?wall2" }
-      { x = 184, y = 168, mat = "?lite" }
+      { x = 184, y = 168, mat = "?lite", x_offset=0, y_offset=0 }
     }
   }
 }

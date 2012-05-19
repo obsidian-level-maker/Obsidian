@@ -2528,6 +2528,19 @@ DOOM.SKINS =
     c_lite = "TLITE6_1"
   }
 
+  MiniHall_Door_hell =
+  {
+    _prefab = "MINI_DOOR1"
+    _shape  = "I"
+    _delta  = 0
+
+    door   = { BIGDOOR6=50 }
+    track  = "DOORTRAK"
+    step   = "STEP4"
+    metal  = "METAL"
+    lite   = "FIREWALL"
+  }
+
 
   ---| SWITCHED DOORS |---
 
@@ -4922,7 +4935,7 @@ DOOM2.LEVEL_THEMES =
     outdoors  = { Hell2_outdoors=50 }
     caves     = { Hell2_cave=50 }
 
-    mini_halls = { MiniHall_Arch1 = 50 }
+    mini_halls = { MiniHall_Arch1 = 50, MiniHall_Door_hell = 20 }
 
     big_junctions =
     {
