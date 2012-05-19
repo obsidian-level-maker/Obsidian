@@ -1181,7 +1181,7 @@ function Monsters_in_room(L)
     assert(base_num)
 
     if L.kind == "hallway" then
-      return rand.sel(35, 2, 1)
+      return rand.index_by_probs { 60, 40, 20 }
     end
 
     -- adjust the base number to account for room size
@@ -1204,7 +1204,7 @@ function Monsters_in_room(L)
     local num_kinds
 
     if L.kind == "hallway" then
-      num_kinds = rand.index_by_probs({ 90, 30, 10 })
+      num_kinds = rand.index_by_probs({ 40, 60, 20 })
     else
       local size = math.sqrt(L.svolume)
       num_kinds = int(size / 2)
