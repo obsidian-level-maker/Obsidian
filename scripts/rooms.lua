@@ -1846,6 +1846,8 @@ function Rooms_filter_skins(L, tab_name, tab, reqs, empty_ok)
 
     if reqs.narrow and not skin._narrow then return false end
 
+    if skin._door and reqs.door == 0 then return false end
+
     return true
   end
 

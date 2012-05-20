@@ -503,6 +503,19 @@ function CHUNK_CLASS.bridge_pos(C, dir)
 end
 
 
+function CHUNK_CLASS.has_locked_door(C)
+  for dir = 2,8,2 do
+    local LINK = C.link[dir]
+
+    if LINK and LINK.conn and LINK.conn.lock then
+      return true
+    end
+  end
+
+  return false
+end
+
+
 function CHUNK_CLASS.has_parallel_stair(C, dir)
   if C.stair and geom.is_parallel(C.stair.dir, dir) then
     return true

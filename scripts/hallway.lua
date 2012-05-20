@@ -360,6 +360,11 @@ function HALLWAY_CLASS.select_piece(H, C)
 
   if H.mini_hall or H.big_junc then
     source_tab = assert(THEME.mini_halls)
+
+    -- don't put a doorish mini-hall next to a locked door
+    if C:has_locked_door() then
+      reqs.door = 0
+    end
   end
 
   if C.section.kind == "big_junc" then

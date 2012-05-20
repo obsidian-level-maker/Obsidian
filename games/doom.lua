@@ -2519,6 +2519,7 @@ DOOM.SKINS =
     _prefab = "MINI_DOOR1"
     _shape  = "I"
     _delta  = 0
+    _door   = 1
 
     door   = { BIGDOOR3=50, BIGDOOR4=40, BIGDOOR2=15 }
     track  = "DOORTRAK"
@@ -3691,7 +3692,7 @@ DOOM.THEME_DEFAULTS =
 
   hallway_groups = { basic = 50, thin = 15 }  -- TODO: cavey
 
-  mini_halls = { Hall_Basic_I = 50, MiniHall_Door_tech = 15 }
+  mini_halls = { Hall_Basic_I = 50, MiniHall_Door_tech = 20 }
 
   sky_halls = { skier = 50 }
 
