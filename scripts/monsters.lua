@@ -973,8 +973,8 @@ function Monsters_in_room(L)
       qty = qty * rand.pick { 0.6, 0.8, 1.1 }
 
     -- more in EXIT or KEY rooms (extra boost in small rooms)
-    elseif L.purpose then
-      qty = qty * rand.pick { 1.6, 1.8, 2.1 }
+    elseif L.purpose and L.purpose != "START" then
+      qty = qty * rand.pick { 1.4, 1.6, 1.9 }
 
       local is_small = (L.svolume <= 20)
 
