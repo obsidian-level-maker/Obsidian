@@ -3196,7 +3196,7 @@ DOOM.SKINS =
     ceil1  = "CEIL3_5"
 
     floor2 = "FLAT4"
-    ceil2  = "FLAT5_3"
+    -- ceil2  = "FLAT5_3"
     low_trim = "GRAY7"
     high_trim = "GRAY7"
 
