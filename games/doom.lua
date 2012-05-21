@@ -5837,8 +5837,6 @@ function DOOM1.get_levels()
 
   if OB_CONFIG.length == "few" then MAP_NUM = 4 end
 
-  local few_episodes = { 1, 1, 2, 2 }
-
   -- this accounts for last two levels are BOSS and SECRET level
   local LEV_MAX = MAP_NUM
   if LEV_MAX == 9 then LEV_MAX = 7 end
@@ -5884,10 +5882,6 @@ function DOOM1.get_levels()
 
       LEV.secret_exit = GAME.SECRET_EXITS[LEV.name]
 
-      if OB_CONFIG.length == "few" then
----!!!  LEV.episode = few_episodes[map]
-      end
-
       -- prebuilt levels
       local pb_name = LEV.name
 
@@ -5918,8 +5912,6 @@ function DOOM2.get_levels()
 
   gotcha_map = rand.pick{17,18,19}
   gallow_map = rand.pick{24,25,26}
-
-  local few_episodes = { 1, rand.sel(70,1,2), rand.sel(70,2,3), 3 }
 
   local EP_NUM = 1
   if MAP_NUM > 11 then EP_NUM = 2 end
@@ -5991,10 +5983,6 @@ function DOOM2.get_levels()
     else
       -- difficulty ramps up over whole wad
       LEV.mon_along = math.quadratic(map / (MAP_NUM * 0.7 + 1))
-    end
-
-    if OB_CONFIG.length == "few" then
----!!!  LEV.episode = few_episodes[map]
     end
 
     -- secret levels
