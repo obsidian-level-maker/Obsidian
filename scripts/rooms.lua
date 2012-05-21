@@ -2597,6 +2597,8 @@ function Rooms_outdoor_borders()
     local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, sky_fence_h, dir)
 
     Fabricate("SKY_FENCE", T, { skin, skin2 })
+
+    S.scenic = true  -- mark as used
   end
 
 
@@ -2617,6 +2619,8 @@ function Rooms_outdoor_borders()
     local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, sky_fence_h, dir)
 
     Fabricate("SKY_CORNER", T, { skin, skin2 })
+
+    S.scenic = true  -- mark as used
   end
 
 
