@@ -4383,502 +4383,6 @@ HEXEN.LEVEL_THEMES =
       afrit=3.0, etin=2.5, bishop=1.5
     }
   }
-
-  ---------------------------------------------------------------------------
-  -- Ultramix themes                                                       --
-  ---------------------------------------------------------------------------
-
-  hexen_ultramix01 =
-  {
-    prob = 50
-
-    buildings = { Dungeon_monktan=40, Dungeon_monktan_large=20,
-                  Dungeon_monkgray=30, Dungeon_monkrosette=15,
-                  Dungeon_library=5 }
-    caves     = { Cave_gray=50 }
-    outdoors  = { Dungeon_outdoors1=50 }
-    hallways  = { Dungeon_monktan=40, Dungeon_monktan_large=20,
-                  Dungeon_monkgray=30, Dungeon_monkrosette=15 }
-
-    __pictures =
-    {
-    pic_glass01=20, pic_glass02=2, pic_glass03=20, pic_glass04=2,
-    pic_glass05=20, pic_glass06=2, pic_tomb03=5, pic_books01=15,
-    pic_books02=15, pic_brass1=10, pic_tomb06=10, pic_forest11=5,
-    pic_monk08=5, pic_planet1=5, pic_monk06=5, pic_monk11=5,
-    pic_spawn13=2,
-    }
-
-    -- FIXME: other stuff
-
-    monster_prefs =
-    {
-      bishop=30.0, centaur1=2.0, centaur2=1.5
-    }
-  }
-
-
-  -- Castle type dungeon
-  hexen_ultramix02 =
-  {
-    prob = 50
-
-    liquids = { water=25, muck=70, icefloor=5 }
-
-    buildings = { Dungeon_castle_gray=30,  Dungeon_castle_gray_small= 15,
-                  Dungeon_castle_gray_chains=5, Dungeon_castle_yellow=15,
-                  Dungeon_library=5 }
-    caves     = { Cave_gray=30, Cave_swamp=5, Cave_green=15 }
-    outdoors  = { Dungeon_outdoors2=50 }
-    hallways  = { Dungeon_castle_gray=30,  Dungeon_castle_gray_small= 15,
-                  Dungeon_castle_yellow=15 }
-
-    facades =
-    {
-      CASTLE07=50, CASTLE11=10, CAVE01=10,
-      CAVE02=15, PRTL03=10
-        }
-
-    __pictures =
-    {
-      Pic_forest11=10, Pic_monk08=10, Pic_winnow02=10,
-      Pic_spawn13=5, Pic_fire14=5, Pic_books01=1,
-      Pic_glass01=1, Pic_glass03=1, Pic_glass05=1
-    }
-
-    -- FIXME: other stuff
-
-    monster_prefs =
-    {
-      centaur1=2.0, centaur2=3.0, demon1=3.0
-    }
-
-    style_list =
-    {
-      caves = { none=30, few=70, some=20,  heaps=0 }
-      outdoors = { none=50, few=50, some=20,  heaps=0 }
-    }
-  }
-
-
-  -- Tombs / necropolis
-  hexen_ultramix03 =
-  {
-    prob = 30
-
-    liquids = { water=25, muck=25, icefloor=25, lava=25 }
-
-    buildings = { Dungeon_tomb1=10, Dungeon_tomb2=10, Dungeon_tomb3=10 }
-    caves     = { Cave_gray=50, Cave_swamp=10, Cave_green=5 }
-    outdoors  = { Dungeon_outdoors2=50 }
-    hallways  = { Dungeon_tomb1=10, Dungeon_tomb2=10, Dungeon_tomb3=10 }
-
-    __pictures =
-    {
-      pic_glass01=20, pic_glass02=2, pic_glass03=20, pic_glass04=2,
-      pic_glass05=20, pic_glass06=2, pic_tomb03=50, pic_books01=15,
-      pic_books02=15, pic_brass1=10, pic_tomb06=10, pic_forest11=5,
-      pic_monk08=5, pic_planet1=5, pic_monk06=5, pic_monk11=5,
-      pic_spawn13=2,
-
-      Pic_forest11=10, Pic_monk08=10, Pic_winnow02=10,
-      Pic_spawn13=5, Pic_fire14=5, Pic_books01=1,
-      Pic_glass01=1, Pic_glass03=1, Pic_glass05=1
-    }
-
-    -- FIXME: other stuff
-
-    monster_prefs =
-    {
-      bishop=3.0, centaur2=3.0, reiver=15.0
-    }
-
-    style_list =
-    {
-      caves = { none=30, few=70, some=20,  heaps=0 }
-      outdoors = { none=50, few=50, some=20,  heaps=0 }
-    }
-  }
-
-  -- Sewers / effluvium
-  hexen_ultramix04 =
-  {
-    prob = 20
-
-    liquids = { muck=70 }
-
-    buildings = { Dungeon_sewer1=30, Dungeon_sewer2=20,
-                  Dungeon_sewer_metal=5 }
-    caves     = { Cave_gray=25, Cave_swamp=25 }
-    outdoors  = { Dungeon_outdoors2=50 }
-    hallways  = { Dungeon_sewer1=30, Dungeon_sewer2=20 }
-
-    facades =
-    {
-      CASTLE07=50, CASTLE11=10, CAVE01=10,
-      CAVE02=15, PRTL03=10
-        }
-
-    monster_prefs =
-    {
-      -- need high values just to make them appear
-      serpent1=5000, serpent2=3000
-    }
-
-    style_list =
-    {
-      liquids  = { none=0,  few=0,  some=0,   heaps=100 }
-      caves    = { none=30, few=70, some=20,  heaps=0   }
-      outdoors = { none=50, few=50, some=20,  heaps=0   }
-    }
-  }
-
-  hexen_ultramix05 =
-  {
-    prob = 20
-
-    buildings = { Dungeon_portals1=45, Dungeon_portals2=15 }
-    caves     = { Cave_gray=50 }
-    outdoors  = { Dungeon_outdoors1=50 }
-    hallways  = { Dungeon_portals1=45, Dungeon_portals2=15 }
-
-    __pictures =
-    {
-    pic_glass01=20, pic_glass02=2, pic_glass03=20, pic_glass04=2,
-    pic_glass05=20, pic_glass06=2, pic_tomb03=5, pic_books01=15,
-    pic_books02=15, pic_brass1=10, pic_tomb06=10, pic_forest11=5,
-    pic_monk08=5, pic_planet1=5, pic_monk06=5, pic_monk11=5,
-    pic_spawn13=2,
-    }
-
-    -- FIXME: other stuff
-
-    monster_prefs =
-    {
-      ettin=3.0, demon1=2.0, centaur1=1.5, iceguy=3.0
-    }
-  }
-
-
-  hexen_ultramix06 =
-  {
-    prob = 20
-
-    liquids = { lava=100 }
-
-    buildings = { Fire_room1=65,  Fire_room2=35,  Fire_lavawalls=5}
-    caves     = { Fire_room2=50 }
-    outdoors  = { Fire_outdoors=50 }
-    hallways  = { Fire_room1=50, Fire_room2=40 }
-
-    __pictures =
-    {
-      pic_forest11=5, pic_fire14=20, pic_spawn13=3,
-      pic_winnow02=5, pic_brass1=2, pic_monk06=2, pic_monk11=21,
-      pic_glass01=1, pic_glass03=1, pic_glass05=1
-    }
-
-    __big_pillars = { pillar02=10, fire06=25, xfire=15 }
-
-    __outer_fences =
-    {
-      FIRE01=30, FIRE04=5, FIRE05=10, FIRE06=15,
-      FIRE07=15, FIRE08=10, FIRE09=10, FIRE10=10,
-      FIRE11=10, FIRE12=10
-    }
-
-    monster_prefs =
-    {
-      afrit=3.5
-    }
-
-    style_list =
-    {
-      caves = { none=30, few=70,  some=30,  heaps=0  }
-      outdoors = { none=70, few=5,   some=0,   heaps=0  }
-      liquids  = { none=0,  few=10,  some=60,  heaps=40 }
-      lakes    = { none=0,  few=10,  some=60,  heaps=40 }
-    }
-  }
-
-
-  hexen_ultramix07 =
-  {
-    prob = 20
-
-    liquids = { icefloor=100 } -- ice1 will use "liquids = { ice=70, water=30 }" instead, for variety.
-
-    buildings = { Ice_room1=65, Ice_room2=35 }
-    caves     = { Ice_cave=50 }
-    outdoors  = { Ice_outdoors=50 }
-    hallways  = { Ice_room1=65, Ice_room2=35 }
-
-    __pictures =
-    {
-      pic_forest11=10, pic_spawn13=10,
-    }
-
-    __big_pillars = { ice01=5, ice02=20 }
-
-    __outer_fences =
-    {
-      ICE01=25, ICE06=75
-    }
-
-    style_list =
-    {
-      caves = { none=30, few=70,  some=30,  heaps=0  }
-      outdoors = { none=70, few=5,   some=0,   heaps=0  }
-      liquids  = { none=0,  few=10,  some=60,  heaps=40 }
-      lakes    = { none=0,  few=0,   some=40,  heaps=60 }
-      pictures = { none=50, few=10,  some=10,  heaps=0  }
-    }
-
-    monster_prefs =
-    {
-      iceguy =500, afrit=0.2
-    }
-  }
-
-
-  hexen_ultramix08 =
-  {
-    prob = 20
-
-    square_caves = true
-
-    liquids = { lava=20, icefloor=10, water=5, muck=5 }
-
-    buildings = { Steel_room_mix=10, Steel_room_gray=35, Steel_room_rust=25 }
-    caves     = { Steel_room_mix=10, Steel_room_gray=35, Steel_room_rust=25 }
-    outdoors  = { Steel_room_mix=10, Steel_room_gray=35, Steel_room_rust=25 }
-    hallways  = { Steel_room_mix=10, Steel_room_gray=35, Steel_room_rust=25 }
-
-    __big_pillars = { steel01=10, steel02=10, steel06=10, steel07=10 }
-
-    __outer_fences =
-    {
-      STEEL01=40, STEEL02=10, STEEL05=10,
-      STEEL06=15, STEEL07=5, STEEL08=5
-    }
-
-    style_list =
-    {
-      caves = { none=70, few=30,  some=5,  heaps=0 }
-      outdoors = { none=70, few=5,   some=0,  heaps=0 }
-      liquids  = { none=40, few=60,  some=10, heaps=0 }
-      lakes    = { none=60, few=40,  some=0,  heaps=0 } -- I don't think this is need, but to be safe...
-      pictures = { none=50, few=0,   some=0,  heaps=0 }
-    }
-  }
-
-
-  hexen_ultramix10 =
-  {
-    prob = 30
-
-    liquids = { water=30, muck=40, lava=20 }
-
-    buildings = { Desert_room_stone=25, Cave_desert_tan=20,
-                  Cave_desert_gray=15, Village_room=25 }
-    caves     = { Cave_desert_tan=60, Cave_desert_gray=40,
-                  Cave_brown=25 }
-    outdoors  = { Desert_outdoors=50 }
-    hallways  = { Cave_desert_tan=55, Cave_desert_gray=40 }
-
-    __pictures =
-    {
-      pic_forest11=5, pic_books01=1, pic_tomb06=15,
-      pic_monk06=2, pic_monk11=2, pic_spawn13=2
-    }
-
-    __big_pillars = { pillar01=5, monk14=25 }
-
-    __outer_fences =
-    {
-      WASTE01=35, WASTE02=15
-    }
-
-    style_list =
-    {
-      outdoors = { none=0,  few=0,  some=80,  heaps=20 }
-      liquids  = { none=30, few=70, some=5,   heaps=0  }
-      lakes    = { none=10, few=70, some=10,  heaps=0  }
-  --  I have an idea for a natural-net dividing a large natural into small ones connected by tunnels,
-  --  but this doesn't exist and I can't create it now, so...
-  --   This is the wrong type of hallway, but best I can do now.
-  --  hallways = { none=0,  few=10, some=30, heaps=90 }
-    }
-  }
-
-
-  hexen_ultramix11 =
-  {
-    prob = 30
-
-    liquids = { water=60, muck=10, lava=25 }
-
-        --Not sure I like mixing the gray and brown cave themes too much, JB
-    buildings = { Cave_room=50, Cave_gray=15, Cave_brown=5 }
-    caves     = { Cave_gray=20, Cave_stalag=30, Cave_brown=10 }
-    outdoors  = { Cave_outdoors=50 }
-    hallways  = { Cave_gray=30, Cave_stalag=20, Cave_brown=10 }
-
-    __pictures =
-    {
-      pic_forest11=10, pic_monk08=10, pic_winnow02=10,
-      pic_spawn13=4, pic_fire14=5,
-    }
-
-    __big_pillars =
-    {
-      monk14=10, castle07=5, prtl02=5, fire06=10
-    }
-
-    __outer_fences = { CAVE03=20, CAVE04=40, CAVE05=15, WASTE02=25 }
-
-    style_list =
-    {
-      caves      = { none=0,  few=0,  some=0,  heaps=70 }
-      odd_shapes = { none=0,  few=0,  some=30, heaps=70 }
-      outdoors   = { none=30, few=70, some=5,  heaps=0  }
-      crates     = { none=60, few=40, some=0,  heaps=0  }
-    }
-
-    monster_prefs =
-    {
-      demon1=3.0, demon2=3.0
-    }
-
-    door_probs   = { out_diff=10, combo_diff= 3, normal=1 }
-    window_probs = { out_diff=30, combo_diff=30, normal=5 }
-  }
-
-
-  hexen_ultramix12 =
-  {
-    prob = 30
-
-    liquids = { muck=100 }  -- for whole mulit-level swamp1 theme this will be "liquids = { muck=80, water 20 }"
-
-    buildings = { Swamp1_castle=20, Dungeon_castle_gray=20, Swamp1_hut=60 }
-    caves     = { Cave_swamp=20, Cave_gray=30 }
-    outdoors  = { Swamp1_outdoors=50 }
-    hallways  = { Swamp1_castle=20, Dungeon_castle_gray=20, Swamp1_hut=60  }
-
-    __pictures =
-    {
-      pic_forest11=10, pic_monk08=2, pic_winnow02=3, pic_spawn13=5,
-      pic_books01=3, pic_books02=2
-    }
-
-    __big_pillars =
-    {
-      swamp01=20, swamp02=20, vill01=5, wood03=15
-    }
-
-    __outer_fences =
-    {
-      SWAMP01=20, SWAMP03=20, SWAMP04=20, FOREST07=10,
-      CAVE03=10, CAVE04=10, CAVE05=10, CAVE06=10,
-      WASTE02=5
-    }
-
-    style_list =
-    {
-      caves = { none=0, few=5, some=80, heaps=10  }
-      outdoors = { none=0, few=5, some=80, heaps=10  }
-  --   I had considered including flat x_09 (muck) as a floor texture, and not using
-  --  liquids, but realized this would likely produce diases of muck, ect.  We need
-  --  officially transversable liquids for this theme to really work.
-      liquids  = { none=0, few=0, some=0,  heaps=100 }
-      lakes    = { none=0, few=0, some=0,  heaps=100 }
-    }
-
-    monster_prefs =
-    {
-      -- need high values just to make them appear
-      serpent1=5000, serpent2=3000
-    }
-  }
-
-
-  hexen_ultramix13 =
-  {
-    prob = 30
-
-    liquids = { water=60, muck=15, lava=10 }
-
-    buildings = { Forest_room1=30, Forest_room2=20, Forest_room3=30 }
-    caves     = { Cave_gray=30, Cave_green=25, Cave_brown=40 }
-    outdoors  = { Forest_outdoors=50 }
-    hallways  = { Forest_room3=30, Forest_room2=20, Forest_room3=30 }
-
-    __pictures =
-    {
-      pic_glass01=10, pic_glass02=10, pic_glass03=10, pic_forest11=10,
-      pic_monk08=5, pic_winnow02=10, pic_spawn13=3,
-      pic_books01=2, pic_books02=1
-    }
-
-    __big_pillars =
-    {
-      vill01=5, wood01=15, wood02=5, forest01=25,
-      pillar01=10, pillar02=5, prtl02=20, monk15=10,
-      castle07=5
-    }
-
-    style_list =
-    {
-      caves      = { none=0, few=5,  some=50, heaps=10 }
-      outdoors   = { none=0, few=5,  some=50, heaps=10 }
-      subrooms   = { none=0, few=15, some=50, heaps=50 }
-      islands    = { none=0, few=15, some=50, heaps=50 }
-    }
-  }
-
-  hexen_ultramix09 =
-  {
-    prob = 30
-
-    liquids = { water=60, muck=15, lava=10 }
-
-    buildings = { Forest_room1=30, Forest_room2=20, Forest_room3=30,
-                  Desert_room_stone=25, Village_room=45, Village_brick=25,
-                  Dungeon_castle_gray=15, Dungeon_library=5 }
-    caves     = { Cave_gray=30, Cave_green=25, Cave_brown=40 }
-    outdoors  = { Forest_outdoors=50 }
-    hallways  = { Forest_room3=30, Forest_room2=20, Forest_room3=30,
-                  Desert_room_stone=25, Village_room=45,
-                  Dungeon_castle_gray=15 }
-
-    __pictures =
-    {
-      pic_glass01=10, pic_glass02=10, pic_glass03=10, pic_forest11=10,
-      pic_monk08=5, pic_winnow02=10, pic_spawn13=3,
-      pic_books01=2, pic_books02=1
-    }
-
-    __big_pillars =
-    {
-      vill01=5, wood01=15, wood02=5, forest01=25,
-      pillar01=10, pillar02=5, prtl02=20, monk15=10,
-      castle07=5
-    }
-
-    style_list =
-    {
-      caves      = { none=0, few=5,  some=50, heaps=10 }
-      outdoors   = { none=0, few=5,  some=50, heaps=10 }
-      subrooms   = { none=0, few=15, some=50, heaps=50 }
-      islands    = { none=0, few=15, some=50, heaps=50 }
-    }
-  
-    monster_prefs =
-    {
-      afrit=3.0, etin=2.5, bishop=1.5
-    }
-  }
 }
 
 
@@ -5115,6 +4619,16 @@ HEXEN.MONSTERS =
   {
     level = 7
     prob = 5
+    health = 150
+    damage = 50
+    attack = "missile"
+    float = true
+  }
+
+  reiver_b  =
+  {
+    replaces = "reiver"
+    replace_prob = 65
     health = 150
     damage = 50
     attack = "missile"
@@ -5444,7 +4958,7 @@ HEXEN.EPISODES =
 {
   episode1 =
   {
-    theme = "ULTRAMIX"
+    theme = "ELEMENTAL"
     sky_light = 0.65
   }
 
@@ -5485,9 +4999,24 @@ HEXEN.THEME_FOR_MAP =
   [10] = "hexen_wild2"
   [11] = "hexen_wild1"
   [14] = "hexen_dungeon6"
+  [15] = "hexen_dungeon1"
+  [16] = "hexen_dungeon1"
   [17] = "hexen_wild4"
+  [18] = "hexen_dungeon1"
+  [19] = "hexen_dungeon1"
+  [20] = "hexen_dungeon1"
+  [21] = "hexen_dungeon1"
+  [22] = "hexen_dungeon2"
+  [23] = "hexen_dungeon2"
   [24] = "hexen_dungeon1"
   [25] = "hexen_dungeon4"
+  [26] = "hexen_dungeon2"
+  [27] = "hexen_dungeon2"
+  [28] = "hexen_dungeon2"
+  [29] = "hexen_dungeon3"
+  [30] = "hexen_dungeon3"
+  [31] = "hexen_dungeon3"
+  [32] = "hexen_dungeon3"
   [35] = "hexen_dungeon2"
 }
 
@@ -5547,6 +5076,7 @@ function HEXEN.get_levels()
       }
 
       -- make certain levels match original
+	  -- Was not working, so fixed above, BlackJar72
       if OB_CONFIG.theme == "original" then
         if ep_index == 3 then
           LEV.theme_name = "hexen_dungeon1"
@@ -5774,14 +5304,6 @@ OB_THEMES["hexen_village"] =
   label = "Village"
   for_games = { hexen=1 }
   name_theme = "URBAN"
-  mixed_prob = 20
-}
-
-OB_THEMES["hexen_ultramix"] =
-{
-  label = "Ultramix"
-  for_games = { hexen=1 }
-  name_theme = "GOTHIC"
   mixed_prob = 20
 }
 
