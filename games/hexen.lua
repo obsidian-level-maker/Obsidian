@@ -1002,7 +1002,6 @@ HEXEN.SKINS =
     light = 64
   }
 
-
   Pic_DemonCross =
   {
     _prefab = "PICTURE"
@@ -1093,6 +1092,85 @@ HEXEN.SKINS =
     _copy = "Pic_Doggy"
 
     pic = "TOMB06"
+  }
+  
+  Pic_GlassSmall =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = { GLASS01=25, GLASS03=25, GLASS05=25,
+			  GLASS02=5,  GLASS04=5,  GLASS06=5 }
+    pic_w = 64
+    pic_h = 128
+
+    light = 128
+  }
+  
+  Pic_GlassBig = 
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "TOMB03"
+    pic_w = 128
+    pic_h = 128
+
+    light = 128
+  }
+  
+  Pic_BooksSmall = 
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "BOOKS01"
+    pic_w = 64
+    pic_h = 128
+
+    light = 32
+  }
+  
+  Pic_BooksBig = 
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "BOOKS02"
+    pic_w = 128
+    pic_h = 128
+
+    light = 32
+  }
+  
+  Pic_Planets = 
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "PLANET1"
+    pic_w = 128
+    pic_h = 128
+
+    light = 32
+  }
+  
+  Pic_Grave = 
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = { GRAVE05=25, GRAVE06=25, GRAVE07=25, GRAVE08=25 }
+    pic_w = 64
+    pic_h = 40
+
+    light = 32
   }
 
   Pic_Saint =
@@ -1755,7 +1833,8 @@ HEXEN.THEME_DEFAULTS =
   pedestals = { Pedestal_1 = 50 }
 
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50,
-              Lift_Up1 = 1,   Lift_Down1 = 1 }
+              -- Lift_Up1 = 1,   Lift_Down1 = 1 -- until lifts work in Hexen, BlackJar72
+			}
 
 ---???  weapon2 = { Weapon2_Set = 50 }
 ---???  weapon3 = { Weapon3_Set = 50 }
@@ -2019,6 +2098,7 @@ HEXEN.NAME_THEMES =
         Traductus=30
         Circe=5
         Hades=5
+		Persephone=5
         Hecate=5
         Medea=1
         Loki=5
@@ -2519,7 +2599,7 @@ HEXEN.ROOM_THEMES =
       CASTLE11=10
         }
 
-        rarity="episode"
+    rarity="episode"
 
     walls =
     { -- When/if prefab bookshelve are available, the walls should usuallty not be books, JB
@@ -3100,7 +3180,7 @@ HEXEN.ROOM_THEMES =
     {
       FOREST01=10
       MONK16=25
-        }
+    }
 
     walls =
     {
@@ -3718,19 +3798,24 @@ HEXEN.LEVEL_THEMES =
 
     buildings = { Dungeon_monktan=40, Dungeon_monktan_large=20,
                   Dungeon_monkgray=30, Dungeon_monkrosette=15,
-                  Dungeon_library=5 }
+                }
     caves     = { Cave_gray=50 }
     outdoors  = { Dungeon_outdoors1=50 }
     hallways  = { Dungeon_monktan=40, Dungeon_monktan_large=20,
                   Dungeon_monkgray=30, Dungeon_monkrosette=15 }
 
-    __pictures =
+    pictures =
     {
-      pic_glass01=20, pic_glass02=2, pic_glass03=20, pic_glass04=2, 
-    pic_glass05=20, pic_glass06=2, pic_tomb03=5, pic_books01=15,
-    pic_books02=15, pic_brass1=10, pic_tomb06=10, pic_forest11=5,
-    pic_monk08=5, pic_planet1=5, pic_monk06=5, pic_monk11=5, 
-    pic_spawn13=2, 
+      Pic_GlassSmall=65
+	  Pic_GlassBig=10
+	  Pic_BooksSmall=10
+	  Pic_BooksBig=10
+	  Pic_Planets=5
+	  Pic_Saint=10
+	  Pic_Doggy=15
+	  Pic_Dragon=15 
+      Pic_DemonFace2=10
+      Pic_DemonFace=10
     }
 
     -- FIXME: other stuff
@@ -3757,7 +3842,7 @@ HEXEN.LEVEL_THEMES =
   
     buildings = { Dungeon_castle_gray=30,  Dungeon_castle_gray_small= 15,
                   Dungeon_castle_gray_chains=5, Dungeon_castle_yellow=15,
-                  Dungeon_library=5 }
+                }
     caves     = { Cave_gray=30, Cave_swamp=5, Cave_green=15 }
     outdoors  = { Dungeon_outdoors2=50 }
     hallways  = { Dungeon_castle_gray=30,  Dungeon_castle_gray_small= 15,
@@ -3768,12 +3853,17 @@ HEXEN.LEVEL_THEMES =
       CASTLE07=50, CASTLE11=10, CAVE01=10, 
       CAVE02=15, PRTL03=10
     }
-  
-    __pictures =
+	
+    pictures =
     {
-      Pic_forest11=10, Pic_monk08=10, Pic_winnow02=10, 
-      Pic_spawn13=5, Pic_fire14=5, Pic_books01=1,
-      Pic_glass01=1, Pic_glass03=1, Pic_glass05=1
+      Pic_GlassSmall=5
+	  Pic_BooksSmall=5
+	  Pic_BooksBig=5
+	  Pic_Saint=10
+	  Pic_Doggy=15
+	  Pic_Dragon=15 
+      Pic_DemonFace2=15
+      Pic_SwordGuy=25
     }
 
     -- FIXME: other stuff
@@ -3789,7 +3879,7 @@ HEXEN.LEVEL_THEMES =
       outdoors = { none=50, few=50, some=20,  heaps=0 }
       mon_variety = { none=1, few=65, some=30, heaps=4 }               
     }
-    }
+  }
   
 
   -- Tombs / necropolis
@@ -3804,17 +3894,17 @@ HEXEN.LEVEL_THEMES =
     outdoors  = { Dungeon_outdoors2=50 }
     hallways  = { Dungeon_tomb1=10, Dungeon_tomb2=10, Dungeon_tomb3=10 }
   
-    __pictures =
+    	
+    pictures =
     {
-      pic_glass01=20, pic_glass02=2, pic_glass03=20, pic_glass04=2, 
-      pic_glass05=20, pic_glass06=2, pic_tomb03=50, pic_books01=15,
-      pic_books02=15, pic_brass1=10, pic_tomb06=10, pic_forest11=5,
-      pic_monk08=5, pic_planet1=5, pic_monk06=5, pic_monk11=5, 
-      pic_spawn13=2, 
-      
-      Pic_forest11=10, Pic_monk08=10, Pic_winnow02=10, 
-      Pic_spawn13=5, Pic_fire14=5, Pic_books01=1,
-      Pic_glass01=1, Pic_glass03=1, Pic_glass05=1
+      Pic_GlassSmall=25
+      Pic_GlassBig=50
+	  Pic_Saint=25
+	  Pic_Doggy=15
+      Pic_DemonFace2=25
+      Pic_DemonCross=5
+      Pic_Grave=60
+	  
     }
 
     -- FIXME: other stuff
@@ -3844,6 +3934,13 @@ HEXEN.LEVEL_THEMES =
     caves     = { Cave_gray=25, Cave_swamp=25 }
     outdoors  = { Dungeon_outdoors2=50 }
     hallways  = { Dungeon_sewer1=30, Dungeon_sewer2=20 }
+	
+    pictures =
+    {
+      Pic_DemonFace2=90
+      Pic_DemonCross=5
+      Pic_DemonFace3=5
+    }
 
     facades =
     {
@@ -3873,14 +3970,14 @@ HEXEN.LEVEL_THEMES =
     caves     = { Cave_gray=50 }
     outdoors  = { Dungeon_outdoors1=50 }
     hallways  = { Dungeon_portals1=45, Dungeon_portals2=15 }
-
-    __pictures =
+	
+    pictures =
     {
-    pic_glass01=20, pic_glass02=2, pic_glass03=20, pic_glass04=2,
-    pic_glass05=20, pic_glass06=2, pic_tomb03=5, pic_books01=15,
-    pic_books02=15, pic_brass1=10, pic_tomb06=10, pic_forest11=5,
-    pic_monk08=5, pic_planet1=5, pic_monk06=5, pic_monk11=5,
-    pic_spawn13=2,
+      Pic_DemonFace2=20
+      Pic_DemonCross=5
+      Pic_DemonFace3=5
+      Pic_Doggy=10
+      Pic_Saint=10
     }
 
     -- FIXME: other stuff
@@ -3898,18 +3995,30 @@ HEXEN.LEVEL_THEMES =
 
     liquids = { lava=95, icefloor=5 }
 
-    buildings = { Dungeon_castle_gray=30,  Fire_room1= 15,
-                  Forest_room3=15, Dungeon_tomb3=10 }
+    buildings = { Dungeon_castle_gray=5,  Fire_room1=5,
+                  Forest_room3=45, Dungeon_tomb3=5 }
     caves     = { Cave_gray=55, Cave_stalag=25, Fire_room1=10 }
     outdoors  = { Dungeon_outdoors2=50 }
-    hallways  = { Dungeon_castle_gray=30,  Fire_room1= 15,
-                  Forest_room3=15, Dungeon_tomb3=10 }
+    hallways  = { Dungeon_castle_gray=5,  Fire_room1=5,
+                  Forest_room3=45, Dungeon_tomb3=5 }
+	
+    pictures =
+    {
+      Pic_GlassSmall=5
+	  Pic_BooksSmall=5
+	  Pic_BooksBig=5
+	  Pic_Saint=10
+	  Pic_Doggy=15
+	  Pic_Dragon=15 
+      Pic_DemonFace2=25
+      Pic_SwordGuy=5
+    }
 
     facades =
     {
       CASTLE07=50, CASTLE11=10, CAVE01=10,
       CAVE02=15, PRTL03=10
-        }
+    }
 
     -- FIXME: other stuff
 
@@ -3936,12 +4045,14 @@ HEXEN.LEVEL_THEMES =
     caves     = { Fire_room2=50 }
     outdoors  = { Fire_outdoors=50 }
     hallways  = { Fire_room1=50, Fire_room2=40 }
-
-    __pictures =
+	
+    pictures =
     {
-      pic_forest11=5, pic_fire14=20, pic_spawn13=3,
-      pic_winnow02=5, pic_brass1=2, pic_monk06=2, pic_monk11=21,
-      pic_glass01=1, pic_glass03=1, pic_glass05=1
+	  Pic_DemonFace3=65
+      Pic_DemonCross=40
+	  Pic_Saint=5
+	  Pic_Doggy=5
+      Pic_DemonFace2=5
     }
 
     __big_pillars = { pillar02=10, fire06=25, xfire=15 }
@@ -3979,10 +4090,13 @@ HEXEN.LEVEL_THEMES =
     caves     = { Ice_cave=50 }
     outdoors  = { Ice_outdoors=50 }
     hallways  = { Ice_room1=65, Ice_room2=35 }
-
-    __pictures =
+	
+    pictures =
     {
-      pic_forest11=10, pic_spawn13=10, 
+	  Pic_DemonFace2=65
+	  Pic_DemonFace3=5
+	  Pic_Doggy=5
+      Pic_Saint=25
     }
 
     __big_pillars = { ice01=5, ice02=20 }
@@ -4021,6 +4135,12 @@ HEXEN.LEVEL_THEMES =
     caves     = { Steel_room_mix=25, Steel_room_gray=25, Steel_room_rust=25 }
     outdoors  = { Steel_room_mix=25, Steel_room_gray=25, Steel_room_rust=25 }
     hallways  = { Steel_room_mix=10, Steel_room_gray=35, Steel_room_rust=25 }
+	
+    pictures =
+    {
+	  Pic_Dragon=5
+      Pic_DemonCross=45
+    }
 
     __big_pillars = { steel01=10, steel02=10, steel06=10, steel07=10 }
 
@@ -4053,6 +4173,15 @@ HEXEN.LEVEL_THEMES =
                   Cave_brown=25 }
     outdoors  = { Desert_outdoors=50 }
     hallways  = { Cave_desert_tan=55, Cave_desert_gray=40 }
+	
+    pictures =
+    {
+	  Pic_DemonFace=4
+	  Pic_BooksSmall=1
+      Pic_DemonFace2=10
+	  Pic_Doggy=5
+	  Pic_Saint=5
+    }
 
     __pictures =
     {
@@ -4091,11 +4220,15 @@ HEXEN.LEVEL_THEMES =
     caves     = { Cave_gray=20, Cave_stalag=30, Cave_brown=10 }
     outdoors  = { Cave_outdoors=50 }
     hallways  = { Cave_gray=30, Cave_stalag=20, Cave_brown=10 }
-
-    __pictures =
+	
+    pictures =
     {
-      pic_forest11=10, pic_monk08=10, pic_winnow02=10, 
-      pic_spawn13=4, pic_fire14=5, 
+	  Pic_DemonFace=4
+	  Pic_DemonCross=1
+      Pic_DemonFace2=10
+	  Pic_DemonFace3=5
+	  Pic_Doggy=5
+	  Pic_Saint=5
     }
 
     __big_pillars =
@@ -4132,12 +4265,16 @@ HEXEN.LEVEL_THEMES =
     buildings = { Swamp1_castle=20, Dungeon_castle_gray=20, Swamp1_hut=60 }
     caves     = { Cave_swamp=20, Cave_gray=30 }
     outdoors  = { Swamp1_outdoors=50 }
-    hallways  = { Swamp1_castle=20, Dungeon_castle_gray=20, Swamp1_hut=60  }
-
-    __pictures =
+    hallways  = { Swamp1_castle=20, Dungeon_castle_gray=20, Swamp1_hut=60 }
+	
+    pictures =
     {
-      pic_forest11=10, pic_monk08=2, pic_winnow02=3, pic_spawn13=5,
-      pic_books01=3, pic_books02=2
+	  Pic_DemonFace=2
+	  Pic_BooksSmall=1
+      Pic_DemonFace2=25
+      Pic_DemonFace3=7
+	  Pic_Doggy=5
+	  Pic_Saint=5
     }
 
     __big_pillars =
@@ -4182,12 +4319,15 @@ HEXEN.LEVEL_THEMES =
     caves     = { Cave_gray=30, Cave_green=25, Cave_brown=40 }
     outdoors  = { Forest_outdoors=50 }
     hallways  = { Forest_room3=30, Forest_room2=20, Forest_room3=30 }
-
-    __pictures =
+	
+    pictures =
     {
-      pic_glass01=10, pic_glass02=10, pic_glass03=10, pic_forest11=10,
-      pic_monk08=5, pic_winnow02=10, pic_spawn13=3,
-      pic_books01=2, pic_books02=1
+	  Pic_DemonFace=4
+	  Pic_BooksSmall=1
+      Pic_DemonFace2=10
+	  Pic_GlassSmall=5
+	  Pic_Doggy=5
+	  Pic_Saint=5
     }
 
     __big_pillars =
@@ -4223,11 +4363,15 @@ HEXEN.LEVEL_THEMES =
     caves     = { Cave_gray=20, Cave_stalag=30, Cave_brown=10 }
     outdoors  = { Cave_outdoors=50 }
     hallways  = { Cave_gray=30, Cave_stalag=20, Cave_brown=10 }
-
-    __pictures =
+	
+    pictures =
     {
-      pic_forest11=10, pic_monk08=10, pic_winnow02=10, 
-      pic_spawn13=4, pic_fire14=5, 
+	  Pic_DemonFace=4
+	  Pic_DemonCross=1
+      Pic_DemonFace2=10
+	  Pic_DemonFace3=5
+	  Pic_Doggy=5
+	  Pic_Saint=5
     }
 
     __big_pillars =
@@ -4266,10 +4410,11 @@ HEXEN.LEVEL_THEMES =
     caves     = { Ice_cave=50 }
     outdoors  = { Ice_outdoors=50 }
     hallways  = { Ice_room1=65, Ice_room2=35 }
-
-    __pictures =
+	
+    pictures =
     {
-      pic_forest11=10, pic_spawn13=10, 
+	  Pic_Dragon=5
+      Pic_DemonCross=15
     }
 
     __big_pillars = { ice01=5, ice02=20 }
@@ -4306,11 +4451,15 @@ HEXEN.LEVEL_THEMES =
     caves     = { Cave_swamp=20, Cave_gray=30 }
     outdoors  = { Swamp1_outdoors=50 }
     hallways  = { Swamp1_castle=20, Dungeon_castle_gray=20, Swamp1_hut=60  }
-
-    __pictures =
+	
+    pictures =
     {
-      pic_forest11=10, pic_monk08=2, pic_winnow02=3, pic_spawn13=5,
-      pic_books01=3, pic_books02=2
+	  Pic_DemonFace=2
+	  Pic_BooksSmall=1
+      Pic_DemonFace2=25
+      Pic_DemonFace3=7
+	  Pic_Doggy=5
+	  Pic_Saint=5
     }
 
     __big_pillars = { swamp01=20, swamp02=20, vill01=5, wood03=15 }
@@ -4349,18 +4498,25 @@ HEXEN.LEVEL_THEMES =
   
     buildings = { Forest_room1=30, Forest_room2=20, Forest_room3=30,
                   Desert_room_stone=25, Village_room=45, Village_brick=25,
-                  Dungeon_castle_gray=15, Dungeon_library=5 }
+                  Dungeon_castle_gray=15 }
     caves     = { Cave_gray=30, Cave_green=25, Cave_brown=40 }
     outdoors  = { Forest_outdoors=50 }
     hallways  = { Forest_room3=30, Forest_room2=20, Forest_room3=30,
                   Desert_room_stone=25, Village_room=45,
                   Dungeon_castle_gray=15 }
-
-    __pictures =
+	
+    pictures =
     {
-      pic_glass01=10, pic_glass02=10, pic_glass03=10, pic_forest11=10,
-      pic_monk08=5, pic_winnow02=10, pic_spawn13=3,
-      pic_books01=2, pic_books02=1
+	  Pic_DemonFace=5
+	  Pic_BooksSmall=10
+	  Pic_BooksBig=10
+      Pic_DemonFace2=10
+      Pic_GlassSmall=15
+	  Pic_GlassBig=10
+	  Pic_Doggy=5
+	  Pic_Saint=5
+	  Pic_Dragon=5 
+      Pic_SwordGuy=5
     }
 
     __big_pillars =
@@ -4624,7 +4780,7 @@ HEXEN.MONSTERS =
     attack = "missile"
     float = true
   }
-
+  
   reiver_b  =
   {
     replaces = "reiver"
