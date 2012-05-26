@@ -820,7 +820,9 @@ function Rooms_select_textures()
     L.skin.facade = L.wall_mat
     L.skin.spike_group = "spike" .. tostring(L.id)
 
-    if L.kind != "outdoor" and L.zone.facade_mat then
+    if L.kind != "outdoor" and L.zone.facade_mat and
+       LEVEL.special != "street" -- in street mode, want distinctive buildings
+    then
       L.skin.facade = L.zone.facade_mat
     end
   end
