@@ -20,6 +20,9 @@
 
 TNT = { }
 
+
+---> old stuff --->
+
 TN_COMBOS =
 {
   URBAN_EGYPT =
@@ -244,30 +247,181 @@ TN_SKY_INFO =
   { color="red",    light=192 }
 }
 
-
-----------------------------------------------------------------
-
-
-function tnt_modifier(T)
-
-  T.rails = copy_and_merge(T.rails,  TN_RAILS)
-
----##  T.doors   = copy_and_merge(T.doors,  TN_DOORS)
-
-  T.combos = copy_and_merge(T.combos, TN_COMBOS)
-  T.rooms  = copy_and_merge(T.rooms,  TN_ROOMS)
-
-  T.sc_fabs   = copy_and_merge(T.sc_fabs,   TN_SCENERY_PREFABS)
-  T.wall_fabs = copy_and_merge(T.wall_fabs, TN_WALL_PREFABS)
-
-  T.sky_info = TN_SKY_INFO
-
-  return T
-end
-
+--- <--- end of old stuff <----
 
 
 ----------------------------------------------------------------
+
+
+TNT.MATERIALS =
+{
+  TNTDOOR  = { t="TNTDOOR",   f="FLAT23" }
+  DOC1     = { t="DOC1",      f="FLAT23" }
+  DISASTER = { t="DISASTER",  f="FLOOR7_1" }
+  MTNT1    = { t="MTNT1",     f="FLOOR7_2" }
+
+  METALDR  = { t="TNTDOOR",  f="CEIL5_2" }
+  M_RDOOR  = { t="M_RDOOR",  f="FLOOR7_1" }
+  M_YDOOR  = { t="M_RDOOR",  f="FLOOR7_1" }
+
+  -- we replace the existing DOOM material for these two
+  ASHWALL  = { t="ASPHALT",  f="MFLR8_4" }
+  SUPPORT3 = { t="EGSUPRT3", f="CEIL5_2" }
+
+  METAL_BD = { t="METAL-BD", f="CEIL5_2" }
+  METAL_RM = { t="METAL-BD", f="CEIL5_2" }
+
+  CAVERN1  = { t="CAVERN1",  f="RROCK07" }
+  CAVERN4  = { t="CAVERN4",  f="MFLR8_3" }
+  CAVERN6  = { t="CAVERN6",  f="RROCK17" }
+  CAVERN7  = { t="CAVERN7",  f="RROCK16" }
+
+  SMSTONE6 = { t="SMSTONE6", f="RROCK20" }
+  STONEW1  = { t="STONEW1",  f="FLAT1_2" }
+  STONEW5  = { t="STONEW5",  f="MFLR8_3" }
+
+  -- TODO: rest of the gazillion crates....
+
+  -- TODO: DO* textures
+
+  LITEGRN1 = { t="LITEGRN1", f="FLAT1" }
+  LITERED1 = { t="LITERED1", f="FLAT1" }
+  LITERED2 = { t="LITERED2", f="FLAT23" }
+  LITEYEL1 = { t="LITEYEL1", f="CEIL5_1" }
+  LITEYEL2 = { t="LITEYEL2", f="FLAT23" }
+  LITEYEL3 = { t="LITEYEL3", f="FLAT23" }
+
+  -- TODO: rest of the egypt stuff
+
+  MURAL1   = { t="MURAL1",   f="FLAT1" }
+  MURAL2   = { t="MURAL2",   f="FLAT1" }
+  PILLAR   = { t="PILLAR",   f="FLAT1" }
+
+
+  -- TODO: rails: BRNOPEN, GRNOPEN, REDOPEN, SMGLASS1
+}
+
+
+TNT.SKINS =
+{
+  ---| PICTURES |---
+
+  Pic_TNT1 =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "TNTDOOR"
+    pic_w = 128
+    pic_h = 72
+
+    light = 32
+  }
+
+  Pic_TNT2 =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "DOC1"
+    pic_w = 128
+    pic_h = 72
+    y_offset = 16
+
+    light = 32
+  }
+
+  Pic_EgyptMural =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = { MURAL1=50, MURAL2=50 }
+    pic_w = 128
+    pic_h = 128
+
+    light = 16
+  }
+
+  Pic_DisasterArea =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "DISASTER"
+    pic_w = 128
+    pic_h = 72
+    y_offset = 56
+
+    light = 32
+    effect = 2
+  }
+
+
+  ---| DOORS |---
+
+  MiniHall_Door_tech =
+  {
+    _prefab = "MINI_DOOR1"
+    _shape  = "I"
+    _delta  = 0
+    _door   = 1
+
+    door   = "METALDR"
+    track  = "DOORTRAK"
+    step   = "STEP4"
+    metal  = "DOORSTOP"
+    lite   = "LITEYEL1"
+    c_lite = "TLITE6_1"
+  }
+
+  MiniHall_Door_hell =
+  {
+    _prefab = "MINI_DOOR1"
+    _shape  = "I"
+    _delta  = 0
+
+    door   = "METALDR"
+    track  = "DOORTRAK"
+    step   = "STEP4"
+    metal  = "METAL"
+    lite   = "FIREWALL"
+  }
+}
+
+
+TNT.THEME_DEFAULTS =
+{
+}
+
+
+TNT.LEVEL_THEMES =
+{
+  -- Note: we are only modifying these themes, supplying just the new stuff
+  --       hence we don't need a complete copy of them.
+
+  doom_tech1 =
+  {
+    pictures =
+    {
+      Pic_Computer = 70
+      Pic_TNT1 = 50
+      Pic_TNT2 = 50
+
+      Pic_LiteGlow = 20
+      Pic_LiteGlowBlue = 10
+      Pic_LiteFlash = 20
+    }
+  }
+}
+
+
+----------------------------------------------------------------
+
 
 OB_GAMES["tnt"] =
 {
