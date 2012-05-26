@@ -920,7 +920,7 @@ function Monsters_in_room(L)
   end
 
 
-  local function calc_toughness()
+  local function OLD_calc_toughness()
     -- determine a "toughness" value, where 1.0 is easy and
     -- higher values produces tougher monsters.
 
@@ -2052,7 +2052,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
   L.big_item_spots = {} -- FIXME table.deep_copy(R.mon_spots)
 
-  L.toughness = calc_toughness()
+---???  L.toughness = calc_toughness()
+
   L.firepower = Player_firepower()
 
   gui.debugf("Firepower = %1.3f\n", L.firepower)
