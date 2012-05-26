@@ -1071,7 +1071,7 @@ HEXEN.SKINS =
     light = 32
   }
 
-  Pic_Doggy =
+  Pic_Dogs =
   {
     _prefab = "PICTURE"
     _where  = "edge"
@@ -1089,7 +1089,7 @@ HEXEN.SKINS =
 
   Pic_SwordGuy =
   {
-    _copy = "Pic_Doggy"
+    _copy = "Pic_Dogs"
 
     pic = "TOMB06"
   }
@@ -1871,7 +1871,7 @@ HEXEN.THEME_DEFAULTS =
     Pic_DemonFace3 = 5
 
     Pic_Dragon = 50
-    Pic_Doggy = 20
+    Pic_Dogs = 20
     Pic_SwordGuy = 30
     Pic_Saint = 30
   }
@@ -3812,7 +3812,7 @@ HEXEN.LEVEL_THEMES =
 	  Pic_BooksBig=10
 	  Pic_Planets=5
 	  Pic_Saint=10
-	  Pic_Doggy=15
+	  Pic_Dogs=15
 	  Pic_Dragon=15 
       Pic_DemonFace2=10
       Pic_DemonFace=10
@@ -3860,7 +3860,7 @@ HEXEN.LEVEL_THEMES =
 	  Pic_BooksSmall=5
 	  Pic_BooksBig=5
 	  Pic_Saint=10
-	  Pic_Doggy=15
+	  Pic_Dogs=15
 	  Pic_Dragon=15 
       Pic_DemonFace2=15
       Pic_SwordGuy=25
@@ -3900,7 +3900,7 @@ HEXEN.LEVEL_THEMES =
       Pic_GlassSmall=25
       Pic_GlassBig=50
 	  Pic_Saint=25
-	  Pic_Doggy=15
+	  Pic_Dogs=15
       Pic_DemonFace2=25
       Pic_DemonCross=5
       Pic_Grave=60
@@ -3976,7 +3976,7 @@ HEXEN.LEVEL_THEMES =
       Pic_DemonFace2=20
       Pic_DemonCross=5
       Pic_DemonFace3=5
-      Pic_Doggy=10
+      Pic_Dogs=10
       Pic_Saint=10
     }
 
@@ -4008,7 +4008,7 @@ HEXEN.LEVEL_THEMES =
 	  Pic_BooksSmall=5
 	  Pic_BooksBig=5
 	  Pic_Saint=10
-	  Pic_Doggy=15
+	  Pic_Dogs=15
 	  Pic_Dragon=15 
       Pic_DemonFace2=25
       Pic_SwordGuy=5
@@ -4051,7 +4051,7 @@ HEXEN.LEVEL_THEMES =
 	  Pic_DemonFace3=65
       Pic_DemonCross=40
 	  Pic_Saint=5
-	  Pic_Doggy=5
+	  Pic_Dogs=5
       Pic_DemonFace2=5
     }
 
@@ -4095,7 +4095,7 @@ HEXEN.LEVEL_THEMES =
     {
 	  Pic_DemonFace2=65
 	  Pic_DemonFace3=5
-	  Pic_Doggy=5
+	  Pic_Dogs=5
       Pic_Saint=25
     }
 
@@ -4179,7 +4179,7 @@ HEXEN.LEVEL_THEMES =
 	  Pic_DemonFace=4
 	  Pic_BooksSmall=1
       Pic_DemonFace2=10
-	  Pic_Doggy=5
+	  Pic_Dogs=5
 	  Pic_Saint=5
     }
 
@@ -4227,7 +4227,7 @@ HEXEN.LEVEL_THEMES =
 	  Pic_DemonCross=1
       Pic_DemonFace2=10
 	  Pic_DemonFace3=5
-	  Pic_Doggy=5
+	  Pic_Dogs=5
 	  Pic_Saint=5
     }
 
@@ -4273,7 +4273,7 @@ HEXEN.LEVEL_THEMES =
 	  Pic_BooksSmall=1
       Pic_DemonFace2=25
       Pic_DemonFace3=7
-	  Pic_Doggy=5
+	  Pic_Dogs=5
 	  Pic_Saint=5
     }
 
@@ -4326,7 +4326,7 @@ HEXEN.LEVEL_THEMES =
 	  Pic_BooksSmall=1
       Pic_DemonFace2=10
 	  Pic_GlassSmall=5
-	  Pic_Doggy=5
+	  Pic_Dogs=5
 	  Pic_Saint=5
     }
 
@@ -4370,7 +4370,7 @@ HEXEN.LEVEL_THEMES =
 	  Pic_DemonCross=1
       Pic_DemonFace2=10
 	  Pic_DemonFace3=5
-	  Pic_Doggy=5
+	  Pic_Dogs=5
 	  Pic_Saint=5
     }
 
@@ -4458,7 +4458,7 @@ HEXEN.LEVEL_THEMES =
 	  Pic_BooksSmall=1
       Pic_DemonFace2=25
       Pic_DemonFace3=7
-	  Pic_Doggy=5
+	  Pic_Dogs=5
 	  Pic_Saint=5
     }
 
@@ -4513,7 +4513,7 @@ HEXEN.LEVEL_THEMES =
       Pic_DemonFace2=10
       Pic_GlassSmall=15
 	  Pic_GlassBig=10
-	  Pic_Doggy=5
+	  Pic_Dogs=5
 	  Pic_Saint=5
 	  Pic_Dragon=5 
       Pic_SwordGuy=5
