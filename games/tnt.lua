@@ -260,13 +260,14 @@ TNT.MATERIALS =
   DISASTER = { t="DISASTER",  f="FLOOR7_1" }
   MTNT1    = { t="MTNT1",     f="FLOOR7_2" }
 
-  METALDR  = { t="TNTDOOR",  f="CEIL5_2" }
+  METALDR  = { t="METALDR",  f="CEIL5_2" }
   M_RDOOR  = { t="M_RDOOR",  f="FLOOR7_1" }
   M_YDOOR  = { t="M_RDOOR",  f="FLOOR7_1" }
 
   -- we replace the existing DOOM material for these two
-  ASHWALL  = { t="ASPHALT",  f="MFLR8_4" }
   SUPPORT3 = { t="EGSUPRT3", f="CEIL5_2" }
+  ASHWALL  = { t="ASPHALT",  f="MFLR8_4" }
+  MFLR8_4  = { t="ASPHALT",  f="MFLR8_4" }
 
   METAL_BD = { t="METAL-BD", f="CEIL5_2" }
   METAL_RM = { t="METAL-BD", f="CEIL5_2" }
@@ -282,7 +283,8 @@ TNT.MATERIALS =
 
   -- TODO: rest of the gazillion crates....
 
-  -- TODO: DO* textures
+  -- TODO: rest of DO* textures, PNK4EXIT
+  DOKGRIR  = { t="DOKGRIR",  f="RROCK20" }
 
   LITEGRN1 = { t="LITEGRN1", f="FLAT1" }
   LITERED1 = { t="LITERED1", f="FLAT1" }
@@ -291,12 +293,15 @@ TNT.MATERIALS =
   LITEYEL2 = { t="LITEYEL2", f="FLAT23" }
   LITEYEL3 = { t="LITEYEL3", f="FLAT23" }
 
+  EGGREENI = { t="EGGREENI", f="RROCK20" }
+  EGREDI   = { t="EGREDI",   f="FLAT5_3" }
+
   -- TODO: rest of the egypt stuff
 
   MURAL1   = { t="MURAL1",   f="FLAT1" }
   MURAL2   = { t="MURAL2",   f="FLAT1" }
-  PILLAR   = { t="PILLAR",   f="FLAT1" }
 
+  PILLAR   = { t="PILLAR",   f="FLAT1" }
 
   -- TODO: rails: BRNOPEN, GRNOPEN, REDOPEN, SMGLASS1
 }
@@ -361,6 +366,34 @@ TNT.SKINS =
     effect = 2
   }
 
+  Pic_LiteGlowGreen =
+  {
+    _copy = "Pic_LiteGlow"
+
+    pic = "LITEGRN1"
+  }
+
+  Pic_LiteGlowRed =
+  {
+    _copy = "Pic_LiteGlow"
+
+    pic = "LITERED1"
+  }
+
+  Pic_LiteGlowYellow =
+  {
+    _copy = "Pic_LiteGlow"
+
+    pic = "LITEYEL1"
+  }
+
+  Pic_LiteFlashYellow =
+  {
+    _copy = "Pic_LiteFlash"
+
+    pic = "LITEYEL2"
+  }
+
 
   ---| DOORS |---
 
@@ -391,6 +424,27 @@ TNT.SKINS =
     metal  = "METAL"
     lite   = "FIREWALL"
   }
+
+
+  ---| TELEPORTERS |---
+
+  Teleporter_Closet =
+  {
+    _prefab = "TELEPORT_CLOSET"
+    _where  = "closet"
+--!!!!  _long   = 192
+
+    tele = "GATE4"
+    tele_side = "METAL"
+
+    inner = "DOKGRIR"
+    floor = "CEIL3_3"
+    ceil  = "CEIL3_3"
+    step  = "STEP1"
+
+    special = 97
+  }
+
 }
 
 
@@ -399,10 +453,28 @@ TNT.THEME_DEFAULTS =
 }
 
 
+TNT.ROOM_THEMES =
+{
+  Urban_cave =
+  {
+    naturals =
+    {
+--!!      ASHWALL  = 50
+--      ASHWALL7 = 15
+
+--      ROCK3    = 70
+      CAVERN1  = 25
+      CAVERN6  = 50
+      CAVERN7  = 15
+    }
+  }
+}
+
+
 TNT.LEVEL_THEMES =
 {
-  -- Note: we are only modifying these themes, supplying just the new stuff
-  --       hence we don't need a complete copy of them.
+  -- Note: we are only modifying these themes (supplying new tables)
+  --       hence we don't need a complete copy of each one
 
   doom_tech1 =
   {
@@ -413,8 +485,24 @@ TNT.LEVEL_THEMES =
       Pic_TNT2 = 50
 
       Pic_LiteGlow = 20
-      Pic_LiteGlowBlue = 10
+      Pic_LiteGlowRed = 10
+      Pic_LiteGlowGreen = 10
       Pic_LiteFlash = 20
+      Pic_LiteFlashYellow = 20
+    }
+  }
+
+  doom_urban1 =
+  {
+    pictures =
+    {
+      Pic_MetalFace = 50
+      Pic_MetalFaceLit = 50
+      Pic_MarbFace = 25
+
+      Pic_EgyptMural = 50
+      Pic_DisasterArea = 20
+      Pic_TNT1 = 10
     }
   }
 }
