@@ -1626,7 +1626,7 @@ function HACX.get_levels()
       LEV.mon_along = ep_along
     else
       -- difficulty ramps up over whole wad
-      LEV.mon_along = math.quadratic(map / (MAP_NUM + 1))
+      LEV.mon_along = map * 1.2 / math.min(MAP_NUM, 20)
     end
 
     -- secret levels
