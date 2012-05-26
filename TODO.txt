@@ -7,8 +7,6 @@ Current Goals:
 (1) improve the monster progression, which does not ramp up quickly
     enough over a "full" game.
 
-(3) add normal doors, probably as "mini halls"
-
 (4) add some floor/ceiling prefabs:
       (a) crates
       (b) ceiling lights
@@ -22,8 +20,10 @@ Current Goals:
 DONE: secret exits
 DONE: can disable pre-built levels
 DONE: ensure hallways have monster/item spots
+DONE: add normal doors, probably as "mini halls"
 
 
+FIXED : no sky fences !!!
 FIXED : double halls
 FIXED : progress bar jumps for MAP31/MAP32
 

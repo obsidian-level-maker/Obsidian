@@ -5,10 +5,7 @@ CHANGES (since 3.57)
 * V4 began as an experiment into a completely new way to layout rooms
   using prefabs for everything including floors and ceilings.  However
   this system proved to be unsatisfactory (not flexible enough), so I
-  scrapped it and went back to the drawing board.  Since then, nearly
-  all parts of the Lua code have been reworked or rewritten, and work
-  continues to bring OBLIGE upto the standard of earlier releases and
-  eventually to create even better levels.
+  scrapped it and went back to the drawing board.
 
 + Prefab system!
 

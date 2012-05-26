@@ -411,12 +411,22 @@ Mazes:
   MONSTERS / ITEMS
 ----------------------------------------------------------------
 
++  SpiderMasterminds only appear very very rarely
+
 +  in later levels, low-level monsters should be used in bigger swarms
 
 -  support "Swarms" : a group of 3-N monsters (either a
    single monster or 2-3 of a certain class), and place
    all the monsters close to each other, perhaps even
    have swarm patterns.
+
+IDEA: can compute the "toughness" of a monster palette by
+        each m in palette do sum += palette[m] * m.toughness end
+
+      hence could adjust a randomly chosen palette until the
+      toughness matches what is needed in a room/zone/level.
+      [assumes palette[m] is in range 0 to 1+, i.e. fraction]
+
 
 IDEA: give each monster a "class" field (e.g. class="undead")
       and have a strong tendency to use the same class of
