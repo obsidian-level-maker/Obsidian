@@ -20,6 +20,11 @@
 
 PLUTONIA = { }
 
+
+
+-----> old stuff ---->
+
+
 PL_COMBOS =
 {
   ---- CAVE -------------
@@ -145,29 +150,86 @@ PL_MISC_PREFABS =
   }
 }
 
+-----< end of old stuff <-----
+
+
 ----------------------------------------------------------------
 
-function plut_modifier(T)
+PLUTONIA.MATERIALS =
+{
+  -- Note the hyphens in the actual texture names, which have been
+  -- converted to an underscore for the OBLIGE material names.
+  
+  A-BRBRK
+  A-BRBRK2
+  A-BRICK1
+  A-BRICK2
+  A-BRICK3
+  A-BROCK2
+  A-BROWN1
+  A-BROWN2
+  A-BROWN3
+  A-BROWN5
 
-  T.ERROR_TEX = "SLOPPY1"
+  A-CAMO1
+  A-CAMO2
+  A-CAMO3
+  A-CAMO4
 
-  T.combos   = copy_and_merge(T.combos,   PL_COMBOS)
-  T.hallways = copy_and_merge(T.hallways, PL_HALLWAYS)
+  A-CONCTE
+  A-DBRI1
+  A-DBRI2
+  A-DROCK1
+  A-DROCK2
 
-  T.rails   = copy_and_merge(T.rails,   PL_RAILS)
-  T.doors   = copy_and_merge(T.doors,   PL_DOORS)
-  T.liquids = copy_and_merge(T.liquids, PL_LIQUIDS)
+  A-MARBLE
+  A-MOSBRI
+  A-MOSROK
+  A-MOSRK2
+  A-MOULD
+  A-MUD
 
-  T.misc_fabs = copy_and_merge(T.misc_fabs, PL_MISC_PREFABS)
+  A-MYWOOD
+  A-POIS
+  A-REDROK
+  A-ROCK
+  A-TILE  
+  A-VINE3
+  A-VINE4
+  A-VINE5
 
-  T.sky_info    = PL_SKY_INFO
-  T.special_ped = PL_SPECIAL_PEDESTAL
 
-  T.monster_prefs = { gunner=2.0 }
+  A_YELLOW = { t="A-YELLOW", f="FLAT23" }
 
-  return T
-end
+  -- TODO: A-SKINxxx
 
+  -- this is animated
+  AROCK1   = { t="AROCK1", f="RROCK13" }
+
+  JUNGLE1  = { t="MC10", f="GRASS2" }
+  JUNGLE2  = { t="MC2",  f="GRASS2" }
+
+  METALDR = { T="A-BROWN4" }
+
+  -- replacement materials
+  WOOD1    = { t="A-WOOD1", f="FLAT5_2" }
+  CEIL1_1  = { f="CEIL1_1", t="A-WOOD1", color=0x5b442b }
+  CEIL1_3  = { f="CEIL1_3", t="A-WOOD1", color=0x594d3d }
+  FLAT5_1  = { f="FLAT5_1", t="A-WOOD1", color=0x503b22 }
+  FLAT5_2  = { f="FLAT5_2", t="A-WOOD1", color=0x503c24 }
+
+  -- use Plutonia's waterfall texture instead of our own
+  WFALL1   = { t="WFALL1", f="FWATER1", sane=1 }
+  FWATER1  = { t="WFALL1", f="FWATER1", sane=1 }
+
+
+  -- TODO: Rails
+  --   A_GRATE = { t="A-GRATE", h=129 }
+  --   A_GRATE = { t="A-GRATE", h=129 }
+  --   A_RAIL1 = { t="A-RAIL1", h=32 }
+  --   A_VINE1 = { t="A-VINE1", h=128 }
+  --   A_VINE2 = { t="A-VINE2", h=128 }
+}
 
 
 ----------------------------------------------------------------
