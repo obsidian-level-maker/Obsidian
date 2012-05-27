@@ -160,56 +160,56 @@ PLUTONIA.MATERIALS =
   -- Note the hyphens in the actual texture names, which have been
   -- converted to an underscore for the OBLIGE material names.
   
-  A-BRBRK
-  A-BRBRK2
-  A-BRICK1
-  A-BRICK2
-  A-BRICK3
-  A-BROCK2
-  A-BROWN1
-  A-BROWN2
-  A-BROWN3
-  A-BROWN5
+  A_BRBRK  = { t="A-BRBRK",  f="xxx" }
+  A_BRBRK2 = { t="A-BRBRK2", f="xxx" }
+  A_BRICK1 = { t="A-BRICK1", f="xxx" }
+  A_BRICK2 = { t="A-BRICK2", f="xxx" }
+  A_BRICK3 = { t="A-BRICK3", f="xxx" }
+  A_BROCK2 = { t="A-BROCK2", f="xxx" }
+  A_BROWN1 = { t="A-BROWN1", f="xxx" }
+  A_BROWN2 = { t="A-BROWN2", f="xxx" }
+  A_BROWN3 = { t="A-BROWN3", f="xxx" }
+  A_BROWN5 = { t="A-BROWN5", f="xxx" }
 
-  A-CAMO1
-  A-CAMO2
-  A-CAMO3
-  A-CAMO4
+  A_CAMO1 =  { t="A-CAMO1",  f="xxx" }
+  A_CAMO2 =  { t="A-CAMO2",  f="xxx" }
+  A_CAMO3 =  { t="A-CAMO3",  f="xxx" }
+  A_CAMO4 =  { t="A-CAMO4",  f="xxx" }
 
-  A-CONCTE
-  A-DBRI1
-  A-DBRI2
-  A-DROCK1
-  A-DROCK2
+  A_CONCTE = { t="A-CONCTE", f="xxx" }
+  A_DBRI1 =  { t="A-DBRI1",  f="xxx" }
+  A_DBRI2 =  { t="A-DBRI2",  f="xxx" }
+  A_DROCK1 = { t="A-DROCK1", f="xxx" }
+  A_DROCK2 = { t="A-DROCK2", f="xxx" }
 
-  A-MARBLE
-  A-MOSBRI
-  A-MOSROK
-  A-MOSRK2
-  A-MOULD
-  A-MUD
+  A_MARBLE = { t="A-MARBLE", f="xxx" }
+  A_MOSBRI = { t="A-MOSBRI", f="xxx" }
+  A_MOSROK = { t="A-MOSROK", f="xxx" }
+  A_MOSRK2 = { t="A-MOSRK2", f="xxx" }
+  A_MOULD =  { t="A-MOULD",  f="xxx" }
+  A_MUD =    { t="A-MUD",    f="xxx" }
 
-  A-MYWOOD
-  A-POIS
-  A-REDROK
-  A-ROCK
-  A-TILE  
-  A-VINE3
-  A-VINE4
-  A-VINE5
-
+  A_MYWOOD = { t="A-MYWOOD", f="xxx" }
+  A_POIS =   { t="A-POIS",   f="xxx" }
+  A_REDROK = { t="A-REDROK", f="xxx" }
+  A_ROCK =   { t="A-ROCK",   f="xxx" }
+  A_TILE =   { t="A-TILE",   f="xxx" }  
+  A_VINE3 =  { t="A-VINE3",  f="xxx" }
+  A_VINE4 =  { t="A-VINE4",  f="xxx" }
+  A_VINE5 =  { t="A-VINE5",  f="xxx" }
 
   A_YELLOW = { t="A-YELLOW", f="FLAT23" }
 
   -- TODO: A-SKINxxx
 
   -- this is animated
-  AROCK1   = { t="AROCK1", f="RROCK13" }
+  AROCK1   = { t="AROCK1", f="GRNROCK" }
 
-  JUNGLE1  = { t="MC10", f="GRASS2" }
-  JUNGLE2  = { t="MC2",  f="GRASS2" }
+  JUNGLE1  = { t="MC10", f="RROCK19" }
+  JUNGLE2  = { t="MC2",  f="RROCK19" }
 
-  METALDR = { T="A-BROWN4" }
+  -- use the TNT name for this
+  METALDR  = { t="A-BROWN4", f="CEIL5_2" }
 
   -- replacement materials
   WOOD1    = { t="A-WOOD1", f="FLAT5_2" }
