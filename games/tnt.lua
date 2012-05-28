@@ -309,6 +309,18 @@ TNT.MATERIALS =
 
 TNT.SKINS =
 {
+  ---| ITEM / KEY |---
+
+  Pedestal_1 =
+  {
+    _prefab = "PEDESTAL"
+    _where  = "middle"
+
+    top  = "FLAT22"
+    side = "SHAWN2"
+  }
+
+
   ---| PICTURES |---
 
   Pic_TNT1 =
@@ -417,6 +429,7 @@ TNT.SKINS =
     _prefab = "MINI_DOOR1"
     _shape  = "I"
     _delta  = 0
+    _door   = 1
 
     door   = "METALDR"
     track  = "DOORTRAK"

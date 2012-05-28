@@ -199,7 +199,8 @@ PLUTONIA.MATERIALS =
   -- TODO: A-SKINxxx
 
   -- this is animated
-  AROCK1   = { t="AROCK1", f="GRNROCK" }
+  AROCK1   = { t="AROCK1",   f="GRNROCK" }
+  FIREBLU1 = { t="FIREBLU1", f="GRNROCK" }
 
   JUNGLE1  = { t="MC10", f="RROCK19" }
   JUNGLE2  = { t="MC2",  f="RROCK19" }
@@ -239,6 +240,73 @@ PLUTONIA.MATERIALS =
   --   A_RAIL1 = { t="A-RAIL1", h=32 }
   --   A_VINE1 = { t="A-VINE1", h=128 }
   --   A_VINE2 = { t="A-VINE2", h=128 }
+}
+
+
+PLUTONIA.SKINS =
+{
+  ---| ITEM / KEY |---
+
+  Pedestal_1 =
+  {
+    _prefab = "PEDESTAL"
+    _where  = "middle"
+
+    top  = "FLAT22"
+    side = "SHAWN2"
+  }
+
+
+  ---| DOORS |---
+
+  MiniHall_Door_tech =
+  {
+    _prefab = "MINI_DOOR1"
+    _shape  = "I"
+    _delta  = 0
+    _door   = 1
+
+    door   = "METALDR"
+    track  = "DOORTRAK"
+    step   = "STEP4"
+    metal  = "DOORSTOP"
+    lite   = "LITE3"
+    c_lite = "TLITE6_1"
+  }
+
+  MiniHall_Door_hell =
+  {
+    _prefab = "MINI_DOOR1"
+    _shape  = "I"
+    _delta  = 0
+    _door   = 1
+
+    door   = "METALDR"
+    track  = "DOORTRAK"
+    step   = "STEP4"
+    metal  = "METAL"
+    lite   = "FIREWALL"
+  }
+
+
+  ---| TELEPORTERS |---
+
+  Teleporter_Closet =
+  {
+    _prefab = "TELEPORT_CLOSET"
+    _where  = "closet"
+--!!!!  _long   = 192
+
+    tele = "TLITE6_1"
+    tele_side = "COMPSPAN"
+
+    inner = "LITEBLU4"
+    floor = "CEIL3_3"
+    ceil  = "CEIL3_3"
+    step  = "STEP1"
+
+    special = 97
+  }
 }
 
 
