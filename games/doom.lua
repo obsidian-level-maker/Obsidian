@@ -2534,6 +2534,7 @@ DOOM.SKINS =
     _prefab = "MINI_DOOR1"
     _shape  = "I"
     _delta  = 0
+    _door   = 1
 
     door   = { BIGDOOR6=50 }
     track  = "DOORTRAK"
