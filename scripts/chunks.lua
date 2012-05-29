@@ -767,6 +767,19 @@ function CHUNK_CLASS.content_hub_gate(C)
 end
 
 
+function CHUNK_CLASS.content_decor(C)
+  local skin1 = GAME.SKINS[C.content.decor_prefab]
+
+  local mx, my = C:mid_point()
+
+  local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.content.decor_dir)
+
+  local skin2 = { }
+
+  Fabricate(skin1._prefab, T, { skin1, skin2 })
+end
+
+
 function CHUNK_CLASS.do_hexen_triple(C)
   -- FIXME: this is temp hack !!!
   local skin_map =
@@ -835,6 +848,9 @@ function CHUNK_CLASS.do_content(C)
 
   elseif kind == "GATE" then
     C:content_hub_gate()
+
+  elseif kind == "DECORATION" then
+    C:content_decor()
 
   else
     error("Unknown chunk content: " .. tostring(kind))
@@ -1263,6 +1279,13 @@ function CHUNK_CLASS.build(C)
 
   if C.no_floor then
     -- do nothing (e.g. caves)
+
+  elseif C.floor_prefab then
+    local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, f_h)
+    local skin1 = GAME.SKINS[C.floor_prefab]
+    local skin0 = { floor=f_matname }
+
+    Fabricate(skin1._prefab, T, { skin0, skin1 })
 
   elseif C.stair then
     local skin = C.stair.skin

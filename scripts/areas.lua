@@ -216,6 +216,22 @@ function AREA_CLASS.determine_spots(A)
   end
 
 
+  -- another MUNDO HACK!  bring on V5....
+  each C in A.chunks do
+    if C.content.kind == "DECORATION" then
+      local skin = GAME.SKIN[C.content.decor_prefab]
+      assert(skin)
+
+      local mx, my = C:mid_point()
+      local r = assert(skin._radius)
+
+      local poly = Brush_new_quad(mx - r, my - r, mx + r, my + r)
+
+      gui.spots_fill_poly(poly, 1)
+    end
+  end
+
+
 --[[
     -- TODO solidify brushes from prefabs (including WALLS !!!)
     for _,fab in ipairs(R.prefabs) do

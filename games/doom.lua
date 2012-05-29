@@ -3507,8 +3507,9 @@ DOOM.SKINS =
   {
     _prefab = "PILLAR_2"
     _where  = "middle"
-    _long   = 384
-    _deep   = 384
+    _radius = 40
+---!!    _long   = 384
+---!!    _deep   = 384
 
     base   = "GRAY1"
     pillar = "METAL"
@@ -3517,6 +3518,7 @@ DOOM.SKINS =
   RoundPillar =
   {
     _prefab = "ROUND_PILLAR"
+    _where  = "middle"
     _radius = 32
 
     pillar = "TEKLITE"
@@ -3525,6 +3527,7 @@ DOOM.SKINS =
   Crate1 =
   {
     _prefab = "CRATE"
+    _where  = "middle"
     _radius = 32
 
     crate = "CRATE1"
@@ -3533,6 +3536,7 @@ DOOM.SKINS =
   Crate2 =
   {
     _prefab = "CRATE"
+    _where  = "middle"
     _radius = 32
 
     crate = "CRATE2"
@@ -3541,6 +3545,7 @@ DOOM.SKINS =
   CrateWOOD =
   {
     _prefab = "CRATE"
+    _where  = "middle"
     _radius = 32
 
     crate = "WOOD3"
@@ -3549,6 +3554,7 @@ DOOM.SKINS =
   CrateICK =
   {
     _prefab = "CRATE"
+    _where  = "middle"
     _radius = 32
 
     crate = "ICKWALL4"
@@ -3636,7 +3642,7 @@ DOOM.THEME_DEFAULTS =
                    candelabra=10, red_torch=5,
                    green_torch=5, blue_torch=5 }
 
-  indoor_fabs = { RoundPillar=70,
+  indoor_fabs = { Pillar_2=70,
                   Crate1=10, Crate2=10, 
                   CrateICK=10, CrateWOOD=10 }
 
