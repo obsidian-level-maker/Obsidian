@@ -141,14 +141,14 @@ GLOBAL_STYLE_LIST =
 
   symmetry   = { few=20, some=60, heaps=20 }
   pillars    = { few=30, some=60, heaps=20 }
+  crates     = { few=30, some=60, heaps=20 }
   beams      = { few=25, some=50, heaps=5  }
   barrels    = { few=50, some=50, heaps=10 }
   windows    = { few=20, some=50, heaps=200 }
   pictures   = { few=10, some=50, heaps=10 }
-  lakes      = { few=60, heaps=10 }
 
+  lakes      = { few=60, heaps=10 }
   cages      = { none=50, few=50, some=30, heaps=10 }
-  crates     = { none=20, some=40, heaps=10 }
   bridges    = { none=10, some=40 }
 
   mon_variety = { few=4, some=90, heaps=4 }
