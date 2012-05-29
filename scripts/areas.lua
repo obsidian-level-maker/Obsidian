@@ -2460,6 +2460,72 @@ Areas_dump_vhr(R)
   end
 
 
+  -- please forgive these function names, I'm so so sorry!
+
+  local function chunk_is_mungeable(AREA, sx, sy, sx2, sy2, above_vhr, sw, sh)
+
+    -- not enough room?
+    if sx + sw - 1 > sx2 then return false end
+    if sy + sh - 1 > sy2 then return false end
+
+    sx2 = sx + sw - 1
+    sy2 = sy + sh - 1
+
+    for x = sx,sx2 do
+    for y = sy,sy2 do
+      if x == sx and y == sy then continue end
+        
+      local S = SEEDS[x][y]
+
+      local above_vhr2 = S:above_vhr(AREA.vhr)
+      
+      -- never create chunks with different VHR's above them
+      if above_vhr != above_vhr2 then
+        return false
+      end
+    end
+    end
+  end
+
+
+  local function munge_the_chunk(AREA, sx, sy, sx2, sy2)
+    local S = SEEDS[sx][sy]
+
+    local above_vhr = S:above_vhr(AREA.vhr)
+
+    -- see if a bigger size is possible
+    local sw, sh = 2, 2
+
+    if not chunk_is_mungeable(AREA, sx, sy, sx2, sy2, above_vhr, 2, 2) then
+      if chunk_is_mungeable(AREA, sx, sy, sx2, sy2, above_vhr, 2, 1) then
+        sw, sh = 2, 1
+      elseif chunk_is_mungeable(AREA, sx, sy, sx2, sy2, above_vhr, 1, 2) then
+        sw, sh = 1, 2
+      else
+        sw, sh = 1, 1
+      end
+    end
+
+    sx2 = sx + sw - 1
+    sy2 = sy + sh - 1
+
+    local C = CHUNK_CLASS.new(sx, sy, sx2, sy2)
+    C:set_coords()
+
+    if above_vhr then C.no_ceil = true end
+
+    AREA:add_chunk(C)
+
+    C.room = R ; table.insert(R.chunks, C)
+
+    for x = C.sx1, C.sx2 do
+    for y = C.sy1, C.sy2 do
+      table.insert(SEEDS[x][y].chunks, C)
+    end
+    end
+  end
+
+
   local function test_or_install_pattern(G, pat, mode)
 
 -- stderrf("test_or_install_pattern: %s %s\n", mode, pat.name)
@@ -2557,13 +2623,8 @@ Areas_dump_vhr(R)
           if ELEM.bad then
           
             if not (S.chunk and S.chunk.vhr == v) then
-              -- create a chunk for each seed [TODO: try bigger sizes]
-              local C = CHUNK_CLASS.new(sx, sy, sx, sy)
-              C:set_coords()
-              if S:above_vhr(AREA.vhr) then C.no_ceil = true end
-              AREA:add_chunk(C)
-              C.room = R ; table.insert(R.chunks, C)
-              table.insert(S.chunks, C)
+              -- create a chunk for a seed (trying bigger sizes too)
+              munge_the_chunk(AREA, sx, sy, G.sx2, G.sy2)
             end
 
           elseif not ELEM.chunk then
