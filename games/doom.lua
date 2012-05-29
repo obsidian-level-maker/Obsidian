@@ -4378,9 +4378,12 @@ DOOM.ROOM_THEMES =
       ROCK3    = 70
     }
   }
+}
 
 
-  ---- Miscellaneous ---------------------
+DOOM2.ROOM_THEMES =
+{
+  ---- Wolfenstein 3D -------------
 
   Wolf_cells =
   {

@@ -121,6 +121,11 @@ DOOM1.MATERIALS =
 }
 
 
+DOOM1.ROOM_THEMES =
+{
+}
+
+
 DOOM1.LEVEL_THEMES =
 {
   doom_tech1 =
