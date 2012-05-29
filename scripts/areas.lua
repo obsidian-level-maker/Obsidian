@@ -2462,7 +2462,9 @@ Areas_dump_vhr(R)
 
   -- please forgive these function names, I'm so so sorry!
 
-  local function chunk_is_mungeable(AREA, sx, sy, sx2, sy2, above_vhr, sw, sh)
+  local function chunk_is_mungeable(AREA, ELEM, sx, sy, sw, sh, above_vhr, sx2, sy2)
+    -- FIXME!!!
+    do return false end
 
     -- not enough room?
     if sx + sw - 1 > sx2 then return false end
@@ -2477,18 +2479,29 @@ Areas_dump_vhr(R)
         
       local S = SEEDS[x][y]
 
+      if S.room != R then return false end
+
+      -- FUCK!! must check if part of same elem
+      -- TODO...
+
+      -- never create chunks with different VHR's above them
       local above_vhr2 = S:above_vhr(AREA.vhr)
       
-      -- never create chunks with different VHR's above them
       if above_vhr != above_vhr2 then
         return false
       end
     end
     end
+
+    if R:straddles_concave_corner(sx, sy, sx2, sy2) then
+      return false
+    end
+
+    return true  -- OK!!
   end
 
 
-  local function munge_the_chunk(AREA, sx, sy, sx2, sy2)
+  local function munge_the_chunk(AREA, ELEM, sx, sy, sx2, sy2)
     local S = SEEDS[sx][sy]
 
     local above_vhr = S:above_vhr(AREA.vhr)
@@ -2496,10 +2509,10 @@ Areas_dump_vhr(R)
     -- see if a bigger size is possible
     local sw, sh = 2, 2
 
-    if not chunk_is_mungeable(AREA, sx, sy, sx2, sy2, above_vhr, 2, 2) then
-      if chunk_is_mungeable(AREA, sx, sy, sx2, sy2, above_vhr, 2, 1) then
+    if not chunk_is_mungeable(AREA, ELEM, sx, sy, 2, 2, above_vhr, sx2, sy2) then
+      if chunk_is_mungeable(AREA, ELEM, sx, sy, 2, 1, above_vhr, sx2, sy2) then
         sw, sh = 2, 1
-      elseif chunk_is_mungeable(AREA, sx, sy, sx2, sy2, above_vhr, 1, 2) then
+      elseif chunk_is_mungeable(AREA, ELEM, sx, sy, 1, 2, above_vhr, sx2, sy2) then
         sw, sh = 1, 2
       else
         sw, sh = 1, 1
@@ -2624,7 +2637,7 @@ Areas_dump_vhr(R)
           
             if not (S.chunk and S.chunk.vhr == v) then
               -- create a chunk for a seed (trying bigger sizes too)
-              munge_the_chunk(AREA, sx, sy, G.sx2, G.sy2)
+              munge_the_chunk(AREA, ELEM, sx, sy, G.sx2, G.sy2)
             end
 
           elseif not ELEM.chunk then
