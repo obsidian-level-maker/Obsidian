@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- GAME DEF : Chex Quest 1, 2 and 3
+-- GAME DEF : Chex Quest 3
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -19,14 +19,10 @@
 --
 ----------------------------------------------------------------
 
-CHEX  = { }  -- common stuff
-
-CHEX1 = { }  --\
-CHEX2 = { }  -- stuff specific to each game
-CHEX3 = { }  --/
+CHEX3 = { }  -- common stuff
 
 
-CHEX.ENTITIES =
+CHEX3.ENTITIES =
 {
   --- PLAYERS ---
 
@@ -43,11 +39,9 @@ CHEX.ENTITIES =
   commonus      = { id=3004,kind="monster", r=20,h=56 }
   bipedicus     = { id=9,   kind="monster", r=20,h=56 }
   armored_biped = { id=3001,kind="monster", r=20,h=56 }
-  cycloptis     = { id=3002,kind="monster", r=30,h=56 }
 
   --- BOSSES ---
 
-  Flembrane = { id=3003,kind="monster", r=44,h=100 }
 
   --- PICKUPS ---
 
@@ -90,85 +84,28 @@ CHEX.ENTITIES =
 
   landing_light = { id=2028,kind="scenery", r=16,h=35, light=255 }
 
-  lab_coil   = { id=55,  kind="scenery", r=16,h=86, light=255 }
   flag_pole  = { id=37, kind="scenery", r=16,h=128 }
-  gas_tank   = { id=35, kind="scenery", r=16,h=36 }
-  spaceship  = { id=48, kind="scenery", r=16,h=52 }
 
   chemical_burner = { id=41, kind="scenery", r=16,h=25 }
+  beaker     = { id=80, kind="scenery", r=20,h=64, pass=true }
+  gas_tank   = { id=36, kind="scenery", r=16,h=40 }
+  spaceship  = { id=54, kind="scenery", r=32,h=58 }
 
   -- arboretum --
 
-  apple_tree   = { id=47, kind="scenery", r=16,h=92 }
-  orange_tree  = { id=43, kind="scenery", r=16,h=92 }
-
-  flower1  = { id=28, kind="scenery", r=20,h=25 }
-  flower2  = { id=25, kind="scenery", r=20,h=25 }
-
   cave_bat    = { id=63, kind="scenery", r=16,h=64, ceil=true } -- SOLID?
-  hang_plant1 = { id=50, kind="scenery", r=20,h=64, ceil=true } -- SOLID?
-  hang_plant2 = { id=51, kind="scenery", r=20,h=64, ceil=true } -- SOLID?
+  hang_plant1   = { id=59, kind="scenery", r=20,h=64, pass=true, ceil=true } -- new id
+  hang_plant2   = { id=61, kind="scenery", r=20,h=64, pass=true, ceil=true } -- new id
+  hang_pots     = { id=62, kind="scenery", r=20,h=64, pass=true, ceil=true }
 
   -- other --
 
   slime_fountain = { id=44, kind="scenery", r=16,h=48 }
 
-  captive1 = { id=45, kind="scenery", r=16,h=54 }
-}
+
+---===========>>
 
 
-CHEX1.ENTITIES =
-{
-  -- scenery --
-
-  banana_tree  = { id=54, kind="scenery", r=31,h=108 }
-
-  beaker  = { id=34, kind="scenery", r=16,h=16, pass=true }
-  submerged_plant = { id=31, kind="scenery", r=16,h=42 }
-
-  cave_pillar = { id=32, kind="scenery", r=16,h=128 }
-  stalactite = { id=53, kind="scenery", r=16,h=50 }
-  stalagmite = { id=30, kind="scenery", r=16,h=60 }
-  mine_cart  = { id=33, kind="scenery", r=16,h=30 }
-
-  captive2  = { id=56, kind="scenery", r=16,h=54 }
-  captive3  = { id=57, kind="scenery", r=16,h=48 }
-}
-
-
-CHEX2.ENTITIES =
-{
-  bipedicus  = REMOVE_ME
-  quadrumpus = { id=9,    kind="monster", r=20,h=56 }
-
-  cycloptis  = REMOVE_ME
-  larva      = { id=3002, kind="monster", r=30,h=56 }
-
-  Flembrane  = REMOVE_ME
-  Maximus    = { id=3003, kind="monster", r=44,h=100 }
-
-  -- scenery --
-
-  lamp = { id=34, kind="scenery", r=16, h=80 }
-
-  dinosaur1 = { id=54,   kind="scenery", r=64, h=80 }
-  dinosaur2 = { id=57,   kind="scenery", r=64, h=80 }
-  dinosaur3 = { id=2023, kind="scenery", r=64, h=80 }  -- PICKUP?
-
-  statue_tut     = { id=52, kind="scenery", r=16, h=80 }  -- ONCEILING?
-  statue_ramses  = { id=53, kind="scenery", r=32, h=80 }  -- ONCEILING?
-  statue_thinker = { id=30, kind="scenery", r=32, h=80 }
-  statue_david   = { id=31, kind="scenery", r=32, h=80 }
-  statue_warrior = { id=36, kind="scenery", r=32, h=80 }
-
-  diner_chef  = { id=32, kind="scenery", r=32, h=80 }
-  diner_table = { id=45, kind="scenery", r=24, h=50 }
-  giant_spoon = { id=33, kind="scenery", r=64, h=60 }
-}
-
-
-CHEX3.ENTITIES =
-{
   -- monsters --
 
   cycloptis    = { id=58  , kind="monster", r=30,h=56 }  -- new id
@@ -235,11 +172,7 @@ CHEX3.ENTITIES =
   red_torch      = { id=46,  kind="scenery", r=16,h=68,  light=255 }
   red_torch_sm   = { id=57,  kind="scenery", r=16,h=26,  light=255 }
 
-  beaker     = { id=80, kind="scenery", r=20,h=64, pass=true }  -- new id
-  gas_tank   = { id=36, kind="scenery", r=16,h=40 }  -- new id
-  spaceship  = { id=54, kind="scenery", r=32,h=58 }  -- new id
 
-  chemical_burner = { id=41, kind="scenery", r=16,h=25 }
   globe_stand    = { id=25, kind="scenery", r=16,h=64 }
   lab_coil       = { id=42, kind="scenery", r=16,h=90 }
   mappoint_light = { id=85, kind="scenery", r=16,h=75 }
@@ -263,16 +196,16 @@ CHEX3.ENTITIES =
   slimey_urn  = { id=86, kind="scenery", r=16,h=83 }
 
   ceiling_slime = { id=60, kind="scenery", r=16,h=68, pass=true, ceil=true }
-  hang_plant1   = { id=59, kind="scenery", r=20,h=64, pass=true, ceil=true } -- new id
-  hang_plant2   = { id=61, kind="scenery", r=20,h=64, pass=true, ceil=true } -- new id
-  hang_pots     = { id=62, kind="scenery", r=20,h=64, pass=true, ceil=true }
 }
 
 
-CHEX.PARAMETERS =
+CHEX3.PARAMETERS =
 {
   rails = true
   light_brushes = true
+
+  -- NOTE: no infighting at all
+  infighting = false
   infighting = true
 
   jump_height = 24
@@ -289,16 +222,9 @@ CHEX.PARAMETERS =
 }
 
 
-CHEX3.PARAMETERS =
-{
-  -- NOTE: no infighting at all
-  infighting = false
-}
-
-
 ----------------------------------------------------------------
 
-CHEX.MATERIALS =
+CHEX3.MATERIALS =
 {
   -- special materials --
   _ERROR = { t="COMPSPAN", f="CEIL5_1" }
@@ -352,19 +278,10 @@ CHEX.MATERIALS =
   TAN_GRATE = { t="BRNSMAL1", f="FLAT1" }
   TAN_VINE  = { t="BROVINE",  f="FLAT1" }
 
-  HYDROPON_1 = { t="SKY2", f="FLAT1" }
-  HYDROPON_2 = { t="SKY3", f="FLAT1" }
-  HYDROPON_3 = { t="SKY4", f="FLAT1" }
-
   COMPUTE_1 = { t="COMP2",    f="FLAT5_6" }
   COMPUTE_2 = { t="COMPUTE2", f="FLAT5_6" }
   COMP_BOX  = { t="COMPWERD", f="FLAT5_6" }
   COMP_SPAN = { t="COMPSPAN", f="FLAT5_6" }
-
-  CRATE1   = { t="CRATE1",   f="FLAT1" }
-  CRATE2   = { t="CRATE2",   f="FLAT2" }
-  CRATEMIX = { t="CRATELIT", f="FLAT2" }
-  CRATWIDE = { t="CRATWIDE", f="FLAT2" }
 
   CUPBOARD = { t="BRNBIGC",  f="FLAT1" }
 
@@ -375,7 +292,7 @@ CHEX.MATERIALS =
 
   PIC_PLANET  = { t="SKINCUT",  f="CEIL4_1" }
   PIC_DIPLOMA = { t="EXITDOOR", f="CEIL4_1" }
-  PIC_PHOTO1  = { t="TEKWALL3", f="CEIL4_1" }
+  PIC_PHOTO1  = { t="TEKWALL4", f="CEIL4_1" }
   PIC_PHOTO2  = { t="SLADWALL", f="CEIL4_1" }
 
   TELE_CHAMBER = { t="SLADRIP1", f="FLAT5_6" }
@@ -385,13 +302,12 @@ CHEX.MATERIALS =
   STEP_ORANGE = { t="STEP1",    f="FLAT2" }
   STEP_GRAY   = { t="STEP2",    f="FLAT5_6" }
   STEP_WHITE  = { t="SW2SATYR", f="FLAT5_6" }
-  STEP_CAVE   = { t="STEPLAD1", f="CEIL3_1" }
+  STEP_CAVE   = { t="SKSNAKE2", f="CEIL3_1" }
 
 
   -- floors --
 
   CEIL_LITE = { f="CEIL3_5",  t="SW2SATYR" }
-  CRUD_LITE = { f="TLITE6_6", t="COMPSPAN" }
 
   VERYDARK_BLUE = { f="CEIL4_1",  t="SP_DUDE2" }
   ANOTHER_BLUE  = { f="FLOOR1_1", t="SP_DUDE2" }
@@ -470,124 +386,9 @@ CHEX.MATERIALS =
   SLIME2 = { t="FIREMAG1", f="LAVA1",   sane=1 }
 
 
-  -- other --
-
-  O_PILL   = { t="SP_ROCK1", f="O_PILL",   sane=1 }
-  O_BOLT   = { t="SP_ROCK2", f="O_BOLT",   sane=1 }
-  O_RELIEF = { t="MIDBRN1",  f="O_RELIEF", sane=1 }
-  O_CARVE  = { t="NUKESLAD", f="O_CARVE",  sane=1 }
-  O_NEON   = { t="TEKWALL2", f="CEIL4_1",  sane=1 }
-}
+---===========>>
 
 
-CHEX1.MATERIALS =
-{
-  BLUE_SFALL  = { t="BLODGR1",  f="CEIL4_1" }
-
-  CAVE_SLIMY1 = { t="PIPE4",    f="CEIL3_1" }
-  CAVE_SLIMY2 = { t="MARBLE2",  f="CEIL3_1" }
-  CAVE_SLIMY3 = { t="STARGR1",  f="CEIL3_1" }
-  CAVE_EDGER  = { t="NUKEDGE1", f="CEIL3_1" }
-  CAVE_SPLAT  = { t="NUKEPOIS", f="CEIL3_1" }
-
-  COMPUTE_3   = { t="COMPTALL", f="FLAT5_6" }
-
-  GRAY_FLOWER1 = { t="GRAY2",    f="FLAT5_6" }
-  GRAY_FLOWER2 = { t="GRAYDANG", f="FLAT5_6" }
-
-  PIC_SLIMED  = { t="SLADPOIS", f="CEIL4_1" }
-  PIC_STORAGE = { t="MARBFAC3", f="FLAT2" }
-
-  SW_STEEL = { t="SW1BROWN", f="CEIL3_2" }
-}
-
-
-CHEX2.MATERIALS =
-{
-  -- general --
-
-  HEDGE  = { t="BIGDOOR2", f="FLOOR0_6" }
-  BEIGE  = { t="EXITSIGN", f="FLOOR3_3" }
-
-
-  -- walls --
-
-  GREEN_BRICK  = { t="STARG1",   f="FLOOR4_8" }
-  GREEN_BORDER = { t="STARGR1",  f="FLOOR4_8" }
-  GREEN_SIGN   = { t="DOOR1",    f="FLOOR4_8" }
-  GREEN_GRATE  = { t="STARTAN2", f="FLOOR4_8" }
-
-  BIG_GRATE   = { t="SW1EXIT", f="FLOOR4_1" }
-
-  MARB_GREEN  = { t="BROWN144", f="FLOOR0_6" }
-  MARB_RED    = { t="COMPSTA2", f="FLAT1" }
-
-  RED_CURTAIN = { t="SLADPOIS", f="FLOOR5_3" }
-
-  MOVIE_PRAM    = { t="BLODGR1",  f="CEIL5_1" }
-  MOVIE_MOUSE   = { t="BLODRIP1", f="CEIL5_1" }
-  MOVIE_CHARLES = { t="FIREMAG1", f="CEIL5_1" }
-
-  PIC_EAT_EM = { t="BRNPOIS",  f="CEIL5_1" }
-  PIC_LUV_EM = { t="BRNPOIS2", f="CEIL5_1" }
-  PIC_HUNGRY = { t="PIPE4",    f="FLAT1" }
-
-  PIC_MONA    = { t="MARBFACE", f="CEIL5_1" }
-  PIC_VENUS   = { t="MARBFAC3", f="CEIL5_1" }
-  PIC_VINCENT = { t="MARBLE2",  f="CEIL5_1" }
-  PIC_SCREAM  = { t="MARBLE3",  f="CEIL5_1" }
-  PIC_NUN     = { t="MARBLOD1", f="CEIL5_1" }
-  PIC_BORING  = { t="MIDGRATE", f="CEIL5_1" }
-
-  SIGN_ENTER    = { t="LITE5",    f="CEIL5_1" }
-  SIGN_WELCOME1 = { t="COMPTALL", f="CEIL5_1" }
-  SIGN_WELCOME2 = { t="COMPUTE1", f="CEIL5_1" }
-  SIGN_GALACTIC = { t="NUKE24",   f="CEIL5_1" }
-
-  SIGN_DINER    = { t="NUKEDGE1", f="CEIL5_1" }
-  SIGN_MUSEUM   = { t="SW2GRAY",  f="CEIL5_1" }
-  SIGN_SEWER    = { t="SW2GRAY1", f="CEIL5_1" }
-  SIGN_CINEMA   = { t="SW2SLAD",  f="CEIL5_1" }
-
-  BLUE_POSTER1 = { t="GRAY2",    f="FLOOR1_1" }
-  BLUE_POSTER2 = { t="GSTLION",  f="FLOOR1_1" }
-  BLUE_POSTER3 = { t="GSTSATYR", f="FLOOR1_1" }
-  BLUE_CUPBD   = { t="GRAYPOIS", f="FLOOR1_1" }
-
-  TAN_THEATRE1 = { t="TEKWALL4", f="FLAT2" }
-  TAN_THEATRE2 = { t="GSTONE1",  f="FLAT2" }
-  TAN_THEATRE3 = { t="GSTONE2",  f="FLAT2" }
-  TAN_MENU     = { t="LITE3",    f="FLAT2" }
-
-  BENCH_CANDY   = { t="GRAYBIG",  f="CEIL5_1" }
-  BENCH_POPCORN = { t="GRAYDANG", f="CEIL5_1" }
-
-
-  -- floors --
-
-  GRAY_FLOOR = { f="FLOOR4_1", t="COMPSPAN" }
-
-  BROWN_TILE = { f="FLOOR4_5", t="EXITSIGN" }
-  WHITE_TILE = { f="FLOOR4_6", t="SW2SATYR" }
-  GREEN_TILE = { f="FLOOR4_8", t="STARG1" }
-  RED_TILE   = { f="STEP2",    t="STONE3" }
-
-
-  -- switches --
-
-  SW_GREEN = { t="SW1BROWN", f="FLOOR4_8" }
-
-
-  -- liquids --
-
-  -- Chex Quest 2 has no animated slime texture
-  SLIME1 = { t="GSTVINE2", f="NUKAGE1", sane=1 }
-  SLIME2 = { t="GSTVINE2", f="LAVA1",   sane=1 }
-}
-
-
-CHEX3.MATERIALS =
-{
   -- Chex 1 compatibility --
 
   BLUE_SFALL  = { t="BLODGR1",  f="CEIL4_1" }
@@ -609,9 +410,7 @@ CHEX3.MATERIALS =
   HYDROPON_2 = { t="HYDROPO2", f="FLAT1" }
   HYDROPON_3 = { t="HYDROPO3", f="FLAT1" }
 
-  PIC_PHOTO1 = { t="TEKWALL4", f="CEIL4_1" }
 
-  STEP_CAVE = { t="SKSNAKE2", f="CEIL3_1" }
 
   CRUD_LITE = { f="STOOREST", t="COMPSPAN" }
 
@@ -621,9 +420,9 @@ CHEX3.MATERIALS =
   CRATEMIX = { t="CRATELIT", f="CRATOP1" }
   CRATWIDE = { t="CRATWIDE", f="CRATOP1" }
 
-  -- these two textures are not present in Chex 3
-  GRAY_FLOWER1 = { t="STONE3", f="FLAT5_6" }
-  GRAY_FLOWER2 = { t="STONE3", f="FLAT5_6" }
+  ---- these two textures are not present in Chex 3
+  -- GRAY_FLOWER1 = { t="STONE3", f="FLAT5_6" }
+  -- GRAY_FLOWER2 = { t="STONE3", f="FLAT5_6" }
 
 
   -- Chex 2 compatibility --
@@ -897,10 +696,20 @@ CHEX3.MATERIALS =
 
   CAVE_COLUMN = { t="SKSPINE1", rail_h=128 }
   ORANGE_HOLE = { t="STARG1",   rail_h=128 }
+
+
+  -- other --
+
+  O_PILL   = { t="SP_ROCK1", f="O_PILL",   sane=1 }
+  O_BOLT   = { t="SP_ROCK2", f="O_BOLT",   sane=1 }
+  O_RELIEF = { t="MIDBRN1",  f="O_RELIEF", sane=1 }
+  O_CARVE  = { t="NUKESLAD", f="O_CARVE",  sane=1 }
+  O_NEON   = { t="TEKWALL2", f="CEIL4_1",  sane=1 }
+
 }
 
 
-CHEX.LIQUIDS =
+CHEX3.LIQUIDS =
 {
   water  = { mat="WATER", light=0.65 }
 
@@ -912,7 +721,7 @@ CHEX.LIQUIDS =
 
 ----------------------------------------------------------------
 
-CHEX.SKINS =
+CHEX3.SKINS =
 {
   ----| STARTS |----
 
@@ -1085,7 +894,7 @@ CHEX.SKINS =
 
 ----------------------------------------------------------------
 
-CHEX.THEME_DEFAULTS =
+CHEX3.THEME_DEFAULTS =
 {
   starts = { Start_basic = 50 }
 
@@ -1105,12 +914,12 @@ CHEX.THEME_DEFAULTS =
 }
 
 
-CHEX.NAME_THEMES =
+CHEX3.NAME_THEMES =
 {
 }
 
 
-CHEX.ROOM_THEMES =
+CHEX3.ROOM_THEMES =
 {
   Tech_generic =
   {
@@ -1150,7 +959,7 @@ CHEX.ROOM_THEMES =
 }
 
 
-CHEX.LEVEL_THEMES =
+CHEX3.LEVEL_THEMES =
 {
 --?? TECH, ARBORETUM and CAVE ??
 
@@ -1316,32 +1125,10 @@ CHEX3.MONSTERS =
 }
 
 
-CHEX1.MONSTERS =
-{
-  commonus      = CHEX3.MONSTERS.commonus
-  bipedicus     = CHEX3.MONSTERS.bipedicus
-  cycloptis     = CHEX3.MONSTERS.cycloptis
-  armored_biped = CHEX3.MONSTERS.armored_biped
-
-  Flembrane     = CHEX3.MONSTERS.Flembrane
-}
-
-
-CHEX2.MONSTERS =
-{
-  commonus      = CHEX3.MONSTERS.commonus
-  quadrumpus    = CHEX3.MONSTERS.quadrumpus
-  larva         = CHEX3.MONSTERS.larva
-  armored_biped = CHEX3.MONSTERS.armored_biped
-
-  Maximus       = CHEX3.MONSTERS.Maximus
-}
-
-
 -- Weapon list
 -- ===========
 
-CHEX.WEAPONS =
+CHEX3.WEAPONS =
 {
   spoon =
   {
@@ -1564,7 +1351,7 @@ CHEX.PICKUPS =
 }
 
 
-CHEX.PLAYER_MODEL =
+CHEX3.PLAYER_MODEL =
 {
   chexguy =
   {
@@ -1575,12 +1362,6 @@ CHEX.PLAYER_MODEL =
 
 
 ------------------------------------------------------------
-
-CHEX1.EPISODES =
--- Chex Quest only has one episode of five levels
-{
-}
-
 
 CHEX3.EPISODES =
 {
@@ -1606,58 +1387,6 @@ CHEX3.EPISODES =
     sky_light = 0.75
   }
 }
-
-
-function CHEX1.setup()
-  -- FIXME: TEMP RUBBISH : REMOVE !!
-  each name,mat in GAME.MATERIALS do
-    if mat.f == "XX" then mat.f = "FLOOR0_3" end
-    if mat.t == "XX" then mat.t = "ASHWALL" end
-  end
-end
-
-
-function CHEX1.get_levels()
-  -- this is used for both Chex Quest 1 and 2
-
-  local EP_NUM  = 1
-  local MAP_NUM = 1
-
-  if OB_CONFIG.length == "few"     then MAP_NUM = 3 end
-  if OB_CONFIG.length == "episode" then MAP_NUM = 5 end
-  if OB_CONFIG.length == "full"    then MAP_NUM = 5 ; EP_NUM = 1 end
-
-  for ep_index = 1,EP_NUM do
-    -- create episode info...
-    local EPI =
-    {
-      levels = {}
-    }
-
-    table.insert(GAME.episodes, EPI)
-
-    for map = 1,MAP_NUM do
-
-      local LEV =
-      {
-        episode = EPI
-
-        name  = string.format("E%dM%d", ep_index, map)
-        patch = string.format("WILV%d%d", ep_index-1, map-1)
-
-        ep_along = map / MAP_NUM
-
-        name_theme = "TECH"
-      }
-
-      LEV.mon_along = LEV.ep_along + (ep_index-1) / 5
-
-      table.insert( EPI.levels, LEV)
-      table.insert(GAME.levels, LEV)
-    end -- for map
-
-  end -- for episode
-end
 
 
 function CHEX3.get_levels()
@@ -1705,6 +1434,7 @@ function CHEX3.get_levels()
 end
 
 
+-- TODO: FIX THIS
 function CHEX1.make_cool_gfx()
   local GREEN =
   {
@@ -1761,44 +1491,6 @@ end
 
 ------------------------------------------------------------
 
-UNFINISHED["chex1"] =
-{
-  label = "Chex Quest"
-  format = "doom"
-
-  tables =
-  {
-    CHEX, CHEX1
-  }
-
-  hooks =
-  {
-    setup        = CHEX1.setup
-    get_levels   = CHEX1.get_levels
-    all_done     = CHEX1.all_done
-  }
-}
-
-
-UNFINISHED["chex2"] =
-{
-  label = "Chex Quest 2"
-
-  format = "doom"
-
-  tables =
-  {
-    CHEX, CHEX2
-  }
-
-  hooks =
-  {
-    setup        = CHEX1.setup
-    get_levels   = CHEX1.get_levels
-    all_done     = CHEX1.all_done
-  }
-}
-
 
 UNFINISHED["chex3"] =
 {
@@ -1807,13 +1499,14 @@ UNFINISHED["chex3"] =
 
   tables =
   {
-    CHEX, CHEX3
+    CHEX3
   }
 
   hooks =
   {
-    setup        = CHEX1.setup
+    setup        = CHEX3.setup
     get_levels   = CHEX3.get_levels
+
 --FIXME !!!   all_done     = CHEX1.all_done
   }
 }
