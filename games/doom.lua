@@ -3503,6 +3503,17 @@ DOOM.SKINS =
 
   ---| DECORATION |---
 
+  Pillar_2 =
+  {
+    _prefab = "PILLAR_2"
+    _where  = "middle"
+    _long   = 384
+    _deep   = 384
+
+    base   = "GRAY1"
+    pillar = "METAL"
+  }
+
   RoundPillar =
   {
     _prefab = "ROUND_PILLAR"

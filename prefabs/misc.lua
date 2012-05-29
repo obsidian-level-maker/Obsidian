@@ -75,6 +75,70 @@ PREFAB.PILLAR =
 }
 
 
+PREFAB.PILLAR_2 =
+{
+  fitted = "z"
+
+  z_ranges = { {24,1}, {80,6}, {24,1} }
+
+  brushes =
+  {
+    {
+      { m = "solid" }
+      { x = -32, y = -16, mat = "?pillar" }
+      { x = -16, y = -32, mat = "?pillar" }
+      { x =  16, y = -32, mat = "?pillar" }
+      { x =  32, y = -16, mat = "?pillar" }
+      { x =  32, y =  16, mat = "?pillar" }
+      { x =  16, y =  32, mat = "?pillar" }
+      { x = -16, y =  32, mat = "?pillar" }
+      { x = -32, y =  16, mat = "?pillar" }
+    }
+
+    {
+      { m = "detail" }
+      { x = -48, y = -16, mat = "?base", blocked=1 }
+      { x = -16, y = -48, mat = "?base", blocked=1 }
+      { x =  16, y = -48, mat = "?base", blocked=1 }
+      { x =  48, y = -16, mat = "?base", blocked=1 }
+      { x =  48, y =  16, mat = "?base", blocked=1 }
+      { x =  16, y =  48, mat = "?base", blocked=1 }
+      { x = -16, y =  48, mat = "?base", blocked=1 }
+      { x = -48, y =  16, mat = "?base", blocked=1 }
+      { t = 24, mat = "?base" }
+    }
+
+    {
+      { m = "detail" }
+      { x = -48, y = -16, mat = "?base" }
+      { x = -16, y = -48, mat = "?base" }
+      { x =  16, y = -48, mat = "?base" }
+      { x =  48, y = -16, mat = "?base" }
+      { x =  48, y =  16, mat = "?base" }
+      { x =  16, y =  48, mat = "?base" }
+      { x = -16, y =  48, mat = "?base" }
+      { x = -48, y =  16, mat = "?base" }
+      { b = 104, mat = "?base" }
+    }
+
+    -- bounds in Z axis
+    {
+      { b = 0 }
+      { t = 128 }
+    }
+
+    -- clipping (for Quake)
+    {
+      { m = "clip" }
+      { x = -32, y = -32 }
+      { x =  32, y = -32 }
+      { x =  32, y =  32 }
+      { x = -32, y =  32 }
+    }
+  }
+}
+
+
 PREFAB.ROUND_PILLAR =
 {
   brushes =
