@@ -403,6 +403,16 @@ DOOM1.PREBUILT_LEVELS =
   {
     { prob=50, file="doom1_boss/dis1.wad", map="E3M8" }
   }
+
+  E4M6 =
+  {
+    { prob=50, file="doom1_boss/tower1.wad", map="E2M8" }
+  }
+
+  E4M8 =
+  {
+    { prob=50, file="doom1_boss/dis1.wad", map="E3M8" }
+  }
 }
 
 
@@ -515,12 +525,7 @@ function DOOM1.get_levels()
       LEV.secret_exit = GAME.SECRET_EXITS[LEV.name]
 
       -- prebuilt levels
-      local pb_name = LEV.name
-
-      if LEV.name == "E4M6" then pb_name = "E2M8" end
-      if LEV.name == "E4M8" then pb_name = "E3M8" end
-
-      LEV.prebuilt = GAME.PREBUILT_LEVELS[pb_name]
+      LEV.prebuilt = GAME.PREBUILT_LEVELS[LEV.name]
 
       if LEV.prebuilt then
         LEV.name_theme = LEV.prebuilt.name_theme or "BOSS"
@@ -535,9 +540,23 @@ function DOOM1.get_levels()
 end
 
 
+function DOOM1.end_level()
+  if LEVEL.description and LEVEL.patch then
+    DOOM.make_level_gfx()
+  end
+end
+
+
+function DOOM1.all_done()
+  DOOM.make_cool_gfx()
+
+  gui.wad_merge_sections("doom_falls.wad");
+end
+
+
 ------------------------------------------------------------
 
-UNFINISHED["doom1"] =
+OB_GAMES["doom1"] =
 {
   label = "Doom"
 
@@ -554,14 +573,13 @@ UNFINISHED["doom1"] =
   {
     setup        = DOOM1.setup
     get_levels   = DOOM1.get_levels
-
-    end_level    = DOOM.end_level
-    all_done     = DOOM.all_done
+    end_level    = DOOM1.end_level
+    all_done     = DOOM1.all_done
   }
 }
 
 
-UNFINISHED["ultdoom"] =
+OB_GAMES["ultdoom"] =
 {
   label = "Ultimate Doom"
 

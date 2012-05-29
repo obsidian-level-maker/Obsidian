@@ -5610,17 +5610,14 @@ function DOOM.make_level_gfx()
 end
 
 
-function DOOM.end_level()
-gui.printf("DOOM.end_level: desc='%s' patch='%s'\n",
-           tostring(LEVEL.description),
-           tostring(LEVEL.patch))
+function DOOM2.end_level()
   if LEVEL.description and LEVEL.patch then
     DOOM.make_level_gfx()
   end
 end
 
 
-function DOOM.all_done()
+function DOOM2.all_done()
   DOOM.make_cool_gfx()
 
   gui.wad_merge_sections("doom_falls.wad");
@@ -5653,9 +5650,8 @@ OB_GAMES["doom2"] =
   {
     setup        = DOOM2.setup
     get_levels   = DOOM2.get_levels
-
-    end_level    = DOOM.end_level
-    all_done     = DOOM.all_done
+    end_level    = DOOM2.end_level
+    all_done     = DOOM2.all_done
   }
 }
 
