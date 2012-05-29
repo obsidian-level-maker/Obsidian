@@ -1233,7 +1233,7 @@ CHEX3.WEAPONS =
 -- Pickup List
 -- ===========
 
-CHEX.PICKUPS =
+CHEX3.PICKUPS =
 {
   -- HEALTH --
 
@@ -1434,7 +1434,8 @@ function CHEX3.get_levels()
 end
 
 
--- TODO: FIX THIS
+-- TODO: get this working
+--[[
 function CHEX1.make_cool_gfx()
   local GREEN =
   {
@@ -1487,6 +1488,7 @@ end
 function CHEX1.all_done()
   CHEX1.make_cool_gfx()
 end
+--]]
 
 
 ------------------------------------------------------------
@@ -1507,7 +1509,7 @@ UNFINISHED["chex3"] =
     setup        = CHEX3.setup
     get_levels   = CHEX3.get_levels
 
---FIXME !!!   all_done     = CHEX1.all_done
+--TODO:  all_done     = CHEX3.all_done
   }
 }
 
