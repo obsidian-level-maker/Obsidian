@@ -2466,34 +2466,36 @@ Areas_dump_vhr(R)
     -- FIXME!!!
     do return false end
 
-    -- not enough room?
+    -- does the chunk fit?
     if sx + sw - 1 > sx2 then return false end
     if sy + sh - 1 > sy2 then return false end
 
-    sx2 = sx + sw - 1
-    sy2 = sy + sh - 1
+    local sx1 = sx ; sx2 = sx + sw - 1
+    local sy1 = sy ; sy2 = sy + sh - 1
 
-    for x = sx,sx2 do
-    for y = sy,sy2 do
-      if x == sx and y == sy then continue end
+    -- part of the same elem?
+    if sx1 < ELEM.sx1 or sx2 > ELEM.sx2 or
+       sy1 < ELEM.sy1 or sy2 > ELEM.sy2
+    then return false end
+
+    for x = sx1, sx2 do
+    for y = sy1, sy2 do
+      if x == sx1 and y == sy1 then continue end
         
       local S = SEEDS[x][y]
 
       if S.room != R then return false end
 
-      -- FUCK!! must check if part of same elem
-      -- TODO...
+      if S.chunk then return false end
 
       -- never create chunks with different VHR's above them
-      local above_vhr2 = S:above_vhr(AREA.vhr)
-      
-      if above_vhr != above_vhr2 then
+      if S:above_vhr(AREA.vhr) != above_vhr2 then
         return false
       end
     end
     end
 
-    if R:straddles_concave_corner(sx, sy, sx2, sy2) then
+    if R:straddles_concave_corner(sx1, sy1, sx2, sy2) then
       return false
     end
 
@@ -2519,10 +2521,10 @@ Areas_dump_vhr(R)
       end
     end
 
-    sx2 = sx + sw - 1
-    sy2 = sy + sh - 1
+    local sx1 = sx ; sx2 = sx + sw - 1
+    local sy1 = sy ; sy2 = sy + sh - 1
 
-    local C = CHUNK_CLASS.new(sx, sy, sx2, sy2)
+    local C = CHUNK_CLASS.new(sx1, sy1, sx2, sy2)
     C:set_coords()
 
     if above_vhr then C.no_ceil = true end
@@ -2531,8 +2533,8 @@ Areas_dump_vhr(R)
 
     C.room = R ; table.insert(R.chunks, C)
 
-    for x = C.sx1, C.sx2 do
-    for y = C.sy1, C.sy2 do
+    for x = sx1, sx2 do
+    for y = sy1, sy2 do
       table.insert(SEEDS[x][y].chunks, C)
     end
     end
