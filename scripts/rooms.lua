@@ -2601,6 +2601,7 @@ function Rooms_outdoor_borders()
     Fabricate("SKY_FENCE", T, { skin, skin2 })
 
     S.scenic = true  -- mark as used
+    S.edge_of_map = nil
   end
 
 
@@ -2623,6 +2624,7 @@ function Rooms_outdoor_borders()
     Fabricate("SKY_CORNER", T, { skin, skin2 })
 
     S.scenic = true  -- mark as used
+    S.edge_of_map = nil
   end
 
 
