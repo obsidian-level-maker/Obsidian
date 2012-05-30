@@ -2190,6 +2190,9 @@ Areas_dump_vhr(R)
       AREA:add_chunk(C)
     end
 
+    assert(R.sx1 <= G.sx1 and G.sx2 <= R.sx2)
+    assert(R.sy1 <= G.sy1 and G.sy2 <= R.sy2)
+
     -- create new chunks
     for x = G.sx1, G.sx2 do
     for y = G.sy1, G.sy2 do
@@ -2200,19 +2203,21 @@ Areas_dump_vhr(R)
       -- try to make bigger chunks
       local sw, sh = 1, 1
 
-      if x > 1 and x < G.sx2 and not SEEDS[x+1][y]:used() and
+      if x < G.sx2 and not SEEDS[x+1][y].chunk and
          not R:straddles_concave_corner(x, y, x + sw, y + sh - 1)
       then
         sw = 2
       end
 
-      if y > 1 and y < G.sy2 and not SEEDS[x][y+1]:used() and
+      if y < G.sy2 and not SEEDS[x][y+1].chunk and
          not R:straddles_concave_corner(x, y, x + sw - 1, y + sh)
       then
         sh = 2
       end
 
-      if sw == 2 and sh == 2 and SEEDS[x+1][y+1]:used() then
+      if sw == 2 and sh == 2 and (SEEDS[x+1][y+1].chunk or
+         R:straddles_concave_corner(x, y, x + sw - 1, y + sh - 1))
+      then
         sh = 1
       end 
 
@@ -2463,9 +2468,6 @@ Areas_dump_vhr(R)
   -- please forgive these function names, I'm so so sorry!
 
   local function chunk_is_mungeable(AREA, ELEM, sx, sy, sw, sh, above_vhr, sx2, sy2)
-    -- FIXME!!!
-    do return false end
-
     -- does the chunk fit?
     if sx + sw - 1 > sx2 then return false end
     if sy + sh - 1 > sy2 then return false end
@@ -2486,7 +2488,7 @@ Areas_dump_vhr(R)
 
       if S.room != R then return false end
 
-      if S.chunk then return false end
+      if S.chunk or S.munge_fuck then return false end
 
       -- never create chunks with different VHR's above them
       if S:above_vhr(AREA.vhr) != above_vhr2 then
@@ -2506,20 +2508,24 @@ Areas_dump_vhr(R)
   local function munge_the_chunk(AREA, ELEM, sx, sy, sx2, sy2)
     local S = SEEDS[sx][sy]
 
+    if S.munge_fuck then
+      return
+    end
+
     local above_vhr = S:above_vhr(AREA.vhr)
 
     -- see if a bigger size is possible
-    local sw, sh = 2, 2
+    local sw, sh = 1, 1
 
-    if not chunk_is_mungeable(AREA, ELEM, sx, sy, 2, 2, above_vhr, sx2, sy2) then
-      if chunk_is_mungeable(AREA, ELEM, sx, sy, 2, 1, above_vhr, sx2, sy2) then
-        sw, sh = 2, 1
-      elseif chunk_is_mungeable(AREA, ELEM, sx, sy, 1, 2, above_vhr, sx2, sy2) then
-        sw, sh = 1, 2
-      else
-        sw, sh = 1, 1
-      end
+--[[  BROKEN FOR 3D AREAS
+    if chunk_is_mungeable(AREA, ELEM, sx, sy, 2, 2, above_vhr, sx2, sy2) then
+      sw, sh = 2, 2
+    elseif chunk_is_mungeable(AREA, ELEM, sx, sy, 2, 1, above_vhr, sx2, sy2) then
+      sw = 2
+    elseif chunk_is_mungeable(AREA, ELEM, sx, sy, 1, 2, above_vhr, sx2, sy2) then
+      sh = 2
     end
+--]]
 
     local sx1 = sx ; sx2 = sx + sw - 1
     local sy1 = sy ; sy2 = sy + sh - 1
@@ -2535,6 +2541,7 @@ Areas_dump_vhr(R)
 
     for x = sx1, sx2 do
     for y = sy1, sy2 do
+--    SEEDS[x][y].munge_fuck = true
       table.insert(SEEDS[x][y].chunks, C)
     end
     end
