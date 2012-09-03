@@ -18,19 +18,11 @@
 
 <h3>OLDER VERSIONS</h3>
 
-Earlier releases of Oblige (with version numbers like 0.85 and 0.97)
-may still be of interest, since they support games and features
-which have not been re-implemented in the current versions yet.
-They also have a distinct style, more cluttered and claustrophobic,
+Earlier releases of Oblige may still be of interest, since they support
+games and features which have not yet been re-implemented in the current
+release.
+The V2 versions also have a distinct style, more cluttered and claustrophobic,
 which some people may prefer.
-
-<p>
-Heretic maps are much better in these versions, and Hexen
-is supported fairly well too (Hexen is not yet available in
-Oblige V3).  Most games also add in powerup items, secret
-areas, scenery objects, and monster cages.  Version 0.85
-can create monster closets, and other versions can create
-teleport-in monster traps.
 
 <p>
 Below are links to the two best older versions of OBLIGE,
@@ -39,7 +31,25 @@ but of course all previous releases are available from SourceForge:
 Show Files</a>
 
 
-<h3>VERSION 0.97</h3>
+<span id="357"></span>
+
+<h3>LAST V3 VERSION : 3.57</h3>
+
+<b>Windows Package</b>:
+<a href="http://downloads.sourceforge.net/oblige/oblige-357-win.zip">oblige-357-win.zip</a> (1001 KB)
+
+<p>
+<b>Linux Package</b>:
+<a href="http://downloads.sourceforge.net/oblige/oblige-357-linux.tar.gz">oblige-357-linux.tar.gz</a> (914 KB)
+
+<p>
+<b>Source Code</b>:
+<a href="http://downloads.sourceforge.net/oblige/oblige-357-src.zip">oblige-357-src.zip</a> (847 KB)
+
+
+<span id="097"></span>
+
+<h3>LAST V2 VERSION : 0.97</h3>
 
 <b>Windows Package</b>:
 <a href="http://downloads.sourceforge.net/oblige/oblige-097-win.zip">oblige-097-win.zip</a> (598 KB)
@@ -51,20 +61,6 @@ Show Files</a>
 <p>
 <b>Source Code</b>:
 <a href="http://downloads.sourceforge.net/oblige/oblige-097-src.zip">oblige-097-src.zip</a> (404 KB)
-
-
-<h3>VERSION 0.85</h3>
-
-<b>Windows Package</b>:
-<a href="http://downloads.sourceforge.net/oblige/oblige_085_win.zip">oblige_085_win.zip</a> (452 KB)
-
-<p>
-<b>Linux Package</b>:
-<a href="http://downloads.sourceforge.net/oblige/oblige_085_linux.tar.gz">oblige_085_linux.tar.gz</a> (470 KB)
-
-<p>
-<b>Source Code</b>:
-<a href="http://downloads.sourceforge.net/oblige/oblige_085_src.zip">oblige_085_src.zip</a> (225 KB)
 
 
 </div class="rest">
