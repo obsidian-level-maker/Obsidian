@@ -18,5 +18,5 @@
 <body>
 
 <h1> OBLIGE Level Maker </h1>
-<h2>Advanced random map generator for classic FPS games</h2>
+<h2>Random map generator for classic FPS games</h2>
 
