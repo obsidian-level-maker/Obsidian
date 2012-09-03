@@ -51,12 +51,15 @@ and the last release was version 3.57 in April 2010.
 to layout rooms using prefabs for everything (including floors and ceilings).
 However this system proved to be unsatisfactory, so I scrapped it
 and went back to the drawing board.  Since then large portions of the
-Lua code were reworked or rewritten, and it is expected to have an
-official release sometime before the end of 2011.
+Lua code were reworked or rewritten, and work continues to bring it
+up to the standards of previous releases (and beyond!).
 
 
 <h3>RELEASE DATES</h3>
 
+<b>Version 4.28</b> : 2012-09-??<br>
+
+<p>
 <b>Version 3.57</b> : 2010-04-07<br>
 <b>Version 3.51</b> : 2010-02-24<br>
 
@@ -72,6 +75,64 @@ official release sometime before the end of 2011.
 <b>Version 0.94</b> : 2007-07-05<br>
 <b>Version 0.85</b> : 2007-02-19<br>
 <b>Version 0.81</b> : 2007-01-21  (first public release)<br>
+
+
+<h3 id="changes428">CHANGES IN 4.28</h3>
+<PRE>
++ Prefab system!
+
++ Quake lighting!
++ Quake visibility!
++ Quake II works!
+
++ Hexen works!
++ much improved Hexen themes, thanks to blackjar
++ proper Hub system for Hexen
+
+- support FreeDoom 0.7
+- support for Absolution, the Doom64 TC
+- some work on HacX 1.2 and Harmony [not usable yet]
+- preliminary work on Chex Quest 1, 2 and 3 [not usable yet]
+- preliminary work on Hexen II and Half-Life [not usable yet]
+
+- DOOM themes for Episodes 2 and 4, courtesy Mr Chris
+- monsters are progressive over a full game in DOOM 2
+- more naming goodies, thanks to Mr Chris
+
+- improved progress bar and status messages
+- output file is deleted if an error occurs
+- backup files now use the .OLD extension
+- qsavetex detects and handles Hexen II
+- cmdline option to load a config file (for Batch mode)
+
++ support for "shaped" rooms (L, T, plus, etc)
++ support for teleporters
+- secret exits are created again
+
+- fixed Quake collision issues
+- new more reliable CSG code
+- monster control modules for Heretic, Quake, Quake II
+- support for liquids in Quake and Quake II
+- support reading and writing PK3 files (not used yet)
+- an exporter to .MAP format
+
++ ability to make multiple paths between rooms
+- preliminary work on truely 3D room layouts
+- improved infighting logic in the Fight Simulator
+
+- new 'Jumbled Up' theme setting
+- new 'Tiny' and 'Extreme' settings for level size
+- new 'Alternative Look' option
+- moved the Seed setting, and increased to 6 digits
+- Seed is automatically bumped after a successful build
+
++ customised Lua language:
+  - commas are optional at end of line in data tables
+  - simpler table traversal with new 'each' syntax
+  - ternary operator of the form: (X ? Y ; Z)
+  - continue statement
+  - alternative inequality operator: !=
+</pre>
 
 
 <h3 id="changes357">CHANGES IN 3.57</h3>
