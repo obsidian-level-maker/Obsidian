@@ -313,9 +313,8 @@ function Monsters_init()
   table.name_up(GAME.PICKUPS)
 
   for name,info in pairs(GAME.MONSTERS) do
-    info.ent = GAME.ENTITIES[name]
-    if not info.ent then
-      error(string.format("Monster '%s' lacks entry in ENTITIES table", name))
+    if not info.id then
+      error(string.format("Monster '%s' lacks an id field", name))
     end
   end
 
@@ -912,11 +911,11 @@ function Monsters_in_room(L)
   local CAGE_REUSE_FACTORS = { 5, 20, 60, 200 }
 
   local function is_big(mon)
-    return GAME.ENTITIES[mon].r > 30
+    return GAME.MONSTERS[mon].r > 30
   end
 
   local function is_huge(mon)
-    return GAME.ENTITIES[mon].r > 60
+    return GAME.MONSTERS[mon].r > 60
   end
 
 
@@ -1325,7 +1324,7 @@ function Monsters_in_room(L)
 
     -- check if fits vertically
     local ceil_h = S.ceil_h or R.ceil_h or SKY_H
-    local ent = assert(GAME.ENTITIES[mon])
+    local ent = assert(GAME.MONSTERS[mon])
 
     if ent.h >= (ceil_h - S.floor_h - 1) then
       return false
@@ -1438,22 +1437,22 @@ function Monsters_in_room(L)
 
 
   local function mon_fits(mon, spot)
-    local ent  = GAME.ENTITIES[mon]
+    local info  = GAME.MONSTERS[mon]
 
     -- FIXME !!!
-    -- if ent.h >= (spot.z2 - spot.z1) then return 0 end
+    -- if info.h >= (spot.z2 - spot.z1) then return 0 end
 
     local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
 
-    w = int(w / ent.r / 2.2)
-    h = int(h / ent.r / 2.2)
+    w = int(w / info.r / 2.2)
+    h = int(h / info.r / 2.2)
 
     return w * h
   end
 
 
   local function place_in_spot(mon, spot, all_skills)
-    local ent = GAME.ENTITIES[mon]
+    local info = GAME.MONSTERS[mon]
 
     local x, y = geom.box_mid (spot.x1, spot.y1, spot.x2, spot.y2)
     local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
@@ -1461,8 +1460,8 @@ function Monsters_in_room(L)
     local z = spot.z1
 
     -- move monster to random place within the box
-    local dx = w / 2 - ent.r
-    local dy = h / 2 - ent.r
+    local dx = w / 2 - info.r
+    local dy = h / 2 - info.r
 
     if dx > 0 then
       x = x + rand.range(-dx, dx)
@@ -1477,12 +1476,12 @@ function Monsters_in_room(L)
 --[[
     local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
 
-    w = int(w / ent.r / 2.2)
-    h = int(h / ent.r / 2.2)
+    w = int(w / info.r / 2.2)
+    h = int(h / info.r / 2.2)
 
     for mx = 1,w do for my = 1,h do
-      local x = spot.x1 + ent.r * 2.2 * (mx-0.5)
-      local y = spot.y1 + ent.r * 2.2 * (my-0.5)
+      local x = spot.x1 + info.r * 2.2 * (mx-0.5)
+      local y = spot.y1 + info.r * 2.2 * (my-0.5)
       local z = spot.z1
 
       place_monster(mon, x, y, z)
@@ -1595,7 +1594,6 @@ function Monsters_in_room(L)
 
   local function find_spot(mon, near_to)
     local info = GAME.MONSTERS[mon]
-    local ent  = GAME.ENTITIES[mon]
 
     local poss_spots = {}
 
@@ -1624,7 +1622,7 @@ function Monsters_in_room(L)
     local result = table.pick_best(poss_spots,
         function(A, B) return A.find_cost < B.find_cost end)
   
-    return split_spot(result.find_index, ent.r, near_to)
+    return split_spot(result.find_index, info.r, near_to)
   end
 
 
@@ -1806,13 +1804,13 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
 
   local function fill_cage_area(mon, spot)
-    local ent = assert(GAME.ENTITIES[mon])
+    local info = assert(GAME.MONSTERS[mon])
 
     -- determine maximum number that will fit
     local w, h = geom.box_size(spot.x1,spot.y1, spot.x2,spot.y2)
 
-    w = int(w / ent.r / 2.2)
-    h = int(h / ent.r / 2.2)
+    w = int(w / info.r / 2.2)
+    h = int(h / info.r / 2.2)
 
     assert(w >= 1 and h >= 1)
 
@@ -1824,8 +1822,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     for mx = 1,w do for my = 1,h do
       local loc =
       {
-        x = spot.x1 + ent.r * 2.2 * (mx-0.5)
-        y = spot.y1 + ent.r * 2.2 * (my-0.5)
+        x = spot.x1 + info.r * 2.2 * (mx-0.5)
+        y = spot.y1 + info.r * 2.2 * (my-0.5)
         z = spot.z1
       }
       table.insert(list, loc)
@@ -1836,7 +1834,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- determine quantity, applying user settings
     local qty = calc_quantity() * 1.4
 
-    local d = ent.cage_density or 1
+    local d = info.cage_density or 1
     local f = gui.random()
 
     local want = int(total * d * qty / 100 + f * f * 2)

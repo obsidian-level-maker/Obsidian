@@ -36,32 +36,6 @@ DOOM.ENTITIES =
   dm_player     = { id=11, kind="other", r=16,h=56 }
   teleport_spot = { id=14, kind="other", r=16,h=56 }
 
-  --- Monsters ---
-
-  zombie    = { id=3004,kind="monster", r=20,h=56 }
-  shooter   = { id=9,   kind="monster", r=20,h=56 }
-  gunner    = { id=65,  kind="monster", r=20,h=56 }
-  imp       = { id=3001,kind="monster", r=20,h=56 }
-
-  caco      = { id=3005,kind="monster", r=31,h=56 }
-  revenant  = { id=66,  kind="monster", r=20,h=64 }
-  knight    = { id=69,  kind="monster", r=24,h=64 }
-  baron     = { id=3003,kind="monster", r=24,h=64 }
-
-  mancubus  = { id=67,  kind="monster", r=48,h=64 }
-  arach     = { id=68,  kind="monster", r=66,h=64 }
-  pain      = { id=71,  kind="monster", r=31,h=56 }
-  vile      = { id=64,  kind="monster", r=20,h=56 }
-  demon     = { id=3002,kind="monster", r=30,h=56 }
-  spectre   = { id=58,  kind="monster", r=30,h=56 }
-  skull     = { id=3006,kind="monster", r=16,h=56 }
-
-  ss_dude   = { id=84, kind="monster", r=20, h=56 }
-  keen      = { id=72, kind="monster", r=16, h=72, ceil=true }
-
-  -- bosses --
-  Mastermind = { id=7,  kind="monster", r=128,h=100 }
-  Cyberdemon = { id=16, kind="monster", r=40, h=110 }
 
   --- Pickups ---
 
@@ -184,6 +158,8 @@ DOOM.ENTITIES =
 
   -- special stuff --
   dummy = { id=23, kind="other", r=16,h=16, pass=true }
+
+  keen  = { id=72, kind="monster", r=16, h=72, ceil=true }
 
   brain_boss    = { id=88, kind="other", r=16, h=16 }
   brain_shooter = { id=89, kind="other", r=20, h=32 }
@@ -4847,6 +4823,9 @@ DOOM.MONSTERS =
 {
   zombie =
   {
+    id = 3004
+    r = 20
+    h = 56 
     level = 1
     prob = 40
     health = 20
@@ -4856,21 +4835,11 @@ DOOM.MONSTERS =
     density = 1.5
     infights = true
   }
-
-  shooter =
-  {
-    level = 2
-    prob = 50
-    health = 30
-    damage = 10
-    attack = "hitscan"
-    give = { {weapon="shotty"}, {ammo="shell",count=4} }
-    species = "zombie"
-    infights = true
-  }
-
   imp =
   {
+    id = 3001
+    r = 20
+    h = 56 
     level = 1
     prob = 60
     health = 60
@@ -4880,6 +4849,9 @@ DOOM.MONSTERS =
 
   skull =
   {
+    id = 3006
+    r = 16
+    h = 56 
     level = 3
     prob = 16
     health = 100
@@ -4893,6 +4865,9 @@ DOOM.MONSTERS =
 
   demon =
   {
+    id = 3002
+    r = 30
+    h = 56 
     level = 1
     prob = 35
     health = 150
@@ -4903,6 +4878,9 @@ DOOM.MONSTERS =
 
   spectre =
   {
+    id = 58
+    r = 30
+    h = 56 
     replaces = "demon"
     replace_prob = 25
     crazy_prob = 21
@@ -4917,6 +4895,9 @@ DOOM.MONSTERS =
 
   caco =
   {
+    id = 3005
+    r = 31
+    h = 56 
     level = 3
     prob = 40
     health = 400
@@ -4928,6 +4909,9 @@ DOOM.MONSTERS =
 
   baron =
   {
+    id = 3003
+    r = 24
+    h = 64 
     level = 7
     prob = 20
     health = 1000
@@ -4942,6 +4926,9 @@ DOOM.MONSTERS =
 
   Cyberdemon =
   {
+    id = 16
+    r = 40
+    h = 110
     level = 9
     prob = 17
     crazy_prob = 12
@@ -4955,6 +4942,9 @@ DOOM.MONSTERS =
 
   Mastermind =
   {
+    id = 7
+    r = 128
+    h = 100
     level = 9
     prob = 20
     crazy_prob = 18
@@ -4972,6 +4962,9 @@ DOOM2.MONSTERS =
 {
   gunner =
   {
+    id = 65
+    r = 20
+    h = 56 
     level = 3
     prob = 20
     health = 70
@@ -4984,6 +4977,9 @@ DOOM2.MONSTERS =
 
   revenant =
   {
+    id = 66
+    r = 20
+    h = 64 
     level = 5
     prob = 40
     skip_prob = 90
@@ -4995,6 +4991,9 @@ DOOM2.MONSTERS =
 
   knight =
   {
+    id = 69
+    r = 24
+    h = 64 
     level = 5
     prob = 60
     skip_prob = 90
@@ -5008,6 +5007,9 @@ DOOM2.MONSTERS =
 
   mancubus =
   {
+    id = 67
+    r = 48
+    h = 64 
     level = 6
     prob = 37
     health = 600
@@ -5018,6 +5020,9 @@ DOOM2.MONSTERS =
 
   arach =
   {
+    id = 68
+    r = 66
+    h = 64 
     level = 6
     prob = 25
     health = 500
@@ -5028,6 +5033,9 @@ DOOM2.MONSTERS =
 
   vile =
   {
+    id = 64
+    r = 20
+    h = 56 
     level = 7
     prob = 17
     skip_prob = 120
@@ -5040,6 +5048,9 @@ DOOM2.MONSTERS =
 
   pain =
   {
+    id = 71
+    r = 31
+    h = 56 
     level = 6
     prob = 8
     crazy_prob = 15
@@ -5053,9 +5064,12 @@ DOOM2.MONSTERS =
     weap_prefs = { launch=0.2 }
   }
 
+  -- NOTE: not generated in normal levels
   ss_dude =
   {
-    -- NOTE: not generated in normal levels
+    id = 84
+    r = 20
+    h = 56 
     level = 1
     crazy_prob = 7
     skip_prob = 300

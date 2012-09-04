@@ -165,7 +165,10 @@ function entity_helper(name, x, y, z, props)
     ent = {}
   end
 
-  local info = GAME.ENTITIES[name]
+  local info = GAME.ENTITIES[name] or
+               GAME.MONSTERS[name] or
+               GAME.WEAPONS[name] or
+               GAME.PICKUPS[name]
 
   if not info then
     gui.printf("\nLACKING ENTITY : %s\n\n", name)
@@ -1476,7 +1479,10 @@ function Fab_apply_skins(fab, list)
       return false
     end
 
-    local info = GAME.ENTITIES[name]
+    local info = GAME.ENTITIES[name] or
+                 GAME.MONSTERS[name] or
+                 GAME.WEAPONS[name] or
+                 GAME.PICKUPS[name]
 
     if not info then
       error("No such entity: " .. tostring(name))
