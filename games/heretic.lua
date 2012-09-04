@@ -32,27 +32,6 @@ HERETIC.ENTITIES =
   dm_player     = { id=11, kind="other", r=16,h=56 }
   teleport_spot = { id=14, kind="other", r=16,h=56 }
 
-  --- monsters ---
-  gargoyle   = { id=66, kind="monster", r=16,h=36 }
-  fire_garg  = { id=5,  kind="monster", r=16,h=36 }
-  mummy      = { id=68, kind="monster", r=22,h=64 }
-  mummy_inv  = { id=69, kind="monster", r=22,h=64 }
-
-  leader     = { id=45, kind="monster", r=22,h=64 }
-  leader_inv = { id=46, kind="monster", r=22,h=64 }
-  knight     = { id=64, kind="monster", r=24,h=80 }
-  knight_inv = { id=65, kind="monster", r=24,h=80 }
-
-  disciple   = { id=15, kind="monster", r=16,h=72 }
-  sabreclaw  = { id=90, kind="monster", r=20,h=64 }
-  weredragon = { id=70, kind="monster", r=34,h=80 }
-  ophidian   = { id=92, kind="monster", r=22,h=72 }
-
-  --- bosses ---
-  Ironlich   = { id=6,  kind="monster", r=40,h=72 }
-  Maulotaur  = { id=9,  kind="monster", r=28,h=104 }
-  D_Sparil   = { id=7,  kind="monster", r=28,h=104 }
-
   --- keys ---
   k_yellow   = { id=80, kind="pickup", r=20,h=16, pass=true }
   k_green    = { id=73, kind="pickup", r=20,h=16, pass=true }
@@ -2200,6 +2179,9 @@ HERETIC.MONSTERS =
 {
   gargoyle =
   {
+    id = 66
+    r = 16
+    h = 36
     level = 1
     prob = 30
     health = 20
@@ -2210,6 +2192,9 @@ HERETIC.MONSTERS =
 
   fire_garg =
   {
+    id = 5
+    r = 16
+    h = 36
     level = 3
     prob = 10
     health = 80
@@ -2220,6 +2205,9 @@ HERETIC.MONSTERS =
 
   mummy =
   {
+    id = 68
+    r = 22
+    h = 64
     level = 1
     prob = 60
     health = 80
@@ -2230,6 +2218,9 @@ HERETIC.MONSTERS =
 
   mummy_inv =
   {
+    id = 69
+    r = 22
+    h = 64
     replaces = "mummy"
     replace_prob = 15
     health = 80
@@ -2241,6 +2232,9 @@ HERETIC.MONSTERS =
 
   sabreclaw =  -- MT_CLINK
   {
+    id = 90
+    r = 20
+    h = 64
     level = 5
     prob = 25
     health = 150
@@ -2251,6 +2245,9 @@ HERETIC.MONSTERS =
 
   knight =
   {
+    id = 64
+    r = 24
+    h = 80
     level = 1
     prob = 70
     health = 200
@@ -2261,6 +2258,9 @@ HERETIC.MONSTERS =
 
   knight_inv =
   {
+    id = 65
+    r = 24
+    h = 80
     replaces = "knight"
     replace_prob = 15
     health = 200
@@ -2272,6 +2272,9 @@ HERETIC.MONSTERS =
 
   leader =
   {
+    id = 45
+    r = 22
+    h = 64
     level = 4
     prob = 70
     health = 100
@@ -2282,6 +2285,9 @@ HERETIC.MONSTERS =
 
   leader_inv =
   {
+    id = 46
+    r = 22
+    h = 64
     replaces = "leader"
     replace_prob = 15
     health = 100
@@ -2293,6 +2299,9 @@ HERETIC.MONSTERS =
 
   disciple =  -- MT_WIZARD
   {
+    id = 15
+    r = 16
+    h = 72
     level = 6
     prob = 25
     health = 180
@@ -2304,6 +2313,9 @@ HERETIC.MONSTERS =
 
   weredragon =  -- MT_BEAST
   {
+    id = 70
+    r = 34
+    h = 80
     level = 6
     prob = 30
     health = 220
@@ -2314,6 +2326,9 @@ HERETIC.MONSTERS =
 
   ophidian =  -- MT_SNAKE
   {
+    id = 92
+    r = 22
+    h = 72
     level = 7
     prob = 30
     health = 280
@@ -2329,6 +2344,9 @@ HERETIC.MONSTERS =
 
   Ironlich =  -- MT_HEAD
   {
+    id = 6
+    r = 40
+    h = 72 
     health = 700
     damage = 60
     give = { {ammo="claw_orb",count=3} }
@@ -2337,6 +2355,9 @@ HERETIC.MONSTERS =
 
   Maulotaur =
   {
+    id = 9
+    r = 28
+    h = 104
     health = 3000
     damage = 80
     give  = 
@@ -2348,6 +2369,9 @@ HERETIC.MONSTERS =
 
   D_Sparil =
   {
+    id = 7
+    r = 28
+    h = 104
     health = 2000
     damage = 100
   }

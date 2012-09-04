@@ -33,23 +33,6 @@ QUAKE.ENTITIES =
 
   teleport_spot = { id="info_teleport_destination", kind="other", r=16,h=56, pass=true }
 
-  -- enemies
-  dog      = { id="monster_dog",      kind="monster", r=32, h=80 }  -- dogs are fat!
-  grunt    = { id="monster_army",     kind="monster", r=16, h=80 }
-  enforcer = { id="monster_enforcer", kind="monster", r=16, h=80 }
-  fiend    = { id="monster_demon1",   kind="monster", r=32, h=80 }
-
-  knight   = { id="monster_knight",   kind="monster", r=16, h=80 }
-  death_kt = { id="monster_hell_knight", kind="monster", r=32, h=80 }
-  ogre     = { id="monster_ogre",     kind="monster", r=32, h=80 }
-  fish     = { id="monster_fish",     kind="monster", r=16, h=80 }
-  scrag    = { id="monster_wizard",   kind="monster", r=16, h=80 }
-
-  shambler = { id="monster_shambler", kind="monster", r=32, h=80 }
-  tarbaby  = { id="monster_tarbaby",  kind="monster", r=16, h=80 }
-  vore     = { id="monster_shalrath", kind="monster", r=32, h=80 }
-  zombie   = { id="monster_zombie",   kind="monster", r=16, h=80 }
-
   -- bosses
   Chthon   = { id="monster_boss",   kind="monster", r=128, h=160 }
   Shub     = { id="monster_oldone", kind="monster", r=128, h=160 }
@@ -1695,6 +1678,9 @@ QUAKE.MONSTERS =
 {
   dog =
   {
+    id = "monster_dog"
+    r = 32  -- dogs are fat!
+    h = 80 
     -- we use 'replaces' here to simulate the way dogs
     -- usually appear with grunts.
     replaces = "grunt"
@@ -1707,6 +1693,9 @@ QUAKE.MONSTERS =
 
   fish =
   {
+    id = "monster_fish"
+    r = 16
+    h = 80 
     -- only appears in water
     health = 25
     damage = 3
@@ -1716,6 +1705,9 @@ QUAKE.MONSTERS =
 
   grunt =
   {
+    id = "monster_army"
+    r = 16
+    h = 80 
     level = 1
     prob = 80
     health = 30
@@ -1727,6 +1719,9 @@ QUAKE.MONSTERS =
 
   enforcer =
   {
+    id = "monster_enforcer"
+    r = 16
+    h = 80 
     level = 2
     prob = 40
     health = 80
@@ -1738,6 +1733,9 @@ QUAKE.MONSTERS =
 
   zombie =
   {
+    id = "monster_zombie"
+    r = 16
+    h = 80 
     level = 2
     prob = 40
     health = 60
@@ -1749,6 +1747,9 @@ QUAKE.MONSTERS =
 
   scrag =
   {
+    id = "monster_wizard"
+    r = 16
+    h = 80 
     level = 2
     prob = 60
     health = 80
@@ -1759,6 +1760,9 @@ QUAKE.MONSTERS =
 
   tarbaby =
   {
+    id = "monster_tarbaby"
+    r = 16
+    h = 80 
     level = 3
     prob = 1
     health = 80
@@ -1770,6 +1774,9 @@ QUAKE.MONSTERS =
 
   knight =
   {
+    id = "monster_knight"
+    r = 16
+    h = 80 
     level = 1
     prob = 60
     density  =  0.6
@@ -1780,6 +1787,9 @@ QUAKE.MONSTERS =
 
   death_kt =
   {
+    id = "monster_hell_knight"
+    r = 32
+    h = 80 
     level = 5
     prob = 30
     density  =  0.4
@@ -1790,6 +1800,9 @@ QUAKE.MONSTERS =
 
   ogre =
   {
+    id = "monster_ogre"
+    r = 32
+    h = 80 
     level = 3
     prob = 40
     health = 200
@@ -1801,6 +1814,9 @@ QUAKE.MONSTERS =
 
   fiend =
   {
+    id = "monster_demon1"
+    r = 32
+    h = 80 
     level = 4
     prob = 10
     health = 300
@@ -1812,6 +1828,9 @@ QUAKE.MONSTERS =
 
   vore =
   {
+    id = "monster_shalrath"
+    r = 32
+    h = 80 
     level = 7
     prob = 10
     health = 400
@@ -1822,6 +1841,9 @@ QUAKE.MONSTERS =
 
   shambler =
   {
+    id = "monster_shambler"
+    r = 32
+    h = 80 
     level = 7
     prob = 10
     health = 600

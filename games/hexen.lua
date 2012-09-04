@@ -32,30 +32,6 @@ HEXEN.ENTITIES =
   dm_player     = { id=11, kind="other", r=16,h=64 }
   teleport_spot = { id=14, kind="other", r=16,h=64 }
   
-  --- monsters
-  ettin    = { id=10030,kind="monster", r=24,h=64 }
-  afrit    = { id=10060,kind="monster", r=24,h=64 }
-  demon1   = { id=31,   kind="monster", r=33,h=70 }
-  demon2   = { id=8080, kind="monster", r=33,h=70 }
-
-  iceguy   = { id=8020, kind="monster", r=24,h=80 }
-  centaur1 = { id=107,  kind="monster", r=20,h=64 }
-  centaur2 = { id=115,  kind="monster", r=20,h=64 }
-
-  serpent1  = { id=121,  kind="monster", r=33,h=64 }
-  serpent2  = { id=120,  kind="monster", r=33,h=64 }
-  bishop    = { id=114,  kind="monster", r=24,h=64 }
-  reiver    = { id=34,   kind="monster", r=24,h=64 }
-  reiver_b  = { id=10011,kind="monster", r=24,h=64 }
-
-  -- bosses
-  Fighter_boss = { id=10100, kind="monster", r=16,h=64  }
-  Cleric_boss  = { id=10101, kind="monster", r=16,h=64  }
-  Mage_boss    = { id=10102, kind="monster", r=16,h=64  }
-  Wyvern       = { id=254,   kind="monster", r=20,h=66  }
-  Heresiarch   = { id=10080, kind="monster", r=40,h=120 }
-  Korax        = { id=10200, kind="monster", r=66,h=120 }
-
   --- PICKUPS ---
 
   -- keys
@@ -4680,6 +4656,9 @@ HEXEN.MONSTERS =
 {
   ettin =
   {
+    id = 10030
+    r = 24
+    h = 64
     level = 1
     prob = 60
     health = 170
@@ -4689,6 +4668,9 @@ HEXEN.MONSTERS =
 
   afrit =
   {
+    id = 10060
+    r = 24
+    h = 64
     level = 1
     prob = 40
     health = 80
@@ -4699,6 +4681,9 @@ HEXEN.MONSTERS =
 
   centaur1 =
   {
+    id = 107
+    r = 20
+    h = 64
     level = 2
     prob = 40
     health = 200
@@ -4708,6 +4693,9 @@ HEXEN.MONSTERS =
 
   centaur2 =
   {
+    id = 115
+    r = 20
+    h = 64
     -- not using 'replaces' here, centaur2 is much tougher
     level = 4
     prob = 20
@@ -4718,6 +4706,9 @@ HEXEN.MONSTERS =
 
   serpent1 =
   {
+    id = 121
+    r = 33
+    h = 64
     level = 3
     health = 90
     damage = 10
@@ -4726,6 +4717,9 @@ HEXEN.MONSTERS =
 
   serpent2 =
   {
+    id = 120
+    r = 33
+    h = 64
     replaces = "serpent1"
     replace_prob = 33
     health = 90
@@ -4735,16 +4729,22 @@ HEXEN.MONSTERS =
 
   iceguy =
   {
+    id = 8020
+    r = 24
+    h = 80
     level = 2
     prob = 3
     skip_prob = 300
     health = 120
-    damage = 25 -- not sure the basis of 16, but this guys does a lot of damage!
+    damage = 25
     attack = "missile"
   }
 
   demon1 =
   {
+    id = 31
+    r = 33
+    h = 70
     level = 3
     prob = 30
     health = 250
@@ -4754,6 +4754,9 @@ HEXEN.MONSTERS =
 
   demon2 =
   {
+    id = 8080
+    r = 33
+    h = 70
     replaces = "demon1"
     replace_prob = 40
     health = 250
@@ -4763,6 +4766,9 @@ HEXEN.MONSTERS =
 
   bishop =
   {
+    id = 114
+    r = 24
+    h = 64
     level = 6
     prob = 20
     health = 130
@@ -4773,6 +4779,9 @@ HEXEN.MONSTERS =
 
   reiver =
   {
+    id = 34
+    r = 24
+    h = 64
     level = 7
     prob = 5
     health = 150
@@ -4783,6 +4792,9 @@ HEXEN.MONSTERS =
   
   reiver_b  =
   {
+    id = 10011
+    r = 24
+    h = 64
     replaces = "reiver"
     replace_prob = 65
     health = 150
@@ -4796,8 +4808,38 @@ HEXEN.MONSTERS =
 
   -- FIXME: proper damage and attack fields
 
+  Fighter_boss =
+  {
+    id = 10100
+    r = 16
+    h = 64 
+    health = 5000
+    damage = 90
+  }
+
+  Cleric_boss =
+  {
+    id = 10101
+    r = 16
+    h = 64 
+    health = 5000
+    damage = 90
+  }
+
+  Mage_boss =
+  {
+    id = 10102
+    r = 16
+    h = 64 
+    health = 5000
+    damage = 90
+  }
+
   Wyvern =
   {
+    id = 254
+    r = 20
+    h = 66 
     health = 640
     damage = 60
     float = true
@@ -4805,15 +4847,22 @@ HEXEN.MONSTERS =
 
   Heresiarch =
   {
+    id = 10080
+    r = 40
+    h = 120
     health = 5000
     damage = 70
   }
 
   Korax =
   {
+    id = 10200
+    r = 66
+    h = 120
     health = 5000
     damage = 90
   }
+
 }
 
 

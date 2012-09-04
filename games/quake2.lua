@@ -34,34 +34,6 @@ QUAKE2.ENTITIES =
   teleporter    = { id="misc_teleporter", kind="other", r=16,h=56, pass=true }
   tele_pad      = { id="misc_teleporter_dest", kind="other", r=16,h=56, pass=true }
 
-  -- enemies
-  guard      = { id="monster_soldier_light", kind="monster", r=16, h=56, }
-  guard_sg   = { id="monster_soldier", kind="monster", r=16, h=56, }
-  guard_mg   = { id="monster_soldier_ss",kind="monster", r=16, h=56, }
-  enforcer   = { id="monster_infantry",kind="monster", r=16, h=56, }
-  beserker   = { id="monster_beserk",  kind="monster", r=16, h=56, }
-  grenader   = { id="monster_gunner",  kind="monster", r=16, h=56, }
-
-  tank       = { id="monster_tank",    kind="monster", r=16, h=56, }
-  gladiator  = { id="monster_gladiator",kind="monster", r=32, h=88, }
-  medic      = { id="monster_medic",   kind="monster", r=16, h=56, }
-  maiden     = { id="monster_chick",   kind="monster", r=16, h=56, }
-  tank_cmdr  = { id="monster_tank_commander",kind="monster", r=32, h=88, }
-
-  flyer      = { id="monster_flyer",   kind="monster", r=16, h=56, }
-  technician = { id="monster_floater", kind="monster", r=16, h=56, }
-  icarus     = { id="monster_hover",   kind="monster", r=16, h=56, }
-  parasite   = { id="monster_parasite",kind="monster", r=16, h=56, }
-  shark      = { id="monster_flipper", kind="monster", r=16, h=56, }
-  mutant     = { id="monster_mutant",  kind="monster", r=32, h=56, }
-  brain      = { id="monster_brain",   kind="monster", r=16, h=56, }
-
-  -- bosses
-  Super_tank = { id="monster_supertank",kind="monster", r=64, h=112, }
-  Huge_flyer = { id="monster_boss2",    kind="monster", r=56, h=80,  }
-  Jorg       = { id="monster_jorg",     kind="monster", r=80, h=140, }
-  Makron     = { id="monster_makron",   kind="monster", r=30, h=90,  }
-
   -- pickups
   k_blue  = { id="key_blue_key",  kind="pickup", r=16, h=32, pass=true }
   k_red   = { id="key_red_key",   kind="pickup", r=16, h=32, pass=true }
@@ -1812,6 +1784,9 @@ QUAKE2.MONSTERS =
 {
   guard =
   {
+    id = "monster_soldier_light"
+    r = 16
+    h = 56
     level = 1
     prob = 20
     health = 20
@@ -1821,6 +1796,9 @@ QUAKE2.MONSTERS =
 
   guard_sg =
   {
+    id = "monster_soldier"
+    r = 16
+    h = 56
     level = 1
     prob = 70
     health = 30
@@ -1830,6 +1808,9 @@ QUAKE2.MONSTERS =
 
   guard_mg =
   {
+    id = "monster_soldier_ss"
+    r = 16
+    h = 56
     replaces = "guard_sg"
     replace_prob = 50
     health = 30
@@ -1839,6 +1820,9 @@ QUAKE2.MONSTERS =
 
   enforcer =
   {
+    id = "monster_infantry"
+    r = 16
+    h = 56
     level = 3
     prob = 50
     health = 100
@@ -1848,6 +1832,9 @@ QUAKE2.MONSTERS =
 
   flyer =
   {
+    id = "monster_flyer"
+    r = 16
+    h = 56
     level = 1
     prob = 70
     health = 50
@@ -1859,6 +1846,9 @@ QUAKE2.MONSTERS =
 
   shark =
   {
+    id = "monster_flipper"
+    r = 16
+    h = 56
     -- only appears in water
     health = 50
     damage = 5
@@ -1868,6 +1858,9 @@ QUAKE2.MONSTERS =
 
   parasite =
   {
+    id = "monster_parasite"
+    r = 16
+    h = 56
     level = 2
     prob = 5
     health = 175
@@ -1878,6 +1871,9 @@ QUAKE2.MONSTERS =
 
   maiden =
   {
+    id = "monster_chick"
+    r = 16
+    h = 56
     level = 7
     prob = 50
     health = 175
@@ -1887,6 +1883,9 @@ QUAKE2.MONSTERS =
 
   technician =
   {
+    id = "monster_floater"
+    r = 16
+    h = 56
     level = 5
     prob = 50
     health = 200
@@ -1898,6 +1897,9 @@ QUAKE2.MONSTERS =
 
   beserker =
   {
+    id = "monster_beserk"
+    r = 16
+    h = 56
     level = 5
     prob = 50
     health = 240
@@ -1907,6 +1909,9 @@ QUAKE2.MONSTERS =
 
   icarus =
   {
+    id = "monster_hover"
+    r = 16
+    h = 56
     level = 4
     prob = 70
     health = 240
@@ -1918,6 +1923,9 @@ QUAKE2.MONSTERS =
 
   medic =
   {
+    id = "monster_medic"
+    r = 16
+    h = 56
     level = 5
     prob = 30
     health = 300
@@ -1927,6 +1935,9 @@ QUAKE2.MONSTERS =
 
   mutant =
   {
+    id = "monster_mutant"
+    r = 32
+    h = 56
     level = 3
     prob = 30
     health = 300
@@ -1936,6 +1947,9 @@ QUAKE2.MONSTERS =
 
   brain =
   {
+    id = "monster_brain"
+    r = 16
+    h = 56
     level = 5
     prob = 20
     health = 300
@@ -1945,6 +1959,9 @@ QUAKE2.MONSTERS =
 
   grenader =
   {
+    id = "monster_gunner"
+    r = 16
+    h = 56
     level = 5
     prob = 10
     health = 400
@@ -1954,6 +1971,9 @@ QUAKE2.MONSTERS =
 
   gladiator =
   {
+    id = "monster_gladiator"
+    r = 32
+    h = 88
     level = 7
     prob = 10
     health = 400
@@ -1963,6 +1983,9 @@ QUAKE2.MONSTERS =
 
   tank =
   {
+    id = "monster_tank"
+    r = 16
+    h = 56
     level = 8
     prob = 2
     health = 750
@@ -1972,6 +1995,9 @@ QUAKE2.MONSTERS =
 
   tank_cmdr =
   {
+    id = "monster_tank_commander"
+    r = 32
+    h = 88
     level = 9
     health = 1000
     damage = 160
@@ -1984,24 +2010,36 @@ QUAKE2.MONSTERS =
 
   Super_tank =
   {
+    id = "monster_supertank"
+    r = 64
+    h = 112
     health = 1500
     damage = 200
   }
 
   Huge_flyer =
   {
+    id = "monster_boss2"
+    r = 56
+    h = 80
     health = 2000
     damage = 200
   }
 
   Jorg =
   {
+    id = "monster_jorg"
+    r = 80
+    h = 140
     health = 3000
     damage = 200
   }
 
   Makron =
   {
+    id = "monster_makron"
+    r = 30
+    h = 90
     health = 3000
     damage = 200
   }
