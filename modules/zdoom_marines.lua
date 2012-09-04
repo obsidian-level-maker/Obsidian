@@ -31,6 +31,9 @@ ZDOOM_MARINE.MONSTERS =
 
   marine_fist =
   {
+    id = 9101
+    r = 16
+    h = 56 
     prob = 1
     skip_prob = 200
     health = 100
@@ -42,6 +45,9 @@ ZDOOM_MARINE.MONSTERS =
 
   marine_berserk =
   {
+    id = 9102
+    r = 16
+    h = 56 
     prob = 6
     skip_prob = 100
     health = 100
@@ -53,6 +59,9 @@ ZDOOM_MARINE.MONSTERS =
 
   marine_saw =
   {
+    id = 9103
+    r = 16
+    h = 56 
     prob = 4
     skip_prob = 100
     health = 100
@@ -64,6 +73,9 @@ ZDOOM_MARINE.MONSTERS =
 
   marine_pistol =
   {
+    id = 9104
+    r = 16
+    h = 56 
     prob = 12
     skip_prob = 100
     health = 100
@@ -75,6 +87,9 @@ ZDOOM_MARINE.MONSTERS =
 
   marine_shotty =
   {
+    id = 9105
+    r = 16
+    h = 56 
     prob = 4
     skip_prob = 100
     health = 100
@@ -86,6 +101,9 @@ ZDOOM_MARINE.MONSTERS =
 
   marine_ssg =
   {
+    id = 9106
+    r = 16
+    h = 56 
     prob = 6
     skip_prob = 100
     health = 100
@@ -97,6 +115,9 @@ ZDOOM_MARINE.MONSTERS =
 
   marine_chain =
   {
+    id = 9107
+    r = 16
+    h = 56 
     prob = 6
     skip_prob = 100
     health = 100
@@ -108,6 +129,9 @@ ZDOOM_MARINE.MONSTERS =
 
   marine_rocket =
   {
+    id = 9108
+    r = 16
+    h = 56 
     prob = 4
     crazy_prob = 10
     skip_prob = 100
@@ -120,6 +144,9 @@ ZDOOM_MARINE.MONSTERS =
 
   marine_plasma =
   {
+    id = 9109
+    r = 16
+    h = 56 
     prob = 4
     crazy_prob = 6
     skip_prob = 100
@@ -132,6 +159,9 @@ ZDOOM_MARINE.MONSTERS =
 
   marine_rail =
   {
+    id = 9110
+    r = 16
+    h = 56 
     prob = 2
     skip_prob = 200
     health = 100
@@ -143,6 +173,9 @@ ZDOOM_MARINE.MONSTERS =
 
   marine_bfg =
   {
+    id = 9111
+    r = 16
+    h = 56 
     prob = 2
     skip_prob = 250
     health = 100

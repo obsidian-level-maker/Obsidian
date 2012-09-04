@@ -26,6 +26,10 @@ STEALTH.MONSTERS =
 
   stealth_zombie =
   {
+    id = 9061
+    r = 20
+    h = 56 
+
     replaces = "zombie"
     replace_prob = 30
     crazy_prob = 5
@@ -39,6 +43,9 @@ STEALTH.MONSTERS =
 
   stealth_shooter =
   {
+    id = 9060
+    r = 20
+    h = 56 
     replaces = "shooter"
     replace_prob = 20
     crazy_prob = 11
@@ -51,6 +58,9 @@ STEALTH.MONSTERS =
 
   stealth_imp =
   {
+    id = 9057
+    r = 20
+    h = 56 
     replaces = "imp"
     replace_prob = 40
     crazy_prob = 25
@@ -62,6 +72,9 @@ STEALTH.MONSTERS =
 
   stealth_demon =
   {
+    id = 9055
+    r = 30
+    h = 56 
     replaces = "demon"
     replace_prob = 40
     crazy_prob = 30
@@ -73,6 +86,9 @@ STEALTH.MONSTERS =
 
   stealth_caco =
   {
+    id = 9053
+    r = 31
+    h = 56 
     replaces = "caco"
     replace_prob = 25
     crazy_prob = 41
@@ -86,6 +102,9 @@ STEALTH.MONSTERS =
 
   stealth_baron =
   {
+    id = 9052
+    r = 24
+    h = 64 
     replaces = "baron"
     replace_prob = 20
     crazy_prob = 10
@@ -98,6 +117,9 @@ STEALTH.MONSTERS =
   
   stealth_gunner =
   {
+    id = 9054
+    r = 20
+    h = 56 
     replaces = "gunner"
     replace_prob = 20
     crazy_prob = 21
@@ -110,6 +132,9 @@ STEALTH.MONSTERS =
 
   stealth_revenant =
   {
+    id = 9059
+    r = 20
+    h = 64 
     replaces = "revenant"
     replace_prob = 30
     crazy_prob = 40
@@ -123,6 +148,9 @@ STEALTH.MONSTERS =
 
   stealth_knight =
   {
+    id = 9056
+    r = 24
+    h = 64 
     replaces = "knight"
     replace_prob = 25
     crazy_prob = 11
@@ -136,6 +164,9 @@ STEALTH.MONSTERS =
 
   stealth_mancubus =
   {
+    id = 9058
+    r = 48
+    h = 64 
     replaces = "mancubus"
     replace_prob = 25
     crazy_prob = 31
@@ -148,6 +179,9 @@ STEALTH.MONSTERS =
 
   stealth_arach =
   {
+    id = 9050
+    r = 66
+    h = 64 
     replaces = "arach"
     replace_prob = 25
     crazy_prob = 11
@@ -160,6 +194,9 @@ STEALTH.MONSTERS =
 
   stealth_vile =
   {
+    id = 9051
+    r = 20
+    h = 56 
     replaces = "vile"
     replace_prob = 10
     crazy_prob = 5
@@ -171,6 +208,23 @@ STEALTH.MONSTERS =
     never_promote = true
     invis = true
   }
+}
+
+
+STEALTH.EDGE_IDS =
+{
+  stealth_arach    = 4050
+  stealth_vile     = 4051
+  stealth_baron    = 4052
+  stealth_caco     = 4053
+  stealth_gunner   = 4054
+  stealth_demon    = 4055
+  stealth_knight   = 4056
+  stealth_imp      = 4057
+  stealth_mancubus = 4058
+  stealth_revenant = 4059
+  stealth_shooter  = 4060
+  stealth_zombie   = 4061
 }
 
 
@@ -188,13 +242,20 @@ function STEALTH.setup(self)
 
   for name,_ in pairs(STEALTH.MONSTERS) do
     local M = GAME.MONSTERS[name]
+    
     if M and qty == "less" then
       M.replace_prob = M.replace_prob / 2
       M.crazy_prob = M.crazy_prob / 3
     end
+
     if M and qty == "more" then
       M.replace_prob = math.max(80, M.replace_prob * 2)
       M.crazy_prob = M.crazy_prob * 3
+    end
+
+    -- EDGE uses different id numbers -- fix them
+    if M and OB_CONFIG.game == "edge" then
+      M.id = EDGE_IDS[name]
     end
   end
 end

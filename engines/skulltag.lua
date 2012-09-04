@@ -24,15 +24,6 @@ SKULLTAG = { }
 
 SKULLTAG.ENTITIES =
 {
-  -- monsters
-  darkimp    = { id=5003, kind="monster", r=20,h=56 }
-  bldemon    = { id=5004, kind="monster", r=30,h=56 }
-  superguy   = { id=5005, kind="monster", r=20,h=56 }
-  cacolant   = { id=5006, kind="monster", r=31,h=56 }
-  hectebus   = { id=5007, kind="monster", r=48,h=64 }
-  belphegor  = { id=5008, kind="monster", r=24,h=64 }
-  abaddon    = { id=5015, kind="monster", r=31,h=56 }
-
   -- weapons
   glaunch = { id=5011, kind="pickup", r=20,h=16, pass=true }
   railgun = { id=5012, kind="pickup", r=20,h=16, pass=true }

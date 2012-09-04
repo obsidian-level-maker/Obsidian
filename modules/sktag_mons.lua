@@ -24,6 +24,9 @@ SKTAG_MONS.MONSTERS =
 {
   darkimp =
   {
+    id = 5003
+    r = 20
+    h = 56 
     level = 1
     prob = 55
     health = 120
@@ -34,6 +37,9 @@ SKTAG_MONS.MONSTERS =
 
   superguy =
   {
+    id = 5005
+    r = 20
+    h = 56 
     level = 3
     prob = 33
     health = 120
@@ -45,6 +51,9 @@ SKTAG_MONS.MONSTERS =
 
   bldemon =
   {
+    id = 5004
+    r = 30
+    h = 56 
     level = 3
     prob = 20
     health = 300
@@ -55,6 +64,9 @@ SKTAG_MONS.MONSTERS =
 
   cacolant =
   {
+    id = 5006
+    r = 31
+    h = 56 
     level = 5
     prob = 25
     crazy_prob = 10
@@ -67,6 +79,9 @@ SKTAG_MONS.MONSTERS =
 
   hectebus =
   {
+    id = 5007
+    r = 48
+    h = 64 
     level = 7
     prob = 10
     skip_prob = 100
@@ -79,6 +94,9 @@ SKTAG_MONS.MONSTERS =
 
   abaddon =
   {
+    id = 5015
+    r = 31
+    h = 56 
     level = 7
     prob = 15
     health = 1200
@@ -90,6 +108,9 @@ SKTAG_MONS.MONSTERS =
 
   belphegor =
   {
+    id = 5008
+    r = 24
+    h = 64 
     level = 8
     prob = 10
     health = 1500

@@ -33,31 +33,6 @@ ZDOOM.ENTITIES =
 
   mbf_dog = { id=888, kind="monster", r=12,h=28 }
 
-  stealth_arach    = { id=9050, kind="monster", r=66,h=64 }
-  stealth_vile     = { id=9051, kind="monster", r=20,h=56 }
-  stealth_baron    = { id=9052, kind="monster", r=24,h=64 }
-  stealth_caco     = { id=9053, kind="monster", r=31,h=56 }
-  stealth_gunner   = { id=9054, kind="monster", r=20,h=56 }
-  stealth_demon    = { id=9055, kind="monster", r=30,h=56 }
-  stealth_knight   = { id=9056, kind="monster", r=24,h=64 }
-  stealth_imp      = { id=9057, kind="monster", r=20,h=56 }
-  stealth_mancubus = { id=9058, kind="monster", r=48,h=64 }
-  stealth_revenant = { id=9059, kind="monster", r=20,h=64 }
-  stealth_shooter  = { id=9060, kind="monster", r=20,h=56 }
-  stealth_zombie   = { id=9061, kind="monster", r=20,h=56 }
-
-  marine_fist    = { id=9101, kind="monster", r=16,h=56 }
-  marine_berserk = { id=9102, kind="monster", r=16,h=56 }
-  marine_saw     = { id=9103, kind="monster", r=16,h=56 }
-  marine_pistol  = { id=9104, kind="monster", r=16,h=56 }
-  marine_shotty  = { id=9105, kind="monster", r=16,h=56 }
-  marine_ssg     = { id=9106, kind="monster", r=16,h=56 }
-  marine_chain   = { id=9107, kind="monster", r=16,h=56 }
-  marine_rocket  = { id=9108, kind="monster", r=16,h=56 }
-  marine_plasma  = { id=9109, kind="monster", r=16,h=56 }
-  marine_rail    = { id=9110, kind="monster", r=16,h=56 }
-  marine_bfg     = { id=9111, kind="monster", r=16,h=56 }
-
   -- scenery --
 
   fountain_red    = { id=9027, kind="scenery", r=16,h=16, pass=true }
