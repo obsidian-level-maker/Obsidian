@@ -47,7 +47,7 @@ by David Chess)
 </ul>
 
 <p>
-We plan to fully support the following games:
+It is planned to fully support the following games:
 
 <ul class="gamelist">
   <li>DOOM and DOOM II
@@ -96,44 +96,12 @@ contains a list of bugs and features currently being worked on)
 </i>
 
 
-<h3>STATUS OF GAMES</h3>
-
-<b>DOOM and DOOM II:</b><br>
-Very playable (despite the limitations listed above).
-
-<p>
-<b>Heretic:</b><br>
-Close to being playable, needs more work on proper themes
-(such as the Heretic style of locked doors with the statue
-out front), etc...
-
-<p>
-<b>Hexen:</b><br>
-Not playable just now, the map/wad building code cannot
-create the Hexen-specific formats yet.
-
-<p>
-<b>Quake:</b><br>
-Close to being playable, but still lacking many things: lighting,
-visibility, doors, sloped floors or ceilings,
-liquid areas, proper themes, etc... etc...
-
-<p>
-<b>Quake II:</b><br>
-Quite far from being playable, working levels cannot be built yet,
-and lacks all the same stuff missing from Quake (listed in the previous
-entry).
-
-
-<!--- FUTURE DEVELOPMENT --->
-
-
 <h3>GETTING IN CONTACT</h3>
 
 The best way of getting in contact, especially when reporting bugs,
 is to visit the
 <a href="http://oblige.sourceforge.net/forum/">Oblige Forum</a>.
-You will need an account on SourceForge before you can post.
+Registering to create a new account there is fairly easy.
 
 <p>
 Alternatively you can email me:
