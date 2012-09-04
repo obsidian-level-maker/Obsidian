@@ -125,6 +125,7 @@ SKTAG_MONS.WEAPONS =
 {
   minigun =
   {
+    id = 5014
     level = 2
     pref = 85
     add_prob = 20
@@ -138,6 +139,7 @@ SKTAG_MONS.WEAPONS =
 
   glaunch =
   {
+    id = 5011
     level = 3
     pref = 50
     add_prob = 15
@@ -152,6 +154,7 @@ SKTAG_MONS.WEAPONS =
 
   railgun =
   {
+    id = 5012
     level = 5
     pref = 20
     add_prob = 10
@@ -165,6 +168,7 @@ SKTAG_MONS.WEAPONS =
 
   bfg10k =
   {
+    id = 5013
     level = 7
     pref = 15
     add_prob = 5

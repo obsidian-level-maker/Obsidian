@@ -24,12 +24,6 @@ SKULLTAG = { }
 
 SKULLTAG.ENTITIES =
 {
-  -- weapons
-  glaunch = { id=5011, kind="pickup", r=20,h=16, pass=true }
-  railgun = { id=5012, kind="pickup", r=20,h=16, pass=true }
-  bfg10k  = { id=5013, kind="pickup", r=20,h=16, pass=true }
-  minigun = { id=5014, kind="pickup", r=20,h=16, pass=true }
-
   -- pickups
   max_potion = { id=5090, kind="pickup", r=20,h=16, pass=true }
   max_helmet = { id=5091, kind="pickup", r=20,h=16, pass=true }
