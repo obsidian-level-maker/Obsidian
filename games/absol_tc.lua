@@ -41,16 +41,6 @@ ABSOLUTION.ENTITIES =
   ks_yellow  = { id=39, kind="pickup", r=20,h=16, pass=true }
   ks_blue    = { id=40, kind="pickup", r=20,h=16, pass=true }
 
-  --- weapons ---
-  shotty = { id=2001, kind="pickup", r=20,h=16, pass=true }
-  super  = { id=  82, kind="pickup", r=20,h=16, pass=true }
-  chain  = { id=2002, kind="pickup", r=20,h=16, pass=true }
-  launch = { id=2003, kind="pickup", r=20,h=16, pass=true }
-  plasma = { id=2004, kind="pickup", r=20,h=16, pass=true }
-  saw    = { id=2005, kind="pickup", r=20,h=16, pass=true }
-  bfg    = { id=2006, kind="pickup", r=20,h=16, pass=true }
-  laser  = { id=2009, kind="pickup", r=20,h=16, pass=true }
-
   --- ammo ---
   bullets    = { id=2007, kind="pickup", r=20,h=16, pass=true }
   rocket     = { id=2010, kind="pickup", r=20,h=16, pass=true }
@@ -76,7 +66,6 @@ ABSOLUTION.ENTITIES =
   --- powerups ---
   backpack = { id=   8, kind="pickup", r=20,h=16, pass=true }
   invul    = { id=2022, kind="pickup", r=20,h=16, pass=true }
-  berserk  = { id=2023, kind="pickup", r=20,h=16, pass=true }
   invis    = { id=2024, kind="pickup", r=20,h=16, pass=true }
   suit     = { id=2025, kind="pickup", r=20,h=60, pass=true }
   map      = { id=2026, kind="pickup", r=20,h=16, pass=true }
@@ -1139,6 +1128,7 @@ ABSOLUTION.WEAPONS =
 
   saw =
   {
+    id = 2005
     level = 1
     pref = 3
     add_prob = 2
@@ -1149,6 +1139,7 @@ ABSOLUTION.WEAPONS =
 
   berserk =
   {
+    id = 2023
     level = 5
     pref = 10
     add_prob = 5
@@ -1170,6 +1161,7 @@ ABSOLUTION.WEAPONS =
 
   chain =
   {
+    id = 2002
     level = 1
     pref = 70
     add_prob = 35
@@ -1183,6 +1175,7 @@ ABSOLUTION.WEAPONS =
 
   shotty =
   {
+    id = 2001
     level = 1
     pref = 70
     add_prob = 10
@@ -1198,6 +1191,7 @@ ABSOLUTION.WEAPONS =
 
   super =
   {
+    id = 82
     level = 4
     pref = 50
     add_prob = 20
@@ -1213,6 +1207,7 @@ ABSOLUTION.WEAPONS =
 
   launch =
   {
+    id = 2003
     level = 3
     pref = 50
     add_prob = 25
@@ -1227,6 +1222,7 @@ ABSOLUTION.WEAPONS =
 
   plasma =
   {
+    id = 2004
     level = 5
     pref = 30
     add_prob = 13
@@ -1240,6 +1236,7 @@ ABSOLUTION.WEAPONS =
 
   bfg =
   {
+    id = 2006
     level = 7
     pref = 15
     add_prob = 20
@@ -1254,6 +1251,7 @@ ABSOLUTION.WEAPONS =
 
   laser =
   {
+    id = 2009
     level = 9
     pref = 15
     add_prob = 20

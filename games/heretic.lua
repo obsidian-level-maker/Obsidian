@@ -37,14 +37,6 @@ HERETIC.ENTITIES =
   k_green    = { id=73, kind="pickup", r=20,h=16, pass=true }
   k_blue     = { id=79, kind="pickup", r=20,h=16, pass=true }
 
-  --- weapons ---
-  gauntlets  = { id=2005, kind="pickup", r=20,h=16, pass=true }
-  crossbow   = { id=2001, kind="pickup", r=20,h=16, pass=true }
-  claw       = { id=53,   kind="pickup", r=20,h=16, pass=true }
-  hellstaff  = { id=2004, kind="pickup", r=20,h=16, pass=true }
-  phoenix    = { id=2003, kind="pickup", r=20,h=16, pass=true }
-  firemace   = { id=2002, kind="pickup", r=20,h=16, pass=true }
-
   --- ammo ---
   crystal    = { id=10, kind="pickup", r=20,h=16, pass=true }
   geode      = { id=12, kind="pickup", r=20,h=16, pass=true }
@@ -2406,6 +2398,7 @@ HERETIC.WEAPONS =
 
   gauntlets =
   {
+    id = 2005
     level = 1
     pref = 10
     add_prob = 5
@@ -2416,6 +2409,7 @@ HERETIC.WEAPONS =
 
   crossbow =
   {
+    id = 2001
     level = 1
     pref = 90
     add_prob = 10
@@ -2431,6 +2425,7 @@ HERETIC.WEAPONS =
 
   claw =  -- aka blaster
   {
+    id = 53
     level = 1
     pref = 60
     add_prob = 20
@@ -2445,6 +2440,7 @@ HERETIC.WEAPONS =
 
   hellstaff =  -- aka skullrod
   {
+    id = 2004
     level = 3
     pref = 50
     add_prob = 20
@@ -2459,6 +2455,7 @@ HERETIC.WEAPONS =
 
   phoenix =
   {
+    id = 2003
     level = 4
     pref = 50
     add_prob = 20
@@ -2472,6 +2469,7 @@ HERETIC.WEAPONS =
 
   firemace =
   {
+    id = 2002
     level = 6
     pref = 35
     add_prob = 20

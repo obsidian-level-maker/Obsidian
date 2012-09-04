@@ -40,13 +40,6 @@ HARMONY.ENTITIES =
   kn_yellow  = { id=39, kind="pickup", r=20,h=16, pass=true }
   kn_blue    = { id=40, kind="pickup", r=20,h=16, pass=true }
 
-  --- weapons ---
-  shotgun    = { id=2001, kind="pickup", r=20,h=16, pass=true }
-  minigun    = { id=2002, kind="pickup", r=20,h=16, pass=true }
-  launcher   = { id=2003, kind="pickup", r=20,h=16, pass=true }
-  entropy    = { id=2004, kind="pickup", r=20,h=16, pass=true }
-  h_grenade  = { id=2006, kind="pickup", r=20,h=30, pass=true }
-
   --- ammo ---
   mini_box   = { id=2048, kind="pickup", r=20,h=16, pass=true }
   shell_box  = { id=2049, kind="pickup", r=20,h=16, pass=true }
@@ -1388,9 +1381,10 @@ HARMONY.WEAPONS =
 
   minigun =
   {
-    pref = 70
+    id = 2002
     add_prob = 35
     start_prob = 40
+    pref = 70
     attack = "hitscan"
     rate = 8.5
     damage = 10
@@ -1401,9 +1395,10 @@ HARMONY.WEAPONS =
 
   shotgun =
   {
-    pref = 70
+    id = 2001
     add_prob = 10
     start_prob = 60
+    pref = 70
     attack = "hitscan"
     rate = 0.9
     damage = 70
@@ -1415,9 +1410,10 @@ HARMONY.WEAPONS =
 
   launcher =
   {
-    pref = 40
+    id = 2003
     add_prob = 25
     start_prob = 15
+    pref = 40
     attack = "missile"
     rate = 1.7
     damage = 80
@@ -1429,9 +1425,10 @@ HARMONY.WEAPONS =
 
   entropy =
   {
-    pref = 25
+    id = 2004
     add_prob = 13
     start_prob = 7
+    pref = 25
     rate = 11
     damage = 20
     attack = "missile"
@@ -1439,6 +1436,8 @@ HARMONY.WEAPONS =
     per = 1
     give = { {ammo="cell",count=40} }
   }
+
+-- FIXME  h_grenade = { id = 2006 }
 }
 
 

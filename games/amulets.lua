@@ -38,14 +38,6 @@ AMULETS.ENTITIES =
 
   --- WEAPONS ---
 
-  --- Wood - dmg 1 ---
-  dagger_wood   = { id=4296, kind="pickup", r=20,h=16, pass=true }
-  mace_wood     = { id=4297, kind="pickup", r=20,h=16, pass=true }
-  staff_wood    = { id=4298, kind="pickup", r=20,h=16, pass=true }
-  shtsword_wood = { id=4299, kind="pickup", r=20,h=16, pass=true }
-  lngsword_wood = { id=4300, kind="pickup", r=20,h=16, pass=true }
-  axe_wood      = { id=4301, kind="pickup", r=20,h=16, pass=true }
-  bolt_wood     = { id=4302, kind="pickup", r=20,h=16, pass=true }
 
 
   potion = { id=811, kind="pickup", r=20,h=16, pass=true }
@@ -266,16 +258,29 @@ AMULETS.MONSTERS =
 
 AMULETS.WEAPONS =
 {
+  --- Wood - dmg 1 ---
+
   dagger_wood =
   {
-    pref = 70
+    id = 4296
     add_prob = 10
     start_prob = 60
+    pref = 70
     attack = "hitscan"
     rate = 0.9
     damage = 11
     splash = { 0,10 }
   }
+
+--[[ TODO
+mace_wood     = { id=4297 }
+staff_wood    = { id=4298 }
+shtsword_wood = { id=4299 }
+lngsword_wood = { id=4300 }
+axe_wood      = { id=4301 }
+bolt_wood     = { id=4302 }
+--]]
+
 }
 
 -- Pickup List

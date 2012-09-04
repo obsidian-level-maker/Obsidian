@@ -40,14 +40,6 @@ HACX.ENTITIES =
   kz_yellow  = { id=39, kind="pickup", r=20,h=16, pass=true }
   kz_blue    = { id=40, kind="pickup", r=20,h=16, pass=true }
 
-  tazer    = { id=2001, kind="pickup", r=20,h=16, pass=true }
-  cyrogun  = { id=  82, kind="pickup", r=20,h=16, pass=true }
-  fu2      = { id=2002, kind="pickup", r=20,h=16, pass=true }
-  zooka    = { id=2003, kind="pickup", r=20,h=16, pass=true }
-  antigun  = { id=2004, kind="pickup", r=20,h=16, pass=true }
-  reznator = { id=2005, kind="pickup", r=20,h=16, pass=true }
-  nuker    = { id=2006, kind="pickup", r=20,h=16, pass=true }
-
   dampener   = { id=2014, kind="pickup", r=20,h=16, pass=true }
   microkit   = { id=2011, kind="pickup", r=20,h=16, pass=true }
   hypo       = { id=2012, kind="pickup", r=20,h=16, pass=true }
@@ -1357,6 +1349,7 @@ HACX.WEAPONS =
 
   reznator =
   {
+    id = 2005
     level = 1
     pref = 2
     add_prob = 2
@@ -1367,6 +1360,7 @@ HACX.WEAPONS =
 
   tazer =
   {
+    id = 2001
     level = 1
     pref = 20
     add_prob = 10
@@ -1381,6 +1375,7 @@ HACX.WEAPONS =
 
   cyrogun =
   {
+    id = 82
     level = 3
     pref = 40
     add_prob = 20
@@ -1395,6 +1390,7 @@ HACX.WEAPONS =
 
   fu2 =
   {
+    id = 2002
     level = 3
     pref = 40
     add_prob = 35
@@ -1408,6 +1404,7 @@ HACX.WEAPONS =
 
   zooka =
   {
+    id = 2003
     level = 3
     pref = 20
     add_prob = 25
@@ -1422,6 +1419,7 @@ HACX.WEAPONS =
 
   antigun =
   {
+    id = 2004
     level = 5
     pref = 50
     add_prob = 13
@@ -1435,6 +1433,7 @@ HACX.WEAPONS =
 
   nuker =
   {
+    id = 2006
     level = 7
     pref = 20
     add_prob = 30

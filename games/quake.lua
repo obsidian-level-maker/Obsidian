@@ -41,13 +41,6 @@ QUAKE.ENTITIES =
   k_silver = { id="item_key1", kind="pickup", r=30, h=30, pass=true }
   k_gold   = { id="item_key2", kind="pickup", r=30, h=30, pass=true }
 
-  ssg      = { id="weapon_supershotgun",    kind="pickup", r=30, h=30, pass=true }
-  grenade  = { id="weapon_grenadelauncher", kind="pickup", r=30, h=30, pass=true }
-  rocket   = { id="weapon_rocketlauncher",  kind="pickup", r=30, h=30, pass=true }
-  nailgun  = { id="weapon_nailgun",         kind="pickup", r=30, h=30, pass=true }
-  nailgun2 = { id="weapon_supernailgun",    kind="pickup", r=30, h=30, pass=true }
-  zapper   = { id="weapon_lightning",       kind="pickup", r=30, h=30, pass=true }
-
   heal_25 = { id="item_health", spawnflags=0, kind="pickup", r=30, h=30, pass=true }
   heal_10 = { id="item_health", spawnflags=1, kind="pickup", r=30, h=30, pass=true }
   mega    = { id="item_health", spawnflags=2, kind="pickup", r=30, h=30, pass=true }
@@ -1877,10 +1870,11 @@ QUAKE.WEAPONS =
 
   ssg =
   {
+    id = "weapon_supershotgun"
     level = 2
-    pref = 50
     add_prob = 40
     start_prob = 50
+    pref = 50
     attack = "hitscan"
     rate = 1.4
     damage = 45
@@ -1892,10 +1886,11 @@ QUAKE.WEAPONS =
 
   grenade =
   {
+    id = "weapon_grenadelauncher"
     level = 3
-    pref = 12
     add_prob = 15
     start_prob = 15
+    pref = 12
     attack = "missile"
     rate = 1.5
     damage = 5
@@ -1907,10 +1902,11 @@ QUAKE.WEAPONS =
 
   rocket =
   {
+    id = "weapon_rocketlauncher"
     level = 5
-    pref = 30
     add_prob = 10
     start_prob = 10
+    pref = 30
     attack = "missile"
     rate = 1.2
     damage = 80
@@ -1922,10 +1918,11 @@ QUAKE.WEAPONS =
 
   nailgun =
   {
+    id = "weapon_nailgun"
     level = 1
-    pref = 50
     add_prob = 30
     start_prob = 50
+    pref = 50
     attack = "missile"
     rate = 5.0
     damage = 8
@@ -1936,10 +1933,11 @@ QUAKE.WEAPONS =
 
   nailgun2 =
   {
+    id = "weapon_supernailgun"
     level = 3
-    pref = 80
     add_prob = 10
     start_prob = 15
+    pref = 80
     attack = "missile"
     rate = 5.0
     damage = 18
@@ -1950,10 +1948,11 @@ QUAKE.WEAPONS =
 
   zapper =
   {
+    id = "weapon_lightning"
     level = 5
-    pref = 30
     add_prob = 25
     start_prob = 5
+    pref = 30
     attack = "hitscan"
     rate = 10
     damage = 30

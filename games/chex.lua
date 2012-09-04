@@ -41,13 +41,6 @@ CHEX3.ENTITIES =
   k_yellow = { id=6,  kind="pickup", r=20,h=16, pass=true }
   k_blue   = { id=5,  kind="pickup", r=20,h=16, pass=true }
 
-  large_zorcher   = { id=2001, kind="pickup", r=20,h=16, pass=true }
-  rapid_zorcher   = { id=2002, kind="pickup", r=20,h=16, pass=true }
-  zorch_propulsor = { id=2003, kind="pickup", r=20,h=16, pass=true }
-  phasing_zorcher = { id=2004, kind="pickup", r=20,h=16, pass=true }
-  super_bootspork = { id=2005, kind="pickup", r=20,h=16, pass=true }
-  laz_device      = { id=2006, kind="pickup", r=20,h=16, pass=true }
-
   back_pack      = { id=   8, kind="pickup", r=20,h=16, pass=true }
   slime_suit     = { id=2025, kind="pickup", r=20,h=60, pass=true }
   allmap         = { id=2026, kind="pickup", r=20,h=16, pass=true }
@@ -1155,9 +1148,10 @@ CHEX3.WEAPONS =
 
   super_bootspork =
   {
-    pref = 3
+    id = 2005
     add_prob = 2
     start_prob = 1
+    pref = 3
     attack = "melee"
     rate = 8.7
     damage = 10
@@ -1175,9 +1169,10 @@ CHEX3.WEAPONS =
 
   rapid_zorcher =
   {
-    pref = 70
+    id = 2002
     add_prob = 35
     start_prob = 40
+    pref = 70
     attack = "hitscan"
     rate = 8.5
     damage = 10
@@ -1188,9 +1183,10 @@ CHEX3.WEAPONS =
 
   large_zorcher =
   {
-    pref = 70
+    id = 2001
     add_prob = 10
     start_prob = 60
+    pref = 70
     attack = "hitscan"
     rate = 0.9
     damage = 70
@@ -1202,10 +1198,11 @@ CHEX3.WEAPONS =
 
   zorch_propulsor =
   {
-    pref = 50
+    id = 2003
     add_prob = 25
     start_prob = 10
     rarity = 2
+    pref = 50
     attack = "missile"
     rate = 1.7
     damage = 80
@@ -1217,10 +1214,11 @@ CHEX3.WEAPONS =
 
   phasing_zorcher =
   {
-    pref = 90
+    id = 2004
     add_prob = 13
     start_prob = 5
     rarity = 2
+    pref = 90
     attack = "missile"
     rate = 11
     damage = 20
@@ -1231,10 +1229,11 @@ CHEX3.WEAPONS =
 
   laz_device =
   {
-    pref = 30
+    id = 2006
     add_prob = 30
     start_prob = 0.2
     rarity = 5
+    pref = 30
     attack = "missile"
     rate = 0.8
     damage = 300

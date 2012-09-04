@@ -42,16 +42,6 @@ QUAKE2.ENTITIES =
   k_cube  = { id="key_power_cube",kind="pickup", r=16, h=32, pass=true }
   k_pyr   = { id="key_pyramid",   kind="pickup", r=16, h=32, pass=true }
 
-  shotty   = { id="weapon_shotgun",         kind="pickup", r=16, h=32, pass=true }
-  ssg      = { id="weapon_supershotgun",    kind="pickup", r=16, h=32, pass=true }
-  machine  = { id="weapon_machinegun",      kind="pickup", r=16, h=32, pass=true }
-  chain    = { id="weapon_chaingun",        kind="pickup", r=16, h=32, pass=true }
-  grenade  = { id="weapon_grenadelauncher", kind="pickup", r=16, h=32, pass=true }
-  launcher = { id="weapon_rocketlauncher",  kind="pickup", r=16, h=32, pass=true }
-  hyper    = { id="weapon_hyperblaster",    kind="pickup", r=16, h=32, pass=true }
-  rail     = { id="weapon_railgun",         kind="pickup", r=16, h=32, pass=true }
-  bfg      = { id="weapon_bfg",             kind="pickup", r=16, h=32, pass=true }
-
   heal_2     = { id="item_health_small", kind="pickup", r=16, h=32, pass=true }
   heal_10    = { id="item_health",       kind="pickup", r=16, h=32, pass=true }
   heal_25    = { id="item_health_large", kind="pickup", r=16, h=32, pass=true }
@@ -2069,6 +2059,7 @@ QUAKE2.WEAPONS =
 
   shotty =
   {
+    id = "weapon_shotgun"
     level = 1
     pref = 20
     add_prob = 10
@@ -2083,6 +2074,7 @@ QUAKE2.WEAPONS =
 
   ssg =
   {
+    id = "weapon_supershotgun"
     level = 3
     pref = 70
     add_prob = 50
@@ -2097,6 +2089,7 @@ QUAKE2.WEAPONS =
 
   machine =
   {
+    id = "weapon_machinegun"
     level = 1
     pref = 20
     add_prob = 30
@@ -2110,6 +2103,7 @@ QUAKE2.WEAPONS =
 
   chain =
   {
+    id = "weapon_chaingun"
     level = 4
     pref = 90
     add_prob = 15
@@ -2123,6 +2117,7 @@ QUAKE2.WEAPONS =
 
   grenade =
   {
+    id = "weapon_grenadelauncher"
     level = 3
     pref = 15
     add_prob = 25
@@ -2137,6 +2132,7 @@ QUAKE2.WEAPONS =
 
   launcher =
   {
+    id = "weapon_rocketlauncher"
     level = 5
     pref = 30
     add_prob = 20
@@ -2151,6 +2147,7 @@ QUAKE2.WEAPONS =
 
   rail =
   {
+    id = "weapon_railgun"
     level = 5
     pref = 50
     add_prob = 25
@@ -2165,6 +2162,7 @@ QUAKE2.WEAPONS =
 
   hyper =
   {
+    id = "weapon_hyperblaster"
     level = 4
     pref = 60
     add_prob = 30
@@ -2178,6 +2176,7 @@ QUAKE2.WEAPONS =
 
   bfg =
   {
+    id = "weapon_bfg"
     level = 7
     pref = 20
     add_prob = 25
