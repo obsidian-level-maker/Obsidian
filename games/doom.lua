@@ -4826,6 +4826,22 @@ DOOM.MONSTERS =
     density = 1.5
     infights = true
   }
+
+  shooter =
+  {
+    id = 9
+    r = 20
+    h = 56 
+    level = 2
+    prob = 50
+    health = 30
+    damage = 10
+    attack = "hitscan"
+    give = { {weapon="shotty"}, {ammo="shell",count=4} }
+    species = "zombie"
+    infights = true
+  }
+
   imp =
   {
     id = 3001
