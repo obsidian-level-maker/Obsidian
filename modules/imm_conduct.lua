@@ -53,12 +53,6 @@ IMMORAL_CONDUCT.ENTITIES =
   -- players
   player4 = { id=3000, kind="player", r=20,h=56 }
 
-  -- monsters
-  uzi_trooper     = { id=3042, kind="monster", r=20,h=56 }
-  super_shooter   = { id=3043, kind="monster", r=20,h=56 }
-  m16_zombie      = { id=3044, kind="monster", r=20,h=56 }
-  chainsaw_zombie = { id=3046, kind="monster", r=20,h=56 }
-
   -- weapons
   pistol_pair = { id=2018, kind="pickup", r=20,h=16, pass=true }
   uzi_pair    = { id=2022, kind="pickup", r=20,h=16, pass=true }
@@ -123,6 +117,9 @@ IMMORAL_CONDUCT.MONSTERS =
 {
   uzi_trooper =
   {
+    id = 3042
+    r = 20
+    h = 56
     health = 40
     damage = 30
     attack = "hitscan"
@@ -132,6 +129,9 @@ IMMORAL_CONDUCT.MONSTERS =
 
   super_shooter =
   {
+    id = 3043
+    r = 20
+    h = 56
     health = 50
     damage = 70
     attack = "hitscan"
@@ -142,6 +142,9 @@ IMMORAL_CONDUCT.MONSTERS =
 
   m16_zombie =
   {
+    id = 3044
+    r = 20
+    h = 56
     health = 100
     damage = 40
     attack = "hitscan"
@@ -151,6 +154,9 @@ IMMORAL_CONDUCT.MONSTERS =
 
   chainsaw_zombie =
   {
+    id = 3046
+    r = 20
+    h = 56
     health = 100
     damage = 40
     attack = "melee"
