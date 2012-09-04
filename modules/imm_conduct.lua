@@ -53,19 +53,6 @@ IMMORAL_CONDUCT.ENTITIES =
   -- players
   player4 = { id=3000, kind="player", r=20,h=56 }
 
-  -- weapons
-  pistol_pair = { id=2018, kind="pickup", r=20,h=16, pass=true }
-  uzi_pair    = { id=2022, kind="pickup", r=20,h=16, pass=true }
-  flak_shotty = { id=2006, kind="pickup", r=20,h=16, pass=true }
-  h_grenades  = { id=2046, kind="pickup", r=20,h=16, pass=true }
-  gren_launch = { id=  17, kind="pickup", r=20,h=16, pass=true }
-
-  satchel     = { id=2010, kind="pickup", r=20,h=16, pass=true }
-  minigun     = { id=2999, kind="pickup", r=20,h=16, pass=true }
-  sawed_off   = { id=4444, kind="pickup", r=20,h=16, pass=true }
-  beretta     = { id=4445, kind="pickup", r=20,h=16, pass=true }
-  revolver    = { id=4446, kind="pickup", r=20,h=16, pass=true }
-
   -- pickups
   flak_shells = { id=2024, kind="pickup", r=20,h=16, pass=true }
 }
@@ -168,7 +155,9 @@ IMMORAL_CONDUCT.MONSTERS =
 
 IMMORAL_CONDUCT.WEAPONS =
 {
-  bfg = REMOVE_ME  -- became: flak_shotty
+  launch = REMOVE_ME  -- became: assault_rifle
+  plasma = REMOVE_ME  -- became: sig_cow
+  bfg    = REMOVE_ME  -- became: flak_shotty
 
   fist =  -- knife
   {
@@ -179,6 +168,7 @@ IMMORAL_CONDUCT.WEAPONS =
 
   saw =
   {
+    id = 2005
     pref = 3
     add_prob = 4
     start_prob = 2
@@ -199,6 +189,7 @@ IMMORAL_CONDUCT.WEAPONS =
 
   pistol_pair =
   {
+    id = 2018
     pref = 15
     add_prob = 20
     start_prob = 40
@@ -212,6 +203,7 @@ IMMORAL_CONDUCT.WEAPONS =
 
   shotty =
   {
+    id = 2001
     pref = 50
     add_prob = 40
     start_prob = 120
@@ -227,6 +219,7 @@ IMMORAL_CONDUCT.WEAPONS =
   -- Note: weapon upgrades (like this) are not supported yet
   flak_shotty =
   {
+    id = 2006
     pref = 30
     upgrades = "shotty"
     rate = 0.9
@@ -238,9 +231,10 @@ IMMORAL_CONDUCT.WEAPONS =
 
   super =  -- double barrel
   {
-    pref = 12
+    id = 82
     add_prob = 20
     start_prob = 20
+    pref = 12
     rate = 0.53
     damage = 60
     attack = "hitscan"
@@ -252,6 +246,7 @@ IMMORAL_CONDUCT.WEAPONS =
 
   chain =  -- uzi
   {
+    id = 2002
     pref = 25
     add_prob = 20
     start_prob = 20
@@ -265,6 +260,7 @@ IMMORAL_CONDUCT.WEAPONS =
 
   uzi_pair =
   {
+    id = 2022
     pref = 30
     add_prob = 20
     start_prob = 50
@@ -278,6 +274,7 @@ IMMORAL_CONDUCT.WEAPONS =
 
   h_grenades =
   {
+    id = 2046
     pref = 8
     add_prob = 4
     start_prob = 4
@@ -292,6 +289,7 @@ IMMORAL_CONDUCT.WEAPONS =
 
   gren_launch =
   {
+    id = 17
     pref = 15
     add_prob = 20
     start_prob = 50
@@ -306,6 +304,7 @@ IMMORAL_CONDUCT.WEAPONS =
 
   satchel =
   {
+    id = 2010
     pref = 5
     add_prob = 12
     start_prob = 10
@@ -318,8 +317,9 @@ IMMORAL_CONDUCT.WEAPONS =
     give = { {ammo="charge",count=1} }
   }
 
-  launch =  -- assault rifle
+  assault_rifle =
   {
+    id = 2003
     pref = 50
     add_prob = 60
     start_prob = 60
@@ -331,8 +331,9 @@ IMMORAL_CONDUCT.WEAPONS =
     give = { {ammo="cell",count=45} }
   }
 
-  plasma =  -- SIG-COW
+  sig_cow =
   {
+    id = 2004
     pref = 40
     add_prob = 40
     start_prob = 40
@@ -346,6 +347,7 @@ IMMORAL_CONDUCT.WEAPONS =
 
   minigun  =
   {
+    id = 2999
     pref = 50
     add_prob = 30
     start_prob = 60
@@ -359,6 +361,7 @@ IMMORAL_CONDUCT.WEAPONS =
 
   sawed_off =
   {
+    id = 4444
     pref = 20
     add_prob = 30
     start_prob = 40
@@ -372,6 +375,7 @@ IMMORAL_CONDUCT.WEAPONS =
 
   beretta =
   {
+    id = 4445
     pref = 10
     add_prob = 30
     start_prob = 20
@@ -385,6 +389,7 @@ IMMORAL_CONDUCT.WEAPONS =
 
   revolver =
   {
+    id = 4446
     pref = 10
     add_prob = 50
     start_prob = 40
