@@ -30,51 +30,6 @@ HEXEN2.ENTITIES =
 
   dm_player = { id="info_player_deathmatch", kind="other", r=16,h=56 }
 
-  -- enemies
-  archer    = { id="monster_archer",      kind="monster", r=32, h=80 }
-  archer2   = { id="monster_archer_lord", kind="monster", r=32, h=80 }
-  mummy     = { id="monster_mummy",       kind="monster", r=32, h=80 }
-  mummy2    = { id="monster_mummy_lord",  kind="monster", r=32, h=80 }
-  imp_fire  = { id="monster_imp_fire",    kind="monster", r=32, h=80 }
-  imp_ice   = { id="monster_imp_ice",     kind="monster", r=32, h=80 }
-
-  golem1    = { id="monster_golem_stone",   kind="monster", r=32, h=80 }
-  golem2    = { id="monster_golem_iron",    kind="monster", r=32, h=80 }
-  golem3    = { id="monster_golem_bronze",  kind="monster", r=32, h=80 }
-  golem4    = { id="monster_golem_crystal", kind="monster", r=32, h=80 }
-
-  scorpion1 = { id="monster_scorpion_yellow", kind="monster", r=32, h=80 }
-  scorpion2 = { id="monster_scorpion_black",  kind="monster", r=32, h=80 }
-
-  spider_r1 = { id="monster_spider_red_small",    kind="monster", r=32, h=80 }
-  spider_r2 = { id="monster_spider_red_large",    kind="monster", r=32, h=80 }
-  spider_y1 = { id="monster_spider_yellow_small", kind="monster", r=32, h=80 }
-  spider_y2 = { id="monster_spider_yellow_large", kind="monster", r=32, h=80 }
-
-  rat      = { id="monster_rat",         kind="monster", r=32, h=80 }
-  jaguar   = { id="monster_werejaguar",  kind="monster", r=32, h=80 }
-  panther  = { id="monster_werepanther", kind="monster", r=32, h=80 }
-  raven    = { id="monster_raven",       kind="monster", r=32, h=80 }
-  fish     = { id="monster_fish",        kind="monster", r=32, h=80 }
-  hydra    = { id="monster_hydra",       kind="monster", r=32, h=80 }
-
-  medusa   = { id="monster_medusa_green",      kind="monster", r=32, h=80 }
-  wizard1  = { id="monster_skull_wizard",      kind="monster", r=32, h=80 }
-  wizard2  = { id="monster_skull_wizard_lord", kind="monster", r=32, h=80 }
-  angel1   = { id="monster_fallen_angel",      kind="monster", r=32, h=80 }
-  angel2   = { id="monster_fallen_angel_lord", kind="monster", r=32, h=80 }
-
-  -- bosses
-  Snake    = { id="monster_snake",    kind="monster", r=32, h=80 }
-
-  Famine   = { id="rider_famine",     kind="monster", r=32, h=80 }
-  Pest     = { id="rider_pestilence", kind="monster", r=32, h=80 }
-  War      = { id="rider_war",        kind="monster", r=32, h=80 }
-  Death    = { id="rider_death",      kind="monster", r=32, h=80 }
-
-  Eidolon  = { id="monster_eidolon",  kind="monster", r=32, h=80 }
-
-
   -- weapons
   weapon2  = { id="wp_weapon2",       kind="pickup", r=30, h=30, pass=true }
   weapon3  = { id="wp_weapon3",       kind="pickup", r=30, h=30, pass=true }
@@ -367,6 +322,9 @@ HEXEN2.MONSTERS =
 
   archer =
   {
+    id = "monster_archer"
+    r = 32
+    h = 80
     prob = 50
     health = 25
     damage = 5
@@ -375,6 +333,9 @@ HEXEN2.MONSTERS =
 
   archer2 =
   {
+    id = "monster_archer_lord"
+    r = 32
+    h = 80
     prob = 20
     health = 30
     damage = 14
@@ -383,6 +344,9 @@ HEXEN2.MONSTERS =
 
   mummy =
   {
+    id = "monster_mummy"
+    r = 32
+    h = 80
     prob = 40
     health = 80
     damage = 18
@@ -391,6 +355,9 @@ HEXEN2.MONSTERS =
 
   mummy2 =
   {
+    id = "monster_mummy_lord"
+    r = 32
+    h = 80
     prob = 10
     health = 80
     damage = 10
@@ -400,6 +367,9 @@ HEXEN2.MONSTERS =
 
   imp_fire =
   {
+    id = "monster_imp_fire"
+    r = 32
+    h = 80
     prob = 60
     health = 75
     damage = 9
@@ -409,6 +379,9 @@ HEXEN2.MONSTERS =
 
   imp_ice =
   {
+    id = "monster_imp_ice"
+    r = 32
+    h = 80
     prob = 30
     health = 250
     damage = 30
@@ -416,40 +389,56 @@ HEXEN2.MONSTERS =
     float = true
   }
 
-  golem1 =  -- stone
+  golem1 =
   {
+    id = "monster_golem_stone"
+    r = 32
+    h = 80
+
     prob = 20
     health = 200
     damage = 15
     attack = "melee"
   }
 
-  golem2 =  -- iron
+  golem2 =
   {
+    id = "monster_golem_iron"
+    r = 32
+    h = 80
     prob = 20
     health = 200
     damage = 15
     attack = "melee"
   }
 
-  golem3 =  -- bronze
+  golem3 =
   {
+    id = "monster_golem_bronze"
+    r = 32
+    h = 80
     prob = 20
     health = 200
     damage = 15
     attack = "melee"
   }
 
-  golem4 =  -- crystal
+  golem4 =
   {
+    id = "monster_golem_crystal"
+    r = 32
+    h = 80
     prob = 20
     health = 200
     damage = 15
     attack = "melee"
   }
 
-  wizard1 =
+  wizard =
   {
+    id = "monster_skull_wizard"
+    r = 32
+    h = 80
     prob = 50
     health = 25
     damage = 5
@@ -458,14 +447,20 @@ HEXEN2.MONSTERS =
 
   wizard2 =
   {
+    id = "monster_skull_wizard_lord"
+    r = 32
+    h = 80
     prob = 20
     health = 30
     damage = 14
     attack = "missile"
   }
 
-  angel1 =
+  angel =
   {
+    id = "monster_fallen_angel"
+    r = 32
+    h = 80
     prob = 50
     health = 25
     damage = 5
@@ -475,6 +470,9 @@ HEXEN2.MONSTERS =
 
   angel2 =
   {
+    id = "monster_fallen_angel_lord"
+    r = 32
+    h = 80
     prob = 20
     health = 30
     damage = 14
@@ -486,6 +484,10 @@ HEXEN2.MONSTERS =
 
   rat =
   {
+    id = "monster_rat"
+    r = 32
+    h = 80
+
     prob = 10
     health = 30
     damage = 20
@@ -494,6 +496,9 @@ HEXEN2.MONSTERS =
 
   jaguar =
   {
+    id = "monster_werejaguar"
+    r = 32
+    h = 80
     prob = 10
     health = 30
     damage = 20
@@ -502,6 +507,9 @@ HEXEN2.MONSTERS =
 
   panther =
   {
+    id = "monster_werepanther"
+    r = 32
+    h = 80
     prob = 10
     health = 30
     damage = 20
@@ -510,6 +518,9 @@ HEXEN2.MONSTERS =
 
   raven =
   {
+    id = "monster_raven"
+    r = 32
+    h = 80
     prob = 10
     health = 30
     damage = 20
@@ -519,6 +530,9 @@ HEXEN2.MONSTERS =
 
   fish =  -- only added in water
   {
+    id = "monster_fish"
+    r = 32
+    h = 80
     health = 30
     damage = 20
     attack = "melee"
@@ -527,6 +541,9 @@ HEXEN2.MONSTERS =
 
   hydra =  -- only added in water
   {
+    id = "monster_hydra"
+    r = 32
+    h = 80
     health = 30
     damage = 20
     attack = "melee"
@@ -535,6 +552,10 @@ HEXEN2.MONSTERS =
 
   scorpion1 =
   {
+    id = "monster_scorpion_yellow"
+    r = 32
+    h = 80
+
     prob = 10
     health = 30
     damage = 20
@@ -543,6 +564,9 @@ HEXEN2.MONSTERS =
 
   scorpion2 =
   {
+    id = "monster_scorpion_black"
+    r = 32
+    h = 80
     prob = 10
     health = 30
     damage = 20
@@ -551,6 +575,10 @@ HEXEN2.MONSTERS =
 
   spider_r1 =
   {
+    id = "monster_spider_red_small"
+    r = 32
+    h = 80
+
     prob = 10
     health = 30
     damage = 20
@@ -559,6 +587,9 @@ HEXEN2.MONSTERS =
 
   spider_r2 =
   {
+    id = "monster_spider_red_large"
+    r = 32
+    h = 80
     prob = 10
     health = 30
     damage = 20
@@ -567,6 +598,9 @@ HEXEN2.MONSTERS =
 
   spider_y1 =
   {
+    id = "monster_spider_yellow_small"
+    r = 32
+    h = 80
     prob = 10
     health = 30
     damage = 20
@@ -575,11 +609,27 @@ HEXEN2.MONSTERS =
 
   spider_y2 =
   {
+    id = "monster_spider_yellow_large"
+    r = 32
+    h = 80
     prob = 10
     health = 30
     damage = 20
     attack = "melee"
   }
+
+  -- TODO: medusa   = { id="monster_medusa_green", r=32, h=80 }
+
+  -- BOSSES --
+
+--[[ FIXME
+  Snake    = { id="monster_snake",    r=32, h=80 }
+  Famine   = { id="rider_famine",     r=32, h=80 }
+  Pest     = { id="rider_pestilence", r=32, h=80 }
+  War      = { id="rider_war",        r=32, h=80 }
+  Death    = { id="rider_death",      r=32, h=80 }
+  Eidolon  = { id="monster_eidolon",  r=32, h=80 }
+--]]
 }
 
 

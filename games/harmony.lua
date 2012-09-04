@@ -31,18 +31,6 @@ HARMONY.ENTITIES =
   dm_player     = { id=11, kind="other", r=16,h=56 }
   teleport_spot = { id=14, kind="other", r=16,h=56 }
   
-  --- monsters ---
-  beastling   = { id=3004, kind="monster", r=20,h=56 }
-  follower    = { id=9,    kind="monster", r=20,h=56 }
-  critter     = { id=3003, kind="monster", r=24,h=24 }
-  centaur     = { id=16,   kind="monster", r=40,h=112 }
-
-  mutant    = { id=65,  kind="monster", r=20,h=56 }
-  phage     = { id=68,  kind="monster", r=48,h=64 }
-  predator  = { id=66,  kind="monster", r=20,h=56 }
-  falling   = { id=64,  kind="monster", r=20,h=56 }
-  echidna   = { id=7,   kind="monster", r=128,h=112 }
-
   --- keys ---
   kc_green   = { id=5,  kind="pickup", r=20,h=16, pass=true }
   kc_yellow  = { id=6,  kind="pickup", r=20,h=16, pass=true }
@@ -1265,10 +1253,13 @@ HARMONY.MONSTERS =
 {
   -- FIXME: heaps of guesswork here
 
-  -- FIXME: need entry for 'falling'
+  -- FIXME: falling = { id=64, r=20, h=56 }
 
   beastling =
   {
+    id = 3004
+    r = 20
+    h = 56
     level = 1
     prob = 35
     health = 150
@@ -1278,6 +1269,9 @@ HARMONY.MONSTERS =
 
   critter =
   {
+    id = 3003
+    r = 24
+    h = 24
     level = 4
     prob = 15
     health = 100
@@ -1287,6 +1281,9 @@ HARMONY.MONSTERS =
 
   follower =
   {
+    id = 9
+    r = 20
+    h = 56
     level = 1
     prob = 50
     health = 30
@@ -1297,6 +1294,9 @@ HARMONY.MONSTERS =
 
   predator =
   {
+    id = 66
+    r = 20
+    h = 56
     level = 2
     prob = 60
     health = 60
@@ -1306,6 +1306,9 @@ HARMONY.MONSTERS =
 
   centaur =
   {
+    id = 16
+    r = 40
+    h = 112
     level = 5
     prob = 60
     skip_prob = 90
@@ -1318,6 +1321,9 @@ HARMONY.MONSTERS =
 
   mutant =
   {
+    id = 65
+    r = 20
+    h = 56
     level = 3
     prob = 20
     health = 70
@@ -1328,6 +1334,9 @@ HARMONY.MONSTERS =
 
   phage =
   {
+    id = 68
+    r = 48
+    h = 64
     level = 6
     prob = 25
     health = 500
@@ -1341,6 +1350,9 @@ HARMONY.MONSTERS =
 
   echidna =
   {
+    id = 7
+    r = 128
+    h = 112
     level = 9
     prob = 20
     crazy_prob = 18

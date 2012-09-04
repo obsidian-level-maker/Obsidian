@@ -34,14 +34,6 @@ CHEX3.ENTITIES =
   dm_player     = { id=11, kind="other", r=16,h=56 }
   teleport_spot = { id=14, kind="other", r=16,h=56 }
 
-  --- MONSTERS ---
-
-  commonus      = { id=3004,kind="monster", r=20,h=56 }
-  bipedicus     = { id=9,   kind="monster", r=20,h=56 }
-  armored_biped = { id=3001,kind="monster", r=20,h=56 }
-
-  --- BOSSES ---
-
 
   --- PICKUPS ---
 
@@ -107,21 +99,6 @@ CHEX3.ENTITIES =
 
 
   -- monsters --
-
-  cycloptis    = { id=58  , kind="monster", r=30,h=56 }  -- new id
-
-  larva        = { id=9050, kind="monster", r=30,h=56 }
-  quadrumpus   = { id=9057, kind="monster", r=20,h=56 }
-  stridicus    = { id=3002, kind="monster", r=30,h=56 }
-  flemmine     = { id=3006, kind="monster", r=16,h=56 }
-  super_cyclop = { id=3005, kind="monster", r=31,h=56 }
-
-  --- bosses ---
-
-  Flembrane      = { id=69, kind="monster", r=64,h=64 }  -- new id
-  Maximus        = { id=3003, kind="monster", r=24,h=64 }
-  Snotfolus      = { id=16, kind="monster", r=40,h=110 }
-  Flembomination = { id=7,  kind="monster", r=100,h=100 }
 
   -- pickups --
 
@@ -986,12 +963,15 @@ CHEX3.LEVEL_THEMES =
 -- ============
 
 -- nearly all the settings below for monsters, weapons and items
--- are the same as doom.lua, except the probs for monsters
+-- are the same as for DOOM, except the probabilities.
 
 CHEX3.MONSTERS =
 {
   commonus =
   {
+    id = 3004
+    r = 20
+    h = 56
     prob = 60
     health = 20
     attack = "melee"
@@ -1000,6 +980,9 @@ CHEX3.MONSTERS =
 
   bipedicus =
   {
+    id = 9
+    r = 20
+    h = 56
     prob = 45
     health = 30
     attack = "melee"
@@ -1008,6 +991,9 @@ CHEX3.MONSTERS =
 
   armored_biped =
   {
+    id = 3001
+    r = 20
+    h = 56
     prob = 35
     crazy_prob = 65
     health = 60
@@ -1017,6 +1003,9 @@ CHEX3.MONSTERS =
 
   quadrumpus =
   {
+    id = 9057
+    r = 20
+    h = 56
     -- replaces = "armored_biped"
     -- replace_prob = 30
     prob = 35
@@ -1028,6 +1017,9 @@ CHEX3.MONSTERS =
 
   cycloptis =
   {
+    id = 58  
+    r = 30
+    h = 56
     prob = 30
     health = 150
     attack = "melee"
@@ -1037,6 +1029,9 @@ CHEX3.MONSTERS =
 
   larva =
   {
+    id = 9050
+    r = 30
+    h = 56
     --- replaces = "cycloptis"
     --- replace_prob = 25
     prob = 30
@@ -1049,6 +1044,9 @@ CHEX3.MONSTERS =
 
   flemmine =
   {
+    id = 3006
+    r = 16
+    h = 56
     prob = 20
     health = 100
     attack = "melee"
@@ -1059,6 +1057,9 @@ CHEX3.MONSTERS =
 
   stridicus =
   {
+    id = 3002
+    r = 30
+    h = 56
     prob = 20
     health = 225
     attack = "melee"
@@ -1068,6 +1069,9 @@ CHEX3.MONSTERS =
 
   super_cyclop =
   {
+    id = 3005
+    r = 31
+    h = 56
     prob = 30
     health = 400
     attack = "missile"
@@ -1083,6 +1087,9 @@ CHEX3.MONSTERS =
 
   Flembrane =
   {
+    id = 69
+    r = 64
+    h = 64
     health = 1000
     attack = "missile"
     damage = 45
@@ -1091,6 +1098,9 @@ CHEX3.MONSTERS =
 
   Maximus =
   {
+    id = 3003
+    r = 24
+    h = 64
     prob = 2
     health = 1000
     attack = "missile"
@@ -1101,6 +1111,9 @@ CHEX3.MONSTERS =
 
   Snotfolus =
   {
+    id = 16
+    r = 40
+    h = 110
     prob = 1
     crazy_prob = 10
     skip_prob = 300
@@ -1113,6 +1126,9 @@ CHEX3.MONSTERS =
 
   Flembomination =
   {
+    id = 7
+    r = 100
+    h = 100
     prob = 1
     crazy_prob = 12
     skip_prob = 200

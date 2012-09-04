@@ -31,22 +31,6 @@ HACX.ENTITIES =
   dm_player     = { id=11, kind="other", r=16,h=56 }
   teleport_spot = { id=14, kind="other", r=16,h=56 }
 
-  --- monsters ---
-  thug        = { id=3004, kind="monster", r=21,h=72 }
-  android     = { id=   9, kind="monster", r=21,h=70 }
-  i_c_e       = { id=3001, kind="monster", r=32,h=56 }
-  buzzer      = { id=3002, kind="monster", r=25,h=68 }
-  terminatrix = { id=3003, kind="monster", r=32,h=80 }
-  d_man       = { id=3006, kind="monster", r=48,h=78 }
-
-  stealth     = { id=58,  kind="monster", r=32,h=68 }
-  monstruct   = { id=65,  kind="monster", r=35,h=88 }
-  phage       = { id=67,  kind="monster", r=25,h=96 }
-  thorn       = { id=68,  kind="monster", r=66,h=96 }
-  mecha       = { id=69,  kind="monster", r=24,h=96 }
-  majong7     = { id=71,  kind="monster", r=31,h=56 }
-  roam_mine   = { id=84,  kind="monster", r=5, h=32 }
-
   --- pickups ---
   k_password = { id=5,  kind="pickup", r=20,h=16, pass=true }
   k_ckey     = { id=6,  kind="pickup", r=20,h=16, pass=true }
@@ -1179,10 +1163,14 @@ HACX.LEVEL_THEMES =
 
 ------------------------------------------------------------
 
+
 HACX.MONSTERS =
 {
   thug =
   {
+    id = 3004
+    r = 21
+    h = 72
     level = 1
     prob = 60
     health = 60
@@ -1192,6 +1180,9 @@ HACX.MONSTERS =
 
   android =
   {
+    id = 9
+    r = 21
+    h = 70
     level = 2
     prob = 50
     health = 75
@@ -1201,6 +1192,9 @@ HACX.MONSTERS =
 
   stealth =
   {
+    id = 58
+    r = 32
+    h = 68
     level = 1
     prob = 5
     health = 30
@@ -1214,6 +1208,9 @@ HACX.MONSTERS =
   -- this thing just blows up on contact
   roam_mine =
   {
+    id = 84
+    r = 5
+    h = 32
     level = 1
     prob = 12
     health = 50
@@ -1225,6 +1222,9 @@ HACX.MONSTERS =
 
   phage =
   {
+    id = 67
+    r = 25
+    h = 96
     level = 3
     prob = 40
     health = 150
@@ -1234,6 +1234,9 @@ HACX.MONSTERS =
 
   buzzer =
   {
+    id = 3002
+    r = 25
+    h = 68
     level = 3
     prob = 25
     health = 175
@@ -1244,6 +1247,9 @@ HACX.MONSTERS =
 
   i_c_e =
   {
+    id = 3001
+    r = 32
+    h = 56
     level = 4
     prob = 10
     health = 225
@@ -1253,6 +1259,9 @@ HACX.MONSTERS =
 
   d_man =
   {
+    id = 3006
+    r = 48
+    h = 78
     level = 4
     prob = 10
     health = 250
@@ -1263,6 +1272,9 @@ HACX.MONSTERS =
 
   monstruct =
   {
+    id = 65
+    r = 35
+    h = 88
     level = 5
     prob = 50
     health = 400
@@ -1272,6 +1284,9 @@ HACX.MONSTERS =
 
   majong7 =
   {
+    id = 71
+    r = 31
+    h = 56
     level = 5
     prob = 10
     health = 400
@@ -1283,6 +1298,9 @@ HACX.MONSTERS =
 
   terminatrix =
   {
+    id = 3003
+    r = 32
+    h = 80
     level = 6
     prob = 25
     health = 450
@@ -1293,6 +1311,9 @@ HACX.MONSTERS =
 
   thorn =
   {
+    id = 68
+    r = 66
+    h = 96
     level = 7
     prob = 25
     health = 600
@@ -1302,6 +1323,9 @@ HACX.MONSTERS =
 
   mecha =
   {
+    id = 69
+    r = 24
+    h = 96
     level = 8
     prob = 10
     health = 800

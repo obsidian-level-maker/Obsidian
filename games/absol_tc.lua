@@ -32,28 +32,6 @@ ABSOLUTION.ENTITIES =
   teleport_spot = { id=14, kind="other", r=18,h=56 }
   voodoo_doll   = { id=88, kind="other", r=18,h=56 }
 
-  --- monsters ---
-  zombie    = { id=3004,kind="monster", r=31,h=72 }
-  shooter   = { id=9,   kind="monster", r=31,h=72 }
-  demon     = { id=3002,kind="monster", r=32,h=56 }
-  imp       = { id=3001,kind="monster", r=32,h=72 }
-  skull     = { id=3006,kind="monster", r=16,h=56 }
-
-  caco      = { id=3005,kind="monster", r=39,h=88 }
-  knight    = { id=69,  kind="monster", r=32,h=80 }
-  baron     = { id=3003,kind="monster", r=32,h=80 }
-  mancubus  = { id=67,  kind="monster", r=64,h=80 }
-  arach     = { id=68,  kind="monster", r=64,h=64 }
-  pain      = { id=71,  kind="monster", r=31,h=56 }
-
-  nm_demon  = { id=72,  kind="monster", r=32,h=56 }
-  nm_imp    = { id=400, kind="monster", r=32,h=72 }
-  nm_caco   = { id=66,  kind="monster", r=39,h=88 }
-
-  --- bosses ---
-  CyberDemon  = { id=16,   kind="monster", r=40,h=80 }
-  MotherDemon = { id=5000, kind="monster", r=20,h=80 }
-
   --- keys ---
   kc_red     = { id=13, kind="pickup", r=20,h=16, pass=true }
   kc_yellow  = { id=6,  kind="pickup", r=20,h=16, pass=true }
@@ -927,12 +905,16 @@ ABSOLUTION.LEVEL_THEMES =
 
 ------------------------------------------------------------
 
+
 ABSOLUTION.MONSTERS =
 {
   -- TODO: verify the 'damage' fields (check source code)
 
   zombie =
   {
+    id = 3004
+    r = 31
+    h = 72
     level = 1
     prob = 40
     health = 20
@@ -945,6 +927,9 @@ ABSOLUTION.MONSTERS =
 
   shooter =
   {
+    id = 9
+    r = 31
+    h = 72
     level = 2
     prob = 50
     health = 30
@@ -957,6 +942,9 @@ ABSOLUTION.MONSTERS =
 
   imp =
   {
+    id = 3001
+    r = 32
+    h = 72
     level = 1
     prob = 60
     health = 60
@@ -966,6 +954,9 @@ ABSOLUTION.MONSTERS =
 
   nm_imp =
   {
+    id = 400
+    r = 32
+    h = 72
     level = 2
     prob = 10
     health = 60
@@ -978,6 +969,9 @@ ABSOLUTION.MONSTERS =
 
   skull =
   {
+    id = 3006
+    r = 16
+    h = 56
     level = 3
     prob = 16
     health = 50
@@ -991,6 +985,9 @@ ABSOLUTION.MONSTERS =
 
   demon =
   {
+    id = 3002
+    r = 32
+    h = 56
     level = 1
     prob = 35
     health = 150
@@ -1001,6 +998,9 @@ ABSOLUTION.MONSTERS =
 
   nm_demon =
   {
+    id = 72
+    r = 32
+    h = 56
     level = 2
     prob = 10
     health = 500
@@ -1014,6 +1014,9 @@ ABSOLUTION.MONSTERS =
 
   caco =
   {
+    id = 3005
+    r = 39
+    h = 88
     level = 3
     prob = 40
     health = 400
@@ -1025,6 +1028,9 @@ ABSOLUTION.MONSTERS =
 
   nm_caco =
   {
+    id = 66
+    r = 39
+    h = 88
     level = 4
     prob = 10
     health = 700
@@ -1039,6 +1045,9 @@ ABSOLUTION.MONSTERS =
 
   knight =
   {
+    id = 69
+    r = 32
+    h = 80
     level = 5
     prob = 60
     skip_prob = 90
@@ -1052,6 +1061,9 @@ ABSOLUTION.MONSTERS =
 
   baron =
   {
+    id = 3003
+    r = 32
+    h = 80
     level = 7
     prob = 20
     health = 1000
@@ -1063,6 +1075,9 @@ ABSOLUTION.MONSTERS =
 
   mancubus =
   {
+    id = 67
+    r = 64
+    h = 80
     level = 6
     prob = 37
     health = 600
@@ -1073,6 +1088,9 @@ ABSOLUTION.MONSTERS =
 
   arach =
   {
+    id = 68
+    r = 64
+    h = 64
     level = 6
     prob = 25
     health = 500
@@ -1083,6 +1101,9 @@ ABSOLUTION.MONSTERS =
 
   pain =
   {
+    id = 71
+    r = 31
+    h = 56
     level = 6
     prob = 8
     crazy_prob = 15
@@ -1099,8 +1120,8 @@ ABSOLUTION.MONSTERS =
 
   -- BOSSES --
 
-  -- TODO: CyberDemon
-  -- TODO: MotherDemon
+  -- TODO: CyberDemon  = { id=16,   kind="monster", r=40,h=80 }
+  -- TODO: MotherDemon = { id=5000, kind="monster", r=20,h=80 }
 }
 
 
