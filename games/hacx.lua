@@ -117,6 +117,14 @@ HACX.MATERIALS =
   MODWALL3 = { t="MODWALL3", f="CEIL3_3" }
 
 
+  TECH_PIC1 = { t="BRNSMALR", f="RROCK03" }
+  TECH_PIC2 = { t="CEMENT7",  f="RROCK03" }
+
+  TECH_COMP = { t="COMPSTA2", f="RROCK03" }
+
+  LOGO_1 = { t="PANEL6", f="RROCK03" }
+
+
   -- switches --
 
   SW1CMT = { t="SW1CMT", f="DEM1_2" }
@@ -427,6 +435,20 @@ HACX.SKINS =
   }
 
 
+  Pic_Techy =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = { TECH_PIC1 = 50, TECH_PIC2 = 50, LOGO_1 = 50 }
+    pic_w = 128
+    pic_h = 128
+
+    light = 48
+  }
+
+
   ---| HALLWAY PIECES |---
 
   Hall_Basic_I =
@@ -488,7 +510,9 @@ HACX.THEME_DEFAULTS =
 
   keys = { kz_red=50, kz_blue=50, kz_yellow=50 }
 
-  logos = { Pic_Carve=50, Pic_Pill=50, Pic_Neon=20 }
+  logos = { Pic_Carve=50, Pic_Pill=50 }
+
+  pictures = { Pic_Techy=50 }
 
   switches = { sw_blue = 50 }
 
