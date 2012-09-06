@@ -23,44 +23,29 @@ HACX = { }
 HACX.ENTITIES =
 {
   --- special stuff ---
-  player1 = { id=1, kind="other", r=16,h=56 }
-  player2 = { id=2, kind="other", r=16,h=56 }
-  player3 = { id=3, kind="other", r=16,h=56 }
-  player4 = { id=4, kind="other", r=16,h=56 }
+  player1 = { id=1, r=16, h=56 }
+  player2 = { id=2, r=16, h=56 }
+  player3 = { id=3, r=16, h=56 }
+  player4 = { id=4, r=16, h=56 }
 
-  dm_player     = { id=11, kind="other", r=16,h=56 }
-  teleport_spot = { id=14, kind="other", r=16,h=56 }
+  dm_player     = { id=11, r=16, h=56 }
+  teleport_spot = { id=14, r=16, h=56 }
 
-  --- pickups ---
-  k_password = { id=5,  kind="pickup", r=20,h=16, pass=true }
-  k_ckey     = { id=6,  kind="pickup", r=20,h=16, pass=true }
-  k_keycard  = { id=13, kind="pickup", r=20,h=16, pass=true }
+  --- keys ---
+  k_password = { id=5 }
+  k_ckey     = { id=6 }
+  k_keycard  = { id=13 }
 
-  kz_red     = { id=38, kind="pickup", r=20,h=16, pass=true }
-  kz_yellow  = { id=39, kind="pickup", r=20,h=16, pass=true }
-  kz_blue    = { id=40, kind="pickup", r=20,h=16, pass=true }
+  kz_red     = { id=38 }
+  kz_yellow  = { id=39 }
+  kz_blue    = { id=40 }
 
-  dampener   = { id=2014, kind="pickup", r=20,h=16, pass=true }
-  microkit   = { id=2011, kind="pickup", r=20,h=16, pass=true }
-  hypo       = { id=2012, kind="pickup", r=20,h=16, pass=true }
-  smart_drug = { id=2013, kind="pickup", r=20,h=16, pass=true }
-
-  inhaler      = { id=2015, kind="pickup", r=20,h=16, pass=true }
-  kevlar_armor = { id=2018, kind="pickup", r=20,h=16, pass=true }
-  super_armor  = { id=2019, kind="pickup", r=20,h=16, pass=true }
-
-  bullets     = { id=2007, kind="pickup", r=20,h=16, pass=true }
-  bullet_box  = { id=2048, kind="pickup", r=20,h=16, pass=true }
-  shells      = { id=2008, kind="pickup", r=20,h=16, pass=true }
-  shell_box   = { id=2049, kind="pickup", r=20,h=16, pass=true }
-  torpedos    = { id=2010, kind="pickup", r=20,h=16, pass=true }
-  torpedo_box = { id=2046, kind="pickup", r=20,h=16, pass=true }
-  molecules   = { id=2047, kind="pickup", r=20,h=16, pass=true }
-  mol_tank    = { id=  17, kind="pickup", r=20,h=16, pass=true }
+  -- TODO: POWERUPS
 
   --- scenery ---
-  chair      = { id=35,   kind="scenery", r=24,h=40 }
+  chair      = { id=35, r=24, h=40 }
 
+  -- TODO: all other scenery!!
 }
 
 
@@ -1454,6 +1439,7 @@ HACX.PICKUPS =
 
   dampener =
   {
+    id = 2014
     prob = 20
     cluster = { 4,7 }
     give = { {health=1} }
@@ -1461,6 +1447,7 @@ HACX.PICKUPS =
 
   microkit =
   {
+    id = 2011
     prob = 60
     cluster = { 2,5 }
     give = { {health=10} }
@@ -1468,6 +1455,7 @@ HACX.PICKUPS =
 
   hypo =
   {
+    id = 2012
     prob = 100
     cluster = { 1,3 }
     give = { {health=25} }
@@ -1475,6 +1463,7 @@ HACX.PICKUPS =
 
   smart_drug =
   {
+    id = 2013
     prob = 3
     big_item = true
     give = { {health=150} }
@@ -1484,6 +1473,7 @@ HACX.PICKUPS =
 
   inhaler =
   {
+    id = 2015
     prob = 10
     armor = true
     cluster = { 4,7 }
@@ -1492,6 +1482,7 @@ HACX.PICKUPS =
 
   kevlar_armor =
   {
+    id = 2018
     prob = 5
     armor = true
     big_item = true
@@ -1500,6 +1491,7 @@ HACX.PICKUPS =
 
   super_armor =
   {
+    id = 2019
     prob = 2
     armor = true
     big_item = true
@@ -1510,6 +1502,7 @@ HACX.PICKUPS =
 
   bullets =
   {
+    id = 2007
     prob = 10
     cluster = { 2,5 }
     give = { {ammo="bullet",count=10} }
@@ -1517,6 +1510,7 @@ HACX.PICKUPS =
 
   bullet_box =
   {
+    id = 2048
     prob = 40
     cluster = { 1,3 }
     give = { {ammo="bullet", count=50} }
@@ -1524,6 +1518,7 @@ HACX.PICKUPS =
 
   shells =
   {
+    id = 2008
     prob = 20
     cluster = { 2,5 }
     give = { {ammo="shell",count=4} }
@@ -1531,6 +1526,7 @@ HACX.PICKUPS =
 
   shell_box =
   {
+    id = 2049
     prob = 40
     cluster = { 1,3 }
     give = { {ammo="shell",count=20} }
@@ -1538,6 +1534,7 @@ HACX.PICKUPS =
 
   torpedos =
   {
+    id = 2010
     prob = 10
     cluster = { 4,7 }
     give = { {ammo="torpedo",count=1} }
@@ -1545,6 +1542,7 @@ HACX.PICKUPS =
 
   torpedo_box =
   {
+    id = 2046
     prob = 40
     cluster = { 1,3 }
     give = { {ammo="torpedo",count=5} }
@@ -1552,6 +1550,7 @@ HACX.PICKUPS =
 
   molecules =
   {
+    id = 2047
     prob = 20
     cluster = { 2,5 }
     give = { {ammo="molecule",count=20} }
@@ -1559,6 +1558,7 @@ HACX.PICKUPS =
 
   mol_tank =
   {
+    id = 17
     prob = 40
     cluster = { 1,2 }
     give = { {ammo="molecule",count=100} }

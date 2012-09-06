@@ -23,57 +23,36 @@ ABSOLUTION = { }
 ABSOLUTION.ENTITIES =
 {
   --- player stuff ---
-  player1 = { id=1, kind="other", r=18,h=56 }
-  player2 = { id=2, kind="other", r=18,h=56 }
-  player3 = { id=3, kind="other", r=18,h=56 }
-  player4 = { id=4, kind="other", r=18,h=56 }
+  player1 = { id=1, r=18, h=56 }
+  player2 = { id=2, r=18, h=56 }
+  player3 = { id=3, r=18, h=56 }
+  player4 = { id=4, r=18, h=56 }
 
-  dm_player     = { id=11, kind="other", r=18,h=56 }
-  teleport_spot = { id=14, kind="other", r=18,h=56 }
-  voodoo_doll   = { id=88, kind="other", r=18,h=56 }
+  dm_player     = { id=11 }
+  teleport_spot = { id=14 }
+  voodoo_doll   = { id=88 }
 
   --- keys ---
-  kc_red     = { id=13, kind="pickup", r=20,h=16, pass=true }
-  kc_yellow  = { id=6,  kind="pickup", r=20,h=16, pass=true }
-  kc_blue    = { id=5,  kind="pickup", r=20,h=16, pass=true }
+  kc_red     = { id=13 }
+  kc_yellow  = { id=6 }
+  kc_blue    = { id=5 }
 
-  ks_red     = { id=38, kind="pickup", r=20,h=16, pass=true }
-  ks_yellow  = { id=39, kind="pickup", r=20,h=16, pass=true }
-  ks_blue    = { id=40, kind="pickup", r=20,h=16, pass=true }
-
-  --- ammo ---
-  bullets    = { id=2007, kind="pickup", r=20,h=16, pass=true }
-  rocket     = { id=2010, kind="pickup", r=20,h=16, pass=true }
-  shells     = { id=2008, kind="pickup", r=20,h=16, pass=true }
-  cells      = { id=2047, kind="pickup", r=20,h=16, pass=true }
-
-  bullet_box = { id=2048, kind="pickup", r=20,h=16, pass=true }
-  shell_box  = { id=2049, kind="pickup", r=20,h=16, pass=true }
-  rocket_box = { id=2046, kind="pickup", r=20,h=16, pass=true }
-  cell_pack  = { id=  17, kind="pickup", r=20,h=16, pass=true }
-
-  --- health / armor ---
-  potion   = { id=2014, kind="pickup", r=20,h=16, pass=true }
-  stimpack = { id=2011, kind="pickup", r=20,h=16, pass=true }
-  medikit  = { id=2012, kind="pickup", r=20,h=16, pass=true }
-  soul     = { id=2013, kind="pickup", r=20,h=16, pass=true }
-
-  helmet      = { id=2015, kind="pickup", r=20,h=16, pass=true }
-  green_armor = { id=2018, kind="pickup", r=20,h=16, pass=true }
-  blue_armor  = { id=2019, kind="pickup", r=20,h=16, pass=true }
-  mega        = { id=  83, kind="pickup", r=20,h=16, pass=true }
+  ks_red     = { id=38 }
+  ks_yellow  = { id=39 }
+  ks_blue    = { id=40 }
 
   --- powerups ---
-  backpack = { id=   8, kind="pickup", r=20,h=16, pass=true }
-  invul    = { id=2022, kind="pickup", r=20,h=16, pass=true }
-  invis    = { id=2024, kind="pickup", r=20,h=16, pass=true }
-  suit     = { id=2025, kind="pickup", r=20,h=60, pass=true }
-  map      = { id=2026, kind="pickup", r=20,h=16, pass=true }
-  goggles  = { id=2045, kind="pickup", r=20,h=16, pass=true }
+  backpack = { id=8 }
+  mega     = { id=83 }
+  invul    = { id=2022 }
+  invis    = { id=2024 }
+  suit     = { id=2025 }
+  map      = { id=2026 }
+  goggles  = { id=2045 }
 
-  laser_key1 = { id=4000, kind="pickup", r=20,h=16, pass=true }
-  laser_key2 = { id=4001, kind="pickup", r=20,h=16, pass=true }
-  laser_key3 = { id=4002, kind="pickup", r=20,h=16, pass=true }
+  laser_key1 = { id=4000 }
+  laser_key2 = { id=4001 }
+  laser_key3 = { id=4002 }
 
   --- scenery ---
 
@@ -1272,6 +1251,7 @@ ABSOLUTION.PICKUPS =
 
   potion =
   {
+    id = 2014
     prob = 20
     cluster = { 4,7 }
     give = { {health=1} }
@@ -1279,6 +1259,7 @@ ABSOLUTION.PICKUPS =
 
   stimpack =
   {
+    id = 2011
     prob = 60
     cluster = { 2,5 }
     give = { {health=10} }
@@ -1286,12 +1267,14 @@ ABSOLUTION.PICKUPS =
 
   medikit =
   {
+    id = 2012
     prob = 100
     give = { {health=25} }
   }
 
   soul =
   {
+    id = 2013
     prob = 3
     big_item = true
     start_prob = 5
@@ -1302,6 +1285,7 @@ ABSOLUTION.PICKUPS =
 
   helmet =
   {
+    id = 2015
     prob = 10
     armor = true
     cluster = { 4,7 }
@@ -1310,6 +1294,7 @@ ABSOLUTION.PICKUPS =
 
   green_armor =
   {
+    id = 2018
     prob = 5
     armor = true
     big_item = true
@@ -1319,6 +1304,7 @@ ABSOLUTION.PICKUPS =
 
   blue_armor =
   {
+    id = 2019
     prob = 2
     armor = true
     big_item = true
@@ -1330,6 +1316,7 @@ ABSOLUTION.PICKUPS =
 
   bullets =
   {
+    id = 2007
     prob = 10
     cluster = { 2,5 }
     give = { {ammo="bullet",count=10} }
@@ -1337,12 +1324,14 @@ ABSOLUTION.PICKUPS =
 
   bullet_box =
   {
+    id = 2048
     prob = 40
     give = { {ammo="bullet",count=50} }
   }
 
   shells =
   {
+    id = 2008
     prob = 20
     cluster = { 2,5 }
     give = { {ammo="shell",count=4} }
@@ -1350,12 +1339,14 @@ ABSOLUTION.PICKUPS =
 
   shell_box =
   {
+    id = 2049
     prob = 40
     give = { {ammo="shell",count=20} }
   }
 
   rocket =
   {
+    id = 2010
     prob = 10
     cluster = { 4,7 }
     give = { {ammo="rocket",count=1} }
@@ -1363,12 +1354,14 @@ ABSOLUTION.PICKUPS =
 
   rocket_box =
   {
+    id = 2046
     prob = 40
     give = { {ammo="rocket",count=5} }
   }
 
   cells =
   {
+    id = 2047
     prob = 20
     cluster = { 2,5 }
     give = { {ammo="cell",count=20} }
@@ -1376,6 +1369,7 @@ ABSOLUTION.PICKUPS =
 
   cell_pack =
   {
+    id = 17
     prob = 40
     give = { {ammo="cell",count=100} }
   }

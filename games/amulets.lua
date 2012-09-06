@@ -25,25 +25,20 @@ AMULETS.ENTITIES =
 {
   --- PLAYERS ---
 
-  player1 = { id=1, kind="other", r=16,h=56 }
-  player2 = { id=2, kind="other", r=16,h=56 }
-  player3 = { id=3, kind="other", r=16,h=56 }
-  player4 = { id=4, kind="other", r=16,h=56 }
+  player1 = { id=1, r=16, h=56 }
+  player2 = { id=2, r=16, h=56 }
+  player3 = { id=3, r=16, h=56 }
+  player4 = { id=4, r=16, h=56 }
 
-  dm_player     = { id=11, kind="other", r=16,h=56 }
-  teleport_spot = { id=14, kind="other", r=16,h=56 }
+  dm_player     = { id=11 }
+  teleport_spot = { id=14 }
   
   --- PICKUPS ---
 
-
-  --- WEAPONS ---
-
-
-
-  potion = { id=811, kind="pickup", r=20,h=16, pass=true }
+  potion = { id=811 }
 
   --- SCENERY ---
-  jaw = { id=59, kind="scenery", r=20,h=16, pass=true }
+  jaw = { id=59, r=20, h=16, pass=true }
 }
 
 

@@ -23,28 +23,28 @@ NUKEM = { }
 NUKEM.ENTITIES =
 {
   --- players ---
-  player1 = { id=1405, kind="other", r=20,h=56 }
-  player2 = { id=1405, kind="other", r=20,h=56 }
-  player3 = { id=1405, kind="other", r=20,h=56 }
-  player4 = { id=1405, kind="other", r=20,h=56 }
+  player1 = { id=1405, r=20, h=56 }
+  player2 = { id=1405, r=20, h=56 }
+  player3 = { id=1405, r=20, h=56 }
+  player4 = { id=1405, r=20, h=56 }
 
-  dm_player = { id=1405, kind="other", r=20,h=56 }
+  dm_player = { id=1405 }
 
   --- pickups ---
-  k_yellow   = { id=80, kind="pickup", r=20,h=16, pass=true }
+  k_yellow   = { id=80 }
 
   --- scenery ---
 
   --- buttons ---
-  nuke_button   = { id=142, kind="other", r=32,h=64, pass=true }
-  red_button    = { id=162, kind="other", r=32,h=64, pass=true }
-  square_button = { id=164, kind="other", r=32,h=64, pass=true }
-  access_panel  = { id=130, kind="other", r=32,h=64, pass=true }
+  nuke_button   = { id=142, r=32, h=64, pass=true }
+  red_button    = { id=162, r=32, h=64, pass=true }
+  square_button = { id=164, r=32, h=64, pass=true }
+  access_panel  = { id=130, r=32, h=64, pass=true }
 
-  turn_switch   = { id=136, kind="other", r=32,h=64, pass=true }
-  handle_switch = { id=140, kind="other", r=32,h=64, pass=true }
-  light_switch  = { id=712, kind="other", r=32,h=64, pass=true }
-  lever_switch  = { id=862, kind="other", r=32,h=64, pass=true }
+  turn_switch   = { id=136, r=32, h=64, pass=true }
+  handle_switch = { id=140, r=32, h=64, pass=true }
+  light_switch  = { id=712, r=32, h=64, pass=true }
+  lever_switch  = { id=862, r=32, h=64, pass=true }
 }
 
 
@@ -262,25 +262,25 @@ NUKEM.MONSTERS =
 {
   -- FIXME : NUKEM.MONSTERS
 
-  pig_cop   = { id=2000, r=16,h=56 }
-  liz_troop = { id=1680, r=16,h=56 } 
-  liz_man   = { id=2120, r=16,h=56 }
-  commander = { id=1920, r=16,h=56 }
-  octabrain = { id=1820, r=16,h=56 } 
-  new_beast = { id=4610, r=16,h=56 }
+  pig_cop   = { id=2000, r=16, h=56 }
+  liz_troop = { id=1680, r=16, h=56 } 
+  liz_man   = { id=2120, r=16, h=56 }
+  commander = { id=1920, r=16, h=56 }
+  octabrain = { id=1820, r=16, h=56 } 
+  new_beast = { id=4610, r=16, h=56 }
 
-  recon     = { id=1960, r=16,h=56 }
-  tank      = { id=1975, r=16,h=56 }
-  drone     = { id=1880, r=16,h=56 }
-  rotategun = { id=2360, r=16,h=56 }
-  green_slime = { id=2370, r=16,h=56 }
+  recon     = { id=1960, r=16, h=56 }
+  tank      = { id=1975, r=16, h=56 }
+  drone     = { id=1880, r=16, h=56 }
+  rotategun = { id=2360, r=16, h=56 }
+  green_slime = { id=2370, r=16, h=56 }
 
   -- FIXME: BOSSES
 
-  Boss1 = { id=2630, r=50,h=200 }
-  Boss2 = { id=2710, r=50,h=200 }
-  Boss3 = { id=2760, r=50,h=200 }
-  Boss4 = { id=4740, r=50,h=200 }
+  Boss1 = { id=2630, r=50, h=200 }
+  Boss2 = { id=2710, r=50, h=200 }
+  Boss3 = { id=2760, r=50, h=200 }
+  Boss4 = { id=4740, r=50, h=200 }
 }
 
 

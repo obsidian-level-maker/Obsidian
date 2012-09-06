@@ -23,24 +23,24 @@ STRIFE = { }
 STRIFE.ENTITIES =
 {
   --- special stuff ---
-  player1 = { id=1, kind="other", r=16,h=56 }
-  player2 = { id=2, kind="other", r=16,h=56 }
-  player3 = { id=3, kind="other", r=16,h=56 }
-  player4 = { id=4, kind="other", r=16,h=56 }
+  player1 = { id=1, r=16, h=56 }
+  player2 = { id=2, r=16, h=56 }
+  player3 = { id=3, r=16, h=56 }
+  player4 = { id=4, r=16, h=56 }
 
-  dm_player     = { id=11, kind="other", r=16,h=56 }
-  teleport_spot = { id=14, kind="other", r=16,h=56 }
+  dm_player     = { id=11 }
+  teleport_spot = { id=14 }
 
   --- monsters ---
-  acolyte = { id=1234, kind="monster", r=16,h=56 }
+  acolyte = { id=1234, r=16, h=56 }
 
   --- bosses ---
 
   --- pickups ---
-  k_yellow   = { id=80, kind="pickup", r=20,h=16, pass=true }
+  k_yellow   = { id=80 }
 
   --- scenery ---
-  wall_torch  = { id=50, kind="scenery", r=10,h=64, light=255 }
+  wall_torch  = { id=50, r=10, h=64, light=255 }
 
 }
 

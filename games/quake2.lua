@@ -23,71 +23,55 @@ QUAKE2 = { }
 QUAKE2.ENTITIES =
 {
   -- players
-  player1 = { id="info_player_start", kind="other", r=16,h=56 }
-  player2 = { id="info_player_coop",  kind="other", r=16,h=56 }
-  player3 = { id="info_player_coop",  kind="other", r=16,h=56 }
-  player4 = { id="info_player_coop",  kind="other", r=16,h=56 }
+  player1 = { id="info_player_start", r=16, h=56 }
+  player2 = { id="info_player_coop",  r=16, h=56 }
+  player3 = { id="info_player_coop",  r=16, h=56 }
+  player4 = { id="info_player_coop",  r=16, h=56 }
 
-  dm_player = { id="info_player_deathmatch", kind="other", r=16,h=56 }
+  dm_player = { id="info_player_deathmatch" }
 
-  teleport_spot = { id="info_notnull",    kind="other", r=16,h=56, pass=true }
-  teleporter    = { id="misc_teleporter", kind="other", r=16,h=56, pass=true }
-  tele_pad      = { id="misc_teleporter_dest", kind="other", r=16,h=56, pass=true }
+  teleport_spot = { id="info_notnull" }
+  teleporter    = { id="misc_teleporter" }
+  tele_pad      = { id="misc_teleporter_dest" }
 
-  -- pickups
-  k_blue  = { id="key_blue_key",  kind="pickup", r=16, h=32, pass=true }
-  k_red   = { id="key_red_key",   kind="pickup", r=16, h=32, pass=true }
-  k_cd    = { id="key_data_cd",   kind="pickup", r=16, h=32, pass=true }
-  k_pass  = { id="key_pass",      kind="pickup", r=16, h=32, pass=true }
-  k_cube  = { id="key_power_cube",kind="pickup", r=16, h=32, pass=true }
-  k_pyr   = { id="key_pyramid",   kind="pickup", r=16, h=32, pass=true }
+  -- keys
+  k_blue  = { id="key_blue_key" }
+  k_red   = { id="key_red_key" }
+  k_cd    = { id="key_data_cd" }
+  k_pass  = { id="key_pass" }
+  k_cube  = { id="key_power_cube" }
+  k_pyr   = { id="key_pyramid" }
 
-  heal_2     = { id="item_health_small", kind="pickup", r=16, h=32, pass=true }
-  heal_10    = { id="item_health",       kind="pickup", r=16, h=32, pass=true }
-  heal_25    = { id="item_health_large", kind="pickup", r=16, h=32, pass=true }
-  heal_100   = { id="item_health_mega",  kind="pickup", r=16, h=32, pass=true }
-  adrenaline = { id="item_adrenaline",   kind="pickup", r=16, h=32, pass=true }
-
-  armor_2    = { id="item_armor_shard",  kind="pickup", r=16, h=32, pass=true }
-  armor_25   = { id="item_armor_jacket", kind="pickup", r=16, h=32, pass=true }
-  armor_50   = { id="item_armor_combat", kind="pickup", r=16, h=32, pass=true }
-  armor_100  = { id="item_armor_body",   kind="pickup", r=16, h=32, pass=true }
-
-  am_bullet  = { id="ammo_bullets", kind="pickup", r=16, h=32, pass=true }
-  am_cell    = { id="ammo_cells",   kind="pickup", r=16, h=32, pass=true }
-  am_shell   = { id="ammo_shells",  kind="pickup", r=16, h=32, pass=true }
-  am_grenade = { id="ammo_grenades",kind="pickup", r=16, h=32, pass=true }
-  am_slug    = { id="ammo_slugs",   kind="pickup", r=16, h=32, pass=true }
-  am_rocket  = { id="ammo_rockets", kind="pickup", r=16, h=32, pass=true }
-
-  bandolier  = { id="item_bandolier", kind="pickup", r=16, h=32, pass=true }
-  breather   = { id="item_breather",  kind="pickup", r=16, h=32, pass=true }
-  enviro     = { id="item_enviro",    kind="pickup", r=16, h=32, pass=true }
-  invuln     = { id="item_invulnerability", kind="pickup", r=16, h=32, pass=true }
-  quad       = { id="item_quad",      kind="pickup", r=16, h=32, pass=true }
+  -- powerups
+  adrenaline = { id="item_adrenaline" }
+  bandolier  = { id="item_bandolier" }
+  breather   = { id="item_breather" }
+  enviro     = { id="item_enviro" }
+  invuln     = { id="item_invulnerability" }
+  quad       = { id="item_quad" }
 
   -- scenery
-  barrel      = { id="misc_explobox", kind="scenery", r=20, h=40, pass=true }
-  dead_dude   = { id="misc_deadsoldier", kind="scenery", r=20, h=60, pass=true }
-  insane_dude = { id="misc_insane",  kind="scenery", r=20, h=60, pass=true }
+  barrel      = { id="misc_explobox", r=20, h=40, pass=true }
+  dead_dude   = { id="misc_deadsoldier", r=20, h=60, pass=true }
+  insane_dude = { id="misc_insane",  r=20, h=60, pass=true }
   -- FIXME: varieties of insane_dude!
 
   -- special
 
-  light = { id="light",      kind="other", r=1, h=1, pass=true }
-  sun   = { id="oblige_sun", kind="other", r=1, h=1, pass=true }
+  light = { id="light" }
+  sun   = { id="oblige_sun" }
 
-  door = { id="func_door",  kind="other", r=1, h=1, pass=true }
-  lift = { id="func_plat",  kind="other", r=1, h=1, pass=true }
-  wall = { id="func_wall",  kind="other", r=1, h=1, pass=true }
-  button = { id="func_button", kind="other", r=1, h=1, pass=true }
+  door   = { id="func_door" }
+  lift   = { id="func_plat" }
+  wall   = { id="func_wall" }
+  button = { id="func_button" }
 
-  trigger  = { id="trigger_multiple", kind="other", r=1, h=1, pass=true }
-  trig_key = { id="trigger_key", kind="other", r=1, h=1, pass=true }
+  trigger  = { id="trigger_multiple" }
+  trig_key = { id="trigger_key" }
    
-  change_lev = { id="target_changelevel", kind="other", r=1, h=1, pass=true }
+  change_lev = { id="target_changelevel" }
 
-  camera = { id="info_player_intermission", kind="other", r=1,h=1, pass=true }
+  camera = { id="info_player_intermission" }
 
   -- TODO
 }
@@ -2209,6 +2193,7 @@ QUAKE2.PICKUPS =
 
   heal_2 =
   {
+    id = "item_health_small"
     prob = 10
     cluster = { 3,9 }
     give = { {health=2} }
@@ -2216,18 +2201,21 @@ QUAKE2.PICKUPS =
 
   heal_10 =
   {
+    id = "item_health"
     prob = 20
     give = { {health=10} }
   }
 
   heal_25 =
   {
+    id = "item_health_large"
     prob = 50
     give = { {health=25} }
   }
 
   heal_100 =
   {
+    id = "item_health_mega"
     prob = 5
     give = { {health=70} }
   }
@@ -2236,25 +2224,29 @@ QUAKE2.PICKUPS =
 
   armor_2 =
   {
+    id = "item_armor_shard"
     prob = 7
     cluster = { 3,9 }
     give = { {health=1} }
   }
 
-  armor_25 =  -- (jacket)
+  armor_25 =
   {
+    id = "item_armor_jacket"
     prob = 7
     give = { {health=8} }
   }
 
-  armor_50 =  -- (combat)
+  armor_50 =
   {
+    id = "item_armor_combat"
     prob = 15
     give = { {health=25} }
   }
 
-  armor_100 =  -- (body)
+  armor_100 =
   {
+    id = "item_armor_body"
     prob = 15
     give = { {health=80} }
   }
@@ -2263,36 +2255,42 @@ QUAKE2.PICKUPS =
 
   am_bullet =
   {
+    id = "ammo_bullets"
     prob = 20
     give = { {ammo="bullet",count=50} }
   }
 
   am_shell =
   {
+    id = "ammo_shells"
     prob = 20
     give = { {ammo="shell",count=10} }
   }
 
   am_grenade =
   {
+    id = "ammo_grenades"
     prob = 20
     give = { {ammo="grenade",count=5} }
   }
 
   am_rocket =
   {
+    id = "ammo_rockets"
     prob = 20
     give = { {ammo="rocket",count=5} }
   }
 
   am_slug = 
   {
+    id = "ammo_slugs"
     prob = 20
     give = { {ammo="slug",count=10} }
   }
 
   am_cell =
   {
+    id = "ammo_cells"
     prob = 20
     give = { {ammo="cell",count=50} }
   }

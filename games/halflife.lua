@@ -23,52 +23,24 @@ HALFLIFE = { }
 HALFLIFE.ENTITIES =
 {
   -- players
-  player1 = { id="info_player_start", kind="other", r=16,h=56 }
+  player1 = { id="info_player_start", r=16, h=56 }
 
   -- FIXME !!!
-  player2 = { id="item_healthkit",  kind="other", r=16,h=56 }
-  player3 = { id="item_healthkit",  kind="other", r=16,h=56 }
-  player4 = { id="item_healthkit",  kind="other", r=16,h=56 }
+  player2 = { id="item_healthkit",  r=16, h=56 }
+  player3 = { id="item_healthkit",  r=16, h=56 }
+  player4 = { id="item_healthkit",  r=16, h=56 }
 
-  dm_player = { id="info_player_deathmatch", kind="other", r=16,h=56 }
+  dm_player = { id="info_player_deathmatch" }
 
   -- enemies
-  grunt    = { id="monster_alien_grunt", kind="monster", r=32, h=80, }
-  slave    = { id="monster_alien_slave", kind="monster", r=32, h=80, }
-  garg     = { id="monster_gargantua",   kind="monster", r=32, h=80, }
-
-  baby     = { id="monster_babycrab",    kind="monster", r=32, h=80, }
-  crab     = { id="monster_headcrab",    kind="monster", r=32, h=80, }
-  chicken  = { id="monster_bullchicken", kind="monster", r=32, h=80, }
-  roach    = { id="monster_cockroach",   kind="monster", r=32, h=80, }
-  hound    = { id="monster_houndeye",    kind="monster", r=32, h=80, }
-
-  saur     = { id="monster_ichthyosaur", kind="monster", r=32, h=80, }
-  snark    = { id="monster_snark",       kind="monster", r=32, h=80, }
-  zombie   = { id="monster_zombie",      kind="monster", r=32, h=80, }
 
   -- bosses
 
   -- NPCs
-  barney    = { id="monster_barney",     kind="other", r=32, h=80, }
-  scientist = { id="monster_scientist",  kind="other", r=32, h=80, }
+  barney    = { id="monster_barney",     r=32, h=80, }
+  scientist = { id="monster_scientist",  r=32, h=80, }
 
-  -- pickups
 
-  crowbar  = { id="weapon_crowbar",    kind="pickup", r=30, h=30, pass=true }
-  shotty   = { id="weapon_shotgun",    kind="pickup", r=30, h=30, pass=true }
-  nine_AR  = { id="weapon_9mmAR",      kind="pickup", r=30, h=30, pass=true }
-  handgun  = { id="weapon_9mmhandgun", kind="pickup", r=30, h=30, pass=true }
-
-  snark    = { id="weapon_snark",    kind="pickup", r=30, h=30, pass=true }
-  rpg      = { id="weapon_rpg",      kind="pickup", r=30, h=30, pass=true }
-  w357     = { id="weapon_357",      kind="pickup", r=30, h=30, pass=true }
-  gauss    = { id="weapon_gauss",    kind="pickup", r=30, h=30, pass=true }
-
-  buckshot  = { id="ammo_buckshot", kind="pickup", r=30, h=30, pass=true }
-  clip      = { id="ammo_9mmAR",    kind="pickup", r=30, h=30, pass=true }
-
-  health    = { id="item_healthkit", kind="pickup", r=30, h=30, pass=true }
 
 
   -- scenery
@@ -76,13 +48,12 @@ HALFLIFE.ENTITIES =
 
   -- special
 
-  trigger    = { id="trigger_multiple", kind="other", r=1, h=1, pass=true }
-  change_lev = { id="trigger_changelevel", kind="other", r=1, h=1, pass=true }
-  teleport   = { id="trigger_teleport", kind="other", r=1, h=1, pass=true }
+  light = { id="light" }
+  sun   = { id="oblige_sun" }
 
-  light = { id="light",      kind="other", r=1, h=1, pass=true }
-  sun   = { id="oblige_sun", kind="other", r=1, h=1, pass=true }
-
+  trigger    = { id="trigger_multiple" }
+  change_lev = { id="trigger_changelevel" }
+  teleport   = { id="trigger_teleport" }
 }
 
 
@@ -236,6 +207,9 @@ HALFLIFE.MONSTERS =
 {
   crab =
   {
+    id = "monster_headcrab"
+    r = 32
+    h = 80
     prob = 20
     health = 25
     damage = 5
@@ -244,6 +218,9 @@ HALFLIFE.MONSTERS =
 
   grunt =
   {
+    id = "monster_alien_grunt"
+    r = 32
+    h = 80
     prob = 80
     health = 30
     damage = 14
@@ -252,6 +229,9 @@ HALFLIFE.MONSTERS =
 
   garg =
   {
+    id = "monster_gargantua"
+    r = 32
+    h = 80
     prob = 3
     health = 80
     damage = 10
@@ -261,6 +241,9 @@ HALFLIFE.MONSTERS =
 
   chicken =
   {
+    id = "monster_bullchicken"
+    r = 32
+    h = 80
     prob = 60
     health = 75
     damage = 9
@@ -269,6 +252,9 @@ HALFLIFE.MONSTERS =
 
   hound =
   {
+    id = "monster_houndeye"
+    r = 32
+    h = 80
     prob = 30
     health = 250
     damage = 30
@@ -277,6 +263,9 @@ HALFLIFE.MONSTERS =
 
   roach =
   {
+    id = "monster_cockroach"
+    r = 32
+    h = 80
     prob = 40
     health = 200
     damage = 15
@@ -285,6 +274,9 @@ HALFLIFE.MONSTERS =
 
   snark =
   {
+    id = "monster_snark"
+    r = 32
+    h = 80
     prob = 10
     health = 300
     damage = 20
@@ -293,6 +285,9 @@ HALFLIFE.MONSTERS =
 
   saur =
   {
+    id = "monster_ichthyosaur"
+    r = 32
+    h = 80
     prob = 3
     health = 300
     damage = 20
@@ -301,11 +296,18 @@ HALFLIFE.MONSTERS =
 
   zombie =
   {
+    id = "monster_zombie"
+    r = 32
+    h = 80
     prob = 60
     health = 80
     damage = 18
     attack = "missile"
   }
+
+--TODO  slave    = { id="monster_alien_slave", r=32, h=80, }
+
+--TODO  baby     = { id="monster_babycrab",    r=32, h=80, }
 }
 
 
@@ -313,6 +315,7 @@ HALFLIFE.WEAPONS =
 {
   crowbar =
   {
+    id = "weapon_crowbar"
     attack = "melee"
     rate = 2.0
     damage = 20
@@ -320,6 +323,7 @@ HALFLIFE.WEAPONS =
 
   shotty =
   {
+    id = "weapon_shotgun"
     pref = 50
     add_prob = 40
     start_prob = 50
@@ -334,6 +338,7 @@ HALFLIFE.WEAPONS =
 
   w357 =
   {
+    id = "weapon_357"
     pref = 50
     add_prob = 40
     start_prob = 50
@@ -348,6 +353,7 @@ HALFLIFE.WEAPONS =
 
   rpg =
   {
+    id = "weapon_rpg"
     pref = 50
     add_prob = 40
     start_prob = 50
@@ -360,6 +366,12 @@ HALFLIFE.WEAPONS =
     give = { {ammo="shell",count=5} }
   }
 
+--[[ TODO
+  nine_AR  = { id="weapon_9mmAR",      r=30, h=30, pass=true }
+  handgun  = { id="weapon_9mmhandgun", r=30, h=30, pass=true }
+  snark    = { id="weapon_snark",    r=30, h=30, pass=true }
+  gauss    = { id="weapon_gauss",    r=30, h=30, pass=true }
+--]]
 }
 
 
@@ -369,6 +381,7 @@ HALFLIFE.PICKUPS =
 
   health =
   {
+    id = "item_healthkit"
     prob = 50
     give = { {health=25} }
   }
@@ -381,10 +394,12 @@ HALFLIFE.PICKUPS =
 
   buckshot =
   {
+    id = "ammo_buckshot"
     prob = 10
     give = { {ammo="shell",count=20} }
   }
 
+--TODO :  clip = { id="ammo_9mmAR",    r=30, h=30, pass=true }
 }
 
 

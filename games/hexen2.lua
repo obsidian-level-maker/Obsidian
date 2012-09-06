@@ -23,102 +23,95 @@ HEXEN2 = { }
 HEXEN2.ENTITIES =
 {
   -- players
-  player1 = { id="info_player_start", kind="other", r=16,h=56 }
-  player2 = { id="info_player_coop",  kind="other", r=16,h=56 }
-  player3 = { id="info_player_coop",  kind="other", r=16,h=56 }
-  player4 = { id="info_player_coop",  kind="other", r=16,h=56 }
+  player1 = { id="info_player_start", r=16, h=56 }
+  player2 = { id="info_player_coop",  r=16, h=56 }
+  player3 = { id="info_player_coop",  r=16, h=56 }
+  player4 = { id="info_player_coop",  r=16, h=56 }
 
-  dm_player = { id="info_player_deathmatch", kind="other", r=16,h=56 }
+  dm_player = { id="info_player_deathmatch" }
 
   -- weapons
-  weapon2  = { id="wp_weapon2",       kind="pickup", r=30, h=30, pass=true }
-  weapon3  = { id="wp_weapon3",       kind="pickup", r=30, h=30, pass=true }
+  weapon2  = { id="wp_weapon2" }
+  weapon3  = { id="wp_weapon3" }
 
-  piece1   = { id="wp_weapon4_head",  kind="pickup", r=30, h=30, pass=true }
-  piece2   = { id="wp_weapon4_staff", kind="pickup", r=30, h=30, pass=true }
+  piece1   = { id="wp_weapon4_head" }
+  piece2   = { id="wp_weapon4_staff" }
 
 --[[
-  p_vorpal    = { id="wp_weapon2",       kind="pickup", r=30, h=30, pass=true }
-  p_axe       = { id="wp_weapon3",       kind="pickup", r=30, h=30, pass=true }
-  p1_purifier = { id="wp_weapon4_head",  kind="pickup", r=30, h=30, pass=true }
-  p2_purifier = { id="wp_weapon4_staff", kind="pickup", r=30, h=30, pass=true }
+  p_vorpal    = { id="wp_weapon2" }
+  p_axe       = { id="wp_weapon3" }
+  p1_purifier = { id="wp_weapon4_head" }
+  p2_purifier = { id="wp_weapon4_staff" }
 
-  c_ice    = { id="wp_weapon2",       kind="pickup", r=30, h=30, pass=true }
-  c_meteor = { id="wp_weapon3",       kind="pickup", r=30, h=30, pass=true }
-  c1_sun   = { id="wp_weapon4_head",  kind="pickup", r=30, h=30, pass=true }
-  c2_sun   = { id="wp_weapon4_staff", kind="pickup", r=30, h=30, pass=true }
+  c_ice    = { id="wp_weapon2" }
+  c_meteor = { id="wp_weapon3" }
+  c1_sun   = { id="wp_weapon4_head" }
+  c2_sun   = { id="wp_weapon4_staff" }
 
-  n_magic  = { id="wp_weapon2",       kind="pickup", r=30, h=30, pass=true }
-  n_bone   = { id="wp_weapon3",       kind="pickup", r=30, h=30, pass=true }
-  n1_staff = { id="wp_weapon4_head",  kind="pickup", r=30, h=30, pass=true }
-  n2_staff = { id="wp_weapon4_staff", kind="pickup", r=30, h=30, pass=true }
+  n_magic  = { id="wp_weapon2" }
+  n_bone   = { id="wp_weapon3" }
+  n1_staff = { id="wp_weapon4_head" }
+  n2_staff = { id="wp_weapon4_staff" }
 
-  a_crossbow   = { id="wp_weapon2",       kind="pickup", r=30, h=30, pass=true }
-  a_grenade    = { id="wp_weapon3",       kind="pickup", r=30, h=30, pass=true }
-  a1_vindictus = { id="wp_weapon4_head",  kind="pickup", r=30, h=30, pass=true }
-  a2_vindictus = { id="wp_weapon4_staff", kind="pickup", r=30, h=30, pass=true }
+  a_crossbow   = { id="wp_weapon2" }
+  a_grenade    = { id="wp_weapon3" }
+  a1_vindictus = { id="wp_weapon4_head" }
+  a2_vindictus = { id="wp_weapon4_staff" }
 --]]
 
-  -- pickups
-  blue_mana  = { id="item_mana_blue",  kind="pickup", r=20,h=16, pass=true }
-  green_mana = { id="item_mana_green", kind="pickup", r=20,h=16, pass=true }
-  dual_mana  = { id="item_mana_both",  kind="pickup", r=20,h=16, pass=true }
-
-  health    = { id="item_health",  kind="pickup", r=30, h=30, pass=true }
-
   -- keys
-  k_pharaoh  = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_pharaoh  = { id="puzzle_piece",
                  fields={ puzzle_id="e1", netname="Pharaoh's Key" } }
-  k_anubia   = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_anubia   = { id="puzzle_piece",
                  fields={ puzzle_id="ankey", netname="Key of Anubia" } }
-  k_ra       = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_ra       = { id="puzzle_piece",
                  fields={ puzzle_id="rakey", netname="Key of Ra" } }
-  k_horus    = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_horus    = { id="puzzle_piece",
                  fields={ puzzle_id="eyeh", netname="Eye of Horus" } }
 
-  k_soul     = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_soul     = { id="puzzle_piece",
                  fields={ puzzle_id="soul", netname="Soul Key" } }
-  k_stable   = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_stable   = { id="puzzle_piece",
                  fields={ puzzle_id="stkey", netname="Stable Key" } }
-  k_tailor   = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_tailor   = { id="puzzle_piece",
                  fields={ puzzle_id="takey", netname="Tailor's Key" } }
-  k_treasury = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_treasury = { id="puzzle_piece",
                  fields={ puzzle_id="trkey", netname="Treasury Key" } }
-  k_guardian = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_guardian = { id="puzzle_piece",
                  fields={ puzzle_id="s2", netname="Guardian Key" } }
 
-  k_stone    = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_stone    = { id="puzzle_piece",
                  fields={ puzzle_id="m1", netname="Stone Key" } }
-  k_skull    = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_skull    = { id="puzzle_piece",
                  fields={ puzzle_id="m2", netname="Crystal Skull" } }
-  k_jade     = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_jade     = { id="puzzle_piece",
                  fields={ puzzle_id="m3", netname="Jade Skull" } }
-  k_serpent  = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_serpent  = { id="puzzle_piece",
                  fields={ puzzle_id="m4", netname="Serpent's Heart" } }
 
-  k_fire     = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_fire     = { id="puzzle_piece",
                  fields={ puzzle_id="fire", netname="Element of Fire" } }
-  k_water    = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_water    = { id="puzzle_piece",
                  fields={ puzzle_id="water", netname="Element of Water" } }
-  k_air      = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_air      = { id="puzzle_piece",
                  fields={ puzzle_id="air", netname="Element of Air" } }
-  k_earth    = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_earth    = { id="puzzle_piece",
                  fields={ puzzle_id="earth", netname="Element of Earth" } }
 
-  k_crystal  = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_crystal  = { id="puzzle_piece",
                  fields={ puzzle_id="r5", netname="Power Crystal" } }
-  k_void     = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_void     = { id="puzzle_piece",
                  fields={ puzzle_id="r6", netname="Void Stone" } }
-  k_sun      = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_sun      = { id="puzzle_piece",
                  fields={ puzzle_id="r7", netname="Sun Stone" } }
-  k_shadow   = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_shadow   = { id="puzzle_piece",
                  fields={ puzzle_id="r8", netname="Shadow Stone" } }
 
-  k_sphere   = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_sphere   = { id="puzzle_piece",
                  fields={ puzzle_id="gsphere", netname="Gold Sphere" } }
-  k_gold     = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_gold     = { id="puzzle_piece",
                  fields={ puzzle_id="r1", netname="Gold Bar" } }
-  k_silver   = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+  k_silver   = { id="puzzle_piece",
                  fields={ puzzle_id="silver", netname="Silver Bar" } }
 
   -- scenery
@@ -126,12 +119,12 @@ HEXEN2.ENTITIES =
 
   -- special
 
-  trigger    = { id="trigger_multiple", kind="other", r=1, h=1, pass=true }
-  change_lev = { id="trigger_changelevel", kind="other", r=1, h=1, pass=true }
-  teleport   = { id="trigger_teleport", kind="other", r=1, h=1, pass=true }
+  light = { id="light" }
+  sun   = { id="oblige_sun" }
 
-  light = { id="light",      kind="other", r=1, h=1, pass=true }
-  sun   = { id="oblige_sun", kind="other", r=1, h=1, pass=true }
+  trigger    = { id="trigger_multiple" }
+  change_lev = { id="trigger_changelevel" }
+  teleport   = { id="trigger_teleport" }
 }
 
 
@@ -829,6 +822,7 @@ HEXEN2.PICKUPS =
 
   health =
   {
+    id = "item_health"
     prob = 50
     give = { {health=25} }
   }
@@ -841,16 +835,19 @@ HEXEN2.PICKUPS =
 
   blue_mana =
   {
+    id = "item_mana_blue"
     prob = 10
     give = { {ammo="blue_mana",count=20} }
   }
 
   green_mana =
   {
+    id = "item_mana_green"
     prob = 10
     give = { {ammo="green_mana",count=20} }
   }
 
+  --TODO: dual_mana  = { id="item_mana_both" }
 }
 
 
