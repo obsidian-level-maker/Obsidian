@@ -24,91 +24,71 @@ QUAKE = {}
 QUAKE.ENTITIES =
 {
   -- players
-  player1 = { id="info_player_start", kind="other", r=16,h=56 }
-  player2 = { id="info_player_coop",  kind="other", r=16,h=56 }
-  player3 = { id="info_player_coop",  kind="other", r=16,h=56 }
-  player4 = { id="info_player_coop",  kind="other", r=16,h=56 }
+  player1 = { id="info_player_start", r=16, h=56 }
+  player2 = { id="info_player_coop",  r=16, h=56 }
+  player3 = { id="info_player_coop",  r=16, h=56 }
+  player4 = { id="info_player_coop",  r=16, h=56 }
 
-  dm_player = { id="info_player_deathmatch", kind="other", r=16,h=56 }
+  dm_player = { id="info_player_deathmatch" }
 
-  teleport_spot = { id="info_teleport_destination", kind="other", r=16,h=56, pass=true }
+  teleport_spot = { id="info_teleport_destination" }
 
-  -- bosses
-  Chthon   = { id="monster_boss",   kind="monster", r=128, h=160 }
-  Shub     = { id="monster_oldone", kind="monster", r=128, h=160 }
+  -- keys
+  k_silver = { id="item_key1" }
+  k_gold   = { id="item_key2" }
 
-  -- pickups
-  k_silver = { id="item_key1", kind="pickup", r=30, h=30, pass=true }
-  k_gold   = { id="item_key2", kind="pickup", r=30, h=30, pass=true }
-
-  heal_25 = { id="item_health", spawnflags=0, kind="pickup", r=30, h=30, pass=true }
-  heal_10 = { id="item_health", spawnflags=1, kind="pickup", r=30, h=30, pass=true }
-  mega    = { id="item_health", spawnflags=2, kind="pickup", r=30, h=30, pass=true }
-
-  green_armor  = { id="item_armor1",   kind="pickup", r=30, h=30, pass=true }
-  yellow_armor = { id="item_armor2",   kind="pickup", r=30, h=30, pass=true }
-  red_armor    = { id="item_armorInv", kind="pickup", r=30, h=30, pass=true }
-
-  shell_20  = { id="item_shells",  spawnflags=0, kind="pickup", r=30, h=30, pass=true }
-  shell_40  = { id="item_shells",  spawnflags=1, kind="pickup", r=30, h=30, pass=true }
-  nail_25   = { id="item_spikes",  spawnflags=0, kind="pickup", r=30, h=30, pass=true }
-  nail_50   = { id="item_spikes",  spawnflags=1, kind="pickup", r=30, h=30, pass=true }
-  rocket_5  = { id="item_rockets", spawnflags=0, kind="pickup", r=30, h=30, pass=true }
-  rocket_10 = { id="item_rockets", spawnflags=1, kind="pickup", r=30, h=30, pass=true }
-  cell_6    = { id="item_cells",   spawnflags=0, kind="pickup", r=30, h=30, pass=true }
-  cell_12   = { id="item_cells",   spawnflags=1, kind="pickup", r=30, h=30, pass=true }
-
-  suit   = { id="item_artifact_envirosuit",      kind="pickup", r=30, h=30, pass=true }
-  invis  = { id="item_artifact_invisibility",    kind="pickup", r=30, h=30, pass=true }
-  invuln = { id="item_artifact_invulnerability", kind="pickup", r=30, h=30, pass=true }
-  quad   = { id="item_artifact_super_damage",    kind="pickup", r=30, h=30, pass=true }
+  -- powerups
+  suit   = { id="item_artifact_envirosuit" }
+  invis  = { id="item_artifact_invisibility" }
+  invuln = { id="item_artifact_invulnerability" }
+  quad   = { id="item_artifact_super_damage" }
 
   -- scenery
-  barrel     = { id="misc_explobox",  kind="scenery", r=30, h=80 }
-  explode_bg = { id="misc_explobox2", kind="scenery", r=30, h=40 }
-  crucified  = { id="monster_zombie", spawnflags=1, kind="scenery", r=32, h=64 }
+  barrel     = { id="misc_explobox",  r=30, h=80 }
+  explode_bg = { id="misc_explobox2", r=30, h=40 }
+  crucified  = { id="monster_zombie", spawnflags=1, r=32, h=64 }
 
   -- light sources
-  torch      = { id="light_torch_small_walltorch",  kind="scenery", r=30, h=60, pass=true }
-  globe      = { id="light_globe", kind="scenery", r=10, h=10, pass=true }
-  flame1     = { id="light_flame_small_white", kind="scenery", r=10, h=10, pass=true }
-  flame2     = { id="light_flame_small_yellow", kind="scenery", r=10, h=10, pass=true }
-  flame3     = { id="light_flame_large_yellow", kind="scenery", r=10, h=10, pass=true }
+  torch      = { id="light_torch_small_walltorch",  r=30, h=60, pass=true }
+  globe      = { id="light_globe", r=10, h=10, pass=true }
+  flame1     = { id="light_flame_small_white", r=10, h=10, pass=true }
+  flame2     = { id="light_flame_small_yellow", r=10, h=10, pass=true }
+  flame3     = { id="light_flame_large_yellow", r=10, h=10, pass=true }
 
-  fireball   = { id="misc_fireball",  kind="scenery", r=10, h=10, pass=true }
+  fireball   = { id="misc_fireball",  r=10, h=10, pass=true }
 
   -- ambient sounds
-  snd_computer = { id="ambient_comp_hum",  kind="scenery", r=30, h=30, pass=true }
-  snd_buzz     = { id="ambient_light_buzz",kind="scenery", r=30, h=30, pass=true }
-  snd_buzz2    = { id="ambient_flouro_buzz",kind="scenery", r=30, h=30, pass=true }
-  snd_drip     = { id="ambient_drip",      kind="scenery", r=30, h=30, pass=true }
-  snd_drone    = { id="ambient_drone",     kind="scenery", r=30, h=30, pass=true }
-  snd_wind     = { id="ambient_suck_wind", kind="scenery", r=30, h=30, pass=true }
-  snd_swamp1   = { id="ambient_swamp1",    kind="scenery", r=30, h=30, pass=true }
-  snd_swamp2   = { id="ambient_swamp2",    kind="scenery", r=30, h=30, pass=true }
-  snd_thunder  = { id="ambient_thunder",   kind="scenery", r=30, h=30, pass=true }
+  snd_computer = { id="ambient_comp_hum",  r=30, h=30, pass=true }
+  snd_buzz     = { id="ambient_light_buzz",r=30, h=30, pass=true }
+  snd_buzz2    = { id="ambient_flouro_buzz",r=30, h=30, pass=true }
+  snd_drip     = { id="ambient_drip",      r=30, h=30, pass=true }
+  snd_drone    = { id="ambient_drone",     r=30, h=30, pass=true }
+  snd_wind     = { id="ambient_suck_wind", r=30, h=30, pass=true }
+  snd_swamp1   = { id="ambient_swamp1",    r=30, h=30, pass=true }
+  snd_swamp2   = { id="ambient_swamp2",    r=30, h=30, pass=true }
+  snd_thunder  = { id="ambient_thunder",   r=30, h=30, pass=true }
 
   -- special
 
-  dummy = { id="info_null",  kind="other", r=1, h=1, pass=true }
+  dummy = { id="info_null" }
 
-  light = { id="light",      kind="other", r=1, h=1, pass=true }
-  sun   = { id="oblige_sun", kind="other", r=1, h=1, pass=true }
+  light = { id="light" }
+  sun   = { id="oblige_sun" }
 
-  trigger    = { id="trigger_multiple", kind="other", r=1, h=1, pass=true }
-  change_lev = { id="trigger_changelevel", kind="other", r=1, h=1, pass=true }
-  teleport   = { id="trigger_teleport", kind="other", r=1, h=1, pass=true }
+  trigger    = { id="trigger_multiple" }
+  change_lev = { id="trigger_changelevel" }
+  teleport   = { id="trigger_teleport" }
 
-  door = { id="func_door",  kind="other", r=1, h=1, pass=true }
-  lift = { id="func_plat",  kind="other", r=1, h=1, pass=true }
-  wall = { id="func_wall",  kind="other", r=1, h=1, pass=true }
-  button = { id="func_button", kind="other", r=1, h=1, pass=true }
+  door = { id="func_door" }
+  lift = { id="func_plat" }
+  wall = { id="func_wall" }
+  button = { id="func_button" }
 
-  secret = { id="trigger_secret", kind="other", r=1, h=1, pass=true }
-  secret_door = { id="func_door_secret", kind="other", r=1, h=1, pass=true }
+  secret = { id="trigger_secret" }
+  secret_door = { id="func_door_secret" }
 
-  camera = { id="info_intermission", kind="other", r=1, h=1, pass=true }
-  spiker = { id="trap_spikeshooter", kind="other", r=1, h=1, pass=true }
+  camera = { id="info_intermission" }
+  spiker = { id="trap_spikeshooter" }
 }
 
 
@@ -1984,6 +1964,8 @@ QUAKE.PICKUPS =
 
   heal_10 =
   {
+    id = "item_health"
+    spawnflags = 1
     prob = 20
     cluster = { 1,2 }
     give = { {health=8} }   -- real amount is 5-10 units
@@ -1991,12 +1973,16 @@ QUAKE.PICKUPS =
 
   heal_25 =
   {
+    id = "item_health"
+    spawnflags = 0
     prob = 50
     give = { {health=25} }
   }
 
   mega =
   {
+    id = "item_health"
+    spawnflags = 2
     prob = 3
     big_item = true
     give = { {health=70} }  -- gives 100 but it rots aways
@@ -2006,18 +1992,21 @@ QUAKE.PICKUPS =
 
   green_armor =
   {
+    id = "item_armor1"
     prob = 9
     give = { {health=30} }
   }
 
   yellow_armor =
   {
+    id = "item_armor2"
     prob = 3
     give = { {health=90} }
   }
 
   red_armor =
   {
+    id = "item_armorInv"
     prob = 1
     give = { {health=160} }
   }
@@ -2026,48 +2015,64 @@ QUAKE.PICKUPS =
 
   shell_20 =
   {
+    id = "item_shells"
+    spawnflags = 0
     prob = 10
     give = { {ammo="shell",count=20} }
   }
 
   shell_40 =
   {
+    id = "item_shells"
+    spawnflags = 1
     prob = 20
     give = { {ammo="shell",count=40} }
   }
 
   nail_25 =
   {
+    id = "item_spikes"
+    spawnflags = 0
     prob = 10
     give = { {ammo="nail",count=25} }
   }
 
   nail_50 =
   {
+    id = "item_spikes"
+    spawnflags = 1
     prob = 20
     give = { {ammo="nail",count=50} }
   }
 
   rocket_5 =
   {
+    id = "item_rockets"
+    spawnflags = 0
     prob = 10
     give = { {ammo="rocket",count=5} }
   }
 
   rocket_10 =
   {
+    id = "item_rockets"
+    spawnflags = 1
     prob = 20
     give = { {ammo="rocket",count=10} }
   }
 
   cell_6 =
   {
+    id = "item_cells"
+    spawnflags = 0
     prob = 10
     give = { {ammo="cell",count=6} }
   }
 
   cell_12 =
   {
+    id = "item_cells"
+    spawnflags = 1
     prob = 20
     give = { {ammo="cell",count=12} }
   }
