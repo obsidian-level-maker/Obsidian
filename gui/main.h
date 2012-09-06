@@ -124,7 +124,6 @@ game_interface_c * Doom_GameObject();
 game_interface_c * Nukem_GameObject();
 game_interface_c * Quake1_GameObject();
 game_interface_c * Quake2_GameObject();
-game_interface_c * Wolf_GameObject();
 
 
 #endif /* __OBLIGE_MAIN_H__ */
