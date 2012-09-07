@@ -125,6 +125,8 @@ HARMONY.MATERIALS =
 
   ORANJE3 = { t="0ORANJE3", f="FLOOR0_3" }
 
+  LOGO_1 = { t="0IMP", f="FLOOR4_8" }
+
 
   -- floors --
 
@@ -988,6 +990,7 @@ HARMONY.SKINS =
   Start_basic =
   {
     _prefab = "START_SPOT"
+    _where  = "middle"
 
     top = "O_BOLT"
   }
@@ -998,6 +1001,7 @@ HARMONY.SKINS =
   Exit_switch =
   {
     _prefab = "EXIT_PILLAR",
+    _where  = "middle"
 
     switch = "BROWNHUG"
     exit = "METAL"
@@ -1012,14 +1016,14 @@ HARMONY.SKINS =
   Stair_Up1 =
   {
     _prefab = "STAIR_6"
-    _where  = "chunk"
+    _where  = "floor"
     _deltas = { 32,48,48,64,64,80 }
   }
 
   Stair_Down1 =
   {
     _prefab = "NICHE_STAIR_8"
-    _where  = "chunk"
+    _where  = "floor"
     _deltas = { -32,-48,-64,-64,-80,-96 }
   }
 
@@ -1109,7 +1113,7 @@ HARMONY.SKINS =
   Switch_blue1 =
   {
     _prefab = "SMALL_SWITCH"
-    _where  = "chunk"
+    _where  = "middle"
     _switch = "sw_blue"
 
     switch_h = 64
@@ -1127,7 +1131,7 @@ HARMONY.SKINS =
   Teleporter1 =
   {
     _prefab = "TELEPORT_PAD"
-    _where  = "chunk"
+    _where  = "middle"
 
     tele = "TELEPORT"
     side = "TELEPORT"
@@ -1142,6 +1146,67 @@ HARMONY.SKINS =
   }
 
 
+  ---| PICTURES |---
+
+  Pic_Logo =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "LOGO_1"
+    pic_w = 128
+    pic_h = 128
+
+    light = 48
+  }
+
+
+  ---| HALLWAY PIECES |---
+
+  Hall_Basic_I =
+  {
+    _prefab = "HALL_BASIC_I"
+    _shape  = "I"
+  }
+
+  Hall_Basic_C =
+  {
+    _prefab = "HALL_BASIC_C"
+    _shape  = "C"
+  }
+
+  Hall_Basic_T =
+  {
+    _prefab = "HALL_BASIC_T"
+    _shape  = "T"
+  }
+
+  Hall_Basic_P =
+  {
+    _prefab = "HALL_BASIC_P"
+    _shape  = "P"
+  }
+
+  Hall_Basic_I_Stair =
+  {
+    _prefab = "HALL_BASIC_I_STAIR"
+    _shape  = "IS"
+  }
+
+  Hall_Basic_I_Lift =
+  {
+    _prefab = "HALL_BASIC_I_LIFT"
+    _shape  = "IL"
+    _tags   = 1
+
+    lift = "LIFT"
+    top  = "LIFT"
+
+    raise_W1 = 130
+    lower_WR = 88  -- 120
+    lower_SR = 62  -- 123
+  }
 }
 
 
@@ -1155,6 +1220,8 @@ HARMONY.THEME_DEFAULTS =
 
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
 
+  logos = { Pic_Logo = 50 }
+
 --!!  keys = { kn_blue=50, kn_purple=50, kn_yellow=50 }
 
 --!!  switch_doors = { Door_SW_blue = 50 }
@@ -1163,6 +1230,27 @@ HARMONY.THEME_DEFAULTS =
 
   teleporters = { Teleporter1 = 50 }
 
+  hallway_groups = { basic = 50 }
+
+  mini_halls = { Hall_Basic_I = 50 }
+}
+
+
+HARMONY.HALLWAY_GROUPS =
+{
+  basic =
+  {
+    pieces =
+    {
+      Hall_Basic_I = 50
+      Hall_Basic_C = 50
+      Hall_Basic_T = 50
+      Hall_Basic_P = 50
+
+      Hall_Basic_I_Stair = 20
+      Hall_Basic_I_Lift  = 2
+    }
+  }
 }
 
 
@@ -1674,7 +1762,7 @@ end
 
 ------------------------------------------------------------
 
-UNFINISHED["harmony"] =
+OB_GAMES["harmony"] =
 {
   label = "Harmony"
 
