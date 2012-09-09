@@ -1094,6 +1094,10 @@ function CHUNK_CLASS.build_door(C, dir, LINK, f_h, c_h, long)
     reqs.narrow = 1
   end
 
+  if not THEME.locked_doors then
+    error("Theme is missing 'locked_doors' table.")
+  end
+
   local poss_skins = Rooms_filter_skins(C.room or C.hall,
                         "locked_doors", THEME.locked_doors, reqs)
 
