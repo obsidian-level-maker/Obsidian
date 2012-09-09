@@ -120,7 +120,7 @@ HARMONY.MATERIALS =
 
   DOORTRAK = { t="DOORTRAK", f="CEIL5_1" }
 
-  LIFT  = { t="1LIFT2", f="FLAT5_2" }
+  LIFT  = { t="1LIFT2", f="STEP2" }
 
   YELLOWLITE = { t="PANBORD2", f="FLOOR4_8" }
 
@@ -128,6 +128,7 @@ HARMONY.MATERIALS =
   -- walls --
 
   ORANJE3 = { t="0ORANJE3", f="FLOOR0_3" }
+  STOEL4  = { t="1STOEL4",  f="RROCK13" }
 
   LOGO_1 = { t="0IMP", f="FLOOR4_8" }
 
@@ -137,8 +138,12 @@ HARMONY.MATERIALS =
   GREENWALL = { t="1GREEN", f="FLOOR4_1" }
   PURPLE_UGH = { t="SP_DUDE8", f="DEM1_5" }
 
+  GRAY1 = { t="ZZWOLF7", f="FLAT5_4" }
+
 
   -- floors --
+
+  DIRT  = { f="MFLR8_2", t="STONE6" }
 
   FLOOR4_8 = { f="FLOOR4_8", t="SILVER3" }
 
@@ -526,40 +531,58 @@ HARMONY.ROOM_THEMES =
 {
   Tech_generic =
   {
+    facades =
+    {
+      STOEL4 = 50
+    }
+
     walls =
     {
-      ORANJE3=50,
+      ORANJE3 = 50
     }
 
     floors =
     {
-      ORANJE3=50,
+      ORANJE3 = 50
     }
 
     ceilings =
     {
-      FLOOR4_8=50,
+      FLOOR4_8 = 50
     }
   }
+
+
+  Hallway_generic =
+  {
+    walls =
+    {
+      GRAY1 = 50
+    }
+  }
+
 
   Cave_generic =
   {
     naturals =
     {
-      ROCKS=50
+      ROCKS = 50
     }
   }
+
 
   Outdoors_generic =
   {
     floors =
     {
-      ORANJE3=50,
+      DIRT = 50
+      GRASS2 = 15
     }
 
     naturals =
     {
-      GRASS2=50, ROCKS=10
+      GRASS2 = 50
+      ROCKS = 10
     }
   }
 }
@@ -574,6 +597,8 @@ HARMONY.LEVEL_THEMES =
     liquids = { water=90, nukage=30, lava=10 }
 
     buildings = { Tech_generic=50 }
+
+    hallways = { Hallway_generic=50 }
 
     caves = { Cave_generic=50 }
 
