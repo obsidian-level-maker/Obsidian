@@ -73,8 +73,6 @@ CHEX3.ENTITIES =
 ---===========>>
 
 
-  -- monsters --
-
   -- pickups --
 
   kf_red    = { id=38 }
@@ -546,7 +544,7 @@ CHEX3.MATERIALS =
   CJLODG17 = { t="CJLODG17", f="XX" }
 
   CJMETE01 = { t="CJMETE01", f="XX" }
-  CJMINE01 = { t="CJMINE01", f="XX" }
+  CJMINE01 = { t="CJMINE01", f="CJFMINE1" }
   CJMINE02 = { t="CJMINE02", f="XX" }
   CJREDDR0 = { t="CJREDDR0", f="XX" }
   CJSHIP01 = { t="CJSHIP01", f="XX" }
@@ -680,6 +678,7 @@ CHEX3.SKINS =
   Start_basic =
   {
     _prefab = "START_SPOT"
+    _where  = "middle"
 
     top = "O_BOLT"
   }
@@ -687,9 +686,10 @@ CHEX3.SKINS =
 
   ----| EXITS |----
 
-  Exit_switch =
+  Exit_pillar =
   {
     _prefab = "EXIT_PILLAR",
+    _where  = "middle"
 
     switch = "SW_COMPUTE"
     exit = "METAL"
@@ -704,21 +704,21 @@ CHEX3.SKINS =
   Stair_Up1 =
   {
     _prefab = "STAIR_6"
-    _where  = "chunk"
+    _where  = "floor"
     _deltas = { 32,48,48,64,64,80 }
   }
 
   Stair_Down1 =
   {
     _prefab = "NICHE_STAIR_8"
-    _where  = "chunk"
+    _where  = "floor"
     _deltas = { -32,-48,-64,-64,-80,-96 }
   }
 
   Lift_Up1 =
   {
     _prefab = "LIFT_UP"
-    _where  = "chunk"
+    _where  = "floor"
     _tags   = 1
     _deltas = { 96,128,160,192 }
 
@@ -732,7 +732,7 @@ CHEX3.SKINS =
   Lift_Down1 =
   {
     _prefab = "LIFT_DOWN"
-    _where  = "chunk"
+    _where  = "floor"
     _tags   = 1
     _deltas = { -96,-128,-160,-192 }
 
@@ -829,7 +829,7 @@ CHEX3.SKINS =
   Switch_alum =
   {
     _prefab = "SMALL_SWITCH"
-    _where  = "chunk"
+    _where  = "middle"
     _switch = "sw_alum"
 
     switch_h = 64
@@ -841,6 +841,68 @@ CHEX3.SKINS =
     special = 103
   }
 
+
+  ---| PICTURES |---
+
+  Pic_Logo =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "CJLOGO1" 
+    pic_w = 128
+    pic_h = 128
+
+    light = 48
+  }
+
+
+  ---| HALLWAY PIECES |---
+
+  Hall_Basic_I =
+  {
+    _prefab = "HALL_BASIC_I"
+    _shape  = "I"
+  }
+
+  Hall_Basic_C =
+  {
+    _prefab = "HALL_BASIC_C"
+    _shape  = "C"
+  }
+
+  Hall_Basic_T =
+  {
+    _prefab = "HALL_BASIC_T"
+    _shape  = "T"
+  }
+
+  Hall_Basic_P =
+  {
+    _prefab = "HALL_BASIC_P"
+    _shape  = "P"
+  }
+
+  Hall_Basic_I_Stair =
+  {
+    _prefab = "HALL_BASIC_I_STAIR"
+    _shape  = "IS"
+  }
+
+  Hall_Basic_I_Lift =
+  {
+    _prefab = "HALL_BASIC_I_LIFT"
+    _shape  = "IL"
+    _tags   = 1
+
+    lift = "LIFT"
+    top  = "LIFT"
+
+    raise_W1 = 130
+    lower_WR = 88  -- 120
+    lower_SR = 62  -- 123
+  }
 }
 
 
@@ -850,7 +912,7 @@ CHEX3.THEME_DEFAULTS =
 {
   starts = { Start_basic = 50 }
 
-  exits = { Exit_switch = 50 }
+  exits = { Exit_pillar = 50 }
 
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50,
              Lift_Up1 = 20, Lift_Down1 = 20 }
@@ -863,11 +925,35 @@ CHEX3.THEME_DEFAULTS =
 
   locked_doors = { Locked_blue=50, Locked_red=50, Locked_yellow=50,
                    Door_SW_alum = 50 }
+
+  logos = { Pic_Logo=50 }
+
+  hallway_groups = { basic = 50 }
+
+  mini_halls = { Hall_Basic_I = 50 }
 }
 
 
 CHEX3.NAME_THEMES =
 {
+}
+
+
+CHEX3.HALLWAY_GROUPS =
+{
+  basic =
+  {
+    pieces =
+    {
+      Hall_Basic_I = 50
+      Hall_Basic_C = 50
+      Hall_Basic_T = 50
+      Hall_Basic_P = 50
+
+      Hall_Basic_I_Stair = 20
+      Hall_Basic_I_Lift  = 2
+    }
+  }
 }
 
 
@@ -877,34 +963,51 @@ CHEX3.ROOM_THEMES =
   {
     walls =
     {
-      BLUE_WALL=30,
-      GRAY_PANELS=10, GRAY_PIPES=20, GRAY_STRIPE=10,
-      ORANGE_TILE=30, 
-      TAN1=10, TAN2=10
+      BLUE_WALL = 30
+      GRAY_PANELS = 10
+      GRAY_PIPES = 20
+      GRAY_STRIPE = 10
+      ORANGE_TILE = 30
+      TAN1 = 10
+      TAN2 = 10
     }
 
     floors =
     {
-      DARK_GRAY=50, BLUE_CARPET=50,
-      ORANGE_TILE=50, VERYDARK_BLUE=50,
+      DARK_GRAY = 50
+      BLUE_CARPET = 50
+      ORANGE_TILE = 50
+      VERYDARK_BLUE = 50
     }
 
     ceilings =
     {
-      CEIL4_1=50,
+      CEIL4_1 = 50
     }
   }
 
   Cave_generic =
   {
-    naturals = { CAVE=50 }
+    naturals =
+    { 
+      CAVE = 50
+      CJMINE02 = 15
+    }
   }
 
   Outdoors_generic =
   {
-    floors = { RED_FLOOR=50, TAN1=50, DARK_GRAY=50 }
+    floors =
+    {
+      RED_FLOOR = 50
+      DARK_GRAY = 50
+      TAN1 = 50
+    }
 
-    naturals = { DIRT=50 }
+    naturals =
+    {
+      DIRT = 50
+    }
   }
 
   -- TODO: Outdoor_space_port
@@ -1405,7 +1508,7 @@ function CHEX3.get_levels()
   local  EP_NUM = (OB_CONFIG.length == "full"   ? 3 ; 1)
   local MAP_NUM = (OB_CONFIG.length == "single" ? 1 ; 5)
 
-  if OB_CONFIG.length == "few" then MAP_NUM = 2 end
+  if OB_CONFIG.length == "few" then MAP_NUM = 3 end
 
   for ep_index = 1,EP_NUM do
     local EPI =
@@ -1506,7 +1609,7 @@ end
 ------------------------------------------------------------
 
 
-UNFINISHED["chex3"] =
+OB_GAMES["chex3"] =
 {
   label = "Chex Quest 3"
   format = "doom"
