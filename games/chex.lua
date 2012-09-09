@@ -545,7 +545,7 @@ CHEX3.MATERIALS =
 
   CJMETE01 = { t="CJMETE01", f="XX" }
   CJMINE01 = { t="CJMINE01", f="CJFMINE1" }
-  CJMINE02 = { t="CJMINE02", f="XX" }
+  CJMINE02 = { t="CJMINE02", f="CJFMINE1" }
   CJREDDR0 = { t="CJREDDR0", f="XX" }
   CJSHIP01 = { t="CJSHIP01", f="XX" }
   CJSHIP02 = { t="CJSHIP02", f="XX" }
@@ -650,8 +650,8 @@ CHEX3.MATERIALS =
 
   -- other --
 
-  O_PILL   = { t="SP_ROCK1", f="O_PILL",   sane=1 }
-  O_BOLT   = { t="SP_ROCK2", f="O_BOLT",   sane=1 }
+  O_BOLT   = { t="SP_ROCK1", f="O_BOLT",   sane=1 }
+  O_PILL   = { t="SP_ROCK2", f="O_PILL",   sane=1 }
   O_RELIEF = { t="MIDBRN1",  f="O_RELIEF", sane=1 }
   O_CARVE  = { t="NUKESLAD", f="O_CARVE",  sane=1 }
   O_NEON   = { t="TEKWALL2", f="CEIL4_1",  sane=1 }
@@ -1549,9 +1549,7 @@ function CHEX3.get_levels()
 end
 
 
--- TODO: get this working
---[[
-function CHEX1.make_cool_gfx()
+function CHEX3.make_cool_gfx()
   local GREEN =
   {
     0, 7, 127, 126, 125, 124, 123, 122, 120, 118, 116, 113
@@ -1584,11 +1582,9 @@ function CHEX1.make_cool_gfx()
   gui.set_colormap(3, colmaps[3])
   gui.set_colormap(4, colmaps[4])
 
-  -- FIXME !!!!  make sure this works with all three games
-
   -- patches : SP_ROCK1, SP_ROCK2, MIDBRN1, NUKESLAD
-  gui.wad_logo_gfx("WALL63_1", "p", "PILL",   128,128, 1)
-  gui.wad_logo_gfx("WALL63_2", "p", "BOLT",   128,128, 2)
+  gui.wad_logo_gfx("WALL63_1", "p", "BOLT",   128,128, 2)
+  gui.wad_logo_gfx("WALL63_2", "p", "PILL",   128,128, 1)
   gui.wad_logo_gfx("DOOR12_1", "p", "RELIEF",  64,128, 3)
   gui.wad_logo_gfx("WALL57_1", "p", "CARVE",   64,128, 4)
 
@@ -1600,10 +1596,9 @@ function CHEX1.make_cool_gfx()
 end
 
 
-function CHEX1.all_done()
-  CHEX1.make_cool_gfx()
+function CHEX3.all_done()
+  CHEX3.make_cool_gfx()
 end
---]]
 
 
 ------------------------------------------------------------
@@ -1623,8 +1618,7 @@ OB_GAMES["chex3"] =
   {
     setup        = CHEX3.setup
     get_levels   = CHEX3.get_levels
-
---TODO:  all_done     = CHEX3.all_done
+    all_done     = CHEX3.all_done
   }
 }
 
