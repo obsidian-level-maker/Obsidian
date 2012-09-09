@@ -20,7 +20,7 @@ CHANGES (since 3.57)
 - support FreeDoom 0.7
 - support for Absolution, the Doom64 TC
 - support for HacX 1.2 and Harmony
-- preliminary work on Chex Quest 1, 2 and 3 [not usable yet]
+- support for Chex Quest 3
 - preliminary work on Hexen II and Half-Life [not usable yet]
 
 - DOOM themes for Episodes 2 and 4, courtesy Mr Chris
