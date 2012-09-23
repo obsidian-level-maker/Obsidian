@@ -36,6 +36,48 @@ OBLIGE 4.28 is the current version.
 
 <h3>NEWS</h3>
 
+<div class="newsdate">30-Sep-2012:</div>
+<blockquote class="news">
+
+I hadn't been doing much with OBLIGE for a long time,
+but for the sake of moving forward with the V4 codebase I am
+happy to announce that.....
+
+<p>
+VERSION 4.28 HAS BEEN RELEASED!
+
+<p>
+OK, it's true that this is not an Earth-shattering release,
+and somewhat of a backwards step compared with the last V3
+release.
+However there are still some good things in this version:
+
+<ul class="spacey_list">
+
+<li>Quake support is much better than V3, there are no collision
+problems, and the maps now have lighting and vis.
+<li>Quake 2 support!
+<li>Hexen is supported again, with hub support
+<li>support for Absolution, the Doom64 TC
+<li>support for FreeDoom, HacX and Harmony
+<li>teleporters!
+<li>multiple paths between rooms
+
+</ul>
+
+I'm not sure exactly what I'm going to do now, but I definitely have
+some ideas that I want to experiment with.  Supporting so many
+games is quite a burden, though, and I may need to concentrate on
+a single game for a while.
+
+<p>
+Anyway, I hope you have some fun with this release.
+
+</blockquote>
+
+
+<hr style="clear: right;">
+
 <div class="newsdate">01-Jan-2012:</div>
 <blockquote class="news">
 
