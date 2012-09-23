@@ -49,7 +49,7 @@ A place where two rooms are connected so the player can pass
 between them.
 Connections may be locked, so that the player needs to find a
 key or switch to open it.
-Doorways and doors are the normal kinds of connections, but
+Archways and doors are the normal kinds of connections, but
 other kinds (such as teleporters and one-way drop-offs) are
 possible too.
 </div>
@@ -375,7 +375,7 @@ V1 &nbsp; V2 &nbsp; V3 &nbsp; V4
 These designate the major versions of OBLIGE.
 V1 was merely a prototype and was never publicly released.
 V2 and V3 are older versions and are no longer being developed.
-V4 is the latest codebase, but has not yet had any official releases.
+V4 is the latest codebase.
 
 <p>
 <i>(see the <a href="doc_history.html">History</a> page for
