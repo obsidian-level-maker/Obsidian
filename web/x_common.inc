@@ -105,3 +105,12 @@
   <a href="blog_nov2008.html">Nov-2008</a>
 </block>
 
+
+<block ModMENU>
+  <div class="menu">
+  <use TopCorners>
+  <use MenuHome>
+  <use MenuWhere where="MODDING">
+  </div>
+</block>
+

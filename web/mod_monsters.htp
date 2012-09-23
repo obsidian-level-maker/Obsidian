@@ -1,0 +1,57 @@
+<set O_WHERE="Modding">
+
+<file include="x_common.inc">
+<file include="x_header.inc">
+
+<use ModMENU>
+
+<div class="submenu">
+<use SubSpacer>
+<use SubWhere where="NEW MONSTERS">
+</div>
+
+<div class="rest">
+
+<h3>ADDING NEW MONSTERS</h3>
+
+This tutorial will show how to create a module which adds new monsters
+for OBLIGE to use in the generated levels.
+
+
+<h3>Step 1</h3>
+
+In the <i>modules</i> folder in OBLIGE, there is a file called
+<b>new_monsters.template</b>.  Copy this to a new file
+
+
+<h3>Step 2</h3>
+
+Open this file with a text editor, such as NOTEPAD which comes with
+the Windows operating system, or gedit for Linux.  Do NOT use a
+word processor program, such as Microsoft Word, because they do not
+create plain text files and OBLIGE will not be able to read them.
+
+<p>
+Find all occurrances of the word 'CUSTOM' and change it to your
+name for the module (uppercase is best).  For example, change it to
+'XXX'.
+
+
+<h3>Step 3</h3>
+
+
+<h3>Step 4</h3>
+Now you can test your module.
+Start OBLIGE (if it was already open then close it first), and your
+new module should appear in the modules list.  Enable your module,
+and build some levels, and the new monster(s) should appear.
+
+<p>
+Testing tips:
+<p>....
+
+
+</div class="rest">
+
+<file include="x_footer.inc">
+
