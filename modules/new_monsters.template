@@ -1,10 +1,6 @@
 ----------------------------------------------------------------
 --  TEMPLATE for adding NEW MONSTERS
 ----------------------------------------------------------------
---
---  TODO: describe stuff
---
-----------------------------------------------------------------
 
 CUSTOM = { }
 
@@ -13,15 +9,13 @@ CUSTOM.MONSTERS =
   monster1 =
   {
     id = 1234
-    r = 16
-    h = 56 
-    prob = 1
-    skip_prob = 200
+    r = 32
+    h = 80 
+    prob = 30
     health = 100
-    damage = 4
-    attack = "melee"
-    never_promote = true
-    density = 0.2
+    damage = 10
+    attack = "missile"
+    density = 0.9
   }
 }
 
@@ -30,8 +24,7 @@ OB_MODULES["CUSTOM"] =
 {
   label = "CUSTOM"
 
-  for_games   = { doom2=1 }
-  for_engines = { zdoom=1 }
+  for_games = { doom2=1 }
 
   tables =
   {
