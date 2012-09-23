@@ -57,11 +57,11 @@ However there are still some good things in this version:
 <li>Quake support is much better than V3, there are no collision
 problems, and the maps now have proper lighting and vis.
 <li>Quake 2 support!
-<li>Hexen is supported again, with hub support
+<li>Hexen is supported again, with hubs
 <li>support for Absolution, the Doom64 TC
-<li>support for FreeDoom, HacX and Harmony
-<li>teleporters!
+<li>support for HacX and Harmony
 <li>multiple paths between rooms
+<li>teleporters
 
 </ul>
 

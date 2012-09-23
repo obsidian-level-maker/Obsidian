@@ -17,6 +17,10 @@
   <a href="doc_usage.html">Documentation</a>
 </block>
 
+<block MenuModding>
+  <a href="mod_monsters.html">Modding</a>
+</block>
+
 
 <block SubSpacer>
   &nbsp; &nbsp; &nbsp;
@@ -32,6 +36,7 @@
   <use TopCorners>
   <use MenuWhere where="HOME">
   <use MenuDocs>
+  <use MenuModding>
   </div>
 </block>
 
@@ -61,6 +66,7 @@
   <use TopCorners>
   <use MenuHome>
   <use MenuWhere where="DOCUMENTATION">
+  <use MenuModding>
   </div>
 </block>
 
@@ -110,6 +116,7 @@
   <div class="menu">
   <use TopCorners>
   <use MenuHome>
+  <use MenuDocs>
   <use MenuWhere where="MODDING">
   </div>
 </block>
