@@ -968,9 +968,6 @@ DONE:  module to create _debugging_ MAP file
 
 -  improved use of liquids.
 
--  have a table listing a quantized HSV for each texture/flat
-   and make aesthetic decisions using it.
-
 -  fight simulator: take amount of cover into account
 
 -  a module or style for Claustrophic levels
