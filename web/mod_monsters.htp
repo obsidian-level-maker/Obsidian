@@ -64,21 +64,102 @@ Example: <b>FOOBIE.MONSTERS =</b>
 <h3>Step 4</h3>
 
 Here you will create the entries for one or more monsters.
-There is already a single entry in the template, called 'monster1',
-which is defined by everything in between the curly brackets
-(<b>{</b> .... <b>}</b>).
+There is already a single entry in the template, called 'monster1'.
+Each entry is defined by fields in between curly brackets
+<b>{</b> .... <b>}</b>.
 You can add more monsters by copying an existing entry, making
 sure the opening and closing brackets match up.  If you mess up
 the brackets, OBLIGE will raise an error message when it starts.
 
 <p>
-You can give the monsters custom names, e.g. "demon3", but as
+You can give the monsters custom names, e.g. "demon3", but like
 before you can only use letters, digit and
 the underscore, and it cannot begin with a digit.
-If you added extra monster entries, they need to have different names.
+If you added extra monster entries, their names need to be
+different.
+Also, the name should be different to the ones for the game
+itself -- otherwise your monster will <i>replace</i>
+the existing one.
 
 <p>
-@@@@@
+Each monster entry consists of a number of field names and their values,
+with a single field on each line.  Here is a description of the
+most common fields you can use:
+
+
+<p>
+<b>Compulsory Fields:</b>
+
+<blockquote>
+<b>id</b> : this is the ID number of the monster, the same number you
+would use in the editor (like Doom Builder).
+</blockquote>
+
+<blockquote>
+<b>r</b> : the radius of the monster.
+If this is too small,
+this monster will probably end up being stuck in a wall or another monster.
+</blockquote>
+
+<blockquote>
+<b>h</b> : the height of the monster.
+</blockquote>
+
+<blockquote>
+<b>prob</b> : the probability of using this monster.
+Higher values make the monster more likely to be used in a room.
+Note this is NOT a percentage or absolute value, so values above 100
+are perfectly valid.
+</blockquote>
+
+<blockquote>
+<b>health</b> : the health points of the monster.
+</blockquote>
+
+<blockquote>
+<b>damage</b> : approximately how much the damage per second
+that the monster could inflict on the player.
+For melee monsters, this is how
+much damage it can do when up close to the player -- OBLIGE already
+knows that a far-away melee monster cannot hurt the player.
+</blockquote>
+
+<blockquote>
+<b>attack</b> : the main kind of attack the monster does.
+There are three possible values: "melee", "missile", and "hitscan"
+(these values are strings and must have the double quotes).
+</blockquote>
+
+
+<b>Optional Fields:</b>
+
+<blockquote>
+<b>level</b> : this is a rough indicator of where, in an episode
+or megawad, the monster should first appear.  
+Generally easy monsters have low numbers (1 to 3),
+tougher monsters are from 4 to 7,
+and boss monsters have values of 8 or 9.
+When no level value is present, the monster can appear in any map.
+</blockquote>
+
+<blockquote>
+<b>skip_prob</b> : a probability value of skipping this monster
+for the whole map.  Again this is not a percentage or absolute
+value -- but higher values mean more chance of it being skipped.
+</blockquote>
+
+<blockquote>
+<b>density</b> : this controls how many monsters to use in a room,
+where 1.0 is normal, and higher values produce more monsters.
+For particularly nasty monsters, like the Archvile in DOOM, low
+numbers like 0.2 is good for ensuring they are used sparingly.
+</blockquote>
+
+<blockquote>
+<b>float</b> : set this to "true" (without the quotes) for
+monsters which fly.  OBLIGE can place flying monsters in places
+which wouldn't make sense for normal ones.
+</blockquote>
 
 
 <h3>Step 5</h3>
