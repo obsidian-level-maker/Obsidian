@@ -1433,6 +1433,7 @@ QUAKE2.SKINS =
   Start_basic =
   {
     _prefab = "START_SPOT"
+    _where  = "middle"
 
     top = "O_BOLT"
   }
@@ -1443,9 +1444,26 @@ QUAKE2.SKINS =
   Exit_basic =
   {
     _prefab = "QUAKE2_EXIT_PAD"
+    _where  = "middle"
 
     pad  = "DOORSWT2"
     side = "RED1_2"
+  }
+
+
+  ----| PICTURES |----
+
+  Pic_Carve =
+  {
+    _prefab = "PICTURE"
+    _where  = "edge"
+    _long   = 192
+
+    pic   = "WINCOMP3_7"
+    pic_w = 64
+    pic_h = 64
+
+    light = 64
   }
 
 
@@ -1465,7 +1483,7 @@ QUAKE2.SKINS =
   Pedestal_1 =
   {
     _prefab = "PEDESTAL"
-    _where  = "chunk"
+    _where  = "middle"
 
     top  = "WSTLT1_1"   -- LIGHT03_5
     side = "METAL1_1"
@@ -1480,21 +1498,21 @@ QUAKE2.SKINS =
   Stair_Up1 =
   {
     _prefab = "STAIR_6"
-    _where  = "chunk"
+    _where  = "floor"
     _deltas = { 32,48,64,64,80 }
   }
 
   Stair_Down1 =
   {
     _prefab = "NICHE_STAIR_8"
-    _where  = "chunk"
+    _where  = "floor"
     _deltas = { -32,-48,-64,-80,-96 }
   }
 
   Lift_Up1 =
   {
     _prefab = "QUAKE_LIFT_UP"
-    _where  = "chunk"
+    _where  = "floor"
     _deltas = { 96,128,128,160,192 }
 
     lift = "GRNX2_7"
@@ -1503,7 +1521,7 @@ QUAKE2.SKINS =
   Lift_Down1 =
   {
     _prefab = "QUAKE_LIFT_DOWN"
-    _where  = "chunk"
+    _where  = "floor"
     _deltas = { -96,-128,-128,-160,-192 }
 
     lift = "GRNX2_7"
@@ -1582,7 +1600,7 @@ QUAKE2.SKINS =
   Switch_floor1 =
   {
     _prefab = "QUAKE_FLOOR_SWITCH"
-    _where  = "chunk"
+    _where  = "middle"
     _switch = "sw_foo"
 
     switch = "FLOORSW0"
@@ -1595,7 +1613,7 @@ QUAKE2.SKINS =
   Teleporter1 =
   {
     _prefab = "QUAKE2_TELEPORTER"
-    _where  = "chunk"
+    _where  = "middle"
   }
 
 
@@ -1645,6 +1663,80 @@ QUAKE2.SKINS =
   }
 --]]
 
+
+  ---| HALLWAY PIECES |---
+
+  Hall_Basic_I =
+  {
+    _prefab = "HALL_BASIC_I"
+    _shape  = "I"
+  }
+
+  Hall_Basic_C =
+  {
+    _prefab = "HALL_BASIC_C"
+    _shape  = "C"
+
+    torch_ent = "none"
+  }
+
+  Hall_Basic_T =
+  {
+    _prefab = "HALL_BASIC_T"
+    _shape  = "T"
+  }
+
+  Hall_Basic_P =
+  {
+    _prefab = "HALL_BASIC_P"
+    _shape  = "P"
+  }
+
+  Hall_Basic_I_Stair =
+  {
+    _prefab = "HALL_BASIC_I_STAIR"
+    _shape  = "IS"
+  }
+
+  Hall_Basic_I_Lift =
+  {
+    _prefab = "HALL_BASIC_I_LIFT_QUAKE"
+    _shape  = "IL"
+    _tags   = 1
+
+    lift = "MET5_1"
+  }
+
+
+  Sky_Hall_I =
+  {
+    _prefab = "SKY_HALL_I"
+    _shape  = "I"
+    _need_sky = 1
+  }
+
+  Sky_Hall_C =
+  {
+    _prefab = "SKY_HALL_C"
+    _shape  = "C"
+    _need_sky = 1
+
+    support = "METAL1_1"
+    torch_ent = "none"
+  }
+
+  Sky_Hall_I_Stair =
+  {
+    _prefab = "SKY_HALL_I_STAIR"
+    _shape  = "IS"
+    _need_sky = 1
+
+--??    step = "STEP5"
+  }
+
+
+
+
 } -- end of QUAKE2.SKINS
 
 
@@ -1673,12 +1765,52 @@ QUAKE2.THEME_DEFAULTS =
 
   teleporters = { Teleporter1 = 50 }
 
+  hallway_groups = { basic = 50 }
+
+  mini_halls = { Hall_Basic_I = 50 }
+
+  sky_halls = { skier = 50 }
+
+  logos = { Pic_Carve = 50 }
 }
 
 
 QUAKE2.NAME_THEMES =
 {
   -- TODO (especially 'Strogg')
+}
+
+
+QUAKE2.HALLWAY_GROUPS =
+{
+  basic =
+  {
+    pieces =
+    {
+      Hall_Basic_I = 50
+      Hall_Basic_C = 50
+      Hall_Basic_T = 50
+      Hall_Basic_P = 50
+
+      Hall_Basic_I_Stair = 20
+      Hall_Basic_I_Lift  = 2
+    }
+  }
+
+  skier =
+  {
+    pieces =
+    {
+      Sky_Hall_I = 50
+      Sky_Hall_C = 50
+      Sky_Hall_I_Stair = 50
+
+      Hall_Basic_T = 50  -- use indoor versions for these
+      Hall_Basic_P = 50  --
+
+      Hall_Basic_I_Lift = 2   -- TODO: sky version
+    }
+  }
 }
 
 
@@ -2418,7 +2550,7 @@ end
 
 ----------------------------------------------------------------
 
-UNFINISHED["quake2"] =
+OB_GAMES["quake2"] =
 {
   label = "Quake 2"
 
