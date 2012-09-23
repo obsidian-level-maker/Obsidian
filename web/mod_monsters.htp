@@ -15,7 +15,7 @@
 <h3>ADDING NEW MONSTERS</h3>
 
 This tutorial will show how to create a module which adds new monsters
-for OBLIGE to use in the generated levels.
+for OBLIGE to use in generated levels.
 
 
 <h3>Step 1</h3>
@@ -30,10 +30,9 @@ are invalid names.
 <h3>Step 2</h3>
 
 In the <i>modules</i> folder in OBLIGE, there is a file called
-<b>new_monsters.template</b>.  Copy this to a new file, using the
-name you picked in step 1, and set the file extension
+<b>new_monsters.template</b>.  Copy this to a new file, changing the
+name to the name you picked in step 1, and setting the file extension
 (sometimes called the file type) to "lua".
-
 
 <p>
 Example: <b>foobie.lua</b>
@@ -42,8 +41,8 @@ Example: <b>foobie.lua</b>
 Lowercase filenames are best.
 If the file extension is not set correctly,
 OBLIGE will not load it.
-You can see which files are loaded by looking at the <i>LOGS.txt</i>
-file after running OBLIGE.
+You can see which files are being loaded by looking at the
+<i>LOGS.txt</i> file after running OBLIGE.
 
 
 <h3>Step 3</h3>
@@ -54,7 +53,7 @@ word processor program, such as Microsoft Word, because they do not
 create plain text files and OBLIGE will not be able to read them.
 
 <p>
-Find all occurrances of the word 'CUSTOM' and change it to your
+Find all occurrances of the word "CUSTOM" and change it to your
 name for the module, using uppercase letters this time.
 
 <p>
@@ -67,9 +66,9 @@ Here you will create the entries for one or more monsters.
 There is already a single entry in the template, called 'monster1'.
 Each entry is defined by fields in between curly brackets
 <b>{</b> .... <b>}</b>.
-You can add more monsters by copying an existing entry, making
-sure the opening and closing brackets match up.  If you mess up
-the brackets, OBLIGE will raise an error message when it starts.
+You can add more monsters by copying an existing entry, changing
+the name, and making sure the opening and closing brackets match up.
+If you mess up the brackets, OBLIGE will raise an error when it starts.
 
 <p>
 You can give the monsters custom names, e.g. "demon3", but like
@@ -77,7 +76,7 @@ before you can only use letters, digit and
 the underscore, and it cannot begin with a digit.
 If you added extra monster entries, their names need to be
 different.
-Also, the name should be different to the ones for the game
+Also, the name should be different to the ones from the game
 itself -- otherwise your monster will <i>replace</i>
 the existing one.
 
@@ -158,7 +157,7 @@ numbers like 0.2 is good for ensuring they are used sparingly.
 <blockquote>
 <b>float</b> : set this to "true" (without the quotes) for
 monsters which fly.  OBLIGE can place flying monsters in places
-which wouldn't make sense for normal ones.
+which wouldn't make sense for walking ones.
 </blockquote>
 
 
@@ -178,8 +177,8 @@ contains the generated levels).
 
 <ol class="spacey_list">
 <li>
-you can use a 'prob' value much higher than normal (like 999) to
-make sure that the monster is being added into the levels.
+you can set a 'prob' value much higher than normal (like 999) to
+make sure that the monster gets added into the levels.
 Once it is working, then set the 'prob' value to something sane.
 
 <li>
