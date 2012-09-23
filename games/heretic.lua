@@ -135,83 +135,83 @@ HERETIC.MATERIALS =
 
   -- walls --
 
-  BANNER1  = { t="BANNER1",  f="FLOOR03", color=0x3a2b3c }
-  BANNER2  = { t="BANNER2",  f="FLOOR03", color=0x3c213b }
-  BANNER3  = { t="BANNER3",  f="FLAT520", color=0x4f2318 }
-  BANNER4  = { t="BANNER4",  f="FLAT520", color=0x222039 }
-  BANNER5  = { t="BANNER5",  f="FLOOR25", color=0x662c0f }
-  BANNER6  = { t="BANNER6",  f="FLOOR25", color=0x392831 }
-  BANNER7  = { t="BANNER7",  f="FLOOR00", color=0x3d2d3e }
-  BANNER8  = { t="BANNER8",  f="FLOOR00", color=0x3f243e }
-  BLUEFRAG = { t="BLUEFRAG", f="FLOOR16", color=0x00043b }
-  BRWNRCKS = { t="BRWNRCKS", f="FLOOR17", color=0x40200f }
+  BANNER1  = { t="BANNER1",  f="FLOOR03" }
+  BANNER2  = { t="BANNER2",  f="FLOOR03" }
+  BANNER3  = { t="BANNER3",  f="FLAT520" }
+  BANNER4  = { t="BANNER4",  f="FLAT520" }
+  BANNER5  = { t="BANNER5",  f="FLOOR25" }
+  BANNER6  = { t="BANNER6",  f="FLOOR25" }
+  BANNER7  = { t="BANNER7",  f="FLOOR00" }
+  BANNER8  = { t="BANNER8",  f="FLOOR00" }
+  BLUEFRAG = { t="BLUEFRAG", f="FLOOR16" }
+  BRWNRCKS = { t="BRWNRCKS", f="FLOOR17" }
 
-  CELTIC   = { t="CELTIC",   f="FLOOR06", color=0x694429 }
-  CHAINMAN = { t="CHAINMAN", f="FLAT520", color=0x39332e }
-  CSTLMOSS = { t="CSTLMOSS", f="FLOOR03", color=0x2e302d }
-  CSTLRCK  = { t="CSTLRCK",  f="FLOOR03", color=0x313131 }
-  CTYSTCI1 = { t="CTYSTCI1", f="FLOOR11", color=0x3f3527 }
-  CTYSTCI2 = { t="CTYSTCI2", f="FLOOR11", color=0x40372a }
-  CTYSTCI4 = { t="CTYSTCI4", f="FLOOR11", color=0x41392f }
-  CTYSTUC1 = { t="CTYSTUC1", f="FLOOR11", color=0x322b25 }
-  CTYSTUC2 = { t="CTYSTUC2", f="FLOOR11", color=0x37322d }
-  CTYSTUC3 = { t="CTYSTUC3", f="FLOOR11", color=0x312a24 }
-  CTYSTUC4 = { t="CTYSTUC4", f="FLOOR11", color=0x393530 }
-  CTYSTUC5 = { t="CTYSTUC5", f="FLOOR11", color=0x302823 }
+  CELTIC   = { t="CELTIC",   f="FLOOR06" }
+  CHAINMAN = { t="CHAINMAN", f="FLAT520" }
+  CSTLMOSS = { t="CSTLMOSS", f="FLOOR03" }
+  CSTLRCK  = { t="CSTLRCK",  f="FLOOR03" }
+  CTYSTCI1 = { t="CTYSTCI1", f="FLOOR11" }
+  CTYSTCI2 = { t="CTYSTCI2", f="FLOOR11" }
+  CTYSTCI4 = { t="CTYSTCI4", f="FLOOR11" }
+  CTYSTUC1 = { t="CTYSTUC1", f="FLOOR11" }
+  CTYSTUC2 = { t="CTYSTUC2", f="FLOOR11" }
+  CTYSTUC3 = { t="CTYSTUC3", f="FLOOR11" }
+  CTYSTUC4 = { t="CTYSTUC4", f="FLOOR11" }
+  CTYSTUC5 = { t="CTYSTUC5", f="FLOOR11" }
 
-  DMNMSK   = { t="DMNMSK",   f="FLAT521", color=0x5c5d5c }
-  DOOREXIT = { t="DOOREXIT", f="FLAT520", color=0x3a3b43 }
-  DOORSTON = { t="DOORSTON", f="FLOOR30", color=0x2b2b29 }
-  DOORWOOD = { t="DOORWOOD", f="FLAT507", color=0x302119 }
-  DRIPWALL = { t="DRIPWALL", f="FLOOR27", color=0x664c2a }
+  DMNMSK   = { t="DMNMSK",   f="FLAT521" }
+  DOOREXIT = { t="DOOREXIT", f="FLAT520" }
+  DOORSTON = { t="DOORSTON", f="FLOOR30" }
+  DOORWOOD = { t="DOORWOOD", f="FLAT507" }
+  DRIPWALL = { t="DRIPWALL", f="FLOOR27" }
 
-  GRNBLOK1 = { t="GRNBLOK1", f="FLOOR19", color=0x2c392b }
-  GRNBLOK2 = { t="GRNBLOK2", f="FLOOR19", color=0x2a372a }
-  GRNBLOK3 = { t="GRNBLOK3", f="FLOOR19", color=0x2c392b }
-  GRNBLOK4 = { t="GRNBLOK4", f="FLOOR19", color=0x2b3729 }
-  GRSKULL1 = { t="GRSKULL1", f="FLAT521", color=0x62605e }
-  GRSKULL2 = { t="GRSKULL2", f="FLAT521", color=0x686765 }
-  GRSKULL3 = { t="GRSKULL3", f="FLAT521", color=0x716f6e }
-  GRSTNPB  = { t="GRSTNPB",  f="FLAT520", color=0x2c2926 }
-  GRSTNPBV = { t="GRSTNPBV", f="FLAT520", color=0x302e2b }
-  GRSTNPBW = { t="GRSTNPBW", f="FLAT520", color=0x2f2c28 }
-  HORSES1  = { t="HORSES1",  f="FLAT520", color=0x343833 }
+  GRNBLOK1 = { t="GRNBLOK1", f="FLOOR19" }
+  GRNBLOK2 = { t="GRNBLOK2", f="FLOOR19" }
+  GRNBLOK3 = { t="GRNBLOK3", f="FLOOR19" }
+  GRNBLOK4 = { t="GRNBLOK4", f="FLOOR19" }
+  GRSKULL1 = { t="GRSKULL1", f="FLAT521" }
+  GRSKULL2 = { t="GRSKULL2", f="FLAT521" }
+  GRSKULL3 = { t="GRSKULL3", f="FLAT521" }
+  GRSTNPB  = { t="GRSTNPB",  f="FLAT520" }
+  GRSTNPBV = { t="GRSTNPBV", f="FLAT520" }
+  GRSTNPBW = { t="GRSTNPBW", f="FLAT520" }
+  HORSES1  = { t="HORSES1",  f="FLAT520" }
 
-  LOOSERCK = { t="LOOSERCK", f="FLOOR04", color=0x2b2b29 }
-  METL1    = { t="METL1",    f="FLOOR29", color=0x171717 }
-  METL2    = { t="METL2",    f="FLOOR28", color=0x191919 }
-  MOSAIC1  = { t="MOSAIC1",  f="FLAT502", color=0x3a5dc9 }
-  MOSAIC2  = { t="MOSAIC2",  f="FLAT502", color=0x4062c1 }
-  MOSAIC3  = { t="MOSAIC3",  f="FLAT502", color=0x3c63c0 }
-  MOSAIC4  = { t="MOSAIC4",  f="FLAT502", color=0x3c5ec6 }
-  MOSAIC5  = { t="MOSAIC5",  f="FLAT502", color=0x3e60c4 }
-  MOSSRCK1 = { t="MOSSRCK1", f="FLOOR05", color=0x2c3a29 }
+  LOOSERCK = { t="LOOSERCK", f="FLOOR04" }
+  METL1    = { t="METL1",    f="FLOOR29" }
+  METL2    = { t="METL2",    f="FLOOR28" }
+  MOSAIC1  = { t="MOSAIC1",  f="FLAT502" }
+  MOSAIC2  = { t="MOSAIC2",  f="FLAT502" }
+  MOSAIC3  = { t="MOSAIC3",  f="FLAT502" }
+  MOSAIC4  = { t="MOSAIC4",  f="FLAT502" }
+  MOSAIC5  = { t="MOSAIC5",  f="FLAT502" }
+  MOSSRCK1 = { t="MOSSRCK1", f="FLOOR05" }
 
-  ORNGRAY  = { t="ORNGRAY",  f="FLAT504", color=0x3e3e3e }
-  RCKSNMUD = { t="RCKSNMUD", f="FLOOR01", color=0x49321a }
-  REDWALL  = { t="REDWALL",  f="FLOOR09", color=0x5f0000 }
-  ROOTWALL = { t="ROOTWALL", f="FLAT506", color=0x4b311f }
+  ORNGRAY  = { t="ORNGRAY",  f="FLAT504" }
+  RCKSNMUD = { t="RCKSNMUD", f="FLOOR01" }
+  REDWALL  = { t="REDWALL",  f="FLOOR09" }
+  ROOTWALL = { t="ROOTWALL", f="FLAT506" }
 
-  SAINT1   = { t="SAINT1",   f="FLAT523", color=0x2a2a2a }
-  SANDSQ2  = { t="SANDSQ2",  f="FLOOR06", color=0x6f4f2a }
-  SKULLSB1 = { t="SKULLSB1", f="FLOOR30", color=0x202020 }
-  SNDBLCKS = { t="SNDBLCKS", f="FLOOR06", color=0x4e3515 }
-  SNDCHNKS = { t="SNDCHNKS", f="FLAT522", color=0x6b3c1e }
-  SNDPLAIN = { t="SNDPLAIN", f="FLOOR25", color=0x4b3114 }
-  SPINE1   = { t="SPINE1",   f="FLOOR25", color=0x4b3214 }
-  SPINE2   = { t="SPINE2",   f="FLOOR25", color=0x513616 }
+  SAINT1   = { t="SAINT1",   f="FLAT523" }
+  SANDSQ2  = { t="SANDSQ2",  f="FLOOR06" }
+  SKULLSB1 = { t="SKULLSB1", f="FLOOR30" }
+  SNDBLCKS = { t="SNDBLCKS", f="FLOOR06" }
+  SNDCHNKS = { t="SNDCHNKS", f="FLAT522" }
+  SNDPLAIN = { t="SNDPLAIN", f="FLOOR25" }
+  SPINE1   = { t="SPINE1",   f="FLOOR25" }
+  SPINE2   = { t="SPINE2",   f="FLOOR25" }
 
-  SQPEB1   = { t="SQPEB1",   f="FLAT504", color=0x474846 }
-  SQPEB2   = { t="SQPEB2",   f="FLOOR27", color=0x4a2610 }
-  STNGLS1  = { t="STNGLS1",  f="FLOOR30", color=0x4b2745 }
-  STNGLS2  = { t="STNGLS2",  f="FLOOR30", color=0x3c1d3f }
-  STNGLS3  = { t="STNGLS3",  f="FLOOR30", color=0x31202d }
+  SQPEB1   = { t="SQPEB1",   f="FLAT504" }
+  SQPEB2   = { t="SQPEB2",   f="FLOOR27" }
+  STNGLS1  = { t="STNGLS1",  f="FLOOR30" }
+  STNGLS2  = { t="STNGLS2",  f="FLOOR30" }
+  STNGLS3  = { t="STNGLS3",  f="FLOOR30" }
 
-  TMBSTON1 = { t="TMBSTON1", f="FLAT521", color=0x40413f }
-  TMBSTON2 = { t="TMBSTON2", f="FLAT521", color=0x3d3f3d }
-  TRISTON1 = { t="TRISTON1", f="FLOOR00", color=0x343434 }
-  TRISTON2 = { t="TRISTON2", f="FLOOR17", color=0x4f2b15 }
-  WOODWL   = { t="WOODWL",   f="FLOOR10", color=0x42210f }
+  TMBSTON1 = { t="TMBSTON1", f="FLAT521" }
+  TMBSTON2 = { t="TMBSTON2", f="FLAT521" }
+  TRISTON1 = { t="TRISTON1", f="FLOOR00" }
+  TRISTON2 = { t="TRISTON2", f="FLOOR17" }
+  WOODWL   = { t="WOODWL",   f="FLOOR10" }
 
   -- switches --
 
@@ -220,53 +220,53 @@ HERETIC.MATERIALS =
 
   -- floors --
 
-  FLAT500  = { f="FLAT500", t="SQPEB1",   color=0x574f49 }
-  FLAT502  = { f="FLAT502", t="BLUEFRAG", color=0x030793 }
-  FLAT503  = { f="FLAT503", t="SQPEB1",   color=0x4b4b4a }
-  FLAT504  = { f="FLAT504", t="SQPEB1",   color=0x555754 }
-  FLAT506  = { f="FLAT506", t="ROOTWALL", color=0x3d2b1f }
-  FLAT507  = { f="FLAT507", t="DOORWOOD", color=0x292524 }
-  FLAT508  = { f="FLAT508", t="DOORWOOD", color=0x3a2215 }
-  FLAT509  = { f="FLAT509", t="LOOSERCK", color=0x494949 }
-  FLAT510  = { f="FLAT510", t="BRWNRCKS", color=0x4b2c0b }
+  FLAT500  = { f="FLAT500", t="SQPEB1" }
+  FLAT502  = { f="FLAT502", t="BLUEFRAG" }
+  FLAT503  = { f="FLAT503", t="SQPEB1" }
+  FLAT504  = { f="FLAT504", t="SQPEB1" }
+  FLAT506  = { f="FLAT506", t="ROOTWALL" }
+  FLAT507  = { f="FLAT507", t="DOORWOOD" }
+  FLAT508  = { f="FLAT508", t="DOORWOOD" }
+  FLAT509  = { f="FLAT509", t="LOOSERCK" }
+  FLAT510  = { f="FLAT510", t="BRWNRCKS" }
 
-  FLAT512  = { f="FLAT512", t="GRNBLOK1", color=0x1c241b }
-  FLAT513  = { f="FLAT513", t="GRNBLOK1", color=0x2d362c }
-  FLAT516  = { f="FLAT516", t="LOOSERCK", color=0x2f2419 }
-  FLAT517  = { f="FLAT517", t="BLUEFRAG", color=0x1f25c4 }
-  FLAT520  = { f="FLAT520", t="CSTLRCK",  color=0x373837 }
-  FLAT521  = { f="FLAT521", t="SQPEB1",   color=0x505050 }
-  FLAT522  = { f="FLAT522", t="SNDCHNKS", color=0x7c4b28 }
-  FLAT523  = { f="FLAT523", t="GRSTNPB",  color=0x262626 }
+  FLAT512  = { f="FLAT512", t="GRNBLOK1" }
+  FLAT513  = { f="FLAT513", t="GRNBLOK1" }
+  FLAT516  = { f="FLAT516", t="LOOSERCK" }
+  FLAT517  = { f="FLAT517", t="BLUEFRAG" }
+  FLAT520  = { f="FLAT520", t="CSTLRCK" }
+  FLAT521  = { f="FLAT521", t="SQPEB1" }
+  FLAT522  = { f="FLAT522", t="SNDCHNKS" }
+  FLAT523  = { f="FLAT523", t="GRSTNPB" }
 
-  FLOOR00  = { f="FLOOR00", t="TRISTON1", color=0x303030 }
-  FLOOR01  = { f="FLOOR01", t="LOOSERCK", color=0x1b110b }
-  FLOOR03  = { f="FLOOR03", t="CSTLRCK",  color=0x343434 }
-  FLOOR04  = { f="FLOOR04", t="CSTLRCK",  color=0x393a39 }
-  FLOOR05  = { f="FLOOR05", t="MOSSRCK1", color=0x283e23 }
-  FLOOR06  = { f="FLOOR06", t="SANDSQ2",  color=0x956139 }
-  FLOOR07  = { f="FLOOR07", t="MOSAIC1",  color=0x676679 }
-  FLOOR08  = { f="FLOOR08", t="CHAINSD",  color=0x2f2d2b }
-  FLOOR09  = { f="FLOOR09", t="REDWALL",  color=0x6d0000 }
-  FLOOR10  = { f="FLOOR10", t="WOODWL",   color=0x442b0e }
-  FLOOR11  = { f="FLOOR11", t="WOODWL",   color=0x3c3428 }
-  FLOOR12  = { f="FLOOR12", t="WOODWL",   color=0x372f26 }
-  FLOOR16  = { f="FLOOR16", t="BLUEFRAG", color=0x00043b }
-  FLOOR17  = { f="FLOOR17", t="BRWNRCKS", color=0x3e200e }
-  FLOOR18  = { f="FLOOR18", t="GRNBLOK1", color=0x293828 }
-  FLOOR19  = { f="FLOOR19", t="GRNBLOK1", color=0x334531 }
+  FLOOR00  = { f="FLOOR00", t="TRISTON1" }
+  FLOOR01  = { f="FLOOR01", t="LOOSERCK" }
+  FLOOR03  = { f="FLOOR03", t="CSTLRCK" }
+  FLOOR04  = { f="FLOOR04", t="CSTLRCK" }
+  FLOOR05  = { f="FLOOR05", t="MOSSRCK1" }
+  FLOOR06  = { f="FLOOR06", t="SANDSQ2" }
+  FLOOR07  = { f="FLOOR07", t="MOSAIC1" }
+  FLOOR08  = { f="FLOOR08", t="CHAINSD" }
+  FLOOR09  = { f="FLOOR09", t="REDWALL" }
+  FLOOR10  = { f="FLOOR10", t="WOODWL" }
+  FLOOR11  = { f="FLOOR11", t="WOODWL" }
+  FLOOR12  = { f="FLOOR12", t="WOODWL" }
+  FLOOR16  = { f="FLOOR16", t="BLUEFRAG" }
+  FLOOR17  = { f="FLOOR17", t="BRWNRCKS" }
+  FLOOR18  = { f="FLOOR18", t="GRNBLOK1" }
+  FLOOR19  = { f="FLOOR19", t="GRNBLOK1" }
 
-  FLOOR20  = { f="FLOOR20", t="SQPEB2",   color=0x4a2a17 }
-  FLOOR21  = { f="FLOOR21", t="CHAINSD",  color=0x33343e }
-  FLOOR22  = { f="FLOOR22", t="CHAINSD",  color=0x33343e }
-  FLOOR23  = { f="FLOOR23", t="CHAINSD",  color=0x33343e }
-  FLOOR24  = { f="FLOOR24", t="CHAINSD",  color=0x33343e }
-  FLOOR25  = { f="FLOOR25", t="SPINE2",   color=0x513616 }
-  FLOOR26  = { f="FLOOR26", t="CHAINSD",  color=0x282a44 }
-  FLOOR27  = { f="FLOOR27", t="SANDSQ2",  color=0x644623 }
-  FLOOR28  = { f="FLOOR28", t="METL2",    color=0x191919 }
-  FLOOR29  = { f="FLOOR29", t="METL1",    color=0x171717 }
-  FLOOR30  = { f="FLOOR30", t="METL1",    color=0x181818 }
+  FLOOR20  = { f="FLOOR20", t="SQPEB2" }
+  FLOOR21  = { f="FLOOR21", t="CHAINSD" }
+  FLOOR22  = { f="FLOOR22", t="CHAINSD" }
+  FLOOR23  = { f="FLOOR23", t="CHAINSD" }
+  FLOOR24  = { f="FLOOR24", t="CHAINSD" }
+  FLOOR25  = { f="FLOOR25", t="SPINE2" }
+  FLOOR26  = { f="FLOOR26", t="CHAINSD" }
+  FLOOR27  = { f="FLOOR27", t="SANDSQ2" }
+  FLOOR28  = { f="FLOOR28", t="METL2" }
+  FLOOR29  = { f="FLOOR29", t="METL1" }
+  FLOOR30  = { f="FLOOR30", t="METL1" }
 
   -- rails --
 
@@ -308,11 +308,11 @@ HERETIC.MATERIALS =
 
 HERETIC.LIQUIDS =
 {
-  water  = { mat="FLTFLWW1", color=0x282fcc, light=0.65, special=0 }
-  water2 = { mat="FLTWAWA1", color=0x282fcc, light=0.65, special=0 }
-  sludge = { mat="FLTSLUD1", color=0x3e453d, light=0.65, special=16, damage=20 }
-  lava   = { mat="FLATHUH1", color=0x851b00, light=0.75, special=16, damage=20 }
-  magma  = { mat="FLTLAVA1", color=0x442b2b, light=0.65, special=16, damage=20 }
+  water  = { mat="FLTFLWW1", light=0.65, special=0 }
+  water2 = { mat="FLTWAWA1", light=0.65, special=0 }
+  sludge = { mat="FLTSLUD1", light=0.65, special=16, damage=20 }
+  lava   = { mat="FLATHUH1", light=0.75, special=16, damage=20 }
+  magma  = { mat="FLTLAVA1", light=0.65, special=16, damage=20 }
 }
 
 

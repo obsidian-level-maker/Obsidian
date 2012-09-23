@@ -701,10 +701,10 @@ QUAKE.MATERIALS =
 
 QUAKE.LIQUIDS =
 {
-  water  = { mat="L_WATER0", medium="water", color=0x000088, light=0, special=0 }
-  slime0 = { mat="L_SLIME0", medium="slime", color=0x008800, light=0, special=0, damage=99 }
-  slime  = { mat="L_SLIME",  medium="slime", color=0x008800, light=0, special=0, damage=99 }
-  lava1  = { mat="L_LAVA1",  medium="lava",  color=0x880000, light=1, special=0, damage=99, fireballs=1 }
+  water  = { mat="L_WATER0", medium="water", light=0, special=0 }
+  slime0 = { mat="L_SLIME0", medium="slime", light=0, special=0, damage=99 }
+  slime  = { mat="L_SLIME",  medium="slime", light=0, special=0, damage=99 }
+  lava1  = { mat="L_LAVA1",  medium="lava",  light=1, special=0, damage=99, fireballs=1 }
 }
 
 

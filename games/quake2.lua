@@ -1417,10 +1417,10 @@ QUAKE2.RAILS =
 
 QUAKE2.LIQUIDS =
 {
-  water  = { mat="L_WATER4", medium="water", color=0x000088, light=0, special=0 }
-  mud    = { mat="L_MUD2",   medium="water", color=0x442200, light=0, special=0 }
-  slime  = { mat="L_SLIME",  medium="slime", color=0x008800, light=0, special=0, damage=99 }
-  lava   = { mat="L_LAVA1",  medium="lava",  color=0x880000, light=1, special=0, damage=99 }
+  water  = { mat="L_WATER4", medium="water", light=0, special=0 }
+  mud    = { mat="L_MUD2",   medium="water", light=0, special=0 }
+  slime  = { mat="L_SLIME",  medium="slime", light=0, special=0, damage=99 }
+  lava   = { mat="L_LAVA1",  medium="lava",  light=1, special=0, damage=99 }
 }
 
 

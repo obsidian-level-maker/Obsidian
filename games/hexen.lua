@@ -235,233 +235,233 @@ HEXEN.MATERIALS =
 
   -- walls --
 
-  BOOKS01  = { t="BOOKS01",  f="F_092", color=0x2c1b11 }
-  BOOKS02  = { t="BOOKS02",  f="F_092", color=0x2d1b0f }
-  BOOKS03  = { t="BOOKS03",  f="F_092", color=0x2d1b0f }
-  BOOKS04  = { t="BOOKS04",  f="F_092", color=0x2e1b0f }
-  BRASS1   = { t="BRASS1",   f="F_037", color=0x5b2c02 }
-  BRASS3   = { t="BRASS3",   f="F_037", color=0x532802 }
-  BRASS4   = { t="BRASS5",   f="F_037", color=0x542802 }
-  CASTLE01 = { t="CASTLE01", f="F_012", color=0x252525 }
-  CASTLE02 = { t="CASTLE02", f="F_012", color=0x262625 }
-  CASTLE03 = { t="CASTLE03", f="F_012", color=0x262525 }
-  CASTLE04 = { t="CASTLE04", f="F_012", color=0x262625 }
-  CASTLE05 = { t="CASTLE05", f="F_012", color=0x262525 }
-  CASTLE06 = { t="CASTLE06", f="F_012", color=0x262525 }
-  CASTLE07 = { t="CASTLE07", f="F_057", color=0x2a2a2a }
-  CASTLE08 = { t="CASTLE08", f="F_057", color=0x373736 }
-  CASTLE11 = { t="CASTLE11", f="F_073", color=0x3e3426 }
+  BOOKS01  = { t="BOOKS01",  f="F_092" }
+  BOOKS02  = { t="BOOKS02",  f="F_092" }
+  BOOKS03  = { t="BOOKS03",  f="F_092" }
+  BOOKS04  = { t="BOOKS04",  f="F_092" }
+  BRASS1   = { t="BRASS1",   f="F_037" }
+  BRASS3   = { t="BRASS3",   f="F_037" }
+  BRASS4   = { t="BRASS5",   f="F_037" }
+  CASTLE01 = { t="CASTLE01", f="F_012" }
+  CASTLE02 = { t="CASTLE02", f="F_012" }
+  CASTLE03 = { t="CASTLE03", f="F_012" }
+  CASTLE04 = { t="CASTLE04", f="F_012" }
+  CASTLE05 = { t="CASTLE05", f="F_012" }
+  CASTLE06 = { t="CASTLE06", f="F_012" }
+  CASTLE07 = { t="CASTLE07", f="F_057" }
+  CASTLE08 = { t="CASTLE08", f="F_057" }
+  CASTLE11 = { t="CASTLE11", f="F_073" }
 
-  CAVE01   = { t="CAVE01",   f="F_073", color=0x393023 }
-  CAVE02   = { t="CAVE02",   f="F_076", color=0x2e2f2d }
-  CAVE03   = { t="CAVE03",   f="F_039", color=0x2f2d20 }
-  CAVE04   = { t="CAVE04",   f="F_039", color=0x292b24 }
-  CAVE05   = { t="CAVE05",   f="F_007", color=0x21160e }
-  CAVE06   = { t="CAVE06",   f="F_039", color=0x262621 }
-  CAVE07   = { t="CAVE07",   f="F_008", color=0x1d1c1a }
-  CAVE12   = { t="CAVE12",   f="F_076", color=0x383938 }
-  CHAP1    = { t="CHAP1",    f="F_082", color=0x4f3317 }
-  CHAP2    = { t="CHAP2",    f="F_082", color=0x381b03 }
-  CHAP3    = { t="CHAP3",    f="F_082", color=0x232622 }
-  CLOCKA   = { t="CLOCKA",   f="F_082", color=0x413d32 }
-  CRATE01  = { t="CRATE01",  f="F_049", color=0x3a1c0d }
-  CRATE02  = { t="CRATE02",  f="F_051", color=0x31180b }
-  CRATE03  = { t="CRATE03",  f="F_050", color=0x2e170b }
-  CRATE04  = { t="CRATE04",  f="F_052", color=0x31180b }
-  CRATE05  = { t="CRATE05",  f="F_053", color=0x32190c }
+  CAVE01   = { t="CAVE01",   f="F_073" }
+  CAVE02   = { t="CAVE02",   f="F_076" }
+  CAVE03   = { t="CAVE03",   f="F_039" }
+  CAVE04   = { t="CAVE04",   f="F_039" }
+  CAVE05   = { t="CAVE05",   f="F_007" }
+  CAVE06   = { t="CAVE06",   f="F_039" }
+  CAVE07   = { t="CAVE07",   f="F_008" }
+  CAVE12   = { t="CAVE12",   f="F_076" }
+  CHAP1    = { t="CHAP1",    f="F_082" }
+  CHAP2    = { t="CHAP2",    f="F_082" }
+  CHAP3    = { t="CHAP3",    f="F_082" }
+  CLOCKA   = { t="CLOCKA",   f="F_082" }
+  CRATE01  = { t="CRATE01",  f="F_049" }
+  CRATE02  = { t="CRATE02",  f="F_051" }
+  CRATE03  = { t="CRATE03",  f="F_050" }
+  CRATE04  = { t="CRATE04",  f="F_052" }
+  CRATE05  = { t="CRATE05",  f="F_053" }
 
-  D_AXE    = { t="D_AXE",    f="F_092", color=0x26170d }
-  D_BRASS1 = { t="D_BRASS1", f="F_037", color=0x572901 }
-  D_BRASS2 = { t="D_BRASS2", f="F_037", color=0x572901 }
-  D_CAST   = { t="D_CAST",   f="F_073", color=0x292117 }
-  D_CAVE   = { t="D_CAVE",   f="F_073", color=0x291f17 }
-  D_CAVE2  = { t="D_CAVE2",  f="F_007", color=0x22170d }
-  D_DUNGEO = { t="D_DUNGEO", f="F_092", color=0x27180f }
-  D_END1   = { t="D_END1",   f="F_073", color=0x302a21 }
-  D_END2   = { t="D_END2",   f="F_073", color=0x322c23 }
-  D_END3   = { t="D_END3",   f="F_092", color=0x271409 }
-  D_END4   = { t="D_END4",   f="F_092", color=0x26160d }
-  D_ENDBR  = { t="D_ENDBR",  f="F_037", color=0x502602 }
-  D_ENDSLV = { t="D_ENDSLV", f="F_082", color=0x333333 }
-  D_FIRE   = { t="D_FIRE",   f="F_013", color=0x2d2421 }
-  D_RUST   = { t="D_RUST",   f="F_073", color=0x2b1e15 }
-  D_SILKEY = { t="D_SILKEY", f="F_092", color=0x27150b }
-  D_SILVER = { t="D_SILVER", f="F_073", color=0x2b2018 }
-  D_SLV1   = { t="D_SLV1",   f="F_066", color=0x383938 }
-  D_SLV2   = { t="D_SLV2",   f="F_066", color=0x383938 }
-  D_STEEL  = { t="D_STEEL",  f="F_065", color=0x302f2d }
-  D_SWAMP  = { t="D_SWAMP",  f="F_018", color=0x242520 }
-  D_SWAMP2 = { t="D_SWAMP2", f="F_076", color=0x2e2f2b }
-  D_WASTE  = { t="D_WASTE",  f="F_037", color=0x553b19 }
-  D_WD01   = { t="D_WD01",   f="F_092", color=0x27150b }
-  D_WD02   = { t="D_WD02",   f="F_092", color=0x27150b }
-  D_WD03   = { t="D_WD03",   f="F_092", color=0x26160c }
-  D_WD04   = { t="D_WD04",   f="F_092", color=0x26160c }
-  D_WD05   = { t="D_WD05",   f="F_051", color=0x2d170b }
-  D_WD06   = { t="D_WD06",   f="F_051", color=0x2d170b }
-  D_WD07   = { t="D_WD07",   f="F_073", color=0x2b1d14 }
-  D_WD08   = { t="D_WD08",   f="F_073", color=0x2a1d14 }
-  D_WD09   = { t="D_WD09",   f="F_073", color=0x2a1d14 }
-  D_WD10   = { t="D_WD10",   f="F_073", color=0x2a1e15 }
-  D_WINNOW = { t="D_WINNOW", f="F_073", color=0x2b1b12 }
-  DOOR51   = { t="DOOR51",   f="F_082", color=0x323432 }
+  D_AXE    = { t="D_AXE",    f="F_092" }
+  D_BRASS1 = { t="D_BRASS1", f="F_037" }
+  D_BRASS2 = { t="D_BRASS2", f="F_037" }
+  D_CAST   = { t="D_CAST",   f="F_073" }
+  D_CAVE   = { t="D_CAVE",   f="F_073" }
+  D_CAVE2  = { t="D_CAVE2",  f="F_007" }
+  D_DUNGEO = { t="D_DUNGEO", f="F_092" }
+  D_END1   = { t="D_END1",   f="F_073" }
+  D_END2   = { t="D_END2",   f="F_073" }
+  D_END3   = { t="D_END3",   f="F_092" }
+  D_END4   = { t="D_END4",   f="F_092" }
+  D_ENDBR  = { t="D_ENDBR",  f="F_037" }
+  D_ENDSLV = { t="D_ENDSLV", f="F_082" }
+  D_FIRE   = { t="D_FIRE",   f="F_013" }
+  D_RUST   = { t="D_RUST",   f="F_073" }
+  D_SILKEY = { t="D_SILKEY", f="F_092" }
+  D_SILVER = { t="D_SILVER", f="F_073" }
+  D_SLV1   = { t="D_SLV1",   f="F_066" }
+  D_SLV2   = { t="D_SLV2",   f="F_066" }
+  D_STEEL  = { t="D_STEEL",  f="F_065" }
+  D_SWAMP  = { t="D_SWAMP",  f="F_018" }
+  D_SWAMP2 = { t="D_SWAMP2", f="F_076" }
+  D_WASTE  = { t="D_WASTE",  f="F_037" }
+  D_WD01   = { t="D_WD01",   f="F_092" }
+  D_WD02   = { t="D_WD02",   f="F_092" }
+  D_WD03   = { t="D_WD03",   f="F_092" }
+  D_WD04   = { t="D_WD04",   f="F_092" }
+  D_WD05   = { t="D_WD05",   f="F_051" }
+  D_WD06   = { t="D_WD06",   f="F_051" }
+  D_WD07   = { t="D_WD07",   f="F_073" }
+  D_WD08   = { t="D_WD08",   f="F_073" }
+  D_WD09   = { t="D_WD09",   f="F_073" }
+  D_WD10   = { t="D_WD10",   f="F_073" }
+  D_WINNOW = { t="D_WINNOW", f="F_073" }
+  DOOR51   = { t="DOOR51",   f="F_082" }
 
-  FIRE01   = { t="FIRE01",   f="F_032", color=0x171817 }
-  FIRE02   = { t="FIRE02",   f="F_032", color=0x1e1e1e }
-  FIRE03   = { t="FIRE03",   f="F_032", color=0x1e1e1e }
-  FIRE04   = { t="FIRE04",   f="F_032", color=0x1e1f1e }
-  FIRE05   = { t="FIRE05",   f="F_032", color=0x191919 }
-  FIRE06   = { t="FIRE06",   f="F_013", color=0x292725 }
-  FIRE07   = { t="FIRE07",   f="F_013", color=0x292725 }
-  FIRE08   = { t="FIRE08",   f="F_013", color=0x2b2927 }
-  FIRE09   = { t="FIRE09",   f="F_013", color=0x2b2927 }
-  FIRE10   = { t="FIRE10",   f="F_013", color=0x2b2a27 }
-  FIRE11   = { t="FIRE11",   f="F_013", color=0x2d2b29 }
-  FIRE12   = { t="FIRE12",   f="F_013", color=0x2d2b29 }
-  FIRE14   = { t="FIRE14",   f="F_032", color=0x1d1e1d }
-  FIRE15   = { t="FIRE15",   f="F_032", color=0x1b1c1b }
-  FIRE17   = { t="FIRE17",   f="F_017", color=0x2a231d }
+  FIRE01   = { t="FIRE01",   f="F_032" }
+  FIRE02   = { t="FIRE02",   f="F_032" }
+  FIRE03   = { t="FIRE03",   f="F_032" }
+  FIRE04   = { t="FIRE04",   f="F_032" }
+  FIRE05   = { t="FIRE05",   f="F_032" }
+  FIRE06   = { t="FIRE06",   f="F_013" }
+  FIRE07   = { t="FIRE07",   f="F_013" }
+  FIRE08   = { t="FIRE08",   f="F_013" }
+  FIRE09   = { t="FIRE09",   f="F_013" }
+  FIRE10   = { t="FIRE10",   f="F_013" }
+  FIRE11   = { t="FIRE11",   f="F_013" }
+  FIRE12   = { t="FIRE12",   f="F_013" }
+  FIRE14   = { t="FIRE14",   f="F_032" }
+  FIRE15   = { t="FIRE15",   f="F_032" }
+  FIRE17   = { t="FIRE17",   f="F_017" }
 
-  FOREST01 = { t="FOREST01", f="F_014", color=0x553217 }
-  FOREST02 = { t="FOREST02", f="F_038", color=0x151712 }
-  FOREST03 = { t="FOREST03", f="F_038", color=0x1d1c15 }
-  FOREST04 = { t="FOREST04", f="F_038", color=0x1a1d19 }
-  FOREST05 = { t="FOREST05", f="F_048", color=0x334531 }
-  FOREST07 = { t="FOREST07", f="F_002", color=0x3c2b14 }
-  FOREST10 = { t="FOREST10", f="F_047", color=0x2f271e }
-  FOREST11 = { t="FOREST11", f="F_038", color=0x2f302e }
-  FORPUZ1  = { t="FORPUZ1",  f="F_005", color=0x5d3517 }
-  FORPUZ2  = { t="FORPUZ2",  f="F_038", color=0x291f14 }
-  FORPUZ3  = { t="FORPUZ3",  f="F_041", color=0x2a211a }
+  FOREST01 = { t="FOREST01", f="F_014" }
+  FOREST02 = { t="FOREST02", f="F_038" }
+  FOREST03 = { t="FOREST03", f="F_038" }
+  FOREST04 = { t="FOREST04", f="F_038" }
+  FOREST05 = { t="FOREST05", f="F_048" }
+  FOREST07 = { t="FOREST07", f="F_002" }
+  FOREST10 = { t="FOREST10", f="F_047" }
+  FOREST11 = { t="FOREST11", f="F_038" }
+  FORPUZ1  = { t="FORPUZ1",  f="F_005" }
+  FORPUZ2  = { t="FORPUZ2",  f="F_038" }
+  FORPUZ3  = { t="FORPUZ3",  f="F_041" }
 
-  GEARW    = { t="GEARW",    f="F_074", color=0x523514 }
-  GEARX    = { t="GEARX",    f="F_074", color=0x4a4237 }
-  GEARY    = { t="GEARY",    f="F_074", color=0x4c3e2d }
-  GEARZ    = { t="GEARZ",    f="F_074", color=0x4f381e }
-  GILO1    = { t="GILO1",    f="F_072", color=0x5e5f5e }
-  GILO2    = { t="GILO2",    f="F_072", color=0x5e5f5e }
+  GEARW    = { t="GEARW",    f="F_074" }
+  GEARX    = { t="GEARX",    f="F_074" }
+  GEARY    = { t="GEARY",    f="F_074" }
+  GEARZ    = { t="GEARZ",    f="F_074" }
+  GILO1    = { t="GILO1",    f="F_072" }
+  GILO2    = { t="GILO2",    f="F_072" }
 
-  GLASS01  = { t="GLASS01",  f="F_081", color=0x402f3a }
-  GLASS02  = { t="GLASS02",  f="F_081", color=0x2c2e39 }
-  GLASS03  = { t="GLASS03",  f="F_081", color=0x3e2b38 }
-  GLASS04  = { t="GLASS04",  f="F_081", color=0x2f2a36 }
-  GLASS05  = { t="GLASS05",  f="F_081", color=0x3e2633 }
-  GLASS06  = { t="GLASS06",  f="F_081", color=0x2d2c39 }
-  GRAVE01  = { t="GRAVE01",  f="F_009", color=0x3b3e3a }
-  GRAVE03  = { t="GRAVE03",  f="F_009", color=0x383d38 }
-  GRAVE04  = { t="GRAVE04",  f="F_009", color=0x3d413d }
-  GRAVE05  = { t="GRAVE05",  f="F_009", color=0x3d413d }
-  GRAVE06  = { t="GRAVE06",  f="F_009", color=0x3b3f3a }
-  GRAVE07  = { t="GRAVE07",  f="F_009", color=0x3a3e3a }
-  GRAVE08  = { t="GRAVE08",  f="F_009", color=0x3b3f3a }
+  GLASS01  = { t="GLASS01",  f="F_081" }
+  GLASS02  = { t="GLASS02",  f="F_081" }
+  GLASS03  = { t="GLASS03",  f="F_081" }
+  GLASS04  = { t="GLASS04",  f="F_081" }
+  GLASS05  = { t="GLASS05",  f="F_081" }
+  GLASS06  = { t="GLASS06",  f="F_081" }
+  GRAVE01  = { t="GRAVE01",  f="F_009" }
+  GRAVE03  = { t="GRAVE03",  f="F_009" }
+  GRAVE04  = { t="GRAVE04",  f="F_009" }
+  GRAVE05  = { t="GRAVE05",  f="F_009" }
+  GRAVE06  = { t="GRAVE06",  f="F_009" }
+  GRAVE07  = { t="GRAVE07",  f="F_009" }
+  GRAVE08  = { t="GRAVE08",  f="F_009" }
 
-  ICE01    = { t="ICE01",    f="F_033", color=0x545269 }
-  ICE02    = { t="ICE02",    f="F_040", color=0x302e31 }
-  ICE03    = { t="ICE03",    f="F_040", color=0x28282a }
-  ICE06    = { t="ICE06",    f="F_040", color=0x343235 }
-  MONK01   = { t="MONK01",   f="F_027", color=0x292d29 }
-  MONK02   = { t="MONK02",   f="F_025", color=0x462d12 }
-  MONK03   = { t="MONK03",   f="F_025", color=0x473624 }
-  MONK04   = { t="MONK04",   f="F_025", color=0x463018 }
-  MONK05   = { t="MONK05",   f="F_025", color=0x402d19 }
-  MONK06   = { t="MONK06",   f="F_025", color=0x43260a }
-  MONK07   = { t="MONK07",   f="F_031", color=0x2f312f }
-  MONK08   = { t="MONK08",   f="F_031", color=0x292c29 }
-  MONK09   = { t="MONK09",   f="F_025", color=0x442a10 }
-  MONK11   = { t="MONK11",   f="F_025", color=0x43260a }
-  MONK12   = { t="MONK12",   f="F_025", color=0x442a10 }
-  MONK14   = { t="MONK14",   f="F_029", color=0x4b3113 }
-  MONK15   = { t="MONK15",   f="F_029", color=0x4a3013 }
-  MONK16   = { t="MONK16",   f="F_028", color=0x492f12 }
-  MONK17   = { t="MONK17",   f="F_028", color=0x482e12 }
-  MONK18   = { t="MONK18",   f="F_028", color=0x482e13 }
-  MONK19   = { t="MONK19",   f="F_028", color=0x3e260d }
-  MONK21   = { t="MONK21",   f="F_028", color=0x3e260d }
-  MONK22   = { t="MONK22",   f="F_028", color=0x3e260d }
-  MONK23   = { t="MONK23",   f="F_025", color=0x41372d }
+  ICE01    = { t="ICE01",    f="F_033" }
+  ICE02    = { t="ICE02",    f="F_040" }
+  ICE03    = { t="ICE03",    f="F_040" }
+  ICE06    = { t="ICE06",    f="F_040" }
+  MONK01   = { t="MONK01",   f="F_027" }
+  MONK02   = { t="MONK02",   f="F_025" }
+  MONK03   = { t="MONK03",   f="F_025" }
+  MONK04   = { t="MONK04",   f="F_025" }
+  MONK05   = { t="MONK05",   f="F_025" }
+  MONK06   = { t="MONK06",   f="F_025" }
+  MONK07   = { t="MONK07",   f="F_031" }
+  MONK08   = { t="MONK08",   f="F_031" }
+  MONK09   = { t="MONK09",   f="F_025" }
+  MONK11   = { t="MONK11",   f="F_025" }
+  MONK12   = { t="MONK12",   f="F_025" }
+  MONK14   = { t="MONK14",   f="F_029" }
+  MONK15   = { t="MONK15",   f="F_029" }
+  MONK16   = { t="MONK16",   f="F_028" }
+  MONK17   = { t="MONK17",   f="F_028" }
+  MONK18   = { t="MONK18",   f="F_028" }
+  MONK19   = { t="MONK19",   f="F_028" }
+  MONK21   = { t="MONK21",   f="F_028" }
+  MONK22   = { t="MONK22",   f="F_028" }
+  MONK23   = { t="MONK23",   f="F_025" }
 
-  PILLAR01 = { t="PILLAR01", f="F_037", color=0x4b2f13 }
-  PILLAR02 = { t="PILLAR02", f="F_044", color=0x373837 }
-  PLANET1  = { t="PLANET1",  f="F_025", color=0x2e251d }
-  PLANET2  = { t="PLANET2",  f="F_025", color=0x2d251c }
-  PLAT01   = { t="PLAT01",   f="F_045", color=0x1f201f }
-  PLAT02   = { t="PLAT02",   f="F_065", color=0x1f1f1d }  
-  POOT     = { t="POOT",     f="F_048", color=0x334531 }
-  PRTL02   = { t="PRTL02",   f="F_057", color=0x373736 }
-  PRTL03   = { t="PRTL03",   f="F_019", color=0x222b22 }
-  PRTL04   = { t="PRTL04",   f="F_044", color=0x464644 }
-  PRTL05   = { t="PRTL05",   f="F_044", color=0x3b3a37 }
-  PRTL06   = { t="PRTL06",   f="F_057", color=0x3c3c3c }
-  PUZZLE1  = { t="PUZZLE1",  f="F_082", color=0x242220 }
-  PUZZLE10 = { t="PUZZLE10", f="F_091", color=0x292929 }
-  PUZZLE11 = { t="PUZZLE11", f="F_091", color=0x282928 }
-  PUZZLE12 = { t="PUZZLE12", f="F_091", color=0x282928 }
-  PUZZLE2  = { t="PUZZLE2",  f="F_082", color=0x24211f }
-  PUZZLE3  = { t="PUZZLE3",  f="F_082", color=0x252220 }
-  PUZZLE4  = { t="PUZZLE4",  f="F_082", color=0x242220 }
-  PUZZLE5  = { t="PUZZLE5",  f="F_091", color=0x2c2c2c }
-  PUZZLE6  = { t="PUZZLE6",  f="F_091", color=0x2c2c2c }
-  PUZZLE7  = { t="PUZZLE7",  f="F_091", color=0x2c2d2c }
-  PUZZLE8  = { t="PUZZLE8",  f="F_091", color=0x2c2d2c }
-  PUZZLE9  = { t="PUZZLE9",  f="F_091", color=0x292929 }
+  PILLAR01 = { t="PILLAR01", f="F_037" }
+  PILLAR02 = { t="PILLAR02", f="F_044" }
+  PLANET1  = { t="PLANET1",  f="F_025" }
+  PLANET2  = { t="PLANET2",  f="F_025" }
+  PLAT01   = { t="PLAT01",   f="F_045" }
+  PLAT02   = { t="PLAT02",   f="F_065" }  
+  POOT     = { t="POOT",     f="F_048" }
+  PRTL02   = { t="PRTL02",   f="F_057" }
+  PRTL03   = { t="PRTL03",   f="F_019" }
+  PRTL04   = { t="PRTL04",   f="F_044" }
+  PRTL05   = { t="PRTL05",   f="F_044" }
+  PRTL06   = { t="PRTL06",   f="F_057" }
+  PUZZLE1  = { t="PUZZLE1",  f="F_082" }
+  PUZZLE10 = { t="PUZZLE10", f="F_091" }
+  PUZZLE11 = { t="PUZZLE11", f="F_091" }
+  PUZZLE12 = { t="PUZZLE12", f="F_091" }
+  PUZZLE2  = { t="PUZZLE2",  f="F_082" }
+  PUZZLE3  = { t="PUZZLE3",  f="F_082" }
+  PUZZLE4  = { t="PUZZLE4",  f="F_082" }
+  PUZZLE5  = { t="PUZZLE5",  f="F_091" }
+  PUZZLE6  = { t="PUZZLE6",  f="F_091" }
+  PUZZLE7  = { t="PUZZLE7",  f="F_091" }
+  PUZZLE8  = { t="PUZZLE8",  f="F_091" }
+  PUZZLE9  = { t="PUZZLE9",  f="F_091" }
 
-  SEWER01  = { t="SEWER01",  f="F_018", color=0x222522 }
-  SEWER02  = { t="SEWER02",  f="F_018", color=0x202220 }
-  SEWER05  = { t="SEWER05",  f="F_018", color=0x232521 }
-  SEWER06  = { t="SEWER06",  f="F_018", color=0x222421 }
-  SEWER07  = { t="SEWER07",  f="F_017", color=0x291d16 }
-  SEWER08  = { t="SEWER08",  f="F_017", color=0x291f17 }
-  SEWER09  = { t="SEWER09",  f="F_017", color=0x291e16 }
-  SEWER10  = { t="SEWER10",  f="F_017", color=0x292017 }
-  SEWER11  = { t="SEWER11",  f="F_017", color=0x291e16 }
-  SEWER12  = { t="SEWER12",  f="F_017", color=0x292017 }
-  SEWER13  = { t="SEWER13",  f="F_018", color=0x333533 }
+  SEWER01  = { t="SEWER01",  f="F_018" }
+  SEWER02  = { t="SEWER02",  f="F_018" }
+  SEWER05  = { t="SEWER05",  f="F_018" }
+  SEWER06  = { t="SEWER06",  f="F_018" }
+  SEWER07  = { t="SEWER07",  f="F_017" }
+  SEWER08  = { t="SEWER08",  f="F_017" }
+  SEWER09  = { t="SEWER09",  f="F_017" }
+  SEWER10  = { t="SEWER10",  f="F_017" }
+  SEWER11  = { t="SEWER11",  f="F_017" }
+  SEWER12  = { t="SEWER12",  f="F_017" }
+  SEWER13  = { t="SEWER13",  f="F_018" }
 
-  SPAWN01  = { t="SPAWN01",  f="F_042", color=0x2f302f }
-  SPAWN05  = { t="SPAWN05",  f="F_042", color=0x30302f }
-  SPAWN08  = { t="SPAWN08",  f="F_065", color=0x201c17 }
-  SPAWN10  = { t="SPAWN10",  f="F_065", color=0x201c17 }
-  SPAWN11  = { t="SPAWN11",  f="F_078", color=0x202920 }
-  SPAWN13  = { t="SPAWN13",  f="F_042", color=0x3e3f3d }
-  STEEL01  = { t="STEEL01",  f="F_074", color=0x372417 }
-  STEEL02  = { t="STEEL02",  f="F_075", color=0x332214 }
-  STEEL05  = { t="STEEL05",  f="F_069", color=0x312f2e }
-  STEEL06  = { t="STEEL06",  f="F_069", color=0x2d2c2b }
-  STEEL07  = { t="STEEL07",  f="F_070", color=0x484848 }
-  STEEL08  = { t="STEEL08",  f="F_078", color=0x333231 }
-  SWAMP01  = { t="SWAMP01",  f="F_019", color=0x283226 }
-  SWAMP03  = { t="SWAMP03",  f="F_019", color=0x292f29 }
-  SWAMP04  = { t="SWAMP04",  f="F_017", color=0x23231d }
-  SWAMP06  = { t="SWAMP06",  f="F_017", color=0x343432 }
+  SPAWN01  = { t="SPAWN01",  f="F_042" }
+  SPAWN05  = { t="SPAWN05",  f="F_042" }
+  SPAWN08  = { t="SPAWN08",  f="F_065" }
+  SPAWN10  = { t="SPAWN10",  f="F_065" }
+  SPAWN11  = { t="SPAWN11",  f="F_078" }
+  SPAWN13  = { t="SPAWN13",  f="F_042" }
+  STEEL01  = { t="STEEL01",  f="F_074" }
+  STEEL02  = { t="STEEL02",  f="F_075" }
+  STEEL05  = { t="STEEL05",  f="F_069" }
+  STEEL06  = { t="STEEL06",  f="F_069" }
+  STEEL07  = { t="STEEL07",  f="F_070" }
+  STEEL08  = { t="STEEL08",  f="F_078" }
+  SWAMP01  = { t="SWAMP01",  f="F_019" }
+  SWAMP03  = { t="SWAMP03",  f="F_019" }
+  SWAMP04  = { t="SWAMP04",  f="F_017" }
+  SWAMP06  = { t="SWAMP06",  f="F_017" }
 
-  TOMB01   = { t="TOMB01",   f="F_058", color=0x2a2a29 }
-  TOMB02   = { t="TOMB02",   f="F_058", color=0x292929 }
-  TOMB03   = { t="TOMB03",   f="F_058", color=0x373134 }
-  TOMB04   = { t="TOMB04",   f="F_058", color=0x1e1f1e }
-  TOMB05   = { t="TOMB05",   f="F_059", color=0x683506 }
-  TOMB06   = { t="TOMB06",   f="F_059", color=0x66370f }
-  TOMB07   = { t="TOMB07",   f="F_044", color=0x342f28 }
-  TOMB08   = { t="TOMB08",   f="F_042", color=0x3d3f3d }
-  TOMB09   = { t="TOMB09",   f="F_042", color=0x48280c }
-  TOMB10   = { t="TOMB10",   f="F_042", color=0x4c2708 }
-  TOMB11   = { t="TOMB11",   f="F_044", color=0x332e27 }
-  TOMB12   = { t="TOMB12",   f="F_059", color=0x4c3b2b }
-  VALVE1   = { t="VALVE1",   f="F_047", color=0x3b2916 }
-  VALVE2   = { t="VALVE2",   f="F_047", color=0x3b2915 }
-  VILL01   = { t="VILL01",   f="F_030", color=0x3b220d }
-  VILL04   = { t="VILL04",   f="F_055", color=0x3a220c }
-  VILL05   = { t="VILL05",   f="F_055", color=0x39200c }
+  TOMB01   = { t="TOMB01",   f="F_058" }
+  TOMB02   = { t="TOMB02",   f="F_058" }
+  TOMB03   = { t="TOMB03",   f="F_058" }
+  TOMB04   = { t="TOMB04",   f="F_058" }
+  TOMB05   = { t="TOMB05",   f="F_059" }
+  TOMB06   = { t="TOMB06",   f="F_059" }
+  TOMB07   = { t="TOMB07",   f="F_044" }
+  TOMB08   = { t="TOMB08",   f="F_042" }
+  TOMB09   = { t="TOMB09",   f="F_042" }
+  TOMB10   = { t="TOMB10",   f="F_042" }
+  TOMB11   = { t="TOMB11",   f="F_044" }
+  TOMB12   = { t="TOMB12",   f="F_059" }
+  VALVE1   = { t="VALVE1",   f="F_047" }
+  VALVE2   = { t="VALVE2",   f="F_047" }
+  VILL01   = { t="VILL01",   f="F_030" }
+  VILL04   = { t="VILL04",   f="F_055" }
+  VILL05   = { t="VILL05",   f="F_055" }
 
-  WASTE01  = { t="WASTE01",  f="F_005", color=0x693b18 }
-  WASTE02  = { t="WASTE02",  f="F_044", color=0x3d3f3c }
-  WASTE03  = { t="WASTE03",  f="F_082", color=0x525551 }
-  WASTE04  = { t="WASTE04",  f="F_037", color=0x573c19 }
-  WINN01   = { t="WINN01",   f="F_047", color=0x2e2318 }
-  WINNOW02 = { t="WINNOW02", f="F_022", color=0x2b2c2b }
-  WOOD01   = { t="WOOD01",   f="F_054", color=0x351a0c }
-  WOOD02   = { t="WOOD02",   f="F_092", color=0x32190b }
-  WOOD03   = { t="WOOD03",   f="F_092", color=0x2d1a0d }
-  WOOD04   = { t="WOOD04",   f="F_054", color=0x2b1a0d }
+  WASTE01  = { t="WASTE01",  f="F_005" }
+  WASTE02  = { t="WASTE02",  f="F_044" }
+  WASTE03  = { t="WASTE03",  f="F_082" }
+  WASTE04  = { t="WASTE04",  f="F_037" }
+  WINN01   = { t="WINN01",   f="F_047" }
+  WINNOW02 = { t="WINNOW02", f="F_022" }
+  WOOD01   = { t="WOOD01",   f="F_054" }
+  WOOD02   = { t="WOOD02",   f="F_092" }
+  WOOD03   = { t="WOOD03",   f="F_092" }
+  WOOD04   = { t="WOOD04",   f="F_054" }
 
   X_FAC01  = { t="X_FAC01",  f="X_001", sane=1 }
   X_FIRE01 = { t="X_FIRE01", f="X_001", sane=1 }
@@ -472,17 +472,17 @@ HEXEN.MATERIALS =
 
   -- steps --
 
-  S_01     = { t="S_01",     f="F_047", color=0x2c2217 }
-  S_02     = { t="S_02",     f="F_009", color=0x464846 }
-  S_04     = { t="S_04",     f="F_030", color=0x3b2003 }
-  S_05     = { t="S_05",     f="F_057", color=0x262622 }
-  S_06     = { t="S_06",     f="F_009", color=0x5e615c }
-  S_07     = { t="S_07",     f="F_009", color=0x4e4f4d }
-  S_09     = { t="S_09",     f="F_047", color=0x363430 }
-  S_11     = { t="S_11",     f="F_034", color=0x172614 }
-  S_12     = { t="S_12",     f="F_053", color=0x361a0c }
-  S_13     = { t="S_13",     f="F_057", color=0x313131 }
-  T2_STEP  = { t="T2_STEP",  f="F_057", color=0x323332 }
+  S_01     = { t="S_01",     f="F_047" }
+  S_02     = { t="S_02",     f="F_009" }
+  S_04     = { t="S_04",     f="F_030" }
+  S_05     = { t="S_05",     f="F_057" }
+  S_06     = { t="S_06",     f="F_009" }
+  S_07     = { t="S_07",     f="F_009" }
+  S_09     = { t="S_09",     f="F_047" }
+  S_11     = { t="S_11",     f="F_034" }
+  S_12     = { t="S_12",     f="F_053" }
+  S_13     = { t="S_13",     f="F_057" }
+  T2_STEP  = { t="T2_STEP",  f="F_057" }
 
 
   -- switches --
@@ -500,86 +500,86 @@ HEXEN.MATERIALS =
 
   -- floors --
 
-  F_001 = { t="WASTE01",  f="F_001", color=0x351b0c }
-  F_002 = { t="WASTE01",  f="F_002", color=0x492f11 }
-  F_003 = { t="WASTE01",  f="F_003", color=0x572e13 }
-  F_004 = { t="WASTE01",  f="F_004", color=0x3f2911 }
-  F_005 = { t="WASTE01",  f="F_005", color=0x5c3314 }
-  F_006 = { t="WASTE01",  f="F_006", color=0x4b2c12 }
-  F_007 = { t="CAVE05",   f="F_007", color=0x2f1f0f }
-  F_008 = { t="CAVE07",   f="F_008", color=0x1d1c1a }
-  F_009 = { t="PRTL02",   f="F_009", color=0x383a38 }
-  F_010 = { t="PRTL04",   f="F_010", color=0x505150 }
-  F_011 = { t="FOREST01", f="F_011", color=0x7c4b28 }
-  F_012 = { t="FIRE06",   f="F_012", color=0x262726 }
-  F_013 = { t="FIRE06",   f="F_013", color=0x292724 }
-  F_014 = { t="MONK16",   f="F_014", color=0x41280f }
-  F_015 = { t="CASTLE01", f="F_015", color=0x2d2e2d }
-  F_017 = { t="SWAMP04",  f="F_017", color=0x23221d }
-  F_018 = { t="SEWER01",  f="F_018", color=0x222522 }
-  F_019 = { t="SWAMP01",  f="F_019", color=0x2c372b }
-  F_020 = { t="SWAMP01",  f="F_020", color=0x2d362d }
-  F_021 = { t="FIRE06",   f="F_021", color=0x201e1d }
-  F_022 = { t="FIRE06",   f="F_022", color=0x202020 }
-  F_023 = { t="SEWER01",  f="F_023", color=0x1e1f1e }
-  F_024 = { t="SEWER07",  f="F_024", color=0x222411 }
-  F_025 = { t="MONK02",   f="F_025", color=0x472e12 }
-  F_027 = { t="MONK01",   f="F_027", color=0x292d29 }
-  F_028 = { t="MONK16",   f="F_028", color=0x4b3113 }
-  F_029 = { t="MONK14",   f="F_029", color=0x513515 }
-  F_030 = { t="VILL01",   f="F_030", color=0x40210e }
-  F_031 = { t="MONK07",   f="F_031", color=0x313331 }
-  F_032 = { t="FIRE01",   f="F_032", color=0x171817 }
-  F_033 = { t="ICE01",    f="F_033", color=0x727188 }
-  F_034 = { t="FOREST02", f="F_034", color=0x141c13 }
-  F_037 = { t="WASTE04",  f="F_037", color=0x644623 }
-  F_038 = { t="FOREST02", f="F_038", color=0x151712 }
-  F_039 = { t="CAVE04",   f="F_039", color=0x222420 }
-  F_040 = { t="CAVE04",   f="F_040", color=0x1a1c1a }
-  F_041 = { t="FIRE06",   f="F_041", color=0x2a221c }
-  F_042 = { t="FIRE06",   f="F_042", color=0x3b3b3b }
-  F_043 = { t="WASTE02",  f="F_043", color=0x303230 }
-  F_044 = { t="PRTL04",   f="F_044", color=0x4f504e }
-  F_045 = { t="WASTE03",  f="F_045", color=0x2e2d2b }
-  F_046 = { t="WASTE03",  f="F_046", color=0x413b2f }
-  F_047 = { t="TOMB07",   f="F_047", color=0x4c4130 }
-  F_048 = { t="FOREST05", f="F_048", color=0x334531 }
-  F_049 = { t="CRATE01",  f="F_049", color=0x3a1c0d }
-  F_050 = { t="CRATE03",  f="F_050", color=0x2e170b }
-  F_051 = { t="CRATE02",  f="F_051", color=0x31180b }
-  F_052 = { t="CRATE04",  f="F_052", color=0x31180b }
-  F_053 = { t="CRATE05",  f="F_053", color=0x32190c }
-  F_054 = { t="WOOD01",   f="F_054", color=0x341a0c }
-  F_055 = { t="WOOD01",   f="F_055", color=0x341a0c }
-  F_057 = { t="CASTLE07", f="F_057", color=0x282828 }
-  F_058 = { t="TOMB04",   f="F_058", color=0x1e1f1e }
-  F_059 = { t="TOMB05",   f="F_059", color=0x723804 }
+  F_001 = { t="WASTE01",  f="F_001" }
+  F_002 = { t="WASTE01",  f="F_002" }
+  F_003 = { t="WASTE01",  f="F_003" }
+  F_004 = { t="WASTE01",  f="F_004" }
+  F_005 = { t="WASTE01",  f="F_005" }
+  F_006 = { t="WASTE01",  f="F_006" }
+  F_007 = { t="CAVE05",   f="F_007" }
+  F_008 = { t="CAVE07",   f="F_008" }
+  F_009 = { t="PRTL02",   f="F_009" }
+  F_010 = { t="PRTL04",   f="F_010" }
+  F_011 = { t="FOREST01", f="F_011" }
+  F_012 = { t="FIRE06",   f="F_012" }
+  F_013 = { t="FIRE06",   f="F_013" }
+  F_014 = { t="MONK16",   f="F_014" }
+  F_015 = { t="CASTLE01", f="F_015" }
+  F_017 = { t="SWAMP04",  f="F_017" }
+  F_018 = { t="SEWER01",  f="F_018" }
+  F_019 = { t="SWAMP01",  f="F_019" }
+  F_020 = { t="SWAMP01",  f="F_020" }
+  F_021 = { t="FIRE06",   f="F_021" }
+  F_022 = { t="FIRE06",   f="F_022" }
+  F_023 = { t="SEWER01",  f="F_023" }
+  F_024 = { t="SEWER07",  f="F_024" }
+  F_025 = { t="MONK02",   f="F_025" }
+  F_027 = { t="MONK01",   f="F_027" }
+  F_028 = { t="MONK16",   f="F_028" }
+  F_029 = { t="MONK14",   f="F_029" }
+  F_030 = { t="VILL01",   f="F_030" }
+  F_031 = { t="MONK07",   f="F_031" }
+  F_032 = { t="FIRE01",   f="F_032" }
+  F_033 = { t="ICE01",    f="F_033" }
+  F_034 = { t="FOREST02", f="F_034" }
+  F_037 = { t="WASTE04",  f="F_037" }
+  F_038 = { t="FOREST02", f="F_038" }
+  F_039 = { t="CAVE04",   f="F_039" }
+  F_040 = { t="CAVE04",   f="F_040" }
+  F_041 = { t="FIRE06",   f="F_041" }
+  F_042 = { t="FIRE06",   f="F_042" }
+  F_043 = { t="WASTE02",  f="F_043" }
+  F_044 = { t="PRTL04",   f="F_044" }
+  F_045 = { t="WASTE03",  f="F_045" }
+  F_046 = { t="WASTE03",  f="F_046" }
+  F_047 = { t="TOMB07",   f="F_047" }
+  F_048 = { t="FOREST05", f="F_048" }
+  F_049 = { t="CRATE01",  f="F_049" }
+  F_050 = { t="CRATE03",  f="F_050" }
+  F_051 = { t="CRATE02",  f="F_051" }
+  F_052 = { t="CRATE04",  f="F_052" }
+  F_053 = { t="CRATE05",  f="F_053" }
+  F_054 = { t="WOOD01",   f="F_054" }
+  F_055 = { t="WOOD01",   f="F_055" }
+  F_057 = { t="CASTLE07", f="F_057" }
+  F_058 = { t="TOMB04",   f="F_058" }
+  F_059 = { t="TOMB05",   f="F_059" }
 
-  F_061 = { t="TOMB04",   f="F_061", color=0x3e3f3d }
-  F_062 = { t="TOMB04",   f="F_062", color=0x3e403e }
-  F_063 = { t="TOMB04",   f="F_063", color=0x3e403e }
-  F_064 = { t="TOMB04",   f="F_064", color=0x3b3d3b }
-  F_065 = { t="STEEL06",  f="F_065", color=0x313131 }
-  F_066 = { t="STEEL07",  f="F_066", color=0x52514f }
-  F_067 = { t="STEEL06",  f="F_067", color=0x313130 }
-  F_068 = { t="STEEL07",  f="F_068", color=0x52504e }
-  F_069 = { t="STEEL06",  f="F_069", color=0x2a2928 }
-  F_070 = { t="STEEL07",  f="F_070", color=0x4a4846 }
-  F_071 = { t="STEEL05",  f="F_071", color=0x323232 }
-  F_072 = { t="STEEL07",  f="F_072", color=0x535352 }
-  F_073 = { t="CASTLE11", f="F_073", color=0x302b21 }
-  F_074 = { t="STEEL01",  f="F_074", color=0x352215 }
-  F_075 = { t="STEEL02",  f="F_075", color=0x392312 }
-  F_076 = { t="CAVE02",   f="F_076", color=0x2e302d }
-  F_077 = { t="VILL01",   f="F_077", color=0x351f0d }
-  F_078 = { t="STEEL06",  f="F_078", color=0x373635 }
-  F_081 = { t="GLASS05",  f="F_081", color=0x342a3b }
-  F_082 = { t="CASTLE01", f="F_082", color=0x262626 }
-  F_083 = { t="CASTLE01", f="F_083", color=0x30302e }
-  F_084 = { t="CASTLE01", f="F_084", color=0x323454 }
-  F_089 = { t="CASTLE01", f="F_089", color=0x302517 }
-  F_091 = { t="CASTLE01", f="F_091", color=0x272420 }
-  F_092 = { t="WOOD01",   f="F_092", color=0x341a0c }
+  F_061 = { t="TOMB04",   f="F_061" }
+  F_062 = { t="TOMB04",   f="F_062" }
+  F_063 = { t="TOMB04",   f="F_063" }
+  F_064 = { t="TOMB04",   f="F_064" }
+  F_065 = { t="STEEL06",  f="F_065" }
+  F_066 = { t="STEEL07",  f="F_066" }
+  F_067 = { t="STEEL06",  f="F_067" }
+  F_068 = { t="STEEL07",  f="F_068" }
+  F_069 = { t="STEEL06",  f="F_069" }
+  F_070 = { t="STEEL07",  f="F_070" }
+  F_071 = { t="STEEL05",  f="F_071" }
+  F_072 = { t="STEEL07",  f="F_072" }
+  F_073 = { t="CASTLE11", f="F_073" }
+  F_074 = { t="STEEL01",  f="F_074" }
+  F_075 = { t="STEEL02",  f="F_075" }
+  F_076 = { t="CAVE02",   f="F_076" }
+  F_077 = { t="VILL01",   f="F_077" }
+  F_078 = { t="STEEL06",  f="F_078" }
+  F_081 = { t="GLASS05",  f="F_081" }
+  F_082 = { t="CASTLE01", f="F_082" }
+  F_083 = { t="CASTLE01", f="F_083" }
+  F_084 = { t="CASTLE01", f="F_084" }
+  F_089 = { t="CASTLE01", f="F_089" }
+  F_091 = { t="CASTLE01", f="F_091" }
+  F_092 = { t="WOOD01",   f="F_092" }
 
 
   -- liquids --
@@ -640,175 +640,8 @@ HEXEN.MATERIALS =
   O_CARVE  = { t="BRASS4",  f="O_CARVE", sane=1 }
 
   -- FIXME: TEMP HACK!!
-  STNGLS1  = { t="GLASS01",  f="F_081", color=0x402f3a }
+  STNGLS1  = { t="GLASS01",  f="F_081" }
 }
-
-
---[[ FIXME: incorporate these color values
-
--------------
--- Missing --
--------------
-
-F_A501 , color=0x313331 -- This is really F_031 (duplicate)
-
-
--------------------------------------------
--- Special / Pics (and/but also Missing) --
--------------------------------------------
-
-BLANK , color=0x040404
-
-CLOCK01 , color=0x6e4e21
-CLOCK02 , color=0x705121
-CLOCK03 , color=0x73521f
-CLOCK04 , color=0x705121
-CLOCK05 , color=0x6e4e21
-CLOCK06 , color=0x705121
-CLOCK07 , color=0x73521f
-CLOCK08 , color=0x705121
-CLOCK11 , color=0x73511f
-CLOCK12 , color=0x765520
-CLOCK13 , color=0x7a551e
-CLOCK14 , color=0x765520
-CLOCK15 , color=0x73511f
-CLOCK16 , color=0x765520
-CLOCK17 , color=0x7a551e
-CLOCK18 , color=0x765520
-
-SPAWN02 , color=0x2f302f
-SPAWN03 , color=0x33312d
-SPAWN04 , color=0x303030
-SPAWN06 , color=0x30302f
-SPAWN07 , color=0x30302e
-SPAWN09 , color=0x211c17
-SPAWN10 , color=0x241a15
-SPAWN12 , color=0x2e2f1f
-
---The following are likely all repressented by F_084
-F_085 , color=0x313352
-F_086 , color=0x313350
-F_087 , color=0x313352
-F_088 , color=0x313351
-
-
------------
--- Rails --
------------
-
-CASTLE09 , color=0x3b3b3b
-CAVE11 , color=0x3e3f3d
-FIRE16 , color=0x3b3a39
-FOREST06 , color=0x412e14
-FOREST12 , color=0x30312e
-GATE01 , color=0x191b19
-GATE02 , color=0x2f2921
-GATE03 , color=0x2e2a23
-GATE04 , color=0x30291f
-GATE51 , color=0x252019
-GATE52 , color=0x252019
-GATE53 , color=0x27231c
-GLASS07 , color=0x2c2231
-PRTL07 , color=0x434343
-MONK24 , color=0x4a3c2e
-SEWER03 , color=0x242421
-SEWER04 , color=0x252724
-SEWER14 , color=0x373837
-SWAMP07 , color=0x383734
-TOMB13 , color=0x5b422a
-TOMB18 , color=0x333030
-VALVE01 , color=0x1c1711
-VALVE02 , color=0x1d1711
-VILL06 , color=0x2e180a
-VILL07 , color=0x2e180a
-VILL08 , color=0x2c1809
-
-
-----------
--- Sane --
-----------
-
-BOSSK1 , color=0x272727
-BOSSK2 , color=0x2e2d29
-
-GEAR01 , color=0x483d2c
-GEAR02 , color=0x39332a
-GEAR03 , color=0x39332a
-GEAR04 , color=0x38332a
-GEAR05 , color=0x39332a
-GEAR0A , color=0x392f24
-GEAR0B , color=0x382f24
-
-SW51_OFF , color=0x23201e
-SW51_ON , color=0x332a20
-SW52_OFF , color=0x282928
-SW52_ON , color=0x342f28
-SW53_DN , color=0x402811
-SW53_MD , color=0x402911
-SW53_UP , color=0x412a12
-
-SW_1_DN , color=0x282114
-SW_1_MD , color=0x282113
-SW_1_UP , color=0x272113
-SW_2_DN , color=0x222720
-SW_2_MD , color=0x212721
-SW_2_UP , color=0x21261f
-SW_EL1 , color=0x2d2e2d
-SW_EL2 , color=0x232323
-SW_EL3 , color=0x1c1d1c
-SW_EL4 , color=0x271718
-SW_EL5 , color=0x3d1514
-SW_OL1 , color=0x2d261e
-SW_OL2 , color=0x2c261d
-SW_OL3 , color=0x2c261e
-SW_OL4 , color=0x2c251d
-SW_OL5 , color=0x2d261e
-
-X_FAC01 , color=0x760101
-X_FAC02 , color=0x740101
-X_FAC03 , color=0x770101
-X_FAC04 , color=0x740101
-X_FAC05 , color=0x6d0201
-X_FAC06 , color=0x6a0301
-X_FAC07 , color=0x6a0601
-X_FAC08 , color=0x650602
-X_FAC09 , color=0x650602
-X_FAC10 , color=0x620602
-X_FAC11 , color=0x630702
-X_FAC12 , color=0x630602
-X_FIRE01 , color=0x901b00
-X_FIRE02 , color=0x8e2000
-X_FIRE03 , color=0x911c00
-X_FIRE04 , color=0x8e2000
-X_SWMP1 , color=0x121d0e
-X_SWMP2 , color=0x121d0d
-X_SWMP3 , color=0x111d0d
-X_SWR1 , color=0x1e211e
-X_SWR2 , color=0x1e221e
-X_SWR3 , color=0x1e221e
-X_WATER1 , color=0x010438
-X_WATER2 , color=0x010439
-X_WATER3 , color=0x010439
-X_WATER4 , color=0x010438
-
-X_001 , color=0x901b00
-X_002 , color=0x8e2000
-X_003 , color=0x911c00
-X_004 , color=0x8e2000
-X_005 , color=0x010438
-X_006 , color=0x010439
-X_007 , color=0x010439
-X_008 , color=0x010438
-X_009 , color=0x121d0e
-X_010 , color=0x121d0d
-X_011 , color=0x111d0d
-X_012 , color=0x553130
-X_013 , color=0x533130
-X_014 , color=0x513130
-X_015 , color=0x533130
-X_016 , color=0x523130
-
---]]
 
 
 ----------------------------------------------------------------

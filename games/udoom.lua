@@ -34,22 +34,22 @@ DOOM1.MATERIALS =
 
   -- walls --
 
-  ASHWALL  = { t="ASHWALL",  f="FLOOR6_2", color=0x242424 }
-  BROVINE  = { t="BROVINE",  f="FLOOR0_1", color=0x434824 }
-  BRNPOIS2 = { t="BRNPOIS2", f="FLOOR7_1", color=0x3d3119 }
-  BROWNWEL = { t="BROWNWEL", f="FLOOR7_1", color=0x3b2d15 }
+  ASHWALL  = { t="ASHWALL",  f="FLOOR6_2" }
+  BROVINE  = { t="BROVINE",  f="FLOOR0_1" }
+  BRNPOIS2 = { t="BRNPOIS2", f="FLOOR7_1" }
+  BROWNWEL = { t="BROWNWEL", f="FLOOR7_1" }
 
-  COMP2    = { t="COMP2",    f="CEIL5_1",  color=0x21201c }
-  COMPOHSO = { t="COMPOHSO", f="FLOOR7_1", color=0x1e1821 }
-  COMPTILE = { t="COMPTILE", f="CEIL5_1",  color=0x101034 }
-  COMPUTE1 = { t="COMPUTE1", f="FLAT19",   color=0x605f60 }
-  COMPUTE2 = { t="COMPUTE2", f="CEIL5_1",  color=0x20201c }
-  COMPUTE3 = { t="COMPUTE3", f="CEIL5_1",  color=0x493521 }
+  COMP2    = { t="COMP2",    f="CEIL5_1" }
+  COMPOHSO = { t="COMPOHSO", f="FLOOR7_1" }
+  COMPTILE = { t="COMPTILE", f="CEIL5_1" }
+  COMPUTE1 = { t="COMPUTE1", f="FLAT19" }
+  COMPUTE2 = { t="COMPUTE2", f="CEIL5_1" }
+  COMPUTE3 = { t="COMPUTE3", f="CEIL5_1" }
 
-  DOORHI   = { t="DOORHI",   f="FLAT19", color=0x7c7066 }
-  GRAYDANG = { t="GRAYDANG", f="FLAT19", color=0x6f6666 }
-  ICKDOOR1 = { t="ICKDOOR1", f="FLAT19", color=0x6d6f63 }
-  ICKWALL6 = { t="ICKWALL6", f="FLAT18", color=0x60615b }
+  DOORHI   = { t="DOORHI",   f="FLAT19" }
+  GRAYDANG = { t="GRAYDANG", f="FLAT19" }
+  ICKDOOR1 = { t="ICKDOOR1", f="FLAT19" }
+  ICKWALL6 = { t="ICKWALL6", f="FLAT18" }
 
   LITE2    = { t="LITE2",    f="FLOOR0_1" }
   LITE4    = { t="LITE4",    f="FLAT19" }
@@ -60,26 +60,26 @@ DOOM1.MATERIALS =
   LITERED  = { t="LITERED",  f="FLOOR1_6" }
   LITESTON = { t="LITESTON", f="MFLR8_1" }
 
-  NUKESLAD = { t="NUKESLAD", f="FLOOR7_1", color=0x2a2e22 }
-  PLANET1  = { t="PLANET1",  f="FLAT23",   color=0x423b38 }
-  REDWALL1 = { t="REDWALL1", f="FLOOR1_6", color=0xc50000 }
-  SKINBORD = { t="SKINBORD", f="FLAT5_5",  color=0x8f5c4d }
-  SKINTEK1 = { t="SKINTEK1", f="FLAT5_5",  color=0x604937 }
-  SKINTEK2 = { t="SKINTEK2", f="FLAT5_5",  color=0x514130 }
-  SKULWAL3 = { t="SKULWAL3", f="FLAT5_6",  color=0x4e311d }
-  SKULWALL = { t="SKULWALL", f="FLAT5_6",  color=0x4e3d2b }
+  NUKESLAD = { t="NUKESLAD", f="FLOOR7_1" }
+  PLANET1  = { t="PLANET1",  f="FLAT23" }
+  REDWALL1 = { t="REDWALL1", f="FLOOR1_6" }
+  SKINBORD = { t="SKINBORD", f="FLAT5_5" }
+  SKINTEK1 = { t="SKINTEK1", f="FLAT5_5" }
+  SKINTEK2 = { t="SKINTEK2", f="FLAT5_5" }
+  SKULWAL3 = { t="SKULWAL3", f="FLAT5_6" }
+  SKULWALL = { t="SKULWALL", f="FLAT5_6" }
   SLADRIP1 = { t="SLADRIP1", f="FLOOR7_1" }
 
-  SP_DUDE3 = { t="SP_DUDE3", f="DEM1_5",   color=0x464631 }
-  SP_DUDE6 = { t="SP_DUDE6", f="DEM1_5",   color=0x4b4731 }
-  SP_ROCK1 = { t="SP_ROCK1", f="MFLR8_3",  color=0x4c4b42 }
-  STARTAN1 = { t="STARTAN1", f="FLOOR4_1", color=0x6a543f }
-  STONGARG = { t="STONGARG", f="MFLR8_1",  color=0x33352d }
-  STONPOIS = { t="STONPOIS", f="FLAT5_4",  color=0x59554d }
-  TEKWALL2 = { t="TEKWALL2", f="CEIL5_1",  color=0x37342a }
-  TEKWALL3 = { t="TEKWALL3", f="CEIL5_1",  color=0x323128 }
-  TEKWALL5 = { t="TEKWALL5", f="CEIL5_1",  color=0x35322a }
-  WOODSKUL = { t="WOODSKUL", f="FLAT5_2",  color=0x4f3b25 }
+  SP_DUDE3 = { t="SP_DUDE3", f="DEM1_5" }
+  SP_DUDE6 = { t="SP_DUDE6", f="DEM1_5" }
+  SP_ROCK1 = { t="SP_ROCK1", f="MFLR8_3" }
+  STARTAN1 = { t="STARTAN1", f="FLOOR4_1" }
+  STONGARG = { t="STONGARG", f="MFLR8_1" }
+  STONPOIS = { t="STONPOIS", f="FLAT5_4" }
+  TEKWALL2 = { t="TEKWALL2", f="CEIL5_1" }
+  TEKWALL3 = { t="TEKWALL3", f="CEIL5_1" }
+  TEKWALL5 = { t="TEKWALL5", f="CEIL5_1" }
+  WOODSKUL = { t="WOODSKUL", f="FLAT5_2" }
 
 
   -- switches --
@@ -92,11 +92,11 @@ DOOM1.MATERIALS =
 
   -- floors --
 
-  FLAT5_6  = { f="FLAT5_6", t="SKULWALL", color=0x553c20 }
-  FLAT5_7  = { f="FLAT5_7", t="ASHWALL",  color=0x353535 }
-  FLAT5_8  = { f="FLAT5_8", t="ASHWALL",  color=0x2c2c2c }
-  FLOOR6_2 = { f="FLOOR6_2", t="ASHWALL", color=0x292929 }
-  MFLR8_4  = { f="MFLR8_4",  t="ASHWALL", color=0x292929 }
+  FLAT5_6  = { f="FLAT5_6", t="SKULWALL" }
+  FLAT5_7  = { f="FLAT5_7", t="ASHWALL" }
+  FLAT5_8  = { f="FLAT5_8", t="ASHWALL" }
+  FLOOR6_2 = { f="FLOOR6_2", t="ASHWALL" }
+  MFLR8_4  = { f="MFLR8_4",  t="ASHWALL" }
 
 
   -- rails --
