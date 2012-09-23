@@ -20,35 +20,96 @@ for OBLIGE to use in the generated levels.
 
 <h3>Step 1</h3>
 
-In the <i>modules</i> folder in OBLIGE, there is a file called
-<b>new_monsters.template</b>.  Copy this to a new file
+Pick a short name for your module.
+It must only contain letters, digits, and the
+underscore '_', and must start with a letter.
+For example, "foobie" and "big_demon3" are OK, but "3d_tiger" and "$#!^"
+are invalid names.
 
 
 <h3>Step 2</h3>
 
-Open this file with a text editor, such as NOTEPAD which comes with
-the Windows operating system, or gedit for Linux.  Do NOT use a
+In the <i>modules</i> folder in OBLIGE, there is a file called
+<b>new_monsters.template</b>.  Copy this to a new file, using the
+name you picked in step 1, and set the file extension
+(sometimes called the file type) to "lua".
+
+
+<p>
+Example: <b>foobie.lua</b>
+
+<p>
+Lowercase filenames are best.
+If the file extension is not set correctly,
+OBLIGE will not load it.
+You can see which files are loaded by looking at the <i>LOGS.txt</i>
+file after running OBLIGE.
+
+
+<h3>Step 3</h3>
+
+Open your file with a text editor, such as NOTEPAD (which comes with
+the Windows operating system) or gedit for Linux.  Do NOT use a
 word processor program, such as Microsoft Word, because they do not
 create plain text files and OBLIGE will not be able to read them.
 
 <p>
 Find all occurrances of the word 'CUSTOM' and change it to your
-name for the module (uppercase is best).  For example, change it to
-'XXX'.
+name for the module, using uppercase letters this time.
 
-
-<h3>Step 3</h3>
+<p>
+Example: <b>FOOBIE.MONSTERS =</b>
 
 
 <h3>Step 4</h3>
+
+Here you will create the entries for one or more monsters.
+There is already a single entry in the template, called 'monster1',
+which is defined by everything in between the curly brackets
+(<b>{</b> .... <b>}</b>).
+You can add more monsters by copying an existing entry, making
+sure the opening and closing brackets match up.  If you mess up
+the brackets, OBLIGE will raise an error message when it starts.
+
+<p>
+You can give the monsters custom names, e.g. "demon3", but as
+before you can only use letters, digit and
+the underscore, and it cannot begin with a digit.
+If you added extra monster entries, they need to have different names.
+
+<p>
+@@@@@
+
+
+<h3>Step 5</h3>
 Now you can test your module.
 Start OBLIGE (if it was already open then close it first), and your
 new module should appear in the modules list.  Enable your module,
 and build some levels, and the new monster(s) should appear.
 
+When playing the levels, be sure to load the WADs or PK3s which contains
+the monster graphics (etc) in addition to the OBLIGE WAD (which only
+contains the generated levels).
+
+
 <p>
-Testing tips:
-<p>....
+<b>Testing Tips:</b>
+
+<ol class="spacey_list">
+<li>
+you can use a 'prob' value much higher than normal (like 999) to
+make sure that the monster is being added into the levels.
+Once it is working, then set the 'prob' value to something sane.
+
+<li>
+OBLIGE sometimes skips using a monster for a whole level, so if
+it hasn't appeared on the first level, check some other levels.
+
+<!---
+Also, monsters with a high 'level' value will usually not appear
+in the early levels of an episode or whole game. --->
+
+</ol>
 
 
 </div class="rest">
