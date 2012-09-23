@@ -183,11 +183,7 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
     local dodge_ratio
 
 
-    if info.no_dist then
-      hit_ratio   = 1.0
-      dodge_ratio = 0.0
-
-    elseif info.attack == "melee" then
+    if info.attack == "melee" then
       hit_ratio   = MELEE_RATIOS[idx]
       dodge_ratio = MELEE_DODGE
 
