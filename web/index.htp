@@ -47,7 +47,7 @@ happy to announce that.....
 VERSION 4.28 HAS BEEN RELEASED!
 
 <p>
-OK, it's true that this is not an Earth-shattering release,
+OK, it's true that this is not exactly an Earth-shattering release,
 and somewhat of a backwards step compared with the last V3
 release.
 However there are still some good things in this version:
@@ -55,7 +55,7 @@ However there are still some good things in this version:
 <ul class="spacey_list">
 
 <li>Quake support is much better than V3, there are no collision
-problems, and the maps now have lighting and vis.
+problems, and the maps now have proper lighting and vis.
 <li>Quake 2 support!
 <li>Hexen is supported again, with hub support
 <li>support for Absolution, the Doom64 TC

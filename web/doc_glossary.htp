@@ -295,19 +295,19 @@ but other shapes are possible too.
 <div id="seed" class="gloss_term">
 Seed
 </div><div class="gloss_define">
-In the GUI, the seed is a 5-digit value which is used to
+In the GUI, the seed is a 6-digit value which is used to
 setup the random-number generator.  The same seed value
 produces the same random numbers, and hence the same levels
 (when all other settings are the same).
-The top three digits are guaranteed to be different on
-different days, so it would take about 16 months before
+The top four digits are guaranteed to be different on
+different days, so it would take about 27 <i>years</i> before
 they start repeating.
-The BUMP button only changes the bottom two digits.
+The '+' (Bump) button only changes the bottom two digits.
 
 <p>
 In the Lua code, a seed is a square region on the 2D map.
-The size is usually 192x192 units, but this can depend on the
-selected game.
+At the moment the size is 192x192 units,
+but this may change in the future.
 Each seed represents a single mapping concept,
 such as a walkway, stair, lift, switch, pillar, or a spot for a
 monster.  The sides of each seed can be used for walls, doors,
