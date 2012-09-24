@@ -48,8 +48,7 @@ VERSION 4.28 HAS BEEN RELEASED!
 
 <p>
 OK, it's true that this is not exactly an Earth-shattering release,
-and somewhat of a backwards step compared with the last V3
-release.
+and compared with previous versions all the rooms are very plain.
 However there are still some good things in this version:
 
 <ul class="spacey_list">
@@ -65,10 +64,10 @@ problems, and the maps now have proper lighting and vis.
 
 </ul>
 
-I'm not sure exactly what I'm going to do now, but I definitely have
-some ideas that I want to experiment with.  Supporting so many
-games is quite a burden, though, and I may need to concentrate on
-a single game for a while.
+I'm not sure exactly what I'm going to work on now,
+but I definitely have some ideas that I want to experiment with.
+Supporting so many games is quite a burden though,
+and I may need to concentrate on a single game for a while.
 
 <p>
 Anyway, I hope you have some fun with this release.
