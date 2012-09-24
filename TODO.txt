@@ -2,42 +2,24 @@
 OBLIGE TODO
 ===========
 
-Current Goals:
+>>>  add pillars (via. C.content.kind = "DECORATION"
+                       C.content.decor_prefab = "Pillar_2")
 
-(1) improve the monster progression, which does not ramp up quickly
-    enough over a "full" game.
+>>>  add crates too (pick prefab from THEME.indoor_fabs)
+
+>>>  add pits too (set C.floor_prefab = "Pit_Test")
+
+>>>  fix chunk_is_mungeable()
+
+
+Current Goals:
 
 (4) add some floor/ceiling prefabs:
       (a) crates
-      (b) ceiling lights
+      (b) ceiling lights / sky holes
       (c) pillars
 
-(6) get some of the other games working, especially Doom 1 and Quake 2,
-    and possibly Harmony and/or HacX too.
-    Some stuff for TNT/Evilution and Plutonia would be a bonus.
-
-
-DONE: secret exits
-DONE: can disable pre-built levels
-DONE: ensure hallways have monster/item spots
-DONE: add normal doors, probably as "mini halls"
-
-
-FIXED : no sky fences !!!
-FIXED : double halls
-FIXED : progress bar jumps for MAP31/MAP32
-
-
------------------------------------------------------------------
-
-
--   for 'mon_along' calculation -- ideally take it out of
-    the game specific code (can modify it via PARAM or THEME).
-
--  check health and ammo distribution (too much in start room?)
-
-
-(3) 3D patterns in Quake:
+(7) 3D patterns in Quake:
 
     (a) have 'z1_cap' and 'z2_cap' fields in a chunk, ensure all
         prefabs use it -- perhaps: Trans.set_cap(), Trans.clear_cap()
@@ -48,9 +30,13 @@ FIXED : progress bar jumps for MAP31/MAP32
                   (sub areas have same floor height but different ceilings)
 
 
-Issue with prefab composition? x/y/z_ranges of a child prefab is only
-honored when it is inserted into the parent, NOT when the combined
-prefab is inserted into the target space.
+-----------------------------------------------------------------
+
+
+-   for 'mon_along' calculation -- ideally take it out of
+    the game specific code (can modify it via PARAM or THEME).
+
+-  check health and ammo distribution (too much in start room?)
 
 
 +  HEXEN and QUAKE : fix hallway lifts
