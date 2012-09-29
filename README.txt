@@ -1,16 +1,8 @@
 
-OBLIGE 4.23-WIP
-===============
+OBLIGE 4.28
+===========
 
-by Andrew Apted.  February 2012
-
-
-** PREFACE **
-
-This package is just a SNAPSHOT or "Work In Progress" of
-current Oblige development.  This it NOT a proper release and
-is only intended for testing or for curiosity.  The levels are
-quite poor, and some games which can be selected may not work.
+by Andrew Apted.  September 2012
 
 
 INTRODUCTION
@@ -80,7 +72,7 @@ CONTACT DETAILS
 
   Website: http://oblige.sourceforge.net/
 
-  Forum: http://sourceforge.net/apps/phpbb/oblige/
+  Forum: http://oblige.sourceforge.net/forum/
 
   Email: <ajapted@users.sf.net>
 
