@@ -36,7 +36,7 @@ OBLIGE 4.28 is the current version.
 
 <h3>NEWS</h3>
 
-<div class="newsdate">30-Sep-2012:</div>
+<div class="newsdate">28-Sep-2012:</div>
 <blockquote class="news">
 
 I hadn't been doing much with OBLIGE for a long time,
@@ -44,7 +44,7 @@ but for the sake of moving forward with the V4 codebase I am
 happy to announce that.....
 
 <p>
-VERSION 4.28 HAS BEEN RELEASED!
+VERSION 4.28 HAS BEEN RELEASED
 
 <p>
 OK, it's true that this is not exactly an Earth-shattering release,
@@ -66,8 +66,10 @@ problems, and the maps now have proper lighting and vis.
 
 I'm not sure exactly what I'm going to work on now,
 but I definitely have some ideas that I want to experiment with.
-Supporting so many games is quite a burden though,
-and I may need to concentrate on a single game for a while.
+The same vision that I had five
+years ago -- that a random level generator can create levels
+genuinely worth playing -- that is still something which
+I want to achieve.
 
 <p>
 Anyway, I hope you have some fun with this release.

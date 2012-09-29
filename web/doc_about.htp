@@ -79,10 +79,9 @@ for even more stuff we'd like to add)
 
 <ul class="status">
 
-<li>no traps, no cages
-<li>no secrets, no powerups
-<li>very limited scenery
-<li>messed up monster quantities
+<li>very plain rooms, no liquids
+<li>no traps
+<li>no boss maps
 
 </ul>
 
@@ -90,10 +89,12 @@ for even more stuff we'd like to add)
 See this forum thread (LINK) for a list of known problems
 --->
 
-<p>
-<i>(The <a href="http://oblige.svn.sourceforge.net/viewvc/oblige/trunk/TODO.txt">TODO</a>
+<!---
+[p]
+[i](The [a href="http://oblige.svn.sourceforge.net/viewvc/oblige/trunk/TODO.txt"]TODO[/a]
 contains a list of bugs and features currently being worked on)
-</i>
+[/i]
+--->
 
 
 <h3>GETTING IN CONTACT</h3>
