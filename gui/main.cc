@@ -436,8 +436,8 @@ bool Build_Cool_Shit()
     else if (StringCaseCmp(format, "nukem") == 0)
       game_object = Nukem_GameObject();
 
-    else if (StringCaseCmp(format, "wolf3d") == 0)
-      game_object = Wolf_GameObject();
+/// else if (StringCaseCmp(format, "wolf3d") == 0)
+///   game_object = Wolf_GameObject();
 
     else if (StringCaseCmp(format, "quake") == 0)
       game_object = Quake1_GameObject();
