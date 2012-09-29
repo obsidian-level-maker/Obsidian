@@ -118,6 +118,17 @@ DOOM1.MATERIALS =
   -- FIXME: HACK HACK HACK
   BRICKLIT = { t="LITEMET",  f="CEIL5_1" }
   PIPEWAL1 = { t="COMPWERD", f="CEIL5_1" }
+  MIDBARS3 = { t="MIDGRATE", f="CEIL5_1" }
+}
+
+ 
+DOOM1.THEME_DEFAULTS =
+{
+  big_junctions =
+  {
+    Junc_Octo = 70
+    Junc_Spokey = 10
+  }
 }
 
 
