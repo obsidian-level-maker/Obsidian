@@ -2157,7 +2157,12 @@ gui.debugf("number_of_areas @ %s svol:%d --> %d [VHR %d .. %d]\n",
 
     if table.empty(areas) then
 Areas_dump_vhr(R)
-      error("failed to find any height in grid neighbors")
+      gui.printf("WARNING: failed to find any height in grid neighbors")
+
+      local AREA = AREA_CLASS.new("floor", R)
+      AREA.vhr = rand.irange(min_vhr, max_vhr)
+      table.insert(R.areas, AREA)
+      return AREA
     end
 
     -- TODO: pick the least used VHR so far
