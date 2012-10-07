@@ -40,7 +40,7 @@ from existing programs (like the famous <b>SLIGE</b>
 by David Chess)
 
 <ul class="features">
-  <li>higher quality levels, e.g. outdoor areas!
+  <li>high quality levels, e.g. outdoor areas!
   <li>easy to use GUI interface (no messing with command lines)
   <li>built-in node builder, the created levels are ready to play
   <li>uses the LUA scripting language for easy customisation

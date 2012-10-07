@@ -11,9 +11,9 @@ INTRODUCTION
   games, such as DOOM II and QUAKE (with more in development).
   The goal is to produce good levels which are fun to play.
 
-  The _planned_ features are:
+  The planned features are:
 
-    * higher quality levels, e.g. outdoor areas!
+    * high quality levels, e.g. outdoor areas!
     * easy to use GUI interface (no messing with command lines)
     * built-in node builder, so the levels are ready to play
     * uses the LUA scripting language for easy customisation
