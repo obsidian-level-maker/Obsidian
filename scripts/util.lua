@@ -40,6 +40,12 @@ function sel(cond, yes_val, no_val)
   return no_val
 end
 
+function warning(fmt, ...)
+  if fmt then
+    gui.printf("WARNING: " .. fmt, ...)
+  end
+end
+
 function stderrf(fmt, ...)
   if fmt then
     io.stderr:write(string.format(fmt, ...))

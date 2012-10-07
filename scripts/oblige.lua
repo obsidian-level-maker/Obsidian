@@ -428,10 +428,9 @@ function ob_set_mod_option(name, option, value)
   end
 
   -- this can only happen while parsing the CONFIG.CFG file
-  -- (containing some old no-longer-used value).
+  -- (containing some no-longer-used value).
   if not def.avail_choices[value] then
-    gui.printf("WARNING: invalid choice: %s (for option %s.%s)\n",
-               value, name, option)
+    warning("invalid choice: %s (for option %s.%s)\n", value, name, option)
     return
   end
 
