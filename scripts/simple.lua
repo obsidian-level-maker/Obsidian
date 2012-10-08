@@ -67,8 +67,8 @@ function Simple_cave_or_maze(R)
 
 --[[
   local function set_corner(S, side, value)
-    local mx = (S.sx - R.sx1) * 3 + 1
-    local my = (S.sy - R.sy1) * 3 + 1
+    local mx = (S.sx - R.sx1) * 4 + 1
+    local my = (S.sy - R.sy1) * 4 + 1
 
     local dx, dy = geom.delta(side)
 
@@ -135,15 +135,15 @@ function Simple_cave_or_maze(R)
     R.cave_base_x = SEEDS[R.sx1][R.sy1].x1
     R.cave_base_y = SEEDS[R.sx1][R.sy1].y1
 
-    map = CAVE_CLASS.new(R.cave_base_x, R.cave_base_y, R.sw * 3, R.sh * 3)
+    map = CAVE_CLASS.new(R.cave_base_x, R.cave_base_y, R.sw * 4, R.sh * 4)
 
     -- determine location of chunks inside this map
     each C in R.chunks do
-      C.cave_x1 = (C.sx1 - R.sx1) * 3 + 1
-      C.cave_y1 = (C.sy1 - R.sy1) * 3 + 1
+      C.cave_x1 = (C.sx1 - R.sx1) * 4 + 1
+      C.cave_y1 = (C.sy1 - R.sy1) * 4 + 1
 
-      C.cave_x2 = (C.sx2 - R.sx1) * 3 + 3
-      C.cave_y2 = (C.sy2 - R.sy1) * 3 + 3
+      C.cave_x2 = (C.sx2 - R.sx1) * 4 + 4
+      C.cave_y2 = (C.sy2 - R.sy1) * 4 + 4
     end
   end
 
@@ -158,16 +158,16 @@ function Simple_cave_or_maze(R)
 
       if C and (C.void or C.scenic or C.cross_junc) then continue end
 
-      local cx = (sx - R.sx1) * 3 + 1
-      local cy = (sy - R.sy1) * 3 + 1
+      local cx = (sx - R.sx1) * 4 + 1
+      local cy = (sy - R.sy1) * 4 + 1
 
-      map:fill(cx, cy, cx+2, cy+2, 0)
+      map:fill(cx, cy, cx+3, cy+3, 0)
 
       for dir = 2,8,2 do
         if not S:same_room(dir) and not (C and C.link[dir]) and
            not (C and C.foobage == "important")
         then
-          set_side(cx, cy, cx+2, cy+2, dir, (R.is_lake ? -1 ; 1))
+          set_side(cx, cy, cx+3, cy+3, dir, (R.is_lake ? -1 ; 1))
         end
       end
     end end -- sx, sy
@@ -182,11 +182,11 @@ function Simple_cave_or_maze(R)
 
       if S.is_walk and rand.odds(25) then
 
-        local cx = (sx - R.sx1) * 3 + 1
-        local cy = (sy - R.sy1) * 3 + 1
+        local cx = (sx - R.sx1) * 4 + 1
+        local cy = (sy - R.sy1) * 4 + 1
 
-        for cx = cx, cx+2 do
-          for cy = cy, cy+2 do
+        for cx = cx, cx+3 do
+          for cy = cy, cy+3 do
             if map:get(cx, cy) == 0 and rand.odds(25) then
               map:set(cx, cy, -1)
             end
