@@ -736,13 +736,14 @@ DOOM1.PREBUILT_LEVELS =
 {
   E1M8 =
   {
-    { prob=40, file="doom1_boss/anomaly1.wad", map="E1M8" }
-    { prob=80, file="doom1_boss/anomaly2.wad", map="E1M8" }
+    { prob=50, file="doom1_boss/anomaly1.wad", map="E1M8" }
+    { prob=50, file="doom1_boss/anomaly2.wad", map="E1M8" }
   }
 
   E2M8 =
   {
-    { prob=50, file="doom1_boss/tower1.wad", map="E2M8" }
+    { prob=40, file="doom1_boss/tower1.wad", map="E2M8" }
+    { prob=80, file="doom1_boss/tower2.wad", map="E2M8" }
   }
 
   E3M8 =
