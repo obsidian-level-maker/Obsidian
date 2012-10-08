@@ -79,7 +79,7 @@ OB_THEMES["psycho"] =
 
 -- important constants
 
-SEED_SIZE = 192
+SEED_SIZE = 256
 
 EXTREME_H = 4000
 
