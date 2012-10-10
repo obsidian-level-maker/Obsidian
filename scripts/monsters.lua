@@ -89,8 +89,7 @@ COOP_MON_FACTOR = 1.35
 COOP_HEALTH_FACTOR = 1.3
 COOP_AMMO_FACTOR   = 1.6
 
-MONSTER_MAX_TIME   = { weak=6,  medium=9,   tough=12  }
-MONSTER_MAX_DAMAGE = { weak=70, medium=110, tough=180 }
+MONSTER_MAX_TIME = { weak=6, medium=9, tough=12 }
 
 
 -- Doom flags
@@ -373,11 +372,15 @@ end
 function Monsters_max_level()
   local max_level = 10 * (LEVEL.mon_along or 0.5)
 
+  if OB_CONFIG.strength == "tough" then
+    max_level = max_level * 1.7
+  end
+
   if max_level < 1 then max_level = 1 end
 
   LEVEL.max_level = max_level
 
-  gui.printf("Monster max_level: %1.2f\n", max_level)
+  gui.printf("Monster max_level: %1.1f\n", max_level)
 end
 
 
@@ -1019,7 +1022,7 @@ function Monsters_in_room(L)
       return 2 / (1 + factor)
 
     elseif OB_CONFIG.strength == "tough" then
-      return (factor + 1) / 2
+      return (factor + 1) / 8
 
     else
       return 1
@@ -1098,11 +1101,13 @@ function Monsters_in_room(L)
     local d = info.density or 1
     
     -- level check
-    local max_level = LEVEL.max_level * L.lev_along
-    if max_level < 2 then max_level = 2 end
+    if OB_CONFIG.strength != "crazy" then
+      local max_level = LEVEL.max_level * L.lev_along
+      if max_level < 2 then max_level = 2 end
 
-    if info.level > max_level then
-      d = d / 4
+      if info.level > max_level then
+        d = d / 4
+      end
     end
 
     -- random variation
@@ -1137,7 +1142,7 @@ function Monsters_in_room(L)
 
 
     -- would the monster take too long to kill?
-    local max_time = MONSTER_MAX_TIME[OB_CONFIG.strength] or 8
+    local max_time = MONSTER_MAX_TIME[OB_CONFIG.strength] or 9
 
     if time > max_time*2 then
       d = d / 4
@@ -1145,18 +1150,6 @@ function Monsters_in_room(L)
       d = d / 2
     end
 
-
-    -- would the monster inflict too much damage on the player?
-
-    --> TOO FRICKIN' BAD
-
---[[
-    local max_damage = MONSTER_MAX_DAMAGE[OB_CONFIG.strength] or 100
-
-    if damage > max_damage then
-      d = d / 
-    end
---]]
     return d
   end
 
@@ -1206,7 +1199,7 @@ function Monsters_in_room(L)
       num_kinds = rand.index_by_probs({ 40, 60, 20 })
     else
       local size = math.sqrt(L.svolume)
-      num_kinds = int(size / 2)
+      num_kinds = int(size / 1.2)
     end
 
     local list = {}
