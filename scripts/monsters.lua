@@ -1178,10 +1178,10 @@ function Monsters_in_room(L)
 
     -- adjust the base number to account for room size
     local size = math.sqrt(L.svolume)
-    local num  = int(base_num * size / 12 + 0.6 + gui.random())
+    local num  = int(base_num * size / 8 + 0.6 + gui.random())
 
     if num < 1 then num = 1 end
-    if num > 5 then num = 5 end  -- FIXME: game specific --> PARAM.xxx
+    if num > 5 then num = 5 end
 
     if rand.odds(30) then num = num + 1 end
     if rand.odds(3)  then num = num + 1 end
