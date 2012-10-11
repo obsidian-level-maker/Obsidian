@@ -4730,9 +4730,10 @@ DOOM2.PREBUILT_LEVELS =
 {
   MAP07 =
   {
-    { prob=30, file="doom2_boss/simple1.wad", map="MAP07" }
+    { prob=50, file="doom2_boss/simple1.wad", map="MAP07" }
     { prob=50, file="doom2_boss/simple2.wad", map="MAP07" }
-    { prob=70, file="doom2_boss/simple3.wad", map="MAP07" }
+    { prob=50, file="doom2_boss/simple3.wad", map="MAP07" }
+    { prob=50, file="doom2_boss/simple4.wad", map="MAP07" }
   }
 
   MAP30 =
@@ -4746,7 +4747,7 @@ DOOM2.PREBUILT_LEVELS =
     { prob=50, file="doom2_boss/gotcha1.wad", map="MAP01" }
     { prob=50, file="doom2_boss/gotcha2.wad", map="MAP01" }
     { prob=40, file="doom2_boss/gotcha3.wad", map="MAP01" }
-    { prob=10, file="doom2_boss/gotcha4.wad", map="MAP01" }
+    { prob=20, file="doom2_boss/gotcha4.wad", map="MAP01" }
   }
 
   GALLOW =
