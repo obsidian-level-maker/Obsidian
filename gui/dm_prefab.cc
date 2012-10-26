@@ -34,7 +34,7 @@
 //  
 //  wadfab_get_sector(index)
 //  -->  { floor_h=#, floor_tex="...",
-//         ceil_h=#, ceil_tex="...",
+//          ceil_h=#,  ceil_tex="...",
 //         special=#, tag=#, light=#
 //       }
 //  
@@ -88,7 +88,7 @@ static int friz_num_gl_segs;
 static int friz_num_polygons;
 
 
-static const byte *lev_v2_magic = (byte *)"gNd2";
+static const byte *lev_v2_magic = (const byte *) "gNd2";
 
 
 static bool LoadLump(const char *lump_name, byte ** array, int * count,
@@ -97,7 +97,10 @@ static bool LoadLump(const char *lump_name, byte ** array, int * count,
   int entry = WAD_FindEntry(lump_name);
 
   if (entry < 0)
+  {
+    DebugPrintf("Lump not found '%s'\n", lump_name);
     return false;
+  }
   
   int pos    = 0;
   int length = WAD_EntryLen(entry);
@@ -109,19 +112,32 @@ static bool LoadLump(const char *lump_name, byte ** array, int * count,
     char buffer[4];
 
     if (! WAD_ReadData(entry, 0, 4, buffer))
+    {
+      DebugPrintf("Failed reading lump (%d bytes)\n", 4);
       return false;
+    }
 
     if (memcmp(buffer, lev_v2_magic, 4) != 0)
+    {
+      DebugPrintf("Wrong GL-nodes version\n");
       return false;
+    }
 
     pos    += 4;
     length -= 4;
   }
 
   if (! WAD_ReadData(entry, pos, length, *array))
+  {
+    DebugPrintf("Failed reading lump (%d bytes)\n", length);
     return false;
+  }
 
   *count = length / (int)struct_size;
+
+//FIXME: TEMP DEBUG, REMOVE
+fprintf(stderr, "Loaded %s at [%d]: %d items (%d bytes)\n",
+        lump_name, entry, *count, length);
 
   return true;
 }
@@ -136,7 +152,31 @@ static void FreeLump(byte ** array)
   }
 }
 
-int wadfab_free(lua_State *L);
+
+int wadfab_free(lua_State *L)
+{
+  FreeLump((byte **) &friz_verts);
+  FreeLump((byte **) &friz_lines);
+  FreeLump((byte **) &friz_sides);
+  FreeLump((byte **) &friz_sectors);
+  FreeLump((byte **) &friz_things);
+
+  FreeLump((byte **) &friz_gl_verts);
+  FreeLump((byte **) &friz_gl_segs);
+  FreeLump((byte **) &friz_polygons);
+
+  friz_num_verts = 0;
+  friz_num_lines = 0;
+  friz_num_sides = 0;
+  friz_num_sectors = 0;
+  friz_num_things = 0;
+
+  friz_num_gl_verts = 0;
+  friz_num_gl_segs = 0;
+  friz_num_polygons = 0;
+
+  return 0;
+}
 
 
 int wadfab_load(lua_State *L)
@@ -159,6 +199,7 @@ int wadfab_load(lua_State *L)
       ! LoadLump("SECTORS",  (byte **) &friz_sectors,  &friz_num_sectors,  sizeof(raw_sector_t))
      )
   {
+    WAD_CloseRead();
     wadfab_free(L);
     return luaL_error(L, "wadfab_load: missing/bad map in %s", name);
   }
@@ -168,64 +209,44 @@ int wadfab_load(lua_State *L)
       ! LoadLump("GL_SSECT", (byte **) &friz_polygons, &friz_num_polygons, sizeof(raw_subsec_t))
      )
   {
+    WAD_CloseRead();
     wadfab_free(L);
     return luaL_error(L, "wadfab_load: missing/bad GL-nodes in %s", name);
   }
 
-  return 0;
-}
-
-
-int wadfab_free(lua_State *L)
-{
+  // we have loaded everything we need -- can close then file now
   WAD_CloseRead();
 
-  FreeLump((byte **) &friz_verts);
-  FreeLump((byte **) &friz_lines);
-  FreeLump((byte **) &friz_sides);
-  FreeLump((byte **) &friz_sectors);
-  FreeLump((byte **) &friz_things);
-
-  FreeLump((byte **) &friz_gl_verts);
-  FreeLump((byte **) &friz_gl_segs);
-  FreeLump((byte **) &friz_polygons);
-
-  friz_num_verts = 0;
-  friz_num_lines = 0;
-  friz_num_sides = 0;
-  friz_num_sectors = 0;
-  friz_num_things = 0;
-
-  friz_num_gl_verts = 0;
-  friz_num_gl_segs = 0;
-  friz_num_polygons = 0;
+  return 0;
 }
 
 
 //------------------------------------------------------------------------
 
 
-int wadfab_get_polygon(lua_State *L)
+int wadfab_get_thing(lua_State *L)
 {
+  // FIXME: wadfab_get_thing
 }
 
 
 int wadfab_get_sector(lua_State *L)
 {
+  // FIXME: wadfab_get_sector
 }
 
 
 int wadfab_get_side(lua_State *L)
 {
+  // FIXME: wadfab_get_side
 }
 
 
-int wadfab_get_thing(lua_State *L)
+int wadfab_get_polygon(lua_State *L)
 {
+  // FIXME: wadfab_get_polygon
 }
 
-
-// TODO
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
