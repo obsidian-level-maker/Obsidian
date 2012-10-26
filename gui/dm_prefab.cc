@@ -36,6 +36,67 @@
 #include "g_doom.h"
 #include "q_common.h"  // qLump_c
 
+//
+//  A.P.I
+//  =====
+//  
+//  wadfab_load(name)
+//  --> boolean
+//  
+//  wadfab_free()
+//  --> no result
+//  
+//  wadfab_get_polygon(index)
+//  -->  { sector=# 
+//         coords={ {x=#,y=#,side=# } ... }
+//       }
+//  
+//  wadfab_get_sector(index)
+//  -->  { floor_h=#, floor_tex="...",
+//         ceil_h=#, ceil_tex="...",
+//         special=#, tag=#, light=#
+//       }
+//  
+//  wadfab_get_side(index)
+//  -->  { upper_tex="", mid_tex="", lower_tex="",
+//         x_offset=#, y_offset=#,
+//         special=#, tag=#, flags=#
+//       }
+//  
+//  wadfab_get_thing(index)
+//  -->  { id=#, x=#, y=#, angle=#, flags=# }
+//
+
+
+int DM_wadfab_load(lua_State *L)
+{
+}
+
+
+int DM_wadfab_free(lua_State *L)
+{
+}
+
+
+int DM_wadfab_get_polygon(lua_State *L)
+{
+}
+
+
+int DM_wadfab_get_sector(lua_State *L)
+{
+}
+
+
+int DM_wadfab_get_side(lua_State *L)
+{
+}
+
+
+int DM_wadfab_get_thing(lua_State *L)
+{
+}
+
 
 // TODO
 
