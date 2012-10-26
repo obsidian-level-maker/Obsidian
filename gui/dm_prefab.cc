@@ -67,33 +67,79 @@
 //  -->  { id=#, x=#, y=#, angle=#, flags=# }
 //
 
+static raw_vertex_t  * friz_verts;
+static raw_linedef_t * friz_lines;
+static raw_sidedef_t * friz_sides;
+static raw_sector_t  * friz_sectors;
+static raw_thing_t   * friz_things;
 
-int DM_wadfab_load(lua_State *L)
+static raw_vertex_t  * friz_gl_verts;
+static raw_gl_seg_t  * friz_gl_segs;
+static raw_subsec_t  * friz_polygons;
+
+static int friz_num_verts;
+static int friz_num_lines;
+static int friz_num_sides;
+static int friz_num_sectors;
+static int friz_num_things;
+
+static int friz_num_gl_verts;
+static int friz_num_gl_segs;
+static int friz_num_polygons;
+
+
+static bool LoadLump(const char *name, byte ** array, int *count, size_t struct_size,
+                     int magic = 0)
 {
 }
 
 
-int DM_wadfab_free(lua_State *L)
+int wadfab_load(lua_State *L)
+{
+  if (! WAD_OpenRead(filename))
+    return luaL_error(L, "wadfab_load: bad WAD file: %s", fab_name);
+
+  if (! LoadLump("THINGS",   (byte **) &friz_things,   &friz_num_things,   sizeof(raw_thing_t)) ||
+      ! LoadLump("VERTEXES", (byte **) &friz_verts,    &friz_num_verts,    sizeof(raw_vertex_t)) ||
+      ! LoadLump("LINEDEFS", (byte **) &friz_lines,    &friz_num_lines,    sizeof(raw_linedef_t)) ||
+      ! LoadLump("SIDEDEFS", (byte **) &friz_sides,    &friz_num_sides,    sizeof(raw_sidedef_t)) ||
+      ! LoadLump("SECTORS",  (byte **) &friz_sectors,  &friz_num_sectors,  sizeof(raw_sector_t))
+     )
+  {
+    return luaL_error(L, "wadfab_load: missing/bad map in %s", fab_name);
+  }
+
+  if (! LoadLump("GL_VERT",  (byte **) &friz_gl_verts, &friz_num_gl_verts, sizeof(raw_vertex_t), 2) ||
+      ! LoadLump("GL_SEGS",  (byte **) &friz_gl_segs,  &friz_num_gl_segs,  sizeof(raw_gl_seg_t)) ||
+      ! LoadLump("GL_SSECT", (byte **) &friz_polygons, &friz_num_polygons, sizeof(raw_subsec_t))
+     )
+  {
+    return luaL_error(L, "wadfab_load: missing/bad GL-nodes in %s", fab_name);
+  }
+}
+
+
+int wadfab_free(lua_State *L)
 {
 }
 
 
-int DM_wadfab_get_polygon(lua_State *L)
+int wadfab_get_polygon(lua_State *L)
 {
 }
 
 
-int DM_wadfab_get_sector(lua_State *L)
+int wadfab_get_sector(lua_State *L)
 {
 }
 
 
-int DM_wadfab_get_side(lua_State *L)
+int wadfab_get_side(lua_State *L)
 {
 }
 
 
-int DM_wadfab_get_thing(lua_State *L)
+int wadfab_get_thing(lua_State *L)
 {
 }
 

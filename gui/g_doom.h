@@ -220,6 +220,25 @@ typedef struct
 }
 raw_patch_header_t;
 
+
+typedef struct raw_gl_seg_s
+{
+  u16_t start;      // from this vertex...
+  u16_t end;        // ... to this vertex
+  u16_t linedef;    // linedef that this seg goes along, or -1
+  u16_t side;       // 0 if on right of linedef, 1 if on left
+  u16_t partner;    // partner seg number, or -1
+}
+raw_gl_seg_t;
+
+
+typedef struct raw_subsec_s
+{
+  u16_t num;     // number of Segs in this Sub-Sector
+  u16_t first;   // first Seg
+}
+raw_subsec_t;
+
 #endif /* __OBLIGE_DOOM_OUT_H__ */
 
 //--- editor settings ---

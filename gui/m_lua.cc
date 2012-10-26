@@ -543,6 +543,13 @@ extern int DM_fsky_add_stars(lua_State *L);
 extern int DM_fsky_add_clouds(lua_State *L);
 extern int DM_fsky_add_hills(lua_State *L);
 
+extern int wadfab_load(lua_State *L);
+extern int wadfab_free(lua_State *L);
+extern int wadfab_get_polygon(lua_State *L);
+extern int wadfab_get_sector(lua_State *L);
+extern int wadfab_get_side(lua_State *L);
+extern int wadfab_get_thing(lua_State *L);
+
 extern int Q1_add_mapmodel(lua_State *L);
 extern int Q1_add_tex_wad(lua_State *L);
 
@@ -601,6 +608,13 @@ static const luaL_Reg gui_script_funcs[] =
   { "fsky_add_stars",   DM_fsky_add_stars },
   { "fsky_add_clouds",  DM_fsky_add_clouds },
   { "fsky_add_hills",   DM_fsky_add_hills },
+
+  { "wadfab_load",         wadfab_load },
+  { "wadfab_free",         wadfab_free },
+  { "wadfab_get_polygon",  wadfab_get_polygon },
+  { "wadfab_get_sector",   wadfab_get_sector },
+  { "wadfab_get_side",     wadfab_get_side },
+  { "wadfab_get_thing",    wadfab_get_thing },
 
   // Quake functions
   { "q1_add_mapmodel",  Q1_add_mapmodel },
