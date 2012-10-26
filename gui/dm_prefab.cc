@@ -17,31 +17,12 @@
 //  GNU General Public License for more details.
 //
 //------------------------------------------------------------------------
-
-#include "headers.h"
-#include "hdr_fltk.h"
-#include "hdr_lua.h"
-#include "hdr_ui.h"
-
-#include "lib_file.h"
-#include "lib_util.h"
-#include "lib_wad.h"
-
-#include "main.h"
-#include "m_lua.h"
-
-#include "csg_main.h"
-
-#include "dm_prefab.h"
-#include "g_doom.h"
-#include "q_common.h"  // qLump_c
-
 //
 //  A.P.I
 //  =====
 //  
 //  wadfab_load(name)
-//  --> boolean
+//  --> no result, raises error on failure
 //  
 //  wadfab_free()
 //  --> no result
@@ -66,6 +47,25 @@
 //  wadfab_get_thing(index)
 //  -->  { id=#, x=#, y=#, angle=#, flags=# }
 //
+//------------------------------------------------------------------------
+
+#include "headers.h"
+#include "hdr_fltk.h"
+#include "hdr_lua.h"
+#include "hdr_ui.h"
+
+#include "lib_file.h"
+#include "lib_util.h"
+#include "lib_wad.h"
+
+#include "main.h"
+#include "m_lua.h"
+
+#include "csg_main.h"
+
+#include "dm_prefab.h"
+#include "g_doom.h"
+
 
 static raw_vertex_t  * friz_verts;
 static raw_linedef_t * friz_lines;
@@ -88,16 +88,69 @@ static int friz_num_gl_segs;
 static int friz_num_polygons;
 
 
-static bool LoadLump(const char *name, byte ** array, int *count, size_t struct_size,
-                     int magic = 0)
+static const byte *lev_v2_magic = (byte *)"gNd2";
+
+
+static bool LoadLump(const char *lump_name, byte ** array, int * count,
+                     size_t struct_size, int magic = 0)
 {
+  int entry = WAD_FindEntry(lump_name);
+
+  if (entry < 0)
+    return false;
+  
+  int pos    = 0;
+  int length = WAD_EntryLen(entry);
+
+  *array = new byte[length + 1];
+
+  if (magic == 2)
+  {
+    char buffer[4];
+
+    if (! WAD_ReadData(entry, 0, 4, buffer))
+      return false;
+
+    if (memcmp(buffer, lev_v2_magic, 4) != 0)
+      return false;
+
+    pos    += 4;
+    length -= 4;
+  }
+
+  if (! WAD_ReadData(entry, pos, length, *array))
+    return false;
+
+  *count = length / (int)struct_size;
+
+  return true;
 }
+
+
+static void FreeLump(byte ** array)
+{
+  if (*array)
+  {
+    delete[] (*array);
+    *array = NULL;
+  }
+}
+
+int wadfab_free(lua_State *L);
 
 
 int wadfab_load(lua_State *L)
 {
+  const char *name = luaL_checkstring(L, 1);
+
+  char filename[PATH_MAX];
+
+  // FIXME: determine full name PROPERLY !!
+  sprintf(filename, "./prefabs/%s", name);
+
+
   if (! WAD_OpenRead(filename))
-    return luaL_error(L, "wadfab_load: bad WAD file: %s", fab_name);
+    return luaL_error(L, "wadfab_load: missing/bad WAD: %s", name);
 
   if (! LoadLump("THINGS",   (byte **) &friz_things,   &friz_num_things,   sizeof(raw_thing_t)) ||
       ! LoadLump("VERTEXES", (byte **) &friz_verts,    &friz_num_verts,    sizeof(raw_vertex_t)) ||
@@ -106,7 +159,8 @@ int wadfab_load(lua_State *L)
       ! LoadLump("SECTORS",  (byte **) &friz_sectors,  &friz_num_sectors,  sizeof(raw_sector_t))
      )
   {
-    return luaL_error(L, "wadfab_load: missing/bad map in %s", fab_name);
+    wadfab_free(L);
+    return luaL_error(L, "wadfab_load: missing/bad map in %s", name);
   }
 
   if (! LoadLump("GL_VERT",  (byte **) &friz_gl_verts, &friz_num_gl_verts, sizeof(raw_vertex_t), 2) ||
@@ -114,14 +168,41 @@ int wadfab_load(lua_State *L)
       ! LoadLump("GL_SSECT", (byte **) &friz_polygons, &friz_num_polygons, sizeof(raw_subsec_t))
      )
   {
-    return luaL_error(L, "wadfab_load: missing/bad GL-nodes in %s", fab_name);
+    wadfab_free(L);
+    return luaL_error(L, "wadfab_load: missing/bad GL-nodes in %s", name);
   }
+
+  return 0;
 }
 
 
 int wadfab_free(lua_State *L)
 {
+  WAD_CloseRead();
+
+  FreeLump((byte **) &friz_verts);
+  FreeLump((byte **) &friz_lines);
+  FreeLump((byte **) &friz_sides);
+  FreeLump((byte **) &friz_sectors);
+  FreeLump((byte **) &friz_things);
+
+  FreeLump((byte **) &friz_gl_verts);
+  FreeLump((byte **) &friz_gl_segs);
+  FreeLump((byte **) &friz_polygons);
+
+  friz_num_verts = 0;
+  friz_num_lines = 0;
+  friz_num_sides = 0;
+  friz_num_sectors = 0;
+  friz_num_things = 0;
+
+  friz_num_gl_verts = 0;
+  friz_num_gl_segs = 0;
+  friz_num_polygons = 0;
 }
+
+
+//------------------------------------------------------------------------
 
 
 int wadfab_get_polygon(lua_State *L)
