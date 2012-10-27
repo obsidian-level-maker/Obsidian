@@ -2373,3 +2373,95 @@ end
 
 ------------------------------------------------------------------------
 
+
+function Fab_load_from_wad(name)
+
+  local function copy_coord(S, C, pass)
+
+    local C2 = { x=C.x, y=C.y }
+
+    local side
+    local line
+
+    if C.side then side = gui.wadfab_get_side(C.side) end
+    if C.line then line = gui.wadfab_get_line(C.line) end
+
+    -- TODO: handle linedef flags
+
+    -- FIXME !!!  texture
+
+    return C2
+  end
+
+
+  local function create_brush(S, coords, pass)
+    
+    -- pass: 1 = create a floor brush (or solid wall)
+    --       2 = create a ceiling brush
+    
+    -- skip making a brush when the flat is LAVA4
+    if pass == 1 and S.floor_tex == "LAVA4" then return end
+    if pass == 2 and S. ceil_tex == "LAVA4" then return end
+
+    local B = {}
+
+    -- TODO: handle 'tag' value
+
+    if S.floor_h >= S.ceil_h then
+      -- solid wall, infinitely tall brush
+      if pass != 1 then return end
+
+    elseif pass == 1 then
+      table.insert(B, { t=S.floor_h, tex=S.floor_tex, special=S.special })
+
+    else
+      table.insert(B, { b=S.ceil_h, tex=S.ceil_tex })
+    end
+
+    each C in coords do
+      table.insert(B, copy_coord(S, C))
+    end
+
+    return B
+  end
+
+
+  ---| Fab_load_from_wad |---
+
+  -- load the map structures into memory
+  gui.wadfab_load(name)
+
+  local fab =
+  {
+    brushes  = {}
+    models   = {}
+    entities = {}
+  }
+
+  for thing_idx = 0,999 do
+    local E = gui.wadfab_get_thing(thing_idx)
+
+    -- nil result marks the end
+    if not E then break; end
+
+    table.insert(fab.entities, E)
+  end
+
+  for poly_idx = 0,999 do
+    local sec_idx, coords = gui.wadfab_get_polygon(poly_idx)
+
+    -- nil result marks the end
+    if not sec_idx then break; end
+
+    local S = gui.wadfab_get_sector(sec_idx)
+    assert(S)
+
+    create_brush(S, coords, 1)
+    create_brush(S, coords, 2)
+  end
+
+  gui.wadfab_free()
+
+  return fab
+end
+
