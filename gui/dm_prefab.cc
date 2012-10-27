@@ -28,9 +28,7 @@
 //  --> no result
 //  
 //  wadfab_get_polygon(index)
-//  -->  { sector=# 
-//         coords={ {x=#,y=#,side=# } ... }
-//       }
+//  -->  sector_num, { {x=#,y=#,side=# } ... }
 //  
 //  wadfab_get_sector(index)
 //  -->  { floor_h=#, floor_tex="...",
@@ -382,11 +380,80 @@ int wadfab_get_line(lua_State *L)
 }
 
 
+static const raw_sidedef_t * side_for_seg(const raw_gl_seg_t * seg)
+{
+  int ld = LE_S16(seg->linedef);
+
+  if (ld < 0) // miniseg?
+    return NULL;
+
+  if (ld >= friz_num_lines)
+    return NULL;  // error??
+
+  const raw_linedef_t * line = &friz_lines[ld];
+
+  int sd;
+
+  if (seg->side)
+    sd = LE_S16(line->sidedef2);
+  else
+    sd = LE_S16(line->sidedef1);
+
+  // an absent side cannot normally occur
+  if (sd < 0 || sd >= friz_num_sides)
+    return NULL;  // error??
+
+  return &friz_sides[sd];
+}
+
+
+static int determine_sector(const raw_gl_seg_t * segs, int count)
+{
+  // we assume that the first seg will be on a linedef (i.e. NOT a miniseg)
+  // TODO: try other segs if first one is a miniseg 
+
+  const raw_sidedef_t * side = side_for_seg(segs);
+
+  if (! side)
+    return -1;
+
+  int index = LE_S16(side->sector);
+
+  if (index < 0 || index >= friz_num_sectors)
+    return -1;
+
+  return index;
+}
+
+
 int wadfab_get_polygon(lua_State *L)
 {
   int index = luaL_checkint(L, 1);
 
-  // FIXME: wadfab_get_polygon
+  if (index < 0 || index >= friz_num_polygons)
+    return 0;
+
+  const raw_subsec_t * sub = &friz_polygons[index];
+
+  int seg_num   = LE_U16(sub->num);
+  int seg_first = LE_U16(sub->first);
+
+  if (seg_num <= 0 || seg_first + seg_num > friz_num_gl_segs)
+    return luaL_error(L, "wadfab_get_polygon: bad GL-subsector #%d", index);
+
+  const raw_gl_seg_t * seg = &friz_gl_segs[seg_first];
+
+  int sector = determine_sector(seg, seg_num);
+
+  // result #1
+  lua_pushinteger(L, sector);
+
+  // result #2
+  lua_createtable(L, seg_num, 0);
+
+  // FIXME !!!
+
+  return 2;
 }
 
 
