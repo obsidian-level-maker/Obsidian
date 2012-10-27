@@ -241,8 +241,6 @@ int wadfab_get_thing(lua_State *L)
 {
   int index = luaL_checkint(L, 1);
 
-  index--;  // #1 is the first
-
   if (index < 0 || index >= friz_num_things)
     return 0;
 
@@ -281,8 +279,6 @@ int wadfab_get_thing(lua_State *L)
 int wadfab_get_sector(lua_State *L)
 {
   int index = luaL_checkint(L, 1);
-
-  index--;  // #1 is the first
 
   if (index < 0 || index >= friz_num_sectors)
     return 0;
