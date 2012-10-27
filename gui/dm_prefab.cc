@@ -380,30 +380,30 @@ int wadfab_get_line(lua_State *L)
 }
 
 
-static const raw_sidedef_t * side_for_seg(const raw_gl_seg_t * seg)
+static int side_for_seg(const raw_gl_seg_t * seg, bool opposite = false)
 {
   int ld = LE_S16(seg->linedef);
 
   if (ld < 0) // miniseg?
-    return NULL;
+    return -1;
 
   if (ld >= friz_num_lines)
-    return NULL; //??? Main_FatalError("wadfab_get_polygon: bad linedef #%d", ld);
+    return -1; //??? Main_FatalError("wadfab_get_polygon: bad linedef #%d", ld);
 
   const raw_linedef_t * line = &friz_lines[ld];
 
   int sd;
 
-  if (seg->side)
+  if ((seg->side ? true : false) != opposite)
     sd = LE_S16(line->sidedef2);
   else
     sd = LE_S16(line->sidedef1);
 
-  // an absent side cannot normally occur
+  // an absent side does not normally occur
   if (sd < 0 || sd >= friz_num_sides)
-    return NULL;  // error??
+    return -1;
 
-  return &friz_sides[sd];
+  return sd;
 }
 
 
@@ -412,10 +412,12 @@ static int determine_sector(const raw_gl_seg_t * segs, int count)
   // we assume that the first seg will be on a linedef (i.e. NOT a miniseg)
   // TODO: try other segs if first one is a miniseg 
 
-  const raw_sidedef_t * side = side_for_seg(segs);
+  int sd = side_for_seg(segs);
 
-  if (! side)
+  if (sd < 0)
     return -1;
+
+  const raw_sidedef_t * side = &friz_sides[sd];
 
   int index = LE_S16(side->sector);
 
@@ -463,7 +465,24 @@ static void push_gl_seg(lua_State *L, int tab_index, const raw_gl_seg_t * seg)
   lua_pushnumber(L, y);
   lua_setfield(L, -2, "y");
 
-  // FIXME: side and/or line
+  int ld = LE_S16(seg->linedef);
+
+  if (ld >= 0 && ld < friz_num_lines)
+  {
+    lua_pushinteger(L, ld);
+    lua_setfield(L, -2, "line");
+  }
+
+  int sd = side_for_seg(seg, true /* opposite */);
+
+  if (sd < 0)
+    sd = side_for_seg(seg, false);
+
+  if (sd >= 0)
+  {
+    lua_pushinteger(L, sd);
+    lua_setfield(L, -2, "side");
+  }
 
   lua_rawseti(L, -2, tab_index);
 }
