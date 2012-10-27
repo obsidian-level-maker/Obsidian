@@ -388,7 +388,7 @@ static const raw_sidedef_t * side_for_seg(const raw_gl_seg_t * seg)
     return NULL;
 
   if (ld >= friz_num_lines)
-    return NULL;  // error??
+    return NULL; //??? Main_FatalError("wadfab_get_polygon: bad linedef #%d", ld);
 
   const raw_linedef_t * line = &friz_lines[ld];
 
@@ -426,6 +426,46 @@ static int determine_sector(const raw_gl_seg_t * segs, int count)
 }
 
 
+static void push_gl_seg(lua_State *L, int tab_index, const raw_gl_seg_t * seg)
+{
+  lua_newtable(L);
+
+  int v_idx = LE_U16(seg->end);
+
+  const raw_vertex_t * vert;
+
+  if (v_idx & IS_GL_VERT)
+  {
+    v_idx ^= IS_GL_VERT;
+
+    if (v_idx >= friz_num_gl_verts)
+      luaL_error(L, "wadfab_get_polygon: bad GL vertex #%d", v_idx);
+
+    vert = &friz_gl_verts[v_idx];
+  }
+  else
+  {
+    if (v_idx >= friz_num_verts)
+      luaL_error(L, "wadfab_get_polygon: bad vertex #%d", v_idx);
+
+    vert = &friz_verts[v_idx];
+  }
+
+  int x = LE_S16(vert->x);
+  int y = LE_S16(vert->y);
+
+  lua_pushinteger(L, x);
+  lua_setfield(L, -2, "x");
+
+  lua_pushinteger(L, y);
+  lua_setfield(L, -2, "y");
+
+  // FIXME: side and/or line
+
+  lua_rawseti(L, -2, tab_index);
+}
+
+
 int wadfab_get_polygon(lua_State *L)
 {
   int index = luaL_checkint(L, 1);
@@ -445,13 +485,19 @@ int wadfab_get_polygon(lua_State *L)
 
   int sector = determine_sector(seg, seg_num);
 
-  // result #1
+  // result #1 : SECTOR
   lua_pushinteger(L, sector);
 
-  // result #2
+  // result #2 : COORDS
   lua_createtable(L, seg_num, 0);
 
-  // FIXME !!!
+  for (int tab_index = 1 ; tab_index <= seg_num ; tab_index++)
+  {
+    // GL subsectors are clockwise, but OBLIGE are anti-clockwise.
+    // hence reverse the order.  We also use 'end' instead of 'start'.
+
+    push_gl_seg(L, tab_index, seg + (seg_num - tab_index));
+  }
 
   return 2;
 }

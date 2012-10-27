@@ -231,6 +231,8 @@ typedef struct raw_gl_seg_s
 }
 raw_gl_seg_t;
 
+#define IS_GL_VERT  0x8000
+
 
 typedef struct raw_subsec_s
 {
