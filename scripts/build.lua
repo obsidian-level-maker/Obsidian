@@ -52,6 +52,7 @@ DOOM_LINE_FLAGS =
 {
   blocked     = 0x01
   block_mon   = 0x02
+  two_sided   = 0x04
   sound_block = 0x40
 
   draw_secret = 0x20
@@ -2376,6 +2377,8 @@ end
 
 function Fab_load_from_wad(name)
 
+  local fab
+
   local function copy_coord(S, C, pass)
 
     local C2 = { x=C.x, y=C.y }
@@ -2386,9 +2389,52 @@ function Fab_load_from_wad(name)
     if C.side then side = gui.wadfab_get_side(C.side) end
     if C.line then line = gui.wadfab_get_line(C.line) end
 
+    --- determine texture to use ---
+
+    local upper_tex
+    local lower_tex
+    local   mid_tex
+
+    upper_tex = side and side.upper_tex
+    if upper_tex == "-" then upper_tex = nil end
+
+    lower_tex = side and side.lower_tex
+    if lower_tex == "-" then lower_tex = nil end
+
+    mid_tex = side and side.mid_tex
+    if mid_tex == "-" then mid_tex = nil end
+
+
+    local tex
+
+    -- if line is one-sided, use the middle texture
+    if line and bit.band(line.flags, DOOM_LINE_FLAGS.two_sided) == 0 then
+      tex = mid_tex
+
+    elseif pass == 1 then
+      tex = lower_tex or upper_tex
+
+    else
+      tex = upper_tex or lower_tex
+    end
+
+    if tex then
+      C2.tex = tex
+    end
+
+    -- offsets --
+
+    if side and side.x_offset and side.x_offset != 0 then
+      C2.x_offset = side.x_offset
+    end
+
+    if side and side.y_offset and side.y_offset != 0 then
+      C2.y_offset = side.y_offset
+    end
+
     -- TODO: handle linedef flags
 
-    -- FIXME !!!  texture
+    -- TODO: handle linedef tag
 
     return C2
   end
@@ -2407,6 +2453,8 @@ function Fab_load_from_wad(name)
 
     -- TODO: handle 'tag' value
 
+    -- TODO: a way to create closed doors
+
     if S.floor_h >= S.ceil_h then
       -- solid wall, infinitely tall brush
       if pass != 1 then return end
@@ -2422,7 +2470,8 @@ function Fab_load_from_wad(name)
       table.insert(B, copy_coord(S, C))
     end
 
-    return B
+    -- add this new brush to the prefab
+    table.insert(fab.brushes, B)
   end
 
 
@@ -2431,8 +2480,10 @@ function Fab_load_from_wad(name)
   -- load the map structures into memory
   gui.wadfab_load(name)
 
-  local fab =
+  fab =
   {
+    name = name
+
     brushes  = {}
     models   = {}
     entities = {}
