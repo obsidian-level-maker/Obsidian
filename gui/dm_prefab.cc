@@ -40,9 +40,11 @@
 //  
 //  wadfab_get_side(index)
 //  -->  { upper_tex="", mid_tex="", lower_tex="",
-//         x_offset=#, y_offset=#,
-//         special=#, tag=#, flags=#
+//         x_offset=#, y_offset=#
 //       }
+// 
+//  wadfab_get_line(index)
+//  -->  { special=#, tag=#, flags=# }
 //  
 //  wadfab_get_thing(index)
 //  -->  { id=#, x=#, y=#, angle=#, flags=# }
@@ -323,7 +325,60 @@ int wadfab_get_side(lua_State *L)
 {
   int index = luaL_checkint(L, 1);
 
-  // FIXME: wadfab_get_side
+  if (index < 0 || index >= friz_num_sides)
+    return 0;
+
+  const raw_sidedef_t * side = &friz_sides[index];
+
+  int x_offset = LE_S16(side->x_offset);
+  int y_offset = LE_S16(side->y_offset);
+
+  lua_newtable(L);
+
+  lua_pushinteger(L, x_offset);
+  lua_setfield(L, -2, "x_offset");
+
+  lua_pushinteger(L, y_offset);
+  lua_setfield(L, -2, "y_offset");
+
+  push_char8(L, side->upper_tex);
+  lua_setfield(L, -2, "upper_tex");
+
+  push_char8(L, side->lower_tex);
+  lua_setfield(L, -2, "lower_tex");
+
+  push_char8(L, side->mid_tex);
+  lua_setfield(L, -2, "mid_tex");
+
+  return 1;
+}
+
+
+int wadfab_get_line(lua_State *L)
+{
+  int index = luaL_checkint(L, 1);
+
+  if (index < 0 || index >= friz_num_lines)
+    return 0;
+
+  const raw_linedef_t * line = &friz_lines[index];
+
+  int special = LE_S16(line->type);
+  int   flags = LE_S16(line->flags);
+  int     tag = LE_S16(line->tag);
+
+  lua_newtable(L);
+
+  lua_pushinteger(L, special);
+  lua_setfield(L, -2, "special");
+
+  lua_pushinteger(L, flags);
+  lua_setfield(L, -2, "flags");
+
+  lua_pushinteger(L, tag);
+  lua_setfield(L, -2, "tag");
+
+  return 1;
 }
 
 
