@@ -221,6 +221,13 @@ typedef struct
 raw_patch_header_t;
 
 
+typedef struct raw_gl_vertex_s
+{
+  s32_t x, y;
+}
+raw_gl_vertex_t;
+
+
 typedef struct raw_gl_seg_s
 {
   u16_t start;      // from this vertex...

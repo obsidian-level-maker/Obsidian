@@ -73,9 +73,9 @@ static raw_sidedef_t * friz_sides;
 static raw_sector_t  * friz_sectors;
 static raw_thing_t   * friz_things;
 
-static raw_vertex_t  * friz_gl_verts;
-static raw_gl_seg_t  * friz_gl_segs;
-static raw_subsec_t  * friz_polygons;
+static raw_gl_vertex_t * friz_gl_verts;
+static raw_gl_seg_t    * friz_gl_segs;
+static raw_subsec_t    * friz_polygons;
 
 static int friz_num_verts;
 static int friz_num_lines;
@@ -206,7 +206,7 @@ int wadfab_load(lua_State *L)
     return luaL_error(L, "wadfab_load: missing/bad map in %s", name);
   }
 
-  if (! LoadLump("GL_VERT",  (byte **) &friz_gl_verts, &friz_num_gl_verts, sizeof(raw_vertex_t), 2) ||
+  if (! LoadLump("GL_VERT",  (byte **) &friz_gl_verts, &friz_num_gl_verts, sizeof(raw_gl_vertex_t), 2) ||
       ! LoadLump("GL_SEGS",  (byte **) &friz_gl_segs,  &friz_num_gl_segs,  sizeof(raw_gl_seg_t)) ||
       ! LoadLump("GL_SSECT", (byte **) &friz_polygons, &friz_num_polygons, sizeof(raw_subsec_t))
      )
@@ -432,7 +432,7 @@ static void push_gl_seg(lua_State *L, int tab_index, const raw_gl_seg_t * seg)
 
   int v_idx = LE_U16(seg->end);
 
-  const raw_vertex_t * vert;
+  double x, y;
 
   if (v_idx & IS_GL_VERT)
   {
@@ -441,23 +441,26 @@ static void push_gl_seg(lua_State *L, int tab_index, const raw_gl_seg_t * seg)
     if (v_idx >= friz_num_gl_verts)
       luaL_error(L, "wadfab_get_polygon: bad GL vertex #%d", v_idx);
 
-    vert = &friz_gl_verts[v_idx];
+    const raw_gl_vertex_t * vert = &friz_gl_verts[v_idx];
+
+    x = LE_S32(vert->x) / 65536.0;
+    y = LE_S32(vert->y) / 65536.0;
   }
   else
   {
     if (v_idx >= friz_num_verts)
       luaL_error(L, "wadfab_get_polygon: bad vertex #%d", v_idx);
 
-    vert = &friz_verts[v_idx];
+    const raw_vertex_t * vert = &friz_verts[v_idx];
+
+    x = LE_S16(vert->x);
+    y = LE_S16(vert->y);
   }
 
-  int x = LE_S16(vert->x);
-  int y = LE_S16(vert->y);
-
-  lua_pushinteger(L, x);
+  lua_pushnumber(L, x);
   lua_setfield(L, -2, "x");
 
-  lua_pushinteger(L, y);
+  lua_pushnumber(L, y);
   lua_setfield(L, -2, "y");
 
   // FIXME: side and/or line
