@@ -2371,42 +2371,5 @@ function Build_shadow(S, side, dist, z2)
 end
 
 
----==========================================================---
-
-
-function OLD__Quake_test()
-
-  -- FIXME: convert this into a prefab
-
-  Trans.old_quad(get_mat("METAL1_2"), 0, 128, 256, 384,  -24, 0)
-  Trans.old_quad(get_mat("CEIL1_1"),  0, 128, 256, 384,  192, 208)
-
-  -- 3D floor test
-  if false then
-    Trans.old_quad(get_mat("METAL2_4"), 112, 192, 144, 208, 20, 30);
-  end
-
-  -- liquid test
-  if false then
-    raw_add_brush(
-    {
-      { m="liquid", medium="water" },
-      { t=119, tex="e1u1/water4" },
-      { x=0,   y=0,   tex="e1u1/water4" },
-      { x=100, y=0,   tex="e1u1/water4" },
-      { x=100, y=600, tex="e1u1/water4" },
-      { x=0,   y=600, tex="e1u1/water4" },
-    })
-  end
-
-  local wall_i = get_mat("COMP1_1")
-
-  Trans.old_quad(wall_i, 0,   128,  32, 384,  0, 192)
-  Trans.old_quad(wall_i, 224, 128, 256, 384,  0, 192)
-  Trans.old_quad(wall_i, 0,   128, 256, 144,  0, 192)
-  Trans.old_quad(wall_i, 0,   370, 256, 384,  0, 192)
-
-  entity_helper("player1", 80, 256, 64)
-  entity_helper("light",   80, 256, 160, { light=200 })
-end
+------------------------------------------------------------------------
 
