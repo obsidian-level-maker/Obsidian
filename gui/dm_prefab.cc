@@ -135,9 +135,11 @@ static bool LoadLump(const char *lump_name, byte ** array, int * count,
 
   *count = length / (int)struct_size;
 
-//FIXME: TEMP DEBUG, REMOVE
-fprintf(stderr, "Loaded %s at [%d]: %d items (%d bytes)\n",
-        lump_name, entry, *count, length);
+// DEBUG
+#if 0
+fprintf(stderr, "Loaded %s : %d items (%d bytes)\n",
+        lump_name, *count, length);
+#endif
 
   return true;
 }
@@ -226,24 +228,65 @@ int wadfab_load(lua_State *L)
 
 int wadfab_get_thing(lua_State *L)
 {
-  // FIXME: wadfab_get_thing
+  int index = luaL_checkint(L, 1);
+
+  index--;  // #1 is the first
+
+  if (index < 0 || index >= friz_num_things)
+    return 0;
+
+  const raw_thing_t * thing = &friz_things[index];
+
+  int x     = LE_S16(thing->x);
+  int y     = LE_S16(thing->y);
+  int angle = LE_S16(thing->angle);
+  int id    = LE_U16(thing->type);
+  int flags = LE_U16(thing->options);
+
+  lua_newtable(L);
+
+  lua_pushinteger(L, x);
+  lua_setfield(L, -2, "x");
+
+  lua_pushinteger(L, y);
+  lua_setfield(L, -2, "y");
+
+  lua_pushinteger(L, angle);
+  lua_setfield(L, -2, "angle");
+
+  lua_pushinteger(L, angle);
+  lua_setfield(L, -2, "angle");
+
+  lua_pushinteger(L, id);
+  lua_setfield(L, -2, "id");
+
+  lua_pushinteger(L, flags);
+  lua_setfield(L, -2, "flags");
+
+  return 1;
 }
 
 
 int wadfab_get_sector(lua_State *L)
 {
+  int index = luaL_checkint(L, 1);
+
   // FIXME: wadfab_get_sector
 }
 
 
 int wadfab_get_side(lua_State *L)
 {
+  int index = luaL_checkint(L, 1);
+
   // FIXME: wadfab_get_side
 }
 
 
 int wadfab_get_polygon(lua_State *L)
 {
+  int index = luaL_checkint(L, 1);
+
   // FIXME: wadfab_get_polygon
 }
 
