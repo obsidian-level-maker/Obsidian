@@ -226,6 +226,17 @@ int wadfab_load(lua_State *L)
 //------------------------------------------------------------------------
 
 
+static void push_char8(lua_State *L, const char * buf)
+{
+  size_t len = 0;
+
+  while (len < 8 && buf[len] != 0)
+    len++;
+
+  lua_pushlstring(L, buf, len);
+}
+
+
 int wadfab_get_thing(lua_State *L)
 {
   int index = luaL_checkint(L, 1);
@@ -271,7 +282,44 @@ int wadfab_get_sector(lua_State *L)
 {
   int index = luaL_checkint(L, 1);
 
-  // FIXME: wadfab_get_sector
+  index--;  // #1 is the first
+
+  if (index < 0 || index >= friz_num_sectors)
+    return 0;
+
+  const raw_sector_t * sec = &friz_sectors[index];
+
+  int floor_h = LE_S16(sec->floor_h);
+  int  ceil_h = LE_S16(sec->ceil_h);
+
+  int special = LE_S16(sec->special);
+  int   light = LE_S16(sec->light);
+  int     tag = LE_S16(sec->tag);
+
+  lua_newtable(L);
+
+  lua_pushinteger(L, floor_h);
+  lua_setfield(L, -2, "floor_h");
+
+  lua_pushinteger(L, ceil_h);
+  lua_setfield(L, -2, "ceil_h");
+
+  lua_pushinteger(L, special);
+  lua_setfield(L, -2, "special");
+
+  lua_pushinteger(L, light);
+  lua_setfield(L, -2, "light");
+
+  lua_pushinteger(L, tag);
+  lua_setfield(L, -2, "tag");
+
+  push_char8(L, sec->floor_tex);
+  lua_setfield(L, -2, "floor_tex");
+
+  push_char8(L, sec->ceil_tex);
+  lua_setfield(L, -2, "ceil_tex");
+
+  return 1;
 }
 
 
