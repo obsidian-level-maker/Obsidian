@@ -164,7 +164,8 @@ function Seed_init(map_W, map_H, free_W, free_H)
   if PARAM.centre_map then
     BASE_X = 0 - int(SEED_W / 2) * SEED_SIZE
     BASE_Y = 0 - int(SEED_H / 2) * SEED_SIZE
-  else
+
+  elseif not OB_CONFIG.align then
     -- for Doom (etc), we want the middle 64x64 square of each seed
     -- to have aligned flats -- for teleporters (etc).
     BASE_X = BASE_X + 32
