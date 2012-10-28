@@ -25,12 +25,11 @@ class UI_Level : public Fl_Group
 {
 public: /// private:
 
+  UI_RChoice *size;
   UI_RChoice *theme;
 
-  UI_RChoice *size;
   UI_RChoice *outdoors;
-
-  UI_RChoice *secrets;
+  UI_RChoice *caves;
   UI_RChoice *traps;
 
 
@@ -53,13 +52,13 @@ private:
 
   void setup_Size();
   void setup_Outdoors();
-  void setup_Secrets();
+  void setup_Caves();
   void setup_Traps();
 
   static void callback_Size    (Fl_Widget *, void*);
   static void callback_Theme   (Fl_Widget *, void*);
   static void callback_Outdoors(Fl_Widget *, void*);
-  static void callback_Secrets (Fl_Widget *, void*);
+  static void callback_Caves   (Fl_Widget *, void*);
   static void callback_Traps   (Fl_Widget *, void*);
 
   static const char * size_syms[];

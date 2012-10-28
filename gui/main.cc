@@ -402,7 +402,7 @@ static void Batch_Defaults()
   // Level Architecture
   ob_set_config("size",     "prog");
   ob_set_config("outdoors", "mixed");
-  ob_set_config("secrets",  "mixed");
+  ob_set_config("caves",    "mixed");
   ob_set_config("traps",    "mixed");
 
   // Playing Style

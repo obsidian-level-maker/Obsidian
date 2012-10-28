@@ -47,7 +47,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 
   int y_step = 6 + KF;
 
-  int cx = x + 84 + KF * 11;
+  int cx = x + 88 + KF * 11;
   int cy = y + y_step + KF * 3;
 
   Fl_Box *heading = new Fl_Box(FL_NO_BOX, x+6, cy, w-12, 24, "Level Architecture");
@@ -61,7 +61,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   cy += heading->h() + y_step;
 
 
-  int cw = 114 + KF * 12;
+  int cw = 114 + KF * 14;
   int ch = 24 + KF * 2;
 
   size = new UI_RChoice(cx, cy, cw, ch, "Size: ");
@@ -87,6 +87,8 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 
   cy += theme->h() + y_step;
 
+  cy += y_step + y_step/2;
+
 
   outdoors = new UI_RChoice(cx, cy, cw, ch, "Outdoors: ");
   outdoors->align(FL_ALIGN_LEFT);
@@ -99,19 +101,17 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 
   cy += outdoors->h() + y_step;
 
-  cy += y_step + y_step/2;
 
+  caves = new UI_RChoice(cx, cy, cw, ch, "Caves: ");
+  caves->align(FL_ALIGN_LEFT);
+  caves->selection_color(MY_GREEN);
+  caves->callback(callback_Caves, this);
 
-  secrets = new UI_RChoice(cx, cy, cw, ch, "Secrets: ");
-  secrets->align(FL_ALIGN_LEFT);
-  secrets->selection_color(MY_GREEN);
-  secrets->callback(callback_Secrets, this);
+  setup_Caves();
 
-  setup_Secrets();
+  add(caves);
 
-  add(secrets);
-
-  cy += secrets->h() + y_step;
+  cy += caves->h() + y_step;
 
 
   traps = new UI_RChoice(cx, cy, cw, ch, "Traps: ");
@@ -143,20 +143,20 @@ void UI_Level::Locked(bool value)
 {
   if (value)
   {
-    theme->deactivate();
     size ->deactivate();
+    theme->deactivate();
 
     outdoors->deactivate();
-    secrets ->deactivate();
+    caves   ->deactivate();
     traps   ->deactivate();
   }
   else
   {
-    theme->activate();
     size ->activate();
+    theme->activate();
 
     outdoors->activate();
-    secrets ->activate();
+    caves   ->activate();
     traps   ->activate();
   }
 }
@@ -192,11 +192,11 @@ void UI_Level::callback_Outdoors(Fl_Widget *w, void *data)
   ob_set_config("outdoors", that->outdoors->GetID());
 }
  
-void UI_Level::callback_Secrets(Fl_Widget *w, void *data)
+void UI_Level::callback_Caves(Fl_Widget *w, void *data)
 {
   UI_Level *that = (UI_Level *) data;
 
-  ob_set_config("secrets", that->secrets->GetID());
+  ob_set_config("caves", that->caves->GetID());
 }
 
 void UI_Level::Defaults()
@@ -205,7 +205,7 @@ void UI_Level::Defaults()
 
   ParseValue("size",     "prog");
   ParseValue("outdoors", "mixed");
-  ParseValue("secrets",  "mixed");
+  ParseValue("caves",    "mixed");
   ParseValue("traps",    "mixed");
 }
  
@@ -227,10 +227,10 @@ bool UI_Level::ParseValue(const char *key, const char *value)
     return true;
   }
 
-  if (StringCaseCmp(key, "secrets") == 0)
+  if (StringCaseCmp(key, "caves") == 0)
   {
-    secrets->SetID(value);
-    callback_Secrets(NULL, this);
+    caves->SetID(value);
+    callback_Caves(NULL, this);
     return true;
   }
 
@@ -320,12 +320,12 @@ void UI_Level::setup_Outdoors()
   }
 }
 
-void UI_Level::setup_Secrets()
+void UI_Level::setup_Caves()
 {
-  for (int i = 0; trap_syms[i]; i += 2)
+  for (int i = 0; outdoor_syms[i]; i += 2)
   {
-    secrets->AddPair(trap_syms[i], trap_syms[i+1]);
-    secrets->ShowOrHide(trap_syms[i], 1);
+    caves->AddPair(outdoor_syms[i], outdoor_syms[i+1]);
+    caves->ShowOrHide(outdoor_syms[i], 1);
   }
 }
 
