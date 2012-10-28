@@ -1343,6 +1343,60 @@ end
 
 
 
+function Fab_determine_bbox(fab)
+  local x1, y1, z1
+  local x2, y2, z2
+
+  -- Note: no need to handle slopes, they are defined to be "shrinky"
+  --       (i.e. never higher that t, never lower than b).
+
+  each B in fab.brushes do
+    if not B[1].outlier then
+      each C in B do
+
+        if C.x then 
+          if not x1 then
+            x1, y1 = C.x, C.y
+            x2, y2 = C.x, C.y
+          else
+            x1 = math.min(x1, C.x)
+            y1 = math.min(y1, C.y)
+            x2 = math.max(x2, C.x)
+            y2 = math.max(y2, C.y)
+          end
+
+        elseif C.b or C.t then
+          local z = C.b or C.t
+          if not z1 then
+            z1, z2 = z, z
+          else
+            z1 = math.min(z1, z)
+            z2 = math.max(z2, z)
+          end
+        end
+
+      end -- C
+    end
+  end -- B
+
+  assert(x1 and y1 and x2 and y2)
+
+  -- Note: it is OK when z1 and z2 are not set (this happens with
+  --       prefabs consisting entirely of infinitely tall solids).
+
+  -- Note: It is possible to get dz == 0
+
+  local dz
+  if z1 then dz = z2 - z1 end
+
+  fab.bbox = { x1=x1, x2=x2, dx=(x2 - x1),
+               y1=y1, y2=y2, dy=(y2 - y1),
+               z1=z1, z2=z2, dz=dz,
+             }
+end
+
+
+
 function Fab_apply_skins(fab, list)
   -- perform skin substitutions on everything in the prefab.
   -- Note that the 'list' parameter is modified.
@@ -1526,59 +1580,6 @@ function Fab_apply_skins(fab, list)
   end
 
 
-  local function determine_bbox(fab)
-    local x1, y1, z1
-    local x2, y2, z2
-
-    -- Note: no need to handle slopes, they are defined to be "shrinky"
-    --       (i.e. never higher that t, never lower than b).
-
-    each B in fab.brushes do
-      if not B[1].outlier then
-        each C in B do
-
-          if C.x then 
-            if not x1 then
-              x1, y1 = C.x, C.y
-              x2, y2 = C.x, C.y
-            else
-              x1 = math.min(x1, C.x)
-              y1 = math.min(y1, C.y)
-              x2 = math.max(x2, C.x)
-              y2 = math.max(y2, C.y)
-            end
-
-          elseif C.b or C.t then
-            local z = C.b or C.t
-            if not z1 then
-              z1, z2 = z, z
-            else
-              z1 = math.min(z1, z)
-              z2 = math.max(z2, z)
-            end
-          end
-
-        end -- C
-      end
-    end -- B
-
-    assert(x1 and y1 and x2 and y2)
-
-    -- Note: it is OK when z1 and z2 are not set (this happens with
-    --       prefabs consisting entirely of infinitely tall solids).
-
-    -- Note: It is possible to get dz == 0
- 
-    local dz
-    if z1 then dz = z2 - z1 end
-
-    fab.bbox = { x1=x1, x2=x2, dx=(x2 - x1),
-                 y1=y1, y2=y2, dy=(y2 - y1),
-                 z1=z1, z2=z2, dz=dz,
-               }
-  end
-
-
   local function brush_stuff()
     each B in fab.brushes do
       if not B[1].m then
@@ -1644,7 +1645,7 @@ function Fab_apply_skins(fab, list)
   Fab_composition(fab, SKIN)
 
   -- find bounding box (in prefab space)
-  determine_bbox(fab)
+  Fab_determine_bbox(fab)
 
   brush_stuff()
 
@@ -2449,7 +2450,10 @@ function Fab_load_from_wad(name)
     if pass == 1 and S.floor_tex == "LAVA4" then return end
     if pass == 2 and S. ceil_tex == "LAVA4" then return end
 
-    local B = {}
+    local B =
+    {
+      { m="solid" }
+    }
 
     -- TODO: handle 'tag' value
 
@@ -2512,6 +2516,8 @@ function Fab_load_from_wad(name)
   end
 
   gui.wadfab_free()
+
+  Fab_determine_bbox(fab)
 
   return fab
 end
