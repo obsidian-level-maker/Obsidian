@@ -48,7 +48,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
   int y_step = 6 + KF;
 
-  int cx = x + 84 + KF * 11;
+  int cx = x + 88 + KF * 11;
   int cy = y + y_step + KF * 3;
 
   Fl_Box *heading = new Fl_Box(FL_NO_BOX, x+6, cy, w-12, 24, "Playing Style");
@@ -62,7 +62,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   cy += heading->h() + y_step;
 
 
-  int cw = 114 + KF * 16;
+  int cw = 114 + KF * 14;
   int ch = 24 + KF * 2;
 
   mons = new UI_RChoice(cx, cy, cw, ch, "Monsters: ");
