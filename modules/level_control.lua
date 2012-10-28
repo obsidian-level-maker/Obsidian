@@ -68,7 +68,6 @@ OB_MODULES["level_control"] =
     big_rooms   = { label="Big Rooms",      choices=LEVEL_CONTROL.CHOICES }
     big_juncs   = { label="Big Junctions",  choices=LEVEL_CONTROL.CHOICES }
     cages       = { label="Cages",          choices=LEVEL_CONTROL.CHOICES }
-    caves       = { label="Caves",          choices=LEVEL_CONTROL.CHOICES }
     crates      = { label="Crates",         choices=LEVEL_CONTROL.CHOICES }
     crossovers  = { label="Cross-Overs",    choices=LEVEL_CONTROL.CHOICES }
     cycles      = { label="Multiple Paths", choices=LEVEL_CONTROL.CHOICES }
@@ -80,6 +79,7 @@ OB_MODULES["level_control"] =
     pictures    = { label="Pictures",       choices=LEVEL_CONTROL.CHOICES }
     pillars     = { label="Pillars",        choices=LEVEL_CONTROL.CHOICES }
     scenics     = { label="Scenics",        choices=LEVEL_CONTROL.CHOICES }
+    secrets     = { label="Secrets",        choices=LEVEL_CONTROL.CHOICES }
     symmetry    = { label="Symmetry",       choices=LEVEL_CONTROL.CHOICES }
     teleporters = { label="Teleporters",    choices=LEVEL_CONTROL.CHOICES }
     windows     = { label="Windows",        choices=LEVEL_CONTROL.CHOICES }
