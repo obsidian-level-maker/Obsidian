@@ -119,7 +119,7 @@ GLOBAL_STYLE_LIST =
 {
   -- these three correspond to buttons in the GUI
   outdoors   = { few=20, some=60, heaps=40 }
-  secrets    = { few=20, some=60, heaps=10 }
+  caves      = { none=20, few=50, some=30, heaps=5 }
   traps      = { few=20, some=60, heaps=30 }
 
   -- things that affect the whole level
@@ -128,16 +128,17 @@ GLOBAL_STYLE_LIST =
   big_juncs   = { none=10, some=40, heaps=40 }
   liquids     = { none=10, few=30, some=40, heaps=20 }
   scenics     = { few=30, some=50, heaps=10 }
+  secrets     = { few=20, some=60, heaps=10 }
+
   odd_shapes  = { none=10, few=40, some=60, heaps=4 }
   big_rooms   = { none=6, few=60, some=40, heaps=20 }
-  caves       = { none=20, few=50, some=30, heaps=5 }
   cycles      = { none=20, some=50, heaps=50 }
   crossovers  = { none=40 } --!!!! , some=40, heaps=40 }
   teleporters = { none=30, few=30, some=30, heaps=5 }
 
-  room_shape = { none=30, L=5, T=5, U=10, H=10, S=5 }
-
   -- things that affect individual rooms
+
+  room_shape = { none=30, L=5, T=5, U=10, H=10, S=5 }
 
   symmetry   = { few=20, some=60, heaps=20 }
   pillars    = { few=30, some=60, heaps=20 }
@@ -710,7 +711,7 @@ function Levels_do_styles()
   end
 
   -- GUI overrides...
-  each name in { "outdoors", "secrets", "traps" } do
+  each name in { "outdoors", "caves", "traps" } do
     if OB_CONFIG[name] and OB_CONFIG[name] != "mixed" then
       STYLE[name] = OB_CONFIG[name]
     end
