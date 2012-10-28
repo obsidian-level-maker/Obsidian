@@ -1541,7 +1541,7 @@ end
 
 ------------------------------------------------------------
 
-OB_GAMES["absolution"] =
+UNFINISHED["absolution"] =
 {
   label = "Doom64 TC"
 
