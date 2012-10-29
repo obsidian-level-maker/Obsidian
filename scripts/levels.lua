@@ -106,7 +106,7 @@ require "build"
 require "chunks"
 require "simple"
 require "hallway"
-require "z_fabs"
+require "z_pats"
 
 require "areas"
 require "rooms"

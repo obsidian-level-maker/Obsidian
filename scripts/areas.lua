@@ -2380,7 +2380,7 @@ Areas_dump_vhr(R)
 
         local line = structure[stru_h + 1 - y]
         if not line or #line != stru_w then
-          error("bad structure in z_fab: " .. pat.name)
+          error("bad structure in z-pattern: " .. pat.name)
         end
 
         local ch = string.sub(line, x, x)
