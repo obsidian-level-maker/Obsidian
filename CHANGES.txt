@@ -2,3 +2,13 @@
 CHANGES (since 4.28)
 ====================
 
++ replaced 'Secrets' button with 'Caves' in the GUI
+
+- new E2M8 and MAP07 boss maps, thanks to Mr. Chris
+
+- changed grid size to 256x256 (was 192x192)
+
+- fixed "Crazy" monsters setting to ignore 'level' values
+
+- workaround for rare bug in Street mode
+
