@@ -188,7 +188,7 @@ int wadfab_load(lua_State *L)
   char filename[PATH_MAX];
 
   // FIXME: determine full name PROPERLY !!
-  sprintf(filename, "./prefabs/%s", name);
+  sprintf(filename, "./fabs/%s", name);
 
 
   if (! WAD_OpenRead(filename))
