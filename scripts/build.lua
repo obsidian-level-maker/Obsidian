@@ -2479,45 +2479,66 @@ function Fab_load_from_wad(name)
   end
 
 
+  function load_it(name)
+    -- load the map structures into memory
+    gui.wadfab_load(name)
+
+    fab =
+    {
+      name = name
+
+      brushes  = {}
+      models   = {}
+      entities = {}
+    }
+
+    for thing_idx = 0,999 do
+      local E = gui.wadfab_get_thing(thing_idx)
+
+      -- nil result marks the end
+      if not E then break; end
+
+      table.insert(fab.entities, E)
+    end
+
+    for poly_idx = 0,999 do
+      local sec_idx, coords = gui.wadfab_get_polygon(poly_idx)
+
+      -- nil result marks the end
+      if not sec_idx then break; end
+
+      local S = gui.wadfab_get_sector(sec_idx)
+      assert(S)
+
+      create_brush(S, coords, 1)
+      create_brush(S, coords, 2)
+    end
+
+    gui.wadfab_free()
+
+    Fab_determine_bbox(fab)
+
+    return fab
+  end
+
+
   ---| Fab_load_from_wad |---
 
-  -- load the map structures into memory
-  gui.wadfab_load(name)
-
-  fab =
-  {
-    name = name
-
-    brushes  = {}
-    models   = {}
-    entities = {}
-  }
-
-  for thing_idx = 0,999 do
-    local E = gui.wadfab_get_thing(thing_idx)
-
-    -- nil result marks the end
-    if not E then break; end
-
-    table.insert(fab.entities, E)
+  -- see if already loaded
+  if not EPISODE.cached_wads then
+    EPISODE.cached_wads = {}
   end
 
-  for poly_idx = 0,999 do
-    local sec_idx, coords = gui.wadfab_get_polygon(poly_idx)
-
-    -- nil result marks the end
-    if not sec_idx then break; end
-
-    local S = gui.wadfab_get_sector(sec_idx)
-    assert(S)
-
-    create_brush(S, coords, 1)
-    create_brush(S, coords, 2)
+  if not EPISODE.cached_wads[name] then
+    EPISODE.cached_wads[name] = load_it(name)
   end
+  
+  local orig = EPISODE.cached_wads[name]
+  assert(orig)
 
-  gui.wadfab_free()
+  local fab = table.deep_copy(orig)
 
-  Fab_determine_bbox(fab)
+  fab.skinned = true
 
   return fab
 end
