@@ -381,8 +381,8 @@ function Areas_handle_connections()
 
     -- when there are four (or more) seeds, use the middle two
     if not is_double then
-      if geom.is_vert(dir)  and K.sw >= 4 then sx2 = sx1 + 1 end
-      if geom.is_horiz(dir) and K.sh >= 4 then sy2 = sy1 + 1 end
+---!!!!      if geom.is_vert(dir)  and K.sw >= 4 then sx2 = sx1 + 1 end
+---!!!!      if geom.is_horiz(dir) and K.sh >= 4 then sy2 = sy1 + 1 end
     end
 
     -- when connecting to junctions, use the same size as the junction
@@ -2208,6 +2208,7 @@ Areas_dump_vhr(R)
       -- try to make bigger chunks
       local sw, sh = 1, 1
 
+--[[ !!!!
       if x < G.sx2 and not SEEDS[x+1][y].chunk and
          not R:straddles_concave_corner(x, y, x + sw, y + sh - 1)
       then
@@ -2225,6 +2226,7 @@ Areas_dump_vhr(R)
       then
         sh = 1
       end 
+--]]
 
       local C = CHUNK_CLASS.new(x, y, x + sw - 1, y + sh - 1)
       C:set_coords()
@@ -2641,6 +2643,7 @@ Areas_dump_vhr(R)
           if not ELEM.bad and not ELEM.chunk then
             if check_elem_clobbers_chunk(G, v, ELEM) or
                R:straddles_concave_corner(ELEM.sx1, ELEM.sy1, ELEM.sx2, ELEM.sy2)
+               or true  --!!!!!!
             then
               ELEM.bad = true
             end
@@ -2946,8 +2949,8 @@ function Areas_height_realization(R)
   assign_floor(base_v, R.entry_h)
 
   for i = 1,9 do
-    assign_floor(base_v + i, R.entry_h + i * 64)
-    assign_floor(base_v - i, R.entry_h - i * 64)
+    assign_floor(base_v + i, R.entry_h + i * 16)
+    assign_floor(base_v - i, R.entry_h - i * 16)
   end
 
   -- ceilings too

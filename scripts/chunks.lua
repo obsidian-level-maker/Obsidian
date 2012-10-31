@@ -1045,7 +1045,7 @@ function CHUNK_CLASS.build_fence(C, dir, low_fence)
 --  local skin1 = assert(GAME.SKINS["Fence_1"])  --!!!!
   local skin2 = assert(C.room.skin)
 
-  Fabricate("FENCE", T, { skin2 })
+--  Fabricate("FENCE", T, { skin2 })
 end
 
 
@@ -1152,6 +1152,50 @@ function CHUNK_CLASS.categorize_hall_piece(C)
       C.link[6] or C.hall_link[6], C.link[8] or C.hall_link[8]);
 
   assert(cat != "N" and cat != "F")
+
+  return cat, dir
+end
+
+
+function CHUNK_CLASS.categorize_floor_piece(C)
+  local highers = {}
+
+  local A = C.area
+
+  if not (A and A.floor_h) then return "N", 2 end
+
+  local N1 = SEEDS[C.sx1][C.sy2 + 1]
+  local S1 = SEEDS[C.sx1][C.sy1 - 1]
+  local E1 = SEEDS[C.sx2 + 1][C.sy1]
+  local W1 = SEEDS[C.sx1 - 1][C.sy1]
+
+  N1 = (N1 ? N1:first_chunk() ; nil)
+  S1 = (S1 ? S1:first_chunk() ; nil)
+  E1 = (E1 ? E1:first_chunk() ; nil)
+  W1 = (W1 ? W1:first_chunk() ; nil)
+
+  N1 = (N1 ? N1.area ; nil)
+  S1 = (S1 ? S1.area ; nil)
+  E1 = (E1 ? E1.area ; nil)
+  W1 = (W1 ? W1.area ; nil)
+
+  N1 = (N1 ? N1.floor_h ; nil)
+  S1 = (S1 ? S1.floor_h ; nil)
+  E1 = (E1 ? E1.floor_h ; nil)
+  W1 = (W1 ? W1.floor_h ; nil)
+
+  N1 = (N1 ? N1 > A.floor_h ; nil)
+  S1 = (S1 ? S1 > A.floor_h ; nil)
+  E1 = (E1 ? E1 > A.floor_h ; nil)
+  W1 = (W1 ? W1 > A.floor_h ; nil)
+
+  local cat, dir = Trans.categorize_linkage(S1, W1, E1, N1)
+
+  if cat == "F" then cat = "E" end
+  if cat == "N" then cat = "O" end
+  if cat == "T" then cat = "O" end -- not supported yet
+
+  dir = 10 - dir
 
   return cat, dir
 end
@@ -1291,7 +1335,7 @@ function CHUNK_CLASS.build(C)
 
     Fabricate(skin1._prefab, T, { skin0, skin1 })
 
-  elseif C.stair then
+  elseif C.stair and false then  --!!!!
     local skin = C.stair.skin
 
     local skin0 = { side=f_matname, step=f_matname, top=f_matname, floor=f_matname, wall=f_matname }
@@ -1311,10 +1355,30 @@ function CHUNK_CLASS.build(C)
 
     Fabricate(skin._prefab, T, { skin0, skin, skin2 })
 
+
+--!!!! TESTINK STUFF
+  elseif "trim_floor_test" then  
+
+    local cat, dir = C:categorize_floor_piece()
+
+    local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir)
+
+    local name = "floor/trimmed_" .. string.lower(cat) .. ".wad"
+
+    local fab = Fab_load_from_wad(name)
+    fab.state = "skinned"
+    fab.fitted = "xy"
+
+    Fab_transform_XY(fab, T)
+    Fab_transform_Z (fab, T)
+    Fab_render(fab)
+
+
   elseif not (C.room and C.room.kind == "cave") then
     f_mat = Mat_lookup(f_matname)
     f_tex = f_mat.f or f_mat.t
 
+stderrf("floor chunk size: %d x %d\n", C.x2 - C.x1, C.y2 - C.y1)
     brush = Brush_new_quad(C.x1, C.y1, C.x2, C.y2)
 
     Brush_set_tex(brush, f_mat.t)

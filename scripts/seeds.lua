@@ -73,6 +73,13 @@ function SEED_CLASS.neighbor(S, dir, dist)
 end
 
 
+function SEED_CLASS.first_chunk(S)
+  if S.chunk then return S.chunk end
+  local vhr, C = next(S.chunks)
+  return C
+end
+
+
 function SEED_CLASS.same_room(S, dir)
   local N = S:neighbor(dir)
   return N and N.room == S.room
