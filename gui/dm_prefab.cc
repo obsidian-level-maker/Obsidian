@@ -127,10 +127,13 @@ static bool LoadLump(const char *lump_name, byte ** array, int * count,
     length -= 4;
   }
 
-  if (! WAD_ReadData(entry, pos, length, *array))
+  if (length > 0)
   {
-    DebugPrintf("Failed reading lump (%d bytes)\n", length);
-    return false;
+    if (! WAD_ReadData(entry, pos, length, *array))
+    {
+      DebugPrintf("Failed reading lump (%d bytes)\n", length);
+      return false;
+    }
   }
 
   *count = length / (int)struct_size;
