@@ -1378,7 +1378,6 @@ function CHUNK_CLASS.build(C)
     f_mat = Mat_lookup(f_matname)
     f_tex = f_mat.f or f_mat.t
 
-stderrf("floor chunk size: %d x %d\n", C.x2 - C.x1, C.y2 - C.y1)
     brush = Brush_new_quad(C.x1, C.y1, C.x2, C.y2)
 
     Brush_set_tex(brush, f_mat.t)

@@ -2548,3 +2548,22 @@ function Fab_load(skin)
   return fab
 end
 
+
+function Fabricate2(main_skin, T, skins)
+  if main_skin._prefab then
+    return Fabricate(main_skin._prefab, T, skins)
+
+  elseif main_skin._file then
+    local fab = Fab_load(main_skin)  -- FIXME: skins??
+
+    Fab_transform_XY(fab, T)
+    Fab_transform_Z (fab, T)
+    Fab_render(fab)
+
+    return fab
+
+  else
+    error("Bad skin: no _prefab or _file keyword")
+  end
+end
+

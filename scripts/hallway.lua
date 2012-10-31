@@ -432,7 +432,7 @@ function HALLWAY_CLASS.build_hall_piece(H, C)
 
   local skin2 = { stair_h = C.h_stair_h }
 
-  local fab = Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
+  local fab = Fabricate2(skin1, T, { skin0, skin1, skin2 })
 
   if fab.has_spots then
     Rooms_distribute_spots(H, Fab_read_spots(fab))
