@@ -328,8 +328,12 @@ function HALLWAY_CLASS.pick_group(H)
 
   H.group = GAME.GROUPS[group_name]
 
-  if not H.group or H.group.kind != "hallway" then
+  if not H.group then
     error("Missing hallway group: " .. tostring(group_name))
+  end
+
+  if not (H.group.kind == "hallway" or H.group.kind == "skyhall") then
+    error("Wrong kind for hallway group: " .. tostring(group_name))
   end
 end
 
