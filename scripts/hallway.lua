@@ -326,9 +326,9 @@ function HALLWAY_CLASS.pick_group(H)
     H.sky_hall_sky_h = sky_h
   end
 
-  H.group = GAME.HALLWAY_GROUPS[group_name]
+  H.group = GAME.GROUPS[group_name]
 
-  if not H.group then
+  if not H.group or H.group.kind != "hallway" then
     error("Missing hallway group: " .. tostring(group_name))
   end
 end

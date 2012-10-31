@@ -3564,11 +3564,11 @@ DOOM.THEME_DEFAULTS =
 
   fences = { Fence1 = 50 }
 
-  hallway_groups = { basic = 50, thin = 15 }  -- TODO: cavey
+  hallway_groups = { hall_basic = 50, hall_thin = 15 }  -- TODO: cavey
 
   mini_halls = { Hall_Basic_I = 50, MiniHall_Door_tech = 20 }
 
-  sky_halls = { skier = 50 }
+  sky_halls = { sky_hall = 50 }
 
   big_junctions =
   {
@@ -3673,10 +3673,14 @@ DOOM.NAME_THEMES =
 }
 
 
-DOOM.HALLWAY_GROUPS =
+DOOM.GROUPS =
 {
-  basic =
+  ---| HALLWAYS |---
+
+  hall_basic =
   {
+    kind = "hallway"
+
     pieces =
     {
       Hall_Basic_I = 50
@@ -3689,8 +3693,11 @@ DOOM.HALLWAY_GROUPS =
     }
   }
 
-  thin =
+
+  hall_thin =
   {
+    kind = "hallway"
+
     narrow = 1
 
     pieces =
@@ -3714,8 +3721,11 @@ DOOM.HALLWAY_GROUPS =
     }
   }
 
-  cavey =
+
+  hall_cavey =
   {
+    kind = "hallway"
+
     pieces =
     {
       Hall_Cavey_I = 50
@@ -3728,8 +3738,11 @@ DOOM.HALLWAY_GROUPS =
     }
   }
 
-  skier =
+
+  sky_hall =
   {
+    kind = "skyhall"
+
     pieces =
     {
       Sky_Hall_I = 50
