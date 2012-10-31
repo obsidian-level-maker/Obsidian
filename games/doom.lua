@@ -2598,32 +2598,37 @@ DOOM.SKINS =
 
   Hall_Basic_I =
   {
-    _prefab = "HALL_BASIC_I"
+    _file   = "hall/trim1_i.wad"
     _shape  = "I"
+    _fitted = "xy"
   }
 
   Hall_Basic_C =
   {
-    _prefab = "HALL_BASIC_C"
+    _file   = "hall/trim1_c.wad"
     _shape  = "C"
+    _fitted = "xy"
   }
 
   Hall_Basic_T =
   {
     _prefab = "HALL_BASIC_T"
     _shape  = "T"
+    _fitted = "xy"
   }
 
   Hall_Basic_P =
   {
     _prefab = "HALL_BASIC_P"
     _shape  = "P"
+    _fitted = "xy"
   }
 
   Hall_Basic_I_Stair =
   {
     _prefab = "HALL_BASIC_I_STAIR"
     _shape  = "IS"
+    _fitted = "xy"
 
     step = "STEP3"
     support = "SUPPORT2"
@@ -2634,6 +2639,7 @@ DOOM.SKINS =
   {
     _prefab = "HALL_BASIC_I_LIFT"
     _shape  = "IL"
+    _fitted = "xy"
     _tags   = 1
 
     lift = "SUPPORT3"
