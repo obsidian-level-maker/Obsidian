@@ -3130,8 +3130,9 @@ DOOM.SKINS =
 
   Teleporter_Closet =
   {
-    _prefab = "TELEPORT_CLOSET"
-    _where  = "closet"
+    _file  = "closet/teleport1.wad"
+    _where = "closet"
+    _fitted = "xy"
 --!!!!  _long   = 192
 
     tele = "GATE4"

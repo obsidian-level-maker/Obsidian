@@ -2376,7 +2376,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Fab_load_from_wad(name)
+function Fab_load(skin)
 
   local fab
 
@@ -2522,7 +2522,11 @@ function Fab_load_from_wad(name)
   end
 
 
-  ---| Fab_load_from_wad |---
+  ---| Fab_load |---
+
+  assert(skin._file)
+
+  local name = skin._file
 
   -- see if already loaded
   if not EPISODE.cached_wads then
@@ -2538,7 +2542,8 @@ function Fab_load_from_wad(name)
 
   local fab = table.deep_copy(orig)
 
-  fab.skinned = true
+  fab.state  = "skinned"
+  fab.fitted = skin._fitted  -- can be NIL
 
   return fab
 end

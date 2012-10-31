@@ -1357,7 +1357,7 @@ function CHUNK_CLASS.build(C)
 
 
 --!!!! TESTINK STUFF
-  elseif "trim_floor_test" then  
+  elseif OB_CONFIG.trim_floor then  
 
     local cat, dir = C:categorize_floor_piece()
 

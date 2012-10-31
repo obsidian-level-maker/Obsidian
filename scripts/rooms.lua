@@ -722,15 +722,12 @@ function CLOSET_CLASS.build(CL)
 
   local T = Trans.box_transform(x1, y1, x2, y2, C.floor_h, 10 - CL.dir)
 
-  if CL.closet_kind == "TELEPORTER" then
-    local fab = Fab_load_from_wad("closet/teleport1.wad");
-    fab.state = "skinned"
-    fab.fitted = "xy"
+  if skin1._file then
+    local fab = Fab_load(skin1)
 
     Fab_transform_XY(fab, T)
     Fab_transform_Z (fab, T)
     Fab_render(fab)
-
     return
   end
 
