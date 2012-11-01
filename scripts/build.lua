@@ -2376,6 +2376,22 @@ end
 ------------------------------------------------------------------------
 
 
+WADFAB_ENTITIES =
+{
+  -- monster spots
+  
+  [3002] = { kind="monster",  r=32  }  -- demon
+  [3005] = { kind="flyer",    r=32  }  -- cacodemon
+  [  68] = { kind="monster",  r=64  }  -- arachnotron
+  [   7] = { kind="monster",  r=128 }  -- spider mastermind
+
+  -- item spots
+
+  [2015] = { kind="pickup"   }  -- armor helmet
+  [2015] = { kind="big_item" }  -- green armor vest
+}
+
+
 function Fab_load(skin)
 
   local fab
@@ -2479,6 +2495,27 @@ function Fab_load(skin)
   end
 
 
+  local function handle_entity(fab, E)
+    local spot_info = WADFAB_ENTITIES[E.id]
+
+    if not spot_info then
+      table.insert(fab.entities, E)
+      return
+    end
+
+    local spot = {}
+
+    spot.kind = spot_info.kind
+
+    spot.x = E.x
+    spot.y = E.y
+    spot.r = spot_info.r
+    spot.angle = E.angle
+
+    table.insert(fab.spots, spot)
+  end
+
+
   function load_it(name)
     -- load the map structures into memory
     gui.wadfab_load(name)
@@ -2490,6 +2527,8 @@ function Fab_load(skin)
       brushes  = {}
       models   = {}
       entities = {}
+
+      spots = {}
     }
 
     for thing_idx = 0,999 do
@@ -2498,7 +2537,7 @@ function Fab_load(skin)
       -- nil result marks the end
       if not E then break; end
 
-      table.insert(fab.entities, E)
+      handle_entity(fab, E)
     end
 
     for poly_idx = 0,999 do
