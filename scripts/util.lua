@@ -128,12 +128,13 @@ function read_text_file(filename)
   return lines
 end
 
-function style_sel(name, v_none, v_few, v_some, v_heaps)
+function style_sel(name, v_none, v_few, v_some, v_heaps, v_all)
   local keyword = STYLE[name]
 
-  if keyword == "none"  then return v_none  end
-  if keyword == "few"   then return v_few   end
-  if keyword == "heaps" then return v_heaps end
+  if keyword == "none"   then return v_none  end
+  if keyword == "few"    then return v_few   end
+  if keyword == "heaps"  then return v_heaps end
+  if keyword == "always" then return v_all or v_heaps end
 
   return v_some
 end
