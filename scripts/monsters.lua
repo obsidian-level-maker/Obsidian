@@ -1943,6 +1943,20 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   end
 
 
+  local function adjust_health(L, qty)
+    -- perform calculation on a per-seed basis
+    local svol = L.svolume or 10
+
+    qty = qty / svol
+
+    if qty > 64 then qty = 64 end
+    if qty > 32 then qty = 32 + (qty - 32) / 4 end
+    if qty > 16 then qty = 16 + (qty - 16) / 2 end
+
+    return qty * svol
+  end
+
+
   local function user_adjust_result(stats)
     -- apply the user's health/ammo adjustments here
 
@@ -1995,6 +2009,9 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     Fight_Simulator(mon_list, weap_list, weap_prefs, stats)
 
 --  gui.debugf("raw result = \n%s\n", table.tostr(stats,1))
+
+    -- normalize very large quantities of health 
+    stats.health = adjust_health(L, stats.health)
 
     user_adjust_result(stats)
 
