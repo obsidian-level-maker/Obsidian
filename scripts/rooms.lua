@@ -1029,7 +1029,7 @@ function Rooms_collect_sky_groups()
 
   local function init_sky_groups()
     each R in LEVEL.rooms do
-      if R.kind == "outdoor" then
+      if R.kind == "outdoor" or R.was_outdoor_FIXME then
         table.insert(outdoor_rooms, R)
         R.sky_group = _index
       end
@@ -1062,15 +1062,16 @@ function Rooms_collect_sky_groups()
     for kx = 1,SECTION_W do for ky = 1,SECTION_H do
       local K = SECTIONS[kx][ky]
 
-      if not (K and K.room and K.room.kind == "outdoor") then
+      if not (K and K.room and K.room.sky_group) then
         continue
       end
 
       -- only need to test south and west
       for dir = 2,4,2 do
-        local N = K:neighbor(dir)
+      for dist = 1,1 do
+        local N = K:neighbor(dir, dist)
 
-        if not (N and N.room and N.room.kind == "outdoor") then
+        if not (N and N.room and N.room.sky_group) then
           continue
         end
 
@@ -1080,8 +1081,10 @@ function Rooms_collect_sky_groups()
 
         changes = true
 
+      end -- for dist
       end -- for dir
-    end end -- for kx, ky
+
+    end end -- kx, ky
 
     return changes
   end
@@ -1775,10 +1778,6 @@ end
 
 
 function Rooms_blow_chunks()
-
-  each H in LEVEL.halls do
-    H:pick_group()
-  end
 
   each R in LEVEL.rooms do
     each C in R.chunks do
@@ -2951,6 +2950,10 @@ function Rooms_build_all()
 ---!!!  Rooms_setup_symmetry()
 
   Rooms_place_gates()
+
+  each H in LEVEL.halls do
+    H:pick_group()
+  end
 
   Rooms_collect_sky_groups()
 
