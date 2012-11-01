@@ -1,6 +1,71 @@
 
 OBLIGE TODO
+= ==========
+
+
+>>  review sky and cave quotas -- be independent
+
+
+!!  fix pick_sizes and max_W, max_H
+
+!!  Street mode : if one room surrounds another one, the "streets"
+    between them are isolated from the rest, leading to this error:
+
+      Script Error: Failed to find any height in grid neighbors
+
+- Crazy monster toughness doesn't seem to override monster
+  level, like it should. I played a whole Ultimate Doom wad
+  and the monsters seemed to be the same strength as they
+  would usually be (ie. no Barons until later levels).
+
+  --> level check in density calc
+
+- Psychedelic mode has a few issues. Exit signs / doors are
+  replaced now where they weren't before, and the bars in
+  monster cages are replaced by solid-looking walls. This
+  makes it so you can't see what's inside them shooting at
+  you, but they can clearly see you.
+
+- make secrets more secret
+
+
+
+WAD Prefabs
 ===========
+
++  sometimes gets wrong texture (e.g. hall/trim_c)
+
++  get teleporter working
+
+-  mechanism to get side texture from floor/ceil
+   (e.g. set side to CRACKLE2
+   requires MATERIALS table to be fairly complete
+
+-  mechanism to create a closed sector (for doors, etc)
+   e.g. ceil_h - floor_h == 1
+
+-  ability to "pick" the sector at a point / edge / corner
+   and get the height there
+   ALSO can set that sector to a certain material (floor, floor2, etc)
+
+-  create monster spots
+      DEMON  --> medium spot : 64x64
+      CACO   --> medium spot : 64x64 + flying
+      ARACH  --> large spot  : 128x128
+      SPIDER --> huge spot   : 256x256
+
+-  create item spots from certain pickups:
+      HELMET    --> item spot
+      GREEN ARM --> big item spot
+
+-  Fab_load: can merge skins [OR: make utility for that]
+
+??  determine pathname PROPERLY
+
+
+
+========================================================================
+
 
 >>>  add pillars (via. C.content.kind = "DECORATION"
                        C.content.decor_prefab = "Pillar_2")
