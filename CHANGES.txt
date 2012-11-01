@@ -10,5 +10,9 @@ CHANGES (since 4.28)
 
 - fixed "Crazy" monsters setting to ignore 'level' values
 
-- workaround for rare bug in Street mode
+- workaround for rare error in Street mode
+
+- support 'Always' setting for Outdoors and Caves
+
+- try to prevent rooms overflowing with health
 
