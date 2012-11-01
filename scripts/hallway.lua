@@ -356,7 +356,7 @@ function HALLWAY_CLASS.select_piece(H, C)
   }
 
   -- find all skins which match this mode (etc)
-  local source_tab = H.group and H.group.pieces
+  local source_tab = H.group and H.group.parts
 
   if H.mini_hall and H.is_secret then
     return "Secret_Mini"  -- FIXME: THEME.secret_halls
@@ -375,17 +375,19 @@ function HALLWAY_CLASS.select_piece(H, C)
     local biggies = THEME.big_junctions
     assert(biggies)
 
-    -- expand the table, checking that skins exist
+    -- FIXME: this is ass-backwards, we should have picked the group
+    --        earlier (checking that it supports the actual link-cat)
+
     source_tab = {}
 
     local SUFFIXES = { "_I", "_C", "_T", "_P" }
 
     each name,prob in biggies do
-      each suffix in SUFFIXES do
-        local full_name = name .. suffix
-        if GAME.SKINS[full_name] then
-          source_tab[full_name] = prob
-        end
+      local j_group = GAME.GROUPS[name]
+      if not j_group then error("No such junction group: " .. tostring(name)) end
+
+      each skin_name,prob in j_group.parts do
+        source_tab[skin_name] = prob
       end
     end
   end
