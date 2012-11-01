@@ -1621,7 +1621,7 @@ function Plan_decide_outdoors()
 
   local function score_room(R)
     -- too small ?
-    if R.svolume < 8 then return -1 end
+    if R.svolume < 4 then return -1 end
 
     -- never for secret exit
     if R.purpose == "SECRET_EXIT" then return -1 end
@@ -1630,13 +1630,13 @@ function Plan_decide_outdoors()
 
     local what = 0
 
-    -- higher probs for sides of map, even higher for the corners
+    -- preference for the sides of map, even higher for the corners
     if R.kx1 <= 2 or R.kx2 >= SECTION_W-1 then what = what + 1 end
     if R.ky1 <= 2 or R.ky2 >= SECTION_H-1 then what = what + 1 end
 
     score = score + 10 * what
 
-    score = score + 25 * gui.random() ^ 2
+    score = score + 20 * gui.random() ^ 2
 
     return score
   end
@@ -1655,7 +1655,7 @@ function Plan_decide_outdoors()
     if table.empty(list) then return nil end
 
     -- don't always pick the largest room
-    if #list >= 2 and rand.odds(35) then
+    if #list >= 2 and rand.odds(40) then
       return table.remove(list, 2)
     end
 
@@ -1683,16 +1683,16 @@ function Plan_decide_outdoors()
     return
   end
 
-  -- sort rooms by score (highest first)
-  table.sort(room_list,
-    function(A, B) return A.outdoor_score > B.outdoor_score end)
-
   -- compute the quota
-  local perc = style_sel("outdoors", 0, 15, 35, 60)
+  local perc = style_sel("outdoors", 0, 15, 35, 65, 100)
 
   local quota = total_seeds * perc / 100
 
   gui.printf("Outdoor Quota: %d seeds (%d total)\n", quota, total_seeds)
+
+  -- sort rooms by score (highest first)
+  table.sort(room_list,
+    function(A, B) return A.outdoor_score > B.outdoor_score end)
 
   while quota > 0 do
     local R = pick_room(room_list, quota)
@@ -1707,22 +1707,30 @@ function Plan_decide_outdoors()
 end
 
 
+
 function Plan_decide_caves()
+
+  local function turn_into_cave(R)
+    -- remember the outdoorsy-ness
+    if R.kind == "outdoor" then
+      R.was_outdoor = true
+    end
+
+    R.kind = "cave"
+  end
+
 
   local function score_room(R)
     -- sometimes turn surrounder room into a big cave
     if R.is_surrounder and rand.odds(style_sel("caves", 0, 15, 35, 90)) then
-      R.kind = "cave"
+      turn_into_cave(R)
       return -1  -- ignore it now
     end
 
     -- too small ?
-    if R.svolume < 24 then return -1 end
+    if R.svolume < 6 then return -1 end
 
     local score = R.svolume
-
----##  -- prefer not to eat the outdoor rooms
----##  if R.kind == "outdoor" then return score / 2 + gui.random() end
 
     local what = 0
 
@@ -1735,7 +1743,7 @@ function Plan_decide_caves()
     -- prefer odd-shaped rooms
     if R.odd_shape then score = score * 2 end 
 
-    return score + 25 * gui.random() ^ 2
+    return score + 20 * gui.random() ^ 2
   end
 
   
@@ -1752,7 +1760,7 @@ function Plan_decide_caves()
     if table.empty(list) then return nil end
 
     -- don't always pick the largest room
-    if #list >= 2 and rand.odds(35) then
+    if #list >= 2 and rand.odds(40) then
       return table.remove(list, 2)
     end
 
@@ -1780,16 +1788,16 @@ function Plan_decide_caves()
     return
   end
 
-  -- sort rooms by score (highest first)
-  table.sort(room_list,
-    function(A, B) return A.cave_score > B.cave_score end)
-
   -- compute the quota
-  local perc = style_sel("caves", 0, 15, 35, 65)
+  local perc = style_sel("caves", 0, 15, 35, 65, 100)
 
   local quota = total_seeds * perc / 100
 
   gui.printf("Cave Quota: %d seeds (%d total)\n", quota, total_seeds)
+
+  -- sort rooms by score (highest first)
+  table.sort(room_list,
+    function(A, B) return A.cave_score > B.cave_score end)
 
   while quota > 0 do
     local R = pick_room(room_list, quota)
@@ -1797,14 +1805,8 @@ function Plan_decide_caves()
     -- nothing possible?
     if not R then break end
 
-    -- if the room was outdoor, then randomly re-assign as cave,
-    -- with a probability depending on the STYLE setting.
-    if R.kind == "outdoor" and not rand.odds(perc + 30) then continue end
-
-    R.old_kind = R.kind
-
     -- re-assign room as a cave
-    R.kind = "cave"
+    turn_into_cave(R)
 
     quota = quota - R.svolume
   end
