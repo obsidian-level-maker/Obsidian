@@ -3579,12 +3579,12 @@ DOOM.THEME_DEFAULTS =
 
   big_junctions =
   {
-    Junc_Ledge = 80
-    Junc_Octo = 50
-    Junc_Nuke_Pipes = 14
-    Junc_Nuke_Islands = 70  -- size restriction means this is fairly rare
-    Junc_Spokey = 10
-    Junc_Circle_tech = 40
+    junc_ledge = 80
+    junc_octo = 50
+    junc_nuke_pipes = 14
+--  junc_Nuke_Islands = 70  -- size restriction means this is fairly rare
+    junc_spokey = 10
+    junc_circle_tech = 40
   }
 
   fat_cages = { Fat_Cage1 = 50, Fat_Cage_W_Bars = 8 }
@@ -3688,7 +3688,7 @@ DOOM.GROUPS =
   {
     kind = "hallway"
 
-    pieces =
+    parts =
     {
       Hall_Basic_I = 50
       Hall_Basic_C = 50
@@ -3707,7 +3707,7 @@ DOOM.GROUPS =
 
     narrow = 1
 
-    pieces =
+    parts =
     {
       Hall_Thin_I = 50
       Hall_Thin_C = 50
@@ -3733,7 +3733,7 @@ DOOM.GROUPS =
   {
     kind = "hallway"
 
-    pieces =
+    parts =
     {
       Hall_Cavey_I = 50
       Hall_Cavey_C = 50
@@ -3750,7 +3750,7 @@ DOOM.GROUPS =
   {
     kind = "skyhall"
 
-    pieces =
+    parts =
     {
       Sky_Hall_I = 50
       Sky_Hall_C = 50
@@ -3760,6 +3760,80 @@ DOOM.GROUPS =
       Hall_Basic_P = 50  --
 
       Hall_Basic_I_Lift = 2   -- TODO: sky version
+    }
+  }
+
+
+  ---| BIG JUNCTIONS |---
+
+  junc_ledge =
+  {
+    parts =
+    {
+      Junc_Ledge_P = 50
+      Junc_Ledge_T = 50
+    }
+  }
+
+  junc_octo =
+  {
+    parts =
+    {
+      Junc_Octo_I = 50
+      Junc_Octo_C = 50
+      Junc_Octo_T = 50
+      Junc_Octo_P = 50
+    }
+  }
+
+  junc_nuke_pipes =
+  {
+    parts =
+    {
+      Junc_Nuke_Pipes_I = 50
+      Junc_Nuke_Pipes_C = 50
+      Junc_Nuke_Pipes_T = 50
+      Junc_Nuke_Pipes_P = 50
+    }
+  }
+
+  junc_nuke_islands =
+  {
+    parts =
+    {
+      Junc_Nuke_Islands_C = 50
+    }
+  }
+
+  junc_spokey =
+  {
+    parts =
+    {
+      Junc_Spokey_I = 50
+      Junc_Spokey_C = 50
+      Junc_Spokey_T = 50
+      Junc_Spokey_P = 50
+    }
+  }
+
+  junc_circle_tech =
+  {
+    parts =
+    {
+      Junc_Circle_tech_I = 50
+      Junc_Circle_tech_C = 50
+      Junc_Circle_tech_T = 50
+      Junc_Circle_tech_P = 50
+    }
+  }
+
+  junc_well =
+  {
+    parts =
+    {
+      Junc_Well_I = 50
+      Junc_Well_T = 50
+      Junc_Well_P = 50
     }
   }
 }
@@ -4579,10 +4653,10 @@ DOOM2.LEVEL_THEMES =
 
     big_junctions =
     {
-      Junc_Octo = 50
-      Junc_Nuke_Pipes = 5
-      Junc_Spokey = 10
-      Junc_Circle_gothic = 40
+      junc_octo = 50
+      junc_nuke_pipes = 5
+      junc_spokey = 10
+      junc_circle_gothic = 40
     }
 
     exits = { Exit_Closet_hell = 50, Exit_Pillar_gothic = 10 }
@@ -4670,12 +4744,12 @@ DOOM2.LEVEL_THEMES =
 
     big_junctions =
     {
-      Junc_Well = 99
+      junc_well = 99
 
-      Junc_Octo = 50
-      Junc_Nuke_Pipes = 5
-      Junc_Spokey = 10
-      Junc_Circle_gothic = 40
+      junc_octo = 50
+      junc_nuke_pipes = 5
+      junc_spokey = 10
+      junc_circle_gothic = 40
     }
 
     logos = { Pic_Carve=30, Pic_Pill=30, Pic_Neon=70 }
