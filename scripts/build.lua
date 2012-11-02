@@ -2561,6 +2561,21 @@ function Fab_load(skin)
   end
 
 
+  local function bound_Z(fab)
+    if skin._bound_z1 then
+      fab.bbox.z1 = math.min(fab.bbox.z1 or 9999, skin._bound_z1)
+    end
+
+    if skin._bound_z2 then
+      fab.bbox.z2 = math.max(fab.bbox.z2 or -9999, skin._bound_z2)
+    end
+
+    if fab.bbox.z1 then
+      fab.bbox.dz = fab.bbox.z2 - fab.bbox.z1
+    end
+  end
+
+
   ---| Fab_load |---
 
   assert(skin._file)
@@ -2580,6 +2595,8 @@ function Fab_load(skin)
   assert(orig)
 
   local fab = table.deep_copy(orig)
+
+  bound_Z(fab)
 
   fab.state  = "skinned"
   fab.fitted = skin._fitted  -- can be NIL
