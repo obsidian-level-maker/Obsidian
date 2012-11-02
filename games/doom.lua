@@ -3153,6 +3153,19 @@ DOOM.SKINS =
   }
 
 
+  ---| WALLS |---
+
+  Wall_plain =
+  {
+    _file   = "wall/plain.wad"
+    _where  = "edge"
+    _fitted = "xyz"
+
+    _bound_z1 = 0
+    _bound_z2 = 128
+  }
+
+
   ---| WINDOWS |---
 
   Window1 =
@@ -3179,26 +3192,6 @@ DOOM.SKINS =
     metal = "METAL"
     rail  = "MIDBARS3"
   }
-
-
-  ---| CAGES |---
-
-  Fat_Cage1 =
-  {
-    _prefab = "FAT_CAGE1"
-    _where  = "chunk"
-
-    rail = "MIDBARS3"    
-  }
-
-  Fat_Cage_W_Bars =
-  {
-    _prefab = "FAT_CAGE_W_BARS"
-    _where  = "chunk"
-
-    bar = "METAL"
-  }
-
 
 
   ---| PICTURES |---
@@ -3454,6 +3447,25 @@ DOOM.SKINS =
     pic = { SW2SATYR=50, SW2GARG=50, SW2LION=50 }
 
     light = 32
+  }
+
+
+  ---| CAGES |---
+
+  Fat_Cage1 =
+  {
+    _prefab = "FAT_CAGE1"
+    _where  = "chunk"
+
+    rail = "MIDBARS3"    
+  }
+
+  Fat_Cage_W_Bars =
+  {
+    _prefab = "FAT_CAGE_W_BARS"
+    _where  = "chunk"
+
+    bar = "METAL"
   }
 
 
