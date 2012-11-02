@@ -1023,7 +1023,10 @@ function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
     return
   end
 
-  Fabricate("WALL", T, { skin })
+  local skin2 = GAME.SKINS["Wall_plain"]
+  assert(skin2)
+
+  Fabricate2(skin2, T, { skin })
 end
 
 
