@@ -2951,13 +2951,14 @@ function Rooms_build_all()
 
   Rooms_place_gates()
 
+  Areas_handle_connections()
+
   each H in LEVEL.halls do
     H:pick_group()
   end
 
   Rooms_collect_sky_groups()
 
-  Areas_handle_connections()
   Areas_important_stuff()
   Areas_flesh_out()
 
