@@ -1655,7 +1655,7 @@ DOOM.SKINS =
 
   Start_basic =
   {
-    _prefab = "START_SPOT"
+    _file   = "start/basic.wad"
     _where  = "middle"
 
     top = "O_BOLT"
@@ -3194,6 +3194,19 @@ DOOM.SKINS =
   }
 
 
+  Sky_fence =
+  {
+    _prefab = "SKY_FENCE"
+    _where  = "chunk"
+  }
+
+  Sky_corner =
+  {
+    _prefab = "SKY_CORNER"
+    _where  = "chunk"
+  }
+
+
   ---| PICTURES |---
 
   Pic_Pill =
@@ -3836,6 +3849,17 @@ DOOM.GROUPS =
       Junc_Circle_tech_C = 50
       Junc_Circle_tech_T = 50
       Junc_Circle_tech_P = 50
+    }
+  }
+
+  junc_circle_gothic =
+  {
+    parts =
+    {
+      Junc_Circle_gothic_I = 50
+      Junc_Circle_gothic_C = 50
+      Junc_Circle_gothic_T = 50
+      Junc_Circle_gothic_P = 50
     }
   }
 

@@ -722,7 +722,7 @@ function CLOSET_CLASS.build(CL)
 
   local T = Trans.box_transform(x1, y1, x2, y2, C.floor_h, 10 - CL.dir)
 
-  Fabricate2(skin1, T, { skin0, skin1, skin2 })
+  Fabricate(skin1, T, { skin0, skin1, skin2 })
 
 --[[
   -- experiment !!
@@ -1328,6 +1328,11 @@ function ROOM_CLASS.add_closet(R, closet_kind)
   else
     error("Bad closet kind: " .. tostring(closet_kind))
   end
+
+
+--FIXME !!!! CLOSETS
+if closet_kind == "START" then return false end
+
 
   if not source_tab then return false end
 
@@ -2086,7 +2091,7 @@ function OLD__Layout_all_ceilings()
 
       local T = Trans.spot_transform(mx, my, R.ceil_h)
 
----???   Fabricate("SKYLITE_1", T, {{ trim="WIZWOOD1_5", metal="WIZMET1_2" }})
+---???   Fabricate_old("SKYLITE_1", T, {{ trim="WIZWOOD1_5", metal="WIZMET1_2" }})
     else
       if GAME.format == "quake" then
         quake_temp_lights(R)
@@ -2331,7 +2336,7 @@ function Rooms_fake_building(sx1, sy1, sx2, sy2, kind, dir, face_room, zone)
 
     local T = Trans.box_transform(x1, y1, x2, y2, f_h, 10 - dir)
 
-    local fab = Fabricate(skin1._prefab, T, { skin1, skin2 })
+    local fab = Fabricate(skin1, T, { skin1, skin2 })
 
     face_room:add_cage_or_trap(fab)
     return
@@ -2366,7 +2371,7 @@ stderrf("FAKE CORNER @ %s corner:%d\n", S:tostr(), corner)
 
   local skin2 = { sky_h=R.sky_h - f_h, wall=mat }
 
-  Fabricate(skin1._prefab, T, { skin1, skin2 })
+  Fabricate(skin1, T, { skin1, skin2 })
 end
 
 
@@ -2603,7 +2608,10 @@ function Rooms_outdoor_borders()
 
     local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, sky_fence_h, dir)
 
-    Fabricate("SKY_FENCE", T, { skin, skin2 })
+    local skin0 = GAME.SKINS["Sky_fence"]
+    assert(skin0)
+
+    Fabricate(skin0, T, { skin, skin2 })
 
     S.scenic = true  -- mark as used
     S.edge_of_map = nil
@@ -2626,7 +2634,10 @@ function Rooms_outdoor_borders()
 
     local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, sky_fence_h, dir)
 
-    Fabricate("SKY_CORNER", T, { skin, skin2 })
+    local skin0 = GAME.SKINS["Sky_corner"]
+    assert(skin0)
+
+    Fabricate(skin0, T, { skin, skin2 })
 
     S.scenic = true  -- mark as used
     S.edge_of_map = nil
@@ -2975,7 +2986,7 @@ function Rooms_build_all()
 --[[ DEBUG
 local T = Trans.box_transform(-7*192, -6*192, -6*192, -5*192, 448, 2)
 local skin = { item="quad", wall="TECH08_2", outer="CITY6_3" }
-Fabricate("SECRET_NICHE_W_JUMPS", T, { skin })
+Fabricate_old("SECRET_NICHE_W_JUMPS", T, { skin })
 --]]
 end
 

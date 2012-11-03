@@ -2190,7 +2190,7 @@ end
 
 
 
-function Fabricate(name, T, skins)
+function Fabricate_old(name, T, skins)
   
 -- stderrf("=========  FABRICATE %s\n", name)
 
@@ -2605,9 +2605,9 @@ function Fab_load(skin)
 end
 
 
-function Fabricate2(main_skin, T, skins)
+function Fabricate(main_skin, T, skins)
   if main_skin._prefab then
-    return Fabricate(main_skin._prefab, T, skins)
+    return Fabricate_old(main_skin._prefab, T, skins)
 
   elseif main_skin._file then
     local fab = Fab_load(main_skin)  -- FIXME: skins??

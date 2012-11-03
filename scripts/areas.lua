@@ -1853,7 +1853,7 @@ then
   --  if N and N.room == R and N.v_areas and N.v_areas[A1.vhr] and N.v_areas[A2.vhr] then
 
   local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, math.min(A1.floor_h, A2.floor_h), 10 - dir)
-  Fabricate("STAIR_180", T, { R.skin })
+  Fabricate_old("STAIR_180", T, { R.skin })
   S.wtf_bbq = true
 end
 
