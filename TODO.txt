@@ -1,9 +1,16 @@
 
 OBLIGE TODO
-= ==========
+===========
 
 
->>  review sky and cave quotas -- be independent
+>>  GUI picture on website
+
+
+-  pick mini_halls at areas_handle_connections
+
++  sky spread algo
+   (a) check 2 seeds away on each dir (i.e. through mini-halls)
+   (b) handle caves too
 
 
 !!  fix pick_sizes and max_W, max_H
@@ -13,12 +20,6 @@ OBLIGE TODO
 
       Script Error: Failed to find any height in grid neighbors
 
-- Crazy monster toughness doesn't seem to override monster
-  level, like it should. I played a whole Ultimate Doom wad
-  and the monsters seemed to be the same strength as they
-  would usually be (ie. no Barons until later levels).
-
-  --> level check in density calc
 
 - Psychedelic mode has a few issues. Exit signs / doors are
   replaced now where they weren't before, and the bars in
@@ -33,7 +34,8 @@ OBLIGE TODO
 WAD Prefabs
 ===========
 
-+  sometimes gets wrong texture (e.g. hall/trim_c)
++  BUG: wrong textures (e.g. steps on teleporter)
+   --> using 'upper' when should be using 'lower'
 
 +  get teleporter working
 
@@ -44,23 +46,34 @@ WAD Prefabs
 -  mechanism to create a closed sector (for doors, etc)
    e.g. ceil_h - floor_h == 1
 
--  ability to "pick" the sector at a point / edge / corner
-   and get the height there
-   ALSO can set that sector to a certain material (floor, floor2, etc)
+-  NO: ability to "pick" the sector at a point / edge / corner and get the height there
+   YES: use tag numbers for "main floor", "neighbor floor" (etc)
+        and can set that sector to a certain material (floor, floor2, etc)
 
--  create monster spots
-      DEMON  --> medium spot : 64x64
-      CACO   --> medium spot : 64x64 + flying
-      ARACH  --> large spot  : 128x128
-      SPIDER --> huge spot   : 256x256
+        102 = south (main floor)
+        108 = north (neighbor floor)
+        104 = east
+        106 = west
 
--  create item spots from certain pickups:
-      HELMET    --> item spot
-      GREEN ARM --> big item spot
+-  create monster and item spots:
+   +  review current spot system
+   +  use the fab.spots table 
 
 -  Fab_load: can merge skins [OR: make utility for that]
 
 ??  determine pathname PROPERLY
+
+
+Needed Prefabs
+--------------
+
+picture*
+fence
+sky_fence, sky_corner
+item pedestal
+a basic big junction
+a switched door
+switch
 
 
 
@@ -83,16 +96,6 @@ Current Goals:
       (a) crates
       (b) ceiling lights / sky holes
       (c) pillars
-
-(7) 3D patterns in Quake:
-
-    (a) have 'z1_cap' and 'z2_cap' fields in a chunk, ensure all
-        prefabs use it -- perhaps: Trans.set_cap(), Trans.clear_cap()
-
-        Problem: chunks may partially overlap!
-
-        Solution: prevent chunks from spanning two "sub areas"
-                  (sub areas have same floor height but different ceilings)
 
 
 -----------------------------------------------------------------
