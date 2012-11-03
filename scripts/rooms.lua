@@ -1331,7 +1331,7 @@ function ROOM_CLASS.add_closet(R, closet_kind)
 
 
 --FIXME !!!! CLOSETS
-if closet_kind == "START" then return false end
+if closet_kind == "START" or true then return false end
 
 
   if not source_tab then return false end

@@ -1711,6 +1711,12 @@ DOOM.SKINS =
     y_offset=0
   }
 
+  Exit_pillar =
+  {
+    _file  = "exit/pillar1.wad",
+    _where = "middle"
+  }
+
   Exit_Pillar_tech =
   {
     _prefab = "EXIT_PILLAR",
@@ -3541,7 +3547,6 @@ DOOM.SKINS =
     crate = "ICKWALL4"
   }
 
-
 } -- end of DOOM.SKINS
 
 
@@ -3552,7 +3557,7 @@ DOOM.THEME_DEFAULTS =
 {
   starts = { Start_basic = 10, Start_Closet = 70 }
 
-  exits = { Exit_Pillar_tech = 10, Exit_Closet_tech = 70 }
+  exits = { Exit_pillar = 10, Exit_Closet_tech = 70 }
 
   pedestals = { Pedestal_1 = 50 }
 
@@ -4695,7 +4700,7 @@ DOOM2.LEVEL_THEMES =
       junc_circle_gothic = 40
     }
 
-    exits = { Exit_Closet_hell = 50, Exit_Pillar_gothic = 10 }
+--!!    exits = { Exit_Closet_hell = 50, Exit_Pillar_gothic = 10 }
 
     logos = { Pic_Carve=90, Pic_Pill=50, Pic_Neon=5 }
 
@@ -4773,8 +4778,8 @@ DOOM2.LEVEL_THEMES =
     caves     = { Urban_cave=50 }
     outdoors  = { Urban_outdoors=50 }
 
-    exits = { Exit_Closet_urban=50, Exit_Pillar_urban=10,
-              Exit_Pillar_gothic=3 }
+--!!    exits = { Exit_Closet_urban=50, Exit_Pillar_urban=10,
+--!!              Exit_Pillar_gothic=3 }
 
     mini_halls = { MiniHall_Arch1 = 50 }
 
