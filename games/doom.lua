@@ -2618,14 +2618,14 @@ DOOM.SKINS =
 
   Hall_Basic_T =
   {
-    _prefab = "HALL_BASIC_T"
+    _file   = "hall/trim1_t.wad"
     _shape  = "T"
     _fitted = "xy"
   }
 
   Hall_Basic_P =
   {
-    _prefab = "HALL_BASIC_P"
+    _file   = "hall/trim1_p.wad"
     _shape  = "P"
     _fitted = "xy"
   }
