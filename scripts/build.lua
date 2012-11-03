@@ -2449,6 +2449,11 @@ function Fab_load(skin)
       C2.y_offset = side.y_offset
     end
 
+    -- line type --
+    if line and line.special and line.special > 1 then
+      C2.special = line.special
+    end
+
     -- TODO: handle linedef flags
 
     -- TODO: handle linedef tag
