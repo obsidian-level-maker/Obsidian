@@ -3125,7 +3125,7 @@ DOOM.SKINS =
 
   Teleporter1 =
   {
-    _prefab = "TELEPORT_PAD"
+    _file   = "misc/tele_pad.wad"
     _where  = "middle"
 
     tele = { GATE1=60, GATE2=60, GATE3=30 }
