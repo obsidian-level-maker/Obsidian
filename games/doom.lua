@@ -4924,7 +4924,7 @@ DOOM.MONSTERS =
     level = 2
     prob = 50
     health = 30
-    damage = 10
+    damage = 15
     attack = "hitscan"
     give = { {weapon="shotty"}, {ammo="shell",count=4} }
     species = "zombie"
