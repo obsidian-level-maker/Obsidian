@@ -628,7 +628,7 @@ function CHUNK_CLASS.do_big_item(C, item_name)
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
 
-  Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
+  Fabricate2(skin1, T, { skin0, skin1, skin2 })
 end
 
 
@@ -646,7 +646,7 @@ function CHUNK_CLASS.content_start(C)
 
   local skin2 = { }
 
-  Fabricate(skin1._prefab, T, { skin1, skin2 })
+  Fabricate2(skin1, T, { skin1, skin2 })
 end
 
 
@@ -674,7 +674,7 @@ function CHUNK_CLASS.content_exit(C)
     skin2.special = 51
   end
 
-  Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
+  Fabricate2(skin1, T, { skin0, skin1, skin2 })
 end
 
 
@@ -705,7 +705,7 @@ function CHUNK_CLASS.content_switch(C)
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
 
-  Fabricate(skin1._prefab, T, { skin1, skin2 })
+  Fabricate2(skin1, T, { skin1, skin2 })
 end
 
 
@@ -736,7 +736,7 @@ function CHUNK_CLASS.content_teleporter(C)
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, 10 - C.spot_dir)
 
 
-  Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
+  Fabricate2(skin1, T, { skin0, skin1, skin2 })
 end
 
 
@@ -763,7 +763,7 @@ function CHUNK_CLASS.content_hub_gate(C)
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, 10 - C.spot_dir)
 
-  Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
+  Fabricate2(skin1, T, { skin0, skin1, skin2 })
 end
 
 
@@ -776,7 +776,7 @@ function CHUNK_CLASS.content_decor(C)
 
   local skin2 = { }
 
-  Fabricate(skin1._prefab, T, { skin1, skin2 })
+  Fabricate2(skin1, T, { skin1, skin2 })
 end
 
 
@@ -802,7 +802,7 @@ function CHUNK_CLASS.do_hexen_triple(C)
   local skin0 = { wall = C.room.wall_mat }
   local skin2 = { }
 
-  Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
+  Fabricate2(skin1, T, { skin0, skin1, skin2 })
 end
 
 
@@ -1019,7 +1019,7 @@ function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
       error("No such picture skin: " .. tostring(C.area.pic_name))
     end
 
-    Fabricate(skin2._prefab, T, { skin, skin2 })
+    Fabricate2(skin2, T, { skin, skin2 })
     return
   end
 
@@ -1061,7 +1061,7 @@ function CHUNK_CLASS.build_scenic(C)
 
     local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, C.prefab_dir or 2)
 
-    Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
+    Fabricate2(skin1, T, { skin0, skin1, skin2 })
 
   else
     -- plain solid quad
@@ -1125,7 +1125,7 @@ function CHUNK_CLASS.build_door(C, dir, LINK, f_h, c_h, long)
     error("Unknown lock kind: " .. tostring(lock.kind))
   end
 
-  Fabricate(skin._prefab, T, { skin, skin2 })
+  Fabricate2(skin, T, { skin, skin2 })
 end
 
 
@@ -1145,7 +1145,7 @@ function CHUNK_CLASS.build_fat_arch(C)
 
   local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, dir)
 
-  Fabricate(skin1._prefab, T, { skin1, skin2 })
+  Fabricate2(skin1, T, { skin1, skin2 })
 end
 
 
@@ -1336,7 +1336,7 @@ function CHUNK_CLASS.build(C)
     local skin1 = GAME.SKINS[C.floor_prefab]
     local skin0 = { floor=f_matname }
 
-    Fabricate(skin1._prefab, T, { skin0, skin1 })
+    Fabricate2(skin1, T, { skin0, skin1 })
 
   elseif C.stair and false then  --!!!!
     local skin = C.stair.skin
@@ -1356,7 +1356,7 @@ function CHUNK_CLASS.build(C)
 ---## stderrf("STAIR STUFF: dir:%d h1:%d h2:%d delta:%d scale_z:%1.4f\n",
 ---##   C.stair.dir, C.stair.C1.floor_h, C.stair.C2.floor_h, delta_h, T.scale_z)
 
-    Fabricate(skin._prefab, T, { skin0, skin, skin2 })
+    Fabricate2(skin, T, { skin0, skin, skin2 })
 
 
 --!!!! TESTINK STUFF
