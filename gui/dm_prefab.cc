@@ -216,7 +216,7 @@ int wadfab_load(lua_State *L)
   {
     WAD_CloseRead();
     wadfab_free(L);
-    return luaL_error(L, "wadfab_load: missing/bad GL-nodes in %s", name);
+    return luaL_error(L, "wadfab_load: MISSING GL-NODES in %s", name);
   }
 
   // we have loaded everything we need -- can close then file now
