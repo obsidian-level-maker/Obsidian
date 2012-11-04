@@ -2485,10 +2485,17 @@ function Fab_load(skin)
       if pass != 1 then return end
 
     elseif pass == 1 then
-      table.insert(B, { t=S.floor_h, tex=S.floor_tex, special=S.special })
+      local C = { t=S.floor_h, tex=S.floor_tex, special=S.special }
+      table.insert(B, C)
 
     else
-      table.insert(B, { b=S.ceil_h, tex=S.ceil_tex })
+      local C = { b=S.ceil_h, tex=S.ceil_tex }
+      table.insert(B, C)
+
+      -- ability to create closed doors
+      if int(S.ceil_h - S.floor_h) == 1 then
+        C.delta_z = -1
+      end
     end
 
     each C in coords do
