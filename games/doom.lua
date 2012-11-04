@@ -3191,8 +3191,9 @@ DOOM.SKINS =
 
   Fence1 =
   {
-    _prefab = "FENCE_W_RAIL"
+    _file   = "fence/fence1.wad"
     _where  = "edge"
+    _fitted = "xy"
     _long   = 192
     _deep   = 32
 
