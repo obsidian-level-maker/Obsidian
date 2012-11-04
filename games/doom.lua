@@ -2632,7 +2632,7 @@ DOOM.SKINS =
 
   Hall_Basic_I_Stair =
   {
-    _prefab = "HALL_BASIC_I_STAIR"
+    _file   = "hall/trim1_st.wad"
     _shape  = "IS"
     _fitted = "xy"
 
