@@ -1620,6 +1620,12 @@ end
 function Plan_decide_outdoors()
 
   local function score_room(R)
+    -- handle the surrounder room
+    if R.is_surrounder and rand.odds(style_sel("outdoors", 0, 15, 35, 80)) then
+      R.kind = "outdoor"
+      return -1  -- ignore it now
+    end
+
     -- too small ?
     if R.svolume < 4 then return -1 end
 
