@@ -1957,8 +1957,8 @@ DOOM.SKINS =
 
   Pedestal_1 =
   {
-    _prefab = "PEDESTAL"
-    _where  = "middle"
+    _file  = "pedestal/ped.wad"
+    _where = "middle"
 
     top  = "CEIL1_2"
     side = "METAL"

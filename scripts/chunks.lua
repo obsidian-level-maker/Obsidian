@@ -629,6 +629,9 @@ function CHUNK_CLASS.do_big_item(C, item_name)
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
 
   Fabricate(skin1, T, { skin0, skin1, skin2 })
+
+  --!!!! FIXME should be done via the skin
+  entity_helper(item_name, mx, my, C.floor_h or 0)
 end
 
 
