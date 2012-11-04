@@ -2492,7 +2492,7 @@ function Fab_load(skin)
     end
 
     each C in coords do
-      table.insert(B, copy_coord(S, C))
+      table.insert(B, copy_coord(S, C, pass))
     end
 
     -- add this new brush to the prefab
@@ -2554,8 +2554,8 @@ function Fab_load(skin)
       local S = gui.wadfab_get_sector(sec_idx)
       assert(S)
 
-      create_brush(S, coords, 1)
-      create_brush(S, coords, 2)
+      create_brush(S, coords, 1)  -- floor
+      create_brush(S, coords, 2)  -- ceil
     end
 
     gui.wadfab_free()
