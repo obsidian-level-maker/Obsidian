@@ -3617,7 +3617,7 @@ DOOM.THEME_DEFAULTS =
     junc_circle_tech = 40
   }
 
-  fat_cages = { Fat_Cage1 = 50, Fat_Cage_W_Bars = 8 }
+--!!!!  fat_cages = { Fat_Cage1 = 50, Fat_Cage_W_Bars = 8 }
 
   outdoor_decor = { big_tree=50, burnt_tree=10, brown_stub=10 }
 
