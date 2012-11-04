@@ -2410,8 +2410,9 @@ DOOM.SKINS =
 
   Door_SW_blue =
   {
-    _prefab = "DOOR"
+    _file   = "door/sw_door1.wad"
     _where  = "edge"
+    _fitted = "xy"
     _switch = "sw_blue"
     _long = 192
     _deep = 48
