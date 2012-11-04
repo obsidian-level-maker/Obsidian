@@ -1018,6 +1018,7 @@ function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
     if not skin2 then
       error("No such picture skin: " .. tostring(C.area.pic_name))
     end
+    T.fitted_z = nil
 
     Fabricate(skin2, T, { skin, skin2 })
     return

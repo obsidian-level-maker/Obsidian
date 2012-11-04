@@ -3230,8 +3230,11 @@ DOOM.SKINS =
 
   Pic_Carve =
   {
-    _prefab = "PICTURE"
+    _file   = "wall/pic_64x64.wad"
     _where  = "edge"
+    _fitted = "xy"
+    _bound_z1 = 0
+    _bound_z2 = 128
     _long   = 192
 
     pic   = "O_CARVE"
@@ -3261,8 +3264,11 @@ DOOM.SKINS =
 
   Pic_Computer =
   {
-    _prefab = "PICTURE"
+    _file   = "wall/pic_128x48.wad"
     _where  = "edge"
+    _fitted = "xy"
+    _bound_z1 = 0
+    _bound_z2 = 112
     _long   = 192
 
     pic   = { COMPSTA1=50, COMPSTA2=50 }
@@ -3595,7 +3601,7 @@ DOOM.THEME_DEFAULTS =
 
   teleporters = { Teleporter1 = 10, Teleporter_Closet = 80 }
 
-  logos = { Pic_Carve=50, Pic_Pill=50, Pic_Neon=20 }
+  logos = { Pic_Carve=50 } --!!!! , Pic_Pill=50, Pic_Neon=20 }
 
   windows = { Window1 = 50 }
 
@@ -4652,17 +4658,17 @@ DOOM2.LEVEL_THEMES =
 
     big_pillars = { big_red=50, big_blue=50 }
 
-    logos = { Pic_Carve=10, Pic_Pill=90, Pic_Neon=50 }
+--!!!!    logos = { Pic_Carve=10, Pic_Pill=90, Pic_Neon=50 }
 
     pictures =
     {
       Pic_Computer = 70
-      Pic_TekWall = 10
-      Pic_Silver3 = 25
-
-      Pic_LiteGlow = 20
-      Pic_LiteGlowBlue = 10
-      Pic_LiteFlash = 20
+--!!!      Pic_TekWall = 10
+--!!!      Pic_Silver3 = 25
+--!!!
+--!!!      Pic_LiteGlow = 20
+--!!!      Pic_LiteGlowBlue = 10
+--!!!      Pic_LiteFlash = 20
     }
 
     crates = { crate1=50, crate2=50, comp=70, lite5=20,
@@ -4702,8 +4708,9 @@ DOOM2.LEVEL_THEMES =
 
 --!!    exits = { Exit_Closet_hell = 50, Exit_Pillar_gothic = 10 }
 
-    logos = { Pic_Carve=90, Pic_Pill=50, Pic_Neon=5 }
+--!!!!    logos = { Pic_Carve=90, Pic_Pill=50, Pic_Neon=5 }
 
+--[[
     pictures =
     {
       Pic_MarbFace = 40
@@ -4712,6 +4719,7 @@ DOOM2.LEVEL_THEMES =
       Pic_SkinScroll = 10
       Pic_FaceScroll = 10
     }
+--]]
 
     big_pillars = { big_red=50, sloppy=20, sloppy2=20, }
 
@@ -4745,8 +4753,9 @@ DOOM2.LEVEL_THEMES =
 
     big_pillars = { big_red=50, sloppy=20, sloppy2=20, }
 
-    logos = { carve=90, pill=50, neon=5 }
+--!!!!    logos = { carve=90, pill=50, neon=5 }
 
+--[[
     pictures =
     {
       marbfac2=10, marbfac3=10,
@@ -4755,6 +4764,7 @@ DOOM2.LEVEL_THEMES =
 
       spdude7=7,
     }
+--]]
 
     OLD__switches = { sw_skin=50, sw_marble=50, sw_vine=50 }
 
@@ -4793,8 +4803,9 @@ DOOM2.LEVEL_THEMES =
       junc_circle_gothic = 40
     }
 
-    logos = { Pic_Carve=30, Pic_Pill=30, Pic_Neon=70 }
+--!!!!    logos = { Pic_Carve=30, Pic_Pill=30, Pic_Neon=70 }
 
+--[[
     pictures =
     {
       Pic_MetalFace = 50
@@ -4805,6 +4816,7 @@ DOOM2.LEVEL_THEMES =
       Pic_Wreath = 20
       Pic_Adolf = 2
     }
+--]]
 
     lifts = { shiny=20, platform=20, rusty=50 }
 

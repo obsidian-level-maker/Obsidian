@@ -2192,7 +2192,7 @@ end
 
 function Fabricate_old(name, T, skins)
   
--- stderrf("=========  FABRICATE %s\n", name)
+stderrf("=========  FABRICATE %s\n", name)
 
   local fab = Fab_create(name)
 
