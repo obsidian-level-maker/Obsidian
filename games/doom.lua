@@ -2884,7 +2884,8 @@ DOOM.SKINS =
 
   Junc_Circle_gothic_P =
   {
-    _prefab = "JUNCTION_CIRCLE"
+    _file   = "junction/circle_p.wad"
+    _fitted = "xy"
     _shape  = "P"
 
     floor  = "CEIL3_5"
@@ -3607,7 +3608,7 @@ DOOM.THEME_DEFAULTS =
 
   fences = { Fence1 = 50 }
 
-  hallway_groups = { hall_basic = 50, hall_thin = 15 }  -- TODO: cavey
+  hallway_groups = { hall_basic = 50 } --!!!! , hall_thin = 15 }  -- TODO: cavey
 
   mini_halls = { Hall_Basic_I = 50, MiniHall_Door_tech = 20 }
 
@@ -3615,12 +3616,13 @@ DOOM.THEME_DEFAULTS =
 
   big_junctions =
   {
-    junc_ledge = 80
-    junc_octo = 50
-    junc_nuke_pipes = 14
---  junc_Nuke_Islands = 70  -- size restriction means this is fairly rare
-    junc_spokey = 10
-    junc_circle_tech = 40
+--!!!     junc_ledge = 80
+--!!!     junc_octo = 50
+--!!!     junc_nuke_pipes = 14
+--!!!  -- junc_Nuke_Islands = 70  -- size restriction means this is fairly rare
+--!!!     junc_spokey = 10
+
+    junc_circle_gothic = 40
   }
 
 --!!!!  fat_cages = { Fat_Cage1 = 50, Fat_Cage_W_Bars = 8 }
@@ -4698,7 +4700,7 @@ DOOM2.LEVEL_THEMES =
 
     mini_halls = { MiniHall_Arch1 = 50, MiniHall_Door_hell = 20 }
 
-    big_junctions =
+    __big_junctions =
     {
       junc_octo = 50
       junc_nuke_pipes = 5
@@ -4793,7 +4795,7 @@ DOOM2.LEVEL_THEMES =
 
     mini_halls = { MiniHall_Arch1 = 50 }
 
-    big_junctions =
+    __big_junctions =
     {
       junc_well = 99
 
