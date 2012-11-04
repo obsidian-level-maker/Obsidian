@@ -3205,14 +3205,16 @@ DOOM.SKINS =
 
   Sky_fence =
   {
-    _prefab = "SKY_FENCE"
+    _file   = "fence/sky_fence.wad"
     _where  = "chunk"
+    _fitted = "xy"
   }
 
   Sky_corner =
   {
-    _prefab = "SKY_CORNER"
+    _file   = "fence/sky_corner.wad"
     _where  = "chunk"
+    _fitted = "xy"
   }
 
 

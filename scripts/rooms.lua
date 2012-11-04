@@ -2626,10 +2626,10 @@ function Rooms_outdoor_borders()
 
     local skin2 = { sky_h = R.sky_h - sky_fence_h }
 
-        if dir == 9 then dir = 2
-    elseif dir == 1 then dir = 8
-    elseif dir == 7 then dir = 6
-    elseif dir == 3 then dir = 4
+        if dir == 1 then dir = 2
+    elseif dir == 9 then dir = 8
+    elseif dir == 3 then dir = 6
+    elseif dir == 7 then dir = 4
     end
 
     local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, sky_fence_h, dir)
