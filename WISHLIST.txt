@@ -612,9 +612,13 @@ Cancellation:
   DOCUMENTATION / WEB SITE
 ----------------------------------------------------------------
 
--  new "RUNNING THE MAPS" section ?
+-  update Usage page:
+   -  recommend My Documents, avoid Program Files
+   -  the 'Seed' setting is no longer first
 
 -  To reset all settings, simply delete this file: CONFIG.txt
+
+-  new "RUNNING THE MAPS" section ?
 
 [etc.... merge WEB_TODO.txt into here...]
 

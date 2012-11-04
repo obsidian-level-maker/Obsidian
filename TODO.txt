@@ -3,14 +3,14 @@ OBLIGE TODO
 ===========
 
 
->>  GUI picture on website
-
-
 -  pick mini_halls at areas_handle_connections
 
 +  sky spread algo
    (a) check 2 seeds away on each dir (i.e. through mini-halls)
    (b) handle caves too
+
++  re-think switches/locked_doors stuff : USE GROUPS
+
 
 
 !!  fix pick_sizes and max_W, max_H
@@ -19,6 +19,8 @@ OBLIGE TODO
     between them are isolated from the rest, leading to this error:
 
       Script Error: Failed to find any height in grid neighbors
+
+    --> detect this, make multiple rooms
 
 
 - Psychedelic mode has a few issues. Exit signs / doors are
@@ -34,17 +36,20 @@ OBLIGE TODO
 WAD Prefabs
 ===========
 
-+  BUG: wrong textures (e.g. steps on teleporter)
-   --> using 'upper' when should be using 'lower'
+FIXED: BUG: wrong textures (e.g. steps on teleporter)
+       --> using 'upper' when should be using 'lower'
 
 +  get teleporter working
+      ???  get tag number from skin
+
++  get switched doors working
 
 -  mechanism to get side texture from floor/ceil
    (e.g. set side to CRACKLE2
    requires MATERIALS table to be fairly complete
 
--  mechanism to create a closed sector (for doors, etc)
-   e.g. ceil_h - floor_h == 1
+DONE: mechanism to create a closed sector (for doors, etc)
+      e.g. ceil_h - floor_h == 1
 
 -  NO: ability to "pick" the sector at a point / edge / corner and get the height there
    YES: use tag numbers for "main floor", "neighbor floor" (etc)
@@ -59,7 +64,9 @@ WAD Prefabs
    +  review current spot system
    +  use the fab.spots table 
 
--  Fab_load: can merge skins [OR: make utility for that]
+-  offseting !
+
+-  Fab_load: can merge skins
 
 ??  determine pathname PROPERLY
 
@@ -67,14 +74,9 @@ WAD Prefabs
 Needed Prefabs
 --------------
 
-picture*
-fence
 sky_fence, sky_corner
-item pedestal
-a basic big junction
-a switched door
-switch
-
+hall w/ lift
+keyed door (red card)
 
 
 ========================================================================
