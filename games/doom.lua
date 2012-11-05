@@ -2644,7 +2644,7 @@ DOOM.SKINS =
 
   Hall_Basic_I_Lift =
   {
-    _prefab = "HALL_BASIC_I_LIFT"
+    _file   = "hall/trim1_lf.wad"
     _shape  = "IL"
     _fitted = "xy"
     _tags   = 1
