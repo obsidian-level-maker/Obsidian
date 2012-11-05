@@ -2392,7 +2392,7 @@ WADFAB_ENTITIES =
 }
 
 
-function Fab_load(skin)
+function Fab_load_wad(skin)
 
   local fab
 
@@ -2588,7 +2588,7 @@ function Fab_load(skin)
   end
 
 
-  ---| Fab_load |---
+  ---| Fab_load_wad |---
 
   assert(skin._file)
 
@@ -2622,7 +2622,7 @@ function Fabricate(main_skin, T, skins)
     return Fabricate_old(main_skin._prefab, T, skins)
 
   elseif main_skin._file then
-    local fab = Fab_load(main_skin)  -- FIXME: skins??
+    local fab = Fab_load_wad(main_skin)  -- FIXME: skins??
 
     Fab_transform_XY(fab, T)
     Fab_transform_Z (fab, T)
