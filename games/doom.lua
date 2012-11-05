@@ -2219,8 +2219,9 @@ DOOM.SKINS =
 
   Locked_kc_red =
   {
-    _prefab = "DOOR"
+    _file   = "door/key_door.wad"
     _where  = "edge"
+    _fitted = "xy"
     _key    = "kc_red"
     _long   = 192
     _deep   = 48
@@ -3575,7 +3576,7 @@ DOOM.THEME_DEFAULTS =
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50,
              Lift_Up1 = 4, Lift_Down1 = 4 }
 
-  keys = { kc_red=50, kc_blue=50, kc_yellow=50 }
+  keys = { kc_red=50 }  --!!!!!! , kc_blue=50, kc_yellow=50 }
 
   -- TODO: sw_wood  sw_marble
   switches = { sw_blue=50 }  --!!!! , sw_red=50, sw_pink=20, sw_vine=20 }
@@ -4697,7 +4698,7 @@ DOOM2.LEVEL_THEMES =
 
     liquids = { lava=90, blood=40, nukage=5 }
 
-    keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
+--!!!!    keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
 
     buildings = { Hell2_hotbrick=50, Hell2_marble=50 }
     hallways  = { Hell2_hallway=50 }
@@ -4748,7 +4749,7 @@ DOOM2.LEVEL_THEMES =
 
     liquids = { lava=40, blood=90, slime=10 }
 
-    keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
+--!!!!    keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
 
     buildings = { D2_Hot_room=50 }
     outdoors  = { D2_Hot_outdoors=50 }
