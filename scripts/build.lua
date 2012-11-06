@@ -2608,7 +2608,14 @@ end
 
 
 function Fab_merge_skins(fab, main_skin, list)
+  --
+  -- merges the skin list into the main skin (from GAMES.SKIN table)
+  -- and also includes various default values.
+  --
+
   local result = table.copy(GLOBAL_SKIN_DEFAULTS)
+
+  result.wall = GAME.MATERIALS["_ERROR"].t
 
   if  GAME.skin_defaults then table.merge(result,  GAME.skin_defaults) end
   if THEME.skin_defaults then table.merge(result, THEME.skin_defaults) end
@@ -2623,9 +2630,10 @@ function Fab_merge_skins(fab, main_skin, list)
 end
 
 
-function Fab_substitutions(SKIN)
+function Fab_substitutions(fab, SKIN)
   --
-  -- handle all the subs (the "?xxx" syntax) and random tables.
+  -- handle all subs (the "?xxx" syntax) and random tables.
+  -- the SKIN table is modified here.
   --
 
   local function random_pass(keys)
@@ -2716,8 +2724,8 @@ end
 
 
 function Fab_replacements(fab, skin)
-  -- this replaces textures (etc) in the brushes of the prefab
-  -- with stuff from the skin.
+  -- replaces textures (etc) in the brushes of the prefab with
+  -- stuff from the skin.
 
   -- FIXME: Fab_replacements
 end
@@ -2734,7 +2742,7 @@ function Fabricate(main_skin, T, skins)
 
     local skin = Fab_merge_skins(fab, main_skin, skins)
 
-    Fab_substitutions(skin)
+    Fab_substitutions(fab, skin)
 
     Fab_replacements(fab, skin)
 
