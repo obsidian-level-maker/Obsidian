@@ -2668,6 +2668,7 @@ DOOM.SKINS =
     _file   = "hall/trim1_lf.wad"
     _shape  = "IL"
     _fitted = "xy"
+    _z_ranges = { {64,0}, {64,0,"?stair_h-64"}, {128,0} }
     _tags   = 1
 
     lift = "SUPPORT3"
