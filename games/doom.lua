@@ -2177,11 +2177,15 @@ DOOM.SKINS =
 
   Locked_kc_blue =
   {
-    _prefab = "DOOR"
+    _file   = "door/key_door.wad"
     _where  = "edge"
+    _fitted = "xy"
     _key    = "kc_blue"
     _long   = 192
     _deep   = 48
+
+    tex_DOORRED = "DOORBLU";
+    line_33 = 32
 
     door_w = 128
     door_h = 112
@@ -2198,11 +2202,15 @@ DOOM.SKINS =
 
   Locked_kc_yellow =
   {
-    _prefab = "DOOR"
+    _file   = "door/key_door.wad"
     _where  = "edge"
+    _fitted = "xy"
     _key    = "kc_yellow"
     _long   = 192
     _deep   = 48
+
+    tex_DOORRED = "DOORYEL";
+    line_33 = 34
 
     door_w = 128
     door_h = 112
@@ -2238,6 +2246,7 @@ DOOM.SKINS =
     special = 33
     tag = 0  -- kind_mult=28
   }
+
 
   Locked_ks_blue =
   {
@@ -3578,7 +3587,7 @@ DOOM.THEME_DEFAULTS =
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50,
              Lift_Up1 = 4, Lift_Down1 = 4 }
 
-  keys = { kc_red=50 }  --!!!!!! , kc_blue=50, kc_yellow=50 }
+  keys = { kc_red=50, kc_blue=50, kc_yellow=50 }
 
   -- TODO: sw_wood  sw_marble
   switches = { sw_blue=50 }  --!!!! , sw_red=50, sw_pink=20, sw_vine=20 }
