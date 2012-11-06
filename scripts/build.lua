@@ -2727,7 +2727,59 @@ function Fab_replacements(fab, skin)
   -- replaces textures (etc) in the brushes of the prefab with
   -- stuff from the skin.
 
-  -- FIXME: Fab_replacements
+  local function santize_char(ch)
+    if ch == "-" or ch == " " or ch == "_" then return "_" end
+
+    if string.match(ch, "%w") then return ch end
+
+    -- convert a weird character to a lowercase letter
+    local num = string.byte(ch)
+    if (num < 0) then num = -num end
+    num = num % 26;
+
+    return string.sub("abcdefghijklmnopqrstuvwxyz", num, num)
+  end
+
+
+  local function santize(name)
+    name = string.upper(name)
+
+    local s = ""
+
+    for i = 1,#name do
+      s = s .. santize_char(string.sub(name, i, i))
+    end
+
+    if s == "" then return "ZZZ" end
+
+    return s
+  end
+
+
+  local function check(prefix, val)
+    local k = prefix .. "_" .. val;
+
+    if skin[k] then return skin[k] end
+
+    return val
+  end
+
+
+  ---| Fab_replacements |---
+
+  each B in fab.brushes do
+    each C in B do
+      if C.tex and C.x     then C.tex = check("tex",  santize(C.tex)) end
+      if C.tex and not C.x then C.tex = check("flat", santize(C.tex)) end
+
+      if C.special and C.x     then C.special = check("linetype", C.special) end
+      if C.special and not C.x then C.special = check("sectype",  C.special) end
+    end
+  end
+
+  each E in fab.entities do
+    E.id = check("thing", E.id)
+  end
 end
 
 
