@@ -2772,8 +2772,8 @@ function Fab_replacements(fab, skin)
       if C.tex and C.x     then C.tex = check("tex",  santize(C.tex)) end
       if C.tex and not C.x then C.tex = check("flat", santize(C.tex)) end
 
-      if C.special and C.x     then C.special = check("linetype", C.special) end
-      if C.special and not C.x then C.special = check("sectype",  C.special) end
+      if C.special and C.x     then C.special = check("line",   C.special) end
+      if C.special and not C.x then C.special = check("sector", C.special) end
     end
   end
 
