@@ -1102,8 +1102,6 @@ end
 
 function Trans.loose_group_targets(groups, scale)
 
-  -- TODO: TEST THIS CODE !!!
-
   local total_size  = 0
   local total_size2 = 0
 
@@ -1141,6 +1139,8 @@ function Trans.loose_group_targets(groups, scale)
     G.low2  = pos2 ; pos2 = pos2 + G.size2
     G.high2 = pos2
   end
+
+--- stderrf("loose_groups:\n%s\n\n", table.tostr(groups, 2))
 end
 
 
@@ -2723,23 +2723,28 @@ function Fab_substitutions(fab, SKIN)
 end
 
 
-function Fab_subs_in_ranges(fab, skin)
-  
+function Fab_copy_ranges(fab, skin)
+  -- this also performs substitutions in the groups
+ 
   local function do_range(groups)
     if not groups then return end
 
-    each G in groups do
+    new_groups = table.deep_copy(groups)
+
+    each G in new_groups do
       for i = 1,#G do
         G[i] = Trans.substitute(skin, G[i])
       end
     end
+
+    return new_groups
   end
 
-  ---| Fab_subs_in_ranges |---
+  ---| Fab_copy_ranges |---
 
-  do_range(fab.x_ranges)
-  do_range(fab.y_ranges)
-  do_range(fab.z_ranges)
+  fab.x_ranges = do_range(skin._x_ranges)
+  fab.y_ranges = do_range(skin._y_ranges)
+  fab.z_ranges = do_range(skin._z_ranges)
 end
 
 
@@ -2823,11 +2828,7 @@ stderrf("=========  FABRICATE %s\n", main_skin._file)
     fab.state  = "skinned"
     fab.fitted = main_skin._fitted
 
-    fab.x_ranges = main_skin._x_ranges
-    fab.y_ranges = main_skin._y_ranges
-    fab.z_ranges = main_skin._z_ranges
-
-    Fab_subs_in_ranges(fab, skin)
+    Fab_copy_ranges(fab, skin)
 
     Fab_transform_XY(fab, T)
     Fab_transform_Z (fab, T)
