@@ -2250,11 +2250,15 @@ DOOM.SKINS =
 
   Locked_ks_blue =
   {
-    _prefab = "DOOR"
+    _file   = "door/key_door.wad"
     _where  = "edge"
+    _fitted = "xy"
     _key    = "ks_blue"
     _long   = 192
     _deep   = 48
+
+    tex_DOORRED = "DOORBLU2";
+    line_33 = 32
 
     door_w = 128
     door_h = 112
@@ -2273,11 +2277,15 @@ DOOM.SKINS =
 
   Locked_ks_yellow =
   {
-    _prefab = "DOOR"
+    _file   = "door/key_door.wad"
     _where  = "edge"
+    _fitted = "xy"
     _key    = "ks_yellow"
     _long   = 192
     _deep   = 48
+
+    tex_DOORRED = "DOORYEL2";
+    line_33 = 34
 
     door_w = 128
     door_h = 112
@@ -2296,11 +2304,14 @@ DOOM.SKINS =
 
   Locked_ks_red =
   {
-    _prefab = "DOOR"
+    _file   = "door/key_door.wad"
     _where  = "edge"
+    _fitted = "xy"
     _key    = "ks_red"
     _long   = 192
     _deep   = 48
+
+    tex_DOORRED = "DOORRED2";
 
     door_w = 128
     door_h = 112
@@ -4709,7 +4720,7 @@ DOOM2.LEVEL_THEMES =
 
     liquids = { lava=90, blood=40, nukage=5 }
 
---!!!!    keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
+    keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
 
     buildings = { Hell2_hotbrick=50, Hell2_marble=50 }
     hallways  = { Hell2_hallway=50 }
@@ -4760,7 +4771,7 @@ DOOM2.LEVEL_THEMES =
 
     liquids = { lava=40, blood=90, slime=10 }
 
---!!!!    keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
+    keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
 
     buildings = { D2_Hot_room=50 }
     outdoors  = { D2_Hot_outdoors=50 }
