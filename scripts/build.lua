@@ -2097,7 +2097,7 @@ end
 
 
 
-function Fab_bound_Z(fab, z1, z2)
+function Fab_bound_brushes_Z(fab, z1, z2)
   if not (z1 or z2) then return end
 
   for _,B in ipairs(fab.brushes) do
@@ -2723,6 +2723,27 @@ function Fab_substitutions(fab, SKIN)
 end
 
 
+function Fab_subs_in_ranges(fab, skin)
+  
+  local function do_range(groups)
+    if not groups then return end
+
+    each G in groups do
+      for i = 1,#G do
+        G[i] = Trans.substitute(skin, G[i])
+      end
+    end
+  end
+
+  ---| Fab_subs_in_ranges |---
+
+  do_range(fab.x_ranges)
+  do_range(fab.y_ranges)
+  do_range(fab.z_ranges)
+end
+
+
+
 function Fab_replacements(fab, skin)
   -- replaces textures (etc) in the brushes of the prefab with
   -- stuff from the skin.
@@ -2788,6 +2809,7 @@ function Fabricate(main_skin, T, skins)
     return Fabricate_old(main_skin._prefab, T, skins)
 
   elseif main_skin._file then
+stderrf("=========  FABRICATE %s\n", main_skin._file)
     local fab = Fab_load_wad(main_skin._file)
 
     Fab_bound_Z(fab, main_skin)
@@ -2800,6 +2822,12 @@ function Fabricate(main_skin, T, skins)
 
     fab.state  = "skinned"
     fab.fitted = main_skin._fitted
+
+    fab.x_ranges = main_skin._x_ranges
+    fab.y_ranges = main_skin._y_ranges
+    fab.z_ranges = main_skin._z_ranges
+
+    Fab_subs_in_ranges(fab, skin)
 
     Fab_transform_XY(fab, T)
     Fab_transform_Z (fab, T)
