@@ -2623,10 +2623,95 @@ function Fab_merge_skins(fab, main_skin, list)
 end
 
 
-function Fab_substitutions(skin)
-  -- this handles the "?xxx" syntax and random tables
+function Fab_substitutions(SKIN)
+  --
+  -- handle all the subs (the "?xxx" syntax) and random tables.
+  --
 
-  -- FIXME: Fab_substitutions
+  local function random_pass(keys)
+    -- most fields with a table value are considered to be random
+    -- replacement, e.g. pic = { COMPSTA1=50, COMPWERD=50 }.
+
+    each name in keys do
+      local value = SKIN[name]
+
+      if type(value) == "table" then
+        if table.size(value) == 0 then
+          error("Fab_substitutions: random table is empty: " .. tostring(name))
+        end
+
+        SKIN[name] = rand.key_by_probs(value)
+      end
+    end
+  end
+
+
+  local function function_pass(keys)
+    each name in keys do
+      local func = SKIN[name]
+
+      if type(func) == "function" then
+        SKIN[name] = func(SKIN)
+      end
+    end
+  end
+
+
+  local function subst_pass(keys)
+    local changes = 0
+
+    -- look for unresolved substitutions first
+    each name in keys do
+      local value = SKIN[name]
+
+      if Trans.is_subst(value) then
+        local ref = Trans.substitute(SKIN, value)
+
+        if ref and type(ref) == "function" then
+          error("Substitution references a function: " .. value)
+        end
+
+        if ref and Trans.is_subst(ref) then
+          -- need to resolve the other one first
+        else
+          SKIN[name] = ref
+          changes = changes + 1
+        end
+      end
+    end
+
+    return changes
+  end
+
+
+  ---| Fab_substitutions |---
+
+  -- Note: iterate over a copy of the key names, since we cannot
+  --       safely modify a table while iterating through it.
+  --
+  --       Fields starting with an underscore are ignored, to allow
+  --       for special fields in the skin.
+  local keys = {}
+
+  each name,value in SKIN do
+    if not string.match(name, "^_") then
+      table.insert(keys, name)
+    end
+  end
+
+  random_pass(keys)
+
+  for loop = 1,20 do
+    if subst_pass(keys) == 0 then
+      function_pass(keys)
+      return SKIN
+    end
+  end
+
+  -- failed !
+  gui.debugf("\nSKIN =\n%s\n\n", table.tostr(SKIN))
+
+  error("Fab_substitutions: cannot resolve refs")
 end
 
 
