@@ -9,7 +9,7 @@ OBLIGE TODO
    (a) check 2 seeds away on each dir (i.e. through mini-halls)
    (b) handle caves too
 
-+  re-think switches/locked_doors stuff : USE GROUPS
++  re-think switches/locked_doors selection : USE GROUPS?
 
 
 
@@ -36,6 +36,10 @@ OBLIGE TODO
 WAD Prefabs
 ===========
 
+DONE:  Fab_load_wad: only cache result of loading prefab -- no skin stuff
+DONE:  Fabricate: can merge skins
+DONE:  Fabricate (or whatever): apply skin values
+
 FIXED: BUG: wrong textures (e.g. steps on teleporter)
        --> using 'upper' when should be using 'lower'
 
@@ -47,6 +51,11 @@ FIXED: BUG: wrong textures (e.g. steps on teleporter)
 -  mechanism to get side texture from floor/ceil
    (e.g. set side to CRACKLE2
    requires MATERIALS table to be fairly complete
+
+?  do we need _x_ranges and _y_ranges anymore?
+   (could use it in picture wad-fab I guess)
+
+DONE:  _z_ranges (etc) 
 
 DONE: mechanism to create a closed sector (for doors, etc)
       e.g. ceil_h - floor_h == 1
@@ -66,7 +75,9 @@ DONE: mechanism to create a closed sector (for doors, etc)
 
 -  offseting !
 
--  Fab_load: can merge skins
+-  rail textures
+
+-  line flags (e.g. blocking)
 
 ??  determine pathname PROPERLY
 
@@ -74,9 +85,9 @@ DONE: mechanism to create a closed sector (for doors, etc)
 Needed Prefabs
 --------------
 
-sky_fence, sky_corner
-hall w/ lift
-keyed door (red card)
+start closet
+exit closet
+
 
 
 ========================================================================
