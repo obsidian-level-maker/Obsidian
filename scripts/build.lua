@@ -2392,7 +2392,7 @@ WADFAB_ENTITIES =
 }
 
 
-function Fab_load_wad(skin)
+function Fab_load_wad(name)
 
   local fab
 
@@ -2534,7 +2534,8 @@ function Fab_load_wad(skin)
 
     fab =
     {
-      name = name
+      name  = name
+      state = "raw"
 
       brushes  = {}
       models   = {}
@@ -2573,26 +2574,7 @@ function Fab_load_wad(skin)
   end
 
 
-  local function bound_Z(fab)
-    if skin._bound_z1 then
-      fab.bbox.z1 = math.min(fab.bbox.z1 or 9999, skin._bound_z1)
-    end
-
-    if skin._bound_z2 then
-      fab.bbox.z2 = math.max(fab.bbox.z2 or -9999, skin._bound_z2)
-    end
-
-    if fab.bbox.z1 then
-      fab.bbox.dz = fab.bbox.z2 - fab.bbox.z1
-    end
-  end
-
-
   ---| Fab_load_wad |---
-
-  assert(skin._file)
-
-  local name = skin._file
 
   -- see if already loaded
   if not EPISODE.cached_wads then
@@ -2606,14 +2588,22 @@ function Fab_load_wad(skin)
   local orig = EPISODE.cached_wads[name]
   assert(orig)
 
-  local fab = table.deep_copy(orig)
+  return table.deep_copy(orig)
+end
 
-  bound_Z(fab)
 
-  fab.state  = "skinned"
-  fab.fitted = skin._fitted  -- can be NIL
+function Fab_bound_Z(fab, skin)
+  if skin._bound_z1 then
+    fab.bbox.z1 = math.min(fab.bbox.z1 or 9999, skin._bound_z1)
+  end
 
-  return fab
+  if skin._bound_z2 then
+    fab.bbox.z2 = math.max(fab.bbox.z2 or -9999, skin._bound_z2)
+  end
+
+  if fab.bbox.z1 and fab.bbox.z2 then
+    fab.bbox.dz = fab.bbox.z2 - fab.bbox.z1
+  end
 end
 
 
@@ -2622,7 +2612,16 @@ function Fabricate(main_skin, T, skins)
     return Fabricate_old(main_skin._prefab, T, skins)
 
   elseif main_skin._file then
-    local fab = Fab_load_wad(main_skin)  -- FIXME: skins??
+    local fab = Fab_load_wad(main_skin._file)
+
+    Fab_bound_Z(fab, main_skin)
+
+--FIXME   Fab_substitutions()
+
+--FIXME   Fab_replacements()
+
+    fab.state  = "skinned"
+    fab.fitted = main_skin._fitted
 
     Fab_transform_XY(fab, T)
     Fab_transform_Z (fab, T)
