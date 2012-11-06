@@ -996,7 +996,7 @@ function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
   if C:neighbor_info(dir, info, "sky_only") and
      info.c_min - info.f_max >= 64
   then
-    Trans.set_fitted_z(T, info.f_max, info.c_min)
+--???    Trans.set_fitted_z(T, info.f_max, info.c_min)
 
     -- FIXME: big hack !!!!!
     if (OB_CONFIG.game == "heretic" or OB_CONFIG.game == "hexen") and C.room and C.room.zone.fake_windows 
@@ -1006,7 +1006,9 @@ function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
       Fabricate_old("PICTURE_WINDOW", T, { skin, skin2 })
       return
     elseif LEVEL.special != "street" or rand.odds(31) then
-      Fabricate_old("WINDOW", T, { skin })
+      local skin0 = GAME.SKINS["Window1"]
+      assert(skin0)
+      Fabricate(skin0, T, { skin })
       return
     end
   end

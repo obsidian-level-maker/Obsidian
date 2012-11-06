@@ -3179,8 +3179,9 @@ DOOM.SKINS =
 
   Window1 =
   {
-    _prefab = "WINDOW"
+    _file   = "window/window1.wad"
     _where  = "edge"
+    _fitted = "xy"
     _long   = 192
     _deep   = 24
 
