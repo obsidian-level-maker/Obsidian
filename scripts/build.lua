@@ -2607,6 +2607,37 @@ function Fab_bound_Z(fab, skin)
 end
 
 
+function Fab_merge_skins(fab, main_skin, list)
+  local result = table.copy(GLOBAL_SKIN_DEFAULTS)
+
+  if  GAME.skin_defaults then table.merge(result,  GAME.skin_defaults) end
+  if THEME.skin_defaults then table.merge(result, THEME.skin_defaults) end
+
+  table.merge(result, main_skin)
+
+  each skin in list do
+    table.merge(result, skin)
+  end
+
+  return result
+end
+
+
+function Fab_substitutions(skin)
+  -- this handles the "?xxx" syntax and random tables
+
+  -- FIXME: Fab_substitutions
+end
+
+
+function Fab_replacements(fab, skin)
+  -- this replaces textures (etc) in the brushes of the prefab
+  -- with stuff from the skin.
+
+  -- FIXME: Fab_replacements
+end
+
+
 function Fabricate(main_skin, T, skins)
   if main_skin._prefab then
     return Fabricate_old(main_skin._prefab, T, skins)
@@ -2616,9 +2647,11 @@ function Fabricate(main_skin, T, skins)
 
     Fab_bound_Z(fab, main_skin)
 
---FIXME   Fab_substitutions()
+    local skin = Fab_merge_skins(fab, main_skin, skins)
 
---FIXME   Fab_replacements()
+    Fab_substitutions(skin)
+
+    Fab_replacements(fab, skin)
 
     fab.state  = "skinned"
     fab.fitted = main_skin._fitted
