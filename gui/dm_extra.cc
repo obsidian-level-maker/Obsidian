@@ -925,7 +925,7 @@ int DM_wad_transfer_lump(lua_State *L)
 
   // TODO: support PK3
 
-  if (! CheckExtension(pkg_name, "wad"))
+  if (! MatchExtension(pkg_name, "wad"))
     return luaL_error(L, "wad_transfer_lump: file extension is not WAD: %s\n", pkg_name);
 
   const char *full_name = FileFindInPath(data_path, pkg_name);
@@ -961,7 +961,7 @@ int DM_wad_transfer_map(lua_State *L)
   const char *src_map  = luaL_checkstring(L, 2);
   const char *dest_map = luaL_checkstring(L, 3);
 
-  if (! CheckExtension(pkg_name, "wad"))
+  if (! MatchExtension(pkg_name, "wad"))
     return luaL_error(L, "wad_transfer_map: file extension is not WAD: %s\n", pkg_name);
 
   const char *full_name = FileFindInPath(data_path, pkg_name);
@@ -1057,7 +1057,7 @@ int DM_wad_merge_sections(lua_State *L)
 
   LogPrintf("Merging WAD sections from: %s\n", pkg_name);
 
-  if (! CheckExtension(pkg_name, "wad"))
+  if (! MatchExtension(pkg_name, "wad"))
     return luaL_error(L, "wad_merge_sections: file extension is not WAD: %s\n", pkg_name);
 
   const char *full_name = FileFindInPath(data_path, pkg_name);
@@ -1133,7 +1133,7 @@ int DM_wad_read_text_lump(lua_State *L)
   const char *pkg_name = luaL_checkstring(L, 1);
   const char *src_lump = luaL_checkstring(L, 2);
  
-  if (! CheckExtension(pkg_name, "wad"))
+  if (! MatchExtension(pkg_name, "wad"))
     return luaL_error(L, "wad_read_text_lump: file extension is not WAD: %s\n", pkg_name);
 
   const char *full_name = FileFindInPath(data_path, pkg_name);

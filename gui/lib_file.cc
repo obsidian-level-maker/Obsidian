@@ -82,11 +82,11 @@ bool HasExtension(const char *filename)
 }
 
 //
-// CheckExtension
+// MatchExtension
 //
 // When ext is NULL, checks if the file has no extension.
 //
-bool CheckExtension(const char *filename, const char *ext)
+bool MatchExtension(const char *filename, const char *ext)
 {
   if (! ext)
     return ! HasExtension(filename);

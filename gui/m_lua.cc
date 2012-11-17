@@ -847,7 +847,7 @@ static void add_extra_script(const char *name, int flags, void *priv_dat)
   if (flags & SCAN_F_Hidden)
     return;
 
-  if (! CheckExtension(name, "lua"))
+  if (! MatchExtension(name, "lua"))
     return;
 
   list->push_back(StringDup(name));

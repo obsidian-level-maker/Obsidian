@@ -31,7 +31,7 @@
 
 // filename functions
 bool HasExtension(const char *filename);
-bool CheckExtension(const char *filename, const char *ext);
+bool MatchExtension(const char *filename, const char *ext);
 char *ReplaceExtension(const char *filename, const char *ext);
 const char *FindBaseName(const char *filename);
 

@@ -219,7 +219,7 @@ char *Select_Output_File(const char *ext)
 
 #else  // Linux and MacOSX
 
-  if (HasExtension(last_file) && ! CheckExtension(last_file, ext))
+  if (HasExtension(last_file) && ! MatchExtension(last_file, ext))
   {
     char *new_last = ReplaceExtension(last_file, NULL);
     StringFree(last_file);
