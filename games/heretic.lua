@@ -397,6 +397,19 @@ HERETIC.SKINS =
   }
 
 
+  ---| WALLS |---
+
+  Wall_plain =
+  {
+    _file   = "wall/plain.wad"
+    _where  = "edge"
+    _fitted = "xyz"
+
+    _bound_z1 = 0
+    _bound_z2 = 128
+  }
+
+
   ---| PICTURES |---
 
   Pic_Carve =
@@ -526,6 +539,37 @@ HERETIC.SKINS =
     _copy = "BigPic_ChainMan"
 
     pic = "SKY2"
+  }
+
+
+  ----| WINDOWS |----
+
+  Window1 =
+  {
+    _file   = "window/window1.wad"
+    _where  = "edge"
+    _fitted = "xy"
+    _long   = 192
+    _deep   = 24
+
+    track = "METL2"
+  }
+
+
+  ----| FENCES |----
+
+  Sky_fence =
+  {
+    _file   = "fence/sky_fence.wad"
+    _where  = "chunk"
+    _fitted = "xy"
+  }
+
+  Sky_corner =
+  {
+    _file   = "fence/sky_corner.wad"
+    _where  = "chunk"
+    _fitted = "xy"
   }
 
 
@@ -1822,11 +1866,11 @@ HERETIC.THEME_DEFAULTS =
     Pic_Eagle = 40
   }
 
-  hallway_groups = { basic = 50 }
+  hallway_groups = { hall_basic = 50 }
 
   mini_halls = { Hall_Basic_I = 50 }
 
-  sky_halls = { skier = 50 }
+  sky_halls = { sky_hall = 50 }
 
 --FIXME TEMP STUFF
   cave_walls = { BRWNRCKS=10, LAVA1=20, LOOSERCK=20,
@@ -1850,11 +1894,13 @@ HERETIC.NAME_THEMES =
 }
 
 
-HERETIC.HALLWAY_GROUPS =
+HERETIC.GROUPS =
 {
-  basic =
+  hall_basic =
   {
-    pieces =
+    kind = "hallway"
+
+    parts =
     {
       Hall_Basic_I = 50
       Hall_Basic_C = 50
@@ -1866,9 +1912,11 @@ HERETIC.HALLWAY_GROUPS =
     }
   }
 
-  skier =
+  sky_hall =
   {
-    pieces =
+    kind = "skyhall"
+
+    parts =
     {
       Sky_Hall_I = 50
       Sky_Hall_C = 50

@@ -20,7 +20,7 @@
 
 PREFAB.WALL =
 {
-  fitted = "xyz"
+  fitted = "xy"
 
   brushes =
   {
