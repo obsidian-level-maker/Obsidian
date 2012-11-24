@@ -2144,6 +2144,20 @@ HERETIC.LEVEL_THEMES =
 }
 
 
+HERETIC.PREBUILT_LEVELS =
+{
+  E1M8 =
+  {
+    { prob=50, file="heretic_boss/maw1.wad", map="E1M8" }
+  }
+
+  E2M8 =
+  {
+    { prob=50, file="heretic_boss/portal1.wad", map="E2M8" }
+  }
+}
+
+
 ------------------------------------------------------------
 
 HERETIC.MONSTERS =
@@ -2722,6 +2736,13 @@ function HERETIC.get_levels()
 
       LEV.secret_exit = GAME.SECRET_EXITS[LEV.name]
 
+      -- prebuilt levels
+      LEV.prebuilt = GAME.PREBUILT_LEVELS[LEV.name]
+
+      if LEV.prebuilt then
+        LEV.name_theme = LEV.prebuilt.name_theme or "BOSS"
+      end
+
     end -- for map
 
   end -- for episode
@@ -2794,7 +2815,7 @@ end
 
 ------------------------------------------------------------
 
-UNFINISHED["heretic"] =
+OB_GAMES["heretic"] =
 {
   label = "Heretic"
 
