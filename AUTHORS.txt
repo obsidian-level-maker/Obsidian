@@ -50,6 +50,9 @@ Sam Trenholme
   - lots of feedback and support
   - numerous fixes
 
+DoomIIGuy
+  - Heretic boss maps
+
 
 THANKS TO:
 
