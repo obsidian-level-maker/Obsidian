@@ -3,6 +3,9 @@ OBLIGE TODO
 ===========
 
 
+!!!!  proper Unixy compile/install in Linux
+
+
 -  pick mini_halls at areas_handle_connections
 
 +  sky spread algo
