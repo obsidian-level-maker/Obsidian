@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2012 Andrew Apted
+--  Copyright (C) 2006-2013 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -2793,6 +2793,19 @@ function Fab_replacements(fab, skin)
   end
 
 
+  local function check_tag(val)
+    local k = "tag_" .. val
+
+    -- if it is not already specified, allocate a new tag
+
+    if not skin[k] then
+      skin[k] = Plan_alloc_id("tag");
+    end
+
+    return skin[k]
+  end
+
+
   ---| Fab_replacements |---
 
   each B in fab.brushes do
@@ -2803,7 +2816,7 @@ function Fab_replacements(fab, skin)
       if C.special and C.x     then C.special = check("line",   C.special) end
       if C.special and not C.x then C.special = check("sector", C.special) end
 
-      if C.tag then C.tag = check("tag", C.tag) end
+      if C.tag then C.tag = check_tag(C.tag) end
     end
   end
 
