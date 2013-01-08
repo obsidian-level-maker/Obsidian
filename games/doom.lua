@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2012 Andrew Apted
+--  Copyright (C) 2006-2013 Andrew Apted
 --  Copyright (C)      2011 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -1673,11 +1673,11 @@ DOOM.SKINS =
 
   Start_Closet =
   {
-    _prefab = "START_CLOSET"
+    _file   = "start/closet1.wad"
     _where  = "closet"
-    _long   = { 192,384 }
-    _deep   = { 192,384 }
+    _fitted = "xy"
 
+--[[
     step = "FLAT1"
 
     door = "BIGDOOR1"
@@ -1691,6 +1691,7 @@ DOOM.SKINS =
 
     item1 = "bullet_box"
     item2 = "stimpack"
+--]]
   }
 
 
