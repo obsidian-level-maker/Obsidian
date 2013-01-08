@@ -3,7 +3,66 @@ WORK-IN-PROGRESS
 ================
 
 
-!!!!  proper Unixy compile/install in Linux
+WAD Prefabs
+-----------
+
+DONE:  Fab_load_wad: only cache result of loading prefab -- no skin stuff
+DONE:  Fabricate: can merge skins
+DONE:  Fabricate (or whatever): apply skin values
+
+FIXED: BUG: wrong textures (e.g. steps on teleporter)
+       --> using 'upper' when should be using 'lower'
+
+DONE:  get teleporter working
+DONE:  get switched doors working
+
++  offseting !
+   -  an offset value of '1' means zero, and zero means "auto mode"
+   -  keep the unpeg flags as-are
+
+-  mechanism to get side texture from floor/ceil
+   (e.g. set side to CRACKLE2
+   requires MATERIALS table to be fairly complete
+
+?  do we need _x_ranges and _y_ranges anymore?
+   (could use it in picture wad-fab I guess)
+
+DONE:  _z_ranges (etc) 
+
+DONE: mechanism to create a closed sector (for doors, etc)
+      e.g. ceil_h - floor_h == 1
+
+-  NO: ability to "pick" the sector at a point / edge / corner and get the height there
+   YES: use tag numbers for "main floor", "neighbor floor" (etc)
+        and can set that sector to a certain material (floor, floor2, etc)
+
+        102 = south (main floor)
+        108 = north (neighbor floor)
+        104 = east
+        106 = west
+
+-  create monster and item spots:
+   +  review current spot system
+   +  use the fab.spots table 
+
+-  rail textures
+
+-  line flags (e.g. blocking)
+
+??  determine pathname PROPERLY
+
+
+Needed Prefabs
+--------------
+
+start closet
+exit closet
+
+
+
+========================================================================
+
+!!  proper Unixy compile/install in Linux
 
 
 -  pick mini_halls at areas_handle_connections
@@ -33,64 +92,6 @@ WORK-IN-PROGRESS
   you, but they can clearly see you.
 
 - make secrets more secret
-
-
-
-WAD Prefabs
-===========
-
-DONE:  Fab_load_wad: only cache result of loading prefab -- no skin stuff
-DONE:  Fabricate: can merge skins
-DONE:  Fabricate (or whatever): apply skin values
-
-FIXED: BUG: wrong textures (e.g. steps on teleporter)
-       --> using 'upper' when should be using 'lower'
-
-+  get teleporter working
-      ???  get tag number from skin
-
-+  get switched doors working
-
--  mechanism to get side texture from floor/ceil
-   (e.g. set side to CRACKLE2
-   requires MATERIALS table to be fairly complete
-
-?  do we need _x_ranges and _y_ranges anymore?
-   (could use it in picture wad-fab I guess)
-
-DONE:  _z_ranges (etc) 
-
-DONE: mechanism to create a closed sector (for doors, etc)
-      e.g. ceil_h - floor_h == 1
-
--  NO: ability to "pick" the sector at a point / edge / corner and get the height there
-   YES: use tag numbers for "main floor", "neighbor floor" (etc)
-        and can set that sector to a certain material (floor, floor2, etc)
-
-        102 = south (main floor)
-        108 = north (neighbor floor)
-        104 = east
-        106 = west
-
--  create monster and item spots:
-   +  review current spot system
-   +  use the fab.spots table 
-
--  offseting !
-
--  rail textures
-
--  line flags (e.g. blocking)
-
-??  determine pathname PROPERLY
-
-
-Needed Prefabs
---------------
-
-start closet
-exit closet
-
 
 
 ========================================================================

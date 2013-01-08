@@ -19,6 +19,11 @@ ______________________________________________________________________
 -  texture coord system (see docs/Tex_Coords.txt)
 
 
+*  proper install for Unix / Linux systems
+
+-  make a Debian package
+
+
 ______________________________________________________________________
 
   LOWER PRIORITY
