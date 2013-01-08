@@ -2450,13 +2450,15 @@ function Fab_load_wad(name)
     end
 
     -- line type --
-    if line and line.special and line.special > 1 then
+    if line and line.special and line.special > 0 then
       C2.special = line.special
     end
 
-    -- TODO: handle linedef flags
+    if line and line.tag and line.tag > 0 then
+      C2.tag = line.tag
+    end
 
-    -- TODO: handle linedef tag
+    -- TODO: handle linedef flags
 
     return C2
   end
@@ -2476,18 +2478,18 @@ function Fab_load_wad(name)
       { m="solid" }
     }
 
-    -- TODO: handle 'tag' value
-
-    -- TODO: a way to create closed doors
-
     if S.floor_h >= S.ceil_h then
       -- solid wall, infinitely tall brush
       if pass != 1 then return end
 
     elseif pass == 1 then
       local C = { t=S.floor_h, tex=S.floor_tex, special=S.special }
-      table.insert(B, C)
 
+      if S.tag and S.tag > 0 then
+        C.tag = S.tag
+      end
+
+      table.insert(B, C)
     else
       local C = { b=S.ceil_h, tex=S.ceil_tex }
       table.insert(B, C)
@@ -2800,6 +2802,8 @@ function Fab_replacements(fab, skin)
 
       if C.special and C.x     then C.special = check("line",   C.special) end
       if C.special and not C.x then C.special = check("sector", C.special) end
+
+      if C.tag then C.tag = check("tag", C.tag) end
     end
   end
 
