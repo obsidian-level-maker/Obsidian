@@ -693,9 +693,9 @@ function CHUNK_CLASS.content_switch(C)
   assert(lock.switch)
 
   local skin1
-  local skin2 = { tag=lock.tag }
+  local skin2 = { tag_1=lock.tag }
   
-  skin2.target = string.format("switch%d", skin2.tag)
+  skin2.target = string.format("switch%d", skin2.tag_1)
 
   local poss_skins = Rooms_filter_skins(C.room or C.hall, 
                        "switch_fabs", THEME.switch_fabs,
@@ -1127,8 +1127,8 @@ function CHUNK_CLASS.build_door(C, dir, LINK, f_h, c_h, long)
     skin2.targetname = "door" .. Plan_alloc_id("door")
 
   elseif lock.kind == "SWITCH" then
-    skin2.tag = lock.tag
-    skin2.targetname = string.format("switch%d", skin2.tag)
+    skin2.tag_1 = lock.tag
+    skin2.targetname = string.format("switch%d", skin2.tag_1)
 
   else
     error("Unknown lock kind: " .. tostring(lock.kind))

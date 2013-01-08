@@ -2439,7 +2439,7 @@ DOOM.SKINS =
     _where  = "edge"
     _fitted = "xy"
     _switch = "sw_blue"
-    _long = 192
+    _long = 256
     _deep = 48
 
     door_w = 128
@@ -2487,7 +2487,7 @@ DOOM.SKINS =
     _prefab = "DOOR"
     _where  = "edge"
     _switch = "sw_red"
-    _long = 192
+    _long = 256
     _deep = 48
 
     door_w = 128
@@ -2535,7 +2535,7 @@ DOOM.SKINS =
     _prefab = "DOOR"
     _where  = "edge"
     _switch = "sw_pink"
-    _long   = 192
+    _long   = 256
     _deep   = 48
 
     door_w = 128
@@ -2583,7 +2583,7 @@ DOOM.SKINS =
     _prefab = "DOOR"
     _where  = "edge"
     _switch = "sw_vine"
-    _long   = 192
+    _long   = 256
     _deep   = 48
 
     door_w = 128
