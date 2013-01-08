@@ -1,6 +1,6 @@
 
-OBLIGE TODO
-===========
+WORK-IN-PROGRESS
+================
 
 
 !!!!  proper Unixy compile/install in Linux
