@@ -3156,6 +3156,10 @@ DOOM.SKINS =
     _file   = "misc/tele_pad.wad"
     _where  = "middle"
 
+    tag_1 = "?out_tag"
+    tag_2 = "?in_tag"
+
+--[[
     tele = { GATE1=60, GATE2=60, GATE3=30 }
     side = "METAL"
 
@@ -3166,6 +3170,7 @@ DOOM.SKINS =
     special = 97
     effect = 8
     light = 255
+--]]
   }
 
   Teleporter_Closet =
