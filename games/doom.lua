@@ -1759,11 +1759,11 @@ DOOM.SKINS =
 
   Exit_Closet_tech =
   {
-    _prefab = "EXIT_CLOSET"
+    _file   = "exit/closet1.wad"
     _where  = "closet"
-    _long   = { 192,384 }
-    _deep   = { 192,384 }
+    _fitted = "xy"
 
+--[[ FIXME
     door  = "EXITDOOR"
     track = "DOORTRAK"
     key   = "EXITDOOR"
@@ -1790,15 +1790,16 @@ DOOM.SKINS =
 
     item1 = { stimpack=50, medikit=20, soul=1, none=30 }
     item2 = { shells=50, bullets=40, rocket=30, potion=20 }
+--]]
   }
 
   Exit_Closet_hell =
   {
-    _prefab = "EXIT_CLOSET"
+    _file   = "exit/closet1.wad"
     _where  = "closet"
-    _long   = { 192,384 }
-    _deep   = { 192,384 }
+    _fitted = "xy"
 
+--[[ FIXME
     door  = "EXITDOOR"
     track = "DOORTRAK"
     key   = "SUPPORT3"
@@ -1824,15 +1825,16 @@ DOOM.SKINS =
 
     item1 = { stimpack=50, medikit=20, soul=1, none=30 }
     item2 = { shells=50, bullets=40, rocket=30, potion=20 }
+--]]
   }
 
   Exit_Closet_urban =
   {
     _prefab = "EXIT_CLOSET"
     _where  = "closet"
-    _long   = { 192,384 }
-    _deep   = { 192,384 }
+    _fitted = "xy"
 
+--[[ FIXME
     door  = "EXITDOOR"
     track = "DOORTRAK"
     key   = "SUPPORT3"
@@ -1860,6 +1862,7 @@ DOOM.SKINS =
 
     item1 = { stimpack=50, medikit=20, soul=1, none=30 }
     item2 = { shells=50, bullets=40, rocket=30, potion=20 }
+--]]
   }
 
 
