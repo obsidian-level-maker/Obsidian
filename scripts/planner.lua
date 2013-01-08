@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2012 Andrew Apted
+--  Copyright (C) 2006-2013 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -135,7 +135,7 @@ function Section_get_room(mx, my)
     return nil
   end
 
-  return SECTIONS[mx*2 - 1][my*2 - 1]
+  return SECTIONS[mx*2][my*2]
 end
 
 
@@ -366,7 +366,7 @@ function Plan_decide_map_size()
     H = HEIGHTS[n]
 
   else
-    local WIDTHS  = { tiny=3, small=4, regular=6, large=8, extreme=12 }
+    local WIDTHS  = { tiny=3, small=4, regular=6, large=8, extreme=11 }
     local HEIGHTS = { tiny=2, small=3, regular=4, large=6, extreme=10 }
 
     W = WIDTHS[ob_size]
@@ -390,9 +390,8 @@ end
 
 
 function Plan_create_sections()
-  local SIZE_TABLE = THEME.room_size_table or { 30,60,10 }  -- 3, 4
 
-  local free_seeds = 4
+  local free_seeds = 4  -- at top of map
 
 
   local function dump_sizes(line, t, N)
@@ -410,80 +409,36 @@ function Plan_create_sections()
     limit = limit - 4
 
     assert(W >= 2)
-    assert(limit >= 1 + W * (min_size+1) + 1)
+    assert(limit >= 1 + W * (min_size+1))
 
     -- this lists holds the result sizes
     local sizes = {}
 
----###    -- set very left and right (or top and bottom) hallway channels
----###    sizes[1]     = 1
----###    sizes[W*2+1] = 1
+    -- set very left and right (or top and bottom) hallway channels
+    sizes[1]     = 1
+    sizes[W*2+1] = 1
 
     local total
 
-    -- try many times to find a usable set of sizes
-    for loop = 1,50 do
-      total = 0 ---### sizes[1] + sizes[W*2 + 1]
 
-      for x = 1,W do
-        sizes[x*2-1] = 3 -- 2 + rand.index_by_probs(SIZE_TABLE)
-        total = total + sizes[x*2-1]
+    total = 2
 
-        if x < W then
-          sizes[x*2+0] = 1 -- rand.sel(50, 1, 2)
-          total = total + sizes[x*2+0]
-        end
-      end
+    for x = 1,W do
+      sizes[x*2] = 3
+      total = total + sizes[x*2]
 
-      if total <= limit then
-        return sizes  -- OK!
+      if x < W then
+        sizes[x*2+1] = 1
+        total = total + sizes[x*2+1]
       end
     end
 
-    -- the above failed, so adjust the last set of sizes it made
 
-    gui.printf("Adjusting column/row sizes....\n")
+    local remaining = limit - total
 
-    for loop = 1,200 do
-      if total <= limit then
-        return sizes  -- OK!
-      end
+    assert(remaining >= 0)
 
-      -- find a section size to shrink
-      local x = rand.irange(1, W)
-
-      while x <= W and sizes[x*2-1] <= min_size do
-        x = x + 1
-      end
-
-      if x <= W then
-        sizes[x*2-1] = sizes[x*2-1] - 1
-        total = total - 1
-      end
-
-      -- reduce fat hallways too
---[[
-      if total > limit and rand.odds(25) then
-        x = rand.irange(1, W-1)
-
-        while x <= W-1 and sizes[x*2+1] <= 1 do
-          x = x + 1
-        end
-
-        if x <= W-1 then
-          sizes[x*2+1] = sizes[x*2+1] - 1
-          total = total - 1
-        end
-      end 
---]]
-    end
-
-    -- the assert() above should mean we never get here
-
-    gui.debugf("W:%d min_size:%d limit:%d\n", W, min_size, limit)
-    dump_sizes("Failed sizes: ", sizes, W*2 - 1)
-
-    error("pick_sizes failed")
+    return sizes
   end
 
 
@@ -491,7 +446,7 @@ function Plan_create_sections()
     -- begins at 3 since there are 2 spare seeds on each side of the map
     local pos = { 3 }
 
-    for x = 1, (W-1)*2 do
+    for x = 1, W*2 do
       pos[x+1] = pos[x] + sizes[x]
     end
 
@@ -506,14 +461,14 @@ function Plan_create_sections()
   -- reduce level size if rooms would become too small
   -- (this must take hallway channels into account too).
 
-  local max_W = int(limit / 4.3)
-  local max_H = int((limit - free_seeds) / 4.3)
+  local max_W = int((limit - 1) / 4.1)
+  local max_H = int((limit - free_seeds - 1) / 4.1)
 
   if MAP_W > max_W then MAP_W = max_W end
   if MAP_H > max_H then MAP_H = max_H end
 
-  SECTION_W = MAP_W * 2 - 1
-  SECTION_H = MAP_H * 2 - 1
+  SECTION_W = MAP_W * 2 + 1
+  SECTION_H = MAP_H * 2 + 1
 
   gui.printf("Map Size: %dx%d --> %dx%d sections\n", MAP_W, MAP_H, SECTION_W, SECTION_H)
 
@@ -533,11 +488,11 @@ function Plan_create_sections()
   for x = 1,SECTION_W do for y = 1,SECTION_H do
     local kind
 
-    if (x % 2) == 1 and (y % 2) == 1 then
+    if (x % 2) == 0 and (y % 2) == 0 then
       kind = "section"
-    elseif (x % 2) == 1 then
+    elseif (x % 2) == 0 then
       kind = "horiz"
-    elseif (y % 2) == 1 then
+    elseif (y % 2) == 0 then
       kind = "vert"
     else
       kind = "junction"
