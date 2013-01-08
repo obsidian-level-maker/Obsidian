@@ -33,7 +33,7 @@ REQUIRED LIBRARIES
 Zlib (v1.2.3 or later)
   http://www.zlib.net/
 
-FLTK (Fast Light Tool Kit) : v1.3.0
+FLTK (Fast Light Tool Kit) : v1.3
   http://www.fltk.org/
 
 FLTK may require: libpng, jpeglib, zlib
