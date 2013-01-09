@@ -2388,7 +2388,7 @@ WADFAB_ENTITIES =
   -- item spots
 
   [2015] = { kind="pickup"   }  -- armor helmet
-  [2015] = { kind="big_item" }  -- green armor vest
+  [2018] = { kind="big_item" }  -- green armor vest
 }
 
 
@@ -2443,10 +2443,12 @@ function Fab_load_wad(name)
 
     if side and side.x_offset and side.x_offset != 0 then
       C2.x_offset = side.x_offset
+      if C2.x_offset == 1 then C2.x_offset = 0 end
     end
 
     if side and side.y_offset and side.y_offset != 0 then
       C2.y_offset = side.y_offset
+      if C2.x_offset == 1 then C2.x_offset = 0 end
     end
 
     -- line type --
