@@ -3256,7 +3256,7 @@ DOOM.SKINS =
   {
     _prefab = "PICTURE"
     _where  = "edge"
-    _long   = 192
+    _long   = 256
 
     pic   = "O_PILL"
     pic_w = 128
@@ -3272,7 +3272,7 @@ DOOM.SKINS =
     _fitted = "xy"
     _bound_z1 = 0
     _bound_z2 = 128
-    _long   = 192
+    _long   = 256
 
     pic   = "O_CARVE"
     pic_w = 64
@@ -3285,7 +3285,7 @@ DOOM.SKINS =
   {
     _prefab = "PICTURE"
     _where  = "edge"
-    _long   = 192
+    _long   = 256
 
     pic   = "O_NEON"
     pic_w = 128
@@ -3306,7 +3306,7 @@ DOOM.SKINS =
     _fitted = "xy"
     _bound_z1 = 0
     _bound_z2 = 112
-    _long   = 192
+    _long   = 256
 
     pic   = { COMPSTA1=50, COMPSTA2=50 }
     pic_w = 128
@@ -3321,7 +3321,7 @@ DOOM.SKINS =
   {
     _prefab = "PICTURE"
     _where  = "edge"
-    _long   = 192
+    _long   = 256
 
     pic   = "SILVER3"
     pic_w = 64
@@ -3337,7 +3337,7 @@ DOOM.SKINS =
   {
     _prefab = "PICTURE"
     _where  = "edge"
-    _long   = 192
+    _long   = 256
 
     pic   = { TEKWALL1=50, TEKWALL4=50 }
     pic_w = 144
@@ -3392,7 +3392,7 @@ DOOM.SKINS =
   {
     _prefab = "PICTURE"
     _where  = "edge"
-    _long   = 192
+    _long   = 256
 
     pic   = "FIREWALL"
     pic_w = 128
@@ -3407,7 +3407,7 @@ DOOM.SKINS =
   {
     _prefab = "PICTURE"
     _where  = "edge"
-    _long   = 192
+    _long   = 256
 
     pic   = { MARBFAC2=50, MARBFAC3=50 }
     pic_w = 128
@@ -3420,7 +3420,7 @@ DOOM.SKINS =
   {
     _prefab = "PICTURE"
     _where  = "edge"
-    _long   = 192
+    _long   = 256
 
     pic   = "MARBFACE"
     pic_w = 128
@@ -3433,7 +3433,7 @@ DOOM.SKINS =
   {
     _prefab = "PICTURE"
     _where  = "edge"
-    _long   = 192
+    _long   = 256
 
     pic   = "SKINFACE"
     pic_w = 144
@@ -3449,7 +3449,7 @@ DOOM.SKINS =
   {
     _prefab = "PICTURE"
     _where  = "edge"
-    _long   = 192
+    _long   = 256
 
     pic   = "SP_FACE1"
     pic_w = 144
@@ -3465,7 +3465,7 @@ DOOM.SKINS =
   {
     _prefab = "PICTURE"
     _where  = "edge"
-    _long   = 192
+    _long   = 256
 
     pic   = "ZZWOLF7"
     pic_w = 128
