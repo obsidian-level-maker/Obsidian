@@ -2406,6 +2406,8 @@ function Fab_load_wad(name)
     if C.side then side = gui.wadfab_get_side(C.side) end
     if C.line then line = gui.wadfab_get_line(C.line) end
 
+    local flags = (line and line.flags) or 0
+
     --- determine texture to use ---
 
     local upper_tex
@@ -2425,7 +2427,7 @@ function Fab_load_wad(name)
     local tex
 
     -- if line is one-sided, use the middle texture
-    if line and bit.band(line.flags, DOOM_LINE_FLAGS.two_sided) == 0 then
+    if line and bit.band(flags, DOOM_LINE_FLAGS.two_sided) == 0 then
       tex = mid_tex
 
     elseif pass == 1 then
@@ -2442,16 +2444,17 @@ function Fab_load_wad(name)
     -- offsets --
 
     if side and side.x_offset and side.x_offset != 0 then
-      C2.x_offset = side.x_offset
-      if C2.x_offset == 1 then C2.x_offset = 0 end
+      C2.u1 = side.x_offset
+      if C2.u1 == 1 then C2.u1 = 0 end
     end
 
     if side and side.y_offset and side.y_offset != 0 then
-      C2.y_offset = side.y_offset
-      if C2.x_offset == 1 then C2.x_offset = 0 end
+      C2.v1 = side.y_offset
+      if C2.v1 == 1 then C2.v1 = 0 end
     end
 
     -- line type --
+
     if line and line.special and line.special > 0 then
       C2.special = line.special
     end
@@ -2460,7 +2463,27 @@ function Fab_load_wad(name)
       C2.tag = line.tag
     end
 
-    -- TODO: handle linedef flags
+    -- line flags --
+
+    local MLF_UpperUnpegged = 0x0008
+    local MLF_LowerUnpegged = 0x0010
+
+    if not line then
+      -- nothing
+
+    elseif bit.band(flags, DOOM_LINE_FLAGS.two_sided) == 0 then
+      if bit.band(flags, MLF_LowerUnpegged) != 0 then
+        C2.peg = 1
+      end
+
+    else
+      if (bit.band(flags, MLF_LowerUnpegged) == 0 and pass == 1) or
+         (bit.band(flags, MLF_UpperUnpegged) == 0 and pass == 2) then
+        C2.peg = 1
+      end
+    end
+
+    -- TODO: handle other flags
 
     return C2
   end
