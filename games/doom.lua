@@ -3175,11 +3175,14 @@ DOOM.SKINS =
 
   Teleporter_Closet =
   {
-    _file  = "closet/teleport1.wad"
+    _file  = "misc/tele_closet1.wad"
     _where = "closet"
     _fitted = "xy"
---!!!!  _long   = 192
+    _long   = 256
 
+    tag_1 = "?out_tag"
+    tag_2 = "?in_tag"
+--[[
     tele = "GATE4"
     tele_side = "METAL"
 
@@ -3189,6 +3192,7 @@ DOOM.SKINS =
     step  = "STEP1"
 
     special = 97
+--]]
   }
 
 
