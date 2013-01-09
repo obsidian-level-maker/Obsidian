@@ -1296,10 +1296,12 @@ static void DM_MakeLine(region_c *R, snag_c *S)
   if (! L->back)
     L->flags |= MLF_BlockAll;
   else
+  {
     L->flags |= MLF_TwoSided | MLF_LowerUnpeg | MLF_UpperUnpeg;
 
-  if (l_peg) L->flags ^= MLF_LowerUnpeg;
-  if (u_peg) L->flags ^= MLF_UpperUnpeg;
+    if (l_peg) L->flags ^= MLF_LowerUnpeg;
+    if (u_peg) L->flags ^= MLF_UpperUnpeg;
+  }
 
 
   csg_property_set_c *spec = DM_FindSpecial(S, R, N);

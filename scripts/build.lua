@@ -2471,11 +2471,6 @@ function Fab_load_wad(name)
     if not line then
       -- nothing
 
-    elseif bit.band(flags, DOOM_LINE_FLAGS.two_sided) == 0 then
-      if bit.band(flags, MLF_LowerUnpegged) != 0 then
-        C2.peg = 1
-      end
-
     else
       if (bit.band(flags, MLF_LowerUnpegged) == 0 and pass == 1) or
          (bit.band(flags, MLF_UpperUnpegged) == 0 and pass == 2) then
