@@ -661,6 +661,14 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
                                csg_property_set_c *f_face,
                                csg_property_set_c *c_face)
 {
+  S->light = R->shade;
+
+  S->light = CLAMP(96, S->light, 255);
+
+  // TODO effects !!
+
+#if 0
+
   // final light value for the sector is the 'ambient' lighting
   // in a room PLUS the greatest additive light brush MINUS the
   // greatest subtractive (shadow) brush.
@@ -789,6 +797,7 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
   {
     S->special = color;
   }
+#endif
 }
 
 

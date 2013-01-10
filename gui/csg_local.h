@@ -104,6 +104,8 @@ public:
   // used by DOOM and QUAKE Clipping (etc)
   int index;
 
+  int shade;
+
 public:
   region_c();
 
