@@ -1390,17 +1390,22 @@ function CHUNK_CLASS.build(C)
     f_mat = Mat_lookup(f_matname)
     f_tex = f_mat.f or f_mat.t
 
-    brush = Brush_new_quad(C.x1, C.y1, C.x2, C.y2)
+    for dx = 0,3 do for dy = 0,3 do
+      local x1 = C.x1 + dx * 64
+      local y1 = C.y1 + dy * 64
 
-    Brush_set_tex(brush, f_mat.t)
+      brush = Brush_new_quad(x1, y1, x1 + 64, y1 + 64)
 
-    table.insert(brush, { t=f_h, tex=f_tex, special=f_special })
+      Brush_set_tex(brush, f_mat.t)
 
-    if C.z1_cap then
-      table.insert(brush, { b=C.z1_cap, tex=f_tex })
-    end
+      table.insert(brush, { t=f_h, tex=f_tex, special=f_special })
 
-    raw_add_brush(brush)
+      if C.z1_cap then
+        table.insert(brush, { b=C.z1_cap, tex=f_tex })
+      end
+
+      raw_add_brush(brush)
+    end end
   end
 
 
