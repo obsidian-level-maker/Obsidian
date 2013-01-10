@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2012 Andrew Apted
+//  Copyright (C) 2006-2013 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -2115,6 +2115,8 @@ void CSG_DOOM_Write()
   CSG_BSP(4.0);
 
   CSG_MakeMiniMap();
+
+  CSG_Shade();
 
   DM_CreateSectors();
   DM_CoalesceSectors();
