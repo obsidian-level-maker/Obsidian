@@ -257,7 +257,8 @@ brush_vert_c * snag_c::FindBrushVert(const csg_brush_c *B)
 //------------------------------------------------------------------------
 
 region_c::region_c() : snags(), brushes(), entities(), gaps(),
-                       liquid(NULL), degenerate(false), index(-1)
+                       liquid(NULL), degenerate(false),
+                       index(-1), shade(0)
 { }
 
 
@@ -975,11 +976,11 @@ static partition_c * ChoosePartition(group_c & group, bool *reached_chunk)
     // horizontal or vertical line, preferably somewhere close to the
     // middle of the group.
     //
-    // The logic here splits along seed boundaries (2x2 seeds actually),
+    // The logic here splits along seed boundaries,
     // which is optimal for avoiding region splits.  It would still work
     // though if the Lua code used a different seed size.
 
-#define CHUNK_SIZE  384.0
+#define CHUNK_SIZE  256.0
 
     double gx1, gy1, gx2, gy2;
 
