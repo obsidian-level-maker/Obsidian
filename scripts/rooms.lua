@@ -711,7 +711,7 @@ function CLOSET_CLASS.build(CL)
   local x1, y1, x2, y2 = C.x1, C.y1, C.x2, C.y2
 
   -- align indoor closets with wall  [FIXME: remove hack for teleporters]
-  if CL.parent.kind != "outdoor" and
+  if not (CL.parent.kind == "outdoor" or CL.parent.was_outdoor) and
      CL.closet_kind != "TELEPORTER"
   then
     if CL.dir == 2 then y1 = y1 - 24 end
