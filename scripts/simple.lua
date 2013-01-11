@@ -921,6 +921,14 @@ function Simple_render_cave(R)
   end
 
 
+  local function cell_middle(x, y)
+    local mx = cave.base_x + (x - 1) * 64 + 32
+    local my = cave.base_y + (y - 1) * 64 + 32
+  
+    return mx, my
+  end
+
+
   local function choose_tex(last, tab)
     local tex = rand.key_by_probs(tab)
 
@@ -1149,6 +1157,10 @@ do return end ----!!!!!!!
 
         if c_mat == "_SKY" then
           table.insert(c_brush, 1, { m="sky" })
+
+          local mx, my = cell_middle(x, y)
+
+          entity_helper("light", mx, my, c_h - 4, { kind="sky", light=208 })
         end
 
         gui.spots_fill_poly(f_brush, 0)

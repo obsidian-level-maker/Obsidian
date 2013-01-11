@@ -138,6 +138,8 @@ DOOM.ENTITIES =
   brain_shooter = { id=89, r=20, h=32 }
   brain_target  = { id=87, r=20, h=32, pass=true }
 
+  light = { id="light", r=1, h=1, pass=true }
+
 } -- end of DOOM.ENTITIES
 
 
@@ -146,7 +148,7 @@ DOOM.PARAMETERS =
   rails = true
   infighting = true
   raising_start = true
-  light_brushes = true
+---!!!  light_brushes = true
 
   jump_height = 24
 
