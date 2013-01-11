@@ -182,6 +182,5 @@ void CSG_Shade()
   SHADE_MergeRegions();
 }
 
-
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

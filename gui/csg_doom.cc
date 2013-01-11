@@ -2027,6 +2027,10 @@ static void DM_WriteLinedefs()
 
 static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E)
 {
+  // ignore light entities
+  if (strcmp(E->id.c_str(), "light") == 0)
+    return;
+
   int type = atoi(E->id.c_str());
 
   if (type <= 0)
