@@ -104,6 +104,7 @@ public:
   // used by DOOM and QUAKE Clipping (etc)
   int index;
 
+  // used by DOOM shading code
   int shade;
 
 public:
