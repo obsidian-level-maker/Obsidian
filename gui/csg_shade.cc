@@ -34,7 +34,7 @@ Doom Lighting Model
 -------------------
 
 1. light comes from entities (points in 3D space)
-   [ Lua code can create them from light-emitting surfaces ]
+   [ Lua code can create them for light-emitting surfaces ]
 
 2. result value is MAXIMUM of all tests made 
 

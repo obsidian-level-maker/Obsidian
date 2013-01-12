@@ -168,9 +168,34 @@ public:
 };
 
 
+class bsp_node_c
+{
+public:
+  // partition
+  double x1, y1, x2, y2;
+
+  // front : one of these should be non-NULL
+  bsp_node_c *front_node;
+    region_c *front_leaf;
+
+  // back : one of these should be non-NULL
+  bsp_node_c *back_node;
+    region_c *back_leaf;
+
+public:
+  bsp_node_c(double px1, double py1, double px2, double py2);
+
+  // destructor deletes child nodes (but not leafs)
+  ~bsp_node_c();
+};
+
+
+
 /***** VARIABLES ****************/
 
 extern std::vector<region_c *> all_regions;
+
+extern bsp_node_c * bsp_root;
 
 
 /***** FUNCTIONS ****************/

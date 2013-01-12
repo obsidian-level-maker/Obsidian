@@ -570,12 +570,28 @@ bool gap_c::HasNeighbor(gap_c *N) const
 }
 
 
+bsp_node_c::bsp_node_c(double px1, double py1, double px2, double py2) :
+    x1(px1), y1(py1), x2(px2), y2(py2),
+    front_node(NULL), front_leaf(NULL),
+     back_node(NULL),  back_leaf(NULL)
+{
+}
+
+bsp_node_c::~bsp_node_c()
+{
+  delete front_node;
+  delete  back_node;
+}
+
+
 
 /***** VARIABLES ******************/
 
 static std::vector<partition_c *> all_partitions;
 
 std::vector<region_c *> all_regions;
+
+bsp_node_c * bsp_root;
 
 
 //------------------------------------------------------------------------
@@ -929,7 +945,7 @@ static void DivideOneRegion(region_c *R, partition_c *part,
 }
 
 
-static void MergeGroup(group_c & group)
+static region_c * MergeGroup(group_c & group)
 {
   region_c *R = group.regs[0];
 
@@ -947,6 +963,8 @@ static void MergeGroup(group_c & group)
     R->snags[k]->region = R;
 
   // snags themselves get merged/etc in HandleOverlaps()
+
+  return R;
 }
 
 
@@ -1065,8 +1083,12 @@ static void DivideOneEntity(csg_entity_c *E, partition_c *part,
 }
 
 
-static void SplitGroup(group_c & group, bool reached_chunk = false)
+static void SplitGroup(group_c & group, bool reached_chunk,
+                       region_c ** leaf_out, bsp_node_c ** node_out)
 {
+  *leaf_out = NULL;
+  *node_out = NULL;
+
   if (group.regs.empty())
   {
     if (! group.ents.empty())
@@ -1099,9 +1121,13 @@ static void SplitGroup(group_c & group, bool reached_chunk = false)
     for (unsigned int k = 0 ; k < group.ents.size() ; k++)
       DivideOneEntity(group.ents[k], part, front, back);
 
+    bsp_node_c *node = new bsp_node_c(part->x1, part->y1, part->x2, part->y2);
+
     // recursively handle each side
-    SplitGroup(front, reached_chunk); 
-    SplitGroup(back,  reached_chunk); 
+    SplitGroup(front, reached_chunk, &node->front_leaf, &node->front_node);
+    SplitGroup(back,  reached_chunk, &node-> back_leaf, &node-> back_node);
+
+    *node_out = node;
 
     // input group has been consumed now 
   }
@@ -1110,7 +1136,7 @@ static void SplitGroup(group_c & group, bool reached_chunk = false)
     // at here, we have a leaf group which is convex,
     // hence merge all the regions into one.
 
-    MergeGroup(group);
+    *leaf_out = MergeGroup(group);
   }
 }
 
@@ -1387,7 +1413,8 @@ static void RemoveDeadRegions()
     // snags exist in the all_snags vector, don't free them twice
     R->snags.clear();
 
-    delete R;
+//!!!! FIXME: region may be a leaf in a bsp_node_c
+//  delete R;
   }
 
   int after = (int)all_regions.size();
@@ -1793,7 +1820,13 @@ void CSG_BSP(double grid, bool is_clip_hull)
   // create a rectangle region around whole map
   AddBoundingRegion(root);
 
-  SplitGroup(root);
+  region_c * bsp_leaf;
+
+  SplitGroup(root, false /* reached_chunk */, &bsp_leaf, &bsp_root);
+
+  // all normal maps will get a root node -- this is only for sanity
+  if (! bsp_root)
+    bsp_root = new bsp_node_c(0, 0, 0, 777);
 
   HandleOverlaps();
 
@@ -1834,6 +1867,8 @@ void CSG_BSP_Free()
 
   all_partitions.clear();
   all_regions.clear();
+
+  delete bsp_root;
 }
 
 
