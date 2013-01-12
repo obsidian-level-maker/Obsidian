@@ -1121,13 +1121,38 @@ static void SplitGroup(group_c & group, bool reached_chunk,
     for (unsigned int k = 0 ; k < group.ents.size() ; k++)
       DivideOneEntity(group.ents[k], part, front, back);
 
-    bsp_node_c *node = new bsp_node_c(part->x1, part->y1, part->x2, part->y2);
+    region_c *front_leaf;
+    region_c * back_leaf;
+
+    bsp_node_c *front_node;
+    bsp_node_c * back_node;
 
     // recursively handle each side
-    SplitGroup(front, reached_chunk, &node->front_leaf, &node->front_node);
-    SplitGroup(back,  reached_chunk, &node-> back_leaf, &node-> back_node);
+    SplitGroup(front, reached_chunk, &front_leaf, &front_node);
+    SplitGroup(back,  reached_chunk, & back_leaf, & back_node);
 
-    *node_out = node;
+    // don't create a node unless there is something on both sides
+    if (! (front_leaf || front_node))
+    {
+      *leaf_out = back_leaf;
+      *node_out = back_node;
+    }
+    else if (! (back_leaf || back_node))
+    {
+      *leaf_out = front_leaf;
+      *node_out = front_node;
+    }
+    else
+    {
+      bsp_node_c *node = new bsp_node_c(part->x1, part->y1, part->x2, part->y2);
+
+      node->front_leaf = front_leaf;
+      node->front_node = front_node;
+      node-> back_leaf =  back_leaf;
+      node-> back_node =  back_node;
+
+      *node_out = node;
+    }
 
     // input group has been consumed now 
   }
@@ -1415,6 +1440,7 @@ static void RemoveDeadRegions()
 
 //!!!! FIXME: region may be a leaf in a bsp_node_c
 //  delete R;
+    R->degenerate = true;  // hack -- mark it as dead
   }
 
   int after = (int)all_regions.size();
