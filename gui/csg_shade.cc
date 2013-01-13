@@ -64,6 +64,9 @@ Doom Lighting Model
 
 static int current_region_group;
 
+static int stat_targets;
+static int stat_traces;
+
 
 static int SHADE_CalcRegionGroup(region_c *R)
 {
@@ -224,6 +227,8 @@ static void SHADE_ProcessLight(region_c *R, double x1, double y1,
   if (dist > 999)
     return;
 
+  stat_traces++;
+
   int vis = SHADE_RecursiveTrace(bsp_root, NULL, x1, y1, light.x, light.y);
 
   if (vis == 0)
@@ -253,6 +258,8 @@ static void SHADE_LightRegion(region_c *R)
   double mid_x, mid_y;
 
   R->GetMidPoint(&mid_x, &mid_y);
+
+  stat_targets++;
 
   for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
   {
@@ -305,13 +312,19 @@ static void SHADE_MergeResults()
 
 void CSG_Shade()
 {
+  stat_targets = stat_traces = 0;
+
   QCOM_FindLights();
+
+  LogPrintf("Found %u lights\n", qk_all_lights.size());
 
   SHADE_GroupRegions();
   SHADE_ProcessRegions();
   SHADE_MergeResults();
 
   QCOM_FreeLights();
+
+  LogPrintf("Lit %d targets, with %d vis tests\n", stat_targets, stat_traces);
 }
 
 //--- editor settings ---
