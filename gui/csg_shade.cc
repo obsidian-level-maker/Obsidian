@@ -123,6 +123,63 @@ static void SHADE_GroupRegions()
 }
 
 
+static void SHADE_CollectLights()
+{
+  // FIXME
+}
+
+
+static int SHADE_TraceLeaf(region_c *leaf, shade_trace_c *trace)
+{
+  // FIXME
+
+  return 1;
+}
+
+
+static int SHADE_RecursiveTrace(bsp_node_c *node, region_c *leaf, shade_trace_c *trace)
+{
+  while (node)
+  {
+    double a = PerpDist(trace->x1,trace->y1, node->x1,node->y1, node->x2,node->y2);
+    double b = PerpDist(trace->x2,trace->y2, node->x1,node->y1, node->x2,node->y2);
+
+    int a_side = (a < 0) ? -1 : +1;
+    int b_side = (b < 0) ? -1 : +1;
+
+    if (a_side != b_side)
+    {
+      int front = SHADE_RecursiveTrace(node->front_node, node->front_leaf, trace);
+
+      if (front <= 0)
+        return front;
+
+      int back = SHADE_RecursiveTrace(node-> back_node, node-> back_leaf, trace);
+
+      return MIN(front, back);
+    }
+
+    // traverse down a single side of the node
+
+    if (a_side < 0)
+    {
+      node = node->back_node;
+      leaf = node->back_leaf;
+    }
+    else
+    {
+      node = node->front_node;
+      leaf = node->front_leaf;
+    }
+  }
+
+  if (! leaf || leaf->degenerate)
+    return 0;
+
+  return SHADE_TraceLeaf(leaf, trace);
+}
+
+
 static void SHADE_LightRegion(region_c *R)
 {
   SYS_ASSERT(R->gaps.size() > 0);
@@ -147,7 +204,7 @@ static void SHADE_ProcessRegions()
 }
 
 
-static void SHADE_MergeRegions()
+static void SHADE_MergeResults()
 {
   unsigned int i, k, n;
 
@@ -177,9 +234,11 @@ static void SHADE_MergeRegions()
 
 void CSG_Shade()
 {
+  SHADE_CollectLights();
+
   SHADE_GroupRegions();
   SHADE_ProcessRegions();
-  SHADE_MergeRegions();
+  SHADE_MergeResults();
 }
 
 //--- editor settings ---
