@@ -259,8 +259,6 @@ static void SHADE_LightRegion(region_c *R)
 
   R->GetMidPoint(&mid_x, &mid_y);
 
-  stat_targets++;
-
   // TODO: a way to quickly ignore far away lights (e.g. put in a quadtree)
 
   for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
@@ -282,6 +280,16 @@ static void SHADE_ProcessRegions()
       break;
 
     SHADE_LightRegion(all_regions[i]);
+
+    stat_targets++;
+
+    if (stat_targets % 400 == 0)
+    {
+      Main_Ticker();
+
+      if (main_action >= MAIN_CANCEL)
+        break;
+    }
   }
 }
 
