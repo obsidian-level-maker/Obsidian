@@ -24,6 +24,7 @@
 #include "hdr_ui.h"
 
 #include "lib_util.h"
+#include "main.h"
 
 #include "csg_main.h"
 #include "csg_local.h"
@@ -187,13 +188,49 @@ static int SHADE_RecursiveTrace(bsp_node_c *node, region_c *leaf, shade_trace_t 
 }
 
 
+static void SHADE_ProcessLight(region_c *R, double x1, double y1,
+                               quake_light_t & light)
+{
+  if (light.kind == LTK_Sun)
+    Main_FatalError("Sun lights found in DOOM-ish format map.\n");
+
+  float dist = ComputeDist(x1, y1, light.x, light.y);
+
+  // FIXME: dist = dist * light.factor;
+
+  // skip lights which are too far away
+  if (dist > 999)
+    return;
+
+  // FIXME: trace !!!
+
+  int value = light.level >> 8;
+
+  if (dist > 110) value -= 16;
+  if (dist > 220) value -= 16;
+  if (dist > 330) value -= 16;
+  if (dist > 440) value -= 16;
+  if (dist > 580) value -= 16;
+  if (dist > 730) value -= 16;
+
+  R->shade = MAX(R->shade, value); 
+}
+
+
 static void SHADE_LightRegion(region_c *R)
 {
   SYS_ASSERT(R->gaps.size() > 0);
 
-  // TEST CRUD:
+  R->shade = 0;
 
-  R->shade = 144 + 16 * ((rand() & 255) % 5);
+  double mid_x, mid_y;
+
+  R->GetMidPoint(&mid_x, &mid_y);
+
+  for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
+  {
+    SHADE_ProcessLight(R, mid_x, mid_y, qk_all_lights[i]);
+  }
 }
 
 
