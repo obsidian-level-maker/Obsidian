@@ -223,9 +223,10 @@ static inline void SHADE_ComputeLevel(quake_light_t& light, double x, double y)
 
   dist = dist / light.factor;
 
-  int reduc = (int)dist / 92;
+  light.style = (light.level >> 8) - (int)dist / 6;
 
-  light.style = (light.level >> 8) - reduc * 16;
+  if (light.style > 0)
+      light.style &= 0xF0;
 }
 
 
