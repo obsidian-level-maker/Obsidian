@@ -391,6 +391,10 @@ function Levels_setup()
     gui.property("sub_format", PARAM.sub_format)
   end
 
+  if not OB_CONFIG.align then
+    gui.property("offset_map", "1")
+  end
+
   table.merge_missing(PARAM, GLOBAL_PARAMETERS)
 
   table.name_up(PREFAB)

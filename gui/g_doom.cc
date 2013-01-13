@@ -53,6 +53,8 @@ static char *level_name;
 
 int dm_sub_format;
 
+int dm_offset_map;
+
 static qLump_c *thing_lump;
 static qLump_c *vertex_lump;
 static qLump_c *sector_lump;
@@ -273,6 +275,12 @@ void DM_EndLevel(const char *level_name)
 
 void DM_AddVertex(int x, int y)
 {
+  if (dm_offset_map)
+  {
+    x += 32;
+    y += 32;
+  }
+
   raw_vertex_t vert;
 
   vert.x = LE_S16(x);
@@ -370,6 +378,12 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 void DM_AddThing(int x, int y, int h, int type, int angle, int options,
                  int tid, byte special, const byte *args)
 {
+  if (dm_offset_map)
+  {
+    x += 32;
+    y += 32;
+  }
+
   if (dm_sub_format != SUBFMT_Hexen)
   {
     raw_thing_t thing;
@@ -768,6 +782,10 @@ void doom_game_interface_c::Property(const char *key, const char *value)
       dm_sub_format = SUBFMT_Strife;
     else
       LogPrintf("WARNING: unknown DOOM sub_format '%s'\n", value);
+  }
+  else if (StringCaseCmp(key, "offset_map") == 0)
+  {
+    dm_offset_map = atoi(value);
   }
   else if (StringCaseCmp(key, "ef_solid_type") == 0)
   {
