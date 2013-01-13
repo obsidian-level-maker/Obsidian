@@ -137,32 +137,54 @@ typedef struct
 shade_trace_t;
 
 
-static int SHADE_TraceLeaf(region_c *leaf, shade_trace_t *trace)
+static int SHADE_TraceLeaf(region_c *leaf)
 {
-  // FIXME
+  if (leaf->gaps.size() == 0)
+    return 0;
 
-  return 1;
+  return 100;
 }
 
 
-static int SHADE_RecursiveTrace(bsp_node_c *node, region_c *leaf, shade_trace_t *trace)
+static int SHADE_RecursiveTrace(bsp_node_c *node, region_c *leaf,
+                                float x1, float y1,
+                                float x2, float y2)
 {
   while (node)
   {
-    double a = PerpDist(trace->x1,trace->y1, node->x1,node->y1, node->x2,node->y2);
-    double b = PerpDist(trace->x2,trace->y2, node->x1,node->y1, node->x2,node->y2);
+    double a = PerpDist(x1,y1, node->x1,node->y1, node->x2,node->y2);
+    double b = PerpDist(x2,y2, node->x1,node->y1, node->x2,node->y2);
 
     int a_side = (a < 0) ? -1 : +1;
     int b_side = (b < 0) ? -1 : +1;
 
     if (a_side != b_side)
     {
-      int front = SHADE_RecursiveTrace(node->front_node, node->front_leaf, trace);
+      // compute intersection point
+      
+      double frac = a / (double)(a - b);
+
+      double mx = x1 + (x2 - x1) * frac;
+      double my = y1 + (y2 - y1) * frac;
+
+      int front, back;
+
+      // traverse down the side containing the start point
+
+      if (a_side < 0)
+        front = SHADE_RecursiveTrace(node-> back_node, node-> back_leaf, x1, y1, mx, my);
+      else
+        front = SHADE_RecursiveTrace(node->front_node, node->front_leaf, x1, y1, mx, my);
 
       if (front <= 0)
         return front;
 
-      int back = SHADE_RecursiveTrace(node-> back_node, node-> back_leaf, trace);
+      // traverse down the side containing the end point
+
+      if (a_side < 0)
+        back = SHADE_RecursiveTrace(node->front_node, node->front_leaf, mx, my, x2, y2);
+      else
+        back = SHADE_RecursiveTrace(node-> back_node, node-> back_leaf, mx, my, x2, y2);
 
       return MIN(front, back);
     }
@@ -171,20 +193,20 @@ static int SHADE_RecursiveTrace(bsp_node_c *node, region_c *leaf, shade_trace_t 
 
     if (a_side < 0)
     {
-      node = node->back_node;
       leaf = node->back_leaf;
+      node = node->back_node;
     }
     else
     {
-      node = node->front_node;
       leaf = node->front_leaf;
+      node = node->front_node;
     }
   }
 
   if (! leaf || leaf->degenerate)
-    return 0;
+    return 100;
 
-  return SHADE_TraceLeaf(leaf, trace);
+  return SHADE_TraceLeaf(leaf);
 }
 
 
@@ -200,6 +222,11 @@ static void SHADE_ProcessLight(region_c *R, double x1, double y1,
 
   // skip lights which are too far away
   if (dist > 999)
+    return;
+
+  int vis = SHADE_RecursiveTrace(bsp_root, NULL, x1, y1, light.x, light.y);
+
+  if (vis == 0)
     return;
 
   // FIXME: trace !!!
