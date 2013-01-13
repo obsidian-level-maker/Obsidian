@@ -277,6 +277,27 @@ function Brush_copy(brush)
 end
 
 
+function Brush_middle(brush)
+  local sum_x = 0
+  local sum_y = 0
+  local total = 0
+
+  for _,C in ipairs(brush) do
+    if C.x then
+      sum_x = sum_x + C.x
+      sum_y = sum_y + C.y
+      total = total + 1
+    end
+  end
+
+  if total == 0 then
+    return 0, 0
+  end
+    
+  return sum_x / total, sum_y / total
+end
+
+
 function Brush_bbox(brush)
   local x1, x2 = 9e9, -9e9
   local y1, y2 = 9e9, -9e9
@@ -2517,6 +2538,12 @@ function Fab_load_wad(name)
       -- ability to create closed doors
       if int(S.ceil_h - S.floor_h) == 1 then
         C.delta_z = -1
+      end
+
+      if string.match(S.ceil_tex, "^F_SKY") and not C.delta_z then
+        local mx, my = Brush_middle(coords)
+        local ent = { id="light", x=mx, y=my, z=C.b - 4, light=190, _factor=0.8 }
+        table.insert(fab.entities, ent)
       end
     end
 
