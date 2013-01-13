@@ -1160,7 +1160,7 @@ do return end ----!!!!!!!
 
           local mx, my = cell_middle(x, y)
 
-          entity_helper("light", mx, my, c_h - 4, { kind="sky", light=208 })
+          entity_helper("light", mx, my, c_h - 4, { kind="sky", light=190 })
         end
 
         gui.spots_fill_poly(f_brush, 0)

@@ -1407,7 +1407,7 @@ function CHUNK_CLASS.build(C)
       raw_add_brush(brush)
 
       if c_mat == "_SKY" then
-        entity_helper("light", x1+32, y1+32, c_h - 4, { kind="sky", light=208 })
+        entity_helper("light", x1+32, y1+32, c_h - 4, { kind="sky", light=190 })
       end
     end end
   end
