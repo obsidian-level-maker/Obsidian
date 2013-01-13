@@ -595,6 +595,8 @@ void QCOM_FreeLights()
 
 void QCOM_FindLights()
 {
+  QCOM_FreeLights();
+
   for (unsigned int i = 0 ; i < all_entities.size() ; i++)
   {
     csg_entity_c *E = all_entities[i];
@@ -812,7 +814,6 @@ void QCOM_LightAllFaces()
 {
   LogPrintf("\nLighting World...\n");
 
-  QCOM_FreeLights();
   QCOM_FindLights();
 
   LogPrintf("found %u lights\n", qk_all_lights.size());

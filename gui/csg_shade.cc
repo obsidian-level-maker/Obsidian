@@ -23,8 +23,13 @@
 #include "hdr_lua.h"
 #include "hdr_ui.h"
 
+#include "lib_util.h"
+
 #include "csg_main.h"
 #include "csg_local.h"
+
+#include "q_common.h"
+#include "q_light.h"
 
 #include <algorithm>
 
@@ -123,13 +128,15 @@ static void SHADE_GroupRegions()
 }
 
 
-static void SHADE_CollectLights()
+typedef struct
 {
-  // FIXME
+  float x1, y1;
+  float x2, y2;
 }
+shade_trace_t;
 
 
-static int SHADE_TraceLeaf(region_c *leaf, shade_trace_c *trace)
+static int SHADE_TraceLeaf(region_c *leaf, shade_trace_t *trace)
 {
   // FIXME
 
@@ -137,7 +144,7 @@ static int SHADE_TraceLeaf(region_c *leaf, shade_trace_c *trace)
 }
 
 
-static int SHADE_RecursiveTrace(bsp_node_c *node, region_c *leaf, shade_trace_c *trace)
+static int SHADE_RecursiveTrace(bsp_node_c *node, region_c *leaf, shade_trace_t *trace)
 {
   while (node)
   {
@@ -234,11 +241,13 @@ static void SHADE_MergeResults()
 
 void CSG_Shade()
 {
-  SHADE_CollectLights();
+  QCOM_FindLights();
 
   SHADE_GroupRegions();
   SHADE_ProcessRegions();
   SHADE_MergeResults();
+
+  QCOM_FreeLights();
 }
 
 //--- editor settings ---
