@@ -583,37 +583,17 @@ void qLightmap_c::Store()
 
 //------------------------------------------------------------------------
 
-typedef enum
-{
-  LTK_Normal = 0,
-  LTK_Sun,
-}
-quake_light_kind_e;
+
+std::vector<quake_light_t> qk_all_lights;
 
 
-typedef struct
-{
-  int kind;
-
-  float x, y, z;
-  float radius;
-
-  int level;  // 16.8 fixed point
-  int style;
-}
-quake_light_t;
-
-
-static std::vector<quake_light_t> qk_all_lights;
-
-
-static void QCOM_FreeLights()
+void QCOM_FreeLights()
 {
   qk_all_lights.clear();
 }
 
 
-static void QCOM_FindLights()
+void QCOM_FindLights()
 {
   for (unsigned int i = 0 ; i < all_entities.size() ; i++)
   {

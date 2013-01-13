@@ -96,14 +96,40 @@ private:
 };
 
 
+typedef enum
+{
+  LTK_Normal = 0,
+  LTK_Sun,
+}
+quake_light_kind_e;
+
+
+typedef struct
+{
+  int kind;
+
+  float x, y, z;
+  float radius;
+
+  int level;  // 16.8 fixed point
+  int style;
+}
+quake_light_t;
+
+
 /***** VARIABLES **********/
 
 extern bool qk_color_lighting;
 
 extern int qk_lighting_quality;
 
+extern std::vector<quake_light_t> qk_all_lights;
+
 
 /***** FUNCTIONS **********/
+
+void QCOM_FindLights();
+void QCOM_FreeLights();
 
 void QCOM_FreeLightmaps();
 
