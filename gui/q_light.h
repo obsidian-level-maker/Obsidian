@@ -110,6 +110,7 @@ typedef struct
 
   float x, y, z;
   float radius;
+  float factor;
 
   int level;  // 16.8 fixed point
   int style;

@@ -39,10 +39,20 @@
 #include "csg_quake.h"
 
 
+#if 0  // fixme: quake defaults
+
 #define DEFAULT_LIGHTLEVEL  150
 #define DEFAULT_SUNLEVEL    30
+#define DEFAULT_FACTOR      2.0  // radius multiplier
 
-#define DEFAULT_FACTOR  2.0  // radius multiplier
+#else
+
+#define DEFAULT_LIGHTLEVEL  192
+#define DEFAULT_SUNLEVEL    208
+#define DEFAULT_FACTOR      1.0
+
+#endif
+
 
 #define LOW_LIGHT  20
 
@@ -617,9 +627,9 @@ void QCOM_FindLights()
     float default_level = (light.kind == LTK_Sun) ? DEFAULT_SUNLEVEL : DEFAULT_LIGHTLEVEL;
 
     float level  = E->props.getDouble("light", default_level);
-    float factor = E->props.getDouble("_factor", DEFAULT_FACTOR);
 
-    light.radius = level * factor;
+    light.factor = E->props.getDouble("_factor", DEFAULT_FACTOR);
+    light.radius = level * light.factor;
 
     if (level < 1 || light.radius < 1)
       continue;

@@ -218,7 +218,7 @@ static void SHADE_ProcessLight(region_c *R, double x1, double y1,
 
   float dist = ComputeDist(x1, y1, light.x, light.y);
 
-  // FIXME: dist = dist * light.factor;
+  dist = dist / light.factor;
 
   // skip lights which are too far away
   if (dist > 999)
