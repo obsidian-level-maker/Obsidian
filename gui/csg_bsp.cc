@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2010 Andrew Apted
+//  Copyright (C) 2006-2013 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -41,6 +41,8 @@ static bool csg_is_clip_hull;
 
 static double mini_centre_x;
 static double mini_centre_y;
+
+static std::vector<region_c*> dead_regions;
 
 
 
@@ -1412,6 +1414,90 @@ static void AddBoundingRegion(group_c & group)
 }
 
 
+#if 0  // -AJA- testing showed that this is unnecessary...
+
+static void PruneBSPTree(bsp_node_c * node)
+{
+  // remove any dead regions from the BSP tree
+
+  if (node->front_leaf && node->front_leaf->degenerate)
+      node->front_leaf = NULL;
+
+  if (node->back_leaf && node->back_leaf->degenerate)
+      node->back_leaf = NULL;
+
+
+  if (node->front_node)
+  {
+    bsp_node_c *sub = node->front_node;
+
+    PruneBSPTree(sub);
+
+    if (! (sub->front_node || sub->front_leaf))
+    {
+      node->front_node = sub->back_node;
+      node->front_leaf = sub->back_leaf;
+
+      sub->back_node = NULL;
+      delete sub;
+    }
+    else if (! (sub->back_node || sub->back_leaf))
+    {
+      node->front_node = sub->front_node;
+      node->front_leaf = sub->front_leaf;
+
+      sub->front_node = NULL;
+      delete sub;
+    }
+  }
+
+  if (node->back_node)
+  {
+    bsp_node_c *sub = node->back_node;
+
+    PruneBSPTree(sub);
+
+    if (! (sub->front_node || sub->front_leaf))
+    {
+      node->back_node = sub->back_node;
+      node->back_leaf = sub->back_leaf;
+
+      sub->back_node = NULL;
+      delete sub;
+    }
+    else if (! (sub->back_node || sub->back_leaf))
+    {
+      node->back_node = sub->front_node;
+      node->back_leaf = sub->front_leaf;
+
+      sub->front_node = NULL;
+      delete sub;
+    }
+  }
+}
+#endif
+
+
+void DumpCSGTree(const bsp_node_c * node, const region_c * leaf = NULL, int level = 0)
+{
+  for (int i = 0 ; i < level ; i++)
+    fprintf(stderr, "  ");
+
+  if (node)
+  {
+    fprintf(stderr, "node %p (%1.1f %1.1f) --> (%1.1f %1.1f)\n", node,
+            node->x1, node->y1, node->x2, node->y2);
+
+    DumpCSGTree(node->front_node, node->front_leaf, level+1);
+    DumpCSGTree(node-> back_node, node-> back_leaf, level+1);
+  }
+  else if (leaf)
+    fprintf(stderr, "region %p\n", leaf);
+  else
+    fprintf(stderr, "NULL!!");
+}
+
+
 static void RemoveDeadRegions()
 {
   int before = (int)all_regions.size();
@@ -1438,9 +1524,10 @@ static void RemoveDeadRegions()
     // snags exist in the all_snags vector, don't free them twice
     R->snags.clear();
 
-//!!!! FIXME: region may be a leaf in a bsp_node_c
-//  delete R;
-    R->degenerate = true;  // hack -- mark it as dead
+    // cannot delete the region here -- it may be in a bsp_node_c
+    dead_regions.push_back(R);
+
+    R->degenerate = true;  // mark it as dead
   }
 
   int after = (int)all_regions.size();
@@ -1452,6 +1539,13 @@ static void RemoveDeadRegions()
   {
     LogPrintf("WARNING: %d entities in dead region\n", lost_ents);
   }
+
+///  PruneBSPTree(bsp_root);
+
+#if 0
+  fprintf(stderr, "CSG BSP Tree:\n");
+  DumpCSGTree(bsp_root);
+#endif
 }
 
 
@@ -1891,8 +1985,12 @@ void CSG_BSP_Free()
   for (i = 0 ; i < all_regions.size() ; i++)
     delete all_regions[i];
 
+  for (i = 0 ; i < dead_regions.size() ; i++)
+    delete dead_regions[i];
+
   all_partitions.clear();
   all_regions.clear();
+  dead_regions.clear();
 
   delete bsp_root;
 }
