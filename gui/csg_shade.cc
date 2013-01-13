@@ -34,6 +34,7 @@
 
 #include <algorithm>
 
+
 /*
 
 Doom Lighting Model
@@ -61,6 +62,9 @@ Doom Lighting Model
 6. clamp results to a certain minimum (e.g. 96)
 
 */
+
+#define MIN_SHADE  96
+
 
 static int current_region_group;
 
@@ -213,39 +217,35 @@ static int SHADE_RecursiveTrace(bsp_node_c *node, region_c *leaf,
 }
 
 
-static void SHADE_ProcessLight(region_c *R, double x1, double y1,
-                               quake_light_t & light)
+static inline void SHADE_ComputeLevel(quake_light_t& light, double x, double y)
+{
+  double dist = ComputeDist(x, y, light.x, light.y);
+
+  dist = dist / light.factor;
+
+  int reduc = (int)dist / 92;
+
+  light.style = (light.level >> 8) - reduc * 16;
+}
+
+
+static void SHADE_ProcessLight(region_c *R, double x, double y, quake_light_t & light)
 {
   if (light.kind == LTK_Sun)
     Main_FatalError("Sun lights found in DOOM-ish format map.\n");
 
-  float dist = ComputeDist(x1, y1, light.x, light.y);
-
-  dist = dist / light.factor;
-
-  // skip lights which are too far away
-  if (dist > 999)
+  // skip lights which cannot increase the maximum
+  if (light.style <= R->shade)
     return;
 
-  stat_traces++;
+  int vis = SHADE_RecursiveTrace(bsp_root, NULL, x, y, light.x, light.y);
 
-  int vis = SHADE_RecursiveTrace(bsp_root, NULL, x1, y1, light.x, light.y);
+  stat_traces++;
 
   if (vis == 0)
     return;
 
-  // FIXME: trace !!!
-
-  int value = light.level >> 8;
-
-  if (dist > 110) value -= 16;
-  if (dist > 220) value -= 16;
-  if (dist > 330) value -= 16;
-  if (dist > 440) value -= 16;
-  if (dist > 580) value -= 16;
-  if (dist > 730) value -= 16;
-
-  R->shade = MAX(R->shade, value); 
+  R->shade = light.style;
 }
 
 
@@ -253,7 +253,7 @@ static void SHADE_LightRegion(region_c *R)
 {
   SYS_ASSERT(R->gaps.size() > 0);
 
-  R->shade = 0;
+  R->shade = MIN_SHADE;
 
   double mid_x, mid_y;
 
@@ -261,8 +261,12 @@ static void SHADE_LightRegion(region_c *R)
 
   stat_targets++;
 
+  // TODO: a way to quickly ignore far away lights (e.g. put in a quadtree)
+
   for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
   {
+    SHADE_ComputeLevel(qk_all_lights[i], mid_x, mid_y);
+
     SHADE_ProcessLight(R, mid_x, mid_y, qk_all_lights[i]);
   }
 }
