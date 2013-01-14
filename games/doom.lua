@@ -3208,6 +3208,8 @@ DOOM.SKINS =
 
     _bound_z1 = 0
     _bound_z2 = 128
+
+    tex_STARTAN3 = "?wall"
   }
 
 
@@ -3221,7 +3223,7 @@ DOOM.SKINS =
     _long   = 192
     _deep   = 24
 
-    track = "SHAWN2"
+    tex_STARTAN3 = "?wall"
   }
 
 
@@ -3280,11 +3282,8 @@ DOOM.SKINS =
     _bound_z2 = 128
     _long   = 256
 
-    pic   = "O_CARVE"
-    pic_w = 64
-    pic_h = 64
-
-    light = 64
+    tex_GRAYPOIS = "CEMENT4"
+    tex_STARTAN3 = "?wall"
   }
 
   Pic_Neon =
