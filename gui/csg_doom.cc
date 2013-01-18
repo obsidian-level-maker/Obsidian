@@ -248,8 +248,6 @@ public:
 
   void Kill()
   {
-    x = y = -7777;
-
     for (int i = 0 ; i < 4 ; i++)
       lines[i] = NULL;
   }
@@ -539,6 +537,8 @@ public:
   {
     SYS_ASSERT(B->start == end);
     SYS_ASSERT(B->end != start);
+
+    end->Kill();
 
     end = B->end;
 
@@ -1480,7 +1480,6 @@ static doom_linedef_c * DM_FindSimilarLine(doom_linedef_c *L, doom_vertex_c *V)
     if (! M) break;
     if (M == L) continue;
 
-if (! M->isValid()) continue;
     SYS_ASSERT(M->isValid());
 
     if (! L->isFrontSimilar(M))
@@ -1643,10 +1642,10 @@ static int TryRoundAtVertex(doom_vertex_c *V)
 
   doom_linedef_c *L = new doom_linedef_c(*LX);
 
-  dm_linedefs.push_back(L);
-
   if (L->front) dm_sidedefs.push_back(L->front);
   if (L->back ) dm_sidedefs.push_back(L->back );
+
+  dm_linedefs.push_back(L);
 
 
   // orientation of L must match LX, since we copied sidedefs from LX
