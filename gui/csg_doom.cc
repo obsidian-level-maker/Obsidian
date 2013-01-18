@@ -198,6 +198,18 @@ public:
            (strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0);
   }
 
+  bool MatchNoLight(const doom_sector_c *other) const
+  {
+    return (mark == other->mark) &&
+           (f_h == other->f_h) &&
+           (c_h == other->c_h) &&
+           (special == other->special) &&
+           (tag  == other->tag)  &&
+
+           (strcmp(f_tex.c_str(), other->f_tex.c_str()) == 0) &&
+           (strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0);
+  }
+
   bool Match(const doom_sector_c *other) const
   {
     // deliberately absent: misc_flags
@@ -1609,6 +1621,13 @@ static int TryRoundAtVertex(doom_vertex_c *V)
   {
     return 0;  // not a square corner
   }
+
+  // must be two-sided lines, sectors only differ by light level
+  if (! (LX->front && LX->back)) return 0;
+  if (! (LY->front && LY->back)) return 0;
+
+  if (! LX->front->sector->MatchNoLight(LX->back->sector))
+    return 0;
 
   // too short?
   if (LX->length < 32 || LY->length < 32)
