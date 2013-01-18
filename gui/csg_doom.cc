@@ -235,13 +235,17 @@ public:
   // also for horizontal texture alignment.
   doom_linedef_c *lines[4];
  
+  // was the vertex created by corner rounding code, and it split an
+  // existing linedef in half?
+  bool rounded_half;
+
 public:
-  doom_vertex_c() : x(0), y(0), index(-1)
+  doom_vertex_c() : x(0), y(0), index(-1), rounded_half(false)
   {
     lines[0] = lines[1] = lines[2] = lines[3] = NULL;
   }
 
-  doom_vertex_c(int _x, int _y) : x(_x), y(_y), index(-1)
+  doom_vertex_c(int _x, int _y) : x(_x), y(_y), index(-1), rounded_half(false)
   {
     lines[0] = lines[1] = lines[2] = lines[3] = NULL;
   }
@@ -260,6 +264,8 @@ public:
 
   void Kill()
   {
+    rounded_half = false;
+
     for (int i = 0 ; i < 4 ; i++)
       lines[i] = NULL;
   }
@@ -421,7 +427,7 @@ public:
     length = ComputeDist(start->x, start->y, end->x, end->y);
   }
 
-  inline doom_vertex_c *OtherVertex(const doom_vertex_c *V) const
+  inline doom_vertex_c *OtherVert(const doom_vertex_c *V) const
   {
     if (start == V)
       return end;
@@ -1594,6 +1600,41 @@ static void DM_AlignTextures()
 }
 
 
+static bool RoundWouldClobber(int cx, int cy, int ox, int oy,
+                              const doom_vertex_c *ignore1,
+                              const doom_vertex_c *ignore2,
+                              const doom_vertex_c *ignore3)
+{
+  int x1 = MIN(cx, ox);
+  int y1 = MIN(cy, oy);
+
+  int x2 = MAX(cx, ox);
+  int y2 = MAX(cy, oy);
+
+  for (unsigned int i = 0 ; i < dm_vertices.size() ; i++)
+  {
+    const doom_vertex_c *V = dm_vertices[i];
+
+    if (V == ignore1 || V == ignore2 || V == ignore3)
+      continue;
+
+    if (! V->lines[0])  // dud vertex?
+      continue;
+
+    // allow vertex at opposite corner
+    // (this is the cheesy way -- the proper way would be to check if the
+    //  vertex is within the triangle).
+    if (V->x == ox && V->y == oy)
+      continue;
+
+    if (x1 <= V->x && V->x <= x2 && y1 <= V->y && V->y <= y2)
+      return true;
+  }
+
+  return false;  // OK
+}
+
+
 static int TryRoundAtVertex(doom_vertex_c *V)
 {
   if (V->getNumLines() != 2)
@@ -1630,27 +1671,63 @@ static int TryRoundAtVertex(doom_vertex_c *V)
     return 0;
 
   // too short?
-  if (LX->length < 32 || LY->length < 32)
+  if (LX->length < 16 || LY->length < 16)
     return 0;
 
-// fprintf(stderr, "Round corner candidate @ (%d %d)\n", V->x, V->y);
 
-  int x_len = (LX->length < 36) ? -1 : MIN(64, LX->length / 2);
-  int y_len = (LY->length < 36) ? -1 : MIN(64, LY->length / 2);
+  int x_len = LX->length;
+  int y_len = LY->length;
 
-  // FIXME!!!!  test if any geometry would be clobbered 
-  //            only need to see if a used vertex lies inside the triangle
+  bool x_rounded_half = false;
+  bool y_rounded_half = false;
 
+  if (x_len < 32 || (x_len <= 64 && LX->OtherVert(V)->rounded_half))
+  {
+    /* don't add new vertex */
+  }
+  else if (x_len > 128)
+  {
+    x_len = 64;
+  }
+  else
+  {
+    x_len /= 2;
+    x_rounded_half = true;
+  }
 
-// FIXME
-  if (x_len < 0 || y_len < 0) return 0;
-
+  if (y_len < 32 || (y_len <= 64 && LY->OtherVert(V)->rounded_half))
+  {
+    /* don't add new vertex */
+  }
+  else if (y_len > 128)
+  {
+    y_len = 64;
+  }
+  else
+  {
+    y_len /= 2;
+    y_rounded_half = true;
+  }
 
   int x_dir = (LX->start->x < LX->end->x) ? +1 : -1;
   int y_dir = (LY->start->y < LY->end->y) ? +1 : -1;
 
   if (LX->end == V) x_dir = -x_dir;
   if (LY->end == V) y_dir = -y_dir;
+
+  int x_other = V->x + x_dir * x_len;
+  int y_other = V->y + y_dir * y_len;
+
+
+  // test if any geometry would be clobbered
+  // (only need to see if a used vertex lies inside the triangle)
+
+  if (RoundWouldClobber(V->x, V->y, x_other, y_other, V, LX->OtherVert(V), LY->OtherVert(V)))
+    return 0;
+
+
+// FIXME
+  if (x_len == LX->length || y_len == LY->length) return 0;
 
 
   doom_vertex_c *VX = DM_MakeVertex(V->x + x_dir * x_len,  V->y);
