@@ -237,32 +237,64 @@ public:
   ~doom_vertex_c()
   { }
 
+  int getNumLines() const
+  {
+    for (int i = 0 ; i < 4 ; i++)
+      if (! lines[i])
+        return i;
+
+    return 4;
+  }
+
+  void Kill()
+  {
+    x = y = -7777;
+
+    for (int i = 0 ; i < 4 ; i++)
+      lines[i] = NULL;
+  }
+
+  int FindLine(const doom_linedef_c *L) const
+  {
+    for (int i = 0 ; i < 4 ; i++)
+      if (lines[i] == L)
+        return i;
+
+    return -1;
+  }
+
   void AddLine(doom_linedef_c *L)
   {
-    for (int i=0; i < 4; i++)
+    for (int i = 0 ; i < 4 ; i++)
       if (! lines[i])
       {
         lines[i] = L; return;
       }
   }
 
+  void RemoveLine(doom_linedef_c *L)
+  {
+    int i = FindLine(L);
+
+    if (i < 0)
+      return;
+
+    for ( ; i < 3 ; i++)
+    {
+      lines[i] = lines[i+1];
+    }
+
+    lines[i] = NULL;
+  }
+
   void ReplaceLine(doom_linedef_c *old_L, doom_linedef_c *new_L)
   {
-    for (int i=0; i < 4; i++)
+    for (int i = 0 ; i < 4 ; i++)
       if (lines[i] == old_L)
       {
         lines[i] = new_L;
         return;
       }
-  }
-
-  bool HasLine(const doom_linedef_c *L) const
-  {
-    for (int i=0; i < 4; i++)
-      if (lines[i] == L)
-        return true;
-
-    return false;
   }
 
   doom_linedef_c *SecondLine(const doom_linedef_c *L) const
@@ -305,6 +337,12 @@ public:
   { }
 
   ~doom_sidedef_c()
+  { }
+
+  doom_sidedef_c(const doom_sidedef_c& other) :
+       lower(other.lower), mid(other.mid), upper(other.upper),
+       x_offset(IVAL_NONE), y_offset(other.y_offset),
+       sector(other.sector), index(-1)
   { }
 
   int Write();
@@ -353,6 +391,21 @@ public:
   ~doom_linedef_c()
   { }
 
+  doom_linedef_c(const doom_linedef_c& other) :
+       start(NULL), end(NULL),
+       front(NULL), back(NULL),
+       flags(other.flags), special(other.special),
+       tag(other.tag), length(0),
+       sim_prev(NULL), sim_next(NULL)
+  {
+    // NOTE: be sure to add these sidedefs into dm_sidedefs!
+    if (other.front)
+      front = new doom_sidedef_c(*other.front);
+
+    if (other.back)
+      back = new doom_sidedef_c(*other.back);
+  }
+
   void CalcLength()
   {
     length = ComputeDist(start->x, start->y, end->x, end->y);
@@ -367,14 +420,18 @@ public:
     return start;
   }
 
-  inline bool Valid() const
+  inline bool isValid() const
   {
     return (start != NULL);
   }
 
   void Kill()
   {
-    start = end = NULL;
+    start->RemoveLine(this);
+    start = NULL;
+
+    end->RemoveLine(this);
+    end = NULL;
   }
 
   void Flip()
@@ -494,6 +551,16 @@ public:
     B->Kill();
 
     CalcLength();
+  }
+
+  bool isVert() const
+  {
+    return start->x == end->x;
+  }
+
+  bool isHoriz() const
+  {
+    return start->y == end->y;
   }
 
   bool isFrontSimilar(const doom_linedef_c *P) const
@@ -1375,7 +1442,7 @@ static bool DM_TryMergeLine(doom_linedef_c *A)
   if (V != B->start)
     return false;
 
-  SYS_ASSERT(B->Valid());
+  SYS_ASSERT(B->isValid());
 
   if (! A->CanMerge(B))
     return false;
@@ -1386,17 +1453,18 @@ static bool DM_TryMergeLine(doom_linedef_c *A)
 }
 
 
-static void DM_MergeColinearLines()
+static void DM_MergeColinearLines(bool show_count = true)
 {
   int count = 0;
 
-  for (int pass = 0 ; pass < 4 ; pass++)
+  for (int pass = 0 ; pass < 3 ; pass++)
     for (int i = 0 ; i < (int)dm_linedefs.size() ; i++)
-      if (dm_linedefs[i]->Valid())
+      if (dm_linedefs[i]->isValid())
         DM_TryMergeLine(dm_linedefs[i]);
           count++;
 
-  LogPrintf("Merged %d colinear lines\n");
+  if (show_count)
+    LogPrintf("Merged %d colinear lines\n");
 }
 
 
@@ -1411,6 +1479,9 @@ static doom_linedef_c * DM_FindSimilarLine(doom_linedef_c *L, doom_vertex_c *V)
 
     if (! M) break;
     if (M == L) continue;
+
+if (! M->isValid()) continue;
+    SYS_ASSERT(M->isValid());
 
     if (! L->isFrontSimilar(M))
       continue;
@@ -1442,7 +1513,7 @@ static void DM_AlignTextures()
   for (i = 0 ; i < (int)dm_linedefs.size() ; i++)
   {
     doom_linedef_c *L = dm_linedefs[i];
-    if (! L->Valid())
+    if (! L->isValid())
       continue;
 
     L->sim_prev = DM_FindSimilarLine(L, L->start);
@@ -1469,7 +1540,7 @@ static void DM_AlignTextures()
     for (i = 0 ; i < (int)dm_linedefs.size() ; i++)
     {
       doom_linedef_c *L = dm_linedefs[i];
-      if (! L->Valid())
+      if (! L->isValid())
         continue;
 
       if (L->front->x_offset == IVAL_NONE)
@@ -1511,6 +1582,133 @@ static void DM_AlignTextures()
   LogPrintf("Aligned %d textures\n", count);
 }
 
+
+static int TryRoundAtVertex(doom_vertex_c *V)
+{
+  if (V->getNumLines() != 2)
+    return 0;
+
+  doom_linedef_c *LX = V->lines[0];
+  doom_linedef_c *LY = V->lines[1];
+
+  // this probably cannot happen, but just in case...
+  if (! LX->isValid() || ! LY->isValid())
+    return 0;
+  
+  SYS_ASSERT(LX->start == V || LX->end == V);
+  SYS_ASSERT(LY->start == V || LY->end == V);
+
+  if (LX->isHoriz() && LY->isVert())
+  {
+    /* OK */
+  }
+  else if (LX->isVert() && LY->isHoriz())
+  {
+    std::swap(LX, LY);
+  }
+  else
+  {
+    return 0;  // not a square corner
+  }
+
+  // too short?
+  if (LX->length < 32 || LY->length < 32)
+    return 0;
+
+// fprintf(stderr, "Round corner candidate @ (%d %d)\n", V->x, V->y);
+
+  int x_len = (LX->length < 36) ? -1 : MIN(64, LX->length / 2);
+  int y_len = (LY->length < 36) ? -1 : MIN(64, LY->length / 2);
+
+  // FIXME!!!!  test if any geometry would be clobbered 
+  //            only need to see if a used vertex lies inside the triangle
+
+
+// FIXME
+  if (x_len < 0 || y_len < 0) return 0;
+
+
+  int x_dir = (LX->start->x < LX->end->x) ? +1 : -1;
+  int y_dir = (LY->start->y < LY->end->y) ? +1 : -1;
+
+  if (LX->end == V) x_dir = -x_dir;
+  if (LY->end == V) y_dir = -y_dir;
+
+
+  doom_vertex_c *VX = DM_MakeVertex(V->x + x_dir * x_len,  V->y);
+  doom_vertex_c *VY = DM_MakeVertex(V->x,  y_dir * y_len + V->y);
+
+  SYS_ASSERT(VX != VY);
+
+
+  doom_linedef_c *L = new doom_linedef_c(*LX);
+
+  dm_linedefs.push_back(L);
+
+  if (L->front) dm_sidedefs.push_back(L->front);
+  if (L->back ) dm_sidedefs.push_back(L->back );
+
+
+  // orientation of L must match LX, since we copied sidedefs from LX
+  L->start = VX;
+  L->end   = VY;
+
+  if (LX->start == V)
+    std::swap(L->start, L->end);
+
+  L->CalcLength();
+
+
+  VX->AddLine(L);
+  VX->AddLine(LX);
+
+  VY->AddLine(L);
+  VY->AddLine(LY);
+
+
+  if (LX->start == V)
+      LX->start = VX;
+  else
+      LX->end = VX;
+
+  if (LY->start == V)
+      LY->start = VY;
+  else
+      LY->end = VY;
+
+  V->Kill();
+
+  LX->CalcLength();
+  LY->CalcLength();
+
+  return 1;
+}
+
+static void DM_RoundCorners()
+{
+  /*
+   * Looks for corners where two (and only two) linedefs meet and
+   * the linedefs are axis-aligned, and tries to add a diagonal at
+   * the corner.
+   *
+   * This is mainly to help reduce jaggies produces by the lighting
+   * algorithm.
+   */
+
+  // need to iterate over linedefs, since we don't know here which
+  // vertices are in-use and which are not.
+
+  int count = 0;
+
+  for (int i = 0 ; i < (int)dm_vertices.size() ; i++)
+    if (dm_vertices[i]->getNumLines() == 2)
+      count += TryRoundAtVertex(dm_vertices[i]);
+
+  LogPrintf("Rounded %d square corners\n", count);
+
+  // need this again, since we often create co-linear diagonals
+//!!!!  DM_MergeColinearLines(false /* show_count */);
+}
 
 
 //------------------------------------------------------------------------
@@ -1825,6 +2023,10 @@ static void DM_ExtraFloors(doom_sector_c *S, region_c *R)
 
 static void DM_ExtraFloorNeighbors()
 {
+  // Collect sector neighbors which have the same extrafloors.
+  // These can use the same tag in the dummy sector (and most
+  // importantly, require less dummy sectors).
+
   for (unsigned int i = 0 ; i < dm_linedefs.size() ; i++)
   {
     doom_linedef_c *L = dm_linedefs[i];
@@ -2020,7 +2222,7 @@ static void DM_WriteLinedefs()
   // written as well.
 
   for (int i = 0; i < (int)dm_linedefs.size(); i++)
-    if (dm_linedefs[i]->Valid())
+    if (dm_linedefs[i]->isValid())
       dm_linedefs[i]->Write();
 }
 
@@ -2136,6 +2338,7 @@ void CSG_DOOM_Write()
 
   DM_CreateLinedefs();
   DM_MergeColinearLines();
+  DM_RoundCorners();
   DM_AlignTextures();
 
   DM_ExtraFloorNeighbors();
