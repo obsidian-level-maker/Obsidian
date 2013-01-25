@@ -815,6 +815,7 @@ function Simple_render_cave(R)
     -- [but it makes for nicer lighting]
 
     if A == B and A == C and A == D then
+--[[
       local dx, dy
 
       -- ensure length of (dx,dy) is never too long
@@ -825,7 +826,7 @@ function Simple_render_cave(R)
 
       delta_x_map[x][y] = dx
       delta_y_map[x][y] = dy
-
+--]]
       return
     end
 
