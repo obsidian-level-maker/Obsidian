@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2009-2012 Andrew Apted
+--  Copyright (C) 2009-2013 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -758,6 +758,8 @@ function Simple_render_cave(R)
 
   local B_CORNERS = { 1,3,9,7 }
 
+  local move_flat_corners = (R.ceil_mat == "_SKY")
+
 
   local function grab_cell(x, y)
     if not cave:valid_cell(x, y) then
@@ -790,6 +792,8 @@ function Simple_render_cave(R)
     local C = grab_cell(x-1, y-1)
     local D = grab_cell(x,   y-1)
 
+    local touch_solid
+
     -- never move a corner at edge of room
     if not A or not B or not C or not D then
       return
@@ -801,6 +805,7 @@ function Simple_render_cave(R)
       B = (B == "#")
       C = (C == "#")
       D = (D == "#")
+      touch_solid = true
     else
       -- otherwise pick highest floor (since that can block a lower floor)
       local max_h = math.max(A, B, C, D) - 2
@@ -812,21 +817,24 @@ function Simple_render_cave(R)
     end
 
     -- no need to move when all cells are the same
-    -- [but it makes for nicer lighting]
 
     if A == B and A == C and A == D then
---[[
-      local dx, dy
 
-      -- ensure length of (dx,dy) is never too long
-      repeat
-        dx = rand.pick { -20, -12, 0, 12, 20 }
-        dy = rand.pick { -20, -12, 0, 12, 20 }
-      until math.abs(dx) + math.abs(dy) < 38
+      -- but it makes for nicer lighting in outdoor rooms....
+      if not touch_solid and move_flat_corners then
 
-      delta_x_map[x][y] = dx
-      delta_y_map[x][y] = dy
---]]
+        local dx, dy
+
+        -- ensure length of (dx,dy) is never too long
+        repeat
+          dx = rand.pick { -20, -12, 0, 12, 20 }
+          dy = rand.pick { -20, -12, 0, 12, 20 }
+        until math.abs(dx) + math.abs(dy) < 38
+
+        delta_x_map[x][y] = dx
+        delta_y_map[x][y] = dy
+      end
+
       return
     end
 
