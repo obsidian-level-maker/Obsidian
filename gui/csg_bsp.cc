@@ -1993,6 +1993,7 @@ void CSG_BSP_Free()
   dead_regions.clear();
 
   delete bsp_root;
+  bsp_root = NULL;
 }
 
 
