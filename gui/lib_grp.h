@@ -54,16 +54,16 @@ typedef struct
 {
   char magic[12];
   u32_t num_lumps;
-}
-raw_grp_header_t;
+
+} PACKEDATTR raw_grp_header_t;
 
 
 typedef struct
 {
   char name[12];
   u32_t length;
-}
-raw_grp_lump_t;
+
+} PACKEDATTR raw_grp_lump_t;
 
 
 #endif /* __OBLIGE_LIB_GRP_H__ */

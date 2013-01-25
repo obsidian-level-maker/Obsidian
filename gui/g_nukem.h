@@ -52,8 +52,8 @@ typedef struct
 
   u16_t angle;
   u16_t sector;
-}
-raw_nukem_map_t;
+
+} PACKEDATTR raw_nukem_map_t;
 
 #define DUKE_MAP_VERSION  7
 
@@ -91,8 +91,8 @@ typedef struct
   u16_t lo_tag;
   u16_t hi_tag;
   u16_t extra;
-}
-raw_nukem_sector_t;
+
+} PACKEDATTR raw_nukem_sector_t;
 
 #define SECTOR_F_PARALLAX    (1 << 0)
 #define SECTOR_F_SLOPED      (1 << 1)
@@ -125,8 +125,8 @@ typedef struct
 
   u16_t lo_tag, hi_tag;
   u16_t extra;
-}
-raw_nukem_wall_t;
+
+} PACKEDATTR raw_nukem_wall_t;
 
 #define WALL_F_BLOCKING    (1 << 0)
 #define WALL_F_ONE_WAY     (1 << 5)
@@ -166,8 +166,8 @@ typedef struct
   u16_t xvel, yvel, zvel;
   u16_t lo_tag, hi_tag;
   u16_t extra;
-}
-raw_nukem_sprite_t;
+
+} PACKEDATTR raw_nukem_sprite_t;
 
 #define SPRITE_F_BLOCKING    (1 << 0)
 #define SPRITE_F_SUBMERGED   (1 << 7)
@@ -199,8 +199,8 @@ typedef struct
   // s32_t anim[NUM_PICS];
 
   // block_of_pixels_t pics[NUM_PICS];
-}
-raw_art_header_t;
+
+} PACKEDATTR raw_art_header_t;
 
 
 #endif /* __OBLIGE_NUKEM_LEVEL_H__ */

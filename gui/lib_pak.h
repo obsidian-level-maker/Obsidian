@@ -57,8 +57,8 @@ typedef struct
 
   u32_t dir_start;
   u32_t entry_num;
-}
-raw_pak_header_t;
+
+} PACKEDATTR raw_pak_header_t;
 
 #define PAK_MAGIC  "PACK"
 
@@ -69,8 +69,8 @@ typedef struct
 
   u32_t offset;
   u32_t length;
-}
-raw_pak_entry_t;
+
+} PACKEDATTR raw_pak_entry_t;
 
 
 #endif /* __OBLIGE_PAK_FILES_H__ */

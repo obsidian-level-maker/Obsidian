@@ -108,8 +108,8 @@ typedef struct
   s32_t headnode;
   s32_t firstface, numfaces;  // submodels just draw faces
                               // without walking the bsp tree
-}
-dmodel2_t;
+
+} PACKEDATTR dmodel2_t;
 
 
 // planes (x&~1) and (x&~1)+1 are always opposites
@@ -167,8 +167,8 @@ typedef struct
 
   u16_t firstface;
   u16_t numfaces;  // counting both sides
-}
-dnode2_t;
+
+} PACKEDATTR dnode2_t;
 
 
 #define SURF_LIGHT     0x1   // value will hold the light strength
@@ -191,8 +191,8 @@ typedef struct
 
   char  texture[32];  // texture name (textures/*.wal)
   s32_t anim_next;    // for animations, -1 = end of chain
-}
-texinfo2_t;
+
+} PACKEDATTR texinfo2_t;
 
 
 // AJA: dvertex_t and dedge_t moved to q_common.h
@@ -215,16 +215,16 @@ typedef struct
 
   u16_t first_leafbrush;
   u16_t num_leafbrushes;
-}
-dleaf2_t;
+
+} PACKEDATTR dleaf2_t;
 
 
 typedef struct
 {
   u16_t planenum;    // facing out of the leaf
   s16_t texinfo;
-}
-dbrushside_t;
+
+} PACKEDATTR dbrushside_t;
 
 typedef struct
 {
@@ -232,8 +232,8 @@ typedef struct
   s32_t numsides;
 
   u32_t contents;
-}
-dbrush_t;
+
+} PACKEDATTR dbrush_t;
 
 
 // special yaw angles which orient entities up or down
@@ -251,8 +251,8 @@ typedef struct
 {
   s32_t numclusters;
   s32_t offsets[1][2];   // [NUMCLUSTERS][2]
-}
-dvis_t;
+
+} PACKEDATTR dvis_t;
 
 // each area has a list of portals that lead into other areas
 // when portals are closed, other areas may not be visible or
@@ -261,15 +261,15 @@ typedef struct
 {
   s32_t portal_id;
   s32_t otherarea;
-}
-dareaportal_t;
+
+} PACKEDATTR dareaportal_t;
 
 typedef struct
 {
   s32_t num_portals;
   s32_t first_portal;
-}
-darea_t;
+
+} PACKEDATTR darea_t;
 
 #endif /* __QUAKE2_FILES_H__ */
 

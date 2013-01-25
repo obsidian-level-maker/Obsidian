@@ -82,8 +82,8 @@ typedef struct
 
   u32_t num_lumps;
   u32_t dir_start;
-}
-raw_wad_header_t;
+
+} PACKEDATTR raw_wad_header_t;
 
 
 typedef struct
@@ -92,8 +92,8 @@ typedef struct
   u32_t length;
 
   char name[8];
-}
-raw_wad_lump_t;
+
+} PACKEDATTR raw_wad_lump_t;
 
 
 /* ----- WAD2 structures ---------------------- */
@@ -104,8 +104,8 @@ typedef struct
 
   u32_t num_lumps;
   u32_t dir_start;
-}
-raw_wad2_header_t;
+
+} PACKEDATTR raw_wad2_header_t;
 
 #define WAD2_MAGIC  "WAD2"
 
@@ -121,8 +121,8 @@ typedef struct
   u8_t  _pad[2];
 
   char  name[16];  // must be null terminated
-}
-raw_wad2_lump_t;
+
+} PACKEDATTR raw_wad2_lump_t;
 
 // compression method (from Quake1 source)
 #define CMP_NONE  0

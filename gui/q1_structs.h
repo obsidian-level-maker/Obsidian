@@ -94,15 +94,15 @@ typedef struct
   s32_t headnode[MAX_MAP_HULLS];
   s32_t numleafs;   // not including the solid leaf 0
   s32_t firstface, numfaces;
-}
-dmodel_t;
+
+} PACKEDATTR dmodel_t;
 
 typedef struct
 {
   s32_t num_miptex;
   s32_t data_ofs[2];   // [nummiptex]
-}
-dmiptexlump_t;
+
+} PACKEDATTR dmiptexlump_t;
 
 #define MIP_LEVELS 4
 typedef struct miptex_s
@@ -110,8 +110,8 @@ typedef struct miptex_s
   char name[16];
   u32_t width, height;
   u32_t offsets[MIP_LEVELS]; // four mip maps stored
-}
-miptex_t;
+
+} PACKEDATTR miptex_t;
 
 
 // AJA: moved dplane_t to q_common.h
@@ -144,8 +144,8 @@ typedef struct
 
   u16_t firstface;
   u16_t numfaces; // counting both sides
-}
-dnode_t;
+
+} PACKEDATTR dnode_t;
 
 /*
  * Note that children are interpreted as unsigned values now, so that we can
@@ -157,8 +157,8 @@ typedef struct dclipnode_s
 {
   s32_t planenum;
   u16_t children[2];
-}
-dclipnode_t;
+
+} PACKEDATTR dclipnode_t;
 
 #define CLIP_SPECIAL  0xFFF0
 
@@ -170,8 +170,8 @@ typedef struct
 
   s32_t miptex;
   s32_t flags;
-}
-texinfo_t;
+
+} PACKEDATTR texinfo_t;
 
 // sky or slime: no lightmap, no 256 subdivision
 // -AJA- only disables a check on extents, otherwise not used by quake engine
@@ -199,8 +199,8 @@ typedef struct
   u16_t num_marksurf;
 
   u8_t ambient_level[NUM_AMBIENTS];
-}
-dleaf_t;
+
+} PACKEDATTR dleaf_t;
 
 #endif /* __QUAKE1_BSPFILE_H__ */
 

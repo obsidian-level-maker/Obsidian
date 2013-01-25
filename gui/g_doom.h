@@ -82,8 +82,8 @@ int DM_NumThings();
 typedef struct
 {
   s16_t x, y;
-}
-raw_vertex_t;
+
+} PACKEDATTR raw_vertex_t;
 
 
 typedef struct
@@ -95,8 +95,8 @@ typedef struct
   s16_t tag;       // this linedef activates the sector with same tag
   u16_t sidedef1;  // right sidedef
   u16_t sidedef2;  // left sidedef (only if this line adjoins 2 sectors)
-}
-raw_linedef_t;
+
+} PACKEDATTR raw_linedef_t;
 
 typedef enum
 {
@@ -118,8 +118,8 @@ typedef struct
   u8_t  args[5];      // special arguments
   u16_t sidedef1;     // right sidedef
   u16_t sidedef2;     // left sidedef
-}
-raw_hexen_linedef_t;
+
+} PACKEDATTR raw_hexen_linedef_t;
 
 
 typedef struct
@@ -132,8 +132,8 @@ typedef struct
   char mid_tex[8];    // texture name for the regular part
 
   u16_t sector;    // adjacent sector
-}
-raw_sidedef_t;
+
+} PACKEDATTR raw_sidedef_t;
 
 
 typedef struct
@@ -147,8 +147,8 @@ typedef struct
   u16_t light;     // light level (0-255)
   u16_t special;   // special behaviour (0 = normal, 9 = secret, ...)
   s16_t tag;       // sector activated by a linedef with same tag
-}
-raw_sector_t;
+
+} PACKEDATTR raw_sector_t;
 
 
 typedef struct
@@ -157,8 +157,8 @@ typedef struct
   s16_t angle;     // angle thing faces (degrees)
   u16_t type;      // type of thing
   u16_t options;   // when appears, deaf, etc..
-}
-raw_thing_t;
+
+} PACKEDATTR raw_thing_t;
 
 typedef enum
 {
@@ -192,8 +192,8 @@ typedef struct
 
   u8_t special;    // special type
   u8_t args[5];    // special arguments
-} 
-raw_hexen_thing_t;
+
+}  PACKEDATTR raw_hexen_thing_t;
 
 
 typedef struct
@@ -204,8 +204,8 @@ typedef struct
 
   u32_t func_num;
   u32_t str_num;
-}
-raw_behavior_header_t;
+
+} PACKEDATTR raw_behavior_header_t;
 
 
 /* ----- Other structures ---------------------- */
@@ -217,15 +217,15 @@ typedef struct
 
   s16_t x_offset;
   s16_t y_offset;
-}
-raw_patch_header_t;
+
+} PACKEDATTR raw_patch_header_t;
 
 
 typedef struct raw_gl_vertex_s
 {
   s32_t x, y;
-}
-raw_gl_vertex_t;
+
+} PACKEDATTR raw_gl_vertex_t;
 
 
 typedef struct raw_gl_seg_s
@@ -235,8 +235,8 @@ typedef struct raw_gl_seg_s
   u16_t linedef;    // linedef that this seg goes along, or -1
   u16_t side;       // 0 if on right of linedef, 1 if on left
   u16_t partner;    // partner seg number, or -1
-}
-raw_gl_seg_t;
+
+} PACKEDATTR raw_gl_seg_t;
 
 #define IS_GL_VERT  0x8000
 
@@ -245,8 +245,8 @@ typedef struct raw_subsec_s
 {
   u16_t num;     // number of Segs in this Sub-Sector
   u16_t first;   // first Seg
-}
-raw_subsec_t;
+
+} PACKEDATTR raw_subsec_t;
 
 #endif /* __OBLIGE_DOOM_OUT_H__ */
 

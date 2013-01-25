@@ -129,15 +129,15 @@ typedef struct
 {
   u32_t start;
   u32_t length;
-}
-lump_t;
+
+} PACKEDATTR lump_t;
 
 typedef struct
 {
   s32_t version;
   lump_t lumps[Q1_HEADER_LUMPS];
-}
-dheader_t;
+
+} PACKEDATTR dheader_t;
 
 typedef struct
 {
@@ -145,31 +145,31 @@ typedef struct
   s32_t  version;  
 
   lump_t lumps[Q2_HEADER_LUMPS];
-}
-dheader2_t;
+
+} PACKEDATTR dheader2_t;
 
 
 typedef struct
 {
   float x, y, z;
-}
-dvertex_t;
+
+} PACKEDATTR dvertex_t;
 
 // note that edge 0 is never used, because negative edge nums are used for
 // counterclockwise use of the edge in a face
 typedef struct
 {
   u16_t v[2]; // vertex numbers
-}
-dedge_t;
+
+} PACKEDATTR dedge_t;
 
 typedef struct
 {
   float normal[3];
   float dist;
   s32_t type; // PLANE_X - PLANE_ANYZ 
-}
-dplane_t;
+
+} PACKEDATTR dplane_t;
 
 // 0-2 are axial planes
 #define PLANE_X      0
@@ -197,8 +197,8 @@ typedef struct
   u8_t  styles[NUM_STYLES];
 
   s32_t lightofs;   // start of [numstyles*surfsize] samples
-}
-dface_t;
+
+} PACKEDATTR dface_t;
 
 
 #endif /* __OBLIGE_BSPOUT_H__ */
