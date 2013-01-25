@@ -149,6 +149,13 @@ static int SHADE_TraceLeaf(region_c *leaf)
   if (leaf->gaps.size() == 0)
     return 0;
 
+  int z1 = leaf->gaps.front()->bottom->t.z;
+  int z2 = leaf->gaps.back() ->top->b.z;
+
+  // close door?
+  if (z2 - z1 <= 4)
+    return 0;  // should be 10 or 20, but not supported yet
+
   return 100;
 }
 
