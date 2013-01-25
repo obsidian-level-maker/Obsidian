@@ -1726,14 +1726,56 @@ static int TryRoundAtVertex(doom_vertex_c *V)
     return 0;
 
 
-// FIXME
-  if (x_len == LX->length || y_len == LY->length) return 0;
+  /* handle four cases :
+   *   1. no new vertices
+   *   2. add one new vertex (split horizontal line)
+   *   3. add one new vertex (split vertical line)
+   *   4. add two new vertices
+   */
 
+  if (x_len == LX->length && y_len == LY->length)
+  {
+    doom_vertex_c *V2 = LY->OtherVert(V);
+
+    V2->ReplaceLine(LY, LX);
+    V2->AddLine(LX);
+
+    if (LX->start == V)
+        LX->start = V2;
+    else
+        LX->end = V2;
+
+    LX->CalcLength();
+
+    LY->Kill();
+     V->Kill();
+
+    return 1;
+  }
+
+  /* case 2 */
+
+  if (x_len == LX->length)
+  {
+    return 0;
+  }
+
+  /* case 3 */
+
+  if (y_len == LY->length)
+  {
+    return 0;
+  }
+
+  /* case 4 */
 
   doom_vertex_c *VX = DM_MakeVertex(V->x + x_dir * x_len,  V->y);
   doom_vertex_c *VY = DM_MakeVertex(V->x,  y_dir * y_len + V->y);
 
   SYS_ASSERT(VX != VY);
+
+  VX->rounded_half = x_rounded_half;
+  VY->rounded_half = y_rounded_half;
 
 
   doom_linedef_c *L = new doom_linedef_c(*LX);
@@ -1771,10 +1813,10 @@ static int TryRoundAtVertex(doom_vertex_c *V)
   else
       LY->end = VY;
 
-  V->Kill();
-
   LX->CalcLength();
   LY->CalcLength();
+
+  V->Kill();
 
   return 1;
 }
@@ -1790,11 +1832,9 @@ static void DM_RoundCorners()
    * algorithm.
    */
 
-  // need to iterate over linedefs, since we don't know here which
-  // vertices are in-use and which are not.
-
   int count = 0;
 
+for (int pass = 0 ; pass < 2 ; pass++)
   for (int i = 0 ; i < (int)dm_vertices.size() ; i++)
     if (dm_vertices[i]->getNumLines() == 2)
       count += TryRoundAtVertex(dm_vertices[i]);
