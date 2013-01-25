@@ -527,15 +527,17 @@ public:
 
   bool CanMerge(const doom_linedef_c *B) const
   {
-    if (start == B->end)
-      return false;
-
     if (! ColinearWith(B))
       return false;
+
+return true;  //!!!! FIXME
 
     // test sidedefs
     doom_sidedef_c *B_front = B->front;
     doom_sidedef_c *B_back  = B->back;
+
+    if (start == B->start || end == B->end)
+      std::swap(B_front, B_back);
 
     if (! CanMergeSides(back,  B_back) ||
         ! CanMergeSides(front, B_front))
@@ -545,6 +547,9 @@ public:
         B_front->x_offset == IVAL_NONE)
       return true;
 
+    if (start == B->start || end == B->end)
+      return false;
+
     int diff = B_front->x_offset - (front->x_offset + I_ROUND(length));
 
     // the < 4 accounts for precision loss after multiple merges
@@ -553,8 +558,15 @@ public:
 
   void Merge(doom_linedef_c *B)
   {
-    SYS_ASSERT(B->start == end);
-    SYS_ASSERT(B->end != start);
+    bool flipped_me = false;
+
+    if (start == B->start || start == B->end)
+    {
+      Flip(); flipped_me = true;
+    }
+
+    if (end != B->start)
+      B->Flip();
 
     end->Kill();
 
@@ -567,6 +579,9 @@ public:
       back->x_offset += I_ROUND(B->length);
 
     B->Kill();
+
+    if (flipped_me)
+      Flip();
 
     CalcLength();
   }
@@ -1446,28 +1461,21 @@ static void DM_CreateLinedefs()
 
 //------------------------------------------------------------------------
 
-static bool DM_TryMergeLine(doom_linedef_c *A)
+static bool DM_TryMergeLine(doom_vertex_c *V)
 {
-  doom_vertex_c *V = A->end;
+  doom_linedef_c *A = V->lines[0];
+  doom_linedef_c *B = V->lines[1];
 
-  doom_linedef_c *B = V->SecondLine(A);
-
-  if (! B)
-    return false;
-
-  // we only handle the case where B's start == A's end
-  // (which is still the vast majority of mergeable cases)
-  if (V != B->start)
-    return false;
-
+  SYS_ASSERT(A->isValid());
   SYS_ASSERT(B->isValid());
 
-  if (! A->CanMerge(B))
-    return false;
+  if (A->CanMerge(B))
+  {
+    A->Merge(B);
+    return true;
+  }
 
-  A->Merge(B);
-
-  return true;
+  return false;
 }
 
 
@@ -1476,9 +1484,9 @@ static void DM_MergeColinearLines(bool show_count = true)
   int count = 0;
 
   for (int pass = 0 ; pass < 3 ; pass++)
-    for (int i = 0 ; i < (int)dm_linedefs.size() ; i++)
-      if (dm_linedefs[i]->isValid())
-        DM_TryMergeLine(dm_linedefs[i]);
+    for (int i = 0 ; i < (int)dm_vertices.size() ; i++)
+      if (dm_vertices[i]->getNumLines() == 2)
+        if (DM_TryMergeLine(dm_vertices[i]))
           count++;
 
   if (show_count)
@@ -1530,6 +1538,7 @@ static void DM_AlignTextures()
   for (i = 0 ; i < (int)dm_linedefs.size() ; i++)
   {
     doom_linedef_c *L = dm_linedefs[i];
+
     if (! L->isValid())
       continue;
 
@@ -1738,7 +1747,6 @@ static int TryRoundAtVertex(doom_vertex_c *V)
     doom_vertex_c *V2 = LY->OtherVert(V);
 
     V2->ReplaceLine(LY, LX);
-    V2->AddLine(LX);
 
     if (LX->start == V)
         LX->start = V2;
@@ -1867,7 +1875,7 @@ static void DM_RoundCorners()
   LogPrintf("Rounded %d square corners\n", count);
 
   // need this again, since we often create co-linear diagonals
-//!!!!  DM_MergeColinearLines(false /* show_count */);
+  DM_MergeColinearLines(false /* show_count */);
 }
 
 
@@ -2190,6 +2198,9 @@ static void DM_ExtraFloorNeighbors()
   for (unsigned int i = 0 ; i < dm_linedefs.size() ; i++)
   {
     doom_linedef_c *L = dm_linedefs[i];
+
+    if (! L->isValid())
+      continue;
 
     if (! L->back)
       continue;
