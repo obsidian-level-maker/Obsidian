@@ -1730,7 +1730,7 @@ static int TryRoundAtVertex(doom_vertex_c *V)
    *   1. no new vertices
    *   2. add one new vertex (split horizontal line)
    *   3. add one new vertex (split vertical line)
-   *   4. add two new vertices
+   *   4. add two new vertices -- split both
    */
 
   if (x_len == LX->length && y_len == LY->length)
@@ -1753,24 +1753,47 @@ static int TryRoundAtVertex(doom_vertex_c *V)
     return 1;
   }
 
+  doom_vertex_c * VX;
+  doom_vertex_c * VY;
+  doom_linedef_c * L;
+
   /* case 2 */
 
-  if (x_len == LX->length)
+  if (y_len == LY->length)
   {
-    return 0;
+    VX = DM_MakeVertex(V->x + x_dir * x_len,  V->y);
+    VY = VX;
+
+    VX->rounded_half = x_rounded_half;
+
+    VX->AddLine(LX);
+    VX->AddLine(LY);
+
+    goto finished;
   }
 
   /* case 3 */
 
-  if (y_len == LY->length)
+  if (x_len == LX->length)
   {
-    return 0;
+    // essentially replacing V with a new split vertex
+
+    VY = DM_MakeVertex(V->x,  y_dir * y_len + V->y);
+    VX = VY;
+
+    VY->rounded_half = y_rounded_half;
+
+    VY->AddLine(LX);
+    VY->AddLine(LY);
+
+    goto finished;
   }
+
 
   /* case 4 */
 
-  doom_vertex_c *VX = DM_MakeVertex(V->x + x_dir * x_len,  V->y);
-  doom_vertex_c *VY = DM_MakeVertex(V->x,  y_dir * y_len + V->y);
+  VX = DM_MakeVertex(V->x + x_dir * x_len,  V->y);
+  VY = DM_MakeVertex(V->x,  y_dir * y_len + V->y);
 
   SYS_ASSERT(VX != VY);
 
@@ -1778,7 +1801,7 @@ static int TryRoundAtVertex(doom_vertex_c *V)
   VY->rounded_half = y_rounded_half;
 
 
-  doom_linedef_c *L = new doom_linedef_c(*LX);
+  L = new doom_linedef_c(*LX);
 
   if (L->front) dm_sidedefs.push_back(L->front);
   if (L->back ) dm_sidedefs.push_back(L->back );
@@ -1803,6 +1826,7 @@ static int TryRoundAtVertex(doom_vertex_c *V)
   VY->AddLine(LY);
 
 
+finished:
   if (LX->start == V)
       LX->start = VX;
   else
@@ -1821,6 +1845,7 @@ static int TryRoundAtVertex(doom_vertex_c *V)
   return 1;
 }
 
+
 static void DM_RoundCorners()
 {
   /*
@@ -1834,10 +1859,10 @@ static void DM_RoundCorners()
 
   int count = 0;
 
-for (int pass = 0 ; pass < 2 ; pass++)
-  for (int i = 0 ; i < (int)dm_vertices.size() ; i++)
-    if (dm_vertices[i]->getNumLines() == 2)
-      count += TryRoundAtVertex(dm_vertices[i]);
+  for (int pass = 0 ; pass < 2 ; pass++)
+    for (int i = 0 ; i < (int)dm_vertices.size() ; i++)
+      if (dm_vertices[i]->getNumLines() == 2)
+        count += TryRoundAtVertex(dm_vertices[i]);
 
   LogPrintf("Rounded %d square corners\n", count);
 
