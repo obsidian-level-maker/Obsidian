@@ -765,6 +765,7 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
 
   S->light = CLAMP(96, S->light, 255);
 
+
   // TODO effects !!
 
 #if 0
@@ -2297,6 +2298,59 @@ static void DM_ProcessExtraFloors()
 }
 
 
+static int DM_CalcDoorLight(const doom_sector_c *S)
+{
+  int l_min = 192;
+  int l_max = S->light;
+
+  for (unsigned int i = 0 ; i < dm_linedefs.size() ; i++)
+  {
+    const doom_linedef_c *L = dm_linedefs[i];
+
+    if (! L->isValid())
+      continue;
+
+    if (! L->back)
+      continue;
+
+    doom_sector_c *front = L->front->sector;
+    doom_sector_c * back = L-> back->sector;
+
+    if (front == back)
+      continue;
+
+    // we ignore closed neighbors
+
+    if (front == S && back->f_h < back->c_h)
+    {
+      l_min = MIN(l_min, back->light);
+      l_max = MAX(l_max, back->light);
+    }
+
+    if (back == S && front->f_h < front->c_h)
+    {
+      l_min = MIN(l_min, front->light);
+      l_max = MAX(l_max, front->light);
+    }
+  }
+
+  // usually pick the maximum, but if other neighbors are lower then
+  // reduce it by 16 (or 32 if very high).
+
+  if (l_max >= l_min + 16)
+  {
+    l_max -= 16;
+  }
+
+  if (l_max >= l_min + 32 && l_max >= 208)
+  {
+    l_max -= 16;
+  }
+
+  return l_max;
+}
+
+
 static void DM_ProcessLightFX()
 {
   for (unsigned int i = 0 ; i < dm_sectors.size() ; i++)
@@ -2305,6 +2359,12 @@ static void DM_ProcessLightFX()
 
     if (S->unused)
       continue;
+
+    // handle lighting for closed doors -- get level from a neighbor
+    if (S->f_h == S->c_h)
+    {
+      S->light = DM_CalcDoorLight(S);
+    }
 
     if (S->special > 0 && S->light2 > 0)
     {

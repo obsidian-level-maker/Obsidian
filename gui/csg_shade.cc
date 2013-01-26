@@ -45,21 +45,25 @@ Doom Lighting Model
 
 2. result value is MAXIMUM of all tests made 
 
-3. (a) sky ceiling is like a light of 184 units
-   (b) if diagonal vector (4,1,2) from floor can hit sky, light is 208
-   (c) these tests are skipped for night skies
+3. result is clamped to a certain minimum (e.g. 96)
 
-4. a "sector" here is a group of brush regions.
+4. (a) sky will use light entities too (e.g. 184 units)
+   (b) if diagonal vector (4,1,2) from floor can hit sky, light is 208
+   (c) both these tests are skipped for night skies
+
+5. a "sector" here is a group of brush regions.
    rules for grouping them:
 
    (a) same floor brush, or
    (b) same "tag" property
 
-5. sectors perform lighting tests at various points in sector
-   (most basic: middle point of each region).  Further distance
-   means lower light level [equation yet to be determined...]
+6. sectors perform lighting tests at various points in sector
+   (most basic: middle point of each region).  If the LOS is
+   blocked, no light is transferred.  Further distance means
+   lower light level.
 
-6. clamp results to a certain minimum (e.g. 96)
+7. closed sectors (e.g. doors) block light, hence they determine
+   their lighting value as the value of an adjacent region.
 
 */
 
