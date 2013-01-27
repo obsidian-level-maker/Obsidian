@@ -70,6 +70,9 @@ Doom Lighting Model
 #define MIN_SHADE  96
 
 
+int shade_sky_level = 200;  // FIXME: a way to set this from Lua
+
+
 static int current_region_group;
 
 static int stat_targets;
@@ -188,8 +191,8 @@ static int SHADE_RecursiveTrace(bsp_node_c *node, region_c *leaf,
       
       double frac = a / (double)(a - b);
 
-      double mx = x1 + (x2 - x1) * frac;
-      double my = y1 + (y2 - y1) * frac;
+      float mx = x1 + (x2 - x1) * frac;
+      float my = y1 + (y2 - y1) * frac;
 
       int front, back;
 
@@ -231,6 +234,110 @@ static int SHADE_RecursiveTrace(bsp_node_c *node, region_c *leaf,
     return 100;
 
   return SHADE_TraceLeaf(leaf);
+}
+
+
+/* returns:
+ *   -1 : hit solid brush
+ *    0 : hit nothing at all
+ *   +1 : hit sky brush
+ */
+static int SHADE_RecursiveSkyCheck(bsp_node_c *node, region_c *leaf,
+                                   float x1, float y1, float z1,
+                                   float x2, float y2, float z2)
+{
+  while (node)
+  {
+    double a = PerpDist(x1,y1, node->x1,node->y1, node->x2,node->y2);
+    double b = PerpDist(x2,y2, node->x1,node->y1, node->x2,node->y2);
+
+    int a_side = (a < 0) ? -1 : +1;
+    int b_side = (b < 0) ? -1 : +1;
+
+    if (a_side != b_side)
+    {
+      // compute intersection point
+      
+      double frac = a / (double)(a - b);
+
+      float mx = x1 + (x2 - x1) * frac;
+      float my = y1 + (y2 - y1) * frac;
+      float mz = z1 + (z2 - z1) * frac;
+
+      int front, back;
+
+      // traverse down the side containing the start point
+
+      if (a_side < 0)
+        front = SHADE_RecursiveSkyCheck(node-> back_node, node-> back_leaf, x1, y1, z1, mx, my, mz);
+      else
+        front = SHADE_RecursiveSkyCheck(node->front_node, node->front_leaf, x1, y1, z1, mx, my, mz);
+
+      if (front != 0)
+        return front;
+
+      // traverse down the side containing the end point
+
+      if (a_side < 0)
+        back = SHADE_RecursiveSkyCheck(node->front_node, node->front_leaf, mx, my, mz, x2, y2, z2);
+      else
+        back = SHADE_RecursiveSkyCheck(node-> back_node, node-> back_leaf, mx, my, mz, x2, y2, z2);
+
+      return back;
+    }
+
+    // traverse down a single side of the node
+
+    if (a_side < 0)
+    {
+      leaf = node->back_leaf;
+      node = node->back_node;
+    }
+    else
+    {
+      leaf = node->front_leaf;
+      node = node->front_node;
+    }
+  }
+
+  if (! leaf || leaf->degenerate)
+    return 0;
+
+  // check all brushes in this leaf
+
+  for (unsigned int g = 0 ; g < leaf->gaps.size() ; g++)
+  for (int pass = 0 ; pass < 2 ; pass++)
+  {
+    gap_c *gap = leaf->gaps[g];
+
+    csg_brush_c *B = pass ? gap->bottom : gap->top;
+
+    if (B->IntersectRay(x1, y1, z1, x2, y2, z2))
+    {
+      if (B->bkind == BKIND_Sky)
+        return +1;
+      else
+        return -1;
+    }
+  }
+
+  return 0;  // hit nothing
+}
+
+
+static bool SHADE_CastRayTowardSky(region_c *R, float x1, float y1)
+{
+  // starting Z
+  csg_brush_c *B = R->gaps.front()->bottom;
+
+  float z1 = B->t.z + 0.5;
+
+  // end point
+  float x2 = x1 + 2048;
+  float y2 = y1 + 1024;
+  float z2 = z1 + 4096;
+
+  return SHADE_RecursiveSkyCheck(bsp_root, NULL, x1, y1, z1, x2, y2, z2);
 }
 
 
@@ -284,6 +391,11 @@ static void SHADE_LightRegion(region_c *R)
     SHADE_ComputeLevel(qk_all_lights[i], mid_x, mid_y);
 
     SHADE_ProcessLight(R, mid_x, mid_y, qk_all_lights[i]);
+  }
+
+  if (shade_sky_level > 0 && SHADE_CastRayTowardSky(R, mid_x, mid_y))
+  {
+    R->shade = MAX(R->shade, shade_sky_level);
   }
 }
 
