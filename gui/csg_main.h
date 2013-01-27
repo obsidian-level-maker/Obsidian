@@ -195,6 +195,9 @@ public:
   // makes sure there are enough vertices and they are in
   // anti-clockwise order.  Returns NULL if OK, otherwise an
   // error message string.
+
+  bool IntersectRay(float x1, float y1, float z1,
+                    float x2, float y2, float z2) const;
 };
 
 

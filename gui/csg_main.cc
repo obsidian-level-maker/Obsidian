@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2010 Andrew Apted
+//  Copyright (C) 2006-2013 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -208,7 +208,7 @@ const char * csg_brush_c::Validate()
 
   bflags |= BRU_IF_Quad;
 
-  for (unsigned int k = 0; k < verts.size(); k++)
+  for (unsigned int k = 0 ; k < verts.size() ; k++)
   {
     brush_vert_c *v1 = verts[k];
     brush_vert_c *v2 = verts[(k+1) % (int)verts.size()];
@@ -254,7 +254,7 @@ void csg_brush_c::ComputeBBox()
   max_x = -9e7;
   max_y = -9e7;
 
-  for (unsigned int i = 0; i < verts.size(); i++)
+  for (unsigned int i = 0 ; i < verts.size() ; i++)
   {
     brush_vert_c *V = verts[i];
 
@@ -264,6 +264,54 @@ void csg_brush_c::ComputeBBox()
     if (V->x > max_x) max_x = V->x;
     if (V->y > max_y) max_y = V->y;
   }
+}
+
+
+bool csg_brush_c::IntersectRay(float x1, float y1, float z1,
+                               float x2, float y2, float z2) const
+{
+  // clip the 2D line to the brush sides
+
+  for (unsigned int k = 0 ; k < verts.size() ; k++)
+  {
+    brush_vert_c *v1 = verts[k];
+    brush_vert_c *v2 = verts[(k+1) % (int)verts.size()];
+
+    double a = PerpDist(x1,y1, v1->x,v1->y, v2->x,v2->y);
+    double b = PerpDist(x2,y2, v1->x,v1->y, v2->x,v2->y);
+
+    // ray is completely outside the brush?
+    if (a > 0 && b > 0)
+      return false;
+
+    // ray is completely inside it?
+    if (a <= 0 && b <= 0)
+      continue;
+
+    // gotta clip the ray
+
+    double frac = a / (double)(a - b);
+
+    if (a > 0)
+    {
+      x1 = x1 + (x2 - x1) * frac;
+      y1 = y1 + (y2 - y1) * frac;
+      z1 = z1 + (z2 - z1) * frac;
+    }
+    else
+    {
+      x2 = x1 + (x2 - x1) * frac;
+      y2 = y1 + (y2 - y1) * frac;
+      z2 = z1 + (z2 - z1) * frac;
+    }
+  }
+
+  // at here, the clipped ray lies inside the brush
+
+  if (MAX(z1, z2) < b.z - 0.1) return false;
+  if (MIN(z1, z2) > t.z + 0.1) return false;
+
+  return true;
 }
 
 
