@@ -2593,7 +2593,7 @@ function Fab_load_wad(name)
       if angle < 0 then angle = angle + 360 end
       angle = math.clamp(0, angle, 315)
 
-      E.light = 128 + int(angle * 16 / 45)
+      E.light = 140 + int(angle * 16 / 45)
 
       table.insert(fab.entities, E)
       return
