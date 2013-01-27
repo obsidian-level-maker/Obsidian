@@ -2410,6 +2410,20 @@ WADFAB_ENTITIES =
 
   [2015] = { kind="pickup"   }  -- armor helmet
   [2018] = { kind="big_item" }  -- green armor vest
+
+  -- lights
+
+  [  34] = { kind="light" }
+}
+
+
+WADFAB_SKILL_TO_LIGHT =
+{
+  [1] = 0.4   -- EASY
+  [3] = 0.7   -- EASY + MED
+  [7] = 1.0   -- EASY + MED + HARD
+  [6] = 1.5   --        MED + HARD
+  [4] = 2.5   --              HARD
 }
 
 
@@ -2560,6 +2574,27 @@ function Fab_load_wad(name)
     local spot_info = WADFAB_ENTITIES[E.id]
 
     if not spot_info then
+      table.insert(fab.entities, E)
+      return
+    end
+
+    -- logic to add light entities:
+    --   + skill bits control factor (all set = normal)
+    --   + angle controls level (0 = 144, 45 = 160, ..., 315 = 256)
+    if spot_info.kind == "light" then
+      E.id = "light"
+
+      local skill = bit.band(E.flags or 7, 7)
+      E.flags = bit.bor(E.flags, 7)
+
+      E._factor = WADFAB_SKILL_TO_LIGHT[skill] or 1.0
+
+      local angle = E.angle or 180
+      if angle < 0 then angle = angle + 360 end
+      angle = math.clamp(0, angle, 315)
+
+      E.light = 128 + int(angle * 16 / 45)
+
       table.insert(fab.entities, E)
       return
     end
