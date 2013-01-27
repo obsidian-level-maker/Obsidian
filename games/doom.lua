@@ -1679,6 +1679,8 @@ DOOM.SKINS =
     _where  = "closet"
     _fitted = "xy"
 
+    tex_STARTAN3 = "?wall"
+
 --[[
     step = "FLAT1"
 
