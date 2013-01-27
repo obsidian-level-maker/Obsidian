@@ -87,29 +87,35 @@ static int SHADE_CalcRegionGroup(region_c *R)
   csg_property_set_c *f_face = &B->t.face;
   csg_property_set_c *c_face = &T->b.face;
 
+  // differentiate floor heights
+  int base = ((int)B->t.z & 0x1FF8) << 17;
+
   const char *tag = f_face->getStr("tag");
   if (tag)
-    return atoi(tag);
+    return base + atoi(tag);
 
   tag = c_face->getStr("tag");
   if (tag)
-    return atoi(tag);
+    return base + atoi(tag);
 
   tag = f_face->getStr("_shade_tag");
   if (tag)
-    return atoi(tag);
+    return base + atoi(tag);
 
   // create a new tag for this brush
 
   int result = current_region_group;
-  current_region_group++;
-  
+
   char result_buf[64];
   sprintf(result_buf, "%d", result);
 
   f_face->Add("_shade_tag", result_buf);
 
-  return result;
+  current_region_group++;
+  if (current_region_group == 0xFFFFF)
+    current_region_group = 0x10000;
+
+  return base + result;
 }
 
 
@@ -124,7 +130,7 @@ struct region_index_Compare
 
 static void SHADE_GroupRegions()
 {
-  current_region_group = 1000000;  // a value outside normal tag values
+  current_region_group = 0x10000;  // a value outside normal tag values
 
   for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
