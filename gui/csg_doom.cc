@@ -475,6 +475,14 @@ public:
     return false;
   }
 
+  bool hasRail() const
+  {
+    if (front && front->mid[0] != '-') return true;
+    if ( back &&  back->mid[0] != '-') return true;
+
+    return false;
+  }
+
   inline bool CanMergeSides(const doom_sidedef_c *A, const doom_sidedef_c *B) const
   {
     if (! A || ! B)
@@ -530,8 +538,6 @@ public:
     if (! ColinearWith(B))
       return false;
 
-return true;  //!!!! FIXME
-
     // test sidedefs
     doom_sidedef_c *B_front = B->front;
     doom_sidedef_c *B_back  = B->back;
@@ -543,10 +549,11 @@ return true;  //!!!! FIXME
         ! CanMergeSides(front, B_front))
       return false;
 
-    if (  front->x_offset == IVAL_NONE ||
+    if (  front->x_offset == IVAL_NONE &&
         B_front->x_offset == IVAL_NONE)
       return true;
 
+/*
     if (start == B->start || end == B->end)
       return false;
 
@@ -554,6 +561,8 @@ return true;  //!!!! FIXME
 
     // the < 4 accounts for precision loss after multiple merges
     return abs(diff) < 4; 
+*/
+    return false;
   }
 
   void Merge(doom_linedef_c *B)
@@ -1656,7 +1665,10 @@ static int TryRoundAtVertex(doom_vertex_c *V)
   // this probably cannot happen, but just in case...
   if (! LX->isValid() || ! LY->isValid())
     return 0;
-  
+
+  if (LX->hasRail() || LY->hasRail())
+    return 0;
+
   SYS_ASSERT(LX->start == V || LX->end == V);
   SYS_ASSERT(LY->start == V || LY->end == V);
 
