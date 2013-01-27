@@ -758,7 +758,7 @@ function Simple_render_cave(R)
 
   local B_CORNERS = { 1,3,9,7 }
 
-  local move_flat_corners = (R.ceil_mat == "_SKY")
+  local move_flat_corners = false; --????  (R.ceil_mat == "_SKY")
 
 
   local function grab_cell(x, y)
@@ -1169,7 +1169,7 @@ do return end ----!!!!!!!
 
           local mx, my = cell_middle(x, y)
 
-          entity_helper("light", mx, my, c_h - 4, { kind="sky", light=190 })
+          entity_helper("light", mx, my, c_h - 4, { kind="sky", light=LEVEL.sky_shade })
         end
 
         gui.spots_fill_poly(f_brush, 0)

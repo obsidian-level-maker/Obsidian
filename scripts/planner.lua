@@ -1982,6 +1982,9 @@ function Plan_create_rooms()
 
   assert(LEVEL.ep_along)
 
+  LEVEL.sky_light = 192
+  LEVEL.sky_shade = 160
+
   LEVEL.rooms = {}
   LEVEL.conns = {}
   LEVEL.halls = {}
