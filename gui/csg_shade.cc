@@ -237,6 +237,71 @@ static int SHADE_RecursiveTrace(bsp_node_c *node, region_c *leaf,
 }
 
 
+static int SHADE_CheckSkyLeaf(region_c *leaf,
+                              float x1, float y1, float z1,
+                              float x2, float y2, float z2)
+{
+  // check if ray intersects this region (in 2D)
+  // [logic is basically the same as csg_brush_c::IntersectRay]
+
+  for (unsigned int k = 0 ; k < leaf->snags.size() ; k++)
+  {
+    snag_c *snag = leaf->snags[k];
+
+    double a = -PerpDist(x1,y1, snag->x1,snag->y1, snag->x2,snag->y2);
+    double b = -PerpDist(x2,y2, snag->x1,snag->y1, snag->x2,snag->y2);
+
+    // ray is completely outside the region?
+    if (a > 0 && b > 0)
+      return false;
+
+    // ray is completely inside it?
+    if (a <= 0 && b <= 0)
+      continue;
+
+    // gotta clip the ray
+
+    double frac = a / (double)(a - b);
+
+    if (a > 0)
+    {
+      x1 = x1 + (x2 - x1) * frac;
+      y1 = y1 + (y2 - y1) * frac;
+      z1 = z1 + (z2 - z1) * frac;
+    }
+    else
+    {
+      x2 = x1 + (x2 - x1) * frac;
+      y2 = y1 + (y2 - y1) * frac;
+      z2 = z1 + (z2 - z1) * frac;
+    }
+  }
+
+  // at here, the clipped ray lies inside the region
+
+  if (z1 > z2)
+    std::swap(z1, z2);
+
+  for (unsigned int k = 0 ; k < leaf->brushes.size() ; k++)
+  {
+    csg_brush_c *B = leaf->brushes[k];
+
+    if (z1 > B->t.z) continue;
+    if (z2 < B->b.z) continue;
+
+    if (B->bkind == BKIND_Sky)
+      return +1;
+    else
+      return -1;
+  }
+
+  if (leaf->gaps.size() == 0)
+    return -1;
+
+  return 0;  // hit nothing
+}
+
+
 /* returns:
  *   -1 : hit solid brush
  *    0 : hit nothing at all
@@ -303,25 +368,7 @@ static int SHADE_RecursiveSkyCheck(bsp_node_c *node, region_c *leaf,
   if (! leaf || leaf->degenerate)
     return 0;
 
-  // check all brushes in this leaf
-
-  for (unsigned int g = 0 ; g < leaf->gaps.size() ; g++)
-  for (int pass = 0 ; pass < 2 ; pass++)
-  {
-    gap_c *gap = leaf->gaps[g];
-
-    csg_brush_c *B = pass ? gap->bottom : gap->top;
-
-    if (B->IntersectRay(x1, y1, z1, x2, y2, z2))
-    {
-      if (B->bkind == BKIND_Sky)
-        return +1;
-      else
-        return -1;
-    }
-  }
-
-  return 0;  // hit nothing
+  return SHADE_CheckSkyLeaf(leaf, x1, y1, z1, x2, y2, z2);
 }
 
 
@@ -333,11 +380,13 @@ static bool SHADE_CastRayTowardSky(region_c *R, float x1, float y1)
   float z1 = B->t.z + 0.5;
 
   // end point
-  float x2 = x1 + 2048;
-  float y2 = y1 + 1024;
-  float z2 = z1 + 4096;
+  float x2 = x1 + 1024;
+  float y2 = y1 + 2048;
+  float z2 = z1 + 3072;
 
-  return SHADE_RecursiveSkyCheck(bsp_root, NULL, x1, y1, z1, x2, y2, z2);
+  int vis = SHADE_RecursiveSkyCheck(bsp_root, NULL, x1, y1, z1, x2, y2, z2);
+
+  return (vis == 1);
 }
 
 
