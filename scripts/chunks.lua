@@ -1390,7 +1390,10 @@ function CHUNK_CLASS.build(C)
     f_mat = Mat_lookup(f_matname)
     f_tex = f_mat.f or f_mat.t
 
-    for dx = 0,3 do for dy = 0,3 do
+    local sub_x = (C.sx2 - C.sx1 + 1) * 4;
+    local sub_y = (C.sy2 - C.sy1 + 1) * 4;
+
+    for dx = 0,sub_x-1 do for dy = 0,sub_y-1 do
       local x1 = C.x1 + dx * 64
       local y1 = C.y1 + dy * 64
 

@@ -2213,7 +2213,7 @@ end
 
 function Fabricate_old(name, T, skins)
   
-stderrf("=========  FABRICATE %s\n", name)
+--stderrf("=========  FABRICATE %s\n", name)
 
   local fab = Fab_create(name)
 
@@ -2913,7 +2913,7 @@ function Fabricate(main_skin, T, skins)
     return Fabricate_old(main_skin._prefab, T, skins)
 
   elseif main_skin._file then
-stderrf("=========  FABRICATE %s\n", main_skin._file)
+--- stderrf("=========  FABRICATE %s\n", main_skin._file)
     local fab = Fab_load_wad(main_skin._file)
 
     Fab_bound_Z(fab, main_skin)
