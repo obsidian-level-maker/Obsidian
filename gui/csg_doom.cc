@@ -537,25 +537,26 @@ public:
     return d < COLINEAR_THRESHHOLD;
   }
 
-  bool TryMerge(doom_linedef_c *B)
+private:
+  bool TryMerge3(doom_linedef_c *B)
   {
-    if (! ColinearWith(B))
-      return false;
-
     // test sidedefs
     doom_sidedef_c *B_front = B->front;
     doom_sidedef_c *B_back  = B->back;
 
-    if (start == B->start || end == B->end)
-      std::swap(B_front, B_back);
+    int A_len = length;
+    int B_len = B->length;
 
     if (! CanMergeSides(back,  B_back) ||
         ! CanMergeSides(front, B_front))
       return false;
 
+// FIXME FIXME
+/*
     if (! (  front->x_offset == IVAL_NONE &&
            B_front->x_offset == IVAL_NONE))
       return false;
+*/
 
 /*
     if (start == B->start || end == B->end)
@@ -567,21 +568,13 @@ public:
     return abs(diff) < 4; 
 */
 
-    bool flipped_me = false;
-
-    if (start == B->start || start == B->end)
-    {
-      Flip(); flipped_me = true;
-    }
-
-    if (end != B->start)
-      B->Flip();
-
     end->Kill();
 
     end = B->end;
 
-    B->end->ReplaceLine(B, this);
+    end->ReplaceLine(B, this);
+
+    CalcLength();
 
     // fix X offset on back sidedef
     if (back && back->x_offset != IVAL_NONE)
@@ -589,12 +582,43 @@ public:
 
     B->Kill();
 
-    if (flipped_me)
-      Flip();
-
-    CalcLength();
-
     return true;
+  }
+
+  bool TryMerge2(doom_linedef_c *B)
+  {
+    if (end != B->end)
+      return TryMerge3(B);
+
+    B->Flip();
+
+    if (TryMerge3(B))
+      return true;  // B has been killed
+
+    B->Flip();
+
+    return false;
+  }
+
+public:
+  bool TryMerge(doom_linedef_c *B)
+  {
+    if (! ColinearWith(B))
+      return false;
+
+    // this flip malarkey is to ensure that B's start == A's end,
+    // which greatly simplifies the offset tests.
+
+    if (! (start == B->start || start == B->end))
+      return TryMerge2(B);
+
+    Flip();
+
+    bool result = TryMerge2(B);
+
+    Flip();
+
+    return result;
   }
 
   bool isVert() const
