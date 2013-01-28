@@ -64,6 +64,10 @@ double light_dist_factor = 800.0;
 #define MTF_HEXEN_MODES    (256 + 512 + 1024)
 
 
+// fake linedef special for lower-unpegging
+#define LIN_FAKE_UNPEGGED  991
+
+
 class extrafloor_c
 {
 public:
@@ -533,7 +537,7 @@ public:
     return d < COLINEAR_THRESHHOLD;
   }
 
-  bool CanMerge(const doom_linedef_c *B) const
+  bool TryMerge(doom_linedef_c *B)
   {
     if (! ColinearWith(B))
       return false;
@@ -549,9 +553,9 @@ public:
         ! CanMergeSides(front, B_front))
       return false;
 
-    if (  front->x_offset == IVAL_NONE &&
-        B_front->x_offset == IVAL_NONE)
-      return true;
+    if (! (  front->x_offset == IVAL_NONE &&
+           B_front->x_offset == IVAL_NONE))
+      return false;
 
 /*
     if (start == B->start || end == B->end)
@@ -562,11 +566,7 @@ public:
     // the < 4 accounts for precision loss after multiple merges
     return abs(diff) < 4; 
 */
-    return false;
-  }
 
-  void Merge(doom_linedef_c *B)
-  {
     bool flipped_me = false;
 
     if (start == B->start || start == B->end)
@@ -593,6 +593,8 @@ public:
       Flip();
 
     CalcLength();
+
+    return true;
   }
 
   bool isVert() const
@@ -1413,7 +1415,9 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 
 
   if (! L->back)
+  {
     L->flags |= MLF_BlockAll;
+  }
   else
   {
     L->flags |= MLF_TwoSided | MLF_LowerUnpeg | MLF_UpperUnpeg;
@@ -1442,6 +1446,12 @@ static void DM_MakeLine(region_c *R, snag_c *S)
     L->flags |= spec->getInt("flags");
 
     spec->getHexenArgs(L->args);
+
+    if (L->special == LIN_FAKE_UNPEGGED)
+    {
+      L->special = 0;
+      L->flags |= MLF_LowerUnpeg;
+    }
   }
 }
 
@@ -1479,13 +1489,7 @@ static bool DM_TryMergeLine(doom_vertex_c *V)
   SYS_ASSERT(A->isValid());
   SYS_ASSERT(B->isValid());
 
-  if (A->CanMerge(B))
-  {
-    A->Merge(B);
-    return true;
-  }
-
-  return false;
+  return A->TryMerge(B);
 }
 
 
