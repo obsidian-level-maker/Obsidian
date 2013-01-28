@@ -540,6 +540,10 @@ public:
 private:
   bool TryMerge3(doom_linedef_c *B)
   {
+    // meh, this should not be possible (but it CAN happen)
+    if (start == B->end)
+      return false;
+
     // test sidedefs
     doom_sidedef_c *B_front = B->front;
     doom_sidedef_c *B_back  = B->back;
@@ -1823,6 +1827,8 @@ static int TryRoundAtVertex(doom_vertex_c *V)
     else
         LX->end = V2;
 
+    SYS_ASSERT(LX->start != LX->end);
+
     LX->CalcLength();
 
     LY->Kill();
@@ -1914,6 +1920,9 @@ finished:
       LY->start = VY;
   else
       LY->end = VY;
+
+  SYS_ASSERT(LX->start != LX->end);
+  SYS_ASSERT(LY->start != LY->end);
 
   LX->CalcLength();
   LY->CalcLength();
