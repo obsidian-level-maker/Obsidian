@@ -544,29 +544,62 @@ private:
     doom_sidedef_c *B_front = B->front;
     doom_sidedef_c *B_back  = B->back;
 
-    int A_len = length;
-    int B_len = B->length;
+    int A_len = I_ROUND(   length);
+    int B_len = I_ROUND(B->length);
 
-    if (! CanMergeSides(back,  B_back) ||
-        ! CanMergeSides(front, B_front))
-      return false;
+    if (! CanMergeSides(front, B_front)) return false;
+    if (! CanMergeSides(back,  B_back))  return false;
 
-// FIXME FIXME
-/*
-    if (! (  front->x_offset == IVAL_NONE &&
-           B_front->x_offset == IVAL_NONE))
-      return false;
-*/
+    if (front)
+    {
+      int ax =   front->x_offset;
+      int bx = B_front->x_offset;
 
-/*
-    if (start == B->start || end == B->end)
-      return false;
+      if (bx == IVAL_NONE)
+      {
+        /* OK */
+      }
+      else if (ax == IVAL_NONE)
+      {
+        return false;
+      }
+      else
+      {
+        int diff = bx - (ax + A_len);
 
-    int diff = B_front->x_offset - (front->x_offset + I_ROUND(length));
+        // the < 4 accounts for precision loss after multiple merges
+        if (abs(diff) >= 4)
+          return false;
+      }
+    }
 
-    // the < 4 accounts for precision loss after multiple merges
-    return abs(diff) < 4; 
-*/
+    if (back)
+    {
+      int ax =   back->x_offset;
+      int bx = B_back->x_offset;
+
+      if (bx == IVAL_NONE)
+      {
+        /* OK */
+      }
+      else if (ax == IVAL_NONE)
+      {
+        return false;
+      }
+      else
+      {
+        int diff = ax - (bx + B_len);
+
+        if (abs(diff) >= 4)
+          return false;
+      }
+    }
+
+    /* CAN MERGE THEM */
+
+    if (back && back->x_offset != IVAL_NONE)
+      back->x_offset += B_len;
+
 
     end->Kill();
 
@@ -575,10 +608,6 @@ private:
     end->ReplaceLine(B, this);
 
     CalcLength();
-
-    // fix X offset on back sidedef
-    if (back && back->x_offset != IVAL_NONE)
-      back->x_offset += I_ROUND(B->length);
 
     B->Kill();
 
