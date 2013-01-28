@@ -569,7 +569,7 @@ private:
       }
       else
       {
-        int diff = bx - (ax + A_len);
+        int diff = (ax + A_len) - bx;
 
         // the < 4 accounts for precision loss after multiple merges
         if (abs(diff) >= 4)
@@ -592,7 +592,7 @@ private:
       }
       else
       {
-        int diff = ax - (bx + B_len);
+        int diff = (bx + B_len) - ax;
 
         if (abs(diff) >= 4)
           return false;
@@ -602,7 +602,7 @@ private:
     /* CAN MERGE THEM */
 
     if (back && back->x_offset != IVAL_NONE)
-      back->x_offset += B_len;
+      back->x_offset -= B_len;
 
 
     end->Kill();
