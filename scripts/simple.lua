@@ -1130,6 +1130,17 @@ do return end ----!!!!!!!
   end
 
 
+  local function do_ceil_brush(B)
+    if c_mat == "_SKY" then
+      table.insert(c_brush, 1, { m="sky" })
+      local mx, my = cell_middle(x, y)
+      entity_helper("light", mx, my, c_h - 4, { kind="sky", light=LEVEL.sky_shade })
+    end
+
+    brush_helper(B)
+  end
+
+
   local function render_floor_ceil(A)
     assert(A.floor_map)
 
@@ -1164,18 +1175,10 @@ do return end ----!!!!!!!
         Brush_set_mat(f_brush, f_mat, f_mat)
         Brush_set_mat(c_brush, c_mat, c_mat)
 
-        if c_mat == "_SKY" then
-          table.insert(c_brush, 1, { m="sky" })
-
-          local mx, my = cell_middle(x, y)
-
-          entity_helper("light", mx, my, c_h - 4, { kind="sky", light=LEVEL.sky_shade })
-        end
-
         gui.spots_fill_poly(f_brush, 0)
 
         brush_helper(f_brush)
-        brush_helper(c_brush)
+        do_ceil_brush(c_brush)
 
         -- handle walls (Spot stuff)
         for dir = 2,8,2 do
@@ -1282,7 +1285,7 @@ do return end ----!!!!!!!
         Brush_add_bottom(c_brush, c_h)
         Brush_set_mat(c_brush, c_mat, c_mat)
 
-        brush_helper(c_brush)
+        do_ceil_brush(c_brush)
       end
 
     end end -- x, y
