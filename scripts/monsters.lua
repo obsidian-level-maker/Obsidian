@@ -910,6 +910,8 @@ end
 
 function Monsters_in_room(L)
 
+  -- places monsters in a room _or_ hallway
+
 
   local CAGE_REUSE_FACTORS = { 5, 20, 60, 200 }
 
