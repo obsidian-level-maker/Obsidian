@@ -568,9 +568,41 @@ static void SHADE_RenderLeaf(region_c *leaf)
 
 static bool SHADE_IsNodeOccluded(bsp_node_c *node)
 {
-  // FIXME
+  // determine rough relative position of node bbox to view
+  int x_pos, y_pos;
 
-  return false;
+  if (node->bb_x1 > view_x)
+    x_pos = 2;
+  else if (node->bb_x2 < view_x)
+    x_pos = 0;
+  else
+    x_pos = 1;
+
+  if (node->bb_y1 > view_y)
+    y_pos = 2;
+  else if (node->bb_y2 < view_y)
+    y_pos = 0;
+  else
+    y_pos = 1;
+
+  int pos = y_pos * 3 + x_pos;
+
+  // node surrounds view point?
+  if (pos == 4)
+    return false;
+
+  // determine corners of bbox to use
+
+  float x1 = (0x00f & (1 << pos)) ? node->bb_x2 : node->bb_x1;
+  float x2 = (0x1c8 & (1 << pos)) ? node->bb_x2 : node->bb_x1;
+
+  float y1 = (0x126 & (1 << pos)) ? node->bb_y2 : node->bb_y1;
+  float y2 = (0x04b & (1 << pos)) ? node->bb_y2 : node->bb_y1;
+
+  float high = CalcAngle(view_x, view_y, x1, y1);
+  float low  = CalcAngle(view_x, view_y, x2, y2);
+
+  return Occlusion_Blocked(low, high);
 }
 
 
@@ -578,7 +610,6 @@ static void SHADE_RecursiveRenderView(bsp_node_c *node, region_c *leaf)
 {
   while (node)
   {
-
     // distance check  [TODO: better check]
     if (node->bb_x1 >= view_x + DISTANCE_LIMIT ||
         node->bb_x2 <= view_x - DISTANCE_LIMIT ||
