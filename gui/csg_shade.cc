@@ -70,7 +70,7 @@ Doom Lighting Model
 
 #define MIN_SHADE  96
 
-#define DISTANCE_LIMIT  1600
+#define DISTANCE_LIMIT  1400
 
 
 int shade_sky_level = 200;  // FIXME: a way to set this from Lua
@@ -119,7 +119,8 @@ static void SHADE_CollectLights()
       int   e_light  = E->props.getInt("light", 0);
       float e_factor = E->props.getDouble("_factor", 1.0);
 
-      if (e_light > R->e_light)
+      if (e_light > R->e_light ||
+          (e_light == R->e_light && e_factor > R->e_factor))
       {
         R->e_light  = e_light;
         R->e_factor = e_factor;
@@ -495,6 +496,30 @@ static float view_x, view_y;
 static region_c * view_reg;
 
 
+static void AngleRangeForLeaf(region_c *leaf, float *low, float *high)
+{
+  SYS_ASSERT(leaf->snags.size() > 0);
+
+  *low  = +9e9;
+  *high = -9e9;
+
+  for (unsigned int k = 0 ; k < leaf->snags.size() ; k++)
+  {
+    snag_c *S = leaf->snags[k];
+
+    float ang = CalcAngle(view_x, view_y, S->x1, S->y1);
+
+    *low  = MIN(*low,  ang);
+    *high = MAX(*high, ang);
+  }
+
+  if (*high - *low > 180.0)
+  {
+    std::swap(*low, *high);
+  }
+}
+
+
 static void SHADE_RenderLeaf(region_c *leaf)
 {
   double dist = leaf->DistanceToPoint(view_x, view_y);
@@ -504,17 +529,19 @@ static void SHADE_RenderLeaf(region_c *leaf)
     if (dist >= DISTANCE_LIMIT)
       return;
 
-    // FIXME : determine angle range
+    float ang_low;
+    float ang_high;
 
-    // FIXME : if (! Occlusion_Test(low, high))
-    //           return;
+    AngleRangeForLeaf(leaf, &ang_low, &ang_high);
 
     if (leaf->gaps.size() == 0)
     {
-      // FIXME : Occlusion_Set(low, high);
-
+      Occlusion_Set(ang_low, ang_high);
       return;
     }
+
+    if (Occlusion_Blocked(ang_low, ang_high))
+      return;
   }
 
   // apply lighting from this region
