@@ -55,6 +55,9 @@ double ComputeDist(double sx, double sy, double ex, double ey);
 double ComputeDist(double sx, double sy, double sz,
                    double ex, double ey, double ez);
 
+double PointLineDist(double x, double y,
+                     double x1, double y1, double x2, double y2); 
+
 void CalcIntersection(double nx1, double ny1, double nx2, double ny2,
                       double px1, double py1, double px2, double py2,
                       double *x, double *y);

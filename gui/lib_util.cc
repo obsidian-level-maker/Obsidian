@@ -239,6 +239,35 @@ double ComputeDist(double sx, double sy, double sz,
 }
 
 
+double PointLineDist(double x, double y,
+                     double x1, double y1, double x2, double y2)
+{
+  x  -= x1; y  -= y1;
+  x2 -= x1; y2 -= y1;
+
+  double len_squared = (x2*x2 + y2*y2);
+
+  SYS_ASSERT(len_squared > 0);
+
+  double along_frac = (x * x2 + y * y2) / len_squared;
+
+  // three cases:
+  //   (a) off the "left" side (closest to start point)
+  //   (b) off the "right" side (closest to end point)
+  //   (c) in-between : use the perpendicular distance
+
+  if (along_frac <= 0)
+    return sqrt(x*x + y*y);
+
+  else if (along_frac >= 1)
+    return ComputeDist(x, y, x2, y2);
+    
+  else
+    // perp dist
+    return (x * y2 - y * x2) / sqrt(len_squared);
+}
+
+
 void CalcIntersection(double nx1, double ny1, double nx2, double ny2,
                       double px1, double py1, double px2, double py2,
                       double *x, double *y)
