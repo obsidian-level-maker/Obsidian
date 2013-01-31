@@ -264,7 +264,7 @@ double PointLineDist(double x, double y,
     
   else
     // perp dist
-    return (x * y2 - y * x2) / sqrt(len_squared);
+    return fabs(x * y2 - y * x2) / sqrt(len_squared);
 }
 
 
