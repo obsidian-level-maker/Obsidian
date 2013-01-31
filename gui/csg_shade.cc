@@ -92,8 +92,8 @@ static void SHADE_CollectLights()
     if (R->gaps.size() == 0)
       continue;
 
-    csg_brush_c *B = leaf->gaps.front()->bottom;
-    csg_brush_c *T = leaf->gaps.back()->top;
+    csg_brush_c *B = R->gaps.front()->bottom;
+    csg_brush_c *T = R->gaps.back()->top;
 
     csg_property_set_c *f_face = &B->t.face;
     csg_property_set_c *c_face = &T->b.face;
@@ -487,58 +487,49 @@ static void SHADE_ProcessLight(region_c *R, double x, double y, quake_light_t & 
 
 
 static float view_x, view_y;
+static region_c * view_reg;
 
 
 static void SHADE_RenderLeaf(region_c *leaf)
 {
   double dist = leaf->DistanceToPoint(view_x, view_y);
 
-  if (dist >= DISTANCE_LIMIT)
-    return;
-
-  // FIXME : determine angle range
-
-  // FIXME : if (! Occlusion_Test(low, high))
-  //           return;
-
-  if (leaf->gaps.size() == 0)
+  if (! leaf->ContainsPoint(view_x, view_y))
   {
-    // FIXME : Occlusion_Set(low, high);
+    if (dist >= DISTANCE_LIMIT)
+      return;
 
-    return;
+    // FIXME : determine angle range
+
+    // FIXME : if (! Occlusion_Test(low, high))
+    //           return;
+
+    if (leaf->gaps.size() == 0)
+    {
+      // FIXME : Occlusion_Set(low, high);
+
+      return;
+    }
   }
-
-  // FIXME : visit light entities in this region
-  //         (test them for occlusion)
 
   // handle lit faces
-  // FIXME: pre-collect this information
 
-  csg_brush_c *B = leaf->gaps.front()->bottom;
-  csg_brush_c *T = leaf->gaps.back()->top;
-
-  csg_property_set_c *f_face = &B->t.face;
-  csg_property_set_c *c_face = &T->b.face;
-
-  int f_level = f_face->getInt("light");
-  int c_level = c_face->getInt("light");
-
-  if (f_level < MIN_SHADE && c_level < MIN_SHADE)
-    return;
-
-  float f_factor = f_face->getDouble("_factor", 1.0);
-  float c_factor = c_face->getDouble("_factor", 1.0);
-
-  if (f_level > MIN_SHADE)
+  if (leaf->f_light > MIN_SHADE)
   {
-    int f_shade = SHADE_ComputeLevel(dist, f_level, f_factor);
-    leaf->shade = MAX(leaf->shade, f_shade);
+    int f_shade = SHADE_ComputeLevel(dist, leaf->f_light, leaf->f_factor);
+    view_reg->shade = MAX(view_reg->shade, f_shade);
   }
 
-  if (c_level > MIN_SHADE)
+  if (leaf->c_light > MIN_SHADE)
   {
-    int c_shade = SHADE_ComputeLevel(dist, c_level, c_factor);
-    leaf->shade = MAX(leaf->shade, c_shade);
+    int c_shade = SHADE_ComputeLevel(dist, leaf->c_light, leaf->c_factor);
+    view_reg->shade = MAX(view_reg->shade, c_shade);
+  }
+
+  if (leaf->e_light > MIN_SHADE)
+  {
+    int e_shade = SHADE_ComputeLevel(dist, leaf->e_light, leaf->e_factor);
+    view_reg->shade = MAX(view_reg->shade, e_shade);
   }
 }
 
@@ -610,19 +601,11 @@ static void SHADE_LightRegion(region_c *R)
 
   view_x = mid_x;
   view_y = mid_y;
+  view_reg = R;
 
   Occlusion_Clear();
 
   SHADE_RecursiveRenderView(bsp_root, NULL);
-
-  // TODO: a way to quickly ignore far away lights (e.g. put in a quadtree)
-
-  for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
-  {
-    SHADE_ComputeLevel(qk_all_lights[i], mid_x, mid_y);
-
-    SHADE_ProcessLight(R, mid_x, mid_y, qk_all_lights[i]);
-  }
 
   if (shade_sky_level > 0 && SHADE_CastRayTowardSky(R, mid_x, mid_y))
   {
