@@ -269,7 +269,7 @@ static inline bool DoTest(angle_t low, angle_t high)
 }
 
 
-bool Occlusion_Test(float low, float high)
+bool Occlusion_Blocked(float low, float high)
 {
   // Check whether all angles in the given range are set (i.e. blocked).
   // Returns true if the entire range is blocked, false otherwise.

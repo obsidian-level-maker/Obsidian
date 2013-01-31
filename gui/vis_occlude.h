@@ -24,7 +24,7 @@
 void Occlusion_Clear(void);
 void Occlusion_Set(float low, float high);
 
-bool Occlusion_Test(float low, float high);
+bool Occlusion_Blocked(float low, float high);
 
 #endif /* __VIS_OCCLUDE_H__ */
 
