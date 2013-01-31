@@ -81,6 +81,7 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/q_tjuncs.o  \
 	$(OBJ_DIR)/q_vis.o     \
 	$(OBJ_DIR)/vis_buffer.o \
+	$(OBJ_DIR)/vis_occlude.o \
 	\
 	$(OBJ_DIR)/twister.o   \
 	$(OBJ_DIR)/tx_forge.o  \
