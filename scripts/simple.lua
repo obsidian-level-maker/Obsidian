@@ -1271,6 +1271,11 @@ do return end ----!!!!!!!
           -- damaging (FIXME)
           f_brush[#f_brush].special = 16
 
+          -- lighting
+          if c_mat != "_SKY" then
+            f_brush[#f_brush].light = 168
+          end
+
           Brush_set_mat(f_brush, l_mat, l_mat)
 
           brush_helper(f_brush)
