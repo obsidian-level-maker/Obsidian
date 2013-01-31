@@ -260,7 +260,8 @@ brush_vert_c * snag_c::FindBrushVert(const csg_brush_c *B)
 
 region_c::region_c() : snags(), brushes(), entities(), gaps(),
                        liquid(NULL), degenerate(false),
-                       index(-1), shade(0)
+                       index(-1), shade(0),
+                       f_light(0), c_light(0), e_light(0)
 { }
 
 

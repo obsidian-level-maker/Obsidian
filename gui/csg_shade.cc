@@ -82,6 +82,53 @@ static int stat_targets;
 static int stat_traces;
 
 
+static void SHADE_CollectLights()
+{
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+  {
+    region_c * R = all_regions[i];
+
+    // closed regions never provide light
+    if (R->gaps.size() == 0)
+      continue;
+
+    csg_brush_c *B = leaf->gaps.front()->bottom;
+    csg_brush_c *T = leaf->gaps.back()->top;
+
+    csg_property_set_c *f_face = &B->t.face;
+    csg_property_set_c *c_face = &T->b.face;
+
+    R->f_light = f_face->getInt("light");
+    R->c_light = c_face->getInt("light");
+
+    if (R->f_light > 0)
+        R->f_factor = f_face->getDouble("_factor", 1.0);
+
+    if (R->c_light > 0)
+        R->c_factor = c_face->getDouble("_factor", 1.0);
+
+    // scan entities : choose one with largest level
+
+    for (unsigned int k = 0 ; k < R->entities.size() ; k++)
+    {
+      csg_entity_c *E = R->entities[k];
+
+      if (strcmp(E->id.c_str(), "light") != 0)
+        continue;
+
+      int   e_light  = E->props.getInt("light", 0);
+      float e_factor = E->props.getDouble("_factor", 1.0);
+
+      if (e_light > R->e_light)
+      {
+        R->e_light  = e_light;
+        R->e_factor = e_factor;
+      }
+    }
+  }
+}
+
+
 static int SHADE_CalcRegionGroup(region_c *R)
 {
   if (R->gaps.size() == 0)
@@ -444,6 +491,11 @@ static float view_x, view_y;
 
 static void SHADE_RenderLeaf(region_c *leaf)
 {
+  double dist = leaf->DistanceToPoint(view_x, view_y);
+
+  if (dist >= DISTANCE_LIMIT)
+    return;
+
   // FIXME : determine angle range
 
   // FIXME : if (! Occlusion_Test(low, high))
@@ -474,8 +526,6 @@ static void SHADE_RenderLeaf(region_c *leaf)
   if (f_level < MIN_SHADE && c_level < MIN_SHADE)
     return;
 
-  float dist = 123; // FIXME : distance to region
-
   float f_factor = f_face->getDouble("_factor", 1.0);
   float c_factor = c_face->getDouble("_factor", 1.0);
 
@@ -493,11 +543,31 @@ static void SHADE_RenderLeaf(region_c *leaf)
 }
 
 
+static bool SHADE_IsNodeOccluded(bsp_node_c *node)
+{
+  // FIXME
+
+  return false;
+}
+
+
 static void SHADE_RecursiveRenderView(bsp_node_c *node, region_c *leaf)
 {
   while (node)
   {
-    // !!!! FIXME: check if node bbox is occluded OR TOO FAR AWAY
+    // distance check  [TODO: better check]
+    if (node->bb_x1 >= view_x + DISTANCE_LIMIT ||
+        node->bb_x2 <= view_x - DISTANCE_LIMIT ||
+        node->bb_y1 >= view_y + DISTANCE_LIMIT ||
+        node->bb_y2 <= view_y + DISTANCE_LIMIT)
+    {
+      return;
+    }
+
+    if (SHADE_IsNodeOccluded(node))
+      return;
+
+    // continue down one side of the partition line (usually)
 
     double a = PerpDist(view_x,view_y, node->x1,node->y1, node->x2,node->y2);
 
@@ -617,9 +687,7 @@ void CSG_Shade()
 {
   stat_targets = stat_traces = 0;
 
-  QCOM_FindLights();
-
-  LogPrintf("Found %u lights\n", qk_all_lights.size());
+  SHADE_CollectLights();
 
   SHADE_GroupRegions();
   SHADE_ProcessRegions();
