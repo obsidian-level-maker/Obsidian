@@ -448,6 +448,26 @@ bool region_c::ContainsPoint(double x, double y) const
 }
 
 
+double region_c::DistanceToPoint(float x, float y) const
+{
+  if (ContainsPoint(x, y))
+    return 0;
+
+  double best = 9e9;
+
+  for (unsigned int i = 0 ; i < snags.size() ; i++)
+  {
+    snag_c *S = snags[i];
+
+    double dist = PointLineDist(x, y, S->x1,S->y1, S->x2,S->y2);
+
+    best = MIN(best, dist);
+  }
+
+  return best;
+}
+
+
 bool region_c::HasSameBrushes(const region_c *other) const
 {
   // NOTE WELL: assumes brushes have been sorted

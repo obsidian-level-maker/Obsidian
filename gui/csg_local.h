@@ -132,6 +132,7 @@ public:
   void GetMidPoint(double *mid_x, double *mid_y);
 
   bool ContainsPoint(double x, double y) const;
+  double DistanceToPoint(float x, float y) const;
 
   void SortBrushes();
 
