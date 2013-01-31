@@ -41,30 +41,18 @@
 Doom Lighting Model
 -------------------
 
-1. light comes from entities (points in 3D space)
-   [ Lua code can create them for light-emitting surfaces ]
+1. light comes from entities (points in 3D space) and flat surfaces
 
 2. result value is MAXIMUM of all tests made 
 
 3. result is clamped to a certain minimum (e.g. 96)
 
-4. (a) sky will use light entities too (e.g. 184 units)
-   (b) if diagonal vector (4,1,2) from floor can hit sky, light is 208
-   (c) both these tests are skipped for night skies
+4. solid walls and close doors block light
 
-5. a "sector" here is a group of brush regions.
-   rules for grouping them:
+5. light diminishes by distance
 
-   (a) same floor brush, or
-   (b) same "tag" property
-
-6. sectors perform lighting tests at various points in sector
-   (most basic: middle point of each region).  If the LOS is
-   blocked, no light is transferred.  Further distance means
-   lower light level.
-
-7. closed sectors (e.g. doors) block light, hence they determine
-   their lighting value as the value of an adjacent region.
+6. since closed doors don't get lit, there value is computed later
+   using the light from an adjacent sector.
 
 */
 
@@ -202,94 +190,6 @@ static void SHADE_GroupRegions()
   // (this has a side-effect of placing all solid regions at the end)
 
   std::sort(all_regions.begin(), all_regions.end(), region_index_Compare());
-}
-
-
-typedef struct
-{
-  float x1, y1;
-  float x2, y2;
-}
-shade_trace_t;
-
-
-static int SHADE_TraceLeaf(region_c *leaf)
-{
-  if (leaf->gaps.size() == 0)
-    return 0;
-
-  int z1 = leaf->gaps.front()->bottom->t.z;
-  int z2 = leaf->gaps.back() ->top->b.z;
-
-  // close door?
-  if (z2 - z1 <= 4)
-    return 0;  // should be 10 or 20, but not supported yet
-
-  return 100;
-}
-
-
-static int SHADE_RecursiveTrace(bsp_node_c *node, region_c *leaf,
-                                float x1, float y1,
-                                float x2, float y2)
-{
-  while (node)
-  {
-    double a = PerpDist(x1,y1, node->x1,node->y1, node->x2,node->y2);
-    double b = PerpDist(x2,y2, node->x1,node->y1, node->x2,node->y2);
-
-    int a_side = (a < 0) ? -1 : +1;
-    int b_side = (b < 0) ? -1 : +1;
-
-    if (a_side != b_side)
-    {
-      // compute intersection point
-      
-      double frac = a / (double)(a - b);
-
-      float mx = x1 + (x2 - x1) * frac;
-      float my = y1 + (y2 - y1) * frac;
-
-      int front, back;
-
-      // traverse down the side containing the start point
-
-      if (a_side < 0)
-        front = SHADE_RecursiveTrace(node-> back_node, node-> back_leaf, x1, y1, mx, my);
-      else
-        front = SHADE_RecursiveTrace(node->front_node, node->front_leaf, x1, y1, mx, my);
-
-      if (front <= 0)
-        return front;
-
-      // traverse down the side containing the end point
-
-      if (a_side < 0)
-        back = SHADE_RecursiveTrace(node->front_node, node->front_leaf, mx, my, x2, y2);
-      else
-        back = SHADE_RecursiveTrace(node-> back_node, node-> back_leaf, mx, my, x2, y2);
-
-      return MIN(front, back);
-    }
-
-    // traverse down a single side of the node
-
-    if (a_side < 0)
-    {
-      leaf = node->back_leaf;
-      node = node->back_node;
-    }
-    else
-    {
-      leaf = node->front_leaf;
-      node = node->front_node;
-    }
-  }
-
-  if (! leaf || leaf->degenerate)
-    return 100;
-
-  return SHADE_TraceLeaf(leaf);
 }
 
 
@@ -472,24 +372,6 @@ static inline int SHADE_ComputeLevel(float dist, int light, float factor)
 }
 
 
-static void SHADE_ProcessLight(region_c *R, double x, double y, quake_light_t & light)
-{
-  if (light.kind == LTK_Sun)
-    Main_FatalError("Sun lights found in DOOM-ish format map.\n");
-
-  // skip lights which cannot increase the maximum
-  if (light.style <= R->shade)
-    return;
-
-  int vis = SHADE_RecursiveTrace(bsp_root, NULL, x, y, light.x, light.y);
-
-  stat_traces++;
-
-  if (vis == 0)
-    return;
-
-  R->shade = light.style;
-}
 
 
 static float view_x, view_y;
