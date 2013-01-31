@@ -19,10 +19,12 @@
 #ifndef __VIS_OCCLUDE_H__
 #define __VIS_OCCLUDE_H__
 
-void Occlusion_Clear(void);
-void Occlusion_Set(angle_t low, angle_t high);
+// all angles are in degrees, and must be in the range [-360,360]
 
-bool Occlusion_Test(angle_t low, angle_t high);
+void Occlusion_Clear(void);
+void Occlusion_Set(float low, float high);
+
+bool Occlusion_Test(float low, float high);
 
 #endif /* __VIS_OCCLUDE_H__ */
 

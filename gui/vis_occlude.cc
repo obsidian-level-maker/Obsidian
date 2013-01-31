@@ -16,14 +16,28 @@
 //
 //----------------------------------------------------------------------------
 
-#include "i_defs.h"
-
-#include "ddf/types.h"
+#include "headers.h"
+#include "main.h"
 
 #include "vis_occlude.h"
 
 
 // #define DEBUG_OCCLUDE  1
+
+
+typedef u16_t angle_t;
+
+#define ANG180   0x8000
+#define ANG_MAX  0xffff
+
+static inline angle_t ToAngle(float ang)
+{
+  if (ang < 0) ang += 360.0;
+
+  ang = ang * 65536.0 / 360.0;
+
+  return (angle_t)(u32_t)ang;
+}
 
 
 typedef struct angle_range_s
@@ -32,8 +46,8 @@ typedef struct angle_range_s
 
   struct angle_range_s *next;
   struct angle_range_s *prev;
-}
-angle_range_t;
+
+} angle_range_t;
 
 
 static angle_range_t *occbuf_head = NULL;
@@ -51,7 +65,7 @@ static void ValidateBuffer(void)
     return;
   }
 
-  for (angle_range_t *AR = occbuf_head; AR; AR = AR->next)
+  for (angle_range_t *AR = occbuf_head ; AR ; AR = AR->next)
   {
     SYS_ASSERT(AR->low <= AR->high);
 
@@ -110,7 +124,9 @@ static inline angle_range_t *GetNewRange(angle_t low, angle_t high)
     free_range_chickens = R->next;
   }
   else
+  {
     R = new angle_range_t;
+  }
 
   R->low  = low;
   R->high = high;
@@ -172,7 +188,7 @@ static inline void RemoveRange(angle_range_t *R)
 
 static void DoSet(angle_t low, angle_t high)
 {
-  for (angle_range_t *AR = occbuf_head; AR; AR = AR->next)
+  for (angle_range_t *AR = occbuf_head ; AR ; AR = AR->next)
   {
     if (high < AR->low)
     {
@@ -192,7 +208,7 @@ static void DoSet(angle_t low, angle_t high)
     // some subsequent ranges in the list.  When that happens,
     // we must remove them (and adjust the current range).
 
-    AR->low  = MIN(AR->low, low);
+    AR->low  = MIN(AR->low,  low);
     AR->high = MAX(AR->high, high);
 
 #ifdef DEBUG_OCCLUDE
@@ -217,17 +233,20 @@ static void DoSet(angle_t low, angle_t high)
 }
 
 
-void Occlusion_Set(angle_t low, angle_t high)
+void Occlusion_Set(float low, float high)
 {
   // Set all angles in the given range, i.e. mark them as blocking.
-  // The angles are relative to the VIEW angle.
+  // The range is limited to 180 degrees.
 
-  SYS_ASSERT((angle_t)(high - low) < ANG180);
+  angle_t a1 = ToAngle(low);
+  angle_t a2 = ToAngle(high);
 
-  if (low <= high)
-    DoSet(low, high);
+  SYS_ASSERT((angle_t)(a2 - a1) < ANG180);
+
+  if (a1 <= a2)
+    DoSet(a1, a2);
   else
-    { DoSet(low, ANG_MAX); DoSet(0, high); }
+    { DoSet(a1, ANG_MAX); DoSet(0, a2); }
 
 #ifdef DEBUG_OCCLUDE
   ValidateBuffer();
@@ -237,7 +256,7 @@ void Occlusion_Set(angle_t low, angle_t high)
 
 static inline bool DoTest(angle_t low, angle_t high)
 {
-  for (angle_range_t *AR = occbuf_head; AR; AR = AR->next)
+  for (angle_range_t *AR = occbuf_head ; AR ; AR = AR->next)
   {
     if (AR->low <= low && high <= AR->high)
       return true;
@@ -250,17 +269,21 @@ static inline bool DoTest(angle_t low, angle_t high)
 }
 
 
-bool Occlusion_Test(angle_t low, angle_t high)
+bool Occlusion_Test(float low, float high)
 {
   // Check whether all angles in the given range are set (i.e. blocked).
   // Returns true if the entire range is blocked, false otherwise.
+  // The range is limited to 180 degrees.
 
-  SYS_ASSERT((angle_t)(high - low) < ANG180);
+  angle_t a1 = ToAngle(low);
+  angle_t a2 = ToAngle(high);
 
-  if (low <= high)
-    return DoTest(low, high);
+  SYS_ASSERT((angle_t)(a2 - a1) < ANG180);
+
+  if (a1 <= a2)
+    return DoTest(a1, a2);
   else
-    return DoTest(low, ANG_MAX) && DoTest(0, high);
+    return DoTest(a1, ANG_MAX) && DoTest(0, a2);
 }
 
 
