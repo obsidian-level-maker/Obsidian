@@ -2701,7 +2701,7 @@ function Fab_merge_skins(fab, main_skin, list)
 
   result.wall = GAME.MATERIALS["_ERROR"].t
 
-  if  GAME.skin_defaults then table.merge(result,  GAME.skin_defaults) end
+  if  GAME.SKIN_DEFAULTS then table.merge(result,  GAME.SKIN_DEFAULTS) end
   if THEME.skin_defaults then table.merge(result, THEME.skin_defaults) end
 
   table.merge(result, main_skin)

@@ -1648,6 +1648,8 @@ DOOM.EXITS =  -- Note: UNUSED STUFF
 
 DOOM.SKIN_DEFAULTS =
 {
+  tex_STARTAN3 = "?wall"
+  tex_BLAKWAL1 = "?outer"
 }
 
 
@@ -1679,7 +1681,6 @@ DOOM.SKINS =
     _where  = "closet"
     _fitted = "xy"
 
-    tex_STARTAN3 = "?wall"
 
 --[[
     step = "FLAT1"
@@ -2634,7 +2635,7 @@ DOOM.SKINS =
 
   Hall_Basic_I =
   {
-    _file   = "hall/trim1_i.wad"
+    _file   = "hall/trim1_i_win.wad"
     _shape  = "I"
     _fitted = "xy"
   }
@@ -2648,7 +2649,7 @@ DOOM.SKINS =
 
   Hall_Basic_T =
   {
-    _file   = "hall/trim1_t.wad"
+    _file   = "hall/trim1_t_lit.wad"
     _shape  = "T"
     _fitted = "xy"
   }
@@ -3211,7 +3212,6 @@ DOOM.SKINS =
     _bound_z1 = 0
     _bound_z2 = 128
 
-    tex_STARTAN3 = "?wall"
   }
 
 
@@ -3225,7 +3225,6 @@ DOOM.SKINS =
     _long   = 192
     _deep   = 24
 
-    tex_STARTAN3 = "?wall"
   }
 
 
@@ -3285,7 +3284,6 @@ DOOM.SKINS =
     _long   = 256
 
     tex_GRAYPOIS = "CEMENT4"
-    tex_STARTAN3 = "?wall"
   }
 
   Pic_Neon =
