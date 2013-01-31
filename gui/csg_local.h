@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2010 Andrew Apted
+//  Copyright (C) 2006-2013 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -182,11 +182,21 @@ public:
   bsp_node_c *back_node;
     region_c *back_leaf;
 
+  // bounding box of this node
+  float bb_x1, bb_y1;
+  float bb_x2, bb_y2;
+
 public:
   bsp_node_c(double px1, double py1, double px2, double py2);
 
   // destructor deletes child nodes (but not leafs)
   ~bsp_node_c();
+
+  void ComputeBBox();
+
+private:
+  void AddBBox(bsp_node_c *node);
+  void AddBBox(region_c *leaf);
 };
 
 

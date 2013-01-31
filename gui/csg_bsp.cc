@@ -575,7 +575,9 @@ bool gap_c::HasNeighbor(gap_c *N) const
 bsp_node_c::bsp_node_c(double px1, double py1, double px2, double py2) :
     x1(px1), y1(py1), x2(px2), y2(py2),
     front_node(NULL), front_leaf(NULL),
-     back_node(NULL),  back_leaf(NULL)
+     back_node(NULL),  back_leaf(NULL),
+    bb_x1(0), bb_y1(0),
+    bb_x2(0), bb_y2(0)
 {
 }
 
@@ -585,6 +587,48 @@ bsp_node_c::~bsp_node_c()
   delete  back_node;
 }
 
+
+void bsp_node_c::ComputeBBox()
+{
+  bb_x1 = bb_y1 = +9e9;
+  bb_x2 = bb_y2 = -9e9;
+
+  if (front_node) AddBBox(front_node);
+  if (front_leaf) AddBBox(front_leaf);
+    
+  if (back_node) AddBBox(back_node);
+  if (back_leaf) AddBBox(back_leaf);
+
+  if (bb_x1 > bb_x2) bb_x1 = bb_x2 = 0;
+  if (bb_y1 > bb_y2) bb_y1 = bb_y2 = 0;
+}
+
+void bsp_node_c::AddBBox(bsp_node_c *node)
+{
+  node->ComputeBBox();
+
+  if (node->bb_x2 > node->bb_x1)
+  {
+    bb_x1 = MIN(bb_x1, node->bb_x1);
+    bb_x2 = MAX(bb_x2, node->bb_x2);
+
+    bb_y1 = MIN(bb_y1, node->bb_y1);
+    bb_y2 = MAX(bb_y2, node->bb_y2);
+  }
+}
+
+void bsp_node_c::AddBBox(region_c *leaf)
+{
+  double x1, y1, x2, y2;
+
+  leaf->GetBounds(&x1, &y1, &x2, &y2);
+
+  bb_x1 = MIN(bb_x1, x1);
+  bb_x2 = MAX(bb_x2, x2);
+
+  bb_y1 = MIN(bb_y1, y1);
+  bb_y2 = MAX(bb_y2, y2);
+}
 
 
 /***** VARIABLES ******************/
@@ -1485,8 +1529,9 @@ void DumpCSGTree(const bsp_node_c * node, const region_c * leaf = NULL, int leve
 
   if (node)
   {
-    fprintf(stderr, "node %p (%1.1f %1.1f) --> (%1.1f %1.1f)\n", node,
-            node->x1, node->y1, node->x2, node->y2);
+    fprintf(stderr, "node %p (%1.1f %1.1f) --> (%1.1f %1.1f)  BBOX: (%1.0f %1.0f) .. (%1.0f %1.0f)\n", node,
+            node->x1, node->y1, node->x2, node->y2,
+            node->bb_x1, node->bb_y1, node->bb_x2, node->bb_y2);
 
     DumpCSGTree(node->front_node, node->front_leaf, level+1);
     DumpCSGTree(node-> back_node, node-> back_leaf, level+1);
@@ -1542,10 +1587,6 @@ static void RemoveDeadRegions()
 
 ///  PruneBSPTree(bsp_root);
 
-#if 0
-  fprintf(stderr, "CSG BSP Tree:\n");
-  DumpCSGTree(bsp_root);
-#endif
 }
 
 
@@ -1944,9 +1985,11 @@ void CSG_BSP(double grid, bool is_clip_hull)
 
   SplitGroup(root, false /* reached_chunk */, &bsp_leaf, &bsp_root);
 
-  // all normal maps will get a root node -- this is only for sanity
+  // all valid maps will get a root node -- this is only for sanity
   if (! bsp_root)
     bsp_root = new bsp_node_c(0, 0, 0, 777);
+
+  bsp_root->ComputeBBox();
 
   HandleOverlaps();
 
@@ -1958,6 +2001,11 @@ void CSG_BSP(double grid, bool is_clip_hull)
   CSG_SwallowBrushes();
 
   CSG_DiscoverGaps();
+
+#if 0
+  fprintf(stderr, "CSG BSP Tree:\n");
+  DumpCSGTree(bsp_root);
+#endif
 }
 
 
