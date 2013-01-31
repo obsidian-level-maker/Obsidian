@@ -125,6 +125,11 @@ static void SHADE_CollectLights()
         R->e_factor = e_factor;
       }
     }
+    
+#if 0  // debug
+fprintf(stderr, "region %p lights: %3d / %3d / %3d\n",
+        R, R->f_light, R->c_light, R->e_light);
+#endif
   }
 }
 
@@ -512,7 +517,7 @@ static void SHADE_RenderLeaf(region_c *leaf)
     }
   }
 
-  // handle lit faces
+  // apply lighting from this region
 
   if (leaf->f_light > MIN_SHADE)
   {
@@ -546,11 +551,12 @@ static void SHADE_RecursiveRenderView(bsp_node_c *node, region_c *leaf)
 {
   while (node)
   {
+
     // distance check  [TODO: better check]
     if (node->bb_x1 >= view_x + DISTANCE_LIMIT ||
         node->bb_x2 <= view_x - DISTANCE_LIMIT ||
         node->bb_y1 >= view_y + DISTANCE_LIMIT ||
-        node->bb_y2 <= view_y + DISTANCE_LIMIT)
+        node->bb_y2 <= view_y - DISTANCE_LIMIT)
     {
       return;
     }
@@ -558,27 +564,23 @@ static void SHADE_RecursiveRenderView(bsp_node_c *node, region_c *leaf)
     if (SHADE_IsNodeOccluded(node))
       return;
 
-    // continue down one side of the partition line (usually)
+    // decide which side to visit first
 
     double a = PerpDist(view_x,view_y, node->x1,node->y1, node->x2,node->y2);
 
-    // handle case of view point sitting on partition line
-    if (fabs(a) < 1.0)
+    if (a > -0.01)
     {
       SHADE_RecursiveRenderView(node->front_node, node->front_leaf);
-      SHADE_RecursiveRenderView(node-> back_node, node-> back_leaf);
-      return;
-    }
 
-    if (a > 0)
-    {
-      leaf = node->front_leaf;
-      node = node->front_node;
+      leaf = node->back_leaf;
+      node = node->back_node;
     }
     else
     {
-      leaf = node->back_leaf;
-      node = node->back_node;
+      SHADE_RecursiveRenderView(node-> back_node, node-> back_leaf);
+
+      leaf = node->front_leaf;
+      node = node->front_node;
     }
   }
 

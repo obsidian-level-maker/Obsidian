@@ -267,7 +267,9 @@ region_c::region_c() : snags(), brushes(), entities(), gaps(),
 
 region_c::region_c(const region_c& other) :
     snags(), brushes(), entities(), gaps(),
-    liquid(NULL), degenerate(false), index(-1)
+    liquid(NULL), degenerate(false),
+    index(-1), shade(0),
+    f_light(0), c_light(0), e_light(0)
 {
   for (unsigned int i = 0 ; i < other.brushes.size() ; i++)
     brushes.push_back(other.brushes[i]);
