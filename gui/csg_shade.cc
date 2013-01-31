@@ -23,6 +23,8 @@
 #include "hdr_lua.h"
 #include "hdr_ui.h"
 
+#include <algorithm>
+
 #include "lib_util.h"
 #include "main.h"
 
@@ -31,8 +33,7 @@
 
 #include "q_common.h"
 #include "q_light.h"
-
-#include <algorithm>
+#include "vis_occlude.h"
 
 
 /*
@@ -68,6 +69,8 @@ Doom Lighting Model
 */
 
 #define MIN_SHADE  96
+
+#define DISTANCE_LIMIT  1600
 
 
 int shade_sky_level = 200;  // FIXME: a way to set this from Lua
@@ -403,6 +406,19 @@ static inline void SHADE_ComputeLevel(quake_light_t& light, double x, double y)
 }
 
 
+static inline int SHADE_ComputeLevel(float dist, int light, float factor)
+{
+  dist = dist / factor;
+
+  int result = light - (int)dist / 5;
+
+  if (result > 0)
+    result &= 0xF0;
+
+  return result;
+}
+
+
 static void SHADE_ProcessLight(region_c *R, double x, double y, quake_light_t & light)
 {
   if (light.kind == LTK_Sun)
@@ -423,6 +439,95 @@ static void SHADE_ProcessLight(region_c *R, double x, double y, quake_light_t & 
 }
 
 
+static float view_x, view_y;
+
+
+static void SHADE_RenderLeaf(region_c *leaf)
+{
+  // FIXME : determine angle range
+
+  // FIXME : if (! Occlusion_Test(low, high))
+  //           return;
+
+  if (leaf->gaps.size() == 0)
+  {
+    // FIXME : Occlusion_Set(low, high);
+
+    return;
+  }
+
+  // FIXME : visit light entities in this region
+  //         (test them for occlusion)
+
+  // handle lit faces
+  // FIXME: pre-collect this information
+
+  csg_brush_c *B = leaf->gaps.front()->bottom;
+  csg_brush_c *T = leaf->gaps.back()->top;
+
+  csg_property_set_c *f_face = &B->t.face;
+  csg_property_set_c *c_face = &T->b.face;
+
+  int f_level = f_face->getInt("light");
+  int c_level = c_face->getInt("light");
+
+  if (f_level < MIN_SHADE && c_level < MIN_SHADE)
+    return;
+
+  float dist = 123; // FIXME : distance to region
+
+  float f_factor = f_face->getDouble("_factor", 1.0);
+  float c_factor = c_face->getDouble("_factor", 1.0);
+
+  if (f_level > MIN_SHADE)
+  {
+    int f_shade = SHADE_ComputeLevel(dist, f_level, f_factor);
+    leaf->shade = MAX(leaf->shade, f_shade);
+  }
+
+  if (c_level > MIN_SHADE)
+  {
+    int c_shade = SHADE_ComputeLevel(dist, c_level, c_factor);
+    leaf->shade = MAX(leaf->shade, c_shade);
+  }
+}
+
+
+static void SHADE_RecursiveRenderView(bsp_node_c *node, region_c *leaf)
+{
+  while (node)
+  {
+    // !!!! FIXME: check if node bbox is occluded OR TOO FAR AWAY
+
+    double a = PerpDist(view_x,view_y, node->x1,node->y1, node->x2,node->y2);
+
+    // handle case of view point sitting on partition line
+    if (fabs(a) < 1.0)
+    {
+      SHADE_RecursiveRenderView(node->front_node, node->front_leaf);
+      SHADE_RecursiveRenderView(node-> back_node, node-> back_leaf);
+      return;
+    }
+
+    if (a > 0)
+    {
+      leaf = node->front_leaf;
+      node = node->front_node;
+    }
+    else
+    {
+      leaf = node->back_leaf;
+      node = node->back_node;
+    }
+  }
+
+  if (! leaf || leaf->degenerate)
+    return;
+
+  SHADE_RenderLeaf(leaf);
+}
+
+
 static void SHADE_LightRegion(region_c *R)
 {
   SYS_ASSERT(R->gaps.size() > 0);
@@ -432,6 +537,13 @@ static void SHADE_LightRegion(region_c *R)
   double mid_x, mid_y;
 
   R->GetMidPoint(&mid_x, &mid_y);
+
+  view_x = mid_x;
+  view_y = mid_y;
+
+  Occlusion_Clear();
+
+  SHADE_RecursiveRenderView(bsp_root, NULL);
 
   // TODO: a way to quickly ignore far away lights (e.g. put in a quadtree)
 
