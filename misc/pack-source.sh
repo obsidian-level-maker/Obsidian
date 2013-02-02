@@ -8,8 +8,6 @@ fi
 
 echo "Creating the source package for Oblige..."
 
-cd ..
-
 dest=~/PACK-SRC
 
 mkdir $dest
@@ -81,8 +79,8 @@ cp -av data/doom2_boss/*.* $dest/data/doom2_boss
 #
 cp -av *.txt $dest
 
-rm $dest/LOGS.txt
-rm $dest/CONFIG.txt
+rm -f $dest/LOGS.txt
+rm -f $dest/CONFIG.txt
 
 mkdir $dest/doc
 cp -av doc/*.* $dest/doc
