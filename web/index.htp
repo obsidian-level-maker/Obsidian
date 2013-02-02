@@ -36,6 +36,25 @@ OBLIGE 4.28 is the current version.
 
 <h3>NEWS</h3>
 
+<div class="newsdate">02-Feb-2013:</div>
+<blockquote class="news">
+
+The 4.28 source package has been updated, since it was missing the
+lua_src and glbsp_src directories (oops!).
+
+<p>
+In other news, I have been working on a new prefab system where the
+prefabs are stored in ordinary WAD files (rather than using Lua code),
+which I hope will make it easier to create custom content.
+I have also implemented a new algorithm for DOOM lighting, which
+should be better than the system used in 3.57, since it properly
+accounts for blocking walls and distance to lighting sources.
+
+</blockquote>
+
+
+<hr style="clear: right;">
+
 <div class="newsdate">28-Sep-2012:</div>
 <blockquote class="news">
 
