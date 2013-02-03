@@ -203,7 +203,7 @@ int wadfab_load(lua_State *L)
   char filename[PATH_MAX];
 
   // FIXME: determine full name PROPERLY !!
-  sprintf(filename, "./hobs/%s", name);
+  sprintf(filename, "./fabs/%s", name);
 
 
   if (! WAD_OpenRead(filename))
@@ -218,7 +218,7 @@ int wadfab_load(lua_State *L)
   {
     WAD_CloseRead();
     wadfab_free(L);
-    return luaL_error(L, "wadfab_load: missing/bad map in hobs/%s", name);
+    return luaL_error(L, "wadfab_load: missing/bad map in %s", name);
   }
 
   if (! LoadLump("HO_VERT",  (byte **) &friz_ho_verts, &friz_num_ho_verts, sizeof(raw_ho_vertex_t), 2) ||
@@ -228,7 +228,7 @@ int wadfab_load(lua_State *L)
   {
     WAD_CloseRead();
     wadfab_free(L);
-    return luaL_error(L, "wadfab_load: MISSING HOBBS in hobs/%s", name);
+    return luaL_error(L, "wadfab_load: MISSING HOBBS in %s", name);
   }
 
   // we have loaded everything we need -- can close then file now
