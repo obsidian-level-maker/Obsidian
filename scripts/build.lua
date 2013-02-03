@@ -2519,6 +2519,21 @@ function Fab_load_wad(name)
   end
 
 
+  local function create_void_brush(coords)
+    local B =
+    {
+      { m="solid" }
+    }
+
+    each C in coords do
+      table.insert(B, copy_coord(S, C, 1))
+    end
+
+    -- add this new brush to the prefab
+    table.insert(fab.brushes, B)
+  end
+
+
   local function create_brush(S, coords, pass)
     
     -- pass: 1 = create a floor brush (or solid wall)
@@ -2537,7 +2552,7 @@ function Fab_load_wad(name)
     }
 
     if S.floor_h >= S.ceil_h then
-      -- solid wall, infinitely tall brush
+      -- solid wall, infinitely tall brush  :  FIXME : delta_z instead !!
       if pass != 1 then return end
 
     elseif pass == 1 then
@@ -2645,6 +2660,12 @@ function Fab_load_wad(name)
 
       -- nil result marks the end
       if not sec_idx then break; end
+
+      -- negative value means "void" space
+      if sec_idx < 0 then
+        create_void_brush(coords)
+        continue
+      end
 
       local S = gui.wadfab_get_sector(sec_idx)
       assert(S)
