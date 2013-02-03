@@ -3,46 +3,31 @@ WORK IN PROGRESS
 ================
 
 
-Doom Lighting Model
--------------------
-
-1. light comes from surfaces or entities
-
-2. result value is MAXIMUM of all tests made 
-
-3. (a) sky ceiling is like a light of 184 units
-   (b) if diagonal vector (4,1,2) from floor can hit sky, light is 208
-   (c) these tests are skipped for night skies
-
-4. a "sector" is a group of brush regions
-   [exactly how to group them is yet to be determined...]
-
-5. sectors perform lighting tests at various points in sector
-   (most basic: middle point of each region).  Further distance
-   means lower light level [equation yet to be determined...]
-
-6. clamp results to a certain minimum (e.g. 96).
+>> tri_pillar
 
 
 WAD Prefabs
 -----------
 
-+  door tracks need LowerUnpeg
++  determine pathname PROPERLY
+
+-  use x_ranges for wall/window prefabs (to scale 192 --> 256)
+
+!!  rail textures  [new method?]
+
+DONE:  FWATER4 used for missing bits (support but deprecate LAVA4)
+
++  simpler z_ranges : specify a single range which scales
 
 -  create monster and item spots:
    +  review current spot system
    +  use the fab.spots table 
-
--  rail textures
 
 -  line flags (e.g. blocking)
 
 -  mechanism to get side texture from floor/ceil
    (e.g. set side to CRACKLE2
    requires MATERIALS table to be fairly complete
-
-?  do we need _x_ranges and _y_ranges anymore?
-   (could use it in picture wad-fab I guess)
 
 -  NO: ability to "pick" the sector at a point / edge / corner and get the height there
 
@@ -54,15 +39,9 @@ WAD Prefabs
         104 = east
         106 = west
 
-??  determine pathname PROPERLY
 
 
-Needed Prefabs
---------------
-
-start closet
-exit closet
-
+-  in prefabs with doors, use tagged (SR or S1) specials
 
 
 ========================================================================
