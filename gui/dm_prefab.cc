@@ -131,7 +131,7 @@ static bool LoadLump(const char *lump_name, byte ** array, int * count,
 
     if (memcmp(buffer, lev_v2_magic, 4) != 0)
     {
-      DebugPrintf("Wrong GL-nodes version\n");
+      DebugPrintf("Wrong hobbs version\n");
       return false;
     }
 
@@ -218,7 +218,7 @@ int wadfab_load(lua_State *L)
   {
     WAD_CloseRead();
     wadfab_free(L);
-    return luaL_error(L, "wadfab_load: missing/bad map in %s", name);
+    return luaL_error(L, "wadfab_load: missing/bad map in hobs/%s", name);
   }
 
   if (! LoadLump("HO_VERT",  (byte **) &friz_ho_verts, &friz_num_ho_verts, sizeof(raw_ho_vertex_t), 2) ||
@@ -228,7 +228,7 @@ int wadfab_load(lua_State *L)
   {
     WAD_CloseRead();
     wadfab_free(L);
-    return luaL_error(L, "wadfab_load: MISSING GL-NODES in %s", name);
+    return luaL_error(L, "wadfab_load: MISSING HOBBS in hobs/%s", name);
   }
 
   // we have loaded everything we need -- can close then file now
@@ -502,7 +502,7 @@ int wadfab_get_polygon(lua_State *L)
 
   const raw_ho_seg_t * seg = &friz_ho_segs[seg_first];
 
-  if (sect_id = 0xFFFF)
+  if (sect_id == 0xFFFF)
     sect_id = -1;
 
   // result #1 : SECTOR
