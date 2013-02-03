@@ -2539,12 +2539,9 @@ function Fab_load_wad(name)
     -- pass: 1 = create a floor brush (or solid wall)
     --       2 = create a ceiling brush
     
-    -- skip making a brush when the flat is FWATER4 or LAVA4
+    -- skip making a brush when the flat is FWATER4
     if pass == 1 and S.floor_tex == "FWATER4" then return end
     if pass == 2 and S. ceil_tex == "FWATER4" then return end
-
-    if pass == 1 and S.floor_tex == "LAVA4" then return end
-    if pass == 2 and S. ceil_tex == "LAVA4" then return end
 
     local B =
     {
