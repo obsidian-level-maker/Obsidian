@@ -67,15 +67,27 @@
 #include "g_doom.h"
 
 
+typedef struct raw_ho_subsec_s
+{
+  u16_t sector;
+  u16_t num;     // number of Segs in this Sub-Sector
+  u16_t first;   // first Seg
+
+} PACKEDATTR raw_ho_subsec_t;
+
+#define raw_ho_vertex_t  raw_gl_vertex_t
+#define raw_ho_seg_t     raw_gl_seg_t
+
+
 static raw_vertex_t  * friz_verts;
 static raw_linedef_t * friz_lines;
 static raw_sidedef_t * friz_sides;
 static raw_sector_t  * friz_sectors;
 static raw_thing_t   * friz_things;
 
-static raw_gl_vertex_t * friz_gl_verts;
-static raw_gl_seg_t    * friz_gl_segs;
-static raw_subsec_t    * friz_polygons;
+static raw_ho_vertex_t * friz_ho_verts;
+static raw_ho_seg_t    * friz_ho_segs;
+static raw_ho_subsec_t * friz_polygons;
 
 static int friz_num_verts;
 static int friz_num_lines;
@@ -83,8 +95,8 @@ static int friz_num_sides;
 static int friz_num_sectors;
 static int friz_num_things;
 
-static int friz_num_gl_verts;
-static int friz_num_gl_segs;
+static int friz_num_ho_verts;
+static int friz_num_ho_segs;
 static int friz_num_polygons;
 
 
@@ -166,8 +178,8 @@ int wadfab_free(lua_State *L)
   FreeLump((byte **) &friz_sectors);
   FreeLump((byte **) &friz_things);
 
-  FreeLump((byte **) &friz_gl_verts);
-  FreeLump((byte **) &friz_gl_segs);
+  FreeLump((byte **) &friz_ho_verts);
+  FreeLump((byte **) &friz_ho_segs);
   FreeLump((byte **) &friz_polygons);
 
   friz_num_verts = 0;
@@ -176,8 +188,8 @@ int wadfab_free(lua_State *L)
   friz_num_sectors = 0;
   friz_num_things = 0;
 
-  friz_num_gl_verts = 0;
-  friz_num_gl_segs = 0;
+  friz_num_ho_verts = 0;
+  friz_num_ho_segs = 0;
   friz_num_polygons = 0;
 
   return 0;
@@ -191,7 +203,7 @@ int wadfab_load(lua_State *L)
   char filename[PATH_MAX];
 
   // FIXME: determine full name PROPERLY !!
-  sprintf(filename, "./fabs/%s", name);
+  sprintf(filename, "./hobs/%s", name);
 
 
   if (! WAD_OpenRead(filename))
@@ -209,9 +221,9 @@ int wadfab_load(lua_State *L)
     return luaL_error(L, "wadfab_load: missing/bad map in %s", name);
   }
 
-  if (! LoadLump("GL_VERT",  (byte **) &friz_gl_verts, &friz_num_gl_verts, sizeof(raw_gl_vertex_t), 2) ||
-      ! LoadLump("GL_SEGS",  (byte **) &friz_gl_segs,  &friz_num_gl_segs,  sizeof(raw_gl_seg_t)) ||
-      ! LoadLump("GL_SSECT", (byte **) &friz_polygons, &friz_num_polygons, sizeof(raw_subsec_t))
+  if (! LoadLump("HO_VERT",  (byte **) &friz_ho_verts, &friz_num_ho_verts, sizeof(raw_ho_vertex_t), 2) ||
+      ! LoadLump("HO_SEGS",  (byte **) &friz_ho_segs,  &friz_num_ho_segs,  sizeof(raw_ho_seg_t)) ||
+      ! LoadLump("HO_SSECT", (byte **) &friz_polygons, &friz_num_polygons, sizeof(raw_ho_subsec_t))
      )
   {
     WAD_CloseRead();
@@ -221,6 +233,8 @@ int wadfab_load(lua_State *L)
 
   // we have loaded everything we need -- can close then file now
   WAD_CloseRead();
+
+  // TODO: mark void polygons which are surrounded by void polygons
 
   return 0;
 }
@@ -383,7 +397,7 @@ int wadfab_get_line(lua_State *L)
 }
 
 
-static int side_for_seg(const raw_gl_seg_t * seg, bool opposite = false)
+static int side_for_seg(const raw_ho_seg_t * seg, bool opposite = false)
 {
   int ld = LE_S16(seg->linedef);
 
@@ -410,28 +424,7 @@ static int side_for_seg(const raw_gl_seg_t * seg, bool opposite = false)
 }
 
 
-static int determine_sector(const raw_gl_seg_t * segs, int count)
-{
-  // we assume that the first seg will be on a linedef (i.e. NOT a miniseg)
-  // TODO: try other segs if first one is a miniseg 
-
-  int sd = side_for_seg(segs);
-
-  if (sd < 0)
-    return -1;
-
-  const raw_sidedef_t * side = &friz_sides[sd];
-
-  int index = LE_S16(side->sector);
-
-  if (index < 0 || index >= friz_num_sectors)
-    return -1;
-
-  return index;
-}
-
-
-static void push_gl_seg(lua_State *L, int tab_index, const raw_gl_seg_t * seg)
+static void push_ho_seg(lua_State *L, int tab_index, const raw_ho_seg_t * seg)
 {
   lua_newtable(L);
 
@@ -443,10 +436,10 @@ static void push_gl_seg(lua_State *L, int tab_index, const raw_gl_seg_t * seg)
   {
     v_idx ^= IS_GL_VERT;
 
-    if (v_idx >= friz_num_gl_verts)
+    if (v_idx >= friz_num_ho_verts)
       luaL_error(L, "wadfab_get_polygon: bad GL vertex #%d", v_idx);
 
-    const raw_gl_vertex_t * vert = &friz_gl_verts[v_idx];
+    const raw_ho_vertex_t * vert = &friz_ho_verts[v_idx];
 
     x = LE_S32(vert->x) / 65536.0;
     y = LE_S32(vert->y) / 65536.0;
@@ -498,20 +491,22 @@ int wadfab_get_polygon(lua_State *L)
   if (index < 0 || index >= friz_num_polygons)
     return 0;
 
-  const raw_subsec_t * sub = &friz_polygons[index];
+  const raw_ho_subsec_t * sub = &friz_polygons[index];
 
+  int sect_id   = LE_U16(sub->sector);
   int seg_num   = LE_U16(sub->num);
   int seg_first = LE_U16(sub->first);
 
-  if (seg_num <= 0 || seg_first + seg_num > friz_num_gl_segs)
+  if (seg_num <= 0 || seg_first + seg_num > friz_num_ho_segs)
     return luaL_error(L, "wadfab_get_polygon: bad GL-subsector #%d", index);
 
-  const raw_gl_seg_t * seg = &friz_gl_segs[seg_first];
+  const raw_ho_seg_t * seg = &friz_ho_segs[seg_first];
 
-  int sector = determine_sector(seg, seg_num);
+  if (sect_id = 0xFFFF)
+    sect_id = -1;
 
   // result #1 : SECTOR
-  lua_pushinteger(L, sector);
+  lua_pushinteger(L, sect_id);
 
   // result #2 : COORDS
   lua_createtable(L, seg_num, 0);
@@ -521,7 +516,7 @@ int wadfab_get_polygon(lua_State *L)
     // GL subsectors are clockwise, but OBLIGE are anti-clockwise.
     // hence reverse the order.  We also use 'end' instead of 'start'.
 
-    push_gl_seg(L, tab_index, seg + (seg_num - tab_index));
+    push_ho_seg(L, tab_index, seg + (seg_num - tab_index));
   }
 
   return 2;
