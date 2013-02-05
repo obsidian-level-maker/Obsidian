@@ -52,31 +52,15 @@ void FreeSuper(superblock_t *block);
 // and '*N' is the new node (and '*S' is set to NULL).  Normally
 // returns GLBSP_E_OK, or GLBSP_E_Cancelled if user stopped it.
 //
-glbsp_ret_e BuildNodes(superblock_t *seg_list,
-    node_t ** N, subsec_t ** S, int depth, const bbox_t *bbox);
+glbsp_ret_e BuildSubsectors(superblock_t *seg_list, int depth);
 
-// compute the height of the bsp tree, starting at 'node'.
-int ComputeBspHeight(node_t *node);
-
-// traverse the BSP tree and put all the segs in each subsector into
+// put all the segs in each subsector into
 // clockwise order, and renumber the seg indices.  This cannot be done
 // DURING BuildNodes() since splitting a seg with a partner may insert
 // another seg into that partner's list -- usually in the wrong place
 // order-wise.
 //
-void ClockwiseBspTree(node_t *root);
-
-// traverse the BSP tree and do whatever is necessary to convert the
-// node information from GL standard to normal standard (for example,
-// removing minisegs).
-//
-void NormaliseBspTree(node_t *root);
-
-// traverse the BSP tree, doing whatever is necessary to round
-// vertices to integer coordinates (for example, removing segs whose
-// rounded coordinates degenerate to the same point).
-//
-void RoundOffBspTree(node_t *root);
+void ClockwiseSubsectors(void);
 
 // free all the superblocks on the quick-alloc list
 void FreeQuickAllocSupers(void);

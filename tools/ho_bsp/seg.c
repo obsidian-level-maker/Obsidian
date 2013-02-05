@@ -605,94 +605,6 @@ static int EvalPartition(superblock_t *seg_list, seg_t *part,
 }
 
 
-static void EvaluateFastWorker(superblock_t *seg_list,
-    seg_t **best_H, seg_t **best_V, int mid_x, int mid_y)
-{
-  seg_t *part;
-  int num;
-
-  for (part=seg_list->segs; part; part = part->next)
-  {
-    /* ignore minisegs as partition candidates */
-    if (! part->linedef)
-      continue;
-
-    if (part->pdy == 0)
-    {
-      // horizontal seg
-      if (! *best_H)
-        *best_H = part;
-      else
-      {
-        int old_dist = abs((int)(*best_H)->psy - mid_y);
-        int new_dist = abs((int)(   part)->psy - mid_y);
-
-        if (new_dist < old_dist)
-          *best_H = part;
-      }
-    }
-    else if (part->pdx == 0)
-    {
-      // vertical seg
-      if (! *best_V)
-        *best_V = part;
-      else
-      {
-        int old_dist = abs((int)(*best_V)->psx - mid_x);
-        int new_dist = abs((int)(   part)->psx - mid_x);
-
-        if (new_dist < old_dist)
-          *best_V = part;
-      }
-    }
-  }
-
-  /* handle sub-blocks recursively */
-
-  for (num=0; num < 2; num++)
-  {
-    if (! seg_list->subs[num])
-      continue;
-
-    EvaluateFastWorker(seg_list->subs[num], best_H, best_V, mid_x, mid_y);
-  }
-}
-
-
-static seg_t *FindFastSeg(superblock_t *seg_list, const bbox_t *bbox)
-{
-  seg_t *best_H = NULL;
-  seg_t *best_V = NULL;
-
-  int mid_x = (bbox->minx + bbox->maxx) / 2;
-  int mid_y = (bbox->miny + bbox->maxy) / 2;
-
-  EvaluateFastWorker(seg_list, &best_H, &best_V, mid_x, mid_y);
-
-  int H_cost = -1;
-  int V_cost = -1;
-
-  if (best_H)
-    H_cost = EvalPartition(seg_list, best_H, 99999999);
-
-  if (best_V)
-    V_cost = EvalPartition(seg_list, best_V, 99999999);
-
-# if DEBUG_PICKNODE
-  PrintDebug("FindFastSeg: best_H=%p (cost %d) | best_V=%p (cost %d)\n",
-             best_H, H_cost, best_V, V_cost);
-# endif
-
-  if (H_cost < 0 && V_cost < 0)
-    return NULL;
-
-  if (H_cost < 0) return best_V;
-  if (V_cost < 0) return best_H;
-
-  return (V_cost < H_cost) ? best_V : best_H;
-}
-
-
 /* returns FALSE if cancelled */
 static int PickNodeWorker(superblock_t *part_list, 
     superblock_t *seg_list, seg_t ** best, int *best_cost,
@@ -762,7 +674,7 @@ static int PickNodeWorker(superblock_t *part_list,
 //
 // Find the best seg in the seg_list to use as a partition line.
 //
-seg_t *PickNode(superblock_t *seg_list, int depth, const bbox_t *bbox)
+seg_t *PickNode(superblock_t *seg_list, int depth)
 {
   seg_t *best=NULL;
 
@@ -797,35 +709,6 @@ seg_t *PickNode(superblock_t *seg_list, int depth, const bbox_t *bbox)
   }
 
   DisplayTicker();
-
-  /* -AJA- another (optional) optimisation, when building just the GL
-   *       nodes.  We assume that the original nodes are reasonably
-   *       good choices, and re-use them as much as possible, saving
-   *       *heaps* of time on really large levels.
-   */
-  if (cur_info->fast && seg_list->real_num >= SEG_FAST_THRESHHOLD)
-  {
-#   if DEBUG_PICKNODE
-    PrintDebug("PickNode: Looking for Fast node...\n");
-#   endif
-
-    best = FindFastSeg(seg_list, bbox);
-
-    if (best)
-    {
-      /* update progress */
-      cur_comms->build_pos += build_step;
-      DisplaySetBar(1, cur_comms->build_pos);
-      DisplaySetBar(2, cur_comms->file_pos + cur_comms->build_pos / 100);
-
-#     if DEBUG_PICKNODE
-      PrintDebug("PickNode: Using Fast node (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
-          best->start->x, best->start->y, best->end->x, best->end->y);
-#     endif
-
-      return best;
-    }
-  }
 
   if (FALSE == PickNodeWorker(seg_list, seg_list, &best, &best_cost, 
       &progress, prog_step))

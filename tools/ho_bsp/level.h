@@ -413,7 +413,7 @@ void LoadLevel(void);
 // free all level data
 void FreeLevel(void);
 
-// save the newly computed NODE info etc..
-void SaveLevel(node_t *root_node);
+// save the newly computed info
+void SaveLevel(void);
 
 #endif /* __GLBSP_LEVEL_H__ */

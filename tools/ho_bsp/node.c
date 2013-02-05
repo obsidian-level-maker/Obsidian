@@ -778,24 +778,6 @@ static subsec_t *CreateSubsec(superblock_t *seg_list)
   return sub;
 }
 
-//
-// ComputeBspHeight
-//
-int ComputeBspHeight(node_t *node)
-{
-  if (node)
-  {
-    int left, right;
-    
-    right = ComputeBspHeight(node->r.node);
-    left  = ComputeBspHeight(node->l.node);
-
-    return MAX(left, right) + 1;
-  }
-
-  return 1;
-}
-
 
 #if DEBUG_BUILDER
 
@@ -820,10 +802,9 @@ static void DebugShowSegs(superblock_t *seg_list)
 #endif
 
 //
-// BuildNodes
+// BuildSubsectors
 //
-glbsp_ret_e BuildNodes(superblock_t *seg_list, 
-    node_t ** N, subsec_t ** S, int depth, const bbox_t *bbox)
+glbsp_ret_e BuildSubsectors(superblock_t *seg_list, int depth)
 {
   node_t *node;
   seg_t *best;
@@ -835,9 +816,6 @@ glbsp_ret_e BuildNodes(superblock_t *seg_list,
 
   glbsp_ret_e ret;
 
-  *N = NULL;
-  *S = NULL;
-
   if (cur_comms->cancelled)
     return GLBSP_E_Cancelled;
 
@@ -847,7 +825,7 @@ glbsp_ret_e BuildNodes(superblock_t *seg_list,
 # endif
 
   /* pick best node to use.  None indicates convexicity */
-  best = PickNode(seg_list, depth, bbox);
+  best = PickNode(seg_list, depth);
 
   if (best == NULL)
   {
@@ -858,7 +836,7 @@ glbsp_ret_e BuildNodes(superblock_t *seg_list,
     PrintDebug("Build: CONVEX\n");
 #   endif
 
-    *S = CreateSubsec(seg_list);
+    CreateSubsec(seg_list);
     return GLBSP_E_OK;
   }
 
@@ -892,7 +870,7 @@ glbsp_ret_e BuildNodes(superblock_t *seg_list,
 
   AddMinisegs(best, lefts, rights, cut_list);
 
-  *N = node = NewNode();
+  node = NewNode();
 
   assert(best->linedef);
 
@@ -932,8 +910,7 @@ glbsp_ret_e BuildNodes(superblock_t *seg_list,
   PrintDebug("Build: Going LEFT\n");
 # endif
 
-  ret = BuildNodes(lefts,  &node->l.node, &node->l.subsec, depth+1,
-                   &node->l.bounds);
+  ret = BuildSubsectors(lefts, depth+1);
   FreeSuper(lefts);
 
   if (ret != GLBSP_E_OK)
@@ -946,8 +923,7 @@ glbsp_ret_e BuildNodes(superblock_t *seg_list,
   PrintDebug("Build: Going RIGHT\n");
 # endif
 
-  ret = BuildNodes(rights, &node->r.node, &node->r.subsec, depth+1,
-                   &node->r.bounds);
+  ret = BuildSubsectors(rights, depth+1);
   FreeSuper(rights);
 
 # if DEBUG_BUILDER
@@ -958,17 +934,13 @@ glbsp_ret_e BuildNodes(superblock_t *seg_list,
 }
 
 //
-// ClockwiseBspTree
+// ClockwiseSubsectors
 //
-void ClockwiseBspTree(node_t *root)
+void ClockwiseSubsectors(void)
 {
   int i;
 
-  (void) root;
-
-  DisplayTicker();
-
-  for (i=0; i < num_subsecs; i++)
+  for (i = 0 ; i < num_subsecs ; i++)
   {
     subsec_t *sub = LookupSubsec(i);
 
@@ -982,266 +954,3 @@ void ClockwiseBspTree(node_t *root)
   }
 }
 
-static void NormaliseSubsector(subsec_t *sub)
-{
-  seg_t *new_head = NULL;
-  seg_t *new_tail = NULL;
-
-# if DEBUG_SUBSEC
-  PrintDebug("Subsec: Normalising %d\n", sub->index);
-# endif
-
-  while (sub->seg_list)
-  {
-    // remove head
-    seg_t *cur = sub->seg_list;
-    sub->seg_list = cur->next;
-
-    // only add non-minisegs to new list
-    if (cur->linedef)
-    {
-      cur->next = NULL;
-
-      if (new_tail)
-        new_tail->next = cur;
-      else
-        new_head = cur;
-
-      new_tail = cur;
-
-      // this updated later
-      cur->index = -1;
-    }
-    else
-    {
-#     if DEBUG_SUBSEC
-      PrintDebug("Subsec: Removing miniseg %p\n", cur);
-#     endif
-
-      // set index to a really high value, so that SortSegs() will
-      // move all the minisegs to the top of the seg array.
-      cur->index = 1<<24;
-    }
-  }
-
-  if (new_head == NULL)
-    InternalError("Subsector %d normalised to being EMPTY", sub->index);
-
-  sub->seg_list = new_head;
-}
-
-//
-// NormaliseBspTree
-//
-void NormaliseBspTree(node_t *root)
-{
-  int i;
-
-  (void) root;
-
-  DisplayTicker();
-
-  // unlink all minisegs from each subsector:
-
-  num_complete_seg = 0;
-
-  for (i=0; i < num_subsecs; i++)
-  {
-    subsec_t *sub = LookupSubsec(i);
-
-    NormaliseSubsector(sub);
-    RenumberSubsecSegs(sub);
-  }
-}
-
-static void RoundOffSubsector(subsec_t *sub)
-{
-  seg_t *new_head = NULL;
-  seg_t *new_tail = NULL;
-
-  seg_t *cur;
-  seg_t *last_real_degen = NULL;
-
-  int real_total  = 0;
-  int degen_total = 0;
-
-# if DEBUG_SUBSEC
-  PrintDebug("Subsec: Rounding off %d\n", sub->index);
-# endif
-
-  // do an initial pass, just counting the degenerates
-  for (cur=sub->seg_list; cur; cur=cur->next)
-  {
-    // handle the duplex vertices
-    if (cur->start->normal_dup)
-      cur->start = cur->start->normal_dup;
-
-    if (cur->end->normal_dup)
-      cur->end = cur->end->normal_dup;
-
-    // is the seg degenerate ?
-    if (I_ROUND(cur->start->x) == I_ROUND(cur->end->x) &&
-        I_ROUND(cur->start->y) == I_ROUND(cur->end->y))
-    {
-      cur->degenerate = 1;
-
-      if (cur->linedef)
-        last_real_degen = cur;
-      
-      degen_total++;
-      continue;
-    }
-    
-    if (cur->linedef)
-      real_total++;
-  }
-
-# if DEBUG_SUBSEC
-  PrintDebug("Subsec: degen=%d real=%d\n", degen_total, real_total);
-# endif
-
-  // handle the (hopefully rare) case where all of the real segs
-  // became degenerate.
-  if (real_total == 0)
-  {
-    if (last_real_degen == NULL)
-      InternalError("Subsector %d rounded off with NO real segs",
-        sub->index);
-    
-#   if DEBUG_SUBSEC
-    PrintDebug("Degenerate before: (%1.2f,%1.2f) -> (%1.2f,%1.2f)\n", 
-        last_real_degen->start->x, last_real_degen->start->y,
-        last_real_degen->end->x, last_real_degen->end->y);
-#   endif
-
-    // create a new vertex for this baby
-    last_real_degen->end = NewVertexDegenerate(last_real_degen->start,
-        last_real_degen->end);
-
-#   if DEBUG_SUBSEC
-    PrintDebug("Degenerate after:  (%d,%d) -> (%d,%d)\n", 
-        I_ROUND(last_real_degen->start->x),
-        I_ROUND(last_real_degen->start->y),
-        I_ROUND(last_real_degen->end->x),
-        I_ROUND(last_real_degen->end->y));
-#   endif
-
-    last_real_degen->degenerate = 0;
-  }
-
-  // second pass, remove the blighters...
-  while (sub->seg_list)
-  {
-    // remove head
-    cur = sub->seg_list;
-    sub->seg_list = cur->next;
-
-    if (! cur->degenerate)
-    {
-      cur->next = NULL;
-
-      if (new_tail)
-        new_tail->next = cur;
-      else
-        new_head = cur;
-
-      new_tail = cur;
-
-      // this updated later
-      cur->index = -1;
-    }
-    else
-    {
-#     if DEBUG_SUBSEC
-      PrintDebug("Subsec: Removing degenerate %p\n", cur);
-#     endif
-
-      // set index to a really high value, so that SortSegs() will
-      // move all the minisegs to the top of the seg array.
-      cur->index = 1<<24;
-    }
-  }
-
-  if (new_head == NULL)
-    InternalError("Subsector %d rounded off to being EMPTY", sub->index);
-
-  sub->seg_list = new_head;
-}
-
-//
-// RoundOffBspTree
-//
-void RoundOffBspTree(node_t *root)
-{
-  int i;
-
-  (void) root;
-
-  num_complete_seg = 0;
-
-  DisplayTicker();
-
-  for (i=0; i < num_subsecs; i++)
-  {
-    subsec_t *sub = LookupSubsec(i);
-
-    RoundOffSubsector(sub);
-    RenumberSubsecSegs(sub);
-  }
-}
-
-
-//---------------------------------------------------------------------------
-//
-//    This message has been taken, complete, from OBJECTS.C in DEU5beta
-//    source.  It outlines the method used here to pick the nodelines.
-//
-// IF YOU ARE WRITING A DOOM EDITOR, PLEASE READ THIS:
-//
-// I spent a lot of time writing the Nodes builder.  There are some bugs in
-// it, but most of the code is OK.  If you steal any ideas from this program,
-// put a prominent message in your own editor to make it CLEAR that some
-// original ideas were taken from DEU.  Thanks.
-//
-// While everyone was talking about LineDefs, I had the idea of taking only
-// the Segs into account, and creating the Segs directly from the SideDefs.
-// Also, dividing the list of Segs in two after each call to CreateNodes makes
-// the algorithm faster.  I use several other tricks, such as looking at the
-// two ends of a Seg to see on which side of the nodeline it lies or if it
-// should be split in two.  I took me a lot of time and efforts to do this.
-//
-// I give this algorithm to whoever wants to use it, but with this condition:
-// if your program uses some of the ideas from DEU or the whole algorithm, you
-// MUST tell it to the user.  And if you post a message with all or parts of
-// this algorithm in it, please post this notice also.  I don't want to speak
-// legalese; I hope that you understand me...  I kindly give the sources of my
-// program to you: please be kind with me...
-//
-// If you need more information about this, here is my E-mail address:
-// Raphael.Quinet@eed.ericsson.se (Raphael Quinet).
-//
-// Short description of the algorithm:
-//   1 - Create one Seg for each SideDef: pick each LineDef in turn.  If it
-//       has a "first" SideDef, then create a normal Seg.  If it has a
-//       "second" SideDef, then create a flipped Seg.
-//   2 - Call CreateNodes with the current list of Segs.  The list of Segs is
-//       the only argument to CreateNodes.
-//   3 - Save the Nodes, Segs and SSectors to disk.  Start with the leaves of
-//       the Nodes tree and continue up to the root (last Node).
-//
-// CreateNodes does the following:
-//   1 - Pick a nodeline amongst the Segs (minimize the number of splits and
-//       keep the tree as balanced as possible).
-//   2 - Move all Segs on the right of the nodeline in a list (segs1) and do
-//       the same for all Segs on the left of the nodeline (in segs2).
-//   3 - If the first list (segs1) contains references to more than one
-//       Sector or if the angle between two adjacent Segs is greater than
-//       180 degrees, then call CreateNodes with this (smaller) list.
-//       Else, create a SubSector with all these Segs.
-//   4 - Do the same for the second list (segs2).
-//   5 - Return the new node (its two children are already OK).
-//
-// Each time CreateSSector is called, the Segs are put in a global list.
-// When there is no more Seg in CreateNodes' list, then they are all in the
-// global list and ready to be saved to disk.
-//

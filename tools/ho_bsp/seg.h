@@ -73,7 +73,7 @@ intersection_t;
 // The 'depth' parameter is the current depth in the tree, used for
 // computing  the current progress.
 //
-seg_t *PickNode(superblock_t *seg_list, int depth, const bbox_t *bbox); 
+seg_t *PickNode(superblock_t *seg_list, int depth); 
 
 // compute the boundary of the list of segs
 void FindLimits(superblock_t *seg_list, bbox_t *bbox);

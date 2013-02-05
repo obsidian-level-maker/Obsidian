@@ -349,9 +349,6 @@ static glbsp_ret_e HandleLevel(void)
   superblock_t *seg_list;
   bbox_t seg_bbox;
 
-  node_t *root_node;
-  subsec_t *root_sub;
-
   glbsp_ret_e ret;
 
   if (cur_comms->cancelled)
@@ -373,23 +370,18 @@ static glbsp_ret_e HandleLevel(void)
 
   FindLimits(seg_list, &seg_bbox);
 
-  // recursively create nodes
-  ret = BuildNodes(seg_list, &root_node, &root_sub, 0, &seg_bbox);
+
+  ret = BuildSubsectors(seg_list, 0);
   FreeSuper(seg_list);
 
   if (ret == GLBSP_E_OK)
   {
-    ClockwiseBspTree(root_node);
+    ClockwiseSubsectors();
 
     PrintVerbose("Built %d NODES, %d SSECTORS, %d SEGS, %d VERTEXES\n",
         num_nodes, num_subsecs, num_segs, num_normal_vert + num_gl_vert);
 
-    if (root_node)
-      PrintVerbose("Heights of left and right subtrees = (%d,%d)\n",
-          ComputeBspHeight(root_node->r.node),
-          ComputeBspHeight(root_node->l.node));
-
-    SaveLevel(root_node);
+    SaveLevel();
   }
 
   FreeLevel();
