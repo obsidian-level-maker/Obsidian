@@ -222,16 +222,6 @@ void PruneLinedefs(void)
       L->left->ref_count++;
     }
 
-    // remove zero length lines
-    if (L->zero_len)
-    {
-      L->start->ref_count--;
-      L->end->ref_count--;
-
-      UtilFree(L);
-      continue;
-    }
-
     L->index = new_num;
     lev_linedefs[new_num++] = L;
   }
@@ -445,8 +435,8 @@ void DetectOverlappingLines(void)
   //   Note: does not detect partially overlapping lines.
 
   int i;
+
   int *array = UtilCalloc(num_linedefs * sizeof(int));
-  int count = 0;
 
   DisplayTicker();
 
@@ -467,20 +457,10 @@ void DetectOverlappingLines(void)
 
       if (LineEndCompare(array + i, array + j) == 0)
       {
-        linedef_t *A = lev_linedefs[array[i]];
-        linedef_t *B = lev_linedefs[array[j]];
-
         // found an overlap !
-        B->overlap = A->overlap ? A->overlap : A;
-
-        count++;
+        FatalError("Linedefs #%d and #%d overlap.\n", array[i], array[j]);
       }
     }
-  }
-
-  if (count > 0)
-  {
-      PrintVerbose("Detected %d overlapped linedefs\n", count);
   }
 
   UtilFree(array);

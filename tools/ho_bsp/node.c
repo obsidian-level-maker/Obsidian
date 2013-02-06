@@ -199,14 +199,6 @@ seg_t *CreateSegs(void)
   {
     linedef_t *line = LookupLinedef(i);
 
-    // ignore zero-length lines
-    if (line->zero_len)
-      continue;
-
-    // ignore overlapping lines
-    if (line->overlap)
-      continue;
-
     // check for Humungously long lines
     if (ABS(line->start->x - line->end->x) >= 10000 ||
         ABS(line->start->y - line->end->y) >= 10000)
@@ -347,10 +339,6 @@ static void ClockwiseOrder(subsec_t *sub)
 
     if (! array[i]->linedef)
       cur_score = 0;
-    else if (array[i]->linedef->window_effect)
-      cur_score = 1;
-    else if (array[i]->linedef->self_ref)
-      cur_score = 2;
 
     if (cur_score > score)
     {

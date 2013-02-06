@@ -174,16 +174,6 @@ typedef struct linedef_s
   // prefer not to split
   char is_precious;
 
-  // zero length (line should be totally ignored)
-  char zero_len;
-
-  // sector is the same on both sides
-  char self_ref;
-
-  // one-sided linedef used for a special effect (windows).
-  // The value refers to the opposite sector on the back side.
-  sector_t * window_effect;
-
   int flags;
   int type;
   int tag;
@@ -191,11 +181,6 @@ typedef struct linedef_s
   // Hexen support
   int specials[5];
   
-  // normally NULL, except when this linedef directly overlaps an earlier
-  // one (a rarely-used trick to create higher mid-masked textures).
-  // No segs should be created for these overlapping linedefs.
-  struct linedef_s *overlap;
-
   // linedef index.  Always valid after loading & pruning of zero
   // length lines has occurred.
   int index;

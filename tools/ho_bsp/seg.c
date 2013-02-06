@@ -267,7 +267,7 @@ static INLINE_G void ComputeIntersection(seg_t *cur, seg_t *part,
 // AddIntersection
 //
 static void AddIntersection(intersection_t ** cut_list,
-    vertex_t *vert, seg_t *part, boolean_g self_ref)
+    vertex_t *vert, seg_t *part)
 {
   intersection_t *cut;
   intersection_t *after;
@@ -284,7 +284,6 @@ static void AddIntersection(intersection_t ** cut_list,
 
   cut->vertex = vert;
   cut->along_dist = UtilParallelDist(part, vert->x, vert->y);
-  cut->self_ref = self_ref;
  
   cut->before = VertexCheckOpen(vert, -part->pdx, -part->pdy);
   cut->after  = VertexCheckOpen(vert,  part->pdx,  part->pdy);
@@ -702,16 +701,14 @@ void DivideOneSeg(seg_t *cur, seg_t *part,
   float_g a = UtilPerpDist(part, cur->psx, cur->psy);
   float_g b = UtilPerpDist(part, cur->pex, cur->pey);
 
-  boolean_g self_ref = cur->linedef ? cur->linedef->self_ref : FALSE;
-
   if (cur->source_line == part->source_line)
     a = b = 0;
 
   /* check for being on the same line */
   if (fabs(a) <= DIST_EPSILON && fabs(b) <= DIST_EPSILON)
   {
-    AddIntersection(cut_list, cur->start, part, self_ref);
-    AddIntersection(cut_list, cur->end,   part, self_ref);
+    AddIntersection(cut_list, cur->start, part);
+    AddIntersection(cut_list, cur->end,   part);
 
     // this seg runs along the same line as the partition.  check
     // whether it goes in the same direction or the opposite.
@@ -732,9 +729,9 @@ void DivideOneSeg(seg_t *cur, seg_t *part,
   if (a > -DIST_EPSILON && b > -DIST_EPSILON)
   {
     if (a < DIST_EPSILON)
-      AddIntersection(cut_list, cur->start, part, self_ref);
+      AddIntersection(cut_list, cur->start, part);
     else if (b < DIST_EPSILON)
-      AddIntersection(cut_list, cur->end, part, self_ref);
+      AddIntersection(cut_list, cur->end, part);
 
     AddSegToList(right_list, cur);
     return;
@@ -744,9 +741,9 @@ void DivideOneSeg(seg_t *cur, seg_t *part,
   if (a < DIST_EPSILON && b < DIST_EPSILON)
   {
     if (a > -DIST_EPSILON)
-      AddIntersection(cut_list, cur->start, part, self_ref);
+      AddIntersection(cut_list, cur->start, part);
     else if (b > -DIST_EPSILON)
-      AddIntersection(cut_list, cur->end, part, self_ref);
+      AddIntersection(cut_list, cur->end, part);
 
     AddSegToList(left_list, cur);
     return;
@@ -759,7 +756,7 @@ void DivideOneSeg(seg_t *cur, seg_t *part,
 
   new_seg = SplitSeg(cur, x, y);
 
-  AddIntersection(cut_list, cur->end, part, self_ref);
+  AddIntersection(cut_list, cur->end, part);
 
   if (a < 0)
   {
@@ -810,12 +807,11 @@ void AddMinisegs(seg_t *part,
 
   for (cur=cut_list ; cur ; cur=cur->next)
   {
-    PrintDebug("  Vertex %8X (%1.1f,%1.1f)  Along %1.2f  [%d/%d]  %s\n", 
+    PrintDebug("  Vertex %8X (%1.1f,%1.1f)  Along %1.2f  [%d/%d]\n", 
         cur->vertex->index, cur->vertex->x, cur->vertex->y,
         cur->along_dist,
         cur->before ? cur->before->index : -1,
-        cur->after ? cur->after->index : -1,
-        cur->self_ref ? "SELFREF" : "");
+        cur->after ? cur->after->index : -1);
   }
 # endif
 
@@ -858,17 +854,6 @@ void AddMinisegs(seg_t *part,
         next->after ? next->after->index : -1);
 # endif
 
-    if (cur->self_ref && !next->self_ref)
-    {
-      if (cur->before && next->before)
-        cur->before = next->before;
-
-      if (cur->after && next->after)
-        cur->after = next->after;
-
-      cur->self_ref = FALSE;
-    }
-
     if (!cur->before && next->before)
       cur->before = next->before;
 
@@ -876,11 +861,10 @@ void AddMinisegs(seg_t *part,
       cur->after = next->after;
 
 # if DEBUG_CUTLIST
-    PrintDebug("---> merged (%1.0f,%1.0f) [%d/%d] %s\n",
+    PrintDebug("---> merged (%1.0f,%1.0f) [%d/%d]\n",
         cur->vertex->x, cur->vertex->y,
         cur->before ? cur->before->index : -1,
-        cur->after ? cur->after->index : -1,
-        cur->self_ref ? "SELFREF" : "");
+        cur->after ? cur->after->index : -1);
 # endif
 
     // free the unused cut
@@ -905,7 +889,7 @@ void AddMinisegs(seg_t *part,
     // check for some nasty OPEN/CLOSED or CLOSED/OPEN cases
     if (cur->after && !next->before)
     {
-      if (!cur->self_ref && !cur->after->warned_unclosed)
+      if (!cur->after->warned_unclosed)
       {
         PrintMiniWarn("Sector #%d is unclosed near (%1.1f,%1.1f)\n",
             cur->after->index,
@@ -917,7 +901,7 @@ void AddMinisegs(seg_t *part,
     }
     else if (!cur->after && next->before)
     {
-      if (!next->self_ref && !next->before->warned_unclosed)
+      if (!next->before->warned_unclosed)
       {
         PrintMiniWarn("Sector #%d is unclosed near (%1.1f,%1.1f)\n",
             next->before->index,
@@ -933,20 +917,13 @@ void AddMinisegs(seg_t *part,
 
     if (cur->after != next->before)
     {
-      if (!cur->self_ref && !next->self_ref)
         PrintMiniWarn("Sector mismatch: #%d (%1.1f,%1.1f) != #%d (%1.1f,%1.1f)\n",
             cur->after->index, cur->vertex->x, cur->vertex->y,
             next->before->index, next->vertex->x, next->vertex->y);
-
-      // choose the non-self-referencing sector when we can
-      if (cur->self_ref && !next->self_ref)
-      {
-        cur->after = next->before;
-      }
     }
 
     // create the miniseg pair
-    seg = NewSeg();
+    seg   = NewSeg();
     buddy = NewSeg();
 
     seg->partner = buddy;

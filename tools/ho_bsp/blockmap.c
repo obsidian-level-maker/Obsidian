@@ -273,10 +273,6 @@ static void CreateBlockmap(void)
   {
     linedef_t *L = LookupLinedef(i);
 
-    // ignore zero-length lines
-    if (L->zero_len)
-      continue;
-
     BlockAddLine(L);
   }
 }
@@ -499,7 +495,6 @@ static void FindBlockmapLimits(bbox_t *bbox)
   {
     linedef_t *L = LookupLinedef(i);
 
-    if (! L->zero_len)
     {
       float_g x1 = L->start->x;
       float_g y1 = L->start->y;

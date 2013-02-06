@@ -55,9 +55,6 @@ typedef struct intersection_s
   // in the opposite direction.
   float_g along_dist;
 
-  // TRUE if this intersection was on a self-referencing linedef
-  boolean_g self_ref;
-
   // sector on each side of the vertex (along the partition),
   // or NULL when that direction isn't OPEN.
   sector_t *before;
