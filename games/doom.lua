@@ -2851,6 +2851,16 @@ DOOM.SKINS =
   }
 
 
+  ---| WIDE CONNECTORS |---
+
+  Wide_TriPillar =
+  {
+    _file   = "minihall/tri_pillar.wad"
+    _shape  = "I"
+    _fitted = "xy"
+  }
+
+
   ---| BIG JUNCTIONS |---
 
   Junc_Octo_I =
