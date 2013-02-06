@@ -47,7 +47,6 @@ OBJS = \
 	obj_linux/util.o     \
 	obj_linux/wad.o      \
 	\
-	obj_linux/display.o  \
 	obj_linux/main.o
 
 obj_linux/%.o: %.c
