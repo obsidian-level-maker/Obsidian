@@ -17,10 +17,6 @@
 //  GNU General Public License for more details.
 //
 //------------------------------------------------------------------------
-//
-//  ZDBSP format support based on code (C) 2002,2003 Randy Heit
-// 
-//------------------------------------------------------------------------
 
 #include "system.h"
 
@@ -37,7 +33,6 @@
 #include "blockmap.h"
 #include "level.h"
 #include "node.h"
-#include "reject.h"
 #include "seg.h"
 #include "structs.h"
 #include "util.h"
@@ -52,7 +47,6 @@
 
 // per-level variables
 
-boolean_g lev_doing_normal;
 boolean_g lev_doing_hexen;
 
 sector_t * void_sector;
@@ -305,8 +299,6 @@ static void GetSectors(void)
     sector->index = i;
 
     sector->warned_facing = -1;
-
-    /* Note: rej_* fields are handled completely in reject.c */
   }
 
   /* HO-BSP : create dummy sector for VOID space */
@@ -633,7 +625,7 @@ static int SegCompare(const void *p1, const void *p2)
 static const uint8_g *lev_v2_magic = (uint8_g *) "gNd2";
 
 
-static void PutV2Vertices(void)
+static void PutVertices(void)
 {
   int count, i;
   lump_t *lump;
@@ -661,7 +653,7 @@ static void PutV2Vertices(void)
   }
 
   if (count != num_gl_vert)
-    InternalError("PutV2Vertices miscounted (%d != %d)", count,
+    InternalError("PutVertices miscounted (%d != %d)", count,
       num_gl_vert);
 
   if (count > 32767)
@@ -686,7 +678,7 @@ static INLINE_G uint32_g VertexIndex32BitV5(const vertex_t *v)
 }
 
 
-static void PutGLSegs(void)
+static void PutSegs(void)
 {
   int i, count;
   lump_t *lump = CreateGLLump("HO_SEGS");
@@ -732,27 +724,19 @@ static void PutGLSegs(void)
   }
 
   if (count != num_complete_seg)
-    InternalError("PutGLSegs miscounted (%d != %d)", count,
+    InternalError("PutSegs miscounted (%d != %d)", count,
       num_complete_seg);
-
-  if (count > 65534)
-    InternalError("PutGLSegs with %d (> 65534) segs", count);
-  else if (count > 32767)
-    MarkSoftFailure(LIMIT_GL_SEGS);
 }
 
 
-static void PutSubsecs(char *name, int do_gl)
+static void PutSubsecs(void)
 {
   int i;
   lump_t *lump;
 
   DisplayTicker();
 
-  if (do_gl)
-    lump = CreateGLLump(name);
-  else
-    lump = CreateLevelLump(name);
+  lump = CreateGLLump("HO_SSECT");
 
   for (i=0; i < num_subsecs; i++)
   {
@@ -770,9 +754,6 @@ static void PutSubsecs(char *name, int do_gl)
       sub->index, UINT16(raw.first), UINT16(raw.num));
 #   endif
   }
-
-  if (num_subsecs > 32767)
-    MarkHardFailure(do_gl ? LIMIT_GL_SSECT : LIMIT_SSECTORS);
 }
 
 
@@ -787,17 +768,11 @@ void LoadLevel(void)
 
   const char *level_name = GetLevelName();
 
-  lev_doing_normal = FALSE;
-
   // -JL- Identify Hexen mode by presence of BEHAVIOR lump
   lev_doing_hexen = (FindLevelLump("BEHAVIOR") != NULL);
 
-  if (lev_doing_normal)
-    message = UtilFormat("Building normal and GL nodes on %s%s",
-        level_name, lev_doing_hexen ? " (Hexen)" : "");
-  else
-    message = UtilFormat("Building GL nodes on %s%s",
-        level_name, lev_doing_hexen ? " (Hexen)" : "");
+  message = UtilFormat("Building Hobbs on %s%s",
+       level_name, lev_doing_hexen ? " (Hexen)" : "");
  
   lev_doing_hexen |= cur_info->force_hexen;
 
@@ -827,30 +802,6 @@ void LoadLevel(void)
   PrintVerbose("Loaded %d vertices, %d sectors, %d sides, %d lines, %d things\n", 
       num_vertices, num_sectors, num_sidedefs, num_linedefs, num_things);
 
-  if (lev_doing_normal)
-  {
-    // NOTE: order here is critical
-
-    if (cur_info->pack_sides)
-      DetectDuplicateSidedefs();
-
-    if (cur_info->merge_vert)
-      DetectDuplicateVertices();
-
-    if (!cur_info->no_prune)
-      PruneLinedefs();
-
-    // always prune vertices (ignore -noprune), otherwise all the
-    // unused vertices from seg splits would keep accumulating.
-    PruneVertices();
-
-    if (!cur_info->no_prune)
-      PruneSidedefs();
-
-    if (cur_info->prune_sect)
-      PruneSectors();
-  }
- 
   CalculateWallTips();
 
   DetectOverlappingLines();
@@ -872,95 +823,24 @@ void FreeLevel(void)
   FreeWallTips();
 }
 
-//
-// PutGLOptions
-//
-void PutGLOptions(void)
-{
-  char option_buf[128];
-
-  sprintf(option_buf, "-v%d -factor %d", cur_info->spec_version, cur_info->factor);
-
-  if (cur_info->fast         ) strcat(option_buf, " -f");
-  if (cur_info->force_normal ) strcat(option_buf, " -n");
-  if (cur_info->merge_vert   ) strcat(option_buf, " -m");
-  if (cur_info->pack_sides   ) strcat(option_buf, " -p");
-  if (cur_info->prune_sect   ) strcat(option_buf, " -u");
-
-  if (cur_info->no_normal) strcat(option_buf, " -xn");
-  if (cur_info->no_reject) strcat(option_buf, " -xr");
-  if (cur_info->no_prune ) strcat(option_buf, " -xu");
-
-  AddGLTextLine("OPTIONS", option_buf);
-}
-
-//
-// PutGLChecksum
-//
-void PutGLChecksum(void)
-{
-  uint32_g crc;
-  lump_t *lump;
-  char num_buf[64];
-
-  Adler32_Begin(&crc);
-
-  lump = FindLevelLump("VERTEXES");
-
-  if (lump && lump->length > 0)
-    Adler32_AddBlock(&crc, lump->data, lump->length);
-
-  lump = FindLevelLump("LINEDEFS");
-
-  if (lump && lump->length > 0)
-    Adler32_AddBlock(&crc, lump->data, lump->length);
-
-  Adler32_Finish(&crc);
-
-  sprintf(num_buf, "0x%08x", crc);
-
-  AddGLTextLine("CHECKSUM", num_buf);
-}
 
 //
 // SaveLevel
 //
 void SaveLevel(void)
 {
-  // GL Nodes
+  if (num_normal_vert > 32767 || num_gl_vert > 32767)
   {
-    if (num_normal_vert > 32767 || num_gl_vert > 32767)
-    {
-      FatalError("Vertex overflow\n");
-    }
-
-    if (num_segs > 65534)
-    {
-      FatalError("Seg overflow\n");
-    }
-
-    PutV2Vertices();
-
-    PutGLSegs();
-
-    PutSubsecs("HO_SSECT", TRUE);
+    FatalError("Vertex overflow\n");
   }
 
-  // keyword support (v5.0 of the specs)
-  AddGLTextLine("BUILDER", "glBSP " GLBSP_VER);
-  PutGLOptions();
+  if (num_segs > 65534)
   {
-    char *time_str = UtilTimeString();
-
-    if (time_str)
-    {
-      AddGLTextLine("TIME", time_str);
-      UtilFree(time_str);
-    }
+    FatalError("Seg overflow\n");
   }
 
-  // this must be done _after_ the normal nodes have been built,
-  // so that we use the new VERTEXES lump in the checksum.
-  PutGLChecksum();
+  PutVertices();
+  PutSegs();
+  PutSubsecs();
 }
 

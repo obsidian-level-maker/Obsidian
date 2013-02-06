@@ -159,16 +159,6 @@ typedef struct raw_hexen_thing_s
 } 
 raw_hexen_thing_t;
 
-// -JL- Hexen polyobj thing types
-#define PO_ANCHOR_TYPE      3000
-#define PO_SPAWN_TYPE       3001
-#define PO_SPAWNCRUSH_TYPE  3002
-
-// -JL- ZDoom polyobj thing types
-#define ZDOOM_PO_ANCHOR_TYPE      9300
-#define ZDOOM_PO_SPAWN_TYPE       9301
-#define ZDOOM_PO_SPAWNCRUSH_TYPE  9302
-
 
 /* ----- The BSP tree structures ----------------------- */
 

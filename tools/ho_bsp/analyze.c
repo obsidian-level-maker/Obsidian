@@ -33,7 +33,6 @@
 #include "blockmap.h"
 #include "level.h"
 #include "node.h"
-#include "reject.h"
 #include "seg.h"
 #include "structs.h"
 #include "util.h"
@@ -52,7 +51,6 @@ extern linedef_t ** lev_linedefs;
 extern sidedef_t ** lev_sidedefs;
 extern sector_t  ** lev_sectors;
 
-extern boolean_g lev_doing_normal;
 
 
 /* ----- analysis routines ----------------------------- */
@@ -74,51 +72,6 @@ static int VertexCompare(const void *p1, const void *p2)
   return (int)A->y - (int)B->y;
 }
 
-static int SidedefCompare(const void *p1, const void *p2)
-{
-  int comp;
-
-  int side1 = ((const uint16_g *) p1)[0];
-  int side2 = ((const uint16_g *) p2)[0];
-
-  sidedef_t *A = lev_sidedefs[side1];
-  sidedef_t *B = lev_sidedefs[side2];
-
-  if (side1 == side2)
-    return 0;
-
-  // don't merge sidedefs on special lines
-  if (A->on_special || B->on_special)
-    return side1 - side2;
-
-  if (A->sector != B->sector)
-  {
-    if (A->sector == NULL) return -1;
-    if (B->sector == NULL) return +1;
-
-    return (A->sector->index - B->sector->index);
-  }
-
-  if ((int)A->x_offset != (int)B->x_offset)
-    return A->x_offset - (int)B->x_offset;
-
-  if ((int)A->y_offset != B->y_offset)
-    return (int)A->y_offset - (int)B->y_offset;
-
-  // compare textures
-
-  comp = memcmp(A->upper_tex, B->upper_tex, sizeof(A->upper_tex));
-  if (comp) return comp;
-  
-  comp = memcmp(A->lower_tex, B->lower_tex, sizeof(A->lower_tex));
-  if (comp) return comp;
-  
-  comp = memcmp(A->mid_tex, B->mid_tex, sizeof(A->mid_tex));
-  if (comp) return comp;
-
-  // sidedefs must be the same
-  return 0;
-}
 
 void DetectDuplicateVertices(void)
 {
@@ -150,35 +103,6 @@ void DetectDuplicateVertices(void)
   UtilFree(array);
 }
 
-void DetectDuplicateSidedefs(void)
-{
-  int i;
-  uint16_g *array = UtilCalloc(num_sidedefs * sizeof(uint16_g));
-
-  DisplayTicker();
-
-  // sort array of indices
-  for (i=0; i < num_sidedefs; i++)
-    array[i] = i;
-  
-  qsort(array, num_sidedefs, sizeof(uint16_g), SidedefCompare);
-
-  // now mark them off
-  for (i=0; i < num_sidedefs - 1; i++)
-  {
-    // duplicate ?
-    if (SidedefCompare(array + i, array + i+1) == 0)
-    {
-      sidedef_t *A = lev_sidedefs[array[i]];
-      sidedef_t *B = lev_sidedefs[array[i+1]];
-
-      // found a duplicate !
-      B->equiv = A->equiv ? A->equiv : A;
-    }
-  }
-
-  UtilFree(array);
-}
 
 void PruneLinedefs(void)
 {
@@ -285,54 +209,6 @@ void PruneVertices(void)
   num_normal_vert = num_vertices;
 }
 
-void PruneSidedefs(void)
-{
-  int i;
-  int new_num;
-  int unused = 0;
-
-  DisplayTicker();
-
-  // scan all sidedefs
-  for (i=0, new_num=0; i < num_sidedefs; i++)
-  {
-    sidedef_t *S = lev_sidedefs[i];
-
-    if (S->ref_count < 0)
-      InternalError("Sidedef %d ref_count is %d", i, S->ref_count);
-    
-    if (S->ref_count == 0)
-    {
-      if (S->sector)
-        S->sector->ref_count--;
-
-      if (S->equiv == NULL)
-        unused++;
-
-      UtilFree(S);
-      continue;
-    }
-
-    S->index = new_num;
-    lev_sidedefs[new_num++] = S;
-  }
-
-  if (new_num < num_sidedefs)
-  {
-    int dup_num = num_sidedefs - new_num - unused;
-
-    if (unused > 0)
-      PrintVerbose("Pruned %d unused sidedefs\n", unused);
-
-    if (dup_num > 0)
-      PrintVerbose("Pruned %d duplicate sidedefs\n", dup_num);
-
-    num_sidedefs = new_num;
-  }
-
-  if (new_num == 0)
-    FatalError("Couldn't find any Sidedefs");
-}
 
 void PruneSectors(void)
 {
@@ -558,12 +434,6 @@ vertex_t *NewVertexFromSplitSeg(seg_t *seg, float_g x, float_g y)
 
   vert->ref_count = seg->partner ? 4 : 2;
 
-  if (lev_doing_normal && cur_info->spec_version == 1)
-  {
-    vert->index = num_normal_vert;
-    num_normal_vert++;
-  }
-  else
   {
     vert->index = num_gl_vert | IS_GL_VERTEX;
     num_gl_vert++;
@@ -578,18 +448,6 @@ vertex_t *NewVertexFromSplitSeg(seg_t *seg, float_g x, float_g y)
       seg->partner ? seg->partner->sector : NULL, seg->sector);
 
   // create a duplex vertex if needed
-
-  if (lev_doing_normal && cur_info->spec_version != 1)
-  {
-    vert->normal_dup = NewVertex();
-
-    vert->normal_dup->x = x;
-    vert->normal_dup->y = y;
-    vert->normal_dup->ref_count = vert->ref_count;
-
-    vert->normal_dup->index = num_normal_vert;
-    num_normal_vert++;
-  }
 
   return vert;
 }
@@ -608,12 +466,6 @@ vertex_t *NewVertexDegenerate(vertex_t *start, vertex_t *end)
 
   vert->ref_count = start->ref_count;
 
-  if (lev_doing_normal)
-  {
-    vert->index = num_normal_vert;
-    num_normal_vert++;
-  }
-  else
   {
     vert->index = num_gl_vert | IS_GL_VERTEX;
     num_gl_vert++;

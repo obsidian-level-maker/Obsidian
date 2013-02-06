@@ -26,13 +26,11 @@
 
 // detection routines
 void DetectDuplicateVertices(void);
-void DetectDuplicateSidedefs(void);
 void DetectOverlappingLines(void);
 
 // pruning routines
 void PruneLinedefs(void);
 void PruneVertices(void);
-void PruneSidedefs(void);
 void PruneSectors(void);
 
 // computes the wall tips for all of the vertices

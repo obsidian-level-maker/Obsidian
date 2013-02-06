@@ -85,9 +85,6 @@ typedef struct sector_s
   // sector index.  Always valid after loading & pruning.
   int index;
 
-  // -JL- non-zero if this sector contains a polyobj.
-  int has_polyobj;
-
   // reference count.  When building normal nodes, unused sectors will
   // be pruned.
   int ref_count;
@@ -103,16 +100,6 @@ typedef struct sector_s
   int light;
   int special;
   int tag;
-
-  // used when building REJECT table.  Each set of sectors that are
-  // isolated from other sectors will have a different group number.
-  // Thus: on every 2-sided linedef, the sectors on both sides will be
-  // in the same group.  The rej_next, rej_prev fields are a link in a
-  // RING, containing all sectors of the same group.
-  int rej_group;
-
-  struct sector_s *rej_next;
-  struct sector_s *rej_prev;
 
   struct seg_s * seg_list;
 
