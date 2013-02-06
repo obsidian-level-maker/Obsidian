@@ -50,7 +50,7 @@ Sam Trenholme
   - lots of feedback and support
   - numerous fixes
 
-DoomIIGuy
+LakiSoft
   - Heretic boss maps
 
 
