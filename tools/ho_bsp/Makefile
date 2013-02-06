@@ -43,7 +43,6 @@ OBJS = \
 	obj_linux/glbsp.o    \
 	obj_linux/level.o    \
 	obj_linux/node.o     \
-	obj_linux/reject.o   \
 	obj_linux/seg.o      \
 	obj_linux/system.o   \
 	obj_linux/util.o     \
