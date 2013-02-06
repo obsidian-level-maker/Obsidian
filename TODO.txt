@@ -16,12 +16,15 @@ ______________________________________________________________________
 
 *  symmetrical rooms
 
--  texture coord system (see docs/Tex_Coords.txt)
-
 
 *  proper install for Unix / Linux systems
 
 -  make a Debian package
+
+
++  update Usage page:
+   -  recommend My Documents, avoid Program Files
+   -  the 'Seed' setting is no longer first
 
 
 ______________________________________________________________________
@@ -30,9 +33,9 @@ ______________________________________________________________________
 ______________________________________________________________________
 
 
-----------------------------------------------------------------
+----------------------------------------------
   OTHER GAMES
-----------------------------------------------------------------
+----------------------------------------------
 
 ?  Chex Quest 1, 2, 3
 
@@ -45,9 +48,9 @@ ______________________________________________________________________
 ?  Dark Forces
 
 
-----------------------------------------------------------------
+----------------------------------------------
   LEVEL STUFF
-----------------------------------------------------------------
+----------------------------------------------
 
 !!  RADICAL IDEA : __ALL__ fitted prefabs are "xyz" mode
                    i.e. always supply a 3D bounding box
@@ -421,9 +424,9 @@ Mazes:
                                             (e.g. over lava)
 
 
-----------------------------------------------------------------
+----------------------------------------------
   MONSTERS / ITEMS
-----------------------------------------------------------------
+----------------------------------------------
 
 +  SpiderMasterminds only appear very very rarely
 
@@ -465,9 +468,9 @@ Weapons:
 -  update Immoral Conduct module too
 
 
-----------------------------------------------------------------
+----------------------------------------------
   MISCELLANEOUS
-----------------------------------------------------------------
+----------------------------------------------
 
 +  when traversibility in a room is poor (exit near entrance),
    make the exit into a switched door and put a switch at other
@@ -481,6 +484,10 @@ Weapons:
      y_offset is alternate term for v1 or v2  (depends on 'peg' flag)
 
 +  DOORS (LOCKED TOO) in a whole mini-hall
+
+IDEA: GAME.SCOPED_VARS table which is like styles but (a) fields can
+      be used in prefabs (b) a _scope field can be "zone", "level",
+      "room", "episode" -- value remains constant over that scope.
 
 IDEA:  replaceable brushes in prefabs.
        Use this mechanism to place windows and pictures
@@ -593,9 +600,9 @@ Name generator:
    to make it seem like there is a actual story to the maps.
 
 
-----------------------------------------------------------------
+----------------------------------------------
   GUI and C++ CODE
-----------------------------------------------------------------
+----------------------------------------------
 
 +  an option for more compact GUI (fit on 640x480 screen)
 
@@ -622,24 +629,9 @@ Cancellation:
   -  can abort Q1_ClippingHull() midstream
 
 
-----------------------------------------------------------------
-  DOCUMENTATION / WEB SITE
-----------------------------------------------------------------
-
--  update Usage page:
-   -  recommend My Documents, avoid Program Files
-   -  the 'Seed' setting is no longer first
-
--  To reset all settings, simply delete this file: CONFIG.txt
-
--  new "RUNNING THE MAPS" section ?
-
-[etc.... merge WEB_TODO.txt into here...]
-
-
-----------------------------------------------------------------
+----------------------------------------------
   LUA EXTENSIONS
-----------------------------------------------------------------
+----------------------------------------------
 
 +  bug where errors show the wrong line number
 
@@ -653,22 +645,24 @@ NO: implement 2D array access: [x, y] --> [x][y]
     --> there's a power patch for that
 
 
-----------------------------------------------------------------
+----------------------------------------------
+  DOCUMENTATION / WEB SITE
+----------------------------------------------
+
+-  To reset all settings, simply delete this file: CONFIG.txt
+
+-  new "RUNNING THE MAPS" section ?
+
+[etc.... merge WEB_TODO.txt into here...]
+
+-  information about creating prefabs
+
+
+----------------------------------------------
   DOOM and DOOM II
-----------------------------------------------------------------
+----------------------------------------------
 
 >> for DOOM 1, have a separate theme for Episode 2
-
-!!  rethink way lighting is done, probably use light brushes for
-    every situation (regions without a primary light brush get
-    flood filled with a value less than nearest light).
-
-    Also allow light brushes to eat other ones in certain cases
-    (e.g. a shadow brush may override a low-level light brush).
-
-+  support 'light' in a 't'/'b' coord as automatic light brush
-
--  move light brush intensity value to props[] 
 
 +  support MAPINFO lumps (especially for ZDoom ports).
 
@@ -678,8 +672,6 @@ NO: implement 2D array access: [x, y] --> [x][y]
 
 -  MAP32: find and kill all the Keens to open the door to the exit.
           perhaps use Psychedelic theme and a lower qty Crazy mode.
-
-NO:  CSG DOOM: support entity.light
 
 -  support BOOM's 242 linetype for liquids and fake 3D floors
 
@@ -702,9 +694,6 @@ NO:  CSG DOOM: support entity.light
 
 -  give sky_fence linedefs the 'never draw' flag
 
--  make light level of windows (esp. outdoor -> outdoor)
-   slightly lower than surrounds.
-
 -  support lightning in ZDoom etc (via MAPINFO)
 
 -  ZDoom slopes:
@@ -718,26 +707,9 @@ NO:  CSG DOOM: support entity.light
    347 = 0,   Plane_Align (1, 2)  // Slope f.f. and b.c.
 
 
-DOOM Shadow Algorithm:
-
-1. give light brushes a 2D origin point (optional, if not present then
-   the light is coming down from ceiling or up from floor)
-
-2. test for intersections with nearby solid brushes.
-   IF a side intersects with the light brush
-   AND the light origin is on the correct side
-   THEN split the light brush into 3 (at most) pieces
-        (i.e. subtract the shadow area from the light brush)
-
-3. a simpler alternative would be to change the light model
-   to use simple addition of all light brushes, and merely
-   create a shadow brush (at the intersection side) which cancels
-   out the original light brush.
-
-
-----------------------------------------------------------------
+----------------------------------------------
   FINAL DOOM
-----------------------------------------------------------------
+----------------------------------------------
 
 -  TNT Evilution textures that have been changed:
      BLODGR1..4  SLADRIP1..3  SW1GSTON    SW1SKULL
@@ -748,9 +720,9 @@ DOOM Shadow Algorithm:
 -  Plutonia has 'WFALL1..4' textures for water
 
 
-----------------------------------------------------------------
+----------------------------------------------
   DOOM 64
-----------------------------------------------------------------
+----------------------------------------------
 
 !!  transition to make levels for Doom64 EX, not the TC.
 
@@ -761,34 +733,9 @@ DOOM Shadow Algorithm:
 +  a new theme (Urban / Hell) 
 
 
-----------------------------------------------------------------
-  HACX
-----------------------------------------------------------------
-
-+  complete the MATERIALS table
-
--  finish the ENTITIES table (trees etc)
-
-
-----------------------------------------------------------------
-  CHEX QUEST
-----------------------------------------------------------------
-
-+  finish Chex 3 MATERIALS table (the "XX" stuff)
-
-+  implement basic theme for Chex 2 and Chex 3
-
--  make some good themes :)
-
--  ensure that Oblige logos work in all games
-
-?  a pwad with textures/flats to smooth out compat issues
-   and make certain materials more usable.
-
-
-----------------------------------------------------------------
+----------------------------------------------
   HERETIC
-----------------------------------------------------------------
+----------------------------------------------
 
 -  don't build Blaze doors into maps.
 
@@ -807,9 +754,9 @@ Sam's suggestions:
   pools), or be like some areas in the original E3M7.
 
 
-----------------------------------------------------------------
+----------------------------------------------
   HEXEN
-----------------------------------------------------------------
+----------------------------------------------
 
 !!  BOSS map : require the 2/3 hub keys to access boss room
                NOTE: could use them to restrict progress along chain
@@ -830,18 +777,36 @@ Sam's suggestions:
 -  need exit teleporter in final Hub
 
 
-----------------------------------------------------------------
-  STRIFE
-----------------------------------------------------------------
+----------------------------------------------
+  CHEX QUEST
+----------------------------------------------
 
-!!  get it working
++  finish Chex 3 MATERIALS table (the "XX" stuff)
+
++  implement basic theme for Chex 2 and Chex 3
+
+-  make some good themes :)
+
+-  ensure that Oblige logos work in all games
+
+?  a pwad with textures/flats to smooth out compat issues
+   and make certain materials more usable.
 
 
-----------------------------------------------------------------
+----------------------------------------------
+  HACX
+----------------------------------------------
+
++  complete the MATERIALS table
+
+-  finish the ENTITIES table (trees etc)
+
+
+----------------------------------------------
   DUKE NUKEM 3D
-----------------------------------------------------------------
+----------------------------------------------
 
-!!  get it working again (in case it broke)
+!!  get it working again
 
 !  exit buttons
 
@@ -861,9 +826,14 @@ Sam's suggestions:
 -  fake 3D bridges (created via sprites)
 
 
-----------------------------------------------------------------
+----------------------------------------------
   QUAKE
-----------------------------------------------------------------
+----------------------------------------------
+
+!!  get it working again
+    1. support loading ".map" files as prefabs
+    2. create ".map" file for the level
+    3. invoke Quake map compiling tools
 
 +  slopes!
    -  for clipping, force a node line where slope flattens out,
@@ -876,6 +846,8 @@ Sam's suggestions:
    -  create OBLIGE logos : gui.quake_make_logo()
 
 +  flame cages
+
+-  texture coord system (see docs/Tex_Coords.txt)
 
 DONE: for the missing WAD message: a clickable hyperlink
 
@@ -918,59 +890,20 @@ DONE:  module to create _debugging_ MAP file
 ?  keys are removed after use : re-use them ??
 
 
-----------------------------------------------------------------
+----------------------------------------------
   QUAKE II
-----------------------------------------------------------------
+----------------------------------------------
+
+!!  get it working again
 
 +  proper hub system
 
 -  create oblige logos (.wal entries)
 
 
-----------------------------------------------------------------
-  HEXEN II
-----------------------------------------------------------------
-
-+  proper 'level', 'prob' and 'density' fields for MONSTERS
-
--  IDEA: faster clipping hulls:
-   -  re-use #2 for #5 (adjust for floor Z diff)
-   -  re-use #3 or render BSP for #4 (pentacles)
-
-
-----------------------------------------------------------------
-  HALF-LIFE
-----------------------------------------------------------------
-
--  fix the sky
-
--  create miptex: "error" "missing" "o_carve" (w/ palette)
-
--  Skies: 2desert black city cliff desert dusk morning
-          neb1 neb2 neb6 neb7 night space
-          alien1 alien2 alien3 xeno8 xeno9 xeno10
-
-
-----------------------------------------------------------------
-  QUAKE III
-----------------------------------------------------------------
-
-!!  get it working
-
--  surfaceType = MST_PLANAR
-
--  LUMP_DRAWINDEXES contains offsets from the base drawvert
-   of a surface.  Probably only need to create fans, i.e.
-   0 1 2  0 2 3  0 3 4  0 4 5  ...  0 63 64
-
--  can leave LUMP_LIGHTMAPS and LUMP_LIGHTGRID empty
-
--  can leave LUMP_VISIBILITY empty, LUMP_FOGS too
-
-
-----------------------------------------------------------------
+----------------------------------------------
   PIPE DREAMS
-----------------------------------------------------------------
+----------------------------------------------
 
 +  make Oblige easier to mod
 
@@ -982,11 +915,7 @@ DONE:  module to create _debugging_ MAP file
       5080 = "Blue Start"      
       5081 = "Red Start"
 
--  light up DOOM (etc) levels in a Quake-like way
-
 -  improved use of liquids.
-
--  fight simulator: take amount of cover into account
 
 -  a module or style for Claustrophic levels
 

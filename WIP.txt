@@ -6,6 +6,10 @@ WORK IN PROGRESS
 >> tri_pillar
 
 
+!!  proper Unixy compile/install in Linux
+
+
+
 WAD Prefabs
 -----------
 
@@ -46,8 +50,6 @@ DONE:  FWATER4 used for missing bits (support but deprecate LAVA4)
 
 ========================================================================
 
-!!  proper Unixy compile/install in Linux
-
 
 -  pick mini_halls at areas_handle_connections
 
@@ -58,8 +60,6 @@ DONE:  FWATER4 used for missing bits (support but deprecate LAVA4)
 +  re-think switches/locked_doors selection : USE GROUPS?
 
 
-
-!!  fix pick_sizes and max_W, max_H
 
 !!  Street mode : if one room surrounds another one, the "streets"
     between them are isolated from the rest, leading to this error:
@@ -78,7 +78,6 @@ DONE:  FWATER4 used for missing bits (support but deprecate LAVA4)
 - make secrets more secret
 
 
-========================================================================
 
 
 >>>  add pillars (via. C.content.kind = "DECORATION"
@@ -91,28 +90,12 @@ DONE:  FWATER4 used for missing bits (support but deprecate LAVA4)
 >>>  fix chunk_is_mungeable()
 
 
-Current Goals:
-
-(4) add some floor/ceiling prefabs:
-      (a) crates
-      (b) ceiling lights / sky holes
-      (c) pillars
-
-
------------------------------------------------------------------
-
 
 -   for 'mon_along' calculation -- ideally take it out of
     the game specific code (can modify it via PARAM or THEME).
 
--  check health and ammo distribution (too much in start room?)
-
-
-+  HEXEN and QUAKE : fix hallway lifts
 
 -  FAT_CAGE_PILLAR
-
--  doors are walls, hence should be XYZ fitted
 
 +  x_repeat should be a skin thang
 
@@ -127,14 +110,8 @@ Current Goals:
 -  separate (or at least mark) pictures that serve as main light
    sources for an area / room.  [QUAKE]
 
-Idea: GAME.SCOPED_VARS table which is like styles but (a) fields can
-      be used in prefabs (b) a _scope field can be "zone", "level",
-      "room", "episode" -- value remains constant over that scope.
-
 +  have "hallway arches", specified in hallway groups, used in
    indoor rooms where the hallway meets the room.
-
--  prevent jumping over sky-hall sides (esp. QUAKE and HEXEN)
 
 
 >>>  big_junction hallways : use 'mini_halls' instead of a hallway group
@@ -162,14 +139,6 @@ Idea: GAME.SCOPED_VARS table which is like styles but (a) fields can
 +  support height-changing mini-halls
 
 
-3D Areas:
-
-PATTERN LOGIC : skip patterns if (a) multiple levels,
-                                 (b) 2+ chunks in that grid and all of them would
-                                     end up in the same vhr
-                              OR (b2) one chunk in grid but ends up at same vhr
-                                      as all previously assigned chunks in room
-
 
 +  fix monsters stuck in doors / corners of chunks
 
@@ -192,7 +161,4 @@ PATTERN LOGIC : skip patterns if (a) multiple levels,
 >>  better exits
 
 -  liquid areas
-
-Closets:
-+  allow closet to be smaller than chunk, fill extra space with void
 
