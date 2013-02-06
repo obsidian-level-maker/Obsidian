@@ -39,7 +39,6 @@ clean:
 
 OBJS = \
 	obj_linux/analyze.o  \
-	obj_linux/blockmap.o \
 	obj_linux/glbsp.o    \
 	obj_linux/level.o    \
 	obj_linux/node.o     \

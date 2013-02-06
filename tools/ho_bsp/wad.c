@@ -31,7 +31,6 @@
 
 #include <zlib.h>
 
-#include "blockmap.h"
 #include "level.h"
 #include "node.h"
 #include "seg.h"

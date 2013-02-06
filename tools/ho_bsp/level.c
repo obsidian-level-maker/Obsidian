@@ -30,7 +30,6 @@
 #include <assert.h>
 
 #include "analyze.h"
-#include "blockmap.h"
 #include "level.h"
 #include "node.h"
 #include "seg.h"

@@ -320,6 +320,10 @@ extern int num_normal_vert;
 extern int num_gl_vert;
 extern int num_complete_seg;
 
+// map limits
+extern int limit_x1, limit_y1;
+extern int limit_x2, limit_y2;
+
 extern sector_t * void_sector;
 
 

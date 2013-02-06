@@ -24,6 +24,13 @@
 #include "structs.h"
 #include "level.h"
 
+
+void DetermineMapLimits(void);
+
+int CheckLinedefInsideBox(int xmin, int ymin, int xmax, int ymax,
+    int x1, int y1, int x2, int y2);
+
+
 // detection routines
 void DetectDuplicateVertices(void);
 void DetectOverlappingLines(void);

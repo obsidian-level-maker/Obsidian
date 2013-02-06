@@ -30,7 +30,6 @@
 #include <assert.h>
 
 #include "analyze.h"
-#include "blockmap.h"
 #include "level.h"
 #include "node.h"
 #include "seg.h"
@@ -52,8 +51,44 @@ extern sidedef_t ** lev_sidedefs;
 extern sector_t  ** lev_sectors;
 
 
+int limit_x1, limit_y1;
+int limit_x2, limit_y2;
+
+
+void DetermineMapLimits(void)
+{
+  int i;
+
+  limit_x1 = +999999;
+  limit_y1 = +999999;
+  limit_x2 = -999999;
+  limit_y2 = -999999;
+
+  for (i=0; i < num_linedefs; i++)
+  {
+    linedef_t *L = LookupLinedef(i);
+
+    {
+      int x1 = (int)L->start->x;
+      int y1 = (int)L->start->y;
+      int x2 = (int)L->end->x;
+      int y2 = (int)L->end->y;
+
+      limit_x1 = MIN(limit_x1, MIN(x1, x2));
+      limit_y1 = MIN(limit_y1, MIN(y1, y2));
+
+      limit_x2 = MAX(limit_x2, MAX(x1, x2));
+      limit_y2 = MAX(limit_y2, MAX(y1, y2));
+    }
+  }
+
+  PrintVerbose("Map goes from (%d,%d) to (%d,%d)\n",
+      limit_x1, limit_y1, limit_x2, limit_y2);
+}
+
 
 /* ----- analysis routines ----------------------------- */
+
 
 static int VertexCompare(const void *p1, const void *p2)
 {

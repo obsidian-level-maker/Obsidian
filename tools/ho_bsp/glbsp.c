@@ -29,7 +29,7 @@
 #include <limits.h>
 #include <assert.h>
 
-#include "blockmap.h"
+#include "analyze.h"
 #include "level.h"
 #include "node.h"
 #include "seg.h"
@@ -66,7 +66,7 @@ const nodebuildinfo_t default_buildinfo =
   FALSE,   // no_prune
   FALSE,   // merge_vert
 
-  DEFAULT_BLOCK_LIMIT,   // block_limit
+  3333,   // block_limit
 
   FALSE,   // missing_output
   FALSE    // same_filenames
@@ -267,13 +267,6 @@ glbsp_ret_e GlbspCheckInfo(nodebuildinfo_t *info,
     return GLBSP_E_BadInfoFixed;
   }
 
-  if (info->block_limit < 1000 || info->block_limit > 64000)
-  {
-    info->block_limit = DEFAULT_BLOCK_LIMIT;
-    SetErrorMsg("Bad blocklimit value !");
-    return GLBSP_E_BadInfoFixed;
-  }
-
   return GLBSP_E_OK;
 }
 
@@ -360,7 +353,7 @@ static glbsp_ret_e HandleLevel(void)
 
   LoadLevel();
 
-  InitBlockmap();
+  DetermineMapLimits();
 
   VerifyOuterLines();
 
