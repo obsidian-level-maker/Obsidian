@@ -968,7 +968,6 @@ void Script_Load(const char *root)
   Script_LoadSubDir("games");
   Script_LoadSubDir("engines");
   Script_LoadSubDir("modules");
-  Script_LoadSubDir("prefabs");
 
   has_loaded = true;
  
