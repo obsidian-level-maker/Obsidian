@@ -654,9 +654,6 @@ static void PutVertices(void)
   if (count != num_gl_vert)
     InternalError("PutVertices miscounted (%d != %d)", count,
       num_gl_vert);
-
-  if (count > 32767)
-    MarkSoftFailure(LIMIT_GL_VERT);
 }
 
 
@@ -691,10 +688,6 @@ static void PutSegs(void)
   {
     raw_gl_seg_t raw;
     seg_t *seg = segs[i];
-
-    // ignore degenerate segs
-    if (seg->degenerate)
-      continue;
 
     raw.start = UINT16(VertexIndex16Bit(seg->start));
     raw.end   = UINT16(VertexIndex16Bit(seg->end));

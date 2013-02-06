@@ -67,36 +67,11 @@ typedef struct level_s
 
   // for normal levels, this is the associated GL level lump
   struct lump_s *buddy;
-
-  // information on overflow
-  int soft_limit;
-  int hard_limit;
-  int v5_switch;
 }
 level_t;
 
 /* this level information holds GL lumps */
 #define LEVEL_IS_GL      0x0002
-
-/* limit flags, to show what went wrong */
-#define LIMIT_VERTEXES     0x000001
-#define LIMIT_SECTORS      0x000002
-#define LIMIT_SIDEDEFS     0x000004
-#define LIMIT_LINEDEFS     0x000008
-
-#define LIMIT_SEGS         0x000010
-#define LIMIT_SSECTORS     0x000020
-#define LIMIT_NODES        0x000040
-
-#define LIMIT_GL_VERT      0x000100
-#define LIMIT_GL_SEGS      0x000200
-#define LIMIT_GL_SSECT     0x000400
-#define LIMIT_GL_NODES     0x000800
-
-#define LIMIT_BAD_SIDE     0x001000
-#define LIMIT_BMAP_TRUNC   0x002000
-#define LIMIT_BLOCKMAP     0x004000
-#define LIMIT_ZDBSP        0x008000
 
 
 // directory entry
@@ -215,24 +190,6 @@ lump_t *CreateGLLump(const char *name);
 // with the above function).
 //
 void AppendLevelLump(lump_t *lump, const void *data, int length);
-
-// for the current GL lump, add a keyword/value pair into the
-// level marker lump.
-void AddGLTextLine(const char *keyword, const char *value);
-
-// Zlib compression support
-void ZLibBeginLump(lump_t *lump);
-void ZLibAppendLump(const void *data, int length);
-void ZLibFinishLump(void);
-
-// mark the fact that this level failed to build.
-void MarkSoftFailure(int soft);
-void MarkHardFailure(int hard);
-void MarkV5Switch(int v5);
-void MarkZDSwitch(void);
-
-// alert the user if any levels failed to build properly.
-void ReportFailedLevels(void);
 
 
 /* ----- conversion macros ----------------------- */

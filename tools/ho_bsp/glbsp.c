@@ -468,8 +468,6 @@ glbsp_ret_e GlbspBuildNodes(const nodebuildinfo_t *info,
     PrintMsg("\n");
     PrintMsg("Total serious warnings: %d\n", cur_comms->total_big_warn);
     PrintMsg("Total minor warnings: %d\n", cur_comms->total_small_warn);
-
-    ReportFailedLevels();
   }
 
   // close wads and free memory

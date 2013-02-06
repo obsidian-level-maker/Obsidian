@@ -264,31 +264,3 @@ char *UtilTimeString(void)
 #endif  
 }
 
-//------------------------------------------------------------------------
-//  Adler-32 CHECKSUM Code
-//------------------------------------------------------------------------
-
-void Adler32_Begin(uint32_g *crc)
-{
-  *crc = 1;
-}
-
-void Adler32_AddBlock(uint32_g *crc, const uint8_g *data, int length)
-{
-    uint32_g s1 = (*crc) & 0xFFFF;
-    uint32_g s2 = ((*crc) >> 16) & 0xFFFF;
-
-    for (; length > 0; data++, length--)
-    {
-        s1 = (s1 + *data) % 65521;
-        s2 = (s2 + s1)    % 65521;
-    }
-
-    *crc = (s2 << 16) | s1;
-}
-
-void Adler32_Finish(uint32_g *crc)
-{
-  /* nothing to do */
-}
-

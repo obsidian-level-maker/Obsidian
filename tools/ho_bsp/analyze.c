@@ -487,45 +487,6 @@ vertex_t *NewVertexFromSplitSeg(seg_t *seg, float_g x, float_g y)
   return vert;
 }
 
-//
-// NewVertexDegenerate
-//
-vertex_t *NewVertexDegenerate(vertex_t *start, vertex_t *end)
-{
-  float_g dx = end->x - start->x;
-  float_g dy = end->y - start->y;
-
-  float_g dlen = UtilComputeDist(dx, dy);
-
-  vertex_t *vert = NewVertex();
-
-  vert->ref_count = start->ref_count;
-
-  {
-    vert->index = num_gl_vert | IS_GL_VERTEX;
-    num_gl_vert++;
-  }
-
-  // compute new coordinates
-
-  vert->x = start->x;
-  vert->y = start->x;
-
-  if (dlen == 0)
-    InternalError("NewVertexDegenerate: bad delta !");
-
-  dx /= dlen;
-  dy /= dlen;
-
-  while (I_ROUND(vert->x) == I_ROUND(start->x) && 
-         I_ROUND(vert->y) == I_ROUND(start->y))
-  {
-    vert->x += dx;
-    vert->y += dy;
-  }
-
-  return vert;
-}
 
 //
 // VertexCheckOpen

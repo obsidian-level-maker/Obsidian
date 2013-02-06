@@ -48,13 +48,6 @@ void CalculateWallTips(void);
 //
 vertex_t *NewVertexFromSplitSeg(seg_t *seg, float_g x, float_g y);
 
-// return a new end vertex to compensate for a seg that would end up
-// being zero-length (after integer rounding).  Doesn't compute the
-// wall_tip info (thus this routine should only be used _after_ node
-// building).
-//
-vertex_t *NewVertexDegenerate(vertex_t *start, vertex_t *end);
-
 // check whether a line with the given delta coordinates and beginning
 // at this vertex is open.  Returns a sector reference if it's open,
 // or NULL if closed (void space or directly along a linedef).
