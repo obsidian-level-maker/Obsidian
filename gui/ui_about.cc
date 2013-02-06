@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2012 Andrew Apted
+//  Copyright (C) 2006-2013 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -85,10 +85,10 @@ private:
 
 
 const char *UI_About::Text =
-  "OBLIGE is a random level generator for\n"
-  "classic FPS games like DOOM and Hexen\n"
+  "OBLIGE is a random level generator\n"
+  "for classic FPS games like DOOM\n"
   "\n"
-  "Copyright (C) 2006-2013 Andrew Apted\n"
+  "Copyright (C) 2006-2013 Andrew Apted, et al\n"
   "\n"
   "This program is free software, and may be\n"
   "distributed and modified under the terms of\n"
@@ -166,7 +166,7 @@ UI_About::UI_About(int W, int H, const char *label) :
   int bw = 60 + KF * 10;
   int bh = 30 + KF * 3;
 
-  Fl_Button *button = new Fl_Button(W-10-bw, H-10-bh, bw, bh, "OK");
+  Fl_Button *button = new Fl_Button(W-30-bw, H-10-bh, bw, bh, "OK");
   button->callback(callback_Quit, this);
   darkish->add(button);
 }
@@ -179,7 +179,7 @@ void DLG_AboutText(void)
   if (about_window)  // already up?
     return;
 
-  int about_w = 370 + KF * 30;
+  int about_w = 400 + KF * 30;
   int about_h = 370 + KF * 40;
 
   about_window = new UI_About(about_w, about_h, "About Box");
@@ -413,7 +413,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
   int bw = 60 + KF * 10;
   int bh = 30 + KF * 3;
 
-  Fl_Button *button = new Fl_Button(W-10-bw, H-10-bh, bw, bh, "OK");
+  Fl_Button *button = new Fl_Button(W-30-bw, H-10-bh, bw, bh, "OK");
   button->callback(callback_Quit, this);
   darkish->add(button);
 }
