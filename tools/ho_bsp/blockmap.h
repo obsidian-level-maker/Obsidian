@@ -37,11 +37,6 @@ int limit_x2, limit_y2;
 //
 void InitBlockmap(void);
 
-// build the blockmap and write the data into the BLOCKMAP lump
-void PutBlockmap(void);
-
-// utility routines...
-void GetBlockmapBounds(int *x, int *y, int *w, int *h);
 
 int CheckLinedefInsideBox(int xmin, int ymin, int xmax, int ymax,
     int x1, int y1, int x2, int y2);
