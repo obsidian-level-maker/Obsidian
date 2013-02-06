@@ -27,23 +27,16 @@
 // line.  Returns -1 if box is on left side, +1 if box is on right
 // size, or 0 if the line intersects the box.
 //
-int BoxOnLineSide(superblock_t *box, seg_t *part);
+int BoxOnLineSide(seg_t *part, float_g x1, float_g y1, float_g x2, float_g y2);
 
 // add the seg to the given list
-void AddSegToSuper(superblock_t *block, seg_t *seg);
+void AddSegToList(seg_t ** list_ptr, seg_t *seg);
 
-// increase the counts within the superblock, to account for the given
-// seg being split.
-//
-void SplitSegInSuper(superblock_t *block, seg_t *seg);
 
 // scan all the linedef of the level and convert each sidedef into a
 // seg (or seg pair).  Returns the list of segs.
 //
-superblock_t *CreateSegs(void);
-
-// free a super block.
-void FreeSuper(superblock_t *block);
+seg_t * CreateSegs(void);
 
 // takes the seg list and determines if it is convex.  When it is, the
 // segs are converted to a subsector, and '*S' is the new subsector
@@ -52,7 +45,7 @@ void FreeSuper(superblock_t *block);
 // and '*N' is the new node (and '*S' is set to NULL).  Normally
 // returns GLBSP_E_OK, or GLBSP_E_Cancelled if user stopped it.
 //
-glbsp_ret_e BuildSubsectors(superblock_t *seg_list, int depth);
+glbsp_ret_e BuildSubsectors(seg_t *seg_list, int depth);
 
 // put all the segs in each subsector into
 // clockwise order, and renumber the seg indices.  This cannot be done
@@ -61,9 +54,6 @@ glbsp_ret_e BuildSubsectors(superblock_t *seg_list, int depth);
 // order-wise.
 //
 void ClockwiseSubsectors(void);
-
-// free all the superblocks on the quick-alloc list
-void FreeQuickAllocSupers(void);
 
 
 #endif /* __GLBSP_NODE_H__ */

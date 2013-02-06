@@ -346,8 +346,7 @@ void VerifyOuterLines(void)
 
 static glbsp_ret_e HandleLevel(void)
 {
-  superblock_t *seg_list;
-  bbox_t seg_bbox;
+  seg_t *seg_list;
 
   glbsp_ret_e ret;
 
@@ -368,11 +367,8 @@ static glbsp_ret_e HandleLevel(void)
   // create initial segs
   seg_list = CreateSegs();
 
-  FindLimits(seg_list, &seg_bbox);
-
 
   ret = BuildSubsectors(seg_list, 0);
-  FreeSuper(seg_list);
 
   if (ret == GLBSP_E_OK)
   {
@@ -386,7 +382,6 @@ static glbsp_ret_e HandleLevel(void)
 
   FreeLevel();
   FreeQuickAllocCuts();
-  FreeQuickAllocSupers();
 
   return ret;
 }

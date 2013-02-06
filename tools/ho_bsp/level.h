@@ -27,7 +27,7 @@
 
 struct node_s;
 struct sector_s;
-struct superblock_s;
+struct seg_s;
 
 
 // a wall_tip is where a wall meets a vertex
@@ -113,6 +113,8 @@ typedef struct sector_s
 
   struct sector_s *rej_next;
   struct sector_s *rej_prev;
+
+  struct seg_s * seg_list;
 
   // suppress superfluous mini warnings
   int warned_facing;
@@ -249,9 +251,7 @@ typedef struct seg_s
   // won't be any of these when writing the V2 GL_SEGS lump].
   int degenerate;
  
-  // the superblock that contains this seg, or NULL if the seg is no
-  // longer in any superblock (e.g. now in a subsector).
-  struct superblock_s *block;
+
 
   // precomputed data for faster calculations
   float_g psx, psy;
@@ -331,36 +331,6 @@ typedef struct node_s
   int too_long;
 }
 node_t;
-
-
-typedef struct superblock_s
-{
-  // parent of this block, or NULL for a top-level block
-  struct superblock_s *parent;
-
-  // coordinates on map for this block, from lower-left corner to
-  // upper-right corner.  Pseudo-inclusive, i.e (x,y) is inside block
-  // if and only if x1 <= x < x2 and y1 <= y < y2.
-  int x1, y1;
-  int x2, y2;
-
-  // sub-blocks.  NULL when empty.  [0] has the lower coordinates, and
-  // [1] has the higher coordinates.  Division of a square always
-  // occurs horizontally (e.g. 512x512 -> 256x512 -> 256x256).
-  struct superblock_s *subs[2];
-
-  // number of real segs and minisegs contained by this block
-  // (including all sub-blocks below it).
-  int real_num;
-  int mini_num;
-
-  // list of segs completely contained by this block.
-  seg_t *segs;
-}
-superblock_t;
-
-#define SUPER_IS_LEAF(s)  \
-    ((s)->x2-(s)->x1 <= 256 && (s)->y2-(s)->y1 <= 256)
 
 
 /* ----- Level data arrays ----------------------- */

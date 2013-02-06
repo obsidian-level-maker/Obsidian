@@ -73,10 +73,7 @@ intersection_t;
 // The 'depth' parameter is the current depth in the tree, used for
 // computing  the current progress.
 //
-seg_t *PickNode(superblock_t *seg_list, int depth); 
-
-// compute the boundary of the list of segs
-void FindLimits(superblock_t *seg_list, bbox_t *bbox);
+seg_t *PickNode(seg_t *seg_list, int depth); 
 
 // compute the seg private info (psx/y, pex/y, pdx/y, etc).
 void RecomputeSeg(seg_t *seg);
@@ -88,15 +85,15 @@ void RecomputeSeg(seg_t *seg);
 // the partition line.
 //
 void DivideOneSeg(seg_t *cur, seg_t *part, 
-    superblock_t *left_list, superblock_t *right_list,
+    seg_t ** left_list, seg_t ** right_list,
     intersection_t ** cut_list);
 
 // remove all the segs from the list, partitioning them into the left
 // or right lists based on the given partition line.  Adds any
 // intersections onto the intersection list as it goes.
 //
-void SeparateSegs(superblock_t *seg_list, seg_t *part,
-    superblock_t *left_list, superblock_t *right_list,
+void SeparateSegs(seg_t *seg_list, seg_t *part,
+    seg_t ** left_list, seg_t ** right_list,
     intersection_t ** cut_list);
 
 // analyse the intersection list, and add any needed minisegs to the
@@ -104,7 +101,7 @@ void SeparateSegs(superblock_t *seg_list, seg_t *part,
 // structures will be freed back into a quick-alloc list.
 //
 void AddMinisegs(seg_t *part, 
-    superblock_t *left_list, superblock_t *right_list, 
+    seg_t ** left_list, seg_t ** right_list, 
     intersection_t *cut_list);
 
 // free the quick allocation cut list

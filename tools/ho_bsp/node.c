@@ -59,9 +59,6 @@
 #define DEBUG_SUBSEC   0
 
 
-static superblock_t *quick_alloc_supers = NULL;
-
-
 //
 // PointOnLineSide
 //
@@ -80,12 +77,12 @@ static int PointOnLineSide(seg_t *part, float_g x, float_g y)
 //
 // BoxOnLineSide
 //
-int BoxOnLineSide(superblock_t *box, seg_t *part)
+int BoxOnLineSide(seg_t *part, float_g x1, float_g y1, float_g x2, float_g y2)
 {
-  float_g x1 = (float_g)box->x1 - IFFY_LEN * 1.5;
-  float_g y1 = (float_g)box->y1 - IFFY_LEN * 1.5;
-  float_g x2 = (float_g)box->x2 + IFFY_LEN * 1.5;
-  float_g y2 = (float_g)box->y2 + IFFY_LEN * 1.5;
+  x1 -= IFFY_LEN * 1.5;
+  y1 -= IFFY_LEN * 1.5;
+  x2 += IFFY_LEN * 1.5;
+  y2 += IFFY_LEN * 1.5;
 
   int p1, p2;
 
@@ -131,216 +128,16 @@ int BoxOnLineSide(superblock_t *box, seg_t *part)
 }
 
 
-/* ----- super block routines ------------------------------------ */
-
 //
-// NewSuperBlock
+// AddSegToList
 //
-static superblock_t *NewSuperBlock(void)
+void AddSegToList(seg_t ** list_ptr, seg_t *seg)
 {
-  superblock_t *block;
+  seg->next  = *list_ptr;
 
-  if (quick_alloc_supers == NULL)
-    return UtilCalloc(sizeof(superblock_t));
-
-  block = quick_alloc_supers;
-  quick_alloc_supers = block->subs[0];
-
-  // clear out any old rubbish
-  memset(block, 0, sizeof(superblock_t));
-
-  return block;
+  (*list_ptr) = seg;
 }
 
-//
-// FreeQuickAllocSupers
-//
-void FreeQuickAllocSupers(void)
-{
-  while (quick_alloc_supers)
-  {
-    superblock_t *block = quick_alloc_supers;
-    quick_alloc_supers = block->subs[0];
-
-    UtilFree(block);
-  }
-}
-
-//
-// FreeSuper
-//
-void FreeSuper(superblock_t *block)
-{
-  int num;
-
-  if (block->segs)
-#if 0  // this can happen, but only under abnormal circumstances, in
-       // particular when the node-building was cancelled by the GUI.
-    InternalError("FreeSuper: block contains segs");
-#else
-    block->segs = NULL;
-#endif
-
-  // recursively handle sub-blocks
-  for (num=0; num < 2; num++)
-  {
-    if (block->subs[num])
-      FreeSuper(block->subs[num]);
-  } 
-
-  // add block to quick-alloc list.  Note that subs[0] is used for
-  // linking the blocks together.
-
-  block->subs[0] = quick_alloc_supers;
-  quick_alloc_supers = block;
-}
-
-#if 0 // DEBUGGING CODE
-static void TestSuperWorker(superblock_t *block, int *real, int *mini)
-{
-  seg_t *cur;
-  int num;
-
-  for (cur=block->segs; cur; cur=cur->next)
-  {
-    if (cur->linedef)
-      (*real) += 1;
-    else
-      (*mini) += 1;
-  }
-
-  for (num=0; num < 2; num++)
-  {
-    if (block->subs[num])
-      TestSuperWorker(block->subs[num], real, mini);
-  }
-}
-
-//
-// TestSuper
-//
-void TestSuper(superblock_t *block)
-{
-  int real_num = 0;
-  int mini_num = 0;
-
-  TestSuperWorker(block, &real_num, &mini_num);
-
-  if (real_num != block->real_num || mini_num != block->mini_num)
-    InternalError("TestSuper FAILED: block=%p %d/%d != %d/%d",
-      block, block->real_num, block->mini_num, real_num, mini_num);
-}
-#endif
-
-//
-// AddSegToSuper
-//
-void AddSegToSuper(superblock_t *block, seg_t *seg)
-{
-  for (;;)
-  {
-    int p1, p2;
-    int child;
-
-    int x_mid = (block->x1 + block->x2) / 2;
-    int y_mid = (block->y1 + block->y2) / 2;
-
-    superblock_t *sub;
-
-    // update seg counts
-    if (seg->linedef)
-      block->real_num++;
-    else
-      block->mini_num++;
-   
-    if (SUPER_IS_LEAF(block))
-    {
-      // block is a leaf -- no subdivision possible
-
-      seg->next = block->segs;
-      seg->block = block;
-
-      block->segs = seg;
-      return;
-    }
-
-    if (block->x2 - block->x1 >= block->y2 - block->y1)
-    {
-      // block is wider than it is high, or square
-
-      p1 = seg->start->x >= x_mid;
-      p2 = seg->end->x   >= x_mid;
-    }
-    else
-    {
-      // block is higher than it is wide
-
-      p1 = seg->start->y >= y_mid;
-      p2 = seg->end->y   >= y_mid;
-    }
-
-    if (p1 && p2)
-      child = 1;
-    else if (!p1 && !p2)
-      child = 0;
-    else
-    {
-      // line crosses midpoint -- link it in and return
-
-      seg->next = block->segs;
-      seg->block = block;
-
-      block->segs = seg;
-      return;
-    }
-
-    // OK, the seg lies in one half of this block.  Create the block
-    // if it doesn't already exist, and loop back to add the seg.
-
-    if (! block->subs[child])
-    {
-      block->subs[child] = sub = NewSuperBlock();
-      sub->parent = block;
-
-      if (block->x2 - block->x1 >= block->y2 - block->y1)
-      {
-        sub->x1 = child ? x_mid : block->x1;
-        sub->y1 = block->y1;
-
-        sub->x2 = child ? block->x2 : x_mid;
-        sub->y2 = block->y2;
-      }
-      else
-      {
-        sub->x1 = block->x1;
-        sub->y1 = child ? y_mid : block->y1;
-
-        sub->x2 = block->x2;
-        sub->y2 = child ? block->y2 : y_mid;
-      }
-    }
-
-    block = block->subs[child];
-  }
-}
-
-//
-// SplitSegInSuper
-//
-void SplitSegInSuper(superblock_t *block, seg_t *seg)
-{
-  do
-  {
-    // update seg counts
-    if (seg->linedef)
-      block->real_num++;
-    else
-      block->mini_num++;
- 
-    block = block->parent;
-  }
-  while (block != NULL);
-}
 
 static seg_t *CreateOneSeg(linedef_t *line, vertex_t *start, vertex_t *end,
     sidedef_t *side, int side_num)
@@ -377,22 +174,22 @@ static seg_t *CreateOneSeg(linedef_t *line, vertex_t *start, vertex_t *end,
 // Initially create all segs, one for each linedef.  Must be called
 // _after_ InitBlockmap().
 //
-superblock_t *CreateSegs(void)
+seg_t *CreateSegs(void)
 {
   int i;
-  int bw, bh;
 
+  seg_t *all_segs = NULL;
+ 
   seg_t *left, *right;
-  superblock_t *block;
 
   PrintVerbose("Creating Segs...\n");
 
-  block = NewSuperBlock();
- 
+/*
   GetBlockmapBounds(&block->x1, &block->y1, &bw, &bh);
 
   block->x2 = block->x1 + 128 * UtilRoundPOW2(bw);
   block->y2 = block->y1 + 128 * UtilRoundPOW2(bh);
+*/
 
   // step through linedefs and get side numbers
 
@@ -424,14 +221,14 @@ superblock_t *CreateSegs(void)
     
 
     right = CreateOneSeg(line, line->start, line->end, line->right, 0);
-    AddSegToSuper(block, right);
+    AddSegToList(&all_segs, right);
 
     if (line->is_border)
       left = NULL;
     else
     {
       left = CreateOneSeg(line, line->end, line->start, line->left, 1);
-      AddSegToSuper(block, left);
+      AddSegToList(&all_segs, left);
     }
 
     if (left && right)
@@ -445,7 +242,7 @@ superblock_t *CreateSegs(void)
     }
   }
 
-  return block;
+  return all_segs;
 }
 
 //
@@ -716,42 +513,16 @@ static void RenumberSubsecSegs(subsec_t *sub)
 }
 
 
-static void CreateSubsecWorker(subsec_t *sub, superblock_t *block)
+static void CreateSubsecWorker(subsec_t *sub, seg_t *block)
 {
-  int num;
-
-  while (block->segs)
+  while (block)
   {
     // unlink first seg from block
-    seg_t *cur = block->segs;
-    block->segs = cur->next;
-    
-    // link it into head of the subsector's list
-    cur->next = sub->seg_list;
-    cur->block = NULL;
+    seg_t *cur = block;
+    block = block->next;
 
-    sub->seg_list = cur;
+    AddSegToList(&sub->seg_list, cur);
   }
-
-  // recursively handle sub-blocks
-
-  for (num=0; num < 2; num++)
-  {
-    superblock_t *A = block->subs[num];
-
-    if (A)
-    {
-      CreateSubsecWorker(sub, A);
-
-      if (A->real_num + A->mini_num > 0)
-        InternalError("CreateSubsec: child %d not empty !", num);
-
-      FreeSuper(A);
-      block->subs[num] = NULL;
-    }
-  }
-
-  block->real_num = block->mini_num = 0;
 }
 
 //
@@ -759,7 +530,7 @@ static void CreateSubsecWorker(subsec_t *sub, superblock_t *block)
 //
 // Create a subsector from a list of segs.
 //
-static subsec_t *CreateSubsec(superblock_t *seg_list)
+static subsec_t *CreateSubsec(seg_t *seg_list)
 {
   subsec_t *sub = NewSubsec();
 
@@ -781,22 +552,16 @@ static subsec_t *CreateSubsec(superblock_t *seg_list)
 
 #if DEBUG_BUILDER
 
-static void DebugShowSegs(superblock_t *seg_list)
+static void DebugShowSegs(seg_t *seg_list)
 {
   seg_t *cur;
   int num;
 
-  for (cur=seg_list->segs; cur; cur=cur->next)
+  for (cur = seg_list ; cur ; cur = cur->next)
   {
     PrintDebug("Build:   %sSEG %p  sector=%d  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
         cur->linedef ? "" : "MINI", cur, cur->sector->index,
         cur->start->x, cur->start->y, cur->end->x, cur->end->y);
-  }
-
-  for (num=0; num < 2; num++)
-  {
-    if (seg_list->subs[num])
-      DebugShowSegs(seg_list->subs[num]);
   }
 }
 #endif
@@ -804,13 +569,13 @@ static void DebugShowSegs(superblock_t *seg_list)
 //
 // BuildSubsectors
 //
-glbsp_ret_e BuildSubsectors(superblock_t *seg_list, int depth)
+glbsp_ret_e BuildSubsectors(seg_t *seg_list, int depth)
 {
   node_t *node;
   seg_t *best;
 
-  superblock_t *rights;
-  superblock_t *lefts;
+  seg_t * rights;
+  seg_t * lefts;
 
   intersection_t *cut_list;
 
@@ -845,30 +610,23 @@ glbsp_ret_e BuildSubsectors(superblock_t *seg_list, int depth)
       best, best->start->x, best->start->y, best->end->x, best->end->y);
 # endif
 
-  /* create left and right super blocks */
-  lefts  = (superblock_t *) NewSuperBlock();
-  rights = (superblock_t *) NewSuperBlock();
-
-  lefts->x1 = rights->x1 = seg_list->x1;
-  lefts->y1 = rights->y1 = seg_list->y1;
-  lefts->x2 = rights->x2 = seg_list->x2;
-  lefts->y2 = rights->y2 = seg_list->y2;
-
   /* divide the segs into two lists: left & right */
+  lefts  = NULL;
+  rights = NULL;
   cut_list = NULL;
 
-  SeparateSegs(seg_list, best, lefts, rights, &cut_list);
+  SeparateSegs(seg_list, best, &lefts, &rights, &cut_list);
 
   /* sanity checks... */
-  if (rights->real_num + rights->mini_num == 0)
+  if (! rights)
     InternalError("Separated seg-list has no RIGHT side");
 
-  if (lefts->real_num + lefts->mini_num == 0)
+  if (! lefts)
     InternalError("Separated seg-list has no LEFT side");
 
   DisplayTicker();
 
-  AddMinisegs(best, lefts, rights, cut_list);
+  AddMinisegs(best, &lefts, &rights, cut_list);
 
   node = NewNode();
 
@@ -902,20 +660,14 @@ glbsp_ret_e BuildSubsectors(superblock_t *seg_list, int depth)
     node->too_long = 1;
   }
 
-  /* find limits of vertices */
-  FindLimits(lefts,  &node->l.bounds);
-  FindLimits(rights, &node->r.bounds);
-
 # if DEBUG_BUILDER
   PrintDebug("Build: Going LEFT\n");
 # endif
 
   ret = BuildSubsectors(lefts, depth+1);
-  FreeSuper(lefts);
 
   if (ret != GLBSP_E_OK)
   {
-    FreeSuper(rights);
     return ret;
   }
 
@@ -924,7 +676,6 @@ glbsp_ret_e BuildSubsectors(superblock_t *seg_list, int depth)
 # endif
 
   ret = BuildSubsectors(rights, depth+1);
-  FreeSuper(rights);
 
 # if DEBUG_BUILDER
   PrintDebug("Build: DONE\n");

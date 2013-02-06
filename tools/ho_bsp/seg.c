@@ -158,10 +158,6 @@ void RecomputeSeg(seg_t *seg)
 //       segs (except the one we are currently splitting) must exist
 //       on a singly-linked list somewhere. 
 //
-// Note: we must update the count values of any superblock that
-//       contains the seg (and/or partner), so that future processing
-//       is not fucked up by incorrect counts.
-//
 static seg_t *SplitSeg(seg_t *old_seg, float_g x, float_g y)
 {
   seg_t *new_seg;
@@ -174,10 +170,6 @@ static seg_t *SplitSeg(seg_t *old_seg, float_g x, float_g y)
   else
     PrintDebug("Splitting Miniseg %p at (%1.1f,%1.1f)\n", old_seg, x, y);
 # endif
-
-  // update superblock, if needed
-  if (old_seg->block)
-    SplitSegInSuper(old_seg->block, old_seg);
 
   new_vert = NewVertexFromSplitSeg(old_seg, x, y);
   new_seg  = NewSeg();
@@ -204,10 +196,6 @@ static seg_t *SplitSeg(seg_t *old_seg, float_g x, float_g y)
 #   if DEBUG_SPLIT
     PrintDebug("Splitting Partner %p\n", old_seg->partner);
 #   endif
-
-    // update superblock, if needed
-    if (old_seg->partner->block)
-      SplitSegInSuper(old_seg->partner->block, old_seg->partner);
 
     new_seg->partner = NewSeg();
 
@@ -335,7 +323,7 @@ static void AddIntersection(intersection_t ** cut_list,
 //
 // Returns TRUE if a "bad seg" was found early.
 //
-static int EvalPartitionWorker(superblock_t *seg_list, seg_t *part, 
+static int EvalPartitionWorker(seg_t *seg_list, seg_t *part, 
     int best_cost, eval_info_t *info)
 {
   seg_t *check;
@@ -343,34 +331,7 @@ static int EvalPartitionWorker(superblock_t *seg_list, seg_t *part,
   float_g qnty;
   float_g a, b, fa, fb;
 
-  int num;
   int factor = cur_info->factor;
-
-  // -AJA- this is the heart of my superblock idea, it tests the
-  //       _whole_ block against the partition line to quickly handle
-  //       all the segs within it at once.  Only when the partition
-  //       line intercepts the box do we need to go deeper into it.
-
-  num = BoxOnLineSide(seg_list, part);
-
-  if (num < 0)
-  {
-    // LEFT
-
-    info->real_left += seg_list->real_num;
-    info->mini_left += seg_list->mini_num;
-
-    return FALSE;
-  }
-  else if (num > 0)
-  {
-    // RIGHT
-
-    info->real_right += seg_list->real_num;
-    info->mini_right += seg_list->mini_num;
-    
-    return FALSE;
-  }
 
 # define ADD_LEFT()  \
       do {  \
@@ -386,7 +347,7 @@ static int EvalPartitionWorker(superblock_t *seg_list, seg_t *part,
 
   /* check partition against all Segs */
 
-  for (check=seg_list->segs; check; check=check->next)
+  for (check = seg_list ; check ; check = check->next)
   { 
     // This is the heart of my pruning idea - it catches
     // bad segs early on. Killough
@@ -523,17 +484,6 @@ static int EvalPartitionWorker(superblock_t *seg_list, seg_t *part,
     }
   }
 
-  /* handle sub-blocks recursively */
-
-  for (num=0; num < 2; num++)
-  {
-    if (! seg_list->subs[num])
-      continue;
-
-    if (EvalPartitionWorker(seg_list->subs[num], part, best_cost, info))
-      return TRUE;
-  }
-
   /* no "bad seg" was found */
   return FALSE;
 }
@@ -548,7 +498,7 @@ static int EvalPartitionWorker(superblock_t *seg_list, seg_t *part,
 // Returns the computed cost, or a negative value if the seg should be
 // skipped altogether.
 //
-static int EvalPartition(superblock_t *seg_list, seg_t *part, 
+static int EvalPartition(seg_t *seg_list, seg_t *part, 
     int best_cost)
 {
   eval_info_t info;
@@ -606,17 +556,16 @@ static int EvalPartition(superblock_t *seg_list, seg_t *part,
 
 
 /* returns FALSE if cancelled */
-static int PickNodeWorker(superblock_t *part_list, 
-    superblock_t *seg_list, seg_t ** best, int *best_cost,
+static int PickNodeWorker(seg_t *part_list, 
+    seg_t *seg_list, seg_t ** best, int *best_cost,
     int *progress, int prog_step)
 {
   seg_t *part;
 
-  int num;
   int cost;
 
   /* use each Seg as partition */
-  for (part=part_list->segs; part; part = part->next)
+  for (part = part_list ; part ; part = part->next)
   {
     if (cur_comms->cancelled)
       return FALSE;
@@ -657,15 +606,6 @@ static int PickNodeWorker(superblock_t *part_list,
 
   DisplayTicker();
 
-  /* recursively handle sub-blocks */
-
-  for (num=0; num < 2; num++)
-  {
-    if (part_list->subs[num])
-      PickNodeWorker(part_list->subs[num], seg_list, best, best_cost,
-        progress, prog_step);
-  }
-
   return TRUE;
 }
 
@@ -674,7 +614,7 @@ static int PickNodeWorker(superblock_t *part_list,
 //
 // Find the best seg in the seg_list to use as a partition line.
 //
-seg_t *PickNode(superblock_t *seg_list, int depth)
+seg_t *PickNode(seg_t *seg_list, int depth)
 {
   seg_t *best=NULL;
 
@@ -689,6 +629,8 @@ seg_t *PickNode(superblock_t *seg_list, int depth)
 # endif
 
   /* compute info for showing progress */
+
+/*
   if (depth <= 6)
   {
     static int depth_counts[7] = { 248, 100, 30, 10, 6, 4, 2 };
@@ -707,7 +649,7 @@ seg_t *PickNode(superblock_t *seg_list, int depth)
       DisplaySetBar(2, cur_comms->file_pos + cur_comms->build_pos / 100);
     }
   }
-
+*/
   DisplayTicker();
 
   if (FALSE == PickNodeWorker(seg_list, seg_list, &best, &best_cost, 
@@ -749,7 +691,7 @@ seg_t *PickNode(superblock_t *seg_list, int depth)
 //       or be split.
 //
 void DivideOneSeg(seg_t *cur, seg_t *part, 
-    superblock_t *left_list, superblock_t *right_list,
+    seg_t ** left_list, seg_t ** right_list,
     intersection_t ** cut_list)
 {
   seg_t *new_seg;
@@ -776,11 +718,11 @@ void DivideOneSeg(seg_t *cur, seg_t *part,
 
     if (cur->pdx*part->pdx + cur->pdy*part->pdy < 0)
     {
-      AddSegToSuper(left_list, cur);
+      AddSegToList(left_list, cur);
     }
     else
     {
-      AddSegToSuper(right_list, cur);
+      AddSegToList(right_list, cur);
     }
 
     return;
@@ -794,7 +736,7 @@ void DivideOneSeg(seg_t *cur, seg_t *part,
     else if (b < DIST_EPSILON)
       AddIntersection(cut_list, cur->end, part, self_ref);
 
-    AddSegToSuper(right_list, cur);
+    AddSegToList(right_list, cur);
     return;
   }
  
@@ -806,7 +748,7 @@ void DivideOneSeg(seg_t *cur, seg_t *part,
     else if (b > -DIST_EPSILON)
       AddIntersection(cut_list, cur->end, part, self_ref);
 
-    AddSegToSuper(left_list, cur);
+    AddSegToList(left_list, cur);
     return;
   }
  
@@ -821,100 +763,30 @@ void DivideOneSeg(seg_t *cur, seg_t *part,
 
   if (a < 0)
   {
-    AddSegToSuper(left_list,  cur);
-    AddSegToSuper(right_list, new_seg);
+    AddSegToList(left_list,  cur);
+    AddSegToList(right_list, new_seg);
   }
   else
   {
-    AddSegToSuper(right_list, cur);
-    AddSegToSuper(left_list,  new_seg);
+    AddSegToList(right_list, cur);
+    AddSegToList(left_list,  new_seg);
   }
 }
 
 //
 // SeparateSegs
 //
-void SeparateSegs(superblock_t *seg_list, seg_t *part,
-    superblock_t *lefts, superblock_t *rights,
+void SeparateSegs(seg_t *seg_list, seg_t *part,
+    seg_t ** left_list, seg_t ** right_list,
     intersection_t ** cut_list)
 {
-  int num;
-
-  while (seg_list->segs)
+  while (seg_list)
   {
-    seg_t *cur = seg_list->segs;
-    seg_list->segs = cur->next;
+    seg_t *cur = seg_list;
+    seg_list   = seg_list->next;
 
-    cur->block = NULL;
-
-    DivideOneSeg(cur, part, lefts, rights, cut_list);
+    DivideOneSeg(cur, part, left_list, right_list, cut_list);
   }
-
-  // recursively handle sub-blocks
-  for (num=0; num < 2; num++)
-  {
-    superblock_t *A = seg_list->subs[num];
-
-    if (A)
-    {
-      SeparateSegs(A, part, lefts, rights, cut_list);
-
-      if (A->real_num + A->mini_num > 0)
-        InternalError("SeparateSegs: child %d not empty !", num);
-
-      FreeSuper(A);
-      seg_list->subs[num] = NULL;
-    }
-  }
-
-  seg_list->real_num = seg_list->mini_num = 0;
-}
-
-
-static void FindLimitWorker(superblock_t *block, bbox_t *bbox)
-{
-  seg_t *cur;
-  int num;
-
-  for (cur=block->segs; cur; cur=cur->next)
-  {
-    float_g x1 = cur->start->x;
-    float_g y1 = cur->start->y;
-    float_g x2 = cur->end->x;
-    float_g y2 = cur->end->y;
-
-    int lx = (int) floor(MIN(x1, x2));
-    int ly = (int) floor(MIN(y1, y2));
-    int hx = (int) ceil(MAX(x1, x2));
-    int hy = (int) ceil(MAX(y1, y2));
-
-    if (lx < bbox->minx) bbox->minx = lx;
-    if (ly < bbox->miny) bbox->miny = ly;
-    if (hx > bbox->maxx) bbox->maxx = hx;
-    if (hy > bbox->maxy) bbox->maxy = hy;
-  }
-
-  // recursive handle sub-blocks
-
-  for (num=0; num < 2; num++)
-  {
-    if (block->subs[num])
-      FindLimitWorker(block->subs[num], bbox);
-  }
-}
-
-//
-// FindLimits
-//
-// Find the limits from a list of segs, by stepping through the segs
-// and comparing the vertices at both ends.
-//
-void FindLimits(superblock_t *seg_list, bbox_t *bbox)
-{
-  bbox->minx = bbox->miny = SHRT_MAX;
-  bbox->maxx = bbox->maxy = SHRT_MIN;
-
-  FindLimitWorker(seg_list, bbox);
 }
 
 
@@ -922,7 +794,7 @@ void FindLimits(superblock_t *seg_list, bbox_t *bbox)
 // AddMinisegs
 //
 void AddMinisegs(seg_t *part, 
-    superblock_t *left_list, superblock_t *right_list, 
+    seg_t ** left_list, seg_t ** right_list, 
     intersection_t *cut_list)
 {
   intersection_t *cur, *next;
@@ -936,7 +808,7 @@ void AddMinisegs(seg_t *part,
   PrintDebug("PARTITION: (%1.1f,%1.1f) += (%1.1f,%1.1f)\n",
       part->psx, part->psy, part->pdx, part->pdy);
 
-  for (cur=cut_list; cur; cur=cur->next)
+  for (cur=cut_list ; cur ; cur=cur->next)
   {
     PrintDebug("  Vertex %8X (%1.1f,%1.1f)  Along %1.2f  [%d/%d]  %s\n", 
         cur->vertex->index, cur->vertex->x, cur->vertex->y,
@@ -1099,8 +971,8 @@ void AddMinisegs(seg_t *part,
     RecomputeSeg(buddy);
 
     // add the new segs to the appropriate lists
-    AddSegToSuper(right_list, seg);
-    AddSegToSuper(left_list, buddy);
+    AddSegToList(right_list, seg);
+    AddSegToList(left_list, buddy);
 
 #   if DEBUG_CUTLIST
     PrintDebug("AddMiniseg: %p RIGHT  sector %d  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
