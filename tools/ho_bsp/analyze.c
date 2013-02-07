@@ -369,7 +369,7 @@ void DetectOverlappingLines(void)
       if (LineEndCompare(array + i, array + j) == 0)
       {
         // found an overlap !
-        FatalError("Linedefs #%d and #%d overlap.\n", array[i], array[j]);
+        FatalError("Linedefs #%d and #%d overlap.", array[i], array[j]);
       }
     }
   }
@@ -417,11 +417,51 @@ static void VertexAddWallTip(vertex_t *vert, double dx, double dy,
   }
 }
 
+void ValidateWallTip(const vertex_t *vert)
+{
+  const wall_tip_t *tip;
+  const sector_t *first_right;
+
+  if (! vert->tip_set)
+    InternalError("No wall tips @ vertex #%d", vert->index);
+
+  if (! vert->tip_set->next)
+    FatalError("Vertex #%d only has one line.", vert->index);
+
+  first_right = vert->tip_set->right;
+  
+  for (tip = vert->tip_set ; tip ; tip = tip->next)
+  {
+    if (tip->next)
+    {
+      if (tip->left != tip->next->right)
+      {
+        FatalError("Sector #%d not closed at vertex #%d",
+          tip->left ? tip->left->index :
+          tip->right ? tip->right->index : -1,
+          vert->index);
+      }
+    }
+    else
+    {
+      if (tip->left != first_right)
+      {
+        FatalError("Sector #%d not closed at vertex #%d",
+          tip->left ? tip->left->index :
+          tip->right ? tip->right->index : -1,
+          vert->index);
+      }
+    }
+  }
+}
+
 void CalculateWallTips(void)
 {
   int i;
 
   DisplayTicker();
+
+  // create the wall tips
 
   for (i=0; i < num_linedefs; i++)
   {
@@ -438,7 +478,17 @@ void CalculateWallTips(void)
     VertexAddWallTip(line->start, x2-x1, y2-y1, left, right);
     VertexAddWallTip(line->end,   x1-x2, y1-y2, right, left);
   }
- 
+
+  // now check them
+
+  for (i=0; i < num_linedefs; i++)
+  {
+    const linedef_t *line = lev_linedefs[i];
+
+    ValidateWallTip(line->start);
+    ValidateWallTip(line->end);
+  }
+
 # if DEBUG_WALLTIPS
   for (i=0; i < num_vertices; i++)
   {
