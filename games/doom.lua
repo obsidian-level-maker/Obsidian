@@ -544,7 +544,7 @@ DOOM2.MATERIALS =
 {
   -- walls --
 
-  ASHWALL  = { t="ASHWALL2", f="MFLR8_4" }  -- compatibility name
+  ASHWALL2 = { t="ASHWALL2", f="MFLR8_4" }
   ASHWALL3 = { t="ASHWALL3", f="FLAT10" }
   ASHWALL4 = { t="ASHWALL4", f="FLAT10" }
   ASHWALL6 = { t="ASHWALL6", f="RROCK20" }
@@ -4112,7 +4112,7 @@ DOOM.ROOM_THEMES =
       SP_ROCK1=50,
       GRAYVINE=50,
       TEKWALL4=3,
-      ASHWALL  = 50
+      ASHWALL2 = 50
       ASHWALL4 = 50
       ASHWALL6  = 10
       TANROCK7  = 10
@@ -4139,7 +4139,7 @@ DOOM.ROOM_THEMES =
 
     naturals =
     {
-      ASHWALL=50,
+      ASHWALL2=50,
       ASHWALL4=50,
       SP_ROCK1=50,
       ASHWALL6  = 20
@@ -4305,7 +4305,7 @@ DOOM.ROOM_THEMES =
     {
       ROCKRED1 = 50
       SP_ROCK1 = 30
-      ASHWALL  = 30
+      ASHWALL2 = 30
       ASHWALL3  = 25
       ASHWALL6  = 20
       ASHWALL7  = 15
@@ -4516,7 +4516,7 @@ DOOM.ROOM_THEMES =
   {
     naturals =
     {
-      ASHWALL  = 50
+      ASHWALL2 = 50
       ASHWALL4 = 50
       BSTONE1  = 15
       ZIMMER5  = 15
@@ -4534,7 +4534,7 @@ DOOM.ROOM_THEMES =
 
     naturals =
     {
-      ASHWALL  = 50
+      ASHWALL2 = 50
       ASHWALL4 = 50
       BSTONE1  = 15
       ZIMMER5  = 15

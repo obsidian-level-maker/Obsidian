@@ -115,7 +115,9 @@ DOOM1.MATERIALS =
   NUKAGE1  = { t="SLADRIP1", f="NUKAGE1", sane=1 }
 
 
-  -- FIXME: HACK HACK HACK
+  -- compatibility stuff
+
+  ASHWALL2 = { t="ASHWALL",  f="FLOOR6_2" }
   BRICKLIT = { t="LITEMET",  f="CEIL5_1" }
   PIPEWAL1 = { t="COMPWERD", f="CEIL5_1" }
   MIDBARS3 = { t="MIDGRATE", f="CEIL5_1" }
