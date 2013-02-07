@@ -2855,6 +2855,7 @@ end
 
 
 function Fab_replacements(fab, skin)
+
   -- replaces textures (etc) in the brushes of the prefab with
   -- stuff from the skin.
 
@@ -2881,16 +2882,42 @@ function Fab_replacements(fab, skin)
       s = s .. santize_char(string.sub(name, i, i))
     end
 
-    if s == "" then return "ZZZ" end
+    if s == "" then return "XXX" end
 
     return s
   end
 
 
   local function check(prefix, val)
-    local k = prefix .. "_" .. val;
+    local k = prefix .. "_" .. val
 
     if skin[k] then return skin[k] end
+
+    return val
+  end
+
+
+  local function check_tex(val)
+    local k = "tex_" .. val
+
+    if skin[k] then
+      local mat = Mat_lookup(skin[k])
+
+      return assert(mat.t)
+    end
+
+    return val
+  end
+
+
+  local function check_flat(val)
+    local k = "flat_" .. val
+
+    if skin[k] then
+      local mat = Mat_lookup(skin[k])
+
+      return assert(mat.f or mat.t)
+    end
 
     return val
   end
@@ -2912,9 +2939,11 @@ function Fab_replacements(fab, skin)
   ---| Fab_replacements |---
 
   each B in fab.brushes do
+    local has_sky
+
     each C in B do
-      if C.tex and C.x     then C.tex = check("tex",  santize(C.tex)) end
-      if C.tex and not C.x then C.tex = check("flat", santize(C.tex)) end
+      if C.tex and C.x     then C.tex = check_tex (santize(C.tex)) end
+      if C.tex and not C.x then C.tex = check_flat(santize(C.tex)) end
 
       if C.special and C.x     then C.special = check("line",   C.special) end
       if C.special and not C.x then C.special = check("sector", C.special) end
@@ -2942,7 +2971,6 @@ function Fabricate(main_skin, T, skins)
     local skin = Fab_merge_skins(fab, main_skin, skins)
 
     Fab_substitutions(fab, skin)
-
     Fab_replacements(fab, skin)
 
     fab.state  = "skinned"
@@ -2952,6 +2980,7 @@ function Fabricate(main_skin, T, skins)
 
     Fab_transform_XY(fab, T)
     Fab_transform_Z (fab, T)
+
     Fab_render(fab)
 
     return fab
