@@ -252,7 +252,7 @@ static void AddIntersection(intersection_t ** cut_list,
     vertex_t *vert, seg_t *part)
 {
   intersection_t *cut;
-  intersection_t *after;
+  intersection_t *next;
 
   /* check if vertex already present */
   for (cut=(*cut_list); cut; cut=cut->next)
@@ -267,35 +267,32 @@ static void AddIntersection(intersection_t ** cut_list,
   cut->vertex = vert;
   cut->along_dist = UtilParallelDist(part, vert->x, vert->y);
  
-  cut->before = VertexCheckOpen(vert, -part->pdx, -part->pdy);
-  cut->after  = VertexCheckOpen(vert,  part->pdx,  part->pdy);
+  sector_t * before = VertexCheckOpen(vert, -part->pdx, -part->pdy);
+  sector_t * after  = VertexCheckOpen(vert,  part->pdx,  part->pdy);
 
   /* HO-BSP : only the currently processed sector is "open" */
 
-  if (cut->before && cut->before != build_sector)
-    cut->before = NULL;
-
-  if (cut->after && cut->after != build_sector)
-    cut->after = NULL;
+  cut->before = (before == build_sector) ? 1 : 0;
+  cut->after  = (after  == build_sector) ? 1 : 0;
  
   /* enqueue the new intersection into the list */
 
-  for (after=(*cut_list); after && after->next; after=after->next)
+  for (next=(*cut_list); next && next->next; next=next->next)
   { }
 
-  while (after && cut->along_dist < after->along_dist) 
-    after = after->prev;
+  while (next && cut->along_dist < next->along_dist) 
+    next = next->prev;
   
   /* link it in */
-  cut->next = after ? after->next : (*cut_list);
-  cut->prev = after;
+  cut->next = next ? next->next : (*cut_list);
+  cut->prev = next;
 
-  if (after)
+  if (next)
   {
-    if (after->next)
-      after->next->prev = cut;
+    if (next->next)
+      next->next->prev = cut;
     
-    after->next = cut;
+    next->next = cut;
   }
   else
   {
@@ -800,8 +797,7 @@ void AddMinisegs(seg_t *part,
     PrintDebug("  Vertex %8X (%1.1f,%1.1f)  Along %1.2f  [%d/%d]\n", 
         cur->vertex->index, cur->vertex->x, cur->vertex->y,
         cur->along_dist,
-        cur->before ? cur->before->index : -1,
-        cur->after ? cur->after->index : -1);
+        cur->before, cur->after);
   }
 # endif
 
@@ -836,12 +832,10 @@ void AddMinisegs(seg_t *part,
 # if DEBUG_CUTLIST
     PrintDebug("Merging cut (%1.0f,%1.0f) [%d/%d] with %p (%1.0f,%1.0f) [%d/%d]\n",
         cur->vertex->x, cur->vertex->y,
-        cur->before ? cur->before->index : -1,
-        cur->after ? cur->after->index : -1,
+        cur->before, cur->after,
         next->vertex,
         next->vertex->x, next->vertex->y,
-        next->before ? next->before->index : -1,
-        next->after ? next->after->index : -1);
+        next->before, next->after);
 # endif
 
     if (!cur->before && next->before)
@@ -853,8 +847,7 @@ void AddMinisegs(seg_t *part,
 # if DEBUG_CUTLIST
     PrintDebug("---> merged (%1.0f,%1.0f) [%d/%d]\n",
         cur->vertex->x, cur->vertex->y,
-        cur->before ? cur->before->index : -1,
-        cur->after ? cur->after->index : -1);
+        cur->before, cur->after);
 # endif
 
     // free the unused cut
@@ -877,40 +870,16 @@ void AddMinisegs(seg_t *part,
       continue;
  
     // check for some nasty OPEN/CLOSED or CLOSED/OPEN cases
-    if (cur->after && !next->before)
+    if ((cur->after && !next->before) ||
+        (!cur->after && next->before))
     {
-      if (!cur->after->warned_unclosed)
-      {
-        PrintMiniWarn("Sector #%d is unclosed near (%1.1f,%1.1f)\n",
-            cur->after->index,
-            (cur->vertex->x + next->vertex->x) / 2.0,
-            (cur->vertex->y + next->vertex->y) / 2.0);
-        cur->after->warned_unclosed = 1;
-      }
-      continue;
-    }
-    else if (!cur->after && next->before)
-    {
-      if (!next->before->warned_unclosed)
-      {
-        PrintMiniWarn("Sector #%d is unclosed near (%1.1f,%1.1f)\n",
-            next->before->index,
-            (cur->vertex->x + next->vertex->x) / 2.0,
-            (cur->vertex->y + next->vertex->y) / 2.0);
-        next->before->warned_unclosed = 1;
-      }
+      PrintMiniWarn("Unclosed sector near (%1.1f,%1.1f)\n",
+          (cur->vertex->x + next->vertex->x) / 2.0,
+          (cur->vertex->y + next->vertex->y) / 2.0);
       continue;
     }
 
-    // righteo, here we have definite open space.
-    // do a sanity check on the sectors (just for good measure).
-
-    if (cur->after != next->before)
-    {
-        PrintMiniWarn("Sector mismatch: #%d (%1.1f,%1.1f) != #%d (%1.1f,%1.1f)\n",
-            cur->after->index, cur->vertex->x, cur->vertex->y,
-            next->before->index, next->vertex->x, next->vertex->y);
-    }
+    /* Righteo, here we have definite open space */
 
     // create the miniseg pair
     seg   = NewSeg();
@@ -928,7 +897,7 @@ void AddMinisegs(seg_t *part,
     // leave 'linedef' field as NULL.
     // leave 'side' as zero too (not needed for minisegs).
 
-    seg->sector = buddy->sector = cur->after;
+    seg->sector = buddy->sector = build_sector;
 
     seg->index = buddy->index = -1;
 

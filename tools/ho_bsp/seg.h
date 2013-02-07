@@ -55,10 +55,9 @@ typedef struct intersection_s
   // in the opposite direction.
   double along_dist;
 
-  // sector on each side of the vertex (along the partition),
-  // or NULL when that direction isn't OPEN.
-  sector_t *before;
-  sector_t *after;
+  // open flag on each side of the vertex (along the partition)
+  int before;
+  int after;
 }
 intersection_t;
 
