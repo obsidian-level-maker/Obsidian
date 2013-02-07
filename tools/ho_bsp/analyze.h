@@ -35,10 +35,6 @@ int CheckLinedefInsideBox(int xmin, int ymin, int xmax, int ymax,
 void DetectDuplicateVertices(void);
 void DetectOverlappingLines(void);
 
-// pruning routines
-void PruneLinedefs(void);
-void PruneVertices(void);
-void PruneSectors(void);
 
 // computes the wall tips for all of the vertices
 void CalculateWallTips(void);
