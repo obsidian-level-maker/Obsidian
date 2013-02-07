@@ -274,6 +274,9 @@ extern int limit_x2, limit_y2;
 
 extern sector_t * void_sector;
 
+// currently processed sector
+extern sector_t * build_sector;
+
 
 /* ----- function prototypes ----------------------- */
 

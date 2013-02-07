@@ -39,8 +39,10 @@
 
 
 #define DEBUG_BUILDER  0
-#define DEBUG_SORTER   1
-#define DEBUG_SUBSEC   1
+#define DEBUG_SORTER   0
+#define DEBUG_SUBSEC   0
+
+sector_t * build_sector;
 
 
 //
@@ -359,8 +361,8 @@ static void SanityCheckClosed(subsec_t *sub)
 
   if (gaps > 0)
   {
-    PrintMiniWarn("Subsector #%d near (%1.1f,%1.1f) is not closed "
-        "(%d gaps, %d segs)\n", sub->index, 
+    PrintMiniWarn("Subsector #%d (sec #%d) near (%1.1f,%1.1f) is not closed "
+        "(%d gaps, %d segs)\n", sub->index, sub->sector->index,
         sub->mid_x, sub->mid_y, gaps, total);
 
 #   if DEBUG_SUBSEC
@@ -388,7 +390,7 @@ static void SanityCheckSameSector(subsec_t *sub)
 
   if (! compare)
   {
-    PrintWarn("Subsector %p got no sector!!\n", sub);
+    FatalError("Subsector %p got no sector!!\n", sub);
     return;
   }
 
@@ -507,7 +509,6 @@ static subsec_t *CreateSubsec(seg_t *seg_list)
 static void DebugShowSegs(seg_t *seg_list)
 {
   seg_t *cur;
-  int num;
 
   for (cur = seg_list ; cur ; cur = cur->next)
   {
@@ -623,6 +624,12 @@ glbsp_ret_e BuildEverything(void)
     // skip unused sectors
     if (! sec->seg_list)
       continue;
+
+    PrintDebug("-------------------------------\n");
+    PrintDebug("Processing Sector #%d\n", i);
+    PrintDebug("-------------------------------\n");
+
+    build_sector = sec;
 
     ret = BuildSubsectors(sec->seg_list, 0);
 
