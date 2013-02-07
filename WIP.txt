@@ -3,11 +3,36 @@ WORK IN PROGRESS
 ================
 
 
+!!  proper Unixy compile/install in Linux
+
+
+DONE:  fix material handling from wad-fabs
+
++  have 'sky_light' and 'sky_shade' PROPERTIES, and instead of adding
+   an entity just set the "light" value of the brush or face
+
+-  do LIQUID lighting via brush (or face) lighting
+
++  oscillating sectors (etc?) create a dummy
+
++  fucking lower-unpeg on door tracks
+
 >> tri_pillar
 
 
-!!  proper Unixy compile/install in Linux
+HO-BSP
+------
 
++  an _option_ to handle Islands:
+   (a) an island is a loop of linedefs (or segs) going anti-clockwise
+   (b) ignore outside of map, or in a VOID space
+   (c) find all sectors (or parts of sectors) inside that loop  [TRICKY]
+   (d) the sector itself must not be inside that loop
+   (e) all sectors inside the loop must either be VOID or a sector with
+       no tag and floors > loop sector and ceilings < loop sector
+   (f) when detected, simply omit segs from the loop.
+       hence the loop sector is sub-divided as if the island did not
+       exist (perhaps not sub-divided at all)
 
 
 WAD Prefabs
