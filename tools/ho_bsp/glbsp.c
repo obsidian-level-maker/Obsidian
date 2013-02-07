@@ -367,8 +367,8 @@ static glbsp_ret_e HandleLevel(void)
   {
     ClockwiseSubsectors();
 
-    PrintVerbose("Built %d NODES, %d SSECTORS, %d SEGS, %d VERTEXES\n",
-        num_nodes, num_subsecs, num_segs, num_normal_vert + num_gl_vert);
+    PrintVerbose("Built %d SUBSECS, %d SEGS, %d VERTEXES\n",
+        num_subsecs, num_segs, num_gl_vert);
 
     SaveLevel();
   }

@@ -64,7 +64,6 @@ LEVELARRAY(thing_t,   lev_things,     num_things)
 
 static LEVELARRAY(seg_t,     segs,       num_segs)
 static LEVELARRAY(subsec_t,  subsecs,    num_subsecs)
-static LEVELARRAY(node_t,    nodes,      num_nodes)
 static LEVELARRAY(wall_tip_t,wall_tips,  num_wall_tips)
 
 
@@ -109,9 +108,6 @@ seg_t *NewSeg(void)
 subsec_t *NewSubsec(void)
   ALLIGATOR(subsec_t, subsecs, num_subsecs)
 
-node_t *NewNode(void)
-  ALLIGATOR(node_t, nodes, num_nodes)
-
 wall_tip_t *NewWallTip(void)
   ALLIGATOR(wall_tip_t, wall_tips, num_wall_tips)
 
@@ -150,9 +146,6 @@ void FreeSegs(void)
 void FreeSubsecs(void)
   FREEMASON(subsec_t, subsecs, num_subsecs)
 
-void FreeNodes(void)
-  FREEMASON(node_t, nodes, num_nodes)
-
 void FreeWallTips(void)
   FREEMASON(wall_tip_t, wall_tips, num_wall_tips)
 
@@ -188,36 +181,9 @@ seg_t *LookupSeg(int index)
 subsec_t *LookupSubsec(int index)
   LOOKERUPPER(subsecs, num_subsecs, "subsector")
   
-node_t *LookupNode(int index)
-  LOOKERUPPER(nodes, num_nodes, "node")
-
 
 /* ----- reading routines ------------------------------ */
 
-
-//
-// CheckForNormalNodes
-//
-int CheckForNormalNodes(void)
-{
-  lump_t *lump;
-  
-  /* Note: an empty NODES lump can be valid */
-  if (FindLevelLump("NODES") == NULL)
-    return FALSE;
- 
-  lump = FindLevelLump("SEGS");
-  
-  if (! lump || lump->length == 0 || CheckLevelLumpZero(lump))
-    return FALSE;
-
-  lump = FindLevelLump("SSECTORS");
-  
-  if (! lump || lump->length == 0 || CheckLevelLumpZero(lump))
-    return FALSE;
-
-  return TRUE;
-}
 
 //
 // GetVertices
@@ -812,7 +778,6 @@ void FreeLevel(void)
   FreeThings();
   FreeSegs();
   FreeSubsecs();
-  FreeNodes();
   FreeWallTips();
 }
 

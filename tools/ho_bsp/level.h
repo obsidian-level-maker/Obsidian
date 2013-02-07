@@ -25,7 +25,6 @@
 #include "wad.h"
 
 
-struct node_s;
 struct sector_s;
 struct seg_s;
 
@@ -255,38 +254,6 @@ typedef struct bbox_s
 bbox_t;
 
 
-typedef struct child_s
-{
-  // child node or subsector (one must be NULL)
-  struct node_s *node;
-  subsec_t *subsec;
-
-  // child bounding box
-  bbox_t bounds;
-}
-child_t;
-
-
-typedef struct node_s
-{
-  int x, y;     // starting point
-  int dx, dy;   // offset to ending point
-
-  // right & left children
-  child_t r;
-  child_t l;
-
-  // node index.  Only valid once the NODES or GL_NODES lump has been
-  // created.
-  int index;
-
-  // the node is too long, and the (dx,dy) values should be halved
-  // when writing into the NODES lump.
-  int too_long;
-}
-node_t;
-
-
 /* ----- Level data arrays ----------------------- */
 
 extern int num_vertices;
@@ -296,7 +263,6 @@ extern int num_sectors;
 extern int num_things;
 extern int num_segs;
 extern int num_subsecs;
-extern int num_nodes;
 
 extern int num_normal_vert;
 extern int num_gl_vert;
@@ -319,7 +285,6 @@ sector_t *NewSector(void);
 thing_t *NewThing(void);
 seg_t *NewSeg(void);
 subsec_t *NewSubsec(void);
-node_t *NewNode(void);
 wall_tip_t *NewWallTip(void);
 
 // lookup routines
@@ -330,10 +295,6 @@ sector_t *LookupSector(int index);
 thing_t *LookupThing(int index);
 seg_t *LookupSeg(int index);
 subsec_t *LookupSubsec(int index);
-node_t *LookupNode(int index);
-
-// check whether the current level already has normal nodes
-int CheckForNormalNodes(void);
 
 // load all level data for the current level
 void LoadLevel(void);

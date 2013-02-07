@@ -551,7 +551,6 @@ static void DebugShowSegs(seg_t *seg_list)
 //
 glbsp_ret_e BuildSubsectors(seg_t *seg_list, int depth)
 {
-  node_t *node;
   seg_t *best;
 
   seg_t * rights;
@@ -608,37 +607,7 @@ glbsp_ret_e BuildSubsectors(seg_t *seg_list, int depth)
 
   AddMinisegs(best, &lefts, &rights, cut_list);
 
-  node = NewNode();
-
   assert(best->linedef);
-
-  if (best->side == 0)
-  {
-    node->x  = best->linedef->start->x;
-    node->y  = best->linedef->start->y;
-    node->dx = best->linedef->end->x - node->x;
-    node->dy = best->linedef->end->y - node->y;
-  }
-  else  /* left side */
-  {
-    node->x  = best->linedef->end->x;
-    node->y  = best->linedef->end->y;
-    node->dx = best->linedef->start->x - node->x;
-    node->dy = best->linedef->start->y - node->y;
-  }
-
-  /* check for really long partition (overflows dx,dy in NODES) */
-  if (best->p_length >= 30000)
-  {
-    if (node->dx && node->dy && ((node->dx & 1) || (node->dy & 1)))
-    {
-      PrintMiniWarn("Loss of accuracy on VERY long node: "
-          "(%d,%d) -> (%d,%d)\n", node->x, node->y, 
-          node->x + node->dx, node->y + node->dy);
-    }
-
-    node->too_long = 1;
-  }
 
 # if DEBUG_BUILDER
   PrintDebug("Build: Going LEFT\n");
