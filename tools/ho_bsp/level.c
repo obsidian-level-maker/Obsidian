@@ -795,6 +795,7 @@ void LoadLevel(void)
       num_vertices, num_sectors, num_sidedefs, num_linedefs, num_things);
 
   DetectOverlappingLines();
+  DetectDuplicateVertices();
 
   CalculateWallTips();
 }

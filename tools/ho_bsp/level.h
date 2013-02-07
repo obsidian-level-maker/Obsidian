@@ -62,10 +62,6 @@ typedef struct vertex_s
   // will be pruned.
   int ref_count;
 
-  // usually NULL, unless this vertex occupies the same location as a
-  // previous vertex.  Only used during the pruning phase.
-  struct vertex_s *equiv;
-
   // set of wall_tips
   wall_tip_t *tip_set;
 }

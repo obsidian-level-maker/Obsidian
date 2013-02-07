@@ -124,14 +124,20 @@ void DetectDuplicateVertices(void)
   // now mark them off
   for (i=0; i < num_vertices - 1; i++)
   {
-    // duplicate ?
-    if (VertexCompare(array + i, array + i+1) == 0)
+    if (VertexCompare(array + i, array + i+1) != 0)
+      continue;
+
+    // found a duplicate !
+
     {
       vertex_t *A = lev_vertices[array[i]];
       vertex_t *B = lev_vertices[array[i+1]];
 
-      // found a duplicate !
-      B->equiv = A->equiv ? A->equiv : A;
+      // we only care if the vertices both belong to a linedef
+      if (A->ref_count == 0 || B->ref_count == 0)
+        continue;
+
+      FatalError("Vertices #%d and #%d overlap.", array[i], array[i+1]);
     }
   }
 
