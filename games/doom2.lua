@@ -3293,7 +3293,7 @@ DOOM.SKINS =
     _bound_z2 = 128
     _long   = 256
 
-    tex_GRAYPOIS = "CEMENT4"
+    tex_GRAYPOIS = "O_CARVE"
   }
 
   Pic_Neon =
