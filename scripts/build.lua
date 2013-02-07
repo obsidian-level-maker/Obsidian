@@ -2569,6 +2569,11 @@ function Fab_load_wad(name)
         C.delta_z = -1
       end
 
+      -- automatically convert to a sky brush
+      if string.match(S.ceil_tex, "^F_SKY") then
+        B[1].m = "sky"
+      end
+
       if string.match(S.ceil_tex, "^F_SKY") and not C.delta_z then
         local mx, my = Brush_middle(coords)
         local ent = { id="light", x=mx, y=my, z=C.b - 4, light=LEVEL.sky_shade, _factor=0.8 }
