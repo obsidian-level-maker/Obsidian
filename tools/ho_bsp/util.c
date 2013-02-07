@@ -196,7 +196,7 @@ int UtilRoundPOW2(int x)
 //
 // Translate (dx, dy) into an angle value (degrees)
 //
-angle_g UtilComputeAngle(float_g dx, float_g dy)
+angle_g UtilComputeAngle(double dx, double dy)
 {
   double angle;
 

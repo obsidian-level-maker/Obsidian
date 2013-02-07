@@ -63,9 +63,9 @@
 //
 // Returns -1 for left, +1 for right, or 0 for intersect.
 //
-static int PointOnLineSide(seg_t *part, float_g x, float_g y)
+static int PointOnLineSide(seg_t *part, double x, double y)
 {
-  float_g perp = UtilPerpDist(part, x, y);
+  double perp = UtilPerpDist(part, x, y);
   
   if (fabs(perp) <= DIST_EPSILON)
     return 0;
@@ -76,7 +76,7 @@ static int PointOnLineSide(seg_t *part, float_g x, float_g y)
 //
 // BoxOnLineSide
 //
-int BoxOnLineSide(seg_t *part, float_g x1, float_g y1, float_g x2, float_g y2)
+int BoxOnLineSide(seg_t *part, double x1, double y1, double x2, double y2)
 {
   x1 -= IFFY_LEN * 1.5;
   y1 -= IFFY_LEN * 1.5;
@@ -236,7 +236,7 @@ static void DetermineMiddle(subsec_t *sub)
 {
   seg_t *cur;
 
-  float_g mid_x=0, mid_y=0;
+  double mid_x=0, mid_y=0;
   int total=0;
 
   // compute middle coordinates

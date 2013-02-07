@@ -157,7 +157,7 @@ void RecomputeSeg(seg_t *seg)
 //       segs (except the one we are currently splitting) must exist
 //       on a singly-linked list somewhere. 
 //
-static seg_t *SplitSeg(seg_t *old_seg, float_g x, float_g y)
+static seg_t *SplitSeg(seg_t *old_seg, double x, double y)
 {
   seg_t *new_seg;
   vertex_t *new_vert;
@@ -227,7 +227,7 @@ static seg_t *SplitSeg(seg_t *old_seg, float_g x, float_g y)
 //       situations like horizontal/vertical lines.
 //
 static INLINE_G void ComputeIntersection(seg_t *cur, seg_t *part,
-  float_g perp_c, float_g perp_d, float_g *x, float_g *y)
+  double perp_c, double perp_d, double *x, double *y)
 {
   double ds;
 
@@ -326,8 +326,8 @@ static int EvalPartitionWorker(seg_t *seg_list, seg_t *part,
 {
   seg_t *check;
 
-  float_g qnty;
-  float_g a, b, fa, fb;
+  double qnty;
+  double a, b, fa, fb;
 
   int factor = cur_info->factor;
 
@@ -694,11 +694,11 @@ void DivideOneSeg(seg_t *cur, seg_t *part,
 {
   seg_t *new_seg;
 
-  float_g x, y;
+  double x, y;
 
   /* get state of lines' relation to each other */
-  float_g a = UtilPerpDist(part, cur->psx, cur->psy);
-  float_g b = UtilPerpDist(part, cur->pex, cur->pey);
+  double a = UtilPerpDist(part, cur->psx, cur->psy);
+  double b = UtilPerpDist(part, cur->pex, cur->pey);
 
   if (cur->source_line == part->source_line)
     a = b = 0;
@@ -821,7 +821,7 @@ void AddMinisegs(seg_t *part,
 
   while (cur && next)
   {
-    float_g len = next->along_dist - cur->along_dist;
+    double len = next->along_dist - cur->along_dist;
 
     if (len < -0.1)
       InternalError("Bad order in intersect list: %1.3f > %1.3f\n",

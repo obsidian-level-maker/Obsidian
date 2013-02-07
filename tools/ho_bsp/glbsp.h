@@ -50,7 +50,6 @@ typedef unsigned char  uint8_g;
 typedef unsigned short uint16_g;
 typedef unsigned int   uint32_g;
 
-typedef double float_g;
 typedef double angle_g;  // degrees, 0 is E, 90 is N
 
 // boolean type

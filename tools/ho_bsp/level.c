@@ -246,8 +246,8 @@ static void GetVertices(void)
   {
     vertex_t *vert = NewVertex();
 
-    vert->x = (float_g) SINT16(raw->x);
-    vert->y = (float_g) SINT16(raw->y);
+    vert->x = (double) SINT16(raw->x);
+    vert->y = (double) SINT16(raw->y);
 
     vert->index = i;
   }
@@ -586,8 +586,8 @@ static void GetLinedefsHexen(void)
 
 static INLINE_G int TransformSegDist(const seg_t *seg)
 {
-  float_g sx = seg->side ? seg->linedef->end->x : seg->linedef->start->x;
-  float_g sy = seg->side ? seg->linedef->end->y : seg->linedef->start->y;
+  double sx = seg->side ? seg->linedef->end->x : seg->linedef->start->x;
+  double sy = seg->side ? seg->linedef->end->y : seg->linedef->start->y;
 
   return (int) ceil(UtilComputeDist(seg->start->x - sx, seg->start->y - sy));
 }

@@ -27,7 +27,7 @@
 // line.  Returns -1 if box is on left side, +1 if box is on right
 // size, or 0 if the line intersects the box.
 //
-int BoxOnLineSide(seg_t *part, float_g x1, float_g y1, float_g x2, float_g y2);
+int BoxOnLineSide(seg_t *part, double x1, double y1, double x2, double y2);
 
 // add the seg to the given list
 void AddSegToList(seg_t ** list_ptr, seg_t *seg);

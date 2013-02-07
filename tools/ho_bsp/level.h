@@ -52,7 +52,7 @@ wall_tip_t;
 typedef struct vertex_s
 {
   // coordinates
-  float_g x, y;
+  double x, y;
 
   // vertex index.  Always valid after loading and pruning of unused
   // vertices has occurred.  For GL vertices, bit 30 will be set.
@@ -68,12 +68,6 @@ typedef struct vertex_s
 
   // set of wall_tips
   wall_tip_t *tip_set;
-
-  // contains a duplicate vertex, needed when both normal and V2 GL
-  // nodes are being built at the same time (this is the vertex used
-  // for the normal segs).  Normally NULL.  Note: the wall tips on
-  // this vertex are not created.
-  struct vertex_s *normal_dup;
 }
 vertex_t;
 
@@ -218,14 +212,14 @@ typedef struct seg_s
   int index;
 
   // precomputed data for faster calculations
-  float_g psx, psy;
-  float_g pex, pey;
-  float_g pdx, pdy;
+  double psx, psy;
+  double pex, pey;
+  double pdx, pdy;
 
-  float_g p_length;
-  float_g p_angle;
-  float_g p_para;
-  float_g p_perp;
+  double p_length;
+  double p_angle;
+  double p_para;
+  double p_perp;
 
   // linedef that this seg initially comes from.  For "real" segs,
   // this is just the same as the 'linedef' field above.  For
@@ -251,8 +245,8 @@ typedef struct subsec_s
   int index;
 
   // approximate middle point
-  float_g mid_x;
-  float_g mid_y;
+  double mid_x;
+  double mid_y;
 }
 subsec_t;
 

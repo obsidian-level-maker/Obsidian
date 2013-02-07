@@ -46,12 +46,12 @@ void CalculateWallTips(void);
 // return a new vertex (with correct wall_tip info) for the split that
 // happens along the given seg at the given location.
 //
-vertex_t *NewVertexFromSplitSeg(seg_t *seg, float_g x, float_g y);
+vertex_t *NewVertexFromSplitSeg(seg_t *seg, double x, double y);
 
 // check whether a line with the given delta coordinates and beginning
 // at this vertex is open.  Returns a sector reference if it's open,
 // or NULL if closed (void space or directly along a linedef).
 //
-sector_t * VertexCheckOpen(vertex_t *vert, float_g dx, float_g dy);
+sector_t * VertexCheckOpen(vertex_t *vert, double dx, double dy);
 
 #endif /* __GLBSP_ANALYZE_H__ */

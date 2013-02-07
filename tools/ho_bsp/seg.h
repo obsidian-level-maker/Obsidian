@@ -53,7 +53,7 @@ typedef struct intersection_s
   // partition seg's start point, positive values move in the same
   // direction as the partition's direction, and negative values move
   // in the opposite direction.
-  float_g along_dist;
+  double along_dist;
 
   // sector on each side of the vertex (along the partition),
   // or NULL when that direction isn't OPEN.

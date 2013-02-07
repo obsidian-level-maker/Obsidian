@@ -380,7 +380,7 @@ void DetectOverlappingLines(void)
 
 /* ----- vertex routines ------------------------------- */
 
-static void VertexAddWallTip(vertex_t *vert, float_g dx, float_g dy,
+static void VertexAddWallTip(vertex_t *vert, double dx, double dy,
   sector_t *left, sector_t *right)
 {
   wall_tip_t *tip = NewWallTip();
@@ -427,10 +427,10 @@ void CalculateWallTips(void)
   {
     linedef_t *line = lev_linedefs[i];
 
-    float_g x1 = line->start->x;
-    float_g y1 = line->start->y;
-    float_g x2 = line->end->x;
-    float_g y2 = line->end->y;
+    double x1 = line->start->x;
+    double y1 = line->start->y;
+    double x2 = line->end->x;
+    double y2 = line->end->y;
 
     sector_t *right = (line->right) ? line->right->sector : void_sector;
     sector_t *left  = (line->left)  ? line->left->sector  : (line->is_border ? NULL : void_sector);
@@ -460,7 +460,7 @@ void CalculateWallTips(void)
 //
 // NewVertexFromSplitSeg
 //
-vertex_t *NewVertexFromSplitSeg(seg_t *seg, float_g x, float_g y)
+vertex_t *NewVertexFromSplitSeg(seg_t *seg, double x, double y)
 {
   vertex_t *vert = NewVertex();
 
@@ -491,7 +491,7 @@ vertex_t *NewVertexFromSplitSeg(seg_t *seg, float_g x, float_g y)
 //
 // VertexCheckOpen
 //
-sector_t * VertexCheckOpen(vertex_t *vert, float_g dx, float_g dy)
+sector_t * VertexCheckOpen(vertex_t *vert, double dx, double dy)
 {
   wall_tip_t *tip;
 

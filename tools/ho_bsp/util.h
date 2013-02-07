@@ -73,7 +73,7 @@ char *UtilTimeString(void);
 int UtilRoundPOW2(int x);
 
 // compute angle & distance from (0,0) to (dx,dy)
-angle_g UtilComputeAngle(float_g dx, float_g dy);
+angle_g UtilComputeAngle(double dx, double dy);
 #define UtilComputeDist(dx,dy)  sqrt((dx) * (dx) + (dy) * (dy))
 
 // compute the parallel and perpendicular distances from a partition
