@@ -824,7 +824,7 @@ void AddMinisegs(seg_t *part,
     double len = next->along_dist - cur->along_dist;
 
     if (len < -0.1)
-      InternalError("Bad order in intersect list: %1.3f > %1.3f\n",
+      InternalError("Bad order in intersect list: %1.3f > %1.3f",
           cur->along_dist, next->along_dist);
 
     if (len > 0.2)

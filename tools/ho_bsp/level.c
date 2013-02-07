@@ -479,7 +479,7 @@ static void GetLinedefs(void)
     if ( (fabs(start->x - end->x) < DIST_EPSILON) && 
          (fabs(start->y - end->y) < DIST_EPSILON) )
     {
-      FatalError("Linedef #%d has zero length.\n", i);
+      FatalError("Linedef #%d has zero length.", i);
     }
 
     line->flags = UINT16(raw->flags);
@@ -549,7 +549,7 @@ static void GetLinedefsHexen(void)
     if ( (fabs(start->x - end->x) < DIST_EPSILON) && 
          (fabs(start->y - end->y) < DIST_EPSILON) )
     {
-      FatalError("Linedef #%d has zero length.\n", i);
+      FatalError("Linedef #%d has zero length.", i);
     }
 
     line->flags = UINT16(raw->flags);
@@ -823,12 +823,12 @@ void SaveLevel(void)
 {
   if (num_normal_vert > 32767 || num_gl_vert > 32767)
   {
-    FatalError("Vertex overflow\n");
+    FatalError("Vertex overflow!");
   }
 
   if (num_segs > 65534)
   {
-    FatalError("Seg overflow\n");
+    FatalError("Seg overflow!");
   }
 
   PutVertices();

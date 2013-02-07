@@ -688,7 +688,7 @@ lump_t *CreateGLMarker(void)
   }
   else
   {
-    FatalError("Level name too lump: '%s'\n", level->name);
+    FatalError("Level name too long: '%s'", level->name);
   }
 
   cur = NewLump(UtilStrDup(name_buf));
