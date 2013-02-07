@@ -269,6 +269,14 @@ static void AddIntersection(intersection_t ** cut_list,
  
   cut->before = VertexCheckOpen(vert, -part->pdx, -part->pdy);
   cut->after  = VertexCheckOpen(vert,  part->pdx,  part->pdy);
+
+  /* HO-BSP : only the currently processed sector is "open" */
+
+  if (cut->before && cut->before != build_sector)
+    cut->before = NULL;
+
+  if (cut->after && cut->after != build_sector)
+    cut->after = NULL;
  
   /* enqueue the new intersection into the list */
 
