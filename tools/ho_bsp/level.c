@@ -794,9 +794,9 @@ void LoadLevel(void)
   PrintVerbose("Loaded %d vertices, %d sectors, %d sides, %d lines, %d things\n", 
       num_vertices, num_sectors, num_sidedefs, num_linedefs, num_things);
 
-  CalculateWallTips();
-
   DetectOverlappingLines();
+
+  CalculateWallTips();
 }
 
 //
