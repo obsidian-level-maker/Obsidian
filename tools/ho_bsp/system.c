@@ -30,7 +30,7 @@
 #include <assert.h>
 
 
-#define DEBUG_ENABLED   0
+#define DEBUG_ENABLED   1
 
 #define DEBUGGING_FILE  "gb_debug.txt"
 

@@ -339,8 +339,6 @@ void VerifyOuterLines(void)
 
 static glbsp_ret_e HandleLevel(void)
 {
-  seg_t *seg_list;
-
   glbsp_ret_e ret;
 
   if (cur_comms->cancelled)
@@ -358,10 +356,10 @@ static glbsp_ret_e HandleLevel(void)
   VerifyOuterLines();
 
   // create initial segs
-  seg_list = CreateSegs();
+  CreateSegs();
 
 
-  ret = BuildSubsectors(seg_list, 0);
+  ret = BuildEverything();
 
   if (ret == GLBSP_E_OK)
   {

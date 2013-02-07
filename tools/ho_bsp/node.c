@@ -17,21 +17,6 @@
 //  GNU General Public License for more details.
 //
 //------------------------------------------------------------------------
-//
-// Split a list of segs into two using the method described at bottom
-// of the file, this was taken from OBJECTS.C in the DEU5beta source.
-//
-// This is done by scanning all of the segs and finding the one that
-// does the least splitting and has the least difference in numbers of
-// segs on either side.
-//
-// If the ones on the left side make a SSector, then create another SSector
-// else put the segs into lefts list.
-// If the ones on the right side make a SSector, then create another SSector
-// else put the segs into rights list.
-//
-// Rewritten by Andrew Apted (-AJA-), 1999-2000.
-//
 
 #include "system.h"
 
@@ -54,8 +39,8 @@
 
 
 #define DEBUG_BUILDER  0
-#define DEBUG_SORTER   0
-#define DEBUG_SUBSEC   0
+#define DEBUG_SORTER   1
+#define DEBUG_SUBSEC   1
 
 
 //
@@ -143,15 +128,6 @@ static seg_t *CreateOneSeg(linedef_t *line, vertex_t *start, vertex_t *end,
 {
   seg_t *seg = NewSeg();
 
-  // check for bad sidedef
-  if (side && ! side->sector)
-  {
-    PrintWarn("Bad sidedef on linedef #%d (Z_CheckHeap error)\n",
-        line->index);
-
-    side = NULL;
-  }
- 
   seg->start   = start;
   seg->end     = end;
   seg->linedef = line;
@@ -164,21 +140,21 @@ static seg_t *CreateOneSeg(linedef_t *line, vertex_t *start, vertex_t *end,
 
   RecomputeSeg(seg);
 
+  // add the seg to the sector's list
+  AddSegToList(&seg->sector->seg_list, seg);
+
   return seg;
 }
 
 //
 // CreateSegs
 //
-// Initially create all segs, one for each linedef.  Must be called
-// _after_ InitBlockmap().
+// Initially create all segs, two for each linedef (usually).
 //
-seg_t *CreateSegs(void)
+void CreateSegs(void)
 {
   int i;
 
-  seg_t *all_segs = NULL;
- 
   seg_t *left, *right;
 
   PrintVerbose("Creating Segs...\n");
@@ -205,14 +181,12 @@ seg_t *CreateSegs(void)
     
 
     right = CreateOneSeg(line, line->start, line->end, line->right, 0);
-    AddSegToList(&all_segs, right);
 
     if (line->is_border)
       left = NULL;
     else
     {
       left = CreateOneSeg(line, line->end, line->start, line->left, 1);
-      AddSegToList(&all_segs, left);
     }
 
     if (left && right)
@@ -225,8 +199,6 @@ seg_t *CreateSegs(void)
         right->partner = left;
     }
   }
-
-  return all_segs;
 }
 
 //
@@ -271,7 +243,7 @@ static void ClockwiseOrder(subsec_t *sub)
   int score = -1;
 
 # if DEBUG_SUBSEC
-  PrintDebug("Subsec: Clockwising %d\n", sub->index);
+  PrintDebug("Subsec: Clockwising %d (sector #%d)\n", sub->index, sub->sector->index);
 # endif
 
   // count segs and create an array to manipulate them
@@ -634,6 +606,34 @@ glbsp_ret_e BuildSubsectors(seg_t *seg_list, int depth)
 }
 
 //
+// BuildEverything
+//
+glbsp_ret_e BuildEverything(void)
+{
+  int i;
+
+  glbsp_ret_e ret;
+
+  // this automatically includes the dummy 'void_sector'
+
+  for (i = 0 ; i < num_sectors ; i++)
+  {
+    sector_t *sec = LookupSector(i);
+
+    // skip unused sectors
+    if (! sec->seg_list)
+      continue;
+
+    ret = BuildSubsectors(sec->seg_list, 0);
+
+    if (ret != GLBSP_E_OK)
+      return ret;
+  }
+
+  return GLBSP_E_OK;
+}
+
+//
 // ClockwiseSubsectors
 //
 void ClockwiseSubsectors(void)
@@ -644,12 +644,14 @@ void ClockwiseSubsectors(void)
   {
     subsec_t *sub = LookupSubsec(i);
 
+    // this determines 'sector' field
+    SanityCheckSameSector(sub);
+
     ClockwiseOrder(sub);
     RenumberSubsecSegs(sub);
 
     // do some sanity checks
     SanityCheckClosed(sub);
-    SanityCheckSameSector(sub);
     SanityCheckHasRealSeg(sub);
   }
 }

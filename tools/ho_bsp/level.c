@@ -374,11 +374,11 @@ static void GetSidedefs(void)
   {
     sidedef_t *side = NewSidedef();
 
-    side->sector = (SINT16(raw->sector) == -1) ? NULL :
-        LookupSector(UINT16(raw->sector));
+    if (SINT16(raw->sector) == -1)
+      FatalError("Missing sector ref in sidedef #%d\n", i);
 
-    if (side->sector)
-      side->sector->ref_count++;
+    side->sector = LookupSector(UINT16(raw->sector));
+    side->sector->ref_count++;
 
     side->x_offset = SINT16(raw->x_offset);
     side->y_offset = SINT16(raw->y_offset);

@@ -36,7 +36,7 @@ void AddSegToList(seg_t ** list_ptr, seg_t *seg);
 // scan all the linedef of the level and convert each sidedef into a
 // seg (or seg pair).  Returns the list of segs.
 //
-seg_t * CreateSegs(void);
+void CreateSegs(void);
 
 // takes the seg list and determines if it is convex.  When it is, the
 // segs are converted to a subsector, and '*S' is the new subsector
@@ -46,6 +46,8 @@ seg_t * CreateSegs(void);
 // returns GLBSP_E_OK, or GLBSP_E_Cancelled if user stopped it.
 //
 glbsp_ret_e BuildSubsectors(seg_t *seg_list, int depth);
+
+glbsp_ret_e BuildEverything(void);
 
 // put all the segs in each subsector into
 // clockwise order, and renumber the seg indices.  This cannot be done

@@ -226,7 +226,7 @@ seg_t;
 
 typedef struct subsec_s
 {
-  // sector this belongs to, or NULL for void space
+  // sector this belongs to (possibly 'void_sector')
   sector_t *sector;
 
   // list of segs

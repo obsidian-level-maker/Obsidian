@@ -17,23 +17,6 @@
 //  GNU General Public License for more details.
 //
 //------------------------------------------------------------------------
-//
-// To be able to divide the nodes down, this routine must decide which
-// is the best Seg to use as a nodeline. It does this by selecting the
-// line with least splits and has least difference of Segs on either
-// side of it.
-//
-// Credit to Raphael Quinet and DEU, this routine is a copy of the
-// nodeline picker used in DEU5beta. I am using this method because
-// the method I originally used was not so good.
-//
-// Rewritten by Lee Killough to significantly improve performance,
-// while not affecting results one bit in >99% of cases (some tiny
-// differences due to roundoff error may occur, but they are
-// insignificant).
-//
-// Rewritten again by Andrew Apted (-AJA-), 1999-2000.
-//
 
 #include "system.h"
 
