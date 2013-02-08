@@ -2419,11 +2419,9 @@ WADFAB_ENTITIES =
 
 WADFAB_SKILL_TO_LIGHT =
 {
-  [1] = 0.4   -- EASY
-  [3] = 0.7   -- EASY + MED
-  [7] = 1.0   -- EASY + MED + HARD
-  [6] = 1.5   --        MED + HARD
-  [4] = 2.5   --              HARD
+  [1] = 0.5   -- EASY
+  [2] = 1.0   -- MEDIUM
+  [4] = 2.0   -- HARD
 }
 
 
@@ -2601,7 +2599,7 @@ function Fab_load_wad(name)
       local skill = bit.band(E.flags or 7, 7)
       E.flags = bit.bor(E.flags, 7)
 
-      E._factor = WADFAB_SKILL_TO_LIGHT[skill] or 1.0
+      E._factor = WADFAB_SKILL_TO_LIGHT[skill]
 
       local angle = E.angle or 180
       if angle < 0 then angle = angle + 360 end
