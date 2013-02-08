@@ -1170,8 +1170,6 @@ do return end ----!!!!!!!
 
         if c_mat == "_SKY" then
           table.insert(c_brush, 1, { m="sky" })
-          local mx, my = cell_middle(x, y)
-          entity_helper("light", mx, my, c_h - 4, { kind="sky", light=LEVEL.sky_shade })
         end
 
         brush_helper(c_brush)
@@ -1288,8 +1286,6 @@ do return end ----!!!!!!!
 
         if c_mat == "_SKY" then
           table.insert(c_brush, 1, { m="sky" })
-          local mx, my = cell_middle(x, y)
-          entity_helper("light", mx, my, c_h - 4, { kind="sky", light=LEVEL.sky_shade })
         end
 
         brush_helper(c_brush)
