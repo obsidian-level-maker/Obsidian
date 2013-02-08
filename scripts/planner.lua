@@ -614,8 +614,8 @@ function Plan_add_big_junctions()
 
     -- less chance at edges (even less at corners).
     -- that's because we want three or four connections.
-    if (mx == 1 or mx == MAP_W) and rand.odds(25) then return false end
-    if (my == 1 or my == MAP_H) and rand.odds(25) then return false end
+    if (mx == 1 or mx == MAP_W) and rand.odds(30) then return false end
+    if (my == 1 or my == MAP_H) and rand.odds(30) then return false end
 
     -- don't want anyone touching our junc!
     for dx = -1,1 do for dy = -1,1 do
@@ -648,7 +648,7 @@ function Plan_add_big_junctions()
   local small_level = (MAP_W + MAP_H <= 5)
 
   -- decide how many big hallway junctions to make
-  local prob = style_sel("big_juncs", 0, 25, 50, 80)
+  local prob = style_sel("big_juncs", 0, 15, 35, 70)
 
   if not THEME.big_junctions or prob < 1 then
     gui.printf("Big junctions: disabled\n")
