@@ -49,7 +49,9 @@ double  PerpDist(double x, double y,
                  double x1, double y1, double x2, double y2);
 double AlongDist(double x, double y,
                  double x1, double y1, double x2, double y2);
+
 double CalcAngle(double sx, double sy, double ex, double ey);
+double DiffAngle(double A, double B);  // A + result = B
 
 double ComputeDist(double sx, double sy, double ex, double ey);
 double ComputeDist(double sx, double sy, double sz,

@@ -227,6 +227,20 @@ double CalcAngle(double sx, double sy, double ex, double ey)
 }
 
 
+double DiffAngle(double A, double B)
+{
+  // A + result = B
+  // result ranges from -180 to +180
+
+  double D = A - B;
+
+  while (D >  180.0) D = D - 360.0;
+  while (D < -180.0) D = D + 360.0;
+
+  return D;
+}
+
+
 double ComputeDist(double sx, double sy, double ex, double ey)
 {
   return sqrt((ex-sx)*(ex-sx) + (ey-sy)*(ey-sy));
