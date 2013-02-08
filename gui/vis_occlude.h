@@ -19,7 +19,7 @@
 #ifndef __VIS_OCCLUDE_H__
 #define __VIS_OCCLUDE_H__
 
-// all angles are in degrees, and must be in the range [-360,360]
+// all angles are in degrees, and must be in the range [-720,+720]
 
 void Occlusion_Clear(void);
 void Occlusion_Set(float low, float high);

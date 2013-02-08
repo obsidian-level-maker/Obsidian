@@ -32,9 +32,9 @@ typedef u16_t angle_t;
 
 static inline angle_t ToAngle(float ang)
 {
-  if (ang < 0) ang += 360.0;
+  if (ang < 0) ang += 720.0;
 
-  ang = ang * 65536.0 / 360.0;
+  ang = ang * (65536.0 / 360.0);
 
   return (angle_t)(u32_t)ang;
 }
