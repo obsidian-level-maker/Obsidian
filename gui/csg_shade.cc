@@ -70,11 +70,15 @@ int sky_shade;
 static int current_region_group;
 
 static int stat_targets;
-static int stat_traces;
+static int stat_sources;
 
 
 static void SHADE_CollectLights()
 {
+  int face_count = 0;
+  int sky_count  = 0;
+  int ent_count  = 0;
+
   for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
     region_c * R = all_regions[i];
@@ -93,19 +97,30 @@ static void SHADE_CollectLights()
     R->c_light = c_face->getInt("light");
 
     if (R->f_light > 0)
-        R->f_factor = f_face->getDouble("_factor", 1.0);
+    {
+      R->f_factor = f_face->getDouble("_factor", 1.0);
+      face_count++;
+    }
 
     if (R->c_light > 0)
-        R->c_factor = c_face->getDouble("_factor", 1.0);
+    {
+      R->c_factor = c_face->getDouble("_factor", 1.0);
+      face_count++;
+    }
 
     // sky brushes are lit automatically
     if (! R->c_light && T->bkind == BKIND_Sky && sky_shade > 0)
     {
       R->c_light  = sky_shade;
       R->c_factor = SKY_SHADE_FACTOR;
+      sky_count++;
     }
 
     // scan entities : choose one with largest level
+
+    // ignore when under a day-time sky
+    if (T->bkind == BKIND_Sky && sky_shade > 0)
+      continue;
 
     for (unsigned int k = 0 ; k < R->entities.size() ; k++)
     {
@@ -113,6 +128,8 @@ static void SHADE_CollectLights()
 
       if (strcmp(E->id.c_str(), "light") != 0)
         continue;
+
+      ent_count++;
 
       int   e_light  = E->props.getInt("light", 0);
       float e_factor = E->props.getDouble("_factor", 1.0);
@@ -130,6 +147,9 @@ fprintf(stderr, "region %p lights: %3d / %3d / %3d\n",
         R, R->f_light, R->c_light, R->e_light);
 #endif
   }
+
+  LogPrintf("Found %d light entities, %d lit faces, %d sky faces\n",
+            ent_count, face_count, sky_count);
 }
 
 
@@ -425,10 +445,9 @@ static void AngleRangeForLeaf(region_c *leaf, float *low, float *high)
 
 static void SHADE_RenderLeaf(region_c *leaf)
 {
-  double dist = leaf->DistanceToPoint(view_x, view_y);
+  stat_sources++;
 
-double mid_x, mid_y;
-leaf->GetMidPoint(&mid_x, &mid_y);
+  double dist = leaf->DistanceToPoint(view_x, view_y);
 
   if (! leaf->ContainsPoint(view_x, view_y))
   {
@@ -650,7 +669,9 @@ static void SHADE_MergeResults()
 
 void CSG_Shade()
 {
-  stat_targets = stat_traces = 0;
+  LogPrintf("Lighting level...\n");
+
+  stat_targets = stat_sources = 0;
 
   SHADE_CollectLights();
 
@@ -660,7 +681,8 @@ void CSG_Shade()
 
   QCOM_FreeLights();
 
-  LogPrintf("Lit %d targets, with %d vis tests\n", stat_targets, stat_traces);
+  LogPrintf("Lit %d targets (visited %d sources in total)\n",
+            stat_targets, stat_sources);
 }
 
 //--- editor settings ---
