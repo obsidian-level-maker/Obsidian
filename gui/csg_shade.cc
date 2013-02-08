@@ -61,7 +61,10 @@ Doom Lighting Model
 #define DISTANCE_LIMIT  1400
 
 
-int shade_sky_level = 200;  // FIXME: a way to set this from Lua
+int sky_light;
+int sky_shade;
+
+#define SKY_SHADE_FACTOR  2.0
 
 
 static int current_region_group;
@@ -94,6 +97,13 @@ static void SHADE_CollectLights()
 
     if (R->c_light > 0)
         R->c_factor = c_face->getDouble("_factor", 1.0);
+
+    // sky brushes are lit automatically
+    if (! R->c_light && T->bkind == BKIND_Sky && sky_shade > 0)
+    {
+      R->c_light  = sky_shade;
+      R->c_factor = SKY_SHADE_FACTOR;
+    }
 
     // scan entities : choose one with largest level
 
@@ -549,9 +559,9 @@ static void SHADE_LightRegion(region_c *R)
 
   SHADE_RecursiveRenderView(bsp_root, NULL);
 
-  if (shade_sky_level > 0 && SHADE_CastRayTowardSky(R, mid_x, mid_y))
+  if (sky_light > 0 && SHADE_CastRayTowardSky(R, mid_x, mid_y))
   {
-    R->shade = MAX(R->shade, shade_sky_level);
+    R->shade = MAX(R->shade, sky_light);
   }
 }
 

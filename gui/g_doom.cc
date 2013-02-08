@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2010 Andrew Apted
+//  Copyright (C) 2006-2013 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -46,6 +46,9 @@ extern void CSG_DOOM_Write();
 extern int ef_solid_type;
 extern int ef_liquid_type;
 extern int ef_liquid_special;
+
+extern int sky_light;
+extern int sky_shade;
 
 
 static char *level_name;
@@ -794,6 +797,14 @@ void doom_game_interface_c::Property(const char *key, const char *value)
   else if (StringCaseCmp(key, "ef_liquid_type") == 0)
   {
     ef_liquid_type = atoi(value);
+  }
+  else if (StringCaseCmp(key, "sky_light") == 0)
+  {
+    sky_light = atoi(value);
+  }
+  else if (StringCaseCmp(key, "sky_shade") == 0)
+  {
+    sky_shade = atoi(value);
   }
   else
   {
