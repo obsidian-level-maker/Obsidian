@@ -188,12 +188,13 @@ HACX.MATERIALS =
 
 HACX.LIQUIDS =
 {
-  water  = { mat="L_WATER",  light=0.65, special=0 }
-  water2 = { mat="L_WATER2", light=0.65, special=0 }
-  slime  = { mat="L_SLIME",  light=0.65, special=16 }
-  goo    = { mat="L_GOO",    light=0.65, special=16 }
-  lava   = { mat="L_LAVA",   light=0.75, special=16 }
-  elec   = { mat="L_ELEC",   light=0.75, special=16 }
+  water  = { mat="L_WATER",  light=168, special=0 }
+  water2 = { mat="L_WATER2", light=168, special=0 }
+
+  slime  = { mat="L_SLIME",  light=168, special=16, damage=20 }
+  goo    = { mat="L_GOO",    light=168, special=16, damage=20 }
+  lava   = { mat="L_LAVA",   light=192, special=16, damage=20 }
+  elec   = { mat="L_ELEC",   light=176, special=16, damage=20 }
 }
 
 

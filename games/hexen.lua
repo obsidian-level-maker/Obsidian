@@ -1576,14 +1576,16 @@ HEXEN.SKINS =
 
 HEXEN.LIQUIDS =
 {
+  -- Hexen gets damage from the flat (not a sector special)
+
   -- water and muck sometimes flow in a direction, but I'll leave that to 
   -- later code development (and a hopefully randomized special adds per sector).
-  water  = { mat="X_005", light=0.00, sec_kind=0 },
-  muck   = { mat="X_009", light=0.00, sec_kind=0 },
-  lava   = { mat="X_001", light=0.75, sec_kind=0 }, -- 20% damage (Hexen uses image, not sec_knid for this)
+  water  = { mat="X_005", light=168, special=0 },
+  muck   = { mat="X_009", light=168, special=0 },
+  lava   = { mat="X_001", light=192, special=0, damage=20 },
   
   -- Ice isn't really a liquid, but may be placed like one in some ice levels
-  icefloor = { mat="F_033", light=0.00, sec_kind=0 },
+  icefloor = { mat="F_033", special=0 },
 }
 
 

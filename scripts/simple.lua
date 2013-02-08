@@ -1266,12 +1266,12 @@ do return end ----!!!!!!!
         else
           Brush_add_top(f_brush, f_h)
 
-          -- damaging (FIXME)
-          f_brush[#f_brush].special = 16
+          -- damaging
+          f_brush[#f_brush].special = LEVEL.liquid.special
 
           -- lighting
-          if c_mat != "_SKY" then
-            f_brush[#f_brush].light = 168
+          if LEVEL.liquid.light then
+            f_brush[#f_brush].light = LEVEL.liquid.light
           end
 
           Brush_set_mat(f_brush, l_mat, l_mat)

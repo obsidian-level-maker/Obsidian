@@ -1327,7 +1327,7 @@ function CHUNK_CLASS.build(C)
     else
       f_mat = LEVEL.liquid.mat
       if OB_CONFIG.game != "hexen" then
-        f_special = 16  --- FIXME: LEVEL.liquid.special
+        f_special = LEVEL.liquid.special
       end
     end
   end
