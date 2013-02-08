@@ -232,7 +232,7 @@ double DiffAngle(double A, double B)
   // A + result = B
   // result ranges from -180 to +180
 
-  double D = A - B;
+  double D = B - A;
 
   while (D >  180.0) D = D - 360.0;
   while (D < -180.0) D = D + 360.0;
