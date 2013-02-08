@@ -387,54 +387,84 @@ static inline int SHADE_ComputeLevel(float dist, int light, float factor)
 static float view_x, view_y;
 static region_c * view_reg;
 
+// bool debug_light_rend;
+
 
 static void AngleRangeForLeaf(region_c *leaf, float *low, float *high)
 {
+  // output angles range from -180.0 to +540.0 with *low < *high
+
   SYS_ASSERT(leaf->snags.size() > 0);
 
-  *low  = +9e9;
-  *high = -9e9;
+  double mid_x, mid_y;
+
+  leaf->GetMidPoint(&mid_x, &mid_y);
+
+  float baseline = CalcAngle(view_x, view_y, mid_x, mid_y);
+
+  float l_diff = 0;
+  float h_diff = 0;
 
   for (unsigned int k = 0 ; k < leaf->snags.size() ; k++)
   {
     snag_c *S = leaf->snags[k];
 
-    float ang = CalcAngle(view_x, view_y, S->x1, S->y1);
+    float ang = DiffAngle(baseline, CalcAngle(view_x, view_y, S->x1, S->y1));
 
-    *low  = MIN(*low,  ang);
-    *high = MAX(*high, ang);
+    l_diff = MIN(l_diff, ang);
+    h_diff = MAX(h_diff, ang);
   }
 
-  if (*high - *low > 180.0)
-  {
-    std::swap(*low, *high);
-  }
+  *low  = baseline + l_diff;
+  *high = baseline + h_diff;
 }
+
+
+#define OCL_EPSILON  0.02
 
 
 static void SHADE_RenderLeaf(region_c *leaf)
 {
   double dist = leaf->DistanceToPoint(view_x, view_y);
 
+double mid_x, mid_y;
+leaf->GetMidPoint(&mid_x, &mid_y);
+
   if (! leaf->ContainsPoint(view_x, view_y))
   {
     if (dist >= DISTANCE_LIMIT)
       return;
 
-    float ang_low;
-    float ang_high;
+    float ang_low  = 0;
+    float ang_high = 0;
 
     AngleRangeForLeaf(leaf, &ang_low, &ang_high);
 
     if (leaf->gaps.size() == 0)
     {
-      Occlusion_Set(ang_low, ang_high);
+      Occlusion_Set(ang_low - OCL_EPSILON, ang_high + OCL_EPSILON);
       return;
     }
 
     if (Occlusion_Blocked(ang_low, ang_high))
+    {
       return;
+    }
   }
+
+
+#if 0
+if (debug_light_rend)
+{
+  fprintf(stderr, "SHADE_RenderLeaf %p @ (%1.0f %1.0f)\n", leaf, mid_x, mid_y);
+  fprintf(stderr, "   gaps: %u  dist: %1.0f\n", leaf->gaps.size(), dist);
+  fprintf(stderr, "   angle range: %1.5f .. %1.5f\n", ang_low, ang_high);
+  fprintf(stderr, "   lights: %d / %d / %d\n", leaf->f_light, leaf->c_light, leaf->e_light);
+
+  Occlusion_Dump();
+}
+#endif
+
 
   // apply lighting from this region
 
