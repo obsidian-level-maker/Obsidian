@@ -202,9 +202,10 @@ int wadfab_load(lua_State *L)
 
   char filename[PATH_MAX];
 
-  // FIXME: determine full name PROPERLY !!
-  sprintf(filename, "./fabs/%s", name);
+  sprintf(filename, "%s/fabs/%s", home_dir, name);
 
+  if (! FileExists(filename))
+    sprintf(filename, "%s/fabs/%s", install_dir, name);
 
   if (! WAD_OpenRead(filename))
     return luaL_error(L, "wadfab_load: missing/bad WAD: %s", name);
