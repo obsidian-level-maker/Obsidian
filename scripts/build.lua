@@ -2557,11 +2557,9 @@ function Fab_load_wad(name)
       { m="solid" }
     }
 
-    if S.floor_h >= S.ceil_h then
-      -- solid wall, infinitely tall brush  :  FIXME : delta_z instead !!
-      if pass != 1 then return end
+    local is_door = (S.floor_h >= S.ceil_h)
 
-    elseif pass == 1 then
+    if pass == 1 then
       local C = { t=S.floor_h, tex=S.floor_tex, special=S.special }
 
       if S.tag and S.tag > 0 then
@@ -2579,8 +2577,10 @@ function Fab_load_wad(name)
       local C = { b=S.ceil_h, tex=S.ceil_tex }
       table.insert(B, C)
 
-      -- ability to create closed doors
-      if int(S.ceil_h - S.floor_h) == 1 then
+      -- to make closed doors we need to force a gap, otherwise the CSG
+      -- code will create void space.
+      if is_door then
+        C.b = S.floor_h + 1
         C.delta_z = -1
       end
 
