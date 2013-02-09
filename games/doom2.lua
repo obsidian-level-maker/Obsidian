@@ -3168,7 +3168,7 @@ DOOM.SKINS =
 
   Teleporter1 =
   {
-    _file   = "misc/tele_pad.wad"
+    _file   = "teleport/pad1.wad"
     _where  = "middle"
 
     tag_1 = "?out_tag"
@@ -3190,7 +3190,7 @@ DOOM.SKINS =
 
   Teleporter_Closet =
   {
-    _file  = "misc/tele_closet1.wad"
+    _file  = "teleport/closet1.wad"
     _where = "closet"
     _fitted = "xy"
     _long   = 256
