@@ -99,6 +99,11 @@ public:
 
   csg_brush_c *liquid;
 
+  double mid_x, mid_y;
+
+  // this forms a bounding box (dist from the mid point)
+  float rw, rh;
+
   bool degenerate;
 
   // used by DOOM and QUAKE Clipping (etc)
@@ -132,7 +137,6 @@ public:
   void MergeOther(region_c *other);
 
   void GetBounds(double *x1, double *y1, double *x2, double *y2);
-  void GetMidPoint(double *mid_x, double *mid_y);
 
   bool ContainsPoint(double x, double y) const;
   double DistanceToPoint(float x, float y) const;
@@ -146,7 +150,9 @@ public:
 
   bool HasFlattened() const;
 
-  void ClockwiseSnags();
+  void ComputeMidPoint();
+  void ComputeBounds();
+  void ClockwiseSnags();  // requires CalcMidPoint()
 
   void DebugDump();
 };

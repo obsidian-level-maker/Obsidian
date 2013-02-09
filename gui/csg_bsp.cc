@@ -413,9 +413,9 @@ void region_c::GetBounds(double *x1, double *y1, double *x2, double *y2)
 }
 
 
-void region_c::GetMidPoint(double *mid_x, double *mid_y)
+void region_c::ComputeMidPoint()
 {
-  *mid_x = *mid_y = 0;
+  mid_x = mid_y = 0;
 
   if (snags.empty())
     return;
@@ -424,14 +424,28 @@ void region_c::GetMidPoint(double *mid_x, double *mid_y)
   {
     snag_c *S = snags[i];
 
-    *mid_x += S->x1 + S->x2;
-    *mid_y += S->y1 + S->y2;
+    mid_x += S->x1 + S->x2;
+    mid_y += S->y1 + S->y2;
   }
 
   double total = 2 * snags.size();
 
-  *mid_x /= total;
-  *mid_y /= total;
+  mid_x /= total;
+  mid_y /= total;
+}
+
+
+void region_c::ComputeBounds()
+{
+  rw = rh = 0;
+
+  for (unsigned int i = 0 ; i < snags.size() ; i++)
+  {
+    snag_c *S = snags[i];
+
+    rw = MAX(rw, fabs(S->x1 - mid_x));
+    rh = MAX(rh, fabs(S->y1 - mid_y));
+  }
 }
 
 
@@ -496,10 +510,6 @@ void region_c::ClockwiseSnags()
 
   // determine angle of each snag's starting vertex
   double * angles = new double[total];
-
-  double mid_x, mid_y;
-
-  GetMidPoint(&mid_x, &mid_y);
 
   for (i = 0 ; i < total ; i++)
   {
@@ -2019,7 +2029,13 @@ void CSG_BSP(double grid, bool is_clip_hull)
   RemoveDeadRegions();
 
   for (unsigned int i = 0 ; i < all_regions.size() ; i++)
-    all_regions[i]->ClockwiseSnags();
+  {
+    region_c * R = all_regions[i];
+
+    R->ComputeMidPoint();
+    R->ComputeBounds();
+    R->ClockwiseSnags();
+  }
 
   CSG_SwallowBrushes();
 

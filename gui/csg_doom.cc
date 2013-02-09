@@ -133,8 +133,6 @@ public:
 
   region_c *region;
 
-  double mid_x, mid_y;  // invalid after DM_CoalesceSectors()
-
   int misc_flags;
   int valid_count;
   int light2;
@@ -986,9 +984,6 @@ static void DM_MakeSector(region_c *R)
   R->index = (int)dm_sectors.size();
 
   dm_sectors.push_back(S);
-
-
-  R->GetMidPoint(&S->mid_x, &S->mid_y);
 
 
   csg_brush_c *B = R->gaps.front()->bottom;

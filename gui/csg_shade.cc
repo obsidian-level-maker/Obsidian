@@ -58,7 +58,7 @@ Doom Lighting Model
 
 #define MIN_SHADE  96
 
-#define DISTANCE_LIMIT  1400
+#define DISTANCE_LIMIT  1440
 
 
 int sky_light;
@@ -416,11 +416,7 @@ static void AngleRangeForLeaf(region_c *leaf, float *low, float *high)
 
   SYS_ASSERT(leaf->snags.size() > 0);
 
-  double mid_x, mid_y;
-
-  leaf->GetMidPoint(&mid_x, &mid_y);
-
-  float baseline = CalcAngle(view_x, view_y, mid_x, mid_y);
+  float baseline = CalcAngle(view_x, view_y, leaf->mid_x, leaf->mid_y);
 
   float l_diff = 0;
   float h_diff = 0;
@@ -449,11 +445,11 @@ static void SHADE_RenderLeaf(region_c *leaf)
 
   double dist = leaf->DistanceToPoint(view_x, view_y);
 
+  if (dist >= DISTANCE_LIMIT)
+    return;
+
   if (! leaf->ContainsPoint(view_x, view_y))
   {
-    if (dist >= DISTANCE_LIMIT)
-      return;
-
     float ang_low  = 0;
     float ang_high = 0;
 
@@ -596,19 +592,15 @@ static void SHADE_LightRegion(region_c *R)
 
   R->shade = MIN_SHADE;
 
-  double mid_x, mid_y;
-
-  R->GetMidPoint(&mid_x, &mid_y);
-
-  view_x = mid_x;
-  view_y = mid_y;
+  view_x = R->mid_x;
+  view_y = R->mid_y;
   view_reg = R;
 
   Occlusion_Clear();
 
   SHADE_RecursiveRenderView(bsp_root, NULL);
 
-  if (sky_light > 0 && SHADE_CastRayTowardSky(R, mid_x, mid_y))
+  if (sky_light > 0 && SHADE_CastRayTowardSky(R, view_x, view_y))
   {
     R->shade = MAX(R->shade, sky_light);
   }
