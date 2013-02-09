@@ -31,8 +31,9 @@
 #define LOG_FILENAME     "LOGS.txt"
 
 
-extern const char *install_path;
-extern const char *working_path;
+extern const char *home_dir;
+extern const char *install_dir;
+
 extern const char *data_path;
 
 extern bool batch_mode;

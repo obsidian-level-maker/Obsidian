@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2012 Andrew Apted
+//  Copyright (C) 2006-2013 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -43,8 +43,8 @@
 #define TICKER_TIME  50 /* ms */
 
 
-const char *working_path = NULL;
-const char *install_path = NULL;
+const char *home_dir    = NULL;
+const char *install_dir = NULL;
 
 int screen_w;
 int screen_h;
@@ -113,7 +113,7 @@ void Determine_WorkingPath(const char *argv0)
   // and LOGS.txt files are, as well the temp files.
 
 #ifndef FHS_INSTALL
-  working_path = GetExecutablePath(argv0);
+  home_dir = GetExecutablePath(argv0);  // FIXME !!!
 
 #else
   char *path = StringNew(FL_PATH_MAX + 4);
@@ -121,25 +121,25 @@ void Determine_WorkingPath(const char *argv0)
   if (fl_filename_expand(path, "$HOME/.oblige") == 0)
     Main_FatalError("Unable to find $HOME directory!\n");
 
-  working_path = path;
+  home_dir = path;
 
   // try to create it (doesn't matter if it already exists)
-  FileMakeDir(working_path);
+  FileMakeDir(home_dir);
 #endif
 
-  if (! working_path)
-    working_path = StringDup(".");
+  if (! home_dir)
+    home_dir = StringDup(".");
 }
 
 
-void Determine_InstallPath(const char *argv0)
+void Determine_InstallDir(const char *argv0)
 {
   // secondly find the "Install directory", and store the
-  // result in the global variable 'install_path'.  This is
+  // result in the global variable 'install_dir'.  This is
   // where all the LUA scripts and other data files are.
 
 #ifndef FHS_INSTALL
-  install_path = StringDup(working_path);
+  install_dir = StringDup(home_dir);
 
 #else
   static const char *prefixes[] =
@@ -150,15 +150,15 @@ void Determine_InstallPath(const char *argv0)
   for (int i = 0; prefixes[i]; i++)
   {
 #if 0  // Version specific dir
-    install_path = StringPrintf("%s/share/oblige-%s", prefixes[i], OBLIGE_VERSION);
+    install_dir = StringPrintf("%s/share/oblige-%s", prefixes[i], OBLIGE_VERSION);
 #else
-    install_path = StringPrintf("%s/share/oblige", prefixes[i]);
+    install_dir = StringPrintf("%s/share/oblige", prefixes[i]);
 #endif
 
-    const char *filename = StringPrintf("%s/scripts/oblige.lua", install_path);
+    const char *filename = StringPrintf("%s/scripts/oblige.lua", install_dir);
 
 #if 0  // DEBUG
-    fprintf(stderr, "Trying install path: [%s]\n", install_path);
+    fprintf(stderr, "Trying install dir: [%s]\n", install_dir);
     fprintf(stderr, "  using file: [%s]\n\n", filename);
 #endif
 
@@ -169,12 +169,12 @@ void Determine_InstallPath(const char *argv0)
     if (exists)
       return;
 
-    StringFree(install_path);
-    install_path = NULL;
+    StringFree(install_dir);
+    install_dir = NULL;
   }
 #endif
 
-  if (! install_path)
+  if (! install_dir)
     Main_FatalError("Unable to find Oblige's install directory!\n");
 }
 
@@ -539,9 +539,9 @@ int main(int argc, char **argv)
 
 
   Determine_WorkingPath(argv[0]);
-  Determine_InstallPath(argv[0]);
+  Determine_InstallDir(argv[0]);
 
-  FileChangeDir(working_path);
+  FileChangeDir(home_dir);  // FIXME !!! use absolute filenames
 
 
   LogInit(batch_mode ? NULL : LOG_FILENAME);
@@ -555,12 +555,11 @@ int main(int argc, char **argv)
   LogPrintf("********************************************************\n");
   LogPrintf("\n");
 
-  LogPrintf("Library versions: %s / FLTK %d.%d.%d / glBSP %s\n\n",
-            LUA_RELEASE, FL_MAJOR_VERSION, FL_MINOR_VERSION, FL_PATCH_VERSION,
-            GLBSP_VER);
+  LogPrintf("Library versions: FLTK %d.%d.%d\n\n",
+            FL_MAJOR_VERSION, FL_MINOR_VERSION, FL_PATCH_VERSION);
 
-  LogPrintf("working_path: [%s]\n",   working_path);
-  LogPrintf("install_path: [%s]\n\n", install_path);
+  LogPrintf("home_dir:    %s\n",   home_dir);
+  LogPrintf("install_dir: %s\n\n", install_dir);
 
   if (! batch_mode)
     Cookie_Load(CONFIG_FILENAME, true /* PRELOAD */);

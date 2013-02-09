@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2011 Andrew Apted
+//  Copyright (C) 2006-2013 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -677,10 +677,10 @@ static int p_init_lua(lua_State *L)
 
 static void Script_SetScriptPath(lua_State *L)
 {
-  if (StringCaseCmp(install_path, working_path) == 0)
-    script_path = StringPrintf("%s/scripts/?.lua", install_path);
+  if (StringCaseCmp(install_dir, home_dir) == 0)
+    script_path = StringPrintf("%s/scripts/?.lua", install_dir);
   else
-    script_path = StringPrintf("./scripts/?.lua;%s/scripts/?.lua", install_path);
+    script_path = StringPrintf("%s/scripts/?.lua;%s/scripts/?.lua", home_dir, install_dir);
 
   LogPrintf("script_path: [%s]\n", script_path);
 
@@ -698,11 +698,11 @@ static void Script_SetScriptPath(lua_State *L)
 
 static void Script_SetDataPath(void)
 {
-  data_path = "./modules/data;./data";
+  data_path = "./modules/data;./data";  // FIXME use $home_dir
 
-  if (StringCaseCmp(install_path, working_path) != 0)
+  if (StringCaseCmp(install_dir, home_dir) != 0)
   {
-    data_path = StringPrintf("%s;%s/modules/data;%s/data", data_path, install_path, install_path);
+    data_path = StringPrintf("%s;%s/modules/data;%s/data", data_path, install_dir, install_dir);
   }
 
   LogPrintf("data_path:   [%s]\n\n", data_path);
@@ -921,21 +921,16 @@ static void Script_LoadSubDir(const char *subdir)
   //       we end up loading both, which is OK but inefficient.
 
   //  first pass = install directory
-  // second pass = working directory
+  // second pass =    home directory
 
   int num_pass = 2;
 
-  if (StringCaseCmp(install_path, working_path) == 0)
+  if (StringCaseCmp(install_dir, home_dir) == 0)
     num_pass = 1;
 
   for (int pass = 0; pass < num_pass; pass++)
   {
-    const char *path;
-
-    if (pass == 0)
-      path = StringPrintf("%s/%s", install_path, subdir);
-    else
-      path = StringPrintf("./%s", subdir);
+    const char *path = StringPrintf("%s/%s", (pass == 0 ? install_dir : home_dir), subdir);
 
     Script_LoadAllFromDir(path);
 
