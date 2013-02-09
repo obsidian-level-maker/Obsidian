@@ -2424,6 +2424,17 @@ WADFAB_SKILL_TO_LIGHT =
   [4] = 2.0   -- HARD
 }
 
+WADFAB_LIGHT_DELTAS =
+{
+  [1]  =  48  -- random off
+  [2]  =  48  -- blink fast
+  [12] =  48  -- blink fast, sync
+  [3]  =  48  -- blink slow
+  [13] =  48  -- blink slow, sync
+  [8]  =  96  -- oscillates
+  [17] =  48  -- flickers
+}
+
 
 function Fab_load_wad(name)
 
@@ -2557,6 +2568,12 @@ function Fab_load_wad(name)
         C.tag = S.tag
       end
 
+      -- lighting specials need a 'light_delta' field (for best results)
+      local delta = WADFAB_LIGHT_DELTAS[S.special or 0]
+      if delta then
+        C.light_delta = delta
+      end
+
       table.insert(B, C)
     else
       local C = { b=S.ceil_h, tex=S.ceil_tex }
@@ -2592,7 +2609,7 @@ function Fab_load_wad(name)
 
     -- logic to add light entities:
     --   + skill bits control factor (all set = normal)
-    --   + angle controls level (0 = 144, 45 = 160, ..., 315 = 256)
+    --   + angle controls level (0 = 128, 45 = 144, ..., 315 = 240)
     if spot_info.kind == "light" then
       E.id = "light"
 
