@@ -389,7 +389,19 @@ void region_c::MergeOther(region_c *other)
 }
 
 
-void region_c::GetBounds(double *x1, double *y1, double *x2, double *y2)
+bool region_c::isClosed() const
+{
+  if (gaps.size() == 0)
+    return true;
+
+  csg_brush_c *B = gaps.front()->bottom;
+  csg_brush_c *T = gaps.back() ->top;
+
+  return (T->b.z - B->t.z < 2.5);
+}
+
+
+void region_c::GetBounds(double *x1, double *y1, double *x2, double *y2) const
 {
   if (snags.empty())
   {
@@ -402,7 +414,7 @@ void region_c::GetBounds(double *x1, double *y1, double *x2, double *y2)
 
   for (unsigned int i = 0 ; i < snags.size() ; i++)
   {
-    snag_c *S = snags[i];
+    const snag_c *S = snags[i];
 
     *x1 = MIN(*x1, MIN(S->x1, S->x2));
     *y1 = MIN(*y1, MIN(S->y1, S->y2));
@@ -422,7 +434,7 @@ void region_c::ComputeMidPoint()
 
   for (unsigned int i = 0 ; i < snags.size() ; i++)
   {
-    snag_c *S = snags[i];
+    const snag_c *S = snags[i];
 
     mid_x += S->x1 + S->x2;
     mid_y += S->y1 + S->y2;
@@ -441,7 +453,7 @@ void region_c::ComputeBounds()
 
   for (unsigned int i = 0 ; i < snags.size() ; i++)
   {
-    snag_c *S = snags[i];
+    const snag_c *S = snags[i];
 
     rw = MAX(rw, fabs(S->x1 - mid_x));
     rh = MAX(rh, fabs(S->y1 - mid_y));
@@ -453,7 +465,7 @@ bool region_c::ContainsPoint(double x, double y) const
 {
   for (unsigned int i = 0 ; i < snags.size() ; i++)
   {
-    snag_c *S = snags[i];
+    const snag_c *S = snags[i];
 
     double d = PerpDist(x, y, S->x1,S->y1, S->x2,S->y2);
 
@@ -474,7 +486,7 @@ double region_c::DistanceToPoint(float x, float y) const
 
   for (unsigned int i = 0 ; i < snags.size() ; i++)
   {
-    snag_c *S = snags[i];
+    const snag_c *S = snags[i];
 
     double dist = PointLineDist(x, y, S->x1,S->y1, S->x2,S->y2);
 

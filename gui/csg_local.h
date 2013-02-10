@@ -136,7 +136,9 @@ public:
 
   void MergeOther(region_c *other);
 
-  void GetBounds(double *x1, double *y1, double *x2, double *y2);
+  bool isClosed() const;
+
+  void GetBounds(double *x1, double *y1, double *x2, double *y2) const;
 
   bool ContainsPoint(double x, double y) const;
   double DistanceToPoint(float x, float y) const;
