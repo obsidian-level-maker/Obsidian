@@ -2533,6 +2533,12 @@ function Fab_load_wad(name)
       end
     end
 
+    -- railings --
+
+    if pass == 1 and line and mid_tex and tex != mid_tex then
+      C2.rail = mid_tex
+    end
+
     return C2
   end
 

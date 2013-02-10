@@ -1054,9 +1054,13 @@ static int CalcYOffset(brush_vert_c *V, int oy, bool u_peg)
 
 static int CalcRailYOffset(brush_vert_c *rail, doom_sector_c *F, doom_sector_c *B)
 {
+  return 0;
+
+/* ???
   int base_h = MAX(F->f_h, B->f_h);
 
   return I_ROUND(rail->parent->b.z) - base_h;
+*/
 }
 
 
@@ -1145,7 +1149,7 @@ static doom_sidedef_c * DM_MakeSidedef(
     if (rail)
     {
       *l_peg = false;
-      SD->mid = rail->face.getStr("tex", "-");
+      SD->mid = rail->face.getStr("rail", "-");
       r_ox = rail->face.getInt("u1", r_ox);
     }
 
@@ -1226,42 +1230,37 @@ static csg_property_set_c * DM_FindSpecial(snag_c *S, region_c *R1, region_c *R2
 }
 
 
-static brush_vert_c * DM_FindRail(snag_c *S, doom_sector_c *front, doom_sector_c *back)
+static brush_vert_c * DM_FindRail(const region_c *R, const region_c *N,
+                                  const snag_c *S)
 {
-  // railings require a two-sided line
-  if (! front || ! back)
+  if (R->gaps.size() == 0 || N->gaps.size() == 0)
     return NULL;
 
-  float f_max = MAX(front->f_h, back->f_h) + 4;
-  float c_min = MIN(front->c_h, back->c_h) - 4;
+  /* we only find railings from a floor brush */
 
-  if (f_max >= c_min)
-    return NULL;
+  const csg_brush_c *B1 = R->gaps.front()->bottom;
+  const csg_brush_c *B2 = N->gaps.front()->bottom;
 
   for (int side = 0 ; side < 2 ; side++)
   {
-    snag_c *test_S = (side == 0) ? S->partner : S;
+    const snag_c *test_S = (side == 0) ? S->partner : S;
 
     if (! test_S)
       continue;
 
     for (unsigned int k = 0 ; k < test_S->sides.size() ; k++)
     {
-      brush_vert_c *V = test_S->sides[k];
+        brush_vert_c *V = test_S->sides[k];
 
-      if (V->parent->bkind != BKIND_Rail)
-        continue;
+        if (! (V->parent == B1 || V->parent == B2))
+          continue;
 
-      // is rail in lala land?
-      if (V->parent->b.z > c_min || V->parent->t.z < f_max)
-        continue;
+        const char *tex = V->face.getStr("rail", "-");
 
-      const char *tex = V->face.getStr("tex", "-");
-
-      if (tex[0] == '-' && !V->face.getStr("special"))
-        continue;
-
-      return V;  // found it
+        if (tex[0] != '-')
+        {
+          return V;  // found it
+        }
     }
   }
 
@@ -1303,7 +1302,12 @@ static void DM_MakeLine(region_c *R, snag_c *S)
     back = dm_sectors[N->index];
 
 
-  brush_vert_c *rail = DM_FindRail(S, front, back);
+  // railings require a two-sided line
+  brush_vert_c *rail = NULL;
+  
+  if (front || back)
+    rail = DM_FindRail(R, N, S);
+
 
   // skip the line if same on both sides, except when it has a rail
   if (front == back && !rail)
@@ -1364,6 +1368,7 @@ static void DM_MakeLine(region_c *R, snag_c *S)
   csg_property_set_c *spec = DM_FindSpecial(S, R, N);
 
 
+/* ???
   if (rail)
   {
     L->flags |= rail->face.getInt("flags");
@@ -1371,7 +1376,7 @@ static void DM_MakeLine(region_c *R, snag_c *S)
     if (! spec && rail->face.getStr("special"))
       spec = &rail->face;
   }
-
+*/
   if (spec)
   {
     L->special = spec->getInt("special");
