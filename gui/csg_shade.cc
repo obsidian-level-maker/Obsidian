@@ -41,17 +41,19 @@
 Doom Lighting Model
 -------------------
 
-1. light comes from entities (points in 3D space) and flat surfaces
+1. light comes from entities (points in 3D space) and flat surfaces.
+   these diminish by distance (with a controllable factor).
 
-2. result value is MAXIMUM of all tests made 
+2. we also do a sky test -- cast a ray from floor to see if hit a sky
+   brush.  When hit, use the 'sky_light' value.
 
-3. result is clamped to a certain minimum (e.g. 96)
+3. result value is MAXIMUM of all tests made.
 
-4. solid walls and close doors block light
+4. result is clamped to a certain minimum (e.g. 96)
 
-5. light diminishes by distance
+5. solid walls and close doors block light.
 
-6. since closed doors don't get lit, there value is computed later
+6. since closed doors don't get lit, their value is computed later
    using the light from an adjacent sector.
 
 */
@@ -84,7 +86,7 @@ static void SHADE_CollectLights()
     region_c * R = all_regions[i];
 
     // closed regions never provide light
-    if (R->gaps.size() == 0)
+    if (R->isClosed())
       continue;
 
     csg_brush_c *B = R->gaps.front()->bottom;
@@ -141,7 +143,7 @@ static void SHADE_CollectLights()
         R->e_factor = e_factor;
       }
     }
-    
+
 #if 0  // debug
 fprintf(stderr, "region %p lights: %3d / %3d / %3d\n",
         R, R->f_light, R->c_light, R->e_light);
@@ -155,8 +157,10 @@ fprintf(stderr, "region %p lights: %3d / %3d / %3d\n",
 
 static int SHADE_CalcRegionGroup(region_c *R)
 {
-  if (R->gaps.size() == 0)
+  if (R->isClosed())
     return -1;
+
+  /* we only group regions with a tag and same floor height */
 
   csg_brush_c *B = R->gaps.front()->bottom;
   csg_brush_c *T = R->gaps.back() ->top;
@@ -165,7 +169,7 @@ static int SHADE_CalcRegionGroup(region_c *R)
   csg_property_set_c *c_face = &T->b.face;
 
   // differentiate floor heights
-  int base = ((int)B->t.z & 0x1FF8) << 17;
+  int base = ((int)B->t.z & 0x1FFF) << 16;
 
   const char *tag = f_face->getStr("tag");
   if (tag)
@@ -175,24 +179,10 @@ static int SHADE_CalcRegionGroup(region_c *R)
   if (tag)
     return base + atoi(tag);
 
-  tag = f_face->getStr("_shade_tag");
-  if (tag)
-    return base + atoi(tag);
-
-  // create a new tag for this brush
-
   int result = current_region_group;
-
-  char result_buf[64];
-  sprintf(result_buf, "%d", result);
-
-  f_face->Add("_shade_tag", result_buf);
-
   current_region_group++;
-  if (current_region_group == 0xFFFFF)
-    current_region_group = 0x10000;
 
-  return base + result;
+  return result;
 }
 
 
@@ -207,7 +197,7 @@ struct region_index_Compare
 
 static void SHADE_GroupRegions()
 {
-  current_region_group = 0x10000;  // a value outside normal tag values
+  current_region_group = 0x40000000;  // a value outside normal tag values
 
   for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
@@ -455,7 +445,7 @@ static void SHADE_RenderLeaf(region_c *leaf)
 
     AngleRangeForLeaf(leaf, &ang_low, &ang_high);
 
-    if (leaf->gaps.size() == 0)
+    if (leaf->index < 0)
     {
       Occlusion_Set(ang_low - OCL_EPSILON, ang_high + OCL_EPSILON);
       return;
