@@ -1220,108 +1220,6 @@ function Trans.substitute(SKIN, value)
 end
 
 
-function Trans.process_skins(list)
-
-  local SKIN = {}
-
-  local function misc_stuff()
-    -- these are useful for conditional brushes/ents
-    if GAME.format == "doom" or GAME.format == "nukem" then
-      SKIN["doomy"] = 1
-    else
-      SKIN["quakey"] = 1
-    end
-  end
-
-
-  local function random_pass(keys)
-    -- most fields with a table value are considered to be random
-    -- replacement, e.g. pic = { COMPSTA1=50, COMPWERD=50 }.
-    --
-    -- fields starting with an underscore are ignored, to allow for
-    -- special fields in the skin.
-
-    each name in keys do
-      local value = SKIN[name]
-
-      if type(value) == "table" and not string.match(name, "^_") then
-        if table.size(value) == 0 then
-          error("process_skins: random table is empty: " .. tostring(name))
-        end
-
-        SKIN[name] = rand.key_by_probs(value)
-      end
-    end
-  end
-
-
-  local function function_pass(keys)
-    each name in keys do
-      local func = SKIN[name]
-
-      if type(func) == "function" then
-        SKIN[name] = func(SKIN)
-      end
-    end
-  end
-
-
-  local function subst_pass(keys)
-    local changes = 0
-
-    -- look for unresolved substitutions first
-    for _,name in ipairs(keys) do
-      local value = SKIN[name]
-
-      if Trans.is_subst(value) then
-        local ref = Trans.substitute(SKIN, value)
-
-        if ref and type(ref) == "function" then
-          error("Substitution references a function: " .. value)
-        end
-
-        if ref and Trans.is_subst(ref) then
-          -- need to resolve the other one first
-        else
-          SKIN[name] = ref
-          changes = changes + 1
-        end
-      end
-    end
-
-    return changes
-  end
-
-
-  ---| Trans.process_skins |---
-
-  misc_stuff()
-
-  each skin_tab in list do
-    table.merge(SKIN, skin_tab)
-  end 
-
-  -- Note: iterate over a copy of the key names, since we cannot
-  --       safely modify a table while iterating through it.
-  local keys = table.keys(SKIN)
-
-  random_pass(keys)
-
-  for loop = 1,20 do
-    if subst_pass(keys) == 0 then
-      function_pass(keys)
-      return SKIN
-    end
-  end
-
-  -- failed !
-  gui.debugf("\nSKIN =\n%s\n\n", table.tostr(SKIN, 1))
-
-  error("process_skins: cannot resolve refs")
-end
-
-
-
 function Fab_create(name)
 
   local function mark_outliers(fab)
@@ -1415,268 +1313,6 @@ function Fab_determine_bbox(fab)
                z1=z1, z2=z2, dz=dz,
              }
 end
-
-
-
-function Fab_apply_skins(fab, list)
-  -- perform skin substitutions on everything in the prefab.
-  -- Note that the 'list' parameter is modified.
-
-  local SKIN
-
-  local function do_substitutions(t)
-    each k in table.keys(t) do
-      local v = t[k]
-
-      if type(v) == "string" then
-        v = Trans.substitute(SKIN, v)
-
-        if v == nil then
-          error(string.format("Prefab: missing value for \"%s\"", t[k]))
-        end
-
-        -- empty strings are the way to specify NIL
-        if v == "" then v = nil end
-
-        t[k] = v
-      end
-
-      -- recursively handle sub-tables
-      if type(v) == "table" then
-        do_substitutions(v)
-      end
-    end
-  end
-
-
-  local function has_failing_condition(tab)
-    -- tab can be: a brush (the 'm' table), a model or an entity.
-    -- the 'only_if' field will also be removed now.
-
-    if tab.only_if == nil then
-      return false
-    end
-
-    local result = (convert_bool(tab.only_if) == 0)
-
-    tab.only_if = nil
-
-    return result
-  end
-
-
-  local function do_conditionals(fab)
-    -- brushes....
-    for index = #fab.brushes, 1, -1 do
-      local B = fab.brushes[index]
-      if B[1].m and has_failing_condition(B[1]) then
-        table.remove(fab.brushes, index)
-      end
-    end
-
-    -- models....
-    for index = #fab.models, 1, -1 do
-      local M = fab.models[index]
-      if has_failing_condition(M) then
-        table.remove(fab.models, index)
-      end
-    end
-
-    -- NOTE: entities are done below (in do_entities)
-  end
-
-
-  local function process_materials(brush)
-    -- check if it should be a sky brush
-    if not brush[1].m and Brush_has_sky(brush) then
-      table.insert(brush, 1, { m="sky" })
-    end
-
-    each C in brush do
-      if C.mat then
-        local mat = Mat_lookup(C.mat)
-        assert(mat and mat.t)
-
-        if C.b then
-          C.tex = mat.c or mat.f or mat.t
-        elseif C.t then
-          C.tex = mat.f or mat.t
-        else
-          C.tex = mat.t
-        end
-
-        C.mat = nil
-      end
-    end
-  end
-
-
-  local function process_model_face(face, is_flat)
-    if face.mat then
-      local mat = Mat_lookup(face.mat)
-      assert(mat and mat.t)
-
-      if is_flat and mat.f then
-        face.tex = mat.f
-      else
-        face.tex = mat.t
-      end
-
-      face.mat = nil
-    end
-  end
-
-
-  local function do_materials(fab)
-    each B in fab.brushes do
-      process_materials(B)
-    end
-
-    each M in fab.models do
-      process_model_face(M.x_face, false)
-      process_model_face(M.y_face, false)
-      process_model_face(M.z_face, true)
-    end
-  end
-  
-
-  local function process_entity(E)
-    local name = E.ent
-
-    if not name then
-      error("prefab entity with missing 'ent' field")
-    end
-
-    if name == "none" then
-      return false
-    end
-
-    if PARAM.light_brushes and (name == "light" or name == "sun") then
-      return false
-    end
-
-    local info = GAME.ENTITIES[name] or
-                 GAME.MONSTERS[name] or
-                 GAME.WEAPONS[name] or
-                 GAME.PICKUPS[name]
-
-    if not info then
-      error("No such entity: " .. tostring(name))
-    end
-
-    E.id = assert(info.id)
-    E.ent = nil
-
-    if E.z then
-      E.delta_z = info.delta_z or PARAM.entity_delta_z
-    end
-
-    if info.spawnflags then
-      E.spawnflags = bit.bor((E.spawnflags or 0), info.spawnflags)
-    end
-
-    if info.fields then
-      each name,value in info.fields do E[name] = value end
-    end
-
-    return true -- OK --
-  end
-
-
-  local function do_entities(fab)
-    for index = #fab.entities,1,-1 do
-      local E = fab.entities[index]
-
-      -- we allow entities to be unknown, removing them from the list
-      if has_failing_condition(E) or not process_entity(E) then
-        table.remove(fab.entities, index)
-      end
-    end
-
-    for _,M in ipairs(fab.models) do
-      if not process_entity(M.entity) then
-        error("Prefab model has 'none' entity")
-      end
-    end
-  end
-
-
-  local function brush_stuff()
-    each B in fab.brushes do
-      if not B[1].m then
-        table.insert(B, 1, { m="solid" })
-      end
-
-      B[1].fab = fab
-
-      each C in B do
-        Brush_collect_flags(C)
-
-        -- convert X/Y offsets
-        if C.x_offset then C.u1 = C.x_offset ; C.x_offset = nil end
-        if C.y_offset then C.v1 = C.y_offset ; C.y_offset = nil end
-      end
-    end
-  end
-
- 
-  ---| Fab_apply_skins |---
-
-  assert(fab.state == "raw")
-
-  fab.state = "skinned"
-
-  -- add the standard skin tables into the list
-  if fab.defaults        then table.insert(list, 1, fab.defaults) end
-  if THEME.skin_defaults then table.insert(list, 1, THEME.skin_defaults) end
-  if GAME.SKIN_DEFAULTS  then table.insert(list, 1, GAME.SKIN_DEFAULTS) end
-
-  table.insert(list, 1, GLOBAL_SKIN_DEFAULTS)
-
-  SKIN = Trans.process_skins(list)
-
-  -- defaults are applied, don't need it anymore
-  fab.defaults = nil
-
-  if SKIN._tags then
-    for i = 1, SKIN._tags do
-      local name = "tag"
-      if i >= 2 then name = name .. i end
-      SKIN[name] = Plan_alloc_id("tag")
-    end
-  end
-
-  if fab.team_models then
-    SKIN.team = Plan_alloc_id("team")
-  end
-
-  -- perform substitutions (values beginning with '?' are skin refs)
-  do_substitutions(fab)
-
-  -- remove brushes (etc) which fail their conditional test 
-  do_conditionals(fab)
-
-  -- convert 'mat' fields to 'tex' fields
-  do_materials(fab)
-
-  -- lookup entity names
-  do_entities(fab)
-
-  -- handle "prefab" brushes.  NOTE: recursive
-  Fab_composition(fab, SKIN)
-
-  -- find bounding box (in prefab space)
-  Fab_determine_bbox(fab)
-
-  brush_stuff()
-
-  -- grab repeat vars from skin
-  fab.x_repeat = SKIN._repeat
-  fab.y_repeat = SKIN._repeat_y
-
-  SKIN = nil
-end
-
 
 
 function Fab_transform_XY(fab, T)
@@ -2209,30 +1845,6 @@ function Fab_read_spots(fab)
   return list
 end
 
-
-
-function Fabricate_old(name, T, skins)
-  
---stderrf("=========  FABRICATE %s\n", name)
-
-  local fab = Fab_create(name)
-
-  -- FIXME: not here
-  skins = table.copy(skins)
-  if  ROOM and  ROOM.skin then table.insert(skins, 1, ROOM.skin) end
-  if THEME and THEME.skin then table.insert(skins, 1, THEME.skin) end
-
-  Fab_apply_skins(fab, skins)
-
-  Fab_repetition_X(fab, T)
-
-  Fab_transform_XY(fab, T)
-  Fab_transform_Z (fab, T)
-
-  Fab_render(fab)
-
-  return fab
-end
 
 
 function Fab_size_check(skin, long, deep)
@@ -2988,34 +2600,31 @@ end
 
 
 function Fabricate(main_skin, T, skins)
-  if main_skin._prefab then
-    return Fabricate_old(main_skin._prefab, T, skins)
-
-  elseif main_skin._file then
---- stderrf("=========  FABRICATE %s\n", main_skin._file)
-    local fab = Fab_load_wad(main_skin._file)
-
-    Fab_bound_Z(fab, main_skin)
-
-    local skin = Fab_merge_skins(fab, main_skin, skins)
-
-    Fab_substitutions(fab, skin)
-    Fab_replacements(fab, skin)
-
-    fab.state  = "skinned"
-    fab.fitted = main_skin._fitted
-
-    Fab_copy_ranges(fab, skin)
-
-    Fab_transform_XY(fab, T)
-    Fab_transform_Z (fab, T)
-
-    Fab_render(fab)
-
-    return fab
-
-  else
-    error("Bad skin: no _prefab or _file keyword")
+  if not main_skin._file then
+    error("Old-style prefab skin used")
   end
+
+--- stderrf("=========  FABRICATE %s\n", main_skin._file)
+
+  local fab = Fab_load_wad(main_skin._file)
+
+  Fab_bound_Z(fab, main_skin)
+
+  local skin = Fab_merge_skins(fab, main_skin, skins)
+
+  Fab_substitutions(fab, skin)
+  Fab_replacements(fab, skin)
+
+  fab.state  = "skinned"
+  fab.fitted = main_skin._fitted
+
+  Fab_copy_ranges(fab, skin)
+
+  Fab_transform_XY(fab, T)
+  Fab_transform_Z (fab, T)
+
+  Fab_render(fab)
+
+  return fab
 end
 
