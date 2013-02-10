@@ -1220,48 +1220,6 @@ function Trans.substitute(SKIN, value)
 end
 
 
-function Fab_create(name)
-
-  local function mark_outliers(fab)
-    for _,B in ipairs(fab.brushes) do
-      if B[1].m and not B[1].insider and
-         (B[1].m == "light" or B[1].m == "spot")
-      then
-        B[1].outlier = true
-      end
-
-      if B[1].m == "spot" then
-        fab.has_spots = true
-      end
-    end
-  end
-
-
-  ---| Fab_create |---
-
-  local info = PREFAB[name]
-
-  if not info then
-    error("Unknown prefab: " .. name)
-  end
-
-  local fab = table.deep_copy(info)
-
-  fab.name = name
-
-  if not fab.brushes  then fab.brushes  = {} end
-  if not fab.models   then fab.models   = {} end
-  if not fab.entities then fab.entities = {} end
-
-  mark_outliers(fab)
-
-  fab.state = "raw"
-
-  return fab
-end
-
-
-
 function Fab_determine_bbox(fab)
   local x1, y1, z1
   local x2, y2, z2
@@ -1583,6 +1541,8 @@ end
 
 
 function Fab_composition(parent, parent_skin)
+  -- FIXME : rework for WAD-fabs !!
+
   -- handles "prefab" brushes, replacing them with the brushes of
   -- the child prefab (transformed to fit into the "prefab" brush),
   -- and adding all the child's entities and models too.
@@ -2257,11 +2217,19 @@ function Fab_load_wad(name)
 
     local spot = {}
 
+    local r = spot_info.r
+
     spot.kind = spot_info.kind
 
-    spot.x = E.x
-    spot.y = E.y
-    spot.r = spot_info.r
+    spot.x1 = E.x - r
+    spot.x2 = E.x + r
+
+    spot.y1 = E.y - r
+    spot.y2 = E.y + r
+
+    spot.z1 = 0   -- TODO: determine properly
+    spot.z2 = 128 --
+
     spot.angle = E.angle
 
     table.insert(fab.spots, spot)
