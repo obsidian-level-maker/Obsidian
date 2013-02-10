@@ -2520,9 +2520,18 @@ function Fab_load_wad(name)
          (bit.band(flags, MLF_UpperUnpegged) == 0 and pass == 2) then
         C2.peg = 1
       end
-    end
 
-    -- TODO: handle other flags
+      -- keep these flags: block-all, block-mon, secret, no-draw,
+      --                   always-draw, block-sound, pass-thru
+      flags = bit.band(flags, 0x2E3)
+
+      if flags != 0 then
+        C2.flags = flags
+
+        -- this makes sure the flags get applied
+        if not C2.special then C2.special = 0 end
+      end
+    end
 
     return C2
   end
