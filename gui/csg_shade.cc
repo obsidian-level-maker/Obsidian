@@ -160,7 +160,7 @@ static int SHADE_CalcRegionGroup(region_c *R)
   if (R->isClosed())
     return -1;
 
-  /* we only group regions with a tag and same floor height */
+  /* group regions with a tag and same floor height */
 
   csg_brush_c *B = R->gaps.front()->bottom;
   csg_brush_c *T = R->gaps.back() ->top;
@@ -179,8 +179,19 @@ static int SHADE_CalcRegionGroup(region_c *R)
   if (tag)
     return base + atoi(tag);
 
+  /* otherwise combine regions with same floor brush */
+
+  tag = f_face->getStr("_shade_tag");
+  if (tag)
+    return atoi(tag);
+
   int result = current_region_group;
   current_region_group++;
+
+  char buffer[64];
+  sprintf(buffer, "%d", result);
+
+  f_face->Add("_shade_tag", buffer);
 
   return result;
 }
