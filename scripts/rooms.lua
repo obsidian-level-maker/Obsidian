@@ -640,6 +640,8 @@ function Rooms_distribute_spots(L, list)
       table.insert(L.cage_spots, spot)
     elseif spot.kind == "trap" then
       table.insert(L.trap_spots, spot)
+    elseif spot.kind == "pickup" then
+      table.insert(L.item_spots, spot)
     else
       table.insert(L.mon_spots, spot)
     end
@@ -1788,6 +1790,7 @@ end
 function Rooms_blow_chunks()
 
   each R in LEVEL.rooms do
+    ROOM = R
     each C in R.chunks do
       C:build()
     end
@@ -1796,8 +1799,11 @@ function Rooms_blow_chunks()
   -- scenic rooms ??
 
   each H in LEVEL.halls do
+    ROOM = H
     H:build()
   end
+
+  ROOM = nil
 
   each CL in LEVEL.closets do
     CL:build()
@@ -2339,9 +2345,11 @@ function Rooms_fake_building(sx1, sy1, sx2, sy2, kind, dir, face_room, zone)
 
     local T = Trans.box_transform(x1, y1, x2, y2, f_h, 10 - dir)
 
-    local fab = Fabricate(skin1, T, { skin1, skin2 })
+    ROOM = face_room
 
-    face_room:add_cage_or_trap(fab)
+    Fabricate(skin1, T, { skin1, skin2 })
+
+    ROOM = nil
     return
   end
 

@@ -1752,8 +1752,8 @@ function Fab_render(fab)
   each E in fab.entities do
     raw_add_entity(E)
   end
-end
 
+end
 
 
 function Fab_read_spots(fab)
@@ -2221,6 +2221,12 @@ function Fab_load_wad(name)
 
     spot.kind = spot_info.kind
 
+    -- the "ambush" (aka Deaf) flag means a caged monster
+    local MTF_Ambush = 8
+    if spot.kind == "monster" and bit.band(E.flags or 0, MTF_Ambush) != 0 then
+      spot.kind = "cage"
+    end
+
     spot.x1 = E.x - r
     spot.x2 = E.x + r
 
@@ -2592,6 +2598,10 @@ function Fabricate(main_skin, T, skins)
   Fab_transform_Z (fab, T)
 
   Fab_render(fab)
+
+  if ROOM then
+    Rooms_distribute_spots(ROOM, fab.spots)
+  end
 
   return fab
 end
