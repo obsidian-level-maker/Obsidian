@@ -26,6 +26,7 @@
 #include <algorithm>
 
 #include "lib_util.h"
+#include "lib_argv.h"
 #include "main.h"
 
 #include "csg_main.h"
@@ -660,8 +661,27 @@ static void SHADE_MergeResults()
 }
 
 
+void SHADE_NoLighting()
+{
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+  {
+    region_c *R = all_regions[i];
+
+    R->shade = 160;
+  } 
+}
+
+
 void CSG_Shade()
 {
+  if (ArgvFind(0, "nolight") >= 0)
+  {
+    LogPrintf("NOT LIGHTING LEVEL (-nolight specified)\n");
+    SHADE_NoLighting();
+    return;
+  }
+
+
   LogPrintf("Lighting level...\n");
 
   stat_targets = stat_sources = 0;
@@ -671,8 +691,6 @@ void CSG_Shade()
   SHADE_GroupRegions();
   SHADE_ProcessRegions();
   SHADE_MergeResults();
-
-  QCOM_FreeLights();
 
   LogPrintf("Lit %d targets (visited %d sources in total)\n",
             stat_targets, stat_sources);
