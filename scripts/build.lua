@@ -2215,30 +2215,36 @@ function Fab_load_wad(name)
       return
     end
 
-    local spot = {}
+    -- create a fake brush for the spot
+    -- (this brush is never sent to the CSG code, but it is a handy
+    --  way to get the spot translated and rotated)
 
-    local r = spot_info.r
+    local B =
+    {
+      { m = "spot" }
+    }
 
-    spot.kind = spot_info.kind
+    B[1].spot_kind = spot_info.kind
+    B[1].angle = E.angle
 
     -- the "ambush" (aka Deaf) flag means a caged monster
     local MTF_Ambush = 8
-    if spot.kind == "monster" and bit.band(E.flags or 0, MTF_Ambush) != 0 then
-      spot.kind = "cage"
+    if spot_info.kind == "monster" and bit.band(E.flags or 0, MTF_Ambush) != 0 then
+      B[1].spot_kind = "cage"
     end
 
-    spot.x1 = E.x - r
-    spot.x2 = E.x + r
+    local r = spot_info.r
 
-    spot.y1 = E.y - r
-    spot.y2 = E.y + r
+    table.insert(B, { x=E.x - r, y = E.y - r })
+    table.insert(B, { x=E.x + r, y = E.y - r })
+    table.insert(B, { x=E.x + r, y = E.y + r })
+    table.insert(B, { x=E.x - r, y = E.y + r })
 
-    spot.z1 = 0   -- TODO: determine properly
-    spot.z2 = 128 --
+    -- TODO: determine Z range properly (at least the bottom)
+    table.insert(B, { b=0 })
+    table.insert(B, { t=128 })
 
-    spot.angle = E.angle
-
-    table.insert(fab.spots, spot)
+    table.insert(fab.brushes, B)
   end
 
 
@@ -2254,8 +2260,6 @@ function Fab_load_wad(name)
       brushes  = {}
       models   = {}
       entities = {}
-
-      spots = {}
     }
 
     for thing_idx = 0,999 do
@@ -2600,7 +2604,7 @@ function Fabricate(main_skin, T, skins)
   Fab_render(fab)
 
   if ROOM then
-    Rooms_distribute_spots(ROOM, fab.spots)
+    Rooms_distribute_spots(ROOM, Fab_read_spots(fab))
   end
 
   return fab
