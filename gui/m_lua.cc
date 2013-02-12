@@ -861,6 +861,24 @@ struct Compare_ScriptFilename_pred
   }
 };
 
+
+static void Script_LoadFile(const char *filename)
+{
+  int status = luaL_loadfile(LUA_ST, filename);
+
+  if (status == 0)
+    status = lua_pcall(LUA_ST, 0, 0, 0);
+
+  if (status != 0)
+  {
+    const char *msg = lua_tolstring(LUA_ST, -1, NULL);
+
+    Main_FatalError("Unable to load script '%s'\n%s",
+                    fl_filename_name(filename), msg);
+  }
+}
+
+
 static bool Script_LoadAllFromDir(const char *path)
 {
   // load all scripts (files which match "*.lua") from a
@@ -890,18 +908,7 @@ static bool Script_LoadAllFromDir(const char *path)
     const char *full_name = StringPrintf("%s/%s", path, file_list[i]);
 
     // load it !!
-    int status = luaL_loadfile(LUA_ST, full_name);
-
-    if (status == 0)
-      status = lua_pcall(LUA_ST, 0, 0, 0);
-
-    if (status != 0)
-    {
-      const char *msg = lua_tolstring(LUA_ST, -1, NULL);
-
-      Main_FatalError("Unable to load script '%s' (%d)\n%s",
-                      file_list[i], status, msg);
-    }
+    Script_LoadFile(full_name);
 
     StringFree(full_name);
     StringFree(file_list[i]);
@@ -913,6 +920,7 @@ static bool Script_LoadAllFromDir(const char *path)
 
   return true;  // OK
 }
+
 
 static void Script_LoadSubDir(const char *subdir)
 {
@@ -928,7 +936,7 @@ static void Script_LoadSubDir(const char *subdir)
   if (StringCaseCmp(install_dir, home_dir) == 0)
     num_pass = 1;
 
-  for (int pass = 0; pass < num_pass; pass++)
+  for (int pass = 0 ; pass < num_pass ; pass++)
   {
     const char *path = StringPrintf("%s/%s", (pass == 0 ? install_dir : home_dir), subdir);
 
@@ -960,7 +968,8 @@ void Script_Load(const char *root)
 
   LogPrintf("DONE.\n\n");
 
-  Script_LoadSubDir("games");
+  Script_LoadFile(StringPrintf("%s/x_doom/games.lua", install_dir));
+
   Script_LoadSubDir("engines");
   Script_LoadSubDir("modules");
 

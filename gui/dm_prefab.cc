@@ -202,10 +202,10 @@ int wadfab_load(lua_State *L)
 
   char filename[PATH_MAX];
 
-  sprintf(filename, "%s/fabs/%s", home_dir, name);
+  sprintf(filename, "%s/x_doom/%s", home_dir, name);
 
   if (! FileExists(filename))
-    sprintf(filename, "%s/fabs/%s", install_dir, name);
+    sprintf(filename, "%s/x_doom/%s", install_dir, name);
 
   if (! WAD_OpenRead(filename))
     return luaL_error(L, "wadfab_load: missing/bad WAD: %s", name);
