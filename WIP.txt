@@ -6,31 +6,11 @@ WORK IN PROGRESS
 !!  proper Unixy compile/install in Linux
 
 
-DONE:  fix material handling from wad-fabs
-
-DONE:  have 'sky_light' and 'sky_shade' PROPERTIES, and instead of adding
-       an entity just set the "light" value of the brush or face
-
-DONE:  do LIQUID lighting via brush (or face) lighting
-
-DONE:  fucking lower-unpeg on door tracks
-
-DONE:  oscillating sectors (etc?) create a dummy
-
-DONE:  Fab_load_wad : allow closed doors -- add 1 to ceil and use delta_z
-
-DONE:  ignore light entities which occur below a sky brush (in CSG_SHADE)
-
-DONE:  fix region grouping
-
-DONE:  make closed doors block light : mark region somehow
-
-DONE:  FWATER4 used for missing bits (support but deprecate LAVA4)
-
-
 -  group regions: if untagged (so grouped by floor brush) then
    check if floor brush's mid point is valid (lies inside one of the
    regions) -- if valid, use only that point for lighting calc.
+
+   [or: use average coord of group for lighting calc]
 
 
 -  tri_pillar
@@ -41,19 +21,16 @@ WAD Prefabs
 
 +  simpler z_ranges : specify coordinate(s) which expands
 
--  use x_ranges for wall/window prefabs (to scale 192 --> 256)
+   BUT: need to handle (1) expanding lifts so target height matches
+                       (2) expanding Z to match a sky height
 
-!!  rail textures  [new method?]
+-  use x_ranges for wall/window prefabs (to scale 192 --> 256)
 
 -  create monster and item spots:
    +  review current spot system
    +  use the fab.spots table 
 
--  line flags (e.g. blocking)
-
--  mechanism to get side texture from floor/ceil
-   (e.g. set side to CRACKLE2
-   requires MATERIALS table to be fairly complete
+   >>>  have a 'ROOM' global, Fabricate() uses it
 
 -  NO: ability to "pick" the sector at a point / edge / corner and get the height there
 
@@ -65,9 +42,6 @@ WAD Prefabs
         104 = east
         106 = west
 
-
-
--  in prefabs with doors, use tagged (SR or S1) specials
 
 
 ========================================================================
