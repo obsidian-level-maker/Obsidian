@@ -682,6 +682,8 @@ static void Script_SetScriptPath(lua_State *L)
   else
     script_path = StringPrintf("%s/scripts/?.lua;%s/scripts/?.lua", home_dir, install_dir);
 
+  script_path = StringPrintf("%s;%s/x_doom/?.lua", script_path, install_dir);
+
   LogPrintf("script_path: [%s]\n", script_path);
 
   lua_getglobal(L, "package");
