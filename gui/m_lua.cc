@@ -675,14 +675,13 @@ static int p_init_lua(lua_State *L)
   return 0;
 }
 
-static void Script_SetScriptPath(lua_State *L)
+static void Script_SetScriptPath(lua_State *L, const char *subdir)
 {
   if (StringCaseCmp(install_dir, home_dir) == 0)
-    script_path = StringPrintf("%s/scripts/?.lua", install_dir);
+    script_path = StringPrintf("%s/%s/?.lua", install_dir, subdir);
   else
-    script_path = StringPrintf("%s/scripts/?.lua;%s/scripts/?.lua", home_dir, install_dir);
-
-  script_path = StringPrintf("%s;%s/x_doom/?.lua", script_path, install_dir);
+    script_path = StringPrintf("%s/%s/?.lua;%s/%s/?.lua", home_dir, subdir,
+                               install_dir, subdir);
 
   LogPrintf("script_path: [%s]\n", script_path);
 
@@ -708,29 +707,6 @@ static void Script_SetDataPath(void)
   }
 
   LogPrintf("data_path:   [%s]\n\n", data_path);
-}
-
-
-void Script_Init(void)
-{
-  LUA_ST = lua_open();
-  if (! LUA_ST)
-    Main_FatalError("LUA Init failed: cannot create new state");
-
-  int status = lua_cpcall(LUA_ST, &p_init_lua, NULL);
-  if (status != 0)
-    Main_FatalError("LUA Init failed: cannot load standard libs (%d)", status);
-
-  Script_SetScriptPath(LUA_ST);
-  Script_SetDataPath();
-}
-
-void Script_Close(void)
-{
-  if (LUA_ST)
-    lua_close(LUA_ST);
-
-  LUA_ST = NULL;
 }
 
 
@@ -864,6 +840,25 @@ struct Compare_ScriptFilename_pred
 };
 
 
+static void Script_Require(const char *name)
+{
+  char require_text[128];
+  sprintf(require_text, "require '%s'", name);
+
+  int status = luaL_loadstring(LUA_ST, require_text);
+
+  if (status == 0)
+    status = lua_pcall(LUA_ST, 0, 0, 0);
+
+  if (status != 0)
+  {
+    const char *msg = lua_tolstring(LUA_ST, -1, NULL);
+
+    Main_FatalError("Unable to load script '%s.lua'\n%s", name, msg);
+  }
+}
+
+
 static void Script_LoadFile(const char *filename)
 {
   int status = luaL_loadfile(LUA_ST, filename);
@@ -949,31 +944,42 @@ static void Script_LoadSubDir(const char *subdir)
 }
 
 
-void Script_Load(const char *root)
+void Script_Open(const char *game_dir)
 {
-  LogPrintf("Loading main script: %s.lua\n", root);
+  // create Lua state
 
-  char require_text[128];
-  sprintf(require_text, "require '%s'", root);
+  LUA_ST = luaL_newstate();
+  if (! LUA_ST)
+    Main_FatalError("LUA Init failed: cannot create new state");
 
-  int status = luaL_loadstring(LUA_ST, require_text);
-
-  if (status == 0)
-    status = lua_pcall(LUA_ST, 0, 0, 0);
-
+  int status = lua_cpcall(LUA_ST, &p_init_lua, NULL);
   if (status != 0)
-  {
-    const char *msg = lua_tolstring(LUA_ST, -1, NULL);
+    Main_FatalError("LUA Init failed: cannot load standard libs (%d)", status);
 
-    Main_FatalError("Unable to load script '%s.lua' (%d)\n%s", root, status, msg);
-  }
+  Script_SetDataPath();
+
+
+  // load main scripts
+
+  LogPrintf("Loading main script: oblige.lua\n");
+
+  Script_SetScriptPath(LUA_ST, "scripts");
+
+  Script_Require("oblige");
 
   LogPrintf("DONE.\n\n");
 
-  Script_LoadFile(StringPrintf("%s/x_doom/games.lua", install_dir));
-
   Script_LoadSubDir("engines");
   Script_LoadSubDir("modules");
+
+  
+  // load game-specific scripts
+
+  Script_SetScriptPath(LUA_ST, game_dir);
+
+  Script_Require("games");
+
+  // FIXME: load prefab skins
 
   has_loaded = true;
  
@@ -981,6 +987,15 @@ void Script_Load(const char *root)
     Main_FatalError("The ob_init script failed.\n");
 
   has_added_buttons = true;
+}
+
+
+void Script_Close()
+{
+  if (LUA_ST)
+    lua_close(LUA_ST);
+
+  LUA_ST = NULL;
 }
 
 

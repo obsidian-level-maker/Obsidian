@@ -588,11 +588,9 @@ int main(int argc, char **argv)
   }
 
 
-  Script_Init();
-
   if (batch_mode)
   {
-    Script_Load("oblige");
+    Script_Open("x_doom");
 
     Batch_Defaults();
 
@@ -619,7 +617,7 @@ int main(int argc, char **argv)
 
     main_win = new UI_MainWin(main_w, main_h, OBLIGE_TITLE " " OBLIGE_VERSION);
 
-    Script_Load("oblige");
+    Script_Open("x_doom");
 
     // FIXME: main_win->Defaults();
     main_win->game_box ->Defaults();
