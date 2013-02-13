@@ -1,15 +1,43 @@
+--------------------------------------------------------------------
+--  DOOM WEAPONS
+--------------------------------------------------------------------
+--
+--  Copyright (C) 2006-2013 Andrew Apted
+--  Copyright (C)      2011 Chris Pisarczyk
+--
+--  This program is free software; you can redistribute it and/or
+--  modify it under the terms of the GNU General Public License
+--  as published by the Free Software Foundation; either version 2
+--  of the License, or (at your option) any later version.
+--
+--------------------------------------------------------------------
 
 DOOM.AMMOS =
 {
-  bullet = { start_bonus = 60 }
-  shell  = { start_bonus = 12 }
-  rocket = { start_bonus = 4  }
-  cell   = { start_bonus = 40 }
+  bullet =
+  {
+    start_bonus = 60
+  }
+
+  shell =
+  {
+    start_bonus = 12
+  }
+
+  rocket =
+  {
+    start_bonus = 4
+  }
+
+  cell =
+  {
+    start_bonus = 40
+  }
 }
 
 
--- Weapon list
--- ===========
+-- Usable keywords
+-- ===============
 --
 -- pref       : usage preference [absent = never]
 -- add_prob   : probabiliiy of adding into level [absent = never]

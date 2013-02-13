@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  GAME DEFINITION : DOOM II : HELL ON EARTH
+--  GAME DEFINITION : DOOM, DOOM II
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
