@@ -98,8 +98,8 @@ require "util"
 
 require "planner"
 require "connect"
-require "quests"
-require "caves"
+require "quest"
+require "cave"
 
 require "seeds"
 require "build"
@@ -109,9 +109,9 @@ require "hallway"
 require "z_pats"
 
 require "areas"
-require "rooms"
+require "room"
 require "fight"
-require "monsters"
+require "monster"
 require "naming"
 
 

@@ -21,7 +21,7 @@
 require "defs"
 require "util"
 
-require "levels"
+require "level"
 
 -- require 'Profiler'  -- Pepperfish's
 
