@@ -54,6 +54,8 @@
 #include "hdr_lua.h"
 #include "hdr_ui.h"
 
+#include "ajpoly.h"
+
 #include "lib_file.h"
 #include "lib_util.h"
 #include "lib_wad.h"
@@ -67,130 +69,23 @@
 #include "g_doom.h"
 
 
-typedef struct raw_ho_subsec_s
+// callbacks for AJ-Polygonator
+
+void Appl_FatalError(const char *str, ...)
 {
-  u16_t sector;
-  u16_t num;     // number of Segs in this Sub-Sector
-  u16_t first;   // first Seg
-
-} PACKEDATTR raw_ho_subsec_t;
-
-#define raw_ho_vertex_t  raw_gl_vertex_t
-#define raw_ho_seg_t     raw_gl_seg_t
-
-
-static raw_vertex_t  * friz_verts;
-static raw_linedef_t * friz_lines;
-static raw_sidedef_t * friz_sides;
-static raw_sector_t  * friz_sectors;
-static raw_thing_t   * friz_things;
-
-static raw_ho_vertex_t * friz_ho_verts;
-static raw_ho_seg_t    * friz_ho_segs;
-static raw_ho_subsec_t * friz_polygons;
-
-static int friz_num_verts;
-static int friz_num_lines;
-static int friz_num_sides;
-static int friz_num_sectors;
-static int friz_num_things;
-
-static int friz_num_ho_verts;
-static int friz_num_ho_segs;
-static int friz_num_polygons;
-
-
-static const byte *lev_v2_magic = (const byte *) "gNd2";
-
-
-static bool LoadLump(const char *lump_name, byte ** array, int * count,
-                     size_t struct_size, int magic = 0)
-{
-  int entry = WAD_FindEntry(lump_name);
-
-  if (entry < 0)
-  {
-    DebugPrintf("Lump not found '%s'\n", lump_name);
-    return false;
-  }
-  
-  int pos    = 0;
-  int length = WAD_EntryLen(entry);
-
-  *array = new byte[length + 1];
-
-  if (magic == 2)
-  {
-    char buffer[4];
-
-    if (! WAD_ReadData(entry, 0, 4, buffer))
-    {
-      DebugPrintf("Failed reading lump (%d bytes)\n", 4);
-      return false;
-    }
-
-    if (memcmp(buffer, lev_v2_magic, 4) != 0)
-    {
-      DebugPrintf("Wrong hobbs version\n");
-      return false;
-    }
-
-    pos    += 4;
-    length -= 4;
-  }
-
-  if (length > 0)
-  {
-    if (! WAD_ReadData(entry, pos, length, *array))
-    {
-      DebugPrintf("Failed reading lump (%d bytes)\n", length);
-      return false;
-    }
-  }
-
-  *count = length / (int)struct_size;
-
-// DEBUG
-#if 0
-fprintf(stderr, "Loaded %s : %d items (%d bytes)\n",
-        lump_name, *count, length);
-#endif
-
-  return true;
+  // FIXME
 }
 
-
-static void FreeLump(byte ** array)
+void Appl_Printf(const char *str, ...)
 {
-  if (*array)
-  {
-    delete[] (*array);
-    *array = NULL;
-  }
+  // FIXME
 }
 
 
 int wadfab_free(lua_State *L)
 {
-  FreeLump((byte **) &friz_verts);
-  FreeLump((byte **) &friz_lines);
-  FreeLump((byte **) &friz_sides);
-  FreeLump((byte **) &friz_sectors);
-  FreeLump((byte **) &friz_things);
-
-  FreeLump((byte **) &friz_ho_verts);
-  FreeLump((byte **) &friz_ho_segs);
-  FreeLump((byte **) &friz_polygons);
-
-  friz_num_verts = 0;
-  friz_num_lines = 0;
-  friz_num_sides = 0;
-  friz_num_sectors = 0;
-  friz_num_things = 0;
-
-  friz_num_ho_verts = 0;
-  friz_num_ho_segs = 0;
-  friz_num_polygons = 0;
+  ajpoly::CloseMap();
+  ajpoly::FreeWAD();
 
   return 0;
 }
@@ -204,38 +99,18 @@ int wadfab_load(lua_State *L)
 
   sprintf(filename, "%s/x_doom/%s", home_dir, name);
 
+  // check home directory, if not found then try install dir
   if (! FileExists(filename))
     sprintf(filename, "%s/x_doom/%s", install_dir, name);
 
-  if (! WAD_OpenRead(filename))
-    return luaL_error(L, "wadfab_load: missing/bad WAD: %s", name);
+  if (! FileExists(filename))
+    return luaL_error(L, "wadfab_load: no such file: %s", name);
 
-  if (! LoadLump("THINGS",   (byte **) &friz_things,   &friz_num_things,   sizeof(raw_thing_t)) ||
-      ! LoadLump("VERTEXES", (byte **) &friz_verts,    &friz_num_verts,    sizeof(raw_vertex_t)) ||
-      ! LoadLump("LINEDEFS", (byte **) &friz_lines,    &friz_num_lines,    sizeof(raw_linedef_t)) ||
-      ! LoadLump("SIDEDEFS", (byte **) &friz_sides,    &friz_num_sides,    sizeof(raw_sidedef_t)) ||
-      ! LoadLump("SECTORS",  (byte **) &friz_sectors,  &friz_num_sectors,  sizeof(raw_sector_t))
-     )
-  {
-    WAD_CloseRead();
-    wadfab_free(L);
-    return luaL_error(L, "wadfab_load: missing/bad map in %s", name);
-  }
+  if (! ajpoly::LoadWAD(filename))
+    return luaL_error(L, "wadfab_load: %s", ajpoly::GetError());
 
-  if (! LoadLump("HO_VERT",  (byte **) &friz_ho_verts, &friz_num_ho_verts, sizeof(raw_ho_vertex_t), 2) ||
-      ! LoadLump("HO_SEGS",  (byte **) &friz_ho_segs,  &friz_num_ho_segs,  sizeof(raw_ho_seg_t)) ||
-      ! LoadLump("HO_SSECT", (byte **) &friz_polygons, &friz_num_polygons, sizeof(raw_ho_subsec_t))
-     )
-  {
-    WAD_CloseRead();
-    wadfab_free(L);
-    return luaL_error(L, "wadfab_load: MISSING HOBBS in %s", name);
-  }
-
-  // we have loaded everything we need -- can close then file now
-  WAD_CloseRead();
-
-  // TODO: mark void polygons which are surrounded by void polygons
+  if (! ajpoly::OpenMap("*" /* first one */))
+    return luaL_error(L, "wadfab_load: %s", ajpoly::GetError());
 
   return 0;
 }
@@ -259,35 +134,26 @@ int wadfab_get_thing(lua_State *L)
 {
   int index = luaL_checkint(L, 1);
 
-  if (index < 0 || index >= friz_num_things)
+  if (index < 0 || index >= ajpoly::num_things)
     return 0;
 
-  const raw_thing_t * thing = &friz_things[index];
-
-  int x     = LE_S16(thing->x);
-  int y     = LE_S16(thing->y);
-  int angle = LE_S16(thing->angle);
-  int id    = LE_U16(thing->type);
-  int flags = LE_U16(thing->options);
+  const ajpoly::thing_c * T = ajpoly::Thing(index);
 
   lua_newtable(L);
 
-  lua_pushinteger(L, x);
+  lua_pushinteger(L, T->x);
   lua_setfield(L, -2, "x");
 
-  lua_pushinteger(L, y);
+  lua_pushinteger(L, T->y);
   lua_setfield(L, -2, "y");
 
-  lua_pushinteger(L, angle);
+  lua_pushinteger(L, T->angle);
   lua_setfield(L, -2, "angle");
 
-  lua_pushinteger(L, angle);
-  lua_setfield(L, -2, "angle");
-
-  lua_pushinteger(L, id);
+  lua_pushinteger(L, T->type);
   lua_setfield(L, -2, "id");
 
-  lua_pushinteger(L, flags);
+  lua_pushinteger(L, T->options);
   lua_setfield(L, -2, "flags");
 
   return 1;
@@ -298,39 +164,32 @@ int wadfab_get_sector(lua_State *L)
 {
   int index = luaL_checkint(L, 1);
 
-  if (index < 0 || index >= friz_num_sectors)
+  if (index < 0 || index >= ajpoly::num_sectors)
     return 0;
 
-  const raw_sector_t * sec = &friz_sectors[index];
-
-  int floor_h = LE_S16(sec->floor_h);
-  int  ceil_h = LE_S16(sec->ceil_h);
-
-  int special = LE_S16(sec->special);
-  int   light = LE_S16(sec->light);
-  int     tag = LE_S16(sec->tag);
+  const ajpoly::sector_c * S = ajpoly::Sector(index);
 
   lua_newtable(L);
 
-  lua_pushinteger(L, floor_h);
+  lua_pushinteger(L, S->floor_h);
   lua_setfield(L, -2, "floor_h");
 
-  lua_pushinteger(L, ceil_h);
+  lua_pushinteger(L, S->ceil_h);
   lua_setfield(L, -2, "ceil_h");
 
-  lua_pushinteger(L, special);
+  lua_pushinteger(L, S->special);
   lua_setfield(L, -2, "special");
 
-  lua_pushinteger(L, light);
+  lua_pushinteger(L, S->light);
   lua_setfield(L, -2, "light");
 
-  lua_pushinteger(L, tag);
+  lua_pushinteger(L, S->tag);
   lua_setfield(L, -2, "tag");
 
-  push_char8(L, sec->floor_tex);
+  lua_pushstring(L, S->floor_tex);
   lua_setfield(L, -2, "floor_tex");
 
-  push_char8(L, sec->ceil_tex);
+  lua_pushstring(L, S->ceil_tex);
   lua_setfield(L, -2, "ceil_tex");
 
   return 1;
@@ -341,7 +200,7 @@ int wadfab_get_side(lua_State *L)
 {
   int index = luaL_checkint(L, 1);
 
-  if (index < 0 || index >= friz_num_sides)
+  if (index < 0 || index >= ajpoly::num_sides)
     return 0;
 
   const raw_sidedef_t * side = &friz_sides[index];
@@ -374,7 +233,7 @@ int wadfab_get_line(lua_State *L)
 {
   int index = luaL_checkint(L, 1);
 
-  if (index < 0 || index >= friz_num_lines)
+  if (index < 0 || index >= ajpoly::num_lines)
     return 0;
 
   const raw_linedef_t * line = &friz_lines[index];
@@ -405,7 +264,7 @@ static int side_for_seg(const raw_ho_seg_t * seg, bool opposite = false)
   if (ld < 0) // miniseg?
     return -1;
 
-  if (ld >= friz_num_lines)
+  if (ld >= ajpoly::num_lines)
     return -1; //??? Main_FatalError("wadfab_get_polygon: bad linedef #%d", ld);
 
   const raw_linedef_t * line = &friz_lines[ld];
@@ -418,7 +277,7 @@ static int side_for_seg(const raw_ho_seg_t * seg, bool opposite = false)
     sd = LE_S16(line->sidedef1);
 
   // an absent side does not normally occur
-  if (sd < 0 || sd >= friz_num_sides)
+  if (sd < 0 || sd >= ajpoly::num_sides)
     return -1;
 
   return sd;
@@ -437,7 +296,7 @@ static void push_ho_seg(lua_State *L, int tab_index, const raw_ho_seg_t * seg)
   {
     v_idx ^= IS_GL_VERT;
 
-    if (v_idx >= friz_num_ho_verts)
+    if (v_idx >= ajpoly::num_ho_verts)
       luaL_error(L, "wadfab_get_polygon: bad GL vertex #%d", v_idx);
 
     const raw_ho_vertex_t * vert = &friz_ho_verts[v_idx];
@@ -447,7 +306,7 @@ static void push_ho_seg(lua_State *L, int tab_index, const raw_ho_seg_t * seg)
   }
   else
   {
-    if (v_idx >= friz_num_verts)
+    if (v_idx >= ajpoly::num_verts)
       luaL_error(L, "wadfab_get_polygon: bad vertex #%d", v_idx);
 
     const raw_vertex_t * vert = &friz_verts[v_idx];
@@ -464,7 +323,7 @@ static void push_ho_seg(lua_State *L, int tab_index, const raw_ho_seg_t * seg)
 
   int ld = LE_S16(seg->linedef);
 
-  if (ld >= 0 && ld < friz_num_lines)
+  if (ld >= 0 && ld < ajpoly::num_lines)
   {
     lua_pushinteger(L, ld);
     lua_setfield(L, -2, "line");
@@ -489,7 +348,7 @@ int wadfab_get_polygon(lua_State *L)
 {
   int index = luaL_checkint(L, 1);
 
-  if (index < 0 || index >= friz_num_polygons)
+  if (index < 0 || index >= ajpoly::num_polygons)
     return 0;
 
   const raw_ho_subsec_t * sub = &friz_polygons[index];
@@ -498,7 +357,7 @@ int wadfab_get_polygon(lua_State *L)
   int seg_num   = LE_U16(sub->num);
   int seg_first = LE_U16(sub->first);
 
-  if (seg_num <= 0 || seg_first + seg_num > friz_num_ho_segs)
+  if (seg_num <= 0 || seg_first + seg_num > ajpoly::num_ho_segs)
     return luaL_error(L, "wadfab_get_polygon: bad GL-subsector #%d", index);
 
   const raw_ho_seg_t * seg = &friz_ho_segs[seg_first];
