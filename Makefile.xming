@@ -7,7 +7,9 @@
 
 PROGRAM=Oblige.exe
 
-CXX=i586-mingw32msvc-g++
+MINGW=i586-mingw32msvc-
+
+CXX=$(MINGW)g++
 
 LIB_LOC=lib_win32
 OBJ_DIR=obj_win32
@@ -30,7 +32,7 @@ FLTK_LIBS=$(FLTK_DIR)/mingw/lib/libfltk_images.a \
 ZLIB_FLAGS=-I$(ZLIB_DIR)
 ZLIB_LIBS=$(ZLIB_DIR)/libz.a
 
-CXXFLAGS=$(OPTIMISE) -Wall -Wno-strict-aliasing -D$(OS) \
+CXXFLAGS=$(OPTIMISE) -Wall -fno-strict-aliasing -D$(OS) \
          -Ilua_src -Iglbsp_src $(FLTK_FLAGS) $(ZLIB_FLAGS)
 LDFLAGS=
 LIBS=-lm $(FLTK_LIBS) $(ZLIB_LIBS) \
@@ -176,10 +178,10 @@ $(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS)
 	$(CXX) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 stripped: $(PROGRAM)
-	i586-mingw32msvc-strip --strip-unneeded $(PROGRAM)
+	$(MINGW)strip --strip-unneeded $(PROGRAM)
 
 $(OBJ_DIR)/oblige_res.o: gui/oblige.rc
-	i586-mingw32msvc-windres $^ -o $@
+	$(MINGW)windres $^ -o $@
 
 .PHONY: all clean stripped
 
