@@ -28,7 +28,7 @@
 //  --> no result
 //  
 //  wadfab_get_polygon(index)
-//  -->  sector_num, { {x=#,y=#,side=# } ... }
+//  -->  sector_num, { {x=#,y=#,side=#,line=# } ... }
 //  
 //  wadfab_get_sector(index)
 //  -->  { floor_h=#, floor_tex="...",
@@ -112,22 +112,14 @@ int wadfab_load(lua_State *L)
   if (! ajpoly::OpenMap("*" /* first one */))
     return luaL_error(L, "wadfab_load: %s", ajpoly::GetError());
 
+  if (! ajpoly::Polygonate(true /* require_border */))
+    return luaL_error(L, "wadfab_load: %s", ajpoly::GetError());
+
   return 0;
 }
 
 
 //------------------------------------------------------------------------
-
-
-static void push_char8(lua_State *L, const char * buf)
-{
-  size_t len = 0;
-
-  while (len < 8 && buf[len] != 0)
-    len++;
-
-  lua_pushlstring(L, buf, len);
-}
 
 
 int wadfab_get_thing(lua_State *L)
@@ -262,87 +254,34 @@ int wadfab_get_line(lua_State *L)
 }
 
 
-static int side_for_seg(const raw_ho_seg_t * seg, bool opposite = false)
-{
-  int ld = LE_S16(seg->linedef);
-
-  if (ld < 0) // miniseg?
-    return -1;
-
-  if (ld >= ajpoly::num_linedefs)
-    return -1; //??? Main_FatalError("wadfab_get_polygon: bad linedef #%d", ld);
-
-  const raw_linedef_t * line = &friz_lines[ld];
-
-  int sd;
-
-  if ((seg->side ? true : false) != opposite)
-    sd = LE_S16(line->sidedef2);
-  else
-    sd = LE_S16(line->sidedef1);
-
-  // an absent side does not normally occur
-  if (sd < 0 || sd >= ajpoly::num_sidedefs)
-    return -1;
-
-  return sd;
-}
-
-
-static void push_edge(lua_State *L, int tab_index, const raw_ho_seg_t * seg)
+static void push_edge(lua_State *L, int tab_index, const ajpoly::edge_c * E)
 {
   lua_newtable(L);
 
-  int v_idx = LE_U16(seg->end);
-
-  double x, y;
-
-  if (v_idx & IS_GL_VERT)
-  {
-    v_idx ^= IS_GL_VERT;
-
-    if (v_idx >= ajpoly::num_ho_verts)
-      luaL_error(L, "wadfab_get_polygon: bad GL vertex #%d", v_idx);
-
-    const raw_ho_vertex_t * vert = &friz_ho_verts[v_idx];
-
-    x = LE_S32(vert->x) / 65536.0;
-    y = LE_S32(vert->y) / 65536.0;
-  }
-  else
-  {
-    if (v_idx >= ajpoly::num_verts)
-      luaL_error(L, "wadfab_get_polygon: bad vertex #%d", v_idx);
-
-    const raw_vertex_t * vert = &friz_verts[v_idx];
-
-    x = LE_S16(vert->x);
-    y = LE_S16(vert->y);
-  }
-
-  lua_pushnumber(L, x);
+  lua_pushnumber(L, E->end->x);
   lua_setfield(L, -2, "x");
 
-  lua_pushnumber(L, y);
+  lua_pushnumber(L, E->end->y);
   lua_setfield(L, -2, "y");
 
-  int ld = LE_S16(seg->linedef);
-
-  if (ld >= 0 && ld < ajpoly::num_linedefs)
+  if (E->linedef)
   {
-    lua_pushinteger(L, ld);
+    lua_pushinteger(L, E->linedef->index);
     lua_setfield(L, -2, "line");
-  }
 
-  int sd = side_for_seg(seg, true /* opposite */);
+    const ajpoly::sidedef_c * SD;
 
-  if (sd < 0)
-    sd = side_for_seg(seg, false);
+    // want opposite side than normal (since we are flipping the edges)
+    if (E->side == 0)
+      SD = E->linedef->left;
+    else
+      SD = E->linedef->right;
 
-  if (sd >= 0)
-  {
-    lua_pushinteger(L, sd);
-    lua_setfield(L, -2, "side");
+    if (SD)
+    {
+      lua_pushinteger(L, E->linedef->index);
+      lua_setfield(L, -2, "side");
+    }
   }
 
   lua_rawseti(L, -2, tab_index);
@@ -358,26 +297,32 @@ int wadfab_get_polygon(lua_State *L)
 
   const ajpoly::polygon_c * poly = ajpoly::Polygon(index);
 
+
+  // result #1 : SECTOR
   int sect_id  = poly->sector->index;
 
   if (sect_id == 0xFFFF)
     sect_id = -1;
 
-  // result #1 : SECTOR
   lua_pushinteger(L, sect_id);
 
 
-  const raw_ho_seg_t * seg = &friz_ho_segs[seg_first];
-
   // result #2 : COORDS
-  lua_createtable(L, seg_num, 0);
+  std::vector<ajpoly::edge_c *> edges;
 
-  for (int tab_index = 1 ; tab_index <= seg_num ; tab_index++)
+  for (ajpoly::edge_c * E = poly->edge_list ; E ; E = E->next)
+    edges.push_back(E);
+
+  int edge_num = (int)edges.size();
+
+  lua_createtable(L, edge_num, 0);
+
+  for (int tab_index = 1 ; tab_index <= edge_num ; tab_index++)
   {
-    // GL subsectors are clockwise, but OBLIGE are anti-clockwise.
+    // the polygon edges are clockwise, but OBLIGE are anti-clockwise.
     // hence reverse the order.  We also use 'end' instead of 'start'.
 
-    push_edge(L, tab_index, seg + (seg_num - tab_index));
+    push_edge(L, tab_index, edges[edge_num - tab_index]);
   }
 
   return 2;
