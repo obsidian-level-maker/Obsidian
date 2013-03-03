@@ -186,6 +186,7 @@ clean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
 	rm -f $(OBJ_DIR)/lua/*.o
 	rm -f $(OBJ_DIR)/glbsp/*.o
+	rm -f $(OBJ_DIR)/ajpoly/*.o
 
 $(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(AJPOLY_OBJS)
 	$(CXX) -Wl,--warn-common $^ -o $@ $(LDFLAGS) $(LIBS)
