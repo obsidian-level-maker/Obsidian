@@ -66,7 +66,7 @@ private:
 	int    data_len;
 
 public:
-	wad_c() : fp(NULL), lumps()
+	wad_c() : fp(NULL), lumps(), data_block(NULL), data_len()
 	{ }
 
 	virtual ~wad_c();

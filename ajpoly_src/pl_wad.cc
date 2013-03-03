@@ -71,7 +71,7 @@ byte * wad_c::AllocateData(int length)
 {
 	if (data_block && length <= data_len)
 		return data_block;
-	
+
 	FreeData();
 
 	data_len = length;
@@ -199,6 +199,9 @@ void wad_c::DetermineLevels()
 
 		for (unsigned int j = 5 ; j < 16 ; j++)
 		{
+			if (k + j >= lumps.size())
+				break;
+
 			lump_c * N = lumps[k + j];
 
 			if (! CheckLevelLump(N->name))

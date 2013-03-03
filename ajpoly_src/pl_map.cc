@@ -17,7 +17,7 @@
 #include "pl_local.h"
 
 
-#define DEBUG_LOAD   0
+#define DEBUG_LOAD  0
 
 
 namespace ajpoly
@@ -437,13 +437,11 @@ bool LoadLinedefs()
 		vertex_c *start = Vertex(LE_U16(raw->start));
 		vertex_c *end   = Vertex(LE_U16(raw->end));
 
-		start->ref_count++;
-		  end->ref_count++;
-
-		line = NewLinedef();
-
 		line->start = start;
 		line->end   = end;
+
+		start->ref_count++;
+		  end->ref_count++;
 
 		/* check for zero-length line */
 		if ((fabs(start->x - end->x) < DIST_EPSILON) && 
@@ -491,13 +489,11 @@ bool LoadLinedefsHexen()
 		vertex_c *start = Vertex(LE_U16(raw->start));
 		vertex_c *end   = Vertex(LE_U16(raw->end));
 
-		start->ref_count++;
-		  end->ref_count++;
-
-		line = NewLinedef();
-
 		line->start = start;
 		line->end   = end;
+
+		start->ref_count++;
+		  end->ref_count++;
 
 		/* check for zero-length line */
 		if ((fabs(start->x - end->x) < DIST_EPSILON) && 
@@ -521,12 +517,9 @@ bool LoadLinedefsHexen()
 }
 
 
-
 //------------------------------------------------------------------------
 //   ANALYZE
 //------------------------------------------------------------------------
-
-
 
 
 int limit_x1, limit_y1;
