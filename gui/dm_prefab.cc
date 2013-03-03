@@ -71,16 +71,37 @@
 
 // callbacks for AJ-Polygonator
 
+static char appl_message[MSG_BUF_LEN];
+
 void Appl_FatalError(const char *str, ...)
 {
-  // FIXME
+  va_list args;
+
+  va_start(args, str);
+  vsnprintf(appl_message, MSG_BUF_LEN, str, args);
+  va_end(args);
+
+  appl_message[MSG_BUF_LEN-1] = 0;
+
+  Main_FatalError("AJ-Polygonator Failure:\n%s", appl_message);
+  /* NOT REACHED */
 }
 
 void Appl_Printf(const char *str, ...)
 {
-  // FIXME
+  va_list args;
+
+  va_start(args, str);
+  vsnprintf(appl_message, MSG_BUF_LEN, str, args);
+  va_end(args);
+
+  appl_message[MSG_BUF_LEN-1] = 0;
+
+  LogPrintf("AJPOLY: %s", appl_message);
 }
 
+
+//------------------------------------------------------------------------
 
 int wadfab_free(lua_State *L)
 {
@@ -120,7 +141,6 @@ int wadfab_load(lua_State *L)
 
 
 //------------------------------------------------------------------------
-
 
 int wadfab_get_thing(lua_State *L)
 {
