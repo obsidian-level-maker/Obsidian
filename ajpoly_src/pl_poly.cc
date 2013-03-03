@@ -1096,6 +1096,8 @@ bool Polygonate(bool require_border)
 
 		Appl_Printf("Built %d POLYGONS, %d EDGES, %d SPLIT-VERTS\n",
 					num_polygons, num_edges, num_splits);
+
+		Appl_Printf("\n");
 	}
 
 	FreeQuickAllocCuts();

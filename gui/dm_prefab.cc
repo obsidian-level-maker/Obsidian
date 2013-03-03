@@ -89,15 +89,18 @@ void Appl_FatalError(const char *str, ...)
 
 void Appl_Printf(const char *str, ...)
 {
-  va_list args;
+  if (debug_messages)
+  {
+    va_list args;
 
-  va_start(args, str);
-  vsnprintf(appl_message, MSG_BUF_LEN, str, args);
-  va_end(args);
+    va_start(args, str);
+    vsnprintf(appl_message, MSG_BUF_LEN, str, args);
+    va_end(args);
 
-  appl_message[MSG_BUF_LEN-1] = 0;
+    appl_message[MSG_BUF_LEN-1] = 0;
 
-  LogPrintf("AJPOLY: %s", appl_message);
+    LogPrintf("AJPOLY: %s", appl_message);
+  }
 }
 
 
