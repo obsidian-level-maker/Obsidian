@@ -184,7 +184,8 @@ public:
 	// adjacent sector, or NULL if none (for outside of map)
 	sector_c *sector;
 
-	// 0 for right, 1 for left
+	// side of linedef this edge is on: 0 for right, 1 for left
+	// (not valid when 'linedef' field is NULL)
 	int side;
 
 	// edge on other side, or NULL if one-sided.

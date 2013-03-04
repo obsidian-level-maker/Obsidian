@@ -35,14 +35,14 @@
 //          ceil_h=#,  ceil_tex="...",
 //         special=#, tag=#, light=#
 //       }
-//  
+// 
 //  wadfab_get_side(index)
 //  -->  { upper_tex="", mid_tex="", lower_tex="",
 //         x_offset=#, y_offset=#
 //       }
 // 
 //  wadfab_get_line(index)
-//  -->  { special=#, tag=#, flags=# }
+//  -->  { special=#, tag=#, flags=#, right=#, left=# }
 //  
 //  wadfab_get_thing(index)
 //  -->  { id=#, x=#, y=#, angle=#, flags=# }
@@ -294,7 +294,7 @@ static void push_edge(lua_State *L, int tab_index, const ajpoly::edge_c * E)
 
     const ajpoly::sidedef_c * SD;
 
-    // want opposite side than normal (since we are flipping the edges)
+    // we want the "outer" sidedef (the opposite side)
     if (E->side == 0)
       SD = E->linedef->left;
     else
@@ -302,7 +302,7 @@ static void push_edge(lua_State *L, int tab_index, const ajpoly::edge_c * E)
 
     if (SD)
     {
-      lua_pushinteger(L, E->linedef->index);
+      lua_pushinteger(L, SD->index);
       lua_setfield(L, -2, "side");
     }
   }
