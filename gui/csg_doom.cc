@@ -1233,6 +1233,9 @@ static csg_property_set_c * DM_FindSpecial(snag_c *S, region_c *R1, region_c *R2
 static brush_vert_c * DM_FindRail(const region_c *R, const region_c *N,
                                   const snag_c *S)
 {
+  if (! R || ! N)
+    return NULL;
+
   if (R->gaps.size() == 0 || N->gaps.size() == 0)
     return NULL;
 
