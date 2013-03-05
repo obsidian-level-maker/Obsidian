@@ -33,4 +33,4 @@ const char *UI_GetLastFile(void);
 #endif /* __UI_CHOOSER_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

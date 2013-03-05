@@ -24,58 +24,58 @@
 class UI_Build : public Fl_Group
 {
 private:
-  Fl_Box *status;
-  Fl_Progress *progress;
+	Fl_Box *status;
+	Fl_Progress *progress;
 
-  char  status_label[200];
-  char  prog_label[100];
+	char  status_label[200];
+	char  prog_label[100];
 
-  int   level_index;  // starts at 1
-  int   level_total;
+	int   level_index;  // starts at 1
+	int   level_total;
 
-  bool  node_begun;
-  float node_ratio;
-  float node_along;
+	bool  node_begun;
+	float node_ratio;
+	float node_along;
 
-  std::vector<std::string> step_names;
+	std::vector<std::string> step_names;
 
-  Fl_Button *build;
-  Fl_Button *about;
-  Fl_Button *options;
-  Fl_Button *quit;
-
-public:
-  UI_MiniMap *mini_map;
+	Fl_Button *build;
+	Fl_Button *about;
+	Fl_Button *options;
+	Fl_Button *quit;
 
 public:
-  UI_Build(int x, int y, int w, int h, const char *label = NULL);
-  virtual ~UI_Build();
+	UI_MiniMap *mini_map;
 
 public:
-  void Prog_Init(int node_perc, const char *extra_steps);
-  void Prog_AtLevel(int index, int total);
-  void Prog_Step(const char *step_name);
-  void Prog_Nodes(int pos, int limit);
-  void Prog_Finish();
+	UI_Build(int x, int y, int w, int h, const char *label = NULL);
+	virtual ~UI_Build();
 
-  void SetStatus(const char *msg);
-  void SetAbortButton(bool abort);
-  void Locked(bool value);
+public:
+	void Prog_Init(int node_perc, const char *extra_steps);
+	void Prog_AtLevel(int index, int total);
+	void Prog_Step(const char *step_name);
+	void Prog_Nodes(int pos, int limit);
+	void Prog_Finish();
+
+	void SetStatus(const char *msg);
+	void SetAbortButton(bool abort);
+	void Locked(bool value);
 
 private:
-  void ParseSteps(const char *list);
-  int  FindStep(const char *name);  // -1 if not found
+	void ParseSteps(const char *list);
+	int  FindStep(const char *name);  // -1 if not found
 
-  void AddStatusStep(const char *name);
+	void AddStatusStep(const char *name);
 
-  static void build_callback(Fl_Widget *, void*);
-  static void about_callback(Fl_Widget *, void*);
-  static void options_callback(Fl_Widget *, void*);
-  static void stop_callback(Fl_Widget *, void*);
-  static void quit_callback(Fl_Widget *, void*);
+	static void build_callback(Fl_Widget *, void*);
+	static void about_callback(Fl_Widget *, void*);
+	static void options_callback(Fl_Widget *, void*);
+	static void stop_callback(Fl_Widget *, void*);
+	static void quit_callback(Fl_Widget *, void*);
 };
 
 #endif /* __UI_BUILD_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

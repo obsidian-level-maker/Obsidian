@@ -27,83 +27,83 @@ class UI_Module : public Fl_Group
 friend class UI_CustomMods;
 
 private:
-  std::string id_name;
+	std::string id_name;
 
-  Fl_Check_Button *mod_button;  
+	Fl_Check_Button *mod_button;  
 
-  std::map<std::string, UI_RChoice *> choice_map;
-
-public:
-  UI_Module(int x, int y, int w, int h, const char *id, const char *label);
-  virtual ~UI_Module();
-
-  void AddOption(const char *option, const char *label);
-
-  void OptionPair(const char *option, const char *id, const char *label);
-
-  bool ParseValue(const char *option, const char *value);
+	std::map<std::string, UI_RChoice *> choice_map;
 
 public:
-  int CalcHeight() const;
+	UI_Module(int x, int y, int w, int h, const char *id, const char *label);
+	virtual ~UI_Module();
 
-  void update_Enable();
+	void AddOption(const char *option, const char *label);
+
+	void OptionPair(const char *option, const char *id, const char *label);
+
+	bool ParseValue(const char *option, const char *value);
+
+public:
+	int CalcHeight() const;
+
+	void update_Enable();
 
 protected:
-  UI_RChoice *FindOpt(const char *opt); // const;
+	UI_RChoice *FindOpt(const char *opt); // const;
 
 private:
-  static void callback_OptChange(Fl_Widget *w, void *data);
+	static void callback_OptChange(Fl_Widget *w, void *data);
 };
 
 
 class UI_CustomMods : public Fl_Group
 {
 private:
-  Fl_Group *mod_pack;
+	Fl_Group *mod_pack;
 
-  Fl_Scrollbar *sbar;
+	Fl_Scrollbar *sbar;
 
-  // area occupied by module list
-  int mx, my, mw, mh;
+	// area occupied by module list
+	int mx, my, mw, mh;
 
-  // number of pixels "lost" above the top of the module area
-  int offset_y;
+	// number of pixels "lost" above the top of the module area
+	int offset_y;
 
-  // total height of all shown modules
-  int total_h;
-
-public:
-  UI_CustomMods(int x, int y, int w, int h, const char *label = NULL);
-  virtual ~UI_CustomMods();
+	// total height of all shown modules
+	int total_h;
 
 public:
-  void AddModule(const char *id, const char *label);
+	UI_CustomMods(int x, int y, int w, int h, const char *label = NULL);
+	virtual ~UI_CustomMods();
 
-  bool ShowOrHide(const char *id, bool new_shown);
+public:
+	void AddModule(const char *id, const char *label);
 
-  void ChangeValue(const char *id, bool enable);
+	bool ShowOrHide(const char *id, bool new_shown);
 
-  void AddOption (const char *module, const char *option, const char *label);
+	void ChangeValue(const char *id, bool enable);
 
-  void OptionPair(const char *module, const char *option,
-                  const char *id, const char *label);
+	void AddOption (const char *module, const char *option, const char *label);
 
-  bool ParseOptValue(const char *module, const char *option,
-                     const char *value);
+	void OptionPair(const char *module, const char *option,
+			const char *id, const char *label);
 
-  void Locked(bool value);
+	bool ParseOptValue(const char *module, const char *option,
+			const char *value);
+
+	void Locked(bool value);
 
 private:
-  UI_Module *FindID(const char *id) const;
+	UI_Module *FindID(const char *id) const;
 
-  void PositionAll(UI_Module *focus = NULL);
+	void PositionAll(UI_Module *focus = NULL);
 
-  static void callback_Scroll(Fl_Widget *w, void *data);
-  static void callback_ModEnable(Fl_Widget *w, void *data);
+	static void callback_Scroll(Fl_Widget *w, void *data);
+	static void callback_ModEnable(Fl_Widget *w, void *data);
 };
 
 
 #endif /* __UI_MODS_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

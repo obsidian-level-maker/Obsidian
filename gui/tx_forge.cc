@@ -60,19 +60,19 @@ static int meshsize;
 
 static void create_mesh(int width)
 {
-  meshsize = width;
+	meshsize = width;
 
-  int total_elem = (meshsize * meshsize + 1) * 2;
+	int total_elem = (meshsize * meshsize + 1) * 2;
 
-  mesh_a = new float[total_elem];
+	mesh_a = new float[total_elem];
 
-  // clear it to zeros
-  memset(mesh_a, 0, total_elem * sizeof(float));
+	// clear it to zeros
+	memset(mesh_a, 0, total_elem * sizeof(float));
 }
 
 static void free_mesh(void)
 {
-  delete[] mesh_a ; mesh_a = NULL;
+	delete[] mesh_a ; mesh_a = NULL;
 }
 
 
@@ -102,71 +102,71 @@ static void free_mesh(void)
 
 static void fourn(float data[], int nn[], int ndim, int isign)
 {
-  int i1, i2, i3;
-  int i2rev, i3rev, ip1, ip2, ip3, ifp1, ifp2;
-  int ibit, idim, k1, k2, n, nprev, nrem, ntot;
-  float tempi, tempr;
-  double theta, wi, wpi, wpr, wr, wtemp;
+	int i1, i2, i3;
+	int i2rev, i3rev, ip1, ip2, ip3, ifp1, ifp2;
+	int ibit, idim, k1, k2, n, nprev, nrem, ntot;
+	float tempi, tempr;
+	double theta, wi, wpi, wpr, wr, wtemp;
 
 #define FN_SWAP(a,b) tempr=(a); (a) = (b); (b) = tempr
 
-  ntot = 1;
-  for (idim = 1; idim <= ndim; idim++)
-    ntot *= nn[idim];
-  nprev = 1;
-  for (idim = ndim; idim >= 1; idim--) {
-    n = nn[idim];
-    nrem = ntot / (n * nprev);
-    ip1 = nprev << 1;
-    ip2 = ip1 * n;
-    ip3 = ip2 * nrem;
-    i2rev = 1;
-    for (i2 = 1; i2 <= ip2; i2 += ip1) {
-      if (i2 < i2rev) {
-        for (i1 = i2; i1 <= i2 + ip1 - 2; i1 += 2) {
-          for (i3 = i1; i3 <= ip3; i3 += ip2) {
-            i3rev = i2rev + i3 - i2;
-            FN_SWAP(data[i3], data[i3rev]);
-            FN_SWAP(data[i3 + 1], data[i3rev + 1]);
-          }
-        }
-      }
-      ibit = ip2 >> 1;
-      while (ibit >= ip1 && i2rev > ibit) {
-        i2rev -= ibit;
-        ibit >>= 1;
-      }
-      i2rev += ibit;
-    }
-    ifp1 = ip1;
-    while (ifp1 < ip2) {
-      ifp2 = ifp1 << 1;
-      theta = isign * (M_PI * 2) / (ifp2 / ip1);
-      wtemp = sin(0.5 * theta);
-      wpr = -2.0 * wtemp * wtemp;
-      wpi = sin(theta);
-      wr = 1.0;
-      wi = 0.0;
-      for (i3 = 1; i3 <= ifp1; i3 += ip1) {
-        for (i1 = i3; i1 <= i3 + ip1 - 2; i1 += 2) {
-          for (i2 = i1; i2 <= ip3; i2 += ifp2) {
-            k1 = i2;
-            k2 = k1 + ifp1;
-            tempr = wr * data[k2] - wi * data[k2 + 1];
-            tempi = wr * data[k2 + 1] + wi * data[k2];
-            data[k2] = data[k1] - tempr;
-            data[k2 + 1] = data[k1 + 1] - tempi;
-            data[k1] += tempr;
-            data[k1 + 1] += tempi;
-          }
-        }
-        wr = (wtemp = wr) * wpr - wi * wpi + wr;
-        wi = wi * wpr + wtemp * wpi + wi;
-      }
-      ifp1 = ifp2;
-    }
-    nprev *= n;
-  }
+	ntot = 1;
+	for (idim = 1; idim <= ndim; idim++)
+		ntot *= nn[idim];
+	nprev = 1;
+	for (idim = ndim; idim >= 1; idim--) {
+		n = nn[idim];
+		nrem = ntot / (n * nprev);
+		ip1 = nprev << 1;
+		ip2 = ip1 * n;
+		ip3 = ip2 * nrem;
+		i2rev = 1;
+		for (i2 = 1; i2 <= ip2; i2 += ip1) {
+			if (i2 < i2rev) {
+				for (i1 = i2; i1 <= i2 + ip1 - 2; i1 += 2) {
+					for (i3 = i1; i3 <= ip3; i3 += ip2) {
+						i3rev = i2rev + i3 - i2;
+						FN_SWAP(data[i3], data[i3rev]);
+						FN_SWAP(data[i3 + 1], data[i3rev + 1]);
+					}
+				}
+			}
+			ibit = ip2 >> 1;
+			while (ibit >= ip1 && i2rev > ibit) {
+				i2rev -= ibit;
+				ibit >>= 1;
+			}
+			i2rev += ibit;
+		}
+		ifp1 = ip1;
+		while (ifp1 < ip2) {
+			ifp2 = ifp1 << 1;
+			theta = isign * (M_PI * 2) / (ifp2 / ip1);
+			wtemp = sin(0.5 * theta);
+			wpr = -2.0 * wtemp * wtemp;
+			wpi = sin(theta);
+			wr = 1.0;
+			wi = 0.0;
+			for (i3 = 1; i3 <= ifp1; i3 += ip1) {
+				for (i1 = i3; i1 <= i3 + ip1 - 2; i1 += 2) {
+					for (i2 = i1; i2 <= ip3; i2 += ifp2) {
+						k1 = i2;
+						k2 = k1 + ifp1;
+						tempr = wr * data[k2] - wi * data[k2 + 1];
+						tempi = wr * data[k2 + 1] + wi * data[k2];
+						data[k2] = data[k1] - tempr;
+						data[k2 + 1] = data[k1 + 1] - tempi;
+						data[k1] += tempr;
+						data[k1 + 1] += tempi;
+					}
+				}
+				wr = (wtemp = wr) * wpr - wi * wpi + wr;
+				wi = wi * wpr + wtemp * wpi + wi;
+			}
+			ifp1 = ifp2;
+		}
+		nprev *= n;
+	}
 }
 #undef FN_SWAP
 
@@ -180,26 +180,26 @@ static double gauss_add, gauss_mul; /* Gaussian random parameters */
 
 static void init_gauss(void)
 {
-  /* Range of random generator */
-  gauss_add = sqrt(3.0 * NRAND);
-  gauss_mul = 2 * gauss_add / (NRAND * double(0xFFFF));
+	/* Range of random generator */
+	gauss_add = sqrt(3.0 * NRAND);
+	gauss_mul = 2 * gauss_add / (NRAND * double(0xFFFF));
 }
 
 /*  GAUSS  --  Return a Gaussian random number.  As given in Peitgen
                & Saupe, page 77. */
 static double rand_gauss(void)
 {
-  double sum = 0.0;
+	double sum = 0.0;
 
-  for (int i = 0; i < NRAND; i++)
-    sum += (ss_twist.Rand() & 0xFFFF);
+	for (int i = 0; i < NRAND; i++)
+		sum += (ss_twist.Rand() & 0xFFFF);
 
-  return sum * gauss_mul - gauss_add;
+	return sum * gauss_mul - gauss_add;
 }
 
 static double rand_phase(void)
 {
-  return 2 * M_PI * ss_twist.Rand_fp();
+	return 2 * M_PI * ss_twist.Rand_fp();
 }
 
 
@@ -210,156 +210,156 @@ static double rand_phase(void)
 */
 static void spectral_synth(int n, double h)
 {
-  int i, j;
+	int i, j;
 
-  for (i = 0; i <= n / 2; i++)
-  for (j = 0; j <= n / 2; j++)
-  {
-    double phase = rand_phase();
-    double rad;
+	for (i = 0; i <= n / 2; i++)
+	for (j = 0; j <= n / 2; j++)
+	{
+		double phase = rand_phase();
+		double rad;
 
-    if (i == 0 && j == 0)
-      rad = 0;
-    else
-      rad = pow((double) (i * i + j * j), -(h + 1) / 2) * rand_gauss();
+		if (i == 0 && j == 0)
+			rad = 0;
+		else
+			rad = pow((double) (i * i + j * j), -(h + 1) / 2) * rand_gauss();
 
-    double rcos = rad * cos(phase);
-    double rsin = rad * sin(phase);
+		double rcos = rad * cos(phase);
+		double rsin = rad * sin(phase);
 
-    int i0 = (i == 0) ? 0 : n - i;
-    int j0 = (j == 0) ? 0 : n - j;
+		int i0 = (i == 0) ? 0 : n - i;
+		int j0 = (j == 0) ? 0 : n - j;
 
-    Real(i, j) = rcos;
-    Imag(i, j) = rsin;
-    Real(i0, j0) = rcos;
-    Imag(i0, j0) = - rsin;
-  }
-    
-  Imag(n / 2, 0) = 0;
-  Imag(0, n / 2) = 0;
-  Imag(n / 2, n / 2) = 0;
+		Real(i, j) = rcos;
+		Imag(i, j) = rsin;
+		Real(i0, j0) = rcos;
+		Imag(i0, j0) = - rsin;
+	}
 
-  for (i = 1; i <= n / 2 - 1; i++)
-  for (j = 1; j <= n / 2 - 1; j++)
-  {
-    double phase = rand_phase();
-    double rad = pow((double) (i * i + j * j), -(h + 1) / 2) * rand_gauss();
+	Imag(n / 2, 0) = 0;
+	Imag(0, n / 2) = 0;
+	Imag(n / 2, n / 2) = 0;
 
-    double rcos = rad * cos(phase);
-    double rsin = rad * sin(phase);
+	for (i = 1; i <= n / 2 - 1; i++)
+	for (j = 1; j <= n / 2 - 1; j++)
+	{
+		double phase = rand_phase();
+		double rad = pow((double) (i * i + j * j), -(h + 1) / 2) * rand_gauss();
 
-    Real(i, n - j) = rcos;
-    Imag(i, n - j) = rsin;
-    Real(n - i, j) = rcos;
-    Imag(n - i, j) = - rsin;
-  }
+		double rcos = rad * cos(phase);
+		double rsin = rad * sin(phase);
 
-  int nsize[3];
+		Real(i, n - j) = rcos;
+		Imag(i, n - j) = rsin;
+		Real(n - i, j) = rcos;
+		Imag(n - i, j) = - rsin;
+	}
 
-  nsize[0] = 0;
-  nsize[1] = nsize[2] = n;   /* Dimension of frequency domain array */
+	int nsize[3];
 
-  fourn(mesh_a, nsize, 2, -1);     /* Take inverse 2D Fourier transform */
+	nsize[0] = 0;
+	nsize[1] = nsize[2] = n;   /* Dimension of frequency domain array */
+
+	fourn(mesh_a, nsize, 2, -1);     /* Take inverse 2D Fourier transform */
 }
 
 
 static void copy_and_scale(float *buf)
 {
-  /* Compute extrema for autoscaling. */
-  double rmin =  1e30;
-  double rmax = -1e30;
+	/* Compute extrema for autoscaling. */
+	double rmin =  1e30;
+	double rmax = -1e30;
 
-  int i, j;
+	int i, j;
 
-  for (i = 0; i < meshsize; i++)
-  for (j = 0; j < meshsize; j++)
-  {
-    double r = Real(i, j);
+	for (i = 0; i < meshsize; i++)
+	for (j = 0; j < meshsize; j++)
+	{
+		double r = Real(i, j);
 
-    rmin = MIN(rmin, r);
-    rmax = MAX(rmax, r);
-  }
+		rmin = MIN(rmin, r);
+		rmax = MAX(rmax, r);
+	}
 
-//  fprintf(stderr, "MESH RANGE : %1.5f .. %1.5f\n", rmin, rmax);
+	//  fprintf(stderr, "MESH RANGE : %1.5f .. %1.5f\n", rmin, rmax);
 
-  double range = (rmax - rmin);
+	double range = (rmax - rmin);
 
-  if (fabs(range) < 0.0001)
-    range = 0.0001;
+	if (fabs(range) < 0.0001)
+		range = 0.0001;
 
-  for (i = 0; i < meshsize; i++)
-  for (j = 0; j < meshsize; j++)
-  {
-    *buf++ = (Real(i, j) - rmin) / range;
-  }
+	for (i = 0; i < meshsize; i++)
+	for (j = 0; j < meshsize; j++)
+	{
+		*buf++ = (Real(i, j) - rmin) / range;
+	}
 }
 
 
 static void power_law_scale(float *buf, double powscale)
 {
-  /* Apply power law scaling if non-unity scale is requested. */
+	/* Apply power law scaling if non-unity scale is requested. */
 
-  float *buf_end = buf + (meshsize * meshsize);
+	float *buf_end = buf + (meshsize * meshsize);
 
-  for (; buf < buf_end; buf++)
-  {
-    *buf = pow(*buf, powscale);
-  }
+	for (; buf < buf_end; buf++)
+	{
+		*buf = pow(*buf, powscale);
+	}
 }
 
 
 void TX_SpectralSynth(int seed, float *buf, int width,
                       double fracdim, double powscale)
 {
-  SYS_ASSERT(width > 0 && (width & 1) == 0);
-  SYS_ASSERT(0 < fracdim && fracdim < 4.0);
-  SYS_ASSERT(powscale > 0);
+	SYS_ASSERT(width > 0 && (width & 1) == 0);
+	SYS_ASSERT(0 < fracdim && fracdim < 4.0);
+	SYS_ASSERT(powscale > 0);
 
-  ss_twist.Seed(seed);
+	ss_twist.Seed(seed);
 
-  init_gauss();
+	init_gauss();
 
-  create_mesh(width);
+	create_mesh(width);
 
-  spectral_synth(width, 3.0 - fracdim);
+	spectral_synth(width, 3.0 - fracdim);
 
-  copy_and_scale(buf);
+	copy_and_scale(buf);
 
-  if (fabs(powscale - 1.0) > 0.01)
-    power_law_scale(buf, powscale);
+	if (fabs(powscale - 1.0) > 0.01)
+		power_law_scale(buf, powscale);
 
-  free_mesh();
+	free_mesh();
 }
 
 
 void TX_TestSynth(void)
 {
-  float *buf = new float[128*128];
+	float *buf = new float[128*128];
 
-  TX_SpectralSynth(2, buf, 128);
+	TX_SpectralSynth(2, buf, 128);
 
-  FILE *fp = fopen("testsynth.ppm", "wb");
-  SYS_ASSERT(fp);
+	FILE *fp = fopen("testsynth.ppm", "wb");
+	SYS_ASSERT(fp);
 
-  fprintf(fp, "P6\n128 128 255\n");
+	fprintf(fp, "P6\n128 128 255\n");
 
-  for (int y = 0; y < 128; y++)
-  for (int x = 0; x < 128; x++)
-  {
-    float f = buf[y*128 + x];
+	for (int y = 0 ; y < 128 ; y++)
+	for (int x = 0 ; x < 128 ; x++)
+	{
+		float f = buf[y*128 + x];
 
-    int ity = (int)(1 + f*253);
+		int ity = (int)(1 + f*253);
 
-    fputc(ity, fp);
-    fputc(ity, fp);
-    fputc(ity, fp);
-  }
+		fputc(ity, fp);
+		fputc(ity, fp);
+		fputc(ity, fp);
+	}
 
-  fclose(fp);
+	fclose(fp);
 
-  delete[] buf;
+	delete[] buf;
 }
 
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

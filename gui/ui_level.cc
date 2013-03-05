@@ -37,98 +37,98 @@
 UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
     Fl_Group(x, y, w, h, label)
 {
-  end(); // cancel begin() in Fl_Group constructor
- 
-  box(FL_THIN_UP_BOX);
+	end(); // cancel begin() in Fl_Group constructor
 
-  if (! alternate_look)
-    color(BUILD_BG, BUILD_BG);
+	box(FL_THIN_UP_BOX);
 
-
-  int y_step = 6 + KF;
-
-  int cx = x + 88 + KF * 11;
-  int cy = y + y_step + KF * 3;
-
-  Fl_Box *heading = new Fl_Box(FL_NO_BOX, x+6, cy, w-12, 24, "Level Architecture");
-  heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-  heading->labeltype(FL_NORMAL_LABEL);
-  heading->labelfont(FL_HELVETICA_BOLD);
-  heading->labelsize(FL_NORMAL_SIZE + 2);
-
-  add(heading);
-
-  cy += heading->h() + y_step;
+	if (! alternate_look)
+		color(BUILD_BG, BUILD_BG);
 
 
-  int cw = 114 + KF * 14;
-  int ch = 24 + KF * 2;
+	int y_step = 6 + KF;
 
-  size = new UI_RChoice(cx, cy, cw, ch, "Size: ");
-  size->align(FL_ALIGN_LEFT);
-  size->selection_color(MY_GREEN);
-  size->callback(callback_Size, this);
+	int cx = x + 88 + KF * 11;
+	int cy = y + y_step + KF * 3;
 
-  setup_Size();
+	Fl_Box *heading = new Fl_Box(FL_NO_BOX, x+6, cy, w-12, 24, "Level Architecture");
+	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+	heading->labeltype(FL_NORMAL_LABEL);
+	heading->labelfont(FL_HELVETICA_BOLD);
+	heading->labelsize(FL_NORMAL_SIZE + 2);
 
-  add(size);
+	add(heading);
 
-  cy += size->h() + y_step;
-
-  cy += y_step + y_step/2;
-
-
-  theme = new UI_RChoice(cx, cy, cw, ch, "Theme: ");
-  theme->align(FL_ALIGN_LEFT);
-  theme->selection_color(MY_GREEN);
-  theme->callback(callback_Theme, this);
-
-  add(theme);
-
-  cy += theme->h() + y_step;
-
-  cy += y_step + y_step/2;
+	cy += heading->h() + y_step;
 
 
-  outdoors = new UI_RChoice(cx, cy, cw, ch, "Outdoors: ");
-  outdoors->align(FL_ALIGN_LEFT);
-  outdoors->selection_color(MY_GREEN);
-  outdoors->callback(callback_Outdoors, this);
+	int cw = 114 + KF * 14;
+	int ch = 24 + KF * 2;
 
-  setup_Outdoors();
+	size = new UI_RChoice(cx, cy, cw, ch, "Size: ");
+	size->align(FL_ALIGN_LEFT);
+	size->selection_color(MY_GREEN);
+	size->callback(callback_Size, this);
 
-  add(outdoors);
+	setup_Size();
 
-  cy += outdoors->h() + y_step;
+	add(size);
 
+	cy += size->h() + y_step;
 
-  caves = new UI_RChoice(cx, cy, cw, ch, "Caves: ");
-  caves->align(FL_ALIGN_LEFT);
-  caves->selection_color(MY_GREEN);
-  caves->callback(callback_Caves, this);
-
-  setup_Caves();
-
-  add(caves);
-
-  cy += caves->h() + y_step;
+	cy += y_step + y_step/2;
 
 
-  traps = new UI_RChoice(cx, cy, cw, ch, "Traps: ");
-  traps->align(FL_ALIGN_LEFT);
-  traps->selection_color(MY_GREEN);
-  traps->callback(callback_Traps, this);
+	theme = new UI_RChoice(cx, cy, cw, ch, "Theme: ");
+	theme->align(FL_ALIGN_LEFT);
+	theme->selection_color(MY_GREEN);
+	theme->callback(callback_Theme, this);
 
-  setup_Traps();
+	add(theme);
 
-  add(traps);
+	cy += theme->h() + y_step;
 
-  cy += traps->h() + y_step;
+	cy += y_step + y_step/2;
 
 
-//  DebugPrintf("UI_Level: final h = %d\n", cy - y);
+	outdoors = new UI_RChoice(cx, cy, cw, ch, "Outdoors: ");
+	outdoors->align(FL_ALIGN_LEFT);
+	outdoors->selection_color(MY_GREEN);
+	outdoors->callback(callback_Outdoors, this);
 
-  resizable(0);  // don't resize our children
+	setup_Outdoors();
+
+	add(outdoors);
+
+	cy += outdoors->h() + y_step;
+
+
+	caves = new UI_RChoice(cx, cy, cw, ch, "Caves: ");
+	caves->align(FL_ALIGN_LEFT);
+	caves->selection_color(MY_GREEN);
+	caves->callback(callback_Caves, this);
+
+	setup_Caves();
+
+	add(caves);
+
+	cy += caves->h() + y_step;
+
+
+	traps = new UI_RChoice(cx, cy, cw, ch, "Traps: ");
+	traps->align(FL_ALIGN_LEFT);
+	traps->selection_color(MY_GREEN);
+	traps->callback(callback_Traps, this);
+
+	setup_Traps();
+
+	add(traps);
+
+	cy += traps->h() + y_step;
+
+
+	//  DebugPrintf("UI_Level: final h = %d\n", cy - y);
+
+	resizable(0);  // don't resize our children
 }
 
 
@@ -136,29 +136,29 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 // Destructor
 //
 UI_Level::~UI_Level()
-{
-}
+{ }
+
 
 void UI_Level::Locked(bool value)
 {
-  if (value)
-  {
-    size ->deactivate();
-    theme->deactivate();
+	if (value)
+	{
+		size ->deactivate();
+		theme->deactivate();
 
-    outdoors->deactivate();
-    caves   ->deactivate();
-    traps   ->deactivate();
-  }
-  else
-  {
-    size ->activate();
-    theme->activate();
+		outdoors->deactivate();
+		caves   ->deactivate();
+		traps   ->deactivate();
+	}
+	else
+	{
+		size ->activate();
+		theme->activate();
 
-    outdoors->activate();
-    caves   ->activate();
-    traps   ->activate();
-  }
+		outdoors->activate();
+		caves   ->activate();
+		traps   ->activate();
+	}
 }
 
 
@@ -166,82 +166,88 @@ void UI_Level::Locked(bool value)
 
 void UI_Level::callback_Theme(Fl_Widget *w, void *data)
 {
-  UI_Level *that = (UI_Level *) data;
+	UI_Level *that = (UI_Level *) data;
 
-  ob_set_config("theme", that->theme->GetID());
+	ob_set_config("theme", that->theme->GetID());
 }
- 
+
+
 void UI_Level::callback_Size(Fl_Widget *w, void *data)
 {
-  UI_Level *that = (UI_Level *) data;
+	UI_Level *that = (UI_Level *) data;
 
-  ob_set_config("size", that->size->GetID());
+	ob_set_config("size", that->size->GetID());
 }
- 
+
+
 void UI_Level::callback_Traps(Fl_Widget *w, void *data)
 {
-  UI_Level *that = (UI_Level *) data;
+	UI_Level *that = (UI_Level *) data;
 
-  ob_set_config("traps", that->traps->GetID());
+	ob_set_config("traps", that->traps->GetID());
 }
- 
+
+
 void UI_Level::callback_Outdoors(Fl_Widget *w, void *data)
 {
-  UI_Level *that = (UI_Level *) data;
+	UI_Level *that = (UI_Level *) data;
 
-  ob_set_config("outdoors", that->outdoors->GetID());
+	ob_set_config("outdoors", that->outdoors->GetID());
 }
- 
+
+
 void UI_Level::callback_Caves(Fl_Widget *w, void *data)
 {
-  UI_Level *that = (UI_Level *) data;
+	UI_Level *that = (UI_Level *) data;
 
-  ob_set_config("caves", that->caves->GetID());
+	ob_set_config("caves", that->caves->GetID());
 }
+
 
 void UI_Level::Defaults()
 {
-  // Note: theme handled by LUA code (ob_init)
+	// Note: theme handled by LUA code (ob_init)
 
-  ParseValue("size",     "prog");
-  ParseValue("outdoors", "mixed");
-  ParseValue("caves",    "mixed");
-  ParseValue("traps",    "mixed");
+	ParseValue("size",     "prog");
+	ParseValue("outdoors", "mixed");
+	ParseValue("caves",    "mixed");
+	ParseValue("traps",    "mixed");
 }
- 
+
+
 bool UI_Level::ParseValue(const char *key, const char *value)
 {
-  // Note: theme handled by LUA code
+	// Note: theme handled by LUA code
 
-  if (StringCaseCmp(key, "size") == 0)
-  {
-    size->SetID(value);
-    callback_Size(NULL, this);
-    return true;
-  }
+	if (StringCaseCmp(key, "size") == 0)
+	{
+		size->SetID(value);
+		callback_Size(NULL, this);
+		return true;
+	}
 
-  if (StringCaseCmp(key, "outdoors") == 0)
-  {
-    outdoors->SetID(value);
-    callback_Outdoors(NULL, this);
-    return true;
-  }
+	if (StringCaseCmp(key, "outdoors") == 0)
+	{
+		outdoors->SetID(value);
+		callback_Outdoors(NULL, this);
+		return true;
+	}
 
-  if (StringCaseCmp(key, "caves") == 0)
-  {
-    caves->SetID(value);
-    callback_Caves(NULL, this);
-    return true;
-  }
+	if (StringCaseCmp(key, "caves") == 0)
+	{
+		caves->SetID(value);
+		callback_Caves(NULL, this);
+		return true;
+	}
 
-  if (StringCaseCmp(key, "traps") == 0)
-  {
-    traps->SetID(value);
-    callback_Traps(NULL, this);
-    return true;
-  }
+	if (StringCaseCmp(key, "traps") == 0)
+	{
+		traps->SetID(value);
+		callback_Traps(NULL, this);
+		return true;
+	}
 
-  return false;
+	return false;
 }
 
 
@@ -249,96 +255,102 @@ bool UI_Level::ParseValue(const char *key, const char *value)
 
 const char * UI_Level::size_syms[] =
 {
-  "tiny",    "Tiny",
-  "small",   "Small",
-  "regular", "Regular",
-  "large",   "Large",
-  "extreme", "Extreme",
+	"tiny",    "Tiny",
+	"small",   "Small",
+	"regular", "Regular",
+	"large",   "Large",
+	"extreme", "Extreme",
 
-  "prog",    "Progressive",
-  "mixed",   "Mix It Up",
+	"prog",    "Progressive",
+	"mixed",   "Mix It Up",
 
-  NULL, NULL
+	NULL, NULL
 };
+
 
 const char * UI_Level::outdoor_syms[] =
 {
-  "none",   "NONE",
-  "few",    "Rare",
-  "some",   "Medium",
-  "heaps",  "Heaps",
-  "always", "Always",
+	"none",   "NONE",
+	"few",    "Rare",
+	"some",   "Medium",
+	"heaps",  "Heaps",
+	"always", "Always",
 
-  "mixed",  "Mix It Up",
+	"mixed",  "Mix It Up",
 
-  NULL, NULL
+	NULL, NULL
 };
+
 
 const char * UI_Level::trap_syms[] =
 {
-  // also used for: Secrets
+	// also used for: Secrets
 
-  "none",   "NONE",  
-  "few",    "Rare",
-  "some",   "Medium",
-  "heaps",  "Heaps",
+	"none",   "NONE",  
+	"few",    "Rare",
+	"some",   "Medium",
+	"heaps",  "Heaps",
 
-  "mixed",  "Mix It Up",
+	"mixed",  "Mix It Up",
 
-  NULL, NULL
+	NULL, NULL
 };
+
 
 #if 0
 const char * UI_Level::light_syms[] =
 {
-  "none",   "NONE",
-  "dark",   "Dark",
-  "normal", "Medium",
-  "bright", "Bright",
+	"none",   "NONE",
+	"dark",   "Dark",
+	"normal", "Medium",
+	"bright", "Bright",
 
-  "mixed",  "Mix It Up",
+	"mixed",  "Mix It Up",
 
-  NULL, NULL
+	NULL, NULL
 };
 #endif
 
+
 void UI_Level::setup_Size()
 {
-  for (int i = 0; size_syms[i]; i += 2)
-  {
-    size->AddPair(size_syms[i], size_syms[i+1]);
-    size->ShowOrHide(size_syms[i], 1);
-  }
+	for (int i = 0; size_syms[i]; i += 2)
+	{
+		size->AddPair(size_syms[i], size_syms[i+1]);
+		size->ShowOrHide(size_syms[i], 1);
+	}
 }
+
 
 void UI_Level::setup_Outdoors()
 {
-  for (int i = 0; outdoor_syms[i]; i += 2)
-  {
-    outdoors->AddPair(outdoor_syms[i], outdoor_syms[i+1]);
-    outdoors->ShowOrHide(outdoor_syms[i], 1);
-  }
+	for (int i = 0; outdoor_syms[i]; i += 2)
+	{
+		outdoors->AddPair(outdoor_syms[i], outdoor_syms[i+1]);
+		outdoors->ShowOrHide(outdoor_syms[i], 1);
+	}
 }
+
 
 void UI_Level::setup_Caves()
 {
-  for (int i = 0; outdoor_syms[i]; i += 2)
-  {
-    caves->AddPair(outdoor_syms[i], outdoor_syms[i+1]);
-    caves->ShowOrHide(outdoor_syms[i], 1);
-  }
+	for (int i = 0; outdoor_syms[i]; i += 2)
+	{
+		caves->AddPair(outdoor_syms[i], outdoor_syms[i+1]);
+		caves->ShowOrHide(outdoor_syms[i], 1);
+	}
 }
+
 
 void UI_Level::setup_Traps()
 {
-  for (int i = 0; trap_syms[i]; i += 2)
-  {
-    traps->AddPair(trap_syms[i], trap_syms[i+1]);
-    traps->ShowOrHide(trap_syms[i], 1);
-  }
-
+	for (int i = 0; trap_syms[i]; i += 2)
+	{
+		traps->AddPair(trap_syms[i], trap_syms[i+1]);
+		traps->ShowOrHide(trap_syms[i], 1);
+	}
 }
 
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

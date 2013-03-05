@@ -26,22 +26,23 @@
 
 
 choice_data_c::choice_data_c(const char *_id, const char *_label) :
-    id(NULL), label(NULL), shown(false),
-    mapped(-1), widget(NULL)
+	id(NULL), label(NULL), shown(false),
+	mapped(-1), widget(NULL)
 {
-  if (_id)    id    = StringDup(_id);
-  if (_label) label = StringDup(_label);
+	if (_id)    id    = StringDup(_id);
+	if (_label) label = StringDup(_label);
 }
  
+
 choice_data_c::~choice_data_c()
 {
-  if (id)    StringFree(id);
-  if (label) StringFree(label);
+	if (id)    StringFree(id);
+	if (label) StringFree(label);
 
-  // ignore 'widget' field when shown, we assume it exists in
-  // an Fl_Group and hence FLTK will take care to delete it.
-  if (! shown)
-    delete widget;
+	// ignore 'widget' field when shown, we assume it exists in
+	// an Fl_Group and hence FLTK will take care to delete it.
+	if (! shown)
+		delete widget;
 }
 
 
@@ -49,90 +50,91 @@ choice_data_c::~choice_data_c()
 
 
 UI_RChoice::UI_RChoice(int x, int y, int w, int h, const char *label) :
-    Fl_Choice(x, y, w, h, label),
-    opt_list()
+	Fl_Choice(x, y, w, h, label),
+	opt_list()
 { }
 
 
 UI_RChoice::~UI_RChoice()
 {
-  for (unsigned int i = 0; i < opt_list.size(); i++)
-  {
-    delete opt_list[i];
-  }
+	for (unsigned int i = 0; i < opt_list.size(); i++)
+	{
+		delete opt_list[i];
+	}
 }
 
 
 void UI_RChoice::AddPair(const char *id, const char *label)
 {
-  choice_data_c *opt = FindID(id);
+	choice_data_c *opt = FindID(id);
 
-  if (opt)
-  {
-    StringFree(opt->label);
-    opt->label = StringDup(label);
+	if (opt)
+	{
+		StringFree(opt->label);
+		opt->label = StringDup(label);
 
-    if (opt->shown)
-      Recreate();
-  }
-  else
-  {
-    opt = new choice_data_c(id, label);
+		if (opt->shown)
+			Recreate();
+	}
+	else
+	{
+		opt = new choice_data_c(id, label);
 
-    opt_list.push_back(opt);
+		opt_list.push_back(opt);
 
-    // no need to call Recreate() here since new pairs are always
-    // hidden (shown == false).
-  }
+		// no need to call Recreate() here since new pairs are always
+		// hidden (shown == false).
+	}
 }
 
 
 bool UI_RChoice::ShowOrHide(const char *id, bool new_shown)
 {
-  SYS_ASSERT(id);
+	SYS_ASSERT(id);
 
-  choice_data_c *P = FindID(id);
+	choice_data_c *P = FindID(id);
 
-  if (! P)
-    return false;
+	if (! P)
+		return false;
 
-  if (P->shown != new_shown)
-  {
-    P->shown = new_shown;
-    Recreate();
-  }
+	if (P->shown != new_shown)
+	{
+		P->shown = new_shown;
+		Recreate();
+	}
 
-  return true;
+	return true;
 }
 
 
 const char *UI_RChoice::GetID() const
 {
-  choice_data_c *P = FindMapped();
+	choice_data_c *P = FindMapped();
 
-  return P ? P->id : "";
+	return P ? P->id : "";
 }
+
 
 const char *UI_RChoice::GetLabel() const
 {
-  choice_data_c *P = FindMapped();
+	choice_data_c *P = FindMapped();
 
-  return P ? P->label : "";
+	return P ? P->label : "";
 }
 
 
 bool UI_RChoice::SetID(const char *id)
 {
-  SYS_ASSERT(id);
+	SYS_ASSERT(id);
 
-  choice_data_c *P = FindID(id);
+	choice_data_c *P = FindID(id);
 
-  if (! P || P->mapped < 0)
-    return false;
+	if (! P || P->mapped < 0)
+		return false;
 
-  value(P->mapped);
+	value(P->mapped);
 
-  return true;
+	return true;
 }
 
 
@@ -141,64 +143,64 @@ bool UI_RChoice::SetID(const char *id)
 
 void UI_RChoice::Recreate()
 {
-  // recreate the choice list
+	// recreate the choice list
 
-  choice_data_c *LAST = FindMapped();
+	choice_data_c *LAST = FindMapped();
 
-  clear();
+	clear();
 
-  for (unsigned int j = 0; j < opt_list.size(); j++)
-  {
-    choice_data_c *P = opt_list[j];
+	for (unsigned int j = 0 ; j < opt_list.size() ; j++)
+	{
+		choice_data_c *P = opt_list[j];
 
-    if (! P->shown)
-    {
-      P->mapped = -1;
-      continue;
-    }
+		if (! P->shown)
+		{
+			P->mapped = -1;
+			continue;
+		}
 
-    P->mapped = add(P->label, 0, 0, 0, 0);
-  }
+		P->mapped = add(P->label, 0, 0, 0, 0);
+	}
 
-  // update the currently selected choice
+	// update the currently selected choice
 
-  if (LAST && LAST->mapped >= 0)
-  {
-    value(LAST->mapped);
-    return;
-  }
+	if (LAST && LAST->mapped >= 0)
+	{
+		value(LAST->mapped);
+		return;
+	}
 
-  value(0);
+	value(0);
 }
 
 
 choice_data_c * UI_RChoice::FindID(const char *id) const
 {
-  for (unsigned int j = 0; j < opt_list.size(); j++)
-  {
-    choice_data_c *P = opt_list[j];
-    
-    if (strcmp(P->id, id) == 0)
-      return P;
-  }
+	for (unsigned int j = 0; j < opt_list.size(); j++)
+	{
+		choice_data_c *P = opt_list[j];
 
-  return NULL;
+		if (strcmp(P->id, id) == 0)
+			return P;
+	}
+
+	return NULL;
 }
- 
- 
+
+
 choice_data_c * UI_RChoice::FindMapped() const
 {
-  for (unsigned int j = 0; j < opt_list.size(); j++)
-  {
-    choice_data_c *P = opt_list[j];
+	for (unsigned int j = 0 ; j < opt_list.size() ; j++)
+	{
+		choice_data_c *P = opt_list[j];
 
-    if (P->mapped >= 0 && P->mapped == value())
-      return P;
-  }
+		if (P->mapped >= 0 && P->mapped == value())
+			return P;
+	}
 
-  return NULL;
+	return NULL;
 }
 
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

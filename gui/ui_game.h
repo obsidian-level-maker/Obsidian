@@ -24,58 +24,58 @@
 class UI_Game : public Fl_Group
 {
 private:
-  Fl_Int_Input *seed;
-  Fl_Button *bump;
+	Fl_Int_Input *seed;
+	Fl_Button *bump;
 
 public:
-  UI_RChoice *game;
-  UI_RChoice *mode;
+	UI_RChoice *game;
+	UI_RChoice *mode;
 
-  UI_RChoice *engine;
-  UI_RChoice *length;
-
-public:
-  UI_Game(int x, int y, int w, int h, const char *label = NULL);
-  virtual ~UI_Game();
+	UI_RChoice *engine;
+	UI_RChoice *length;
 
 public:
+	UI_Game(int x, int y, int w, int h, const char *label = NULL);
+	virtual ~UI_Game();
 
-  void SetSeed(u32_t new_val);
+public:
 
-  void FreshSeed();
-  void StaleSeed(u32_t old_val);
-  void BumpSeed();
+	void SetSeed(u32_t new_val);
 
-  void Locked(bool value);
+	void FreshSeed();
+	void StaleSeed(u32_t old_val);
+	void BumpSeed();
 
-  const char *get_Seed();
-  
-  void Defaults();
+	void Locked(bool value);
 
-  // this is only for reading the CONFIG file.
-  // parse the name and store the value in the appropriate
-  // widget, also sending it to the Lua code.
-  // Returns false if the key was unknown.
-  bool ParseValue(const char *key, const char *value);
+	const char *get_Seed();
+
+	void Defaults();
+
+	// this is only for reading the CONFIG file.
+	// parse the name and store the value in the appropriate
+	// widget, also sending it to the Lua code.
+	// Returns false if the key was unknown.
+	bool ParseValue(const char *key, const char *value);
 
 private:
-  void setup_Mode();
-  void setup_Length();
+	void setup_Mode();
+	void setup_Length();
 
-  static void callback_Seed(Fl_Widget *, void*);
-  static void callback_Bump(Fl_Widget *, void*);
+	static void callback_Seed(Fl_Widget *, void*);
+	static void callback_Bump(Fl_Widget *, void*);
 
-  static void callback_Game  (Fl_Widget *, void*);
-  static void callback_Mode  (Fl_Widget *, void*);
-  static void callback_Engine(Fl_Widget *, void*);
-  static void callback_Length(Fl_Widget *, void*);
+	static void callback_Game  (Fl_Widget *, void*);
+	static void callback_Mode  (Fl_Widget *, void*);
+	static void callback_Engine(Fl_Widget *, void*);
+	static void callback_Length(Fl_Widget *, void*);
 
-  static const char *mode_syms[];
-  static const char *length_syms[];
+	static const char *mode_syms[];
+	static const char *length_syms[];
 
 };
 
 #endif /* __UI_GAME_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

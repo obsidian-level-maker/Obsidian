@@ -11,4 +11,4 @@ void TX_SpectralSynth(int seed, float *buf, int width,
 #endif /* __OBLIGE_TX_FORGE_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

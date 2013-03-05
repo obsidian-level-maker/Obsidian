@@ -25,48 +25,48 @@ class UI_Level : public Fl_Group
 {
 public: /// private:
 
-  UI_RChoice *size;
-  UI_RChoice *theme;
+	UI_RChoice *size;
+	UI_RChoice *theme;
 
-  UI_RChoice *outdoors;
-  UI_RChoice *caves;
-  UI_RChoice *traps;
+	UI_RChoice *outdoors;
+	UI_RChoice *caves;
+	UI_RChoice *traps;
 
-
-public:
-  UI_Level(int x, int y, int w, int h, const char *label = NULL);
-  virtual ~UI_Level();
 
 public:
-  void Locked(bool value);
+	UI_Level(int x, int y, int w, int h, const char *label = NULL);
+	virtual ~UI_Level();
 
-  void Defaults();
+public:
+	void Locked(bool value);
 
-  // this is only for reading the CONFIG file.
-  // parse the name and store the value in the appropriate
-  // widget, also sending it to the Lua code.
-  // Returns false if the key was unknown.
-  bool ParseValue(const char *key, const char *value);
+	void Defaults();
+
+	// this is only for reading the CONFIG file.
+	// parse the name and store the value in the appropriate
+	// widget, also sending it to the Lua code.
+	// Returns false if the key was unknown.
+	bool ParseValue(const char *key, const char *value);
 
 private:
 
-  void setup_Size();
-  void setup_Outdoors();
-  void setup_Caves();
-  void setup_Traps();
+	void setup_Size();
+	void setup_Outdoors();
+	void setup_Caves();
+	void setup_Traps();
 
-  static void callback_Size    (Fl_Widget *, void*);
-  static void callback_Theme   (Fl_Widget *, void*);
-  static void callback_Outdoors(Fl_Widget *, void*);
-  static void callback_Caves   (Fl_Widget *, void*);
-  static void callback_Traps   (Fl_Widget *, void*);
+	static void callback_Size    (Fl_Widget *, void*);
+	static void callback_Theme   (Fl_Widget *, void*);
+	static void callback_Outdoors(Fl_Widget *, void*);
+	static void callback_Caves   (Fl_Widget *, void*);
+	static void callback_Traps   (Fl_Widget *, void*);
 
-  static const char * size_syms[];
-  static const char * outdoor_syms[];
-  static const char * trap_syms[];
+	static const char * size_syms[];
+	static const char * outdoor_syms[];
+	static const char * trap_syms[];
 };
 
 #endif /* __UI_LEVEL_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

@@ -41,4 +41,4 @@ void SKY_AddBuilding(int seed, byte *pixels, int W, int H,
 #endif /* __OBLIGE_TX_SKIES_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

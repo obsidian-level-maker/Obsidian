@@ -30,25 +30,25 @@
 class UI_MainWin : public Fl_Double_Window
 {
 public:
-  // main child widgets
+	// main child widgets
 
-  UI_Game   *game_box;
+	UI_Game   *game_box;
 
-  UI_Level  *level_box;
-  UI_Play   *play_box;
+	UI_Level  *level_box;
+	UI_Play   *play_box;
 
-  UI_Build  *build_box;
-  UI_CustomMods *mod_box;
+	UI_Build  *build_box;
+	UI_CustomMods *mod_box;
 
 public:
-  UI_MainWin(int W, int H, const char *title);
-  virtual ~UI_MainWin();
+	UI_MainWin(int W, int H, const char *title);
+	virtual ~UI_MainWin();
 
-  static void CalcWindowSize(bool hide_modules, int *W, int *H);
+	static void CalcWindowSize(bool hide_modules, int *W, int *H);
 
-  void Locked(bool value);
+	void Locked(bool value);
 
-  void HideModules(bool hide);
+	void HideModules(bool hide);
 };
 
 extern int KF;  // Kromulent Factor
@@ -59,4 +59,4 @@ extern UI_MainWin * main_win;
 #endif /* __UI_WINDOW_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

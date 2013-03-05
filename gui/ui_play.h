@@ -25,55 +25,55 @@ class UI_Play : public Fl_Group
 {
 public: // private:
 
-  UI_RChoice *mons;
-  UI_RChoice *strength;
+	UI_RChoice *mons;
+	UI_RChoice *strength;
 
-  UI_RChoice *powers;
-  UI_RChoice *traps;
+	UI_RChoice *powers;
+	UI_RChoice *traps;
 
-  UI_RChoice *health;
-  UI_RChoice *ammo;
-
-public:
-  UI_Play(int x, int y, int w, int h, const char *label = NULL);
-  virtual ~UI_Play();
+	UI_RChoice *health;
+	UI_RChoice *ammo;
 
 public:
+	UI_Play(int x, int y, int w, int h, const char *label = NULL);
+	virtual ~UI_Play();
 
-  void Locked(bool value);
-  
-  void Defaults();
+public:
 
-  // this is only for reading the CONFIG file.
-  // parse the name and store the value in the appropriate
-  // widget, also sending it to the Lua code.
-  // Returns false if the key was unknown.
-  bool ParseValue(const char *key, const char *value);
+	void Locked(bool value);
+
+	void Defaults();
+
+	// this is only for reading the CONFIG file.
+	// parse the name and store the value in the appropriate
+	// widget, also sending it to the Lua code.
+	// Returns false if the key was unknown.
+	bool ParseValue(const char *key, const char *value);
 
 private:
 
-  void setup_Monsters();
-  void setup_Strength();
-  void setup_Powers  ();
-  void setup_Health  ();
-  void setup_Ammo    ();
+	void setup_Monsters();
+	void setup_Strength();
+	void setup_Powers  ();
+	void setup_Health  ();
+	void setup_Ammo    ();
 
-  static void notify_Mode(const char *name, void *priv_dat);
+	static void notify_Mode(const char *name, void *priv_dat);
 
-  static void callback_Monsters(Fl_Widget *, void*);
-  static void callback_Strength(Fl_Widget *, void*);
-  static void callback_Powers  (Fl_Widget *, void*);
-  static void callback_Health  (Fl_Widget *, void*);
-  static void callback_Ammo    (Fl_Widget *, void*);
+	static void callback_Monsters(Fl_Widget *, void*);
+	static void callback_Strength(Fl_Widget *, void*);
+	static void callback_Powers  (Fl_Widget *, void*);
+	static void callback_Health  (Fl_Widget *, void*);
+	static void callback_Ammo    (Fl_Widget *, void*);
 
-  static const char * monster_syms[];
-  static const char * strength_syms[];
-  static const char * power_syms[];
-  static const char * trap_syms[];
-  static const char * health_syms[];
+	static const char * monster_syms[];
+	static const char * strength_syms[];
+	static const char * power_syms[];
+	static const char * trap_syms[];
+	static const char * health_syms[];
 };
 
 #endif /* __UI_PLAY_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

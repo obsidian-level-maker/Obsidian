@@ -25,34 +25,34 @@
 class UI_HyperLink : public Fl_Button
 {
 private:
-  // true when mouse is over this widget
-  bool hover;
+	// true when mouse is over this widget
+	bool hover;
 
-  // area containing the label
-  int label_X, label_Y, label_W, label_H;
+	// area containing the label
+	int label_X, label_Y, label_W, label_H;
 
-  // the URL to visit when clicked
-  const char *url;
-
-public:
-  UI_HyperLink(int x, int y, int w, int h, const char *label,
-               const char *_url);
-  virtual ~UI_HyperLink();
+	// the URL to visit when clicked
+	const char *url;
 
 public:
-  // FLTK overrides
+	UI_HyperLink(int x, int y, int w, int h, const char *label,
+			const char *_url);
+	virtual ~UI_HyperLink();
 
-  int handle(int event);
+public:
+	// FLTK overrides
 
-  void draw();
+	int handle(int event);
+
+	void draw();
 
 private:
-  void checkLink();
+	void checkLink();
 
-  static void callback_Link(Fl_Widget *w, void *data);
+	static void callback_Link(Fl_Widget *w, void *data);
 };
 
 #endif /* __UI_HYPER_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab
