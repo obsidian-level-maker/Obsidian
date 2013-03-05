@@ -141,23 +141,7 @@ static inline float UT_SwapFloat(float x)
 #endif
 
 
-//
-// The packed attribute forces structures to be packed into the minimum 
-// space necessary.  If this is not done, the compiler may align structure
-// fields differently to optimize memory access, inflating the overall
-// structure size.  It is important to use the packed attribute on certain
-// structures where alignment is important, particularly data read/written
-// to disk.
-//
-
-#ifdef __GNUC__
-#define PACKEDATTR  __attribute__((packed))
-#else
-#define PACKEDATTR
-#endif
-
-
 #endif // __SYS_ENDIAN_H__
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

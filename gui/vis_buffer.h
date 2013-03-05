@@ -47,107 +47,107 @@ typedef std::vector<Stair_Pos> Stair_Steps;
 class Vis_Buffer
 {
 private:
-  int W, H;  // size
+	int W, H;  // size
 
-  short * data;
+	short * data;
 
-  bool quick_mode;
+	bool quick_mode;
 
-  // square we are processing
-  int loc_x, loc_y;
+	// square we are processing
+	int loc_x, loc_y;
 
-  // current transform
-  int flip_x, flip_y;
+	// current transform
+	int flip_x, flip_y;
 
-  // current limits for DoSteps()
-  int limit_x, limit_y;
+	// current limits for DoSteps()
+	int limit_x, limit_y;
 
-  std::vector<Stair_Pos> saved_cells;
-
-public:
-   Vis_Buffer(int width, int height);
-  ~Vis_Buffer();
+	std::vector<Stair_Pos> saved_cells;
 
 public:
-  inline int Trans_X(int x)
-  {
-    return flip_x ? (loc_x * 2 - x) : x;
-  }
-
-  inline int Trans_Y(int y)
-  {
-    return flip_y ? (loc_y * 2 - y) : y;
-  }
-
-  inline int Trans_Side(int side)
-  {
-    if ( (flip_x && (side == 4 || side == 6)) ||
-         (flip_y && (side == 2 || side == 8)) )
-    {
-      return 10 - side;
-    }
-    return side;
-  }
-
-  inline bool isValid(int x, int y)
-  {
-    x = Trans_X(x);
-    y = Trans_Y(y);
-
-    return (0 <= x && x < W) && (0 <= y && y < H);
-  }
-
-  inline short& at(int x, int y)
-  {
-    x = Trans_X(x);
-    y = Trans_Y(y);
-
-    return data[y * W + x];
-  }
-
-  inline bool CanSee(int x, int y) const
-  {
-    return ((data[y * W + x] & V_ANY) == 0);
-  }
+	Vis_Buffer(int width, int height);
+	~Vis_Buffer();
 
 public:
-  void Clear();
-  void SetQuickMode(bool enable);
+	inline int Trans_X(int x)
+	{
+		return flip_x ? (loc_x * 2 - x) : x;
+	}
 
-  void AddWall(int x, int y, int side);
-  void AddDiagonal(int x, int y, int dir);
+	inline int Trans_Y(int y)
+	{
+		return flip_y ? (loc_y * 2 - y) : y;
+	}
 
-  bool TestWall(int x, int y, int side);
+	inline int Trans_Side(int side)
+	{
+		if ( (flip_x && (side == 4 || side == 6)) ||
+			 (flip_y && (side == 2 || side == 8)) )
+		{
+			return 10 - side;
+		}
+		return side;
+	}
 
-  void ReadMap(const char *filename);
-  void WriteMap(const char *filename);
+	inline bool isValid(int x, int y)
+	{
+		x = Trans_X(x);
+		y = Trans_Y(y);
 
-  void SimplifySolid();
+		return (0 <= x && x < W) && (0 <= y && y < H);
+	}
 
-  void ClearVis();
-  void ProcessVis(int x, int y);
+	inline short& at(int x, int y)
+	{
+		x = Trans_X(x);
+		y = Trans_Y(y);
 
-  void Truncate(int dist);
-  void FloodFill(int passes);
+		return data[y * W + x];
+	}
+
+	inline bool CanSee(int x, int y) const
+	{
+		return ((data[y * W + x] & V_ANY) == 0);
+	}
+
+public:
+	void Clear();
+	void SetQuickMode(bool enable);
+
+	void AddWall(int x, int y, int side);
+	void AddDiagonal(int x, int y, int dir);
+
+	bool TestWall(int x, int y, int side);
+
+	void ReadMap(const char *filename);
+	void WriteMap(const char *filename);
+
+	void SimplifySolid();
+
+	void ClearVis();
+	void ProcessVis(int x, int y);
+
+	void Truncate(int dist);
+	void FloodFill(int passes);
 
 private:
-  void AddStep(Stair_Steps& dest, int x, int y, int side);
-  void CopySteps(Stair_Steps& dest, const Stair_Steps& src);
-  void MarkSteps(const Stair_Steps& steps);
-  void FollowStair(Stair_Steps& steps, int sx, int sy, int side, int recursion);
+	void AddStep(Stair_Steps& dest, int x, int y, int side);
+	void CopySteps(Stair_Steps& dest, const Stair_Steps& src);
+	void MarkSteps(const Stair_Steps& steps);
+	void FollowStair(Stair_Steps& steps, int sx, int sy, int side, int recursion);
 
-  void ConvertDiagonals();
-  void RestoreDiagonals();
-  void AddWallSave(int x, int y, int side);
+	void ConvertDiagonals();
+	void RestoreDiagonals();
+	void AddWallSave(int x, int y, int side);
 
-  void DoBasic(int dx, int dy, int side);
-  void DoFill();
-  void DoSteps(int quadrant);
+	void DoBasic(int dx, int dy, int side);
+	void DoFill();
+	void DoSteps(int quadrant);
 
-  void FloodEmpties();
+	void FloodEmpties();
 };
 
 #endif /* __OBLIGE_VIS_BUFFER_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

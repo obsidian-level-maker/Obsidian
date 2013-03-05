@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2013 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -56,7 +56,13 @@
     ((x) < (low) ? (low) : (x) > (high) ? (high) : (x))
 #endif
 
+#ifdef __GNUC__
+#define PACKEDATTR  __attribute__((packed))
+#else
+#define PACKEDATTR
+#endif
+
 #endif  /* __SYS_MACRO_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

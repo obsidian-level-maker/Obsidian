@@ -25,48 +25,48 @@
 
 assert_fail_c::assert_fail_c(const char *_msg)
 {
-  strncpy(message, _msg, sizeof(message));
+	strncpy(message, _msg, sizeof(message));
 
-  message[sizeof(message) - 1] = 0;
+	message[sizeof(message) - 1] = 0;
 }
 
 assert_fail_c::~assert_fail_c()
 {
-  /* nothing needed */
+	/* nothing needed */
 }
 
 assert_fail_c::assert_fail_c(const assert_fail_c &other)
 {
-  strcpy(message, other.message);
+	strcpy(message, other.message);
 }
 
 assert_fail_c& assert_fail_c::operator=(const assert_fail_c &other)
 {
-  if (this != &other)
-    strcpy(message, other.message);
-  
-  return *this;
+	if (this != &other)
+		strcpy(message, other.message);
+
+	return *this;
 }
 
 //----------------------------------------------------------------------------
 
 void AssertFail(const char *msg, ...)
 {
-  static char buffer[MSG_BUF_LEN];
+	static char buffer[MSG_BUF_LEN];
 
-  va_list argptr;
+	va_list argptr;
 
-  va_start(argptr, msg);
-  vsnprintf(buffer, MSG_BUF_LEN-1, msg, argptr);
-  va_end(argptr);
+	va_start(argptr, msg);
+	vsnprintf(buffer, MSG_BUF_LEN-1, msg, argptr);
+	va_end(argptr);
 
-  buffer[MSG_BUF_LEN-2] = 0;
+	buffer[MSG_BUF_LEN-2] = 0;
 
-// NO WORKY WITH LUA :( ---> throw assert_fail_c(buffer);
+	// NO WORKY WITH LUA :( ---> throw assert_fail_c(buffer);
 
-  Main_FatalError("Sorry, an internal error occurred.\n%s", buffer);
+	Main_FatalError("Sorry, an internal error occurred.\n%s", buffer);
 }
 
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

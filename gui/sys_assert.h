@@ -24,19 +24,19 @@
 class assert_fail_c
 {
 public:
-  assert_fail_c(const char *_msg);
-  assert_fail_c(const assert_fail_c &other);
-  ~assert_fail_c();
-  
-private:
-  static const int MSG_MAX = 200;
+	assert_fail_c(const char *_msg);
+	assert_fail_c(const assert_fail_c &other);
+	~assert_fail_c();
 
-  char message[MSG_MAX];
+private:
+	static const int MSG_MAX = 200;
+
+	char message[MSG_MAX];
 
 public:
-  const char* GetMessage() const { return message; }
+	const char* GetMessage() const { return message; }
 
-  assert_fail_c& operator=(const assert_fail_c &other);
+	assert_fail_c& operator=(const assert_fail_c &other);
 };
 
 // -------- the macros --------
@@ -72,4 +72,4 @@ void AssertFail(const char *msg, ...);
 #endif  /* __SYS_ASSERT__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

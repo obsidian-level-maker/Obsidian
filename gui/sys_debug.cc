@@ -30,103 +30,103 @@ static bool terminal  = false;
 
 void LogInit(const char *filename)
 {
-  if (filename)
-  {
-    log_file = fopen(filename, "w");
-  }
+	if (filename)
+	{
+		log_file = fopen(filename, "w");
+	}
 
-  LogPrintf("====== START OF OBLIGE LOGS ======\n");
+	LogPrintf("====== START OF OBLIGE LOGS ======\n");
 }
 
 
 void LogEnableDebug(bool enable)
 {
-  if (debugging == enable)
-    return;
+	if (debugging == enable)
+		return;
 
-  debugging = enable;
+	debugging = enable;
 
-  if (debugging)
-    LogPrintf("===  DEBUGGING ENABLED  ===\n\n");
-  else
-    LogPrintf("===  DEBUGGING DISABLED  ===\n\n");
+	if (debugging)
+		LogPrintf("===  DEBUGGING ENABLED  ===\n\n");
+	else
+		LogPrintf("===  DEBUGGING DISABLED  ===\n\n");
 }
 
 void LogEnableTerminal(bool enable)
 {
-  terminal = enable;
+	terminal = enable;
 }
 
 
 void LogClose(void)
 {
-  LogPrintf("\n====== END OF OBLIGE LOGS ======\n\n");
+	LogPrintf("\n====== END OF OBLIGE LOGS ======\n\n");
 
-  if (log_file)
-  {
-    fclose(log_file);
+	if (log_file)
+	{
+		fclose(log_file);
 
-    log_file = NULL;
-  }
+		log_file = NULL;
+	}
 }
 
 
 void LogPrintf(const char *str, ...)
 {
-  if (log_file)
-  {
-    va_list args;
+	if (log_file)
+	{
+		va_list args;
 
-    va_start(args, str);
-    vfprintf(log_file, str, args);
-    va_end(args);
+		va_start(args, str);
+		vfprintf(log_file, str, args);
+		va_end(args);
 
-    fflush(log_file);
-  }
+		fflush(log_file);
+	}
 
-  // show on the Linux terminal too
-  if (terminal)
-  {
-    va_list args;
+	// show on the Linux terminal too
+	if (terminal)
+	{
+		va_list args;
 
-    va_start(args, str);
-    vfprintf(stdout, str, args);
-    va_end(args);
-  }
+		va_start(args, str);
+		vfprintf(stdout, str, args);
+		va_end(args);
+	}
 }
 
 
 void DebugPrintf(const char *str, ...)
 {
-  if (debugging)
-  {
-    static char buffer[MSG_BUF_LEN];
+	if (debugging)
+	{
+		static char buffer[MSG_BUF_LEN];
 
-    va_list args;
+		va_list args;
 
-    va_start(args, str);
-    vsnprintf(buffer, MSG_BUF_LEN-1, str, args);
-    va_end(args);
+		va_start(args, str);
+		vsnprintf(buffer, MSG_BUF_LEN-1, str, args);
+		va_end(args);
 
-    buffer[MSG_BUF_LEN-2] = 0;
+		buffer[MSG_BUF_LEN-2] = 0;
 
-    // prefix each debugging line with a special symbol
+		// prefix each debugging line with a special symbol
 
-    char *pos = buffer;
-    char *next;
+		char *pos = buffer;
+		char *next;
 
-    while (pos && *pos)
-    {
-      next = strchr(pos, '\n');
+		while (pos && *pos)
+		{
+			next = strchr(pos, '\n');
 
-      if (next) *next++ = 0;
+			if (next) *next++ = 0;
 
-      LogPrintf("# %s\n", pos);
+			LogPrintf("# %s\n", pos);
 
-      pos = next;
-    }
-  }
+			pos = next;
+		}
+	}
 }
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

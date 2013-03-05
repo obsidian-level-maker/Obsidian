@@ -43,10 +43,10 @@ extern const char *batch_output_file;
 // when this is true, user pressed 'Cancel' or has quit the program
 typedef enum
 {
-  MAIN_NONE = 0,
-  MAIN_BUILD,
-  MAIN_CANCEL,
-  MAIN_QUIT
+	MAIN_NONE = 0,
+	MAIN_BUILD,
+	MAIN_CANCEL,
+	MAIN_QUIT
 }
 main_action_kind_e;
 
@@ -68,51 +68,51 @@ void Main_Ticker();
 
 class game_interface_c
 {
-  /* this is an abstract base class */
+	/* this is an abstract base class */
 
 public:
-  game_interface_c()
-  { }
+	game_interface_c()
+	{ }
 
-  virtual ~game_interface_c()
-  { }
+	virtual ~game_interface_c()
+	{ }
 
-  /*** MAIN ***/
+	/*** MAIN ***/
 
-  virtual bool Start() = 0;
-  // this selects an output filename or directory and prepares
-  // for building a set of levels.  Returns false if an error
-  // occurs (or the user simply Cancel'd).
+	// this selects an output filename or directory and prepares
+	// for building a set of levels.  Returns false if an error
+	// occurs (or the user simply Cancel'd).
+	virtual bool Start() = 0;
 
-  virtual bool Finish(bool build_ok) = 0;
-  // this is called after all levels are done.  The 'build_ok'
-  // value is the result from the LUA script, and is false if
-  // an error occurred or the user clicked Abort.
-  //
-  // For DOOM this will run glBSP node builder, for QUAKE it will
-  // put all the BSP files into the final PAK file.
-  //
-  // Returns false on error.  Note that Finish() is never
-  // called if Start() fails.
+	// this is called after all levels are done.  The 'build_ok'
+	// value is the result from the LUA script, and is false if
+	// an error occurred or the user clicked Abort.
+	//
+	// For DOOM this will run glBSP node builder, for QUAKE it will
+	// put all the BSP files into the final PAK file.
+	//
+	// Returns false on error.  Note that Finish() is never
+	// called if Start() fails.
+	virtual bool Finish(bool build_ok) = 0;
 
-  /*** CSG2 ***/
+	/*** CSG2 ***/
 
-  virtual void BeginLevel() = 0;
-  // this will set things up in preparation for the next level
-  // being built.  It is called after the CSG2 code sets itself
-  // up and hence could alter some CSG2 parameters, other than
-  // that there is lttle need to do anything here.
+	// this will set things up in preparation for the next level
+	// being built.  It is called after the CSG2 code sets itself
+	// up and hence could alter some CSG2 parameters, other than
+	// that there is lttle need to do anything here.
+	virtual void BeginLevel() = 0;
 
-  virtual void EndLevel() = 0;
-  // called when all the brushes and entities have been added
-  // but before the CSG2 performs a cleanup.  Typically the
-  // game-specific code will call CSG_BSP() and convert
-  // the result to the game-specific level format.
+	// called when all the brushes and entities have been added
+	// but before the CSG2 performs a cleanup.  Typically the
+	// game-specific code will call CSG_BSP() and convert
+	// the result to the game-specific level format.
+	virtual void EndLevel() = 0;
 
-  virtual void Property(const char *key, const char *value) = 0;
-  // sets a certain property, especially "level_name" which is
-  // required by most games (like DOOM and QUAKE).  Unknown
-  // properties are ignored.  May be called during startup too.
+	// sets a certain property, especially "level_name" which is
+	// required by most games (like DOOM and QUAKE).  Unknown
+	// properties are ignored.  May be called during startup too.
+	virtual void Property(const char *key, const char *value) = 0;
 };
 
 
@@ -130,4 +130,4 @@ game_interface_c * Quake2_GameObject();
 #endif /* __OBLIGE_MAIN_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

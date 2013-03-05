@@ -34,4 +34,4 @@ void DebugPrintf(const char *str, ...);
 #endif /* __SYS_DEBUG_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab
