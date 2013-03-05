@@ -35,10 +35,10 @@
 
 typedef enum
 {
-  CCTX_PreLoad = 0,
-  CCTX_Load,
-  CCTX_Save,
-  CCTX_Arguments
+	CCTX_PreLoad = 0,
+	CCTX_Load,
+	CCTX_Save,
+	CCTX_Arguments
 }
 cookie_context_e;
 
@@ -54,214 +54,214 @@ static bool keep_seed;
 
 static bool ParseMiscOption(const char *name, const char *value)
 {
-  if (StringCaseCmp(name, "create_backups") == 0)
-  {
-    if (context == CCTX_PreLoad)
-      create_backups = atoi(value) ? true : false;
-  }
-  else if (StringCaseCmp(name, "debug_messages") == 0)
-  {
-    if (context == CCTX_PreLoad)
-      debug_messages = atoi(value) ? true : false;
-  }
-  else if (StringCaseCmp(name, "best_lighting") == 0)
-  {
-    if (context == CCTX_PreLoad)
-      best_lighting = atoi(value) ? true : false;
-  }
-  else if (StringCaseCmp(name, "hide_modules") == 0)
-  {
-    if (context == CCTX_PreLoad)
-      hide_module_panel = atoi(value) ? true : false;
-  }
-  else if (StringCaseCmp(name, "alternate_look") == 0)
-  {
-    if (context == CCTX_PreLoad)
-      alternate_look = atoi(value) ? true : false;
-  }
-  else if (StringCaseCmp(name, "last_file") == 0)
-  {
-    if (context == CCTX_PreLoad)
-      UI_SetLastFile(value);
-  }
-  else
-  {
-    return false;  // not a misc option
-  }
+	if (StringCaseCmp(name, "create_backups") == 0)
+	{
+		if (context == CCTX_PreLoad)
+			create_backups = atoi(value) ? true : false;
+	}
+	else if (StringCaseCmp(name, "debug_messages") == 0)
+	{
+		if (context == CCTX_PreLoad)
+			debug_messages = atoi(value) ? true : false;
+	}
+	else if (StringCaseCmp(name, "best_lighting") == 0)
+	{
+		if (context == CCTX_PreLoad)
+			best_lighting = atoi(value) ? true : false;
+	}
+	else if (StringCaseCmp(name, "hide_modules") == 0)
+	{
+		if (context == CCTX_PreLoad)
+			hide_module_panel = atoi(value) ? true : false;
+	}
+	else if (StringCaseCmp(name, "alternate_look") == 0)
+	{
+		if (context == CCTX_PreLoad)
+			alternate_look = atoi(value) ? true : false;
+	}
+	else if (StringCaseCmp(name, "last_file") == 0)
+	{
+		if (context == CCTX_PreLoad)
+			UI_SetLastFile(value);
+	}
+	else
+	{
+		return false;  // not a misc option
+	}
 
-  return true;
+	return true;
 }
 
 
 static void Cookie_SetValue(const char *name, const char *value)
 {
-  // -- Misc Options --
-  if (ParseMiscOption(name, value))
-    return;
+	// -- Misc Options --
+	if (ParseMiscOption(name, value))
+		return;
 
-  // skip everything else during PRELOAD
-  if (context == CCTX_PreLoad)
-    return;
-
-
-  if (context == CCTX_Load)
-    DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name, value);
-  else if (context == CCTX_Arguments)
-    DebugPrintf("ARGUMENT: Name: [%s] Value: [%s]\n", name, value);
+	// skip everything else during PRELOAD
+	if (context == CCTX_PreLoad)
+		return;
 
 
-  // the new style module syntax
-  if (name[0] == '@')
-  {
-    active_module = (name + 1);
-
-    name = "self";
-  }
-
-  if (active_module[0])
-  {
-    const char *module = active_module.c_str();
-
-    ob_set_mod_option(module, name, value);
-
-    if (main_win)
-      main_win->mod_box->ParseOptValue(module, name, value);
-    
-    return;
-  }
+	if (context == CCTX_Load)
+		DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name, value);
+	else if (context == CCTX_Arguments)
+		DebugPrintf("ARGUMENT: Name: [%s] Value: [%s]\n", name, value);
 
 
-  // need special handling for the 'seed' value
-  if (StringCaseCmp(name, "seed") == 0)
-  {
-    if (main_win)
-    {
-      int seed = atoi(value);
+	// the new style module syntax
+	if (name[0] == '@')
+	{
+		active_module = (name + 1);
 
-      if (context == CCTX_Arguments || keep_seed)
-        main_win->game_box->SetSeed(seed);
-      else
-        main_win->game_box->StaleSeed(seed);
-    }
-    else
-    {
-      // ignore seed when loading a config file in Batch mode
-      // unless the -k / --keep option is given.
+		name = "self";
+	}
 
-      if (context == CCTX_Arguments || keep_seed)
-        ob_set_config(name, value);
-    }
+	if (active_module[0])
+	{
+		const char *module = active_module.c_str();
 
-    return;
-  }
+		ob_set_mod_option(module, name, value);
+
+		if (main_win)
+			main_win->mod_box->ParseOptValue(module, name, value);
+
+		return;
+	}
 
 
-  if (main_win)
-  {
-    // -- Game Settings --
-    if (main_win->game_box->ParseValue(name, value))
-      return;
-    
-    // -- Level Architecture --
-    if (main_win->level_box->ParseValue(name, value))
-      return;
-    
-    // -- Playing Style --
-    if (main_win->play_box->ParseValue(name, value))
-      return;
-  }
+	// need special handling for the 'seed' value
+	if (StringCaseCmp(name, "seed") == 0)
+	{
+		if (main_win)
+		{
+			int seed = atoi(value);
+
+			if (context == CCTX_Arguments || keep_seed)
+				main_win->game_box->SetSeed(seed);
+			else
+				main_win->game_box->StaleSeed(seed);
+		}
+		else
+		{
+			// ignore seed when loading a config file in Batch mode
+			// unless the -k / --keep option is given.
+
+			if (context == CCTX_Arguments || keep_seed)
+				ob_set_config(name, value);
+		}
+
+		return;
+	}
 
 
-  // old style module syntax (for compatibility)
-  const char *option = strchr(name, '.');
+	if (main_win)
+	{
+		// -- Game Settings --
+		if (main_win->game_box->ParseValue(name, value))
+			return;
 
-  if (option)
-  {
-    char *module = StringDup(name);
-    module[option - name] = 0;
+		// -- Level Architecture --
+		if (main_win->level_box->ParseValue(name, value))
+			return;
 
-    option++;
-
-    ob_set_mod_option(module, option, value);
-
-    if (main_win)
-      main_win->mod_box->ParseOptValue(module, option, value);
-
-    StringFree(module);
-    return;
-  }
+		// -- Playing Style --
+		if (main_win->play_box->ParseValue(name, value))
+			return;
+	}
 
 
-  // everything else goes to the script
-  ob_set_config(name, value);
+	// old style module syntax (for compatibility)
+	const char *option = strchr(name, '.');
+
+	if (option)
+	{
+		char *module = StringDup(name);
+		module[option - name] = 0;
+
+		option++;
+
+		ob_set_mod_option(module, option, value);
+
+		if (main_win)
+			main_win->mod_box->ParseOptValue(module, option, value);
+
+		StringFree(module);
+		return;
+	}
+
+
+	// everything else goes to the script
+	ob_set_config(name, value);
 }
 
 
 static bool Cookie_ParseLine(char *buf)
 {
-  // remove whitespace
-  while (isspace(*buf))
-    buf++;
+	// remove whitespace
+	while (isspace(*buf))
+		buf++;
 
-  int len = strlen(buf);
+	int len = strlen(buf);
 
-  while (len > 0 && isspace(buf[len-1]))
-    buf[--len] = 0;
- 
-  // ignore blank lines and comments
-  if (*buf == 0)
-    return true;
+	while (len > 0 && isspace(buf[len-1]))
+		buf[--len] = 0;
 
-  if (buf[0] == '-' && buf[1] == '-')
-    return true;
+	// ignore blank lines and comments
+	if (*buf == 0)
+		return true;
 
-  // curly brackets are just for aesthetics : ignore them
-  if (*buf == '{' || *buf == '}')
-    return true;
+	if (buf[0] == '-' && buf[1] == '-')
+		return true;
 
-  if (! (isalpha(*buf) || *buf == '@'))
-  {
-    if (context != CCTX_PreLoad)
-      LogPrintf("Weird config line: [%s]\n", buf);
+	// curly brackets are just for aesthetics : ignore them
+	if (*buf == '{' || *buf == '}')
+		return true;
 
-    return false;
-  }
+	if (! (isalpha(*buf) || *buf == '@'))
+	{
+		if (context != CCTX_PreLoad)
+			LogPrintf("Weird config line: [%s]\n", buf);
 
-  // Righteo, line starts with an identifier.  It should be of the
-  // form "name = value".  We'll terminate the identifier, and pass
-  // the name/value strings to the matcher function.
+		return false;
+	}
 
-  const char *name = buf;
+	// Righteo, line starts with an identifier.  It should be of the
+	// form "name = value".  We'll terminate the identifier, and pass
+	// the name/value strings to the matcher function.
 
-  for (buf++ ; isalnum(*buf) || *buf == '_' || *buf == '.' ; buf++)
-  { /* nothing here */ }
+	const char *name = buf;
 
-  while (isspace(*buf))
-    *buf++ = 0;
-  
-  if (*buf != '=')
-  {
-    if (context != CCTX_PreLoad)
-      LogPrintf("Config line missing '=': [%s]\n", buf);
+	for (buf++ ; isalnum(*buf) || *buf == '_' || *buf == '.' ; buf++)
+	{ /* nothing here */ }
 
-    return false;
-  }
+	while (isspace(*buf))
+		*buf++ = 0;
 
-  *buf++ = 0;
+	if (*buf != '=')
+	{
+		if (context != CCTX_PreLoad)
+			LogPrintf("Config line missing '=': [%s]\n", buf);
 
-  while (isspace(*buf))
-    buf++;
+		return false;
+	}
 
-  if (*buf == 0)
-  {
-    if (context != CCTX_PreLoad)
-      LogPrintf("Config line missing value!\n");
+	*buf++ = 0;
 
-    return false;
-  }
+	while (isspace(*buf))
+		buf++;
 
-  Cookie_SetValue(name, buf);
-  return true;
+	if (*buf == 0)
+	{
+		if (context != CCTX_PreLoad)
+			LogPrintf("Config line missing value!\n");
+
+		return false;
+	}
+
+	Cookie_SetValue(name, buf);
+	return true;
 }
 
 
@@ -269,135 +269,135 @@ static bool Cookie_ParseLine(char *buf)
 
 bool Cookie_Load(const char *filename, bool pre_load)
 {
-  context = pre_load ? CCTX_PreLoad : CCTX_Load;
+	context = pre_load ? CCTX_PreLoad : CCTX_Load;
 
-  keep_seed = (ArgvFind('k', "keep") >= 0);
+	keep_seed = (ArgvFind('k', "keep") >= 0);
 
-  active_module.clear();
+	active_module.clear();
 
-  cookie_fp = fopen(filename, "r");
+	cookie_fp = fopen(filename, "r");
 
-  if (! cookie_fp)
-  {
-    if (! pre_load)
-      LogPrintf("Missing Config file -- using defaults.\n\n");
+	if (! cookie_fp)
+	{
+		if (! pre_load)
+			LogPrintf("Missing Config file -- using defaults.\n\n");
 
-    return false;
-  }
+		return false;
+	}
 
-  LogPrintf("Loading Config (%s)...\n", pre_load ? "PRELOAD" : "FULL");
+	LogPrintf("Loading Config (%s)...\n", pre_load ? "PRELOAD" : "FULL");
 
-  // simple line-by-line parser
-  char buffer[MSG_BUF_LEN];
+	// simple line-by-line parser
+	char buffer[MSG_BUF_LEN];
 
-  int error_count = 0;
+	int error_count = 0;
 
-  while (fgets(buffer, MSG_BUF_LEN-2, cookie_fp))
-  {
-    if (! Cookie_ParseLine(buffer))
-      error_count += 1;
-  }
+	while (fgets(buffer, MSG_BUF_LEN-2, cookie_fp))
+	{
+		if (! Cookie_ParseLine(buffer))
+			error_count += 1;
+	}
 
-  if (error_count > 0 && ! pre_load)
-    LogPrintf("DONE (found %d parse errors)\n\n", error_count);
-  else
-    LogPrintf("DONE.\n\n");
+	if (error_count > 0 && ! pre_load)
+		LogPrintf("DONE (found %d parse errors)\n\n", error_count);
+	else
+		LogPrintf("DONE.\n\n");
 
-  fclose(cookie_fp);
+	fclose(cookie_fp);
 
-  return true;
+	return true;
 }
 
 
 bool Cookie_Save(const char *filename)
 {
-  context = CCTX_Save;
+	context = CCTX_Save;
 
-  cookie_fp = fopen(filename, "w");
+	cookie_fp = fopen(filename, "w");
 
-  if (! cookie_fp)
-  {
-    LogPrintf("Error: unable to create file: %s\n(%s)\n\n",
-        filename, strerror(errno));
-    return false;
-  }
+	if (! cookie_fp)
+	{
+		LogPrintf("Error: unable to create file: %s\n(%s)\n\n",
+				filename, strerror(errno));
+		return false;
+	}
 
-  LogPrintf("Saving Config...\n");
+	LogPrintf("Saving Config...\n");
 
-  // header...
-  fprintf(cookie_fp, "-- CONFIG FILE : OBLIGE %s\n", OBLIGE_VERSION); 
-  fprintf(cookie_fp, "-- " OBLIGE_TITLE " (C) 2006-2013 Andrew Apted\n");
-  fprintf(cookie_fp, "-- http://oblige.sourceforge.net/\n\n");
+	// header...
+	fprintf(cookie_fp, "-- CONFIG FILE : OBLIGE %s\n", OBLIGE_VERSION); 
+	fprintf(cookie_fp, "-- " OBLIGE_TITLE " (C) 2006-2013 Andrew Apted\n");
+	fprintf(cookie_fp, "-- http://oblige.sourceforge.net/\n\n");
 
-  fprintf(cookie_fp, "-- Misc Options --\n");
-  fprintf(cookie_fp, "create_backups = %d\n", create_backups ? 1 : 0);
-  fprintf(cookie_fp, "debug_messages = %d\n", debug_messages ? 1 : 0);
-  fprintf(cookie_fp, "best_lighting = %d\n",  best_lighting ? 1 : 0);
-  fprintf(cookie_fp, "hide_modules = %d\n",   hide_module_panel ? 1 : 0);
-  fprintf(cookie_fp, "alternate_look = %d\n", alternate_look ? 1 : 0);
-  fprintf(cookie_fp, "last_file = %s\n", UI_GetLastFile());
-  fprintf(cookie_fp, "\n");
+	fprintf(cookie_fp, "-- Misc Options --\n");
+	fprintf(cookie_fp, "create_backups = %d\n", create_backups ? 1 : 0);
+	fprintf(cookie_fp, "debug_messages = %d\n", debug_messages ? 1 : 0);
+	fprintf(cookie_fp, "best_lighting = %d\n",  best_lighting ? 1 : 0);
+	fprintf(cookie_fp, "hide_modules = %d\n",   hide_module_panel ? 1 : 0);
+	fprintf(cookie_fp, "alternate_look = %d\n", alternate_look ? 1 : 0);
+	fprintf(cookie_fp, "last_file = %s\n", UI_GetLastFile());
+	fprintf(cookie_fp, "\n");
 
 
-  std::vector<std::string> lines;
+	std::vector<std::string> lines;
 
-  ob_read_all_config(&lines);
+	ob_read_all_config(&lines);
 
-  for (unsigned int i = 0 ; i < lines.size() ; i++)
-  {
-    fprintf(cookie_fp, "%s\n", lines[i].c_str());
-  }
+	for (unsigned int i = 0 ; i < lines.size() ; i++)
+	{
+		fprintf(cookie_fp, "%s\n", lines[i].c_str());
+	}
 
-  LogPrintf("DONE.\n\n");
+	LogPrintf("DONE.\n\n");
 
-  fclose(cookie_fp);
+	fclose(cookie_fp);
 
-  return true;
+	return true;
 }
 
 
 void Cookie_ParseArguments(void)
 {
-  context = CCTX_Arguments;
+	context = CCTX_Arguments;
 
-  active_module.clear();
+	active_module.clear();
 
-  for (int i = 0 ; i < arg_count ; i++)
-  {
-    const char *arg = arg_list[i];
+	for (int i = 0 ; i < arg_count ; i++)
+	{
+		const char *arg = arg_list[i];
 
-    if (arg[0] == '-')
-      continue;
+		if (arg[0] == '-')
+			continue;
 
-    if (arg[0] == '{' || arg[0] == '}')
-      continue;
+		if (arg[0] == '{' || arg[0] == '}')
+			continue;
 
-    const char *eq_pos = strchr(arg, '=');
-    if (! eq_pos)
-    {
-      // allow module names to omit the (rather useless) value
-      if (arg[0] == '@')
-        Cookie_SetValue(arg, "1");
+		const char *eq_pos = strchr(arg, '=');
+		if (! eq_pos)
+		{
+			// allow module names to omit the (rather useless) value
+			if (arg[0] == '@')
+				Cookie_SetValue(arg, "1");
 
-      continue;
-    }
+			continue;
+		}
 
-    // split argument into name/value pair
-    int eq_offset = (eq_pos - arg);
+		// split argument into name/value pair
+		int eq_offset = (eq_pos - arg);
 
-    char *name = StringDup(arg);
-    char *value = name + eq_offset + 1;
+		char *name = StringDup(arg);
+		char *value = name + eq_offset + 1;
 
-    name[eq_offset] = 0;
+		name[eq_offset] = 0;
 
-    if (name[0] == 0 || value[0] == 0)
-      Main_FatalError("Bad setting on command line: '%s'\n", arg);
+		if (name[0] == 0 || value[0] == 0)
+			Main_FatalError("Bad setting on command line: '%s'\n", arg);
 
-    Cookie_SetValue(name, value);
+		Cookie_SetValue(name, value);
 
-    StringFree(name);
-  }
+		StringFree(name);
+	}
 }
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

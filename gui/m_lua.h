@@ -34,8 +34,8 @@ bool Script_RunString(const char *str, ...);
 
 typedef struct
 {
-  byte colors[MAX_COLORS_PER_MAP];
-  int  size;
+	byte colors[MAX_COLORS_PER_MAP];
+	int  size;
 }
 color_mapping_t;
 
@@ -56,4 +56,4 @@ bool ob_build_cool_shit(void);
 #endif /* __SCRIPTING_HEADER__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

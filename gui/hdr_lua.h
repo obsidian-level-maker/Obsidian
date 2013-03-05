@@ -29,5 +29,3 @@
 
 #endif // __OB_HDR_LUA__
 
-//--- editor settings ---
-// vi:ts=2:sw=2:expandtab

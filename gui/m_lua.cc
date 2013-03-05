@@ -48,7 +48,6 @@ static bool has_added_buttons = false;
 static std::vector<std::string> * conf_line_buffer;
 
 
-
 // random number generator (Mersenne Twister)
 static MT_rand_c GUI_RNG(0);
 
@@ -60,60 +59,60 @@ color_mapping_t color_mappings[MAX_COLOR_MAPS];
 //
 int gui_raw_log_print(lua_State *L)
 {
-  int nargs = lua_gettop(L);
+	int nargs = lua_gettop(L);
 
-  if (nargs >= 1)
-  {
-    const char *res = luaL_checkstring(L,1);
-    SYS_ASSERT(res);
+	if (nargs >= 1)
+	{
+		const char *res = luaL_checkstring(L,1);
+		SYS_ASSERT(res);
 
-    ConPrintf("%s", res);
+		ConPrintf("%s", res);
 
-    // strip off colorizations
-    if (res[0] == '@' && isdigit(res[1]))
-      res += 2;
+		// strip off colorizations
+		if (res[0] == '@' && isdigit(res[1]))
+			res += 2;
 
-    LogPrintf("%s", res);
-  }
+		LogPrintf("%s", res);
+	}
 
-  return 0;
+	return 0;
 }
 
 // LUA: raw_debug_print(str)
 //
 int gui_raw_debug_print(lua_State *L)
 {
-  int nargs = lua_gettop(L);
+	int nargs = lua_gettop(L);
 
-  if (nargs >= 1)
-  {
-    const char *res = luaL_checkstring(L,1);
-    SYS_ASSERT(res);
+	if (nargs >= 1)
+	{
+		const char *res = luaL_checkstring(L,1);
+		SYS_ASSERT(res);
 
-    if (debug_onto_console)
-      ConPrintf("%s", res);
+		if (debug_onto_console)
+			ConPrintf("%s", res);
 
-    DebugPrintf("%s", res);
-  }
+		DebugPrintf("%s", res);
+	}
 
-  return 0;
+	return 0;
 }
 
 // LUA: raw_console_print(str)
 //
 int gui_raw_console_print(lua_State *L)
 {
-  int nargs = lua_gettop(L);
+	int nargs = lua_gettop(L);
 
-  if (nargs >= 1)
-  {
-    const char *res = luaL_checkstring(L,1);
-    SYS_ASSERT(res);
+	if (nargs >= 1)
+	{
+		const char *res = luaL_checkstring(L,1);
+		SYS_ASSERT(res);
 
-    ConPrintf("%s", res);
-  }
+		ConPrintf("%s", res);
+	}
 
-  return 0;
+	return 0;
 }
 
 
@@ -121,13 +120,13 @@ int gui_raw_console_print(lua_State *L)
 //
 int gui_config_line(lua_State *L)
 {
-  const char *res = luaL_checkstring(L,1);
+	const char *res = luaL_checkstring(L,1);
 
-  SYS_ASSERT(conf_line_buffer);
+	SYS_ASSERT(conf_line_buffer);
 
-  conf_line_buffer->push_back(res);
+	conf_line_buffer->push_back(res);
 
-  return 0;
+	return 0;
 }
 
 
@@ -135,12 +134,12 @@ int gui_config_line(lua_State *L)
 //
 int gui_mkdir(lua_State *L)
 {
-  const char *name = luaL_checkstring(L,1);
+	const char *name = luaL_checkstring(L,1);
 
-  bool result = FileMakeDir(name);
+	bool result = FileMakeDir(name);
 
-  lua_pushboolean(L, result ? 1 : 0);
-  return 1;
+	lua_pushboolean(L, result ? 1 : 0);
+	return 1;
 }
 
 
@@ -148,38 +147,38 @@ int gui_mkdir(lua_State *L)
 //
 int gui_set_colormap(lua_State *L)
 {
-  int map_id = luaL_checkint(L, 1);
+	int map_id = luaL_checkint(L, 1);
 
-  if (map_id < 1 || map_id > MAX_COLOR_MAPS)
-    return luaL_argerror(L, 1, "colmap value out of range");
+	if (map_id < 1 || map_id > MAX_COLOR_MAPS)
+		return luaL_argerror(L, 1, "colmap value out of range");
 
-  if (lua_type(L, 2) != LUA_TTABLE)
-  {
-    return luaL_argerror(L, 2, "expected a table: colors");
-  }
+	if (lua_type(L, 2) != LUA_TTABLE)
+	{
+		return luaL_argerror(L, 2, "expected a table: colors");
+	}
 
-  color_mapping_t *map = & color_mappings[map_id-1];
+	color_mapping_t *map = & color_mappings[map_id-1];
 
-  map->size = 0;
+	map->size = 0;
 
-  for (int i = 0; i < MAX_COLORS_PER_MAP; i++)
-  {
-    lua_pushinteger(L, 1+i);
-    lua_gettable(L, 2);
+	for (int i = 0; i < MAX_COLORS_PER_MAP; i++)
+	{
+		lua_pushinteger(L, 1+i);
+		lua_gettable(L, 2);
 
-    if (lua_isnil(L, -1))
-    {
-      lua_pop(L, 1);
-      break;
-    }
+		if (lua_isnil(L, -1))
+		{
+			lua_pop(L, 1);
+			break;
+		}
 
-    map->colors[i] = luaL_checkint(L, -1);
-    map->size = i+1;
+		map->colors[i] = luaL_checkint(L, -1);
+		map->size = i+1;
 
-    lua_pop(L, 1);
-  }
+		lua_pop(L, 1);
+	}
 
-  return 0;
+	return 0;
 }
 
 
@@ -187,18 +186,18 @@ int gui_set_colormap(lua_State *L)
 //
 int gui_locate_data(lua_State *L)
 {
-  const char *base_name = luaL_checkstring(L, 1);
+	const char *base_name = luaL_checkstring(L, 1);
 
-  const char *full_name = FileFindInPath(data_path, base_name);
+	const char *full_name = FileFindInPath(data_path, base_name);
 
-  if (! full_name)
-  {
-    lua_pushnil(L);
-    return 1;
-  }
+	if (! full_name)
+	{
+		lua_pushnil(L);
+		return 1;
+	}
 
-  lua_pushstring(L, full_name);
-  return 1;
+	lua_pushstring(L, full_name);
+	return 1;
 }
 
 
@@ -206,37 +205,37 @@ int gui_locate_data(lua_State *L)
 //
 int gui_add_button(lua_State *L)
 {
-  const char *what  = luaL_checkstring(L,1);
-  const char *id    = luaL_checkstring(L,2);
-  const char *label = luaL_checkstring(L,3);
+	const char *what  = luaL_checkstring(L,1);
+	const char *id    = luaL_checkstring(L,2);
+	const char *label = luaL_checkstring(L,3);
 
-  SYS_ASSERT(what && id && label);
+	SYS_ASSERT(what && id && label);
 
-  if (! main_win)
-    return 0;
+	if (! main_win)
+		return 0;
 
-  // only allowed during startup
-  if (has_added_buttons)
-    Main_FatalError("Script problem: gui.add_button called late.\n");
+	// only allowed during startup
+	if (has_added_buttons)
+		Main_FatalError("Script problem: gui.add_button called late.\n");
 
-// DebugPrintf("  add_button: %s id:%s\n", what, id);
+	// DebugPrintf("  add_button: %s id:%s\n", what, id);
 
-  if (StringCaseCmp(what, "game") == 0)
-    main_win->game_box->game->AddPair(id, label);
+	if (StringCaseCmp(what, "game") == 0)
+		main_win->game_box->game->AddPair(id, label);
 
-  else if (StringCaseCmp(what, "engine") == 0)
-    main_win->game_box->engine->AddPair(id, label);
+	else if (StringCaseCmp(what, "engine") == 0)
+		main_win->game_box->engine->AddPair(id, label);
 
-  else if (StringCaseCmp(what, "theme") == 0)
-    main_win->level_box->theme->AddPair(id, label);
+	else if (StringCaseCmp(what, "theme") == 0)
+		main_win->level_box->theme->AddPair(id, label);
 
-  else if (StringCaseCmp(what, "module") == 0)
-    main_win->mod_box->AddModule(id, label);
+	else if (StringCaseCmp(what, "module") == 0)
+		main_win->mod_box->AddModule(id, label);
 
-  else
-    Main_FatalError("add_button: unknown what value '%s'\n", what);
+	else
+		Main_FatalError("add_button: unknown what value '%s'\n", what);
 
-  return 0;
+	return 0;
 }
 
 // LUA: add_mod_option (module, option, [id,] label)
@@ -247,37 +246,37 @@ int gui_add_button(lua_State *L)
 //
 int gui_add_mod_option(lua_State *L)
 {
-  int nargs = lua_gettop(L);
+	int nargs = lua_gettop(L);
 
-  const char *module = luaL_checkstring(L,1);
-  const char *option = luaL_checkstring(L,2);
+	const char *module = luaL_checkstring(L,1);
+	const char *option = luaL_checkstring(L,2);
 
-  const char *id    = NULL;
-  const char *label = NULL;
+	const char *id    = NULL;
+	const char *label = NULL;
 
-  if (nargs >= 4)
-  {
-    id    = luaL_checkstring(L,3);
-    label = luaL_checkstring(L,4);
-  }
-  else
-    label = luaL_checkstring(L,3);
+	if (nargs >= 4)
+	{
+		id    = luaL_checkstring(L,3);
+		label = luaL_checkstring(L,4);
+	}
+	else
+		label = luaL_checkstring(L,3);
 
-  SYS_ASSERT(module && option);
+	SYS_ASSERT(module && option);
 
-  if (! main_win)
-    return 0;
+	if (! main_win)
+		return 0;
 
-  // only allowed during startup
-  if (has_added_buttons)
-    Main_FatalError("Script problem: gui.add_mod_option called late.\n");
+	// only allowed during startup
+	if (has_added_buttons)
+		Main_FatalError("Script problem: gui.add_mod_option called late.\n");
 
-  if (! id)
-    main_win->mod_box->AddOption(module, option, label);
-  else
-    main_win->mod_box->OptionPair(module, option, id, label);
+	if (! id)
+		main_win->mod_box->AddOption(module, option, label);
+	else
+		main_win->mod_box->OptionPair(module, option, id, label);
 
-  return 0;
+	return 0;
 }
 
 
@@ -285,34 +284,34 @@ int gui_add_mod_option(lua_State *L)
 //
 int gui_show_button(lua_State *L)
 {
-  const char *what = luaL_checkstring(L,1);
-  const char *id   = luaL_checkstring(L,2);
+	const char *what = luaL_checkstring(L,1);
+	const char *id   = luaL_checkstring(L,2);
 
-  int shown = lua_toboolean(L,3) ? 1 : 0;
+	int shown = lua_toboolean(L,3) ? 1 : 0;
 
-  SYS_ASSERT(what && id);
+	SYS_ASSERT(what && id);
 
-  if (! main_win)
-    return 0;
+	if (! main_win)
+		return 0;
 
-// DebugPrintf("  show_button: %s id:%s %s\n", what, id, shown ? "show" : "HIDE");
+	// DebugPrintf("  show_button: %s id:%s %s\n", what, id, shown ? "show" : "HIDE");
 
-  if (StringCaseCmp(what, "game") == 0)
-    main_win->game_box->game->ShowOrHide(id, shown);
+	if (StringCaseCmp(what, "game") == 0)
+		main_win->game_box->game->ShowOrHide(id, shown);
 
-  else if (StringCaseCmp(what, "engine") == 0)
-    main_win->game_box->engine->ShowOrHide(id, shown);
+	else if (StringCaseCmp(what, "engine") == 0)
+		main_win->game_box->engine->ShowOrHide(id, shown);
 
-  else if (StringCaseCmp(what, "theme") == 0)
-    main_win->level_box->theme->ShowOrHide(id, shown);
+	else if (StringCaseCmp(what, "theme") == 0)
+		main_win->level_box->theme->ShowOrHide(id, shown);
 
-  else if (StringCaseCmp(what, "module") == 0)
-    main_win->mod_box->ShowOrHide(id, shown);
+	else if (StringCaseCmp(what, "module") == 0)
+		main_win->mod_box->ShowOrHide(id, shown);
 
-  else
-    Main_FatalError("show_button: unknown what value '%s'\n", what);
+	else
+		Main_FatalError("show_button: unknown what value '%s'\n", what);
 
-  return 0;
+	return 0;
 }
 
 
@@ -320,34 +319,34 @@ int gui_show_button(lua_State *L)
 //
 int gui_change_button(lua_State *L)
 {
-  const char *what = luaL_checkstring(L,1);
-  const char *id   = luaL_checkstring(L,2);
+	const char *what = luaL_checkstring(L,1);
+	const char *id   = luaL_checkstring(L,2);
 
-  int opt_val = lua_toboolean(L,3) ? 1 : 0;
+	int opt_val = lua_toboolean(L,3) ? 1 : 0;
 
-  SYS_ASSERT(what && id);
+	SYS_ASSERT(what && id);
 
-  if (! main_win)
-    return 0;
+	if (! main_win)
+		return 0;
 
-// DebugPrintf("  change_button: %s --> %s\n", what, id);
+	// DebugPrintf("  change_button: %s --> %s\n", what, id);
 
-  if (StringCaseCmp(what, "game") == 0)
-    main_win->game_box->game->SetID(id);
+	if (StringCaseCmp(what, "game") == 0)
+		main_win->game_box->game->SetID(id);
 
-  else if (StringCaseCmp(what, "engine") == 0)
-    main_win->game_box->engine->SetID(id);
+	else if (StringCaseCmp(what, "engine") == 0)
+		main_win->game_box->engine->SetID(id);
 
-  else if (StringCaseCmp(what, "theme") == 0)
-    main_win->level_box->theme->SetID(id);
+	else if (StringCaseCmp(what, "theme") == 0)
+		main_win->level_box->theme->SetID(id);
 
-  else if (StringCaseCmp(what, "module") == 0)
-    main_win->mod_box->ChangeValue(id, opt_val);
+	else if (StringCaseCmp(what, "module") == 0)
+		main_win->mod_box->ChangeValue(id, opt_val);
 
-  else
-    Main_FatalError("change_button: unknown what value '%s'\n", what);
+	else
+		Main_FatalError("change_button: unknown what value '%s'\n", what);
 
-  return 0;
+	return 0;
 }
 
 
@@ -355,20 +354,20 @@ int gui_change_button(lua_State *L)
 //
 int gui_change_mod_option(lua_State *L)
 {
-  const char *module = luaL_checkstring(L,1);
-  const char *option = luaL_checkstring(L,2);
-  const char *value  = luaL_checkstring(L,3);
+	const char *module = luaL_checkstring(L,1);
+	const char *option = luaL_checkstring(L,2);
+	const char *value  = luaL_checkstring(L,3);
 
-  SYS_ASSERT(module && option && value);
+	SYS_ASSERT(module && option && value);
 
-// DebugPrintf("  change_mod_option: %s.%s --> %s\n", module, option, value);
+	// DebugPrintf("  change_mod_option: %s.%s --> %s\n", module, option, value);
 
-  ob_set_mod_option(module, option, value);
+	ob_set_mod_option(module, option, value);
 
-  if (main_win)
-    main_win->mod_box->ParseOptValue(module, option, value);
+	if (main_win)
+		main_win->mod_box->ParseOptValue(module, option, value);
 
-  return 0;
+	return 0;
 }
 
 
@@ -376,17 +375,17 @@ int gui_change_mod_option(lua_State *L)
 //
 int gui_at_level(lua_State *L)
 {
-  const char *name = luaL_checkstring(L,1);
- 
-  int index = luaL_checkint(L, 2);
-  int total = luaL_checkint(L, 3);
+	const char *name = luaL_checkstring(L,1);
 
-  Main_ProgStatus("Making %s", name);
+	int index = luaL_checkint(L, 2);
+	int total = luaL_checkint(L, 3);
 
-  if (main_win)
-    main_win->build_box->Prog_AtLevel(index, total);
+	Main_ProgStatus("Making %s", name);
 
-  return 0;
+	if (main_win)
+		main_win->build_box->Prog_AtLevel(index, total);
+
+	return 0;
 }
 
 
@@ -394,12 +393,12 @@ int gui_at_level(lua_State *L)
 //
 int gui_prog_step(lua_State *L)
 {
-  const char *name = luaL_checkstring(L,1);
+	const char *name = luaL_checkstring(L,1);
 
-  if (main_win)
-    main_win->build_box->Prog_Step(name);
+	if (main_win)
+		main_win->build_box->Prog_Step(name);
 
-  return 0;
+	return 0;
 }
 
 
@@ -407,21 +406,21 @@ int gui_prog_step(lua_State *L)
 //
 int gui_ticker(lua_State *L)
 {
-  Main_Ticker();
+	Main_Ticker();
 
-  return 0;
+	return 0;
 }
 
 // LUA: abort() --> boolean
 //
 int gui_abort(lua_State *L)
 {
-  int value = (main_action >= MAIN_CANCEL) ? 1 : 0;
+	int value = (main_action >= MAIN_CANCEL) ? 1 : 0;
 
-  Main_Ticker();
+	Main_Ticker();
 
-  lua_pushboolean(L, value);
-  return 1;
+	lua_pushboolean(L, value);
+	return 1;
 }
 
 
@@ -429,21 +428,21 @@ int gui_abort(lua_State *L)
 //
 int gui_rand_seed(lua_State *L)
 {
-  int the_seed = luaL_checkint(L, 1) & 0x7FFFFFFF;
+	int the_seed = luaL_checkint(L, 1) & 0x7FFFFFFF;
 
-  GUI_RNG.Seed(the_seed);
+	GUI_RNG.Seed(the_seed);
 
-  return 0;
+	return 0;
 }
 
 // LUA: random() --> number
 //
 int gui_random(lua_State *L)
 {
-  lua_Number value = GUI_RNG.Rand_fp();
+	lua_Number value = GUI_RNG.Rand_fp();
 
-  lua_pushnumber(L, value);
-  return 1;
+	lua_pushnumber(L, value);
+	return 1;
 }
 
 
@@ -451,55 +450,55 @@ int gui_random(lua_State *L)
 //
 int gui_bit_and(lua_State *L)
 {
-  int A = luaL_checkint(L, 1);
-  int B = luaL_checkint(L, 2);
+	int A = luaL_checkint(L, 1);
+	int B = luaL_checkint(L, 2);
 
-  lua_pushinteger(L, A & B);
-  return 1;
+	lua_pushinteger(L, A & B);
+	return 1;
 }
 
 // LUA: bit_test(val) --> boolean
 //
 int gui_bit_test(lua_State *L)
 {
-  int A = luaL_checkint(L, 1);
-  int B = luaL_checkint(L, 2);
+	int A = luaL_checkint(L, 1);
+	int B = luaL_checkint(L, 2);
 
-  lua_pushboolean(L, (A & B) != 0);
-  return 1;
+	lua_pushboolean(L, (A & B) != 0);
+	return 1;
 }
 
 // LUA: bit_or(A, B) --> number
 //
 int gui_bit_or(lua_State *L)
 {
-  int A = luaL_checkint(L, 1);
-  int B = luaL_checkint(L, 2);
+	int A = luaL_checkint(L, 1);
+	int B = luaL_checkint(L, 2);
 
-  lua_pushinteger(L, A | B);
-  return 1;
+	lua_pushinteger(L, A | B);
+	return 1;
 }
 
 // LUA: bit_xor(A, B) --> number
 //
 int gui_bit_xor(lua_State *L)
 {
-  int A = luaL_checkint(L, 1);
-  int B = luaL_checkint(L, 2);
+	int A = luaL_checkint(L, 1);
+	int B = luaL_checkint(L, 2);
 
-  lua_pushinteger(L, A ^ B);
-  return 1;
+	lua_pushinteger(L, A ^ B);
+	return 1;
 }
 
 // LUA: bit_not(val) --> number
 //
 int gui_bit_not(lua_State *L)
 {
-  int A = luaL_checkint(L, 1);
+	int A = luaL_checkint(L, 1);
 
-  // do not make the result negative
-  lua_pushinteger(L, (~A) & 0x7FFFFFFF);
-  return 1;
+	// do not make the result negative
+	lua_pushinteger(L, (~A) & 0x7FFFFFFF);
+	return 1;
 }
 
 
@@ -557,445 +556,445 @@ extern int Q1_add_tex_wad(lua_State *L);
 
 static const luaL_Reg gui_script_funcs[] =
 {
-  { "raw_log_print",     gui_raw_log_print },
-  { "raw_debug_print",   gui_raw_debug_print },
-  { "raw_console_print", gui_raw_console_print },
+	{ "raw_log_print",     gui_raw_log_print },
+	{ "raw_debug_print",   gui_raw_debug_print },
+	{ "raw_console_print", gui_raw_console_print },
 
-  { "config_line",    gui_config_line },
-  { "mkdir",          gui_mkdir },
-  { "set_colormap",   gui_set_colormap },
-  { "locate_data",    gui_locate_data },
+	{ "config_line",    gui_config_line },
+	{ "mkdir",          gui_mkdir },
+	{ "set_colormap",   gui_set_colormap },
+	{ "locate_data",    gui_locate_data },
 
-  { "add_button",     gui_add_button },
-  { "add_mod_option", gui_add_mod_option },
-  { "show_button",    gui_show_button },
-  { "change_button",  gui_change_button },
-  { "change_mod_option", gui_change_mod_option },
+	{ "add_button",     gui_add_button },
+	{ "add_mod_option", gui_add_mod_option },
+	{ "show_button",    gui_show_button },
+	{ "change_button",  gui_change_button },
+	{ "change_mod_option", gui_change_mod_option },
 
-  { "at_level",    gui_at_level },
-  { "prog_step",   gui_prog_step },
-  { "ticker",      gui_ticker },
-  { "abort",       gui_abort },
-  { "rand_seed",   gui_rand_seed },
-  { "random",      gui_random },
+	{ "at_level",    gui_at_level },
+	{ "prog_step",   gui_prog_step },
+	{ "ticker",      gui_ticker },
+	{ "abort",       gui_abort },
+	{ "rand_seed",   gui_rand_seed },
+	{ "random",      gui_random },
 
-  // CSG functions
-  { "begin_level", CSG_begin_level },
-  { "end_level",   CSG_end_level },
-  { "property",    CSG_property },
-  { "add_brush",   CSG_add_brush  },
-  { "add_entity",  CSG_add_entity },
+	// CSG functions
+	{ "begin_level", CSG_begin_level },
+	{ "end_level",   CSG_end_level },
+	{ "property",    CSG_property },
+	{ "add_brush",   CSG_add_brush  },
+	{ "add_entity",  CSG_add_entity },
 
-  // Wolf-3D functions
-  { "wolf_block",     WF_wolf_block },
-  { "wolf_read",      WF_wolf_read },
-  { "wolf_mini_map",  WF_wolf_mini_map },
+	// Wolf-3D functions
+	{ "wolf_block",     WF_wolf_block },
+	{ "wolf_read",      WF_wolf_read },
+	{ "wolf_mini_map",  WF_wolf_mini_map },
 
-  // Doom/Heretic/Hexen functions
-  { "wad_name_gfx",   DM_wad_name_gfx  },
-  { "wad_logo_gfx",   DM_wad_logo_gfx  },
-  { "wad_add_text_lump",   DM_wad_add_text_lump },
-  { "wad_add_binary_lump", DM_wad_add_binary_lump },
+	// Doom/Heretic/Hexen functions
+	{ "wad_name_gfx",   DM_wad_name_gfx  },
+	{ "wad_logo_gfx",   DM_wad_logo_gfx  },
+	{ "wad_add_text_lump",   DM_wad_add_text_lump },
+	{ "wad_add_binary_lump", DM_wad_add_binary_lump },
 
-  { "wad_insert_file",   DM_wad_insert_file },
-  { "wad_transfer_lump", DM_wad_transfer_lump },
-  { "wad_transfer_map",  DM_wad_transfer_map },
-  { "wad_merge_sections",DM_wad_merge_sections },
-  { "wad_read_text_lump",DM_wad_read_text_lump },
+	{ "wad_insert_file",   DM_wad_insert_file },
+	{ "wad_transfer_lump", DM_wad_transfer_lump },
+	{ "wad_transfer_map",  DM_wad_transfer_map },
+	{ "wad_merge_sections",DM_wad_merge_sections },
+	{ "wad_read_text_lump",DM_wad_read_text_lump },
 
-  { "fsky_create",      DM_fsky_create },
-  { "fsky_write",       DM_fsky_write },
-  { "fsky_solid_box",   DM_fsky_solid_box },
-  { "fsky_add_stars",   DM_fsky_add_stars },
-  { "fsky_add_clouds",  DM_fsky_add_clouds },
-  { "fsky_add_hills",   DM_fsky_add_hills },
+	{ "fsky_create",      DM_fsky_create },
+	{ "fsky_write",       DM_fsky_write },
+	{ "fsky_solid_box",   DM_fsky_solid_box },
+	{ "fsky_add_stars",   DM_fsky_add_stars },
+	{ "fsky_add_clouds",  DM_fsky_add_clouds },
+	{ "fsky_add_hills",   DM_fsky_add_hills },
 
-  { "wadfab_load",         wadfab_load },
-  { "wadfab_free",         wadfab_free },
-  { "wadfab_get_polygon",  wadfab_get_polygon },
-  { "wadfab_get_sector",   wadfab_get_sector },
-  { "wadfab_get_side",     wadfab_get_side },
-  { "wadfab_get_line",     wadfab_get_line },
-  { "wadfab_get_thing",    wadfab_get_thing },
+	{ "wadfab_load",         wadfab_load },
+	{ "wadfab_free",         wadfab_free },
+	{ "wadfab_get_polygon",  wadfab_get_polygon },
+	{ "wadfab_get_sector",   wadfab_get_sector },
+	{ "wadfab_get_side",     wadfab_get_side },
+	{ "wadfab_get_line",     wadfab_get_line },
+	{ "wadfab_get_thing",    wadfab_get_thing },
 
-  // Quake functions
-  { "q1_add_mapmodel",  Q1_add_mapmodel },
-  { "q1_add_tex_wad",   Q1_add_tex_wad },
+	// Quake functions
+	{ "q1_add_mapmodel",  Q1_add_mapmodel },
+	{ "q1_add_tex_wad",   Q1_add_tex_wad },
 
-  // SPOT functions
-  { "spots_begin",     SPOT_begin },
-  { "spots_draw_line", SPOT_draw_line },
-  { "spots_fill_poly", SPOT_fill_poly },
-  { "spots_dump",      SPOT_dump },
-  { "spots_get_mons",  SPOT_get_mons },
-  { "spots_get_items", SPOT_get_items },
-  { "spots_read_grid", SPOT_read_grid },
-  { "spots_end",       SPOT_end },
+	// SPOT functions
+	{ "spots_begin",     SPOT_begin },
+	{ "spots_draw_line", SPOT_draw_line },
+	{ "spots_fill_poly", SPOT_fill_poly },
+	{ "spots_dump",      SPOT_dump },
+	{ "spots_get_mons",  SPOT_get_mons },
+	{ "spots_get_items", SPOT_get_items },
+	{ "spots_read_grid", SPOT_read_grid },
+	{ "spots_end",       SPOT_end },
 
-  { NULL, NULL } // the end
+	{ NULL, NULL } // the end
 };
 
 
 static const luaL_Reg bit_functions[] =
 {
-  { "band",    gui_bit_and },
-  { "btest",   gui_bit_test },
-  { "bor",     gui_bit_or  },
-  { "bxor",    gui_bit_xor },
-  { "bnot",    gui_bit_not },
+	{ "band",    gui_bit_and },
+	{ "btest",   gui_bit_test },
+	{ "bor",     gui_bit_or  },
+	{ "bxor",    gui_bit_xor },
+	{ "bnot",    gui_bit_not },
 
-  { NULL, NULL } // the end
+	{ NULL, NULL } // the end
 };
 
 
 int Script_RegisterLib(const char *name, const luaL_Reg *reg)
 {
-  SYS_NULL_CHECK(LUA_ST);
+	SYS_NULL_CHECK(LUA_ST);
 
-  luaL_register(LUA_ST, name, reg);
+	luaL_register(LUA_ST, name, reg);
 
-  // remove the table which luaL_register created
-  lua_pop(LUA_ST, 1);
+	// remove the table which luaL_register created
+	lua_pop(LUA_ST, 1);
 
-  return 0;
+	return 0;
 }
 
 static int p_init_lua(lua_State *L)
 {
-  /* stop collector during initialization */
-  lua_gc(L, LUA_GCSTOP, 0);
-  {
-    luaL_openlibs(L);  /* open libraries */
+	/* stop collector during initialization */
+	lua_gc(L, LUA_GCSTOP, 0);
+	{
+		luaL_openlibs(L);  /* open libraries */
 
-    Script_RegisterLib("gui", gui_script_funcs);
-    Script_RegisterLib("bit", bit_functions);
-  }
-  lua_gc(L, LUA_GCRESTART, 0);
+		Script_RegisterLib("gui", gui_script_funcs);
+		Script_RegisterLib("bit", bit_functions);
+	}
+	lua_gc(L, LUA_GCRESTART, 0);
 
-  return 0;
+	return 0;
 }
 
 static void Script_SetScriptPath(lua_State *L, const char *subdir)
 {
-  if (StringCaseCmp(install_dir, home_dir) == 0)
-    script_path = StringPrintf("%s/%s/?.lua", install_dir, subdir);
-  else
-    script_path = StringPrintf("%s/%s/?.lua;%s/%s/?.lua", home_dir, subdir,
-                               install_dir, subdir);
+	if (StringCaseCmp(install_dir, home_dir) == 0)
+		script_path = StringPrintf("%s/%s/?.lua", install_dir, subdir);
+	else
+		script_path = StringPrintf("%s/%s/?.lua;%s/%s/?.lua", home_dir, subdir,
+				install_dir, subdir);
 
-  LogPrintf("script_path: [%s]\n", script_path);
+	LogPrintf("script_path: [%s]\n", script_path);
 
-  lua_getglobal(L, "package");
+	lua_getglobal(L, "package");
 
-  if (lua_type(L, -1) == LUA_TNIL)
-    Main_FatalError("Script problem: no 'package' module!");
+	if (lua_type(L, -1) == LUA_TNIL)
+		Main_FatalError("Script problem: no 'package' module!");
 
-  lua_pushstring(L, script_path);
+	lua_pushstring(L, script_path);
 
-  lua_setfield(L, -2, "path");
+	lua_setfield(L, -2, "path");
 
-  lua_pop(L, 1);
+	lua_pop(L, 1);
 }
 
 static void Script_SetDataPath(void)
 {
-  data_path = "./modules/data;./data";  // FIXME use $home_dir
+	data_path = "./modules/data;./data";  // FIXME use $home_dir
 
-  if (StringCaseCmp(install_dir, home_dir) != 0)
-  {
-    data_path = StringPrintf("%s;%s/modules/data;%s/data", data_path, install_dir, install_dir);
-  }
+	if (StringCaseCmp(install_dir, home_dir) != 0)
+	{
+		data_path = StringPrintf("%s;%s/modules/data;%s/data", data_path, install_dir, install_dir);
+	}
 
-  LogPrintf("data_path:   [%s]\n\n", data_path);
+	LogPrintf("data_path:   [%s]\n\n", data_path);
 }
 
 
 static bool Script_CallFunc(const char *func_name, int nresult = 0, const char **params = NULL)
 {
-  // Note: the results of the function will be on the Lua stack
+	// Note: the results of the function will be on the Lua stack
 
-  lua_getglobal(LUA_ST, "ob_traceback");
- 
-  if (lua_type(LUA_ST, -1) == LUA_TNIL)
-    Main_FatalError("Script problem: missing function '%s'", "ob_traceback");
+	lua_getglobal(LUA_ST, "ob_traceback");
 
-  lua_getglobal(LUA_ST, func_name);
+	if (lua_type(LUA_ST, -1) == LUA_TNIL)
+		Main_FatalError("Script problem: missing function '%s'", "ob_traceback");
 
-  if (lua_type(LUA_ST, -1) == LUA_TNIL)
-    Main_FatalError("Script problem: missing function '%s'", func_name);
+	lua_getglobal(LUA_ST, func_name);
 
-  int nargs = 0;
-  if (params)
-  {
-    for (; *params; params++, nargs++)
-      lua_pushstring(LUA_ST, *params);
-  }
+	if (lua_type(LUA_ST, -1) == LUA_TNIL)
+		Main_FatalError("Script problem: missing function '%s'", func_name);
 
-  int status = lua_pcall(LUA_ST, nargs, nresult, -2-nargs);
-  if (status != 0)
-  {
-    const char *msg = lua_tolstring(LUA_ST, -1, NULL);
+	int nargs = 0;
+	if (params)
+	{
+		for (; *params; params++, nargs++)
+			lua_pushstring(LUA_ST, *params);
+	}
 
-    // skip the filename
-    const char *err_msg = strstr(msg, ": ");
-    if (err_msg)
-      err_msg += 2;
-    else
-      err_msg = msg;
+	int status = lua_pcall(LUA_ST, nargs, nresult, -2-nargs);
+	if (status != 0)
+	{
+		const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-    // this will appear in the log file too
+		// skip the filename
+		const char *err_msg = strstr(msg, ": ");
+		if (err_msg)
+			err_msg += 2;
+		else
+			err_msg = msg;
 
-    ConPrintf("\nScript Error: @1%s\n", err_msg);
-    DLG_ShowError("Script Error: %s", err_msg);
+		// this will appear in the log file too
 
-    lua_pop(LUA_ST, 2);  // ob_traceback, message
-    return false;
-  }
- 
-  // remove the traceback function
-  lua_remove(LUA_ST, -1-nresult);
+		ConPrintf("\nScript Error: @1%s\n", err_msg);
+		DLG_ShowError("Script Error: %s", err_msg);
 
-  return true;
+		lua_pop(LUA_ST, 2);  // ob_traceback, message
+		return false;
+	}
+
+	// remove the traceback function
+	lua_remove(LUA_ST, -1-nresult);
+
+	return true;
 }
 
 
 bool Script_RunString(const char *str, ...)
 {
-  static char buffer[MSG_BUF_LEN];
+	static char buffer[MSG_BUF_LEN];
 
-  va_list args;
+	va_list args;
 
-  va_start(args, str);
-  vsnprintf(buffer, MSG_BUF_LEN-1, str, args);
-  va_end(args);
+	va_start(args, str);
+	vsnprintf(buffer, MSG_BUF_LEN-1, str, args);
+	va_end(args);
 
-  buffer[MSG_BUF_LEN-2] = 0;
+	buffer[MSG_BUF_LEN-2] = 0;
 
 
-  lua_getglobal(LUA_ST, "ob_traceback");
- 
-  if (lua_type(LUA_ST, -1) == LUA_TNIL)
-    Main_FatalError("Script problem: missing function '%s'", "ob_traceback");
+	lua_getglobal(LUA_ST, "ob_traceback");
 
-  int status = luaL_loadbuffer(LUA_ST, buffer, strlen(buffer), "=CONSOLE");
+	if (lua_type(LUA_ST, -1) == LUA_TNIL)
+		Main_FatalError("Script problem: missing function '%s'", "ob_traceback");
 
-  if (status != 0)
-  {
-    // const char *msg = lua_tolstring(LUA_ST, -1, NULL);
+	int status = luaL_loadbuffer(LUA_ST, buffer, strlen(buffer), "=CONSOLE");
 
-    ConPrintf("Error: @1Bad Syntax or Unknown Command\n");
+	if (status != 0)
+	{
+		// const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-    lua_pop(LUA_ST, 2);  // ob_traceback, message
-    return false;
-  }
+		ConPrintf("Error: @1Bad Syntax or Unknown Command\n");
 
-  status = lua_pcall(LUA_ST, 0, 0, -2);
-  if (status != 0)
-  {
-    const char *msg = lua_tolstring(LUA_ST, -1, NULL);
+		lua_pop(LUA_ST, 2);  // ob_traceback, message
+		return false;
+	}
 
-    // skip the filename
-    const char *err_msg = strstr(msg, ": ");
-    if (err_msg)
-      err_msg += 2;
-    else
-      err_msg = msg;
+	status = lua_pcall(LUA_ST, 0, 0, -2);
+	if (status != 0)
+	{
+		const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-    ConPrintf("\nScript Error: @1%s\n", err_msg);
-    LogPrintf("\nScript Error: %s\n", err_msg);
+		// skip the filename
+		const char *err_msg = strstr(msg, ": ");
+		if (err_msg)
+			err_msg += 2;
+		else
+			err_msg = msg;
 
-    lua_pop(LUA_ST, 2);  // ob_traceback, message
-    return false;
-  }
- 
-  lua_pop(LUA_ST, 1);  // ob_traceback
-  return true;
+		ConPrintf("\nScript Error: @1%s\n", err_msg);
+		LogPrintf("\nScript Error: %s\n", err_msg);
+
+		lua_pop(LUA_ST, 2);  // ob_traceback, message
+		return false;
+	}
+
+	lua_pop(LUA_ST, 1);  // ob_traceback
+	return true;
 }
 
 
 static void add_extra_script(const char *name, int flags, void *priv_dat)
 {
-  std::vector<const char*> *list = (std::vector<const char*> *) priv_dat;
-    
-  DebugPrintf("  file [%s] flags:%d\n", name, flags);
-      
-  if (flags & SCAN_F_IsDir)
-    return;
+	std::vector<const char*> *list = (std::vector<const char*> *) priv_dat;
 
-  if (flags & SCAN_F_Hidden)
-    return;
+	DebugPrintf("  file [%s] flags:%d\n", name, flags);
 
-  if (! MatchExtension(name, "lua"))
-    return;
+	if (flags & SCAN_F_IsDir)
+		return;
 
-  list->push_back(StringDup(name));
+	if (flags & SCAN_F_Hidden)
+		return;
+
+	if (! MatchExtension(name, "lua"))
+		return;
+
+	list->push_back(StringDup(name));
 }
+
 
 struct Compare_ScriptFilename_pred
 {
-  inline bool operator() (const char *A, const char *B) const
-  {
-    return StringCaseCmp(A, B) < 0;
-  }
+	inline bool operator() (const char *A, const char *B) const
+	{
+		return StringCaseCmp(A, B) < 0;
+	}
 };
 
 
 static void Script_Require(const char *name)
 {
-  char require_text[128];
-  sprintf(require_text, "require '%s'", name);
+	char require_text[128];
+	sprintf(require_text, "require '%s'", name);
 
-  int status = luaL_loadstring(LUA_ST, require_text);
+	int status = luaL_loadstring(LUA_ST, require_text);
 
-  if (status == 0)
-    status = lua_pcall(LUA_ST, 0, 0, 0);
+	if (status == 0)
+		status = lua_pcall(LUA_ST, 0, 0, 0);
 
-  if (status != 0)
-  {
-    const char *msg = lua_tolstring(LUA_ST, -1, NULL);
+	if (status != 0)
+	{
+		const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-    Main_FatalError("Unable to load script '%s.lua'\n%s", name, msg);
-  }
+		Main_FatalError("Unable to load script '%s.lua'\n%s", name, msg);
+	}
 }
 
 
 static void Script_LoadFile(const char *filename)
 {
-  int status = luaL_loadfile(LUA_ST, filename);
+	int status = luaL_loadfile(LUA_ST, filename);
 
-  if (status == 0)
-    status = lua_pcall(LUA_ST, 0, 0, 0);
+	if (status == 0)
+		status = lua_pcall(LUA_ST, 0, 0, 0);
 
-  if (status != 0)
-  {
-    const char *msg = lua_tolstring(LUA_ST, -1, NULL);
+	if (status != 0)
+	{
+		const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-    Main_FatalError("Unable to load script '%s'\n%s",
-                    fl_filename_name(filename), msg);
-  }
+		Main_FatalError("Unable to load script '%s'\n%s",
+				fl_filename_name(filename), msg);
+	}
 }
 
 
 static bool Script_LoadAllFromDir(const char *path)
 {
-  // load all scripts (files which match "*.lua") from a
-  // sub-directory.
+	// load all scripts (files which match "*.lua") from a
+	// sub-directory.
 
-  LogPrintf("Loading scripts from: [%s]\n", path);
+	LogPrintf("Loading scripts from: [%s]\n", path);
 
-  std::vector<const char*> file_list;
+	std::vector<const char*> file_list;
 
-  int count = ScanDirectory(path, add_extra_script, &file_list);
+	int count = ScanDirectory(path, add_extra_script, &file_list);
 
-  if (count < 0)
-  {
-    LogPrintf("  --> No such directory.\n\n");
-    return false;
-  }
+	if (count < 0)
+	{
+		LogPrintf("  --> No such directory.\n\n");
+		return false;
+	}
 
-  DebugPrintf("Scanned %d entries in sub-directory.\n", count);
+	DebugPrintf("Scanned %d entries in sub-directory.\n", count);
 
-  std::sort(file_list.begin(), file_list.end(),
-            Compare_ScriptFilename_pred());
+	std::sort(file_list.begin(), file_list.end(), Compare_ScriptFilename_pred());
 
-  for (unsigned int i = 0; i < file_list.size(); i++)
-  {
-    LogPrintf("Loading %d/%d : %s\n", i+1, file_list.size(), file_list[i]);
- 
-    const char *full_name = StringPrintf("%s/%s", path, file_list[i]);
+	for (unsigned int i = 0; i < file_list.size(); i++)
+	{
+		LogPrintf("Loading %d/%d : %s\n", i+1, file_list.size(), file_list[i]);
 
-    // load it !!
-    Script_LoadFile(full_name);
+		const char *full_name = StringPrintf("%s/%s", path, file_list[i]);
 
-    StringFree(full_name);
-    StringFree(file_list[i]);
-    
-    file_list[i] = NULL;
-  }
- 
-  LogPrintf("DONE.\n\n");
+		// load it !!
+		Script_LoadFile(full_name);
 
-  return true;  // OK
+		StringFree(full_name);
+		StringFree(file_list[i]);
+
+		file_list[i] = NULL;
+	}
+
+	LogPrintf("DONE.\n\n");
+
+	return true;  // OK
 }
 
 
 static void Script_LoadSubDir(const char *subdir)
 {
-  // TODO: prevent loading a script from install directory if the same one
-  //       (e.g. games/doom.lua) exists in the working directory.  Right now
-  //       we end up loading both, which is OK but inefficient.
+	// TODO: prevent loading a script from install directory if the same one
+	//       (e.g. games/doom.lua) exists in the working directory.  Right now
+	//       we end up loading both, which is OK but inefficient.
 
-  //  first pass = install directory
-  // second pass =    home directory
+	//  first pass = install directory
+	// second pass =    home directory
 
-  int num_pass = 2;
+	int num_pass = 2;
 
-  if (StringCaseCmp(install_dir, home_dir) == 0)
-    num_pass = 1;
+	if (StringCaseCmp(install_dir, home_dir) == 0)
+		num_pass = 1;
 
-  for (int pass = 0 ; pass < num_pass ; pass++)
-  {
-    const char *path = StringPrintf("%s/%s", (pass == 0 ? install_dir : home_dir), subdir);
+	for (int pass = 0 ; pass < num_pass ; pass++)
+	{
+		const char *path = StringPrintf("%s/%s", (pass == 0 ? install_dir : home_dir), subdir);
 
-    Script_LoadAllFromDir(path);
+		Script_LoadAllFromDir(path);
 
-    StringFree(path);
-  }
+		StringFree(path);
+	}
 }
 
 
 void Script_Open(const char *game_dir)
 {
-  // create Lua state
+	// create Lua state
 
-  LUA_ST = luaL_newstate();
-  if (! LUA_ST)
-    Main_FatalError("LUA Init failed: cannot create new state");
+	LUA_ST = luaL_newstate();
+	if (! LUA_ST)
+		Main_FatalError("LUA Init failed: cannot create new state");
 
-  int status = lua_cpcall(LUA_ST, &p_init_lua, NULL);
-  if (status != 0)
-    Main_FatalError("LUA Init failed: cannot load standard libs (%d)", status);
+	int status = lua_cpcall(LUA_ST, &p_init_lua, NULL);
+	if (status != 0)
+		Main_FatalError("LUA Init failed: cannot load standard libs (%d)", status);
 
-  Script_SetDataPath();
+	Script_SetDataPath();
 
 
-  // load main scripts
+	// load main scripts
 
-  LogPrintf("Loading main script: oblige.lua\n");
+	LogPrintf("Loading main script: oblige.lua\n");
 
-  Script_SetScriptPath(LUA_ST, "scripts");
+	Script_SetScriptPath(LUA_ST, "scripts");
 
-  Script_Require("oblige");
+	Script_Require("oblige");
 
-  LogPrintf("DONE.\n\n");
+	LogPrintf("DONE.\n\n");
 
-  Script_LoadSubDir("engines");
-  Script_LoadSubDir("modules");
+	Script_LoadSubDir("engines");
+	Script_LoadSubDir("modules");
 
-  
-  // load game-specific scripts
 
-  Script_SetScriptPath(LUA_ST, game_dir);
+	// load game-specific scripts
 
-  Script_Require("games");
+	Script_SetScriptPath(LUA_ST, game_dir);
 
-  // FIXME: load prefab skins
+	Script_Require("games");
 
-  has_loaded = true;
- 
-  if (! Script_CallFunc("ob_init"))
-    Main_FatalError("The ob_init script failed.\n");
+	// FIXME: load prefab skins
 
-  has_added_buttons = true;
+	has_loaded = true;
+
+	if (! Script_CallFunc("ob_init"))
+		Main_FatalError("The ob_init script failed.\n");
+
+	has_added_buttons = true;
 }
 
 
 void Script_Close()
 {
-  if (LUA_ST)
-    lua_close(LUA_ST);
+	if (LUA_ST)
+		lua_close(LUA_ST);
 
-  LUA_ST = NULL;
+	LUA_ST = NULL;
 }
 
 
@@ -1006,104 +1005,104 @@ void Script_Close()
 
 bool ob_set_config(const char *key, const char *value)
 {
-  // See the document 'doc/Config_Flow.txt' for a good
-  // description of the flow of configuration values
-  // between the C++ GUI and the Lua scripts.
+	// See the document 'doc/Config_Flow.txt' for a good
+	// description of the flow of configuration values
+	// between the C++ GUI and the Lua scripts.
 
-  SYS_NULL_CHECK(key);
-  SYS_NULL_CHECK(value);
+	SYS_NULL_CHECK(key);
+	SYS_NULL_CHECK(value);
 
-  if (! has_loaded)
-  {
-    DebugPrintf("ob_set_config(%s) called before loaded!\n", key);
-    return false;
-  }
- 
-  const char *params[3];
+	if (! has_loaded)
+	{
+		DebugPrintf("ob_set_config(%s) called before loaded!\n", key);
+		return false;
+	}
 
-  params[0] = key;
-  params[1] = value;
-  params[2] = NULL; // end of list
+	const char *params[3];
 
-  return Script_CallFunc("ob_set_config", 0, params);
+	params[0] = key;
+	params[1] = value;
+	params[2] = NULL; // end of list
+
+	return Script_CallFunc("ob_set_config", 0, params);
 }
 
 
 bool ob_set_mod_option(const char *module, const char *option,
-                       const char *value)
+		const char *value)
 {
-  if (! has_loaded)
-  {
-    DebugPrintf("Script_SetModOption called before loaded!\n");
-    return false;
-  }
- 
-  const char *params[4];
+	if (! has_loaded)
+	{
+		DebugPrintf("Script_SetModOption called before loaded!\n");
+		return false;
+	}
 
-  params[0] = module;
-  params[1] = option;
-  params[2] = value;
-  params[3] = NULL;
+	const char *params[4];
 
-  return Script_CallFunc("ob_set_mod_option", 0, params);
+	params[0] = module;
+	params[1] = option;
+	params[2] = value;
+	params[3] = NULL;
+
+	return Script_CallFunc("ob_set_mod_option", 0, params);
 }
 
 
 bool ob_read_all_config(std::vector<std::string> * lines)
 {
-  if (! has_loaded)
-  {
-    DebugPrintf("Script_GetAllConfig called before loaded!\n");
-    return false;
-  }
+	if (! has_loaded)
+	{
+		DebugPrintf("Script_GetAllConfig called before loaded!\n");
+		return false;
+	}
 
-  conf_line_buffer = lines;
- 
-  bool result = Script_CallFunc("ob_read_all_config", 0);
+	conf_line_buffer = lines;
 
-  conf_line_buffer = NULL;
+	bool result = Script_CallFunc("ob_read_all_config", 0);
 
-  return result;
+	conf_line_buffer = NULL;
+
+	return result;
 }
 
 
 const char * ob_game_format(void)
 {
-  if (! Script_CallFunc("ob_game_format", 1))
-    return NULL;
+	if (! Script_CallFunc("ob_game_format", 1))
+		return NULL;
 
-  const char *res = lua_tolstring(LUA_ST, -1, NULL);
+	const char *res = lua_tolstring(LUA_ST, -1, NULL);
 
-  if (res)
-    res = StringDup(res);
+	if (res)
+		res = StringDup(res);
 
-  // remove result from lua stack
-  lua_pop(LUA_ST, 1);
+	// remove result from lua stack
+	lua_pop(LUA_ST, 1);
 
-  return res;
+	return res;
 }
 
 
 bool ob_build_cool_shit(void)
 {
-  if (! Script_CallFunc("ob_build_cool_shit", 1))
-  {
-    Main_ProgStatus("Script Error");
-    return false;
-  }
+	if (! Script_CallFunc("ob_build_cool_shit", 1))
+	{
+		Main_ProgStatus("Script Error");
+		return false;
+	}
 
-  const char *res = lua_tolstring(LUA_ST, -1, NULL);
+	const char *res = lua_tolstring(LUA_ST, -1, NULL);
 
-  // remove result from lua stack
-  lua_pop(LUA_ST, 1);
+	// remove result from lua stack
+	lua_pop(LUA_ST, 1);
 
-  if (res && strcmp(res, "ok") == 0)
-    return true;
+	if (res && strcmp(res, "ok") == 0)
+		return true;
 
-  Main_ProgStatus("Cancelled");
-  return false;
+	Main_ProgStatus("Cancelled");
+	return false;
 }
 
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab
