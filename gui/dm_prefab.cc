@@ -75,32 +75,32 @@ static char appl_message[MSG_BUF_LEN];
 
 void Appl_FatalError(const char *str, ...)
 {
-  va_list args;
+	va_list args;
 
-  va_start(args, str);
-  vsnprintf(appl_message, MSG_BUF_LEN, str, args);
-  va_end(args);
+	va_start(args, str);
+	vsnprintf(appl_message, MSG_BUF_LEN, str, args);
+	va_end(args);
 
-  appl_message[MSG_BUF_LEN-1] = 0;
+	appl_message[MSG_BUF_LEN-1] = 0;
 
-  Main_FatalError("AJ-Polygonator Failure:\n%s", appl_message);
-  /* NOT REACHED */
+	Main_FatalError("AJ-Polygonator Failure:\n%s", appl_message);
+	/* NOT REACHED */
 }
 
 void Appl_Printf(const char *str, ...)
 {
-  if (debug_messages)
-  {
-    va_list args;
+	if (debug_messages)
+	{
+		va_list args;
 
-    va_start(args, str);
-    vsnprintf(appl_message, MSG_BUF_LEN, str, args);
-    va_end(args);
+		va_start(args, str);
+		vsnprintf(appl_message, MSG_BUF_LEN, str, args);
+		va_end(args);
 
-    appl_message[MSG_BUF_LEN-1] = 0;
+		appl_message[MSG_BUF_LEN-1] = 0;
 
-    LogPrintf("AJPOLY: %s", appl_message);
-  }
+		LogPrintf("AJPOLY: %s", appl_message);
+	}
 }
 
 
@@ -108,38 +108,38 @@ void Appl_Printf(const char *str, ...)
 
 int wadfab_free(lua_State *L)
 {
-  ajpoly::CloseMap();
-  ajpoly::FreeWAD();
+	ajpoly::CloseMap();
+	ajpoly::FreeWAD();
 
-  return 0;
+	return 0;
 }
 
 
 int wadfab_load(lua_State *L)
 {
-  const char *name = luaL_checkstring(L, 1);
+	const char *name = luaL_checkstring(L, 1);
 
-  char filename[PATH_MAX];
+	char filename[PATH_MAX];
 
-  sprintf(filename, "%s/x_doom/%s", home_dir, name);
+	sprintf(filename, "%s/x_doom/%s", home_dir, name);
 
-  // check home directory, if not found then try install dir
-  if (! FileExists(filename))
-    sprintf(filename, "%s/x_doom/%s", install_dir, name);
+	// check home directory, if not found then try install dir
+	if (! FileExists(filename))
+		sprintf(filename, "%s/x_doom/%s", install_dir, name);
 
-  if (! FileExists(filename))
-    return luaL_error(L, "wadfab_load: no such file: %s", name);
+	if (! FileExists(filename))
+		return luaL_error(L, "wadfab_load: no such file: %s", name);
 
-  if (! ajpoly::LoadWAD(filename))
-    return luaL_error(L, "wadfab_load: %s", ajpoly::GetError());
+	if (! ajpoly::LoadWAD(filename))
+		return luaL_error(L, "wadfab_load: %s", ajpoly::GetError());
 
-  if (! ajpoly::OpenMap("*" /* first one */))
-    return luaL_error(L, "wadfab_load: %s", ajpoly::GetError());
+	if (! ajpoly::OpenMap("*" /* first one */))
+		return luaL_error(L, "wadfab_load: %s", ajpoly::GetError());
 
-  if (! ajpoly::Polygonate(true /* require_border */))
-    return luaL_error(L, "wadfab_load: %s", ajpoly::GetError());
+	if (! ajpoly::Polygonate(true /* require_border */))
+		return luaL_error(L, "wadfab_load: %s", ajpoly::GetError());
 
-  return 0;
+	return 0;
 }
 
 
@@ -147,210 +147,210 @@ int wadfab_load(lua_State *L)
 
 int wadfab_get_thing(lua_State *L)
 {
-  int index = luaL_checkint(L, 1);
+	int index = luaL_checkint(L, 1);
 
-  if (index < 0 || index >= ajpoly::num_things)
-    return 0;
+	if (index < 0 || index >= ajpoly::num_things)
+		return 0;
 
-  const ajpoly::thing_c * TH = ajpoly::Thing(index);
+	const ajpoly::thing_c * TH = ajpoly::Thing(index);
 
-  lua_newtable(L);
+	lua_newtable(L);
 
-  lua_pushinteger(L, TH->x);
-  lua_setfield(L, -2, "x");
+	lua_pushinteger(L, TH->x);
+	lua_setfield(L, -2, "x");
 
-  lua_pushinteger(L, TH->y);
-  lua_setfield(L, -2, "y");
+	lua_pushinteger(L, TH->y);
+	lua_setfield(L, -2, "y");
 
-  lua_pushinteger(L, TH->angle);
-  lua_setfield(L, -2, "angle");
+	lua_pushinteger(L, TH->angle);
+	lua_setfield(L, -2, "angle");
 
-  lua_pushinteger(L, TH->type);
-  lua_setfield(L, -2, "id");
+	lua_pushinteger(L, TH->type);
+	lua_setfield(L, -2, "id");
 
-  lua_pushinteger(L, TH->options);
-  lua_setfield(L, -2, "flags");
+	lua_pushinteger(L, TH->options);
+	lua_setfield(L, -2, "flags");
 
-  return 1;
+	return 1;
 }
 
 
 int wadfab_get_sector(lua_State *L)
 {
-  int index = luaL_checkint(L, 1);
+	int index = luaL_checkint(L, 1);
 
-  if (index < 0 || index >= ajpoly::num_sectors)
-    return 0;
+	if (index < 0 || index >= ajpoly::num_sectors)
+		return 0;
 
-  const ajpoly::sector_c * SEC = ajpoly::Sector(index);
+	const ajpoly::sector_c * SEC = ajpoly::Sector(index);
 
-  lua_newtable(L);
+	lua_newtable(L);
 
-  lua_pushinteger(L, SEC->floor_h);
-  lua_setfield(L, -2, "floor_h");
+	lua_pushinteger(L, SEC->floor_h);
+	lua_setfield(L, -2, "floor_h");
 
-  lua_pushinteger(L, SEC->ceil_h);
-  lua_setfield(L, -2, "ceil_h");
+	lua_pushinteger(L, SEC->ceil_h);
+	lua_setfield(L, -2, "ceil_h");
 
-  lua_pushinteger(L, SEC->special);
-  lua_setfield(L, -2, "special");
+	lua_pushinteger(L, SEC->special);
+	lua_setfield(L, -2, "special");
 
-  lua_pushinteger(L, SEC->light);
-  lua_setfield(L, -2, "light");
+	lua_pushinteger(L, SEC->light);
+	lua_setfield(L, -2, "light");
 
-  lua_pushinteger(L, SEC->tag);
-  lua_setfield(L, -2, "tag");
+	lua_pushinteger(L, SEC->tag);
+	lua_setfield(L, -2, "tag");
 
-  lua_pushstring(L, SEC->floor_tex);
-  lua_setfield(L, -2, "floor_tex");
+	lua_pushstring(L, SEC->floor_tex);
+	lua_setfield(L, -2, "floor_tex");
 
-  lua_pushstring(L, SEC->ceil_tex);
-  lua_setfield(L, -2, "ceil_tex");
+	lua_pushstring(L, SEC->ceil_tex);
+	lua_setfield(L, -2, "ceil_tex");
 
-  return 1;
+	return 1;
 }
 
 
 int wadfab_get_side(lua_State *L)
 {
-  int index = luaL_checkint(L, 1);
+	int index = luaL_checkint(L, 1);
 
-  if (index < 0 || index >= ajpoly::num_sidedefs)
-    return 0;
+	if (index < 0 || index >= ajpoly::num_sidedefs)
+		return 0;
 
-  const ajpoly::sidedef_c * SD = ajpoly::Sidedef(index);
+	const ajpoly::sidedef_c * SD = ajpoly::Sidedef(index);
 
-  lua_newtable(L);
+	lua_newtable(L);
 
-  lua_pushinteger(L, SD->x_offset);
-  lua_setfield(L, -2, "x_offset");
+	lua_pushinteger(L, SD->x_offset);
+	lua_setfield(L, -2, "x_offset");
 
-  lua_pushinteger(L, SD->y_offset);
-  lua_setfield(L, -2, "y_offset");
+	lua_pushinteger(L, SD->y_offset);
+	lua_setfield(L, -2, "y_offset");
 
-  lua_pushstring(L, SD->upper_tex);
-  lua_setfield(L, -2, "upper_tex");
+	lua_pushstring(L, SD->upper_tex);
+	lua_setfield(L, -2, "upper_tex");
 
-  lua_pushstring(L, SD->lower_tex);
-  lua_setfield(L, -2, "lower_tex");
+	lua_pushstring(L, SD->lower_tex);
+	lua_setfield(L, -2, "lower_tex");
 
-  lua_pushstring(L, SD->mid_tex);
-  lua_setfield(L, -2, "mid_tex");
+	lua_pushstring(L, SD->mid_tex);
+	lua_setfield(L, -2, "mid_tex");
 
-  return 1;
+	return 1;
 }
 
 
 int wadfab_get_line(lua_State *L)
 {
-  int index = luaL_checkint(L, 1);
+	int index = luaL_checkint(L, 1);
 
-  if (index < 0 || index >= ajpoly::num_linedefs)
-    return 0;
+	if (index < 0 || index >= ajpoly::num_linedefs)
+		return 0;
 
-  const ajpoly::linedef_c * LD = ajpoly::Linedef(index);
+	const ajpoly::linedef_c * LD = ajpoly::Linedef(index);
 
-  lua_newtable(L);
+	lua_newtable(L);
 
-  lua_pushinteger(L, LD->special);
-  lua_setfield(L, -2, "special");
+	lua_pushinteger(L, LD->special);
+	lua_setfield(L, -2, "special");
 
-  lua_pushinteger(L, LD->flags);
-  lua_setfield(L, -2, "flags");
+	lua_pushinteger(L, LD->flags);
+	lua_setfield(L, -2, "flags");
 
-  lua_pushinteger(L, LD->tag);
-  lua_setfield(L, -2, "tag");
+	lua_pushinteger(L, LD->tag);
+	lua_setfield(L, -2, "tag");
 
-  if (LD->right)
-  {
-    lua_pushinteger(L, LD->right->index);
-    lua_setfield(L, -2, "right");
-  }
+	if (LD->right)
+	{
+		lua_pushinteger(L, LD->right->index);
+		lua_setfield(L, -2, "right");
+	}
 
-  if (LD->left)
-  {
-    lua_pushinteger(L, LD->left->index);
-    lua_setfield(L, -2, "left");
-  }
+	if (LD->left)
+	{
+		lua_pushinteger(L, LD->left->index);
+		lua_setfield(L, -2, "left");
+	}
 
-  return 1;
+	return 1;
 }
 
 
 static void push_edge(lua_State *L, int tab_index, const ajpoly::edge_c * E)
 {
-  lua_newtable(L);
+	lua_newtable(L);
 
-  lua_pushnumber(L, E->end->x);
-  lua_setfield(L, -2, "x");
+	lua_pushnumber(L, E->end->x);
+	lua_setfield(L, -2, "x");
 
-  lua_pushnumber(L, E->end->y);
-  lua_setfield(L, -2, "y");
+	lua_pushnumber(L, E->end->y);
+	lua_setfield(L, -2, "y");
 
-  if (E->linedef)
-  {
-    lua_pushinteger(L, E->linedef->index);
-    lua_setfield(L, -2, "line");
+	if (E->linedef)
+	{
+		lua_pushinteger(L, E->linedef->index);
+		lua_setfield(L, -2, "line");
 
-    const ajpoly::sidedef_c * SD;
+		const ajpoly::sidedef_c * SD;
 
-    // we want the "outer" sidedef (the opposite side)
-    if (E->side == 0)
-      SD = E->linedef->left;
-    else
-      SD = E->linedef->right;
+		// we want the "outer" sidedef (the opposite side)
+		if (E->side == 0)
+			SD = E->linedef->left;
+		else
+			SD = E->linedef->right;
 
-    if (SD)
-    {
-      lua_pushinteger(L, SD->index);
-      lua_setfield(L, -2, "side");
-    }
-  }
+		if (SD)
+		{
+			lua_pushinteger(L, SD->index);
+			lua_setfield(L, -2, "side");
+		}
+	}
 
-  lua_rawseti(L, -2, tab_index);
+	lua_rawseti(L, -2, tab_index);
 }
 
 
 int wadfab_get_polygon(lua_State *L)
 {
-  int index = luaL_checkint(L, 1);
+	int index = luaL_checkint(L, 1);
 
-  if (index < 0 || index >= ajpoly::num_polygons)
-    return 0;
+	if (index < 0 || index >= ajpoly::num_polygons)
+		return 0;
 
-  const ajpoly::polygon_c * poly = ajpoly::Polygon(index);
-
-
-  // result #1 : SECTOR
-  int sect_id  = poly->sector->index;
-
-  if (sect_id == 0xFFFF)
-    sect_id = -1;
-
-  lua_pushinteger(L, sect_id);
+	const ajpoly::polygon_c * poly = ajpoly::Polygon(index);
 
 
-  // result #2 : COORDS
-  std::vector<ajpoly::edge_c *> edges;
+	// result #1 : SECTOR
+	int sect_id  = poly->sector->index;
 
-  for (ajpoly::edge_c * E = poly->edge_list ; E ; E = E->next)
-    edges.push_back(E);
+	if (sect_id == 0xFFFF)
+		sect_id = -1;
 
-  int edge_num = (int)edges.size();
+	lua_pushinteger(L, sect_id);
 
-  lua_createtable(L, edge_num, 0);
 
-  for (int tab_index = 1 ; tab_index <= edge_num ; tab_index++)
-  {
-    // the polygon edges are clockwise, but OBLIGE are anti-clockwise.
-    // hence reverse the order.  We also use 'end' instead of 'start'.
+	// result #2 : COORDS
+	std::vector<ajpoly::edge_c *> edges;
 
-    push_edge(L, tab_index, edges[edge_num - tab_index]);
-  }
+	for (ajpoly::edge_c * E = poly->edge_list ; E ; E = E->next)
+		edges.push_back(E);
 
-  return 2;
+	int edge_num = (int)edges.size();
+
+	lua_createtable(L, edge_num, 0);
+
+	for (int tab_index = 1 ; tab_index <= edge_num ; tab_index++)
+	{
+		// the polygon edges are clockwise, but OBLIGE are anti-clockwise.
+		// hence reverse the order.  We also use 'end' instead of 'start'.
+
+		push_edge(L, tab_index, edges[edge_num - tab_index]);
+	}
+
+	return 2;
 }
 
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab
