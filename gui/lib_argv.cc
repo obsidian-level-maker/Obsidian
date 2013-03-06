@@ -38,105 +38,107 @@ int arg_count = 0;
 //
 void ArgvInit(int argc, const char **argv)
 {
-  arg_count = argc;
-  SYS_ASSERT(arg_count >= 0);
+	arg_count = argc;
+	SYS_ASSERT(arg_count >= 0);
 
-  if (arg_count == 0)
-  {
-    arg_list = NULL;
-    return;
-  }
+	if (arg_count == 0)
+	{
+		arg_list = NULL;
+		return;
+	}
 
-  arg_list = new const char *[arg_count];
+	arg_list = new const char *[arg_count];
 
-  int dest = 0;
+	int dest = 0;
 
-  for (int i = 0; i < arg_count; i++)
-  {
-    const char *cur = argv[i];
-    SYS_NULL_CHECK(cur);
+	for (int i = 0; i < arg_count; i++)
+	{
+		const char *cur = argv[i];
+		SYS_NULL_CHECK(cur);
 
 #ifdef MACOSX
-    // ignore MacOS X rubbish
-    if (strncmp(cur, "-psn", 4) == 0)
-      continue;
+		// ignore MacOS X rubbish
+		if (strncmp(cur, "-psn", 4) == 0)
+			continue;
 #endif
 
-    // support GNU-style long options
-    if (cur[0] == '-' && cur[1] == '-' && isalnum(cur[2]))
-      cur++;
+		// support GNU-style long options
+		if (cur[0] == '-' && cur[1] == '-' && isalnum(cur[2]))
+			cur++;
 
-    arg_list[dest] = strdup(cur);
+		arg_list[dest] = strdup(cur);
 
-    // support DOS-style short options
-    if (cur[0] == '/' && (isalnum(cur[1]) || cur[1] == '?') && cur[2] == 0)
-      *(char *)(arg_list[dest]) = '-';
+		// support DOS-style short options
+		if (cur[0] == '/' && (isalnum(cur[1]) || cur[1] == '?') && cur[2] == 0)
+			*(char *)(arg_list[dest]) = '-';
 
-    dest++;
-  }
+		dest++;
+	}
 
-  arg_count = dest;
+	arg_count = dest;
 }
 
 
 void ArgvClose(void)
 {
-  while (arg_count-- > 0)
-    free((void *) arg_list[arg_count]);
+	while (arg_count-- > 0)
+		free((void *) arg_list[arg_count]);
 
-  if (arg_list)
-    delete[] arg_list;
+	if (arg_list)
+		delete[] arg_list;
 }
+
 
 int ArgvFind(char short_name, const char *long_name, int *num_params)
 {
-  SYS_ASSERT(short_name || long_name);
+	SYS_ASSERT(short_name || long_name);
 
-  if (num_params)
-    *num_params = 0;
+	if (num_params)
+		*num_params = 0;
 
-  int p = 0;
+	int p = 0;
 
-  for (; p < arg_count; p++)
-  {
-    if (! ArgvIsOption(p))
-      continue;
+	for (; p < arg_count; p++)
+	{
+		if (! ArgvIsOption(p))
+			continue;
 
-    const char *str = arg_list[p];
+		const char *str = arg_list[p];
 
-    if (short_name && (short_name == tolower(str[1])) && str[2] == 0)
-      break;
+		if (short_name && (short_name == tolower(str[1])) && str[2] == 0)
+			break;
 
-    if (long_name && (StringCaseCmp(long_name, str + 1) == 0))
-      break;
-  }
+		if (long_name && (StringCaseCmp(long_name, str + 1) == 0))
+			break;
+	}
 
-  if (p >= arg_count)  // NOT FOUND
-    return -1;
+	if (p >= arg_count)  // NOT FOUND
+		return -1;
 
-  if (num_params)
-  {
-    int q = p + 1;
+	if (num_params)
+	{
+		int q = p + 1;
 
-    while ((q < arg_count) && ! ArgvIsOption(q))
-      q++;
+		while ((q < arg_count) && ! ArgvIsOption(q))
+			q++;
 
-    *num_params = q - p - 1;
-  }
+		*num_params = q - p - 1;
+	}
 
-  return p;
+	return p;
 }
+
 
 bool ArgvIsOption(int index)
 {
-  SYS_ASSERT(index >= 0);
-  SYS_ASSERT(index < arg_count);
+	SYS_ASSERT(index >= 0);
+	SYS_ASSERT(index < arg_count);
 
-  const char *str = arg_list[index];
-  SYS_NULL_CHECK(str);
+	const char *str = arg_list[index];
+	SYS_NULL_CHECK(str);
 
-  return (str[0] == '-');
+	return (str[0] == '-');
 }
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

@@ -43,4 +43,4 @@ void Signal_Raise(const char *name);
 #endif /* __LIB_SIGNAL_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

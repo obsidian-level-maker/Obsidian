@@ -53,10 +53,10 @@ void PAK_FinishLump(void);
 
 typedef struct
 {
-  char magic[4];
+	char magic[4];
 
-  u32_t dir_start;
-  u32_t entry_num;
+	u32_t dir_start;
+	u32_t entry_num;
 
 } PACKEDATTR raw_pak_header_t;
 
@@ -65,10 +65,10 @@ typedef struct
 
 typedef struct
 {
-  char name[56];
+	char name[56];
 
-  u32_t offset;
-  u32_t length;
+	u32_t offset;
+	u32_t length;
 
 } PACKEDATTR raw_pak_entry_t;
 
@@ -76,4 +76,4 @@ typedef struct
 #endif /* __OBLIGE_PAK_FILES_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

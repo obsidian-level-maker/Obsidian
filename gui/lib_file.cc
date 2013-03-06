@@ -46,40 +46,42 @@
 
 bool FileExists(const char *filename)
 {
-  FILE *fp = fopen(filename, "rb");
+	FILE *fp = fopen(filename, "rb");
 
-  if (fp)
-  {
-    fclose(fp);
-    return true;
-  }
+	if (fp)
+	{
+		fclose(fp);
+		return true;
+	}
 
-  return false;
+	return false;
 }
+
 
 bool HasExtension(const char *filename)
 {
-  int A = (int)strlen(filename) - 1;
+	int A = (int)strlen(filename) - 1;
 
-  if (A > 0 && filename[A] == '.')
-    return false;
+	if (A > 0 && filename[A] == '.')
+		return false;
 
-  for (; A >= 0; A--)
-  {
-    if (filename[A] == '.')
-      return true;
+	for (; A >= 0; A--)
+	{
+		if (filename[A] == '.')
+			return true;
 
-    if (filename[A] == '/')
-      break;
+		if (filename[A] == '/')
+			break;
 
 #ifdef WIN32
-    if (filename[A] == '\\' || filename[A] == ':')
-      break;
+		if (filename[A] == '\\' || filename[A] == ':')
+			break;
 #endif
-  }
+	}
 
-  return false;
+	return false;
 }
+
 
 //
 // MatchExtension
@@ -88,23 +90,24 @@ bool HasExtension(const char *filename)
 //
 bool MatchExtension(const char *filename, const char *ext)
 {
-  if (! ext)
-    return ! HasExtension(filename);
+	if (! ext)
+		return ! HasExtension(filename);
 
-  int A = (int)strlen(filename) - 1;
-  int B = (int)strlen(ext) - 1;
+	int A = (int)strlen(filename) - 1;
+	int B = (int)strlen(ext) - 1;
 
-  for (; B >= 0; B--, A--)
-  {
-    if (A < 0)
-      return false;
+	for (; B >= 0; B--, A--)
+	{
+		if (A < 0)
+			return false;
 
-    if (toupper(filename[A]) != toupper(ext[B]))
-      return false;
-  }
+		if (toupper(filename[A]) != toupper(ext[B]))
+			return false;
+	}
 
-  return (A >= 1) && (filename[A] == '.');
+	return (A >= 1) && (filename[A] == '.');
 }
+
 
 //
 // ReplaceExtension
@@ -115,219 +118,231 @@ bool MatchExtension(const char *filename, const char *ext)
 //
 char *ReplaceExtension(const char *filename, const char *ext)
 {
-  SYS_ASSERT(filename[0] != 0);
+	SYS_ASSERT(filename[0] != 0);
 
-  char *buffer = StringNew(strlen(filename) + (ext ? strlen(ext) : 0) + 10);
+	char *buffer = StringNew(strlen(filename) + (ext ? strlen(ext) : 0) + 10);
 
-  strcpy(buffer, filename);
+	strcpy(buffer, filename);
 
-  char *dot_pos = buffer + strlen(buffer) - 1;
+	char *dot_pos = buffer + strlen(buffer) - 1;
 
-  for (; dot_pos >= buffer && *dot_pos != '.'; dot_pos--)
-  {
-    if (*dot_pos == '/')
-      break;
+	for (; dot_pos >= buffer && *dot_pos != '.'; dot_pos--)
+	{
+		if (*dot_pos == '/')
+			break;
 
 #ifdef WIN32
-    if (*dot_pos == '\\' || *dot_pos == ':')
-      break;
+		if (*dot_pos == '\\' || *dot_pos == ':')
+			break;
 #endif
-  }
+	}
 
-  if (dot_pos < buffer || *dot_pos != '.')
-    dot_pos = NULL;
+	if (dot_pos < buffer || *dot_pos != '.')
+		dot_pos = NULL;
 
-  if (! ext)
-  {
-    if (dot_pos)
-      dot_pos[0] = 0;
+	if (! ext)
+	{
+		if (dot_pos)
+			dot_pos[0] = 0;
 
-    return buffer;
-  }
+		return buffer;
+	}
 
-  if (dot_pos)
-    dot_pos[1] = 0;
-  else
-    strcat(buffer, ".");
+	if (dot_pos)
+		dot_pos[1] = 0;
+	else
+		strcat(buffer, ".");
 
-  strcat(buffer, ext);
+	strcat(buffer, ext);
 
-  return buffer;
+	return buffer;
 }
+
 
 const char *FindBaseName(const char *filename)
 {
-  // Find the base name of the file (i.e. without any path).
-  // The result always points within the given string.
-  //
-  // Example:  "C:\Foo\Bar.wad"  ->  "Bar.wad"
+	// Find the base name of the file (i.e. without any path).
+	// The result always points within the given string.
+	//
+	// Example:  "C:\Foo\Bar.wad"  ->  "Bar.wad"
 
-  const char *pos = filename + strlen(filename) - 1;
+	const char *pos = filename + strlen(filename) - 1;
 
-  for (; pos >= filename; pos--)
-  {
-    if (*pos == '/')
-      return pos + 1;
+	for (; pos >= filename; pos--)
+	{
+		if (*pos == '/')
+			return pos + 1;
 
 #ifdef WIN32
-    if (*pos == '\\' || *pos == ':')
-      return pos + 1;
+		if (*pos == '\\' || *pos == ':')
+			return pos + 1;
 #endif
-  }
+	}
 
-  return filename;
+	return filename;
 }
+
 
 void FilenameStripBase(char *buffer)
 {
-  char *pos = buffer + strlen(buffer) - 1;
+	char *pos = buffer + strlen(buffer) - 1;
 
-  for (; pos > buffer; pos--)
-  {
-    if (*pos == '/')
-      break;
+	for (; pos > buffer; pos--)
+	{
+		if (*pos == '/')
+			break;
 
 #ifdef WIN32
-    if (*pos == '\\')
-      break;
+		if (*pos == '\\')
+			break;
 
-    if (*pos == ':')
-    {
-      pos[1] = 0;
-      return;
-    }
+		if (*pos == ':')
+		{
+			pos[1] = 0;
+			return;
+		}
 #endif
-  }
+	}
 
-  if (pos > buffer)
-     *pos = 0;
-  else
-    strcpy(buffer, ".");
+	if (pos > buffer)
+		*pos = 0;
+	else
+		strcpy(buffer, ".");
 }
+
 
 bool FileCopy(const char *src_name, const char *dest_name)
 {
-  char buffer[1024];
+	char buffer[1024];
 
-  FILE *src = fopen(src_name, "rb");
-  if (! src)
-    return false;
+	FILE *src = fopen(src_name, "rb");
+	if (! src)
+		return false;
 
-  FILE *dest = fopen(dest_name, "wb");
-  if (! dest)
-  {
-    fclose(src);
-    return false;
-  }
+	FILE *dest = fopen(dest_name, "wb");
+	if (! dest)
+	{
+		fclose(src);
+		return false;
+	}
 
-  while (true)
-  {
-    int rlen = fread(buffer, 1, sizeof(buffer), src);
-    if (rlen <= 0)
-      break;
+	while (true)
+	{
+		int rlen = fread(buffer, 1, sizeof(buffer), src);
+		if (rlen <= 0)
+			break;
 
-    int wlen = fwrite(buffer, 1, rlen, dest);
-    if (wlen != rlen)
-      break;
-  }
+		int wlen = fwrite(buffer, 1, rlen, dest);
+		if (wlen != rlen)
+			break;
+	}
 
-  bool was_OK = !ferror(src) && !ferror(dest);
+	bool was_OK = !ferror(src) && !ferror(dest);
 
-  fclose(dest);
-  fclose(src);
+	fclose(dest);
+	fclose(src);
 
-  return was_OK;
+	return was_OK;
 }
+
 
 bool FileRename(const char *old_name, const char *new_name)
 {
 #ifdef WIN32
-  return (::MoveFile(old_name, new_name) != 0);
+	return (::MoveFile(old_name, new_name) != 0);
 
 #else // UNIX or MACOSX
 
-  return (rename(old_name, new_name) == 0);
+	return (rename(old_name, new_name) == 0);
 #endif
 }
+
 
 bool FileDelete(const char *filename)
 {
 #ifdef WIN32
-  return (::DeleteFile(filename) != 0);
+	return (::DeleteFile(filename) != 0);
 
 #else // UNIX or MACOSX
 
-  return (remove(filename) == 0);
+	return (remove(filename) == 0);
 #endif
 }
+
 
 bool FileChangeDir(const char *dir_name)
 { 
 #ifdef WIN32
-  return (::SetCurrentDirectory(dir_name) != 0);
+	return (::SetCurrentDirectory(dir_name) != 0);
 
 #else // UNIX or MACOSX
 
-  return (chdir(dir_name) == 0);
+	return (chdir(dir_name) == 0);
 #endif
 }
-  
+
+
 bool FileMakeDir(const char *dir_name)
 {
 #ifdef WIN32
-  return (::CreateDirectory(dir_name, NULL) != 0);
+	return (::CreateDirectory(dir_name, NULL) != 0);
 
 #else // UNIX or MACOSX
 
-  return (mkdir(dir_name, 0775) == 0);
+	return (mkdir(dir_name, 0775) == 0);
 #endif
 }
 
-u8_t *FileLoad(const char *filename, int *length)
+
+byte *FileLoad(const char *filename, int *length)
 {
-  *length = 0;
+	*length = 0;
 
-  FILE *fp = fopen(filename, "rb");
+	FILE *fp = fopen(filename, "rb");
 
-  if (! fp)
-    return NULL;
+	if (! fp)
+		return NULL;
 
-  // determine size of file (via seeking)
-  fseek(fp, 0, SEEK_END);
-  {
-    (*length) = (int)ftell(fp);
-  }
-  fseek(fp, 0, SEEK_SET);
+	// determine size of file (via seeking)
+	fseek(fp, 0, SEEK_END);
+	{
+		(*length) = (int)ftell(fp);
+	}
+	fseek(fp, 0, SEEK_SET);
 
-  if (ferror(fp) || *length < 0)
-  {
-    fclose(fp);
-    return NULL;
-  }
+	if (ferror(fp) || *length < 0)
+	{
+		fclose(fp);
+		return NULL;
+	}
 
-  u8_t *data = (u8_t *) malloc(*length + 1);
+	byte *data = (byte *) malloc(*length + 1);
 
-  if (! data)
-    AssertFail("Out of memory (%d bytes for FileLoad)\n", *length);
+	if (! data)
+		AssertFail("Out of memory (%d bytes for FileLoad)\n", *length);
 
-  // ensure buffer is NUL-terminated
-  data[*length] = 0;
+	// ensure buffer is NUL-terminated
+	data[*length] = 0;
 
-  if (1 != fread(data, *length, 1, fp))
-  {
-    FileFree(data);
-    fclose(fp);
-    return NULL;
-  }
+	if (1 != fread(data, *length, 1, fp))
+	{
+		FileFree(data);
+		fclose(fp);
+		return NULL;
+	}
 
-  fclose(fp);
+	fclose(fp);
 
-  return data;
+	return data;
 }
 
-void FileFree(u8_t *mem)
+
+void FileFree(const byte *mem)
 {
-  free((void*) mem);
+	if (mem)
+	{
+		free((void*) mem);
+	}
 }
 
 
@@ -337,56 +352,56 @@ void FileFree(u8_t *mem)
 bool PathIsDirectory(const char *path)
 {
 #ifdef WIN32
-  char old_dir[MAX_PATH+1];
+	char old_dir[MAX_PATH+1];
 
-  if (GetCurrentDirectory(MAX_PATH, (LPSTR)old_dir) == FALSE)
-      return false;
+	if (GetCurrentDirectory(MAX_PATH, (LPSTR)old_dir) == FALSE)
+		return false;
 
-  bool result = SetCurrentDirectory(path);
+	bool result = SetCurrentDirectory(path);
 
-  SetCurrentDirectory(old_dir);
+	SetCurrentDirectory(old_dir);
 
-  return result;
+	return result;
 
 #else // UNIX or MACOSX
 
-  struct stat finfo;
+	struct stat finfo;
 
-  if (stat(path, &finfo) != 0)
-    return false;
+	if (stat(path, &finfo) != 0)
+		return false;
 
-  return (S_ISDIR(finfo.st_mode)) ? true : false;
+	return (S_ISDIR(finfo.st_mode)) ? true : false;
 #endif
 }
 
 
 const char * FileFindInPath(const char *paths, const char *base_name)
 {
-  // search through the path list (separated by ';') to find the file.
-  // If found, the complete filename is returned (which must be freed
-  // using StringFree).  If not found, NULL is returned.
+	// search through the path list (separated by ';') to find the file.
+	// If found, the complete filename is returned (which must be freed
+	// using StringFree).  If not found, NULL is returned.
 
-  for (;;)
-  {
-    const char *sep = strchr(paths, ';');
-    int len = sep ? (sep - paths) : strlen(paths);
+	for (;;)
+	{
+		const char *sep = strchr(paths, ';');
+		int len = sep ? (sep - paths) : strlen(paths);
 
-    SYS_ASSERT(len > 0);
+		SYS_ASSERT(len > 0);
 
-    const char *filename = StringPrintf("%.*s/%s", len, paths, base_name);
+		const char *filename = StringPrintf("%.*s/%s", len, paths, base_name);
 
-//  fprintf(stderr, "Trying data file: [%s]\n", filename);
+		//  fprintf(stderr, "Trying data file: [%s]\n", filename);
 
-    if (FileExists(filename))
-      return filename;
+		if (FileExists(filename))
+			return filename;
 
-    StringFree(filename);
+		StringFree(filename);
 
-    if (! sep)
-      return NULL;  // not found
+		if (! sep)
+			return NULL;  // not found
 
-    paths = sep + 1;
-  }
+		paths = sep + 1;
+	}
 }
 
 
@@ -394,123 +409,123 @@ const char * FileFindInPath(const char *paths, const char *base_name)
 
 int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat)
 {
-  int count = 0;
+	int count = 0;
 
 #ifdef WIN32
 
-  // this is a bit clunky.  We set the current directory to the
-  // target and use FindFirstFile with "*.*" as the pattern. 
-  // Afterwards we restore the current directory.
+	// this is a bit clunky.  We set the current directory to the
+	// target and use FindFirstFile with "*.*" as the pattern. 
+	// Afterwards we restore the current directory.
 
-  char old_dir[MAX_PATH+1];
-  
-  if (GetCurrentDirectory(MAX_PATH, (LPSTR)old_dir) == FALSE)
-      return SCAN_ERROR;
+	char old_dir[MAX_PATH+1];
 
-  if (SetCurrentDirectory(path) == FALSE)
-    return SCAN_ERR_NoExist;
+	if (GetCurrentDirectory(MAX_PATH, (LPSTR)old_dir) == FALSE)
+		return SCAN_ERROR;
 
-  WIN32_FIND_DATA fdata;
+	if (SetCurrentDirectory(path) == FALSE)
+		return SCAN_ERR_NoExist;
 
-  HANDLE handle = FindFirstFile("*.*", &fdata);
-  if (handle == INVALID_HANDLE_VALUE)
-  {
-    SetCurrentDirectory(old_dir);
+	WIN32_FIND_DATA fdata;
 
-    return 0;  //??? (GetLastError() == ERROR_FILE_NOT_FOUND) ? 0 : SCAN_ERROR;
-  }
+	HANDLE handle = FindFirstFile("*.*", &fdata);
+	if (handle == INVALID_HANDLE_VALUE)
+	{
+		SetCurrentDirectory(old_dir);
 
-  do
-  {
-    int flags = 0;
+		return 0;  //??? (GetLastError() == ERROR_FILE_NOT_FOUND) ? 0 : SCAN_ERROR;
+	}
 
-    if (fdata.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-      flags |= SCAN_F_IsDir;
+	do
+	{
+		int flags = 0;
 
-    if (fdata.dwFileAttributes & FILE_ATTRIBUTE_READONLY)
-      flags |= SCAN_F_ReadOnly;
+		if (fdata.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+			flags |= SCAN_F_IsDir;
 
-    if (fdata.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN)
-      flags |= SCAN_F_Hidden;
+		if (fdata.dwFileAttributes & FILE_ATTRIBUTE_READONLY)
+			flags |= SCAN_F_ReadOnly;
 
-    // minor kludge for consistency with Unix
-    if (fdata.cFileName[0] == '.' && isalpha(fdata.cFileName[1]))
-      flags |= SCAN_F_Hidden;
+		if (fdata.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN)
+			flags |= SCAN_F_Hidden;
 
-    if (strcmp(fdata.cFileName, ".")  == 0 ||
-        strcmp(fdata.cFileName, "..") == 0)
-    {
-      // skip the funky "." and ".." dirs 
-    }
-    else
-    {
-      (* func)(fdata.cFileName, flags, priv_dat);
+		// minor kludge for consistency with Unix
+		if (fdata.cFileName[0] == '.' && isalpha(fdata.cFileName[1]))
+			flags |= SCAN_F_Hidden;
 
-      count++;
-    }
-  }
-  while (FindNextFile(handle, &fdata) != FALSE);
+		if (strcmp(fdata.cFileName, ".")  == 0 ||
+				strcmp(fdata.cFileName, "..") == 0)
+		{
+			// skip the funky "." and ".." dirs 
+		}
+		else
+		{
+			(* func)(fdata.cFileName, flags, priv_dat);
 
-  FindClose(handle);
+			count++;
+		}
+	}
+	while (FindNextFile(handle, &fdata) != FALSE);
 
-  SetCurrentDirectory(old_dir);
+	FindClose(handle);
+
+	SetCurrentDirectory(old_dir);
 
 
 #else // ---- UNIX ------------------------------------------------
 
-  DIR *handle = opendir(path);
-  if (handle == NULL)
-    return SCAN_ERR_NoExist;
+	DIR *handle = opendir(path);
+	if (handle == NULL)
+		return SCAN_ERR_NoExist;
 
-  for (;;)
-  {
-    const struct dirent *fdata = readdir(handle);
-    if (fdata == NULL)
-      break;
+	for (;;)
+	{
+		const struct dirent *fdata = readdir(handle);
+		if (fdata == NULL)
+			break;
 
-    if (strlen(fdata->d_name) == 0)
-      continue;
+		if (strlen(fdata->d_name) == 0)
+			continue;
 
-    // skip the funky "." and ".." dirs 
-    if (strcmp(fdata->d_name, ".")  == 0 ||
-        strcmp(fdata->d_name, "..") == 0)
-      continue;
-
-
-    const char *full_name = StringPrintf("%s/%s", path, fdata->d_name);
- 
-    struct stat finfo;
-
-    if (stat(full_name, &finfo) != 0)
-    {
-      DebugPrintf(".... stat failed: %s\n", strerror(errno));
-      StringFree(full_name);
-      continue;
-    }
-
-    StringFree(full_name);
+		// skip the funky "." and ".." dirs 
+		if (strcmp(fdata->d_name, ".")  == 0 ||
+				strcmp(fdata->d_name, "..") == 0)
+			continue;
 
 
-    int flags = 0;
+		const char *full_name = StringPrintf("%s/%s", path, fdata->d_name);
 
-    if (S_ISDIR(finfo.st_mode))
-      flags |= SCAN_F_IsDir;
+		struct stat finfo;
 
-    if ((finfo.st_mode & (S_IWUSR | S_IWGRP | S_IWOTH)) == 0)
-      flags |= SCAN_F_ReadOnly;
+		if (stat(full_name, &finfo) != 0)
+		{
+			DebugPrintf(".... stat failed: %s\n", strerror(errno));
+			StringFree(full_name);
+			continue;
+		}
 
-    if (fdata->d_name[0] == '.' && isalpha(fdata->d_name[1]))
-      flags |= SCAN_F_Hidden;
+		StringFree(full_name);
 
-    (* func)(fdata->d_name, flags, priv_dat);
 
-    count++;
-  }
+		int flags = 0;
 
-  closedir(handle);
+		if (S_ISDIR(finfo.st_mode))
+			flags |= SCAN_F_IsDir;
+
+		if ((finfo.st_mode & (S_IWUSR | S_IWGRP | S_IWOTH)) == 0)
+			flags |= SCAN_F_ReadOnly;
+
+		if (fdata->d_name[0] == '.' && isalpha(fdata->d_name[1]))
+			flags |= SCAN_F_Hidden;
+
+		(* func)(fdata->d_name, flags, priv_dat);
+
+		count++;
+	}
+
+	closedir(handle);
 #endif
 
-  return count;
+	return count;
 }
 
 
@@ -518,83 +533,83 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat)
 
 const char *GetExecutablePath(const char *argv0)
 {
-  char *path;
+	char *path;
 
 #ifdef WIN32
-  path = StringNew(PATH_MAX+2);
+	path = StringNew(PATH_MAX+2);
 
-  int length = GetModuleFileName(GetModuleHandle(NULL), path, PATH_MAX);
+	int length = GetModuleFileName(GetModuleHandle(NULL), path, PATH_MAX);
 
-  if (length > 0 && length < PATH_MAX)
-  {
-    if (access(path, 0) == 0)  // sanity check
-    {
-      FilenameStripBase(path);
-      return path;
-    }
-  }
+	if (length > 0 && length < PATH_MAX)
+	{
+		if (access(path, 0) == 0)  // sanity check
+		{
+			FilenameStripBase(path);
+			return path;
+		}
+	}
 
-  // didn't work, free the memory
-  StringFree(path);
+	// didn't work, free the memory
+	StringFree(path);
 #endif
 
 #ifdef UNIX
-  path = StringNew(PATH_MAX+2);
+	path = StringNew(PATH_MAX+2);
 
-  int length = readlink("/proc/self/exe", path, PATH_MAX);
+	int length = readlink("/proc/self/exe", path, PATH_MAX);
 
-  if (length > 0)
-  {
-    path[length] = 0; // add the missing NUL
+	if (length > 0)
+	{
+		path[length] = 0; // add the missing NUL
 
-    if (access(path, 0) == 0)  // sanity check
-    {
-      FilenameStripBase(path);
-      return path;
-    }
-  }
+		if (access(path, 0) == 0)  // sanity check
+		{
+			FilenameStripBase(path);
+			return path;
+		}
+	}
 
-  // didn't work, free the memory
-  StringFree(path);
+	// didn't work, free the memory
+	StringFree(path);
 #endif
 
 #ifdef MACOSX
-/*
-  from http://www.hmug.org/man/3/NSModule.html
+	/*
+	   from http://www.hmug.org/man/3/NSModule.html
 
-  extern int _NSGetExecutablePath(char *buf, unsigned long *bufsize);
+	   extern int _NSGetExecutablePath(char *buf, unsigned long *bufsize);
 
-  _NSGetExecutablePath copies the path of the executable
-  into the buffer and returns 0 if the path was successfully
-  copied in the provided buffer. If the buffer is not large
-  enough, -1 is returned and the expected buffer size is
-  copied in *bufsize.
-*/
-  int pathlen = PATH_MAX * 2;
+	   _NSGetExecutablePath copies the path of the executable
+	   into the buffer and returns 0 if the path was successfully
+	   copied in the provided buffer. If the buffer is not large
+	   enough, -1 is returned and the expected buffer size is
+	   copied in *bufsize.
+	 */
+	int pathlen = PATH_MAX * 2;
 
-  path = StringNew(pathlen+2);
+	path = StringNew(pathlen+2);
 
-  if (0 == _NSGetExecutablePath(path, &pathlen))
-  {
-    // FIXME: will this be _inside_ the .app folder???
-    FilenameStripBase(path);
-    return path;
-  }
-  
-  // didn't work, free the memory
-  StringFree(path);
+	if (0 == _NSGetExecutablePath(path, &pathlen))
+	{
+		// FIXME: will this be _inside_ the .app folder???
+		FilenameStripBase(path);
+		return path;
+	}
+
+	// didn't work, free the memory
+	StringFree(path);
 #endif
 
-  // fallback method: use argv[0]
-  path = StringDup(argv0);
+	// fallback method: use argv[0]
+	path = StringDup(argv0);
 
 #ifdef MACOSX
-  // FIXME: check if _inside_ the .app folder
+	// FIXME: check if _inside_ the .app folder
 #endif
-  
-  FilenameStripBase(path);
-  return path;
+
+	FilenameStripBase(path);
+	return path;
 }
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

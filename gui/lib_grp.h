@@ -52,16 +52,16 @@ void GRP_FinishLump(void);
 
 typedef struct
 {
-  char magic[12];
-  u32_t num_lumps;
+	char magic[12];
+	u32_t num_lumps;
 
 } PACKEDATTR raw_grp_header_t;
 
 
 typedef struct
 {
-  char name[12];
-  u32_t length;
+	char name[12];
+	u32_t length;
 
 } PACKEDATTR raw_grp_lump_t;
 
@@ -69,4 +69,4 @@ typedef struct
 #endif /* __OBLIGE_LIB_GRP_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

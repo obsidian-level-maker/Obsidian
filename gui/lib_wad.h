@@ -74,36 +74,36 @@ bool WAD2_AppendData(const void *data, int length);
 void WAD2_FinishLump(void);
 
 
-/* ----- WAD structure ---------------------- */
+/* ----- WAD structure (Doom) ---------------------- */
 
 typedef struct
 {
-  char magic[4];
+	char magic[4];
 
-  u32_t num_lumps;
-  u32_t dir_start;
+	u32_t num_lumps;
+	u32_t dir_start;
 
 } PACKEDATTR raw_wad_header_t;
 
 
 typedef struct
 {
-  u32_t start;
-  u32_t length;
+	u32_t start;
+	u32_t length;
 
-  char name[8];
+	char name[8];
 
 } PACKEDATTR raw_wad_lump_t;
 
 
-/* ----- WAD2 structures ---------------------- */
+/* ----- WAD2 structures (Quake) ---------------------- */
 
 typedef struct
 {
-  char magic[4];
+	char magic[4];
 
-  u32_t num_lumps;
-  u32_t dir_start;
+	u32_t num_lumps;
+	u32_t dir_start;
 
 } PACKEDATTR raw_wad2_header_t;
 
@@ -112,15 +112,15 @@ typedef struct
 
 typedef struct
 {
-  u32_t start;
-  u32_t length;  // compressed
-  u32_t u_len;   // uncompressed
+	u32_t start;
+	u32_t length;  // compressed
+	u32_t u_len;   // uncompressed
 
-  u8_t  type;
-  u8_t  compression;
-  u8_t  _pad[2];
+	u8_t  type;
+	u8_t  compression;
+	u8_t  _pad[2];
 
-  char  name[16];  // must be null terminated
+	char  name[16];  // must be null terminated
 
 } PACKEDATTR raw_wad2_lump_t;
 
@@ -144,4 +144,4 @@ typedef struct
 #endif /* __OBLIGE_LIB_WAD_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

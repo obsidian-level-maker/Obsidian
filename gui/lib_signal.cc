@@ -34,23 +34,23 @@
 class signal_pair_c
 {
 public:
-  const char *name;
-  
-  signal_notify_f func;
-  
-  void *priv_dat;
+	const char *name;
+
+	signal_notify_f func;
+
+	void *priv_dat;
 
 public:
-  signal_pair_c(const char *_name, signal_notify_f _func, void *_priv) :
-      func(_func), priv_dat(_priv)
-  {
-    name = StringDup(_name);
-  }
-  
-  ~signal_pair_c()
-  {
-    StringFree(name);
-  }
+	signal_pair_c(const char *_name, signal_notify_f _func, void *_priv) :
+		func(_func), priv_dat(_priv)
+	{
+		name = StringDup(_name);
+	}
+
+	~signal_pair_c()
+	{
+		StringFree(name);
+	}
 };
 
 
@@ -63,111 +63,111 @@ static const char * signal_in_progress = NULL;
 
 void Signal_Watch(const char *name, signal_notify_f func, void *priv_dat)
 {
-  // check if already exists
-  for (unsigned int i = 0; i < sig_list.size(); i++)
-  {
-    signal_pair_c *P = sig_list[i];
+	// check if already exists
+	for (unsigned int i = 0; i < sig_list.size(); i++)
+	{
+		signal_pair_c *P = sig_list[i];
 
-    if (strcmp(P->name, name) == 0 && P->func == func)
-    {
-      P->priv_dat = priv_dat;
-      return;
-    }
-  }
+		if (strcmp(P->name, name) == 0 && P->func == func)
+		{
+			P->priv_dat = priv_dat;
+			return;
+		}
+	}
 
-  sig_list.push_back(new signal_pair_c(name, func, priv_dat));
+	sig_list.push_back(new signal_pair_c(name, func, priv_dat));
 }
 
 
 void Signal_DontCare(const char *name, signal_notify_f func)
 {
-  for (unsigned int i = 0; i < sig_list.size(); i++)
-  {
-    signal_pair_c *P = sig_list[i];
+	for (unsigned int i = 0; i < sig_list.size(); i++)
+	{
+		signal_pair_c *P = sig_list[i];
 
-    if (strcmp(P->name, name) == 0 && P->func == func)
-    {
-      delete P;
-      sig_list[i] = NULL;
+		if (strcmp(P->name, name) == 0 && P->func == func)
+		{
+			delete P;
+			sig_list[i] = NULL;
 
-      break;
-    }
-  }
- 
-  // remove NULL pointer(s) from the list
-  std::vector<signal_pair_c *>::iterator ENDP;
+			break;
+		}
+	}
 
-  ENDP = std::remove(sig_list.begin(), sig_list.end(), (signal_pair_c*)NULL);
+	// remove NULL pointer(s) from the list
+	std::vector<signal_pair_c *>::iterator ENDP;
 
-  sig_list.erase(ENDP, sig_list.end());
+	ENDP = std::remove(sig_list.begin(), sig_list.end(), (signal_pair_c*)NULL);
+
+	sig_list.erase(ENDP, sig_list.end());
 }
 
 
 void Signal_Raise(const char *name)
 {
-  if (signal_in_progress)
-  {
+	if (signal_in_progress)
+	{
 #if 0
-    if (strcmp(signal_in_progress, name) == 0)
-    {
-      DebugPrintf("Signal '%s' raised when already in progress\n", name);
-      return;
-    }
+		if (strcmp(signal_in_progress, name) == 0)
+		{
+			DebugPrintf("Signal '%s' raised when already in progress\n", name);
+			return;
+		}
 #endif
 
-    std::list<const char *>::iterator LI;
+		std::list<const char *>::iterator LI;
 
-    for (LI = pending_sigs.begin(); LI != pending_sigs.end(); LI++)
-    {
-      if (strcmp(*LI, name) == 0)
-      {
-        DebugPrintf("Signal '%s' raised when already pending\n", name);
-        return;
-      }
-    }
+		for (LI = pending_sigs.begin(); LI != pending_sigs.end(); LI++)
+		{
+			if (strcmp(*LI, name) == 0)
+			{
+				DebugPrintf("Signal '%s' raised when already pending\n", name);
+				return;
+			}
+		}
 
-    pending_sigs.push_back(StringDup(name));
-    return;
-  }
+		pending_sigs.push_back(StringDup(name));
+		return;
+	}
 
-  int loop_count = 0;
+	int loop_count = 0;
 
-  // memory management strategy:
-  //   - copy names when added in the pending list
-  //   - free names after we perform a notification run
+	// memory management strategy:
+	//   - copy names when added in the pending list
+	//   - free names after we perform a notification run
 
-  name = StringDup(name);
+	name = StringDup(name);
 
-  for (;;)
-  {
-    loop_count++;
-    if (loop_count >= EXCESSIVE_LOOPS)
-      Main_FatalError("Signal_Raise(%s) : excessive looping!\n", name);
+	for (;;)
+	{
+		loop_count++;
+		if (loop_count >= EXCESSIVE_LOOPS)
+			Main_FatalError("Signal_Raise(%s) : excessive looping!\n", name);
 
-    signal_in_progress = name;
+		signal_in_progress = name;
 
-    for (unsigned int i = 0; i < sig_list.size(); i++)
-    {
-      signal_pair_c *P = sig_list[i];
+		for (unsigned int i = 0; i < sig_list.size(); i++)
+		{
+			signal_pair_c *P = sig_list[i];
 
-      if (strcmp(P->name, name) != 0)
-        continue;
-      
-      (* P->func)(name, P->priv_dat);
-    }
+			if (strcmp(P->name, name) != 0)
+				continue;
 
-    signal_in_progress = NULL;
+			(* P->func)(name, P->priv_dat);
+		}
 
-    StringFree(name);
+		signal_in_progress = NULL;
 
-    if (pending_sigs.empty())
-      break;
+		StringFree(name);
 
-    name = pending_sigs.front();
-    pending_sigs.pop_front();
-  }
+		if (pending_sigs.empty())
+			break;
+
+		name = pending_sigs.front();
+		pending_sigs.pop_front();
+	}
 }
 
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

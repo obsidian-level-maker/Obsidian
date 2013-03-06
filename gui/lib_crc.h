@@ -82,3 +82,6 @@ inline crc32_c& crc32_c::operator+= (bool value)
 }
 
 #endif // __LIB_CRC_H__
+
+//--- editor settings ---
+// vi:ts=4:sw=4:noexpandtab

@@ -97,3 +97,5 @@ crc32_c& crc32_c::AddCStr(const char *str)
 	return AddBlock((const u8_t *) str, (int)strlen(str));
 }
 
+//--- editor settings ---
+// vi:ts=4:sw=4:noexpandtab

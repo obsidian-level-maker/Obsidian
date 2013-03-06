@@ -43,8 +43,8 @@ bool FileDelete(const char *filename);
 bool FileChangeDir(const char *dir_name);
 bool FileMakeDir(const char *dir_name);
 
-u8_t *FileLoad(const char *filename, int *length);
-void FileFree(u8_t *mem);
+byte *FileLoad(const char *filename, int *length);
+void  FileFree(const byte *mem);
 
 const char * FileFindInPath(const char *paths, const char *base_name);
 
@@ -58,18 +58,18 @@ bool PathIsDirectory(const char *path);
 
 typedef enum
 {
-  SCAN_F_IsDir    = (1 << 0),
-  SCAN_F_Hidden   = (1 << 1),
-  SCAN_F_ReadOnly = (1 << 2),
+	SCAN_F_IsDir    = (1 << 0),
+	SCAN_F_Hidden   = (1 << 1),
+	SCAN_F_ReadOnly = (1 << 2),
 }
 scan_flags_e;
 
 typedef enum
 {
-  SCAN_ERROR = -1,  // general catch-all
+	SCAN_ERROR = -1,  // general catch-all
 
-  SCAN_ERR_NoExist  = -2,  // could not find given path
-  SCAN_ERR_NotDir   = -3,  // path was not a directory
+	SCAN_ERR_NoExist  = -2,  // could not find given path
+	SCAN_ERR_NotDir   = -3,  // path was not a directory
 }
 scan_error_e;
 
@@ -84,4 +84,4 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat);
 #endif /* __LIB_FILE_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

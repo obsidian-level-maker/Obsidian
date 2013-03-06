@@ -72,4 +72,4 @@ bool VectorSameDir(double dx1, double dy1, double dx2, double dy2);
 #endif /* __LIB_UTIL_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab
