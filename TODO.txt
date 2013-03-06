@@ -2,6 +2,7 @@
 OBLIGE TODO
 ===========
 
+
 ______________________________________________________________________
 
   HIGH PRIORITY
@@ -16,6 +17,8 @@ ______________________________________________________________________
 
 *  symmetrical rooms
 
+
+*  NSIS installer for Windows
 
 *  proper install for Unix / Linux systems
 
