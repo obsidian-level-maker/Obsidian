@@ -1277,11 +1277,11 @@ DOOM.SKINS =
   }
 
 
-  ---| WIDE CONNECTORS |---
+  ---| WIDE JOINERS |---
 
   Wide_TriPillar =
   {
-    _file   = "minihall/tri_pillar.wad"
+    _file   = "joiner/tri_pillar.wad"
     _shape  = "I"
     _fitted = "xy"
   }
