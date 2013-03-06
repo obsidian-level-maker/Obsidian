@@ -2874,9 +2874,9 @@ Areas_dump_vhr(R)
   local function fill_a_spot()
     local G = find_free_spot()
 
-    if not pick_a_pattern(G) then
+--    if not pick_a_pattern(G) then
       install_PLAIN(G)
-    end
+--    end
 
     G.used = true
 

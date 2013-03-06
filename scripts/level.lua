@@ -106,7 +106,6 @@ require "build"
 require "chunks"
 require "simple"
 require "hallway"
-require "z_pats"
 
 require "areas"
 require "room"
@@ -398,7 +397,6 @@ function Levels_setup()
   table.merge_missing(PARAM, GLOBAL_PARAMETERS)
 
   table.name_up(PREFAB)
-  table.name_up(AREA_PATTERNS)
 
   table.expand_copies(GAME.SKINS)
 end
