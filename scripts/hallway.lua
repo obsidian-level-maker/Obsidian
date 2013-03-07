@@ -468,659 +468,6 @@ function HALLWAY_CLASS.build(H)
 end
 
 
-----------------------------------------------------------------
-
-
-function Hallway_prepare()
-  local quota = 0
-
-  if STYLE.hallways != "none" then
-    local perc = style_sel("hallways", 0, 20, 50, 120)
-
-    quota = (MAP_W * MAP_H * rand.range(1, 2)) * perc / 100 - 1
-    
-    quota = int(quota)  -- round down
-  end
-
-  gui.printf("Hallway quota: %d sections\n", quota)
-
-  LEVEL.hall_quota = quota
-
-  -- big junctions are marked as "used" during the planning phase,
-  -- which simplifies that code.  But now we want to actually use
-  -- them, so mark them as free again.
-  for kx = 1,SECTION_W do for ky = 1,SECTION_H do
-    local K = SECTIONS[kx][ky]
-
-    if K.kind == "big_junc" then
-      K.used = false
-    end
-  end end
-end
-
-
-
-function Hallway_scan(start_K, start_dir, mode)
-
-  -- traces out all possible hallways (upto a certain length) from the
-  -- starting section and dir.  Each possible hallway is given a score,
-  -- and LEVEL.best_conn will remember the best hallway (over multiple
-  -- calls to this function).
-
-
-  local function test_nearby_hallway(MID)
-    if not (MID.hall or (MID.room and MID.room.street)) then return end
-
-    if MID.hall and MID.hall.big_junc then return false end
-
-    if not Connect_is_possible(start_K.room, MID.hall or MID.room, mode) then return end
-
-    local score = -100 - MID.num_conn - gui.random()
-
-    -- try damn hard to _not_ connect to crossover hallways
-    if MID.hall and MID.hall.crossover then
-      if mode != "emergency" then return false end
-
-      score = score - 500
-    end
-
-
-    -- score is now computed : test it
-
-    if score < LEVEL.best_conn.score then return end
-
-
-    -- OK --
-
-    local D1 = CONN_CLASS.new("normal", MID.hall or MID.room, start_K.room, 10 - start_dir)
-
-    D1.K1 = MID
-    D1.K2 = start_K
-
-
-    LEVEL.best_conn.D1 = D1
-    LEVEL.best_conn.D2 = nil
-    LEVEL.best_conn.hall  = nil
-    LEVEL.best_conn.score = score
-    LEVEL.best_conn.stats = {}
-    LEVEL.best_conn.merge = nil
-    LEVEL.best_conn.onto_hall_K = MID
-  end
-
-
-  local function test_hall_conn(end_K, end_dir, visited, stats)
-    local L1 = start_K.room or start_K.hall
-    local L2 = end_K.room or end_K.hall
-
-    if not L2 then return end
-
-    if not Connect_is_possible(L1, L2, mode) then return end
-
-    -- currently we only connect to secret rooms via a mini-hall
-    -- TODO: relax this
-    if mode == "secret_exit" and #visited != 1 then return end
-
-    -- only connect to a big junction straight off a room
-    if end_K.kind == "big_junc" and #visited != 1 then return end
-
-    -- never connect to the hallway "spokes" off a big junction
-    if end_K.kind != "big_junc" and end_K.hall and end_K.hall.big_junc then return end
-
-    -- never connect to secret halls or crossovers
-    if end_K.hall and end_K.hall.is_secret then return end
-    if end_K.hall and end_K.hall.crossover then return end
-
-    -- crossovers must be distinct (not same as start or end)
-    if stats.crossover and end_K.room == stats.crossover then return end
-
-    -- cycles must connect two rooms, not hallways
-    -- (that's because we don't want to merge and forget the cycle-ness)
-    -- TODO: relax this to allow connecting onto a big junction
-    if mode == "cycle" and end_K.hall then return end
-    
-    local merge = false
-
-    -- Note: currently _REQUIRE_ all hallways to merge, since there's no
-    --       logic for placing locked doors between two hallway prefabs
-    if end_K.hall then -- and rand.odds(95) then
-      merge = true
-    end
-
-    local score1 = start_K:eval_exit(start_dir)
-    local score2 =   end_K:eval_exit(  end_dir)
-    assert(score1 >= 0 and score2 >= 0)
-
-    local score = (score1 + score2) * 10
-
-    -- bonus for connecting to a central hub room
-    if L1.central_hub or (end_K.room and end_K.room.central_hub) then
-      score = score + 155
-    -- big bonus for using a big junction
-    elseif end_K.kind == "big_junc" then
-      score = score + 120
-      merge = true
-    elseif stats.big_junc then
-      score = score + 80
-      merge = false
-
-      if end_K.hall then return end
-    end
-
-    -- prefer secret exits DO NOT connect to the start room
-    if mode == "secret_exit" then
-      if L2.purpose == "START" then
-        score = score - 300
-      end
-      if L2.kind == "outdoor" then
-        score = score - 50
-      end
-    end
-
-    if stats.crossover then
-      local factor = style_sel("crossovers", 0, -10, 0, 300)
-      local len = 0
-      each K in visited do if K.used then len = len + 1 end end
-      score = score + (len ^ 0.25) * factor
-      merge = false
-      if end_K.hall then return end
-    end
-
-    -- prefer cycles between the same quest
-    local need_lock
-
-    if mode == "cycle" and
-       (L1.quest != L2.quest or
-        L1.purpose == "SOLUTION" or
-        L2.purpose == "SOLUTION")
-    then                    
-
-      if L1.quest != L2.quest then
-        local next_quest = L1.quest
-
-        if L2.quest.id > next_quest.id then
-          next_quest = L2.quest
-        end
-
-        assert(next_quest.entry_conn)
-
-        need_lock = assert(next_quest.entry_conn.lock)
-
-      else
-        -- shortcut out of a key room
-        assert(not (L1.purpose == "SOLUTION" and L2.purpose == "SOLUTION"))
-
-        if L1.purpose == "SOLUTION" then
-          need_lock = assert(L1.purpose_lock)
-        else
-          assert(L2.purpose == "SOLUTION")
-          need_lock = assert(L2.purpose_lock)
-        end
-      end
-
-      -- never make them if it would need a keyed door, but the game
-      -- uses up keys (since key is needed for original door).
-      if need_lock.kind == "KEY" and PARAM.lose_keys then
-        return
-      end
-
-      score = score - 40
-    end
-
-
-    -- score is now computed : test it
-
-    if score < LEVEL.best_conn.score then return end
-
-
-    -- OK --
-
-    local H = HALLWAY_CLASS.new()
-
-    H.sections = visited
-    H.conn_group = L1.conn_group
-
-    if end_K.kind == "big_junc" then
-      H.big_junc = end_K
-    else
-      H.big_junc = stats.big_junc
-    end
-
-    if mode == "secret_exit" then
-      H.is_secret = true
-      H.off_room  = L2
-    end
-
-    if stats.crossover then
-      H.crossover = stats.crossover
-    end
-
-    if merge and end_K.hall.crossover then
-      merge = false
-    end
-
-
-    local D1 = CONN_CLASS.new("normal", L1, H, start_dir)
-
-    D1.K1 = start_K
-    D1.K2 = H.sections[1]
-
-
-    -- Note: some code assumes that D2.L2 is the destination room/hall
-
-    local D2 = CONN_CLASS.new("normal", H, L2, 10 - end_dir)
-
-    D2.K1 = table.last(H.sections)
-    D2.K2 = end_K
-
-    -- need a secret door?
-    if mode == "secret_exit" then
-      D2.kind = "secret"
-    end
-
-
-    -- handle quest difference : need to lock door (cycles only)
-
-    if need_lock then
-      D2.lock = need_lock
-    end
-
-
-    LEVEL.best_conn.D1 = D1
-    LEVEL.best_conn.D2 = D2
-    LEVEL.best_conn.hall  = H
-    LEVEL.best_conn.score = score
-    LEVEL.best_conn.stats = stats
-    LEVEL.best_conn.merge = merge
-    LEVEL.best_conn.onto_hall_K = (end_K.hall ? end_K ; nil)
-  end
-
-
-  local function can_begin_crossover(K, N, stats)
-    if not PARAM.bridges then return false end
-
---!!!!!!!!!! CROSSOVERS CURRENTLY DISABLED
-do return false end
-
-    if STYLE.crossovers == "none" then return false end
-
-    -- never do crossovers for cycles (TODO: review this)
-    if mode == "cycle" then return false end
-
-    -- FIXME: LEVEL.crossover_quota
-
-    -- only enter the room at a junction (i.e. through a hallway channel)
-    if K.kind != "junction" then return false end
-
-    if not N.room then return false end
-
-    -- crossovers must be distinct (not same as start or end)
-    if N.room == start_K.room then return false end
-
-    -- limit of one per room
-    -- [cannot do more because crossovers limit the floor heights and
-    --  two crossovers can lead to an unsatisfiable range]
-    if N.room.crossover_hall then return false end
-
-    -- if re-entering a room, must be the same one!
-    if stats.crossover and N.room != stats.crossover then return false end
-
-    -- !!!! FIXME: caves are not yet Cross-Over friendly
-    if N.room.kind == "cave" then return false end
-
-    return true
-  end
-
-
-  local function hall_flow(K, from_dir, visited, stats, quota)
-    assert(K)
-
-    -- must be a free section except when crossing over a room
-    if not (stats.crossover and stats.crossover == K.room) then
-      assert(not K.used)
-    end
-
-    -- already part of hallway path?
-    if table.has_elem(visited, K) then return end
-
-    -- can only flow through a big junction when coming straight off
-    -- a room (i.e. ROOM --> MID --> BIG_JUNC).
-    if K.kind == "big_junc" and #visited != 1 then return end
-
-    -- no big junctions for cycles
-    if K.kind == "big_junc" and mode == "cycle" then return end
-
---stderrf("hall_flow: visited @ %s from:%d\n", K:tostr(), from_dir)
---stderrf("{\n")
-
-    -- FIXME REVIEW: this too soon?? (before the orig_kind checks)
-    table.insert(visited, K)
-
-    if K.kind == "big_junc" then
-      stats.big_junc = K
-    end
-
-    local is_junction
-
-    if K.orig_kind == "vert" or K.orig_kind == "horiz" then
-      -- ok
-    elseif K.orig_kind == "junction" or K.kind == "big_junc" then
-      is_junction = true
-    else
-      return  -- not a hallway section
-    end
-
-    for dir = 2,8,2 do
-      -- never able to go back the way we came
-      if dir == from_dir then continue end
-
-      local N = K:neighbor(dir)
-      if not N then continue end
-
-      if K.kind != "big_junc" and not K.used then
---stderrf("  testing conn @ dir:%d\n", dir)
-        test_hall_conn(N, 10 - dir, visited, stats)
-      end
-
-      -- too many hallways already?
-      if quota < 1 then continue end
-
-      -- limit length of big junctions
-      if stats.big_junc and #visited >= 3 then continue end
-
-      local do_cross = false
-
-      if N.used then
-        -- don't allow crossover to walk into another room
-        if K.used and N.room != stats.crossover then continue end
-
-        -- begin crossover?
-        if not K.used and not can_begin_crossover(K, N, stats) then continue end
-
-        do_cross = true
-      end
-
-      if (not is_junction) or K.used or geom.is_perpendic(dir, from_dir) or
-         K.kind == "big_junc" or mode == "emergency"
-      then
-
---stderrf("  recursing @ dir:%d\n", dir)
-        local new_stats = table.copy(stats)
-        if do_cross then new_stats.crossover = N.room end
-        local new_quota = quota - (N.used ? 0 ; 1)
-
-        hall_flow(N, 10 - dir, table.copy(visited), new_stats, new_quota)
-      end
-    end
---stderrf("}\n")
-  end
-
-
-  ---| Hallway_scan |---
-
-  -- always begin from a room
-  assert(start_K.room)
-
-  local MID = start_K:neighbor(start_dir)
-
-  if not MID then return end
-
-  -- if the neighboring section is already used, nothing is possible
-  -- except to branch off that section (which must be a hallway too).
-  if MID.used then
-    test_nearby_hallway(MID)
-    return
-  end
-
-  local quota = 4
-
-  if STYLE.hallways == "none"  then quota = 0 end
-  if STYLE.hallways == "heaps" then quota = 6 end
-
-  quota = math.min(quota, LEVEL.hall_quota)
-
-  -- when normal connection logic has failed, allow long hallways
-  if mode == "emergency" then quota = 8 end
-
-  hall_flow(MID, 10 - start_dir, {}, {}, quota)
-end
-
-
-
-function Hallway_add_doubles()
-  -- looks for places where a "double hallway" can be added.
-  -- these are where the hallways comes around two sides of a room
-  -- and connects on both sides (instead of straight on).
-
-  -- Note: this is done _after_ all the connections have been made
-  -- for two reasons:
-  --    (1) don't want these to block normal connections
-  --    (2) don't want other connections joining onto these
-
-  local function find_conn_for_double(K, dir)
-    each D in LEVEL.conns do
-      if D.kind == "normal" then
-        if D.K1 == K and D.dir1 == dir then return D end
-        if D.K2 == K and D.dir2 == dir then return D end
-      end
-    end
-
-    return nil
-  end
-
-
-  local function try_add_at_section(H, K, dir)
-    -- check if all the pieces we need are free
-    local  left_dir = geom.LEFT [dir]
-    local right_dir = geom.RIGHT[dir]
-
-    local  left_J = K:neighbor(left_dir)
-    local right_J = K:neighbor(right_dir)
-
-    if not  left_J or  left_J.used then return false end
-    if not right_J or right_J.used then return false end
-
-    local  left_K =  left_J:neighbor(dir)
-    local right_K = right_J:neighbor(dir)
-
-    if not  left_K or  left_K.used then return false end
-    if not right_K or right_K.used then return false end
-
-    -- hallway widths on each side must be the same
-    if geom.is_vert(dir) then
-      if left_K.sw != right_K.sw then return false end
-    else
-      if left_K.sh != right_K.sh then return false end
-    end
-
-    -- size check
-    local room_K = K:neighbor(dir)
-    if not room_K.room then return false end
-
-    -- rarely connect to caves
-    if room_K.room.kind == "cave" and rand.odds(80) then return false end
-
-    assert(room_K ==  left_K:neighbor(right_dir))
-    assert(room_K == right_K:neighbor( left_dir))
-
-    local long, deep = room_K.sw, room_K.sh
-    if geom.is_horiz(dir) then long, deep = deep, long end
-
-    if deep < 3 then return false end
-
-    -- fixme: this should not fail
-    local D1 = find_conn_for_double(K, dir)
-    if not D1 then return false end
-
-    -- never from/to secret exits
-    if D1.L1.purpose == "SECRET_EXIT" or
-       D1.L2.purpose == "SECRET_EXIT"
-    then return false end
-
-    -- don't have a pair of keyed doors if the game uses up keys
-    if PARAM.lose_keys and D1.lock and D1.lock.kind == "KEY" then
-      return false
-    end
-
-    -- less chance if entrance was locked 
-    local entry_D = find_conn_for_double(K, 10 - dir)
-
-    if entry_D and entry_D.lock then
-      if entry_D.lock.kind == "KEY" then return false end
-      if rand.odds(65) then return false end
-    end
-
-
-    ---- MAKE IT SO ----
-
-    gui.debugf("Double hallway @ %s dir:%d\n", K:tostr(), dir)
-
-    H.double_fork = K
-    H.double_dir  = dir
-
-    room_K.room.double_K   = room_K
-    room_K.room.double_dir = left_dir
-
-    -- update existing connection
-    D1.kind = "double_L"
-
-    local need_swap
-
-    if D1.K1 != K then need_swap = true ; D1:swap() end
-
-    assert(D1.K1 == K)
-    assert(D1.K2 == room_K)
-
-    D1.K1   = left_K
-    D1.dir1 = right_dir
-    D1.dir2 = 10 - right_dir
-
-    local D2 = CONN_CLASS.new("double_R", H, room_K.room, left_dir)
-
-    D2.K1 = right_K
-    D2.K2 = room_K
-
-    -- restore previous connection order
-    -- [this is needed now that doubles are done _after_ quests]
-    if need_swap then
-      D1:swap()
-      D2:swap()
-    end
-
-    -- make sure new connection has the same lock
-    D2.lock = D1.lock
-    
-    -- peer them up (not needed ATM, might be useful someday)
-    D1.double_peer = D2
-    D2.double_peer = D1
-
-    D2:add_it()
-
-    -- peer up the sections too
-     left_J.double_peer = right_J
-    right_J.double_peer =  left_J
-
-     left_K.double_peer = right_K
-    right_K.double_peer =  left_K
-
-    -- add new sections to hallway
-    H:add_section(left_J) ; H:add_section(right_J)
-    H:add_section(left_K) ; H:add_section(right_K)
-
-    left_J:set_hall(H) ; right_J:set_hall(H)
-    left_K:set_hall(H) ; right_K:set_hall(H)
-
-    -- update path through the sections
-    K.hall_link[dir] = nil
-    K.hall_link[left_dir]  = H
-    K.hall_link[right_dir] = H
-
-     left_J.hall_link[dir] = H
-    right_J.hall_link[dir] = H
-
-     left_J.hall_link[right_dir] = H
-    right_J.hall_link[ left_dir] = H
-
-     left_K.hall_link[10-dir] = H
-    right_K.hall_link[10-dir] = H
-
-     left_K.hall_link[right_dir] = room_K.room
-    right_K.hall_link[ left_dir] = room_K.room
-
-    return true
-  end
-
-
-  local function try_add_double(H)
-    if #H.sections != 1 then return end
-
-    -- never create for cycles, it complicates the height adjusting logic too much
-    if H.is_cycle then return end
-
-    local SIDES = { 2,4,6,8 }
-    rand.shuffle(SIDES)
-
-    each dir in SIDES do
-      local K = H.sections[1]
-
-      if try_add_at_section(H, K, dir) then
-        return true
-      end
-    end
-
-    return false
-  end
-
-
-  --| Hallway_add_doubles |--
-
-  local quota = MAP_W / 2 + gui.random()
-
-  local visits = table.copy(LEVEL.halls)
-  rand.shuffle(visits)  -- score and sort them??
-
-  each H in visits do
-    if quota < 1 then break end
-
-    if try_add_double(H) then
-      quota = quota - 1
-    end
-  end
-end
-
-
-function Hallway_add_streets()
-  if LEVEL.special != "street" then return end
-
-  local room = ROOM_CLASS.new()
-
-  room.kind = "outdoor"
-  room.street  = true
-  room.conn_group = 999
-
-  for kx = 1,SECTION_W do for ky = 1,SECTION_H do
-    local K = SECTIONS[kx][ky]
-
-    if K and not K.used then
----   if K.kind == "vert"  and (kx == 1 or kx == SECTION_W) then continue end
----   if K.kind == "horiz" and (ky == 1 or ky == SECTION_H) then continue end
-
-      K:set_room(room)
-
-      room:add_section(K)
-      room:fill_section(K)
-
-      room.map_volume = (room.map_volume or 0) + 0.5
-    end
-  end end
-
-  -- give each room an apparent height
-  each R in LEVEL.rooms do
-    R.street_inner_h = rand.pick { 160, 192, 224, 256, 288 }
-  end
-end
-
-
-
 --------------------------------------------------------------------
 
 
@@ -1790,6 +1137,659 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
 
   if H.crossover then
     H:limit_crossed_room()
+  end
+end
+
+
+----------------------------------------------------------------
+
+
+function Hallway_prepare()
+  local quota = 0
+
+  if STYLE.hallways != "none" then
+    local perc = style_sel("hallways", 0, 20, 50, 120)
+
+    quota = (MAP_W * MAP_H * rand.range(1, 2)) * perc / 100 - 1
+    
+    quota = int(quota)  -- round down
+  end
+
+  gui.printf("Hallway quota: %d sections\n", quota)
+
+  LEVEL.hall_quota = quota
+
+  -- big junctions are marked as "used" during the planning phase,
+  -- which simplifies that code.  But now we want to actually use
+  -- them, so mark them as free again.
+  for kx = 1,SECTION_W do for ky = 1,SECTION_H do
+    local K = SECTIONS[kx][ky]
+
+    if K.kind == "big_junc" then
+      K.used = false
+    end
+  end end
+end
+
+
+
+function Hallway_scan(start_K, start_dir, mode)
+
+  -- traces out all possible hallways (upto a certain length) from the
+  -- starting section and dir.  Each possible hallway is given a score,
+  -- and LEVEL.best_conn will remember the best hallway (over multiple
+  -- calls to this function).
+
+
+  local function test_nearby_hallway(MID)
+    if not (MID.hall or (MID.room and MID.room.street)) then return end
+
+    if MID.hall and MID.hall.big_junc then return false end
+
+    if not Connect_is_possible(start_K.room, MID.hall or MID.room, mode) then return end
+
+    local score = -100 - MID.num_conn - gui.random()
+
+    -- try damn hard to _not_ connect to crossover hallways
+    if MID.hall and MID.hall.crossover then
+      if mode != "emergency" then return false end
+
+      score = score - 500
+    end
+
+
+    -- score is now computed : test it
+
+    if score < LEVEL.best_conn.score then return end
+
+
+    -- OK --
+
+    local D1 = CONN_CLASS.new("normal", MID.hall or MID.room, start_K.room, 10 - start_dir)
+
+    D1.K1 = MID
+    D1.K2 = start_K
+
+
+    LEVEL.best_conn.D1 = D1
+    LEVEL.best_conn.D2 = nil
+    LEVEL.best_conn.hall  = nil
+    LEVEL.best_conn.score = score
+    LEVEL.best_conn.stats = {}
+    LEVEL.best_conn.merge = nil
+    LEVEL.best_conn.onto_hall_K = MID
+  end
+
+
+  local function test_hall_conn(end_K, end_dir, visited, stats)
+    local L1 = start_K.room or start_K.hall
+    local L2 = end_K.room or end_K.hall
+
+    if not L2 then return end
+
+    if not Connect_is_possible(L1, L2, mode) then return end
+
+    -- currently we only connect to secret rooms via a mini-hall
+    -- TODO: relax this
+    if mode == "secret_exit" and #visited != 1 then return end
+
+    -- only connect to a big junction straight off a room
+    if end_K.kind == "big_junc" and #visited != 1 then return end
+
+    -- never connect to the hallway "spokes" off a big junction
+    if end_K.kind != "big_junc" and end_K.hall and end_K.hall.big_junc then return end
+
+    -- never connect to secret halls or crossovers
+    if end_K.hall and end_K.hall.is_secret then return end
+    if end_K.hall and end_K.hall.crossover then return end
+
+    -- crossovers must be distinct (not same as start or end)
+    if stats.crossover and end_K.room == stats.crossover then return end
+
+    -- cycles must connect two rooms, not hallways
+    -- (that's because we don't want to merge and forget the cycle-ness)
+    -- TODO: relax this to allow connecting onto a big junction
+    if mode == "cycle" and end_K.hall then return end
+    
+    local merge = false
+
+    -- Note: currently _REQUIRE_ all hallways to merge, since there's no
+    --       logic for placing locked doors between two hallway prefabs
+    if end_K.hall then -- and rand.odds(95) then
+      merge = true
+    end
+
+    local score1 = start_K:eval_exit(start_dir)
+    local score2 =   end_K:eval_exit(  end_dir)
+    assert(score1 >= 0 and score2 >= 0)
+
+    local score = (score1 + score2) * 10
+
+    -- bonus for connecting to a central hub room
+    if L1.central_hub or (end_K.room and end_K.room.central_hub) then
+      score = score + 155
+    -- big bonus for using a big junction
+    elseif end_K.kind == "big_junc" then
+      score = score + 120
+      merge = true
+    elseif stats.big_junc then
+      score = score + 80
+      merge = false
+
+      if end_K.hall then return end
+    end
+
+    -- prefer secret exits DO NOT connect to the start room
+    if mode == "secret_exit" then
+      if L2.purpose == "START" then
+        score = score - 300
+      end
+      if L2.kind == "outdoor" then
+        score = score - 50
+      end
+    end
+
+    if stats.crossover then
+      local factor = style_sel("crossovers", 0, -10, 0, 300)
+      local len = 0
+      each K in visited do if K.used then len = len + 1 end end
+      score = score + (len ^ 0.25) * factor
+      merge = false
+      if end_K.hall then return end
+    end
+
+    -- prefer cycles between the same quest
+    local need_lock
+
+    if mode == "cycle" and
+       (L1.quest != L2.quest or
+        L1.purpose == "SOLUTION" or
+        L2.purpose == "SOLUTION")
+    then                    
+
+      if L1.quest != L2.quest then
+        local next_quest = L1.quest
+
+        if L2.quest.id > next_quest.id then
+          next_quest = L2.quest
+        end
+
+        assert(next_quest.entry_conn)
+
+        need_lock = assert(next_quest.entry_conn.lock)
+
+      else
+        -- shortcut out of a key room
+        assert(not (L1.purpose == "SOLUTION" and L2.purpose == "SOLUTION"))
+
+        if L1.purpose == "SOLUTION" then
+          need_lock = assert(L1.purpose_lock)
+        else
+          assert(L2.purpose == "SOLUTION")
+          need_lock = assert(L2.purpose_lock)
+        end
+      end
+
+      -- never make them if it would need a keyed door, but the game
+      -- uses up keys (since key is needed for original door).
+      if need_lock.kind == "KEY" and PARAM.lose_keys then
+        return
+      end
+
+      score = score - 40
+    end
+
+
+    -- score is now computed : test it
+
+    if score < LEVEL.best_conn.score then return end
+
+
+    -- OK --
+
+    local H = HALLWAY_CLASS.new()
+
+    H.sections = visited
+    H.conn_group = L1.conn_group
+
+    if end_K.kind == "big_junc" then
+      H.big_junc = end_K
+    else
+      H.big_junc = stats.big_junc
+    end
+
+    if mode == "secret_exit" then
+      H.is_secret = true
+      H.off_room  = L2
+    end
+
+    if stats.crossover then
+      H.crossover = stats.crossover
+    end
+
+    if merge and end_K.hall.crossover then
+      merge = false
+    end
+
+
+    local D1 = CONN_CLASS.new("normal", L1, H, start_dir)
+
+    D1.K1 = start_K
+    D1.K2 = H.sections[1]
+
+
+    -- Note: some code assumes that D2.L2 is the destination room/hall
+
+    local D2 = CONN_CLASS.new("normal", H, L2, 10 - end_dir)
+
+    D2.K1 = table.last(H.sections)
+    D2.K2 = end_K
+
+    -- need a secret door?
+    if mode == "secret_exit" then
+      D2.kind = "secret"
+    end
+
+
+    -- handle quest difference : need to lock door (cycles only)
+
+    if need_lock then
+      D2.lock = need_lock
+    end
+
+
+    LEVEL.best_conn.D1 = D1
+    LEVEL.best_conn.D2 = D2
+    LEVEL.best_conn.hall  = H
+    LEVEL.best_conn.score = score
+    LEVEL.best_conn.stats = stats
+    LEVEL.best_conn.merge = merge
+    LEVEL.best_conn.onto_hall_K = (end_K.hall ? end_K ; nil)
+  end
+
+
+  local function can_begin_crossover(K, N, stats)
+    if not PARAM.bridges then return false end
+
+--!!!!!!!!!! CROSSOVERS CURRENTLY DISABLED
+do return false end
+
+    if STYLE.crossovers == "none" then return false end
+
+    -- never do crossovers for cycles (TODO: review this)
+    if mode == "cycle" then return false end
+
+    -- FIXME: LEVEL.crossover_quota
+
+    -- only enter the room at a junction (i.e. through a hallway channel)
+    if K.kind != "junction" then return false end
+
+    if not N.room then return false end
+
+    -- crossovers must be distinct (not same as start or end)
+    if N.room == start_K.room then return false end
+
+    -- limit of one per room
+    -- [cannot do more because crossovers limit the floor heights and
+    --  two crossovers can lead to an unsatisfiable range]
+    if N.room.crossover_hall then return false end
+
+    -- if re-entering a room, must be the same one!
+    if stats.crossover and N.room != stats.crossover then return false end
+
+    -- !!!! FIXME: caves are not yet Cross-Over friendly
+    if N.room.kind == "cave" then return false end
+
+    return true
+  end
+
+
+  local function hall_flow(K, from_dir, visited, stats, quota)
+    assert(K)
+
+    -- must be a free section except when crossing over a room
+    if not (stats.crossover and stats.crossover == K.room) then
+      assert(not K.used)
+    end
+
+    -- already part of hallway path?
+    if table.has_elem(visited, K) then return end
+
+    -- can only flow through a big junction when coming straight off
+    -- a room (i.e. ROOM --> MID --> BIG_JUNC).
+    if K.kind == "big_junc" and #visited != 1 then return end
+
+    -- no big junctions for cycles
+    if K.kind == "big_junc" and mode == "cycle" then return end
+
+--stderrf("hall_flow: visited @ %s from:%d\n", K:tostr(), from_dir)
+--stderrf("{\n")
+
+    -- FIXME REVIEW: this too soon?? (before the orig_kind checks)
+    table.insert(visited, K)
+
+    if K.kind == "big_junc" then
+      stats.big_junc = K
+    end
+
+    local is_junction
+
+    if K.orig_kind == "vert" or K.orig_kind == "horiz" then
+      -- ok
+    elseif K.orig_kind == "junction" or K.kind == "big_junc" then
+      is_junction = true
+    else
+      return  -- not a hallway section
+    end
+
+    for dir = 2,8,2 do
+      -- never able to go back the way we came
+      if dir == from_dir then continue end
+
+      local N = K:neighbor(dir)
+      if not N then continue end
+
+      if K.kind != "big_junc" and not K.used then
+--stderrf("  testing conn @ dir:%d\n", dir)
+        test_hall_conn(N, 10 - dir, visited, stats)
+      end
+
+      -- too many hallways already?
+      if quota < 1 then continue end
+
+      -- limit length of big junctions
+      if stats.big_junc and #visited >= 3 then continue end
+
+      local do_cross = false
+
+      if N.used then
+        -- don't allow crossover to walk into another room
+        if K.used and N.room != stats.crossover then continue end
+
+        -- begin crossover?
+        if not K.used and not can_begin_crossover(K, N, stats) then continue end
+
+        do_cross = true
+      end
+
+      if (not is_junction) or K.used or geom.is_perpendic(dir, from_dir) or
+         K.kind == "big_junc" or mode == "emergency"
+      then
+
+--stderrf("  recursing @ dir:%d\n", dir)
+        local new_stats = table.copy(stats)
+        if do_cross then new_stats.crossover = N.room end
+        local new_quota = quota - (N.used ? 0 ; 1)
+
+        hall_flow(N, 10 - dir, table.copy(visited), new_stats, new_quota)
+      end
+    end
+--stderrf("}\n")
+  end
+
+
+  ---| Hallway_scan |---
+
+  -- always begin from a room
+  assert(start_K.room)
+
+  local MID = start_K:neighbor(start_dir)
+
+  if not MID then return end
+
+  -- if the neighboring section is already used, nothing is possible
+  -- except to branch off that section (which must be a hallway too).
+  if MID.used then
+    test_nearby_hallway(MID)
+    return
+  end
+
+  local quota = 4
+
+  if STYLE.hallways == "none"  then quota = 0 end
+  if STYLE.hallways == "heaps" then quota = 6 end
+
+  quota = math.min(quota, LEVEL.hall_quota)
+
+  -- when normal connection logic has failed, allow long hallways
+  if mode == "emergency" then quota = 8 end
+
+  hall_flow(MID, 10 - start_dir, {}, {}, quota)
+end
+
+
+
+function Hallway_add_doubles()
+
+  -- looks for places where a "double hallway" can be added.
+  -- these are where the hallways comes around two sides of a room
+  -- and connects on both sides (instead of straight on).
+
+  -- Note: this is done _after_ all the connections have been made
+  -- for two reasons:
+  --    (1) don't want these to block normal connections
+  --    (2) don't want other connections joining onto these
+
+  local function find_conn_for_double(K, dir)
+    each D in LEVEL.conns do
+      if D.kind == "normal" then
+        if D.K1 == K and D.dir1 == dir then return D end
+        if D.K2 == K and D.dir2 == dir then return D end
+      end
+    end
+
+    return nil
+  end
+
+
+  local function try_add_at_section(H, K, dir)
+    -- check if all the pieces we need are free
+    local  left_dir = geom.LEFT [dir]
+    local right_dir = geom.RIGHT[dir]
+
+    local  left_J = K:neighbor(left_dir)
+    local right_J = K:neighbor(right_dir)
+
+    if not  left_J or  left_J.used then return false end
+    if not right_J or right_J.used then return false end
+
+    local  left_K =  left_J:neighbor(dir)
+    local right_K = right_J:neighbor(dir)
+
+    if not  left_K or  left_K.used then return false end
+    if not right_K or right_K.used then return false end
+
+    -- hallway widths on each side must be the same
+    if geom.is_vert(dir) then
+      if left_K.sw != right_K.sw then return false end
+    else
+      if left_K.sh != right_K.sh then return false end
+    end
+
+    -- size check
+    local room_K = K:neighbor(dir)
+    if not room_K.room then return false end
+
+    -- rarely connect to caves
+    if room_K.room.kind == "cave" and rand.odds(80) then return false end
+
+    assert(room_K ==  left_K:neighbor(right_dir))
+    assert(room_K == right_K:neighbor( left_dir))
+
+    local long, deep = room_K.sw, room_K.sh
+    if geom.is_horiz(dir) then long, deep = deep, long end
+
+    if deep < 3 then return false end
+
+    -- fixme: this should not fail
+    local D1 = find_conn_for_double(K, dir)
+    if not D1 then return false end
+
+    -- never from/to secret exits
+    if D1.L1.purpose == "SECRET_EXIT" or
+       D1.L2.purpose == "SECRET_EXIT"
+    then return false end
+
+    -- don't have a pair of keyed doors if the game uses up keys
+    if PARAM.lose_keys and D1.lock and D1.lock.kind == "KEY" then
+      return false
+    end
+
+    -- less chance if entrance was locked 
+    local entry_D = find_conn_for_double(K, 10 - dir)
+
+    if entry_D and entry_D.lock then
+      if entry_D.lock.kind == "KEY" then return false end
+      if rand.odds(65) then return false end
+    end
+
+
+    ---- MAKE IT SO ----
+
+    gui.debugf("Double hallway @ %s dir:%d\n", K:tostr(), dir)
+
+    H.double_fork = K
+    H.double_dir  = dir
+
+    room_K.room.double_K   = room_K
+    room_K.room.double_dir = left_dir
+
+    -- update existing connection
+    D1.kind = "double_L"
+
+    local need_swap
+
+    if D1.K1 != K then need_swap = true ; D1:swap() end
+
+    assert(D1.K1 == K)
+    assert(D1.K2 == room_K)
+
+    D1.K1   = left_K
+    D1.dir1 = right_dir
+    D1.dir2 = 10 - right_dir
+
+    local D2 = CONN_CLASS.new("double_R", H, room_K.room, left_dir)
+
+    D2.K1 = right_K
+    D2.K2 = room_K
+
+    -- restore previous connection order
+    -- [this is needed now that doubles are done _after_ quests]
+    if need_swap then
+      D1:swap()
+      D2:swap()
+    end
+
+    -- make sure new connection has the same lock
+    D2.lock = D1.lock
+    
+    -- peer them up (not needed ATM, might be useful someday)
+    D1.double_peer = D2
+    D2.double_peer = D1
+
+    D2:add_it()
+
+    -- peer up the sections too
+     left_J.double_peer = right_J
+    right_J.double_peer =  left_J
+
+     left_K.double_peer = right_K
+    right_K.double_peer =  left_K
+
+    -- add new sections to hallway
+    H:add_section(left_J) ; H:add_section(right_J)
+    H:add_section(left_K) ; H:add_section(right_K)
+
+    left_J:set_hall(H) ; right_J:set_hall(H)
+    left_K:set_hall(H) ; right_K:set_hall(H)
+
+    -- update path through the sections
+    K.hall_link[dir] = nil
+    K.hall_link[left_dir]  = H
+    K.hall_link[right_dir] = H
+
+     left_J.hall_link[dir] = H
+    right_J.hall_link[dir] = H
+
+     left_J.hall_link[right_dir] = H
+    right_J.hall_link[ left_dir] = H
+
+     left_K.hall_link[10-dir] = H
+    right_K.hall_link[10-dir] = H
+
+     left_K.hall_link[right_dir] = room_K.room
+    right_K.hall_link[ left_dir] = room_K.room
+
+    return true
+  end
+
+
+  local function try_add_double(H)
+    if #H.sections != 1 then return end
+
+    -- never create for cycles, it complicates the height adjusting logic too much
+    if H.is_cycle then return end
+
+    local SIDES = { 2,4,6,8 }
+    rand.shuffle(SIDES)
+
+    each dir in SIDES do
+      local K = H.sections[1]
+
+      if try_add_at_section(H, K, dir) then
+        return true
+      end
+    end
+
+    return false
+  end
+
+
+  --| Hallway_add_doubles |--
+
+  local quota = MAP_W / 2 + gui.random()
+
+  local visits = table.copy(LEVEL.halls)
+  rand.shuffle(visits)  -- score and sort them??
+
+  each H in visits do
+    if quota < 1 then break end
+
+    if try_add_double(H) then
+      quota = quota - 1
+    end
+  end
+end
+
+
+function Hallway_add_streets()
+  if LEVEL.special != "street" then return end
+
+  local room = ROOM_CLASS.new()
+
+  room.kind = "outdoor"
+  room.street  = true
+  room.conn_group = 999
+
+  for kx = 1,SECTION_W do for ky = 1,SECTION_H do
+    local K = SECTIONS[kx][ky]
+
+    if K and not K.used then
+---   if K.kind == "vert"  and (kx == 1 or kx == SECTION_W) then continue end
+---   if K.kind == "horiz" and (ky == 1 or ky == SECTION_H) then continue end
+
+      K:set_room(room)
+
+      room:add_section(K)
+      room:fill_section(K)
+
+      room.map_volume = (room.map_volume or 0) + 0.5
+    end
+  end end
+
+  -- give each room an apparent height
+  each R in LEVEL.rooms do
+    R.street_inner_h = rand.pick { 160, 192, 224, 256, 288 }
   end
 end
 
