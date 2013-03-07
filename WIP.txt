@@ -6,13 +6,6 @@ WORK IN PROGRESS
 !!  proper Unixy compile/install in Linux
 
 
--  group regions: if untagged (so grouped by floor brush) then
-   check if floor brush's mid point is valid (lies inside one of the
-   regions) -- if valid, use only that point for lighting calc.
-
-   [or: use average coord of group for lighting calc]
-
-
 -  tri_pillar
 
 
