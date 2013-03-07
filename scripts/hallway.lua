@@ -371,7 +371,7 @@ function HALLWAY_CLASS.select_piece(H, C)
     end
   end
 
-  if C.section.kind == "big_junc" then
+  if C.section.shape == "big_junc" then
     local biggies = THEME.big_junctions
     assert(biggies)
 
@@ -523,7 +523,7 @@ function HALLWAY_CLASS.try_add_middle_chunk(H, K)
   local sx1, sy1 = K.sx1, K.sy1
   local sx2, sy2 = K.sx2, K.sy2
 
-  if K.shape == "junction" or K.kind == "big_junc" or
+  if K.shape == "junction" or K.shape == "big_junc" or
      K.double_peer or rand.odds(20)
   then
     -- use the whole section
@@ -676,7 +676,7 @@ function HALLWAY_CLASS.link_chunks(H)
       H:try_link_chunk(C, 2)
       H:try_link_chunk(C, 8)
 
-    elseif C.section.kind == "big_junc" then
+    elseif C.section.shape == "big_junc" then
       for dir = 2,8,2 do
         H:try_link_chunk(C, dir)
       end
@@ -781,7 +781,7 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
 
   local floor_heights = {}  -- indexed by [dir]
 
-  if C.section.kind == "big_junc" then
+  if C.section.shape == "big_junc" then
     C.skin_name = H:select_piece(C)
 
     local skin = assert(GAME.SKINS[C.skin_name])
@@ -894,7 +894,7 @@ function HALLWAY_CLASS.cycle_flow(H, C, from_dir, z, i_deltas, seen)
 
   local climb_h = math.min(PARAM.jump_height, 32)
 
-  if C.h_shape == "I" and C.section.kind != "big_junc" and
+  if C.h_shape == "I" and C.section.shape != "big_junc" and
      not C.crossover_hall
   then
     local dz = table.remove(i_deltas, 1)
@@ -1158,17 +1158,6 @@ function Hallway_prepare()
   gui.printf("Hallway quota: %d sections\n", quota)
 
   LEVEL.hall_quota = quota
-
-  -- big junctions are marked as "used" during the planning phase,
-  -- which simplifies that code.  But now we want to actually use
-  -- them, so mark them as free again.
-  for kx = 1,SECTION_W do for ky = 1,SECTION_H do
-    local K = SECTIONS[kx][ky]
-
-    if K.kind == "big_junc" then
-      K.used = false
-    end
-  end end
 end
 
 
@@ -1234,10 +1223,10 @@ function Hallway_scan(start_K, start_dir, mode)
     if mode == "secret_exit" and #visited != 1 then return end
 
     -- only connect to a big junction straight off a room
-    if end_K.kind == "big_junc" and #visited != 1 then return end
+    if end_K.shape == "big_junc" and #visited != 1 then return end
 
     -- never connect to the hallway "spokes" off a big junction
-    if end_K.kind != "big_junc" and end_K.hall and end_K.hall.big_junc then return end
+    if end_K.shape != "big_junc" and end_K.hall and end_K.hall.big_junc then return end
 
     -- never connect to secret halls or crossovers
     if end_K.hall and end_K.hall.is_secret then return end
@@ -1269,7 +1258,7 @@ function Hallway_scan(start_K, start_dir, mode)
     if L1.central_hub or (end_K.room and end_K.room.central_hub) then
       score = score + 155
     -- big bonus for using a big junction
-    elseif end_K.kind == "big_junc" then
+    elseif end_K.shape == "big_junc" then
       score = score + 120
       merge = true
     elseif stats.big_junc then
@@ -1352,7 +1341,7 @@ function Hallway_scan(start_K, start_dir, mode)
     H.sections = visited
     H.conn_group = L1.conn_group
 
-    if end_K.kind == "big_junc" then
+    if end_K.shape == "big_junc" then
       H.big_junc = end_K
     else
       H.big_junc = stats.big_junc
@@ -1457,10 +1446,10 @@ do return false end
 
     -- can only flow through a big junction when coming straight off
     -- a room (i.e. ROOM --> MID --> BIG_JUNC).
-    if K.kind == "big_junc" and #visited != 1 then return end
+    if K.shape == "big_junc" and #visited != 1 then return end
 
     -- no big junctions for cycles
-    if K.kind == "big_junc" and mode == "cycle" then return end
+    if K.shape == "big_junc" and mode == "cycle" then return end
 
 --stderrf("hall_flow: visited @ %s from:%d\n", K:tostr(), from_dir)
 --stderrf("{\n")
@@ -1468,7 +1457,7 @@ do return false end
     -- FIXME REVIEW: this too soon?? (before the orig_kind checks)
     table.insert(visited, K)
 
-    if K.kind == "big_junc" then
+    if K.shape == "big_junc" then
       stats.big_junc = K
     end
 
@@ -1476,7 +1465,7 @@ do return false end
 
     if K.shape == "vert" or K.shape == "horiz" then
       -- ok
-    elseif K.shape == "junction" or K.kind == "big_junc" then
+    elseif K.shape == "junction" or K.shape == "big_junc" then
       is_junction = true
     else
       return  -- not a hallway section
@@ -1489,7 +1478,7 @@ do return false end
       local N = K:neighbor(dir)
       if not N then continue end
 
-      if K.kind != "big_junc" and not K.used then
+      if K.shape != "big_junc" and not K.used then
 --stderrf("  testing conn @ dir:%d\n", dir)
         test_hall_conn(N, 10 - dir, visited, stats)
       end
@@ -1513,7 +1502,7 @@ do return false end
       end
 
       if (not is_junction) or K.used or geom.is_perpendic(dir, from_dir) or
-         K.kind == "big_junc" or mode == "emergency"
+         K.shape == "big_junc" or mode == "emergency"
       then
 
 --stderrf("  recursing @ dir:%d\n", dir)

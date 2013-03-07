@@ -249,7 +249,7 @@ function Plan_count_free_room_sections()
   for mx = 1,MAP_W do for my = 1,MAP_H do
     local K = Section_get_room(mx, my)
 
-    if not K.used then
+    if K:usable_for_room() then
       count = count + 1
     end
   end end
@@ -265,7 +265,7 @@ function Plan_get_visit_list()
   for mx = 1,MAP_W do for my = 1,MAP_H do
     local K = Section_get_room(mx, my)
 
-    if not K.used then
+    if K:usable_for_room() then
       table.insert(visits, { mx=mx, my=my, K=K })
     end
   end end
@@ -284,15 +284,15 @@ function Plan_dump_sections(title)
     if not K then return ' ' end
 
     if K.hall then return '#' end
-    if K.shape == "junction" then return '+' end
+
     if K.shape == "vert"     then return '|' end
     if K.shape == "horiz"    then return '-' end
-
-    if K.kind == "big_junc" then return '*' end
+    if K.shape == "junction" then return '+' end
+    if K.shape == "big_junc" then return '*' end
 
     if not K.used then return '.' end
     if not K.room then return '?' end
-    
+
     local R = assert(K.room)
 
     if R.kind == "scenic" then return '%' end
@@ -339,11 +339,9 @@ function Plan_add_big_junctions()
       -- allow diagonal touching in one direction only
       if dx == dy then continue end
 
-      local nx, ny = mx + dx, my + dy
+      local N = Section_get_room(mx + dx, my + dy)
 
-      local N = Section_get_room(nx, ny)
-
-      if N and N.kind == "big_junc" then return false end
+      if N and N.shape == "big_junc" then return false end
 
     end end -- dx, dy
 
@@ -354,7 +352,7 @@ function Plan_add_big_junctions()
 
     -- OK --
 
-    K:set_big_junc()
+    K.shape = "big_junc"
 
     return true
   end
@@ -399,8 +397,8 @@ function Plan_add_small_rooms()
     local K1 = Section_get_room(mx+1, my)
     local K2 = Section_get_room(mx, my+1)
 
-    local can_x = (mx < MAP_W) and not K1.used
-    local can_y = (my < MAP_H) and not K2.used
+    local can_x = (mx < MAP_W) and K1:usable_for_room()
+    local can_y = (my < MAP_H) and K2:usable_for_room()
 
     if can_x and can_y then
       -- prefer making the room "squarer"
@@ -447,7 +445,7 @@ function Plan_add_small_rooms()
   for mx = 1,MAP_W do for my = 1,MAP_H do
     local K = Section_get_room(mx, my)
 
-    if not K.used then
+    if K:usable_for_room() then
       make_small_room(K, mx, my)
     end
   end end
@@ -535,7 +533,7 @@ function Plan_add_big_rooms()
 
       if set_R then
         K:set_room(set_R) 
-      elseif K.used then
+      elseif not K:usable_for_room() then
         return false -- would overlap a room
       end
     end end
@@ -575,7 +573,7 @@ function Plan_add_big_rooms()
 
       if set_R then
         K:set_room(set_R)
-      elseif K.used then
+      elseif not K:usable_for_room() then
         return false -- would overlap a room
       end
     end -- index
@@ -784,7 +782,7 @@ function Plan_add_odd_shapes()
   local function find_free_spot(mx, my)
     local K = Section_get_room(mx, my)
 
-    if not K.used then
+    if K:usable_for_room() then
       return mx, my
     end
 
@@ -804,7 +802,7 @@ function Plan_add_odd_shapes()
       each side in SIDES do
         local nx, ny = geom.nudge(mx, my, side)
         K = Section_get_room(nx, ny)
-        if K and not K.used then
+        if K and K:usable_for_room() then
           return nx, ny
         end
       end
@@ -862,7 +860,7 @@ function Plan_add_odd_shapes()
 
         local K = Section_get_room(nx, ny)
 
-        if K and not K.used then
+        if K and K:usable_for_room() then
           -- OK --
           K:set_room(area.room)
 
@@ -1244,7 +1242,7 @@ function Plan_expand_rooms()
     for kx = 1,SECTION_W do for ky = 1,SECTION_H do
       local K = SECTIONS[kx][ky]
 
-      if not K.used and K.shape == "junction" then
+      if K.shape == "junction" and not K.used then
         try_fill_junc(K)
       end
     end end

@@ -52,13 +52,11 @@ class SECTION
 
   sx1, sy1, sx2, sy2, sw, sh  -- location in seed map
 
-REMOVE:  kind : keyword   -- "section", "section2", "annex", "intrusion"
-                   -- "junction", "big_junc", "vert", "horiz"
-
   shape : keyword  -- "vert"     : tall and skinny
                    -- "horiz"    : wide and skinny
                    -- "junction" : 1x1 touching vert(s) and horiz(s)
-                   -- "rect"     : catch-all for the rest
+                   -- "big_junc" : large size junction
+                   -- "rect"     : everything else
 
   used : boolean
 
@@ -71,8 +69,8 @@ REMOVE:  kind : keyword   -- "section", "section2", "annex", "intrusion"
 
   hall_link[dir] : ROOM/HALL  -- non-nil means that this section in a
                               -- hallway is "pathing" in the given
-                              -- direction to the given room, which
-                              -- is usually the same as 'hall' field.
+                              -- direction to a room or hallway
+                              -- (usually the same as 'hall' field)
 }
 
 --------------------------------------------------------------]]
@@ -299,6 +297,13 @@ function SECTION_CLASS.tostr(K)
 end
 
 
+function SECTION_CLASS.usable_for_room(K)
+  if K.used then return false end
+  if K.shape == "big_junc" then return false end
+  return true
+end
+
+
 function SECTION_CLASS.set_room(K, R)
   assert(not K.used)
   K.room = R ; K.used = true
@@ -317,11 +322,6 @@ end
 function SECTION_CLASS.set_crossover(K, H)
   assert(K.used)
   K.crossover_hall = H
-end
-
-function SECTION_CLASS.set_big_junc(K)
-  assert(not K.used)
-  K.kind = "big_junc" ; K.used = true
 end
 
 function SECTION_CLASS.set_closet(K, CL)
