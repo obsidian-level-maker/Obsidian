@@ -202,19 +202,19 @@ function Plan_create_sections()
   SECTIONS = table.array_2D(SECTION_W, SECTION_H)
 
   for x = 1,SECTION_W do for y = 1,SECTION_H do
-    local kind
+    local shape
 
     if (x % 2) == 0 and (y % 2) == 0 then
-      kind = "section"
+      shape = "rect"
     elseif (x % 2) == 0 then
-      kind = "horiz"
+      shape = "horiz"
     elseif (y % 2) == 0 then
-      kind = "vert"
+      shape = "vert"
     else
-      kind = "junction"
+      shape = "junction"
     end
 
-    local K = SECTION_CLASS.new(kind, x, y)
+    local K = SECTION_CLASS.new(shape, x, y)
 
     SECTIONS[x][y] = K
 
@@ -284,10 +284,11 @@ function Plan_dump_sections(title)
     if not K then return ' ' end
 
     if K.hall then return '#' end
-    if K.kind == "junction" then return '+' end
+    if K.shape == "junction" then return '+' end
+    if K.shape == "vert"     then return '|' end
+    if K.shape == "horiz"    then return '-' end
+
     if K.kind == "big_junc" then return '*' end
-    if K.kind == "vert"     then return '|' end
-    if K.kind == "horiz"    then return '-' end
 
     if not K.used then return '.' end
     if not K.room then return '?' end
@@ -1243,7 +1244,7 @@ function Plan_expand_rooms()
     for kx = 1,SECTION_W do for ky = 1,SECTION_H do
       local K = SECTIONS[kx][ky]
 
-      if not K.used and K.kind == "junction" then
+      if not K.used and K.shape == "junction" then
         try_fill_junc(K)
       end
     end end

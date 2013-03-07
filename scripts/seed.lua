@@ -52,7 +52,7 @@ class SECTION
 
   sx1, sy1, sx2, sy2, sw, sh  -- location in seed map
 
-  kind : keyword   -- "section", "section2", "annex", "intrusion"
+REMOVE:  kind : keyword   -- "section", "section2", "annex", "intrusion"
                    -- "junction", "big_junc", "vert", "horiz"
 
   shape : keyword  -- "vert"     : tall and skinny
@@ -279,11 +279,11 @@ end
 --------------------------------------------------------------------
 
 
-function SECTION_CLASS.new(kind, kx, ky)
+function SECTION_CLASS.new(shape, kx, ky)
   local K =
   {
-    kind = kind
-    orig_kind = kind
+    kind  = shape  -- meh, fixme
+    shape = shape
     kx = kx
     ky = ky
     num_conn = 0
@@ -508,7 +508,7 @@ function SECTION_CLASS.eval_exit(K, dir)
 
   -- an "uncrowded middler" is the middle of a wide edge and does
   -- not have any neighbors with connections
-  if K.room and K.kind == "section" and conn_d >= 2 and
+  if K.room and K.shape == "rect" and conn_d >= 2 and
      K:same_room(geom.RIGHT[dir], 2) and
      K:same_room(geom. LEFT[dir], 2)
   then

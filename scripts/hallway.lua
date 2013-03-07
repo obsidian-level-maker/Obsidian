@@ -523,12 +523,12 @@ function HALLWAY_CLASS.try_add_middle_chunk(H, K)
   local sx1, sy1 = K.sx1, K.sy1
   local sx2, sy2 = K.sx2, K.sy2
 
-  if K.kind == "junction" or K.kind == "big_junc" or
+  if K.shape == "junction" or K.kind == "big_junc" or
      K.double_peer or rand.odds(20)
   then
     -- use the whole section
 
-  elseif K.kind == "horiz" then
+  elseif K.shape == "horiz" then
 
     if K.sw >= 5 then
       sx1 = sx1 + 2
@@ -538,7 +538,7 @@ function HALLWAY_CLASS.try_add_middle_chunk(H, K)
       sx2 = sx2 - 1
     end
 
-  elseif K.kind == "vert" then
+  elseif K.shape == "vert" then
 
     if K.sh >= 5 then
       sy1 = sy1 + 2
@@ -627,11 +627,11 @@ function HALLWAY_CLASS.create_chunks(H)
   -- that side touches another section in the same hallway).
 
   each K in H.sections do
-    if K.kind == "horiz" then
+    if K.shape == "horiz" then
       H:add_edge_chunk(K, 4)
       H:add_edge_chunk(K, 6)
 
-    elseif K.kind == "vert" then
+    elseif K.shape == "vert" then
       H:add_edge_chunk(K, 2)
       H:add_edge_chunk(K, 8)
     end
@@ -668,11 +668,11 @@ function HALLWAY_CLASS.link_chunks(H)
     -- want the link recorded even though there can be a difference in
     -- the size of the "spoke" chunks and the "big_junc" chunk.
 
-    if C.section.kind == "horiz" then
+    if C.section.shape == "horiz" then
       H:try_link_chunk(C, 4)
       H:try_link_chunk(C, 6)
     
-    elseif C.section.kind == "vert" then
+    elseif C.section.shape == "vert" then
       H:try_link_chunk(C, 2)
       H:try_link_chunk(C, 8)
 
@@ -1422,7 +1422,7 @@ do return false end
     -- FIXME: LEVEL.crossover_quota
 
     -- only enter the room at a junction (i.e. through a hallway channel)
-    if K.kind != "junction" then return false end
+    if K.shape != "junction" then return false end
 
     if not N.room then return false end
 
@@ -1474,9 +1474,9 @@ do return false end
 
     local is_junction
 
-    if K.orig_kind == "vert" or K.orig_kind == "horiz" then
+    if K.shape == "vert" or K.shape == "horiz" then
       -- ok
-    elseif K.orig_kind == "junction" or K.kind == "big_junc" then
+    elseif K.shape == "junction" or K.kind == "big_junc" then
       is_junction = true
     else
       return  -- not a hallway section

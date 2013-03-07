@@ -379,7 +379,8 @@ function Connect_scan_sections(mode, min_score)
 
     if not (K and K.used and K.room) then continue end
 
-    if K.kind != "section" then continue end
+    -- FIXME: THIS NO GOOD
+    if K.shape != "rect" then continue end
 
     -- only connect TO a street (never FROM one)
     if K.room.street then continue end

@@ -348,7 +348,7 @@ function Areas_handle_connections()
     C.crossover_hall = H
     C.section = K
 
-    if K.orig_kind == "junction" then
+    if K.shape == "junction" then
       C.cross_junc = true
     end
 
@@ -386,7 +386,7 @@ function Areas_handle_connections()
     end
 
     -- when connecting to junctions, use the same size as the junction
-    if other_K.kind == "junction" then
+    if other_K.shape == "junction" then
       if geom.is_vert(dir) then
         sx1, sx2 = other_K.sx1, other_K.sx2
       else
@@ -401,7 +401,7 @@ function Areas_handle_connections()
     if not C then
       if K.hall then
         -- junctions become a single chunk
-        if K.kind == "junction" then
+        if K.shape == "junction" then
           sx1, sy1, sx2, sy2 = K.sx1, K.sy1, K.sx2, K.sy2
 
         -- a hallway chunk must be as _deep_ as the hallway channel
@@ -580,8 +580,8 @@ function Areas_important_stuff()
       local cost = 2 ^ rand.range(1, 5)
 
       -- avoid junctions  [FIXME: only avoid ones in middle of room]
-      if S.section.orig_kind == "junction" then cost = 500 end
-      if N.section.orig_kind == "junction" then cost = 500 end
+      if S.section.shape == "junction" then cost = 500 end
+      if N.section.shape == "junction" then cost = 500 end
 
       S.cost[dir]    = cost
       N.cost[10-dir] = cost
@@ -1640,7 +1640,7 @@ stderrf("Areas_create_all_areas @ %s : (%d %d) .. (%d %d)\n",
   init()
  
   each K in R.sections do
-    if (K.orig_kind == "junction") and not K:touches_edge() then
+    if (K.shape == "junction") and not K:touches_edge() then
       try_MIDDLE(K, pick_vhr { 0,1,3, 7,9,5, 0,0,0})
     end
   end
@@ -1978,7 +1978,7 @@ gui.debugf("number_of_areas @ %s svol:%d --> %d [VHR %d .. %d]\n",
     --- step 1 : create grids from sections ---
 
     each K in R.sections do
-      if K.orig_kind != "section" then continue end
+      if K.shape != "rect" then continue end
 
       if K.room != R then continue end
 
@@ -3156,7 +3156,7 @@ function Areas_flesh_out()
     local cages = rand.odds(20)  -- FIXME: (a) check cage palette  (b) STYLE
 
     each K in R.sections do
-      local is_junc = (K.orig_kind == "junction")
+      local is_junc = (K.shape == "junction")
       local is_edge =  K:touches_edge()
 
       if not is_junc then continue end
@@ -3486,7 +3486,7 @@ function Areas_flesh_out()
 
     if N.room == K.room then return false end
 
-    if K.kind == "outdoor" and N.kind == "outdoor" then return false end
+    -- fixme?
   end
 
 

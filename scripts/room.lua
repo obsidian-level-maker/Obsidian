@@ -222,7 +222,7 @@ function ROOM_CLASS.add_section(R, K)
 
   R.kvolume = (R.kvolume or 0) + 1
 
-  if K.kind == "section" then
+  if K.shape == "rect" then
     R.map_volume = (R.map_volume or 0) + 1
   end
 end
