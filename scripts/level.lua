@@ -96,9 +96,7 @@ class HUB_LINK
 require "defs"
 require "util"
 
-require "section"
-require "seeds"
-
+require "seed"
 require "planner"
 require "connect"
 require "quest"
