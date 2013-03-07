@@ -22,7 +22,7 @@
 
 class HALLWAY
 {
-  kind : keyword  -- "hallway"  (differentiates from room types)
+  kind : keyword  -- "hallway"  (differentiates from a ROOM object)
 
   id : number (for debugging)
 
