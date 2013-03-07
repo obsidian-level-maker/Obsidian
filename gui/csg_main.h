@@ -40,181 +40,181 @@ class csg_brush_c;
 
 class slope_info_c
 {
-  // defines the planes used for sloped floors or ceiling.
-  // gives two points on the 2D map, and change in Z between them.
-  //
-  // the absolute Z coords are not here, this is implicitly relative
-  // to an external height (such as the top of the brush).
+	// defines the planes used for sloped floors or ceiling.
+	// gives two points on the 2D map, and change in Z between them.
+	//
+	// the absolute Z coords are not here, this is implicitly relative
+	// to an external height (such as the top of the brush).
 
 public:
-  double sx, sy;
-  double ex, ey;
+	double sx, sy;
+	double ex, ey;
 
-  double dz;
+	double dz;
 
 public:
-   slope_info_c();
-   slope_info_c(const slope_info_c *other);
-  ~slope_info_c();
+	slope_info_c();
+	slope_info_c(const slope_info_c *other);
+	~slope_info_c();
 
-  void Reverse();
+	void Reverse();
 
-  double GetAngle() const;
+	double GetAngle() const;
 
-  double CalcZ(double base_z, double x, double y) const;
+	double CalcZ(double base_z, double x, double y) const;
 };
 
 
 class csg_property_set_c
 {
 private:
-  std::map<std::string, std::string> dict;
+	std::map<std::string, std::string> dict;
 
 public:
-  csg_property_set_c() : dict()
-  { }
+	csg_property_set_c() : dict()
+	{ }
 
-  ~csg_property_set_c()
-  { }
+	~csg_property_set_c()
+	{ }
 
-  // copy constructor
-  csg_property_set_c(const csg_property_set_c& other) : dict(other.dict)
-  { }
+	// copy constructor
+	csg_property_set_c(const csg_property_set_c& other) : dict(other.dict)
+	{ }
 
-  void Add(const char *key, const char *value);
-  void Remove(const char *key);
+	void Add(const char *key, const char *value);
+	void Remove(const char *key);
 
-  const char * getStr(const char *key, const char *def_val = NULL);
+	const char * getStr(const char *key, const char *def_val = NULL);
 
-  double getDouble(const char *key, double def_val = 0);
-  int    getInt   (const char *key, int def_val = 0);
+	double getDouble(const char *key, double def_val = 0);
+	int    getInt   (const char *key, int def_val = 0);
 
-  void getHexenArgs(u8_t *arg5);
+	void getHexenArgs(u8_t *arg5);
 
-  void DebugDump();
+	void DebugDump();
 
 public:
-  typedef std::map<std::string, std::string>::iterator iterator;
+	typedef std::map<std::string, std::string>::iterator iterator;
 
-  iterator begin() { return dict.begin(); }
-  iterator   end() { return dict.  end(); }
+	iterator begin() { return dict.begin(); }
+	iterator   end() { return dict.  end(); }
 };
 
 
 class brush_vert_c
 {
 public:
-  csg_brush_c *parent;
+	csg_brush_c *parent;
 
-  double x, y;
+	double x, y;
 
-  csg_property_set_c face;
+	csg_property_set_c face;
 
 public:
-   brush_vert_c(csg_brush_c *_parent, double _x = 0, double _y = 0);
-  ~brush_vert_c();
+	brush_vert_c(csg_brush_c *_parent, double _x = 0, double _y = 0);
+	~brush_vert_c();
 };
 
 
 class brush_plane_c
 {
 public:
-  // without slope, this is just the height of the top or bottom
-  // of the brush.  When sloped, it still represents a bounding
-  // height of the brush.
-  double z;
+	// without slope, this is just the height of the top or bottom
+	// of the brush.  When sloped, it still represents a bounding
+	// height of the brush.
+	double z;
 
-  slope_info_c *slope;  // NULL if not sloped
+	slope_info_c *slope;  // NULL if not sloped
 
-  csg_property_set_c face;
+	csg_property_set_c face;
 
 public:
-  brush_plane_c(double _z = 0) : z(_z), slope(NULL), face()
-  { }
+	brush_plane_c(double _z = 0) : z(_z), slope(NULL), face()
+	{ }
 
-  brush_plane_c(const brush_plane_c& other);
+	brush_plane_c(const brush_plane_c& other);
 
-  ~brush_plane_c();
+	~brush_plane_c();
 };
 
 
 typedef enum
 {
-  BKIND_Solid = 0,
-  BKIND_Detail,   // ignored for clipping (Quake 1/2 only)
-  BKIND_Clip,     // clipping only, no visible faces (Quake 1/2 only)
+	BKIND_Solid = 0,
+	BKIND_Detail,   // ignored for clipping (Quake 1/2 only)
+	BKIND_Clip,     // clipping only, no visible faces (Quake 1/2 only)
 
-  BKIND_Sky,
-  BKIND_Liquid,
-  BKIND_Rail,     // supply a railing (DOOM/Nukem only)
-  BKIND_Light,    // supply extra lighting or shadow
+	BKIND_Sky,
+	BKIND_Liquid,
+	BKIND_Rail,     // supply a railing (DOOM/Nukem only)
+	BKIND_Light,    // supply extra lighting or shadow
 }
 brush_kind_e;
 
 typedef enum
 {
-  // internal flags
-  BRU_IF_Quad    = (1 << 16),  // brush is a four-sided box
-  BRU_IF_Seen    = (1 << 17),  // already seen (Quake II)
+	// internal flags
+	BRU_IF_Quad    = (1 << 16),  // brush is a four-sided box
+	BRU_IF_Seen    = (1 << 17),  // already seen (Quake II)
 }
 brush_flags_e;
 
 
 class csg_brush_c
 {
-  // This represents a "brush" in Quake terms, a solid area
-  // on the map with out-facing sides and top/bottom.  Like
-  // quake brushes, these must be convex, but co-linear sides
-  // are allowed.
+	// This represents a "brush" in Quake terms, a solid area
+	// on the map with out-facing sides and top/bottom.  Like
+	// quake brushes, these must be convex, but co-linear sides
+	// are allowed.
 
 public:
-  int bkind;
-  int bflags;
+	int bkind;
+	int bflags;
 
-  csg_property_set_c props;
+	csg_property_set_c props;
 
-  std::vector<brush_vert_c *> verts;
+	std::vector<brush_vert_c *> verts;
 
-  brush_plane_c b;  // bottom
-  brush_plane_c t;  // top
+	brush_plane_c b;  // bottom
+	brush_plane_c t;  // top
 
-  double min_x, min_y;
-  double max_x, max_y;
+	double min_x, min_y;
+	double max_x, max_y;
 
 public:
-   csg_brush_c();
-  ~csg_brush_c();
+	csg_brush_c();
+	~csg_brush_c();
 
-  // copy constructor
-  // NOTE: verts and slopes are not cloned
-  csg_brush_c(const csg_brush_c *other);
+	// copy constructor
+	// NOTE: verts and slopes are not cloned
+	csg_brush_c(const csg_brush_c *other);
 
-  void ComputeBBox();
+	void ComputeBBox();
 
-  const char * Validate();
-  // makes sure there are enough vertices and they are in
-  // anti-clockwise order.  Returns NULL if OK, otherwise an
-  // error message string.
+	const char * Validate();
+	// makes sure there are enough vertices and they are in
+	// anti-clockwise order.  Returns NULL if OK, otherwise an
+	// error message string.
 
-  bool IntersectRay(float x1, float y1, float z1,
-                    float x2, float y2, float z2) const;
+	bool IntersectRay(float x1, float y1, float z1,
+			float x2, float y2, float z2) const;
 };
 
 
 class csg_entity_c
 {
 public:
-  std::string id;
+	std::string id;
 
-  double x, y, z;
+	double x, y, z;
 
-  csg_property_set_c props;
+	csg_property_set_c props;
 
 public:
-   csg_entity_c();
-  ~csg_entity_c();
+	csg_entity_c();
+	~csg_entity_c();
 
-  bool Match(const char *want_name) const;
+	bool Match(const char *want_name) const;
 };
 
 
@@ -239,4 +239,4 @@ void CSG_MakeMiniMap();
 #endif /* __OBLIGE_CSG_MAIN_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

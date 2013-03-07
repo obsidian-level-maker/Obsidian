@@ -46,12 +46,12 @@ std::string dummy_plane_tex;
 
 
 slope_info_c::slope_info_c() :
-      sx(0),sy(0), ex(1),ey(0),dz(0)
+	sx(0),sy(0), ex(1),ey(0),dz(0)
 { }
 
 slope_info_c::slope_info_c(const slope_info_c *other) :
-      sx(other->sx), sy(other->sy),
-      ex(other->ex), ey(other->ey), dz(other->dz)
+	sx(other->sx), sy(other->sy),
+	ex(other->ex), ey(other->ey), dz(other->dz)
 { }
 
 slope_info_c::~slope_info_c()
@@ -60,97 +60,97 @@ slope_info_c::~slope_info_c()
 
 void slope_info_c::Reverse()
 {
-  std::swap(sx, ex);
-  std::swap(sy, ey);
+	std::swap(sx, ex);
+	std::swap(sy, ey);
 
-  dz = -dz;
+	dz = -dz;
 }
 
 
 double slope_info_c::GetAngle() const
 {
-  double xy_dist = ComputeDist(sx, sy, ex, ey);
+	double xy_dist = ComputeDist(sx, sy, ex, ey);
 
-  return CalcAngle(0, 0, xy_dist, dz);
+	return CalcAngle(0, 0, xy_dist, dz);
 }
 
 
 double slope_info_c::CalcZ(double base_z, double x, double y) const
 {
-  double dx = (ex - sx);
-  double dy = (ey - sy);
+	double dx = (ex - sx);
+	double dy = (ey - sy);
 
-  double along = (x - sx) * dx + (y - dy) * dy;
+	double along = (x - sx) * dx + (y - dy) * dy;
 
-  return base_z + dz * along / (dx*dx + dy*dy);
+	return base_z + dz * along / (dx*dx + dy*dy);
 }
 
 
 
 void csg_property_set_c::Add(const char *key, const char *value)
 {
-  dict[key] = std::string(value);
+	dict[key] = std::string(value);
 }
 
 void csg_property_set_c::Remove(const char *key)
 {
-  dict.erase(key);
+	dict.erase(key);
 }
 
 
 void csg_property_set_c::DebugDump()
 {
-  std::map<std::string, std::string>::iterator PI;
+	std::map<std::string, std::string>::iterator PI;
 
-  fprintf(stderr, "{\n");
+	fprintf(stderr, "{\n");
 
-  for (PI = dict.begin() ; PI != dict.end() ; PI++)
-  {
-    fprintf(stderr, "  %s = \"%s\"\n", PI->first.c_str(), PI->second.c_str());
-  }
+	for (PI = dict.begin() ; PI != dict.end() ; PI++)
+	{
+		fprintf(stderr, "  %s = \"%s\"\n", PI->first.c_str(), PI->second.c_str());
+	}
 
-  fprintf(stderr, "}\n");
+	fprintf(stderr, "}\n");
 }
 
 
 const char * csg_property_set_c::getStr(const char *key, const char *def_val)
 {
-  std::map<std::string, std::string>::iterator PI = dict.find(key);
+	std::map<std::string, std::string>::iterator PI = dict.find(key);
 
-  if (PI == dict.end())
-    return def_val;
+	if (PI == dict.end())
+		return def_val;
 
-  return PI->second.c_str();
+	return PI->second.c_str();
 }
 
 double csg_property_set_c::getDouble(const char *key, double def_val)
 {
-  const char *str = getStr(key);
+	const char *str = getStr(key);
 
-  return str ? atof(str) : def_val;
+	return str ? atof(str) : def_val;
 }
 
 int csg_property_set_c::getInt(const char *key, int def_val)
 {
-  const char *str = getStr(key);
+	const char *str = getStr(key);
 
-  return str ? I_ROUND(atof(str)) : def_val;
+	return str ? I_ROUND(atof(str)) : def_val;
 }
 
 
 void csg_property_set_c::getHexenArgs(u8_t *arg5)
 {
-  arg5[0] = getInt("arg1");
-  arg5[1] = getInt("arg2");
-  arg5[2] = getInt("arg3");
-  arg5[3] = getInt("arg4");
-  arg5[4] = getInt("arg5");
+	arg5[0] = getInt("arg1");
+	arg5[1] = getInt("arg2");
+	arg5[2] = getInt("arg3");
+	arg5[3] = getInt("arg4");
+	arg5[4] = getInt("arg5");
 }
 
 
 brush_vert_c::brush_vert_c(csg_brush_c *_parent, double _x, double _y) :
-      parent(_parent), x(_x), y(_y),
-      face()
+	parent(_parent), x(_x), y(_y),
+	face()
 { }
 
 brush_vert_c::~brush_vert_c()
@@ -158,160 +158,160 @@ brush_vert_c::~brush_vert_c()
 
 
 brush_plane_c::brush_plane_c(const brush_plane_c& other) :
-    z(other.z), slope(NULL), face(other.face)
+	z(other.z), slope(NULL), face(other.face)
 {
-  // NOTE: slope not cloned
+	// NOTE: slope not cloned
 }
  
 brush_plane_c::~brush_plane_c()
 {
-  // free slope ??   (or keep all slopes in big list)
+	// free slope ??   (or keep all slopes in big list)
 
-  // free face ??  (or keep all faces in big list)
+	// free face ??  (or keep all faces in big list)
 }
 
 
 csg_brush_c::csg_brush_c() :
-     bkind(BKIND_Solid), bflags(0),
-     props(), verts(),
-     b(-EXTREME_H),
-     t( EXTREME_H)
+	bkind(BKIND_Solid), bflags(0),
+	props(), verts(),
+	b(-EXTREME_H),
+	t( EXTREME_H)
 { }
 
 csg_brush_c::csg_brush_c(const csg_brush_c *other) :
-      bkind(other->bkind), bflags(other->bflags),
-      props(other->props), verts(),
-      b(other->b), t(other->t)
+	bkind(other->bkind), bflags(other->bflags),
+	props(other->props), verts(),
+	b(other->b), t(other->t)
 {
-  // NOTE: verts and slopes not cloned
+	// NOTE: verts and slopes not cloned
 
-  bflags &= ~ BRU_IF_Quad;
+	bflags &= ~ BRU_IF_Quad;
 }
 
 csg_brush_c::~csg_brush_c()
 {
-  // FIXME: free verts
+	// FIXME: free verts
 
-  // FIXME: free slopes
+	// FIXME: free slopes
 }
 
 
 const char * csg_brush_c::Validate()
 {
-  if (verts.size() < 3)
-    return "Line loop contains less than 3 vertices!";
+	if (verts.size() < 3)
+		return "Line loop contains less than 3 vertices!";
 
-  // FIXME: make sure brush is convex (co-linear lines is OK)
+	// FIXME: make sure brush is convex (co-linear lines is OK)
 
-  // make sure vertices are anti-clockwise
-  double average_ang = 0;
+	// make sure vertices are anti-clockwise
+	double average_ang = 0;
 
-  bflags |= BRU_IF_Quad;
+	bflags |= BRU_IF_Quad;
 
-  for (unsigned int k = 0 ; k < verts.size() ; k++)
-  {
-    brush_vert_c *v1 = verts[k];
-    brush_vert_c *v2 = verts[(k+1) % (int)verts.size()];
-    brush_vert_c *v3 = verts[(k+2) % (int)verts.size()];
+	for (unsigned int k = 0 ; k < verts.size() ; k++)
+	{
+		brush_vert_c *v1 = verts[k];
+		brush_vert_c *v2 = verts[(k+1) % (int)verts.size()];
+		brush_vert_c *v3 = verts[(k+2) % (int)verts.size()];
 
-    if (fabs(v2->x - v1->x) < EPSILON && fabs(v2->y - v1->y) < EPSILON)
-      return "Line loop contains a zero length line!";
+		if (fabs(v2->x - v1->x) < EPSILON && fabs(v2->y - v1->y) < EPSILON)
+			return "Line loop contains a zero length line!";
 
-    double ang1 = CalcAngle(v2->x, v2->y, v1->x, v1->y);
-    double ang2 = CalcAngle(v2->x, v2->y, v3->x, v3->y);
+		double ang1 = CalcAngle(v2->x, v2->y, v1->x, v1->y);
+		double ang2 = CalcAngle(v2->x, v2->y, v3->x, v3->y);
 
-    double diff = ang1 - ang2;
+		double diff = ang1 - ang2;
 
-    if (diff < 0)    diff += 360.0;
-    if (diff >= 360) diff -= 360.0;
+		if (diff < 0)    diff += 360.0;
+		if (diff >= 360) diff -= 360.0;
 
-    if (diff > 180.1)
-      return "Line loop is not convex!";
+		if (diff > 180.1)
+			return "Line loop is not convex!";
 
-    average_ang += diff;
+		average_ang += diff;
 
-    if (fabs(v1->x - v2->x) >= EPSILON &&
-        fabs(v1->y - v2->y) >= EPSILON)
-    {
-      bflags &= ~BRU_IF_Quad;  // not a quad
-    } 
-  }
+		if (fabs(v1->x - v2->x) >= EPSILON &&
+				fabs(v1->y - v2->y) >= EPSILON)
+		{
+			bflags &= ~BRU_IF_Quad;  // not a quad
+		} 
+	}
 
-  average_ang /= (double)verts.size();
+	average_ang /= (double)verts.size();
 
-// fprintf(stderr, "Average angle = %1.4f\n\n", average_ang);
+	// fprintf(stderr, "Average angle = %1.4f\n\n", average_ang);
 
-  if (average_ang > 180.0)
-    return "Line loop is not anti-clockwise!";
+	if (average_ang > 180.0)
+		return "Line loop is not anti-clockwise!";
 
-  return NULL; // OK
+	return NULL; // OK
 }
 
 void csg_brush_c::ComputeBBox()
 {
-  min_x = +9e7;
-  min_y = +9e7;
-  max_x = -9e7;
-  max_y = -9e7;
+	min_x = +9e7;
+	min_y = +9e7;
+	max_x = -9e7;
+	max_y = -9e7;
 
-  for (unsigned int i = 0 ; i < verts.size() ; i++)
-  {
-    brush_vert_c *V = verts[i];
+	for (unsigned int i = 0 ; i < verts.size() ; i++)
+	{
+		brush_vert_c *V = verts[i];
 
-    if (V->x < min_x) min_x = V->x;
-    if (V->y < min_y) min_y = V->y;
+		if (V->x < min_x) min_x = V->x;
+		if (V->y < min_y) min_y = V->y;
 
-    if (V->x > max_x) max_x = V->x;
-    if (V->y > max_y) max_y = V->y;
-  }
+		if (V->x > max_x) max_x = V->x;
+		if (V->y > max_y) max_y = V->y;
+	}
 }
 
 
 bool csg_brush_c::IntersectRay(float x1, float y1, float z1,
                                float x2, float y2, float z2) const
 {
-  // clip the 2D line to the brush sides
+	// clip the 2D line to the brush sides
 
-  for (unsigned int k = 0 ; k < verts.size() ; k++)
-  {
-    brush_vert_c *v1 = verts[k];
-    brush_vert_c *v2 = verts[(k+1) % (int)verts.size()];
+	for (unsigned int k = 0 ; k < verts.size() ; k++)
+	{
+		brush_vert_c *v1 = verts[k];
+		brush_vert_c *v2 = verts[(k+1) % (int)verts.size()];
 
-    double a = PerpDist(x1,y1, v1->x,v1->y, v2->x,v2->y);
-    double b = PerpDist(x2,y2, v1->x,v1->y, v2->x,v2->y);
+		double a = PerpDist(x1,y1, v1->x,v1->y, v2->x,v2->y);
+		double b = PerpDist(x2,y2, v1->x,v1->y, v2->x,v2->y);
 
-    // ray is completely outside the brush?
-    if (a > 0 && b > 0)
-      return false;
+		// ray is completely outside the brush?
+		if (a > 0 && b > 0)
+			return false;
 
-    // ray is completely inside it?
-    if (a <= 0 && b <= 0)
-      continue;
+		// ray is completely inside it?
+		if (a <= 0 && b <= 0)
+			continue;
 
-    // gotta clip the ray
+		// gotta clip the ray
 
-    double frac = a / (double)(a - b);
+		double frac = a / (double)(a - b);
 
-    if (a > 0)
-    {
-      x1 = x1 + (x2 - x1) * frac;
-      y1 = y1 + (y2 - y1) * frac;
-      z1 = z1 + (z2 - z1) * frac;
-    }
-    else
-    {
-      x2 = x1 + (x2 - x1) * frac;
-      y2 = y1 + (y2 - y1) * frac;
-      z2 = z1 + (z2 - z1) * frac;
-    }
-  }
+		if (a > 0)
+		{
+			x1 = x1 + (x2 - x1) * frac;
+			y1 = y1 + (y2 - y1) * frac;
+			z1 = z1 + (z2 - z1) * frac;
+		}
+		else
+		{
+			x2 = x1 + (x2 - x1) * frac;
+			y2 = y1 + (y2 - y1) * frac;
+			z2 = z1 + (z2 - z1) * frac;
+		}
+	}
 
-  // at here, the clipped ray lies inside the brush
+	// at here, the clipped ray lies inside the brush
 
-  if (MAX(z1, z2) < b.z - 0.1) return false;
-  if (MIN(z1, z2) > t.z + 0.1) return false;
+	if (MAX(z1, z2) < b.z - 0.1) return false;
+	if (MIN(z1, z2) > t.z + 0.1) return false;
 
-  return true;
+	return true;
 }
 
 
@@ -324,7 +324,7 @@ csg_entity_c::~csg_entity_c()
 
 bool csg_entity_c::Match(const char *want_name) const
 {
-  return (strcmp(id.c_str(), want_name) == 0);
+	return (strcmp(id.c_str(), want_name) == 0);
 }
 
 
@@ -334,230 +334,230 @@ int Grab_Properties(lua_State *L, int stack_pos,
                     csg_property_set_c *props,
                     bool skip_singles = false)
 {
-  if (stack_pos < 0)
-    stack_pos += lua_gettop(L) + 1;
+	if (stack_pos < 0)
+		stack_pos += lua_gettop(L) + 1;
 
-  if (lua_isnil(L, stack_pos))
-    return 0;
+	if (lua_isnil(L, stack_pos))
+		return 0;
 
-  if (lua_type(L, stack_pos) != LUA_TTABLE)
-    return luaL_argerror(L, stack_pos, "bad property table");
+	if (lua_type(L, stack_pos) != LUA_TTABLE)
+		return luaL_argerror(L, stack_pos, "bad property table");
 
-  for (lua_pushnil(L) ; lua_next(L, stack_pos) != 0 ; lua_pop(L,1))
-  {
-    // skip keys which are not strings
-    if (lua_type(L, -2) != LUA_TSTRING)
-      continue;
+	for (lua_pushnil(L) ; lua_next(L, stack_pos) != 0 ; lua_pop(L,1))
+	{
+		// skip keys which are not strings
+		if (lua_type(L, -2) != LUA_TSTRING)
+			continue;
 
-    const char *key = lua_tostring(L, -2);
+		const char *key = lua_tostring(L, -2);
 
-    // optionally skip single letter keys ('x', 'y', etc)
-    if (skip_singles && strlen(key) == 1)
-      continue;
+		// optionally skip single letter keys ('x', 'y', etc)
+		if (skip_singles && strlen(key) == 1)
+			continue;
 
-    // validate the value
-    if (lua_type(L, -1) == LUA_TBOOLEAN)
-    {
-      props->Add(key, lua_toboolean(L, -1) ? "1" : "0");
-      continue;
-    }
+		// validate the value
+		if (lua_type(L, -1) == LUA_TBOOLEAN)
+		{
+			props->Add(key, lua_toboolean(L, -1) ? "1" : "0");
+			continue;
+		}
 
-    if (lua_type(L, -1) == LUA_TSTRING || lua_type(L, -1) == LUA_TNUMBER)
-    {
-      props->Add(key, lua_tostring(L, -1));
-      continue;
-    }
+		if (lua_type(L, -1) == LUA_TSTRING || lua_type(L, -1) == LUA_TNUMBER)
+		{
+			props->Add(key, lua_tostring(L, -1));
+			continue;
+		}
 
-    // ignore other values (tables etc)
+		// ignore other values (tables etc)
 
-//// return luaL_error(L, "bad property: weird value for '%s'", key);
-  }
+		//// return luaL_error(L, "bad property: weird value for '%s'", key);
+	}
 
-  return 0;
+	return 0;
 }
 
 
 static slope_info_c * Grab_Slope(lua_State *L, int stack_pos, bool is_ceil)
 {
-  if (stack_pos < 0)
-    stack_pos += lua_gettop(L) + 1;
+	if (stack_pos < 0)
+		stack_pos += lua_gettop(L) + 1;
 
-  if (lua_isnil(L, stack_pos))
-    return NULL;
+	if (lua_isnil(L, stack_pos))
+		return NULL;
 
-  if (lua_type(L, stack_pos) != LUA_TTABLE)
-  {
-    luaL_argerror(L, stack_pos, "missing table: slope info");
-    return NULL; /* NOT REACHED */
-  }
+	if (lua_type(L, stack_pos) != LUA_TTABLE)
+	{
+		luaL_argerror(L, stack_pos, "missing table: slope info");
+		return NULL; /* NOT REACHED */
+	}
 
-  slope_info_c *P = new slope_info_c();
+	slope_info_c *P = new slope_info_c();
 
-  lua_getfield(L, stack_pos, "x1");
-  lua_getfield(L, stack_pos, "y1");
+	lua_getfield(L, stack_pos, "x1");
+	lua_getfield(L, stack_pos, "y1");
 
-  P->sx = luaL_checknumber(L, -2);
-  P->sy = luaL_checknumber(L, -1);
+	P->sx = luaL_checknumber(L, -2);
+	P->sy = luaL_checknumber(L, -1);
 
-  lua_pop(L, 2);
+	lua_pop(L, 2);
 
-  lua_getfield(L, stack_pos, "x2");
-  lua_getfield(L, stack_pos, "y2");
-  lua_getfield(L, stack_pos, "dz");
+	lua_getfield(L, stack_pos, "x2");
+	lua_getfield(L, stack_pos, "y2");
+	lua_getfield(L, stack_pos, "dz");
 
-  P->ex = luaL_checknumber(L, -3);
-  P->ey = luaL_checknumber(L, -2);
-  P->dz = luaL_checknumber(L, -1);
+	P->ex = luaL_checknumber(L, -3);
+	P->ey = luaL_checknumber(L, -2);
+	P->dz = luaL_checknumber(L, -1);
 
-  lua_pop(L, 3);
+	lua_pop(L, 3);
 
-  // floor slopes should have negative dz, and ceilings positive
-  if ((is_ceil ? 1 : -1) * P->dz < 0)
-  {
-    // P->Reverse();
-    luaL_error(L, "bad slope: dz should be <0 for floor, >0 for ceiling");
-    return NULL; /* NOT REACHED */
-  }
+	// floor slopes should have negative dz, and ceilings positive
+	if ((is_ceil ? 1 : -1) * P->dz < 0)
+	{
+		// P->Reverse();
+		luaL_error(L, "bad slope: dz should be <0 for floor, >0 for ceiling");
+		return NULL; /* NOT REACHED */
+	}
 
-  return P;
+	return P;
 }
 
 
 int Grab_BrushMode(lua_State *L, const char *kind)
 {
-  // parse the 'm' field of the props table
+	// parse the 'm' field of the props table
 
-  if (! kind)
-  {
-    // not present, return the default
-    return BKIND_Solid;
-  }
+	if (! kind)
+	{
+		// not present, return the default
+		return BKIND_Solid;
+	}
 
-  if (StringCaseCmp(kind, "solid")  == 0) return BKIND_Solid;
-  if (StringCaseCmp(kind, "detail") == 0) return BKIND_Detail;
-  if (StringCaseCmp(kind, "clip")   == 0) return BKIND_Clip;
+	if (StringCaseCmp(kind, "solid")  == 0) return BKIND_Solid;
+	if (StringCaseCmp(kind, "detail") == 0) return BKIND_Detail;
+	if (StringCaseCmp(kind, "clip")   == 0) return BKIND_Clip;
 
-  if (StringCaseCmp(kind, "sky")    == 0) return BKIND_Sky;
-  if (StringCaseCmp(kind, "liquid") == 0) return BKIND_Liquid;
-  if (StringCaseCmp(kind, "rail")   == 0) return BKIND_Rail;
-  if (StringCaseCmp(kind, "light")  == 0) return BKIND_Light;
+	if (StringCaseCmp(kind, "sky")    == 0) return BKIND_Sky;
+	if (StringCaseCmp(kind, "liquid") == 0) return BKIND_Liquid;
+	if (StringCaseCmp(kind, "rail")   == 0) return BKIND_Rail;
+	if (StringCaseCmp(kind, "light")  == 0) return BKIND_Light;
 
-  return luaL_error(L, "gui.add_brush: unknown kind '%s'", kind);
+	return luaL_error(L, "gui.add_brush: unknown kind '%s'", kind);
 }
 
 
 static int Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
 {
-  if (stack_pos < 0)
-    stack_pos += lua_gettop(L) + 1;
+	if (stack_pos < 0)
+		stack_pos += lua_gettop(L) + 1;
 
-  if (lua_type(L, stack_pos) != LUA_TTABLE)
-  {
-    return luaL_error(L, "gui.add_brush: missing vertex info");
-  }
+	if (lua_type(L, stack_pos) != LUA_TTABLE)
+	{
+		return luaL_error(L, "gui.add_brush: missing vertex info");
+	}
 
-  lua_getfield(L, stack_pos, "m");
+	lua_getfield(L, stack_pos, "m");
 
-  if (! lua_isnil(L, -1))
-  {
-    const char *kind_str = luaL_checkstring(L, -1);
+	if (! lua_isnil(L, -1))
+	{
+		const char *kind_str = luaL_checkstring(L, -1);
 
-    B->bkind = Grab_BrushMode(L, kind_str);
+		B->bkind = Grab_BrushMode(L, kind_str);
 
-    Grab_Properties(L, stack_pos, &B->props, true);
+		Grab_Properties(L, stack_pos, &B->props, true);
 
-    lua_pop(L, 1);
+		lua_pop(L, 1);
 
-    return 0;
-  }
+		return 0;
+	}
 
-  lua_pop(L, 1);
+	lua_pop(L, 1);
 
-  lua_getfield(L, stack_pos, "slope");
-  lua_getfield(L, stack_pos, "b");
-  lua_getfield(L, stack_pos, "t");
+	lua_getfield(L, stack_pos, "slope");
+	lua_getfield(L, stack_pos, "b");
+	lua_getfield(L, stack_pos, "t");
 
-  if (! lua_isnil(L, -2) || ! lua_isnil(L, -1))
-  {
-    if (lua_isnil(L, -2))  // top
-    {
-      B->t.z = luaL_checknumber(L, -1);
-      B->t.slope = Grab_Slope(L, -3, false);
+	if (! lua_isnil(L, -2) || ! lua_isnil(L, -1))
+	{
+		if (lua_isnil(L, -2))  // top
+		{
+			B->t.z = luaL_checknumber(L, -1);
+			B->t.slope = Grab_Slope(L, -3, false);
 
-      Grab_Properties(L, stack_pos, &B->t.face, true);
-    }
-    else  // bottom
-    {
-      B->b.z = luaL_checknumber(L, -2);
-      B->b.slope = Grab_Slope(L, -3, true);
+			Grab_Properties(L, stack_pos, &B->t.face, true);
+		}
+		else  // bottom
+		{
+			B->b.z = luaL_checknumber(L, -2);
+			B->b.slope = Grab_Slope(L, -3, true);
 
-      Grab_Properties(L, stack_pos, &B->b.face, true);
-    }
-  }
-  else  // side info
-  {
-    brush_vert_c *V = new brush_vert_c(B);
+			Grab_Properties(L, stack_pos, &B->b.face, true);
+		}
+	}
+	else  // side info
+	{
+		brush_vert_c *V = new brush_vert_c(B);
 
-    lua_getfield(L, stack_pos, "x");
-    lua_getfield(L, stack_pos, "y");
+		lua_getfield(L, stack_pos, "x");
+		lua_getfield(L, stack_pos, "y");
 
-    V->x = luaL_checknumber(L, -2);
-    V->y = luaL_checknumber(L, -1);
+		V->x = luaL_checknumber(L, -2);
+		V->y = luaL_checknumber(L, -1);
 
-    lua_pop(L, 2);
+		lua_pop(L, 2);
 
-    Grab_Properties(L, stack_pos, &V->face, true);
+		Grab_Properties(L, stack_pos, &V->face, true);
 
-    B->verts.push_back(V);
-  }
+		B->verts.push_back(V);
+	}
 
-  lua_pop(L, 3);  // slope, b, t
+	lua_pop(L, 3);  // slope, b, t
 
-  return 0;
+	return 0;
 }
 
 
 static int Grab_CoordList(lua_State *L, int stack_pos, csg_brush_c *B)
 {
-  if (lua_type(L, stack_pos) != LUA_TTABLE)
-  {
-    return luaL_argerror(L, stack_pos, "missing table: coords");
-  }
+	if (lua_type(L, stack_pos) != LUA_TTABLE)
+	{
+		return luaL_argerror(L, stack_pos, "missing table: coords");
+	}
 
-  int index = 1;
+	int index = 1;
 
-  for (;;)
-  {
-    lua_pushinteger(L, index);
-    lua_gettable(L, stack_pos);
+	for (;;)
+	{
+		lua_pushinteger(L, index);
+		lua_gettable(L, stack_pos);
 
-    if (lua_isnil(L, -1))
-    {
-      lua_pop(L, 1);
-      break;
-    }
+		if (lua_isnil(L, -1))
+		{
+			lua_pop(L, 1);
+			break;
+		}
 
-    Grab_Vertex(L, -1, B);
+		Grab_Vertex(L, -1, B);
 
-    lua_pop(L, 1);
+		lua_pop(L, 1);
 
-    index++;
-  }
+		index++;
+	}
 
-  const char *err_msg = B->Validate();
+	const char *err_msg = B->Validate();
 
-  if (err_msg)
-    return luaL_error(L, "%s", err_msg);
+	if (err_msg)
+		return luaL_error(L, "%s", err_msg);
 
-  B->ComputeBBox();
+	B->ComputeBBox();
 
-  if ((B->max_x - B->min_x) < EPSILON)
-    return luaL_error(L, "Line loop has zero width!");
+	if ((B->max_x - B->min_x) < EPSILON)
+		return luaL_error(L, "Line loop has zero width!");
 
-  if ((B->max_y - B->min_y) < EPSILON)
-    return luaL_error(L, "Line loop has zero height!");
+	if ((B->max_y - B->min_y) < EPSILON)
+		return luaL_error(L, "Line loop has zero height!");
 
-  return 0;
+	return 0;
 }
 
 
@@ -565,13 +565,13 @@ static int Grab_CoordList(lua_State *L, int stack_pos, csg_brush_c *B)
 //
 int CSG_begin_level(lua_State *L)
 {
-  SYS_ASSERT(game_object);
+	SYS_ASSERT(game_object);
 
-  CSG_Main_Free();
+	CSG_Main_Free();
 
-  game_object->BeginLevel();
+	game_object->BeginLevel();
 
-  return 0;
+	return 0;
 }
 
 
@@ -579,15 +579,15 @@ int CSG_begin_level(lua_State *L)
 //
 int CSG_end_level(lua_State *L)
 {
-  SYS_ASSERT(game_object);
+	SYS_ASSERT(game_object);
 
-  game_object->EndLevel();
+	game_object->EndLevel();
 
-  CSG_Main_Free();
+	CSG_Main_Free();
 
-  CSG_BSP_Free();
+	CSG_BSP_Free();
 
-  return 0;
+	return 0;
 }
 
 
@@ -595,27 +595,27 @@ int CSG_end_level(lua_State *L)
 //
 int CSG_property(lua_State *L)
 {
-  const char *key   = luaL_checkstring(L,1);
-  const char *value = luaL_checkstring(L,2);
+	const char *key   = luaL_checkstring(L,1);
+	const char *value = luaL_checkstring(L,2);
 
-  // eat propertities intended for CSG2
+	// eat propertities intended for CSG2
 
-  if (strcmp(key, "error_tex") == 0)
-  {
-    dummy_wall_tex = std::string(value);
-    return 0;
-  }
-  else if (strcmp(key, "error_flat") == 0)
-  {
-    dummy_plane_tex = std::string(value);
-    return 0;
-  }
+	if (strcmp(key, "error_tex") == 0)
+	{
+		dummy_wall_tex = std::string(value);
+		return 0;
+	}
+	else if (strcmp(key, "error_flat") == 0)
+	{
+		dummy_plane_tex = std::string(value);
+		return 0;
+	}
 
-  SYS_ASSERT(game_object);
+	SYS_ASSERT(game_object);
 
-  game_object->Property(key, value);
+	game_object->Property(key, value);
 
-  return 0;
+	return 0;
 }
 
 
@@ -656,16 +656,16 @@ int CSG_property(lua_State *L)
 //
 int CSG_add_brush(lua_State *L)
 {
-  csg_brush_c *B = new csg_brush_c();
+	csg_brush_c *B = new csg_brush_c();
 
-  Grab_CoordList(L, 1, B);
+	Grab_CoordList(L, 1, B);
 
-  if (B->props.getStr("flavor"))
-    Main_FatalError("Flavored brush used.\n");
+	if (B->props.getStr("flavor"))
+		Main_FatalError("Flavored brush used.\n");
 
-  all_brushes.push_back(B);
+	all_brushes.push_back(B);
 
-  return 0;
+	return 0;
 }
 
 
@@ -681,23 +681,23 @@ int CSG_add_brush(lua_State *L)
 //
 int CSG_add_entity(lua_State *L)
 {
-  csg_entity_c *E = new csg_entity_c();
+	csg_entity_c *E = new csg_entity_c();
 
-  Grab_Properties(L, 1, &E->props);
+	Grab_Properties(L, 1, &E->props);
 
-  E->id = E->props.getStr("id", "");
-  
-  E->x = E->props.getDouble("x");
-  E->y = E->props.getDouble("y");
-  E->z = E->props.getDouble("z");
+	E->id = E->props.getStr("id", "");
 
-  // save a bit of space
-  E->props.Remove("id"); E->props.Remove("x");
-  E->props.Remove("y");  E->props.Remove("z");
+	E->x = E->props.getDouble("x");
+	E->y = E->props.getDouble("y");
+	E->z = E->props.getDouble("z");
 
-  all_entities.push_back(E);
+	// save a bit of space
+	E->props.Remove("id"); E->props.Remove("x");
+	E->props.Remove("y");  E->props.Remove("z");
 
-  return 0;
+	all_entities.push_back(E);
+
+	return 0;
 }
 
 
@@ -705,21 +705,21 @@ int CSG_add_entity(lua_State *L)
 
 void CSG_Main_Free()
 {
-  unsigned int k;
+	unsigned int k;
 
-  for (k = 0 ; k < all_brushes.size() ; k++)
-    delete all_brushes[k];
+	for (k = 0 ; k < all_brushes.size() ; k++)
+		delete all_brushes[k];
 
-  for (k = 0 ; k < all_entities.size() ; k++)
-    delete all_entities[k];
+	for (k = 0 ; k < all_entities.size() ; k++)
+		delete all_entities[k];
 
-  all_brushes .clear();
-  all_entities.clear();
+	all_brushes .clear();
+	all_entities.clear();
 
-  dummy_wall_tex .clear();
-  dummy_plane_tex.clear();
+	dummy_wall_tex .clear();
+	dummy_plane_tex.clear();
 }
 
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab
