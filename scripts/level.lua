@@ -107,7 +107,7 @@ require "chunks"
 require "simple"
 require "hallway"
 
-require "areas"
+require "area"
 require "room"
 require "fight"
 require "monster"
