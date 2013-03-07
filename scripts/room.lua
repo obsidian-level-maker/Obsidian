@@ -2366,7 +2366,7 @@ function Rooms_decide_fences()
       for dir = 2,4,2 do
         local N = S:neighbor(dir)
 
-        if not N or not N.room or N.room == R then continue end
+        if not (N and N.room) or N.room == R then continue end
 
         if N.room.kind != "outdoor" then continue end
 

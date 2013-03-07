@@ -96,12 +96,14 @@ class HUB_LINK
 require "defs"
 require "util"
 
+require "section"
+require "seeds"
+
 require "planner"
 require "connect"
 require "quest"
 require "cave"
 
-require "seeds"
 require "build"
 require "chunks"
 require "simple"
