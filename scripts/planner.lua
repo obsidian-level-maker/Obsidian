@@ -1065,8 +1065,6 @@ function Plan_contiguous_sections()
 
     N:set_room(K.room)
 
-    N.kind = "section2"
-
     table.insert(K.room.sections, N)
   end
 

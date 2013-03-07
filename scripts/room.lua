@@ -251,8 +251,6 @@ end
 function ROOM_CLASS.annex(R, K)
   K:set_room(R)
 
-  K.kind = "annex"
-
   R:add_section(K)
 end
 

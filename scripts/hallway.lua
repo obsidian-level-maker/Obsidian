@@ -1764,9 +1764,6 @@ function Hallway_add_streets()
     local K = SECTIONS[kx][ky]
 
     if K and not K.used then
----   if K.kind == "vert"  and (kx == 1 or kx == SECTION_W) then continue end
----   if K.kind == "horiz" and (ky == 1 or ky == SECTION_H) then continue end
-
       K:set_room(room)
 
       room:add_section(K)

@@ -62,6 +62,7 @@ class SECTION
 
   room : ROOM
   hall : HALLWAY
+  closet : CLOSET
 
   num_conn  -- number of connections
 
@@ -280,7 +281,6 @@ end
 function SECTION_CLASS.new(shape, kx, ky)
   local K =
   {
-    kind  = shape  -- meh, fixme
     shape = shape
     kx = kx
     ky = ky
@@ -293,7 +293,7 @@ end
 
 
 function SECTION_CLASS.tostr(K)
-  return string.format("%s [%d,%d]", string.upper(K.kind), K.kx, K.ky)
+  return string.format("%s [%d,%d]", string.upper(K.shape), K.kx, K.ky)
 end
 
 
