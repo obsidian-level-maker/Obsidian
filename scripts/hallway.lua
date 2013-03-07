@@ -500,7 +500,13 @@ end
 
 
 
-function Hallway_test_branch(start_K, start_dir, mode)
+function Hallway_scan(start_K, start_dir, mode)
+
+  -- traces out all possible hallways (upto a certain length) from the
+  -- starting section and dir.  Each possible hallway is given a score,
+  -- and LEVEL.best_conn will remember the best hallway (over multiple
+  -- calls to this function).
+
 
   local function test_nearby_hallway(MID)
     if not (MID.hall or (MID.room and MID.room.street)) then return end
@@ -849,7 +855,7 @@ do return false end
   end
 
 
-  ---| Hallway_test_branch |---
+  ---| Hallway_scan |---
 
   -- always begin from a room
   assert(start_K.room)
@@ -858,8 +864,8 @@ do return false end
 
   if not MID then return end
 
-  -- if neighbor section is used, nothing is possible except
-  -- branching off a nearby hallway.
+  -- if the neighboring section is already used, nothing is possible
+  -- except to branch off that section (which must be a hallway too).
   if MID.used then
     test_nearby_hallway(MID)
     return

@@ -390,10 +390,10 @@ function Connect_scan_sections(mode, min_score)
     end
 
     for dir = 2,8,2 do
-      Hallway_test_branch(K, dir, mode)
+      Hallway_scan(K, dir, mode)
     end
 
-    -- this function can be expensive, so check for user abort
+    -- this function can take a while to run, so check for user abort
     if gui.abort() then return true end
   end end
 
