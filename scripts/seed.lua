@@ -471,7 +471,7 @@ function SECTION_CLASS.touches_edge(K)
 end
 
 
-function SECTION_CLASS.divide(K, dir, chop_num)
+function SECTION_CLASS.divide(K, side, chop_num)
   -- divide this section in two pieces.
   -- when dir == 8 then this object becomes the bottom, and the new section
   -- is the top (similarly for other directions).
@@ -480,13 +480,13 @@ function SECTION_CLASS.divide(K, dir, chop_num)
 
   assert(chop_num > 0)
 
-  if geom.is_vert(dir) then
+  if geom.is_vert(side) then
     assert(K.sh > chop_num)
   else
     assert(K.sw > chop_num)
   end
 
-  local N = SECTION_CLASS.new("rect")
+  local N = SECTION_CLASS.new("chop")
 
   N.used = K.used
   N.room = K.room
@@ -497,16 +497,16 @@ function SECTION_CLASS.divide(K, dir, chop_num)
   N.sy2 = K.sy2
   N.sy2 = K.sy2
 
-  if dir == 2 then
+  if side == 2 then
     K.sy1 = K.sy1 + chop_num
     N.sy2 = K.sy1 - 1
-  elseif dir == 8 then
+  elseif side == 8 then
     K.sy2 = K.sy2 - chop_num
     N.sy1 = K.sy2 + 1
-  elseif dir == 4 then
+  elseif side == 4 then
     K.sx1 = K.sx1 + chop_num
     N.sx2 = K.sx1 - 1
-  elseif dir == 6 then
+  elseif side == 6 then
     K.sx2 = K.sx2 - chop_num
     N.sx1 = K.sx2 + 1
   else
