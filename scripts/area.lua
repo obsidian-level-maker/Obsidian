@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2010-2012 Andrew Apted
+--  Copyright (C) 2010-2013 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -3429,7 +3429,7 @@ function Areas_flesh_out()
   end
 
 
-  local function tizzy_up_room(R)
+  local function finish_up_room(R)
 
     -- TODO add "area" prefabs now (e.g. crates, cages, bookcases)
 
@@ -3523,6 +3523,6 @@ function Areas_flesh_out()
 
   sync_sky_heights()
 
-  each R in LEVEL.rooms do tizzy_up_room(R) end
+  each R in LEVEL.rooms do finish_up_room(R) end
 end
 
