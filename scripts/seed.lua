@@ -397,10 +397,18 @@ end
 
 
 function SECTION_CLASS.neighbor(K, dir, dist)
-  local nx, ny = geom.nudge(K.kx, K.ky, dir, dist)
+  local nx, ny
 
-  if Section_is_valid(nx, ny) then
-    return SECTIONS[nx][ny]
+  if dir == 2 or dir == 8 then
+    nx = int((K.sx1 + K.sx2) / 2)
+    ny = (dir == 2 ? K.sy1 - 1 ; K.sy2 + 1)
+  else
+    ny = int((K.sy1 + K.sy2) / 2)
+    nx = (dir == 4 ? K.sx1 - 1 ; K.sx2 + 1)
+  end
+
+  if Seed_valid(nx, ny) then
+    return SEEDS[nx][ny].section
   end
 
   return nil
