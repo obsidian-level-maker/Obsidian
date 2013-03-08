@@ -1739,6 +1739,8 @@ function Hallway_add_doubles()
 
   --| Hallway_add_doubles |--
 
+do return end  --!!!! FIXME: disabled for now
+
   local quota = MAP_W / 2 + gui.random()
 
   local visits = table.copy(LEVEL.halls)

@@ -901,7 +901,7 @@ function Levels_make_all()
   table.index_up(GAME.levels)
   table.index_up(GAME.episodes)
 
-  Levels_decide_special_kinds()
+--!!!!  Levels_decide_special_kinds()
 
   Levels_choose_themes()
 
