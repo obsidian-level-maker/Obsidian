@@ -913,6 +913,13 @@ function Trans.box_transform(x1, y1, x2, y2, z, dir)
 end
 
 
+function Trans.section_transform(K, dir)
+  local x1, y1, x2, y2 = K:get_coords()
+
+  return Trans.box_transform(x1, y1, x2, y2, K.floor_h or 0, dir)
+end
+
+
 function Trans.corner_transform(x1,y1, x2,y2, z, side, horiz, vert)
   local XS   = { [1]=x1, [9]= x2, [7]= x1, [3]=x2 }
   local YS   = { [1]=y1, [9]= y2, [7]= y2, [3]=y1 }

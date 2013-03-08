@@ -589,6 +589,8 @@ function Connect_cycles()
 
   ---| Connect_cycles |---
 
+do return end  --!!!!! FIXME: temporarily disabled
+
   if STYLE.cycles != "none" then
     prepare_cycles()
 

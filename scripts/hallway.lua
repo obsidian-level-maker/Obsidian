@@ -30,7 +30,6 @@ class HALLWAY
   entry_conn
 
   sections : list(SECTION)
-  chunks   : list(CHUNK)
 
   big_junc  : SECTION
   crossover : ROOM
@@ -79,7 +78,6 @@ function HALLWAY_CLASS.new()
     id       = Plan_alloc_id("hallway")
     conns    = {}
     sections = {}
-    chunks   = {}
 
     mon_spots  = {}
     item_spots = {}
@@ -97,11 +95,11 @@ function HALLWAY_CLASS.tostr(H)
 end
 
 
-function HALLWAY_CLASS.dump_chunks(H)
-  gui.debugf("%s chunks:\n{\n", H:tostr())
+function HALLWAY_CLASS.OLD__dump_pieces(H)
+  gui.debugf("%s pieces:\n{\n", H:tostr())
 
-  each C in H.chunks do
-    gui.debugf("  %s\n", C:tostr())
+  each P in H.pieces do
+    gui.debugf("  %s\n", P:tostr())
   end
 
   gui.debugf("}\n")
@@ -113,7 +111,7 @@ function HALLWAY_CLASS.dump(H)
   gui.debugf("{\n")
   -- FIXME
   gui.debugf("belong = %s\n", (H.belong_room ? H.belong_room:tostr() ; "nil"))
-  gui.debugf("chunks = %s\n", (H.chunks ? tostring(#H.chunks) ; "nil"))
+  gui.debugf("sections = %s\n", (H.sections ? tostring(#H.sections) ; "nil"))
   gui.debugf("}\n")
 end
 
@@ -204,6 +202,9 @@ function HALLWAY_CLASS.add_sections(H, sections)
       K:set_crossover(H)
     else
       K:set_hall(H)
+
+      K.link = {}
+      K.hall_link = {}
     end
   end
 end
@@ -262,7 +263,6 @@ function HALLWAY_CLASS.merge_it(old_H, new_H, via_conn)
   -- the new_H object is never used again
   new_H.id       = nil
   new_H.sections = nil
-  new_H.chunks   = nil
 end
 
 
@@ -289,9 +289,9 @@ function HALLWAY_CLASS.alloc_chunk(H, K, sx1, sy1, sx2, sy2)
   C.section = K
   C.hall_link = {}
 
-  table.insert(H.chunks, C)
-
-  C:install()
+---###  table.insert(H.chunks, C)
+---###  C:install()
+  C:set_coords()
 
   return C
 end
@@ -302,15 +302,6 @@ function HALLWAY_CLASS.is_side_connected(H, K, dir)
   -- section in this hallway.
 
   return K.hall_link[dir] == H
-end
-
-
-function HALLWAY_CLASS.section_has_chunk(H, K)
-  each C in H.chunks do
-    if K:contains_chunk(C) then return true end
-  end
-
-  return false
 end
 
 
@@ -410,10 +401,10 @@ function HALLWAY_CLASS.add_edge_chunk(H, K, side)
 end
 
 
-function HALLWAY_CLASS.create_chunks(H)
-  -- the hallway will already have some chunks (from connections).
-  -- this will create the remaining chunks, AND link the chunks together
-  -- (i.e. create the CHUNK.hall_link[] tables).
+
+function HALLWAY_CLASS.create_pieces(H)
+
+--[[
 
   -- every section will get at least one chunk
   each K in H.sections do
@@ -434,30 +425,47 @@ function HALLWAY_CLASS.create_chunks(H)
       H:add_edge_chunk(K, 8)
     end
   end
+
+--]]
+
 end
 
 
-function HALLWAY_CLASS.try_link_chunk(H, C, dir)
+
+function HALLWAY_CLASS.try_link_piece(H, P, dir)
   -- already linked?
-  if C.link[dir] or C.hall_link[dir] then
+  if P.link[dir] or P.hall_link[dir] then
     return
   end
 
-  local C2 = C:middle_neighbor(dir)
+  local P2 = P:touch_neighbor(dir)
   
-  if not C2 then return end
+  if not P2 then return end
 
-  if C2.hall != H then return end
+  if P2.hall != H then return end
 
   -- OK !!
 
-  C .hall_link[dir] = C2
-  C2.hall_link[10 - dir] = C
+  P .hall_link[dir] = P2
+  P2.hall_link[10 - dir] = P
 end
 
 
-function HALLWAY_CLASS.link_chunks(H)
-  each C in H.chunks do
+
+function categorize_hall_piece(P)
+  local cat, dir = Trans.categorize_linkage(
+      P.link[2] or P.hall_link[2], P.link[4] or P.hall_link[4],
+      P.link[6] or P.hall_link[6], P.link[8] or P.hall_link[8]);
+
+  assert(cat != "N" and cat != "F")
+
+  P.h_shape = cat
+  P.h_dir   = dir
+end
+
+
+function HALLWAY_CLASS.link_pieces(H)
+  each P in H.sections do
     -- only check links inside and at edges of horizontal or vertical
     -- sections.  This will handle junctions OK, since junctions always
     -- touch such sections (i.e. two junctions never directly touch).
@@ -466,31 +474,31 @@ function HALLWAY_CLASS.link_chunks(H)
     -- want the link recorded even though there can be a difference in
     -- the size of the "spoke" chunks and the "big_junc" chunk.
 
-    if C.section.shape == "horiz" then
-      H:try_link_chunk(C, 4)
-      H:try_link_chunk(C, 6)
+    if P.shape == "horiz" then
+      H:try_link_piece(P, 4)
+      H:try_link_piece(P, 6)
     
-    elseif C.section.shape == "vert" then
-      H:try_link_chunk(C, 2)
-      H:try_link_chunk(C, 8)
+    elseif P.shape == "vert" then
+      H:try_link_piece(P, 2)
+      H:try_link_piece(P, 8)
 
-    elseif C.section.shape == "big_junc" then
+    elseif P.shape == "big_junc" then
       for dir = 2,8,2 do
-        H:try_link_chunk(C, dir)
+        H:try_link_piece(P, dir)
       end
     end
   end
 
-  -- verify all chunks have sane linkage
-  each C in H.chunks do
-    if table.size(C.link) + table.size(C.hall_link) < 2 then
-      gui.debugf("hallway %s has bad linkage @ %s\n", H:tostr(), C:tostr())
+  -- categorize the hallway pieces, and verify the linkages
+
+  each P in H.sections do
+    if table.size(P.link) + table.size(P.hall_link) < 2 then
+      gui.debugf("hallway %s has bad linkage @ %s\n", H:tostr(), P:tostr())
       error("bad linkage in hallway")
     end
 
-    -- and categorize the hallway piece needed
-    if not C.crossover_hall then
-      C.h_shape, C.h_dir = C:categorize_hall_piece()
+    if not P.crossover_hall then
+      categorize_hall_piece(P)
     end
   end
 end
@@ -570,19 +578,20 @@ end
 
 
 
-function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
+function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
   -- recursively flow through the hallway, adding stairs (etc) 
 
---- stderrf("stair_flow @ %s | %s\n", H:tostr(), C:tostr())
+stderrf("stair_flow @ %s | %s\n", H:tostr(), P:tostr())
 
-  seen[C] = true
+  seen[P] = true
 
   local floor_heights = {}  -- indexed by [dir]
 
-  if C.section.shape == "big_junc" then
-    C.skin_name = H:select_piece(C)
+  if P.shape == "big_junc" then
+    --FIXME FIXME
+    P.skin_name = H:select_piece(P)
 
-    local skin = assert(GAME.SKINS[C.skin_name])
+    local skin = assert(GAME.SKINS[P.skin_name])
 
     -- allow height changes at big junctions (specified by the skin)
 
@@ -590,9 +599,9 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
       assert(skin._heights[4])
       
       -- this is complicated by the fact that we can enter the junction
-      -- from a different direction that it faces (from_dir != C.h_dir).
+      -- from a different direction that it faces (from_dir != P.h_dir).
 
-      local s = C.h_dir
+      local s = P.h_dir
       local e = geom.RIGHT[s]
       local w = geom.LEFT[s]
       local n = 10 - s
@@ -616,37 +625,37 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
   -- only the "I" pieces can become stairs or lifts
   -- (everything else must have no height changes)
 
-  C.floor_h = floor_h
+  P.floor_h = floor_h
 
-  if C.h_shape == "I" and not (H.big_junc or H.mini_hall) and
-     not C.crossover_hall and
-     (rand.odds(H.stair_prob) or C.double_peer) and
-     (not H.double_fork or C.double_peer)
+  if P.h_shape == "I" and not (H.big_junc or H.mini_hall) and
+     not P.crossover_hall and
+     (rand.odds(H.stair_prob) or P.double_peer) and
+     (not H.double_fork or P.double_peer)
   then
     -- reverse Z direction in a double hallway when hit the fork section,
     -- which means the other side mirrors the first side
-    if C.double_peer and C.double_peer.floor_h and H.need_flip and not H.flipped_double then
+    if P.double_peer and P.double_peer.floor_h and H.need_flip and not H.flipped_double then
       z_dir = -z_dir
       H.flipped_double = true
     end
 
-    C.h_extra = "stair"
-    C.h_dir   = (z_dir < 0 ? 10 - from_dir ; from_dir)
+    P.h_extra = "stair"
+    P.h_dir   = (z_dir < 0 ? 10 - from_dir ; from_dir)
 
     -- FIXME: pick stair kind ("short" / "medium" / "tall" / "lift")
 
-    C.h_stair_kind = "medium"
-    C.h_stair_h = 64
+    P.h_stair_kind = "medium"
+    P.h_stair_h = 64
 
-    floor_h = floor_h + C.h_stair_h * z_dir
+    floor_h = floor_h + P.h_stair_h * z_dir
 
     -- stairs and lifts require chunk has the lowest height
     if z_dir < 0 then
-      C.floor_h = floor_h
+      P.floor_h = floor_h
     end
   end
 
-  if (C.h_shape == "C" or C.h_shape == "P") and rand.odds(15) and not H.double_fork then
+  if (P.h_shape == "C" or P.h_shape == "P") and rand.odds(15) and not H.double_fork then
     z_dir = -z_dir
   end
 
@@ -659,18 +668,26 @@ function HALLWAY_CLASS.stair_flow(H, C, from_dir, floor_h, z_dir, seen)
 
     if dir == from_dir then continue end
 
-    local C2 = C.hall_link[dir]
+    local P2
 
-    if C2 and not seen[C2] then
-      H:stair_flow(C2, 10 - dir, f_h, z_dir, seen)
+    if H == P.hall_link[dir] then
+      P2 = P:touch_neighbor(dir)
+      assert(P2)
+      assert(P2.hall == H)
+    end
+
+    if P2 and not seen[P2] then
+      H:stair_flow(P2, 10 - dir, f_h, z_dir, seen)
       did_a_branch = true
     end
 
-    local LINK = C.link[dir]
+    -- transmit floor height into a destination room
+
+    local LINK = P.link[dir]
 
     if LINK and not (LINK.conn and LINK.conn.kind == "double_R") then
       local C3 = LINK.C1
-      if C3 == C then C3 = LINK.C2 end
+      if LINK.K1 == P then C3 = LINK.C2 end
 
       C3.floor_h = f_h
     end
@@ -879,9 +896,9 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
   H.done_heights = true
 
   assert(entry_conn)
-  assert(entry_conn.C1)
+  assert(entry_conn.K1)
 
-  local entry_C = assert(entry_conn.C2)
+  local entry_K = assert(entry_conn.K2)
   local entry_h = assert(entry_conn.C1.floor_h)
   local entry_dir = entry_conn.dir1
 
@@ -897,16 +914,15 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
 
   H.height = 768  -- FIXME RUBBISH REMOVE IT
 
-  assert(H.chunks)
-
   if #H.sections == 1 and not H.is_cycle then
     H.mini_hall = true
   end
 
-  H:create_chunks()
-  H:  link_chunks()
+  H:create_pieces()
+  H:  link_pieces()
 
-  H:update_seeds_for_chunks()
+----???  H:update_seeds_for_chunks()
+
   H:peer_double_chunks()
 
   H.stair_prob = 35
@@ -915,21 +931,21 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
   local z_dir = rand.sel(50, 1, -1)
 
   if H.is_cycle then
-    H:handle_cycle(entry_C, 10 - entry_dir, entry_h)
+    H:handle_cycle(entry_K, 10 - entry_dir, entry_h)
 
   else
-    H:stair_flow(entry_C, 10 - entry_dir, entry_h, z_dir, {})
+    H:stair_flow(entry_K, 10 - entry_dir, entry_h, z_dir, {})
   end
 
   H.min_floor_h = entry_h
   H.max_floor_h = entry_h
 
-  each C in H.chunks do
-    assert(C.floor_h)
+  each P in H.sections do
+    assert(P.floor_h)
 
-    if not C.crossover_hall then
-      H.min_floor_h = math.min(H.min_floor_h, C.floor_h)
-      H.max_floor_h = math.max(H.max_floor_h, C.floor_h)
+    if not P.crossover_hall then
+      H.min_floor_h = math.min(H.min_floor_h, P.floor_h)
+      H.max_floor_h = math.max(H.max_floor_h, P.floor_h)
     end
   end
 
@@ -994,7 +1010,7 @@ function HALLWAY_CLASS.pick_group(H)
   local group_name = H.zone.hallway_group
 
   -- check for "sky halls"
-  local sky_h = H:check_sky_hall()
+  local sky_h = nil  --!!!!! FIXME  H:check_sky_hall()
 
   if sky_h and THEME.sky_halls then
     group_name = rand.key_by_probs(THEME.sky_halls)
@@ -1014,15 +1030,18 @@ function HALLWAY_CLASS.pick_group(H)
 end
 
 
-function HALLWAY_CLASS.select_piece(H, C)
-  if C.skin_name then return C.skin_name end
+function HALLWAY_CLASS.select_piece(H, P)
+  if P.skin_name then return P.skin_name end
 
-  local shape = C.h_shape
+  local shape = P.h_shape
 
-  if C.h_extra == "stair" then shape = shape .. "S" end
-  if C.h_extra == "lift"  then shape = shape .. "L" end
+  if P.h_extra == "stair" then shape = shape .. "S" end
+  if P.h_extra == "lift"  then shape = shape .. "L" end
 
-  local long, deep = geom.long_deep(C.x2 - C.x1, C.y2 - C.y1, C.h_dir)
+  local long, deep = P:long_deep(P.h_dir)
+
+  long = long * SEED_SIZE
+  deep = deep * SEED_SIZE
 
   local reqs =
   {
@@ -1042,12 +1061,12 @@ function HALLWAY_CLASS.select_piece(H, C)
     source_tab = assert(THEME.mini_halls)
 
     -- don't put a doorish mini-hall next to a locked door
-    if C:has_locked_door() then
-      reqs.door = 0
-    end
+---FIXME    if C:has_locked_door() then
+---FIXME      reqs.door = 0
+---FIXME    end
   end
 
-  if C.section.shape == "big_junc" then
+  if P.shape == "big_junc" then
     local biggies = THEME.big_junctions
     assert(biggies)
 
@@ -1085,8 +1104,8 @@ function HALLWAY_CLASS.select_piece(H, C)
 end
 
 
-function HALLWAY_CLASS.build_hall_piece(H, C)
-  local skin_name = H:select_piece(C)
+function HALLWAY_CLASS.build_hall_piece(H, P)
+  local skin_name = H:select_piece(P)
 
   local skin1 = GAME.SKINS[skin_name]
   assert(skin1)
@@ -1106,9 +1125,9 @@ function HALLWAY_CLASS.build_hall_piece(H, C)
     end
   end
 
-  local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, C.h_dir or 2)
+  local T = Trans.section_transform(P, P.h_dir or 2)
 
-  local skin2 = { stair_h = C.h_stair_h }
+  local skin2 = { stair_h = P.h_stair_h }
 
   local fab = Fabricate(skin1, T, { skin0, skin1, skin2 })
 
@@ -1120,7 +1139,8 @@ function HALLWAY_CLASS.build_hall_piece(H, C)
 
   -- the sky is done separately for "Sky Hall" pieces
   if H.sky_hall_sky_h and skin1._need_sky then
-    local brush = Brush_new_quad(C.x1, C.y1, C.x2, C.y2, H.sky_hall_sky_h)
+    local x1, y1, x2, y2 = P:get_coords()
+    local brush = Brush_new_quad(x1, y1, x2, y2, H.sky_hall_sky_h)
 
     Brush_set_mat(brush, "_SKY", "_SKY")
     table.insert(brush, 1, { m="sky" })
@@ -1129,16 +1149,16 @@ function HALLWAY_CLASS.build_hall_piece(H, C)
   end
 
 --[[
-local mx, my = C:mid_point()
+local mx, my = P:mid_point()
 entity_helper("dummy", mx, my, 24)
 --]]
 end
 
 
 function HALLWAY_CLASS.build(H)
-  each C in H.chunks do
-    if not C.crossover_hall then
-      H:build_hall_piece(C)
+  each P in H.sections do
+    if not P.crossover_hall then
+      H:build_hall_piece(P)
     end
   end
 end
