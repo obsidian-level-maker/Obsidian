@@ -266,208 +266,6 @@ function HALLWAY_CLASS.merge_it(old_H, new_H, via_conn)
 end
 
 
-function HALLWAY_CLASS.check_sky_hall(H)
-  local info = {}
-
-  local sky_count = 0
-  local total     = 0
-
-  each C in H.chunks do
-    if not C.crossover_hall and not (C.h_shape == "P" or C.h_shape == "T") then
-
-      local touches_sky
-
-      for dir = 2,8,2 do
-        if not C.link[dir] and C:neighbor_info(dir, info, "sky_only") then
-          touches_sky = true
-        end
-      end -- dir
-
-      if touches_sky then sky_count = sky_count + 1 end
-      total = total + 1
-    end
-  end
-
---[[ DEBUG
-stderrf("check_sky_hall @ %s : %d/%d\nfloor range (%d..%d)\n%s\n\n",
-        H:tostr(), sky_count, total,
-        H.min_floor_h, H.max_floor_h,
-        table.tostr(info))
---]]
-
-  -- Requirements:
-  if sky_count >= math.max(1, total / 3) and
-     info.f_max and H.min_floor_h >= info.f_max and
-     info.c_min and H.max_floor_h + 80 <= info.c_min
-  then
-    return info.c_min
-  end
-
-  return nil  -- not possible
-end
-
-
-function HALLWAY_CLASS.pick_group(H)
-  -- use a single style per zone
-  local group_tab = H.theme.hallway_groups or THEME.hallway_groups
-
-  if not H.zone.hallway_group then
-    H.zone.hallway_group = rand.key_by_probs(group_tab)
-  end
-
-  local group_name = H.zone.hallway_group
-
-  -- check for "sky halls"
-  local sky_h = H:check_sky_hall()
-
-  if sky_h and THEME.sky_halls then
-    group_name = rand.key_by_probs(THEME.sky_halls)
-
-    H.sky_hall_sky_h = sky_h
-  end
-
-  H.group = GAME.GROUPS[group_name]
-
-  if not H.group then
-    error("Missing hallway group: " .. tostring(group_name))
-  end
-
-  if not (H.group.kind == "hallway" or H.group.kind == "skyhall") then
-    error("Wrong kind for hallway group: " .. tostring(group_name))
-  end
-end
-
-
-function HALLWAY_CLASS.select_piece(H, C)
-  if C.skin_name then return C.skin_name end
-
-  local shape = C.h_shape
-
-  if C.h_extra == "stair" then shape = shape .. "S" end
-  if C.h_extra == "lift"  then shape = shape .. "L" end
-
-  local long, deep = geom.long_deep(C.x2 - C.x1, C.y2 - C.y1, C.h_dir)
-
-  local reqs =
-  {
-    shape = shape
-    long  = long
-    deep  = deep
-  }
-
-  -- find all skins which match this mode (etc)
-  local source_tab = H.group and H.group.parts
-
-  if H.mini_hall and H.is_secret then
-    return "Secret_Mini"  -- FIXME: THEME.secret_halls
-  end
-
-  if H.mini_hall or H.big_junc then
-    source_tab = assert(THEME.mini_halls)
-
-    -- don't put a doorish mini-hall next to a locked door
-    if C:has_locked_door() then
-      reqs.door = 0
-    end
-  end
-
-  if C.section.shape == "big_junc" then
-    local biggies = THEME.big_junctions
-    assert(biggies)
-
-    -- FIXME: this is ass-backwards, we should have picked the group
-    --        earlier (checking that it supports the actual link-cat)
-
-    source_tab = {}
-
-    local SUFFIXES = { "_I", "_C", "_T", "_P" }
-
-    each name,prob in biggies do
-      local j_group = GAME.GROUPS[name]
-      if not j_group then error("No such junction group: " .. tostring(name)) end
-
-      each skin_name,prob in j_group.parts do
-        source_tab[skin_name] = prob
-      end
-    end
-  end
-
-  assert(source_tab)
-
-  local tab = Rooms_filter_skins(H, "hallway_group", source_tab, reqs)
-
-  -- handle pieces that should only occur in-between other pieces
-  each name in table.keys(tab) do
-    local skin = GAME.SKINS[name]
-
-    if skin._in_between and (not H.last_piece or H.last_piece == name) then
-      tab[name] = nil
-    end
-  end
-
-  return rand.key_by_probs(tab)
-end
-
-
-function HALLWAY_CLASS.build_hall_piece(H, C)
-  local skin_name = H:select_piece(C)
-
-  local skin1 = GAME.SKINS[skin_name]
-  assert(skin1)
- 
-  local skin0 = { wall  = H.wall_mat,
-                  floor = H.floor_mat,
-                  ceil  = H.ceil_mat,
-                  outer = H.zone.facade_mat
-                }
-
-  -- hack for secret exits -- need hallway piece to blend in
-  if H.mini_hall and H.is_secret then
-    if H.off_room.kind == "outdoor" then
-      skin0.wall = skin0.outer
-    else
-      skin0.wall = H.off_room.wall_mat
-    end
-  end
-
-  local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, C.h_dir or 2)
-
-  local skin2 = { stair_h = C.h_stair_h }
-
-  local fab = Fabricate(skin1, T, { skin0, skin1, skin2 })
-
-  if fab.has_spots then
-    Rooms_distribute_spots(H, Fab_read_spots(fab))
-  end
-
-  H.last_piece = skin_name
-
-  -- the sky is done separately for "Sky Hall" pieces
-  if H.sky_hall_sky_h and skin1._need_sky then
-    local brush = Brush_new_quad(C.x1, C.y1, C.x2, C.y2, H.sky_hall_sky_h)
-
-    Brush_set_mat(brush, "_SKY", "_SKY")
-    table.insert(brush, 1, { m="sky" })
-
-    brush_helper(brush)
-  end
-
---[[
-local mx, my = C:mid_point()
-entity_helper("dummy", mx, my, 24)
---]]
-end
-
-
-function HALLWAY_CLASS.build(H)
-  each C in H.chunks do
-    if not C.crossover_hall then
-      H:build_hall_piece(C)
-    end
-  end
-end
-
-
 --------------------------------------------------------------------
 
 
@@ -1141,7 +939,212 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
 end
 
 
-----------------------------------------------------------------
+--------------------------------------------------------------------
+
+
+function HALLWAY_CLASS.check_sky_hall(H)
+  local info = {}
+
+  local sky_count = 0
+  local total     = 0
+
+  each C in H.chunks do
+    if not C.crossover_hall and not (C.h_shape == "P" or C.h_shape == "T") then
+
+      local touches_sky
+
+      for dir = 2,8,2 do
+        if not C.link[dir] and C:neighbor_info(dir, info, "sky_only") then
+          touches_sky = true
+        end
+      end -- dir
+
+      if touches_sky then sky_count = sky_count + 1 end
+      total = total + 1
+    end
+  end
+
+--[[ DEBUG
+stderrf("check_sky_hall @ %s : %d/%d\nfloor range (%d..%d)\n%s\n\n",
+        H:tostr(), sky_count, total,
+        H.min_floor_h, H.max_floor_h,
+        table.tostr(info))
+--]]
+
+  -- Requirements:
+  if sky_count >= math.max(1, total / 3) and
+     info.f_max and H.min_floor_h >= info.f_max and
+     info.c_min and H.max_floor_h + 80 <= info.c_min
+  then
+    return info.c_min
+  end
+
+  return nil  -- not possible
+end
+
+
+function HALLWAY_CLASS.pick_group(H)
+  -- use a single style per zone
+  local group_tab = H.theme.hallway_groups or THEME.hallway_groups
+
+  if not H.zone.hallway_group then
+    H.zone.hallway_group = rand.key_by_probs(group_tab)
+  end
+
+  local group_name = H.zone.hallway_group
+
+  -- check for "sky halls"
+  local sky_h = H:check_sky_hall()
+
+  if sky_h and THEME.sky_halls then
+    group_name = rand.key_by_probs(THEME.sky_halls)
+
+    H.sky_hall_sky_h = sky_h
+  end
+
+  H.group = GAME.GROUPS[group_name]
+
+  if not H.group then
+    error("Missing hallway group: " .. tostring(group_name))
+  end
+
+  if not (H.group.kind == "hallway" or H.group.kind == "skyhall") then
+    error("Wrong kind for hallway group: " .. tostring(group_name))
+  end
+end
+
+
+function HALLWAY_CLASS.select_piece(H, C)
+  if C.skin_name then return C.skin_name end
+
+  local shape = C.h_shape
+
+  if C.h_extra == "stair" then shape = shape .. "S" end
+  if C.h_extra == "lift"  then shape = shape .. "L" end
+
+  local long, deep = geom.long_deep(C.x2 - C.x1, C.y2 - C.y1, C.h_dir)
+
+  local reqs =
+  {
+    shape = shape
+    long  = long
+    deep  = deep
+  }
+
+  -- find all skins which match this mode (etc)
+  local source_tab = H.group and H.group.parts
+
+  if H.mini_hall and H.is_secret then
+    return "Secret_Mini"  -- FIXME: THEME.secret_halls
+  end
+
+  if H.mini_hall or H.big_junc then
+    source_tab = assert(THEME.mini_halls)
+
+    -- don't put a doorish mini-hall next to a locked door
+    if C:has_locked_door() then
+      reqs.door = 0
+    end
+  end
+
+  if C.section.shape == "big_junc" then
+    local biggies = THEME.big_junctions
+    assert(biggies)
+
+    -- FIXME: this is ass-backwards, we should have picked the group
+    --        earlier (checking that it supports the actual link-cat)
+
+    source_tab = {}
+
+    local SUFFIXES = { "_I", "_C", "_T", "_P" }
+
+    each name,prob in biggies do
+      local j_group = GAME.GROUPS[name]
+      if not j_group then error("No such junction group: " .. tostring(name)) end
+
+      each skin_name,prob in j_group.parts do
+        source_tab[skin_name] = prob
+      end
+    end
+  end
+
+  assert(source_tab)
+
+  local tab = Rooms_filter_skins(H, "hallway_group", source_tab, reqs)
+
+  -- handle pieces that should only occur in-between other pieces
+  each name in table.keys(tab) do
+    local skin = GAME.SKINS[name]
+
+    if skin._in_between and (not H.last_piece or H.last_piece == name) then
+      tab[name] = nil
+    end
+  end
+
+  return rand.key_by_probs(tab)
+end
+
+
+function HALLWAY_CLASS.build_hall_piece(H, C)
+  local skin_name = H:select_piece(C)
+
+  local skin1 = GAME.SKINS[skin_name]
+  assert(skin1)
+ 
+  local skin0 = { wall  = H.wall_mat,
+                  floor = H.floor_mat,
+                  ceil  = H.ceil_mat,
+                  outer = H.zone.facade_mat
+                }
+
+  -- hack for secret exits -- need hallway piece to blend in
+  if H.mini_hall and H.is_secret then
+    if H.off_room.kind == "outdoor" then
+      skin0.wall = skin0.outer
+    else
+      skin0.wall = H.off_room.wall_mat
+    end
+  end
+
+  local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, C.h_dir or 2)
+
+  local skin2 = { stair_h = C.h_stair_h }
+
+  local fab = Fabricate(skin1, T, { skin0, skin1, skin2 })
+
+  if fab.has_spots then
+    Rooms_distribute_spots(H, Fab_read_spots(fab))
+  end
+
+  H.last_piece = skin_name
+
+  -- the sky is done separately for "Sky Hall" pieces
+  if H.sky_hall_sky_h and skin1._need_sky then
+    local brush = Brush_new_quad(C.x1, C.y1, C.x2, C.y2, H.sky_hall_sky_h)
+
+    Brush_set_mat(brush, "_SKY", "_SKY")
+    table.insert(brush, 1, { m="sky" })
+
+    brush_helper(brush)
+  end
+
+--[[
+local mx, my = C:mid_point()
+entity_helper("dummy", mx, my, 24)
+--]]
+end
+
+
+function HALLWAY_CLASS.build(H)
+  each C in H.chunks do
+    if not C.crossover_hall then
+      H:build_hall_piece(C)
+    end
+  end
+end
+
+
+--------------------------------------------------------------------
 
 
 function Hallway_prepare()
