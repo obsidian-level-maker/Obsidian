@@ -314,6 +314,15 @@ function SECTION_CLASS.usable_for_room(K)
 end
 
 
+function SECTION_CLASS.install(K)
+  for sx = K.sx1, K.sx2 do
+  for sy = K.sy1, K.sy2 do
+    SEEDS[sx][sy].section = K
+  end
+  end
+end
+
+
 function SECTION_CLASS.set_room(K, R)
   assert(not K.used)
   K.room = R ; K.used = true
@@ -459,6 +468,68 @@ function SECTION_CLASS.touches_edge(K)
   end
 
   return false
+end
+
+
+function SECTION_CLASS.divide_vert(K, top_num)
+  -- divide this section vertically in two.
+  -- this object becomes the bottom, and the new section is the top.
+  -- the 'top_num' specifies the height in seeds for the top.
+  -- returns the top section.
+
+  assert(top_num > 0)
+  assert(K.sh > top_num)
+
+  local N = SECTION_CLASS.new("rect")
+
+  N.used = K.used
+  N.room = K.room
+  N.hall = K.hall
+
+  N.sx1 = K.sx1
+  N.sx2 = K.sx2
+
+  N.sy1 = K.sy2 - (top_num - 1)
+  N.sy2 = K.sy2
+
+  K.sy2 = N.sy1 - 1
+
+  K:update_size()
+  N:update_size()
+
+  N:install()
+
+  return N
+end
+
+
+function SECTION_CLASS.divide_horiz(K, right_num)
+  -- divide this section horizontally in two.
+  -- semantics are roughly equivalent to divide_vert() above.
+
+  assert(right_num > 0)
+  assert(K.sw > right_num)
+
+  local N = SECTION_CLASS.new("rect")
+
+  N.used = K.used
+  N.room = K.room
+  N.hall = K.hall
+
+  N.sy1 = K.sy1
+  N.sy2 = K.sy2
+
+  N.sx1 = K.sx2 - (right_num - 1)
+  N.sx2 = K.sx2
+
+  K.sx2 = N.sx1 - 1
+
+  K:update_size()
+  N:update_size()
+
+  N:install()
+
+  return N
 end
 
 
