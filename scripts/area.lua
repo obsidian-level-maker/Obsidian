@@ -491,6 +491,18 @@ function Areas_handle_connections()
 
     C1.link[dir]      = LINK
     C2.link[10 - dir] = LINK
+
+    if C1.hall then
+       K1 = SEEDS[C1.sx1][C1.sy1].section
+       K1.link[dir] = LINK
+       LINK.K1 = K1
+    end
+
+    if C2.hall then
+       K2 = SEEDS[C2.sx1][C2.sy1].section
+       K2.link[10 - dir] = LINK
+       LINK.K2 = K2
+    end
   end
 
 
@@ -3389,6 +3401,7 @@ function Areas_flesh_out()
 
 
   local function floor_stuff(R)
+stderrf("AREA floor_stuff @ %s\n", R:tostr())
     R.areas = {}
 
     if R.kind == "cave" then

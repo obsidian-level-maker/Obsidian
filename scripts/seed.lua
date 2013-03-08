@@ -295,6 +295,7 @@ function SECTION_CLASS.new(shape, kx, ky)
     kx = kx
     ky = ky
     num_conn = 0
+    link = {}
     hall_link = {}
   }
   table.set_class(K, SECTION_CLASS)

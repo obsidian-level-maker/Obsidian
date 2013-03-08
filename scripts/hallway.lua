@@ -202,9 +202,6 @@ function HALLWAY_CLASS.add_sections(H, sections)
       K:set_crossover(H)
     else
       K:set_hall(H)
-
-      K.link = {}
-      K.hall_link = {}
     end
   end
 end
@@ -581,7 +578,8 @@ end
 function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
   -- recursively flow through the hallway, adding stairs (etc) 
 
-stderrf("stair_flow @ %s | %s\n", H:tostr(), P:tostr())
+--stderrf("stair_flow @ %s | %s\n", H:tostr(), P:tostr())
+--stderrf("from_dir: %d\n", from_dir)
 
   seen[P] = true
 
@@ -686,8 +684,12 @@ stderrf("stair_flow @ %s | %s\n", H:tostr(), P:tostr())
     local LINK = P.link[dir]
 
     if LINK and not (LINK.conn and LINK.conn.kind == "double_R") then
+-- stderrf("stair_flow: LINK = \n%s\n\n", table.tostr(LINK, 2))
       local C3 = LINK.C1
-      if LINK.K1 == P then C3 = LINK.C2 end
+
+      if P:contains_chunk(C3) then C3 = LINK.C2 end
+
+      assert(not P:contains_chunk(C3))
 
       C3.floor_h = f_h
     end
@@ -890,6 +892,8 @@ end
 
 function HALLWAY_CLASS.floor_stuff(H, entry_conn)
   ---- if H.done_heights then return end
+
+stderrf("hallway floor_stuff for %s\n", H:tostr())
 
   assert(not H.done_heights)
 
