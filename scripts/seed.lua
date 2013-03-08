@@ -471,14 +471,20 @@ function SECTION_CLASS.touches_edge(K)
 end
 
 
-function SECTION_CLASS.divide_vert(K, top_num)
-  -- divide this section vertically in two.
-  -- this object becomes the bottom, and the new section is the top.
-  -- the 'top_num' specifies the height in seeds for the top.
-  -- returns the top section.
+function SECTION_CLASS.divide(K, dir, chop_num)
+  -- divide this section in two pieces.
+  -- when dir == 8 then this object becomes the bottom, and the new section
+  -- is the top (similarly for other directions).
+  -- chop_num specifies the depth (in seeds) to remove at the edge.
+  -- returns the new section.
 
-  assert(top_num > 0)
-  assert(K.sh > top_num)
+  assert(chop_num > 0)
+
+  if geom.is_vert(dir) then
+    assert(K.sh > chop_num)
+  else
+    assert(K.sw > chop_num)
+  end
 
   local N = SECTION_CLASS.new("rect")
 
@@ -488,41 +494,24 @@ function SECTION_CLASS.divide_vert(K, top_num)
 
   N.sx1 = K.sx1
   N.sx2 = K.sx2
-
-  N.sy1 = K.sy2 - (top_num - 1)
+  N.sy2 = K.sy2
   N.sy2 = K.sy2
 
-  K.sy2 = N.sy1 - 1
-
-  K:update_size()
-  N:update_size()
-
-  N:install()
-
-  return N
-end
-
-
-function SECTION_CLASS.divide_horiz(K, right_num)
-  -- divide this section horizontally in two.
-  -- semantics are roughly equivalent to divide_vert() above.
-
-  assert(right_num > 0)
-  assert(K.sw > right_num)
-
-  local N = SECTION_CLASS.new("rect")
-
-  N.used = K.used
-  N.room = K.room
-  N.hall = K.hall
-
-  N.sy1 = K.sy1
-  N.sy2 = K.sy2
-
-  N.sx1 = K.sx2 - (right_num - 1)
-  N.sx2 = K.sx2
-
-  K.sx2 = N.sx1 - 1
+  if dir == 2 then
+    K.sy1 = K.sy1 + chop_num
+    N.sy2 = K.sy1 - 1
+  elseif dir == 8 then
+    K.sy2 = K.sy2 - chop_num
+    N.sy1 = K.sy2 + 1
+  elseif dir == 4 then
+    K.sx1 = K.sx1 + chop_num
+    N.sx2 = K.sx1 - 1
+  elseif dir == 6 then
+    K.sx2 = K.sx2 - chop_num
+    N.sx1 = K.sx2 + 1
+  else
+    error("bad direction for section divide()");
+  end
 
   K:update_size()
   N:update_size()
