@@ -34,6 +34,8 @@ class SEED
   room : ROOM
   hall : HALLWAY
 
+  edges[dir] : EDGE
+
   chunk : CHUNK  -- connection/important chunk
 
   chunks[v_area] : CHUNK
@@ -42,6 +44,12 @@ class SEED
 
   is_walk  -- TRUE if seed must be remain walkable
            -- (i.e. cannot use for void / cage / liquid)
+}
+
+
+class EDGE
+{
+  conn : CONN
 }
 
 
@@ -95,7 +103,7 @@ SECTION_CLASS = { }
 
 
 function SEED_CLASS.new(x, y)
-  local S = { sx=x, sy=y, cost={}, chunks={}, v_areas={} }
+  local S = { sx=x, sy=y, cost={}, edges={}, chunks={}, v_areas={} }
   table.set_class(S, SEED_CLASS)
   return S
 end
