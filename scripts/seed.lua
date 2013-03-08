@@ -342,6 +342,24 @@ function SECTION_CLASS.long_deep(K, dir)
 end
 
 
+function SECTION_CLASS.get_coords()
+  local x1 = SEEDS[K.sx1][K.sy1].x1
+  local y1 = SEEDS[K.sx1][K.sy1].y1
+
+  local x2 = SEEDS[K.sx2][K.sy2].x2
+  local y2 = SEEDS[K.sx2][K.sy2].y2
+
+  return x1, y1, x2, y2
+end
+
+
+function SECTION_CLASS.mid_point()
+  local x1, y1, x2, y2 = SECTION_CLASS.get_coords()
+
+  return (x1 + x2) / 2, (y1 + y2) / 2
+end
+
+
 function Section_is_valid(x, y)
   return 1 <= x and x <= SECTION_W and
          1 <= y and y <= SECTION_H
