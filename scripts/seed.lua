@@ -359,7 +359,7 @@ function SECTION_CLASS.long_deep(K, dir)
 end
 
 
-function SECTION_CLASS.get_coords()
+function SECTION_CLASS.get_coords(K)
   local x1 = SEEDS[K.sx1][K.sy1].x1
   local y1 = SEEDS[K.sx1][K.sy1].y1
 
@@ -370,7 +370,7 @@ function SECTION_CLASS.get_coords()
 end
 
 
-function SECTION_CLASS.mid_point()
+function SECTION_CLASS.mid_point(K)
   local x1, y1, x2, y2 = SECTION_CLASS.get_coords()
 
   return (x1 + x2) / 2, (y1 + y2) / 2
@@ -406,6 +406,17 @@ end
 
 
 function SECTION_CLASS.neighbor(K, dir, dist)
+  local nx, ny = geom.nudge(K.kx, K.ky, dir, dist)
+
+  if Section_is_valid(nx, ny) then
+    return SECTIONS[nx][ny]
+  end
+
+  return nil
+end
+
+
+function SECTION_CLASS.touch_neighbor(K, dir)
   local nx, ny
 
   if dir == 2 or dir == 8 then
