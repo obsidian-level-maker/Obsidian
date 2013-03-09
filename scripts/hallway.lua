@@ -1468,49 +1468,54 @@ do return false end
       assert(not K.used)
     end
 
-    -- already part of hallway path?
+    -- already part of current hallway?
     if table.has_elem(visited, K) then return end
 
+    local crossing_over = K.used
+
+    if not (K.shape == "vert" or K.shape == "horiz" or
+            K.shape == "junction" or K.shape == "big_junc")
+    then
+      return  -- not a hallway section
+    end
+
     -- can only flow through a big junction when coming straight off
-    -- a room (i.e. ROOM --> MID --> BIG_JUNC).
+    -- a room (e.g. ROOM --> HORIZ --> BIG_JUNC).
     if K.shape == "big_junc" and #visited != 1 then return end
 
     -- no big junctions for cycles
     if K.shape == "big_junc" and mode == "cycle" then return end
 
+
+    --- OK ---
+
 --stderrf("hall_flow: visited @ %s from:%d\n", K:tostr(), from_dir)
 --stderrf("{\n")
 
-    -- FIXME REVIEW: this too soon?? (before the orig_kind checks)
     table.insert(visited, K)
 
     if K.shape == "big_junc" then
       stats.big_junc = K
     end
 
-    local is_junction
-
-    if K.shape == "vert" or K.shape == "horiz" then
-      -- ok
-    elseif K.shape == "junction" or K.shape == "big_junc" then
-      is_junction = true
-    else
-      return  -- not a hallway section
-    end
+    -- now recursively flow down the other directions
 
     for dir = 2,8,2 do
-      -- never able to go back the way we came
+      -- cannot go back the way we came
       if dir == from_dir then continue end
 
       local N = K:neighbor(dir)
       if not N then continue end
 
-      if K.shape != "big_junc" and not K.used then
+      -- reached a room?  if so, evaluate this hallway
+
+      -- FIXME: allow big junctions to connect directly to rooms
+      if K.shape != "big_junc" and not crossing_over then
 --stderrf("  testing conn @ dir:%d\n", dir)
         test_hall_conn(N, 10 - dir, visited, stats)
       end
 
-      -- too many hallways already?
+      -- can continue this hallway?
       if quota < 1 then continue end
 
       -- limit length of big junctions
@@ -1518,23 +1523,26 @@ do return false end
 
       local do_cross = false
 
+      -- begin crossover? (or continue one)
       if N.used then
         -- don't allow crossover to walk into another room
-        if K.used and N.room != stats.crossover then continue end
+        if crossing_over and N.room != stats.crossover then continue end
 
-        -- begin crossover?
-        if not K.used and not can_begin_crossover(K, N, stats) then continue end
+        if not crossing_over and not can_begin_crossover(K, N, stats) then continue end
 
         do_cross = true
       end
 
-      if (not is_junction) or K.used or geom.is_perpendic(dir, from_dir) or
-         K.shape == "big_junc" or mode == "emergency"
+      -- must turn at a junction, except in emergency mode
+
+      if K.shape != "junction" or geom.is_perpendic(dir, from_dir) or
+         mode == "emergency" or crossing_over
       then
 
 --stderrf("  recursing @ dir:%d\n", dir)
         local new_stats = table.copy(stats)
         if do_cross then new_stats.crossover = N.room end
+
         local new_quota = quota - (N.used ? 0 ; 1)
 
         hall_flow(N, 10 - dir, table.copy(visited), new_stats, new_quota)
