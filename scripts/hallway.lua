@@ -167,12 +167,9 @@ end
 
 function HALLWAY_CLASS.setup_path(H, path)
 
-  -- the 'path' is a list of sections in visited order, as
-  -- produced by the hall_flow() function.
+  -- the 'path' is a list of sections in visited order, as produced
+  -- by the hall_flow() function.
   assert(#path >= 1)
-
-  -- because big_junc get merged [FIXME: LOGIC for MERGE + PATH]
-  if H.big_junc then return end
 
   for i = 1, #path-1 do
     local K1 = path[i]
@@ -233,37 +230,36 @@ function HALLWAY_CLASS.add_it(H)
 end
 
 
-function HALLWAY_CLASS.merge_it(old_H, new_H, via_conn)
--- stderrf("MERGING %s into %s\n", new_H:tostr(), old_H:tostr())
+function HALLWAY_CLASS.add_to_existing(H, new_H, via_conn)
 
-error("MERGE_IT")
+  -- unlike add_it(), the new hallway is merely used to extend an
+  -- existing hallway.
 
-  assert(old_H != new_H)
+stderrf("MERGING %s into %s\n", new_H:tostr(), H:tostr())
 
-  assert(via_conn.L1 == new_H)
-  assert(via_conn.L2 == old_H)
+  assert(H != new_H)
 
-  assert(not old_H.crossover)
+  assert(not     H.crossover)
   assert(not new_H.crossover)
 
-  -- do the equivalent of add_it()
-  old_H:mark_sections(new_H.sections)
-
-  -- create the path on new hallway, but refer to old hallway
-  old_H:setup_path(new_H.sections)
-
-  -- update the path for the connection from OLD --> NEW
-  local dir = assert(via_conn.dir2)
-
-  via_conn.K2.hall_link[dir]      = old_H
-  via_conn.K1.hall_link[10 - dir] = old_H
-
-  -- transfer the sections
+  -- transfer the sections and setup the path links
   each K in new_H.sections do
-    table.insert(old_H.sections, K)
+    table.insert(H.sections, K)
   end
 
-  LEVEL.hall_quota = LEVEL.hall_quota - #new_H.sections
+  H:setup_path(new_H.sections)
+
+  H:mark_sections(new_H.sections)
+
+  -- create path link for the OLD <--> NEW connection
+  local dir = assert(via_conn.dir1)
+
+  via_conn.K1.hall_link[dir]      = via_conn.K2
+  via_conn.K2.hall_link[10 - dir] = via_conn.K1
+
+  if #new_H.sections > 1 then
+    LEVEL.hall_quota = LEVEL.hall_quota - #new_H.sections
+  end
 
   -- the new_H object is never used again
   new_H.id       = nil
@@ -1204,10 +1200,8 @@ function Hallway_scan(start_K, start_dir, mode)
 
     -- Note: currently _REQUIRE_ all hallways to merge, since there's no
     --       logic for placing locked doors between two hallway prefabs
-    if end_K.hall then -- and rand.odds(95) then
+    if end_K.hall and not end_K.hall.crossover then -- and rand.odds(95) then
       merge = true
-
-return --!!!!!!
     end
 
     local score1 = start_K:eval_exit(start_dir)
@@ -1316,10 +1310,6 @@ return --!!!!!!
 
     if stats.crossover then
       H.crossover = stats.crossover
-    end
-
-    if merge and end_K.hall.crossover then
-      merge = false
     end
 
 

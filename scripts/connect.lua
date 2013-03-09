@@ -231,35 +231,37 @@ end
 
 
 
-function Connect_make_branch(mode)
-  local info = LEVEL.best_conn
-
-  -- merge new hall into an existing one?
-  if info.merge then
-    assert(info.onto_hall_K)
-
-    local new_hall = assert(info.hall)
-    local old_hall = assert(info.onto_hall_K.hall)
-
-    old_hall:merge_it(new_hall, info.D2)
-
-    info.hall = nil
-
-    -- update the CONN info -- only need one now
-    if info.D1.L1 == new_hall then info.D1.L1 = old_hall end
-    if info.D1.L2 == new_hall then info.D1.L2 = old_hall end
-
-    info.D2 = nil
-  end
+function Connect_make_branch(info, mode)
 
   -- must add hallway to level now
-  -- (so that merge_groups in CONN:add_it() can find it)
+  -- [so merge_groups in CONN:add_it() can find it]
   if info.hall then
-    info.hall:add_it()
 
-    if mode == "cycle" then
-      info.is_cycle = true
-      info.hall.is_cycle = true
+    -- merge new hall into an existing one?
+    if info.merge then
+      assert(info.onto_hall_K)
+
+      local new_hall = assert(info.hall)
+      local old_hall = assert(info.onto_hall_K.hall)
+
+      old_hall:add_to_existing(new_hall, info.D2)
+
+      info.hall = nil
+
+      -- update the CONN info -- only need one now
+      if info.D1.L1 == new_hall then info.D1.L1 = old_hall end
+      if info.D1.L2 == new_hall then info.D1.L2 = old_hall end
+    
+      info.D2 = nil
+
+    else  -- normal creation
+
+      info.hall:add_it()
+
+      if mode == "cycle" then
+        info.is_cycle = true
+        info.hall.is_cycle = true
+      end
     end
   end
 
@@ -271,7 +273,7 @@ function Connect_make_branch(mode)
   end
 
   -- for cycles, ensure new hallway gets a quest and zone
-  if mode == "cycle" then
+  if mode == "cycle" and info.hall then
     assert(info.D1.L1.quest)
     assert(info.D1.L1.zone)
 
@@ -476,7 +478,7 @@ function Connect_scan_sections(mode, min_score)
     return false
   end
 
-  Connect_make_branch(mode)
+  Connect_make_branch(LEVEL.best_conn, mode)
 
   return true  -- OK
 end
