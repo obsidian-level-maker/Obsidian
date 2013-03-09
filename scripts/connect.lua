@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2012 Andrew Apted
+--  Copyright (C) 2006-2013 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -396,13 +396,21 @@ function Connect_eval_direct(start_K, dir, mode)
   local score
 
   if end_K.room then
-    score = gui.random() * 100  -- FIXME?
+    local score1 = start_K:eval_exit(dir)
+    local score2 =   end_K:eval_exit(10 - dir)
+
+    score = (score1 + score2) * 10 + 100 * gui.random() ^ 1.7
+
+    -- prefer secret exits DO NOT connect to the start room
+    if L2.purpose == "START" then
+      score = score - 300
+    end
   else
     -- prefer not to connect onto existing hallways
     score = -100 - end_K.num_conn - gui.random()
   end
 
-  -- try damn hard to _not_ connect to crossover hallways
+  -- try damn hard _not_ to connect to crossover hallways
   if end_K.hall and end_K.hall.crossover then
     if mode != "emergency" then return end
 
@@ -435,9 +443,14 @@ end
 
 
 function Connect_scan_sections(mode, min_score)
+
+  -- evaluate all possible connections (within reason) and pick the
+  -- one with the highest score.
+
   LEVEL.best_conn = { score=min_score }
 
-  for kx = 1,SECTION_W do for ky = 1,SECTION_H do
+  for kx = 1,SECTION_W do
+  for ky = 1,SECTION_H do
     local K = SECTIONS[kx][ky]
 
     if not (K and K.used and K.room) then continue end
@@ -457,8 +470,10 @@ function Connect_scan_sections(mode, min_score)
     end
 
     -- this function can take a while to run, so check for user abort
+    -- (return true so we don't trigger an error)
     if gui.abort() then return true end
-  end end
+  end
+  end
 
   -- failed to make any connection?
   if not LEVEL.best_conn.D1 then
@@ -510,9 +525,14 @@ end
 
 
 function Connect_rooms()
+  
+  -- this function ensures all rooms become connected together
+  -- (as a simple undirected graph, i.e. no loops).  Rooms can be
+  -- connected directly at a boundary, via a hallway, or via a
+  -- pair of teleporters.
 
-  -- a "branch" is a room with 3 or more connections.
-  -- a "stalk"  is a room with two connections.
+  -- we also decide the start room here.
+
 
   local function initial_groups()
     each R in LEVEL.rooms do
