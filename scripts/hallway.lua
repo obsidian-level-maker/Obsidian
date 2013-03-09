@@ -1197,46 +1197,6 @@ function Hallway_scan(start_K, start_dir, mode)
   -- calls to this function).
 
 
-  local function eval_direct_conn(MID)
-    if not (MID.hall or (MID.room and MID.room.street)) then return end
-
-    if MID.hall and MID.hall.big_junc then return end
-
-    if not Connect_is_possible(start_K.room, MID.hall or MID.room, mode) then return end
-
-    local score = -100 - MID.num_conn - gui.random()
-
-    -- try damn hard to _not_ connect to crossover hallways
-    if MID.hall and MID.hall.crossover then
-      if mode != "emergency" then return end
-
-      score = score - 500
-    end
-
-
-    -- score is now computed : test it
-
-    if score < LEVEL.best_conn.score then return end
-
-
-    --- OK ---
-
-    local D1 = CONN_CLASS.new("normal", MID.hall or MID.room, start_K.room, 10 - start_dir)
-
-    D1.K1 = MID
-    D1.K2 = start_K
-
-
-    LEVEL.best_conn =
-    {
-      score = score
-      D1 = D1
-      stats = {}
-      onto_hall_K = MID
-    }
-  end
-
-
   local function eval_final_hallway(end_K, end_dir, path, stats)
     local L1 = start_K.room or start_K.hall
     local L2 =   end_K.room or   end_K.hall
@@ -1521,7 +1481,7 @@ do return false end
       -- can continue this hallway?
       if quota < 1 then continue end
 
-      -- limit length of big junctions
+      -- limit length of big junction hallways
       if stats.big_junc and #path >= 3 then continue end
 
       local do_cross = false
@@ -1560,16 +1520,9 @@ do return false end
   -- always begin from a room
   assert(start_K.room)
 
-  local MID = start_K:neighbor(start_dir)
+  local N = start_K:neighbor(start_dir)
 
-  if not MID then return end
-
-  -- if the neighboring section is already used, nothing is possible
-  -- except to branch off that section (which must be a hallway too).
-  if MID.used then
-    eval_direct_conn(MID)
-    return
-  end
+  if not N or N.used then return end
 
   local quota = 4
 
@@ -1581,7 +1534,7 @@ do return false end
   -- when normal connection logic has failed, allow long hallways
   if mode == "emergency" then quota = 8 end
 
-  hall_flow(MID, 10 - start_dir, {}, {}, quota)
+  hall_flow(N, 10 - start_dir, {}, {}, quota)
 end
 
 

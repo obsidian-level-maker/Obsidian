@@ -371,6 +371,69 @@ end
 
 
 
+function Connect_eval_direct(start_K, dir, mode)
+
+  -- see if we can make a direct connection to a neighboring room
+  -- (which touches the start room).
+
+  local end_K = start_K:neighbor(dir)
+
+  if not end_K then return end
+
+  local L1 = start_K.room or start_K.hall
+  local L2 =   end_K.room or   end_K.hall
+
+  if not L2 then return end
+
+  if L1 == L2 then return end
+
+  if not Connect_is_possible(L1, L2, mode) then return end
+
+  -- never extend onto big junction hallways
+  if L2.big_junc then return end
+
+
+  local score
+
+  if end_K.room then
+    score = gui.random() * 100  -- FIXME?
+  else
+    -- prefer not to connect onto existing hallways
+    score = -100 - end_K.num_conn - gui.random()
+  end
+
+  -- try damn hard to _not_ connect to crossover hallways
+  if end_K.hall and end_K.hall.crossover then
+    if mode != "emergency" then return end
+
+    score = score - 500
+  end
+
+
+  -- score is now computed : test it
+
+  if score < LEVEL.best_conn.score then return end
+
+
+  --- OK ---
+
+  local D1 = CONN_CLASS.new("normal", L2, L1, 10 - dir)
+
+  D1.K1 =   end_K
+  D1.K2 = start_K
+
+
+  LEVEL.best_conn =
+  {
+    score = score
+    D1 = D1
+    stats = {}
+    onto_hall_K = MID
+  }
+end
+
+
+
 function Connect_scan_sections(mode, min_score)
   LEVEL.best_conn = { score=min_score }
 
@@ -378,9 +441,6 @@ function Connect_scan_sections(mode, min_score)
     local K = SECTIONS[kx][ky]
 
     if not (K and K.used and K.room) then continue end
-
-    -- FIXME: THIS NO GOOD
-    if K.shape != "rect" then continue end
 
     -- only connect TO a street (never FROM one)
     if K.room.street then continue end
@@ -391,6 +451,8 @@ function Connect_scan_sections(mode, min_score)
     end
 
     for dir = 2,8,2 do
+      Connect_eval_direct(K, dir, mode)
+
       Hallway_scan(K, dir, mode)
     end
 
@@ -530,6 +592,7 @@ function Connect_rooms()
     if not Connect_scan_sections("normal", -999) then
       if not Connect_scan_sections("emergency", -99999) then
         Plan_dump_rooms("Current Map:")
+        gui.printf("Rooms with no conns: %s\n", Room_list_no_conns())
         Connect_dump_groups()
         error("Failed to connect all rooms")
       end

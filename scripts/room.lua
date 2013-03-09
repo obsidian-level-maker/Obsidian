@@ -647,6 +647,20 @@ function Rooms_distribute_spots(L, list)
 end
 
 
+function Room_list_no_conns()
+  local list = ""
+
+  each R in LEVEL.rooms do
+    if #R.conns == 0 then
+      list = list .. R.id
+      list = list .. " "
+    end
+  end
+
+  return "{ " .. list .. "}"
+end
+
+
 ----------------------------------------------------------------
 
 
