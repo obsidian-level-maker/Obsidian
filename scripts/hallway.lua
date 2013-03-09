@@ -129,9 +129,11 @@ function HALLWAY_CLASS.dump_path(H)
     local line = ""
 
     for dir = 2,8,2 do
-      local L = K.hall_link[dir]
+      local N = K.hall_link[dir]
 
-      if L then
+      if N then
+        local L = N.room or N.hall
+
         line = line .. string.format("[%d] --> %s  ", dir, L:tostr())
       end
     end
@@ -163,18 +165,20 @@ function HALLWAY_CLASS.calc_lev_along(H)
 end
 
 
-function HALLWAY_CLASS.setup_path(H, sections)
+function HALLWAY_CLASS.setup_path(H, path)
+
+  -- the 'path' is a list of sections in visited order, as
+  -- produced by the hall_flow() function.
+  assert(#path >= 1)
+
   -- because big_junc get merged [FIXME: LOGIC for MERGE + PATH]
   if H.big_junc then return end
 
-  -- the 'sections' list is the same as 'visited' list, and contains
-  -- each visited section from one end to the other.  
+  for i = 1, #path-1 do
+    local K1 = path[i]
+    local K2 = path[i+1]
 
-  for i = 1, #sections-1 do
-    local K1 = sections[i]
-    local K2 = sections[i+1]
-
-    -- figure out direction
+    -- reconstruct the direction
     local dir
 
         if K2.sx1 > K1.sx2 then dir = 6
@@ -184,15 +188,15 @@ function HALLWAY_CLASS.setup_path(H, sections)
     else error("weird hallway path")
     end
 
-    K1.hall_link[dir] = H
-    K2.hall_link[10 - dir] = H
+    K1.hall_link[dir]      = K2
+    K2.hall_link[10 - dir] = K1
   end
 
   -- NOTE: links leading "off" the hallway are handled by CONN:add_it()
 end
 
 
-function HALLWAY_CLASS.add_sections(H, sections)
+function HALLWAY_CLASS.mark_sections(H, sections)
   each K in sections do
     -- an already used section can only be a crossover
     if K.used then
@@ -208,7 +212,12 @@ end
 
 
 function HALLWAY_CLASS.add_it(H)
+
   table.insert(LEVEL.halls, H)
+
+  H:setup_path(H.sections)
+
+  H:mark_sections(H.sections)
 
   if H.crossover then
     local over_R = H.crossover
@@ -217,9 +226,6 @@ function HALLWAY_CLASS.add_it(H)
 
 -- stderrf("************* CROSSOVER @ %s\n", over_R:tostr())
   end
-
-  -- mark sections as used
-  H:add_sections(H.sections)
 
   if #H.sections > 1 then
     LEVEL.hall_quota = LEVEL.hall_quota - #H.sections
@@ -230,6 +236,8 @@ end
 function HALLWAY_CLASS.merge_it(old_H, new_H, via_conn)
 -- stderrf("MERGING %s into %s\n", new_H:tostr(), old_H:tostr())
 
+error("MERGE_IT")
+
   assert(old_H != new_H)
 
   assert(via_conn.L1 == new_H)
@@ -239,7 +247,7 @@ function HALLWAY_CLASS.merge_it(old_H, new_H, via_conn)
   assert(not new_H.crossover)
 
   -- do the equivalent of add_it()
-  old_H:add_sections(new_H.sections)
+  old_H:mark_sections(new_H.sections)
 
   -- create the path on new hallway, but refer to old hallway
   old_H:setup_path(new_H.sections)
@@ -266,6 +274,7 @@ end
 --------------------------------------------------------------------
 
 
+-- FIXME: OLD CRUD
 function HALLWAY_CLASS.can_alloc_chunk(H, sx1, sy1, sx2, sy2)
   for sx = sx1,sx2 do for sy = sy1,sy2 do
     local S = SEEDS[sx][sy]
@@ -276,6 +285,7 @@ function HALLWAY_CLASS.can_alloc_chunk(H, sx1, sy1, sx2, sy2)
 end
 
 
+-- FIXME: OLD CRUD
 function HALLWAY_CLASS.alloc_chunk(H, K, sx1, sy1, sx2, sy2)
   assert(K.sx1 <= sx1 and sx1 <= sx2 and sx2 <= K.sx2)
   assert(K.sy1 <= sy1 and sy1 <= sy2 and sy2 <= K.sy2)
@@ -298,7 +308,9 @@ function HALLWAY_CLASS.is_side_connected(H, K, dir)
   -- returns true if the given side of the section connects to another
   -- section in this hallway.
 
-  return K.hall_link[dir] == H
+  local N = K.hall_link[dir]
+
+  return N and N.hall == H
 end
 
 
@@ -429,30 +441,10 @@ end
 
 
 
-function HALLWAY_CLASS.try_link_piece(H, P, dir)
-  -- already linked?
-  if P.link[dir] or P.hall_link[dir] then
-    return
-  end
-
-  local P2 = P:touch_neighbor(dir)
-  
-  if not P2 then return end
-
-  if P2.hall != H then return end
-
-  -- OK !!
-
-  P .hall_link[dir] = P2
-  P2.hall_link[10 - dir] = P
-end
-
-
-
 function categorize_hall_piece(P)
   local cat, dir = Trans.categorize_linkage(
-      P.link[2] or P.hall_link[2], P.link[4] or P.hall_link[4],
-      P.link[6] or P.hall_link[6], P.link[8] or P.hall_link[8]);
+      P.hall_link[2], P.hall_link[4],
+      P.hall_link[6], P.hall_link[8]);
 
   assert(cat != "N" and cat != "F")
 
@@ -461,35 +453,22 @@ function categorize_hall_piece(P)
 end
 
 
-function HALLWAY_CLASS.link_pieces(H)
+function HALLWAY_CLASS.categorize_pieces(H)
+
+--[[  OLD OLD OLD
   each P in H.sections do
-    -- only check links inside and at edges of horizontal or vertical
-    -- sections.  This will handle junctions OK, since junctions always
-    -- touch such sections (i.e. two junctions never directly touch).
-
-    -- This logic should handle big junctions properly too, since we
-    -- want the link recorded even though there can be a difference in
-    -- the size of the "spoke" chunks and the "big_junc" chunk.
-
-    if P.shape == "horiz" then
-      H:try_link_piece(P, 4)
-      H:try_link_piece(P, 6)
-    
-    elseif P.shape == "vert" then
-      H:try_link_piece(P, 2)
-      H:try_link_piece(P, 8)
-
-    elseif P.shape == "big_junc" then
+    if P.shape == "big_junc" then
       for dir = 2,8,2 do
         H:try_link_piece(P, dir)
       end
     end
   end
+--]]
 
   -- categorize the hallway pieces, and verify the linkages
 
   each P in H.sections do
-    if table.size(P.link) + table.size(P.hall_link) < 2 then
+    if table.size(P.hall_link) < 2 then
       gui.debugf("hallway %s has bad linkage @ %s\n", H:tostr(), P:tostr())
       error("bad linkage in hallway")
     end
@@ -666,15 +645,9 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
 
     if dir == from_dir then continue end
 
-    local P2
+    local P2 = P.hall_link[dir]
 
-    if H == P.hall_link[dir] then
-      P2 = P:touch_neighbor(dir)
-      assert(P2)
-      assert(P2.hall == H)
-    end
-
-    if P2 and not seen[P2] then
+    if P2 and P2.hall == H and not seen[P2] then
       H:stair_flow(P2, 10 - dir, f_h, z_dir, seen)
       did_a_branch = true
     end
@@ -923,7 +896,7 @@ stderrf("hallway floor_stuff for %s\n", H:tostr())
   end
 
   H:create_pieces()
-  H:  link_pieces()
+  H:categorize_pieces()
 
 ----???  H:update_seeds_for_chunks()
 
@@ -1233,6 +1206,8 @@ function Hallway_scan(start_K, start_dir, mode)
     --       logic for placing locked doors between two hallway prefabs
     if end_K.hall then -- and rand.odds(95) then
       merge = true
+
+return --!!!!!!
     end
 
     local score1 = start_K:eval_exit(start_dir)
