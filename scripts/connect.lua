@@ -129,22 +129,22 @@ function CONN_CLASS.add_it(D)
     gui.debugf("via %s --> %s\n", D.K1:tostr(), D.K2:tostr())
   end
 
-  if D.L1.conn_group != D.L2.conn_group then
-    Connect_merge_groups(D.L1.conn_group, D.L2.conn_group)
-  end
-
   table.insert(LEVEL.conns, D)
 
   table.insert(D.L1.conns, D)
   table.insert(D.L2.conns, D)
+
+  if D.L1.conn_group != D.L2.conn_group then
+    Connect_merge_groups(D.L1.conn_group, D.L2.conn_group)
+  end
 
   if not (D.kind == "teleporter" or D.kind == "closet") then
     D.K1.num_conn = D.K1.num_conn + 1
     D.K2.num_conn = D.K2.num_conn + 1
 
     -- hallway stuff
-    if D.K1.hall then D.K1.hall_link[D.dir1] = D.L2 end
-    if D.K2.hall then D.K2.hall_link[D.dir2] = D.L1 end
+    if D.K1.hall then D.K1.hall_link[D.dir1] = D.K2 end
+    if D.K2.hall then D.K2.hall_link[D.dir2] = D.K1 end
   end
 end
 
@@ -268,10 +268,6 @@ function Connect_make_branch(mode)
 
   if info.D2 then
      info.D2:add_it()
-  end
-
-  if info.hall then
-    info.hall:setup_path(info.hall.sections)
   end
 
   -- for cycles, ensure new hallway gets a quest and zone

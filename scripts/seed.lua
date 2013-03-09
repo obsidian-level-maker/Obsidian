@@ -78,10 +78,8 @@ class SECTION
 
   crossover_hall : HALLWAY
 
-  hall_link[dir] : ROOM/HALL  -- non-nil means that this section in a
-                              -- hallway is "pathing" in the given
-                              -- direction to a room or hallway
-                              -- (usually the same as 'hall' field)
+  hall_link[dir] : SECTION  -- for hallways, possible travel dirs
+                            -- (may exit the hallway)
 }
 
 --------------------------------------------------------------]]
