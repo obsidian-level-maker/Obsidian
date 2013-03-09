@@ -1197,10 +1197,10 @@ function Hallway_scan(start_K, start_dir, mode)
   -- calls to this function).
 
 
-  local function test_nearby_hallway(MID)
+  local function eval_direct_conn(MID)
     if not (MID.hall or (MID.room and MID.room.street)) then return end
 
-    if MID.hall and MID.hall.big_junc then return false end
+    if MID.hall and MID.hall.big_junc then return end
 
     if not Connect_is_possible(start_K.room, MID.hall or MID.room, mode) then return end
 
@@ -1208,7 +1208,7 @@ function Hallway_scan(start_K, start_dir, mode)
 
     -- try damn hard to _not_ connect to crossover hallways
     if MID.hall and MID.hall.crossover then
-      if mode != "emergency" then return false end
+      if mode != "emergency" then return end
 
       score = score - 500
     end
@@ -1219,7 +1219,7 @@ function Hallway_scan(start_K, start_dir, mode)
     if score < LEVEL.best_conn.score then return end
 
 
-    -- OK --
+    --- OK ---
 
     local D1 = CONN_CLASS.new("normal", MID.hall or MID.room, start_K.room, 10 - start_dir)
 
@@ -1227,19 +1227,19 @@ function Hallway_scan(start_K, start_dir, mode)
     D1.K2 = start_K
 
 
-    LEVEL.best_conn.D1 = D1
-    LEVEL.best_conn.D2 = nil
-    LEVEL.best_conn.hall  = nil
-    LEVEL.best_conn.score = score
-    LEVEL.best_conn.stats = {}
-    LEVEL.best_conn.merge = nil
-    LEVEL.best_conn.onto_hall_K = MID
+    LEVEL.best_conn =
+    {
+      score = score
+      D1 = D1
+      stats = {}
+      onto_hall_K = MID
+    }
   end
 
 
-  local function test_hall_conn(end_K, end_dir, visited, stats)
+  local function eval_final_hallway(end_K, end_dir, path, stats)
     local L1 = start_K.room or start_K.hall
-    local L2 = end_K.room or end_K.hall
+    local L2 =   end_K.room or   end_K.hall
 
     if not L2 then return end
 
@@ -1247,10 +1247,10 @@ function Hallway_scan(start_K, start_dir, mode)
 
     -- currently we only connect to secret rooms via a mini-hall
     -- TODO: relax this
-    if mode == "secret_exit" and #visited != 1 then return end
+    if mode == "secret_exit" and #path != 1 then return end
 
     -- only connect to a big junction straight off a room
-    if end_K.shape == "big_junc" and #visited != 1 then return end
+    if end_K.shape == "big_junc" and #path != 1 then return end
 
     -- never connect to the hallway "spokes" off a big junction
     if end_K.shape != "big_junc" and end_K.hall and end_K.hall.big_junc then return end
@@ -1308,7 +1308,7 @@ function Hallway_scan(start_K, start_dir, mode)
     if stats.crossover then
       local factor = style_sel("crossovers", 0, -10, 0, 300)
       local len = 0
-      each K in visited do if K.used then len = len + 1 end end
+      each K in path do if K.used then len = len + 1 end end
       score = score + (len ^ 0.25) * factor
       merge = false
       if end_K.hall then return end
@@ -1361,11 +1361,11 @@ function Hallway_scan(start_K, start_dir, mode)
     if score < LEVEL.best_conn.score then return end
 
 
-    -- OK --
+    --- OK ---
 
     local H = HALLWAY_CLASS.new()
 
-    H.sections = visited
+    H.sections = path
     H.conn_group = L1.conn_group
 
     if end_K.shape == "big_junc" then
@@ -1414,13 +1414,16 @@ function Hallway_scan(start_K, start_dir, mode)
     end
 
 
-    LEVEL.best_conn.D1 = D1
-    LEVEL.best_conn.D2 = D2
-    LEVEL.best_conn.hall  = H
-    LEVEL.best_conn.score = score
-    LEVEL.best_conn.stats = stats
-    LEVEL.best_conn.merge = merge
-    LEVEL.best_conn.onto_hall_K = (end_K.hall ? end_K ; nil)
+    LEVEL.best_conn =
+    {
+      score = score
+      stats = stats
+      D1 = D1
+      D2 = D2
+      hall  = H
+      merge = merge
+      onto_hall_K = (end_K.hall ? end_K ; nil)
+    }
   end
 
 
@@ -1460,7 +1463,7 @@ do return false end
   end
 
 
-  local function hall_flow(K, from_dir, visited, stats, quota)
+  local function hall_flow(K, from_dir, path, stats, quota)
     assert(K)
 
     -- must be a free section except when crossing over a room
@@ -1469,7 +1472,7 @@ do return false end
     end
 
     -- already part of current hallway?
-    if table.has_elem(visited, K) then return end
+    if table.has_elem(path, K) then return end
 
     local crossing_over = K.used
 
@@ -1481,7 +1484,7 @@ do return false end
 
     -- can only flow through a big junction when coming straight off
     -- a room (e.g. ROOM --> HORIZ --> BIG_JUNC).
-    if K.shape == "big_junc" and #visited != 1 then return end
+    if K.shape == "big_junc" and #path != 1 then return end
 
     -- no big junctions for cycles
     if K.shape == "big_junc" and mode == "cycle" then return end
@@ -1492,7 +1495,7 @@ do return false end
 --stderrf("hall_flow: visited @ %s from:%d\n", K:tostr(), from_dir)
 --stderrf("{\n")
 
-    table.insert(visited, K)
+    table.insert(path, K)
 
     if K.shape == "big_junc" then
       stats.big_junc = K
@@ -1512,14 +1515,14 @@ do return false end
       -- FIXME: allow big junctions to connect directly to rooms
       if K.shape != "big_junc" and not crossing_over then
 --stderrf("  testing conn @ dir:%d\n", dir)
-        test_hall_conn(N, 10 - dir, visited, stats)
+        eval_final_hallway(N, 10 - dir, path, stats)
       end
 
       -- can continue this hallway?
       if quota < 1 then continue end
 
       -- limit length of big junctions
-      if stats.big_junc and #visited >= 3 then continue end
+      if stats.big_junc and #path >= 3 then continue end
 
       local do_cross = false
 
@@ -1545,7 +1548,7 @@ do return false end
 
         local new_quota = quota - (N.used ? 0 ; 1)
 
-        hall_flow(N, 10 - dir, table.copy(visited), new_stats, new_quota)
+        hall_flow(N, 10 - dir, table.copy(path), new_stats, new_quota)
       end
     end
 --stderrf("}\n")
@@ -1564,7 +1567,7 @@ do return false end
   -- if the neighboring section is already used, nothing is possible
   -- except to branch off that section (which must be a hallway too).
   if MID.used then
-    test_nearby_hallway(MID)
+    eval_direct_conn(MID)
     return
   end
 
