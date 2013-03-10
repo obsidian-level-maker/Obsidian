@@ -58,10 +58,7 @@ class BORDER
   room : ROOM  -- the outdoor room this borders
   dir          -- direction towards room
 
-  sx, sy       -- coord of first seed (next to room)
-
-  long : number  -- length of border along side of room
-  deep : number  -- depth of border (away from room), usually 2
+  sx1, sy1, sx2, sy2   -- seed range
 }
 
 

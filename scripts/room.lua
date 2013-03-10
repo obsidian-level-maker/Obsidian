@@ -2350,7 +2350,7 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
   end
 
 
-  local function extends_to_edge(S, dir, try_num)
+  local function extends_to_edge(S, dir, try_num, no_side_check)
     local perp_dir = geom.RIGHT[dir]
 
     for i = 0, try_num do
@@ -2359,6 +2359,8 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
       if not N then break; end
 
       if semi_used(N) then return false end
+
+      if no_side_check then continue end
 
       local A = N:neighbor(perp_dir)
       local B = N:neighbor(10 - perp_dir)
@@ -2372,20 +2374,13 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
 
   local function do_mark_border(B)
+    for sx = B.sx1, B.sx2 do
+    for sy = B.sy1, B.sy2 do
+      SEEDS[sx][sy].border = B
+    end
+    end
 
     table.insert(LEVEL.borders, B)
-
-    local SA = SEEDS[B.sx][B.sy]
-    local along_dir = (geom.is_vert(B.dir) ? 6 ; 8)
-
-    for i = 0, B.long - 1 do
-    for k = 0, B.deep - 1 do
-      local SX = SA:neighbor(along_dir,  i)
-      local S  = SX:neighbor(10 - B.dir, k)
-
-      S.border = B
-    end
-    end
   end
 
 
@@ -2410,16 +2405,29 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
     if found == 0 then return end
 
+    -- determine seed bbox
+    local sx2, sy2
+
+    if geom.is_horiz(dir) then
+      if dir == 6 then sx = sx - 1 end
+      sx2 = sx + 1
+      sy2 = sy + found - 1
+    else
+      if dir == 8 then sy = sy - 1 end
+      sy2 = sy + 1
+      sx2 = sx + found - 1
+    end
+
     local BORDER =
     {
       kind = "edge"
       dir  = dir
       room = room
 
-      sx   = sx
-      sy   = sy
-      long = found
-      deep = 2
+      sx1  = sx
+      sy1  = sy
+      sx2  = sx2
+      sy2  = sy2
     }
 
     do_mark_border(BORDER)
@@ -2459,14 +2467,14 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
 
   local function corner_is_free(S, dir)
-    local S2 = S:neighbor(10 - dir)
+    local T = S:neighbor(10 - dir)
 
-    if not S2 then return false end
+    if not T then return false end
 
-    local sx1 = math.min(S.sx, S2.sx)
-    local sy1 = math.min(S.sy, S2.sy)
-    local sx2 = math.max(S.sx, S2.sx)
-    local sy2 = math.max(S.sy, S2.sy)
+    local sx1 = math.min(S.sx, T.sx)
+    local sy1 = math.min(S.sy, T.sy)
+    local sx2 = math.max(S.sx, T.sx)
+    local sy2 = math.max(S.sy, T.sy)
 
     for sx = sx1, sx2 do
     for sy = sy1, sy2 do
@@ -2481,6 +2489,9 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
 
   local function mark_outdoor_outies()
+    -- an "outie" is a corner sitting at a 270 degree bend in the room
+    -- (whereas normal corners sit at a 90 degree bend).
+
     local mid_x1 = 8
     local mid_y1 = 8
     local mid_x2 = SEED_W - 8
@@ -2536,7 +2547,9 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
            not extends_to_edge(SR, 10 - L_dir, 3)
         then continue end
 
-stderrf("\n****** OUTIE @ %s dir:%d\n", S:tostr(), dir)
+        local T = S:neighbor(10 - dir)
+
+stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
         local BORDER =
         {
@@ -2544,10 +2557,10 @@ stderrf("\n****** OUTIE @ %s dir:%d\n", S:tostr(), dir)
           dir  = dir
           room = N.room
 
-          sx   = sx
-          sy   = sy
-          long = 2
-          deep = 2
+          sx1  = math.min(S.sx, T.sx)
+          sy1  = math.min(S.sy, T.sy)
+          sx2  = math.max(S.sx, T.sx)
+          sy2  = math.max(S.sy, T.sy)
         }
 
         do_mark_border(BORDER)
