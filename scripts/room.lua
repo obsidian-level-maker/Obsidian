@@ -684,6 +684,21 @@ function CLOSET_CLASS.tostr(CL)
 end
 
 
+function CLOSET_CLASS.install(CL)
+  local K = CL.section
+
+  for sx = K.sx1, K.sx2 do
+  for sy = K.sy1, K.sy2 do
+    local S = SEEDS[sx][sy]
+
+    assert(not S:used())
+
+    S.closet = CL
+  end
+  end
+end
+
+
 function CLOSET_CLASS.build(CL)
   local C = assert(CL.chunk)
 
@@ -1358,6 +1373,8 @@ if not (closet_kind == "START" or closet_kind == "EXIT" or closet_kind == "TELEP
 
   -- mark section as used
   N:set_closet(CL)
+
+  CL:install()
 
 
   -- create connection
@@ -2320,7 +2337,9 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
 
   local function semi_used(S)
-    if S.room or S.hall then return true end
+    if S.room then return true end
+    if S.hall then return true end
+    if S.closet then return true end
 
     if S.scenic and not (S.scenic == "border") then return true end
 
@@ -2332,9 +2351,9 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
     for i = 1, try_num do
       local N = S:neighbor(dir, i)
 
-      if not N then continue end
+      if not N or N.free then break; end
 
-      if semi_used(S) then return false end
+      if semi_used(N) then return false end
     end
 
     return true
@@ -2370,7 +2389,8 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
           local T = S:neighbor(10 - dir)
 
           S.scenic = "border"
-          T.scenic = "border"
+
+          if T then T.scenic = "border" end
         end
       end
 
@@ -2485,6 +2505,8 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
   mark_outdoor_edges()
   mark_outdoor_corners()
+
+Plan_dump_rooms("Border map:")
 
   mark_fake_buildings()
 
