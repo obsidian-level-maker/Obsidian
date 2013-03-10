@@ -2337,40 +2337,105 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
 
   local function semi_used(S)
-    if S.room then return true end
-    if S.hall then return true end
+    return S:used()
+--[[
+    if S.room   then return true end
+    if S.hall   then return true end
     if S.closet then return true end
 
-    if S.scenic and not (S.scenic == "border") then return true end
+    if S.border and not (S.border.kind == "edge") then return true end
 
     return false
+--]]
   end
 
 
   local function extends_to_edge(S, dir, try_num)
-    for i = 1, try_num do
+    local perp_dir = geom.RIGHT[dir]
+
+    for i = 0, try_num do
       local N = S:neighbor(dir, i)
 
-      if not N or N.free then break; end
+      if not N then break; end
 
       if semi_used(N) then return false end
+
+      local A = N:neighbor(perp_dir)
+      local B = N:neighbor(10 - perp_dir)
+
+      if A.room and A.room.kind == "outdoor" then return false end
+      if B.room and B.room.kind == "outdoor" then return false end
     end
 
     return true
   end
 
 
+  local function do_mark_border(B)
+
+    table.insert(LEVEL.borders, B)
+
+    local SA = SEEDS[B.sx][B.sy]
+    local along_dir = (geom.is_vert(B.dir) ? 6 ; 8)
+
+    for i = 0, B.long - 1 do
+    for k = 0, B.deep - 1 do
+      local SX = SA:neighbor(along_dir,  i)
+      local S  = SX:neighbor(10 - B.dir, k)
+
+      S.border = B
+    end
+    end
+  end
+
+
+  local function try_mark_edge_group(SA, sx, sy, dir, room)
+    local along_dir = (geom.is_vert(dir) ? 6 ; 8)
+    local found = 0
+
+    for i = 0, 99 do
+      local S = SA:neighbor(along_dir, i)
+
+      if not S then break; end
+      if not S:neighbor(10 - dir) then break; end
+
+      if not extends_to_edge(S, 10 - dir, 3) then break; end
+
+      local N = S:neighbor(dir)
+
+      if not (N and N.room == room) then break; end
+
+      found = found + 1
+    end
+
+    if found == 0 then return end
+
+    local BORDER =
+    {
+      kind = "edge"
+      dir  = dir
+      room = room
+
+      sx   = sx
+      sy   = sy
+      long = found
+      deep = 2
+    }
+
+    do_mark_border(BORDER)
+  end
+
+
   local function mark_outdoor_edges()
     local mid_x1 = 8
-    local mid_x2 = SEED_W - 8
-
     local mid_y1 = 8
+    local mid_x2 = SEED_W - 8
     local mid_y2 = SEED_TOP - 8
 
     for sx = 1, SEED_W do
     for sy = 1, SEED_TOP do
       
-      -- skip middle of level (to speed up large maps)
+      -- skip middle of level (speed up large maps)
       if mid_x1 <= sx and sx <= mid_x2 and
          mid_y1 <= sy and sy <= mid_y2
       then continue end
@@ -2385,17 +2450,7 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
         if not N then continue end
         if not (N.room and N.room.kind == "outdoor") then continue end
 
-        if extends_to_edge(S, 10 - dir, 3) then
-          local T = S:neighbor(10 - dir)
-
-          S.scenic = "border"
-          S.border_dir = dir
-
-          if T then
-            T.scenic = "border"
-            T.border_dir = dir
-          end
-        end
+        try_mark_edge_group(S, sx, sy, dir, room)
       end
 
     end -- sx, sy
@@ -2403,17 +2458,21 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
   end
 
 
+  local function corner_is_free(S, dir)
+    
+  end
+
+
   local function mark_outdoor_corners()
     local mid_x1 = 8
-    local mid_x2 = SEED_W - 8
-
     local mid_y1 = 8
+    local mid_x2 = SEED_W - 8
     local mid_y2 = SEED_TOP - 8
 
     for sx = 1, SEED_W do
     for sy = 1, SEED_TOP do
       
-      -- skip middle of level (to speed up large maps)
+      -- skip middle of level (speed up large maps)
       if mid_x1 <= sx and sx <= mid_x2 and
          mid_y1 <= sy and sy <= mid_y2
       then continue end
@@ -2688,6 +2747,8 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
 
   ---| Room_do_outdoor_borders |---
+
+  LEVEL.borders = {}
 
 --  find_fat_fences()
 

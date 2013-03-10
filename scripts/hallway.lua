@@ -1218,7 +1218,7 @@ function Hallway_scan(start_K, start_dir, mode)
       score = score + 120
       merge = true
     elseif stats.big_junc then
-      score = score + 80
+      score = score - 800 --!!!!!!!!
       merge = false
 
       if end_K.hall then return end

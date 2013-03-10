@@ -297,8 +297,10 @@ function Plan_dump_sections(title)
 
     local R = assert(K.room)
 
-    if R.kind == "scenic" then return '%' end
+    if R.kind == "scenic" then return '=' end
+
     local n = 1 + ((R.id - 1) % 26)
+
     if R.odd_shape then
       return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
     else
@@ -1545,7 +1547,7 @@ function Plan_dump_rooms(title, match_kind)
 
     if not R then
       if S.closet then return "$" end
-      if S.scenic then return "%" end
+      if S.border then return "%" end
 
       if sx <= spare_x1 or sx >= spare_x2 or
          sy <= spare_y1 or sy >= spare_y2

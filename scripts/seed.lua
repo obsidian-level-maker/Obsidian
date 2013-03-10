@@ -31,11 +31,10 @@ class SEED
 
   section : SECTION
 
-  room : ROOM
-  hall : HALLWAY
+  room   : ROOM
+  hall   : HALLWAY
   closet : CLOSET
-
-  scenic : boolean
+  border : BORDER
 
   edges[dir] : EDGE
 
@@ -47,6 +46,22 @@ class SEED
 
   is_walk  -- TRUE if seed must be remain walkable
            -- (i.e. cannot use for void / cage / liquid)
+}
+
+
+class BORDER
+{
+  kind : keyword   -- "edge"
+                   -- "corner"
+                   -- "outie"
+
+  room : ROOM  -- the outdoor room this borders
+  dir          -- direction towards room
+
+  sx, sy       -- coord of first seed (next to room)
+
+  long : number  -- length of border along side of room
+  deep : number  -- depth of border (away from room), usually 2
 }
 
 
@@ -73,8 +88,8 @@ class SECTION
 
   used : boolean
 
-  room : ROOM
-  hall : HALLWAY
+  room   : ROOM
+  hall   : HALLWAY
   closet : CLOSET
 
   num_conn  -- number of connections
@@ -143,7 +158,7 @@ end
 
 
 function SEED_CLASS.used(S)
-  return S.room or S.hall or S.closet or S.scenic or
+  return S.room or S.hall or S.closet or S.border or
          S.chunk or not table.empty(S.chunks)
 end
 
