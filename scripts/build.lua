@@ -2014,6 +2014,8 @@ WADFAB_LIGHT_DELTAS =
   [17] =  48  -- flickers
 }
 
+WADFAB_REACHABLE = 992
+
 
 function Fab_load_wad(name)
 
@@ -2155,6 +2157,11 @@ function Fab_load_wad(name)
 
     if pass == 1 then
       local C = { t=S.floor_h, tex=S.floor_tex, special=S.special }
+
+      if C.special == WADFAB_REACHABLE then
+        C.special = nil
+        C.reachable = true
+      end
 
       if S.tag and S.tag > 0 then
         C.tag = S.tag
