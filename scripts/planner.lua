@@ -23,6 +23,9 @@ MAP_W = 0  -- number of non-hallway sections
 MAP_H = 0  --
 
 
+SPARE_SEEDS = 1
+
+
 function Plan_alloc_id(kind)
   local result = (LEVEL.ids[kind] or 0) + 1
   LEVEL.ids[kind] = result
@@ -121,8 +124,8 @@ function Plan_create_sections()
   local function pick_sizes(W, limit)
     local min_size = 3
 
-    -- two spare seeds on each edge of the map
-    limit = limit - 4
+    -- spare seeds on each edge of the map
+    limit = limit - SPARE_SEEDS * 2
 
     assert(W >= 2)
     assert(limit >= 1 + W * (min_size+1))
@@ -159,8 +162,7 @@ function Plan_create_sections()
 
 
   local function get_positions(W, sizes)
-    -- begins at 3 since there are 2 spare seeds on each side of the map
-    local pos = { 3 }
+    local pos = { 1 + SPARE_SEEDS }
 
     for x = 1, W*2 do
       pos[x+1] = pos[x] + sizes[x]
@@ -1520,18 +1522,38 @@ end
 
 
 function Plan_dump_rooms(title, match_kind)
+  
+  local spare_x1 = SPARE_SEEDS
+  local spare_y1 = SPARE_SEEDS
+
+  local spare_x2 = SEED_W   - (SPARE_SEEDS - 1)
+  local spare_y2 = SEED_TOP - (SPARE_SEEDS - 1)
+
+
   local function seed_to_char(sx, sy)
     local S = SEEDS[sx][sy]
 
-    if S.edge_of_map then return "/" end
+    local K = S.section
 
-    if S.section and S.section.hall then return "#" end
+    if K and K.used then
+      if K.shape == "big_junc" then return "@" end
+
+      if K.hall then return "#" end
+    end
 
     local R = S.room
-    if not R then return "." end
+
+    if not R then
+      if sx <= spare_x1 or sx >= spare_x2 or
+         sy <= spare_y1 or sy >= spare_y2
+      then return "/" end
+
+      return " "
+    end
 
     if R.kind == "scenic" then return "=" end
-    if R.street then return "#" end
+
+    if R.street then return ":" end
 
     local n = 1 + ((R.id - 1) % 26)
 
