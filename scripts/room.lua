@@ -2447,9 +2447,9 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
         S.scenic = "border_c"
         S.border_dir = dir
 
-        if S2 and not S2:used() then S2.scenic = "border_c" ; S2.border_c = dir end
-        if S3 and not S3:used() then S3.scenic = "border_c" ; S3.border_c = dir end
-        if S4 and not S4:used() then S4.scenic = "border_c" ; S4.border_c = dir end
+        if S2 and not S2:used() then S2.scenic = "border_c" ; S2.border_dir = dir end
+        if S3 and not S3:used() then S3.scenic = "border_c" ; S3.border_dir = dir end
+        if S4 and not S4:used() then S4.scenic = "border_c" ; S4.border_dir = dir end
 
         break;
 
@@ -2533,19 +2533,35 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
       cw = 2
     end
 
-    local skin_name = "Border_" .. cw .. "x" .. ch .. "_t"
+    local skin_name = "Border_" .. math.min(cw, ch) .. "x" ..
+                                   math.max(cw, ch) .. "_t"
 
     local skin1 = GAME.SKINS[skin_name]
-    assert(skin1)
+    if not skin1 then
+      error("missing border prefab: " .. skin_name)
+    end
 
     local x1, y1 = SA.x1, SA.y1
     local x2, y2 = x1 + cw * SEED_SIZE, y1 + ch * SEED_SIZE
 
     local floor_h = 80  --!!!!! FIXME
+    local sky_h   = 384  --!!!! FIXME
 
     local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
 
     Fabricate(skin1, T, { skin1 })
+
+    brush = Brush_new_quad(x1, y1, x2, y2, sky_h)
+    Brush_set_mat(brush, "_SKY", "_SKY")
+    table.insert(brush, 1, { m="sky" })
+    brush_helper(brush)
+
+    -- mark as done
+    SA.scenic = "border_done"
+
+    if cw == 2 then SB.scenic = "border_done" end
+    if ch == 2 then SC.scenic = "border_done" end
+    if cw == 2 and ch == 2 then SD.scenic = "border_done" end
   end
 
 
@@ -2555,6 +2571,9 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
     local B = (SB.scenic == "border_c")
     local C = (SC.scenic == "border_c")
     local D = (SD.scenic == "border_c")
+
+--stderrf("\n\n build_border_corner: A=%s B=%s C=%s D=%s\n",
+--        SA:tostr(), string.bool(B), string.bool(C), string.bool(D))
 
     -- determine size, usually 2x2
     local cw = 1
@@ -2576,16 +2595,33 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
     local skin_name = "Border_" .. cw .. "x" .. ch .. "_c"
 
     local skin1 = GAME.SKINS[skin_name]
-    assert(skin1)
+    if not skin1 then
+      error("missing border prefab: " .. skin_name)
+    end
 
     local x1, y1 = SA.x1, SA.y1
     local x2, y2 = x1 + cw * SEED_SIZE, y1 + ch * SEED_SIZE
 
     local floor_h = 80  --!!!!! FIXME
+    local sky_h   = 384  --!!!! FIXME
 
     local T = Trans.corner_transform(x1, y1, x2, y2, floor_h, dir, 512, 512)
 
     Fabricate(skin1, T, { skin1 })
+
+    brush = Brush_new_quad(x1, y1, x2, y2, sky_h)
+    Brush_set_mat(brush, "_SKY", "_SKY")
+    table.insert(brush, 1, { m="sky" })
+    brush_helper(brush)
+
+    -- mark as done
+    SA.scenic = "border_done"
+
+    if cw == 2 then
+      SB.scenic = "border_done"
+      SC.scenic = "border_done"
+      SD.scenic = "border_done"
+    end
   end
 
 
