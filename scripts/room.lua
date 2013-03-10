@@ -2497,6 +2497,116 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
     end -- sx, sy
     end
+
+    -- fix the problematic keyword
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_TOP do
+      local S = SEEDS[sx][sy]
+
+      if S.scenic == "border_b" then
+         S.scenic = "border"
+      end
+    end
+    end
+  end
+
+
+  local function build_border_edge(SA, SB, SC, SD)
+    local dir = assert(SA.border_dir)
+
+    local B = (SB.scenic == "border")
+    local C = (SC.scenic == "border")
+    local D = (SD.scenic == "border")
+
+    -- determine size, usually 2x2, sometimes 1x2 (along dir)
+    local cw = 1
+    local ch = 1
+
+    if B and C and D then
+      cw, ch = 2, 2
+
+    elseif geom.is_vert(dir) and C then
+      ch = 2
+
+    elseif geom.is_horiz(dir) and B then
+      cw = 2
+    end
+
+    local skin_name = "Border_" .. cw .. "x" .. ch .. "_t"
+
+    local skin1 = GAME.SKINS[skin_name]
+    assert(skin1)
+
+    local x1, y1 = SA.x1, SA.y1
+    local x2, y2 = x1 + cw * SEED_SIZE, y1 + ch * SEED_SIZE
+
+    local floor_h = 80  --!!!!! FIXME
+
+    local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
+
+    Fabricate(skin1, T, { skin1 })
+  end
+
+
+  local function build_border_corner(SA, SB, SC, SD)
+    local dir = assert(SA.border_dir)
+    
+    local B = (SB.scenic == "border_c")
+    local C = (SC.scenic == "border_c")
+    local D = (SD.scenic == "border_c")
+
+    -- determine size, usually 2x2
+    local cw = 1
+    local ch = 1
+
+    if B and C and D then
+      cw, ch = 2, 2
+
+    elseif dir == 9 and D then
+      SA = SD
+      
+    elseif dir == 3 and B then
+      SA = SB
+
+    elseif dir == 7 and C then
+      SA = SC
+    end
+
+    local skin_name = "Border_" .. cw .. "x" .. ch .. "_c"
+
+    local skin1 = GAME.SKINS[skin_name]
+    assert(skin1)
+
+    local x1, y1 = SA.x1, SA.y1
+    local x2, y2 = x1 + cw * SEED_SIZE, y1 + ch * SEED_SIZE
+
+    local floor_h = 80  --!!!!! FIXME
+
+    local T = Trans.corner_transform(x1, y1, x2, y2, floor_h, dir, 512, 512)
+
+    Fabricate(skin1, T, { skin1 })
+  end
+
+
+  local function build_borders()
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_TOP do
+
+      local SA = SEEDS[sx][sy]
+      local SB = SA:neighbor(6)
+      local SC = SA:neighbor(8)
+      local SD = SA:neighbor(9)
+
+      if SA.scenic == "border" then
+        build_border_edge(SA, SB, SC, SD)    
+
+      elseif SA.scenic == "border_c" then
+        build_border_corner(SA, SB, SC, SD)    
+      end
+
+    end -- sx, sy
+    end
   end
 
 
@@ -2545,6 +2655,8 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
 --  find_fat_fences()
 
+-- FIXME: need to find "outies" too
+
   mark_outdoor_edges()
 
   if rand.odds(30 + 70) then    -- FIXME: proper odds
@@ -2554,6 +2666,9 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
   mark_outdoor_corners()
 
 Plan_dump_rooms("Border map:")
+
+  build_borders()
+
 
   mark_fake_buildings()
 
