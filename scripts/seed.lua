@@ -33,6 +33,7 @@ class SEED
 
   room : ROOM
   hall : HALLWAY
+  closet : CLOSET
 
   scenic : boolean
 
@@ -142,7 +143,8 @@ end
 
 
 function SEED_CLASS.used(S)
-  return S.room or S.hall or S.scenic or S.chunk or not table.empty(S.chunks)
+  return S.room or S.hall or S.closet or S.scenic or
+         S.chunk or not table.empty(S.chunks)
 end
 
 

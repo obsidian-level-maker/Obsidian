@@ -1544,6 +1544,9 @@ function Plan_dump_rooms(title, match_kind)
     local R = S.room
 
     if not R then
+      if S.closet then return "$" end
+      if S.scenic then return "%" end
+
       if sx <= spare_x1 or sx >= spare_x2 or
          sy <= spare_y1 or sy >= spare_y2
       then return "/" end
@@ -1564,13 +1567,16 @@ function Plan_dump_rooms(title, match_kind)
     end
   end
 
+
   gui.printf("%s\n", title or "Seed Map:")
 
   for y = SEED_H,1,-1 do
     local line = ""
+
     for x = 1,SEED_W do
       line = line .. seed_to_char(x, y)
     end
+
     gui.printf("%s\n", line)
   end
 
