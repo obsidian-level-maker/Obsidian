@@ -2418,40 +2418,69 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
       if S:used() then continue end
 
-      local touch_dir
-
       for dir = 1,9,2 do if dir != 5 then
-        local N = S:neighbor(dir, dist)
+        local N = S:neighbor(dir)
 
-        if N and N.room and N.room.kind == "outdoor" then
-          touches_dir = dir
-          break
-        end
+        if not N then continue end
+        if not (N.room and N.room.kind == "outdoor") then continue end
+
+        local L_dir = geom. LEFT_45[dir]
+        local R_dir = geom.RIGHT_45[dir]
+
+        local N2 = S:neighbor(L_dir)
+        local N3 = S:neighbor(R_dir)
+
+        if not (N2 and N2.scenic == "border" and
+                N3 and N3.scenic == "border")
+        then continue end
+
+        -- mark spot, and attempt to make it 2x2
+
+        local S2 = S:neighbor(10 - L_dir)
+        local S3 = S:neighbor(10 - R_dir)
+        local S4 = S:neighbor(10 - dir)
+
+        S.scenic = "border_c"
+
+        if S2 and not S2:used() then S2.scenic = "border_c" end
+        if S3 and not S3:used() then S3.scenic = "border_c" end
+        if S4 and not S4:used() then S4.scenic = "border_c" end
+
+        break;
+
       end end
 
-      if not touch_dir then continue end
+    end -- sx, sy
+    end
+  end
 
-      local L_dir = geom. LEFT_45[touch_dir]
-      local R_dir = geom.RIGHT_45[touch_dir]
 
-      local N2 = S:neighbor(L_dir)
-      local N3 = S:neighbor(R_dir)
+  local function mark_outdoor_betweeners()
+    -- Example:
+    --        aa bb       aa bb
+    --        %% %%  -->  %%%%%
+    --        %% %%       %%%%%
 
-      if not (N2 and N2.scenic == "border") or
-         not (N3 and N3.scenic == "border")
-      then continue end
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_TOP do
+      local S = SEEDS[sx][sy]
 
-      -- mark spot (and attempt to make it 2x2)
+      if S:used() then continue end
 
-      local S2 = S:neighbor(10 - L_dir)
-      local S3 = S:neighbor(10 - R_dir)
-      local S4 = S:neighbor(10 - touch_dir)
+      local cat_str = ""
 
-      S.scenic = "border_c"
+      for dir = 2,8,2 do
+        local N = S:neighbor(dir)
 
-      if not S2:used() then S2.scenic = "border_c" end
-      if not S3:used() then S3.scenic = "border_c" end
-      if not S4:used() then S4.scenic = "border_c" end
+        if N and (N.scenic == "border" or N.scenic == "border_c") then
+          cat_str = cat_str .. tostring(dir)
+        end
+      end
+
+      if cat_str == "28" or cat_str == "46" then
+        -- keyword must be different, otherwise we get T shapes (etc)
+        S.scenic = "border_b"
+      end
 
     end -- sx, sy
     end
@@ -2501,10 +2530,14 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
   ---| Room_do_outdoor_borders |---
 
-  find_fat_fences()
+--  find_fat_fences()
 
   mark_outdoor_edges()
   mark_outdoor_corners()
+
+  if rand.odds(30 + 70) then    -- FIXME: proper odds
+    mark_outdoor_betweeners()
+  end
 
 Plan_dump_rooms("Border map:")
 
