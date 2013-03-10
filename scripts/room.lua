@@ -2459,7 +2459,103 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
 
   local function corner_is_free(S, dir)
-    
+    local S2 = S:neighbor(10 - dir)
+
+    if not S2 then return false end
+
+    local sx1 = math.min(S.sx, S2.sx)
+    local sy1 = math.min(S.sy, S2.sy)
+    local sx2 = math.max(S.sx, S2.sx)
+    local sy2 = math.max(S.sy, S2.sy)
+
+    for sx = sx1, sx2 do
+    for sy = sy1, sy2 do
+      local N = SEEDS[sx][sy]
+
+      if not N or N:used() then return false end
+    end
+    end
+
+    return true
+  end
+
+
+  local function mark_outdoor_outies()
+    local mid_x1 = 8
+    local mid_y1 = 8
+    local mid_x2 = SEED_W - 8
+    local mid_y2 = SEED_TOP - 8
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_TOP do
+      
+      -- skip middle of level (speed up large maps)
+      if mid_x1 <= sx and sx <= mid_x2 and
+         mid_y1 <= sy and sy <= mid_y2
+      then continue end
+
+      local S = SEEDS[sx][sy]
+
+      if S:used() then continue end
+
+      for dir = 1,9,2 do if dir != 5 then
+        local N = S:neighbor(dir)
+
+        if not N then continue end
+        if not (N.room and N.room.kind == "outdoor") then continue end
+
+        if not corner_is_free(S, dir) then continue end
+
+        local L_dir = geom. LEFT_45[dir]
+        local R_dir = geom.RIGHT_45[dir]
+
+        local N2 = S:neighbor(L_dir)
+        local N3 = S:neighbor(R_dir)
+
+        if not (N2 and N2.room == N.room and
+                N3 and N3.room == N.room)
+        then continue end
+
+        local N4 = N2:neighbor(10 - R_dir)
+        local N5 = N3:neighbor(10 - L_dir)
+
+        if not (N4 and N4.room == N.room and
+                N5 and N5.room == N.room)
+        then continue end
+
+        if not extends_to_edge(S, 10 - R_dir, 3, "noside") or
+           not extends_to_edge(S, 10 - L_dir, 3, "noside")
+        then continue end
+
+        local SL = S:neighbor(10 - L_dir)
+        local SR = S:neighbor(10 - R_dir)
+
+        if not (SL and SR) then continue end
+
+        if not extends_to_edge(SL, 10 - R_dir, 3) or
+           not extends_to_edge(SR, 10 - L_dir, 3)
+        then continue end
+
+stderrf("\n****** OUTIE @ %s dir:%d\n", S:tostr(), dir)
+
+        local BORDER =
+        {
+          kind = "outie"
+          dir  = dir
+          room = N.room
+
+          sx   = sx
+          sy   = sy
+          long = 2
+          deep = 2
+        }
+
+        do_mark_border(BORDER)
+
+      end end  -- dir
+
+    end -- sx, sy
+    end
   end
 
 
@@ -2486,6 +2582,8 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
         if not N then continue end
         if not (N.room and N.room.kind == "outdoor") then continue end
+
+        if not corner_is_free(S, dir) then continue end
 
         local L_dir = geom. LEFT_45[dir]
         local R_dir = geom.RIGHT_45[dir]
@@ -2517,6 +2615,7 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
     end -- sx, sy
     end
   end
+
 
 
   local function mark_outdoor_betweeners()
@@ -2753,6 +2852,8 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 --  find_fat_fences()
 
 -- FIXME: need to find "outies" too
+
+  mark_outdoor_outies()
 
   mark_outdoor_edges()
 
