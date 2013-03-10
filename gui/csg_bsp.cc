@@ -1817,7 +1817,25 @@ static void SpreadReachability(void)
 	//            further.  Then all gaps without the flag are
 	//            unreachable and should be filled.
 
-	// TODO: a lua mechanism to force the reachable flag
+	// firstly, allow brushes to force reachable flag
+
+	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+	{
+		region_c *R = all_regions[i];
+
+		for (unsigned int k = 0 ; k < R->gaps.size() ; k++)
+		{
+			gap_c *G = R->gaps[k];
+
+			if (G->bottom->t.face.getStr("reachable") ||
+			    G->top   ->b.face.getStr("reachable"))
+			{
+				G->reachable = true;
+			}
+		}
+	}
+
+
 	int changes;
 
 	do
