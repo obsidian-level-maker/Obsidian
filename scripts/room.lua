@@ -1961,27 +1961,41 @@ function Room_outdoor_borders()
   --
   --  BORDER ALGORITHM
   --
-  --  (1) find all unused seeds which border TWO outdoor rooms (or more).
-  --      place fake buildings there ('scenic' field in seeds).
+  --  (1) find unused seeds between TWO outdoor rooms and place
+  --      "fat_fences" there (or fake buildings or fat cages).
   --
-  --  (2) flood fill the 'edge_of_map' flag in seeds.
+  --      seeds get marked as 'scenic'
   --
-  --      [any fake buildings will prevent the flag spreading]
+  --  (2) at each edge of an outdoor room, check if edge would
+  --      touch edge of map if extended (check at least 4 seeds).
   --
-  --  (3) analyse from edge : if hit an indoor (or fake) AND touches
-  --      an outdoor room, then place fake buildings all the way to edge.
+  --      mark these seeds and sections as 'scenic_border'.
   --
-  --      [at this point, all 'edge_of_map' seeds should only touch
-  --       a single outdoor room]
+  --         aa./        aa%%
+  --         aa./   -->  aa%%
+  --         .../        .../
   --
-  --  (4) find all unused non-edge seeds which border ONE outdoor room,
-  --      place fake buildings there.  Same code for step (1) but with
-  --      a different check and probably different prefabs.
+  --  (3) unused seeds which touch two scenic_borders at a corner
+  --      (and don't touch any rooms) also become scenic_border.
   --
-  --  (5) scan around edges of each outdoor room, place sky fences
-  --      in unused 'edge_of_map' seeds.  Place sky corners only where
-  --      a seed places a fence in two directions (e.g. 2 and 4).
+  --         aa%%        aa%%
+  --         aa%%   -->  aa%%
+  --         %%..        %%%%
+  --      
+  --  (4) everywhere else that an outdoor room touches an unused
+  --      seed we need a fake building in that unused seed.
+  --      this includes seeds near the scenic_borders of a room.
   --
+  --      where a run a these fake-building spots touches (or could
+  --      extend to touch) the edge of map, set texture of them all
+  --      to the same building (e.g. zone texture of nearest indoor
+  --      building).
+  --
+  --      otherwise get texture from a touching indoor building, or
+  --      some fallback method (e.g. zone of touching outdoor room).
+  -- 
+
+
 
   local function categorize_touches(T)
     local cat, dir = Trans.categorize_linkage(T[2], T[4], T[6], T[8])
