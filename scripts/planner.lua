@@ -360,7 +360,7 @@ function Plan_add_big_junctions()
 
   ---| Plan_add_big_junctions |---
 
-do return end  --!!!!!! FIXME: disabled temporarily
+--do return end  --!!!!!! FIXME: disabled temporarily
 
   local small_level = (MAP_W + MAP_H <= 5)
 
