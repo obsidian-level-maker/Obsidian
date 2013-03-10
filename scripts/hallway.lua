@@ -1437,8 +1437,7 @@ do return false end
 
       -- reached a room?  if so, evaluate this hallway
 
-      -- FIXME: allow big junctions to connect directly to rooms
-      if K.shape != "big_junc" and not crossing_over then
+      if (K.shape != "big_junc" or N.room) and not crossing_over then
 --stderrf("  testing conn @ dir:%d\n", dir)
         eval_final_hallway(N, 10 - dir, path, stats)
       end
