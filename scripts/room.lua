@@ -23,9 +23,8 @@
 class ROOM
 {
   kind : keyword  -- "building" : constructed room
-                  -- "cave"     : natural room
                   -- "outdoor"  : room with sky
-                  -- "hallway"  : corridor / passage
+                  -- "cave"     : natural room
 
   shape : keyword -- "rect" (perfect rectangle)
                   -- "L"  "T"  "U"  "S"  "H"
@@ -760,7 +759,7 @@ end
 ----------------------------------------------------------------
 
 
-function Rooms_select_textures()
+function Room_select_textures()
 
   local function select_textures(L)
     local tab
@@ -821,7 +820,7 @@ function Rooms_select_textures()
   end
 
 
-  ---| Rooms_select_textures |---
+  ---| Room_select_textures |---
 
   each R in LEVEL.rooms do
     select_textures(R)
@@ -1006,7 +1005,7 @@ end
 
 
 
-function Rooms_collect_sky_groups()
+function Room_collect_sky_groups()
 
   -- this makes sure that any two outdoor rooms which touch will belong
   -- to the same sky_group and hence get the same sky height.
@@ -1557,7 +1556,7 @@ end
 
 
 
-function Rooms_add_sun()
+function Room_add_sun()
   -- game check
   if not GAME.ENTITIES["sun"] then return end
 
@@ -1583,7 +1582,7 @@ end
 
 
 
-function Rooms_intermission_camera()
+function Room_intermission_camera()
   -- game check
   if not GAME.ENTITIES["camera"] then return end
 
@@ -1630,31 +1629,6 @@ function Rooms_intermission_camera()
   local angles = string.format("%d %d 0", mlook, angle)
 
   entity_helper("camera", x1, y1, z1, { angles=angles })
-end
-
-
-
-function Rooms_blow_chunks()
-
-  each R in LEVEL.rooms do
-    ROOM = R
-    each C in R.chunks do
-      C:build()
-    end
-  end
-
-  -- scenic rooms ??
-
-  each H in LEVEL.halls do
-    ROOM = H
-    H:build()
-  end
-
-  ROOM = nil
-
-  each CL in LEVEL.closets do
-    CL:build()
-  end
 end
 
 
@@ -1769,7 +1743,7 @@ end
 
 
 
-function Rooms_ambient_lighting()
+function Room_ambient_lighting()
 
   -- FIXME: probably should pick colors from a list (e.g. ROOM_THEME.colors or THEME.colors)
 
@@ -1829,7 +1803,7 @@ function Rooms_ambient_lighting()
   end
 
 
-  ---| Rooms_ambient_lighting |---
+  ---| Room_ambient_lighting |---
 
   if not PARAM.light_brushes then
     return
@@ -1859,7 +1833,7 @@ end
 ----------------------------------------------------------------
 
 
-function Rooms_place_hub_gates()
+function Room_place_hub_gates()
   if not LEVEL.hub_links then return end
 
   local function calc_rough_space(R)
@@ -1883,7 +1857,7 @@ function Rooms_place_hub_gates()
     return table.pick_best(LEVEL.rooms, function(A, B) return A.rough_space > B.rough_space end)
   end
 
-  --| Rooms_place_hub_gates |--
+  --| Room_place_hub_gates |--
 
   each R in LEVEL.rooms do
     R.rough_space = calc_rough_space(R)
@@ -1985,7 +1959,7 @@ end
 
 
 
-function Rooms_outdoor_borders()
+function Room_outdoor_borders()
   --
   --  BORDER ALGORITHM
   --
@@ -2323,7 +2297,7 @@ function Rooms_outdoor_borders()
   end
 
 
-  ---| Rooms_do_outdoor_borders |---
+  ---| Room_do_outdoor_borders |---
 
   Seed_flood_fill_edges()
 
@@ -2401,17 +2375,42 @@ end
 
 
 
-function Rooms_build_all()
+function Room_blow_chunks()
+
+  each R in LEVEL.rooms do
+    ROOM = R
+    each C in R.chunks do
+      C:build()
+    end
+  end
+
+  -- scenic rooms ??
+
+  each H in LEVEL.halls do
+    ROOM = H
+    H:build()
+  end
+
+  ROOM = nil
+
+  each CL in LEVEL.closets do
+    CL:build()
+  end
+end
+
+
+
+function Room_build_all()
 
   gui.printf("\n--==| Build Rooms |==--\n\n")
 
   gui.prog_step("Rooms");
 
-  Rooms_select_textures()
+  Room_select_textures()
 
 ---!!!  Rooms_setup_symmetry()
 
-  Rooms_place_hub_gates()
+  Room_place_hub_gates()
 
   Areas_handle_connections()
 
@@ -2419,25 +2418,20 @@ function Rooms_build_all()
     H:pick_group()
   end
 
-  Rooms_collect_sky_groups()
+  Room_collect_sky_groups()
 
   Areas_important_stuff()
   Areas_flesh_out()
 
-  Rooms_outdoor_borders()
-  Rooms_ambient_lighting()
+  Room_outdoor_borders()
+  Room_ambient_lighting()
 
   -- Rooms_indoor_walls()
 
-  Rooms_blow_chunks()
-  Rooms_add_sun()
-  Rooms_intermission_camera()
+  Room_blow_chunks()
 
+  Room_add_sun()
+  Room_intermission_camera()
 
---[[ DEBUG
-local T = Trans.box_transform(-7*192, -6*192, -6*192, -5*192, 448, 2)
-local skin = { item="quad", wall="TECH08_2", outer="CITY6_3" }
-Fabricate_old("SECRET_NICHE_W_JUMPS", T, { skin })
---]]
 end
 

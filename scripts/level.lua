@@ -746,10 +746,10 @@ function Levels_build_it()
   Quest_make_quests()
   if gui.abort() then return "abort" end
 
-  Rooms_build_all()
+  Room_build_all()
   if gui.abort() then return "abort" end
 
-  Monsters_make_battles()
+  Monster_make_battles()
   if gui.abort() then return "abort" end
 
   gui.printf("\n")

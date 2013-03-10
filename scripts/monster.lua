@@ -2100,7 +2100,7 @@ function Monsters_show_stats()
 end
 
 
-function Monsters_make_battles()
+function Monster_make_battles()
   
   gui.printf("\n--==| Make Battles |==--\n\n")
 
