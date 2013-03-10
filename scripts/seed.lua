@@ -253,7 +253,9 @@ function Seed_init(map_W, map_H, free_W, free_H)
 
     if x > map_W or y > map_H then
       S.free = true
-    elseif x == 1 or x == map_W or y == 1 or y == map_H then
+    elseif x <= SPARE_SEEDS or x >= map_W - (SPARE_SEEDS - 1) or
+           y <= SPARE_SEEDS or y >= map_H - (SPARE_SEEDS - 1)
+    then
       S.edge_of_map = true
     end
   end end -- x, y
@@ -264,41 +266,6 @@ end
 function Seed_valid(x, y)
   return (x >= 1 and x <= SEED_W) and
          (y >= 1 and y <= SEED_H)
-end
-
-
-
-function Seed_flood_fill_edges()
-  local active = {}
-
-  for x = 1,SEED_W do for y = 1,SEED_H do
-    local S = SEEDS[x][y]
-
-    if S:used() then
-      S.edge_of_map = nil
-    end
-
-    if S.edge_of_map then
-      table.insert(active, S)
-    end
-  end end -- for x, y
-
-  while #active > 0 do
-    local new_active = {}
-
-    each S in active do
-      for side = 2,8,2 do
-        local N = S:neighbor(side)
-
-        if N and not N.edge_of_map and not N.free and not N:used() then
-          N.edge_of_map = true
-          table.insert(new_active, N)
-        end
-      end
-    end -- S
-
-    active = new_active
-  end
 end
 
 

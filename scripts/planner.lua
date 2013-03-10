@@ -23,9 +23,6 @@ MAP_W = 0  -- number of non-hallway sections
 MAP_H = 0  --
 
 
-SPARE_SEEDS = 1
-
-
 function Plan_alloc_id(kind)
   local result = (LEVEL.ids[kind] or 0) + 1
   LEVEL.ids[kind] = result
@@ -237,8 +234,8 @@ function Plan_create_sections()
 
   --- create the SEED map ---
 
-  local seed_W = section_X[SECTION_W] + section_W[SECTION_W]
-  local seed_H = section_Y[SECTION_H] + section_H[SECTION_H]
+  local seed_W = section_X[SECTION_W] + section_W[SECTION_W] + (SPARE_SEEDS - 1)
+  local seed_H = section_Y[SECTION_H] + section_H[SECTION_H] + (SPARE_SEEDS - 1)
 
   Seed_init(seed_W, seed_H, 0, free_seeds)
 end
@@ -1525,13 +1522,6 @@ end
 
 function Plan_dump_rooms(title, match_kind)
   
-  local spare_x1 = SPARE_SEEDS
-  local spare_y1 = SPARE_SEEDS
-
-  local spare_x2 = SEED_W   - (SPARE_SEEDS - 1)
-  local spare_y2 = SEED_TOP - (SPARE_SEEDS - 1)
-
-
   local function seed_to_char(sx, sy)
     local S = SEEDS[sx][sy]
 
@@ -1549,9 +1539,7 @@ function Plan_dump_rooms(title, match_kind)
       if S.closet then return "$" end
       if S.border then return "%" end
 
-      if sx <= spare_x1 or sx >= spare_x2 or
-         sy <= spare_y1 or sy >= spare_y2
-      then return "/" end
+      if S.edge_of_map or S.free then return "/" end
 
       return " "
     end
