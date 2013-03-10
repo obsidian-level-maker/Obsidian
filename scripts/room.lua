@@ -2389,8 +2389,12 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
           local T = S:neighbor(10 - dir)
 
           S.scenic = "border"
+          S.border_dir = dir
 
-          if T then T.scenic = "border" end
+          if T then
+            T.scenic = "border"
+            T.border_dir = dir
+          end
         end
       end
 
@@ -2441,10 +2445,11 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
         local S4 = S:neighbor(10 - dir)
 
         S.scenic = "border_c"
+        S.border_dir = dir
 
-        if S2 and not S2:used() then S2.scenic = "border_c" end
-        if S3 and not S3:used() then S3.scenic = "border_c" end
-        if S4 and not S4:used() then S4.scenic = "border_c" end
+        if S2 and not S2:used() then S2.scenic = "border_c" ; S2.border_c = dir end
+        if S3 and not S3:used() then S3.scenic = "border_c" ; S3.border_c = dir end
+        if S4 and not S4:used() then S4.scenic = "border_c" ; S4.border_c = dir end
 
         break;
 
@@ -2468,6 +2473,7 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
       if S:used() then continue end
 
       local cat_str = ""
+      local cat_dir
 
       for dir = 2,8,2 do
         local N = S:neighbor(dir)
@@ -2475,11 +2481,18 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
         if N and (N.scenic == "border" or N.scenic == "border_c") then
           cat_str = cat_str .. tostring(dir)
         end
+
+        if N and N.scenic == "border" then cat_dir = N.border_dir end
       end
 
-      if cat_str == "28" or cat_str == "46" then
-        -- keyword must be different, otherwise we get T shapes (etc)
+      if not cat_dir then continue end
+
+      if (cat_str == "28" and geom.is_horiz(cat_dir)) or
+         (cat_str == "46" and geom.is_vert(cat_dir))
+      then
+        -- keyword must be different, otherwise one half won't get filled
         S.scenic = "border_b"
+        S.border_dir = cat_dir
       end
 
     end -- sx, sy
@@ -2533,11 +2546,12 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 --  find_fat_fences()
 
   mark_outdoor_edges()
-  mark_outdoor_corners()
 
   if rand.odds(30 + 70) then    -- FIXME: proper odds
     mark_outdoor_betweeners()
   end
+
+  mark_outdoor_corners()
 
 Plan_dump_rooms("Border map:")
 
