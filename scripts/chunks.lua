@@ -384,23 +384,6 @@ function CHUNK_CLASS.quad_for_edge(C, dir, thick)
 end
 
 
-function CHUNK_CLASS.against_map_edge(C, dir)  -- TODO: REMOVE, OLD
-  local sx1, sy1, sx2, sy2 = geom.side_coords(dir, C.sx1, C.sy1, C.sx2, C.sy2)
-
-  sx1, sy1 = geom.nudge(sx1, sy1, dir)
-  sx2, sy2 = geom.nudge(sx2, sy2, dir)
-
-  if not Seed_valid(sx1, sy1) then return true end
-
-  for sx = sx1,sx2 do for sy = sy1,sy2 do
-    if SEEDS[sx][sy].free then return true end
---#  if SEEDS[sx][sy].edge_of_map then return true end
-  end end
-
-  return false
-end
-
-
 function CHUNK_CLASS.get_street_sky_h(C, dir)
   local sx1, sy1 = geom.side_coords(dir, C.sx1, C.sy1, C.sx2, C.sy2)
 
