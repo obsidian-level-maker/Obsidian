@@ -85,8 +85,11 @@ class CLOSET
 {
   kind : keyword  -- "closet"  (differentiates from room types)
 
+
   closet_kind : keyword  -- "START", "EXIT"
                          -- "secret", "trap"
+
+  section : SECTION
 
   parent : ROOM  -- parent room
 
@@ -94,11 +97,6 @@ class CLOSET
 
   dir : 2/4/6/8
 
-  chunk : CHUNK
-
-
-???   sx1, sy1, sx2, sy2  -- \ Seed range
-???   sw, sh, svolume     -- /
 }
 
 
@@ -671,9 +669,7 @@ function CLOSET_CLASS.new(kind, parent)
     id = Plan_alloc_id("closet")
     kind = "closet"
     closet_kind = kind
-
     parent = parent
-
     conns = {}
   }
 
@@ -721,7 +717,7 @@ function CLOSET_CLASS.build(CL)
 
   assert(C.floor_h)
 
-  local x1, y1, x2, y2 = C.x1, C.y1, C.x2, C.y2
+  local x1, y1, x2, y2 = CL.section:get_coords()
 
   -- align indoor closets with wall  [FIXME: remove hack for teleporters]
   local dx, dy = 0, 0
@@ -1347,6 +1343,7 @@ if not (closet_kind == "START" or closet_kind == "EXIT" or closet_kind == "TELEP
   --                           { where="closet", long=long, deep=deep })
 
   local N = K:neighbor(dir)
+  assert(N)
 
   -- create closet object
   local CL = CLOSET_CLASS.new(closet_kind, R)
@@ -1357,10 +1354,11 @@ if not (closet_kind == "START" or closet_kind == "EXIT" or closet_kind == "TELEP
   CL.section = N
   CL.skins = list
 
-  CL.conn_group = R.conn_group  -- keep D:add_it() happy
+  CL.conn_group = R.conn_group  -- keep CONN:add_it() happy
 
   -- mark section as used
   N:set_closet(CL)
+
 
   -- create connection
   local D = CONN_CLASS.new("closet", R, CL, dir)
