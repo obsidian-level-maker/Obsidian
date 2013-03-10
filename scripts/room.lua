@@ -2003,7 +2003,7 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
     local mat = "TEKBRON1"
 
-    S.scenic = true
+    S.scenic = "fat_fence"
 
     local brush = Brush_new_quad(S.x1, S.y1, S.x2, S.y2)
     Brush_set_mat(brush, mat)
@@ -2319,17 +2319,178 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
   end
 
 
+  local function semi_used(S)
+    if S.room or S.hall then return true end
+
+    if S.scenic and not (S.scenic == "border") then return true end
+
+    return false
+  end
+
+
+  local function extends_to_edge(S, dir, try_num)
+    for i = 1, try_num do
+      local N = S:neighbor(dir, i)
+
+      if not N then continue end
+
+      if semi_used(S) then return false end
+    end
+
+    return true
+  end
+
+
+  local function mark_outdoor_edges()
+    local mid_x1 = 8
+    local mid_x2 = SEED_W - 8
+
+    local mid_y1 = 8
+    local mid_y2 = SEED_TOP - 8
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_TOP do
+      
+      -- skip middle of level (to speed up large maps)
+      if mid_x1 <= sx and sx <= mid_x2 and
+         mid_y1 <= sy and sy <= mid_y2
+      then continue end
+
+      local S = SEEDS[sx][sy]
+
+      if semi_used(S) then continue end
+
+      for dir = 2,8,2 do
+        local N = S:neighbor(dir)
+
+        if not N then continue end
+        if not (N.room and N.room.kind == "outdoor") then continue end
+
+        if extends_to_edge(S, 10 - dir, 3) then
+          local T = S:neighbor(10 - dir)
+
+          S.scenic = "border"
+          T.scenic = "border"
+        end
+      end
+
+    end -- sx, sy
+    end
+  end
+
+
+  local function mark_outdoor_corners()
+    local mid_x1 = 8
+    local mid_x2 = SEED_W - 8
+
+    local mid_y1 = 8
+    local mid_y2 = SEED_TOP - 8
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_TOP do
+      
+      -- skip middle of level (to speed up large maps)
+      if mid_x1 <= sx and sx <= mid_x2 and
+         mid_y1 <= sy and sy <= mid_y2
+      then continue end
+
+      local S = SEEDS[sx][sy]
+
+      if S:used() then continue end
+
+      local touch_dir
+
+      for dir = 1,9,2 do if dir != 5 then
+        local N = S:neighbor(dir, dist)
+
+        if N and N.room and N.room.kind == "outdoor" then
+          touches_dir = dir
+          break
+        end
+      end end
+
+      if not touch_dir then continue end
+
+      local L_dir = geom. LEFT_45[touch_dir]
+      local R_dir = geom.RIGHT_45[touch_dir]
+
+      local N2 = S:neighbor(L_dir)
+      local N3 = S:neighbor(R_dir)
+
+      if not (N2 and N2.scenic == "border") or
+         not (N3 and N3.scenic == "border")
+      then continue end
+
+      -- mark spot (and attempt to make it 2x2)
+
+      local S2 = S:neighbor(10 - L_dir)
+      local S3 = S:neighbor(10 - R_dir)
+      local S4 = S:neighbor(10 - touch_dir)
+
+      S.scenic = "border_c"
+
+      if not S2:used() then S2.scenic = "border_c" end
+      if not S3:used() then S3.scenic = "border_c" end
+      if not S4:used() then S4.scenic = "border_c" end
+
+    end -- sx, sy
+    end
+  end
+
+
+  local function mark_fake_buildings()
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_TOP do
+      local S = SEEDS[sx][sy]
+
+      if S:used() then continue end
+
+      local outdoors = {}
+      local touches  = {}
+      local zone
+
+      for dir = 2,8,2 do
+        local N = S:neighbor(dir)
+
+        if not N then continue end
+
+        if N.room and N.room.kind == "outdoor" then
+          table.add_unique(outdoors, N.room)
+        end
+
+        local N_zone
+
+        if N.room and N.room.kind != "outdoor" then N_zone = N.room.zone
+        elseif N.hall then N_zone = N.hall.zone
+        elseif N.fake_zone then N_zone = N.fake_zone
+        end
+
+        if N_zone and (not zone or N_zone.id < zone.id) then
+          zone = N_zone
+        end
+      end
+
+      if not zone then zone = LEVEL.zones[1] end
+
+      if #outdoors >= 1 then
+        S.scenic = "fake_building"
+      end
+    end end
+  end
+
+
   ---| Room_do_outdoor_borders |---
 
   find_fat_fences()
 
---[[ FIXME FIXME
   mark_outdoor_edges()
   mark_outdoor_corners()
 
   mark_fake_buildings()
 
-  analyse_edges()
+---  analyse_edges()
+
+--[[ FIXME FIXME
 
   each R in LEVEL.rooms do
     if R.kind == "outdoor" then
