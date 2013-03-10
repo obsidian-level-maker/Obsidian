@@ -34,6 +34,8 @@ class SEED
   room : ROOM
   hall : HALLWAY
 
+  scenic : boolean
+
   edges[dir] : EDGE
 
   chunk : CHUNK  -- connection/important chunk

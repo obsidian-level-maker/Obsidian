@@ -1995,37 +1995,47 @@ function Room_outdoor_borders()
   --      some fallback method (e.g. zone of touching outdoor room).
   -- 
 
-
-
-  local function categorize_touches(T)
-    local cat, dir = Trans.categorize_linkage(T[2], T[4], T[6], T[8])
+  local function add_fat_fence(S, dir, zone)
      
-    assert(cat != "N")
+    -- FIXME: TEST STUFF
 
-    return cat, dir
+stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
+
+    local mat = "TEKBRON1"
+
+    S.scenic = true
+
+    local brush = Brush_new_quad(S.x1, S.y1, S.x2, S.y2)
+    Brush_set_mat(brush, mat)
+    brush_helper(brush)
+
   end
 
 
-  local function scan_for_unused_seeds(pass)
-    for sx = 1, SEED_W do for sy = 1, SEED_TOP do
+  local function find_fat_fences()
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_TOP do
       local S = SEEDS[sx][sy]
 
       if S:used() then continue end
 
-      if pass == 2 and S.edge_of_map then continue end
-
       local outdoors = {}
       local touches  = {}
       local zone
+
+      local cat_str = ""
 
       for dir = 2,8,2 do
         local N = S:neighbor(dir)
 
         if not N then continue end
 
+        -- FIXME !!!  check that seed edge is "walk" or "liquid"
+
         if N.room and N.room.kind == "outdoor" then
           table.add_unique(outdoors, N.room)
-          touches[dir] = N.room
+
+          cat_str = cat_str .. tostring(dir)
         end
 
         local N_zone
@@ -2040,15 +2050,15 @@ function Room_outdoor_borders()
         end
       end
 
-      if (pass == 1 and #outdoors >= 2) or
-         (pass == 2 and #outdoors == 1)
-      then
-        local t_kind, t_dir = categorize_touches(touches)
+      if not zone then zone = LEVEL.zones[1] end
 
-        local face_room = rand.pick(outdoors)
+      local cat_dir
 
-        Rooms_fake_building(S.sx, S.sy, S.sx, S.sy, t_kind, t_dir,
-                            face_room, zone or face_room.zone)
+      if cat_str == "46" then cat_dir = rand.sel(50, 4, 6) end
+      if cat_str == "28" then cat_dir = rand.sel(50, 2, 8) end
+
+      if cat_dir then
+        add_fat_fence(S, cat_dir, zone)
       end
     end end
   end
@@ -2301,9 +2311,9 @@ function Room_outdoor_borders()
     for sy = 1, SEED_TOP do
       local S = SEEDS[sx][sy]
 
-      if S:used() then continue end
-
-      Rooms_fake_building(sx, sy, sx, sy, 'P', nil, nil, LEVEL.zones[1])
+      if not S:used() then
+        Rooms_fake_building(sx, sy, sx, sy, 'P', nil, nil, LEVEL.zones[1])
+      end
     end
     end
   end
@@ -2311,21 +2321,22 @@ function Room_outdoor_borders()
 
   ---| Room_do_outdoor_borders |---
 
-  Seed_flood_fill_edges()
+  find_fat_fences()
 
--- Plan_dump_rooms("Edges of Map:")
+--[[ FIXME FIXME
+  mark_outdoor_edges()
+  mark_outdoor_corners()
 
-  scan_for_unused_seeds(1)
+  mark_fake_buildings()
 
   analyse_edges()
-
-  scan_for_unused_seeds(2)
 
   each R in LEVEL.rooms do
     if R.kind == "outdoor" then
       scan_room(R)
     end
   end
+--]]
 
   fill_remaining_seeds()
 end
