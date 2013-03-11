@@ -2894,6 +2894,24 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
   end
 
 
+  local function touches_outdoor_or_border(S, dir)
+    local N = S:neighbor(dir)
+
+    if not N then return nil end
+
+    if N.room and N.room.kind == "outdoor" then return N.room end
+
+    if not N.border then return nil end
+
+    if N.border.kind != "edge" then return nil end
+
+    -- hits _back_ of the edge border?
+    if dir == N.border.dir then return nil end
+
+    return N.border.room  -- OK
+  end
+
+
   local function fake_corners()
     for sx = 1, SEED_W do
     for sy = 1, SEED_TOP do
@@ -2942,9 +2960,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
       if not S or S:used() then break; end
 
-      local N = S:neighbor(dir)
-
-      if not (N and N.room == room) then break; end
+      if touches_outdoor_or_border(S, dir) != room then break; end
 
       found = found + 1
     end
@@ -2984,12 +3000,11 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
       if S:used() then continue end
 
       for dir = 2,8,2 do
-        local N = S:neighbor(dir)
+        local room = touches_outdoor_or_border(S, dir)
 
-        if not N then continue end
-        if not (N.room and N.room.kind == "outdoor") then continue end
+        if not room then continue end
 
-        try_run_of_fake_edges(S, sx, sy, dir, N.room)
+        try_run_of_fake_edges(S, sx, sy, dir, room)
       end
 
     end -- sx, sy
