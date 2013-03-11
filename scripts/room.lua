@@ -2336,20 +2336,6 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
   end
 
 
-  local function semi_used(S)
-    return S:used()
---[[
-    if S.room   then return true end
-    if S.hall   then return true end
-    if S.closet then return true end
-
-    if S.border and not (S.border.kind == "edge") then return true end
-
-    return false
---]]
-  end
-
-
   local function extends_to_edge(S, dir, try_num, no_side_check)
     local perp_dir = geom.RIGHT[dir]
 
@@ -2358,7 +2344,7 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
       if not N then break; end
 
-      if semi_used(N) then return false end
+      if N:used() then return false end
 
       if no_side_check then continue end
 
@@ -2461,7 +2447,7 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
       local S = SEEDS[sx][sy]
 
-      if semi_used(S) then continue end
+      if S:used() then continue end
 
       for dir = 2,8,2 do
         local N = S:neighbor(dir)
@@ -2689,7 +2675,6 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
 
   local function try_vert_betweener(B1, side, B2)
-    
     if B1.sy1 != B2.sy1 then return end
     if B1.sy2 != B2.sy2 then return end
 
@@ -2701,8 +2686,6 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
     local sx = (side == 4 ? B1.sx1 - 1 ; B1.sx2 + 1)
 
     local sy = (B1.dir == 2 ? B1.sy1 ; B1.sy2)
-
-stderrf("\n**** possible vert betweener @ (%d %d)\n", sx, sy)
 
     local S = SEEDS[sx][sy]
 
@@ -2716,14 +2699,40 @@ stderrf("\n**** possible vert betweener @ (%d %d)\n", sx, sy)
       B1.sx2 = B1.sx2 + 1
     end
 
-    for y = B1.sy1, B1.sy2 do
-      SEEDS[sx][y].border = B1
+    for ny = B1.sy1, B1.sy2 do
+      SEEDS[sx][ny].border = B1
     end
   end
 
 
   local function try_horiz_betweener(B1, side, B2)
-    -- TODO
+    if B1.sx1 != B2.sx1 then return end
+    if B1.sx2 != B2.sx2 then return end
+
+    if side == 2 and B2.sy2 != B1.sy1 - 2 then return end
+    if side == 8 and B2.sy1 != B1.sy2 + 2 then return end
+
+    -- may be possible : check seeds in-between them
+
+    local sy = (side == 2 ? B1.sy1 - 1 ; B1.sy2 + 1)
+
+    local sx = (B1.dir == 4 ? B1.sx1 ; B1.sx2)
+
+    local S = SEEDS[sx][sy]
+
+    if not extends_to_edge(S, 10 - B1.dir, 3) then return end
+
+    -- OK, so enlarge B1 (the edge border)
+
+    if side == 2 then
+      B1.sy1 = B1.sy1 - 1
+    else
+      B1.sy2 = B1.sy2 + 1
+    end
+
+    for nx = B1.sx1, B1.sx2 do
+      SEEDS[nx][sy].border = B1
+    end
   end
 
 
@@ -2735,6 +2744,7 @@ stderrf("\n**** possible vert betweener @ (%d %d)\n", sx, sy)
 
     each B1 in LEVEL.borders do
       
+      -- we want edge borders, since we can enlarge them easily
       if B1.kind != "edge" then continue end
 
       each B2 in LEVEL.borders do
