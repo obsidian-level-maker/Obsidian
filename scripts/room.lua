@@ -2018,13 +2018,9 @@ function Room_outdoor_borders()
 
 stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
-    local mat = "TEKBRON1"
+    S.border = { kind = "fat_fence" }
 
-    S.scenic = "fat_fence"
-
-    local brush = Brush_new_quad(S.x1, S.y1, S.x2, S.y2)
-    Brush_set_mat(brush, mat)
-    brush_helper(brush)
+    Build_solid_quad(S.x1, S.y1, S.x2, S.y2, "TEKBRON1")
 
   end
 
@@ -2375,7 +2371,7 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
     for i = 0, 99 do
       local S = SA:neighbor(along_dir, i)
 
-      if not S then break; end
+      if not S or S:used() then break; end
       if not S:neighbor(10 - dir) then break; end
 
       if not extends_to_edge(S, 10 - dir, 3) then break; end
@@ -2418,7 +2414,7 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
   end
 
 
-  local function mark_outdoor_edges()
+  local function outdoor_edges()
     local mid_x1 = 8
     local mid_y1 = 8
     local mid_x2 = SEED_W - 8
@@ -2472,7 +2468,7 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
   end
 
 
-  local function mark_outdoor_outies()
+  local function outdoor_outies()
     -- an "outie" is a corner sitting at a 270 degree bend in the room
     -- (whereas normal corners sit at a 90 degree bend).
 
@@ -2579,7 +2575,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
           then
             local N = S:neighbor(L_dir)
 
-            if not N.border then bad = true end
+            if not (N.border and N.border.kind != "fat_fence") then bad = true end
           end
           
           if (R_dir == 2 and sy == B.sy1) or
@@ -2589,7 +2585,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
           then
             local N = S:neighbor(R_dir)
 
-            if not N.border then bad = true end
+            if not (N.border and N.border.kind != "fat_fence") then bad = true end
           end
 
         end -- sx, sy
@@ -2629,7 +2625,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
   end
 
 
-  local function mark_outdoor_corners()
+  local function outdoor_corners()
     local mid_x1 = 8
     local mid_y1 = 8
     local mid_x2 = SEED_W - 8
@@ -2758,7 +2754,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
   end
 
 
-  local function mark_outdoor_betweeners()
+  local function outdoor_betweeners()
     -- Example:
     --        aa bb       aa bb
     --        %% %%  -->  %%%%%
@@ -2864,44 +2860,139 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
   end
 
 
-  local function mark_fake_buildings()
+  local function zone_for_faker(S, dir)
+    local ROTS = { 0, 1, 7, 2, 6, 3, 5, 4 }
+
+    for dist = 1,3 do
+      each rot in ROTS do
+
+        local dir = geom.ROTATE[rot][dir]
+
+        local N = S:neighbor(dir, dist)
+
+        if not N then continue end
+
+        if N.room and N.room.kind == "outdoor" then continue end
+        if N.room and N.room.kind == "cave"    then continue end
+
+        if N.zone then
+          return N.zone
+        end
+
+      end
+    end
+
+    return LEVEL.zones[1]
+  end
+
+
+  local function zone_for_fake_group(sx1, sy1, sx2, sy2, dir)
+
+    --!!! FIXME : zone_for_fake_group
+
+    return LEVEL.zones[1]
+  end
+
+
+  local function fake_corners()
     for sx = 1, SEED_W do
     for sy = 1, SEED_TOP do
       local S = SEEDS[sx][sy]
 
       if S:used() then continue end
 
-      local outdoors = {}
-      local touches  = {}
-      local zone
+      for dir = 1,9,2 do if dir != 5 then
+        local N = S:neighbor(dir)
+
+        if not N then continue end
+        if not (N.room and N.room.kind == "outdoor") then continue end
+
+        local L_dir = geom. LEFT_45[dir]
+        local R_dir = geom.RIGHT_45[dir]
+
+        local N2 = S:neighbor(L_dir)
+        local N3 = S:neighbor(R_dir)
+
+        if not (N2 and N2.room == N.room and
+                N3 and N3.room == N.room)
+        then continue end
+
+        -- OK --
+
+        local zone = zone_for_faker(S, 10 - dir)
+
+        -- mark as used
+        S.border = { kind = "fake_building" }
+
+        Build_solid_quad(S.x1, S.y1, S.x2, S.y2, "SFALL1")
+
+      end end  -- dir
+
+    end -- sx, sy
+    end
+  end
+
+
+  local function try_run_of_fake_edges(SA, sx, sy, dir, room)
+    local along_dir = (geom.is_vert(dir) ? 6 ; 8)
+    local found = 0
+
+    for i = 0, 99 do
+      local S = SA:neighbor(along_dir, i)
+
+      if not S or S:used() then break; end
+
+      local N = S:neighbor(dir)
+
+      if not (N and N.room == room) then break; end
+
+      found = found + 1
+    end
+
+    if found == 0 then return end
+
+    -- OK --
+
+    local SZ = SA:neighbor(along_dir, found - 1)
+
+    local sx1 = math.min(sx, SZ.sx)
+    local sy1 = math.min(sy, SZ.sy)
+    local sx2 = math.max(sx, SZ.sx)
+    local sy2 = math.max(sy, SZ.sy)
+
+    local zone = zone_for_fake_group(sx1, sy1, sx2, sy2, dir)
+
+    SA = SEEDS[sx1][sy1]
+    SZ = SEEDS[sx2][sy2]
+
+    Build_solid_quad(SA.x1, SA.y1, SZ.x2, SZ.y2, "COMPBLUE")
+
+    -- mark as used
+    for sx = sx1, sx2 do
+    for sy = sy1, sy2 do
+      SEEDS[sx][sy].border = { kind = "fake_building" }
+    end
+    end
+  end
+
+
+  local function fake_edges()
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_TOP do
+      local S = SEEDS[sx][sy]
+
+      if S:used() then continue end
 
       for dir = 2,8,2 do
         local N = S:neighbor(dir)
 
         if not N then continue end
+        if not (N.room and N.room.kind == "outdoor") then continue end
 
-        if N.room and N.room.kind == "outdoor" then
-          table.add_unique(outdoors, N.room)
-        end
-
-        local N_zone
-
-        if N.room and N.room.kind != "outdoor" then N_zone = N.room.zone
-        elseif N.hall then N_zone = N.hall.zone
-        elseif N.fake_zone then N_zone = N.fake_zone
-        end
-
-        if N_zone and (not zone or N_zone.id < zone.id) then
-          zone = N_zone
-        end
+        try_run_of_fake_edges(S, sx, sy, dir, N.room)
       end
 
-      if not zone then zone = LEVEL.zones[1] end
-
-      if #outdoors >= 1 then
-        S.scenic = "fake_building"
-      end
-    end
+    end -- sx, sy
     end
   end
 
@@ -2929,15 +3020,14 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
   LEVEL.borders = {}
 
---!!  find_fat_fences()
+  find_fat_fences()
 
-  mark_outdoor_outies()
-  mark_outdoor_edges()
-
-  mark_outdoor_corners()
+  outdoor_outies()
+  outdoor_edges()
+  outdoor_corners()
 
   if rand.odds(30 + 70) then    -- FIXME: proper odds
-    mark_outdoor_betweeners()
+    outdoor_betweeners()
   end
 
   validate_outies()
@@ -2946,11 +3036,8 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
   build_borders()
 
-
-  mark_fake_buildings()
-
----  analyse_edges()
-
+  fake_corners()
+  fake_edges()
 
   fill_remaining_seeds()
 end
