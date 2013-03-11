@@ -1986,14 +1986,14 @@ function Room_outdoor_borders()
   --  (2) at each edge of an outdoor room, check if edge would
   --      touch edge of map if extended (check at least 4 seeds).
   --
-  --      mark these seeds and sections as 'scenic_border'.
+  --      mark these seeds and sections as 'border'.
   --
   --         aa./        aa%%
   --         aa./   -->  aa%%
   --         .../        .../
   --
-  --  (3) unused seeds which touch two scenic_borders at a corner
-  --      (and don't touch any rooms) also become scenic_border.
+  --  (3) unused seeds which touch two scenic borders at a corner
+  --      (and don't touch any rooms) also become scenic border.
   --
   --         aa%%        aa%%
   --         aa%%   -->  aa%%
@@ -2318,21 +2318,6 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
       end end  -- corner
 
     end end -- sx, sy
-  end
-
-
-  local function fill_remaining_seeds()
-    -- this is mainly to fix the borders of Sky Halls
-
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_TOP do
-      local S = SEEDS[sx][sy]
-
-      if not S:used() then
-        Rooms_fake_building(sx, sy, sx, sy, 'P', nil, nil, LEVEL.zones[1])
-      end
-    end
-    end
   end
 
 
@@ -2830,10 +2815,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
     Fabricate(skin1, T, { skin1 })
 
-    brush = Brush_new_quad(x1, y1, x2, y2, sky_h)
-    Brush_set_mat(brush, "_SKY", "_SKY")
-    table.insert(brush, 1, { m="sky" })
-    brush_helper(brush)
+    Build_sky_quad(x1, y1, x2, y2, sky_h)
   end
 
 
@@ -2919,7 +2901,27 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
       if #outdoors >= 1 then
         S.scenic = "fake_building"
       end
-    end end
+    end
+    end
+  end
+
+
+  local function fill_remaining_seeds()
+    -- this is mainly to fix the borders of Sky Halls
+    -- (or other unintended gaps in the geometry)
+
+    local zone = LEVEL.zones[1]
+    local mat  = assert(zone.facade_mat)
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_TOP do
+      local S = SEEDS[sx][sy]
+
+      if S:used() then continue end
+
+      Build_solid_quad(S.x1, S.y1, S.x2, S.y2, mat)
+    end
+    end
   end
 
 
@@ -2949,14 +2951,6 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
 ---  analyse_edges()
 
---[[ FIXME FIXME
-
-  each R in LEVEL.rooms do
-    if R.kind == "outdoor" then
-      scan_room(R)
-    end
-  end
---]]
 
   fill_remaining_seeds()
 end
