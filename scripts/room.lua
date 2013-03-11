@@ -2384,6 +2384,17 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
   end
 
 
+  local function unmark_border(B)
+    for sx = B.sx1, B.sx2 do
+    for sy = B.sy1, B.sy2 do
+      SEEDS[sx][sy].border = nil
+    end
+    end
+
+    B.kind = "invalid"
+  end
+
+
   local function try_mark_edge_group(SA, sx, sy, dir, room)
     local along_dir = (geom.is_vert(dir) ? 6 ; 8)
     local found = 0
@@ -2458,7 +2469,7 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
         if not N then continue end
         if not (N.room and N.room.kind == "outdoor") then continue end
 
-        try_mark_edge_group(S, sx, sy, dir, room)
+        try_mark_edge_group(S, sx, sy, dir, N.room)
       end
 
     end -- sx, sy
@@ -2568,6 +2579,53 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
       end end  -- dir
 
     end -- sx, sy
+    end
+  end
+
+
+  local function validate_outies()
+    -- we require outies to touch normal borders on the two sides
+
+    each B in LEVEL.borders do
+      if B.kind == "outie" then
+
+        local L_dir = 10 - geom. LEFT_45[B.dir]
+        local R_dir = 10 - geom.RIGHT_45[B.dir]
+
+        local bad = false
+
+        for sx = B.sx1, B.sx2 do
+        for sy = B.sy1, B.sy2 do
+
+          local S = SEEDS[sx][sy]
+
+          if (L_dir == 2 and sy == B.sy1) or
+             (L_dir == 8 and sy == B.sy2) or
+             (L_dir == 4 and sx == B.sx1) or
+             (L_dir == 6 and sx == B.sx2)
+          then
+            local N = S:neighbor(L_dir)
+
+            if not N.border then bad = true end
+          end
+          
+          if (R_dir == 2 and sy == B.sy1) or
+             (R_dir == 8 and sy == B.sy2) or
+             (R_dir == 4 and sx == B.sx1) or
+             (R_dir == 6 and sx == B.sx2)
+          then
+            local N = S:neighbor(R_dir)
+
+            if not N.border then bad = true end
+          end
+
+        end -- sx, sy
+        end
+
+        if bad then
+          unmark_border(B)
+        end
+      end
     end
   end
 
@@ -2862,21 +2920,20 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
   LEVEL.borders = {}
 
---  find_fat_fences()
-
--- FIXME: need to find "outies" too
+--!!  find_fat_fences()
 
   mark_outdoor_outies()
-
   mark_outdoor_edges()
 
   if rand.odds(30 + 70) then    -- FIXME: proper odds
-    mark_outdoor_betweeners()
+--!!    mark_outdoor_betweeners()
   end
 
-  mark_outdoor_corners()
+--!!  mark_outdoor_corners()
 
-Plan_dump_rooms("Border map:")
+  validate_outies()
+
+Plan_dump_rooms("Border Map:")
 
   build_borders()
 
