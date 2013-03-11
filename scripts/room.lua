@@ -2616,6 +2616,34 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
   end
 
 
+  local function find_border_mate(sx1, sy1, sx2, sy2, side, room)
+    each B in LEVEL.borders do
+      if B.kind == "invalid" then continue end
+    
+      if B.room != room then continue end
+
+      if geom.is_horiz(side) then
+        
+        if B.sy1 != sy1 then continue end
+        if B.sy2 != sy2 then continue end
+
+        if side == 4 and B.sx2 == sx1 - 1 then return B end
+        if side == 6 and B.sx1 == sx2 + 1 then return B end
+      
+      else  -- vert
+
+        if B.sx1 != sx1 then continue end
+        if B.sx2 != sx2 then continue end
+
+        if side == 2 and B.sy2 == sy1 - 1 then return B end
+        if side == 8 and B.sy1 == sy2 + 1 then return B end
+      end
+    end
+
+    return nil  -- not found
+  end
+
+
   local function mark_outdoor_corners()
     local mid_x1 = 8
     local mid_y1 = 8
@@ -2642,32 +2670,41 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
         if not corner_is_free(S, dir) then continue end
 
+        -- look for edge borders that mate up with this corner
+
+        local T = S:neighbor(10 - dir)
+
+        local sx1 = math.min(S.sx, T.sx)
+        local sy1 = math.min(S.sy, T.sy)
+        local sx2 = math.max(S.sx, T.sx)
+        local sy2 = math.max(S.sy, T.sy)
+
         local L_dir = geom. LEFT_45[dir]
         local R_dir = geom.RIGHT_45[dir]
 
-        local N2 = S:neighbor(L_dir)
-        local N3 = S:neighbor(R_dir)
+        if find_border_mate(sx1, sy1, sx2, sy2, L_dir, N.room) and
+           find_border_mate(sx1, sy1, sx2, sy2, R_dir, N.room)
+        then
+          -- OK --
 
-        if not (N2 and N2.scenic == "border" and
-                N3 and N3.scenic == "border")
-        then continue end
+          local BORDER =
+          {
+            kind = "corner"
+            dir  = dir
+            room = N.room
 
-        -- mark spot, and attempt to make it 2x2
+            sx1  = sx1
+            sy1  = sy1
+            sx2  = sx2
+            sy2  = sy2
+          }
 
-        local S2 = S:neighbor(10 - L_dir)
-        local S3 = S:neighbor(10 - R_dir)
-        local S4 = S:neighbor(10 - dir)
+          do_mark_border(BORDER)
 
-        S.scenic = "border_c"
-        S.border_dir = dir
+          break;
+        end
 
-        if S2 and not S2:used() then S2.scenic = "border_c" ; S2.border_dir = dir end
-        if S3 and not S3:used() then S3.scenic = "border_c" ; S3.border_dir = dir end
-        if S4 and not S4:used() then S4.scenic = "border_c" ; S4.border_dir = dir end
-
-        break;
-
-      end end
+      end end  -- dir
 
     end -- sx, sy
     end
@@ -2947,7 +2984,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
   mark_outdoor_outies()
   mark_outdoor_edges()
 
---!!  mark_outdoor_corners()
+  mark_outdoor_corners()
 
   if rand.odds(30 + 70) then    -- FIXME: proper odds
     mark_outdoor_betweeners()
