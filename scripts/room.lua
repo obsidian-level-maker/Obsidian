@@ -2799,7 +2799,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
     local x1, y1 = S1.x1, S1.y1
     local x2, y2 = S2.x2, S2.y2
 
-    local floor_h = assert(B.room.max_floor_h) + 48
+    local floor_h = assert(B.room.max_floor_h)
     local sky_h   = assert(B.room.sky_h)
 
     local dir = B.dir
