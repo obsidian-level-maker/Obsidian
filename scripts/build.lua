@@ -1858,118 +1858,18 @@ end
 ------------------------------------------------------------------------
 
 
-function Brush_shadowify(coords, dist)
-  --
-  -- ALGORITHM
-  --
-  -- Each side of the brush can be in one of three states:
-  --    "light"  (not facing the shadow)
-  --    "dark"
-  --    "edge"   (parallel to shadow extrusion)
-  --
-  -- For each vertex we can do one of three operations:
-  --    KEEP : when both lines are light or edge
-  --    MOVE : when both lines are dark or edge
-  --    DUPLICATE : one line is dark, one is light
-
-  for i = 1,#coords do
-    local v1 = coords[i]
-    local v2 = coords[(i < #coords ? i+1 ; 1)]
-
-    local dx = v2.x - v1.x
-    local dy = v2.y - v1.y
-
-    -- simplify detection : map extrusion to X axis
-    dy = dy + dx
-
-    if dy < -0.01 then
-      coords[i].light = true
-    elseif dy > 0.01 then
-      coords[i].dark = true
-    else
-      -- it is an edge : implied
-    end
-  end
-
-  local new_coords = {}
-
-  for i = 1,#coords do
-    local P = coords[(i > 1 ? i-1 ; #coords)]
-    local N = coords[i]
-
-    if not (P.dark or N.dark) then
-      -- KEEP
-      table.insert(new_coords, N)
-    else
-      local NEW = { x=N.x+dist, y=N.y-dist}
-
-      if not (P.light or N.light) then
-        -- MOVE
-        table.insert(new_coords, NEW)
-      else
-        -- DUPLICATE
-        assert(P.light or P.dark)
-        assert(N.light or N.dark)
-
-        if P.light and N.dark then
-          table.insert(new_coords, N)
-          table.insert(new_coords, NEW)
-        else
-          table.insert(new_coords, NEW)
-          table.insert(new_coords, N)
-        end
-      end
-    end
-  end
-
-  return new_coords
+function Build_solid_quad(x1, y1, x2, y2, mat)
+  local brush = Brush_new_quad(x1, y1, x2, y2, sky_h)
+  Brush_set_mat(brush, mat, mat)
+  brush_helper(brush)
 end
 
 
-function Build_shadow(S, side, dist, z2)
-  assert(dist)
-
-  if not PARAM.outdoor_shadows then return end
-
-  if not S then return end
-
-  if side < 0 then
-    S = S:neighbor(-side)
-    if not (S and S.room and S.room.kind == "outdoor") then return end
-    side = 10 + side
-  end
-
-  local x1, y1 = S.x1, S.y1
-  local x2, y2 = S.x2, S.y2
-
-  if side == 8 then
-    local N = S:neighbor(6)
-    local clip = not (N and N.room and N.room.kind == "outdoor")
-
-    -- FIXME: update for new brush system
-    Trans.old_brush(get_light(-1),
-    {
-      { x=x2, y=y2 }
-      { x=x1, y=y2 }
-      { x=x1+dist, y=y2-dist }
-      { x=x2+sel(clip,0,dist), y=y2-dist }
-    },
-    -EXTREME_H, z2 or EXTREME_H)
-  end
-
-  if side == 4 then
-    local N = S:neighbor(2)
-    local clip = not (N and N.room and N.room.kind == "outdoor")
-
-    Trans.old_brush(get_light(-1),
-    {
-      { x=x1, y=y2 }
-      { x=x1, y=y1 }
-      { x=x1+dist, y=y1-sel(clip,0,dist) }
-      { x=x1+dist, y=y2-dist }
-    },
-    -EXTREME_H, z2 or EXTREME_H)
-  end
+function Build_sky_quad(x1, y1, x2, y2, sky_h)
+  local brush = Brush_new_quad(x1, y1, x2, y2, sky_h)
+  Brush_set_mat(brush, "_SKY", "_SKY")
+  table.insert(brush, 1, { m="sky" })
+  brush_helper(brush)
 end
 
 
