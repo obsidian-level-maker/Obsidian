@@ -2584,7 +2584,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
 
   local function validate_outies()
-    -- we require outies to touch normal borders on the two sides
+    -- we require outies to mate up with normal borders on the two sides
 
     each B in LEVEL.borders do
       if B.kind == "outie" then
@@ -2688,6 +2688,44 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
   end
 
 
+  local function try_vert_betweener(B1, side, B2)
+    
+    if B1.sy1 != B2.sy1 then return end
+    if B1.sy2 != B2.sy2 then return end
+
+    if side == 4 and B2.sx2 != B1.sx1 - 2 then return end
+    if side == 6 and B2.sx1 != B1.sx2 + 2 then return end
+
+    -- may be possible : check seeds in-between them
+
+    local sx = (side == 4 ? B1.sx1 - 1 ; B1.sx2 + 1)
+
+    local sy = (B1.dir == 2 ? B1.sy1 ; B1.sy2)
+
+stderrf("\n**** possible vert betweener @ (%d %d)\n", sx, sy)
+
+    local S = SEEDS[sx][sy]
+
+    if not extends_to_edge(S, 10 - B1.dir, 3) then return end
+
+    -- OK, so enlarge B1 (the edge border)
+
+    if side == 4 then
+      B1.sx1 = B1.sx1 - 1
+    else
+      B1.sx2 = B1.sx2 + 1
+    end
+
+    for y = B1.sy1, B1.sy2 do
+      SEEDS[sx][y].border = B1
+    end
+  end
+
+
+  local function try_horiz_betweener(B1, side, B2)
+    -- TODO
+  end
+
 
   local function mark_outdoor_betweeners()
     -- Example:
@@ -2695,48 +2733,22 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
     --        %% %%  -->  %%%%%
     --        %% %%       %%%%%
 
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_TOP do
-      local S = SEEDS[sx][sy]
+    each B1 in LEVEL.borders do
+      
+      if B1.kind != "edge" then continue end
 
-      if S:used() then continue end
+      each B2 in LEVEL.borders do
 
-      local cat_str = ""
-      local cat_dir
+        if B2.kind == "invalid" then continue end
 
-      for dir = 2,8,2 do
-        local N = S:neighbor(dir)
-
-        if N and (N.scenic == "border" or N.scenic == "border_c") then
-          cat_str = cat_str .. tostring(dir)
+        if geom.is_vert(B1.dir) then
+          try_vert_betweener(B1, 4, B2)
+          try_vert_betweener(B1, 6, B2)
+        else
+          try_horiz_betweener(B1, 2, B2)
+          try_horiz_betweener(B1, 8, B2)
         end
-
-        if N and N.scenic == "border" then cat_dir = N.border_dir end
       end
-
-      if not cat_dir then continue end
-
-      if (cat_str == "28" and geom.is_horiz(cat_dir)) or
-         (cat_str == "46" and geom.is_vert(cat_dir))
-      then
-        -- keyword must be different, otherwise one half won't get filled
-        S.scenic = "border_b"
-        S.border_dir = cat_dir
-      end
-
-    end -- sx, sy
-    end
-
-    -- fix the problematic keyword
-
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_TOP do
-      local S = SEEDS[sx][sy]
-
-      if S.scenic == "border_b" then
-         S.scenic = "border"
-      end
-    end
     end
   end
 
@@ -2925,17 +2937,17 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
   mark_outdoor_outies()
   mark_outdoor_edges()
 
-  if rand.odds(30 + 70) then    -- FIXME: proper odds
---!!    mark_outdoor_betweeners()
-  end
-
 --!!  mark_outdoor_corners()
+
+  if rand.odds(30 + 70) then    -- FIXME: proper odds
+    mark_outdoor_betweeners()
+  end
 
   validate_outies()
 
 Plan_dump_rooms("Border Map:")
 
-  build_borders()
+--!!  build_borders()
 
 
   mark_fake_buildings()
