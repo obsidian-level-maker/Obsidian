@@ -3,7 +3,11 @@ WORK IN PROGRESS
 ================
 
 
-!!  proper Unixy compile/install in Linux
++  fix cycles
+
++  fix double halls
+
++  fix street mode
 
 
 -  tri_pillar
@@ -18,6 +22,8 @@ WAD Prefabs
                        (2) expanding Z to match a sky height
 
 -  use x_ranges for wall/window prefabs (to scale 192 --> 256)
+
+-  use y_range to make closets scale
 
 -  create monster and item spots:
    +  review current spot system
