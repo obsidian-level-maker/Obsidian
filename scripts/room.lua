@@ -2812,8 +2812,8 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
       error("missing border prefab: " .. skin_name)
     end
 
-    local S1 = SEEDS[B.sx1][B.sy1]
-    local S2 = SEEDS[B.sx2][B.sy2]
+    local S1 = SEEDS[sx1][sy1]
+    local S2 = SEEDS[sx2][sy2]
 
     local x1, y1 = S1.x1, S1.y1
     local x2, y2 = S2.x2, S2.y2
@@ -2843,21 +2843,21 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
     local cw = sx2 - sx1 + 1
     local ch = sy2 - sy1 + 1
 
-    while cw >= 3 do
-      local w = rand.sel(70, 2, 1)
+    while cw > 2 do
+      local w = rand.sel(75, 2, 1)
 
       build_border_fab(B, sx1, sy1, sx1 + w - 1, sy2, "t")
 
-      sx2 = sx1 + w
+      sx1 = sx1 + w
        cw =  cw - w
     end
       
-    while ch >= 3 do
-      local h = rand.sel(70, 2, 1)
+    while ch > 2 do
+      local h = rand.sel(75, 2, 1)
 
       build_border_fab(B, sx1, sy1, sx2, sy1 + h - 1, "t")
 
-      sy2 = sy1 + h
+      sy1 = sy1 + h
        ch =  ch - h
     end
       
