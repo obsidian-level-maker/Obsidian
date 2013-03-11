@@ -2378,6 +2378,8 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
     end
 
     B.kind = "invalid"
+
+    table.kill_elem(LEVEL.borders, B)
   end
 
 
@@ -2572,7 +2574,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
   local function validate_outies()
     -- we require outies to mate up with normal borders on the two sides
 
-    each B in LEVEL.borders do
+    each B in table.copy(LEVEL.borders) do
       if B.kind == "outie" then
 
         local L_dir = 10 - geom. LEFT_45[B.dir]
@@ -2618,8 +2620,6 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
   local function find_border_mate(sx1, sy1, sx2, sy2, side, room)
     each B in LEVEL.borders do
-      if B.kind == "invalid" then continue end
-    
       if B.room != room then continue end
 
       if geom.is_horiz(side) then
@@ -2785,9 +2785,6 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
       if B1.kind != "edge" then continue end
 
       each B2 in LEVEL.borders do
-
-        if B2.kind == "invalid" then continue end
-
         if geom.is_vert(B1.dir) then
           try_vert_betweener(B1, 4, B2)
           try_vert_betweener(B1, 6, B2)
@@ -2800,40 +2797,34 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
   end
 
 
-  local function build_border_edge(SA, SB, SC, SD)
-    local dir = assert(SA.border_dir)
+  local function build_border_fab(B, sx1, sy1, sx2, sy2, cat)
+    local cw = sx2 - sx1 + 1
+    local ch = sy2 - sy1 + 1
 
-    local B = (SB.scenic == "border")
-    local C = (SC.scenic == "border")
-    local D = (SD.scenic == "border")
+    assert(cw <= 2 and ch <= 2)
 
-    -- determine size, usually 2x2, sometimes 1x2 (along dir)
-    local cw = 1
-    local ch = 1
-
-    if B and C and D then
-      cw, ch = 2, 2
-
-    elseif geom.is_vert(dir) and C then
-      ch = 2
-
-    elseif geom.is_horiz(dir) and B then
-      cw = 2
-    end
-
+    -- FIXME: find matching fabs in SKINS table
     local skin_name = "Border_" .. math.min(cw, ch) .. "x" ..
-                                   math.max(cw, ch) .. "_t"
+                                   math.max(cw, ch) .. "_" .. cat
 
     local skin1 = GAME.SKINS[skin_name]
     if not skin1 then
       error("missing border prefab: " .. skin_name)
     end
 
-    local x1, y1 = SA.x1, SA.y1
-    local x2, y2 = x1 + cw * SEED_SIZE, y1 + ch * SEED_SIZE
+    local S1 = SEEDS[B.sx1][B.sy1]
+    local S2 = SEEDS[B.sx2][B.sy2]
 
-    local floor_h = 80  --!!!!! FIXME
-    local sky_h   = 384  --!!!! FIXME
+    local x1, y1 = S1.x1, S1.y1
+    local x2, y2 = S2.x2, S2.y2
+
+    local floor_h = assert(B.room.max_floor_h) + 48
+    local sky_h   = assert(B.room.sky_h)
+
+    local dir = B.dir
+    if dir == 1 or dir == 3 or dir == 7 or dir == 9 then
+      dir = geom.LEFT_45[dir]
+    end
 
     local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
 
@@ -2843,93 +2834,50 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
     Brush_set_mat(brush, "_SKY", "_SKY")
     table.insert(brush, 1, { m="sky" })
     brush_helper(brush)
-
-    -- mark as done
-    SA.scenic = "border_done"
-
-    if cw == 2 then SB.scenic = "border_done" end
-    if ch == 2 then SC.scenic = "border_done" end
-    if cw == 2 and ch == 2 then SD.scenic = "border_done" end
   end
 
 
-  local function build_border_corner(SA, SB, SC, SD)
-    local dir = assert(SA.border_dir)
-    
-    local B = (SB.scenic == "border_c")
-    local C = (SC.scenic == "border_c")
-    local D = (SD.scenic == "border_c")
+  local function build_border_edge(B, sx1, sy1, sx2, sy2)
+    -- edge can be very wide (or tall) -- need to split it
 
---stderrf("\n\n build_border_corner: A=%s B=%s C=%s D=%s\n",
---        SA:tostr(), string.bool(B), string.bool(C), string.bool(D))
+    local cw = sx2 - sx1 + 1
+    local ch = sy2 - sy1 + 1
 
-    -- determine size, usually 2x2
-    local cw = 1
-    local ch = 1
+    while cw >= 3 do
+      local w = rand.sel(70, 2, 1)
 
-    if B and C and D then
-      cw, ch = 2, 2
+      build_border_fab(B, sx1, sy1, sx1 + w - 1, sy2, "t")
 
-    elseif dir == 9 and D then
-      SA = SD
+      sx2 = sx1 + w
+       cw =  cw - w
+    end
       
-    elseif dir == 3 and B then
-      SA = SB
+    while ch >= 3 do
+      local h = rand.sel(70, 2, 1)
 
-    elseif dir == 7 and C then
-      SA = SC
+      build_border_fab(B, sx1, sy1, sx2, sy1 + h - 1, "t")
+
+      sy2 = sy1 + h
+       ch =  ch - h
     end
-
-    local skin_name = "Border_" .. cw .. "x" .. ch .. "_c"
-
-    local skin1 = GAME.SKINS[skin_name]
-    if not skin1 then
-      error("missing border prefab: " .. skin_name)
-    end
-
-    local x1, y1 = SA.x1, SA.y1
-    local x2, y2 = x1 + cw * SEED_SIZE, y1 + ch * SEED_SIZE
-
-    local floor_h = 80  --!!!!! FIXME
-    local sky_h   = 384  --!!!! FIXME
-
-    local T = Trans.corner_transform(x1, y1, x2, y2, floor_h, dir, 512, 512)
-
-    Fabricate(skin1, T, { skin1 })
-
-    brush = Brush_new_quad(x1, y1, x2, y2, sky_h)
-    Brush_set_mat(brush, "_SKY", "_SKY")
-    table.insert(brush, 1, { m="sky" })
-    brush_helper(brush)
-
-    -- mark as done
-    SA.scenic = "border_done"
-
-    if cw == 2 then
-      SB.scenic = "border_done"
-      SC.scenic = "border_done"
-      SD.scenic = "border_done"
-    end
+      
+    build_border_fab(B, sx1, sy1, sx2, sy2, "t")
   end
 
 
   local function build_borders()
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_TOP do
+    each B in LEVEL.borders do
+      
+      if B.kind == "edge" then
+        build_border_edge(B, B.sx1, B.sy1, B.sx2, B.sy2)
 
-      local SA = SEEDS[sx][sy]
-      local SB = SA:neighbor(6)
-      local SC = SA:neighbor(8)
-      local SD = SA:neighbor(9)
+      elseif B.kind == "corner" then
+        build_border_fab(B, B.sx1, B.sy1, B.sx2, B.sy2, "c")
 
-      if SA.scenic == "border" then
-        build_border_edge(SA, SB, SC, SD)    
+      elseif B.kind == "outie" then
+        build_border_fab(B, B.sx1, B.sy1, B.sx2, B.sy2, "o")
 
-      elseif SA.scenic == "border_c" then
-        build_border_corner(SA, SB, SC, SD)    
       end
-
-    end -- sx, sy
     end
   end
 
@@ -2992,9 +2940,9 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
   validate_outies()
 
-Plan_dump_rooms("Border Map:")
+  Plan_dump_rooms("Border Map:")
 
---!!  build_borders()
+  build_borders()
 
 
   mark_fake_buildings()
