@@ -379,6 +379,11 @@ function Plan_add_big_junctions()
     -- limit of one big junction in a small level
     if small_level and did_it then break; end
   end
+
+  -- occasionally don't use them  [maybe make into scenic rooms?]
+  if rand.odds(10 + 90) then  --!!!!!!
+    LEVEL.ignore_big_junctions = true
+  end
 end
 
 
