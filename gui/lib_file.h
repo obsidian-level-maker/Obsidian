@@ -1,10 +1,10 @@
 //------------------------------------------------------------------------
-//  Directory Scanning
+//  File Utilities
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2013 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -75,11 +75,19 @@ scan_error_e;
 
 typedef void (* directory_iter_f)(const char *name, int flags, void *priv_dat);
 
-int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat);
 // scan the directory with the given path and call the given
 // function (passing the private data pointer to it) for each
 // entry in the directory.  Returns the total number of entries,
 // or a negative value on error (SCAN_ERR_xx value).
+int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat);
+
+// scan directory and populate the list with the sub-directory names.
+// result is same as ScanDirectory().
+int ScanDir_GetSubDirs(const char *path, std::vector<std::string> & list);
+
+// scan directory and populate the list with all non-hidden files which
+// have the given extension.  Result is same as ScanDirectory().
+int ScanDir_MatchingFiles(const char *path, const char *ext, std::vector<std::string> & list);
 
 #endif /* __LIB_FILE_H__ */
 

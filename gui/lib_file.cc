@@ -1,10 +1,10 @@
 //------------------------------------------------------------------------
-//  Directory Scanning
+//  File Utilities
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2013 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -22,6 +22,8 @@
 
 #include "lib_file.h"
 #include "lib_util.h"
+
+#include <algorithm>
 
 #ifdef WIN32
 #include <io.h>
@@ -524,6 +526,78 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat)
 
 	closedir(handle);
 #endif
+
+	return count;
+}
+
+
+static void add_subdir_name(const char *name, int flags, void *priv_dat)
+{
+	std::vector<std::string> * list = (std::vector<std::string> *) priv_dat;
+
+	if ((flags & SCAN_F_Hidden) || name[0] == '.')
+		return;
+
+	if (flags & SCAN_F_IsDir)
+	{
+		list->push_back(name);
+	}
+}
+
+
+int ScanDir_GetSubDirs(const char *path, std::vector<std::string> & list)
+{
+	int count = ScanDirectory(path, add_subdir_name, &list);
+
+	if (count > 0)
+	{
+		std::sort(list.begin(), list.end());
+	}
+
+	return count;
+}
+
+
+struct scan_match_data_t
+{
+	std::vector<std::string> * list;
+
+	const char *ext;
+};
+
+
+static void add_matching_name(const char *name, int flags, void *priv_dat)
+{
+	scan_match_data_t * match_data = (scan_match_data_t *) priv_dat;
+
+	std::vector<std::string> * list = match_data->list;
+
+	if ((flags & SCAN_F_Hidden) || name[0] == '.')
+		return;
+
+	if (flags & SCAN_F_IsDir)
+		return;
+
+	if (! MatchExtension(name, match_data->ext))
+		return;
+
+	list->push_back(name);
+}
+
+
+int ScanDir_MatchingFiles(const char *path, const char *ext, std::vector<std::string> & list)
+{
+	scan_match_data_t  data;
+
+	data.list = &list;
+	data.ext  = ext;
+
+	int count = ScanDirectory(path, add_matching_name, &data);
+
+	if (count > 0)
+	{
+		std::sort(list.begin(), list.end());
+	}
 
 	return count;
 }
