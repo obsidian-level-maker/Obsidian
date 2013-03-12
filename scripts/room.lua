@@ -2793,6 +2793,12 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
       error("missing border prefab: " .. skin_name)
     end
 
+    local skin2 =
+    {
+      wall  = B.mat or B.room.zone.facade_mat
+      outer = B.room.zone.facade_mat
+    }
+
     local S1 = SEEDS[sx1][sy1]
     local S2 = SEEDS[sx2][sy2]
 
@@ -2811,7 +2817,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
     ROOM = B.room
 
-    Fabricate(skin1, T, { skin1 })
+    Fabricate(skin1, T, { skin1, skin2 })
 
     Build_sky_quad(x1, y1, x2, y2, sky_h)
 
