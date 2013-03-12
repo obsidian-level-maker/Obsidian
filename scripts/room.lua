@@ -2809,9 +2809,13 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
     local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
 
+    ROOM = B.room
+
     Fabricate(skin1, T, { skin1 })
 
     Build_sky_quad(x1, y1, x2, y2, sky_h)
+
+    ROOM = nil
   end
 
 
