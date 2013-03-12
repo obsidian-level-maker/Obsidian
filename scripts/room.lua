@@ -3041,7 +3041,10 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
   outdoor_edges()
   outdoor_corners()
 
-  if rand.odds(30 + 70) then    -- FIXME: proper odds
+  -- betweeners are disabled, since we want border prefabs which are
+  -- open at the sides, and enabling betweeners would allow the player
+  -- to travel into rooms they shouldn't be able to get to.
+  if false then
     outdoor_betweeners()
   end
 
