@@ -1682,28 +1682,28 @@ DOOM.SKINS =
 
   Border_1x2_t =
   {
-    _file   = "border/liquid_1x2_t.wad"
+    _file   = "border/urban_1x2_t.wad"
     _where  = "chunk"
     _fitted = "xy"
   }
 
   Border_2x2_t =
   {
-    _file   = "border/liquid_2x2_t.wad"
+    _file   = "border/urban_2x2_t.wad"
     _where  = "chunk"
     _fitted = "xy"
   }
 
   Border_2x2_c =
   {
-    _file   = "border/liquid_2x2_c.wad"
+    _file   = "border/urban_2x2_c.wad"
     _where  = "chunk"
     _fitted = "xy"
   }
 
   Border_2x2_o =
   {
-    _file   = "border/liquid_2x2_o.wad"
+    _file   = "border/urban_2x2_o.wad"
     _where  = "chunk"
     _fitted = "xy"
   }
