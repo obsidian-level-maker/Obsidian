@@ -82,11 +82,13 @@ typedef void (* directory_iter_f)(const char *name, int flags, void *priv_dat);
 int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat);
 
 // scan directory and populate the list with the sub-directory names.
+// the list will be sorted (case-insensitively).
 // result is same as ScanDirectory().
 int ScanDir_GetSubDirs(const char *path, std::vector<std::string> & list);
 
 // scan directory and populate the list with all non-hidden files which
-// have the given extension.  Result is same as ScanDirectory().
+// have the given extension.  the list is sorted (case-insensitively).
+// result is same as ScanDirectory().
 int ScanDir_MatchingFiles(const char *path, const char *ext, std::vector<std::string> & list);
 
 #endif /* __LIB_FILE_H__ */

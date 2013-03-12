@@ -531,6 +531,15 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat)
 }
 
 
+struct filename_nocase_CMP
+{
+	inline bool operator() (const std::string& A, const std::string& B) const
+	{
+		return StringCaseCmp(A.c_str(), B.c_str()) < 0;
+	}
+};
+
+
 static void add_subdir_name(const char *name, int flags, void *priv_dat)
 {
 	std::vector<std::string> * list = (std::vector<std::string> *) priv_dat;
@@ -551,7 +560,7 @@ int ScanDir_GetSubDirs(const char *path, std::vector<std::string> & list)
 
 	if (count > 0)
 	{
-		std::sort(list.begin(), list.end());
+		std::sort(list.begin(), list.end(), filename_nocase_CMP());
 	}
 
 	return count;
@@ -596,7 +605,7 @@ int ScanDir_MatchingFiles(const char *path, const char *ext, std::vector<std::st
 
 	if (count > 0)
 	{
-		std::sort(list.begin(), list.end());
+		std::sort(list.begin(), list.end(), filename_nocase_CMP());
 	}
 
 	return count;
