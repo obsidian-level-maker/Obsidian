@@ -1007,7 +1007,7 @@ function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
       error("No such picture skin: " .. tostring(C.area.pic_name))
     end
 
-    if skin2._file then
+    if skin2.file then
       T.fitted_z = nil
     end
 
@@ -1102,7 +1102,7 @@ function CHUNK_CLASS.build_door(C, dir, LINK, f_h, c_h, long)
   local skin2 = C:inner_outer_mat(L1, L2)
 
   local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
-                                 0, long, skin._deep or 48, 0)
+                                 0, long, skin.deep or 48, 0)
 
   if lock.kind == "KEY" then
     -- Quake II bits

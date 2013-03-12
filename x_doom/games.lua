@@ -85,34 +85,17 @@ DOOM.SKINS =
 
   Start_basic =
   {
-    _file   = "start/basic.wad"
-    _where  = "middle"
+    file   = "start/basic.wad"
+    where  = "middle"
 
     top = "O_BOLT"
   }
 
   Start_Closet =
   {
-    _file   = "start/closet1.wad"
-    _where  = "closet"
-    _fitted = "xy"
-
-
---[[
-    step = "FLAT1"
-
-    door = "BIGDOOR1"
-    track = "DOORTRAK"
-
-    support = "SUPPORT2"
-    support_ox = 24
-
-    special = 31  -- open and stay open
-    tag = 0
-
-    item1 = "bullet_box"
-    item2 = "stimpack"
---]]
+    file   = "start/closet1.wad"
+    where  = "closet"
+    fitted = "xy"
   }
 
 
@@ -120,15 +103,15 @@ DOOM.SKINS =
 
   Exit_pillar =
   {
-    _file  = "exit/pillar1.wad",
-    _where = "middle"
+    file  = "exit/pillar1.wad",
+    where = "middle"
   }
 
   Exit_Closet_tech =
   {
-    _file   = "exit/closet1.wad"
-    _where  = "closet"
-    _fitted = "xy"
+    file   = "exit/closet1.wad"
+    where  = "closet"
+    fitted = "xy"
 
 --[[ FIXME
     door  = "EXITDOOR"
@@ -162,9 +145,9 @@ DOOM.SKINS =
 
   Exit_Closet_hell =
   {
-    _file   = "exit/closet1.wad"
-    _where  = "closet"
-    _fitted = "xy"
+    file   = "exit/closet1.wad"
+    where  = "closet"
+    fitted = "xy"
 
 --[[ FIXME
     door  = "EXITDOOR"
@@ -204,8 +187,8 @@ DOOM.SKINS =
 
   Fat_Outside_Corner1 =
   {
-    _prefab = "FAT_CORNER_DIAG"
-    _where  = "chunk"
+    prefab = "FAT_CORNER_DIAG"
+    where  = "chunk"
   }
 
 
@@ -213,8 +196,8 @@ DOOM.SKINS =
 
   Pedestal_1 =
   {
-    _file  = "pedestal/ped.wad"
-    _where = "middle"
+    file  = "pedestal/ped.wad"
+    where = "middle"
 
     top  = "CEIL1_2"
     side = "METAL"
@@ -231,207 +214,103 @@ DOOM.SKINS =
 
   Locked_kc_blue =
   {
-    _file   = "door/key_door.wad"
-    _where  = "edge"
-    _fitted = "xy"
-    _key    = "kc_blue"
-    _long   = 192
-    _deep   = 48
+    file   = "door/key_door.wad"
+    where  = "edge"
+    fitted = "xy"
+    key    = "kc_blue"
+    long   = 192
+    deep   = 48
 
     tex_DOORRED = "DOORBLU";
     line_33 = 32
-
-    door_w = 128
-    door_h = 112
-
-    key = "DOORBLU"
-    door = "BIGDOOR3"
-    door_c = "FLOOR7_2"
-    step = "STEP4"
-    track = "DOORTRAK"
-
-    special = 32
-    tag = 0  -- kind_mult=26
   }
 
   Locked_kc_yellow =
   {
-    _file   = "door/key_door.wad"
-    _where  = "edge"
-    _fitted = "xy"
-    _key    = "kc_yellow"
-    _long   = 192
-    _deep   = 48
+    file   = "door/key_door.wad"
+    where  = "edge"
+    fitted = "xy"
+    key    = "kc_yellow"
+    long   = 192
+    deep   = 48
 
     tex_DOORRED = "DOORYEL";
     line_33 = 34
-
-    door_w = 128
-    door_h = 112
-
-    key = "DOORYEL"
-    door = "BIGDOOR4"
-    door_c = "FLOOR3_3"
-    step = "STEP4"
-    track = "DOORTRAK"
-
-    special = 34
-    tag = 0  -- kind_mult=27
   }
 
   Locked_kc_red =
   {
-    _file   = "door/key_door.wad"
-    _where  = "edge"
-    _fitted = "xy"
-    _key    = "kc_red"
-    _long   = 192
-    _deep   = 48
-
-    door_w = 128
-    door_h = 112
-
-    key = "DOORRED"
-    door = "BIGDOOR2"
-    door_c = "FLAT1"
-    step = "STEP4"
-    track = "DOORTRAK"
-
-    special = 33
-    tag = 0  -- kind_mult=28
+    file   = "door/key_door.wad"
+    where  = "edge"
+    fitted = "xy"
+    key    = "kc_red"
+    long   = 192
+    deep   = 48
   }
 
 
   Locked_ks_blue =
   {
-    _file   = "door/key_door.wad"
-    _where  = "edge"
-    _fitted = "xy"
-    _key    = "ks_blue"
-    _long   = 192
-    _deep   = 48
+    file   = "door/key_door.wad"
+    where  = "edge"
+    fitted = "xy"
+    key    = "ks_blue"
+    long   = 192
+    deep   = 48
 
     tex_DOORRED = "DOORBLU2";
     line_33 = 32
-
-    door_w = 128
-    door_h = 112
-
-    key = "DOORBLU2"
-    key_ox = 4
-    key_oy = -10
-    door = "BIGDOOR7"
-    door_c = "FLOOR7_2"
-    step = "STEP4"
-    track = "DOORTRAK"
-
-    special = 32
-    tag = 0  -- kind_mult=26
   }
 
   Locked_ks_yellow =
   {
-    _file   = "door/key_door.wad"
-    _where  = "edge"
-    _fitted = "xy"
-    _key    = "ks_yellow"
-    _long   = 192
-    _deep   = 48
+    file   = "door/key_door.wad"
+    where  = "edge"
+    fitted = "xy"
+    key    = "ks_yellow"
+    long   = 192
+    deep   = 48
 
     tex_DOORRED = "DOORYEL2";
     line_33 = 34
-
-    door_w = 128
-    door_h = 112
-
-    key = "DOORYEL2"
-    key_ox = 4
-    key_oy = -10
-    door = "BIGDOOR7"
-    door_c = "FLOOR3_3"
-    step = "STEP4"
-    track = "DOORTRAK"
-
-    special = 34
-    tag = 0  -- kind_mult=27
   }
 
   Locked_ks_red =
   {
-    _file   = "door/key_door.wad"
-    _where  = "edge"
-    _fitted = "xy"
-    _key    = "ks_red"
-    _long   = 192
-    _deep   = 48
+    file   = "door/key_door.wad"
+    where  = "edge"
+    fitted = "xy"
+    key    = "ks_red"
+    long   = 192
+    deep   = 48
 
     tex_DOORRED = "DOORRED2";
-
-    door_w = 128
-    door_h = 112
-
-    key = "DOORRED2"
-    key_ox = 4
-    key_oy = -10
-    door = "BIGDOOR7"
-    door_c = "FLAT1"
-    step = "STEP4"
-    track = "DOORTRAK"
-
-    special = 33
-    tag = 0  -- kind_mult=28
   }
-
 
 
   ---| SWITCHED DOORS |---
 
   Door_SW_blue =
   {
-    _file   = "door/sw_door1.wad"
-    _where  = "edge"
-    _fitted = "xy"
-    _switch = "sw_blue"
-    _long = 256
-    _deep = 48
-
-    door_w = 128
-    door_h = 112
-
-    key = "COMPBLUE"
-    door = "BIGDOOR3"
-    door_c = "FLOOR7_2"
-    step = "COMPBLUE"
-    track = "DOORTRAK"
-    frame = "FLAT14"
-    door_h = 112
-    special = 0
+    file   = "door/sw_door1.wad"
+    where  = "edge"
+    fitted = "xy"
+    switch = "sw_blue"
+    long = 256
+    deep = 48
   }
 
   Door_SW_blue_NAR =
   {
-    _copy = "Door_SW_blue"
-    _narrow = 1
-
-    door_w = 64
-    door_h = 72
-    door   = "DOOR1"
-    door_c = "FLAT23"
+    copy = "Door_SW_blue"
+    narrow = 1
   }
 
   Switch_blue1 =
   {
-    _file   = "switch/small2.wad"
-    _where  = "middle"
-    _switch = "sw_blue"
-
-    switch_h = 64
-    switch = "SW1BLUE"
-    side = "COMPBLUE"
-    base = "COMPBLUE"
-    x_offset = 0
-    y_offset = 50
-    special = 103
+    file   = "switch/small2.wad"
+    where  = "middle"
+    switch = "sw_blue"
   }
 
 
@@ -439,37 +318,37 @@ DOOM.SKINS =
 
   Hall_Basic_I =
   {
-    _file   = "hall/trim1_i_win.wad"
-    _shape  = "I"
-    _fitted = "xy"
+    file   = "hall/trim1_i_win.wad"
+    shape  = "I"
+    fitted = "xy"
   }
 
   Hall_Basic_C =
   {
-    _file   = "hall/trim1_c.wad"
-    _shape  = "C"
-    _fitted = "xy"
+    file   = "hall/trim1_c.wad"
+    shape  = "C"
+    fitted = "xy"
   }
 
   Hall_Basic_T =
   {
-    _file   = "hall/trim1_t_lit.wad"
-    _shape  = "T"
-    _fitted = "xy"
+    file   = "hall/trim1_t_lit.wad"
+    shape  = "T"
+    fitted = "xy"
   }
 
   Hall_Basic_P =
   {
-    _file   = "hall/trim1_p.wad"
-    _shape  = "P"
-    _fitted = "xy"
+    file   = "hall/trim1_p.wad"
+    shape  = "P"
+    fitted = "xy"
   }
 
   Hall_Basic_I_Stair =
   {
-    _file   = "hall/trim1_st.wad"
-    _shape  = "IS"
-    _fitted = "xy"
+    file   = "hall/trim1_st.wad"
+    shape  = "IS"
+    fitted = "xy"
 
     step = "STEP3"
     support = "SUPPORT2"
@@ -478,11 +357,11 @@ DOOM.SKINS =
 
   Hall_Basic_I_Lift =
   {
-    _file   = "hall/trim1_lf.wad"
-    _shape  = "IL"
-    _fitted = "xy"
-    _z_ranges = { {64,0}, {64,0,"?stair_h-64"}, {128,0} }
-    _tags   = 1
+    file   = "hall/trim1_lf.wad"
+    shape  = "IL"
+    fitted = "xy"
+    z_ranges = { {64,0}, {64,0,"?stair_h-64"}, {128,0} }
+    tags   = 1
 
     lift = "SUPPORT3"
     top  = { STEP_F1=50, STEP_F2=50 }
@@ -493,13 +372,11 @@ DOOM.SKINS =
   }
 
 
-
-
   Secret_Mini =
   {
-    _prefab = "SECRET_MINI"
-    _shape  = "I"
-    _tags   = 1
+    prefab = "SECRET_MINI"
+    shape  = "I"
+    tags   = 1
 
     pic   = "O_NEON"
     inner = "COMPSPAN"
@@ -511,41 +388,25 @@ DOOM.SKINS =
 
   Wide_TriPillar =
   {
-    _file   = "joiner/tri_pillar.wad"
-    _shape  = "I"
-    _fitted = "xy"
+    file   = "joiner/tri_pillar.wad"
+    shape  = "I"
+    fitted = "xy"
   }
 
 
   ---| BIG JUNCTIONS |---
 
-
-
   Junc_Circle_gothic_P =
   {
-    _file   = "junction/circle_p.wad"
-    _fitted = "xy"
-    _shape  = "P"
-
-    floor  = "CEIL3_5"
-    circle = "CEIL3_3"
-    step   = "STEP6"
-
-    plinth = "MARBGRAY"
-    plinth_top = "FLOOR7_2"
-    plinth_ent = "evil_eye"
-
-    billboard = "SW2SATYR"
-    bill_side = "METAL"
-    bill_oy   = 52
-
-    torch_ent = "red_torch"
+    file   = "junction/circle_p.wad"
+    fitted = "xy"
+    shape  = "P"
   }
 
   Junc_Circle_gothic_I =
   {
-    _copy  = "Junc_Circle_gothic_P"
-    _shape = "I"
+    copy  = "Junc_Circle_gothic_P"
+    shape = "I"
 
     east_h = 0
     west_h = 0
@@ -553,8 +414,8 @@ DOOM.SKINS =
 
   Junc_Circle_gothic_C =
   {
-    _copy  = "Junc_Circle_gothic_P"
-    _shape = "C"
+    copy  = "Junc_Circle_gothic_P"
+    shape = "C"
 
     east_h = 0
     north_h = 0
@@ -562,8 +423,8 @@ DOOM.SKINS =
 
   Junc_Circle_gothic_T =
   {
-    _copy  = "Junc_Circle_gothic_P"
-    _shape = "T"
+    copy  = "Junc_Circle_gothic_P"
+    shape = "T"
 
     north_h = 0
   }
@@ -573,46 +434,22 @@ DOOM.SKINS =
 
   Teleporter1 =
   {
-    _file   = "teleport/pad1.wad"
-    _where  = "middle"
+    file   = "teleport/pad1.wad"
+    where  = "middle"
 
     tag_1 = "?out_tag"
     tag_2 = "?in_tag"
-
---[[
-    tele = { GATE1=60, GATE2=60, GATE3=30 }
-    side = "METAL"
-
-    x_offset = 0
-    y_offset = 0
-    peg = 1
-
-    special = 97
-    effect = 8
-    light = 255
---]]
   }
 
   Teleporter_Closet =
   {
-    _file  = "teleport/closet1.wad"
-    _where = "closet"
-    _fitted = "xy"
-    _long   = 256
+    file  = "teleport/closet1.wad"
+    where = "closet"
+    fitted = "xy"
+    long   = 256
 
     tag_1 = "?out_tag"
     tag_2 = "?in_tag"
---[[
-    tele = "GATE4"
-    tele_side = "METAL"
-
-    inner = "REDWALL"
-    floor = "CEIL3_3"
-    ceil  = "CEIL3_3"
-    step  = "STEP1"
-
-    special = 97
---]]
   }
 
 
@@ -620,12 +457,12 @@ DOOM.SKINS =
 
   Wall_plain =
   {
-    _file   = "wall/plain.wad"
-    _where  = "edge"
-    _fitted = "xyz"
+    file   = "wall/plain.wad"
+    where  = "edge"
+    fitted = "xyz"
 
-    _bound_z1 = 0
-    _bound_z2 = 128
+    bound_z1 = 0
+    bound_z2 = 128
 
   }
 
@@ -634,11 +471,11 @@ DOOM.SKINS =
 
   Window1 =
   {
-    _file   = "window/window1.wad"
-    _where  = "edge"
-    _fitted = "xy"
-    _long   = 192
-    _deep   = 24
+    file   = "window/window1.wad"
+    where  = "edge"
+    fitted = "xy"
+    long   = 192
+    deep   = 24
 
   }
 
@@ -647,11 +484,11 @@ DOOM.SKINS =
 
   Fence1 =
   {
-    _file   = "fence/fence1.wad"
-    _where  = "edge"
-    _fitted = "xy"
-    _long   = 192
-    _deep   = 32
+    file   = "fence/fence1.wad"
+    where  = "edge"
+    fitted = "xy"
+    long   = 192
+    deep   = 32
 
     fence = "ICKWALL7"
     metal = "METAL"
@@ -663,12 +500,12 @@ DOOM.SKINS =
 
   Pic_Carve =
   {
-    _file   = "wall/pic_64x64.wad"
-    _where  = "edge"
-    _fitted = "xy"
-    _bound_z1 = 0
-    _bound_z2 = 128
-    _long   = 256
+    file   = "wall/pic_64x64.wad"
+    where  = "edge"
+    fitted = "xy"
+    long   = 256
+    bound_z1 = 0
+    bound_z2 = 128
 
     tex_GRAYPOIS = "O_CARVE"
   }
@@ -678,12 +515,12 @@ DOOM.SKINS =
 
   Pic_Computer =
   {
-    _file   = "wall/pic_128x48.wad"
-    _where  = "edge"
-    _fitted = "xy"
-    _bound_z1 = 0
-    _bound_z2 = 112
-    _long   = 256
+    file   = "wall/pic_128x48.wad"
+    where  = "edge"
+    fitted = "xy"
+    long   = 256
+    bound_z1 = 0
+    bound_z2 = 112
 
     pic   = { COMPSTA1=50, COMPSTA2=50 }
     pic_w = 128
@@ -699,9 +536,9 @@ DOOM.SKINS =
 
   Fat_Cage1 =
   {
-    _file   = "cage/fat_edge.wad"
-    _where  = "chunk"
-    _fitted = "xy"
+    file   = "cage/fat_edge.wad"
+    where  = "chunk"
+    fitted = "xy"
 
     rail = "MIDBARS3"    
   }

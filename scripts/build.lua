@@ -1817,21 +1817,21 @@ end
 function Fab_size_check(skin, long, deep)
   -- the 'long' and 'deep' parameters can be nil : means anything is OK
 
-  if long and skin._long then
-    if type(skin._long) == "number" then
-      if long < skin._long then return false end
+  if long and skin.long then
+    if type(skin.long) == "number" then
+      if long < skin.long then return false end
     else
-      if long < skin._long[1] then return false end
-      if long > skin._long[2] then return false end
+      if long < skin.long[1] then return false end
+      if long > skin.long[2] then return false end
     end
   end
 
-  if deep and skin._deep then
-    if type(skin._deep) == "number" then
-      if deep < skin._deep then return false end
+  if deep and skin.deep then
+    if type(skin.deep) == "number" then
+      if deep < skin.deep then return false end
     else
-      if deep < skin._deep[1] then return false end
-      if deep > skin._deep[2] then return false end
+      if deep < skin.deep[1] then return false end
+      if deep > skin.deep[2] then return false end
     end
   end
 
@@ -2231,12 +2231,12 @@ end
 
 
 function Fab_bound_Z(fab, skin)
-  if skin._bound_z1 then
-    fab.bbox.z1 = math.min(fab.bbox.z1 or 9999, skin._bound_z1)
+  if skin.bound_z1 then
+    fab.bbox.z1 = math.min(fab.bbox.z1 or 9999, skin.bound_z1)
   end
 
-  if skin._bound_z2 then
-    fab.bbox.z2 = math.max(fab.bbox.z2 or -9999, skin._bound_z2)
+  if skin.bound_z2 then
+    fab.bbox.z2 = math.max(fab.bbox.z2 or -9999, skin.bound_z2)
   end
 
   if fab.bbox.z1 and fab.bbox.z2 then
@@ -2492,13 +2492,13 @@ end
 
 
 function Fabricate(main_skin, T, skins)
-  if not main_skin._file then
+  if not main_skin.file then
     error("Old-style prefab skin used")
   end
 
---- stderrf("=========  FABRICATE %s\n", main_skin._file)
+--- stderrf("=========  FABRICATE %s\n", main_skin.file)
 
-  local fab = Fab_load_wad(main_skin._file)
+  local fab = Fab_load_wad(main_skin.file)
 
   Fab_bound_Z(fab, main_skin)
 
@@ -2508,7 +2508,7 @@ function Fabricate(main_skin, T, skins)
   Fab_replacements(fab, skin)
 
   fab.state  = "skinned"
-  fab.fitted = main_skin._fitted
+  fab.fitted = main_skin.fitted
 
   Fab_copy_ranges(fab, skin)
 

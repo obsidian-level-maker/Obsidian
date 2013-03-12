@@ -1674,36 +1674,36 @@ function Rooms_filter_skins(L, tab_name, tab, reqs, empty_ok)
   
   local function match(skin)
     -- placement check
-    if reqs.where and skin._where != reqs.where then return false end
+    if reqs.where and skin.where != reqs.where then return false end
 
     -- size check
     if not Fab_size_check(skin, reqs.long, reqs.deep) then return false end
 
     -- building type checks
     if L then
-      if skin._cave     and skin._cave     != convert_bool(L.kind == "cave")     then return false end
-      if skin._outdoor  and skin._outdoor  != convert_bool(L.kind == "outdoor")  then return false end
-      if skin._building and skin._building != convert_bool(L.kind == "building") then return false end
-      if skin._hallway  and skin._hallway  != convert_bool(L.kind == "hallway")  then return false end
+      if skin.cave     and skin.cave     != convert_bool(L.kind == "cave")     then return false end
+      if skin.outdoor  and skin.outdoor  != convert_bool(L.kind == "outdoor")  then return false end
+      if skin.building and skin.building != convert_bool(L.kind == "building") then return false end
+      if skin.hallway  and skin.hallway  != convert_bool(L.kind == "hallway")  then return false end
     end
 
     -- liquid check
-    if skin._liquid and not LEVEL.liquid then return false end
+    if skin.liquid and not LEVEL.liquid then return false end
 
     -- key and switch check
-    if skin._key != reqs.key then return false end
+    if skin.key != reqs.key then return false end
 
-    if skin._switch != reqs.switch then
-      if not (reqs.switch and skin._switches) then return false end
-      if not skin._switches[reqs.switch] then return false end
+    if skin.switch != reqs.switch then
+      if not (reqs.switch and skin.switches) then return false end
+      if not skin.switches[reqs.switch] then return false end
     end
 
     -- hallway stuff
-    if skin._shape != reqs.shape then return false end
+    if skin.shape != reqs.shape then return false end
 
-    if reqs.narrow and not skin._narrow then return false end
+    if reqs.narrow and not skin.narrow then return false end
 
-    if skin._door and reqs.door == 0 then return false end
+    if skin.door and reqs.door == 0 then return false end
 
     return true
   end
