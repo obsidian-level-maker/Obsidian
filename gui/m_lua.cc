@@ -812,34 +812,6 @@ bool Script_RunString(const char *str, ...)
 }
 
 
-static void add_extra_script(const char *name, int flags, void *priv_dat)
-{
-	std::vector<const char*> *list = (std::vector<const char*> *) priv_dat;
-
-	DebugPrintf("  file [%s] flags:%d\n", name, flags);
-
-	if (flags & SCAN_F_IsDir)
-		return;
-
-	if (flags & SCAN_F_Hidden)
-		return;
-
-	if (! MatchExtension(name, "lua"))
-		return;
-
-	list->push_back(StringDup(name));
-}
-
-
-struct Compare_ScriptFilename_pred
-{
-	inline bool operator() (const char *A, const char *B) const
-	{
-		return StringCaseCmp(A, B) < 0;
-	}
-};
-
-
 static void Script_Require(const char *name)
 {
 	char require_text[128];
@@ -876,16 +848,16 @@ static void Script_LoadFile(const char *filename)
 }
 
 
-static bool Script_LoadAllFromDir(const char *path)
+static bool Script_LoadAllFromDir(const char *path, const char *ext)
 {
 	// load all scripts (files which match "*.lua") from a
 	// sub-directory.
 
 	LogPrintf("Loading scripts from: [%s]\n", path);
 
-	std::vector<const char*> file_list;
+	std::vector<std::string> file_list;
 
-	int count = ScanDirectory(path, add_extra_script, &file_list);
+	int count = ScanDir_MatchingFiles(path, ext, file_list);
 
 	if (count < 0)
 	{
@@ -895,24 +867,22 @@ static bool Script_LoadAllFromDir(const char *path)
 
 	DebugPrintf("Scanned %d entries in sub-directory.\n", count);
 
-	std::sort(file_list.begin(), file_list.end(), Compare_ScriptFilename_pred());
-
-	for (unsigned int i = 0; i < file_list.size(); i++)
+	for (unsigned int i = 0 ; i < file_list.size() ; i++)
 	{
-		LogPrintf("Loading %d/%d : %s\n", i+1, file_list.size(), file_list[i]);
+		const char *base_name = file_list[i].c_str();
 
-		const char *full_name = StringPrintf("%s/%s", path, file_list[i]);
+		LogPrintf("Loading %d/%d : %s\n", i+1, file_list.size(), base_name);
+
+		const char *full_name = StringPrintf("%s/%s", path, base_name);
 
 		// load it !!
 		Script_LoadFile(full_name);
 
 		StringFree(full_name);
-		StringFree(file_list[i]);
-
-		file_list[i] = NULL;
 	}
 
-	LogPrintf("DONE.\n\n");
+	if (file_list.size() > 0)
+		LogPrintf("DONE.\n\n");
 
 	return true;  // OK
 }
@@ -936,10 +906,39 @@ static void Script_LoadSubDir(const char *subdir)
 	{
 		const char *path = StringPrintf("%s/%s", (pass == 0 ? install_dir : home_dir), subdir);
 
-		Script_LoadAllFromDir(path);
+		Script_LoadAllFromDir(path, "lua");
 
 		StringFree(path);
 	}
+}
+
+
+void Script_LoadSkins(const char *game_dir)
+{
+	const char *path = StringPrintf("%s/%s", install_dir, game_dir);
+
+	std::vector<std::string> subdir_list;
+
+	int count = ScanDir_GetSubDirs(path, subdir_list);
+
+	if (count < 0)
+		Main_FatalError("Failed to scan prefab directory\n(error code %d)\n", count);
+
+	if (count == 0)
+		Main_FatalError("Missing prefab folders?!?\n");
+
+	// visit each folder and load the skin files
+
+	for (unsigned int i = 0 ; i < subdir_list.size() ; i++)
+	{
+		const char *subdir = StringPrintf("%s/%s", path, subdir_list[i].c_str());
+
+		Script_LoadAllFromDir(subdir, "lua");
+
+		StringFree(subdir);
+	}
+
+	StringFree(path);
 }
 
 
@@ -978,7 +977,7 @@ void Script_Open(const char *game_dir)
 
 	Script_Require("games");
 
-	// FIXME: load prefab skins
+	Script_LoadSkins(game_dir);
 
 	has_loaded = true;
 
