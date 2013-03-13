@@ -2922,6 +2922,40 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
   end
 
 
+  local function build_fake_building(skin_name, x1, y1, x2, y2, dir,
+                                     room, zone)
+
+    local skin1 = GAME.SKINS[skin_name]
+    if not skin1 then
+      error("missing border prefab: " .. skin_name)
+    end
+
+    local skin2 =
+    {
+      wall = zone.facade_mat
+    }
+
+    local floor_h = assert(room.max_floor_h)
+    local sky_h   = assert(room.sky_h)
+
+    if dir == 1 or dir == 3 or dir == 7 or dir == 9 then
+      dir = geom.LEFT_45[dir]
+    end
+
+    local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
+
+    ROOM = room
+
+    Fabricate(skin1, T, { skin1, skin2 })
+
+    if skin1.need_sky then
+      Build_sky_quad(x1, y1, x2, y2, sky_h)
+    end
+
+    ROOM = nil
+  end
+
+
   local function fake_corners()
     for sx = 1, SEED_W do
     for sy = 1, SEED_TOP do
@@ -2952,7 +2986,8 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
         -- mark as used
         S.border = { kind = "fake_building" }
 
-        Build_solid_quad(S.x1, S.y1, S.x2, S.y2, "SFALL1")
+        build_fake_building("Fat_Corner1", S.x1, S.y1, S.x2, S.y2, dir,
+                            N.room, zone)
 
       end end  -- dir
 
