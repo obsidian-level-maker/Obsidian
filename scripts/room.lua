@@ -2972,12 +2972,8 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
         local L_dir = geom. LEFT_45[dir]
         local R_dir = geom.RIGHT_45[dir]
 
-        local N2 = S:neighbor(L_dir)
-        local N3 = S:neighbor(R_dir)
-
-        if not (N2 and N2.room == N.room and
-                N3 and N3.room == N.room)
-        then continue end
+        if not touches_outdoor_or_border(S, L_dir) then continue end
+        if not touches_outdoor_or_border(S, R_dir) then continue end
 
         -- OK --
 
