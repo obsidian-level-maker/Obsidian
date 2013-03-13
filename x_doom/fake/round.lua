@@ -1,10 +1,10 @@
 --
--- Fat corner
+-- Rounded fake corner
 --
 
-DOOM.SKINS.Fat_Corner1 =
+DOOM.SKINS.Fake_Round =
 {
-  file   = "corner/fat1.wad"
+  file   = "fake/round.wad"
   where  = "border"
   fitted = "xy"
   need_sky = 1
