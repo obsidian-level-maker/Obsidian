@@ -2785,7 +2785,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
     assert(cw <= 2 and ch <= 2)
 
     -- FIXME: find matching fabs in SKINS table
-    local skin_name = "Border_" .. math.min(cw, ch) .. "x" ..
+    local skin_name = "Border_liquid_" .. math.min(cw, ch) .. "x" ..
                                    math.max(cw, ch) .. "_" .. cat
 
     local skin1 = GAME.SKINS[skin_name]
@@ -2982,7 +2982,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
         -- mark as used
         S.border = { kind = "fake_building" }
 
-        build_fake_building("Fat_Corner1", S.x1, S.y1, S.x2, S.y2, dir,
+        build_fake_building("Fake_Round", S.x1, S.y1, S.x2, S.y2, dir,
                             N.room, zone)
 
       end end  -- dir
