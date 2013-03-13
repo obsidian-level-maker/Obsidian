@@ -747,7 +747,7 @@ function CLOSET_CLASS.build(CL)
   x1 = x1 + dx ; x2 = x2 + dx
   y1 = y1 + dy ; y2 = y2 + dy
 
-  local T = Trans.box_transform(x1, y1, x2, y2, C.floor_h, 10 - CL.dir)
+  local T = Trans.box_transform(x1, y1, x2, y2, C.floor_h, CL.dir)
 
   Fabricate(skin1, T, { skin0, skin1, skin2 })
 
@@ -1954,10 +1954,10 @@ function Rooms_fake_building(sx1, sy1, sx2, sy2, kind, dir, face_room, zone)
       end
       f_h = R.cage_floor_h
     end
-    
+
     local skin2 = { sky_ofs=face_room.sky_h - f_h, wall=mat }
 
-    local T = Trans.box_transform(x1, y1, x2, y2, f_h, 10 - dir)
+    local T = Trans.box_transform(x1, y1, x2, y2, f_h, dir)
 
     ROOM = face_room
 
