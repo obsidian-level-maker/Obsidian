@@ -1172,6 +1172,45 @@ function Trans.loose_group_targets(groups, scale)
 end
 
 
+function Trans.expansion_groups(points, axis_name, fit_size, pf_size)
+
+  if not points then return nil end
+
+  local extra = fit_size - pf_size
+
+  if math.abs(extra) < 1 then return nil end
+
+  if extra < 0 then
+    error("Prefab does not fit! (on " .. axis_name .. " axis)")
+  end
+
+  if type(points) == "number" then
+    points = { points }
+  end
+
+  local groups = { }
+  local pos = 0
+
+  for i = 1,#points do
+    if points[i] < 0 or points[i] > pf_size then
+      error(axis_name .. "expand has value out of range")
+    end
+
+    local G =
+    {
+      low  = points[i]
+      high = (i < #points ? points[i + 1] ; pf_size)
+    }
+
+    G.size = G.high - G.low
+
+    table.insert(groups, G)
+  end
+
+  return groups
+end
+
+
 ------------------------------------------------------------------------
 
 
