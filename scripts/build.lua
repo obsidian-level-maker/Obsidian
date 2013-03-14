@@ -1193,7 +1193,7 @@ function Trans.expansion_groups(points, axis_name, fit_size, pf_size)
 
   for i = 1,#points do
     if points[i] < 0 or points[i] > pf_size then
-      error(axis_name .. "expand has value out of range")
+      error(axis_name .. "_expand has value out of range")
     end
 
     local G =
@@ -1202,7 +1202,13 @@ function Trans.expansion_groups(points, axis_name, fit_size, pf_size)
       high = (i < #points ? points[i + 1] ; pf_size)
     }
 
-    G.size = G.high - G.low
+    G.size  = G.high - G.low
+
+    -- distribute extra amount equally to each range
+    G.low2  = G.low + i * extra / #points 
+
+    G.size2 = G.size
+    G.high2 = G.low2 + G.size2
 
     table.insert(groups, G)
   end
