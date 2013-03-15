@@ -2573,7 +2573,16 @@ function Fabricate(main_skin, T, skins)
   Fab_replacements(fab, skin)
 
   fab.state  = "skinned"
-  fab.fitted = main_skin.fitted
+
+  fab.x_fit = main_skin.x_fit
+  fab.y_fit = main_skin.y_fit
+  fab.z_fit = main_skin.z_fit
+
+  -- FIXME: TEMP HACK
+  if main_skin.fitted == "xy" then
+    fab.x_fit = "stretch"
+    fab.y_fit = "stretch"
+  end
 
   Fab_copy_ranges(fab, skin)
 
