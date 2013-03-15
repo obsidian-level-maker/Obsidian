@@ -3462,10 +3462,10 @@ stderrf("AREA floor_stuff @ %s\n", R:tostr())
   local function prepare_ceiling(R)
     local h = R.crossover_max_h or R.max_floor_h
 
-    h = h + rand.pick { 128, 192, 256, 320, 384 }
+    h = h + rand.pick { 128, 192, 256, 320 }
 
     if R.kind == "outdoor" then
-      R.sky_h = h + 128
+      R.sky_group.h = math.max(R.sky_group.h or -768, h)
     else
       R.ceil_h = h
     end
@@ -3474,21 +3474,6 @@ stderrf("AREA floor_stuff @ %s\n", R:tostr())
 
   local function ceiling_stuff(R)
     prepare_ceiling(R)
-  end
-
-
-  local function sync_sky_heights()
-    each R in LEVEL.rooms do
-      if R.sky_group then
-        R.sky_group.h = math.max(R.sky_group.h or -999, R.sky_h)
-      end
-    end
-
-    each R in LEVEL.rooms do
-      if R.sky_group then
-        R.sky_h = R.sky_group.h
-      end
-    end
   end
 
 
@@ -3533,8 +3518,6 @@ stderrf("AREA floor_stuff @ %s\n", R:tostr())
 
 --each R in LEVEL.rooms do decide_windows(R) end
   each R in LEVEL.rooms do ceiling_stuff(R) end
-
-  sync_sky_heights()
 
   each R in LEVEL.rooms do finish_up_room(R) end
 end

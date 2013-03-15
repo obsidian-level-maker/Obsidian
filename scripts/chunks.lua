@@ -336,7 +336,7 @@ function CHUNK_CLASS.neighbor_info(C, dir, info, sky_only)
     if N.floor_h then info.f_min = math.min(info.f_min or  9999, N.floor_h) end
     if N.floor_h then info.f_max = math.max(info.f_max or -9999, N.floor_h) end
 
-    local ceil_h = N.ceil_h or (N.room and N.room.sky_h)
+    local ceil_h = N.ceil_h or (N.room and N.room.sky_group and N.room.sky_group.h)
 
     if ceil_h then info.c_min = math.min(info.c_min or  9999, ceil_h) end
     if ceil_h then info.c_max = math.max(info.c_max or -9999, ceil_h) end
@@ -1267,7 +1267,7 @@ function CHUNK_CLASS.build(C)
     c_mat = "_SKY"
     c_medium = "sky"
     if C.room then
-      c_h = assert(C.room.sky_h)
+      c_h = assert(C.room.sky_group.h)
     end
 
   else

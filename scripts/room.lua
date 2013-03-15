@@ -115,7 +115,7 @@ class SKY_GROUP
 {
   rooms : list(ROOM)
 
-  sky_h : number  -- the final sky height for the group
+  h : number  -- the sky height for the group
 }
 
 
@@ -1086,7 +1086,7 @@ function Room_collect_sky_groups()
   end
 
 
-  ---| Rooms_synchronise_skies |---
+  ---| Room_collect_sky_groups |---
 
   init_sky_groups()
 
@@ -1097,25 +1097,28 @@ function Room_collect_sky_groups()
   end
 
   -- collect all the sky groups
-  LEVEL.sky_groups = {}
+  local all_groups = {}
 
   gui.debugf("\nSky group list:\n")
 
   each R in outdoor_rooms do
     gui.debugf("%d @ %s\n", R.sky_group, R:tostr())
 
-    local group = LEVEL.sky_groups[R.sky_group]
+    local group = all_groups[R.sky_group]
 
     if not group then
       group = { rooms={} }
-      LEVEL.sky_groups[R.sky_group] = group
+
+      all_groups[R.sky_group] = group
     end
 
     table.insert(group.rooms, R)
 
-    -- change the ID number to a group reference
+    -- change field from a number --> a group reference
     R.sky_group = group
   end
+
+  -- Note: sky heights are determined later
 end
 
 
@@ -1905,74 +1908,6 @@ end
 
 
 
-function Rooms_fake_building(sx1, sy1, sx2, sy2, kind, dir, face_room, zone)
-  -- mark it
-  for sx = sx1, sx2 do
-  for sy = sy1, sy2 do
-    local S = SEEDS[sx][sy]
-
-    S.scenic = true
-    S.fake_zone = zone
-    S.edge_of_map = nil
-  end
-  end
-
-  local x1 = SEEDS[sx1][sy1].x1
-  local y1 = SEEDS[sx1][sy1].y1
-
-  local x2 = SEEDS[sx2][sy2].x2
-  local y2 = SEEDS[sx2][sy2].y2
-
-  local mat = assert(zone.facade_mat)
-
--- stderrf("Rooms_fake_building @ (%d %d) .. (%d %d) : %s\n", sx1, sy1, sx2, sy2, kind)
-
-  -- cages!
-  local cage_prob = style_sel("cages", 0, 10, 30, 80)
-
-  if face_room and face_room.purpose != "START" and
-     THEME.fat_cages and rand.odds(cage_prob)
-  then
-    if not LEVEL.fat_cage_kind then
-      LEVEL.fat_cage_kind = rand.key_by_probs(THEME.fat_cages)
-    end
-
-    local skin1 = assert(GAME.SKINS[LEVEL.fat_cage_kind])
-
-    -- FIXME: use nearby floors 
-    local f_h = face_room.max_floor_h + 48
-    local c_h = face_room.sky_h
-
-    local cage_h = skin1._cage_h or 208  -- FIXME
-
-    gui.debugf("Trying cage @ %s: f_h=%d c_h=%d\n", face_room:tostr(), f_h, c_h)
-
-    if f_h - c_h >= cage_h then
-      if not R.cage_floor_h then
-        R.cage_floor_h = rand.sel(75, f_h, c_h - cage_h)
-      end
-      f_h = R.cage_floor_h
-    end
-
-    local skin2 = { sky_ofs=face_room.sky_h - f_h, wall=mat }
-
-    local T = Trans.box_transform(x1, y1, x2, y2, f_h, dir)
-
-    ROOM = face_room
-
-    Fabricate(skin1, T, { skin1, skin2 })
-
-    ROOM = nil
-    return
-  end
-
-  local brush = Brush_new_quad(x1, y1, x2, y2)
-  Brush_set_mat(brush, mat)
-  brush_helper(brush)
-end
-
-
-
 function Room_outdoor_borders()
   --
   --  BORDER ALGORITHM
@@ -2028,7 +1963,7 @@ function Room_outdoor_borders()
       floor_h = assert(room.max_floor_h)
     end
 
-    local sky_h   = assert(room.sky_h)
+    local sky_h = assert(room.sky_group.h)
 
     if dir == 1 or dir == 3 or dir == 7 or dir == 9 then
       dir = geom.LEFT_45[dir]
@@ -2062,7 +1997,6 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
     local N2 = S:neighbor(10 - dir)
 
     local floor_h = math.max(N1.room.max_floor_h, N2.room.max_floor_h)
-    local sky_h   = math.max(N1.room.sky_h, N2.room.sky_h)
 
     local skin_name = rand.sel(80, "Fake_RoundFence_1x1", "Cage_FatFence1")
 
@@ -2288,7 +2222,7 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
     local sky_fence_h = assert(R.max_floor_h)
 
-    local skin2 = { sky_h = R.sky_h - sky_fence_h }
+    local skin2 = { sky_h = R.sky_group.h - sky_fence_h }
 
         if dir == 1 then dir = 2
     elseif dir == 9 then dir = 8
@@ -2852,7 +2786,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
     local x2, y2 = S2.x2, S2.y2
 
     local floor_h = assert(B.room.max_floor_h)
-    local sky_h   = assert(B.room.sky_h)
+    local sky_h   = assert(B.room.sky_group.h)
 
     local dir = B.dir
     if dir == 1 or dir == 3 or dir == 7 or dir == 9 then
