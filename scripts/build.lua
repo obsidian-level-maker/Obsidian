@@ -692,7 +692,7 @@ function Trans.dump(T, title)
     each G in groups do
       gui.debugf("    (%1.0f %1.0f %1.0f) --> (%1.0f %1.0f %1.0f)  wt:%1.2f\n",
                  G.low  or -1, G.high  or -1, G.size  or -1,
-                 G.low2 or -1, G.high2 or -1, G.size2 or -1, G.weight)
+                 G.low2 or -1, G.high2 or -1, G.size2 or -1, G.weight or -1)
     end
 
     gui.debugf("  }\n")
@@ -1202,9 +1202,14 @@ function Trans.expansion_groups(list, axis_name, fit_size, pf_size)
     set_sizes(G)
 
     return { G }
-  end
+  
+  elseif list == "left" or list == "bottom" then
+    list = { 0, 1 }
 
-  if list == "anchor" then
+  elseif list == "right" or list == "top" then
+    list = { pf_size - 1, pf_size }
+
+  elseif list == "anchor" then
     list = { 0, 1, pf_size - 1, pf_size }
   end
 
@@ -1225,6 +1230,7 @@ function Trans.expansion_groups(list, axis_name, fit_size, pf_size)
   end
 
 
+  -- construct a series of plain groups
   local groups = { }
 
   for i = 1,#list-1 do
@@ -1236,10 +1242,26 @@ function Trans.expansion_groups(list, axis_name, fit_size, pf_size)
 
     G.size = G.high - G.low
 
-    G.weight = ((i % 2) == 1 ? 1 ; 0)
+    table.insert(groups, G)
   end
 
-  -- FIXME
+  assert(extra > 0)
+
+  -- now determine the target mappings
+  local pos = groups[1].low
+
+  each G in groups do
+    G.size2 = G.size
+
+    if (_index % 2) == 1 then
+      G.size2 = G.size2 + extra / (#list / 2)
+    end
+
+    G.low2  = pos
+    G.high2 = pos + G.size2
+
+    pos = pos + G.size2
+  end
 
   return groups
 end
