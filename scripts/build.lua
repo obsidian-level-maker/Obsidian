@@ -1209,7 +1209,7 @@ function Trans.expansion_groups(list, axis_name, fit_size, pf_size)
   elseif list == "right" or list == "top" then
     list = { pf_size - 1, pf_size }
 
-  elseif list == "anchor" then
+  elseif list == "frame" then
     list = { 0, 1, pf_size - 1, pf_size }
   end
 

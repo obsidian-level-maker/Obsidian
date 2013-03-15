@@ -98,7 +98,7 @@ DOOM.SKINS.Start_Closet =
 {
   file   = "start/closet1.wad"
   where  = "closet"
-  x_fit  = "anchor"
+  x_fit  = "frame"
   y_fit  = "top"
 }
 
@@ -115,7 +115,7 @@ DOOM.SKINS.Exit_Closet_tech =
 {
   file   = "exit/closet1.wad"
   where  = "closet"
-  x_fit  = "anchor"
+  x_fit  = "frame"
   y_fit  = "top"
 
 --[[ FIXME
@@ -457,7 +457,7 @@ DOOM.SKINS.Teleporter_Closet =
 {
   file  = "teleport/closet1.wad"
   where = "closet"
-  x_fit = "anchor"
+  x_fit = "frame"
   y_fit = "top"
   long  = 256
 
@@ -515,7 +515,7 @@ DOOM.SKINS.Pic_Carve =
 {
   file   = "wall/pic_64x64.wad"
   where  = "edge"
-  x_fit  = "anchor"
+  x_fit  = "frame"
   y_fit  = "top"
   long   = 256
   bound_z1 = 0
@@ -531,7 +531,7 @@ DOOM.SKINS.Pic_Computer =
 {
   file   = "wall/pic_128x48.wad"
   where  = "edge"
-  x_fit  = "anchor"
+  x_fit  = "frame"
   y_fit  = "top"
   long   = 256
   bound_z1 = 0
