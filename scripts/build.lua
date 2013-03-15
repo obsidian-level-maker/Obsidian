@@ -1172,46 +1172,74 @@ function Trans.loose_group_targets(groups, scale)
 end
 
 
-function Trans.expansion_groups(points, axis_name, fit_size, pf_size)
+function Trans.expansion_groups(list, axis_name, fit_size, pf_size)
+  assert(list)
 
-  if not points then return nil end
+  local function set_sizes(G)
+    G.size  = G.high  - G.low
+    G.size2 = G.high2 - G.low2
+  end
 
   local extra = fit_size - pf_size
 
+  -- nothing needed if the size is the same
   if math.abs(extra) < 1 then return nil end
 
   if extra < 0 then
     error("Prefab does not fit! (on " .. axis_name .. " axis)")
   end
 
-  if type(points) == "number" then
-    points = { points }
-  end
-
-  local groups = { }
-  local pos = 0
-
-  for i = 1,#points do
-    if points[i] < 0 or points[i] > pf_size then
-      error(axis_name .. "_expand has value out of range")
-    end
-
+  -- check some special keywords
+  if list == "stretch" then
     local G =
     {
-      low  = points[i]
-      high = (i < #points ? points[i + 1] ; pf_size)
+      low   = 0
+      high  = pf_size
+      low2  = 0
+      high2 = fit_size
     }
 
-    G.size  = G.high - G.low
+    set_sizes(G)
 
-    -- distribute extra amount equally to each range
-    G.low2  = G.low + i * extra / #points 
-
-    G.size2 = G.size
-    G.high2 = G.low2 + G.size2
-
-    table.insert(groups, G)
+    return { G }
   end
+
+  if list == "anchor" then
+    list = { 0, 1, pf_size - 1, pf_size }
+  end
+
+
+  if type(list) != "table" then
+    error("Bad " .. axis_name .. "_fit field in prefab: " .. tostring(list))
+  end
+
+
+  -- validate list
+  for i = 1, #list-1 do
+    local A = list[i]
+    local B = list[i + 1]
+
+    if A >= B then
+      error("Bad ordering in " .. axis_name .. "_fit field in prefab")
+    end
+  end
+
+
+  local groups = { }
+
+  for i = 1,#list-1 do
+    local G =
+    {
+      low  = list[i]
+      high = list[i+1]
+    }
+
+    G.size = G.high - G.low
+
+    G.weight = ((i % 2) == 1 ? 1 ; 0)
+  end
+
+  -- FIXME
 
   return groups
 end
@@ -1385,7 +1413,7 @@ function Fab_transform_XY(fab, T)
 
   --- X ---
 
-  if fab.fitted and string.find(fab.fitted, "x") then
+  if fab.x_fit then
     if not T.fitted_x then
       error("Fitted prefab used without fitted X transform")
 
@@ -1396,22 +1424,18 @@ function Fab_transform_XY(fab, T)
       error("Fitted prefab must have lowest X coord at 0")
     end
 
-    Trans.TRANSFORM.groups_x = Trans.expansion_groups(fab.x_expand, "x", T.fitted_x, bbox.x2)
+    Trans.TRANSFORM.groups_x = Trans.expansion_groups(fab.x_fit, "x", T.fitted_x, bbox.x2)
 
   else  -- "loose" placement
     if T.fitted_x then
       error("Loose prefab used with fitted X transform")
-    end
-
-    if fab.x_expand then
-      error("Loose prefab cannot contain x_expand")
     end
   end
 
 
   --- Y ---
 
-  if fab.fitted and string.find(fab.fitted, "y") then
+  if fab.y_fit then
     if not T.fitted_y then
       error("Fitted prefab used without fitted Y transform")
 
@@ -1422,15 +1446,11 @@ function Fab_transform_XY(fab, T)
       error("Fitted prefab must have lowest Y coord at 0")
     end
 
-    Trans.TRANSFORM.groups_y = Trans.expansion_groups(fab.y_expand, "y", T.fitted_y, bbox.y2)
+    Trans.TRANSFORM.groups_y = Trans.expansion_groups(fab.y_fit, "y", T.fitted_y, bbox.y2)
 
   else
     if T.fitted_y then
       error("Loose prefab used with fitted Y transform")
-    end
-
-    if fab.y_expand then
-      error("Loose prefab cannot contain y_expand")
     end
   end
 
@@ -1528,7 +1548,7 @@ function Fab_transform_Z(fab, T)
 
   --- Z ---
 
-  if fab.fitted and string.find(fab.fitted, "z") then
+  if fab.z_fit then
     if not T.fitted_z then
       error("Fitted prefab used without fitted Z transform")
 
@@ -1542,16 +1562,12 @@ function Fab_transform_Z(fab, T)
       error("Fitted prefab must have lowest Z coord at 0")
     end
 
-    Trans.TRANSFORM.groups_z = Trans.expansion_groups(fab.z_expand, "z", T.fitted_z, bbox.z2)
+    Trans.TRANSFORM.groups_z = Trans.expansion_groups(fab.z_fit, "z", T.fitted_z, bbox.z2)
 
   else  -- "loose" mode
 
     if T.fitted_z then
       error("Loose prefab used with fitted Z transform")
-    end
-
-    if fab.z_expand then
-      error("Loose prefab cannot contain z_expand")
     end
   end
 
