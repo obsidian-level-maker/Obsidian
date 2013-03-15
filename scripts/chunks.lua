@@ -963,7 +963,7 @@ end
 
 function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
   local long = geom.vert_sel(dir, C.x2 - C.x1, C.y2 - C.y1)
-  local deep = 24
+  local deep = 32
 
   local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
                                  0, long, deep, 0)
@@ -997,7 +997,7 @@ function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
   end
 
   -- walls and windows use an "XYZ" fitted transform
-  Trans.set_fitted_z(T, f_h, c_h)
+---!!!  Trans.set_fitted_z(T, f_h, c_h)
 
   -- PICTURES!!!
   local pic_prob = style_sel("pictures", 0, 25, 50, 80)
