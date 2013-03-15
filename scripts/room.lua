@@ -734,10 +734,9 @@ function CLOSET_CLASS.build(CL)
 
   local x1, y1, x2, y2 = CL.section:get_coords()
 
-  -- align indoor closets with wall  [FIXME: remove hack for teleporters]
+  -- align indoor closets with wall
   local dx, dy = 0, 0
-  if not (CL.parent.kind == "outdoor" or CL.parent.was_outdoor) and
-     CL.closet_kind != "TELEPORTER"
+  if not (CL.parent.kind == "outdoor" or CL.parent.was_outdoor)
   then
     if CL.dir == 2 then y1 = y1 - 32 end
     if CL.dir == 4 then x1 = x1 - 32 end
@@ -3044,7 +3043,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
     SA = SEEDS[sx1][sy1]
     SZ = SEEDS[sx2][sy2]
 
-    Build_solid_quad(SA.x1, SA.y1, SZ.x2, SZ.y2, "COMPBLUE")
+--    Build_solid_quad(SA.x1, SA.y1, SZ.x2, SZ.y2, "COMPBLUE")
 
     -- mark as used
     for sx = sx1, sx2 do

@@ -458,7 +458,7 @@ DOOM.SKINS.Teleporter_Closet =
   file  = "teleport/closet1.wad"
   where = "closet"
   x_fit = "frame"
-  y_fit = "top"
+  y_fit = { 0,48 }
   long  = 256
 
   tag_1 = "?out_tag"
