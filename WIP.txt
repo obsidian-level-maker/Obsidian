@@ -10,30 +10,39 @@ WORK IN PROGRESS
 +  fix street mode
 
 
+>>  find potential fat fences early, mark some of them to ensure
+    the two neighbor rooms get sky sync'd 
+
+
+>>  mark 1-section halls as "joiners"
+
+>>  find joiners which touch two outdoor rooms, and sometimes
+    ensure it gets a 'sky_group' field -- so all three are sync'd
+
+
+!!  proper method to pick outdoor border prefabs
+
++  fix material chosen for borders and fake buildings
+
+-  borders / fakers : support 'z_fit'
+
+
 -  tri_pillar
 
 
 WAD Prefabs
 -----------
 
-+  simpler z_ranges : specify coordinate(s) which expands
+-  lifts : ability to expand vertically so target height matches
+   (something like z_fit ??) 
 
-   BUT: need to handle (1) expanding lifts so target height matches
-                       (2) expanding Z to match a sky height
+-  check that prefabs can add ITEM spots
 
--  use x_ranges for wall/window prefabs (to scale 192 --> 256)
+-  support spots in prefabs for weapons and keys
 
--  use y_range to make closets scale
+-  IDEA: ability to "pick" the sector at a point / edge / corner and get the height there
 
--  create monster and item spots:
-   +  review current spot system
-   +  use the fab.spots table 
-
-   >>>  have a 'ROOM' global, Fabricate() uses it
-
--  NO: ability to "pick" the sector at a point / edge / corner and get the height there
-
-   YES: use tag numbers for "main floor", "neighbor floor" (etc)
+   OR : use tag numbers for "main floor", "neighbor floor" (etc)
         and can set that sector to a certain material (floor, floor2, etc)
 
         102 = south (main floor)
