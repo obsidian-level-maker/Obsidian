@@ -1173,13 +1173,6 @@ end
 
 
 function Trans.expansion_groups(list, axis_name, fit_size, pf_size)
-  assert(list)
-
-  local function set_sizes(G)
-    G.size  = G.high  - G.low
-    G.size2 = G.high2 - G.low2
-  end
-
   local extra = fit_size - pf_size
 
   -- nothing needed if the size is the same
@@ -1189,8 +1182,12 @@ function Trans.expansion_groups(list, axis_name, fit_size, pf_size)
     error("Prefab does not fit! (on " .. axis_name .. " axis)")
   end
 
-  -- check some special keywords
-  if list == "stretch" then
+  assert(extra > 0)
+
+  -- check some special keywords.
+  -- missing 'x_fit' field (etc) defaults to "stretch"
+
+  if not list or list == "stretch" then
     local G =
     {
       low   = 0
@@ -1199,7 +1196,8 @@ function Trans.expansion_groups(list, axis_name, fit_size, pf_size)
       high2 = fit_size
     }
 
-    set_sizes(G)
+    G.size  = G.high  - G.low
+    G.size2 = G.high2 - G.low2
 
     return { G }
   
@@ -1230,8 +1228,9 @@ function Trans.expansion_groups(list, axis_name, fit_size, pf_size)
   end
 
 
-  -- construct a series of plain groups
+  -- construct the mapping groups
   local groups = { }
+  local pos = list[1]
 
   for i = 1,#list-1 do
     local G =
@@ -1242,18 +1241,9 @@ function Trans.expansion_groups(list, axis_name, fit_size, pf_size)
 
     G.size = G.high - G.low
 
-    table.insert(groups, G)
-  end
-
-  assert(extra > 0)
-
-  -- now determine the target mappings
-  local pos = groups[1].low
-
-  each G in groups do
     G.size2 = G.size
 
-    if (_index % 2) == 1 then
+    if (i % 2) == 1 then
       G.size2 = G.size2 + extra / (#list / 2)
     end
 
@@ -1261,6 +1251,8 @@ function Trans.expansion_groups(list, axis_name, fit_size, pf_size)
     G.high2 = pos + G.size2
 
     pos = pos + G.size2
+
+    table.insert(groups, G)
   end
 
   return groups
@@ -1435,7 +1427,7 @@ function Fab_transform_XY(fab, T)
 
   --- X ---
 
-  if fab.x_fit then
+  if fab.x_fit or T.fitted_x then
     if not T.fitted_x then
       error("Fitted prefab used without fitted X transform")
 
@@ -1448,16 +1440,14 @@ function Fab_transform_XY(fab, T)
 
     Trans.TRANSFORM.groups_x = Trans.expansion_groups(fab.x_fit, "x", T.fitted_x, bbox.x2)
 
-  else  -- "loose" placement
-    if T.fitted_x then
-      error("Loose prefab used with fitted X transform")
-    end
+  else
+    -- "loose" placement
   end
 
 
   --- Y ---
 
-  if fab.y_fit then
+  if fab.y_fit or T.fitted_y then
     if not T.fitted_y then
       error("Fitted prefab used without fitted Y transform")
 
@@ -1471,9 +1461,7 @@ function Fab_transform_XY(fab, T)
     Trans.TRANSFORM.groups_y = Trans.expansion_groups(fab.y_fit, "y", T.fitted_y, bbox.y2)
 
   else
-    if T.fitted_y then
-      error("Loose prefab used with fitted Y transform")
-    end
+    -- "loose" placement
   end
 
   -- apply the coordinate transform to all parts of the prefab
@@ -1570,14 +1558,14 @@ function Fab_transform_Z(fab, T)
 
   --- Z ---
 
-  if fab.z_fit then
+  if fab.z_fit or T.fitted_z then
     if not T.fitted_z then
       error("Fitted prefab used without fitted Z transform")
 
     elseif T.scale_z then
       error("Fitted transform used with scale_z")
 
-    elseif not groups_z then
+    elseif not (bbox.dz and bbox.dz >= 1) then
       error("Fitted prefab has no vertical range!")
 
     elseif math.abs(bbox.z1) > 0.1 then
@@ -1586,11 +1574,8 @@ function Fab_transform_Z(fab, T)
 
     Trans.TRANSFORM.groups_z = Trans.expansion_groups(fab.z_fit, "z", T.fitted_z, bbox.z2)
 
-  else  -- "loose" mode
-
-    if T.fitted_z then
-      error("Loose prefab used with fitted Z transform")
-    end
+  else
+    -- "loose" mode
   end
 
   -- apply the coordinate transform to all parts of the prefab
@@ -2577,12 +2562,6 @@ function Fabricate(main_skin, T, skins)
   fab.x_fit = main_skin.x_fit
   fab.y_fit = main_skin.y_fit
   fab.z_fit = main_skin.z_fit
-
-  -- FIXME: TEMP HACK
-  if main_skin.fitted == "xy" then
-    fab.x_fit = "stretch"
-    fab.y_fit = "stretch"
-  end
 
   Fab_copy_ranges(fab, skin)
 
