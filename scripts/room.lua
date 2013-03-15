@@ -2064,7 +2064,9 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
     local floor_h = math.max(N1.room.max_floor_h, N2.room.max_floor_h)
     local sky_h   = math.max(N1.room.sky_h, N2.room.sky_h)
 
-    build_fake_building("Fake_RoundFence_1x1", S.x1, S.y1, S.x2, S.y2, dir,
+    local skin_name = rand.sel(80, "Fake_RoundFence_1x1", "Cage_FatFence1")
+
+    build_fake_building(skin_name, S.x1, S.y1, S.x2, S.y2, dir,
                         N1.room, zone, floor_h)
   end
 
