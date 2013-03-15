@@ -79,8 +79,12 @@ DOOM2.PARAMETERS =
 
 DOOM.SKIN_DEFAULTS =
 {
-  tex_STARTAN3 = "?wall"
-  tex_BLAKWAL1 = "?outer"
+  tex_STARTAN3  = "?wall"
+  flat_FLOOR5_3 = "?wall"
+
+  tex_BLAKWAL1  = "?outer"
+
+  flat_FLOOR0_6 = "?floor"
 }
 
 
