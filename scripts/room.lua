@@ -2956,6 +2956,48 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
   end
 
 
+  local function try_fake_corner_at_seed(S, pass)
+    for dir = 1,9,2 do if dir != 5 then
+      local N = S:neighbor(dir)
+
+      if not N then continue end
+      if not (N.room and N.room.kind == "outdoor") then continue end
+
+      local L_dir = geom. LEFT_45[dir]
+      local R_dir = geom.RIGHT_45[dir]
+
+      -- only allow borders in second pass
+
+      if pass == 1 then
+        local N2 = S:neighbor(L_dir)
+        local N3 = S:neighbor(R_dir)
+
+        if not (N2 and N2.room and N2.room == N.room) then continue end
+        if not (N3 and N3.room and N3.room == N.room) then continue end
+
+      else
+        if touches_outdoor_or_border(S, L_dir) != N.room then continue end
+        if touches_outdoor_or_border(S, R_dir) != N.room then continue end
+      end
+
+      -- OK --
+
+      local zone = zone_for_faker(S, 10 - dir)
+
+      -- mark as used
+      S.border = { kind = "fake_building" }
+
+      build_fake_building("Fake_Round", S.x1, S.y1, S.x2, S.y2, dir,
+                          N.room, zone)
+
+      return true
+
+    end end  -- dir
+
+    return false
+  end
+
+
   local function fake_corners()
     for sx = 1, SEED_W do
     for sy = 1, SEED_TOP do
@@ -2963,29 +3005,9 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
       if S:used() then continue end
 
-      for dir = 1,9,2 do if dir != 5 then
-        local N = S:neighbor(dir)
-
-        if not N then continue end
-        if not (N.room and N.room.kind == "outdoor") then continue end
-
-        local L_dir = geom. LEFT_45[dir]
-        local R_dir = geom.RIGHT_45[dir]
-
-        if not touches_outdoor_or_border(S, L_dir) then continue end
-        if not touches_outdoor_or_border(S, R_dir) then continue end
-
-        -- OK --
-
-        local zone = zone_for_faker(S, 10 - dir)
-
-        -- mark as used
-        S.border = { kind = "fake_building" }
-
-        build_fake_building("Fake_Round", S.x1, S.y1, S.x2, S.y2, dir,
-                            N.room, zone)
-
-      end end  -- dir
+      if not try_fake_corner_at_seed(S, 1) then
+             try_fake_corner_at_seed(S, 2)
+      end
 
     end -- sx, sy
     end
@@ -3028,6 +3050,10 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
     for sx = sx1, sx2 do
     for sy = sy1, sy2 do
       SEEDS[sx][sy].border = { kind = "fake_building" }
+
+        local S = SEEDS[sx][sy]
+        build_fake_building("Fake_Building1", S.x1, S.y1, S.x2, S.y2, dir,
+                            room, zone)
     end
     end
   end
