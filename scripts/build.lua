@@ -1383,13 +1383,6 @@ function Fab_transform_XY(fab, T)
 
   local bbox = fab.bbox
 
-  local groups_x = Trans.create_groups(fab.x_ranges, bbox.x1, bbox.x2)
-  local groups_y = Trans.create_groups(fab.y_ranges, bbox.y1, bbox.y2)
-
-
-  Trans.TRANSFORM.groups_x = groups_x
-  Trans.TRANSFORM.groups_y = groups_y
-
   --- X ---
 
   if fab.fitted and string.find(fab.fitted, "x") then
@@ -1403,16 +1396,16 @@ function Fab_transform_XY(fab, T)
       error("Fitted prefab must have lowest X coord at 0")
     end
 
-    Trans.fitted_group_targets(groups_x, 0, T.fitted_x)
+    Trans.TRANSFORM.groups_x = Trans.expansion_groups(fab.x_expand, "x", T.fitted_x, bbox.x2)
 
   else  -- "loose" placement
     if T.fitted_x then
       error("Loose prefab used with fitted X transform")
     end
 
-    Trans.loose_group_targets(groups_x, T.scale_x or 1)
-
-    Trans.TRANSFORM.scale_x = nil
+    if fab.x_expand then
+      error("Loose prefab cannot contain x_expand")
+    end
   end
 
 
@@ -1429,16 +1422,16 @@ function Fab_transform_XY(fab, T)
       error("Fitted prefab must have lowest Y coord at 0")
     end
 
-    Trans.fitted_group_targets(groups_y, 0, T.fitted_y)
+    Trans.TRANSFORM.groups_y = Trans.expansion_groups(fab.y_expand, "y", T.fitted_y, bbox.y2)
 
   else
     if T.fitted_y then
       error("Loose prefab used with fitted Y transform")
     end
 
-    Trans.loose_group_targets(groups_y, T.scale_y or 1)
-
-    Trans.TRANSFORM.scale_y = nil
+    if fab.y_expand then
+      error("Loose prefab cannot contain y_expand")
+    end
   end
 
   -- apply the coordinate transform to all parts of the prefab
@@ -1532,13 +1525,6 @@ function Fab_transform_Z(fab, T)
   Trans.set(T)
 
   local bbox = fab.bbox
-  local groups_z
-
-  if bbox.z1 and bbox.dz > 1 then
-    groups_z = Trans.create_groups(fab.z_ranges, bbox.z1, bbox.z2)
-
-    Trans.TRANSFORM.groups_z = groups_z
-  end
 
   --- Z ---
 
@@ -1556,9 +1542,7 @@ function Fab_transform_Z(fab, T)
       error("Fitted prefab must have lowest Z coord at 0")
     end
 
-    if groups_z then
-      Trans.fitted_group_targets(groups_z, 0, T.fitted_z)
-    end
+    Trans.TRANSFORM.groups_z = Trans.expansion_groups(fab.z_expand, "z", T.fitted_z, bbox.z2)
 
   else  -- "loose" mode
 
@@ -1566,10 +1550,8 @@ function Fab_transform_Z(fab, T)
       error("Loose prefab used with fitted Z transform")
     end
 
-    if groups_z then
-      Trans.loose_group_targets(groups_z, T.scale_z or 1)
-
-      Trans.TRANSFORM.scale_z = nil
+    if fab.z_expand then
+      error("Loose prefab cannot contain z_expand")
     end
   end
 
@@ -2541,7 +2523,7 @@ function Fabricate(main_skin, T, skins)
     error("Old-style prefab skin used")
   end
 
---- stderrf("=========  FABRICATE %s\n", main_skin.file)
+  gui.debugf("=========  FABRICATE %s\n", main_skin.file)
 
   local fab = Fab_load_wad(main_skin.file)
 
