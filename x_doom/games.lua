@@ -98,7 +98,8 @@ DOOM.SKINS.Start_Closet =
 {
   file   = "start/closet1.wad"
   where  = "closet"
-  fitted = "xy"
+  x_fit  = "anchor"
+  y_fit  = "top"
 }
 
 
@@ -114,7 +115,8 @@ DOOM.SKINS.Exit_Closet_tech =
 {
   file   = "exit/closet1.wad"
   where  = "closet"
-  fitted = "xy"
+  x_fit  = "anchor"
+  y_fit  = "top"
 
 --[[ FIXME
   door  = "EXITDOOR"
@@ -323,7 +325,8 @@ DOOM.SKINS.Hall_Basic_I =
 {
   file   = "hall/trim1_i_win.wad"
   shape  = "I"
-  fitted = "xy"
+  x_fit  = "stretch"
+  y_fit  = "stretch"
 }
 
 DOOM.SKINS.Hall_Basic_C =
@@ -331,27 +334,32 @@ DOOM.SKINS.Hall_Basic_C =
   file   = "hall/trim1_c.wad"
   shape  = "C"
   fitted = "xy"
+  x_fit  = "stretch"
+  y_fit  = "stretch"
 }
 
 DOOM.SKINS.Hall_Basic_T =
 {
   file   = "hall/trim1_t_lit.wad"
   shape  = "T"
-  fitted = "xy"
+  x_fit  = "stretch"
+  y_fit  = "stretch"
 }
 
 DOOM.SKINS.Hall_Basic_P =
 {
   file   = "hall/trim1_p.wad"
   shape  = "P"
-  fitted = "xy"
+  x_fit  = "stretch"
+  y_fit  = "stretch"
 }
 
 DOOM.SKINS.Hall_Basic_I_Stair =
 {
   file   = "hall/trim1_st.wad"
   shape  = "IS"
-  fitted = "xy"
+  x_fit  = "stretch"
+  y_fit  = "stretch"
 
   step = "STEP3"
   support = "SUPPORT2"
@@ -362,7 +370,8 @@ DOOM.SKINS.Hall_Basic_I_Lift =
 {
   file   = "hall/trim1_lf.wad"
   shape  = "IL"
-  fitted = "xy"
+  x_fit  = "stretch"
+  y_fit  = "stretch"
   z_ranges = { {64,0}, {64,0,"?stair_h-64"}, {128,0} }
   tags   = 1
 
@@ -448,8 +457,9 @@ DOOM.SKINS.Teleporter_Closet =
 {
   file  = "teleport/closet1.wad"
   where = "closet"
-  fitted = "xy"
-  long   = 256
+  x_fit = "anchor"
+  y_fit = "top"
+  long  = 256
 
   tag_1 = "?out_tag"
   tag_2 = "?in_tag"
@@ -462,7 +472,7 @@ DOOM.SKINS.Wall_plain =
 {
   file   = "wall/plain.wad"
   where  = "edge"
-  fitted = "xyz"
+  fitted = "xy"
 
   bound_z1 = 0
   bound_z2 = 128
@@ -505,7 +515,8 @@ DOOM.SKINS.Pic_Carve =
 {
   file   = "wall/pic_64x64.wad"
   where  = "edge"
-  fitted = "xy"
+  x_fit  = "anchor"
+  y_fit  = "top"
   long   = 256
   bound_z1 = 0
   bound_z2 = 128
@@ -520,7 +531,8 @@ DOOM.SKINS.Pic_Computer =
 {
   file   = "wall/pic_128x48.wad"
   where  = "edge"
-  fitted = "xy"
+  x_fit  = "anchor"
+  y_fit  = "top"
   long   = 256
   bound_z1 = 0
   bound_z2 = 112
