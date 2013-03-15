@@ -2011,6 +2011,43 @@ function Room_outdoor_borders()
   --      some fallback method (e.g. zone of touching outdoor room).
   -- 
 
+  local function build_fake_building(skin_name, x1, y1, x2, y2, dir,
+                                     room, zone, floor_h)
+
+    local skin1 = GAME.SKINS[skin_name]
+    if not skin1 then
+      error("missing border prefab: " .. skin_name)
+    end
+
+    local skin2 =
+    {
+      wall = zone.facade_mat
+    }
+
+    if not floor_h then
+      floor_h = assert(room.max_floor_h)
+    end
+
+    local sky_h   = assert(room.sky_h)
+
+    if dir == 1 or dir == 3 or dir == 7 or dir == 9 then
+      dir = geom.LEFT_45[dir]
+    end
+
+    local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
+
+    ROOM = room
+
+    Fabricate(skin1, T, { skin1, skin2 })
+
+    if skin1.need_sky then
+      Build_sky_quad(x1, y1, x2, y2, sky_h)
+    end
+
+    ROOM = nil
+  end
+
+
   local function add_fat_fence(S, dir, zone)
      
     -- FIXME: TEST STUFF
@@ -2019,8 +2056,16 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
     S.border = { kind = "fat_fence" }
 
-    Build_solid_quad(S.x1, S.y1, S.x2, S.y2, "TEKBRON1")
+--    Build_solid_quad(S.x1, S.y1, S.x2, S.y2, "TEKBRON1")
 
+    local N1 = S:neighbor(dir)
+    local N2 = S:neighbor(10 - dir)
+
+    local floor_h = math.max(N1.room.max_floor_h, N2.room.max_floor_h)
+    local sky_h   = math.max(N1.room.sky_h, N2.room.sky_h)
+
+    build_fake_building("Fake_RoundFence_1x1", S.x1, S.y1, S.x2, S.y2, dir,
+                        N1.room, zone, floor_h)
   end
 
 
@@ -2918,40 +2963,6 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
     if dir == N.border.dir then return nil end
 
     return N.border.room  -- OK
-  end
-
-
-  local function build_fake_building(skin_name, x1, y1, x2, y2, dir,
-                                     room, zone)
-
-    local skin1 = GAME.SKINS[skin_name]
-    if not skin1 then
-      error("missing border prefab: " .. skin_name)
-    end
-
-    local skin2 =
-    {
-      wall = zone.facade_mat
-    }
-
-    local floor_h = assert(room.max_floor_h)
-    local sky_h   = assert(room.sky_h)
-
-    if dir == 1 or dir == 3 or dir == 7 or dir == 9 then
-      dir = geom.LEFT_45[dir]
-    end
-
-    local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
-
-    ROOM = room
-
-    Fabricate(skin1, T, { skin1, skin2 })
-
-    if skin1.need_sky then
-      Build_sky_quad(x1, y1, x2, y2, sky_h)
-    end
-
-    ROOM = nil
   end
 
 
