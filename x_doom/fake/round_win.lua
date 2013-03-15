@@ -5,8 +5,8 @@
 DOOM.SKINS.Fake_RoundWindow =
 {
   file   = "fake/round_win.wad"
-  where  = "border"
-  fitted = "xy"
+  where  = "fake_corner"
+  shape  = "C"
   need_sky = 1
 }
 

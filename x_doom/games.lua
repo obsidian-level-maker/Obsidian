@@ -156,7 +156,6 @@ DOOM.SKINS.Exit_Closet_hell =
 {
   file   = "exit/closet1.wad"
   where  = "closet"
-  fitted = "xy"
 
 --[[ FIXME
   door  = "EXITDOOR"
@@ -225,7 +224,6 @@ DOOM.SKINS.Locked_kc_blue =
 {
   file   = "door/key_door.wad"
   where  = "edge"
-  fitted = "xy"
   key    = "kc_blue"
   long   = 192
   deep   = 48
@@ -238,7 +236,6 @@ DOOM.SKINS.Locked_kc_yellow =
 {
   file   = "door/key_door.wad"
   where  = "edge"
-  fitted = "xy"
   key    = "kc_yellow"
   long   = 192
   deep   = 48
@@ -251,7 +248,6 @@ DOOM.SKINS.Locked_kc_red =
 {
   file   = "door/key_door.wad"
   where  = "edge"
-  fitted = "xy"
   key    = "kc_red"
   long   = 192
   deep   = 48
@@ -262,7 +258,6 @@ DOOM.SKINS.Locked_ks_blue =
 {
   file   = "door/key_door.wad"
   where  = "edge"
-  fitted = "xy"
   key    = "ks_blue"
   long   = 192
   deep   = 48
@@ -275,7 +270,6 @@ DOOM.SKINS.Locked_ks_yellow =
 {
   file   = "door/key_door.wad"
   where  = "edge"
-  fitted = "xy"
   key    = "ks_yellow"
   long   = 192
   deep   = 48
@@ -288,7 +282,6 @@ DOOM.SKINS.Locked_ks_red =
 {
   file   = "door/key_door.wad"
   where  = "edge"
-  fitted = "xy"
   key    = "ks_red"
   long   = 192
   deep   = 48
@@ -303,7 +296,6 @@ DOOM.SKINS.Door_SW_blue =
 {
   file   = "door/sw_door1.wad"
   where  = "edge"
-  fitted = "xy"
   switch = "sw_blue"
   long = 256
   deep = 48
@@ -329,41 +321,30 @@ DOOM.SKINS.Hall_Basic_I =
 {
   file   = "hall/trim1_i_win.wad"
   shape  = "I"
-  x_fit  = "stretch"
-  y_fit  = "stretch"
 }
 
 DOOM.SKINS.Hall_Basic_C =
 {
   file   = "hall/trim1_c.wad"
   shape  = "C"
-  fitted = "xy"
-  x_fit  = "stretch"
-  y_fit  = "stretch"
 }
 
 DOOM.SKINS.Hall_Basic_T =
 {
   file   = "hall/trim1_t_lit.wad"
   shape  = "T"
-  x_fit  = "stretch"
-  y_fit  = "stretch"
 }
 
 DOOM.SKINS.Hall_Basic_P =
 {
   file   = "hall/trim1_p.wad"
   shape  = "P"
-  x_fit  = "stretch"
-  y_fit  = "stretch"
 }
 
 DOOM.SKINS.Hall_Basic_I_Stair =
 {
   file   = "hall/trim1_st.wad"
   shape  = "IS"
-  x_fit  = "stretch"
-  y_fit  = "stretch"
 
   step = "STEP3"
   support = "SUPPORT2"
@@ -374,8 +355,6 @@ DOOM.SKINS.Hall_Basic_I_Lift =
 {
   file   = "hall/trim1_lf.wad"
   shape  = "IL"
-  x_fit  = "stretch"
-  y_fit  = "stretch"
   z_ranges = { {64,0}, {64,0,"?stair_h-64"}, {128,0} }
   tags   = 1
 
@@ -406,7 +385,6 @@ DOOM.SKINS.Wide_TriPillar =
 {
   file   = "joiner/tri_pillar.wad"
   shape  = "I"
-  fitted = "xy"
 }
 
 
@@ -415,7 +393,6 @@ DOOM.SKINS.Wide_TriPillar =
 DOOM.SKINS.Junc_Circle_gothic_P =
 {
   file   = "junction/circle_p.wad"
-  fitted = "xy"
   shape  = "P"
 }
 
@@ -476,7 +453,6 @@ DOOM.SKINS.Wall_plain =
 {
   file   = "wall/plain.wad"
   where  = "edge"
-  fitted = "xy"
 
   bound_z1 = 0
   bound_z2 = 128
@@ -490,7 +466,6 @@ DOOM.SKINS.Window1 =
 {
   file   = "window/window1.wad"
   where  = "edge"
-  fitted = "xy"
   long   = 192
   deep   = 24
 
@@ -503,7 +478,6 @@ DOOM.SKINS.Fence1 =
 {
   file   = "fence/fence1.wad"
   where  = "edge"
-  fitted = "xy"
   long   = 192
   deep   = 32
 
@@ -557,7 +531,6 @@ DOOM.SKINS.Fat_Cage1 =
 {
   file   = "cage/fat_edge.wad"
   where  = "border"
-  fitted = "xy"
 
   rail = "MIDBARS3"    
 }
