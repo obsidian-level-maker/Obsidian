@@ -515,7 +515,7 @@ function Connect_start_room()
   then
 
     if room:add_closet("start") then
-      room.has_start_closet = true
+      room.purpose_is_done = true
     end
   end
 end

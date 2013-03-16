@@ -718,8 +718,7 @@ function Areas_important_stuff()
 
 
   local function add_purpose(R)
-    if R.purpose == "START" and R.has_start_closet then return end
-    if R.purpose == "EXIT"  and R.has_exit_closet  then return end
+    if R.purpose_is_done then return end
 
     local C = spot_for_wotsit(R)
 

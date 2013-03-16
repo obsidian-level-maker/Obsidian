@@ -728,6 +728,10 @@ function CLOSET_CLASS.build(CL)
     skin2.out_target = string.format("tele%d", skin2.out_tag)
   end
 
+  if CL.closet_kind == "switch" then
+    skin2.tag_1 = CL.parent.purpose_lock.tag
+  end
+
   assert(C.floor_h)
 
   local x1, y1, x2, y2 = CL.section:get_coords()
@@ -1364,7 +1368,12 @@ function ROOM_CLASS.add_closet(R, closet_kind)
   {
     kind  = closet_kind
     where = "closet"
+    room  = R
   }
+
+  if closet_kind == "switch" then
+    reqs.switch = R.purpose_lock.switch
+  end
 
 
   local list = Room_matching_skins(reqs)
@@ -1401,11 +1410,15 @@ function Room_add_closets()
 
   -- handle exit room first (give it priority)
   if LEVEL.exit_room:add_closet("exit") then
-    LEVEL.exit_room.has_exit_closet = true
+    LEVEL.exit_room.purpose_is_done = true
   end
 
+  local room_list = table.copy(LEVEL.rooms)
+
   -- now do teleporters
-  each R in LEVEL.rooms do
+  rand.shuffle(room_list)
+
+  each R in room_list do
     if R:has_teleporter() then
       if R:add_closet("teleporter") then
         R.has_teleporter_closet = true
@@ -1413,17 +1426,26 @@ function Room_add_closets()
     end
   end
 
-  -- FIXME: switch closets
+  -- switch closets
+  rand.shuffle(room_list)
+
+  each R in room_list do
+    if R.purpose == "SOLUTION" and R.purpose_lock.kind == "SWITCH" then
+      if R:add_closet("switch") then
+        R.purpose_is_done = true
+      end
+    end
+  end
 
   -- TODO ITEM / SECRET closets in start room
 
   -- do the other kinds of closets now, visiting rooms in random order
-  local room_list = table.copy(LEVEL.rooms)
 
   for loop = 1,4 do
     rand.shuffle(room_list)
 
     each R in room_list do
+
       local kind = rand.key_by_probs { trap=60, secret=10, item=20 }
 
 --!!!!      R:add_closet(kind)
