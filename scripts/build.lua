@@ -657,6 +657,20 @@ function Trans.clear_cap()
 end
 
 
+function Trans.dump_groups(name, groups)
+  gui.debugf("  %s =\n", name)
+  gui.debugf("  {\n")
+
+  each G in groups do
+    gui.debugf("    (%1.0f %1.0f %1.0f) --> (%1.0f %1.0f %1.0f)  wt:%1.2f\n",
+               G.low  or -1, G.high  or -1, G.size  or -1,
+               G.low2 or -1, G.high2 or -1, G.size2 or -1, G.weight or -1)
+  end
+
+  gui.debugf("  }\n")
+end
+
+
 function Trans.dump(T, title)
   -- debugging aid : show current transform
 
@@ -685,22 +699,9 @@ function Trans.dump(T, title)
   if T.fitted_y then gui.debugf("  fitted_y = %1.0f\n", T.fitted_y) end
   if T.fitted_z then gui.debugf("  fitted_z = %1.0f\n", T.fitted_z) end
 
-  local function dump_groups(name, groups)
-    gui.debugf("  %s =\n", name)
-    gui.debugf("  {\n")
-
-    each G in groups do
-      gui.debugf("    (%1.0f %1.0f %1.0f) --> (%1.0f %1.0f %1.0f)  wt:%1.2f\n",
-                 G.low  or -1, G.high  or -1, G.size  or -1,
-                 G.low2 or -1, G.high2 or -1, G.size2 or -1, G.weight or -1)
-    end
-
-    gui.debugf("  }\n")
-  end
-
-  if T.groups_x then dump_groups("groups_x", T.groups_x) end
-  if T.groups_y then dump_groups("groups_y", T.groups_y) end
-  if T.groups_z then dump_groups("groups_z", T.groups_z) end
+  if T.groups_x then Trans.dump_groups("groups_x", T.groups_x) end
+  if T.groups_y then Trans.dump_groups("groups_y", T.groups_y) end
+  if T.groups_z then Trans.dump_groups("groups_z", T.groups_z) end
 end
 
 
