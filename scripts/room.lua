@@ -713,7 +713,7 @@ function CLOSET_CLASS.build(CL)
     skin0.wall = CL.parent.zone.facade_mat
   end
 
-  if CL.closet_kind == "TELEPORTER" then
+  if CL.closet_kind == "teleporter" then
     local conn = CL.parent:get_teleport_conn()
 
     if conn.L1 == CL.parent then
@@ -1320,9 +1320,11 @@ function ROOM_CLASS.install_closet(R, K, dir, kind, skin)
 
   gui.debugf("%s @ %s dir:%d\n", CL:tostr(), N:tostr(), 10 - dir)
 
-  CL.dir = 10 - dir
-  CL.section = N
+  CL.closet_kind = kind
   CL.skin = skin
+
+  CL.section = N
+  CL.dir = 10 - dir
 
   CL.conn_group = R.conn_group  -- keep CONN:add_it() happy
 
@@ -1405,7 +1407,7 @@ function Room_add_closets()
   -- now do teleporters
   each R in LEVEL.rooms do
     if R:has_teleporter() then
-      if R:add_closet("teleport") then
+      if R:add_closet("teleporter") then
         R.has_teleporter_closet = true
       end
     end
@@ -1759,14 +1761,14 @@ function Room_matching_skins(reqs)
 
   local function match(skin)
     -- type check
-stderrf("match........ (skin == req)\n")
+--stderrf("match........ \n")
     local kind = skin.kind or kind_from_filename(skin.file)
 
-stderrf("   %s == %s\n", kind, tostring(reqs.kind))
+--stderrf("   %s == %s\n", kind, tostring(reqs.kind))
     if reqs.kind != kind then return false end
 
     -- placement check
-stderrf("   %s == %s\n", tostring(skin.where), tostring(reqs.kind))
+--stderrf("   %s == %s\n", tostring(skin.where), tostring(reqs.kind))
     if reqs.where and skin.where != reqs.where then return false end
 
     -- size check
@@ -1800,7 +1802,7 @@ stderrf("   %s == %s\n", tostring(skin.where), tostring(reqs.kind))
 
     if reqs.door and skin.door != reqs.door then return false end
 
-stderrf("   --> YES YES YES\n")
+--stderrf("   --> YES YES YES\n")
     return true
   end
 
@@ -1808,7 +1810,7 @@ stderrf("   --> YES YES YES\n")
   local list = { }
 
   each name,skin in GAME.SKINS do
-stderrf("visiting '%s'\n", name)
+--stderrf("visiting '%s'\n", name)
     if match(skin) then
       list[name] = 50  -- FIXME !!!
     end
