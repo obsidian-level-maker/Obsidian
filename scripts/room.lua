@@ -702,10 +702,8 @@ end
 function CLOSET_CLASS.build(CL)
   local C = assert(CL.chunk)
 
-  local skin_name = rand.key_by_probs(CL.skins)
-
   local skin0 = table.copy(CL.parent.skin)
-  local skin1 = assert(GAME.SKINS[skin_name])
+  local skin1 = CL.skin
   local skin2 = {}
 
   -- FIXME !!  get floor texture from touching area
@@ -1313,63 +1311,18 @@ function ROOM_CLASS.find_closet_spot(R, want_deep)
 end
 
 
-function ROOM_CLASS.add_closet(R, closet_kind)
-  local source_tab
-  local style_name
-
-      if closet_kind == "START" then source_tab = THEME.starts
-  elseif closet_kind == "EXIT"  then source_tab = THEME.exits
-  elseif closet_kind == "ITEM"  then source_tab = THEME.pedestals
-  elseif closet_kind == "TRAP"  then source_tab = THEME.traps ; style_name = "traps"
-  elseif closet_kind == "SECRET" then source_tab = THEME.secrets ; style_name = "secrets"
-  elseif closet_kind == "TELEPORTER" then source_tab = THEME.teleporters
-  elseif closet_kind == "HUB_GATE" then source_tab = THEME.hub_gates
-  else
-    error("Bad closet kind: " .. tostring(closet_kind))
-  end
-
-
---FIXME !!!! CLOSETS
-if not (closet_kind == "START" or closet_kind == "EXIT" or closet_kind == "TELEPORTER") then return false end
-
-
-  if not source_tab then return false end
-
-  -- check styles
-  if style_name then
-    local prob = style_sel(style_name, 0, 35, 70, 99)
-    if not rand.odds(prob) then return false end
-  end
-
-  local list = Room_filter_skins(R, closet_kind .. "-closets", source_tab,
-                                  { where="closet" }, "empty_ok")
-
-  if table.empty(list) then return false end
-
-
-  -- pick location to attach closet to room
-  local want_deep = (kind == "START" or kind == "EXIT" or rand.odds(10))
-
-  local K, dir = R:find_closet_spot(R, want_deep)
-
-  if not K then return false end
-
-  -- !!!! FIXME : only pick prefabs that can fit
-  -- local long, deep = blah....
-  -- list = Room_filter_skins(R, closet_kind .. "-closets", list,
-  --                           { where="closet", long=long, deep=deep })
-
+function ROOM_CLASS.install_closet(R, K, dir, kind, skin)
   local N = K:neighbor(dir)
   assert(N)
 
   -- create closet object
-  local CL = CLOSET_CLASS.new(closet_kind, R)
+  local CL = CLOSET_CLASS.new(kind, R)
 
-  gui.debugf("%s @ %s dir:%d\n", CL:tostr(), N:tostr(), 10-dir)
+  gui.debugf("%s @ %s dir:%d\n", CL:tostr(), N:tostr(), 10 - dir)
 
   CL.dir = 10 - dir
   CL.section = N
-  CL.skins = list
+  CL.skin = skin
 
   CL.conn_group = R.conn_group  -- keep CONN:add_it() happy
 
@@ -1386,8 +1339,58 @@ if not (closet_kind == "START" or closet_kind == "EXIT" or closet_kind == "TELEP
   D.K2 = N
 
   D:add_it()
+end
 
-  return true
+
+function ROOM_CLASS.add_closet(R, closet_kind)
+  -- check styles
+  local STYLE_NAMES =
+  {
+    trap = "traps"
+    secret = "secrets"
+  }
+
+  local style_name = STYLE_NAMES[closet_kind]
+
+  if style_name then
+    local prob = style_sel(style_name, 0, 35, 70, 99)
+    if not rand.odds(prob) then return false end
+  end
+
+
+  local reqs =
+  {
+    kind  = closet_kind
+    where = "closet"
+  }
+
+
+  local list = Room_matching_skins(reqs)
+
+  -- keep trying prefabs until one fits
+  while not table.empty(list) do
+    local skin_name = rand.key_by_probs(list)
+    list[skin_name] = nil
+
+    local skin = GAME.SKINS[skin_name]
+
+stderrf("trying closet '%s' @ %s\n", skin_name, R:tostr())
+
+    local want_deep = false -- FIXME: proper "can fit" checking
+                            -- local long, deep = blah....
+
+    local K, dir = R:find_closet_spot(R, want_deep)
+
+    if not K then continue end
+
+stderrf("chosen closet '%s' @ %s dir:%d\n", skin_name, K:tostr(), dir)
+
+    R:install_closet(K, dir, closet_kind, skin)
+
+    return true  -- OK
+  end
+
+  return false  -- nothing worked
 end
 
 
@@ -1408,6 +1411,8 @@ function Room_add_closets()
     end
   end
 
+  -- FIXME: switch closets
+
   -- TODO ITEM / SECRET closets in start room
 
   -- do the other kinds of closets now, visiting rooms in random order
@@ -1417,9 +1422,9 @@ function Room_add_closets()
     rand.shuffle(room_list)
 
     each R in room_list do
-      local kind = rand.key_by_probs { TRAP=60, SECRET=10, ITEM=20 }
+      local kind = rand.key_by_probs { trap=60, secret=10, item=20 }
 
-      R:add_closet(kind)
+--!!!!      R:add_closet(kind)
     end
   end      
 end
@@ -1754,11 +1759,14 @@ function Room_matching_skins(reqs)
 
   local function match(skin)
     -- type check
+stderrf("match........ (skin == req)\n")
     local kind = skin.kind or kind_from_filename(skin.file)
 
+stderrf("   %s == %s\n", kind, tostring(reqs.kind))
     if reqs.kind != kind then return false end
 
     -- placement check
+stderrf("   %s == %s\n", tostring(skin.where), tostring(reqs.kind))
     if reqs.where and skin.where != reqs.where then return false end
 
     -- size check
@@ -1792,13 +1800,15 @@ function Room_matching_skins(reqs)
 
     if reqs.door and skin.door != reqs.door then return false end
 
+stderrf("   --> YES YES YES\n")
     return true
   end
 
 
   local list = { }
 
-  each skin in GAME.SKINS do
+  each name,skin in GAME.SKINS do
+stderrf("visiting '%s'\n", name)
     if match(skin) then
       list[name] = 50  -- FIXME !!!
     end

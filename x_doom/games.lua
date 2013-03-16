@@ -193,11 +193,13 @@ DOOM.SKINS.Exit_Closet_hell =
 
 ----| WALLS / CORNERS |----
 
+--[[
 DOOM.SKINS.Fat_Outside_Corner1 =
 {
-  prefab = "FAT_CORNER_DIAG"
+  file   = "FAT_CORNER_DIAG"
   where  = "border"
 }
+--]]
 
 
 ----| ITEM / KEY |----
@@ -367,6 +369,7 @@ DOOM.SKINS.Hall_Basic_I_Lift =
 }
 
 
+--[[
 DOOM.SKINS.Secret_Mini =
 {
   prefab = "SECRET_MINI"
@@ -377,6 +380,7 @@ DOOM.SKINS.Secret_Mini =
   inner = "COMPSPAN"
   metal = "METAL"
 }
+--]]
 
 
 ---| WIDE JOINERS |---
