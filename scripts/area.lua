@@ -3514,7 +3514,7 @@ stderrf("AREA floor_stuff @ %s\n", R:tostr())
   each R in LEVEL.rooms do floor_stuff(R) end
   each R in LEVEL.rooms do outgoing_cycles(R) end
 
-  Rooms_decide_fences()
+  Room_decide_fences()
 
 --each R in LEVEL.rooms do decide_windows(R) end
   each R in LEVEL.rooms do ceiling_stuff(R) end

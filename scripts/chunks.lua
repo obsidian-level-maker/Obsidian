@@ -601,7 +601,7 @@ function CHUNK_CLASS.do_big_item(C, item_name)
     return
   end
 
-  local list  = Rooms_filter_skins(C.room or C.hall, "pedestals", THEME.pedestals,
+  local list  = Room_filter_skins(C.room or C.hall, "pedestals", THEME.pedestals,
                                    { where="middle" })
   local name  = rand.key_by_probs(list)
   local skin1 = GAME.SKINS[name]
@@ -620,7 +620,7 @@ end
 
 
 function CHUNK_CLASS.content_start(C)
-  local list = Rooms_filter_skins(C.room or C.hall, "starts", THEME.starts,
+  local list = Room_filter_skins(C.room or C.hall, "starts", THEME.starts,
                                   { where="middle" })
 
   local name  = rand.key_by_probs(list)
@@ -637,7 +637,7 @@ end
 
 
 function CHUNK_CLASS.content_exit(C)
-  local list = Rooms_filter_skins(C.room or C.hall, "exits", THEME.exits,
+  local list = Room_filter_skins(C.room or C.hall, "exits", THEME.exits,
                                   { where="middle" })
   local name = rand.key_by_probs(list)
   local skin1 = GAME.SKINS[name]
@@ -680,7 +680,7 @@ function CHUNK_CLASS.content_switch(C)
   
   skin2.target = string.format("switch%d", skin2.tag_1)
 
-  local poss_skins = Rooms_filter_skins(C.room or C.hall, 
+  local poss_skins = Room_filter_skins(C.room or C.hall, 
                        "switch_fabs", THEME.switch_fabs,
                        { where="middle", key=lock.key, switch=lock.switch })
 
@@ -698,7 +698,7 @@ end
 function CHUNK_CLASS.content_teleporter(C)
   local conn = assert(C.content.teleporter)
 
-  local list  = Rooms_filter_skins(C.room or C.hall, "teleporters", THEME.teleporters,
+  local list  = Room_filter_skins(C.room or C.hall, "teleporters", THEME.teleporters,
                                    { where="middle" })
   local name  = rand.key_by_probs(list)
   local skin1 = assert(GAME.SKINS[name])
@@ -727,7 +727,7 @@ end
 
 
 function CHUNK_CLASS.content_hub_gate(C)
-  local list  = Rooms_filter_skins(C.room or C.hall, "hub_gates", THEME.hub_gates,
+  local list  = Room_filter_skins(C.room or C.hall, "hub_gates", THEME.hub_gates,
                                    { where="middle" })
   local name  = rand.key_by_probs(list)
   local skin1 = assert(GAME.SKINS[name])
@@ -1093,7 +1093,7 @@ function CHUNK_CLASS.build_door(C, dir, LINK, f_h, c_h, long)
     error("Theme is missing 'locked_doors' table.")
   end
 
-  local poss_skins = Rooms_filter_skins(C.room or C.hall,
+  local poss_skins = Room_filter_skins(C.room or C.hall,
                         "locked_doors", THEME.locked_doors, reqs)
 
   local name = rand.key_by_probs(poss_skins)

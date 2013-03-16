@@ -1062,7 +1062,7 @@ function HALLWAY_CLASS.select_piece(H, P)
 
   assert(source_tab)
 
-  local tab = Rooms_filter_skins(H, "hallway_group", source_tab, reqs)
+  local tab = Room_filter_skins(H, "hallway_group", source_tab, reqs)
 
   -- handle pieces that should only occur in-between other pieces
   each name in table.keys(tab) do
@@ -1105,7 +1105,7 @@ function HALLWAY_CLASS.build_hall_piece(H, P)
   local fab = Fabricate(skin1, T, { skin0, skin1, skin2 })
 
   if fab.has_spots then
-    Rooms_distribute_spots(H, Fab_read_spots(fab))
+    Room_distribute_spots(H, Fab_read_spots(fab))
   end
 
   H.last_piece = skin_name

@@ -629,7 +629,7 @@ function ROOM_CLASS.dump_areas(R)
 end
 
 
-function Rooms_distribute_spots(L, list)
+function Room_distribute_spots(L, list)
   each spot in list do
     if spot.kind == "cage" then
       table.insert(L.cage_spots, spot)
@@ -912,7 +912,7 @@ end
 
 
 
-function Rooms_setup_symmetry()
+function Room_setup_symmetry()
   -- The 'symmetry' field of each room already has a value
   -- (from the big-branch connection system).  Here we choose
   -- whether to keep that, expand it (rare) or discard it.
@@ -995,7 +995,7 @@ function Rooms_setup_symmetry()
   end
 
 
-  --| Rooms_setup_symmetry |--
+  --| Room_setup_symmetry |--
 
   each R in LEVEL.rooms do
     decide_layout_symmetry(R)
@@ -1122,7 +1122,7 @@ function Room_collect_sky_groups()
 end
 
 
-function OLD_Rooms_decide_windows()
+function OLD_Room_decide_windows()
 
   local function add_window(K, N, side)
     gui.printf("Window from %s --> %s\n", K:tostr(), N:tostr())
@@ -1205,7 +1205,7 @@ function OLD_Rooms_decide_windows()
   end
 
 
-  ---| Rooms_decide_windows |---
+  ---| Room_decide_windows |---
 
   if STYLE.windows == "none" then return end
 
@@ -1341,7 +1341,7 @@ if not (closet_kind == "START" or closet_kind == "EXIT" or closet_kind == "TELEP
     if not rand.odds(prob) then return false end
   end
 
-  local list = Rooms_filter_skins(R, closet_kind .. "-closets", source_tab,
+  local list = Room_filter_skins(R, closet_kind .. "-closets", source_tab,
                                   { where="closet" }, "empty_ok")
 
   if table.empty(list) then return false end
@@ -1356,7 +1356,7 @@ if not (closet_kind == "START" or closet_kind == "EXIT" or closet_kind == "TELEP
 
   -- !!!! FIXME : only pick prefabs that can fit
   -- local long, deep = blah....
-  -- list = Rooms_filter_skins(R, closet_kind .. "-closets", list,
+  -- list = Room_filter_skins(R, closet_kind .. "-closets", list,
   --                           { where="closet", long=long, deep=deep })
 
   local N = K:neighbor(dir)
@@ -1392,17 +1392,17 @@ end
 
 
 
-function Rooms_add_closets()
+function Room_add_closets()
 
   -- handle exit room first (give it priority)
-  if LEVEL.exit_room:add_closet("EXIT") then
+  if LEVEL.exit_room:add_closet("exit") then
     LEVEL.exit_room.has_exit_closet = true
   end
 
   -- now do teleporters
   each R in LEVEL.rooms do
     if R:has_teleporter() then
-      if R:add_closet("TELEPORTER") then
+      if R:add_closet("teleport") then
         R.has_teleporter_closet = true
       end
     end
@@ -1426,7 +1426,7 @@ end
 
 
 
-function Rooms_dists_from_entrance()
+function Room_dists_from_entrance()
 
   local function spread_entry_dist(R)
     local count = 1
@@ -1459,7 +1459,7 @@ if not K then K = R.sections[1] end
     end
   end
 
-  --| Rooms_dists_from_entrance |--
+  --| Room_dists_from_entrance |--
 
   each R in LEVEL.rooms do
     if R.entry_conn then
@@ -1474,7 +1474,7 @@ end
 
 
 
-function Rooms_collect_targets(R)
+function Room_collect_targets(R)
 
   local targets =
   {
@@ -1502,7 +1502,7 @@ function Rooms_collect_targets(R)
     return true
   end
 
-  --| Rooms_collect_targets |--
+  --| Room_collect_targets |--
 
   for _,M in ipairs(R.middles) do
     if not M.usage then
@@ -1528,7 +1528,7 @@ function Rooms_collect_targets(R)
 end
 
 
-function Rooms_sort_targets(targets, entry_factor, conn_factor, busy_factor)
+function Room_sort_targets(targets, entry_factor, conn_factor, busy_factor)
   for _,listname in ipairs { "edges", "corners", "middles" } do
     local list = targets[listname]
     if list then
@@ -1546,7 +1546,7 @@ end
 
 
 
-function Rooms_bound_outdoor_areas()
+function Room_bound_outdoor_areas()
 end
 
 
@@ -1555,7 +1555,7 @@ end
 
 
 
-function Rooms_player_angle(R, C)
+function Room_player_angle(R, C)
   if R.sh > R.sw then
     if (C.sy1 + C.sy2) / 2 > (R.sy1 + R.sy2) / 2 then 
       return 270
@@ -1671,7 +1671,7 @@ end
 
 
 
-function Rooms_filter_skins(L, tab_name, tab, reqs, empty_ok)
+function Room_filter_skins(L, tab_name, tab, reqs, empty_ok)
   assert(tab)
   
   local function match(skin)
@@ -1725,7 +1725,7 @@ function Rooms_filter_skins(L, tab_name, tab, reqs, empty_ok)
   end
 
   if table.empty(result) and not empty_ok then
-    gui.debugf("Rooms_filter_skins:\n")
+    gui.debugf("Room_filter_skins:\n")
     gui.debugf("skins = \n%s\n", table.tostr(tab))
     gui.debugf("reqs = \n%s\n", table.tostr(reqs))
 
@@ -3075,7 +3075,7 @@ end
 
 
 
-function Rooms_decide_fences()
+function Room_decide_fences()
 
   local function check_room_pair(R1, R2, S, N)
     if R1.quest == R2.quest then return end
@@ -3117,9 +3117,9 @@ function Rooms_decide_fences()
   end
 
 
-  ---| Rooms_decide_fences |---
+  ---| Room_decide_fences |---
 
-  gui.debugf("Rooms_decide_fences.........\n")
+  gui.debugf("Room_decide_fences.........\n")
 
   each R in LEVEL.rooms do
     if R.kind == "outdoor" then
@@ -3163,7 +3163,7 @@ function Room_build_all()
 
   Room_select_textures()
 
----!!!  Rooms_setup_symmetry()
+---!!!  Room_setup_symmetry()
 
   Room_place_hub_gates()
 
@@ -3181,7 +3181,7 @@ function Room_build_all()
   Room_outdoor_borders()
   Room_ambient_lighting()
 
-  -- Rooms_indoor_walls()
+  -- Room_indoor_walls()
 
   Room_blow_chunks()
 

@@ -514,7 +514,7 @@ function Connect_start_room()
      rand.odds(80)
   then
 
-    if room:add_closet("START") then
+    if room:add_closet("start") then
       room.has_start_closet = true
     end
   end

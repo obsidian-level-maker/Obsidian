@@ -2571,7 +2571,7 @@ function Fabricate(main_skin, T, skins)
   Fab_render(fab)
 
   if ROOM then
-    Rooms_distribute_spots(ROOM, Fab_read_spots(fab))
+    Room_distribute_spots(ROOM, Fab_read_spots(fab))
   end
 
   return fab
