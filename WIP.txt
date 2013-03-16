@@ -26,6 +26,10 @@ WORK IN PROGRESS
 
 -  borders / fakers : support 'z_fit'
 
+-  fake building and fences : support long ones, also deep ones
+
+-  a way to prevent repeating the same prefab in a row
+
 
 -  tri_pillar
 
