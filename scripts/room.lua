@@ -732,6 +732,10 @@ function CLOSET_CLASS.build(CL)
     skin2.tag_1 = CL.parent.purpose_lock.tag
   end
 
+  if CL.closet_kind == "item" then
+    skin2.item = assert(CL.item)
+  end
+
   assert(C.floor_h)
 
   local x1, y1, x2, y2 = CL.section:get_coords()
@@ -1332,6 +1336,11 @@ function ROOM_CLASS.install_closet(R, K, dir, kind, skin)
 
   CL.conn_group = R.conn_group  -- keep CONN:add_it() happy
 
+  -- FIXME: assumes a key, need a way to have other items
+  if kind == "item" then
+    CL.item = R.purpose_lock.key
+  end
+
   -- mark section as used
   N:set_closet(CL)
 
@@ -1426,7 +1435,7 @@ function Room_add_closets()
     end
   end
 
-  -- switch closets
+  -- switch closets and key niches
   rand.shuffle(room_list)
 
   each R in room_list do
@@ -1435,7 +1444,15 @@ function Room_add_closets()
         R.purpose_is_done = true
       end
     end
+
+    if R.purpose == "SOLUTION" and R.purpose_lock.kind == "KEY" then
+      if R:add_closet("item") then
+        R.purpose_is_done = true
+      end
+    end
   end
+
+  -- TODO: weapon niches
 
   -- TODO ITEM / SECRET closets in start room
 
@@ -1846,7 +1863,7 @@ end
 function Room_pick_skin(reqs)
   assert(reqs.kind)
 
-  local list = Room_matching_skins(L, reqs)
+  local list = Room_matching_skins(reqs)
 
   if table.empty(list) then
     gui.debugf("Room_pick_skins:\n")
