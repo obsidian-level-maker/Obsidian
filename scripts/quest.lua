@@ -1735,6 +1735,12 @@ function Quest_make_quests()
   end
 
 
+  -- do weapons and switches now, so that we can create closets for them
+  Quest_add_weapons()
+
+  Quest_choose_keys()
+
+
   Room_add_closets()
 
   Plan_expand_rooms()
@@ -1742,10 +1748,6 @@ function Quest_make_quests()
 
 
   Quest_assign_room_themes()
-
-  Quest_add_weapons()
-
-  Quest_choose_keys()
 
   -- left over keys can be used in the next level of a hub
   if LEVEL.usable_keys and LEVEL.hub_links then
