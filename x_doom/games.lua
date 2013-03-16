@@ -432,7 +432,7 @@ DOOM.SKINS.Junc_Circle_gothic_T =
 
 DOOM.SKINS.Teleporter1 =
 {
-  file   = "teleport/pad1.wad"
+  file   = "teleporter/pad1.wad"
   where  = "middle"
 
   tag_1 = "?out_tag"
@@ -441,7 +441,7 @@ DOOM.SKINS.Teleporter1 =
 
 DOOM.SKINS.Teleporter_Closet =
 {
-  file  = "teleport/closet1.wad"
+  file  = "teleporter/closet1.wad"
   where = "closet"
   x_fit = "frame"
   y_fit = { 0,48 }
