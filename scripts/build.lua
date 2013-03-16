@@ -1950,8 +1950,8 @@ WADFAB_ENTITIES =
 WADFAB_SKILL_TO_LIGHT =
 {
   [1] = 0.5   -- EASY
-  [2] = 1.0   -- MEDIUM
-  [4] = 2.0   -- HARD
+  [2] = 0.8   -- MEDIUM
+  [4] = 1.3   -- HARD
 }
 
 WADFAB_LIGHT_DELTAS =
