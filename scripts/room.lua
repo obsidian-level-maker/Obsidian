@@ -1737,6 +1737,97 @@ end
 
 
 
+function Room_matching_skins(reqs)
+
+  local function kind_from_filename(name)
+    assert(name)
+
+    local kind = string.match(name, "([%w_]+)/")
+
+    if not kind then
+      error("weird skin filename: " .. tostring(name))
+    end
+
+    return kind
+  end
+
+
+  local function match(skin)
+    -- type check
+    local kind = skin.kind or kind_from_filename(skin.file)
+
+    if reqs.kind != kind then return false end
+
+    -- placement check
+    if reqs.where and skin.where != reqs.where then return false end
+
+    -- size check
+--!!!!    if not Fab_size_check(skin, reqs.long, reqs.deep) then return false end
+
+    -- building type checks
+    if reqs.room then
+      local L = reqs.room
+
+      if skin.cave     and skin.cave     != convert_bool(L.kind == "cave")     then return false end
+      if skin.outdoor  and skin.outdoor  != convert_bool(L.kind == "outdoor")  then return false end
+      if skin.building and skin.building != convert_bool(L.kind == "building") then return false end
+      if skin.hallway  and skin.hallway  != convert_bool(L.kind == "hallway")  then return false end
+    end
+
+    -- liquid check
+    if skin.liquid and not LEVEL.liquid then return false end
+
+    -- key and switch check
+    if reqs.key and skin.key != reqs.key then return false end
+
+    if skin.switch != reqs.switch then
+      if not (reqs.switch and skin.switches) then return false end
+      if not skin.switches[reqs.switch] then return false end
+    end
+
+    -- hallway stuff
+    if reqs.shape and skin.shape != reqs.shape then return false end
+
+    if reqs.narrow and skin.narrow != reqs.narrow then return false end
+
+    if reqs.door and skin.door != reqs.door then return false end
+
+    return true
+  end
+
+
+  local list = { }
+
+  each skin in GAME.SKINS do
+    if match(skin) then
+      list[name] = 50  -- FIXME !!!
+    end
+  end
+
+  return list
+end
+
+
+
+function Room_pick_skin(reqs)
+  assert(reqs.kind)
+
+  local list = Room_matching_skins(L, reqs)
+
+  if table.empty(list) then
+    gui.debugf("Room_pick_skins:\n")
+    gui.debugf("reqs = \n%s\n", table.tostr(reqs))
+
+    error("No matching prefab for: " .. req.kind)
+  end
+
+  local name = rand.key_by_probs(list)
+
+  return assert(GAME.SKINS[name])
+end
+
+
+
 function Layout_possible_fab_group(usage, list, req_key)
   usage.edge_fabs   = Layout_possible_prefab_from_list(list, "edge",   req_key)
   usage.corner_fabs = Layout_possible_prefab_from_list(list, "corner", req_key)
