@@ -2520,6 +2520,32 @@ function Fab_replacements(fab, skin)
   end
 
 
+  local function check_thing(val)
+    local k = "thing_" .. val
+
+    if skin[k] then
+      local name = skin[k]
+
+      -- allow specifying a raw ID number
+      if type(name) == "number" then return name end
+
+      local info = GAME.ENTITIES[name] or
+                   GAME.MONSTERS[name] or
+                   GAME.WEAPONS[name] or
+                   GAME.PICKUPS[name]
+
+      if not info then
+        gui.printf("\nLACKING ENTITY : %s\n\n", name)
+        return name
+      end
+
+      return assert(info.id)
+    end
+
+    return val
+  end
+
+
   ---| Fab_replacements |---
 
   each B in fab.brushes do
@@ -2537,7 +2563,7 @@ function Fab_replacements(fab, skin)
   end
 
   each E in fab.entities do
-    E.id = check("thing", E.id)
+    E.id = check_thing(E.id)
   end
 end
 
