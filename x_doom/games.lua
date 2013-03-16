@@ -203,15 +203,6 @@ DOOM.SKINS.Fat_Outside_Corner1 =
 --]]
 
 
-----| ITEM / KEY |----
-
-DOOM.SKINS.Item_Pedestal =
-{
-  file  = "item/pedestal.wad"
-  where = "middle"
-}
-
-
 ----| ARCHES |----
 
 

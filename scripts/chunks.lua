@@ -601,10 +601,7 @@ function CHUNK_CLASS.do_big_item(C, item_name)
     return
   end
 
-  local list  = Room_filter_skins(C.room or C.hall, "pedestals", THEME.pedestals,
-                                   { where="middle" })
-  local name  = rand.key_by_probs(list)
-  local skin1 = GAME.SKINS[name]
+  local skin1 = Room_pick_skin({ kind = "item", where = "middle", room = C.room or C.hall })
 
   local skin2 = { item = item_name }
   local skin0 = { wall = C.room.wall_mat }
@@ -612,9 +609,6 @@ function CHUNK_CLASS.do_big_item(C, item_name)
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
 
   Fabricate(skin1, T, { skin0, skin1, skin2 })
-
-  --!!!! FIXME should be done via the skin
-  entity_helper(item_name, mx, my, C.floor_h or 0)
 end
 
 
