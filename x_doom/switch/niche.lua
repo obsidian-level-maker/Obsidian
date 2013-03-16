@@ -8,15 +8,15 @@ DOOM.SKINS.Switch_niche1 =
   where  = "closet"
   switch = "sw_blue"
   x_fit  = "frame"
-  y_fit  = "top"
+  y_fit  = "bottom"
 }
 
 DOOM.SKINS.Switch_niche2 =
 {
   file   = "switch/niche2.wad"
-  where  = "closet2"
+  where  = "closet"
   switch = "sw_blue"
   x_fit  = "frame"
-  y_fit  = "top"
+  y_fit  = "bottom"
 }
 
