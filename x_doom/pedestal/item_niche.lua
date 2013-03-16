@@ -2,9 +2,9 @@
 -- Item niche
 --
 
-DOOM.SKINS.Pedestal_Niche1 =
+DOOM.SKINS.Item_Niche1 =
 {
-  file  = "pedestal/item_niche.wad"
+  file  = "item/niche1.wad"
   where = "closet"
 
   thing_5 = "?item"

@@ -205,13 +205,10 @@ DOOM.SKINS.Fat_Outside_Corner1 =
 
 ----| ITEM / KEY |----
 
-DOOM.SKINS.Pedestal_1 =
+DOOM.SKINS.Item_Pedestal =
 {
-  file  = "pedestal/ped.wad"
+  file  = "item/pedestal.wad"
   where = "middle"
-
-  top  = "CEIL1_2"
-  side = "METAL"
 }
 
 
