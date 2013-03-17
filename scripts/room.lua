@@ -749,12 +749,16 @@ function CLOSET_CLASS.build(CL)
     if CL.dir == 6 then x2 = x2 + 32 end
     if CL.dir == 8 then y2 = y2 + 32 end
   end
----###  x1 = x1 + dx ; x2 = x2 + dx
----###  y1 = y1 + dy ; y2 = y2 + dy
 
   local T = Trans.box_transform(x1, y1, x2, y2, C.floor_h, CL.dir)
 
   Fabricate(skin1, T, { skin0, skin1, skin2 })
+
+  if skin1.need_sky then
+    assert(CL.parent.sky_group)
+    local sky_h = CL.parent.sky_group.h
+    Build_sky_quad(x1, y1, x2, y2, sky_h)
+  end
 
 --[[
   -- experiment !!
