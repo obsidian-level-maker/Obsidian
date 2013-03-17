@@ -239,17 +239,27 @@ function ob_console_dump(info, ...)
 end
 
 
+function ob_match_word_or_table(tab, conf)
+  if type(tab) == "table" then
+    return tab[conf] and tab[conf] > 0
+  else
+    return tab == conf
+  end
+end
+
+
 function ob_match_conf(T)
   assert(OB_CONFIG.game)
   assert(OB_CONFIG.mode)
   assert(OB_CONFIG.engine)
 
-  if T.for_games and not T.for_games[OB_CONFIG.game] then
+  if T.game and not ob_match_word_or_table(T.game, OB_CONFIG.game) then
     local game_def = OB_GAMES[OB_CONFIG.game]
+
     while game_def do
       if not game_def.extends then return false end
 
-      if T.for_games[game_def.extends] then
+      if ob_match_word_or_table(T.game, game_def.extends) then
         break; -- OK --
       end
 
@@ -257,12 +267,13 @@ function ob_match_conf(T)
     end
   end
 
-  if T.for_engines and not T.for_engines[OB_CONFIG.engine] then
+  if T.engine and not ob_match_word_or_table(T.engine, OB_CONFIG.engine) then
     local engine_def = OB_ENGINES[OB_CONFIG.engine]
+
     while engine_def do
       if not engine_def.extends then return false end
 
-      if T.for_engines[engine_def.extends] then
+      if ob_match_word_or_table(T.engine, engine_def.extends) then
         break; -- OK --
       end
 
@@ -270,12 +281,17 @@ function ob_match_conf(T)
     end
   end
 
-  if T.for_modes and not T.for_modes[OB_CONFIG.mode] then
+  if T.playmode and not ob_match_word_or_table(T.playmode, OB_CONFIG.mode) then
     return false
   end
 
-  if T.for_modules then
-    for name,_ in pairs(T.for_modules) do
+  if T.mod then
+    local mod = T.mod
+    if type(T.mod) != "table" then
+      mod = { [T.mod] = 1 }
+    end
+
+    each name,_ in mod do
       local def = OB_MODULES[name]
       if not (def and def.shown and def.enabled) then
         return false
