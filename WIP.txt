@@ -34,6 +34,24 @@ WORK IN PROGRESS
 -  tri_pillar
 
 
+
+Group System
+------------
+
+1.  have a GAME.GROUPS table
+
+2.  each group has a 'kind' field, can be "hall", "border" (etc)
+
+3.  groups have filtering keywords, e.g 'for_theme'
+
+4.  for each level (or zone, etc) OBLIGE will pick a group for
+    each context, e.g. ZONE.hall_group, LEVEL.border_group
+
+5.  prefabs with a 'group' keyword (or table) are filtered (ignored)
+    if none of the groups match.  The value multiplies the prob.
+
+
+
 WAD Prefabs
 -----------
 
