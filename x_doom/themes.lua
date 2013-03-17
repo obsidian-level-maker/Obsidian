@@ -1069,7 +1069,7 @@ DOOM2.ROOM_THEMES =
 
 DOOM2.LEVEL_THEMES =
 {
-  doom_tech1 =
+  tech1 =
   {
     prob = 60
 
@@ -1139,7 +1139,7 @@ DOOM2.LEVEL_THEMES =
   }
 
 
-  doom_hell1 =
+  hell1 =
   {
     prob = 50,
 
@@ -1190,7 +1190,7 @@ DOOM2.LEVEL_THEMES =
 
 
   -- AJA: not sure whether to keep this
-  Hmmm_doom_hell2 =
+  Hmmm_hell2 =
   {
     prob = 25,
 
@@ -1232,7 +1232,7 @@ DOOM2.LEVEL_THEMES =
   }
 
 
-  doom_urban1 =
+  urban1 =
   {
     prob = 50,
 
@@ -1293,7 +1293,7 @@ DOOM2.LEVEL_THEMES =
 
 
   -- this theme is not normally used (only for secret levels)
-  doom_wolf1 =
+  wolf1 =
   {
     prob = 10,
 
@@ -1332,7 +1332,7 @@ DOOM2.LEVEL_THEMES =
 ------------------------------------------------------------
 
 
-OB_THEMES["doom_tech"] =
+OB_THEMES["tech"] =
 {
   label = "Tech"
   priority = 8
@@ -1341,7 +1341,7 @@ OB_THEMES["doom_tech"] =
   mixed_prob = 60
 }
 
-OB_THEMES["doom_hell"] =
+OB_THEMES["hell"] =
 {
   label = "Hell"
   priority = 4
@@ -1350,7 +1350,7 @@ OB_THEMES["doom_hell"] =
   mixed_prob = 50
 }
 
-OB_THEMES["doom_urban"] =
+OB_THEMES["urban"] =
 {
   label = "Urban"
   priority = 6
@@ -1359,7 +1359,7 @@ OB_THEMES["doom_urban"] =
   mixed_prob = 50
 }
 
-OB_THEMES["doom_wolf"] =
+OB_THEMES["wolf"] =
 {
   label = "Wolfenstein",
   priority = 2
