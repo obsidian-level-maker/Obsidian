@@ -3461,7 +3461,7 @@ stderrf("AREA floor_stuff @ %s\n", R:tostr())
   local function prepare_ceiling(R)
     local h = R.crossover_max_h or R.max_floor_h
 
-    h = h + rand.pick { 128, 192, 256, 320 }
+    h = h + rand.pick { 192, 256, 320 }
 
     if R.kind == "outdoor" then
       R.sky_group.h = math.max(R.sky_group.h or -768, h)
