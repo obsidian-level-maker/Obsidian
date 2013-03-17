@@ -14,6 +14,9 @@
 
 DOOM.MATERIALS =
 {
+  --- These materials are common to all DOOM games...
+
+
   -- special materials --
 
   _ERROR = { t="CRACKLE2", f="CEIL5_2" }
@@ -323,8 +326,8 @@ DOOM.MATERIALS =
   SFLR7_1  = { f="SFLR7_1", t="SKSNAKE1" }
   SFLR7_4  = { f="SFLR7_4", t="SKSNAKE1" }
   
-  STEP_F1  = { f="STEP1", t="SHAWN2" }
-  STEP_F2  = { f="STEP2", t="SHAWN2" }
+  F_STEP1  = { f="STEP1", t="SHAWN2" }
+  F_STEP2  = { f="STEP2", t="SHAWN2" }
 
   TLITE6_1 = { f="TLITE6_1", t="METAL" }
   TLITE6_4 = { f="TLITE6_4", t="METAL" }
@@ -367,13 +370,133 @@ DOOM.MATERIALS =
   --
   -- Note too that STEP1/2 are ambiguous, the flats are quite
   -- different to the textures, hence renamed the flats as
-  -- STEP_F1 and STEP_F2.
+  -- F_STEP1 and F_STEP2.
 
 }
 
 
+DOOM.LIQUIDS =
+{
+  water  = { mat="FWATER1", light=168, special=0 }
+  blood  = { mat="BLOOD1",  light=168, special=0 }
+  nukage = { mat="NUKAGE1", light=180, special=16, damage=20 }
+  lava   = { mat="LAVA1",   light=192, special=16, damage=20 }
+
+  -- Doom II only --
+  slime  = { mat="SLIME01", light=168, special=16, damage=20 }
+}
+
+
+--------------------------------------------------------------------
+--  Ultimate DOOM
+--------------------------------------------------------------------
+
+DOOM1.MATERIALS =
+{
+  -- These materials are unique to DOOM I / Ultimate DOOM...
+
+
+  -- walls --
+
+  ASHWALL  = { t="ASHWALL",  f="FLOOR6_2" }
+  BROVINE  = { t="BROVINE",  f="FLOOR0_1" }
+  BRNPOIS2 = { t="BRNPOIS2", f="FLOOR7_1" }
+  BROWNWEL = { t="BROWNWEL", f="FLOOR7_1" }
+
+  COMP2    = { t="COMP2",    f="CEIL5_1" }
+  COMPOHSO = { t="COMPOHSO", f="FLOOR7_1" }
+  COMPTILE = { t="COMPTILE", f="CEIL5_1" }
+  COMPUTE1 = { t="COMPUTE1", f="FLAT19" }
+  COMPUTE2 = { t="COMPUTE2", f="CEIL5_1" }
+  COMPUTE3 = { t="COMPUTE3", f="CEIL5_1" }
+
+  DOORHI   = { t="DOORHI",   f="FLAT19" }
+  GRAYDANG = { t="GRAYDANG", f="FLAT19" }
+  ICKDOOR1 = { t="ICKDOOR1", f="FLAT19" }
+  ICKWALL6 = { t="ICKWALL6", f="FLAT18" }
+
+  LITE2    = { t="LITE2",    f="FLOOR0_1" }
+  LITE4    = { t="LITE4",    f="FLAT19" }
+  LITE96   = { t="LITE96",   f="FLOOR7_1" }
+  LITEBLU2 = { t="LITEBLU2", f="FLAT23" }
+  LITEBLU3 = { t="LITEBLU3", f="FLAT23" }
+  LITEMET  = { t="LITEMET",  f="FLOOR4_8" }
+  LITERED  = { t="LITERED",  f="FLOOR1_6" }
+  LITESTON = { t="LITESTON", f="MFLR8_1" }
+
+  NUKESLAD = { t="NUKESLAD", f="FLOOR7_1" }
+  PLANET1  = { t="PLANET1",  f="FLAT23" }
+  REDWALL1 = { t="REDWALL1", f="FLOOR1_6" }
+  SKINBORD = { t="SKINBORD", f="FLAT5_5" }
+  SKINTEK1 = { t="SKINTEK1", f="FLAT5_5" }
+  SKINTEK2 = { t="SKINTEK2", f="FLAT5_5" }
+  SKULWAL3 = { t="SKULWAL3", f="FLAT5_6" }
+  SKULWALL = { t="SKULWALL", f="FLAT5_6" }
+  SLADRIP1 = { t="SLADRIP1", f="FLOOR7_1" }
+
+  SP_DUDE3 = { t="SP_DUDE3", f="DEM1_5" }
+  SP_DUDE6 = { t="SP_DUDE6", f="DEM1_5" }
+  SP_ROCK1 = { t="SP_ROCK1", f="MFLR8_3" }
+  STARTAN1 = { t="STARTAN1", f="FLOOR4_1" }
+  STONGARG = { t="STONGARG", f="MFLR8_1" }
+  STONPOIS = { t="STONPOIS", f="FLAT5_4" }
+  TEKWALL2 = { t="TEKWALL2", f="CEIL5_1" }
+  TEKWALL3 = { t="TEKWALL3", f="CEIL5_1" }
+  TEKWALL5 = { t="TEKWALL5", f="CEIL5_1" }
+  WOODSKUL = { t="WOODSKUL", f="FLAT5_2" }
+
+
+  -- switches --
+
+  SW1BRN1  = { t="SW1BRN1",  f="FLOOR0_1" }
+  SW1STARG = { t="SW1STARG", f="FLAT23" }
+  SW1STONE = { t="SW1STONE", f="FLAT1" }
+  SW1STON2 = { t="SW1STON2", f="MFLR8_1" }
+
+
+  -- floors --
+
+  FLAT5_6  = { f="FLAT5_6", t="SKULWALL" }
+  FLAT5_7  = { f="FLAT5_7", t="ASHWALL" }
+  FLAT5_8  = { f="FLAT5_8", t="ASHWALL" }
+  FLOOR6_2 = { f="FLOOR6_2", t="ASHWALL" }
+  MFLR8_4  = { f="MFLR8_4",  t="ASHWALL" }
+
+
+  -- rails --
+
+  BRNBIGC  = { t="BRNBIGC",  rail_h=128, line_flags=1 }
+
+  MIDVINE1 = { t="MIDVINE1", rail_h=128 }
+  MIDVINE2 = { t="MIDVINE2", rail_h=128 }
+
+
+  -- liquid stuff (using new patches)
+  BFALL1   = { t="BLODGR1",  f="BLOOD1", sane=1 }
+  BLOOD1   = { t="BLODGR1",  f="BLOOD1", sane=1 }
+
+  SFALL1   = { t="SLADRIP1", f="NUKAGE1", sane=1 }
+  NUKAGE1  = { t="SLADRIP1", f="NUKAGE1", sane=1 }
+
+
+  -- compatibility stuff
+
+  ASHWALL2 = { t="ASHWALL",  f="FLOOR6_2" }
+  BRICKLIT = { t="LITEMET",  f="CEIL5_1" }
+  PIPEWAL1 = { t="COMPWERD", f="CEIL5_1" }
+  MIDBARS3 = { t="MIDGRATE", f="CEIL5_1" }
+}
+
+ 
+--------------------------------------------------------------------
+--  DOOM II : Hell on Earth
+--------------------------------------------------------------------
+
 DOOM2.MATERIALS =
 {
+  -- These materials are unique to DOOM II...
+
+
   -- walls --
 
   ASHWALL2 = { t="ASHWALL2", f="MFLR8_4" }
@@ -633,22 +756,9 @@ DOOM2.MATERIALS =
 
 
 
-DOOM.LIQUIDS =
-{
-  water  = { mat="FWATER1", light=168, special=0 }
-  blood  = { mat="BLOOD1",  light=168, special=0 }
-  nukage = { mat="NUKAGE1", light=180, special=16, damage=20 }
-  lava   = { mat="LAVA1",   light=192, special=16, damage=20 }
-
-  -- Doom II only --
-  slime  = { mat="SLIME01", light=168, special=16, damage=20 }
-}
-
-
 --------------------------------------------------------------------
 --  Final DOOM
 --------------------------------------------------------------------
-
 
 TNT.MATERIALS =
 {
