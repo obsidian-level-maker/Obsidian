@@ -21,12 +21,32 @@
 
 DOOM  = { }  -- common stuff
 
-DOOM2 = { }  -- stuff specific to DOOM II
+DOOM1 = { }  -- game specific stuff
+DOOM2 = { }  --
+
+TNT      = { }
+PLUTONIA = { }
+FREEDOOM = { }
 
 
 -- skin tables
 DOOM .SKINS = { }
+DOOM1.SKINS = { }
 DOOM2.SKINS = { }
+
+TNT.SKINS      = { }
+PLUTONIA.SKINS = { }
+FREEDOOM.SKINS = { }
+
+
+-- group tables
+DOOM .GROUPS = { }
+DOOM1.GROUPS = { }
+DOOM2.GROUPS = { }
+
+TNT.GROUPS      = { }
+PLUTONIA.GROUPS = { }
+FREEDOOM.GROUPS = { }
 
 
 require "entities"
@@ -112,7 +132,6 @@ DOOM.PLAYER_MODEL =
     weapons = { pistol=1, fist=1 }
   }
 }
-
 
 
 ------------------------------------------------------------
@@ -234,9 +253,53 @@ OB_GAMES["doom2"] =
 
   hooks =
   {
-    get_levels   = DOOM2.get_levels
-    end_level    = DOOM2.end_level
-    all_done     = DOOM2.all_done
+    get_levels = DOOM2.get_levels
+    end_level  = DOOM2.end_level
+    all_done   = DOOM2.all_done
+  }
+}
+
+
+-- TODO: "doom1"
+
+-- TODO: "ultdoom"
+
+
+OB_GAMES["tnt"] =
+{
+  label = "TNT Evilution"
+
+  extends = "doom2"
+
+  tables =
+  {
+    TNT
+  }
+}
+
+
+OB_GAMES["plutonia"] =
+{
+  label = "Plutonia Exp."
+
+  extends = "doom2"
+
+  tables =
+  {
+    PLUTONIA
+  }
+}
+
+
+OB_GAMES["freedoom"] =
+{
+  label = "FreeDoom 0.7"
+
+  extends = "doom2"
+
+  tables =
+  {
+    FREEDOOM
   }
 }
 

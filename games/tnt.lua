@@ -253,59 +253,6 @@ TN_SKY_INFO =
 ----------------------------------------------------------------
 
 
-TNT.MATERIALS =
-{
-  TNTDOOR  = { t="TNTDOOR",   f="FLAT23" }
-  DOC1     = { t="DOC1",      f="FLAT23" }
-  DISASTER = { t="DISASTER",  f="FLOOR7_1" }
-  MTNT1    = { t="MTNT1",     f="FLOOR7_2" }
-
-  METALDR  = { t="METALDR",  f="CEIL5_2" }
-  M_RDOOR  = { t="M_RDOOR",  f="FLOOR7_1" }
-  M_YDOOR  = { t="M_RDOOR",  f="FLOOR7_1" }
-
-  -- we replace the existing DOOM material for these two
-  SUPPORT3 = { t="EGSUPRT3", f="CEIL5_2" }
-  ASHWALL  = { t="ASPHALT",  f="MFLR8_4" }
-  MFLR8_4  = { t="ASPHALT",  f="MFLR8_4" }
-
-  METAL_BD = { t="METAL-BD", f="CEIL5_2" }
-  METAL_RM = { t="METAL-BD", f="CEIL5_2" }
-
-  CAVERN1  = { t="CAVERN1",  f="RROCK07" }
-  CAVERN4  = { t="CAVERN4",  f="MFLR8_3" }
-  CAVERN6  = { t="CAVERN6",  f="RROCK17" }
-  CAVERN7  = { t="CAVERN7",  f="RROCK16" }
-
-  SMSTONE6 = { t="SMSTONE6", f="RROCK20" }
-  STONEW1  = { t="STONEW1",  f="FLAT1_2" }
-  STONEW5  = { t="STONEW5",  f="MFLR8_3" }
-
-  -- TODO: rest of the gazillion crates....
-
-  -- TODO: rest of DO* textures, PNK4EXIT
-  DOKGRIR  = { t="DOKGRIR",  f="RROCK20" }
-
-  LITEGRN1 = { t="LITEGRN1", f="FLAT1" }
-  LITERED1 = { t="LITERED1", f="FLAT1" }
-  LITERED2 = { t="LITERED2", f="FLAT23" }
-  LITEYEL1 = { t="LITEYEL1", f="CEIL5_1" }
-  LITEYEL2 = { t="LITEYEL2", f="FLAT23" }
-  LITEYEL3 = { t="LITEYEL3", f="FLAT23" }
-
-  EGGREENI = { t="EGGREENI", f="RROCK20" }
-  EGREDI   = { t="EGREDI",   f="FLAT5_3" }
-
-  -- TODO: rest of the egypt stuff
-
-  MURAL1   = { t="MURAL1",   f="FLAT1" }
-  MURAL2   = { t="MURAL2",   f="FLAT1" }
-
-  PILLAR   = { t="PILLAR",   f="FLAT1" }
-
-  -- TODO: rails: BRNOPEN, GRNOPEN, REDOPEN, SMGLASS1
-}
-
 
 TNT.SKINS =
 {
@@ -523,25 +470,4 @@ TNT.LEVEL_THEMES =
 
 ----------------------------------------------------------------
 
-
-OB_GAMES["tnt"] =
-{
-  label = "TNT Evilution"
-
-  extends = "doom2"
-
-  tables =
-  {
-    TNT
-  }
-}
-
-
-UNFINISHED["tnt_egypt"] =
-{
-  ref = "EGYPT"
-  label = "Egypt"
-
-  game = "tnt"
-}
 

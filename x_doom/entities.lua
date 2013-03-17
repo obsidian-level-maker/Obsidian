@@ -128,4 +128,5 @@ DOOM.ENTITIES =
 
   light = { id="light", r=1, h=1, pass=true }
 
-} -- end of DOOM.ENTITIES
+}
+

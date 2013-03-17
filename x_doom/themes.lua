@@ -1368,3 +1368,13 @@ OB_THEMES["wolf"] =
   psycho_prob = 5
 }
 
+
+-- TNT Evilution themes
+
+UNFINISHED["egypt"] =
+{
+  label = "Egypt"
+  game = "tnt"
+  name_theme = "GOTHIC"
+}
+

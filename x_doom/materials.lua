@@ -369,7 +369,7 @@ DOOM.MATERIALS =
   -- different to the textures, hence renamed the flats as
   -- STEP_F1 and STEP_F2.
 
-} -- end of DOOM.MATERIALS
+}
 
 
 DOOM2.MATERIALS =
@@ -644,4 +644,150 @@ DOOM.LIQUIDS =
   slime  = { mat="SLIME01", light=168, special=16, damage=20 }
 }
 
+
+--------------------------------------------------------------------
+--  Final DOOM
+--------------------------------------------------------------------
+
+
+TNT.MATERIALS =
+{
+  TNTDOOR  = { t="TNTDOOR",   f="FLAT23" }
+  DOC1     = { t="DOC1",      f="FLAT23" }
+  DISASTER = { t="DISASTER",  f="FLOOR7_1" }
+  MTNT1    = { t="MTNT1",     f="FLOOR7_2" }
+
+  METALDR  = { t="METALDR",  f="CEIL5_2" }
+  M_RDOOR  = { t="M_RDOOR",  f="FLOOR7_1" }
+  M_YDOOR  = { t="M_RDOOR",  f="FLOOR7_1" }
+
+  -- we replace the existing DOOM material for these two
+  SUPPORT3 = { t="EGSUPRT3", f="CEIL5_2" }
+  ASHWALL2 = { t="ASPHALT",  f="MFLR8_4" }
+  MFLR8_4  = { t="ASPHALT",  f="MFLR8_4" }
+
+  METAL_BD = { t="METAL-BD", f="CEIL5_2" }
+  METAL_RM = { t="METAL-BD", f="CEIL5_2" }
+
+  CAVERN1  = { t="CAVERN1",  f="RROCK07" }
+  CAVERN4  = { t="CAVERN4",  f="MFLR8_3" }
+  CAVERN6  = { t="CAVERN6",  f="RROCK17" }
+  CAVERN7  = { t="CAVERN7",  f="RROCK16" }
+
+  SMSTONE6 = { t="SMSTONE6", f="RROCK20" }
+  STONEW1  = { t="STONEW1",  f="FLAT1_2" }
+  STONEW5  = { t="STONEW5",  f="MFLR8_3" }
+
+  -- TODO: rest of the gazillion crates....
+
+  -- TODO: rest of DO* textures, PNK4EXIT
+  DOKGRIR  = { t="DOKGRIR",  f="RROCK20" }
+
+  LITEGRN1 = { t="LITEGRN1", f="FLAT1" }
+  LITERED1 = { t="LITERED1", f="FLAT1" }
+  LITERED2 = { t="LITERED2", f="FLAT23" }
+  LITEYEL1 = { t="LITEYEL1", f="CEIL5_1" }
+  LITEYEL2 = { t="LITEYEL2", f="FLAT23" }
+  LITEYEL3 = { t="LITEYEL3", f="FLAT23" }
+
+  EGGREENI = { t="EGGREENI", f="RROCK20" }
+  EGREDI   = { t="EGREDI",   f="FLAT5_3" }
+
+  -- TODO: rest of the egypt stuff
+
+  MURAL1   = { t="MURAL1",   f="FLAT1" }
+  MURAL2   = { t="MURAL2",   f="FLAT1" }
+
+  PILLAR   = { t="PILLAR",   f="FLAT1" }
+
+  -- TODO: rails: BRNOPEN, GRNOPEN, REDOPEN, SMGLASS1
+}
+
+
+PLUTONIA.MATERIALS =
+{
+  -- Note the hyphens in the actual texture names, which have been
+  -- converted to an underscore for the OBLIGE material names.
+  
+  A_BRBRK  = { t="A-BRBRK",  f="RROCK18" }
+  A_BRBRK2 = { t="A-BRBRK2", f="RROCK16" }
+  A_BRICK1 = { t="A-BRICK1", f="MFLR8_1" }
+  A_BROWN1 = { t="A-BROWN1", f="RROCK17" }
+  A_BROWN2 = { t="A-BROWN2", f="FLAT8" }
+  A_BROWN3 = { t="A-BROWN3", f="RROCK03" }
+  A_BROWN5 = { t="A-BROWN5", f="RROCK19" }
+
+  A_CAMO1 =  { t="A-CAMO1",  f="GRASS1" }
+  A_CAMO2 =  { t="A-CAMO2",  f="SLIME13" }
+  A_CAMO3 =  { t="A-CAMO3",  f="SLIME13" }
+  A_CAMO4 =  { t="A-CAMO4",  f="FLOOR7_2" }
+
+  A_DBRI1 =  { t="A-DBRI1",  f="FLAT5_4" }
+  A_DBRI2 =  { t="A-DBRI2",  f="MFLR8_2" }
+  A_DROCK1 = { t="A-DROCK1", f="FLOOR6_2" }
+  A_DROCK2 = { t="A-DROCK2", f="MFLR8_2" }
+
+  A_MARBLE = { t="A-MARBLE", f="FLAT1" }
+  A_MOSBRI = { t="A-MOSBRI", f="SLIME13" }
+  A_MOSROK = { t="A-MOSROK", f="FLAT5_7" }
+  A_MOSRK2 = { t="A-MOSRK2", f="SLIME13" }
+  A_MOULD =  { t="A-MOULD",  f="RROCK19" }
+  A_MUD =    { t="A-MUD",    f="RROCK16" }
+
+  A_MYWOOD = { t="A-MYWOOD", f="FLAT5_1" }
+  A_POIS =   { t="A-POIS",   f="CEIL5_2" }
+  A_REDROK = { t="A-REDROK", f="FLAT5_3" }
+  A_ROCK =   { t="A-ROCK",   f="FLAT5_7" }
+  A_TILE =   { t="A-TILE",   f="GRNROCK" }  
+  A_VINE3 =  { t="A-VINE3",  f="RROCK12" }
+  A_VINE4 =  { t="A-VINE4",  f="RROCK16" }
+  A_VINE5 =  { t="A-VINE5",  f="MFLR8_3" }
+
+  A_YELLOW = { t="A-YELLOW", f="FLAT23" }
+
+  -- TODO: A-SKINxxx
+
+  -- this is animated
+  AROCK1   = { t="AROCK1",   f="GRNROCK" }
+  FIREBLU1 = { t="FIREBLU1", f="GRNROCK" }
+
+  JUNGLE1  = { t="MC10", f="RROCK19" }
+  JUNGLE2  = { t="MC2",  f="RROCK19" }
+
+  -- use the TNT name for this
+  METALDR  = { t="A-BROWN4", f="CEIL5_2" }
+
+  -- replacement materials
+  WOOD1    = { t="A-MYWOOD", f="FLAT5_2" }
+  CEIL1_1  = { f="CEIL1_1", t="A-WOOD1", color=0x5b442b }
+  CEIL1_3  = { f="CEIL1_3", t="A-WOOD1", color=0x594d3d }
+  FLAT5_1  = { f="FLAT5_1", t="A-WOOD1", color=0x503b22 }
+  FLAT5_2  = { f="FLAT5_2", t="A-WOOD1", color=0x503c24 }
+
+  STONE   = { t="A-CONCTE", f="FLAT5_4" }
+  FLAT5_4 = { t="A-CONCTE", f="FLAT5_4" }
+
+  BIGBRIK2 = { t="A-BRICK1", f="MFLR8_1" }
+  BIGBRIK1 = { t="A-BRICK2", f="RROCK14" }
+  RROCK14  = { t="A-BRICK2", f="RROCK14" }
+  BRICK5   = { t="A-BRICK3", f="RROCK12" }
+  BRICJ10  = { t="A-TILE",   f="GRNROCK" }  
+  BRICK11  = { t="A-BRBRK",  f="RROCK18" }
+  BRICK12  = { t="A-BROCK2", f="FLOOR4_6" }
+
+  ASHWALL4 = { t="A-DROCK2", f="MFLR8_2" }
+  ASHWALL7 = { t="A-MUD",    f="RROCK16" }
+
+  -- use Plutonia's waterfall texture instead of our own
+  WFALL1   = { t="WFALL1", f="FWATER1", sane=1 }
+  FWATER1  = { t="WFALL1", f="FWATER1", sane=1 }
+
+
+  -- TODO: Rails
+  --   A_GRATE = { t="A-GRATE", h=129 }
+  --   A_GRATE = { t="A-GRATE", h=129 }
+  --   A_RAIL1 = { t="A-RAIL1", h=32 }
+  --   A_VINE1 = { t="A-VINE1", h=128 }
+  --   A_VINE2 = { t="A-VINE2", h=128 }
+}
 

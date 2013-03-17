@@ -36,22 +36,3 @@ function FREEDOOM.setup()
 end
 
 
-OB_GAMES["freedoom"] =
-{
-  label = "FreeDoom 0.7"
-
-  extends = "doom2"
-
-  tables =
-  {
-    FREEDOOM
-  }
-
-  hooks =
-  {
-    setup = FREEDOOM.setup
-  }
-
-  -- no additional parameters
-}
-
