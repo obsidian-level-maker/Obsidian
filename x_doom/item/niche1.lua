@@ -9,6 +9,8 @@ DOOM.SKINS.Item_Niche1 =
   x_fit = "frame"
   y_fit = "top"
 
+  outdoor = 0
+
   thing_5 = "?item"
 }
 
