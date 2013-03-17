@@ -144,7 +144,7 @@ OB_ENGINES["edge"] =
 
   extends = "boom"
 
-  for_games = { doom1=1, doom2=1 }
+  game = { doom1=1, doom2=1 }
 
   tables =
   {

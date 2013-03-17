@@ -262,9 +262,9 @@ OB_MODULES["sktag_mons"] =
 {
   label = "Skulltag : Monsters and Items"
 
-  for_games = { doom1=1, doom2=1 }
-  for_modes = { sp=1, coop=1 }
-  for_engines = { skulltag=1 }
+  game = { doom1=1, doom2=1 }
+  playmode = { sp=1, coop=1 }
+  engine = { skulltag=1 }
 
   tables =
   {
@@ -339,7 +339,7 @@ OB_MODULES["sktag_mon_control"] =
 {
   label = "Skulltag Monsters : Fine Control"
 
-  for_modules = { sktag_mons=1 }
+  mod = "sktag_mons"
 
   hooks =
   {
@@ -389,7 +389,7 @@ OB_MODULES["sktag_weap_control"] =
 {
   label = "Skulltag Weapons : Fine Control"
 
-  for_modules = { sktag_mons=1 }
+  mod = "sktag_mons"
 
   hooks =
   {

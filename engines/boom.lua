@@ -93,7 +93,8 @@ OB_ENGINES["boom"] =
 {
   label = "BOOM Compat"
   priority = 92
-  for_games = { doom1=1, doom2=1 }
+
+  game = { doom1=1, doom2=1 }
 
   tables =
   {

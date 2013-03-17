@@ -541,6 +541,7 @@ UNFINISHED["tnt_egypt"] =
 {
   ref = "EGYPT"
   label = "Egypt"
-  for_modules = { tnt=1 }
+
+  game = "tnt"
 }
 

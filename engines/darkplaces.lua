@@ -34,7 +34,8 @@ end
 OB_ENGINES["darkplaces"] =
 {
   label = "DarkPlaces"
-  for_games = { quake=1 }
+
+  game = "quake"
 
   tables =
   {

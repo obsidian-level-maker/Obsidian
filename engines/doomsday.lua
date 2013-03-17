@@ -24,7 +24,7 @@ OB_ENGINES["doomsday"] =
 
   -- not yet BOOM compatible
 
-  for_games = { doom1=1, doom2=1, heretic=1, hexen=1 }
+  game = { doom1=1, doom2=1, heretic=1, hexen=1 }
 
   -- TODO
 }

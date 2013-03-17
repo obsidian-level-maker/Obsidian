@@ -35,7 +35,8 @@ end
 OB_ENGINES["fitz"] =
 {
   label = "FitzQuake"
-  for_games = { quake=1 }
+
+  game = "quake"
 
   tables =
   {

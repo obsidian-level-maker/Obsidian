@@ -74,8 +74,8 @@ OB_MODULES["quake2_mon_control"] =
 {
   label = "Quake2 Monster Control"
 
-  for_games = { quake2=1 }
-  for_modes = { sp=1, coop=1 }
+  game = { quake2=1 }
+  playmode = { sp=1, coop=1 }
 
   hooks =
   {
@@ -172,8 +172,8 @@ OB_MODULES["quake2_weapon_control"] =
 {
   label = "Quake2 Weapon Control"
 
-  for_games = { quake2=1 }
-  for_modes = { sp=1, coop=1 }
+  game = { quake2=1 }
+  playmode = { sp=1, coop=1 }
 
   hooks =
   {

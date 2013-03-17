@@ -1336,7 +1336,6 @@ OB_THEMES["tech"] =
 {
   label = "Tech"
   priority = 8
-  for_games = { doom1=1, doom2=1 }
   name_theme = "TECH"
   mixed_prob = 60
 }
@@ -1345,7 +1344,6 @@ OB_THEMES["hell"] =
 {
   label = "Hell"
   priority = 4
-  for_games = { doom1=1, doom2=1 }
   name_theme = "GOTHIC"
   mixed_prob = 50
 }
@@ -1354,7 +1352,7 @@ OB_THEMES["urban"] =
 {
   label = "Urban"
   priority = 6
-  for_games = { doom2=1 }
+  game = "doom2"
   name_theme = "URBAN"
   mixed_prob = 50
 }
@@ -1363,7 +1361,7 @@ OB_THEMES["wolf"] =
 {
   label = "Wolfenstein",
   priority = 2
-  for_games = { doom2=1 }
+  game = "doom2"
   name_theme = "URBAN"
 
   -- this theme is special, hence no mixed_prob

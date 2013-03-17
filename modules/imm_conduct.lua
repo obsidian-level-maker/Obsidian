@@ -495,9 +495,9 @@ OB_MODULES["imm_conduct"] =
 {
   label = "Immoral Conduct - Special Edition"
 
-  for_games = { doom2=1 }
-  for_modes = { sp=1, coop=1 }
-  for_engines = { edge=1 }
+  game = { doom2=1 }
+  playmode = { sp=1, coop=1 }
+  engine = { edge=1 }
 
   tables =
   {

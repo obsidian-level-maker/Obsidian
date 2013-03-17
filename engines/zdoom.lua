@@ -57,7 +57,7 @@ OB_ENGINES["zdoom"] =
 
   extends = "boom"
 
-  for_games =
+  game =
   {
     chex3=1, doom1=1, doom2=1, heretic=1, hexen=1
   }
@@ -95,7 +95,7 @@ OB_ENGINES["gzdoom"] =
 
   extends = "zdoom"
 
-  for_games =
+  game =
   {
     chex3=1, doom1=1, doom2=1, heretic=1, hexen=1
   }

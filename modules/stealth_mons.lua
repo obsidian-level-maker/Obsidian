@@ -265,9 +265,9 @@ OB_MODULES["stealth_mons"] =
 {
   label = "Stealth Monsters"
 
-  for_games   = { doom1=1, doom2=1 }
-  for_modes   = { sp=1, coop=1 }
-  for_engines = { edge=1, zdoom=1, gzdoom=1, skulltag=1 }
+  game = { doom1=1, doom2=1 }
+  playmode = { sp=1, coop=1 }
+  engine = { edge=1, zdoom=1, gzdoom=1, skulltag=1 }
 
   tables =
   {
@@ -339,7 +339,7 @@ OB_MODULES["stealth_mon_control"] =
 {
   label = "Stealth Monsters : Fine Control"
 
-  for_modules = { stealth_mons=1 }
+  mod = "stealth_mons"
 
   hooks =
   {

@@ -35,7 +35,7 @@ OB_MODULES["no_prebuilt_doom"] =
 {
   label = "Disable Prebuilt Maps (DOOM)"
 
-  for_games = { doom1=1, doom2=1 }
+  game = { doom1=1, doom2=1 }
 
   tables =
   {

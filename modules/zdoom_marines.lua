@@ -231,9 +231,9 @@ OB_MODULES["zdoom_marines"] =
 {
   label = "ZDoom Marines"
 
-  for_games   = { doom1=1, doom2=1 }
-  for_modes   = { sp=1, coop=1 }
-  for_engines = { zdoom=1, gzdoom=1, skulltag=1 }
+  game = { doom1=1, doom2=1 }
+  playmode = { sp=1, coop=1 }
+  engine = { zdoom=1, gzdoom=1, skulltag=1 }
 
   tables =
   {
@@ -307,7 +307,7 @@ OB_MODULES["zdoom_marine_control"] =
 {
   label = "ZDoom Marines : Fine Control"
 
-  for_modules = { zdoom_marines=1 }
+  mod = "zdoom_marines"
 
   hooks =
   {

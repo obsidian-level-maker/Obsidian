@@ -948,7 +948,7 @@ OB_THEMES["doom_deimos"] =
 {
   label = "Deimos"
   priority = 6
-  for_games = { doom1=1 }
+  game = "doom1"
   name_theme = "TECH"
   mixed_prob = 30
 }
@@ -958,7 +958,7 @@ OB_THEMES["doom_flesh"] =
 {
   label = "Thy Flesh"
   priority = 2
-  for_games = { ultdoom=1 }
+  game = "ultdoom"
   name_theme = "GOTHIC"
   mixed_prob = 20
 }

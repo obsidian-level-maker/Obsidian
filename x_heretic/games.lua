@@ -2885,7 +2885,6 @@ OB_GAMES["heretic"] =
 OB_THEMES["heretic_urban"] =
 {
   label = "Urban"
-  for_games = { heretic=1 }
   name_theme = "URBAN"
   mixed_prob = 50
 }
@@ -2893,7 +2892,6 @@ OB_THEMES["heretic_urban"] =
 OB_THEMES["heretic_castle"] =
 {
   label = "Castle"
-  for_games = { heretic=1 }
   name_theme = "GOTHIC"
   mixed_prob = 50
 }

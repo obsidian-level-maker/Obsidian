@@ -97,7 +97,7 @@ OB_ENGINES["skulltag"] =
 
   extends = "zdoom"
 
-  for_games =
+  game =
   {
     chex3=1, doom1=1, doom2=1, heretic=1, hexen=1
   }

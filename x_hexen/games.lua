@@ -5290,7 +5290,6 @@ UNFINISHED["hexen"] =
 OB_THEMES["hexen_dungeon"] =
 {
   label = "Dungeon"
-  for_games = { hexen=1 }
   name_theme = "GOTHIC"
   mixed_prob = 50
 }
@@ -5298,7 +5297,6 @@ OB_THEMES["hexen_dungeon"] =
 OB_THEMES["hexen_element"] =
 {
   label = "Elemental"
-  for_games = { hexen=1 }
   name_theme = "GOTHIC"
   mixed_prob = 50
 }
@@ -5306,7 +5304,6 @@ OB_THEMES["hexen_element"] =
 OB_THEMES["hexen_wild"] =
 {
   label = "Wilderness"
-  for_games = { hexen=1 }
   name_theme = "GOTHIC"
   mixed_prob = 50
 }
@@ -5314,7 +5311,6 @@ OB_THEMES["hexen_wild"] =
 OB_THEMES["hexen_cave"] =
 {
   label = "Cave"
-  for_games = { hexen=1 }
   name_theme = "GOTHIC"
   mixed_prob = 20
 }
@@ -5322,7 +5318,6 @@ OB_THEMES["hexen_cave"] =
 OB_THEMES["hexen_ice"] =
 {
   label = "Ice"
-  for_games = { hexen=1 }
   name_theme = "GOTHIC"
   mixed_prob = 10
 }
@@ -5330,7 +5325,6 @@ OB_THEMES["hexen_ice"] =
 OB_THEMES["hexen_swamp"] =
 {
   label = "Swamp"
-  for_games = { hexen=1 }
   name_theme = "GOTHIC"
   mixed_prob = 20
 }
@@ -5338,7 +5332,6 @@ OB_THEMES["hexen_swamp"] =
 OB_THEMES["hexen_village"] =
 {
   label = "Village"
-  for_games = { hexen=1 }
   name_theme = "URBAN"
   mixed_prob = 20
 }
