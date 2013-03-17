@@ -5,37 +5,36 @@
 DOOM.SKINS.Hall_Basic_I =
 {
   file   = "hall/trim1_i_win.wad"
+  group  = "hall_trim"
   shape  = "I"
-  group  = "trim"
 }
 
 DOOM.SKINS.Hall_Basic_C =
 {
   file   = "hall/trim1_c.wad"
+  group  = "hall_trim"
   shape  = "C"
-  group  = "trim"
 }
 
 DOOM.SKINS.Hall_Basic_T =
 {
   file   = "hall/trim1_t_lit.wad"
+  group  = "hall_trim"
   shape  = "T"
-  group  = "trim"
 }
 
 DOOM.SKINS.Hall_Basic_P =
 {
   file   = "hall/trim1_p.wad"
+  group  = "hall_trim"
   shape  = "P"
-  group  = "trim"
 }
 
 DOOM.SKINS.Hall_Basic_I_Stair =
 {
   file   = "hall/trim1_st.wad"
+  group  = "hall_trim"
   shape  = "IS"
-
-  group  = "trim"
 
 --[[
   step = "STEP3"
@@ -47,8 +46,8 @@ DOOM.SKINS.Hall_Basic_I_Stair =
 DOOM.SKINS.Hall_Basic_I_Lift =
 {
   file   = "hall/trim1_lf.wad"
+  group  = "hall_trim"
   shape  = "IL"
-  group  = "trim"
   tags   = 1
 
 --[[
@@ -59,5 +58,15 @@ DOOM.SKINS.Hall_Basic_I_Lift =
   lower_WR = 88  -- 120
   lower_SR = 62  -- 123
 --]]
+}
+
+
+--
+-- Group for these hallway pieces
+--
+
+DOOM.GROUPS.hall_trim =
+{
+  kind = "hallway"
 }
 
