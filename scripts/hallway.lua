@@ -1154,6 +1154,9 @@ function Hallway_prepare()
   gui.printf("Hallway quota: %d sections\n", quota)
 
   LEVEL.hall_quota = quota
+
+  -- choose hallway group now
+  LEVEL.hall_group = Room_pick_group({ kind = "hall" })
 end
 
 

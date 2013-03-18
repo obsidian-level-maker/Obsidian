@@ -1874,7 +1874,7 @@ function Room_pick_skin(reqs)
     gui.debugf("Room_pick_skins:\n")
     gui.debugf("reqs = \n%s\n", table.tostr(reqs))
 
-    error("No matching prefab for: " .. req.kind)
+    error("No matching prefabs for: " .. reqs.kind)
   end
 
   local name = rand.key_by_probs(list)
@@ -1924,7 +1924,7 @@ function Room_pick_group(reqs)
     gui.debugf("Room_pick_groups:\n")
     gui.debugf("reqs = \n%s\n", table.tostr(reqs))
 
-    error("No matching prefab for: " .. req.kind)
+    error("No matching groups for: " .. reqs.kind)
   end
 
   local name = rand.key_by_probs(list)
@@ -3242,6 +3242,9 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
 
   ---| Room_do_outdoor_borders |---
+
+  -- decide the border group now
+  LEVEL.border_group = Room_pick_group({ kind = "border" })
 
   LEVEL.borders = {}
 
