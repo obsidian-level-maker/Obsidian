@@ -1802,6 +1802,22 @@ function Room_matching_skins(reqs)
   end
 
 
+  local function match_size(req_w, skin_w)
+    -- skin defaults to 1
+    if not skin_w then skin_w = 1 end
+
+    if type(skin_w) == "table" then
+      if #skin_w != 2 or skin_w[1] > skin_w[2] then
+        error("Bad seed range in prefab skin")
+      end
+
+      return skin_w[1] <= req_w and req_w <= skin_w[2]
+    end
+
+    return req_w == skin_w
+  end
+
+
   local function match(skin)
     -- type check
 --stderrf("match........ \n")
@@ -1814,10 +1830,14 @@ function Room_matching_skins(reqs)
 --stderrf("   %s == %s\n", tostring(skin.where), tostring(reqs.kind))
     if reqs.where and skin.where != reqs.where then return false end
 
-    -- size check
---!!!!    if not Fab_size_check(skin, reqs.long, reqs.deep) then return false end
-
     -- FIXME: game / engine / mod / playmode / theme
+
+    -- size check (1)
+    if reqs.seed_w and not match_size(reqs.seed_w, skin.seed_w) then return false end
+    if reqs.seed_h and not match_size(reqs.seed_h, skin.seed_h) then return false end
+    
+    -- size check (2)
+--!!!! FIXME   if not Fab_size_check(skin, reqs.long, reqs.deep) then return false end
 
     -- building type checks
     if reqs.room then
@@ -1927,9 +1947,7 @@ function Room_pick_group(reqs)
     error("No matching groups for: " .. reqs.kind)
   end
 
-  local name = rand.key_by_probs(list)
-
-  return assert(GAME.GROUPS[name])
+  return rand.key_by_probs(list)
 end
 
 
@@ -3245,6 +3263,8 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
   -- decide the border group now
   LEVEL.border_group = Room_pick_group({ kind = "border" })
+
+  gui.printf("Border group: %s\n", LEVEL.border_group)
 
   LEVEL.borders = {}
 
