@@ -1004,7 +1004,7 @@ end
 
 
 function HALLWAY_CLASS.select_piece(H, P)
-  if P.skin_name then return P.skin_name end
+--wtf??  if P.skin_name then return P.skin_name end
 
   local shape = P.h_shape
 
@@ -1018,11 +1018,13 @@ function HALLWAY_CLASS.select_piece(H, P)
 
   local reqs =
   {
+    kind  = "hall"
+    group = LEVEL.hall_group
     shape = shape
-    long  = long
-    deep  = deep
+    room  = H
   }
 
+--[[
   -- find all skins which match this mode (etc)
   local source_tab = H.group and H.group.parts
 
@@ -1038,8 +1040,12 @@ function HALLWAY_CLASS.select_piece(H, P)
 ---FIXME      reqs.door = 0
 ---FIXME    end
   end
+--]]
 
   if P.shape == "big_junc" then
+
+error("Big junctions broken")
+
     local biggies = THEME.big_junctions
     assert(biggies)
 
@@ -1060,11 +1066,10 @@ function HALLWAY_CLASS.select_piece(H, P)
     end
   end
 
-  assert(source_tab)
-
-  local tab = Room_filter_skins(H, "hallway_group", source_tab, reqs)
+---###  local tab = Room_filter_skins(H, "hallway_group", source_tab, reqs)
 
   -- handle pieces that should only occur in-between other pieces
+--[[
   each name in table.keys(tab) do
     local skin = GAME.SKINS[name]
 
@@ -1072,15 +1077,14 @@ function HALLWAY_CLASS.select_piece(H, P)
       tab[name] = nil
     end
   end
+--]]
 
-  return rand.key_by_probs(tab)
+  return Room_pick_skin(reqs)
 end
 
 
 function HALLWAY_CLASS.build_hall_piece(H, P)
-  local skin_name = H:select_piece(P)
-
-  local skin1 = GAME.SKINS[skin_name]
+  local skin1 = H:select_piece(P)
   assert(skin1)
  
   local skin0 = { wall  = H.wall_mat,
@@ -1108,7 +1112,7 @@ function HALLWAY_CLASS.build_hall_piece(H, P)
     Room_distribute_spots(H, Fab_read_spots(fab))
   end
 
-  H.last_piece = skin_name
+  H.last_piece = skin1.name
 
   -- the sky is done separately for "Sky Hall" pieces
   if H.sky_hall_sky_h and skin1._need_sky then
@@ -1157,6 +1161,8 @@ function Hallway_prepare()
 
   -- choose hallway group now
   LEVEL.hall_group = Room_pick_group({ kind = "hall" })
+
+  gui.printf("Hallway group: %s\n", LEVEL.hall_group)
 end
 
 
