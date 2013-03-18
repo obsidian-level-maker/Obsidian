@@ -1045,7 +1045,7 @@ function Monsters_in_room(L)
 
     if THEME.force_mon_probs then
       prob = THEME.force_mon_probs[name] or
-             THEME.force_mon_probs._else
+             THEME.force_mon_probs._other
       if prob then return prob end
     end
 
@@ -1218,8 +1218,8 @@ function Monsters_in_room(L)
       end
 
       if THEME.force_mon_probs then
-        prob = THEME.force_mon_probs[name] or
-               THEME.force_mon_probs._else or prob  
+        prob = THEME.force_mon_probs[name]  or
+               THEME.force_mon_probs._other or prob  
       end
 
       if prob > 0 and LEVEL.monster_prefs then
