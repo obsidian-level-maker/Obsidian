@@ -216,10 +216,24 @@ function DOOM.make_level_gfx()
 end
 
 
+function DOOM1.end_level()
+  if LEVEL.description and LEVEL.patch then
+    DOOM.make_level_gfx()
+  end
+end
+
+
 function DOOM2.end_level()
   if LEVEL.description and LEVEL.patch then
     DOOM.make_level_gfx()
   end
+end
+
+
+function DOOM1.all_done()
+  DOOM.make_cool_gfx()
+
+  gui.wad_merge_sections("doom_falls.wad");
 end
 
 
