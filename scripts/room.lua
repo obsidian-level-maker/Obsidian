@@ -779,6 +779,23 @@ end
 ----------------------------------------------------------------
 
 
+function Room_player_angle(R, C)
+  if R.sh > R.sw then
+    if (C.sy1 + C.sy2) / 2 > (R.sy1 + R.sy2) / 2 then 
+      return 270
+    else
+      return 90
+    end
+  else
+    if (C.sx1 + C.sx2) / 2 > (R.sx1 + R.sx2) / 2 then 
+      return 180
+    else
+      return 0
+    end
+  end
+end
+
+
 function Room_select_textures()
 
   local function select_textures(L)
@@ -920,6 +937,285 @@ function Room_select_textures()
 --???  end
 end
 
+
+
+function Layout_inner_outer_tex(skin, K, K2)
+  assert(K)
+  if not K2 then return end
+
+  local R = K.room
+  local N = K2.room
+
+  if N.kind == "REMOVED" then return end
+
+  skin.wall  = R.skin.wall
+  skin.outer = N.skin.wall
+
+  if R.kind == "outdoor" and N.kind != "outdoor" then
+    skin.wall  = N.facade or skin.outer
+  elseif N.kind == "outdoor" and R.kind != "outdoor" then
+    skin.outer = R.facade or skin.wall
+  end
+end
+
+
+
+function Room_filter_skins(L, tab_name, tab, reqs, empty_ok)
+  assert(tab)
+  
+  local function match(skin)
+    -- placement check
+    if reqs.where and skin.where != reqs.where then return false end
+
+    -- size check
+    if not Fab_size_check(skin, reqs.long, reqs.deep) then return false end
+
+    -- building type checks
+    if L then
+      if skin.cave     and skin.cave     != convert_bool(L.kind == "cave")     then return false end
+      if skin.outdoor  and skin.outdoor  != convert_bool(L.kind == "outdoor")  then return false end
+      if skin.building and skin.building != convert_bool(L.kind == "building") then return false end
+      if skin.hallway  and skin.hallway  != convert_bool(L.kind == "hallway")  then return false end
+    end
+
+    -- liquid check
+    if skin.liquid and not LEVEL.liquid then return false end
+
+    -- key and switch check
+    if skin.key != reqs.key then return false end
+
+    if skin.switch != reqs.switch then
+      if not (reqs.switch and skin.switches) then return false end
+      if not skin.switches[reqs.switch] then return false end
+    end
+
+    -- hallway stuff
+    if skin.shape != reqs.shape then return false end
+
+    if reqs.narrow and not skin.narrow then return false end
+
+    if skin.door and reqs.door == 0 then return false end
+
+    return true
+  end
+
+  local result = {}
+
+  each name,prob in tab do
+    local skin = GAME.SKINS[name]
+
+    if not skin then
+      error("No such skin: " .. tostring(name) .. " in: " .. tab_name)
+    end
+
+    if match(skin) then
+      result[name] = prob
+    end
+  end
+
+  if table.empty(result) and not empty_ok then
+    gui.debugf("Room_filter_skins:\n")
+    gui.debugf("skins = \n%s\n", table.tostr(tab))
+    gui.debugf("reqs = \n%s\n", table.tostr(reqs))
+
+    error("No matching prefab for: " .. tab_name)
+  end
+
+  return result
+end
+
+
+
+function Room_matching_skins(reqs)
+
+  local function kind_from_filename(name)
+    assert(name)
+
+    local kind = string.match(name, "([%w_]+)/")
+
+    if not kind then
+      error("weird skin filename: " .. tostring(name))
+    end
+
+    return kind
+  end
+
+
+  local function match_size(req_w, skin_w)
+    -- skin defaults to 1
+    if not skin_w then skin_w = 1 end
+
+    if type(skin_w) == "table" then
+      if #skin_w != 2 or skin_w[1] > skin_w[2] then
+        error("Bad seed range in prefab skin")
+      end
+
+      return skin_w[1] <= req_w and req_w <= skin_w[2]
+    end
+
+    return req_w == skin_w
+  end
+
+
+  local function match(skin)
+    -- type check
+--stderrf("match........ \n")
+    local kind = skin.kind or kind_from_filename(skin.file)
+
+--stderrf("   %s == %s\n", kind, tostring(reqs.kind))
+    if reqs.kind != kind then return false end
+
+    -- group check
+    if reqs.group and skin.group != reqs.group then return false end
+
+    -- placement check
+--stderrf("   %s == %s\n", tostring(skin.where), tostring(reqs.kind))
+    if reqs.where and skin.where != reqs.where then return false end
+    if reqs.shape and skin.shape != reqs.shape then return false end
+
+    -- FIXME: game / engine / mod / playmode / theme
+
+    -- size check (1)
+    if reqs.seed_w and not match_size(reqs.seed_w, skin.seed_w) then return false end
+    if reqs.seed_h and not match_size(reqs.seed_h, skin.seed_h) then return false end
+    
+    -- size check (2)
+--!!!! FIXME   if not Fab_size_check(skin, reqs.long, reqs.deep) then return false end
+
+    -- building type checks
+    if reqs.room then
+      local L = reqs.room
+
+      if skin.cave     and skin.cave     != convert_bool(L.kind == "cave")     then return false end
+      if skin.outdoor  and skin.outdoor  != convert_bool(L.kind == "outdoor")  then return false end
+      if skin.building and skin.building != convert_bool(L.kind == "building") then return false end
+      if skin.hallway  and skin.hallway  != convert_bool(L.kind == "hallway")  then return false end
+    end
+
+    -- liquid check
+    if skin.liquid and not LEVEL.liquid then return false end
+
+    -- key and switch check
+    if reqs.key and skin.key != reqs.key then return false end
+
+    if skin.switch != reqs.switch then
+      if not (reqs.switch and skin.switches) then return false end
+      if not skin.switches[reqs.switch] then return false end
+    end
+
+    -- hallway stuff
+    if reqs.narrow and skin.narrow != reqs.narrow then return false end
+
+    if reqs.door and skin.door != reqs.door then return false end
+
+--stderrf("   --> YES YES YES\n")
+    return true
+  end
+
+
+  local list = { }
+
+  each name,skin in GAME.SKINS do
+--stderrf("visiting '%s'\n", name)
+    if match(skin) then
+      list[name] = skin.prob or 50
+    end
+  end
+
+  return list
+end
+
+
+function Room_pick_skin(reqs)
+  assert(reqs.kind)
+
+  local list = Room_matching_skins(reqs)
+
+  if table.empty(list) then
+    gui.debugf("Room_pick_skins:\n")
+    gui.debugf("reqs = \n%s\n", table.tostr(reqs))
+
+    error("No matching prefabs for: " .. reqs.kind)
+  end
+
+  local name = rand.key_by_probs(list)
+
+  return assert(GAME.SKINS[name])
+end
+
+
+
+function Room_matching_groups(reqs)
+
+  local function match(group)
+    -- type check
+    if reqs.kind != group.kind then return false end
+
+    -- FIXME: game / engine / mod / playmode / theme
+
+    -- liquid check
+    if group.liquid and not LEVEL.liquid then return false end
+
+    -- hallway stuff
+    if group.narrow != group.narrow then return false end
+
+    return true
+  end
+
+
+  local list = { }
+
+  each name,group in GAME.GROUPS do
+--stderrf("visiting '%s'\n", name)
+    if match(group) then
+      list[name] = group.prob or 50
+    end
+  end
+
+  return list
+end
+
+
+function Room_pick_group(reqs)
+  assert(reqs.kind)
+
+  local list = Room_matching_groups(reqs)
+
+  if table.empty(list) then
+    gui.debugf("Room_pick_groups:\n")
+    gui.debugf("reqs = \n%s\n", table.tostr(reqs))
+
+    error("No matching groups for: " .. reqs.kind)
+  end
+
+  return rand.key_by_probs(list)
+end
+
+
+
+function Layout_possible_fab_group(usage, list, req_key)
+  usage.edge_fabs   = Layout_possible_prefab_from_list(list, "edge",   req_key)
+  usage.corner_fabs = Layout_possible_prefab_from_list(list, "corner", req_key)
+  usage.middle_fabs = Layout_possible_prefab_from_list(list, "middle", req_key)
+
+  if not usage.edge_fabs and not usage.corner_fabs and not usage.middle_fabs then
+    error("Theme is missing usable prefabs for: " .. tostring("XXX"))
+  end
+end
+
+
+function Layout_possible_windows(E)
+  if E.usage.K1.room.kind == "outdoor" and E.usage.K2.room.kind == "outdoor" then
+    list = THEME.fences
+  else
+    list = THEME.windows
+  end
+
+  E.usage.edge_fabs = Layout_possible_prefab_from_list(list, "edge")
+end
+
+
+----------------------------------------------------------------
 
 
 function Room_setup_symmetry()
@@ -1595,31 +1891,7 @@ function Room_sort_targets(targets, entry_factor, conn_factor, busy_factor)
 end
 
 
-
-function Room_bound_outdoor_areas()
-end
-
-
-
 ------------------------------------------------------------------------
-
-
-
-function Room_player_angle(R, C)
-  if R.sh > R.sw then
-    if (C.sy1 + C.sy2) / 2 > (R.sy1 + R.sy2) / 2 then 
-      return 270
-    else
-      return 90
-    end
-  else
-    if (C.sx1 + C.sx2) / 2 > (R.sx1 + R.sx2) / 2 then 
-      return 180
-    else
-      return 0
-    end
-  end
-end
 
 
 
@@ -1698,282 +1970,6 @@ function Room_intermission_camera()
   entity_helper("camera", x1, y1, z1, { angles=angles })
 end
 
-
-
-function Layout_inner_outer_tex(skin, K, K2)
-  assert(K)
-  if not K2 then return end
-
-  local R = K.room
-  local N = K2.room
-
-  if N.kind == "REMOVED" then return end
-
-  skin.wall  = R.skin.wall
-  skin.outer = N.skin.wall
-
-  if R.kind == "outdoor" and N.kind != "outdoor" then
-    skin.wall  = N.facade or skin.outer
-  elseif N.kind == "outdoor" and R.kind != "outdoor" then
-    skin.outer = R.facade or skin.wall
-  end
-end
-
-
-
-function Room_filter_skins(L, tab_name, tab, reqs, empty_ok)
-  assert(tab)
-  
-  local function match(skin)
-    -- placement check
-    if reqs.where and skin.where != reqs.where then return false end
-
-    -- size check
-    if not Fab_size_check(skin, reqs.long, reqs.deep) then return false end
-
-    -- building type checks
-    if L then
-      if skin.cave     and skin.cave     != convert_bool(L.kind == "cave")     then return false end
-      if skin.outdoor  and skin.outdoor  != convert_bool(L.kind == "outdoor")  then return false end
-      if skin.building and skin.building != convert_bool(L.kind == "building") then return false end
-      if skin.hallway  and skin.hallway  != convert_bool(L.kind == "hallway")  then return false end
-    end
-
-    -- liquid check
-    if skin.liquid and not LEVEL.liquid then return false end
-
-    -- key and switch check
-    if skin.key != reqs.key then return false end
-
-    if skin.switch != reqs.switch then
-      if not (reqs.switch and skin.switches) then return false end
-      if not skin.switches[reqs.switch] then return false end
-    end
-
-    -- hallway stuff
-    if skin.shape != reqs.shape then return false end
-
-    if reqs.narrow and not skin.narrow then return false end
-
-    if skin.door and reqs.door == 0 then return false end
-
-    return true
-  end
-
-  local result = {}
-
-  each name,prob in tab do
-    local skin = GAME.SKINS[name]
-
-    if not skin then
-      error("No such skin: " .. tostring(name) .. " in: " .. tab_name)
-    end
-
-    if match(skin) then
-      result[name] = prob
-    end
-  end
-
-  if table.empty(result) and not empty_ok then
-    gui.debugf("Room_filter_skins:\n")
-    gui.debugf("skins = \n%s\n", table.tostr(tab))
-    gui.debugf("reqs = \n%s\n", table.tostr(reqs))
-
-    error("No matching prefab for: " .. tab_name)
-  end
-
-  return result
-end
-
-
-
-function Room_matching_skins(reqs)
-
-  local function kind_from_filename(name)
-    assert(name)
-
-    local kind = string.match(name, "([%w_]+)/")
-
-    if not kind then
-      error("weird skin filename: " .. tostring(name))
-    end
-
-    return kind
-  end
-
-
-  local function match_size(req_w, skin_w)
-    -- skin defaults to 1
-    if not skin_w then skin_w = 1 end
-
-    if type(skin_w) == "table" then
-      if #skin_w != 2 or skin_w[1] > skin_w[2] then
-        error("Bad seed range in prefab skin")
-      end
-
-      return skin_w[1] <= req_w and req_w <= skin_w[2]
-    end
-
-    return req_w == skin_w
-  end
-
-
-  local function match(skin)
-    -- type check
---stderrf("match........ \n")
-    local kind = skin.kind or kind_from_filename(skin.file)
-
---stderrf("   %s == %s\n", kind, tostring(reqs.kind))
-    if reqs.kind != kind then return false end
-
-    -- group check
-    if reqs.group and skin.group != reqs.group then return false end
-
-    -- placement check
---stderrf("   %s == %s\n", tostring(skin.where), tostring(reqs.kind))
-    if reqs.where and skin.where != reqs.where then return false end
-    if reqs.shape and skin.shape != reqs.shape then return false end
-
-    -- FIXME: game / engine / mod / playmode / theme
-
-    -- size check (1)
-    if reqs.seed_w and not match_size(reqs.seed_w, skin.seed_w) then return false end
-    if reqs.seed_h and not match_size(reqs.seed_h, skin.seed_h) then return false end
-    
-    -- size check (2)
---!!!! FIXME   if not Fab_size_check(skin, reqs.long, reqs.deep) then return false end
-
-    -- building type checks
-    if reqs.room then
-      local L = reqs.room
-
-      if skin.cave     and skin.cave     != convert_bool(L.kind == "cave")     then return false end
-      if skin.outdoor  and skin.outdoor  != convert_bool(L.kind == "outdoor")  then return false end
-      if skin.building and skin.building != convert_bool(L.kind == "building") then return false end
-      if skin.hallway  and skin.hallway  != convert_bool(L.kind == "hallway")  then return false end
-    end
-
-    -- liquid check
-    if skin.liquid and not LEVEL.liquid then return false end
-
-    -- key and switch check
-    if reqs.key and skin.key != reqs.key then return false end
-
-    if skin.switch != reqs.switch then
-      if not (reqs.switch and skin.switches) then return false end
-      if not skin.switches[reqs.switch] then return false end
-    end
-
-    -- hallway stuff
-    if reqs.narrow and skin.narrow != reqs.narrow then return false end
-
-    if reqs.door and skin.door != reqs.door then return false end
-
---stderrf("   --> YES YES YES\n")
-    return true
-  end
-
-
-  local list = { }
-
-  each name,skin in GAME.SKINS do
---stderrf("visiting '%s'\n", name)
-    if match(skin) then
-      list[name] = skin.prob or 50
-    end
-  end
-
-  return list
-end
-
-
-function Room_pick_skin(reqs)
-  assert(reqs.kind)
-
-  local list = Room_matching_skins(reqs)
-
-  if table.empty(list) then
-    gui.debugf("Room_pick_skins:\n")
-    gui.debugf("reqs = \n%s\n", table.tostr(reqs))
-
-    error("No matching prefabs for: " .. reqs.kind)
-  end
-
-  local name = rand.key_by_probs(list)
-
-  return assert(GAME.SKINS[name])
-end
-
-
-
-function Room_matching_groups(reqs)
-
-  local function match(group)
-    -- type check
-    if reqs.kind != group.kind then return false end
-
-    -- FIXME: game / engine / mod / playmode / theme
-
-    -- liquid check
-    if group.liquid and not LEVEL.liquid then return false end
-
-    -- hallway stuff
-    if group.narrow != group.narrow then return false end
-
-    return true
-  end
-
-
-  local list = { }
-
-  each name,group in GAME.GROUPS do
---stderrf("visiting '%s'\n", name)
-    if match(group) then
-      list[name] = group.prob or 50
-    end
-  end
-
-  return list
-end
-
-
-function Room_pick_group(reqs)
-  assert(reqs.kind)
-
-  local list = Room_matching_groups(reqs)
-
-  if table.empty(list) then
-    gui.debugf("Room_pick_groups:\n")
-    gui.debugf("reqs = \n%s\n", table.tostr(reqs))
-
-    error("No matching groups for: " .. reqs.kind)
-  end
-
-  return rand.key_by_probs(list)
-end
-
-
-
-function Layout_possible_fab_group(usage, list, req_key)
-  usage.edge_fabs   = Layout_possible_prefab_from_list(list, "edge",   req_key)
-  usage.corner_fabs = Layout_possible_prefab_from_list(list, "corner", req_key)
-  usage.middle_fabs = Layout_possible_prefab_from_list(list, "middle", req_key)
-
-  if not usage.edge_fabs and not usage.corner_fabs and not usage.middle_fabs then
-    error("Theme is missing usable prefabs for: " .. tostring("XXX"))
-  end
-end
-
-
-function Layout_possible_windows(E)
-  if E.usage.K1.room.kind == "outdoor" and E.usage.K2.room.kind == "outdoor" then
-    list = THEME.fences
-  else
-    list = THEME.windows
-  end
-
-  E.usage.edge_fabs = Layout_possible_prefab_from_list(list, "edge")
-end
 
 
 
