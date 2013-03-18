@@ -67,6 +67,6 @@ DOOM.SKINS.Hall_Basic_I_Lift =
 
 DOOM.GROUPS.hall_trim =
 {
-  kind = "hallway"
+  kind = "hall"
 }
 
