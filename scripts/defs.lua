@@ -29,9 +29,6 @@ SEEDS    = {}
 SECTIONS = {}
 EPISODE  = {}
 
--- all prefabs go here
-PREFAB = {}
-
 -- a place for unfinished stuff
 UNFINISHED = {}
 
