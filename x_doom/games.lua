@@ -260,9 +260,41 @@ OB_GAMES["doom2"] =
 }
 
 
--- TODO: "doom1"
+UNFINISHED["doom1"] =
+{
+  label = "Doom"
 
--- TODO: "ultdoom"
+  priority = 98  -- keep at second spot
+
+  format = "doom"
+
+  tables =
+  {
+    DOOM, DOOM1
+  }
+
+  hooks =
+  {
+    setup        = DOOM1.setup
+    get_levels   = DOOM1.get_levels
+    end_level    = DOOM1.end_level
+    all_done     = DOOM1.all_done
+  }
+}
+
+
+UNFINISHED["ultdoom"] =
+{
+  label = "Ultimate Doom"
+
+  extends = "doom1"
+
+  priority = 97  -- keep at third spot
+  
+  -- no additional tables
+
+  -- no additional hooks
+}
 
 
 OB_GAMES["tnt"] =
