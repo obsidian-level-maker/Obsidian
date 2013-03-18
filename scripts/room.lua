@@ -1826,9 +1826,13 @@ function Room_matching_skins(reqs)
 --stderrf("   %s == %s\n", kind, tostring(reqs.kind))
     if reqs.kind != kind then return false end
 
+    -- group check
+    if reqs.group and skin.group != reqs.group then return false end
+
     -- placement check
 --stderrf("   %s == %s\n", tostring(skin.where), tostring(reqs.kind))
     if reqs.where and skin.where != reqs.where then return false end
+    if reqs.shape and skin.shape != reqs.shape then return false end
 
     -- FIXME: game / engine / mod / playmode / theme
 
@@ -1861,8 +1865,6 @@ function Room_matching_skins(reqs)
     end
 
     -- hallway stuff
-    if reqs.shape and skin.shape != reqs.shape then return false end
-
     if reqs.narrow and skin.narrow != reqs.narrow then return false end
 
     if reqs.door and skin.door != reqs.door then return false end
@@ -2973,20 +2975,27 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
   end
 
 
-  local function build_border_fab(B, sx1, sy1, sx2, sy2, cat)
+  local function build_border_fab(B, sx1, sy1, sx2, sy2, shape)
     local cw = sx2 - sx1 + 1
     local ch = sy2 - sy1 + 1
 
     assert(cw <= 2 and ch <= 2)
 
-    -- FIXME: find matching fabs in SKINS table
-    local skin_name = "Border_liquid_" .. math.min(cw, ch) .. "x" ..
-                                   math.max(cw, ch) .. "_" .. cat
-
-    local skin1 = GAME.SKINS[skin_name]
-    if not skin1 then
-      error("missing border prefab: " .. skin_name)
+    if geom.is_horiz(B.dir) then
+      cw, ch = ch, cw
     end
+
+    -- find matching prefab
+    local reqs =
+    {
+      kind   = "border"
+      group  = LEVEL.border_group
+      shape  = shape
+      seed_w = cw
+      seed_h = ch
+    }
+
+    local skin1 = Room_pick_skin(reqs)
 
     local skin2 =
     {
@@ -3029,7 +3038,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
     while cw > 2 do
       local w = rand.sel(75, 2, 1)
 
-      build_border_fab(B, sx1, sy1, sx1 + w - 1, sy2, "t")
+      build_border_fab(B, sx1, sy1, sx1 + w - 1, sy2, "T")
 
       sx1 = sx1 + w
        cw =  cw - w
@@ -3038,13 +3047,13 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
     while ch > 2 do
       local h = rand.sel(75, 2, 1)
 
-      build_border_fab(B, sx1, sy1, sx2, sy1 + h - 1, "t")
+      build_border_fab(B, sx1, sy1, sx2, sy1 + h - 1, "T")
 
       sy1 = sy1 + h
        ch =  ch - h
     end
       
-    build_border_fab(B, sx1, sy1, sx2, sy2, "t")
+    build_border_fab(B, sx1, sy1, sx2, sy2, "T")
   end
 
 
@@ -3055,10 +3064,10 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
         build_border_edge(B, B.sx1, B.sy1, B.sx2, B.sy2)
 
       elseif B.kind == "corner" then
-        build_border_fab(B, B.sx1, B.sy1, B.sx2, B.sy2, "c")
+        build_border_fab(B, B.sx1, B.sy1, B.sx2, B.sy2, "C")
 
       elseif B.kind == "outie" then
-        build_border_fab(B, B.sx1, B.sy1, B.sx2, B.sy2, "o")
+        build_border_fab(B, B.sx1, B.sy1, B.sx2, B.sy2, "O")
 
       end
     end
