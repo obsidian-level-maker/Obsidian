@@ -1817,6 +1817,8 @@ function Room_matching_skins(reqs)
     -- size check
 --!!!!    if not Fab_size_check(skin, reqs.long, reqs.deep) then return false end
 
+    -- FIXME: game / engine / mod / playmode / theme
+
     -- building type checks
     if reqs.room then
       local L = reqs.room
@@ -1855,13 +1857,12 @@ function Room_matching_skins(reqs)
   each name,skin in GAME.SKINS do
 --stderrf("visiting '%s'\n", name)
     if match(skin) then
-      list[name] = 50  -- FIXME !!!
+      list[name] = skin.prob or 50
     end
   end
 
   return list
 end
-
 
 
 function Room_pick_skin(reqs)
@@ -1879,6 +1880,56 @@ function Room_pick_skin(reqs)
   local name = rand.key_by_probs(list)
 
   return assert(GAME.SKINS[name])
+end
+
+
+
+function Room_matching_groups(reqs)
+
+  local function match(group)
+    -- type check
+    if reqs.kind != group.kind then return false end
+
+    -- FIXME: game / engine / mod / playmode / theme
+
+    -- liquid check
+    if group.liquid and not LEVEL.liquid then return false end
+
+    -- hallway stuff
+    if group.narrow != group.narrow then return false end
+
+    return true
+  end
+
+
+  local list = { }
+
+  each name,group in GAME.GROUPS do
+--stderrf("visiting '%s'\n", name)
+    if match(group) then
+      list[name] = group.prob or 50
+    end
+  end
+
+  return list
+end
+
+
+function Room_pick_group(reqs)
+  assert(reqs.kind)
+
+  local list = Room_matching_groups(reqs)
+
+  if table.empty(list) then
+    gui.debugf("Room_pick_groups:\n")
+    gui.debugf("reqs = \n%s\n", table.tostr(reqs))
+
+    error("No matching prefab for: " .. req.kind)
+  end
+
+  local name = rand.key_by_probs(list)
+
+  return assert(GAME.GROUPS[name])
 end
 
 
