@@ -178,8 +178,11 @@ DOOM.WEAPONS =
     per = 40
     give = { {ammo="cell",count=40} }
   }
+}
 
-  -- this is Doom II only --
+
+DOOM2.WEAPONS =
+{
   super =
   {
     id = 82

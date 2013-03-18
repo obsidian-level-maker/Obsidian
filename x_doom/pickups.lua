@@ -141,18 +141,6 @@ DOOM.PICKUPS =
     give = { {ammo="cell",count=100} }
   }
 
-  -- Doom II only --
-
-  mega =
-  {
-    id = 83
-    prob = 1
-    armor = true
-    big_item = true
-    start_prob = 8
-    give = { {health=200} }
-  }
-
 
   -- NOTES:
   --
@@ -164,5 +152,19 @@ DOOM.PICKUPS =
   -- saves the player's health when you are hit with damage.
   -- The BLUE jacket saves 50% of damage, hence it is roughly
   -- equivalent to 100 units of health.
+}
+
+
+DOOM2.PICKUPS =
+{
+  mega =
+  {
+    id = 83
+    prob = 1
+    armor = true
+    big_item = true
+    start_prob = 8
+    give = { {health=200} }
+  }
 }
 
