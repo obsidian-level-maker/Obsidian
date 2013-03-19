@@ -536,7 +536,9 @@ end
 
 
 function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
+  --
   -- recursively flow through the hallway, adding stairs (etc) 
+  --
 
 --stderrf("stair_flow @ %s | %s\n", H:tostr(), P:tostr())
 --stderrf("from_dir: %d\n", from_dir)
@@ -584,7 +586,7 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
 
   P.floor_h = floor_h
 
-  if P.h_shape == "I" and not (H.big_junc or H.mini_hall) and
+  if P.h_shape == "I" and not H.big_junc and
      not P.crossover_hall and
      (rand.odds(H.stair_prob) or P.double_peer) and
      (not H.double_fork or P.double_peer)
@@ -869,11 +871,11 @@ stderrf("hallway floor_stuff for %s\n", H:tostr())
 -- stderrf("applied cross_limit: entry_h --> %d\n", entry_h)
   end
 
-  H.height = 768  -- FIXME RUBBISH REMOVE IT
-
+--[[
   if #H.sections == 1 and not H.is_cycle then
     H.mini_hall = true
   end
+--]]
 
   H:create_pieces()
   H:categorize_pieces()
@@ -1046,6 +1048,7 @@ function HALLWAY_CLASS.select_big_junc(H, P)
   local reqs =
   {
     kind  = "junction"
+    shape = P.h_shape
     room  = H
   }
 
