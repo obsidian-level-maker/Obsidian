@@ -76,8 +76,8 @@ DOOM.MATERIALS =
   DOORSTOP = { t="DOORSTOP", f="FLAT23" }
   DOORTRAK = { t="DOORTRAK", f="FLAT23" }
 
-  EXITDOOR = { t="EXITDOOR", f="FLAT5_5" }
-  EXITSIGN = { t="EXITSIGN", f="CEIL5_1" }
+  EXITDOOR = { t="EXITDOOR", f="FLAT5_5", sane=1 }
+  EXITSIGN = { t="EXITSIGN", f="CEIL5_1", sane=1 }
   EXITSTON = { t="EXITSTON", f="MFLR8_1" }
 
   -- these three are animated
@@ -337,12 +337,12 @@ DOOM.MATERIALS =
 
   -- rails --
 
-  BRNSMAL1 = { t="BRNSMAL1", rail_h=64,  line_flags=1 }
-  BRNSMAL2 = { t="BRNSMAL2", rail_h=64,  line_flags=1 }
-  BRNSMALC = { t="BRNSMALC", rail_h=64,  line_flags=1 }
+  BRNSMAL1 = { t="BRNSMAL1", rail_h=64 }
+  BRNSMAL2 = { t="BRNSMAL2", rail_h=64 }
+  BRNSMALC = { t="BRNSMALC", rail_h=64 }
 
-  MIDBRN1  = { t="MIDBRN1",  rail_h=128, line_flags=1 }
-  MIDGRATE = { t="MIDGRATE", rail_h=128, line_flags=1 }
+  MIDBRN1  = { t="MIDBRN1",  rail_h=128 }
+  MIDGRATE = { t="MIDGRATE", rail_h=128 }
 
 
   -- liquid stuff (using new patches)
@@ -465,7 +465,7 @@ DOOM1.MATERIALS =
 
   -- rails --
 
-  BRNBIGC  = { t="BRNBIGC",  rail_h=128, line_flags=1 }
+  BRNBIGC  = { t="BRNBIGC",  rail_h=128 }
 
   MIDVINE1 = { t="MIDVINE1", rail_h=128 }
   MIDVINE2 = { t="MIDVINE2", rail_h=128 }
@@ -484,7 +484,7 @@ DOOM1.MATERIALS =
   ASHWALL2 = { t="ASHWALL",  f="FLOOR6_2" }
   BRICKLIT = { t="LITEMET",  f="CEIL5_1" }
   PIPEWAL1 = { t="COMPWERD", f="CEIL5_1" }
-  MIDBARS3 = { t="MIDGRATE", f="CEIL5_1" }
+  MIDBARS3 = { t="MIDGRATE", rail_h=128 }
 }
 
  
@@ -732,10 +732,10 @@ DOOM2.MATERIALS =
 
   DBRAIN1  = { t="DBRAIN1",  rail_h=32 }
 
-  MIDBARS1 = { t="MIDBARS1", rail_h=128, line_flags=1 }
-  MIDBARS3 = { t="MIDBARS3", rail_h=72,  line_flags=1 }
-  MIDBRONZ = { t="MIDBRONZ", rail_h=128, line_flags=1 }
-  MIDSPACE = { t="MIDSPACE", rail_h=128, line_flags=1 }
+  MIDBARS1 = { t="MIDBARS1", rail_h=128 }
+  MIDBARS3 = { t="MIDBARS3", rail_h=72  }
+  MIDBRONZ = { t="MIDBRONZ", rail_h=128 }
+  MIDSPACE = { t="MIDSPACE", rail_h=128 }
 
   -- scaled MIDVINE2 from FreeDoom
   FMIDVINE = { t="SP_DUDE8", rail_h=128 }
