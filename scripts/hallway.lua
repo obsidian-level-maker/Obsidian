@@ -1052,7 +1052,13 @@ function HALLWAY_CLASS.select_big_junc(H, P)
     room  = H
   }
 
-  return Room_pick_skin(reqs)
+  -- alternate requirements : match the hallway group
+
+  local reqs2 = table.copy(reqs)
+
+  reqs2.group = LEVEL.hall_group
+
+  return Room_pick_skin(reqs, reqs2)
 end
 
 
