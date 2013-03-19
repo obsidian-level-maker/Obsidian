@@ -1100,11 +1100,18 @@ function Room_matching_skins(reqs)
     if reqs.kind != kind then return 0 end
 
     -- group check
-    if reqs.group and skin.group != reqs.group then return 0 end
+    if reqs.group != skin.group then return 0 end
 
     -- placement check
-    if reqs.where and skin.where != reqs.where then return 0 end
-    if reqs.shape and skin.shape != reqs.shape then return 0 end
+    if reqs.where != skin.where then return 0 end
+
+    -- shape check
+    if type(skin.shape) == "table" then
+      if not reqs.shape then return 0 end
+      if not skin.shape[reqs.shape] then return 0 end
+    else
+      if reqs.shape != skin.shape then return 0 end
+    end
 
     -- size check (1)
     if reqs.seed_w and not match_size(reqs.seed_w, skin.seed_w) then return 0 end
@@ -1127,7 +1134,7 @@ function Room_matching_skins(reqs)
     if skin.liquid and not LEVEL.liquid then return 0 end
 
     -- key and switch check
-    if reqs.key and skin.key != reqs.key then return 0 end
+    if reqs.key != skin.key then return 0 end
 
     if skin.switch != reqs.switch then
       if not (reqs.switch and skin.switches) then return 0 end
@@ -1135,9 +1142,9 @@ function Room_matching_skins(reqs)
     end
 
     -- hallway stuff
-    if reqs.narrow and skin.narrow != reqs.narrow then return 0 end
-
-    if reqs.door and skin.door != reqs.door then return 0 end
+    if reqs.narrow != reqs.narrow then return 0 end
+    if reqs.door   != skin.door   then return 0 end
+    if reqs.secret != skin.secret then return 0 end
 
     -- game, theme (etc) check
     return Room_match_user_stuff(skin)
