@@ -2,45 +2,45 @@
 -- Curvey hallway
 --
 
-DOOM.SKINS.Hall_curve1_I =
+DOOM.SKINS.Hall_curve_I =
 {
-  file   = "hall/curve1_i_win.wad"
-  group  = "hall_curve1"
+  file   = "hall/curve_i.wad"
+  group  = "hall_curve"
   shape  = "I"
 }
 
-DOOM.SKINS.Hall_curve1_C =
+DOOM.SKINS.Hall_curve_C =
 {
-  file   = "hall/curve1_c.wad"
-  group  = "hall_curve1"
+  file   = "hall/curve_c.wad"
+  group  = "hall_curve"
   shape  = "C"
 }
 
-DOOM.SKINS.Hall_curve1_T =
+DOOM.SKINS.Hall_curve_T =
 {
-  file   = "hall/curve1_t_lit.wad"
-  group  = "hall_curve1"
+  file   = "hall/curve_t.wad"
+  group  = "hall_curve"
   shape  = "T"
 }
 
-DOOM.SKINS.Hall_curve1_P =
+DOOM.SKINS.Hall_curve_P =
 {
-  file   = "hall/curve1_p.wad"
-  group  = "hall_curve1"
+  file   = "hall/curve_p.wad"
+  group  = "hall_curve"
   shape  = "P"
 }
 
-DOOM.SKINS.Hall_curve1_I_Stair =
+DOOM.SKINS.Hall_curve_I_Stair =
 {
-  file   = "hall/curve1_st.wad"
-  group  = "hall_curve1"
+  file   = "hall/curve_st.wad"
+  group  = "hall_curve"
   shape  = "IS"
 }
 
-DOOM.SKINS.Hall_curve1_I_Lift =
+DOOM.SKINS.Hall_curve_I_Lift =
 {
-  file   = "hall/curve1_lf.wad"
-  group  = "hall_curve1"
+  file   = "hall/curve_lf.wad"
+  group  = "hall_curve"
   shape  = "IL"
   tags   = 1
 }
@@ -49,7 +49,7 @@ DOOM.SKINS.Hall_curve1_I_Lift =
 -- Group information
 --
 
-DOOM.GROUPS.hall_curve1 =
+DOOM.GROUPS.hall_curve =
 {
   kind = "hall"
   prob = 999
