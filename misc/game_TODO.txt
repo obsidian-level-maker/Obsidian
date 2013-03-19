@@ -1,0 +1,141 @@
+OTHER GAME TODO
+===============
+
+
+----------------------------------------------
+  DOOM 64
+----------------------------------------------
+
+!!  transition to make levels for Doom64 EX, not the TC.
+
+    +  need to create the different WAD format
+    +  need to bundle the special glbsp-based node builder
+    +  need to pack created wad files into the final wad
+
++  a new theme (Urban / Hell) 
+
+
+----------------------------------------------
+  HACX
+----------------------------------------------
+
++  complete the MATERIALS table
+
+-  finish the ENTITIES table (trees etc)
+
+
+----------------------------------------------
+  CHEX QUEST
+----------------------------------------------
+
++  finish Chex 3 MATERIALS table (the "XX" stuff)
+
++  implement basic theme for Chex 2 and Chex 3
+
+-  make some good themes :)
+
+-  ensure that Oblige logos work in all games
+
+?  a pwad with textures/flats to smooth out compat issues
+   and make certain materials more usable.
+
+
+----------------------------------------------
+  DUKE NUKEM 3D
+----------------------------------------------
+
+!!  get it working again
+
+!  exit buttons
+
+!  Oblige logos: create 'TILES020.ART' lump
+
++  merge sectors where possible:
+   -  same properties on both sides
+   -  the removed walls form a single chain (not separate)
+
++  monsters
++  weapons
++  health and ammo
+
++  working doors
++  keys and switches
+
+-  fake 3D bridges (created via sprites)
+
+
+----------------------------------------------
+  QUAKE
+----------------------------------------------
+
+!!  get it working again
+    1. support loading ".map" files as prefabs
+    2. create ".map" file for the level
+    3. invoke Quake map compiling tools
+
++  slopes!
+   -  for clipping, force a node line where slope flattens out,
+      then mark one side as sloped - other side as flat.
+
++  better texture alignment
+
++  better miptex handling:
+   -  support multiple WD2 files : gui.quake_add_textures
+   -  create OBLIGE logos : gui.quake_make_logo()
+
++  flame cages
+
+-  texture coord system (see docs/Tex_Coords.txt)
+
+DONE: for the missing WAD message: a clickable hyperlink
+
+-  support colored lighting (FitzQuake, Darkplaces, etc).
+   - add an entry in the pack called "maps/xxx.lit", which
+   - it should contain: QLIT 1 0 0 0 <data>
+
+-  support fog: in worldspawn put: "fog" "density R G B"
+   (requires FitzQuake or Darkplaces)
+
+-  LAVA: style=5, have "lava light" similar to "sun light"
+
+-  support the Boss maps (next map = "start")
+     E2M6 : wood floor, funky bridge, kill vores to get rune
+     E3M6 : castley, lavay, teleport-in fiend
+     E4M7 : blue maze, spawn, kill vores to get rune
+
+-  better exits
+
+-  CalcPoints : move edges inwards by 2 pixels
+
+-  visibility: support diagonals, check if any sides in a cluster
+               touch or cross a line between corners.
+
+-  nail/spike shooters FTW : good in hallways
+
+-  create faces from stacked brushes behind a gap (cf. oa_dm7)
+
+DONE:  module to create _debugging_ MAP file
+
+-  Option for shrinking textures by half (scaled in-map)
+   which would only require 1/4 of the lightmap space
+   (and hence less likely to run out of it)
+
+-  convert the Quake_test() function into a prefab
+
+?  create dummy .lit files for FitzQuake & DarkPlaces
+   -  gui.pak_add_binary_lump
+
+?  keys are removed after use : re-use them ??
+
+
+----------------------------------------------
+  QUAKE II
+----------------------------------------------
+
+!!  get it working again
+
++  proper hub system
+
+-  create oblige logos (.wal entries)
+
+
