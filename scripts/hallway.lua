@@ -437,29 +437,7 @@ end
 
 
 
-function categorize_hall_piece(P)
-  local cat, dir = Trans.categorize_linkage(
-      P.hall_link[2], P.hall_link[4],
-      P.hall_link[6], P.hall_link[8]);
-
-  assert(cat != "N" and cat != "F")
-
-  P.h_shape = cat
-  P.h_dir   = dir
-end
-
-
 function HALLWAY_CLASS.categorize_pieces(H)
-
---[[  OLD OLD OLD
-  each P in H.sections do
-    if P.shape == "big_junc" then
-      for dir = 2,8,2 do
-        H:try_link_piece(P, dir)
-      end
-    end
-  end
---]]
 
   -- categorize the hallway pieces, and verify the linkages
 
@@ -470,7 +448,14 @@ function HALLWAY_CLASS.categorize_pieces(H)
     end
 
     if not P.crossover_hall then
-      categorize_hall_piece(P)
+      local cat, dir = Trans.categorize_linkage(
+          P.hall_link[2], P.hall_link[4],
+          P.hall_link[6], P.hall_link[8]);
+
+      assert(cat != "N" and cat != "F")
+
+      P.h_shape = cat
+      P.h_dir   = dir
     end
   end
 end
@@ -561,15 +546,14 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
   local floor_heights = {}  -- indexed by [dir]
 
   if P.shape == "big_junc" then
-    --FIXME FIXME
-    P.skin_name = H:select_piece(P)
+    local skin = H:select_big_junc(P)
 
-    local skin = assert(GAME.SKINS[P.skin_name])
+    P.skin = skin
 
     -- allow height changes at big junctions (specified by the skin)
 
-    if skin._heights then
-      assert(skin._heights[4])
+    if skin.heights then
+      assert(skin.heights[4])
       
       -- this is complicated by the fact that we can enter the junction
       -- from a different direction that it faces (from_dir != P.h_dir).
@@ -579,10 +563,10 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
       local w = geom.LEFT[s]
       local n = 10 - s
 
-      floor_heights[s] = skin._heights[1]
-      floor_heights[e] = skin._heights[2]
-      floor_heights[w] = skin._heights[3]
-      floor_heights[n] = skin._heights[4]
+      floor_heights[s] = skin.heights[1]
+      floor_heights[e] = skin.heights[2]
+      floor_heights[w] = skin.heights[3]
+      floor_heights[n] = skin.heights[4]
 
       local from_h = floor_heights[from_dir]
 
@@ -972,6 +956,7 @@ stderrf("check_sky_hall @ %s : %d/%d\nfloor range (%d..%d)\n%s\n\n",
 end
 
 
+
 function HALLWAY_CLASS.pick_group(H)
   -- use a single style per zone
   local group_tab = H.theme.hallway_groups or THEME.hallway_groups
@@ -1003,9 +988,8 @@ function HALLWAY_CLASS.pick_group(H)
 end
 
 
-function HALLWAY_CLASS.select_piece(H, P)
---wtf??  if P.skin_name then return P.skin_name end
 
+function HALLWAY_CLASS.select_piece(H, P)
   local shape = P.h_shape
 
   if P.h_extra == "stair" then shape = shape .. "S" end
@@ -1042,33 +1026,7 @@ function HALLWAY_CLASS.select_piece(H, P)
   end
 --]]
 
-  if P.shape == "big_junc" then
-
-error("Big junctions broken")
-
-    local biggies = THEME.big_junctions
-    assert(biggies)
-
-    -- FIXME: this is ass-backwards, we should have picked the group
-    --        earlier (checking that it supports the actual link-cat)
-
-    source_tab = {}
-
-    local SUFFIXES = { "_I", "_C", "_T", "_P" }
-
-    each name,prob in biggies do
-      local j_group = GAME.GROUPS[name]
-      if not j_group then error("No such junction group: " .. tostring(name)) end
-
-      each skin_name,prob in j_group.parts do
-        source_tab[skin_name] = prob
-      end
-    end
-  end
-
----###  local tab = Room_filter_skins(H, "hallway_group", source_tab, reqs)
-
-  -- handle pieces that should only occur in-between other pieces
+  -- FIXME: handle pieces that should only occur in-between other pieces
 --[[
   each name in table.keys(tab) do
     local skin = GAME.SKINS[name]
@@ -1083,15 +1041,33 @@ error("Big junctions broken")
 end
 
 
+
+function HALLWAY_CLASS.select_big_junc(H, P)
+  local reqs =
+  {
+    kind  = "junction"
+    room  = H
+  }
+
+  return Room_pick_skin(reqs)
+end
+
+
+
 function HALLWAY_CLASS.build_hall_piece(H, P)
-  local skin1 = H:select_piece(P)
-  assert(skin1)
+  if not P.skin then
+    P.skin = H:select_piece(P)
+  end
+
+  local skin1 = P.skin
  
-  local skin0 = { wall  = H.wall_mat,
-                  floor = H.floor_mat,
-                  ceil  = H.ceil_mat,
-                  outer = H.zone.facade_mat
-                }
+  local skin0 =
+  {
+    wall  = H.wall_mat,
+    floor = H.floor_mat,
+    ceil  = H.ceil_mat,
+    outer = H.zone.facade_mat
+  }
 
   -- hack for secret exits -- need hallway piece to blend in
   if H.mini_hall and H.is_secret then
@@ -1115,21 +1091,13 @@ function HALLWAY_CLASS.build_hall_piece(H, P)
   H.last_piece = skin1.name
 
   -- the sky is done separately for "Sky Hall" pieces
-  if H.sky_hall_sky_h and skin1._need_sky then
+  if skin1.need_sky then
+    assert(H.sky_group)
     local x1, y1, x2, y2 = P:get_coords()
-    local brush = Brush_new_quad(x1, y1, x2, y2, H.sky_hall_sky_h)
-
-    Brush_set_mat(brush, "_SKY", "_SKY")
-    table.insert(brush, 1, { m="sky" })
-
-    brush_helper(brush)
+    Build_sky_quad(x1, y1, x2, y2, H.sky_group.h)
   end
-
---[[
-local mx, my = P:mid_point()
-entity_helper("dummy", mx, my, 24)
---]]
 end
+
 
 
 function HALLWAY_CLASS.build(H)

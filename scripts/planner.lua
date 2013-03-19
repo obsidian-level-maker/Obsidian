@@ -381,7 +381,7 @@ function Plan_add_big_junctions()
   end
 
   -- occasionally don't use them  [maybe make into scenic rooms?]
-  if rand.odds(10 + 90) then  --!!!!!!
+  if rand.odds(10 - 90) then  --!!!!!!
     LEVEL.ignore_big_junctions = true
   end
 end

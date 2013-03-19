@@ -1055,7 +1055,7 @@ function Room_match_user_stuff(tab)
  
   if factor <= 0 then return 0 end
 
-  -- FIXME: 'mod' field !!!
+  -- TODO: module check
 
   return factor
 end
