@@ -2329,6 +2329,8 @@ function Fab_substitutions(fab, SKIN)
     -- most fields with a table value are considered to be random
     -- replacement, e.g. pic = { COMPSTA1=50, COMPWERD=50 }.
 
+--[[  FIXME: do this in Fab_replacements
+
     each name in keys do
       local value = SKIN[name]
 
@@ -2340,6 +2342,7 @@ function Fab_substitutions(fab, SKIN)
         SKIN[name] = rand.key_by_probs(value)
       end
     end
+--]]
   end
 
 
