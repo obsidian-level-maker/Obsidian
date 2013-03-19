@@ -1113,11 +1113,11 @@ function Room_matching_skins(reqs)
       if reqs.shape != skin.shape then return 0 end
     end
 
-    -- size check (1)
+    -- size check -- seed based
     if reqs.seed_w and not match_size(reqs.seed_w, skin.seed_w) then return 0 end
     if reqs.seed_h and not match_size(reqs.seed_h, skin.seed_h) then return 0 end
     
-    -- size check (2)
+    -- size check -- map units
 --!!!! FIXME   if not Fab_size_check(skin, reqs.long, reqs.deep) then return 0 end
 
     -- building type checks
@@ -1151,6 +1151,8 @@ function Room_matching_skins(reqs)
   end
 
 
+  assert(reqs.kind)
+
   local list = { }
 
   each name,skin in GAME.SKINS do
@@ -1165,10 +1167,25 @@ function Room_matching_skins(reqs)
 end
 
 
-function Room_pick_skin(reqs)
-  assert(reqs.kind)
+function Room_multi_match_skins(reqs, req2, req3, req4)
+  local list = {}
 
-  local list = Room_matching_skins(reqs)
+  while reqs do
+    local list2 = Room_matching_skins(reqs)
+
+    -- ensure earlier matches are kept (override later ones)
+    list = table.merge(list2, list)
+
+    -- shift and continue
+    reqs, req2, req3, req4 = req2, req3, req4, nil
+  end
+
+  return list
+end
+
+
+function Room_pick_skin(reqs, req2, req3, req4)
+  local list = Room_multi_match_skins(reqs, req2, req3, req4)
 
   if table.empty(list) then
     gui.debugf("Room_pick_skins:\n")
