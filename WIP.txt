@@ -3,6 +3,14 @@ WORK IN PROGRESS
 ================
 
 
+>>>>  hall/curve_XX.wad  [fix big junction selection]
+      make it taller
+
+>> transition Doors (etc) to use Room_pick_skin()
+
+DONE:  game / mod (etc) checks for matching_skins / groups
+
+
 +  fix cycles
 
 +  fix double halls
@@ -19,8 +27,12 @@ WORK IN PROGRESS
 >>  find joiners which touch two outdoor rooms, and sometimes
     ensure it gets a 'sky_group' field -- so all three are sync'd
 
+-  review policy on "pegging"
+   (a) rename "peg" --> "unpeg"
+   (b) only honor it with explicit Y offset
 
-!!  proper method to pick outdoor border prefabs
+
+DONE:  proper method to pick outdoor border prefabs
 
 +  fix material chosen for borders and fake buildings
 
@@ -62,6 +74,8 @@ WAD Prefabs
 
 -  support spots in prefabs for weapons and keys
 
+-  column with heart/skull : place for a prefabbed switch or key
+
 -  IDEA: ability to "pick" the sector at a point / edge / corner and get the height there
 
    OR : use tag numbers for "main floor", "neighbor floor" (etc)
@@ -83,9 +97,6 @@ WAD Prefabs
    (a) check 2 seeds away on each dir (i.e. through mini-halls)
    (b) handle caves too
 
-+  re-think switches/locked_doors selection : USE GROUPS?
-
-
 
 !!  Street mode : if one room surrounds another one, the "streets"
     between them are isolated from the rest, leading to this error:
@@ -93,32 +104,6 @@ WAD Prefabs
       Script Error: Failed to find any height in grid neighbors
 
     --> detect this, make multiple rooms
-
-
-- Psychedelic mode has a few issues. Exit signs / doors are
-  replaced now where they weren't before, and the bars in
-  monster cages are replaced by solid-looking walls. This
-  makes it so you can't see what's inside them shooting at
-  you, but they can clearly see you.
-
-- make secrets more secret
-
-
-
-
->>>  add pillars (via. C.content.kind = "DECORATION"
-                       C.content.decor_prefab = "Pillar_2")
-
->>>  add crates too (pick prefab from THEME.indoor_fabs)
-
->>>  add pits too (set C.floor_prefab = "Pit_Test")
-
->>>  fix chunk_is_mungeable()
-
-
-
--   for 'mon_along' calculation -- ideally take it out of
-    the game specific code (can modify it via PARAM or THEME).
 
 
 -  FAT_CAGE_PILLAR
@@ -163,28 +148,4 @@ WAD Prefabs
       _cave = 0 / 1
 
 +  support height-changing mini-halls
-
-
-
-+  fix monsters stuck in doors / corners of chunks
-
-
------------------------------------------------------------------
-
-
->>  windows
-
->>  pictures in walls
-
->>  secret niches
-
--  normal doors  [c.f. mini-hall doors]
-
--  ceiling prefabs (esp. light fixtures)
-
--  floor prefabs (crates are great, cages are all the rage)
-
->>  better exits
-
--  liquid areas
 
