@@ -5,7 +5,6 @@
 DOOM.SKINS.Junc_spokey =
 {
   file   = "junction/spokey.wad"
-  shape  = "P"
-  prob   = 999
+  shape  = { I=1, C=1, T=1, P=1 }
 }
 
