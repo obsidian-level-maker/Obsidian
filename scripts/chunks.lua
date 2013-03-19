@@ -1247,14 +1247,8 @@ function CHUNK_CLASS.build(C)
       f_mat = "RROCK01"
     end
 
-  elseif C.hall then  -- FIXME !!!!!  decide this EARLIER
-    w_mat = assert(C.hall.wall_mat)
-    f_mat = assert(C.hall.floor_mat)
-    c_mat = assert(C.hall.ceil_mat)
-
-    c_h = f_h + C.hall.height
   else
-    error("Chunk not in room or hall??")
+    error("Chunk not in a room!")
   end
 
   if (C.room and C.room.kind == "outdoor") or (C.hall and C.hall.outdoor) then
