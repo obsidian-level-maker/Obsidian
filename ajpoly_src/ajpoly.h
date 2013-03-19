@@ -70,8 +70,8 @@ public:
 	int floor_h, ceil_h;
 
 	// textures
-	char floor_tex[8];
-	char ceil_tex[8];
+	char floor_tex[10];
+	char ceil_tex[10];
 
 	// attributes
 	int light;
