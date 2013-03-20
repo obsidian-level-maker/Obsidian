@@ -2325,11 +2325,39 @@ function Fab_substitutions(fab, SKIN)
   -- the SKIN table is modified here.
   --
 
+  local PREFIXES =
+  {
+    "tex_", "flat_", "thing_",
+    "tag_", "line_", "sector_"
+  }
+
+  local function match_prefix(name)
+    each prefix in PREFIXES do
+      if string.match(name, "^" .. prefix) then
+        return true
+      end
+    end
+
+    return false
+  end
+
+
+  local function matching_keys()
+    local list = { }
+
+    each k,v in SKIN do
+      if match_prefix(k) then
+        table.insert(list, k)
+      end
+    end
+
+    return list
+  end
+
+
   local function random_pass(keys)
     -- most fields with a table value are considered to be random
-    -- replacement, e.g. pic = { COMPSTA1=50, COMPWERD=50 }.
-
---[[  FIXME: do this in Fab_replacements
+    -- replacement, e.g. tex_FOO = { COMPSTA1=50, COMPSTA2=50 }.
 
     each name in keys do
       local value = SKIN[name]
@@ -2342,45 +2370,37 @@ function Fab_substitutions(fab, SKIN)
         SKIN[name] = rand.key_by_probs(value)
       end
     end
---]]
   end
 
 
-  local function function_pass(keys)
-    each name in keys do
-      local func = SKIN[name]
+  local function do_substitution(value)
+    local seen = { }
 
-      if type(func) == "function" then
-        SKIN[name] = func(SKIN)
+    while Trans.is_subst(value) do
+
+      if seen[value] then
+        -- failed !
+        gui.debugf("\nSKIN =\n%s\n\n", table.tostr(SKIN))
+        error("Fab_substitutions: recursive refs (" .. tostring(value) .. ")")
       end
+
+      seen[value] = 1
+
+      value = Trans.substitute(SKIN, value)
     end
+
+    return value
   end
 
 
   local function subst_pass(keys)
-    local changes = 0
-
-    -- look for unresolved substitutions first
     each name in keys do
       local value = SKIN[name]
 
       if Trans.is_subst(value) then
-        local ref = Trans.substitute(SKIN, value)
-
-        if ref and type(ref) == "function" then
-          error("Substitution references a function: " .. value)
-        end
-
-        if ref and Trans.is_subst(ref) then
-          -- need to resolve the other one first
-        else
-          SKIN[name] = ref
-          changes = changes + 1
-        end
+        SKIN[name] = do_substitution(value)
       end
     end
-
-    return changes
   end
 
 
@@ -2389,29 +2409,14 @@ function Fab_substitutions(fab, SKIN)
   -- Note: iterate over a copy of the key names, since we cannot
   --       safely modify a table while iterating through it.
   --
-  --       Fields starting with an underscore are ignored, to allow
-  --       for special fields in the skin.
-  local keys = {}
-
-  each name,value in SKIN do
-    if not string.match(name, "^_") then
-      table.insert(keys, name)
-    end
-  end
+  -- Also we only process the replacement keywords, which have the
+  -- special prefixes listed above ("tex_" etc).
+  --
+  local keys = matching_keys()
 
   random_pass(keys)
 
-  for loop = 1,20 do
-    if subst_pass(keys) == 0 then
-      function_pass(keys)
-      return SKIN
-    end
-  end
-
-  -- failed !
-  gui.debugf("\nSKIN =\n%s\n\n", table.tostr(SKIN))
-
-  error("Fab_substitutions: cannot resolve refs")
+  subst_pass(keys)
 end
 
 
