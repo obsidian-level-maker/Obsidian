@@ -10,3 +10,15 @@ DOOM.SKINS.Junc_curve_C =
   prob   = 999
 }
 
+--
+-- Big junction : weird snakey T-shape
+--
+
+DOOM.SKINS.Junc_curve_snake_T =
+{
+  file   = "junction/curve_snake.wad"
+  shape  = "T"
+  group  = "hall_curve"
+  prob   = 999
+}
+
