@@ -3,13 +3,17 @@ WORK IN PROGRESS
 ================
 
 
->>>>  hall/curve_XX.wad  [fix big junction selection]
-      make it taller
+>>  mark 1-section halls as "joiners"
 
->> transition Doors (etc) to use Room_pick_skin()
+>>  find joiners which touch two outdoor rooms, and sometimes
+    ensure it gets a 'sky_group' field -- so all three are sync'd
 
-DONE:  game / mod (etc) checks for matching_skins / groups
+-  tri_pillar
 
+-  outdoor joiner : fence on each side with brick column
+
+
+!!  Hallways : break 3x1 (etc?) sections into 3 pieces
 
 +  fix cycles
 
@@ -18,21 +22,10 @@ DONE:  game / mod (etc) checks for matching_skins / groups
 +  fix street mode
 
 
->>  find potential fat fences early, mark some of them to ensure
-    the two neighbor rooms get sky sync'd 
-
-
->>  mark 1-section halls as "joiners"
-
->>  find joiners which touch two outdoor rooms, and sometimes
-    ensure it gets a 'sky_group' field -- so all three are sync'd
-
 -  review policy on "pegging"
    (a) rename "peg" --> "unpeg"
    (b) only honor it with explicit Y offset
 
-
-DONE:  proper method to pick outdoor border prefabs
 
 +  fix material chosen for borders and fake buildings
 
@@ -43,38 +36,18 @@ DONE:  proper method to pick outdoor border prefabs
 -  a way to prevent repeating the same prefab in a row
 
 
--  tri_pillar
-
-
-
-Group System
-------------
-
-1.  have a GAME.GROUPS table
-
-2.  each group has a 'kind' field, can be "hall", "border" (etc)
-
-3.  groups have filtering keywords, e.g 'for_theme'
-
-4.  for each level (or zone, etc) OBLIGE will pick a group for
-    each context, e.g. ZONE.hall_group, LEVEL.border_group
-
-5.  prefabs with a 'group' keyword (or table) are filtered (ignored)
-    if none of the groups match.  The value multiplies the prob.
-
-
 
 WAD Prefabs
 -----------
 
++  check that prefabs can add ITEM spots
+
++  column with heart (#36) : place for a prefabbed switch or key or weapon
+
 -  lifts : ability to expand vertically so target height matches
    (something like z_fit ??) 
 
--  check that prefabs can add ITEM spots
-
--  support spots in prefabs for weapons and keys
-
--  column with heart/skull : place for a prefabbed switch or key
+WISH:  mirror (horizontally) a 'T' or 'P' shaped hallway piece or big junction
 
 -  IDEA: ability to "pick" the sector at a point / edge / corner and get the height there
 
