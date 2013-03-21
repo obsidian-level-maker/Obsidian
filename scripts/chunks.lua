@@ -601,7 +601,14 @@ function CHUNK_CLASS.do_big_item(C, item_name)
     return
   end
 
-  local skin1 = Room_pick_skin({ kind = "item", where = "middle", room = C.room or C.hall })
+  local reqs =
+  {
+    kind  = "item"
+    where = "middle"
+    room = C.room or C.hall
+  }
+
+  local skin1 = Room_pick_skin(reqs)
 
   local skin2 = { item = item_name }
   local skin0 = { wall = C.room.wall_mat }
@@ -614,11 +621,14 @@ end
 
 
 function CHUNK_CLASS.content_start(C)
-  local list = Room_filter_skins(C.room or C.hall, "starts", THEME.starts,
-                                  { where="middle" })
+  local reqs =
+  {
+    kind  = "start"
+    where = "middle"
+    room  = C.room or C.hall
+  }
 
-  local name  = rand.key_by_probs(list)
-  local skin1 = GAME.SKINS[name]
+  local skin1 = Room_pick_skin(reqs)
 
   local mx, my = C:mid_point()
 
@@ -631,10 +641,14 @@ end
 
 
 function CHUNK_CLASS.content_exit(C)
-  local list = Room_filter_skins(C.room or C.hall, "exits", THEME.exits,
-                                  { where="middle" })
-  local name = rand.key_by_probs(list)
-  local skin1 = GAME.SKINS[name]
+  local reqs =
+  {
+    kind  = "exit"
+    where = "middle"
+    room  = C.room or C.hall
+  }
+
+  local skin1 = Room_pick_skin(reqs)
 
   local mx, my = C:mid_point()
 
@@ -674,12 +688,16 @@ function CHUNK_CLASS.content_switch(C)
   
   skin2.target = string.format("switch%d", skin2.tag_1)
 
-  local poss_skins = Room_filter_skins(C.room or C.hall, 
-                       "switch_fabs", THEME.switch_fabs,
-                       { where="middle", key=lock.key, switch=lock.switch })
+  local reqs =
+  {
+    kind  = "switch"
+    where = "middle"
+    room  = C.room or C.hall
+    key   = lock.key
+    switch = lock.switch
+  }
 
-  local name  = rand.key_by_probs(poss_skins)
-  local skin1 = assert(GAME.SKINS[name])
+  local skin1 = Room_pick_skin(reqs)
 
   local mx, my = C:mid_point()
 
@@ -692,10 +710,14 @@ end
 function CHUNK_CLASS.content_teleporter(C)
   local conn = assert(C.content.teleporter)
 
-  local list  = Room_filter_skins(C.room or C.hall, "teleporters", THEME.teleporters,
-                                   { where="middle" })
-  local name  = rand.key_by_probs(list)
-  local skin1 = assert(GAME.SKINS[name])
+  local reqs =
+  {
+    kind  = "teleporter"
+    where = "middle"
+    room  = C.room or C.hall
+  }
+
+  local skin1 = Room_pick_skin(reqs)
 
   local skin0 = { wall = C.room.wall_mat }
   local skin2 = {}
@@ -715,16 +737,19 @@ function CHUNK_CLASS.content_teleporter(C)
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, 10 - C.spot_dir)
 
-
   Fabricate(skin1, T, { skin0, skin1, skin2 })
 end
 
 
 function CHUNK_CLASS.content_hub_gate(C)
-  local list  = Room_filter_skins(C.room or C.hall, "hub_gates", THEME.hub_gates,
-                                   { where="middle" })
-  local name  = rand.key_by_probs(list)
-  local skin1 = assert(GAME.SKINS[name])
+  local reqs  =
+  {
+    kind  = "hub_gate"
+    where = "middle"
+    room  = C.room or C.hall
+  }
+
+  local skin1 = Room_pick_skin(reqs)
 
   local skin0 = { wall = C.room.wall_mat }
   local skin2 = {}
@@ -744,19 +769,6 @@ function CHUNK_CLASS.content_hub_gate(C)
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, 10 - C.spot_dir)
 
   Fabricate(skin1, T, { skin0, skin1, skin2 })
-end
-
-
-function CHUNK_CLASS.content_decor(C)
-  local skin1 = GAME.SKINS[C.content.decor_prefab]
-
-  local mx, my = C:mid_point()
-
-  local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.content.decor_dir)
-
-  local skin2 = { }
-
-  Fabricate(skin1, T, { skin1, skin2 })
 end
 
 
@@ -829,114 +841,11 @@ function CHUNK_CLASS.do_content(C)
   elseif kind == "GATE" then
     C:content_hub_gate()
 
-  elseif kind == "DECORATION" then
-    C:content_decor()
-
   else
     error("Unknown chunk content: " .. tostring(kind))
   end
 end
 
-
-
-function CHUNK_CLASS.unpack_parts(C, filter_field)
-  -- returns a list of rectangles which represent the area of the
-  -- chunk _minus_ the areas of the parts.
-
-  local spaces =
-  {
-    { x1=C.x1, y1=C.y1, x2=C.x2, y2=C.y2 }
-  }
-
-  local function split_space_X(S, N)
-    if N.x1 > S.x1 then
-      local T = table.copy(S)
-      S.x1 = N.x1 ; T.x2 = N.x1
-      table.insert(spaces, T)
-    end
-
-    if N.x2 < S.x2 then
-      local T = table.copy(S)
-      S.x2 = N.x2 ; T.x1 = N.x2
-      table.insert(spaces, T)
-    end
-
-    if N.y1 > S.y1 then
-      local T = table.copy(S)
-      S.y1 = N.y1 ; T.y2 = N.y1
-      table.insert(spaces, T)
-    end
-
-    if N.y2 < S.y2 then
-      local T = table.copy(S)
-      S.y2 = N.y2 ; T.y1 = N.y2
-      table.insert(spaces, T)
-    end
-  end
-
-  local function split_space_Y(S, N)
-    -- same code as above, but do Y first
-
-    if N.y1 > S.y1 then
-      local T = table.copy(S)
-      S.y1 = N.y1 ; T.y2 = N.y1
-      table.insert(spaces, T)
-    end
-
-    if N.y2 < S.y2 then
-      local T = table.copy(S)
-      S.y2 = N.y2 ; T.y1 = N.y2
-      table.insert(spaces, T)
-    end
-     
-    if N.x1 > S.x1 then
-      local T = table.copy(S)
-      S.x1 = N.x1 ; T.x2 = N.x1
-      table.insert(spaces, T)
-    end
-
-    if N.x2 < S.x2 then
-      local T = table.copy(S)
-      S.x2 = N.x2 ; T.x1 = N.x2
-      table.insert(spaces, T)
-    end
-  end
-
-  local function split_space(S, N)
-    local x_dist = math.min(
-      math.abs(S.x1 - N.x1), math.abs(S.x1 - N.x2),
-      math.abs(S.x2 - N.x1), math.abs(S.x2 - N.x2))
-
-    local y_dist = math.min(
-      math.abs(S.y1 - N.y1), math.abs(S.y1 - N.y2),
-      math.abs(S.y2 - N.y1), math.abs(S.y2 - N.y2))
-
-    if x_dist < y_dist then
-      split_space_X(S, N)
-    else
-      split_space_Y(S, N)
-    end
-  end
-
-  local function remove_rect(N)
-    -- rebuild the list
-    local old_spaces = spaces
-    spaces = {}
-
-    each S in old_spaces do
-      if geom.boxes_overlap(S.x1,S.y1,S.x2,S.y2, N.x1,N.y1,N.x2,N.y2) then
-        split_space(S, N)
-      end
-    end
-  end
-
-  each P in C.parts do
-    if filter_field and P[filter_field] then continue end
-    remove_rect(P)
-  end
-
-  return spaces
-end
 
 
 function CHUNK_CLASS.inner_outer_mat(C, L1, L2)
@@ -1075,7 +984,14 @@ function CHUNK_CLASS.build_door(C, dir, LINK, f_h, c_h, long)
   local L1 = C .room or C .hall
   assert(L2)
 
-  local reqs = { where="edge", long=long, key=lock.key, switch=lock.switch }
+  local reqs =
+  {
+    kind  = "door"
+    where = "edge"
+    -- long = long
+    key    = lock.key
+    switch = lock.switch
+  }
 
   if ( C.hall and  C.hall.group.narrow) or
      (C2.hall and C2.hall.group.narrow)
@@ -1083,15 +999,7 @@ function CHUNK_CLASS.build_door(C, dir, LINK, f_h, c_h, long)
     reqs.narrow = 1
   end
 
-  if not THEME.locked_doors then
-    error("Theme is missing 'locked_doors' table.")
-  end
-
-  local poss_skins = Room_filter_skins(C.room or C.hall,
-                        "locked_doors", THEME.locked_doors, reqs)
-
-  local name = rand.key_by_probs(poss_skins)
-  local skin = assert(GAME.SKINS[name])
+  local skin = Room_pick_skin(reqs)
 
   local skin2 = C:inner_outer_mat(L1, L2)
 
@@ -1112,26 +1020,6 @@ function CHUNK_CLASS.build_door(C, dir, LINK, f_h, c_h, long)
   end
 
   Fabricate(skin, T, { skin, skin2 })
-end
-
-
-function CHUNK_CLASS.build_fat_arch(C)
-  
-  local LINK, dir
-  for s = 2,8,2 do
-    if C.link[s] then LINK = C.link[s] ; dir = s ; break end
-  end
-  assert(dir)
-
-  local L1 = LINK.C1.room or LINK.C1.hall
-  local L2 = LINK.C2.room or LINK.C2.hall
-  
-  local skin1 = GAME.SKINS["Fat_Arch1"]  -- FIXME
-  local skin2 = C:inner_outer_mat(L1, L2)
-
-  local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, dir)
-
-  Fabricate(skin1, T, { skin1, skin2 })
 end
 
 

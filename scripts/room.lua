@@ -960,72 +960,6 @@ end
 
 
 
-function Room_filter_skins(L, tab_name, tab, reqs, empty_ok)
-  assert(tab)
-  
-  local function match(skin)
-    -- placement check
-    if reqs.where and skin.where != reqs.where then return false end
-
-    -- size check
-    if not Fab_size_check(skin, reqs.long, reqs.deep) then return false end
-
-    -- building type checks
-    if L then
-      if skin.cave     and skin.cave     != convert_bool(L.kind == "cave")     then return false end
-      if skin.outdoor  and skin.outdoor  != convert_bool(L.kind == "outdoor")  then return false end
-      if skin.building and skin.building != convert_bool(L.kind == "building") then return false end
-      if skin.hallway  and skin.hallway  != convert_bool(L.kind == "hallway")  then return false end
-    end
-
-    -- liquid check
-    if skin.liquid and not LEVEL.liquid then return false end
-
-    -- key and switch check
-    if skin.key != reqs.key then return false end
-
-    if skin.switch != reqs.switch then
-      if not (reqs.switch and skin.switches) then return false end
-      if not skin.switches[reqs.switch] then return false end
-    end
-
-    -- hallway stuff
-    if skin.shape != reqs.shape then return false end
-
-    if reqs.narrow and not skin.narrow then return false end
-
-    if skin.door and reqs.door == 0 then return false end
-
-    return true
-  end
-
-  local result = {}
-
-  each name,prob in tab do
-    local skin = GAME.SKINS[name]
-
-    if not skin then
-      error("No such skin: " .. tostring(name) .. " in: " .. tab_name)
-    end
-
-    if match(skin) then
-      result[name] = prob
-    end
-  end
-
-  if table.empty(result) and not empty_ok then
-    gui.debugf("Room_filter_skins:\n")
-    gui.debugf("skins = \n%s\n", table.tostr(tab))
-    gui.debugf("reqs = \n%s\n", table.tostr(reqs))
-
-    error("No matching prefab for: " .. tab_name)
-  end
-
-  return result
-end
-
-
-
 function Room_match_user_stuff(tab)
   -- 'tab' can be a skin or a group table.
   -- returns a probability multiplier >= 0
@@ -1714,6 +1648,9 @@ end
 
 
 function ROOM_CLASS.add_closet(R, closet_kind)
+
+do return false end  --!!!!!
+
   -- check styles
   local STYLE_NAMES =
   {
