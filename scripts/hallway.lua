@@ -168,6 +168,29 @@ function HALLWAY_CLASS.calc_lev_along(H)
 end
 
 
+function HALLWAY_CLASS.joiner_sections(H)
+  assert(H.joiner)
+
+  local K = H.sections[1]
+  local dir = (K.hall_link[2] ? 2 ; 4)
+
+  local K1 = K.hall_link[dir]
+  local K2 = K.hall_link[10 - dir]
+
+  assert(K1 and K1.room)
+  assert(K2 and K2.room)
+
+  return K1, K2
+end
+
+
+function HALLWAY_CLASS.joiner_rooms(H)
+  local K1, K2 = H:joiner_sections()
+
+  return K1.room, K2.room
+end
+
+
 function HALLWAY_CLASS.setup_path(H, path)
 
   -- the 'path' is a list of sections in visited order, as produced
