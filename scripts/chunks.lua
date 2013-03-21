@@ -632,7 +632,7 @@ function CHUNK_CLASS.content_start(C)
 
   local mx, my = C:mid_point()
 
-  local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
+  local T = Trans.spot_transform(mx, my, C.floor_h or 0, 10 - C.spot_dir)
 
   local skin2 = { }
 
