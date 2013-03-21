@@ -579,8 +579,14 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
   floor_diffs[2] = 0 ; floor_diffs[8] = 0
   floor_diffs[4] = 0 ; floor_diffs[6] = 0
 
-  if P.shape == "big_junc" then
-    local skin = H:select_big_junc(P)
+  if P.shape == "big_junc" or H.joiner then
+    local skin
+
+    if H.joiner then
+      skin = H:select_joiner(P)
+    else
+      skin = H:select_big_junc(P)
+    end
 
     P.skin = skin
 
@@ -612,7 +618,7 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
 
   P.floor_h = floor_h
 
-  if P.h_shape == "I" and not H.big_junc and
+  if P.h_shape == "I" and not (H.big_junc or H.joiner) and
      not P.crossover_hall and
      (rand.odds(H.stair_prob) or P.double_peer) and
      (not H.double_fork or P.double_peer)
@@ -1087,6 +1093,38 @@ function HALLWAY_CLASS.select_big_junc(H, P)
   reqs2.group = LEVEL.hall_group
 
   return Room_pick_skin(reqs, reqs2)
+end
+
+
+
+function HALLWAY_CLASS.select_joiner(H, P)
+  local reqs =
+  {
+    kind  = "joiner"
+  }
+
+  if H.sky_group then
+    reqs.sky_mul = 10
+  end
+
+  -- alternatively, use a normal hallway piece
+  local reqs2 =
+  {
+    kind  = "hall"
+    group = LEVEL.hall_group
+    shape = "X"
+
+    prob_mul = 0.01  -- a bit boring
+  }
+
+  local reqs3 =  -- or maybe a stair
+  {
+    kind  = "hall"
+    group = LEVEL.hall_group
+    shape = "IS"
+  }
+
+  return Room_pick_skin(reqs, reqs2, reqs3)
 end
 
 
