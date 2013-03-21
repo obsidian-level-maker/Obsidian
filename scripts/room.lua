@@ -1091,7 +1091,7 @@ function Room_matching_skins(reqs)
     local prob = match(skin) * (skin.prob or 50)
 
     if prob > 0 then
-      list[name] = prob
+      list[name] = prob * (reqs.prob_mul or 0)
     end
   end
 
