@@ -2124,7 +2124,7 @@ function Room_analyse_fat_fences()
 
       seen[pair] = true
 
-      if rand.odds(35 + 65) then  --!!!! FIXME
+      if rand.odds(35 - 65) then  --!!!! FIXME
         Room_merge_sky_groups(R1, R2)
       end
 
@@ -2218,10 +2218,11 @@ function Room_outdoor_borders()
     local N1 = S:neighbor(dir)
     local N2 = S:neighbor(10 - dir)
 
-    if N1.room == N2.room then return end
-
     -- require same sky height on each side
-    if N1.sky_group != N2.sky_group then return end
+    local R1 = N1.room
+    local R2 = N2.room
+
+    if R1.sky_group != R2.sky_group then return end
 
 stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
@@ -2229,12 +2230,12 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
     S.border = { kind = "fat_fence" }
 
-    local floor_h = math.max(N1.room.max_floor_h, N2.room.max_floor_h)
+    local floor_h = math.max(R1.max_floor_h, R2.max_floor_h)
 
     local skin_name = rand.sel(80, "Fake_RoundFence_1x1", "Cage_FatFence1")
 
     build_fake_building(skin_name, S.x1, S.y1, S.x2, S.y2, dir,
-                        N1.room, zone, floor_h)
+                        R1, zone, floor_h)
   end
 
 
