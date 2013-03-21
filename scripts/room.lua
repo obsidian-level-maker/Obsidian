@@ -1313,6 +1313,10 @@ function Room_merge_sky_groups(L1, L2)
   assert(L1.sky_group)
   assert(L2.sky_group)
 
+  if L1.sky_group == L2.sky_group then
+    return
+  end
+
   if L1.id > L2.id then L1, L2 = L2, L1 end
 
   -- the second SKY_GROUP table will never be used again
@@ -1367,9 +1371,7 @@ function Room_create_sky_groups()
         continue
       end
 
-      if N.room.sky_group != K.room.sky_group then
-        Room_merge_sky_groups(N.room, K.room)
-      end
+      Room_merge_sky_groups(N.room, K.room)
 
     end -- dir
 
