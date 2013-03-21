@@ -20,5 +20,8 @@ DOOM.SKINS.Junc_curve_snake_T =
   shape  = "T"
   group  = "hall_curve"
   prob   = 999
+
+  east = { h=-32 }
+  west = { h= 48 }
 }
 
