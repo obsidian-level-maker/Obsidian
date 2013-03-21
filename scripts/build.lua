@@ -1027,7 +1027,7 @@ function Trans.categorize_linkage(dir2, dir4, dir6, dir8)
 
   -- plus shape, all four directions
   elseif link_str == "2468" then
-    return 'P', 2
+    return 'P', rand.pick { 2,4,6,8 }
 
   else
     error("categorize_linkage failed on: " .. link_str)
