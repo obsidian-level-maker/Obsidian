@@ -35,6 +35,8 @@ DOOM.SKINS.Hall_curve_I_Stair =
   file   = "hall/curve_st.wad"
   group  = "hall_curve"
   shape  = "IS"
+
+  north  = { h=64 }
 }
 
 DOOM.SKINS.Hall_curve_I_Lift =

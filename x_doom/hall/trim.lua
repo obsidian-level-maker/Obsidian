@@ -36,6 +36,8 @@ DOOM.SKINS.Hall_trim1_I_Stair =
   group  = "hall_trim"
   shape  = "IS"
 
+  north  = { h=64 }
+
 --[[
   step = "STEP3"
   support = "SUPPORT2"
