@@ -35,6 +35,9 @@ class HALLWAY
   crossover : ROOM
   is_cycle  : boolean
 
+  joiner : boolean  -- a joiner is a single section hallway going
+                    -- straight ahead (two rooms, no turning).
+
   double_fork : SECTION    -- only present for double hallways.
   double_dir  : direction  -- dir at the single end (into hallway)
 
@@ -256,6 +259,9 @@ stderrf("MERGING %s into %s\n", new_H:tostr(), H:tostr())
 
   via_conn.K1.hall_link[dir]      = via_conn.K2
   via_conn.K2.hall_link[10 - dir] = via_conn.K1
+
+  -- lose the "joiner" status
+  H.joiner = false
 
   if #new_H.sections > 1 then
     LEVEL.hall_quota = LEVEL.hall_quota - #new_H.sections
@@ -847,6 +853,8 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
 
 stderrf("hallway floor_stuff for %s\n", H:tostr())
 
+if H.joiner then stderrf("   JOINER !!!!\n") end
+
   assert(not H.done_heights)
 
   H.done_heights = true
@@ -1284,6 +1292,12 @@ function Hallway_scan(start_K, start_dir, mode)
       H.big_junc = end_K
     else
       H.big_junc = stats.big_junc
+    end
+
+    if not H.big_junc and #H.sections == 1 and end_K.room and
+       (end_K.kx == start_K.kx or end_K.ky == start_K.ky)
+    then
+      H.joiner = true
     end
 
     if mode == "secret_exit" then
