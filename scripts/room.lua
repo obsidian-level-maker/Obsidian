@@ -2136,6 +2136,27 @@ end
 
 
 
+function Room_analyse_outside_joiners()
+  -- find joiner hallways which connect two outdoor rooms, and
+  -- decide whether or not to allow an "outside" joiner.
+
+  each H in LEVEL.halls do
+    if H.joiner then
+      local R1, R2 = H:joiner_rooms()
+
+      if not (R1.sky_group and R2.sky_group) then continue end
+
+      if rand.odds(35 + 65) then  --!!!!! FIXME
+        Room_merge_sky_groups(R1, R2)
+
+        H.sky_group = R1.sky_group
+      end
+    end
+  end
+end
+
+
+
 function Room_outdoor_borders()
   --
   --  BORDER ALGORITHM
@@ -3421,6 +3442,7 @@ function Room_build_all()
 
   Room_create_sky_groups()
   Room_analyse_fat_fences()
+  Room_analyse_outside_joiners()
 
   Areas_important_stuff()
   Areas_flesh_out()
