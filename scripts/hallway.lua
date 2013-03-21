@@ -545,39 +545,36 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
 
   seen[P] = true
 
-  local floor_heights = {}  -- indexed by [dir]
+  local floor_diffs = { }  -- indexed by [dir]
+
+  floor_diffs[2] = 0 ; floor_diffs[8] = 0
+  floor_diffs[4] = 0 ; floor_diffs[6] = 0
 
   if P.shape == "big_junc" then
     local skin = H:select_big_junc(P)
 
     P.skin = skin
 
+    -- determine south / north / east / west directions
+    local s_dir = P.h_dir
+    local n_dir = 10 - s_dir
+    local e_dir = geom.LEFT [s_dir]
+    local w_dir = geom.RIGHT[s_dir]
+
     -- allow height changes at big junctions (specified by the skin)
 
-    if skin.heights then
-      assert(skin.heights[4])
-      
-      -- this is complicated by the fact that we can enter the junction
-      -- from a different direction that it faces (from_dir != P.h_dir).
+    if skin.south then floor_diffs[s_dir] = skin.south.h end
+    if skin.north then floor_diffs[n_dir] = skin.north.h end
+    if skin.east  then floor_diffs[e_dir] = skin.east.h  end
+    if skin.west  then floor_diffs[w_dir] = skin.west.h  end
 
-      local s = P.h_dir
-      local e = geom.RIGHT[s]
-      local w = geom.LEFT[s]
-      local n = 10 - s
+    -- we may enter the junction from a direction other than south
+    -- (relative to the prefab).  So adjust the current floor_h
+    -- (which moves the whole prefab up or down) to ensure the
+    -- floor heights at the entry position match.
+    local diff_h = floor_diffs[from_dir] or 0
 
-      floor_heights[s] = skin.heights[1]
-      floor_heights[e] = skin.heights[2]
-      floor_heights[w] = skin.heights[3]
-      floor_heights[n] = skin.heights[4]
-
-      local from_h = floor_heights[from_dir]
-
-      for dir = 2,8,2 do
-        floor_heights[dir] = floor_h + floor_heights[dir] - from_h
-      end
-
-      floor_h = floor_heights[s]
-    end
+    floor_h = floor_h + floor_diffs[s_dir] - diff_h
   end
 
 
@@ -623,7 +620,7 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
   local did_a_branch = false
 
   each dir in rand.dir_list() do
-    local f_h = floor_heights[dir] or floor_h
+    local f_h = floor_h + (floor_diffs[dir] or 0)
 
     if dir == from_dir then continue end
 
