@@ -151,7 +151,7 @@ GLOBAL_STYLE_LIST =
   cages      = { none=50, few=50, some=30, heaps=10 }
   bridges    = { none=10, some=40 }
 
-  mon_variety = { few=4, some=90, heaps=4 }
+  mon_variety = { some=90, heaps=4 }
 
   lt_trim    = { none=40, some=20, heaps=10 }
   lt_spokes  = { none=90, some=20, heaps=5 }
