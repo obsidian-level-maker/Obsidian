@@ -113,8 +113,6 @@ class FENCE
 
 class SKY_GROUP
 {
-  rooms : list(ROOM)
-
   h : number  -- the sky height for the group
 }
 
@@ -1311,108 +1309,71 @@ end
 
 
 
-function Room_collect_sky_groups()
+function Room_merge_sky_groups(L1, L2)
+  assert(L1.sky_group)
+  assert(L2.sky_group)
+
+  if L1.id > L2.id then L1, L2 = L2, L1 end
+
+  -- the second SKY_GROUP table will never be used again
+  L2.sky_group.h = "dead"
+
+  each T in LEVEL.rooms do
+    if T.sky_group == L2.sky_group then
+       T.sky_group =  L1.sky_group
+    end
+  end
+
+  each T in LEVEL.halls do
+    if T.sky_group == L2.sky_group then
+       T.sky_group =  L1.sky_group
+    end
+  end
+end
+
+
+
+function Room_create_sky_groups()
 
   -- this makes sure that any two outdoor rooms which touch will belong
   -- to the same sky_group and hence get the same sky height.
 
-  local outdoor_rooms = {}
+  -- setup each room
 
-
-  local function init_sky_groups()
-    each R in LEVEL.rooms do
-      if R.kind == "outdoor" or R.was_outdoor_FIXME then
-        table.insert(outdoor_rooms, R)
-        R.sky_group = _index
-      end
+  each R in LEVEL.rooms do
+    if R.kind == "outdoor" or R.was_outdoor_FIXME then
+      R.sky_group = { }
     end
   end
 
+  -- merge neighbors which touch each other
 
-  local function merge_groups(id1, id2)
-    if id1 > id2 then id1,id2 = id2,id1 end
+  for kx = 1,SECTION_W do
+  for ky = 1,SECTION_H do
 
-    gui.debugf("merge_sky_groups: %d --> %d\n", id2, id1)
+    local K = SECTIONS[kx][ky]
 
-    each R in outdoor_rooms do
-      if R.sky_group == id2 then
-        R.sky_group = id1
-      end
+    if not (K and K.room and K.room.sky_group) then
+      continue
     end
-  end
 
+    -- only need to test south and west
+    for dir = 2,4,2 do
+      local N = K:neighbor(dir, dist)
 
-  local function spread_sky_groups()
-    -- returns true if there was a change, false on no changes.
-
-    -- TODO: we may need to include the simple (one section) hallways
-    --       between two outdoor rooms, as it might be nice to allow
-    --       some "open top" prefabs to connect them.
-
-    local changes = false
-
-    for kx = 1,SECTION_W do for ky = 1,SECTION_H do
-      local K = SECTIONS[kx][ky]
-
-      if not (K and K.room and K.room.sky_group) then
+      if not (N and N.room and N.room.sky_group) then
         continue
       end
 
-      -- only need to test south and west
-      for dir = 2,4,2 do
-      for dist = 1,1 do
-        local N = K:neighbor(dir, dist)
+      if N.room.sky_group != K.room.sky_group then
+        Room_merge_sky_groups(N.room, K.room)
+      end
 
-        if not (N and N.room and N.room.sky_group) then
-          continue
-        end
+    end -- dir
 
-        if N.room.sky_group != K.room.sky_group then
-          merge_groups(N.room.sky_group, K.room.sky_group)
-        end
+  end -- kx, ky
+  end --
 
-        changes = true
-
-      end -- for dist
-      end -- for dir
-
-    end end -- kx, ky
-
-    return changes
-  end
-
-
-  ---| Room_collect_sky_groups |---
-
-  init_sky_groups()
-
-  for loop = 1,20 do
-    if not spread_sky_groups() then
-      break;
-    end
-  end
-
-  -- collect all the sky groups
-  local all_groups = {}
-
-  gui.debugf("\nSky group list:\n")
-
-  each R in outdoor_rooms do
-    gui.debugf("%d @ %s\n", R.sky_group, R:tostr())
-
-    local group = all_groups[R.sky_group]
-
-    if not group then
-      group = { rooms={} }
-
-      all_groups[R.sky_group] = group
-    end
-
-    table.insert(group.rooms, R)
-
-    -- change field from a number --> a group reference
-    R.sky_group = group
-  end
 
   -- Note: sky heights are determined later
 end
@@ -2114,6 +2075,63 @@ end
 
 
 
+function Room_analyse_fat_fences()
+  -- find places where fat fences are possible (between two outdoor
+  -- rooms), and decide whether or not to allow them.
+  --
+  -- allowing them means that the sky heights of the rooms become
+  -- synchronised, and doing this too much can create levels with
+  -- overly high skies.
+
+  local seen = { }
+
+  for sx = 1, SEED_W do
+  for sy = 1, SEED_TOP do
+
+    local S = SEEDS[sx][sy]
+
+    if S:used() then continue end
+
+    for dir = 2,4,2 do
+      local N1 = S:neighbor(dir)
+      local N2 = S:neighbor(10 - dir)
+
+      if not (N1 and N1.room) then continue end
+      if not (N2 and N2.room) then continue end
+
+      local R1 = N1.room
+      local R2 = N2.room
+
+      if R1 == R2 then continue end
+
+      if R1.kind != "outdoor" then continue end
+      if R2.kind != "outdoor" then continue end
+
+      -- ok, here is a possible pair.
+
+      -- create a unique id for the pair
+      local id1 = math.min(R1.id, R2.id)
+      local id2 = math.max(R1.id, R2.id)
+
+      local pair = tostring(id1) .. "_" .. tostring(id2)
+
+      -- already processed this pair of rooms?
+      if seen[pair] then continue end
+
+      seen[pair] = true
+
+      if rand.odds(35 + 65) then  --!!!! FIXME
+        Room_merge_sky_groups(R1, R2)
+      end
+
+    end -- dir
+
+  end  -- sx, sy
+  end  --
+end
+
+
+
 function Room_outdoor_borders()
   --
   --  BORDER ALGORITHM
@@ -2193,14 +2211,19 @@ function Room_outdoor_borders()
      
     -- FIXME: TEST STUFF
 
--- stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
+    local N1 = S:neighbor(dir)
+    local N2 = S:neighbor(10 - dir)
 
-    S.border = { kind = "fat_fence" }
+    if N1.room == N2.room then return end
+
+    -- require same sky height on each side
+    if N1.sky_group != N2.sky_group then return end
+
+stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
 --    Build_solid_quad(S.x1, S.y1, S.x2, S.y2, "TEKBRON1")
 
-    local N1 = S:neighbor(dir)
-    local N2 = S:neighbor(10 - dir)
+    S.border = { kind = "fat_fence" }
 
     local floor_h = math.max(N1.room.max_floor_h, N2.room.max_floor_h)
 
@@ -3257,7 +3280,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
   end
 
 
-  ---| Room_do_outdoor_borders |---
+  ---| Room_outdoor_borders |---
 
   -- decide the border group now
   LEVEL.border_group = Room_pick_group({ kind = "border" })
@@ -3391,7 +3414,8 @@ function Room_build_all()
     H:pick_group()
   end
 
-  Room_collect_sky_groups()
+  Room_create_sky_groups()
+  Room_analyse_fat_fences()
 
   Areas_important_stuff()
   Areas_flesh_out()
