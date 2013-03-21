@@ -593,14 +593,6 @@ end
 
 
 function CHUNK_CLASS.do_big_item(C, item_name)
-  local mx, my = C:mid_point()
-
-  -- simple method if no pedestals
-  if not THEME.pedestals then
-    entity_helper(item_name, mx, my, C.floor_h or 0)
-    return
-  end
-
   local reqs =
   {
     kind  = "item"
@@ -612,6 +604,8 @@ function CHUNK_CLASS.do_big_item(C, item_name)
 
   local skin2 = { item = item_name }
   local skin0 = { wall = C.room.wall_mat }
+
+  local mx, my = C:mid_point()
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
 
@@ -629,12 +623,11 @@ function CHUNK_CLASS.content_start(C)
   }
 
   local skin1 = Room_pick_skin(reqs)
+  local skin2 = { }
 
   local mx, my = C:mid_point()
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, 10 - C.spot_dir)
-
-  local skin2 = { }
 
   Fabricate(skin1, T, { skin1, skin2 })
 end
@@ -650,10 +643,6 @@ function CHUNK_CLASS.content_exit(C)
 
   local skin1 = Room_pick_skin(reqs)
 
-  local mx, my = C:mid_point()
-
-  local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
-
   local skin2 = { next_map = LEVEL.next_map, targetname = "exit" }
   local skin0 = { wall = C.room.wall_mat }
 
@@ -667,6 +656,10 @@ function CHUNK_CLASS.content_exit(C)
   if C.content.kind == "SECRET_EXIT" then
     skin2.special = 51
   end
+
+  local mx, my = C:mid_point()
+
+  local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
 
   Fabricate(skin1, T, { skin0, skin1, skin2 })
 end
@@ -708,8 +701,6 @@ end
 
 
 function CHUNK_CLASS.content_teleporter(C)
-  local conn = assert(C.content.teleporter)
-
   local reqs =
   {
     kind  = "teleporter"
@@ -721,6 +712,8 @@ function CHUNK_CLASS.content_teleporter(C)
 
   local skin0 = { wall = C.room.wall_mat }
   local skin2 = {}
+
+  local conn = assert(C.content.teleporter)
 
   if conn.L1 == C.room then
     skin2. in_tag = conn.tele_tag2
@@ -787,12 +780,12 @@ function CHUNK_CLASS.do_hexen_triple(C)
   local name  = assert(skin_map[C.content.weapon])
   local skin1 = assert(GAME.SKINS[name])
 
+  local skin0 = { wall = C.room.wall_mat }
+  local skin2 = { }
+
   local mx, my = C:mid_point()
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
-
-  local skin0 = { wall = C.room.wall_mat }
-  local skin2 = { }
 
   Fabricate(skin1, T, { skin0, skin1, skin2 })
 end
