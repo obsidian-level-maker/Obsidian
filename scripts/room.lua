@@ -1091,7 +1091,7 @@ function Room_matching_skins(reqs)
     local prob = match(skin) * (skin.prob or 50)
 
     if prob > 0 then
-      list[name] = prob * (reqs.prob_mul or 0)
+      list[name] = prob * (reqs.prob_mul or 1)
     end
   end
 
@@ -1118,6 +1118,11 @@ end
 
 function Room_pick_skin(reqs, req2, req3, req4)
   local list = Room_multi_match_skins(reqs, req2, req3, req4)
+
+if DEBUG_MULTI_SKIN then
+   DEBUG_MULTI_SKIN = nil
+   stderrf("\n\nDEBUG MULTI SKIN = \n%s\n\n", table.tostr(list))
+end
 
   if table.empty(list) then
     gui.debugf("Room_pick_skins:\n")
