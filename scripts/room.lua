@@ -1316,17 +1316,19 @@ function Room_merge_sky_groups(L1, L2)
   if L1.id > L2.id then L1, L2 = L2, L1 end
 
   -- the second SKY_GROUP table will never be used again
-  L2.sky_group.h = "dead"
+  local dead_group = L2.sky_group
+
+  dead_group.h = "dead"
 
   each T in LEVEL.rooms do
-    if T.sky_group == L2.sky_group then
-       T.sky_group =  L1.sky_group
+    if T.sky_group == dead_group then
+       T.sky_group = L1.sky_group
     end
   end
 
   each T in LEVEL.halls do
-    if T.sky_group == L2.sky_group then
-       T.sky_group =  L1.sky_group
+    if T.sky_group == dead_group then
+       T.sky_group = L1.sky_group
     end
   end
 end
