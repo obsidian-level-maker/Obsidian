@@ -3400,7 +3400,8 @@ function Areas_flesh_out()
 
 
   local function floor_stuff(R)
-stderrf("AREA floor_stuff @ %s\n", R:tostr())
+-- stderrf("AREA floor_stuff @ %s\n", R:tostr())
+
     R.areas = {}
 
     if R.kind == "cave" then

@@ -2256,7 +2256,7 @@ function Room_outdoor_borders()
      
     -- FIXME: TEST STUFF
 
-stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
+-- stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
     S.border = { kind = "fat_fence" }
 
