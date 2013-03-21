@@ -3,28 +3,41 @@ WORK IN PROGRESS
 ================
 
 
->>  mark 1-section halls as "joiners"
-
->>  find joiners which touch two outdoor rooms, and sometimes
-    ensure it gets a 'sky_group' field -- so all three are sync'd
-
--  tri_pillar
-
--  outdoor joiner : fence on each side with brick column
+IDEA: indoor closets are designed to mate up with walls.
+      how about doing same for (a) hallway pieces, (b) joiners
 
 
-!!  Hallways : break 3x1 (etc?) sections into 3 pieces
+Joiners
+-------
+
+-  joiners can connect to 0, 1 or 2 outdoor rooms
+   (and _only_ one of these possibilities)
+
+   -  similiarly: 0, 1 or 2 cave rooms
+
+-  how to scale joiners for SKY_H (z_fit I guess)
+
+-  implement some outdoor joiners:
+
+    -  tri_pillar
+
+    -  rounded side with stair
+
+    -  fence on each side with brick column
+
+-  implement some other joiners
+
+   -  Y stair
+
+
+
+!!  Hallways : break 3x1 (etc?) sections into pieces
 
 +  fix cycles
 
 +  fix double halls
 
 +  fix street mode
-
-
--  review policy on "pegging"
-   (a) rename "peg" --> "unpeg"
-   (b) only honor it with explicit Y offset
 
 
 +  fix material chosen for borders and fake buildings
@@ -34,6 +47,11 @@ WORK IN PROGRESS
 -  fake building and fences : support long ones, also deep ones
 
 -  a way to prevent repeating the same prefab in a row
+
+
+-  review policy on "pegging"
+   (a) rename "peg" --> "unpeg"
+   (b) only honor it with explicit Y offset
 
 
 
