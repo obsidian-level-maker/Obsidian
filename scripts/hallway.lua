@@ -1134,6 +1134,9 @@ function HALLWAY_CLASS.build_hall_piece(H, P)
     P.skin = H:select_piece(P)
   end
 
+  local S1 = SEEDS[P.sx1][P.sy1]
+  local SK = S1.section
+
   local skin1 = P.skin
  
   local skin0 =
@@ -1141,7 +1144,7 @@ function HALLWAY_CLASS.build_hall_piece(H, P)
     wall  = H.wall_mat,
     floor = H.floor_mat,
     ceil  = H.ceil_mat,
-    outer = H.zone.facade_mat
+    outer = (SK ? SK.outer.wall ; H.zone.facade_mat)
   }
 
   -- hack for secret exits -- need hallway piece to blend in

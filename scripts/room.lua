@@ -2201,17 +2201,20 @@ function Room_outdoor_borders()
   -- 
 
   local function build_fake_building(skin_name, x1, y1, x2, y2, dir,
-                                     room, zone, floor_h)
+                                     room, K, floor_h)
 
     local skin1 = GAME.SKINS[skin_name]
     if not skin1 then
       error("missing border prefab: " .. skin_name)
     end
 
-    local skin2 =
-    {
-      wall = zone.facade_mat
-    }
+    local outer_skin
+    
+    if K then
+      outer_skin = K.outer
+    else
+      outer_skin = { wall=room.zone.facade_mat }
+    end
 
     if not floor_h then
       floor_h = assert(room.max_floor_h)
@@ -2227,7 +2230,7 @@ function Room_outdoor_borders()
 
     ROOM = room
 
-    Fabricate(skin1, T, { skin1, skin2 })
+    Fabricate(skin1, T, { skin1, outer_skin })
 
     if skin1.need_sky then
       Build_sky_quad(x1, y1, x2, y2, sky_h)
@@ -2237,10 +2240,7 @@ function Room_outdoor_borders()
   end
 
 
-  local function add_fat_fence(S, dir, zone)
-     
-    -- FIXME: TEST STUFF
-
+  local function add_fat_fence(S, dir)
     local N1 = S:neighbor(dir)
     local N2 = S:neighbor(10 - dir)
 
@@ -2252,16 +2252,16 @@ function Room_outdoor_borders()
 
 stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
---    Build_solid_quad(S.x1, S.y1, S.x2, S.y2, "TEKBRON1")
-
+    -- mark as used
     S.border = { kind = "fat_fence" }
 
     local floor_h = math.max(R1.max_floor_h, R2.max_floor_h)
 
+    -- FIXME: determine prefab properly!!
     local skin_name = rand.sel(80, "Fake_RoundFence_1x1", "Cage_FatFence1")
 
     build_fake_building(skin_name, S.x1, S.y1, S.x2, S.y2, dir,
-                        R1, zone, floor_h)
+                        R1, S.section, floor_h)
   end
 
 
@@ -2271,10 +2271,6 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
       local S = SEEDS[sx][sy]
 
       if S:used() then continue end
-
-      local outdoors = {}
-      local touches  = {}
-      local zone
 
       local cat_str = ""
 
@@ -2286,32 +2282,19 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
         -- FIXME !!!  check that seed edge is "walk" or "liquid"
 
         if N.room and N.room.kind == "outdoor" then
-          table.add_unique(outdoors, N.room)
-
           cat_str = cat_str .. tostring(dir)
         end
-
-        local N_zone
-
-        if N.room and N.room.kind != "outdoor" then N_zone = N.room.zone
-        elseif N.hall then N_zone = N.hall.zone
-        elseif N.fake_zone then N_zone = N.fake_zone
-        end
-
-        if N_zone and (not zone or N_zone.id < zone.id) then
-          zone = N_zone
-        end
       end
-
-      if not zone then zone = LEVEL.zones[1] end
 
       local cat_dir
 
       if cat_str == "46" then cat_dir = rand.sel(50, 4, 6) end
       if cat_str == "28" then cat_dir = rand.sel(50, 2, 8) end
 
+      -- FIXME: support 2x1 or 3x1 size (find runs)
+
       if cat_dir then
-        add_fat_fence(S, cat_dir, zone)
+        add_fat_fence(S, cat_dir)
       end
     end end
   end
@@ -2779,6 +2762,9 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
 
   local function build_border_fab(B, sx1, sy1, sx2, sy2, shape)
+    local S1 = SEEDS[sx1][sy1]
+    local S2 = SEEDS[sx2][sy2]
+
     local cw = sx2 - sx1 + 1
     local ch = sy2 - sy1 + 1
 
@@ -2800,14 +2786,13 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
     local skin1 = Room_pick_skin(reqs)
 
-    local skin2 =
-    {
-      wall  = B.mat or B.room.zone.facade_mat
-      outer = B.room.zone.facade_mat
-    }
+    local outer_skin
 
-    local S1 = SEEDS[sx1][sy1]
-    local S2 = SEEDS[sx2][sy2]
+    if S1.section then
+      outer_skin = S1.section.outer
+    else
+      outer_skin = { wall=B.room.zone.facade_mat }
+    end
 
     local x1, y1 = S1.x1, S1.y1
     local x2, y2 = S2.x2, S2.y2
@@ -2877,40 +2862,6 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
   end
 
 
-  local function zone_for_faker(S, dir)
-    local ROTS = { 0, 1, 7, 2, 6, 3, 5, 4 }
-
-    for dist = 1,3 do
-      each rot in ROTS do
-
-        local dir = geom.ROTATE[rot][dir]
-
-        local N = S:neighbor(dir, dist)
-
-        if not N then continue end
-
-        if N.room and N.room.kind == "outdoor" then continue end
-        if N.room and N.room.kind == "cave"    then continue end
-
-        if N.zone then
-          return N.zone
-        end
-
-      end
-    end
-
-    return LEVEL.zones[1]
-  end
-
-
-  local function zone_for_fake_group(sx1, sy1, sx2, sy2, dir)
-
-    --!!! FIXME : zone_for_fake_group
-
-    return LEVEL.zones[1]
-  end
-
-
   local function touches_outdoor_or_border(S, dir)
     local N = S:neighbor(dir)
 
@@ -2955,13 +2906,11 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
       -- OK --
 
-      local zone = zone_for_faker(S, 10 - dir)
-
       -- mark as used
       S.border = { kind = "fake_building" }
 
       build_fake_building("Fake_Round", S.x1, S.y1, S.x2, S.y2, dir,
-                          N.room, zone)
+                          N.room, S.section)
 
       return true
 
@@ -3012,8 +2961,6 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
     local sx2 = math.max(sx, SZ.sx)
     local sy2 = math.max(sy, SZ.sy)
 
-    local zone = zone_for_fake_group(sx1, sy1, sx2, sy2, dir)
-
     SA = SEEDS[sx1][sy1]
     SZ = SEEDS[sx2][sy2]
 
@@ -3025,8 +2972,9 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
       SEEDS[sx][sy].border = { kind = "fake_building" }
 
         local S = SEEDS[sx][sy]
+
         build_fake_building("Fake_Building1", S.x1, S.y1, S.x2, S.y2, dir,
-                            room, zone)
+                            room, S.section)
     end
     end
   end
