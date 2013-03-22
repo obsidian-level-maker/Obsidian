@@ -3296,14 +3296,19 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
     -- this is mainly to fix the borders of Sky Halls
     -- (or other unintended gaps in the geometry)
 
-    local zone = LEVEL.zones[1]
-    local mat  = assert(zone.facade_mat)
+    local mat
 
     for sx = 1, SEED_W do
     for sy = 1, SEED_TOP do
       local S = SEEDS[sx][sy]
 
       if S:used() then continue end
+
+      if S.section then
+        mat = assert(S.section.outer.wall)
+      else
+        mat = LEVEL.zones[1].facade_mat
+      end
 
       Build_solid_quad(S.x1, S.y1, S.x2, S.y2, mat)
     end

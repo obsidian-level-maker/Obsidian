@@ -958,7 +958,7 @@ function Quest_assign_room_themes()
       if L then
         K11.outer = { wall=L.zone.facade_mat }
       else
-        K11.outer = { LEVEL.zones[1].facade_mat }
+        K11.outer = { wall=LEVEL.zones[1].facade_mat }
       end
     end
 
