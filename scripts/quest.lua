@@ -807,11 +807,15 @@ function Quest_assign_room_themes()
 
 
   local function spread_facades_near_outdoors()
+    -- this fills the "gaps" between an indoor and outdoor room.
+
     for kx = 1,SECTION_W do
     for ky = 1,SECTION_H do
       local K = SECTIONS[kx][ky]
 
       if K.outer then continue end
+
+      if (K.room and K.room.kind == "outdoor") then continue end
 
       each dir in geom.ALL_DIRS do
         local N1 = K:neighbor(dir)
@@ -842,13 +846,99 @@ function Quest_assign_room_themes()
   end
 
 
+  local function spread_facades_around_outdoors()
+    -- this fills "around" outdoor rooms, e.g. a section K above a room
+    -- can be filled by section to the left or right of K.
+
+    for kx = 1,SECTION_W do
+    for ky = 1,SECTION_H do
+      local K = SECTIONS[kx][ky]
+
+      if K.outer then continue end
+
+      if (K.room and K.room.kind == "outdoor") then continue end
+
+      for dir = 2,8,2 do
+        local N = K:neighbor(dir)
+
+        if not (N and N.room and N.room.kind == "outdoor") then continue end
+
+        local T1 = K:neighbor(geom.RIGHT[dir])
+        local T2 = K:neighbor(geom.LEFT [dir])
+
+        local out1 = (T1 and T1.room and T1.room.kind == "outdoor")
+        local out2 = (T2 and T2.room and T2.room.kind == "outdoor")
+
+        if T1.outer and not out1 then
+          K.outer = table.copy(T1.outer)
+          break;
+        end
+
+        if T2.outer and not out2 then
+          K.outer = table.copy(T2.outer)
+          break;
+        end
+
+      end -- dir
+
+    end -- kx, ky
+    end
+  end
+
+
+  local function spread_facades_flood(allow_outdoor)
+    -- this simply fills empty sections from any neighbor.
+    -- returns true if something was changed
+
+    local changes = false
+
+    for kx = 1,SECTION_W do
+    for ky = 1,SECTION_H do
+      local K = SECTIONS[kx][ky]
+
+      if K.outer then continue end
+
+      if (not allow_outdoor) and (K.room and K.room.kind == "outdoor") then continue end
+
+      for dir = 2,8,2 do
+        local N = K:neighbor(dir)
+
+        if N and N.outer then
+          K.outer = table.copy(N.outer)
+          changes = true
+          break;
+        end
+      end
+
+    end -- kx, ky
+    end
+
+    return changes
+  end
+
+
+  local function verify_section_facades()
+    for kx = 1,SECTION_W do
+    for ky = 1,SECTION_H do
+      local K = SECTIONS[kx][ky]
+
+      if not K.outer then
+        error("Not all sections got a facade")
+      end
+    end
+    end
+  end
+
+
   local function facades_for_all_sections()
 
     -- prepare sections, ready for a flood-fill
 
     each R in LEVEL.rooms do
       if R.kind != "outdoor" then
-        K.outer = { wall=R.zone.facade_mat }
+        each K in R.sections do
+          K.outer = { wall=R.zone.facade_mat }
+        end
       end
     end
 
@@ -868,11 +958,22 @@ function Quest_assign_room_themes()
       if L then
         K11.outer = { wall=L.zone.facade_mat }
       else
-        K11.outer = { LEVELS.zones[1].facade_mat }
+        K11.outer = { LEVEL.zones[1].facade_mat }
       end
     end
 
-    spread_facades_near_outdoors()
+    for pass = 1,1 do
+      spread_facades_near_outdoors()
+    end
+
+    for pass = 1,4 do
+      spread_facades_around_outdoors()
+    end
+
+    while not spread_facades_flood(false) do end
+    while not spread_facades_flood(true)  do end
+
+    verify_section_facades()
   end
 
 
