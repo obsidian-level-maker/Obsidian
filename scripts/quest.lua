@@ -949,29 +949,28 @@ function Quest_assign_room_themes()
     end
 
     -- ensure at least one section has a facade
+    -- [use top-right due to run-on bias in the flood-fill algo]
 
-    local K11 = SECTIONS[1][1]
+    local KK = SECTIONS[SECTION_W][SECTION_H]
 
-    if not K11.outer then
-      local L = K11.room or K11.hall
+    if not KK.outer then
+      local L = KK.room or KK.hall
 
       if L then
-        K11.outer = { wall=L.zone.facade_mat }
+        KK.outer = { wall=L.zone.facade_mat }
       else
-        K11.outer = { wall=LEVEL.zones[1].facade_mat }
+        KK.outer = { wall=LEVEL.zones[1].facade_mat }
       end
     end
 
-    for pass = 1,1 do
-      spread_facades_near_outdoors()
-    end
+    spread_facades_near_outdoors()
 
     for pass = 1,4 do
       spread_facades_around_outdoors()
     end
 
-    while not spread_facades_flood(false) do end
-    while not spread_facades_flood(true)  do end
+    while spread_facades_flood(false) do end
+    while spread_facades_flood(true)  do end
 
     verify_section_facades()
   end
