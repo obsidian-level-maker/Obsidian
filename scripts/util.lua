@@ -589,6 +589,8 @@ geom.ANGLES = { 225,270,315, 180,0,0, 135,90,45 }
 
 geom.TRANSPOSE = { 1,4,7, 2,5,8, 3,6,9 }
 
+geom.ALL_DIRS = { 1,2,3, 4,6, 7,8,9 }
+
 
 function geom.dist(x1,y1, x2,y2)
   return math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )

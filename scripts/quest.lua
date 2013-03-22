@@ -798,7 +798,81 @@ function Quest_assign_room_themes()
       local r_theme2 = Z.themes["building"][2]  -- may be NIL
 
       Z.facade_mat = facade_from_room_themes(r_theme1, r_theme2, seen)
+
+      assert(Z.facade_mat)
+
+      gui.printf("Facade for %s : %s\n", Z:tostr(), Z.facade_mat)
     end
+  end
+
+
+  local function spread_facades_near_outdoors()
+    for kx = 1,SECTION_W do
+    for ky = 1,SECTION_H do
+      local K = SECTIONS[kx][ky]
+
+      if K.outer then continue end
+
+      each dir in geom.ALL_DIRS do
+        local N1 = K:neighbor(dir)
+        local N2 = K:neighbor(10 - dir)
+
+        if not (N1 and N2) then continue end
+
+        local out1 = (N1.room and N1.room.kind == "outdoor")
+        local out2 = (N2.room and N2.room.kind == "outdoor")
+
+        -- want 'N1' to be an indoor room, 'N2' to be an outdoor room
+        if out1 then
+          N1, N2 = N2, N1
+          out1, out2 = out2, out1
+        end
+
+        if out1 or not out2 then continue end
+
+        if N1.outer then
+          K.outer = table.copy(N1.outer)
+          break;
+        end
+
+      end -- dir
+
+    end -- kx, ky
+    end
+  end
+
+
+  local function facades_for_all_sections()
+
+    -- prepare sections, ready for a flood-fill
+
+    each R in LEVEL.rooms do
+      if R.kind != "outdoor" then
+        K.outer = { wall=R.zone.facade_mat }
+      end
+    end
+
+    each H in LEVEL.halls do
+      each K in H.sections do
+        K.outer = { wall=H.zone.facade_mat }
+      end
+    end
+
+    -- ensure at least one section has a facade
+
+    local K11 = SECTIONS[1][1]
+
+    if not K11.outer then
+      local L = K11.room or K11.hall
+
+      if L then
+        K11.outer = { wall=L.zone.facade_mat }
+      else
+        K11.outer = { LEVELS.zones[1].facade_mat }
+      end
+    end
+
+    spread_facades_near_outdoors()
   end
 
 
@@ -830,11 +904,9 @@ function Quest_assign_room_themes()
   end
 
   select_facades_for_zones()
-  pictures_for_zones()
+  facades_for_all_sections()
 
-  each Z in LEVEL.zones do
-    gui.printf("Facade for %s : %s\n", Z:tostr(), Z.facade_mat or "none!!")
-  end
+  pictures_for_zones()
 
   -- verify each room and hallway got a theme
   each R in LEVEL.rooms do assert(R.theme) end
