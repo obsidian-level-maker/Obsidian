@@ -68,6 +68,7 @@ OB_MODULES["level_control"] =
     big_rooms   = { label="Big Rooms",      choices=LEVEL_CONTROL.CHOICES }
     big_juncs   = { label="Big Junctions",  choices=LEVEL_CONTROL.CHOICES }
     cages       = { label="Cages",          choices=LEVEL_CONTROL.CHOICES }
+    closets     = { label="Closets",        choices=LEVEL_CONTROL.CHOICES }
     crates      = { label="Crates",         choices=LEVEL_CONTROL.CHOICES }
     crossovers  = { label="Cross-Overs",    choices=LEVEL_CONTROL.CHOICES }
     cycles      = { label="Multiple Paths", choices=LEVEL_CONTROL.CHOICES }

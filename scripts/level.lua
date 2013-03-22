@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2012 Andrew Apted
+--  Copyright (C) 2006-2013 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -144,8 +144,9 @@ GLOBAL_STYLE_LIST =
   crates     = { few=30, some=60, heaps=20 }
   beams      = { few=25, some=50, heaps=5  }
   barrels    = { few=50, some=50, heaps=10 }
-  windows    = { few=20, some=50, heaps=200 }
   pictures   = { few=10, some=50, heaps=10 }
+  windows    = { few=5,  some=15, heaps=50 }
+  closets    = { few=5,  some=15, heaps=50 }
 
   lakes      = { few=60, heaps=10 }
   cages      = { none=50, few=50, some=30, heaps=10 }
