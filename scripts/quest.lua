@@ -921,22 +921,16 @@ function Quest_spread_facades()
 
       if (K.room and K.room.kind == "outdoor") then continue end
 
-      each dir in geom.ALL_DIRS do
+      for dir = 2,8,2 do
         local N1 = K:neighbor(dir)
         local N2 = K:neighbor(10 - dir)
 
         if not (N1 and N2) then continue end
 
-        local out1 = (N1.room and N1.room.kind == "outdoor")
-        local out2 = (N2.room and N2.room.kind == "outdoor")
-
         -- want 'N1' to be an indoor room, 'N2' to be an outdoor room
-        if out1 then
-          N1, N2 = N2, N1
-          out1, out2 = out2, out1
-        end
 
-        if out1 or not out2 then continue end
+        if     (N1.room and N1.room.kind == "outdoor") then continue end
+        if not (N2.room and N2.room.kind == "outdoor") then continue end
 
         if N1.facade then
           K.facade = N1.facade
@@ -965,6 +959,12 @@ function Quest_spread_facades()
         local N = K:neighbor(dir)
 
         if not (N and N.room and N.room.kind == "outdoor") then continue end
+
+        local N1 = K:neighbor(geom.RIGHT_45[dir])
+        local N2 = K:neighbor(geom. LEFT_45[dir])
+
+        if (N1 and N1.room == N.room) then continue end
+        if (N2 and N2.room == N.room) then continue end
 
         local found
 
@@ -1041,7 +1041,7 @@ function Quest_spread_facades()
 
       if (not allow_outdoor) and (K.room and K.room.kind == "outdoor") then continue end
 
-      for dir = 2,8,2 do
+      for dir = 6,8,2 do
         local N = K:neighbor(dir)
 
         if N and N.facade then
@@ -1144,8 +1144,12 @@ dump_facades("At corners #1")
   while facades_flood(false) do end
   while facades_flood(true)  do end
 
+dump_facades("Flood")
+
   facades_transfer_to_seeds()
   facades_do_edge_seeds()
+
+dump_facades("FINAL FACADES")
 
   verify_all_seeds_got_a_facade()
 end
