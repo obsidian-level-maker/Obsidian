@@ -679,6 +679,11 @@ end
 function CHUNK_CLASS.content_switch(C)
   local L = assert(C.room or C.hall)
 
+  local lock = C.content.lock
+
+  assert(lock)
+  assert(lock.switch)
+
   local reqs =
   {
     kind  = "switch"
@@ -689,11 +694,6 @@ function CHUNK_CLASS.content_switch(C)
   }
 
   local skin1 = Room_pick_skin(reqs)
-
-  local lock = C.content.lock
-
-  assert(lock)
-  assert(lock.switch)
 
   local skin2 = { tag_1=lock.tag }
   
