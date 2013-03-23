@@ -1048,13 +1048,20 @@ function Room_matching_skins(reqs)
 --!!!! FIXME   if not Fab_size_check(skin, reqs.long, reqs.deep) then return 0 end
 
     -- building type checks
-    if reqs.room then
-      local L = reqs.room
+    if reqs.room_kind then
+      local kind = reqs.room_kind
 
-      if skin.cave     and skin.cave     != convert_bool(L.kind == "cave")     then return 0 end
-      if skin.outdoor  and skin.outdoor  != convert_bool(L.kind == "outdoor")  then return 0 end
-      if skin.building and skin.building != convert_bool(L.kind == "building") then return 0 end
-      if skin.hallway  and skin.hallway  != convert_bool(L.kind == "hallway")  then return 0 end
+      if skin.outdoor  and skin.outdoor  != convert_bool(kind == "outdoor")  then return 0 end
+      if skin.building and skin.building != convert_bool(kind == "building") then return 0 end
+      if skin.cave     and skin.cave     != convert_bool(kind == "cave")     then return 0 end
+    end
+
+    if reqs.room2_kind then
+      local kind = reqs.room2_kind
+
+      if skin.outdoor2  and skin.outdoor2  != convert_bool(kind == "outdoor")  then return 0 end
+      if skin.building2 and skin.building2 != convert_bool(kind == "building") then return 0 end
+      if skin.cave2     and skin.cave2     != convert_bool(kind == "cave")     then return 0 end
     end
 
     -- liquid check

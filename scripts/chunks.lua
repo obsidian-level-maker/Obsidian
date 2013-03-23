@@ -599,7 +599,7 @@ function CHUNK_CLASS.do_big_item(C, item_name)
   {
     kind  = "item"
     where = "middle"
-    room = L
+    room_kind = L.kind
   }
 
   local skin1 = Room_pick_skin(reqs)
@@ -623,7 +623,7 @@ function CHUNK_CLASS.content_start(C)
   {
     kind  = "start"
     where = "middle"
-    room  = L
+    room_kind = L.kind
   }
 
   local skin1 = Room_pick_skin(reqs)
@@ -644,7 +644,7 @@ function CHUNK_CLASS.content_exit(C)
   {
     kind  = "exit"
     where = "middle"
-    room  = L
+    room_kind = L.kind
   }
 
   local skin1 = Room_pick_skin(reqs)
@@ -688,9 +688,9 @@ function CHUNK_CLASS.content_switch(C)
   {
     kind  = "switch"
     where = "middle"
-    room  = L
     key   = lock.key
     switch = lock.switch
+    room_kind = L.kind
   }
 
   local skin1 = Room_pick_skin(reqs)
@@ -714,7 +714,7 @@ function CHUNK_CLASS.content_teleporter(C)
   {
     kind  = "teleporter"
     where = "middle"
-    room  = L
+    room_kind = L.kind
   }
 
   local skin1 = Room_pick_skin(reqs)
@@ -750,7 +750,7 @@ function CHUNK_CLASS.content_hub_gate(C)
   {
     kind  = "hub_gate"
     where = "middle"
-    room  = L
+    room_kind = L.kind
   }
 
   local skin1 = Room_pick_skin(reqs)

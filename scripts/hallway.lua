@@ -1041,7 +1041,6 @@ function HALLWAY_CLASS.select_piece(H, P)
     kind  = "hall"
     group = LEVEL.hall_group
     shape = shape
-    room  = H
   }
 
 --[[
@@ -1083,7 +1082,6 @@ function HALLWAY_CLASS.select_big_junc(H, P)
   {
     kind  = "junction"
     shape = P.h_shape
-    room  = H
   }
 
   -- alternate requirements : match the hallway group
