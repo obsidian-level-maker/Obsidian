@@ -3,10 +3,6 @@ WORK IN PROGRESS
 ================
 
 
-IDEA: indoor closets are designed to mate up with walls.
-      how about doing same for (a) hallway pieces, (b) joiners
-
-
 Joiners
 -------
 
@@ -40,14 +36,17 @@ Joiners
 +  fix street mode
 
 
-+  fix material chosen for borders and fake buildings
+-  fake building and fences : support long ones, also deep ones
+
+-  long fat_fences / fake_building : don't span different outers
 
 -  borders / fakers : support 'z_fit'
 
--  fake building and fences : support long ones, also deep ones
-
 -  a way to prevent repeating the same prefab in a row
 
+
+IDEA: indoor closets are scaled to mate up with walls.
+      how about doing same for (a) hallway pieces, (b) joiners
 
 -  review policy on "pegging"
    (a) rename "peg" --> "unpeg"
