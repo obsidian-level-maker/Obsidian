@@ -1612,9 +1612,6 @@ end
 
 
 function ROOM_CLASS.add_closet(R, closet_kind)
-
-do return false end  --!!!!!
-
   -- check styles
   local STYLE_NAMES =
   {
@@ -1622,10 +1619,11 @@ do return false end  --!!!!!
     secret = "secrets"
   }
 
-  local style_name = STYLE_NAMES[closet_kind]
+  local style_name = STYLE_NAMES[closet_kind] or "closets"
 
   if style_name then
-    local prob = style_sel(style_name, 0, 35, 70, 99)
+    local prob = style_sel(style_name, 0, 20, 60, 95)
+
     if not rand.odds(prob) then return false end
   end
 
