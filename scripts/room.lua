@@ -750,13 +750,7 @@ function CLOSET_CLASS.build(CL)
 
   local T = Trans.box_transform(x1, y1, x2, y2, C.floor_h, CL.dir)
 
-  Fabricate(skin1, T, { skin0, skin1, skin2 })
-
-  if skin1.need_sky then
-    assert(CL.parent.sky_group)
-    local sky_h = CL.parent.sky_group.h
-    Build_sky_quad(x1, y1, x2, y2, sky_h)
-  end
+  Fabricate_at(CL.parent, skin1, T, { skin0, skin1, skin2 })
 
 --[[
   -- experiment !!
@@ -2220,23 +2214,13 @@ function Room_outdoor_borders()
       floor_h = assert(room.max_floor_h)
     end
 
-    local sky_h = assert(room.sky_group.h)
-
     if dir == 1 or dir == 3 or dir == 7 or dir == 9 then
       dir = geom.LEFT_45[dir]
     end
 
     local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
 
-    ROOM = room
-
-    Fabricate(skin1, T, { skin1, outer_skin })
-
-    if skin1.need_sky then
-      Build_sky_quad(x1, y1, x2, y2, sky_h)
-    end
-
-    ROOM = nil
+    Fabricate_at(room, skin1, T, { skin1, outer_skin })
   end
 
 
@@ -2798,7 +2782,6 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
     local x2, y2 = S2.x2, S2.y2
 
     local floor_h = assert(B.room.max_floor_h)
-    local sky_h   = assert(B.room.sky_group.h)
 
     local dir = B.dir
     if dir == 1 or dir == 3 or dir == 7 or dir == 9 then
@@ -2807,13 +2790,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
     local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
 
-    ROOM = B.room
-
-    Fabricate(skin1, T, { skin1, skin2 })
-
-    Build_sky_quad(x1, y1, x2, y2, sky_h)
-
-    ROOM = nil
+    Fabricate_at(B.room, skin1, T, { skin1, skin2 })
   end
 
 
