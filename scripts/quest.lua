@@ -806,6 +806,46 @@ function Quest_assign_room_themes()
   end
 
 
+  ---| Quest_assign_room_themes |---
+
+  LEVEL.rare_used = {}
+
+  if not EPISODE.rare_used then EPISODE.rare_used = {} end
+
+  if THEME.facades then
+    LEVEL.global_facades = table.copy(THEME.facades)
+  end
+
+  determine_extents()
+
+  each kind,extent in EXTENT_TAB do
+    dominant_themes_for_kind(kind, extent)
+  end
+
+  dump_dominant_themes()
+
+  each R in LEVEL.rooms do
+    local rare_ok = (_index % 2 == 0) and rand.odds(THEME.rare_prob or 30)
+    assign_room_theme(R, rare_ok)
+  end
+
+  each H in LEVEL.halls do
+    assign_hall_theme(H)
+  end
+
+  select_facades_for_zones()
+
+  pictures_for_zones()
+
+  -- verify each room and hallway got a theme
+  each R in LEVEL.rooms do assert(R.theme) end
+  each H in LEVEL.halls do assert(H.theme) end
+end
+
+
+
+function Quest_spread_facades()
+
   local function facades_for_indoor_rooms()
     each R in LEVEL.rooms do
       if R.kind != "outdoor" then
@@ -1048,66 +1088,29 @@ function Quest_assign_room_themes()
   end
 
 
-  local function distribute_facades()
-    facades_for_indoor_rooms()
+  ---| Quest_spread_facades |---
 
-    facades_in_between()
+  facades_for_indoor_rooms()
+
+  facades_in_between()
+  facades_at_corners()
+
+  for pass = 1,3 do
+    facades_around_outdoors()
     facades_at_corners()
-
-    for pass = 1,3 do
-      facades_around_outdoors()
-      facades_at_corners()
-    end
-
-    -- ensure at least one section has a facade
-    -- [use top-right due to run-on bias in the flood-fill algo]
-    facades_for_top_right()
-
-    while facades_flood(false) do end
-    while facades_flood(true)  do end
-
-    facades_transfer_to_seeds()
-    facades_do_edge_seeds()
-
-    verify_all_seeds_got_a_facade()
   end
 
+  -- ensure at least one section has a facade
+  -- [use top-right due to run-on bias in the flood-fill algo]
+  facades_for_top_right()
 
-  ---| Quest_assign_room_themes |---
+  while facades_flood(false) do end
+  while facades_flood(true)  do end
 
-  LEVEL.rare_used = {}
+  facades_transfer_to_seeds()
+  facades_do_edge_seeds()
 
-  if not EPISODE.rare_used then EPISODE.rare_used = {} end
-
-  if THEME.facades then
-    LEVEL.global_facades = table.copy(THEME.facades)
-  end
-
-  determine_extents()
-
-  each kind,extent in EXTENT_TAB do
-    dominant_themes_for_kind(kind, extent)
-  end
-
-  dump_dominant_themes()
-
-  each R in LEVEL.rooms do
-    local rare_ok = (_index % 2 == 0) and rand.odds(THEME.rare_prob or 30)
-    assign_room_theme(R, rare_ok)
-  end
-
-  each H in LEVEL.halls do
-    assign_hall_theme(H)
-  end
-
-  select_facades_for_zones()
-  distribute_facades()
-
-  pictures_for_zones()
-
-  -- verify each room and hallway got a theme
-  each R in LEVEL.rooms do assert(R.theme) end
-  each H in LEVEL.halls do assert(H.theme) end
+  verify_all_seeds_got_a_facade()
 end
 
 
@@ -2017,6 +2020,7 @@ function Quest_make_quests()
 
 
   Quest_assign_room_themes()
+  Quest_spread_facades()
 
   -- left over keys can be used in the next level of a hub
   if LEVEL.usable_keys and LEVEL.hub_links then
