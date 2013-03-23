@@ -945,7 +945,8 @@ function Quest_spread_facades()
 
 
   local function facades_at_corners()
-    -- this tries to fill empty corners near outdoor rooms
+    -- this tries to fill empty corners near outdoor rooms.
+    -- it is mainly important for the edges of the map.
 
     for kx = 1,SECTION_W do
     for ky = 1,SECTION_H do
@@ -972,9 +973,7 @@ function Quest_spread_facades()
           local T = K:neighbor(dir2)
 
           if T and T.facade then
-            K.facade = T.facade
-            found = true
-            break;
+            K.facade = T.facade ; found = true ; break
           end
         end
 
@@ -1011,12 +1010,12 @@ function Quest_spread_facades()
         local out2 = (T2 and T2.room and T2.room.kind == "outdoor")
 
         if T1.facade and not out1 then
-          K.facade = table.copy(T1.facade)
+          K.facade = T1.facade
           break;
         end
 
         if T2.facade and not out2 then
-          K.facade = table.copy(T2.facade)
+          K.facade = T2.facade
           break;
         end
 
@@ -1041,14 +1040,29 @@ function Quest_spread_facades()
 
       if (not allow_outdoor) and (K.room and K.room.kind == "outdoor") then continue end
 
-      for dir = 6,8,2 do
-        local N = K:neighbor(dir)
+      local N2 = K:neighbor(2)
+      local N4 = K:neighbor(4)
+      local N6 = K:neighbor(6)
+      local N8 = K:neighbor(8)
 
-        if N and N.facade then
-          K.facade = N.facade
-          changes = true
-          break;
-        end
+      local F2 = N2 and N2.facade
+      local F4 = N4 and N4.facade
+      local F6 = N6 and N6.facade
+      local F8 = N8 and N8.facade
+
+      if F2 and F2 == F8 then
+        K.facade = F2 ; changes = true ; continue
+
+      elseif F4 and (F4 == F6 or F4 == F2 or F4 == F8) then
+        K.facade = F4 ; changes = true ; continue
+
+      elseif F2 and (F2 == F4 or F2 == F6) then
+        K.facade = F2 ; changes = true ; continue
+      end
+
+      if F6 or F8 then
+        K.facade = F6 or F8
+        changes = true
       end
 
     end -- kx, ky
@@ -1124,13 +1138,9 @@ function Quest_spread_facades()
   ---| Quest_spread_facades |---
 
   facades_for_indoor_rooms()
-dump_facades("Indoor")
 
   facades_in_between()
-dump_facades("In between")
-
   facades_at_corners()
-dump_facades("At corners #1")
 
   for pass = 1,3 do
     facades_around_outdoors()
@@ -1138,18 +1148,13 @@ dump_facades("At corners #1")
   end
 
   -- ensure at least one section has a facade
-  -- [use top-right due to run-on bias in the flood-fill algo]
   facades_for_top_right()
 
   while facades_flood(false) do end
   while facades_flood(true)  do end
 
-dump_facades("Flood")
-
   facades_transfer_to_seeds()
   facades_do_edge_seeds()
-
-dump_facades("FINAL FACADES")
 
   verify_all_seeds_got_a_facade()
 end
