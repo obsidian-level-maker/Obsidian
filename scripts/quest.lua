@@ -846,6 +846,39 @@ end
 
 function Quest_spread_facades()
 
+  local function char_for_facade(sx, sy)
+    local S = SEEDS[sx][sy]
+
+    local facade = (S.section and S.section.facade) or S.facade
+
+    if not facade then
+      if S.edge_of_map or S.free then return "/" end
+
+      return " "
+    end
+
+    return string.sub(facade, 1, 1)
+  end
+
+
+  local function dump_facades(title)
+    gui.printf("%s\n", title)
+
+    for y = SEED_TOP,1,-1 do
+      local line = ""
+
+      for x = 1,SEED_W do
+        line = line .. char_for_facade(x, y)
+      end
+
+      gui.printf("%s\n", line)
+    end
+
+    gui.printf("\n")
+  end
+
+
+
   local function facades_for_indoor_rooms()
     each R in LEVEL.rooms do
       if R.kind != "outdoor" then
@@ -1091,9 +1124,13 @@ function Quest_spread_facades()
   ---| Quest_spread_facades |---
 
   facades_for_indoor_rooms()
+dump_facades("Indoor")
 
   facades_in_between()
+dump_facades("In between")
+
   facades_at_corners()
+dump_facades("At corners #1")
 
   for pass = 1,3 do
     facades_around_outdoors()
