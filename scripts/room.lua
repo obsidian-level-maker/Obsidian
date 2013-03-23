@@ -700,16 +700,17 @@ end
 function CLOSET_CLASS.build(CL)
   local C = assert(CL.chunk)
 
-  local skin0 = table.copy(CL.parent.skin)
   local skin1 = CL.skin
-  local skin2 = {}
+
+  local skin0 = table.copy(CL.parent.skin)
 
   -- FIXME !!  get floor texture from touching area
 
   if CL.parent.kind == "outdoor" then
-    -- FIXME: this won't match neighboring walls
-    skin0.wall = CL.parent.zone.facade_mat
+    skin0.wall = CL.section.facade
   end
+
+  local skin2 = { }
 
   if CL.closet_kind == "teleporter" then
     local conn = CL.parent:get_teleport_conn()
