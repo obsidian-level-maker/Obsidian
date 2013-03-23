@@ -2193,20 +2193,15 @@ function Room_outdoor_borders()
   -- 
 
   local function build_fake_building(skin_name, x1, y1, x2, y2, dir,
-                                     room, K, floor_h)
+                                     room, facade, floor_h)
+    assert(facade)
 
     local skin1 = GAME.SKINS[skin_name]
     if not skin1 then
       error("missing border prefab: " .. skin_name)
     end
 
-    local outer_skin
-    
-    if K then
-      outer_skin = K.outer
-    else
-      outer_skin = { wall=room.zone.facade_mat }
-    end
+    local skin2 = { wall=facade }
 
     if not floor_h then
       floor_h = assert(room.max_floor_h)
@@ -2218,7 +2213,7 @@ function Room_outdoor_borders()
 
     local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
 
-    Fabricate_at(room, skin1, T, { skin1, outer_skin })
+    Fabricate_at(room, skin1, T, { skin1, skin2 })
   end
 
 
@@ -2243,7 +2238,7 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
     local skin_name = rand.sel(80, "Fake_RoundFence_1x1", "Cage_FatFence1")
 
     build_fake_building(skin_name, S.x1, S.y1, S.x2, S.y2, dir,
-                        R1, S.section, floor_h)
+                        R1, S.facade, floor_h)
   end
 
 
@@ -2768,13 +2763,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
     local skin1 = Room_pick_skin(reqs)
 
-    local outer_skin
-
-    if S1.section then
-      outer_skin = S1.section.outer
-    else
-      outer_skin = { wall=B.room.zone.facade_mat }
-    end
+    local skin2 = { wall=S1.facade }
 
     local x1, y1 = S1.x1, S1.y1
     local x2, y2 = S2.x2, S2.y2
@@ -2885,7 +2874,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
       S.border = { kind = "fake_building" }
 
       build_fake_building("Fake_Round", S.x1, S.y1, S.x2, S.y2, dir,
-                          N.room, S.section)
+                          N.room, S.facade)
 
       return true
 
@@ -2949,7 +2938,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
         local S = SEEDS[sx][sy]
 
         build_fake_building("Fake_Building1", S.x1, S.y1, S.x2, S.y2, dir,
-                            room, S.section)
+                            room, S.facade)
     end
     end
   end
@@ -2979,21 +2968,13 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
     -- this is mainly to fix the borders of Sky Halls
     -- (or other unintended gaps in the geometry)
 
-    local mat
-
     for sx = 1, SEED_W do
     for sy = 1, SEED_TOP do
       local S = SEEDS[sx][sy]
 
       if S:used() then continue end
 
-      if S.section then
-        mat = assert(S.section.outer.wall)
-      else
-        mat = LEVEL.zones[1].facade_mat
-      end
-
-      Build_solid_quad(S.x1, S.y1, S.x2, S.y2, mat)
+      Build_solid_quad(S.x1, S.y1, S.x2, S.y2, S.facade)
     end
     end
   end
