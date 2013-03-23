@@ -986,7 +986,7 @@ function Quest_spread_facades()
   end
 
 
-  local function facades_around_outdoors()
+  local function facades_around_outdoors(no_edge)
     -- this fills "around" outdoor rooms, e.g. a section K above a room
     -- can be filled by section to the left or right of K.
 
@@ -997,6 +997,10 @@ function Quest_spread_facades()
       if K.facade then continue end
 
       if (K.room and K.room.kind == "outdoor") then continue end
+
+      if no_edge and (kx == 1 or kx == SECTION_W or
+                      ky == 1 or ky == SECTION_H)
+      then continue end
 
       for dir = 2,8,2 do
         local N = K:neighbor(dir)
@@ -1142,8 +1146,8 @@ function Quest_spread_facades()
   facades_in_between()
   facades_at_corners()
 
-  for pass = 1,3 do
-    facades_around_outdoors()
+  for pass = 1,6 do
+    facades_around_outdoors(pass < 4)
     facades_at_corners()
   end
 
