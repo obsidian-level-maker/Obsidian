@@ -593,11 +593,13 @@ end
 
 
 function CHUNK_CLASS.do_big_item(C, item_name)
+  local L = assert(C.room or C.hall)
+
   local reqs =
   {
     kind  = "item"
     where = "middle"
-    room = C.room or C.hall
+    room = L
   }
 
   local skin1 = Room_pick_skin(reqs)
@@ -609,17 +611,19 @@ function CHUNK_CLASS.do_big_item(C, item_name)
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
 
-  Fabricate(skin1, T, { skin0, skin1, skin2 })
+  Fabricate_at(L, skin1, T, { skin0, skin1, skin2 })
 end
 
 
 
 function CHUNK_CLASS.content_start(C)
+  local L = assert(C.room or C.hall)
+
   local reqs =
   {
     kind  = "start"
     where = "middle"
-    room  = C.room or C.hall
+    room  = L
   }
 
   local skin1 = Room_pick_skin(reqs)
@@ -629,22 +633,24 @@ function CHUNK_CLASS.content_start(C)
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, 10 - C.spot_dir)
 
-  Fabricate(skin1, T, { skin1, skin2 })
+  Fabricate_at(L, skin1, T, { skin1, skin2 })
 end
 
 
 function CHUNK_CLASS.content_exit(C)
+  local L = assert(C.room or C.hall)
+
   local reqs =
   {
     kind  = "exit"
     where = "middle"
-    room  = C.room or C.hall
+    room  = L
   }
 
   local skin1 = Room_pick_skin(reqs)
 
-  local skin2 = { next_map = LEVEL.next_map, targetname = "exit" }
   local skin0 = { wall = C.room.wall_mat }
+  local skin2 = { next_map = LEVEL.next_map, targetname = "exit" }
 
   -- Hexen: on last map, exit will end the game
   if OB_CONFIG.game == "hexen" and not LEVEL.next_map then
@@ -661,7 +667,7 @@ function CHUNK_CLASS.content_exit(C)
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
 
-  Fabricate(skin1, T, { skin0, skin1, skin2 })
+  Fabricate_at(L, skin1, T, { skin0, skin1, skin2 })
 end
 
 
@@ -671,41 +677,44 @@ end
 
 
 function CHUNK_CLASS.content_switch(C)
-  local lock = C.content.lock
-
-  assert(lock)
-  assert(lock.switch)
-
-  local skin1
-  local skin2 = { tag_1=lock.tag }
-  
-  skin2.target = string.format("switch%d", skin2.tag_1)
+  local L = assert(C.room or C.hall)
 
   local reqs =
   {
     kind  = "switch"
     where = "middle"
-    room  = C.room or C.hall
+    room  = L
     key   = lock.key
     switch = lock.switch
   }
 
   local skin1 = Room_pick_skin(reqs)
 
+  local lock = C.content.lock
+
+  assert(lock)
+  assert(lock.switch)
+
+  local skin2 = { tag_1=lock.tag }
+  
+  skin2.target = string.format("switch%d", skin2.tag_1)
+
   local mx, my = C:mid_point()
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
 
-  Fabricate(skin1, T, { skin1, skin2 })
+  Fabricate_at(L, skin1, T, { skin1, skin2 })
 end
 
 
 function CHUNK_CLASS.content_teleporter(C)
+  local L = assert(C.room or C.hall)
+
   local reqs =
   {
     kind  = "teleporter"
     where = "middle"
-    room  = C.room or C.hall
+    room  = L
   }
 
   local skin1 = Room_pick_skin(reqs)
@@ -730,16 +739,18 @@ function CHUNK_CLASS.content_teleporter(C)
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, 10 - C.spot_dir)
 
-  Fabricate(skin1, T, { skin0, skin1, skin2 })
+  Fabricate_at(L, skin1, T, { skin0, skin1, skin2 })
 end
 
 
 function CHUNK_CLASS.content_hub_gate(C)
+  local L = assert(C.room or C.hall)
+
   local reqs  =
   {
     kind  = "hub_gate"
     where = "middle"
-    room  = C.room or C.hall
+    room  = L
   }
 
   local skin1 = Room_pick_skin(reqs)
@@ -761,11 +772,13 @@ function CHUNK_CLASS.content_hub_gate(C)
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, 10 - C.spot_dir)
 
-  Fabricate(skin1, T, { skin0, skin1, skin2 })
+  Fabricate_at(L, skin1, T, { skin0, skin1, skin2 })
 end
 
 
 function CHUNK_CLASS.do_hexen_triple(C)
+  local L = assert(C.room or C.hall)
+
   -- FIXME: this is temp hack !!!
   local skin_map =
   {
@@ -787,7 +800,7 @@ function CHUNK_CLASS.do_hexen_triple(C)
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
 
-  Fabricate(skin1, T, { skin0, skin1, skin2 })
+  Fabricate_at(L, skin1, T, { skin0, skin1, skin2 })
 end
 
 
@@ -858,6 +871,8 @@ end
 
 
 function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
+  local L = assert(C.room or C.hall)
+
   local long = geom.vert_sel(dir, C.x2 - C.x1, C.y2 - C.y1)
   local deep = 32
 
@@ -877,6 +892,7 @@ function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
   then
 --???    Trans.set_fitted_z(T, info.f_max, info.c_min)
 
+--[[
     -- FIXME: big hack !!!!!
     if (OB_CONFIG.game == "heretic" or OB_CONFIG.game == "hexen") and C.room and C.room.zone.fake_windows 
        and info.c_min - info.f_max >= 200
@@ -890,6 +906,7 @@ function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
       Fabricate(skin0, T, { skin })
       return
     end
+--]]
   end
 
   -- walls and windows use an "XYZ" fitted transform
@@ -903,22 +920,20 @@ function CHUNK_CLASS.build_wall(C, dir, f_h, c_h)
       error("No such picture skin: " .. tostring(C.area.pic_name))
     end
 
-    if skin2.file then
-      T.fitted_z = nil
-    end
-
-    Fabricate(skin2, T, { skin, skin2 })
+    Fabricate_at(L, skin2, T, { skin, skin2 })
     return
   end
 
   local skin2 = GAME.SKINS["Wall_plain"]
   assert(skin2)
 
-  Fabricate(skin2, T, { skin })
+  Fabricate_at(L, skin2, T, { skin })
 end
 
 
 function CHUNK_CLASS.build_fence(C, dir, low_fence)
+  local L = assert(C.room or C.hall)
+
   local long = geom.vert_sel(dir, C.x2 - C.x1, C.y2 - C.y1)
   local deep = 16
 
@@ -936,11 +951,13 @@ function CHUNK_CLASS.build_fence(C, dir, low_fence)
   local skin1 = assert(GAME.SKINS["Fence1"])
   local skin2 = assert(C.room.skin)
 
-  Fabricate(skin1, T, { skin2 })
+  Fabricate_at(L, skin1, T, { skin2 })
 end
 
 
 function CHUNK_CLASS.build_scenic(C)
+--[[  NOT USED ATM
+
   if C.prefab_skin then
     local skin0 = {}
 
@@ -966,6 +983,7 @@ function CHUNK_CLASS.build_scenic(C)
 
     brush_helper(brush)
   end
+--]]
 end
 
 
@@ -975,6 +993,7 @@ function CHUNK_CLASS.build_door(C, dir, LINK, f_h, c_h, long)
   local C2 = LINK.C2
   local L2 = C2.room or C2.hall
   local L1 = C .room or C .hall
+  assert(L1)
   assert(L2)
 
   local reqs =
@@ -1012,7 +1031,7 @@ function CHUNK_CLASS.build_door(C, dir, LINK, f_h, c_h, long)
     error("Unknown lock kind: " .. tostring(lock.kind))
   end
 
-  Fabricate(skin, T, { skin, skin2 })
+  Fabricate_at(L1, skin, T, { skin, skin2 })
 end
 
 
@@ -1192,6 +1211,7 @@ function CHUNK_CLASS.build(C)
   if C.no_floor then
     -- do nothing (e.g. caves)
 
+--[[  NOT USED
   elseif C.floor_prefab then
     local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, f_h)
     local skin1 = GAME.SKINS[C.floor_prefab]
@@ -1199,7 +1219,7 @@ function CHUNK_CLASS.build(C)
 
     Fabricate(skin1, T, { skin0, skin1 })
 
-  elseif C.stair and false then  --!!!!
+  elseif C.stair and false then
     local skin = C.stair.skin
 
     local skin0 = { side=f_matname, step=f_matname, top=f_matname, floor=f_matname, wall=f_matname }
@@ -1218,6 +1238,7 @@ function CHUNK_CLASS.build(C)
 ---##   C.stair.dir, C.stair.C1.floor_h, C.stair.C2.floor_h, delta_h, T.scale_z)
 
     Fabricate(skin, T, { skin0, skin, skin2 })
+--]]
 
 
 --!!!! TESTINK STUFF
