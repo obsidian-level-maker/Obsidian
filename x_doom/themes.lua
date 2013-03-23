@@ -1322,7 +1322,7 @@ DOOM2.LEVEL_THEMES =
 
     OLD__doors = { wolf_door=90, wolf_elev_door=5 }
 
-    force_mon_probs = { ss_dude=70, demon=20, shooter=20, zombie=20, _other=0 }
+    force_mon_probs = { ss_dude=70, demon=20, shooter=20, zombie=20, other=0 }
 
     ---??? weap_prefs = { chain=3, shotty=3, super=3 }
 

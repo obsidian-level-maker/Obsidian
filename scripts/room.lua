@@ -962,7 +962,7 @@ function Room_match_user_stuff(tab)
   local function match(field, user)
     if type(field) == "table" then
       local v = field[user]
-      if not v then v = field["_other"] or 0 end
+      if not v then v = field["other"] or 0 end
       factor = factor * v
 
     else
