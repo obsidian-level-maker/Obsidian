@@ -2589,3 +2589,25 @@ function Fabricate(main_skin, T, skins)
   return fab
 end
 
+
+function Fabricate_at(L, main_skin, T, skins)
+  -- L can be a room or a hallway
+  ROOM = L
+
+  Fabricate(main_skin, T, skins)
+
+  if main_skin.need_sky then
+    if not L.sky_group then
+      error("Prefab with need_sky used in indoor room : " .. tostring(main_skin.name))
+    end
+
+    if not T.bbox then
+      error("Prefab with need_sky used in loose transform")
+    end
+
+    Build_sky_quad(T.bbox.x1, T.bbox.y1, T.bbox.x2, T.bbox.y2, L.sky_group.h)
+  end
+
+  ROOM = nil
+end
+

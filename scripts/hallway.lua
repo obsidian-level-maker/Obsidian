@@ -1157,11 +1157,7 @@ function HALLWAY_CLASS.build_hall_piece(H, P)
 
   local skin2 = { stair_h = P.h_stair_h }
 
-  local fab = Fabricate(skin1, T, { skin0, skin1, skin2 })
-
-  if fab.has_spots then
-    Room_distribute_spots(H, Fab_read_spots(fab))
-  end
+  Fabricate_at(H, skin1, T, { skin0, skin1, skin2 })
 
   H.last_piece = skin1.name
 
