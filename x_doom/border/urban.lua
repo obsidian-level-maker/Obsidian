@@ -9,6 +9,7 @@ DOOM.SKINS.Border_urban_1x2_t =
   shape  = "T"
   seed_w = 1
   seed_h = 2
+  add_sky = 1
 }
 
 
@@ -19,6 +20,7 @@ DOOM.SKINS.Border_urban_2x2_t =
   shape  = "T"
   seed_w = 2
   seed_h = 2
+  add_sky = 1
 }
 
 
@@ -29,6 +31,7 @@ DOOM.SKINS.Border_urban_2x2_c =
   shape  = "C"
   seed_w = 2
   seed_h = 2
+  add_sky = 1
 }
 
 
@@ -39,6 +42,7 @@ DOOM.SKINS.Border_urban_2x2_o =
   shape  = "O"
   seed_w = 2
   seed_h = 2
+  add_sky = 1
 }
 
 --

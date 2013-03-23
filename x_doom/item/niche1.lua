@@ -21,8 +21,8 @@ DOOM.SKINS.Item_Niche1_outdoor =
   x_fit = "frame"
   y_fit = "top"
 
-  outdoor  = 1
-  need_sky = 1
+  outdoor = 1
+  add_sky = 1
 
   thing_5 = "?item"
 }

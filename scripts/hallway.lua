@@ -1160,13 +1160,6 @@ function HALLWAY_CLASS.build_hall_piece(H, P)
   Fabricate_at(H, skin1, T, { skin0, skin1, skin2 })
 
   H.last_piece = skin1.name
-
-  -- the sky is done separately for "Sky Hall" pieces
-  if skin1.need_sky then
-    assert(H.sky_group)
-    local x1, y1, x2, y2 = P:get_coords()
-    Build_sky_quad(x1, y1, x2, y2, H.sky_group.h)
-  end
 end
 
 

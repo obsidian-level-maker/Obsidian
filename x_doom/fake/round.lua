@@ -7,6 +7,6 @@ DOOM.SKINS.Fake_Round =
   file   = "fake/round.wad"
   where  = "border"
   shape  = "C"
-  need_sky = 1
+  add_sky = 1
 }
 

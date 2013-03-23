@@ -7,7 +7,7 @@ DOOM.SKINS.Fake_RoundFence_1x1 =
   file   = "fake/round_fence.wad"
   where  = "fake_fence"
   shape  = "I"
-  need_sky = 1
+  add_sky = 1
 }
 
 DOOM.SKINS.Fake_RoundFence_2x1 =
@@ -15,6 +15,6 @@ DOOM.SKINS.Fake_RoundFence_2x1 =
   file   = "fake/round_fence2.wad"
   where  = "fake_fence"
   shape  = "I"
-  need_sky = 1
+  add_sky = 1
 }
 
