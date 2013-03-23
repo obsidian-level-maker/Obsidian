@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2012 Andrew Apted
+--  Copyright (C) 2006-2013 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -898,7 +898,7 @@ function Quest_assign_room_themes()
         for dir2 = 2,8,2 do
           local T = K:neighbor(dir2)
 
-          if T.facade then
+          if T and T.facade then
             K.facade = T.facade
             found = true
             break;
@@ -985,7 +985,7 @@ function Quest_assign_room_themes()
   end
 
 
-  local function verify_section_facades()
+  local function facades_transfer_to_seeds()
     for kx = 1,SECTION_W do
     for ky = 1,SECTION_H do
       local K = SECTIONS[kx][ky]
@@ -993,12 +993,62 @@ function Quest_assign_room_themes()
       if not K.facade then
         error("Not all sections got a facade")
       end
-    end
+
+      for sx = K.sx1, K.sx2 do
+      for sy = K.sy1, K.sy2 do
+        SEEDS[sx][sy].facade = K.facade
+      end
+      end
+
+    end  -- kx, ky
     end
   end
 
 
-  local function facades_for_all_sections()
+  local function facades_edge_pass(sx, sy, dir, face_dir)
+    local num = (geom.is_horiz(dir) ? SEED_W ; SEED_TOP)
+
+    local S1 = SEEDS[sx][sy]
+
+    for k = 0, num - 1 do
+      local S = S1:neighbor(dir, k)
+
+      if S.facade then continue end
+
+      local N = S:neighbor(face_dir)
+      assert(N)
+
+      S.facade = N.facade  -- may be nil
+    end
+  end
+
+
+  local function facades_do_edge_seeds()
+    -- ensure seeds at edge of map (which have no section) get a facade
+
+    for x = SPARE_SEEDS, 1, -1 do
+      facades_edge_pass(x, 1, 8, 6)
+      facades_edge_pass(1, x, 6, 8)
+
+      facades_edge_pass(SEED_W - (x - 1), 1,   8, 4)
+      facades_edge_pass(1, SEED_TOP - (x - 1), 6, 2)
+    end
+  end
+
+
+  local function verify_all_seeds_got_a_facade()
+    for sx = 1,SEED_W   do
+    for sy = 1,SEED_TOP do
+      if not SEEDS[sx][sy].facade then
+        gui.debugf("Bad seed : (%d %d)\n", sx, sy)
+        error("Not all seeds got a facade")
+      end
+    end  -- kx, ky
+    end
+  end
+
+
+  local function distribute_facades()
     facades_for_indoor_rooms()
 
     facades_in_between()
@@ -1016,7 +1066,10 @@ function Quest_assign_room_themes()
     while facades_flood(false) do end
     while facades_flood(true)  do end
 
-    verify_section_facades()
+    facades_transfer_to_seeds()
+    facades_do_edge_seeds()
+
+    verify_all_seeds_got_a_facade()
   end
 
 
@@ -1048,7 +1101,7 @@ function Quest_assign_room_themes()
   end
 
   select_facades_for_zones()
-  facades_for_all_sections()
+  distribute_facades()
 
   pictures_for_zones()
 
