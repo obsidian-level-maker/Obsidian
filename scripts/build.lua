@@ -910,6 +910,8 @@ function Trans.box_transform(x1, y1, x2, y2, z, dir)
     T.fitted_y = x2 - x1
   end
 
+  T.bbox = { x1=x1, y1=y1, x2=x2, y2=y2 }
+
   return T
 end
 
@@ -918,31 +920,6 @@ function Trans.section_transform(K, dir)
   local x1, y1, x2, y2 = K:get_coords()
 
   return Trans.box_transform(x1, y1, x2, y2, K.floor_h or 0, dir)
-end
-
-
-function Trans.corner_transform(x1,y1, x2,y2, z, side, horiz, vert)
-  local XS   = { [1]=x1, [9]= x2, [7]= x1, [3]=x2 }
-  local YS   = { [1]=y1, [9]= y2, [7]= y2, [3]=y1 }
-  local ANGS = { [1]=0,  [9]=180, [7]=270, [3]=90 }
-
-  local T = {}
-
-  T.add_x = XS[side]
-  T.add_y = YS[side]
-  T.add_z = z
-
-  T.rotate = ANGS[side]
-
-  if side == 1 or side == 9 then
-    T.fitted_x = horiz
-    T.fitted_y = vert
-  else
-    T.fitted_x = vert
-    T.fitted_y = horiz
-  end
-
-  return T
 end
 
 
