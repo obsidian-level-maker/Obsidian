@@ -30,20 +30,38 @@ DOOM.SKINS.Hall_curve_P =
   shape  = "P"
 }
 
-DOOM.SKINS.Hall_curve_I_Stair =
+DOOM.SKINS.Hall_curve_Stair_S =
 {
-  file   = "hall/curve_st.wad"
+  file   = "hall/curve_ss.wad"
   group  = "hall_curve"
-  shape  = "IS"
+  shape  = "SS"
+
+  north  = { h=32 }
+}
+
+DOOM.SKINS.Hall_curve_Stair_M =
+{
+  file   = "hall/curve_sm.wad"
+  group  = "hall_curve"
+  shape  = "SM"
 
   north  = { h=64 }
 }
 
-DOOM.SKINS.Hall_curve_I_Lift =
+DOOM.SKINS.Hall_curve_Stair_L =
+{
+  file   = "hall/curve_sxl.wad"
+  group  = "hall_curve"
+  shape  = "SL"
+
+  north  = { h=96 }
+}
+
+DOOM.SKINS.Hall_curve_Lift =
 {
   file   = "hall/curve_lf.wad"
   group  = "hall_curve"
-  shape  = "IL"
+  shape  = "lift"
   tags   = 1
 }
 
