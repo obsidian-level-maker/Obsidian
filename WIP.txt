@@ -3,13 +3,28 @@ WORK IN PROGRESS
 ================
 
 
+>>  facades for HELL : vines, gray-marb, uh...
+
+>>  get 'height' value into 'env' pick_skin() tables
+
+>>>  stairs / lift : standardize height stuff
+
+     _elevation = "short" / "medium" / "tall" / "lift"
+
+     or:  shape = "IS" (64), "IT" (128)
+
+     z_ranges = { {128,0,"?height"}, ... }  in prefab to make it reach target height
+
+
+
 Joiners
 -------
 
 -  joiners can connect to 0, 1 or 2 outdoor rooms
    (and _only_ one of these possibilities)
 
-   -  similiarly: 0, 1 or 2 cave rooms
+   -->  outdoor = 1 / building2 = 1
+           cave = 1 / cave2 = 1
 
 -  how to scale joiners for SKY_H (z_fit I guess)
 
@@ -38,7 +53,7 @@ Joiners
 
 -  fake building and fences : support long ones, also deep ones
 
--  long fat_fences / fake_building : don't span different outers
+-  long fat_fences / fake_building : don't span different facades
 
 -  borders / fakers : support 'z_fit'
 
@@ -66,6 +81,10 @@ WAD Prefabs
 
 WISH:  mirror (horizontally) a 'T' or 'P' shaped hallway piece or big junction
 
++  x_repeat should be a skin thang
+
+-  do mirroring in prefab space (only really need X)
+
 -  IDEA: ability to "pick" the sector at a point / edge / corner and get the height there
 
    OR : use tag numbers for "main floor", "neighbor floor" (etc)
@@ -81,13 +100,6 @@ WISH:  mirror (horizontally) a 'T' or 'P' shaped hallway piece or big junction
 ========================================================================
 
 
--  pick mini_halls at areas_handle_connections
-
-+  sky spread algo
-   (a) check 2 seeds away on each dir (i.e. through mini-halls)
-   (b) handle caves too
-
-
 !!  Street mode : if one room surrounds another one, the "streets"
     between them are isolated from the rest, leading to this error:
 
@@ -98,44 +110,11 @@ WISH:  mirror (horizontally) a 'T' or 'P' shaped hallway piece or big junction
 
 -  FAT_CAGE_PILLAR
 
-+  x_repeat should be a skin thang
-
--  use 'pictures' in room themes, if exists
-
--  do mirroring in prefab space (only really need X)
-
 
 +  Need logic to decide how to light up a room (windows vs wall
    lights vs ceilings lights etc).
 
--  separate (or at least mark) pictures that serve as main light
-   sources for an area / room.  [QUAKE]
-
-+  have "hallway arches", specified in hallway groups, used in
+?  have "hallway arches", specified in hallway groups, used in
    indoor rooms where the hallway meets the room.
 
-
->>>  big_junction hallways : use 'mini_halls' instead of a hallway group
-
-     also: some control over them
-     (a) disable (or prefer) certain height diffs
-     (b) disable doors (since big junction has a door there)
-         [extends to doors at room/mini_hall connection]
-     (c) can provide a skin with 'floor', 'wall' and/or 'ceil' materials
-     (d) can specify other keywords which must be preset or absent in the skin
-
-
->>>  stairs / lift : standardize height stuff
-
-     _elevation = "short" / "medium" / "tall" / "lift"
-
-     z_ranges = { {128,0,"?height"}, ... }  in prefab to make it reach target height
-
-
-+  mini hall room connection control:
-      _outdoor = 0 / 1
-      _building = 0 / 1
-      _cave = 0 / 1
-
-+  support height-changing mini-halls
 
