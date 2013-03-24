@@ -3136,10 +3136,6 @@ function Room_build_all()
 
   Areas_handle_connections()
 
-  each H in LEVEL.halls do
-    H:pick_group()
-  end
-
   Room_create_sky_groups()
   Room_analyse_fat_fences()
   Room_analyse_outside_joiners()

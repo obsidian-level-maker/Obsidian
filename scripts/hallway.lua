@@ -993,38 +993,6 @@ end
 
 
 
-function HALLWAY_CLASS.pick_group(H)
-  -- use a single style per zone
-  local group_tab = H.theme.hallway_groups or THEME.hallway_groups
-
-  if not H.zone.hallway_group then
-    H.zone.hallway_group = rand.key_by_probs(group_tab)
-  end
-
-  local group_name = H.zone.hallway_group
-
-  -- check for "sky halls"
-  local sky_h = nil  --!!!!! FIXME  H:check_sky_hall()
-
-  if sky_h and THEME.sky_halls then
-    group_name = rand.key_by_probs(THEME.sky_halls)
-
-    H.sky_hall_sky_h = sky_h
-  end
-
-  H.group = GAME.GROUPS[group_name]
-
-  if not H.group then
-    error("Missing hallway group: " .. tostring(group_name))
-  end
-
-  if not (H.group.kind == "hallway" or H.group.kind == "skyhall") then
-    error("Wrong kind for hallway group: " .. tostring(group_name))
-  end
-end
-
-
-
 function HALLWAY_CLASS.select_piece(H, P)
   local shape = P.h_shape
 
