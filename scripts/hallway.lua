@@ -633,9 +633,10 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
     P.h_extra = "stair"
     P.h_dir   = (z_dir < 0 ? 10 - from_dir ; from_dir)
 
-    -- FIXME: pick stair kind ("short" / "medium" / "tall" / "lift")
+    -- FIXME: pick stair kind ("short" / "medium" / "tall")
+    --        (only one kind per hallway)
 
-    P.h_stair_kind = "medium"
+    P.h_stair_kind = "SM"
     P.h_stair_h = 64
 
     floor_h = floor_h + P.h_stair_h * z_dir
@@ -996,8 +997,8 @@ end
 function HALLWAY_CLASS.select_piece(H, P)
   local shape = P.h_shape
 
-  if P.h_extra == "stair" then shape = shape .. "S" end
-  if P.h_extra == "lift"  then shape = shape .. "L" end
+  if P.h_extra == "stair" then shape = assert(P.h_stair_kind) end
+  if P.h_extra == "lift"  then shape = "lift" end
 
   local long, deep = P:long_deep(P.h_dir)
 
