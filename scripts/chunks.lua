@@ -595,14 +595,15 @@ end
 function CHUNK_CLASS.do_big_item(C, item_name)
   local L = assert(C.room or C.hall)
 
+  local env = { room_kind = L.kind }
+
   local reqs =
   {
     kind  = "item"
     where = "middle"
-    room_kind = L.kind
   }
 
-  local skin1 = Room_pick_skin(reqs)
+  local skin1 = Room_pick_skin(env, reqs)
 
   local skin2 = { item = item_name }
   local skin0 = { wall = C.room.wall_mat }
@@ -619,14 +620,15 @@ end
 function CHUNK_CLASS.content_start(C)
   local L = assert(C.room or C.hall)
 
+  local env = { room_kind = L.kind }
+
   local reqs =
   {
     kind  = "start"
     where = "middle"
-    room_kind = L.kind
   }
 
-  local skin1 = Room_pick_skin(reqs)
+  local skin1 = Room_pick_skin(env, reqs)
   local skin2 = { }
 
   local mx, my = C:mid_point()
@@ -640,14 +642,15 @@ end
 function CHUNK_CLASS.content_exit(C)
   local L = assert(C.room or C.hall)
 
+  local env = { room_kind = L.kind }
+
   local reqs =
   {
     kind  = "exit"
     where = "middle"
-    room_kind = L.kind
   }
 
-  local skin1 = Room_pick_skin(reqs)
+  local skin1 = Room_pick_skin(env, reqs)
 
   local skin0 = { wall = C.room.wall_mat }
   local skin2 = { next_map = LEVEL.next_map, targetname = "exit" }
@@ -684,16 +687,17 @@ function CHUNK_CLASS.content_switch(C)
   assert(lock)
   assert(lock.switch)
 
+  local env = { room_kind = L.kind }
+
   local reqs =
   {
     kind  = "switch"
     where = "middle"
     key   = lock.key
     switch = lock.switch
-    room_kind = L.kind
   }
 
-  local skin1 = Room_pick_skin(reqs)
+  local skin1 = Room_pick_skin(env, reqs)
 
   local skin2 = { tag_1=lock.tag }
   
@@ -710,14 +714,15 @@ end
 function CHUNK_CLASS.content_teleporter(C)
   local L = assert(C.room or C.hall)
 
+  local env = { room_kind = L.kind }
+
   local reqs =
   {
     kind  = "teleporter"
     where = "middle"
-    room_kind = L.kind
   }
 
-  local skin1 = Room_pick_skin(reqs)
+  local skin1 = Room_pick_skin(env, reqs)
 
   local skin0 = { wall = C.room.wall_mat }
   local skin2 = {}
@@ -746,14 +751,15 @@ end
 function CHUNK_CLASS.content_hub_gate(C)
   local L = assert(C.room or C.hall)
 
+  local env = { room_kind = L.kind }
+
   local reqs  =
   {
     kind  = "hub_gate"
     where = "middle"
-    room_kind = L.kind
   }
 
-  local skin1 = Room_pick_skin(reqs)
+  local skin1 = Room_pick_skin(env, reqs)
 
   local skin0 = { wall = C.room.wall_mat }
   local skin2 = {}
@@ -996,6 +1002,12 @@ function CHUNK_CLASS.build_door(C, dir, LINK, f_h, c_h, long)
   assert(L1)
   assert(L2)
 
+  local env =
+  {
+    room_kind  = L1.kind
+    room2_kind = L2.kind
+  }
+
   local reqs =
   {
     kind  = "door"
@@ -1011,7 +1023,7 @@ function CHUNK_CLASS.build_door(C, dir, LINK, f_h, c_h, long)
     reqs.narrow = 1
   end
 
-  local skin = Room_pick_skin(reqs)
+  local skin = Room_pick_skin(env, reqs)
 
   local skin2 = C:inner_outer_mat(L1, L2)
 

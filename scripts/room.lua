@@ -989,7 +989,7 @@ end
 
 
 
-function Room_matching_skins(reqs)
+function Room_matching_skins(env, reqs)
 
   local function kind_from_filename(name)
     assert(name)
@@ -1044,20 +1044,13 @@ function Room_matching_skins(reqs)
     -- shape check
     if not match_word_or_table(reqs.shape, skin.shape) then return 0 end
 
-    -- size check -- seed based
-    if reqs.seed_w and not match_size(reqs.seed_w, skin.seed_w) then return 0 end
-    if reqs.seed_h and not match_size(reqs.seed_h, skin.seed_h) then return 0 end
-
-    -- size check -- map units
---!!!! FIXME   if not Fab_size_check(skin, reqs.long, reqs.deep) then return 0 end
-
     -- key and switch check
     if reqs.key != skin.key then return 0 end
 
     if not match_word_or_table(reqs.switch, skin.switch) then return 0 end
 
     -- hallway stuff
-    if reqs.narrow != reqs.narrow then return 0 end
+    if reqs.narrow != skin.narrow then return 0 end
     if reqs.door   != skin.door   then return 0 end
     if reqs.secret != skin.secret then return 0 end
 
@@ -1066,16 +1059,23 @@ function Room_matching_skins(reqs)
 
 
   local function match_environment(skin)
-    -- building type checks
-    if skin.outdoor  and reqs.room_kind != "outdoor"  then return 0 end
-    if skin.indoor   and reqs.room_kind == "outdoor"  then return 0 end
-    if skin.cave     and reqs.room_kind != "cave"     then return 0 end
-    if skin.building and reqs.room_kind != "building" then return 0 end
+    -- size check -- seed based
+    if env.seed_w and not match_size(env.seed_w, skin.seed_w) then return 0 end
+    if env.seed_h and not match_size(env.seed_h, skin.seed_h) then return 0 end
 
-    if skin.outdoor2  and reqs.room2_kind != "outdoor"  then return 0 end
-    if skin.indoor2   and reqs.room2_kind == "outdoor"  then return 0 end
-    if skin.cave2     and reqs.room2_kind != "cave"     then return 0 end
-    if skin.building2 and reqs.room2_kind != "building" then return 0 end
+    -- size check -- map units
+--!!!! FIXME   if not Fab_size_check(skin, env.long, env.deep) then return 0 end
+
+    -- building type checks
+    if skin.outdoor  and env.room_kind != "outdoor"  then return 0 end
+    if skin.indoor   and env.room_kind == "outdoor"  then return 0 end
+    if skin.cave     and env.room_kind != "cave"     then return 0 end
+    if skin.building and env.room_kind != "building" then return 0 end
+
+    if skin.outdoor2  and env.room2_kind != "outdoor"  then return 0 end
+    if skin.indoor2   and env.room2_kind == "outdoor"  then return 0 end
+    if skin.cave2     and env.room2_kind != "cave"     then return 0 end
+    if skin.building2 and env.room2_kind != "building" then return 0 end
 
     -- liquid check
     if skin.liquid and not LEVEL.liquid then return 0 end
@@ -1108,11 +1108,11 @@ function Room_matching_skins(reqs)
 end
 
 
-function Room_multi_match_skins(reqs, req2, req3, req4)
+function Room_multi_match_skins(env, reqs, req2, req3, req4)
   local list = {}
 
   while reqs do
-    local list2 = Room_matching_skins(reqs)
+    local list2 = Room_matching_skins(env, reqs)
 
     -- ensure earlier matches are kept (override later ones)
     list = table.merge(list2, list)
@@ -1125,8 +1125,8 @@ function Room_multi_match_skins(reqs, req2, req3, req4)
 end
 
 
-function Room_pick_skin(reqs, req2, req3, req4)
-  local list = Room_multi_match_skins(reqs, req2, req3, req4)
+function Room_pick_skin(env, reqs, req2, req3, req4)
+  local list = Room_multi_match_skins(env, reqs, req2, req3, req4)
 
 if DEBUG_MULTI_SKIN then
    DEBUG_MULTI_SKIN = nil
@@ -1135,6 +1135,7 @@ end
 
   if table.empty(list) then
     gui.debugf("Room_pick_skins:\n")
+    gui.debugf("env  = \n%s\n", table.tostr(reqs))
     gui.debugf("reqs = \n%s\n", table.tostr(reqs))
 
     error("No matching prefabs for: " .. reqs.kind)
@@ -1643,11 +1644,17 @@ function ROOM_CLASS.add_closet(R, closet_kind)
   end
 
 
+  local env =
+  {
+    seed_w = 1
+    seed_h = 1
+    room_kind = R.kind
+  }
+
   local reqs =
   {
     kind  = closet_kind
     where = "closet"
-    room_kind = R.kind
   }
 
   if closet_kind == "switch" then
@@ -1655,7 +1662,7 @@ function ROOM_CLASS.add_closet(R, closet_kind)
   end
 
 
-  local list = Room_matching_skins(reqs)
+  local list = Room_matching_skins(env, reqs)
 
   -- keep trying prefabs until one fits
   while not table.empty(list) do
@@ -2767,16 +2774,20 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
     end
 
     -- find matching prefab
+    local env =
+    {
+      seed_w = cw
+      seed_h = ch
+    }
+
     local reqs =
     {
       kind   = "border"
       group  = LEVEL.border_group
       shape  = shape
-      seed_w = cw
-      seed_h = ch
     }
 
-    local skin1 = Room_pick_skin(reqs)
+    local skin1 = Room_pick_skin(env, reqs)
 
     local skin2 = { wall=S1.facade }
 

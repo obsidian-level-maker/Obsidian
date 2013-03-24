@@ -1033,8 +1033,11 @@ function HALLWAY_CLASS.select_piece(H, P)
 
   local long, deep = P:long_deep(P.h_dir)
 
-  long = long * SEED_SIZE
-  deep = deep * SEED_SIZE
+  local env =
+  {
+    seed_w = 1
+    seed_h = 1
+  }
 
   local reqs =
   {
@@ -1072,12 +1075,18 @@ function HALLWAY_CLASS.select_piece(H, P)
   end
 --]]
 
-  return Room_pick_skin(reqs)
+  return Room_pick_skin(env, reqs)
 end
 
 
 
 function HALLWAY_CLASS.select_big_junc(H, P)
+  local env =
+  {
+    seed_w = 3
+    seed_h = 3
+  }
+
   local reqs =
   {
     kind  = "junction"
@@ -1090,20 +1099,34 @@ function HALLWAY_CLASS.select_big_junc(H, P)
 
   reqs2.group = LEVEL.hall_group
 
-  return Room_pick_skin(reqs, reqs2)
+  return Room_pick_skin(env, reqs, reqs2)
 end
 
 
 
 function HALLWAY_CLASS.select_joiner(H, P)
-  local reqs =
+  local R1, R2 = H:joiner_rooms()
+
+  local long, deep = P:long_deep(P.h_dir)
+
+  local env =
   {
-    kind  = "joiner"
+--!!!!    seed_w = long
+--!!!!    seed_h = deep
+
+    room_kind  = R1.kind
+    room2_kind = R2.kind
   }
 
-  if H.sky_group then
-    reqs.sky_mul = 10
+  -- can only allow outdoor joiners if the skies are the same height
+  if R1.kind == "outdoor" and R2.kind == "outdoor" and not H.sky_group then
+    env.room2_kind = "building"
   end
+
+  local reqs =
+  {
+    kind = "joiner"
+  }
 
   -- alternatively, use a normal hallway piece
   local reqs2 =
@@ -1122,7 +1145,7 @@ function HALLWAY_CLASS.select_joiner(H, P)
     shape = "IS"
   }
 
-  return Room_pick_skin(reqs, reqs2, reqs3)
+  return Room_pick_skin(env, reqs, reqs2, reqs3)
 end
 
 
@@ -1142,11 +1165,13 @@ function HALLWAY_CLASS.build_hall_piece(H, P)
     outer = H.zone.facade_mat
   }
 
+  if H.joiner then
+    skin0.wall = skin0.outer
+  end
+
   -- hack for secret exits -- need hallway piece to blend in
-  if H.mini_hall and H.is_secret then
-    if H.off_room.kind == "outdoor" then
-      skin0.wall = skin0.outer
-    else
+  if H.is_secret then
+    if H.off_room.kind != "outdoor" then
       skin0.wall = H.off_room.wall_mat
     end
   end
