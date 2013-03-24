@@ -1020,7 +1020,16 @@ function Room_matching_skins(reqs)
   end
 
 
-  local function match(skin)
+  local function match_word_or_table(req, tab)
+    if type(tab) == "table" then
+      return tab[req] and tab[req] > 0
+    else
+      return tab == req
+    end
+  end
+
+
+  local function match_requirements(skin)
     -- type check
     local kind = skin.kind or kind_from_filename(skin.file)
 
@@ -1033,67 +1042,65 @@ function Room_matching_skins(reqs)
     if reqs.where != skin.where then return 0 end
 
     -- shape check
-    if type(skin.shape) == "table" then
-      if not reqs.shape then return 0 end
-      if not skin.shape[reqs.shape] then return 0 end
-    else
-      if reqs.shape != skin.shape then return 0 end
-    end
+    if not match_word_or_table(reqs.shape, skin.shape) then return 0 end
 
     -- size check -- seed based
     if reqs.seed_w and not match_size(reqs.seed_w, skin.seed_w) then return 0 end
     if reqs.seed_h and not match_size(reqs.seed_h, skin.seed_h) then return 0 end
-    
+
     -- size check -- map units
 --!!!! FIXME   if not Fab_size_check(skin, reqs.long, reqs.deep) then return 0 end
-
-    -- building type checks
-    if reqs.room_kind then
-      local kind = reqs.room_kind
-
-      if skin.outdoor  and skin.outdoor  != convert_bool(kind == "outdoor")  then return 0 end
-      if skin.building and skin.building != convert_bool(kind == "building") then return 0 end
-      if skin.cave     and skin.cave     != convert_bool(kind == "cave")     then return 0 end
-    end
-
-    if reqs.room2_kind then
-      local kind = reqs.room2_kind
-
-      if skin.outdoor2  and skin.outdoor2  != convert_bool(kind == "outdoor")  then return 0 end
-      if skin.building2 and skin.building2 != convert_bool(kind == "building") then return 0 end
-      if skin.cave2     and skin.cave2     != convert_bool(kind == "cave")     then return 0 end
-    end
-
-    -- liquid check
-    if skin.liquid and not LEVEL.liquid then return 0 end
 
     -- key and switch check
     if reqs.key != skin.key then return 0 end
 
-    if skin.switch != reqs.switch then
-      if not (reqs.switch and skin.switches) then return 0 end
-      if not skin.switches[reqs.switch] then return 0 end
-    end
+    if not match_word_or_table(reqs.switch, skin.switch) then return 0 end
 
     -- hallway stuff
     if reqs.narrow != reqs.narrow then return 0 end
     if reqs.door   != skin.door   then return 0 end
     if reqs.secret != skin.secret then return 0 end
 
-    -- game, theme (etc) check
-    return Room_match_user_stuff(skin)
+    return 1
   end
 
+
+  local function match_environment(skin)
+    -- building type checks
+    if skin.outdoor  and reqs.room_kind != "outdoor"  then return 0 end
+    if skin.indoor   and reqs.room_kind == "outdoor"  then return 0 end
+    if skin.cave     and reqs.room_kind != "cave"     then return 0 end
+    if skin.building and reqs.room_kind != "building" then return 0 end
+
+    if skin.outdoor2  and reqs.room2_kind != "outdoor"  then return 0 end
+    if skin.indoor2   and reqs.room2_kind == "outdoor"  then return 0 end
+    if skin.cave2     and reqs.room2_kind != "cave"     then return 0 end
+    if skin.building2 and reqs.room2_kind != "building" then return 0 end
+
+    -- liquid check
+    if skin.liquid and not LEVEL.liquid then return 0 end
+
+    return 1
+  end
+
+
+  ---| Room_matching_skins |---
 
   assert(reqs.kind)
 
   local list = { }
 
   each name,skin in GAME.SKINS do
-    local prob = match(skin) * (skin.prob or 50)
+    if match_requirements(skin) <= 0 then continue end
+    if match_environment (skin) <= 0 then continue end
+
+    -- game, theme (etc) check
+    local prob = Room_match_user_stuff(skin)
+
+    prob = prob * (skin.prob or 50) * (reqs.prob_mul or 1)
 
     if prob > 0 then
-      list[name] = prob * (reqs.prob_mul or 1)
+      list[name] = prob
     end
   end
 
@@ -1640,7 +1647,7 @@ function ROOM_CLASS.add_closet(R, closet_kind)
   {
     kind  = closet_kind
     where = "closet"
-    room  = R
+    room_kind = R.kind
   }
 
   if closet_kind == "switch" then
