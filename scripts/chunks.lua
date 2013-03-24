@@ -1017,11 +1017,13 @@ function CHUNK_CLASS.build_door(C, dir, LINK, f_h, c_h, long)
     switch = lock.switch
   }
 
+--[[
   if ( C.hall and  C.hall.group.narrow) or
      (C2.hall and C2.hall.group.narrow)
   then
     reqs.narrow = 1
   end
+--]]
 
   local skin = Room_pick_skin(env, reqs)
 
