@@ -49,6 +49,10 @@ PLUTONIA.GROUPS = { }
 FREEDOOM.GROUPS = { }
 
 
+----------------------------------------------------------------
+
+-- load in all the other definition files...
+
 require "entities"
 require "monsters"
 require "weapons"
@@ -61,8 +65,7 @@ require "levels"
 require "resources"
 
 
-------------------------------------------------------------
-
+----------------------------------------------------------------
 
 OB_GAMES["doom2"] =
 {
