@@ -5,6 +5,8 @@
 DOOM.SKINS.Joiner_TriPillar =
 {
   file   = "joiner/tri_pillar.wad"
-  shape  = "I"
+
+  outdoor  = 1
+  outdoor2 = 1
 }
 
