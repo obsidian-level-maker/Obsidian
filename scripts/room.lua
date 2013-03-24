@@ -1004,19 +1004,19 @@ function Room_matching_skins(env, reqs)
   end
 
 
-  local function match_size(req_w, skin_w)
+  local function match_size(env_w, skin_w)
     -- skin defaults to 1
     if not skin_w then skin_w = 1 end
 
-    if type(skin_w) == "table" then
-      if #skin_w != 2 or skin_w[1] > skin_w[2] then
-        error("Bad seed range in prefab skin")
+    if type(env_w) == "table" then
+      if #env_w != 2 or env_w[1] > env_w[2] then
+        error("Bad seed range in env table")
       end
 
-      return skin_w[1] <= req_w and req_w <= skin_w[2]
+      return env_w[1] <= skin_w and skin_w <= env_w[2]
     end
 
-    return req_w == skin_w
+    return env_w == skin_w
   end
 
 
@@ -1024,7 +1024,7 @@ function Room_matching_skins(env, reqs)
     if type(tab) == "table" then
       return tab[req] and tab[req] > 0
     else
-      return tab == req
+      return req == tab
     end
   end
 
@@ -1135,7 +1135,7 @@ end
 
   if table.empty(list) then
     gui.debugf("Room_pick_skins:\n")
-    gui.debugf("env  = \n%s\n", table.tostr(reqs))
+    gui.debugf("env  = \n%s\n", table.tostr(env))
     gui.debugf("reqs = \n%s\n", table.tostr(reqs))
 
     error("No matching prefabs for: " .. reqs.kind)

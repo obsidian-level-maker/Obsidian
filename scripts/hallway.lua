@@ -1118,7 +1118,7 @@ function HALLWAY_CLASS.select_joiner(H, P)
     room2_kind = R2.kind
   }
 
-  -- can only allow outdoor joiners if the skies are the same height
+  -- only allow outdoor joiners if the skies are the same height
   if R1.kind == "outdoor" and R2.kind == "outdoor" and not H.sky_group then
     env.room2_kind = "building"
   end
