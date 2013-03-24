@@ -127,6 +127,17 @@ DOOM.ENTITIES =
   brain_target  = { id=87, r=20, h=32, pass=true }
 
   light = { id="light", r=1, h=1, pass=true }
+}
 
+
+----------------------------------------------------------------
+
+DOOM.PLAYER_MODEL =
+{
+  doomguy =
+  {
+    stats   = { health=0 }
+    weapons = { pistol=1, fist=1 }
+  }
 }
 

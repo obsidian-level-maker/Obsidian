@@ -95,45 +95,6 @@ DOOM2.PARAMETERS =
 }
 
 
-----------------------------------------------------------------
-
-DOOM.SKIN_DEFAULTS =
-{
-  tex_STARTAN3  = "?wall"
-  flat_FLOOR5_3 = "?wall"
-
-  tex_BLAKWAL1  = "?outer"
-
-  flat_FLOOR0_6 = "?floor"
-}
-
-
---[[
-DOOM.SKINS.Secret_Mini =
-{
-  prefab = "SECRET_MINI"
-  shape  = "I"
-  tags   = 1
-
-  pic   = "O_NEON"
-  inner = "COMPSPAN"
-  metal = "METAL"
-}
---]]
-
-
-----------------------------------------------------------------
-
-DOOM.PLAYER_MODEL =
-{
-  doomguy =
-  {
-    stats   = { health=0 }
-    weapons = { pistol=1, fist=1 }
-  }
-}
-
-
 ------------------------------------------------------------
 
 

@@ -12,6 +12,16 @@
 --
 --------------------------------------------------------------------
 
+DOOM.SKIN_DEFAULTS =
+{
+  tex_STARTAN3  = "?wall"
+  tex_BLAKWAL1  = "?outer"
+
+  flat_FLOOR5_3 = "?wall"
+  flat_FLOOR0_6 = "?floor"
+}
+
+
 DOOM.MATERIALS =
 {
   --- These materials are common to all DOOM games...
