@@ -3084,7 +3084,6 @@ end
 function Room_blow_chunks()
 
   each R in LEVEL.rooms do
-    ROOM = R
     each C in R.chunks do
       C:build()
     end
@@ -3093,11 +3092,8 @@ function Room_blow_chunks()
   -- scenic rooms ??
 
   each H in LEVEL.halls do
-    ROOM = H
     H:build()
   end
-
-  ROOM = nil
 
   each CL in LEVEL.closets do
     CL:build()

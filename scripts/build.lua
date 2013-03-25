@@ -2452,20 +2452,17 @@ function Fabricate(main_skin, T, skins)
   Fab_transform_Z (fab, T)
 
   Fab_render(fab)
-
-  if ROOM then
-    Room_distribute_spots(ROOM, Fab_read_spots(fab))
-  end
-
-  return fab
 end
 
 
 function Fabricate_at(L, main_skin, T, skins)
   -- L can be a room or a hallway
-  ROOM = L
 
   Fabricate(main_skin, T, skins)
+
+  if L then
+    Room_distribute_spots(L, Fab_read_spots(fab))
+  end
 
   if main_skin.add_sky then
     if not L.sky_group then
@@ -2478,7 +2475,5 @@ function Fabricate_at(L, main_skin, T, skins)
 
     Build_sky_quad(T.bbox.x1, T.bbox.y1, T.bbox.x2, T.bbox.y2, L.sky_group.h)
   end
-
-  ROOM = nil
 end
 
