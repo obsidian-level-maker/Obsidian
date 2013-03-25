@@ -942,12 +942,12 @@ DOOM2.LEVEL_THEMES =
     {
       MARBLE2  = 50
       SP_HOT1  = 50
-      MARBGRAY = 25
-      STONE3   = 25
-      GSTVINE1 = 15
-      GSTVINE2 = 15
-      BRONZE1  = 3
-      BROWN1   = 3
+      MARBGRAY = 30
+      STONE3   = 30
+      GSTVINE1 = 20
+      GSTVINE2 = 20
+      BRONZE1  = 5
+      BROWN1   = 5
     }
 
 --!!!!    logos = { Pic_Carve=90, Pic_Pill=50, Pic_Neon=5 }
