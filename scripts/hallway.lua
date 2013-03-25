@@ -1111,7 +1111,7 @@ function HALLWAY_CLASS.select_joiner(H, P)
   {
     kind  = "hall"
     group = LEVEL.hall_group
-    shape = "IS"
+    shape = "SM"
   }
 
   return Room_pick_skin(env, reqs, reqs2, reqs3)
