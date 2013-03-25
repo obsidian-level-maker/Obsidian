@@ -14,12 +14,6 @@
 
 DOOM.THEME_DEFAULTS =
 {
-  starts = { Start_basic = 10, Start_Closet = 70 }
-
-  exits = { Exit_pillar = 10, Exit_Closet_tech = 70 }
-
-  pedestals = { Pedestal_1 = 50 }
-
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50,
              Lift_Up1 = 4, Lift_Down1 = 4 }
 
@@ -28,56 +22,13 @@ DOOM.THEME_DEFAULTS =
   -- TODO: sw_wood  sw_marble
   switches = { sw_blue=50 }  --!!!! , sw_red=50, sw_pink=20, sw_vine=20 }
 
-  switch_fabs  = { Switch_blue1=50 }
-                 --!!!! Switch_red1=50, Switch_pink1=50, Switch_vine1=50 }
-
-  locked_doors = { Locked_kc_blue = 50,   Locked_ks_blue = 50,
-                   Locked_kc_red = 50,    Locked_ks_red = 50,
-                   Locked_kc_yellow = 50, Locked_ks_yellow = 50,
-
-                   Door_SW_blue = 50,
-                   --!!!! Door_SW_red = 50, Door_SW_pink = 50, Door_SW_vine = 50,
-
---[[ !!!
-                   Locked_kc_blue_NAR = 3,   Locked_ks_blue_NAR = 3,
-                   Locked_kc_red_NAR = 3,    Locked_ks_red_NAR = 3,
-                   Locked_kc_yellow_NAR = 3, Locked_ks_yellow_NAR = 3,
-                     
-                   Door_SW_blue_NAR = 3, Door_SW_red_NAR = 3,
-                   Door_SW_pink_NAR = 3, Door_SW_vine_NAR = 3
---]]
-                 }
-
   secrets = { Secret_Closet = 50 }
 
   arches = { Arch1 = 50 }
 
-  doors = { Door_silver = 50 }
-
-  teleporters = { Teleporter1 = 10, Teleporter_Closet = 80 }
-
   logos = { Pic_Carve=50 } --!!!! , Pic_Pill=50, Pic_Neon=20 }
 
-  windows = { Window1 = 50 }
-
   fences = { Fence1 = 50 }
-
-  hallway_groups = { hall_basic = 50 } --!!!! , hall_thin = 15 }  -- TODO: cavey
-
-  mini_halls = { Hall_Basic_I = 50 } --!!!! , MiniHall_Door_tech = 20 }
-
-  sky_halls = { sky_hall = 50 }
-
-  big_junctions =
-  {
---!!!     junc_ledge = 80
---!!!     junc_octo = 50
---!!!     junc_nuke_pipes = 14
---!!!  -- junc_Nuke_Islands = 70  -- size restriction means this is fairly rare
---!!!     junc_spokey = 10
-
-    junc_circle_gothic = 40
-  }
 
   fat_cages = { Fat_Cage1 = 50 } --- , Fat_Cage_W_Bars = 8 }
 
@@ -167,176 +118,6 @@ DOOM.NAME_THEMES =
       {
         ["UAC Crisis"]=30
       }
-    }
-  }
-}
-
-
-DOOM.GROUPS =
-{
-  ---| HALLWAYS |---
-
-  hall_basic =
-  {
-    kind = "hallway"
-
-    parts =
-    {
-      Hall_Basic_I = 50
-      Hall_Basic_C = 50
-      Hall_Basic_T = 50
-      Hall_Basic_P = 50
-
-      Hall_Basic_I_Stair = 20
-      Hall_Basic_I_Lift  = 2
-    }
-  }
-
-
-  hall_thin =
-  {
-    kind = "hallway"
-
-    narrow = 1
-
-    parts =
-    {
-      Hall_Thin_I = 50
-      Hall_Thin_C = 50
-      Hall_Thin_T = 50
-
-      Hall_Thin_I_Stair = 20
-      Hall_Basic_I_Lift  = 2  -- TODO
-
-      Hall_Thin_I_Bulge = 70
-      Hall_Thin_I_Bend  = 20
-
-      Hall_Thin_I_Oh = 5
-      Hall_Thin_C_Oh = 5
-      Hall_Thin_T_Oh = 20
-      Hall_Thin_P_Oh = 50
-
-      Hall_Basic_P = 1  -- TODO (needed since Hall_Thin_P_Oh is large)
-    }
-  }
-
-
-  hall_cavey =
-  {
-    kind = "hallway"
-
-    parts =
-    {
-      Hall_Cavey_I = 50
-      Hall_Cavey_C = 50
-      Hall_Cavey_T = 50
-      Hall_Cavey_P = 50
-
-      Hall_Cavey_I_Stair = 20
-      Hall_Basic_I_Lift  = 2   -- TODO
-    }
-  }
-
-
-  sky_hall =
-  {
-    kind = "skyhall"
-
-    parts =
-    {
-      Sky_Hall_I = 50
-      Sky_Hall_C = 50
-      Sky_Hall_I_Stair = 50
-
-      Hall_Basic_T = 50  -- use indoor versions for these
-      Hall_Basic_P = 50  --
-
-      Hall_Basic_I_Lift = 2   -- TODO: sky version
-    }
-  }
-
-
-  ---| BIG JUNCTIONS |---
-
-  junc_ledge =
-  {
-    parts =
-    {
-      Junc_Ledge_P = 50
-      Junc_Ledge_T = 50
-    }
-  }
-
-  junc_octo =
-  {
-    parts =
-    {
-      Junc_Octo_I = 50
-      Junc_Octo_C = 50
-      Junc_Octo_T = 50
-      Junc_Octo_P = 50
-    }
-  }
-
-  junc_nuke_pipes =
-  {
-    parts =
-    {
-      Junc_Nuke_Pipes_I = 50
-      Junc_Nuke_Pipes_C = 50
-      Junc_Nuke_Pipes_T = 50
-      Junc_Nuke_Pipes_P = 50
-    }
-  }
-
-  junc_nuke_islands =
-  {
-    parts =
-    {
-      Junc_Nuke_Islands_C = 50
-    }
-  }
-
-  junc_spokey =
-  {
-    parts =
-    {
-      Junc_Spokey_I = 50
-      Junc_Spokey_C = 50
-      Junc_Spokey_T = 50
-      Junc_Spokey_P = 50
-    }
-  }
-
-  junc_circle_tech =
-  {
-    parts =
-    {
-      Junc_Circle_tech_I = 50
-      Junc_Circle_tech_C = 50
-      Junc_Circle_tech_T = 50
-      Junc_Circle_tech_P = 50
-    }
-  }
-
-  junc_circle_gothic =
-  {
-    parts =
-    {
-      Junc_Circle_gothic_I = 50
-      Junc_Circle_gothic_C = 50
-      Junc_Circle_gothic_T = 50
-      Junc_Circle_gothic_P = 50
-    }
-  }
-
-  junc_well =
-  {
-    parts =
-    {
-      Junc_Well_I = 50
-      Junc_Well_T = 50
-      Junc_Well_P = 50
     }
   }
 }
@@ -1157,18 +938,6 @@ DOOM2.LEVEL_THEMES =
     outdoors  = { Hell2_outdoors=50 }
     caves     = { Hell2_cave=50 }
 
-    __mini_halls = { MiniHall_Arch1 = 50, MiniHall_Door_hell = 20 }
-
-    __big_junctions =
-    {
-      junc_octo = 50
-      junc_nuke_pipes = 5
-      junc_spokey = 10
-      junc_circle_gothic = 40
-    }
-
---!!    exits = { Exit_Closet_hell = 50, Exit_Pillar_gothic = 10 }
-
 --!!!!    logos = { Pic_Carve=90, Pic_Pill=50, Pic_Neon=5 }
 
 --[[
@@ -1209,9 +978,6 @@ DOOM2.LEVEL_THEMES =
 
     FIXME_switch_doors = { Door_pink = 50, Door_vine = 50 }
 
-    OLD__exits = { skin_pillar=40, skull_pillar=20,
-      demon_pillar2=10, demon_pillar3=10 }
-
     big_pillars = { big_red=50, sloppy=20, sloppy2=20, }
 
 --!!!!    logos = { carve=90, pill=50, neon=5 }
@@ -1248,21 +1014,6 @@ DOOM2.LEVEL_THEMES =
     hallways  = { Urban_hallway=50 }
     caves     = { Urban_cave=50 }
     outdoors  = { Urban_outdoors=50 }
-
---!!    exits = { Exit_Closet_urban=50, Exit_Pillar_urban=10,
---!!              Exit_Pillar_gothic=3 }
-
-    __mini_halls = { MiniHall_Arch1 = 50 }
-
-    __big_junctions =
-    {
-      junc_well = 99
-
-      junc_octo = 50
-      junc_nuke_pipes = 5
-      junc_spokey = 10
-      junc_circle_gothic = 40
-    }
 
 --!!!!    logos = { Pic_Carve=30, Pic_Pill=30, Pic_Neon=70 }
 
@@ -1313,8 +1064,6 @@ DOOM2.LEVEL_THEMES =
     hallways = { Wolf_hall=50 }
 
     __pictures = { eagle1=50, hitler1=10 }
-
-    OLD__exits = { skull_pillar=50, stone_pillar=8 }
 
     OLD__switches = { sw_wood=50, sw_blue=50, sw_hot=50 }
 
@@ -1709,8 +1458,6 @@ DOOM1.LEVEL_THEMES =
       litered=10,
     }
 
-    OLD__exits = { stone_pillar=50 }
-
     OLD__switches = { sw_blue=50, sw_hot=50 }
 
     bars = { bar_silver=50, bar_gray=50 }
@@ -1780,8 +1527,6 @@ DOOM1.LEVEL_THEMES =
       litered=10,
     }
 
-    OLD__exits = { stone_pillar=50 }
-
     OLD__switches = { sw_blue=50, sw_hot=50 }
 
     bars = { bar_silver=50, bar_gray=50 }
@@ -1841,9 +1586,6 @@ DOOM1.LEVEL_THEMES =
       skulls1=10, skulls2=10, spdude3=3, spdude6=3,
     }
 
-    OLD__exits = { skin_pillar=40,
-              demon_pillar2=10, demon_pillar3=10 }
-
     OLD__switches = { sw_marble=50, sw_vine=50, sw_wood=50 }
 
     bars = { bar_wood=50, bar_metal=50 }
@@ -1880,9 +1622,6 @@ DOOM1.LEVEL_THEMES =
       skulls1=20, skulls2=20,
     }
 
-    OLD__exits = { skin_pillar=40,
-              demon_pillar2=10, demon_pillar3=10 }
-
     OLD__switches = { sw_skin=50, sw_vine=50, sw_wood=50 }
 
     bars = { bar_wood=50, bar_metal=50 }
@@ -1917,8 +1656,6 @@ DOOM1.LEVEL_THEMES =
     }
 
     keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
-
-    __exits = { skin_pillar=30, demon_pillar2=10 }
 
     __switches = { sw_marble=50, sw_vine=50, sw_wood=50 }
 
