@@ -621,9 +621,6 @@ struct GROUP
 {
   low,  high,  size   : the original coordinate range
   low2, high2, size2  : the new coordinate range
-
-  weight  : relative weight of this group (in relation to others).
-            needed for setting up the groups, but not for using them.
 }
 --]]
 
@@ -662,9 +659,9 @@ function Trans.dump_groups(name, groups)
   gui.debugf("  {\n")
 
   each G in groups do
-    gui.debugf("    (%1.0f %1.0f %1.0f) --> (%1.0f %1.0f %1.0f)  wt:%1.2f\n",
+    gui.debugf("    (%1.0f %1.0f %1.0f) --> (%1.0f %1.0f %1.0f)\n",
                G.low  or -1, G.high  or -1, G.size  or -1,
-               G.low2 or -1, G.high2 or -1, G.size2 or -1, G.weight or -1)
+               G.low2 or -1, G.high2 or -1, G.size2 or -1)
   end
 
   gui.debugf("  }\n")
@@ -1011,143 +1008,6 @@ function Trans.categorize_linkage(dir2, dir4, dir6, dir8)
   end
 end
 
-
-
-function Trans.create_groups(ranges, pf_min, pf_max)
-
-  -- pf_min and pf_max are in the 'prefab' space (i.e. before any
-  -- stretching or shrinkin is done).
-
-  assert(pf_min and pf_max)
-
-  local groups = { }
-
-  if not ranges then
-    local G =
-    {
-      low  = pf_min
-      high = pf_max
-      size = pf_max - pf_min
-    }
-
-    G.weight = 1 * G.size
-
-    table.insert(groups, G)
-
-    return groups
-  end
-
-
-  -- create groups
-
-  assert(#ranges >= 1)
-
-  local pf_pos = pf_min
-
-  each S in ranges do
-    local G = { }
-
-    G.size = S[1]
-
-    G.low  = pf_pos ; pf_pos = pf_pos + G.size
-    G.high = pf_pos
-
-    G.weight = S[2]
-
-    if S[3] then
-      G.size2 = S[3]
-    elseif G.weight == 0 then
-      G.size2 = G.size
-    end
-
-    G.weight = G.weight * G.size
-
-    table.insert(groups, G)
-  end
-
-  -- verify that group sizes match the coordinate bbox
-  if math.abs(pf_pos - pf_max) > 0.1 then
-    error(string.format("Prefab: groups mismatch with coords (%d != %d)", pf_pos, pf_max))
-  end
-
-  return groups
-end
-
-
-function Trans.fitted_group_targets(groups, low2, high2)
-  local extra = high2 - low2
-  local extra_weight = 0
-
-  each G in groups do
-    extra = extra - (G.size2 or G.size)
-
-    if not G.size2 then
-      extra_weight = extra_weight + G.weight
-    end
-  end
-
-  local pos2 = low2
-
-  each G in groups do
-    if not G.size2 then
-      G.size2 = G.size + extra * G.weight / extra_weight
-    end
-
-    if G.size2 <= 1 then
-      error("Prefab does not fit!")
-    end
-
-    G.low2  = pos2 ; pos2 = pos2 + G.size2
-    G.high2 = pos2
-  end
-
-  -- verify the results
-  assert(math.abs(pos2 - high2) < 0.1)
-end
-
-
-function Trans.loose_group_targets(groups, scale)
-
-  local total_size  = 0
-  local total_size2 = 0
-
-  local extra_weight = 0
-
-  each G in groups do
-    if not G.size2 then
-      G.weight = G.weight * (scale - 1)
-      extra_weight = extra_weight + G.weight
-    end
-  end
-
-  each G in groups do
-    if not G.size2 then
-      if extra_weight > 1 then
-        assert(G.weight > 0)
-        G.size2 = G.size * (1 + G.weight / extra_weight)
-      else
-        G.size2 = G.size
-      end
-    end
-
-    if G.size2 <= 1 then
-      error("Prefab does not fit!")
-    end
-
-    total_size  = total_size  + G.size 
-    total_size2 = total_size2 + G.size2
-  end
-
-  -- this assumes the left/bottom coord will be zero (fitted) or negative (focal)
-  local pos2 = groups[1].low * total_size2 / total_size
-
-  each G in groups do
-    G.low2  = pos2 ; pos2 = pos2 + G.size2
-    G.high2 = pos2
-  end
-
---- stderrf("loose_groups:\n%s\n\n", table.tostr(groups, 2))
-end
 
 
 function Trans.expansion_groups(list, axis_name, fit_size, pf_size)
