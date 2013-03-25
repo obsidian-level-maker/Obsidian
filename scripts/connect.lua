@@ -344,7 +344,7 @@ function Connect_teleporters()
   ---| Connect_teleporters |---
 
   -- check if game / theme supports them
-  if not THEME.teleporters then return end
+  if not PARAM.teleporters then return end
 
   if STYLE.teleporters == "none" then return end
 
