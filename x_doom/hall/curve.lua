@@ -50,7 +50,7 @@ DOOM.SKINS.Hall_curve_Stair_M =
 
 DOOM.SKINS.Hall_curve_Stair_L =
 {
-  file   = "hall/curve_sxl.wad"
+  file   = "hall/curve_sl.wad"
   group  = "hall_curve"
   shape  = "SL"
 
