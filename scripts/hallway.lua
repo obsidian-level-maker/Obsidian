@@ -583,7 +583,7 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
     local skin
 
     if H.joiner then
-      skin = H:select_joiner(P)
+      skin = H:select_joiner(P, floor_h)
     else
       skin = H:select_big_junc(P)
     end
@@ -1073,7 +1073,7 @@ end
 
 
 
-function HALLWAY_CLASS.select_joiner(H, P)
+function HALLWAY_CLASS.select_joiner(H, P, floor_h)
   local R1, R2 = H:joiner_rooms()
 
   local long, deep = P:long_deep(P.h_dir)
@@ -1088,16 +1088,21 @@ function HALLWAY_CLASS.select_joiner(H, P)
   }
 
   -- only allow outdoor joiners if the skies are the same height
-  if R1.kind == "outdoor" and R2.kind == "outdoor" and not H.sky_group then
+  local is_outdoor = (R1.kind == "outdoor" and R2.kind == "outdoor")
+
+  if is_outdoor and not H.sky_group then
+    is_outdoor = false
     env.neighbor = "building"
   end
+
+  -- FIXME: set env.height (unless is_outdoor)
 
   local reqs =
   {
     kind = "joiner"
   }
 
-  -- alternatively, use a normal hallway piece
+  -- alternatively, use a normal hallway piece  [ REMOVE !! ]
   local reqs2 =
   {
     kind  = "hall"
@@ -1114,7 +1119,21 @@ function HALLWAY_CLASS.select_joiner(H, P)
     shape = "SM"
   }
 
-  return Room_pick_skin(env, reqs, reqs2, reqs3)
+  local skin = Room_pick_skin(env, reqs, reqs2, reqs3)
+
+  -- joiners can influence sky height...
+  if is_outdoor and skin.height then
+    local h = floor_h
+    if type(skin.height) == "table" then
+      h = h + skin.height[1]
+    else
+      h = h + skin.height
+    end
+
+    H.sky_group.h = math.max(H.sky_group.h or -768, h)
+  end
+
+  return skin
 end
 
 
@@ -1149,6 +1168,11 @@ function HALLWAY_CLASS.build_hall_piece(H, P)
 
   if P.h_stair_kind == "lift" then
     Trans.set_fitted_z(T, P.floor_h, P.floor_h + P.h_stair_h)
+
+  elseif skin1.z_fit then
+    assert(H.sky_group)
+    local sky_h = H.sky_group.h
+    Trans.set_fitted_z(T, P.floor_h, sky_h)
   end
 
   Fabricate_at(H, skin1, T, { skin0, skin1 })

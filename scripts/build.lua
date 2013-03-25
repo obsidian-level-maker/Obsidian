@@ -2452,13 +2452,15 @@ function Fabricate(main_skin, T, skins)
   Fab_transform_Z (fab, T)
 
   Fab_render(fab)
+
+  return fab
 end
 
 
 function Fabricate_at(L, main_skin, T, skins)
   -- L can be a room or a hallway
 
-  Fabricate(main_skin, T, skins)
+  local fab = Fabricate(main_skin, T, skins)
 
   if L then
     Room_distribute_spots(L, Fab_read_spots(fab))
