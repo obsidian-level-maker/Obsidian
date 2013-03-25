@@ -1364,7 +1364,7 @@ function Plan_decide_outdoors()
   end
 
   -- compute the quota
-  local perc = style_sel("outdoors", 0, 15, 35, 65, 100)
+  local perc = style_sel("outdoors", 0, 15, 40, 75, 100)
 
   local quota = total_seeds * perc / 100
 
