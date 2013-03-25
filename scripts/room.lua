@@ -1020,6 +1020,15 @@ function Room_matching_skins(env, reqs)
   end
 
 
+  local function match_room_kind(env_k, skin_k)
+    if skin_k == "indoor" then
+      return env_k != "outdoor"
+    end
+
+    return env_k == skin_k
+  end
+
+
   local function match_word_or_table(req, tab)
     if type(tab) == "table" then
       return tab[req] and tab[req] > 0
@@ -1067,15 +1076,13 @@ function Room_matching_skins(env, reqs)
 --!!!! FIXME   if not Fab_size_check(skin, env.long, env.deep) then return 0 end
 
     -- building type checks
-    if skin.outdoor  and env.room_kind != "outdoor"  then return 0 end
-    if skin.indoor   and env.room_kind == "outdoor"  then return 0 end
-    if skin.cave     and env.room_kind != "cave"     then return 0 end
-    if skin.building and env.room_kind != "building" then return 0 end
+    if skin.room_kind then
+      if not match_room_kind(env.room_kind, skin.room_kind) then return 0 end
+    end
 
-    if skin.outdoor2  and env.room2_kind != "outdoor"  then return 0 end
-    if skin.indoor2   and env.room2_kind == "outdoor"  then return 0 end
-    if skin.cave2     and env.room2_kind != "cave"     then return 0 end
-    if skin.building2 and env.room2_kind != "building" then return 0 end
+    if skin.neighbor then
+      if not match_room_kind(env.neighbor, skin.neighbor) then return 0 end
+    end
 
     -- liquid check
     if skin.liquid and not LEVEL.liquid then return 0 end

@@ -6,7 +6,9 @@ DOOM.SKINS.Joiner_TriPillar =
 {
   file   = "joiner/tri_pillar.wad"
 
-  outdoor  = 1
-  outdoor2 = 1
+  room_kind = "outdoor"
+  neighbor  = "outdoor"
+
+  prob = 200
 }
 
