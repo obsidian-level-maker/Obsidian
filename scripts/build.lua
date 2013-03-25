@@ -2127,6 +2127,17 @@ function Fab_bound_Z(fab, skin)
     fab.bbox.z2 = math.max(fab.bbox.z2 or -9999, skin.bound_z2)
   end
 
+  -- for lifts, we pretend the bbox only extends vertically to the
+  -- high floor height.  In combination with a reduced T.fitted_z
+  -- (only target_h - source_h), this will expand the lift correctly.
+  --
+  -- TODO: perhaps a cleaner (more general) solution
+
+  if skin.shape == "lift" then
+    fab.bbox.z2 = LIFT_H
+    assert(skin.z_fit == "top")
+  end
+
   if fab.bbox.z1 and fab.bbox.z2 then
     fab.bbox.dz = fab.bbox.z2 - fab.bbox.z1
   end
