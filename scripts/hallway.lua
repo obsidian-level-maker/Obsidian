@@ -636,8 +636,8 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
     -- FIXME: pick stair kind ("short" / "medium" / "tall")
     --        (only one kind per hallway)
 
-    P.h_stair_kind = "SM"
-    P.h_stair_h = 64
+    P.h_stair_kind = "lift"
+    P.h_stair_h = rand.pick { 104, 128, 166 }
 
     floor_h = floor_h + P.h_stair_h * z_dir
 
@@ -919,7 +919,7 @@ if H.joiner then stderrf("   JOINER !!!!\n") end
 
   H:peer_double_chunks()
 
-  H.stair_prob = 35
+  H.stair_prob = 35 + 65  --!!!!! FIXME
 
   -- general vertical direction
   local z_dir = rand.sel(50, 1, -1)
@@ -1147,9 +1147,11 @@ function HALLWAY_CLASS.build_hall_piece(H, P)
 
   local T = Trans.section_transform(P, P.h_dir or 2)
 
-  local skin2 = { stair_h = P.h_stair_h }
+  if P.h_stair_kind == "lift" then
+    Trans.set_fitted_z(T, P.floor_h, P.floor_h + P.h_stair_h)
+  end
 
-  Fabricate_at(H, skin1, T, { skin0, skin1, skin2 })
+  Fabricate_at(H, skin1, T, { skin0, skin1 })
 
   H.last_piece = skin1.name
 end

@@ -62,6 +62,7 @@ DOOM.SKINS.Hall_trim1_Lift =
   file   = "hall/trim1_lf.wad"
   group  = "hall_trim"
   shape  = "lift"
+  z_fit  = "top"
   tags   = 1
 }
 
