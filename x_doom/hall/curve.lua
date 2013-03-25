@@ -63,7 +63,6 @@ DOOM.SKINS.Hall_curve_Lift =
   group  = "hall_curve"
   shape  = "lift"
   z_fit  = "top"
-  tags   = 1
 }
 
 --

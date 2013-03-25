@@ -63,7 +63,6 @@ DOOM.SKINS.Hall_trim1_Lift =
   group  = "hall_trim"
   shape  = "lift"
   z_fit  = "top"
-  tags   = 1
 }
 
 
