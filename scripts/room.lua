@@ -1195,29 +1195,6 @@ function Room_pick_group(reqs)
 end
 
 
-
-function Layout_possible_fab_group(usage, list, req_key)
-  usage.edge_fabs   = Layout_possible_prefab_from_list(list, "edge",   req_key)
-  usage.corner_fabs = Layout_possible_prefab_from_list(list, "corner", req_key)
-  usage.middle_fabs = Layout_possible_prefab_from_list(list, "middle", req_key)
-
-  if not usage.edge_fabs and not usage.corner_fabs and not usage.middle_fabs then
-    error("Theme is missing usable prefabs for: " .. tostring("XXX"))
-  end
-end
-
-
-function Layout_possible_windows(E)
-  if E.usage.K1.room.kind == "outdoor" and E.usage.K2.room.kind == "outdoor" then
-    list = THEME.fences
-  else
-    list = THEME.windows
-  end
-
-  E.usage.edge_fabs = Layout_possible_prefab_from_list(list, "edge")
-end
-
-
 ----------------------------------------------------------------
 
 
