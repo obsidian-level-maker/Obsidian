@@ -3,9 +3,13 @@ WORK IN PROGRESS
 ================
 
 
->>  facades for HELL : vines, gray-marb, uh...
+>>  brick_gate
+
+>>  liquid border : put liquid near edge, have rocky fence at back
+
 
 >>  get 'height' value into 'env' pick_skin() tables
+
 
 >>>  stairs / lift : standardize height stuff
 
@@ -30,25 +34,38 @@ Joiners
 
 -  implement some outdoor joiners:
 
-    -  tri_pillar
+    DONE:  tri_pillar
 
-    -  rounded side with stair
+    DONE:  rounded side with stair
 
-    -  fence on each side with brick column
+    DONE:  fence on each side with brick column
 
 -  implement some other joiners
 
-   -  Y stair
+    DONE:  Y stair
 
+
++  new policy on "pegging"
+   (a) rename "peg" --> "unpeg"
+   (b) always honor it
+   (c) if doubt on which side (e.g. floor height same),
+       prefer explicit Y offset over zero Y offset
+
+-  DOOM CSG: create linedefs which have a rail or soecial, even
+             when sectors on both sides would be the same
+             
+             [indeed, allow sectors on both sides to merge, but
+              create the line anyway]
 
 
 !!  Hallways : break 3x1 (etc?) sections into pieces
 
-+  fix cycles
+!!  fix cycles
 
-+  fix double halls
 
-+  fix street mode
+-  fix double halls
+
+-  fix street mode
 
 
 -  fake building and fences : support long ones, also deep ones
@@ -63,14 +80,12 @@ Joiners
 IDEA: indoor closets are scaled to mate up with walls.
       how about doing same for (a) hallway pieces, (b) joiners
 
--  review policy on "pegging"
-   (a) rename "peg" --> "unpeg"
-   (b) only honor it with explicit Y offset
-
 
 
 WAD Prefabs
 -----------
+
+-  after Replacements, give _LIQUID brushes the liquid.special and liquid.light
 
 +  check that prefabs can add ITEM spots
 
