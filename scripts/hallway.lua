@@ -1374,7 +1374,9 @@ function Hallway_scan(start_K, start_dir, mode)
     end
 
     if not H.big_junc and #H.sections == 1 and end_K.room and
-       (end_K.kx == start_K.kx or end_K.ky == start_K.ky)
+       (end_K.kx == start_K.kx or end_K.ky == start_K.ky) and
+       ( (geom.is_vert (start_dir) and path[1].sw == 3) or
+         (geom.is_horiz(start_dir) and path[1].sh == 3))
     then
       H.joiner = true
     end
