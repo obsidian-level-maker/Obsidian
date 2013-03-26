@@ -19,6 +19,9 @@ DOOM.SKIN_DEFAULTS =
 
   flat_FLOOR5_3 = "?wall"
   flat_FLOOR0_6 = "?floor"
+
+  tex_SFALL3   = "_LIQUID"
+  flat_NUKAGE3 = "_LIQUID"
 }
 
 
