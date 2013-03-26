@@ -1087,6 +1087,10 @@ function HALLWAY_CLASS.select_joiner(H, P, floor_h)
     neighbor  = R2.kind
   }
 
+  if R1.quest != R2.quest then
+    env.has_door = 1
+  end
+
   -- only allow outdoor joiners if the skies are the same height
   local is_outdoor = (R1.kind == "outdoor" and R2.kind == "outdoor")
 
@@ -1096,7 +1100,7 @@ function HALLWAY_CLASS.select_joiner(H, P, floor_h)
   end
 
   -- if there is a locked door on one side, prevent using outdoor joiners
-  if is_outdoor and R1.quest != R2.quest then
+  if is_outdoor and env.has_door then
     is_outdoor = false
     env.room_kind = "building"
     env.neighbor  = "building"

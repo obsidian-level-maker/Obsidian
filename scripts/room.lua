@@ -1084,6 +1084,9 @@ function Room_matching_skins(env, reqs)
       if not match_room_kind(env.neighbor, skin.neighbor) then return 0 end
     end
 
+    -- door check
+    if env.has_door and skin.no_door then return 0 end
+
     -- liquid check
     if skin.liquid and not LEVEL.liquid then return 0 end
 
