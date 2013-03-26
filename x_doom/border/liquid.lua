@@ -52,5 +52,7 @@ DOOM.SKINS.Border_liquid_2x2_o =
 DOOM.GROUPS.border_liquid =
 {
   kind = "border"
+
+  prob = 999
 }
 

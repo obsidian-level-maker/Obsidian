@@ -52,7 +52,5 @@ DOOM.SKINS.Border_dropoff_2x2_o =
 DOOM.GROUPS.border_dropoff =
 {
   kind = "border"
-
-  prob = 999
 }
 
