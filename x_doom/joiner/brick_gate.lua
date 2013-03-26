@@ -12,6 +12,6 @@ DOOM.SKINS.Joiner_brick_gate =
   bound_z1  = 0
   add_sky   = 1
 
-  prob = 2000
+  prob = 8000
 }
 

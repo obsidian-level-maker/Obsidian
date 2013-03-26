@@ -12,7 +12,7 @@ DOOM.SKINS.Joiner_round_stair =
   bound_z1  = 0
   add_sky   = 1
 
-  prob = 2000
+  prob = 200
 
   north = { h=80 }
 }
