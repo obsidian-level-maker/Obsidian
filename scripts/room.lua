@@ -1088,7 +1088,11 @@ function Room_matching_skins(env, reqs)
     if env.has_door and skin.no_door then return 0 end
 
     -- liquid check
-    if skin.liquid and not LEVEL.liquid then return 0 end
+    if skin.liquid then
+      if not LEVEL.liquid then return 0 end
+      if skin.liquid == "harmless" and     LEVEL.liquid.damage then return 0 end
+      if skin.liquid == "damaging" and not LEVEL.liquid.damage then return 0 end
+    end
 
     return 1
   end
@@ -1165,7 +1169,11 @@ function Room_matching_groups(reqs)
     if reqs.kind != group.kind then return 0 end
 
     -- liquid check
-    if group.liquid and not LEVEL.liquid then return 0 end
+    if group.liquid then
+      if not LEVEL.liquid then return 0 end
+      if group.liquid == "harmless" and     LEVEL.liquid.damage then return 0 end
+      if group.liquid == "damaging" and not LEVEL.liquid.damage then return 0 end
+    end
 
     -- hallway stuff
     if group.narrow != group.narrow then return 0 end
