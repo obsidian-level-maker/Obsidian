@@ -32,15 +32,20 @@ end
 
 
 function Plan_choose_liquid()
-  if not LEVEL.liquid and THEME.liquids and STYLE.liquids != "none" then
+  if THEME.liquids and STYLE.liquids != "none" then
     local name = rand.key_by_probs(THEME.liquids)
-    LEVEL.liquid = assert(GAME.LIQUIDS[name])
+    local liquid = assert(GAME.LIQUIDS[name])
+
+    LEVEL.liquid = liquid
+
     gui.printf("Liquid: %s\n\n", name)
 
     -- setup the special '_LIQUID' material
-    assert(LEVEL.liquid.mat)
-    local mat = assert(GAME.MATERIALS[LEVEL.liquid.mat])
-    GAME.MATERIALS["_LIQUID"] = mat
+    assert(liquid.mat)
+    local info = assert(GAME.MATERIALS[liquid.mat])
+
+    GAME.MATERIALS["_LIQUID"] = info
+
   else
     gui.printf("Liquids disabled.\n\n")
 
@@ -366,7 +371,7 @@ function Plan_add_big_junctions()
   -- decide how many big hallway junctions to make
   local prob = style_sel("big_juncs", 0, 15, 35, 70)
 
-  if not THEME.big_junctions or prob < 1 then
+  if prob < 1 then
     gui.printf("Big junctions: disabled\n")
     return
   end
@@ -381,7 +386,7 @@ function Plan_add_big_junctions()
   end
 
   -- occasionally don't use them  [maybe make into scenic rooms?]
-  if rand.odds(10 - 90) then  --!!!!!!
+  if rand.odds(10 + 90) then  --!!!!!!
     LEVEL.ignore_big_junctions = true
   end
 end
