@@ -1095,6 +1095,13 @@ function HALLWAY_CLASS.select_joiner(H, P, floor_h)
     env.neighbor = "building"
   end
 
+  -- if there is a locked door on one side, prevent using outdoor joiners
+  if is_outdoor and R1.quest != R2.quest then
+    is_outdoor = false
+    env.room_kind = "building"
+    env.neighbor  = "building"
+  end
+
   -- FIXME: set env.height (unless is_outdoor)
 
   local reqs =
