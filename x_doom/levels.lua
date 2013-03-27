@@ -23,17 +23,20 @@ DOOM2.EPISODES =
 {
   episode1 =
   {
-    sky_light = 0.75
+    sky_patch = "RSKY1"
+    dark_prob = 10
   }
 
   episode2 =
   {
-    sky_light = 0.50
+    sky_patch = "RSKY2"
+    dark_prob = 50
   }
 
   episode3 =
   {
-    sky_light = 0.75
+    sky_patch = "RSKY3"
+    dark_prob = 5
   }
 }
 
@@ -145,8 +148,6 @@ function DOOM2.get_levels()
       patch = string.format("CWILV%02d", map-1)
 
       ep_along = ep_along
-
-      sky_light = ep_info.sky_light
     }
 
     table.insert( EPI.levels, LEV)
@@ -213,22 +214,26 @@ DOOM1.EPISODES =
 {
   episode1 =
   {
-    sky_light = 0.85
+    sky_patch = "SKY1"
+    dark_prob = 10
   }
 
   episode2 =
   {
-    sky_light = 0.65
+    sky_patch = "SKY2"
+    dark_prob = 40
   }
 
   episode3 =
   {
-    sky_light = 0.75
+    sky_patch = "SKY3"
+    dark_prob = 10
   }
 
   episode4 =
   {
-    sky_light = 0.75
+    sky_patch = "SKY4"
+    dark_prob = 5
   }
 }
 
@@ -316,7 +321,6 @@ function DOOM1.get_levels()
          ep_along = ep_along
         mon_along = ep_along + (ep_index-1) / 5
 
-        sky_light   = ep_info.sky_light
         secret_kind = (map == 9) and "plain"
       }
 
@@ -339,4 +343,53 @@ function DOOM1.get_levels()
 
   end -- for episode
 end
+
+
+--------------------------------------------------------------------
+--  Final DOOM (etc)
+--------------------------------------------------------------------
+
+
+TNT.EPISODES =
+{
+  episode1 =
+  {
+    sky_patch = "RSKY1"
+    dark_prob = 10
+  }
+
+  episode2 =
+  {
+    sky_patch = "RSKY2"
+    dark_prob = 80
+  }
+
+  episode3 =
+  {
+    sky_patch = "RSKY3"
+    dark_prob = 5
+  }
+}
+
+
+PLUTONIA.EPISODES =
+{
+  episode1 =
+  {
+    sky_patch = "RSKY1"
+    dark_prob = 10
+  }
+
+  episode2 =
+  {
+    sky_patch = "RSKY2"
+    dark_prob = 10
+  }
+
+  episode3 =
+  {
+    sky_patch = "RSKY3"
+    dark_prob = 40
+  }
+}
 
