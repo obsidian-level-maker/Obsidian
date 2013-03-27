@@ -1761,6 +1761,7 @@ WADFAB_ENTITIES =
 {
   -- monster spots
   
+  [3004] = { kind="monster",  r=20  }  -- zombieman
   [3002] = { kind="monster",  r=32  }  -- demon
   [3005] = { kind="flyer",    r=32  }  -- cacodemon
   [  68] = { kind="monster",  r=64  }  -- arachnotron
@@ -1771,9 +1772,9 @@ WADFAB_ENTITIES =
   [2015] = { kind="pickup"   }  -- armor helmet
   [2018] = { kind="big_item" }  -- green armor vest
 
-  -- lights
+  -- lighting
 
-  [  34] = { kind="light" }
+  [  34] = { kind="light" }  -- candle
 }
 
 
