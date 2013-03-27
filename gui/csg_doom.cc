@@ -1246,8 +1246,7 @@ static csg_property_set_c * DM_FindSpecial(snag_c *S, region_c *R1, region_c *R2
 }
 
 
-static brush_vert_c * DM_FindRail(const region_c *R, const region_c *N,
-                                  const snag_c *S)
+static brush_vert_c * DM_FindRail(const snag_c *S, const region_c *R, const region_c *N)
 {
 	if (! R || ! N)
 		return NULL;
@@ -1325,11 +1324,19 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 	brush_vert_c *rail = NULL;
 
 	if (front || back)
-		rail = DM_FindRail(R, N, S);
+		rail = DM_FindRail(S, R, N);
 
 
-	// skip the line if same on both sides, except when it has a rail
-	if (front == back && !rail)
+	csg_property_set_c *spec = DM_FindSpecial(S, R, N);
+
+	int L_special = 0;
+
+	if (spec)
+		L_special = spec->getInt("special");
+	
+
+	// skip the line if same on both sides, except when it has a rail or line special
+	if (front == back && !rail && !L_special)
 		return;
 
 
@@ -1384,22 +1391,11 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 	}
 
 
-	csg_property_set_c *spec = DM_FindSpecial(S, R, N);
+	L->special = L_special;
 
-
-	/* ???
-	   if (rail)
-	   {
-	   L->flags |= rail->face.getInt("flags");
-
-	   if (! spec && rail->face.getStr("special"))
-	   spec = &rail->face;
-	   }
-	 */
 	if (spec)
 	{
-		L->special = spec->getInt("special");
-		L->tag     = spec->getInt("tag");
+		L->tag = spec->getInt("tag");
 
 		L->flags |= spec->getInt("flags");
 
