@@ -560,7 +560,8 @@ function Levels_choose_themes()
   -- A Bit Mixed : choose a theme for each episode
   local episode_list = {}
 
-  if OB_CONFIG.theme == "original" and GAME.ORIGINAL_THEMES then
+  if OB_CONFIG.theme == "original" then
+    assert(GAME.ORIGINAL_THEMES)
     total = math.max(total, # GAME.ORIGINAL_THEMES)
   end
 
@@ -571,7 +572,7 @@ function Levels_choose_themes()
     local info = OB_THEMES[name]
     local pos = rand.irange(1, total)
 
-    if OB_CONFIG.theme == "original" and GAME.ORIGINAL_THEMES then
+    if OB_CONFIG.theme == "original" then
       for i,orig_theme in ipairs(GAME.ORIGINAL_THEMES) do
         if name == orig_theme and not episode_list[i] then
           -- this can leave gaps, but they are filled later
@@ -590,7 +591,7 @@ function Levels_choose_themes()
   gui.debugf("Initial theme list = \n%s\n", table.tostr(episode_list))
 
   -- fill any gaps when in "As Original" mode
-  if OB_CONFIG.theme == "original" and GAME.ORIGINAL_THEMES then
+  if OB_CONFIG.theme == "original" then
     for i,orig_theme in ipairs(GAME.ORIGINAL_THEMES) do
       if not episode_list[i] then
         episode_list[i] = orig_theme
