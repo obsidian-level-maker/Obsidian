@@ -1439,8 +1439,8 @@ function Monsters_in_room(L)
 
     local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
 
-    w = int(w / info.r / 2.2)
-    h = int(h / info.r / 2.2)
+    w = int(w / info.r / 2)
+    h = int(h / info.r / 2)
 
     return w * h
   end
@@ -1471,12 +1471,12 @@ function Monsters_in_room(L)
 --[[
     local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
 
-    w = int(w / info.r / 2.2)
-    h = int(h / info.r / 2.2)
+    w = int(w / info.r / 2)
+    h = int(h / info.r / 2)
 
     for mx = 1,w do for my = 1,h do
-      local x = spot.x1 + info.r * 2.2 * (mx-0.5)
-      local y = spot.y1 + info.r * 2.2 * (my-0.5)
+      local x = spot.x1 + info.r * 2 * (mx-0.5)
+      local y = spot.y1 + info.r * 2 * (my-0.5)
       local z = spot.z1
 
       place_monster(mon, x, y, z)
@@ -1804,8 +1804,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- determine maximum number that will fit
     local w, h = geom.box_size(spot.x1,spot.y1, spot.x2,spot.y2)
 
-    w = int(w / info.r / 2.2)
-    h = int(h / info.r / 2.2)
+    w = int(w / info.r / 2)
+    h = int(h / info.r / 2)
 
     assert(w >= 1 and h >= 1)
 
@@ -1817,8 +1817,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     for mx = 1,w do for my = 1,h do
       local loc =
       {
-        x = spot.x1 + info.r * 2.2 * (mx-0.5)
-        y = spot.y1 + info.r * 2.2 * (my-0.5)
+        x = spot.x1 + info.r * 2 * (mx-0.5)
+        y = spot.y1 + info.r * 2 * (my-0.5)
         z = spot.z1
       }
       table.insert(list, loc)
