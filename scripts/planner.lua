@@ -1717,14 +1717,18 @@ function Plan_create_rooms()
   --   3. add odd-shaped and big rooms
   --   4. add small rooms
   --   5. decide outdoors and caves
-  --  ??? create edge and corner lists
   --
   gui.printf("\n--==| Planning Rooms |==--\n\n")
 
   assert(LEVEL.ep_along)
 
-  LEVEL.sky_light = 192
-  LEVEL.sky_shade = 160
+  if LEVEL.episode.is_dark then
+    LEVEL.sky_light = 0
+    LEVEL.sky_shade = 0
+  else
+    LEVEL.sky_light = 192
+    LEVEL.sky_shade = 160
+  end
 
   LEVEL.rooms = {}
   LEVEL.conns = {}

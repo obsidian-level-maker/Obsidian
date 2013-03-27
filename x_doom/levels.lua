@@ -107,6 +107,13 @@ function DOOM2.get_levels()
       levels = {}
     }
 
+    local ep_info = DOOM2.EPISODES["episode" .. ep_index]
+    assert(ep_info)
+
+    if rand.odds(ep_info.dark_prob) then
+      EPI.is_dark = true
+    end
+
     table.insert(GAME.episodes, EPI)
   end
 
@@ -133,12 +140,12 @@ function DOOM2.get_levels()
       ep_along = map / MAP_NUM
     end
 
+    assert(ep_along <= 1)
+
     local EPI = GAME.episodes[ep_index]
     assert(EPI)
 
     local ep_info = DOOM2.EPISODES["episode" .. ep_index]
-    assert(ep_info)
-    assert(ep_along <= 1)
 
     local LEV =
     {
@@ -300,6 +307,10 @@ function DOOM1.get_levels()
 
     local ep_info = DOOM1.EPISODES["episode" .. ep_index]
     assert(ep_info)
+
+    if rand.odds(ep_info.dark_prob) then
+      EPI.is_dark = true
+    end
 
     for map = 1,MAP_NUM do
       local ep_along = map / LEV_MAX
