@@ -745,6 +745,18 @@ function CHUNK_CLASS.content_teleporter(C)
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, 10 - C.spot_dir)
 
   Fabricate_at(L, skin1, T, { skin0, skin1, skin2 })
+
+--[[ TRIGGER TEST
+
+  local brush = Brush_new_quad(mx - 140, my + 96, mx + 642, my + 128)
+
+  brush[1].special = 1001
+  brush[1].tag = 2002
+
+  table.insert(brush, 1, { m="trigger" })
+
+  brush_helper(brush)
+--]]
 end
 
 
