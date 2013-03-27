@@ -437,10 +437,10 @@ int Grab_BrushMode(lua_State *L, const char *kind)
 	if (StringCaseCmp(kind, "detail") == 0) return BKIND_Detail;
 	if (StringCaseCmp(kind, "clip")   == 0) return BKIND_Clip;
 
-	if (StringCaseCmp(kind, "sky")    == 0) return BKIND_Sky;
-	if (StringCaseCmp(kind, "liquid") == 0) return BKIND_Liquid;
-	if (StringCaseCmp(kind, "rail")   == 0) return BKIND_Rail;
-	if (StringCaseCmp(kind, "light")  == 0) return BKIND_Light;
+	if (StringCaseCmp(kind, "sky")     == 0) return BKIND_Sky;
+	if (StringCaseCmp(kind, "liquid")  == 0) return BKIND_Liquid;
+	if (StringCaseCmp(kind, "trigger") == 0) return BKIND_Trigger;
+	if (StringCaseCmp(kind, "light")   == 0) return BKIND_Light;
 
 	return luaL_error(L, "gui.add_brush: unknown kind '%s'", kind);
 }

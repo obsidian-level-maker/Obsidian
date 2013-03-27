@@ -1941,14 +1941,16 @@ static void DiscoverThemGaps()
 			csg_brush_c *A = R->brushes[k];
 
 			// skip the "ephemeral" brushes
-			if (high->bkind == BKIND_Liquid || high->bkind == BKIND_Rail ||
-					high->bkind == BKIND_Light)
+			if (high->bkind == BKIND_Liquid  ||
+			    high->bkind == BKIND_Trigger ||
+				high->bkind == BKIND_Light)
 			{
 				high = A;
 				continue;
 			}
-			else if (A->bkind == BKIND_Liquid || A->bkind == BKIND_Rail ||
-					A->bkind == BKIND_Light)
+			else if (A->bkind == BKIND_Liquid  ||
+					 A->bkind == BKIND_Trigger ||
+					 A->bkind == BKIND_Light)
 			{
 				continue;
 			}

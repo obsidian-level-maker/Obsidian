@@ -13,7 +13,6 @@
 
 DOOM.PARAMETERS =
 {
-  rails = true
   teleporters = true
   infighting = true
 

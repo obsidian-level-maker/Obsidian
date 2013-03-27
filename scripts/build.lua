@@ -41,10 +41,11 @@ CSG_BRUSHES =
   solid  = 1
   detail = 1
   clip   = 1
-  sky    = 1
-  liquid = 1
-  rail   = 1
-  light  = 1
+
+  sky     = 1
+  liquid  = 1
+  trigger = 1
+  light   = 1
 }
 
 
@@ -139,10 +140,6 @@ end
 function brush_helper(brush)
   local mode = brush[1].m
 
-  -- light and rail brushes only make sense for 2.5D games
-  if mode == "light" and not PARAM.light_brushes then return end
-  if mode == "rail"  and not PARAM.rails then return end
-
   each C in brush do
     Brush_collect_flags(C)
   end
@@ -153,10 +150,6 @@ end
 
 function entity_helper(name, x, y, z, props)
   assert(name)
-
-  if PARAM.light_brushes and name == "light" then
-    return
-  end
 
   local ent
 
