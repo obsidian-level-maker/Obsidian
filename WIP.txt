@@ -3,9 +3,15 @@ WORK IN PROGRESS
 ================
 
 
->>  brick_gate
+-  dark skies
 
->>  liquid border : put liquid near edge, have rocky fence at back
+-  skies to match original theme
+
+-  store ORIGINAL_THEMES in episode tables
+
+-  very basic "fake" building
+
+-  fake building with a fake window (or two)
 
 
 >>  get 'height' value into 'env' pick_skin() tables
@@ -24,38 +30,7 @@ WORK IN PROGRESS
 Joiners
 -------
 
--  joiners can connect to 0, 1 or 2 outdoor rooms
-   (and _only_ one of these possibilities)
-
-   -->  outdoor = 1 / building2 = 1
-           cave = 1 / cave2 = 1
-
 -  how to scale joiners for SKY_H (z_fit I guess)
-
--  implement some outdoor joiners:
-
-    DONE:  tri_pillar
-
-    DONE:  rounded side with stair
-
-    DONE:  fence on each side with brick column
-
--  implement some other joiners
-
-    DONE:  Y stair
-
-
-+  new policy on "pegging"
-   (a) rename "peg" --> "unpeg"
-   (b) always honor it
-   (c) if doubt on which side (e.g. floor height same),
-       prefer explicit Y offset over zero Y offset
-
--  DOOM CSG: create linedefs which have a rail or soecial, even
-             when sectors on both sides would be the same
-             
-             [indeed, allow sectors on both sides to merge, but
-              create the line anyway]
 
 
 !!  Hallways : break 3x1 (etc?) sections into pieces
@@ -69,6 +44,7 @@ Joiners
 
 
 -  fake building and fences : support long ones, also deep ones
+   - also: allow a 'group' field to match border_group
 
 -  long fat_fences / fake_building : don't span different facades
 
