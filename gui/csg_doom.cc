@@ -1194,6 +1194,47 @@ static doom_sidedef_c * DM_MakeSidedef(
 }
 
 
+static csg_property_set_c * DM_FindTrigger(snag_c *S, doom_sector_c *front, doom_sector_c *back)
+{
+	// triggers require a two-sided line
+	if (! front || ! back)
+		return NULL;
+
+	float f_max = MAX(front->f_h, back->f_h) + 4;
+	float c_min = MIN(front->c_h, back->c_h) - 4;
+
+	if (f_max >= c_min)
+		return NULL;
+
+	for (int side = 0 ; side < 2 ; side++)
+	{
+		snag_c *test_S = (side == 0) ? S->partner : S;
+
+		if (! test_S)
+			continue;
+
+		for (unsigned int k = 0 ; k < test_S->sides.size() ; k++)
+		{
+			brush_vert_c *V = test_S->sides[k];
+
+			if (V->parent->bkind != BKIND_Trigger)
+				continue;
+
+			// is the trigger in lala land?
+			if (V->parent->b.z > c_min || V->parent->t.z < f_max)
+				continue;
+
+			if (! V->face.getStr("special"))
+				continue;
+
+			return &V->face;  // found it
+		}
+	}
+
+	return NULL;
+}
+
+
 static csg_property_set_c * DM_FindSpecial(snag_c *S, region_c *R1, region_c *R2)
 {
 	brush_vert_c *V;
@@ -1334,6 +1375,16 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 	if (spec)
 		L_special = spec->getInt("special");
 	
+	// trigger brushes are secondary to specials on brush verts
+	// (because it is bad when a door or lift gets dudded).
+	if (L_special == 0)
+	{
+		spec = DM_FindTrigger(S, front, back);
+
+		if (spec)
+			L_special = spec->getInt("special");
+	}
+
 
 	// skip the line if same on both sides, except when it has a rail or line special
 	if (front == back && !rail && !L_special)
