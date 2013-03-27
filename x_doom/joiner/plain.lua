@@ -4,22 +4,24 @@
 
 DOOM.SKINS.Joiner_plain =
 {
-  file = "joiner/cagey.wad"
+  file = "joiner/plain.wad"
 
-  prob = 9000
+  prob = 60
 }
 
 DOOM.SKINS.Joiner_plain_cage =
 {
   file = "joiner/plain_cage.wad"
+  cage = 1
 
-  prob = 3000
+  prob = 20
 }
 
 DOOM.SKINS.Joiner_plain_trap =
 {
   file = "joiner/plain_trap.wad"
+  trap = 1
 
-  prob = 90000
+  prob = 10
 }
 
