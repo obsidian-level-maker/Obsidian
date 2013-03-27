@@ -1885,9 +1885,9 @@ function Fab_load_wad(name)
       -- nothing
 
     else
-      if (bit.band(flags, MLF_LowerUnpegged) == 0 and pass == 1) or
-         (bit.band(flags, MLF_UpperUnpegged) == 0 and pass == 2) then
-        C2.peg = 1
+      if (bit.band(flags, MLF_LowerUnpegged) != 0 and pass == 1) or
+         (bit.band(flags, MLF_UpperUnpegged) != 0 and pass == 2) then
+        C2.unpeg = 1
       end
 
       -- keep these flags: block-all, block-mon, secret, no-draw,

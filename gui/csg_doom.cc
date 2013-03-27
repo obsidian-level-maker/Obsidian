@@ -1049,7 +1049,7 @@ static int CalcXOffset(snag_c *S, brush_vert_c *V, int ox)
 }
 
 
-static int CalcYOffset(brush_vert_c *V, int oy, bool u_peg)
+static int CalcYOffset(brush_vert_c *V, int oy, bool unpeg_U)
 {
 	// !!! FIXME: handle cut-offs (etc)
 	return oy;
@@ -1071,7 +1071,7 @@ static int CalcRailYOffset(brush_vert_c *rail, doom_sector_c *F, doom_sector_c *
 static doom_sidedef_c * DM_MakeSidedef(
 	doom_sector_c *sec, doom_sector_c *back,
 	snag_c *snag, snag_c *other,
-	brush_vert_c *rail, bool *l_peg, bool *u_peg)
+	brush_vert_c *rail, bool *unpeg_L, bool *unpeg_U)
 {
 	if (! sec)
 		return NULL;
@@ -1114,8 +1114,8 @@ static doom_sidedef_c * DM_MakeSidedef(
 		{
 			SD->mid = lower->face.getStr("tex", dummy_tex);
 
-			if (lower->face.getInt("peg"))
-				*l_peg = true;
+			if (lower->face.getInt("unpeg"))
+				*unpeg_L = true;
 
 			int ox = lower->face.getInt("u1", IVAL_NONE);
 			int oy = lower->face.getInt("v1", IVAL_NONE);
@@ -1141,9 +1141,6 @@ static doom_sidedef_c * DM_MakeSidedef(
 		if (! lower) lower = l_brush->verts[0];
 		if (! upper) upper = u_brush->verts[0];
 
-		if (lower->face.getInt("peg")) *l_peg = true;
-		if (upper->face.getInt("peg")) *u_peg = true;
-
 		SD->lower = lower->face.getStr("tex", dummy_tex);
 		SD->upper = upper->face.getStr("tex", dummy_tex);
 
@@ -1152,7 +1149,7 @@ static doom_sidedef_c * DM_MakeSidedef(
 
 		if (rail)
 		{
-			*l_peg = false;
+			*unpeg_L = true;
 			SD->mid = rail->face.getStr("rail", "-");
 			r_ox = rail->face.getInt("u1", r_ox);
 		}
@@ -1162,6 +1159,21 @@ static doom_sidedef_c * DM_MakeSidedef(
 
 		int u_ox = upper->face.getInt("u1", IVAL_NONE);
 		int u_oy = upper->face.getInt("v1", IVAL_NONE);
+
+		// grab unpeg flags -- but only for the visible parts
+		if (lower->face.getInt("unpeg") && back &&
+		    (back->f_h > sec->f_h ||
+			 (back->f_h == sec->f_h && l_oy != IVAL_NONE)))
+		{
+			*unpeg_L = true;
+		}
+		
+		if (upper->face.getInt("unpeg") && back &&
+			(back->c_h < sec->c_h ||
+			 (back->c_h == sec->c_h && u_oy != IVAL_NONE)))
+		{
+			*unpeg_U = true;
+		}
 
 		if (r_ox != IVAL_NONE)
 			SD->x_offset = CalcXOffset(snag, rail,  r_ox);
@@ -1173,9 +1185,9 @@ static doom_sidedef_c * DM_MakeSidedef(
 		if (rail)
 			SD->y_offset = CalcRailYOffset(rail, sec, back);
 		else if (l_oy != IVAL_NONE)
-			SD->y_offset = CalcYOffset(lower, l_oy, *u_peg);
+			SD->y_offset = CalcYOffset(lower, l_oy, *unpeg_U);
 		else if (u_oy != IVAL_NONE)
-			SD->y_offset = CalcYOffset(upper, u_oy, *u_peg);
+			SD->y_offset = CalcYOffset(upper, u_oy, *unpeg_U);
 	}
 
 	return SD;
@@ -1345,11 +1357,11 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 	L->CalcLength();
 
 
-	bool l_peg = false;
-	bool u_peg = false;
+	bool unpeg_L = false;
+	bool unpeg_U = false;
 
-	L->front = DM_MakeSidedef(front,  back, S->partner, S, rail, &l_peg, &u_peg);
-	L->back  = DM_MakeSidedef( back, front, S, S->partner, rail, &l_peg, &u_peg);
+	L->front = DM_MakeSidedef(front,  back, S->partner, S, rail, &unpeg_L, &unpeg_U);
+	L->back  = DM_MakeSidedef( back, front, S, S->partner, rail, &unpeg_L, &unpeg_U);
 
 	SYS_ASSERT(L->front || L->back);
 
@@ -1365,10 +1377,10 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 	}
 	else
 	{
-		L->flags |= MLF_TwoSided | MLF_LowerUnpeg | MLF_UpperUnpeg;
+		L->flags |= MLF_TwoSided;
 
-		if (l_peg) L->flags ^= MLF_LowerUnpeg;
-		if (u_peg) L->flags ^= MLF_UpperUnpeg;
+		if (unpeg_L) L->flags |= MLF_LowerUnpeg;
+		if (unpeg_U) L->flags |= MLF_UpperUnpeg;
 	}
 
 
