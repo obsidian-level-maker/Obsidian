@@ -182,42 +182,62 @@ SKY_GEN.colormaps =
 }
 
 
-function SKY_GEN.make_skies()
-
-  local clouds =
+SKY_GEN.sky_themes =
+{
+  urban =
   {
-    GREY_CLOUDS = 50
-    DARK_CLOUDS = 50
-    BLUE_CLOUDS = 50
-    HELL_CLOUDS = 50
-    ORANGE_CLOUDS = 50
-    HELLISH_CLOUDS = 50
-    BROWN_CLOUDS = 50
-    BROWNISH_CLOUDS = 50
-    YELLOW_CLOUDS = 50
-    GREEN_CLOUDS = 50
-    JADE_CLOUDS = 50
-    DARKRED_CLOUDS = 50
-    PEACH_CLOUDS = 50
-    WHITE_CLOUDS = 50
-    SKY_CLOUDS = 50
+    clouds =
+    {
+      SKY_CLOUDS = 150
+      GREY_CLOUDS = 50
+      DARK_CLOUDS = 50
+      BLUE_CLOUDS = 50
+      BROWN_CLOUDS = 50
+      BROWNISH_CLOUDS = 50
+
+      GREEN_CLOUDS = 50
+      JADE_CLOUDS = 50
+      DARKRED_CLOUDS = 50
+      PEACH_CLOUDS = 50
+      WHITE_CLOUDS = 50
+    }
+
+    hills =
+    {
+      TAN_HILLS = 50
+      BROWN_HILLS = 50
+      DARKBROWN_HILLS = 50
+      GREENISH_HILLS = 30
+      GREEN_HILLS = 30
+      BLACK_HILLS = 10
+    }
   }
 
-  local hills =
+  hell =
   {
-    TAN_HILLS = 50
-    BROWN_HILLS = 50
-    GREEN_HILLS = 50
-    HELL_HILLS = 50
-    DARKBROWN_HILLS = 50
-    GREENISH_HILLS = 50
-    BLACK_HILLS = 50
+    clouds =
+    {
+      HELL_CLOUDS = 50
+      ORANGE_CLOUDS = 50
+      HELLISH_CLOUDS = 50
+      YELLOW_CLOUDS = 50
+    }
+
+    hills =
+    {
+      HELL_HILLS = 50
+      TAN_HILLS = 50
+      BROWN_HILLS = 50
+      DARKBROWN_HILLS = 50
+      BLACK_HILLS = 50
+    }
   }
 
+  psycho =
+  {
+--[[ TODO : fix Psychedelic theme
 
---[[ FIXME
-  if OB_CONFIG.theme == "psycho" then
-    cloudes = { PURPLE_CLOUDS, PURPLE_CLOUDS,
+    clouds = { PURPLE_CLOUDS, PURPLE_CLOUDS,
                 RAINBOW_CLOUDS, RAINBOW_CLOUDS,
                 GREEN_CLOUDS, YELLOW_CLOUDS,
                 HELLISH_CLOUDS, BLACK_N_WHITE,
@@ -228,28 +248,50 @@ function SKY_GEN.make_skies()
                 HELLISH_CLOUDS, YELLOW_CLOUDS,
                 BLUE_CLOUDS, BLUE_CLOUDS,
               }
-  end
 --]]
+  }
+}
 
 
-  each info in GAME.sky_patches do
-    assert(info.patch)
+function SKY_GEN.generate_skies()
+
+  local themes = { "urban", "urban", "hell", "hell" }
+
+  rand.shuffle(themes)
+
+  local starry_ep = rand.irange(1, # GAME.episodes)
+
+  if rand.odds(30) then
+    stars_ep = -1
+  end
+
+
+  each epi in GAME.episodes do
+    assert(epi.sky_patch)
+    assert(_index <= #themes)
+
+    local seed = int(gui.random() * 1000000)
 
     gui.fsky_create(256, 128, 0)
 
     local squish = rand.index_by_probs { 1, 4, 2 }
 
-    if back_gs[num] == "stars" then
+    local theme = SKY_GEN.sky_themes[themes[_index]]
+    assert(theme)
+
+    if _index == starry_ep then
       gui.set_colormap(1, SKY_GEN.colormaps.STARS)
-      gui.fsky_add_stars  { seed=num+9, colmap=1 }
+      gui.fsky_add_stars  { seed=seed, colmap=1 }
     else
       gui.set_colormap(1, back_gs[num])
-      gui.fsky_add_clouds { seed=num+1, colmap=1, squish=squish }
+      gui.fsky_add_clouds { seed=seed, colmap=1, squish=squish }
     end
+
+    seed = seed + 1
 
     if fore_gs[num] != "none" then
       gui.set_colormap(2, fore_gs[num])
-      gui.fsky_add_hills  { seed=num+5, colmap=2, max_h=0.6 }
+      gui.fsky_add_hills  { seed=seed, colmap=2, max_h=0.6 }
     end
 
     gui.fsky_write(info.patch)
@@ -259,7 +301,7 @@ end
 
 ----------------------------------------------------------------
 
-OB_MODULES["sky_gen_doom"] =
+OB_MODULES["gen_skies_doom"] =
 {
   label = "Sky Generator (DOOM)"
 
@@ -267,7 +309,7 @@ OB_MODULES["sky_gen_doom"] =
 
   hooks =
   {
-    get_levels = SKY_GEN.make_skies
+    get_levels = SKY_GEN.generate_skies
   }
 }
 
