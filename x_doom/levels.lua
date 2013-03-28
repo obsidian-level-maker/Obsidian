@@ -23,29 +23,24 @@ DOOM2.EPISODES =
 {
   episode1 =
   {
+    theme = "tech"
     sky_patch = "RSKY1"
     dark_prob = 10
   }
 
   episode2 =
   {
+    theme = "urban"
     sky_patch = "RSKY2"
     dark_prob = 40
   }
 
   episode3 =
   {
+    theme = "hell"
     sky_patch = "RSKY3"
     dark_prob = 10
   }
-}
-
-
-DOOM2.ORIGINAL_THEMES =
-{
-  "tech"
-  "urban"
-  "hell"
 }
 
 
@@ -214,36 +209,31 @@ DOOM1.EPISODES =
 {
   episode1 =
   {
+    theme = "tech"
     sky_patch = "SKY1"
     dark_prob = 10
   }
 
   episode2 =
   {
+    theme = "deimos"
     sky_patch = "SKY2"
     dark_prob = 40
   }
 
   episode3 =
   {
+    theme = "hell"
     sky_patch = "SKY3"
     dark_prob = 10
   }
 
   episode4 =
   {
+    theme = "flesh"
     sky_patch = "SKY4"
     dark_prob = 10
   }
-}
-
-
-DOOM1.ORIGINAL_THEMES =
-{
-  "tech"
-  "deimos"
-  "hell"
-  "flesh"
 }
 
 
