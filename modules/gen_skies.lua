@@ -236,20 +236,29 @@ SKY_GEN.themes =
 
   psycho =
   {
---[[ TODO : fix Psychedelic theme
+    clouds =
+    {
+      PURPLE_CLOUDS  = 90
+      YELLOW_CLOUDS  = 70
+      HELLISH_CLOUDS = 20
+      RAINBOW_CLOUDS = 10
 
-    clouds = { PURPLE_CLOUDS, PURPLE_CLOUDS,
-                RAINBOW_CLOUDS, RAINBOW_CLOUDS,
-                GREEN_CLOUDS, YELLOW_CLOUDS,
-                HELLISH_CLOUDS, BLACK_N_WHITE,
-              }
-    hills = {
-                PURPLE_CLOUDS, RAINBOW_CLOUDS,
-                GREEN_CLOUDS, ORANGE_CLOUDS,
-                HELLISH_CLOUDS, YELLOW_CLOUDS,
-                BLUE_CLOUDS, BLUE_CLOUDS,
-              }
---]]
+      GREEN_CLOUDS = 70
+      BLUE_CLOUDS  = 70
+      WHITE_CLOUDS = 30
+      GREY_CLOUDS  = 30
+    }
+
+    hills =
+    {
+      BLUE_CLOUDS = 70
+      RAINBOW_CLOUDS = 70
+      PURPLE_CLOUDS = 30
+      YELLOW_CLOUDS = 30
+      ORANGE_CLOUDS = 30
+      WHITE_CLOUDS = 30
+      HELLISH_CLOUDS = 10
+    }
   }
 }
 
@@ -297,12 +306,9 @@ function SKY_GEN.generate_skies()
       else
         theme_name = "urban"
       end
+    elseif OB_CONFIG.theme == "psycho" then
+      theme_name = "psycho"
     end
-
-    --TODO:
-    -- if OB_CONFIG.theme == "psycho" then
-    --   theme_name = "psycho"
-    -- end
 
     local theme = all_themes[theme_name]
 
