@@ -269,6 +269,9 @@ function SKY_GEN.generate_skies()
 
   rand.shuffle(theme_list)
 
+  -- copy all theme tables [so we can safely modify them]
+  local all_themes = table.deep_copy(SKY_GEN.themes)
+
 
   each EPI in GAME.episodes do
     assert(EPI.sky_patch)
@@ -282,7 +285,7 @@ function SKY_GEN.generate_skies()
 
     local seed = int(gui.random() * 1000000)
 
-    local squish = rand.index_by_probs { 1, 4, 2 }
+    local squish = rand.index_by_probs({ 1, 4, 2 })
 
 
     local theme_name = theme_list[_index]
@@ -300,27 +303,59 @@ function SKY_GEN.generate_skies()
     --   theme_name = "psycho"
     -- end
 
-    local theme = SKY_GEN.themes[theme_name]
+    local theme = all_themes[theme_name]
+
     assert(theme)
+    assert(theme.clouds)
+    assert(theme.hills)
 
 
     gui.fsky_create(256, 128, 0)
 
     if _index == starry_ep then
-      gui.set_colormap(1, SKY_GEN.colormaps.STARS)
-      gui.fsky_add_stars  { seed=seed, colmap=1 }
-    else
-      -- FIXME: pick clouds
+      --- Stars ---
 
-      gui.set_colormap(1, back_gs[num])
-      gui.fsky_add_clouds { seed=seed, colmap=1, squish=squish }
+      local name = "STARS"
+
+      local colormap = SKY_GEN.colormaps[name]
+      if not colormap then
+        error("SKY_GEN: unknown colormap: " .. tostring(name))
+      end
+
+      gui.set_colormap(1, colormap)
+      gui.fsky_add_stars({ seed=seed, colmap=1 })
+
+    else
+      --- Clouds ---
+
+      local name = rand.key_by_probs(theme.clouds)
+      -- don't use same one again
+      theme.clouds[name] = nil
+
+      local colormap = SKY_GEN.colormaps[name]
+      if not colormap then
+        error("SKY_GEN: unknown colormap: " .. tostring(name))
+      end
+
+      gui.set_colormap(1, colormap)
+      gui.fsky_add_clouds({ seed=seed, colmap=1, squish=squish })
     end
 
-    if fore_gs[num] != "none" then
-      -- FIXME: pick hills
 
-      gui.set_colormap(2, fore_gs[num])
-      gui.fsky_add_hills  { seed=seed+1, colmap=2, max_h=0.6 }
+    if rand.odds(80) then
+      --- Hills ---
+
+      local name = rand.key_by_probs(theme.hills)
+      -- don't use same one again
+      theme.hills[name] = nil
+
+      local colormap = SKY_GEN.colormaps[name]
+      if not colormap then
+        error("SKY_GEN: unknown colormap: " .. tostring(name))
+      end
+
+      gui.set_colormap(2, colormap)
+      gui.fsky_add_hills({ seed=seed+1, colmap=2, max_h=0.6 })
     end
 
     gui.fsky_write(EPI.sky_patch)
