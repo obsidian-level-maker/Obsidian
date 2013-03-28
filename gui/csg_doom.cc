@@ -1289,6 +1289,7 @@ static csg_property_set_c * DM_FindSpecial(snag_c *S, region_c *R1, region_c *R2
 
 static brush_vert_c * DM_FindRail(const snag_c *S, const region_c *R, const region_c *N)
 {
+	// railings require a two-sided line
 	if (! R || ! N)
 		return NULL;
 
@@ -1361,32 +1362,34 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 		back = dm_sectors[N->index];
 
 
-	// railings require a two-sided line
-	brush_vert_c *rail = NULL;
-
-	if (front || back)
-		rail = DM_FindRail(S, R, N);
-
+	brush_vert_c *rail = DM_FindRail(S, R, N);
 
 	csg_property_set_c *spec = DM_FindSpecial(S, R, N);
+	csg_property_set_c *trig = DM_FindTrigger(S, front, back);
+
+	bool use_trig = false;
 
 	int L_special = 0;
+	int L_tag     = 0;
 
 	if (spec)
+	{
 		L_special = spec->getInt("special");
+		L_tag     = spec->getInt("tag");
+	}
 	
 	// trigger brushes are secondary to specials on brush verts
 	// (because it is bad when a door or lift gets dudded).
-	if (L_special == 0)
+	if (L_special == 0 && trig)
 	{
-		spec = DM_FindTrigger(S, front, back);
+		use_trig  = true;
 
-		if (spec)
-			L_special = spec->getInt("special");
+		L_special = trig->getInt("special");
+		L_tag     = trig->getInt("tag");
 	}
 
 
-	// skip the line if same on both sides, except when it has a rail or line special
+	// skip the line if same on both sides, except when it has a rail or special
 	if (front == back && !rail && !L_special)
 		return;
 
@@ -1398,6 +1401,8 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 	if (y1 < map_bound_y1) map_bound_y1 = y1;
 	if (y2 < map_bound_y1) map_bound_y1 = y2;
 
+
+	// create the line...
 
 	doom_linedef_c *L = new doom_linedef_c;
 
@@ -1429,6 +1434,19 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 	}
 
 
+	// set the special and tag
+
+	L->special = L_special;
+	L->tag     = L_tag;
+
+	if (use_trig)
+		trig->getHexenArgs(L->args);
+	else if (spec)
+		spec->getHexenArgs(L->args);
+
+
+	// flags...
+
 	if (! L->back)
 	{
 		L->flags |= MLF_BlockAll;
@@ -1441,22 +1459,13 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 		if (unpeg_U) L->flags |= MLF_UpperUnpeg;
 	}
 
+	if (rail) L->flags |= rail->face.getInt("flags");
+	if (spec) L->flags |= spec->getInt("flags");
 
-	L->special = L_special;
-
-	if (spec)
+	if (L->special == LIN_FAKE_UNPEGGED)
 	{
-		L->tag = spec->getInt("tag");
-
-		L->flags |= spec->getInt("flags");
-
-		spec->getHexenArgs(L->args);
-
-		if (L->special == LIN_FAKE_UNPEGGED)
-		{
-			L->special = 0;
-			L->flags |= MLF_LowerUnpeg;
-		}
+		L->special = 0;
+		L->flags |= MLF_LowerUnpeg;
 	}
 }
 
