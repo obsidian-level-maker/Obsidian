@@ -189,27 +189,26 @@ SKY_GEN.themes =
     clouds =
     {
       SKY_CLOUDS = 150
-      GREY_CLOUDS = 50
+      BLUE_CLOUDS = 80
+      WHITE_CLOUDS = 80
+      GREY_CLOUDS = 80
       DARK_CLOUDS = 50
-      BLUE_CLOUDS = 50
-      BROWN_CLOUDS = 50
-      BROWNISH_CLOUDS = 50
 
-      GREEN_CLOUDS = 50
-      JADE_CLOUDS = 50
-      DARKRED_CLOUDS = 50
-      PEACH_CLOUDS = 50
-      WHITE_CLOUDS = 50
+      BROWN_CLOUDS = 40
+      BROWNISH_CLOUDS = 40
+      PEACH_CLOUDS = 40
+      GREEN_CLOUDS = 20
+      JADE_CLOUDS = 20
     }
 
     hills =
     {
-      TAN_HILLS = 50
+      TAN_HILLS = 30
       BROWN_HILLS = 50
       DARKBROWN_HILLS = 50
       GREENISH_HILLS = 30
       GREEN_HILLS = 30
-      BLACK_HILLS = 10
+      BLACK_HILLS = 5
     }
   }
 
@@ -218,16 +217,16 @@ SKY_GEN.themes =
   {
     clouds =
     {
-      HELL_CLOUDS = 50
-      ORANGE_CLOUDS = 50
-      HELLISH_CLOUDS = 50
-      YELLOW_CLOUDS = 50
+      HELL_CLOUDS = 70
+      HELLISH_CLOUDS = 70
+      DARKRED_CLOUDS = 50
+      YELLOW_CLOUDS = 35
+      ORANGE_CLOUDS = 35
     }
 
     hills =
     {
       HELL_HILLS = 50
-      TAN_HILLS = 50
       BROWN_HILLS = 50
       DARKBROWN_HILLS = 50
       BLACK_HILLS = 30
@@ -260,8 +259,8 @@ function SKY_GEN.generate_skies()
   -- select episode for the starry starry night
   local starry_ep = rand.irange(1, # GAME.episodes)
 
-  if rand.odds(30) then
-    stars_ep = -1
+  if rand.odds(37) then
+    starry_ep = -7
   end
 
   -- determine themes for each episode
@@ -272,6 +271,8 @@ function SKY_GEN.generate_skies()
   -- copy all theme tables [so we can safely modify them]
   local all_themes = table.deep_copy(SKY_GEN.themes)
 
+
+  gui.printf("\nSky generator:\n");
 
   each EPI in GAME.episodes do
     assert(EPI.sky_patch)
@@ -325,6 +326,8 @@ function SKY_GEN.generate_skies()
       gui.set_colormap(1, colormap)
       gui.fsky_add_stars({ seed=seed, colmap=1 })
 
+      gui.printf("  %d = %s\n", _index, name)
+
     else
       --- Clouds ---
 
@@ -339,6 +342,8 @@ function SKY_GEN.generate_skies()
 
       gui.set_colormap(1, colormap)
       gui.fsky_add_clouds({ seed=seed, colmap=1, squish=squish })
+
+      gui.printf("  %d = %s\n", _index, name)
     end
 
 
@@ -354,12 +359,16 @@ function SKY_GEN.generate_skies()
         error("SKY_GEN: unknown colormap: " .. tostring(name))
       end
 
+      gui.printf("    + %s\n", name)
+
       gui.set_colormap(2, colormap)
       gui.fsky_add_hills({ seed=seed+1, colmap=2, max_h=0.6 })
     end
 
     gui.fsky_write(EPI.sky_patch)
   end
+
+  gui.printf("\n")
 end
 
 
