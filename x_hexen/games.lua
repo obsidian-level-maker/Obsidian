@@ -5063,7 +5063,7 @@ end
 
 
 function HEXEN.get_levels()
-  local EP_NUM  = (OB_CONFIG.length == "full"   ? 5 ; 1)
+  local EP_NUM  = (OB_CONFIG.length == "game"   ? 5 ; 1)
   local MAP_NUM = (OB_CONFIG.length == "single" ? 1 ; 7)
 
 --??  GAME.original_themes = {}
