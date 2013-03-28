@@ -30,13 +30,13 @@ DOOM2.EPISODES =
   episode2 =
   {
     sky_patch = "RSKY2"
-    dark_prob = 50
+    dark_prob = 40
   }
 
   episode3 =
   {
     sky_patch = "RSKY3"
-    dark_prob = 5
+    dark_prob = 10
   }
 }
 
@@ -110,9 +110,7 @@ function DOOM2.get_levels()
     local ep_info = DOOM2.EPISODES["episode" .. ep_index]
     assert(ep_info)
 
-    if rand.odds(ep_info.dark_prob) then
-      EPI.is_dark = true
-    end
+    EPI.dark_prob = ep_info.dark_prob
 
     table.insert(GAME.episodes, EPI)
   end
@@ -240,7 +238,7 @@ DOOM1.EPISODES =
   episode4 =
   {
     sky_patch = "SKY4"
-    dark_prob = 5
+    dark_prob = 10
   }
 }
 
@@ -308,9 +306,7 @@ function DOOM1.get_levels()
     local ep_info = DOOM1.EPISODES["episode" .. ep_index]
     assert(ep_info)
 
-    if rand.odds(ep_info.dark_prob) then
-      EPI.is_dark = true
-    end
+    EPI.dark_prob = ep_info.dark_prob
 
     for map = 1,MAP_NUM do
       local ep_along = map / LEV_MAX
@@ -378,7 +374,7 @@ TNT.EPISODES =
   episode3 =
   {
     sky_patch = "RSKY3"
-    dark_prob = 5
+    dark_prob = 10
   }
 }
 

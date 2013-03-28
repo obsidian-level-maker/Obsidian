@@ -31,6 +31,20 @@ end
 
 
 
+function Plan_choose_darkness()
+  if EPISODE.dark_prob and rand.odds(EPISODE.dark_prob) then
+    gui.printf("Darkness falls across the land...\n")
+
+    LEVEL.sky_light = 0
+    LEVEL.sky_shade = 0
+  else
+    LEVEL.sky_light = 192
+    LEVEL.sky_shade = 160
+  end
+end
+
+
+
 function Plan_choose_liquid()
   if THEME.liquids and STYLE.liquids != "none" then
     local name = rand.key_by_probs(THEME.liquids)
@@ -57,6 +71,8 @@ end
 
 
 function Plan_decide_map_size()
+  assert(LEVEL.ep_along)
+
   local ob_size = OB_CONFIG.size
 
   local W, H
@@ -1720,22 +1736,13 @@ function Plan_create_rooms()
   --
   gui.printf("\n--==| Planning Rooms |==--\n\n")
 
-  assert(LEVEL.ep_along)
-
-  if LEVEL.episode.is_dark then
-    LEVEL.sky_light = 0
-    LEVEL.sky_shade = 0
-  else
-    LEVEL.sky_light = 192
-    LEVEL.sky_shade = 160
-  end
-
   LEVEL.rooms = {}
   LEVEL.conns = {}
   LEVEL.halls = {}
   LEVEL.scenics = {}
   LEVEL.closets = {}
 
+  Plan_choose_darkness()
   Plan_choose_liquid()
 
   Plan_decide_map_size()
