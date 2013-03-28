@@ -207,7 +207,6 @@ SKY_GEN.themes =
       BROWN_HILLS = 50
       DARKBROWN_HILLS = 50
       GREENISH_HILLS = 30
-      GREEN_HILLS = 30
       BLACK_HILLS = 5
     }
   }
@@ -220,8 +219,8 @@ SKY_GEN.themes =
       HELL_CLOUDS = 70
       HELLISH_CLOUDS = 70
       DARKRED_CLOUDS = 50
-      YELLOW_CLOUDS = 35
-      ORANGE_CLOUDS = 35
+      YELLOW_CLOUDS = 30
+      ORANGE_CLOUDS = 30
     }
 
     hills =
@@ -229,7 +228,7 @@ SKY_GEN.themes =
       HELL_HILLS = 50
       BROWN_HILLS = 50
       DARKBROWN_HILLS = 50
-      BLACK_HILLS = 30
+      BLACK_HILLS = 50
     }
   }
 
@@ -251,13 +250,14 @@ SKY_GEN.themes =
 
     hills =
     {
-      BLUE_CLOUDS = 70
-      RAINBOW_CLOUDS = 70
+      BLUE_CLOUDS = 50
+      GREEN_HILLS = 50
+      RAINBOW_CLOUDS = 50
       PURPLE_CLOUDS = 30
       YELLOW_CLOUDS = 30
       ORANGE_CLOUDS = 30
       WHITE_CLOUDS = 30
-      HELLISH_CLOUDS = 10
+      HELLISH_CLOUDS = 20
     }
   }
 }
