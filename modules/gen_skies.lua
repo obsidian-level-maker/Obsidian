@@ -372,6 +372,10 @@ function SKY_GEN.generate_skies()
     end
 
     gui.fsky_write(EPI.sky_patch)
+
+    if EPI.sky_patch2 then gui.fsky_write(EPI.sky_patch2) end
+    if EPI.sky_patch3 then gui.fsky_write(EPI.sky_patch3) end
+    if EPI.sky_patch4 then gui.fsky_write(EPI.sky_patch4) end
   end
 
   gui.printf("\n")

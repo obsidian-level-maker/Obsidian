@@ -349,19 +349,31 @@ TNT.EPISODES =
 {
   episode1 =
   {
-    sky_patch = "RSKY1"
+    theme = "tech"
+    sky_patch  = "DOEDAY"
+    sky_patch2 = "DONDAY"
+    sky_patch3 = "DOWDAY"
+    sky_patch4 = "DOSDAY"
     dark_prob = 10
   }
 
   episode2 =
   {
-    sky_patch = "RSKY2"
+    theme = "urban"
+    sky_patch  = "DOENITE"
+    sky_patch2 = "DONNITE"
+    sky_patch3 = "DOWNITE"
+    sky_patch4 = "DOSNITE"
     dark_prob = 80
   }
 
   episode3 =
   {
-    sky_patch = "RSKY3"
+    theme = "hell"
+    sky_patch  = "DOEHELL"
+    sky_patch2 = "DONHELL"
+    sky_patch3 = "DOWHELL"
+    sky_patch4 = "DOSHELL"
     dark_prob = 10
   }
 }
@@ -371,19 +383,26 @@ PLUTONIA.EPISODES =
 {
   episode1 =
   {
-    sky_patch = "RSKY1"
+    theme = "tech"
+    sky_patch  = "SKY1"
     dark_prob = 10
   }
 
   episode2 =
   {
-    sky_patch = "RSKY2"
+    theme = "urban"
+    sky_patch  = "SKY2A"
+    sky_patch2 = "SKY2B"
+    sky_patch3 = "SKY2C"
+    sky_patch4 = "SKY2D"
     dark_prob = 10
   }
 
   episode3 =
   {
-    sky_patch = "RSKY3"
+    theme = "hell"
+    sky_patch  = "SKY3A"
+    sky_patch2 = "SKY3B"
     dark_prob = 40
   }
 }
