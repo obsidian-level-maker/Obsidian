@@ -142,7 +142,6 @@ GLOBAL_STYLE_LIST =
   symmetry   = { few=20, some=60, heaps=20 }
   pillars    = { few=30, some=60, heaps=20 }
   crates     = { few=30, some=60, heaps=20 }
-  beams      = { few=25, some=50, heaps=5  }
   barrels    = { few=50, some=50, heaps=10 }
   pictures   = { few=10, some=50, heaps=10 }
   windows    = { few=5,  some=15, heaps=50 }
@@ -407,13 +406,26 @@ end
 
 function Levels_decide_special_kinds()
   each EPI in GAME.episodes do
-    -- Street Mode is fairly rare, no more than once per episode
-    -- (and sometimes none at all, when street_idx > #levels)
-    local street_idx = rand.irange(1,16)
 
-    local LEV = EPI.levels[street_idx]  -- nil if absent
-    if LEV and not LEV.special then
-      LEV.special = "street"
+    -- NOTE: this style is only set via the Level Control module
+    if STYLE.street_mode and STYLE.street_mode != "few" then
+      local prob = style_sel("street_mode", 0, 0, 25, 90)
+
+      each LEV in EPI.levels do
+        if rand.odds(prob) then
+          LEV.special = "street"
+        end
+      end
+
+    else
+      -- Street Mode is fairly rare, no more than once per episode
+      -- (and sometimes none at all, when street_idx > #levels)
+      local street_idx = rand.irange(1,14)
+
+      local LEV = EPI.levels[street_idx]  -- nil if absent
+      if LEV and not LEV.special and not STYLE.street_mode then
+        LEV.special = "street"
+      end
     end
 
     -- Surround Mode is even rarer

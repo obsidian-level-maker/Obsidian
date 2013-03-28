@@ -32,7 +32,14 @@ end
 
 
 function Plan_choose_darkness()
-  if EPISODE.dark_prob and rand.odds(EPISODE.dark_prob) then
+  local prob = EPISODE.dark_prob or 0
+
+  -- NOTE: this style is only set via the Level Control module
+  if STYLE.darkness then
+    prob = style_sel("darkness", 0, 10, 30, 90)
+  end
+
+  if rand.odds(prob) then
     gui.printf("Darkness falls across the land...\n")
 
     LEVEL.sky_light = 0

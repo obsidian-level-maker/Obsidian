@@ -64,7 +64,6 @@ OB_MODULES["level_control"] =
   {
     bridges     = { label="3D Bridges",     choices=LEVEL_CONTROL.CHOICES }
     barrels     = { label="Barrels",        choices=LEVEL_CONTROL.CHOICES }
-    beams       = { label="Beams",          choices=LEVEL_CONTROL.CHOICES }
     big_rooms   = { label="Big Rooms",      choices=LEVEL_CONTROL.CHOICES }
     big_juncs   = { label="Big Junctions",  choices=LEVEL_CONTROL.CHOICES }
     cages       = { label="Cages",          choices=LEVEL_CONTROL.CHOICES }
@@ -72,6 +71,7 @@ OB_MODULES["level_control"] =
     crates      = { label="Crates",         choices=LEVEL_CONTROL.CHOICES }
     crossovers  = { label="Cross-Overs",    choices=LEVEL_CONTROL.CHOICES }
     cycles      = { label="Multiple Paths", choices=LEVEL_CONTROL.CHOICES }
+    darkness    = { label="Dark Outdoors",  choices=LEVEL_CONTROL.CHOICES }
     hallways    = { label="Hallways",       choices=LEVEL_CONTROL.CHOICES }
     lakes       = { label="Lakes",          choices=LEVEL_CONTROL.CHOICES }
     liquids     = { label="Liquids",        choices=LEVEL_CONTROL.CHOICES }
@@ -79,8 +79,9 @@ OB_MODULES["level_control"] =
     odd_shapes  = { label="Odd Shapes",     choices=LEVEL_CONTROL.CHOICES }
     pictures    = { label="Pictures",       choices=LEVEL_CONTROL.CHOICES }
     pillars     = { label="Pillars",        choices=LEVEL_CONTROL.CHOICES }
-    scenics     = { label="Scenics",        choices=LEVEL_CONTROL.CHOICES }
+    scenics     = { label="Scenic Rooms",   choices=LEVEL_CONTROL.CHOICES }
     secrets     = { label="Secrets",        choices=LEVEL_CONTROL.CHOICES }
+    street_mode = { label="Street Mode",    choices=LEVEL_CONTROL.CHOICES }
     symmetry    = { label="Symmetry",       choices=LEVEL_CONTROL.CHOICES }
     teleporters = { label="Teleporters",    choices=LEVEL_CONTROL.CHOICES }
     windows     = { label="Windows",        choices=LEVEL_CONTROL.CHOICES }
