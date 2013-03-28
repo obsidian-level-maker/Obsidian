@@ -101,16 +101,13 @@ function DOOM2.get_levels()
 
   -- create episode info...
 
-  for ep_index = 1,EP_NUM do
-    local EPI =
-    {
-      levels = {}
-    }
-
-    local ep_info = DOOM2.EPISODES["episode" .. ep_index]
+  for ep_index = 1,3 do
+    local ep_info = GAME.EPISODES["episode" .. ep_index]
     assert(ep_info)
 
-    EPI.dark_prob = ep_info.dark_prob
+    local EPI = table.copy(ep_info)
+
+    EPI.levels = { }
 
     table.insert(GAME.episodes, EPI)
   end
@@ -142,8 +139,6 @@ function DOOM2.get_levels()
 
     local EPI = GAME.episodes[ep_index]
     assert(EPI)
-
-    local ep_info = DOOM2.EPISODES["episode" .. ep_index]
 
     local LEV =
     {
@@ -294,19 +289,23 @@ function DOOM1.get_levels()
   local LEV_MAX = MAP_NUM
   if LEV_MAX == 9 then LEV_MAX = 7 end
 
-  for ep_index = 1,EP_NUM do
-    -- create episode info...
-    local EPI =
-    {
-      levels = {}
-    }
+  -- create episode info...
 
-    table.insert(GAME.episodes, EPI)
-
-    local ep_info = DOOM1.EPISODES["episode" .. ep_index]
+  for ep_index = 1,4 do
+    local ep_info = GAME.EPISODES["episode" .. ep_index]
     assert(ep_info)
 
-    EPI.dark_prob = ep_info.dark_prob
+    local EPI = table.copy(ep_info)
+
+    EPI.levels = { }
+
+    table.insert(GAME.episodes, EPI)
+  end
+
+  -- create level info...
+
+  for ep_index = 1,EP_NUM do
+    local EPI = GAME.episodes(ep_index)
 
     for map = 1,MAP_NUM do
       local ep_along = map / LEV_MAX
@@ -317,7 +316,6 @@ function DOOM1.get_levels()
         ep_along = 0.5
       end
 
-      -- create level info...
       local LEV =
       {
         episode = EPI

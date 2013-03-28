@@ -913,7 +913,7 @@ function Levels_make_all()
 --Levels_rarify(3, GAME.POWERUPS)
 
   each EPI in GAME.episodes do
-    EPISODE = table.copy(EPI)
+    EPISODE = EPI
 
     each L in EPI.levels do
       if Levels_make_level(L) == "abort" then
