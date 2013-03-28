@@ -16,7 +16,7 @@
 --
 ----------------------------------------------------------------
 
-SKY_GEN = {}
+SKY_GEN = { }
 
 
 SKY_GEN.colormaps =
@@ -182,7 +182,7 @@ SKY_GEN.colormaps =
 }
 
 
-SKY_GEN.sky_themes =
+SKY_GEN.themes =
 {
   urban =
   {
@@ -213,6 +213,7 @@ SKY_GEN.sky_themes =
     }
   }
 
+
   hell =
   {
     clouds =
@@ -229,9 +230,10 @@ SKY_GEN.sky_themes =
       TAN_HILLS = 50
       BROWN_HILLS = 50
       DARKBROWN_HILLS = 50
-      BLACK_HILLS = 50
+      BLACK_HILLS = 30
     }
   }
+
 
   psycho =
   {
@@ -255,46 +257,73 @@ SKY_GEN.sky_themes =
 
 function SKY_GEN.generate_skies()
 
-  local themes = { "urban", "urban", "hell", "hell" }
-
-  rand.shuffle(themes)
-
+  -- select episode for the starry starry night
   local starry_ep = rand.irange(1, # GAME.episodes)
 
   if rand.odds(30) then
     stars_ep = -1
   end
 
+  -- determine themes for each episode
+  local theme_list = { "urban", "urban", "hell", "hell" }
 
-  each epi in GAME.episodes do
-    assert(epi.sky_patch)
-    assert(_index <= #themes)
+  rand.shuffle(theme_list)
+
+
+  each EPI in GAME.episodes do
+    assert(EPI.sky_patch)
+    assert(_index <= #theme_list)
+
+    if _index == starry_ep then
+      EPI.dark_prob = 90
+    else
+      EPI.dark_prob = 10
+    end
 
     local seed = int(gui.random() * 1000000)
 
-    gui.fsky_create(256, 128, 0)
-
     local squish = rand.index_by_probs { 1, 4, 2 }
 
-    local theme = SKY_GEN.sky_themes[themes[_index]]
+
+    local theme_name = theme_list[_index]
+
+    if OB_CONFIG.theme == "original" then
+      if EPI.theme == "hell" or EPI.theme == "flesh" then
+        theme_name = "hell"
+      else
+        theme_name = "urban"
+      end
+    end
+
+    --TODO:
+    -- if OB_CONFIG.theme == "psycho" then
+    --   theme_name = "psycho"
+    -- end
+
+    local theme = SKY_GEN.themes[theme_name]
     assert(theme)
+
+
+    gui.fsky_create(256, 128, 0)
 
     if _index == starry_ep then
       gui.set_colormap(1, SKY_GEN.colormaps.STARS)
       gui.fsky_add_stars  { seed=seed, colmap=1 }
     else
+      -- FIXME: pick clouds
+
       gui.set_colormap(1, back_gs[num])
       gui.fsky_add_clouds { seed=seed, colmap=1, squish=squish }
     end
 
-    seed = seed + 1
-
     if fore_gs[num] != "none" then
+      -- FIXME: pick hills
+
       gui.set_colormap(2, fore_gs[num])
-      gui.fsky_add_hills  { seed=seed, colmap=2, max_h=0.6 }
+      gui.fsky_add_hills  { seed=seed+1, colmap=2, max_h=0.6 }
     end
 
-    gui.fsky_write(info.patch)
+    gui.fsky_write(EPI.sky_patch)
   end
 end
 
