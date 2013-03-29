@@ -66,6 +66,9 @@ double light_dist_factor = 800.0;
 // fake linedef special for lower-unpegging
 #define LIN_FAKE_UNPEGGED  991
 
+// fake sector special to get floor texture from a neighbor
+#define SEC_GRAB_NB_FLOOR  993
+
 
 class extrafloor_c
 {
@@ -948,6 +951,29 @@ static void DM_CreateSectors()
 }
 
 
+static bool DM_TryGrabFloor(doom_sector_c *D1, doom_sector_c *D2)
+{
+	if (D2->special == SEC_GRAB_NB_FLOOR)
+	{
+		std::swap(D1, D2);
+	}
+
+	if (D1->special != SEC_GRAB_NB_FLOOR  ||
+	    D2->special == SEC_GRAB_NB_FLOOR)
+		return false;
+
+	if (D1->f_h != D2->f_h)
+		return false;
+
+	// grab the other floor, remove the fake special
+
+	D1->f_tex   = D2->f_tex;
+	D1->special = 0;
+
+	return true;
+}
+
+
 static int DM_CoalescePass()
 {
 	int changes = 0;
@@ -970,10 +996,16 @@ static int DM_CoalescePass()
 			if (!N || N->index < 0)
 				continue;
 
+			// only check the relationship once
+			if (N->index <= R->index)
+				continue;
+
 			doom_sector_c *D2 = dm_sectors[N->index];
 
-			// use '>' so that we only check the relationship once
-			if (N->index > R->index && D2->Match(D1))
+			if (DM_TryGrabFloor(D1, D2))
+				changes++;
+
+			if (D2->Match(D1))
 			{
 				D2->MarkUnused();
 
@@ -2437,6 +2469,9 @@ int doom_vertex_c::Write()
 
 int doom_sector_c::Write()
 {
+	if (special == SEC_GRAB_NB_FLOOR)
+		special = 0;
+
 	if (index < 0)  // not written yet?
 	{
 		index = DM_NumSectors();
