@@ -1938,11 +1938,12 @@ function Fab_load_wad(name)
     local is_door = (S.floor_h >= S.ceil_h)
 
     if pass == 1 then
-      local C = { t=S.floor_h, tex=S.floor_tex, special=S.special }
+      local C = { t=S.floor_h, tex=S.floor_tex }
 
-      if C.special == WADFAB_REACHABLE then
-        C.special = nil
+      if S.special == WADFAB_REACHABLE then
         C.reachable = true
+      elseif S.special and S.special > 0 then
+        C.special = S.special
       end
 
       if S.tag and S.tag > 0 then
@@ -1956,6 +1957,7 @@ function Fab_load_wad(name)
       end
 
       table.insert(B, C)
+
     else
       local C = { b=S.ceil_h, tex=S.ceil_tex }
       table.insert(B, C)
@@ -2112,6 +2114,7 @@ function Fab_load_wad(name)
 end
 
 
+
 function Fab_bound_Z(fab, skin)
   if skin.bound_z1 then
     fab.bbox.z1 = math.min(fab.bbox.z1 or 9999, skin.bound_z1)
@@ -2138,6 +2141,7 @@ function Fab_bound_Z(fab, skin)
 end
 
 
+
 function Fab_merge_skins(fab, main_skin, list)
   --
   -- merges the skin list into the main skin (from GAMES.SKIN table)
@@ -2159,6 +2163,7 @@ function Fab_merge_skins(fab, main_skin, list)
 
   return result
 end
+
 
 
 function Fab_substitutions(fab, SKIN)
@@ -2319,8 +2324,15 @@ function Fab_replacements(fab, skin)
   end
 
 
-  local function check_flat(val)
+  local function check_flat(val, C)
     local k = "flat_" .. val
+
+    -- give liquid brushes lighting and/or special type
+    if skin[k] == "_LIQUID" and LEVEL.liquid then
+      C.special = C.special or LEVEL.liquid.special
+      C.light   = LEVEL.liquid.light
+      C._factor = 0.7
+    end
 
     if skin[k] then
       local mat = Mat_lookup(skin[k])
@@ -2374,16 +2386,14 @@ function Fab_replacements(fab, skin)
   ---| Fab_replacements |---
 
   each B in fab.brushes do
-    local has_sky
-
     each C in B do
-      if C.tex and C.x     then C.tex = check_tex (santize(C.tex)) end
-      if C.tex and not C.x then C.tex = check_flat(santize(C.tex)) end
-
       if C.special and C.x     then C.special = check("line",   C.special) end
       if C.special and not C.x then C.special = check("sector", C.special) end
 
       if C.tag then C.tag = check_tag(C.tag) end
+
+      if C.tex and C.x     then C.tex = check_tex (santize(C.tex)) end
+      if C.tex and not C.x then C.tex = check_flat(santize(C.tex), C) end
     end
   end
 
