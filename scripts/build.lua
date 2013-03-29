@@ -1498,7 +1498,7 @@ end
 
 
 
-function Fab_repetition_X(fab, T)
+function Fab_repetition_X__OLD(fab, T)
 
   local orig_brushes  = #fab.brushes
   local orig_models   = #fab.models
@@ -2262,31 +2262,6 @@ function Fab_substitutions(fab, SKIN)
 end
 
 
-function Fab_copy_ranges(fab, skin)
-  -- this also performs substitutions in the groups
- 
-  local function do_range(groups)
-    if not groups then return end
-
-    new_groups = table.deep_copy(groups)
-
-    each G in new_groups do
-      for i = 1,#G do
-        G[i] = Trans.substitute(skin, G[i])
-      end
-    end
-
-    return new_groups
-  end
-
-  ---| Fab_copy_ranges |---
-
-  fab.x_ranges = do_range(skin._x_ranges)
-  fab.y_ranges = do_range(skin._y_ranges)
-  fab.z_ranges = do_range(skin._z_ranges)
-end
-
-
 
 function Fab_replacements(fab, skin)
 
@@ -2418,6 +2393,7 @@ function Fab_replacements(fab, skin)
 end
 
 
+
 function Fabricate(main_skin, T, skins)
   if not main_skin.file then
     error("Old-style prefab skin used")
@@ -2440,8 +2416,6 @@ function Fabricate(main_skin, T, skins)
   fab.y_fit = main_skin.y_fit
   fab.z_fit = main_skin.z_fit
 
-  Fab_copy_ranges(fab, skin)
-
   Fab_transform_XY(fab, T)
   Fab_transform_Z (fab, T)
 
@@ -2449,6 +2423,7 @@ function Fabricate(main_skin, T, skins)
 
   return fab
 end
+
 
 
 function Fabricate_at(L, main_skin, T, skins)
