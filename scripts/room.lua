@@ -633,7 +633,7 @@ function Room_distribute_spots(L, list)
       table.insert(L.cage_spots, spot)
     elseif spot.kind == "trap" then
       table.insert(L.trap_spots, spot)
-    elseif spot.kind == "pickup" then
+    elseif spot.kind == "pickup" or spot.kind == "big_item" then
       table.insert(L.item_spots, spot)
     else
       table.insert(L.mon_spots, spot)

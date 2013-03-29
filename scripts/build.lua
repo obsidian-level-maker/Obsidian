@@ -1769,8 +1769,8 @@ WADFAB_ENTITIES =
 
   -- item spots
 
-  [2015] = { kind="pickup"   }  -- armor helmet
-  [2018] = { kind="big_item" }  -- green armor vest
+  [2015] = { kind="pickup",   r=16 }  -- armor helmet
+  [2018] = { kind="big_item", r=16 }  -- green armor vest
 
   -- lighting
 
@@ -1993,8 +1993,8 @@ function Fab_load_wad(name)
     end
 
     -- logic to add light entities:
-    --   + skill bits control factor (all set = normal)
     --   + angle controls level (0 = 128, 45 = 144, ..., 315 = 240)
+    --   + skill bits determine the _factor
     if spot_info.kind == "light" then
       E.id = "light"
 
