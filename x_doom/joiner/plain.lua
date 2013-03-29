@@ -12,16 +12,18 @@ DOOM.SKINS.Joiner_plain =
 DOOM.SKINS.Joiner_plain_cage =
 {
   file = "joiner/plain_cage.wad"
-  cage = 1
 
   prob = 20
+
+  style = "cages"
 }
 
 DOOM.SKINS.Joiner_plain_trap =
 {
   file = "joiner/plain_trap.wad"
-  trap = 1
 
   prob = 10
+
+  style = "traps"
 }
 

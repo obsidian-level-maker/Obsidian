@@ -982,7 +982,26 @@ function Room_match_user_stuff(tab)
  
   if factor <= 0 then return 0 end
 
-  -- TODO: module check
+  -- style stuff
+
+  if tab.liquid then
+    factor = factor * style_sel("liquids", 0, 0.25, 1.0, 3.0)
+  end
+
+  if tab.style then
+    local list = tab.style
+    if type(list) != "table" then
+      list = { [list]=1 }
+    end
+
+    each name,_ in list do
+      if not STYLE[name] then
+        error("Unknown style name in prefab skin: " .. tostring(name))
+      end
+
+      factor = factor * style_sel(name, 0, 0.25, 1.0, 3.0)
+    end
+  end
 
   return factor
 end
@@ -1093,6 +1112,9 @@ function Room_matching_skins(env, reqs)
       if skin.liquid == "harmless" and     LEVEL.liquid.damage then return 0 end
       if skin.liquid == "damaging" and not LEVEL.liquid.damage then return 0 end
     end
+
+    -- darkness check
+    if skin.dark_map and LEVEL.sky_shade != 0 then return 0 end
 
     return 1
   end
