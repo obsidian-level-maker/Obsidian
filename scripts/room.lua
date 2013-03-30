@@ -2214,14 +2214,12 @@ function Room_outdoor_borders()
   --      some fallback method (e.g. zone of touching outdoor room).
   -- 
 
-  local function build_fake_building(skin_name, x1, y1, x2, y2, dir,
+  local function build_fake_building(env, reqs, x1, y1, x2, y2, dir,
                                      room, facade, floor_h)
-    assert(facade)
 
-    local skin1 = GAME.SKINS[skin_name]
-    if not skin1 then
-      error("missing border prefab: " .. skin_name)
-    end
+    local skin1 = Room_pick_skin(env, reqs)
+
+    assert(facade)
 
     local skin2 = { wall=facade }
 
@@ -2256,10 +2254,20 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
     local floor_h = math.max(R1.max_floor_h, R2.max_floor_h)
 
-    -- FIXME: determine prefab properly!!
-    local skin_name = rand.sel(80, "Fake_RoundFence_1x1", "Cage_FatFence1")
+    -- find matching prefab
+    local env =
+    {
+      seed_w = cw
+      seed_h = ch
+    }
 
-    build_fake_building(skin_name, S.x1, S.y1, S.x2, S.y2, dir,
+    local reqs =
+    {
+      kind   = "fake"
+      shape  = "I"
+    }
+
+    build_fake_building(env, reqs, S.x1, S.y1, S.x2, S.y2, dir,
                         R1, S.facade, floor_h)
   end
 
@@ -2899,7 +2907,19 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
       -- mark as used
       S.border = { kind = "fake_building" }
 
-      build_fake_building("Fake_Round", S.x1, S.y1, S.x2, S.y2, dir,
+      local env =
+      {
+        seed_w = 1
+        seed_h = 1
+      }
+
+      local reqs =
+      {
+        kind   = "fake"
+        shape  = "C"
+      }
+
+      build_fake_building(env, reqs, S.x1, S.y1, S.x2, S.y2, dir,
                           N.room, S.facade)
 
       return true
@@ -2963,7 +2983,19 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
         local S = SEEDS[sx][sy]
 
-        build_fake_building("Fake_Building1", S.x1, S.y1, S.x2, S.y2, dir,
+        local env =
+        {
+          seed_w = 1
+          seed_h = 1
+        }
+
+        local reqs =
+        {
+          kind   = "fake"
+          shape  = "F"
+        }
+
+        build_fake_building(env, reqs, S.x1, S.y1, S.x2, S.y2, dir,
                             room, S.facade)
     end
     end
