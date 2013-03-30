@@ -3,34 +3,26 @@ WORK IN PROGRESS
 ================
 
 
--  dark skies
+DONE:  properly support "big_item" spots
 
--  skies to match original theme
-
--  store ORIGINAL_THEMES in episode tables
-
--  very basic "fake" building
+DONE:  very basic "fake" building
 
 -  fake building with a fake window (or two)
+
+-  fake building with torches (esp. for dark maps)
+
+
+-  fake building and fences : support long ones, also deep ones
+   - also: allow a 'group' field to match border_group
+
+-  borders / fakers : support 'z_fit'
+
 
 
 >>  get 'height' value into 'env' pick_skin() tables
 
-
 >>>  stairs / lift : standardize height stuff
 
-     _elevation = "short" / "medium" / "tall" / "lift"
-
-     or:  shape = "IS" (64), "IT" (128)
-
-     z_ranges = { {128,0,"?height"}, ... }  in prefab to make it reach target height
-
-
-
-Joiners
--------
-
--  how to scale joiners for SKY_H (z_fit I guess)
 
 
 !!  Hallways : break 3x1 (etc?) sections into pieces
@@ -43,32 +35,16 @@ Joiners
 -  fix street mode
 
 
--  fake building and fences : support long ones, also deep ones
-   - also: allow a 'group' field to match border_group
-
--  long fat_fences / fake_building : don't span different facades
-
--  borders / fakers : support 'z_fit'
-
 -  a way to prevent repeating the same prefab in a row
 
-
-IDEA: indoor closets are scaled to mate up with walls.
-      how about doing same for (a) hallway pieces, (b) joiners
+minor:  long fat_fences / fake_building : don't span different facades
 
 
 
 WAD Prefabs
 -----------
 
--  after Replacements, give _LIQUID brushes the liquid.special and liquid.light
-
-+  check that prefabs can add ITEM spots
-
 +  column with heart (#36) : place for a prefabbed switch or key or weapon
-
--  lifts : ability to expand vertically so target height matches
-   (something like z_fit ??) 
 
 WISH:  mirror (horizontally) a 'T' or 'P' shaped hallway piece or big junction
 
