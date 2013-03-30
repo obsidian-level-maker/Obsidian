@@ -7,7 +7,8 @@ DOOM.SKINS.Fake_cage1 =
   file   = "fake/cage1.wad"
   shape  = "F"
 
-  style = "cages"
+  prob   = 5
+  style  = "cages"
 }
 
 --
@@ -19,6 +20,7 @@ DOOM.SKINS.Fake_cage1_fence =
   file   = "fake/cage_fence.wad"
   shape  = "I"
 
+  prob   = 20
   style  = "cages"
 }
 

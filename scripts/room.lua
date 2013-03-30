@@ -2257,8 +2257,8 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
     -- find matching prefab
     local env =
     {
-      seed_w = cw
-      seed_h = ch
+      seed_w = 1
+      seed_h = 1
     }
 
     local reqs =
