@@ -145,7 +145,6 @@ function ROOM_CLASS.new(shape)
     mon_spots  = {}
     item_spots = {}
     cage_spots = {}
-    trap_spots = {}
 
     prefabs = {}
     blocks  = {}
@@ -629,10 +628,8 @@ end
 
 function Room_distribute_spots(L, list)
   each spot in list do
-    if spot.kind == "cage" then
+    if spot.kind == "cage" or spot.kind == "trap" then
       table.insert(L.cage_spots, spot)
-    elseif spot.kind == "trap" then
-      table.insert(L.trap_spots, spot)
     elseif spot.kind == "pickup" or spot.kind == "big_item" then
       table.insert(L.item_spots, spot)
     else
@@ -2095,20 +2092,6 @@ function Room_place_hub_gates()
       R.rough_space = R.rough_space - 4
 
       gui.debugf("Adding gate to %s @ %s\n", link.dest.name, R:tostr())
-    end
-  end
-end
-
-
-
-function ROOM_CLASS.add_cage_or_trap(R, fab)
-  local spots = Fab_read_spots(fab)
-
-  each spot in spots do
-    if spot.kind == "cage" then
-      table.insert(R.cage_spots, spot)
-    elseif spot.kind == "trap" then
-      table.insert(R.trap_spots, spot)
     end
   end
 end

@@ -85,7 +85,6 @@ function HALLWAY_CLASS.new()
     mon_spots  = {}
     item_spots = {}
     cage_spots = {}
-    trap_spots = {}
   }
   table.set_class(H, HALLWAY_CLASS)
 

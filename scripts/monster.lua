@@ -1032,16 +1032,8 @@ function Monsters_in_room(L)
   end
 
 
-  local function prob_for_mon(name, info, enviro)
+  local function prob_for_mon(name, info, spot_kind)
     local prob = info.prob
-
-    if enviro == "cage" then
-      -- no flying monsters in cage (some cages don't have bars)
-      if info.float then return 0 end
-
-      -- monster needs a long distance attack
-      if info.attack == "melee" then return 0 end
-    end
 
     if THEME.force_mon_probs then
       prob = THEME.force_mon_probs[name] or
@@ -1068,6 +1060,14 @@ function Monsters_in_room(L)
     end
     if L.theme.monster_prefs then
       prob = prob * (L.theme.monster_prefs[name] or 1)
+    end
+
+    if spot_kind == "cage" then
+      -- cage monsters need a long distance attack
+      if info.attack == "melee" then return 0 end
+
+      -- less preference for flying monsters
+      if info.float then prob = prob * 0.5 end
     end
 
     if L.kind == "outdoor" or L.semi_outdoor then
@@ -1761,7 +1761,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   end
 
 
-  local function decide_cage_monster(enviro, spot, room_pal, used_mons)
+  local function decide_cage_monster(spot, room_pal, used_mons)
     -- Note: this function is used for traps too
 
     -- FIXME: decide cage_palette EARLIER (before laying out the room)
@@ -1772,7 +1772,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     if used_num > 4 then used_num = 4 end
 
     each mon,info in GAME.MONSTERS do
-      local prob = prob_for_mon(mon, info, enviro)
+      local prob = prob_for_mon(mon, info, spot.kind)
 
       if STYLE.mon_variety == "none" and not LEVEL.global_pal[mon] then continue end
 
@@ -1847,7 +1847,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   end
 
 
-  local function fill_cages(enviro, spot_list, room_pal)
+  local function fill_cages(spot_list, room_pal)
     if table.empty(L.cage_spots) then return end
 
     local qty = calc_quantity()
@@ -1855,7 +1855,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     local used_mons = {}
 
     each spot in spot_list do
-      local mon = decide_cage_monster(enviro, spot, room_pal, used_mons)
+      local mon = decide_cage_monster(spot, room_pal, used_mons)
 
       if mon then
         fill_cage_area(mon, spot, qty)
@@ -1900,8 +1900,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- value to only give monster drops for accessible monsters.
     L.normal_count = #L.monster_list
 
-    fill_cages("cage", L.cage_spots, palette)
-    fill_cages("trap", L.trap_spots, palette)
+    fill_cages(L.cage_spots, palette)
   end
 
 
