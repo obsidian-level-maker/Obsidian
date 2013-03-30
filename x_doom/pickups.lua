@@ -19,6 +19,8 @@ DOOM.PICKUPS =
   potion =
   {
     id = 2014
+    kind = "health"
+    rank = 0
     prob = 20
     cluster = { 4,7 }
     give = { {health=1} }
@@ -27,6 +29,8 @@ DOOM.PICKUPS =
   stimpack =
   {
     id = 2011
+    kind = "health"
+    rank = 1
     prob = 60
     cluster = { 2,5 }
     give = { {health=10} }
@@ -35,6 +39,8 @@ DOOM.PICKUPS =
   medikit =
   {
     id = 2012
+    kind = "health"
+    rank = 2
     prob = 100
     give = { {health=25} }
   }
@@ -42,8 +48,8 @@ DOOM.PICKUPS =
   soul =
   {
     id = 2013
-    prob = 3
-    big_item = true
+    kind = "health"
+    rank = 4
     start_prob = 5
     give = { {health=150} }
   }
@@ -53,8 +59,9 @@ DOOM.PICKUPS =
   helmet =
   {
     id = 2015
+    kind = "armor"
+    rank = 0
     prob = 10
-    armor = true
     cluster = { 4,7 }
     give = { {health=1} }
   }
@@ -62,9 +69,9 @@ DOOM.PICKUPS =
   green_armor =
   {
     id = 2018
+    kind = "armor"
+    rank = 2
     prob = 5
-    armor = true
-    big_item = true
     start_prob = 80
     give = { {health=30} }
   }
@@ -72,9 +79,9 @@ DOOM.PICKUPS =
   blue_armor =
   {
     id = 2019
+    kind = "armor"
+    rank = 3
     prob = 2
-    armor = true
-    big_item = true
     start_prob = 30
     give = { {health=80} }
   }
@@ -84,6 +91,8 @@ DOOM.PICKUPS =
   bullets =
   {
     id = 2007
+    kind = "ammo"
+    rank = 0
     prob = 10
     cluster = { 2,5 }
     give = { {ammo="bullet",count=10} }
@@ -92,6 +101,8 @@ DOOM.PICKUPS =
   bullet_box =
   {
     id = 2048
+    kind = "ammo"
+    rank = 1
     prob = 40
     give = { {ammo="bullet",count=50} }
   }
@@ -99,6 +110,8 @@ DOOM.PICKUPS =
   shells =
   {
     id = 2008
+    kind = "ammo"
+    rank = 0
     prob = 20
     cluster = { 2,5 }
     give = { {ammo="shell",count=4} }
@@ -107,6 +120,8 @@ DOOM.PICKUPS =
   shell_box =
   {
     id = 2049
+    kind = "ammo"
+    rank = 1
     prob = 40
     give = { {ammo="shell",count=20} }
   }
@@ -114,6 +129,8 @@ DOOM.PICKUPS =
   rocket =
   {
     id = 2010
+    kind = "ammo"
+    rank = 0
     prob = 10
     cluster = { 4,7 }
     give = { {ammo="rocket",count=1} }
@@ -122,6 +139,8 @@ DOOM.PICKUPS =
   rocket_box =
   {
     id = 2046
+    kind = "ammo"
+    rank = 1
     prob = 40
     give = { {ammo="rocket",count=5} }
   }
@@ -129,6 +148,8 @@ DOOM.PICKUPS =
   cells =
   {
     id = 2047
+    kind = "ammo"
+    rank = 0
     prob = 20
     cluster = { 2,5 }
     give = { {ammo="cell",count=20} }
@@ -137,6 +158,8 @@ DOOM.PICKUPS =
   cell_pack =
   {
     id = 17
+    kind = "ammo"
+    rank = 1
     prob = 40
     give = { {ammo="cell",count=100} }
   }
@@ -160,9 +183,9 @@ DOOM2.PICKUPS =
   mega =
   {
     id = 83
+    kind = "health"
+    rank = 5
     prob = 1
-    armor = true
-    big_item = true
     start_prob = 8
     give = { {health=200} }
   }
