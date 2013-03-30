@@ -50,6 +50,7 @@ DOOM.PICKUPS =
     id = 2013
     kind = "health"
     rank = 4
+    prob = 3
     start_prob = 5
     give = { {health=150} }
   }
