@@ -609,8 +609,17 @@ end
 
 function Monsters_do_pickups()
 
-  local function sort_spots(L)
-    rand.shuffle(L.item_spots)
+  local function extract_big_item_spots(L)
+    L.big_spots = {}
+
+    for i = #L.item_spots, 1, -1 do
+      local spot = L.item_spots[i]
+
+      if spot.kind == "big_item" then
+        table.remove(L.item_spots, i)
+        table.insert(L.big_spots, spot)
+      end
+    end
   end
 
 
@@ -717,21 +726,14 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
   end
 
 
-  local function place_big_item(spot, item)
-    -- FIXME : this is unused atm, need a tidy up!!
+  local function place_item_in_spot(item_name, spot)
+    local x, y = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
 
-    local x, y = spot.x, spot.y
-
-    -- assume big spots will sometimes run out (and be reused),
-    -- so don't put multiple items at exactly the same place.
-    x = x + rand.irange(-6, 6)
-    y = y + rand.irange(-6, 6)
-
-    place_item(item, x, y, spot.z)
+    place_item(item_name, x, y, spot.z1)
   end
 
 
-  local function OLD__place_small_item(spot, item, count)
+  local function OLD__place_item_array(spot, item, count)
     local x1, y1 = spot.x, spot.y
     local x2, y2 = spot.x, spot.y
 
@@ -787,7 +789,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
       end
 
       -- avoid already used spots
-      if spot.used then dist = dist + 9000 end
+      if spot.used then dist = dist + 100000 end
 
       if not best_idx or dist < best_dist then
         best_idx  = index
@@ -810,19 +812,15 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
 
 
   local function place_item_list(L, item_list, CL)
-    for _,pair in ipairs(item_list) do
+    each pair in item_list do
       local item  = pair.item
       local count = pair.count
-      local spot
 
-      if item.big_item and not table.empty(L.big_item_spots) then
-        assert(count == 1)
+      -- big item?
+      if item.rank > 0 and count == 1 and not table.empty(L.big_spots) then
+        local spot = table.remove(L.big_spots, 1)
 
-        spot = table.remove(L.big_item_spots)
-        spot.x, spot.y = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
-        spot.z = spot.z1
-
-        place_big_item(spot, item.name, CL)
+        place_item_in_spot(item.name, spot)
 
         return
       end
@@ -839,14 +837,11 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
 
         local spot = find_cluster_spot(L, prev_spots, item.name)
 
-        local x, y = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
+        place_item_in_spot(item.name, spot)
 
-        place_item(item.name, x, y, spot.z1)
-
-        -- reuse spots if they run out (except in Wolf3D)
+        -- reuse spots if they run out
         spot.used = true
         table.insert(L.item_spots, spot)
-
       end
     end
   end
@@ -866,7 +861,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
 
         gui.debugf("Item list for %s:%1.1f [%s] @ %s\n", stat,qty, CL, L:tostr())
 
-        for _,pair in ipairs(item_list) do
+        each pair in item_list do
           local item = pair.item
           gui.debugf("   %dx %s (%d)\n", pair.count, item.name,
                      item.give[1].health or item.give[1].count)
@@ -874,23 +869,30 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
       end
     end
 
-    sort_spots(L)
-
-    -- place large clusters before small ones
-    table.sort(item_list, function(A,B) return (A.count + A.random) > (B.count + B.random) end)
+    rand.shuffle(L.item_spots)
 
     -- kludge to add some backpacks to DOOM maps
     -- TODO: better system for "nice start items" or so
     if L.purpose == "START" and GAME.ENTITIES["backpack"] then
-      table.insert(item_list, 1, { item={ name="backpack", big_item=true }, count=1 })
+      table.insert(item_list, 1, { item={ name="backpack", rank=4 }, count=1, random=1 })
     end
+
+    -- sort items by rank
+    -- also: place large clusters before small ones
+    table.sort(item_list,
+      function(A,B)
+        if A.rank != B.rank then return A.rank > B.rank end
+        return (A.count + A.random) > (B.count + B.random)
+      end)
 
     place_item_list(L, item_list, CL)
   end
 
 
   local function pickups_in_room(L)
-    for CL,hmodel in pairs(LEVEL.hmodels) do
+    extract_big_item_spots(L)
+
+    each CL,hmodel in LEVEL.hmodels do
       pickups_for_hmodel(L, CL, hmodel)
     end
   end
@@ -1206,7 +1208,7 @@ function Monsters_in_room(L)
 
     local list = {}
 
-    for name,info in pairs(GAME.MONSTERS) do
+    each name,info in GAME.MONSTERS do
       local prob = info.crazy_prob or info.prob or 0
 
 --??  if not LEVEL.global_palette[name] then
@@ -1258,7 +1260,7 @@ function Monsters_in_room(L)
     local list = {}
     gui.debugf("Monster list:\n")
 
-    for mon,info in pairs(GAME.MONSTERS) do
+    each mon,info in GAME.MONSTERS do
       local prob = prob_for_mon(mon, info)
 
       if prob > 0 then
@@ -1972,7 +1974,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       ammo_mul = ammo_mul * COOP_AMMO_FACTOR
     end
 
-    for name,qty in pairs(stats) do
+    each name,qty in stats do
       stats[name] = qty * (name == "health" ? heal_mul ; ammo_mul)
     end
   end
@@ -2058,8 +2060,6 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
   L.monster_list = {}
   L.fight_stats  = make_empty_stats()
-
-  L.big_item_spots = {} -- FIXME table.deep_copy(R.mon_spots)
 
 ---???  L.toughness = calc_toughness()
 
