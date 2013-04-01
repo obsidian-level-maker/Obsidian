@@ -36,7 +36,7 @@ class SEED
   closet : CLOSET
   border : BORDER
 
-  edges[dir] : EDGE
+  portals[dir] : PORTAL
 
   chunk : CHUNK  -- connection/important chunk
 
@@ -62,9 +62,28 @@ class BORDER
 }
 
 
-class EDGE
+class PORTAL
 {
+  -- a portal is the side of a seed (or row of seeds) where the
+  -- player will cross at some time.  Primary use is for connections
+  -- between a room and another room or hallway.  Secondary use is
+  -- for intra-room connections.
+  --
+  -- the portal is two-way, and there is only one at any place
+  -- (generally at the southern or eastern side).
+  --
+  -- in the future there may be one-way portals (drop-offs), and/or
+  -- "liquid" or "window" portals.
+
+  kind : keyword   -- "walk"  (the only possible value so far)
+
+  sx1, sy1, sx2, sy2  -- seed range
+
+  side : DIR  -- which side of the seed range
+
   conn : CONN
+
+  floor_h  -- floor height (set during room layouting)
 }
 
 
@@ -116,7 +135,7 @@ SECTION_CLASS = { }
 
 
 function SEED_CLASS.new(x, y)
-  local S = { sx=x, sy=y, cost={}, edges={}, chunks={}, v_areas={} }
+  local S = { sx=x, sy=y, cost={}, portals={}, chunks={}, v_areas={} }
   table.set_class(S, SEED_CLASS)
   return S
 end

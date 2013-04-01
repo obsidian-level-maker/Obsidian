@@ -1811,7 +1811,7 @@ end
 
 
 
-function Room_collect_targets(R)
+function OLD__Room_collect_targets(R)
 
   local targets =
   {
