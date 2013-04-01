@@ -494,6 +494,10 @@ IDEA:  replaceable brushes in prefabs.
 IDEA: "weak texturing" (especially on floors) which will try to
       use a texturing from adjoining floor (via a certain side).
 
+-  a mode to use dynamic lights instead of sector lighting
+   (for ports like EDGE and GZDoom).  Basically just convert
+   the candle thing in prefabs to light-emitting entities.
+
 -  outdoor wall extender: 64x64 block with torch on top
 
 -  fix for ugly sky in outdoor room near a hallway
