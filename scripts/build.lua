@@ -880,6 +880,8 @@ end
 
 
 function Trans.box_transform(x1, y1, x2, y2, z, dir)
+  if not dir then dir = 2 end
+
   local XS   = { [2]=x1, [8]= x2, [4]= x1, [6]=x2 }
   local YS   = { [2]=y1, [8]= y2, [4]= y2, [6]=y1 }
   local ANGS = { [2]=0,  [8]=180, [4]=270, [6]=90 }
