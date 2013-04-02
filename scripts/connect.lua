@@ -22,17 +22,17 @@
 
 class CONN
 {
-  kind   : keyword  -- "normal", "secret"
-                    -- "double_L", "double_R"
-                    -- "teleporter"
-                    -- "closet" (e.g. starting niche)
-  lock   : LOCK
+  kind : keyword  -- "normal", "secret"
+                  -- "double_L", "double_R"
+                  -- "teleporter"
+                  -- "closet" (e.g. starting niche)
+  lock : LOCK
 
   id : number  -- debugging aid
 
   -- The two rooms are the vital (compulsory) information,
   -- especially for the quest system.  For teleporters the
-  -- other info (sections and dir1/dir2) may be absent.
+  -- other info may be absent (sections and dir1/dir2).
 
   L1, L2 : location (either ROOM or HALLWAY)
 
@@ -44,7 +44,9 @@ class CONN
               -- dir1 leading out of L1 / K1 / C1
               -- dir2 leading out of L2 / K2 / C2
 
- 
+  portal : PORTAL
+
+
   --- POSSIBLE_CONN ---
 
   score : number
