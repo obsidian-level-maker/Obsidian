@@ -3546,9 +3546,7 @@ function Areas_kick_the_goals(L)
   end
 
 
-  function do_big_item(C, item_name)
-    local L = assert(C.room or C.hall)
-
+  function do_big_item(G, item_name)
     local env = { room_kind = L.kind }
 
     local reqs =
@@ -3560,19 +3558,17 @@ function Areas_kick_the_goals(L)
     local skin1 = Room_pick_skin(env, reqs)
 
     local skin2 = { item = item_name }
-    local skin0 = { wall = C.room.wall_mat }
+    local skin0 = { wall = L.wall_mat }
 
     local mx, my = mid_point(G)
 
-    local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
+    local T = Trans.spot_transform(mx, my, G.z1, G.spot_dir)
 
     Fabricate_at(L, skin1, T, { skin0, skin1, skin2 })
   end
 
 
-  function content_start(C)
-    local L = assert(C.room or C.hall)
-
+  function content_start(G)
     local env = { room_kind = L.kind }
 
     local reqs =
@@ -3586,15 +3582,13 @@ function Areas_kick_the_goals(L)
 
     local mx, my = mid_point(G)
 
-    local T = Trans.spot_transform(mx, my, C.floor_h or 0, 10 - C.spot_dir)
+    local T = Trans.spot_transform(mx, my, G.z1, 10 - G.spot_dir)
 
     Fabricate_at(L, skin1, T, { skin1, skin2 })
   end
 
 
-  function content_exit(C)
-    local L = assert(C.room or C.hall)
-
+  function content_exit(G)
     local env = { room_kind = L.kind }
 
     local reqs =
@@ -3605,7 +3599,7 @@ function Areas_kick_the_goals(L)
 
     local skin1 = Room_pick_skin(env, reqs)
 
-    local skin0 = { wall = C.room.wall_mat }
+    local skin0 = { wall = L.wall_mat }
     local skin2 = { next_map = LEVEL.next_map, targetname = "exit" }
 
     -- Hexen: on last map, exit will end the game
@@ -3614,28 +3608,25 @@ function Areas_kick_the_goals(L)
     end
 
     -- FIXME: hack for secret exits (assumes DOOM/HERETIC)
-    --        instead should have THEME.secret_exits and custom skins
-    if C.content.kind == "SECRET_EXIT" then
+    if G.content.kind == "SECRET_EXIT" then
       skin2.special = 51
     end
 
     local mx, my = mid_point(G)
 
-    local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
+    local T = Trans.spot_transform(mx, my, G.z1, G.spot_dir)
 
     Fabricate_at(L, skin1, T, { skin0, skin1, skin2 })
   end
 
 
   function content_key(G)
-    do_big_item(G, assert(C.content.key))
+    do_big_item(G, assert(G.content.key))
   end
 
 
   function content_switch(G)
-    local L = assert(C.room or C.hall)
-
-    local lock = C.content.lock
+    local lock = G.content.lock
 
     assert(lock)
     assert(lock.switch)
@@ -3658,15 +3649,13 @@ function Areas_kick_the_goals(L)
 
     local mx, my = mid_point(G)
 
-    local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
+    local T = Trans.spot_transform(mx, my, G.z1, G.spot_dir)
 
     Fabricate_at(L, skin1, T, { skin1, skin2 })
   end
 
 
-  function content_teleporter(C)
-    local L = assert(C.room or C.hall)
-
+  function content_teleporter(G)
     local env = { room_kind = L.kind }
 
     local reqs =
@@ -3677,12 +3666,12 @@ function Areas_kick_the_goals(L)
 
     local skin1 = Room_pick_skin(env, reqs)
 
-    local skin0 = { wall = C.room.wall_mat }
+    local skin0 = { wall = L.wall_mat }
     local skin2 = {}
 
-    local conn = assert(C.content.teleporter)
+    local conn = assert(G.content.teleporter)
 
-    if conn.L1 == C.room then
+    if conn.L1 == L then
       skin2. in_tag = conn.tele_tag2
       skin2.out_tag = conn.tele_tag1
     else
@@ -3695,7 +3684,7 @@ function Areas_kick_the_goals(L)
 
     local mx, my = mid_point(G)
 
-    local T = Trans.spot_transform(mx, my, C.floor_h or 0, 10 - C.spot_dir)
+    local T = Trans.spot_transform(mx, my, G.z1, 10 - G.spot_dir)
 
     Fabricate_at(L, skin1, T, { skin0, skin1, skin2 })
 
@@ -3713,9 +3702,7 @@ function Areas_kick_the_goals(L)
   end
 
 
-  function content_hub_gate(C)
-    local L = assert(C.room or C.hall)
-
+  function content_hub_gate(G)
     local env = { room_kind = L.kind }
 
     local reqs  =
@@ -3726,12 +3713,12 @@ function Areas_kick_the_goals(L)
 
     local skin1 = Room_pick_skin(env, reqs)
 
-    local skin0 = { wall = C.room.wall_mat }
+    local skin0 = { wall = G.wall_mat }
     local skin2 = {}
 
-    skin2.source_id  = C.content.source_id
-    skin2.  dest_id  = C.content.dest_id
-    skin2.  dest_map = C.content.dest_map
+    skin2.source_id  = G.content.source_id
+    skin2.  dest_id  = G.content.dest_id
+    skin2.  dest_map = G.content.dest_map
 
   -- stderrf("content_hub_gate: to map %d : %d --> %d\n", skin2.dest_map, skin2.source_id, skin2.dest_id)
 
@@ -3741,14 +3728,13 @@ function Areas_kick_the_goals(L)
 
     local mx, my = mid_point(G)
 
-    local T = Trans.spot_transform(mx, my, C.floor_h or 0, 10 - C.spot_dir)
+    local T = Trans.spot_transform(mx, my, G.z1, 10 - G.spot_dir)
 
     Fabricate_at(L, skin1, T, { skin0, skin1, skin2 })
   end
 
 
-  function do_hexen_triple(C)
-    local L = assert(C.room or C.hall)
+  function do_hexen_triple(G)
 
     -- FIXME: this is temp hack !!!
     local skin_map =
@@ -3761,31 +3747,31 @@ function Areas_kick_the_goals(L)
       piece3  = "Piece3_Set"
     }
 
-    local name  = assert(skin_map[C.content.weapon])
+    local name  = assert(skin_map[G.content.weapon])
     local skin1 = assert(GAME.SKINS[name])
 
-    local skin0 = { wall = C.room.wall_mat }
+    local skin0 = { wall = L.wall_mat }
     local skin2 = { }
 
     local mx, my = mid_point(G)
 
-    local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
+    local T = Trans.spot_transform(mx, my, G.z1, G.spot_dir)
 
     Fabricate_at(L, skin1, T, { skin0, skin1, skin2 })
   end
 
 
-  function content_weapon(C)
+  function content_weapon(G)
     -- Hexen stuff
-    local weapon = C.content.weapon
+    local weapon = G.content.weapon
 
     if OB_CONFIG.game == "hexen" and
        (weapon == "weapon2" or weapon == "weapon3" or
         weapon == "piece1" or weapon == "piece2" or weapon == "piece3")
     then
-      do_hexen_triple()
+      do_hexen_triple(G)
     else
-      do_big_item(weapon)
+      do_big_item(G, weapon)
     end
   end
 
@@ -3798,28 +3784,28 @@ function Areas_kick_the_goals(L)
     G.spot_dir = 2  -- FIXME dir_for_spot()
 
     if kind == "START" then
-      content_start()
+      content_start(G)
 
     elseif kind == "EXIT" or kind == "SECRET_EXIT" then
-      content_exit()
+      content_exit(G)
 
     elseif kind == "KEY" then
-      content_key()
+      content_key(G)
 
     elseif kind == "SWITCH" then
-      content_switch()
+      content_switch(G)
 
     elseif kind == "WEAPON" then
-      content_weapon()
+      content_weapon(G)
 
     elseif kind == "TELEPORTER" then
-      content_teleporter()
+      content_teleporter(G)
 
     elseif kind == "GATE" then
-      content_hub_gate()
+      content_hub_gate(G)
 
     else
-      error("Unknown chunk content: " .. tostring(kind))
+      error("Unknown goal kind: " .. tostring(kind))
     end
   end
 
