@@ -22,6 +22,9 @@
 #include "main.h"
 
 
+#define DEBUG_BUF_LEN  20000
+
+
 static FILE *log_file = NULL;
 
 static bool debugging = false;
@@ -100,15 +103,15 @@ void DebugPrintf(const char *str, ...)
 {
 	if (debugging)
 	{
-		static char buffer[MSG_BUF_LEN];
+		static char buffer[DEBUG_BUF_LEN];
 
 		va_list args;
 
 		va_start(args, str);
-		vsnprintf(buffer, MSG_BUF_LEN-1, str, args);
+		vsnprintf(buffer, DEBUG_BUF_LEN-1, str, args);
 		va_end(args);
 
-		buffer[MSG_BUF_LEN-2] = 0;
+		buffer[DEBUG_BUF_LEN-2] = 0;
 
 		// prefix each debugging line with a special symbol
 
