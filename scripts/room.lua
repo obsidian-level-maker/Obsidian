@@ -3141,6 +3141,8 @@ function Room_blow_chunks()
     each C in R.chunks do
       C:build()
     end
+
+    Areas_kick_the_goals(R)
   end
 
   -- scenic rooms ??
