@@ -2999,11 +2999,11 @@ function Areas_height_realization(R)
 
   assert(R.entry_h)
 
-  assert(R.entry_C)
-  assert(R.entry_C.area)
-  assert(R.entry_C.area.vhr)
+--  assert(R.entry_C)
+--  assert(R.entry_C.area)
+--  assert(R.entry_C.area.vhr)
  
-  local base_v = R.entry_C.area.vhr
+  local base_v = R.areas[1].vhr
 
   assign_floor(base_v, R.entry_h)
 
@@ -3299,6 +3299,7 @@ function Areas_flesh_out()
       --       elseif R.has_teleporter() then find_tele_chunk
       -- [BETTER: have R.entry_chunk field]
 
+--[[
       assert(#R.chunks > 0)
 
       repeat
@@ -3308,8 +3309,8 @@ function Areas_flesh_out()
       if R.floor_limit then
         h = rand.sel(50, R.floor_limit[1], R.floor_limit[2])
       else
-        h = rand.pick { 0,128,192,256,384 }
-      end
+]]
+        h = rand.irange(-2, 2) * 96
     end
 
     return C, h
