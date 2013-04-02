@@ -1772,6 +1772,10 @@ WADFAB_ENTITIES =
   [2015] = { kind="pickup",   r=16 }  -- armor helmet
   [2018] = { kind="big_item", r=16 }  -- green armor vest
 
+  -- goal / purpose spot
+
+  [  36] = { kind="goal", r=64 }  -- column with heart
+
   -- lighting
 
   [  34] = { kind="light" }  -- candle
@@ -2014,8 +2018,8 @@ function Fab_load_wad(name)
     end
 
     -- create a fake brush for the spot
-    -- (this brush is never sent to the CSG code, but it is a handy
-    --  way to get the spot translated and rotated)
+    -- (this brush is never sent to the CSG code -- it is simply a
+    --  handy way to get the spot translated and rotated)
 
     local B =
     {
