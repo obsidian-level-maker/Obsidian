@@ -571,10 +571,9 @@ end
 ----------------------------------------------------------------
 
 
-function Areas_important_stuff()
+function Areas_path_through_rooms()
 
-  -- this places the "important" stuff (keys, switches, teleporters)
-  -- into the rooms.  It also creates a path between all the connection
+  -- creates a path between all the connection
   -- chunks and important chunks (the main point of that path is so we
   -- know which parts of the room can be used for non-walkable stuff
   -- like liquids, thick walls, cages etc).
@@ -615,244 +614,6 @@ function Areas_important_stuff()
         init_seed(R, S)
       end
     end end
-  end
-
-
-  local function update_distances(R)
-    -- in each unallocated seed in a room, compute the distance to
-    -- the nearest allocated seed, and distance from a wall.
-    
-    -- Note: with teleporters it is possible that none of the seeds
-    -- gets a 'chunk_dist' value.
-
-    local function init_dists()
-      for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
-        local S = SEEDS[sx][sy]
-        if S.room == R then
-          
-          -- ignore certain chunks [crossovers]
-          if S.chunk and not S.chunk.crossover_hall then
-            S.chunk_dist = 0
-          else
-            S.chunk_dist = nil
-          end
-
-          if S.near_wall then
-            S.wall_dist = 0
-          else
-            S.wall_dist = nil
-          end
-        
-          S.dist_random = gui.random()
-        end
-      end end
-    end
-
-    local function spread_dists()
-      local changed = false
-
-      for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
-        local S = SEEDS[sx][sy]
-        if S.room == R then
-
-          for dir = 2,8,2 do
-            if S:same_room(dir) then
-              local N = S:neighbor(dir)
-
-              if S.chunk_dist and S.chunk_dist + 1 < (N.chunk_dist or 999) then
-                N.chunk_dist = S.chunk_dist + 1
-                changed  = true
-              end
-
-              if S.wall_dist and S.wall_dist + 1 < (N.wall_dist or 999) then
-                N.wall_dist = S.wall_dist + 1
-                changed  = true
-              end
-            end
-          end
-        end
-      end end
-
-      return changed
-    end
-
-    init_dists()
-
-    while spread_dists() do end
-  end
-
-
-  local function spot_for_wotsit(R)
-    update_distances(R)
-
-    local spot
-    local best_dist = -9e9
-
-    -- in caves we want the spot to be away from the edges of the room
-    local wall_factor = (R.kind == "cave" or rand.odds(5) ? 15.2 ; 2.15)
-
-    for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
-      local S = SEEDS[sx][sy]
-
-      if S.room == R and not S.chunk then
-        local dist = (S.chunk_dist or 0) * 7 + (S.wall_dist or 0) * wall_factor + S.dist_random
-
-        if dist > best_dist then
-          spot = S
-          best_dist = dist
-        end
-      end
-    end end
-
-    -- FIXME !!!! try to use an existing chunk
-    if not spot then error("NO SPOT FOR WOTSIT") end
-
-    -- create chunk
-
-    local C = R:alloc_chunk(spot.sx, spot.sy, spot.sx, spot.sy)
-
-    C.foobage = "important"
-
-    return C
-  end
-
-
-  local function add_purpose(R)
-    if R.purpose_is_done then return end
-
-    local C = spot_for_wotsit(R)
-
-    C.content.kind = R.purpose
-
-    -- no monsters near start spot, please
-    if R.purpose == "START" then
-      R:add_exclusion_zone("empty",     C.x1, C.y1, C.x2, C.y2, 144)
-      R:add_exclusion_zone("nonfacing", C.x1, C.y1, C.x2, C.y2, 768)
-    end
-
-    if R.purpose == "SOLUTION" then
-      local lock = assert(R.purpose_lock)
-
-      C.content.lock = lock
-
-      if lock.kind == "KEY" or lock.kind == "SWITCH" then
-        C.content.kind = lock.kind
-      else
-        error("UNKNOWN LOCK KIND")
-      end
-
-      if lock.kind == "KEY" then
-        C.content.key = assert(lock.key)
-      end
-    end
-
-    --- Hexen stuff ---
-
-    -- NOTE: arg1 of the player things is used to select which spot
-    --       the hub gate takes you to.  We set it to the local_map
-    --       number of the OTHER map.
-
-    if R.purpose == "EXIT" and LEVEL.hub_key then
-      -- goal of branch level is just a key
-      C.content.kind = "KEY"
-      C.content.key  = LEVEL.hub_key
-    
-    elseif R.purpose == "EXIT" and LEVEL.hub_links then
-      -- goal of chain levels is gate to next level
-      local chain_link = Hub_find_link("EXIT")
-
-      if chain_link and chain_link.kind == "chain" then
-        C.content.kind = "GATE"
-        C.content.source_id = chain_link.dest.local_map
-        C.content.dest_id   = chain_link.src .local_map
-        C.content.dest_map  = chain_link.dest.map
-      end
-    end
-
-    if R.purpose == "START" and LEVEL.hub_links then
-      -- beginning of each level (except start) is a hub gate
-      local from_link = Hub_find_link("START")
-
-      if from_link then
-        C.content.kind = "GATE"
-        C.content.source_id = from_link.src .local_map
-        C.content.dest_id   = from_link.dest.local_map
-        C.content.dest_map  = from_link.src .map
-      end
-    end
-  end
-
-
-  local function add_weapon(R, weapon)
-    local C = spot_for_wotsit(R)
-
-    C.content.kind = "WEAPON"
-    C.content.weapon = weapon
-  end
-
-
-  local function add_teleporter(R)
-    if R.has_teleporter_closet then return end
-
-    local conn = R:get_teleport_conn()
-    
-    local C = spot_for_wotsit(R)
-
-    C.content.kind = "TELEPORTER"
-    C.content.teleporter = conn  -- FIXME?
-
-        if conn.L1 == R then conn.C1 = C
-    elseif conn.L2 == R then conn.C2 = C
-    else   error("add_teleporter failure (bad conn?)")
-    end
-
-    -- prevent monsters being close to it (in target room)
-    if R == conn.L2 then
-      R:add_exclusion_zone("empty",     C.x1, C.y1, C.x2, C.y2, 224)
-      R:add_exclusion_zone("nonfacing", C.x1, C.y1, C.x2, C.y2, 768)
-    end
-  end
-
-
-  local function add_hub_gate(R, link)
-    assert(link)
-
-    -- FIXME
-    if link.dest.kind == "SECRET" then
-      gui.debugf("Skipping hub gate to secret level\n")
-      return
-    end
-
-    local C = spot_for_wotsit(R)
-    
-    C.content.kind = "GATE"
-    C.content.source_id = link.dest.local_map
-    C.content.dest_id   = link.src .local_map
-    C.content.dest_map  = link.dest.map
-  end
-
-
-  local function place_importants(R)
-    if R.purpose then add_purpose(R) end
-
-    if R:has_teleporter() then add_teleporter(R) end
-
-    if R.weapons then
-      each name in R.weapons do add_weapon(R, name) end
-    end
-
-    each link in R.gates do add_hub_gate(R, link) end
-  end
-
-
-  local function extra_stuff(R)
-
-    -- this function is meant to ensure good traversibility in a room.
-    -- e.g. put a nice item in sections without any connections or
-    -- importants, or if the exit is close to the entrance then make
-    -- the exit door require a far-away switch to open it.
-
-    -- TODO
   end
 
 
@@ -957,18 +718,290 @@ gui.debugf("  seeds: (%d %d) --> (%d %d)\n", sx, sy, ex, ey)
   end
 
 
-  local function visit_room(R)
+  ---| Areas_path_through_room |---
+
+  each R in LEVEL.rooms do
     init_room(R)
-    place_importants(R)
-    extra_stuff(R)
     make_paths(R)
+  end
+end
+
+
+
+function Areas_important_stuff()
+
+  -- this places the "important" stuff (keys, switches, teleporters)
+  -- into the rooms.
+
+  local function OLD__update_distances(R)
+    -- in each unallocated seed in a room, compute the distance to
+    -- the nearest allocated seed, and distance from a wall.
+    
+    -- Note: with teleporters it is possible that none of the seeds
+    -- gets a 'chunk_dist' value.
+
+    local function init_dists()
+      for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
+        local S = SEEDS[sx][sy]
+        if S.room == R then
+          
+          -- ignore certain chunks [crossovers]
+          if S.chunk and not S.chunk.crossover_hall then
+            S.chunk_dist = 0
+          else
+            S.chunk_dist = nil
+          end
+
+          if S.near_wall then
+            S.wall_dist = 0
+          else
+            S.wall_dist = nil
+          end
+        
+          S.dist_random = gui.random()
+        end
+      end end
+    end
+
+    local function spread_dists()
+      local changed = false
+
+      for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
+        local S = SEEDS[sx][sy]
+        if S.room == R then
+
+          for dir = 2,8,2 do
+            if S:same_room(dir) then
+              local N = S:neighbor(dir)
+
+              if S.chunk_dist and S.chunk_dist + 1 < (N.chunk_dist or 999) then
+                N.chunk_dist = S.chunk_dist + 1
+                changed  = true
+              end
+
+              if S.wall_dist and S.wall_dist + 1 < (N.wall_dist or 999) then
+                N.wall_dist = S.wall_dist + 1
+                changed  = true
+              end
+            end
+          end
+        end
+      end end
+
+      return changed
+    end
+
+    init_dists()
+
+    while spread_dists() do end
+  end
+
+
+  local function spot_for_wotsit(R)
+    -- update_distances(R)
+
+    local free_spots = {}
+
+    each spot in R.goal_spots do
+      if not spot.used then
+        table.insert(free_spots, spot)
+      end
+    end
+
+    -- FIXME: evaluate spots  [distance from ...]
+
+    if table.empty(free_spots) then
+      error("NO SPOT FOR WOTSIT")
+    end
+
+    local G = free_spots[1]
+    
+    G.used = true
+    G.content = {}
+
+    return G
+
+
+--[[
+    local spot
+    local best_dist = -9e9
+
+    -- in caves we want the spot to be away from the edges of the room
+    local wall_factor = (R.kind == "cave" or rand.odds(5) ? 15.2 ; 2.15)
+
+    for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
+
+      if S.room == R and not S.chunk then
+        local dist = (S.chunk_dist or 0) * 7 + (S.wall_dist or 0) * wall_factor + S.dist_random
+
+        if dist > best_dist then
+          spot = S
+          best_dist = dist
+        end
+      end
+    end end
+
+    -- FIXME !!!! try to use an existing chunk
+    if not spot then error("NO SPOT FOR WOTSIT") end
+
+    -- create chunk
+
+    local C = R:alloc_chunk(spot.sx, spot.sy, spot.sx, spot.sy)
+
+    C.foobage = "important"
+
+    return C
+--]]
+  end
+
+
+  local function add_purpose(R)
+    if R.purpose_is_done then return end
+
+    local G = spot_for_wotsit(R)
+
+    G.content.kind = R.purpose
+
+    -- no monsters near start spot, please
+    if R.purpose == "START" then
+      R:add_exclusion_zone("empty",     G.x1, G.y1, G.x2, G.y2, 144)
+      R:add_exclusion_zone("nonfacing", G.x1, G.y1, G.x2, G.y2, 768)
+    end
+
+    if R.purpose == "SOLUTION" then
+      local lock = assert(R.purpose_lock)
+
+      G.content.lock = lock
+
+      if lock.kind == "KEY" or lock.kind == "SWITCH" then
+        G.content.kind = lock.kind
+      else
+        error("UNKNOWN LOCK KIND")
+      end
+
+      if lock.kind == "KEY" then
+        G.content.key = assert(lock.key)
+      end
+    end
+
+    --- Hexen stuff ---
+
+    -- NOTE: arg1 of the player things is used to select which spot
+    --       the hub gate takes you to.  We set it to the local_map
+    --       number of the OTHER map.
+
+    if R.purpose == "EXIT" and LEVEL.hub_key then
+      -- goal of branch level is just a key
+      G.content.kind = "KEY"
+      G.content.key  = LEVEL.hub_key
+    
+    elseif R.purpose == "EXIT" and LEVEL.hub_links then
+      -- goal of chain levels is gate to next level
+      local chain_link = Hub_find_link("EXIT")
+
+      if chain_link and chain_link.kind == "chain" then
+        G.content.kind = "GATE"
+        G.content.source_id = chain_link.dest.local_map
+        G.content.dest_id   = chain_link.src .local_map
+        G.content.dest_map  = chain_link.dest.map
+      end
+    end
+
+    if R.purpose == "START" and LEVEL.hub_links then
+      -- beginning of each level (except start) is a hub gate
+      local from_link = Hub_find_link("START")
+
+      if from_link then
+        G.content.kind = "GATE"
+        G.content.source_id = from_link.src .local_map
+        G.content.dest_id   = from_link.dest.local_map
+        G.content.dest_map  = from_link.src .map
+      end
+    end
+  end
+
+
+  local function add_weapon(R, weapon)
+    local G = spot_for_wotsit(R)
+
+    G.content.kind = "WEAPON"
+    G.content.weapon = weapon
+  end
+
+
+  local function add_teleporter(R)
+    if R.has_teleporter_closet then return end
+
+    local conn = R:get_teleport_conn()
+    
+    local G = spot_for_wotsit(R)
+
+    G.content.kind = "TELEPORTER"
+    G.content.teleporter = conn  -- FIXME?
+
+--[[ FIXME
+        if conn.L1 == R then conn.C1 = C
+    elseif conn.L2 == R then conn.C2 = C
+    else   error("add_teleporter failure (bad conn?)")
+    end
+--]]
+
+    -- prevent monsters being close to it (in target room)
+    if R == conn.L2 then
+      R:add_exclusion_zone("empty",     G.x1, G.y1, G.x2, G.y2, 224)
+      R:add_exclusion_zone("nonfacing", G.x1, G.y1, G.x2, G.y2, 768)
+    end
+  end
+
+
+  local function add_hub_gate(R, link)
+    assert(link)
+
+    -- FIXME
+    if link.dest.kind == "SECRET" then
+      gui.debugf("Skipping hub gate to secret level\n")
+      return
+    end
+
+    local G = spot_for_wotsit(R)
+    
+    G.content.kind = "GATE"
+    G.content.source_id = link.dest.local_map
+    G.content.dest_id   = link.src .local_map
+    G.content.dest_map  = link.dest.map
+  end
+
+
+  local function place_importants(R)
+    if R.purpose then add_purpose(R) end
+
+    if R:has_teleporter() then add_teleporter(R) end
+
+    if R.weapons then
+      each name in R.weapons do add_weapon(R, name) end
+    end
+
+    each link in R.gates do add_hub_gate(R, link) end
+  end
+
+
+  local function extra_stuff(R)
+
+    -- this function is meant to ensure good traversibility in a room.
+    -- e.g. put a nice item in sections without any connections or
+    -- importants, or if the exit is close to the entrance then make
+    -- the exit door require a far-away switch to open it.
+
+    -- TODO
   end
 
 
   ---| Areas_important_stuff |---
 
   each R in LEVEL.rooms do
-    visit_room(R)
+    place_importants(R)
+    extra_stuff(R)
   end
 end
 
@@ -3529,6 +3562,8 @@ function Areas_flesh_out()
   each R in LEVEL.rooms do floor_stuff(R) end
   each R in LEVEL.rooms do outgoing_cycles(R) end
 
+  Areas_important_stuff()
+
   Room_decide_fences()
 
 --each R in LEVEL.rooms do decide_windows(R) end
@@ -3537,6 +3572,8 @@ function Areas_flesh_out()
   each R in LEVEL.rooms do finish_up_room(R) end
 end
 
+
+----------------------------------------------------------------
 
 
 function Areas_kick_the_goals(L)
