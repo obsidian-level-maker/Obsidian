@@ -1153,7 +1153,7 @@ end
 
 
 
-function Areas_create_all_areas(R)
+function Areas_create_all_areas__OLD(R)
 
   local min_size = 2 + R.map_volume * 2
   local max_size = int(R.svolume * 0.7)
@@ -2961,6 +2961,68 @@ end
 
 
 
+function Areas_layout_with_prefabs(R)
+
+  -- FIXME !!!  very temporary stuff
+
+  local function do_floor(S)
+    local env =
+    {
+    }
+
+    local reqs =
+    {
+      kind = "floor"
+      seed_w = 1
+      seed_h = 1
+    }
+
+    local skin1 = Room_pick_skin(env, reqs)
+
+    local floor_h = assert(R.entry_h)
+
+    local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, floor_h)
+
+    Fabricate_at(R, skin1, T, { skin1 })
+  end
+
+
+  local function do_ceiling(S)
+    local env =
+    {
+    }
+
+    local reqs =
+    {
+      kind = "floor"
+      seed_w = 1
+      seed_h = 1
+    }
+
+    local skin1 = Room_pick_skin(env, reqs)
+
+    local ceil_h = assert(R.entry_h) + 192
+
+    local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, ceil_h)
+
+    Fabricate_at(R, skin1, T, { skin1 })
+  end
+
+
+  for sx = R.sx1, R.sx2 do
+  for sy = R.sy1, R.sy2 do
+    local S = SEEDS[sx][sy]
+
+    if S.room == R then
+      do_floor(S)
+      do_ceiling(S)
+    end
+  end
+  end
+end
+
+
+
 function Areas_height_realization(R)
   --
   -- the virtual becomes reality, and it happens here
@@ -3343,6 +3405,10 @@ function Areas_flesh_out()
     R.min_floor_h = R.entry_h
     R.max_floor_h = R.entry_h
 
+each C in R.chunks do
+  C.floor_h = R.entry_h
+end
+
     -- validate : all areas got a height
     each A in R.areas do
       each C in A.chunks do
@@ -3467,8 +3533,7 @@ function Areas_flesh_out()
 
       Simple_connect_all_areas(R)
     else
-      Areas_create_with_patterns(R)
-      Areas_height_realization(R)
+      Areas_layout_with_prefabs(R)
     end
 
     finish_heights(R)

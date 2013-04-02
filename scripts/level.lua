@@ -736,6 +736,7 @@ function Levels_do_styles()
 --!!!!!! Temp disable caves and closets
 STYLE.caves   = "none"
 STYLE.closets = "none"
+STYLE.outdoors = "none"
 
   SKY_H = rand.sel(5, 768, 512)
 

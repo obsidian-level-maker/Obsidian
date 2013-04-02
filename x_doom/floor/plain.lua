@@ -2,8 +2,8 @@
 -- Plain floor
 --
 
-DOOM.SKINS.Floor_plain =
+DOOM.SKINS.Floor_plain_1x1 =
 {
-  file   = "floor/plain.wad"
+  file   = "floor/plain_1x1.wad"
 }
 

@@ -845,8 +845,6 @@ function CHUNK_CLASS.build(C)
   assert(not C.hall)
   assert(not C.closet)
 
-  Trans.set_cap(C.z1_cap, C.z2_cap)
-
 
   local f_h
   local c_h
@@ -1062,21 +1060,13 @@ function CHUNK_CLASS.build(C)
   if not C.ceil_h then C.ceil_h = c_h end  -- meh, crud
 
 
-  -- parts
-
-  for dir = 1,9,2 do
-    local P = C.parts[dir]
-
-    if P then --[[ FIXME --]] end
-  end
-
-
   -- walls
 
   local w_matname = w_mat
   w_mat = Mat_lookup(w_matname)
   w_tex = w_mat.t
 
+if false then
   for dir = 2,8,2 do
     local long = geom.vert_sel(dir, C.x2 - C.x1, C.y2 - C.y1)
 
@@ -1117,6 +1107,7 @@ function CHUNK_CLASS.build(C)
     end
 
   end -- dir
+end
 
 
   -- crossover
@@ -1176,21 +1167,5 @@ function CHUNK_CLASS.build(C)
   end
 
 
-  --[[ debugging aid
-  local mx, my = C:mid_point()
-  entity_helper("dummy", mx, my, f_h + 24)
-  --]]
-
-
-  -- lighting
-
-  if light > 0 and GAME.format != "doom" then
-    local x, y = C:mid_point()
-    local z = rand.irange(64, c_h-32)
-    entity_helper("light", x, y, z, { light=light })
-  end
-
-
-  Trans.clear_cap()
 end
 

@@ -2,8 +2,8 @@
 -- Solid ceiling
 --
 
-DOOM.SKINS.Ceiling_solid =
+DOOM.SKINS.Ceiling_solid_1x1 =
 {
-  file   = "ceiling/solid.wad"
+  file   = "ceiling/solid_1x1.wad"
 }
 
