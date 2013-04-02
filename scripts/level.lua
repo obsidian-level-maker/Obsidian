@@ -733,6 +733,10 @@ function Levels_do_styles()
     end
   end
 
+--!!!!!! Temp disable caves and closets
+STYLE.caves   = "none"
+STYLE.closets = "none"
+
   SKY_H = rand.sel(5, 768, 512)
 
   if OB_CONFIG.theme == "psycho" then
