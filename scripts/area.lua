@@ -2965,6 +2965,13 @@ function Areas_layout_with_prefabs(R)
 
   -- FIXME !!!  very temporary stuff
 
+  local skin2 =
+   {
+    wall  = R.wall_mat
+    floor = R.floor_mat or R.wall_mat
+    ceil  = R.ceil_mat  or R.wall_mat
+  }
+
   local function do_floor(S)
     local env =
     {
@@ -2979,11 +2986,11 @@ function Areas_layout_with_prefabs(R)
 
     local skin1 = Room_pick_skin(env, reqs)
 
-    local floor_h = assert(R.entry_h)
+    local floor_h = assert(R.entry_h) + 2   -- FIXME
 
     local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, floor_h)
 
-    Fabricate_at(R, skin1, T, { skin1 })
+    Fabricate_at(R, skin1, T, { skin1, skin2 })
   end
 
 
@@ -2994,7 +3001,7 @@ function Areas_layout_with_prefabs(R)
 
     local reqs =
     {
-      kind = "floor"
+      kind = "ceiling"
       seed_w = 1
       seed_h = 1
     }
@@ -3005,7 +3012,7 @@ function Areas_layout_with_prefabs(R)
 
     local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, ceil_h)
 
-    Fabricate_at(R, skin1, T, { skin1 })
+    Fabricate_at(R, skin1, T, { skin1, skin2 })
   end
 
 
