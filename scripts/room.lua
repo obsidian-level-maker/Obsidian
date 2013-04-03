@@ -151,6 +151,7 @@ function ROOM_CLASS.new(shape)
     blocks  = {}
     decor   = {}
     exclusion_zones = {}
+    sky_rects = {}
   }
   table.set_class(R, ROOM_CLASS)
   table.insert(LEVEL.rooms, R)
@@ -588,6 +589,19 @@ function ROOM_CLASS.random_seed(R)
   end
 
   error("failure finding a random seed??")
+end
+
+
+function ROOM_CLASS.build(R)
+  if R.kind == "outdoor" then
+    local sky_h = assert(R.sky_group.h)
+
+    each rect in R.sky_rects do
+      Build_sky_quad(rect.x1, rect.y1, rect.x2, rect.y2, sky_h)
+    end
+  end
+
+  Areas_kick_the_goals(R)
 end
 
 
@@ -3138,11 +3152,7 @@ end
 function Room_blow_chunks()
 
   each R in LEVEL.rooms do
-    each C in R.chunks do
-      C:build()
-    end
-
-    Areas_kick_the_goals(R)
+    R:build()
   end
 
   -- scenic rooms ??

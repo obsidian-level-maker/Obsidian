@@ -2995,6 +2995,17 @@ function Areas_layout_with_prefabs(R)
 
 
   local function do_ceiling(S)
+    if R.kind == "outdoor" then
+      local rect =
+      {
+        x1 = S.x1, y1 = S.y1
+        x2 = S.x2, y2 = S.y2
+      }
+
+      table.insert(R.sky_rects, rect)
+      return
+    end
+
     local env =
     {
     }

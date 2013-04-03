@@ -837,6 +837,10 @@ end
 
 
 function CHUNK_CLASS.build(C)
+
+do return end  -- RIP chunks
+
+
   if C.scenic then
     C:build_scenic()
     return
