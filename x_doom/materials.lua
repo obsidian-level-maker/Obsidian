@@ -15,13 +15,18 @@
 DOOM.SKIN_DEFAULTS =
 {
   tex_STARTAN3  = "?wall"
+  flat_FLOOR5_3 = "?wall"
+
   tex_BLAKWAL1  = "?outer"
 
-  flat_FLOOR5_3 = "?wall"
   flat_FLOOR0_6 = "?floor"
+  tex_GRAY5     = "?floor"
 
-  tex_SFALL3   = "_LIQUID"
+  flat_CEIL3_1  = "?ceil"
+  tex_STARBR2   = "?ceil"
+
   flat_NUKAGE3 = "_LIQUID"
+  tex_SFALL3   = "_LIQUID"
 }
 
 
