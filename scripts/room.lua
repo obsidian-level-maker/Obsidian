@@ -137,8 +137,10 @@ function ROOM_CLASS.new(shape)
     spaces = {}
     floor_mats = {}
 
+    walls = {}
+    corners = {}
+    fences = {}   -- FIXME: just use 'walls' ??
     gates = {}
-    fences = {}
 
     num_windows = 0
 
@@ -148,10 +150,10 @@ function ROOM_CLASS.new(shape)
     cage_spots = {}
 
     prefabs = {}
-    blocks  = {}
     decor   = {}
-    exclusion_zones = {}
+
     sky_rects = {}
+    exclusion_zones = {}
   }
   table.set_class(R, ROOM_CLASS)
   table.insert(LEVEL.rooms, R)
@@ -3192,12 +3194,9 @@ function Room_build_all()
   Room_outdoor_borders()
   Room_ambient_lighting()
 
-  -- Room_indoor_walls()
-
   Room_blow_chunks()
 
   Room_add_sun()
   Room_intermission_camera()
-
 end
 

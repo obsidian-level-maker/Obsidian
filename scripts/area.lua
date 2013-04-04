@@ -2972,6 +2972,58 @@ function Areas_layout_with_prefabs(R)
     ceil  = R.ceil_mat  or R.wall_mat
   }
 
+
+  local function get_skin_edge(skin, px, py, pdir)
+    -- px, py and pdir are in the prefab space.
+    -- px ranges from 1 to seed_w
+    -- py ranges from 1 to seed_h
+
+    local edge
+
+    if pdir == 8 then edge = skin["north" .. px] or skin["north"] end
+    if pdir == 2 then edge = skin["south" .. px] or skin["south"] end
+    if pdir == 6 then edge = skin[ "east" .. px] or skin[ "east"] end
+    if pdir == 4 then edge = skin[ "west" .. px] or skin[ "west"] end
+
+    return edge
+  end
+
+
+  local function make_walls(sx1, sy1, sx2, sy2, skin, pf_dir)
+    if R.kind == "outdoor" then return end
+
+    for dir = 2,8,2 do
+      for sx = sx1, sx2 do
+      for sy = sy1, sy2 do
+
+        local S = SEEDS[sx][sy]
+
+        -- ignore portals (entry and exit ways)
+        if S.portal[dir] then continue end
+
+        local N = S:neighbor(dir)
+
+        if N and N.room == R then continue end
+
+        -- the room ends here, check if prefab was walkable
+        local px = sx - sx1 + 1
+        local py = sy - sy1 + 1  -- FIXME: HANDLE ROTATIONS !!!
+        local pdir = dir
+
+        local edge = get_skin_edge(skin, px, py, pdir)
+
+        if edge and (edge.h or edge.liquid) then
+
+          ADD_WALL(blah, blah)
+
+        end
+
+      end -- sx, sy
+      end
+    end -- dir
+  end
+
+
   local function do_floor(S)
     local env =
     {
@@ -2986,9 +3038,13 @@ function Areas_layout_with_prefabs(R)
 
     local skin1 = Room_pick_skin(env, reqs)
 
+    local pf_dir = 2  -- !!!!
+
+    make_walls(S.sx, S.sy, S.sx, S.sy, skin1, pf_dir)
+
     local floor_h = assert(R.entry_h) + 2   -- FIXME
 
-    local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, floor_h)
+    local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, floor_h, pf_dir)
 
     Fabricate_at(R, skin1, T, { skin1, skin2 })
   end
