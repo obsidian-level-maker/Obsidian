@@ -70,18 +70,6 @@ class CHUNK
 }
 
 
-class LINK
-{
-  C1, C2  -- chunks which are linked
-
-  dir     -- direction from C1 to C2
-
-  conn : CONN   -- optional (not used for crossovers)
-
-  x1, x2  |  y1, y2  -- coordinate range shared between chunks
-}
-
-
 class PART
 {
   chunk, side   -- identification

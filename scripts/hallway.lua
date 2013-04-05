@@ -689,6 +689,9 @@ end
 
 
 function HALLWAY_CLASS.cycle_flow(H, C, from_dir, z, i_deltas, seen)
+
+  -- FIXME !!!!  VERY BROKEN -- REWRITE THIS
+
   -- Note: this code will only work on a simple (non-forked) hallway
 
   seen[C] = true
@@ -751,6 +754,9 @@ end
 
 
 function HALLWAY_CLASS.handle_cycle(H, start_C, from_dir, start_z)
+
+  -- FIXME !!!!  VERY BROKEN -- REWRITE THIS
+
   -- find exit chunk
   local exit_C
   local exit_dir

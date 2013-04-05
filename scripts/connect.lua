@@ -38,11 +38,9 @@ class CONN
 
   K1, K2 : SECTION
 
-  C1, C2 : CHUNK   -- decided later (at chunk creation)
-
   dir1, dir2  -- direction value (2/4/6/8) 
-              -- dir1 leading out of L1 / K1 / C1
-              -- dir2 leading out of L2 / K2 / C2
+              -- dir1 leading out of L1 / K1
+              -- dir2 leading out of L2 / K2
 
   portal : PORTAL
 
@@ -84,8 +82,6 @@ function CONN_CLASS.dump(D)
   gui.debugf("    L2 = %s\n", (D.L2 ? D.L2:tostr() ; "nil"))
   gui.debugf("    K1 = %s\n", (D.K1 ? D.K1:tostr() ; "nil"))
   gui.debugf("    K2 = %s\n", (D.K2 ? D.K2:tostr() ; "nil"))
-  gui.debugf("    C1 = %s\n", (D.C1 ? D.C1:tostr() ; "nil"))
-  gui.debugf("    C2 = %s\n", (D.C2 ? D.C2:tostr() ; "nil"))
   gui.debugf("  dir1 = %s\n", (D.dir1 ? tostring(D.dir1) ; "nil"))
   gui.debugf("  dir2 = %s\n", (D.dir2 ? tostring(D.dir2) ; "nil"))
   gui.debugf("}\n")
@@ -112,7 +108,6 @@ end
 function CONN_CLASS.swap(D)
   D.L1, D.L2 = D.L2, D.L1
   D.K1, D.K2 = D.K2, D.K1
-  D.C1, D.C2 = D.C2, D.C1
 
   D.dir1, D.dir2 = D.dir2, D.dir1
 end

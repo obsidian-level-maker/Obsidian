@@ -42,6 +42,14 @@ class AREA
 }
 
 
+class LINK
+{
+  dir  -- direction from K1 to K2
+
+  conn : CONN   -- optional (not used for crossovers)
+}
+
+
 --------------------------------------------------------------]]
 
 
@@ -356,7 +364,7 @@ function Areas_handle_connections()
   end
 
 
-  local function chunk_for_section_side(K, dir, other_K, is_double)
+  local function OLD__chunk_for_section_side(K, dir, other_K, is_double)
     -- sections are guaranteed to stay aligned, so calling this
     -- function on two touching sections will provide two chunks
     -- which touch each other.
@@ -453,53 +461,35 @@ function Areas_handle_connections()
   end
 
 
-  local function link_chunks(C1, dir, C2, conn)
-    assert(C1)
-    assert(C2)
+  local function link_them(K1, dir, K2, conn)
+    assert(K1)
+    assert(K2)
 
+    -- FIXME
     -- prefer to build door on the room side
-    if (C1.hall and C2.room) or
-       (C1.room and C1.room.street)
+--[[
+    if (K1.hall and K2.room) or
+       (K1.room and K1.room.street)
     then
-      C1, C2 = C2, C1
+      K1, K2 = K2, K1
       dir = 10 - dir
     end
+--]]
 
-    gui.debugf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
+    gui.debugf("link_them: %s --> %s\n", K1:tostr(), K2:tostr())
 
     local LINK =
     {
-      C1 = C1
-      C2 = C2
       dir = dir
       conn = conn
     }
 
-    if geom.is_vert(dir) then
-      local x1 = math.max(C1.x1, C2.x1)
-      local x2 = math.min(C1.x2, C2.x2)
-
-      LINK.x1 = x1 + 16
-      LINK.x2 = x2 - 16
-    else
-      local y1 = math.max(C1.y1, C2.y1)
-      local y2 = math.min(C1.y2, C2.y2)
-
-      LINK.y1 = y1 + 16
-      LINK.y2 = y2 - 16
-    end
-
-    C1.link[dir]      = LINK
-    C2.link[10 - dir] = LINK
-
-    if C1.hall then
-       K1 = SEEDS[C1.sx1][C1.sy1].section
+    if K1.hall then
        K1.link[dir] = LINK
        LINK.K1 = K1
     end
 
-    if C2.hall then
-       K2 = SEEDS[C2.sx1][C2.sy1].section
+    if K2.hall then
        K2.link[10 - dir] = LINK
        LINK.K2 = K2
     end
@@ -549,15 +539,7 @@ function Areas_handle_connections()
 
     add_portal(D, sx1, sy1, sx2, sy2, D.dir1)
 
-
-    -- FIXME: REMOVE OLD CRUD....
-
-    local C1 = chunk_for_section_side(D.K1, D.dir1, D.K2, is_double)
-    local C2 = chunk_for_section_side(D.K2, D.dir2, D.K1, is_double)
-
-    D.C1 = C1 ; D.C2 = C2
-
-    link_chunks(C1, D.dir1, C2, D)
+    link_them(D.K1, D.dir1, D.K2, D)
   end
 
 
@@ -593,9 +575,6 @@ function Areas_handle_connections()
     -- teleporters are done elsewhere (as an "important")
     if D.kind != "teleporter" then
       handle_conn(D)
-
-      assert(D.C1)
-      assert(D.C2)
     end
   end
 
@@ -760,10 +739,12 @@ gui.debugf("  seeds: (%d %d) --> (%d %d)\n", sx, sy, ex, ey)
 
   ---| Areas_path_through_room |---
 
+--[[
   each R in LEVEL.rooms do
     init_room(R)
     make_paths(R)
   end
+--]]
 end
 
 
@@ -1049,918 +1030,7 @@ end
 ----------------------------------------------------------------
 
 
-function Areas_dump_vhr(R)
-
-  local function check_vhr(v)
-    for y = R.sy2, R.sy1, -1 do
-      for x = R.sx1, R.sx2 do
-        local S = SEEDS[x][y]
-
-        if S.room == R and S.v_areas[v] then
-          return true
-        end
-      end
-    end
-
-    return false
-  end
-
-
-  local function dump_vhr(v)
-    for y = R.sy2, R.sy1, -1 do
-      local line = "  "
-
-      for x = R.sx1, R.sx2 do
-        local S = SEEDS[x][y]
-
-        if S.room != R then
-          line = line .. " "
-        elseif S.v_areas[v] then
-          line = line .. v
-        elseif S.void then
-          line = line .. "#"
-        else
-          line = line .. "."
-        end
-      end
-
-      gui.debugf("%s\n", line)
-    end
-
-    gui.debugf("\n");
-  end
-
-
-  ---| Areas_dump_vhr |---
-
-  gui.debugf("Virtual Areas in %s\n", R:tostr())
-
-  for v = 9,1,-1 do
-    if check_vhr(v) then
-      dump_vhr(v)
-    end
-  end
-end
-
-
-function Areas_assign_chunks_to_vhrs(R)
-  -- logic here is to try to place one chunk in the lowest area, and
-  -- one chunk in the highest area, and the remaining chunks in the
-  -- least used virtual areas.
-
-  local occupied_vhrs = {}
-
-  local low_chunks  = {}
-  local high_chunks = {}
-
-  each C in R.chunks do
-    local S = SEEDS[C.sx1][C.sy1]
-
-    -- if only one choice, use it
-    if table.size(S.v_areas) == 1 then
-      local v, AREA = next(S.v_areas)
-      AREA:add_chunk(C)
-      occupied_vhrs[v] = (occupied_vhrs[v] or 0) + 1
-      continue
-    end
-
-    if S.v_areas[R.vhr1] then table.insert( low_chunks, C) end
-    if S.v_areas[R.vhr2] then table.insert(high_chunks, C) end
-  end
-
-  -- we need to handle case like: low = { X Y }  high = { X }
-  -- hence we handle the shortest table first.
-
-  for pass = 1,2 do
-    local C, v
-
-    if (pass == 1) == (#low_chunks < #high_chunks) then
-
-      -- LOW
-      if not occupied_vhrs[R.vhr1] and #low_chunks > 0 then
-        C = rand.pick(low_chunks)
-        v = R.vhr1
-      end
-    
-    else
-
-      -- HIGH
-      if not occupied_vhrs[R.vhr2] and #high_chunks > 0 then
-        C = rand.pick(high_chunks)
-        v = R.vhr2
-      end
-    end
-
-    if C then
-      local S = SEEDS[C.sx1][C.sy1]
-      local AR = assert(S.v_areas[v])
-
-      AR:add_chunk(C)
-
-      occupied_vhrs[v] = (occupied_vhrs[v] or 0) + 1
-
-      table.kill_elem( low_chunks, C)
-      table.kill_elem(high_chunks, C)
-    end
-  end
-
-  -- assign all other chunks  [TODO: take area size into account]
-
-  each C in R.chunks do
-    if C.area then continue end
-
-    local S = SEEDS[C.sx1][C.sy1]
-
-    -- filter probabilities based on areas that chunk may exist in
-    local tab2 = {}
-
-    for v = 1,9 do
-      if S.v_areas[v] then
-        tab2[v] = (occupied_vhrs[v] ? 10 ; 80)
-      end
-    end
-
-    assert(not table.empty(tab2))
-
-    local v = rand.key_by_probs(tab2)
-    local AR = assert(S.v_areas[v])
-
-    AR:add_chunk(C)
-
-    occupied_vhrs[v] = (occupied_vhrs[v] or 0) + 1
-  end
-end
-
-
-
-function Areas_create_all_areas__OLD(R)
-
-  local min_size = 2 + R.map_volume * 2
-  local max_size = int(R.svolume * 0.7)
-
-  local total_seeds = 0
-  local  used_seeds = 0
-
-  local used_vhrs = {}
-
-  local area = table.array_2D(R.sx2, R.sy2)
-  local area_size
-
-
-  local VHR_DECAY = { 10,10,10, 4,4,4, 10,10,10 }
-
-  local function pick_vhr(tab)
-    each v,usage in used_vhrs do
-      if tab[v] then
---      tab[v] = tab[v] / (VHR_DECAY[v] ^ usage)
-      end
-    end
-
-    return rand.index_by_probs(tab)
-  end
-
-
-  local function init()
-    for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
-      local S = SEEDS[sx][sy]
-      if S.room == R then
-        total_seeds = total_seeds + 1
-      end
-    end end
-  end
-
-  
-  local function clear()
-    for x = R.sx1, R.sx2 do
-      if not table.empty(area[x]) then
-        area[x] = {}
-      end
-    end
-
-    area_size = 0
-  end
-
-
-  local function install(v)
-    used_vhrs[v] = (used_vhrs[v] or 0) + 1
-
-    -- create a new area object here
-    local AREA = AREA_CLASS.new("floor", R)
-
-    AREA.vhr = v
-    AREA.size = area_size
-
-    table.insert(R.areas, AREA)
-
-    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
-      if area[x][y] then
-        local S = SEEDS[x][y]
-        assert(S.room == R)
-        assert(not S.void)
-
-        if table.empty(S.v_areas) then
-          used_seeds = used_seeds + 1
-        end
-
-        assert(not S.v_areas[v])
-        S.v_areas[v] = AREA
-      end
-    end end
-  end
-
-
-  local function test(x, y, v)
-assert(Seed_valid(x, y))
-    local sx1, sy1 = x, y
-    local sx2, sy2 = x, y
-
-    -- must expand range to whole chunk if present
-    local C = SEEDS[x][y].chunk
-
-    if C then
-      sx1, sy1 = C.sx1, C.sy1
-      sx2, sy2 = C.sx2, C.sy2
-    end
-
-    for nx = sx1,sx2 do for ny = sy1,sy2 do
-      if not SEEDS[nx][ny]:can_add_vhr(R, v) then
-        return false
-      end
-    end end
-
-    return true
-  end
-
-
-  local function set(x, y)
-    local sx1, sy1 = x, y
-    local sx2, sy2 = x, y
-
-    -- must expand range to whole chunk if present
-    local C = SEEDS[x][y].chunk
-
-    if C then
-      sx1, sy1 = C.sx1, C.sy1
-      sx2, sy2 = C.sx2, C.sy2
-    end
-
-    for nx = sx1,sx2 do for ny = sy1,sy2 do
-      if not area[nx][ny] then
-        area[nx][ny] = true
-        area_size = area_size + 1
-      end
-    end end
-  end
-
-
-  local function test_box(x1, y1, x2, y2, v)
-    for x = x1,x2 do for y = y1,y2 do
-      if not test(x, y, v) then return false end
-    end end
-
-    return true
-  end
-
-
-  local function set_box(x1, y1, x2, y2)
-    for x = x1,x2 do for y = y1,y2 do
-      set(x, y)
-    end end
-  end
-
-
-  local function test_box_no_edge(x1, y1, x2, y2, v)
-    for x = x1,x2 do for y = y1,y2 do
-      if SEEDS[x][y].room != R then return false end
-      if SEEDS[x][y]:edge_of_room() then return false end
-      if not test(x, y, v) then return false end
-    end end
-
-    return true
-  end
-
-
-  local function try_MIDDLE(junc, v)
-    -- initial size
-    local sx1, sy1 = junc.sx1, junc.sy1
-    local sx2, sy2 = junc.sx2, junc.sy2
-
-    if not test_box(sx1, sy1, sx2, sy2) then return end
-
-    clear()
-
-    set_box(sx1, sy1, sx2, sy2)
-
-    -- try growing it  [FIXME: try each direction individually]
-    for loop = 1,2 do
-      sx1 = sx1 - 1 ; sx2 = sx2 + 1
-      sy1 = sy1 - 1 ; sy2 = sy2 + 1
-
-      local new_vol = (sx2 - sx1 + 1) * (sy2 - sy1 + 1)
-
-      if new_vol > max_size then break end
-
-      if test_box_no_edge(sx1, sy1, sx2, sy2) then
-        set_box(sx1, sy1, sx2, sy2)
-      end
-    end
-
-    if area_size < min_size then
-      return
-    end
-
-    stderrf("try_MIDDLE @ v=%d size=%d\n", v, area_size)
-
-    install(v)
-
-    -- TODO: try to surround this one
-  end
-
-
-  local function try_CORNER(corner, v)
-  end
-
-
-  local function try_EDGE(side, v)
-  end
-
-
-  local function try_TWO_SIDE(corner, v, extend)
-    local L_side = geom. LEFT_45[side]
-    local R_side = geom.RIGHT_45[side]
-  end
-
-
-  local function try_THREE_SIDE(side, v, extend)
-    local L_side = geom. LEFT[side]
-    local R_side = geom.RIGHT[side]
-  end
-
-
-  local function random_spread_in_dir(bbox, dir, prob, v)
-    -- returns FALSE only if nothing was possible
-    local possible = false
-
-    local x1, x2, xdir = bbox.x1, bbox.x2, 1
-    local y1, y2, ydir = bbox.y1, bbox.y2, 1
-
-    -- prevent run-on
-    if dir == 6 then x1, x2 = x2, x1 ; xdir = -1 end
-    if dir == 8 then y1, y2 = y2, y1 ; ydir = -1 end
-
-    for y = y1, y2, ydir do
-      for x = x1, x2, xdir do
-        local S = SEEDS[x][y]
-        if S.room != R then continue end
-
-        if not area[x][y] then continue end
-
-        local N = S:neighbor(dir)
-        if not N or N.room != R then continue end
-
-        local nx, ny = N.sx, N.sy
-
-        if area[nx][ny] then continue end
-
-        if not test(nx, ny, v) then continue end
-
-        possible = true
-
-        if rand.odds(prob) then
-          set(nx, ny)
-
-          -- update bbox!
-          if nx < bbox.x1 then bbox.x1 = nx end
-          if nx > bbox.x2 then bbox.x2 = nx end
-
-          if ny < bbox.y1 then bbox.y1 = ny end
-          if ny > bbox.y2 then bbox.y2 = ny end
-        end
-      end
-    end
-
-    return possible
-  end
-
-
-  local function random_spread(bbox, v)
-    each dir in rand.dir_list() do
-      if random_spread_in_dir(bbox, dir, 35, v) then
-        return true
-      end
-    end
-
-    return false
-  end
-
-
-  local function try_RANDOM(v)
-stderrf("try_RANDOM begin, v=%d\n", v)
-    if used_seeds >= total_seeds then return end
-
-    local unused_seeds = {}
-
-    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
-      local S = SEEDS[x][y]
-      if S.room == R and table.empty(S.v_areas) then
-        table.insert(unused_seeds, S)
-      end
-    end end
-
-    assert(#unused_seeds == total_seeds - used_seeds)
-
-    local first
-    
-    for loop = 1,10 do
-      first = rand.pick(unused_seeds)
-
-stderrf("  loop: %d  test(%d %d)\n", loop, first.sx, first.sy)
-      if test(first.sx, first.sy, v) then break end
-
-      first = nil
-    end
-
-    if not first then return end
-
-stderrf("  first = %s\n", first:tostr())
-    clear()
-
-    local x = first.sx
-    local y = first.sy
-
-    set(x, y)
-
-    local bbox = { x1=x, y1=y, x2=x, y2=y }
-
-    while area_size < min_size do
-      -- abort if cannot reach the minimum size
-      if not random_spread(bbox, v) then return end
-    end
-
-    while rand.odds(80) and area_size < max_size * 0.8 do
-      random_spread(bbox, v)
-    end
-
-    stderrf("try_RANDOM @ v=%d size=%d\n", v, area_size)
-
-    install(v)
-  end
-
-
-  local function merge_areas(new_AR, old_AR)
-stderrf("merge_areas %s --> %s\n", new_AR:tostr(), old_AR:tostr())
-    local v = new_AR.vhr
-    assert(v == old_AR.vhr)
-
-    new_AR.size = new_AR.size + old_AR.size
-    old_AR.size = 0
-
-    table.kill_elem(R.areas, old_AR)
-
-    each C in old_AR.chunks do
-      assert(C.area == old_AR)
-      C.area = new_AR
-      table.insert(new_AR.chunks, C)
-    end
-
-    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
-      local S = SEEDS[x][y]
-      if S.room == R and S.v_areas and S.v_areas[v] == old_AR then
-        S.v_areas[v] = new_AR
-      end
-    end end
-
-    old_AR.chunks = nil
-  end
-
-
-  local function try_grow_from_neighbors(S)
-    -- collect possible areas
-    local poss_areas = {}
-
-    for dir = 2,8,2 do
-      local N = S:neighbor(dir)
-      if N and N.room == R and not N.void and not table.empty(N.v_areas) then
-        each v,AREA in N.v_areas do
-          table.add_unique(poss_areas, AREA)
-        end
-      end
-    end
-
-    if table.empty(poss_areas) then return false end
-
-    -- if more than one possibility, try to pick one that does not require a merge
-    if #poss_areas >= 2 then
-      local poss2 = {}
-
-      each AR in poss_areas do
-        if test(S.sx, S.sy, AR.vhr) then
-          table.insert(poss2, AR)
-        end
-      end
-
-      if #poss2 > 0 then
-        poss_areas = poss2
-      end
-    end
-
-    assert(#poss_areas > 0)
-
-    -- install the area in the seed/s
-    local AREA = rand.pick(poss_areas)
-    local v    = AREA.vhr
-
-    local sx1, sy1 = S.sx, S.sy
-    local sx2, sy2 = S.sx, S.sy
-
-    -- must expand range to whole chunk if present
-    local C = S.chunk
-
-    if C then
-      sx1, sy1 = C.sx1, C.sy1
-      sx2, sy2 = C.sx2, C.sy2
-    end
-
-    for x = sx1,sx2 do for y = sy1,sy2 do
-      local S2 = SEEDS[x][y]
-      assert(table.empty(S2.v_areas))
-      used_seeds = used_seeds + 1
-      S2.v_areas[v] = AREA
-
-      -- may need to merge areas
-      for dir = 2,8,2 do
-        local N2 = S:neighbor(dir)
-        if N2 and N2.room == R and not N2.void and 
-           N2.v_areas[v] and N2.v_areas[v] != AREA
-        then
-          merge_areas(AREA, N2.v_areas[v])
-        end
-      end
-    end end
-
-    return true
-  end
-
-
-  local function grow_the_rest()
-    local unused_seeds = {}
-
-    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
-      local S = SEEDS[x][y]
-      if S.room == R and table.empty(S.v_areas) and not S.void then
-        table.insert(unused_seeds, S)
-      end
-    end end
-
--- stderrf("unused:%d == %d - %d\n", #unused_seeds, total_seeds, used_seeds)
-    assert(#unused_seeds == total_seeds - used_seeds)
-
-    rand.shuffle(unused_seeds)
-
-    local can_void = true
-    if R.kind == "outdoor" then can_void = false end
-
-    each S in unused_seeds do
-      if can_void and not S.is_walk and not S.chunk and rand.odds(100) then
-        S.void = true
-        used_seeds = used_seeds + 1
-        continue
-      end
-
-      if try_grow_from_neighbors(S) then
-        break
-      end
-    end
-  end
-
-
-  local function remap_vhr(src_v, dest_v)
-    gui.debugf("remap_vhr %d --> %d\n", src_v, dest_v)
-
-    assert(not used_vhrs[dest_v])
-
-    used_vhrs[dest_v] = used_vhrs[src_v]
-    used_vhrs[ src_v] = nil
-
-    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
-      local S = SEEDS[x][y]
-      if S and S.room == R and S.v_areas[src_v] then
-        assert(not S.v_areas[dest_v])
-        S.v_areas[dest_v] = S.v_areas[src_v]
-        S.v_areas[ src_v] = nil
-      end
-    end end
-
-    each AREA in R.areas do
-      if AREA.vhr == src_v then
-        AREA.vhr = dest_v
-      end
-    end
-  end
-
-
-  local function gap_removal()
-    -- ensure that the VHR numbers have no gaps (e.g. 3,4,6 --> 3,4,5)
-    local mapping = {}
-
-    -- determine lowest and highest VHRs
-    local low
-    local high
-
-    for v = 1,9 do
-      if used_vhrs[v] then
-        if not low then low = v end
-        high = v
-      end
-    end
-
-    -- create a mapping where the destination numbers are contiguous
-    local cur  = low
-    local gaps = 0
-
-    for v = low,high do
-      if used_vhrs[v] then
-        mapping[v] = cur
-        cur = cur + 1
-      else
-        gaps = gaps + 1
-      end
-    end
-
-    assert(table.size(used_vhrs) == table.size(mapping))
-
-    if gaps == 0 then return end
-
-    -- apply the mapping
-    for v = 1,9 do
-      if mapping[v] and mapping[v] != v then
-        remap_vhr(v, mapping[v])
-      end
-    end
-
-    R.vhr1 = mapping[low]
-    R.vhr2 = R.vhr1 + table.size(mapping) - 1
-  end
-
-
-  local function VALIDATE()
-    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
-      local S = SEEDS[x][y]
-      if S.room == R and table.empty(S.v_areas) and not S.void then
-        error("failed to create area @ " .. S:tostr())
-      end
-    end end
-  end
-
-
-  ---| Areas_create_all_areas |----
-
-stderrf("Areas_create_all_areas @ %s : (%d %d) .. (%d %d)\n",
-        R:tostr(), R.sx1, R.sy1, R.sx2, R.sy2)
-
-  local SIDES   = { 2,4,6,8 }
-  local CORNERS = { 1,3,7,9 }
-
-  init()
- 
-  each K in R.sections do
-    if (K.shape == "junction") and not K:touches_edge() then
-      try_MIDDLE(K, pick_vhr { 0,1,3, 7,9,5, 0,0,0})
-    end
-  end
-
-  for loop = 1,16 do  
-    local extend = (loop >= 11)
-    local v = pick_vhr { 0,0,0, 3,6,9, 5,1,0 }
-
-    if rand.odds(75) then
-      -- nothing
-    elseif rand.odds(75) then
-      try_TWO_SIDE(rand.dir(), v, extend)
-    else
-      try_THREE_SIDE(rand.dir(), v, extend)
-    end
-  end
-
-  for loop = 1,4 do
-    if rand.odds(25) then
-      try_RANDOM(pick_vhr { 0,0,1, 7,9,7, 1,0,0 })
-    end
-  end
-
-  for loop = 1,16 do
-    local v = pick_vhr { 0,1,5, 9,9,9, 5,1,0 }
-
-    if rand.odds(50) then
-      -- nothing
-    elseif rand.odds(50) then
-      try_CORNER(rand.pick(CORNERS), v)
-    else
-      try_EDGE(rand.dir(), v)
-    end
-  end
-
-  for loop = 1, R.map_volume + 2 do
-    try_RANDOM(pick_vhr { 0,0,3, 7,9,7, 3,0,0 })
-  end
-
-  -- must have created at least one area by now
-  if used_seeds == 0 then
-    error("failed to create any areas at all")
-  end
-
-  --- FINAL PASS : fill gaps by expanding from neighbors ---
-
-  for loop = 1,200 do
-    if used_seeds >= total_seeds then break end
-
-    if loop == 200 then
-      error("failed to create areas in some seeds")
-    end
-
-    grow_the_rest()
-  end
-
-  gap_removal()
-
-  R.used_vhrs = used_vhrs
-
-  dump()
-
-  VALIDATE()
-
-  Areas_assign_chunks_to_vhrs(R)
-
-  Areas_chunk_it_up_baby(R)
-end
-
-
-
-function Areas_connect_all_areas(R)
-  --
-  -- Connects areas via stairs or lifts.
-  --
-
-  -- GOALS HERE:
-  -- (1) prevent / minimise stairs with a big height difference
-  --     [ideally all differences are 1 VHR]
-  --
-  -- (2) stair has 1 seed before it, 2 after it, e.g.  4 4> <5 5
-  --
-  -- (3) before and after seeds are not stairs (strong preference)
-  --     or importants (medium preference)
-  --
-  -- (4) stair is far away from any chunks
-  --
-  -- (5) slight preference for stairs _along_ a wall / void
-
-
-  -- ALGORITHM: connect smallest area to a neighbor, until all
-  --            areas are connected.  Score each stair spot.
-
-  local poss_seeds = {}
-
-
-  local function init()
-    R.stairs = {}
-
-    each AR in R.areas do
-      AR.conn_group = _index
-    end
-
-    for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
-      local S = SEEDS[sx][sy]
-
-      if S.room == R and not S.void and not S.chunk then
-        table.insert(poss_seeds, S)
-      end
-    end end
-  end
-
-
-  local function highest_group()
-    local g = 0
-
-    each AR in R.areas do
-      g = math.max(g, AR.conn_group)
-    end
-
-    return g
-  end
-
-
-  local function merge(id1, id2)
-    if id1 > id2 then id1,id2 = id2,id1 end
-
-    each AR in R.areas do
-      if AR.conn_group == id2 then
-        AR.conn_group = id1
-      end
-    end
-  end
-
-
-  local function score_spot(S, N, dir, A1, A2)
-    local N = S:neighbor(dir)
-
-    local v_diff = math.abs(A1.vhr - A2.vhr)
-
-    local score = (10 - v_diff) * 10
-
-    -- TODO : THE OTHER CRITERIA
-
-    -- bit of randomness is a tie-breaker
-    return score + gui.random()
-  end
-
-
-  local function make_a_connection()
-    local best
-
-    each S in poss_seeds do
-      for dir = 2,8,2 do
-        local N = S:neighbor(dir)
-
-        if not (N and N.room == R) then continue end
-        if N.void then continue end
-        if N.stair_info then continue end
-
-        each v1,A1 in S.v_areas do
-          each v2,A2 in N.v_areas do
-            if v1 == v2 then continue end
-
-            if A1.conn_group == A2.conn_group then continue end
-
-            local score = score_spot(S, N, dir, A1, A2)
-
---stderrf("score_spot @ %s dir:%d --> %1.2f\n", S:tostr(), dir, score)
-
-            if score >= 0 and (not best or score > best.score) then
-              best = { S=S, dir=dir, A1=A1, A2=A2, score=score }
-            end
-          end
-        end
-
-      end
-    end
-
-    if not best then return false end
-
-    -- place stair
-
-    local S   = best.S
-    local dir = best.dir
-    local A1  = best.A1
-    local A2  = best.A2
-
-    gui.debugf("Added stair @ %s dir:%d  %s --> %s\n", S:tostr(), dir, A1:tostr(), A2:tostr())
-
-    merge(A1.conn_group, A2.conn_group)
-
-    local N = S:neighbor(dir)
-
-    S.stair_info = best
-    N.stair_from = 10 - dir
-
-    table.kill_elem(poss_seeds, S)
-    table.kill_elem(poss_seeds, N)
-
-    table.insert(R.stairs, stair_info)
-
--- TEST
-if S.v_areas[A2.vhr] and math.abs(A1.vhr - A2.vhr) == 1 and
-   N.v_areas[A1.vhr] and N.v_areas[A2.vhr]
-then
-  --  for pass = 1,2 do
-  --  local dir2 = (pass == 1 ? geom.RIGHT[dir] ; geom.LEFT[dir])
-  --  local N = S:neighbor(dir2)
-  --  if N and N.room == R and N.v_areas and N.v_areas[A1.vhr] and N.v_areas[A2.vhr] then
-
-  local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, math.min(A1.floor_h, A2.floor_h), 10 - dir)
-  Fabricate_old("STAIR_180", T, { R.skin })
-  S.wtf_bbq = true
-end
-
-    return true
-  end
-
-
-  ---| Areas_connect_all_areas |----
-
-  gui.debugf("Areas_connect_all_areas @ %s\n", R:tostr())
-
-  init()
-
-  while highest_group() > 1 do
-    if not make_a_connection() then
-      error("unable to connect areas in room!")
-    end
-  end
-end
-
-
-
-function Areas_create_with_patterns(R)
+function Areas_create_with_patterns__OLD(R)
   local num_vhr
   local min_vhr
   local max_vhr
@@ -2993,8 +2063,6 @@ Areas_dump_vhr(R)
     fill_a_spot()
   end
 
-  Areas_dump_vhr(R)
-
   -- DONT NEED THIS (we assign chunks when installing the pattern)
   -- Areas_assign_chunks_to_vhrs(R)
 end
@@ -3431,123 +2499,6 @@ end
 
 
 
-function Areas_height_realization(R)
-  --
-  -- the virtual becomes reality, and it happens here
-  --
-
-  local max_floor_h = R.entry_h
-
-  local function assign_floor(v, floor_h)
-    if v < 1 or v > 9 then return end
-
-    each AR in R.areas do
-      if AR.vhr == v then
-        AR.floor_h = floor_h
-        max_floor_h = math.max(max_floor_h, AR.floor_h)
-      end
-    end
-  end
-
-  local function assign_ceil(v, ceil_h)
-    if v < 1 or v > 9 then return false end
-
-    local seen = false
-
-    each AR in R.areas do
-      if AR.vhr == v then
-        AR.ceil_h = ceil_h
-        seen = true
-      end
-    end
-
-    return seen
-  end
-
-
-  ---| Areas_height_realization |---
-
-  assert(R.entry_h)
-
---  assert(R.entry_C)
---  assert(R.entry_C.area)
---  assert(R.entry_C.area.vhr)
- 
-  local base_v = R.areas[1].vhr
-
-  assign_floor(base_v, R.entry_h)
-
-  for i = 1,9 do
-    assign_floor(base_v + i, R.entry_h + i * 16)
-    assign_floor(base_v - i, R.entry_h - i * 16)
-  end
-
-  -- ceilings too
-  local ceil_h = max_floor_h + 192
-
-  for v = 9,1,-1 do
-    if assign_ceil(v, ceil_h) then
-      ceil_h = ceil_h + 128
-    end
-  end
-
-  -- update chunks [ASSUMES: chunks already exist]
-  each AR in R.areas do
-    each C in AR.chunks do
-      C.floor_h = assert(AR.floor_h)
-
-      if C.stair then
-        C.stair.low_h  = C.floor_h
-        C.stair.high_h = C.floor_h + 64  -- FIXME
-      end      
-    end
-  end
-end
-
-
-
-function Areas_chunk_it_up_baby(R)
-
-  -- TODO : make bigger chunks
-
-  local function chunkify_area(AR)
-    for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
-      local S = SEEDS[sx][sy]
-
-      if S.room != R then continue end
-      if S.chunk and S.chunk.area == AR then continue end
-      if S.void or S.wtf_bbq then continue end
-
-      if S.v_areas[AR.vhr] != AR then continue end
-
-      local C = CHUNK_CLASS.new(sx, sy, sx, sy)
-
-      C.room = R
-      C.area = AR
-
-      C:set_coords()
-
-      if S:above_vhr(AR.vhr) then C.no_ceil = true end
-
-      table.insert( R.chunks, C)
-      table.insert(AR.chunks, C)
-    end end
-  end
-
-  ---| Areas_chunk_it_up_baby |---
-
-  each AR in R.areas do
-    chunkify_area(AR)
-
-    -- this takes care of other chunks too (conns & importants)
-    each C in AR.chunks do
-      C.floor_h = assert(AR.floor_h)
-    end
-  end
-end
-
-
-
 function Areas_flesh_out()
 
   -- this creates the actual walkable areas in each room, making sure
@@ -3699,7 +2650,7 @@ function Areas_flesh_out()
   end
 
 
-  local function decorative_chunks(R)
+  local function OLD__decorative_chunks(R)
     -- this does scenic stuff like cages, nukage pits, etc...
 
 -- TODO: this is not used, redo the void pillars
@@ -3723,7 +2674,7 @@ function Areas_flesh_out()
   --
 
 
-  local function areas_touching_chunk(R, C, list)
+  local function OLD__areas_touching_chunk(R, C, list)
     each C2 in R.chunks do
       if C2.area and C2.area != C.area and C:is_adjacent(C2) then
         table.add_unique(list, C2.area)
@@ -3732,7 +2683,7 @@ function Areas_flesh_out()
   end
 
 
-  local function areas_touching_area(R, A)
+  local function OLD__areas_touching_area(R, A)
     local list = {}
 
     each C in R.chunks do
@@ -3745,7 +2696,7 @@ function Areas_flesh_out()
   end
 
 
-  local function set_all_touching(R)
+  local function OLD__set_all_touching(R)
     each A in R.areas do
       A.touching = areas_touching_area(R, A)
     end
@@ -3781,30 +2732,9 @@ function Areas_flesh_out()
 
   local function finish_heights(R)
     -- find minimum and maximum heights
+    -- FIXME: DO THIS AS WE GO !!!!
     R.min_floor_h = R.entry_h
     R.max_floor_h = R.entry_h
-
-each C in R.chunks do
-  C.floor_h = R.entry_h
-end
-
-    -- validate : all areas got a height
-    each A in R.areas do
-      each C in A.chunks do
-
-        if not C.floor_h then
-          -- stderrf("FUCKED UP IN %s @ %s\n", R:tostr(), C:tostr())
-          -- C.floor_h = -999
-          -- C. ceil_h =  999
-          error("Area chunk failed to get a floor height")
-        end
-
-        local h = C.floor_h
-
-        R.min_floor_h = math.min(R.min_floor_h, h)
-        R.max_floor_h = math.max(R.max_floor_h, h)
-      end
-    end
 
     R.done_heights = true
   end
