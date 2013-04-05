@@ -156,13 +156,6 @@ function SEED_CLASS.neighbor(S, dir, dist)
 end
 
 
-function SEED_CLASS.first_chunk(S)
-  if S.chunk then return S.chunk end
-  local vhr, C = next(S.chunks)
-  return C
-end
-
-
 function SEED_CLASS.same_room(S, dir)
   local N = S:neighbor(dir)
   return N and N.room == S.room
@@ -188,43 +181,6 @@ function SEED_CLASS.edge_of_room(S)
   end
 
   return true
-end
-
-
-function SEED_CLASS.can_add_vhr(S, R, v)
-  if S.room != R then return false end
-
-  for dx = -1,1 do for dy = -1,1 do
-    local nx = S.sx + dx
-    local ny = S.sy + dy
-
-    if not Seed_valid(nx, ny) then continue end
-
-    local N = SEEDS[nx][ny]
-    if N.room != R then continue end
-
-    if N.v_areas[v] then return false end
-  end end
-
-  return true
-end
-
-
-function SEED_CLASS.above_vhr(S, vhr)
-  for v = vhr+1, 9 do
-    if S.v_areas[v] then return v end
-  end
-
-  return nil
-end
-
-
-function SEED_CLASS.below_vhr(S, vhr)
-  for v = vhr-1, 1, -1 do
-    if S.v_areas[v] then return v end
-  end
-
-  return nil
 end
 
 
