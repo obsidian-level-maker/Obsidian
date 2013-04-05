@@ -2981,6 +2981,18 @@ function Areas_layout_with_prefabs(R)
     }
 
     table.insert(R.walls, WALL)
+
+    -- put in seeds too
+
+    sx1, sy1, sx2, sy2 = geom.side_coords(side, sx1, sy1, sx2, sy2)
+
+    for sx = sx1, sx2 do
+    for sy = sy1, sy2 do
+      local S = SEEDS[sx][sy]
+
+      S.walls[side] = WALL
+    end
+    end
   end
 
 
@@ -3088,8 +3100,91 @@ function Areas_layout_with_prefabs(R)
   end
 
 
+  local function try_add_corner(S, dir)
+    local dir_L = geom. LEFT_45[dir]
+    local dir_R = geom.RIGHT_45[dir]
+
+    local wall_L = S.walls[dir_L]
+    local wall_R = S.walls[dir_R]
+
+    if not (wall_L and wall_R) then return end
+
+    -- OK found a corner
+
+    local CORNER =
+    {
+      kind = "corner"
+      sx1 = S.sx, sy1 = S.sy
+      sx2 = S.sx, sy2 = S.sy
+      side = dir
+      wall_L = wall_L
+      wall_R = wall_R
+    }
+
+    table.insert(R.corners, CORNER)
+
+    -- update WALL objects with the touching corner
+    assert(not wall_L.corner_R)
+    assert(not wall_R.corner_L)
+
+    wall_L.corner_R = CORNER
+    wall_R.corner_L = CORNER
+  end
+
+
+  local function try_add_outie(S, dir)
+    -- this is for 270 degree corners
+    local dir_L = geom. LEFT_45[dir]
+    local dir_R = geom.RIGHT_45[dir]
+
+    local NL = S:neighbor(dir_L)
+    local NR = S:neighbor(dir_R)
+
+    if not (NL and NL.room == R) then return end
+    if not (NR and NR.room == R) then return end
+
+    local wall_L = NL.walls[dir_R]
+    local wall_R = NR.walls[dir_L]
+
+    if not (wall_L and wall_R) then return end
+
+    -- OK found an outie corner
+
+    local CORNER =
+    {
+      kind = "outie"
+      sx1 = S.sx, sy1 = S.sy
+      sx2 = S.sx, sy2 = S.sy
+      side = dir
+      wall_L = wall_L
+      wall_R = wall_R
+    }
+
+    table.insert(R.corners, CORNER)
+
+    -- update WALL objects with the touching corner
+    assert(not wall_L.corner_R)
+    assert(not wall_R.corner_L)
+
+    wall_L.corner_R = CORNER
+    wall_R.corner_L = CORNER
+  end
+
+
   local function find_corners()
-    -- TODO
+    for sx = R.sx1, R.sx2 do
+    for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
+
+      if S.room == R then
+        each dir in geom.DIAGONALS do
+          try_add_corner(S, dir)
+          try_add_outie (S, dir)
+        end
+      end
+
+    end -- sx, sy
+    end
   end
 
 

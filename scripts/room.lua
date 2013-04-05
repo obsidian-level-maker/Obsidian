@@ -103,6 +103,9 @@ class CLOSET
 class WALL extends PORTAL
 {
   kind : keyword  -- "wall"
+
+  corner_L : CORNER  -- corner to left (ACW) of wall
+  corner_R : CORNER  -- corner to right (CW) of wall
 }
 
 
@@ -111,6 +114,9 @@ class CORNER extends PORTAL
   kind : keyword  -- "corner" or "outie"
 
   (side will be 1, 3, 7 or 9)
+
+  wall_L : WALL   -- wall to left (ACW) of corner
+  wall_R : WALL   -- wall to right (CW) of corner
 }
 
 
