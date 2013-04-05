@@ -507,6 +507,7 @@ function Areas_handle_connections()
 
 
   local function add_portal(D, sx1, sy1, sx2, sy2, dir)
+    assert(not D.portal)
 
     local PORTAL =
     {
@@ -516,6 +517,8 @@ function Areas_handle_connections()
       side = dir
       conn = D
     }
+
+    D.portal = PORTAL
 
     -- put in seeds
 
@@ -3099,9 +3102,7 @@ function Areas_layout_with_prefabs(R)
   end
 
 
-  local function make_walls(sx1, sy1, sx2, sy2, skin, rot)
-    if R.kind == "outdoor" then return end
-
+  local function process_edges(sx1, sy1, sx2, sy2, skin, rot, h)
     for dir = 2,8,2 do
       for sx = sx1, sx2 do
       for sy = sy1, sy2 do
@@ -3111,22 +3112,38 @@ function Areas_layout_with_prefabs(R)
         local py = sy - sy1 + 1
         local pdir = dir
 
+        local edge = get_skin_edge(skin, px, py, pdir)
+
 
         local S = SEEDS[sx][sy]
 
-        -- ignore portals (entry and exit ways)
-        if S.portals[dir] then continue end
+        -- handles portals (entry and exit ways) : set floor_h
+        local portal = S.portals[dir]
+
+        if portal then
+          assert(edge and edge.h)
+
+          if not portal.floor_h then
+            portal.floor_h = h + edge.h
+          end
+
+          continue
+        end
+
+
+        -- create walls
+        if R.kind == "outdoor" then continue end
 
         local N = S:neighbor(dir)
 
         if N and N.room == R then continue end
 
         -- the room ends here, check if prefab was walkable
-        local edge = get_skin_edge(skin, px, py, pdir)
 
         if edge and (edge.h or edge.liquid) then
           
-          -- FIXME: determine floor_h
+          -- FIXME: use this floor_h
+          local floor_h = h + edge.h
 
           add_wall(sx, sy, sx, sy, dir)
         end
@@ -3243,9 +3260,9 @@ function Areas_layout_with_prefabs(R)
 
     local rot = 0  -- !!!!
 
-    make_walls(S.sx, S.sy, S.sx, S.sy, skin1, rot)
-
     local floor_h = assert(R.entry_h) + 2   -- FIXME
+
+    process_edges(S.sx, S.sy, S.sx, S.sy, skin1, rot, floor_h)
 
     local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, floor_h, pf_dir)
 
@@ -3735,45 +3752,17 @@ function Areas_flesh_out()
   end
 
 
-  local function entry_chunk_and_height(R)
-    local C, floor_h
-
-    if R.entry_conn and R.entry_conn.kind != "teleporter" then
-      C = assert(R.entry_conn.C2)
-
----# if not C.floor_h then stderrf("No floor @ %s in %s\n", C:tostr(), R:tostr()) end
-
-      h = assert(C.floor_h)  ---# or -777)
-
-      assert(C.room == R)
-
-    else
-      -- TODO: if R.purpose == "START" then find_start_chunk
-      --       elseif R.has_teleporter() then find_tele_chunk
-      -- [BETTER: have R.entry_chunk field]
-
---[[
-      assert(#R.chunks > 0)
-
-      repeat
-        C = rand.pick(R.chunks)
-      until not (C.scenic or C.liquid)
-
-      if R.floor_limit then
-        h = rand.sel(50, R.floor_limit[1], R.floor_limit[2])
-      else
-]]
-        h = rand.irange(-2, 2) * 96
-    end
-
-    return C, h
-  end
-
-
   local function initial_height(R)
 -- stderrf("initial_height in %s\n", R:tostr())
 
-    local entry_C, entry_h = entry_chunk_and_height(R)
+    local entry_h
+    
+    if R.entry_conn and R.entry_conn.kind != "teleporter" then
+      assert(R.entry_conn.portal)
+      entry_h = assert(R.entry_conn.portal.floor_h)
+    else
+      entry_h = rand.irange(-2, 2) * 96
+    end
 
     if not R:in_floor_limit(entry_h) then
       gui.debugf("WARNING !!!! entry_h not in floor_limit\n")
@@ -3787,7 +3776,6 @@ function Areas_flesh_out()
     end
 
     R.entry_h = entry_h
-    R.entry_C = entry_C
   end
 
 
@@ -3869,6 +3857,9 @@ end
   local function outgoing_heights(L)
     each D in L.conns do
       if D.L1 == L and D.L2.kind == "hallway" and D.kind != "double_R" then
+        assert(D.portal)
+        assert(D.portal.floor_h)
+
         local hall = D.L2
 
         -- cycles hallways are done after everything else
@@ -3884,11 +3875,8 @@ end
       if D.L1 == L and D.kind != "teleporter" and
          L.kind != "hallway" and D.L2.kind != "hallway"
       then
-        assert(D.C1)
-        assert(D.C2)
-        assert(D.C1.floor_h)
-
-        D.C2.floor_h = D.C1.floor_h
+        assert(D.portal)
+        assert(D.portal.floor_h)
       end
     end
   end
@@ -3918,6 +3906,7 @@ end
     initial_height(R)
     
     if R.kind == "cave" then
+      -- FIXME !!!
       local entry_area = assert(R.entry_C.area)
       R.entry_area = entry_area
       entry_area:set_floor(R.entry_h)

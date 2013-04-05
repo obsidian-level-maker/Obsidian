@@ -672,13 +672,12 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
 
     if LINK and not (LINK.conn and LINK.conn.kind == "double_R") then
 -- stderrf("stair_flow: LINK = \n%s\n\n", table.tostr(LINK, 2))
-      local C3 = LINK.C1
 
-      if P:contains_chunk(C3) then C3 = LINK.C2 end
+      assert(LINK.conn)
 
-      assert(not P:contains_chunk(C3))
-
-      C3.floor_h = f_h
+      if LINK.conn.portal and not LINK.conn.portal.floor_h then
+        LINK.conn.portal.floor_h = f_h
+      end
     end
 
     if did_a_branch and rand.odds(50) and not H.double_fork then
@@ -890,9 +889,10 @@ if H.joiner then stderrf("   JOINER !!!!\n") end
 
   assert(entry_conn)
   assert(entry_conn.K1)
+  assert(entry_conn.portal)
 
   local entry_K = assert(entry_conn.K2)
-  local entry_h = assert(entry_conn.C1.floor_h)
+  local entry_h = assert(entry_conn.portal.floor_h)
   local entry_dir = entry_conn.dir1
 
   if entry_conn.kind == "double_L" or entry_conn.kind == "double_R" then
