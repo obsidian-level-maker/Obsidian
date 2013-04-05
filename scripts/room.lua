@@ -100,6 +100,20 @@ class CLOSET
 }
 
 
+class WALL extends PORTAL
+{
+  kind : keyword  -- "wall"
+}
+
+
+class CORNER extends PORTAL
+{
+  kind : keyword  -- "corner" or "outie"
+
+  (side will be 1, 3, 7 or 9)
+}
+
+
 class FENCE
 {
   kind : keyword   -- "none"   : can allow player to fall off

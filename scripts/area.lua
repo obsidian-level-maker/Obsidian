@@ -2963,14 +2963,25 @@ end
 
 function Areas_layout_with_prefabs(R)
 
-  -- FIXME !!!  very temporary stuff
-
   local skin2 =
    {
     wall  = R.wall_mat
     floor = R.floor_mat or R.wall_mat
     ceil  = R.ceil_mat  or R.wall_mat
   }
+
+
+  local function add_wall(sx1, sy1, sx2, sy2, side)
+    local WALL =
+    {
+      kind = "wall"
+      sx1  = sx1, sy1 = sy1
+      sx2  = sx2, sy2 = sy2
+      side = side
+    }
+
+    table.insert(R.walls, WALL)
+  end
 
 
   local function get_skin_edge(skin, px, py, pdir)
@@ -2982,19 +2993,75 @@ function Areas_layout_with_prefabs(R)
 
     if pdir == 8 then edge = skin["north" .. px] or skin["north"] end
     if pdir == 2 then edge = skin["south" .. px] or skin["south"] end
-    if pdir == 6 then edge = skin[ "east" .. px] or skin[ "east"] end
-    if pdir == 4 then edge = skin[ "west" .. px] or skin[ "west"] end
+    if pdir == 6 then edge = skin[ "east" .. py] or skin[ "east"] end
+    if pdir == 4 then edge = skin[ "west" .. py] or skin[ "west"] end
 
     return edge
   end
 
 
-  local function make_walls(sx1, sy1, sx2, sy2, skin, pf_dir)
+  local function test_prefab(sx1, sy1, sx2, sy2, skin, rot)
+    local pw = skin.seed_w or 1
+    local ph = skin.seed_h or 1
+
+    for dir = 2,8,2 do
+      for sx = sx1, sx2 do
+      for sy = sy1, sy2 do
+
+        -- FIXME: HANDLE ROTATIONS !!!
+        local px = sx - sx1 + 1
+        local py = sy - sy1 + 1
+        local pdir = dir
+
+        -- only interested in the edges
+        if dir == 2 and py > 1  then continue end
+        if dir == 8 and py < ph then continue end
+        if dir == 4 and px > 1  then continue end
+        if dir == 6 and px < pw then continue end
+
+
+        local S = SEEDS[sx][sy]
+        local N = S:neighbor(dir)
+
+        local mode
+
+        if S.portal[dir] then
+          mode = "walk"
+        elseif N and N.room == R then
+          mode = "walk"
+        else
+          mode = "closed"
+        end
+
+
+        local edge = get_skin_edge(skin, px, py, pdir)
+
+        if edge and edge.h then
+          if mode != "walk" then return false end
+        else
+          if mode != "closed" then return false end
+        end
+
+      end -- sx, sy
+      end
+    end -- dir
+
+    return true -- OK
+  end
+
+
+  local function make_walls(sx1, sy1, sx2, sy2, skin, rot)
     if R.kind == "outdoor" then return end
 
     for dir = 2,8,2 do
       for sx = sx1, sx2 do
       for sy = sy1, sy2 do
+
+        -- FIXME: HANDLE ROTATIONS !!!
+        local px = sx - sx1 + 1
+        local py = sy - sy1 + 1
+        local pdir = dir
+
 
         local S = SEEDS[sx][sy]
 
@@ -3006,16 +3073,13 @@ function Areas_layout_with_prefabs(R)
         if N and N.room == R then continue end
 
         -- the room ends here, check if prefab was walkable
-        local px = sx - sx1 + 1
-        local py = sy - sy1 + 1  -- FIXME: HANDLE ROTATIONS !!!
-        local pdir = dir
-
         local edge = get_skin_edge(skin, px, py, pdir)
 
         if edge and (edge.h or edge.liquid) then
+          
+          -- FIXME: determine floor_h
 
-          ADD_WALL(blah, blah)
-
+          add_wall(sx, sy, sx, sy, dir)
         end
 
       end -- sx, sy
@@ -3023,6 +3087,13 @@ function Areas_layout_with_prefabs(R)
     end -- dir
   end
 
+
+  local function find_corners()
+    -- TODO
+  end
+
+
+  -- FIXME !!!  very temporary stuff
 
   local function do_floor(S)
     local env =
@@ -3083,6 +3154,8 @@ function Areas_layout_with_prefabs(R)
   end
 
 
+  ---| Areas_layout_with_prefabs |---
+
   for sx = R.sx1, R.sx2 do
   for sy = R.sy1, R.sy2 do
     local S = SEEDS[sx][sy]
@@ -3093,6 +3166,8 @@ function Areas_layout_with_prefabs(R)
     end
   end
   end
+
+  find_corners()
 end
 
 

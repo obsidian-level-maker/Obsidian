@@ -37,6 +37,7 @@ class SEED
   border : BORDER
 
   portals[dir] : PORTAL
+  walls[dir]   : WALL
 
   chunk : CHUNK  -- connection/important chunk
 
@@ -135,7 +136,7 @@ SECTION_CLASS = { }
 
 
 function SEED_CLASS.new(x, y)
-  local S = { sx=x, sy=y, cost={}, portals={}, chunks={}, v_areas={} }
+  local S = { sx=x, sy=y, cost={}, portals={}, walls={}, chunks={}, v_areas={} }
   table.set_class(S, SEED_CLASS)
   return S
 end
