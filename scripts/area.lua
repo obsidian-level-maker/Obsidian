@@ -2964,7 +2964,7 @@ end
 function Areas_layout_with_prefabs(R)
 
   local skin2 =
-   {
+  {
     wall  = R.wall_mat
     floor = R.floor_mat or R.wall_mat
     ceil  = R.ceil_mat  or R.wall_mat
@@ -3037,7 +3037,7 @@ function Areas_layout_with_prefabs(R)
 
         local mode
 
-        if S.portal[dir] then
+        if S.portals[dir] then
           mode = "walk"
         elseif N and N.room == R then
           mode = "walk"
@@ -3078,7 +3078,7 @@ function Areas_layout_with_prefabs(R)
         local S = SEEDS[sx][sy]
 
         -- ignore portals (entry and exit ways)
-        if S.portal[dir] then continue end
+        if S.portals[dir] then continue end
 
         local N = S:neighbor(dir)
 
@@ -3204,9 +3204,9 @@ function Areas_layout_with_prefabs(R)
 
     local skin1 = Room_pick_skin(env, reqs)
 
-    local pf_dir = 2  -- !!!!
+    local rot = 0  -- !!!!
 
-    make_walls(S.sx, S.sy, S.sx, S.sy, skin1, pf_dir)
+    make_walls(S.sx, S.sy, S.sx, S.sy, skin1, rot)
 
     local floor_h = assert(R.entry_h) + 2   -- FIXME
 
@@ -3263,6 +3263,99 @@ function Areas_layout_with_prefabs(R)
   end
 
   find_corners()
+end
+
+
+
+function Areas_build_walls(R)
+
+  local THICK = 32
+
+  local skin2 =
+  {
+    wall  = R.wall_mat
+    floor = R.floor_mat or R.wall_mat
+    ceil  = R.ceil_mat  or R.wall_mat
+  }
+
+
+  local function do_wall(info)
+
+if rand.odds(50) then return end
+
+    -- determine coords
+    local S1 = SEEDS[info.sx1][info.sy1]
+    local S2 = SEEDS[info.sx2][info.sy2]
+
+    local x1, y1, x2, y2 = S1.x1, S1.y1, S2.x2, S2.y2
+
+    if info.side == 2 then y2 = y1 + THICK end
+    if info.side == 8 then y1 = y2 - THICK end
+    if info.side == 4 then x2 = x1 + THICK end
+    if info.side == 6 then x1 = x2 - THICK end
+
+    -- FIXME: ADJUST FOR CORNER !!!!!
+
+    local floor_h = 0  -- FIXME
+
+    local T = Trans.box_transform(x1, y1, x2, y2, floor_h, info.side)
+
+    local skin1
+
+    -- FIXME: pick prefab properly !!!!
+    skin1 = assert(GAME.SKINS["Wall_plain"])
+
+    Fabricate_at(R, skin1, T, { skin1, skin2 })
+  end
+
+
+  local function do_corner(info)
+    -- determine coords
+    local S = SEEDS[info.sx1][info.sy1]
+
+    local x1, y1 = S.x1, S.y1
+    local x2, y2 = S.x2, S.y2
+
+    if info.side == 1 or info.side == 3 then
+      y2 = y1 + THICK
+    else
+      y1 = y2 - THICK
+    end
+
+    if info.side == 1 or info.side == 7 then
+      x2 = x1 + THICK
+    else
+      x1 = x2 - THICK
+    end
+
+    local dir = geom.LEFT_45[info.side]
+
+    local floor_h = 0  -- FIXME
+
+    local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
+
+    local skin1
+
+    -- FIXME: pick prefab properly !!!!
+    if info.kind == "outie" then
+      skin1 = assert(GAME.SKINS["Corner_curved_outie"])
+    else
+      skin1 = assert(GAME.SKINS["Corner_curved"])
+    end
+
+    Fabricate_at(R, skin1, T, { skin1, skin2 })
+  end
+
+
+  ---| Areas_build_walls |---
+
+  each info in R.walls do
+    do_wall(info)
+  end
+
+  each info in R.corners do
+    do_corner(info)
+  end
 end
 
 
@@ -3875,6 +3968,8 @@ end
   Areas_important_stuff()
 
   Room_decide_fences()
+
+  each R in LEVEL.rooms do Areas_build_walls(R) end
 
 --each R in LEVEL.rooms do decide_windows(R) end
   each R in LEVEL.rooms do ceiling_stuff(R) end
