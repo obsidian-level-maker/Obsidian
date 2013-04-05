@@ -3,6 +3,31 @@ WORK IN PROGRESS
 ================
 
 
+>>>  create PORTALs for all room connections
+
+>>>  create wall and corner information for each room
+     -  ignore PORTALS
+
+
+-  rotate walls/pic/etc by 180 deg
+
+
+!!!  get closets working again
+
+
++  when no goal spots, use a large monster spot
+
+
++  floor/plain_3x3  and  plain_1x1
+
++  ceil/plain_3x3  and  plain_1x1
+
++  column with heart (#36) : place for a prefabbed switch or key or weapon
+
+-  better goal spot picking : c.f. spot_for_wotsit
+
+
+
 DONE:  properly support "big_item" spots
 
 DONE:  very basic "fake" building
@@ -27,6 +52,8 @@ DONE:  very basic "fake" building
 
 !!  Hallways : break 3x1 (etc?) sections into pieces
 
+    WISH: support other sizes
+
 !!  fix cycles
 
 
@@ -44,13 +71,11 @@ minor:  long fat_fences / fake_building : don't span different facades
 WAD Prefabs
 -----------
 
-+  column with heart (#36) : place for a prefabbed switch or key or weapon
-
 WISH:  mirror (horizontally) a 'T' or 'P' shaped hallway piece or big junction
 
-+  x_repeat should be a skin thang
-
 -  do mirroring in prefab space (only really need X)
+
++  x_repeat should be a skin thang
 
 -  IDEA: ability to "pick" the sector at a point / edge / corner and get the height there
 
