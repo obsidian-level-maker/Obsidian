@@ -2,7 +2,7 @@
 -- Curved corner
 --
 
-DOOM.SKINS.Corner_curved =
+DOOM.SKINS.Corner_curved_c =
 {
   file   = "corner/curved.wad"
   shape  = "C"
@@ -16,7 +16,7 @@ DOOM.SKINS.Corner_curved =
 -- Outie corner (270 degrees)
 --
 
-DOOM.SKINS.Corner_curved_outie =
+DOOM.SKINS.Corner_curved_o =
 {
   file   = "corner/curved_o.wad"
   shape  = "O"

@@ -3281,8 +3281,6 @@ function Areas_build_walls(R)
 
   local function do_wall(info)
 
-if rand.odds(50) then return end
-
     -- determine coords
     local S1 = SEEDS[info.sx1][info.sy1]
     local S2 = SEEDS[info.sx2][info.sy2]
@@ -3294,7 +3292,23 @@ if rand.odds(50) then return end
     if info.side == 4 then x2 = x1 + THICK end
     if info.side == 6 then x1 = x2 - THICK end
 
-    -- FIXME: ADJUST FOR CORNER !!!!!
+    -- adjust for nearby corner
+    local dir_L = geom. LEFT[info.side]
+    local dir_R = geom.RIGHT[info.side]
+
+    if info.corner_L and info.corner_L.kind != "outie" then
+      if dir_L == 2 then y1 = y1 + THICK end
+      if dir_L == 8 then y2 = y2 - THICK end
+      if dir_L == 4 then x1 = x1 + THICK end
+      if dir_L == 6 then x2 = x2 - THICK end
+    end
+
+    if info.corner_R and info.corner_R.kind != "outie" then
+      if dir_R == 2 then y1 = y1 + THICK end
+      if dir_R == 8 then y2 = y2 - THICK end
+      if dir_R == 4 then x1 = x1 + THICK end
+      if dir_R == 6 then x2 = x2 - THICK end
+    end
 
     local floor_h = 0  -- FIXME
 
@@ -3338,9 +3352,9 @@ if rand.odds(50) then return end
 
     -- FIXME: pick prefab properly !!!!
     if info.kind == "outie" then
-      skin1 = assert(GAME.SKINS["Corner_curved_outie"])
+      skin1 = assert(GAME.SKINS["Corner_curved_o"])
     else
-      skin1 = assert(GAME.SKINS["Corner_curved"])
+      skin1 = assert(GAME.SKINS["Corner_basic_c"])
     end
 
     Fabricate_at(R, skin1, T, { skin1, skin2 })
@@ -3349,12 +3363,15 @@ if rand.odds(50) then return end
 
   ---| Areas_build_walls |---
 
-  each info in R.walls do
-    do_wall(info)
-  end
+  -- must build corners first as their size can vary, and the walls
+  -- will need to know what size was used.
 
   each info in R.corners do
     do_corner(info)
+  end
+
+  each info in R.walls do
+    do_wall(info)
   end
 end
 
