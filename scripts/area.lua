@@ -506,11 +506,48 @@ function Areas_handle_connections()
   end
 
 
+  local function add_portal(D, sx1, sy1, sx2, sy2, dir)
+
+    local PORTAL =
+    {
+      kind = "walk"
+      sx1  = sx1, sy1 = sy1
+      sx2  = sx2, sy2 = sy2
+      side = dir
+      conn = D
+    }
+
+    -- put in seeds
+
+    for sx = sx1, sx2 do
+    for sy = sy1, sy2 do
+      local S = SEEDS[sx][sy]
+
+      local N = S:neighbor(dir)
+      assert(N)
+
+      S.portals[dir]      = PORTAL
+      N.portals[10 - dir] = PORTAL
+    end
+    end
+  end
+
+
   local function handle_conn(D)
     assert(D.K1 and D.dir1)
     assert(D.K2 and D.dir2)
 
     local is_double = (D.kind == "double_L" or D.kind == "double_R")
+
+
+    -- determine place for portal
+    local sx1, sy1, sx2, sy2 = geom.side_coords(D.dir1,
+                                    D.K1.sx1, D.K1.sy1, D.K1.sx2, D.K1.sy2)
+
+    add_portal(D, sx1, sy1, sx2, sy2, D.dir1)
+
+
+    -- FIXME: REMOVE OLD CRUD....
 
     local C1 = chunk_for_section_side(D.K1, D.dir1, D.K2, is_double)
     local C2 = chunk_for_section_side(D.K2, D.dir2, D.K1, is_double)
