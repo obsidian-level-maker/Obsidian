@@ -1380,17 +1380,19 @@ function Areas_build_walls(R)
     local dir_R = geom.RIGHT[info.side]
 
     if info.corner_L and info.corner_L.kind != "outie" then
-      if dir_L == 2 then y1 = y1 + THICK end
-      if dir_L == 8 then y2 = y2 - THICK end
-      if dir_L == 4 then x1 = x1 + THICK end
-      if dir_L == 6 then x2 = x2 - THICK end
+      local thick = assert(info.corner_L.deep)
+      if dir_L == 2 then y1 = y1 + thick end
+      if dir_L == 8 then y2 = y2 - thick end
+      if dir_L == 4 then x1 = x1 + thick end
+      if dir_L == 6 then x2 = x2 - thick end
     end
 
     if info.corner_R and info.corner_R.kind != "outie" then
-      if dir_R == 2 then y1 = y1 + THICK end
-      if dir_R == 8 then y2 = y2 - THICK end
-      if dir_R == 4 then x1 = x1 + THICK end
-      if dir_R == 6 then x2 = x2 - THICK end
+      local thick = assert(info.corner_R.deep)
+      if dir_R == 2 then y1 = y1 + thick end
+      if dir_R == 8 then y2 = y2 - thick end
+      if dir_R == 4 then x1 = x1 + thick end
+      if dir_R == 6 then x2 = x2 - thick end
     end
 
     local floor_h = 0  -- FIXME
@@ -1400,7 +1402,7 @@ function Areas_build_walls(R)
     local skin1
 
     -- FIXME: pick prefab properly !!!!
-    skin1 = assert(GAME.SKINS["Wall_plain"])
+    skin1 = assert(GAME.SKINS["Pic_Carve"])
 
     Fabricate_at(R, skin1, T, { skin1, skin2 })
   end
@@ -1413,16 +1415,18 @@ function Areas_build_walls(R)
     local x1, y1 = S.x1, S.y1
     local x2, y2 = S.x2, S.y2
 
+    info.deep = (info.kind == "outie" ? 1 ; 2) * THICK;
+
     if info.side == 1 or info.side == 3 then
-      y2 = y1 + THICK
+      y2 = y1 + info.deep
     else
-      y1 = y2 - THICK
+      y1 = y2 - info.deep
     end
 
     if info.side == 1 or info.side == 7 then
-      x2 = x1 + THICK
+      x2 = x1 + info.deep
     else
-      x1 = x2 - THICK
+      x1 = x2 - info.deep
     end
 
     local dir = geom.LEFT_45[info.side]
@@ -1437,7 +1441,7 @@ function Areas_build_walls(R)
     if info.kind == "outie" then
       skin1 = assert(GAME.SKINS["Corner_curved_o"])
     else
-      skin1 = assert(GAME.SKINS["Corner_basic_c"])
+      skin1 = assert(GAME.SKINS["Corner_support"])
     end
 
     Fabricate_at(R, skin1, T, { skin1, skin2 })
