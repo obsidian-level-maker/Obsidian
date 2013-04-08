@@ -10,5 +10,7 @@ DOOM.SKINS.Corner_support =
 
   bound_z1 = 0
   bound_z2 = 128
+
+  tex_SUPPORT2 = "SUPPORT3"
 }
 
