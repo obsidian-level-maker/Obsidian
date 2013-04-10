@@ -176,6 +176,14 @@ function table.kill_elem(t, v)
   return false
 end
 
+function table.kill_matching(t, predicate)
+  for idx = #t, 1, -1 do
+    if predicate(t[idx]) then
+      table.remove(t, idx)
+    end
+  end
+end
+
 function table.add_unique(t, v)
   if not table.has_elem(t, v) then
     table.insert(t, v)
