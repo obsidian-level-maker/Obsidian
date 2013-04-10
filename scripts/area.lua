@@ -1029,8 +1029,15 @@ function Areas_important_stuff()
 
 
   local function clean_mon_spots(R)
-    -- remove any large monster spots which we used
-    table.kill_matching(R.mon_spots, function(A) return A.used end)
+    -- move any large monster spots which we used --> R.goal_spots
+    for idx = #R.mon_spots, 1, -1 do
+      local spot = R.mon_spots[idx]
+
+      if spot.used then
+        table.remove(R.mon_spots, idx)
+        table.insert(R.goal_spots, spot)
+      end
+    end
   end
 
 
