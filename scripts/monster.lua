@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008-2012 Andrew Apted
+--  Copyright (C) 2008-2013 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -1526,8 +1526,7 @@ function Monsters_in_room(L)
   end
 
 
-  local function split_spot(index, r, near_to)
-    local spot = table.remove(L.mon_spots, index)
+  local function split_spot(spot, r, near_to)
 
     local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
 
@@ -1594,7 +1593,7 @@ function Monsters_in_room(L)
 
     local poss_spots = {}
 
-    for index,spot in ipairs(L.mon_spots) do
+    each spot in L.mon_spots do
       local fit_num = mon_fits(mon, spot)
       if fit_num > 0 then
 
@@ -1606,7 +1605,7 @@ function Monsters_in_room(L)
 
         -- tie breeker
         spot.find_cost  = spot.find_cost + gui.random() * 16
-        spot.find_index = index
+        spot.find_index = _index
 
         table.insert(poss_spots, spot)
       end
@@ -1619,7 +1618,9 @@ function Monsters_in_room(L)
     local result = table.pick_best(poss_spots,
         function(A, B) return A.find_cost < B.find_cost end)
   
-    return split_spot(result.find_index, info.r, near_to)
+    local spot = table.remove(L.mon_spots, result.find_index)
+
+    return split_spot(spot, info.r, near_to)
   end
 
 

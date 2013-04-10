@@ -752,7 +752,10 @@ end
 function Areas_important_stuff()
 
   -- this places the "important" stuff (keys, switches, teleporters)
-  -- into the rooms.
+  -- into the rooms.  It requires "goal spots".
+  --
+  -- NOTE: closets for switches, teleporters (etc) are done elsewhere.
+  --
 
   local function OLD__update_distances(R)
     -- in each unallocated seed in a room, compute the distance to
@@ -825,6 +828,13 @@ function Areas_important_stuff()
 
     each spot in R.goal_spots do
       if not spot.used then
+        table.insert(free_spots, spot)
+      end
+    end
+
+    -- can also used large monster spots...
+    each spot in R.mon_spots do
+      if not spot.used and (spot.x2 - spot.x1) >= 64 then
         table.insert(free_spots, spot)
       end
     end
@@ -1018,11 +1028,18 @@ function Areas_important_stuff()
   end
 
 
+  local function clean_mon_spots(R)
+    -- remove any large monster spots which we used
+    table.kill_matching(R.mon_spots, function(A) return A.used end)
+  end
+
+
   ---| Areas_important_stuff |---
 
   each R in LEVEL.rooms do
     place_importants(R)
     extra_stuff(R)
+    clean_mon_spots(R)
   end
 end
 
