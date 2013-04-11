@@ -757,67 +757,40 @@ function Areas_important_stuff()
   -- NOTE: closets for switches, teleporters (etc) are done elsewhere.
   --
 
-  local function OLD__update_distances(R)
-    -- in each unallocated seed in a room, compute the distance to
-    -- the nearest allocated seed, and distance from a wall.
-    
-    -- Note: with teleporters it is possible that none of the seeds
-    -- gets a 'chunk_dist' value.
+  local DEF_DIST = (SEED_SIZE * 7)
 
-    local function init_dists()
-      for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
-        local S = SEEDS[sx][sy]
-        if S.room == R then
-          
-          -- ignore certain chunks [crossovers]
-          if S.chunk and not S.chunk.crossover_hall then
-            S.chunk_dist = 0
-          else
-            S.chunk_dist = nil
-          end
 
-          if S.near_wall then
-            S.wall_dist = 0
-          else
-            S.wall_dist = nil
-          end
-        
-          S.dist_random = gui.random()
-        end
-      end end
-    end
+  local function nearest_wall(T)
+    -- FIXME
+  end
 
-    local function spread_dists()
-      local changed = false
 
-      for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
-        local S = SEEDS[sx][sy]
-        if S.room == R then
+  local function nearest_portal(T)
+    -- FIXME
+  end
 
-          for dir = 2,8,2 do
-            if S:same_room(dir) then
-              local N = S:neighbor(dir)
 
-              if S.chunk_dist and S.chunk_dist + 1 < (N.chunk_dist or 999) then
-                N.chunk_dist = S.chunk_dist + 1
-                changed  = true
-              end
+  local function nearest_goal(T)
+    -- FIXME
+  end
 
-              if S.wall_dist and S.wall_dist + 1 < (N.wall_dist or 999) then
-                N.wall_dist = S.wall_dist + 1
-                changed  = true
-              end
-            end
-          end
-        end
-      end end
 
-      return changed
-    end
+  local function evaluate_spot(spot)
+    -- Factors we take into account:
+    --   1. distance from walls
+    --   2. distance from entrance / exits
+    --   3. distance from other goals
 
-    init_dists()
+    local   wall_dist = nearest_wall(spot)   or DEF_DIST
+    local portal_dist = nearest_portal(spot) or DEF_DIST
+    local   goal_dist = nearest_goal(spot)   or DEF_DIST
 
-    while spread_dists() do end
+    --[[ TODO: in caves we want the spot to be away from the edges of the room
+    if R.kind == "cave" or rand.odds(5) then
+      wall_dist = wall_dist * 6
+    end  --]]
+
+    return portal_dist * 4 + goal_dist * 2 + wall_dist / 3 + gui.random()
   end
 
 
@@ -832,58 +805,31 @@ function Areas_important_stuff()
       end
     end
 
-    -- can also used large monster spots...
+    -- can also use large monster spots...
     each spot in R.mon_spots do
       if not spot.used and (spot.x2 - spot.x1) >= 64 then
         table.insert(free_spots, spot)
       end
     end
 
-    -- FIXME: evaluate spots  [distance from ...]
-
+    -- disaster!
     if table.empty(free_spots) then
       error("NO SPOT FOR WOTSIT")
     end
 
-    local G = free_spots[1]
-    
+
+    each spot in free_spots do
+      spot.cost = evaluate_spot(spot)
+    end
+
+    local G = table.pick_best(free_spots, function(A, B) return A.cost < B.cost end)
+
     G.used = true
     G.content = {}
 
+    table.insert(R.goals, G)
+
     return G
-
-
---[[
-    local spot
-    local best_dist = -9e9
-
-    -- in caves we want the spot to be away from the edges of the room
-    local wall_factor = (R.kind == "cave" or rand.odds(5) ? 15.2 ; 2.15)
-
-    for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
-      local S = SEEDS[sx][sy]
-
-      if S.room == R and not S.chunk then
-        local dist = (S.chunk_dist or 0) * 7 + (S.wall_dist or 0) * wall_factor + S.dist_random
-
-        if dist > best_dist then
-          spot = S
-          best_dist = dist
-        end
-      end
-    end end
-
-    -- FIXME !!!! try to use an existing chunk
-    if not spot then error("NO SPOT FOR WOTSIT") end
-
-    -- create chunk
-
-    local C = R:alloc_chunk(spot.sx, spot.sy, spot.sx, spot.sy)
-
-    C.foobage = "important"
-
-    return C
---]]
   end
 
 
@@ -1005,6 +951,8 @@ function Areas_important_stuff()
 
 
   local function place_importants(R)
+    R.goals = {}
+
     if R.purpose then add_purpose(R) end
 
     if R:has_teleporter() then add_teleporter(R) end
@@ -2216,10 +2164,10 @@ function Areas_kick_the_goals(L)
 
   ---| Areas_kick_the_goals |---
 
-  each G in L.goal_spots do
-    if G.content then
-      do_content(G)
-    end
+  if not L.goals then return end
+
+  each G in L.goals do
+    do_content(G)
   end
 end
 

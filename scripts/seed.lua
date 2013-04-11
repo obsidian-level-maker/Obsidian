@@ -163,7 +163,7 @@ end
 
 
 function SEED_CLASS.mid_point(S)
-  return int((S.x1 + S.x2) / 2), int((S.y1 + S.y2) / 2)
+  return geom.box_mid(S.x1, S.y1, S.x2, S.y2)
 end
 
 
@@ -235,10 +235,24 @@ function Seed_init(map_W, map_H, free_W, free_H)
 end
 
 
-
 function Seed_valid(x, y)
   return (x >= 1 and x <= SEED_W) and
          (y >= 1 and y <= SEED_H)
+end
+
+
+function Seed_group_edge_coords(P, dir, thick)
+  local x1 = SEEDS[P.sx1][P.sy1].x1
+  local y1 = SEEDS[P.sx1][P.sy1].y1
+  local x2 = SEEDS[P.sx2][P.sy2].x2
+  local y2 = SEEDS[P.sx2][P.sy2].y2
+
+  if dir == 2 then y2 = y1 + thick end
+  if dir == 8 then y1 = y2 - thick end
+  if dir == 4 then x2 = x1 + thick end
+  if dir == 6 then x1 = x2 - thick end
+
+  return x1, y1, x2, y2
 end
 
 
@@ -583,4 +597,5 @@ function SECTION_CLASS.eval_exit(K, dir)
   -- all other cases
   return 2 + conn_d + rand
 end
+
 
