@@ -1489,19 +1489,6 @@ function Areas_flesh_out()
   local pass_h = GAME.ENTITIES.player1.h + (PARAM.step_height or 16) + 8
 
 
-  local function expand_chunks(R)
-    -- so far most chunks are only a single seed in size.
-    -- this function can make them bigger, for reasons like:
-    --   (a) to make a centered doorway
-    --   (b) use a complex pedestal for a key or switch
-    --   etc...
-
-    -- Note: only applies to walkable chunks
-
-    -- TODO
-  end
-
-
   local function free_seeds_along_side(R, side)
     local seeds = {}
 
@@ -1806,6 +1793,8 @@ function Areas_flesh_out()
   local function floor_stuff(R)
 -- stderrf("AREA floor_stuff @ %s\n", R:tostr())
 
+    R:compute_wall_dists()
+
     R.areas = {}
 
     if R.kind == "cave" then
@@ -1914,7 +1903,6 @@ function Areas_flesh_out()
 
   ---| Areas_flesh_out |---
 
-  each R in LEVEL.rooms do expand_chunks(R) end
   each R in LEVEL.rooms do floor_stuff(R) end
   each R in LEVEL.rooms do outgoing_cycles(R) end
 

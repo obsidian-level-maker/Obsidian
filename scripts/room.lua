@@ -614,6 +614,56 @@ function ROOM_CLASS.random_seed(R)
 end
 
 
+function ROOM_CLASS.init_wall_dists(R)
+  for sx = R.sx1, R.sx2 do
+  for sy = R.sy1, R.sy2 do
+    local S = SEEDS[sx][sy]
+    if S.room != R then continue end
+
+    for dir = 2,8,2 do
+      if not S:same_room(dir) then
+        S.wall_dist = 0.5
+      end
+    end
+
+  end -- sx, sy
+  end
+end
+
+
+function ROOM_CLASS.spread_wall_dists(R)
+  local changed = false
+
+  for sx = R.sx1, R.sx2 do
+  for sy = R.sy1, R.sy2 do
+    local S = SEEDS[sx][sy]
+    if S.room != R then continue end
+
+    for dir = 2,8,2 do
+      if S:same_room(dir) then
+        local N = S:neighbor(dir)
+
+        if S.wall_dist and S.wall_dist + 1 < (N.wall_dist or 999) then
+          N.wall_dist = S.wall_dist + 1
+          changed  = true
+        end
+      end
+    end
+
+  end  -- sx, sy
+  end
+
+  return changed
+end
+
+
+function ROOM_CLASS.compute_wall_dists(R)
+  R:init_wall_dists()
+
+  while R:spread_wall_dists() do end
+end
+
+
 function ROOM_CLASS.build(R)
   if R.kind == "outdoor" then
     local sky_h = assert(R.sky_group.h)

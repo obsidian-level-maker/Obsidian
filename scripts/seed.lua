@@ -47,6 +47,9 @@ class SEED
 
   is_walk  -- TRUE if seed must be remain walkable
            -- (i.e. cannot use for void / cage / liquid)
+
+  wall_dist : number  -- roughly how far away the edge of the room is
+                      -- (in seeds).  applies to all room kinds.
 }
 
 
