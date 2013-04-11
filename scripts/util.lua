@@ -602,7 +602,7 @@ geom.DIAGONALS = { 1,3,7,9 }
 
 
 function geom.dist(x1,y1, x2,y2)
-  return math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )
+  return math.sqrt( (x1-x2) * (x1-x2) + (y1-y2) * (y1-y2) )
 end
 
 function geom.perp_dist(x, y, sx,sy, ex,ey)
@@ -770,7 +770,7 @@ end
 
 
 function geom.box_mid(x1,y1, x2,y2)
-  return int((x1+x2)/2), int((y1+y2)/2)
+  return int((x1 + x2) / 2), int((y1 + y2) / 2)
 end
 
 function geom.box_size(x1,y1, x2,y2)
@@ -779,6 +779,30 @@ end
 
 function geom.group_size(x1,y1, x2,y2)
   return x2 - x1 + 1, y2 - y1 + 1
+end
+
+function geom.box_dist(ax1,ay1,ax2,ay2, bx1,by1,bx2,by2)
+  -- support 'B' being just a point
+  if not bx2 then
+    bx2, by2 = bx1, by1
+  end
+
+  local x_dist = 0
+  local y_dist = 0
+
+  if bx1 > ax2 then
+    x_dist = bx1 - ax2
+  elseif ax1 > bx2 then
+    x_dist = ax1 - bx2
+  end
+
+  if by1 > ay2 then
+    y_dist = by1 - ay2
+  elseif ay1 > by2 then
+    y_dist = ay1 - by2
+  end
+
+  return geom.dist(x_dist, y_dist)
 end
 
 function geom.inside_box(x,y, bx1,by1, bx2,by2)
