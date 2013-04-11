@@ -749,7 +749,7 @@ end
 
 
 
-function Areas_important_stuff()
+function Areas_place_importants(R)
 
   -- this places the "important" stuff (keys, switches, teleporters)
   -- into the rooms.  It requires "goal spots".
@@ -757,21 +757,59 @@ function Areas_important_stuff()
   -- NOTE: closets for switches, teleporters (etc) are done elsewhere.
   --
 
-  local DEF_DIST = (SEED_SIZE * 7)
-
-
   local function nearest_wall(T)
-    -- FIXME
+    local dist
+
+    each wall in R.walls do
+      local d = geom.box_dist(T.x1, T.y1, T.x2, T.y2,
+                              Seed_group_edge_coords(wall, wall.side, 32))
+      d = d / SEED_SIZE
+      if not dist or d < dist then
+        dist = d
+      end
+    end
+
+stderrf("nearest_wall : %d\n", dist or -77)
+    return dist
   end
 
 
   local function nearest_portal(T)
-    -- FIXME
+    local dist
+
+    each D in R.conns do
+      if D.portal then
+local bx1, by1, bx2, by2 =
+Seed_group_edge_coords(D.portal, D.portal.side, 0)
+stderrf("(%s %s) .. (%s %s)\n", tostring(bx1), tostring(by1), tostring(bx2), tostring(by2))
+        local d = geom.box_dist(T.x1, T.y1, T.x2, T.y2,
+                                Seed_group_edge_coords(D.portal, D.portal.side, 0))
+        d = d / SEED_SIZE
+        if not dist or d < dist then
+          dist = d
+        end
+      end
+    end
+
+stderrf("nearest_portal : %d\n", dist or -77)
+    return dist
   end
 
 
   local function nearest_goal(T)
-    -- FIXME
+    local dist
+
+    each G in R.goals do
+      local d = geom.box_dist(T.x1, T.y1, T.x2, T.y2,
+                              G.x1, G.y1, G.x2, G.y2)
+      d = d / SEED_SIZE
+      if not dist or d < dist then
+        dist = d
+      end
+    end
+
+stderrf("nearest_goal : %d\n", dist or -77)
+    return dist
   end
 
 
@@ -781,20 +819,27 @@ function Areas_important_stuff()
     --   2. distance from entrance / exits
     --   3. distance from other goals
 
-    local   wall_dist = nearest_wall(spot)   or DEF_DIST
-    local portal_dist = nearest_portal(spot) or DEF_DIST
-    local   goal_dist = nearest_goal(spot)   or DEF_DIST
+    local   wall_dist = nearest_wall(spot)   or 10
+    local portal_dist = nearest_portal(spot) or 10
+    local   goal_dist = nearest_goal(spot)   or 10
 
     --[[ TODO: in caves we want the spot to be away from the edges of the room
     if R.kind == "cave" or rand.odds(5) then
       wall_dist = wall_dist * 6
     end  --]]
 
-    return portal_dist * 4 + goal_dist * 2 + wall_dist / 3 + gui.random()
+    local score = portal_dist * 7 + goal_dist * 9 + wall_dist
+
+    -- prefer not to use very large monster spots
+    if spot.kind == "monster" and (spot.x2 - spot.x1) >= 100 then
+      score = score - 123
+    end
+ 
+    return score + gui.random()
   end
 
 
-  local function spot_for_wotsit(R)
+  local function spot_for_wotsit()
     -- update_distances(R)
 
     local free_spots = {}
@@ -819,10 +864,10 @@ function Areas_important_stuff()
 
 
     each spot in free_spots do
-      spot.cost = evaluate_spot(spot)
+      spot.score = evaluate_spot(spot)
     end
 
-    local G = table.pick_best(free_spots, function(A, B) return A.cost < B.cost end)
+    local G = table.pick_best(free_spots, function(A, B) return A.score > B.score end)
 
     G.used = true
     G.content = {}
@@ -836,7 +881,7 @@ function Areas_important_stuff()
   local function add_purpose(R)
     if R.purpose_is_done then return end
 
-    local G = spot_for_wotsit(R)
+    local G = spot_for_wotsit()
 
     G.content.kind = R.purpose
 
@@ -900,7 +945,7 @@ function Areas_important_stuff()
 
 
   local function add_weapon(R, weapon)
-    local G = spot_for_wotsit(R)
+    local G = spot_for_wotsit()
 
     G.content.kind = "WEAPON"
     G.content.weapon = weapon
@@ -912,7 +957,7 @@ function Areas_important_stuff()
 
     local conn = R:get_teleport_conn()
     
-    local G = spot_for_wotsit(R)
+    local G = spot_for_wotsit()
 
     G.content.kind = "TELEPORTER"
     G.content.teleporter = conn  -- FIXME?
@@ -941,7 +986,7 @@ function Areas_important_stuff()
       return
     end
 
-    local G = spot_for_wotsit(R)
+    local G = spot_for_wotsit()
     
     G.content.kind = "GATE"
     G.content.source_id = link.dest.local_map
@@ -950,7 +995,7 @@ function Areas_important_stuff()
   end
 
 
-  local function place_importants(R)
+  local function place_importants()
     R.goals = {}
 
     if R.purpose then add_purpose(R) end
@@ -965,7 +1010,7 @@ function Areas_important_stuff()
   end
 
 
-  local function extra_stuff(R)
+  local function extra_stuff()
 
     -- this function is meant to ensure good traversibility in a room.
     -- e.g. put a nice item in sections without any connections or
@@ -976,7 +1021,7 @@ function Areas_important_stuff()
   end
 
 
-  local function clean_mon_spots(R)
+  local function clean_mon_spots()
     -- move any large monster spots which we used --> R.goal_spots
     for idx = #R.mon_spots, 1, -1 do
       local spot = R.mon_spots[idx]
@@ -989,13 +1034,11 @@ function Areas_important_stuff()
   end
 
 
-  ---| Areas_important_stuff |---
+  ---| Areas_place_importants |---
 
-  each R in LEVEL.rooms do
-    place_importants(R)
-    extra_stuff(R)
-    clean_mon_spots(R)
-  end
+  place_importants()
+  extra_stuff()
+  clean_mon_spots()
 end
 
 
@@ -1875,7 +1918,7 @@ function Areas_flesh_out()
   each R in LEVEL.rooms do floor_stuff(R) end
   each R in LEVEL.rooms do outgoing_cycles(R) end
 
-  Areas_important_stuff()
+  each R in LEVEL.rooms do Areas_place_importants(R) end
 
   Room_decide_fences()
 
