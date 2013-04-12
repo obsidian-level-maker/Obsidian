@@ -507,36 +507,6 @@ function ROOM_CLASS.has_walk(R, sx1, sy1, sx2, sy2)
 end
 
 
-function ROOM_CLASS.can_alloc_chunk(R, sx1, sy1, sx2, sy2)
-  if sx1 < R.sx1 or sx2 > R.sx2 then return false end
-  if sy1 < R.sy1 or sy2 > R.sy2 then return false end
- 
-  for sx = sx1, sx2 do for sy = sy1, sy2 do
-    local S = SEEDS[sx][sy]
-    if S.room != R then return false end
-    if S.chunk or S.void then return false end
-  end end
-
-  return true
-end
-
-
-function ROOM_CLASS.alloc_chunk(R, sx1, sy1, sx2, sy2)
-  assert(R.sx1 <= sx1 and sx1 <= sx2 and sx2 <= R.sx2)
-  assert(R.sy1 <= sy1 and sy1 <= sy2 and sy2 <= R.sy2)
-
-  local C = CHUNK_CLASS.new(sx1, sy1, sx2, sy2)
-
-  C.room = R
-
-  table.insert(R.chunks, C)
-
-  C:install()
-
-  return C
-end
-
-
 function ROOM_CLASS.straddles_concave_corner(R, sx1, sy1, sx2, sy2)
   -- assumes all seeds in the range belong to this room
 

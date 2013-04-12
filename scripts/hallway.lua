@@ -298,36 +298,6 @@ end
 --------------------------------------------------------------------
 
 
--- FIXME: OLD CRUD
-function HALLWAY_CLASS.can_alloc_chunk(H, sx1, sy1, sx2, sy2)
-  for sx = sx1,sx2 do for sy = sy1,sy2 do
-    local S = SEEDS[sx][sy]
-    if S.chunk then return false end
-  end end
-
-  return true
-end
-
-
--- FIXME: OLD CRUD
-function HALLWAY_CLASS.alloc_chunk(H, K, sx1, sy1, sx2, sy2)
-  assert(K.sx1 <= sx1 and sx1 <= sx2 and sx2 <= K.sx2)
-  assert(K.sy1 <= sy1 and sy1 <= sy2 and sy2 <= K.sy2)
-
-  local C = CHUNK_CLASS.new(sx1, sy1, sx2, sy2)
-
-  C.hall = H
-  C.section = K
-  C.hall_link = {}
-
----###  table.insert(H.chunks, C)
----###  C:install()
-  C:set_coords()
-
-  return C
-end
-
-
 function HALLWAY_CLASS.is_side_connected(H, K, dir)
   -- returns true if the given side of the section connects to another
   -- section in this hallway.
