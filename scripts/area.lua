@@ -758,19 +758,14 @@ function Areas_place_importants(R)
   --
 
   local function nearest_wall(T)
-    local dist
+    -- get wall_dist from seed containing the spot
+    
+    local S = Seed_from_coord(T.x1 + 32, T.y1 + 32)
 
-    each wall in R.walls do
-      local d = geom.box_dist(T.x1, T.y1, T.x2, T.y2,
-                              Seed_group_edge_coords(wall, wall.side, 32))
-      d = d / SEED_SIZE
-      if not dist or d < dist then
-        dist = d
-      end
-    end
+    -- sanity check
+    if S.room != R then return nil end
 
-stderrf("nearest_wall : %d\n", dist or -77)
-    return dist
+    return assert(S.wall_dist)
   end
 
 
@@ -779,9 +774,6 @@ stderrf("nearest_wall : %d\n", dist or -77)
 
     each D in R.conns do
       if D.portal then
-local bx1, by1, bx2, by2 =
-Seed_group_edge_coords(D.portal, D.portal.side, 0)
-stderrf("(%s %s) .. (%s %s)\n", tostring(bx1), tostring(by1), tostring(bx2), tostring(by2))
         local d = geom.box_dist(T.x1, T.y1, T.x2, T.y2,
                                 Seed_group_edge_coords(D.portal, D.portal.side, 0))
         d = d / SEED_SIZE
@@ -791,7 +783,6 @@ stderrf("(%s %s) .. (%s %s)\n", tostring(bx1), tostring(by1), tostring(bx2), tos
       end
     end
 
-stderrf("nearest_portal : %d\n", dist or -77)
     return dist
   end
 
@@ -808,7 +799,6 @@ stderrf("nearest_portal : %d\n", dist or -77)
       end
     end
 
-stderrf("nearest_goal : %d\n", dist or -77)
     return dist
   end
 
@@ -828,20 +818,32 @@ stderrf("nearest_goal : %d\n", dist or -77)
       wall_dist = wall_dist * 6
     end  --]]
 
-    local score = portal_dist * 7 + goal_dist * 9 + wall_dist
+    -- combine portal_dist and goal_dist
+    goal_dist = math.min(goal_dist, portal_dist * 0.7)
+
+    local score = goal_dist * 5 + wall_dist
 
     -- prefer not to use very large monster spots
-    if spot.kind == "monster" and (spot.x2 - spot.x1) >= 100 then
-      score = score - 123
+    if spot.kind == "monster" and (spot.x2 - spot.x1) >= 188 then
+      score = score - 100
     end
  
-    return score + gui.random()
+    -- tie breaker
+    score = score + 2.1 * gui.random() ^ 2
+
+--[[
+if R.purpose == "START" then
+local S = Seed_from_coord(spot.x1 + 32, spot.y1 + 32)
+gui.printf("  %s : wall:%1.1f portal:%1.1f goal:%1.1f --> score:%1.2f\n",
+    S:tostr(), wall_dist, portal_dist, goal_dist, score)
+end
+--]]
+
+    return score
   end
 
 
   local function spot_for_wotsit()
-    -- update_distances(R)
-
     local free_spots = {}
 
     each spot in R.goal_spots do
@@ -856,6 +858,8 @@ stderrf("nearest_goal : %d\n", dist or -77)
         table.insert(free_spots, spot)
       end
     end
+
+--## gui.printf("spot_for_wotsit....  %d spots\n", #free_spots)
 
     -- disaster!
     if table.empty(free_spots) then
