@@ -61,6 +61,15 @@ ______________________________________________________________________
   LEVEL STUFF
 ----------------------------------------------
 
+WAD Prefabs
+
+-  mirror (horizontally) a 'T' or 'P' shaped hallway piece or big junction
+
+-  do mirroring in prefab space (only really need X)
+
+-  x_repeat
+
+
 New Starting Logic
 
 -  three main kinds:
@@ -82,6 +91,30 @@ New Starting Logic
             to get moving to fight or avoid the monsters scattered
             around.  There is usually some useful pickups nearby,
             especially a starting weapon. 
+
+
+V5 Stuff:
+
++  Need logic to decide how to light up a room (windows vs wall
+   lights vs ceilings lights etc).
+
++  borders / fakers : support 'z_fit'
+
+-  fix double halls
+
+-  fake building with a fake window (or two)
+
+-  fake building with torches (esp. for dark maps)
+
+-  fake building and fences : support long ones, also deep ones
+   - also: allow a 'group' field to match border_group
+
+-  a way to prevent repeating the same prefab in a row
+
+-  support 1x3 hallway pieces (and other sizes)
+
+?  have "hallway arches", specified in hallway groups, used in
+   indoor rooms where the hallway meets the room.
 
 
 PATTERN AREA LOGIC:

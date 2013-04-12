@@ -9,104 +9,28 @@ WORK IN PROGRESS
      -  ignore PORTALS
 
 
--  rotate walls/pic/etc by 180 deg
-
+!!!!  get caves working again
 
 !!!  get closets working again
 
 
-+  when no goal spots, use a large monster spot
-
-
-+  floor/plain_3x3  and  plain_1x1
-
-+  ceil/plain_3x3  and  plain_1x1
-
-+  column with heart (#36) : place for a prefabbed switch or key or weapon
-
--  better goal spot picking : c.f. spot_for_wotsit
-
-
-
-DONE:  properly support "big_item" spots
-
-DONE:  very basic "fake" building
-
--  fake building with a fake window (or two)
-
--  fake building with torches (esp. for dark maps)
-
-
--  fake building and fences : support long ones, also deep ones
-   - also: allow a 'group' field to match border_group
-
--  borders / fakers : support 'z_fit'
-
-
-
->>  get 'height' value into 'env' pick_skin() tables
-
->>>  stairs / lift : standardize height stuff
-
-
-
-!!  Hallways : break 3x1 (etc?) sections into pieces
-
-    WISH: support other sizes
+!!  Hallways : break 3x1 (etc) sections into pieces
 
 !!  fix cycles
 
 
--  fix double halls
-
--  fix street mode
+>>  get 'height' value into 'env' pick_skin() tables
 
 
--  a way to prevent repeating the same prefab in a row
+!!  fix street mode
 
-minor:  long fat_fences / fake_building : don't span different facades
-
-
-
-WAD Prefabs
------------
-
-WISH:  mirror (horizontally) a 'T' or 'P' shaped hallway piece or big junction
-
--  do mirroring in prefab space (only really need X)
-
-+  x_repeat should be a skin thang
-
--  IDEA: ability to "pick" the sector at a point / edge / corner and get the height there
-
-   OR : use tag numbers for "main floor", "neighbor floor" (etc)
-        and can set that sector to a certain material (floor, floor2, etc)
-
-        102 = south (main floor)
-        108 = north (neighbor floor)
-        104 = east
-        106 = west
-
-
-
-========================================================================
-
-
-!!  Street mode : if one room surrounds another one, the "streets"
+!!  street mode : if one room surrounds another one, the "streets"
     between them are isolated from the rest, leading to this error:
 
       Script Error: Failed to find any height in grid neighbors
 
-    --> detect this, make multiple rooms
+    --> detect this, make multiple "street" rooms
 
 
 -  FAT_CAGE_PILLAR
-
-
-+  Need logic to decide how to light up a room (windows vs wall
-   lights vs ceilings lights etc).
-
-?  have "hallway arches", specified in hallway groups, used in
-   indoor rooms where the hallway meets the room.
-
 
