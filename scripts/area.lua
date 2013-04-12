@@ -757,9 +757,102 @@ function Areas_place_importants(R)
   -- NOTE: closets for switches, teleporters (etc) are done elsewhere.
   --
 
+  local function dir_for_spot(T)
+    local S = Seed_from_coord(T.x1 + 32, T.y1 + 32)
+
+    local best_dir
+    local best_dist
+
+    for dir = 2,8,2 do
+      local dist = R:dist_to_edge(S, dir)
+
+      dist = dist + gui.random() / 10
+
+      if not best_dist or dist > best_dist then
+        best_dir  = dir
+        best_dist = dist
+      end
+    end
+
+    return best_dir
+
+  --[[ OLD STUFF
+    local R = C.room
+
+    -- check which sides of chunk are against a wall or liquid
+    local edges = {}
+
+    local num_wall = 0
+    local num_same = 0
+    local num_diff = 0
+    local num_liq  = 0
+
+    for dir = 2,8,2 do
+      edges[dir] = C:classify_edge(dir)
+
+          if edges[dir] == "wall"   then num_wall = num_wall + 1
+      elseif edges[dir] == "same"   then num_same = num_same + 1
+      elseif edges[dir] == "diff"   then num_diff = num_diff + 1
+      elseif edges[dir] == "liquid" then num_liq  = num_liq  + 1
+      end
+    end
+
+    -- prefer direction which is in the same area
+    if num_same == 1 then
+      for dir = 2,8,2 do
+        if edges[dir] == "same" then return dir end
+      end
+    end
+
+    if num_same == 0 and num_diff == 1 then
+      for dir = 2,8,2 do
+        if edges[dir] == "diff" then return dir end
+      end
+    end
+
+    -- handle corners
+    local hemmed
+
+    if edges[4] == "wall" and edges[6] == "wall" then hemmed = true end
+    if edges[2] == "wall" and edges[8] == "wall" then hemmed = true end
+
+    if num_wall == 2 and not hemmed and num_liq == 0 then
+      if R.sh > R.sw then
+        return (edges[2] == "wall" ? 8 ; 2)
+      else
+        return (edges[4] == "wall" ? 6 ; 4)
+      end
+    end
+
+    -- find a wall to face away from
+    for dir = 2,8,2 do
+      if edges[10 - dir] == "wall" and edges[dir] == "same" then
+        return dir
+      end
+    end
+
+    -- otherwise use position in room
+    local dir1 = ((C.sx1 + C.sx2) < (R.sx1 + R.sx2) ? 6 ; 4)
+    local dir2 = ((C.sy1 + C.sy2) < (R.sy1 + R.sy2) ? 8 ; 2)
+
+    if R.sh > R.sw then dir1, dir2 = dir2, dir1 end
+
+    if edges[dir1] != "liquid" then return dir1 end
+    if edges[dir2] != "liquid" then return dir2 end
+
+    -- find any direction which does not face liquid
+    for dir = 2,8,2 do
+      if edges[dir] != "liquid" then return dir end
+    end
+
+    return 2
+--]]
+  end
+
+
   local function nearest_wall(T)
-    -- get wall_dist from seed containing the spot
-    
+    -- get the wall_dist from seed containing the spot
+
     local S = Seed_from_coord(T.x1 + 32, T.y1 + 32)
 
     -- sanity check
@@ -875,6 +968,8 @@ end
 
     G.used = true
     G.content = {}
+
+    G.spot_dir = dir_for_spot(G)
 
     table.insert(R.goals, G)
 
@@ -2167,8 +2262,6 @@ function Areas_kick_the_goals(L)
     local kind = G.content.kind
 
     if not kind then return end
-
-    G.spot_dir = 2  -- FIXME dir_for_spot()
 
     if kind == "START" then
       content_start(G)

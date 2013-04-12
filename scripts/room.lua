@@ -664,6 +664,19 @@ function ROOM_CLASS.compute_wall_dists(R)
 end
 
 
+function ROOM_CLASS.dist_to_edge(R, S, dir)
+  local count = 0
+
+  while true do
+    local N = S:neighbor(dir)
+
+    if N.room != R then return count end
+
+    count = count + 1 ; S = N
+  end
+end
+
+
 function ROOM_CLASS.build(R)
   if R.kind == "outdoor" then
     local sky_h = assert(R.sky_group.h)
