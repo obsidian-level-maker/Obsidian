@@ -100,10 +100,9 @@ require "seed"
 require "planner"
 require "connect"
 require "quest"
-require "cave"
 
 require "build"
-require "chunks"
+require "cave"
 require "simple"
 require "hallway"
 
