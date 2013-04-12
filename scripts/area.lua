@@ -389,6 +389,30 @@ function Areas_handle_connections()
   end
 
 
+  local function place_for_portal(D)
+    local is_joiner = (D.L1.joiner or D.L2.joiner)
+
+    local sx1, sy1, sx2, sy2 = geom.side_coords(D.dir1,
+                                    D.K1.sx1, D.K1.sy1, D.K1.sx2, D.K1.sy2)
+
+    -- except for joiners, connections are usually 1 seed wide
+    -- TODO: for "C" hallway pieces (or direct-room conns) pick randomly
+    if (sx2 > sx1 or sy2 > sy1) and not is_joiner then
+      if sx2 > sx1 then
+        assert(sx2 == sx1 + 2)
+        sx1 = sx1 + 1
+        sx2 = sx1
+      else
+        assert(sy2 == sy1 + 2)
+        sy1 = sy1 + 1
+        sy2 = sy1
+      end
+    end
+
+    return sx1, sy1, sx2, sy2
+  end
+
+
   local function handle_conn(D)
     assert(D.K1 and D.dir1)
     assert(D.K2 and D.dir2)
@@ -397,8 +421,7 @@ function Areas_handle_connections()
 
 
     -- determine place for portal
-    local sx1, sy1, sx2, sy2 = geom.side_coords(D.dir1,
-                                    D.K1.sx1, D.K1.sy1, D.K1.sx2, D.K1.sy2)
+    local sx1, sy1, sx2, sy2 = place_for_portal(D)
 
     add_portal(D, sx1, sy1, sx2, sy2, D.dir1)
 
