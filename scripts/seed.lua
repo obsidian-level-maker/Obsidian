@@ -244,6 +244,18 @@ function Seed_valid(x, y)
 end
 
 
+function Seed_from_coord(x, y)
+  local sx = 1 + math.floor((x - BASE_X) / SEED_SIZE)
+  local sy = 1 + math.floor((y - BASE_Y) / SEED_SIZE)
+
+  -- clamp to usable range, mainly to handle edge cases
+  sx = math.clamp(1, sx, SEED_W)
+  sy = math.clamp(1, sy, SEED_H)
+
+  return SEEDS[sx][sy]
+end
+
+
 function Seed_group_edge_coords(P, dir, thick)
   local x1 = SEEDS[P.sx1][P.sy1].x1
   local y1 = SEEDS[P.sx1][P.sy1].y1
