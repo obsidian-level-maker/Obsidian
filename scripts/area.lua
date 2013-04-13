@@ -1122,6 +1122,13 @@ function Areas_layout_with_prefabs(R)
     local wall_L = S.walls[dir_L]
     local wall_R = S.walls[dir_R]
 
+--[[
+    if S:same_room(dir) or
+       S:same_room(dir_L) or
+       S:same_room(dir_R)
+    then return end
+--]]
+
     if not (wall_L and wall_R) then return end
 
     -- OK found a corner
@@ -1139,11 +1146,15 @@ function Areas_layout_with_prefabs(R)
     table.insert(R.corners, CORNER)
 
     -- update WALL objects with the touching corner
-    assert(not wall_L.corner_R)
-    assert(not wall_R.corner_L)
+    if wall_L then
+      assert(not wall_L.corner_R)
+      wall_L.corner_R = CORNER
+    end
 
-    wall_L.corner_R = CORNER
-    wall_R.corner_L = CORNER
+    if wall_R then
+      assert(not wall_R.corner_L)
+      wall_R.corner_L = CORNER
+    end
   end
 
 
@@ -1277,7 +1288,9 @@ function Areas_layout_with_prefabs(R)
   end
   end
 
-  find_corners()
+  if R.kind != "outdoor" then
+    find_corners()
+  end
 end
 
 
