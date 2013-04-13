@@ -728,10 +728,10 @@ function Areas_place_importants(R)
     local portal_dist = nearest_portal(spot) or 10
     local   goal_dist = nearest_goal(spot)   or 10
 
-    --[[ TODO: in caves we want the spot to be away from the edges of the room
+    -- in caves we need the spot to be away from the edges of the room
     if R.kind == "cave" or rand.odds(5) then
-      wall_dist = wall_dist * 6
-    end  --]]
+      goal_dist = math.min(goal_dist, wall_dist * 0.9)
+    end
 
     -- combine portal_dist and goal_dist
     goal_dist = math.min(goal_dist, portal_dist * 0.7)
