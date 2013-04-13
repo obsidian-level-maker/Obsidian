@@ -240,7 +240,7 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
 
     -- have a reasonable default
     if not sheet then
-      return (species1 == species2 ? "friend" ; "hurt")
+      return sel(species1 == species2, "friend", "hurt")
     end
 
     local result

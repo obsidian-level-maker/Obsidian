@@ -288,7 +288,7 @@ function CAVE_CLASS.generate(cave, solid_prob)
   -- convert values for the result
   for x = 1,W do for y = 1,H do
     if map[x][y] == 0 then
-      work[x][y] = (work[x][y] > 0 ? 1 ; -1)
+      work[x][y] = sel(work[x][y] > 0, 1, -1)
     else
       work[x][y] = map[x][y]
     end
@@ -550,7 +550,7 @@ function CAVE_CLASS.copy_island(cave, reg_id)
     if val == nil then
       -- nothing to copy
     else
-      island.cells[x][y] = (val == reg_id ? 1 ; -1)
+      island.cells[x][y] = sel(val == reg_id, 1, -1)
     end
   end end
 
@@ -750,7 +750,7 @@ function CAVE_CLASS.remove_dots(cave)
     local val = cells[x][y]
 
     if val and val != 0 and is_isolated(x, y, val) then
-      local dx = (x > W/2 ? -1 ; 1)
+      local dx = sel(x > W/2, -1, 1)
       cells[x][y] = cells[x+dx][y]
     end
   end end

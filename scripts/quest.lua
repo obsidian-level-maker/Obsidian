@@ -1097,7 +1097,7 @@ function Quest_spread_facades()
 
 
   local function facades_edge_pass(sx, sy, dir, face_dir)
-    local num = (geom.is_horiz(dir) ? SEED_W ; SEED_TOP)
+    local num = sel(geom.is_horiz(dir), SEED_W, SEED_TOP)
 
     local S1 = SEEDS[sx][sy]
 
@@ -1255,7 +1255,7 @@ function dump_room_flow(L, indents, is_locked)
       indents[#indents] = false
     end
 
-    dump_room_flow(D.L2, indents, (D.kind == "teleporter" ? "tele" ; D.lock))
+    dump_room_flow(D.L2, indents, sel(D.kind == "teleporter", "tele", D.lock))
   end
 end
 
@@ -1335,7 +1335,7 @@ function Quest_create_zones()
     each Z in LEVEL.zones do
       gui.printf("  %d: vol:%3.1f rooms:%d head:%s\n", Z.id,
                  Z.volume or 0, #Z.rooms,
-                 (Z.rooms[1] ? Z.rooms[1]:tostr() ; "NIL"))
+                 (Z.rooms[1] and Z.rooms[1]:tostr()) or "NIL")
     end
   end
 

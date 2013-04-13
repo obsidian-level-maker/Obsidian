@@ -408,10 +408,10 @@ function SECTION_CLASS.touch_neighbor(K, dir)
 
   if dir == 2 or dir == 8 then
     nx = int((K.sx1 + K.sx2) / 2)
-    ny = (dir == 2 ? K.sy1 - 1 ; K.sy2 + 1)
+    ny = sel(dir == 2, K.sy1 - 1, K.sy2 + 1)
   else
     ny = int((K.sy1 + K.sy2) / 2)
-    nx = (dir == 4 ? K.sx1 - 1 ; K.sx2 + 1)
+    nx = sel(dir == 4, K.sx1 - 1, K.sx2 + 1)
   end
 
   if Seed_valid(nx, ny) then
@@ -571,7 +571,7 @@ function SECTION_CLASS.eval_exit(K, dir)
     end
   end
 
-  local rand = ((uniq_dir ? 1 ; 0) + gui.random()) / 2
+  local rand = (sel(uniq_dir, 1, 0) + gui.random()) / 2
 
   -- a free section please
   if K.num_conn > 0 then
@@ -585,7 +585,7 @@ function SECTION_CLASS.eval_exit(K, dir)
     local foot_dir = K:is_foot()
 
     if foot_dir then
-      return (foot_dir == dir ? 9 ; 8) + rand 
+      return sel(foot_dir == dir, 9, 8) + rand 
     end
   end
 

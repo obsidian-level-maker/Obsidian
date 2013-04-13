@@ -1137,8 +1137,8 @@ function Trans.substitute(SKIN, value)
     if op == "+" then return value + number end
     if op == "-" then return value - number end
 
-    if op == "==" then return (value == number ? 1 ; 0) end
-    if op == "!=" then return (value != number ? 1 ; 0) end
+    if op == "==" then return sel(value == number, 1, 0) end
+    if op == "!=" then return sel(value != number, 1, 0) end
 
     error("bad subst operator: " .. tostring(op))
   end
