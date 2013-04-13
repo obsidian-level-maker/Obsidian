@@ -80,12 +80,9 @@ DOOM2.PREBUILT_LEVELS =
 
 
 function DOOM2.get_levels()
+  local MAP_LEN_TAB = { few=4, episode=11, game=32 }
 
-  local MAP_NUM = 11
-
-  if OB_CONFIG.length == "single" then MAP_NUM = 1  end
-  if OB_CONFIG.length == "few"    then MAP_NUM = 4  end
-  if OB_CONFIG.length == "game"   then MAP_NUM = 32 end
+  local MAP_NUM = MAP_LEN_TAB[OB_CONFIG.length] or 1
 
   gotcha_map = rand.pick{17,18,19}
   gallow_map = rand.pick{24,25,26}
@@ -269,11 +266,12 @@ DOOM1.PREBUILT_LEVELS =
 
 
 function DOOM1.get_levels()
-  local EP_MAX  = (OB_CONFIG.game   == "ultdoom" ? 4 ; 3)
-  local EP_NUM  = (OB_CONFIG.length == "game"    ? EP_MAX ; 1)
-  local MAP_NUM = (OB_CONFIG.length == "single"  ? 1 ; 9)
+  local EP_MAX  = sel(OB_CONFIG.game   == "ultdoom", 4, 3)
+  local EP_NUM  = sel(OB_CONFIG.length == "game", EP_MAX, 1)
 
-  if OB_CONFIG.length == "few" then MAP_NUM = 4 end
+  local MAP_LEN_TAB = { single=1, few=4 }
+
+  local MAP_NUM = MAP_LEN_TAB[OB_CONFIG.length] or 9
 
   -- this accounts for last two levels are BOSS and SECRET level
   local LEV_MAX = MAP_NUM
