@@ -701,12 +701,14 @@ static void prefixexp (LexState *ls, expdesc *v) {
     case '(': {
       int line = ls->linenumber;
       luaX_next(ls);
+      expr(ls, v);
       // -AJA- 2011/04/16:
       // support a ternary operator in the form: (X ? Y ; Z)
       // based on Ryota Hirose's 2010/09/14 patch.
-      expr(ls, v);
-      if (ls->t.token == '?')
-        ifexpr(ls, v);
+      // CURRENTLY DISABLED : can corrupt local variables
+
+      // if (ls->t.token == '?')
+      //   ifexpr(ls, v);
       check_match(ls, ')', '(', line);
       luaK_dischargevars(ls->fs, v);
       return;
