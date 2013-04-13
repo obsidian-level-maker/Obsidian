@@ -645,8 +645,10 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
 
       assert(LINK.conn)
 
-      if LINK.conn.portal and not LINK.conn.portal.floor_h then
-        LINK.conn.portal.floor_h = f_h
+      local portal = LINK.conn.portal1 or LINK.conn.portal2
+
+      if portal and not portal.floor_h then
+        portal.floor_h = f_h
       end
     end
 
@@ -863,12 +865,14 @@ if H.joiner then stderrf("   JOINER !!!!\n") end
 
   H.done_heights = true
 
+  local portal = entry_conn.portal1 or entry_conn.portal2
+
   assert(entry_conn)
   assert(entry_conn.K1)
-  assert(entry_conn.portal)
+  assert(portal)
 
   local entry_K = assert(entry_conn.K2)
-  local entry_h = assert(entry_conn.portal.floor_h)
+  local entry_h = assert(portal.floor_h)
   local entry_dir = entry_conn.dir1
 
   if entry_conn.kind == "double_L" or entry_conn.kind == "double_R" then

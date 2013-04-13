@@ -289,44 +289,37 @@ function Areas_handle_connections()
   end
 
 
-  local function add_portal(D, sx1, sy1, sx2, sy2, dir)
-    assert(not D.portal)
-
-    local PORTAL =
-    {
-      kind = "walk"
-      sx1  = sx1, sy1 = sy1
-      sx2  = sx2, sy2 = sy2
-      side = dir
-      conn = D
-    }
-
-    D.portal = PORTAL
-
-    -- put in seeds
-
-    for sx = sx1, sx2 do
-    for sy = sy1, sy2 do
+  local function install_portal(portal)
+    -- put into the seeds
+    for sx = portal.sx1, portal.sx2 do
+    for sy = portal.sy1, portal.sy2 do
       local S = SEEDS[sx][sy]
 
-      local N = S:neighbor(dir)
-      assert(N)
-
-      S.portals[dir]      = PORTAL
-      N.portals[10 - dir] = PORTAL
+      S.portals[dir] = PORTAL
     end
     end
   end
 
 
-  local function place_for_portal(D)
-    local is_joiner = (D.L1.joiner or D.L2.joiner)
+  local function create_portal(D, L)
+    -- determine place (in seeds)
+    local sx1, sy1, sx2, sy2
+    local dir
 
-    local sx1, sy1, sx2, sy2 = geom.side_coords(D.dir1,
-                                    D.K1.sx1, D.K1.sy1, D.K1.sx2, D.K1.sy2)
+    if D.L1 == L then
+      dir = D.dir1
+      sx1, sy1, sx2, sy2 = geom.side_coords(dir,
+                                D.K1.sx1, D.K1.sy1, D.K1.sx2, D.K1.sy2)
+    else
+      dir = D.dir1
+      sx1, sy1, sx2, sy2 = geom.side_coords(dir,
+                                D.K2.sx1, D.K2.sy1, D.K2.sx2, D.K2.sy2)
+    end
 
     -- except for joiners, connections are usually 1 seed wide
-    -- TODO: for "C" hallway pieces (or direct-room conns) pick randomly
+    -- TODO: for "C" hallway pieces (or direct-room conns) sometimes move left or right
+    local is_joiner = (D.L1.joiner or D.L2.joiner)
+
     if (sx2 > sx1 or sy2 > sy1) and not is_joiner then
       if sx2 > sx1 then
         assert(sx2 == sx1 + 2)
@@ -339,7 +332,19 @@ function Areas_handle_connections()
       end
     end
 
-    return sx1, sy1, sx2, sy2
+
+    local PORTAL =
+    {
+      kind = "walk"
+      sx1  = sx1, sy1 = sy1
+      sx2  = sx2, sy2 = sy2
+      side = dir
+      conn = D
+    }
+
+    install_portal(PORTAL)
+
+    return PORTAL
   end
 
 
@@ -350,10 +355,19 @@ function Areas_handle_connections()
     local is_double = (D.kind == "double_L" or D.kind == "double_R")
 
 
-    -- determine place for portal
-    local sx1, sy1, sx2, sy2 = place_for_portal(D)
+    if D.L1.kind != "hallway" then
+       D.portal1 = create_portal(D, D.L1)
+    end
 
-    add_portal(D, sx1, sy1, sx2, sy2, D.dir1)
+    if D.L2.kind != "hallway" then
+       D.portal2 = create_portal(D, D.L2)
+    end
+
+    if D.portal1 and D.portal2 then
+      D.portal1.peer = D.portal2
+      D.portal2.peer = D.portal1
+    end
+
 
     link_them(D.K1, D.dir1, D.K2, D)
   end
@@ -688,9 +702,11 @@ function Areas_place_importants(R)
     local dist
 
     each D in R.conns do
-      if D.portal then
+      local portal = D.portal1 or D.portal2  -- doesn't matter which
+
+      if portal then
         local d = geom.box_dist(T.x1, T.y1, T.x2, T.y2,
-                                Seed_group_edge_coords(D.portal, D.portal.side, 0))
+                                Seed_group_edge_coords(portal, portal.side, 0))
         d = d / SEED_SIZE
         if not dist or d < dist then
           dist = d
@@ -1116,6 +1132,8 @@ function Areas_layout_with_prefabs(R)
 
           if not portal.floor_h then
             portal.floor_h = h + edge.h
+
+            if portal.peer then portal.peer.floor_h = portal.floor_h end
           end
 
           continue
@@ -1467,8 +1485,9 @@ function Areas_flesh_out()
     local entry_h
     
     if R.entry_conn and R.entry_conn.kind != "teleporter" then
-      assert(R.entry_conn.portal)
-      entry_h = assert(R.entry_conn.portal.floor_h)
+      local portal = R.entry_conn.portal1 or R.entry_conn.portal2
+      assert(portal)
+      entry_h = assert(portal.floor_h)
     else
       entry_h = rand.irange(-2, 2) * 96
     end
@@ -1544,9 +1563,11 @@ function Areas_flesh_out()
 
   local function outgoing_heights(L)
     each D in L.conns do
+      local portal = D.portal1 or D.portal2
+
       if D.L1 == L and D.L2.kind == "hallway" and D.kind != "double_R" then
-        assert(D.portal)
-        assert(D.portal.floor_h)
+        assert(portal)
+        assert(portal.floor_h)
 
         local hall = D.L2
 
@@ -1563,8 +1584,8 @@ function Areas_flesh_out()
       if D.L1 == L and D.kind != "teleporter" and
          L.kind != "hallway" and D.L2.kind != "hallway"
       then
-        assert(D.portal)
-        assert(D.portal.floor_h)
+        assert(portal)
+        assert(portal.floor_h)
       end
     end
   end

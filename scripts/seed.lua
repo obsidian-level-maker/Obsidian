@@ -70,14 +70,14 @@ class PORTAL
 {
   -- a portal is the side of a seed (or row of seeds) where the
   -- player will cross at some time.  Primary use is for connections
-  -- between a room and another room or hallway.  Secondary use is
-  -- for intra-room connections.
+  -- between a room and another room or hallway.
   --
-  -- the portal is two-way, and there is only one at any place
-  -- (generally at the southern or eastern side).
+  -- portals are one-way.  There is generally one where a hallway
+  -- meets a room (the hallway doesn't need it), but where two rooms
+  -- are directly connected there will be two portals back-to-back.
   --
-  -- in the future there may be one-way portals (drop-offs), and/or
-  -- "liquid" or "window" portals.
+  -- In the future there may be other kinds of portals, such as
+  -- "drop_off", "liquid" or "window" portals.
 
   kind : keyword   -- "walk"  (the only possible value so far)
 
@@ -86,6 +86,8 @@ class PORTAL
   side : DIR  -- which side of the seed range
 
   conn : CONN
+
+  peer : PORTAL  -- for back-to-back connections
 
   floor_h  -- floor height (set during room layouting)
 }

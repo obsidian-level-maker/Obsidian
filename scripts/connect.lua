@@ -42,7 +42,7 @@ class CONN
               -- dir1 leading out of L1 / K1
               -- dir2 leading out of L2 / K2
 
-  portal : PORTAL
+  portal1, portal2 : PORTAL
 
 
   --- POSSIBLE_CONN ---
