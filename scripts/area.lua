@@ -291,11 +291,22 @@ function Areas_handle_connections()
 
   local function install_portal(portal)
     -- put into the seeds
+    local side = portal.side
+
     for sx = portal.sx1, portal.sx2 do
     for sy = portal.sy1, portal.sy2 do
       local S = SEEDS[sx][sy]
 
-      S.portals[dir] = PORTAL
+--[[
+gui.debugf("install portal %s (%s <--> %s) @ %s dir:%d\n",
+           tostring(portal),
+           portal.conn.L1:tostr(),
+           portal.conn.L2:tostr(),
+           S:tostr(), side)
+--]]
+      assert(not S.portals[side])
+
+      S.portals[side] = portal
     end
     end
   end
@@ -303,15 +314,15 @@ function Areas_handle_connections()
 
   local function create_portal(D, L)
     -- determine place (in seeds)
-    local sx1, sy1, sx2, sy2
     local dir
+    local sx1, sy1, sx2, sy2
 
     if D.L1 == L then
       dir = D.dir1
       sx1, sy1, sx2, sy2 = geom.side_coords(dir,
                                 D.K1.sx1, D.K1.sy1, D.K1.sx2, D.K1.sy2)
     else
-      dir = D.dir1
+      dir = D.dir2
       sx1, sy1, sx2, sy2 = geom.side_coords(dir,
                                 D.K2.sx1, D.K2.sy1, D.K2.sx2, D.K2.sy2)
     end
