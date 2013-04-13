@@ -167,7 +167,7 @@ function Simple_cave_or_maze(R)
         if not S:same_room(dir) and not (C and C.link[dir]) and
            not (C and C.foobage == "important")
         then
-          set_side(cx, cy, cx+3, cy+3, dir, (R.is_lake ? -1 ; 1))
+          set_side(cx, cy, cx+3, cy+3, dir, sel(R.is_lake, -1, 1))
         end
       end
     end end -- sx, sy
@@ -264,7 +264,7 @@ function Simple_cave_or_maze(R)
         break
       end
 
-      cave:generate((R.is_lake ? 58 ; 38))
+      cave:generate(sel(R.is_lake, 58, 38))
 
       cave:remove_dots()
 
@@ -914,11 +914,11 @@ function Simple_render_cave(R)
     each side in B_CORNERS do
       local dx, dy = geom.delta(side)
 
-      local fx = bx + (dx < 0 ? 0 ; 64)
-      local fy = by + (dy < 0 ? 0 ; 64)
+      local fx = bx + sel(dx < 0, 0, 64)
+      local fy = by + sel(dy < 0, 0, 64)
 
-      local cx = x + (dx < 0 ? 0 ; 1)
-      local cy = y + (dy < 0 ? 0 ; 1)
+      local cx =  x + sel(dx < 0, 0, 1)
+      local cy =  y + sel(dy < 0, 0, 1)
 
       fx = fx + (delta_x_map[cx][cy] or 0)
       fy = fy + (delta_y_map[cx][cy] or 0)
@@ -1180,7 +1180,7 @@ do return end ----!!!!!!!
           if cave:valid_cell(nx, ny) and R.area_map:get(nx, ny) != A then
             local is_wall = (R.area_map:get(nx, ny) == nil)
             local poly = brush_for_cell(nx, ny)
-            gui.spots_fill_poly(poly, (is_wall ? 1 ; 2))
+            gui.spots_fill_poly(poly, sel(is_wall, 1, 2))
           end
         end
 

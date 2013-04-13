@@ -71,36 +71,36 @@ end
 
 function CONN_CLASS.tostr(D)
   return string.format("CONN_%d [%s%s]", D.id, D.kind,
-         (D.is_cycle ? "/cycle" ; ""))
+         sel(D.is_cycle, "/cycle", ""))
 end
 
 
 function CONN_CLASS.dump(D)
   gui.debugf("%s =\n", D:tostr())
   gui.debugf("{\n")
-  gui.debugf("    L1 = %s\n", (D.L1 ? D.L1:tostr() ; "nil"))
-  gui.debugf("    L2 = %s\n", (D.L2 ? D.L2:tostr() ; "nil"))
-  gui.debugf("    K1 = %s\n", (D.K1 ? D.K1:tostr() ; "nil"))
-  gui.debugf("    K2 = %s\n", (D.K2 ? D.K2:tostr() ; "nil"))
-  gui.debugf("  dir1 = %s\n", (D.dir1 ? tostring(D.dir1) ; "nil"))
-  gui.debugf("  dir2 = %s\n", (D.dir2 ? tostring(D.dir2) ; "nil"))
+  gui.debugf("    L1 = %s\n", (D.L1 and D.L1:tostr()) or "nil")
+  gui.debugf("    L2 = %s\n", (D.L2 and D.L2:tostr()) or "nil")
+  gui.debugf("    K1 = %s\n", (D.K1 and D.K1:tostr()) or "nil")
+  gui.debugf("    K2 = %s\n", (D.K2 and D.K2:tostr()) or "nil")
+  gui.debugf("  dir1 = %s\n", (D.dir1 and tostring(D.dir1)) or "nil")
+  gui.debugf("  dir2 = %s\n", (D.dir2 and tostring(D.dir2)) or "nil")
   gui.debugf("}\n")
 end
 
 
 function CONN_CLASS.neighbor(D, L)
-  return (L == D.L1 ? D.L2 ; D.L1)
+  return sel(L == D.L1, D.L2, D.L1)
 end
 
 
 function CONN_CLASS.section(D, L)
-  return (L == D.L1 ? D.K1 ; D.K2)
+  return sel(L == D.L1, D.K1, D.K2)
 end
 
 
 function CONN_CLASS.what_dir(D, L)
   if D.dir1 then
-    return (L == D.L1 ? D.dir1 ; D.dir2)
+    return sel(L == D.L1, D.dir1, D.dir2)
   end
 end
 

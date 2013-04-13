@@ -1320,18 +1320,18 @@ function Room_setup_symmetry()
 
   local function prob_for_match(old_sym, new_sym)
     if old_sym == new_sym then
-      return (old_sym == "xy" ? 8000 ; 400)
+      return sel(old_sym == "xy", 8000, 400)
 
     elseif new_sym == "xy" then
       -- rarely upgrade from NONE --> XY symmetry
-      return (old_sym ? 30 ; 3)
+      return sel(old_sym, 30, 3)
 
     elseif old_sym == "xy" then
       return 150
 
     else
       -- rarely change from X --> Y or vice versa
-      return (old_sym ? 6 ; 60)
+      return sel(old_sym, 6, 60)
     end
   end
 
@@ -1389,7 +1389,7 @@ function Room_setup_symmetry()
 
     local index = rand.index_by_probs(probs)
 
-    R.symmetry = (index > 1 ? syms[index] ; nil)
+    R.symmetry = sel(index > 1, syms[index], nil)
   end
 
 
@@ -1585,7 +1585,7 @@ function Room_select_picture(R, v_space, index)
   v_space = v_space - 16
   -- FIXME: needs more v_space checking
 
-  if THEME.logos and rand.odds((LEVEL.has_logo ? 7 ; 40)) then
+  if THEME.logos and rand.odds(sel(LEVEL.has_logo, 7, 40)) then
     LEVEL.has_logo = true
     return rand.key_by_probs(THEME.logos)
   end
@@ -1652,7 +1652,7 @@ function ROOM_CLASS.find_closet_spot(R, want_deep)
 
   --- find_closet_spot ---
 
-  local deep = (want_deep ? 2 ; 1)  -- FIXME!! not used yet
+  local deep = sel(want_deep, 2, 1)  -- FIXME!! not used yet
 
   local best
   local best_score = -9e9
@@ -1977,7 +1977,7 @@ function Room_add_sun()
     local x = math.sin(angle * math.pi / 180.0) * sun_r
     local y = math.cos(angle * math.pi / 180.0) * sun_r
 
-    local level = (i == 1 ? 32 ; 6)
+    local level = sel(i == 1, 32, 6)
 
     entity_helper("sun", x, y, sun_h, { light=level })
   end
@@ -2430,7 +2430,7 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
 
   local function try_mark_edge_group(SA, sx, sy, dir, room)
-    local along_dir = (geom.is_vert(dir) ? 6 ; 8)
+    local along_dir = geom.vert_sel(dir, 6, 8)
     local found = 0
 
     for i = 0, 99 do
@@ -2766,9 +2766,9 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
     -- may be possible : check seeds in-between them
 
-    local sx = (side == 4 ? B1.sx1 - 1 ; B1.sx2 + 1)
+    local sx = sel(side == 4, B1.sx1 - 1, B1.sx2 + 1)
 
-    local sy = (B1.dir == 2 ? B1.sy1 ; B1.sy2)
+    local sy = sel(B1.dir == 2, B1.sy1, B1.sy2)
 
     local S = SEEDS[sx][sy]
 
@@ -2797,9 +2797,9 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
     -- may be possible : check seeds in-between them
 
-    local sy = (side == 2 ? B1.sy1 - 1 ; B1.sy2 + 1)
+    local sy = sel(side == 2, B1.sy1 - 1, B1.sy2 + 1)
 
-    local sx = (B1.dir == 4 ? B1.sx1 ; B1.sx2)
+    local sx = sel(B1.dir == 4, B1.sx1, B1.sx2)
 
     local S = SEEDS[sx][sy]
 
@@ -3022,7 +3022,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
 
   local function try_run_of_fake_edges(SA, sx, sy, dir, room)
-    local along_dir = (geom.is_vert(dir) ? 6 ; 8)
+    local along_dir = geom.vert_sel(dir, 6, 8)
     local found = 0
 
     for i = 0, 99 do

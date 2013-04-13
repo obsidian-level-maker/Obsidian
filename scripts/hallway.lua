@@ -112,8 +112,8 @@ function HALLWAY_CLASS.dump(H)
   gui.debugf("%s =\n", H:tostr())
   gui.debugf("{\n")
   -- FIXME
-  gui.debugf("belong = %s\n", (H.belong_room ? H.belong_room:tostr() ; "nil"))
-  gui.debugf("sections = %s\n", (H.sections ? tostring(#H.sections) ; "nil"))
+  gui.debugf("belong = %s\n", (H.belong_room and H.belong_room:tostr()) or "nil")
+  gui.debugf("sections = %s\n", (H.sections and tostring(#H.sections)) or "nil")
   gui.debugf("}\n")
 end
 
@@ -171,7 +171,7 @@ function HALLWAY_CLASS.joiner_sections(H)
   assert(H.joiner)
 
   local K = H.sections[1]
-  local dir = (K.hall_link[2] ? 2 ; 4)
+  local dir = sel(K.hall_link[2], 2, 4)
 
   local K1 = K.hall_link[dir]
   local K2 = K.hall_link[10 - dir]
@@ -600,7 +600,7 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
     end
 
     P.h_extra = "stair"
-    P.h_dir   = (z_dir < 0 ? 10 - from_dir ; from_dir)
+    P.h_dir   = sel(z_dir < 0, 10 - from_dir, from_dir)
 
     -- FIXME: pick stair kind ("short" / "medium" / "tall")
     --        (only one kind per hallway)
@@ -675,12 +675,12 @@ function HALLWAY_CLASS.cycle_flow(H, C, from_dir, z, i_deltas, seen)
   then
     local dz = table.remove(i_deltas, 1)
     local abs_dz = math.abs(dz)
-    local z_dir = (dz < 0 ? -1 ; 1)
+    local z_dir = sel(dz < 0, -1, 1)
 
     -- only need a stair if distance is too big for player to climb
     if abs_dz > climb_h then
 
-      C.h_dir = (dz < 0 ? 10 - from_dir ; from_dir)
+      C.h_dir = sel(dz < 0, 10 - from_dir, from_dir)
       
       -- need a lift?
       if abs_dz > 80 + PARAM.step_height then
@@ -748,7 +748,7 @@ function HALLWAY_CLASS.handle_cycle(H, start_C, from_dir, start_z)
   -- determine the target height
   local LINK = exit_C.link[exit_dir]
 
-  local room_C = (LINK.C1 == exit_C ? LINK.C2 ; LINK.C1)
+  local room_C = sel(LINK.C1 == exit_C, LINK.C2, LINK.C1)
 
   local exit_z = assert(room_C.floor_h)
 
@@ -1263,7 +1263,7 @@ function Hallway_scan(start_K, start_dir, mode)
       score = score + 120
       merge = true
     elseif stats.big_junc then
-      score = score + (LEVEL.ignore_big_junctions ? -300 ; 80)
+      score = score + sel(LEVEL.ignore_big_junctions, -300, 80)
       merge = false
 
       if end_K.hall then return end
@@ -1400,7 +1400,7 @@ function Hallway_scan(start_K, start_dir, mode)
       D2 = D2
       hall  = H
       merge = merge
-      onto_hall_K = (end_K.hall ? end_K ; nil)
+      onto_hall_K = sel(end_K.hall, end_K, nil)
     }
   end
 
@@ -1523,7 +1523,7 @@ do return false end
         local new_stats = table.copy(stats)
         if do_cross then new_stats.crossover = N.room end
 
-        local new_quota = quota - (N.used ? 0 ; 1)
+        local new_quota = quota - sel(N.used, 0, 1)
 
         hall_flow(N, 10 - dir, table.copy(path), new_stats, new_quota)
       end

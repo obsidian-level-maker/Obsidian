@@ -189,78 +189,8 @@ function AREA_CLASS.grab_spots(A)
 end
 
 
-function AREA_CLASS.determine_spots(A)
-      
-  local L = A.room
-
-  -- Spot stuff : begin with "clear" rectangle (contents = 0).
-  --              walls and high barriers get removed (contents = 1)
-  --              as well as other unusable places (contents = 2).
-
-  local x1, y1, x2, y2 = A:chunk_bbox()
-
-  -- little bit of padding for extra safety
-  gui.spots_begin(x1+4, y1+4, x2-4, y2-4, 2)
-
-
-  each C in A.chunks do
-    local poly = Brush_new_quad(C.x1, C.y1, C.x2, C.y2)
-
-    if C.content.kind or C.stair or C.liquid then
-      continue
-    end
-
-    gui.spots_fill_poly(poly, 0)
-
-    for dir = 2,8,2 do
-      local edge_k = C:classify_edge(dir)
-
-      if edge_k == "same" then continue end
-
-      local fill_k = (edge_k == "wall" or edge_k == "liquid" ? 1 ; 2)
-
-      gui.spots_fill_poly(C:quad_for_edge(dir, 16), fill_k)
-    end
-  end
-
-
-  -- another MUNDO HACK!  bring on V5....
-  each C in A.chunks do
-    if C.content.kind == "DECORATION" then
-      local skin = GAME.SKIN[C.content.decor_prefab]
-      assert(skin)
-
-      local mx, my = C:mid_point()
-      local r = assert(skin._radius)
-
-      local poly = Brush_new_quad(mx - r, my - r, mx + r, my + r)
-
-      gui.spots_fill_poly(poly, 1)
-    end
-  end
-
-
---[[
-    -- TODO solidify brushes from prefabs (including WALLS !!!)
-    for _,fab in ipairs(R.prefabs) do
-      remove_prefab(fab)
-    end
-
-    -- TODO remove solid decor entities
-    for _,dec in ipairs(R.decor) do
-      remove_decor(dec)
-    end
---]]
-
-
-  A:grab_spots()
-
-  gui.spots_end()
-end
-
-
 function AREA_CLASS.decide_picture(A)
-  if (not LEVEL.has_logo) or rand.odds((A.room.has_logo ? 10 ; 30)) then
+  if (not LEVEL.has_logo) or rand.odds(sel(A.room.has_logo, 10, 30)) then
     A.pic_name = assert(A.room.zone.logo_name)
 
     A.room.has_logo = true
@@ -545,11 +475,11 @@ function Areas_path_through_rooms()
 gui.debugf("create_a_path: %s : %s --> %s\n", R:tostr(), C1:tostr(), C2:tostr())
 
     -- pick start and ending seeds
-    local sx = (C2.sx1 > C1.sx1 ? C1.sx2 ; C1.sx1)
-    local sy = (C2.sy1 > C1.sy1 ? C1.sy2 ; C1.sy1)
+    local sx = sel(C2.sx1 > C1.sx1, C1.sx2, C1.sx1)
+    local sy = sel(C2.sy1 > C1.sy1, C1.sy2, C1.sy1)
 
-    local ex = (C1.sx1 > C2.sx1 ? C2.sx2 ; C2.sx1)
-    local ey = (C1.sy1 > C2.sy1 ? C2.sy2 ; C2.sy1)
+    local ex = sel(C1.sx1 > C2.sx1, C2.sx2, C2.sx1)
+    local ey = sel(C1.sy1 > C2.sy1, C2.sy2, C2.sy1)
 
     -- coordinates must be relative for A* algorithm
     sx, sy = (sx - R.sx1) + 1, (sy - R.sy1) + 1
@@ -1417,7 +1347,7 @@ function Areas_build_walls(R)
     local x1, y1 = S.x1, S.y1
     local x2, y2 = S.x2, S.y2
 
-    info.deep = (info.kind == "outie" ? 1 ; 2) * THICK;
+    info.deep = sel(info.kind == "outie", 1, 2) * THICK;
 
     if info.side == 1 or info.side == 3 then
       y2 = y1 + info.deep
@@ -1644,15 +1574,6 @@ function Areas_flesh_out()
   end
 
 
-  local function determine_spots(R)
-    -- Note: for caves this is done during render phase
-
-    each A in R.areas do
-      A:determine_spots()
-    end
-  end
-
-
   local function finish_up_room(R)
 
     -- TODO add "area" prefabs now (e.g. crates, cages, bookcases)
@@ -1665,7 +1586,7 @@ function Areas_flesh_out()
     if R.kind == "cave" then
       Simple_render_cave(R)
     else
-      determine_spots(R)
+      ---## determine_spots(R)
     end
   end
 

@@ -528,7 +528,7 @@ function Monsters_distribute_stats()
       each stat,count in R_stats do
         if count <= 0 then continue end
 
-        local value = count * (stat == "health" ? health_qty ; ammo_qty)
+        local value = count * sel(stat == "health", health_qty, ammo_qty)
 
         N_stats[stat] = (N_stats[stat] or 0) + value
         R_stats[stat] =  R_stats[stat]       - value
@@ -679,7 +679,7 @@ gui.debugf("Initial %s = %1.1f\n", stat, hmodel.stats[stat] or 0)
 
     if L.purpose == "START" and L:has_weapon_using_ammo(stat) then
       if qty > 0 then
-        excess = (OB_CONFIG.strength == "crazy" ? 1.2 ; 0.6) * qty
+        excess = sel(OB_CONFIG.strength == "crazy", 1.2, 0.6) * qty
       end
 
       if GAME.AMMOS and GAME.AMMOS[stat] then
@@ -742,7 +742,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
       return
     end
 
-    local away = (count == 2 ? 20 ; 40)
+    local away = sel(count == 2, 20, 40)
     local dir  = spot.dir
 
     if geom.is_vert(dir) then
@@ -1545,7 +1545,7 @@ function Monsters_in_room(L)
       if near_to then
         local d1 = math.abs(near_to.x1 - spot.x1)
         local d2 = math.abs(near_to.x2 - spot.x2)
-        side = (d1 < d2 ? 4 ; 6)
+        side = sel(d1 < d2, 4, 6)
       end
 
       if side == 4 then
@@ -1567,7 +1567,7 @@ function Monsters_in_room(L)
       if near_to then
         local d1 = math.abs(near_to.y1 - spot.y1)
         local d2 = math.abs(near_to.y2 - spot.y2)
-        side = (d1 < d2 ? 2 ; 8)
+        side = sel(d1 < d2, 2, 8)
       end
 
       if side == 2 then
@@ -1695,7 +1695,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     -- break up really large monster spots, so that we get a better
     -- distribution of monsters.
-    split_huge_spots((has_huge ? 288 ; 144))
+    split_huge_spots(sel(has_huge, 288, 144))
 
 
     -- total number of monsters wanted
@@ -1878,7 +1878,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       palette = room_palette()
     end
 
-    local barrel_chance = (L.kind == "building" ? 15 ; 2)
+    local barrel_chance = sel(L.kind == "building", 15, 2)
 --!!    if R.natural then barrel_chance = 3 end
 --!!    if R.hallway then barrel_chance = 5 end
 
@@ -1976,7 +1976,11 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     end
 
     each name,qty in stats do
-      stats[name] = qty * (name == "health" ? heal_mul ; ammo_mul)
+      if name == "health" then
+        stats[name] = qty * heal_mul
+      else
+        stats[name] = qty * ammo_mul
+      end
     end
   end
 
