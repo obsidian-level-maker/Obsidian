@@ -46,6 +46,19 @@ function Simple_cave_or_maze(R)
   end
 --]]
 
+  local function cave_box_for_seed(sx, sy)
+    local box =
+    {
+      cx1 = (sx - R.sx1) * 4 + 1
+      cy1 = (sy - R.sy1) * 4 + 1
+    }
+
+    box.cx2 = box.cx1 + 3
+    box.cy2 = box.cy1 + 3
+    
+    return box
+  end
+
 
   local function set_whole(C, value)
     for cx = C.cave_x1, C.cave_x2 do
@@ -126,6 +139,60 @@ function Simple_cave_or_maze(R)
          C.crossover_hall
       then
         set_whole(C, -1)
+      end
+    end
+  end
+
+
+  local function clear_portals()
+    each D in R.conns do
+      local P = D.portal
+
+      if not P then continue end
+
+      -- determine cave cells to clear:
+      -- 1. skip one cell on each side of the portal
+      -- 2. clear cells which touch portal, and two more away from it
+
+      local b1 = cave_box_for_seed(P.sx1, P.sy1)
+      local b2 = cave_box_for_seed(P.sx2, P.sy2)
+
+      local cx1, cy1, cx2, cy2
+      
+      if geom.is_vert(P.side) then
+        cx1 = b1.cx1 + 1
+        cx2 = b2.cx2 - 1
+
+        if P.side == 2 then
+          cy1 = b1.cy1 - 3
+          cy2 = b1.cy1 + 2
+        else
+          cy1 = b1.cy2 - 3
+          cy2 = b1.cy2 + 2
+        end
+
+      else -- is_horiz(P.side)
+        cy1 = b1.cy1 + 1
+        cy2 = b2.cy2 - 1
+
+        if P.side == 4 then
+          cx1 = b1.cx1 - 3
+          cx2 = b1.cx1 + 2
+        else
+          cx1 = b1.cx2 - 3
+          cx2 = b1.cx2 + 2
+        end
+      end
+
+      -- our computed range will go outside of the room, hence need to
+      -- check each coordinate...
+
+      for cx = cx1, cx2 do
+      for cy = cy1, cy2 do
+        if map:valid_cell(cx, cy) and map:get(cx, cy) != nil then
+          map:set(cx, cy, -1)
+        end
+      end
       end
     end
   end
@@ -307,6 +374,7 @@ function Simple_cave_or_maze(R)
   mark_boundaries()
 
   clear_importants()
+  clear_portals()
 
   generate_cave()
 
