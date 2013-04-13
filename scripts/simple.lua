@@ -203,15 +203,6 @@ function Simple_cave_or_maze(R)
     R.cave_base_y = SEEDS[R.sx1][R.sy1].y1
 
     map = CAVE_CLASS.new(R.cave_base_x, R.cave_base_y, R.sw * 4, R.sh * 4)
-
-    -- determine location of chunks inside this map
-    each C in R.chunks do
-      C.cave_x1 = (C.sx1 - R.sx1) * 4 + 1
-      C.cave_y1 = (C.sy1 - R.sy1) * 4 + 1
-
-      C.cave_x2 = (C.sx2 - R.sx1) * 4 + 4
-      C.cave_y2 = (C.sy2 - R.sy1) * 4 + 4
-    end
   end
 
 
@@ -344,7 +335,7 @@ function Simple_cave_or_maze(R)
       -- randomly clear some cells along the walk path.
       -- After each iteration the number of cleared cells will keep
       -- increasing, making it more likely to generate a valid cave.
-      clear_walks()
+--!!! FIXME      clear_walks()
     end
 
     R.cave_map = cave

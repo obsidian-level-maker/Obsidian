@@ -570,7 +570,11 @@ end
 function Areas_place_importants(R)
 
   -- this places the "important" stuff (keys, switches, teleporters)
-  -- into the rooms.  It requires "goal spots".
+  -- into the rooms.  It requires "goal spots" (except for caves).
+  --
+  -- for caves, this is done before the room is laid out, since the
+  -- cave code needs to know a-priori where the importants will go
+  -- (so it can ensure there is clear space at those places).
   --
   -- NOTE: closets for switches, teleporters (etc) are done elsewhere.
   --
@@ -951,7 +955,33 @@ end
   end
 
 
+  local function fake_goal_spots()
+    for sx = R.sx1, R.sx2 do
+    for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
+
+      if S.room == R then
+        local SPOT =
+        {
+          x1 = S.x1 + 64
+          y1 = S.y1 + 64
+          x2 = S.x2 - 64
+          y2 = S.y2 - 64
+          z1 = 0
+          z2 = 128
+        }
+        table.insert(R.goal_spots, SPOT)
+      end
+    end  -- sx, sy
+    end
+  end
+
+
   ---| Areas_place_importants |---
+
+  if R.kind == "cave" then
+    fake_goal_spots()
+  end
 
   place_importants()
   extra_stuff()
@@ -1559,6 +1589,8 @@ function Areas_flesh_out()
     R.areas = {}
 
     if R.kind == "cave" then
+      Areas_place_importants(R)
+
       Simple_cave_or_maze(R)
       Simple_create_areas(R)
     end
@@ -1580,6 +1612,7 @@ function Areas_flesh_out()
 
     if R.kind != "cave" then
       floor_textures(R)
+      Areas_place_importants(R)
     end
 
     outgoing_heights(R)
@@ -1657,8 +1690,6 @@ function Areas_flesh_out()
 
   each R in LEVEL.rooms do floor_stuff(R) end
   each R in LEVEL.rooms do outgoing_cycles(R) end
-
-  each R in LEVEL.rooms do Areas_place_importants(R) end
 
   Room_decide_fences()
 
