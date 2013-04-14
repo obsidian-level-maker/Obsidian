@@ -354,8 +354,13 @@ end
 
 function Simple_create_areas(R)
 
-  local cover_chunks
-  local chunk_map
+  -- sub-divide the floor of the cave into areas of differing heights.
+
+
+  -- groups are areas (rectangles) belonging to portals or importants
+  -- and must be kept distinct (at the same height).
+  local group_list
+  local group_map
 
 
   local function one_big_area()
@@ -369,48 +374,35 @@ function Simple_create_areas(R)
   end
 
 
-  local function collect_cover_chunks()
-    -- find the chunks which must be completed covered by any area.
-    cover_chunks = {}
+  local function add_group_to_map(G)
+    table.insert(group_list, G)
 
-    each C in R.chunks do
-      if C.foobage == "important" or C.foobage == "conn" or
-         C.foobage == "crossover"
-      then
-        table.insert(cover_chunks, C)
-
-        C.no_floor = true
-        C.no_ceil  = true
-      end
+    for x = G.cx1, G.cx2 do
+    for y = G.cy1, G.cy2 do
+      group_map.cells[x][y] = G
+    end
     end
   end
 
 
-  local function add_chunk_to_map(C)
-    for x = C.cave_x1, C.cave_x2 do
-      for y = C.cave_y1, C.cave_y2 do
-        chunk_map.cells[x][y] = C
-      end
+  local function remove_group_from_map(G)
+    table.kill_elem(group_list, G)
+
+    for x = G.cx1, G.cx2 do
+    for y = G.cy1, G.cy2 do
+      group_map.cells[x][y] = nil
+    end
     end
   end
 
 
-  local function remove_chunk_from_map(C)
-    for x = C.cave_x1, C.cave_x2 do
-      for y = C.cave_y1, C.cave_y2 do
-        chunk_map.cells[x][y] = nil
-      end
-    end
-  end
+  local function create_group_map()
+    group_list = {}
 
+    group_map = CAVE_CLASS.blank_copy(R.cave_map)
 
-  local function create_chunk_map()
-    collect_cover_chunks()
-
-    chunk_map = CAVE_CLASS.blank_copy(R.cave_map)
-
-    each C in cover_chunks do
-      add_chunk_to_map(C)
+    each G in R.cave_imps do
+      add_group_to_map(G)
     end
   end
 
@@ -443,7 +435,7 @@ function Simple_create_areas(R)
     local cx1, cy1
     local cx2, cy2
 
-    local touched_chunks
+    local touched_groups
     
 
     -- mark free areas with zero instead of negative [TODO: make into a cave method]
@@ -454,29 +446,27 @@ function Simple_create_areas(R)
     end end
 
 
-    local function touch_a_chunk(C)
-      table.insert(touched_chunks, C)
+    local function touch_a_group(G)
+      remove_group_from_map(G)
 
-      table.kill_elem(cover_chunks, C)
+      -- add the whole group to the current step
+      for x = G.cx1, G.cx2 do
+      for y = G.cy1, G.cy2 do
+        s_cel[x][y] = 1
+        f_cel[x][y] = 1
 
-      remove_chunk_from_map(C)
-
-      -- add the whole chunk to the current step
-      for x = C.cave_x1, C.cave_x2 do
-        for y = C.cave_y1, C.cave_y2 do
-          s_cel[x][y] = 1
-          f_cel[x][y] = 1
-
-          size = size + 1
-        end
+        size = size + 1
+      end
       end
 
-      -- update bbox
-      cx1 = math.min(cx1, C.cave_x1)
-      cy1 = math.min(cy1, C.cave_y1)
+      touched_groups = touched_groups + 1
 
-      cx2 = math.max(cx2, C.cave_x2)
-      cy2 = math.max(cy2, C.cave_y2)
+      -- update bbox
+      cx1 = math.min(cx1, G.cx1)
+      cy1 = math.min(cy1, G.cy1)
+
+      cx2 = math.max(cx2, G.cx2)
+      cy2 = math.max(cy2, G.cy2)
     end
 
 
@@ -493,8 +483,8 @@ function Simple_create_areas(R)
       if y < cy1 then cy1 = y end
       if y > cy2 then cy2 = y end
 
-      if chunk_map.cells[x][y] then
-        touch_a_chunk(chunk_map.cells[x][y])
+      if group_map.cells[x][y] then
+        touch_a_group(group_map.cells[x][y])
       end
     end
 
@@ -564,7 +554,7 @@ function Simple_create_areas(R)
 
       size = 0
 
-      touched_chunks = {}
+      touched_groups = 0
 
       cx1 = cx ; cx2 = cx
       cy1 = cy ; cy2 = cy
@@ -580,7 +570,7 @@ function Simple_create_areas(R)
         grow_it(50)
       end
 
-      if size < 4 or #touched_chunks > 0 then
+      if size < 4 or touched_groups > 0 then
         grow_it(100)
         grow_it(40)
       end
@@ -602,31 +592,21 @@ step:dump("Step:")
         prev_A = AREA
       end
 
-      each C in touched_chunks do
-        table.insert(prev_A.chunks, C)
-
-        C.area = prev_A
-      end
-
 
       -- find new positions for growth
 
-      for x = cx1, cx2 do for y = cy1, cy2 do
-        if s_cel[x][y] == 1 then
-          for dir = 2,8,2 do
-            local nx, ny = geom.nudge(x, y, dir)
-            if free:valid_cell(nx, ny) and f_cel[nx][ny] == 0 then
-              table.insert(pos_list, { x=nx, y=ny, prev=prev_A })
-            end
+      for x = cx1, cx2 do
+      for y = cy1, cy2 do
+        if s_cel[x][y] != 1 then continue end
+
+        for dir = 2,8,2 do
+          local nx, ny = geom.nudge(x, y, dir)
+          if free:valid_cell(nx, ny) and f_cel[nx][ny] == 0 then
+            table.insert(pos_list, { x=nx, y=ny, prev=prev_A })
           end
         end
-      end end
-
--- LIGHTING TEST CRAP
-  if GAME.format != "doom" then
-    prev_A.light_x = step.base_x + 32 + (cx-1) * 64
-    prev_A.light_y = step.base_y + 32 + (cy-1) * 64
-  end
+      end -- x, y
+      end
 
     end
 
@@ -701,19 +681,17 @@ step:dump("Step:")
 
   ---| Simple_create_areas |---
 
-  one_big_area()
-
---[[  FIXME
+  if false then
+    one_big_area()
   else
-    create_chunk_map()
+    create_group_map()
 
     grow_step_areas()
 
-    if #cover_chunks > 0 then
+    if #group_list > 0 then
       error("Cave steps failed to cover all important chunks\n")
     end
   end
---]]
 
   create_area_map()
 
@@ -774,7 +752,7 @@ do
   assert(entry_h)
 
   each A in R.cave_areas do
-    A.floor_h = entry_h
+    A.floor_h = entry_h + rand.pick({ -12, -6, 0, 6, 12 })
   end
 
   each D in R.conns do
@@ -1180,7 +1158,8 @@ do return end ----!!!!!!!
       c_h = R.max_floor_h + 400
     end
 
-c_h = f_h + 256
+f_h = -512
+c_h =  512 -- f_h + 256
 
     A.ceil_h = c_h
 
