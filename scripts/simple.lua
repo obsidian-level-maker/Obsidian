@@ -24,7 +24,8 @@ function Simple_cave_or_maze(R)
   local map
   local cave
 
-  local point_list
+  local importants = {}
+  local point_list = {}
 
 --[[
   R.cave_floor_h = 0 --!!!!!!  R.entry_floor_h
@@ -133,71 +134,6 @@ function Simple_cave_or_maze(R)
 --]]
 
 
-  local function clear_importants()
-    each C in R.chunks do
-      if C.foobage == "important" or C.foobage == "conn" or
-         C.crossover_hall
-      then
-        set_whole(C, -1)
-      end
-    end
-  end
-
-
-  local function clear_portals()
-    each D in R.conns do
-      local P = D.portal
-
-      if not P then continue end
-
-      -- determine cave cells to clear:
-      -- 1. skip one cell on each side of the portal
-      -- 2. clear cells which touch portal, and two more away from it
-
-      local b1 = cave_box_for_seed(P.sx1, P.sy1)
-      local b2 = cave_box_for_seed(P.sx2, P.sy2)
-
-      local cx1, cy1, cx2, cy2
-      
-      if geom.is_vert(P.side) then
-        cx1 = b1.cx1 + 1
-        cx2 = b2.cx2 - 1
-
-        if P.side == 2 then
-          cy1 = b1.cy1 - 3
-          cy2 = b1.cy1 + 2
-        else
-          cy1 = b1.cy2 - 3
-          cy2 = b1.cy2 + 2
-        end
-
-      else -- is_horiz(P.side)
-        cy1 = b1.cy1 + 1
-        cy2 = b2.cy2 - 1
-
-        if P.side == 4 then
-          cx1 = b1.cx1 - 3
-          cx2 = b1.cx1 + 2
-        else
-          cx1 = b1.cx2 - 3
-          cx2 = b1.cx2 + 2
-        end
-      end
-
-      -- our computed range will go outside of the room, hence need to
-      -- check each coordinate...
-
-      for cx = cx1, cx2 do
-      for cy = cy1, cy2 do
-        if map:valid_cell(cx, cy) and map:get(cx, cy) != nil then
-          map:set(cx, cy, -1)
-        end
-      end
-      end
-    end
-  end
-
-
   local function create_map()
     R.cave_base_x = SEEDS[R.sx1][R.sy1].x1
     R.cave_base_y = SEEDS[R.sx1][R.sy1].y1
@@ -207,14 +143,13 @@ function Simple_cave_or_maze(R)
 
 
   local function mark_boundaries()
-    for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
+    -- this also sets most parts of the cave to zero
+
+    for sx = R.sx1, R.sx2 do
+    for sy = R.sy1, R.sy2 do
       local S = SEEDS[sx][sy]
 
       if S.room != R then continue end
-
-      local C = S.chunk
-
-      if C and (C.void or C.scenic or C.cross_junc) then continue end
 
       local cx = (sx - R.sx1) * 4 + 1
       local cy = (sy - R.sy1) * 4 + 1
@@ -222,13 +157,13 @@ function Simple_cave_or_maze(R)
       map:fill(cx, cy, cx+3, cy+3, 0)
 
       for dir = 2,8,2 do
-        if not S:same_room(dir) and not (C and C.link[dir]) and
-           not (C and C.foobage == "important")
-        then
+        if not S:same_room(dir) then
           set_side(cx, cy, cx+3, cy+3, dir, sel(R.is_lake, -1, 1))
         end
       end
-    end end -- sx, sy
+
+    end -- sx, sy
+    end
   end
 
 
@@ -256,25 +191,117 @@ function Simple_cave_or_maze(R)
   end
 
 
-  local function collect_important_points()
-    point_list = {}
+  local function point_for_portal(P)
+    -- determine cave cell range:
+    -- 1. skip one cell on each side of the portal
+    -- 2. clear cells which touch portal, and two more away from it
 
-    each C in R.chunks do
-      if C.foobage == "important" or C.foobage == "conn" then
+    local b1 = cave_box_for_seed(P.sx1, P.sy1)
+    local b2 = cave_box_for_seed(P.sx2, P.sy2)
 
-        local POINT =
-        {
-          x = math.i_mid(C.cave_x1, C.cave_x2)
-          y = math.i_mid(C.cave_y1, C.cave_y2)
-        }
+    local cx1, cy1, cx2, cy2
+    
+    if geom.is_vert(P.side) then
+      cx1 = b1.cx1 + 1
+      cx2 = b2.cx2 - 1
 
-        table.insert(point_list, POINT)
+      if P.side == 2 then
+        cy1 = b1.cy1
+        cy2 = b1.cy1 + 2
+      else
+        cy1 = b1.cy2 - 2
+        cy2 = b1.cy2
       end
+
+    else -- is_horiz(P.side)
+      cy1 = b1.cy1 + 1
+      cy2 = b2.cy2 - 1
+
+      if P.side == 4 then
+        cx1 = b1.cx1
+        cx2 = b1.cx1 + 2
+      else
+        cx1 = b1.cx2 - 2
+        cx2 = b1.cx2
+      end
+    end
+
+
+    local IMP =
+    {
+      cx1 = cx1
+      cy1 = cy1
+      cx2 = cx2
+      cy2 = cy2
+
+      portal = P
+    }
+
+    table.insert(importants, IMP)
+
+    local POINT =
+    {
+      x = math.i_mid(cx1, cx2)
+      y = math.i_mid(cy1, cy2)
+    }
+
+    table.insert(point_list, POINT)
+  end
+
+
+  local function point_for_goal(G)
+    -- FIXME: this assumes goal is at centre of a seed (currently true, but...)
+    local S = Seed_from_coord(G.x1 + 4, G.y1 + 4)
+
+    local cx = (S.sx - R.sx1) * 4 + 1
+    local cy = (S.sy - R.sy1) * 4 + 1
+    
+    local IMP =
+    {
+      cx1 = cx + 1
+      cy1 = cy + 1
+      cx2 = cx + 2
+      cy2 = cy + 2
+
+      goal = G
+    }
+
+    table.insert(importants, IMP)
+
+    local POINT =
+    {
+      x = cx + 1
+      y = cy + 1
+    }
+
+    table.insert(point_list, POINT)
+  end
+
+
+  local function collect_important_points()
+    each D in R.conns do
+      if R == D.L1 and D.portal1 then
+        point_for_portal(D.portal1)
+      end
+      if R == D.L2 and D.portal2 then
+        point_for_portal(D.portal2)
+      end
+    end
+
+    each G in R.goals do
+      point_for_goal(G)
     end
 
     assert(#point_list > 0)
 
     R.point_list = point_list
+  end
+
+
+  local function clear_importants()
+    each IMP in importants do
+      map:fill(IMP.cx1, IMP.cy1, IMP.cx2, IMP.cy2, -1)
+    end
   end
 
 
@@ -357,6 +384,8 @@ function Simple_cave_or_maze(R)
 
   ---| Simple_cave_or_maze |---
 
+  R.cave_areas = {}
+
   -- create the cave object and make the boundaries solid
   create_map()
 
@@ -365,7 +394,6 @@ function Simple_cave_or_maze(R)
   mark_boundaries()
 
   clear_importants()
-  clear_portals()
 
   generate_cave()
 
@@ -817,8 +845,6 @@ function Simple_render_cave(R)
 
   local B_CORNERS = { 1,3,9,7 }
 
-  local move_flat_corners = false; --????  (R.ceil_mat == "_SKY")
-
 
   local function grab_cell(x, y)
     if not cave:valid_cell(x, y) then
@@ -878,22 +904,6 @@ function Simple_render_cave(R)
     -- no need to move when all cells are the same
 
     if A == B and A == C and A == D then
-
-      -- but it makes for nicer lighting in outdoor rooms....
-      if not touch_solid and move_flat_corners then
-
-        local dx, dy
-
-        -- ensure length of (dx,dy) is never too long
-        repeat
-          dx = rand.pick { -20, -12, 0, 12, 20 }
-          dy = rand.pick { -20, -12, 0, 12, 20 }
-        until math.abs(dx) + math.abs(dy) < 38
-
-        delta_x_map[x][y] = dx
-        delta_y_map[x][y] = dy
-      end
-
       return
     end
 
@@ -1371,7 +1381,7 @@ do return end ----!!!!!!!
   
   create_delta_map()
 
-  each A in R.areas do
+  each A in R.cave_areas do
     render_floor_ceil(A)
   end
 
