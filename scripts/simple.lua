@@ -79,54 +79,6 @@ function AREA_CLASS.set_floor(A, floor_h)
 end
 
 
-function AREA_CLASS.grab_spots(A)
-  local L = A.room
-
-  local item_spots = {}
-
-  gui.spots_get_items(item_spots)
-
-
-  -- mark exclusion zones (e.g. area around a teleporter)
-  -- do it _after_ getting the item spots
-
-  each zone in L.exclusion_zones do
-    if zone.kind == "empty" then
-      local poly = Brush_new_quad(zone.x1, zone.y1, zone.x2, zone.y2)
-      gui.spots_fill_poly(poly, 2)
-    end
-  end
-
---  gui.spots_dump("Spot grid")
-
-
-  local mon_spots  = {}
-
-  gui.spots_get_mons(mon_spots)
-
-
-  if table.empty(item_spots) and mon_spots[1] then
-    table.insert(item_spots, mon_spots[1])
-  end
-
-  -- add to room, set Z positions
-
-  each spot in item_spots do
-    spot.z1 = A.floor_h
-    spot.z2 = A.ceil_h or (spot.z1 + 64)
-
-    table.insert(L.item_spots, spot)
-  end
-
-  each spot in mon_spots do
-    spot.z1 = A.floor_h
-    spot.z2 = A.ceil_h  or (spot.z1 + 200)  -- FIXME
-
-    spot.face_away = L:find_nonfacing_spot(spot.x1, spot.y1, spot.x2, spot.y2)
-
-    table.insert(L.mon_spots, spot)
-  end
-end
 
 
 --------------------------------------------------------------------
@@ -1254,6 +1206,54 @@ do return end ----!!!!!!!
   end
 
 
+  local function grab_spots(f_h, c_h)
+    local item_spots = {}
+
+    gui.spots_get_items(item_spots)
+
+
+    -- mark exclusion zones (e.g. area around a teleporter)
+    -- do it _after_ getting the item spots
+
+    each zone in R.exclusion_zones do
+      if zone.kind == "empty" then
+        local poly = Brush_new_quad(zone.x1, zone.y1, zone.x2, zone.y2)
+        gui.spots_fill_poly(poly, 2)
+      end
+    end
+
+  --  gui.spots_dump("Spot grid")
+
+
+    local mon_spots  = {}
+
+    gui.spots_get_mons(mon_spots)
+
+
+    if table.empty(item_spots) and mon_spots[1] then
+      table.insert(item_spots, mon_spots[1])
+    end
+
+    -- add to room, set Z positions
+
+    each spot in item_spots do
+      spot.z1 = f_h
+      spot.z2 = c_h
+
+      table.insert(R.item_spots, spot)
+    end
+
+    each spot in mon_spots do
+      spot.z1 = f_h
+      spot.z2 = c_h
+
+      spot.face_away = R:find_nonfacing_spot(spot.x1, spot.y1, spot.x2, spot.y2)
+
+      table.insert(R.mon_spots, spot)
+    end
+  end
+
+
   local function render_floor_ceil(A)
     assert(A.floor_map)
 
@@ -1279,7 +1279,8 @@ c_h =  512 -- f_h + 256
 
     gui.spots_begin(x1+4, y1+4, x2-4, y2-4, 2)
 
-    for x = 1,cave.w do for y = 1,cave.h do
+    for x = 1,cave.w do
+    for y = 1,cave.h do
       if (A.floor_map:get(x, y) or 0) > 0 then
 
         local f_brush = brush_for_cell(x, y)
@@ -1312,9 +1313,10 @@ c_h =  512 -- f_h + 256
         end
 
       end
-    end end
+    end  -- x, y
+    end
 
-    A:grab_spots()
+    grab_spots(f_h, c_h)
 
     gui.spots_end()
   end
