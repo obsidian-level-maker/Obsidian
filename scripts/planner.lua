@@ -147,49 +147,42 @@ function Plan_create_sections()
 
 
   local function pick_sizes(W, limit)
-    local min_size = 3
 
-    -- spare seeds on each edge of the map
-    limit = limit - SPARE_SEEDS * 2
-
-    assert(W >= 2)
-    assert(limit >= 1 + W * (min_size+1))
-
-    -- this lists holds the result sizes
     local sizes = {}
+ 
+    -- set edge sections
+    sizes[1]       = EDGE_SEEDS
+    sizes[W*2 + 3] = EDGE_SEEDS
 
-    -- set very left and right (or top and bottom) hallway channels
-    sizes[1]     = 1
-    sizes[W*2+1] = 1
+    -- set hallway channels next to edge sections
+    sizes[2]       = 1
+    sizes[W*2 + 2] = 1
 
-    local total
+    limit = limit - (EDGE_SEEDS + 1) * 2
 
-
-    total = 2
 
     for x = 1,W do
-      sizes[x*2] = 3
-      total = total + sizes[x*2]
+      -- room
+      sizes[x*2 + 1] = 3
+      limit = limit  - 3
 
       if x < W then
-        sizes[x*2+1] = 1
-        total = total + sizes[x*2+1]
+        -- hallway
+        sizes[x*2 + 2] = 1
+        limit = limit  - 1
       end
     end
 
-
-    local remaining = limit - total
-
-    assert(remaining >= 0)
+    assert(limit >= 0)
 
     return sizes
   end
 
 
   local function get_positions(W, sizes)
-    local pos = { 1 + SPARE_SEEDS }
+    local pos = { 1 }
 
-    for x = 1, W*2 do
+    for x = 1, W*2 + 2 do
       pos[x+1] = pos[x] + sizes[x]
     end
 
@@ -210,8 +203,8 @@ function Plan_create_sections()
   if MAP_W > max_W then MAP_W = max_W end
   if MAP_H > max_H then MAP_H = max_H end
 
-  SECTION_W = MAP_W * 2 + 1
-  SECTION_H = MAP_H * 2 + 1
+  SECTION_W = MAP_W * 2 + 3
+  SECTION_H = MAP_H * 2 + 3
 
   gui.printf("Map Size: %dx%d --> %dx%d sections\n", MAP_W, MAP_H, SECTION_W, SECTION_H)
 
@@ -228,14 +221,17 @@ function Plan_create_sections()
 
   SECTIONS = table.array_2D(SECTION_W, SECTION_H)
 
-  for x = 1,SECTION_W do for y = 1,SECTION_H do
+  for x = 1,SECTION_W do
+  for y = 1,SECTION_H do
     local shape
 
-    if (x % 2) == 0 and (y % 2) == 0 then
+    if x == 1 or x == SECTION_W or y == 1 or y == SECTION_H then
+      shape = "edge"
+    elseif (x % 2) == 1 and (y % 2) == 1 then
       shape = "rect"
-    elseif (x % 2) == 0 then
+    elseif (x % 2) == 1 then
       shape = "horiz"
-    elseif (y % 2) == 0 then
+    elseif (y % 2) == 1 then
       shape = "vert"
     else
       shape = "junction"
@@ -257,13 +253,15 @@ function Plan_create_sections()
     -- remember original location
     K.ox1, K.oy1 = K.sx1, K.sy1
     K.ox2, K.oy2 = K.sx2, K.sy2
-  end end
+
+  end  -- x, y
+  end
 
 
   --- create the SEED map ---
 
-  local seed_W = section_X[SECTION_W] + section_W[SECTION_W] + (SPARE_SEEDS - 1)
-  local seed_H = section_Y[SECTION_H] + section_H[SECTION_H] + (SPARE_SEEDS - 1)
+  local seed_W = section_X[SECTION_W] - 1 + section_W[SECTION_W]
+  local seed_H = section_Y[SECTION_H] - 1 + section_H[SECTION_H]
 
   Seed_init(seed_W, seed_H, 0, free_seeds)
 end
@@ -273,13 +271,15 @@ end
 function Plan_count_free_room_sections()
   local count = 0
 
-  for mx = 1,MAP_W do for my = 1,MAP_H do
+  for mx = 1,MAP_W do
+  for my = 1,MAP_H do
     local K = Section_get_room(mx, my)
 
     if K:usable_for_room() then
       count = count + 1
     end
-  end end
+  end
+  end
 
   return count
 end
@@ -289,13 +289,15 @@ end
 function Plan_get_visit_list()
   local visits = {}
 
-  for mx = 1,MAP_W do for my = 1,MAP_H do
+  for mx = 1,MAP_W do
+  for my = 1,MAP_H do
     local K = Section_get_room(mx, my)
 
     if K:usable_for_room() then
       table.insert(visits, { mx=mx, my=my, K=K })
     end
-  end end
+  end
+  end
 
   rand.shuffle(visits)
 
@@ -312,6 +314,7 @@ function Plan_dump_sections(title)
 
     if K.hall then return '#' end
 
+    if K.shape == "edge"     then return '/' end
     if K.shape == "vert"     then return '|' end
     if K.shape == "horiz"    then return '-' end
     if K.shape == "junction" then return '+' end
@@ -336,10 +339,10 @@ function Plan_dump_sections(title)
   gui.printf("\n")
   gui.printf("%s\n", title or "Section Map:")
 
-  for y = SECTIONS.h, 1, -1 do
+  for y = SECTION_H, 1, -1 do
     local line = "  "
 
-    for x = 1, SECTIONS.w do
+    for x = 1, SECTION_W do
       line = line .. section_char(x, y)
     end
 
@@ -1085,35 +1088,38 @@ function Plan_contiguous_sections()
   -- make sure that multi-section rooms are contiguous, i.e. each section
   -- touches a nearby section of the same room (no hallway in between).
 
-  local function try_join(K, dir)
-    local N  = K:neighbor(dir, 1)
-    local K2 = K:neighbor(dir, 2)
+  local function try_join(K1, dir)
+    local N  = K1:neighbor(dir, 1)
+    local K2 = K1:neighbor(dir, 2)
 
     if not (N and K2) then return end
 
-    -- require in-between section to be free
     if N.used then return end
 
     -- require section on far side to be same room
-    if K2.room != K.room then return end
+    if K2.room != K1.room then return end
 
-    N:set_room(K.room)
+    local R = K1.room
 
-    table.insert(K.room.sections, N)
+    N:set_room(R)
+
+    table.insert(R.sections, N)
   end
 
 
   ---| Plan_contiguous_sections |---
 
   for loop = 1,2 do
-    for kx = 1, SECTION_W do for ky = 1, SECTION_H do
+    for kx = 1, SECTION_W do
+    for ky = 1, SECTION_H do
       local K = SECTIONS[kx][ky]
 
       if K.room then
         try_join(K, 6)
         try_join(K, 8)
       end
-    end end -- kx, ky
+    end -- kx, ky
+    end
   end -- loop
 end
 
@@ -1301,14 +1307,16 @@ end
 
 
 function Plan_collect_sections()
-  for kx = 1,SECTION_W do for ky = 1,SECTION_H do
+  for kx = 1,SECTION_W do
+  for ky = 1,SECTION_H do
     local K = SECTIONS[kx][ky]
     local R = K.room
 
     if R then
       R:add_section(K)
     end
-  end end
+  end -- kx, ky
+  end
 
   -- determine sizes
   each R in LEVEL.rooms do

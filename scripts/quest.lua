@@ -1117,7 +1117,7 @@ function Quest_spread_facades()
   local function facades_do_edge_seeds()
     -- ensure seeds at edge of map (which have no section) get a facade
 
-    for x = SPARE_SEEDS, 1, -1 do
+    for x = EDGE_SEEDS, 1, -1 do
       facades_edge_pass(x, 1, 8, 6)
       facades_edge_pass(1, x, 6, 8)
 

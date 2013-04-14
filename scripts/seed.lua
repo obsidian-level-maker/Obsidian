@@ -116,10 +116,10 @@ class SECTION
 
   num_conn  -- number of connections
 
-  crossover_hall : HALLWAY
-
   hall_link[dir] : SECTION  -- for hallways, possible travel dirs
                             -- (may exit the hallway)
+
+  crossover_hall : HALLWAY
 }
 
 --------------------------------------------------------------]]
@@ -218,7 +218,8 @@ function Seed_init(map_W, map_H, free_W, free_H)
     BASE_Y = 0 - int(SEED_H / 2) * SEED_SIZE
   end
 
-  for x = 1,SEED_W do for y = 1,SEED_H do
+  for x = 1,SEED_W do
+  for y = 1,SEED_H do
     local S = SEED_CLASS.new(x, y)
 
     SEEDS[x][y] = S
@@ -231,12 +232,13 @@ function Seed_init(map_W, map_H, free_W, free_H)
 
     if x > map_W or y > map_H then
       S.free = true
-    elseif x <= SPARE_SEEDS or x >= map_W - (SPARE_SEEDS - 1) or
-           y <= SPARE_SEEDS or y >= map_H - (SPARE_SEEDS - 1)
+    elseif x <= EDGE_SEEDS or x >= map_W - (EDGE_SEEDS - 1) or
+           y <= EDGE_SEEDS or y >= map_H - (EDGE_SEEDS - 1)
     then
       S.edge_of_map = true
     end
-  end end -- x, y
+  end -- x, y
+  end
 end
 
 
@@ -384,16 +386,18 @@ function Section_get_room(mx, my)
     return nil
   end
 
-  return SECTIONS[mx*2][my*2]
+  return SECTIONS[1 + mx*2][1 + my*2]
 end
 
 
 function Section_random_visits()
   local list = {}
 
-  for kx = 1,SECTION_W do for ky = 1,SECTION_H do
+  for kx = 1,SECTION_W do
+  for ky = 1,SECTION_H do
     table.insert(list, SECTIONS[kx][ky])
-  end end
+  end
+  end
 
   rand.shuffle(list)
 

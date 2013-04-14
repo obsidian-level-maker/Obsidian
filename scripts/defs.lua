@@ -78,7 +78,7 @@ OB_THEMES["psycho"] =
 
 SEED_SIZE = 256
 
-SPARE_SEEDS = 2
+EDGE_SEEDS = 2
 
 EXTREME_H = 4000
 
