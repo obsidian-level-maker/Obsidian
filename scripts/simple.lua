@@ -18,6 +18,119 @@
 --
 ----------------------------------------------------------------
 
+--[[ *** CLASS INFORMATION ***
+
+class AREA
+{
+  kind : keyword
+
+  id : number   -- identifier (for debugging)
+
+  room : ROOM
+
+  chunks : list(CHUNK)
+
+  floor_map : CAVE  -- in cave rooms, this is the shape of the floor
+
+  size : number of seeds occupied
+
+  touching : list(AREA)   -- NOTE: only used by cave code ATM
+
+  floor_h  -- floor height
+
+  target_h  -- if present, get as close to this height as possible
+}
+
+--------------------------------------------------------------]]
+
+
+AREA_CLASS = {}
+
+function AREA_CLASS.new(kind, room)
+  local A =
+  {
+    id = Plan_alloc_id("area")
+    kind = kind
+    room = room
+    chunks = {}
+    touching = {}
+  }
+  table.set_class(A, AREA_CLASS)
+  return A
+end
+
+
+function AREA_CLASS.tostr(A)
+  return string.format("AREA_%d", A.id)
+end
+
+
+function AREA_CLASS.add_touching(A, N)
+  table.add_unique(A.touching, N)
+end
+
+
+function AREA_CLASS.set_floor(A, floor_h)
+  A.floor_h = floor_h
+
+  each C in A.chunks do
+    C.floor_h = floor_h
+  end
+end
+
+
+function AREA_CLASS.grab_spots(A)
+  local L = A.room
+
+  local item_spots = {}
+
+  gui.spots_get_items(item_spots)
+
+
+  -- mark exclusion zones (e.g. area around a teleporter)
+  -- do it _after_ getting the item spots
+
+  each zone in L.exclusion_zones do
+    if zone.kind == "empty" then
+      local poly = Brush_new_quad(zone.x1, zone.y1, zone.x2, zone.y2)
+      gui.spots_fill_poly(poly, 2)
+    end
+  end
+
+--  gui.spots_dump("Spot grid")
+
+
+  local mon_spots  = {}
+
+  gui.spots_get_mons(mon_spots)
+
+
+  if table.empty(item_spots) and mon_spots[1] then
+    table.insert(item_spots, mon_spots[1])
+  end
+
+  -- add to room, set Z positions
+
+  each spot in item_spots do
+    spot.z1 = A.floor_h
+    spot.z2 = A.ceil_h or (spot.z1 + 64)
+
+    table.insert(L.item_spots, spot)
+  end
+
+  each spot in mon_spots do
+    spot.z1 = A.floor_h
+    spot.z2 = A.ceil_h  or (spot.z1 + 200)  -- FIXME
+
+    spot.face_away = L:find_nonfacing_spot(spot.x1, spot.y1, spot.x2, spot.y2)
+
+    table.insert(L.mon_spots, spot)
+  end
+end
+
+
+--------------------------------------------------------------------
+
 
 function Simple_cave_or_maze(R)
 
@@ -717,8 +830,6 @@ function Simple_connect_all_areas(R, entry_h)
 
   local function recurse(A, z_dir)
     assert(A.floor_h)
-
-    if not A.touching then return end
 
     if rand.odds(z_change_prob) then
       z_dir = - z_dir

@@ -660,42 +660,6 @@ function ROOM_CLASS.build(R)
 end
 
 
-function ROOM_CLASS.dump_areas(R)
-  local function seed_char(x, y)
-    local S = SEEDS[x][y]
-
-    if not S or S.room != R then return ' ' end
-    if not S.chunk then return '!' end
-
-    if S.chunk.liquid then return '~' end
-    if S.chunk.scenic then return '#' end
-
-    local A = S.chunk.area
-
-    if not A then return '.' end
-    if not A.id then return '?' end
-
-    local n = 1 + ((A.id - 1) % 26)
-
-    return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
-  end
-
-  gui.debugf("AREAS IN %s @ (%d %d) :\n", R:tostr(), R.sx1, R.sy1)
-
-  for y = R.sy2, R.sy1, -1 do
-    local line = "  "
-
-    for x = R.sx1, R.sx2 do
-      line = line .. seed_char(x, y)
-    end
-
-    gui.debugf("%s\n", line)
-  end
-
-  gui.debugf("\n")
-end
-
-
 function Room_distribute_spots(L, list)
   each spot in list do
     if spot.kind == "cage" or spot.kind == "trap" then
@@ -2039,7 +2003,7 @@ end
 
 
 
-function Room_ambient_lighting()
+function Room_ambient_lighting__OLD()
 
   -- FIXME: probably should pick colors from a list (e.g. ROOM_THEME.colors or THEME.colors)
 
@@ -3245,7 +3209,7 @@ function Room_build_all()
   Areas_flesh_out()
 
   Room_outdoor_borders()
-  Room_ambient_lighting()
+---??  Room_ambient_lighting()
 
   Room_blow_chunks()
 

@@ -20,28 +20,6 @@
 
 --[[ *** CLASS INFORMATION ***
 
-class AREA
-{
-  kind : keyword
-
-  id : number   -- identifier (for debugging)
-
-  room : ROOM
-
-  chunks : list(CHUNK)
-
-  floor_map : CAVE  -- in cave rooms, this is the shape of the floor
-
-  size : number of seeds occupied
-
-  touching : list(AREA)   -- NOTE: only used by cave code ATM
-
-  floor_h  -- floor height
-
-  target_h  -- if present, get as close to this height as possible
-}
-
-
 class LINK
 {
   dir  -- direction from K1 to K2
@@ -53,147 +31,11 @@ class LINK
 --------------------------------------------------------------]]
 
 
-AREA_CLASS = {}
-
-function AREA_CLASS.new(kind, room)
-  local A =
-  {
-    id = Plan_alloc_id("area")
-    kind = kind
-    room = room
-    chunks = {}
-    touching = {}
-  }
-  table.set_class(A, AREA_CLASS)
-  return A
-end
-
-
-function AREA_CLASS.tostr(A)
-  return string.format("AREA_%d", A.id)
-end
-
-
-function AREA_CLASS.add_chunk(A, C)
-  C.area = A
-
-  table.insert(A.chunks, C)
-end
-
-
-function AREA_CLASS.touches(A, A2)
-  each N in A.touching do
-    if A2 == N then return true end
-  end
-
-  return false
-end
-
-
-function AREA_CLASS.add_touching(A, N)
-  table.add_unique(A.touching, N)
-end
-
-
-function AREA_CLASS.set_floor(A, floor_h)
-  A.floor_h = floor_h
-
-  each C in A.chunks do
-    C.floor_h = floor_h
-  end
-end
-
-
-function AREA_CLASS.shrink_bbox_for_room_edges(A, x1, y1, x2, y2)
-  local R = assert(A.room)
-
-  local rx1 = SEEDS[R.sx1][R.sy1].x1 + 40
-  local ry1 = SEEDS[R.sx1][R.sy1].y1 + 40
-  local rx2 = SEEDS[R.sx2][R.sy2].x2 - 40
-  local ry2 = SEEDS[R.sx2][R.sy2].y2 - 40
-
-  if x1 < rx1 then x1 = rx1 end
-  if y1 < ry1 then y1 = ry1 end
-  if x2 > rx2 then x2 = rx2 end
-  if y2 > ry2 then y2 = ry2 end
-
-  return x1,y1, x2,y2
-end
-
-
-function AREA_CLASS.chunk_bbox(A)
-  local x1, y1 =  9e9,  9e9
-  local x2, y2 = -9e9, -9e9
-
-  each C in A.chunks do
-    x1 = math.min(x1, C.x1)
-    y1 = math.min(y1, C.y1)
-    x2 = math.max(x2, C.x2)
-    y2 = math.max(y2, C.y2)
-  end
-
-  assert(x1 < x2)
-  assert(y1 < y2)
-
-  return A:shrink_bbox_for_room_edges(x1,y1, x2,y2)
-end
-
-
-function AREA_CLASS.grab_spots(A)
-  local L = A.room
-
-  local item_spots = {}
-
-  gui.spots_get_items(item_spots)
-
-
-  -- mark exclusion zones (e.g. area around a teleporter)
-  -- do it _after_ getting the item spots
-
-  each zone in L.exclusion_zones do
-    if zone.kind == "empty" then
-      local poly = Brush_new_quad(zone.x1, zone.y1, zone.x2, zone.y2)
-      gui.spots_fill_poly(poly, 2)
-    end
-  end
-
---  gui.spots_dump("Spot grid")
-
-
-  local mon_spots  = {}
-
-  gui.spots_get_mons(mon_spots)
-
-
-  if table.empty(item_spots) and mon_spots[1] then
-    table.insert(item_spots, mon_spots[1])
-  end
-
-  -- add to room, set Z positions
-
-  each spot in item_spots do
-    spot.z1 = A.floor_h
-    spot.z2 = A.ceil_h or (spot.z1 + 64)
-
-    table.insert(L.item_spots, spot)
-  end
-
-  each spot in mon_spots do
-    spot.z1 = A.floor_h
-    spot.z2 = A.ceil_h  or (spot.z1 + 200)  -- FIXME
-
-    spot.face_away = L:find_nonfacing_spot(spot.x1, spot.y1, spot.x2, spot.y2)
-
-    table.insert(L.mon_spots, spot)
-  end
-end
-
-
-function AREA_CLASS.decide_picture(A)
+function Area_decide_picture(K)
   if (not LEVEL.has_logo) or rand.odds(sel(A.room.has_logo, 10, 30)) then
-    A.pic_name = assert(A.room.zone.logo_name)
+    K.pic_name = assert(K.room.zone.logo_name)
 
-    A.room.has_logo = true
+    K.room.has_logo = true
      LEVEL.has_logo = true
 
     return
@@ -201,8 +43,8 @@ function AREA_CLASS.decide_picture(A)
 
   local prob = style_sel("pictures", 0, 50, 85, 99)
 
-  if A.room.zone.pictures and rand.odds(prob) then
-    A.pic_name = rand.key_by_probs(A.room.zone.pictures)
+  if K.room.zone.pictures and rand.odds(prob) then
+    K.pic_name = rand.key_by_probs(K.room.zone.pictures)
   end
 end
 
@@ -1532,15 +1374,6 @@ function Areas_flesh_out()
   end
 
 
-  local function floor_textures(R)
-    if R.kind == "cave" then return end
-
-    each A in R.areas do
-      pick_floor_tex(R, A)
-    end
-  end
-
-
   local function crossover_room(R)
     local hall = R.crossover_hall
 
@@ -1609,8 +1442,6 @@ function Areas_flesh_out()
 
     R:compute_wall_dists()
 
-    R.areas = {}
-
     if R.kind == "cave" then
       Areas_place_importants(R)
 
@@ -1630,7 +1461,7 @@ function Areas_flesh_out()
     R.done_heights = true
 
     if R.kind != "cave" then
-      floor_textures(R)
+      --?? floor_textures(R)
       Areas_place_importants(R)
     end
 
@@ -1643,11 +1474,12 @@ function Areas_flesh_out()
 
     -- TODO add "area" prefabs now (e.g. crates, cages, bookcases)
 
+--[[  ???
     each A in R.areas do
       A:decide_picture()
       A.use_fence = rand.odds(80)
     end
-
+--]]
   end
 
 
