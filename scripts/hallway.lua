@@ -1273,9 +1273,12 @@ function Hallway_scan(start_K, start_dir, mode)
       if end_K.hall then return end
     end
 
-    -- prefer not using sections at edge of map
+    -- prefer not using sections at edge of map (esp. for caves)
+    local edge_cost = 8
+    if L1.kind == "cave" or L2.kind == "cave" then edge_cost = 18 end
+
     each K in path do
-      if K.near_edge then score = score - 12 end
+      if K.near_edge then score = score - edge_cost end
     end
 
     -- prefer secret exits DO NOT connect to the start room
