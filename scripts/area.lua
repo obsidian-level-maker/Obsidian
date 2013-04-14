@@ -1142,9 +1142,7 @@ function Areas_layout_with_prefabs(R)
           assert(edge and edge.h)
 
           if not portal.floor_h then
-            portal.floor_h = h + edge.h
-
-            if portal.peer then portal.peer.floor_h = portal.floor_h end
+            Portal_set_floor(portal, h + edge.h)
           end
 
           continue
@@ -1630,12 +1628,7 @@ function Areas_flesh_out()
     initial_height(R)
     
     if R.kind == "cave" then
-      -- FIXME !!!
-      local entry_area = assert(R.entry_C.area)
-      R.entry_area = entry_area
-      entry_area:set_floor(R.entry_h)
-
-      Simple_connect_all_areas(R)
+      Simple_connect_all_areas(R, R.entry_h)
     else
       Areas_layout_with_prefabs(R)
     end

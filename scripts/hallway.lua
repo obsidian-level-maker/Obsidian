@@ -648,7 +648,7 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
       local portal = LINK.conn.portal1 or LINK.conn.portal2
 
       if portal and not portal.floor_h then
-        portal.floor_h = f_h
+        Portal_set_floor(portal, f_h)
       end
     end
 

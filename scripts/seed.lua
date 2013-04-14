@@ -273,6 +273,13 @@ function Seed_group_edge_coords(P, dir, thick)
 end
 
 
+function Portal_set_floor(P, floor_h)
+  P.floor_h = floor_h
+
+  if P.peer then P.peer.floor_h = floor_h end
+end
+
+
 --------------------------------------------------------------------
 
 
