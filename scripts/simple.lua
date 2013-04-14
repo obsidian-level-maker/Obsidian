@@ -349,7 +349,7 @@ function Simple_create_areas(R)
   local function one_big_area()
     local AREA = AREA_CLASS.new("floor", R)
 
-    table.insert(R.areas, AREA)
+    table.insert(R.cave_areas, AREA)
 
     AREA.floor_map = R.cave_map:copy()
 
@@ -583,7 +583,7 @@ step:dump("Step:")
       else
         local AREA = AREA_CLASS.new("floor", R) 
 
-        table.insert(R.areas, AREA)
+        table.insert(R.cave_areas, AREA)
 
         AREA.floor_map = step
 
@@ -639,7 +639,7 @@ step:dump("Step:")
 
     local area_map = CAVE_CLASS.blank_copy(R.cave_map)
 
-    each A in R.areas do
+    each A in R.cave_areas do
       for x = 1,W do
       for y = 1,H do
         if (A.floor_map.cells[x][y] or 0) > 0 then
@@ -679,8 +679,8 @@ step:dump("Step:")
     end end
 
     -- verify all areas touch at least one other
-    if #R.areas > 1 then
-      each A in R.areas do
+    if #R.cave_areas > 1 then
+      each A in R.cave_areas do
         assert(not table.empty(A.touching))
       end
     end
@@ -709,7 +709,7 @@ step:dump("Step:")
 
 
 --[[ debugging
-  each A in R.areas do
+  each A in R.cave_areas do
     assert(A.floor_map)
 
     A.floor_map:dump("Step for " .. A:tostr())
@@ -719,7 +719,7 @@ end
 
 
 
-function Simple_connect_all_areas(R)
+function Simple_connect_all_areas(R, entry_h)
 
   local z_change_prob = 10
   if rand.odds(10) then z_change_prob = 40 end
@@ -757,7 +757,21 @@ function Simple_connect_all_areas(R)
 
   ---| Simple_connect_all_areas |---
 
-do return end  --!!!! FIXME
+--!!!! FIXME
+do
+  assert(entry_h)
+
+  each A in R.cave_areas do
+    A.floor_h = entry_h
+  end
+
+  each D in R.conns do
+    if D.portal1 then Portal_set_floor(D.portal1, entry_h) end
+    if D.portal2 then Portal_set_floor(D.portal2, entry_h) end
+  end
+
+  return
+end
 
   local z_dir = rand.sel(35, 1, -1)
 
@@ -1153,6 +1167,8 @@ do return end ----!!!!!!!
     elseif rand.odds(25) then
       c_h = R.max_floor_h + 400
     end
+
+c_h = f_h + 256
 
     A.ceil_h = c_h
 
