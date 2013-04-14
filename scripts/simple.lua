@@ -199,18 +199,29 @@ function Simple_cave_or_maze(R)
 
 
   local function point_for_goal(G)
-    -- FIXME: this assumes goal is at centre of a seed (currently true, but...)
-    local S = Seed_from_coord(G.x1 + 4, G.y1 + 4)
+    -- expand bbox slightly
+    local x1, y1 = G.x1 - 12, G.y1 - 12
+    local x2, y2 = G.x2 - 12, G.y2 - 12
 
-    local cx = (S.sx - R.sx1) * 4 + 1
-    local cy = (S.sy - R.sy1) * 4 + 1
-    
+    -- convert to cell coordinates
+    x1 = x1 - R.cave_base_x ; y1 = y1 - R.cave_base_y
+    x2 = x2 - R.cave_base_x ; y2 = y2 - R.cave_base_y
+
+    local cx1 = 1 + int(x1 / 64)
+    local cy1 = 1 + int(y1 / 64)
+
+    local cx2 = 1 + int((x2 + 63) / 64)
+    local cy2 = 1 + int((y2 + 63) / 64)
+
+    assert(cx1 >= 1) ; assert(cx2 <= map.w)
+    assert(cy1 >= 1) ; assert(cy2 <= map.h)
+
     local IMP =
     {
-      cx1 = cx + 1
-      cy1 = cy + 1
-      cx2 = cx + 2
-      cy2 = cy + 2
+      cx1 = cx1
+      cy1 = cy1
+      cx2 = cx2
+      cy2 = cy2
 
       goal = G
     }
@@ -219,8 +230,8 @@ function Simple_cave_or_maze(R)
 
     local POINT =
     {
-      x = cx + 1
-      y = cy + 1
+      x = math.i_mid(cx1, cx2)
+      y = math.i_mid(cy1, cy2)
     }
 
     table.insert(point_list, POINT)
@@ -244,6 +255,7 @@ function Simple_cave_or_maze(R)
     assert(#point_list > 0)
 
     R.point_list = point_list
+    R.cave_imps  = importants
   end
 
 
@@ -1141,11 +1153,11 @@ do return end ----!!!!!!!
   local function area_cell_bbox(A)
     -- TODO: this is whole cave, ideally have just the area
 
-    local x1 = cave.base_x + 40
-    local y1 = cave.base_y + 40
+    local x1 = cave.base_x + 10
+    local y1 = cave.base_y + 10
 
-    local x2 = x1 + cave.w * 64 - 40
-    local y2 = y1 + cave.w * 64 - 40
+    local x2 = x1 + cave.w * 64 - 10
+    local y2 = y1 + cave.h * 64 - 10
 
     return x1,y1, x2,y2
 
