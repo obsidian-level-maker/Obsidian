@@ -1513,16 +1513,9 @@ function Areas_flesh_out()
     end
 
     R.entry_h = entry_h
-  end
 
-
-  local function finish_heights(R)
-    -- find minimum and maximum heights
-    -- FIXME: DO THIS AS WE GO !!!!
     R.min_floor_h = R.entry_h
     R.max_floor_h = R.entry_h
-
-    R.done_heights = true
   end
 
 
@@ -1626,14 +1619,15 @@ function Areas_flesh_out()
     end
 
     initial_height(R)
-    
+
     if R.kind == "cave" then
       Simple_connect_all_areas(R, R.entry_h)
+      Simple_render_cave(R)
     else
       Areas_layout_with_prefabs(R)
     end
 
-    finish_heights(R)
+    R.done_heights = true
 
     if R.kind != "cave" then
       floor_textures(R)
@@ -1654,11 +1648,6 @@ function Areas_flesh_out()
       A.use_fence = rand.odds(80)
     end
 
-    if R.kind == "cave" then
-      Simple_render_cave(R)
-    else
-      ---## determine_spots(R)
-    end
   end
 
 
