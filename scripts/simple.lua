@@ -22,66 +22,15 @@
 
 class AREA
 {
-  kind : keyword
+  touching : list(AREA)
 
-  id : number   -- identifier (for debugging)
-
-  room : ROOM
-
-  chunks : list(CHUNK)
-
-  floor_map : CAVE  -- in cave rooms, this is the shape of the floor
-
-  size : number of seeds occupied
-
-  touching : list(AREA)   -- NOTE: only used by cave code ATM
+  floor_map : CAVE   -- shape of the floor
 
   floor_h  -- floor height
-
-  target_h  -- if present, get as close to this height as possible
+  ceil_h   -- ceiling height
 }
 
 --------------------------------------------------------------]]
-
-
-AREA_CLASS = {}
-
-function AREA_CLASS.new(kind, room)
-  local A =
-  {
-    id = Plan_alloc_id("area")
-    kind = kind
-    room = room
-    chunks = {}
-    touching = {}
-  }
-  table.set_class(A, AREA_CLASS)
-  return A
-end
-
-
-function AREA_CLASS.tostr(A)
-  return string.format("AREA_%d", A.id)
-end
-
-
-function AREA_CLASS.add_touching(A, N)
-  table.add_unique(A.touching, N)
-end
-
-
-function AREA_CLASS.set_floor(A, floor_h)
-  A.floor_h = floor_h
-
-  each C in A.chunks do
-    C.floor_h = floor_h
-  end
-end
-
-
-
-
---------------------------------------------------------------------
 
 
 function Simple_cave_or_maze(R)
@@ -429,7 +378,10 @@ function Simple_create_areas(R)
 
 
   local function one_big_area()
-    local AREA = AREA_CLASS.new("floor", R)
+    local AREA =
+    {
+      touching = {}
+    }
 
     table.insert(R.cave_areas, AREA)
 
@@ -648,7 +600,10 @@ step:dump("Step:")
         merge_step(prev_A.floor_map)
 
       else
-        local AREA = AREA_CLASS.new("floor", R) 
+        local AREA =
+        {
+          touching = {}
+        }
 
         table.insert(R.cave_areas, AREA)
 
@@ -716,7 +671,8 @@ step:dump("Step:")
 
     local area_map = R.area_map
 
-    for x = 1,W do for y = 1,H do
+    for x = 1,W do
+    for y = 1,H do
       local A1 = area_map.cells[x][y]
 
       if not A1 then continue end
@@ -729,11 +685,12 @@ step:dump("Step:")
         local A2 = area_map.cells[nx][ny]
 
         if A2 and A2 != A1 then
-          A1:add_touching(A2)
-          A2:add_touching(A1)
+          table.add_unique(A1.touching, A2)
+          table.add_unique(A2.touching, A1)
         end
       end
-    end end
+    end  -- x, y
+    end
 
     -- verify all areas touch at least one other
     if #R.cave_areas > 1 then
@@ -760,14 +717,13 @@ step:dump("Step:")
 
   create_area_map()
 
---!!!  determine_touching_areas()
-
+  determine_touching_areas()
 
 --[[ debugging
   each A in R.cave_areas do
     assert(A.floor_map)
 
-    A.floor_map:dump("Step for " .. A:tostr())
+    A.floor_map:dump("Step for area-" .. tostring(A))
   end
 --]]
 end
@@ -780,6 +736,7 @@ function Simple_connect_all_areas(R, entry_h)
   if rand.odds(10) then z_change_prob = 40 end
   if rand.odds(15) then z_change_prob =  0 end
 
+
   local function recurse(A, z_dir)
     assert(A.floor_h)
 
@@ -791,16 +748,7 @@ function Simple_connect_all_areas(R, entry_h)
       if not N.floor_h then
         local new_h = A.floor_h + z_dir * rand.sel(35, 8, 16)
 
-        N:set_floor(new_h)
-
--- LIGHTING TEST CRAP
-  if GAME.format != "doom" and R.ceil_mat != "_SKY" then
-    local x = assert(N.light_x)
-    local y = assert(N.light_y)
-    local z = N.floor_h + rand.pick { 40,60,80 }
-    local light = rand.pick { 70, 110, 150 }
-    entity_helper("light", x, y, z, { light=light })
-  end
+        N.floor_h = new_h
 
         recurse(N, z_dir)
       end
