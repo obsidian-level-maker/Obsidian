@@ -61,80 +61,23 @@ function Simple_cave_or_maze(R)
   end
 
 
-  local function set_whole(C, value)
-    for cx = C.cave_x1, C.cave_x2 do
-      for cy = C.cave_y1, C.cave_y2 do
-        map:set(cx, cy, value)
-      end
-    end
-  end
-
-
   local function set_side(cx1, cy1, cx2, cy2, side, value)
     local x1,y1, x2,y2 = geom.side_coords(side, cx1,cy1, cx2,cy2)
 
-    for cx = x1,x2 do for cy = y1,y2 do
-      map:set(cx, cy, value)
-    end end
+    map:fill(x1, y1, x2, y2, value)
   end
 
 
---[[
-  local function set_corner(S, side, value)
-    local mx = (S.sx - R.sx1) * 4 + 1
-    local my = (S.sy - R.sy1) * 4 + 1
+  local function set_corner(cx1, cy1, cx2, cy2, side, value)
+    local cx, cy = geom.pick_corner(side, cx1, cy1, cx2, cy2)
 
-    local dx, dy = geom.delta(side)
-
-    mx = mx + 1 + dx
-    my = my + 1 + dy
-
-    map:set(mx, my, value)
+    map:set(cx, cy, value)
   end
-
-
-  local function handle_wall(S, side)
-    local N = S:neighbor(side)
-
-    if not N or not N.room then
-      return set_side(S, side, (R.is_lake ? -1 ; 1))
-    end
-
-    if N.room == S.room then return end
-
-    if N.room.natural then
-      return set_side(S, side, (R.is_lake ? -1 ; 1))
-    end
-
-    set_side(S, side, (R.is_lake ? -1 ; 1))
-  end
-
-
-  local function handle_corner(S, side)
-    local N = S:neighbor(side)
-
-    local A = S:neighbor(geom.ROTATE[1][side])
-    local B = S:neighbor(geom.ROTATE[7][side])
-
-    if not (A and A.room == R) or not (B and B.room == R) then
-      return
-    end
-
-    if not N or not N.room then
-      if R.is_lake then set_corner(S, side, -1) end
-      return
-    end
-
-    if N.room == S.room then return end
-
-    if N.room.nature then return end
-
-    set_corner(S, side, -1)
-  end
---]]
 
 
   local function create_map()
+    R.cave_areas  = {}
+
     R.cave_base_x = SEEDS[R.sx1][R.sy1].x1
     R.cave_base_y = SEEDS[R.sx1][R.sy1].y1
 
@@ -161,6 +104,12 @@ function Simple_cave_or_maze(R)
           set_side(cx, cy, cx+3, cy+3, dir, sel(R.is_lake, -1, 1))
         end
       end
+
+      for dir = 1,9,2 do if dir != 5 then
+        if not S:same_room(dir) then
+          set_corner(cx, cy, cx+3, cy+3, dir, sel(R.is_lake, -1, 1))
+        end
+      end end
 
     end -- sx, sy
     end
@@ -375,16 +324,7 @@ function Simple_cave_or_maze(R)
   end
 
 
-  ----------->
-
-
-  local w_tex  = cave_tex
-
-
-
   ---| Simple_cave_or_maze |---
-
-  R.cave_areas = {}
 
   -- create the cave object and make the boundaries solid
   create_map()
@@ -396,7 +336,6 @@ function Simple_cave_or_maze(R)
   clear_importants()
 
   generate_cave()
-
 end
 
 
@@ -411,14 +350,6 @@ function Simple_create_areas(R)
     local AREA = AREA_CLASS.new("floor", R)
 
     table.insert(R.areas, AREA)
-
-    each C in R.chunks do
-      if not C.void and not C.scenic and not C.cross_junc then
-        C.area = AREA
-        C.cave = true
-        table.insert(AREA.chunks, C)
-      end
-    end
 
     AREA.floor_map = R.cave_map:copy()
 
@@ -701,19 +632,21 @@ step:dump("Step:")
 
 
   local function create_area_map()
-    -- create a map where each cell refers to an AREA, or is NIL.
-
-    local area_map = CAVE_CLASS.blank_copy(R.cave_map)
+    -- create a map where each cell refers to an AREA, or is NIL
 
     local W = R.cave_map.w
     local H = R.cave_map.h
 
+    local area_map = CAVE_CLASS.blank_copy(R.cave_map)
+
     each A in R.areas do
-      for x = 1,W do for y = 1,H do
+      for x = 1,W do
+      for y = 1,H do
         if (A.floor_map.cells[x][y] or 0) > 0 then
           area_map.cells[x][y] = A
         end
-      end end
+      end
+      end
     end
 
     R.area_map = area_map
@@ -756,9 +689,9 @@ step:dump("Step:")
 
   ---| Simple_create_areas |---
 
-  if false then
-    -- FIXME: this probably broken!  (since no more filler chunks)
-    one_big_area()
+  one_big_area()
+
+--[[  FIXME
   else
     create_chunk_map()
 
@@ -768,10 +701,12 @@ step:dump("Step:")
       error("Cave steps failed to cover all important chunks\n")
     end
   end
+--]]
 
   create_area_map()
 
-  determine_touching_areas()
+--!!!  determine_touching_areas()
+
 
 --[[ debugging
   each A in R.areas do
@@ -821,6 +756,8 @@ function Simple_connect_all_areas(R)
 
 
   ---| Simple_connect_all_areas |---
+
+do return end  --!!!! FIXME
 
   local z_dir = rand.sel(35, 1, -1)
 
@@ -1021,6 +958,8 @@ function Simple_render_cave(R)
   end
 
 
+--[[  OLD STUFF -- MAY BE USEFUL
+
   local function WALL_brush(data, coords)
     if data.shadow_info then
       local sh_coords = Brush_shadowify(coords, 40)
@@ -1068,7 +1007,7 @@ function Simple_render_cave(R)
 
     -- handle islands first
 
---[[
+--((
     each island in cave.islands do
 
       -- FIXME
@@ -1086,7 +1025,7 @@ function Simple_render_cave(R)
         cave:subtract(island)
       end
     end
---]]
+--))
 
 
 do return end ----!!!!!!!
@@ -1167,6 +1106,7 @@ do return end ----!!!!!!!
       walkway:render(FC_brush, data)
     end
   end
+--]]
 
 
   local function render_walls()
