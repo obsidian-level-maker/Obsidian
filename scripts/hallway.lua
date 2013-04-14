@@ -1273,6 +1273,11 @@ function Hallway_scan(start_K, start_dir, mode)
       if end_K.hall then return end
     end
 
+    -- prefer not using sections at edge of map
+    each K in path do
+      if K.near_edge then score = score - 12 end
+    end
+
     -- prefer secret exits DO NOT connect to the start room
     if mode == "secret_exit" then
       if L2.purpose == "START" then

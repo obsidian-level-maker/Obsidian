@@ -1,4 +1,4 @@
----------------------------------------------------------------
+----------------------------------------------------------------
 --  PLANNING : Single Player
 ----------------------------------------------------------------
 --
@@ -249,6 +249,10 @@ function Plan_create_sections()
 
     K.sx2 = K.sx1 + K.sw - 1
     K.sy2 = K.sy1 + K.sh - 1
+
+    if x == 2 or x == (SECTION_W - 1) or y == 2 or y == (SECTION_H - 1) then
+      K.near_edge = true
+    end
 
     -- remember original location
     K.ox1, K.oy1 = K.sx1, K.sy1

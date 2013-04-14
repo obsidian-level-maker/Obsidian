@@ -570,7 +570,9 @@ function SECTION_CLASS.eval_exit(K, dir)
   -- evaluate exit from this section + direction
   -- returns value between 0 and 10, or -1 if not possible at all
 
-  if not K:neighbor(dir) then return -1 end
+  local N = K:neighbor(dir)
+
+  if not N then return -1 end
 
   -- check if direction is unique
   local uniq_dir = true

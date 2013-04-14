@@ -1605,8 +1605,8 @@ function ROOM_CLASS.find_closet_spot(R, want_deep)
 
     -- prefer edge of map (leave interior hallway channels free)
     -- FIXME but only for START / EXIT closets
-    if (geom.is_horiz(dir) and (N.kx == 1 or N.kx == SECTION_W)) or
-       (geom. is_vert(dir) and (N.ky == 1 or N.ky == SECTION_W))
+    if (geom.is_horiz(dir) and (N.kx <= 2 or N.kx >= SECTION_W - 1)) or
+       (geom. is_vert(dir) and (N.ky <= 2 or N.ky >= SECTION_H - 1))
     then
       score = score + 50
     end
