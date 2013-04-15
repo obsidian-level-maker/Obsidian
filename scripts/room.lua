@@ -640,7 +640,7 @@ function ROOM_CLASS.dist_to_edge(R, S, dir)
   while true do
     local N = S:neighbor(dir)
 
-    if N.room != R then return count end
+    if not (N and N.room == R) then return count end
 
     count = count + 1 ; S = N
   end
