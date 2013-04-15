@@ -466,6 +466,8 @@ function Simple_create_areas(R)
     local function touch_a_group(G)
       remove_group_from_map(G)
 
+      table.insert(touched_groups, G)
+
       -- add the whole group to the current step
       for x = G.cx1, G.cx2 do
       for y = G.cy1, G.cy2 do
@@ -475,8 +477,6 @@ function Simple_create_areas(R)
         size = size + 1
       end
       end
-
-      touched_groups = touched_groups + 1
 
       -- update bbox
       cx1 = math.min(cx1, G.cx1)
@@ -571,7 +571,7 @@ function Simple_create_areas(R)
 
       size = 0
 
-      touched_groups = 0
+      touched_groups = {}
 
       cx1 = cx ; cx2 = cx
       cy1 = cy ; cy2 = cy
@@ -587,7 +587,7 @@ function Simple_create_areas(R)
         grow_it(50)
       end
 
-      if size < 4 or touched_groups > 0 then
+      if size < 4 or #touched_groups > 0 then
         grow_it(100)
         grow_it(40)
       end
@@ -613,6 +613,12 @@ step:dump("Step:")
       end
 
 
+      -- remember area of covered groups (e.g. for outgoing heights)
+      each G in touched_groups do
+        G.area = prev_A
+      end
+
+
       -- find new positions for growth
 
       for x = cx1, cx2 do
@@ -630,7 +636,8 @@ step:dump("Step:")
 
     end
 
-    ------>
+
+    --| grow_an_area |--
 
     while #pos_list > 0 do
       local pos = table.remove(pos_list, rand.irange(1, #pos_list))
@@ -744,6 +751,8 @@ function Simple_connect_all_areas(R, entry_h)
       z_dir = - z_dir
     end
 
+    rand.shuffle(A.touching)
+
     each N in A.touching do
       if not N.floor_h then
         local new_h = A.floor_h + z_dir * rand.sel(35, 8, 16)
@@ -756,27 +765,45 @@ function Simple_connect_all_areas(R, entry_h)
   end
 
 
+  local function find_entry_area()
+    each imp in R.cave_imps do
+      assert(imp.area)
+      if imp.portal and imp.portal.floor_h then
+        return imp.area
+      end
+    end
+
+    return rand.pick(R.cave_areas)
+  end
+
+
   ---| Simple_connect_all_areas |---
-
---!!!! FIXME
-do
-  assert(entry_h)
-
-  each A in R.cave_areas do
-    A.floor_h = entry_h + rand.pick({ -12, -6, 0, 6, 12 })
-  end
-
-  each D in R.conns do
-    if D.portal1 then Portal_set_floor(D.portal1, entry_h) end
-    if D.portal2 then Portal_set_floor(D.portal2, entry_h) end
-  end
-
-  return
-end
 
   local z_dir = rand.sel(35, 1, -1)
 
-  recurse(R.entry_area, z_dir)
+  local entry_area = find_entry_area()
+
+  entry_area.floor_h = entry_h
+
+  recurse(entry_area, z_dir)
+
+  -- transfer heights to importants and portals
+  each imp in R.cave_imps do
+    assert(imp.area)
+    assert(imp.area.floor_h)
+
+    local G = imp.goal
+    local P = imp.portal
+
+    if G then
+      G.z1 = imp.area.floor_h
+      G.z2 = G.z1 + 160
+    end
+
+    if P and not P.floor_h then
+      Portal_set_floor(P, imp.area.floor_h)
+    end
+  end 
 end
 
 
@@ -1209,16 +1236,15 @@ do return end ----!!!!!!!
     local c_mat = R.ceil_mat  or cave_tex
 
     local f_h = A.floor_h
-    local c_h = R.max_floor_h + rand.pick { 128, 192,192,192, 288 }
+    local c_h = f_h + rand.pick { 128, 192,192,192, 288 }
 
+--[[
     if c_mat == "_SKY" then
       c_h = R.max_floor_h + 192
     elseif rand.odds(25) then
       c_h = R.max_floor_h + 400
     end
-
-f_h = -512
-c_h =  512 -- f_h + 256
+--]]
 
     A.ceil_h = c_h
 
