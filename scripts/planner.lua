@@ -318,14 +318,15 @@ function Plan_dump_sections(title)
 
     if K.hall then return '#' end
 
-    if K.shape == "edge"     then return '/' end
-    if K.shape == "vert"     then return '|' end
-    if K.shape == "horiz"    then return '-' end
-    if K.shape == "junction" then return '+' end
-    if K.shape == "big_junc" then return '*' end
+    if not K.room then
+      if K.shape == "edge"     then return '/' end
+      if K.shape == "vert"     then return '|' end
+      if K.shape == "horiz"    then return '-' end
+      if K.shape == "junction" then return '+' end
+      if K.shape == "big_junc" then return '*' end
 
-    if not K.used then return '.' end
-    if not K.room then return '?' end
+      if not K.used then return '.' end
+    end
 
     local R = assert(K.room)
 
@@ -1287,13 +1288,15 @@ function Plan_expand_rooms()
 
 
   local function fill_junctions()
-    for kx = 1,SECTION_W do for ky = 1,SECTION_H do
+    for kx = 1,SECTION_W do
+    for ky = 1,SECTION_H do
       local K = SECTIONS[kx][ky]
 
       if K.shape == "junction" and not K.used then
         try_fill_junc(K)
       end
-    end end
+    end
+    end
   end
 
 
@@ -1308,11 +1311,12 @@ function Plan_expand_rooms()
   end
 
 
-  local function try_expand_cave(K, dir)
+  local function try_expand_cave_at_edge(K, dir)
     local N  = K:neighbor(dir, 1)
     local N2 = K:neighbor(dir, 2)
 
     if not N or N.used then return end
+
     if not N.near_edge then return end
 
     -- OK
@@ -1321,6 +1325,7 @@ function Plan_expand_rooms()
 
     if N2 and not N2.used then
       K.room:annex(N2)
+      K.expanded_dirs = { 2,4,6,8 }
     end
   end
 
@@ -1335,13 +1340,14 @@ function Plan_expand_rooms()
     if (A or B) and (C or D) and ((A or B) == (C or D)) then
       local R = A or B
       R:annex(K)
+      K.expanded_dirs = { 2,4,6,8 }
     end
   end
 
 
   local function expand_caves()
-    -- Note: done in two distinct steps to prevent run-on along edges
-    --       of the map.
+    -- Note: done in two distinct steps to prevent run-on along the
+    --       edges of the map.
 
     -- step 1 : expand out to edges
 
@@ -1352,12 +1358,12 @@ function Plan_expand_rooms()
       if not (K.room and K.room.kind == "cave") then continue end
 
       for dir = 2,8,2 do
-        try_expand_cave(K, dir)
+        try_expand_cave_at_edge(K, dir)
       end
     end
     end
 
-    -- step 2 : fill in corners (two sides are cave)
+    -- step 2 : fill in corners (require two sides to be cave)
 
     for loop = 1, 2 do
       for kx = 1, SECTION_W do
@@ -1386,7 +1392,7 @@ function Plan_expand_rooms()
   Plan_contiguous_sections()
 
   -- fill unused junctions that border a room on two sides
----!!!!  fill_junctions()
+--???  fill_junctions()
 
   -- update the seeds themselves and the room bboxes
   Plan_make_seeds()
