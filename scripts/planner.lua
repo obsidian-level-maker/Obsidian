@@ -1173,19 +1173,22 @@ function Plan_expand_rooms()
     local count = 0
 
     -- test if all sections can be nudged
-    for kx = kx1,kx2 do for ky = ky1,ky2 do
+    for kx = kx1,kx2 do
+    for ky = ky1,ky2 do
       local KP = SECTIONS[kx][ky]
       if KP.room != K.room then continue end
       if KP:same_room(dir) then continue end
 
       if not can_nudge(KP, dir) then return false end
       count = count + 1
-    end end
+    end
+    end
 
     if count == 0 then return false end
 
     -- actually nudge them
-    for kx = kx1,kx2 do for ky = ky1,ky2 do
+    for kx = kx1,kx2 do
+    for ky = ky1,ky2 do
       local KP = SECTIONS[kx][ky]
       if KP.room != K.room then continue end
       if KP:same_room(dir) then continue end
@@ -1194,7 +1197,8 @@ function Plan_expand_rooms()
 
       K.room:annex(N)
       K:set_expanded(dir)
-    end end
+    end
+    end
 
     return true
   end
@@ -1213,7 +1217,8 @@ function Plan_expand_rooms()
     local visits  = {}
     local narrows = {}
 
-    for mx = 1,MAP_W do for my = 1,MAP_H do
+    for mx = 1,MAP_W do
+    for my = 1,MAP_H do
       local K = Section_get_room(mx, my)
 
       if K.room then
@@ -1229,7 +1234,8 @@ function Plan_expand_rooms()
           table.insert(narrows, { K=K, dir=6 })
         end
       end
-    end end
+    end  -- mx, my
+    end
 
     -- do an initial pass to try and expand very narrow rooms
     rand.shuffle(narrows)
@@ -1291,16 +1297,96 @@ function Plan_expand_rooms()
   end
 
 
+  local function neighbor_cave_room(K, dir)
+    local N = K:neighbor(dir)
+
+    if (N and N.room and N.room.kind == "cave") then
+      return N.room
+    end
+
+    return nil
+  end
+
+
+  local function try_expand_cave(K, dir)
+    local N  = K:neighbor(dir, 1)
+    local N2 = K:neighbor(dir, 2)
+
+    if not N or N.used then return end
+    if not N.near_edge then return end
+
+    -- OK
+
+    K.room:annex(N)
+
+    if N2 and not N2.used then
+      K.room:annex(N2)
+    end
+  end
+
+
+  local function try_expand_cave_corner(K)
+    local A = neighbor_cave_room(K, 4) 
+    local B = neighbor_cave_room(K, 6) 
+
+    local C = neighbor_cave_room(K, 2) 
+    local D = neighbor_cave_room(K, 8) 
+
+    if (A or B) and (C or D) and ((A or B) == (C or D)) then
+      local R = A or B
+      R:annex(K)
+    end
+  end
+
+
+  local function expand_caves()
+    -- Note: done in two distinct steps to prevent run-on along edges
+    --       of the map.
+
+    -- step 1 : expand out to edges
+
+    for kx = 3, SECTION_W-2 do
+    for ky = 3, SECTION_H-2 do
+      local K = SECTIONS[kx][ky]
+
+      if not (K.room and K.room.kind == "cave") then continue end
+
+      for dir = 2,8,2 do
+        try_expand_cave(K, dir)
+      end
+    end
+    end
+
+    -- step 2 : fill in corners (two sides are cave)
+
+    for loop = 1, 2 do
+      for kx = 1, SECTION_W do
+      for ky = 1, SECTION_H do
+        local K = SECTIONS[kx][ky]
+
+        if not (K.near_edge or K.shape == "edge") then continue end
+
+        if K.used then continue end
+
+        try_expand_cave_corner(K)
+      end
+      end
+    end -- loop
+  end
+
+
   ---| Plan_expand_rooms |---
 
   -- main stuff : expand rooms on sides
+  expand_caves()
+
 ---!!!!  nudge_rooms()
 
   -- fill in gaps
   Plan_contiguous_sections()
 
   -- fill unused junctions that border a room on two sides
-  fill_junctions()
+---!!!!  fill_junctions()
 
   -- update the seeds themselves and the room bboxes
   Plan_make_seeds()
