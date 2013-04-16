@@ -1488,7 +1488,7 @@ function Areas_flesh_out()
 
     h = h + rand.pick { 192, 256, 320 }
 
-    if R.kind == "outdoor" then
+    if R.is_outdoor then
       R.sky_group.h = math.max(R.sky_group.h or -768, h)
     else
       R.ceil_h = h

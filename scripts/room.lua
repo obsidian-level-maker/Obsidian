@@ -649,7 +649,7 @@ end
 
 
 function ROOM_CLASS.build(R)
-  if R.kind == "outdoor" then
+  if R.is_outdoor then
     local sky_h = assert(R.sky_group.h)
 
     each rect in R.sky_rects do

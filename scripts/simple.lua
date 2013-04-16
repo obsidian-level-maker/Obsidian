@@ -1231,6 +1231,11 @@ do return end ----!!!!!!!
     local f_h = A.floor_h
     local c_h = f_h + rand.pick { 128, 192,192,192, 288 }
 
+    if R.is_outdoor then
+      c_mat = nil
+      c_h   = nil
+    end
+
 --[[
     if c_mat == "_SKY" then
       c_h = R.max_floor_h + 192
@@ -1239,7 +1244,7 @@ do return end ----!!!!!!!
     end
 --]]
 
-    A.ceil_h = c_h
+    A.ceil_h = c_h or A.floor_h + 192
 
     -- Spot stuff
     local x1, y1, x2, y2 = area_cell_bbox(A)
@@ -1251,23 +1256,28 @@ do return end ----!!!!!!!
       if (A.floor_map:get(x, y) or 0) > 0 then
 
         local f_brush = brush_for_cell(x, y)
-        local c_brush = brush_for_cell(x, y)
 
-        Brush_add_top   (f_brush, f_h)
-        Brush_add_bottom(c_brush, c_h)
-
+        Brush_add_top(f_brush, f_h)
         Brush_set_mat(f_brush, f_mat, f_mat)
-        Brush_set_mat(c_brush, c_mat, c_mat)
 
         gui.spots_fill_poly(f_brush, 0)
 
         brush_helper(f_brush)
 
-        if c_mat == "_SKY" then
-          table.insert(c_brush, 1, { m="sky" })
+
+        if c_mat then
+          local c_brush = brush_for_cell(x, y)
+
+          Brush_add_bottom(c_brush, c_h)
+          Brush_set_mat(c_brush, c_mat, c_mat)
+
+          if c_mat == "_SKY" then
+            table.insert(c_brush, 1, { m="sky" })
+          end
+
+          brush_helper(c_brush)
         end
 
-        brush_helper(c_brush)
 
         -- handle walls (Spot stuff)
         for dir = 2,8,2 do
@@ -1283,7 +1293,7 @@ do return end ----!!!!!!!
     end  -- x, y
     end
 
-    grab_spots(f_h, c_h)
+    grab_spots(A.floor_h, A.ceil_h)
 
     gui.spots_end()
   end
@@ -1404,6 +1414,25 @@ do return end ----!!!!!!!
   end
 
 
+  local function add_sky_rects()
+    for sx = R.sx1, R.sx2 do
+    for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
+
+      if S.room == R then
+        local rect =
+        {
+          x1 = S.x1, y1 = S.y1
+          x2 = S.x2, y2 = S.y2
+        }
+
+        table.insert(R.sky_rects, rect)
+      end
+    end -- sx, sy
+    end
+  end
+
+
   ---| Simple_render_cave |---
   
   create_delta_map()
@@ -1415,5 +1444,9 @@ do return end ----!!!!!!!
   add_liquid_pools()
 
   render_walls()
+
+  if R.is_outdoor then
+    add_sky_rects()
+  end
 end
 
