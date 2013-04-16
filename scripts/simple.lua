@@ -33,6 +33,11 @@ class AREA
 --------------------------------------------------------------]]
 
 
+SPOT_CLEAR = 0
+SPOT_WALL  = 1
+SPOT_LEDGE = 2
+
+
 function Simple_cave_or_maze(R)
 
   local map
@@ -1159,69 +1164,6 @@ do return end ----!!!!!!!
   end
 
 
-  local function area_cell_bbox(A)
-    -- TODO: this is whole cave, ideally have just the area
-
-    local x1 = cave.base_x + 10
-    local y1 = cave.base_y + 10
-
-    local x2 = x1 + cave.w * 64 - 10
-    local y2 = y1 + cave.h * 64 - 10
-
-    return x1,y1, x2,y2
-
---  return A:shrink_bbox_for_room_edges(x1,y1, x2,y2)
-  end
-
-
-  local function grab_spots(f_h, c_h)
-    local item_spots = {}
-
-    gui.spots_get_items(item_spots)
-
-
-    -- mark exclusion zones (e.g. area around a teleporter)
-    -- do it _after_ getting the item spots
-
-    each zone in R.exclusion_zones do
-      if zone.kind == "empty" then
-        local poly = Brush_new_quad(zone.x1, zone.y1, zone.x2, zone.y2)
-        gui.spots_fill_poly(poly, 2)
-      end
-    end
-
-  --  gui.spots_dump("Spot grid")
-
-
-    local mon_spots  = {}
-
-    gui.spots_get_mons(mon_spots)
-
-
-    if table.empty(item_spots) and mon_spots[1] then
-      table.insert(item_spots, mon_spots[1])
-    end
-
-    -- add to room, set Z positions
-
-    each spot in item_spots do
-      spot.z1 = f_h
-      spot.z2 = c_h
-
-      table.insert(R.item_spots, spot)
-    end
-
-    each spot in mon_spots do
-      spot.z1 = f_h
-      spot.z2 = c_h
-
-      spot.face_away = R:find_nonfacing_spot(spot.x1, spot.y1, spot.x2, spot.y2)
-
-      table.insert(R.mon_spots, spot)
-    end
-  end
-
-
   local function render_floor_ceil(A)
     assert(A.floor_map)
 
@@ -1246,11 +1188,6 @@ do return end ----!!!!!!!
 
     A.ceil_h = c_h or A.floor_h + 192
 
-    -- Spot stuff
-    local x1, y1, x2, y2 = area_cell_bbox(A)
-
-    gui.spots_begin(x1+4, y1+4, x2-4, y2-4, 2)
-
     for x = 1,cave.w do
     for y = 1,cave.h do
       if (A.floor_map:get(x, y) or 0) > 0 then
@@ -1259,8 +1196,6 @@ do return end ----!!!!!!!
 
         Brush_add_top(f_brush, f_h)
         Brush_set_mat(f_brush, f_mat, f_mat)
-
-        gui.spots_fill_poly(f_brush, 0)
 
         brush_helper(f_brush)
 
@@ -1278,22 +1213,129 @@ do return end ----!!!!!!!
           brush_helper(c_brush)
         end
 
-
-        -- handle walls (Spot stuff)
-        for dir = 2,8,2 do
-          local nx, ny = geom.nudge(x, y, dir)
-          if cave:valid_cell(nx, ny) and R.area_map:get(nx, ny) != A then
-            local is_wall = (R.area_map:get(nx, ny) == nil)
-            local poly = brush_for_cell(nx, ny)
-            gui.spots_fill_poly(poly, sel(is_wall, 1, 2))
-          end
-        end
-
       end
     end  -- x, y
     end
+  end
 
-    grab_spots(A.floor_h, A.ceil_h)
+
+  local function do_spot_floor(A, x, y)
+    if R.area_map:get(x, y) != A then return end
+
+    local poly = brush_for_cell(x, y)
+
+    gui.spots_fill_poly(poly, SPOT_CLEAR)
+  end
+
+
+  local function do_spot_wall(A, x, y)
+    local cell = R.area_map:get(x, y)
+
+    if cell == A then return end
+
+    local near_area = false
+
+    for dir = 1,9 do if dir != 5 then
+      local nx, ny = geom.nudge(x, y, dir)
+
+      if cave:valid_cell(nx, ny) and R.area_map:get(nx, ny) == A then
+        near_area = true
+        break;
+      end
+    end end -- dir
+
+    if near_area then 
+      local poly = brush_for_cell(x, y)
+
+      if cell == nil then
+        gui.spots_fill_poly(poly, SPOT_WALL)
+      else
+        gui.spots_fill_poly(poly, SPOT_LEDGE)
+      end
+    end
+  end
+
+
+  local function determine_spots(A)
+    assert(A.floor_map)
+
+    -- determine bbox of area
+
+    -- TODO: this is whole cave, ideally have just the area
+
+    local x1 = cave.base_x + 10
+    local y1 = cave.base_y + 10
+
+    local x2 = x1 + cave.w * 64 - 10
+    local y2 = y1 + cave.h * 64 - 10
+
+    gui.spots_begin(x1, y1, x2, y2, SPOT_LEDGE)
+
+
+    -- step 1 : handle floors
+
+    for cx = 1, cave.w do
+    for cy = 1, cave.h do
+      do_spot_floor(A, cx, cy)
+    end
+    end
+
+    -- step 2 : handle nearby walls
+
+    for cx = 1, cave.w do
+    for cy = 1, cave.h do
+      do_spot_wall(A, cx, cy)
+    end
+    end
+
+
+    -- now grab all the spots...
+
+    local item_spots = {}
+
+    gui.spots_get_items(item_spots)
+
+    -- mark exclusion zones (e.g. area around a teleporter).
+    -- gotta do it _after_ getting the item spots
+
+    each zone in R.exclusion_zones do
+      if zone.kind == "empty" then
+        local poly = Brush_new_quad(zone.x1, zone.y1, zone.x2, zone.y2)
+        gui.spots_fill_poly(poly, SPOT_LEDGE)
+      end
+    end
+
+  --  gui.spots_dump("Spot grid")
+
+
+    local mon_spots  = {}
+
+    gui.spots_get_mons(mon_spots)
+
+    if table.empty(item_spots) and mon_spots[1] then
+      table.insert(item_spots, mon_spots[1])
+    end
+
+
+    -- add to room, set Z positions
+    local f_h = assert(A.floor_h)
+    local c_h = assert(A.ceil_h)
+
+    each spot in item_spots do
+      spot.z1 = f_h
+      spot.z2 = c_h
+
+      table.insert(R.item_spots, spot)
+    end
+
+    each spot in mon_spots do
+      spot.z1 = f_h
+      spot.z2 = c_h
+
+      spot.face_away = R:find_nonfacing_spot(spot.x1, spot.y1, spot.x2, spot.y2)
+
+      table.insert(R.mon_spots, spot)
+    end
 
     gui.spots_end()
   end
@@ -1441,7 +1483,11 @@ do return end ----!!!!!!!
     render_floor_ceil(A)
   end
 
-  add_liquid_pools()
+  each A in R.cave_areas do
+    determine_spots(A)
+  end
+
+--!!!! FIXME  add_liquid_pools()
 
   render_walls()
 
