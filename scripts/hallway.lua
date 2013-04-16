@@ -1779,7 +1779,8 @@ function Hallway_add_streets()
   local room = ROOM_CLASS.new()
 
   room.kind = "outdoor"
-  room.street  = true
+  room.is_outdoor = true
+  room.is_street  = true
   room.conn_group = 999
 
   for kx = 1,SECTION_W do for ky = 1,SECTION_H do

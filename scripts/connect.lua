@@ -186,7 +186,7 @@ function Connect_is_possible(L1, L2, mode)
   if mode != "cycle" and
      L1.kind != "hallway" and
      L2.kind != "hallway" and
-     not L2.street
+     not L2.is_street
   then
     return (L1.conn_group < L2.conn_group)
   end
@@ -451,7 +451,7 @@ function Connect_scan_sections(mode, min_score)
     if not (K and K.used and K.room) then continue end
 
     -- only connect TO a street (never FROM one)
-    if K.room.street then continue end
+    if K.room.is_street then continue end
 
     -- ignore secret exits in normal mode, require them in secret mode
     if (mode == "secret_exit") != (K.room.purpose == "SECRET_EXIT") then

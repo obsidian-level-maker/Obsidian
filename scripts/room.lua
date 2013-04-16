@@ -31,7 +31,8 @@ class ROOM
                   -- "plus"
                   -- "odd" (everything else)
 
-  scenic  : bool  -- true for scenic (unvisitable) rooms
+  is_outdoor : bool  -- true for "outdoor" kind, or some caves
+  is_street  : bool  -- used in Street mode
 
   conns : list(CONN)  -- connections with neighbor rooms
 
@@ -777,8 +778,7 @@ function CLOSET_CLASS.build(CL)
 
   -- align indoor closets with wall
   local dx, dy = 0, 0
-  if not (CL.parent.kind == "outdoor" or CL.parent.was_outdoor)
-  then
+  if not CL.parent.is_outdoor then
     if CL.dir == 2 then y1 = y1 - 32 end
     if CL.dir == 4 then x1 = x1 - 32 end
     if CL.dir == 6 then x2 = x2 + 32 end
@@ -849,7 +849,7 @@ function Room_select_textures()
         if L.floor_mat != L.wall_mat then break; end
       end
 
-      if L.was_outdoor then
+      if L.is_outdoor then
         L.ceil_mat = "_SKY"
       else
         L.ceil_mat = L.wall_mat
@@ -1415,7 +1415,7 @@ function Room_create_sky_groups()
   -- setup each room
 
   each R in LEVEL.rooms do
-    if R.kind == "outdoor" or R.was_outdoor_FIXME then
+    if R.is_outdoor then
       R.sky_group = { }
     end
   end
@@ -1518,7 +1518,7 @@ function OLD_Room_decide_windows()
 
     if STYLE.windows == "none" then return end
 
----    if R.outdoor or R.semi_outdoor then return end
+    if R.is_outdoor then return end
 
     -- TODO: cavey see-through holes
     if R.kind != "building" then return end
@@ -1960,7 +1960,7 @@ function Room_intermission_camera()
 
   each R in LEVEL.rooms do
     if R.purpose != "START" and R.purpose != "EXIT" and
-       R.kind != "cave" and R.kind != "hallway" and not R.street
+       R.kind != "cave" and R.kind != "hallway" and not R.is_street
     then
       if not room or (R.kvolume > room.kvolume) then
         room = R
@@ -3169,12 +3169,9 @@ end
 
 
 function Room_blow_chunks()
-
   each R in LEVEL.rooms do
     R:build()
   end
-
-  -- scenic rooms ??
 
   each H in LEVEL.halls do
     H:build()

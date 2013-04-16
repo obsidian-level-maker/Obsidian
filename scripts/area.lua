@@ -104,7 +104,7 @@ function Areas_handle_connections()
     -- prefer to build door on the room side
 --[[
     if (K1.hall and K2.room) or
-       (K1.room and K1.room.street)
+       (K1.room and K1.room.is_street)
     then
       K1, K2 = K2, K1
       dir = 10 - dir

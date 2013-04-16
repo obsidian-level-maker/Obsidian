@@ -1439,6 +1439,7 @@ function Plan_decide_outdoors()
     -- handle the surrounder room
     if R.is_surrounder and rand.odds(style_sel("outdoors", 0, 15, 35, 80)) then
       R.kind = "outdoor"
+      R.is_outdoor = true
       return -1  -- ignore it now
     end
 
@@ -1523,6 +1524,7 @@ function Plan_decide_outdoors()
     if not R then break end
 
     R.kind = "outdoor"
+    R.is_outdoor = true
 
     quota = quota - R.svolume
   end
@@ -1533,11 +1535,7 @@ end
 function Plan_decide_caves()
 
   local function turn_into_cave(R)
-    -- remember the outdoorsy-ness
-    if R.kind == "outdoor" then
-      R.was_outdoor = true
-    end
-
+    -- Note: we keep the 'is_outdoor' flag (to make an outdoorsy cave)
     R.kind = "cave"
   end
 
@@ -1693,7 +1691,7 @@ function Plan_dump_rooms(title, match_kind)
 
     if R.kind == "scenic" then return "=" end
 
-    if R.street then return ":" end
+    if R.is_street then return ":" end
 
     local n = 1 + ((R.id - 1) % 26)
 

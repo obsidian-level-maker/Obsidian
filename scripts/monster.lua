@@ -1072,7 +1072,7 @@ function Monsters_in_room(L)
       if info.float then prob = prob * 0.5 end
     end
 
-    if L.kind == "outdoor" or L.semi_outdoor then
+    if L.is_outdoor then
       prob = prob * (info.outdoor_factor or 1)
     end
 
