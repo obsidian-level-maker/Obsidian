@@ -836,7 +836,7 @@ function Simple_render_cave(R)
     if C == nil then return nil end
 
     -- check for a solid cell
-    if C > 0 then return "#" end
+    if C > 0 then return EXTREME_H end
 
     -- otherwise there should be a floor area here
     local A = R.area_map:get(x, y)
@@ -856,29 +856,20 @@ function Simple_render_cave(R)
     local C = grab_cell(x-1, y-1)
     local D = grab_cell(x,   y-1)
 
-    local touch_solid
-
     -- never move a corner at edge of room
     if not A or not B or not C or not D then
       return
     end
 
-    -- solid cells always override floor cells
-    if A == "#" or B == "#" or C == "#" or D == "#" then
-      A = (A == "#")
-      B = (B == "#")
-      C = (C == "#")
-      D = (D == "#")
-      touch_solid = true
-    else
-      -- otherwise pick highest floor (since that can block a lower floor)
-      local max_h = math.max(A, B, C, D) - 2
+    -- pick highest floor (since that can block a lower floor)
+    -- [solid cells will always override floor cells]
 
-      A = (A > max_h)
-      B = (B > max_h)
-      C = (C > max_h)
-      D = (D > max_h)
-    end
+    local max_h = math.max(A, B, C, D) - 2
+
+    A = (A > max_h)
+    B = (B > max_h)
+    C = (C > max_h)
+    D = (D > max_h)
 
     -- no need to move when all cells are the same
 
@@ -947,9 +938,11 @@ function Simple_render_cave(R)
 
     if square_cave then return end
 
-    for x = 1,dw do for y = 1,dh do
+    for x = 1, dw do
+    for y = 1, dh do
       analyse_corner(x, y)
-    end end
+    end
+    end
   end
 
 
