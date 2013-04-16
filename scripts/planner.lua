@@ -135,9 +135,6 @@ end
 
 function Plan_create_sections()
 
-  local free_seeds = 4  -- at top of map
-
-
   local function dump_sizes(line, t, N)
     for i = 1,N do
       line = line .. tostring(t[i]) .. " "
@@ -198,7 +195,7 @@ function Plan_create_sections()
   -- (this must take hallway channels into account too).
 
   local max_W = int((limit - 1) / 4.1)
-  local max_H = int((limit - free_seeds - 1) / 4.1)
+  local max_H = int((limit - DEPOT_SEEDS - 1) / 4.1)
 
   if MAP_W > max_W then MAP_W = max_W end
   if MAP_H > max_H then MAP_H = max_H end
@@ -210,7 +207,7 @@ function Plan_create_sections()
 
 
   local section_W = pick_sizes(MAP_W, limit)
-  local section_H = pick_sizes(MAP_H, limit - free_seeds)
+  local section_H = pick_sizes(MAP_H, limit - DEPOT_SEEDS)
 
   local section_X = get_positions(MAP_W, section_W)
   local section_Y = get_positions(MAP_H, section_H)
@@ -241,14 +238,7 @@ function Plan_create_sections()
 
     SECTIONS[x][y] = K
 
-    K.sw = section_W[x]
-    K.sh = section_H[y]
-
-    K.sx1 = section_X[x]
-    K.sy1 = section_Y[y]
-
-    K.sx2 = K.sx1 + K.sw - 1
-    K.sy2 = K.sy1 + K.sh - 1
+    K:set_seed_range(section_X[x], section_Y[y], section_W[x], section_H[y])
 
     if x == 2 or x == (SECTION_W - 1) or y == 2 or y == (SECTION_H - 1) then
       K.near_edge = true
@@ -267,7 +257,27 @@ function Plan_create_sections()
   local seed_W = section_X[SECTION_W] - 1 + section_W[SECTION_W]
   local seed_H = section_Y[SECTION_H] - 1 + section_H[SECTION_H]
 
-  Seed_init(seed_W, seed_H, 0, free_seeds)
+  Seed_init(seed_W, seed_H, 0, DEPOT_SEEDS)
+end
+
+
+
+function Plan_add_depot_sections()
+  LEVEL.depots = {}
+
+  local across_num = int(SEED_W / 3)
+
+  for dy = 1, DEPOT_SEEDS do
+  for dx = 1, across_num  do
+
+    local K = SECTION_CLASS.new("depot")  -- no kx/ky coords
+
+    K:set_seed_range(1 + (dx - 1) * 3, SEED_H - (dy - 1), 3, 1)
+
+    table.insert(LEVEL.depots, K)
+
+  end -- dy, dx
+  end
 end
 
 
@@ -1858,6 +1868,7 @@ function Plan_create_rooms()
 
   Plan_decide_map_size()
   Plan_create_sections()
+  Plan_add_depot_sections()
 
   Levels_invoke_hook("add_rooms")
 

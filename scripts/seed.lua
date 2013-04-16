@@ -305,6 +305,18 @@ function SECTION_CLASS.tostr(K)
 end
 
 
+function SECTION_CLASS.set_seed_range(K, sx, sy, sw, sh)
+  K.sx1 = sx
+  K.sy1 = sy
+
+  K.sw  = sw
+  K.sh  = sh
+
+  K.sx2 = K.sx1 + K.sw - 1
+  K.sy2 = K.sy1 + K.sh - 1
+end
+
+
 function SECTION_CLASS.usable_for_room(K)
   if K.used then return false end
   if K.shape == "big_junc" then return false end
