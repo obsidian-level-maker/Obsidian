@@ -749,8 +749,10 @@ function Simple_connect_all_areas(R, entry_h)
   if rand.odds(15) then z_change_prob =  0 end
 
 
-  local function recurse(A, z_dir)
-    assert(A.floor_h)
+  local function visit_area(A, z_dir, h)
+    -- recursively spread floors heights into each area
+
+    A.floor_h = h
 
     if rand.odds(z_change_prob) then
       z_dir = - z_dir
@@ -762,9 +764,7 @@ function Simple_connect_all_areas(R, entry_h)
       if not N.floor_h then
         local new_h = A.floor_h + z_dir * rand.sel(35, 8, 16)
 
-        N.floor_h = new_h
-
-        recurse(N, z_dir)
+        visit_area(N, z_dir, new_h)
       end
     end
   end
@@ -782,33 +782,46 @@ function Simple_connect_all_areas(R, entry_h)
   end
 
 
+  local function transfer_heights()
+    -- transfer heights to importants and portals
+    each imp in R.cave_imps do
+      assert(imp.area)
+      assert(imp.area.floor_h)
+
+      local G = imp.goal
+      local P = imp.portal
+
+      if G then
+        G.z1 = imp.area.floor_h
+        G.z2 = G.z1 + 160
+      end
+
+      if P and not P.floor_h then
+        Portal_set_floor(P, imp.area.floor_h)
+      end
+    end 
+  end
+
+
+  local function update_min_max_floor()
+    each A in R.cave_areas do
+      R.min_floor_h = math.min(R.min_floor_h, A.floor_h)
+      R.max_floor_h = math.max(R.max_floor_h, A.floor_h)
+    end
+  end
+
+
   ---| Simple_connect_all_areas |---
 
   local z_dir = rand.sel(35, 1, -1)
 
   local entry_area = find_entry_area()
 
-  entry_area.floor_h = entry_h
+  visit_area(entry_area, z_dir, entry_h)
 
-  recurse(entry_area, z_dir)
+  transfer_heights()
 
-  -- transfer heights to importants and portals
-  each imp in R.cave_imps do
-    assert(imp.area)
-    assert(imp.area.floor_h)
-
-    local G = imp.goal
-    local P = imp.portal
-
-    if G then
-      G.z1 = imp.area.floor_h
-      G.z2 = G.z1 + 160
-    end
-
-    if P and not P.floor_h then
-      Portal_set_floor(P, imp.area.floor_h)
-    end
-  end 
+  update_min_max_floor()
 end
 
 

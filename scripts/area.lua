@@ -1442,16 +1442,13 @@ function Areas_flesh_out()
 
     R:compute_wall_dists()
 
+    initial_height(R)
+
     if R.kind == "cave" then
       Areas_place_importants(R)
 
       Simple_cave_or_maze(R)
       Simple_create_areas(R)
-    end
-
-    initial_height(R)
-
-    if R.kind == "cave" then
       Simple_connect_all_areas(R, R.entry_h)
       Simple_render_cave(R)
     else
