@@ -445,6 +445,7 @@ function Areas_place_importants(R)
   --
   -- NOTE: closets for switches, teleporters (etc) are done elsewhere.
   --
+  local cave_mode
 
   local function dir_for_spot(T)
     local S = Seed_from_coord(T.x1 + 32, T.y1 + 32)
@@ -593,19 +594,20 @@ function Areas_place_importants(R)
     --   2. distance from entrance / exits
     --   3. distance from other goals
 
-    local   wall_dist = nearest_wall(spot)   or 10
-    local portal_dist = nearest_portal(spot) or 10
-    local   goal_dist = nearest_goal(spot)   or 10
-
-    -- in caves we need the spot to be away from the edges of the room
-    if R.kind == "cave" or rand.odds(5) then
-      goal_dist = math.min(goal_dist, wall_dist * 0.9)
-    end
+    local   wall_dist = nearest_wall(spot)   or 20
+    local portal_dist = nearest_portal(spot) or 20
+    local   goal_dist = nearest_goal(spot)   or 20
 
     -- combine portal_dist and goal_dist
-    goal_dist = math.min(goal_dist, portal_dist * 0.7)
+    local score = math.min(goal_dist, portal_dist * 1.2)
 
-    local score = goal_dist * 5 + wall_dist
+    -- now combine with wall_dist.
+    -- in caves we need the spot to be away from the edges of the room
+    if cave_mode then
+      score = score + wall_dist * 2.3
+    else
+      score = score + wall_dist / 5
+    end
 
     -- prefer not to use very large monster spots
     if spot.kind == "monster" and (spot.x2 - spot.x1) >= 188 then
@@ -613,16 +615,15 @@ function Areas_place_importants(R)
     end
  
     -- tie breaker
-    score = score + 2.1 * gui.random() ^ 2
+    score = score + 2.0 * gui.random() ^ 2
 
 --[[
-if R.purpose == "START" then
+if R.id == 2 then --- R.purpose == "START" then
 local S = Seed_from_coord(spot.x1 + 32, spot.y1 + 32)
 gui.printf("  %s : wall:%1.1f portal:%1.1f goal:%1.1f --> score:%1.2f\n",
     S:tostr(), wall_dist, portal_dist, goal_dist, score)
 end
 --]]
-
     return score
   end
 
@@ -847,6 +848,10 @@ end
 
 
   ---| Areas_place_importants |---
+
+  if R.kind == "cave" or rand.odds(10) then
+    cave_mode = true
+  end
 
   if R.kind == "cave" then
     fake_goal_spots()
