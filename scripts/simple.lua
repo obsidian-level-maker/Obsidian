@@ -28,6 +28,8 @@ class AREA
 
   floor_h  -- floor height
   ceil_h   -- ceiling height
+
+  has_goal : bool  -- true if area contains a portal or goal
 }
 
 --------------------------------------------------------------]]
@@ -621,6 +623,8 @@ step:dump("Step:")
       -- remember area of covered groups (e.g. for outgoing heights)
       each G in touched_groups do
         G.area = prev_A
+
+        prev_A.has_goal = true
       end
 
 
@@ -753,6 +757,12 @@ function Simple_connect_all_areas(R, entry_h)
     -- recursively spread floors heights into each area
 
     A.floor_h = h
+
+    if R.is_outdoor or A.has_goal then
+      A.ceil_h = A.floor_h + 192
+    else
+      A.ceil_h = A.floor_h + rand.pick { 128, 192,192,192, 288 }
+    end
 
     if rand.odds(z_change_prob) then
       z_dir = - z_dir
@@ -1162,72 +1172,66 @@ do return end ----!!!!!!!
 --]]
 
 
-  local function render_walls()
+  local function render_wall(cx, cy)
     local w_mat = cave_tex
 
-    for x = 1,cave.w do for y = 1,cave.h do
-      if (cave:get(x, y) or 0) > 0 then
-        local brush = brush_for_cell(x, y)
+    local brush = brush_for_cell(cx, cy)
 
-        Brush_set_mat(brush, w_mat, w_mat)
+    Brush_set_mat(brush, w_mat, w_mat)
 
-        brush_helper(brush)
-      end
-    end end
+    brush_helper(brush)
   end
 
 
-  local function render_floor_ceil(A)
+  local function render_floor_ceil(x, y)
+    local A = R.area_map:get(x, y)
+
     assert(A.floor_map)
 
     local f_mat = R.floor_mat or cave_tex
     local c_mat = R.ceil_mat  or cave_tex
 
     local f_h = A.floor_h
-    local c_h = f_h + rand.pick { 128, 192,192,192, 288 }
+    local c_h = A.ceil_h  
 
     if R.is_outdoor then
       c_mat = nil
       c_h   = nil
     end
 
---[[
-    if c_mat == "_SKY" then
-      c_h = R.max_floor_h + 192
-    elseif rand.odds(25) then
-      c_h = R.max_floor_h + 400
-    end
---]]
 
-    A.ceil_h = c_h or A.floor_h + 192
+    local f_brush = brush_for_cell(x, y)
 
-    for x = 1,cave.w do
-    for y = 1,cave.h do
-      if (A.floor_map:get(x, y) or 0) > 0 then
+    Brush_add_top(f_brush, f_h)
+    Brush_set_mat(f_brush, f_mat, f_mat)
 
-        local f_brush = brush_for_cell(x, y)
-
-        Brush_add_top(f_brush, f_h)
-        Brush_set_mat(f_brush, f_mat, f_mat)
-
-        brush_helper(f_brush)
+    brush_helper(f_brush)
 
 
-        if c_mat then
-          local c_brush = brush_for_cell(x, y)
+    if c_mat then
+      local c_brush = brush_for_cell(x, y)
 
-          Brush_add_bottom(c_brush, c_h)
-          Brush_set_mat(c_brush, c_mat, c_mat)
+      Brush_add_bottom(c_brush, c_h)
+      Brush_set_mat(c_brush, c_mat, c_mat)
 
-          if c_mat == "_SKY" then
-            table.insert(c_brush, 1, { m="sky" })
-          end
-
-          brush_helper(c_brush)
-        end
-
+      if c_mat == "_SKY" then
+        table.insert(c_brush, 1, { m="sky" })
       end
-    end  -- x, y
+
+      brush_helper(c_brush)
+    end
+  end
+
+
+  local function render_cell(x, y)
+    local val = cave:get(x, y)
+
+    if val == nil then
+      -- nothing
+    elseif val > 0 then
+      render_wall(x, y)
+    else
+      render_floor_ceil(x, y)
     end
   end
 
@@ -1397,7 +1401,8 @@ do return end ----!!!!!!!
 
     -- TODO: fireballs for Quake
 
-    for x = 1,cave.w do for y = 1,cave.h do
+    for x = 1,cave.w do
+    for y = 1,cave.h do
 
       if ((island:get(x, y) or 0) > 0) then
 
@@ -1492,17 +1497,17 @@ do return end ----!!!!!!!
   
   create_delta_map()
 
-  each A in R.cave_areas do
-    render_floor_ceil(A)
+--!!!! FIXME  add_liquid_pools()
+
+  for x = 1,cave.w do
+  for y = 1,cave.h do
+    render_cell(x, y)
+  end
   end
 
   each A in R.cave_areas do
     determine_spots(A)
   end
-
---!!!! FIXME  add_liquid_pools()
-
-  render_walls()
 
   if R.is_outdoor then
     add_sky_rects()
