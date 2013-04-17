@@ -29,7 +29,7 @@ class AREA
   floor_h  -- floor height
   ceil_h   -- ceiling height
 
-  has_goal : bool  -- true if area contains a portal or goal
+  goal_type : bool  -- true if area contains a portal or goal
 }
 
 --------------------------------------------------------------]]
@@ -137,6 +137,7 @@ function Simple_cave_or_maze(R)
   end
 
 
+--[[
   local function clear_walks()
     for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
       local S = SEEDS[sx][sy]
@@ -158,6 +159,27 @@ function Simple_cave_or_maze(R)
 
       end
     end end -- sx, sy
+  end
+--]]
+
+
+  local function clear_some_seeds()
+    for sx = R.sx1, R.sx2 do
+    for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
+
+      if S.room != R then continue end
+
+      if S.wall_dist < 1.1 then continue end
+
+      if rand.odds(85) then continue end
+
+      local cx = 1 + (sx - R.sx1) * 4
+      local cy = 1 + (sy - R.sy1) * 4
+
+      map:fill(cx, cy, cx+3, cy+3, -1)
+    end
+    end
   end
 
 
@@ -312,7 +334,7 @@ function Simple_cave_or_maze(R)
   local function generate_cave()
     map:dump("Empty Cave:")
 
-    local MAX_LOOP = 10
+    local MAX_LOOP = 20
 
     for loop = 1,MAX_LOOP do
       gui.debugf("Trying to make a cave: loop %d\n", loop)
@@ -341,10 +363,10 @@ function Simple_cave_or_maze(R)
         break
       end
 
-      -- randomly clear some cells along the walk path.
+      -- randomly clear some seeds in the room.
       -- After each iteration the number of cleared cells will keep
       -- increasing, making it more likely to generate a valid cave.
---!!! FIXME      clear_walks()
+      clear_some_seeds()
     end
 
     R.cave_map = cave
@@ -624,7 +646,11 @@ step:dump("Step:")
       each G in touched_groups do
         G.area = prev_A
 
-        prev_A.has_goal = true
+        if G.portal then
+          prev_A.goal_type = "portal"
+        else
+          prev_A.goal_type = "important"
+        end
       end
 
 
@@ -758,7 +784,7 @@ function Simple_connect_all_areas(R, entry_h)
 
     A.floor_h = h
 
-    if R.is_outdoor or A.has_goal then
+    if R.is_outdoor or A.goal_type then
       A.ceil_h = A.floor_h + 192
     else
       A.ceil_h = A.floor_h + rand.pick { 128, 192,192,192, 288 }
