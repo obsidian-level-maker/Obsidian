@@ -1258,18 +1258,18 @@ do return end ----!!!!!!!
     local f_h = A.floor_h
     local c_h = A.ceil_h  
 
-    if R.is_outdoor then
-      c_mat = nil
-      c_h   = nil
-    end
+    local f_liquid
 
     if R.walkway then
       if (R.liquid_way:get(x, y) or 0) > 0 then
         f_h = f_h - 24
         f_mat = "LAVA1"
+        c_h = c_h + 128
+        c_mat = "_SKY"
       elseif (R.walkway:get(x, y) or 0) > 0 then
         f_h = f_h - 8
         f_mat = R.walkway_mat
+        c_h = c_h + 64
       end
     end
 
@@ -1282,7 +1282,7 @@ do return end ----!!!!!!!
     brush_helper(f_brush)
 
 
-    if c_mat then
+    if not R.is_outdoor then
       local c_brush = brush_for_cell(x, y)
 
       Brush_add_bottom(c_brush, c_h)
@@ -1629,10 +1629,10 @@ function Simple_decide_properties(R)
     TORCH_MODES.corner = nil
   end
 
-  if (R.is_outdoor and LEVEL.sky_shade > 0) or
+  if (R.is_outdoor and not LEVEL.is_dark) or
      (R.cave_liquid_mode == "lake")
   then
-    TORCH_MODES.none = 2000
+    TORCH_MODES.none = 4000
   else
     local has_liquid = (R.cave_liquid_mode != "none")
     local has_sky    = (R.cave_sky_mode != "none")

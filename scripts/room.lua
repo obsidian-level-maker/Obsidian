@@ -1150,7 +1150,7 @@ function Room_matching_skins(env, reqs)
     end
 
     -- darkness check
-    if skin.dark_map and LEVEL.sky_shade != 0 then return 0 end
+    if skin.dark_map and not LEVEL.is_dark then return 0 end
 
     return 1
   end

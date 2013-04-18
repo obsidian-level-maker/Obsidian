@@ -42,9 +42,9 @@ class LEVEL
   quests  : list(QUEST)
   locks   : list(LOCK)
 
-  ids : table  -- used for allocating tag numbers (etc)
-
   liquid : table  -- the main liquid in the level (can be nil)
+
+  is_dark : bool  -- true if outdoor rooms will be dark
 
   start_room : ROOM  -- the starting room
    exit_room : ROOM  -- the exit room
@@ -64,6 +64,8 @@ class LEVEL
   assume_weapons : table  -- weapons we got in a previous level
 
   usable_keys : prob table  -- if present, can only use these keys
+
+  ids : table  -- used for allocating tag numbers (etc)
 
   -- TODO: lots of other fields : document important ones
 }

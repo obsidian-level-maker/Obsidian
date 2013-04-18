@@ -42,6 +42,7 @@ function Plan_choose_darkness()
   if rand.odds(prob) then
     gui.printf("Darkness falls across the land...\n")
 
+    LEVEL.is_dark = true
     LEVEL.sky_light = 0
     LEVEL.sky_shade = 0
   else
