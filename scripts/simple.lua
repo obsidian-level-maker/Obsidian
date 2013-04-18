@@ -1542,7 +1542,65 @@ end
 
 
 
+function Simple_decide_properties(R)
+  local LIQUID_MODES = { none=20, lake=10, some=80 }
+  local   STEP_MODES = { walkway=20, up=20, down=20, mixed=80 }
+  local    SKY_MODES = { none=30, walkway=50, some=50 }
+  local  TORCH_MODES = { none=10, corner=60, middle=30 }
+
+  -- decide liquid mode
+  if not LEVEL.liquid then
+    R.cave_liquid_mode = "none"
+    STEP_MODES.walkway = nil
+  else
+    R.cave_liquid_mode = rand.key_by_probs(LIQUID_MODES)
+  end
+
+  -- decide step mode
+  R.cave_step_mode = rand.key_by_probs(STEP_MODES)
+
+  if R.cave_step_mode != "walkway" then
+    SKY_MODES.walkway = nil
+  end
+
+  -- decide sky mode
+  if R.is_outdoor then
+    R.cave_sky_mode = rand.sel(50, "high_wall", "low_wall")
+  else
+    R.cave_sky_mode = rand.key_by_probs(SKY_MODES)
+  end
+
+  -- decide torch mode
+  if R.cave_sky_mode == "walkway" then
+    TORCH_MODES.middle = nil
+  end
+
+  if R.cave_liquid_mode == "lake" then
+    TORCH_MODES.corner = nil
+  end
+
+  if (R.is_outdoor and LEVEL.sky_shade > 0) or
+     (R.cave_liquid_mode == "lake")
+  then
+    TORCH_MODES.none = 2000
+  else
+    local has_liquid = (R.cave_liquid_mode != "none")
+    local has_sky    = (R.cave_sky_mode != "none")
+
+    if has_liquid and has_sky then
+      TORCH_MODES.none = 900
+    elseif has_liquid or has_sky then
+      TORCH_MODES.none = 50
+    end
+  end
+
+  R.cave_torch_mode = rand.key_by_probs(TORCH_MODES)
+end
+
+
+
 function Simple_cave_or_maze(R)
+  Simple_decide_properties(R)
   Simple_generate_cave(R)
   Simple_create_areas(R)
   Simple_floor_heights(R, R.entry_h)
