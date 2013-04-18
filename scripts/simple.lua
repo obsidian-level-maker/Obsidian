@@ -244,7 +244,7 @@ function Simple_generate_cave(R)
   local function point_for_goal(G)
     -- expand bbox slightly
     local x1, y1 = G.x1 - 12, G.y1 - 12
-    local x2, y2 = G.x2 - 12, G.y2 - 12
+    local x2, y2 = G.x2 + 12, G.y2 + 12
 
     -- convert to cell coordinates
     x1 = x1 - R.cave_base_x ; y1 = y1 - R.cave_base_y
@@ -303,8 +303,8 @@ function Simple_generate_cave(R)
 
 
   local function clear_importants()
-    each IMP in importants do
-      map:fill(IMP.cx1, IMP.cy1, IMP.cx2, IMP.cy2, -1)
+    each imp in importants do
+      map:fill(imp.cx1, imp.cy1, imp.cx2, imp.cy2, -1)
     end
   end
 
@@ -334,6 +334,12 @@ function Simple_generate_cave(R)
   local function generate_cave()
     map:dump("Empty Cave:")
 
+    local solid_prob = 38
+
+--!!!    if R.cave_liquid_mode == "lake" then
+--!!!      solid_prob = 58
+--!!!    end
+
     local MAX_LOOP = 20
 
     for loop = 1,MAX_LOOP do
@@ -353,7 +359,7 @@ function Simple_generate_cave(R)
         break
       end
 
-      cave:generate(sel(R.is_lake, 58, 38))
+      cave:generate(solid_prob)
 
       cave:remove_dots()
 
@@ -406,7 +412,10 @@ function Simple_create_areas(R)
   local group_map
 
 
-  local function one_big_area()
+  local function make_walkway()
+
+    -- only have one area (the indentation / liquidy bits are considered a
+    -- minor variation of it).
     local AREA =
     {
       touching = {}
@@ -417,6 +426,30 @@ function Simple_create_areas(R)
     AREA.floor_map = R.cave_map:copy()
 
     AREA.floor_map:negate()
+
+    each imp in R.cave_imps do
+      imp.area = AREA
+    end
+
+
+    R.walkway = R.cave_map:copy()
+
+    -- remove importants from it
+    each imp in R.cave_imps do
+      R.walkway:fill(imp.cx1, imp.cy1, imp.cx2, imp.cy2, 1)
+    end
+
+    R.walkway:negate()
+    R.walkway:shrink(true)
+    R.walkway:shrink(true)
+    R.walkway:remove_dots()
+
+
+    R.liquid_way = R.walkway:copy()
+
+    R.liquid_way:shrink(true)
+    R.liquid_way:shrink(true)
+    R.liquid_way:remove_dots()
   end
 
 
@@ -745,8 +778,8 @@ step:dump("Step:")
 
   ---| Simple_create_areas |---
 
-  if false then
-    one_big_area()
+  if R.cave_step_mode == "walkway" then
+    make_walkway()
   else
     create_group_map()
 
@@ -896,7 +929,14 @@ function Simple_render_cave(R)
     local A = R.area_map:get(x, y)
     assert(A)
 
-    return assert(A.floor_h)
+    local h = assert(A.floor_h)
+
+    if R.walkway then
+      if (R.walkway   :get(x, y) or 0) > 0 then h = h - 16 end
+      if (R.liquid_way:get(x, y) or 0) > 0 then h = h - 16 end
+    end
+
+    return h
   end
 
 
@@ -1212,8 +1252,6 @@ do return end ----!!!!!!!
   local function render_floor_ceil(x, y)
     local A = R.area_map:get(x, y)
 
-    assert(A.floor_map)
-
     local f_mat = R.floor_mat or cave_tex
     local c_mat = R.ceil_mat  or cave_tex
 
@@ -1223,6 +1261,16 @@ do return end ----!!!!!!!
     if R.is_outdoor then
       c_mat = nil
       c_h   = nil
+    end
+
+    if R.walkway then
+      if (R.liquid_way:get(x, y) or 0) > 0 then
+        f_h = f_h - 24
+        f_mat = "LAVA1"
+      elseif (R.walkway:get(x, y) or 0) > 0 then
+        f_h = f_h - 8
+        f_mat = R.walkway_mat
+      end
     end
 
 
@@ -1300,8 +1348,6 @@ do return end ----!!!!!!!
 
 
   local function determine_spots(A)
-    assert(A.floor_map)
-
     -- determine bbox of area
 
     -- TODO: this is whole cave, ideally have just the area
@@ -1523,6 +1569,10 @@ do return end ----!!!!!!!
   
   create_delta_map()
 
+  if R.walkway then
+    R.walkway_mat = choose_tex(R.floor_mat, R.theme.naturals or THEME.naturals)
+  end
+
 --!!!! FIXME  add_liquid_pools()
 
   for x = 1,cave.w do
@@ -1543,9 +1593,9 @@ end
 
 
 function Simple_decide_properties(R)
-  local LIQUID_MODES = { none=20, lake=10, some=80 }
-  local   STEP_MODES = { walkway=20, up=20, down=20, mixed=80 }
-  local    SKY_MODES = { none=30, walkway=50, some=50 }
+  local LIQUID_MODES = { none=20, lake=10, some=8099 }
+  local   STEP_MODES = { walkway=2099, up=20, down=20, mixed=80 }
+  local    SKY_MODES = { none=30, walkway=5099, some=50 }
   local  TORCH_MODES = { none=10, corner=60, middle=30 }
 
   -- decide liquid mode
@@ -1557,7 +1607,7 @@ function Simple_decide_properties(R)
   end
 
   -- decide step mode
-  R.cave_step_mode = rand.key_by_probs(STEP_MODES)
+  R.cave_step_mode = "walkway" --!!!! rand.key_by_probs(STEP_MODES)
 
   if R.cave_step_mode != "walkway" then
     SKY_MODES.walkway = nil
@@ -1602,8 +1652,10 @@ end
 function Simple_cave_or_maze(R)
   Simple_decide_properties(R)
   Simple_generate_cave(R)
+
   Simple_create_areas(R)
   Simple_floor_heights(R, R.entry_h)
+
   Simple_render_cave(R)
 end
 
