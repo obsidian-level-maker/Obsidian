@@ -29,7 +29,11 @@ class AREA
   floor_h  -- floor height
   ceil_h   -- ceiling height
 
-  goal_type : bool  -- true if area contains a portal or goal
+  goal_type : keyword  -- normally nil
+                       -- or can be "portal" or "important"
+
+  walk_way   : CAVE
+  liquid_way : CAVE
 }
 
 --------------------------------------------------------------]]
@@ -432,24 +436,27 @@ function Simple_create_areas(R)
     end
 
 
-    R.walkway = R.cave_map:copy()
+    local walk_way = R.cave_map:copy()
 
     -- remove importants from it
     each imp in R.cave_imps do
-      R.walkway:fill(imp.cx1, imp.cy1, imp.cx2, imp.cy2, 1)
+      walk_way:fill(imp.cx1, imp.cy1, imp.cx2, imp.cy2, 1)
     end
 
-    R.walkway:negate()
-    R.walkway:shrink(true)
-    R.walkway:shrink(true)
-    R.walkway:remove_dots()
+    walk_way:negate()
+    walk_way:shrink(true)
+    walk_way:shrink(true)
+    walk_way:remove_dots()
 
 
-    R.liquid_way = R.walkway:copy()
+    liquid_way = walk_way:copy()
 
-    R.liquid_way:shrink(true)
-    R.liquid_way:shrink(true)
-    R.liquid_way:remove_dots()
+    liquid_way:shrink(true)
+    liquid_way:shrink(true)
+    liquid_way:remove_dots()
+
+    AREA.walk_way   = walk_way
+    AREA.liquid_way = liquid_way
   end
 
 
@@ -931,9 +938,9 @@ function Simple_render_cave(R)
 
     local h = assert(A.floor_h)
 
-    if R.walkway then
-      if (R.walkway   :get(x, y) or 0) > 0 then h = h - 16 end
-      if (R.liquid_way:get(x, y) or 0) > 0 then h = h - 16 end
+    if A.walk_way then
+      if (A.walk_way   :get(x, y) or 0) > 0 then h = h - 16 end
+      if (A.liquid_way:get(x, y) or 0) > 0 then h = h - 16 end
     end
 
     return h
@@ -1260,13 +1267,13 @@ do return end ----!!!!!!!
 
     local f_liquid
 
-    if R.walkway then
-      if (R.liquid_way:get(x, y) or 0) > 0 then
+    if A.walk_way then
+      if (A.liquid_way:get(x, y) or 0) > 0 then
         f_h = f_h - 24
         f_mat = "LAVA1"
         c_h = c_h + 128
         c_mat = "_SKY"
-      elseif (R.walkway:get(x, y) or 0) > 0 then
+      elseif (A.walk_way:get(x, y) or 0) > 0 then
         f_h = f_h - 8
         f_mat = R.walkway_mat
         c_h = c_h + 64
@@ -1569,7 +1576,7 @@ do return end ----!!!!!!!
   
   create_delta_map()
 
-  if R.walkway then
+  if true then
     R.walkway_mat = choose_tex(R.floor_mat, R.theme.naturals or THEME.naturals)
   end
 
