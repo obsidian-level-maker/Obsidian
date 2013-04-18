@@ -40,7 +40,7 @@ SPOT_WALL  = 1
 SPOT_LEDGE = 2
 
 
-function Simple_cave_or_maze(R)
+function Simple_generate_cave(R)
 
   local map
   local cave
@@ -379,7 +379,7 @@ function Simple_cave_or_maze(R)
   end
 
 
-  ---| Simple_cave_or_maze |---
+  ---| Simple_generate_cave |---
 
   -- create the cave object and make the boundaries solid
   create_map()
@@ -772,7 +772,7 @@ end
 
 
 
-function Simple_connect_all_areas(R, entry_h)
+function Simple_floor_heights(R, entry_h)
 
   local z_change_prob = 10
   if rand.odds(10) then z_change_prob = 40 end
@@ -847,7 +847,7 @@ function Simple_connect_all_areas(R, entry_h)
   end
 
 
-  ---| Simple_connect_all_areas |---
+  ---| Simple_floor_heights |---
 
   local z_dir = rand.sel(35, 1, -1)
 
@@ -1538,5 +1538,14 @@ do return end ----!!!!!!!
   if R.is_outdoor then
     add_sky_rects()
   end
+end
+
+
+
+function Simple_cave_or_maze(R)
+  Simple_generate_cave(R)
+  Simple_create_areas(R)
+  Simple_floor_heights(R, R.entry_h)
+  Simple_render_cave(R)
 end
 

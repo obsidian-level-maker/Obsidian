@@ -1453,9 +1453,6 @@ function Areas_flesh_out()
       Areas_place_importants(R)
 
       Simple_cave_or_maze(R)
-      Simple_create_areas(R)
-      Simple_connect_all_areas(R, R.entry_h)
-      Simple_render_cave(R)
     else
       Areas_layout_with_prefabs(R)
     end
