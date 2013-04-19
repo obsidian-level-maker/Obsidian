@@ -1115,17 +1115,19 @@ function Simple_render_cave(R)
     local c_h = A.ceil_h  
 
     local f_liquid
+    local c_sky
 
     if A.walk_way then
       if (A.liquid_way:get(x, y) or 0) > 0 then
         f_h = f_h - 24
-        f_mat = "LAVA1"
         c_h = c_h + 128
-        c_mat = "_SKY"
+        f_liquid = true
+        c_sky = true
       elseif (A.walk_way:get(x, y) or 0) > 0 then
         f_h = f_h - 8
-        f_mat = R.walkway_mat
         c_h = c_h + 64
+        f_mat = R.walkway_mat
+--        c_sky = true
       end
     end
 
@@ -1133,7 +1135,12 @@ function Simple_render_cave(R)
     local f_brush = brush_for_cell(x, y)
 
     Brush_add_top(f_brush, f_h)
-    Brush_set_mat(f_brush, f_mat, f_mat)
+
+    if f_liquid then
+      Brush_mark_liquid(f_brush)
+    else
+      Brush_set_mat(f_brush, f_mat, f_mat)
+    end
 
     brush_helper(f_brush)
 
@@ -1142,10 +1149,11 @@ function Simple_render_cave(R)
       local c_brush = brush_for_cell(x, y)
 
       Brush_add_bottom(c_brush, c_h)
-      Brush_set_mat(c_brush, c_mat, c_mat)
 
-      if c_mat == "_SKY" then
-        table.insert(c_brush, 1, { m="sky" })
+      if c_sky then
+        Brush_mark_sky(c_brush)
+      else
+        Brush_set_mat(c_brush, c_mat, c_mat)
       end
 
       brush_helper(c_brush)

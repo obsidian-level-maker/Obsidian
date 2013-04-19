@@ -320,15 +320,36 @@ end
 
 
 function Brush_get_b(brush)
-  for _,C in ipairs(brush) do
+  each C in brush do
     if C.b then return C.b end
   end
 end
 
 
 function Brush_get_t(brush)
-  for _,C in ipairs(brush) do
+  each C in brush do
     if C.t then return C.t end
+  end
+end
+
+
+function Brush_mark_sky(brush)
+  Brush_set_mat(brush, "_SKY", "_SKY")
+
+  table.insert(brush, 1, { m="sky" })
+end
+
+
+function Brush_mark_liquid(brush)
+  assert(LEVEL.liquid)
+
+  Brush_set_mat(brush, "_LIQUID", "_LIQUID")
+
+  each C in brush do
+    if C.b or C.t then
+      C.special = LEVEL.liquid.special
+      C.light   = LEVEL.liquid.light
+    end
   end
 end
 
