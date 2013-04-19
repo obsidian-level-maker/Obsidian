@@ -1051,7 +1051,7 @@ function Simple_render_cave(R)
     local bx = cave.base_x + (x - 1) * 64
     local by = cave.base_y + (y - 1) * 64
 
-    local coords = { }
+    local coords = {}
 
     each side in B_CORNERS do
       local dx, dy = geom.delta(side)
@@ -1092,157 +1092,6 @@ function Simple_render_cave(R)
 
     return tex
   end
-
-
---[[  OLD STUFF -- MAY BE USEFUL
-
-  local function WALL_brush(data, coords)
-    if data.shadow_info then
-      local sh_coords = Brush_shadowify(coords, 40)
---!!!!      Trans.old_brush(data.shadow_info, sh_coords, -EXTREME_H, (data.z2 or EXTREME_H) - 4)
-    end
-
-    if data.f_h then table.insert(coords, { t=data.f_h, delta_z=data.f_delta }) end
-    if data.c_h then table.insert(coords, { b=data.c_h, delta_z=data.c_delta }) end
-
-    Brush_set_mat(coords, data.w_mat, data.w_mat)
-
-    brush_helper(coords)
-  end
-
-
-  local function FC_brush(data, coords)
-    if data.f_h then
-      local coord2 = table.deep_copy(coords)
-      table.insert(coord2, { t=data.f_h, delta_z=data.f_delta })
-
-      Brush_set_mat(coord2, data.f_mat, data.f_mat)
-
-      brush_helper(coord2)
-    end
-
-    if data.c_h then
-      local coord2 = table.deep_copy(coords)
-      table.insert(coord2, { b=data.c_h, delta_z=data.c_delta })
-
-      Brush_set_mat(coord2, data.c_mat, data.c_mat)
-
-      brush_helper(coord2)
-    end
-  end
-
-
-  local function render_walls_OLD()
-
-    --- DO WALLS ---
-
-    local data = { w_mat = cave_tex }
-
-    cave:render(WALL_brush, data)
-
-
-    -- handle islands first
-
---((
-    each island in cave.islands do
-
-      -- FIXME
-      if LEVEL.liquid and not R.is_lake and --(( reg.cells > 4 and --))
-         rand.odds(1)
-      then
-
-        -- create a lava/nukage pit
-        local pit = Mat_lookup(LEVEL.liquid.mat)
-
-        island:render(WALL_brush,
-                      { f_h=R.cave_floor_h+8, pit.f or pit.t,
-                        delta_f=rand.sel(70, -52, -76) })
-
-        cave:subtract(island)
-      end
-    end
---))
-
-
-do return end ----!!!!!!!
-
-
-    if R.is_lake then return end
-    if THEME.square_caves then return end
-    if PARAM.simple_caves then return end
-
-
-    local ceil_h = R.cave_floor_h + R.cave_h
-
-    -- TODO: @ pass 3, 4 : come back up (ESP with liquid)
-
-    local last_ftex = R.cave_tex
-
-    for i = 1,rand.index_by_probs({ 10,10,70 })-1 do
-      walkway:shrink(false)
-
-  ---???    if rand.odds(sel(i==1, 20, 50)) then
-  ---???      walkway:shrink(false)
-  ---???    end
-
-      walkway:remove_dots()
-
-
-      -- DO FLOOR and CEILING --
-
-      data = {}
-
-
-      if R.outdoor then
-        data.ftex = choose_tex(last_ftex, THEME.landscape_trims or THEME.landscape_walls)
-      else
-        data.ftex = choose_tex(last_ftex, THEME.cave_trims or THEME.cave_walls)
-      end
-
-      last_ftex = data.ftex
-
-      data.do_floor = true
-
-      if LEVEL.liquid and i==2 and rand.odds(60) then  -- TODO: theme specific prob
-        local liq_mat = Mat_lookup(LEVEL.liquid.mat)
-        data.ftex = liq_mat.f or liq_mat.t
-
-        -- FIXME: this bugs up monster/pickup/key spots
-        if rand.odds(0) then
-          data.delta_f = -(i * 10 + 40)
-        end
-      end
-
-      if true then
-        data.delta_f = -(i * 10)
-      end
-
-      data.f_h = R.cave_floor_h + i
-
-      data.do_ceil = false
-
-      if R.kind != "outdoor" then
-        data.do_ceil = true
-
-        if i==2 and rand.odds(60) then
-          local mat = Mat_lookup("_SKY")
-          data.ctex = mat.f or mat.t
-        elseif rand.odds(50) then
-          data.ctex = data.ftex
-        elseif rand.odds(80) then
-          data.ctex = choose_tex(data.ctex, THEME.cave_trims or THEME.cave_walls)
-        end
-
-        data.delta_c = int((0.6 + (i-1)*0.3) * R.cave_h)
-
-        data.c_z = ceil_h - i
-      end
-
-
-      walkway:render(FC_brush, data)
-    end
-  end
---]]
 
 
   local function render_wall(cx, cy)
@@ -1610,6 +1459,10 @@ function Simple_decide_properties(R)
     R.cave_liquid_mode = "none"
     STEP_MODES.walkway = nil
   else
+    if not R.is_outdoor then
+      LIQUID_MODES.lake = nil
+    end
+
     R.cave_liquid_mode = rand.key_by_probs(LIQUID_MODES)
   end
 
@@ -1644,10 +1497,12 @@ function Simple_decide_properties(R)
     local has_liquid = (R.cave_liquid_mode != "none")
     local has_sky    = (R.cave_sky_mode != "none")
 
+    if LEVEL.is_dark then has_sky = false end
+
     if has_liquid and has_sky then
       TORCH_MODES.none = 900
     elseif has_liquid or has_sky then
-      TORCH_MODES.none = 50
+      TORCH_MODES.none = 120
     end
   end
 
