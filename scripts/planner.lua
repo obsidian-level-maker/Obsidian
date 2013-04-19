@@ -830,6 +830,98 @@ end
 
 
 
+function Plan_add_caves()
+
+  local function handle_surrounder()
+    each R in LEVEL.rooms do
+      if R.is_surrounder then
+        if rand.odds(style_sel("caves", 0, 15, 35, 90)) then
+          R.kind = "cave"
+        end
+      end
+    end
+  end
+
+
+  local function score_room(R)
+    -- sometimes turn surrounder room into a big cave
+    if R.is_surrounder and ) then
+      turn_into_cave(R)
+      return -1  -- ignore it now
+    end
+
+    -- too small ?
+    if R.svolume < 6 then return -1 end
+
+    local score = R.svolume
+
+    local what = 0
+
+    -- higher probs for sides of map, even higher for the corners
+    if R.kx1 <= 2 or R.kx2 >= SECTION_W-1 then what = what + 1 end
+    if R.ky1 <= 2 or R.ky2 >= SECTION_H-1 then what = what + 1 end
+
+    score = score + 10 * what ^ 2
+
+    -- prefer odd-shaped rooms
+    if R.odd_shape then score = score * 2 end 
+
+    return score + 20 * gui.random() ^ 2
+  end
+
+
+  local function find_free_spot(side)
+
+  end
+
+  
+  ---| Plan_add_caves |---
+
+  -- compute the quota
+  local perc = style_sel("caves", 0, 15, 35, 65, 100)
+
+  if perc == 0 or not THEME.caves then
+    gui.printf("Caves: NONE\n")
+    return
+  end
+
+  local quota = MAP_W * MAP_H * perc / 100
+
+  gui.printf("Cave Quota: %d seeds (%d total)\n", quota, total_seeds)
+
+  local num_free = Plan_count_free_room_sections()
+
+  handle_surrounder()
+
+
+  -- best starting spots are in a corner
+  -- for middle of map, require a 2x2 sections
+  local locations = { [1]=50, [3]=50, [7]=50, [9]=50,
+                      [2]=20, [4]=20, [6]=20, [8]=20,
+                      [5]=40
+                    }
+
+  local areas = { }
+
+  while #areas < 7 and
+       (#areas == 0 or quota / #areas > rand.irange(6,12))
+  do
+    
+    -- pick a location
+    local side = rand.key_by_probs(locations)
+
+    if side != 5 then
+      locations[side] = nil
+    end
+
+    local mx, my = find_free_spot(side)
+  end
+
+  
+end
+
+
+
 function Plan_add_odd_shapes()
 
   local function find_free_spot(mx, my)
@@ -1436,11 +1528,19 @@ end
 
 function Plan_decide_outdoors()
 
+  local function turn_into_outdoor(R)
+    if R.kind != "cave" then
+       R.kind = "outdoor"
+    end
+
+    R.is_outdoor = true
+  end
+
+
   local function score_room(R)
     -- handle the surrounder room
     if R.is_surrounder and rand.odds(style_sel("outdoors", 0, 15, 35, 80)) then
-      R.kind = "outdoor"
-      R.is_outdoor = true
+      turn_into_outdoor(R)
       return -1  -- ignore it now
     end
 
@@ -1455,8 +1555,8 @@ function Plan_decide_outdoors()
     local what = 0
 
     -- preference for the sides of map, even higher for the corners
-    if R.kx1 <= 2 or R.kx2 >= SECTION_W-1 then what = what + 1 end
-    if R.ky1 <= 2 or R.ky2 >= SECTION_H-1 then what = what + 1 end
+    if R.kx1 <= 3 or R.kx2 >= SECTION_W-2 then what = what + 1 end
+    if R.ky1 <= 3 or R.ky2 >= SECTION_H-2 then what = what + 1 end
 
     score = score + 10 * what
 
@@ -1524,114 +1624,12 @@ function Plan_decide_outdoors()
     -- nothing possible?
     if not R then break end
 
-    R.kind = "outdoor"
-    R.is_outdoor = true
+    turn_into_outdoor(R)
 
     quota = quota - R.svolume
   end
 end
 
-
-
-function Plan_decide_caves()
-
-  local function turn_into_cave(R)
-    -- Note: we keep the 'is_outdoor' flag (to make an outdoorsy cave)
-    R.kind = "cave"
-  end
-
-
-  local function score_room(R)
-    -- sometimes turn surrounder room into a big cave
-    if R.is_surrounder and rand.odds(style_sel("caves", 0, 15, 35, 90)) then
-      turn_into_cave(R)
-      return -1  -- ignore it now
-    end
-
-    -- too small ?
-    if R.svolume < 6 then return -1 end
-
-    local score = R.svolume
-
-    local what = 0
-
-    -- higher probs for sides of map, even higher for the corners
-    if R.kx1 <= 2 or R.kx2 >= SECTION_W-1 then what = what + 1 end
-    if R.ky1 <= 2 or R.ky2 >= SECTION_H-1 then what = what + 1 end
-
-    score = score + 10 * what ^ 2
-
-    -- prefer odd-shaped rooms
-    if R.odd_shape then score = score * 2 end 
-
-    return score + 20 * gui.random() ^ 2
-  end
-
-  
-  local function pick_room(list, quota)
-    -- remove rooms which don't meet the quota
-    for index = #list, 1, -1 do
-      local R = list[index]
-
-      if R.svolume > quota then
-        table.remove(list, index)
-      end
-    end
-
-    if table.empty(list) then return nil end
-
-    -- don't always pick the largest room
-    if #list >= 2 and rand.odds(40) then
-      return table.remove(list, 2)
-    end
-
-    return table.remove(list, 1)
-  end
-
-
-  ---| Plan_decide_caves |---
-
-  -- collect rooms which can be made into a cave
-  local room_list = {}
-  local total_seeds = 0
-
-  each R in LEVEL.rooms do
-    R.cave_score = score_room(R)
-
-    if R.cave_score > 0 then
-      table.insert(room_list, R)
-      total_seeds = total_seeds + R.svolume
-    end
-  end
-
-  if table.empty(room_list) or not THEME.caves then
-    gui.printf("Cave Quota: NONE\n")
-    return
-  end
-
-  -- compute the quota
-  local perc = style_sel("caves", 0, 15, 35, 65, 100)
-
-  local quota = total_seeds * perc / 100
-
-  gui.printf("Cave Quota: %d seeds (%d total)\n", quota, total_seeds)
-
-  -- sort rooms by score (highest first)
-  table.sort(room_list,
-    function(A, B) return A.cave_score > B.cave_score end)
-
-  while quota > 0 do
-    local R = pick_room(room_list, quota)
-
-    -- nothing possible?
-    if not R then break end
-
-    -- re-assign room as a cave
-    turn_into_cave(R)
-
-    quota = quota - R.svolume
-  end
-end
 
 
 ------------------------------------------------------------------------
@@ -1872,11 +1870,12 @@ function Plan_create_rooms()
   Levels_invoke_hook("add_rooms")
 
   Plan_add_special_rooms()
-  Plan_add_odd_shapes()
+  Plan_add_caves()
   Plan_add_big_rooms()
 
-  Plan_add_big_junctions()
+--??  Plan_add_odd_shapes()
   Plan_add_small_rooms()
+  Plan_add_big_junctions()
 
   Plan_collect_sections()
   Plan_contiguous_sections()
@@ -1885,7 +1884,6 @@ function Plan_create_rooms()
   Plan_make_seeds()
 
   Plan_decide_outdoors()
-  Plan_decide_caves()
 
   Plan_dump_rooms()
 end
