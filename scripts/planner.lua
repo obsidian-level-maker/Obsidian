@@ -843,33 +843,6 @@ function Plan_add_caves()
   end
 
 
-  local function score_room(R)
-    -- sometimes turn surrounder room into a big cave
-    if R.is_surrounder and ) then
-      turn_into_cave(R)
-      return -1  -- ignore it now
-    end
-
-    -- too small ?
-    if R.svolume < 6 then return -1 end
-
-    local score = R.svolume
-
-    local what = 0
-
-    -- higher probs for sides of map, even higher for the corners
-    if R.kx1 <= 2 or R.kx2 >= SECTION_W-1 then what = what + 1 end
-    if R.ky1 <= 2 or R.ky2 >= SECTION_H-1 then what = what + 1 end
-
-    score = score + 10 * what ^ 2
-
-    -- prefer odd-shaped rooms
-    if R.odd_shape then score = score * 2 end 
-
-    return score + 20 * gui.random() ^ 2
-  end
-
-
   local function spot_is_free(mx1, my1, mx2, my2)
     for x = mx1, mx2 do
     for y = my1, my2 do
@@ -1012,13 +985,15 @@ function Plan_add_caves()
   -- for middle of map, require a 2x2 sections
   local locations = { [1]=50, [3]=50, [7]=50, [9]=50,
                       [2]=20, [4]=20, [6]=20, [8]=20,
-                      [5]=40
+                      [5]=90
                     }
 
   local areas = { }
 
+  local rough_size = rand.irange(4, 8)
+
   while #areas < 7 and
-       (#areas == 0 or quota / #areas > rand.irange(6,12))
+       (#areas == 0 or quota / #areas > rough_size)
   do
     -- pick a location
     local side = rand.key_by_probs(locations)
@@ -1053,6 +1028,8 @@ function Plan_add_caves()
       end
     end
   end
+
+  Plan_dump_sections("Sections with caves:")
 end
 
 
