@@ -870,8 +870,118 @@ function Plan_add_caves()
   end
 
 
-  local function find_free_spot(side)
+  local function spot_is_free(mx1, my1, mx2, my2)
+    for x = mx1, mx2 do
+    for y = my1, my2 do
+      local K = Section_get_room(x, y)
 
+      if not K:usable_for_room() then return false end
+    end
+    end
+
+    return true
+  end
+
+
+  local function find_free_spot(side)
+    local dx, dy = geom.delta(side)
+
+    local mx1, mx2 = 1, MAP_W
+    local my1, my2 = 1, MAP_H
+
+        if dx < 0 then mx2 = 1
+    elseif dx > 0 then mx1 = MAP_W
+    end
+
+        if dy < 0 then my2 = 1
+    elseif dy > 0 then my1 = MAP_H
+    end
+
+    if side == 5 then
+      mx2 = mx2 - 1
+      my2 = my2 - 1
+    end
+
+    local mw = sel(side == 5, 2, 1)
+    local mh = mw
+
+    local spots = {}
+
+    for mx = mx1, mx2 do
+    for my = my1, my2 do
+      if spot_is_free(mx, my, mx + mw - 1, my + mh - 1) then
+        local SPOT =
+        {
+          mx1 = mx, mx2 = mx + mw - 1
+          my1 = my, my2 = my + mh - 1
+          mw  = mw, mh  = mh
+        }
+        table.insert(spots, SPOT)
+      end
+    end
+    end
+
+    if table.empty(spots) then
+      return nil
+    end
+
+    return rand.pick(spots)
+  end
+
+
+  local function new_room(spot)
+    local R = ROOM_CLASS.new("odd")
+
+    R.kind = "cave"
+
+    for mx = spot.mx1, spot.mx2 do
+    for my = spot.my1, spot.my2 do
+      local K = Section_get_room(mx, my)
+
+      K:set_room(R)
+    end
+    end
+
+    -- this cost ensures large areas _tend_ to be at end of list,
+    -- but are not forced to be (can be visited earlier).
+    R.cave_cost = math.max(spot.mw, spot.mh) + gui.random() * 1.7
+
+    return R
+  end
+
+
+  local function grow_room(R)
+    local locs = {}
+
+    for mx = 1, MAP_W do
+    for my = 1, MAP_H do
+      local K = Section_get_room(mx, my)
+
+      if K.room != R then continue end
+
+      for dir = 2,8,2 do
+        local nx, ny = geom.nudge(mx, my, dir)
+        N = Section_get_room(nx, ny)
+
+        if N and N:usable_for_room() then
+          table.insert(locs, { K=K, N=N })
+        end
+      end
+
+    end -- mx, my
+    end
+
+
+    if table.empty(locs) then return false end
+
+    local loc = rand.pick(locs)
+    local N   = loc.N
+
+    N:set_room(R)
+
+    R.cave_cost = R.cave_cost + rand.range(0.5, 1.0)
+
+    return true
   end
 
   
@@ -885,16 +995,20 @@ function Plan_add_caves()
     return
   end
 
-  local quota = MAP_W * MAP_H * perc / 100
-
-  gui.printf("Cave Quota: %d seeds (%d total)\n", quota, total_seeds)
 
   local num_free = Plan_count_free_room_sections()
+
+  local quota = num_free * perc / 100
+
+  gui.printf("Cave Quota: %d sections\n", quota)
+
 
   handle_surrounder()
 
 
-  -- best starting spots are in a corner
+  --- add starting spots ---
+
+  -- best starting spots are in a corner.
   -- for middle of map, require a 2x2 sections
   local locations = { [1]=50, [3]=50, [7]=50, [9]=50,
                       [2]=20, [4]=20, [6]=20, [8]=20,
@@ -906,18 +1020,39 @@ function Plan_add_caves()
   while #areas < 7 and
        (#areas == 0 or quota / #areas > rand.irange(6,12))
   do
-    
     -- pick a location
     local side = rand.key_by_probs(locations)
 
+    -- don't use this location again (except for middle)
     if side != 5 then
       locations[side] = nil
     end
 
-    local mx, my = find_free_spot(side)
+    local spot = find_free_spot(side)
+
+    if spot then
+      table.insert(areas, new_room(spot))
+      quota = quota - spot.mw * spot.mh
+    end
   end
 
-  
+
+  --- grow these rooms ---
+
+  for loop = 1,50 do
+    if quota < 1 then break; end
+
+    -- want to visit smallest ones first
+    table.sort(areas, function(A, B) return A.cave_cost < B.cave_cost end)
+
+    each R in areas do
+      if quota < 1 then break; end
+
+      if grow_room(R) then
+        quota = quota - 1
+      end
+    end
+  end
 end
 
 
@@ -1142,13 +1277,15 @@ function Plan_add_special_rooms()
     if MAP_H >= 6 then y2 = y2 - 1 end
     if MAP_H >= 8 then y1 = y1 + 1 end
 
-    for mx = 1,MAP_W do for my = 1,MAP_H do
+    for mx = 1, MAP_W do
+    for my = 1, MAP_H do
       if mx == x1 or mx == x2 or my == y1 or my == y2 then
         local K = Section_get_room(mx, my)
         assert(not K.room)
         K:set_room(room)
       end
-    end end
+    end
+    end
 
     Plan_dump_sections("Sections for surrounder:")
   end
