@@ -52,6 +52,8 @@ function Simple_generate_cave(R)
   local importants = {}
   local point_list = {}
 
+  local is_lake = (R.cave_liquid_mode == "lake")
+
 --[[
   R.cave_floor_h = 0 --!!!!!!  R.entry_floor_h
   R.cave_h = rand.pick { 128, 128, 192, 256 }
@@ -126,13 +128,13 @@ function Simple_generate_cave(R)
 
       for dir = 2,8,2 do
         if not S:same_room(dir) then
-          set_side(cx, cy, cx+3, cy+3, dir, sel(R.is_lake, -1, 1))
+          set_side(cx, cy, cx+3, cy+3, dir, sel(is_lake, -1, 1))
         end
       end
 
       for dir = 1,9,2 do if dir != 5 then
         if not S:same_room(dir) then
-          set_corner(cx, cy, cx+3, cy+3, dir, sel(R.is_lake, -1, 1))
+          set_corner(cx, cy, cx+3, cy+3, dir, sel(is_lake, -1, 1))
         end
       end end
 
@@ -321,7 +323,9 @@ function Simple_generate_cave(R)
       return false
     end
 
-    cave.empty_id = cave.flood[point_list[1].x][point_list[1].y]
+    local p1 = point_list[1]
+
+    cave.empty_id = cave.flood[p1.x][p1.y]
 
     assert(cave.empty_id)
     assert(cave.empty_id < 0)
@@ -340,9 +344,9 @@ function Simple_generate_cave(R)
 
     local solid_prob = 38
 
---!!!    if R.cave_liquid_mode == "lake" then
---!!!      solid_prob = 58
---!!!    end
+    if is_lake then
+      solid_prob = 58
+    end
 
     local MAX_LOOP = 20
 
@@ -365,6 +369,11 @@ function Simple_generate_cave(R)
 
       cave:generate(solid_prob)
 
+    cave:dump("Generated Cave:")
+---      if is_lake then
+---        cave:negate()
+---      end
+
       cave:remove_dots()
 
       cave:flood_fill()
@@ -381,7 +390,9 @@ function Simple_generate_cave(R)
 
     R.cave_map = cave
 
-    cave:solidify_pockets()
+    if not is_lake then
+      cave:solidify_pockets()
+    end
 
     cave:dump("Filled Cave:")
 
@@ -406,9 +417,11 @@ end
 
 
 function Simple_create_areas(R)
+  --|
+  --| sub-divide the floor of the cave into areas of differing heights.
+  --|
 
-  -- sub-divide the floor of the cave into areas of differing heights.
-
+  local is_lake = (R.cave_liquid_mode == "lake")
 
   -- groups are areas (rectangles) belonging to portals or importants
   -- and must be kept distinct (at the same height).
@@ -434,6 +447,9 @@ function Simple_create_areas(R)
     each imp in R.cave_imps do
       imp.area = AREA
     end
+
+
+    if R.cave_liquid_mode == "lake" then return end
 
 
     local walk_way = R.cave_map:copy()
@@ -908,6 +924,8 @@ function Simple_render_cave(R)
 
   local cave_tex = R.wall_mat or "_ERROR"
 
+  local is_lake = (R.cave_liquid_mode == "lake")
+
   -- the delta map specifies how to move each corner of the 64x64 cells
   -- (where the cells form a continuous mesh).
   local delta_x_map
@@ -934,6 +952,9 @@ function Simple_render_cave(R)
 
     -- otherwise there should be a floor area here
     local A = R.area_map:get(x, y)
+
+if not A then return end  --!!!!!!!!! WTF WTF
+
     assert(A)
 
     local h = assert(A.floor_h)
@@ -1105,8 +1126,22 @@ function Simple_render_cave(R)
   end
 
 
-  local function render_floor_ceil(x, y)
+  local function render_cell(x, y)
+    local val = cave:get(x, y)
+
+    if val == nil then return end
+
+    if val > 0 and not is_lake then
+      render_wall(x, y)
+      return
+    end
+
+
     local A = R.area_map:get(x, y)
+
+    if val > 0 then A = { } end  -- FIXME
+
+if not A then return end  --!!!!!!!
 
     local f_mat = R.floor_mat or cave_tex
     local c_mat = R.ceil_mat  or cave_tex
@@ -1117,7 +1152,14 @@ function Simple_render_cave(R)
     local f_liquid
     local c_sky
 
-    if A.walk_way then
+
+    if val > 0 then
+      f_h = R.min_floor_h - 64
+      f_liquid = true
+
+      c_h = f_h + 256 -- TEMP SHITE
+
+    elseif A.walk_way then
       if (A.liquid_way:get(x, y) or 0) > 0 then
         f_h = f_h - 24
         c_h = c_h + 128
@@ -1157,19 +1199,6 @@ function Simple_render_cave(R)
       end
 
       brush_helper(c_brush)
-    end
-  end
-
-
-  local function render_cell(x, y)
-    local val = cave:get(x, y)
-
-    if val == nil then
-      -- nothing
-    elseif val > 0 then
-      render_wall(x, y)
-    else
-      render_floor_ceil(x, y)
     end
   end
 
@@ -1457,7 +1486,7 @@ end
 
 
 function Simple_decide_properties(R)
-  local LIQUID_MODES = { none=20, lake=10, some=8099 }
+  local LIQUID_MODES = { none=20, lake=1099, some=80 }
   local   STEP_MODES = { walkway=2099, up=20, down=20, mixed=80 }
   local    SKY_MODES = { none=30, walkway=5099, some=50 }
   local  TORCH_MODES = { none=10, corner=60, middle=30 }
@@ -1471,11 +1500,11 @@ function Simple_decide_properties(R)
       LIQUID_MODES.lake = nil
     end
 
-    R.cave_liquid_mode = rand.key_by_probs(LIQUID_MODES)
+    R.cave_liquid_mode = "lake" --- rand.key_by_probs(LIQUID_MODES)
   end
 
   -- decide step mode
-  R.cave_step_mode = "walkway" --!!!! rand.key_by_probs(STEP_MODES)
+  R.cave_step_mode = "mixed" --!!!! rand.key_by_probs(STEP_MODES)
 
   if R.cave_step_mode != "walkway" then
     SKY_MODES.walkway = nil
