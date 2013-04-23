@@ -504,7 +504,7 @@ function CAVE_CLASS.validate_conns(cave, point_list)
     cave:flood_fill()
   end
 
-  for _,P in ipairs(point_list) do
+  each P in point_list do
     if (cave.flood[P.x][P.y] or 0) >= 0 then
       -- not valid : the cell is solid or absent
       return false
@@ -998,6 +998,8 @@ function CAVE_CLASS.furthest_point(cave, ref_points)
 
   return best_x, best_y  -- could be nil !
 end
+
+
 
 
 ----------------------------------------------------------------

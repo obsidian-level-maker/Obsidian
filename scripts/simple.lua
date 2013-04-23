@@ -26,15 +26,22 @@ class CAVE_INFO
 
   x1, y1, x2, y2  -- bounding coords
 
-  raw : CAVE   -- the raw generated cave
+  liquid_mode : keyword  -- "none", "some", "lake", "walkway"
+  step_mode   : keyword  -- "walkway", "up", "down", "mixed"
 
-  flood : CAVE  -- raw cave divided into contiguous areas
+  sky_mode    : keyword  -- "none"
+                         -- "some", "walkway"  (indoor rooms only)
+                         -- "low_wall", "high_wall"  (outdoor rooms)
 
-  cells : ARRAY_2d(CELL)  -- info for each 64x64 block
+  cave : CAVE   -- raw generated cave
+
+  blocks : array(BLOCKS)  -- info for each 64x64 block
+
+  areas : list(AREA)
 }
 
 
-class CELL
+class BLOCK
 {
   area : AREA
 }
@@ -122,7 +129,7 @@ function Simple_generate_cave(R)
     info.W = R.sw * 4
     info.H = R.sh * 4
 
-    R.cave_areas  = {}
+    info.areas  = {}
 
     info.x1 = SEEDS[R.sx1][R.sy1].x1
     info.y1 = SEEDS[R.sx1][R.sy1].y1
@@ -410,7 +417,7 @@ function Simple_generate_cave(R)
       clear_some_seeds()
     end
 
-    info.raw = cave
+    info.cave = cave
 
     if not is_lake then
       cave:solidify_pockets()
@@ -422,21 +429,21 @@ function Simple_generate_cave(R)
   end
 
 
-  local function make_cells()
-    info.cells = table.array_2D(info.W, info.H)
+  local function make_blocks()
+    info.blocks = table.array_2D(info.W, info.H)
 
     for x = 1, info.W do
     for y = 1, info.H do
-      local val = cave:get(x, y)
+      local val = cave.flood[x][y]
 
       if val == nil then continue end
 
-      local CELL =
+      local BLOCK =
       {
         region = val
       }
 
-      info.cells[x][y] = CELL
+      info.blocks[x][y] = BLOCK
     end
     end
   end
@@ -455,7 +462,7 @@ function Simple_generate_cave(R)
 
   generate_cave()
 
-  make_cells()
+  make_blocks()
 end
 
 
@@ -484,9 +491,9 @@ function Simple_create_areas(R)
       touching = {}
     }
 
-    table.insert(R.cave_areas, AREA)
+    table.insert(info.areas, AREA)
 
-    AREA.floor_map = info.raw:copy()
+    AREA.floor_map = info.cave:copy()
 
     AREA.floor_map:negate()
 
@@ -498,7 +505,7 @@ function Simple_create_areas(R)
     if info.liquid_mode == "lake" then return end
 
 
-    local walk_way = info.raw:copy()
+    local walk_way = info.cave:copy()
 
     -- remove importants from it
     each imp in R.cave_imps do
@@ -547,7 +554,7 @@ function Simple_create_areas(R)
   local function create_group_map()
     group_list = {}
 
-    group_map = CAVE_CLASS.blank_copy(info.raw)
+    group_map = CAVE_CLASS.blank_copy(info.cave)
 
     each G in R.cave_imps do
       add_group_to_map(G)
@@ -566,7 +573,7 @@ function Simple_create_areas(R)
     }
 
 
-    local free  = CAVE_CLASS.copy(info.raw)
+    local free  = CAVE_CLASS.copy(info.cave)
     local f_cel = free.cells
 
     local step
@@ -682,11 +689,13 @@ function Simple_create_areas(R)
       --      consider '0' as a valid value.
       -- At least this one is a bit more efficient :)
 
-      for x = cx1, cx2 do for y = cy1, cy2 do
+      for x = cx1, cx2 do
+      for y = cy1, cy2 do
         if s_cel[x][y] == 1 then
           prev.cells[x][y] = 1
         end
-      end end
+      end
+      end
     end
 
 
@@ -735,7 +744,7 @@ step:dump("Step:")
           touching = {}
         }
 
-        table.insert(R.cave_areas, AREA)
+        table.insert(info.areas, AREA)
 
         AREA.floor_map = step
 
@@ -792,11 +801,11 @@ step:dump("Step:")
     local W = info.W
     local H = info.H
 
-    local area_map = CAVE_CLASS.blank_copy(info.raw)
+    local area_map = CAVE_CLASS.blank_copy(info.cave)
 
-    each A in R.cave_areas do
-      for x = 1,W do
-      for y = 1,H do
+    each A in info.areas do
+      for x = 1, W do
+      for y = 1, H do
         if (A.floor_map.cells[x][y] or 0) > 0 then
           area_map.cells[x][y] = A
         end
@@ -814,8 +823,8 @@ step:dump("Step:")
 
     local area_map = R.area_map
 
-    for x = 1,W do
-    for y = 1,H do
+    for x = 1, W do
+    for y = 1, H do
       local A1 = area_map.cells[x][y]
 
       if not A1 then continue end
@@ -836,8 +845,8 @@ step:dump("Step:")
     end
 
     -- verify all areas touch at least one other
-    if #R.cave_areas > 1 then
-      each A in R.cave_areas do
+    if #info.areas > 1 then
+      each A in info.areas do
         assert(not table.empty(A.touching))
       end
     end
@@ -863,7 +872,7 @@ step:dump("Step:")
   determine_touching_areas()
 
 --[[ debugging
-  each A in R.cave_areas do
+  each A in info.areas do
     assert(A.floor_map)
 
     A.floor_map:dump("Step for area-" .. tostring(A))
@@ -918,7 +927,7 @@ function Simple_floor_heights(R, entry_h)
       end
     end
 
-    return rand.pick(R.cave_areas)
+    return rand.pick(info.areas)
   end
 
 
@@ -944,7 +953,7 @@ function Simple_floor_heights(R, entry_h)
 
 
   local function update_min_max_floor()
-    each A in R.cave_areas do
+    each A in info.areas do
       R.min_floor_h = math.min(R.min_floor_h, A.floor_h)
       R.max_floor_h = math.max(R.max_floor_h, A.floor_h)
     end
@@ -971,7 +980,7 @@ function Simple_render_cave(R)
   local info = R.cave_info
 
 
-  local cave = info.raw
+  local cave = info.cave
 
   local cave_tex = R.wall_mat or "_ERROR"
 
@@ -1529,7 +1538,7 @@ if not A then return end  --!!!!!!!
   end
   end
 
-  each A in R.cave_areas do
+  each A in info.areas do
     determine_spots(A)
   end
 
