@@ -82,6 +82,8 @@ function Simple_generate_cave(R)
 
   local is_lake = (info.liquid_mode == "lake")
 
+  local need_border = is_lake or (info.sky_mode == "low_wall")
+
 --[[
   if R.outdoor and THEME.landscape_walls then
     R.cave_tex = rand.key_by_probs(THEME.landscape_walls)
@@ -158,6 +160,12 @@ function Simple_generate_cave(R)
       for dir = 2,8,2 do
         if not S:same_room(dir) then
           set_side(cx, cy, cx+3, cy+3, dir, sel(is_lake, -1, 1))
+        end
+
+        -- in lake mode, clear whole seeds that touch edge of map
+        -- (i.e. which will have a sky border next to them)
+        if need_border and S:neighbor(dir) == nil then
+          map:fill(cx, cy, cx+3, cy+3, -1)
         end
       end
 
@@ -473,6 +481,7 @@ function Simple_create_areas(R)
   --|
 
   local info = R.cave_info
+  local cave = info.cave
 
   local is_lake = (info.liquid_mode == "lake")
 
@@ -796,24 +805,19 @@ step:dump("Step:")
 
 
   local function create_area_map()
-    -- create a map where each cell refers to an AREA, or is NIL
-
-    local W = info.W
-    local H = info.H
-
-    local area_map = CAVE_CLASS.blank_copy(info.cave)
+    -- transfer 'area' value into each block  [FIXME: do this when area is created]
 
     each A in info.areas do
-      for x = 1, W do
-      for y = 1, H do
+      for x = 1, info.W do
+      for y = 1, info.H do
+        local block = info.blocks[x][y]
+
         if (A.floor_map.cells[x][y] or 0) > 0 then
-          area_map.cells[x][y] = A
+          block.area = A
         end
       end
       end
     end
-
-    R.area_map = area_map
   end
 
 
@@ -821,20 +825,22 @@ step:dump("Step:")
     local W = info.W
     local H = info.H
 
-    local area_map = R.area_map
-
     for x = 1, W do
     for y = 1, H do
-      local A1 = area_map.cells[x][y]
+      local block = info.blocks[x][y]
+
+      local A1 = block and block.area  --###  area_map.cells[x][y]
 
       if not A1 then continue end
 
       for dir = 2,4,2 do
         local nx, ny = geom.nudge(x, y, dir)
 
-        if not area_map:valid_cell(nx, ny) then continue end
+        if not cave:valid_cell(nx, ny) then continue end
 
-        local A2 = area_map.cells[nx][ny]
+        local n_block = info.blocks[nx][ny]
+
+        local A2 = n_block and n_block.area
 
         if A2 and A2 != A1 then
           table.add_unique(A1.touching, A2)
@@ -1002,6 +1008,8 @@ function Simple_render_cave(R)
       return nil
     end
 
+    local block = info.blocks[x][y]
+
     local C = cave:get(x, y)
 
     -- in some places we build nothing (e.g. other rooms)
@@ -1011,9 +1019,9 @@ function Simple_render_cave(R)
     if C > 0 then return EXTREME_H end
 
     -- otherwise there should be a floor area here
-    local A = R.area_map:get(x, y)
+    local A = block.area  ---###  R.area_map:get(x, y)
 
-if not A then return end  --!!!!!!!!! WTF WTF
+if not A then return end  --!!!!!!!!! DUE TO EMPTY ISLANDS
 
     assert(A)
 
@@ -1187,6 +1195,9 @@ if not A then return end  --!!!!!!!!! WTF WTF
 
 
   local function render_cell(x, y)
+    local block = info.blocks[x][y]
+
+
     local val = cave:get(x, y)
 
     if val == nil then return end
@@ -1197,7 +1208,7 @@ if not A then return end  --!!!!!!!!! WTF WTF
     end
 
 
-    local A = R.area_map:get(x, y)
+    local A = block.area  ---###  R.area_map:get(x, y)
 
     if val > 0 then A = { } end  -- FIXME
 
@@ -1264,7 +1275,9 @@ if not A then return end  --!!!!!!!
 
 
   local function do_spot_floor(A, x, y)
-    if R.area_map:get(x, y) != A then return end
+    local block = info.blocks[x][y]
+
+    if not (block and block.area == A) then return end
 
     local poly = brush_for_cell(x, y)
 
@@ -1273,16 +1286,20 @@ if not A then return end  --!!!!!!!
 
 
   local function do_spot_wall(A, x, y)
-    local cell = R.area_map:get(x, y)
+    local block = info.blocks[x][y]
 
-    if cell == A then return end
+    if (block and block.area == A) then return end
 
     local near_area = false
 
     for dir = 1,9 do if dir != 5 then
       local nx, ny = geom.nudge(x, y, dir)
 
-      if cave:valid_cell(nx, ny) and R.area_map:get(nx, ny) == A then
+      if not cave:valid_cell(nx, ny) then continue end
+
+      local n_block = info.blocks[nx][ny]
+
+      if (n_block and n_block == A) then
         near_area = true
         break;
       end
