@@ -717,6 +717,48 @@ function CAVE_CLASS.grow(cave, keep_edges)
 end
 
 
+function CAVE_CLASS.grow8(cave, keep_edges)
+  -- like grow() method but expands in all 8 directions
+
+  local W = cave.w
+  local H = cave.h
+
+  local work = table.array_2D(W, H)
+  local cells = cave.cells
+
+  local function value_for_spot(x, y)
+    local val = cells[x][y]
+    local hit_edge
+
+    for dir = 1,9 do if dir != 5 then
+      local nx, ny = geom.nudge(x, y, dir)
+
+      if not cave:valid_cell(nx, ny) or not cells[nx][ny] then
+        hit_edge = true
+      elseif cells[nx][ny] > 0 then
+        val = cells[nx][ny]
+      end
+    end end -- dir
+
+    if keep_edges and hit_edge then
+      return cells[x][y]
+    end
+
+    return val
+  end
+
+  for x = 1, W do
+  for y = 1, H do
+    if cells[x][y] then
+      work[x][y] = value_for_spot(x, y)
+    end
+  end
+  end
+
+  cave.cells = work
+end
+
+
 function CAVE_CLASS.shrink(cave, keep_edges)
   -- shrink the cave : it will have more empties, less solids.
   -- when 'keep_edges' is true, cells at edges are not touched.
@@ -741,6 +783,48 @@ function CAVE_CLASS.shrink(cave, keep_edges)
         val = cells[nx][ny]
       end
     end
+
+    if keep_edges and hit_edge then
+      return cells[x][y]
+    end
+
+    return val
+  end
+
+  for x = 1, W do
+  for y = 1, H do
+    if cells[x][y] then
+      work[x][y] = value_for_spot(x, y)
+    end
+  end
+  end
+
+  cave.cells = work
+end
+
+
+function CAVE_CLASS.shrink8(cave, keep_edges)
+  -- like shrink() method but checks all 8 directions
+
+  local W = cave.w
+  local H = cave.h
+
+  local work = table.array_2D(W, H)
+  local cells = cave.cells
+
+  local function value_for_spot(x, y)
+    local val = cells[x][y]
+    local hit_edge
+
+    for dir = 1,9 do if dir != 5 then
+      local nx, ny = geom.nudge(x, y, dir)
+    
+      if not cave:valid_cell(nx, ny) or not cells[nx][ny] then
+        hit_edge = true
+      elseif cells[nx][ny] < 0 then
+        val = cells[nx][ny]
+      end
+    end end -- dir
 
     if keep_edges and hit_edge then
       return cells[x][y]
