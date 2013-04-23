@@ -1763,7 +1763,7 @@ end
 
 
 function Build_solid_quad(x1, y1, x2, y2, mat)
-  local brush = Brush_new_quad(x1, y1, x2, y2, sky_h)
+  local brush = Brush_new_quad(x1, y1, x2, y2)
   Brush_set_mat(brush, mat, mat)
   brush_helper(brush)
 end

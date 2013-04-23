@@ -490,7 +490,7 @@ function CAVE_CLASS.flood_fill(cave)
 
   cave.flood = flood
 
-  --- cave:dump_regions()
+      cave:dump_regions()
 end
 
 
