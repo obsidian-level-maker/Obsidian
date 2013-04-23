@@ -94,9 +94,11 @@ end
 
 
 function CAVE_CLASS.fill(cave, x1,y1, x2,y2, val)
-  for x = x1,x2 do for y = y1,y2 do
+  for x = x1, x2 do
+  for y = y1, y2 do
     cave.cells[x][y] = val
-  end end
+  end
+  end
 end
 
 
@@ -111,11 +113,13 @@ function CAVE_CLASS.negate(cave, x1,y1, x2,y2)
     y1, y2 = 1, cave.h
   end
 
-  for x = x1,x2 do for y = y1,y2 do
+  for x = x1, x2 do
+  for y = y1, y2 do
     if cave.cells[x][y] then
       cave.cells[x][y] = - cave.cells[x][y]
     end
-  end end
+  end
+  end
 
   return cave
 end
@@ -126,9 +130,11 @@ function CAVE_CLASS.copy(cave)
 
   local newbie = cave:blank_copy()
 
-  for x = 1,cave.w do for y = 1,cave.h do
+  for x = 1, cave.w do
+  for y = 1, cave.h do
     newbie.cells[x][y] = cave.cells[x][y]
-  end end
+  end
+  end
 
   return newbie
 end
@@ -164,13 +170,15 @@ function CAVE_CLASS.union(cave, other)
   local W = math.min(cave.w, other.w)
   local H = math.min(cave.h, other.h)
 
-  for x = 1,W do for y = 1,H do
-    if (cave.cells[x][y] or 0) < 0 and
+  for x = 1, W do
+  for y = 1, H do
+    if ( cave.cells[x][y] or 0) < 0 and
        (other.cells[x][y] or 0) > 0
     then
       cave.cells[x][y] = other.cells[x][y]
     end
-  end end
+  end
+  end
 end
 
 
@@ -178,13 +186,15 @@ function CAVE_CLASS.intersection(cave, other)
   local W = math.min(cave.w, other.w)
   local H = math.min(cave.h, other.h)
 
-  for x = 1,W do for y = 1,H do
-    if (cave.cells[x][y] or 0) > 0 and
+  for x = 1, W do
+  for y = 1, H do
+    if ( cave.cells[x][y] or 0) > 0 and
        (other.cells[x][y] or 0) < 0
     then
       cave.cells[x][y] = other.cells[x][y]
     end
-  end end
+  end
+  end
 end
 
 
@@ -194,13 +204,15 @@ function CAVE_CLASS.subtract(cave, other)
 
   local empty_id = cave.empty_id or -1
 
-  for x = 1,W do for y = 1,H do
-    if (cave.cells[x][y] or 0) > 0 and
+  for x = 1, W do
+  for y = 1, H do
+    if ( cave.cells[x][y] or 0) > 0 and
        (other.cells[x][y] or 0) > 0
     then
       cave.cells[x][y] = empty_id
     end
-  end end
+  end
+  end
 end
 
 
@@ -231,7 +243,8 @@ function CAVE_CLASS.generate(cave, solid_prob)
   local temp = table.array_2D(W, H)
 
   -- populate initial map
-  for x = 1,W do for y = 1,H do
+  for x = 1, W do
+  for y = 1, H do
     if not map[x][y] or map[x][y] < 0 then
       work[x][y] = 0
     elseif map[x][y] > 0 then
@@ -239,7 +252,8 @@ function CAVE_CLASS.generate(cave, solid_prob)
     else
       work[x][y] = rand.sel(solid_prob, 1, 0)
     end
-  end end
+  end
+  end
 
   local function calc_new(x, y, loop)
     if not map[x][y] then return 0 end
@@ -251,9 +265,11 @@ function CAVE_CLASS.generate(cave, solid_prob)
     end
 
     local neighbors = 0
-    for nx = x-1,x+1 do for ny = y-1,y+1 do
+    for nx = x-1,x+1 do
+    for ny = y-1,y+1 do
       neighbors = neighbors + work[nx][ny]
-    end end
+    end
+    end
 
     if neighbors >= 5 then return 1 end
 
@@ -263,13 +279,15 @@ function CAVE_CLASS.generate(cave, solid_prob)
 
     -- check larger area
     local neighbors = 0
-    for nx = x-2,x+2 do for ny = y-2,y+2 do
+    for nx = x-2,x+2 do
+    for ny = y-2,y+2 do
       if math.abs(x-nx) == 2 and math.abs(y-ny) == 2 then
         -- skip the corners of the 5x5 block
       else
         neighbors = neighbors + work[nx][ny]
       end
-    end end
+    end
+    end
 
     if neighbors <= 2 then return 1 end
 
@@ -278,21 +296,25 @@ function CAVE_CLASS.generate(cave, solid_prob)
 
   -- perform the cellular automation steps
   for loop = 1,7 do
-    for x = 1,W do for y = 1,H do
+    for x = 1, W do
+    for y = 1, H do
       temp[x][y] = calc_new(x, y, loop)
-    end end
+    end
+    end
 
     work, temp = temp, work
   end
 
   -- convert values for the result
-  for x = 1,W do for y = 1,H do
+  for x = 1, W do
+  for y = 1, H do
     if map[x][y] == 0 then
       work[x][y] = sel(work[x][y] > 0, 1, -1)
     else
       work[x][y] = map[x][y]
     end
-  end end
+  end
+  end
 
   cave.cells = work
 end
@@ -307,7 +329,8 @@ function CAVE_CLASS.gen_empty(cave)
 
   local cells = cave.cells
 
-  for x = 1,W do for y = 1,H do
+  for x = 1, W do
+  for y = 1, H do
     if not cells[x][y] then
       -- skip it
     elseif cells[x][y] > 0 then
@@ -315,7 +338,8 @@ function CAVE_CLASS.gen_empty(cave)
     else
       cells[x][y] = -1
     end
-  end end
+  end
+  end
 
   return cave
 end
@@ -421,7 +445,8 @@ function CAVE_CLASS.flood_fill(cave)
 
   -- initial setup
 
-  for x = 1,W do for y = 1,H do
+  for x = 1, W do
+  for y = 1, H do
     if not cells[x][y] then
       -- ignore it
     elseif cells[x][y] < 0 then
@@ -429,15 +454,18 @@ function CAVE_CLASS.flood_fill(cave)
     else
       flood[x][y] = solid_id ; solid_id = solid_id + 1
     end
-  end end
+  end
+  end
 
   -- perform the flood-fill
 
-  for x = 1,W do for y = 1,H do
+  for x = 1, W do
+  for y = 1, H do
     if flood[x][y] then
       flood_point(x, y)
     end
-  end end
+  end
+  end
 
   while #next_points > 0 do
     local np_list = next_points ; next_points = {}
@@ -456,9 +484,11 @@ function CAVE_CLASS.flood_fill(cave)
   cave.empty_regions = 0
   cave.solid_regions = 0
 
-  for x = 1,W do for y = 1,H do
+  for x = 1, W do
+  for y = 1, H do
     update_info(x, y)
-  end end
+  end
+  end
 
   cave.flood = flood
 
@@ -523,12 +553,12 @@ function CAVE_CLASS.solidify_pockets(cave)
 
     -- solidify the cells
     for x = REG.x1, REG.x2 do
-      for y = REG.y1, REG.y2 do
-        if cave.flood[x][y] == pocket_id then
-          cave.cells[x][y] = 1
-          cave.flood[x][y] = nil
-        end
+    for y = REG.y1, REG.y2 do
+      if cave.flood[x][y] == pocket_id then
+        cave.cells[x][y] = 1
+        cave.flood[x][y] = nil
       end
+    end
     end
 
     -- remove the region info
@@ -545,14 +575,16 @@ function CAVE_CLASS.copy_island(cave, reg_id)
 
   local island = cave:blank_copy()
 
-  for x = 1,W do for y = 1,H do
+  for x = 1, W do
+  for y = 1, H do
     local val = flood[x][y]
     if val == nil then
       -- nothing to copy
     else
       island.cells[x][y] = sel(val == reg_id, 1, -1)
     end
-  end end
+  end
+  end
 
   island:dump("Island for " .. tostring(reg_id))
 
@@ -581,7 +613,8 @@ function CAVE_CLASS.find_islands(cave)
   -- an island, and "no" when definitely not an island. 
   local potentials = {}
 
-  for x = 1,W do for y = 1,H do
+  for x = 1, W do
+  for y = 1, H do
     local reg = flood[x][y]
     if (reg or 0) > 0 then
 
@@ -604,7 +637,8 @@ function CAVE_CLASS.find_islands(cave)
       end
 
     end
-  end end
+  end -- x, y
+  end
 
   -- create the islands
 
@@ -671,11 +705,13 @@ function CAVE_CLASS.grow(cave, keep_edges)
     return val
   end
 
-  for x = 1,W do for y = 1,H do
+  for x = 1, W do
+  for y = 1, H do
     if cells[x][y] then
       work[x][y] = value_for_spot(x, y)
     end
-  end end
+  end
+  end
 
   cave.cells = work
 end
@@ -713,11 +749,13 @@ function CAVE_CLASS.shrink(cave, keep_edges)
     return val
   end
 
-  for x = 1,W do for y = 1,H do
+  for x = 1, W do
+  for y = 1, H do
     if cells[x][y] then
       work[x][y] = value_for_spot(x, y)
     end
-  end end
+  end
+  end
 
   cave.cells = work
 end
@@ -746,14 +784,16 @@ function CAVE_CLASS.remove_dots(cave)
     return true
   end
 
-  for x = 1,W do for y = 1,H do
+  for x = 1, W do
+  for y = 1, H do
     local val = cells[x][y]
 
     if val and val != 0 and is_isolated(x, y, val) then
       local dx = sel(x > W/2, -1, 1)
       cells[x][y] = cells[x+dx][y]
     end
-  end end
+  end
+  end
 end
 
 
@@ -764,11 +804,13 @@ function CAVE_CLASS.is_land_locked(cave, x, y)
 
   local cells = cave.cells
 
-  for dx = -1,1 do for dy = -1,1 do
+  for dx = -1, 1 do
+  for dy = -1, 1 do
     if (cells[x+dx][y+dy] or 0) < 0 then
       return false
     end
-  end end
+  end
+  end
 
   return true
 end
@@ -781,11 +823,13 @@ function CAVE_CLASS.is_empty_locked(cave, x, y)
 
   local cells = cave.cells
 
-  for dx = -1,1 do for dy = -1,1 do
+  for dx = -1,1 do
+  for dy = -1,1 do
     if (cells[x+dx][y+dy] or 0) >= 0 then
       return false
     end
-  end end
+  end
+  end
 
   return true
 end
@@ -847,7 +891,8 @@ function CAVE_CLASS.furthest_point(cave, ref_points)
   local best_x, best_y
   local best_dist = 9e9
 
-  for x = 1,W do for y = 1,H do
+  for x = 1, W do
+  for y = 1, H do
     local dist = dist_map[x][y]
     if dist and dist < (best_dist+3) then
 
@@ -866,7 +911,8 @@ function CAVE_CLASS.furthest_point(cave, ref_points)
       end
 
     end
-  end end
+  end  -- x, y
+  end
 
   return best_x, best_y  -- could be nil !
 end
@@ -962,7 +1008,8 @@ function CAVE_CLASS.maze_generate(maze)
     local middles = {}
     local edges   = {}
 
-    for x = 1,W do for y = 1,H do
+    for x = 1, W do
+    for y = 1, H do
       if (cells[x][y] or 0) > 0 or 
          (cells[x][y] == 0 and (table.empty(middles) or rand.odds(2)))
       then
@@ -980,7 +1027,8 @@ function CAVE_CLASS.maze_generate(maze)
           end
         end
       end
-    end end
+    end -- x, y
+    end
 
     -- we much prefer starting at an edge
     if #edges > 0 then
@@ -1039,11 +1087,13 @@ function CAVE_CLASS.maze_generate(maze)
 
 
   local function tidy_up()
-    for x = 1,W do for y = 1,H do
+    for x = 1, W do
+    for y = 1, H do
       if cells[x][y] == 0 then
          cells[x][y] = -1
       end
-    end end
+    end
+    end
   end
 
 
@@ -1101,9 +1151,11 @@ function CAVE_CLASS.maze_render(maze, brush_func, data)
 
   ---| maze_render |---
 
-  for x = 1,W do for y = 1,H do
-    visit_cell(x, y)    
-  end end
+  for x = 1, W do
+  for y = 1, H do
+    visit_cell(x, y)
+  end
+  end
 end
 
 
