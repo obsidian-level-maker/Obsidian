@@ -30,8 +30,6 @@ class CAVE
 {
   w, h   -- width and height (in cells)
   
-  base_x, base_y  -- coordinate of bottom left corner
-
   cells : array_2D(number)  -- > 0 means solid
                             -- < 0 means empty
 
@@ -65,8 +63,8 @@ class REGION
 CAVE_CLASS = {}
 
 
-function CAVE_CLASS.new(base_x, base_y, w, h)
-  local cave = { base_x=base_x, base_y=base_y, w=w, h=h }
+function CAVE_CLASS.new(w, h)
+  local cave = { w=w, h=h }
   table.set_class(cave, CAVE_CLASS)
   cave.cells = table.array_2D(w, h)
   return cave
@@ -74,7 +72,7 @@ end
 
 
 function CAVE_CLASS.blank_copy(cave)
-  return CAVE_CLASS.new(cave.base_x, cave.base_y, cave.w, cave.h)
+  return CAVE_CLASS.new(cave.w, cave.h)
 end
 
 
@@ -126,7 +124,7 @@ end
 
 
 function CAVE_CLASS.copy(cave)
-  -- only copies 'base_x', 'base_y', 'w', 'h' and 'cells' members
+  -- only copies 'w', 'h' and 'cells' members
 
   local newbie = cave:blank_copy()
 
@@ -1248,7 +1246,7 @@ function Maze_test()
   local SIZE = 15
 
   for loop = 1,20 do
-    local maze = CAVE_CLASS.new(0, 0, SIZE, SIZE)
+    local maze = CAVE_CLASS.new(SIZE, SIZE)
 
     -- solid on outside, empty in middle
     maze:fill(1,1, SIZE,SIZE,     1)

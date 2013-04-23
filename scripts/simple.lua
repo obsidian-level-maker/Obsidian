@@ -20,6 +20,26 @@
 
 --[[ *** CLASS INFORMATION ***
 
+class CAVE_INFO
+{
+  W, H   -- size of cave
+
+  x1, y1, x2, y2  -- bounding coords
+
+  raw : CAVE   -- the raw generated cave
+
+  flood : CAVE  -- raw cave divided into contiguous areas
+
+  cells : ARRAY_2d(CELL)  -- info for each 64x64 block
+}
+
+
+class CELL
+{
+  area : AREA
+}
+
+
 class AREA
 {
   touching : list(AREA)
@@ -45,6 +65,7 @@ SPOT_LEDGE = 2
 
 
 function Simple_generate_cave(R)
+  local info = R.cave_info
 
   local map
   local cave
@@ -52,12 +73,7 @@ function Simple_generate_cave(R)
   local importants = {}
   local point_list = {}
 
-  local is_lake = (R.cave_liquid_mode == "lake")
-
---[[
-  R.cave_floor_h = 0 --!!!!!!  R.entry_floor_h
-  R.cave_h = rand.pick { 128, 128, 192, 256 }
---]]
+  local is_lake = (info.liquid_mode == "lake")
 
 --[[
   if R.outdoor and THEME.landscape_walls then
@@ -103,12 +119,18 @@ function Simple_generate_cave(R)
 
 
   local function create_map()
+    info.W = R.sw * 4
+    info.H = R.sh * 4
+
     R.cave_areas  = {}
 
-    R.cave_base_x = SEEDS[R.sx1][R.sy1].x1
-    R.cave_base_y = SEEDS[R.sx1][R.sy1].y1
+    info.x1 = SEEDS[R.sx1][R.sy1].x1
+    info.y1 = SEEDS[R.sx1][R.sy1].y1
 
-    map = CAVE_CLASS.new(R.cave_base_x, R.cave_base_y, R.sw * 4, R.sh * 4)
+    info.x2 = SEEDS[R.sx2][R.sy2].x2
+    info.y2 = SEEDS[R.sx2][R.sy2].y2
+
+    map = CAVE_CLASS.new(info.W, info.H)
   end
 
 
@@ -253,8 +275,8 @@ function Simple_generate_cave(R)
     local x2, y2 = G.x2 + 12, G.y2 + 12
 
     -- convert to cell coordinates
-    x1 = x1 - R.cave_base_x ; y1 = y1 - R.cave_base_y
-    x2 = x2 - R.cave_base_x ; y2 = y2 - R.cave_base_y
+    x1 = x1 - info.x1 ; y1 = y1 - info.y1
+    x2 = x2 - info.x1 ; y2 = y2 - info.y1
 
     local cx1 = 1 + int(x1 / 64)
     local cy1 = 1 + int(y1 / 64)
@@ -388,7 +410,7 @@ function Simple_generate_cave(R)
       clear_some_seeds()
     end
 
-    R.cave_map = cave
+    info.raw = cave
 
     if not is_lake then
       cave:solidify_pockets()
@@ -397,6 +419,26 @@ function Simple_generate_cave(R)
     cave:dump("Filled Cave:")
 
     cave:find_islands()
+  end
+
+
+  local function make_cells()
+    info.cells = table.array_2D(info.W, info.H)
+
+    for x = 1, info.W do
+    for y = 1, info.H do
+      local val = cave:get(x, y)
+
+      if val == nil then continue end
+
+      local CELL =
+      {
+        region = val
+      }
+
+      info.cells[x][y] = CELL
+    end
+    end
   end
 
 
@@ -412,6 +454,8 @@ function Simple_generate_cave(R)
   clear_importants()
 
   generate_cave()
+
+  make_cells()
 end
 
 
@@ -421,7 +465,9 @@ function Simple_create_areas(R)
   --| sub-divide the floor of the cave into areas of differing heights.
   --|
 
-  local is_lake = (R.cave_liquid_mode == "lake")
+  local info = R.cave_info
+
+  local is_lake = (info.liquid_mode == "lake")
 
   -- groups are areas (rectangles) belonging to portals or importants
   -- and must be kept distinct (at the same height).
@@ -440,7 +486,7 @@ function Simple_create_areas(R)
 
     table.insert(R.cave_areas, AREA)
 
-    AREA.floor_map = R.cave_map:copy()
+    AREA.floor_map = info.raw:copy()
 
     AREA.floor_map:negate()
 
@@ -449,10 +495,10 @@ function Simple_create_areas(R)
     end
 
 
-    if R.cave_liquid_mode == "lake" then return end
+    if info.liquid_mode == "lake" then return end
 
 
-    local walk_way = R.cave_map:copy()
+    local walk_way = info.raw:copy()
 
     -- remove importants from it
     each imp in R.cave_imps do
@@ -501,15 +547,12 @@ function Simple_create_areas(R)
   local function create_group_map()
     group_list = {}
 
-    group_map = CAVE_CLASS.blank_copy(R.cave_map)
+    group_map = CAVE_CLASS.blank_copy(info.raw)
 
     each G in R.cave_imps do
       add_group_to_map(G)
     end
   end
-
-
-  local cave_floor_h = 0 ---  assert(A.chunks[1].floor_h)
 
 
   local function grow_step_areas()
@@ -523,7 +566,7 @@ function Simple_create_areas(R)
     }
 
 
-    local free  = CAVE_CLASS.copy(R.cave_map)
+    local free  = CAVE_CLASS.copy(info.raw)
     local f_cel = free.cells
 
     local step
@@ -540,12 +583,14 @@ function Simple_create_areas(R)
     local touched_groups
     
 
-    -- mark free areas with zero instead of negative [TODO: make into a cave method]
-    for fx = 1,cw do for fy = 1,ch do
+    -- mark free areas with zero instead of negative
+    for fx = 1, cw do
+    for fy = 1, ch do
       if (f_cel[fx][fy] or 0) < 0 then
         f_cel[fx][fy] = 0
       end
-    end end
+    end
+    end
 
 
     local function touch_a_group(G)
@@ -744,10 +789,10 @@ step:dump("Step:")
   local function create_area_map()
     -- create a map where each cell refers to an AREA, or is NIL
 
-    local W = R.cave_map.w
-    local H = R.cave_map.h
+    local W = info.W
+    local H = info.H
 
-    local area_map = CAVE_CLASS.blank_copy(R.cave_map)
+    local area_map = CAVE_CLASS.blank_copy(info.raw)
 
     each A in R.cave_areas do
       for x = 1,W do
@@ -764,8 +809,8 @@ step:dump("Step:")
 
 
   local function determine_touching_areas()
-    local W = R.cave_map.w
-    local H = R.cave_map.h
+    local W = info.W
+    local H = info.H
 
     local area_map = R.area_map
 
@@ -801,7 +846,7 @@ step:dump("Step:")
 
   ---| Simple_create_areas |---
 
-  if R.cave_step_mode == "walkway" then
+  if info.step_mode == "walkway" then
     make_walkway()
   else
     create_group_map()
@@ -829,6 +874,9 @@ end
 
 
 function Simple_floor_heights(R, entry_h)
+
+  local info = R.cave_info
+
 
   local z_change_prob = 10
   if rand.odds(10) then z_change_prob = 40 end
@@ -920,19 +968,22 @@ end
 
 function Simple_render_cave(R)
 
-  local cave = R.cave_map
+  local info = R.cave_info
+
+
+  local cave = info.raw
 
   local cave_tex = R.wall_mat or "_ERROR"
 
-  local is_lake = (R.cave_liquid_mode == "lake")
+  local is_lake = (info.liquid_mode == "lake")
 
   -- the delta map specifies how to move each corner of the 64x64 cells
   -- (where the cells form a continuous mesh).
   local delta_x_map
   local delta_y_map
 
-  local dw = cave.w + 1
-  local dh = cave.h + 1
+  local dw = info.W + 1
+  local dh = info.H + 1
 
   local B_CORNERS = { 1,3,9,7 }
 
@@ -1069,8 +1120,8 @@ if not A then return end  --!!!!!!!!! WTF WTF
 
 
   local function brush_for_cell(x, y)
-    local bx = cave.base_x + (x - 1) * 64
-    local by = cave.base_y + (y - 1) * 64
+    local bx = info.x1 + (x - 1) * 64
+    local by = info.y1 + (y - 1) * 64
 
     local coords = {}
 
@@ -1094,8 +1145,8 @@ if not A then return end  --!!!!!!!!! WTF WTF
 
 
   local function cell_middle(x, y)
-    local mx = cave.base_x + (x - 1) * 64 + 32
-    local my = cave.base_y + (y - 1) * 64 + 32
+    local mx = info.x1 + (x - 1) * 64 + 32
+    local my = info.y1 + (y - 1) * 64 + 32
   
     return mx, my
   end
@@ -1245,27 +1296,27 @@ if not A then return end  --!!!!!!!
 
     -- TODO: this is whole cave, ideally have just the area
 
-    local x1 = cave.base_x + 10
-    local y1 = cave.base_y + 10
+    local x1 = info.x1 + 10
+    local y1 = info.y1 + 10
 
-    local x2 = x1 + cave.w * 64 - 10
-    local y2 = y1 + cave.h * 64 - 10
+    local x2 = info.x2 - 10
+    local y2 = info.y2 - 10
 
     gui.spots_begin(x1, y1, x2, y2, SPOT_LEDGE)
 
 
     -- step 1 : handle floors
 
-    for cx = 1, cave.w do
-    for cy = 1, cave.h do
+    for cx = 1, info.W do
+    for cy = 1, info.H do
       do_spot_floor(A, cx, cy)
     end
     end
 
     -- step 2 : handle nearby walls
 
-    for cx = 1, cave.w do
-    for cy = 1, cave.h do
+    for cx = 1, info.W do
+    for cy = 1, info.H do
       do_spot_wall(A, cx, cy)
     end
     end
@@ -1327,7 +1378,8 @@ if not A then return end  --!!!!!!!
     local min_floor =  9e9
     local max_ceil  = -9e9
   
-    for x = 1,cave.w do for y = 1,cave.h do
+    for x = 1, info.W do
+    for y = 1, info.H do
       if ((island:get(x, y) or 0) > 0) then
         for dir = 2,8,2 do
           local nx, ny = geom.nudge(x, y, dir)
@@ -1341,7 +1393,8 @@ if not A then return end  --!!!!!!!
           max_ceil  = math.max(max_ceil , A.ceil_h)
         end
       end
-    end end
+    end  -- x, y
+    end
 
 --!!!! FIXME  assert(min_floor < max_ceil)
 
@@ -1349,6 +1402,7 @@ if not A then return end  --!!!!!!!
   end
 
 
+--[[ OLD
   local function render_liquid_area(island)
     -- create a lava/nukage pit
 
@@ -1366,8 +1420,8 @@ if not A then return end  --!!!!!!!
 
     -- TODO: fireballs for Quake
 
-    for x = 1,cave.w do
-    for y = 1,cave.h do
+    for x = 1, cave.w do
+    for y = 1, cave.h do
 
       if ((island:get(x, y) or 0) > 0) then
 
@@ -1424,6 +1478,7 @@ if not A then return end  --!!!!!!!
 
     end end -- x, y
   end
+--]]
 
 
   local function add_liquid_pools()
@@ -1468,8 +1523,8 @@ if not A then return end  --!!!!!!!
 
 --!!!! FIXME  add_liquid_pools()
 
-  for x = 1,cave.w do
-  for y = 1,cave.h do
+  for x = 1, info.W do
+  for y = 1, info.H do
     render_cell(x, y)
   end
   end
@@ -1486,6 +1541,8 @@ end
 
 
 function Simple_decide_properties(R)
+  local info = R.cave_info
+
   local LIQUID_MODES = { none=20, lake=1099, some=80 }
   local   STEP_MODES = { walkway=2099, up=20, down=20, mixed=80 }
   local    SKY_MODES = { none=30, walkway=5099, some=50 }
@@ -1493,46 +1550,46 @@ function Simple_decide_properties(R)
 
   -- decide liquid mode
   if not LEVEL.liquid then
-    R.cave_liquid_mode = "none"
+    info.liquid_mode = "none"
     STEP_MODES.walkway = nil
   else
     if not R.is_outdoor then
       LIQUID_MODES.lake = nil
     end
 
-    R.cave_liquid_mode = "lake" --- rand.key_by_probs(LIQUID_MODES)
+    info.liquid_mode = "lake" ---!!!! rand.key_by_probs(LIQUID_MODES)
   end
 
   -- decide step mode
-  R.cave_step_mode = "mixed" --!!!! rand.key_by_probs(STEP_MODES)
+  info.step_mode = "mixed" --!!!! rand.key_by_probs(STEP_MODES)
 
-  if R.cave_step_mode != "walkway" then
+  if info.step_mode != "walkway" then
     SKY_MODES.walkway = nil
   end
 
   -- decide sky mode
   if R.is_outdoor then
-    R.cave_sky_mode = rand.sel(50, "high_wall", "low_wall")
+    info.sky_mode = rand.sel(50, "high_wall", "low_wall")
   else
-    R.cave_sky_mode = rand.key_by_probs(SKY_MODES)
+    info.sky_mode = rand.key_by_probs(SKY_MODES)
   end
 
   -- decide torch mode
-  if R.cave_sky_mode == "walkway" then
+  if info.sky_mode == "walkway" then
     TORCH_MODES.middle = nil
   end
 
-  if R.cave_liquid_mode == "lake" then
+  if info.liquid_mode == "lake" then
     TORCH_MODES.corner = nil
   end
 
   if (R.is_outdoor and not LEVEL.is_dark) or
-     (R.cave_liquid_mode == "lake")
+     (info.liquid_mode == "lake")
   then
     TORCH_MODES.none = 4000
   else
-    local has_liquid = (R.cave_liquid_mode != "none")
-    local has_sky    = (R.cave_sky_mode != "none")
+    local has_liquid = (info.liquid_mode != "none")
+    local has_sky    = (info.sky_mode != "none")
 
     if LEVEL.is_dark then has_sky = false end
 
@@ -1543,12 +1600,14 @@ function Simple_decide_properties(R)
     end
   end
 
-  R.cave_torch_mode = rand.key_by_probs(TORCH_MODES)
+  info.torch_mode = rand.key_by_probs(TORCH_MODES)
 end
 
 
 
 function Simple_cave_or_maze(R)
+  R.cave_info = {}
+
   Simple_decide_properties(R)
   Simple_generate_cave(R)
 
