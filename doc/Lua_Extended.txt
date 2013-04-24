@@ -39,22 +39,9 @@ CHANGES
    the current index value.
 
 
-3. Ternary operator similar to ?: which is well known in C / C++.
-   Initially I tried a patch which used if/then/else syntax, but
-   that was too clumsy for my taste and I modified it to use the
-   following syntax:
-
-   Example: x = (game == "doom" ? 1 ; 2)
-
-   Note that the parentheses are required, which made the parsing
-   code easier but also prevents any ambiguity with the semicolon.
-   The colon used in the C / C++ operator could not be used here
-   since Lua already uses it for method calls.
-
-
-4. Continue statement.  This is something I missed a lot from C
+3. Continue statement.  This is something I missed a lot from C
    and C++, since I prefer to keep indentation to a minimum and
-   tend to write loops with "filters" near the beginning.
+   to write loops with "filters" near the beginning.
 
    Example:
 
@@ -63,13 +50,13 @@ CHANGES
         if R.outdoor then continue end
 
         -- ignore cavey rooms
-        if R.natural then continue end
+        if R.kind == "cave" then continue end
 
         ... do something ...
       end
 
 
-5. Added != operator with the same meaning as '~=' (not equals)
+4. Added != operator with the same meaning as '~=' (not equals)
    since I find it more readable -- the exclamation mark just
    stands out more.
 
