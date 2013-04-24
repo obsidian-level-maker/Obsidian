@@ -35,7 +35,7 @@ class CAVE_INFO
 
   cave : CAVE   -- raw generated cave
 
-  blocks : array(BLOCKS)  -- info for each 64x64 block
+  blocks : array(BLOCK)  -- info for each 64x64 block
 
   areas : list(AREA)
 }
@@ -44,6 +44,11 @@ class CAVE_INFO
 class BLOCK
 {
   area : AREA
+
+  -- these fields can override the AREA or the ROOM values
+  floor_h, ceil_h
+
+  floor_mat, ceil_mat
 }
 
 
@@ -51,10 +56,8 @@ class AREA
 {
   touching : list(AREA)
 
-  floor_map : CAVE   -- shape of the floor
-
   floor_h  -- floor height
-  ceil_h   -- ceiling height
+   ceil_h  -- ceiling height
 
   goal_type : keyword  -- normally nil
                        -- or can be "portal" or "important"
@@ -491,6 +494,18 @@ function Simple_create_areas(R)
   local group_map
 
 
+  local function install_area(A, a_cave, mul)
+    for cx = 1, info.W do
+    for cy = 1, info.H do
+      if ((a_cave:get(cx, cy) or 0) * mul) > 0 then
+        assert(not info.blocks[cx][cy].area)
+        info.blocks[cx][cy].area = A
+      end
+    end
+    end
+  end
+
+
   local function make_walkway()
 
     -- only have one area (the indentation / liquidy bits are considered a
@@ -502,13 +517,11 @@ function Simple_create_areas(R)
 
     table.insert(info.areas, AREA)
 
-    AREA.floor_map = info.cave:copy()
-
-    AREA.floor_map:negate()
-
     each imp in R.cave_imps do
       imp.area = AREA
     end
+
+    install_area(AREA, cave, -1)
 
 
     if info.liquid_mode == "lake" then return end
@@ -693,21 +706,6 @@ function Simple_create_areas(R)
     end
 
 
-    local function merge_step(prev)
-      -- meh, need this functions because union() method does not
-      --      consider '0' as a valid value.
-      -- At least this one is a bit more efficient :)
-
-      for x = cx1, cx2 do
-      for y = cy1, cy2 do
-        if s_cel[x][y] == 1 then
-          prev.cells[x][y] = 1
-        end
-      end
-      end
-    end
-
-
     local function grow_an_area(cx, cy, prev_A)
 
 -- free:dump("Free:")
@@ -745,7 +743,7 @@ step:dump("Step:")
       -- when the step is too small, merge it into previous area
       if size < 4 and prev_A then
 
-        merge_step(prev_A.floor_map)
+        install_area(prev_A, step, 1)
 
       else
         local AREA =
@@ -755,7 +753,7 @@ step:dump("Step:")
 
         table.insert(info.areas, AREA)
 
-        AREA.floor_map = step
+        install_area(AREA, step, 1)
 
         prev_A = AREA
       end
@@ -800,23 +798,6 @@ step:dump("Step:")
       if f_cel[pos.x][pos.y] != 0 then continue end
 
       grow_an_area(pos.x, pos.y, pos.prev)
-    end
-  end
-
-
-  local function create_area_map()
-    -- transfer 'area' value into each block  [FIXME: do this when area is created]
-
-    each A in info.areas do
-      for x = 1, info.W do
-      for y = 1, info.H do
-        local block = info.blocks[x][y]
-
-        if (A.floor_map.cells[x][y] or 0) > 0 then
-          block.area = A
-        end
-      end
-      end
     end
   end
 
@@ -873,17 +854,7 @@ step:dump("Step:")
     end
   end
 
-  create_area_map()
-
   determine_touching_areas()
-
---[[ debugging
-  each A in info.areas do
-    assert(A.floor_map)
-
-    A.floor_map:dump("Step for area-" .. tostring(A))
-  end
---]]
 end
 
 
