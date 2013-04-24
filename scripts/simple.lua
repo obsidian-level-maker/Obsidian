@@ -178,7 +178,7 @@ function Simple_generate_cave(R)
 
         -- in lake mode, clear whole seeds that touch edge of map
         -- (i.e. which will have a sky border next to them)
-        if is_lake and S:neighbor(dir) == nil then
+        if is_lake and S:need_lake_fence(dir) then
           map:fill(cx, cy, cx+3, cy+3, -1)
         end
       end
@@ -1564,9 +1564,100 @@ function Simple_outdoor_borders(R)
   end
 
 
+  local function install_fence_post(cx1, cy1, cx2, cy2, dir, along_dir, i, deep)
+    -- FIXME
+  end
+
+
+  local function try_fence_run(S, dir)
+    if not S.lake_fences then S.lake_fences = {} end
+
+    -- already done?
+    if S.lake_fences[dir] then return end
+
+    local along_dir = geom.vert_sel(dir, 6, 8)
+
+    local count = 1
+
+    local S1 = S
+    local S2 = S:neighbor(along_dir)
+
+    while S2 do
+      assert(not (S2.lake_fences and S2.lake_fences[dir]))
+
+      if not S2:need_lake_fence(dir) then break; end
+
+      if not S2.lake_fences then S2.lake_fences = {} end
+
+      count = count + 1
+
+      S2 = S2:neighbor(along_dir)
+    end
+
+    --- OK, install it ---
+
+    for i = 1, count do
+      local N = S:neighbor(along_dir, i - 1)
+
+      N.lake_fences[dir] = true  -- prevent visiting again
+    end
+
+    local S2 = S:neighbor(along_dir, count - 1)
+
+    local cx1 = 1 + (S.sx - R.sx1) * 4
+    local cy1 = 1 + (S.sy - R.sy1) * 4
+
+    local cx2 = 1 + (S2.sx - R.sx1) * 4 + 3
+    local cy2 = 1 + (S2.sy - R.sy1) * 4 + 3
+
+    assert(cx2 > cx1 and cy2 > cy1)
+
+    -- starting depth
+    local deep = rand.sel(50, 1, 2)
+
+    for i = 1, count * 4 do
+      install_fence_post(cx1, cy1, cx2, cy2, dir, along_dir, i, deep)
+
+      -- pick next depth
+          if deep == 1 then deep = rand.index_by_probs({ 50, 45,  5})
+      elseif deep == 2 then deep = rand.index_by_probs({ 35, 50, 15})
+      elseif deep == 3 then deep = rand.index_by_probs({  5, 45, 50})
+      end
+    end
+  end
+
+
+  local function create_lake_fences()
+    info.lake_fence =
+    {
+      floor_h = R.min_floor_h + 80
+    }
+
+    for sx = R.sx1, R.sx2 do
+    for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
+
+      if S.room != R then continue end
+
+      for dir = 2,8,2 do
+        if S:need_lake_fence(dir) then
+          try_fence_run(S, dir)
+        end
+      end
+
+    end -- sx, sy
+    end
+  end
+
+
   ---| Simple_outdoor_borders |---
 
   if not R.is_outdoor then return end
+
+  if info.liquid_mode == "lake" then
+    create_lake_fences()    
+  end
+
 
   if info.liquid_mode == "lake" or
      info.sky_mode == "low_wall" then

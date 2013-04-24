@@ -167,6 +167,18 @@ function SEED_CLASS.same_room(S, dir)
 end
 
 
+function SEED_CLASS.need_lake_fence(S, dir)
+  --| need a lake fence at:
+  --| (1) very edge of map
+  --| (2) border to a different outdoor room
+  local N = S:neighbor(dir)
+  if not N then return true end
+  if not (S.room and N.room) then return false end
+  if S.room == N.room then return false end
+  return N.room.is_outdoor
+end
+
+
 function SEED_CLASS.mid_point(S)
   return geom.box_mid(S.x1, S.y1, S.x2, S.y2)
 end
