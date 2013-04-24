@@ -975,6 +975,13 @@ function Simple_floor_heights(R, entry_h)
   end
 
 
+  local function handle_low_wall()
+    if info.sky_mode != "low_wall" then return end
+
+    info.wall.floor_h = R.max_floor_h + 80
+  end
+
+
   ---| Simple_floor_heights |---
 
   local z_dir = rand.sel(35, 1, -1)
@@ -987,6 +994,8 @@ function Simple_floor_heights(R, entry_h)
 
   update_min_max_floor()
   update_walk_ways()
+
+  handle_low_wall()
 end
 
 
