@@ -39,16 +39,20 @@ class CAVE_INFO
   blocks : array(AREA)  -- info for each 64x64 block
 
   floors : list(AREA)
+  wall   : AREA
 }
 
 
 class AREA
 {
   --| this info is used to describe each cave cell
-  --| (usually shared between cells).
-  --| currently solid walls have no area [FIXME]
+  --| (and generally shared between multiple cells).
 
-  touching : list(AREA)
+  wall   : boolean  -- true for solid walls
+  liquid : boolean  -- true for a liquid floor
+  sky    : boolean  -- true for a sky ceiling
+
+  touching : list(AREA)   -- only used for visitable floors
 
   floor_h  -- floor height
    ceil_h  -- ceiling height
@@ -142,6 +146,13 @@ function Simple_generate_cave(R)
 
     info.floors = {}
 
+    local WALL_AREA =
+    {
+      wall = true
+    }
+
+    info.wall = WALL_AREA
+
     map = CAVE_CLASS.new(info.W, info.H)
   end
 
@@ -167,7 +178,7 @@ function Simple_generate_cave(R)
 
         -- in lake mode, clear whole seeds that touch edge of map
         -- (i.e. which will have a sky border next to them)
-        if need_border and S:neighbor(dir) == nil then
+        if is_lake and S:neighbor(dir) == nil then
           map:fill(cx, cy, cx+3, cy+3, -1)
         end
       end
@@ -831,6 +842,19 @@ step:dump("Step:")
   end
 
 
+  local function set_walls()
+    for x = 1, info.W do
+    for y = 1, info.H do
+      local val = cave:get(x, y)
+
+      if (val or 0) > 0 then
+        info.blocks[x][y] = info.wall
+      end
+    end
+    end
+  end
+
+
   ---| Simple_create_areas |---
 
   if info.step_mode == "walkway" then
@@ -846,6 +870,10 @@ step:dump("Step:")
   end
 
   determine_touching_areas()
+
+  if not is_lake then
+    set_walls()
+  end
 end
 
 
@@ -865,7 +893,9 @@ function Simple_floor_heights(R, entry_h)
 
     A.floor_h = h
 
-    if R.is_outdoor or A.goal_type then
+    if R.is_outdoor then
+      -- no ceil_h (done later using sky_rects)
+    elseif A.goal_type then
       A.ceil_h = A.floor_h + 192
     else
       A.ceil_h = A.floor_h + rand.pick { 128, 192,192,192, 288 }
@@ -935,7 +965,10 @@ function Simple_floor_heights(R, entry_h)
 
         if WALK then
           WALK.floor_h = A.floor_h - WALK.indent * 12
-          WALK. ceil_h = A. ceil_h + WALK.indent * 64
+
+          if A.ceil_h then
+            WALK.ceil_h = A.ceil_h + WALK.indent * 64
+          end
         end
       end
     end
@@ -1158,56 +1191,29 @@ if not A then return end  --!!!!!!!!! DUE TO EMPTY ISLANDS
   end
 
 
-  local function render_wall(cx, cy)
-    local w_mat = cave_tex
-
-    local brush = brush_for_cell(cx, cy)
-
-    Brush_set_mat(brush, w_mat, w_mat)
-
-    brush_helper(brush)
-  end
-
-
   local function render_cell(x, y)
     local A = info.blocks[x][y]
 
-
-    local val = cave:get(x, y)
-
-    if val == nil then return end
-
-    if val > 0 and not is_lake then
-      render_wall(x, y)
-      return
-    end
+    if not A then return end
 
 
-    if val > 0 then A = { } end  -- FIXME
-
-if not A then return end  --!!!!!!!
+    local f_h = A.floor_h
+    local c_h = A.ceil_h  
 
     local f_mat = A.floor_mat or R.floor_mat or cave_tex
     local c_mat = A. ceil_mat or R.ceil_mat  or cave_tex
 
-    local f_h = A.floor_h
-    local c_h = A.ceil_h  
+    if A.wall then f_mat = A.wall_mat or R.wall_mat or cave_tex end
 
     local f_liquid = A.liquid
     local c_sky    = A.sky
 
 
-    if val > 0 then
-      f_h = R.min_floor_h - 64
-      f_liquid = true
-
-      c_h = f_h + 256 -- TEMP SHITE
-    end
-
-
     local f_brush = brush_for_cell(x, y)
 
-    Brush_add_top(f_brush, f_h)
+    if f_h then
+      Brush_add_top(f_brush, f_h)
+    end
 
     if f_liquid then
       Brush_mark_liquid(f_brush)
@@ -1218,7 +1224,7 @@ if not A then return end  --!!!!!!!
     brush_helper(f_brush)
 
 
-    if not R.is_outdoor then
+    if c_h then
       local c_brush = brush_for_cell(x, y)
 
       Brush_add_bottom(c_brush, c_h)
@@ -1336,7 +1342,7 @@ if not A then return end  --!!!!!!!
 
     -- add to room, set Z positions
     local f_h = assert(A.floor_h)
-    local c_h = assert(A.ceil_h)
+    local c_h = A.ceil_h or (f_h + 160)
 
     each spot in item_spots do
       spot.z1 = f_h
