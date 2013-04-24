@@ -22,18 +22,19 @@
 
 class CAVE_INFO
 {
-  W, H   -- size of cave
+  W, H  -- size of cave (# of cells)
 
   x1, y1, x2, y2  -- bounding coords
 
   liquid_mode : keyword  -- "none", "some", "lake", "walkway"
+
   step_mode   : keyword  -- "walkway", "up", "down", "mixed"
 
   sky_mode    : keyword  -- "none"
                          -- "some", "walkway"  (indoor rooms only)
                          -- "low_wall", "high_wall"  (outdoor rooms)
 
-  cave : CAVE   -- raw generated cave
+  cave : CAVE  -- raw generated cave
 
   blocks : array(AREA)  -- info for each 64x64 block
 
@@ -43,6 +44,10 @@ class CAVE_INFO
 
 class AREA
 {
+  --| this info is used to describe each cave cell
+  --| (usually shared between cells).
+  --| currently solid walls have no area [FIXME]
+
   touching : list(AREA)
 
   floor_h  -- floor height
@@ -53,6 +58,10 @@ class AREA
 
   goal_type : keyword  -- set if area contains a goal (normally nil)
                        -- can be "portal" or "important".
+
+  -- stuff for walkways only
+  parent : AREA
+  child1, child2 : AREA
 }
 
 --------------------------------------------------------------]]
@@ -474,19 +483,6 @@ function Simple_create_areas(R)
   end
 
 
-  local function install_indent(a_cave, indent)
---[[ REMOVE
-    for cx = 1, info.W do
-    for cy = 1, info.H do
-      if (a_cave:get(cx, cy) or 0) > 0 then
-        info.blocks[cx][cy].indent = indent
-      end
-    end
-    end
---]]
-  end
-
-
   local function make_walkway()
 
     -- only have one area (the indentation / liquidy bits are considered a
@@ -514,7 +510,7 @@ function Simple_create_areas(R)
       indent = 1
     }
 
-    AREA.walk1 = WALK1
+    AREA.child1 = WALK1
 
     local walk_way = info.cave:copy()
 
@@ -538,7 +534,7 @@ function Simple_create_areas(R)
       liquid = true
     }
 
-    AREA.walk2 = WALK2
+    AREA.child2 = WALK2
 
     walk_way:shrink8(true)
 --    walk_way:shrink(true)
@@ -935,7 +931,7 @@ function Simple_floor_heights(R, entry_h)
   local function update_walk_ways()
     each A in info.floors do
       for pass = 1,2 do
-        local WALK = sel(pass == 1, A.walk1, A.walk2)
+        local WALK = sel(pass == 1, A.child1, A.child2)
 
         if WALK then
           WALK.floor_h = A.floor_h - WALK.indent * 12
@@ -1206,19 +1202,6 @@ if not A then return end  --!!!!!!!
       f_liquid = true
 
       c_h = f_h + 256 -- TEMP SHITE
-
---[[
-    elseif block.indent == 1 then
-      f_h = f_h - 8
-      c_h = c_h + 64
-      f_mat = R.walkway_mat
---        c_sky = true
-    elseif block.indent == 2 then
-      f_h = f_h - 24
-      c_h = c_h + 128
-      f_liquid = true
-      c_sky = true
---]]
     end
 
 
