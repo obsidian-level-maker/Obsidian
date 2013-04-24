@@ -35,23 +35,9 @@ class CAVE_INFO
 
   cave : CAVE   -- raw generated cave
 
-  blocks : array(BLOCK)  -- info for each 64x64 block
+  blocks : array(AREA)  -- info for each 64x64 block
 
-  areas : list(AREA)
-}
-
-
-class BLOCK
-{
-  area : AREA
-
-  indent : number  -- for "walkway" mode, this is 1 or 2 for the
-                   -- ident level, or NIL for no change
-
-  -- these fields can override the AREA or ROOM values
-  floor_h, ceil_h
-
-  floor_mat, ceil_mat
+  floors : list(AREA)
 }
 
 
@@ -62,8 +48,11 @@ class AREA
   floor_h  -- floor height
    ceil_h  -- ceiling height
 
-  goal_type : keyword  -- normally nil
-                       -- or can be "portal" or "important"
+  floor_mat  -- floor material
+   ceil_mat  -- ceiling material
+
+  goal_type : keyword  -- set if area contains a goal (normally nil)
+                       -- can be "portal" or "important".
 }
 
 --------------------------------------------------------------]]
@@ -134,13 +123,15 @@ function Simple_generate_cave(R)
     info.W = R.sw * 4
     info.H = R.sh * 4
 
-    info.areas  = {}
+    info.blocks = table.array_2D(info.W, info.H)
 
     info.x1 = SEEDS[R.sx1][R.sy1].x1
     info.y1 = SEEDS[R.sx1][R.sy1].y1
 
     info.x2 = SEEDS[R.sx2][R.sy2].x2
     info.y2 = SEEDS[R.sx2][R.sy2].y2
+
+    info.floors = {}
 
     map = CAVE_CLASS.new(info.W, info.H)
   end
@@ -440,26 +431,6 @@ function Simple_generate_cave(R)
   end
 
 
-  local function make_blocks()
-    info.blocks = table.array_2D(info.W, info.H)
-
-    for x = 1, info.W do
-    for y = 1, info.H do
-      local val = cave.flood[x][y]
-
-      if val == nil then continue end
-
-      local BLOCK =
-      {
-        region = val
-      }
-
-      info.blocks[x][y] = BLOCK
-    end
-    end
-  end
-
-
   ---| Simple_generate_cave |---
 
   -- create the cave object and make the boundaries solid
@@ -472,8 +443,6 @@ function Simple_generate_cave(R)
   clear_importants()
 
   generate_cave()
-
-  make_blocks()
 end
 
 
@@ -498,8 +467,7 @@ function Simple_create_areas(R)
     for cx = 1, info.W do
     for cy = 1, info.H do
       if ((a_cave:get(cx, cy) or 0) * mul) > 0 then
-        assert(not info.blocks[cx][cy].area)
-        info.blocks[cx][cy].area = A
+        info.blocks[cx][cy] = A
       end
     end
     end
@@ -507,6 +475,7 @@ function Simple_create_areas(R)
 
 
   local function install_indent(a_cave, indent)
+--[[ REMOVE
     for cx = 1, info.W do
     for cy = 1, info.H do
       if (a_cave:get(cx, cy) or 0) > 0 then
@@ -514,6 +483,7 @@ function Simple_create_areas(R)
       end
     end
     end
+--]]
   end
 
 
@@ -526,7 +496,7 @@ function Simple_create_areas(R)
       touching = {}
     }
 
-    table.insert(info.areas, AREA)
+    table.insert(info.floors, AREA)
 
     each imp in R.cave_imps do
       imp.area = AREA
@@ -537,6 +507,14 @@ function Simple_create_areas(R)
 
     if info.liquid_mode == "lake" then return end
 
+
+    local WALK1 =
+    {
+      parent = AREA
+      indent = 1
+    }
+
+    AREA.walk1 = WALK1
 
     local walk_way = info.cave:copy()
 
@@ -550,14 +528,23 @@ function Simple_create_areas(R)
 --    walk_way:shrink(true)
     walk_way:remove_dots()
 
-    install_indent(walk_way, 1)
+    install_area(WALK1, walk_way, 1)
 
+
+    local WALK2 =
+    {
+      parent = AREA
+      indent = 2
+      liquid = true
+    }
+
+    AREA.walk2 = WALK2
 
     walk_way:shrink8(true)
 --    walk_way:shrink(true)
     walk_way:remove_dots()
 
-    install_indent(walk_way, 2)
+    install_area(WALK2, walk_way, 1)
   end
 
 
@@ -761,7 +748,7 @@ step:dump("Step:")
           touching = {}
         }
 
-        table.insert(info.areas, AREA)
+        table.insert(info.floors, AREA)
 
         install_area(AREA, step, 1)
 
@@ -818,22 +805,20 @@ step:dump("Step:")
 
     for x = 1, W do
     for y = 1, H do
-      local block = info.blocks[x][y]
+      local A1 = info.blocks[x][y]
 
-      local A1 = block and block.area  --###  area_map.cells[x][y]
-
-      if not A1 then continue end
+      if not (A1 and A1.touching) then continue end
 
       for dir = 2,4,2 do
         local nx, ny = geom.nudge(x, y, dir)
 
         if not cave:valid_cell(nx, ny) then continue end
 
-        local n_block = info.blocks[nx][ny]
+        local A2 = info.blocks[nx][ny]
 
-        local A2 = n_block and n_block.area
+        if not (A2 and A2.touching) then continue end
 
-        if A2 and A2 != A1 then
+        if A2 != A1 then
           table.add_unique(A1.touching, A2)
           table.add_unique(A2.touching, A1)
         end
@@ -842,8 +827,8 @@ step:dump("Step:")
     end
 
     -- verify all areas touch at least one other
-    if #info.areas > 1 then
-      each A in info.areas do
+    if #info.floors > 1 then
+      each A in info.floors do
         assert(not table.empty(A.touching))
       end
     end
@@ -914,7 +899,7 @@ function Simple_floor_heights(R, entry_h)
       end
     end
 
-    return rand.pick(info.areas)
+    return rand.pick(info.floors)
   end
 
 
@@ -940,9 +925,23 @@ function Simple_floor_heights(R, entry_h)
 
 
   local function update_min_max_floor()
-    each A in info.areas do
+    each A in info.floors do
       R.min_floor_h = math.min(R.min_floor_h, A.floor_h)
       R.max_floor_h = math.max(R.max_floor_h, A.floor_h)
+    end
+  end
+
+
+  local function update_walk_ways()
+    each A in info.floors do
+      for pass = 1,2 do
+        local WALK = sel(pass == 1, A.walk1, A.walk2)
+
+        if WALK then
+          WALK.floor_h = A.floor_h - WALK.indent * 12
+          WALK. ceil_h = A. ceil_h + WALK.indent * 64
+        end
+      end
     end
   end
 
@@ -958,6 +957,7 @@ function Simple_floor_heights(R, entry_h)
   transfer_heights()
 
   update_min_max_floor()
+  update_walk_ways()
 end
 
 
@@ -989,7 +989,7 @@ function Simple_render_cave(R)
       return nil
     end
 
-    local block = info.blocks[x][y]
+    local A = info.blocks[x][y]
 
     local C = cave:get(x, y)
 
@@ -1000,19 +1000,18 @@ function Simple_render_cave(R)
     if C > 0 then return EXTREME_H end
 
     -- otherwise there should be a floor area here
-    local A = block.area  ---###  R.area_map:get(x, y)
 
 if not A then return end  --!!!!!!!!! DUE TO EMPTY ISLANDS
 
     assert(A)
 
-    local h = assert(A.floor_h)
+    return assert(A.floor_h)
 
+--[[
     if block.indent then
       h = h - block.indent * 16
     end
-
-    return h
+--]]
   end
 
 
@@ -1175,7 +1174,7 @@ if not A then return end  --!!!!!!!!! DUE TO EMPTY ISLANDS
 
 
   local function render_cell(x, y)
-    local block = info.blocks[x][y]
+    local A = info.blocks[x][y]
 
 
     local val = cave:get(x, y)
@@ -1188,20 +1187,18 @@ if not A then return end  --!!!!!!!!! DUE TO EMPTY ISLANDS
     end
 
 
-    local A = block.area  ---###  R.area_map:get(x, y)
-
     if val > 0 then A = { } end  -- FIXME
 
 if not A then return end  --!!!!!!!
 
-    local f_mat = R.floor_mat or cave_tex
-    local c_mat = R.ceil_mat  or cave_tex
+    local f_mat = A.floor_mat or R.floor_mat or cave_tex
+    local c_mat = A. ceil_mat or R.ceil_mat  or cave_tex
 
     local f_h = A.floor_h
     local c_h = A.ceil_h  
 
-    local f_liquid
-    local c_sky
+    local f_liquid = A.liquid
+    local c_sky    = A.sky
 
 
     if val > 0 then
@@ -1210,6 +1207,7 @@ if not A then return end  --!!!!!!!
 
       c_h = f_h + 256 -- TEMP SHITE
 
+--[[
     elseif block.indent == 1 then
       f_h = f_h - 8
       c_h = c_h + 64
@@ -1220,6 +1218,7 @@ if not A then return end  --!!!!!!!
       c_h = c_h + 128
       f_liquid = true
       c_sky = true
+--]]
     end
 
 
@@ -1253,9 +1252,9 @@ if not A then return end  --!!!!!!!
 
 
   local function do_spot_floor(A, x, y)
-    local block = info.blocks[x][y]
+    local A2 = info.blocks[x][y]
 
-    if not (block and block.area == A) then return end
+    if A != A2 then return end
 
     local poly = brush_for_cell(x, y)
 
@@ -1264,9 +1263,9 @@ if not A then return end  --!!!!!!!
 
 
   local function do_spot_wall(A, x, y)
-    local block = info.blocks[x][y]
+    local A2 = info.blocks[x][y]
 
-    if (block and block.area == A) then return end
+    if A2 == A then return end
 
     local near_area = false
 
@@ -1275,9 +1274,7 @@ if not A then return end  --!!!!!!!
 
       if not cave:valid_cell(nx, ny) then continue end
 
-      local n_block = info.blocks[nx][ny]
-
-      if (n_block and n_block == A) then
+      if info.blocks[nx][ny] == A then
         near_area = true
         break;
       end
@@ -1533,7 +1530,7 @@ if not A then return end  --!!!!!!!
   end
   end
 
-  each A in info.areas do
+  each A in info.floors do
     determine_spots(A)
   end
 
