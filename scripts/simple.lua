@@ -45,7 +45,10 @@ class BLOCK
 {
   area : AREA
 
-  -- these fields can override the AREA or the ROOM values
+  indent : number  -- for "walkway" mode, this is 1 or 2 for the
+                   -- ident level, or NIL for no change
+
+  -- these fields can override the AREA or ROOM values
   floor_h, ceil_h
 
   floor_mat, ceil_mat
@@ -61,9 +64,6 @@ class AREA
 
   goal_type : keyword  -- normally nil
                        -- or can be "portal" or "important"
-
-  walk_way   : CAVE
-  liquid_way : CAVE
 }
 
 --------------------------------------------------------------]]
@@ -506,6 +506,17 @@ function Simple_create_areas(R)
   end
 
 
+  local function install_indent(a_cave, indent)
+    for cx = 1, info.W do
+    for cy = 1, info.H do
+      if (a_cave:get(cx, cy) or 0) > 0 then
+        info.blocks[cx][cy].indent = indent
+      end
+    end
+    end
+  end
+
+
   local function make_walkway()
 
     -- only have one area (the indentation / liquidy bits are considered a
@@ -535,19 +546,18 @@ function Simple_create_areas(R)
     end
 
     walk_way:negate()
-    walk_way:shrink(true)
-    walk_way:shrink(true)
+    walk_way:shrink8(true)
+--    walk_way:shrink(true)
     walk_way:remove_dots()
 
+    install_indent(walk_way, 1)
 
-    liquid_way = walk_way:copy()
 
-    liquid_way:shrink(true)
-    liquid_way:shrink(true)
-    liquid_way:remove_dots()
+    walk_way:shrink8(true)
+--    walk_way:shrink(true)
+    walk_way:remove_dots()
 
-    AREA.walk_way   = walk_way
-    AREA.liquid_way = liquid_way
+    install_indent(walk_way, 2)
   end
 
 
@@ -998,9 +1008,8 @@ if not A then return end  --!!!!!!!!! DUE TO EMPTY ISLANDS
 
     local h = assert(A.floor_h)
 
-    if A.walk_way then
-      if (A.walk_way   :get(x, y) or 0) > 0 then h = h - 16 end
-      if (A.liquid_way:get(x, y) or 0) > 0 then h = h - 16 end
+    if block.indent then
+      h = h - block.indent * 16
     end
 
     return h
@@ -1201,18 +1210,16 @@ if not A then return end  --!!!!!!!
 
       c_h = f_h + 256 -- TEMP SHITE
 
-    elseif A.walk_way then
-      if (A.liquid_way:get(x, y) or 0) > 0 then
-        f_h = f_h - 24
-        c_h = c_h + 128
-        f_liquid = true
-        c_sky = true
-      elseif (A.walk_way:get(x, y) or 0) > 0 then
-        f_h = f_h - 8
-        c_h = c_h + 64
-        f_mat = R.walkway_mat
+    elseif block.indent == 1 then
+      f_h = f_h - 8
+      c_h = c_h + 64
+      f_mat = R.walkway_mat
 --        c_sky = true
-      end
+    elseif block.indent == 2 then
+      f_h = f_h - 24
+      c_h = c_h + 128
+      f_liquid = true
+      c_sky = true
     end
 
 
@@ -1608,11 +1615,11 @@ function Simple_decide_properties(R)
       LIQUID_MODES.lake = nil
     end
 
-    info.liquid_mode = "lake" ---!!!! rand.key_by_probs(LIQUID_MODES)
+    info.liquid_mode = "some" ---!!!! rand.key_by_probs(LIQUID_MODES)
   end
 
   -- decide step mode
-  info.step_mode = "mixed" --!!!! rand.key_by_probs(STEP_MODES)
+  info.step_mode = "walkway" --!!!! rand.key_by_probs(STEP_MODES)
 
   if info.step_mode != "walkway" then
     SKY_MODES.walkway = nil
