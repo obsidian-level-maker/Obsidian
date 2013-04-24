@@ -1565,7 +1565,25 @@ function Simple_outdoor_borders(R)
 
 
   local function install_fence_post(cx1, cy1, cx2, cy2, dir, along_dir, i, deep)
-    -- FIXME
+    if along_dir == 6 then
+      cx1 = cx1 + (i - 1)
+      cx2 = cx1
+    else
+      cy1 = cy1 + (i - 1)
+      cy2 = cy1
+    end
+
+        if dir == 2 then cy2 = cy1 + (deep - 1)
+    elseif dir == 8 then cy1 = cy2 - (deep - 1)
+    elseif dir == 4 then cx2 = cx1 + (deep - 1)
+    elseif dir == 6 then cx1 = cx2 - (deep - 1)
+    end
+
+    for x = cx1, cx2 do
+    for y = cy1, cy2 do
+      info.blocks[x][y] = info.fence
+    end
+    end
   end
 
 
@@ -1583,6 +1601,8 @@ function Simple_outdoor_borders(R)
     local S2 = S:neighbor(along_dir)
 
     while S2 do
+      if S2.room != R then break; end
+
       assert(not (S2.lake_fences and S2.lake_fences[dir]))
 
       if not S2:need_lake_fence(dir) then break; end
@@ -1628,9 +1648,9 @@ function Simple_outdoor_borders(R)
 
 
   local function create_lake_fences()
-    info.lake_fence =
+    info.fence =
     {
-      floor_h = R.min_floor_h + 80
+      floor_h = R.max_floor_h + 96
     }
 
     for sx = R.sx1, R.sx2 do
@@ -1701,11 +1721,11 @@ function Simple_decide_properties(R)
       LIQUID_MODES.lake = nil
     end
 
-    info.liquid_mode = "some" ---!!!! rand.key_by_probs(LIQUID_MODES)
+    info.liquid_mode = "lake" ---!!!! rand.key_by_probs(LIQUID_MODES)
   end
 
   -- decide step mode
-  info.step_mode = "walkway" --!!!! rand.key_by_probs(STEP_MODES)
+  info.step_mode = "mixed" --!!!! rand.key_by_probs(STEP_MODES)
 
   if info.step_mode != "walkway" then
     SKY_MODES.walkway = nil
