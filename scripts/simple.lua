@@ -39,7 +39,10 @@ class CAVE_INFO
   blocks : array(AREA)  -- info for each 64x64 block
 
   floors : list(AREA)
+  lakes  : list(AREA)
+
   wall   : AREA
+  fence  : AREA
 }
 
 
@@ -1558,6 +1561,59 @@ end
 
 
 
+function Simple_fill_lakes(R)
+  local info = R.cave_info
+  local cave = info.cave
+
+
+  local function add_lake(id, reg)
+
+    -- FIXME: if reg.size < 16 then emptify_region()
+
+    local LAKE =
+    {
+      liquid = true
+
+      cx1 = reg.x1
+      cy1 = reg.y1
+      cx2 = reg.x2
+      cy2 = reg.y2
+
+      floor_h = -777
+    }
+
+    table.insert(info.lakes, LAKE)
+
+    for x = LAKE.cx1, LAKE.cx2 do
+    for y = LAKE.cy1, LAKE.cy2 do
+      if cave.flood[x][y] == id then
+        info.blocks[x][y] = LAKE
+      end
+    end
+    end
+  end
+
+
+  ---| Simple_fill_lakes |---
+
+  info.lakes = {}
+
+  if info.liquid_mode != "lake" then return end
+
+  -- determine region id for the main walkway
+  local p1 = R.point_list[1]
+
+  local path_id = cave.flood[p1.x][p1.y]
+
+  each id,reg in cave.regions do
+    if id > 0 then
+      add_lake(id, reg)
+    end
+  end
+end
+
+
+
 function Simple_lake_fences(R)
   local info = R.cave_info
 
@@ -1796,6 +1852,8 @@ function Simple_cave_or_maze(R)
   Simple_generate_cave(R)
 
   Simple_lake_fences(R)
+  Simple_fill_lakes(R)
+
   Simple_create_areas(R)
   Simple_floor_heights(R, R.entry_h)
 
