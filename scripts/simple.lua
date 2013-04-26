@@ -494,6 +494,23 @@ function Simple_create_areas(R)
   end
 
 
+  local function copy_cave_without_fences()
+    local new_cave = info.cave:copy()
+
+    if info.fence then
+      for cx = 1, info.W do
+      for cy = 1, info.H do
+        if info.blocks[cx][cy] == info.fence then
+          new_cave:set(cx, cy, nil)
+        end
+      end
+      end
+    end
+
+    return new_cave
+  end
+
+
   local function make_walkway()
 
     -- only have one area (the indentation / liquidy bits are considered a
@@ -523,7 +540,7 @@ function Simple_create_areas(R)
 
     AREA.child1 = WALK1
 
-    local walk_way = info.cave:copy()
+    local walk_way = copy_cave_without_fences()
 
     -- remove importants from it
     each imp in R.cave_imps do
@@ -599,7 +616,7 @@ function Simple_create_areas(R)
     }
 
 
-    local free  = CAVE_CLASS.copy(info.cave)
+    local free  = copy_cave_without_fences()
     local f_cel = free.cells
 
     local step
@@ -789,7 +806,6 @@ step:dump("Step:")
         end
       end -- x, y
       end
-
     end
 
 
@@ -975,10 +991,14 @@ function Simple_floor_heights(R, entry_h)
   end
 
 
-  local function handle_low_wall()
-    if info.sky_mode != "low_wall" then return end
+  local function update_fences()
+    if info.liquid_mode == "lake" then
+      info.fence.floor_h = R.max_floor_h + 96
+    end
 
-    info.wall.floor_h = R.max_floor_h + 80
+    if info.sky_mode == "low_wall" then
+      info.wall.floor_h = R.max_floor_h + 80
+    end
   end
 
 
@@ -994,8 +1014,7 @@ function Simple_floor_heights(R, entry_h)
 
   update_min_max_floor()
   update_walk_ways()
-
-  handle_low_wall()
+  update_fences()
 end
 
 
@@ -1539,30 +1558,8 @@ end
 
 
 
-function Simple_outdoor_borders(R)
+function Simple_lake_fences(R)
   local info = R.cave_info
-
-  local f_mat = assert(R.wall_mat)
-  local f_h   = R.min_floor_h - 256
-
-
-  local function sky_border(S, dir)
-    local x1, y1 = S.x1, S.y1
-    local x2, y2 = S.x2, S.y2
-
-    if dir == 2 then y2 = y1 ; y1 = y1 - 16 end
-    if dir == 8 then y1 = y2 ; y2 = y2 + 16 end
-    if dir == 4 then x2 = x1 ; x1 = x1 - 16 end
-    if dir == 6 then x1 = x2 ; x2 = x2 + 16 end
-
-    local brush = Brush_new_quad(x1, y1, x2, y2)
-    table.insert(brush, { t=f_h, reachable=true })
-    Brush_set_mat(brush, f_mat, f_mat)
-    brush_helper(brush)
-
-    Build_sky_quad(x1, y1, x2, y2, f_h + 4)
-  end
-
 
   local function install_fence_post(cx1, cy1, cx2, cy2, dir, along_dir, i, deep)
     if along_dir == 6 then
@@ -1647,42 +1644,65 @@ function Simple_outdoor_borders(R)
   end
 
 
-  local function create_lake_fences()
-    info.fence =
-    {
-      floor_h = R.max_floor_h + 96
-    }
+  --| Simple_lake_fences |--
 
-    for sx = R.sx1, R.sx2 do
-    for sy = R.sy1, R.sy2 do
-      local S = SEEDS[sx][sy]
+  if info.liquid_mode != "lake" then return end
 
-      if S.room != R then continue end
+  local FENCE =  
+  {
+    -- floor_h
+  }
 
-      for dir = 2,8,2 do
-        if S:need_lake_fence(dir) then
-          try_fence_run(S, dir)
-        end
+  info.fence = FENCE
+
+  for sx = R.sx1, R.sx2 do
+  for sy = R.sy1, R.sy2 do
+    local S = SEEDS[sx][sy]
+
+    if S.room != R then continue end
+
+    for dir = 2,8,2 do
+      if S:need_lake_fence(dir) then
+        try_fence_run(S, dir)
       end
-
-    end -- sx, sy
     end
+
+  end -- sx, sy
+  end
+end
+
+
+
+function Simple_outdoor_borders(R)
+  local info = R.cave_info
+
+  local f_mat = assert(R.wall_mat)
+  local f_h   = R.min_floor_h - 256
+
+
+  local function sky_border(S, dir)
+    local x1, y1 = S.x1, S.y1
+    local x2, y2 = S.x2, S.y2
+
+    if dir == 2 then y2 = y1 ; y1 = y1 - 16 end
+    if dir == 8 then y1 = y2 ; y2 = y2 + 16 end
+    if dir == 4 then x2 = x1 ; x1 = x1 - 16 end
+    if dir == 6 then x1 = x2 ; x2 = x2 + 16 end
+
+    local brush = Brush_new_quad(x1, y1, x2, y2)
+    table.insert(brush, { t=f_h, reachable=true })
+    Brush_set_mat(brush, f_mat, f_mat)
+    brush_helper(brush)
+
+    Build_sky_quad(x1, y1, x2, y2, f_h + 4)
   end
 
 
   ---| Simple_outdoor_borders |---
 
-  if not R.is_outdoor then return end
-
-  if info.liquid_mode == "lake" then
-    create_lake_fences()    
-  end
-
-
-  if info.liquid_mode == "lake" or
-     info.sky_mode == "low_wall" then
-    -- OK
-  else
+  if not (info.liquid_mode == "lake" or
+          info.sky_mode == "low_wall")
+  then
     return
   end
 
@@ -1775,6 +1795,7 @@ function Simple_cave_or_maze(R)
   Simple_decide_properties(R)
   Simple_generate_cave(R)
 
+  Simple_lake_fences(R)
   Simple_create_areas(R)
   Simple_floor_heights(R, R.entry_h)
 
