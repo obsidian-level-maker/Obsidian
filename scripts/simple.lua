@@ -897,6 +897,61 @@ end
 
 
 
+function Simple_heights_near_area(R, A)
+  local info = R.cave_info
+  local cave = info.cave
+
+  local min_floor_h =  9e9
+  local max_floor_h = -9e9
+
+  local min_ceil_h =  9e9
+  local max_ceil_h = -9e9
+
+  for x = 1, info.W do
+  for y = 1, info.H do
+    for dir = 2,4 do
+      local nx, ny = geom.nudge(x, y, dir)
+
+      if not cave:valid_cell(nx, ny) then continue end
+
+      local A1 = info.blocks[x][y]
+      local A2 = info.blocks[nx][ny]
+
+      if (A2 == A) then
+        A1, A2 = A2, A1
+      end
+
+      if not A2 or (A1 != A) or (A2 == A) then continue end
+
+      if A2.floor_h then
+        min_floor_h = math.min(min_floor_h, A2.floor_h)
+        max_floor_h = math.max(max_floor_h, A2.floor_h)
+      end
+
+      if A2.ceil_h then
+        min_ceil_h = math.min(min_ceil_h, A2.ceil_h)
+        max_ceil_h = math.max(max_ceil_h, A2.ceil_h)
+      end
+    end
+  end -- x, y
+  end
+
+  if min_floor_h > max_floor_h then
+    min_floor_h = nil
+    max_floor_h = nil
+  end
+
+  if min_ceil_h > max_ceil_h then
+    min_ceil_h = nil
+    max_ceil_h = nil
+  end
+
+  return min_floor_h, max_floor_h,
+         min_ceil_h,  max_ceil_h
+end
+
+
+
 function Simple_floor_heights(R, entry_h)
 
   local info = R.cave_info
@@ -1005,6 +1060,25 @@ function Simple_floor_heights(R, entry_h)
   end
 
 
+  local function update_lakes()
+    for pass = 1,4 do
+      each A in info.lakes do
+        if not A.floor_h then
+        
+          local f_h = Simple_heights_near_area(R, A)
+
+          if f_h then
+            A.floor_h = f_h - rand.pick({ 8, 16, 24 })
+          elseif pass == 4 then
+            error("Lake failed to get a height")
+          end
+
+        end
+      end
+    end
+  end
+
+
   ---| Simple_floor_heights |---
 
   local z_dir = rand.sel(35, 1, -1)
@@ -1018,6 +1092,7 @@ function Simple_floor_heights(R, entry_h)
   update_min_max_floor()
   update_walk_ways()
   update_fences()
+  update_lakes()
 end
 
 
@@ -1574,12 +1649,12 @@ function Simple_fill_lakes(R)
     {
       liquid = true
 
+      region = reg
+
       cx1 = reg.x1
       cy1 = reg.y1
       cx2 = reg.x2
       cy2 = reg.y2
-
-      floor_h = -777
     }
 
     table.insert(info.lakes, LAKE)
@@ -1591,6 +1666,14 @@ function Simple_fill_lakes(R)
       end
     end
     end
+  end
+
+
+  local function handle_island(id, reg)
+
+    -- TODO: if large, keep as island and add bridge to nearby ground
+
+    add_lake(id, reg)
   end
 
 
@@ -1606,8 +1689,12 @@ function Simple_fill_lakes(R)
   local path_id = cave.flood[p1.x][p1.y]
 
   each id,reg in cave.regions do
-    if id > 0 then
+    if (id > 0) then
       add_lake(id, reg)
+    end
+
+    if (id < 0) and (id != path_id) then
+      handle_island(id, reg)
     end
   end
 end
@@ -1706,6 +1793,8 @@ function Simple_lake_fences(R)
 
   local FENCE =  
   {
+    fence = true
+
     -- floor_h
   }
 
