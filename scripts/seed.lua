@@ -127,6 +127,7 @@ class SECTION
 
 SEED_W = 0
 SEED_H = 0
+SEED_TOP = 0
 
 BASE_X = 0
 BASE_Y = 0
@@ -154,7 +155,7 @@ end
 
 function SEED_CLASS.neighbor(S, dir, dist)
   local nx, ny = geom.nudge(S.sx, S.sy, dir, dist)
-  if nx < 1 or nx > SEED_W or ny < 1 or ny > SEED_H then
+  if nx < 1 or nx > SEED_W or ny < 1 or ny > SEED_TOP then
     return nil
   end
   return SEEDS[nx][ny]
