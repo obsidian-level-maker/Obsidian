@@ -1123,29 +1123,96 @@ function Simple_floor_heights(R, entry_h)
   end
 
 
-  local function visit_area(A, z_dir, h)
-    -- recursively spread floors heights into each area
+  local function floor_for_river(bunch_A, h)
+    assert(not bunch_A.floor_h)
 
-    A.floor_h = h
+    local diff_h = 16
 
-    if R.is_outdoor then
-      -- no ceil_h (done later using sky_rects)
-    elseif A.goal_type then
-      A.ceil_h = A.floor_h + 192
-    else
-      A.ceil_h = A.floor_h + rand.pick { 128, 192,192,192, 288 }
+    -- determine minimum of all areas touching the river
+    each A in info.floors do
+      if A.liquid_bunch != bunch_A then continue end
+
+      each N in A.touching do
+        if N.liquid_bunch then continue end
+
+        if N.floor_h then
+          h = math.min(h, N.floor_h - diff_h)
+        end
+      end
     end
+
+    each A in info.floors do
+      if A.liquid_bunch == bunch_A then
+        A.floor_h = h
+      end
+    end
+
+    return h
+  end
+
+
+  local function spread_river_banks(bunch_A, h)
+    --| ensure all areas touching the river get a floor height now
+    --| (to prevent those areas becoming lower than the river).
+
+    each A in info.floors do
+      if A.liquid_bunch != bunch_A then continue end
+
+      each N in A.touching do
+        if N.liquid_bunch then continue end
+
+        if not N.floor_h then
+          N.floor_h = h + rand.pick({8, 16, 24})
+        end
+      end
+    end
+  end
+
+
+  local function visit_area(A, z_dir, h)
+    --|
+    --| recursively spread floors heights into each area
+    --|
+
+    assert(not A.visited)
+    A.visited = true
 
     if rand.odds(z_change_prob) then
       z_dir = - z_dir
     end
 
+
+    -- floor --
+
+    if A.floor_h then
+      h = A.floor_h
+    elseif A.liquid_bunch then
+      h = floor_for_river(A.liquid_bunch, h)
+    else
+      A.floor_h = h
+    end
+
+    if A.liquid_bunch then
+      spread_river_banks(A.liquid_bunch, h)
+    end
+
+
+    -- ceiling --
+
+    if R.is_outdoor then
+      -- no ceil_h (done later using sky_rects)
+    elseif A.goal_type then
+      A.ceil_h = h + 192
+    else
+      A.ceil_h = h + rand.pick { 128, 192,192,192, 288 }
+    end
+
+
     rand.shuffle(A.touching)
 
     each N in A.touching do
-      if not N.floor_h then
-        local new_h = A.floor_h + z_dir * rand.sel(35, 8, 16)
-
+      if not N.visited then
+        local new_h = h + z_dir * rand.sel(35, 8, 16)
         visit_area(N, z_dir, new_h)
       end
     end
