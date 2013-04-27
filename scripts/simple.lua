@@ -918,7 +918,6 @@ step:dump("Step:")
   end
 
   determine_touching_areas()
-  determine_middles()
 
   if not is_lake then
     set_walls()
@@ -983,13 +982,14 @@ end
 
 
 function Simple_floor_heights(R, entry_h)
-
   local info = R.cave_info
 
 
-  local z_change_prob = 10
-  if rand.odds(10) then z_change_prob = 40 end
-  if rand.odds(15) then z_change_prob =  0 end
+  local z_change_prob = rand.sel(15, 40, 10)
+
+  if info.step_mode == "up" or info.step_mode == "down" then
+    z_change_prob = 0
+  end
 
 
   local function visit_area(A, z_dir, h)
@@ -1111,7 +1111,15 @@ function Simple_floor_heights(R, entry_h)
 
   ---| Simple_floor_heights |---
 
-  local z_dir = rand.sel(35, 1, -1)
+  local z_dir
+
+  if info.step_mode == "up" then
+    z_dir = 1
+  elseif info.step_mode == "down" then
+    z_dir = -1
+  else
+    z_dir = rand.sel(37, 1, -1)
+  end
 
   local entry_area = find_entry_area()
 
@@ -1943,7 +1951,7 @@ function Simple_decide_properties(R)
   local info = R.cave_info
 
   local LIQUID_MODES = { none=2099, lake=99, some=80 }
-  local   STEP_MODES = { walkway=99, up=20, down=20, mixed=8099 }
+  local   STEP_MODES = { walkway=99, up=30, down=20, mixed=8099 }
   local    SKY_MODES = { none=30, walkway=50, some=5099 }
   local  TORCH_MODES = { none=10, corner=6099, middle=30 }
 
