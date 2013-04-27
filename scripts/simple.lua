@@ -322,8 +322,14 @@ function Simple_generate_cave(R)
     local cx2 = 1 + int((x2 + 63) / 64)
     local cy2 = 1 + int((y2 + 63) / 64)
 
-    assert(cx1 >= 1) ; assert(cx2 <= map.w)
-    assert(cy1 >= 1) ; assert(cy2 <= map.h)
+    cx1 = math.clamp(1, cx1, map.w)
+    cy1 = math.clamp(1, cy1, map.h)
+
+    cx2 = math.clamp(1, cx2, map.w)
+    cy2 = math.clamp(1, cy2, map.h)
+
+    assert(cx1 <= cx2)
+    assert(cy1 <= cy2)
 
     local IMP =
     {
