@@ -129,20 +129,21 @@ static void SHADE_CollectLights()
 		{
 			csg_entity_c *E = R->entities[k];
 
-			if (strcmp(E->id.c_str(), "light") != 0)
+			int e_light = E->props.getInt("light", 0);
+
+			if (e_light <= 0)
 				continue;
 
-			ent_count++;
-
-			int   e_light  = E->props.getInt("light", 0);
 			float e_factor = E->props.getDouble("_factor", 1.0);
 
 			if (e_light > R->e_light ||
-					(e_light == R->e_light && e_factor > R->e_factor))
+				(e_light == R->e_light && e_factor > R->e_factor))
 			{
 				R->e_light  = e_light;
 				R->e_factor = e_factor;
 			}
+
+			ent_count++;
 		}
 
 #if 0  // debug
