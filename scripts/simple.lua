@@ -26,7 +26,7 @@ class CAVE_INFO
 
   x1, y1, x2, y2  -- bounding coords
 
-  liquid_mode : keyword  -- "none", "some", "lake", "walkway"
+  liquid_mode : keyword  -- "none", "some", "lake"
 
   step_mode   : keyword  -- "walkway", "up", "down", "mixed"
 
@@ -2169,7 +2169,7 @@ function Simple_decorations(R)
 
     local N = info.blocks[nx][ny]
 
-    if not (N or N.floor_h) then return true end
+    if not (N and N.floor_h) then return true end
     if N.wall or N.fence then return true end
 
     if N.liquid then return false end
@@ -2247,15 +2247,25 @@ function Simple_decorations(R)
   end
 
 
-  ---| Simple_decorations |---
+  local function place_torches_in_corners()
+    find_corner_locs()
 
-  find_corner_locs()
+    local prob = 8
 
-  each loc in locs do
-    if rand.odds(10) then
-      add_torch(loc.cx, loc.cy)
+    each loc in locs do
+      if rand.odds(prob) then
+        add_torch(loc.cx, loc.cy)
+      end
     end
   end
+
+
+  ---| Simple_decorations |---
+
+  if info.torch_mode != "none" then
+    place_torches_in_corners()
+  end
+
 end
 
 
@@ -2263,10 +2273,8 @@ end
 function Simple_decide_properties(R)
   local info = R.cave_info
 
-  local LIQUID_MODES = { none=2099, lake=99, some=80 }
   local   STEP_MODES = { walkway=99, up=30, down=20, mixed=8099 }
-  local    SKY_MODES = { none=3099, walkway=50, some=50 }
-  local  TORCH_MODES = { none=10, corner=6099, middle=30 }
+  local LIQUID_MODES = { none=2099, some=80, lake=100 }
 
   -- decide liquid mode
   if not LEVEL.liquid then
@@ -2283,44 +2291,27 @@ function Simple_decide_properties(R)
   -- decide step mode
   info.step_mode = rand.key_by_probs(STEP_MODES)
 
-  if info.step_mode != "walkway" then
-    SKY_MODES.walkway = nil
-  end
-
   -- decide sky mode
   if R.is_outdoor then
     info.sky_mode = rand.sel(50, "high_wall", "low_wall")
   else
-    info.sky_mode = rand.key_by_probs(SKY_MODES)
+    info.sky_mode = rand.sel(30, "some", "none")
   end
 
   -- decide torch mode
-  if info.sky_mode == "walkway" then
-    TORCH_MODES.middle = nil
+  local prob = 90
+
+  if info.liquid_mode != "none" then
+    prob = sel(info.step_mode == "walkway", 50, 20)
   end
 
-  if info.liquid_mode == "lake" then
-    TORCH_MODES.corner = nil
-  end
-
-  if (R.is_outdoor and not LEVEL.is_dark) or
-     (info.liquid_mode == "lake")
-  then
-    TORCH_MODES.none = 4000
-  else
-    local has_liquid = (info.liquid_mode != "none")
-    local has_sky    = (info.sky_mode != "none")
-
-    if LEVEL.is_dark then has_sky = false end
-
-    if has_liquid and has_sky then
-      TORCH_MODES.none = 4000
-    elseif has_liquid or has_sky then
-      TORCH_MODES.none = 160
+  if not LEVEL.is_dark then
+    if R.is_outdoor or info.sky_mode != "none" then
+      prob = 0
     end
   end
 
-  info.torch_mode = rand.key_by_probs(TORCH_MODES)
+  info.torch_mode = rand.sel(prob, "some", "none")
 
   gui.debugf("Cave properties in %s\n", R:tostr())
   gui.debugf("    step_mode : %s\n", info.step_mode);
