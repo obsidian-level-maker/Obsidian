@@ -871,8 +871,10 @@ function Plan_add_caves()
     end
 
     if side == 5 then
-      mx2 = mx2 - 1
-      my2 = my2 - 1
+      mx1 = 2
+      my1 = 2
+      mx2 = MAP_W - 2
+      my2 = MAP_H - 2
     end
 
     local mw = sel(side == 5, 2, 1)
@@ -924,6 +926,11 @@ function Plan_add_caves()
 
 
   local function grow_room(R)
+    -- too big already?
+    if #R.sections >= MAP_W * (MAP_H - 1) then
+      return false
+    end
+
     local locs = {}
 
     for mx = 1, MAP_W do
@@ -990,10 +997,13 @@ function Plan_add_caves()
 
   local areas = { }
 
-  local rough_size = rand.irange(4, 8)
+  local rough_size = rand.irange(3, 7)
+
+  local min_rooms = 1
+  if (MAP_W + MAP_H) > 5 or perc > 50 then min_rooms = 2 end
 
   while #areas < 7 and
-       (#areas == 0 or quota / #areas > rough_size)
+       (#areas < min_rooms or quota / #areas >= rough_size)
   do
     -- pick a location
     local side = rand.key_by_probs(locations)
