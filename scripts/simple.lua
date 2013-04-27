@@ -976,7 +976,6 @@ function Simple_bunch_areas(R, mode)
         if list[N] then continue end
         if N.near_bunch then continue end
 
-        -- TODO: optional
         if touches_the_list(N, list, A) then continue end
 
         table.insert(poss, N)
@@ -1028,18 +1027,15 @@ function Simple_bunch_areas(R, mode)
   if mode == "sky"    and info.sky_mode    != "some" then return end
   if mode == "liquid" and info.liquid_mode != "some" then return end
 
-stderrf("Simple_bunch_areas @ %s mode:%s\n", R:tostr(), mode)
-
   setup()
 
-  local try_count = int(#info.floors / 5)
+  local try_count = int(#info.floors / rand.sel(50, 8, 14))
 
   for i = 1, try_count do
     local A1 = pick_start_area()
 
     if not A1 then break; end  -- nothing is possible
 
-stderrf("  try area %s\n", tostring(A1))
     local list = { [A1] = 1 }
 
     while grow_bunch(list) and rand.odds(64) do
@@ -1047,7 +1043,6 @@ stderrf("  try area %s\n", tostring(A1))
     end
 
     if table.size(list) >= 2 then
-stderrf("  INSTALL BUNCH\n")
       install_bunch(list)
     end
   end
@@ -2200,8 +2195,6 @@ function Simple_decide_properties(R)
     info.liquid_mode = rand.key_by_probs(LIQUID_MODES)
   end
 
-stderrf("\n\nliquid_mode = %s\n\n", info.liquid_mode)
-
   -- decide step mode
   info.step_mode = rand.key_by_probs(STEP_MODES)
 
@@ -2236,13 +2229,19 @@ stderrf("\n\nliquid_mode = %s\n\n", info.liquid_mode)
     if LEVEL.is_dark then has_sky = false end
 
     if has_liquid and has_sky then
-      TORCH_MODES.none = 900
+      TORCH_MODES.none = 4000
     elseif has_liquid or has_sky then
-      TORCH_MODES.none = 120
+      TORCH_MODES.none = 160
     end
   end
 
   info.torch_mode = rand.key_by_probs(TORCH_MODES)
+
+  gui.debugf("Cave properties in %s\n", R:tostr())
+  gui.debugf("    step_mode : %s\n", info.step_mode);
+  gui.debugf("  liquid_mode : %s\n", info.liquid_mode);
+  gui.debugf("     sky_mode : %s\n", info.sky_mode);
+  gui.debugf("   torch_mode : %s\n", info.torch_mode);
 end
 
 
