@@ -3,20 +3,26 @@ WORK IN PROGRESS
 ================
 
 
->>>  create PORTALs for all room connections
+---->  light value for entities in prefabs
+
+
+!!! segment hallways into smaller sections
+    (especially where they join the rooms)
+
+    do it _before_ Areas_handle_connections.
+
+
+!!!!  get locked doors working again
+
 
 >>>  create wall and corner information for each room
-     -  ignore PORTALS
 
-
-!!!!  get caves working again
 
 !!!  get closets working again
 
+!!  get big junctions working again
 
-!!  Hallways : break 3x1 (etc) sections into pieces
-
-!!  fix cycles
+!!  get cycles working again
 
 
 >>  get 'height' value into 'env' pick_skin() tables

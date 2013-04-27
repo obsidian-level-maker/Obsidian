@@ -26,7 +26,6 @@ ______________________________________________________________________
 
 
 +  update Usage page:
-   -  recommend My Documents, avoid Program Files
    -  the 'Seed' setting is no longer first
 
 
@@ -115,6 +114,21 @@ V5 Stuff:
 
 ?  have "hallway arches", specified in hallway groups, used in
    indoor rooms where the hallway meets the room.
+
+
+Caves:
+-  handle solid islands, sometimes make pools, or become a step
+
+-  caves with steps: have two floor materials, pick randomly
+
+-  MIDVINE sometimes used at cave transitions
+   (probably need a new prefab for this)
+
+-  support Cross-Overs
+   -  handle the Room's height limitation
+   -  create channels by lowering the floor cells
+   -  for bridges, ensure ceiling cells are high enough
+
 
 
 PATTERN AREA LOGIC:
@@ -407,21 +421,6 @@ Street Mode:
 -  limit caves to being in corner of map, expanded
 
 
-Caves:
-+  support Cross-Overs
-   -  handle the Room's height limitation
-   -  create channels by lowering the floor cells
-   -  for bridges, ensure ceiling cells are high enough
-
--  support "Lakes" again
-
--  get V3 style working again, use it sometimes
-
--  MIDVINE sometimes used at cave transitions
-   (probably need a new prefab for this)
-
-
-
 Planner:
 -  review / improve 'emergency' connections
 
@@ -643,8 +642,6 @@ Name generator:
 
 -  simplify ui_chooser logic --> use Fl_Native_File_Chooser
 
--  consistently use single quotes for single characters
-
 IDEA:
   - move main loop of OBLIGE into Lua (e.g. ob_main_loop)
   - C++ can queue commands to perform, fetched by the Lua loop
@@ -668,23 +665,15 @@ Cancellation:
   LUA EXTENSIONS
 ----------------------------------------------
 
-+  bug where errors show the wrong line number
+?  bug where errors show the wrong line number
 
 -  transfer Lua_Extended.txt document to the website
    (part of modding guide).
-
-NO: allow numbers to begin with plus, like: +3
-    --> see misc/plus_number.diff
-
-NO: implement 2D array access: [x, y] --> [x][y]
-    --> there's a power patch for that
 
 
 ----------------------------------------------
   DOCUMENTATION / WEB SITE
 ----------------------------------------------
-
--  To reset all settings, simply delete this file: CONFIG.txt
 
 -  new "RUNNING THE MAPS" section ?
 
