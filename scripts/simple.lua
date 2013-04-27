@@ -926,6 +926,137 @@ end
 
 
 
+function Simple_bunch_areas(R, mode)
+  --|
+  --| this picks a bunch of step areas which will become either liquid
+  --| or sky (depending on 'mode' parameter).
+  --| 
+  
+  local info = R.cave_info
+
+
+  local function setup()
+    each A in info.floors do
+      if A.goal_type then A.near_bunch = 0 end
+    end
+  end
+
+
+  local function pick_start_area()
+    local poss = {}
+
+    each A in info.floors do
+      if not A.near_bunch then
+        table.insert(poss, A)
+      end
+    end
+
+    if table.empty(poss) then return nil end
+
+    return rand.pick(poss)
+  end
+
+
+  local function touches_the_list(N, list, except)
+    each N2 in N.touching do
+      if list[N2] and N2 != except then
+        return true
+      end
+    end
+
+    return false
+  end
+
+
+  local function grow_bunch(list)
+    local poss = {}
+
+    each A,_ in list do
+      each N in A.touching do
+        if list[N] then continue end
+        if N.near_bunch then continue end
+
+        -- TODO: optional
+        if touches_the_list(N, list, A) then continue end
+
+        table.insert(poss, N)
+      end
+    end
+
+    if table.empty(poss) then return false end
+
+    local A2 = rand.pick(poss)
+
+    list[A2] = 1
+
+    return true
+  end
+
+
+  local function install_bunch(list)
+    local head_A
+
+    each A,_ in list do
+      if not head_A then head_A = A end
+
+      if mode == "sky"    then A.sky_bunch    = head_A ; A.sky = true end
+      if mode == "liquid" then A.liquid_bunch = head_A ; A.liquid = true end
+
+      A.near_bunch = 0
+
+      each N in A.touching do
+        if not N.near_bunch or N.near_bunch > 1 then
+          N.near_bunch = 1
+        end
+      end
+    end
+  end
+
+
+  local function clear()
+    each A in info.floors do
+      A.near_bunch = nil
+    end
+  end
+
+
+  ---| Simple_bunch_areas |---
+
+  if info.step_mode == "walkway" then return end
+  if info.liquid_mode == "lake"  then return end
+
+  if mode == "sky"    and info.sky_mode    != "some" then return end
+  if mode == "liquid" and info.liquid_mode != "some" then return end
+
+stderrf("Simple_bunch_areas @ %s mode:%s\n", R:tostr(), mode)
+
+  setup()
+
+  local try_count = int(#info.floors / 5)
+
+  for i = 1, try_count do
+    local A1 = pick_start_area()
+
+    if not A1 then break; end  -- nothing is possible
+
+stderrf("  try area %s\n", tostring(A1))
+    local list = { [A1] = 1 }
+
+    while grow_bunch(list) and rand.odds(64) do
+      -- keep growing...
+    end
+
+    if table.size(list) >= 2 then
+stderrf("  INSTALL BUNCH\n")
+      install_bunch(list)
+    end
+  end
+
+  clear()
+end
+
+
+
 function Simple_heights_near_area(R, A)
   local info = R.cave_info
   local cave = info.cave
@@ -1950,7 +2081,7 @@ end
 function Simple_decide_properties(R)
   local info = R.cave_info
 
-  local LIQUID_MODES = { none=2099, lake=99, some=80 }
+  local LIQUID_MODES = { none=20, lake=99, some=8099 }
   local   STEP_MODES = { walkway=99, up=30, down=20, mixed=8099 }
   local    SKY_MODES = { none=30, walkway=50, some=5099 }
   local  TORCH_MODES = { none=10, corner=6099, middle=30 }
@@ -1966,6 +2097,8 @@ function Simple_decide_properties(R)
 
     info.liquid_mode = rand.key_by_probs(LIQUID_MODES)
   end
+
+stderrf("\n\nliquid_mode = %s\n\n", info.liquid_mode)
 
   -- decide step mode
   info.step_mode = rand.key_by_probs(STEP_MODES)
@@ -2023,6 +2156,9 @@ function Simple_cave_or_maze(R)
   Simple_outdoor_borders(R)
 
   Simple_create_areas(R)
+  Simple_bunch_areas(R, "liquid")
+  Simple_bunch_areas(R, "sky")
+
   Simple_floor_heights(R, R.entry_h)
   Simple_decorations(R)
 
