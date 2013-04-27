@@ -1307,6 +1307,40 @@ function Simple_floor_heights(R, entry_h)
   end
 
 
+  local function ceiling_for_sky_bunch(bunch_A)
+    local h = bunch_A.ceil_h or 0
+
+    each A in info.floors do
+      if A.sky_bunch != bunch_A then continue end
+
+      each N in A.touching do
+        if N.sky_bunch then continue end
+
+        if N.ceil_h then
+          h = math.max(h, N.ceil_h)
+        end
+      end
+    end
+
+    h = h + rand.pick({ 32,48,64,96 })
+
+    each A in info.floors do
+      if A.sky_bunch == bunch_A then
+        A.ceil_h = h
+      end
+    end
+  end
+
+
+  local function update_sky_bunches()
+    each A in info.floors do
+      if A.sky_bunch == A then
+        ceiling_for_sky_bunch(A)
+      end
+    end
+  end
+
+
   ---| Simple_floor_heights |---
 
   local z_dir
@@ -1329,6 +1363,7 @@ function Simple_floor_heights(R, entry_h)
   update_walk_ways()
   update_fences()
   update_lakes()
+  update_sky_bunches()
 end
 
 
