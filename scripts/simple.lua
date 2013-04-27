@@ -2135,31 +2135,73 @@ end
 
 function Simple_decorations(R)
   --|
-  --| adds torches (etc)
+  --| add torches (etc)
   --|
 
   local info = R.cave_info
+  local cave = info.cave
 
 
   local locs = {}
+
+
+  local function block_is_bounded(x, y, A, dir)
+    local nx, ny = geom.nudge(x, y, dir)
+
+    if not cave:valid_cell(nx, ny) then return true end
+
+    local N = info.blocks[nx][ny]
+
+    if not (N or N.floor_h) then return true end
+    if N.wall or N.fence then return true end
+
+    if N.liquid then return false end
+
+    if N.floor_h < (A.floor_h + 78) then return false end
+
+    -- check opposite side
+
+    nx, ny = geom.nudge(x, y, 10 - dir)
+
+    if not cave:valid_cell(nx, ny) then return false end
+
+    N = info.blocks[nx][ny]
+
+    return (N == A)
+  end
 
 
   local function usable_corner(x, y)
     local A = info.blocks[x][y]
 
     if not (A and A.floor_h) then return false end
-    if A.wall or A.fence then return false end
+    if A.wall or A.fence or A.liquid then return false end
     if A.goal_type then return false end
 
-    -- TODO : analyse N/S/E/W ....
+    -- analyse N/S/E/W...
+    local c_str = ""
+
+    for dir = 2,8,2 do
+      if block_is_bounded(x, y, A, dir) then
+        c_str = c_str .. tostring(dir)
+      end
+    end
+
+    return (c_str == "24") or (c_str == "26") or
+           (c_str == "48") or (c_str == "68")
   end
 
 
-  local function corner_locs()
+  local function find_corner_locs()
     for x = 2, info.W - 1 do
     for y = 2, info.H - 1 do
       if usable_corner(x, y) then
         table.insert(locs, { cx=x, cy=y })    
+
+        local mx = info.x1 + (x-1) * 64 + 32
+        local my = info.y1 + (y-1) * 64 + 32
+
+        entity_helper("red_torch", mx, my, R.max_floor_h)
       end
     end
     end
@@ -2170,6 +2212,9 @@ function Simple_decorations(R)
 
   info.decorations = {}
 
+  find_corner_locs()
+
+  stderrf("\n\n****** Torch corner locs : %d\n\n\n", #locs)
 end
 
 
@@ -2177,9 +2222,9 @@ end
 function Simple_decide_properties(R)
   local info = R.cave_info
 
-  local LIQUID_MODES = { none=20, lake=99, some=8099 }
+  local LIQUID_MODES = { none=2099, lake=99, some=80 }
   local   STEP_MODES = { walkway=99, up=30, down=20, mixed=8099 }
-  local    SKY_MODES = { none=30, walkway=50, some=5099 }
+  local    SKY_MODES = { none=3099, walkway=50, some=50 }
   local  TORCH_MODES = { none=10, corner=6099, middle=30 }
 
   -- decide liquid mode
