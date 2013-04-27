@@ -70,6 +70,8 @@ class AREA
 
   host_spots : list(BBOX)  -- spots which can host a torch/prefab
 
+  decorations : list(BBOX)
+
   -- stuff for walkways only
   parent : AREA
   child1, child2 : AREA
@@ -1652,6 +1654,13 @@ function Simple_render_cave(R)
   end
 
 
+  local function do_spot_decor(dec)
+    local poly = Brush_new_quad(dec.x1, dec.y1, dec.x2, dec.y2)
+
+    gui.spots_fill_poly(poly, SPOT_LEDGE)
+  end
+
+
   local function determine_spots(A)
     -- determine bbox of area
 
@@ -1680,6 +1689,14 @@ function Simple_render_cave(R)
     for cy = 1, info.H do
       do_spot_wall(A, cx, cy)
     end
+    end
+
+    -- step 3 : remove decorations
+
+    if A.decorations then
+      each dec in A.decorations do
+        do_spot_decor(dec)
+      end
     end
 
 
@@ -2198,23 +2215,47 @@ function Simple_decorations(R)
       if usable_corner(x, y) then
         table.insert(locs, { cx=x, cy=y })    
 
-        local mx = info.x1 + (x-1) * 64 + 32
-        local my = info.y1 + (y-1) * 64 + 32
 
-        entity_helper("red_torch", mx, my, R.max_floor_h)
       end
     end
     end
   end
 
 
-  ---| Simple_decorations |---
+  local function add_torch(x, y)
+    local A = info.blocks[x][y]
+    assert(A and A.floor_h)
 
-  info.decorations = {}
+    local mx = info.x1 + (x-1) * 64 + 32
+    local my = info.y1 + (y-1) * 64 + 32
+
+    entity_helper("red_torch", mx, my, A.floor_h, { light=192, _factor=1.3 })
+
+    -- remember bbox, prevent placing items/monsters here
+
+    local DECOR =
+    {
+      x1 = mx - 32, x2 = mx + 32
+      y1 = my - 32, y2 = my + 32
+    }
+
+    if not A.decorations then
+      A.decorations = {}
+    end
+
+    table.insert(A.decorations, DECOR)
+  end
+
+
+  ---| Simple_decorations |---
 
   find_corner_locs()
 
-  stderrf("\n\n****** Torch corner locs : %d\n\n\n", #locs)
+  each loc in locs do
+    if rand.odds(10) then
+      add_torch(loc.cx, loc.cy)
+    end
+  end
 end
 
 
