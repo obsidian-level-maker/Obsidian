@@ -55,7 +55,7 @@ class AREA
   liquid : boolean  -- true for a liquid floor
   sky    : boolean  -- true for a sky ceiling
 
-  touching : list(AREA)   -- only used for visitable floors
+  cx1, cy1, cx2, cy2   -- cell bounding box
 
   floor_h  -- floor height
    ceil_h  -- ceiling height
@@ -65,6 +65,10 @@ class AREA
 
   goal_type : keyword  -- set if area contains a goal (normally nil)
                        -- can be "portal" or "important".
+
+  touching : list(AREA)   -- only used for visitable floors
+
+  host_spots : list(BBOX)  -- spots which can host a torch/prefab
 
   -- stuff for walkways only
   parent : AREA
@@ -470,6 +474,23 @@ end
 
 
 
+function Simple_area_host_parts(R, A)
+  --|
+  --| figure out if this area can host something inside it
+  --| (e.g. a torch or a cage prefab).
+  --|
+  --| stores a list of cell ranges in 'host_spots' field.
+  --|
+
+  local info = R.cave_info
+
+  A.host_spots = {}
+
+  -- TODO
+end
+
+
+
 function Simple_create_areas(R)
   --|
   --| sub-divide the floor of the cave into areas of differing heights.
@@ -769,10 +790,18 @@ step:dump("Step:")
 
         install_area(prev_A, step, 1)
 
+        prev_A.cx1 = math.min(prev_A.cx1, cx1)
+        prev_A.cy1 = math.min(prev_A.cy1, cy1)
+        prev_A.cx2 = math.max(prev_A.cx2, cx2)
+        prev_A.cy2 = math.max(prev_A.cy2, cy2)
+
       else
         local AREA =
         {
           touching = {}
+
+          cx1 = cx1, cy1 = cy1
+          cx2 = cx2, cy2 = cy2
         }
 
         table.insert(info.floors, AREA)
@@ -889,6 +918,7 @@ step:dump("Step:")
   end
 
   determine_touching_areas()
+  determine_middles()
 
   if not is_lake then
     set_walls()
@@ -1851,7 +1881,6 @@ function Simple_outdoor_borders(R)
     return
   end
 
-
   for sx = R.sx1, R.sx2 do
   for sy = R.sy1, R.sy2 do
     local S = SEEDS[sx][sy]
@@ -1869,13 +1898,54 @@ end
 
 
 
+function Simple_decorations(R)
+  --|
+  --| adds torches (etc)
+  --|
+
+  local info = R.cave_info
+
+
+  local locs = {}
+
+
+  local function usable_corner(x, y)
+    local A = info.blocks[x][y]
+
+    if not (A and A.floor_h) then return false end
+    if A.wall or A.fence then return false end
+    if A.goal_type then return false end
+
+    -- TODO : analyse N/S/E/W ....
+  end
+
+
+  local function corner_locs()
+    for x = 2, info.W - 1 do
+    for y = 2, info.H - 1 do
+      if usable_corner(x, y) then
+        table.insert(locs, { cx=x, cy=y })    
+      end
+    end
+    end
+  end
+
+
+  ---| Simple_decorations |---
+
+  info.decorations = {}
+
+end
+
+
+
 function Simple_decide_properties(R)
   local info = R.cave_info
 
-  local LIQUID_MODES = { none=20, lake=1099, some=80 }
-  local   STEP_MODES = { walkway=2099, up=20, down=20, mixed=80 }
-  local    SKY_MODES = { none=30, walkway=5099, some=50 }
-  local  TORCH_MODES = { none=10, corner=60, middle=30 }
+  local LIQUID_MODES = { none=2099, lake=99, some=80 }
+  local   STEP_MODES = { walkway=99, up=20, down=20, mixed=8099 }
+  local    SKY_MODES = { none=30, walkway=50, some=5099 }
+  local  TORCH_MODES = { none=10, corner=6099, middle=30 }
 
   -- decide liquid mode
   if not LEVEL.liquid then
@@ -1886,11 +1956,11 @@ function Simple_decide_properties(R)
       LIQUID_MODES.lake = nil
     end
 
-    info.liquid_mode = "lake" ---!!!! rand.key_by_probs(LIQUID_MODES)
+    info.liquid_mode = rand.key_by_probs(LIQUID_MODES)
   end
 
   -- decide step mode
-  info.step_mode = "mixed" --!!!! rand.key_by_probs(STEP_MODES)
+  info.step_mode = rand.key_by_probs(STEP_MODES)
 
   if info.step_mode != "walkway" then
     SKY_MODES.walkway = nil
@@ -1942,11 +2012,12 @@ function Simple_cave_or_maze(R)
 
   Simple_lake_fences(R)
   Simple_fill_lakes(R)
+  Simple_outdoor_borders(R)
 
   Simple_create_areas(R)
   Simple_floor_heights(R, R.entry_h)
+  Simple_decorations(R)
 
-  Simple_outdoor_borders(R)
   Simple_render_cave(R)
 end
 
