@@ -998,7 +998,7 @@ function Simple_bunch_areas(R, mode)
     each A,_ in list do
       if not head_A then head_A = A end
 
-      if mode == "sky"    then A.sky_bunch    = head_A ; A.sky = true end
+      if mode == "sky"    then A.sky_bunch    = head_A ; A.sky    = true end
       if mode == "liquid" then A.liquid_bunch = head_A ; A.liquid = true end
 
       A.near_bunch = 0
@@ -1392,27 +1392,26 @@ function Simple_render_cave(R)
 
     local A = info.blocks[x][y]
 
-    local C = cave:get(x, y)
-
     -- in some places we build nothing (e.g. other rooms)
-    if C == nil then return nil end
+    if A == nil then return nil end
 
     -- check for a solid cell
-    if C > 0 then return EXTREME_H end
+    if A.wall then return EXTREME_H end
 
     -- otherwise there should be a floor area here
 
-if not A then return end  --!!!!!!!!! DUE TO EMPTY ISLANDS
-
     assert(A)
 
-    return assert(A.floor_h)
+    local f_h = assert(A.floor_h)
 
---[[
-    if block.indent then
-      h = h - block.indent * 16
+    -- take ceiling into account too
+    local c_h = A.ceil_h
+
+    if c_h then
+      f_h = f_h + bit.band(c_h, 511) / 1024
     end
---]]
+
+    return f_h
   end
 
 
@@ -1434,7 +1433,7 @@ if not A then return end  --!!!!!!!!! DUE TO EMPTY ISLANDS
     -- pick highest floor (since that can block a lower floor)
     -- [solid cells will always override floor cells]
 
-    local max_h = math.max(A, B, C, D) - 2
+    local max_h = math.max(A, B, C, D) - 0.01
 
     A = (A > max_h)
     B = (B > max_h)
@@ -1736,6 +1735,7 @@ if not A then return end  --!!!!!!!!! DUE TO EMPTY ISLANDS
   end
 
 
+--[[ OLD
   local function heights_near_island(island)
     local min_floor =  9e9
     local max_ceil  = -9e9
@@ -1764,7 +1764,6 @@ if not A then return end  --!!!!!!!!! DUE TO EMPTY ISLANDS
   end
 
 
---[[ OLD
   local function render_liquid_area(island)
     -- create a lava/nukage pit
 
