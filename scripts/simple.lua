@@ -2228,14 +2228,23 @@ function Simple_decorations(R)
   end
 
 
-  local function add_torch(x, y)
+  local function select_torch()
+    local tab = R.theme.torches or THEME.cave_torches
+
+    if not tab then return end
+
+    return rand.key_by_probs(tab)
+  end
+
+
+  local function add_torch(x, y, torch_ent)
     local A = info.blocks[x][y]
     assert(A and A.floor_h)
 
     local mx = info.x1 + (x-1) * 64 + 32
     local my = info.y1 + (y-1) * 64 + 32
 
-    entity_helper("red_torch", mx, my, A.floor_h, { light=192, _factor=1.3 })
+    entity_helper(torch_ent, mx, my, A.floor_h, { light=192, _factor=1.3 })
 
     -- remember bbox, prevent placing items/monsters here
 
@@ -2254,13 +2263,17 @@ function Simple_decorations(R)
 
 
   local function place_torches_in_corners()
+    local torch_ent = select_torch()
+
+    if not torch_ent then return end
+
     find_corner_locs()
 
-    local prob = 8
+    local prob = 9
 
     each loc in locs do
       if rand.odds(prob) then
-        add_torch(loc.cx, loc.cy)
+        add_torch(loc.cx, loc.cy, torch_ent)
       end
     end
   end

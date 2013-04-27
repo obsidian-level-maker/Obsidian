@@ -45,6 +45,8 @@ DOOM.THEME_DEFAULTS =
                   Crate1=10, Crate2=10, 
                   CrateICK=10, CrateWOOD=10 }
 
+  cave_torches = { red_torch=60, green_torch=40, blue_torch=20 }
+ 
   --------- OLD CRUD --------> > >
 
   outer_fences = { BROWN144=50, STONE2=30, BROWNHUG=10,
@@ -859,7 +861,7 @@ DOOM2.LEVEL_THEMES =
   {
     prob = 60
 
-    liquids = { nukage=90, water=15, lava=10, slime=5 }
+    liquids = { nukage=90, water=25, slime=15, lava=5 }
 
     buildings = { Tech2_startan3=60, Tech2_startan2=40,
                   Tech2_stargrey=10,
@@ -929,7 +931,7 @@ DOOM2.LEVEL_THEMES =
   {
     prob = 50,
 
-    liquids = { lava=90, blood=40, nukage=5 }
+    liquids = { lava=70, blood=40, nukage=5 }
 
     keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
 
@@ -1019,7 +1021,7 @@ DOOM2.LEVEL_THEMES =
   {
     prob = 50,
 
-    liquids = { water=90, slime=40, lava=20, blood=7, nukage=2 }
+    liquids = { water=90, slime=50, blood=20, lava=20 }
 
     buildings = { Urban_panel=20, Urban_brick=50, Urban_bigbrik=50,
                   Urban_stone=60 }
