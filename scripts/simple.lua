@@ -73,8 +73,7 @@ class AREA
   decorations : list(BBOX)
 
   -- stuff for walkways only
-  parent : AREA
-  child1, child2 : AREA
+  children : list[AREA]
 }
 
 --------------------------------------------------------------]]
@@ -550,6 +549,8 @@ function Simple_create_areas(R)
     local AREA =
     {
       touching = {}
+
+      children = {}
     }
 
     table.insert(info.floors, AREA)
@@ -566,11 +567,8 @@ function Simple_create_areas(R)
 
     local WALK1 =
     {
-      parent = AREA
       indent = 1
     }
-
-    AREA.child1 = WALK1
 
     local walk_way = copy_cave_without_fences()
 
@@ -589,18 +587,23 @@ function Simple_create_areas(R)
 
     local WALK2 =
     {
-      parent = AREA
       indent = 2
       liquid = true
     }
 
-    AREA.child2 = WALK2
+    if info.sky_mode == "some" then
+      WALK2.sky = true
+    end
 
     walk_way:shrink8(true)
 --    walk_way:shrink(true)
     walk_way:remove_dots()
 
     install_area(WALK2, walk_way, 1)
+
+
+    table.insert(AREA.children, WALK1)
+    table.insert(AREA.children, WALK2)
   end
 
 
@@ -1265,15 +1268,13 @@ function Simple_floor_heights(R, entry_h)
 
   local function update_walk_ways()
     each A in info.floors do
-      for pass = 1,2 do
-        local WALK = sel(pass == 1, A.child1, A.child2)
+      if not A.children then continue end
 
-        if WALK then
-          WALK.floor_h = A.floor_h - WALK.indent * 12
+      each WALK in A.children do
+        WALK.floor_h = A.floor_h - WALK.indent * 12
 
-          if A.ceil_h then
-            WALK.ceil_h = A.ceil_h + WALK.indent * 64
-          end
+        if A.ceil_h then
+          WALK.ceil_h = A.ceil_h + WALK.indent * 64
         end
       end
     end
@@ -2202,16 +2203,29 @@ function Simple_decorations(R)
     if A.goal_type then return false end
 
     -- analyse N/S/E/W...
-    local c_str = ""
+    local got_dir = {}
 
     for dir = 2,8,2 do
       if block_is_bounded(x, y, A, dir) then
-        c_str = c_str .. tostring(dir)
+        got_dir[dir] = 1
       end
     end
 
-    return (c_str == "24") or (c_str == "26") or
-           (c_str == "48") or (c_str == "68")
+    if table.size(got_dir) != 2 then return false end
+
+    local v_dir = got_dir[2] or got_dir[8]
+    local h_dir = got_dir[4] or got_dir[6]
+
+    if not (v_dir and h_dir) then return false end
+
+    -- check corner cell
+    local dx = sel(h_dir == 4, -1, 1)
+    local dy = sel(v_dir == 2, -1, 1)
+
+    if info.blocks[x + dx][y + dy] != A then return false end
+
+    -- OK!
+    return true
   end
 
 
@@ -2292,8 +2306,8 @@ end
 function Simple_decide_properties(R)
   local info = R.cave_info
 
-  local   STEP_MODES = { walkway=99, up=30, down=20, mixed=8099 }
-  local LIQUID_MODES = { none=2099, some=80, lake=100 }
+  local   STEP_MODES = { walkway=25, up=15, down=10, mixed=65 }
+  local LIQUID_MODES = { none=20, some=80, lake=80 }
 
   -- decide liquid mode
   if not LEVEL.liquid then
