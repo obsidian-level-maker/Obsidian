@@ -997,13 +997,19 @@ function Plan_add_caves()
 
   local areas = { }
 
-  local rough_size = rand.irange(3, 7)
+  local rough_size = rand.irange(2, 5)
+  if (MAP_W + MAP_H) > 6  then rough_size = rough_size + 1 end
+  if (MAP_W + MAP_H) > 10 then rough_size = rough_size + 1 end
 
   local min_rooms = 1
-  if (MAP_W + MAP_H) > 5 or perc > 50 then min_rooms = 2 end
+  if STYLE.caves != "few" and
+     ((MAP_W + MAP_H) > 5 or rand.odds(perc))
+  then
+     min_rooms = 2
+  end
 
   while #areas < 7 and
-       (#areas < min_rooms or quota / #areas >= rough_size)
+       (#areas < min_rooms or quota / #areas > rough_size + 0.4)
   do
     -- pick a location
     local side = rand.key_by_probs(locations)
