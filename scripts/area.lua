@@ -1136,7 +1136,7 @@ function Areas_layout_with_prefabs(R)
 
     local rot = 0  -- !!!!
 
-    local floor_h = assert(R.entry_h) + 2   -- FIXME
+    local floor_h = assert(R.entry_h)   -- FIXME
 
     process_edges(S.sx, S.sy, S.sx, S.sy, skin1, rot, floor_h)
 

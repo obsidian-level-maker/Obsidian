@@ -2377,7 +2377,7 @@ function Fab_replacements(fab, skin)
     -- if it is not already specified, allocate a new tag
 
     if not skin[k] then
-      skin[k] = Plan_alloc_id("tag");
+      skin[k] = Plan_alloc_id("tag")
     end
 
     return skin[k]
@@ -2395,7 +2395,7 @@ function Fab_replacements(fab, skin)
 
       local info = GAME.ENTITIES[name] or
                    GAME.MONSTERS[name] or
-                   GAME.WEAPONS[name] or
+                   GAME.WEAPONS[name]  or
                    GAME.PICKUPS[name]
 
       if not info then
@@ -2407,6 +2407,17 @@ function Fab_replacements(fab, skin)
     end
 
     return val
+  end
+
+
+  local function check_props(E)
+    local k = "props_" .. E.id
+
+    local tab = skin[k]
+
+    if not tab then return end
+
+    table.merge(E, tab)
   end
 
 
@@ -2425,6 +2436,8 @@ function Fab_replacements(fab, skin)
   end
 
   each E in fab.entities do
+    check_props(E)
+
     E.id = check_thing(E.id)
   end
 end
