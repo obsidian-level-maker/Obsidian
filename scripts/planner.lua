@@ -997,18 +997,22 @@ function Plan_add_caves()
 
   local areas = { }
 
+  -- this rough_size logic ensures that on bigger maps we tend to
+  -- create larger caves (rather than lots of smaller caves).
   local rough_size = rand.irange(2, 5)
   if (MAP_W + MAP_H) > 6  then rough_size = rough_size + 1 end
   if (MAP_W + MAP_H) > 10 then rough_size = rough_size + 1 end
 
   local min_rooms = 1
+  local max_rooms = 7
+
   if STYLE.caves != "few" and
      ((MAP_W + MAP_H) > 5 or rand.odds(perc))
   then
      min_rooms = 2
   end
 
-  while #areas < 7 and
+  while #areas < max_rooms and
        (#areas < min_rooms or quota / #areas > rough_size + 0.4)
   do
     -- pick a location

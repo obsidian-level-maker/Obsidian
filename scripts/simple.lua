@@ -2322,6 +2322,10 @@ function Simple_decide_properties(R)
   end
 
   -- decide step mode
+  if info.liquid_mode == "lake" then
+    STEP_MODES.walkway = nil
+  end
+
   info.step_mode = rand.key_by_probs(STEP_MODES)
 
   -- decide sky mode
@@ -2332,10 +2336,10 @@ function Simple_decide_properties(R)
   end
 
   -- decide torch mode
-  local prob = 90
+  local prob = 95
 
   if info.liquid_mode != "none" then
-    prob = sel(info.step_mode == "walkway", 50, 20)
+    prob = sel(info.step_mode == "walkway", 65, 30)
   end
 
   if not LEVEL.is_dark then
