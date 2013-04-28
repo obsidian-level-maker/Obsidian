@@ -9,6 +9,8 @@ DOOM.SKINS.Switch_niche1 =
   switch = "sw_blue"
   x_fit  = "frame"
   y_fit  = "bottom"
+
+  props_35 = { light=192, _factor=0.5 }
 }
 
 DOOM.SKINS.Switch_niche2 =
