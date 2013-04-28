@@ -47,9 +47,6 @@ class ROOM
   sx1, sy1, sx2, sy2  -- \ Seed range
   sw, sh, svolume     -- /
 
-  chunks : list(CHUNK)  -- all chunks in the room
-###  entry_chunk : CHUNK
-
   kx1, ky1, kx2, ky2  -- \ Section range
   kw, kh              -- /
 
@@ -94,7 +91,7 @@ class CLOSET
 
   parent : ROOM  -- parent room
 
-  entry_conn : CONN  -- connection to parent room
+  conn : CONN  -- connection to parent room
 
   dir : 2/4/6/8
 
@@ -152,7 +149,6 @@ function ROOM_CLASS.new(shape)
     shape = shape
 
     conns = {}
-    chunks = {}
     sections = {}
     middles = {}
     spaces = {}
@@ -726,13 +722,15 @@ end
 
 
 function CLOSET_CLASS.build(CL)
-  local C = assert(CL.chunk)
+
+  local portal = CL.conn.portal1 or CL.conn.portal2
+  assert(portal)
 
   local skin1 = CL.skin
 
   local skin0 = table.copy(CL.parent.skin)
 
-  -- FIXME !!  get floor texture from touching area
+  -- FIXME !!  get floor texture from touching area [via portal]
 
   if CL.parent.kind == "outdoor" then
     skin0.wall = CL.section.facade
@@ -763,7 +761,7 @@ function CLOSET_CLASS.build(CL)
     skin2.item = assert(CL.item)
   end
 
-  assert(C.floor_h)
+  local floor_h = assert(portal.floor_h)
 
   local x1, y1, x2, y2 = CL.section:get_coords()
 
@@ -776,7 +774,7 @@ function CLOSET_CLASS.build(CL)
     if CL.dir == 8 then y2 = y2 + 32 end
   end
 
-  local T = Trans.box_transform(x1, y1, x2, y2, C.floor_h, CL.dir)
+  local T = Trans.box_transform(x1, y1, x2, y2, floor_h, CL.dir)
 
   Fabricate_at(CL.parent, skin1, T, { skin0, skin1, skin2 })
 
@@ -1668,6 +1666,8 @@ function ROOM_CLASS.install_closet(R, K, dir, kind, skin)
   D.K2 = N
 
   D:add_it()
+
+  CL.conn = D
 end
 
 
@@ -1964,7 +1964,7 @@ function Room_intermission_camera()
   -- determine place in room
   local info
 
-  each C in room.chunks do
+  each C in room.chunks do  -- FIXME
     local info2 = C:eval_camera()
 
     if not info2 then continue end
