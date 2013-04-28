@@ -305,15 +305,6 @@ function ROOM_CLASS.has_lock_kind(R, kind)
 end
 
 
-function ROOM_CLASS.has_sky_neighbor(R)
-  each D in R.conns do
-    local N = D:neighbor(R)
-    if N.kind == "outdoor" then return true end
-  end
-  return false
-end
-
-
 function ROOM_CLASS.has_teleporter(R)
   each D in R.conns do
     if D.kind == "teleporter" then return true end
