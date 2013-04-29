@@ -3191,6 +3191,8 @@ function Room_build_all()
 
   Room_place_hub_gates()
 
+  Hallway_divide_sections()
+
   Areas_handle_connections()
 
   Room_create_sky_groups()

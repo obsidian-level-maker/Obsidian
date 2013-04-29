@@ -928,6 +928,28 @@ if H.joiner then stderrf("   JOINER !!!!\n") end
 end
 
 
+
+function HALLWAY_CLASS.divide_sections(H)
+  --| currently hallways occupy (a string of) whole sections.
+  --| here we need to subdivide those sections into 1x1 seeds
+  --| (especially where the hallway joins onto a room).
+  --|
+  --| TODO: is this the right time to select prefabs?
+
+  --......
+end
+
+
+
+function Hallway_divide_sections()
+
+  each H in LEVEL.halls do
+    H:divide_sections()
+  end
+end
+
+
+
 --------------------------------------------------------------------
 
 
@@ -1771,6 +1793,7 @@ do return end  --!!!! FIXME: disabled for now
     end
   end
 end
+
 
 
 function Hallway_add_streets()
