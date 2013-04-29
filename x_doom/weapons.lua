@@ -12,30 +12,7 @@
 --
 --------------------------------------------------------------------
 
-DOOM.AMMOS =
-{
-  bullet =
-  {
-    start_bonus = 60
-  }
-
-  shell =
-  {
-    start_bonus = 12
-  }
-
-  rocket =
-  {
-    start_bonus = 4
-  }
-
-  cell =
-  {
-    start_bonus = 40
-  }
-}
-
-
+--
 -- Usable keywords
 -- ===============
 --
@@ -117,6 +94,7 @@ DOOM.WEAPONS =
     ammo = "bullet"
     per = 1
     give = { {ammo="bullet",count=20} }
+    bonus_ammo = 50
   }
 
   shotty =
@@ -133,6 +111,7 @@ DOOM.WEAPONS =
     ammo = "shell"
     per = 1
     give = { {ammo="shell",count=8} }
+    bonus_ammo = 8
   }
 
   launch =
@@ -148,6 +127,7 @@ DOOM.WEAPONS =
     ammo = "rocket"
     per = 1
     give = { {ammo="rocket",count=2} }
+    bonus_ammo = 5
   }
 
   plasma =
@@ -162,6 +142,7 @@ DOOM.WEAPONS =
     ammo = "cell"
     per = 1
     give = { {ammo="cell",count=40} }
+    bonus_ammo = 40
   }
 
   bfg =
@@ -177,6 +158,7 @@ DOOM.WEAPONS =
     ammo = "cell"
     per = 40
     give = { {ammo="cell",count=40} }
+    bonus_ammo = 40
   }
 }
 
@@ -197,6 +179,7 @@ DOOM2.WEAPONS =
     ammo = "shell"
     per = 2
     give = { {ammo="shell",count=8} }
+    bonus_ammo = 12
   }
 }
 

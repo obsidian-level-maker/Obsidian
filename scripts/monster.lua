@@ -731,8 +731,7 @@ function Monsters_do_pickups()
         local spot = table.remove(L.big_spots, 1)
 
         place_item_in_spot(item.name, spot)
-
-        return
+        continue
       end
 
       -- keep track of a limited number of previously chosen spots.
@@ -806,22 +805,24 @@ function Monsters_do_pickups()
 
     -- more stuff in start room
     if L.purpose == "START" then
-      -- FIXME: this is game specific
-      if stat == "rocket" then
-        bonus = 10
-      else
-        bonus = 50
-      end
-
-      if OB_CONFIG.strength == "crazy" then
-        bonus = bonus * 2
+      if stat == "health" then
+        bonus = 20
       end
     end
 
     -- when getting a weapon, should get some ammo for it too
-    -- TODO: 'ammo_bonus' in each weapon
-    if L.kind != "hallway" and L:has_weapon_using_ammo(stat) and GAME.AMMOS then
-      bonus = bonus + GAME.AMMOS[stat].start_bonus
+    if L.weapons then
+      each name in L.weapons do
+        local info = GAME.WEAPONS[name]
+
+        if info.ammo and info.ammo == stat and info.bonus_ammo then
+          bonus = bonus + info.bonus_ammo
+        end
+      end
+    end
+
+    if OB_CONFIG.strength == "crazy" then
+      bonus = bonus * 2
     end
 
     -- compensation for environmental hazards
