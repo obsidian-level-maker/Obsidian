@@ -520,15 +520,58 @@ end
 
 
 function Monsters_distribute_stats()
+  --|
+  --| this distributes the fight statistics (which represent how much
+  --| health and ammo the player needs) into earlier rooms and storage
+  --| rooms in the same zone.
+  --|
 
-  local function distribute(R, health_qty, ammo_qty, N)
+  -- health mainly stays in same room (a reward for killing the monsters)
+  -- ammo mainly goes back, to prepare player for the fight
+  local health_factor = 0.25
+  local ammo_factor   = 0.65
+
+  local function get_previous_locs(room)
+    local list = {}
+
+    -- find previous rooms
+    local R = room
+
+    while R.entry_conn do
+      R = R.entry_conn:neighbor(R)
+
+      if R.kind != "hallway" then
+        local ratio = rand.irange(3,7) / (2.0 ^ #list)
+        table.insert(list, { room=R, ratio=ratio })
+      end
+    end
+
+    -- add storage rooms
+    if room.quest.storage_rooms then
+      each R in room.quest.storage_rooms do
+        local ratio = rand.irange(3,7) / 2.0
+        table.insert(list, { room=R, ratio=ratio })
+      end
+    end
+
+    return list
+  end
+
+
+  local function distribute(R, N, ratio)
     each CL,R_stats in R.fight_stats do
       local N_stats = N.fight_stats[CL]
 
       each stat,count in R_stats do
         if count <= 0 then continue end
 
-        local value = count * sel(stat == "health", health_qty, ammo_qty)
+        local value
+
+        if stat == "health" then
+          value = count * health_factor * ratio
+        else 
+          value = count * ammo_factor * ratio
+        end
 
         N_stats[stat] = (N_stats[stat] or 0) + value
         R_stats[stat] =  R_stats[stat]       - value
@@ -540,45 +583,15 @@ function Monsters_distribute_stats()
   end
 
 
-  local function get_previous_prefs(room)
-    local list = {}
-
-    -- find previous rooms
-    local R = room
-
-    while R.entry_conn do
-      R = R.entry_conn:neighbor(R)
-
-      if R.kind != "hallway" then
-        local ratio = rand.irange(3,7) * (0.5 ^ #list)
-        table.insert(list, { room=R, ratio=ratio })
-      end
-    end
-
-    -- add storage rooms
-    if room.quest.storage_rooms then
-      each R in room.quest.storage_rooms do
-        local ratio = rand.irange(3,7) / 11
-        table.insert(list, { room=R, ratio=ratio })
-      end
-    end
-
-    return list
-  end
-
-
-  local function distribute_to_list(R, health_qty, ammo_qty, list)
+  local function distribute_to_list(R, list)
     local total = 0
 
-    each pos in list do
-      total = total + pos.ratio
+    each loc in list do
+      total = total + loc.ratio
     end
 
-    each pos in list do
-      local h_qty = health_qty * pos.ratio / total
-      local a_qty = ammo_qty   * pos.ratio / total
-
-      distribute(R, h_qty, a_qty, pos.room)
+    each loc in list do
+      distribute(R, loc.room, loc.ratio / total)
     end
   end
 
@@ -593,7 +606,7 @@ function Monsters_distribute_stats()
     if R.is_storage then continue end
 
     if R.fight_stats then
-      distribute_to_list(R, 0.25, 0.75, get_previous_prefs(R))
+      distribute_to_list(R, get_previous_locs(R))
     end
   end
 
