@@ -820,7 +820,7 @@ function Monsters_do_pickups()
 
     -- when getting a weapon, should get some ammo for it too
     -- TODO: 'ammo_bonus' in each weapon
-    if L:has_weapon_using_ammo(stat) and GAME.AMMOS then
+    if L.kind != "hallway" and L:has_weapon_using_ammo(stat) and GAME.AMMOS then
       bonus = bonus + GAME.AMMOS[stat].start_bonus
     end
 
@@ -833,18 +833,8 @@ function Monsters_do_pickups()
   end
 
 
-  local function select_pickups(L, item_list, stat, qty, hmodel)
+  local function do_select_pickups(L, item_list, stat, qty)
     assert(qty >= 0)
-
-    -- subtract any previous gotten stuff
-    qty = qty - (hmodel.stats[stat] or 0)
-    hmodel.stats[stat] = 0
-
-    -- extra stuff : this is _not_ applied to the hmodel
-    -- (otherwise future rooms would get less of it).
-    local bonus = bonus_for_room(L, stat)
-
-    qty = qty + bonus
 
     while qty > 0 do
       local item, count = decide_pickup(L, stat, qty)
@@ -858,10 +848,35 @@ function Monsters_do_pickups()
       end
     end
 
-    -- there will usually be a small excess amount (since items come
-    -- in discrete quantities).  accumulate it into the hmodel...
-    local excess = (-qty)
+    -- return the excess amount
+    return (-qty)
+  end
 
+
+  local function select_pickups(L, item_list, stat, qty, hmodel)
+    assert(qty >= 0)
+
+    local held_qty = hmodel.stats[stat] or 0
+
+    local actual_qty = 0
+
+    -- when the player is already holding more than required, simply
+    -- reduce the hmodel (don't place any items).
+    if held_qty >= qty then
+      hmodel.stats[stat] = held_qty - qty
+    else
+      hmodel.stats[stat] = 0
+      actual_qty = qty - held_qty
+    end
+
+    -- bonus stuff : this is _not_ applied to the hmodel
+    -- (otherwise future rooms would get less of it).
+    actual_qty = actual_qty + bonus_for_room(L, stat)
+
+    local excess = do_select_pickups(L, item_list, stat, actual_qty)
+
+    -- there will usually be a small excess amount, since items come
+    -- in discrete quantities.  accumulate it into the hmodel...
     hmodel.stats[stat] = hmodel.stats[stat] + excess
   end
 
@@ -875,6 +890,7 @@ function Monsters_do_pickups()
     local item_list = {}
 
     each stat,qty in stats do
+      -- this updates the hmodel too
       select_pickups(L, item_list, stat, qty, hmodel)
 
       gui.debugf("Item list for %s:%1.1f [%s] @ %s\n", stat,qty, CL, L:tostr())
