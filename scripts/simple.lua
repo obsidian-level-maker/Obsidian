@@ -1020,6 +1020,11 @@ function Simple_bunch_areas(R, mode)
         end
       end
     end
+
+    -- extra health to compensate player for crossing the river
+    if mode == "liquid" and LEVEL.liquid.damage then
+      R.hazard_health = R.hazard_health + 30
+    end
   end
 
 
@@ -2349,6 +2354,13 @@ function Simple_decide_properties(R)
   end
 
   info.torch_mode = rand.sel(prob, "some", "none")
+
+  -- extra health for damaging liquid
+  if LEVEL.liquid and LEVEL.liquid.damage then
+    if info.liquid_mode != "none" then
+      R.hazard_health = R.hazard_health + R.svolume
+    end
+  end
 
   gui.debugf("Cave properties in %s\n", R:tostr())
   gui.debugf("    step_mode : %s\n", info.step_mode);

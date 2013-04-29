@@ -76,6 +76,8 @@ class ROOM
   sky_group : number  -- outdoor rooms which directly touch will belong
                       -- to the same sky_group (unless a solid wall is
                       -- enforced, e.g. between zones).
+
+  hazard_health  -- health provided to offset environment hazards
 }
 
 
@@ -171,6 +173,8 @@ function ROOM_CLASS.new(shape)
 
     sky_rects = {}
     exclusion_zones = {}
+
+    hazard_health = 0
   }
   table.set_class(R, ROOM_CLASS)
   table.insert(LEVEL.rooms, R)
