@@ -10,7 +10,7 @@ DOOM.SKINS.Switch_niche1 =
   x_fit  = "frame"
   y_fit  = "bottom"
 
-  props_35 = { light=192, _factor=0.5 }
+  props_35 = { light=208, _factor=0.5 }
 }
 
 DOOM.SKINS.Switch_niche2 =
