@@ -623,115 +623,6 @@ function Monsters_do_pickups()
   end
 
 
-  local function decide_pickup(L, stat, qty)
-    local item_tab = {}
-
-    for name,info in pairs(GAME.PICKUPS) do
-      if info.prob and
-         (stat == "health" and info.give[1].health) or
-         (info.give[1].ammo == stat)
-      then
-        item_tab[name] = info.prob
-
-        if L.purpose == "START" and info.start_prob then
-          item_tab[name] = info.start_prob
-        end
-      end
-    end
-
-    assert(not table.empty(item_tab))
-    local name = rand.key_by_probs(item_tab)
-    local info = GAME.PICKUPS[name]
-
-    local count = 1
-    
-    if info.cluster then
-      local each_qty = info.give[1].health or info.give[1].count
-      local min_num  = info.cluster[1]
-      local max_num  = info.cluster[2]
-
-      assert(max_num <= 9)
-
-      --- count = rand.irange(min_num, max_num)
-
-      if min_num * each_qty >= qty then
-        count = min_num
-      elseif max_num * each_qty <= qty then
-        count = max_num - rand.sel(20,1,0)
-      else
-        count = 1 + int(qty / each_qty)
-      end
-    end
-
-    return GAME.PICKUPS[name], count
-  end
-
-
-  local function bonus_for_room(L, stat)
-    local bonus = 0
-
-    -- more stuff in start room
-    if L.purpose == "START" then
-      -- FIXME: this is game specific
-      if stat == "rocket" then
-        bonus = 10
-      else
-        bonus = 50
-      end
-
-      if OB_CONFIG.strength == "crazy" then
-        bonus = bonus * 2
-      end
-    end
-
-    -- when getting a weapon, should get some ammo for it too
-    -- TODO: 'ammo_bonus' in each weapon
-    if L:has_weapon_using_ammo(stat) and GAME.AMMOS then
-      bonus = bonus + GAME.AMMOS[stat].start_bonus
-    end
-
-    -- compensation for environmental hazards
-    if stat == "health" and L.hazard_health then
-      bonus = bonus + L.hazard_health
-    end
-
-    return bonus
-  end
-
-
-  local function select_pickups(L, item_list, stat, qty, hmodel)
-    assert(qty >= 0)
-
-    -- subtract any previous gotten stuff
-    qty = qty - (hmodel.stats[stat] or 0)
-    hmodel.stats[stat] = 0
-
-    -- extra stuff : this is _not_ applied to the hmodel
-    -- (otherwise future rooms would get less of it).
-    local bonus = bonus_for_room(L, stat)
-
-    qty = qty + bonus
-
-    while qty > 0 do
-      local item, count = decide_pickup(L, stat, qty)
-      table.insert(item_list, { item=item, count=count, random=gui.random() })
-
-      if stat == "health" then
-        qty = qty - item.give[1].health * count
-      else
-        assert(item.give[1].ammo)
-        qty = qty - item.give[1].count * count
-      end
-    end
-
-    -- there will usually be a small excess amount (since items come
-    -- in discrete quantities).  accumulate it into the hmodel...
-    local excess = (-qty)
-
-    hmodel.stats[stat] = hmodel.stats[stat] + excess
-  end
-
-
   local function place_item(item_name, x, y, z)
     local props = {}
 
@@ -863,6 +754,115 @@ function Monsters_do_pickups()
         table.insert(L.item_spots, spot)
       end
     end
+  end
+
+
+  local function decide_pickup(L, stat, qty)
+    local item_tab = {}
+
+    for name,info in pairs(GAME.PICKUPS) do
+      if info.prob and
+         (stat == "health" and info.give[1].health) or
+         (info.give[1].ammo == stat)
+      then
+        item_tab[name] = info.prob
+
+        if L.purpose == "START" and info.start_prob then
+          item_tab[name] = info.start_prob
+        end
+      end
+    end
+
+    assert(not table.empty(item_tab))
+    local name = rand.key_by_probs(item_tab)
+    local info = GAME.PICKUPS[name]
+
+    local count = 1
+    
+    if info.cluster then
+      local each_qty = info.give[1].health or info.give[1].count
+      local min_num  = info.cluster[1]
+      local max_num  = info.cluster[2]
+
+      assert(max_num <= 9)
+
+      --- count = rand.irange(min_num, max_num)
+
+      if min_num * each_qty >= qty then
+        count = min_num
+      elseif max_num * each_qty <= qty then
+        count = max_num - rand.sel(20,1,0)
+      else
+        count = 1 + int(qty / each_qty)
+      end
+    end
+
+    return GAME.PICKUPS[name], count
+  end
+
+
+  local function bonus_for_room(L, stat)
+    local bonus = 0
+
+    -- more stuff in start room
+    if L.purpose == "START" then
+      -- FIXME: this is game specific
+      if stat == "rocket" then
+        bonus = 10
+      else
+        bonus = 50
+      end
+
+      if OB_CONFIG.strength == "crazy" then
+        bonus = bonus * 2
+      end
+    end
+
+    -- when getting a weapon, should get some ammo for it too
+    -- TODO: 'ammo_bonus' in each weapon
+    if L:has_weapon_using_ammo(stat) and GAME.AMMOS then
+      bonus = bonus + GAME.AMMOS[stat].start_bonus
+    end
+
+    -- compensation for environmental hazards
+    if stat == "health" and L.hazard_health then
+      bonus = bonus + L.hazard_health
+    end
+
+    return bonus
+  end
+
+
+  local function select_pickups(L, item_list, stat, qty, hmodel)
+    assert(qty >= 0)
+
+    -- subtract any previous gotten stuff
+    qty = qty - (hmodel.stats[stat] or 0)
+    hmodel.stats[stat] = 0
+
+    -- extra stuff : this is _not_ applied to the hmodel
+    -- (otherwise future rooms would get less of it).
+    local bonus = bonus_for_room(L, stat)
+
+    qty = qty + bonus
+
+    while qty > 0 do
+      local item, count = decide_pickup(L, stat, qty)
+      table.insert(item_list, { item=item, count=count, random=gui.random() })
+
+      if stat == "health" then
+        qty = qty - item.give[1].health * count
+      else
+        assert(item.give[1].ammo)
+        qty = qty - item.give[1].count * count
+      end
+    end
+
+    -- there will usually be a small excess amount (since items come
+    -- in discrete quantities).  accumulate it into the hmodel...
+    local excess = (-qty)
+
+    hmodel.stats[stat] = hmodel.stats[stat] + excess
   end
 
 
