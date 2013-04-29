@@ -229,7 +229,7 @@ function Player_firepower()
     local firepower = 0 
     local divisor   = 0
 
-    for weapon,_ in pairs(hmodel.weapons) do
+    each weapon,_ in hmodel.weapons do
       local info = GAME.WEAPONS[weapon]
 
       if not info then
@@ -267,7 +267,7 @@ function Player_firepower()
   local fp_total  = 0
   local class_num = 0
 
-  for CL,hmodel in pairs(LEVEL.hmodels) do
+  each CL,hmodel in LEVEL.hmodels do
     fp_total = fp_total + get_firepower(hmodel)
     class_num = class_num + 1
   end
@@ -281,7 +281,7 @@ end
 function Player_has_weapon(weap_needed)
   
   local function class_has_one(hmodel)
-    for name,_ in pairs(hmodel.weapons) do
+    each name,_ in hmodel.weapons do
       if weap_needed[name] then
         return true
       end
@@ -293,7 +293,7 @@ function Player_has_weapon(weap_needed)
 
   -- we require a match for every class
 
-  for CL,hmodel in pairs(LEVEL.hmodels) do
+  each CL,hmodel in LEVEL.hmodels do
     if not class_has_one(hmodel) then
       return false
     end
@@ -667,33 +667,55 @@ function Monsters_do_pickups()
   end
 
 
+  local function bonus_for_room(L, stat)
+    local bonus = 0
+
+    -- more stuff in start room
+    if L.purpose == "START" then
+      -- FIXME: this is game specific
+      if stat == "rocket" then
+        bonus = 10
+      else
+        bonus = 50
+      end
+
+      if OB_CONFIG.strength == "crazy" then
+        bonus = bonus * 2
+      end
+    end
+
+    -- when getting a weapon, should get some ammo for it too
+    -- TODO: 'ammo_bonus' in each weapon
+    if L:has_weapon_using_ammo(stat) and GAME.AMMOS then
+      bonus = bonus + GAME.AMMOS[stat].start_bonus
+    end
+
+    -- compensation for environmental hazards
+    if stat == "health" and L.hazard_health then
+      bonus = bonus + L.hazard_health
+    end
+
+    return bonus
+  end
+
+
   local function select_pickups(L, item_list, stat, qty, hmodel)
-gui.debugf("Initial %s = %1.1f\n", stat, hmodel.stats[stat] or 0)
+    assert(qty >= 0)
 
     -- subtract any previous gotten stuff
     qty = qty - (hmodel.stats[stat] or 0)
     hmodel.stats[stat] = 0
 
-    -- more ammo in start room
-    local excess = 0
+    -- extra stuff : this is _not_ applied to the hmodel
+    -- (otherwise future rooms would get less of it).
+    local bonus = bonus_for_room(L, stat)
 
-    if L.purpose == "START" and L:has_weapon_using_ammo(stat) then
-      if qty > 0 then
-        excess = sel(OB_CONFIG.strength == "crazy", 1.2, 0.6) * qty
-      end
-
-      if GAME.AMMOS and GAME.AMMOS[stat] then
-        excess = math.max(excess, GAME.AMMOS[stat].start_bonus)
-      end
-      gui.debugf("Bonus %s = %1.1f\n", stat, excess)
-    end
-
-    qty = qty + excess
+    qty = qty + bonus
 
     while qty > 0 do
       local item, count = decide_pickup(L, stat, qty)
       table.insert(item_list, { item=item, count=count, random=gui.random() })
-      
+
       if stat == "health" then
         qty = qty - item.give[1].health * count
       else
@@ -702,14 +724,11 @@ gui.debugf("Initial %s = %1.1f\n", stat, hmodel.stats[stat] or 0)
       end
     end
 
-    excess = excess + (-qty)
+    -- there will usually be a small excess amount (since items come
+    -- in discrete quantities).  accumulate it into the hmodel...
+    local excess = (-qty)
 
-    -- accumulate any excess quantity into the hmodel
-
-    if excess > 0 then
-gui.debugf("Excess %s = %1.1f\n", stat, excess)
-      hmodel.stats[stat] = hmodel.stats[stat] + excess
-    end
+    hmodel.stats[stat] = hmodel.stats[stat] + excess
   end
 
 
@@ -855,17 +874,15 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
     local stats = L.fight_stats[CL]
     local item_list = {}
 
-    for stat,qty in pairs(stats) do
-      if qty > 0 then
-        select_pickups(L, item_list, stat, qty, hmodel)
+    each stat,qty in stats do
+      select_pickups(L, item_list, stat, qty, hmodel)
 
-        gui.debugf("Item list for %s:%1.1f [%s] @ %s\n", stat,qty, CL, L:tostr())
+      gui.debugf("Item list for %s:%1.1f [%s] @ %s\n", stat,qty, CL, L:tostr())
 
-        each pair in item_list do
-          local item = pair.item
-          gui.debugf("   %dx %s (%d)\n", pair.count, item.name,
-                     item.give[1].health or item.give[1].count)
-        end
+      each pair in item_list do
+        local item = pair.item
+        gui.debugf("   %dx %s (%d)\n", pair.count, item.name,
+                   item.give[1].health or item.give[1].count)
       end
     end
 
@@ -1921,7 +1938,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   local function collect_weapons(hmodel)
     local list = {}
 
-    for name,_ in pairs(hmodel.weapons) do
+    each name,_ in hmodel.weapons do
       local info = assert(GAME.WEAPONS[name])
       if info.pref then
         table.insert(list, info)
@@ -1986,7 +2003,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
 
   local function subtract_stuff_we_have(stats, hmodel)
-    for name,have_qty in pairs(hmodel.stats) do
+    each name,have_qty in hmodel.stats do
       local need_qty = stats[name] or 0
       if have_qty > 0 and need_qty > 0 then
         local min_q = math.min(have_qty, need_qty)
@@ -2008,7 +2025,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     gui.debugf("Fight Simulator @ %s  class: %s\n", L:tostr(), CL)
 
     gui.debugf("weapons = \n")
-    for _,info in ipairs(weap_list) do
+    each info in weap_list do
       gui.debugf("  %s\n", info.name)
     end
 
@@ -2035,7 +2052,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     assert(L.monster_list)
 
     if #L.monster_list >= 1 then
-      for CL,hmodel in pairs(LEVEL.hmodels) do
+      each CL,hmodel in LEVEL.hmodels do
         battle_for_class(CL, hmodel)
       end
     end
