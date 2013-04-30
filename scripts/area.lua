@@ -171,7 +171,7 @@ gui.debugf("install portal %s (%s <--> %s) @ %s dir:%d\n",
 
     -- except for joiners, connections are usually 1 seed wide
     -- TODO: for "C" hallway pieces (or direct-room conns) sometimes move left or right
-    local is_joiner = (D.L1.joiner or D.L2.joiner)
+    local is_joiner = (D.L1.is_joiner or D.L2.is_joiner)
 
     if (sx2 > sx1 or sy2 > sy1) and not is_joiner then
       if sx2 > sx1 then

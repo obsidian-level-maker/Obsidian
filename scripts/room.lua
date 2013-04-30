@@ -2194,7 +2194,7 @@ function Room_analyse_outside_joiners()
   -- decide whether or not to allow an "outside" joiner.
 
   each H in LEVEL.halls do
-    if H.joiner then
+    if H.is_joiner then
       local R1, R2 = H:joiner_rooms()
 
       if not (R1.sky_group and R2.sky_group) then continue end

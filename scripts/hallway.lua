@@ -35,8 +35,8 @@ class HALLWAY
   crossover : ROOM
   is_cycle  : boolean
 
-  joiner : boolean  -- a joiner is a single section hallway going
-                    -- straight ahead (two rooms, no turning).
+  is_joiner : boolean  -- a joiner is a single section hallway going
+                       -- straight ahead (two rooms, no turning).
 
   double_fork : SECTION    -- only present for double hallways.
   double_dir  : direction  -- dir at the single end (into hallway)
@@ -168,7 +168,7 @@ end
 
 
 function HALLWAY_CLASS.joiner_sections(H)
-  assert(H.joiner)
+  assert(H.is_joiner)
 
   local K = H.sections[1]
   local dir = sel(K.hall_link[2], 2, 4)
@@ -283,7 +283,7 @@ stderrf("MERGING %s into %s\n", new_H:tostr(), H:tostr())
   via_conn.K2.hall_link[10 - dir] = via_conn.K1
 
   -- lose the "joiner" status
-  H.joiner = false
+  H.is_joiner = false
 
   if #new_H.sections > 1 then
     LEVEL.hall_quota = LEVEL.hall_quota - #new_H.sections
@@ -405,7 +405,7 @@ end
 
 
 
-function HALLWAY_CLASS.create_pieces(H)
+function HALLWAY_CLASS.create_pieces__OLD(H)
 
 --[[
 
@@ -436,8 +436,9 @@ end
 
 
 function HALLWAY_CLASS.categorize_pieces(H)
-
-  -- categorize the hallway pieces, and verify the linkages
+  --|
+  --| categorize the hallway pieces, and verify the linkages
+  --|
 
   each P in H.sections do
     if table.size(P.hall_link) < 2 then
@@ -548,10 +549,10 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
   floor_diffs[2] = 0 ; floor_diffs[8] = 0
   floor_diffs[4] = 0 ; floor_diffs[6] = 0
 
-  if P.shape == "big_junc" or H.joiner then
+  if P.shape == "big_junc" or H.is_joiner then
     local skin
 
-    if H.joiner then
+    if H.is_joiner then
       skin = H:select_joiner(P, floor_h)
     else
       skin = H:select_big_junc(P)
@@ -587,7 +588,7 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
 
   P.floor_h = floor_h
 
-  if P.h_shape == "I" and not (H.big_junc or H.joiner) and
+  if P.h_shape == "I" and not (H.big_junc or H.is_joiner) and
      not P.crossover_hall and
      (rand.odds(H.stair_prob) or P.double_peer) and
      (not H.double_fork or P.double_peer)
@@ -620,7 +621,8 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
     z_dir = -z_dir
   end
 
-  -- recursively handle branches
+
+  --- recursively handle branches ---
 
   local did_a_branch = false
 
@@ -859,7 +861,7 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
 
 stderrf("hallway floor_stuff for %s\n", H:tostr())
 
-if H.joiner then stderrf("   JOINER !!!!\n") end
+if H.is_joiner then stderrf("   JOINER !!!!\n") end
 
   assert(not H.done_heights)
 
@@ -890,9 +892,6 @@ if H.joiner then stderrf("   JOINER !!!!\n") end
     H.mini_hall = true
   end
 --]]
-
-  H:create_pieces()
-  H:categorize_pieces()
 
 ----???  H:update_seeds_for_chunks()
 
@@ -929,20 +928,116 @@ end
 
 
 
+function HALLWAY_CLASS.divide_one_section(H, P)
+  -- no need?
+  if P.sw == 1 and P.sh == 1 then return end
+
+  -- we assume 1x3 or 3x1 size
+  assert(math.max(P.sw, P.sh) == 3)
+  assert(math.min(P.sw, P.sh) == 1)
+
+  local wide = geom.vert_sel(P.h_dir, P.sw, P.sh)
+  local tall = geom.vert_sel(P.h_dir, P.sh, P.sw)
+
+  -- handle tall 'I' pieces later (in stair_flow)
+  if P.h_shape == "I" and tall > 1 then return end
+
+  -- 'P' shapes are already 1x1 (only occur at junctions)
+  assert(P.h_shape != "P")
+
+
+  -- grab original coords
+  local sx1, sy1 = P.sx1, P.sy1
+  local sx2, sy2 = P.sx2, P.sy2
+  local sw,  sh  = P.sw,  P.sh
+
+  local mx = math.i_mid(P.sx1, P.sx2)
+  local my = math.i_mid(P.sy1, P.sy2)
+
+  local along_dir = sel(tall > 1, 8, 6)
+
+
+  -- create new sections
+
+  for x = sx1, sx2 do
+  for y = sy1, sy2 do
+    if x == mx and y == my then continue end
+
+    local K = SECTION_CLASS.new("rect")
+
+    SEEDS[x][y].section = K
+    SEEDS[x][y].hall    = nil
+  end
+  end
+
+
+  -- shrink current section
+
+  P.sx1 = mx ; P.sx2 = mx ; P.sw = 1
+  P.sy1 = my ; P.sy2 = my ; P.sh = 1
+
+
+do return end
+
+
+  local N2 = P.hall_link[2]
+  local N4 = P.hall_link[4]
+  local N6 = P.hall_link[6]
+  local N8 = P.hall_link[8]
+
+
+  -- for 'C' shape (corner) or tall 'T' :
+  --   + old section is middle, stays the same
+  --   + new section will be on bottom, will be 'I' piece
+  --   + could move 'T' down, no need a new section
+  --   + could move 'T' up, the new section is 1x2
+
+  -- for wide 'T' or 'I' shape:
+  --   + old section is middle, stays the same
+  --   + two new sections (left and right), both are 'I' pieces
+  --   + could move 'T' left or right, only need one new section
+
+  -- TODO: ability to move
+
+  if P.h_shape == "C" or (P.h_shape == "T" and tall > 1) then
+
+  else
+
+  end
+
+--[[
+    local touches_room
+
+    for dir = 2,8,2 do
+      local P2 = H.hall_link[dir]
+      if P2 and P2 != H then
+        touches_room = true
+      end
+    end
+--]]
+end
+
+
+
 function HALLWAY_CLASS.divide_sections(H)
+  --|
   --| currently hallways occupy (a string of) whole sections.
   --| here we need to subdivide those sections into 1x1 seeds
   --| (especially where the hallway joins onto a room).
   --|
-  --| TODO: is this the right time to select prefabs?
 
-  --......
+  H:categorize_pieces()
+
+  if H.is_joiner then return end
+
+  each P in H.sections do
+    H:divide_one_section(P)
+  end
 end
 
 
 
 function Hallway_divide_sections()
-
   each H in LEVEL.halls do
     H:divide_sections()
   end
@@ -1165,7 +1260,7 @@ function HALLWAY_CLASS.build_hall_piece(H, P)
     outer = H.zone.facade_mat
   }
 
-  if H.joiner then
+  if H.is_joiner then
     skin0.wall = skin0.outer
   end
 
@@ -1188,6 +1283,9 @@ function HALLWAY_CLASS.build_hall_piece(H, P)
   end
 
   Fabricate_at(H, skin1, T, { skin0, skin1 })
+
+--!!!!!!
+entity_helper("dummy", T.add_x + 128, T.add_y + 128, P.floor_h)
 
   H.last_piece = skin1.name
 end
@@ -1387,7 +1485,7 @@ function Hallway_scan(start_K, start_dir, mode)
        ( (geom.is_vert (start_dir) and path[1].sw == 3) or
          (geom.is_horiz(start_dir) and path[1].sh == 3))
     then
-      H.joiner = true
+      H.is_joiner = true
     end
 
     if mode == "secret_exit" then
