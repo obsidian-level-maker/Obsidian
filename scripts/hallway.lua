@@ -237,9 +237,9 @@ function HALLWAY_CLASS.add_it(H)
 
   table.insert(LEVEL.halls, H)
 
-  H:setup_path(H.sections)
-
   H:mark_sections(H.sections)
+
+  H:setup_path(H.sections)
 
   if H.crossover then
     local over_R = H.crossover
@@ -272,9 +272,9 @@ stderrf("MERGING %s into %s\n", new_H:tostr(), H:tostr())
     table.insert(H.sections, K)
   end
 
-  H:setup_path(new_H.sections)
-
   H:mark_sections(new_H.sections)
+
+  H:setup_path(new_H.sections)
 
   -- create path link for the OLD <--> NEW connection
   local dir = assert(via_conn.dir1)
@@ -435,7 +435,20 @@ end
 
 
 
-function HALLWAY_CLASS.categorize_pieces(H)
+function HALLWAY_CLASS.categorize_piece(H, P)
+  local cat, dir = Trans.categorize_linkage(
+      P.hall_link[2], P.hall_link[4],
+      P.hall_link[6], P.hall_link[8])
+
+  assert(cat != "N" and cat != "F")
+
+  P.h_shape = cat
+  P.h_dir   = dir
+end
+
+
+
+function HALLWAY_CLASS.categorize_all_pieces(H)
   --|
   --| categorize the hallway pieces, and verify the linkages
   --|
@@ -447,14 +460,7 @@ function HALLWAY_CLASS.categorize_pieces(H)
     end
 
     if not P.crossover_hall then
-      local cat, dir = Trans.categorize_linkage(
-          P.hall_link[2], P.hall_link[4],
-          P.hall_link[6], P.hall_link[8]);
-
-      assert(cat != "N" and cat != "F")
-
-      P.h_shape = cat
-      P.h_dir   = dir
+      H:categorize_piece(P)
     end
   end
 end
@@ -929,6 +935,21 @@ end
 
 
 function HALLWAY_CLASS.divide_one_section(H, P)
+  --|
+  --| Handle these scenarios:
+  --|
+  --| for 'C' shape (corner) or tall 'T' :
+  --|   + old section is middle, stays the same
+  --|   + new section will be on bottom, will be 'I' piece
+  --|   + could move 'T' down, no need a new section
+  --|   + could move 'T' up, the new section is 1x2
+  --|
+  --| for wide 'T' or 'I' shape:
+  --|   + old section is middle, stays the same
+  --|   + two new sections (left and right), both are 'I' pieces
+  --|   + could move 'T' left or right, only need one new section
+  --|
+
   -- no need?
   if P.sw == 1 and P.sh == 1 then return end
 
@@ -957,13 +978,21 @@ function HALLWAY_CLASS.divide_one_section(H, P)
   local along_dir = sel(tall > 1, 8, 6)
 
 
-  -- create new sections
+  -- TODO: ability to move the middle piece
 
+
+stderrf("Current section : %s\n", P:tostr())
+
+  -- create new sections
   for x = sx1, sx2 do
   for y = sy1, sy2 do
     if x == mx and y == my then continue end
 
     local K = SECTION_CLASS.new("rect")
+stderrf("New section @ (%d %d) : %s\n", x, y, tostring(K))
+
+    K.sx1 = x ; K.sx2 = x ; K.sw = 1
+    K.sy1 = y ; K.sy2 = y ; K.sh = 1
 
     SEEDS[x][y].section = K
     SEEDS[x][y].hall    = nil
@@ -971,50 +1000,50 @@ function HALLWAY_CLASS.divide_one_section(H, P)
   end
 
 
-  -- shrink current section
-
+  -- shrink current piece
   P.sx1 = mx ; P.sx2 = mx ; P.sw = 1
   P.sy1 = my ; P.sy2 = my ; P.sh = 1
 
 
-do return end
+  --- create new pieces ---
+
+  local S = SEEDS[mx][my]
+stderrf("Middle seed : %s\n", S:tostr())
+
+  for dir = 2,8,2 do
+    local LINK = P.hall_link[dir]
+
+    if not (LINK and LINK.hall == H) then continue end
+
+    local S2 = S:neighbor(dir)
+    local P2 = S2.section
+
+stderrf("  Seed at dir:%d --> %s\n", dir, S2:tostr())
+stderrf("  P2 = %s\n", tostring(P2))
+
+    if P2.used then continue end
 
 
-  local N2 = P.hall_link[2]
-  local N4 = P.hall_link[4]
-  local N6 = P.hall_link[6]
-  local N8 = P.hall_link[8]
+    -- OK --
+
+stderrf("Linking section : %s at dir:%d\n", tostring(P2), dir)
+
+    H:add_section(P2)
+
+    P2:set_hall(H)
 
 
-  -- for 'C' shape (corner) or tall 'T' :
-  --   + old section is middle, stays the same
-  --   + new section will be on bottom, will be 'I' piece
-  --   + could move 'T' down, no need a new section
-  --   + could move 'T' up, the new section is 1x2
+    -- update links
 
-  -- for wide 'T' or 'I' shape:
-  --   + old section is middle, stays the same
-  --   + two new sections (left and right), both are 'I' pieces
-  --   + could move 'T' left or right, only need one new section
+     P.hall_link[dir]      = P2
+    P2.hall_link[10 - dir] = P
 
-  -- TODO: ability to move
+      P2.hall_link[dir]      = LINK
+    LINK.hall_link[10 - dir] = P2
 
-  if P.h_shape == "C" or (P.h_shape == "T" and tall > 1) then
 
-  else
-
+    H:categorize_piece(P2)
   end
-
---[[
-    local touches_room
-
-    for dir = 2,8,2 do
-      local P2 = H.hall_link[dir]
-      if P2 and P2 != H then
-        touches_room = true
-      end
-    end
---]]
 end
 
 
@@ -1026,7 +1055,7 @@ function HALLWAY_CLASS.divide_sections(H)
   --| (especially where the hallway joins onto a room).
   --|
 
-  H:categorize_pieces()
+  H:categorize_all_pieces()
 
   if H.is_joiner then return end
 
