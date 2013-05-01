@@ -46,6 +46,23 @@ class HALLWAY
   wall_mat, floor_mat, ceil_mat 
 }
 
+
+class HALL_PIECE extends SECTION
+{
+  h_shape : keyword   -- "I", "C", "T" or "P" 
+
+  h_dir : DIR  -- direction for shape (south end of prefab)
+
+  h_stair_kind : keyword   -- normally absent
+                           -- can be: "stair32", "stair64", "stair96"
+                           --     or: "lift"
+
+  h_lift_h : number   -- floor differences for lift (absolute)
+
+  skin : PREFAB   -- the prefab to build here
+}
+
+
 --------------------------------------------------------------]]
 
 --
@@ -604,8 +621,9 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
   -- only the "I" pieces can become stairs or lifts
   -- (everything else must have no height changes)
 
-  if P.h_shape == "I" and not (H.big_junc or H.is_joiner or P.tall_I) and
+  if P.h_shape == "I" and not P.tall_I and 
      not P.crossover_hall and
+     not (H.big_junc or H.is_joiner) and
      (rand.odds(H.stair_prob) or P.double_peer) and
      (not H.double_fork or P.double_peer)
   then
@@ -616,18 +634,23 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
       H.flipped_double = true
     end
 
-    P.h_extra = "stair"
-    P.h_dir   = sel(z_dir < 0, 10 - from_dir, from_dir)
+    P.h_dir = sel(z_dir < 0, 10 - from_dir, from_dir)
 
     -- FIXME: pick stair kind ("short" / "medium" / "tall")
     --        (only one kind per hallway)
 
-    P.h_stair_kind = "lift"
-    P.h_stair_h = rand.pick { 104, 128, 166 }
+    if false then
+      P.h_stair_kind = "lift"
+      P.h_lift_h = rand.pick { 104, 128, 166 }
 
-    floor_h = floor_h + P.h_stair_h * z_dir
+      floor_h = floor_h + P.h_lift_h * z_dir
+    else
+      P.h_stair_kind = "stair32"
 
-    -- stairs and lifts require chunk has the lowest height
+      floor_h = floor_h + 32 * z_dir
+    end
+
+    -- stairs and lifts : floor_h must be the lowest height
     if z_dir < 0 then
       P.floor_h = floor_h
     end
@@ -702,13 +725,13 @@ function HALLWAY_CLASS.cycle_flow(H, C, from_dir, z, i_deltas, seen)
     if abs_dz > climb_h then
 
       C.h_dir = sel(dz < 0, 10 - from_dir, from_dir)
-      
+
       -- need a lift?
-      if abs_dz > 80 + PARAM.step_height then
-        C.h_extra = "lift"
+      if abs_dz > 96 then
+        C.h_stair_kind = "lift"
         C.h_stair_h = abs_dz
       else
-        C.h_extra = "stair"
+        C.h_stair_kind = "stair64"
         C.h_stair_h = math.min(abs_dz, 80)
       end
 
@@ -914,7 +937,7 @@ if H.is_joiner then stderrf("   JOINER !!!!\n") end
 
   H:peer_double_chunks()
 
-  H.stair_prob = 35 - 65  --!!!!! FIXME
+  H.stair_prob = 35 + 65  --!!!!! FIXME
 
   -- general vertical direction
   local z_dir = rand.sel(50, 1, -1)
@@ -1131,18 +1154,23 @@ end
 
 
 function HALLWAY_CLASS.select_piece(H, P)
-  local shape = P.h_shape
-
-  if P.h_extra == "stair" then shape = assert(P.h_stair_kind) end
-  if P.h_extra == "lift"  then shape = "lift" end
+  local shape = P.h_stair_kind or P.h_shape
 
   local long, deep = P:long_deep(P.h_dir)
+
+  assert(long == 1)
 
   local env =
   {
     seed_w = long
     seed_h = deep
   }
+
+--[[ TODO : if a 1x3 piece is not chosen, divide section up
+  if deep > 1 then
+    env.seed_h = { 1, deep }
+  end
+--]]
 
   local reqs =
   {
@@ -1314,7 +1342,7 @@ function HALLWAY_CLASS.build_hall_piece(H, P)
   local T = Trans.section_transform(P, P.h_dir or 2)
 
   if P.h_stair_kind == "lift" then
-    Trans.set_fitted_z(T, P.floor_h, P.floor_h + P.h_stair_h)
+    Trans.set_fitted_z(T, P.floor_h, P.floor_h + P.h_lift_h)
 
   elseif skin1.z_fit then
     assert(H.sky_group)
