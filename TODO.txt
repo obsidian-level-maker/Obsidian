@@ -130,6 +130,34 @@ Caves:
    -  for bridges, ensure ceiling cells are high enough
 
 
+Street Mode:
+!!  get it working again
+
++  fix bug : if one room surrounds another one, the "streets"
+   between them are isolated from the rest, leading to this error:
+
+     Script Error: Failed to find any height in grid neighbors
+    
+   --> detect this, make multiple "street" rooms
+
++  limit number of locked rooms:
+   (a) if too many rooms, merge some
+   (b) make some rooms be optional (storehouses or weapon)
+   (c) connect some rooms via bridges
+
+?  better looking "streets" (via prefabs)
+
+-  fix the "big junc" situation, good place for a fountain
+
+-  a raised outdoory room might be cool
+
+-   5% of the time  : keep the outer ring
+   35% of the time  : expand all rooms into outer ring
+   rest of the time : expand corner rooms 65%, side rooms 35%
+
+-  allow big monsters in the street [c.f. MAP12]
+
+
 
 PATTERN AREA LOGIC:
 
@@ -394,31 +422,6 @@ IDEA: "single minis" : a single room (not too big, kvolume <= 2)
 
      [especially when next "room" is a hallway]
 
-
-
-Street Mode:
-+  limit number of locked rooms:
-   (a) if too many rooms, merge some
-   (b) make some rooms be optional (storehouses or weapon)
-   (c) connect some rooms via bridges
-
--  fix the sky glitch (pieces jutting inside a room)
-
--  better looking "streets" (via prefabs and SKINs) ?
-
--  fix the "big junc" situation, good place for a fountain
-
--  a raised outdoory room might be cool
-
--  25% of the time  : keep the outer ring
-   25% of the time  : expand all rooms into outer ring
-   rest of the time : expand corner rooms 50%, side rooms 33%
-
--  allow outdoor rooms
-
--  allow big monsters in the street [c.f. MAP12]
-
--  limit caves to being in corner of map, expanded
 
 
 Planner:

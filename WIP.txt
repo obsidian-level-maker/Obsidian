@@ -3,7 +3,7 @@ WORK IN PROGRESS
 ================
 
 
----->  light value for entities in prefabs
+!!!!  get locked doors working again
 
 
 !!! segment hallways into smaller sections
@@ -12,13 +12,8 @@ WORK IN PROGRESS
     do it _before_ Areas_handle_connections.
 
 
-!!!!  get locked doors working again
-
-
 >>>  create wall and corner information for each room
 
-
-!!!  get closets working again
 
 !!  get big junctions working again
 
@@ -26,16 +21,6 @@ WORK IN PROGRESS
 
 
 >>  get 'height' value into 'env' pick_skin() tables
-
-
-!!  fix street mode
-
-!!  street mode : if one room surrounds another one, the "streets"
-    between them are isolated from the rest, leading to this error:
-
-      Script Error: Failed to find any height in grid neighbors
-
-    --> detect this, make multiple "street" rooms
 
 
 -  FAT_CAGE_PILLAR
