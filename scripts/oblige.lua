@@ -68,7 +68,7 @@ function ob_traceback(msg)
         -- perform our own search of the global namespace,
         -- since the standard LUA code (5.1.2) will not check it
         -- for the topmost function (the one called by C code)
-        for k,v in pairs(_G) do
+        each k,v in _G do
           if v == info.func then
             func_name = k
             break;
@@ -137,6 +137,7 @@ function ob_ref_table(op, t)
   error("ob_ref_table: unknown op: " .. tostring(op))
 end
 
+
 function ob_console_dump(info, ...)
 
   local function dump_tab(t, indent)
@@ -147,7 +148,7 @@ function ob_console_dump(info, ...)
     local keys = {}
     local longest_k = 1
 
-    for k,v in pairs(t) do
+    each k,v in t do
       table.insert(keys, k)
       longest_k = math.max(longest_k, string.len(tostring(k)))
     end
@@ -158,7 +159,7 @@ function ob_console_dump(info, ...)
 
     local space = string.rep("   ", indent+1)
 
-    for index,k in ipairs(keys) do
+    each k in keys do
       local v = t[k]
 
       local k_type = type(k)
@@ -306,7 +307,7 @@ end
 function ob_update_engines()
   local need_new = false
 
-  for name,def in pairs(OB_ENGINES) do
+  each name,def in OB_ENGINES do
     local shown = ob_match_conf(def)
 
     if not shown and (OB_CONFIG.engine == name) then
@@ -326,7 +327,7 @@ end
 function ob_update_themes()
   local new_label
 
-  for name,def in pairs(OB_THEMES) do
+  each name,def in OB_THEMES do
     local shown = ob_match_conf(def)
 
     if not shown and (OB_CONFIG.theme == name) then
@@ -339,7 +340,7 @@ function ob_update_themes()
 
   -- try to keep the same GUI label
   if new_label then
-    for name,def in pairs(OB_THEMES) do
+    each name,def in OB_THEMES do
       local shown = ob_match_conf(def)
 
       if shown and def.label == new_label then
@@ -364,7 +365,7 @@ function ob_update_modules()
   for loop = 1,100 do
     local changed = false
 
-    for name,def in pairs(OB_MODULES) do
+    each name,def in OB_MODULES do
       local shown = ob_match_conf(def)
 
       if shown != def.shown then
@@ -391,8 +392,8 @@ function ob_defs_conflict(def1, def2)
   if not def1.conflicts then return false end
   if not def2.conflicts then return false end
 
-  for K,_ in pairs(def1.conflicts) do
-    if def2.conflicts[K] then
+  each name,_ in def1.conflicts do
+    if def2.conflicts[name] then
       return true
     end
   end
@@ -420,7 +421,7 @@ function ob_set_mod_option(name, option, value)
 
     -- handle conflicting modules (like Radio buttons)
     if value then
-      for other,odef in pairs(OB_MODULES) do
+      each other,odef in OB_MODULES do
         if odef != mod and ob_defs_conflict(mod, odef) then
           odef.enabled = false
           gui.change_button("module", other, odef.enabled)
@@ -550,7 +551,7 @@ function ob_read_all_config(print_to_log)
   do_line("----- Modules -----")
   do_line("")
 
-  for _,name in ipairs(table.keys_sorted(OB_MODULES)) do
+  each name in table.keys_sorted(OB_MODULES) do
     local def = OB_MODULES[name]
 
     do_line("@%s = %s", name, sel(def.enabled, "1", "0"))
@@ -559,7 +560,7 @@ function ob_read_all_config(print_to_log)
     if def.options then
       do_line("{")
 
-      for o_name,opt in pairs(def.options) do
+      each o_name,opt in def.options do
         do_line("  %s = %s", o_name, opt.value or unknown)
       end
 
@@ -599,15 +600,15 @@ function ob_init()
   local function preinit_all(DEFS)
     local removed = {}
 
-    for name,def in pairs(DEFS) do
+    each name,def in DEFS do
       if def.preinit_func then
         if def.preinit_func(def) == REMOVE_ME then
-          removed[name] = true
+          table.insert(removed, name)
         end
       end
     end
 
-    for name,_ in pairs(removed) do
+    each name in removed do
       DEFS[name] = nil
     end
   end
@@ -632,14 +633,14 @@ function ob_init()
   
     local list = {}
 
-    for name,def in pairs(DEFS) do
+    each name,def in DEFS do
       assert(def.name and def.label)
       table.insert(list, def)
     end
 
     table.sort(list, button_sorter)
 
-    for _,def in ipairs(list) do
+    each def in list do
       gui.add_button(what, def.name, def.label)
 
       if what == "game" then
@@ -653,20 +654,20 @@ function ob_init()
   local function create_mod_options()
     gui.debugf("creating module options\n", what)
 
-    for _,mod in pairs(OB_MODULES) do
+    each _,mod in OB_MODULES do
       if not mod.options then
         mod.options = {}
       else
         local list = {}
 
-        for name,opt in pairs(mod.options) do
+        each name,opt in mod.options do
           opt.name = name
           table.insert(list, opt)
         end
 
         table.sort(list, button_sorter)
 
-        for _,opt in ipairs(list) do
+        each opt in list do
           assert(opt.label)
           assert(opt.choices)
 
