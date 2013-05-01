@@ -705,6 +705,7 @@ function ob_init()
 
   gui.change_button("game",   OB_CONFIG.game)
   gui.change_button("engine", OB_CONFIG.engine)
+  gui.change_button("theme",  OB_CONFIG.theme)
 
   gui.printf("\n~~ Completed Lua initialization ~~\n\n")
 end
