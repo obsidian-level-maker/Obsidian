@@ -541,9 +541,9 @@ end
 
 
 function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
-  --
-  -- recursively flow through the hallway, adding stairs (etc) 
-  --
+  --|
+  --| recursively flow through the hallway, adding stairs (etc) 
+  --|
 
 --stderrf("stair_flow @ %s | %s\n", H:tostr(), P:tostr())
 --stderrf("from_dir: %d\n", from_dir)
@@ -589,12 +589,22 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
   end
 
 
+  P.floor_h = floor_h
+
+
+  --- tall eyes ---
+
+  if P.h_shape == "I" and (P.sw == 3 or P.sh == 3) then
+    P.tall_I = true
+  end
+
+
+  --- stairs ---
+
   -- only the "I" pieces can become stairs or lifts
   -- (everything else must have no height changes)
 
-  P.floor_h = floor_h
-
-  if P.h_shape == "I" and not (H.big_junc or H.is_joiner) and
+  if P.h_shape == "I" and not (H.big_junc or H.is_joiner or P.tall_I) and
      not P.crossover_hall and
      (rand.odds(H.stair_prob) or P.double_peer) and
      (not H.double_fork or P.double_peer)
@@ -622,6 +632,7 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
       P.floor_h = floor_h
     end
   end
+
 
   if (P.h_shape == "C" or P.h_shape == "P") and rand.odds(15) and not H.double_fork then
     z_dir = -z_dir
@@ -903,7 +914,7 @@ if H.is_joiner then stderrf("   JOINER !!!!\n") end
 
   H:peer_double_chunks()
 
-  H.stair_prob = 35 + 65  --!!!!! FIXME
+  H.stair_prob = 35 - 65  --!!!!! FIXME
 
   -- general vertical direction
   local z_dir = rand.sel(50, 1, -1)
@@ -1129,8 +1140,8 @@ function HALLWAY_CLASS.select_piece(H, P)
 
   local env =
   {
-    seed_w = 1
-    seed_h = 1
+    seed_w = long
+    seed_h = deep
   }
 
   local reqs =
@@ -1514,7 +1525,7 @@ function Hallway_scan(start_K, start_dir, mode)
        ( (geom.is_vert (start_dir) and path[1].sw == 3) or
          (geom.is_horiz(start_dir) and path[1].sh == 3))
     then
-      H.is_joiner = true
+--!!!!!!      H.is_joiner = true
     end
 
     if mode == "secret_exit" then

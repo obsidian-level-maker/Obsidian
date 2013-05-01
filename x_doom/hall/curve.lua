@@ -9,6 +9,16 @@ DOOM.SKINS.Hall_curve_I =
   shape  = "I"
 }
 
+DOOM.SKINS.Hall_curve_I_bulge =
+{
+  file   = "hall/curve_i_bulge.wad"
+  group  = "hall_curve"
+  shape  = "I"
+
+  seed_w = 1
+  seed_h = 3
+}
+
 DOOM.SKINS.Hall_curve_C =
 {
   file   = "hall/curve_c.wad"
