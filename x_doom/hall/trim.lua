@@ -34,7 +34,7 @@ DOOM.SKINS.Hall_trim1_Stair_S =
 {
   file   = "hall/trim1_ss.wad"
   group  = "hall_trim"
-  shape  = "SS"
+  shape  = "stair32"
 
   north  = { h=32 }
 }
@@ -43,7 +43,7 @@ DOOM.SKINS.Hall_trim1_Stair_M =
 {
   file   = "hall/trim1_sm.wad"
   group  = "hall_trim"
-  shape  = "SM"
+  shape  = "stair64"
 
   north  = { h=64 }
 }
@@ -52,7 +52,7 @@ DOOM.SKINS.Hall_trim1_Stair_L =
 {
   file   = "hall/trim1_sl.wad"
   group  = "hall_trim"
-  shape  = "SL"
+  shape  = "stair96"
 
   north  = { h=96 }
 }
@@ -70,8 +70,11 @@ DOOM.SKINS.Hall_trim1_Lift =
 -- Group for these hallway pieces
 --
 
+--[[  !!! FIXME DISABLED
+
 DOOM.GROUPS.hall_trim =
 {
   kind = "hall"
 }
+--]]
 

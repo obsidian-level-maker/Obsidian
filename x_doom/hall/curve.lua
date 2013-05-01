@@ -44,7 +44,7 @@ DOOM.SKINS.Hall_curve_Stair_S =
 {
   file   = "hall/curve_ss.wad"
   group  = "hall_curve"
-  shape  = "SS"
+  shape  = "stair32"
 
   north  = { h=32 }
 }
@@ -53,7 +53,7 @@ DOOM.SKINS.Hall_curve_Stair_M =
 {
   file   = "hall/curve_sm.wad"
   group  = "hall_curve"
-  shape  = "SM"
+  shape  = "stair64"
 
   north  = { h=64 }
 }
@@ -62,7 +62,7 @@ DOOM.SKINS.Hall_curve_Stair_L =
 {
   file   = "hall/curve_sl.wad"
   group  = "hall_curve"
-  shape  = "SL"
+  shape  = "stair96"
 
   north  = { h=96 }
 }
