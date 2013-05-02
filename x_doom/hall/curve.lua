@@ -9,9 +9,9 @@ DOOM.SKINS.Hall_curve_I =
   shape  = "I"
 }
 
-DOOM.SKINS.Hall_curve_I_bulge =
+DOOM.SKINS.Hall_curve_I_skylight =
 {
-  file   = "hall/curve_i_bulge.wad"
+  file   = "hall/curve_i_sky2.wad"
   group  = "hall_curve"
   shape  = "I"
 
