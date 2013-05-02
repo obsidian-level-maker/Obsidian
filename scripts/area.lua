@@ -876,6 +876,34 @@ end
 ----------------------------------------------------------------
 
 
+function Areas_add_wall(R, kind, sx1, sy1, sx2, sy2, side, floor_h, conn)
+  local WALL =
+  {
+    kind = kind
+    sx1  = sx1, sy1 = sy1
+    sx2  = sx2, sy2 = sy2
+    side = side
+    conn = conn
+    floor_h = floor_h
+  }
+
+  table.insert(R.walls, WALL)
+
+  -- put in seeds too
+
+  sx1, sy1, sx2, sy2 = geom.side_coords(side, sx1, sy1, sx2, sy2)
+
+  for sx = sx1, sx2 do
+  for sy = sy1, sy2 do
+    local S = SEEDS[sx][sy]
+
+    S.walls[side] = WALL
+  end
+  end
+end
+
+
+
 function Areas_layout_with_prefabs(R)
 
   local skin2 =
@@ -884,33 +912,6 @@ function Areas_layout_with_prefabs(R)
     floor = R.floor_mat or R.wall_mat
     ceil  = R.ceil_mat  or R.wall_mat
   }
-
-
-  local function add_wall(kind, sx1, sy1, sx2, sy2, side, floor_h, conn)
-    local WALL =
-    {
-      kind = kind
-      sx1  = sx1, sy1 = sy1
-      sx2  = sx2, sy2 = sy2
-      side = side
-      conn = conn
-      floor_h = floor_h
-    }
-
-    table.insert(R.walls, WALL)
-
-    -- put in seeds too
-
-    sx1, sy1, sx2, sy2 = geom.side_coords(side, sx1, sy1, sx2, sy2)
-
-    for sx = sx1, sx2 do
-    for sy = sy1, sy2 do
-      local S = SEEDS[sx][sy]
-
-      S.walls[side] = WALL
-    end
-    end
-  end
 
 
   local function get_skin_edge(skin, px, py, pdir)
@@ -998,14 +999,16 @@ function Areas_layout_with_prefabs(R)
         local portal = S.portals[dir]
 
         if portal then
+          local P = portal
+
           assert(edge and edge.h)
 
-          if not portal.floor_h then
-            Portal_set_floor(portal, h + edge.h)
+          if not P.floor_h then
+            Portal_set_floor(P, h + edge.h)
           end
 
-          if portal.lock and not portal.added_door then
-            add_wall("door", portal.sx1, portal.sy1, portal.sx2, portal.sy2, portal.side, h + edge.h, portal.conn)
+          if P.lock and not P.added_door then
+            Areas_add_wall(R, "door", P.sx1, P.sy1, P.sx2, P.sy2, P.side, P.floor_h, P.conn)
             portal.added_door = true
           end
 
@@ -1023,7 +1026,7 @@ function Areas_layout_with_prefabs(R)
         -- the room ends here, check if prefab was walkable
 
         if edge and edge.h then
-          add_wall("wall", sx, sy, sx, sy, dir, h + edge.h, nil)
+          Areas_add_wall(R, "wall", sx, sy, sx, sy, dir, h + edge.h, nil)
         end
 
       end -- sx, sy
