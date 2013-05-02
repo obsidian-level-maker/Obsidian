@@ -203,7 +203,6 @@ gui.debugf("install portal %s (%s <--> %s) @ %s dir:%d\n",
       end
     end
 
-stderrf("\n\n****** locked portal for %s\n\n", D:tostr())
     portal.lock = D.lock
   end
 
@@ -1006,7 +1005,6 @@ function Areas_layout_with_prefabs(R)
           end
 
           if portal.lock and not portal.added_door then
-stderrf("\n\n======================= wall for portal lock @ (%d %d)\n\n", portal.sx1, portal.sy1)
             add_wall("door", portal.sx1, portal.sy1, portal.sx2, portal.sy2, portal.side, h + edge.h, portal.conn)
             portal.added_door = true
           end
@@ -1218,24 +1216,37 @@ function Areas_build_walls(R)
 
   local THICK = 32
 
-  local skin2 =
-  {
-    wall  = R.wall_mat
-    floor = R.floor_mat or R.wall_mat
-    ceil  = R.ceil_mat  or R.wall_mat
-  }
-
 
   local function do_wall(info)
-    -- select the prefab
+    -- determine room on other side
+    local L2
+
+    if info.conn then
+      L2 = info.conn:neighbor(R)
+    else
+      local nx, ny = geom.nudge(info.sx1, info.sy1, info.side)
+
+      if Seed_valid(nx, ny) then
+        local S = SEEDS[nx][ny]
+
+        if S then
+          L2 = S.room or S.hall
+        end
+
+        -- sanity check
+        if L2 == R then L2 = nil end
+      end
+    end
+
+
+    --- select prefab ---
 
     local env =
     {
       room_kind  = R.kind
     }
 
-    if info.conn then
-      local L2 = info.conn:neighbor(R)
+    if L2 then
       env.room_kind2 = L2.kind
     end
 
@@ -1256,7 +1267,35 @@ function Areas_build_walls(R)
     local skin = Room_pick_skin(env, reqs)
 
 
-    -- determine coords
+    --- texturing ---
+
+    local skin2 =
+    {
+      wall  = R.wall_mat
+      floor = R.floor_mat or R.wall_mat
+      ceil  = R.ceil_mat  or R.wall_mat
+    }
+
+    if L2 then
+      skin2.outer = L2.wall_mat
+
+      if  R.kind == "outdoor" then skin2.wall  = L2.zone.facade_mat end
+      if L2.kind == "outdoor" then skin2.outer = L1.zone.facade_mat end
+    end
+
+    if lock and lock.kind == "SWITCH" then
+      skin2.tag_1 = lock.tag
+      skin2.targetname = string.format("switch%d", lock.tag)
+    
+    elseif lock and lock.kind == "KEY" then
+      -- Quake II bits
+      skin2.keyname = lock.key
+      skin2.targetname = "door" .. Plan_alloc_id("door")
+    end
+
+
+    --- determine coords ---
+
     local S1 = SEEDS[info.sx1][info.sy1]
     local S2 = SEEDS[info.sx2][info.sy2]
 
@@ -1294,23 +1333,23 @@ function Areas_build_walls(R)
     local T = Trans.box_transform(x1, y1, x2, y2, info.floor_h, info.side)
 
     
-    local skin3 = {}
+    --- build it ---
 
-    if lock and lock.kind == "SWITCH" then
-      skin3.tag_1 = lock.tag
-      skin3.targetname = string.format("switch%d", lock.tag)
-    
-    elseif lock and lock.kind == "KEY" then
-      -- Quake II bits
-      skin3.keyname = lock.key
-      skin3.targetname = "door" .. Plan_alloc_id("door")
-    end
-
-    Fabricate_at(R, skin, T, { skin, skin2, skin3 })
+    Fabricate_at(R, skin, T, { skin, skin2 })
   end
 
 
   local function do_corner(info)
+
+    --- texturing ---
+
+    local skin2 =
+    {
+      wall  = R.wall_mat
+      floor = R.floor_mat or R.wall_mat
+      ceil  = R.ceil_mat  or R.wall_mat
+    }
+
     -- determine coords
     local S = SEEDS[info.sx1][info.sy1]
 
@@ -1352,8 +1391,8 @@ function Areas_build_walls(R)
 
   ---| Areas_build_walls |---
 
-  -- must build corners first as their size can vary, and the walls
-  -- will need to know what size was used.
+  -- must build corners first since their size can vary, and the walls
+  -- will need to know what size was actually used.
 
   each info in R.corners do
     do_corner(info)
@@ -1367,11 +1406,12 @@ end
 
 
 function Areas_flesh_out()
-
-  -- this creates the actual walkable areas in each room, making sure
-  -- that ensures the player can traverse the room, i.e. reach all the
-  -- connections and importants.  It also adds in scenic stuff like
-  -- liquids, thick walls, pillars (etc).
+  --|
+  --| this creates the actual walkable areas in each room, making sure
+  --| that ensures the player can traverse the room, i.e. reach all the
+  --| connections and importants.  It also adds in scenic stuff like
+  --| liquids, thick walls, pillars (etc).
+  --|
 
   local pass_h = GAME.ENTITIES.player1.h + (PARAM.step_height or 16) + 8
 
