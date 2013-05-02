@@ -63,13 +63,12 @@ class ROOM
 
   weapons : list(NAME)  -- weapons to add into room
 
+  walls   : list(WALL)
+  corners : list(CORNER)
+
   fences[ROOM ID] : FENCE  -- what fences that this room has to make
                            -- at the border to other outdoor rooms.
                            -- NIL for none.
-
-???  floor_h, ceil_h : number
-
-  cave_map : CAVE  -- the generated cave / maze
 
   conn_group : number  -- traversibility group (used for Connect logic)
 
@@ -78,6 +77,8 @@ class ROOM
                       -- enforced, e.g. between zones).
 
   hazard_health  -- health provided to offset environment hazards
+
+  cave_info : CAVE_INFO  -- (see simple.lua)
 }
 
 
@@ -102,7 +103,7 @@ class CLOSET
 
 class WALL extends PORTAL
 {
-  kind : keyword  -- "wall"
+  kind : keyword  -- "wall" or "door"
 
   corner_L : CORNER  -- corner to left (ACW) of wall
   corner_R : CORNER  -- corner to right (CW) of wall

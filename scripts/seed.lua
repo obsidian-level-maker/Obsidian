@@ -79,7 +79,7 @@ class PORTAL
   -- In the future there may be other kinds of portals, such as
   -- "drop_off", "liquid" or "window" portals.
 
-  kind : keyword   -- "walk"  (the only possible value so far)
+  kind : keyword   -- "walk" (etc, depends on sub-class)
 
   sx1, sy1, sx2, sy2  -- seed range
 

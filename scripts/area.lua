@@ -100,17 +100,6 @@ function Areas_handle_connections()
     assert(K1)
     assert(K2)
 
-    -- FIXME
-    -- prefer to build door on the room side
---[[
-    if (K1.hall and K2.room) or
-       (K1.room and K1.room.is_street)
-    then
-      K1, K2 = K2, K1
-      dir = 10 - dir
-    end
---]]
-
     gui.debugf("link_them: %s --> %s\n", K1:tostr(), K2:tostr())
 
     local LINK =
@@ -170,7 +159,6 @@ gui.debugf("install portal %s (%s <--> %s) @ %s dir:%d\n",
     end
 
     -- except for joiners, connections are usually 1 seed wide
-    -- TODO: for "C" hallway pieces (or direct-room conns) sometimes move left or right
     local is_joiner = (D.L1.is_joiner or D.L2.is_joiner)
 
     if (sx2 > sx1 or sy2 > sy1) and not is_joiner then
@@ -201,6 +189,25 @@ gui.debugf("install portal %s (%s <--> %s) @ %s dir:%d\n",
   end
 
 
+  local function lock_portals(D)
+    local portal = D.portal1 or D.portal2
+
+    -- prefer the door in the indoor room.
+    -- in street mode, prefer the door in the non-street room.
+
+    if D.portal1 and D.portal2 then
+      if (D.L1.is_outdoor and not D.L2.is_outdoor) or
+          D.L1.is_street
+      then
+        portal = D.portal2
+      end
+    end
+
+stderrf("\n\n****** locked portal for %s\n\n", D:tostr())
+    portal.lock = D.lock
+  end
+
+
   local function handle_conn(D)
     assert(D.K1 and D.dir1)
     assert(D.K2 and D.dir2)
@@ -223,6 +230,10 @@ gui.debugf("install portal %s (%s <--> %s) @ %s dir:%d\n",
 
 
     link_them(D.K1, D.dir1, D.K2, D)
+
+    if D.lock then
+      lock_portals(D)
+    end
   end
 
 
@@ -876,13 +887,15 @@ function Areas_layout_with_prefabs(R)
   }
 
 
-  local function add_wall(sx1, sy1, sx2, sy2, side)
+  local function add_wall(kind, sx1, sy1, sx2, sy2, side, floor_h, conn)
     local WALL =
     {
-      kind = "wall"
+      kind = kind
       sx1  = sx1, sy1 = sy1
       sx2  = sx2, sy2 = sy2
       side = side
+      conn = conn
+      floor_h = floor_h
     }
 
     table.insert(R.walls, WALL)
@@ -992,6 +1005,12 @@ function Areas_layout_with_prefabs(R)
             Portal_set_floor(portal, h + edge.h)
           end
 
+          if portal.lock and not portal.added_door then
+stderrf("\n\n======================= wall for portal lock @ (%d %d)\n\n", portal.sx1, portal.sy1)
+            add_wall("door", portal.sx1, portal.sy1, portal.sx2, portal.sy2, portal.side, h + edge.h, portal.conn)
+            portal.added_door = true
+          end
+
           continue
         end
 
@@ -1005,12 +1024,8 @@ function Areas_layout_with_prefabs(R)
 
         -- the room ends here, check if prefab was walkable
 
-        if edge and (edge.h or edge.liquid) then
-          
-          -- FIXME: use this floor_h
-          local floor_h = h + edge.h
-
-          add_wall(sx, sy, sx, sy, dir)
+        if edge and edge.h then
+          add_wall("wall", sx, sy, sx, sy, dir, h + edge.h, nil)
         end
 
       end -- sx, sy
@@ -1213,16 +1228,47 @@ function Areas_build_walls(R)
 
   local function do_wall(info)
 
+    -- pick prefab
+
+    local env =
+    {
+      room_kind  = R.kind
+    }
+
+    if info.conn then
+      local L2 = info.conn:neighbor(R)
+      env.room_kind2 = L2.kind
+    end
+
+    local reqs =
+    {
+      kind  = "door"
+      where = "edge"
+    }
+
+    local lock = info.conn and info.conn.lock
+
+    if lock then
+      reqs.key    = lock.key
+      reqs.switch = lock.switch
+    end
+
+    
+    local skin = Room_pick_skin(env, reqs)
+
+
     -- determine coords
     local S1 = SEEDS[info.sx1][info.sy1]
     local S2 = SEEDS[info.sx2][info.sy2]
 
     local x1, y1, x2, y2 = S1.x1, S1.y1, S2.x2, S2.y2
 
-    if info.side == 2 then y2 = y1 + THICK end
-    if info.side == 8 then y1 = y2 - THICK end
-    if info.side == 4 then x2 = x1 + THICK end
-    if info.side == 6 then x1 = x2 - THICK end
+    local thick = assert(skin.deep)
+
+    if info.side == 2 then y2 = y1 + thick end
+    if info.side == 8 then y1 = y2 - thick end
+    if info.side == 4 then x2 = x1 + thick end
+    if info.side == 6 then x1 = x2 - thick end
 
     -- adjust for nearby corner
     local dir_L = geom. LEFT[info.side]
@@ -1244,16 +1290,12 @@ function Areas_build_walls(R)
       if dir_R == 6 then x2 = x2 - thick end
     end
 
-    local floor_h = 0  -- FIXME
 
-    local T = Trans.box_transform(x1, y1, x2, y2, floor_h, info.side)
+    assert(info.floor_h)
 
-    local skin1
+    local T = Trans.box_transform(x1, y1, x2, y2, info.floor_h, info.side)
 
-    -- FIXME: pick prefab properly !!!!
-    skin1 = assert(GAME.SKINS["Pic_Carve"])
-
-    Fabricate_at(R, skin1, T, { skin1, skin2 })
+    Fabricate_at(R, skin, T, { skin, skin2 })
   end
 
 
@@ -1345,7 +1387,7 @@ function Areas_flesh_out()
       assert(portal)
       entry_h = assert(portal.floor_h)
     else
-      entry_h = rand.irange(-2, 2) * 96
+      entry_h = 0 --!!!!!! rand.irange(-2, 2) * 96
     end
 
     if not R:in_floor_limit(entry_h) then
