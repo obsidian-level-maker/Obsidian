@@ -1227,8 +1227,7 @@ function Areas_build_walls(R)
 
 
   local function do_wall(info)
-
-    -- pick prefab
+    -- select the prefab
 
     local env =
     {
@@ -1242,7 +1241,7 @@ function Areas_build_walls(R)
 
     local reqs =
     {
-      kind  = "door"
+      kind  = info.kind
       where = "edge"
     }
 
@@ -1276,26 +1275,38 @@ function Areas_build_walls(R)
 
     if info.corner_L and info.corner_L.kind != "outie" then
       local thick = assert(info.corner_L.deep)
-      if dir_L == 2 then y1 = y1 + thick end
-      if dir_L == 8 then y2 = y2 - thick end
-      if dir_L == 4 then x1 = x1 + thick end
-      if dir_L == 6 then x2 = x2 - thick end
+      if dir_L == 2 then y1 = y1 + 64 end
+      if dir_L == 8 then y2 = y2 - 64 end
+      if dir_L == 4 then x1 = x1 + 64 end
+      if dir_L == 6 then x2 = x2 - 64 end
     end
 
     if info.corner_R and info.corner_R.kind != "outie" then
       local thick = assert(info.corner_R.deep)
-      if dir_R == 2 then y1 = y1 + thick end
-      if dir_R == 8 then y2 = y2 - thick end
-      if dir_R == 4 then x1 = x1 + thick end
-      if dir_R == 6 then x2 = x2 - thick end
+      if dir_R == 2 then y1 = y1 + 64 end
+      if dir_R == 8 then y2 = y2 - 64 end
+      if dir_R == 4 then x1 = x1 + 64 end
+      if dir_R == 6 then x2 = x2 - 64 end
     end
-
 
     assert(info.floor_h)
 
     local T = Trans.box_transform(x1, y1, x2, y2, info.floor_h, info.side)
 
-    Fabricate_at(R, skin, T, { skin, skin2 })
+    
+    local skin3 = {}
+
+    if lock and lock.kind == "SWITCH" then
+      skin3.tag_1 = lock.tag
+      skin3.targetname = string.format("switch%d", lock.tag)
+    
+    elseif lock and lock.kind == "KEY" then
+      -- Quake II bits
+      skin3.keyname = lock.key
+      skin3.targetname = "door" .. Plan_alloc_id("door")
+    end
+
+    Fabricate_at(R, skin, T, { skin, skin2, skin3 })
   end
 
 
