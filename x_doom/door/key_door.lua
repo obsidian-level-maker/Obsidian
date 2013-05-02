@@ -7,6 +7,8 @@ DOOM.SKINS.Locked_kc_blue =
   file   = "door/key_door.wad"
   where  = "edge"
   key    = "kc_blue"
+
+  x_fit  = "frame"
   long   = 192
   deep   = 48
 
@@ -19,6 +21,8 @@ DOOM.SKINS.Locked_kc_yellow =
   file   = "door/key_door.wad"
   where  = "edge"
   key    = "kc_yellow"
+
+  x_fit  = "frame"
   long   = 192
   deep   = 48
 
@@ -31,6 +35,8 @@ DOOM.SKINS.Locked_kc_red =
   file   = "door/key_door.wad"
   where  = "edge"
   key    = "kc_red"
+
+  x_fit  = "frame"
   long   = 192
   deep   = 48
 }
@@ -41,6 +47,8 @@ DOOM.SKINS.Locked_ks_blue =
   file   = "door/key_door.wad"
   where  = "edge"
   key    = "ks_blue"
+
+  x_fit  = "frame"
   long   = 192
   deep   = 48
 
@@ -53,6 +61,8 @@ DOOM.SKINS.Locked_ks_yellow =
   file   = "door/key_door.wad"
   where  = "edge"
   key    = "ks_yellow"
+
+  x_fit  = "frame"
   long   = 192
   deep   = 48
 
@@ -65,6 +75,8 @@ DOOM.SKINS.Locked_ks_red =
   file   = "door/key_door.wad"
   where  = "edge"
   key    = "ks_red"
+
+  x_fit  = "frame"
   long   = 192
   deep   = 48
 
