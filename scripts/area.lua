@@ -1282,8 +1282,8 @@ function Areas_build_walls(R)
     if L2 then
       skin2.outer = L2.wall_mat
 
-      if  R.kind == "outdoor" then skin2.wall  = L2.zone.facade_mat end
-      if L2.kind == "outdoor" then skin2.outer =  R.zone.facade_mat end
+      if  R.is_outdoor then skin2.wall  = L2.zone.facade_mat end
+      if L2.is_outdoor then skin2.outer =  R.zone.facade_mat end
     end
 
     if lock and lock.kind == "SWITCH" then

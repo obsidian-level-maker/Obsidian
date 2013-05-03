@@ -727,7 +727,6 @@ end
 
 
 function CLOSET_CLASS.build(CL)
-
   local portal = CL.conn.portal1 or CL.conn.portal2
   assert(portal)
 
@@ -735,11 +734,13 @@ function CLOSET_CLASS.build(CL)
 
   local skin0 = table.copy(CL.parent.skin)
 
-  -- FIXME !!  get floor texture from touching area [via portal]
-
-  if CL.parent.kind == "outdoor" then
+  if CL.parent.is_outdoor then
     skin0.wall = CL.section.facade
   end
+
+  -- FIXME: test room behind closet for 'outer' field
+
+  -- TODO:  get floor texture from touching area [via portal]
 
   local skin2 = { }
 
@@ -3111,8 +3112,8 @@ end
 
 function Room_reckon_doors()
 
-  local  indoor_prob = style_sel("doors", 0,  5, 25,  90, 100)
-  local outdoor_prob = style_sel("doors", 0, 25, 95, 100, 100)
+  local  indoor_prob = style_sel("doors", 0, 10, 30,  90, 100)
+  local outdoor_prob = style_sel("doors", 0, 30, 90, 100, 100)
 
 
   local function visit_conn(D)
