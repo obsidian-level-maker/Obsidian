@@ -1007,7 +1007,7 @@ function Areas_layout_with_prefabs(R)
             Portal_set_floor(P, h + edge.h)
           end
 
-          if P.lock and not P.added_door then
+          if (P.lock or P.has_door) and not P.added_door then
             Areas_add_wall(R, "door", P.sx1, P.sy1, P.sx2, P.sy2, P.side, P.floor_h, P.conn)
             portal.added_door = true
           end
@@ -1283,7 +1283,7 @@ function Areas_build_walls(R)
       skin2.outer = L2.wall_mat
 
       if  R.kind == "outdoor" then skin2.wall  = L2.zone.facade_mat end
-      if L2.kind == "outdoor" then skin2.outer = L1.zone.facade_mat end
+      if L2.kind == "outdoor" then skin2.outer =  R.zone.facade_mat end
     end
 
     if lock and lock.kind == "SWITCH" then

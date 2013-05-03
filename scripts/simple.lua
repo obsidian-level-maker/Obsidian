@@ -1260,7 +1260,7 @@ function Simple_floor_heights(R, entry_h)
         Portal_set_floor(P, imp.area.floor_h)
       end
 
-      if P and P.lock and not P.added_door then
+      if P and (P.lock or P.has_door) and not P.added_door then
         Areas_add_wall(R, "door", P.sx1, P.sy1, P.sx2, P.sy2, P.side, P.floor_h, P.conn)
         P.added_door = true
       end

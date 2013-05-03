@@ -3109,6 +3109,72 @@ end
 
 
 
+function Room_reckon_doors()
+
+  local  indoor_prob = style_sel("doors", 0,  5, 25,  90, 100)
+  local outdoor_prob = style_sel("doors", 0, 25, 95, 100, 100)
+
+
+  local function visit_conn(D)
+    if D.kind == "teleporter" then return end
+    if D.kind == "closet"     then return end
+    if D.kind == "secret"     then return end
+
+    -- for double halls, only decide on left side
+    if D.kind == "double_R"   then return end
+
+    local L1 = D.L1
+    local L2 = D.L2
+
+    if L1.is_outdoor and L2.is_outdoor then return end
+
+    local P1 = D.portal1
+    local P2 = D.portal2
+
+    if L1.kind == "hallway" then
+      L1, L2 = L2, L1
+      P1, P2 = P2, P1
+    end
+
+    -- TODO: review this
+    if L2.kind == "hallway" and L2.is_joiner then return end
+
+    if not P1 then return end
+
+    if P1 and P2 then
+      if L2.is_outdoor or
+         (not L1.kind == "cave" and L2.kind == "building")
+      then
+        L1, L2 = L2, L1
+        P1, P2 = P2, P1
+      end
+    end
+
+    -- apply the random check
+    if L1.is_outdoor then
+      if not rand.odds(outdoor_prob) then return end
+    else
+      if not rand.odds(indoor_prob) then return end
+    end
+
+    -- OK --
+
+stderrf("\n===== DOOR from %s (%s) --> %s (%s) \n", L1:tostr(), L1.kind,
+L2:tostr(), L2.kind)
+
+    P1.has_door = true
+  end
+
+
+  ---| Room_reckon_doors |---
+
+  each D in LEVEL.conns do
+    visit_conn(D)
+  end
+end
+
+
+
 function Room_decide_fences()
 
   local function check_room_pair(R1, R2, S, N)
@@ -3195,6 +3261,8 @@ function Room_build_all()
   Hallway_divide_sections()
 
   Areas_handle_connections()
+
+  Room_reckon_doors()
 
   Room_create_sky_groups()
   Room_analyse_fat_fences()

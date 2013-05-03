@@ -147,16 +147,13 @@ GLOBAL_STYLE_LIST =
   pictures   = { few=10, some=50, heaps=10 }
   windows    = { few=5,  some=15, heaps=50 }
   closets    = { few=5,  some=15, heaps=50 }
+  doors      = { few=20, some=60, heaps=10 }
 
   lakes      = { few=60, heaps=10 }
   cages      = { none=50, few=50, some=30, heaps=10 }
   bridges    = { none=10, some=40 }
 
   mon_variety = { some=90, heaps=4 }
-
-  lt_trim    = { none=40, some=20, heaps=10 }
-  lt_spokes  = { none=90, some=20, heaps=5 }
-  lt_swapped = { none=90, heaps=20 }
 }
 
 
