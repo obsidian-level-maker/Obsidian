@@ -667,8 +667,6 @@ function Connect_cycles()
 
   ---| Connect_cycles |---
 
-do return end  --!!!!! FIXME: temporarily disabled
-
   if STYLE.cycles != "none" then
     prepare_cycles()
 
@@ -685,7 +683,7 @@ do return end  --!!!!! FIXME: temporarily disabled
     end
   end
 
-  Hallway_add_doubles()
+---!!!!  Hallway_add_doubles()
 
   each H in LEVEL.halls do
     H:dump_path()

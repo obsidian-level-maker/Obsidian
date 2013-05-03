@@ -702,11 +702,9 @@ end
 
 
 
-function HALLWAY_CLASS.cycle_flow(H, C, from_dir, z, i_deltas, seen)
+function HALLWAY_CLASS.cycle_flow__OLD(H, C, from_dir, z, i_deltas, seen)
 
   -- FIXME !!!!  VERY BROKEN -- REWRITE THIS
-
-  -- Note: this code will only work on a simple (non-forked) hallway
 
   seen[C] = true
 
@@ -767,61 +765,121 @@ end
 
 
 
-function HALLWAY_CLASS.handle_cycle(H, start_C, from_dir, start_z)
+function HALLWAY_CLASS.cycle_flow(H, start_P, from_dir, start_h)
+  --
+  -- Note: this code will only work on a simple (non-forked) hallway
+  --
 
-  -- FIXME !!!!  VERY BROKEN -- REWRITE THIS
-
-  -- find exit chunk
-  local exit_C
+  -- find the exit piece
+  local exit_P
   local exit_dir
+  local exit_portal
 
-  each C in H.chunks do
-    for dir = 2,8,2 do
-      if C.link[dir] and not (C == start_C and dir == from_dir) then
-        exit_C   = C
-        exit_dir = dir
-        break
-      end
+  each D in LEVEL.conns do
+    if not (D.L1 == H or D.L2 == H) then continue end
+
+    local P, dir, portal
+
+    if D.L1 == H then
+      P   = D.K1
+      dir = D.dir1
+      portal = D.portal1
+    else
+      P   = D.K2
+      dir = D.dir2
+      portal = D.portal2
+    end
+
+    assert(P and dir)
+
+    if not (P == start_P and dir == from_dir) then
+      exit_P   = P
+      exit_dir = dir
+      exit_portal = assert(portal)
+      break;
     end
   end
 
-  if not exit_C then
+  if not exit_P then
     error("cannot find exit from cycle hallway")
   end
 
+
   -- determine the target height
-  local LINK = exit_C.link[exit_dir]
+  local exit_h = assert(exit_portal.floor_h)
 
-  local room_C = sel(LINK.C1 == exit_C, LINK.C2, LINK.C1)
-
-  local exit_z = assert(room_C.floor_h)
-
-  local z_diff = exit_z - start_z
+  local h_diff = exit_h - start_h
 
 
-  -- stairs can only be placed in the "I" pieces -- collect them
+  -- only the "I" pieces can becomes stairs (atm), so collect them
   local i_pieces = {}
 
-  each C2 in H.chunks do
-    if not C2.crossover_hall then
-      if C2.h_shape == "I" then table.insert(i_pieces, C2) end
+  each P in H.sections do
+    if P.h_shape == "I" and math.max(P.sw, P.sh) == 1 then
+      table.insert(i_pieces, P)
     end
   end
 
-  
+gui.debugf("cycle @ %s : %d --> %d  (%d i_pieces)\n",
+           H:tostr(), start_h, exit_h, #i_pieces);
+
+
+  local function tz_int(x)
+    if x < 0 then
+      return - int(- x)
+    else
+      return int(x)
+    end
+  end
+
+
   -- the delta we want for each i_piece (can be zero)
-  local i_deltas = {}
+  local excess = 0
 
   if #i_pieces > 0 then
-    for n = 1,#i_pieces do
-      i_deltas[n] = z_diff / #i_pieces
+    local total = #i_pieces
+    local avg = h_diff / total
+
+    rand.shuffle(i_pieces)
+
+    for n = 1,total do
+      local P = i_pieces[n]
+
+      local delta_h = avg + excess
+      local delta_abs = math.abs(delta_h)
+
+      if delta_abs >= 104 then
+        P.cycle_stair = "lift"
+        P.cycle_diff  = tz_int(delta_h / 8) * 8
+
+      elseif delta_abs >= 64 then
+        P.cycle_stair = "stair64"
+        P.cycle_diff  = sel(delta_h < 0, -64, 64)
+
+      elseif delta_abs >= 32 then
+        P.cycle_stair = "stair32"
+        P.cycle_diff  = sel(delta_h < 0, -32, 32)
+
+      elseif delta_abs >= 16 then
+        P.cycle_stair = "stair16"
+        P.cycle_diff  = sel(delta_h < 0, -16, 16)
+
+      else
+        P.cycle_stair = "none"
+        P.cycle_diff  = 0
+      end
+
+      -- accumulate unused delta into next one
+      excess = delta_h - P.cycle_diff
     end
   end
 
-gui.debugf("Bicycle @ %s : %d --> %d  (%d i_pieces)\n",
-           H:tostr(), start_z, exit_z, #i_pieces);
+  H.cycle_excess = int(excess)
 
-  H:cycle_flow(start_C, from_dir, start_z, i_deltas, {})
+
+  local z_dir = sel(h_diff < 0, -1, 1)
+
+  H:stair_flow(entry_K, 10 - entry_dir, entry_h, z_dir, {}, "cycle")
 end
 
 
@@ -943,7 +1001,7 @@ if H.is_joiner then stderrf("   JOINER !!!!\n") end
   local z_dir = rand.sel(50, 1, -1)
 
   if H.is_cycle then
-    H:handle_cycle(entry_K, 10 - entry_dir, entry_h)
+    H:cycle_flow(entry_K, 10 - entry_dir, entry_h)
 
   else
     H:stair_flow(entry_K, 10 - entry_dir, entry_h, z_dir, {})
