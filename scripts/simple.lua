@@ -250,7 +250,7 @@ function Simple_generate_cave(R)
 
   local function point_for_portal(P)
     -- determine cave cell range:
-    -- 1. skip one cell on each side of the portal
+    -- 1. if side of portal touches side of room, omit those cells
     -- 2. clear cells which touch portal, and two more away from it
 
     local b1 = cave_box_for_seed(P.sx1, P.sy1)
@@ -259,8 +259,19 @@ function Simple_generate_cave(R)
     local cx1, cy1, cx2, cy2
     
     if geom.is_vert(P.side) then
-      cx1 = b1.cx1 + 1
-      cx2 = b2.cx2 - 1
+      cx1 = b1.cx1
+      cx2 = b2.cx2
+
+      local yy = sel(P.side == 2, P.sy1, P.sy2)
+
+      local S1 = SEEDS[P.sx1][yy]
+      local S2 = SEEDS[P.sx2][yy]
+
+      local N1 = S1:neighbor(4)
+      local N2 = S2:neighbor(6)
+
+      if not (N1 and N1.room == R) then cx1 = cx1 + 1 end
+      if not (N2 and N2.room == R) then cx2 = cx2 - 1 end
 
       if P.side == 2 then
         cy1 = b1.cy1
@@ -271,8 +282,19 @@ function Simple_generate_cave(R)
       end
 
     else -- is_horiz(P.side)
-      cy1 = b1.cy1 + 1
-      cy2 = b2.cy2 - 1
+      cy1 = b1.cy1
+      cy2 = b2.cy2
+
+      local xx = sel(P.side == 4, P.sx1, P.sx2)
+
+      local S1 = SEEDS[xx][P.sy1]
+      local S2 = SEEDS[xx][P.sy2]
+
+      local N1 = S1:neighbor(2)
+      local N2 = S2:neighbor(8)
+
+      if not (N1 and N1.room == R) then cy1 = cy1 + 1 end
+      if not (N2 and N2.room == R) then cy2 = cy2 - 1 end
 
       if P.side == 4 then
         cx1 = b1.cx1
