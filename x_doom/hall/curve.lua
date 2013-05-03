@@ -82,6 +82,7 @@ DOOM.SKINS.Hall_curve_Lift =
 DOOM.GROUPS.hall_curve =
 {
   kind = "hall"
-  prob = 999
+
+  theme = { tech=0, other=1 }
 }
 

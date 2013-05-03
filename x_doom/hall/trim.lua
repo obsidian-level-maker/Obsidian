@@ -91,5 +91,7 @@ DOOM.SKINS.Hall_trim1_Lift =
 DOOM.GROUPS.hall_trim =
 {
   kind = "hall"
+
+  theme = { tech=1, other=0 }
 }
 
