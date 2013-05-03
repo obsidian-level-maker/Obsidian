@@ -428,7 +428,7 @@ function Plan_add_big_junctions()
   end
 
   -- occasionally don't use them  [maybe make into scenic rooms?]
-  if rand.odds(10 + 90) then  --!!!!!!
+  if rand.odds(10) then
     LEVEL.ignore_big_junctions = true
   end
 end
@@ -1054,7 +1054,7 @@ end
 
 
 
-function Plan_add_odd_shapes()
+function Plan_add_odd_shapes__OLD()
 
   local function find_free_spot(mx, my)
     local K = Section_get_room(mx, my)
@@ -2006,10 +2006,8 @@ function Plan_create_rooms()
   Plan_add_special_rooms()
   Plan_add_caves()
   Plan_add_big_rooms()
-
---??  Plan_add_odd_shapes()
-  Plan_add_small_rooms()
   Plan_add_big_junctions()
+  Plan_add_small_rooms()
 
   Plan_collect_sections()
   Plan_contiguous_sections()

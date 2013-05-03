@@ -987,6 +987,8 @@ function HALLWAY_CLASS.divide_one_section(H, P)
   -- no need?
   if P.sw == 1 and P.sh == 1 then return end
 
+  if P.shape == "big_junc" then return end
+
   -- we assume 1x3 or 3x1 size
   assert(math.max(P.sw, P.sh) == 3)
   assert(math.min(P.sw, P.sh) == 1)

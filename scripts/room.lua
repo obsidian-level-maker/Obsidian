@@ -3160,9 +3160,6 @@ function Room_reckon_doors()
 
     -- OK --
 
-stderrf("\n===== DOOR from %s (%s) --> %s (%s) \n", L1:tostr(), L1.kind,
-L2:tostr(), L2.kind)
-
     P1.has_door = true
   end
 
