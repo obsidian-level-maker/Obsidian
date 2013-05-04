@@ -438,9 +438,10 @@ end
 
 
 function Connect_scan_sections(mode, min_score)
-
-  -- evaluate all possible connections (within reason) and pick the
-  -- one with the highest score.
+  --|
+  --| evaluate all possible connections (within reason) and pick the
+  --| one with the highest score.
+  --|
 
   LEVEL.best_conn = { score=min_score }
 
@@ -474,6 +475,10 @@ function Connect_scan_sections(mode, min_score)
   if not LEVEL.best_conn.D1 then
     return false
   end
+
+if mode == "cycle" then
+stderrf("\n\n==== CYCLE\n\n")
+end
 
   Connect_make_branch(LEVEL.best_conn, mode)
 

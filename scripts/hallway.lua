@@ -557,7 +557,7 @@ end
 
 
 
-function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
+function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen, is_cycle)
   --|
   --| recursively flow through the hallway, adding stairs (etc) 
   --|
@@ -621,7 +621,22 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
   -- only the "I" pieces can become stairs or lifts
   -- (everything else must have no height changes)
 
-  if P.h_shape == "I" and not P.tall_I and 
+  if is_cycle and P.h_stair_kind then
+
+    if P.h_stair_kind == "none" then
+       P.h_stair_kind = nil
+    else
+      P.h_dir = sel(z_dir < 0, 10 - from_dir, from_dir)
+
+      floor_h = floor_h + P.cycle_diff
+
+      -- stairs and lifts : floor_h must be the lowest height
+      if z_dir < 0 then
+        P.floor_h = floor_h
+      end
+    end
+
+  elseif P.h_shape == "I" and not is_cycle and not P.tall_I and 
      not P.crossover_hall and
      not (H.big_junc or H.is_joiner) and
      (rand.odds(H.stair_prob) or P.double_peer) and
@@ -657,7 +672,8 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
   end
 
 
-  if (P.h_shape == "C" or P.h_shape == "P") and rand.odds(15) and not H.double_fork then
+  if (P.h_shape == "C" or P.h_shape == "P") and rand.odds(15) and
+     not is_cycle and not H.double_fork then
     z_dir = -z_dir
   end
 
@@ -680,6 +696,8 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
 
     -- transmit floor height into a destination room
 
+    if is_cycle then continue end
+
     local LINK = P.link[dir]
 
     if LINK and not (LINK.conn and LINK.conn.kind == "double_R") then
@@ -694,7 +712,9 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen)
       end
     end
 
-    if did_a_branch and rand.odds(50) and not H.double_fork then
+    if did_a_branch and rand.odds(50) and
+       not is_cycle and not H.double_fork
+    then
       z_dir = -z_dir
     end
   end
@@ -783,11 +803,11 @@ function HALLWAY_CLASS.cycle_flow(H, start_P, from_dir, start_h)
     if D.L1 == H then
       P   = D.K1
       dir = D.dir1
-      portal = D.portal1
+      portal = D.portal2
     else
       P   = D.K2
       dir = D.dir2
-      portal = D.portal2
+      portal = D.portal1
     end
 
     assert(P and dir)
@@ -849,23 +869,24 @@ gui.debugf("cycle @ %s : %d --> %d  (%d i_pieces)\n",
       local delta_abs = math.abs(delta_h)
 
       if delta_abs >= 104 then
-        P.cycle_stair = "lift"
-        P.cycle_diff  = tz_int(delta_h / 8) * 8
+        P.h_stair_kind = "lift"
+        P.h_lift_h    = int(delta_abs / 8) * 8
+        P.cycle_diff  = P.h_lift_h * sel(delta_h < 0, -1, 1)
 
       elseif delta_abs >= 64 then
-        P.cycle_stair = "stair64"
+        P.h_stair_kind = "stair64"
         P.cycle_diff  = sel(delta_h < 0, -64, 64)
 
       elseif delta_abs >= 32 then
-        P.cycle_stair = "stair32"
+        P.h_stair_kind = "stair32"
         P.cycle_diff  = sel(delta_h < 0, -32, 32)
 
       elseif delta_abs >= 16 then
-        P.cycle_stair = "stair16"
+        P.h_stair_kind = "stair16"
         P.cycle_diff  = sel(delta_h < 0, -16, 16)
 
       else
-        P.cycle_stair = "none"
+        P.h_stair_kind = "none"
         P.cycle_diff  = 0
       end
 
@@ -877,9 +898,14 @@ gui.debugf("cycle @ %s : %d --> %d  (%d i_pieces)\n",
   H.cycle_excess = int(excess)
 
 
+  if h_diff < 0 then
+    start_h = start_h - H.cycle_excess
+  end
+
+
   local z_dir = sel(h_diff < 0, -1, 1)
 
-  H:stair_flow(entry_K, 10 - entry_dir, entry_h, z_dir, {}, "cycle")
+  H:stair_flow(start_P, from_dir, start_h, z_dir, {}, "cycle")
 end
 
 
