@@ -9,6 +9,7 @@ DOOM.SKINS.Hall_curve_I =
   shape  = "I"
 }
 
+
 DOOM.SKINS.Hall_curve_I_skylight =
 {
   file   = "hall/curve_i_sky2.wad"
@@ -19,12 +20,14 @@ DOOM.SKINS.Hall_curve_I_skylight =
   seed_h = 3
 }
 
+
 DOOM.SKINS.Hall_curve_C =
 {
   file   = "hall/curve_c.wad"
   group  = "hall_curve"
   shape  = "C"
 }
+
 
 DOOM.SKINS.Hall_curve_T =
 {
@@ -33,6 +36,7 @@ DOOM.SKINS.Hall_curve_T =
   shape  = "T"
 }
 
+
 DOOM.SKINS.Hall_curve_P =
 {
   file   = "hall/curve_p.wad"
@@ -40,32 +44,36 @@ DOOM.SKINS.Hall_curve_P =
   shape  = "P"
 }
 
-DOOM.SKINS.Hall_curve_Stair_S =
+
+DOOM.SKINS.Hall_curve_Stair16 =
 {
-  file   = "hall/curve_ss.wad"
+  file   = "hall/curve_s16.wad"
+  group  = "hall_curve"
+  shape  = "stair16"
+
+  north  = { h=16 }
+}
+
+
+DOOM.SKINS.Hall_curve_Stair32 =
+{
+  file   = "hall/curve_s32.wad"
   group  = "hall_curve"
   shape  = "stair32"
 
   north  = { h=32 }
 }
 
-DOOM.SKINS.Hall_curve_Stair_M =
+
+DOOM.SKINS.Hall_curve_Stair64 =
 {
-  file   = "hall/curve_sm.wad"
+  file   = "hall/curve_s64.wad"
   group  = "hall_curve"
   shape  = "stair64"
 
   north  = { h=64 }
 }
 
-DOOM.SKINS.Hall_curve_Stair_L =
-{
-  file   = "hall/curve_sl.wad"
-  group  = "hall_curve"
-  shape  = "stair96"
-
-  north  = { h=96 }
-}
 
 DOOM.SKINS.Hall_curve_Lift =
 {
@@ -74,6 +82,7 @@ DOOM.SKINS.Hall_curve_Lift =
   shape  = "lift"
   z_fit  = "top"
 }
+
 
 --
 -- Group information

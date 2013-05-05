@@ -45,9 +45,19 @@ DOOM.SKINS.Hall_trim1_P =
 }
 
 
-DOOM.SKINS.Hall_trim1_Stair_S =
+DOOM.SKINS.Hall_trim1_Stair16 =
 {
-  file   = "hall/trim1_ss.wad"
+  file   = "hall/trim1_s16.wad"
+  group  = "hall_trim"
+  shape  = "stair16"
+
+  north  = { h=16 }
+}
+
+
+DOOM.SKINS.Hall_trim1_Stair32 =
+{
+  file   = "hall/trim1_s32.wad"
   group  = "hall_trim"
   shape  = "stair32"
 
@@ -55,23 +65,13 @@ DOOM.SKINS.Hall_trim1_Stair_S =
 }
 
 
-DOOM.SKINS.Hall_trim1_Stair_M =
+DOOM.SKINS.Hall_trim1_Stair64 =
 {
-  file   = "hall/trim1_sm.wad"
+  file   = "hall/trim1_s64.wad"
   group  = "hall_trim"
   shape  = "stair64"
 
   north  = { h=64 }
-}
-
-
-DOOM.SKINS.Hall_trim1_Stair_L =
-{
-  file   = "hall/trim1_sl.wad"
-  group  = "hall_trim"
-  shape  = "stair96"
-
-  north  = { h=96 }
 }
 
 
