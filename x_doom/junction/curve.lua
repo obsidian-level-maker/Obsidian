@@ -12,6 +12,7 @@ DOOM.SKINS.Junc_curve_C =
   prob   = 100
 }
 
+
 DOOM.SKINS.Junc_curve_stair1 =
 {
   file   = "junction/curve_stair1.wad"
@@ -22,7 +23,10 @@ DOOM.SKINS.Junc_curve_stair1 =
   prob   = 200
 
   west = { h=80 }
+
+  props_45 = { light=176, _factor=0.5  }
 }
+
 
 DOOM.SKINS.Junc_curve_stair2 =
 {
@@ -34,6 +38,8 @@ DOOM.SKINS.Junc_curve_stair2 =
   prob   = 9999
 
   west = { h=-80 }
+
+  props_45 = { light=176, _factor=0.5 }
 }
 
 
