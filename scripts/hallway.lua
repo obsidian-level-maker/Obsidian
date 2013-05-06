@@ -54,7 +54,7 @@ class HALL_PIECE extends SECTION
   h_dir : DIR  -- direction for shape (south end of prefab)
 
   h_stair_kind : keyword   -- normally absent
-                           -- can be: "stair32", "stair64", "stair96"
+                           -- can be: "stair16", "stair32", "stair64"
                            --     or: "lift"
 
   h_lift_h : number   -- floor differences for lift (absolute)
@@ -654,7 +654,7 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen, is_cycle
     -- FIXME: pick stair kind ("short" / "medium" / "tall")
     --        (only one kind per hallway)
 
-    if false then
+    if rand.odds(50) then
       P.h_stair_kind = "lift"
       P.h_lift_h = rand.pick { 104, 128, 166 }
 
@@ -899,7 +899,7 @@ gui.debugf("cycle @ %s : %d --> %d  (%d i_pieces)\n",
 
 
   if h_diff < 0 then
-    start_h = start_h - H.cycle_excess
+    start_h = start_h + H.cycle_excess
   end
 
 
@@ -1241,6 +1241,10 @@ end
 
 function HALLWAY_CLASS.select_piece(H, P)
   local shape = P.h_stair_kind or P.h_shape
+
+if P.h_stair_kind then
+gui.debugf("STAIR_KIND '%s'\n", P.h_stair_kind)
+end
 
   local long, deep = P:long_deep(P.h_dir)
 

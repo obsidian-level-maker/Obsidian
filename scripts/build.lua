@@ -121,7 +121,7 @@ function Brush_collect_flags(C)
       flags = bit.bor(flags, spac)
     end
 
-    for name,value in pairs(DOOM_LINE_FLAGS) do
+    each name,value in DOOM_LINE_FLAGS do
       if C[name] and C[name] != 0 then
         flags = bit.bor(flags, value)
       end
@@ -224,10 +224,10 @@ end
 function Brush_dump(brush, title)
   gui.debugf("%s:\n{\n", title or "Brush")
 
-  for _,C in ipairs(brush) do
+  each C in brush do
     local field_list = {}
 
-    for name,val in pairs(C) do
+    each name,val in C do
       local pos
       if name == "m" or name == "x" or name == "b" or name == "t" then
         pos = 1
@@ -244,10 +244,10 @@ function Brush_dump(brush, title)
 
     local line = ""
 
-    for idx,name in ipairs(field_list) do
+    each name in field_list do
       local val = C[name]
       
-      if idx > 1 then line = line .. ", " end
+      if _index > 1 then line = line .. ", " end
 
       line = line .. string.format("%s=%s", name, tostring(val))
     end
@@ -255,14 +255,14 @@ function Brush_dump(brush, title)
     gui.debugf("  { %s }\n", line)
   end
 
-  gui.debugf("|\n")
+  gui.debugf("}\n")
 end
 
 
 function Brush_copy(brush)
   local newb = {}
 
-  for _,C in ipairs(brush) do
+  each C in brush do
     table.insert(newb, table.copy(C))
   end
 
@@ -275,7 +275,7 @@ function Brush_middle(brush)
   local sum_y = 0
   local total = 0
 
-  for _,C in ipairs(brush) do
+  each C in brush do
     if C.x then
       sum_x = sum_x + C.x
       sum_y = sum_y + C.y
@@ -295,7 +295,7 @@ function Brush_bbox(brush)
   local x1, x2 = 9e9, -9e9
   local y1, y2 = 9e9, -9e9
 
-  for _,C in ipairs(brush) do
+  each C in brush do
     if C.x then
       x1 = math.min(x1, C.x) ; x2 = math.max(x2, C.x)
       y1 = math.min(y1, C.y) ; y2 = math.max(y2, C.y)
@@ -357,7 +357,7 @@ end
 function Brush_is_quad(brush)
   local x1,y1, x2,y2 = Brush_bbox(brush)
 
-  for _,C in ipairs(brush) do
+  each C in brush do
     if C.x then
       if C.x > x1+0.1 and C.x < x2-0.1 then return false end
       if C.y > y1+0.1 and C.y < y2-0.1 then return false end
@@ -495,7 +495,7 @@ function Mat_prepare_trip()
   local m_before = {}
   local m_after  = {}
 
-  for m,def in pairs(GAME.MATERIALS) do
+  each m,def in GAME.MATERIALS do
     if not def.sane and
        not def.rail_h and
        not (string.sub(m,1,1) == "_") and
@@ -1628,7 +1628,7 @@ end
 function Fab_bound_brushes_Z(fab, z1, z2)
   if not (z1 or z2) then return end
 
-  for _,B in ipairs(fab.brushes) do
+  each B in fab.brushes do
     if CSG_BRUSHES[B[1].m] then
       local b = Brush_get_b(B)
       local t = Brush_get_t(B)
@@ -1651,6 +1651,7 @@ function Fab_render(fab)
     if CSG_BRUSHES[B[1].m] then
       --- DEBUG AID:
       --- stderrf("brush %d/%d\n", _index, #fab.brushes)
+      Brush_dump(B)
 
       raw_add_brush(B)
     end
@@ -2026,7 +2027,7 @@ function Fab_load_wad(name)
       E.id = "light"
 
       local skill = bit.band(E.flags or 7, 7)
-      E.flags = bit.bor(E.flags, 7)
+      E.flags = bit.bor(E.flags or 7, 7)
 
       E._factor = WADFAB_SKILL_TO_LIGHT[skill]
 

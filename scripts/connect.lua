@@ -477,7 +477,7 @@ function Connect_scan_sections(mode, min_score)
   end
 
 if mode == "cycle" then
-stderrf("\n\n==== CYCLE\n\n")
+stderrf("\n\n==== CYCLE : %s / %s\n\n", LEVEL.best_conn.D1.L1:tostr(), LEVEL.best_conn.D1.L2:tostr())
 end
 
   Connect_make_branch(LEVEL.best_conn, mode)
@@ -682,7 +682,7 @@ function Connect_cycles()
     gui.printf("Cycle quota: %d\n", quota)
 
     for i = 1,quota do
-      Connect_scan_sections("cycle", 0)
+      Connect_scan_sections("cycle", -500)
 
       if gui.abort() then return end
     end
