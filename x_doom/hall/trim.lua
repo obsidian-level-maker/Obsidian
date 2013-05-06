@@ -45,6 +45,14 @@ DOOM.SKINS.Hall_trim1_P =
 }
 
 
+DOOM.SKINS.Hall_trim1_Arch =
+{
+  file   = "hall/trim1_arch.wad"
+  group  = "hall_trim"
+  shape  = "arch"
+}
+
+
 DOOM.SKINS.Hall_trim1_Stair16 =
 {
   file   = "hall/trim1_s16.wad"

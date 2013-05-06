@@ -45,6 +45,14 @@ DOOM.SKINS.Hall_curve_P =
 }
 
 
+DOOM.SKINS.Hall_curve_Arch =
+{
+  file   = "hall/curve_arch.wad"
+  group  = "hall_curve"
+  shape  = "arch"
+}
+
+
 DOOM.SKINS.Hall_curve_Stair16 =
 {
   file   = "hall/curve_s16.wad"
