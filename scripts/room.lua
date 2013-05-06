@@ -1094,11 +1094,11 @@ function Room_matching_skins(env, reqs)
 
     if reqs.kind != kind then return 0 end
 
-    -- group check
-    if reqs.group != skin.group then return 0 end
-
     -- placement check
     if reqs.where != skin.where then return 0 end
+
+    -- group check
+    if not match_word_or_table(reqs.group, skin.group) then return 0 end
 
     -- shape check
     if not match_word_or_table(reqs.shape, skin.shape) then return 0 end
@@ -3121,7 +3121,7 @@ function Room_reckon_doors()
     if D.kind == "closet"     then return end
     if D.kind == "secret"     then return end
 
-    -- for double halls, only decide on left side
+    -- for double halls, only decide a single side (the left)
     if D.kind == "double_R"   then return end
 
     local L1 = D.L1
@@ -3142,6 +3142,11 @@ function Room_reckon_doors()
 
     if not P1 then return end
 
+    -- mark archways for indoor --> hallway connections
+    if L1.kind == "building" and L2.kind == "hallway" then
+      P1.has_arch = true
+    end
+
     if P1 and P2 then
       if L2.is_outdoor or
          (not L1.kind == "cave" and L2.kind == "building")
@@ -3161,6 +3166,7 @@ function Room_reckon_doors()
     -- OK --
 
     P1.has_door = true
+    P1.has_arch = nil
   end
 
 

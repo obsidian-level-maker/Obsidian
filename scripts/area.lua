@@ -1007,8 +1007,11 @@ function Areas_layout_with_prefabs(R)
             Portal_set_floor(P, h + edge.h)
           end
 
-          if (P.lock or P.has_door) and not P.added_door then
-            Areas_add_wall(R, "door", P.sx1, P.sy1, P.sx2, P.sy2, P.side, P.floor_h, P.conn)
+          if (P.lock or P.has_door or P.has_arch) and not P.added_door then
+            local wall_kind = sel(P.lock or P.has_door, "door", "arch")
+
+            Areas_add_wall(R, wall_kind, P.sx1, P.sy1, P.sx2, P.sy2, P.side, P.floor_h, P.conn)
+
             portal.added_door = true
           end
 
@@ -1258,6 +1261,11 @@ function Areas_build_walls(R)
       kind  = info.kind
       where = "edge"
     }
+
+    if info.kind == "arch" then
+      reqs.group = LEVEL.hall_group
+    end
+
 
     local lock = info.conn and info.conn.lock
 
