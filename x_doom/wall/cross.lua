@@ -10,14 +10,13 @@ DOOM.SKINS.Wall_cross1 =
   long   = 128
   deep   = 32
 
-  x_fit  = { 0,32, 96,128 }
+  x_fit  = "frame"
 --z_fit  = { 108,128 }
 
   bound_z1 = 0
   bound_z2 = 128
 
   theme  = "hell"
-
-  prob   = 999
+  prob   = 30
 }
 

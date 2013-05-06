@@ -12,5 +12,6 @@ DOOM.SKINS.Wall_plain =
   bound_z1 = 0
   bound_z2 = 128
 
+  prob = 90
 }
 

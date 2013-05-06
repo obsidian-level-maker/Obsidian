@@ -15,6 +15,9 @@ DOOM.SKINS.Pic_Computer =
   bound_z1 = 0
   bound_z2 = 112
 
+  theme = "tech"
+  prob  = 30
+
 --[[
   pic   = { COMPSTA1=50, COMPSTA2=50 }
   pic_w = 128

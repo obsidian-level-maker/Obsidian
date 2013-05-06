@@ -9,13 +9,14 @@ DOOM.SKINS.Wall_torch3 =
 
   long   = 192
   deep   = 64
-  x_fit  = { 64,128 }
+  x_fit  = "frame"
 
   bound_z1 = 0
   bound_z2 = 128
 
   theme  = "hell"
+  prob   = 10
 
-  props_57 = { light=184, _factor=0.8 }
+  props_57 = { light=192, _factor=1.0 }
 }
 
