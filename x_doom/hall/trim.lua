@@ -48,8 +48,13 @@ DOOM.SKINS.Hall_trim1_P =
 DOOM.SKINS.Hall_trim1_Arch =
 {
   file   = "hall/trim1_arch.wad"
+  kind   = "arch"
   group  = "hall_trim"
-  shape  = "arch"
+  where  = "edge"
+
+  long   = 192
+  deep   = 48
+  x_fit  = "frame"
 }
 
 

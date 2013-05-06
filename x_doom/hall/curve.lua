@@ -48,8 +48,13 @@ DOOM.SKINS.Hall_curve_P =
 DOOM.SKINS.Hall_curve_Arch =
 {
   file   = "hall/curve_arch.wad"
+  kind   = "arch"
   group  = "hall_curve"
-  shape  = "arch"
+  where  = "edge"
+
+  long   = 192
+  deep   = 32
+  x_fit  = "frame"
 }
 
 
