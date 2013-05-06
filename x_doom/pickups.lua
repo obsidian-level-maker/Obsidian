@@ -49,7 +49,7 @@ DOOM.PICKUPS =
   {
     id = 2013
     kind = "health"
-    rank = 4
+    rank = 5
     prob = 3
     start_prob = 5
     give = { {health=150} }
@@ -71,7 +71,7 @@ DOOM.PICKUPS =
   {
     id = 2018
     kind = "armor"
-    rank = 2
+    rank = 3
     prob = 5
     start_prob = 80
     give = { {health=30} }
@@ -81,7 +81,7 @@ DOOM.PICKUPS =
   {
     id = 2019
     kind = "armor"
-    rank = 3
+    rank = 4
     prob = 2
     start_prob = 30
     give = { {health=80} }
@@ -160,7 +160,7 @@ DOOM.PICKUPS =
   {
     id = 17
     kind = "ammo"
-    rank = 1
+    rank = 2
     prob = 40
     give = { {ammo="cell",count=100} }
   }
@@ -185,7 +185,7 @@ DOOM2.PICKUPS =
   {
     id = 83
     kind = "health"
-    rank = 5
+    rank = 6
     prob = 1
     start_prob = 8
     give = { {health=200} }
