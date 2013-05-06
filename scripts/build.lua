@@ -1176,32 +1176,33 @@ function Fab_determine_bbox(fab)
   --       (i.e. never higher that t, never lower than b).
 
   each B in fab.brushes do
-    if not B[1].outlier then
-      each C in B do
+    if B[1].outlier then continue end
+    if B[1].m == "spot" then continue end
 
-        if C.x then 
-          if not x1 then
-            x1, y1 = C.x, C.y
-            x2, y2 = C.x, C.y
-          else
-            x1 = math.min(x1, C.x)
-            y1 = math.min(y1, C.y)
-            x2 = math.max(x2, C.x)
-            y2 = math.max(y2, C.y)
-          end
+    each C in B do
 
-        elseif C.b or C.t then
-          local z = C.b or C.t
-          if not z1 then
-            z1, z2 = z, z
-          else
-            z1 = math.min(z1, z)
-            z2 = math.max(z2, z)
-          end
+      if C.x then 
+        if not x1 then
+          x1, y1 = C.x, C.y
+          x2, y2 = C.x, C.y
+        else
+          x1 = math.min(x1, C.x)
+          y1 = math.min(y1, C.y)
+          x2 = math.max(x2, C.x)
+          y2 = math.max(y2, C.y)
         end
 
-      end -- C
-    end
+      elseif C.b or C.t then
+        local z = C.b or C.t
+        if not z1 then
+          z1, z2 = z, z
+        else
+          z1 = math.min(z1, z)
+          z2 = math.max(z2, z)
+        end
+      end
+
+    end -- C
   end -- B
 
   assert(x1 and y1 and x2 and y2)
@@ -1218,6 +1219,8 @@ function Fab_determine_bbox(fab)
                y1=y1, y2=y2, dy=(y2 - y1),
                z1=z1, z2=z2, dz=dz,
              }
+
+  gui.debugf("bbox =\n%s\n", table.tostr(fab.bbox))
 end
 
 
