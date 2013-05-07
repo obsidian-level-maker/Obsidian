@@ -3,21 +3,56 @@ WORK IN PROGRESS
 ================
 
 
-!!!!  get locked doors working again
+++  CONSIDER: should arches simply be a kind of door?
+
+    I think it boils down to: should every normal hallway REQUIRE
+    a door or arch where it meets a room?
 
 
-!!! segment hallways into smaller sections
-    (especially where they join the rooms)
-
-    do it _before_ Areas_handle_connections.
-
-
->>>  create wall and corner information for each room
+-  IDEA: 'override' value for prefabs, default to zero.
+         when > 0, remove all other possible prefabs from the list
+         which have a lower value
 
 
-!!  get big junctions working again
+++  priority for spots  (skill flag)
+       if EASY set OR nothing set --> priority = 1
+       elseif MEDIUM --> priority = 2
+       else              priority = 3
+
+    ALWAYS prefer a higher priority over a lower one.
+
+
++  Hallways: make more monsters
+
+
++  mark used goal spots as unusable for mons/items
+
 
 !!  get cycles working again
+
+    DONE:  update stair_flow() with 'cycle' parameter, use it do
+       determine stair pieces (and skip some other logic).
+
+    DONE:  handle 'cycle_excess' : create a step (if abs >= 12)
+       (step should be at beginning for downward cycles)
+
+    -  ensure 'is_joiner' is never set for cycles
+
+    -  if a locked door is placed in a joiner, don't create cycles
+       for it.
+
+
++  'action' field in a switch prefab, must match door used
+   values can be: "raise", "lower", "stair"
+
+
+-  in a single-section hallway, prevent a door on both sides
+
+
++  Big junctions: add a wall at edges where no hallway exists
+
+
+!!  get joiners working again
 
 
 >>  get 'height' value into 'env' pick_skin() tables

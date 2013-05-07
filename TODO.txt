@@ -112,6 +112,9 @@ V5 Stuff:
 
 -  support 1x3 hallway pieces (and other sizes)
 
+-  "halfies" : fake buildings, cages (etc) which are 256x128 and
+   occupy half a seed (an unused seed between two rooms).
+
 ?  have "hallway arches", specified in hallway groups, used in
    indoor rooms where the hallway meets the room.
 
