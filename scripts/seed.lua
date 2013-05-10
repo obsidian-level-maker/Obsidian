@@ -83,7 +83,10 @@ class PORTAL
 
   sx1, sy1, sx2, sy2  -- seed range
 
+  section : SECTION
+
   side : DIR  -- which side of the seed range
+
 
   conn : CONN
 
@@ -122,6 +125,13 @@ class SECTION
                             -- (may exit the hallway)
 
   crossover_hall : HALLWAY
+
+  --- these are used when laying out rooms ---
+
+  entry     : PORTAL
+  exit[DIR] : PORTAL
+
+  on_path : boolean  -- TRUE if player must visit this section
 }
 
 --------------------------------------------------------------]]

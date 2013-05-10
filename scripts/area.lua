@@ -145,18 +145,18 @@ gui.debugf("install portal %s (%s <--> %s) @ %s dir:%d\n",
 
   local function create_portal(D, L)
     -- determine place (in seeds)
-    local dir
+    local K, dir
     local sx1, sy1, sx2, sy2
 
     if D.L1 == L then
+      K   = D.K1
       dir = D.dir1
-      sx1, sy1, sx2, sy2 = geom.side_coords(dir,
-                                D.K1.sx1, D.K1.sy1, D.K1.sx2, D.K1.sy2)
     else
+      K   = D.K2
       dir = D.dir2
-      sx1, sy1, sx2, sy2 = geom.side_coords(dir,
-                                D.K2.sx1, D.K2.sy1, D.K2.sx2, D.K2.sy2)
     end
+
+    sx1, sy1, sx2, sy2 = geom.side_coords(dir, K.sx1, K.sy1, K.sx2, K.sy2)
 
     -- except for joiners, connections are usually 1 seed wide
     local is_joiner = (D.L1.is_joiner or D.L2.is_joiner)
@@ -179,6 +179,7 @@ gui.debugf("install portal %s (%s <--> %s) @ %s dir:%d\n",
       kind = "walk"
       sx1  = sx1, sy1 = sy1
       sx2  = sx2, sy2 = sy2
+      section = K
       side = dir
       conn = D
     }
@@ -1159,6 +1160,8 @@ function Areas_layout_with_prefabs(R)
 
     local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, floor_h, pf_dir)
 
+skin2.floor = assert(S.section.floor_mat)
+
     Fabricate_at(R, skin1, T, { skin1, skin2 })
   end
 
@@ -1196,17 +1199,127 @@ function Areas_layout_with_prefabs(R)
   end
 
 
+  local function debug_arrow(S, dir, f_h)
+    local mx = math.i_mid(S.x1, S.x2)
+    local my = math.i_mid(S.y1, S.y2)
+
+    local dx, dy = geom.delta(dir)
+    local ax, ay = geom.delta(geom.RIGHT[dir])
+
+    local brush =
+    {
+      { x = mx - ax*20,  y = my - ay * 20,  tex = "COMPBLUE" }
+      { x = mx + ax*20,  y = my + ay * 20,  tex = "COMPBLUE" }
+      { x = mx + dx*100, y = my + dy * 100, tex = "COMPBLUE" }
+      { t = f_h, tex = "FWATER1" }
+    }
+
+    brush_helper(brush)
+  end
+
+
+  local function recurse_find_path(K, side)
+    K.visited_for_path = true
+
+    K.exit = {}
+
+    local mx = math.i_mid(K.sx1, K.sx2)  -- TODO: vary this
+    local my = math.i_mid(K.sy1, K.sy2)
+
+    each dir in rand.dir_list() do
+      if dir == side then continue end
+
+      local sx, sy = mx, my
+
+      if dir == 4 then sx = K.sx1 end
+      if dir == 6 then sx = K.sx2 end
+      if dir == 2 then sy = K.sy1 end
+      if dir == 8 then sy = K.sy2 end
+
+      local S = SEEDS[sx][sy]
+
+      assert(S and S.section == K)
+
+      local N = S:neighbor(dir)
+
+      if not (N and N.room == R) then continue end
+
+      local K2 = N.section
+      assert(K2 != K)
+      assert(K2.room == R)
+
+      if K2.visited_for_path then continue end
+
+      debug_arrow(S, dir, R.entry_h + 24)
+
+      K.exit[dir] = K2  -- FIXME: make a PORTAL table
+
+      recurse_find_path(K2, 10 - dir)
+    end
+  end
+
+
+  local function path_through_room()
+    --| recursively visit sections to define the path through the
+    --| room, stored in the entry and exit fields in each section.
+    --| we also mark which sections _must_ be visited.
+
+    local D = R.entry_conn
+
+    local start_K
+    local start_side
+
+    if D and D.kind != "teleporter" then
+      if D.L1 == R then
+        start_K = D.K1
+        start_side = D.dir1
+      elseif D.L2 == R then
+        start_K = D.K2
+        start_side = D.dir2
+      else
+        error("path_through_room: cannot find entry section")
+      end
+
+    else
+      -- TODO: pick section furthest from any connections
+      start_K = rand.pick(R.sections)
+      start_side = 5  -- "middle"
+    end
+
+    R.start_K    = assert(start_K)
+    R.start_side = assert(start_side)
+
+    start_K.on_path = true
+
+    recurse_find_path(start_K, start_side)
+
+    each K in R.sections do
+      assert(K.visited_for_path)
+    end
+  end
+
+
   ---| Areas_layout_with_prefabs |---
 
-  for sx = R.sx1, R.sx2 do
-  for sy = R.sy1, R.sy2 do
-    local S = SEEDS[sx][sy]
+  path_through_room()
 
-    if S.room == R then
+local mats = { "FLAT1", "FLAT10", "CEIL1_1", "CEIL1_2",
+               "FLAT1_1", "DEM1_5", "CEIL5_1", "FLAT4",
+               "FLAT20", "FLAT5_6", "MFLR8_3", "RROCK19" }
+
+  each K in R.sections do
+    K.floor_mat = mats[1 + _index % 12]
+
+    for sx = K.sx1, K.sx2 do
+    for sy = K.sy1, K.sy2 do
+      local S = SEEDS[sx][sy]
+
+      assert(S.section == K)
+
       do_floor(S)
       do_ceiling(S)
     end
-  end
+    end
   end
 
   if R.kind != "outdoor" then
