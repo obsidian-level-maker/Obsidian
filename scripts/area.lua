@@ -1237,8 +1237,39 @@ function Areas_layout_with_prefabs(R)
 
 
   local function build_floor(K)
-    -- FIXME 
-    return false
+    if not (K.sw == 3 and K.sh == 3) then return false end
+
+    local env =
+    {
+      room_kind = R.kind
+      seed_w = 3
+      seed_h = 3
+    }
+
+    local reqs =
+    {
+      kind = "floor"
+    }
+
+    local list = Room_multi_match_skins(env, reqs)
+
+    if table.empty(list) then return false end
+
+
+    local skin_name = rand.key_by_probs(list)
+
+    local skin1 = assert(GAME.SKINS[skin_name])
+
+    local rot = 0  -- !!!!
+
+
+    process_edges(K.sx1, K.sy1, K.sx2, K.sy2, skin1, rot, K.floor_h)
+
+    local T = Trans.section_transform(K, 2)
+
+    Fabricate_at(R, skin1, T, { skin1, skin2 })
+
+    return true
   end
 
 
