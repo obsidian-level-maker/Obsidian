@@ -6,7 +6,7 @@ DOOM.SKINS.Fake_plain_F =
 {
   file   = "fake/plain.wad"
   shape  = "F"
-  prob   = 20
+  prob   = 100
 }
 
 DOOM.SKINS.Fake_plain_C =

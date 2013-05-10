@@ -1021,9 +1021,8 @@ function Monsters_in_room(L)
     end
 
 
-    -- less in hallways
     if L.kind == "hallway" then
-      qty = qty * rand.pick { 0.6, 0.8, 1.1 }
+      qty = qty * rand.pick { 0.8, 1.2, 1.6 }
 
     -- more in EXIT or KEY rooms (extra boost in small rooms)
     elseif L.purpose and L.purpose != "START" then
@@ -1224,7 +1223,7 @@ function Monsters_in_room(L)
     assert(base_num)
 
     if L.kind == "hallway" then
-      return rand.index_by_probs { 60, 40, 20 }
+      return rand.index_by_probs { 20, 40, 60 }
     end
 
     -- adjust the base number to account for room size
@@ -1247,7 +1246,7 @@ function Monsters_in_room(L)
     local num_kinds
 
     if L.kind == "hallway" then
-      num_kinds = rand.index_by_probs({ 40, 60, 20 })
+      num_kinds = rand.index_by_probs({ 20, 40, 60 })
     else
       local size = math.sqrt(L.svolume)
       num_kinds = int(size / 1.2)
@@ -2099,7 +2098,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     assert(not L.scenic)
 
     if L.kind == "hallway" and #L.sections == 1 then
-      return rand.odds(90)
+      return rand.odds(50)
     end
 
     return true

@@ -4,7 +4,7 @@
 
 DOOM.SKINS.Hall_trim1_I =
 {
-  file   = "hall/trim1_i_win.wad"
+  file   = "hall/trim1_i.wad"
   group  = "hall_trim"
   shape  = "I"
 }
