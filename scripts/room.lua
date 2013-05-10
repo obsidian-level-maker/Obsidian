@@ -3117,6 +3117,9 @@ function Room_reckon_doors()
 
 
   local function visit_conn(D)
+    -- locked doors are handled already
+    if D.lock then return end
+
     if D.kind == "teleporter" then return end
     if D.kind == "closet"     then return end
     if D.kind == "secret"     then return end
@@ -3142,11 +3145,6 @@ function Room_reckon_doors()
 
     if not P1 then return end
 
-    -- mark archways for indoor --> hallway connections
-    if L1.kind == "building" and L2.kind == "hallway" then
-      P1.has_arch = true
-    end
-
     if P1 and P2 then
       if L2.is_outdoor or
          (not L1.kind == "cave" and L2.kind == "building")
@@ -3155,6 +3153,9 @@ function Room_reckon_doors()
         P1, P2 = P2, P1
       end
     end
+
+    -- we nearly always want an arch (if no door)
+    P1.door_kind = "arch"
 
     -- apply the random check
     if L1.is_outdoor then
@@ -3165,8 +3166,7 @@ function Room_reckon_doors()
 
     -- OK --
 
-    P1.has_door = true
-    P1.has_arch = nil
+    P1.door_kind = "door"
   end
 
 

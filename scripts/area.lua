@@ -204,6 +204,7 @@ gui.debugf("install portal %s (%s <--> %s) @ %s dir:%d\n",
     end
 
     portal.lock = D.lock
+    portal.door_kind = "door"
   end
 
 
@@ -1007,11 +1008,8 @@ function Areas_layout_with_prefabs(R)
             Portal_set_floor(P, h + edge.h)
           end
 
-          if (P.lock or P.has_door or P.has_arch) and not P.added_door then
-            local wall_kind = sel(P.lock or P.has_door, "door", "arch")
-
-            Areas_add_wall(R, wall_kind, P.sx1, P.sy1, P.sx2, P.sy2, P.side, P.floor_h, P.conn)
-
+          if P.door_kind and not P.added_door then
+            Areas_add_wall(R, P.door_kind, P.sx1, P.sy1, P.sx2, P.sy2, P.side, P.floor_h, P.conn)
             portal.added_door = true
           end
 

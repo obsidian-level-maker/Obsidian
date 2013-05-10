@@ -90,6 +90,8 @@ class PORTAL
   peer : PORTAL  -- for back-to-back connections
 
   floor_h  -- floor height (set during room layouting)
+
+  door_kind : keyword   -- can be NIL, or "door" or "arch"
 }
 
 
