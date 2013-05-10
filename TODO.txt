@@ -115,6 +115,8 @@ V5 Stuff:
 -  "halfies" : fake buildings, cages (etc) which are 256x128 and
    occupy half a seed (an unused seed between two rooms).
 
+-  halfie closets
+
 ?  have "hallway arches", specified in hallway groups, used in
    indoor rooms where the hallway meets the room.
 

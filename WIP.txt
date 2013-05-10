@@ -3,10 +3,42 @@ WORK IN PROGRESS
 ================
 
 
-++  CONSIDER: should arches simply be a kind of door?
+new Layout:
 
-    I think it boils down to: should every normal hallway REQUIRE
-    a door or arch where it meets a room?
++  need to get sector height for each SPOT, new wadfab function
+
+-  support a 'max_floor' in skins
+   (determine algorithmically from north/east/etc)
+
+
+!!  get joiners working again
+
+
+-  Caves / importants: wall_dist improvement
+
+
++  Big junctions: make C/T/I versions of Spokey and Circle
+
+
+V5 Layout
+---------
+
++  first pass, visit sections to define path through room
+   (basically the entry and exits of each section).
+
+   Recursive algorithm.  It also marks which sections need to be
+   visitable -- other ones could e.g. become fully liquid.
+
++  second pass, recursively visit each section again, decide a
+   prefab to use in the section, honoring constrains (e.g.
+   walkability at touching portals).
+   
+   Have possibility to merely sub-divide the section into two or
+   more pieces, making sure the path is kept valid [tricky!].
+
+   After selecting the prefab, create an output portal at the
+   path exits (for now: a single seed) and that ensures the
+   neighboring sections will connect properly.
 
 
 -  IDEA: 'override' value for prefabs, default to zero.
@@ -20,9 +52,6 @@ WORK IN PROGRESS
        else              priority = 3
 
     ALWAYS prefer a higher priority over a lower one.
-
-
-+  Hallways: make more monsters
 
 
 +  mark used goal spots as unusable for mons/items
@@ -42,17 +71,15 @@ WORK IN PROGRESS
        for it.
 
 
+-  fake doors which go nowhere (fake border or wall which has
+   nothing behind it)
+
+
 +  'action' field in a switch prefab, must match door used
    values can be: "raise", "lower", "stair"
 
 
 -  in a single-section hallway, prevent a door on both sides
-
-
-+  Big junctions: add a wall at edges where no hallway exists
-
-
-!!  get joiners working again
 
 
 >>  get 'height' value into 'env' pick_skin() tables
