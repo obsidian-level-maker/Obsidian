@@ -5,6 +5,7 @@
 DOOM.SKINS.Fake_Building1 =
 {
   file   = "fake/building1.wad"
-  shape  = "I"
+  shape  = "F"
+  y_fit  = "top"
 }
 
