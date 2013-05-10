@@ -1003,8 +1003,9 @@ function Room_match_user_stuff(tab)
     end
   end
 
-  if tab.game  then match(tab.game,  OB_CONFIG.game)  end
-  if tab.theme then match(tab.theme, OB_CONFIG.theme) end
+  if tab.game  then match(tab.game,  OB_CONFIG.game) end
+  if tab.theme then match(tab.theme, LEVEL.super_theme) end
+  if tab.psycho and OB_CONFIG.theme != "psycho" then return 0 end
 
   if factor <= 0 then return 0 end
 

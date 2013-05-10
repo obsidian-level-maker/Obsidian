@@ -469,7 +469,7 @@ function Levels_choose_themes()
   local function set_level_theme(L, name)
     local info = assert(OB_THEMES[name])
 
-    L.super_theme = info
+    L.super_theme = name
 
     if not L.name_theme then
       L.name_theme = info.name_theme
