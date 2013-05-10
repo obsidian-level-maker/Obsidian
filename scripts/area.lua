@@ -1138,7 +1138,7 @@ function Areas_layout_with_prefabs(R)
 
   -- FIXME !!!  very temporary stuff
 
-  local function do_floor(S)
+  local function do_floor(S, floor_h)
     local env =
     {
     }
@@ -1154,8 +1154,6 @@ function Areas_layout_with_prefabs(R)
 
     local rot = 0  -- !!!!
 
-    local floor_h = assert(R.entry_h)   -- FIXME
-
     process_edges(S.sx, S.sy, S.sx, S.sy, skin1, rot, floor_h)
 
     local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, floor_h, pf_dir)
@@ -1166,7 +1164,7 @@ skin2.floor = assert(S.section.floor_mat)
   end
 
 
-  local function do_ceiling(S)
+  local function do_ceiling(S, ceil_h)
     if R.kind == "outdoor" then
       local rect =
       {
@@ -1191,8 +1189,6 @@ skin2.floor = assert(S.section.floor_mat)
 
     local skin1 = Room_pick_skin(env, reqs)
 
-    local ceil_h = assert(R.entry_h) + 192
-
     local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, ceil_h)
 
     Fabricate_at(R, skin1, T, { skin1, skin2 })
@@ -1206,11 +1202,14 @@ skin2.floor = assert(S.section.floor_mat)
     local dx, dy = geom.delta(dir)
     local ax, ay = geom.delta(geom.RIGHT[dir])
 
+    mx = mx + dx * 20
+    my = my + dy * 20
+
     local brush =
     {
-      { x = mx - ax*20,  y = my - ay * 20,  tex = "COMPBLUE" }
-      { x = mx + ax*20,  y = my + ay * 20,  tex = "COMPBLUE" }
-      { x = mx + dx*100, y = my + dy * 100, tex = "COMPBLUE" }
+      { x = mx - ax * 30, y = my - ay * 30, tex = "COMPBLUE" }
+      { x = mx + ax * 30, y = my + ay * 30, tex = "COMPBLUE" }
+      { x = mx + dx * 90, y = my + dy * 90, tex = "COMPBLUE" }
       { t = f_h, tex = "FWATER1" }
     }
 
@@ -1223,8 +1222,8 @@ skin2.floor = assert(S.section.floor_mat)
 
     K.exit = {}
 
-    local mx = math.i_mid(K.sx1, K.sx2)  -- TODO: vary this
-    local my = math.i_mid(K.sy1, K.sy2)
+    local mx = rand.irange(K.sx1, K.sx2)
+    local my = rand.irange(K.sy1, K.sy2)
 
     each dir in rand.dir_list() do
       if dir == side then continue end
@@ -1250,7 +1249,7 @@ skin2.floor = assert(S.section.floor_mat)
 
       if K2.visited_for_path then continue end
 
-      debug_arrow(S, dir, R.entry_h + 24)
+      debug_arrow(S, dir, R.entry_h + 8)
 
       K.exit[dir] = K2  -- FIXME: make a PORTAL table
 
@@ -1299,28 +1298,65 @@ skin2.floor = assert(S.section.floor_mat)
   end
 
 
-  ---| Areas_layout_with_prefabs |---
-
-  path_through_room()
-
-local mats = { "FLAT1", "FLAT10", "CEIL1_1", "CEIL1_2",
-               "FLAT1_1", "DEM1_5", "CEIL5_1", "FLAT4",
-               "FLAT20", "FLAT5_6", "MFLR8_3", "RROCK19" }
-
-  each K in R.sections do
-    K.floor_mat = mats[1 + _index % 12]
-
+  local function plain_fill(K)
     for sx = K.sx1, K.sx2 do
     for sy = K.sy1, K.sy2 do
       local S = SEEDS[sx][sy]
 
       assert(S.section == K)
 
-      do_floor(S)
-      do_ceiling(S)
+      do_floor(S, K.floor_h)
+
+      do_ceiling(S, K.ceil_h)
     end
     end
   end
+
+
+  local function do_section(K)
+
+    -- TODO
+
+    plain_fill(K)
+  end
+
+
+  local function recurse_make_stuff(K, floor_h)
+    
+    K.floor_h = floor_h
+    K.ceil_h  = floor_h + rand.pick({128,192,192,256})
+
+    R.min_floor_h = math.min(R.min_floor_h, floor_h)
+    R.max_floor_h = math.max(R.max_floor_h, floor_h)
+
+    do_section(K, floor_h)
+
+    -- order does not matter here
+
+    for dir = 2,8,2 do
+      local portal = K.exit[dir]  -- FIXME not actually a portal
+
+      if portal then
+        -- FIXME: assert(portal.floor_h)
+        recurse_make_stuff(portal, floor_h - rand.pick{8,12,18})
+      end
+    end
+  end
+
+
+  ---| Areas_layout_with_prefabs |---
+
+  path_through_room()
+
+local mats = { "FLAT1", "FLAT10", "CEIL1_1", "CEIL1_2",
+               "FLAT1_1", "DEM1_5", "FLAT4", "FLAT5_3",
+               "FLAT20", "FLAT5_6", "MFLR8_3", "RROCK19" }
+
+  each K in R.sections do
+    K.floor_mat = mats[1 + _index % 12]
+  end
+
+  recurse_make_stuff(R.start_K, R.entry_h)
 
   if R.kind != "outdoor" then
     find_corners()
