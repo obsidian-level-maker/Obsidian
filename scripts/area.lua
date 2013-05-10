@@ -1136,65 +1136,6 @@ function Areas_layout_with_prefabs(R)
   end
 
 
-  -- FIXME !!!  very temporary stuff
-
-  local function do_floor(S, floor_h)
-    local env =
-    {
-    }
-
-    local reqs =
-    {
-      kind = "floor"
-      seed_w = 1
-      seed_h = 1
-    }
-
-    local skin1 = Room_pick_skin(env, reqs)
-
-    local rot = 0  -- !!!!
-
-    process_edges(S.sx, S.sy, S.sx, S.sy, skin1, rot, floor_h)
-
-    local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, floor_h, pf_dir)
-
-skin2.floor = assert(S.section.floor_mat)
-
-    Fabricate_at(R, skin1, T, { skin1, skin2 })
-  end
-
-
-  local function do_ceiling(S, ceil_h)
-    if R.kind == "outdoor" then
-      local rect =
-      {
-        x1 = S.x1, y1 = S.y1
-        x2 = S.x2, y2 = S.y2
-      }
-
-      table.insert(R.sky_rects, rect)
-      return
-    end
-
-    local env =
-    {
-    }
-
-    local reqs =
-    {
-      kind = "ceiling"
-      seed_w = 1
-      seed_h = 1
-    }
-
-    local skin1 = Room_pick_skin(env, reqs)
-
-    local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, ceil_h)
-
-    Fabricate_at(R, skin1, T, { skin1, skin2 })
-  end
-
-
   local function debug_arrow(S, dir, f_h)
     local mx = math.i_mid(S.x1, S.x2)
     local my = math.i_mid(S.y1, S.y2)
@@ -1261,7 +1202,6 @@ skin2.floor = assert(S.section.floor_mat)
   local function path_through_room()
     --| recursively visit sections to define the path through the
     --| room, stored in the entry and exit fields in each section.
-    --| we also mark which sections _must_ be visited.
 
     local D = R.entry_conn
 
@@ -1288,8 +1228,6 @@ skin2.floor = assert(S.section.floor_mat)
     R.start_K    = assert(start_K)
     R.start_side = assert(start_side)
 
-    start_K.on_path = true
-
     recurse_find_path(start_K, start_side)
 
     each K in R.sections do
@@ -1298,38 +1236,119 @@ skin2.floor = assert(S.section.floor_mat)
   end
 
 
-  local function plain_fill(K)
+  local function build_floor(K)
+    -- FIXME 
+    return false
+  end
+
+
+  local function build_ceiling(K)
+    -- FIXME 
+    return false
+  end
+
+
+  local function fallback_floor_piece(S, floor_h)
+    local env =
+    {
+      room_kind = R.kind
+      seed_w = 1
+      seed_h = 1
+    }
+
+    local reqs =
+    {
+      kind = "floor"
+      flat = 1
+    }
+
+    local skin1 = Room_pick_skin(env, reqs)
+
+    local rot = 0  -- !!!!
+
+    process_edges(S.sx, S.sy, S.sx, S.sy, skin1, rot, floor_h)
+
+    local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, floor_h, pf_dir)
+
+skin2.floor = assert(S.section.floor_mat)
+
+    Fabricate_at(R, skin1, T, { skin1, skin2 })
+  end
+
+
+  local function fallback_ceil_piece(S, ceil_h)
+    if R.kind == "outdoor" then
+      local rect =
+      {
+        x1 = S.x1, y1 = S.y1
+        x2 = S.x2, y2 = S.y2
+      }
+
+      table.insert(R.sky_rects, rect)
+      return
+    end
+
+    local env =
+    {
+      room_kind = R.kind
+      seed_w = 1
+      seed_h = 1
+    }
+
+    local reqs =
+    {
+      kind = "ceiling"
+      seed_w = 1
+      seed_h = 1
+    }
+
+    local skin1 = Room_pick_skin(env, reqs)
+
+    local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, ceil_h)
+
+    Fabricate_at(R, skin1, T, { skin1, skin2 })
+  end
+
+
+  local function fallback_floor(K)
     for sx = K.sx1, K.sx2 do
     for sy = K.sy1, K.sy2 do
-      local S = SEEDS[sx][sy]
-
-      assert(S.section == K)
-
-      do_floor(S, K.floor_h)
-
-      do_ceiling(S, K.ceil_h)
+      fallback_floor_piece(SEEDS[sx][sy], K.floor_h)
     end
     end
   end
 
 
-  local function do_section(K)
-
-    -- TODO
-
-    plain_fill(K)
+  local function fallback_ceiling(K)
+    for sx = K.sx1, K.sx2 do
+    for sy = K.sy1, K.sy2 do
+      fallback_ceil_piece(SEEDS[sx][sy], K.ceil_h)
+    end
+    end
   end
 
 
-  local function recurse_make_stuff(K, floor_h)
-    
+  local function build_section(K, floor_h)
     K.floor_h = floor_h
     K.ceil_h  = floor_h + rand.pick({128,192,192,256})
 
     R.min_floor_h = math.min(R.min_floor_h, floor_h)
     R.max_floor_h = math.max(R.max_floor_h, floor_h)
 
-    do_section(K, floor_h)
+    if not build_floor(K) then
+      fallback_floor(K)
+    end
+
+    if R.kind == "outdoor" then
+      fallback_ceiling(K)
+    elseif not build_ceiling(K) then
+      fallback_ceiling(K)
+    end
+  end
+
+
+  local function recurse_make_stuff(K, floor_h)
+    build_section(K, floor_h)
 
     -- order does not matter here
 
@@ -1351,10 +1370,9 @@ skin2.floor = assert(S.section.floor_mat)
 local mats = { "FLAT1", "FLAT10", "CEIL1_1", "CEIL1_2",
                "FLAT1_1", "DEM1_5", "FLAT4", "FLAT5_3",
                "FLAT20", "FLAT5_6", "MFLR8_3", "RROCK19" }
-
-  each K in R.sections do
-    K.floor_mat = mats[1 + _index % 12]
-  end
+each K in R.sections do
+  K.floor_mat = mats[1 + _index % 12]
+end
 
   recurse_make_stuff(R.start_K, R.entry_h)
 

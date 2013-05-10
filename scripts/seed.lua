@@ -39,10 +39,6 @@ class SEED
   portals[dir] : PORTAL
   walls[dir]   : WALL
 
-  chunk : CHUNK  -- connection/important chunk
-
-  chunks[v_area] : CHUNK
-
   cost[DIR]  -- used when marking paths
 
   is_walk  -- TRUE if seed must be remain walkable
@@ -130,8 +126,6 @@ class SECTION
 
   entry     : PORTAL
   exit[DIR] : PORTAL
-
-  on_path : boolean  -- TRUE if player must visit this section
 }
 
 --------------------------------------------------------------]]
@@ -154,7 +148,7 @@ SECTION_CLASS = { }
 
 
 function SEED_CLASS.new(x, y)
-  local S = { sx=x, sy=y, cost={}, portals={}, walls={}, chunks={}, v_areas={} }
+  local S = { sx=x, sy=y, cost={}, portals={}, walls={} }
   table.set_class(S, SEED_CLASS)
   return S
 end
@@ -198,8 +192,7 @@ end
 
 
 function SEED_CLASS.used(S)
-  return S.room or S.hall or S.closet or S.border or
-         S.chunk or not table.empty(S.chunks)
+  return S.room or S.hall or S.closet or S.border
 end
 
 
@@ -567,12 +560,6 @@ function SECTION_CLASS.divide(K, side, chop_num)
   N:install()
 
   return N
-end
-
-
-function SECTION_CLASS.contains_chunk(K, C)
-  return (C.sx1 >= K.sx1) and (C.sx2 <= K.sx2) and
-         (C.sy1 >= K.sy1) and (C.sy2 <= K.sy2)
 end
 
 
