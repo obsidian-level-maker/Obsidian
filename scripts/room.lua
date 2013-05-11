@@ -1071,6 +1071,19 @@ function Room_matching_skins(env, reqs)
   end
 
 
+  local function match_size_with_rot(skin, rotate)
+    if rotate then
+      if env.seed_w and not match_size(env.seed_w, skin.seed_h) then return false end
+      if env.seed_h and not match_size(env.seed_h, skin.seed_w) then return false end
+    else
+      if env.seed_w and not match_size(env.seed_w, skin.seed_w) then return false end
+      if env.seed_h and not match_size(env.seed_h, skin.seed_h) then return false end
+    end
+
+    return true
+  end
+
+
   local function match_room_kind(env_k, skin_k)
     if skin_k == "indoor" then
       return env_k != "outdoor"
@@ -1135,8 +1148,10 @@ function Room_matching_skins(env, reqs)
 
   local function match_environment(skin)
     -- size check -- seed based
-    if env.seed_w and not match_size(env.seed_w, skin.seed_w) then return 0 end
-    if env.seed_h and not match_size(env.seed_h, skin.seed_h) then return 0 end
+    if not match_size_with_rot(skin, false) then
+      if not env.can_rotate then return 0 end
+      if not match_size_with_rot(skin, true) then return 0 end
+    end
 
     -- size check -- map units
 --!!!! FIXME   if not Fab_size_check(skin, env.long, env.deep) then return 0 end

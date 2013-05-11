@@ -1236,14 +1236,50 @@ function Areas_layout_with_prefabs(R)
   end
 
 
+  local function test_prefab(K, skin, mode, rot)
+    --| rot is the direction 2/4/6/8 where the south end of the prefab
+    --| will be place.  So rot == 2 means no rotation.
+
+    -- FIXME: test that this rotation fits
+
+    return true
+  end
+
+
+  local function try_build_prefab(K, skin, mode)
+    --| mode can be "floor" or "ceiling"
+
+    local rot_probs = {}
+
+    for rot = 2,8,2 do
+      if test_prefab(K, skin, mode, rot) then
+        rot_probs[rot] = 50
+      end
+    end
+
+    if table.empty(rot_probs) then return false end
+
+    local rot = rand.key_by_probs(rot_probs)
+
+    process_edges(K.sx1, K.sy1, K.sx2, K.sy2, skin, rot, K.floor_h)
+
+    local T = Trans.section_transform(K, rot)
+
+    Fabricate_at(R, skin, T, { skin, skin2 })
+
+    return true
+  end
+
+
   local function build_floor(K)
-    if not (K.sw == 3 and K.sh == 3) then return false end
+    if not (K.sw == 3 and K.sh == 3) then return false end  --!!!
 
     local env =
     {
       room_kind = R.kind
       seed_w = 3
       seed_h = 3
+      can_rotate = 1
     }
 
     local reqs =
@@ -1251,25 +1287,25 @@ function Areas_layout_with_prefabs(R)
       kind = "floor"
     }
 
+    local max_try = 8
+
     local list = Room_multi_match_skins(env, reqs)
 
-    if table.empty(list) then return false end
+    while not table.empty(list) and max_try > 0 do
+      local skin_name = rand.key_by_probs(list)
+      list[skin_name] = nil
 
+      local skin = assert(GAME.SKINS[skin_name])
 
-    local skin_name = rand.key_by_probs(list)
+      if try_build_prefab(K, skin) then
+        return true  -- YES !!
+      end
 
-    local skin1 = assert(GAME.SKINS[skin_name])
+      -- limit how many prefabs to try
+      max_try = max_try - 1
+    end
 
-    local rot = 0  -- !!!!
-
-
-    process_edges(K.sx1, K.sy1, K.sx2, K.sy2, skin1, rot, K.floor_h)
-
-    local T = Trans.section_transform(K, 2)
-
-    Fabricate_at(R, skin1, T, { skin1, skin2 })
-
-    return true
+    return false  -- nothing worked
   end
 
 
