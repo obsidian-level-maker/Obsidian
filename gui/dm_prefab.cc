@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2012 Andrew Apted
+//  Copyright (C) 2012-2013 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -45,7 +45,7 @@
 //  -->  { special=#, tag=#, flags=#, right=#, left=# }
 //  
 //  wadfab_get_thing(index)
-//  -->  { id=#, x=#, y=#, angle=#, flags=# }
+//  -->  { id=#, x=#, y=#, z=#, angle=#, flags=# }
 //
 //------------------------------------------------------------------------
 
@@ -145,6 +145,24 @@ int wadfab_load(lua_State *L)
 
 //------------------------------------------------------------------------
 
+static int calc_thing_z(int x, int y)
+{
+	for (int p = 0 ; p < ajpoly::num_polygons ; p++)
+	{
+		const ajpoly::polygon_c * poly = ajpoly::Polygon(p);
+	
+		// ignore void space
+		if (poly->sector->index < 0 || poly->sector->index == 0xFFFF)
+			continue;
+
+		if (poly->ContainsPoint(x, y))
+			return poly->sector->floor_h;
+	}
+
+	return 0;  // dummy value
+}
+
+
 int wadfab_get_thing(lua_State *L)
 {
 	int index = luaL_checkint(L, 1);
@@ -161,6 +179,9 @@ int wadfab_get_thing(lua_State *L)
 
 	lua_pushinteger(L, TH->y);
 	lua_setfield(L, -2, "y");
+
+	lua_pushinteger(L, calc_thing_z(TH->x, TH->y));
+	lua_setfield(L, -2, "z");
 
 	lua_pushinteger(L, TH->angle);
 	lua_setfield(L, -2, "angle");

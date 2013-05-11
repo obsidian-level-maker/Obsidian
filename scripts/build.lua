@@ -2064,14 +2064,13 @@ function Fab_load_wad(name)
 
     local r = spot_info.r
 
-    table.insert(B, { x=E.x - r, y = E.y - r })
-    table.insert(B, { x=E.x + r, y = E.y - r })
-    table.insert(B, { x=E.x + r, y = E.y + r })
-    table.insert(B, { x=E.x - r, y = E.y + r })
+    table.insert(B, { x = E.x - r, y = E.y - r })
+    table.insert(B, { x = E.x + r, y = E.y - r })
+    table.insert(B, { x = E.x + r, y = E.y + r })
+    table.insert(B, { x = E.x - r, y = E.y + r })
 
-    -- TODO: determine Z range properly (at least the bottom)
-    table.insert(B, { b=0 })
-    table.insert(B, { t=128 })
+    table.insert(B, { b = E.z })
+    table.insert(B, { t = E.z + 128 })
 
     table.insert(fab.brushes, B)
   end
