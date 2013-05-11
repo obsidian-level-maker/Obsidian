@@ -1090,7 +1090,7 @@ static int CalcYOffset(brush_vert_c *V, int oy, bool unpeg_U)
 
 static int CalcRailYOffset(brush_vert_c *rail, doom_sector_c *F, doom_sector_c *B)
 {
-	return 0;
+	return rail->face.getInt("v1", 0);
 
 	/* ???
 	   int base_h = MAX(F->f_h, B->f_h);
