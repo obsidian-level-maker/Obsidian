@@ -243,6 +243,8 @@ public:
 	polygon_c() : sector(), edge_list(), mid_x(), mid_y()
 	{ }
 
+	bool ContainsPoint(double x, double y) const;
+
 	int CountEdges() const;
 
 	void CalcMiddle();

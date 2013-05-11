@@ -743,6 +743,23 @@ void polygon_c::CalcMiddle()
 }
 
 
+bool polygon_c::ContainsPoint(double x, double y) const
+{
+	// this is large, matching the precision of DOOM vertices
+	const double epsilon = 0.99;
+
+	for (edge_c * E = edge_list ; E ; E = E->next)
+	{
+		double d = E->PerpDist(x, y);
+
+		if (d < -epsilon)
+			return false;
+	}
+
+	return true;
+}
+
+
 void polygon_c::ClockwiseOrder()
 {
 	edge_c *cur;
