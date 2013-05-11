@@ -120,29 +120,6 @@ function Areas_handle_connections()
   end
 
 
-  local function install_portal(portal)
-    -- put into the seeds
-    local side = portal.side
-
-    for sx = portal.sx1, portal.sx2 do
-    for sy = portal.sy1, portal.sy2 do
-      local S = SEEDS[sx][sy]
-
---[[
-gui.debugf("install portal %s (%s <--> %s) @ %s dir:%d\n",
-           tostring(portal),
-           portal.conn.L1:tostr(),
-           portal.conn.L2:tostr(),
-           S:tostr(), side)
---]]
-      assert(not S.portals[side])
-
-      S.portals[side] = portal
-    end
-    end
-  end
-
-
   local function create_portal(D, L)
     -- determine place (in seeds)
     local K, dir
@@ -184,7 +161,7 @@ gui.debugf("install portal %s (%s <--> %s) @ %s dir:%d\n",
       conn = D
     }
 
-    install_portal(PORTAL)
+    Portal_install(PORTAL)
 
     return PORTAL
   end
@@ -916,6 +893,11 @@ function Areas_layout_with_prefabs(R)
   }
 
 
+  -- class MAPPING
+  -- {
+  -- } 
+
+
   local function get_skin_edge(skin, px, py, pdir)
     -- px, py and pdir are in the prefab space.
     -- px ranges from 1 to seed_w
@@ -932,7 +914,7 @@ function Areas_layout_with_prefabs(R)
   end
 
 
-  local function test_prefab(sx1, sy1, sx2, sy2, skin, rot)
+  local function test_prefab_XXX(sx1, sy1, sx2, sy2, skin, rot)
     local pw = skin.seed_w or 1
     local ph = skin.seed_h or 1
 
@@ -1157,6 +1139,24 @@ function Areas_layout_with_prefabs(R)
     brush_helper(brush)
   end
 
+  
+  local function intra_room_portal(sx1, sy1, sx2, sy2, side, K1, K2)
+
+    local PORTAL =
+    {
+      kind = "intra"
+      sx1  = sx1, sy1 = sy1
+      sx2  = sx2, sy2 = sy2
+      side = side
+      section = K1
+      neighbor = K2
+    }
+
+    Portal_install(PORTAL)
+
+    return PORTAL
+  end
+
 
   local function recurse_find_path(K, side)
     K.visited_for_path = true
@@ -1190,9 +1190,9 @@ function Areas_layout_with_prefabs(R)
 
       if K2.visited_for_path then continue end
 
-      debug_arrow(S, dir, R.entry_h + 8)
+      --- debug_arrow(S, dir, R.entry_h + 8)
 
-      K.exit[dir] = K2  -- FIXME: make a PORTAL table
+      K.exit[dir] = intra_room_portal(sx, sy, sx, sy, dir, K, K2)
 
       recurse_find_path(K2, 10 - dir)
     end
@@ -1242,11 +1242,28 @@ function Areas_layout_with_prefabs(R)
 
     -- FIXME: test that this rotation fits
 
+    -- FIXME: see test_prefab_XXX code above
+
     return true
   end
 
 
-  local function try_build_prefab(K, skin, mode)
+  local function prefab_entry_diff(K, skin, from_dir)
+    assert(from_dir)
+
+    if from_dir == 5 then return 0 end
+
+    -- FIXME:
+    local edge = get_skin_edge(skin, 1, 1, from_dir)
+
+    assert(edge)
+    assert(edge.h)
+
+    return edge.h
+  end
+
+
+  local function try_build_prefab(K, skin, mode, from_dir)
     --| mode can be "floor" or "ceiling"
 
     local rot_probs = {}
@@ -1259,7 +1276,11 @@ function Areas_layout_with_prefabs(R)
 
     if table.empty(rot_probs) then return false end
 
-    local rot = rand.key_by_probs(rot_probs)
+    local rot = 2 --!!!!!! rand.key_by_probs(rot_probs)
+
+    local diff_h = prefab_entry_diff(K, skin, from_dir)
+
+    K.floor_h = K.floor_h - diff_h
 
     process_edges(K.sx1, K.sy1, K.sx2, K.sy2, skin, rot, K.floor_h)
 
@@ -1271,7 +1292,7 @@ function Areas_layout_with_prefabs(R)
   end
 
 
-  local function build_floor(K)
+  local function build_floor(K, from_dir)
     if not (K.sw == 3 and K.sh == 3) then return false end  --!!!
 
     local env =
@@ -1297,7 +1318,7 @@ function Areas_layout_with_prefabs(R)
 
       local skin = assert(GAME.SKINS[skin_name])
 
-      if try_build_prefab(K, skin) then
+      if try_build_prefab(K, skin, "floor", from_dir) then
         return true  -- YES !!
       end
 
@@ -1395,14 +1416,14 @@ skin2.floor = assert(S.section.floor_mat)
   end
 
 
-  local function build_section(K, floor_h)
+  local function build_section(K, floor_h, from_dir)
     K.floor_h = floor_h
-    K.ceil_h  = floor_h + rand.pick({128,192,192,256})
+    K.ceil_h  = floor_h + 192 ---- rand.pick({128,192,192,256})
 
     R.min_floor_h = math.min(R.min_floor_h, floor_h)
     R.max_floor_h = math.max(R.max_floor_h, floor_h)
 
-    if not build_floor(K) then
+    if not build_floor(K, from_dir) then
       fallback_floor(K)
     end
 
@@ -1414,17 +1435,17 @@ skin2.floor = assert(S.section.floor_mat)
   end
 
 
-  local function recurse_make_stuff(K, floor_h)
-    build_section(K, floor_h)
+  local function recurse_make_stuff(K, floor_h, from_dir)
+    build_section(K, floor_h, from_dir)
 
     -- order does not matter here
 
     for dir = 2,8,2 do
-      local portal = K.exit[dir]  -- FIXME not actually a portal
+      local portal = K.exit[dir]
 
       if portal then
-        -- FIXME: assert(portal.floor_h)
-        recurse_make_stuff(portal, floor_h - rand.pick{8,12,18})
+        assert(portal.floor_h)
+        recurse_make_stuff(portal.neighbor, portal.floor_h, 10 - portal.side)
       end
     end
   end
@@ -1441,7 +1462,7 @@ each K in R.sections do
   K.floor_mat = mats[1 + _index % 12]
 end
 
-  recurse_make_stuff(R.start_K, R.entry_h)
+  recurse_make_stuff(R.start_K, R.entry_h, R.start_side)
 
   if R.kind != "outdoor" then
     find_corners()

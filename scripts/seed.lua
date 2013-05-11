@@ -293,6 +293,29 @@ function Seed_group_edge_coords(P, dir, thick)
 end
 
 
+function Portal_install(portal)
+  -- put into the seeds
+  local side = portal.side
+
+  for sx = portal.sx1, portal.sx2 do
+  for sy = portal.sy1, portal.sy2 do
+    local S = SEEDS[sx][sy]
+
+--[[
+gui.debugf("install portal %s (%s <--> %s) @ %s dir:%d\n",
+         tostring(portal),
+         portal.conn.L1:tostr(),
+         portal.conn.L2:tostr(),
+         S:tostr(), side)
+--]]
+    assert(not S.portals[side])
+
+    S.portals[side] = portal
+  end
+  end
+end
+
+
 function Portal_set_floor(P, floor_h)
   P.floor_h = floor_h
 
