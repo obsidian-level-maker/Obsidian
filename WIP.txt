@@ -3,9 +3,9 @@ WORK IN PROGRESS
 ================
 
 
-new Layout:
+V5 Layout:
 
-+  need to get sector height for each SPOT, new wadfab function
++  support all rotations
 
 -  support a 'max_floor' in skins
    (determine algorithmically from north/east/etc)
@@ -14,47 +14,14 @@ new Layout:
 !!  get joiners working again
 
 
--  Caves / importants: wall_dist improvement
-
-
-+  Big junctions: make C/T/I versions of Spokey and Circle
-
-
-V5 Layout
----------
-
-+  first pass, visit sections to define path through room
-   (basically the entry and exits of each section).
-
-   Recursive algorithm.  It also marks which sections need to be
-   visitable -- other ones could e.g. become fully liquid.
-
-+  second pass, recursively visit each section again, decide a
-   prefab to use in the section, honoring constrains (e.g.
-   walkability at touching portals).
-   
-   Have possibility to merely sub-divide the section into two or
-   more pieces, making sure the path is kept valid [tricky!].
-
-   After selecting the prefab, create an output portal at the
-   path exits (for now: a single seed) and that ensures the
-   neighboring sections will connect properly.
-
-
--  IDEA: 'override' value for prefabs, default to zero.
-         when > 0, remove all other possible prefabs from the list
-         which have a lower value
-
-
-++  priority for spots  (skill flag)
-       if EASY set OR nothing set --> priority = 1
-       elseif MEDIUM --> priority = 2
-       else              priority = 3
-
-    ALWAYS prefer a higher priority over a lower one.
++  Big junctions:
+   -  EITHER make C/T/I versions of Spokey and Circle
+        OR   create wall prefabs for them + logic to place it
 
 
 +  mark used goal spots as unusable for mons/items
+
+   -  have : Shrink_touching_spots(x1, y1, x2, y2)
 
 
 !!  get cycles working again
@@ -69,20 +36,6 @@ V5 Layout
 
     -  if a locked door is placed in a joiner, don't create cycles
        for it.
-
-
--  fake doors which go nowhere (fake border or wall which has
-   nothing behind it)
-
-
-+  'action' field in a switch prefab, must match door used
-   values can be: "raise", "lower", "stair"
-
-
--  in a single-section hallway, prevent a door on both sides
-
-
->>  get 'height' value into 'env' pick_skin() tables
 
 
 -  FAT_CAGE_PILLAR

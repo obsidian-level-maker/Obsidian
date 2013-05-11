@@ -110,15 +110,29 @@ V5 Stuff:
 
 -  a way to prevent repeating the same prefab in a row
 
--  support 1x3 hallway pieces (and other sizes)
+
++  priority for spots  (skill flag)
+       if EASY set OR nothing set --> priority = 1
+       elseif MEDIUM --> priority = 2
+       else              priority = 3
+
+   ALWAYS prefer a higher priority over a lower one.
+
+-  cycles: limit number of same-lock cycles e.g. 3 for heaps, 2 some, 1 few
 
 -  "halfies" : fake buildings, cages (etc) which are 256x128 and
    occupy half a seed (an unused seed between two rooms).
 
 -  halfie closets
 
-?  have "hallway arches", specified in hallway groups, used in
-   indoor rooms where the hallway meets the room.
++  'action' field in a switch prefab, must match door used
+   values can be: "raise", "lower", "stair"
+
+-  get 'height' value into 'env' pick_skin() tables
+
+-  IDEA: 'override' value for prefabs, default to zero.
+         when > 0, remove all other possible prefabs from the list
+         which have a lower value
 
 
 Caves:
@@ -164,44 +178,8 @@ Street Mode:
 
 
 
-PATTERN AREA LOGIC:
-
-++  place importants AFTER deciding major areas, and do A* pathing
-    separately for each area.
-
--  sometimes with "PLAIN" fill, have two levels (two VHRs)
-   require neighboring 2+ VHRS with a difference >= 2
-   (or both in one seed).
- 
-??  allow the two area creation methods to co-exist, the grid system
-    can take over after e.g. doing a bunch of try_XXX stuff.
-
-?  continue with unpatterned area logic:
-   -  try_TWO_SIDE()
-   -  try_THREE_SIDE()
-   -  try_CORNER()
-   -  try_EDGE()
-
-?  when expanding a new area (A) which overlaps another (B), then
-   have a kind of slow-down when A starts to overlap too much of B
-   (especially when more than half of A is overlapping B).
-
-?  try to surround a newly installed area with a new one
-   with a VHR +/-1 from the previous.
-
-?  put VOID in non-walk left-overs
-
-?  support the "anchor" table
-
 Outdoor rooms: begin with whole space as "natural", create "constructed"
                intrusions into that space.
-
-
-Outdoor Borders:
-+  review logic, find better way (without the 'edge_of_map' flag)
-
-+  for outdoor bordering, have earlier pass to set the facade_mat
-   in _all_ unused seeds (grow existing buildings)
 
 
 Outdoor Idioms:
