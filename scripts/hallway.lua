@@ -591,10 +591,10 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen, is_cycle
 
     -- allow height changes at big junctions (specified by the skin)
 
-    if skin.south then floor_diffs[s_dir] = skin.south.h end
-    if skin.north then floor_diffs[n_dir] = skin.north.h end
-    if skin.east  then floor_diffs[e_dir] = skin.east.h  end
-    if skin.west  then floor_diffs[w_dir] = skin.west.h  end
+    if skin.south then floor_diffs[s_dir] = skin.south.f_h end
+    if skin.north then floor_diffs[n_dir] = skin.north.f_h end
+    if skin.east  then floor_diffs[e_dir] = skin.east.f_h  end
+    if skin.west  then floor_diffs[w_dir] = skin.west.f_h  end
 
     -- we may enter the junction from a direction other than south
     -- (relative to the prefab).  So adjust the current floor_h
