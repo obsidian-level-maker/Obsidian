@@ -2,6 +2,8 @@
 -- Pictures
 --
 
+---- TECH ----
+
 DOOM.SKINS.Pic_Computer =
 {
   file   = "wall/pic_128x48.wad"
@@ -27,5 +29,27 @@ DOOM.SKINS.Pic_Computer =
   effect = { [0]=90, [1]=5 }  -- sometimes blink
   fx_delta = -47
 --]]
+}
+
+
+---- URBAN ----
+
+DOOM.SKINS.Pic_Adolf =
+{
+  file   = "wall/pic_128x128.wad"
+  where  = "edge"
+
+  long   = 192
+  deep   = 32
+  height = 192
+
+  x_fit  = "frame"
+  y_fit  = "top"
+
+  bound_z1 = 0
+  bound_z2 = 192
+
+  theme = "urban"
+  prob  = 20
 }
 
