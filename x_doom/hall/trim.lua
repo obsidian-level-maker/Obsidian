@@ -63,8 +63,6 @@ DOOM.SKINS.Hall_trim1_Stair16 =
   file   = "hall/trim1_s16.wad"
   group  = "hall_trim"
   shape  = "stair16"
-
-  north  = { h=16 }
 }
 
 
@@ -73,8 +71,6 @@ DOOM.SKINS.Hall_trim1_Stair32 =
   file   = "hall/trim1_s32.wad"
   group  = "hall_trim"
   shape  = "stair32"
-
-  north  = { h=32 }
 }
 
 
@@ -83,8 +79,6 @@ DOOM.SKINS.Hall_trim1_Stair64 =
   file   = "hall/trim1_s64.wad"
   group  = "hall_trim"
   shape  = "stair64"
-
-  north  = { h=64 }
 }
 
 

@@ -14,6 +14,6 @@ DOOM.SKINS.Joiner_round_stair =
 
   prob = 200
 
-  north = { h=80 }
+  north = { f_h=80 }
 }
 

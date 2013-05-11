@@ -1107,7 +1107,7 @@ function Room_matching_skins(env, reqs)
       if string.match(k, "^north") or string.match(k, "^east") or
          string.match(k, "^south") or string.match(k, "^west")
       then
-        if v.h != 0 then return false end
+        if v.f_h != 0 then return false end
       end
     end
 

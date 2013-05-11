@@ -950,7 +950,7 @@ function Areas_layout_with_prefabs(R)
 
         local edge = get_skin_edge(skin, px, py, pdir)
 
-        if edge and edge.h then
+        if edge and edge.f_h then
           if mode != "walk" then return false end
         else
           if mode != "closed" then return false end
@@ -985,10 +985,10 @@ function Areas_layout_with_prefabs(R)
         if portal then
           local P = portal
 
-          assert(edge and edge.h)
+          assert(edge and edge.f_h)
 
           if not P.floor_h then
-            Portal_set_floor(P, h + edge.h)
+            Portal_set_floor(P, h + edge.f_h)
           end
 
           if P.door_kind and not P.added_door then
@@ -1009,8 +1009,8 @@ function Areas_layout_with_prefabs(R)
 
         -- the room ends here, check if prefab was walkable
 
-        if edge and edge.h then
-          Areas_add_wall(R, "wall", sx, sy, sx, sy, dir, h + edge.h, nil)
+        if edge and edge.f_h then
+          Areas_add_wall(R, "wall", sx, sy, sx, sy, dir, h + edge.f_h, nil)
         end
 
       end -- sx, sy
@@ -1257,9 +1257,9 @@ function Areas_layout_with_prefabs(R)
     local edge = get_skin_edge(skin, 1, 1, from_dir)
 
     assert(edge)
-    assert(edge.h)
+    assert(edge.f_h)
 
-    return edge.h
+    return edge.f_h
   end
 
 

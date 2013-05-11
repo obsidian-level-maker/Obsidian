@@ -9,9 +9,9 @@ DOOM.SKINS.Floor_L1_3x3 =
   seed_w = 3
   seed_h = 3
 
-  north  = { h=64 }
-  east   = { h=64 }
-  south  = { h=0 }
-  west   = { h=0 }
+  north  = { f_h=64 }
+  east   = { f_h=64 }
+  south  = { f_h=0 }
+  west   = { f_h=0 }
 }
 

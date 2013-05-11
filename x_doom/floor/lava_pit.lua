@@ -11,9 +11,9 @@ DOOM.SKINS.Floor_lava_pit1 =
 
   liquid = "any"
 
-  north  = { h=0 }
-  east   = { h=0 }
-  south  = { h=0 }
-  west   = { h=0 }
+  north  = { f_h=0 }
+  east   = { f_h=0 }
+  south  = { f_h=0 }
+  west   = { f_h=0 }
 }
 

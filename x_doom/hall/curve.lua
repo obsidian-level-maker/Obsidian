@@ -63,8 +63,6 @@ DOOM.SKINS.Hall_curve_Stair16 =
   file   = "hall/curve_s16.wad"
   group  = "hall_curve"
   shape  = "stair16"
-
-  north  = { h=16 }
 }
 
 
@@ -73,8 +71,6 @@ DOOM.SKINS.Hall_curve_Stair32 =
   file   = "hall/curve_s32.wad"
   group  = "hall_curve"
   shape  = "stair32"
-
-  north  = { h=32 }
 }
 
 
@@ -83,8 +79,6 @@ DOOM.SKINS.Hall_curve_Stair64 =
   file   = "hall/curve_s64.wad"
   group  = "hall_curve"
   shape  = "stair64"
-
-  north  = { h=64 }
 }
 
 

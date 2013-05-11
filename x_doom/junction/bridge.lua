@@ -4,7 +4,7 @@
 
 DOOM.SKINS.Junc_bridge1 =
 {
-  file   = "junction/curve_bridge1.wad"
+  file   = "junction/bridge1.wad"
   shape  = "I"
   group  = "hall_curve"
 
@@ -18,7 +18,7 @@ DOOM.SKINS.Junc_bridge1 =
 
 DOOM.SKINS.Junc_bridge2 =
 {
-  file   = "junction/curve_bridge2.wad"
+  file   = "junction/bridge2.wad"
   shape  = "C"
   group  = "hall_curve"
 
