@@ -430,9 +430,9 @@ function Areas_place_importants(R)
   --
   -- for caves, this is done before the room is laid out, since the
   -- cave code needs to know a-priori where the importants will go
-  -- (so it can ensure there is clear space at those places).
+  -- (so it can ensure there is walkable space at those places).
   --
-  -- NOTE: closets for switches, teleporters (etc) are done elsewhere.
+  -- NOTE: closets for switches (etc) are done elsewhere...
   --
   local cave_mode
 
@@ -593,7 +593,7 @@ function Areas_place_importants(R)
     -- now combine with wall_dist.
     -- in caves we need the spot to be away from the edges of the room
     if cave_mode then
-      score = score + wall_dist * 2.3
+      if wall_dist >= 1.2 then score = score + 100 end
     else
       score = score + wall_dist / 5
     end
@@ -838,7 +838,7 @@ end
 
   ---| Areas_place_importants |---
 
-  if R.kind == "cave" or rand.odds(10) then
+  if R.kind == "cave" or rand.odds(15) then
     cave_mode = true
   end
 
