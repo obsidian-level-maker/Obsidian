@@ -211,6 +211,9 @@ function Areas_handle_connections()
 
     if D.lock then
       lock_portals(D)
+
+      D.L1.has_a_door = true
+      D.L2.has_a_door = true
     end
   end
 

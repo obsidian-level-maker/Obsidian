@@ -3171,10 +3171,17 @@ function Room_reckon_doors()
       P1, P2 = P2, P1
     end
 
-    -- TODO: review this
-    if L2.kind == "hallway" and L2.is_joiner then return end
-
     if not P1 then return end
+
+
+    -- don't add two doors to a short hallway
+    if L2.kind == "hallway" then
+      if #L2.sections <= 2 and L2.has_a_door then return end
+
+      -- TODO: review this
+      if L2.kind == "hallway" and L2.is_joiner then return end
+    end
+
 
     if P1 and P2 then
       if L2.is_outdoor or
@@ -3198,6 +3205,9 @@ function Room_reckon_doors()
     -- OK --
 
     P1.door_kind = "door"
+
+    L1.has_a_door = true
+    L2.has_a_door = true
   end
 
 
