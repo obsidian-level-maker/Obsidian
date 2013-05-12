@@ -651,14 +651,23 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen, is_cycle
 
     P.h_dir = sel(z_dir < 0, 10 - from_dir, from_dir)
 
-    -- FIXME: pick stair kind ("short" / "medium" / "tall")
-    --        (only one kind per hallway)
+    -- pick stair kind (or maybe a lift)
 
-    if rand.odds(50) then
+    local lift_chance = sel(z_dir < 0, 3, 12)
+
+    if #H.sections <= 2 then lift_chance = 1 end
+
+    if rand.odds(lift_chance) then
       P.h_stair_kind = "lift"
-      P.h_lift_h = rand.pick { 104, 128, 166 }
+      P.h_lift_h = rand.pick { 104, 160 }
 
       floor_h = floor_h + P.h_lift_h * z_dir
+
+    elseif rand.odds(10) then
+      P.h_stair_kind = "stair64"
+
+      floor_h = floor_h + 64 * z_dir
+
     else
       P.h_stair_kind = "stair32"
 
@@ -712,7 +721,7 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen, is_cycle
       end
     end
 
-    if did_a_branch and rand.odds(50) and
+    if did_a_branch and rand.odds(40) and
        not is_cycle and not H.double_fork
     then
       z_dir = -z_dir
@@ -1021,7 +1030,7 @@ if H.is_joiner then stderrf("   JOINER !!!!\n") end
 
   H:peer_double_chunks()
 
-  H.stair_prob = 35 + 65  --!!!!! FIXME
+  H.stair_prob = 75
 
   -- general vertical direction
   local z_dir = rand.sel(50, 1, -1)
