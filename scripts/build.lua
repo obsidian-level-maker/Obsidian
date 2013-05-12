@@ -1787,10 +1787,13 @@ function Fab_parse_edges(skin)
   
   if skin._seed_map then return end
 
-  local seed_w = skin.seed_w or 1 
-  local seed_h = skin.seed_h or 1 
+  if not skin.seed_w then skin.seed_w = 1 end
+  if not skin.seed_h then skin.seed_h = 1 end
 
-  local map = table.array_2D(seed_w, seed_h)
+  local W = skin.seed_w
+  local H = skin.seed_h
+
+  local map = table.array_2D(W, H)
 
   skin._seed_map = map
 
@@ -1800,8 +1803,8 @@ function Fab_parse_edges(skin)
 
 
   -- setup the seed map
-  for x = 1, seed_w do
-  for y = 1, seed_h do
+  for x = 1, W do
+  for y = 1, H do
     map[x][y] = { edges={} }
   end
   end
@@ -1810,15 +1813,15 @@ function Fab_parse_edges(skin)
   local function try_parse_edge(dir, prefix, k, edge)
     local k_orig = k
 
-    k = string.match(k, prefix .. "(%d+)")
+    k = string.match(k, prefix .. "(%d*)")
 
     if not k then return end
 
     -- determine range of seeds to store edge.
     -- handles not just 'north' but 'north1' and 'north23' syntax.
 
-    local x1, x2 = 1, seed_w
-    local y1, y2 = 1, seed_h
+    local x1, x2 = 1, W
+    local y1, y2 = 1, H
 
     if dir == 2 then y2 = y1 end
     if dir == 8 then y1 = y2 end
@@ -1834,7 +1837,7 @@ function Fab_parse_edges(skin)
       low  = 0 + low
       high = 0 + high
 
-      if low < 1 or low > high or high > geom.vert_sel(dir, seed_w, seed_h) then
+      if low < 1 or low > high or high > geom.vert_sel(dir, W, H) then
         error("Out of range edge in prefab skin: " .. k_orig)
       end
 
