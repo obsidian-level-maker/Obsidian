@@ -1795,10 +1795,13 @@ function Fab_parse_edges(skin)
   skin._seed_map = map
 
 
-  -- setup the seed map
+  -- also determine a maximum floor_h (if absent from skin)
+  local max_floor_h = 0
 
+
+  -- setup the seed map
   for x = 1, seed_w do
-  for y = 1, seed_H do
+  for y = 1, seed_h do
     map[x][y] = { edges={} }
   end
   end
@@ -1852,6 +1855,10 @@ function Fab_parse_edges(skin)
       end
 
       map[x][y].edges[dir] = edge
+
+      if edge.f_h then
+        max_floor_h = math.max(max_floor_h, edge.f_h)
+      end
     end
     end
   end
@@ -1862,6 +1869,10 @@ function Fab_parse_edges(skin)
     try_parse_edge(2, "south", k, edge)
     try_parse_edge(6, "east",  k, edge)
     try_parse_edge(4, "west",  k, edge)
+  end
+
+  if not skin.max_floor_h then
+    skin.max_floor_h = max_floor_h
   end
 end
 
@@ -2446,7 +2457,7 @@ function Fab_replacements(fab, skin)
     if skin[k] == "_LIQUID" and LEVEL.liquid then
       C.special = C.special or LEVEL.liquid.special
       C.light   = LEVEL.liquid.light
-      C._factor = 0.7
+      C._factor = 0.6
     end
 
     if skin[k] then
