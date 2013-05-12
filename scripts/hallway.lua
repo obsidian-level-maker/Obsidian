@@ -1083,8 +1083,8 @@ function HALLWAY_CLASS.divide_one_section(H, P)
   -- handle tall 'I' pieces later (in stair_flow)
   if P.h_shape == "I" and tall > 1 then return end
 
-  -- 'P' shapes are already 1x1 (only occur at junctions)
-  assert(P.h_shape != "P")
+  -- Note: tall 'P' shapes are rare but _can_ happen
+  --       (this logic handles it fine)
 
 
   -- grab original coords
