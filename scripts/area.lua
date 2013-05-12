@@ -896,9 +896,44 @@ function Areas_layout_with_prefabs(R)
   }
 
 
-  -- class MAPPING
-  -- {
-  -- } 
+  local function convert_dir(dir, rot)
+    if rot == 2 then return dir end
+    if rot == 8 then return 10 - dir end
+
+    if rot == 4 then return geom.RIGHT[dir] end
+    if rot == 6 then return geom.LEFT [dir] end
+  end
+
+
+  local function convert_coord(sdx, sdy, skin, rot)
+    --| sdx and sdy begin at _zero_
+
+    local px, py
+
+    if rot == 2 then
+      px = 1 + sdx
+      py = 1 + sdy
+
+    elseif rot == 8 then
+      px = skin.seed_w - sdx
+      py = skin.seed_h - sdy
+
+    elseif rot == 4 then
+      px = 1 + sdy
+      py = skin.seed_h - sdx
+
+    elseif rot == 6 then
+      px = skin.seed_w - sdy
+      py = 1 + sdx
+
+    end
+
+    assert(px and py)
+    assert(1 <= px and px <= skin.seed_w)
+    assert(1 <= py and py <= skin.seed_h)
+
+    return px, py
+  end
 
 
   local function get_skin_edge(skin, px, py, pdir)
@@ -906,29 +941,23 @@ function Areas_layout_with_prefabs(R)
     -- px ranges from 1 to seed_w
     -- py ranges from 1 to seed_h
 
-    local edge
-
-    if pdir == 8 then edge = skin["north" .. px] or skin["north"] end
-    if pdir == 2 then edge = skin["south" .. px] or skin["south"] end
-    if pdir == 6 then edge = skin[ "east" .. py] or skin[ "east"] end
-    if pdir == 4 then edge = skin[ "west" .. py] or skin[ "west"] end
 
     return edge
   end
 
 
   local function test_prefab_XXX(sx1, sy1, sx2, sy2, skin, rot)
-    local pw = skin.seed_w or 1
-    local ph = skin.seed_h or 1
+    local pw = skin.seed_w
+    local ph = skin.seed_h
 
     for dir = 2,8,2 do
       for sx = sx1, sx2 do
       for sy = sy1, sy2 do
+        -- get coordinate in the prefab space
+        local px, py = convert_coord(sx - sx1, sy - sy1, skin, rot)
+        local pdir = convert_dir(dir, rot)
 
-        -- FIXME: HANDLE ROTATIONS !!!
-        local px = sx - sx1 + 1
-        local py = sy - sy1 + 1
-        local pdir = dir
+        local edge = map[px][py].edges[pdir]
 
         -- only interested in the edges
         if dir == 2 and py > 1  then continue end
@@ -968,16 +997,26 @@ function Areas_layout_with_prefabs(R)
 
 
   local function process_edges(sx1, sy1, sx2, sy2, skin, rot, h)
+    Fab_parse_edges(skin)
+
+    local map = skin._seed_map
+    assert(map)
+
     for dir = 2,8,2 do
       for sx = sx1, sx2 do
       for sy = sy1, sy2 do
+        -- get coordinate in the prefab space
+        local px, py = convert_coord(sx - sx1, sy - sy1, skin, rot)
+        local pdir = convert_dir(dir, rot)
 
-        -- FIXME: HANDLE ROTATIONS !!!
-        local px = sx - sx1 + 1
-        local py = sy - sy1 + 1
-        local pdir = dir
-
-        local edge = get_skin_edge(skin, px, py, pdir)
+--[[
+stderrf("sx: %d (%d .. %d)\n", sx, sx1, sx2)
+stderrf("sy: %d (%d .. %d)\n", sy, sy1, sy2)
+stderrf("--> pcoord %d, %d\n", px, py)
+stderrf("dir: %d ---> pdir: %d\n", dir, pdir)
+stderrf("MAP =\n%s\n", table.tostr(map, 4))
+--]]
+        local edge = map[px][py].edges[pdir]
 
 
         local S = SEEDS[sx][sy]
@@ -1257,7 +1296,12 @@ function Areas_layout_with_prefabs(R)
     if from_dir == 5 then return 0 end
 
     -- FIXME:
-    local edge = get_skin_edge(skin, 1, 1, from_dir)
+    local edge
+
+    if from_dir == 8 then edge = skin["north2"] or skin["north"] end
+    if from_dir == 2 then edge = skin["south2"] or skin["south"] end
+    if from_dir == 6 then edge = skin[ "east2"] or skin[ "east"] end
+    if from_dir == 4 then edge = skin[ "west2"] or skin[ "west"] end
 
     assert(edge)
     assert(edge.f_h)
@@ -1268,6 +1312,8 @@ function Areas_layout_with_prefabs(R)
 
   local function try_build_prefab(K, skin, mode, from_dir)
     --| mode can be "floor" or "ceiling"
+
+    Fab_parse_edges(skin)
 
     local rot_probs = {}
 
@@ -1290,6 +1336,9 @@ function Areas_layout_with_prefabs(R)
     local T = Trans.section_transform(K, rot)
 
     Fabricate_at(R, skin, T, { skin, skin2 })
+
+
+    R.max_floor_h = math.max(R.max_floor_h, K.floor_h + skin.max_floor_h)
 
     return true
   end
@@ -1355,7 +1404,7 @@ function Areas_layout_with_prefabs(R)
 
     local skin1 = Room_pick_skin(env, reqs)
 
-    local rot = 0  -- !!!!
+    local rot = 2  -- !!!!
 
     process_edges(S.sx, S.sy, S.sx, S.sy, skin1, rot, floor_h)
 
