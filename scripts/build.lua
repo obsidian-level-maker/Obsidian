@@ -1781,6 +1781,91 @@ function Build_sky_quad(x1, y1, x2, y2, sky_h)
 end
 
 
+function Fab_parse_edges(skin)
+  --| convert the 'north', 'east' (etc) fields of a skin into
+  --| a list of portals in a 2D array.
+  
+  if skin._seed_map then return end
+
+  local seed_w = skin.seed_w or 1 
+  local seed_h = skin.seed_h or 1 
+
+  local map = table.array_2D(seed_w, seed_h)
+
+  skin._seed_map = map
+
+
+  -- setup the seed map
+
+  for x = 1, seed_w do
+  for y = 1, seed_H do
+    map[x][y] = { edges={} }
+  end
+  end
+
+
+  local function try_parse_edge(dir, prefix, k, edge)
+    local k_orig = k
+
+    k = string.match(k, prefix .. "(%d+)")
+
+    if not k then return end
+
+    -- determine range of seeds to store edge.
+    -- handles not just 'north' but 'north1' and 'north23' syntax.
+
+    local x1, x2 = 1, seed_w
+    local y1, y2 = 1, seed_h
+
+    if dir == 2 then y2 = y1 end
+    if dir == 8 then y1 = y2 end
+    if dir == 4 then x2 = x1 end
+    if dir == 6 then x1 = x2 end
+
+    if k != "" then
+      local low  = string.sub(k, 1, 1)
+      local high = string.sub(k, 2, 1)
+
+      if high == "" then high = low end
+
+      low  = 0 + low
+      high = 0 + high
+
+      if low < 1 or low > high or high > geom.vert_sel(dir, seed_w, seed_h) then
+        error("Out of range edge in prefab skin: " .. k_orig)
+      end
+
+      if geom.is_vert(dir) then
+        x1 = low
+        x2 = high
+      else
+        y1 = low
+        y2 = high
+      end
+    end
+
+    -- actually store it in the array
+    for x = x1, x2 do
+    for y = y1, y2 do
+      if map[x][y].edges[dir] then
+        error("Overlapping edges in prefab skin")
+      end
+
+      map[x][y].edges[dir] = edge
+    end
+    end
+  end
+
+
+  each k, edge in skin do
+    try_parse_edge(8, "north", k, edge)
+    try_parse_edge(2, "south", k, edge)
+    try_parse_edge(6, "east",  k, edge)
+    try_parse_edge(4, "west",  k, edge)
+  end
+end
+
+
 ------------------------------------------------------------------------
 
 
