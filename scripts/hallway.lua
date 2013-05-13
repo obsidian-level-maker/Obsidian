@@ -699,7 +699,7 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen, is_cycle
     local P2 = P.hall_link[dir]
 
     if P2 and P2.hall == H and not seen[P2] then
-      H:stair_flow(P2, 10 - dir, f_h, z_dir, seen)
+      H:stair_flow(P2, 10 - dir, f_h, z_dir, seen, is_cycle)
       did_a_branch = true
     end
 
