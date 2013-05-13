@@ -1451,8 +1451,9 @@ function HALLWAY_CLASS.build_hall_piece(H, P)
 
   Fabricate_at(H, skin1, T, { skin0, skin1 })
 
---!!!!!!
+--[[ debug aid
 entity_helper("dummy", T.add_x + 128, T.add_y + 128, P.floor_h)
+--]]
 
   H.last_piece = skin1.name
 end
@@ -1544,7 +1545,7 @@ function Hallway_scan(start_K, start_dir, mode)
     local score2 =   end_K:eval_exit(  end_dir)
     assert(score1 >= 0 and score2 >= 0)
 
-    local score = (score1 + score2) * 10
+    local score = 200 + (score1 + score2) * 10
 
     -- bonus for connecting to a central hub room
     if L1.central_hub or (end_K.room and end_K.room.central_hub) then
@@ -1554,7 +1555,7 @@ function Hallway_scan(start_K, start_dir, mode)
       score = score + 120
       merge = true
     elseif stats.big_junc then
-      score = score + sel(LEVEL.ignore_big_junctions, -300, 80)
+      score = score + sel(LEVEL.ignore_big_junctions, -400, 80)
       merge = false
 
       if end_K.hall then return end
@@ -1571,7 +1572,7 @@ function Hallway_scan(start_K, start_dir, mode)
     -- prefer secret exits DO NOT connect to the start room
     if mode == "secret_exit" then
       if L2.purpose == "START" then
-        score = score - 300
+        score = score - 1000
       end
       if L2.kind == "outdoor" then
         score = score - 50
@@ -1619,13 +1620,13 @@ function Hallway_scan(start_K, start_dir, mode)
         end
       end
 
-      -- never make them if it would need a keyed door, but the game
+      -- never make them if it needs a keyed door but the game
       -- uses up keys (since key is needed for original door).
       if need_lock.kind == "KEY" and PARAM.lose_keys then
         return
       end
 
-      score = score - 40
+      score = score - 240
     end
 
 
