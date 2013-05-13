@@ -1830,7 +1830,7 @@ function Fab_parse_edges(skin)
 
     if k != "" then
       local low  = string.sub(k, 1, 1)
-      local high = string.sub(k, 2, 1)
+      local high = string.sub(k, 2, 2)
 
       if high == "" then high = low end
 
