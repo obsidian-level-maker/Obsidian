@@ -777,16 +777,6 @@ function Areas_layout_with_prefabs(R)
   end
 
 
-  local function get_skin_edge(skin, px, py, pdir)
-    -- px, py and pdir are in the prefab space.
-    -- px ranges from 1 to seed_w
-    -- py ranges from 1 to seed_h
-
-
-    return edge
-  end
-
-
   local function test_prefab_XXX(sx1, sy1, sx2, sy2, skin, rot)
     local pw = skin.seed_w
     local ph = skin.seed_h
@@ -856,6 +846,7 @@ stderrf("sy: %d (%d .. %d)\n", sy, sy1, sy2)
 stderrf("--> pcoord %d, %d\n", px, py)
 stderrf("dir: %d ---> pdir: %d\n", dir, pdir)
 stderrf("MAP =\n%s\n", table.tostr(map, 4))
+stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
 --]]
         local edge = map[px][py].edges[pdir]
 
@@ -1023,16 +1014,15 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
   end
 
   
-  local function intra_room_portal(sx1, sy1, sx2, sy2, side, K1, K2)
+  local function new_room_portal(kind, K, sx1, sy1, sx2, sy2, side)
 
     local PORTAL =
     {
-      kind = "intra"
+      kind = kind
       sx1  = sx1, sy1 = sy1
       sx2  = sx2, sy2 = sy2
       side = side
-      section = K1
-      neighbor = K2
+      section = K
     }
 
     Portal_install(PORTAL)
@@ -1041,7 +1031,7 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
   end
 
 
-  local function recurse_find_path(K, side)
+  local function recurse_find_path(K, from_dir)
     K.visited_for_path = true
 
     K.exit = {}
@@ -1050,7 +1040,7 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
     local my = rand.irange(K.sy1, K.sy2)
 
     each dir in rand.dir_list() do
-      if dir == side then continue end
+      if dir == from_dir then continue end
 
       local sx, sy = mx, my
 
@@ -1075,9 +1065,18 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
 
       --- debug_arrow(S, dir, R.entry_h + 8)
 
-      K.exit[dir] = intra_room_portal(sx, sy, sx, sy, dir, K, K2)
+      -- create a pair of portals
+      -- (slightly overkill, but keeps things consistent)
 
-      recurse_find_path(K2, 10 - dir)
+      local po1 = new_room_portal("floor_out", K,  S.sx, S.sy, S.sx, S.sy, dir)
+      local po2 = new_room_portal("floor_in",  K2, N.sx, N.sy, N.sx, N.sy, 10 - dir)
+
+      po1.peer = po2
+      po2.peer = po1
+
+      K.exit[dir] = po1
+
+      recurse_find_path(po2.section, po2.side)
     end
   end
 
@@ -1090,14 +1089,17 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
 
     local start_K
     local start_side
+    local start_portal
 
     if D and D.kind != "teleporter" then
       if D.L1 == R then
         start_K = D.K1
         start_side = D.dir1
+        start_portal = D.portal1
       elseif D.L2 == R then
         start_K = D.K2
         start_side = D.dir2
+        start_portal = D.portal2
       else
         error("path_through_room: cannot find entry section")
       end
@@ -1106,10 +1108,12 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
       -- TODO: pick section furthest from any connections
       start_K = rand.pick(R.sections)
       start_side = 5  -- "middle"
+      -- no start portal
     end
 
-    R.start_K    = assert(start_K)
-    R.start_side = assert(start_side)
+    R.start_K      = assert(start_K)
+    R.start_side   = assert(start_side)
+    R.start_portal = start_portal
 
     recurse_find_path(start_K, start_side)
 
@@ -1131,18 +1135,26 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
   end
 
 
-  local function prefab_entry_diff(K, skin, from_dir)
-    assert(from_dir)
+  local function prefab_entry_diff(K, from_portal, skin, rot)
+    if not from_portal then return 0 end
 
-    if from_dir == 5 then return 0 end
+    -- Note: assumes portal is a single seed
+    local side = from_portal.side
 
-    -- FIXME:
-    local edge
+    local sx = from_portal.sx1
+    local sy = from_portal.sy1
 
-    if from_dir == 8 then edge = skin["north2"] or skin["north"] end
-    if from_dir == 2 then edge = skin["south2"] or skin["south"] end
-    if from_dir == 6 then edge = skin[ "east2"] or skin[ "east"] end
-    if from_dir == 4 then edge = skin[ "west2"] or skin[ "west"] end
+    if side == 8 then sy = from_portal.sy2 end
+
+
+    local S = SEEDS[sx][sy]
+    local N = S:neighbor(side)
+
+
+    local px, py = convert_coord(sx - K.sx1, sy - K.sy1, skin, rot)
+    local pdir   = convert_dir(side, rot)
+
+    local edge = skin._seed_map[px][py].edges[pdir]
 
     assert(edge)
     assert(edge.f_h)
@@ -1151,7 +1163,7 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
   end
 
 
-  local function try_build_prefab(K, skin, mode, from_dir)
+  local function try_build_prefab(K, skin, mode, from_portal)
     --| mode can be "floor" or "ceiling"
 
     Fab_parse_edges(skin)
@@ -1169,7 +1181,7 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
     local rot = rand.key_by_probs(rot_probs)
 
 
-    local diff_h = prefab_entry_diff(K, skin, convert_dir(from_dir, rot))
+    local diff_h = prefab_entry_diff(K, from_portal, skin, rot)
 
     K.floor_h = K.floor_h - diff_h
 
@@ -1186,7 +1198,8 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
   end
 
 
-  local function build_floor(K, from_dir)
+  local function build_floor(K, from_portal)
+
     if not (K.sw == 3 and K.sh == 3) then return false end  --!!!
 
     local env =
@@ -1212,7 +1225,7 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
 
       local skin = assert(GAME.SKINS[skin_name])
 
-      if try_build_prefab(K, skin, "floor", from_dir) then
+      if try_build_prefab(K, skin, "floor", from_portal) then
         return true  -- YES !!
       end
 
@@ -1310,14 +1323,14 @@ skin2.floor = assert(S.section.floor_mat)
   end
 
 
-  local function build_section(K, floor_h, from_dir)
+  local function build_section(K, floor_h, from_portal)
     K.floor_h = floor_h
     K.ceil_h  = floor_h + 192 ---- rand.pick({128,192,192,256})
 
     R.min_floor_h = math.min(R.min_floor_h, floor_h)
     R.max_floor_h = math.max(R.max_floor_h, floor_h)
 
-    if not build_floor(K, from_dir) then
+    if not build_floor(K, from_portal) then
       fallback_floor(K)
     end
 
@@ -1329,8 +1342,8 @@ skin2.floor = assert(S.section.floor_mat)
   end
 
 
-  local function recurse_make_stuff(K, floor_h, from_dir)
-    build_section(K, floor_h, from_dir)
+  local function recurse_make_stuff(K, floor_h, from_portal)
+    build_section(K, floor_h, from_portal)
 
     -- order does not matter here
 
@@ -1338,8 +1351,12 @@ skin2.floor = assert(S.section.floor_mat)
       local portal = K.exit[dir]
 
       if portal then
+        -- get the one inside the neighbor
+        portal = assert(portal.peer)
+
         assert(portal.floor_h)
-        recurse_make_stuff(portal.neighbor, portal.floor_h, 10 - portal.side)
+
+        recurse_make_stuff(portal.section, portal.floor_h, portal)
       end
     end
   end
@@ -1356,7 +1373,7 @@ each K in R.sections do
   K.floor_mat = mats[1 + _index % 12]
 end
 
-  recurse_make_stuff(R.start_K, R.entry_h, R.start_side)
+  recurse_make_stuff(R.start_K, R.entry_h, R.start_portal)
 
   if R.kind != "outdoor" then
     find_corners()
