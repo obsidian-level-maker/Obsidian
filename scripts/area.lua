@@ -900,8 +900,8 @@ function Areas_layout_with_prefabs(R)
     if rot == 2 then return dir end
     if rot == 8 then return 10 - dir end
 
-    if rot == 4 then return geom.RIGHT[dir] end
-    if rot == 6 then return geom.LEFT [dir] end
+    if rot == 4 then return geom.LEFT [dir] end
+    if rot == 6 then return geom.RIGHT[dir] end
   end
 
 
@@ -919,12 +919,12 @@ function Areas_layout_with_prefabs(R)
       py = skin.seed_h - sdy
 
     elseif rot == 4 then
-      px = 1 + sdy
-      py = skin.seed_h - sdx
-
-    elseif rot == 6 then
       px = skin.seed_w - sdy
       py = 1 + sdx
+
+    elseif rot == 6 then
+      px = 1 + sdy
+      py = skin.seed_h - sdx
 
     end
 
@@ -1325,9 +1325,10 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
 
     if table.empty(rot_probs) then return false end
 
-    local rot = 2 --!!!!!! rand.key_by_probs(rot_probs)
+    local rot = rand.key_by_probs(rot_probs)
 
-    local diff_h = prefab_entry_diff(K, skin, from_dir)
+
+    local diff_h = prefab_entry_diff(K, skin, convert_dir(from_dir, rot))
 
     K.floor_h = K.floor_h - diff_h
 
