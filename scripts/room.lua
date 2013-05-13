@@ -3313,7 +3313,6 @@ function Room_build_all()
   Room_analyse_fat_fences()
   Room_analyse_outside_joiners()
 
-  Areas_path_through_rooms()
   Areas_flesh_out()
 
   Room_outdoor_borders()
