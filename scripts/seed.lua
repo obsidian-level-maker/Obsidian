@@ -342,7 +342,7 @@ end
 
 
 function SECTION_CLASS.tostr(K)
-  return string.format("%s [%d,%d]", string.upper(K.shape), K.kx, K.ky)
+  return string.format("%s [%d,%d]", string.upper(K.shape), K.kx or -1, K.ky or -1)
 end
 
 
