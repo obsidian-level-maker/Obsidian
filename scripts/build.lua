@@ -1787,6 +1787,7 @@ function Fab_parse_edges(skin)
   
   if skin._seed_map then return end
 
+  -- create the seed map
   if not skin.seed_w then skin.seed_w = 1 end
   if not skin.seed_h then skin.seed_h = 1 end
 
@@ -1798,11 +1799,7 @@ function Fab_parse_edges(skin)
   skin._seed_map = map
 
 
-  -- also determine a maximum floor_h (if absent from skin)
-  local max_floor_h = 0
-
-
-  -- setup the seed map
+  -- initialize it
   for x = 1, W do
   for y = 1, H do
     map[x][y] = { edges={} }
@@ -1810,68 +1807,62 @@ function Fab_parse_edges(skin)
   end
 
 
-  local function try_parse_edge(dir, prefix, k, edge)
-    local k_orig = k
+  -- also determine the maximum floor_h (if absent from skin)
+  local max_floor_h = 0
 
-    k = string.match(k, prefix .. "(%d*)")
 
-    if not k then return end
+  local function lookup_edge(char)
+    if char == '#' then return nil end
 
-    -- determine range of seeds to store edge.
-    -- handles not just 'north' but 'north1' and 'north23' syntax.
+    if char == '.' then return { f_h=0 } end
 
-    local x1, x2 = 1, W
-    local y1, y2 = 1, H
-
-    if dir == 2 then y2 = y1 end
-    if dir == 8 then y1 = y2 end
-    if dir == 4 then x2 = x1 end
-    if dir == 6 then x1 = x2 end
-
-    if k != "" then
-      local low  = string.sub(k, 1, 1)
-      local high = string.sub(k, 2, 2)
-
-      if high == "" then high = low end
-
-      low  = 0 + low
-      high = 0 + high
-
-      if low < 1 or low > high or high > geom.vert_sel(dir, W, H) then
-        error("Out of range edge in prefab skin: " .. k_orig)
-      end
-
-      if geom.is_vert(dir) then
-        x1 = low
-        x2 = high
-      else
-        y1 = low
-        y2 = high
-      end
+    if not string.match(char, "[a-z]") then
+      error("Illegal char in prefab edge string: " .. char)
     end
 
-    -- actually store it in the array
-    for x = x1, x2 do
-    for y = y1, y2 do
-      if map[x][y].edges[dir] then
-        error("Overlapping edges in prefab skin")
-      end
+    local edge = skin.edges and skin.edges[char]
+
+    if not edge then
+      error("Unknown edge in prefab edge string: " .. char)
+    end
+
+    return edge
+  end
+
+
+  local function parse_edge(dir, str)
+    -- check stuff
+    if type(str) != "string" then
+      error("bad edge string in prefab skin")
+    elseif #str != geom.vert_sel(dir, W, H) then
+      error("edge string does not match prefab size")
+    end
+
+    -- process each element of the edge string
+    for n = 1, #str do
+      local x, y
+
+      if dir == 2 then x = n ; y = 1 end
+      if dir == 8 then x = n ; y = H end
+      if dir == 4 then x = 1 ; y = n end
+      if dir == 6 then x = W ; y = n end
+
+      local edge = lookup_edge(string.sub(str, n, n))
 
       map[x][y].edges[dir] = edge
 
-      if edge.f_h then
+      if type(edge) == "table" and edge.f_h then
         max_floor_h = math.max(max_floor_h, edge.f_h)
       end
-    end
     end
   end
 
 
   each k, edge in skin do
-    try_parse_edge(8, "north", k, edge)
-    try_parse_edge(2, "south", k, edge)
-    try_parse_edge(6, "east",  k, edge)
-    try_parse_edge(4, "west",  k, edge)
+    if k == "north" then parse_edge(8, edge) end
+    if k == "south" then parse_edge(2, edge) end
+    if k == "east"  then parse_edge(6, edge) end
+    if k == "west"  then parse_edge(4, edge) end
   end
 
   if not skin.max_floor_h then
