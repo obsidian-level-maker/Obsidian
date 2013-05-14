@@ -8,11 +8,15 @@ DOOM.SKINS.Junc_bridge1 =
   shape  = "I"
   group  = "hall_curve"
 
+  prob   = 200
+
   seed_w = 3
   seed_h = 3
-  prob   = 100
 
   liquid = 1
+
+  north = "#.#"
+  south = "#.#"
 }
 
 
@@ -22,10 +26,17 @@ DOOM.SKINS.Junc_bridge2 =
   shape  = "C"
   group  = "hall_curve"
 
-  seed_w = 3
-  seed_h = 3
   prob   = 400
 
-  west = { f_h=96 }
+  seed_w = 3
+  seed_h = 3
+
+  south = "#.#"
+  west  = "#w#"
+
+  edges =
+  {
+    w = { f_h=96 }
+  }
 }
 

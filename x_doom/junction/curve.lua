@@ -8,9 +8,13 @@ DOOM.SKINS.Junc_curve_C =
   shape  = "C"
   group  = "hall_curve"
 
+  prob   = 100
+
   seed_w = 3
   seed_h = 3
-  prob   = 100
+
+  south = "#.#"
+  west  = "#.#"
 }
 
 
@@ -20,11 +24,18 @@ DOOM.SKINS.Junc_curve_stair1 =
   shape  = "C"
   group  = "hall_curve"
 
-  seed_w = 3
-  seed_h = 3
   prob   = 200
 
-  west = { f_h=80 }
+  seed_w = 3
+  seed_h = 3
+
+  south = "#.#"
+  west  = "#w#"
+
+  edges =
+  {
+    w = { f_h=80 }
+  }
 
   props_45 = { light=176, _factor=0.5  }
 }
@@ -36,11 +47,18 @@ DOOM.SKINS.Junc_curve_stair2 =
   shape  = "C"
   group  = "hall_curve"
 
-  seed_w = 3
-  seed_h = 3
   prob   = 200
 
-  west = { f_h=-80 }
+  seed_w = 3
+  seed_h = 3
+
+  south = "#.#"
+  west  = "#w#"
+
+  edges =
+  {
+    w = { f_h=-80 }
+  }
 
   props_45 = { light=176, _factor=0.5 }
 }
@@ -55,11 +73,20 @@ DOOM.SKINS.Junc_curve_snake_T =
   file   = "junction/curve_snake.wad"
   shape  = "T"
   group  = "hall_curve"
+
+  prob   = 50
+
   seed_w = 3
   seed_h = 3
-  prob   = 40
 
-  east = { f_h=-32 }
-  west = { f_h= 48 }
+  south = "#.#"
+  east  = "#e#"
+  west  = "#w#"
+
+  edges =
+  {
+    e = { f_h=-32 }
+    w = { f_h= 48 }
+  }
 }
 
