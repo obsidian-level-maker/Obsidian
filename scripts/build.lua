@@ -1654,7 +1654,7 @@ function Fab_render(fab)
     if CSG_BRUSHES[B[1].m] then
       --- DEBUG AID:
       --- stderrf("brush %d/%d\n", _index, #fab.brushes)
-      Brush_dump(B)
+      -- Brush_dump(B)
 
       raw_add_brush(B)
     end

@@ -1102,19 +1102,6 @@ function Room_matching_skins(env, reqs)
   end
 
 
-  local function check_is_flat(skin)
-    each k,v in skin do
-      if string.match(k, "^north") or string.match(k, "^east") or
-         string.match(k, "^south") or string.match(k, "^west")
-      then
-        if v.f_h != 0 then return false end
-      end
-    end
-
-    return true
-  end
-
-
   local function match_requirements(skin)
     -- type check
     local kind = skin.kind or kind_from_filename(skin.file)
@@ -1123,8 +1110,6 @@ function Room_matching_skins(env, reqs)
 
     -- placement check
     if reqs.where != skin.where then return 0 end
-
-    if reqs.flat and not check_is_flat(skin) then return 0 end
 
     -- group check
     if not match_word_or_table(reqs.group, skin.group) then return 0 end

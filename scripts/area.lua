@@ -1200,6 +1200,8 @@ stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
 
   local function build_floor(K, from_portal)
 
+if rand.odds(10) then return false end
+
     if not (K.sw == 3 and K.sh == 3) then return false end  --!!!
 
     local env =
@@ -1237,13 +1239,21 @@ stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
   end
 
 
-  local function build_ceiling(K)
-    -- FIXME 
-    return false
+  local function fallback_floor_piece(skin, sx1, sy1, sx2, sy2, floor_h)
+    process_edges(sx1, sy1, sx2, sy2, skin, 2, floor_h)
+
+    local S1 = SEEDS[sx1][sy1]
+    local S2 = SEEDS[sx2][sy2]
+
+    local T = Trans.box_transform(S1.x1, S1.y1, S2.x2, S2.y2, floor_h, 2)
+
+    Fabricate_at(R, skin, T, { skin, skin2 })
   end
 
 
-  local function fallback_floor_piece(S, floor_h)
+  local function fallback_floor(K)
+    skin2.floor = K.floor_mat
+
     local env =
     {
       room_kind = R.kind
@@ -1253,21 +1263,29 @@ stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
 
     local reqs =
     {
-      kind = "floor"
-      flat = 1
+      kind = "plain_floor"
     }
 
-    local skin1 = Room_pick_skin(env, reqs)
+    local whole = false
 
-    local rot = 2  -- !!!!
+    if K.sw == 3 and K.sh == 3 then
+      whole = true
+      env.seed_w = 3
+      env.seed_h = 3
+    end
 
-    process_edges(S.sx, S.sy, S.sx, S.sy, skin1, rot, floor_h)
 
-    local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, floor_h, pf_dir)
+    local skin = Room_pick_skin(env, reqs)
 
-skin2.floor = assert(S.section.floor_mat)
-
-    Fabricate_at(R, skin1, T, { skin1, skin2 })
+    if whole then
+      fallback_floor_piece(skin, K.sx1, K.sy1, K.sx2, K.sy2, K.floor_h)
+    else
+      for sx = K.sx1, K.sx2 do
+      for sy = K.sy1, K.sy2 do
+        fallback_floor_piece(skin, sx, sy, sx, sy, K.floor_h)
+      end
+      end
+    end
   end
 
 
@@ -1280,36 +1298,12 @@ skin2.floor = assert(S.section.floor_mat)
       }
 
       table.insert(R.sky_rects, rect)
-      return
-    end
+    else
+      local brush = Brush_new_quad(S.x1, S.y1, S.x2, S.y2, ceil_h, nil)
 
-    local env =
-    {
-      room_kind = R.kind
-      seed_w = 1
-      seed_h = 1
-    }
+      Brush_set_mat(brush, skin2.ceil, skin2.ceil)
 
-    local reqs =
-    {
-      kind = "ceiling"
-      seed_w = 1
-      seed_h = 1
-    }
-
-    local skin1 = Room_pick_skin(env, reqs)
-
-    local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, ceil_h)
-
-    Fabricate_at(R, skin1, T, { skin1, skin2 })
-  end
-
-
-  local function fallback_floor(K)
-    for sx = K.sx1, K.sx2 do
-    for sy = K.sy1, K.sy2 do
-      fallback_floor_piece(SEEDS[sx][sy], K.floor_h)
-    end
+      brush_helper(brush)
     end
   end
 
@@ -1334,9 +1328,7 @@ skin2.floor = assert(S.section.floor_mat)
       fallback_floor(K)
     end
 
-    if R.kind == "outdoor" then
-      fallback_ceiling(K)
-    elseif not build_ceiling(K) then
+    if not DID_WHOLE_ROOM then
       fallback_ceiling(K)
     end
   end
