@@ -1129,7 +1129,7 @@ stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
 
     -- FIXME: test that this rotation fits
 
-    -- FIXME: see test_prefab_XXX code above
+    -- FIXME: see test_prefab_XXX code above [portal tests]
 
     return true
   end
@@ -1200,39 +1200,110 @@ stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
 
   local function build_floor(K, from_portal)
 
-if rand.odds(10) then return false end
-
     if not (K.sw == 3 and K.sh == 3) then return false end  --!!!
 
     local env =
     {
+      seed_w = math.max(K.sw, K.sh)
+      seed_h = math.min(K.sw, K.sh)
+
       room_kind = R.kind
-      seed_w = 3
-      seed_h = 3
-      can_rotate = 1
     }
 
-    local reqs =
+    local reqs1 =
     {
       kind = "floor"
     }
 
-    local max_try = 8
+    local reqs2
 
-    local list = Room_multi_match_skins(env, reqs)
+    if R.kind != "outdoor" then
+      reqs2 =
+      {
+        kind = "room"
+      }
+    end
 
-    while not table.empty(list) and max_try > 0 do
+
+    local list = Room_multi_match_skins(env, reqs1, reqs2)
+
+    local stop_prob = 20
+
+    while not table.empty(list) do
+      -- we want to sometimes have nothing at all, and this also
+      -- ensures we don't try too many prefabs
+      if rand.odds(stop_prob) then return false end
+      stop_prob = stop_prob + 10
+
       local skin_name = rand.key_by_probs(list)
       list[skin_name] = nil
 
       local skin = assert(GAME.SKINS[skin_name])
 
       if try_build_prefab(K, skin, "floor", from_portal) then
-        return true  -- YES !!
-      end
+        if string.match(skin.file, "^room") then
+          K.whole_room = true
+        end
 
-      -- limit how many prefabs to try
-      max_try = max_try - 1
+        return true  -- YES!!
+      end
+    end
+
+    return false  -- nothing worked
+  end
+
+
+  local function try_build_ceiling_fab(K, skin, from_portal)
+    local rot = rand.dir()
+
+    local T = Trans.section_transform(K, rot)
+    T.add_z = K.ceil_h
+
+    Fabricate_at(R, skin, T, { skin, skin2 })
+
+    return true
+  end
+
+
+  local function build_ceiling(K, from_portal)
+    -- never have ceiling prefabs in outdoor rooms
+    if R.kind == "outdoor" then return false end
+
+    if not (K.sw == 3 and K.sh == 3) then return false end  --!!!
+
+    local env =
+    {
+      seed_w = math.max(K.sw, K.sh)
+      seed_h = math.min(K.sw, K.sh)
+
+      room_kind = R.kind
+    }
+
+    local reqs =
+    {
+      kind = "ceiling"
+    }
+
+    local list = Room_multi_match_skins(env, reqs)
+
+    local stop_prob = 30
+
+    while not table.empty(list) do
+      -- we want to sometimes have nothing at all, and this also
+      -- ensures we don't try too many prefabs
+      if rand.odds(stop_prob) then return false end
+      stop_prob = stop_prob + 20
+
+      local skin_name = rand.key_by_probs(list)
+      list[skin_name] = nil
+
+stderrf("\n\n-----------> CEILING PREFAB '%s' <-------------\n\n", skin_name)
+
+      local skin = assert(GAME.SKINS[skin_name])
+
+      if try_build_ceiling_fab(K, skin, from_portal) then
+        return true  -- YES!!
+      end
     end
 
     return false  -- nothing worked
@@ -1256,9 +1327,10 @@ if rand.odds(10) then return false end
 
     local env =
     {
-      room_kind = R.kind
       seed_w = 1
       seed_h = 1
+
+      room_kind = R.kind
     }
 
     local reqs =
@@ -1328,8 +1400,10 @@ if rand.odds(10) then return false end
       fallback_floor(K)
     end
 
-    if not DID_WHOLE_ROOM then
-      fallback_ceiling(K)
+    if not K.whole_room then
+      if not build_ceiling(K, from_portal) then
+        fallback_ceiling(K)
+      end
     end
   end
 
