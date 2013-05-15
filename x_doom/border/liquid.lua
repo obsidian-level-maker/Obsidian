@@ -26,6 +26,20 @@ DOOM.SKINS.Border_liquid_2x2_t =
 }
 
 
+DOOM.SKINS.Border_liquid_2x2_t_spill =
+{
+  file   = "border/liquid_2x2_t2.wad"
+  group  = "border_liquid"
+  shape  = "T"
+
+  seed_w = 2
+  seed_h = 2
+  add_sky = 1
+
+  prob = 12
+}
+
+
 DOOM.SKINS.Border_liquid_2x2_c =
 {
   file   = "border/liquid_2x2_c.wad"
