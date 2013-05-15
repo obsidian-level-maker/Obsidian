@@ -130,6 +130,10 @@ V5 Stuff:
 
 -  get 'height' value into 'env' pick_skin() tables
 
+-  support 'room' prefabs where the ceiling is a separate WAD
+
+-  'conflict' keyword table for floor / ceiling pairings
+
 -  IDEA: 'override' value for prefabs, default to zero.
          when > 0, remove all other possible prefabs from the list
          which have a lower value

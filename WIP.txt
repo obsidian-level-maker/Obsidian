@@ -5,13 +5,39 @@ WORK IN PROGRESS
 
 V5 Layout:
 
-+  support all rotations
+DONE:  support "room" floors (have ceiling as part of them)
 
--  support a 'max_floor' in skins
-   (determine algorithmically from north/east/etc)
++  can we pick section exit portal AFTER building the prefab?
+
+-  multi_match : give a table of reqs (not reqs1/2/3)
+
+-  for floor / ceiling pieces (etc?) : have a "NONE" probability to match skin
+
+-  support 'height' for outdoor floors
+
+-  have 'complexity' for floors and ceilings : value is 1-3 (0 for plain)
+   and their sum must not exceed 3.  default is 1
+
+-  support 'anchor_dirs' : floor must have non-room on those sides
+
+-  check we don't add walls if an edge is fence/solid ('#')
+
+DONE:  implement 'edges' and simpler north/south/east/west 
+
+DONE:  fallback floor/ceil : treat separate from normal floors
+
+DONE  support all rotations
+
+-  handle the 'max_floor' in skins
 
 
 !!  get joiners working again
+
+    +  make a keyed joiner (or three)
+    +  make a switched joiner (or seven)
+
+
+!!  fat fences not working??
 
 
 +  Big junctions:
