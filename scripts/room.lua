@@ -2919,6 +2919,10 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
     if N.room and N.room.kind == "outdoor" then return N.room end
 
+    -- Note: border check is disabled, since some prefabs (esp. Cages)
+    --       do not work well against a border prefab.
+    do return nil end
+
     if not N.border then return nil end
 
     if N.border.kind != "edge" then return nil end
