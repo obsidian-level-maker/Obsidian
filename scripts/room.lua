@@ -558,14 +558,18 @@ function ROOM_CLASS.add_exclusion_zone(R, kind, x1, y1, x2, y2, extra_dist)
 end
 
 
-function ROOM_CLASS.clip_spot_list(R, list, x1, y1, x2, y2)
+function ROOM_CLASS.clip_spot_list(R, list, x1, y1, x2, y2, strict_mode)
   local new_list = {}
 
   each spot in list do
-    if (spot.x2 < x1 + 1) or (spot.x1 > x2 - 1) or
-       (spot.y2 < y1 + 1) or (spot.y2 > y2 - 1)
+    if (spot.x2 <= x1) or (spot.x1 >= x2) or
+       (spot.y2 <= y1) or (spot.y1 >= y2)
     then
       -- unclipped
+
+    elseif strict_mode then
+      -- drop this spot
+      continue
 
     else
       local w1 = x1 - spot.x1
@@ -579,7 +583,7 @@ function ROOM_CLASS.clip_spot_list(R, list, x1, y1, x2, y2)
         continue
       end
 
-      -- shrink the existing box (on side with most free space)
+      -- shrink the existing box (keep side with most free space)
 
       if w1 >= math.max(w2, h1, h2) then
         spot.x2 = spot.x1 + w1
@@ -602,10 +606,26 @@ function ROOM_CLASS.clip_spot_list(R, list, x1, y1, x2, y2)
 end
 
 
+function ROOM_CLASS.clip_spots(R, x1, y1, x2, y2)
+  --| the given rectangle is where we _cannot_ have a spot
+
+  assert(x1 < x2)
+  assert(y1 < y2)
+
+  -- enlarge the zone a tiny bit
+  x1, y1 = x1 - 2, y1 - 2
+  x2, y2 = x2 + 2, y2 + 2
+
+  R.mon_spots  = R:clip_spot_list(R.mon_spots,  x1, y1, x2, y2)
+  R.item_spots = R:clip_spot_list(R.item_spots, x1, y1, x2, y2)
+  R.goal_spots = R:clip_spot_list(R.goal_spots, x1, y1, x2, y2, "strict")
+end
+
+
 function ROOM_CLASS.exclude_monsters_in_zones(R)
   each zone in R.exclusion_zones do
     if zone.kind == "empty" then
-      R.mon_spots = R:clip_spot_list(R.mon_spots, zone.x1, zone.y1, zone.x2, zone.y2)
+      R:clip_spots(zone.x1, zone.y1, zone.x2, zone.y2)
     end
   end
 end

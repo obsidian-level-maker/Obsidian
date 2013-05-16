@@ -1627,6 +1627,8 @@ function Areas_build_walls(R)
     --- build it ---
 
     Fabricate_at(R, skin, T, { skin, skin2 })
+
+    R:clip_spots(x1, y1, x2, y2)
   end
 
 
@@ -1677,6 +1679,8 @@ function Areas_build_walls(R)
     end
 
     Fabricate_at(R, skin1, T, { skin1, skin2 })
+
+    R:clip_spots(x1, y1, x2, y2)
   end
 
 
@@ -1845,6 +1849,7 @@ function Areas_flesh_out()
 
     if R.kind != "cave" then
       --?? floor_textures(R)
+
       Areas_place_importants(R)
 
       R:exclude_monsters_in_zones()
