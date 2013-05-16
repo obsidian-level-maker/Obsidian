@@ -558,6 +558,59 @@ function ROOM_CLASS.add_exclusion_zone(R, kind, x1, y1, x2, y2, extra_dist)
 end
 
 
+function ROOM_CLASS.clip_spot_list(R, list, x1, y1, x2, y2)
+  local new_list = {}
+
+  each spot in list do
+    if (spot.x2 < x1 + 1) or (spot.x1 > x2 - 1) or
+       (spot.y2 < y1 + 1) or (spot.y2 > y2 - 1)
+    then
+      -- unclipped
+
+    else
+      local w1 = x1 - spot.x1
+      local w2 = spot.x2 - x2
+
+      local h1 = y1 - spot.y1
+      local h2 = spot.y2 - y2
+
+      -- totally clipped?
+      if math.max(w1, w2, h1, h2) < 8 then
+        continue
+      end
+
+      -- shrink the existing box (on side with most free space)
+
+      if w1 >= math.max(w2, h1, h2) then
+        spot.x2 = spot.x1 + w1
+      elseif w2 >= math.max(w1, h1, h2) then
+        spot.x1 = spot.x2 - w2
+      elseif h1 >= math.max(w1, w2, h2) then
+        spot.y2 = spot.y1 + h1
+      else
+        spot.y1 = spot.y2 - h2
+      end
+
+      assert(spot.x2 > spot.x1)
+      assert(spot.y2 > spot.y1)
+    end
+
+    table.insert(new_list, spot)
+  end
+
+  return new_list
+end
+
+
+function ROOM_CLASS.exclude_monsters_in_zones(R)
+  each zone in R.exclusion_zones do
+    if zone.kind == "empty" then
+      R.mon_spots = R:clip_spot_list(R.mon_spots, zone.x1, zone.y1, zone.x2, zone.y2)
+    end
+  end
+end
+
+
 function ROOM_CLASS.find_nonfacing_spot(R, x1, y1, x2, y2)
   each zone in R.exclusion_zones do
     if zone.kind == "nonfacing" and

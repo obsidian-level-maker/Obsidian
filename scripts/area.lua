@@ -1846,6 +1846,8 @@ function Areas_flesh_out()
     if R.kind != "cave" then
       --?? floor_textures(R)
       Areas_place_importants(R)
+
+      R:exclude_monsters_in_zones()
     end
 
     outgoing_heights(R)
