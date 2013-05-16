@@ -827,29 +827,99 @@ function Areas_layout_with_prefabs(R)
   end
 
 
-  local function process_edges(sx1, sy1, sx2, sy2, skin, rot, h)
-    Fab_parse_edges(skin)
+  local function new_floor_portal(kind, K, sx1, sy1, sx2, sy2, side)
 
-    local map = skin._seed_map
-    assert(map)
+    local PORTAL =
+    {
+      kind = kind
+      sx1  = sx1, sy1 = sy1
+      sx2  = sx2, sy2 = sy2
+      side = side
+      section = K
+    }
+
+    Portal_install(PORTAL)
+
+    return PORTAL
+  end
+
+
+  local function add_exit_portals(K, dir, skin, rot)
+    each exit in K.exits do
+      if exit.dir != dir then continue end
+
+      -- choose a single seed on this side
+      -- !!! FIXME: check the edge map for walkable/solid parts
+      -- TODO: support "wide" portals
+      local mx = rand.irange(K.sx1, K.sx2)
+      local my = rand.irange(K.sy1, K.sy2)
+
+      local sx, sy = mx, my
+
+      if dir == 4 then sx = K.sx1 end
+      if dir == 6 then sx = K.sx2 end
+      if dir == 2 then sy = K.sy1 end
+      if dir == 8 then sy = K.sy2 end
+
+      local S = SEEDS[sx][sy]
+      local N = S:neighbor(dir)
+      local K2 = N.section
+
+      -- create a pair of portals
+      -- (slightly overkill, but keeps things consistent)
+
+      local po1 = new_floor_portal("floor_out", K,  S.sx, S.sy, S.sx, S.sy, dir)
+      local po2 = new_floor_portal("floor_in",  K2, N.sx, N.sy, N.sx, N.sy, 10 - dir)
+
+      po1.peer = po2
+      po2.peer = po1
+
+      exit.po1 = po1
+      exit.po2 = po2
+    end
+  end
+
+
+  local function process_edges(K, skin, rot, base_h)
+    local map
+    local fake_edge
+
+    if skin then
+      R.min_floor_h = math.min(R.min_floor_h, base_h)
+      R.max_floor_h = math.max(R.max_floor_h, base_h + skin.max_floor_h)
+
+      Fab_parse_edges(skin)
+
+      map = assert(skin._seed_map)
+    else
+      fake_edge = { f_h=0 }
+    end
 
     for dir = 2,8,2 do
+      add_exit_portals(K, dir, skin, rot)      
+
+      local sx1, sy1, sx2, sy2 = geom.side_coords(dir, K.sx1, K.sy1, K.sx2, K.sy2)
+
       for sx = sx1, sx2 do
       for sy = sy1, sy2 do
-        -- get coordinate in the prefab space
-        local px, py = convert_coord(sx - sx1, sy - sy1, skin, rot)
-        local pdir = convert_dir(dir, rot)
+        local edge
 
+        if skin then
+          -- get coordinate in the prefab space
+          local px, py = convert_coord(sx - K.sx1, sy - K.sy1, skin, rot)
+          local pdir   = convert_dir(dir, rot)
 --[[
-stderrf("sx: %d (%d .. %d)\n", sx, sx1, sx2)
-stderrf("sy: %d (%d .. %d)\n", sy, sy1, sy2)
+stderrf("sx: %d (%d .. %d)\n", sx, K.sx1, K.sx2)
+stderrf("sy: %d (%d .. %d)\n", sy, K.sy1, K.sy2)
 stderrf("--> pcoord %d, %d\n", px, py)
 stderrf("dir: %d ---> pdir: %d\n", dir, pdir)
 stderrf("MAP =\n%s\n", table.tostr(map, 4))
-stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
+--stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
 --]]
-        local edge = map[px][py].edges[pdir]
-
+          edge = map[px][py].edges[pdir]
+        else
+          edge = fake_edge
+        end
 
         local S = SEEDS[sx][sy]
 
@@ -862,7 +932,7 @@ stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
           assert(edge and edge.f_h)
 
           if not P.floor_h then
-            Portal_set_floor(P, h + edge.f_h)
+            Portal_set_floor(P, base_h + edge.f_h)
           end
 
           if P.door_kind and not P.added_door then
@@ -884,7 +954,7 @@ stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
         -- the room ends here, check if prefab was walkable
 
         if edge and edge.f_h then
-          Areas_add_wall(R, "wall", sx, sy, sx, sy, dir, h + edge.f_h, nil)
+          Areas_add_wall(R, "wall", sx, sy, sx, sy, dir, base_h + edge.f_h, nil)
         end
 
       end -- sx, sy
@@ -1014,30 +1084,13 @@ stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
   end
 
   
-  local function new_room_portal(kind, K, sx1, sy1, sx2, sy2, side)
-
-    local PORTAL =
-    {
-      kind = kind
-      sx1  = sx1, sy1 = sy1
-      sx2  = sx2, sy2 = sy2
-      side = side
-      section = K
-    }
-
-    Portal_install(PORTAL)
-
-    return PORTAL
-  end
-
-
   local function recurse_find_path(K, from_dir)
     K.visited_for_path = true
 
-    K.exit = {}
+    K.exits = {}
 
-    local mx = rand.irange(K.sx1, K.sx2)
-    local my = rand.irange(K.sy1, K.sy2)
+    local mx = math.i_mid(K.sx1, K.sx2)
+    local my = math.i_mid(K.sy1, K.sy2)
 
     each dir in rand.dir_list() do
       if dir == from_dir then continue end
@@ -1065,18 +1118,9 @@ stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
 
       --- debug_arrow(S, dir, R.entry_h + 8)
 
-      -- create a pair of portals
-      -- (slightly overkill, but keeps things consistent)
+      table.insert(K.exits, { dir=dir, neighbor=K2 })
 
-      local po1 = new_room_portal("floor_out", K,  S.sx, S.sy, S.sx, S.sy, dir)
-      local po2 = new_room_portal("floor_in",  K2, N.sx, N.sy, N.sx, N.sy, 10 - dir)
-
-      po1.peer = po2
-      po2.peer = po1
-
-      K.exit[dir] = po1
-
-      recurse_find_path(po2.section, po2.side)
+      recurse_find_path(K2, 10 - dir)
     end
   end
 
@@ -1185,14 +1229,11 @@ stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
 
     K.floor_h = K.floor_h - diff_h
 
-    process_edges(K.sx1, K.sy1, K.sx2, K.sy2, skin, rot, K.floor_h)
-
     local T = Trans.section_transform(K, rot)
 
     Fabricate_at(R, skin, T, { skin, skin2 })
 
-
-    R.max_floor_h = math.max(R.max_floor_h, K.floor_h + skin.max_floor_h)
+    process_edges(K, skin, rot, K.floor_h)
 
     return true
   end
@@ -1320,8 +1361,6 @@ stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
 
 
   local function fallback_floor_piece(skin, sx1, sy1, sx2, sy2, floor_h)
-    process_edges(sx1, sy1, sx2, sy2, skin, 2, floor_h)
-
     local S1 = SEEDS[sx1][sy1]
     local S2 = SEEDS[sx2][sy2]
 
@@ -1367,6 +1406,8 @@ stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
       end
       end
     end
+
+    process_edges(K, nil, 2, K.floor_h)
   end
 
 
@@ -1420,19 +1461,13 @@ stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
   local function recurse_make_stuff(K, floor_h, from_portal)
     build_section(K, floor_h, from_portal)
 
-    -- order does not matter here
+    each exit in K.exits do
+      -- get the one inside the neighbor
+      local portal = exit.po2
 
-    for dir = 2,8,2 do
-      local portal = K.exit[dir]
+      assert(portal.floor_h)
 
-      if portal then
-        -- get the one inside the neighbor
-        portal = assert(portal.peer)
-
-        assert(portal.floor_h)
-
-        recurse_make_stuff(portal.section, portal.floor_h, portal)
-      end
+      recurse_make_stuff(portal.section, portal.floor_h, portal)
     end
   end
 

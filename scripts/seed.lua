@@ -124,8 +124,7 @@ class SECTION
 
   --- these are used when laying out rooms ---
 
-  entry     : PORTAL
-  exit[DIR] : PORTAL
+  exits : list(EXIT)
 }
 
 --------------------------------------------------------------]]
