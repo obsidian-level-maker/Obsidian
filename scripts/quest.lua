@@ -2063,6 +2063,7 @@ function Quest_make_quests()
   Quest_choose_keys()
 
 
+  Room_add_voids()
   Room_add_closets()
 
   Plan_expand_rooms()

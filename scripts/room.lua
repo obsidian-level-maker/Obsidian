@@ -248,14 +248,30 @@ function ROOM_CLASS.add_section(R, K)
 end
 
 
+function ROOM_CLASS.remove_section(R, K)
+  table.kill_elem(R.sections, K)
+
+  K.room = nil
+
+  for sx = K.sx1, K.sx2 do
+  for sy = K.sy1, K.sy2 do
+    local S = SEEDS[sx][sy]
+    S.room = nil
+  end
+  end
+end
+
+
 function ROOM_CLASS.fill_section(R, K)
-  for sx = K.sx1,K.sx2 do for sy = K.sy1,K.sy2 do
+  for sx = K.sx1, K.sx2 do
+  for sy = K.sy1, K.sy2 do
     local S = SEEDS[sx][sy]
     assert(not S.hall)
 
     S.room = K.room
     S.section = K
-  end end
+  end
+  end
 
   if not R.sx1 or K.sx1 < R.sx1 then R.sx1 = K.sx1 end
   if not R.sy1 or K.sy1 < R.sy1 then R.sy1 = K.sy1 end
@@ -455,6 +471,18 @@ function ROOM_CLASS.big_score(R)
   end
 
   return score
+end
+
+
+function ROOM_CLASS.void_up_parts(R)
+  if not rand.odds(90) then return end
+
+  -- section list can be modified, need to iterate over a copy
+  each K in table.copy(R.sections) do
+    if K.sw == 1 and K.sh == 1 and K.shape == "junction" then
+      R:remove_section(K)
+    end
+  end
 end
 
 
@@ -1811,6 +1839,16 @@ function Room_add_closets()
 --!!!!      R:add_closet(kind)
     end
   end      
+end
+
+
+
+function Room_add_voids()
+  each R in LEVEL.rooms do
+    if R.kind == "building" then
+      R:void_up_parts()
+    end
+  end
 end
 
 
