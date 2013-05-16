@@ -1312,7 +1312,7 @@ end
   end
 --]]
 
-  return Room_pick_skin(env, reqs)
+  return Room_pick_skin(env, { reqs })
 end
 
 
@@ -1336,7 +1336,7 @@ function HALLWAY_CLASS.select_big_junc(H, P)
 
   reqs2.group = LEVEL.hall_group
 
-  return Room_pick_skin(env, reqs, reqs2)
+  return Room_pick_skin(env, { reqs, reqs2 })
 end
 
 
@@ -1398,7 +1398,7 @@ function HALLWAY_CLASS.select_joiner(H, P, floor_h)
     shape = "SM"
   }
 
-  local skin = Room_pick_skin(env, reqs, reqs2, reqs3)
+  local skin = Room_pick_skin(env, { reqs, reqs2, reqs3 })
 
   -- joiners can influence sky height...
   if is_outdoor and skin.height then

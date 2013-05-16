@@ -475,7 +475,7 @@ end
 
 
 function ROOM_CLASS.void_up_parts(R)
-  if not rand.odds(90) then return end
+  if not rand.odds(95) then return end
 
   -- section list can be modified, need to iterate over a copy
   each K in table.copy(R.sections) do
@@ -1068,7 +1068,7 @@ end
 
 
 
-function Room_matching_skins(env, reqs)
+function Room_matching_skins_for_req(env, reqs)
 
   local function kind_from_filename(name)
     assert(name)
@@ -1195,7 +1195,7 @@ function Room_matching_skins(env, reqs)
   end
 
 
-  ---| Room_matching_skins |---
+  ---| Room_matching_skins_for_req |---
 
   assert(reqs.kind)
 
@@ -1219,25 +1219,22 @@ function Room_matching_skins(env, reqs)
 end
 
 
-function Room_multi_match_skins(env, reqs, req2, req3, req4)
+function Room_match_skins(env, req_list)
   local list = {}
 
-  while reqs do
-    local list2 = Room_matching_skins(env, reqs)
+  each reqs in req_list do
+    local list2 = Room_matching_skins_for_req(env, reqs)
 
     -- ensure earlier matches are kept (override later ones)
     list = table.merge(list2, list)
-
-    -- shift and continue
-    reqs, req2, req3, req4 = req2, req3, req4, nil
   end
 
   return list
 end
 
 
-function Room_pick_skin(env, reqs, req2, req3, req4)
-  local list = Room_multi_match_skins(env, reqs, req2, req3, req4)
+function Room_pick_skin(env, req_list)
+  local list = Room_match_skins(env, req_list)
 
 if DEBUG_MULTI_SKIN then
    DEBUG_MULTI_SKIN = nil
@@ -1245,7 +1242,7 @@ if DEBUG_MULTI_SKIN then
 end
 
   if table.empty(list) then
-    gui.debugf("Room_pick_skins:\n")
+    gui.debugf("Room_pick_skin:\n")
     gui.debugf("env  = \n%s\n", table.tostr(env))
     gui.debugf("reqs = \n%s\n", table.tostr(reqs))
 
@@ -1259,7 +1256,7 @@ end
 
 
 
-function Room_matching_groups(reqs)
+function Room_match_groups(reqs)
 
   local function match(group)
     -- type check
@@ -1297,10 +1294,10 @@ end
 function Room_pick_group(reqs)
   assert(reqs.kind)
 
-  local list = Room_matching_groups(reqs)
+  local list = Room_match_groups(reqs)
 
   if table.empty(list) then
-    gui.debugf("Room_pick_groups:\n")
+    gui.debugf("Room_pick_group:\n")
     gui.debugf("reqs = \n%s\n", table.tostr(reqs))
 
     error("No matching groups for: " .. reqs.kind)
@@ -1756,7 +1753,7 @@ function ROOM_CLASS.add_closet(R, closet_kind)
   end
 
 
-  local list = Room_matching_skins(env, reqs)
+  local list = Room_match_skins(env, { reqs })
 
   -- keep trying prefabs until one fits
   while not table.empty(list) do
@@ -2307,7 +2304,7 @@ function Room_outdoor_borders()
   local function build_fake_building(env, reqs, x1, y1, x2, y2, dir,
                                      room, facade, floor_h)
 
-    local skin1 = Room_pick_skin(env, reqs)
+    local skin1 = Room_pick_skin(env, { reqs })
 
     assert(facade)
 
@@ -2885,7 +2882,7 @@ stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
       shape  = shape
     }
 
-    local skin1 = Room_pick_skin(env, reqs)
+    local skin1 = Room_pick_skin(env, { reqs })
 
     local skin2 = { wall=S1.facade }
 

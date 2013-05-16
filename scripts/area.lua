@@ -1215,17 +1215,18 @@ stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
       kind = "floor"
     }
 
-    local reqs2
+    local req_list = { reqs1 }
 
     if R.kind != "outdoor" then
-      reqs2 =
+      local reqs2 =
       {
         kind = "room"
       }
+      table.insert(req_list, reqs2)
     end
 
 
-    local list = Room_multi_match_skins(env, reqs1, reqs2)
+    local list = Room_match_skins(env, req_list)
 
     local stop_prob = 20
 
@@ -1284,7 +1285,7 @@ stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
       kind = "ceiling"
     }
 
-    local list = Room_multi_match_skins(env, reqs)
+    local list = Room_match_skins(env, { reqs })
 
     local stop_prob = 30
 
@@ -1296,8 +1297,6 @@ stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
 
       local skin_name = rand.key_by_probs(list)
       list[skin_name] = nil
-
-stderrf("\n\n-----------> CEILING PREFAB '%s' <-------------\n\n", skin_name)
 
       local skin = assert(GAME.SKINS[skin_name])
 
@@ -1347,7 +1346,7 @@ stderrf("\n\n-----------> CEILING PREFAB '%s' <-------------\n\n", skin_name)
     end
 
 
-    local skin = Room_pick_skin(env, reqs)
+    local skin = Room_pick_skin(env, { reqs })
 
     if whole then
       fallback_floor_piece(skin, K.sx1, K.sy1, K.sx2, K.sy2, K.floor_h)
@@ -1505,7 +1504,7 @@ function Areas_build_walls(R)
     end
 
     
-    local skin = Room_pick_skin(env, reqs)
+    local skin = Room_pick_skin(env, { reqs })
 
 
     --- texturing ---
@@ -1900,7 +1899,7 @@ function Areas_kick_the_goals(L)
       where = "middle"
     }
 
-    local skin1 = Room_pick_skin(env, reqs)
+    local skin1 = Room_pick_skin(env, { reqs })
 
     local skin2 = { item = item_name }
     local skin0 = { wall = L.wall_mat }
@@ -1922,7 +1921,7 @@ function Areas_kick_the_goals(L)
       where = "middle"
     }
 
-    local skin1 = Room_pick_skin(env, reqs)
+    local skin1 = Room_pick_skin(env, { reqs })
     local skin2 = { }
 
     local mx, my = mid_point(G)
@@ -1942,7 +1941,7 @@ function Areas_kick_the_goals(L)
       where = "middle"
     }
 
-    local skin1 = Room_pick_skin(env, reqs)
+    local skin1 = Room_pick_skin(env, { reqs })
 
     local skin0 = { wall = L.wall_mat }
     local skin2 = { next_map = LEVEL.next_map, targetname = "exit" }
@@ -1986,7 +1985,7 @@ function Areas_kick_the_goals(L)
       switch = lock.switch
     }
 
-    local skin1 = Room_pick_skin(env, reqs)
+    local skin1 = Room_pick_skin(env, { reqs })
 
     local skin2 = { tag_1=lock.tag }
     
@@ -2009,7 +2008,7 @@ function Areas_kick_the_goals(L)
       where = "middle"
     }
 
-    local skin1 = Room_pick_skin(env, reqs)
+    local skin1 = Room_pick_skin(env, { reqs })
 
     local skin0 = { wall = L.wall_mat }
     local skin2 = {}
@@ -2056,7 +2055,7 @@ function Areas_kick_the_goals(L)
       where = "middle"
     }
 
-    local skin1 = Room_pick_skin(env, reqs)
+    local skin1 = Room_pick_skin(env, { reqs })
 
     local skin0 = { wall = G.wall_mat }
     local skin2 = {}
