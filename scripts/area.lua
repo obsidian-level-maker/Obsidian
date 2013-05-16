@@ -1228,16 +1228,23 @@ stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
 
     local list = Room_match_skins(env, req_list)
 
+    -- this "NONE" value is here to handle a small number of possible
+    -- prefabs, especially when they have low probs.
+    list["NONE"] = 90
+
+    -- cf. this stopping logic is to handle large numbers of prefabs,
+    -- where we want to sometimes have nothing at all, but also limit
+    -- the amount of prefabs we try (for performance reasons).
     local stop_prob = 20
 
     while not table.empty(list) do
-      -- we want to sometimes have nothing at all, and this also
-      -- ensures we don't try too many prefabs
       if rand.odds(stop_prob) then return false end
       stop_prob = stop_prob + 10
 
       local skin_name = rand.key_by_probs(list)
       list[skin_name] = nil
+
+      if skin_name == "NONE" then return false end
 
       local skin = assert(GAME.SKINS[skin_name])
 
@@ -1287,16 +1294,19 @@ stderrf("portal: %s (%s)\n", tostring(portal), tostring(portal and portal.kind))
 
     local list = Room_match_skins(env, { reqs })
 
-    local stop_prob = 30
+    -- see 'build_floor' for a description of this stopping logic
+    list["NONE"] = 90
+
+    local stop_prob = 20
 
     while not table.empty(list) do
-      -- we want to sometimes have nothing at all, and this also
-      -- ensures we don't try too many prefabs
       if rand.odds(stop_prob) then return false end
       stop_prob = stop_prob + 20
 
       local skin_name = rand.key_by_probs(list)
       list[skin_name] = nil
+
+      if skin_name == "NONE" then return false end
 
       local skin = assert(GAME.SKINS[skin_name])
 
