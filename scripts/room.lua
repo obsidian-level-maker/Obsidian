@@ -1145,6 +1145,9 @@ function Room_matching_skins_for_req(env, reqs)
     -- shape check
     if not match_word_or_table(reqs.shape, skin.shape) then return 0 end
 
+    -- complexity check
+    if (skin.complexity or 1) > (reqs.max_complexity or 3) then return 0 end
+
     -- key and switch check
     if reqs.key != skin.key then return 0 end
 

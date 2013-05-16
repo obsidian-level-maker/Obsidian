@@ -1294,6 +1294,8 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
           K.whole_room = true
         end
 
+        K.floor_complexity = skin.complexity or 1
+
         return true  -- YES!!
       end
     end
@@ -1331,6 +1333,8 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
     local reqs =
     {
       kind = "ceiling"
+
+      max_complexity = 3 - K.floor_complexity
     }
 
     local list = Room_match_skins(env, { reqs })
@@ -1408,6 +1412,8 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
     end
 
     process_edges(K, nil, 2, K.floor_h)
+
+    K.floor_complexity = 0
   end
 
 
