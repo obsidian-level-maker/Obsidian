@@ -14,6 +14,8 @@ DOOM.SKINS.Room_pillar1 =
   south  = "..."
   west   = "..."
 
-  prob   = 999
+  prob   = 100
+
+  theme  = "tech"
 }
 
