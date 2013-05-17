@@ -3247,6 +3247,13 @@ function Room_reckon_doors()
   local outdoor_prob = style_sel("doors", 0, 30, 90, 100, 100)
 
 
+  local function room_cost(L)
+    if L.kind == "hallway" then return 5 end
+    if L.kind == "cave" then return sel(L.is_outdoor, 4, 3) end
+    return sel(L.is_outdoor, 2, 1)
+  end
+
+
   local function visit_conn(D)
     -- locked doors are handled already
     if D.lock then return end
@@ -3266,34 +3273,28 @@ function Room_reckon_doors()
     local P1 = D.portal1
     local P2 = D.portal2
 
-    if L1.kind == "hallway" then
+    if room_cost(L1) > room_cost(L2) then
       L1, L2 = L2, L1
       P1, P2 = P2, P1
     end
 
+    assert(L1.kind != "hallway")
+
+
     if not P1 then return end
+
+
+    -- we nearly always want an arch (if no door)
+    P1.door_kind = "arch"
 
 
     -- don't add two doors to a short hallway
     if L2.kind == "hallway" then
       if #L2.sections <= 2 and L2.has_a_door then return end
 
-      -- TODO: review this
-      if L2.kind == "hallway" and L2.is_joiner then return end
+      if L2.is_joiner then return end
     end
 
-
-    if P1 and P2 then
-      if L2.is_outdoor or
-         (not L1.kind == "cave" and L2.kind == "building")
-      then
-        L1, L2 = L2, L1
-        P1, P2 = P2, P1
-      end
-    end
-
-    -- we nearly always want an arch (if no door)
-    P1.door_kind = "arch"
 
     -- apply the random check
     if L1.is_outdoor then

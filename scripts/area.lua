@@ -1352,7 +1352,7 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
 
 
   local function fallback_floor(K)
-    skin2.floor = K.floor_mat
+---    skin2.floor = K.floor_mat
 
     local env =
     {
