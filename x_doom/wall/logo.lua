@@ -2,7 +2,7 @@
 -- Logo pics
 --
 
-DOOM.SKINS.Pic_Carve =
+DOOM.SKINS.Logo_Carve =
 {
   file   = "wall/pic_64x64.wad"
   where  = "edge"
@@ -17,4 +17,6 @@ DOOM.SKINS.Pic_Carve =
 
   tex_GRAYPOIS = "O_CARVE"
 }
+
+--TODO: Logo_Pill,  Logo_Neon
 

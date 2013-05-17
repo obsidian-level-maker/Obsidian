@@ -14,9 +14,6 @@
 
 DOOM.THEME_DEFAULTS =
 {
-  stairs = { Stair_Up1 = 50, Stair_Down1 = 50,
-             Lift_Up1 = 4, Lift_Down1 = 4 }
-
   keys = { kc_red=50, kc_blue=50, kc_yellow=50 }
 
   -- TODO: sw_wood  sw_marble
@@ -24,13 +21,9 @@ DOOM.THEME_DEFAULTS =
 
   secrets = { Secret_Closet = 50 }
 
-  arches = { Arch1 = 50 }
-
-  logos = { Pic_Carve=50 } --!!!! , Pic_Pill=50, Pic_Neon=20 }
-
-  fences = { Fence1 = 50 }
-
-  fat_cages = { Fat_Cage1 = 50 } --- , Fat_Cage_W_Bars = 8 }
+  cave_torches = { red_torch=60, green_torch=40, blue_torch=20 }
+ 
+  --------- OLD CRUD --------> > >
 
   outdoor_decor = { big_tree=50, burnt_tree=10, brown_stub=10 }
 
@@ -45,54 +38,12 @@ DOOM.THEME_DEFAULTS =
                   Crate1=10, Crate2=10, 
                   CrateICK=10, CrateWOOD=10 }
 
-  cave_torches = { red_torch=60, green_torch=40, blue_torch=20 }
- 
-  --------- OLD CRUD --------> > >
-
   outer_fences = { BROWN144=50, STONE2=30, BROWNHUG=10,
                    BROVINE2=10, GRAYVINE=10, ICKWALL3=2,
                    GRAY1=10, STONE=20,
                  }
 
-  -- FIXME: should not be separated (environment = "liquid" ??)
   liquid_pics = { pois1=70, pois2=30 }
-
-  crates = { crate1=50, crate2=50, }
-
-  -- FIXME: should not be separated, have 'environment' fields
-  out_crates = { wood=50, ick=50 }
-
-  bars = { bar_silver=50 }
-
-  -- MISC STUFF : these don't quite fit in yet --  (FIXME)
-
-  periph_pillar_mat = "SUPPORT3",
-  beam_mat = "METAL",
-  light_trim = "METAL",
-  corner_supports = { SUPPORT2=50, SUPPORT3=10 }
-  ceiling_trim = "METAL",
-  ceiling_spoke = "SHAWN2",
-  teleporter_mat = "GATE3",
-  raising_start_switch = "SW1COMP",
-  pedestal_mat = "CEIL1_2",
-  hall_trim1 = "GRAY7",
-  hall_trim2 = "METAL",
-  window_side_mat = "DOORSTOP",
-  track_mat = "DOORTRAK",
-
-  lowering_pedestal_skin =
-  {
-    side="WOOD3", top="CEIL1_3",
-    x_offset=0, y_offset=0, peg=1,
-    special=23,
-  }
-
-  lowering_pedestal_skin2 =
-  {
-    side="PIPEWAL1", top="CEIL1_2",
-    x_offset=0, y_offset=0, peg=1,
-    special=23,
-  }
 }
 
 
@@ -156,15 +107,16 @@ DOOM.ROOM_THEMES =
     ceilings =
     {
       CEIL3_3 = 15
-      CEIL3_5=20,
-      CEIL3_1=20,
-      FLAT4=20,
-      CEIL4_2 = 10,
-      CEIL4_3=10,
-      CEIL5_1=10,
-      FLAT9=15,
+      CEIL3_5=20
+      CEIL3_1=20
+      FLAT4=20
+      CEIL4_2 = 10
+      CEIL4_3=10
+      CEIL5_1=10
+      FLAT9=15
     }
   }
+
 
   Tech2_startan2 =
   {
@@ -176,32 +128,33 @@ DOOM.ROOM_THEMES =
 
     floors =
     {
-      FLOOR4_8=50,
-      FLOOR5_1 = 25,
-      FLOOR5_3=30,
-      FLOOR3_3=20,
-      FLOOR0_1 = 20,
-      FLOOR0_2 = 15,
-      FLOOR0_3=30,
-      SLIME15=10,
-      SLIME16=10,
-      FLAT4=15,
+      FLOOR4_8=50
+      FLOOR5_1 = 25
+      FLOOR5_3=30
+      FLOOR3_3=20
+      FLOOR0_1 = 20
+      FLOOR0_2 = 15
+      FLOOR0_3=30
+      SLIME15=10
+      SLIME16=10
+      FLAT4=15
     }
 
     ceilings =
     {
-      CEIL3_1 = 20,
-      CEIL3_2 = 20,
-      CEIL3_5=20,
-      CEIL3_1=20,
-      FLAT4=20,
-      CEIL4_3=10,
-      CEIL5_1 = 15,
-      CEIL5_2=10,
-      FLAT9=30,
-      FLAT19 = 20,
+      CEIL3_1 = 20
+      CEIL3_2 = 20
+      CEIL3_5=20
+      CEIL3_1=20
+      FLAT4=20
+      CEIL4_3=10
+      CEIL5_1 = 15
+      CEIL5_2=10
+      FLAT9=30
+      FLAT19 = 20
     }
   }
+
 
   Tech2_stargrey =
   {
@@ -209,39 +162,40 @@ DOOM.ROOM_THEMES =
 
     walls =
     {
-      STARGR2=50,
+      STARGR2=50
     }
 
     floors =
     {
-      FLOOR4_8=50,
-      FLOOR5_1 = 20,
-      FLOOR5_3=30,
-      FLOOR3_3=20,
-      FLOOR0_3=30,
-      FLOOR0_5 = 15,
-      SLIME15=10,
-      SLIME16=10,
-      FLAT4=15,
+      FLOOR4_8=50
+      FLOOR5_1 = 20
+      FLOOR5_3=30
+      FLOOR3_3=20
+      FLOOR0_3=30
+      FLOOR0_5 = 15
+      SLIME15=10
+      SLIME16=10
+      FLAT4=15
     }
 
     ceilings =
     {
-      CEIL3_5=20,
-      CEIL3_1=20,
-      FLAT4=20,
-      CEIL4_3=10,
-      CEIL5_2=10,
-      FLAT9=30,
-      SLIME14 = 10,
+      CEIL3_5=20
+      CEIL3_1=20
+      FLAT4=20
+      CEIL4_3=10
+      CEIL5_2=10
+      FLAT9=30
+      SLIME14 = 10
     }
   }
+
 
   Tech2_tekgren =
   {
     walls =
     {
-      TEKGREN2 = 50, 
+      TEKGREN2 = 50
     }
 
     floors =
@@ -254,28 +208,29 @@ DOOM.ROOM_THEMES =
 
     ceilings =
     {
-      -- FIXME
-      GRNLITE1=5  
+      FLAT1   = 15
+      CEIL3_5 = 5
     }
   }
+
 
   Tech2_metal2 =
   {
     walls =
     {
-      METAL2 = 50, 
+      METAL2 = 50
     }
 
     floors =
     {
-      FLAT3 = 50,
-      FLOOR0_1 = 30,
-      FLOOR4_5 = 20,
-      FLOOR4_6 = 20,
-      FLOOR7_1 = 15,
+      FLAT3 = 50
+      FLOOR0_1 = 30
+      FLOOR4_5 = 20
+      FLOOR4_6 = 20
+      FLOOR7_1 = 15
       FLAT4 = 5
-      SLIME15 = 20,
-      SLIME14 = 20,
+      SLIME15 = 20
+      SLIME14 = 20
     }
 
     ceilings =
@@ -288,13 +243,14 @@ DOOM.ROOM_THEMES =
     }
   }
 
+
   Tech2_cave =
   {
     naturals =
     {
-      SP_ROCK1=50,
-      GRAYVINE=50,
-      TEKWALL4=3,
+      SP_ROCK1 = 50,
+      GRAYVINE = 50,
+      TEKWALL4 = 3,
       ASHWALL2 = 50
       ASHWALL4 = 50
       ASHWALL6  = 10
@@ -304,6 +260,7 @@ DOOM.ROOM_THEMES =
       ZIMMER7  = 15
     }
   }
+
 
   Tech2_outdoors =
   {
@@ -322,27 +279,28 @@ DOOM.ROOM_THEMES =
 
     naturals =
     {
-      ASHWALL2=50,
-      ASHWALL4=50,
-      SP_ROCK1=50,
-      ASHWALL6  = 20
-      TANROCK4  = 15
+      ASHWALL2 = 50
+      ASHWALL4 = 50
+      SP_ROCK1 = 50
+      ASHWALL6 = 20
+      TANROCK4 = 15
       ZIMMER2  = 15
       ZIMMER4  = 15
       ZIMMER8  = 5
-      ROCK5  = 20
+      ROCK5    = 20
     }
   }
+
 
   Tech2_hallway =
   {
     walls =
     {
-      TEKWALL6 = 50,
-      TEKGREN1 = 50,
-      BROWNPIP = 20,
-      PIPEWAL2 = 50,
-      STARGR1 = 10,
+      TEKWALL6 = 50
+      TEKGREN1 = 50
+      BROWNPIP = 20
+      PIPEWAL2 = 50
+      STARGR1 = 10
       STARBR2 = 10
       PIPE2 = 15
       PIPE4 = 15
@@ -351,23 +309,20 @@ DOOM.ROOM_THEMES =
 
     floors =
     {
-      FLAT14 = 50,
+      FLAT14 = 50
+      FLAT1 = 20
       FLOOR4_8 = 15
-      FLAT1 = 20,
-      FLOOR0_2 = 20,
-      FLOOR1_6 = 5,
+      FLOOR0_2 = 20
       CEIL4_1 = 20
     }
 
     ceilings =
     {
-      CEIL3_5=50,
-      CEIL3_6=20,
-      CEIL3_1=50,
-      RROCK03=50,
-      TLITE6_5=10
+      CEIL3_5 = 50
+      CEIL3_6 = 20
+      CEIL3_1 = 50
+      RROCK03 = 50
       CEIL4_2 = 20
-      GRNLITE1 = 20
     }
   }
 
