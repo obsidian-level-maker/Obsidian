@@ -2315,7 +2315,7 @@ function Simple_decorations(R)
 
     find_corner_locs()
 
-    local prob = 9
+    local prob = 11
 
     each loc in locs do
       if rand.odds(prob) then
