@@ -134,6 +134,8 @@ V5 Stuff:
 
 -  'conflict' keyword table for floor / ceiling pairings
 
+-  handle the 'max_floor' in skins
+
 -  IDEA: 'override' value for prefabs, default to zero.
          when > 0, remove all other possible prefabs from the list
          which have a lower value

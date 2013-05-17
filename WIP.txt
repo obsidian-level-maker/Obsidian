@@ -5,30 +5,36 @@ WORK IN PROGRESS
 
 V5 Layout:
 
+DONE:  implement 'edges' and simpler north/south/east/west 
+DONE:  fallback floor/ceil : treat separate from normal floors
+DONE:  support all rotations
+
 DONE:  support "room" floors (have ceiling as part of them)
+DONE:  sometimes void up 1x1 junctions in rooms
+DONE:  multi_match : give a table of reqs (not reqs1/2/3)
 
-+  can we pick section exit portal AFTER building the prefab?
+DONE:  for floor / ceiling pieces (etc?) : have a "NONE" probability to match skin
+DONE:  pick section exit portal AFTER building the prefab
+DONE:  create an purely indoor big junction
+DONE:  have 'complexity' for floors and ceilings
+DONE:  do goal spots with column-with-skull [NOT MONSTER SPOTS]
 
--  multi_match : give a table of reqs (not reqs1/2/3)
+++  handle 3x1 sections : make a prefab
 
--  for floor / ceiling pieces (etc?) : have a "NONE" probability to match skin
-
--  support 'height' for outdoor floors
-
--  have 'complexity' for floors and ceilings : value is 1-3 (0 for plain)
-   and their sum must not exceed 3.  default is 1
-
--  support 'anchor_dirs' : floor must have non-room on those sides
++  properly test if a prefab fits (esp. with entry portal)
 
 -  check we don't add walls if an edge is fence/solid ('#')
 
-DONE:  implement 'edges' and simpler north/south/east/west 
+-  support 'anchor_dirs' : floor must have non-room on those sides
+   [and the opposite : floor must have room on specified sides]
 
-DONE:  fallback floor/ceil : treat separate from normal floors
+     perhaps: anchor = "d..x" i.e south is non-room, e/w is room, north don't care
+                              and 'd' is for a doorway
 
-DONE  support all rotations
++  minor item spots : generate from monster spots (if none in prefab)
 
--  handle the 'max_floor' in skins
+-  support 'height' for outdoor floors
+
 
 
 !!  get joiners working again
@@ -43,11 +49,6 @@ DONE  support all rotations
 +  Big junctions:
    -  EITHER make C/T/I versions of Spokey and Circle
         OR   create wall prefabs for them + logic to place it
-
-
-+  mark used goal spots as unusable for mons/items
-
-   -  have : Shrink_touching_spots(x1, y1, x2, y2)
 
 
 !!  get cycles working again
