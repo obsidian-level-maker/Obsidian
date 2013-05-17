@@ -461,39 +461,23 @@ end
   end
 
 
-  local function spot_for_wotsit()
-    local free_spots = {}
+  local function spot_for_wotsit(kind, not_essential)
+    if table.empty(R.goal_spots) then
+      -- disaster!
+      if not_essential then return nil end
+      error("NO SPOT FOR " .. kind)
+    end
 
     each spot in R.goal_spots do
-      if not spot.used then
-        table.insert(free_spots, spot)
-      end
-    end
-
-    -- can also use large monster spots...
-    each spot in R.mon_spots do
-      if not spot.used and (spot.x2 - spot.x1) >= 64 then
-        table.insert(free_spots, spot)
-      end
-    end
-
---## gui.printf("spot_for_wotsit....  %d spots\n", #free_spots)
-
-    -- disaster!
-    if table.empty(free_spots) then
-      error("NO SPOT FOR WOTSIT")
-    end
-
-
-    each spot in free_spots do
       spot.score = evaluate_spot(spot)
     end
 
-    local G = table.pick_best(free_spots, function(A, B) return A.score > B.score end)
+    table.sort(R.goal_spots,
+        function(A, B) return A.score > B.score end)
 
-    G.used = true
+    local G = table.remove(R.goal_spots, 1)
+
     G.content = {}
-
     G.spot_dir = dir_for_spot(G)
 
     table.insert(R.goals, G)
@@ -505,7 +489,7 @@ end
   local function add_purpose(R)
     if R.purpose_is_done then return end
 
-    local G = spot_for_wotsit()
+    local G = spot_for_wotsit("PURPOSE")
 
     G.content.kind = R.purpose
 
@@ -569,7 +553,13 @@ end
 
 
   local function add_weapon(R, weapon)
-    local G = spot_for_wotsit()
+    local G = spot_for_wotsit("WEAPON", "not_essential")
+
+    -- this is bad, but not a show-stopper
+    if not G then
+      gui.printf("\nWARNING: NO SPOT FOR WEAPON (%s)\n\n", weapon)
+      return
+    end
 
     G.content.kind = "WEAPON"
     G.content.weapon = weapon
@@ -581,7 +571,7 @@ end
 
     local conn = R:get_teleport_conn()
     
-    local G = spot_for_wotsit()
+    local G = spot_for_wotsit("TELEPORTER")
 
     G.content.kind = "TELEPORTER"
     G.content.teleporter = conn  -- FIXME?
@@ -610,7 +600,7 @@ end
       return
     end
 
-    local G = spot_for_wotsit()
+    local G = spot_for_wotsit("GATE")
     
     G.content.kind = "GATE"
     G.content.source_id = link.dest.local_map
@@ -626,11 +616,11 @@ end
 
     if R:has_teleporter() then add_teleporter(R) end
 
+    each link in R.gates do add_hub_gate(R, link) end
+
     if R.weapons then
       each name in R.weapons do add_weapon(R, name) end
     end
-
-    each link in R.gates do add_hub_gate(R, link) end
   end
 
 
@@ -642,19 +632,6 @@ end
     -- the exit door require a far-away switch to open it.
 
     -- TODO
-  end
-
-
-  local function clean_mon_spots()
-    -- move any large monster spots which we used --> R.goal_spots
-    for idx = #R.mon_spots, 1, -1 do
-      local spot = R.mon_spots[idx]
-
-      if spot.used then
-        table.remove(R.mon_spots, idx)
-        table.insert(R.goal_spots, spot)
-      end
-    end
   end
 
 
@@ -691,8 +668,8 @@ end
   end
 
   place_importants()
+
   extra_stuff()
-  clean_mon_spots()
 end
 
 
@@ -1398,7 +1375,6 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
       env.seed_h = 3
     end
 
-
     local skin = Room_pick_skin(env, { reqs })
 
     if whole then
@@ -1943,12 +1919,12 @@ end
 
 function Areas_kick_the_goals(L)
 
-  function mid_point(G)
+  local function mid_point(G)
     return geom.box_mid(G.x1, G.y1, G.x2, G.y2)
   end
 
 
-  function do_big_item(G, item_name)
+  local function do_big_item(G, item_name)
     local env = { room_kind = L.kind }
 
     local reqs =
@@ -1970,7 +1946,7 @@ function Areas_kick_the_goals(L)
   end
 
 
-  function content_start(G)
+  local function content_start(G)
     local env = { room_kind = L.kind }
 
     local reqs =
@@ -1990,7 +1966,7 @@ function Areas_kick_the_goals(L)
   end
 
 
-  function content_exit(G)
+  local function content_exit(G)
     local env = { room_kind = L.kind }
 
     local reqs =
@@ -2022,12 +1998,12 @@ function Areas_kick_the_goals(L)
   end
 
 
-  function content_key(G)
+  local function content_key(G)
     do_big_item(G, assert(G.content.key))
   end
 
 
-  function content_switch(G)
+  local function content_switch(G)
     local lock = G.content.lock
 
     assert(lock)
@@ -2057,7 +2033,7 @@ function Areas_kick_the_goals(L)
   end
 
 
-  function content_teleporter(G)
+  local function content_teleporter(G)
     local env = { room_kind = L.kind }
 
     local reqs =
@@ -2104,7 +2080,7 @@ function Areas_kick_the_goals(L)
   end
 
 
-  function content_hub_gate(G)
+  local function content_hub_gate(G)
     local env = { room_kind = L.kind }
 
     local reqs  =
@@ -2136,7 +2112,7 @@ function Areas_kick_the_goals(L)
   end
 
 
-  function do_hexen_triple(G)
+  local function do_hexen_triple(G)
 
     -- FIXME: this is temp hack !!!
     local skin_map =
@@ -2163,7 +2139,7 @@ function Areas_kick_the_goals(L)
   end
 
 
-  function content_weapon(G)
+  local function content_weapon(G)
     -- Hexen stuff
     local weapon = G.content.weapon
 
@@ -2178,7 +2154,7 @@ function Areas_kick_the_goals(L)
   end
 
 
-  function do_content(G)
+  local function do_content(G)
     local kind = G.content.kind
 
     if not kind then return end
@@ -2216,6 +2192,11 @@ function Areas_kick_the_goals(L)
 
   each G in L.goals do
     do_content(G)
+
+    -- ensure monsters or items won't be placed here
+    if L.kind != "hallway" then
+      L:clip_spots(G.x1, G.y1, G.x2, G.y2)
+    end
   end
 end
 
