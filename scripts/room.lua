@@ -885,6 +885,8 @@ function CLOSET_CLASS.build(CL)
 
   Fabricate_at(CL.parent, skin1, T, { skin0, skin1, skin2 })
 
+  CL.parent:clip_spots(x1, y1, x2, y2)
+
 --[[
   -- experiment !!
   if CL.parent.kind == "outdoor" and C.floor_h + 208 < CL.parent.sky_h then
