@@ -1891,7 +1891,7 @@ WADFAB_ENTITIES =
 
   -- goal / purpose spot
 
-  [  36] = { kind="goal", r=64 }  -- column with heart
+  [  37] = { kind="goal", r=64 }  -- red pillar with skull
 
   -- lighting
 
