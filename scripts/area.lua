@@ -743,10 +743,8 @@ function Areas_layout_with_prefabs(R)
     elseif rot == 6 then
       px = 1 + sdy
       py = skin.seed_h - sdx
-
     end
 
-    assert(px and py)
     assert(1 <= px and px <= skin.seed_w)
     assert(1 <= py and py <= skin.seed_h)
 
@@ -1147,12 +1145,23 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
   local function test_prefab(K, skin, mode, rot)
     --| rot is the direction 2/4/6/8 where the south end of the prefab
     --| will be place.  So rot == 2 means no rotation.
+    --|
+    --| result is a relative probability (higher is better).
 
-    -- FIXME: test that this rotation fits
+    -- test that this rotation fits
+    local rw = skin.seed_w
+    local rh = skin.seed_h
+
+    if geom.is_horiz(rot) then
+      rw, rh = rh, rw
+    end
+
+    if (rw != K.sw) then return 0 end
+    if (rh != K.sh) then return 0 end
 
     -- FIXME: see test_prefab_XXX code above [portal tests]
 
-    return true
+    return 50
   end
 
 
@@ -1192,8 +1201,10 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
     local rot_probs = {}
 
     for rot = 2,8,2 do
-      if test_prefab(K, skin, mode, rot) then
-        rot_probs[rot] = 50
+      local prob = test_prefab(K, skin, mode, rot)
+
+      if prob > 0 then
+        rot_probs[rot] = prob
       end
     end
 
@@ -1217,9 +1228,6 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
 
 
   local function build_floor(K, from_portal)
-
-    if not (K.sw == 3 and K.sh == 3) then return false end  --!!!
-
     local env =
     {
       seed_w = math.max(K.sw, K.sh)
