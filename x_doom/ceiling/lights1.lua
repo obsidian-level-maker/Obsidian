@@ -5,7 +5,6 @@
 DOOM.SKINS.Ceiling_lights1 =
 {
   file = "ceiling/lights1.wad"
-  kind = "ceiling"
 
   seed_w = 3
   seed_h = 3
