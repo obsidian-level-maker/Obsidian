@@ -1290,7 +1290,16 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
 
 
   local function try_build_ceiling_fab(K, skin, from_portal)
-    local rot = rand.dir()
+    local rot
+
+    -- pick a usable rotation
+    if K.sw == K.sh then
+      rot = rand.dir()
+    elseif (K.sw == skin.seed_w) and (K.sh == skin.seed_h) then
+      rot = rand.sel(50, 2, 8)
+    else
+      rot = rand.sel(50, 4, 6)
+    end
 
     local T = Trans.section_transform(K, rot)
     T.add_z = K.ceil_h
@@ -1304,8 +1313,6 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
   local function build_ceiling(K, from_portal)
     -- never have ceiling prefabs in outdoor rooms
     if R.kind == "outdoor" then return false end
-
-    if not (K.sw == 3 and K.sh == 3) then return false end  --!!!
 
     local env =
     {
@@ -1324,10 +1331,11 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
 
     local list = Room_match_skins(env, { reqs })
 
+
     -- see 'build_floor' for a description of this stopping logic
     list["NONE"] = 90
 
-    local stop_prob = 20
+    local stop_prob = 10
 
     while not table.empty(list) do
       if rand.odds(stop_prob) then return false end
