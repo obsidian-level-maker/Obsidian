@@ -997,7 +997,7 @@ end
 function HALLWAY_CLASS.floor_stuff(H, entry_conn)
   ---- if H.done_heights then return end
 
-stderrf("hallway floor_stuff for %s\n", H:tostr())
+-- stderrf("hallway floor_stuff for %s\n", H:tostr())
 
 if H.is_joiner then stderrf("   JOINER !!!!\n") end
 
@@ -1115,15 +1115,12 @@ function HALLWAY_CLASS.divide_one_section(H, P)
   -- TODO: ability to move the middle piece
 
 
-stderrf("Current section : %s\n", P:tostr())
-
   -- create new sections
   for x = sx1, sx2 do
   for y = sy1, sy2 do
     if x == mx and y == my then continue end
 
     local K = SECTION_CLASS.new("rect")
-stderrf("New section @ (%d %d) : %s\n", x, y, tostring(K))
 
     K.sx1 = x ; K.sx2 = x ; K.sw = 1
     K.sy1 = y ; K.sy2 = y ; K.sh = 1
@@ -1142,7 +1139,6 @@ stderrf("New section @ (%d %d) : %s\n", x, y, tostring(K))
   --- create new pieces ---
 
   local S = SEEDS[mx][my]
-stderrf("Middle seed : %s\n", S:tostr())
 
   for dir = 2,8,2 do
     local LINK = P.hall_link[dir]
@@ -1152,15 +1148,10 @@ stderrf("Middle seed : %s\n", S:tostr())
     local S2 = S:neighbor(dir)
     local P2 = S2.section
 
-stderrf("  Seed at dir:%d --> %s\n", dir, S2:tostr())
-stderrf("  P2 = %s\n", tostring(P2))
-
     if P2.used then continue end
 
 
     -- OK --
-
-stderrf("Linking section : %s at dir:%d\n", tostring(P2), dir)
 
     H:add_section(P2)
 

@@ -476,9 +476,11 @@ function Connect_scan_sections(mode, min_score)
     return false
   end
 
+--[[ debug
 if mode == "cycle" then
 stderrf("\n\n==== CYCLE : %s / %s\n\n", LEVEL.best_conn.D1.L1:tostr(), LEVEL.best_conn.D1.L2:tostr())
 end
+--]]
 
   Connect_make_branch(LEVEL.best_conn, mode)
 
