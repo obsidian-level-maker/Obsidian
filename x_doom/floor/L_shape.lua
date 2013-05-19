@@ -4,7 +4,7 @@
 
 DOOM.SKINS.Floor_L1_3x3 =
 {
-  file   = "floor/L1.wad"
+  file   = "floor/L_shape1.wad"
 
   prob   = 500
 
