@@ -183,9 +183,14 @@ static int SHADE_CalcRegionGroup(region_c *R)
 
 	/* otherwise combine regions with same floor brush */
 
+	int xor_val = 0;
+
+	if (T->bkind == BKIND_Sky)  // separate sky sectors
+		xor_val = 0x77777777;
+
 	tag = f_face->getStr("_shade_tag");
 	if (tag)
-		return atoi(tag);
+		return atoi(tag) ^ xor_val;
 
 	int result = current_region_group;
 	current_region_group++;
@@ -195,7 +200,7 @@ static int SHADE_CalcRegionGroup(region_c *R)
 
 	f_face->Add("_shade_tag", buffer);
 
-	return result;
+	return result ^ xor_val;
 }
 
 
@@ -592,6 +597,8 @@ static void SHADE_LightRegion(region_c *R)
 {
 	SYS_ASSERT(R->gaps.size() > 0);
 
+	csg_brush_c *T = R->gaps.back()->top;
+
 	R->shade = MIN_SHADE;
 
 	view_x = R->mid_x;
@@ -604,7 +611,11 @@ static void SHADE_LightRegion(region_c *R)
 
 	if (sky_light > 0 && SHADE_CastRayTowardSky(R, view_x, view_y))
 	{
-		R->shade = MAX(R->shade, sky_light);
+		// use a lower light for non-sky regions
+		// (since it will affect the ceiling surface too)
+		int light = (T->bkind == BKIND_Sky) ? sky_light : sky_shade;
+
+		R->shade = MAX(R->shade, light);
 	}
 }
 
