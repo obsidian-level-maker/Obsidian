@@ -39,10 +39,11 @@ DOOM.SKINS.Exit_Closet_tech =
 --]]
 }
 
+
 DOOM.SKINS.Exit_Closet_hell =
 {
   file   = "exit/closet1.wad"
-  kind   = "unfinished"
+  kind   = "UNFINISHED"
   where  = "closet"
 
 --[[ FIXME

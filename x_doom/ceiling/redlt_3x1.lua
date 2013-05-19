@@ -2,7 +2,7 @@
 -- 3x1 red ceiling light
 --
 
-DOOM.SKINS.Ceiling_redlight_3x1 =
+DOOM.SKINS.Ceil_redlight_3x1 =
 {
   file = "ceiling/redlt_3x1.wad"
 

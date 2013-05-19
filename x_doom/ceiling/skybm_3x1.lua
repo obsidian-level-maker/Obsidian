@@ -2,7 +2,7 @@
 -- 3x1 skylight pair with beams
 --
 
-DOOM.SKINS.Ceiling_skybeams_3x1 =
+DOOM.SKINS.Ceil_skybeams_3x1 =
 {
   file = "ceiling/skybm_3x1.wad"
 
