@@ -11,7 +11,7 @@ DOOM.SKINS.Switch_niche1 =
   x_fit  = "frame"
   y_fit  = "bottom"
 
-  theme  = { tech=0, other=1 }
+  theme  = "!tech"
 
   props_35 = { light=208, _factor=0.5 }
 }

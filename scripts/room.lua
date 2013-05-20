@@ -1100,8 +1100,11 @@ function Room_match_user_stuff(tab)
       factor = factor * v
 
     else
-      if field != user then
-        factor = 0
+      if string.sub(field, 1, 1) == '!' then
+        field = string.sub(field, 2)
+        if field == user then factor = 0 end
+      else
+        if field != user then factor = 0 end
       end
     end
   end

@@ -99,6 +99,6 @@ DOOM.GROUPS.hall_curve =
 {
   kind = "hall"
 
-  theme = { tech=0, other=1 }
+  theme = "!tech"
 }
 

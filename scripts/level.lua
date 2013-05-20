@@ -131,7 +131,7 @@ GLOBAL_STYLE_LIST =
   secrets     = { few=20, some=60, heaps=10 }
 
   odd_shapes  = { none=10, few=40, some=60, heaps=4 }
-  big_rooms   = { none=6, few=60, some=40, heaps=20 }
+  big_rooms   = { none=6, few=20, some=40, heaps=60 }
   cycles      = { none=20, some=50, heaps=50 }
   crossovers  = { none=40 } --!!!! , some=40, heaps=40 }
   teleporters = { none=30, few=30, some=30, heaps=5 }
