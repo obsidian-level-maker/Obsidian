@@ -628,7 +628,7 @@ void QCOM_FindLights()
 
     float level  = E->props.getDouble("light", default_level);
 
-    light.factor = E->props.getDouble("_factor", DEFAULT_FACTOR);
+    light.factor = E->props.getDouble("factor", DEFAULT_FACTOR);
     light.radius = level * light.factor;
 
     if (level < 1 || light.radius < 1)

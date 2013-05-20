@@ -101,13 +101,13 @@ static void SHADE_CollectLights()
 
 		if (R->f_light > 0)
 		{
-			R->f_factor = f_face->getDouble("_factor", 1.0);
+			R->f_factor = f_face->getDouble("factor", 1.0);
 			face_count++;
 		}
 
 		if (R->c_light > 0)
 		{
-			R->c_factor = c_face->getDouble("_factor", 1.0);
+			R->c_factor = c_face->getDouble("factor", 1.0);
 			face_count++;
 		}
 
@@ -134,7 +134,7 @@ static void SHADE_CollectLights()
 			if (e_light <= 0)
 				continue;
 
-			float e_factor = E->props.getDouble("_factor", 1.0);
+			float e_factor = E->props.getDouble("factor", 1.0);
 
 			if (e_light > R->e_light ||
 				(e_light == R->e_light && e_factor > R->e_factor))

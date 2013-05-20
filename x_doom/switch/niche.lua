@@ -13,7 +13,7 @@ DOOM.SKINS.Switch_niche1 =
 
   theme  = "!tech"
 
-  props_35 = { light=208, _factor=0.5 }
+  props_35 = { light=208, factor=0.5 }
 }
 
 

@@ -37,7 +37,7 @@ DOOM.SKINS.Junc_curve_stair1 =
     w = { f_h=80 }
   }
 
-  props_45 = { light=176, _factor=0.5  }
+  props_45 = { light=176, factor=0.5  }
 }
 
 
@@ -60,7 +60,7 @@ DOOM.SKINS.Junc_curve_stair2 =
     w = { f_h=-80 }
   }
 
-  props_45 = { light=176, _factor=0.5 }
+  props_45 = { light=176, factor=0.5 }
 }
 
 

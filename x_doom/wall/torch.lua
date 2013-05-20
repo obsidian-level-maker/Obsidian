@@ -17,6 +17,6 @@ DOOM.SKINS.Wall_torch3 =
   theme  = "hell"
   prob   = 10
 
-  props_57 = { light=192, _factor=1.0 }
+  props_57 = { light=192, factor=1.0 }
 }
 

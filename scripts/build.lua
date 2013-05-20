@@ -2115,14 +2115,14 @@ function Fab_load_wad(name)
 
     -- logic to add light entities:
     --   + angle controls level (0 = 128, 45 = 144, ..., 315 = 240)
-    --   + skill bits determine the _factor
+    --   + skill bits determine the factor
     if spot_info.kind == "light" then
       E.id = "light"
 
       local skill = bit.band(E.flags or 7, 7)
       E.flags = bit.bor(E.flags or 7, 7)
 
-      E._factor = WADFAB_SKILL_TO_LIGHT[skill]
+      E.factor = WADFAB_SKILL_TO_LIGHT[skill]
 
       local angle = E.angle or 180
       if angle < 0 then angle = angle + 360 end
@@ -2451,7 +2451,7 @@ function Fab_replacements(fab, skin)
     if skin[k] == "_LIQUID" and LEVEL.liquid then
       C.special = C.special or LEVEL.liquid.special
       C.light   = LEVEL.liquid.light
-      C._factor = 0.6
+      C.factor = 0.6
     end
 
     if skin[k] then

@@ -42,6 +42,6 @@ DOOM.SKINS.Room_pillar2 =
 
   theme  = "urban"
 
-  props_45 = { light=176, _factor=0.6 }
+  props_45 = { light=176, factor=0.6 }
 }
 

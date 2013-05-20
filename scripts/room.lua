@@ -1843,16 +1843,12 @@ function ROOM_CLASS.add_closet(R, closet_kind)
 
     local skin = GAME.SKINS[skin_name]
 
-stderrf("trying closet '%s' @ %s\n", skin_name, R:tostr())
-
     local want_deep = false -- FIXME: proper "can fit" checking
                             -- local long, deep = blah....
 
     local K, dir = R:find_closet_spot(R, want_deep)
 
     if not K then continue end
-
-stderrf("chosen closet '%s' @ %s dir:%d\n", skin_name, K:tostr(), dir)
 
     R:install_closet(K, dir, closet_kind, skin)
 
