@@ -5,21 +5,12 @@ WORK IN PROGRESS
 
 V5 Layout:
 
-DONE:  implement 'edges' and simpler north/south/east/west 
-DONE:  fallback floor/ceil : treat separate from normal floors
-DONE:  support all rotations
++  minor item spots : generate from monster spots (if none in prefab)
 
-DONE:  support "room" floors (have ceiling as part of them)
-DONE:  sometimes void up 1x1 junctions in rooms
-DONE:  multi_match : give a table of reqs (not reqs1/2/3)
+-  big item spots from goal spots (if latter but no former)
 
-DONE:  for floor / ceiling pieces (etc?) : have a "NONE" probability to match skin
-DONE:  pick section exit portal AFTER building the prefab
-DONE:  create an purely indoor big junction
-DONE:  have 'complexity' for floors and ceilings
-DONE:  do goal spots with column-with-skull [NOT MONSTER SPOTS]
+-  support 'height' for outdoor floors
 
-++  handle 3x1 sections : make a prefab
 
 +  properly test if a prefab fits (esp. with entry portal)
 
@@ -31,9 +22,7 @@ DONE:  do goal spots with column-with-skull [NOT MONSTER SPOTS]
      perhaps: anchor = "d..x" i.e south is non-room, e/w is room, north don't care
                               and 'd' is for a doorway
 
-+  minor item spots : generate from monster spots (if none in prefab)
-
--  support 'height' for outdoor floors
+   also want to control if direction has a connection
 
 
 
@@ -63,7 +52,4 @@ DONE:  do goal spots with column-with-skull [NOT MONSTER SPOTS]
 
     -  if a locked door is placed in a joiner, don't create cycles
        for it.
-
-
--  FAT_CAGE_PILLAR
 

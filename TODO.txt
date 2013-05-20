@@ -110,6 +110,8 @@ V5 Stuff:
 
 -  a way to prevent repeating the same prefab in a row
 
+-  hallway pieces: north and south (etc) should use STARTAN3 not BLAKWAL1
+
 
 +  priority for spots  (skill flag)
        if EASY set OR nothing set --> priority = 1
