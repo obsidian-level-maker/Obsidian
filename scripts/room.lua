@@ -1266,7 +1266,7 @@ function Room_matching_skins_for_req(env, reqs)
     if skin.liquid then
       if not LEVEL.liquid then return 0 end
       if skin.liquid == "harmless" and     LEVEL.liquid.damage then return 0 end
-      if skin.liquid == "damaging" and not LEVEL.liquid.damage then return 0 end
+      if skin.liquid == "harmful"  and not LEVEL.liquid.damage then return 0 end
     end
 
     -- darkness check
