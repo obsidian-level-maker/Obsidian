@@ -1275,7 +1275,7 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
       local skin = assert(GAME.SKINS[skin_name])
 
       if try_build_prefab(K, skin, "floor", from_portal) then
-        if string.match(skin.file, "^room") then
+        if skin.kind == "room" or (not skin.kind and string.match(skin.file, "^room")) then
           K.whole_room = true
         end
 
