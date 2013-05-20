@@ -668,7 +668,7 @@ function HALLWAY_CLASS.stair_flow(H, P, from_dir, floor_h, z_dir, seen, is_cycle
 
       floor_h = floor_h + P.h_lift_h * z_dir
 
-    elseif rand.odds(10) then
+    elseif rand.odds(7) then
       P.h_stair_kind = "stair64"
 
       floor_h = floor_h + 64 * z_dir
