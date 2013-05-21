@@ -999,7 +999,7 @@ function Monsters_in_room(L)
       qty = LEVEL.quantity
 
     elseif OB_CONFIG.mons == "mixed" then
-      qty = rand.pick { 5,10,25,50 }
+      qty = rand.pick { 8,14,25,45 }
 
     elseif OB_CONFIG.mons == "prog" then
       qty = LEVEL.prog_mons_qty
@@ -1012,31 +1012,32 @@ function Monsters_in_room(L)
       qty = qty * (2 + L.lev_along + LEVEL.ep_along) / 4
     end
 
-    -- game specific adjustment
+    -- random adjustment
+    qty = qty * rand.pick { 0.8, 1.0, 1.2 }
+
+    -- game and theme adjustments
     qty = qty * (PARAM.monster_factor or 1)
+    qty = qty * (THEME.monster_factor or 1)
 
     -- more monsters for Co-operative games
     if OB_CONFIG.mode == "coop" then
       qty = qty * COOP_MON_FACTOR
     end
 
-
-    if L.kind == "hallway" then
-      qty = qty * rand.pick { 0.8, 1.2, 1.6 }
-
     -- more in EXIT or KEY rooms (extra boost in small rooms)
-    elseif L.purpose and L.purpose != "START" then
-      qty = qty * rand.pick { 1.4, 1.6, 1.9 }
+    if L.purpose and L.purpose != "START" then
+      qty = qty * 1.5
 
-      local is_small = (L.svolume <= 20)
-
-      if is_small then qty = qty * 1.25 end
+      if L.svolume <= 16 then qty = qty * 1.2 end
     else
-      -- random variation
-          if rand.odds(5) then qty = qty * 0.4
-      elseif rand.odds(5) then qty = qty * 1.9
-      else
-        qty = qty * rand.pick { 0.7, 1.0, 1.3 }
+      -- less in hallways
+      if L.kind == "hallway" and not L.big_junc then
+        qty = qty * 0.7
+      end
+
+      -- extreme variation in rare circumstances
+          if rand.odds(2) then qty = qty / 3.0
+      elseif rand.odds(2) then qty = qty * 3.0
       end
     end
 
@@ -1876,7 +1877,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     rand.shuffle(list)
 
     -- determine quantity, applying user settings
-    local qty = calc_quantity() * 1.4
+    local qty = calc_quantity() + 20
 
     local d = info.cage_density or 1
     local f = gui.random()
