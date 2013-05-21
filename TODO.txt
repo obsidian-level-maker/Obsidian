@@ -112,6 +112,10 @@ V5 Stuff:
 
 -  hallway pieces: north and south (etc) should use STARTAN3 not BLAKWAL1
 
++  Big junctions:
+   -  EITHER make C/T/I versions of Spokey and Circle
+        OR   create wall prefabs for them + logic to place it
+
 
 +  priority for spots  (skill flag)
        if EASY set OR nothing set --> priority = 1
@@ -141,6 +145,20 @@ V5 Stuff:
 -  IDEA: 'override' value for prefabs, default to zero.
          when > 0, remove all other possible prefabs from the list
          which have a lower value
+
+
++  properly test if a prefab fits (esp. with entry portal)
+
+-  check we don't add walls if an edge is fence/solid ('#')
+
+-  support 'anchor_dirs' : floor must have non-room on those sides
+   [and the opposite : floor must have room on specified sides]
+
+     perhaps: anchor = "d..x" i.e south is non-room, e/w is room, north don't care
+                              and 'd' is for a doorway
+
+   also want to control if direction has a connection
+
 
 
 Caves:
@@ -434,6 +452,9 @@ Pictures:
 
 
 Cycles:
+-  if a locked door is placed in a joiner, don't create cycles
+   for it.
+
 +  less chance if R2 (skipped room) is large
 
 -  create "teleporter cycles" i.e. if R1 -> R2 -> R3 and one

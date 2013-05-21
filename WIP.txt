@@ -5,51 +5,23 @@ WORK IN PROGRESS
 
 V5 Layout:
 
-+  minor item spots : generate from monster spots (if none in prefab)
+DONE:  minor item spots : generate from monster spots (if none in prefab)
+DONE:  big item spots from goal spots (if latter but no former)
 
--  big item spots from goal spots (if latter but no former)
++  score big item spots, check best and update the rest
 
--  support 'height' for outdoor floors
-
-
-+  properly test if a prefab fits (esp. with entry portal)
-
--  check we don't add walls if an edge is fence/solid ('#')
-
--  support 'anchor_dirs' : floor must have non-room on those sides
-   [and the opposite : floor must have room on specified sides]
-
-     perhaps: anchor = "d..x" i.e south is non-room, e/w is room, north don't care
-                              and 'd' is for a doorway
-
-   also want to control if direction has a connection
+-  support 'height' for floors
 
 
 
 !!  get joiners working again
 
     +  make a keyed joiner (or three)
+
     +  make a switched joiner (or seven)
 
-
-!!  fat fences not working??
-
-
-+  Big junctions:
-   -  EITHER make C/T/I versions of Spokey and Circle
-        OR   create wall prefabs for them + logic to place it
+    +  cycles cannot be joiners unless floor diff is 0
 
 
-!!  get cycles working again
-
-    DONE:  update stair_flow() with 'cycle' parameter, use it do
-       determine stair pieces (and skip some other logic).
-
-    DONE:  handle 'cycle_excess' : create a step (if abs >= 12)
-       (step should be at beginning for downward cycles)
-
-    -  ensure 'is_joiner' is never set for cycles
-
-    -  if a locked door is placed in a joiner, don't create cycles
-       for it.
+!!  get fat fences working
 
