@@ -1899,13 +1899,6 @@ WADFAB_ENTITIES =
 }
 
 
-WADFAB_SKILL_TO_LIGHT =
-{
-  [1] = 0.5   -- EASY
-  [2] = 0.8   -- MEDIUM
-  [4] = 1.3   -- HARD
-}
-
 WADFAB_LIGHT_DELTAS =
 {
   [1]  =  48  -- random off
@@ -2105,6 +2098,27 @@ function Fab_load_wad(name)
   end
 
 
+  local function skill_to_rank(flags)
+    if not flags then return 2 end
+
+    if bit.band(flags, 2) then return 2 end
+    if bit.band(flags, 4) then return 3 end
+
+    return 1
+  end
+
+
+  local function angle_to_light(angle)
+    if not angle then return 184 end
+
+    if angle < 0 then angle = angle + 360 end
+
+    angle = math.clamp(0, angle, 315)
+
+    return 136 + int(angle * 16 / 45)
+  end
+
+
   local function handle_entity(fab, E)
     local spot_info = WADFAB_ENTITIES[E.id]
 
@@ -2114,21 +2128,16 @@ function Fab_load_wad(name)
     end
 
     -- logic to add light entities:
-    --   + angle controls level (0 = 128, 45 = 144, ..., 315 = 240)
-    --   + skill bits determine the factor
+    --   - angle controls level (0 = 128, 45 = 144, ..., 315 = 240)
+    --   - skill bits determine the factor
     if spot_info.kind == "light" then
       E.id = "light"
 
-      local skill = bit.band(E.flags or 7, 7)
-      E.flags = bit.bor(E.flags or 7, 7)
+      E.light = angle_to_light(E.angle)
+      E.angle = nil
 
-      E.factor = WADFAB_SKILL_TO_LIGHT[skill]
-
-      local angle = E.angle or 180
-      if angle < 0 then angle = angle + 360 end
-      angle = math.clamp(0, angle, 315)
-
-      E.light = 136 + int(angle * 16 / 45)
+      E.factor = 0.1 + 0.4 * skill_to_rank(E.flags)
+      E.flags  = nil
 
       table.insert(fab.entities, E)
       return
@@ -2145,9 +2154,11 @@ function Fab_load_wad(name)
 
     B[1].spot_kind = spot_info.kind
     B[1].angle = E.angle
+    B[1].rank  = skill_to_rank(E.flags)
 
     -- the "ambush" (aka Deaf) flag means a caged monster
     local MTF_Ambush = 8
+
     if spot_info.kind == "monster" and bit.band(E.flags or 0, MTF_Ambush) != 0 then
       B[1].spot_kind = "cage"
     end

@@ -755,7 +755,11 @@ end
 
 
 function Room_distribute_spots(L, list)
+  local seen = {}
+
   each spot in list do
+    seen[spot.kind] = 1
+
     if spot.kind == "cage" or spot.kind == "trap" then
       table.insert(L.cage_spots, spot)
     elseif spot.kind == "pickup" or spot.kind == "big_item" then
@@ -768,6 +772,25 @@ function Room_distribute_spots(L, list)
     else
       table.insert(L.mon_spots, spot)
     end
+  end
+
+  -- 1. when no big item spots, convert goal spots
+  -- 2. when no small item spots, convert monster spots
+
+  each spot in list do
+
+    if not seen["big_item"] and spot.kind == "goal" then
+      local new_spot = table.copy(spot)
+      new_spot.kind = "big_item"
+      table.insert(L.item_spots, new_spot)
+    end
+
+    if not seen["pickup"] and spot.kind == "monster" then
+      local new_spot = table.copy(spot)
+      new_spot.kind = "pickup"
+      table.insert(L.item_spots, new_spot)
+    end
+
   end
 end
 
