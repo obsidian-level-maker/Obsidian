@@ -263,7 +263,7 @@ DOOM2.MONSTERS =
   arach =
   {
     id = 68
-    r = 66
+    r = 64
     h = 64 
     level = 6
     prob = 25
