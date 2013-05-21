@@ -519,6 +519,44 @@ end
 
 
 
+function Monsters_split_spots(list, max_size)
+  -- recreate the spot list
+  local new_list = {}
+
+  each spot in list do
+    local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
+
+    local XN = int(w / max_size)
+    local YN = int(h / max_size)
+
+    if XN < 2 and YN < 2 then
+      table.insert(new_list, spot)
+      continue
+    end
+
+    for x = 1, XN do
+    for y = 1, YN do
+      local x1 = spot.x1 + (x - 1) * w / XN
+      local x2 = spot.x1 + (x    ) * w / XN
+
+      local y1 = spot.y1 + (y - 1) * h / YN
+      local y2 = spot.y1 + (y    ) * h / YN
+
+      local new_spot = table.copy(spot)
+
+      new_spot.x1 = int(x1) ; new_spot.y1 = int(y1)
+      new_spot.x2 = int(x2) ; new_spot.y2 = int(y2)
+
+      table.insert(new_list, new_spot)
+    end
+    end
+  end
+
+  return new_list
+end
+
+
+
 function Monsters_distribute_stats()
   --|
   --| this distributes the fight statistics (which represent how much
@@ -938,6 +976,8 @@ function Monsters_do_pickups()
 
   local function pickups_in_room(L)
     extract_big_item_spots(L)
+
+    L.item_spots = Monsters_split_spots(L.item_spots, 21)
 
     each CL,hmodel in LEVEL.hmodels do
       pickups_for_hmodel(L, CL, hmodel)
@@ -1488,9 +1528,13 @@ function Monsters_in_room(L)
 
     local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
 
+WWW = w
+HHH = h
+
     w = int(w / info.r / 2)
     h = int(h / info.r / 2)
 
+gui.debugf("  mon_fits: r:%d space:%dx%d --> fit:%dx%d\n", info.r, WWW,HHH, w,h)
     return w * h
   end
 
@@ -1516,122 +1560,6 @@ function Monsters_in_room(L)
     end
 
     place_monster(mon, spot, x, y, z, all_skills)
-
---[[
-    local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
-
-    w = int(w / info.r / 2)
-    h = int(h / info.r / 2)
-
-    for mx = 1,w do for my = 1,h do
-      local x = spot.x1 + info.r * 2 * (mx-0.5)
-      local y = spot.y1 + info.r * 2 * (my-0.5)
-      local z = spot.z1
-
-      place_monster(mon, x, y, z)
-
-      count = count - 1
-      if count < 1 then return end
-    end end
---]]
-  end
-
-
-  local function split_huge_spots(max_size)
-    local list = L.mon_spots
-
-    -- recreate the spot list
-    L.mon_spots = {}
-
-    for _,spot in ipairs(list) do
-      local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
-
-      local XN = math.ceil(w / max_size)
-      local YN = math.ceil(h / max_size)
-
-      assert(XN > 0 and YN > 0)
-
-      if XN < 2 and YN < 2 then
-        table.insert(L.mon_spots, spot)
-      else
-        for x = 1,XN do for y = 1,YN do
-          local x1 = spot.x1 + (x - 1) * w / XN
-          local x2 = spot.x1 + (x    ) * w / XN
-
-          local y1 = spot.y1 + (y - 1) * h / YN
-          local y2 = spot.y1 + (y    ) * h / YN
-
-          local new_spot = table.copy(spot)
-
-          new_spot.x1 = int(x1) ; new_spot.y1 = int(y1)
-          new_spot.x2 = int(x2) ; new_spot.y2 = int(y2)
-
-          table.insert(L.mon_spots, new_spot)
-        end end
-      end
-    end
-  end
-
-
-  local function split_spot(spot, r, near_to)
-
-    local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
-
-    assert(w >= r*2 and h >= r*2)
-
-    -- for small monsters, up their size to 64 units so that when
-    -- the split-off pieces are created it allows other kinds of
-    -- small monsters to fit in those pieces.
-    local r2 = math.max(r*2, 64)
-
-    if w >= r2 + 64 then
-      local remain = table.copy(spot)
-
-      local side = rand.sel(50, 4, 6)
-
-      if near_to then
-        local d1 = math.abs(near_to.x1 - spot.x1)
-        local d2 = math.abs(near_to.x2 - spot.x2)
-        side = sel(d1 < d2, 4, 6)
-      end
-
-      if side == 4 then
-        spot.x2   = spot.x1 + r2
-        remain.x1 = spot.x1 + r2
-      else
-        spot.x1   = spot.x2 - r2
-        remain.x2 = spot.x2 - r2
-      end
-
-      table.insert(L.mon_spots, remain)
-    end
-
-    if h >= r2 + 64 then
-      local remain = table.copy(spot)
-
-      local side = rand.sel(50, 2, 8)
-
-      if near_to then
-        local d1 = math.abs(near_to.y1 - spot.y1)
-        local d2 = math.abs(near_to.y2 - spot.y2)
-        side = sel(d1 < d2, 2, 8)
-      end
-
-      if side == 2 then
-        spot.y2   = spot.y1 + r2
-        remain.y1 = spot.y1 + r2
-      else
-        spot.y1   = spot.y2 - r2
-        remain.y2 = spot.y2 - r2
-      end
-
-      table.insert(L.mon_spots, remain)
-    end
-
-    w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
-    assert(w >= r*2 and h >= r*2)
-
-    return spot
   end
 
 
@@ -1642,41 +1570,42 @@ function Monsters_in_room(L)
 
     each spot in L.mon_spots do
       local fit_num = mon_fits(mon, spot)
-      if fit_num > 0 then
 
-        if near_to then
-          spot.find_cost = Monsters_dist_between_spots(spot, near_to)
-        else
-          spot.find_cost = 0
-        end 
+      if fit_num <= 0 then continue end
 
-        -- tie breeker
-        spot.find_cost  = spot.find_cost + gui.random() * 16
-        spot.find_index = _index
+      if near_to then
+        spot.find_cost = Monsters_dist_between_spots(spot, near_to)
+      else
+        spot.find_cost = 0
+      end 
 
-        table.insert(poss_spots, spot)
-      end
+      -- tie breeker
+      spot.find_cost  = spot.find_cost + gui.random() * 16
+      spot.find_index = _index
+
+      table.insert(poss_spots, spot)
     end
+
 
     if table.empty(poss_spots) then
       return nil  -- no available spots!
     end
 
+
     local result = table.pick_best(poss_spots,
         function(A, B) return A.find_cost < B.find_cost end)
   
-    local spot = table.remove(L.mon_spots, result.find_index)
+    table.remove(L.mon_spots, result.find_index)
 
-    return split_spot(spot, info.r, near_to)
+    return result
   end
 
 
   local function try_add_mon_group(mon, count, all_skills)
-    local spot
     local actual = 0
     
     for i = 1,count do
-      spot = find_spot(mon, spot)
+      local spot = find_spot(mon, spot)
 
       if not spot then break; end
 
@@ -1733,80 +1662,71 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   end
 
 
-  local function fill_monster_map(palette, barrel_chance)
-    -- check if any huge monsters
-    local has_huge = false
-    for mon,prob in pairs(palette) do
-      if is_huge(mon) then has_huge = true end
+  local function fill_sized_monsters(wants, palette, r_min, r_max)
+    L.mon_spots = Monsters_split_spots(L.mon_spots, r_max * 2)
+
+    -- collect monsters that match the size range
+    local want2 = {}
+
+    each mon,qty in wants do
+      if qty > 0 then
+        local r = GAME.MONSTERS[mon].r
+
+        if (r_min < r) and (r <= r_max) then
+          want2[mon] = qty
+        end
+      end
     end
 
-    -- break up really large monster spots, so that we get a better
-    -- distribution of monsters.
-    split_huge_spots(sel(has_huge, 288, 144))
+    -- add these monsters until list is empty or no more spots
+
+    while not table.empty(want2) and
+          not table.empty(L.mon_spots)
+    do
+      local mon  = rand.key_by_probs(want2)
+      local info = GAME.MONSTERS[mon]
+
+      -- figure out how many to place together
+      local horde = calc_horde_size(mon, info)
+
+      horde = math.min(horde, want2[mon])
+
+      local actual = try_add_mon_group(mon, horde)
+
+      -- if it failed, there's no use trying again later
+      if actual > 0 and actual < want2[mon] then
+        want2[mon] = want2[mon] - actual
+      else
+        want2[mon] = nil
+        wants[mon] = nil
+      end
+    end
+  end
 
 
-    -- total number of monsters wanted
+  local function fill_monster_map(palette, barrel_chance)
+    -- compute total number of monsters wanted
     local qty = calc_quantity()
 
     local want_total = tally_spots(L.mon_spots)
 
     want_total = int(want_total * qty / 100 + gui.random())
 
+
     -- determine how many of each kind of monster we want
     local wants = how_many_dudes(palette, want_total)
 
 
-    -- add at least one monster of each kind, trying larger ones first
+    -- process largest monsters before earlier ones, splitting the
+    -- unused spots as we go....
+
+    local SIZES = { 128, 64, 32 }
+
     for pass = 1,3 do
-      for mon,qty in pairs(wants) do if qty >= 1 then
-        if (pass == 1 and is_huge(mon)) or
-           (pass == 2 and is_big(mon) and not is_huge(mon)) or
-           (pass == 3 and not is_big(mon))
-        then
-          try_add_mon_group(mon, 1, true)
+      local r_max = SIZES[pass]
+      local r_min = SIZES[pass + 1] or 0
 
-          wants[mon] = wants[mon] - 1
-
-          -- extra one for very large rooms
-          if (L.svolume or 0) > 70 then
-            try_add_mon_group(mon, 1)
-          end
-        end
-      end end -- mon, qty
-    end
-
-
-    -- try to add these monsters until we have the desired number or
-    -- we have run out of monster spots.
-
-    local pal2 = {}
-
-    each mon,_ in palette do
-      pal2[mon] = 50
-    end
-
-
-    while not table.empty(pal2) and not table.empty(L.mon_spots) do
-      local mon = rand.key_by_probs(pal2)
-      local info = GAME.MONSTERS[mon]
-
-      if wants[mon] < 1 then
-        pal2[mon] = nil
-        continue
-      end
-
-      -- figure out how many to place together
-      local horde = calc_horde_size(mon, info)
-
-      horde = math.min(horde, wants[mon])
-
-      local actual = try_add_mon_group(mon, horde)
-
-      if actual > 0 and actual < wants[mon] then
-        wants[mon] = wants[mon] - actual
-      else
-        pal2[mon] = nil
-      end
+      fill_sized_monsters(wants, palette, r_min, r_max)
     end
   end
 
