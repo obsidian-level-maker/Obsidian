@@ -1,8 +1,8 @@
 --
--- Pillars
+-- Big tech pillar
 --
 
-DOOM.SKINS.Room_pillar1 =
+DOOM.SKINS.Room_pillar_big =
 {
   file   = "room/pillar1.wad"
 
@@ -19,6 +19,10 @@ DOOM.SKINS.Room_pillar1 =
   theme  = "tech"
 }
 
+
+--
+-- Urban wood + four pillars + height diff
+--
 
 DOOM.SKINS.Room_pillar2 =
 {
@@ -41,6 +45,30 @@ DOOM.SKINS.Room_pillar2 =
   prob   = 10
 
   theme  = "urban"
+
+  props_45 = { light=176, factor=0.6 }
+}
+
+
+--
+-- Four pillars and a sky hole
+--
+
+DOOM.SKINS.Room_pillar3 =
+{
+  file   = "room/pillar3.wad"
+
+  prob   = 9999
+
+  seed_w = 3
+  seed_h = 3
+
+  north  = "..."
+  south  = "..."
+  east   = "..."
+  west   = "..."
+
+  theme  = "!tech"
 
   props_45 = { light=176, factor=0.6 }
 }
