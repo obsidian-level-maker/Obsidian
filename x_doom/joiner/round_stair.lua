@@ -4,22 +4,26 @@
 
 DOOM.SKINS.Joiner_round_stair =
 {
-  file   = "joiner/round_stair.wad"
+  file = "joiner/round_stair.wad"
 
-  prob   = 200
+  prob = 200
 
-  room_kind = "outdoor"
-  neighbor  = "outdoor"
+  seed_w = 3
+  seed_h = 1
 
-  bound_z1  = 0
-  add_sky   = 1
-
-  north = "nnn"
-  south = "..."
+  bound_z1 = 0
 
   edges =
   {
     n = { f_h=80 }
   }
+
+  north = "nnn"
+  south = "..."
+
+  room_kind = "outdoor"
+  neighbor  = "outdoor"
+
+  add_sky   = 1
 }
 

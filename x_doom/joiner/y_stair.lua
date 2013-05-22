@@ -4,17 +4,21 @@
 
 DOOM.SKINS.Joiner_Y_stair =
 {
-  file   = "joiner/y_stair.wad"
+  file = "joiner/y_stair.wad"
+
+  prob = 500
 
   seed_w = 3
   seed_H = 1
 
-  prob   = 500
+  edges =
+  {
+    n = { f_h=56 }
+  }
+
+  north  = "nnn"
+  south  = "#.#"
 
   neighbor = "outdoor"
-  no_door  = 1
-
-  north  = "..."
-  south  = "#.#"
 }
 

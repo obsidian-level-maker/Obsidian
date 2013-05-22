@@ -8,8 +8,11 @@ DOOM.SKINS.Joiner_plain =
 
   prob = 60
 
-  north  = "#.#"
-  south  = "#.#"
+  seed_w = 3
+  seed_h = 1
+
+  north = "#.#"
+  south = "#.#"
 }
 
 
@@ -19,10 +22,13 @@ DOOM.SKINS.Joiner_plain_cage =
 
   prob = 20
 
-  style = "cages"
+  seed_w = 3
+  seed_h = 1
 
-  north  = "#.#"
-  south  = "#.#"
+  north = "#.#"
+  south = "#.#"
+
+  style = "cages"
 }
 
 
@@ -32,9 +38,12 @@ DOOM.SKINS.Joiner_plain_trap =
 
   prob = 10
 
-  style = "traps"
+  seed_w = 3
+  seed_h = 1
 
-  north  = "#.#"
-  south  = "#.#"
+  north = "#.#"
+  south = "#.#"
+
+  style = "traps"
 }
 

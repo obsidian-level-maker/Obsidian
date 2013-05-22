@@ -4,14 +4,22 @@
 
 DOOM.SKINS.Joiner_TriPillar =
 {
-  file   = "joiner/tri_pillar.wad"
-  z_fit  = { 64, 72 }
+  file = "joiner/tri_pillar.wad"
+  
+  prob = 200
 
-  room_kind = "outdoor"
-  neighbor  = "outdoor"
+  seed_w = 3
+  seed_h = 1
+
+  z_fit = { 64, 72 }
+
   height    = 160
   bound_z1  = 0
 
-  prob = 200
+  north = "..."
+  south = "..."
+
+  room_kind = "outdoor"
+  neighbor  = "outdoor"
 }
 
