@@ -136,9 +136,9 @@ function Areas_handle_connections()
     sx1, sy1, sx2, sy2 = geom.side_coords(dir, K.sx1, K.sy1, K.sx2, K.sy2)
 
     -- except for joiners, connections are usually 1 seed wide
-    local is_joiner = (D.L1.is_joiner or D.L2.is_joiner)
+    local is_wide = (D.L1.is_joiner or D.L2.is_joiner)
 
-    if (sx2 > sx1 or sy2 > sy1) and not is_joiner then
+    if (sx2 > sx1 or sy2 > sy1) and not is_wide then
       if sx2 > sx1 then
         assert(sx2 == sx1 + 2)
         sx1 = sx1 + 1

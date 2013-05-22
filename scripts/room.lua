@@ -3307,6 +3307,8 @@ function Room_reckon_doors()
 
     if not P1 then return end
 
+    if L2.is_joiner then return end
+
 
     -- we nearly always want an arch (if no door)
     P1.door_kind = "arch"
@@ -3315,8 +3317,6 @@ function Room_reckon_doors()
     -- don't add two doors to a short hallway
     if L2.kind == "hallway" then
       if #L2.sections <= 2 and L2.has_a_door then return end
-
-      if L2.is_joiner then return end
     end
 
 

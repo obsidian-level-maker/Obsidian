@@ -1339,16 +1339,12 @@ function HALLWAY_CLASS.select_joiner(H, P, floor_h)
 
   local env =
   {
---!!!!    seed_w = long
---!!!!    seed_h = deep
+    seed_w = 3
+    seed_h = 1
 
     room_kind = R1.kind
     neighbor  = R2.kind
   }
-
-  if R1.quest != R2.quest then
-    env.has_door = 1
-  end
 
   -- only allow outdoor joiners if the skies are the same height
   local is_outdoor = (R1.kind == "outdoor" and R2.kind == "outdoor")
@@ -1358,13 +1354,6 @@ function HALLWAY_CLASS.select_joiner(H, P, floor_h)
     env.neighbor = "building"
   end
 
-  -- if there is a locked door on one side, prevent using outdoor joiners
-  if is_outdoor and env.has_door then
-    is_outdoor = false
-    env.room_kind = "building"
-    env.neighbor  = "building"
-  end
-
   -- FIXME: set env.height (unless is_outdoor)
 
   local reqs =
@@ -1372,24 +1361,14 @@ function HALLWAY_CLASS.select_joiner(H, P, floor_h)
     kind = "joiner"
   }
 
-  -- alternatively, use a normal hallway piece  [ REMOVE !! ]
-  local reqs2 =
-  {
-    kind  = "hall"
-    group = LEVEL.hall_group
-    shape = "X"
+  local lock = H.joiner_lock
 
-    prob_mul = 0.01  -- a bit boring
-  }
+  if lock then
+    reqs.key    = lock.key
+    reqs.switch = lock.switch
+  end
 
-  local reqs3 =  -- or maybe a stair
-  {
-    kind  = "hall"
-    group = LEVEL.hall_group
-    shape = "SM"
-  }
-
-  local skin = Room_pick_skin(env, { reqs, reqs2, reqs3 })
+  local skin = Room_pick_skin(env, { reqs })
 
   -- joiners can influence sky height...
   if is_outdoor and skin.height then
@@ -1584,8 +1563,21 @@ function Hallway_scan(start_K, start_dir, mode)
       if end_K.hall then return end
     end
 
+
     -- prefer cycles between the same quest
     local need_lock
+
+    if L1.quest != L2.quest then
+      local next_quest = L1.quest
+
+      if L2.quest.id > next_quest.id then
+        next_quest = L2.quest
+      end
+
+      assert(next_quest.entry_conn)
+
+      need_lock = assert(next_quest.entry_conn.lock)
+    end
 
     if mode == "cycle" and
        (L1.quest != L2.quest or
@@ -1593,19 +1585,8 @@ function Hallway_scan(start_K, start_dir, mode)
         L2.purpose == "SOLUTION")
     then                    
 
-      if L1.quest != L2.quest then
-        local next_quest = L1.quest
-
-        if L2.quest.id > next_quest.id then
-          next_quest = L2.quest
-        end
-
-        assert(next_quest.entry_conn)
-
-        need_lock = assert(next_quest.entry_conn.lock)
-
-      else
-        -- shortcut out of a key room
+      -- shortcut out of a key room?
+      if L1.quest == L2.quest then
         assert(not (L1.purpose == "SOLUTION" and L2.purpose == "SOLUTION"))
 
         if L1.purpose == "SOLUTION" then
@@ -1622,7 +1603,8 @@ function Hallway_scan(start_K, start_dir, mode)
         return
       end
 
-      score = score - 240
+      -- repeats of this lock incur greater costs
+      score = score - 200 - (need_lock.cycles or 0) * 140
     end
 
 
@@ -1645,11 +1627,15 @@ function Hallway_scan(start_K, start_dir, mode)
     end
 
     if not H.big_junc and #H.sections == 1 and end_K.room and
+       mode != "cycle" and
        (end_K.kx == start_K.kx or end_K.ky == start_K.ky) and
        ( (geom.is_vert (start_dir) and path[1].sw == 3) or
          (geom.is_horiz(start_dir) and path[1].sh == 3))
     then
---!!!!!!      H.is_joiner = true
+      if rand.odds(99) then
+        H.is_joiner = true
+        H.joiner_lock = need_lock
+      end
     end
 
     if mode == "secret_exit" then
@@ -1683,8 +1669,10 @@ function Hallway_scan(start_K, start_dir, mode)
 
     -- handle quest difference : need to lock door (cycles only)
 
-    if need_lock then
+    if mode == "cycle" and need_lock then
       D2.lock = need_lock
+
+      need_lock.cycles = (need_lock.cycles or 0) + 1
     end
 
 
