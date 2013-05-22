@@ -268,16 +268,16 @@ end
 
 
 function Areas_place_importants(R)
+  --|
+  --| this places the "important" stuff (keys, switches, teleporters)
+  --| into the rooms.  It requires "goal spots" (except for caves).
+  --|
+  --| for caves, this is done before the room is laid out, since the
+  --| cave code needs to know a-priori where the importants will go
+  --| (so it can ensure there is walkable space at those places).
+  --|
+  --| NOTE: closets are done elsewhere...
 
-  -- this places the "important" stuff (keys, switches, teleporters)
-  -- into the rooms.  It requires "goal spots" (except for caves).
-  --
-  -- for caves, this is done before the room is laid out, since the
-  -- cave code needs to know a-priori where the importants will go
-  -- (so it can ensure there is walkable space at those places).
-  --
-  -- NOTE: closets for switches (etc) are done elsewhere...
-  --
   local cave_mode
 
   local function dir_for_spot(T)
@@ -426,6 +426,7 @@ function Areas_place_importants(R)
     --   1. distance from walls
     --   2. distance from entrance / exits
     --   3. distance from other goals
+    --   4. rank value from prefab
 
     local   wall_dist = nearest_wall(spot)   or 20
     local portal_dist = nearest_portal(spot) or 20
@@ -442,9 +443,9 @@ function Areas_place_importants(R)
       score = score + wall_dist / 5
     end
 
-    -- prefer not to use very large monster spots
-    if spot.kind == "monster" and (spot.x2 - spot.x1) >= 188 then
-      score = score - 100
+    -- apply the skill bits from prefab
+    if spot.rank then
+      score = score + (spot.rank - 1) * 5 
     end
  
     -- tie breaker
@@ -616,10 +617,14 @@ end
 
     if R:has_teleporter() then add_teleporter(R) end
 
-    each link in R.gates do add_hub_gate(R, link) end
+    each link in R.gates do
+      add_hub_gate(R, link)
+    end
 
     if R.weapons then
-      each name in R.weapons do add_weapon(R, name) end
+      each name in R.weapons do
+        add_weapon(R, name)
+      end
     end
   end
 

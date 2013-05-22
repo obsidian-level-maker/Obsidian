@@ -1699,6 +1699,7 @@ function Fab_read_spots(fab)
     {
       kind  = B[1].spot_kind
       angle = B[1].angle
+      rank  = B[1].rank
 
       x1 = x1, y1 = y1, z1 = z1
       x2 = x2, y2 = y2, z2 = z2
@@ -2101,8 +2102,8 @@ function Fab_load_wad(name)
   local function skill_to_rank(flags)
     if not flags then return 2 end
 
-    if bit.band(flags, 2) then return 2 end
-    if bit.band(flags, 4) then return 3 end
+    if bit.band(flags, 2) != 0 then return 2 end
+    if bit.band(flags, 4) != 0 then return 3 end
 
     return 1
   end
