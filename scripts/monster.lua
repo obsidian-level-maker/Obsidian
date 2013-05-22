@@ -495,7 +495,7 @@ end
 
 
 
-function Monsters_dist_between_spots(A, B)
+function Monsters_dist_between_spots(A, B, z_penalty)
   local dist_x = 0
   local dist_y = 0
 
@@ -509,9 +509,9 @@ function Monsters_dist_between_spots(A, B)
 
   local dist = math.max(dist_x, dist_y)
 
-  -- large penalty for height difference
+  -- penalty for height difference [for clustering]
   if A.z1 != B.z1 then
-    dist = dist + 1000
+    dist = dist + (z_penalty or 1000)
   end
 
   return dist
@@ -669,8 +669,26 @@ function Monsters_do_pickups()
       if spot.kind == "big_item" then
         table.remove(L.item_spots, i)
         table.insert(L.big_spots, spot)
+
+        spot.score = (spot.rank or 1) * 5 + 7 * gui.random() ^ 2
       end
     end
+  end
+
+
+  local function grab_a_big_spot(L)
+    local result = table.pick_best(L.big_spots,
+            function(A, B) return A.score > B.score end,
+            "remove")
+    
+    -- update remaining scores so next one chosen is far away
+    each spot in L.big_spots do
+      local dist = Monsters_dist_between_spots(spot, result, 80) / 256
+
+      spot.score = spot.score + dist
+    end
+
+    return result
   end
 
 
@@ -779,8 +797,7 @@ function Monsters_do_pickups()
 
       -- big item?
       if item.rank > 0 and count == 1 and not table.empty(L.big_spots) then
-        local spot = table.remove(L.big_spots, 1)
-
+        local spot = grab_a_big_spot(L)
         place_item_in_spot(item.name, spot)
         continue
       end
@@ -965,7 +982,7 @@ function Monsters_do_pickups()
     -- sort items by rank
     -- also: place large clusters before small ones
     table.sort(item_list,
-      function(A,B)
+      function(A, B)
         if A.rank != B.rank then return A.rank > B.rank end
         return (A.count + A.random) > (B.count + B.random)
       end)
@@ -1580,8 +1597,7 @@ gui.debugf("  mon_fits: r:%d space:%dx%d --> fit:%dx%d\n", info.r, WWW,HHH, w,h)
       end 
 
       -- tie breeker
-      spot.find_cost  = spot.find_cost + gui.random() * 16
-      spot.find_index = _index
+      spot.find_cost = spot.find_cost + gui.random() * 16
 
       table.insert(poss_spots, spot)
     end
@@ -1591,13 +1607,8 @@ gui.debugf("  mon_fits: r:%d space:%dx%d --> fit:%dx%d\n", info.r, WWW,HHH, w,h)
       return nil  -- no available spots!
     end
 
-
-    local result = table.pick_best(poss_spots,
+    return table.pick_best(poss_spots,
         function(A, B) return A.find_cost < B.find_cost end)
-  
-    table.remove(L.mon_spots, result.find_index)
-
-    return result
   end
 
 
