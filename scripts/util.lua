@@ -301,7 +301,7 @@ function table.tostr(t, depth, prefix)
   return result
 end
 
-function table.pick_best(list, comp)
+function table.pick_best(list, comp, remove_it)
   assert(list)
 
   if #list == 0 then
@@ -312,15 +312,21 @@ function table.pick_best(list, comp)
     comp = function(A,B) return (A > B) end
   end
 
-  local cur = 1
+  local best = 1
 
   for idx = 2,#list do
-    if not comp(list[cur], list[idx]) then
-      cur = idx
+    if not comp(list[best], list[idx]) then
+      best = idx
     end
   end
 
-  return list[cur], cur
+  local result = list[best]
+
+  if remove_it then
+    table.remove(list, best)
+  end
+
+  return result
 end
 
 function table.merge(dest, src)  -- shallow

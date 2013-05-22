@@ -504,7 +504,7 @@ function Connect_start_room()
 
   assert(#locs > 0)
 
-  local room, index = table.pick_best(locs,
+  local room = table.pick_best(locs,
     function(A, B) return A.start_score > B.start_score end)
 
   gui.printf("Start room: %s\n", room:tostr())
