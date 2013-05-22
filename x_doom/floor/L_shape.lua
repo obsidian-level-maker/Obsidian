@@ -4,9 +4,9 @@
 
 DOOM.SKINS.Floor_3x3_L1 =
 {
-  file   = "floor/L_shape1.wad"
+  file = "floor/L_shape1.wad"
 
-  prob   = 500
+  prob = 50
 
   seed_w = 3
   seed_h = 3
@@ -21,5 +21,28 @@ DOOM.SKINS.Floor_3x3_L1 =
 
   east  = "bbb"
   west  = "..b"
+}
+
+
+DOOM.SKINS.Floor_3x3_L2 =
+{
+  file = "floor/L_shape2.wad"
+
+  prob = 100
+
+  seed_w = 3
+  seed_h = 3
+
+  edges =
+  {
+    n = { f_h=40 }
+    e = { f_h=72 }
+  }
+
+  north = "nnn"
+  south = "..."
+
+  east  = "eee"
+  west  = "..."
 }
 
