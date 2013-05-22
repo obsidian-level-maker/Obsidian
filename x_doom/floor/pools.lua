@@ -6,7 +6,7 @@ DOOM.SKINS.Floor_pool_3x1 =
 {
   file   = "floor/pool_3x1.wad"
 
-  prob = 999
+  prob = 200
 
   seed_w = 3
   seed_h = 1
@@ -25,7 +25,7 @@ DOOM.SKINS.Floor_pool_3x3 =
 {
   file   = "floor/pool_3x3.wad"
 
-  prob = 9999
+  prob = 100
 
   seed_w = 3
   seed_h = 3
