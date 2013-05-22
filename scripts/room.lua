@@ -2330,7 +2330,7 @@ function Room_analyse_fat_fences()
 
       seen[pair] = true
 
-      if rand.odds(35 - 65) then  --!!!! FIXME
+      if rand.odds(35) then
         Room_merge_sky_groups(R1, R2)
       end
 
@@ -2352,7 +2352,7 @@ function Room_analyse_outside_joiners()
 
       if not (R1.sky_group and R2.sky_group) then continue end
 
-      if rand.odds(35 + 65) then  --!!!!! FIXME
+      if rand.odds(50) then
         Room_merge_sky_groups(R1, R2)
 
         H.sky_group = R1.sky_group
