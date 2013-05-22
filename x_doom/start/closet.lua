@@ -17,9 +17,22 @@ DOOM.SKINS.Start_Closet2 =
   file   = "start/closet2.wad"
   where  = "closet"
 
-  prob   = 9999
-
   x_fit  = "frame"
   y_fit  = "top"
+}
+
+
+DOOM.SKINS.Start_Closet3_out =
+{
+  file  = "start/closet3.wad"
+  where = "closet"
+
+  prob  = 300
+
+  x_fit = "frame"
+  y_fit = "top"
+
+  room_kind = "outdoor"
+  add_sky = 1
 }
 
