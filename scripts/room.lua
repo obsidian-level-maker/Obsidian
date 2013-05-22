@@ -1347,10 +1347,10 @@ end
 
   if table.empty(list) then
     gui.debugf("Room_pick_skin:\n")
-    gui.debugf("env  = \n%s\n", table.tostr(env))
-    gui.debugf("reqs = \n%s\n", table.tostr(reqs))
+    gui.debugf("env   = \n%s\n", table.tostr(env))
+    gui.debugf("reqs1 = \n%s\n", table.tostr(req_list[1]))
 
-    error("No matching prefabs for: " .. reqs.kind)
+    error("No matching prefabs for: " .. req_list[1].kind)
   end
 
   local name = rand.key_by_probs(list)
