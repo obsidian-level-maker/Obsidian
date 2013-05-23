@@ -1342,8 +1342,8 @@ function HALLWAY_CLASS.select_joiner(H, P, floor_h)
     seed_w = 3
     seed_h = 1
 
-    room_kind = R1.kind
-    neighbor  = R2.kind
+    room     = R1.kind
+    neighbor = R2.kind
   }
 
   -- only allow outdoor joiners if the skies are the same height

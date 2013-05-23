@@ -19,7 +19,7 @@ DOOM.SKINS.Joiner_TriPillar =
   north = "..."
   south = "..."
 
-  room_kind = "outdoor"
-  neighbor  = "outdoor"
+  room     = "outdoor"
+  neighbor = "outdoor"
 }
 

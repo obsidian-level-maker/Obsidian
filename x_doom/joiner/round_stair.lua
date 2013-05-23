@@ -21,8 +21,8 @@ DOOM.SKINS.Joiner_round_stair =
   north = "nnn"
   south = "..."
 
-  room_kind = "outdoor"
-  neighbor  = "outdoor"
+  room     = "outdoor"
+  neighbor = "outdoor"
 
   add_sky   = 1
 }

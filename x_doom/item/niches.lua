@@ -9,7 +9,7 @@ DOOM.SKINS.Item_Niche1 =
   x_fit = "frame"
   y_fit = "top"
 
-  room_kind = "indoor"
+  room = "indoor"
 
   thing_5 = "?item"
 }
@@ -21,7 +21,7 @@ DOOM.SKINS.Item_Niche1_outdoor =
   x_fit = "frame"
   y_fit = "top"
 
-  room_kind = "outdoor"
+  room = "outdoor"
   add_sky = 1
 
   thing_5 = "?item"

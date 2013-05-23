@@ -32,7 +32,7 @@ DOOM.SKINS.Start_Closet3_out =
   x_fit = "frame"
   y_fit = "top"
 
-  room_kind = "outdoor"
+  room = "outdoor"
   add_sky = 1
 }
 

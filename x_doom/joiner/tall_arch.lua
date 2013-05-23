@@ -19,8 +19,8 @@ DOOM.SKINS.Joiner_TallArch =
   north = "..."
   south = "..."
 
-  room_kind = "outdoor"
-  neighbor  = "outdoor"
+  room     = "outdoor"
+  neighbor = "outdoor"
 
   height  = 256
   add_sky = 1

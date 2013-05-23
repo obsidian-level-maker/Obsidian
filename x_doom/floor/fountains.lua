@@ -17,7 +17,7 @@ DOOM.SKINS.Floor_fountain1 =
   west  = "..."
 
   liquid = "any"
-  room_kind = "outdoor"
+  room = "outdoor"
 
   theme = { hell=0, tech=0.2, other=1 }
 }

@@ -1274,8 +1274,8 @@ function Room_matching_skins_for_req(env, reqs)
 --!!!! FIXME   if not Fab_size_check(skin, env.long, env.deep) then return 0 end
 
     -- building type checks
-    if skin.room_kind then
-      if not match_room_kind(env.room_kind, skin.room_kind) then return 0 end
+    if skin.room then
+      if not match_room_kind(env.room, skin.room) then return 0 end
     end
 
     if skin.neighbor then
@@ -1843,7 +1843,8 @@ function ROOM_CLASS.add_closet(R, closet_kind)
   {
     seed_w = 1
     seed_h = 1
-    room_kind = R.kind
+
+    room = R.kind
   }
 
   local reqs =

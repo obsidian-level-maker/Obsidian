@@ -4,9 +4,9 @@
 
 DOOM.SKINS.Floor_cage_big1 =
 {
-  file   = "floor/cage_big1.wad"
+  file = "floor/cage_big1.wad"
 
-  prob   = 3999
+  prob = 300
 
   seed_w = 3
   seed_h = 3
@@ -23,9 +23,9 @@ DOOM.SKINS.Floor_cage_big1 =
 
 DOOM.SKINS.Floor_cage_big2 =
 {
-  file   = "floor/cage_big2.wad"
+  file = "floor/cage_big2.wad"
 
-  prob   = 3999
+  prob = 300
 
   seed_w = 3
   seed_h = 3
@@ -35,7 +35,7 @@ DOOM.SKINS.Floor_cage_big2 =
   south  = "..."
   west   = "..."
 
-  room_kind = "outdoor"
+  room = "outdoor"
 
   height = 256
 

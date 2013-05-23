@@ -4,41 +4,41 @@
 
 DOOM.SKINS.Room_cage4 =
 {
-  file   = "room/cage4.wad"
+  file = "room/cage4.wad"
 
-  prob   = 999
+  prob = 100
 
   seed_w = 3
   seed_h = 3
 
-  north  = "..."
-  east   = "..."
-  south  = "..."
-  west   = "..."
+  north = "..."
+  east  = "..."
+  south = "..."
+  west  = "..."
 
-  style  = "cages"
+  style = "cages"
 }
 
 
 DOOM.SKINS.Room_cage4_outdoor =
 {
-  file   = "room/cage4_o.wad"
-  kind   = "floor"
+  file = "room/cage4_o.wad"
+  kind = "floor"
 
-  prob   = 999
+  prob = 100
 
   seed_w = 3
   seed_h = 3
 
-  north  = "..."
-  east   = "..."
-  south  = "..."
-  west   = "..."
-
-  room_kind = "outdoor"
+  north = "..."
+  east  = "..."
+  south = "..."
+  west  = "..."
 
   height = 192
 
-  style  = "cages"
+  room = "outdoor"
+
+  style = "cages"
 }
 

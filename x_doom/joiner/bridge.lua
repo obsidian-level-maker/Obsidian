@@ -6,7 +6,7 @@ DOOM.SKINS.Joiner_bridge =
 {
   file = "joiner/bridge.wad"
 
-  prob = 800
+  prob = 500
 
   seed_w = 3
   seed_h = 1
@@ -16,8 +16,8 @@ DOOM.SKINS.Joiner_bridge =
 
   liquid = "any"
 
-  room_kind = "outdoor"
-  neighbor  = "outdoor"
+  room     = "outdoor"
+  neighbor = "outdoor"
 
   add_sky = 1
 }

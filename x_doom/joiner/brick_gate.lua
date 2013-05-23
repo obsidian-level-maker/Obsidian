@@ -13,8 +13,8 @@ DOOM.SKINS.Joiner_brick_gate =
 
   bound_z1 = 0
 
-  room_kind = "outdoor"
-  neighbor  = "outdoor"
+  room     = "outdoor"
+  neighbor = "outdoor"
 
   add_sky = 1
 }

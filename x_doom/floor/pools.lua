@@ -37,6 +37,6 @@ DOOM.SKINS.Floor_pool_3x3 =
 
   liquid = "any"
 
-  room_kind = "outdoor"
+  room = "outdoor"
 }
 

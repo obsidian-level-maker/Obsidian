@@ -1238,7 +1238,7 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
       seed_w = math.max(K.sw, K.sh)
       seed_h = math.min(K.sw, K.sh)
 
-      room_kind = R.kind
+      room = R.kind
     }
 
     local reqs1 =
@@ -1324,7 +1324,7 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
       seed_w = math.max(K.sw, K.sh)
       seed_h = math.min(K.sw, K.sh)
 
-      room_kind = R.kind
+      room = R.kind
     }
 
     local reqs =
@@ -1380,7 +1380,7 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
       seed_w = 1
       seed_h = 1
 
-      room_kind = R.kind
+      room = R.kind
     }
 
     local reqs =
@@ -1526,11 +1526,11 @@ function Areas_build_walls(R)
 
     local env =
     {
-      room_kind  = R.kind
+      room = R.kind
     }
 
     if L2 then
-      env.room_kind2 = L2.kind
+      env.neighbor = L2.kind
     end
 
     local reqs =
@@ -1946,7 +1946,7 @@ function Areas_kick_the_goals(L)
 
 
   local function do_big_item(G, item_name)
-    local env = { room_kind = L.kind }
+    local env = { room = L.kind }
 
     local reqs =
     {
@@ -1968,7 +1968,7 @@ function Areas_kick_the_goals(L)
 
 
   local function content_start(G)
-    local env = { room_kind = L.kind }
+    local env = { room = L.kind }
 
     local reqs =
     {
@@ -1988,7 +1988,7 @@ function Areas_kick_the_goals(L)
 
 
   local function content_exit(G)
-    local env = { room_kind = L.kind }
+    local env = { room = L.kind }
 
     local reqs =
     {
@@ -2030,7 +2030,7 @@ function Areas_kick_the_goals(L)
     assert(lock)
     assert(lock.switch)
 
-    local env = { room_kind = L.kind }
+    local env = { room = L.kind }
 
     local reqs =
     {
@@ -2055,7 +2055,7 @@ function Areas_kick_the_goals(L)
 
 
   local function content_teleporter(G)
-    local env = { room_kind = L.kind }
+    local env = { room = L.kind }
 
     local reqs =
     {
@@ -2102,7 +2102,7 @@ function Areas_kick_the_goals(L)
 
 
   local function content_hub_gate(G)
-    local env = { room_kind = L.kind }
+    local env = { room = L.kind }
 
     local reqs  =
     {
