@@ -1580,15 +1580,18 @@ gui.debugf("  mon_fits: r:%d space:%dx%d --> fit:%dx%d\n", info.r, WWW,HHH, w,h)
   end
 
 
-  local function find_spot(mon, near_to)
-    local info = GAME.MONSTERS[mon]
-
-    local poss_spots = {}
-
+  local function grab_monster_spot(mon, near_to)
+    local total = 0
+    
     each spot in L.mon_spots do
       local fit_num = mon_fits(mon, spot)
 
-      if fit_num <= 0 then continue end
+      if fit_num <= 0 then
+        spot.find_cost = 9e9
+        continue
+      end
+
+      total = total + 1
 
       if near_to then
         spot.find_cost = Monsters_dist_between_spots(spot, near_to)
@@ -1598,17 +1601,18 @@ gui.debugf("  mon_fits: r:%d space:%dx%d --> fit:%dx%d\n", info.r, WWW,HHH, w,h)
 
       -- tie breeker
       spot.find_cost = spot.find_cost + gui.random() * 16
-
-      table.insert(poss_spots, spot)
     end
 
 
-    if table.empty(poss_spots) then
+    if total == 0 then
       return nil  -- no available spots!
     end
 
-    return table.pick_best(poss_spots,
-        function(A, B) return A.find_cost < B.find_cost end)
+    -- pick the best and remove it from the list
+
+    return table.pick_best(L.mon_spots,
+        function(A, B) return A.find_cost < B.find_cost end,
+        "remove")
   end
 
 
@@ -1616,7 +1620,7 @@ gui.debugf("  mon_fits: r:%d space:%dx%d --> fit:%dx%d\n", info.r, WWW,HHH, w,h)
     local actual = 0
     
     for i = 1,count do
-      local spot = find_spot(mon, spot)
+      local spot = grab_monster_spot(mon, spot)
 
       if not spot then break; end
 
