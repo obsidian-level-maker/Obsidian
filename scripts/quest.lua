@@ -1750,10 +1750,15 @@ function Quest_make_quests()
 
       -- preference to avoid 180 degree turns
       if D.dir1 != L.entry_conn.dir2 then
-        dist = dist + 2
+        dist = dist + 3
       end
 
       score = score + dist / 2.0
+    end
+
+    -- small preference for joiners
+    if D.L1.is_joiner or D.L2.is_joiner then
+      score = score + 0.3
     end
 
     -- tie breaker

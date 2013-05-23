@@ -207,6 +207,13 @@ function HALLWAY_CLASS.joiner_rooms(H)
 end
 
 
+function HALLWAY_CLASS.joiner_lock(H)
+  each D in H.conns do
+    if D.lock then return D.lock end
+  end
+end
+
+
 function HALLWAY_CLASS.setup_path(H, path)
 
   -- the 'path' is a list of sections in visited order, as produced
@@ -999,7 +1006,7 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
 
 -- stderrf("hallway floor_stuff for %s\n", H:tostr())
 
-if H.is_joiner then stderrf("   JOINER !!!!\n") end
+if H.is_joiner then stderrf("   JOINER !!! @ %s\n", H:tostr()) end
 
   assert(not H.done_heights)
 
@@ -1361,7 +1368,7 @@ function HALLWAY_CLASS.select_joiner(H, P, floor_h)
     kind = "joiner"
   }
 
-  local lock = H.joiner_lock
+  local lock = H:joiner_lock()
 
   if lock then
     reqs.key    = lock.key
@@ -1402,8 +1409,17 @@ function HALLWAY_CLASS.build_hall_piece(H, P)
     outer = H.zone.facade_mat
   }
 
+  local skin2 = {}
+
   if H.is_joiner then
     skin0.wall = skin0.outer
+
+    local lock = H:joiner_lock()
+
+    if lock and lock.kind == "SWITCH" then
+      skin2.tag_1 = lock.tag
+      skin2.targetname = string.format("switch%d", lock.tag)
+    end
   end
 
   -- hack for secret exits -- need hallway piece to blend in
@@ -1424,7 +1440,7 @@ function HALLWAY_CLASS.build_hall_piece(H, P)
     Trans.set_fitted_z(T, P.floor_h, sky_h)
   end
 
-  Fabricate_at(H, skin1, T, { skin0, skin1 })
+  Fabricate_at(H, skin1, T, { skin0, skin1, skin2 })
 
 --[[ debug aid
 entity_helper("dummy", T.add_x + 128, T.add_y + 128, P.floor_h)
@@ -1567,26 +1583,24 @@ function Hallway_scan(start_K, start_dir, mode)
     -- prefer cycles between the same quest
     local need_lock
 
-    if L1.quest != L2.quest then
-      local next_quest = L1.quest
-
-      if L2.quest.id > next_quest.id then
-        next_quest = L2.quest
-      end
-
-      assert(next_quest.entry_conn)
-
-      need_lock = assert(next_quest.entry_conn.lock)
-    end
-
     if mode == "cycle" and
        (L1.quest != L2.quest or
         L1.purpose == "SOLUTION" or
         L2.purpose == "SOLUTION")
     then                    
+      if L1.quest != L2.quest then
+        local next_quest = L1.quest
 
-      -- shortcut out of a key room?
-      if L1.quest == L2.quest then
+        if L2.quest.id > next_quest.id then
+          next_quest = L2.quest
+        end
+
+        assert(next_quest.entry_conn)
+
+        need_lock = assert(next_quest.entry_conn.lock)
+
+      else
+        -- shortcut out of a key room?
         assert(not (L1.purpose == "SOLUTION" and L2.purpose == "SOLUTION"))
 
         if L1.purpose == "SOLUTION" then
@@ -1634,7 +1648,6 @@ function Hallway_scan(start_K, start_dir, mode)
     then
       if rand.odds(99) then
         H.is_joiner = true
-        H.joiner_lock = need_lock
       end
     end
 
@@ -1669,7 +1682,7 @@ function Hallway_scan(start_K, start_dir, mode)
 
     -- handle quest difference : need to lock door (cycles only)
 
-    if mode == "cycle" and need_lock then
+    if need_lock then
       D2.lock = need_lock
 
       need_lock.cycles = (need_lock.cycles or 0) + 1

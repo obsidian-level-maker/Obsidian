@@ -210,10 +210,14 @@ function Areas_handle_connections()
     link_them(D.K1, D.dir1, D.K2, D)
 
     if D.lock then
-      lock_portals(D)
+      if D.L1.is_joiner or D.L2.is_joiner then
+        -- do nothing for joiners
+      else
+        lock_portals(D)
 
-      D.L1.has_a_door = true
-      D.L2.has_a_door = true
+        D.L1.has_a_door = true
+        D.L2.has_a_door = true
+      end
     end
   end
 
