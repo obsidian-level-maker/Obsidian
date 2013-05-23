@@ -125,7 +125,7 @@ GLOBAL_STYLE_LIST =
   -- things that affect the whole level
 
   hallways    = { none=5, few=30, some=70, heaps=15 }
-  big_juncs   = { none=10, few=30, some=40, heaps=10 }
+  big_juncs   = { none=30, few=30, some=30, heaps=10 }
   liquids     = { none=10, few=30, some=40, heaps=20 }
   scenics     = { few=30, some=50, heaps=10 }
   secrets     = { few=20, some=60, heaps=10 }

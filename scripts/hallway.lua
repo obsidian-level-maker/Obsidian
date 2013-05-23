@@ -1599,6 +1599,9 @@ function Hallway_scan(start_K, start_dir, mode)
 
         need_lock = assert(next_quest.entry_conn.lock)
 
+        -- cycles requiring a key are disabled [except for exit from key room]
+        if need_lock.kind == "KEY" then return end
+
       else
         -- shortcut out of a key room?
         assert(not (L1.purpose == "SOLUTION" and L2.purpose == "SOLUTION"))
