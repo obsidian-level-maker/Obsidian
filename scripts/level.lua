@@ -132,7 +132,7 @@ GLOBAL_STYLE_LIST =
 
   odd_shapes  = { none=10, few=40, some=60, heaps=4 }
   big_rooms   = { none=6, few=20, some=40, heaps=60 }
-  cycles      = { none=20, some=50, heaps=50 }
+  cycles      = { none=50, some=50, heaps=50 }
   crossovers  = { none=40 } --!!!! , some=40, heaps=40 }
   teleporters = { none=30, few=30, some=30, heaps=5 }
 
@@ -146,8 +146,8 @@ GLOBAL_STYLE_LIST =
   barrels    = { few=50, some=50, heaps=10 }
   pictures   = { few=10, some=50, heaps=10 }
   windows    = { few=5,  some=15, heaps=50 }
-  closets    = { few=5,  some=15, heaps=50 }
-  doors      = { few=20, some=60, heaps=10 }
+  closets    = { few=10, some=30, heaps=30 }
+  doors      = { few=30, some=60, heaps=10 }
 
   lakes      = { few=60, heaps=10 }
   cages      = { none=50, few=50, some=30, heaps=10 }
