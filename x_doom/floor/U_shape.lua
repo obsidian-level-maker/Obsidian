@@ -6,7 +6,7 @@ DOOM.SKINS.Floor_3x3_U2 =
 {
   file = "floor/U_shape2.wad"
 
-  prob = 20
+  prob = 5
 
   seed_w = 3
   seed_h = 3

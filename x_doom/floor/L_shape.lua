@@ -6,7 +6,7 @@ DOOM.SKINS.Floor_3x3_L1 =
 {
   file = "floor/L_shape1.wad"
 
-  prob = 50
+  prob = 85
 
   seed_w = 3
   seed_h = 3
@@ -28,7 +28,7 @@ DOOM.SKINS.Floor_3x3_L2 =
 {
   file = "floor/L_shape2.wad"
 
-  prob = 100
+  prob = 50
 
   seed_w = 3
   seed_h = 3

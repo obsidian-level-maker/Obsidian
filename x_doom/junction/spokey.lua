@@ -12,8 +12,6 @@ DOOM.SKINS.Junc_spokey =
   seed_w = 3
   seed_h = 3
 
-  style  = "outdoors"
-
   north  = "#.#"
   south  = "#.#"
   east   = "#.#"
