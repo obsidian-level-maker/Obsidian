@@ -670,7 +670,7 @@ function Monsters_do_pickups()
         table.remove(L.item_spots, i)
         table.insert(L.big_spots, spot)
 
-        spot.score = (spot.rank or 1) * 5 + 7 * gui.random() ^ 2
+        spot.score = (spot.rank or 1) * 5 + 7 * gui.random() ^ 3
       end
     end
   end
