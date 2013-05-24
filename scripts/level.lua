@@ -118,8 +118,8 @@ require "naming"
 GLOBAL_STYLE_LIST =
 {
   -- these three correspond to buttons in the GUI
-  outdoors   = { none=1,  few=20, some=60, heaps=40, always=1 }
-  caves      = { none=20, few=50, some=35, heaps=10, always=1 }
+  outdoors   = { none=2,  few=20, some=60, heaps=40, always=5 }
+  caves      = { none=20, few=50, some=35, heaps=12, always=2 }
   traps      = { few=20, some=60, heaps=30 }
 
   -- things that affect the whole level
