@@ -119,12 +119,12 @@ GLOBAL_STYLE_LIST =
 {
   -- these three correspond to buttons in the GUI
   outdoors   = { none=2,  few=20, some=60, heaps=40, always=5 }
-  caves      = { none=20, few=50, some=35, heaps=12, always=2 }
+  caves      = { none=40, few=50, some=30, heaps=12, always=2 }
   traps      = { few=20, some=60, heaps=30 }
 
   -- things that affect the whole level
 
-  hallways    = { none=5, few=30, some=70, heaps=15 }
+  hallways    = { none=20, few=45, some=45, heaps=5 }
   big_juncs   = { none=30, few=30, some=30, heaps=10 }
   liquids     = { none=10, few=30, some=40, heaps=20 }
   scenics     = { few=30, some=50, heaps=10 }

@@ -994,7 +994,7 @@ function Monsters_do_pickups()
   local function pickups_in_room(L)
     extract_big_item_spots(L)
 
-    L.item_spots = Monsters_split_spots(L.item_spots, 21)
+    L.item_spots = Monsters_split_spots(L.item_spots, 25)
 
     each CL,hmodel in LEVEL.hmodels do
       pickups_for_hmodel(L, CL, hmodel)
