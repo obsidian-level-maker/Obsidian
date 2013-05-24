@@ -14,7 +14,7 @@ DOOM.SKINS.Floor_3x3_U2 =
   edges =
   {
     b = { f_h=64 }
-    c = { f_h=-32 }
+    c = { f_h=-24 }
   }
 
   north = "bcb"

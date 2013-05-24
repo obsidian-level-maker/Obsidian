@@ -40,9 +40,13 @@ DOOM.SKINS.Floor_3x3_L2 =
   }
 
   north = "nnn"
-  south = "..."
+  south = "..e"
 
   east  = "eee"
-  west  = "..."
+  west  = "..n"
+
+  -- not really complex, just want to prevent lift sectors being
+  -- split by ceiling details.
+  complexity = 3
 }
 
