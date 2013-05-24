@@ -83,7 +83,7 @@ DOOM.SKINS.Room_pillar4 =
 {
   file = "room/pillar4.wad"
 
-  prob = 200
+  prob = 2000
 
   seed_w = 3
   seed_h = 3
