@@ -6,6 +6,8 @@ DOOM.SKINS.Room_pillar_big =
 {
   file   = "room/pillar1.wad"
 
+  prob   = 100
+
   seed_w = 3
   seed_h = 3
 
@@ -13,8 +15,6 @@ DOOM.SKINS.Room_pillar_big =
   east   = "..."
   south  = "..."
   west   = "..."
-
-  prob   = 100
 
   theme  = "tech"
 }
@@ -29,20 +29,21 @@ DOOM.SKINS.Room_pillar2 =
   file   = "room/pillar2.wad"
   kind   = "UNFINISHED"
 
+  prob   = 10
+
   seed_w = 3
   seed_h = 3
 
   edges  =
   {
-    a = { f_h=32 }
+    b = { f_h=32 }
   }
 
-  north  = "aaa"
-  south  = "aaa"
-  east   = "a.a"
-  west   = "a.a"
+  north  = "bbb"
+  south  = "bbb"
 
-  prob   = 10
+  east   = "b.b"
+  west   = "b.b"
 
   theme  = "urban"
 
@@ -51,14 +52,14 @@ DOOM.SKINS.Room_pillar2 =
 
 
 --
--- Four pillars and a sky hole
+-- Four large pillars and a sky hole
 --
 
 DOOM.SKINS.Room_pillar3 =
 {
   file   = "room/pillar3.wad"
 
-  prob   = 9999
+  prob   = 30
 
   seed_w = 3
   seed_h = 3
@@ -71,5 +72,31 @@ DOOM.SKINS.Room_pillar3 =
   theme  = "!tech"
 
   props_45 = { light=176, factor=0.6 }
+}
+
+
+--
+-- Four pillars around a U-shape ledge
+--
+
+DOOM.SKINS.Room_pillar4 =
+{
+  file = "room/pillar4.wad"
+
+  prob = 2000
+
+  seed_w = 3
+  seed_h = 3
+
+  edges =
+  {
+    b = { f_h=48 }
+  }
+ 
+  north  = "bbb"
+  south  = "b.b"
+
+  east   = "bbb"
+  west   = "bbb"
 }
 
