@@ -16,6 +16,20 @@ DOOM.SKINS.Joiner_plain =
 }
 
 
+DOOM.SKINS.Joiner_plain_double =
+{
+  file = "joiner/plain_dbl.wad"
+
+  prob = 100
+
+  seed_w = 3
+  seed_h = 1
+
+  north = ".#."
+  south = ".#."
+}
+
+
 DOOM.SKINS.Joiner_plain_cage =
 {
   file = "joiner/plain_cage.wad"
