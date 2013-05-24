@@ -6,7 +6,7 @@ DOOM.SKINS.Joiner_brick_gate =
 {
   file = "joiner/brick_gate.wad"
 
-  prob = 100
+  prob = 300
 
   seed_w = 3
   seed_h = 1
@@ -15,6 +15,8 @@ DOOM.SKINS.Joiner_brick_gate =
 
   room     = "outdoor"
   neighbor = "outdoor"
+
+  theme = "urban"
 
   add_sky = 1
 }

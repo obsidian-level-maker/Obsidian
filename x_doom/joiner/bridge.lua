@@ -6,7 +6,7 @@ DOOM.SKINS.Joiner_bridge =
 {
   file = "joiner/bridge.wad"
 
-  prob = 500
+  prob = 400
 
   seed_w = 3
   seed_h = 1

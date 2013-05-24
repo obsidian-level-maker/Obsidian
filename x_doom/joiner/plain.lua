@@ -6,7 +6,7 @@ DOOM.SKINS.Joiner_plain =
 {
   file = "joiner/plain.wad"
 
-  prob = 60
+  prob = 50
 
   seed_w = 3
   seed_h = 1

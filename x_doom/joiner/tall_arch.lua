@@ -6,7 +6,7 @@ DOOM.SKINS.Joiner_TallArch =
 {
   file = "joiner/tall_arch.wad"
 
-  prob = 200
+  prob = 300
 
   seed_w = 3
   seed_h = 1

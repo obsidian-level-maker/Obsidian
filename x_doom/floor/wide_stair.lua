@@ -1,12 +1,12 @@
 --
--- Wide staircase
+-- Wide staircases
 --
 
 DOOM.SKINS.Floor_wide_stair =
 {
   file = "floor/wide_stair.wad"
 
-  prob = 99
+  prob = 100
 
   seed_w = 3
   seed_h = 1
@@ -17,10 +17,11 @@ DOOM.SKINS.Floor_wide_stair =
     c = { f_h=48 }
   }
 
-  north  = "bbb"
-  south  = "..."
-  east   = "c"
-  west   = "c"
+  north = "bbb"
+  south = "..."
+
+  east  = "c"
+  west  = "c"
 
   complexity = 2
 }
@@ -32,6 +33,6 @@ DOOM.SKINS.Floor_wide_stair2 =
 
   file = "floor/wide_stair2.wad"
 
-  prob = 1999
+  prob = 300
 }
 

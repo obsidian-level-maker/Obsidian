@@ -6,7 +6,7 @@ DOOM.SKINS.Floor_fountain1 =
 {
   file = "floor/fountain1.wad"
 
-  prob = 200
+  prob = 50
 
   seed_w = 3
   seed_h = 3

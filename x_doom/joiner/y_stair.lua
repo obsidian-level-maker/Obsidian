@@ -6,7 +6,7 @@ DOOM.SKINS.Joiner_Y_stair =
 {
   file = "joiner/y_stair.wad"
 
-  prob = 500
+  prob = 100
 
   seed_w = 3
   seed_H = 1

@@ -16,6 +16,7 @@ DOOM.SKINS.Locked_kc_blue =
   line_33 = 32
 }
 
+
 DOOM.SKINS.Locked_kc_yellow =
 {
   file   = "door/key_door.wad"
@@ -29,6 +30,7 @@ DOOM.SKINS.Locked_kc_yellow =
   tex_DOORRED = "DOORYEL";
   line_33 = 34
 }
+
 
 DOOM.SKINS.Locked_kc_red =
 {
@@ -56,6 +58,7 @@ DOOM.SKINS.Locked_ks_blue =
   line_33 = 32
 }
 
+
 DOOM.SKINS.Locked_ks_yellow =
 {
   file   = "door/key_door.wad"
@@ -69,6 +72,7 @@ DOOM.SKINS.Locked_ks_yellow =
   tex_DOORRED = "DOORYEL2";
   line_33 = 34
 }
+
 
 DOOM.SKINS.Locked_ks_red =
 {

@@ -73,6 +73,6 @@ DOOM.GROUPS.border_liquid =
 
   liquid = "any"
 
-  prob = 2000
+  prob = 100
 }
 
