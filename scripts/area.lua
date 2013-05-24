@@ -761,56 +761,6 @@ function Areas_layout_with_prefabs(R)
   end
 
 
-  local function test_prefab_XXX(sx1, sy1, sx2, sy2, skin, rot)
-    local pw = skin.seed_w
-    local ph = skin.seed_h
-
-    for dir = 2,8,2 do
-      for sx = sx1, sx2 do
-      for sy = sy1, sy2 do
-        -- get coordinate in the prefab space
-        local px, py = convert_coord(sx - sx1, sy - sy1, skin, rot)
-        local pdir = convert_dir(dir, rot)
-
-        local edge = map[px][py].edges[pdir]
-
-        -- only interested in the edges
-        if dir == 2 and py > 1  then continue end
-        if dir == 8 and py < ph then continue end
-        if dir == 4 and px > 1  then continue end
-        if dir == 6 and px < pw then continue end
-
-
-        local S = SEEDS[sx][sy]
-        local N = S:neighbor(dir)
-
-        local mode
-
-        if S.portals[dir] then
-          mode = "walk"
-        elseif N and N.room == R then
-          mode = "walk"
-        else
-          mode = "closed"
-        end
-
-
-        local edge = get_skin_edge(skin, px, py, pdir)
-
-        if edge and edge.f_h then
-          if mode != "walk" then return false end
-        else
-          if mode != "closed" then return false end
-        end
-
-      end -- sx, sy
-      end
-    end -- dir
-
-    return true -- OK
-  end
-
-
   local function new_floor_portal(kind, K, sx1, sy1, sx2, sy2, side)
 
     local PORTAL =
@@ -944,6 +894,49 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
       end -- sx, sy
       end
     end -- dir
+  end
+
+
+  local function test_edges(K, skin, rot)
+    --| check whether the edges of this prefab fit with connections
+
+    local map = assert(skin._seed_map)
+
+    -- this maps a portal --> relative height.  Trying to add two
+    -- different heights to the same portal indicates a mismatch.
+    local portal_heights = {}
+
+    for dir = 2,8,2 do
+      local sx1, sy1, sx2, sy2 = geom.side_coords(dir, K.sx1, K.sy1, K.sx2, K.sy2)
+
+      for sx = sx1, sx2 do
+      for sy = sy1, sy2 do
+        -- get coordinate in the prefab space
+        local px, py = convert_coord(sx - K.sx1, sy - K.sy1, skin, rot)
+        local pdir   = convert_dir(dir, rot)
+
+        local edge = map[px][py].edges[pdir]
+
+        local S = SEEDS[sx][sy]
+
+        local portal = S.portals[dir]
+
+        if not portal then continue end  -- TODO: ignore windows
+
+        -- there is a walkable portal here : require walkability in prefab
+        if not (edge and edge.f_h) then return false end
+
+        local exist_h = portal_heights[portal]
+
+        if exist_h and math.abs(exist_h - edge.f_h) > 8 then return false end
+
+        portal_heights[portal] = edge.f_h
+
+      end -- sx, sy
+      end
+    end -- dir
+
+    return true  -- OK
   end
 
 
@@ -1113,6 +1106,9 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
     --| recursively visit sections to define the path through the
     --| room, stored in the entry and exit fields in each section.
 
+    --| TODO: probably just do this DURING recurse_make_stuff
+    --|       (otherwise: explain why separate pass is needed)
+
     local D = R.entry_conn
 
     local start_K
@@ -1168,7 +1164,12 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
     if (rw != K.sw) then return 0 end
     if (rh != K.sh) then return 0 end
 
-    -- FIXME: see test_prefab_XXX code above [portal tests]
+    -- test that the prefab connects with its environment
+    -- (especially connections in/out of the room)
+
+    if mode == "floor" then
+      if not test_edges(K, skin, rot) then return 0 end
+    end
 
     return 50
   end
