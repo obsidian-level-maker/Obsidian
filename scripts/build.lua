@@ -1946,6 +1946,18 @@ function Fab_load_wad(name)
     if mid_tex == "-" then mid_tex = nil end
 
 
+-- detect stray back-quotes (Meh!)
+if upper_tex == "`" then upper_tex = nil end
+if lower_tex == "`" then lower_tex = nil end
+if   mid_tex == "`" then   mid_tex = nil end
+
+--[[
+if upper_tex == "`" or lower_tex == "`" or mid_tex == "`" then
+error("FOUND STRAY QUOTE: line = " .. tostring(C.line))
+end
+--]]
+
+
     local tex
 
     -- if line is one-sided, use the middle texture
