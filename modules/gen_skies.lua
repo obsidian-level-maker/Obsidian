@@ -275,6 +275,17 @@ function SKY_GEN.generate_skies()
   -- determine themes for each episode
   local theme_list = { "urban", "urban", "hell", "hell" }
 
+  -- when user has picked a specific theme, honor it
+  if OB_CONFIG.theme == "hell" then
+    theme_list[1] = "hell"
+    theme_list[2] = "hell"
+  elseif OB_CONFIG.theme == "urban" then
+    theme_list[3] = "urban"
+    theme_list[4] = "urban"
+  elseif OB_CONFIG.theme == "tech" then
+    theme_list[3] = "urban"
+  end
+
   rand.shuffle(theme_list)
 
   -- copy all theme tables [so we can safely modify them]
@@ -306,6 +317,7 @@ function SKY_GEN.generate_skies()
       else
         theme_name = "urban"
       end
+
     elseif OB_CONFIG.theme == "psycho" then
       theme_name = "psycho"
     end
