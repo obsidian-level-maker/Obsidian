@@ -1735,7 +1735,7 @@ function Areas_flesh_out()
       assert(portal)
       entry_h = assert(portal.floor_h)
     else
-      entry_h = 0 --!!!!!! rand.irange(-2, 2) * 96
+      entry_h = rand.pick({ -128, -64, 0, 0, 0, 64, 128 })
     end
 
     if not R:in_floor_limit(entry_h) then
