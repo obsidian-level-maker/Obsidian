@@ -17,33 +17,9 @@ DOOM.THEME_DEFAULTS =
   keys = { kc_red=50, kc_blue=50, kc_yellow=50 }
 
   -- TODO: sw_wood  sw_marble
-  switches = { sw_blue=50 }  --!!!! , sw_red=50, sw_pink=20, sw_vine=20 }
-
-  secrets = { Secret_Closet = 50 }
+  switches = { sw_blue=50 }
 
   cave_torches = { red_torch=60, green_torch=40, blue_torch=20 }
- 
-  --------- OLD CRUD --------> > >
-
-  outdoor_decor = { big_tree=50, burnt_tree=10, brown_stub=10 }
-
-  indoor_decor = { barrel=60, burning_barrel=20,
-                   dead_player=10, gibbed_player=10,
-                   tech_column=10,
-                   impaled_twitch=10, evil_eye=5,
-                   candelabra=10, red_torch=5,
-                   green_torch=5, blue_torch=5 }
-
-  indoor_fabs = { Pillar_2=70,
-                  Crate1=10, Crate2=10, 
-                  CrateICK=10, CrateWOOD=10 }
-
-  outer_fences = { BROWN144=50, STONE2=30, BROWNHUG=10,
-                   BROVINE2=10, GRAYVINE=10, ICKWALL3=2,
-                   GRAY1=10, STONE=20,
-                 }
-
-  liquid_pics = { pois1=70, pois2=30 }
 }
 
 
@@ -826,53 +802,6 @@ DOOM2.LEVEL_THEMES =
     caves     = { Tech2_cave=50 }
     outdoors  = { Tech2_outdoors=50 }
 
-    OLD__doors =
-    {
-      silver=20, silver_fast=33, silver_once=2,
-      bigdoor2=5, bigdoor2_fast=8, bigdoor2_once=5,
-      bigdoor4=5, bigdoor4_fast=8, bigdoor4_once=5,
-      bigdoor3=5,
-    }
-
-    ceil_lights =
-    {
-      TLITE6_5=50, TLITE6_6=30, TLITE6_1=30, FLOOR1_7=30,
-      FLAT2=20,  CEIL3_4=10, FLAT22=10,
-
-      GRNLITE1=10,
-    }
-
-    big_lights =
-    {
-      TLITE6_5=30, TLITE6_6=30, GRNLITE1=30, FLAT17=30, CEIL3_4=30,
-
-      GRNLITE1=20
-    }
-
-    pillars =
-    {
-      metal1=70, tekwall4=20,
-      teklite=50, silver2=10, shawn2=10, metal1=15
-    }
-
-    big_pillars = { big_red=50, big_blue=50 }
-
---!!!!    logos = { Pic_Carve=10, Pic_Pill=90, Pic_Neon=50 }
-
-    pictures =
-    {
-      Pic_Computer = 70
---!!!      Pic_TekWall = 10
---!!!      Pic_Silver3 = 25
---!!!
---!!!      Pic_LiteGlow = 20
---!!!      Pic_LiteGlowBlue = 10
---!!!      Pic_LiteFlash = 20
-    }
-
-    crates = { crate1=50, crate2=50, comp=70, lite5=20,
-      space=90, mod=15 }
-
     monster_prefs = { arach=2.0 }
 
     style_list =
@@ -907,27 +836,6 @@ DOOM2.LEVEL_THEMES =
       BROWN1   = 5
     }
 
---!!!!    logos = { Pic_Carve=90, Pic_Pill=50, Pic_Neon=5 }
-
---[[
-    pictures =
-    {
-      Pic_MarbFace = 40
-      Pic_DemonicFace = 20
-      Pic_FireWall = 30
-      Pic_SkinScroll = 10
-      Pic_FaceScroll = 10
-    }
---]]
-
-    big_pillars = { big_red=50, sloppy=20, sloppy2=20, }
-
-    OLD__switches = { sw_skin=50, sw_vine=50, sw_wood=50 }
-
-    bars = { bar_wood=50, bar_metal=50 }
-
-    outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 }
-
     monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0, vile=2.0 }
   }
 
@@ -945,29 +853,6 @@ DOOM2.LEVEL_THEMES =
     outdoors  = { D2_Hot_outdoors=50 }
     caves     = { D2_Hell_cave=50 }
 
-    FIXME_switch_doors = { Door_pink = 50, Door_vine = 50 }
-
-    big_pillars = { big_red=50, sloppy=20, sloppy2=20, }
-
---!!!!    logos = { carve=90, pill=50, neon=5 }
-
---[[
-    pictures =
-    {
-      marbfac2=10, marbfac3=10,
-      spface1=2, firewall=20,
-      spine=5,
-
-      spdude7=7,
-    }
---]]
-
-    OLD__switches = { sw_skin=50, sw_marble=50, sw_vine=50 }
-
-    bars = { bar_wood=50, bar_metal=50 }
-
-    outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 }
-
     monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0, vile=2.0 }
   }
 
@@ -983,27 +868,6 @@ DOOM2.LEVEL_THEMES =
     hallways  = { Urban_hallway=50 }
     caves     = { Urban_cave=50 }
     outdoors  = { Urban_outdoors=50 }
-
---!!!!    logos = { Pic_Carve=30, Pic_Pill=30, Pic_Neon=70 }
-
---[[
-    pictures =
-    {
-      Pic_MetalFace = 50
-      Pic_MetalFaceLit = 50
-      Pic_MarbFace = 25
-
-      Pic_Eagle = 20
-      Pic_Wreath = 20
-      Pic_Adolf = 2
-    }
---]]
-
-    lifts = { shiny=20, platform=20, rusty=50 }
-
-    OLD__switches = { sw_wood=50, sw_blue=50, sw_hot=50 }
-
-    bars = { bar_wood=50, bar_metal=50 }
 
     room_types =
     {
@@ -1025,20 +889,9 @@ DOOM2.LEVEL_THEMES =
     max_dominant_themes = 1
 
     buildings = { Wolf_cells=50, Wolf_brick=30, Wolf_stein=50 }
-
-    caves = { Wolf_cave=50 }
-
-    outdoors = { Wolf_outdoors=50 }
-
-    hallways = { Wolf_hall=50 }
-
-    __pictures = { eagle1=50, hitler1=10 }
-
-    OLD__switches = { sw_wood=50, sw_blue=50, sw_hot=50 }
-
-    bars = { bar_wood=50, bar_gray=50, bar_silver=50 }
-
-    OLD__doors = { wolf_door=90, wolf_elev_door=5 }
+    hallways  = { Wolf_hall=50 }
+    caves     = { Wolf_cave=50 }
+    outdoors  = { Wolf_outdoors=50 }
 
     force_mon_probs = { ss_dude=70, demon=20, shooter=20, zombie=20, other=0 }
 
@@ -1410,48 +1263,6 @@ DOOM1.LEVEL_THEMES =
     caves     = { D1_Tech_cave=50 }
     outdoors  = { D1_Tech_outdoors=50 }
 
-    __logos = { carve=5, pill=50, neon=50 }
-
-    __pictures =
-    {
-      shawn1=10, tekwall1=4, tekwall4=2,
-      lite5=30, lite5_05blink=10, lite5_10blink=10,
-      liteblu4=30, liteblu4_05sync=10, liteblu4_10sync=10,
-      compsta1=40, compsta1_blink=4,
-      compsta2=40, compsta2_blink=4,
-      redwall=5,
-
----!!!   planet1=20,  planet1_blink=8,
-      compute1=20, compute1_blink=3,
----!!!   compute2=15, compute2_blink=2,
-      litered=10,
-    }
-
-    OLD__switches = { sw_blue=50, sw_hot=50 }
-
-    bars = { bar_silver=50, bar_gray=50 }
-
-    OLD__doors =
-    {
-      silver=20, silver_fast=33, silver_once=2,
-      bigdoor2=5, bigdoor2_fast=8, bigdoor2_once=5,
-      bigdoor4=5, bigdoor4_fast=8, bigdoor4_once=5,
-      bigdoor3=5,
-    }
-
-    ceil_lights =
-    {
-      TLITE6_5=50, TLITE6_6=30, TLITE6_1=30, FLOOR1_7=30,
-      FLAT2=20,    CEIL3_4=10,  FLAT22=10,
-    }
-
-    big_lights = { TLITE6_5=30, TLITE6_6=30, FLAT17=30, CEIL3_4=30 }
-
-    pillars = { metal1=70, tekwall4=20 }
-    big_pillars = { big_red=50, big_blue=50 }
-
-    crates = { crate1=50, crate2=50, comp=70, lite5=20 }
-
     style_list =
     {
       naturals = { none=30, few=70, some=30, heaps=2 }
@@ -1480,47 +1291,6 @@ DOOM1.LEVEL_THEMES =
       BROWN1=50,  -- etc...
     }
 
-    __logos = { carve=5, pill=50, neon=50 }
-
-    __pictures =
-    {
-      shawn1=10, tekwall1=4, tekwall4=2,
-      lite5=20, lite5_05blink=10, lite5_10blink=10,
-      liteblu4=30, liteblu4_05sync=10, liteblu4_10sync=10,
-      compsta1=30, compsta1_blink=15,
-      compsta2=30, compsta2_blink=15,
-
----!!!   planet1=20,  planet1_blink=8,
-      compute1=20, compute1_blink=15,
----!!!   compute2=15, compute2_blink=2,
-      litered=10,
-    }
-
-    OLD__switches = { sw_blue=50, sw_hot=50 }
-
-    bars = { bar_silver=50, bar_gray=50 }
-
-    OLD__doors =
-    {
-      silver=20, silver_fast=33, silver_once=2,
-      bigdoor2=5, bigdoor2_fast=8, bigdoor2_once=5,
-      bigdoor4=5, bigdoor4_fast=8, bigdoor4_once=5,
-      bigdoor3=5,
-    }
-
-    ceil_lights =
-    {
-      TLITE6_5=50, TLITE6_6=30, TLITE6_1=30, FLOOR1_7=30, CEIL1_3=5,
-      FLAT2=20, CEIL3_4=10, FLAT22=10, FLAT17=20, CEIL1_2=7,
-    }
-
-    big_lights = { TLITE6_5=30, TLITE6_6=30, FLAT17=30, CEIL3_4=30 }
-
-    pillars = { metal1=70, tekwall4=20 }
-    big_pillars = { big_red=50, big_blue=50 }
-
-    crates = { crate1=50, crate2=50, comp=70, lite5=20 }
-
     style_list =
     {
       naturals = { none=40, few=70, some=20, heaps=2 }
@@ -1542,25 +1312,6 @@ DOOM1.LEVEL_THEMES =
     outdoors  = { D1_Marble_outdoors=50 }
     caves     = { D1_Hell_cave=50 }
 
-
-    FIXME_switch_doors = { Door_pink = 50, Door_vine = 50 }
-
-    __logos = { carve=90, pill=50, neon=5 }
-
-    __pictures =
-    {
-      marbface=10, skinface=10, firewall=20,
-      spdude1=4, spdude2=4, spdude5=3, spine=2,
-
-      skulls1=10, skulls2=10, spdude3=3, spdude6=3,
-    }
-
-    OLD__switches = { sw_marble=50, sw_vine=50, sw_wood=50 }
-
-    bars = { bar_wood=50, bar_metal=50 }
-
-    outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 }
-
     monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0 }
   }
 
@@ -1579,24 +1330,6 @@ DOOM1.LEVEL_THEMES =
     outdoors  = { D1_Hot_outdoors=50 }
     caves     = { D1_Hell_cave=50 }
 
-
-    __logos = { carve=90, pill=50, neon=5 }
-
-    __pictures =
-    {
-      marbfac2=10, marbfac3=10,
-      spface1=2, firewall=20,
-      spine=5,
-
-      skulls1=20, skulls2=20,
-    }
-
-    OLD__switches = { sw_skin=50, sw_vine=50, sw_wood=50 }
-
-    bars = { bar_wood=50, bar_metal=50 }
-
-    outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 }
-
     monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0 }
   }
 
@@ -1614,25 +1347,7 @@ DOOM1.LEVEL_THEMES =
     caves     = { Flesh_cave=50 }
     outdoors  = { Flesh_outdoors=50 }
 
-    __logos = { carve=90, pill=50, neon=5 }
-
-    __pictures =
-    {
-      marbface=10, skinface=10, firewall=10,
-      spdude1=5, spdude2=5, spdude5=5, spine=2,
-
-      skulls1=8, skulls2=8, spdude3=3, spdude6=3,
-    }
-
     keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
-
-    __switches = { sw_marble=50, sw_vine=50, sw_wood=50 }
-
-    __bars = { bar_wood=50, bar_metal=50 }
-
-    outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10, MARBLE3=10, BROWNHUG=20 }
-
-    __crates = { crate1=0, crate2=0, comp=0, lite5=0, wood=50, ick=15, }
 
     monster_prefs =
     {
