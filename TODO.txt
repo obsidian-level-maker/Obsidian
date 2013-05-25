@@ -99,6 +99,8 @@ V5 Stuff:
 
 +  borders / fakers : support 'z_fit'
 
++  support 'height' for floors
+
 -  fix double halls
 
 -  fake building with a fake window (or two)
@@ -162,6 +164,10 @@ V5 Stuff:
 
 
 Caves:
++  ability to make prefabs in caves
+   (a) replacement walls (e.g. cages)
+   (b) middle of a step
+
 -  handle solid islands, sometimes make pools, or become a step
 
 -  caves with steps: have two floor materials, pick randomly
@@ -452,8 +458,7 @@ Pictures:
 
 
 Cycles:
--  if a locked door is placed in a joiner, don't create cycles
-   for it.
+-  allow joiners _iff_ the height diff is zero
 
 +  less chance if R2 (skipped room) is large
 
@@ -628,8 +633,6 @@ DONE: brush conditionals:  if_true="?doomy"  if_false="?foobie"
 Batch Mode:
 +  detect invalid game=XXX (etc) keywords
 
--  handle theme=tech (find the "doom_tech" entry)
-
 
 Secrets:
 -  fix battle simulator to ignore stuff got in secrets
@@ -677,24 +680,17 @@ Cancellation:
 
 
 ----------------------------------------------
-  LUA EXTENSIONS
+  DOCUMENTATION / WEB SITE
 ----------------------------------------------
 
-?  bug where errors show the wrong line number
++  information about creating prefabs
 
 -  transfer Lua_Extended.txt document to the website
    (part of modding guide).
 
-
-----------------------------------------------
-  DOCUMENTATION / WEB SITE
-----------------------------------------------
-
 -  new "RUNNING THE MAPS" section ?
 
 [etc.... merge WEB_TODO.txt into here...]
-
--  information about creating prefabs
 
 
 ----------------------------------------------
@@ -887,7 +883,7 @@ LEGACY: gui.property("solid_exfloor", 281)
 |KEY:                 |
 |    !!  critical     |
 |    +   important    |
-|    -   plain item   |
+|    -   normal       |
 |    >>  in progress  |
 |    ??  not sure     |
 |_____________________|

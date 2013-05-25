@@ -2,26 +2,3 @@
 WORK IN PROGRESS
 ================
 
-
-V5 Layout:
-
-DONE:  minor item spots : generate from monster spots (if none in prefab)
-DONE:  big item spots from goal spots (if latter but no former)
-
-+  score big item spots, check best and update the rest
-
--  support 'height' for floors
-
-
-
-!!  get joiners working again
-
-    +  make a keyed joiner (or three)
-
-    +  make a switched joiner (or seven)
-
-    +  cycles cannot be joiners unless floor diff is 0
-
-
-!!  get fat fences working
-
