@@ -273,8 +273,6 @@ function HALLWAY_CLASS.add_to_existing(H, new_H, via_conn)
   -- unlike add_it(), the new hallway is merely used to extend an
   -- existing hallway.
 
-stderrf("MERGING %s into %s\n", new_H:tostr(), H:tostr())
-
   assert(H != new_H)
 
   assert(not     H.crossover)
@@ -835,8 +833,6 @@ function HALLWAY_CLASS.floor_stuff(H, entry_conn)
   ---- if H.done_heights then return end
 
 -- stderrf("hallway floor_stuff for %s\n", H:tostr())
-
-if H.is_joiner then stderrf("   JOINER !!! @ %s\n", H:tostr()) end
 
   assert(not H.done_heights)
 

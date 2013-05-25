@@ -2217,8 +2217,6 @@ function Room_outdoor_borders()
 
     if R1.sky_group != R2.sky_group then return end
 
-stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
-
     -- mark as used
     S.border = { kind = "fat_fence" }
 
@@ -2489,7 +2487,7 @@ stderrf("fat fence @ %s dir:%d\n", S:tostr(), dir)
 
         local T = S:neighbor(10 - dir)
 
-stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
+---stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
 
         local BORDER =
         {
