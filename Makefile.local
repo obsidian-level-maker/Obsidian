@@ -194,14 +194,7 @@ $(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(AJPOLY_OBJS)
 stripped: $(PROGRAM)
 	strip --strip-unneeded $(PROGRAM)
 
-updatefabs:
-	@rm -f glnode_logs.txt
-	@for f in fabs/*/*.wad; do  \
-	    echo Building GL nodes for $$f;  \
-	    glbsp -q $$f -o $$f >> glnode_logs.txt;  \
-	done
-
-.PHONY: all clean stripped updatefabs
+.PHONY: all clean stripped
 
 #--- editor settings ------------
 # vi:ts=8:sw=8:noexpandtab
