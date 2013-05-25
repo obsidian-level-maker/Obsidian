@@ -97,20 +97,6 @@ function Simple_generate_cave(R)
 
   local need_border = is_lake or (info.sky_mode == "low_wall")
 
---[[
-  if R.outdoor and THEME.landscape_walls then
-    R.cave_tex = rand.key_by_probs(THEME.landscape_walls)
-
-    if LEVEL.liquid and
-       R.svolume >= style_sel("lakes", 99, 49, 49, 30) and
-       rand.odds(style_sel("lakes", 0, 10, 30, 90))
-    then
-      R.is_lake = true
-    end
-  else
-    R.cave_tex = rand.key_by_probs(THEME.cave_walls)
-  end
---]]
 
   local function cave_box_for_seed(sx, sy)
     local box =
