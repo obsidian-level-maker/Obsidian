@@ -33,8 +33,11 @@ ZLIB_FLAGS=-I$(ZLIB_DIR)
 ZLIB_LIBS=$(ZLIB_DIR)/libz.a
 
 CXXFLAGS=$(OPTIMISE) -Wall -fno-strict-aliasing -D$(OS) \
-         -Ilua_src -Iglbsp_src $(FLTK_FLAGS) $(ZLIB_FLAGS)
+         -Ilua_src -Iglbsp_src -Iajpoly_src \
+	 $(FLTK_FLAGS) $(ZLIB_FLAGS)
+
 LDFLAGS=
+
 LIBS=-lm $(FLTK_LIBS) $(ZLIB_LIBS) \
      -mwindows -lcomdlg32 -lole32 -luuid -lgdi32 \
      -lcomctl32 -lwsock32 -lsupc++
@@ -165,6 +168,20 @@ $(OBJ_DIR)/glbsp/%.o: glbsp_src/%.cc
 	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $< 
 
 
+#----- AJ-Polygonator Objects --------------------------------------
+
+AJPOLY_OBJS= \
+	$(OBJ_DIR)/ajpoly/pl_map.o   \
+	$(OBJ_DIR)/ajpoly/pl_poly.o  \
+	$(OBJ_DIR)/ajpoly/pl_util.o  \
+	$(OBJ_DIR)/ajpoly/pl_wad.o
+
+AJPOLY_CXXFLAGS=$(OPTIMISE) -Wall
+
+$(OBJ_DIR)/ajpoly/%.o: ajpoly_src/%.cc
+	$(CXX) $(AJPOLY_CXXFLAGS) -o $@ -c $< 
+
+
 #----- Targets ----------------------------------------------------
 
 all: $(PROGRAM)
@@ -173,8 +190,9 @@ clean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
 	rm -f $(OBJ_DIR)/lua/*.o
 	rm -f $(OBJ_DIR)/glbsp/*.o
+	rm -f $(OBJ_DIR)/ajpoly/*.o
 
-$(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS)
+$(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(AJPOLY_OBJS)
 	$(CXX) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 stripped: $(PROGRAM)
