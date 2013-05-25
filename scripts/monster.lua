@@ -712,41 +712,6 @@ function Monsters_do_pickups()
   end
 
 
-  local function OLD__place_item_array(spot, item, count)
-    local x1, y1 = spot.x, spot.y
-    local x2, y2 = spot.x, spot.y
-
-    if count == 1 then
-      place_item(spot.S, item, x1,y1)
-      return
-    end
-
-    local away = sel(count == 2, 20, 40)
-    local dir  = spot.dir
-
-    if geom.is_vert(dir) then
-      y1, y2 = y1-away, y2+away
-    elseif geom.is_horiz(dir) then
-      x1, x2 = x1-away, x2+away
-    elseif dir == 1 or dir == 9 then
-      x1, y1 = x1-away, y1-away
-      x2, y2 = x2+away, y2+away
-    elseif dir == 3 or dir == 7 then
-      x1, y1 = x1-away, y1+away
-      x2, y2 = x2+away, y2-away
-    else
-      error("place_small_item: bad dir: " .. tostring(dir))
-    end
-
-    for i = 1,count do
-      local x = x1 + (x2 - x1) * (i-1) / (count-1)
-      local y = y1 + (y2 - y1) * (i-1) / (count-1)
-
-      place_item(spot.S, item, x, y)
-    end
-  end
-
-
   local function find_cluster_spot(L, prev_spots, item_name)
     if #prev_spots == 0 then
       local spot = table.remove(L.item_spots, 1)
@@ -1027,25 +992,6 @@ function Monsters_in_room(L)
 
   local function is_huge(mon)
     return GAME.MONSTERS[mon].r > 60
-  end
-
-
-  local function OLD_calc_toughness()
-    -- determine a "toughness" value, where 1.0 is easy and
-    -- higher values produces tougher monsters.
-
-    -- each level gets progressively tougher
-    local toughness = LEVEL.episode.index + LEVEL.ep_along * 4
-
-    -- each room is tougher too
-    toughness = toughness + L.lev_along
-
-    -- spice it up
-    toughness = toughness + gui.random() ^ 2
-
-    gui.debugf("Toughness = %1.3f\n", toughness)
-
-    return toughness
   end
 
 
@@ -2047,8 +1993,6 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
   L.monster_list = {}
   L.fight_stats  = make_empty_stats()
-
----???  L.toughness = calc_toughness()
 
   L.firepower = Player_firepower()
 

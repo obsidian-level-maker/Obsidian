@@ -1393,9 +1393,9 @@ function Plan_expand_rooms()
     -- (in order to keep the shape synchronised).
     local keep_stems = true
 
----!!!!    if R.shape == "odd" then
----!!!!      keep_stems = false
----!!!!    end
+---!!!    if R.shape == "odd" then
+---!!!      keep_stems = false
+---!!!    end
 
     local kx1, ky1 = K.kx, K.ky
     local kx2, ky2 = K.kx, K.ky

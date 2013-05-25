@@ -486,36 +486,6 @@ function ROOM_CLASS.void_up_parts(R)
 end
 
 
-function ROOM_CLASS.pick_floor_mat(R, h)
-  -- use same material for same height
-
--- FIXME !!!!
-do return assert(R.floor_mat or R.wall_mat) end
-
-  if not R.floor_mats[h] then
-    if R.kind == "outdoor" then
-      R.floor_mats[h] = rand.key_by_probs(R.zone.courtyard_floors)
-    else
-      R.floor_mats[h] = rand.key_by_probs(R.zone.building_floors)
-    end
-  end
-
-  return R.floor_mats[h]
-end
-
-
-function ROOM_CLASS.pick_ceil_mat(R)
--- FIXME !!!!
-do return assert(R.ceil_mat or R.wall_mat) end
-
-  if not R.ceil_mat then
-    R.ceil_mat = rand.key_by_probs(R.zone.building_ceilings)
-  end
-
-  return R.ceil_mat
-end
-
-
 function ROOM_CLASS.has_walk(R, sx1, sy1, sx2, sy2)
   for sx = sx1,sx2 do for sy = sy1,sy2 do
     local S = SEEDS[sx][sy]
@@ -1867,7 +1837,7 @@ function Room_add_closets()
 
       local kind = rand.key_by_probs { trap=60, secret=10, item=20 }
 
---!!!!      R:add_closet(kind)
+--!!!! FIXME     R:add_closet(kind)
     end
   end      
 end
@@ -1883,128 +1853,7 @@ function Room_add_voids()
 end
 
 
-
-function Room_dists_from_entrance()
-
-  local function spread_entry_dist(R)
-    local count = 1
-    local total = #R.sections
-
-    local K = R.entry_conn:section(R)
-
---FIXME !!!!!! (broken after hallways)
-if not K then K = R.sections[1] end
-
-    K.entry_dist = 0
-
-    while count < total do
-      each K in R.sections do
-        for side = 2,8,2 do
-          local N = K:neighbor(side)
-          if N and N.room == R and N.entry_dist then
-
-            local dist = N.entry_dist + 1
-            if not K.entry_dist then
-              K.entry_dist = dist
-              count = count + 1
-            elseif dist < K.entry_dist then
-              K.entry_dist = dist
-            end
-
-          end
-        end
-      end
-    end
-  end
-
-  --| Room_dists_from_entrance |--
-
-  each R in LEVEL.rooms do
-    if R.entry_conn then
-      spread_entry_dist(R)
-    else
-      each K in R.sections do
-        K.entry_dist = 0
-      end
-    end
-  end
-end
-
-
-
-function OLD__Room_collect_targets(R)
-
-  local targets =
-  {
-    edges = {},
-    corners = {},
-    middles = {},
-  }
-
-  local function corner_very_free(C)
-    if C.usage then return false end
-
-    -- size check (TODO: probably better elsewhere)
-    if (C.K.x2 - C.K.x1) < 512 then return false end
-    if (C.K.y2 - C.K.y1) < 512 then return false end
-
-    -- check if the edges touching the corner are also free
-
-    each K in R.sections do
-      for _,E in pairs(K.edges) do
-        if E.corn1 == C and E.usage then return false end
-        if E.corn2 == C and E.usage then return false end
-      end
-    end
-  
-    return true
-  end
-
-  --| Room_collect_targets |--
-
-  for _,M in ipairs(R.middles) do
-    if not M.usage then
-      table.insert(targets.middles, M)
-    end
-  end
-
-  for _,K in ipairs(R.sections) do
-    for _,C in pairs(K.corners) do
-      if not C.concave and corner_very_free(C) then
-        table.insert(targets.corners, C)
-      end
-    end
-
-    for _,E in pairs(K.edges) do
-      if not E.usage then
-        table.insert(targets.edges, E)
-      end
-    end
-  end
-
-  return targets
-end
-
-
-function Room_sort_targets(targets, entry_factor, conn_factor, busy_factor)
-  for _,listname in ipairs { "edges", "corners", "middles" } do
-    local list = targets[listname]
-    if list then
-      for _,E in ipairs(list) do
-        E.free_score = E.K.entry_dist * entry_factor +
-                       E.K.num_conn   * conn_factor  +
-                       E.K.num_busy   * busy_factor  +
-                       gui.random()   * 0.1
-      end
-
-      table.sort(list, function(A, B) return A.free_score > B.free_score end)
-    end
-  end
-end
-
-
 ------------------------------------------------------------------------
-
 
 
 function Room_add_sun()

@@ -114,17 +114,6 @@ function HALLWAY_CLASS.tostr(H)
 end
 
 
-function HALLWAY_CLASS.OLD__dump_pieces(H)
-  gui.debugf("%s pieces:\n{\n", H:tostr())
-
-  each P in H.pieces do
-    gui.debugf("  %s\n", P:tostr())
-  end
-
-  gui.debugf("}\n")
-end
-
-
 function HALLWAY_CLASS.dump(H)
   gui.debugf("%s =\n", H:tostr())
   gui.debugf("{\n")
@@ -378,87 +367,6 @@ function HALLWAY_CLASS.try_add_middle_chunk(H, K)
 end
 
 
-function HALLWAY_CLASS.add_edge_chunk(H, K, side)
-  if not H:is_side_connected(K, side) then
-    return
-  end
-
-  -- determine how much space is on the given side (may be none)
-  local seeds
-
-  each C in H.chunks do
-    if C.section == K then
-
-      local dist
-
-      if side == 2 then dist = C.sy1 - K.sy1 end
-      if side == 8 then dist = K.sy2 - C.sy2 end
-      if side == 4 then dist = C.sx1 - K.sx1 end
-      if side == 6 then dist = K.sx2 - C.sx2 end
-
-      assert(dist)
-      assert(dist >= 0)
-
-      if dist == 0 then
-        -- no space, hence no new chunk
-        return
-      end
-
-      if not seeds or dist < seeds then
-         seeds = dist
-      end
-    end
-  end
-
-  if not seeds then
-    error("add_edge_chunk failed (no chunks in section?)")
-  end
-
-  local sx1, sy1 = K.sx1, K.sy1
-  local sx2, sy2 = K.sx2, K.sy2
-
-  if side == 2 then sy2 = sy1 + (seeds - 1) end
-  if side == 8 then sy1 = sy2 - (seeds - 1) end
-  if side == 4 then sx2 = sx1 + (seeds - 1) end
-  if side == 6 then sx1 = sx2 - (seeds - 1) end
-
-  assert(H:can_alloc_chunk(sx1, sy1, sx2, sy2))
-
-  local C = H:alloc_chunk(K, sx1, sy1, sx2, sy2)
-end
-
-
-
-function HALLWAY_CLASS.create_pieces__OLD(H)
-
---[[
-
-  -- every section will get at least one chunk
-  each K in H.sections do
-    H:try_add_middle_chunk(K)
-  end
-
-  -- at here, the only chunks we need now are ones which fill the gaps
-  -- at either edge of a horizontal or vertical section (but only when
-  -- that side touches another section in the same hallway).
-
-  each K in H.sections do
-    if K.shape == "horiz" then
-      H:add_edge_chunk(K, 4)
-      H:add_edge_chunk(K, 6)
-
-    elseif K.shape == "vert" then
-      H:add_edge_chunk(K, 2)
-      H:add_edge_chunk(K, 8)
-    end
-  end
-
---]]
-
-end
-
-
-
 function HALLWAY_CLASS.categorize_piece(H, P)
   local cat, dir = Trans.categorize_linkage(
       P.hall_link[2], P.hall_link[4],
@@ -469,7 +377,6 @@ function HALLWAY_CLASS.categorize_piece(H, P)
   P.h_shape = cat
   P.h_dir   = dir
 end
-
 
 
 function HALLWAY_CLASS.categorize_all_pieces(H)
@@ -743,69 +650,6 @@ end
 
 
 
-function HALLWAY_CLASS.cycle_flow__OLD(H, C, from_dir, z, i_deltas, seen)
-
-  -- FIXME !!!!  VERY BROKEN -- REWRITE THIS
-
-  seen[C] = true
-
-  C.floor_h = z
-
-  local climb_h = math.min(PARAM.jump_height, 32)
-
-  if C.h_shape == "I" and C.section.shape != "big_junc" and
-     not C.crossover_hall
-  then
-    local dz = table.remove(i_deltas, 1)
-    local abs_dz = math.abs(dz)
-    local z_dir = sel(dz < 0, -1, 1)
-
-    -- only need a stair if distance is too big for player to climb
-    if abs_dz > climb_h then
-
-      C.h_dir = sel(dz < 0, 10 - from_dir, from_dir)
-
-      -- need a lift?
-      if abs_dz > 96 then
-        C.h_stair_kind = "lift"
-        C.h_stair_h = abs_dz
-      else
-        C.h_stair_kind = "stair64"
-        C.h_stair_h = math.min(abs_dz, 80)
-      end
-
-      z = z + dz
-
-      -- stairs and lifts require chunk has the lowest height
-      if z_dir < 0 then
-        C.floor_h = z
-      end
-    else
-
-      -- accumulate unused delta into next one
-      if dz != 0 and #i_deltas > 0 then
-        i_deltas[1] = i_deltas[1] + dz
-      end
-    end
-
-  end
-
-
-  -- handle rest of hallway
-
-  each dir in rand.dir_list() do
-    if dir == from_dir then continue end
-
-    local C2 = C.hall_link[dir]
-
-    if C2 and not seen[C2] then
-      H:cycle_flow(C2, 10 - dir, z, i_deltas, seen)
-    end
-  end
-end
-
-
-
 function HALLWAY_CLASS.cycle_flow(H, start_P, from_dir, start_h)
   --
   -- Note: this code will only work on a simple (non-forked) hallway
@@ -931,20 +775,6 @@ end
 
 
 
-function HALLWAY_CLASS.update_seeds_for_chunks(H)
-  -- TODO: bbox of hallway
-
-  for sx = 1,SEED_W do for sy = 1,SEED_TOP do
-    local S = SEEDS[sx][sy]
-
-    if S.hall == H and not S.chunk then
-      S.hall = nil
-    end
-  end end
-end
-
-
-
 function HALLWAY_CLASS.set_cross_mode(H)
   assert(H.quest)
   assert(H.crossover)
@@ -1037,8 +867,6 @@ if H.is_joiner then stderrf("   JOINER !!! @ %s\n", H:tostr()) end
     H.mini_hall = true
   end
 --]]
-
-----???  H:update_seeds_for_chunks()
 
   H:peer_double_chunks()
 
@@ -1708,7 +1536,7 @@ function Hallway_scan(start_K, start_dir, mode)
   local function can_begin_crossover(K, N, stats)
     if not PARAM.bridges then return false end
 
---!!!!!!!!!! CROSSOVERS CURRENTLY DISABLED
+--!!!! CROSSOVERS CURRENTLY DISABLED
 do return false end
 
     if STYLE.crossovers == "none" then return false end
@@ -2043,8 +1871,6 @@ function Hallway_add_doubles()
 
 
   --| Hallway_add_doubles |--
-
-do return end  --!!!! FIXME: disabled for now
 
   local quota = MAP_W / 2 + gui.random()
 

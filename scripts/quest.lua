@@ -1510,9 +1510,6 @@ function Quest_choose_keys()
   local key_probs = table.copy(LEVEL.usable_keys or THEME.keys or {}) 
   local num_keys  = table.size(key_probs)
 
---!!!!!!
---num_keys = math.min(num_keys, #LEVEL.zones - 1)
-
   assert(THEME.switches)
 
   local switches = table.copy(THEME.switches)
