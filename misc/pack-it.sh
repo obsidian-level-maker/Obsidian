@@ -27,9 +27,6 @@ fi
 
 echo "Creating a $mode package for Oblige..."
 
-cd ..
-
-src=oblige
 dest=PACK-RAT
 
 mkdir $dest
@@ -38,19 +35,18 @@ mkdir $dest
 #  Lua scripts
 #
 mkdir $dest/scripts
-cp -av $src/scripts/*.* $dest/scripts
-
-mkdir $dest/games
-cp -av $src/games/*.* $dest/games
+cp -av scripts/*.* $dest/scripts
 
 mkdir $dest/engines
-cp -av $src/engines/*.* $dest/engines
+cp -av engines/*.* $dest/engines
 
 mkdir $dest/modules
-cp -av $src/modules/*.* $dest/modules
+cp -av modules/*.* $dest/modules
 
-mkdir $dest/prefabs
-cp -av $src/prefabs/*.* $dest/prefabs
+#
+#  Game data
+#
+svn export x_doom $dest/x_doom
 
 #
 #  Data files
@@ -58,42 +54,41 @@ cp -av $src/prefabs/*.* $dest/prefabs
 mkdir $dest/data
 mkdir $dest/modules/data
 
-cp -av $src/data/*.lmp $dest/data || true
-cp -av $src/data/*.wad $dest/data || true
-cp -av $src/data/*.pak $dest/data || true
+cp -av data/*.lmp $dest/data || true
+cp -av data/*.wad $dest/data || true
+cp -av data/*.pak $dest/data || true
 
 mkdir $dest/data/doom1_boss
 mkdir $dest/data/doom2_boss
 
-cp -av $src/data/doom1_boss/*.* $dest/data/doom1_boss
-cp -av $src/data/doom2_boss/*.* $dest/data/doom2_boss
+cp -av data/doom1_boss/*.* $dest/data/doom1_boss
+cp -av data/doom2_boss/*.* $dest/data/doom2_boss
 
 #
 #  Executables
 #
 
-mkdir $dest/tools
-
-if [ $mode == "linux" ]
-then
-cp -av $src/Oblige $dest
-cp -av $src/tools/qsavetex/qsavetex $dest/tools
-else
-cp -av $src/Oblige.exe $dest
-cp -av $src/tools/qsavetex/qsavetex.exe $dest/tools
-fi
+##  mkdir $dest/tools
+##  
+##  if [ $mode == "linux" ]
+##  then
+##  cp -av Oblige $dest
+##  cp -av tools/qsavetex/qsavetex $dest/tools
+##  else
+##  cp -av Oblige.exe $dest
+##  cp -av tools/qsavetex/qsavetex.exe $dest/tools
+##  fi
 
 #
 #  Documentation
 #
-cp -av $src/GPL.txt $dest
-cp -av $src/TODO.txt $dest
-cp -av $src/README.txt $dest
-cp -av $src/WISHLIST.txt $dest
-cp -av $src/CHANGES.txt $dest
-cp -av $src/AUTHORS.txt $dest
+cp -av README.txt $dest
+cp -av TODO.txt $dest
+cp -av GPL.txt $dest
+cp -av CHANGES.txt $dest
+cp -av AUTHORS.txt $dest
 
-### cat $src/web/main.css $src/web/index.html > $dest/README.htm
+### cat web/main.css web/index.html > $dest/README.htm
 
 #
 # all done

@@ -18,17 +18,11 @@ mkdir $dest
 mkdir $dest/scripts
 cp -av scripts/*.* $dest/scripts
 
-mkdir $dest/games
-cp -av games/*.* $dest/games
-
 mkdir $dest/engines
 cp -av engines/*.* $dest/engines
 
 mkdir $dest/modules
 cp -av modules/*.* $dest/modules
-
-mkdir $dest/prefabs
-cp -av prefabs/*.* $dest/prefabs
 
 #
 #  Source code
@@ -59,6 +53,11 @@ mkdir $dest/obj_linux/glbsp
 mkdir $dest/obj_win32
 mkdir $dest/obj_win32/lua
 mkdir $dest/obj_win32/glbsp
+
+#
+#  Game data
+#
+svn export x_doom $dest/x_doom
 
 #
 #  Data files
