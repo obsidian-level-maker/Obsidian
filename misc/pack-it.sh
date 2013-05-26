@@ -68,16 +68,16 @@ cp -av data/doom2_boss/*.* $dest/data/doom2_boss
 #  Executables
 #
 
-##  mkdir $dest/tools
-##  
-##  if [ $mode == "linux" ]
-##  then
-##  cp -av Oblige $dest
+mkdir $dest/tools
+
+if [ $mode == "linux" ]
+then
+cp -av Oblige $dest
 ##  cp -av tools/qsavetex/qsavetex $dest/tools
-##  else
-##  cp -av Oblige.exe $dest
+else
+cp -av Oblige.exe $dest
 ##  cp -av tools/qsavetex/qsavetex.exe $dest/tools
-##  fi
+fi
 
 #
 #  Documentation
