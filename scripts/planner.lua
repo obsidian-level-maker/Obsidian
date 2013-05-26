@@ -92,8 +92,8 @@ function Plan_decide_map_size()
   end
 
   if ob_size == "mixed" then
-    W = 2 + rand.index_by_probs { 1,4,7,4,2,1 }
-    H = 1 + rand.index_by_probs { 1,4,7,4,2,1 }
+    W = 2 + rand.index_by_probs { 2,4,6,4,2,1 }
+    H = 1 + rand.index_by_probs { 2,4,6,4,2,1 }
 
     if W < H then W, H = H, W end
 
@@ -111,8 +111,8 @@ function Plan_decide_map_size()
     H = HEIGHTS[n]
 
   else
-    local WIDTHS  = { tiny=3, small=4, regular=6, large=8, extreme=11 }
-    local HEIGHTS = { tiny=2, small=3, regular=4, large=6, extreme=10 }
+    local WIDTHS  = { tiny=3, small=4, regular=6, large=8, extreme=8 }
+    local HEIGHTS = { tiny=2, small=3, regular=4, large=5, extreme=8 }
 
     W = WIDTHS[ob_size]
     H = HEIGHTS[ob_size]
