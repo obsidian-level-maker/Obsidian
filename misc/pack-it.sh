@@ -10,6 +10,11 @@ then
     exit
 fi
 
+if [ ! -d x_doom ]; then
+    echo "Run this script from the top level."
+    exit 1
+fi
+
 #
 # Grab the mode
 #
@@ -22,7 +27,7 @@ fi
 
 echo "Creating a $mode package for Oblige..."
 
-cd ../..
+cd ..
 
 src=oblige
 dest=PACK-RAT
