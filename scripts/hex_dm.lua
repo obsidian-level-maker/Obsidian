@@ -24,7 +24,8 @@ class HEXAGON
 {
     cx, cy   -- position in cell map
 
-    kind : keyword   -- "free", "edge", "wall", "room"
+    kind : keyword   -- "free", "thread", "room"
+                     -- "edge", "wall"
 
     content : keyword  -- "START", "WEAPON", ...
 
@@ -45,7 +46,6 @@ class THREAD
     id : number
 
     start : HEXAGON   -- starting place (in an existing "room" cell)
-    start_dir : dir   -- start direction to free neighbor
 
     target : HEXAGON  -- ending place (an existing "room" cell)
     target_dir : dir  -- direction OUT of that cell
@@ -54,7 +54,11 @@ class THREAD
 
     dir : HDIR  -- current direction
 
-    history : array(HDIR)  -- all directions to follow from start cell
+    cells : array(HEXAGON)  -- all cells in this thread
+
+    history : array(HDIR)   -- directions to follow from start cell
+
+    grow_prob : number
 }
 
 
@@ -116,7 +120,7 @@ function HEXAGON_CLASS.free_neighbors(C)
   local count = 0
 
   for dir = 1,6 do
-    local N = C.neighbors[dir]
+    local N = C.neighbor[dir]
 
     if N and N.kind == "free" then
       count = count + 1
@@ -152,17 +156,27 @@ function HEXAGON_CLASS.build(C)
   local c_h = rand.irange(4,8) * 32
 
 
-  if C.kind == "edge" or C.kind == "wall" then
+  if C.kind == "edge" or C.kind == "wall" or C.kind == "free" then
     local w_brush = C:to_brush()
 
-    Brush_set_mat(w_brush, "ASHWALL4", "ASHWALL4")
+    local w_mat = "ASHWALL4"
+
+    if C.kind == "free" then w_mat = "COMPSPAN" end
+
+    Brush_set_mat(w_brush, w_mat, w_mat)
 
     brush_helper(w_brush)
   else
     local f_brush = C:to_brush()
 
-    local f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "STARTAN3",
-                              "TEKGREN2", "BROWN1" })
+--    local f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "STARTAN3",
+--                              "TEKGREN2", "BROWN1" })
+
+    if C.kind == "room" then
+      f_mat = "COMPBLUE"
+    else
+      f_mat = "GRAY7"
+    end
 
     Brush_add_top(f_brush, f_h)
     Brush_set_mat(f_brush, f_mat, f_mat)
@@ -186,6 +200,10 @@ function HEXAGON_CLASS.build(C)
       entity_helper("player1", C.mid_x, C.mid_y, f_h, {})
       LEVEL.has_p1_start = true
     end
+  end
+
+  if C.content == "ENTITY" then
+    entity_helper(C.entity, C.mid_x, C.mid_y, f_h, {})
   end
 end
 
@@ -312,18 +330,42 @@ end
 
 
 function Hex_make_cycles()
-  local cycle_id
+
+  local threads = {}
+
+  local MAX_THREAD = 30
+  local total_thread = 0
+
+
+  local function pick_dir(C)
+    local dir_list = {}
+
+    for dir = 1, 6 do
+      local N = C.neighbor[dir]
+
+      if N and N.kind == "free" and N:free_neighbors() == 5 then
+        table.insert(dir_list, dir)
+      end
+    end
+
+    if #dir_list == 0 then
+      return nil
+    end
+
+    return rand.pick(dir_list)
+  end
+
 
   local function pick_start()
-    local list = { }
+    local list = {}
 
-    -- 1. pick the cell
+    -- collect all possible starting cells
 
     for cx = 1, HEX_W do
     for cy = 1, HEX_H do
       local C = HEX_MAP[cx][cy]
 
-      if C.kind == "room" and
+      if (C.kind == "room" or C.kind == "thread") and not C.no_start and
          C:free_neighbors() > 2
       then
         table.insert(list, C)
@@ -331,55 +373,153 @@ function Hex_make_cycles()
     end
     end
 
-    if #list == 0 then
-      return nil
-    end
+    while #list > 0 do
+      local idx = rand.irange(1, #list)
 
-    local C = rand.pick(list)
+      local C = table.remove(list, idx)
 
-    -- 2. pick the direction
+      local dir = pick_dir(C)
 
-    local dirs = { }
-
-    for i = 1, 6 do
-      local N = C.neighbor[i]
-
-      if N and N.kind == "free" then
-        table.insert(dirs, i)
+      if dir then
+        return C, dir  -- success
       end
+
+      -- never try this cell again
+      C.no_start = true
     end
 
-    assert(#dirs > 0)
-
-    local dir = rand.pick(dirs)
-
-    return C, dir
+    return nil  -- fail
   end
 
 
-  local function make_cycle(start, dir)
-    cycle_id = Plan_alloc_id("hex_cycle")
+  local function do_grow_thread(T, dir, N)
+    N.kind = "thread"
+    N.thread = T
+
+    T.pos = N
+    T.dir = dir
+
+    table.insert(T.cells, N)
+    table.insert(T.history, dir)
+  end
 
 
+  local function add_thread()
+    -- reached thread limit ?
+    if total_thread >= MAX_THREAD then return end
+
+
+    local start, dir = pick_start()
+
+    if not start then return end
+
+    local C1 = start.neighbor[dir]
+
+
+    local THREAD =
+    {
+      id = Plan_alloc_id("hex_thread")
+
+      start = start
+
+      cells   = { }
+      history = { }
+
+      grow_dirs = rand.sel(50, { 2,3,4 }, { 4,3,2 })
+      grow_prob = rand.pick({ 40, 60, 80 })
+    }
+
+    do_grow_thread(THREAD, dir, C1)
+
+    table.insert(threads, THREAD)
+
+    total_thread = total_thread + 1
+  end
+
+
+  local function try_grow_thread_in_dir(T, dir)
+    local N = T.pos.neighbor[dir]
+    assert(N)
+
+    if N.kind != "free" then return false end
+
+    if N:free_neighbors() == 5 then
+      do_grow_thread(T, dir, N)
+      return true
+    end
+
+    -- FIXME: TEST FOR RE-JOINING
+
+    return false
+  end
+
+
+  local function grow_a_thread(T)
+    local dir_L = HEX_LEFT [T.dir]
+    local dir_R = HEX_RIGHT[T.dir]
+
+    local check_dirs = {}
+    
+    check_dirs[dir_L] = T.grow_dirs[1]
+    check_dirs[T.dir] = T.grow_dirs[2]
+    check_dirs[dir_R] = T.grow_dirs[3]
+
+    while not table.empty(check_dirs) do
+      local dir = rand.key_by_probs(check_dirs)
+      check_dirs[dir] = nil
+
+      if try_grow_thread_in_dir(T, dir) then
+        return -- OK
+      end
+    end
+
+    -- no direction was possible
+
+    T.dead = true
+
+    -- debug crud...
+    T.pos.content = "ENTITY"
+    T.pos.entity  = "evil_eye"
+  end
+
+
+  local function grow_threads()
+    for index = #threads, 1, -1 do
+      
+      local T = threads[index]
+
+      if rand.odds(T.grow_prob) then
+        grow_a_thread(T)
+
+        if T.dead then
+          table.remove(threads, index)
+        end
+      end
+
+    end  -- index
   end
 
 
   ---| Hex_make_cycles |---
 
-  for i = 1, 10 do
-    gui.debugf("\nMAKING CYCLE %d.......\n", i)
+  add_thread()
+  
+  if rand.odds(60) then add_thread() end
+  if rand.odds(60) then add_thread() end
 
-    local start, dir = pick_start()
+  -- loop until all threads are dead
 
-    if not start then break; end
+  while #threads > 0 do
+    
+    grow_threads()
+    grow_threads()
+    grow_threads()
 
-    if not make_cycle(start, dir) then
-      gui.debugf("FAILED TO MAKE CYCLE.\n")
+--[[
+    if #threads == 0 or  rand.odds(2)  then add_thread() end
+    if #threads == 1 and rand.odds(20) then add_thread() end
+--]]
 
-      -- prevent trying this cell/dir combo again
-      local N = start.neighbor[dir]
-      N.kind = "wall"
-    end
   end
 end
 
