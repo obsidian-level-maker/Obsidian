@@ -24,15 +24,37 @@ class HEXAGON
 {
     cx, cy   -- position in cell map
 
+    kind : keyword   -- "free", "edge", "wall", "room"
+
+    content : keyword  -- "START", "WEAPON", ...
+
     neighbor[HDIR] : HEXAGON   -- neighboring cells
                                -- will be NIL at edge of map
                                -- HDIR is 1 .. 6
 
-    is_edge : bool  -- true if at edge of map (one neighbor is NIL)
-
     mid_x, mid_y  -- coordinate of mid point
 
     vertex[HDIR] : { x=#, y=# }  -- leftmost vertex for each edge
+
+    thread : THREAD
+}
+
+
+class THREAD
+{
+    id : number
+
+    start : HEXAGON   -- starting place (in an existing "room" cell)
+    start_dir : dir   -- start direction to free neighbor
+
+    target : HEXAGON  -- ending place (an existing "room" cell)
+    target_dir : dir  -- direction OUT of that cell
+
+    pos : HEXAGON  -- last cell "converted" to this thread
+
+    dir : HDIR  -- current direction
+
+    history : array(HDIR)  -- all directions to follow from start cell
 }
 
 
@@ -76,6 +98,7 @@ function HEXAGON_CLASS.new(cx, cy)
   {
     cx = cx
     cy = cy
+    kind = "free"
     neighbor = {}
     vertex = {}
   }
@@ -86,6 +109,21 @@ end
 
 function HEXAGON_CLASS.tostr(C)
   return string.format("CELL[%d,%d]", C.cx, C.cy)
+end
+
+
+function HEXAGON_CLASS.free_neighbors(C)
+  local count = 0
+
+  for dir = 1,6 do
+    local N = C.neighbors[dir]
+
+    if N and N.kind == "free" then
+      count = count + 1
+    end
+  end
+
+  return count
 end
 
 
@@ -114,7 +152,7 @@ function HEXAGON_CLASS.build(C)
   local c_h = rand.irange(4,8) * 32
 
 
-  if C.is_edge or (not C.is_start and rand.odds(25)) then
+  if C.kind == "edge" or C.kind == "wall" then
     local w_brush = C:to_brush()
 
     Brush_set_mat(w_brush, "ASHWALL4", "ASHWALL4")
@@ -141,7 +179,7 @@ function HEXAGON_CLASS.build(C)
   end
 
 
-  if C.is_start then
+  if C.content == "START" then
     entity_helper("dm_player", C.mid_x, C.mid_y, f_h, {})
 
     if not LEVEL.has_p1_start then
@@ -240,7 +278,7 @@ function Hex_setup()
       then
         C.neighbor[dir] = HEX_MAP[nx][ny]
       else
-        C.is_edge = true
+        C.kind = "edge"
       end
     end
   end
@@ -262,6 +300,90 @@ function Hex_setup()
 end
 
 
+function Hex_starting_area()
+  LEVEL.start_cx = int(HEX_W / 2)
+  LEVEL.start_cy = int(HEX_H / 2)
+
+  local C = HEX_MAP[LEVEL.start_cx][LEVEL.start_cy]
+
+  C.kind = "room"
+  C.content = "START"
+end
+
+
+function Hex_make_cycles()
+  local cycle_id
+
+  local function pick_start()
+    local list = { }
+
+    -- 1. pick the cell
+
+    for cx = 1, HEX_W do
+    for cy = 1, HEX_H do
+      local C = HEX_MAP[cx][cy]
+
+      if C.kind == "room" and
+         C:free_neighbors() > 2
+      then
+        table.insert(list, C)
+      end
+    end
+    end
+
+    if #list == 0 then
+      return nil
+    end
+
+    local C = rand.pick(list)
+
+    -- 2. pick the direction
+
+    local dirs = { }
+
+    for i = 1, 6 do
+      local N = C.neighbor[i]
+
+      if N and N.kind == "free" then
+        table.insert(dirs, i)
+      end
+    end
+
+    assert(#dirs > 0)
+
+    local dir = rand.pick(dirs)
+
+    return C, dir
+  end
+
+
+  local function make_cycle(start, dir)
+    cycle_id = Plan_alloc_id("hex_cycle")
+
+
+  end
+
+
+  ---| Hex_make_cycles |---
+
+  for i = 1, 10 do
+    gui.debugf("\nMAKING CYCLE %d.......\n", i)
+
+    local start, dir = pick_start()
+
+    if not start then break; end
+
+    if not make_cycle(start, dir) then
+      gui.debugf("FAILED TO MAKE CYCLE.\n")
+
+      -- prevent trying this cell/dir combo again
+      local N = start.neighbor[dir]
+      N.kind = "wall"
+    end
+  end
+end
+
+
 function Hex_build_all()
   for cx = 1, HEX_W do
   for cy = 1, HEX_H do
@@ -274,12 +396,14 @@ end
 
 
 function Hex_create_level()
-  Hex_setup()
-
   LEVEL.sky_light = 192
   LEVEL.sky_shade = 160
 
-  HEX_MAP[9][40].is_start = true
+  Hex_setup()
+
+  Hex_starting_area()
+
+  Hex_make_cycles()
 
   Hex_build_all()
 end
