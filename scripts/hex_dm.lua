@@ -88,15 +88,15 @@ end
 
 ----------------------------------------------------------------
 
+H_WIDTH  = 40
+H_HEIGHT = 32
+
 
 function Hex_middle_coord(cx, cy)
-  local W = 40
-  local H = 32
+  local x = H_WIDTH  * (1 + (cx - 1) * 3 + (1 - (cy % 2)) * 1.5)
+  local y = H_HEIGHT * cy
 
-  local x = W * (1 + (cx - 1) * 3 + (1 - (cy % 2)) * 1.5)
-  local y = H * cy
-
-  return x, y
+  return math.round(x), math.round(y)
 end
 
 
@@ -115,6 +115,33 @@ function Hex_neighbor_pos(cx, cy, dir)
     if dir == 3 then return cx, cy - 1 end
     if dir == 6 then return cx, cy + 1 end
   end
+end
+
+
+function Hex_vertex_coord(C, dir)
+  local x, y
+
+  if dir == 1 then
+    x = C.mid_x - H_WIDTH / 2
+    y = C.mid_y - H_HEIGHT
+  elseif dir == 2 then
+    x = C.mid_x + H_WIDTH / 2
+    y = C.mid_y - H_HEIGHT
+  elseif dir == 3 then
+    x = C.mid_x + H_WIDTH
+    y = C.mid_y
+  elseif dir == 4 then
+    x = C.mid_x - H_WIDTH
+    y = C.mid_y
+  elseif dir == 5 then
+    x = C.mid_x - H_WIDTH / 2
+    y = C.mid_y + H_HEIGHT
+  elseif dir == 6 then
+    x = C.mid_x + H_WIDTH / 2
+    y = C.mid_y + H_HEIGHT
+  end
+
+  return math.round(x), math.round(y)
 end
 
 
@@ -151,5 +178,18 @@ function Hex_setup()
   end
   end
 
+  -- 3. setup vertices
+
+  for cx = 1, HEX_W do
+  for cy = 1, HEX_H do
+    local C = HEX_MAP[cx][cy]
+  
+    for dir = 1,6 do
+      local x, y = Hex_vertex_coord(C, dir)
+
+      C.vert[dir] = { x=x, y=y }
+    end
+  end
+  end
 end
 

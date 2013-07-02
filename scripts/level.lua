@@ -114,6 +114,8 @@ require "fight"
 require "monster"
 require "naming"
 
+require "hex_dm"
+
 
 GLOBAL_STYLE_LIST =
 {
