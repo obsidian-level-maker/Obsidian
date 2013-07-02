@@ -114,7 +114,7 @@ function HEXAGON_CLASS.build(C)
   local c_h = rand.irange(4,8) * 32
 
 
-  if C.is_edge then
+  if C.is_edge or (not C.is_start and rand.odds(25)) then
     local w_brush = C:to_brush()
 
     Brush_set_mat(w_brush, "ASHWALL4", "ASHWALL4")
@@ -154,8 +154,8 @@ end
 
 ----------------------------------------------------------------
 
-H_WIDTH  = 60
-H_HEIGHT = 48
+H_WIDTH  = 80
+H_HEIGHT = 64
 
 
 function Hex_middle_coord(cx, cy)
@@ -275,6 +275,9 @@ end
 
 function Hex_create_level()
   Hex_setup()
+
+  LEVEL.sky_light = 192
+  LEVEL.sky_shade = 160
 
   HEX_MAP[9][40].is_start = true
 
