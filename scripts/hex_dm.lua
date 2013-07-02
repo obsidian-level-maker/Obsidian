@@ -28,6 +28,8 @@ class HEXAGON
                                -- will be NIL at edge of map
                                -- HDIR is 1 .. 6
 
+    is_edge : bool  -- true if at edge of map (one neighbor is NIL)
+
     mid_x, mid_y  -- coordinate of mid point
 
     vertex[HDIR] : { x=#, y=# }  -- leftmost vertex for each edge
@@ -57,13 +59,14 @@ Directions:
 
 HEX_MAP = {}
 
-HEX_W = 100
-HEX_H = 100
+HEX_W = 30
+HEX_H = 90
 
 
 HEX_LEFT  = { 2, 3, 6, 1, 4, 5 }
 HEX_RIGHT = { 4, 1, 2, 5, 6, 3 }
 HEX_OPP   = { 6, 5, 4, 3, 2, 1 }
+HEX_DIRS  = { 1, 4, 5, 6, 3, 2 }
 
 
 HEXAGON_CLASS = {}
@@ -86,10 +89,73 @@ function HEXAGON_CLASS.tostr(C)
 end
 
 
+function HEXAGON_CLASS.to_brush(C)
+  local brush = {}
+
+  for i = 6, 1, -1 do
+    local dir = HEX_DIRS[i]
+
+    local coord =
+    {
+      x = C.vertex[dir].x
+      y = C.vertex[dir].y
+    }
+
+    table.insert(brush, coord)
+  end
+
+  return brush
+end
+
+
+function HEXAGON_CLASS.build(C)
+  
+  local f_h = rand.irange(0,6) * 4
+  local c_h = rand.irange(4,8) * 32
+
+
+  if C.is_edge then
+    local w_brush = C:to_brush()
+
+    Brush_set_mat(w_brush, "ASHWALL4", "ASHWALL4")
+
+    brush_helper(w_brush)
+  else
+    local f_brush = C:to_brush()
+
+    local f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "STARTAN3",
+                              "TEKGREN2", "BROWN1" })
+
+    Brush_add_top(f_brush, f_h)
+    Brush_set_mat(f_brush, f_mat, f_mat)
+
+    brush_helper(f_brush)
+
+
+    local c_brush = C:to_brush()
+
+    Brush_add_bottom(c_brush, 256)
+    Brush_mark_sky(c_brush)
+
+    brush_helper(c_brush)
+  end
+
+
+  if C.is_start then
+    entity_helper("dm_player", C.mid_x, C.mid_y, f_h, {})
+
+    if not LEVEL.has_p1_start then
+      entity_helper("player1", C.mid_x, C.mid_y, f_h, {})
+      LEVEL.has_p1_start = true
+    end
+  end
+end
+
+
 ----------------------------------------------------------------
 
-H_WIDTH  = 40
-H_HEIGHT = 32
+H_WIDTH  = 60
+H_HEIGHT = 48
 
 
 function Hex_middle_coord(cx, cy)
@@ -173,6 +239,8 @@ function Hex_setup()
          (ny >= 1) and (ny <= HEX_H)
       then
         C.neighbor[dir] = HEX_MAP[nx][ny]
+      else
+        C.is_edge = true
       end
     end
   end
@@ -187,9 +255,29 @@ function Hex_setup()
     for dir = 1,6 do
       local x, y = Hex_vertex_coord(C, dir)
 
-      C.vert[dir] = { x=x, y=y }
+      C.vertex[dir] = { x=x, y=y }
     end
   end
   end
+end
+
+
+function Hex_build_all()
+  for cx = 1, HEX_W do
+  for cy = 1, HEX_H do
+    local C = HEX_MAP[cx][cy]
+
+    C:build()
+  end
+  end
+end
+
+
+function Hex_create_level()
+  Hex_setup()
+
+  HEX_MAP[9][40].is_start = true
+
+  Hex_build_all()
 end
 

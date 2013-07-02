@@ -751,6 +751,14 @@ function Levels_build_it()
     return "ok"
   end
 
+  -- Hex-DM test
+  if OB_CONFIG.hex_dm then
+    Hex_create_level()
+    if gui.abort() then return "abort" end
+    return "ok"
+  end
+
+
   Plan_create_rooms()
   if gui.abort() then return "abort" end
 
