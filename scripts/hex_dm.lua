@@ -38,6 +38,8 @@ class HEXAGON
     vertex[HDIR] : { x=#, y=# }  -- leftmost vertex for each edge
 
     thread : THREAD
+
+    is_branch   -- true if a thread branched off here
 }
 
 
@@ -59,6 +61,8 @@ class THREAD
     history : array(HDIR)   -- directions to follow from start cell
 
     grow_prob : number
+
+    limit : number  -- when this reached zero, make a room
 }
 
 
@@ -70,6 +74,7 @@ Directions:
      \           /
       \1       3/
        \___2___/
+
 
 ----------------------------------------------------------------]]
 
@@ -365,11 +370,15 @@ function Hex_make_cycles()
     for cy = 1, HEX_H do
       local C = HEX_MAP[cx][cy]
 
-      if (C.kind == "room" or C.kind == "thread") and not C.no_start and
-         C:free_neighbors() > 2
-      then
-        table.insert(list, C)
-      end
+      if C.no_start then continue end
+
+      if not (C.kind == "room" or
+              (C.kind == "thread" and C.thread.dead))
+      then continue end
+
+      if C:free_neighbors() < 3 then continue end
+
+      table.insert(list, C)
     end
     end
 
@@ -404,6 +413,24 @@ function Hex_make_cycles()
   end
 
 
+  local function new_thread(start)
+    return
+    {
+      id = Plan_alloc_id("hex_thread")
+
+      start = start
+
+      cells   = { }
+      history = { }
+
+      grow_dirs = rand.sel(50, { 2,3,4 }, { 4,3,2 })
+      grow_prob = rand.pick({ 40, 60, 80 })
+
+      limit = rand.irange(8, 18)
+    }
+  end
+
+
   local function add_thread()
     -- reached thread limit ?
     if total_thread >= MAX_THREAD then return end
@@ -415,25 +442,35 @@ function Hex_make_cycles()
 
     local C1 = start.neighbor[dir]
 
+    C1.is_branch = true
 
-    local THREAD =
-    {
-      id = Plan_alloc_id("hex_thread")
 
-      start = start
-
-      cells   = { }
-      history = { }
-
-      grow_dirs = rand.sel(50, { 2,3,4 }, { 4,3,2 })
-      grow_prob = rand.pick({ 40, 60, 80 })
-    }
-
-    do_grow_thread(THREAD, dir, C1)
+    local THREAD = new_thread(start)
 
     table.insert(threads, THREAD)
 
+    do_grow_thread(THREAD, dir, C1)
+
     total_thread = total_thread + 1
+  end
+
+
+  local function respawn_thread(T)
+    -- create a new thread which continues on where T left off
+
+    local THREAD = new_thread(T.pos)
+
+    THREAD.pos = T.pos
+    THREAD.dir = T.dir
+
+    table.insert(threads, THREAD)
+
+    THREAD.pos.is_branch = true
+
+    -- less quota for this thread
+    total_thread = total_thread + 0.4
+
+    return true
   end
 
 
@@ -455,6 +492,27 @@ function Hex_make_cycles()
 
 
   local function grow_a_thread(T)
+    if T.limit <= 0 then
+      -- turn into a room when reached the end
+      T.pos.kind = "room"
+
+      T.dead = true
+
+      -- debug crud...
+      T.pos.content = "ENTITY"
+      T.pos.entity  = "evil_eye"
+
+      -- continue sometimes...
+      if rand.odds(25) then
+        respawn_thread(T)
+      end
+
+      return
+    end
+
+    T.limit = T.limit - 1
+
+
     local dir_L = HEX_LEFT [T.dir]
     local dir_R = HEX_RIGHT[T.dir]
 
@@ -463,6 +521,20 @@ function Hex_make_cycles()
     check_dirs[dir_L] = T.grow_dirs[1]
     check_dirs[T.dir] = T.grow_dirs[2]
     check_dirs[dir_R] = T.grow_dirs[3]
+
+    local tc = #T.history
+
+    -- prevent travelling too many steps in same direction
+    if tc >= 2 and T.history[tc] == T.history[tc - 1] then
+      local d = T.history[tc]
+      assert(check_dirs[d])
+
+      if tc >= 3 and T.history[tc] == T.history[tc - 2] then
+        check_dirs[d] = nil
+      else
+        check_dirs[d] = check_dirs[d] / 2
+      end
+    end
 
     while not table.empty(check_dirs) do
       local dir = rand.key_by_probs(check_dirs)
@@ -476,10 +548,6 @@ function Hex_make_cycles()
     -- no direction was possible
 
     T.dead = true
-
-    -- debug crud...
-    T.pos.content = "ENTITY"
-    T.pos.entity  = "evil_eye"
   end
 
 
@@ -515,10 +583,8 @@ function Hex_make_cycles()
     grow_threads()
     grow_threads()
 
---[[
-    if #threads == 0 or  rand.odds(2)  then add_thread() end
-    if #threads == 1 and rand.odds(20) then add_thread() end
---]]
+    if #threads == 0 or  rand.odds(2) then add_thread() end
+    if #threads == 1 and rand.odds(5) then add_thread() end
 
   end
 end
