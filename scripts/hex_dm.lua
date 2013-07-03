@@ -90,8 +90,8 @@ Directions:
 
 HEX_MAP = {}
 
-HEX_W = 30
-HEX_H = 90
+HEX_W = 20
+HEX_H = 60
 
 
 HEX_LEFT  = { 2, 3, 6, 1, 4, 5 }
@@ -136,6 +136,24 @@ function HEXAGON_CLASS.free_neighbors(C)
 end
 
 
+function HEXAGON_CLASS.can_join(C, T)
+  local hit_room = false
+
+  for i = 1, 6 do
+    local N = C.neighbor[i]
+
+    -- a thread cannot join onto itself
+
+    if (N.kind == "room" or N.kind == "thread") and N.thread != T
+    then
+      hit_room = true
+    end
+  end
+
+  return hit_room
+end
+
+
 function HEXAGON_CLASS.to_brush(C)
   local brush = {}
 
@@ -157,11 +175,11 @@ end
 
 function HEXAGON_CLASS.build(C)
   
-  local f_h = rand.irange(0,6) * 4
+  local f_h = rand.irange(0,6) * 0
   local c_h = rand.irange(4,8) * 32
 
 
-  if C.kind == "edge" or C.kind == "wall" or C.kind == "free" then
+  if C.kind == "edge" or C.kind == "wall" then --- or C.kind == "free" then
     local w_brush = C:to_brush()
 
     local w_mat = "ASHWALL4"
@@ -177,7 +195,11 @@ function HEXAGON_CLASS.build(C)
 --    local f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "STARTAN3",
 --                              "TEKGREN2", "BROWN1" })
 
-    if C.kind == "room" then
+    if C.kind == "free" then
+      f_mat = "NUKAGE1"
+      f_h   = -16
+
+    elseif C.kind == "room" then
       f_mat = "COMPBLUE"
     else
       f_mat = "GRAY7"
@@ -426,7 +448,7 @@ function Hex_make_cycles()
       grow_dirs = rand.sel(50, { 2,3,4 }, { 4,3,2 })
       grow_prob = rand.pick({ 40, 60, 80 })
 
-      limit = rand.irange(8, 18)
+      limit = rand.irange(16, 48)
     }
   end
 
@@ -485,7 +507,15 @@ function Hex_make_cycles()
       return true
     end
 
-    -- FIXME: TEST FOR RE-JOINING
+    if #T.history > 7 and N:can_join(T) then
+      do_grow_thread(T, dir, N)
+
+      T.target = N.neighbor[dir]
+      T.target_dir = dir
+
+      T.dead = true
+      return true
+    end
 
     return false
   end
