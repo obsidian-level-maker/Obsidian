@@ -136,6 +136,21 @@ function HEXAGON_CLASS.free_neighbors(C)
 end
 
 
+function HEXAGON_CLASS.is_leaf(C)
+  local count = 0
+
+  for dir = 1, 6 do
+    local N = C.neighbor[dir]
+
+    if N and (N.kind == "room" or N.kind == "thread") then
+      count = count + 1
+    end
+  end
+
+  return (count == 1)
+end
+
+
 function HEXAGON_CLASS.can_join(C, T)
   local hit_room = false
 
@@ -554,7 +569,7 @@ function Hex_make_cycles()
 
     local tc = #T.history
 
-    -- prevent travelling too many steps in same direction
+    -- prevent too many steps in the same direction
     if tc >= 2 and T.history[tc] == T.history[tc - 1] then
       local d = T.history[tc]
       assert(check_dirs[d])
@@ -562,7 +577,7 @@ function Hex_make_cycles()
       if tc >= 3 and T.history[tc] == T.history[tc - 2] then
         check_dirs[d] = nil
       else
-        check_dirs[d] = check_dirs[d] / 2
+        check_dirs[d] = check_dirs[d] / 3
       end
     end
 
@@ -620,6 +635,38 @@ function Hex_make_cycles()
 end
 
 
+function Hex_trim_leaves()
+  
+  local function trim_pass()
+    local changes = false
+
+    for cx = 1, HEX_W do
+    for cy = 1, HEX_H do
+      local C = HEX_MAP[cx][cy]
+
+      if not (C.kind == "room" or C.kind == "thread") then
+        continue
+      end
+
+      if C:is_leaf() then
+        C.kind = "wall"
+        changes = true
+      end
+   end
+   end
+
+   return changes
+ end
+
+
+ ---| Hex_trim_leaves |---
+
+ while trim_pass() do
+  -- keep going until all nothing changes
+ end
+end
+
+
 function Hex_build_all()
   for cx = 1, HEX_W do
   for cy = 1, HEX_H do
@@ -636,10 +683,10 @@ function Hex_create_level()
   LEVEL.sky_shade = 160
 
   Hex_setup()
-
   Hex_starting_area()
 
   Hex_make_cycles()
+  Hex_trim_leaves()
 
   Hex_build_all()
 end
