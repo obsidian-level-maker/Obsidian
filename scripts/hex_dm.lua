@@ -90,14 +90,20 @@ Directions:
 
 HEX_MAP = {}
 
-HEX_W = 20
-HEX_H = 60
+HEX_W = 15
+HEX_H = 49
+
+HEX_MID_X = 0  -- computed later
+HEX_MID_Y = 0  --
 
 
 HEX_LEFT  = { 2, 3, 6, 1, 4, 5 }
 HEX_RIGHT = { 4, 1, 2, 5, 6, 3 }
 HEX_OPP   = { 6, 5, 4, 3, 2, 1 }
 HEX_DIRS  = { 1, 4, 5, 6, 3, 2 }
+
+
+CTF_MODE = true
 
 
 HEXAGON_CLASS = {}
@@ -147,7 +153,11 @@ function HEXAGON_CLASS.is_leaf(C)
     end
   end
 
-  return (count == 1)
+  if CTF_MODE and C.cy == HEX_MID_Y then
+    return (count == 0)
+  end
+
+  return (count <= 1)
 end
 
 
@@ -252,8 +262,8 @@ end
 
 ----------------------------------------------------------------
 
-H_WIDTH  = 80
-H_HEIGHT = 64
+H_WIDTH  = 80 + 40
+H_HEIGHT = 64 + 32
 
 
 function Hex_middle_coord(cx, cy)
@@ -312,6 +322,9 @@ end
 function Hex_setup()
   HEX_MAP = table.array_2D(HEX_W, HEX_H)
 
+  HEX_MID_X = int((HEX_W + 1) / 2)
+  HEX_MID_Y = int((HEX_H + 1) / 2)
+
   -- 1. create the hexagon cells
 
   for cx = 1, HEX_W do
@@ -361,13 +374,36 @@ end
 
 
 function Hex_starting_area()
-  LEVEL.start_cx = int(HEX_W / 2)
-  LEVEL.start_cy = int(HEX_H / 2)
+  LEVEL.start_cx = HEX_MID_X
+  LEVEL.start_cy = HEX_MID_Y
 
   local C = HEX_MAP[LEVEL.start_cx][LEVEL.start_cy]
 
   C.kind = "room"
   C.content = "START"
+
+
+  if CTF_MODE then
+    local cx1 = HEX_MID_X - int(HEX_W / 4)
+    local cx2 = HEX_MID_X + int(HEX_W / 4)
+
+    if rand.odds(80) then
+      -- sometimes remove middle
+      if rand.odds(30) then
+        C.kind = "free"
+        C.content = nil
+      end
+
+      C = HEX_MAP[cx1][HEX_MID_Y]
+      C.kind = "room"
+
+      C = HEX_MAP[cx2][HEX_MID_Y]
+      C.kind = "room"
+
+      C.content = "ENTITY"
+      C.entity  = "potion"
+    end
+  end
 end
 
 
@@ -384,6 +420,8 @@ function Hex_make_cycles()
 
     for dir = 1, 6 do
       local N = C.neighbor[dir]
+
+      if CTF_MODE and dir >= 4 then continue end
 
       if N and N.kind == "free" and N:free_neighbors() == 5 then
         table.insert(dir_list, dir)
@@ -404,7 +442,7 @@ function Hex_make_cycles()
     -- collect all possible starting cells
 
     for cx = 1, HEX_W do
-    for cy = 1, HEX_H do
+    for cy = 1, sel(CTF_MODE, HEX_MID_Y, HEX_H) do
       local C = HEX_MAP[cx][cy]
 
       if C.no_start then continue end
@@ -516,6 +554,8 @@ function Hex_make_cycles()
     assert(N)
 
     if N.kind != "free" then return false end
+
+    if CTF_MODE and N.cy >= HEX_MID_Y then return false end
 
     if N:free_neighbors() == 5 then
       do_grow_thread(T, dir, N)
@@ -638,7 +678,7 @@ end
 function Hex_trim_leaves()
   
   local function trim_pass()
-    local changes = false
+    local changes = 0
 
     for cx = 1, HEX_W do
     for cy = 1, HEX_H do
@@ -649,13 +689,16 @@ function Hex_trim_leaves()
       end
 
       if C:is_leaf() then
+      
         C.kind = "wall"
-        changes = true
+        C.content = nil
+
+        changes = changes + 1
       end
    end
    end
 
-   return changes
+   return changes > 0
  end
 
 
