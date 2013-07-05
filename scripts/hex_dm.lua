@@ -90,6 +90,7 @@ Directions:
 
 HEX_MAP = {}
 
+-- these must be odd (for CTF mode)
 HEX_W = 15
 HEX_H = 49
 
@@ -343,10 +344,12 @@ function Hex_setup()
   for cy = 1, HEX_H do
     local C = HEX_MAP[cx][cy]
 
+    local far_W = HEX_W - sel(CTF_MODE, (cy % 2), 0)
+
     for dir = 1,6 do
       local nx, ny = Hex_neighbor_pos(cx, cy, dir)
 
-      if (nx >= 1) and (nx <= HEX_W) and
+      if (nx >= 1) and (nx <= far_W) and
          (ny >= 1) and (ny <= HEX_H)
       then
         C.neighbor[dir] = HEX_MAP[nx][ny]
@@ -396,10 +399,11 @@ function Hex_starting_area()
 
       C = HEX_MAP[cx1][HEX_MID_Y]
       C.kind = "room"
+      C.content = "ENTITY"
+      C.entity  = "potion"
 
       C = HEX_MAP[cx2][HEX_MID_Y]
       C.kind = "room"
-
       C.content = "ENTITY"
       C.entity  = "potion"
     end
@@ -710,6 +714,24 @@ function Hex_trim_leaves()
 end
 
 
+function Hex_mirror_map()
+  for cx = 1, HEX_W do
+  for cy = 1, HEX_MID_Y - 1 do
+    local C = HEX_MAP[cx][cy]
+
+    local dx = (HEX_W - cx) + (cy % 2)
+    local dy = (HEX_H - cy) + 1
+
+    if dx < 1 then continue end
+
+    local D = HEX_MAP[dx][dy]
+
+    D.kind = C.kind
+  end
+  end
+end
+
+
 function Hex_build_all()
   for cx = 1, HEX_W do
   for cy = 1, HEX_H do
@@ -730,6 +752,10 @@ function Hex_create_level()
 
   Hex_make_cycles()
   Hex_trim_leaves()
+
+  if CTF_MODE then
+    Hex_mirror_map()
+  end
 
   Hex_build_all()
 end
