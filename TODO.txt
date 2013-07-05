@@ -94,6 +94,28 @@ New Starting Logic
 
 V5 Stuff:
 
++  ensure start room is not too full of monsters
+
++  review monster numbers
+
++  review monster progression : e.g. we expect Cybies / Masterminds
+   in the last map of an epsiode.
+
+-  ease the health attrition formula
+
++  type of prefab is from the NAME
+
+-  have exclusion zones in front of START and TELEPORTER closets
+
++  cycles: fix the "excess" height problem
+
+-  see why some traps or cages are empty
+
+??  a gui option to disable DOOM lighting algorithm
+
+
++  move stuff in data/ into x_doom/ (etc)
+
 +  Need logic to decide how to light up a room (windows vs wall
    lights vs ceilings lights etc).
 
@@ -828,6 +850,8 @@ Sam's suggestions:
    (and the player will return to that spot when they die).
 
 -  "Horror" mode: fewer but tougher monsters, fewer ammo, darker levels.
+
+-  make DOOM lighting algorithm faster on multi-core CPUs.
 
 -  more Oblige logos, higher resolution ones too
 
