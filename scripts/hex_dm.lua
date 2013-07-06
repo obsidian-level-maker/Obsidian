@@ -66,6 +66,14 @@ class THREAD
 }
 
 
+class ROOM
+{
+    id : number
+
+    cells : list(HEXAGON)
+}
+
+
 Directions:
         _______
        /   5   \
@@ -220,6 +228,8 @@ function HEXAGON_CLASS.build(C)
 
 --    local f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "STARTAN3",
 --                              "TEKGREN2", "BROWN1" })
+
+    assert(C.room)
 
     if C.kind == "free" then
       f_mat = "NUKAGE1"
@@ -800,6 +810,147 @@ function Hex_plan()
 end
 
 
+function Hex_add_rooms_CTF()
+  --
+  -- Algorithm:
+  --
+  --   1. setup rooms on the middle row
+  --
+  --   2. process each row away from that, pick room for each cell
+  --      and occasionally create new rooms
+  --
+
+  local function new_room()
+    local ROOM =
+    {
+      id = Plan_alloc_id("hex_room")
+
+      cells = {}
+    }
+
+    return ROOM
+  end
+
+
+  local function set_room(C, room)
+    C.room = room
+
+    table.insert(room.cells, c)
+  end
+
+
+  local function initial_rooms()
+    -- these must be mirrored horizontally, otherwise when the other
+    -- half of the map is mirrored there would be a mismatch.
+
+    local cy = HEX_MID_Y
+
+    local last_room
+
+    for cx = HEX_MID_X, 1, -1 do
+      local C = HEX_MAP[cx][cy]
+
+      if C.kind == "edge" then continue end
+
+      if last_room then
+        local prob = 75 - 50 * (#last_room.cells - 1)
+
+        if prob > 0 and rand.odds(prob) then
+          set_room(C, last_room)
+          continue
+        end
+      end
+
+      last_room = new_room()
+
+      set_room(C, last_room)
+    end
+
+    -- do the mirroring
+
+    for cx = 1, HEX_MID_X - 1 do
+      local dx = HEX_MID_X + (HEX_MID_X - cx)
+
+      local C = HEX_MAP[cx][cy]
+      local D = HEX_MAP[dx][cy]
+
+      if C.kind == "edge" then continue end
+
+      assert(D.kind != "edge")
+
+      set_room(D, C.room)
+    end
+  end
+
+
+  local function process_row(cy)
+    local last_new_room
+
+    for cx = 1, HEX_W do
+      local C = HEX_MAP[cx][cy]
+
+      if C.kind == "edge" then continue end
+
+      -- allow a new room to occupy _two_ horizontal spots
+
+      if last_new_room and #last_new_room.cells == 1 and rand.odds(35) then
+        set_room(C, last_new_room)
+        continue
+      end
+
+      -- occasionally create a new room (unless last cell was new)
+
+      if not last_new_room and rand.odds(5) then
+        last_new_room = new_room()
+        set_room(C, last_new_room)
+        continue
+      end
+
+      last_new_room = nil
+
+      -- otherwise we choose between two above neighbors (diagonals)
+
+      local N1 = C.neighbor[4]
+      local N2 = C.neighbor[6]
+
+      if N1 and N1.kind == "edge" then N1 = nil end
+      if N2 and N2.kind == "edge" then N2 = nil end
+
+      assert(N1 or N2)
+
+      if not N1 then C.room = N2.room ; continue end
+      if not N2 then C.room = N1.room ; continue end
+
+      if N1.room == N2.room then C.room = N1.room ; continue end
+
+      -- FIXME !!!
+
+      C.room = rand.sel(50, N1.room, N2.room)
+    end
+  end
+
+
+  ---| Hex_add_rooms_CTF |---
+
+  initial_rooms()
+
+  for cy = HEX_MID_Y - 1, 1, -1 do
+    process_row(cy)
+  end
+end
+
+
+function Hex_add_rooms()
+
+  ---| Hex_add_rooms |---
+
+  if CTF_MODE then
+    Hex_add_rooms_CTF()
+    return
+  end
+end
+
+
 function Hex_mirror_map()
   for cx = 1, HEX_W do
   for cy = 1, HEX_MID_Y - 1 do
@@ -813,6 +964,7 @@ function Hex_mirror_map()
     local D = HEX_MAP[dx][dy]
 
     D.kind = C.kind
+    D.room = C.room
   end
   end
 end
@@ -835,7 +987,7 @@ function Hex_create_level()
 
   Hex_plan()
 
-  -- Hex_add_rooms()
+  Hex_add_rooms()
 
   -- Hex_place_stuff()
 
