@@ -373,6 +373,13 @@ function Hex_setup()
     end
   end
   end
+
+  -- 4. reset other stuff
+
+  LEVEL.areas = {}
+  LEVEL.rooms = {}
+
+  collectgarbage()
 end
 
 
@@ -696,6 +703,7 @@ function Hex_trim_leaves()
       
         C.kind = "wall"
         C.content = nil
+        C.trimmed = true
 
         changes = changes + 1
       end
@@ -711,6 +719,84 @@ function Hex_trim_leaves()
  while trim_pass() do
   -- keep going until all nothing changes
  end
+end
+
+
+function Hex_check_map_is_valid()
+
+  if CTF_MODE then
+    -- ensure the starting cells survived
+
+    for cx = 1, HEX_W do
+      local C = HEX_MAP[cx][HEX_MID_Y]
+
+      if C.trimmed then
+        stderrf("Failed CTF connection test.\n")
+        return false
+      end
+    end
+  end
+
+  -- generic size / volume checks
+
+  -- TODO: consider counting "branch" cells
+
+  local cx_min, cx_max = 999, -999
+  local cy_min, cy_max = 999, -999
+
+  local count = 0
+
+  for cx = 1, HEX_W do
+  for cy = 1, HEX_H do
+    local C = HEX_MAP[cx][cy]
+
+    if C.kind == "room" or C.kind == "thread" then
+      count = count + 1
+
+      cx_min = math.min(cx, cx_min)
+      cy_min = math.min(cy, cy_min)
+
+      cx_max = math.max(cx, cx_max)
+      cy_max = math.max(cy, cy_max)
+    end
+  end
+  end
+
+  count = count / (HEX_W * HEX_H)
+
+  local width  = (cx_max - cx_min + 1) / HEX_W
+  local height = (cy_max - cy_min + 1) / HEX_H
+
+  if CTF_MODE then
+    count  = count * 2
+    height = height * 2
+  end
+
+  gui.debugf("Volume: %1.3f  width: %1.2f  height: %1.2f\n", count, width, height)
+
+  -- Note: no check on volume
+
+  if width < 0.4 or height < 0.5 then
+    stderrf("Failed size test.\n")
+    return false
+  end
+
+  return true
+end
+
+
+function Hex_plan()
+  -- keep trying until a plan comes together
+  -- (mainly for CTF mode, which sometimes fails)
+
+  repeat
+    Hex_setup()
+    Hex_starting_area()
+
+    Hex_make_cycles()
+    Hex_trim_leaves()
+
+  until Hex_check_map_is_valid()
 end
 
 
@@ -747,11 +833,11 @@ function Hex_create_level()
   LEVEL.sky_light = 192
   LEVEL.sky_shade = 160
 
-  Hex_setup()
-  Hex_starting_area()
+  Hex_plan()
 
-  Hex_make_cycles()
-  Hex_trim_leaves()
+  -- Hex_add_rooms()
+
+  -- Hex_place_stuff()
 
   if CTF_MODE then
     Hex_mirror_map()
