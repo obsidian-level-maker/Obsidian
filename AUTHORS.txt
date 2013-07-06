@@ -53,6 +53,9 @@ Sam Trenholme
 LakiSoft
   - Heretic boss maps
 
+SylandroProbopas
+  - DOOM 1 boss map
+
 
 THANKS TO:
 
