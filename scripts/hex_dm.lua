@@ -1058,7 +1058,12 @@ R.f_mat = "FWATER1"
     if N5 and not N5.room then N5 = nil end
     if N6 and not N6.room then N6 = nil end
 
-    assert(N4 or N6)
+    if not (N4 or N6) then
+      if N5 then return N5.room end
+
+      -- ouch!
+      return new_room()
+    end
 
     local T
     if C.thread and not C.trimmed then T = C.thread end
