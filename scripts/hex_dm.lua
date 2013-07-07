@@ -322,7 +322,7 @@ f_h   = 0
   if C.content == "ENTITY" then
     entity_helper(C.entity, C.mid_x, C.mid_y, f_h, {})
   
-  else  --[[ if C.thread and not C.trimmed and not C.content then --]]
+  elseif C.thread and not C.trimmed and not C.content then
     entity_helper("potion", C.mid_x, C.mid_y, f_h, {})
 
   end
@@ -1049,6 +1049,39 @@ R.f_mat = "FWATER1"
   end
 
 
+  local function choose_room_from_nb(C)
+    local N4 = C.neighbor[4]
+    local N5 = C.neighbor[5]
+    local N6 = C.neighbor[6]
+
+    if N4 and not N4.room then N4 = nil end
+    if N5 and not N5.room then N5 = nil end
+    if N6 and not N6.room then N6 = nil end
+
+    assert(N4 or N6)
+
+    local T
+    if C.thread and not C.trimmed then T = C.thread end
+
+    if N5 and rand.odds(sel(N5.thread == T, 90, 20)) then
+      return N5.room
+    end
+
+    if not N4 then return N6.room end
+    if not N6 then return N4.room end
+
+    if N4.room == N6.room then return N4.room end
+
+    -- tend to prefer the same thread
+    local prob = 50
+
+    if N4.thread == T then prob = prob + 40 end
+    if N6.thread == T then prob = prob - 40 end
+
+    return rand.sel(prob, N4.room, N6.room)
+  end
+
+
   local function process_row(cy)
     local last_new_room
 
@@ -1079,70 +1112,55 @@ R.f_mat = "FWATER1"
 
       -- otherwise we choose between two above neighbors (diagonals)
 
-      local N4 = C.neighbor[4]
-      local N5 = C.neighbor[5]
-      local N6 = C.neighbor[6]
-
-      if N4 and not N4.room then N4 = nil end
-      if N5 and not N5.room then N5 = nil end
-      if N6 and not N6.room then N6 = nil end
-
-      assert(N4 or N6)
-
-      local T
-      if C.thread and not C.trimmed then T = C.thread end
-
-      if N5 and rand.odds(sel(N5.thread == T, 90, 20)) then
-        set_room(C, N5.room)
-        continue
-      end
-
-      if not N4 then C.room = N6.room ; continue end
-      if not N6 then C.room = N4.room ; continue end
-
-      if N4.room == N6.room then C.room = N4.room ; continue end
-
-      -- tend to prefer the same thread
-      local prob = 50
-
-      if N4.thread == T then prob = prob + 40 end
-      if N6.thread == T then prob = prob - 40 end
-
-      set_room(C, rand.sel(prob, N4.room, N6.room))
+      set_room(C, choose_room_from_nb(C))
     end
   end
 
 
+  local function do_kill_room(R)
+    each C in R.cells do
+      C.kind = "edge"
+    end
+    
+    R.dead  = true
+    R.cells = {}
+  end
+
+
   local function do_merge_room(src, dest)
+stderrf("merging ROOM_%d --> ROOM_%d\n", src.id, dest.id)
+
     each C in src.cells do
       set_room(C, dest)
     end
 
     src.dead  = true
     src.cells = {}
+
+for cx = 1, HEX_W do
+for cy = 1, HEX_H do
+  local C = HEX_MAP[cx][cy]
+  if C.room == src then error("room with bad cell list") end
+end end
+
   end
 
 
   local function neighbor_for_merge(R)
     local best
 
-stderrf("neighbor_for_merge  R = ROOM_%d  cells:%d\n", R.id, #R.cells)
     each C in R.cells do
-stderrf("%s\n", C:tostr())
       for dir = 1, 6 do
         local N = C.neighbor[dir]
 
         if not (N and N.room) then continue end
 
         local R2 = N.room
-assert(R2)
-stderrf("  DIR:%d = ROOM_%d\n", dir, R2.id)
 
         if (R2 == R) or (R2 == best) then continue end
 
         if not best then
           best = R2
-assert(best)
           continue
         end
 
@@ -1155,9 +1173,10 @@ assert(best)
       end
     end
 
-    -- TODO: be more robust ??
+    -- best can be NIL, this only happens with rooms on the middle row
+    -- and near the far left / right edges.  Such a room will be removed.
 
-    return assert(best)
+    return best
   end
 
 
@@ -1176,9 +1195,13 @@ assert(best)
 
       local N = neighbor_for_merge(R)
 
-      assert(not N.dead)
+      if N then
+        assert(not N.dead)
 
-      do_merge_room(R, N)
+        do_merge_room(R, N)
+      else
+        do_kill_room(R)
+      end
 
       table.remove(room_list, idx)
     end
