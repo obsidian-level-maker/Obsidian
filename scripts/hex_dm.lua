@@ -722,6 +722,8 @@ function Hex_trim_leaves()
         C.content = nil
         C.trimmed = true
 
+        -- we keep C.thread
+
         changes = changes + 1
       end
    end
@@ -854,10 +856,14 @@ f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
     C.room = room
 
     table.insert(room.cells, c)
+
+    if C.thread and not C.thread.room then
+      C.thread.room = room
+    end
   end
 
 
-  local function initial_rooms()
+  local function initial_row()
     -- these must be mirrored horizontally, otherwise when the other
     -- half of the map is mirrored there would be a mismatch.
 
@@ -897,24 +903,44 @@ f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
   end
 
 
+  local function rooms_from_threads()
+    for cx = 1, HEX_W do
+    for cy = 1, HEX_MID_Y - 1 do
+      local C = HEX_MAP[cx][cy]
+
+      if not (C.thread and not C.trimmed) then continue end
+
+      if not C.thread.room then
+        C.thread.room = new_room()
+      end
+
+      set_room(C, C.thread.room)
+    end
+    end
+  end
+
+
   local function process_row(cy)
     local last_new_room
 
     for cx = 1, HEX_W do
       local C = HEX_MAP[cx][cy]
 
+      -- already set?
+      if C.room then continue end
+
       if C.kind == "edge" then continue end
 
       -- allow a new room to occupy _two_ horizontal spots
 
-      if last_new_room and #last_new_room.cells == 1 and rand.odds(35) then
+      if last_new_room and #last_new_room.cells == 1 and rand.odds(30) then
         set_room(C, last_new_room)
         continue
       end
 
       -- occasionally create a new room (unless last cell was new)
 
-      if not last_new_room and rand.odds(10) then
+      if not last_new_room and rand.odds(15) then
         last_new_room = new_room()
         set_room(C, last_new_room)
         continue
@@ -944,8 +970,6 @@ f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
 
       if N4.room == N6.room then C.room = N4.room ; continue end
 
-      -- FIXME !!!
-
       C.room = rand.sel(50, N4.room, N6.room)
     end
   end
@@ -953,7 +977,9 @@ f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
 
   ---| Hex_add_rooms_CTF |---
 
-  initial_rooms()
+  initial_row()
+
+  rooms_from_threads()
 
   for cy = HEX_MID_Y - 1, 1, -1 do
     process_row(cy)
