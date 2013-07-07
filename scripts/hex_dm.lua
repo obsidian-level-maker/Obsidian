@@ -40,6 +40,8 @@ class HEXAGON
     thread : THREAD
 
     is_branch   -- true if a thread branched off here
+
+    used_dist   -- distance to nearest used cell
 }
 
 
@@ -194,6 +196,36 @@ function HEXAGON_CLASS.can_join(C, T)
 end
 
 
+function HEXAGON_CLASS.used_dist_from_neighbors(C)
+  local dist
+
+  for i = 1, 6 do
+    local N = C.neighbor[i]
+
+    if N and N.used_dist and
+       (not dist or N.used_dist < dist)
+    then
+      dist = N.used_dist
+    end
+  end
+  
+  return dist
+end
+
+
+function HEXAGON_CLASS.touches_edge(C)
+  for i = 1, 6 do
+    local N = C.neighbor[i]
+
+    if not N or N.kind == "edge" then
+      return true
+    end
+  end
+ 
+  return false
+end
+
+
 function HEXAGON_CLASS.to_brush(C)
   local brush = {}
 
@@ -219,7 +251,7 @@ function HEXAGON_CLASS.build(C)
   local c_h = rand.irange(4,8) * 32
 
 
-  if C.kind == "fedge" or C.kind == "fwall" then --- or C.kind == "free" then
+  if C.kind == "edge" or C.kind == "fwall" then --- or C.kind == "free" then
     local w_brush = C:to_brush()
 
     local w_mat = "ASHWALL4"
@@ -733,18 +765,18 @@ function Hex_trim_leaves()
 
         changes = changes + 1
       end
-   end
-   end
+    end
+    end
+ 
+    return (changes > 0)
+  end
 
-   return changes > 0
- end
 
+  ---| Hex_trim_leaves |---
 
- ---| Hex_trim_leaves |---
-
- while trim_pass() do
-  -- keep going until all nothing changes
- end
+  while trim_pass() do
+    -- keep going until all nothing changes
+  end
 end
 
 
@@ -1036,6 +1068,89 @@ end
 function Hex_shrink_edges()
   -- compute a distance from each used cell.
   -- free cells which touch an edge and are far away become edge cells.
+
+  local top_H = sel(CTF_MODE, HEX_MID_Y - 1, HEX_H)
+
+  local function mark_cells()
+    for cx = 1, HEX_W do
+    for cy = 1, top_H do
+      local C = HEX_MAP[cx][cy]
+
+      if C.kind == "used" then
+        C.used_dist = 0
+      end
+    end
+    end
+  end
+
+
+  local function sweep_cells()
+    local changes = 0
+
+    for cx = 1, HEX_W do
+    for cy = 1, top_H do
+      local C = HEX_MAP[cx][cy]
+
+      if C.kind == "edge" then continue end
+
+      local dist = C:used_dist_from_neighbors()
+
+      if not dist then continue end
+
+      dist = dist + 1
+
+      if not C.used_dist or dist < C.used_dist then
+        C.used_dist = dist
+
+        changes = changes + 1
+      end
+    end
+    end
+
+stderrf("sweep_cells : changes = %d\n", changes)
+    return (changes > 0)
+  end
+
+
+  local function set_edge(C)
+    C.kind = "edge"
+
+    -- FIXME room ??
+  end
+
+
+  local function grow_edges()
+    local changes = 0
+
+    for cx = 1, HEX_W do
+    for cy = 1, top_H do
+      local C = HEX_MAP[cx][cy]
+
+      if C.used_dist and
+         C.used_dist > 3 and
+         C:touches_edge()
+      then
+        set_edge(C)
+
+        C.used_dist = nil
+
+        changes = changes + 1
+      end
+    end
+    end
+
+stderrf("grow_edges : changes = %d\n", changes)
+    return (changes > 0)
+  end
+
+
+  ---| Hex_shrink_edges |---
+
+  mark_cells()
+
+  while sweep_cells() do end
+
+  while grow_edges() do end
 end
 
 
@@ -1056,6 +1171,8 @@ function Hex_create_level()
 
   Hex_plan()
 
+  Hex_shrink_edges()
+
   Hex_add_rooms()
 
   -- Hex_place_stuff()
@@ -1063,8 +1180,6 @@ function Hex_create_level()
   if CTF_MODE then
     Hex_mirror_map()
   end
-
-  Hex_shrink_edges()
 
   Hex_build_all()
 end
