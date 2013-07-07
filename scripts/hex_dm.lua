@@ -1088,7 +1088,7 @@ R.f_mat = "FWATER1"
 
 
   local function process_row(cy)
-    local last_new_room
+    local last_new_room = false
 
     for cx = 1, HEX_W do
       local C = HEX_MAP[cx][cy]
@@ -1098,22 +1098,15 @@ R.f_mat = "FWATER1"
 
       if C.kind == "edge" then continue end
 
-      -- allow a new room to occupy _two_ horizontal spots
-
-      if last_new_room and #last_new_room.cells == 1 and rand.odds(30) then
-        set_room(C, last_new_room)
-        continue
-      end
-
       -- occasionally create a new room (unless last cell was new)
 
       if not last_new_room and rand.odds(15) then
-        last_new_room = new_room()
-        set_room(C, last_new_room)
+        set_room(C, new_room())
+        last_new_room = true
         continue
       end
 
-      last_new_room = nil
+      last_new_room = false
 
       -- otherwise we choose between two above neighbors (diagonals)
 
@@ -1132,22 +1125,13 @@ R.f_mat = "FWATER1"
   end
 
 
-  local function do_merge_room(src, dest)
-stderrf("merging ROOM_%d --> ROOM_%d\n", src.id, dest.id)
-
-    each C in src.cells do
+  local function do_merge_room(R, dest)
+    each C in R.cells do
       set_room(C, dest)
     end
 
-    src.dead  = true
-    src.cells = {}
-
-for cx = 1, HEX_W do
-for cy = 1, HEX_H do
-  local C = HEX_MAP[cx][cy]
-  if C.room == src then error("room with bad cell list") end
-end end
-
+    R.dead  = true
+    R.cells = {}
   end
 
 
@@ -1186,7 +1170,7 @@ end end
 
 
   local function merge_rooms()
-    
+
     -- rooms which are too small get merged into a neighboring room
 
     for idx = #room_list, 1, -1 do
