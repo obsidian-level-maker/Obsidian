@@ -274,6 +274,10 @@ f_h   = 0
 
   if C.content == "ENTITY" then
     entity_helper(C.entity, C.mid_x, C.mid_y, f_h, {})
+  
+  elseif C.thread and not C.trimmed then
+    entity_helper("potion", C.mid_x, C.mid_y, f_h, {})
+
   end
 end
 
@@ -423,13 +427,13 @@ function Hex_starting_area()
 
       C = HEX_MAP[cx1][HEX_MID_Y]
       C.kind = "room"
-      C.content = "ENTITY"
-      C.entity  = "potion"
+--      C.content = "ENTITY"
+--      C.entity  = "potion"
 
       C = HEX_MAP[cx2][HEX_MID_Y]
       C.kind = "room"
-      C.content = "ENTITY"
-      C.entity  = "potion"
+--      C.content = "ENTITY"
+--      C.entity  = "potion"
     end
   end
 end
@@ -960,7 +964,10 @@ f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
 
       assert(N4 or N6)
 
-      if N5 and rand.odds(30) then
+      local T
+      if C.thread and not C.trimmed then T = C.thread end
+
+      if N5 and rand.odds(sel(N5.thread == T, 90, 20)) then
         C.room = N5.room
         continue
       end
@@ -970,7 +977,13 @@ f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
 
       if N4.room == N6.room then C.room = N4.room ; continue end
 
-      C.room = rand.sel(50, N4.room, N6.room)
+      -- tend to prefer the same thread
+      local prob = 50
+
+      if N4.thread == T then prob = prob + 40 end
+      if N6.thread == T then prob = prob - 40 end
+
+      C.room = rand.sel(prob, N4.room, N6.room)
     end
   end
 
@@ -979,7 +992,7 @@ f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
 
   initial_row()
 
-  rooms_from_threads()
+--  rooms_from_threads()
 
   for cy = HEX_MID_Y - 1, 1, -1 do
     process_row(cy)
