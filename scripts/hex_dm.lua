@@ -27,7 +27,7 @@ class HEXAGON
     kind : keyword   -- "free", "used"
                      -- "edge", "wall"
 
-    content : keyword  -- "START", "WEAPON", ...
+    content : keyword  -- "START", "WEAPON", "FLAG", ...
 
     neighbor[HDIR] : HEXAGON   -- neighboring cells
                                -- will be NIL at edge of map
@@ -73,6 +73,8 @@ class ROOM
     id : number
 
     cells : list(HEXAGON)
+
+    flag_room : boolean
 }
 
 
@@ -251,7 +253,7 @@ function HEXAGON_CLASS.build(C)
   local c_h = rand.irange(4,8) * 32
 
 
-  if C.kind == "edge" or C.kind == "fwall" then --- or C.kind == "free" then
+  if C.kind == "fedge" or C.kind == "fwall" then --- or C.kind == "free" then
     local w_brush = C:to_brush()
 
     local w_mat = "ASHWALL4"
@@ -310,10 +312,17 @@ f_h   = 0
     end
   end
 
+
+  if C.content == "FLAG" then
+    local ent = sel(C.cy < HEX_MID_Y, "blue_torch", "red_torch")
+    entity_helper(ent, C.mid_x, C.mid_y, f_h, {})
+  end
+
+
   if C.content == "ENTITY" then
     entity_helper(C.entity, C.mid_x, C.mid_y, f_h, {})
   
-  elseif C.thread and not C.trimmed then
+  elseif C.thread and not C.trimmed and not C.content then
     entity_helper("potion", C.mid_x, C.mid_y, f_h, {})
 
   end
@@ -864,7 +873,9 @@ function Hex_add_rooms_CTF()
   --
   --   1. setup rooms on the middle row
   --
-  --   2. process each row away from that, pick room for each cell
+  --   2. pick location for flag room
+  --
+  --   3. process each row away from that, pick room for each cell
   --      and occasionally create new rooms
   --
 
@@ -942,7 +953,79 @@ f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
   end
 
 
-  local function rooms_from_threads()
+  local function bottom_cell_in_column(cx)
+    for cy = 1, HEX_MID_Y - 8 do
+      local C = HEX_MAP[cx][cy]
+
+      if C.kind == "used" then return cy end
+    end
+
+    return nil  -- none at all
+  end
+
+
+  local function pick_flag_pos()
+    local cx, cy
+
+    repeat
+      cx = math.random(1 + 2, HEX_W - 3)
+    
+      cy = bottom_cell_in_column(cx)
+    until cy
+
+    return cx, cy
+  end
+
+
+  local function plant_the_flag()
+    -- determine middle of flag room
+    -- (pick lowest of two tries)
+
+    local cx,  cy  = pick_flag_pos()
+    local cx2, cy2 = pick_flag_pos()
+
+    if cy2 < cy then
+      cx, cy = cx2, cy2
+    end
+
+
+    -- apply a vertical adjustment
+
+    if cy == 1 then cy = cy + 1 end
+
+    if cy > 2 and rand.odds(35) then cy = cy - 1 end
+
+        if rand.odds(10) then cy = cy + 2
+    elseif rand.odds(35) then cy = cy + 1
+    end
+
+
+    -- create the room
+
+    local R = new_room()
+
+    R.flag_room = true
+
+    local C = HEX_MAP[cx][cy]
+
+    C.room = R
+
+    for dir = 1,6 do
+      C.neighbor[dir].room = R
+    end
+
+
+    -- mark location of flag
+
+    local fy = cy - rand.sel(40, 1, 0)
+
+    local F = HEX_MAP[cx][fy]
+
+    F.content = "FLAG"
+  end
+
+
+  local function rooms_from_threads()  -- NOT USED
     for cx = 1, HEX_W do
     for cy = 1, HEX_MID_Y - 1 do
       local C = HEX_MAP[cx][cy]
@@ -1027,6 +1110,8 @@ f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
 
   initial_row()
 
+  plant_the_flag()
+
 --  rooms_from_threads()
 
   for cy = HEX_MID_Y - 1, 1, -1 do
@@ -1060,6 +1145,9 @@ function Hex_mirror_map()
 
     D.kind = C.kind
     D.room = C.room
+
+    D.content = C.content
+    D.entity  = C.entity
   end
   end
 end
