@@ -24,7 +24,7 @@ class HEXAGON
 {
     cx, cy   -- position in cell map
 
-    kind : keyword   -- "free", "thread", "room"
+    kind : keyword   -- "free", "used"
                      -- "edge", "wall"
 
     content : keyword  -- "START", "WEAPON", ...
@@ -47,12 +47,12 @@ class THREAD
 {
     id : number
 
-    start : HEXAGON   -- starting place (in an existing "room" cell)
+    start : HEXAGON   -- starting place (in an existing "used" cell)
 
-    target : HEXAGON  -- ending place (an existing "room" cell)
+    target : HEXAGON  -- ending place (an existing "used" cell)
     target_dir : dir  -- direction OUT of that cell
 
-    pos : HEXAGON  -- last cell "converted" to this thread
+    pos : HEXAGON  -- last cell 'converted' to this thread
 
     dir : HDIR  -- current direction
 
@@ -136,6 +136,13 @@ function HEXAGON_CLASS.tostr(C)
 end
 
 
+function HEXAGON_CLASS.is_active(C)
+  if not C.thread then return false end
+
+  return not C.thread.dead
+end
+
+
 function HEXAGON_CLASS.free_neighbors(C)
   local count = 0
 
@@ -157,7 +164,7 @@ function HEXAGON_CLASS.is_leaf(C)
   for dir = 1, 6 do
     local N = C.neighbor[dir]
 
-    if N and (N.kind == "room" or N.kind == "thread") then
+    if N and N.kind == "used" then
       count = count + 1
     end
   end
@@ -171,20 +178,19 @@ end
 
 
 function HEXAGON_CLASS.can_join(C, T)
-  local hit_room = false
+  local hit_used = false
 
   for i = 1, 6 do
     local N = C.neighbor[i]
 
     -- a thread cannot join onto itself
 
-    if (N.kind == "room" or N.kind == "thread") and N.thread != T
-    then
-      hit_room = true
+    if N.kind == "used" and N.thread != T then
+      hit_used = true
     end
   end
 
-  return hit_room
+  return hit_used
 end
 
 
@@ -239,7 +245,7 @@ if not C.room then C.room = { f_mat="COMPSPAN" } end
       f_mat = "NUKAGE1"
       f_h   = -16
 
-    elseif C.kind == "room" then
+    elseif C.kind == "used" then
       f_mat = "COMPBLUE"
     else
       f_mat = "GRAY7"
@@ -410,7 +416,7 @@ function Hex_starting_area()
 
   local C = HEX_MAP[LEVEL.start_cx][LEVEL.start_cy]
 
-  C.kind = "room"
+  C.kind = "used"
   C.content = "START"
 
 
@@ -426,12 +432,12 @@ function Hex_starting_area()
       end
 
       C = HEX_MAP[cx1][HEX_MID_Y]
-      C.kind = "room"
+      C.kind = "used"
 --      C.content = "ENTITY"
 --      C.entity  = "potion"
 
       C = HEX_MAP[cx2][HEX_MID_Y]
-      C.kind = "room"
+      C.kind = "used"
 --      C.content = "ENTITY"
 --      C.entity  = "potion"
     end
@@ -479,9 +485,9 @@ function Hex_make_cycles()
 
       if C.no_start then continue end
 
-      if not (C.kind == "room" or
-              (C.kind == "thread" and C.thread.dead))
-      then continue end
+      if not (C.kind == "used" and not C:is_active()) then
+        continue
+      end
 
       if C:free_neighbors() < 3 then continue end
 
@@ -509,7 +515,7 @@ function Hex_make_cycles()
 
 
   local function do_grow_thread(T, dir, N)
-    N.kind = "thread"
+    N.kind = "used"
     N.thread = T
 
     T.pos = N
@@ -610,9 +616,6 @@ function Hex_make_cycles()
 
   local function grow_a_thread(T)
     if T.limit <= 0 then
-      -- turn into a room when reached the end
-      T.pos.kind = "room"
-
       T.dead = true
 
       -- debug crud...
@@ -716,7 +719,7 @@ function Hex_trim_leaves()
     for cy = 1, HEX_H do
       local C = HEX_MAP[cx][cy]
 
-      if not (C.kind == "room" or C.kind == "thread") then
+      if C.kind != "used" then
         continue
       end
 
@@ -773,7 +776,7 @@ function Hex_check_map_is_valid()
   for cy = 1, HEX_H do
     local C = HEX_MAP[cx][cy]
 
-    if C.kind == "room" or C.kind == "thread" then
+    if C.kind == "used" then
       count = count + 1
 
       cx_min = math.min(cx, cx_min)
@@ -1030,6 +1033,12 @@ function Hex_mirror_map()
 end
 
 
+function Hex_shrink_edges()
+  -- compute a distance from each used cell.
+  -- free cells which touch an edge and are far away become edge cells.
+end
+
+
 function Hex_build_all()
   for cx = 1, HEX_W do
   for cy = 1, HEX_H do
@@ -1054,6 +1063,8 @@ function Hex_create_level()
   if CTF_MODE then
     Hex_mirror_map()
   end
+
+  Hex_shrink_edges()
 
   Hex_build_all()
 end
