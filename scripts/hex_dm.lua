@@ -275,7 +275,7 @@ if not C.room then C.room = { f_mat="COMPSPAN" } end
 
     assert(C.room)
 
-    if C.kind == "free" then
+    if C.kind == "free" or C.trimmed then --- TEMP
       f_mat = "NUKAGE1"
       f_h   = -16
 
@@ -322,7 +322,7 @@ f_h   = 0
   if C.content == "ENTITY" then
     entity_helper(C.entity, C.mid_x, C.mid_y, f_h, {})
   
-  elseif C.thread and not C.trimmed and not C.content then
+  else  --[[ if C.thread and not C.trimmed and not C.content then --]]
     entity_helper("potion", C.mid_x, C.mid_y, f_h, {})
 
   end
@@ -879,6 +879,8 @@ function Hex_add_rooms_CTF()
   --      and occasionally create new rooms
   --
 
+  local room_list = {}
+
   local function new_room()
     local ROOM =
     {
@@ -897,6 +899,8 @@ f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
                     })
     }
 
+    table.insert(room_list, ROOM)
+
     return ROOM
   end
 
@@ -904,7 +908,7 @@ f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
   local function set_room(C, room)
     C.room = room
 
-    table.insert(room.cells, c)
+    table.insert(room.cells, C)
 
     if C.thread and not C.thread.room then
       C.thread.room = room
@@ -1008,15 +1012,13 @@ f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
 R.f_mat = "FWATER1"
 
     local C = HEX_MAP[cx][cy]
-
     C.kind = "used"
-    C.room = R
+    set_room(C, R)
 
     for dir = 1,6 do
       local N = C.neighbor[dir]
-      
       N.kind = "used"
-      N.room = R
+      set_room(N, R)
     end
 
 
@@ -1091,7 +1093,7 @@ R.f_mat = "FWATER1"
       if C.thread and not C.trimmed then T = C.thread end
 
       if N5 and rand.odds(sel(N5.thread == T, 90, 20)) then
-        C.room = N5.room
+        set_room(C, N5.room)
         continue
       end
 
@@ -1106,7 +1108,79 @@ R.f_mat = "FWATER1"
       if N4.thread == T then prob = prob + 40 end
       if N6.thread == T then prob = prob - 40 end
 
-      C.room = rand.sel(prob, N4.room, N6.room)
+      set_room(C, rand.sel(prob, N4.room, N6.room))
+    end
+  end
+
+
+  local function do_merge_room(src, dest)
+    each C in src.cells do
+      set_room(C, dest)
+    end
+
+    src.dead  = true
+    src.cells = {}
+  end
+
+
+  local function neighbor_for_merge(R)
+    local best
+
+stderrf("neighbor_for_merge  R = ROOM_%d  cells:%d\n", R.id, #R.cells)
+    each C in R.cells do
+stderrf("%s\n", C:tostr())
+      for dir = 1, 6 do
+        local N = C.neighbor[dir]
+
+        if not (N and N.room) then continue end
+
+        local R2 = N.room
+assert(R2)
+stderrf("  DIR:%d = ROOM_%d\n", dir, R2.id)
+
+        if (R2 == R) or (R2 == best) then continue end
+
+        if not best then
+          best = R2
+assert(best)
+          continue
+        end
+
+        -- pick the smallest neighbor
+        if #R2.cells > #best.cells then continue end
+
+        if #R2.cells == #best.cells and rand.odds(50) then continue end
+
+        best = R2
+      end
+    end
+
+    -- TODO: be more robust ??
+
+    return assert(best)
+  end
+
+
+  local function merge_rooms()
+    
+    -- rooms which are too small get merged into a neighboring room
+
+    for idx = #room_list, 1, -1 do
+      local R = room_list[idx]
+
+      assert(not R.dead)
+
+      if R.flag_room then continue end
+
+      if #R.cells >= 4 then continue end
+
+      local N = neighbor_for_merge(R)
+
+      assert(not N.dead)
+
+      do_merge_room(R, N)
+
+      table.remove(room_list, idx)
     end
   end
 
@@ -1117,10 +1191,12 @@ R.f_mat = "FWATER1"
 
   plant_the_flag()
 
---  rooms_from_threads()
-
   for cy = HEX_MID_Y - 1, 1, -1 do
     process_row(cy)
+  end
+
+  for loop = 1, 2 do
+    merge_rooms()
   end
 end
 
@@ -1184,8 +1260,6 @@ function Hex_shrink_edges()
     for cy = 1, top_H do
       local C = HEX_MAP[cx][cy]
 
-      if C.kind == "edge" then continue end
-
       local dist = C:used_dist_from_neighbors()
 
       if not dist then continue end
@@ -1206,8 +1280,6 @@ function Hex_shrink_edges()
 
   local function set_edge(C)
     C.kind = "edge"
-
-    -- FIXME room ??
   end
 
 
@@ -1218,13 +1290,13 @@ function Hex_shrink_edges()
     for cy = 1, top_H do
       local C = HEX_MAP[cx][cy]
 
+      if C.kind == "edge" then continue end
+
       if C.used_dist and
          C.used_dist > 3 and
          C:touches_edge()
       then
         set_edge(C)
-
-        C.used_dist = nil
 
         changes = changes + 1
       end
