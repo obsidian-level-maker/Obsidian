@@ -213,12 +213,14 @@ function HEXAGON_CLASS.build(C)
   local c_h = rand.irange(4,8) * 32
 
 
-  if C.kind == "edge" or C.kind == "wall" then --- or C.kind == "free" then
+  if C.kind == "fedge" or C.kind == "fwall" then --- or C.kind == "free" then
     local w_brush = C:to_brush()
 
     local w_mat = "ASHWALL4"
 
     if C.kind == "free" then w_mat = "COMPSPAN" end
+
+if C.room then w_mat = C.room.f_mat end
 
     Brush_set_mat(w_brush, w_mat, w_mat)
 
@@ -228,6 +230,8 @@ function HEXAGON_CLASS.build(C)
 
 --    local f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "STARTAN3",
 --                              "TEKGREN2", "BROWN1" })
+
+if not C.room then C.room = { f_mat="COMPSPAN" } end
 
     assert(C.room)
 
@@ -240,6 +244,9 @@ function HEXAGON_CLASS.build(C)
     else
       f_mat = "GRAY7"
     end
+
+f_mat = C.room.f_mat
+f_h   = 0
 
     Brush_add_top(f_brush, f_h)
     Brush_set_mat(f_brush, f_mat, f_mat)
@@ -826,6 +833,17 @@ function Hex_add_rooms_CTF()
       id = Plan_alloc_id("hex_room")
 
       cells = {}
+
+f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
+                    "TEKGREN2", "BROWN1", "BIGBRIK1",
+                    "ASHWALL2", "ASHWALL4",
+                    "FLAT14", "FLAT1_1", "FLAT2", "FLAT5_3",
+                    "FLAT22", "FLAT4", "FLOOR1_7", "GATE1",
+                    "FLOOR4_8", "LAVA1", "FWATER1", "NUKAGE1",
+                    "GRNLITE1", "TLITE6_5", "STEP1", "SLIME09",
+                    "SFLR6_1", "RROCK19", "RROCK17", "RROCK13",
+                    "RROCK04", "RROCK02"
+                    })
     }
 
     return ROOM
@@ -852,13 +870,9 @@ function Hex_add_rooms_CTF()
 
       if C.kind == "edge" then continue end
 
-      if last_room then
-        local prob = 75 - 50 * (#last_room.cells - 1)
-
-        if prob > 0 and rand.odds(prob) then
-          set_room(C, last_room)
-          continue
-        end
+      if last_room and #last_room.cells == 1 and rand.odds(50) then
+        set_room(C, last_room)
+        continue
       end
 
       last_room = new_room()
@@ -900,7 +914,7 @@ function Hex_add_rooms_CTF()
 
       -- occasionally create a new room (unless last cell was new)
 
-      if not last_new_room and rand.odds(5) then
+      if not last_new_room and rand.odds(10) then
         last_new_room = new_room()
         set_room(C, last_new_room)
         continue
@@ -910,22 +924,29 @@ function Hex_add_rooms_CTF()
 
       -- otherwise we choose between two above neighbors (diagonals)
 
-      local N1 = C.neighbor[4]
-      local N2 = C.neighbor[6]
+      local N4 = C.neighbor[4]
+      local N5 = C.neighbor[5]
+      local N6 = C.neighbor[6]
 
-      if N1 and N1.kind == "edge" then N1 = nil end
-      if N2 and N2.kind == "edge" then N2 = nil end
+      if N4 and not N4.room then N4 = nil end
+      if N5 and not N5.room then N5 = nil end
+      if N6 and not N6.room then N6 = nil end
 
-      assert(N1 or N2)
+      assert(N4 or N6)
 
-      if not N1 then C.room = N2.room ; continue end
-      if not N2 then C.room = N1.room ; continue end
+      if N5 and rand.odds(30) then
+        C.room = N5.room
+        continue
+      end
 
-      if N1.room == N2.room then C.room = N1.room ; continue end
+      if not N4 then C.room = N6.room ; continue end
+      if not N6 then C.room = N4.room ; continue end
+
+      if N4.room == N6.room then C.room = N4.room ; continue end
 
       -- FIXME !!!
 
-      C.room = rand.sel(50, N1.room, N2.room)
+      C.room = rand.sel(50, N4.room, N6.room)
     end
   end
 
