@@ -253,7 +253,7 @@ function HEXAGON_CLASS.build(C)
   local c_h = rand.irange(4,8) * 32
 
 
-  if C.kind == "fedge" or C.kind == "fwall" then --- or C.kind == "free" then
+  if C.kind == "edge" or C.kind == "fwall" then --- or C.kind == "free" then
     local w_brush = C:to_brush()
 
     local w_mat = "ASHWALL4"
@@ -888,10 +888,9 @@ function Hex_add_rooms_CTF()
 
 f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
                     "TEKGREN2", "BROWN1", "BIGBRIK1",
-                    "ASHWALL2", "ASHWALL4",
+                    "ASHWALL2", "ASHWALL4", "FLOOR4_8",
                     "FLAT14", "FLAT1_1", "FLAT2", "FLAT5_3",
                     "FLAT22", "FLAT4", "FLOOR1_7", "GATE1",
-                    "FLOOR4_8", "LAVA1", "FWATER1", "NUKAGE1",
                     "GRNLITE1", "TLITE6_5", "STEP1", "SLIME09",
                     "SFLR6_1", "RROCK19", "RROCK17", "RROCK13",
                     "RROCK04", "RROCK02"
@@ -991,12 +990,12 @@ f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
 
     -- apply a vertical adjustment
 
-    if cy == 1 then cy = cy + 1 end
+    while cy < 4 do cy = cy + 2 end
 
-    if cy > 2 and rand.odds(35) then cy = cy - 1 end
+    if cy >= 6 and rand.odds(35) then cy = cy - 2 end
 
-        if rand.odds(10) then cy = cy + 2
-    elseif rand.odds(35) then cy = cy + 1
+        if rand.odds(10) then cy = cy + 4
+    elseif rand.odds(35) then cy = cy + 2
     end
 
 
@@ -1006,18 +1005,24 @@ f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
 
     R.flag_room = true
 
+R.f_mat = "FWATER1"
+
     local C = HEX_MAP[cx][cy]
 
+    C.kind = "used"
     C.room = R
 
     for dir = 1,6 do
-      C.neighbor[dir].room = R
+      local N = C.neighbor[dir]
+      
+      N.kind = "used"
+      N.room = R
     end
 
 
     -- mark location of flag
 
-    local fy = cy - rand.sel(40, 1, 0)
+    local fy = cy - rand.sel(40, 2, 0)
 
     local F = HEX_MAP[cx][fy]
 
@@ -1195,7 +1200,6 @@ function Hex_shrink_edges()
     end
     end
 
-stderrf("sweep_cells : changes = %d\n", changes)
     return (changes > 0)
   end
 
@@ -1227,7 +1231,6 @@ stderrf("sweep_cells : changes = %d\n", changes)
     end
     end
 
-stderrf("grow_edges : changes = %d\n", changes)
     return (changes > 0)
   end
 
