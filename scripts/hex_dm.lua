@@ -46,10 +46,7 @@ class HEXAGON
 
     is_branch   -- true if a thread branched off here
 
-    used_dist   -- distance to nearest used cell
-
-    base : keyword  -- "red" or "blue" if part of a team's base
-                    -- NIL for the neutral zone
+    used_dist   -- distance to nearest used cell  [for shrink_edges]
 }
 
 
@@ -85,6 +82,9 @@ class ROOM
     peer : ROOM   -- opposite room when level is mirrored (CTF)
 
     flag_room : boolean
+
+    base : keyword  -- "red" or "blue" if part of a team's base
+                    -- unset for the neutral zone
 }
 
 
@@ -352,8 +352,8 @@ f_mat = C.room.f_mat
 f_h   = 0
 
 f_mat = "COMPSPAN"
-if C.base == "red"  then f_mat = "REDWALL" end
-if C.base == "blue" then f_mat = "COMPBLUE" end
+if C.room.base == "red"  then f_mat = "REDWALL" end
+if C.room.base == "blue" then f_mat = "COMPBLUE" end
 C.room.f_mat = f_mat
 
 
@@ -402,7 +402,7 @@ C.room.f_mat = f_mat
   if C.content == "ENTITY" then
     entity_helper(C.entity, C.mid_x, C.mid_y, f_h, {})
   
-  elseif C.thread and not C.trimmed and not C.content then
+  elseif C.kind == "used" then
     entity_helper("potion", C.mid_x, C.mid_y, f_h, {})
 
   end
@@ -425,7 +425,7 @@ function HEX_ROOM_CLASS.new()
 f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
                     "TEKGREN2", "BROWN1", "BIGBRIK1",
                     "ASHWALL2", "ASHWALL4", "FLOOR4_8",
-                    "FLAT14", "FLAT1_1", "FLAT2", "FLAT5_3",
+                    "FLAT1_1", "FLAT2",
                     "FLAT22", "FLAT4", "FLOOR1_7", "GATE1",
                     "GRNLITE1", "TLITE6_5", "STEP1", "SLIME09",
                     "SFLR6_1", "RROCK19", "RROCK17", "RROCK13",
@@ -450,6 +450,7 @@ end
 
 
 function HEX_ROOM_CLASS.tostr(R)
+assert(R.id)
   if R.id < 0 then
     return string.format("MIRROR_%d", 0 - R.id)
   else
@@ -1001,8 +1002,6 @@ function Hex_check_map_is_valid()
 
   -- generic size / volume checks
 
-  -- TODO: consider counting "branch" cells
-
   local cx_min, cx_max = 999, -999
   local cy_min, cy_max = 999, -999
 
@@ -1346,13 +1345,12 @@ R.f_mat = "FWATER1"
       local R = room_list[idx]
 
       if not is_room_used(R) then
+        -- TODO: turn into a LAKE (sometimes)
         R:kill()
         table.remove(room_list, idx)
       end
     end
   end
-
-
 
 
   ---| Hex_add_rooms_CTF |---
@@ -1370,10 +1368,6 @@ R.f_mat = "FWATER1"
   end
 
   kill_unused_rooms()
-
-local C = HEX_MAP[HEX_W - 3][HEX_MID_Y - 4]
-stderrf("@@ %s : ROOM_%s\n", C:tostr(), tostring(C.room and C.room.id))
-
 end
 
 
@@ -1405,9 +1399,6 @@ function Hex_mirror_map()
 
     D.content = C.content
     D.entity  = C.entity
-
-    if C.base == "red"  then D.base = "blue" end
-    if C.base == "blue" then D.base = "red"  end
 
     C.peer = D
     D.peer = C
@@ -1504,12 +1495,12 @@ function Hex_recollect_rooms()
   -- After mirroring the level, a "room" may consist of two separate
   -- pieces.  Here we reconstitute the rooms from contiguous areas.
   --
-  
+
   local function setup()
     -- rename the 'room' fields
 
     for cx = 1, HEX_W do
-    for cy = 1, top_H do
+    for cy = 1, HEX_H do
       local C = HEX_MAP[cx][cy]
 
       C.old_room = C.room
@@ -1541,6 +1532,8 @@ function Hex_recollect_rooms()
 
   local function recreate_room_from_cell(C)
     local R = HEX_ROOM_CLASS.copy(C.old_room)
+
+    table.insert(LEVEL.rooms, R)
 
     R:add_cell(C)
 
@@ -1581,8 +1574,8 @@ function Hex_recollect_rooms()
 
   setup()
 
+  for cy = 1, HEX_H do
   for cx = 1, HEX_W do
-  for cy = 1, top_H do
     local C = HEX_MAP[cx][cy]
 
     if C.old_room and not C.room then
@@ -1595,7 +1588,7 @@ function Hex_recollect_rooms()
 
   -- validate : check we recreated all rooms
   for cx = 1, HEX_W do
-  for cy = 1, top_H do
+  for cy = 1, HEX_H do
     local C = HEX_MAP[cx][cy]
 
     if C.old_room then assert(C.room) end
@@ -1606,42 +1599,32 @@ end
 
 function Hex_assign_bases()
 
+  -- decide which rooms are part of a team's base
 
-  local function assign_bases()
-    -- decide which rooms are part of a team's base
+  local top_Y  = int((HEX_MID_Y - 1) * rand.pick({ 0.6, 0.8, 1.0 }))
+  local left_X = int((HEX_MID_X - 1) * rand.pick({ 0,   0.7, 1.0 }))
+  local right_X = HEX_W + 1
 
-    local top_Y  = int((HEX_MID_Y - 1) * rand.pick({    0.6, 0.8, 1.0 }))
-    local left_X = int((HEX_MID_X - 1) * rand.pick({ 0, 0.6, 0.8, 1.0 }))
-    local right_X = HEX_W + 1
-
-    if rand.odds(50) then
-      right_X = HEX_W + 1 - left_X
-      left_X  = -1
-    end
+  if rand.odds(50) then
+    right_X = HEX_W + 1 - left_X
+    left_X  = -1
+  end
 stderrf("top_Y:%d  left_X:%d  right_X:%d\n", top_Y, left_X, right_X)
 
-    each R in room_list do
-      if R.flag_room or
-         R.max_cy <= top_Y or
-         R.max_cx <= left_X or
-         R.min_cx >= right_X
-      then
-        R.is_base = true
-      end
-    end
+  each R in LEVEL.rooms do
+    if not R.peer then continue end
 
-    -- ROOM tables are shared on both sides of the map, hence cannot
-    -- assign a "red" or "blue" value to them directly.
+    -- already done?
+    if R.base then continue end
 
-    each R in room_list do
-      if R.is_base then
-        each C in R.cells do
-          C.base = "blue"
-        end
-      end
+    if R.max_cy <= top_Y or
+       R.max_cx <= left_X or
+       R.min_cx >= right_X
+    then
+      R.base = "blue"
+      R.peer.base = "red"
     end
   end
-
 end
 
 
