@@ -360,7 +360,7 @@ C.room.f_mat = f_mat
     Brush_add_top(f_brush, f_h)
     Brush_set_mat(f_brush, f_mat, f_mat)
 
----###  f_brush[#f_brush].tex = "ROOM" .. ((C.room and C.room.id) or 0)
+---### f_brush[#f_brush].tex = "ROOM" .. ((C.old_room and C.old_room.id) or 0)
 
     brush_helper(f_brush)
 
@@ -499,9 +499,21 @@ function HEX_ROOM_CLASS.calc_bbox(R)
 end
 
 
+function HEX_ROOM_CLASS.dump_cells(R)
+  stderrf("Cells for %s :\n", R:tostr())
+  stderrf("{\n")
+
+  each C in R.cells do
+    stderrf("  %s\n", C:tostr())
+  end
+
+  stderrf("}\n")
+end
+
+
 function HEX_ROOM_CLASS.dump_bbox(R)
   if R.min_cx then
-    stderrf("bbox for %s : NONE!\n")
+    stderrf("bbox for %s : NONE!\n", R:tostr())
   else
     stderrf("bbox for %s : (%d %d) .. (%d %d)\n",
              R:tostr(), R.min_cx, R.min_cy, R.max_cx, R.max_cy)
@@ -1061,6 +1073,35 @@ function Hex_plan()
 end
 
 
+----------------------------------------------------------------
+
+
+function Hex_kill_unused_rooms(list)
+
+  -- remove rooms which don't contain a planned pathway
+
+  local function is_room_used(R)
+    each C in R.cells do
+      if C.kind == "used" then return true end
+    end
+
+    return false
+  end
+
+  ---| Hex_kill_unused_rooms |---
+
+  for idx = #list, 1, -1 do
+    local R = list[idx]
+
+    if not is_room_used(R) then
+      -- TODO: turn into a LAKE (sometimes)
+      R:kill()
+      table.remove(list, idx)
+    end
+  end
+end
+
+
 function Hex_add_rooms_CTF()
   --
   -- Algorithm:
@@ -1329,30 +1370,6 @@ R.f_mat = "FWATER1"
   end
 
 
-  local function is_room_used(R)
-    each C in R.cells do
-      if C.kind == "used" then return true end
-    end
-
-    return false
-  end
-
-
-  local function kill_unused_rooms()
-    -- remove rooms which don't contain a planned pathway
-
-    for idx = #room_list, 1, -1 do
-      local R = room_list[idx]
-
-      if not is_room_used(R) then
-        -- TODO: turn into a LAKE (sometimes)
-        R:kill()
-        table.remove(room_list, idx)
-      end
-    end
-  end
-
-
   ---| Hex_add_rooms_CTF |---
 
   initial_row()
@@ -1367,7 +1384,7 @@ R.f_mat = "FWATER1"
     merge_rooms()
   end
 
-  kill_unused_rooms()
+  Hex_kill_unused_rooms(room_list)
 end
 
 
@@ -1594,6 +1611,10 @@ function Hex_recollect_rooms()
     if C.old_room then assert(C.room) end
   end
   end
+
+  -- due to separation, some rooms are now unvisitible : kill 'em!
+
+  Hex_kill_unused_rooms(LEVEL.rooms)
 end
 
 
