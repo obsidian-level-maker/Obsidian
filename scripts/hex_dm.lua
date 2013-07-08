@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  HEXAGONAL DEATH-MATCH
+--  HEXAGONAL DEATH-MATCH / CTF
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -25,7 +25,7 @@ class HEXAGON
     cx, cy   -- position in cell map
 
     kind : keyword   -- "free", "used"
-                     -- "edge", "wall"
+                     -- "edge", "wall", "dead"
 
     content : keyword  -- "START", "WEAPON", "FLAG", ...
 
@@ -38,6 +38,9 @@ class HEXAGON
     vertex[HDIR] : { x=#, y=# }  -- leftmost vertex for each edge
 
     wall_vert[HDIR] : { x=#, y=# }
+
+    peer : HEXAGON  -- in CTF mode, this is the cell on opposite
+                    -- side of the map
 
     thread : THREAD
 
@@ -75,9 +78,11 @@ class THREAD
 
 class ROOM
 {
-    id : number
+    id : number  -- normally > 0, negative for a mirrored room
 
     cells : list(HEXAGON)
+
+    peer : ROOM   -- opposite room when level is mirrored (CTF)
 
     flag_room : boolean
 }
@@ -309,7 +314,7 @@ function HEXAGON_CLASS.build(C)
   local c_h = rand.irange(4,8) * 32
 
 
-  if C.kind == "edge" or C.kind == "fwall" then --- or C.kind == "free" then
+  if C.kind == "edge" or C.kind == "wall" or C.kind == "dead" then --- or C.kind == "free" then
     local w_brush = C:to_brush()
 
     local w_mat = "ASHWALL4"
@@ -400,6 +405,43 @@ C.room.f_mat = f_mat
   elseif C.thread and not C.trimmed and not C.content then
     entity_helper("potion", C.mid_x, C.mid_y, f_h, {})
 
+  end
+end
+
+
+----------------------------------------------------------------
+
+
+HEX_ROOM_CLASS = {}
+
+function HEX_ROOM_CLASS.new()
+  local R =
+  {
+    id = Plan_alloc_id("hex_room")
+
+    cells = {}
+
+-- TEMP DEBUG STUFF
+f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
+                    "TEKGREN2", "BROWN1", "BIGBRIK1",
+                    "ASHWALL2", "ASHWALL4", "FLOOR4_8",
+                    "FLAT14", "FLAT1_1", "FLAT2", "FLAT5_3",
+                    "FLAT22", "FLAT4", "FLOOR1_7", "GATE1",
+                    "GRNLITE1", "TLITE6_5", "STEP1", "SLIME09",
+                    "SFLR6_1", "RROCK19", "RROCK17", "RROCK13",
+                    "RROCK04", "RROCK02"
+                    })
+  }
+  table.set_class(R, HEX_ROOM_CLASS)
+  return R
+end
+
+
+function HEX_ROOM_CLASS.tostr(R)
+  if R.id < 0 then
+    return string.format("MIRROR_%d", 0 - R.id)
+  else
+    return string.format("ROOM_%d", R.id)
   end
 end
 
@@ -857,7 +899,7 @@ function Hex_trim_leaves()
 
       if C:is_leaf() then
       
-        C.kind = "wall"
+        C.kind = "free"
         C.content = nil
         C.trimmed = true
 
@@ -973,22 +1015,7 @@ function Hex_add_rooms_CTF()
   local room_list = {}
 
   local function new_room()
-    local ROOM =
-    {
-      id = Plan_alloc_id("hex_room")
-
-      cells = {}
-
-f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
-                    "TEKGREN2", "BROWN1", "BIGBRIK1",
-                    "ASHWALL2", "ASHWALL4", "FLOOR4_8",
-                    "FLAT14", "FLAT1_1", "FLAT2", "FLAT5_3",
-                    "FLAT22", "FLAT4", "FLOOR1_7", "GATE1",
-                    "GRNLITE1", "TLITE6_5", "STEP1", "SLIME09",
-                    "SFLR6_1", "RROCK19", "RROCK17", "RROCK13",
-                    "RROCK04", "RROCK02"
-                    })
-    }
+    local ROOM = HEX_ROOM_CLASS.new()
 
     table.insert(room_list, ROOM)
 
@@ -1208,7 +1235,7 @@ R.f_mat = "FWATER1"
 
   local function do_kill_room(R)
     each C in R.cells do
-      C.kind = "edge"
+      C.kind = "dead"
     end
     
     R.dead  = true
@@ -1425,6 +1452,9 @@ function Hex_mirror_map()
 
     if C.base == "red"  then D.base = "blue" end
     if C.base == "blue" then D.base = "red"  end
+
+    C.peer = D
+    D.peer = C
   end
   end
 end
@@ -1510,6 +1540,60 @@ function Hex_shrink_edges()
   while sweep_cells() do end
 
   while grow_edges() do end
+end
+
+
+function Hex_recollect_rooms()
+  --
+  -- After mirroring the level, a "room" may consist of two separate
+  -- pieces.  Here we reconstitute rooms from contiguous areas.
+  --
+  
+  local function setup()
+    -- rename the 'room' fields
+
+    for cx = 1, HEX_W do
+    for cy = 1, top_H do
+      local C = HEX_MAP[cx][cy]
+
+      C.old_room = C.room
+      C.room     = nil
+    end
+    end
+  end
+
+
+  local function grow_room(R)
+    local changes = 0
+
+    for idx = 1, #R.cells do
+      local C = R.cells[idx]
+
+      for dir = 1, 6 do
+        local N = C.neighbor[dir]
+
+        if N and not N.room and N.old_room == C.old_room then
+          R:add_cell(N)
+          changes = changes + 1
+        end
+      end
+    end
+
+    return (changes > 0)
+  end
+
+
+  local function recreate_room_from_cell(C)
+
+  end
+
+  ---| Hex_recollect_rooms |---
+
+end
+
+
+function Hex_assign_bases()
+
 end
 
 
