@@ -44,6 +44,9 @@ class HEXAGON
     is_branch   -- true if a thread branched off here
 
     used_dist   -- distance to nearest used cell
+
+    base : keyword  -- "red" or "blue" if part of a team's base
+                    -- NIL for the neutral zone
 }
 
 
@@ -342,6 +345,12 @@ if not C.room then C.room = { f_mat="COMPSPAN" } end
 
 f_mat = C.room.f_mat
 f_h   = 0
+
+f_mat = "COMPSPAN"
+if C.base == "red"  then f_mat = "REDWALL" end
+if C.base == "blue" then f_mat = "COMPBLUE" end
+C.room.f_mat = f_mat
+
 
     Brush_add_top(f_brush, f_h)
     Brush_set_mat(f_brush, f_mat, f_mat)
@@ -1277,6 +1286,52 @@ R.f_mat = "FWATER1"
   end
 
 
+  local function room_bboxes()
+    each R in room_list do
+      each C in R.cells do
+        local cx, cy = C.cx, C.cy
+
+        R.min_cx = math.min(R.min_cx or 999, cx)
+        R.min_cy = math.min(R.min_cy or 999, cy)
+
+        R.max_cx = math.max(R.max_cx or 0, cx)
+        R.max_cy = math.max(R.max_cy or 0, cy)
+      end
+    end
+  end
+
+
+  local function assign_bases()
+    -- decide which rooms are part of a team's base
+
+    local top_Y  = int((HEX_MID_Y - 1) * rand.pick({    0.5, 0.7, 0.9 }))
+    local left_X = int((HEX_MID_X - 1) * rand.pick({ 0, 0.3, 0.6, 0.9 }))
+    local right_X = HEX_W + 1
+
+    if rand.odds(50) then
+      right_X = HEX_W + 1 - left_X
+      left_X  = -1
+    end
+
+    each R in room_list do
+      if R.flag_room or
+         R.max_cy <= top_Y or
+         R.max_cx <= left_X or
+         R.min_cx >= right_X
+      then
+        -- ROOM tables are shared on both sides of the map, hence cannot
+        -- assign a "red" or "blue" value to them directly.
+
+        R.is_base = true
+
+        each C in R.cells do
+          C.base = "blue"
+        end
+      end
+    end
+  end
+
+
   ---| Hex_add_rooms_CTF |---
 
   initial_row()
@@ -1290,6 +1345,9 @@ R.f_mat = "FWATER1"
   for loop = 1, 2 do
     merge_rooms()
   end
+
+  room_bboxes()
+  assign_bases()
 end
 
 
@@ -1321,6 +1379,9 @@ function Hex_mirror_map()
 
     D.content = C.content
     D.entity  = C.entity
+
+    if C.base == "red"  then D.base = "blue" end
+    if C.base == "blue" then D.base = "red"  end
   end
   end
 end
