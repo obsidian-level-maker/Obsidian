@@ -37,6 +37,8 @@ class HEXAGON
 
     vertex[HDIR] : { x=#, y=# }  -- leftmost vertex for each edge
 
+    wall_vert[HDIR] : { x=#, y=# }
+
     thread : THREAD
 
     is_branch   -- true if a thread branched off here
@@ -129,6 +131,7 @@ function HEXAGON_CLASS.new(cx, cy)
     kind = "free"
     neighbor = {}
     vertex = {}
+    wall_vert = {}
   }
   table.set_class(C, HEXAGON_CLASS)
   return C
@@ -247,6 +250,36 @@ function HEXAGON_CLASS.to_brush(C)
 end
 
 
+function HEXAGON_CLASS.build_wall(C, dir)
+  local N = C.neighbor[dir]
+
+  -- no need if neighbor is solid
+  if N and (N.kind == "edge" or N.kind == "solid") then return end
+
+  -- no need if part of same room
+  if N and N.room == C.room then return end
+
+  -- no need if connection part of the path (i.e. walkable)
+  if N and N.kind == "used" and C.kind == "used" then return end
+
+  -- create wall brush
+  local w_brush = {}
+
+  local dir2 = HEX_RIGHT[dir]
+
+  table.insert(w_brush, table.copy(C.wall_vert[dir]))
+  table.insert(w_brush, table.copy(C.wall_vert[dir2]))
+  table.insert(w_brush, table.copy(C.vertex[dir2]))
+  table.insert(w_brush, table.copy(C.vertex[dir]))
+
+  local w_mat = assert(C.room.f_mat)
+
+  Brush_set_mat(w_brush, w_mat, w_mat)
+
+  brush_helper(w_brush)
+end
+
+
 function HEXAGON_CLASS.build(C)
   
   local f_h = rand.irange(0,6) * 0
@@ -266,6 +299,8 @@ if C.room then w_mat = C.room.f_mat end
 
     brush_helper(w_brush)
   else
+    -- floor
+
     local f_brush = C:to_brush()
 
 --    local f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "STARTAN3",
@@ -294,12 +329,21 @@ f_h   = 0
     brush_helper(f_brush)
 
 
+    -- ceiling
+
     local c_brush = C:to_brush()
 
     Brush_add_bottom(c_brush, 256)
     Brush_mark_sky(c_brush)
 
     brush_helper(c_brush)
+
+
+    -- walls
+
+    for dir = 1, 6 do
+      C:build_wall(dir)
+    end
   end
 
 
@@ -384,7 +428,23 @@ function Hex_vertex_coord(C, dir)
     y = C.mid_y + H_HEIGHT
   end
 
-  return math.round(x), math.round(y)
+  return
+  {
+    x = math.round(x)
+    y = math.round(y)
+  }
+end
+
+
+function Hex_wall_coord(C, dir)
+  local x = C.vertex[dir].x
+  local y = C.vertex[dir].y
+
+  return
+  {
+    x = math.round((x * 3 + C.mid_x) / 4)
+    y = math.round((y * 3 + C.mid_y) / 4)
+  }
 end
 
 
@@ -435,9 +495,9 @@ function Hex_setup()
     local C = HEX_MAP[cx][cy]
   
     for dir = 1,6 do
-      local x, y = Hex_vertex_coord(C, dir)
+      C.vertex[dir] = Hex_vertex_coord(C, dir)
 
-      C.vertex[dir] = { x=x, y=y }
+      C.wall_vert[dir] = Hex_wall_coord(C, dir)
     end
   end
   end
