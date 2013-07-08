@@ -437,11 +437,51 @@ f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
 end
 
 
+function HEX_ROOM_CLASS.copy(R)
+  -- does not copy 'id' or the 'cells' list
+
+  local R2 = HEX_ROOM_CLASS.new()
+
+  R2.f_mat     = R.f_mat
+  R2.flag_room = R.flag_room
+
+  return R2
+end
+
+
 function HEX_ROOM_CLASS.tostr(R)
   if R.id < 0 then
     return string.format("MIRROR_%d", 0 - R.id)
   else
     return string.format("ROOM_%d", R.id)
+  end
+end
+
+
+function HEX_ROOM_CLASS.add_cell(R, C)
+  C.room = R
+
+  table.insert(R.cells, C)
+end
+
+
+function HEX_ROOM_CLASS.calc_bbox(R)
+  each C in R.cells do
+    R.min_cx = math.min(R.min_cx or 999, C.cx)
+    R.min_cy = math.min(R.min_cy or 999, C.cy)
+
+    R.max_cx = math.max(R.max_cx or 0, C.cx)
+    R.max_cy = math.max(R.max_cy or 0, C.cy)
+  end
+end
+
+
+function HEX_ROOM_CLASS.dump_bbox(R)
+  if R.min_cx then
+    stderrf("bbox for %s : NONE!\n")
+  else
+    stderrf("bbox for %s : (%d %d) .. (%d %d)\n",
+             R:tostr(), R.min_cx, R.min_cy, R.max_cx, R.max_cy)
   end
 end
 
@@ -1233,7 +1273,7 @@ R.f_mat = "FWATER1"
   end
 
 
-  local function do_kill_room(R)
+  local function do_kill_room(R)  -- FIXME : METHOD
     each C in R.cells do
       C.kind = "dead"
     end
@@ -1243,7 +1283,7 @@ R.f_mat = "FWATER1"
   end
 
 
-  local function do_merge_room(R, dest)
+  local function do_merge_room(R, dest)  -- FIXME : METHOD
     each C in R.cells do
       set_room(C, dest)
     end
@@ -1338,63 +1378,6 @@ R.f_mat = "FWATER1"
   end
 
 
-  local function room_bboxes()
-    each R in room_list do
-      each C in R.cells do
-if R.id == 5 then
-stderrf("ROOM_5 has cell %s\n", C:tostr())
-end
-        R.min_cx = math.min(R.min_cx or 999, C.cx)
-        R.min_cy = math.min(R.min_cy or 999, C.cy)
-
-        R.max_cx = math.max(R.max_cx or 0, C.cx)
-        R.max_cy = math.max(R.max_cy or 0, C.cy)
-      end
-    end
-
-    -- debugging
-    each R in room_list do
-      assert(R.min_cx)
-      stderrf("ROOM_%d bbox: (%d %d) .. (%d %d)\n",
-              R.id, R.min_cx, R.min_cy, R.max_cx, R.max_cy)
-    end
-  end
-
-
-  local function assign_bases()
-    -- decide which rooms are part of a team's base
-
-    local top_Y  = int((HEX_MID_Y - 1) * rand.pick({    0.6, 0.8, 1.0 }))
-    local left_X = int((HEX_MID_X - 1) * rand.pick({ 0, 0.6, 0.8, 1.0 }))
-    local right_X = HEX_W + 1
-
-    if rand.odds(50) then
-      right_X = HEX_W + 1 - left_X
-      left_X  = -1
-    end
-stderrf("top_Y:%d  left_X:%d  right_X:%d\n", top_Y, left_X, right_X)
-
-    each R in room_list do
-      if R.flag_room or
-         R.max_cy <= top_Y or
-         R.max_cx <= left_X or
-         R.min_cx >= right_X
-      then
-        R.is_base = true
-      end
-    end
-
-    -- ROOM tables are shared on both sides of the map, hence cannot
-    -- assign a "red" or "blue" value to them directly.
-
-    each R in room_list do
-      if R.is_base then
-        each C in R.cells do
-          C.base = "blue"
-        end
-      end
-    end
-  end
 
 
   ---| Hex_add_rooms_CTF |---
@@ -1416,8 +1399,6 @@ stderrf("top_Y:%d  left_X:%d  right_X:%d\n", top_Y, left_X, right_X)
 local C = HEX_MAP[HEX_W - 3][HEX_MID_Y - 4]
 stderrf("@@ %s : ROOM_%s\n", C:tostr(), tostring(C.room and C.room.id))
 
-  room_bboxes()
-  assign_bases()
 end
 
 
@@ -1546,7 +1527,7 @@ end
 function Hex_recollect_rooms()
   --
   -- After mirroring the level, a "room" may consist of two separate
-  -- pieces.  Here we reconstitute rooms from contiguous areas.
+  -- pieces.  Here we reconstitute the rooms from contiguous areas.
   --
   
   local function setup()
@@ -1584,15 +1565,107 @@ function Hex_recollect_rooms()
 
 
   local function recreate_room_from_cell(C)
+    local R = HEX_ROOM_CLASS.copy(C.old_room)
 
+    R:add_cell(C)
+
+    while grow_room(R) do
+      -- keep going until claimed all contiguous cells
+    end
+
+    R:calc_bbox()
+
+    return R
   end
+
+
+  local function handle_mirror(C)
+    -- check whther mirror'd cell is a separate room or not
+    local R = C.room
+
+    local N = C.peer
+    if not N then return end
+
+    if N and not N.room then
+      assert(N.old_room == C.old_room)
+
+      local R2 = recreate_room_from_cell(N)
+
+      assert(#R.cells == #R2.cells)
+
+      -- peer the mirrored rooms
+      R.peer  = R2
+      R2.peer = R
+
+      R2.id = 0 - R.id
+    end
+  end
+
 
   ---| Hex_recollect_rooms |---
 
+  setup()
+
+  for cx = 1, HEX_W do
+  for cy = 1, top_H do
+    local C = HEX_MAP[cx][cy]
+
+    if C.old_room and not C.room then
+      if C.peer then assert(not C.peer.room) end
+      recreate_room_from_cell(C)
+      handle_mirror(C)
+    end
+  end
+  end
+
+  -- validate : check we recreated all rooms
+  for cx = 1, HEX_W do
+  for cy = 1, top_H do
+    local C = HEX_MAP[cx][cy]
+
+    if C.old_room then assert(C.room) end
+  end
+  end
 end
 
 
 function Hex_assign_bases()
+
+
+  local function assign_bases()
+    -- decide which rooms are part of a team's base
+
+    local top_Y  = int((HEX_MID_Y - 1) * rand.pick({    0.6, 0.8, 1.0 }))
+    local left_X = int((HEX_MID_X - 1) * rand.pick({ 0, 0.6, 0.8, 1.0 }))
+    local right_X = HEX_W + 1
+
+    if rand.odds(50) then
+      right_X = HEX_W + 1 - left_X
+      left_X  = -1
+    end
+stderrf("top_Y:%d  left_X:%d  right_X:%d\n", top_Y, left_X, right_X)
+
+    each R in room_list do
+      if R.flag_room or
+         R.max_cy <= top_Y or
+         R.max_cx <= left_X or
+         R.min_cx >= right_X
+      then
+        R.is_base = true
+      end
+    end
+
+    -- ROOM tables are shared on both sides of the map, hence cannot
+    -- assign a "red" or "blue" value to them directly.
+
+    each R in room_list do
+      if R.is_base then
+        each C in R.cells do
+          C.base = "blue"
+        end
+      end
+    end
+  end
 
 end
 
@@ -1622,6 +1695,8 @@ function Hex_create_level()
 
   if CTF_MODE then
     Hex_mirror_map()
+    Hex_recollect_rooms()
+    Hex_assign_bases()
   end
 
   Hex_build_all()
