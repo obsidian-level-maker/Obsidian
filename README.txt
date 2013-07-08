@@ -62,7 +62,7 @@ COPYRIGHT and LICENSE
 
   OBLIGE Level Maker
 
-  Copyright (C) 2006-2013 Andrew Apted
+  Copyright (C) 2006-2013 Andrew Apted, et al
 
   OBLIGE is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published
