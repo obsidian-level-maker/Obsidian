@@ -465,6 +465,28 @@ function HEX_ROOM_CLASS.add_cell(R, C)
 end
 
 
+function HEX_ROOM_CLASS.kill(R)
+  each C in R.cells do
+    C.kind = "dead"
+  end
+
+  R.dead  = true
+  R.cells = {}
+end
+
+
+function HEX_ROOM_CLASS.merge(R, old)
+  assert(not R.dead)
+
+  each C in old.cells do
+    R:add_cell(C)
+  end
+
+  old.dead  = true
+  old.cells = {}
+end
+
+
 function HEX_ROOM_CLASS.calc_bbox(R)
   each C in R.cells do
     R.min_cx = math.min(R.min_cx or 999, C.cx)
@@ -1063,17 +1085,6 @@ function Hex_add_rooms_CTF()
   end
 
 
-  local function set_room(C, room)
-    C.room = room
-
-    table.insert(room.cells, C)
-
-    if C.thread and not C.thread.room then
-      C.thread.room = room
-    end
-  end
-
-
   local function initial_row()
     -- these must be mirrored horizontally, otherwise when the other
     -- half of the map is mirrored there would be a mismatch.
@@ -1088,13 +1099,13 @@ function Hex_add_rooms_CTF()
       if C.kind == "edge" then continue end
 
       if last_room and #last_room.cells == 1 and rand.odds(50) then
-        set_room(C, last_room)
+        last_room:add_cell(C)
         continue
       end
 
       last_room = new_room()
 
-      set_room(C, last_room)
+      last_room:add_cell(C)
     end
 
     -- do the mirroring
@@ -1109,7 +1120,7 @@ function Hex_add_rooms_CTF()
 
       assert(D.kind != "edge")
 
-      set_room(D, C.room)
+      C.room:add_cell(D)
     end
   end
 
@@ -1171,12 +1182,12 @@ R.f_mat = "FWATER1"
 
     local C = HEX_MAP[cx][cy]
     C.kind = "used"
-    set_room(C, R)
+    R:add_cell(C)
 
     for dir = 1,6 do
       local N = C.neighbor[dir]
       N.kind = "used"
-      set_room(N, R)
+      R:add_cell(N)
     end
 
 
@@ -1187,23 +1198,6 @@ R.f_mat = "FWATER1"
     local F = HEX_MAP[cx][fy]
 
     F.content = "FLAG"
-  end
-
-
-  local function rooms_from_threads()  -- NOT USED
-    for cx = 1, HEX_W do
-    for cy = 1, HEX_MID_Y - 1 do
-      local C = HEX_MAP[cx][cy]
-
-      if not (C.thread and not C.trimmed) then continue end
-
-      if not C.thread.room then
-        C.thread.room = new_room()
-      end
-
-      set_room(C, C.thread.room)
-    end
-    end
   end
 
 
@@ -1259,7 +1253,8 @@ R.f_mat = "FWATER1"
       -- occasionally create a new room (unless last cell was new)
 
       if not last_new_room and rand.odds(15) then
-        set_room(C, new_room())
+        local R = new_room()
+        R:add_cell(C)
         last_new_room = true
         continue
       end
@@ -1268,28 +1263,10 @@ R.f_mat = "FWATER1"
 
       -- otherwise we choose between two above neighbors (diagonals)
 
-      set_room(C, choose_room_from_nb(C))
+      local R = choose_room_from_nb(C)
+
+      R:add_cell(C)
     end
-  end
-
-
-  local function do_kill_room(R)  -- FIXME : METHOD
-    each C in R.cells do
-      C.kind = "dead"
-    end
-    
-    R.dead  = true
-    R.cells = {}
-  end
-
-
-  local function do_merge_room(R, dest)  -- FIXME : METHOD
-    each C in R.cells do
-      set_room(C, dest)
-    end
-
-    R.dead  = true
-    R.cells = {}
   end
 
 
@@ -1343,11 +1320,9 @@ R.f_mat = "FWATER1"
       local N = neighbor_for_merge(R)
 
       if N then
-        assert(not N.dead)
-
-        do_merge_room(R, N)
+        N:merge(R)
       else
-        do_kill_room(R)
+        R:kill()
       end
 
       table.remove(room_list, idx)
@@ -1371,7 +1346,7 @@ R.f_mat = "FWATER1"
       local R = room_list[idx]
 
       if not is_room_used(R) then
-        do_kill_room(R)
+        R:kill()
         table.remove(room_list, idx)
       end
     end
