@@ -355,6 +355,8 @@ C.room.f_mat = f_mat
     Brush_add_top(f_brush, f_h)
     Brush_set_mat(f_brush, f_mat, f_mat)
 
+---###  f_brush[#f_brush].tex = "ROOM" .. ((C.room and C.room.id) or 0)
+
     brush_helper(f_brush)
 
 
@@ -1286,17 +1288,48 @@ R.f_mat = "FWATER1"
   end
 
 
+  local function is_room_used(R)
+    each C in R.cells do
+      if C.kind == "used" then return true end
+    end
+
+    return false
+  end
+
+
+  local function kill_unused_rooms()
+    -- remove rooms which don't contain a planned pathway
+
+    for idx = #room_list, 1, -1 do
+      local R = room_list[idx]
+
+      if not is_room_used(R) then
+        do_kill_room(R)
+        table.remove(room_list, idx)
+      end
+    end
+  end
+
+
   local function room_bboxes()
     each R in room_list do
       each C in R.cells do
-        local cx, cy = C.cx, C.cy
+if R.id == 5 then
+stderrf("ROOM_5 has cell %s\n", C:tostr())
+end
+        R.min_cx = math.min(R.min_cx or 999, C.cx)
+        R.min_cy = math.min(R.min_cy or 999, C.cy)
 
-        R.min_cx = math.min(R.min_cx or 999, cx)
-        R.min_cy = math.min(R.min_cy or 999, cy)
-
-        R.max_cx = math.max(R.max_cx or 0, cx)
-        R.max_cy = math.max(R.max_cy or 0, cy)
+        R.max_cx = math.max(R.max_cx or 0, C.cx)
+        R.max_cy = math.max(R.max_cy or 0, C.cy)
       end
+    end
+
+    -- debugging
+    each R in room_list do
+      assert(R.min_cx)
+      stderrf("ROOM_%d bbox: (%d %d) .. (%d %d)\n",
+              R.id, R.min_cx, R.min_cy, R.max_cx, R.max_cy)
     end
   end
 
@@ -1304,14 +1337,15 @@ R.f_mat = "FWATER1"
   local function assign_bases()
     -- decide which rooms are part of a team's base
 
-    local top_Y  = int((HEX_MID_Y - 1) * rand.pick({    0.5, 0.7, 0.9 }))
-    local left_X = int((HEX_MID_X - 1) * rand.pick({ 0, 0.3, 0.6, 0.9 }))
+    local top_Y  = int((HEX_MID_Y - 1) * rand.pick({    0.6, 0.8, 1.0 }))
+    local left_X = int((HEX_MID_X - 1) * rand.pick({ 0, 0.6, 0.8, 1.0 }))
     local right_X = HEX_W + 1
 
     if rand.odds(50) then
       right_X = HEX_W + 1 - left_X
       left_X  = -1
     end
+stderrf("top_Y:%d  left_X:%d  right_X:%d\n", top_Y, left_X, right_X)
 
     each R in room_list do
       if R.flag_room or
@@ -1319,11 +1353,15 @@ R.f_mat = "FWATER1"
          R.max_cx <= left_X or
          R.min_cx >= right_X
       then
-        -- ROOM tables are shared on both sides of the map, hence cannot
-        -- assign a "red" or "blue" value to them directly.
-
         R.is_base = true
+      end
+    end
 
+    -- ROOM tables are shared on both sides of the map, hence cannot
+    -- assign a "red" or "blue" value to them directly.
+
+    each R in room_list do
+      if R.is_base then
         each C in R.cells do
           C.base = "blue"
         end
@@ -1345,6 +1383,11 @@ R.f_mat = "FWATER1"
   for loop = 1, 2 do
     merge_rooms()
   end
+
+  kill_unused_rooms()
+
+local C = HEX_MAP[HEX_W - 3][HEX_MID_Y - 4]
+stderrf("@@ %s : ROOM_%s\n", C:tostr(), tostring(C.room and C.room.id))
 
   room_bboxes()
   assign_bases()
