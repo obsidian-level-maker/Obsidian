@@ -250,6 +250,20 @@ function HEXAGON_CLASS.to_brush(C)
 end
 
 
+function HEXAGON_CLASS.to_wall_brush(C, dir)
+  local dir2 = HEX_RIGHT[dir]
+
+  local brush = {}
+
+  table.insert(brush, table.copy(C.wall_vert[dir]))
+  table.insert(brush, table.copy(C.wall_vert[dir2]))
+  table.insert(brush, table.copy(C.vertex[dir2]))
+  table.insert(brush, table.copy(C.vertex[dir]))
+
+  return brush
+end
+
+
 function HEXAGON_CLASS.build_wall(C, dir)
   local N = C.neighbor[dir]
 
@@ -263,20 +277,26 @@ function HEXAGON_CLASS.build_wall(C, dir)
   if N and N.kind == "used" and C.kind == "used" then return end
 
   -- create wall brush
-  local w_brush = {}
-
-  local dir2 = HEX_RIGHT[dir]
-
-  table.insert(w_brush, table.copy(C.wall_vert[dir]))
-  table.insert(w_brush, table.copy(C.wall_vert[dir2]))
-  table.insert(w_brush, table.copy(C.vertex[dir2]))
-  table.insert(w_brush, table.copy(C.vertex[dir]))
 
   local w_mat = assert(C.room.f_mat)
 
-  Brush_set_mat(w_brush, w_mat, w_mat)
+  if false then  -- solid wall
 
-  brush_helper(w_brush)
+    local w_brush = C:to_wall_brush(dir)
+
+    Brush_set_mat(w_brush, w_mat, w_mat)
+
+    brush_helper(w_brush)
+
+  else  -- fence
+
+    local f_brush = C:to_wall_brush(dir)
+
+    Brush_add_top(f_brush, 40)
+    Brush_set_mat(f_brush, w_mat, w_mat)
+
+    brush_helper(f_brush)
+  end
 end
 
 
