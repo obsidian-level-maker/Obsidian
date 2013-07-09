@@ -85,6 +85,9 @@ class ROOM
 
     base : keyword  -- "red" or "blue" if part of a team's base
                     -- unset for the neutral zone
+
+    outdoor : boolean  -- true for outdoor room
+    cave    : boolean  -- true for cave / natural room
 }
 
 
@@ -1630,7 +1633,6 @@ function Hex_assign_bases()
     right_X = HEX_W + 1 - left_X
     left_X  = -1
   end
-stderrf("top_Y:%d  left_X:%d  right_X:%d\n", top_Y, left_X, right_X)
 
   each R in LEVEL.rooms do
     if not R.peer then continue end
@@ -1649,6 +1651,29 @@ stderrf("top_Y:%d  left_X:%d  right_X:%d\n", top_Y, left_X, right_X)
 end
 
 
+function Hex_decide_room_themes()
+  -- choose between outdoor/indoor and cave/building
+  
+  each R in LEVEL.rooms do
+    -- type already set?
+    if R.outdoor != nil then continue end
+
+    R.outdoor = rand.odds(LEVEL.outdoor_prob)
+    R.cave    = rand.odds(LEVEL.cave_prob)
+
+    -- prefer the CTF flag room to be indoor
+    if R.flag_room and rand.odds(50) then R.outdoor = false end
+
+    local N = R.peer
+
+    if N and N.outdoor == nil then
+      N.outdoor = R.outdoor
+      N.cave    = R.cave
+    end
+  end
+end
+
+
 function Hex_build_all()
   for cx = 1, HEX_W do
   for cy = 1, HEX_H do
@@ -1661,8 +1686,16 @@ end
 
 
 function Hex_create_level()
+  
+  gui.printf("\n--==| Hexagonal Construction |==--\n\n")
+
+  Plan_choose_liquid()
+
   LEVEL.sky_light = 192
   LEVEL.sky_shade = 160
+
+  LEVEL.outdoor_prob = style_sel("outdoors", 0, 15, 40, 75, 100)
+  LEVEL.cave_prob    = style_sel("caves",    0, 15, 35, 65, 100)
 
   Hex_plan()
 
@@ -1677,6 +1710,8 @@ function Hex_create_level()
     Hex_recollect_rooms()
     Hex_assign_bases()
   end
+
+  Hex_decide_room_themes()
 
   Hex_build_all()
 end
