@@ -39,6 +39,8 @@ class HEXAGON
 
     wall_vert[HDIR] : { x=#, y=# }
 
+    path[HDIR] : HEXAGON  -- forms a cyclical pathway around the map
+
     peer : HEXAGON  -- in CTF mode, this is the cell on opposite
                     -- side of the map
 
@@ -55,9 +57,6 @@ class THREAD
     id : number
 
     start : HEXAGON   -- starting place (in an existing "used" cell)
-
-    target : HEXAGON  -- ending place (an existing "used" cell)
-    target_dir : dir  -- direction OUT of that cell
 
     pos : HEXAGON  -- last cell 'converted' to this thread
 
@@ -143,6 +142,7 @@ function HEXAGON_CLASS.new(cx, cy)
     neighbor = {}
     vertex = {}
     wall_vert = {}
+    path = {}
   }
   table.set_class(C, HEXAGON_CLASS)
   return C
@@ -195,20 +195,40 @@ function HEXAGON_CLASS.is_leaf(C)
 end
 
 
-function HEXAGON_CLASS.can_join(C, T)
-  local hit_used = false
+function HEXAGON_CLASS.trim(C)
+  C.kind = "free"
+  C.content = nil
+  C.trimmed = true
 
-  for i = 1, 6 do
-    local N = C.neighbor[i]
+  -- we keep C.thread
+
+  -- handle path links
+  for dir = 1, 6 do
+    local N = C.path[dir]
+
+    if N then
+      N.path[HEX_OPP[dir]] = nil
+    end
+  end
+
+  C.path = {}
+end
+
+
+function HEXAGON_CLASS.can_join(C, T)
+  local hit_dir
+
+  for dir = 1, 6 do
+    local N = C.neighbor[dir]
 
     -- a thread cannot join onto itself
 
     if N.kind == "used" and N.thread != T then
-      hit_used = true
+      hit_dir = dir
     end
   end
 
-  return hit_used
+  return hit_dir
 end
 
 
@@ -311,6 +331,18 @@ function HEXAGON_CLASS.build_wall(C, dir)
 end
 
 
+function HEXAGON_CLASS.debug_path(C, dir)
+  if not C.path[dir] then return end
+
+  local dir2 = HEX_RIGHT[dir]
+
+  local x = (C.vertex[dir].x + C.vertex[dir2].x) * 0.35 + C.mid_x * 0.3
+  local y = (C.vertex[dir].y + C.vertex[dir2].y) * 0.35 + C.mid_y * 0.3
+
+  entity_helper("lamp", x, y, 0)
+end
+
+
 function HEXAGON_CLASS.build(C)
   
   local f_h = rand.irange(0,6) * 0
@@ -359,6 +391,8 @@ if C.room.base == "red"  then f_mat = "REDWALL" end
 if C.room.base == "blue" then f_mat = "COMPBLUE" end
 C.room.f_mat = f_mat
 
+if C.kind == "used" then f_h = 16 end
+
 
     Brush_add_top(f_brush, f_h)
     Brush_set_mat(f_brush, f_mat, f_mat)
@@ -381,7 +415,8 @@ C.room.f_mat = f_mat
     -- walls
 
     for dir = 1, 6 do
-      C:build_wall(dir)
+--!!!      C:build_wall(dir)
+      C:debug_path(dir)
     end
   end
 
@@ -401,7 +436,7 @@ C.room.f_mat = f_mat
     entity_helper(ent, C.mid_x, C.mid_y, f_h, {})
   end
 
-
+--[[ !!!
   if C.content == "ENTITY" then
     entity_helper(C.entity, C.mid_x, C.mid_y, f_h, {})
   
@@ -409,6 +444,7 @@ C.room.f_mat = f_mat
     entity_helper("potion", C.mid_x, C.mid_y, f_h, {})
 
   end
+--]]
 end
 
 
@@ -770,6 +806,13 @@ function Hex_make_cycles()
     N.kind = "used"
     N.thread = T
 
+    -- update 'path' links
+    local B = assert(T.pos)
+
+    B.path[dir] = N
+    N.path[HEX_OPP[dir]] = B
+
+    -- update the thread itself
     T.pos = N
     T.dir = dir
 
@@ -814,6 +857,8 @@ function Hex_make_cycles()
 
     table.insert(threads, THREAD)
 
+    THREAD.pos = start
+
     do_grow_thread(THREAD, dir, C1)
 
     total_thread = total_thread + 1
@@ -839,6 +884,18 @@ function Hex_make_cycles()
   end
 
 
+  local function join_thread(T, dir, N, hit_dir)
+    do_grow_thread(T, dir, N)
+
+    local N2 = N.neighbor[hit_dir]
+
+    N .path[hit_dir] = N2
+    N2.path[HEX_OPP[hit_dir]] = N
+
+    T.dead = true
+  end
+
+
   local function try_grow_thread_in_dir(T, dir)
     local N = T.pos.neighbor[dir]
     assert(N)
@@ -852,14 +909,13 @@ function Hex_make_cycles()
       return true
     end
 
-    if #T.history > 7 and N:can_join(T) then
-      do_grow_thread(T, dir, N)
+    if #T.history > 7 then
+      local hit_dir = N:can_join(T)
 
-      T.target = N.neighbor[dir]
-      T.target_dir = dir
-
-      T.dead = true
-      return true
+      if hit_dir then
+        join_thread(T, dir, N, hit_dir)
+        return true
+      end
     end
 
     return false
@@ -976,12 +1032,7 @@ function Hex_trim_leaves()
       end
 
       if C:is_leaf() then
-      
-        C.kind = "free"
-        C.content = nil
-        C.trimmed = true
-
-        -- we keep C.thread
+        C:trim()
 
         changes = changes + 1
       end
@@ -1013,6 +1064,8 @@ function Hex_check_map_is_valid()
         return false
       end
     end
+
+    -- FIXME !!  check all cells are contiguous
   end
 
   -- generic size / volume checks
@@ -1698,6 +1751,8 @@ function Hex_create_level()
   LEVEL.cave_prob    = style_sel("caves",    0, 15, 35, 65, 100)
 
   Hex_plan()
+
+Hex_build_all(); do return end
 
   Hex_shrink_edges()
 
