@@ -182,9 +182,7 @@ function HEXAGON_CLASS.is_leaf(C)
   for dir = 1, 6 do
     local N = C.neighbor[dir]
 
-    if N and N.kind == "used" then
-      count = count + 1
-    end
+    if C.path[dir] then count = count + 1 end
   end
 
   if CTF_MODE and C.cy == HEX_MID_Y then
@@ -1105,7 +1103,7 @@ function Hex_check_map_is_valid()
 
   -- Note: no check on volume
 
-  if width < 0.4 or height < 0.5 then
+  if width < 0.6 or height < 0.6 then
     stderrf("Failed size test.\n")
     return false
   end
