@@ -25,7 +25,7 @@ class HEXAGON
     cx, cy   -- position in cell map
 
     kind : keyword   -- "free", "used"
-                     -- "edge", "wall", "dead"
+                     -- "edge", "solid", "dead"
 
     content : keyword  -- "START", "WEAPON", "FLAG", ...
 
@@ -305,19 +305,19 @@ function HEXAGON_CLASS.build_wall(C, dir)
   local N = C.neighbor[dir]
 
   -- no need if neighbor is solid
-  if N and (N.kind == "edge" or N.kind == "solid") then return end
+  if N and (N.kind == "edge" or N.kind == "solid" or N.kind == "dead") then return end
 
   -- no need if part of same room
   if N and N.room == C.room then return end
 
   -- no need if connection part of the path (i.e. walkable)
-  if N and N.kind == "used" and C.kind == "used" then return end
+  if C.path[dir] then return end
 
   -- create wall brush
 
   local w_mat = assert(C.room.f_mat)
 
-  if false then  -- solid wall
+  if not C.room.outdoor then  -- solid wall
 
     local w_brush = C:to_wall_brush(dir)
 
@@ -351,33 +351,31 @@ end
 
 function HEXAGON_CLASS.build(C)
   
-  local f_h = rand.irange(0,6) * 0
-  local c_h = rand.irange(4,8) * 32
-
-
-  if C.kind == "edge" or C.kind == "wall" or C.kind == "dead" then --- or C.kind == "free" then
+  if C.kind == "edge" or C.kind == "solid" or C.kind == "dead" then
     local w_brush = C:to_brush()
 
     local w_mat = "ASHWALL4"
 
-    if C.kind == "free" then w_mat = "COMPSPAN" end
-
-if C.room then w_mat = C.room.f_mat end
-
     Brush_set_mat(w_brush, w_mat, w_mat)
 
     brush_helper(w_brush)
-  else
+    return
+  end
+
+
     -- floor
+
+  local f_h
+  local c_h
 
     local f_brush = C:to_brush()
 
 --    local f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "STARTAN3",
 --                              "TEKGREN2", "BROWN1" })
 
-if not C.room then C.room = { f_mat="COMPSPAN" } end
+-- if not C.room then C.room = { f_mat="COMPSPAN" } end
 
-    assert(C.room)
+    local R = assert(C.room)
 
     if C.kind == "free" or C.trimmed then --- TEMP
       f_mat = "NUKAGE1"
@@ -389,9 +387,7 @@ if not C.room then C.room = { f_mat="COMPSPAN" } end
       f_mat = "GRAY7"
     end
 
-f_mat = C.room.f_mat
 f_h   = C.room.floor_h
-c_h   = f_h + 512
 
 f_mat = C.room.wall_mat ; assert(f_mat)
 C.room.f_mat = f_mat
@@ -409,10 +405,21 @@ C.room.f_mat = f_mat
 
     -- ceiling
 
+    local c_h = f_h + 160
+
+    if R.outdoor then
+      c_h = LEVEL.sky_h
+    end
+
     local c_brush = C:to_brush()
 
     Brush_add_bottom(c_brush, c_h)
-    Brush_mark_sky(c_brush)
+
+    if R.outdoor then
+      Brush_mark_sky(c_brush)
+    else
+      Brush_set_mat(c_brush, R.ceil_mat, R.ceil_mat)
+    end
 
     brush_helper(c_brush)
 
@@ -420,9 +427,9 @@ C.room.f_mat = f_mat
     -- walls
 
     for dir = 1, 6 do
---!!!      C:build_wall(dir)
+      C:build_wall(dir)
     end
-  end
+
 
 
   if C.content == "START" then
@@ -1566,13 +1573,16 @@ function Hex_floor_heights()
 
 
   local function find_anchor_room()
-    local C = HEX_MAP[HEX_MID_X][HEX_MID_Y]
-
+    local C
     local top_H = sel(CTF_MODE, HEX_MID_Y, HEX_H)
 
-    while not C.room do
-      local cx = math.rand(2, HEX_W - 1)
-      local cy = math.rand(2, top_H - 1)
+    if CTF_MODE and rand.odds(50) then
+      local C = HEX_MAP[HEX_MID_X][HEX_MID_Y]
+    end
+
+    while not (C and C.room) do
+      local cx = rand.irange(2, HEX_W - 1)
+      local cy = rand.irange(2, top_H - 1)
 
       C = HEX_MAP[cx][cy]
     end
@@ -1586,8 +1596,8 @@ function Hex_floor_heights()
     local nb_max
 
     each N in R.walk_neighbors do
-      nb_min = math.min(nb_min or  999, N.floor_h)
-      nb_max = math.max(nb_max or -999, N.floor_h)
+      nb_min = math.min(nb_min or  9999, N.floor_h)
+      nb_max = math.max(nb_max or -9999, N.floor_h)
     end
 
     assert(nb_min <= nb_max)
@@ -1608,6 +1618,21 @@ function Hex_floor_heights()
     end
 
     return false
+  end
+
+
+  local function determine_floor_min_max()
+    local min_h, max_h
+
+    each R in LEVEL.rooms do
+      min_h = math.min(min_h or  9999, R.floor_h)
+      max_h = math.max(max_h or -9999, R.floor_h)
+    end
+
+    LEVEL.max_floor_h = max_h
+    LEVEL.min_floor_h = min_h
+
+    LEVEL.sky_h = LEVEL.max_floor_h + rand.pick({ 144, 192, 256, 320 })
   end
 
 
@@ -1634,6 +1659,8 @@ function Hex_floor_heights()
       try_adjust_room(R)
     end
   end
+
+  determine_floor_min_max()
 end
 
 
