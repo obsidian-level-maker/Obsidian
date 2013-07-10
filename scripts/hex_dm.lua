@@ -1051,6 +1051,106 @@ end
 
 function Hex_check_map_is_valid()
 
+  local function size_check()
+    local cx_min, cx_max = 999, -999
+    local cy_min, cy_max = 999, -999
+
+    local count = 0
+
+    for cx = 1, HEX_W do
+    for cy = 1, HEX_H do
+      local C = HEX_MAP[cx][cy]
+
+      if C.kind == "used" then
+        count = count + 1
+
+        cx_min = math.min(cx, cx_min)
+        cy_min = math.min(cy, cy_min)
+
+        cx_max = math.max(cx, cx_max)
+        cy_max = math.max(cy, cy_max)
+      end
+    end
+    end
+
+    count = count / (HEX_W * HEX_H)
+
+    local width  = (cx_max - cx_min + 1) / HEX_W
+    local height = (cy_max - cy_min + 1) / HEX_H
+
+    if CTF_MODE then
+      count  = count * 2
+      height = height * 2
+    end
+
+    gui.debugf("Volume: %1.3f  width: %1.2f  height: %1.2f\n", count, width, height)
+
+    -- Note: no check on volume
+
+    if width < 0.6 or height < 0.6 then
+      return false
+    end
+
+    return true  -- OK
+  end
+
+
+  local function grow_contiguity(C, seen)
+    C.contiguous = true 
+
+    seen[C] = 1
+
+    for dir = 1, 6 do
+      local N = C.path[dir]
+
+      if N and not seen[N] then
+        grow_contiguity(N, seen)
+      end
+    end
+  end
+
+
+  local function contiguous_check()
+    -- pick start cell
+    local start
+
+    for cx = 1, HEX_W do
+      local C = HEX_MAP[cx][HEX_MID_Y]
+
+      if C.kind == "used" then
+        start = C
+        break
+      end
+    end
+
+    assert(start)
+
+    local seen = {}
+
+    -- recursively spread the 'contiguous' flag
+    grow_contiguity(start, seen)
+
+    for cx = 1, HEX_W do
+    for cy = 1, HEX_MID_Y do
+      local C = HEX_MAP[cx][cy]
+      
+      if C.kind == "used" and not C.contiguous then
+        return false
+      end
+    end
+    end
+
+    return true  -- OK
+  end
+
+
+  ---| Hex_check_map_is_valid |---
+
+  if not size_check() then
+    stderrf("Failed size test.\n")
+    return false
+  end
+
   if CTF_MODE then
     -- ensure the starting cells survived
 
@@ -1058,53 +1158,14 @@ function Hex_check_map_is_valid()
       local C = HEX_MAP[cx][HEX_MID_Y]
 
       if C.trimmed then
-        stderrf("Failed CTF connection test.\n")
+        stderrf("Failed birth test.\n")
         return false
       end
     end
-
-    -- FIXME !!  check all cells are contiguous
   end
 
-  -- generic size / volume checks
-
-  local cx_min, cx_max = 999, -999
-  local cy_min, cy_max = 999, -999
-
-  local count = 0
-
-  for cx = 1, HEX_W do
-  for cy = 1, HEX_H do
-    local C = HEX_MAP[cx][cy]
-
-    if C.kind == "used" then
-      count = count + 1
-
-      cx_min = math.min(cx, cx_min)
-      cy_min = math.min(cy, cy_min)
-
-      cx_max = math.max(cx, cx_max)
-      cy_max = math.max(cy, cy_max)
-    end
-  end
-  end
-
-  count = count / (HEX_W * HEX_H)
-
-  local width  = (cx_max - cx_min + 1) / HEX_W
-  local height = (cy_max - cy_min + 1) / HEX_H
-
-  if CTF_MODE then
-    count  = count * 2
-    height = height * 2
-  end
-
-  gui.debugf("Volume: %1.3f  width: %1.2f  height: %1.2f\n", count, width, height)
-
-  -- Note: no check on volume
-
-  if width < 0.6 or height < 0.6 then
-    stderrf("Failed size test.\n")
+  if CTF_MODE and not contiguous_check() then
+    stderrf("Failed contiguous test.\n")
     return false
   end
 
