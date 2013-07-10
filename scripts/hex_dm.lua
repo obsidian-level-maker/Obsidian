@@ -413,8 +413,7 @@ if C.kind == "used" then f_h = 16 end
     -- walls
 
     for dir = 1, 6 do
---!!!      C:build_wall(dir)
-      C:debug_path(dir)
+      C:build_wall(dir)
     end
   end
 
@@ -1158,7 +1157,7 @@ function Hex_check_map_is_valid()
       local C = HEX_MAP[cx][HEX_MID_Y]
 
       if C.trimmed then
-        stderrf("Failed birth test.\n")
+        stderrf("Failed join test.\n")
         return false
       end
     end
@@ -1764,11 +1763,12 @@ end
 
 
 function Hex_decide_room_themes()
-  -- choose between outdoor/indoor and cave/building
   
-  each R in LEVEL.rooms do
-    -- type already set?
-    if R.outdoor != nil then continue end
+  local function decide_room_kind(R)
+    -- choose between outdoor/indoor and cave/building
+
+    -- already set?
+    if R.outdoor != nil then return end
 
     R.outdoor = rand.odds(LEVEL.outdoor_prob)
     R.cave    = rand.odds(LEVEL.cave_prob)
@@ -1778,10 +1778,126 @@ function Hex_decide_room_themes()
 
     local N = R.peer
 
-    if N and N.outdoor == nil then
+    if N then
       N.outdoor = R.outdoor
       N.cave    = R.cave
     end
+  end
+
+
+  local function pick_theme(tab)
+    local name = rand.key_by_probs(tab)
+
+    local theme = GAME.ROOM_THEMES[name]
+
+    if not theme then
+      error("No such room theme: " .. tostring(name))
+    end
+
+    return theme
+  end
+
+
+  local function decide_room_theme(R)
+    -- already set?
+    if R.theme != nil then return end
+
+    if R.outdoor then
+      R.theme = LEVEL.outdoor_theme
+    elseif R.cave then
+      R.theme = LEVEL.cave_theme
+    else
+      R.theme = rand.sel(70, LEVEL.building_theme1, LEVEL.building_theme2)
+    end
+
+    assert(R.theme)
+
+    if R.peer then
+       R.peer.theme = R.theme
+    end
+  end
+
+
+  local function do_set_tex(R, w_mat, f_mat, c_mat)
+    R.wall_mat  = w_mat
+    R.floor_mat = f_mat
+    R.ceil_mat  = c_mat
+
+    local N = R.peer
+
+    if N then
+      N.wall_mat  = w_mat
+      N.floor_mat = f_mat
+      N.ceil_mat  = c_mat
+    end
+  end
+
+
+  local function select_textures(R)
+    -- already set?
+    if R.wall_mat != nil then return end
+
+    local tab
+
+    if R.outdoor or R.cave then
+      tab = R.theme.naturals or THEME.naturals
+    else
+      tab = R.theme.walls or THEME.walls
+    end
+
+    assert(tab)
+
+
+    local  wall_mat
+    local floor_mat
+    local  ceil_mat
+
+    if R.cave and not R.outdoor then
+       wall_mat = LEVEL.cave_wall
+      floor_mat = LEVEL.cave_floor
+       ceil_mat = wall_mat
+
+    else
+       wall_mat = rand.key_by_probs(tab)
+      floor_mat = rand.key_by_probs(R.theme.floors or tab)
+       ceil_mat = rand.key_by_probs(R.theme.ceilings or tab)
+    end
+
+    do_set_tex(R, wall_mat, floor_mat, ceil_mat)
+
+--[[ OLD CRUD
+    if R.cave and not R.outdoor then
+      each N in R.neighbors do
+        if N.wall_mat == nil and N.cave and not N.outdoor then
+          do_set_tex(N, wall_mat, floor_mat, ceil_mat)
+        end
+      end
+    end
+--]]
+  end
+
+
+  ---| Hex_decide_room_themes |---
+
+  LEVEL.outdoor_prob = style_sel("outdoors", 0, 15, 40, 75, 100)
+  LEVEL.cave_prob    = style_sel("caves",    0, 15, 35, 65, 100)
+
+  LEVEL.building_theme1 = pick_theme(THEME.buildings)
+  LEVEL.building_theme2 = pick_theme(THEME.buildings)
+  LEVEL.outdoor_theme   = pick_theme(THEME.outdoors)
+
+  if not THEME.caves then
+    LEVEL.cave_prob = 0
+  else
+    LEVEL.cave_theme = pick_theme(THEME.caves)
+    LEVEL.cave_wall  = rand.key_by_probs(LEVEL.cave_theme.naturals or THEME.naturals)
+    LEVEL.cave_floor = rand.key_by_probs(LEVEL.cave_theme.naturals or THEME.naturals)
+  end
+
+  each R in LEVEL.rooms do
+    decide_room_kind(R)
+    decide_room_theme(R)
+    select_textures(R)
   end
 end
 
@@ -1806,12 +1922,7 @@ function Hex_create_level()
   LEVEL.sky_light = 192
   LEVEL.sky_shade = 160
 
-  LEVEL.outdoor_prob = style_sel("outdoors", 0, 15, 40, 75, 100)
-  LEVEL.cave_prob    = style_sel("caves",    0, 15, 35, 65, 100)
-
   Hex_plan()
-
-Hex_build_all(); do return end
 
   Hex_shrink_edges()
 
