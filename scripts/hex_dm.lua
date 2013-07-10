@@ -87,6 +87,14 @@ class ROOM
 
     outdoor : boolean  -- true for outdoor room
     cave    : boolean  -- true for cave / natural room
+
+    wall_mat  : string  -- texturing for this room
+    floor_mat : string  --
+    ceil_mat  : string  --
+
+    floor_h : number  -- floor height
+
+    walk_neighbors : list(ROOM)
 }
 
 
@@ -382,14 +390,13 @@ if not C.room then C.room = { f_mat="COMPSPAN" } end
     end
 
 f_mat = C.room.f_mat
-f_h   = 0
+f_h   = C.room.floor_h
+c_h   = f_h + 512
 
-f_mat = "COMPSPAN"
-if C.room.base == "red"  then f_mat = "REDWALL" end
-if C.room.base == "blue" then f_mat = "COMPBLUE" end
+f_mat = C.room.wall_mat ; assert(f_mat)
 C.room.f_mat = f_mat
 
-if C.kind == "used" then f_h = 16 end
+-- if C.kind == "used" then f_h = 16 end
 
 
     Brush_add_top(f_brush, f_h)
@@ -404,7 +411,7 @@ if C.kind == "used" then f_h = 16 end
 
     local c_brush = C:to_brush()
 
-    Brush_add_bottom(c_brush, 256)
+    Brush_add_bottom(c_brush, c_h)
     Brush_mark_sky(c_brush)
 
     brush_helper(c_brush)
@@ -413,7 +420,7 @@ if C.kind == "used" then f_h = 16 end
     -- walls
 
     for dir = 1, 6 do
-      C:build_wall(dir)
+--!!!      C:build_wall(dir)
     end
   end
 
@@ -478,6 +485,7 @@ function HEX_ROOM_CLASS.copy(R)
 
   local R2 = HEX_ROOM_CLASS.new()
 
+  R2.floor_h   = R.floor_h
   R2.f_mat     = R.f_mat
   R2.flag_room = R.flag_room
 
@@ -554,6 +562,23 @@ function HEX_ROOM_CLASS.dump_bbox(R)
     stderrf("bbox for %s : (%d %d) .. (%d %d)\n",
              R:tostr(), R.min_cx, R.min_cy, R.max_cx, R.max_cy)
   end
+end
+
+
+function HEX_ROOM_CLASS.find_walk_neighbors(R)
+  R.walk_neighbors = {}
+
+  each C in R.cells do
+    for dir = 1, 6 do
+      local N = C.path[dir]
+
+      if N and N.room != R then
+        table.add_unique(R.walk_neighbors, N.room)
+      end
+    end
+  end
+
+  assert(not table.empty(R.walk_neighbors))
 end
 
 
@@ -1499,6 +1524,8 @@ R.f_mat = "FWATER1"
   end
 
   Hex_kill_unused_rooms(room_list)
+
+  LEVEL.rooms = room_list
 end
 
 
@@ -1513,7 +1540,107 @@ function Hex_add_rooms()
 end
 
 
+function Hex_floor_heights()
+  --
+  -- The difficulty here is that we require all the cycles to remain
+  -- walkable, which puts many constraints on the room heights.  For
+  -- example, we assume '48' is the maximum difference between any
+  -- two cells.
+  --
+  -- Algorithm:
+  --   1. set all rooms to zero.
+  --
+  --   2. pick a room move the floor_h by 24 units up or down, but only
+  --      when it is compatible with nearby visitable rooms.
+  --
+  --   3. repeat step 2 many times.
+  --
+  local MAX_STEP = 48
+
+  local function try_adjust_room(R)
+    local nb_min
+    local nb_max
+
+    each N in R.walk_neighbors do
+      nb_min = math.min(nb_min or  999, N.floor_h)
+      nb_max = math.max(nb_max or -999, N.floor_h)
+    end
+
+    assert(nb_min <= nb_max)
+
+    local min_h = nb_max - MAX_STEP
+    local max_h = nb_min + MAX_STEP
+
+    assert(min_h <= max_h)
+
+    local step_h = 24 -- rand.pick({16, 24, 36})
+    local z_dir  = rand.sel(75, 1, -1)
+
+    local new_h = R.floor_h + step_h * z_dir
+
+    if math.in_range(min_h, new_h, max_h) then
+      R.floor_h = new_h
+      return true
+    end
+
+    return false
+  end
+
+
+  ---| Hex_floor_heights |---
+
+  each R in LEVEL.rooms do
+    R.floor_h = 0
+
+    R:find_walk_neighbors()
+  end
+
+  for pass = 1, 20 do
+    for loop = 1, 100 do
+      local idx = rand.irange(1, #LEVEL.rooms)
+      local R = LEVEL.rooms[idx]
+
+      try_adjust_room(R)
+    end
+
+--TODO    normalize_rooms()
+  end 
+end
+
+
 function Hex_mirror_map()
+
+  local function peer_cells(C, D)
+    C.peer = D
+    D.peer = C
+  end
+
+
+  local function mirror_path(C, D)
+    for dir = 1, 6 do
+      if C.path[HEX_OPP[dir]] then
+        D.path[dir] = D.neighbor[dir]
+      end
+    end
+  end
+
+
+  local function mirror_cell(C, D)
+    D.kind = C.kind
+    D.room = C.room
+
+    D.content = C.content
+    D.entity  = C.entity
+
+    C.peer = D
+    D.peer = C
+
+    mirror_path(C, D)
+  end
+
+
+  ---| Hex_mirror_map |---
+
   for cx = 1, HEX_W do
   for cy = 1, HEX_MID_Y - 1 do
     local C = HEX_MAP[cx][cy]
@@ -1525,16 +1652,35 @@ function Hex_mirror_map()
 
     local D = HEX_MAP[dx][dy]
 
-    D.kind = C.kind
-    D.room = C.room
-
-    D.content = C.content
-    D.entity  = C.entity
-
-    C.peer = D
-    D.peer = C
+    peer_cells (C, D)
+    mirror_cell(C, D)
   end
   end
+
+
+  -- handle middle row
+  local cy = HEX_MID_Y
+
+  for cx = 1, HEX_W do
+    if cx == HEX_MID_X then continue end
+
+    local dx = HEX_MID_X + (HEX_MID_X - cx)
+
+    local C = HEX_MAP[cx][cy]
+    local D = HEX_MAP[dx][cy]
+
+    if cx < HEX_MID_X then
+      peer_cells(C, D)
+    end
+
+    mirror_path(C, D)
+  end
+
+
+  -- handle middle-most cell
+  local M = HEX_MAP[HEX_MID_X][HEX_MID_Y]
+
+  mirror_path(M, M)
 end
 
 
@@ -1628,6 +1774,8 @@ function Hex_recollect_rooms()
   --
 
   local function setup()
+    LEVEL.rooms = {}
+
     -- rename the 'room' fields
 
     for cx = 1, HEX_W do
@@ -1927,6 +2075,7 @@ function Hex_create_level()
   Hex_shrink_edges()
 
   Hex_add_rooms()
+  Hex_floor_heights()
 
   -- Hex_place_stuff()
 
