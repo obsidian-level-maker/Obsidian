@@ -1555,7 +1555,31 @@ function Hex_floor_heights()
   --
   --   3. repeat step 2 many times.
   --
+  -- NOTE: we also pick a room as an "anchor" room, which remains at
+  --       height zero.  It will prevent run-away height values.
+  --
+
   local MAX_STEP = 48
+
+  local anchor_room
+  local main_z_dir
+
+
+  local function find_anchor_room()
+    local C = HEX_MAP[HEX_MID_X][HEX_MID_Y]
+
+    local top_H = sel(CTF_MODE, HEX_MID_Y, HEX_H)
+
+    while not C.room do
+      local cx = math.rand(2, HEX_W - 1)
+      local cy = math.rand(2, top_H - 1)
+
+      C = HEX_MAP[cx][cy]
+    end
+
+    anchor_room = C.room
+  end
+
 
   local function try_adjust_room(R)
     local nb_min
@@ -1573,8 +1597,8 @@ function Hex_floor_heights()
 
     assert(min_h <= max_h)
 
-    local step_h = 24 -- rand.pick({16, 24, 36})
-    local z_dir  = rand.sel(75, 1, -1)
+    local step_h = rand.sel(70, 48, 24)
+    local z_dir  = rand.sel(75, 1, -1) * main_z_dir
 
     local new_h = R.floor_h + step_h * z_dir
 
@@ -1589,22 +1613,27 @@ function Hex_floor_heights()
 
   ---| Hex_floor_heights |---
 
+  find_anchor_room()
+
   each R in LEVEL.rooms do
     R.floor_h = 0
 
     R:find_walk_neighbors()
   end
 
-  for pass = 1, 20 do
-    for loop = 1, 100 do
-      local idx = rand.irange(1, #LEVEL.rooms)
-      local R = LEVEL.rooms[idx]
+  main_z_dir = rand.sel(70, 1, -1)
 
+
+  local MAX_LOOP = 300 + #LEVEL.rooms * 30
+
+  for loop = 1, MAX_LOOP do
+    local idx = rand.irange(1, #LEVEL.rooms)
+    local R = LEVEL.rooms[idx]
+
+    if R != anchor_room then
       try_adjust_room(R)
     end
-
---TODO    normalize_rooms()
-  end 
+  end
 end
 
 
