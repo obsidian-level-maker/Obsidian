@@ -401,7 +401,9 @@ function HEXAGON_CLASS.build_content(C)
     entity_helper(ent, C.mid_x, C.mid_y, f_h, {})
   end
 
-  if content.kind == "ENTITY" then
+  if content.kind == "ENTITY" or
+     content.kind == "WEAPON"
+  then
     entity_helper(content.entity, C.mid_x, C.mid_y, f_h, {})
   end
 
@@ -675,6 +677,7 @@ function Hex_wall_coord(C, dir)
 end
 
 
+
 function Hex_setup()
   HEX_MAP = table.array_2D(HEX_W, HEX_H)
 
@@ -738,6 +741,7 @@ function Hex_setup()
 end
 
 
+
 function Hex_starting_area()
   LEVEL.start_cx = HEX_MID_X
   LEVEL.start_cy = HEX_MID_Y
@@ -770,6 +774,7 @@ function Hex_starting_area()
     end
   end
 end
+
 
 
 function Hex_make_cycles()
@@ -1053,6 +1058,7 @@ function Hex_make_cycles()
 end
 
 
+
 function Hex_trim_leaves()
   
   local function trim_pass()
@@ -1084,6 +1090,7 @@ function Hex_trim_leaves()
     -- keep going until all nothing changes
   end
 end
+
 
 
 function Hex_check_map_is_valid()
@@ -1184,7 +1191,7 @@ function Hex_check_map_is_valid()
   ---| Hex_check_map_is_valid |---
 
   if not size_check() then
-    stderrf("Failed size test.\n")
+    gui.printf("Size test failed, retrying...\n")
     return false
   end
 
@@ -1195,19 +1202,22 @@ function Hex_check_map_is_valid()
       local C = HEX_MAP[cx][HEX_MID_Y]
 
       if C.trimmed then
-        stderrf("Failed join test.\n")
+        gui.printf("Blocked starting cells, retrying...\n")
         return false
       end
     end
   end
 
   if LEVEL.CTF and not contiguous_check() then
-    stderrf("Failed contiguous test.\n")
+    gui.printf("Contiguous test failed, retrying...\n")
     return false
   end
 
+  gui.printf("Plan validated as OK\n\n")
+
   return true
 end
+
 
 
 function Hex_plan()
@@ -1678,7 +1688,7 @@ function Hex_place_stuff()
   local walkable_cells = {}
 
   local MAX_WALL_DIST = 5
-  local MAX_ITEM_DIST = 3
+  local MAX_ITEM_DIST = 5
 
 
   local function place_anywhere(ent)
@@ -1775,17 +1785,139 @@ function Hex_place_stuff()
   end
 
 
-  local function select_weapons()
-    local list = {}
+  local function put_item(C, kind, item)
+    assert(not C.content)
 
-    -- TODO
+    C.content =
+    {
+      kind   = kind
+      entity = item
+    }
+
+    if C.peer then C.peer.content = C.content end
+
+    C.dist.item = 0
+
+    update_distances("item", MAX_ITEM_DIST)
   end
 
 
-  local function big_item_for_middle()
-    -- TODO
+  local function how_many_weapons()
+    -- TODO: adjust based on map size
 
-    -- not always middle, sometimes in cell with biggest dist.wall
+    return 2 + rand.index_by_probs({ 4, 6, 2 })
+  end
+
+
+  local function prob_for_weapon(name, info)
+    local prob = info.mp_prob or info.add_prob
+
+    if not prob or prob <= 0 then return 0 end
+
+    return prob
+  end
+
+
+  local function decide_weapons()
+    local tab = {}
+
+    each name,info in GAME.WEAPONS do
+      local prob = prob_for_weapon(name, info, R)
+
+      if prob > 0 then
+        tab[name] = prob
+      end
+    end
+
+    assert(not table.empty(tab))
+
+    
+    local want_num = how_many_weapons()
+
+    LEVEL.weapons = {}
+
+    for i = 1, want_num do
+      if table.empty(tab) then break; end
+
+      local name = rand.key_by_probs(tab)
+      tab[name] = nil
+
+      table.insert(LEVEL.weapons, name)
+    end
+
+--??    rand.shuffle(LEVEL.weapons)
+
+
+    gui.printf("Weapons:\n")
+
+    each name in LEVEL.weapons do
+      gui.printf("   %s\n", name)
+    end
+
+    gui.printf("\n")
+  end
+
+
+  local function decide_big_item()
+    local tab = {}
+
+    tab["NONE"] = 20
+
+    each name,info in GAME.PICKUPS do
+      if (info.rank or 0) >= 2 and info.kind != "ammo" then
+        tab[name] = 10
+      end
+    end
+
+    local item = rand.key_by_probs(tab)
+
+    gui.printf("Big item: %s\n\n", item)
+
+    if item != "NONE" then
+      -- add to weapon list (for simpler code later)
+      table.insert(LEVEL.weapons, rand.sel(70, 1, 2), item)
+    end
+  end
+
+
+  local function score_cell_for_weapon(C)
+
+    
+  end
+
+
+  local function score_cell_for_start(C)
+    local score = 0
+
+    if C.dist.wall == 0 then score = score + 10 end
+
+  end
+
+
+  local function spot_for_wotsit(kind)
+
+    -- FIXME !!!
+
+  end
+
+
+  local function place_item_in_middle()
+    local C = HEX_MAP[HEX_MID_X][HEX_MID_Y]
+
+    if not C.room then return end
+
+    local name = table.remove(LEVEL.weapons, 1)
+
+    put_item(C, "WEAPON", name)
+  end
+
+
+  local function place_weapons()
+    each name in LEVEL.weapons do
+      local C = spot_for_wotsit("WEAPON")
+
+      put_item(C, "WEAPON", name)
+    end
   end
 
 
@@ -1796,7 +1928,16 @@ function Hex_place_stuff()
   calc_wall_dists()
   calc_flag_dists()
 
-  -- TODO
+  decide_weapons()
+  decide_big_item()
+
+  if rand.odds(70) then
+    place_item_in_middle()
+  end
+
+  place_weapons()
+
+  -- TODO : place_player_starts()
 
   -- finally, add a single player start
   place_anywhere("player1")
