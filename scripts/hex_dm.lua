@@ -146,9 +146,6 @@ HEX_OPP   = { 6, 5, 4, 3, 2, 1 }
 HEX_DIRS  = { 1, 4, 5, 6, 3, 2 }
 
 
-CTF_MODE = true
-
-
 HEXAGON_CLASS = {}
 
 function HEXAGON_CLASS.new(cx, cy)
@@ -209,7 +206,7 @@ function HEXAGON_CLASS.is_leaf(C)
     if C.path[dir] then count = count + 1 end
   end
 
-  if CTF_MODE and C.cy == HEX_MID_Y then
+  if LEVEL.CTF and C.cy == HEX_MID_Y then
     return (count == 0)
   end
 
@@ -353,7 +350,7 @@ function HEXAGON_CLASS.build_wall(C, dir)
 
   -- create wall brush
 
-  local w_mat = assert(C.room.f_mat)
+  local w_mat = assert(C.room.wall_mat)
 
   if not C.room.outdoor then  -- solid wall
 
@@ -425,72 +422,58 @@ function HEXAGON_CLASS.build(C)
   end
 
 
+  local R = assert(C.room)
+
+
     -- floor
 
   local f_h
   local c_h
 
-    local f_brush = C:to_brush()
+  local f_brush = C:to_brush()
 
---    local f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "STARTAN3",
---                              "TEKGREN2", "BROWN1" })
 
--- if not C.room then C.room = { f_mat="COMPSPAN" } end
+  f_h   = C.room.floor_h
 
-    local R = assert(C.room)
-
-    if C.kind == "free" or C.trimmed then --- TEMP
-      f_mat = "NUKAGE1"
-      f_h   = -16
-
-    elseif C.kind == "used" then
-      f_mat = "COMPBLUE"
-    else
-      f_mat = "GRAY7"
-    end
-
-f_h   = C.room.floor_h
-
-f_mat = C.room.wall_mat ; assert(f_mat)
-C.room.f_mat = f_mat
+  assert(f_h)
 
 -- if C.kind == "used" then f_h = 16 end
 
 
-    Brush_add_top(f_brush, f_h)
-    Brush_set_mat(f_brush, f_mat, f_mat)
+  Brush_add_top(f_brush, f_h)
+  Brush_set_mat(f_brush, R.floor_mat, R.floor_mat)
 
 ---### f_brush[#f_brush].tex = "ROOM" .. ((C.old_room and C.old_room.id) or 0)
 
-    brush_helper(f_brush)
+  brush_helper(f_brush)
 
 
-    -- ceiling
+  -- ceiling
 
-    local c_h = f_h + 160
+  local c_h = f_h + 160
 
-    if R.outdoor then
-      c_h = LEVEL.sky_h
-    end
+  if R.outdoor then
+    c_h = LEVEL.sky_h
+  end
 
-    local c_brush = C:to_brush()
+  local c_brush = C:to_brush()
 
-    Brush_add_bottom(c_brush, c_h)
+  Brush_add_bottom(c_brush, c_h)
 
-    if R.outdoor then
-      Brush_mark_sky(c_brush)
-    else
-      Brush_set_mat(c_brush, R.ceil_mat, R.ceil_mat)
-    end
+  if R.outdoor then
+    Brush_mark_sky(c_brush)
+  else
+    Brush_set_mat(c_brush, R.wall_mat, R.ceil_mat)
+  end
 
-    brush_helper(c_brush)
+  brush_helper(c_brush)
 
 
-    -- walls
+  -- walls
 
-    for dir = 1, 6 do
-      C:build_wall(dir)
-    end
+  for dir = 1, 6 do
+    C:build_wall(dir)
+  end
 
 
   if C.content then
@@ -510,17 +493,6 @@ function HEX_ROOM_CLASS.new()
     id = Plan_alloc_id("hex_room")
 
     cells = {}
-
--- TEMP DEBUG STUFF
-f_mat = rand.pick({ "GRAY7", "MFLR8_3", "MFLR8_4", "FLAT1",
-                    "TEKGREN2", "BROWN1", "BIGBRIK1",
-                    "ASHWALL2", "ASHWALL4", "FLOOR4_8",
-                    "FLAT1_1", "FLAT2",
-                    "FLAT22", "FLAT4", "FLOOR1_7", "GATE1",
-                    "GRNLITE1", "TLITE6_5", "STEP1", "SLIME09",
-                    "SFLR6_1", "RROCK19", "RROCK17", "RROCK13",
-                    "RROCK04", "RROCK02"
-                    })
   }
   table.set_class(R, HEX_ROOM_CLASS)
   return R
@@ -533,7 +505,6 @@ function HEX_ROOM_CLASS.copy(R)
   local R2 = HEX_ROOM_CLASS.new()
 
   R2.floor_h   = R.floor_h
-  R2.f_mat     = R.f_mat
   R2.flag_room = R.flag_room
 
   return R2
@@ -728,7 +699,7 @@ function Hex_setup()
   for cy = 1, HEX_H do
     local C = HEX_MAP[cx][cy]
 
-    local far_W = HEX_W - sel(CTF_MODE, (cy % 2), 0)
+    local far_W = HEX_W - sel(LEVEL.CTF, (cy % 2), 0)
 
     for dir = 1,6 do
       local nx, ny = Hex_neighbor_pos(cx, cy, dir)
@@ -776,7 +747,7 @@ function Hex_starting_area()
   C.kind = "used"
 
 
-  if CTF_MODE then
+  if LEVEL.CTF then
     local cx1 = HEX_MID_X - int(HEX_W / 4)
     local cx2 = HEX_MID_X + int(HEX_W / 4)
 
@@ -815,7 +786,7 @@ function Hex_make_cycles()
     for dir = 1, 6 do
       local N = C.neighbor[dir]
 
-      if CTF_MODE and dir >= 4 then continue end
+      if LEVEL.CTF and dir >= 4 then continue end
 
       if N and N.kind == "free" and N:free_neighbors() == 5 then
         table.insert(dir_list, dir)
@@ -836,7 +807,7 @@ function Hex_make_cycles()
     -- collect all possible starting cells
 
     for cx = 1, HEX_W do
-    for cy = 1, sel(CTF_MODE, HEX_MID_Y, HEX_H) do
+    for cy = 1, sel(LEVEL.CTF, HEX_MID_Y, HEX_H) do
       local C = HEX_MAP[cx][cy]
 
       if C.no_start then continue end
@@ -970,7 +941,7 @@ function Hex_make_cycles()
 
     if N.kind != "free" then return false end
 
-    if CTF_MODE and N.cy >= HEX_MID_Y then return false end
+    if LEVEL.CTF and N.cy >= HEX_MID_Y then return false end
 
     if N:free_neighbors() == 5 then
       do_grow_thread(T, dir, N)
@@ -1144,7 +1115,7 @@ function Hex_check_map_is_valid()
     local width  = (cx_max - cx_min + 1) / HEX_W
     local height = (cy_max - cy_min + 1) / HEX_H
 
-    if CTF_MODE then
+    if LEVEL.CTF then
       count  = count * 2
       height = height * 2
     end
@@ -1217,7 +1188,7 @@ function Hex_check_map_is_valid()
     return false
   end
 
-  if CTF_MODE then
+  if LEVEL.CTF then
     -- ensure the starting cells survived
 
     for cx = 1, HEX_W do
@@ -1230,7 +1201,7 @@ function Hex_check_map_is_valid()
     end
   end
 
-  if CTF_MODE and not contiguous_check() then
+  if LEVEL.CTF and not contiguous_check() then
     stderrf("Failed contiguous test.\n")
     return false
   end
@@ -1573,7 +1544,7 @@ function Hex_add_rooms()
 
   ---| Hex_add_rooms |---
 
-  if CTF_MODE then
+  if LEVEL.CTF then
     Hex_add_rooms_CTF()
     return
   end
@@ -1607,9 +1578,9 @@ function Hex_floor_heights()
 
   local function find_anchor_room()
     local C
-    local top_H = sel(CTF_MODE, HEX_MID_Y, HEX_H)
+    local top_H = sel(LEVEL.CTF, HEX_MID_Y, HEX_H)
 
-    if CTF_MODE and rand.odds(50) then
+    if LEVEL.CTF and rand.odds(50) then
       local C = HEX_MAP[HEX_MID_X][HEX_MID_Y]
     end
 
@@ -1698,7 +1669,7 @@ end
 
 
 function Hex_place_stuff()
-  local top_H = sel(CTF_MODE, HEX_MID_Y - 1, HEX_H)
+  local top_H = sel(LEVEL.CTF, HEX_MID_Y - 1, HEX_H)
 
   local walkable_cells = {}
 
@@ -1868,7 +1839,7 @@ function Hex_shrink_edges()
   -- compute a distance from each used cell.
   -- free cells which touch an edge and are far away become edge cells.
 
-  local top_H = sel(CTF_MODE, HEX_MID_Y - 1, HEX_H)
+  local top_H = sel(LEVEL.CTF, HEX_MID_Y - 1, HEX_H)
 
   local function mark_cells()
     for cx = 1, HEX_W do
@@ -2245,6 +2216,8 @@ function Hex_create_level()
   
   gui.printf("\n--==| Hexagonal Construction |==--\n\n")
 
+  LEVEL.CTF = true  -- FIXME  (OB_CONFIG.mode == "ctf")
+
   Plan_choose_liquid()
 
   LEVEL.sky_light = 192
@@ -2258,7 +2231,7 @@ function Hex_create_level()
 
   Hex_place_stuff()
 
-  if CTF_MODE then
+  if LEVEL.CTF then
     Hex_mirror_map()
     Hex_recollect_rooms()
     Hex_assign_bases()
