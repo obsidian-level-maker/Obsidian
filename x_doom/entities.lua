@@ -117,6 +117,12 @@ DOOM.ENTITIES =
   dead_caco    = { id=22, r=16, h=16, pass=true }
   dead_skull   = { id=23, r=16, h=16, pass=true }
 
+  -- CTF things (NOTE: these don't exist in vanilla DOOM)
+  ctf_blue_flag  = { id=5130, r=16, h=56, pass=true }
+  ctf_blue_start = { id=5080, r=16, h=56, pass=true }
+  ctf_red_flag   = { id=5131, r=16, h=56, pass=true }
+  ctf_red_start  = { id=5081, r=16, h=56, pass=true }
+
   -- special stuff --
   dummy = { id=23, r=16, h=16, pass=true }
 
