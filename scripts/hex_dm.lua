@@ -130,7 +130,7 @@ Directions:
 --      1   2   3   4
 --    1   2   3   4
 
-HEX_MAP = {}
+HEX_CELLS = {}
 
 -- these must be odd (for CTF mode)
 HEX_W = 15
@@ -679,7 +679,7 @@ end
 
 
 function Hex_setup()
-  HEX_MAP = table.array_2D(HEX_W, HEX_H)
+  HEX_CELLS = table.array_2D(HEX_W, HEX_H)
 
   HEX_MID_X = int((HEX_W + 1) / 2)
   HEX_MID_Y = int((HEX_H + 1) / 2)
@@ -692,7 +692,7 @@ function Hex_setup()
 
     C.mid_x, C.mid_y = Hex_middle_coord(cx, cy)
 
-    HEX_MAP[cx][cy] = C
+    HEX_CELLS[cx][cy] = C
   end
   end
 
@@ -700,7 +700,7 @@ function Hex_setup()
 
   for cx = 1, HEX_W do
   for cy = 1, HEX_H do
-    local C = HEX_MAP[cx][cy]
+    local C = HEX_CELLS[cx][cy]
 
     local far_W = HEX_W - sel(LEVEL.CTF, (cy % 2), 0)
 
@@ -710,7 +710,7 @@ function Hex_setup()
       if (nx >= 1) and (nx <= far_W) and
          (ny >= 1) and (ny <= HEX_H)
       then
-        C.neighbor[dir] = HEX_MAP[nx][ny]
+        C.neighbor[dir] = HEX_CELLS[nx][ny]
       else
         C.kind = "edge"
       end
@@ -722,7 +722,7 @@ function Hex_setup()
 
   for cx = 1, HEX_W do
   for cy = 1, HEX_H do
-    local C = HEX_MAP[cx][cy]
+    local C = HEX_CELLS[cx][cy]
   
     for dir = 1,6 do
       C.vertex[dir] = Hex_vertex_coord(C, dir)
@@ -746,7 +746,7 @@ function Hex_starting_area()
   LEVEL.start_cx = HEX_MID_X
   LEVEL.start_cy = HEX_MID_Y
 
-  local C = HEX_MAP[LEVEL.start_cx][LEVEL.start_cy]
+  local C = HEX_CELLS[LEVEL.start_cx][LEVEL.start_cy]
 
   C.kind = "used"
 
@@ -763,10 +763,10 @@ function Hex_starting_area()
 
       local C1, C2
 
-      C1 = HEX_MAP[cx1][HEX_MID_Y]
+      C1 = HEX_CELLS[cx1][HEX_MID_Y]
       C1.kind = "used"
 
-      C2 = HEX_MAP[cx2][HEX_MID_Y]
+      C2 = HEX_CELLS[cx2][HEX_MID_Y]
       C2.kind = "used"
 
       C1.peer = C2
@@ -813,7 +813,7 @@ function Hex_make_cycles()
 
     for cx = 1, HEX_W do
     for cy = 1, sel(LEVEL.CTF, HEX_MID_Y, HEX_H) do
-      local C = HEX_MAP[cx][cy]
+      local C = HEX_CELLS[cx][cy]
 
       if C.no_start then continue end
 
@@ -1066,7 +1066,7 @@ function Hex_trim_leaves()
 
     for cx = 1, HEX_W do
     for cy = 1, HEX_H do
-      local C = HEX_MAP[cx][cy]
+      local C = HEX_CELLS[cx][cy]
 
       if C.kind != "used" then
         continue
@@ -1103,7 +1103,7 @@ function Hex_check_map_is_valid()
 
     for cx = 1, HEX_W do
     for cy = 1, HEX_H do
-      local C = HEX_MAP[cx][cy]
+      local C = HEX_CELLS[cx][cy]
 
       if C.kind == "used" then
         count = count + 1
@@ -1159,7 +1159,7 @@ function Hex_check_map_is_valid()
     local start
 
     for cx = 1, HEX_W do
-      local C = HEX_MAP[cx][HEX_MID_Y]
+      local C = HEX_CELLS[cx][HEX_MID_Y]
 
       if C.kind == "used" then
         start = C
@@ -1176,7 +1176,7 @@ function Hex_check_map_is_valid()
 
     for cx = 1, HEX_W do
     for cy = 1, HEX_MID_Y do
-      local C = HEX_MAP[cx][cy]
+      local C = HEX_CELLS[cx][cy]
       
       if C.kind == "used" and not C.contiguous then
         return false
@@ -1199,7 +1199,7 @@ function Hex_check_map_is_valid()
     -- ensure the starting cells survived
 
     for cx = 1, HEX_W do
-      local C = HEX_MAP[cx][HEX_MID_Y]
+      local C = HEX_CELLS[cx][HEX_MID_Y]
 
       if C.trimmed then
         gui.printf("Blocked starting cells, retrying...\n")
@@ -1297,7 +1297,7 @@ function Hex_add_rooms_CTF()
     local last_room
 
     for cx = HEX_MID_X, 1, -1 do
-      local C = HEX_MAP[cx][cy]
+      local C = HEX_CELLS[cx][cy]
 
       if C.kind == "edge" then continue end
 
@@ -1316,8 +1316,8 @@ function Hex_add_rooms_CTF()
     for cx = 1, HEX_MID_X - 1 do
       local dx = HEX_MID_X + (HEX_MID_X - cx)
 
-      local C = HEX_MAP[cx][cy]
-      local D = HEX_MAP[dx][cy]
+      local C = HEX_CELLS[cx][cy]
+      local D = HEX_CELLS[dx][cy]
 
       if C.kind == "edge" then continue end
 
@@ -1330,7 +1330,7 @@ function Hex_add_rooms_CTF()
 
   local function bottom_cell_in_column(cx)
     for cy = 1, HEX_MID_Y - 8 do
-      local C = HEX_MAP[cx][cy]
+      local C = HEX_CELLS[cx][cy]
 
       if C.kind == "used" then return cy end
     end
@@ -1381,7 +1381,7 @@ function Hex_add_rooms_CTF()
 
     R.flag_room = true
 
-    local C = HEX_MAP[cx][cy]
+    local C = HEX_CELLS[cx][cy]
     C.kind = "used"
     R:add_cell(C)
 
@@ -1396,7 +1396,7 @@ function Hex_add_rooms_CTF()
 
     local fy = cy - rand.sel(40, 2, 0)
 
-    local F = HEX_MAP[cx][fy]
+    local F = HEX_CELLS[cx][fy]
 
     F.content = { kind = "FLAG" }
   end
@@ -1444,7 +1444,7 @@ function Hex_add_rooms_CTF()
     local last_new_room = false
 
     for cx = 1, HEX_W do
-      local C = HEX_MAP[cx][cy]
+      local C = HEX_CELLS[cx][cy]
 
       -- already set?
       if C.room then continue end
@@ -1594,14 +1594,14 @@ function Hex_floor_heights()
     local top_H = sel(LEVEL.CTF, HEX_MID_Y, HEX_H)
 
     if LEVEL.CTF and rand.odds(50) then
-      local C = HEX_MAP[HEX_MID_X][HEX_MID_Y]
+      local C = HEX_CELLS[HEX_MID_X][HEX_MID_Y]
     end
 
     while not (C and C.room) do
       local cx = rand.irange(2, HEX_W - 1)
       local cy = rand.irange(2, top_H - 1)
 
-      C = HEX_MAP[cx][cy]
+      C = HEX_CELLS[cx][cy]
     end
 
     anchor_room = C.room
@@ -1696,7 +1696,7 @@ function Hex_place_stuff()
       local cx = rand.irange(1, HEX_W)
       local cy = rand.irange(1, top_H)
 
-      local C = HEX_MAP[cx][cy]
+      local C = HEX_CELLS[cx][cy]
 
       if not C.room then continue end
 
@@ -1719,7 +1719,7 @@ function Hex_place_stuff()
   local function collect_cells()
     for cx = 1, HEX_W do
     for cy = 1, HEX_H do
-      local C = HEX_MAP[cx][cy]
+      local C = HEX_CELLS[cx][cy]
 
       if C.room then
         table.insert(walkable_cells, C)
@@ -1902,7 +1902,7 @@ function Hex_place_stuff()
 
 
   local function place_item_in_middle()
-    local C = HEX_MAP[HEX_MID_X][HEX_MID_Y]
+    local C = HEX_CELLS[HEX_MID_X][HEX_MID_Y]
 
     if not C.room then return end
 
@@ -1973,14 +1973,14 @@ function Hex_mirror_map()
 
   for cx = 1, HEX_W do
   for cy = 1, HEX_MID_Y - 1 do
-    local C = HEX_MAP[cx][cy]
+    local C = HEX_CELLS[cx][cy]
 
     local dx = (HEX_W - cx) + (cy % 2)
     local dy = (HEX_H - cy) + 1
 
     if dx < 1 then continue end
 
-    local D = HEX_MAP[dx][dy]
+    local D = HEX_CELLS[dx][dy]
 
     mirror_cell(C, D)
     mirror_path(C, D)
@@ -1996,15 +1996,15 @@ function Hex_mirror_map()
 
     local dx = HEX_MID_X + (HEX_MID_X - cx)
 
-    local C = HEX_MAP[cx][cy]
-    local D = HEX_MAP[dx][cy]
+    local C = HEX_CELLS[cx][cy]
+    local D = HEX_CELLS[dx][cy]
 
     mirror_path(C, D)
   end
 
 
   -- handle middle-most cell
-  local M = HEX_MAP[HEX_MID_X][HEX_MID_Y]
+  local M = HEX_CELLS[HEX_MID_X][HEX_MID_Y]
 
   mirror_path(M, M)
 end
@@ -2020,7 +2020,7 @@ function Hex_shrink_edges()
   local function mark_cells()
     for cx = 1, HEX_W do
     for cy = 1, top_H do
-      local C = HEX_MAP[cx][cy]
+      local C = HEX_CELLS[cx][cy]
 
       if C.kind == "used" then
         C.dist.used = 0
@@ -2035,7 +2035,7 @@ function Hex_shrink_edges()
 
     for cx = 1, HEX_W do
     for cy = 1, top_H do
-      local C = HEX_MAP[cx][cy]
+      local C = HEX_CELLS[cx][cy]
 
       local dist = C:used_dist_from_neighbors()
 
@@ -2065,7 +2065,7 @@ function Hex_shrink_edges()
 
     for cx = 1, HEX_W do
     for cy = 1, top_H do
-      local C = HEX_MAP[cx][cy]
+      local C = HEX_CELLS[cx][cy]
 
       if C.kind == "edge" then continue end
 
@@ -2108,7 +2108,7 @@ function Hex_recollect_rooms()
 
     for cx = 1, HEX_W do
     for cy = 1, HEX_H do
-      local C = HEX_MAP[cx][cy]
+      local C = HEX_CELLS[cx][cy]
 
       C.old_room = C.room
       C.room     = nil
@@ -2183,7 +2183,7 @@ function Hex_recollect_rooms()
 
   for cy = 1, HEX_H do
   for cx = 1, HEX_W do
-    local C = HEX_MAP[cx][cy]
+    local C = HEX_CELLS[cx][cy]
 
     if C.old_room and not C.room then
       if C.peer then assert(not C.peer.room) end
@@ -2196,7 +2196,7 @@ function Hex_recollect_rooms()
   -- validate : check we recreated all rooms
   for cx = 1, HEX_W do
   for cy = 1, HEX_H do
-    local C = HEX_MAP[cx][cy]
+    local C = HEX_CELLS[cx][cy]
 
     if C.old_room then assert(C.room) end
   end
@@ -2384,7 +2384,7 @@ end
 function Hex_build_all()
   for cx = 1, HEX_W do
   for cy = 1, HEX_H do
-    local C = HEX_MAP[cx][cy]
+    local C = HEX_CELLS[cx][cy]
 
     C:build()
   end
