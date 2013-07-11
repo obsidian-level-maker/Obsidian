@@ -1687,8 +1687,10 @@ function Hex_place_stuff()
 
   local walkable_cells = {}
 
-  local MAX_WALL_DIST = 5
-  local MAX_ITEM_DIST = 5
+  local MAX_WALL_DIST  = 5  -- fairly arbitrary
+
+  local MAX_ITEM_DIST  = int(HEX_W / 3)
+  local MAX_START_DIST = int(HEX_W / 5)
 
 
   local function place_anywhere(ent)
@@ -1787,6 +1789,7 @@ function Hex_place_stuff()
 
   local function put_item(C, kind, item)
     assert(not C.content)
+    assert(not C.peer)
 
     C.content =
     {
@@ -1794,11 +1797,21 @@ function Hex_place_stuff()
       entity = item
     }
 
-    if C.peer then C.peer.content = C.content end
-
     C.dist.item = 0
 
     update_distances("item", MAX_ITEM_DIST)
+  end
+
+
+  local function put_start(C)
+    assert(not C.content)
+    assert(not C.peer)
+
+    C.content = { kind = "START" }
+
+    C.dist.start = 0
+
+    update_distances("item", MAX_START_DIST)
   end
 
 
@@ -1806,6 +1819,18 @@ function Hex_place_stuff()
     -- TODO: adjust based on map size
 
     return 2 + rand.index_by_probs({ 4, 6, 2 })
+  end
+
+
+  local function how_many_player_starts()
+    -- TODO: adjust based on map size
+
+    if LEVEL.CTF then
+      -- CTF starts will be duplicated when map is mirrored
+      return rand.irange(4, 6)
+    else
+      return rand.irange(5, 10)
+    end
   end
 
 
@@ -1895,9 +1920,26 @@ function Hex_place_stuff()
 
 
   local function spot_for_wotsit(kind)
+    each C in walkable_cells do
+      C.score = -999
 
-    -- FIXME !!!
+      -- already used?
+      if C.content then continue end
 
+      -- ignore the middle row (simplifies some cases)
+      if LEVEL.CTF and C.cy == HEX_MID_Y then continue end
+
+      if kind == "START" then
+        score_cell_for_start(C)
+      else
+        score_cell_for_weapon(C)
+      end
+    end
+
+    local spot = table.pick_best(walkable_cells, 
+        function(A, B) return A.score > B.score end)
+
+    return assert(spot)
   end
 
 
@@ -1921,6 +1963,17 @@ function Hex_place_stuff()
   end
 
 
+  local function place_player_starts()
+    local want_num = how_many_player_starts()
+
+    for i = 1, want_num do
+      local C = spot_for_wotsit("START")
+
+      put_start(C)
+    end
+  end
+
+
   ---| Hex_place_stuff |---
 
   collect_cells()
@@ -1936,8 +1989,7 @@ function Hex_place_stuff()
   end
 
   place_weapons()
-
-  -- TODO : place_player_starts()
+  place_player_starts()
 
   -- finally, add a single player start
   place_anywhere("player1")
