@@ -27,7 +27,7 @@ class HEXAGON
     kind : keyword   -- "free", "used"
                      -- "edge", "solid", "dead"
 
-    content : keyword  -- "START", "WEAPON", "FLAG", ...
+    content : CONTENT
 
     neighbor[HDIR] : HEXAGON   -- neighboring cells
                                -- will be NIL at edge of map
@@ -48,7 +48,7 @@ class HEXAGON
 
     is_branch   -- true if a thread branched off here
 
-    used_dist   -- distance to nearest used cell  [for shrink_edges]
+    dist[keyword]   -- distance to various stuff (e.g. "wall")
 }
 
 
@@ -95,6 +95,16 @@ class ROOM
     floor_h : number  -- floor height
 
     walk_neighbors : list(ROOM)
+}
+
+
+class CONTENT
+{
+  kind : keyword  -- "START", "WEAPON", "ENTITY", etc...
+
+  entity : name
+
+  no_mirror : boolean  -- do not mirror this
 }
 
 
@@ -151,6 +161,7 @@ function HEXAGON_CLASS.new(cx, cy)
     vertex = {}
     wall_vert = {}
     path = {}
+    dist = {}
   }
   table.set_class(C, HEXAGON_CLASS)
   return C
@@ -244,10 +255,8 @@ function HEXAGON_CLASS.used_dist_from_neighbors(C)
   for i = 1, 6 do
     local N = C.neighbor[i]
 
-    if N and N.used_dist and
-       (not dist or N.used_dist < dist)
-    then
-      dist = N.used_dist
+    if N and N.dist.used and (N.dist.used < (dist or 999)) then
+      dist = N.dist.used
     end
   end
   
@@ -349,6 +358,30 @@ function HEXAGON_CLASS.debug_path(C, dir)
 end
 
 
+function HEXAGON_CLASS.build_content(C)
+  local content = C.content
+
+  local f_h = C.floor_h or 0
+
+  -- FIXME: cruddy crud here...
+
+  if content.kind == "START" then
+    entity_helper("dm_player", C.mid_x, C.mid_y, f_h, {})
+  end
+
+
+  if content.kind == "FLAG" then
+    local ent = sel(C.cy < HEX_MID_Y, "blue_torch", "red_torch")
+    entity_helper(ent, C.mid_x, C.mid_y, f_h, {})
+  end
+
+  if content.kind == "ENTITY" then
+    entity_helper(content.entity, C.mid_x, C.mid_y, f_h, {})
+  end
+
+end
+
+
 function HEXAGON_CLASS.build(C)
   
   if C.kind == "edge" or C.kind == "solid" or C.kind == "dead" then
@@ -431,31 +464,9 @@ C.room.f_mat = f_mat
     end
 
 
-
-  if C.content == "START" then
-    entity_helper("dm_player", C.mid_x, C.mid_y, f_h, {})
-
-    if not LEVEL.has_p1_start then
-      entity_helper("player1", C.mid_x, C.mid_y, f_h, {})
-      LEVEL.has_p1_start = true
-    end
+  if C.content then
+    C:build_content(C)
   end
-
-
-  if C.content == "FLAG" then
-    local ent = sel(C.cy < HEX_MID_Y, "blue_torch", "red_torch")
-    entity_helper(ent, C.mid_x, C.mid_y, f_h, {})
-  end
-
---[[ !!!
-  if C.content == "ENTITY" then
-    entity_helper(C.entity, C.mid_x, C.mid_y, f_h, {})
-  
-  elseif C.kind == "used" then
-    entity_helper("potion", C.mid_x, C.mid_y, f_h, {})
-
-  end
---]]
 end
 
 
@@ -734,7 +745,6 @@ function Hex_starting_area()
   local C = HEX_MAP[LEVEL.start_cx][LEVEL.start_cy]
 
   C.kind = "used"
-  C.content = "START"
 
 
   if CTF_MODE then
@@ -745,18 +755,18 @@ function Hex_starting_area()
       -- sometimes remove middle
       if rand.odds(30) then
         C.kind = "free"
-        C.content = nil
       end
 
-      C = HEX_MAP[cx1][HEX_MID_Y]
-      C.kind = "used"
---      C.content = "ENTITY"
---      C.entity  = "potion"
+      local C1, C2
 
-      C = HEX_MAP[cx2][HEX_MID_Y]
-      C.kind = "used"
---      C.content = "ENTITY"
---      C.entity  = "potion"
+      C1 = HEX_MAP[cx1][HEX_MID_Y]
+      C1.kind = "used"
+
+      C2 = HEX_MAP[cx2][HEX_MID_Y]
+      C2.kind = "used"
+
+      C1.peer = C2
+      C2.peer = C1
     end
   end
 end
@@ -954,10 +964,6 @@ function Hex_make_cycles()
   local function grow_a_thread(T)
     if T.limit <= 0 then
       T.dead = true
-
-      -- debug crud...
-      T.pos.content = "ENTITY"
-      T.pos.entity  = "evil_eye"
 
       -- continue sometimes...
       if rand.odds(25) then
@@ -1383,7 +1389,7 @@ R.f_mat = "FWATER1"
 
     local F = HEX_MAP[cx][fy]
 
-    F.content = "FLAG"
+    F.content = { kind = "FLAG" }
   end
 
 
@@ -1664,13 +1670,46 @@ function Hex_floor_heights()
 end
 
 
-function Hex_mirror_map()
+function Hex_place_stuff()
+  -- TODO
 
-  local function peer_cells(C, D)
-    C.peer = D
-    D.peer = C
+  local top_H = sel(CTF_MODE, HEX_MID_Y - 1, HEX_H)
+
+  local function place_anywhere(ent)
+    for loop = 1, 9000 do
+      local cx = rand.irange(1, HEX_W)
+      local cy = rand.irange(1, top_H)
+
+      local C = HEX_MAP[cx][cy]
+
+      if not C.room then continue end
+
+      if C.content then continue end
+
+      C.content =
+      {
+        kind   = "ENTITY"
+        entity = ent
+        no_mirror = true
+      }
+
+      return -- OK
+    end
+
+    error("Failed to place: " .. tostring(ent))
   end
 
+
+  ---| Hex_place_stuff |---
+
+  -- TODO
+
+  -- finally, add a single player start
+  place_anywhere("player1")
+end
+
+
+function Hex_mirror_map()
 
   local function mirror_path(C, D)
     for dir = 1, 6 do
@@ -1685,13 +1724,12 @@ function Hex_mirror_map()
     D.kind = C.kind
     D.room = C.room
 
-    D.content = C.content
-    D.entity  = C.entity
+    if C.content and not C.content.no_mirror then
+      D.content = C.content
+    end
 
     C.peer = D
     D.peer = C
-
-    mirror_path(C, D)
   end
 
 
@@ -1708,8 +1746,8 @@ function Hex_mirror_map()
 
     local D = HEX_MAP[dx][dy]
 
-    peer_cells (C, D)
     mirror_cell(C, D)
+    mirror_path(C, D)
   end
   end
 
@@ -1724,10 +1762,6 @@ function Hex_mirror_map()
 
     local C = HEX_MAP[cx][cy]
     local D = HEX_MAP[dx][cy]
-
-    if cx < HEX_MID_X then
-      peer_cells(C, D)
-    end
 
     mirror_path(C, D)
   end
@@ -1752,7 +1786,7 @@ function Hex_shrink_edges()
       local C = HEX_MAP[cx][cy]
 
       if C.kind == "used" then
-        C.used_dist = 0
+        C.dist.used = 0
       end
     end
     end
@@ -1772,8 +1806,8 @@ function Hex_shrink_edges()
 
       dist = dist + 1
 
-      if not C.used_dist or dist < C.used_dist then
-        C.used_dist = dist
+      if not C.dist.used or dist < C.dist.used then
+        C.dist.used = dist
 
         changes = changes + 1
       end
@@ -1798,8 +1832,8 @@ function Hex_shrink_edges()
 
       if C.kind == "edge" then continue end
 
-      if C.used_dist and
-         C.used_dist > 3 and
+      if C.dist.used and
+         C.dist.used > 3 and
          C:touches_edge()
       then
         set_edge(C)
@@ -2133,7 +2167,7 @@ function Hex_create_level()
   Hex_add_rooms()
   Hex_floor_heights()
 
-  -- Hex_place_stuff()
+  Hex_place_stuff()
 
   if CTF_MODE then
     Hex_mirror_map()
