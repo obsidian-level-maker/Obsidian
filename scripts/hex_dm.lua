@@ -1254,6 +1254,7 @@ function Hex_kill_unused_rooms(list)
 end
 
 
+
 function Hex_add_rooms_CTF()
   --
   -- Algorithm:
@@ -1540,6 +1541,7 @@ function Hex_add_rooms_CTF()
 end
 
 
+
 function Hex_add_rooms()
 
   ---| Hex_add_rooms |---
@@ -1549,6 +1551,7 @@ function Hex_add_rooms()
     return
   end
 end
+
 
 
 function Hex_floor_heights()
@@ -1668,10 +1671,14 @@ function Hex_floor_heights()
 end
 
 
+
 function Hex_place_stuff()
   local top_H = sel(LEVEL.CTF, HEX_MID_Y - 1, HEX_H)
 
   local walkable_cells = {}
+
+  local MAX_WALL_DIST = 5
+  local MAX_ITEM_DIST = 3
 
 
   local function place_anywhere(ent)
@@ -1732,6 +1739,17 @@ function Hex_place_stuff()
   end
 
 
+  local function update_distances(what, count)
+    for loop = 1, count do
+      grow_dist_kind(what)
+    end
+
+    each C in walkable_cells do
+      C.dist[what] = math.min(C.dist[what] or 999, count)
+    end
+  end
+
+
   local function calc_wall_dists()
     each C in walkable_cells do
       if C:near_wall() then
@@ -1740,20 +1758,34 @@ function Hex_place_stuff()
       end
     end
 
-    for loop = 1,4 do
-      grow_dist_kind("wall")
-    end
+    update_distances("wall", MAX_WALL_DIST)
+  end
+
+
+  local function calc_flag_dists()
+    if not LEVEL.CTF then return end
 
     each C in walkable_cells do
-      C.dist.wall = math.min(C.dist.wall or 4, 4)
-    end
-
-    -- debug !!!
-    each C in walkable_cells do
-      if C.dist.wall == 1 then
-        C.content = { kind="ENTITY", entity="lamp" }
+      if C.content and C.content.kind == "FLAG" then
+        C.dist.flag = 0
       end
     end
+
+    update_distances("item", MAX_ITEM_DIST)
+  end
+
+
+  local function select_weapons()
+    local list = {}
+
+    -- TODO
+  end
+
+
+  local function big_item_for_middle()
+    -- TODO
+
+    -- not always middle, sometimes in cell with biggest dist.wall
   end
 
 
@@ -1762,12 +1794,14 @@ function Hex_place_stuff()
   collect_cells()
 
   calc_wall_dists()
+  calc_flag_dists()
 
   -- TODO
 
   -- finally, add a single player start
   place_anywhere("player1")
 end
+
 
 
 function Hex_mirror_map()
@@ -1833,6 +1867,7 @@ function Hex_mirror_map()
 
   mirror_path(M, M)
 end
+
 
 
 function Hex_shrink_edges()
@@ -1916,6 +1951,7 @@ function Hex_shrink_edges()
 
   while grow_edges() do end
 end
+
 
 
 function Hex_recollect_rooms()
@@ -2031,6 +2067,7 @@ function Hex_recollect_rooms()
 end
 
 
+
 function Hex_assign_bases()
 
   -- decide which rooms are part of a team's base
@@ -2059,6 +2096,7 @@ function Hex_assign_bases()
     end
   end
 end
+
 
 
 function Hex_decide_room_themes()
@@ -2201,6 +2239,7 @@ function Hex_decide_room_themes()
 end
 
 
+
 function Hex_build_all()
   for cx = 1, HEX_W do
   for cy = 1, HEX_H do
@@ -2210,6 +2249,7 @@ function Hex_build_all()
   end
   end
 end
+
 
 
 function Hex_create_level()
