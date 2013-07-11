@@ -156,12 +156,17 @@ function HEXAGON_CLASS.new(cx, cy)
   {
     cx = cx
     cy = cy
+
     kind = "free"
+
     neighbor = {}
     vertex = {}
     wall_vert = {}
     path = {}
     dist = {}
+
+    random1 = gui.random()
+    random2 = gui.random()
   }
   table.set_class(C, HEXAGON_CLASS)
   return C
@@ -265,14 +270,38 @@ end
 
 
 function HEXAGON_CLASS.touches_edge(C)
-  for i = 1, 6 do
-    local N = C.neighbor[i]
+  for dir = 1, 6 do
+    local N = C.neighbor[dir]
 
     if not N or N.kind == "edge" then
       return true
     end
   end
  
+  return false
+end
+
+
+function HEXAGON_CLASS.can_travel_in_dir(C, dir)
+  local N = C.neighbor[dir]
+
+  if not (N and N.room) then return false end
+
+  if C.path[dir] then return true end
+  
+  if N.room != C.room then return false end
+
+  return true
+end
+
+
+function HEXAGON_CLASS.near_wall(C)
+  for dir = 1, 6 do
+    if not C:can_travel_in_dir(dir) then
+      return true
+    end
+  end
+
   return false
 end
 
@@ -1370,8 +1399,6 @@ function Hex_add_rooms_CTF()
 
     R.flag_room = true
 
-R.f_mat = "FWATER1"
-
     local C = HEX_MAP[cx][cy]
     C.kind = "used"
     R:add_cell(C)
@@ -1671,9 +1698,10 @@ end
 
 
 function Hex_place_stuff()
-  -- TODO
-
   local top_H = sel(CTF_MODE, HEX_MID_Y - 1, HEX_H)
+
+  local walkable_cells = {}
+
 
   local function place_anywhere(ent)
     for loop = 1, 9000 do
@@ -1700,7 +1728,69 @@ function Hex_place_stuff()
   end
 
 
+  local function collect_cells()
+    for cx = 1, HEX_W do
+    for cy = 1, HEX_H do
+      local C = HEX_MAP[cx][cy]
+
+      if C.room then
+        table.insert(walkable_cells, C)
+      end
+    end
+    end
+  end
+
+
+  local function grow_dist_kind(what)
+    each C in walkable_cells do
+      if not C.dist[what] then continue end
+
+      local new_dist = C.dist[what] + 1
+
+      for dir = 1, 6 do
+        if not C:can_travel_in_dir(dir) then continue end
+
+        local N = C.neighbor[dir]
+
+        if not N.dist[what] or N.dist[what] > new_dist then
+          N.dist[what] = new_dist
+          if N.peer then N.peer.dist[what] = N.dist[what] end
+        end
+      end
+    end
+  end
+
+
+  local function calc_wall_dists()
+    each C in walkable_cells do
+      if C:near_wall() then
+        C.dist.wall = 0
+        if C.peer then C.peer.dist.wall = 0 end
+      end
+    end
+
+    for loop = 1,4 do
+      grow_dist_kind("wall")
+    end
+
+    each C in walkable_cells do
+      C.dist.wall = math.min(C.dist.wall or 4, 4)
+    end
+
+    -- debug !!!
+    each C in walkable_cells do
+      if C.dist.wall == 1 then
+        C.content = { kind="ENTITY", entity="lamp" }
+      end
+    end
+  end
+
+
   ---| Hex_place_stuff |---
+
+  collect_cells()
+
+  calc_wall_dists()
 
   -- TODO
 
@@ -1931,7 +2021,7 @@ function Hex_recollect_rooms()
       assert(#R.cells == #R2.cells)
 
       -- peer the mirrored rooms
-      R.peer  = R2
+      R .peer = R2
       R2.peer = R
 
       R2.id = 0 - R.id
@@ -2161,7 +2251,6 @@ function Hex_create_level()
   LEVEL.sky_shade = 160
 
   Hex_plan()
-
   Hex_shrink_edges()
 
   Hex_add_rooms()
