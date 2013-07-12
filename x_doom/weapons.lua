@@ -19,6 +19,7 @@
 -- pref       : usage preference [absent = never]
 -- add_prob   : probabiliiy of adding into level [absent = never]
 -- start_prob : chance of appearing in start room
+-- mp_prob    : chance of being used in a Multi-Player map
 --
 -- rate   : firing rate (shots per second)
 -- damage : damage can inflict per shot
@@ -66,6 +67,7 @@ DOOM.WEAPONS =
     level = 5
     pref = 10
     add_prob = 5
+    mp_prob = 2
     attack = "melee"
     rate = 1.5
     damage = 90
@@ -135,7 +137,7 @@ DOOM.WEAPONS =
     id = 2004
     level = 5
     pref = 30
-    add_prob = 13
+    add_prob = 15
     attack = "missile"
     rate = 11
     damage = 20
@@ -151,6 +153,7 @@ DOOM.WEAPONS =
     level = 7
     pref = 15
     add_prob = 20
+    mp_prob = 6
     attack = "missile"
     rate = 0.65  -- tweaked value, normally 0.8
     damage = 300
