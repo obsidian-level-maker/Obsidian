@@ -392,24 +392,27 @@ function HEXAGON_CLASS.build_content(C)
 
   local f_h = C.floor_h or 0
 
-  -- FIXME: cruddy crud here...
-
   if content.kind == "START" then
-    entity_helper("dm_player", C.mid_x, C.mid_y, f_h, {})
+    local ent = "dm_player"
+    if content.team then
+      ent = "ctf_" .. content.team .. "_start"
+    end
+    entity_helper(ent, C.mid_x, C.mid_y, f_h, {})
   end
 
-
   if content.kind == "FLAG" then
-    local ent = sel(C.cy < HEX_MID_Y, "blue_torch", "red_torch")
+    -- FIXME: prefab
+    assert(content.team)
+    local ent = "ctf_" .. content.team .. "_flag"
     entity_helper(ent, C.mid_x, C.mid_y, f_h, {})
   end
 
   if content.kind == "ENTITY" or
      content.kind == "WEAPON"
   then
+    -- FIXME: prefab
     entity_helper(content.entity, C.mid_x, C.mid_y, f_h, {})
   end
-
 end
 
 
@@ -2028,7 +2031,7 @@ function Hex_mirror_map()
     D.room = C.room
 
     if C.content and not C.content.no_mirror then
-      D.content = C.content
+      D.content = table.copy(C.content)
     end
 
     C.peer = D
