@@ -397,7 +397,7 @@ function HEXAGON_CLASS.build_content(C)
     if content.team then
       ent = "ctf_" .. content.team .. "_start"
     end
-    entity_helper(ent, C.mid_x, C.mid_y, f_h, {})
+    entity_helper(ent, C.mid_x, C.mid_y, f_h, { angle=content.angle })
   end
 
   if content.kind == "FLAG" then
@@ -410,8 +410,8 @@ function HEXAGON_CLASS.build_content(C)
   if content.kind == "ENTITY" or
      content.kind == "WEAPON"
   then
-    -- FIXME: prefab
-    entity_helper(content.entity, C.mid_x, C.mid_y, f_h, {})
+    -- FIXME: prefab for weapons
+    entity_helper(content.entity, C.mid_x, C.mid_y, f_h, { angle=content.angle })
   end
 end
 
@@ -433,7 +433,7 @@ function HEXAGON_CLASS.build(C)
   local R = assert(C.room)
 
 
-    -- floor
+  -- floor
 
   local f_h
   local c_h
@@ -1699,6 +1699,50 @@ function Hex_place_stuff()
   local MAX_DIST = 9
 
 
+  local function dir_to_angle(dir)
+    if dir == 1 then return 225 end
+    if dir == 2 then return 270 end
+    if dir == 3 then return 315 end
+
+    if dir == 4 then return 135 end
+    if dir == 5 then return  90 end
+    if dir == 6 then return  45 end
+
+    return 0
+  end
+
+
+  local function dist_to_edge(C, dir)
+    local dist = 0
+
+    while C:can_travel_in_dir(dir) do
+      dist = dist + 1
+      C = C.neighbor[dir]
+    end
+
+    return dist
+  end
+
+
+  local function angle_for_player(C)
+    local best_dir
+    local best_dist
+
+    for dir = 1, 6 do
+      local dist = dist_to_edge(C, dir)
+
+      dist = dist + gui.random() / 10
+
+      if not best_dist or dist > best_dist then
+        best_dir  = dir
+        best_dist = dist
+      end
+    end
+
+    return dir_to_angle(best_dir)
+  end
+
+
   local function place_anywhere(ent)
     for loop = 1, 9000 do
       local cx = rand.irange(1, HEX_W)
@@ -1716,6 +1760,10 @@ function Hex_place_stuff()
         entity = ent
         no_mirror = true
       }
+
+      if string.match(ent, "player") then
+        C.content.angle = angle_for_player(C)
+      end
 
       return -- OK
     end
@@ -1816,6 +1864,7 @@ function Hex_place_stuff()
     -- the 'team' field for CTF maps is decided in Hex_assign_bases
 
     C.content = { kind="START" }
+    C.content.angle = angle_for_player(C)
 
     C.dist.start = 0
 
@@ -2017,6 +2066,15 @@ end
 
 function Hex_mirror_map()
 
+  local function mirror_angle(ang)
+    if ang < 180 then
+      return ang + 180
+    else
+      return ang - 180
+    end
+  end
+
+
   local function mirror_path(C, D)
     for dir = 1, 6 do
       if C.path[HEX_OPP[dir]] then
@@ -2032,6 +2090,10 @@ function Hex_mirror_map()
 
     if C.content and not C.content.no_mirror then
       D.content = table.copy(C.content)
+
+      if D.content.angle then
+         D.content.angle = mirror_angle(D.content.angle)
+      end
     end
 
     C.peer = D
