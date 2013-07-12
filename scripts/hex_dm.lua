@@ -1286,7 +1286,10 @@ function Hex_add_rooms_CTF()
   --      and occasionally create new rooms
   --
 
+  local MIN_ROOM_SIZE = 8
+
   local room_list = {}
+
 
   local function new_room()
     local ROOM = HEX_ROOM_CLASS.new()
@@ -1525,7 +1528,7 @@ function Hex_add_rooms_CTF()
 
       if R.flag_room then continue end
 
-      if #R.cells >= 4 then continue end
+      if #R.cells >= MIN_ROOM_SIZE then continue end
 
       local N = neighbor_for_merge(R)
 
