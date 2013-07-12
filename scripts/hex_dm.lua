@@ -445,7 +445,9 @@ function HEXAGON_CLASS.build(C)
   Brush_add_top(f_brush, f_h)
   Brush_set_mat(f_brush, R.floor_mat, R.floor_mat)
 
----### f_brush[#f_brush].tex = "ROOM" .. ((C.old_room and C.old_room.id) or 0)
+if C.dist.item then
+--## f_brush[#f_brush].tex = "IT_" .. C.dist.item
+end
 
   brush_helper(f_brush)
 
@@ -533,6 +535,7 @@ end
 function HEX_ROOM_CLASS.kill(R)
   each C in R.cells do
     C.kind = "dead"
+    C.room = nil
   end
 
   R.dead  = true
@@ -1687,10 +1690,7 @@ function Hex_place_stuff()
 
   local walkable_cells = {}
 
-  local MAX_WALL_DIST  = 5  -- fairly arbitrary
-
-  local MAX_ITEM_DIST  = int(HEX_W / 3)
-  local MAX_START_DIST = int(HEX_W / 5)
+  local MAX_DIST = 9
 
 
   local function place_anywhere(ent)
@@ -1770,7 +1770,7 @@ function Hex_place_stuff()
       end
     end
 
-    update_distances("wall", MAX_WALL_DIST)
+    update_distances("wall", MAX_DIST)
   end
 
 
@@ -1779,11 +1779,11 @@ function Hex_place_stuff()
 
     each C in walkable_cells do
       if C.content and C.content.kind == "FLAG" then
-        C.dist.flag = 0
+        C.dist.item = 0
       end
     end
 
-    update_distances("item", MAX_ITEM_DIST)
+    update_distances("item", MAX_DIST)
   end
 
 
@@ -1799,7 +1799,7 @@ function Hex_place_stuff()
 
     C.dist.item = 0
 
-    update_distances("item", MAX_ITEM_DIST)
+    update_distances("item", MAX_DIST)
   end
 
 
@@ -1811,7 +1811,7 @@ function Hex_place_stuff()
 
     C.dist.start = 0
 
-    update_distances("item", MAX_START_DIST)
+    update_distances("start", MAX_DIST)
   end
 
 
@@ -1905,17 +1905,27 @@ function Hex_place_stuff()
   end
 
 
-  local function score_cell_for_weapon(C)
+  local function score_for_weapon(C)
+    local score = 0
 
-    
+    score = score + C.dist.wall * 12
+
+    score = score + (C.dist.item or 0) * 5
+
+    return score + C.random1 * 11
   end
 
 
-  local function score_cell_for_start(C)
+  local function score_for_start(C)
     local score = 0
 
-    if C.dist.wall == 0 then score = score + 10 end
+    if C.dist.wall == 0 then score = score + 20.0 end
+    if C.dist.wall == 1 then score = score + 6.0 end
 
+    score = score + (C.dist.item  or 0) * 2
+    score = score + (C.dist.start or 0) * 5
+
+    return score + C.random2 * 9
   end
 
 
@@ -1930,9 +1940,9 @@ function Hex_place_stuff()
       if LEVEL.CTF and C.cy == HEX_MID_Y then continue end
 
       if kind == "START" then
-        score_cell_for_start(C)
+        C.score = score_for_start(C)
       else
-        score_cell_for_weapon(C)
+        C.score = score_for_weapon(C)
       end
     end
 
@@ -1984,7 +1994,7 @@ function Hex_place_stuff()
   decide_weapons()
   decide_big_item()
 
-  if rand.odds(70) then
+  if rand.odds(50) then
     place_item_in_middle()
   end
 
