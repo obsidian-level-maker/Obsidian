@@ -104,6 +104,9 @@ class CONTENT
 
   entity : name
 
+  team : keyword  -- "red" or "blue"  (for FLAG and START)
+                  -- not used for DM maps
+
   no_mirror : boolean  -- do not mirror this
 }
 
@@ -1401,7 +1404,7 @@ function Hex_add_rooms_CTF()
 
     local F = HEX_CELLS[cx][fy]
 
-    F.content = { kind = "FLAG" }
+    F.content = { kind="FLAG" }
   end
 
 
@@ -1807,7 +1810,9 @@ function Hex_place_stuff()
     assert(not C.content)
     assert(not C.peer)
 
-    C.content = { kind = "START" }
+    -- the 'team' field for CTF maps is decided in Hex_assign_bases
+
+    C.content = { kind="START" }
 
     C.dist.start = 0
 
@@ -2272,8 +2277,10 @@ end
 
 
 function Hex_assign_bases()
-
-  -- decide which rooms are part of a team's base
+  --
+  -- Decide which rooms are part of a team's base.
+  -- Also assigns the 'team' field for FLAGs and player STARTs.
+  --
 
   local top_Y  = int((HEX_MID_Y - 1) * rand.pick({ 0.6, 0.8, 1.0 }))
   local left_X = int((HEX_MID_X - 1) * rand.pick({ 0,   0.7, 1.0 }))
@@ -2297,6 +2304,53 @@ function Hex_assign_bases()
       R.base = "blue"
       R.peer.base = "red"
     end
+  end
+
+  -- handle flags
+
+  for cx = 1, HEX_W do
+  for cy = 1, HEX_H do
+    local C = HEX_CELLS[cx][cy]
+
+    if C.content and C.content.kind == "FLAG" then
+      if cy < HEX_MID_Y then
+        C.content.team = "blue"
+        C.room.base    = "blue"
+      else
+        C.content.team = "red"
+        C.room.base    = "red"
+      end
+    end
+  end
+  end
+
+  -- handle player starts
+
+  for cx = 1, HEX_W do
+  for cy = 1, HEX_H do
+    local C = HEX_CELLS[cx][cy]
+
+    if C.content and C.content.kind == "START" and not C.content.team then
+      if C.base then
+        C.content.team = C.base
+      else
+        local blue_prob = 50
+        if cy < HEX_MID_Y then blue_prob = 75 end
+        if cy > HEX_MID_Y then blue_prob = 25 end
+
+        C.content.team = rand.sel(blue_prob, "blue", "red")
+
+        local D = assert(C.peer)
+
+        if C.content.team == "blue" then
+          D.content.team = "red"
+        else
+          D.content.team = "blue"
+        end
+      end 
+    end
+
+  end
   end
 end
 
