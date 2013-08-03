@@ -65,9 +65,13 @@ esselfortium : encouragement and detailed feedback.
 
 gggmork : beta testing, detailed feedback.
 
+flyingdeath : various feedback and useful suggestions.
+
 leilei : initial Amulets & Armor definition, various feedback.
 
 Maxim Samoylenko : encouragement and testing.
+
+thesleeve : monster placement analysis.
 
 .... and everyone else who provided feedback, bug reports,
 ideas for improvements (etc), both in email and on the forums.
