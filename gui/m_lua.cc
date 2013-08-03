@@ -519,6 +519,7 @@ extern int CSG_end_level(lua_State *L);
 extern int CSG_property(lua_State *L);
 extern int CSG_add_brush(lua_State *L);
 extern int CSG_add_entity(lua_State *L);
+extern int CSG_trace_ray(lua_State *L);
 
 extern int WF_wolf_block(lua_State *L);
 extern int WF_wolf_read(lua_State *L);
@@ -584,6 +585,7 @@ static const luaL_Reg gui_script_funcs[] =
 	{ "property",    CSG_property },
 	{ "add_brush",   CSG_add_brush  },
 	{ "add_entity",  CSG_add_entity },
+	{ "trace_ray",   CSG_trace_ray },
 
 	// Wolf-3D functions
 	{ "wolf_block",     WF_wolf_block },

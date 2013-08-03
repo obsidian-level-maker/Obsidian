@@ -701,6 +701,66 @@ int CSG_add_entity(lua_State *L)
 }
 
 
+// LUA: trace_ray(x1,y1,z1, x2,y2,z2, mode)
+//
+//   x1 y1 z1  -- start coordinate
+//   x2 y2 z2  -- end coordinate
+//
+//   mode      -- a string with one or more letters
+//      v : visibility [only visible brushes]
+//      p : physics    [only solid brushes]
+//
+int CSG_trace_ray(lua_State *L)
+{
+	double x1 = luaL_checknumber(L, 1);
+	double y1 = luaL_checknumber(L, 2);
+	double z1 = luaL_checknumber(L, 3);
+
+	double x2 = luaL_checknumber(L, 4);
+	double y2 = luaL_checknumber(L, 5);
+	double z2 = luaL_checknumber(L, 6);
+
+	const char *mode = luaL_checkstring(L, 7);
+
+	if (fabs(x2 - x1) < 1 && fabs(y2 - y1) < 1 && fabs(z2 - z1) < 1)
+	{
+		return luaL_error(L, "gui.trace_ray: zero-length vector");
+	}
+
+	if (! (mode[0] == 'v' || mode[0] == 'p'))
+	{
+		return luaL_argerror(L, 7, "gui.trace_ray: bad mode string");
+	}
+
+	bool result = true;
+
+	for (unsigned int k = 0 ; k < all_brushes.size() ; k++)
+	{
+		const csg_brush_c *B = all_brushes[k];
+
+		if (mode[0] == 'v')
+		{
+			if (B->bkind == BKIND_Clip || B->bkind >= BKIND_Trigger)
+				continue;
+		}
+		else if (mode[0] == 'p')
+		{
+			if (B->bkind == BKIND_Detail || B->bkind >= BKIND_Liquid)
+				continue;
+		}
+
+		if (B->IntersectRay(x1, y1, z1, x2, y2, z2))
+		{
+			result = false;
+			break;
+		}
+	}
+
+	lua_pushboolean(L, result ? 1 : 0);
+	return 1;
+}
+
+
 //------------------------------------------------------------------------
 
 void CSG_Main_Free()
