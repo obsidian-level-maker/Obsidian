@@ -421,7 +421,7 @@ end
 
 
 function SECTION_CLASS.mid_point(K)
-  local x1, y1, x2, y2 = SECTION_CLASS.get_coords()
+  local x1, y1, x2, y2 = K:get_coords()
 
   return (x1 + x2) / 2, (y1 + y2) / 2
 end
