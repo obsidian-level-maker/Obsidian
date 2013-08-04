@@ -330,6 +330,149 @@ bool csg_entity_c::Match(const char *want_name) const
 
 //------------------------------------------------------------------------
 
+#define QUAD_NODE_SIZE  320
+
+
+class brush_quad_node_c
+{
+public:
+	int lo_x, lo_y, size;  
+
+	brush_quad_node_c *children[2][2];   // [x][y]
+
+	std::vector<csg_brush_c> brushes;
+
+public:
+	inline int hi_x() const { return x + size; }
+	inline int hi_y() const { return y + size; }
+
+	inline int mid_x() const { return x + size / 2; }
+	inline int mid_y() const { return y + size / 2; }
+
+public:
+	brush_quad_node_c(int x1, int y1, int _size) :
+		lo_x(x1), lo_y(y1), size(_size)
+		brushes()
+	{
+		children[0][0] = NULL;
+		children[0][1] = NULL;
+		children[1][0] = NULL;
+		children[1][1] = NULL;
+
+		Subdivide();
+	}
+
+	~brush_quad_node_c()
+	{
+		delete children[0][0];
+		delete children[0][1];
+		delete children[1][0];
+		delete children[1][1];
+	}
+
+private:
+	void Subdivide()
+	{
+		if (size <= QUAD_NODE_SIZE)
+			return;
+
+		int new_size = (size + 1) / 2;
+
+		for (cx = 0 ; cx < 2 ; cx++)
+		for (cy = 0 ; cy < 2 ; cy++)
+		{
+			int new_x = cx ? mid_x() : lo_x;
+			int new_y = cy ? mid_y() : lo_y;
+
+			children[cx][cy] = new brush_quad_node_c(new_x, new_y, new_size);
+		}
+	}
+
+private:
+	void DoAddBrush(csg_brush_c *B, int x1, int y1, int x2, int y2)
+	{
+		// try to place in a child
+		if (children[0][0])
+		{
+			int cx = -1;
+			int cy = -1;
+
+			if (x1 >  lo_x   && x2 < mid_x()) cx = 0;
+			if (x1 > mid_x() && x2 <  hi_x()) cx = 1;
+
+			if (y1 >  lo_y   && y2 < mid_y()) cy = 0;
+			if (y1 > mid_y() && y2 <  hi_y()) cy = 1;
+
+			if (cx >= 0 && cy >= 0)
+			{
+				children[cx][cy]->DoAddBrush(B, x1, y1, x2, y2);
+				return;
+			}
+		}
+
+		// nope -- gotta go in this node
+		brushes.push_back(B);
+	}
+
+public:
+	/* horizontal tree */
+
+	void AddBrush(csg_brush_c * B)
+	{
+		// FIXME
+	}
+
+	void Process(opp_test_state_t& test, float coord)
+	{
+		for (unsigned int k = 0 ; k < lines.size() ; k++)
+			test.ProcessLine(lines[k]);
+
+		if (! lo_child)
+			return;
+
+		// the AddLine() methods ensure that lines are not added
+		// into a child bucket unless the end points are completely
+		// inside it -- and one unit away from the extremes.
+		//
+		// hence we never need to recurse down BOTH sides here.
+
+		if (coord < mid)
+			lo_child->Process(test, coord);
+		else
+			hi_child->Process(test, coord);
+	}
+
+};
+
+
+brush_quad_node_c * brush_quad_tree;
+
+
+static void CSG_CreateQuadTree()
+{
+	// TODO: these coords assume DOOM maps
+	// (for Quake it should be centred on the origin)
+	// perhaps make this controllable from the Lua scripts?
+
+	brush_quad_tree = new brush_quad_node_c(0, 0, 16384);
+}
+
+static void CSG_DeleteQuadTree()
+{
+	delete brush_quad_tree;
+
+	brush_quad_tree = NULL;
+}
+
+static void CSG_QuadTreeAdd(csg_brush_c *B)
+{
+	SYS_ASSERT(brush_quad_tree);
+
+}
+
+
+//------------------------------------------------------------------------
+
 int Grab_Properties(lua_State *L, int stack_pos,
                     csg_property_set_c *props,
                     bool skip_singles = false)
@@ -571,6 +714,8 @@ int CSG_begin_level(lua_State *L)
 
 	game_object->BeginLevel();
 
+	CSG_CreateQuadTree();
+
 	return 0;
 }
 
@@ -665,6 +810,8 @@ int CSG_add_brush(lua_State *L)
 
 	all_brushes.push_back(B);
 
+	brush_quad_tree->Add(B);
+
 	return 0;
 }
 
@@ -732,6 +879,8 @@ int CSG_trace_ray(lua_State *L)
 		return luaL_argerror(L, 7, "gui.trace_ray: bad mode string");
 	}
 
+	SYS_ASSERT(brush_quad_tree);
+
 	bool result = true;
 
 	for (unsigned int k = 0 ; k < all_brushes.size() ; k++)
@@ -775,6 +924,8 @@ void CSG_Main_Free()
 
 	all_brushes .clear();
 	all_entities.clear();
+
+	CSG_DeleteQuadTree();
 
 	dummy_wall_tex .clear();
 	dummy_plane_tex.clear();
