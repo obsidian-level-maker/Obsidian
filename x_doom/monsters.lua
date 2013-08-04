@@ -15,14 +15,15 @@
 -- Usable keywords
 -- ===============
 --
--- prob       : general probability
+-- prob       : general probability of being used
 -- crazy_prob : probability for "Crazy" strength setting
 --
 -- health : hit points of monster
 -- damage : damage can inflict per second (rough approx)
 -- attack : kind of attack (hitscan | missile | melee)
+-- density : how many too use (e.g. 0.5 = half the normal amount)
 --
--- float  : true if monster floats (flys)
+-- float  : true if monster floats (flies)
 -- invis  : true if invisible (or partially)
 --
 -- weap_prefs : weapon preferences table
@@ -59,6 +60,7 @@ DOOM.MONSTERS =
     attack = "hitscan"
     give = { {ammo="bullet",count=5} }
     density = 1.5
+    room_size = "small"
     infights = true
   }
 
@@ -74,6 +76,7 @@ DOOM.MONSTERS =
     attack = "hitscan"
     give = { {weapon="shotty"}, {ammo="shell",count=4} }
     species = "zombie"
+    room_size = "small"
     infights = true
   }
 
@@ -87,6 +90,7 @@ DOOM.MONSTERS =
     health = 60
     damage = 20
     attack = "missile"
+    room_size = "small"
   }
 
   skull =
@@ -102,6 +106,7 @@ DOOM.MONSTERS =
     density = 0.5
     float = true
     weap_prefs = { launch=0.2 }
+    room_size = "small"
     infights = true
   }
 
@@ -116,6 +121,7 @@ DOOM.MONSTERS =
     damage = 25
     attack = "melee"
     weap_prefs = { launch=0.5 }
+    room_size = "any"
   }
 
   spectre =
@@ -133,6 +139,7 @@ DOOM.MONSTERS =
     outdoor_factor = 3.0
     weap_prefs = { launch=0.2 }
     species = "demon"
+    room_size = "any"
   }
 
   caco =
@@ -147,6 +154,7 @@ DOOM.MONSTERS =
     attack = "missile"
     density = 0.5
     float = true
+    room_size = "large"
   }
 
   baron =
@@ -161,6 +169,7 @@ DOOM.MONSTERS =
     attack = "missile"
     density = 0.5
     weap_prefs = { bfg=3.0 }
+    room_size = "medium"
   }
 
 
@@ -180,6 +189,7 @@ DOOM.MONSTERS =
     attack = "missile"
     density = 0.1
     weap_prefs = { bfg=5.0 }
+    room_size = "medium"
   }
 
   Mastermind =
@@ -196,6 +206,7 @@ DOOM.MONSTERS =
     attack = "hitscan"
     density = 0.2
     weap_prefs = { bfg=5.0 }
+    room_size = "large"
   }
 }
 
@@ -214,6 +225,7 @@ DOOM2.MONSTERS =
     attack = "hitscan"
     give = { {weapon="chain"}, {ammo="bullet",count=10} }
     species = "zombie"
+    room_size = "large"
     infights = true
   }
 
@@ -229,6 +241,7 @@ DOOM2.MONSTERS =
     damage = 70
     attack = "missile"
     density = 0.6
+    room_size = "any"
   }
 
   knight =
@@ -245,6 +258,7 @@ DOOM2.MONSTERS =
     attack = "missile"
     density = 0.7
     species = "baron"
+    room_size = "medium"
   }
 
   mancubus =
@@ -258,6 +272,7 @@ DOOM2.MONSTERS =
     damage = 70
     attack = "missile"
     density = 0.6
+    room_size = "large"
   }
 
   arach =
@@ -271,6 +286,7 @@ DOOM2.MONSTERS =
     damage = 70
     attack = "missile"
     density = 0.8
+    room_size = "medium"
   }
 
   vile =
@@ -285,7 +301,8 @@ DOOM2.MONSTERS =
     damage = 40
     attack = "hitscan"
     density = 0.2
-    never_promote = true
+    room_size = "medium"
+    nasty = true
   }
 
   pain =
@@ -301,9 +318,10 @@ DOOM2.MONSTERS =
     damage = 20
     attack = "missile"
     density = 0.2
-    never_promote = true
     float = true
     weap_prefs = { launch=0.2 }
+    room_size = "large"
+    nasty = true
   }
 
   -- NOTE: not generated in normal levels
