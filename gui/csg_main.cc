@@ -446,7 +446,16 @@ private:
 
 	bool RayTouchesBox(double x1, double y1, double x2, double y2) const
 	{
-		return true; // FIXME !!!!
+		// TODO: a _proper_ line/box test will be much more optimal
+		//       (assuming the average ray is fairly long).
+
+		if (MAX(x1, x2) < lo_x) return false;
+		if (MAX(y1, y2) < lo_y) return false;
+
+		if (MIN(x1, x2) > hi_x()) return false;
+		if (MIN(y1, y2) > hi_y()) return false;
+
+		return true;
 	}
 
 public:
