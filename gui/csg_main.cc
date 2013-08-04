@@ -340,18 +340,18 @@ public:
 
 	brush_quad_node_c *children[2][2];   // [x][y]
 
-	std::vector<csg_brush_c> brushes;
+	std::vector<csg_brush_c *> brushes;
 
 public:
-	inline int hi_x() const { return x + size; }
-	inline int hi_y() const { return y + size; }
+	inline int hi_x() const { return lo_x + size; }
+	inline int hi_y() const { return lo_y + size; }
 
-	inline int mid_x() const { return x + size / 2; }
-	inline int mid_y() const { return y + size / 2; }
+	inline int mid_x() const { return lo_x + size / 2; }
+	inline int mid_y() const { return lo_y + size / 2; }
 
 public:
 	brush_quad_node_c(int x1, int y1, int _size) :
-		lo_x(x1), lo_y(y1), size(_size)
+		lo_x(x1), lo_y(y1), size(_size),
 		brushes()
 	{
 		children[0][0] = NULL;
@@ -378,8 +378,8 @@ private:
 
 		int new_size = (size + 1) / 2;
 
-		for (cx = 0 ; cx < 2 ; cx++)
-		for (cy = 0 ; cy < 2 ; cy++)
+		for (int cx = 0 ; cx < 2 ; cx++)
+		for (int cy = 0 ; cy < 2 ; cy++)
 		{
 			int new_x = cx ? mid_x() : lo_x;
 			int new_y = cy ? mid_y() : lo_y;
@@ -391,7 +391,7 @@ private:
 private:
 	void DoAddBrush(csg_brush_c *B, int x1, int y1, int x2, int y2)
 	{
-		// try to place in a child
+		// does it fit in a child node?
 		if (children[0][0])
 		{
 			int cx = -1;
@@ -415,33 +415,61 @@ private:
 	}
 
 public:
-	/* horizontal tree */
-
-	void AddBrush(csg_brush_c * B)
+	void Add(csg_brush_c * B)
 	{
-		// FIXME
+		int x1 = floor(B->min_x);
+		int y1 = floor(B->min_y);
+		int x2 =  ceil(B->max_x);
+		int y2 =  ceil(B->max_y);
+
+		DoAddBrush(B, x1, y1, x2, y2);
 	}
 
-	void Process(opp_test_state_t& test, float coord)
+private:
+	bool IntersectBrush(const csg_brush_c *B,
+						double x1, double y1, double z1,
+				    	double x2, double y2, double z2, const char *mode)
 	{
-		for (unsigned int k = 0 ; k < lines.size() ; k++)
-			test.ProcessLine(lines[k]);
+		if (mode[0] == 'v')
+		{
+			if (B->bkind == BKIND_Clip || B->bkind >= BKIND_Trigger)
+				return false;
+		}
+		else if (mode[0] == 'p')
+		{
+			if (B->bkind == BKIND_Detail || B->bkind >= BKIND_Liquid)
+				return false;
+		}
 
-		if (! lo_child)
-			return;
-
-		// the AddLine() methods ensure that lines are not added
-		// into a child bucket unless the end points are completely
-		// inside it -- and one unit away from the extremes.
-		//
-		// hence we never need to recurse down BOTH sides here.
-
-		if (coord < mid)
-			lo_child->Process(test, coord);
-		else
-			hi_child->Process(test, coord);
+		return B->IntersectRay(x1, y1, z1, x2, y2, z2);
 	}
 
+	bool RayTouchesBox(double x1, double y1, double x2, double y2) const
+	{
+		return true; // FIXME !!!!
+	}
+
+public:
+	bool TraceRay(double x1, double y1, double z1,
+				  double x2, double y2, double z2, const char *mode)
+	{
+		for (unsigned int k = 0 ; k < brushes.size() ; k++)
+			if (IntersectBrush(brushes[k], x1,y1,z1, x2,y2,z2, mode))
+				return true;
+
+		if (children[0][0])
+		{
+			for (int cx = 0 ; cx < 2 ; cx++)
+			for (int cy = 0 ; cy < 2 ; cy++)
+			{
+				if (children[cx][cy]->RayTouchesBox(x1,y1, x2,y2))
+					if (children[cx][cy]->TraceRay(x1,y1,z1, x2,y2,z2, mode))
+						return true;
+			}
+		}
+
+		return false;  // did not hit anything
+	}
 };
 
 
@@ -462,12 +490,6 @@ static void CSG_DeleteQuadTree()
 	delete brush_quad_tree;
 
 	brush_quad_tree = NULL;
-}
-
-static void CSG_QuadTreeAdd(csg_brush_c *B)
-{
-	SYS_ASSERT(brush_quad_tree);
-
 }
 
 
@@ -853,9 +875,12 @@ int CSG_add_entity(lua_State *L)
 //   x1 y1 z1  -- start coordinate
 //   x2 y2 z2  -- end coordinate
 //
-//   mode      -- a string with one or more letters
+//   mode -- a string with one or more letters:
+//
 //      v : visibility [only visible brushes]
 //      p : physics    [only solid brushes]
+//
+//   result is 'true' if something hit, false otherwise
 //
 int CSG_trace_ray(lua_State *L)
 {
@@ -881,29 +906,7 @@ int CSG_trace_ray(lua_State *L)
 
 	SYS_ASSERT(brush_quad_tree);
 
-	bool result = true;
-
-	for (unsigned int k = 0 ; k < all_brushes.size() ; k++)
-	{
-		const csg_brush_c *B = all_brushes[k];
-
-		if (mode[0] == 'v')
-		{
-			if (B->bkind == BKIND_Clip || B->bkind >= BKIND_Trigger)
-				continue;
-		}
-		else if (mode[0] == 'p')
-		{
-			if (B->bkind == BKIND_Detail || B->bkind >= BKIND_Liquid)
-				continue;
-		}
-
-		if (B->IntersectRay(x1, y1, z1, x2, y2, z2))
-		{
-			result = false;
-			break;
-		}
-	}
+	bool result = brush_quad_tree->TraceRay(x1, y1, z1, x2, y2, z2, mode);
 
 	lua_pushboolean(L, result ? 1 : 0);
 	return 1;
