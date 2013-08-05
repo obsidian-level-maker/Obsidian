@@ -54,7 +54,7 @@ DOOM.MONSTERS =
     r = 20
     h = 56 
     level = 1
-    prob = 40
+    prob = 30
     health = 20
     damage = 4
     attack = "hitscan"
@@ -99,11 +99,10 @@ DOOM.MONSTERS =
     r = 16
     h = 56 
     level = 3
-    prob = 16
+    prob = 20
     health = 100
     damage = 7
     attack = "melee"
-    density = 0.5
     float = true
     weap_prefs = { launch=0.2 }
     room_size = "small"
@@ -285,7 +284,7 @@ DOOM2.MONSTERS =
     health = 500
     damage = 70
     attack = "missile"
-    density = 0.8
+    density = 0.7
     room_size = "medium"
   }
 
