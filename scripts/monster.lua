@@ -995,6 +995,56 @@ function Monsters_in_room(L)
   end
 
 
+  local function determine_room_size()
+    -- occasionally break the rules
+    if rand.odds(1) then return end
+
+    -- value depends on total area of monster spots
+    local area = 0
+
+    each spot in L.mon_spots do
+      area = area + (spot.x2 - spot.x1) * (spot.y2 - spot.y1)
+    end
+
+    -- adjust result to be relative to a single seed
+    area = area / (SEED_SIZE * SEED_SIZE)
+
+    -- random adjustment
+    area = area * rand.range(0.80, 1.25)
+
+    if area < 6 then
+      L.room_size = "small"
+    elseif area < 18 then
+      L.room_size = "medium"
+    else
+      L.room_size = "large"
+    end
+
+    gui.debugf("Room size @ %s --> '%s'  (area: %1.2f)\n", L:tostr(), L.room_size, area)
+  end
+
+
+  local function room_size_factor(mon)
+    local info = GAME.MONSTERS[mon]
+
+    if not    L.room_size then return 1 end
+    if not info.room_size then return 1 end
+
+    if room_size == "any" then return 1 end
+
+    -- a good match
+    if info.room_size == L.room_size then return 1 end
+
+    -- close but no cigar
+    if info.room_size == "medium" or L.room_size == "medium" then
+      return 1 / 5
+    end
+
+    -- big difference: one was "small" and the other was "large"
+    return 1 / 25
+  end
+
+
   local function calc_quantity()
     local qty
 
@@ -1313,6 +1363,9 @@ function Monsters_in_room(L)
     each mon,info in GAME.MONSTERS do
       local prob = prob_for_mon(mon, info)
 
+      -- take room size into account
+      prob = prob * room_size_factor(mon)
+
       if prob > 0 then
         list[mon] = prob
         gui.debugf("  %s --> prob:%1.1f\n", mon, prob)
@@ -1325,7 +1378,7 @@ function Monsters_in_room(L)
 
     gui.debugf("Monster palette: (%d kinds, %d actual)\n", num_kinds, table.size(list))
 
-    for i = 1,num_kinds do
+    for i = 1, num_kinds do
       if table.empty(list) then break; end
 
       local mon  = rand.key_by_probs(list)
@@ -1336,10 +1389,6 @@ function Monsters_in_room(L)
       if rand.odds(25) and LEVEL.mon_replacement[mon] then
         mon = rand.key_by_probs(LEVEL.mon_replacement[mon])
       end
-
----##   -- give large monsters a boost so they are more likely to find a
----##   -- usable spot.  This does not affect the desired quantity.
----##   if is_big(mon) then prob = prob * 2 end
 
       palette[mon] = prob
 
@@ -1995,6 +2044,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   L.fight_stats  = make_empty_stats()
 
   L.firepower = Player_firepower()
+
+  determine_room_size()
 
   gui.debugf("Firepower = %1.3f\n", L.firepower)
 
