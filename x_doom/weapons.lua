@@ -88,7 +88,7 @@ DOOM.WEAPONS =
   {
     id = 2002
     level = 1
-    pref = 70
+    pref = 60
     add_prob = 35
     attack = "hitscan"
     rate = 8.5
