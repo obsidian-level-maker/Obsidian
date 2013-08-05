@@ -1049,11 +1049,11 @@ function Monsters_in_room(L)
 
     -- close but no cigar
     if info.room_size == "medium" or L.room_size == "medium" then
-      return 1 / 4
+      return 1 / 3
     end
 
     -- big difference: one was "small" and the other was "large"
-    return 1 / 16
+    return 1 / 10
   end
 
 
