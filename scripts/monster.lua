@@ -996,8 +996,17 @@ function Monsters_in_room(L)
 
 
   local function determine_room_size()
+    -- hallways are always small : allow any monsters
+    if L.kind == "hallway" then return end
+
+    -- anything goes in the EXIT room
+    if L.purpose == "EXIT" then return end
+
     -- occasionally break the rules
-    if rand.odds(1) then return end
+    if rand.odds(2) then return end
+
+    -- often allow any monsters in caves
+    if L.kind == "cave" and rand.odds(30) then return end
 
     -- value depends on total area of monster spots
     local area = 0
@@ -1011,6 +1020,9 @@ function Monsters_in_room(L)
 
     -- random adjustment
     area = area * rand.range(0.80, 1.25)
+
+    -- caves are often large -- adjust for that
+    if L.kind == "cave" then area = area / 2 - 8 end
 
     if area < 6 then
       L.room_size = "small"
@@ -1037,11 +1049,11 @@ function Monsters_in_room(L)
 
     -- close but no cigar
     if info.room_size == "medium" or L.room_size == "medium" then
-      return 1 / 5
+      return 1 / 4
     end
 
     -- big difference: one was "small" and the other was "large"
-    return 1 / 25
+    return 1 / 16
   end
 
 
@@ -1216,6 +1228,10 @@ function Monsters_in_room(L)
 
     -- random variation
     d = d * rand.range(0.5, 1.5)
+
+
+    -- room size check
+    d = d * room_size_factor(mon) ^ 0.5
 
 
     -- time and damage checks
