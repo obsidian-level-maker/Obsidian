@@ -72,7 +72,7 @@ DOOM.PICKUPS =
     id = 2018
     kind = "armor"
     rank = 3
-    prob = 5
+    prob = 4
     start_prob = 80
     give = { {health=30} }
   }
