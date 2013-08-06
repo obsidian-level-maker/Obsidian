@@ -1128,6 +1128,44 @@ function Monsters_in_room(L)
   end
 
 
+  local function mark_ambush_spots()
+    if L.kind == "hallway" then return end
+
+    -- this also determines an angle facing the ambush focus
+
+    each spot in L.mon_spots do
+      local K = L:section_for_spot(spot)
+
+      if not K then continue end
+      if not K.ambush_focus then continue end
+
+      local mx, my = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
+      local mz = spot.z1 + 50
+
+      local ax = K.ambush_focus.x
+      local ay = K.ambush_focus.y
+      local az = K.ambush_focus.z
+
+      -- too close?
+      if geom.dist(mx, my, ax, ay) < 80 then continue end
+
+      spot.ambush_angle = geom.calc_angle(ax - mx, ay - my)
+
+      local ang = K.ambush_focus.angle
+
+      -- check TWO points separated perpedicular to the entry angle
+      local pdx = math.sin(ang) * 40
+      local pdy = math.cos(ang) * 40
+
+      if gui.trace_ray(mx, my, mz, ax + pdx, ay + pdy, az, "v") and
+         gui.trace_ray(mx, my, mz, ax - pdx, ay - pdy, az, "v")
+      then
+        spot.is_ambush = true
+      end
+    end
+  end
+
+
   local function calc_strength_factor(info)
     local factor = (info.level or 1)
 
@@ -1743,14 +1781,12 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- process largest monsters before earlier ones, splitting the
     -- unused spots as we go....
 
-    local SIZES = { 128, 64, 32 }
+    fill_sized_monsters(wants, palette, 64, 128)
 
-    for pass = 1,3 do
-      local r_max = SIZES[pass]
-      local r_min = SIZES[pass + 1] or 0
+    mark_ambush_spots()
 
-      fill_sized_monsters(wants, palette, r_min, r_max)
-    end
+    fill_sized_monsters(wants, palette, 32, 64)
+    fill_sized_monsters(wants, palette,  0, 32)
   end
 
 
