@@ -1134,6 +1134,11 @@ function Monsters_in_room(L)
     -- if K is not a 3x3 "room section", pick a neighbor that is
     local N1, N2
 
+-- FIXME !!!!
+if K.sw == 1 or K.sh == 1 then
+  return gui.random() * 0.6
+end
+
     if K.sw == 1 then
       N1 = K:touch_neighbor(4)
       N2 = K:touch_neighbor(6)
@@ -1668,18 +1673,43 @@ gui.debugf("  mon_fits: r:%d space:%dx%d --> fit:%dx%d\n", info.r, WWW,HHH, w,h)
   end
 
 
-  local function grab_monster_spot(mon, near_to)
+  local function spot_compare(A, B)
+    if A.find_score != B.find_score then
+      return A.find_score > B.find_score
+    end
+
+    return A.find_cost < B.find_cost
+  end
+
+
+  local function grab_monster_spot(mon, near_to, reqs)
     local total = 0
-    
+
     each spot in L.mon_spots do
       local fit_num = mon_fits(mon, spot)
 
       if fit_num <= 0 then
+        spot.find_score = -1
         spot.find_cost = 9e9
         continue
       end
 
       total = total + 1
+
+      -- check requirements : make a score (QUANTIZED!)
+      local score = 0
+
+      if reqs.ambush then
+        if reqs.ambush < 0 and not spot.is_ambush then score = score + 2 end
+        if reqs.ambush > 0 and     spot.is_ambush then score = score + 2 end
+      end
+
+      if reqs.central then
+        if reqs.central < 0 and spot.central_dist and spot.central_dist < 0.3 then score = score + 1 end
+        if reqs.central > 0 and spot.central_dist and spot.central_dist > 0.3 then score = score + 1 end
+      end
+
+      spot.find_score = score
 
       if near_to then
         spot.find_cost = Monsters_dist_between_spots(spot, near_to)
@@ -1698,25 +1728,34 @@ gui.debugf("  mon_fits: r:%d space:%dx%d --> fit:%dx%d\n", info.r, WWW,HHH, w,h)
 
     -- pick the best and remove it from the list
 
-    return table.pick_best(L.mon_spots,
-        function(A, B) return A.find_cost < B.find_cost end,
-        "remove")
+    return table.pick_best(L.mon_spots, spot_compare, "remove")
   end
 
 
   local function try_add_mon_group(mon, count, all_skills)
+    local info = GAME.MONSTERS[mon]
+
     local actual = 0
     local last_spot
 
-    for i = 1,count do
-      local spot = grab_monster_spot(mon, last_spot)
+    local reqs = {}
+
+    -- prefer melee monsters on outside of a section
+    --    and floating monsters on inside
+    if info.attack == "melee" then reqs.central = 1 end
+    if info.float then reqs.central = -1 end
+
+    -- TODO: ambush reqs
+
+    for i = 1, count do
+      local spot = grab_monster_spot(mon, last_spot, reqs)
 
       if not spot then break; end
 
       place_in_spot(mon, spot, all_skills)
 
       actual    = actual + 1
----   last_spot = spot
+---!!!!   last_spot = spot
     end
 
     return actual
