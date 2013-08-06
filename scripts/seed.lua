@@ -322,6 +322,17 @@ function Portal_set_floor(P, floor_h)
 end
 
 
+function Portal_mid_point(P)
+  local x1 = SEEDS[P.sx1][P.sy1].x1
+  local y1 = SEEDS[P.sx1][P.sy1].y1
+
+  local x2 = SEEDS[P.sx2][P.sy2].x2
+  local y2 = SEEDS[P.sx2][P.sy2].y2
+
+  return geom.box_mid(geom.side_coords(P.side, x1,y1, x2,y2))
+end
+
+
 --------------------------------------------------------------------
 
 

@@ -1460,7 +1460,38 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
   end
 
 
-  local function build_section(K, floor_h, from_portal)
+  local function ambush_focus_for_section(K, floor_h, from_portal)
+    -- usually happens only for START room
+    if not from_portal then return nil end
+
+    local dir = 10 - from_portal.side
+    local angle = geom.ANGLES[dir]
+
+    local mx, my = Portal_mid_point(from_portal)
+    local dx, dy = geom.delta(dir)
+
+    mx = mx + dx * 70
+    my = my + dy * 70
+
+    return { x=mx, y=my, z=floor_h + 40, angle=angle }
+  end
+
+
+  local function can_reuse_ambush_focus(last_K, A)
+    if not last_K then return false end
+    if not last_K.ambush_focus then return false end
+
+    local B = last_K.ambush_focus
+
+    if geom.dist(A.x, A.y, B.x, B.y) >= 800 then return false end
+
+    if math.abs(A.z - B.z) >= 96 then return false end
+
+    return true
+  end
+
+
+  local function build_section(K, floor_h, from_portal, last_K)
     K.floor_h = floor_h
     K.ceil_h  = floor_h + 192 ---- rand.pick({128,192,192,256})
 
@@ -1476,11 +1507,26 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
         fallback_ceiling(K)
       end
     end
+
+    -- decide ambush focus point
+    local amb = ambush_focus_for_section(K, floor_h, from_portal)
+
+    if not amb and not last_K then return end
+
+    if not amb or can_reuse_ambush_focus(last_K, amb) then
+      assert(last_K)
+      K.ambush_focus = last_K.ambush_focus  -- may be NIL
+    else
+      K.ambush_focus = amb
+--!!!!! FIXME
+stderrf("new ambush focus @ %s : (%d %d)\n", K:tostr(), amb.x, amb.y)
+      entity_helper("skull_rock", amb.x, amb.y, amb.z, { angle=amb.angle })
+    end
   end
 
 
-  local function recurse_make_stuff(K, floor_h, from_portal)
-    build_section(K, floor_h, from_portal)
+  local function recurse_make_stuff(K, floor_h, from_portal, last_K)
+    build_section(K, floor_h, from_portal, last_K)
 
     each exit in K.exits do
       -- get the one inside the neighbor
@@ -1488,7 +1534,7 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
 
       assert(portal.floor_h)
 
-      recurse_make_stuff(portal.section, portal.floor_h, portal)
+      recurse_make_stuff(portal.section, portal.floor_h, portal, K)
     end
   end
 
