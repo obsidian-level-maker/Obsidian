@@ -71,7 +71,7 @@ evolves about same rate IN TERMS OF # MONSTERS ADDED.
 
 MONSTER_QUANTITIES =
 {
-  scarce=6, less=12, normal=18, more=30, heaps=50, nuts=200
+  scarce=5, less=10, normal=15, more=25, heaps=40, nuts=200
 }
 
 MONSTER_KIND_TAB =
@@ -1095,10 +1095,7 @@ function Monsters_in_room(L)
 
       if L.svolume <= 16 then qty = qty * 1.2 end
     else
-      -- less in hallways
-      if L.kind == "hallway" and not L.big_junc then
-        qty = qty * 0.7
-      end
+      -- no change in hallways : usually have less spots in them
 
       -- extreme variation in rare circumstances
           if rand.odds(2) then qty = qty / 3.0
