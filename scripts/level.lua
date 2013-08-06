@@ -154,6 +154,7 @@ GLOBAL_STYLE_LIST =
   lakes      = { few=60, heaps=10 }
   cages      = { none=50, few=50, some=30, heaps=10 }
   bridges    = { none=10, some=40 }
+  ambushes   = { none=10, some=50, heaps=10 }
 
   mon_variety = { some=90, heaps=4 }
 }
