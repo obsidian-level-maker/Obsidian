@@ -427,6 +427,13 @@ function SECTION_CLASS.mid_point(K)
 end
 
 
+function SECTION_CLASS.edge_mid_point(K, side)
+  local x1, y1, x2, y2 = K:get_coords()
+
+  return geom.box_mid(geom.side_coords(side, x1,y1, x2,y2))
+end
+
+
 function SECTION_CLASS.contains_point(K, x, y)
   local x1, y1, x2, y2 = K:get_coords()
 
