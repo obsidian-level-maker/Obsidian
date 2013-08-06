@@ -617,6 +617,29 @@ function ROOM_CLASS.find_nonfacing_spot(R, x1, y1, x2, y2)
 end
 
 
+function ROOM_CLASS.section_for_spot(R, spot)
+  local mx, my = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
+
+  -- spot lists will generally have all spots in a section being
+  -- contiguous in the list.  Hence we optimise by caching the last
+  -- found section and check that first.
+  local last_K = R.last_spot_section
+
+  if last_K and last_K:contains_point(mx, my) then
+    return last_K
+  end
+
+  each K in R.sections do
+    if K:contains_point(mx, my) then
+      R.last_spot_section = K
+      return K
+    end
+  end
+
+  return nil  -- not found
+end
+
+
 function ROOM_CLASS.num_crossovers(R)
   if R.crossover_hall then return 1 end
 

@@ -427,6 +427,13 @@ function SECTION_CLASS.mid_point(K)
 end
 
 
+function SECTION_CLASS.contains_point(K, x, y)
+  local x1, y1, x2, y2 = K:get_coords()
+
+  return geom.inside_box(x, y, x1, y1, x2, y2)
+end
+
+
 function Section_is_valid(x, y)
   return 1 <= x and x <= SECTION_W and
          1 <= y and y <= SECTION_H
