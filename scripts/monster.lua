@@ -546,6 +546,7 @@ function Monsters_split_spots(list, max_size)
 
       new_spot.x1 = int(x1) ; new_spot.y1 = int(y1)
       new_spot.x2 = int(x2) ; new_spot.y2 = int(y2)
+      new_spot.marked = nil
 
       table.insert(new_list, new_spot)
     end
@@ -1128,19 +1129,60 @@ function Monsters_in_room(L)
   end
 
 
+  local function calc_central_dist(mx, my, K)
+
+    -- if K is not a 3x3 "room section", pick a neighbor that is
+    local N1, N2
+
+    if K.sw == 1 then
+      N1 = K:touch_neighbor(4)
+      N2 = K:touch_neighbor(6)
+
+    elseif K.sh == 1 then
+      N1 = K:touch_neighbor(2)
+      N2 = K:touch_neighbor(8)
+    end
+
+    if N1 and N1.room != L then N1 = nil end
+    if N2 and N2.room != L then N2 = nil end
+
+    if N1 and N2 then
+      K = rand.sel(50, N1, N2)
+    else
+      K = N1 or N2 or K
+    end
+
+    local kx, ky = geom.box_mid(K:get_coords())
+
+    local dist = geom.dist(kx, ky, mx, my)
+
+    -- normalize result to be in units of roomy sections
+    return dist / (math.max(K.sw, K.sh) * SEED_SIZE)
+  end
+
+
   local function mark_ambush_spots()
     if L.kind == "hallway" then return end
 
-    -- this also determines an angle facing the ambush focus
+    -- this also determines an angle facing the ambush focus,
+    -- as well as a 'central_dist' value.
 
     each spot in L.mon_spots do
+      -- already processed?
+      if spot.marked then continue end
+
+      spot.marked = true
+
       local K = L:section_for_spot(spot)
 
       if not K then continue end
-      if not K.ambush_focus then continue end
 
       local mx, my = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
       local mz = spot.z1 + 50
+
+      spot.central_dist = calc_central_dist(mx, my, K)
+
+      if not K.ambush_focus then continue end
 
       local ax = K.ambush_focus.x
       local ay = K.ambush_focus.y
@@ -1664,15 +1706,17 @@ gui.debugf("  mon_fits: r:%d space:%dx%d --> fit:%dx%d\n", info.r, WWW,HHH, w,h)
 
   local function try_add_mon_group(mon, count, all_skills)
     local actual = 0
-    
+    local last_spot
+
     for i = 1,count do
-      local spot = grab_monster_spot(mon, spot)
+      local spot = grab_monster_spot(mon, last_spot)
 
       if not spot then break; end
 
       place_in_spot(mon, spot, all_skills)
 
-      actual = actual + 1
+      actual    = actual + 1
+---   last_spot = spot
     end
 
     return actual
@@ -1725,6 +1769,10 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
   local function fill_sized_monsters(wants, palette, r_min, r_max)
     L.mon_spots = Monsters_split_spots(L.mon_spots, r_max * 2)
+
+    if r_max < 100 then
+      mark_ambush_spots()
+    end
 
     -- collect monsters that match the size range
     local want2 = {}
@@ -1782,9 +1830,6 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- unused spots as we go....
 
     fill_sized_monsters(wants, palette, 64, 128)
-
-    mark_ambush_spots()
-
     fill_sized_monsters(wants, palette, 32, 64)
     fill_sized_monsters(wants, palette,  0, 32)
   end
