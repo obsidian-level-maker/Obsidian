@@ -592,6 +592,8 @@ end
     if R == conn.L2 then
       R:add_exclusion_zone("empty",     G.x1, G.y1, G.x2, G.y2, 224)
       R:add_exclusion_zone("nonfacing", G.x1, G.y1, G.x2, G.y2, 768)
+
+      conn.L2:entry_coord_from_spot(G, 64)
     end
   end
 
@@ -1144,6 +1146,17 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
     each K in R.sections do
       assert(K.visited_for_path)
     end
+
+--[[  TEMP CRUD
+    if start_side != 5 then
+      local x1, y1, x2, y2 = start_K:get_coords()
+      local mx, my = start_K:mid_point()
+      x1, y1, x2, y2 = geom.side_coords(start_side, x1,y1, x2,y2)
+      mx = (mx + (x1 + x2) * 2) / 5
+      my = (my + (y1 + y2) * 2) / 5
+      R.entry_coord = { x=mx, y=my, z=R.entry_h }
+    end
+--]]
   end
 
 
@@ -1832,6 +1845,33 @@ function Areas_flesh_out()
   end
 
 
+  local function calc_entry_coord(R)
+    local D = R.entry_conn
+
+    if not D or not R.entry_h then return end
+
+    -- teleporters are done elsewhere
+    if R.entry_conn.kind == "teleporter" then return end
+
+    if R.entry_coord then return end
+
+    local start_K
+    local start_dir
+
+    if D.L1 == R then
+      start_K = D.K1
+      start_side = D.dir1
+    else
+      start_K = D.K2
+      start_side = D.dir2
+    end
+
+    if not start_K then return end
+
+    R:entry_coord_from_section_side(start_K, start_side)
+  end
+
+
   local function floor_stuff(R)
 -- stderrf("AREA floor_stuff @ %s\n", R:tostr())
 
@@ -1857,6 +1897,7 @@ function Areas_flesh_out()
       R:exclude_monsters_in_zones()
     end
 
+    calc_entry_coord(R)
     outgoing_heights(R)
     crossover_room(R)
   end

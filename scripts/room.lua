@@ -617,6 +617,26 @@ function ROOM_CLASS.find_nonfacing_spot(R, x1, y1, x2, y2)
 end
 
 
+function ROOM_CLASS.entry_coord_from_spot(R, spot, add_z)
+  local mx, my = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
+
+  R.entry_coord = { x=mx, y=my, z=spot.z1 + add_z }
+end
+
+
+function ROOM_CLASS.entry_coord_from_section_side(R, K, side)
+  local x, y = K:edge_mid_point(side)
+  local dx, dy = geom.delta(10 - side)
+
+  x = x + dx * 70
+  y = y + dy * 70
+
+  local angle = geom.ANGLES[10 - side]
+
+  R.entry_coord = { x=x, y=y, z=R.entry_h + 40, angle=angle }
+end
+
+
 function ROOM_CLASS.section_for_spot(R, spot)
   local mx, my = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
 
