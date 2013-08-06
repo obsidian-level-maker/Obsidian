@@ -1860,6 +1860,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
         prob = prob * CAGE_REUSE_FACTORS[used_num]
       end
 
+      prob = prob * (info.cage_factor or 1)
+
       if prob > 0 then
         list[mon] = prob
       end

@@ -320,6 +320,7 @@ DOOM2.MONSTERS =
     float = true
     weap_prefs = { launch=0.2 }
     room_size = "large"
+    cage_factor = 0  -- never put in cages
     nasty = true
   }
 
