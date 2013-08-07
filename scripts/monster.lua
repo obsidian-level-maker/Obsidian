@@ -1075,7 +1075,7 @@ function Monsters_in_room(L)
       assert(qty)
 
       -- tend to have more monsters in later rooms and levels
-      qty = qty * (2 + L.lev_along + LEVEL.ep_along) / 4
+      qty = qty * (3 + L.lev_along + LEVEL.ep_along) / 5
     end
 
     -- random adjustment
