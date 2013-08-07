@@ -1518,9 +1518,6 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
       K.ambush_focus = last_K.ambush_focus  -- may be NIL
     else
       K.ambush_focus = amb
---!!!!! FIXME
-stderrf("new ambush focus @ %s : (%d %d)\n", K:tostr(), amb.x, amb.y)
-      entity_helper("skull_rock", amb.x, amb.y, amb.z, { angle=amb.angle })
     end
   end
 
