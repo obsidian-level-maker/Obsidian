@@ -1201,13 +1201,13 @@ end
       local ang = K.ambush_focus.angle
 
       -- check TWO points separated perpedicular to the entry angle
-      local pdx = math.sin(ang) * 40
-      local pdy = math.cos(ang) * 40
+      local pdx = math.sin(ang * math.pi / 180) * 48
+      local pdy = math.cos(ang * math.pi / 180) * 48
 
       if gui.trace_ray(mx, my, mz, ax + pdx, ay + pdy, az, "v") and
          gui.trace_ray(mx, my, mz, ax - pdx, ay - pdy, az, "v")
       then
-        spot.is_ambush = true
+        spot.ambush = true
       end
     end
   end
@@ -1638,13 +1638,9 @@ end
 
     local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
 
-WWW = w
-HHH = h
-
     w = int(w / info.r / 2)
     h = int(h / info.r / 2)
 
-gui.debugf("  mon_fits: r:%d space:%dx%d --> fit:%dx%d\n", info.r, WWW,HHH, w,h)
     return w * h
   end
 
@@ -1700,8 +1696,8 @@ gui.debugf("  mon_fits: r:%d space:%dx%d --> fit:%dx%d\n", info.r, WWW,HHH, w,h)
       local score = 0
 
       if reqs.ambush then
-        if reqs.ambush < 0 and not spot.is_ambush then score = score + 2 end
-        if reqs.ambush > 0 and     spot.is_ambush then score = score + 2 end
+        if reqs.ambush < 0 and not spot.ambush then score = score + 2 end
+        if reqs.ambush > 0 and     spot.ambush then score = score + 2 end
       end
 
       if reqs.central then
