@@ -1182,6 +1182,8 @@ end
 
       if not K then continue end
 
+      spot.section = K
+
       local mx, my = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
       local mz = spot.z1 + 50
 
@@ -1718,6 +1720,12 @@ end
         spot.find_cost = Monsters_dist_between_spots(spot, near_to)
       else
         spot.find_cost = 0
+
+        -- prefer a different section than the last non-group spot
+        -- (for better monster distribution in large rooms)
+        if not near_to and (L.last_spot_section and spot.section == L.last_spot_section) then
+          spot.find_cost = spot.find_cost + 20
+        end
       end 
 
       -- tie breeker
@@ -1731,7 +1739,13 @@ end
 
     -- pick the best and remove it from the list
 
-    return table.pick_best(L.mon_spots, spot_compare, "remove")
+    local spot = table.pick_best(L.mon_spots, spot_compare, "remove")
+
+    if not near_to then
+      L.last_spot_section = spot.section
+    end
+
+    return spot
   end
 
 
