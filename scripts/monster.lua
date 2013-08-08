@@ -1032,8 +1032,6 @@ function Monsters_in_room(L)
     else
       L.room_size = "large"
     end
-
-    gui.debugf("Room size @ %s --> '%s'  (area: %1.2f)\n", L:tostr(), L.room_size, area)
   end
 
 
@@ -2248,26 +2246,35 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   end
 
 
+  local function prepare_room()
+    L.monster_list = {}
+    L.fight_stats  = make_empty_stats()
+
+    L.firepower = Player_firepower()
+
+    categorize_room_size()
+
+    L.sneakiness = rand.sel(30, 95, 25)
+
+    if L.kind != "hallway" and L.entry_coord then
+      L.furthest_dist = L:furthest_dist_from_entry()
+    end
+
+    L.baddie_far_prob = 35 * rand.index_by_probs({ 4,4,2 }) - 20
+
+    gui.debugf("Parameters:\n")
+    gui.debugf("  firepower  = %1.3f\n", L.firepower)
+    gui.debugf("  room_size  = %s\n", L.room_size or "UNSET")
+    gui.debugf("  sneakiness = %d%%\n", L.sneakiness)
+    gui.debugf("  baddie_far = %d%%\n", L.baddie_far_prob)
+  end
+
+
   ---| Monsters_in_room |---
 
   gui.debugf("Monsters_in_room @ %s\n", L:tostr())
 
-  L.monster_list = {}
-  L.fight_stats  = make_empty_stats()
-
-  L.firepower = Player_firepower()
-
-  categorize_room_size()
-
-  L.sneakiness = rand.sel(30, 95, 25)
-
-  if L.kind != "hallway" and L.entry_coord then
-    L.furthest_dist = L:furthest_dist_from_entry()
-  end
-
-  L.baddie_far_prob = 100  -- FIXME
-
-  gui.debugf("Firepower = %1.3f\n", L.firepower)
+  prepare_room()
 
   if should_add_monsters() then
     add_monsters()
