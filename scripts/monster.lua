@@ -1717,7 +1717,7 @@ end
       spot.find_score = score
 
       if near_to then
-        spot.find_cost = Monsters_dist_between_spots(spot, near_to)
+        spot.find_cost = Monsters_dist_between_spots(spot, near_to) / 16
       else
         spot.find_cost = 0
 
@@ -1728,17 +1728,17 @@ end
           dist = dist / L.furthest_dist
           dist = math.abs(dist - L.baddie_dists[mon])
 
-          spot.find_cost = dist * 32
+          spot.find_cost = dist * 2.0
 
         -- prefer a different section than the last non-group spot
         -- (for better monster distribution in large rooms)
         elseif (L.last_spot_section and spot.section == L.last_spot_section) then
-          spot.find_cost = spot.find_cost + 20
+          spot.find_cost = spot.find_cost + 2
         end
       end 
 
       -- tie breeker
-      spot.find_cost = spot.find_cost + gui.random() * 16
+      spot.find_cost = spot.find_cost + gui.random()
     end
 
 
@@ -1747,6 +1747,7 @@ end
     end
 
     -- pick the best and remove it from the list
+    -- TODO: for 'near_to' mode maybe trace_ray() to check spot
 
     local spot = table.pick_best(L.mon_spots, spot_compare, "remove")
 
