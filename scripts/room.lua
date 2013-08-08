@@ -637,6 +637,42 @@ function ROOM_CLASS.entry_coord_from_section_side(R, K, side)
 end
 
 
+function ROOM_CLASS.furthest_dist_from_entry(R)
+  if not R.entry_coord then
+    -- rough guess
+    local S1 = SEEDS[R.sx1][R.sy1]
+    local S2 = SEEDS[R.sx2][R.sy2]
+
+    local w = S2.x2 - S1.x1
+    local h = S2.y2 - S1.y1
+
+    return math.max(w, h)
+  end
+
+  local result = 512
+
+  local ex = R.entry_coord.x
+  local ey = R.entry_coord.y
+
+  for sx = R.sx1, R.sx2 do
+  for sy = R.sy1, R.sy2 do
+    local S = SEEDS[sx][sy]
+
+    if S.room != R then continue end
+
+    local ox = sel(S.x1 < ex, S.x1, S.x2)
+    local oy = sel(S.y1 < ey, S.y1, S.y2)
+
+    local dist = geom.dist(ex, ey, ox, oy)
+
+    result = math.max(result, dist)
+  end
+  end
+
+  return result
+end
+
+
 function ROOM_CLASS.section_for_spot(R, spot)
   local mx, my = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
 
