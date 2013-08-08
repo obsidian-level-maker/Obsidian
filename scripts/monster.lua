@@ -1721,9 +1721,18 @@ end
       else
         spot.find_cost = 0
 
+        if reqs.baddie_far and L.entry_coord and L.baddie_dists[mon] then
+          local mx, my = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
+          local dist = geom.dist(L.entry_coord.x, L.entry_coord.y, mx, my)
+
+          dist = dist / L.furthest_dist
+          dist = math.abs(dist - L.baddie_dists[mon])
+
+          spot.find_cost = dist * 32
+
         -- prefer a different section than the last non-group spot
         -- (for better monster distribution in large rooms)
-        if not near_to and (L.last_spot_section and spot.section == L.last_spot_section) then
+        elseif (L.last_spot_section and spot.section == L.last_spot_section) then
           spot.find_cost = spot.find_cost + 20
         end
       end 
@@ -1766,6 +1775,12 @@ end
       reqs.ambush = 1
     else
       reqs.ambush = -1  -- want a visible spot
+    end
+
+    -- sometimes pick a spot whose distance from the entry coord is
+    -- depends on the relative toughness of the monster
+    if rand.odds(L.baddie_far_prob) then
+      reqs.baddie_far = 1
     end
 
     for i = 1, count do
@@ -1817,8 +1832,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
   local function rough_badness(mon)
     local info = GAME.MONSTERS[mon]
-    local damage = math.clamp(1, info.damage or 10, 99)
-    return info.level * 100 + damage
+
+    return info.health + (info.damage or 0) / 2
   end
 
 
