@@ -1748,7 +1748,11 @@ end
     if info.attack == "melee" then reqs.central = 1 end
     if info.float then reqs.central = -1 end
 
-    -- TODO: ambush reqs
+    if rand.odds(L.sneakiness) or info.nasty then
+      reqs.ambush = 1
+    else
+      reqs.ambush = -1  -- want a visible spot
+    end
 
     for i = 1, count do
       local spot = grab_monster_spot(mon, last_spot, reqs)
@@ -1757,8 +1761,8 @@ end
 
       place_in_spot(mon, spot, all_skills)
 
+      last_spot = spot
       actual    = actual + 1
----!!!!   last_spot = spot
     end
 
     return actual
@@ -2184,6 +2188,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   L.firepower = Player_firepower()
 
   determine_room_size()
+
+  L.sneakiness = rand.sel(30, 95, 25)
 
   gui.debugf("Firepower = %1.3f\n", L.firepower)
 
