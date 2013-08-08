@@ -996,7 +996,7 @@ function Monsters_in_room(L)
   end
 
 
-  local function determine_room_size()
+  local function categorize_room_size()
     -- hallways are always small : allow any monsters
     if L.kind == "hallway" then return end
 
@@ -1815,6 +1815,43 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   end
 
 
+  local function rough_badness(mon)
+    local info = GAME.MONSTERS[mon]
+    local damage = math.clamp(1, info.damage or 10, 99)
+    return info.level * 100 + damage
+  end
+
+
+  local function calc_baddie_dists(palette)
+    -- analyse palette and sort monsters into an ideal distance from
+    -- the entry point of the room -- baddest dudes are furthest away.
+    L.baddie_dists = {}
+
+    if not L.furthest_dist then return end
+    if table.size(palette) < 2 then return end
+
+    local baddies = {}
+
+    each mon,_ in palette do
+      local bad = rough_badness(mon)
+
+      table.insert(baddies, { mon=mon, bad=bad })
+    end
+
+    table.sort(baddies, function(A, B) return A.bad < B.bad end)
+
+    gui.debugf("Baddie dists:\n")
+
+    for idx = 1, #baddies do
+      local mon = baddies[idx].mon
+
+      L.baddie_dists[mon] = idx / (#baddies + 1)
+
+      gui.debugf("   %s : %1.3f\n", mon, L.baddie_dists[mon])
+    end
+  end
+
+
   local function calc_horde_size(mon, info)
     local horde = 1
 
@@ -1884,6 +1921,9 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     -- determine how many of each kind of monster we want
     local wants = how_many_dudes(palette, want_total)
+
+    
+    calc_baddie_dists(palette)
 
 
     -- process largest monsters before earlier ones, splitting the
@@ -2201,9 +2241,15 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
   L.firepower = Player_firepower()
 
-  determine_room_size()
+  categorize_room_size()
 
   L.sneakiness = rand.sel(30, 95, 25)
+
+  if L.kind != "hallway" and L.entry_coord then
+    L.furthest_dist = L:furthest_dist_from_entry()
+  end
+
+  L.baddie_far_prob = 100  -- FIXME
 
   gui.debugf("Firepower = %1.3f\n", L.firepower)
 
