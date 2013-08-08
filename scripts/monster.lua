@@ -98,7 +98,7 @@ DOOM_FLAGS =
   EASY    = 1
   MEDIUM  = 2
   HARD    = 4
-  AMBUSH  = 8
+  DEAF    = 8
 }
 
 -- Hexen thing flags
@@ -114,7 +114,7 @@ HEXEN_FLAGS =
 -- Quake flags
 QUAKE_FLAGS =
 {
-  AMBUSH     = 1
+  DEAF       = 1
 
   NOT_EASY   = 256
   NOT_MEDIUM = 512
@@ -1584,10 +1584,6 @@ end
 
 
   local function place_monster(mon, spot, x, y, z, all_skills)
-    local angle = monster_angle(spot, x, y, z)
-
-    local ambush = rand.sel(70, 1, 0)
-
     local info = GAME.MONSTERS[mon]
 
     -- handle replacements
@@ -1597,6 +1593,17 @@ end
     end
 
     table.insert(L.monster_list, info)
+
+    local angle = monster_angle(spot, x, y, z)
+
+    local deaf
+    if L.kind == "cave" or L.kind == "hallway" or info.float then
+      deaf = rand.odds(65)
+    elseif spot.ambush then
+      deaf = rand.odds(95)
+    else
+      deaf = rand.odds(35)
+    end
 
     -- minimum skill needed for the monster to appear
     local skill = calc_min_skill(all_skills)
@@ -1609,8 +1616,8 @@ end
       props.spawnflags = 0
 
       -- UGH, special check needed for Quake zombie
-      if ambush and mon != "zombie" then
-        props.spawnflags = props.spawnflags + QUAKE_FLAGS.AMBUSH
+      if deaf and mon != "zombie" then
+        props.spawnflags = props.spawnflags + QUAKE_FLAGS.DEAF
       end
 
       if (skill > 1) then props.spawnflags = props.spawnflags + QUAKE_FLAGS.NOT_EASY end
@@ -1618,8 +1625,8 @@ end
     else
       props.flags = DOOM_FLAGS.HARD
 
-      if ambush then
-        props.flags = props.flags + DOOM_FLAGS.AMBUSH
+      if deaf then
+        props.flags = props.flags + DOOM_FLAGS.DEAF
       end
 
       if (skill <= 1) then props.flags = props.flags + DOOM_FLAGS.EASY end
