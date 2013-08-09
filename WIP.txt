@@ -9,34 +9,25 @@ BUG: outdoor border placed next to an outdoor lake -- no wall is
      placed between them, can give a gap for the player to walk.
 
 
-+  monster angles!
-   -  small chance of ALL no change (same as prefabs)
-   -  small chance of ALL completely random
-   -  if use ambush spot, usually look towards that spot
-   -  not ambush: often look at entry coord
-   -  sometimes look at an important item  [small chance: ALL]
-   -  otherwise random
+++  placement for closets
 
-+  use ambush spots : 90% DEAF (50% if float)
-   -  50% of monsters want ambush spot [occas: 95%]
 
--  if not ambush spot, 20% DEAF
-
--  quantity (etc?) in hallways -- check prefabs
-
--  sometimes : place baddest monsters at furthest spots from entry
-   [when iterating through palette, do toughest mons first, and
-    find_cost = 1000 / dist_to_entry_coord]
+-  entry_coord / ambush_focus for rooms entered by a closet
 
 -  pick a "guard" monster for certain rooms, place it
    (really the BOSS for an exit or near-exit room)
    skip that monster when deciding palette [usually :]
+   guard monster(s) look at guard item 
 
 ?  reintroduce some "toughness" system
 
--  when pick non-near spot : prefer different section than last one
+DONE:  use new ambush spots
+DONE:  melee monsters : pick spots away from centre of prefab
+DONE:  when pick non-near spot : prefer different section than last one
+DONE:  sometimes place baddest monsters at furthest spots from entry
+DONE:  better monster angles
+
++  implement 'replaces=xxx' by adding _both_ monsters to a palette
 
 -  in dark rooms, invis monsters higher prob, treat as non-replacing
-
-DONE:  melee monsters : pick spots away from centre of prefab
 

@@ -171,6 +171,10 @@ V5 Stuff:
          which have a lower value
 
 
+-  monster quantity (etc?) in hallways -- check prefabs
+
+-  Mons: sometimes look toward important item (esp. keys)
+
 +  properly test if a prefab fits (esp. with entry portal)
 
 -  check we don't add walls if an edge is fence/solid ('#')
