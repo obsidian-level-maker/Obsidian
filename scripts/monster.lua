@@ -1568,6 +1568,14 @@ end
       focus = spot.face
     end
 
+    if L.force_mon_angle then
+      return L.force_mon_angle
+    end
+
+    if rand.odds(L.random_face_prob) and not away then
+      focus = nil
+    end
+
     -- look toward something [or away from something]
     if focus then
       local ang = angle_between_points(x, y, focus.x, focus.y)
@@ -2295,11 +2303,19 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     L.baddie_far_prob = 35 * rand.index_by_probs({ 4,4,2 }) - 20
 
+    if rand.odds(2) then
+      L.force_mon_angle = rand.irange(0,7) * 45
+    end
+
+    L.random_face_prob = rand.sel(20, 90, 10)
+
     gui.debugf("Parameters:\n")
     gui.debugf("  firepower  = %1.3f\n", L.firepower)
     gui.debugf("  room_size  = %s\n", L.room_size or "UNSET")
     gui.debugf("  sneakiness = %d%%\n", L.sneakiness)
     gui.debugf("  baddie_far = %d%%\n", L.baddie_far_prob)
+    gui.debugf("  rand_face  = %d%%\n", L.random_face_prob)
+    gui.debugf("  same_angle = %s\n", sel(L.force_mon_angle, "TRUE", "false"))
   end
 
 
