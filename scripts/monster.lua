@@ -1207,7 +1207,7 @@ end
       if gui.trace_ray(mx, my, mz, ax + pdx, ay + pdy, az, "v") and
          gui.trace_ray(mx, my, mz, ax - pdx, ay - pdy, az, "v")
       then
-        spot.ambush = true
+        spot.ambush = K
       end
     end
   end
@@ -1532,12 +1532,39 @@ end
   end
 
 
-  local function monster_angle(spot, x, y, z)
+  local function quantize_angle(a)
+    if PARAM.fine_angles then return a end
+
+    local a1 = math.floor(a / 45)
+    local a2 = math.ceil (a / 45)
+
+    a = rand.sel(50, a1, a2)
+
+    return bit.band(a, 7) * 45
+  end
+
+
+  local function angle_to_coord(x, y, nx, ny)
+    local ang = geom.calc_angle(nx - x, ny - y)
+
+    -- randomize a bit
+    ang = ang + 60 * rand.skew()
+
+    return quantize_angle(ang)
+  end
+
+
+  local function monster_angle(spot, x, y, z, focus)
     -- TODO: sometimes make all monsters (or a certain type) face
     --       the same direction, or look towards the entrance, or
     --       towards the guard_spot.
 
-    if spot.angle then
+    --!!!! do this _after_ face away check
+    if focus then
+      return angle_to_coord(x, y, focus.x, focus.y)
+    end
+
+    if spot.angle then  --!!!! review : when set?
       return spot.angle
     end
 
@@ -1594,16 +1621,22 @@ end
 
     table.insert(L.monster_list, info)
 
-    local angle = monster_angle(spot, x, y, z)
+    local deaf, focus
 
-    local deaf
     if L.kind == "cave" or L.kind == "hallway" or info.float then
       deaf = rand.odds(65)
     elseif spot.ambush then
-      deaf = rand.odds(95)
+      deaf  = rand.odds(95)
+      focus = assert(spot.ambush.ambush_focus)
     else
       deaf = rand.odds(35)
     end
+
+    if not focus then
+      focus = L.entry_coord
+    end
+
+    local angle = monster_angle(spot, x, y, z, focus)
 
     -- minimum skill needed for the monster to appear
     local skill = calc_min_skill(all_skills)
