@@ -2301,7 +2301,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       L.furthest_dist = L:furthest_dist_from_entry()
     end
 
-    L.baddie_far_prob = 35 * rand.index_by_probs({ 4,4,2 }) - 20
+    L.baddie_far_prob = 35 * rand.index_by_probs({ 3,4,2 }) - 20
 
     if rand.odds(2) then
       L.force_mon_angle = rand.irange(0,7) * 45
