@@ -1544,7 +1544,7 @@ end
   end
 
 
-  local function angle_to_coord(x, y, nx, ny)
+  local function angle_between_points(x, y, nx, ny)
     local ang = geom.calc_angle(nx - x, ny - y)
 
     -- randomize a bit
@@ -1559,31 +1559,24 @@ end
     --       the same direction, or look towards the entrance, or
     --       towards the guard_spot.
 
-    --!!!! do this _after_ face away check
+    local away = false
+
+    if spot.face_away then
+      focus = spot.face_away
+      away  = true
+    elseif spot.face then
+      focus = spot.face
+    end
+
+    -- look toward something [or away from something]
     if focus then
-      return angle_to_coord(x, y, focus.x, focus.y)
-    end
-
-    if spot.angle then  --!!!! review : when set?
-      return spot.angle
-    end
-
-    local face = spot.face or spot.face_away
-
-    if face then
-      local away = (face == spot.face_away)
-
-      local dir = geom.closest_dir(face.x - x, face.y - y)
+      local ang = angle_between_points(x, y, focus.x, focus.y)
 
       if away then
-        dir = 10 - dir
+        ang = geom.angle_add(ang, 180)
       end
 
-      local angle = geom.ANGLES[dir]
-
-      local delta = rand.irange(-1,1) * 45
-
-      return geom.angle_add(angle, delta)
+      return ang
     end
 
     -- fallback : purely random angle
@@ -1610,7 +1603,7 @@ end
   end
 
 
-  local function place_monster(mon, spot, x, y, z, all_skills)
+  local function place_monster(mon, spot, x, y, z, all_skills, is_cage)
     local info = GAME.MONSTERS[mon]
 
     -- handle replacements
@@ -1621,6 +1614,7 @@ end
 
     table.insert(L.monster_list, info)
 
+    -- decide deafness and where to look
     local deaf, focus
 
     if L.kind == "cave" or L.kind == "hallway" or info.float then
@@ -1636,7 +1630,13 @@ end
       focus = L.entry_coord
     end
 
-    local angle = monster_angle(spot, x, y, z, focus)
+    local angle
+
+    if (is_cage or L.kind == "hallway") and spot.angle then
+      angle = spot.angle
+    else
+      angle = monster_angle(spot, x, y, z, focus)
+    end
 
     -- minimum skill needed for the monster to appear
     local skill = calc_min_skill(all_skills)
@@ -2065,7 +2065,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       local all_skills = (i == 1)
       local loc = list[i]
 
-      place_monster(mon, spot, loc.x, loc.y, loc.z, all_skills)
+      place_monster(mon, spot, loc.x, loc.y, loc.z, all_skills, "cage")
     end
   end
 
