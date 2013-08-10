@@ -12,14 +12,21 @@ BUG: outdoor border placed next to an outdoor lake -- no wall is
 ++  placement for closets
 
 
+1. review logic for skipping monsters for WHOLE level
+   - last level should never skip any
+2. decide guard monsters for each ZONE
+3. generate monster palettes for each ZONE
+   - none / few / some / heaps
+   - prefer different palettes for each ZONE
+4. ensure guards / palettes get tougher over each zone
+
+
 -  entry_coord / ambush_focus for rooms entered by a closet
 
 -  pick a "guard" monster for certain rooms, place it
    (really the BOSS for an exit or near-exit room)
    skip that monster when deciding palette [usually :]
    guard monster(s) look at guard item 
-
-?  reintroduce some "toughness" system
 
 DONE:  use new ambush spots
 DONE:  melee monsters : pick spots away from centre of prefab
