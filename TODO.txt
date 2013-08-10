@@ -171,6 +171,12 @@ V5 Stuff:
          which have a lower value
 
 
+-  Fight simulator: adjust monster 'damage' value based on Ambush
+   usage, Cage usage, dark rooms, hitscanners/Archies in low cover
+   rooms -- and lower values if killed by BFG or rocket launcher
+
+-  Fight simulator: re-implement monster infighting
+
 -  monster quantity (etc?) in hallways -- check prefabs
 
 -  Mons: sometimes look toward important item (esp. keys)
@@ -792,6 +798,8 @@ Cancellation:
   HERETIC
 ----------------------------------------------
 
+!!  new 'damage' values for monsters
+
 -  don't build Blaze doors into maps.
 
 -  monsters: not mixed enough (too repetitive), no bosses.
@@ -812,6 +820,8 @@ Sam's suggestions:
 ----------------------------------------------
   HEXEN
 ----------------------------------------------
+
+!!!  new 'damage' values for monsters
 
 !!  BOSS map : require the 2/3 hub keys to access boss room
                NOTE: could use them to restrict progress along chain

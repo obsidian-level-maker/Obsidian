@@ -82,11 +82,11 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
 
   local PLAYER_ACCURACY = 0.8
 
-  local HITSCAN_DODGE = 0.25
+  local HITSCAN_DODGE = 0.25  -- UNUSED, REMOVE THESE
   local MISSILE_DODGE = 0.85
   local MELEE_DODGE   = 0.95
 
-  local HITSCAN_RATIOS = { 1.0, 0.75, 0.5, 0.25 }
+  local HITSCAN_RATIOS = { 1.0, 0.75, 0.5, 0.25 }  -- UNUSED, REMOVE THESE
   local MISSILE_RATIOS = { 1.0, 0.25 }
   local MELEE_RATIOS   = { 1.0 }
 
@@ -171,7 +171,7 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
   end
 
 
-  local function monster_hit_player(M, idx, time)
+  local function OLD__monster_hit_player(M, idx, time)
     local info = M.info
 
     -- how likely the monster is to hit the player
@@ -260,7 +260,7 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
   end
 
 
-  local function monster_hit_monster(M, other_idx, time, factor)
+  local function OLD__monster_hit_monster(M, other_idx, time, factor)
     if other_idx < 1 then return end
 
     -- 'N' for the monster nearer the player (earlier in the list)
@@ -286,7 +286,7 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
   end
 
 
-  local function monsters_shoot(time)
+  local function OLD__monsters_shoot(time)
     for idx,M in ipairs(active_mons) do
       -- skip dead monsters
       if M.health <= 0 then continue end
@@ -313,13 +313,9 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
 
 
   local function calc_monster_threat(info)
-    local threat = info.damage
-    if info.attack == "hitscan" then threat = threat * 2.4 end
-    if info.attack == "melee"   then threat = threat / 2.4 end
+    local threat = info.health + info.damage * 7
 
-    threat = threat + info.health / 20
-    
-    return threat + gui.random()  -- tie breaker
+    return threat + gui.random() * 20  -- tie breaker
   end
 
 
@@ -338,11 +334,21 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
   end
 
   -- put toughest monster first, weakest last.
-  table.sort(active_mons, function(A,B) return A.threat > B.threat end)
+  table.sort(active_mons,
+      function(A,B) return A.threat > B.threat end)
 
-  -- let the monsters throw the first punch (albeit a weak one)
-  monsters_shoot(0.5)
+---##  -- let the monsters throw the first punch (albeit a weak one)
+---##  monsters_shoot(0.5)
 
+  -- TODO: new infight logic : run through active_mons _once_ and
+  --       allow neighbors separated by 4 monsters to hurt each other.
+
+  -- compute health needed by player
+  each M in active_mons do
+    stats.health = stats.health + M.info.damage
+  end
+ 
+  -- run simulation until all monsters are dead
   while #active_mons > 0 do
     local W = select_weapon()
 
@@ -352,9 +358,9 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
     if shots > 30 then shots = 30 end
 
     for loop = 1,shots do
-      local time = player_shoot(W)
-      
-      monsters_shoot(time)
+      player_shoot(W)
+ 
+---##  monsters_shoot(time)
 
       remove_dead_mon()
     end

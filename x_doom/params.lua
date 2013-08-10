@@ -28,10 +28,9 @@ DOOM.PARAMETERS =
   skip_monsters = { 15,25,35 }
 
   time_factor    = 1.0
-  damage_factor  = 1.0
   ammo_factor    = 1.0
-  health_factor  = 0.7
-  monster_factor = 0.9
+  health_factor  = 1.0
+  monster_factor = 1.0
 }
 
 

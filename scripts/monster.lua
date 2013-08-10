@@ -43,7 +43,7 @@ MONSTERS:
 
 (3) give each mon a 'density' value:
     -  use info.density (NOT info.prob)
-    -  adjust with damage/time/along/level/purpose
+    -  adjust with time/along/level/purpose
     -  when all monsters have a density, normalise by dividing by total
 
 (4) give each room a TOTAL count (adjust for along, purpose)
@@ -1316,30 +1316,18 @@ end
     d = d * room_size_factor(mon) ^ 0.5
 
 
-    -- time and damage checks
+    -- time-to-kill check
 
     local toughness = 1  -- FIXME
 
     local time   = info.health / L.firepower
-    local damage = info.damage * time
-
-    if info.attack == "melee" then
-      damage = damage / 5
-    elseif info.attack == "missile" then
-      damage = damage / 2
-    end
 
     if toughness > 1 then
       time = time / math.sqrt(toughness)
     end
 
-    damage = damage / toughness
-
     if PARAM.time_factor then
       time = time * PARAM.time_factor
-    end
-    if PARAM.damage_factor then
-      damage = damage * PARAM.damage_factor
     end
 
 
@@ -1873,7 +1861,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   local function rough_badness(mon)
     local info = GAME.MONSTERS[mon]
 
-    return info.health + (info.damage or 0) / 2
+    return info.health + info.damage * 7
   end
 
 
@@ -2175,7 +2163,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   end
 
 
-  local function adjust_health(L, qty)
+  local function OLD__adjust_health(L, qty)
     -- perform calculation on a per-seed basis
     local svol = L.svolume or 10
 
@@ -2246,8 +2234,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
 --  gui.debugf("raw result = \n%s\n", table.tostr(stats,1))
 
-    -- normalize very large quantities of health 
-    stats.health = adjust_health(L, stats.health)
+---###  -- normalize very large quantities of health 
+---###  stats.health = adjust_health(L, stats.health)
 
     user_adjust_result(stats)
 

@@ -19,7 +19,7 @@
 -- crazy_prob : probability for "Crazy" strength setting
 --
 -- health : hit points of monster
--- damage : damage can inflict per second (rough approx)
+-- damage : total damage inflicted on player (on average)
 -- attack : kind of attack (hitscan | missile | melee)
 -- density : how many too use (e.g. 0.5 = half the normal amount)
 --
@@ -28,7 +28,8 @@
 --
 -- weap_prefs : weapon preferences table
 --
--- NOTES:
+-- NOTES
+-- =====
 --
 -- Some monsters (e.g. IMP) have both a close-range melee
 -- attack and a longer range missile attack.  This is not
@@ -40,10 +41,6 @@
 -- Similarly the Pain Elemental attack is not a real missile
 -- but actually a Lost Soul.  It spawns at least three (when
 -- killed), hence the health is set to 700 instead of 400.
--- Damage value is a rough guess / completely bogus.
---
--- Spider Mastermind damage has been lowered (from 200),
--- since it was creating way too much health in levels.
 --
 
 DOOM.MONSTERS =
@@ -56,7 +53,7 @@ DOOM.MONSTERS =
     level = 1
     prob = 30
     health = 20
-    damage = 4
+    damage = 1
     attack = "hitscan"
     give = { {ammo="bullet",count=5} }
     density = 1.5
@@ -72,7 +69,7 @@ DOOM.MONSTERS =
     level = 2
     prob = 50
     health = 30
-    damage = 15
+    damage = 8
     attack = "hitscan"
     give = { {weapon="shotty"}, {ammo="shell",count=4} }
     species = "zombie"
@@ -88,7 +85,7 @@ DOOM.MONSTERS =
     level = 1
     prob = 60
     health = 60
-    damage = 20
+    damage = 3
     attack = "missile"
     room_size = "small"
   }
@@ -101,7 +98,7 @@ DOOM.MONSTERS =
     level = 3
     prob = 20
     health = 100
-    damage = 7
+    damage = 1
     attack = "melee"
     float = true
     weap_prefs = { launch=0.2 }
@@ -117,7 +114,7 @@ DOOM.MONSTERS =
     level = 1
     prob = 35
     health = 150
-    damage = 25
+    damage = 2
     attack = "melee"
     weap_prefs = { launch=0.5 }
     room_size = "any"
@@ -132,7 +129,7 @@ DOOM.MONSTERS =
     replace_prob = 25
     crazy_prob = 21
     health = 150
-    damage = 25
+    damage = 3
     attack = "melee"
     invis = true
     outdoor_factor = 3.0
@@ -149,7 +146,7 @@ DOOM.MONSTERS =
     level = 3
     prob = 40
     health = 400
-    damage = 35
+    damage = 5
     attack = "missile"
     density = 0.5
     float = true
@@ -164,7 +161,7 @@ DOOM.MONSTERS =
     level = 7
     prob = 20
     health = 1000
-    damage = 45
+    damage = 20
     attack = "missile"
     density = 0.5
     weap_prefs = { bfg=3.0 }
@@ -201,7 +198,7 @@ DOOM.MONSTERS =
     crazy_prob = 18
     skip_prob = 150
     health = 3000
-    damage = 70
+    damage = 200
     attack = "hitscan"
     density = 0.2
     weap_prefs = { bfg=5.0 }
@@ -220,7 +217,7 @@ DOOM2.MONSTERS =
     level = 3
     prob = 20
     health = 70
-    damage = 50
+    damage = 15
     attack = "hitscan"
     give = { {weapon="chain"}, {ammo="bullet",count=10} }
     species = "zombie"
@@ -237,7 +234,7 @@ DOOM2.MONSTERS =
     prob = 40
     skip_prob = 90
     health = 300
-    damage = 70
+    damage = 15
     attack = "missile"
     density = 0.6
     room_size = "any"
@@ -253,7 +250,7 @@ DOOM2.MONSTERS =
     skip_prob = 90
     crazy_prob = 40
     health = 500
-    damage = 45
+    damage = 10
     attack = "missile"
     density = 0.7
     species = "baron"
@@ -268,7 +265,7 @@ DOOM2.MONSTERS =
     level = 6
     prob = 37
     health = 600
-    damage = 70
+    damage = 20
     attack = "missile"
     density = 0.6
     room_size = "large"
@@ -282,7 +279,7 @@ DOOM2.MONSTERS =
     level = 6
     prob = 25
     health = 500
-    damage = 70
+    damage = 15
     attack = "missile"
     density = 0.7
     room_size = "medium"
@@ -297,7 +294,7 @@ DOOM2.MONSTERS =
     prob = 17
     skip_prob = 120
     health = 700
-    damage = 40
+    damage = 50
     attack = "hitscan"
     density = 0.2
     room_size = "medium"
@@ -334,7 +331,7 @@ DOOM2.MONSTERS =
     crazy_prob = 7
     skip_prob = 300
     health = 50
-    damage = 15
+    damage = 5
     attack = "hitscan"
     give = { {ammo="bullet",count=5} }
     density = 2.0
