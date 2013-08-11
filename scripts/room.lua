@@ -696,6 +696,37 @@ function ROOM_CLASS.furthest_dist_from_entry(R)
 end
 
 
+function ROOM_CLASS.find_guard_spot(R)
+  -- finds a KEY or EXIT to guard -- returns coordinate table
+  each G in R.goals do
+    if G.content.kind == "KEY" or
+       G.content.kind == "EXIT"
+    then
+      local mx, my = geom.box_mid(G.x1, G.y1, G.x2, G.y2)
+
+      return { x=mx, y=my }
+    end
+  end
+
+  each CL in R.closets do
+    if CL.closet_kind == "exit" or
+       CL.closet_kind == "item"
+    then
+      -- create a fake spot in front of closet
+      local x, y = CL.section:edge_mid_point(CL.dir)
+      local dx, dy = geom.delta(CL.dir)
+
+      x = x + dx * 70
+      y = y + dy * 70
+
+      return { x=x, y=y }
+    end
+  end
+
+  return nil  -- none
+end
+
+
 function ROOM_CLASS.section_for_spot(R, spot)
   local mx, my = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
 

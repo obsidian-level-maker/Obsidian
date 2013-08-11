@@ -2377,6 +2377,10 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     categorize_room_size()
 
+    if L.kind != "hallway" then
+      L.guard_coord = L:find_guard_spot()
+    end
+
     L.sneakiness = rand.sel(30, 95, 25)
 
     if L.kind != "hallway" and L.entry_coord then
