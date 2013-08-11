@@ -642,9 +642,14 @@ function ROOM_CLASS.entry_coord_from_spot(R, spot, add_z)
 end
 
 
-function ROOM_CLASS.entry_coord_from_section_side(R, K, side)
+function ROOM_CLASS.entry_coord_from_section_side(R, K, side, other_side)
   local x, y = K:edge_mid_point(side)
   local dx, dy = geom.delta(10 - side)
+
+  if other_side then
+    dx, dy = -dx, -dy
+    side = 10 - side
+  end
 
   x = x + dx * 70
   y = y + dy * 70
@@ -920,6 +925,14 @@ function CLOSET_CLASS.install(CL)
 end
 
 
+function CLOSET_CLASS.get_floor_h(CL)
+  local portal = CL.conn.portal1 or CL.conn.portal2
+  assert(portal)
+
+  return portal.floor_h
+end
+
+
 function CLOSET_CLASS.build(CL)
   local portal = CL.conn.portal1 or CL.conn.portal2
   assert(portal)
@@ -961,7 +974,8 @@ function CLOSET_CLASS.build(CL)
     skin2.item = assert(CL.item)
   end
 
-  local floor_h = assert(portal.floor_h)
+  local floor_h = CL:get_floor_h()
+  assert(floor_h)
 
   local x1, y1, x2, y2 = CL.section:get_coords()
 

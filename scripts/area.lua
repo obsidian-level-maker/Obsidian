@@ -1146,17 +1146,6 @@ stderrf("MAP =\n%s\n", table.tostr(map, 4))
     each K in R.sections do
       assert(K.visited_for_path)
     end
-
---[[  TEMP CRUD
-    if start_side != 5 then
-      local x1, y1, x2, y2 = start_K:get_coords()
-      local mx, my = start_K:mid_point()
-      x1, y1, x2, y2 = geom.side_coords(start_side, x1,y1, x2,y2)
-      mx = (mx + (x1 + x2) * 2) / 5
-      my = (my + (y1 + y2) * 2) / 5
-      R.entry_coord = { x=mx, y=my, z=R.entry_h }
-    end
---]]
   end
 
 
@@ -1889,14 +1878,24 @@ function Areas_flesh_out()
 
 
   local function calc_entry_coord(R)
+    -- already have it?
+    if R.entry_coord then return end
+
+    local CL = R:find_entry_closet()
+
+    if CL then
+      -- FIXME: should use portal
+      R:entry_coord_from_section_side(CL.section, CL.dir, "other_side")
+      return
+    end
+
+
     local D = R.entry_conn
 
     if not D or not R.entry_h then return end
 
     -- teleporters are done elsewhere
-    if R.entry_conn.kind == "teleporter" then return end
-
-    if R.entry_coord then return end
+    if D.kind == "teleporter" then return end
 
     local start_K
     local start_dir
