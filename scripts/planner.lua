@@ -1992,7 +1992,6 @@ function Plan_create_rooms()
   LEVEL.conns = {}
   LEVEL.halls = {}
   LEVEL.scenics = {}
-  LEVEL.closets = {}
 
   Plan_choose_darkness()
   Plan_choose_liquid()

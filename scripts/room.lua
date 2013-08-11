@@ -39,8 +39,6 @@ class ROOM
   entry_conn : CONN  -- the main connection used to enter the room
   exit_conn  : CONN  -- the main unlocked connection which exits the room
 
-  branch_kind : keyword
-
   symmetry : keyword   -- symmetry of room, or NIL
                        -- keywords are "x", "y", "xy"
 
@@ -51,6 +49,8 @@ class ROOM
   kw, kh              -- /
 
   sections : list  -- all sections of room
+
+  closets : list(CLOSET)
 
   crossover_hall : HALLWAY  -- if present, a hallway crosses over this room
 
@@ -86,9 +86,8 @@ class CLOSET
 {
   kind : keyword  -- "closet"  (differentiates from room types)
 
-
-  closet_kind : keyword  -- "START", "EXIT"
-                         -- "secret", "trap"
+  closet_kind : keyword  -- "start", "exit"
+                         -- "secret", "trap", "teleporter"
 
   section : SECTION
 
@@ -154,7 +153,6 @@ function ROOM_CLASS.new(shape)
     conns = {}
     sections = {}
     middles = {}
-    spaces = {}
     floor_mats = {}
 
     walls = {}
@@ -169,6 +167,7 @@ function ROOM_CLASS.new(shape)
     item_spots = {}
     cage_spots = {}
 
+    closets = {}
     prefabs = {}
     decor   = {}
 
@@ -617,6 +616,25 @@ function ROOM_CLASS.find_nonfacing_spot(R, x1, y1, x2, y2)
 end
 
 
+function ROOM_CLASS.find_entry_closet(R)
+  each CL in R.closets do
+    if CL.closet_kind == "start" then return CL end
+  end
+
+  if R:has_teleporter() then
+    local D = R:get_teleport_conn()
+
+    if D.L2 == R then
+      each CL in R.closets do
+        if CL.closet_kind == "teleporter" then return CL end
+      end
+    end
+  end
+
+  return nil  -- none
+end
+
+
 function ROOM_CLASS.entry_coord_from_spot(R, spot, add_z)
   local mx, my = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
 
@@ -800,6 +818,10 @@ function ROOM_CLASS.build(R)
   end
 
   Areas_kick_the_goals(R)
+
+  each CL in R.closets do
+    CL:build()
+  end
 end
 
 
@@ -874,7 +896,6 @@ function CLOSET_CLASS.new(kind, parent)
   }
 
   table.set_class(CL, CLOSET_CLASS)
-  table.insert(LEVEL.closets, CL)
   return CL
 end
 
@@ -1790,6 +1811,8 @@ function ROOM_CLASS.install_closet(R, K, dir, kind, skin)
   N:set_closet(CL)
 
   CL:install()
+
+  table.insert(R.closets, CL)
 
 
   -- create connection
@@ -3267,10 +3290,6 @@ function Room_blow_chunks()
 
   each H in LEVEL.halls do
     H:build()
-  end
-
-  each CL in LEVEL.closets do
-    CL:build()
   end
 end
 
