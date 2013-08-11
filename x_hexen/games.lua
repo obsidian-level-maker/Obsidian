@@ -4892,6 +4892,7 @@ HEXEN.PICKUPS =
   {
     id = 81
     prob = 70
+    rank = 1
     cluster = { 1,4 }
     give = { {health=10} }
   }
@@ -4899,6 +4900,7 @@ HEXEN.PICKUPS =
   h_flask =
   {
     id = 82
+    rank = 2
     prob = 25
     give = { {health=25} }
   }
@@ -4907,6 +4909,7 @@ HEXEN.PICKUPS =
   {
     id = 32
     prob = 5
+    rank = 3
     give = { {health=100} }
   }
 
@@ -4916,6 +4919,7 @@ HEXEN.PICKUPS =
   {
     id = 8005
     prob = 10
+    rank = 2
     give = { {health=150} }
     best_class = "fighter"
   }
@@ -4924,6 +4928,7 @@ HEXEN.PICKUPS =
   {
     id = 8006
     prob = 10
+    rank = 2
     give = { {health=150} }
     best_class = "cleric"
   }
@@ -4932,6 +4937,7 @@ HEXEN.PICKUPS =
   {
     id = 8008
     prob = 10
+    rank = 2
     give = { {health=150} }
     best_class = "mage"
   }
@@ -4940,6 +4946,7 @@ HEXEN.PICKUPS =
   {
     id = 8007
     prob = 10
+    rank = 1
     give = { {health=60} }  -- rough average
   }
 
@@ -4949,6 +4956,7 @@ HEXEN.PICKUPS =
   {
     id = 122
     prob = 20
+    rank = 0
     give = { {ammo="blue_mana",count=15} }
   }
 
@@ -4956,6 +4964,7 @@ HEXEN.PICKUPS =
   {
     id = 124
     prob = 20
+    rank = 0
     give = { {ammo="green_mana",count=15} }
   }
 
@@ -4963,6 +4972,7 @@ HEXEN.PICKUPS =
   {
     id = 8004
     prob = 10
+    rank = 0
     give =
     {
       {ammo="blue_mana", count=20}

@@ -413,6 +413,7 @@ IMMORAL_CONDUCT.PICKUPS =
   flak_shells =
   {
     prob = 20
+    rank = 1
     cluster = { 2,5 }
     give = { {ammo="flak",count=4} }
   }
@@ -422,6 +423,7 @@ IMMORAL_CONDUCT.PICKUPS =
   h_grenades =
   {
     prob = 20
+    rank = 1
     cluster = { 1,2 }
     give = { {ammo="rocket",count=5} }
   }
@@ -429,6 +431,7 @@ IMMORAL_CONDUCT.PICKUPS =
   satchel =
   {
     prob = 20
+    rank = 1
     cluster = { 1,3 }
     give = { {ammo="charge",count=1} }
   }

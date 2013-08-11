@@ -188,6 +188,7 @@ SKTAG_MONS.PICKUPS =
   max_potion =
   {
     prob = 1
+    rank = 0
     cluster = { 1,2 }
     give = { {health=1} }
   }
@@ -195,6 +196,7 @@ SKTAG_MONS.PICKUPS =
   max_helmet =
   {
     prob = 1
+    rank = 0
     armor = true
     cluster = { 1,2 }
     give = { {health=1} }
@@ -203,6 +205,7 @@ SKTAG_MONS.PICKUPS =
   red_armor =
   {
     prob = 2
+    rank = 3
     armor = true
     big_item = true
     give = { {health=90} }

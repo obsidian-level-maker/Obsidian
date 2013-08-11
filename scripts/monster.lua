@@ -916,6 +916,16 @@ function Monsters_do_pickups()
   end
 
 
+  local function compare_items(A, B)
+    local A_rank = A.item.rank
+    local B_rank = B.item.rank
+
+    if A_rank != B_rank then return A_rank > B_rank end
+
+     return (A.count + A.random) > (B.count + B.random)
+  end
+
+
   local function pickups_for_hmodel(L, CL, hmodel)
     if table.empty(GAME.PICKUPS) then
       return
@@ -947,11 +957,7 @@ function Monsters_do_pickups()
 
     -- sort items by rank
     -- also: place large clusters before small ones
-    table.sort(item_list,
-      function(A, B)
-        if A.rank != B.rank then return A.rank > B.rank end
-        return (A.count + A.random) > (B.count + B.random)
-      end)
+    table.sort(item_list, compare_items)
 
     place_item_list(L, item_list, CL)
   end
