@@ -416,14 +416,6 @@ function Monsters_global_palette()
 
   LEVEL.global_pal = {}
 
-  each name,info in GAME.MONSTERS do
-    if info.prob  and info.prob > 0 and
-       info.level and info.level <= LEVEL.max_level
-    then
-      LEVEL.global_pal[name] = 1
-    end
-  end
-
   if not LEVEL.monster_prefs then
     LEVEL.monster_prefs = {}
   end
@@ -433,60 +425,20 @@ function Monsters_global_palette()
   if STYLE.mon_variety == "none" then
     local the_mon = Monsters_pick_single_for_level()
 
-    LEVEL.global_pal = {}
     LEVEL.global_pal[the_mon] = 1
-  end
-
-
-  -- sometimes skip monsters (for more variety).
-  -- we don't skip when their level is close to max_level, to allow
-  -- the gradual introduction of monsters to occur normally.
-
-  if PARAM.skip_monsters and STYLE.mon_variety != "none" and STYLE.mon_variety != "heaps" then
-    local perc = rand.pick(PARAM.skip_monsters)
-
-    local skip_list = {}
-    local skip_total = 0
-    local mon_total  = 0
-
-    each name,_ in LEVEL.global_pal do
-      local M = GAME.MONSTERS[name]
-      local prob = M.skip_prob or 50
-
-      if M.level > LEVEL.max_level - 4 then prob = 0 end
-
-      if prob > 0 then
-        -- NOTE: we _could_ adjust probability based on Strength setting.
-        -- _BUT_ it is probably better not to, otherwise we would just be
-        -- skipping monsters which would not have been added anyway.
-
-        -- adjust skip chance based on monster_prefs
-        if LEVEL.monster_prefs then
-          prob = prob / (0.1 + (LEVEL.monster_prefs[name] or 1))
-        end
-        if THEME.monster_prefs then
-          prob = prob / (0.1 + (THEME.monster_prefs[name] or 1))
-        end
-
-        skip_list[name] = prob
-        skip_total = skip_total + 1
+  
+  else
+    -- skip monsters that are too strong for this map
+    
+    each name,info in GAME.MONSTERS do
+      if info.prob  and info.prob > 0 and
+         info.level and info.level <= LEVEL.max_level
+      then
+        LEVEL.global_pal[name] = 1
       end
-
-      mon_total = mon_total + 1
-    end
-
-    local count = int(skip_total * perc / 100 + gui.random())
-
-    for i = 1,count do
-      if table.empty(skip_list) then break; end
-
-      local name = rand.key_by_probs(skip_list)
-      skip_list[name] = nil
-
-      gui.printf("Skipping monster: %s\n", name)
-      LEVEL.global_pal[name] = nil
     end
   end
+
 
   gui.debugf("Monster global palette:\n%s\n", table.tostr(LEVEL.global_pal))
 
@@ -516,22 +468,25 @@ function Monsters_zone_palettes()
 
   local function palette_toughness(pal)
     local total = 0
+    local size  = table.size(pal)
 
     each mon, qty in pal do
       if qty <= 0 then continue end
 
       local info = assert(GAME.MONSTERS[mon])
 
-      local toughness = info.health + info.damage * 7
+---???  local toughness = info.health + info.damage * 7
 
-      total = total + toughness * qty
+      total = total + info.damage * qty
     end
 
-    return int(total * 10)
+    -- tie breaker
+    return (total / size) * 10 + gui.random()
   end
 
 
   local function gen_quantity_set(total)
+    -- the indices represent: none | less | some | more
     local quants = {}
 
     local skip_perc = rand.pick(PARAM.skip_monsters)
@@ -552,23 +507,83 @@ function Monsters_zone_palettes()
   end
 
 
-  local function generate_palette()
-    local pal = {}
+  local QUANT_VALUES = { 0.0, 0.4, 1.0, 2.2 }
 
-    local total = #LEVEL.global_pal
+  local function pick_quant(quants)
+    assert(quants[0] + quants[1] + quants[2] + quants[3] > 0)
+
+    local idx
+
+    repeat
+      idx = rand.irange(0, 3)
+    until quants[idx] > 0
+
+    quants[idx] = quants[idx] - 1
+
+    return assert(QUANT_VALUES[1 + idx])
+  end
+
+
+  local function generate_palette(base_pal)
+    assert(not table.empty(base_pal))
+
+    local total = table.size(base_pal)
 
     if total == 1 then
-      return table.copy(LEVEL.global_pal)
+      return table.copy(base_pal)
     end
 
-    local quants = gen_quantity_set()
+
+    local pal = {}
+
+    local quants = gen_quantity_set(total)
+
+    each mon,_ in base_pal do
+      local qty = pick_quant(quants)
+
+      if qty > 0 then
+        pal[mon] = qty
+      end
+    end
+
+    assert(not table.empty(pal))
 
     return pal 
   end
 
 
+  local function dump_palette(pal)
+    each mon, qty in pal do
+      gui.debugf("   %s  * %1.2f\n", mon, qty)
+    end
+
+    gui.debugf("   TOUGHNESS: %d\n", palette_toughness(pal))
+  end
+
+
   ---| Monsters_zone_palettes |---
 
+  local zone_pals = {}
+
+  for i = 1, #LEVEL.zones do
+    local pal   = generate_palette(LEVEL.global_pal)
+    local tough = palette_toughness(pal)
+
+    zone_pals[i] = { pal=pal, tough=tough }
+  end
+
+  -- ensure weakest palette is first, strongest is last
+  table.sort(zone_pals,
+      function (A, B) return A.tough < B.tough end)
+
+  for i = 1, #LEVEL.zones do
+    local Z = LEVEL.zones[i]
+
+    Z.monster_pal = zone_pals[i].pal
+
+    gui.debugf("Monster palette in %s\n", Z:tostr())
+    dump_palette(Z.monster_pal)
+  end
 end
 
 
