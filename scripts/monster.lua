@@ -495,6 +495,84 @@ end
 
 
 
+function Monsters_zone_palettes()
+
+  local function palettes_are_same(A, B)
+    if table.size(A) != table.size(B) then
+      return false
+    end
+
+    each k, v1 in A do
+      local v2 = B[k]
+
+      if not v2 or math.abs(v1 - v2) > 0.1 then
+        return false
+      end
+    end
+
+    return true
+  end
+
+
+  local function palette_toughness(pal)
+    local total = 0
+
+    each mon, qty in pal do
+      if qty <= 0 then continue end
+
+      local info = assert(GAME.MONSTERS[mon])
+
+      local toughness = info.health + info.damage * 7
+
+      total = total + toughness * qty
+    end
+
+    return int(total * 10)
+  end
+
+
+  local function gen_quantity_set(total)
+    local quants = {}
+
+    local skip_perc = rand.pick(PARAM.skip_monsters)
+
+    quants[0] = int(total * skip_perc / 100 + gui.random() * 0.7)
+    total = total - quants[0]
+
+    quants[2] = int(total * rand.range(0.3, 0.7) + gui.random())
+    total = total - quants[2]
+
+    quants[1] = int(total * rand.range(0.3, 0.7) + gui.random())
+    total = total - quants[1]
+
+    quants[3] = total
+    assert(total >= 0)
+
+    return quants
+  end
+
+
+  local function generate_palette()
+    local pal = {}
+
+    local total = #LEVEL.global_pal
+
+    if total == 1 then
+      return table.copy(LEVEL.global_pal)
+    end
+
+    local quants = gen_quantity_set()
+
+    return pal 
+  end
+
+
+  ---| Monsters_zone_palettes |---
+
+end
+
+
+
 function Monsters_dist_between_spots(A, B, z_penalty)
   local dist_x = 0
   local dist_y = 0
@@ -1403,9 +1481,7 @@ end
     each name,info in GAME.MONSTERS do
       local prob = info.crazy_prob or info.prob or 0
 
---??  if not LEVEL.global_palette[name] then
---??    prob = 0
---??  end
+      if not LEVEL.global_pal[name] then prob = 0 end
 
       if info.weap_needed and not Player_has_weapon(info.weap_needed) then
         prob = 0
@@ -2361,6 +2437,7 @@ function Monster_make_battles()
 
   Monsters_init()
   Monsters_global_palette()
+  Monsters_zone_palettes()
 
   Levels_invoke_hook("make_battles", LEVEL.seed)
 
