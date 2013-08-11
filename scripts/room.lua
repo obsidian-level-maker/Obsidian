@@ -1752,16 +1752,14 @@ function ROOM_CLASS.find_closet_spot(R, want_deep)
     if  not N then return -1 end
     if N.used then return -1 end
 
-    local score = gui.random() * 10
+    local score = K:eval_exit(dir) * 100
+    assert(score >= 0)
 
     local long, deep = N:long_deep(dir)
-
-    -- FIXME: sections at the edges can go 1 seed deeper
 
     score = score + deep * 8
 
     -- prefer edge of map (leave interior hallway channels free)
-    -- FIXME but only for START / EXIT closets
     if (geom.is_horiz(dir) and (N.kx <= 2 or N.kx >= SECTION_W - 1)) or
        (geom. is_vert(dir) and (N.ky <= 2 or N.ky >= SECTION_H - 1))
     then
