@@ -2,9 +2,6 @@
 WORK IN PROGRESS
 ================
 
-BUG: place_item_list loves to crap out around generating 5-6th map,
-     when skulltag monsters/items are enabled.  -- pancirno
-
 BUG: outdoor border placed next to an outdoor lake -- no wall is
      placed between them, can give a gap for the player to walk.
 

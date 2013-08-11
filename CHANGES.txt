@@ -8,6 +8,8 @@ CHANGES (since 4.28)
 
 + new E2M8 and MAP07 boss maps, thanks to Mr. Chris
 
++ new E1M8 boss map, contributed by SylandroProbopas
+
 - changed grid size to 256x256 (was 192x192)
 
 - fixed "Crazy" monsters setting to ignore 'level' values
