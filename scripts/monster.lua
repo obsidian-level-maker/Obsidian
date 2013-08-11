@@ -454,7 +454,7 @@ function Monsters_zone_palettes()
       return false
     end
 
-    each k, v1 in A do
+    each k,v1 in A do
       local v2 = B[k]
 
       if not v2 or math.abs(v1 - v2) > 0.1 then
@@ -470,7 +470,7 @@ function Monsters_zone_palettes()
     local total = 0
     local size  = table.size(pal)
 
-    each mon, qty in pal do
+    each mon,qty in pal do
       if qty <= 0 then continue end
 
       local info = assert(GAME.MONSTERS[mon])
@@ -553,7 +553,7 @@ function Monsters_zone_palettes()
 
 
   local function dump_palette(pal)
-    each mon, qty in pal do
+    each mon,qty in pal do
       gui.debugf("   %s  * %1.2f\n", mon, qty)
     end
 
@@ -1327,18 +1327,19 @@ end
   end
 
 
-  local function prob_for_mon(name, info, spot_kind)
+  local function prob_for_mon(mon, spot_kind)
+    local info = GAME.MONSTERS[mon]
     local prob = info.prob
 
     if THEME.force_mon_probs then
-      prob = THEME.force_mon_probs[name] or
+      prob = THEME.force_mon_probs[mon] or
              THEME.force_mon_probs.other
       if prob then return prob end
     end
 
     prob = prob or 0
 
-    if not LEVEL.global_pal[name] then
+    if not LEVEL.global_pal[mon] then
       return 0
     end
 
@@ -1348,13 +1349,13 @@ end
 
     -- TODO: merge THEME.monster_prefs into LEVEL.monster_prefs
     if LEVEL.monster_prefs then
-      prob = prob * (LEVEL.monster_prefs[name] or 1)
+      prob = prob * (LEVEL.monster_prefs[mon] or 1)
     end
     if THEME.monster_prefs then
-      prob = prob * (THEME.monster_prefs[name] or 1)
+      prob = prob * (THEME.monster_prefs[mon] or 1)
     end
     if L.theme.monster_prefs then
-      prob = prob * (L.theme.monster_prefs[name] or 1)
+      prob = prob * (L.theme.monster_prefs[mon] or 1)
     end
 
     if spot_kind == "cage" then
@@ -1407,30 +1408,24 @@ end
       end
     end
 
-    -- random variation
-    d = d * rand.range(0.5, 1.5)
-
+    -- zone quantities
+    d = d * (L.zone.monster_pal[mon] or 1)
 
     -- room size check
     d = d * room_size_factor(mon) ^ 0.5
 
+    -- random variation
+    d = d * rand.range(0.8, 1.2)
 
-    -- time-to-kill check
 
-    local toughness = 1  -- FIXME
+    -- would the monster take too long to kill?
 
-    local time   = info.health / L.firepower
-
-    if toughness > 1 then
-      time = time / math.sqrt(toughness)
-    end
+    local time = info.health / L.firepower
 
     if PARAM.time_factor then
       time = time * PARAM.time_factor
     end
 
-
-    -- would the monster take too long to kill?
     local max_time = MONSTER_MAX_TIME[OB_CONFIG.strength] or 9
 
     if time > max_time*2 then
@@ -1493,29 +1488,29 @@ end
 
     local list = {}
 
-    each name,info in GAME.MONSTERS do
+    each mon,info in GAME.MONSTERS do
       local prob = info.crazy_prob or info.prob or 0
 
-      if not LEVEL.global_pal[name] then prob = 0 end
+      if not LEVEL.global_pal[mon] then prob = 0 end
 
       if info.weap_needed and not Player_has_weapon(info.weap_needed) then
         prob = 0
       end
 
       if THEME.force_mon_probs then
-        prob = THEME.force_mon_probs[name]  or
+        prob = THEME.force_mon_probs[mon]  or
                THEME.force_mon_probs.other or prob  
       end
 
       if prob > 0 and LEVEL.monster_prefs then
-        prob = prob * (LEVEL.monster_prefs[name] or 1)
+        prob = prob * (LEVEL.monster_prefs[mon] or 1)
         if info.replaces then
           prob = prob * (LEVEL.monster_prefs[info.replaces] or 1)
         end
       end
 
       if prob > 0 then
-        list[name] = prob
+        list[mon] = prob
       end
     end
 
@@ -1543,8 +1538,10 @@ end
     local list = {}
     gui.debugf("Monster list:\n")
 
-    each mon,info in GAME.MONSTERS do
+    each mon,qty in L.zone.monster_pal do
       local prob = prob_for_mon(mon, info)
+
+      prob = prob * qty
 
       -- take room size into account
       prob = prob * room_size_factor(mon)
@@ -2086,7 +2083,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     if used_num > 4 then used_num = 4 end
 
     each mon,info in GAME.MONSTERS do
-      local prob = prob_for_mon(mon, info, spot.kind)
+      local prob = prob_for_mon(mon, spot.kind)
 
       if STYLE.mon_variety == "none" and not LEVEL.global_pal[mon] then continue end
 
