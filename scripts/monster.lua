@@ -1922,7 +1922,7 @@ end
           dist = dist / L.furthest_dist
           dist = math.abs(dist - L.baddie_dists[mon])
 
-          spot.find_cost = dist * 2.0
+          spot.find_cost = dist * 1.8
 
         -- prefer a different section than the last non-group spot
         -- (for better monster distribution in large rooms)
@@ -2507,7 +2507,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       L.furthest_dist = L:furthest_dist_from_entry()
     end
 
-    L.baddie_far_prob = 35 * rand.index_by_probs({ 3,4,2 }) - 20
+    L.baddie_far_prob = rand.pick({ 20, 40, 60, 80 })
 
     if rand.odds(2) then
       L.force_mon_angle = rand.irange(0,7) * 45
