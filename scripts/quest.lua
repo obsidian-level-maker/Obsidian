@@ -74,6 +74,11 @@ class ZONE
   previous[kind] : list(name)
 
   facade_mat  -- material to use for building exteriors (can be NIL)
+
+  monster_pal : table  -- monster palette for zone
+                       -- keys are monster names, values are usage value
+
+  guard_mon : name  -- guard monster for zone (can be NIL)
 }
 
 

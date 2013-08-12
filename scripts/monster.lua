@@ -448,6 +448,72 @@ end
 
 
 function Monsters_zone_palettes()
+  
+  local function prob_for_guard(mon)
+    local info = GAME.MONSTERS[mon]
+
+    if (info.prob or 0) <= 0 then return 0 end
+
+    if info.level > LEVEL.max_level + 3 then return 0 end
+
+    if info.level > LEVEL.max_level + 2 then return 200 end
+    if info.level > LEVEL.max_level + 1 then return 400 end
+    if info.level > LEVEL.max_level     then return 800 end
+
+    local prob = info.level * 3
+
+    -- huge monsters often won't fit in a room, so lower their chance
+    if info.r > 60 then prob = prob / 3 end
+
+    if info.level < math.min(LEVEL.max_level, 9) - 4 then return 0 end
+    if info.level < math.min(LEVEL.max_level, 9) - 2 then return prob / 10 end
+    if info.level < math.min(LEVEL.max_level, 9)     then return prob / 3 end
+
+    return prob
+  end
+
+
+  local function decide_guard_monsters()
+    local tab = {}
+
+    each mon,_ in GAME.MONSTERS do
+      local prob = prob_for_guard(mon)
+
+      if prob > 0 then
+        tab[mon] = prob
+      end
+    end
+
+    gui.debugf("Possible guard monsters:\n%s\n", table.tostr(tab))
+
+    if table.empty(tab) then return end
+
+
+    local list = {}
+    local num_zones = #LEVEL.zones
+
+    for i = 1, num_zones do
+      local mon = rand.key_by_probs(tab)
+      tab[mon] = tab[mon] / 100  -- try hard not to choose again
+
+      local info = GAME.MONSTERS[mon]
+
+      table.insert(list, { mon=mon, tough=info.damage + gui.random() / 10 })
+    end
+
+
+    table.sort(list,
+        function (A, B) return A.tough < B.tough end)
+
+    for i = 1, num_zones do
+      local Z = LEVEL.zones[i]
+
+      Z.guard_mon = list[i].mon
+
+      gui.debugf("Guard monster for %s --> %s\n", Z:tostr(), Z.guard_mon)
+    end
+  end
+
 
   local function palettes_are_same(A, B)
     if table.size(A) != table.size(B) then
@@ -567,6 +633,8 @@ function Monsters_zone_palettes()
 
 
   ---| Monsters_zone_palettes |---
+
+  decide_guard_monsters()
 
   local zone_pals = {}
 
