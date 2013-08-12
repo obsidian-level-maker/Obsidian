@@ -491,6 +491,11 @@ function Monsters_zone_palettes()
 
     local skip_perc = rand.pick(PARAM.skip_monsters)
 
+    -- skip less monsters in small early maps
+    if #LEVEL.zones == 1 and LEVEL.max_level < 5 then
+      skip_perc = skip_perc / 2
+    end
+
     quants[0] = int(total * skip_perc / 100 + gui.random() * 0.7)
     total = total - quants[0]
 
