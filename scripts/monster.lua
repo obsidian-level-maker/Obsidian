@@ -2285,6 +2285,11 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
         break;
       end
 
+      -- look toward the important spot
+      if rand.odds(75) then
+        spot.face = L.guard_coord
+      end
+
       local all_skills = (i == 1)
 
       place_in_spot(mon, spot, all_skills)
