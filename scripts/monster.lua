@@ -676,7 +676,7 @@ function Monsters_dist_between_spots(A, B, z_penalty)
   local dist = math.max(dist_x, dist_y)
 
   -- penalty for height difference [for clustering]
-  if A.z1 != B.z1 then
+  if B.z1 and A.z1 != B.z1 then
     dist = dist + (z_penalty or 1000)
   end
 
@@ -2252,6 +2252,46 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   end
 
 
+  local function add_guarding_monsters()
+    if not L.guard_coord then return end
+
+    if not L.zone.guard_mon then return end
+
+    -- convert coordinate into a fake spot  [no z coords!]
+    local guard_spot =
+    {
+      x1 = L.guard_coord.x - 16
+      y1 = L.guard_coord.y - 16
+      x2 = L.guard_coord.x + 16
+      y2 = L.guard_coord.y + 16
+    }
+
+    local mon  = L.zone.guard_mon
+    local info = GAME.MONSTERS[mon]
+
+    local count = 2
+
+    if info.level >= 8 then count = 1 end
+
+    local reqs = {}
+
+    for i = 1, count do
+      local spot = grab_monster_spot(mon, guard_spot, reqs)
+
+      -- TODO: have a backup monster, strongest in room palette
+
+      if not spot then
+        gui.printf("Cannot place guard monster: %s\n", mon)
+        break;
+      end
+
+      local all_skills = (i == 1)
+
+      place_in_spot(mon, spot, all_skills)
+    end
+  end
+
+
   local function add_monsters()
     local palette
 
@@ -2274,6 +2314,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     if rand.odds(40) or OB_CONFIG.strength == "crazy" then
       L.no_replacement = true
     end
+
+    add_guarding_monsters()
 
     -- FIXME: add barrels even when no monsters in room
 
