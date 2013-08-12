@@ -135,7 +135,7 @@ function CONN_CLASS.add_it(D)
     Connect_merge_groups(D.L1.conn_group, D.L2.conn_group)
   end
 
-  if not (D.kind == "teleporter" or D.kind == "closet") then
+  if not (D.kind == "teleporter") then
     D.K1.num_conn = D.K1.num_conn + 1
     D.K2.num_conn = D.K2.num_conn + 1
 
