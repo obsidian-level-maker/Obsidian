@@ -1266,11 +1266,9 @@ function Monsters_in_room(L)
 
       if L.svolume <= 16 then qty = qty * 1.2 end
     else
-      -- no change in hallways : usually have less spots in them
-
-      -- extreme variation in rare circumstances
-          if rand.odds(2) then qty = qty / 3.0
-      elseif rand.odds(2) then qty = qty * 3.0
+      -- large variation occasionally
+          if rand.odds(7) then qty = qty * 2.1
+      elseif rand.odds(7) then qty = qty / 2.1
       end
     end
 
