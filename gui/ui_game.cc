@@ -313,8 +313,8 @@ const char * UI_Game::mode_syms[] =
 {
 	"sp",   "Single Player",
 	"coop", "Co-op",
-	"dm",   "Deathmatch",
-	"ctf",  "Capture Flag",
+///	"dm",   "Deathmatch",
+///	"ctf",  "Capture Flag",
 
 	NULL, NULL
 };
