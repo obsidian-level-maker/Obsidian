@@ -47,8 +47,6 @@ ______________________________________________________________________
    -  ability to replace textures and entities
    -  build maps with external tools, bundle them for each OS
 
-+  similarly Quake II
-
 -  HacX
 -  Harmony
 -  Chex Quest 3
@@ -180,6 +178,10 @@ V5 Stuff:
 -  monster quantity (etc?) in hallways -- check prefabs
 
 -  Mons: sometimes look toward important item (esp. keys)
+
+-  in dark rooms, invis monsters higher prob, treat as non-replacing
+
+-  guard monsters: if huge, ensure we pick a prefab with a spot for it
 
 +  properly test if a prefab fits (esp. with entry portal)
 
