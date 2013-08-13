@@ -1184,7 +1184,7 @@ end
 
 
 
-function calc_travel_volumes(L, zoney)
+function Quest_calc_travel_volumes(L, zoney)
   -- returns volume for given room + all descendants.
   -- if zoney is true => treat a child room with a zone as locked
 
@@ -1203,7 +1203,7 @@ function calc_travel_volumes(L, zoney)
   local exits = Quest_get_exits(L)
 
   each D in exits do
-    calc_travel_volumes(D.L2, zoney)
+    Quest_calc_travel_volumes(D.L2, zoney)
 
     -- exclude locked exits
     if not (D.lock or (zoney and D.L2.zone)) then
@@ -1218,7 +1218,7 @@ end
 
 
 
-function dump_room_flow(L, indents, is_locked)
+function Quest_dump_room_flow(L, indents, is_locked)
   if not indents then
     indents = {}
   else
@@ -1247,12 +1247,6 @@ function dump_room_flow(L, indents, is_locked)
 
   local exits = Quest_get_exits(L)
 
-  --[[
-    while #exits == 1 do
-      L = exits[1].L2 ; exits = Quest_get_exits(L)
-    end
-  --]]
-
   table.insert(indents, true)
 
   each D in exits do
@@ -1260,7 +1254,7 @@ function dump_room_flow(L, indents, is_locked)
       indents[#indents] = false
     end
 
-    dump_room_flow(D.L2, indents, sel(D.kind == "teleporter", "tele", D.lock))
+    Quest_dump_room_flow(D.L2, indents, sel(D.kind == "teleporter", "tele", D.lock))
   end
 end
 
@@ -1445,10 +1439,16 @@ gui.debugf("Added %s --> %s\n", L:tostr(), Z:tostr())
 
   LEVEL.zones = {}
 
+  Quest_calc_travel_volumes(LEVEL.start_room, "zoney")
+
+  gui.debugf("Level Flow:\n\n")
+  Quest_dump_room_flow(LEVEL.start_room)
+
+
   local keys = LEVEL.usable_keys or THEME.keys or {}
   local num_keys = table.size(keys)
 
-  local min_tvol = 4.5
+  local min_tvol = rand.sel(70, 1.3, 4.5)
 
   collect_rooms_and_halls()
 
@@ -1466,12 +1466,12 @@ gui.debugf("Added %s --> %s\n", L:tostr(), Z:tostr())
 
     create_zone_at_room(L)
 
-    calc_travel_volumes(LEVEL.start_room, "zoney")
+    Quest_calc_travel_volumes(LEVEL.start_room, "zoney")
 
     update_zone_volumes()
 
 gui.debugf("AFTER CREATING ZONE:\n")
-dump_room_flow(LEVEL.start_room)
+Quest_dump_room_flow(LEVEL.start_room)
   end
 
   -- verify everything got a zone
@@ -1995,6 +1995,8 @@ function Quest_make_quests()
 
 
   local function create_quests()
+    Quest_calc_travel_volumes(LEVEL.start_room)
+
     local Q = QUEST_CLASS.new(LEVEL.start_room)
 
     -- room lists will be rebuilt in visit order
@@ -2042,14 +2044,7 @@ function Quest_make_quests()
   LEVEL.locks  = {}
 
 
-  calc_travel_volumes(LEVEL.start_room, "zoney")
-
-  gui.debugf("Level Flow:\n\n")
-  dump_room_flow(LEVEL.start_room)
-
   Quest_create_zones()
-
-  calc_travel_volumes(LEVEL.start_room)
 
   create_quests()
 
