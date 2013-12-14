@@ -164,18 +164,24 @@ V5 Stuff:
 
 -  handle the 'max_floor' in skins
 
+-  IDEA: "Flatness" option in level control module
+
 -  IDEA: 'override' value for prefabs, default to zero.
          when > 0, remove all other possible prefabs from the list
          which have a lower value
 
+
++  better treatment for big Armor and Health items
+
++  monster quantity (etc?) in hallways -- check prefabs
+
+-  prefab to enter room via an elevator
 
 -  Fight simulator: adjust monster 'damage' value based on Ambush
    usage, Cage usage, dark rooms, hitscanners/Archies in low cover
    rooms -- and lower values if killed by BFG or rocket launcher
 
 -  Fight simulator: re-implement monster infighting
-
--  monster quantity (etc?) in hallways -- check prefabs
 
 -  Mons: sometimes look toward important item (esp. keys)
 
