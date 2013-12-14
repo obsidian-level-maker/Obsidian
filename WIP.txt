@@ -2,15 +2,4 @@
 WORK IN PROGRESS
 ================
 
-BUG: outdoor border placed next to an outdoor lake -- no wall is
-     placed between them, can give a gap for the player to walk.
-
-BUG: traps are sometimes empty (support 'trap=true' in lua defs)
-
-BUG (WIN32): copy seed value and paste into filename --> crash.
-
-
-+  fix Cage monster selection and QUANTITIES
-
--  review guard selection when length = "few" 
 
