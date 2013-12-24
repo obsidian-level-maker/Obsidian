@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2013 Andrew Apted
+--  Copyright (C) 2006-2014 Andrew Apted
 --  Copyright (C)      2011 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 
 DOOM  = { }  -- common stuff
 
-DOOM1 = { }  -- game specific stuff
+DOOM1 = { }  -- stuff specific to each game
 DOOM2 = { }  --
 
 TNT      = { }
@@ -49,23 +49,35 @@ PLUTONIA.GROUPS = { }
 FREEDOOM.GROUPS = { }
 
 
-----------------------------------------------------------------
+------------------------------------------------------------
 
--- load in all the other definition files...
+
+require "params"
 
 require "entities"
 require "monsters"
-require "weapons"
 require "pickups"
+require "weapons"
 
-require "params"
 require "materials"
 require "themes"
+require "v3_skins"
+
 require "levels"
 require "resources"
 
 
-----------------------------------------------------------------
+------------------------------------------------------------
+
+
+function DOOM1.setup()
+  -- tweak monster probabilities
+  GAME.MONSTERS["Cyberdemon"].crazy_prob = 8
+  GAME.MONSTERS["Mastermind"].crazy_prob = 12
+end
+
+
+------------------------------------------------------------
 
 OB_GAMES["doom2"] =
 {
@@ -88,10 +100,9 @@ OB_GAMES["doom2"] =
   }
 }
 
-
 UNFINISHED["doom1"] =
 {
-  label = "Doom"
+  label = "Doom 1"
 
   priority = 98  -- keep at second spot
 

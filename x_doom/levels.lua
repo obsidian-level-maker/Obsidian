@@ -2,7 +2,7 @@
 --  DOOM LEVELS
 --------------------------------------------------------------------
 --
---  Copyright (C) 2006-2013 Andrew Apted
+--  Copyright (C) 2006-2014 Andrew Apted
 --  Copyright (C)      2011 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -159,8 +159,8 @@ function DOOM2.get_levels()
 
     -- secret levels
     if map == 31 or map == 32 then
-      LEV.theme_name = "doom_wolf1"
-      LEV.theme = GAME.LEVEL_THEMES[LEV.theme_name]
+      LEV.theme_name = "wolf1"
+      LEV.sub_theme = GAME.LEVEL_THEMES[LEV.theme_name]
 
       LEV.name_theme = "URBAN"
     end

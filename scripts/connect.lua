@@ -1,10 +1,10 @@
-------------------------------------------------------------------------
+---------------------------------------------------------------
 --  CONNECTIONS
-------------------------------------------------------------------------
+----------------------------------------------------------------
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2013 Andrew Apted
+--  Copyright (C) 2006-2014 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -16,684 +16,1226 @@
 --  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 --  GNU General Public License for more details.
 --
-------------------------------------------------------------------------
+----------------------------------------------------------------
 
 --[[ *** CLASS INFORMATION ***
 
 class CONN
 {
-  kind : keyword  -- "normal", "secret"
-                  -- "double_L", "double_R"
-                  -- "teleporter"
-                  -- "closet" (e.g. starting niche)
-  lock : LOCK
+  src    : source ROOM
+  dest   : destination ROOM
 
-  id : number  -- debugging aid
+  src_S  : source SEED
+  dest_S : destination SEED
 
-  -- The two rooms are the vital (compulsory) information,
-  -- especially for the quest system.  For teleporters the
-  -- other info may be absent (sections and dir1/dir2).
+  dir    : direction 2/4/6/8 (from src_S to dest_S)
 
-  L1, L2 : location (either ROOM or HALLWAY)
+  conn_h : floor height for connection
 
-  K1, K2 : SECTION
-
-  dir1, dir2  -- direction value (2/4/6/8) 
-              -- dir1 leading out of L1 / K1
-              -- dir2 leading out of L2 / K2
-
-  portal1, portal2 : PORTAL
-
-
-  --- POSSIBLE_CONN ---
-
-  score : number
-  
+  lock   : LOCK
 }
 
-
 --------------------------------------------------------------]]
+
+require 'defs'
+require 'util'
+
+
+Connect = { }
 
 
 CONN_CLASS = {}
 
-function CONN_CLASS.new(kind, L1, L2, dir)
-  local D = { kind=kind, L1=L1, L2=L2 }
-  D.id = Plan_alloc_id("conn")
-  table.set_class(D, CONN_CLASS)
-  if dir then
-    D.dir1 = dir
-    D.dir2 = 10 - dir
-  end
-  return D
-end
-
-
-function CONN_CLASS.tostr(D)
-  return string.format("CONN_%d [%s%s]", D.id, D.kind,
-         sel(D.is_cycle, "/cycle", ""))
-end
-
-
-function CONN_CLASS.dump(D)
-  gui.debugf("%s =\n", D:tostr())
-  gui.debugf("{\n")
-  gui.debugf("    L1 = %s\n", (D.L1 and D.L1:tostr()) or "nil")
-  gui.debugf("    L2 = %s\n", (D.L2 and D.L2:tostr()) or "nil")
-  gui.debugf("    K1 = %s\n", (D.K1 and D.K1:tostr()) or "nil")
-  gui.debugf("    K2 = %s\n", (D.K2 and D.K2:tostr()) or "nil")
-  gui.debugf("  dir1 = %s\n", (D.dir1 and tostring(D.dir1)) or "nil")
-  gui.debugf("  dir2 = %s\n", (D.dir2 and tostring(D.dir2)) or "nil")
-  gui.debugf("}\n")
-end
-
-
-function CONN_CLASS.neighbor(D, L)
-  return sel(L == D.L1, D.L2, D.L1)
-end
-
-
-function CONN_CLASS.section(D, L)
-  return sel(L == D.L1, D.K1, D.K2)
-end
-
-
-function CONN_CLASS.what_dir(D, L)
-  if D.dir1 then
-    return sel(L == D.L1, D.dir1, D.dir2)
+function CONN_CLASS.neighbor(C, R)
+  if R == C.src then
+    return C.dest
+  else
+    return C.src
   end
 end
 
-
-function CONN_CLASS.swap(D)
-  D.L1, D.L2 = D.L2, D.L1
-  D.K1, D.K2 = D.K2, D.K1
-
-  D.dir1, D.dir2 = D.dir2, D.dir1
-end
-
-
-function CONN_CLASS.k_coord(D)
-  return (D.K1.kx + D.K2.kx) / 2,
-         (D.K1.ky + D.K2.ky) / 2
-end
-
-
-function CONN_CLASS.add_it(D)
-  gui.printf("Connecting %s --> %s : %s\n", D.L1:tostr(), D.L2:tostr(), D.kind or "????")
-  gui.debugf("group %d --> %d\n", D.L1.conn_group, D.L2.conn_group)
-  if D.K1 and D.K2 then
-    gui.debugf("via %s --> %s\n", D.K1:tostr(), D.K2:tostr())
-  end
-
-  table.insert(LEVEL.conns, D)
-
-  table.insert(D.L1.conns, D)
-  table.insert(D.L2.conns, D)
-
-  if D.L1.conn_group != D.L2.conn_group then
-    Connect_merge_groups(D.L1.conn_group, D.L2.conn_group)
-  end
-
-  if not (D.kind == "teleporter") then
-    D.K1.num_conn = D.K1.num_conn + 1
-    D.K2.num_conn = D.K2.num_conn + 1
-
-    -- hallway stuff
-    if D.K1.hall then D.K1.hall_link[D.dir1] = D.K2 end
-    if D.K2.hall then D.K2.hall_link[D.dir2] = D.K1 end
+function CONN_CLASS.seed(C, R)
+  if R == C.src then
+    return C.src_S
+  else
+    return C.dest_S
   end
 end
 
+function CONN_CLASS.tostr(C)
+  return string.format("CONN [%d,%d -> %d,%d %sh:%s]",
+         C.src_S.sx,  C.src_S.sy,
+         C.dest_S.sx, C.dest_S.sy,
+         sel(C.lock, "LOCK ", ""),
+         tostring(C.conn_h))
+end
 
-------------------------------------------------------------------------
+
+-- Generator functions for "big branches" (mostly for large rooms
+-- which deserve 3/4/5 exits).
+-- 
+-- Each function generates a list of configurations.  Each config
+-- describes the exits for a single room, and is a list of tuples
+-- in the form (x, y, dir) but unpacked.  NIL returned means that
+-- the given size was not suitable for that pattern (e.g. a pure
+-- cross requires an odd width and an odd height).
+--
+-- It is assumed that the caller will try all the four possible
+-- mirrorings (none/X/Y/XY) and rotations (none/90) of each
+-- configuration, and these generator functions are optimised
+-- with that in mind.
+--
+-- The symmetry field can have the following keywords:
+--   "x"  mirrored horizontally (i.e. left side = right side)
+--   "y"  mirrored vertically
+--   "xy" mirrored both horizontally and vertically
+--   "R"  rotation symmetry (180 degrees)
+--   "T"  transpose symmetry (square rooms only)
+--
 
 
-function Connect_is_possible(L1, L2, mode)
-  if L1 == L2 then return false end
+--- 2 way --->
 
-  -- never to secret rooms (that is handled elsewhere)
-  if L2.purpose == "SECRET_EXIT" then return false end
+function Connect.gen_PC(long, deep)
+  if long < 3 or long > 7 or (long % 2) == 0 or
+     deep < 2 or deep > 7 or (long / deep) >= 3
+  then
+    return nil
+  end
 
-  if mode == "cycle" then
-    if L1.kind == "hallway" then return false end
-    if L2.kind == "hallway" then return false end
+  local mx  = int((long+1)/2)
 
-    -- no shortcuts to the exit please
-    if L1.purpose == "EXIT" then return false end
-    if L2.purpose == "EXIT" then return false end
+  return {{ mx,1,2, mx,deep,8 }}
+end
 
-    -- [FUTURE Todo: allow _one_way_ cycles to earlier room]
+function Connect.gen_PA(long, deep)
+  if long < 2 or long > 4 or deep < 2 or deep > 5 then
+    return nil
+  end
 
-    if L1.quest == L2.quest then
+  return {{ 1,1,2, 1,deep,8 }}
+end
 
-      -- don't add cycles to rooms with teleporters
-      if L1.kind != "hallway" and L1:has_teleporter() then return false end
-      if L2.kind != "hallway" and L2:has_teleporter() then return false end
+function Connect.gen_PR(long, deep)
+  if long < 2 or deep < 1 or deep > 5 or
+     (long*deep) >= 30 or (deep/long) > 2.1
+  then
+    return nil
+  end
 
-    else  -- different quests
+  local configs = {}
+  local lee = int((long-2)/4)
 
-      if L1.purpose == "SOLUTION" then return false end
-      if L2.purpose == "SOLUTION" then return false end
+  for x = 0,lee do
+    table.insert(configs, { 1+x,1,2, long-x,deep,8 })
+  end
 
+  return configs
+end
+
+function Connect.gen_PX(long, deep)
+  if long < 3 or long > 5 or deep < 1 or deep > 5 then
+    return nil
+  end
+
+  local configs = {}
+  local mx = int(long/2)
+
+  for b = 1,mx do for t = 2,long-1 do
+    if not (deep == 1 and b == t) then
+      table.insert(configs, { b,1,2, t,deep,8 })
+    end
+  end end
+
+  return configs
+end
+
+function Connect.gen_LS(long, deep)
+  if long < 2 or long > 6 or deep ~= long then
+    return nil
+  end
+
+  local configs = {}
+
+  local lee = int((long-1)/2)
+
+  for x = 0,lee do
+    table.insert(configs, { 1,1+x,4, long-x,deep,8 })
+  end
+
+  return configs
+end
+
+function Connect.gen_LX(long, deep)
+  if long < 3 or deep < 1 or long==deep or (long*deep) >= 30 then
+    return nil
+  end
+
+  local configs = {}
+
+  local x_lee = int((long-2)/3)
+  local y_lee = int((deep-1)/2)
+
+  for x = 0,x_lee do for y = 0,y_lee do
+    table.insert(configs, { 1,1+y,4, long-x-1,deep,8 })
+  end end
+
+  return configs
+end
+
+function Connect.gen_U2(long, deep)
+  if long < 3 or deep < 1 or long < deep or deep > 4 then
+    return nil
+  end
+
+  local configs = {}
+
+  local x_lee = int((long-2)/4)
+
+  for x = 0,x_lee do
+    table.insert(configs, { 1+x,deep,8, long-x,deep,8 })
+  end
+
+  return configs
+end
+
+
+--- 3 way --->
+
+function Connect.gen_TC(long, deep)
+  if long < 3 or deep < 1 or deep > 7 or (long % 2) == 0 or (long*deep) >= 42 then
+    return nil
+  end
+
+  local configs = {}
+
+  local mx  = int((long+1)/2)
+  local lee = int((deep-1)/2)
+
+  for y = 0,lee do
+    table.insert(configs, { mx,1,2, 1,deep-y,4, long,deep-y,6 })
+  end
+
+  return configs
+end
+
+function Connect.gen_TX(long, deep)
+  if long < 4 or deep < 1 or deep > 7 or (long*deep) >= 42 then
+    return nil
+  end
+
+  local configs = {}
+
+  local mx    = int((long  )/2)
+  local y_lee = int((deep-1)/2)
+
+  for x = 2,mx do for y = 0,y_lee do
+    table.insert(configs, { x,1,2, 1,deep-y,4, long,deep-y,6 })
+  end end
+
+  return configs
+end
+
+function Connect.gen_TY(long, deep)
+  if long < 3 or deep < 1 or deep > 5 or (long % 2) == 0 then
+    return nil
+  end
+
+  local configs = {}
+
+  local mx  = int((long+1)/2)
+  local lee = int((long-2)/3)
+
+  for x = 0,lee do
+    table.insert(configs, { mx,1,2, 1+x,deep,8, long-x,deep,8 })
+  end
+
+  return configs
+end
+
+function Connect.gen_F3(long, deep)
+  if long < 4 or deep < 1 or (long/deep) < 2 then
+    return nil
+  end
+
+  local configs = {}
+
+  local mx    = int((long  )/2)
+  local y_lee = int((deep-1)/2)
+
+  for x = mx,long-2 do for y = 0,y_lee do
+    table.insert(configs, { 1,1+y,4, x,deep,8, long,deep,8 })
+  end end
+
+  return configs
+end
+
+function Connect.gen_M3(long, deep)
+  if long < 5 or (long % 2) == 0 or long < deep or
+     deep < 1 or deep > 5
+  then
+    return nil
+  end
+
+  local configs = {}
+
+  local mx    = int((long+1)/2)
+  local x_lee = int((long-3)/4)
+
+  for x = 0,x_lee do
+    table.insert(configs, { 1+x,1,2, mx,1,2, long-x,1,2 })
+  end
+
+  return configs
+end
+
+
+--- 4 way --->
+
+function Connect.gen_XC(long, deep)
+  if long < 3 or (long % 2) == 0 or
+     deep < 3 or (deep % 2) == 0
+  then
+     return nil
+  end
+
+  local mx = int((long+1)/2)
+  local my = int((deep+1)/2)
+
+  return {{ mx,1,2, mx,deep,8, 1,my,4, long,my,6 }}
+end
+
+function Connect.gen_XT(long, deep)
+  if long < 3 or deep < 3 or (long % 2) == 0 then
+    return nil
+  end
+
+  local configs = {}
+  local mx = int((long+1)/2)
+  local my = int(deep/2)
+
+  for y = 1,my do
+    table.insert(configs, { mx,1,2, mx,deep,8, 1,y,4, long,y,6 })
+  end
+
+  return configs
+end
+
+function Connect.gen_XX(long, deep)
+  if long < 5 or deep < 3 or (long*deep) >= 50 then
+    return nil
+  end
+
+  local configs = {}
+  local mx = int(long/2)
+  local my = int(deep/2)
+
+  for x = 2,mx do for y = 1,my do
+    table.insert(configs, { x,1,2, x,deep,8, 1,y,4, long,y,6 })
+  end end
+
+  return configs
+end
+
+function Connect.gen_SW(long, deep)
+  if long < 3 or deep < 3 then
+    return nil
+  end
+
+  local configs = {}
+
+  local x_lee = int((long-1)/4)
+  local y_lee = int((deep-1)/4)
+
+  for x = 0,x_lee do for y = 0,y_lee do
+    table.insert(configs, { 1+x,1,2, long,1+y,6, long-x,deep,8, 1,deep-y,4 })
+  end end
+
+  return configs
+end
+
+function Connect.gen_HP(long, deep)
+  if long < 3 or deep < 2 then
+    return nil
+  end
+
+  local configs = {}
+
+  local b_lee = int((long-2)/3)
+  local t_lee = int((long-2)/5)
+  
+  for b = 0,b_lee do for t = 0,t_lee do
+    if b >= t then
+      table.insert(configs, { 1+b,1,2, long-b,1,2, 1+t,deep,8, long-t,deep,8 })
+    end
+  end end
+
+  return configs
+end
+
+function Connect.gen_HT(long, deep)
+  if long < 3 or deep < 2 or (long*deep) >= 50 then
+    return nil
+  end
+
+  local configs = {}
+
+  local x_lee = int((long-2)/3)
+  local y_lee = int((deep-1)/2)
+  
+  for x = 0,x_lee do for y = 0,y_lee do
+    table.insert(configs, { 1+x,1,2, long-x,1,2, 1,deep-y,4, long,deep-y,6 })
+  end end
+
+  return configs
+end
+
+function Connect.gen_F4(long, deep)
+  if long < 4 or deep < 4 then
+    return nil
+  end
+
+  local configs = {}
+
+  local x_dist = int((long)/2)
+  local y_dist = int((deep)/2)
+
+  local x_lee = int((long-1)/4)
+  local y_lee = int((deep-1)/4)
+
+  for x = 0,x_lee do for y = 0,y_lee do
+    table.insert(configs, { 1,1+y,4, 1,1+y+y_dist,4, long-x,deep,8, long-x-x_dist,deep,8 })
+  end end
+
+  return configs
+end
+
+
+--- 5,6 way --->
+
+function Connect.gen_KY(long, deep)
+  if long < 5 or deep < 3 or (long*deep) < 21 or (long % 2) == 0 then
+    return nil
+  end
+
+  local configs = {}
+
+  local mx    = int((long+1)/2)
+  local x_lee = int((long-2)/3)
+ 
+  for x = 0,x_lee do for y = 1,deep-1 do
+    table.insert(configs, { mx,1,2, 1,y,4, long,y,6, 1+x,deep,8, long-x,deep,8 })
+  end end
+
+  return configs
+end
+
+function Connect.gen_KT(long, deep)
+  if long < 3 or deep < 4 or (long*deep) < 21 or (long % 2) == 0 then
+    return nil
+  end
+
+  local configs = {}
+
+  local mx    = int((long+1)/2)
+  local my    = int(deep / 2)
+  local t_lee = int((deep-2)/3)
+ 
+  for t = 0,t_lee do for y = 1,my do
+    table.insert(configs, { mx,1,2, 1,y,4, long,y,6, 1,deep-t,4, long,deep-t,6 })
+  end end
+
+  return configs
+end
+
+function Connect.gen_M5(long, deep)
+  if long < 5 or deep < 3 or (long % 2) == 0 or long < deep then
+    return nil
+  end
+
+  local configs = {}
+
+  local mx    = int((long+1)/2)
+  local t_lee = int((long-4)/3)
+--  local b_lee = int((long-3)/4)
+
+  for b = 0,mx-2 do for t = 0,t_lee do
+    table.insert(configs, { mx-1-b,1,2, mx+1+b,1,2, 1+t,deep,8, mx,deep,8, long-t,deep,8 })
+  end end
+
+  return configs
+end
+
+function Connect.gen_GG(long, deep)
+  if long < 5 or deep < 3 or (long*deep) < 21 or (long % 2) == 0 then
+    return nil
+  end
+
+  local configs = {}
+
+  local mx    = int((long+1)/2)
+  local y_lee = int((deep-3)/2)
+ 
+  for y = 0,y_lee do
+    table.insert(configs, { mx,1,2, mx,deep,8, 1,1+y,4, 1,deep-y,4, long,1+y,6, long,deep-y,6 })
+  end
+
+  return configs
+end
+
+
+Connect.BRANCHES =
+{
+  -- pass through (one side to the other), perfectly centered
+  PC = { conn=2, prob=40, func=Connect.gen_PC, symmetry="x" },
+
+  -- pass through, along one side
+  PA = { conn=2, prob= 8, func=Connect.gen_PA, symmetry="y" },
+
+  -- pass through, rotation symmetry
+  PR = { conn=2, prob=50, func=Connect.gen_PR, symmetry="R" },
+
+  -- pass through, garden variety
+  PX = { conn=2, prob= 3, func=Connect.gen_PX },
+
+  -- L shape for square room (transpose symmetrical)
+  LS = { conn=2, prob=100, func=Connect.gen_LS, symmetry="T" },
+
+  -- L shape, garden variety
+  LX = { conn=2, prob= 3, func=Connect.gen_LX },
+
+  -- U shape, both exits on a single wall
+  U2 = { conn=2, prob= 1, func=Connect.gen_U2, symmetry="x" },
+
+
+  -- T shape, centered main stem, leeway for side stems
+  TC = { conn=3, prob=200, func=Connect.gen_TC, symmetry="x" },
+
+  -- like TC but main stem not centered
+  TX = { conn=3, prob= 50, func=Connect.gen_TX },
+
+  -- Y shape, two exits parallel to single centered entry
+  TY = { conn=3, prob=120, func=Connect.gen_TY, symmetry="x" },
+
+  -- F shape with three exits (mainly for rooms at corner of map)
+  F3 = { conn=3, prob=  2, func=Connect.gen_F3 },
+
+  -- three exits along one wall, middle is centered
+  M3 = { conn=3, prob=  5, func=Connect.gen_M3, symmetry="x" },
+
+
+  -- Cross shape, all stems perfectly centered
+  XC = { conn=4, prob=1800, func=Connect.gen_XC, symmetry="xy" },
+
+  -- Cross shape, centered main stem, leeway for side stems
+  XT = { conn=4, prob=200, func=Connect.gen_XT, symmetry="x" },
+
+  -- Cross shape, no stems are centered
+  XX = { conn=4, prob= 50, func=Connect.gen_XX },
+
+  -- H shape, parallel entries/exits at the four corners
+  HP = { conn=4, prob= 40, func=Connect.gen_HP, symmetry="x" },
+
+  -- like HP but exits are perpendicular to entry dir
+  HT = { conn=4, prob= 40, func=Connect.gen_HT, symmetry="x" },
+
+  -- Swastika shape
+  SW = { conn=4, prob= 50, func=Connect.gen_SW, symmetry="R" },
+
+  -- F shape with two exits on each wall
+  F4 = { conn=4, prob=  5, func=Connect.gen_F4 },
+
+
+  -- five-way star shapes
+  KY = { conn=5, prob=110, func=Connect.gen_KY, symmetry="x" },
+  KT = { conn=5, prob=110, func=Connect.gen_KT, symmetry="x" },
+
+  -- two exits at bottom and three at top, all parallel
+  M5 = { conn=5, prob= 40, func=Connect.gen_M5, symmetry="x" },
+
+
+  -- gigantic six-way shapes
+  GG = { conn=6, prob=250, func=Connect.gen_GG, symmetry="x" },
+}
+
+
+function Connect.test_branch_gen(name)
+  local info = assert(Connect.BRANCHES[name])
+
+  local function dump_exits(config, W, H)
+    local DIR_CHARS = { [2]="|", [8]="|", [4]=">", [6]="<" }
+
+    local P = table.array_2D(W+2, H+2)
+
+    for y = 0,H+1 do for x = 0,W+1 do
+      P[x+1][y+1] = sel(geom.inside_box(x,y, 1,1, W,H), "#", " ")
+    end end
+
+    for idx = 1,#config,3 do
+      local x   = config[idx+0]
+      local y   = config[idx+1]
+      local dir = config[idx+2]
+
+      assert(x, y, dir)
+      assert(geom.inside_box(x,y, 1,1, W,H))
+
+      local nx, ny = geom.nudge(x, y, dir)
+      assert(nx==0 or nx==W+1 or ny==0 or ny==H+1)
+
+      if P[nx+1][ny+1] ~= " " then
+        gui.printf("spot: (%d,%d):%d to (%d,%d)\n", x,y,dir, nx,ny)
+        error("Bad branch!")
+      end
+
+      P[nx+1][ny+1] = DIR_CHARS[dir] or "?"
+    end
+
+    for y = H+1,0,-1 do
+      for x = 0,W+1 do
+        gui.printf("%s", P[x+1][y+1])
+      end
+      gui.printf("\n")
+    end
+    gui.printf("\n")
+  end
+
+  for deep = 1,9 do for long = 1,9 do
+    gui.printf("==== %s %dx%d ==================\n\n", name, long, deep)
+
+    local configs = info.func(long, deep)
+    if not configs then
+      gui.printf("Unsupported size\n\n")
+    else
+      each CONF in configs do
+        dump_exits(CONF, long, deep)
+      end
+    end
+  end end -- deep, long
+end
+
+
+function Connect.connect_rooms()
+
+  -- Guidelines:
+  -- . prefer ground areas not to be leafs
+  -- . prefer big rooms to have 3 or more connections.
+  -- . prefer small isolated rooms to be leafs (1 connection).
+
+  local function merge_groups(id1, id2)
+    if id1 > id2 then id1,id2 = id2,id1 end
+
+    each R in LEVEL.rooms do
+      if R.c_group == id2 then
+        R.c_group = id1
+      end
+    end
+  end
+
+  local function min_group_id()
+    local result
+    
+    each R in LEVEL.rooms do
+      if not result or R.c_group < result then
+        result = R.c_group
+      end
+    end
+
+    return assert(result)
+  end
+
+  local function group_size(id)
+    local result = 0
+
+    each R in LEVEL.rooms do
+      if R.c_group == id then
+        result = result + 1
+      end
+    end
+
+    return assert(result)
+  end
+
+  local function swap_groups(id1, id2)
+    assert(id1 ~= id2)
+
+    each R in LEVEL.rooms do
+      if R.c_group == id1 then
+        R.c_group = id2
+      elseif R.c_group == id2 then
+        R.c_group = id1
+      end
+    end
+  end
+
+  local function connect_seeds(S, T, dir)
+    assert(S.room and S.room.kind ~= "scenic")
+    assert(T.room and T.room.kind ~= "scenic")
+
+    S.border[dir].kind    = "arch"
+    T.border[10-dir].kind = "straddle"
+
+    S.thick[dir] = 24
+    T.thick[10-dir] = 24
+
+gui.debugf("connect_seeds S(%d,%d) ROOM_%d grp:%d --> S(%d,%d) ROOM_%d grp:%d\n",
+S.sx,S.sy, S.room.id, S.room.c_group,
+T.sx,T.sy, T.room.id, T.room.c_group)
+
+    merge_groups(S.room.c_group, T.room.c_group)
+
+    local CONN = { dir=dir, src=S.room, dest=T.room, src_S=S, dest_S=T }
+
+    table.set_class(CONN, CONN_CLASS)
+
+    assert(not S.conn and not S.conn_dir)
+    assert(not T.conn and not T.conn_dir)
+
+    S.conn = CONN
+    T.conn = CONN
+
+    S.conn_dir = dir
+    T.conn_dir = 10-dir
+
+    S.conn_peer = T
+    T.conn_peer = S
+
+    table.insert(LEVEL.conns, CONN)
+
+    table.insert(S.room.conns, CONN)
+    table.insert(T.room.conns, CONN)
+
+    LEVEL.branched_one = true
+
+    return CONN
+  end
+
+
+  local function morph_size(MORPH, R)
+    if MORPH >= 4 then
+      return R.sh, R.sw
+    else
+      return R.sw, R.sh
+    end
+  end
+
+  local function morph_dir(MORPH, dir)
+    if dir == 5 then
+      return 5
+    end
+
+    if (MORPH % 2) >= 1 then
+      if (dir == 4) or (dir == 6) then dir = 10-dir end
+    end
+
+    if (MORPH % 4) >= 2 then
+      if (dir == 2) or (dir == 8) then dir = 10-dir end
+    end
+
+    if MORPH >= 4 then
+      dir = geom.RIGHT[dir]
+    end
+
+    return dir
+  end
+
+  local function morph_coord(MORPH, R, x, y, long, deep)
+    assert(1 <= x and x <= long)
+    assert(1 <= y and y <= deep)
+
+    if (MORPH % 2) >= 1 then
+      x = long+1 - x
+    end
+
+    if (MORPH % 4) >= 2 then
+      y = deep+1 - y
+    end
+
+    if MORPH >= 4 then
+      x, y = y, long+1-x
+    end
+
+    return R.sx1 + (x-1), R.sy1 + (y-1)
+  end
+
+  local function morph_symmetry(MORPH, sym)
+    if sym == "x" then
+      return sel(MORPH >= 4, "y", "x")
+    end
+
+    if sym == "y" then
+      return sel(MORPH >= 4, "x", "y")
+    end
+
+    -- no change for XY, R and T kinds
+    return sym
+  end
+
+  local function dump_new_conns(conns)
+    gui.debugf("NEW CONNS:\n")
+    each C in conns do
+      gui.debugf("  S(%d,%d) --> S(%d,%d)  dir:%d\n", C.S.sx,C.S.sy, C.N.sx,C.N.sy, C.dir)
+    end
+  end
+
+  local function try_configuration(MORPH, R, K, config, long, deep)
+    assert(R.c_group)
+
+    local groups_seen = {}
+    local conns = {}
+
+    groups_seen[R.c_group] = true
+
+-- gui.debugf("TRY configuration: %s\n", table.tostr(config))
+
+    -- see if the pattern can be used on this room
+    -- (e.g. all exits go somewhere and are different groups)
+
+    local hit_conns = 0
+
+    for idx = 1,#config,3 do
+      local x   = config[idx+0]
+      local y   = config[idx+1]
+      local dir = config[idx+2]
+
+      x, y = morph_coord(MORPH, R, x, y, long, deep)
+      dir  = morph_dir(MORPH, dir)
+
+      local nx, ny = geom.nudge(x, y, dir)
+
+      if not Seed.valid(nx, ny, 1) then return false end
+
+      local S = SEEDS[ x][ y][1]
+      local N = SEEDS[nx][ny][1]
+
+      if S.room ~= R then return false end
+
+      -- handle hits on existing connections
+      local existing = false
+
+      if S.conn then
+        if S.conn_dir == dir then
+          existing = true
+        else
+          return false -- only one connection per seed!
+        end
+      end
+
+      if existing then
+        hit_conns = hit_conns + 1
+      else
+        if not N.room or
+           not N.room.c_group or
+           N.room.kind == "scenic" or
+           N.room.branch_kind or
+           groups_seen[N.room.c_group] or
+           N.conn -- only one connection per seed!
+        then
+          return false
+        end
+
+        -- OK --
+
+        groups_seen[N.room.c_group] = true
+
+        table.insert(conns, { S=S, N=N, dir=dir })
+      end
+    end
+
+    if hit_conns ~= #R.conns then
+      return false
+    end
+
+    -- OK, all points were possible, do it for real
+
+gui.debugf("USING CONFIGURATION: %s\n", K)
+gui.debugf("hit_conns = %d\n", hit_conns)
+
+    R.branch_kind = K
+
+    if Connect.BRANCHES[K].symmetry then
+      R.symmetry = morph_symmetry(MORPH, Connect.BRANCHES[K].symmetry)
+    end
+
+    dump_new_conns(conns)
+
+    each C in conns do
+      connect_seeds(C.S, C.N, C.dir)
     end
 
     return true
   end
 
-  -- Note: require R1's group to be less than R2, which ensures that
-  --       a connection between two rooms is only tested _once_.
-  if mode != "cycle" and
-     L1.kind != "hallway" and
-     L2.kind != "hallway" and
-     not L2.is_street
-  then
-    return (L1.conn_group < L2.conn_group)
-  end
+  local function try_branch_big_room(R, K)
 
-  return (L1.conn_group != L2.conn_group)
-end
+    gui.debugf("TRYING CONFIGURATION: %s\n", K)
 
+    -- There are THREE morph steps, done in this order:
+    -- 1. either rotate the pattern clockwise or not
+    -- 2. either flip the pattern horizontally or not
+    -- 3. either flip the pattern vertically or not
 
+    local info = assert(Connect.BRANCHES[K])
 
-function Connect_dump_groups()
-  gui.debugf("Connect groups:\n")
+    local rotates = { 0, 4 }
+    local morphs  = { 0, 1, 2, 3 }
 
-  each R in LEVEL.rooms do
-    gui.debugf("  %s = %d\n", R:tostr(), R.conn_group or -1)
-  end
+    rand.shuffle(rotates)
 
-  each H in LEVEL.halls do
-    gui.debugf("  %s = %d\n", H:tostr(), H.conn_group or -1)
-  end
-end
+    each ROT in rotates do
+      local long, deep = morph_size(ROT, R)
+      local configs = info.func(long, deep)
 
+      if configs then
+        rand.shuffle(configs)
+        each CONF in configs do
+          rand.shuffle(morphs)
 
+          each SUB in morphs do
+            local MORPH = ROT + SUB  -- the full morph
 
-function Connect_merge_groups(id1, id2)
-  if id1 > id2 then id1,id2 = id2,id1 end
-
-  each R in LEVEL.rooms do
-    if R.conn_group == id2 then
-      R.conn_group = id1
-    end
-  end
-
-  each H in LEVEL.halls do
-    if H.conn_group == id2 then
-      H.conn_group = id1
-    end
-  end
-end
-
-
-
-function Connect_make_branch(info, mode)
-
-  -- must add hallway to level now
-  -- [so merge_groups in CONN:add_it() can find it]
-  if info.hall then
-
-    -- merge new hall into an existing one?
-    if info.merge then
-      assert(info.onto_hall_K)
-
-      local new_hall = assert(info.hall)
-      local old_hall = assert(info.onto_hall_K.hall)
-
-      old_hall:add_to_existing(new_hall, info.D2)
-
-      info.hall = nil
-
-      -- update the CONN info -- only need one now
-      if info.D1.L1 == new_hall then info.D1.L1 = old_hall end
-      if info.D1.L2 == new_hall then info.D1.L2 = old_hall end
-    
-      info.D2 = nil
-
-    else  -- normal creation
-
-      info.hall:add_it()
-
-      if mode == "cycle" then
-        info.is_cycle = true
-        info.hall.is_cycle = true
+            if try_configuration(MORPH, R, K, CONF, long, deep) then
+              gui.debugf("Config %s (MORPH:%d) successful @ %s\n",
+                         K, MORPH, R:tostr())
+              return true -- SUCCESS
+            end
+          end -- SUB
+        end -- CONF
       end
-    end
+    end -- ROT
+
+gui.debugf("Failed\n")
+    return false
   end
 
-  -- add connections
-  info.D1:add_it()
-
-  if info.D2 then
-     info.D2:add_it()
-  end
-
-  -- for cycles, ensure new hallway gets a quest and zone
-  if mode == "cycle" and info.hall then
-    assert(info.D1.L1.quest)
-    assert(info.D1.L1.zone)
-
-    assert(not info.D1.L2.quest)
-    assert(not info.D1.L2.zone)
-
-    info.D1.L1.quest:add_room_or_hall(info.D1.L2)
-    info.D1.L1.zone :add_room_or_hall(info.D1.L2)
-  end
-end
-
-
-
-function Connect_teleporters()
-
-  local function collect_teleporter_locs()
-    local loc_list = {}
+  local function branch_big_rooms()
+    local rooms = {}
 
     each R in LEVEL.rooms do
-      local score = R:eval_teleporter()
-
-      if score >= 0 then
-        table.insert(loc_list, { R=R, score=score })
+      if R.svolume >= 1 and (R.kind == "normal") and not R.parent then
+        R.k_score = sel((R.sw%2)==1 and (R.sh%2)==1, 5, 0) + R.svolume + gui.random()
+        table.insert(rooms, R)
       end
     end
 
-    table.sort(loc_list, function(A, B) return A.score > B.score end)
+    if #rooms == 0 then return end
 
-    return loc_list
+    table.sort(rooms, function(A, B) return A.k_score > B.k_score end)
+
+    local big_bra_chance = rand.key_by_probs { [99] = 80, [50]=12, [10]=3 }
+    gui.printf("Big Branch Mode: %d%%\n", big_bra_chance)
+
+    each R in rooms do
+      if (#R.conns <= 2) and rand.odds(big_bra_chance) then
+        gui.debugf("Branching BIG %s k_score: %1.3f\n", R:tostr(), R.k_score)
+
+        local kinds = {}
+        for N,info in pairs(Connect.BRANCHES) do
+          kinds[N] = assert(info.prob)
+        end
+
+        while not table.empty(kinds) do
+          local K = assert(rand.key_by_probs(kinds))
+
+          kinds[K] = nil  -- don't try this branch kind again
+
+          if try_branch_big_room(R, K) then
+            break; -- SUCCESS
+          end
+        end -- while kinds
+      end
+    end -- for R in rooms
   end
 
+  local function make_scenic(R)
+    -- Note: connections must be handled elsewhere
 
-  local function add_teleporter(R1, R2)
-    local D = CONN_CLASS.new("teleporter", R1, R2)
+    gui.debugf("Making %s SCENIC\n", R:tostr())
+    assert(R.kind ~= "scenic")
 
-    D.tele_tag1 = Plan_alloc_id("tag")
-    D.tele_tag2 = Plan_alloc_id("tag")
+    R.kind = "scenic"
 
-    D:add_it()
+    -- move the room to the scenic list
+
+    for index,N in ipairs(LEVEL.rooms) do
+      if N == R then
+        table.remove(LEVEL.rooms, index)
+        R.c_group = -1
+        break;
+      end
+    end
+
+    assert(R.c_group == -1)
+    
+    table.insert(LEVEL.scenic_rooms, R)
+
+    -- remove any arches (from connect_seeds)
+
+    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
+      for side = 2,8,2 do
+        local S = SEEDS[x][y][1]
+        if S.room == R then
+          local B = S.border[side]
+          if B.kind == "arch" then
+            B.kind = nil
+          end
+        end
+      end
+    end end -- for x, y
   end
 
+  local function make_conn_scenic(C)
+    local found
 
-  local function try_add_teleporter()
-    local loc_list = collect_teleporter_locs()
+    for index,N in ipairs(LEVEL.conns) do
+      if N == C then
+        table.remove(LEVEL.conns, index)
+        found = true
+        break;
+      end
+    end
 
-    -- need at least a source and a destination
-    while #loc_list >= 2 do
+    assert(found)
 
-      -- grab the first room (with highest score)
-      local R1 = loc_list[1].R
-      table.remove(loc_list, 1)
+    table.insert(LEVEL.scenic_conns, C)
 
-      -- try to find a room we can connect to
-      each loc in loc_list do
-        local R2 = loc.R
+    ---## C.src_S.conn  = nil; C.src_S.conn_dir  = nil
+    ---## C.dest_S.conn = nil; C.dest_S.conn_dir = nil
+  end
 
-        if Connect_is_possible(R1, R2, "teleporter") then
-          add_teleporter(R1, R2)
-          return true
+  local function try_emergency_connect(R, x, y, dir)
+    local nx, ny = geom.nudge(x, y, dir)
+
+    if not Seed.valid(nx, ny, 1) then return false end
+
+    local S = SEEDS[ x][ y][1]
+    local N = SEEDS[nx][ny][1]
+
+    assert(S.room == R)
+    assert(N.room ~= R)
+
+    if not N.room or
+       not N.room.c_group or
+       N.room.kind == "scenic" or
+       N.room.c_group == R.c_group
+    then
+      return false
+    end
+
+    -- only one connection per seed!
+    if S.conn or N.conn  then return false end
+
+    connect_seeds(S, N, dir)
+
+    R.branch_kind = "EM"
+--  R.old_sym  = R.symmetry
+    R.symmetry = nil
+
+    N.room.branch_kind = "EM"
+    N.room.symmetry = nil
+
+    return true
+  end
+
+  local function score_emerg_branch(R, S, n_side)
+    local score = 200 + gui.random()
+
+    -- prefer it away from other connections
+    for dist = 1,3 do
+      for side = 2,8,2 do if side ~= n_side then
+        local N = S:neighbor(side, dist)
+        if N and N.conn_dir then
+          score = score - 40 / (dist ^ 2)
+        end
+      end end -- for side
+    end -- for dist
+
+    return score
+  end
+
+  local function force_room_branch(R)
+    gui.debugf("Emergency connection in %s\n", R:tostr())
+
+    local try_list = {}
+
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R then
+        for side = 2,8,2 do
+          local N = S:neighbor(side)
+          if N and N.room and N.room ~= R then
+            local score = score_emerg_branch(R, S, side)
+            table.insert(try_list, { x=x, y=y, dir=side, score=score })
+          end
+        end -- for side
+      end
+    end end -- for x, y
+
+    table.sort(try_list, function(A, B) return A.score > B.score end)
+
+    each L in try_list do
+      if try_emergency_connect(R, L.x, L.y, L.dir) then
+        return true -- OK
+      end
+    end
+
+    -- this is not necesarily bad, it could be a group of rooms
+    -- where only one of them can make a connection.
+    gui.debugf("FAILED!\n")
+    return false
+  end
+
+  local function handle_isolate(R, join_chance)
+    if rand.odds(join_chance) or R.parent or not LEVEL.branched_one then
+      if force_room_branch(R) then
+        return -- OK
+      end
+    end
+
+    make_scenic(R)
+  end
+
+  local function handle_rebel_group(list, rebel_id, min_g)
+
+    -- if this group is bigger than the main group, swap them
+    if group_size(rebel_id) > group_size(min_g) then
+      gui.debugf("Crowning rebel group %d (x%d) -> %d (x%d)\n",
+          rebel_id, group_size(rebel_id), min_g, group_size(min_g))
+
+      swap_groups(rebel_id, min_g)
+    end
+
+    local join_chance = 99
+    if STYLE.scenics == "heaps" then join_chance = 66 end
+
+    local rebels = table.subset_w_field(list, "c_group", rebel_id)
+    assert(#rebels > 0)
+    gui.debugf("#rebels : %d\n", #rebels)
+
+    if rand.odds(join_chance) then
+      -- try the least important rooms first
+      each R in rebels do
+        R.rebel_cost = sel(R.symmetry, 500, 0) + R.svolume + gui.random()
+      end
+
+      table.sort(rebels, function(A,B) return A.rebel_cost < B.rebel_cost end)
+
+      each R in rebels do
+        if force_room_branch(R) then
+          gui.debugf("Branched rebel group %d (now %d)\n", rebel_id, R.c_group)
+          return -- OK
         end
       end
     end
 
+    -- make all of them scenic, need to kill the connections
+    gui.debugf("Killing rebel group %d (%d rooms)\n", rebel_id, #rebels)
+
+    -- use a copy since we modify the original list
+    local c_copy = table.copy(LEVEL.conns)
+
+    each C in c_copy do
+      if C.src.c_group == rebel_id then
+        assert(C.dest.c_group == rebel_id)
+        make_conn_scenic(C)
+      end
+    end
+
+    each R in rebels do
+      make_scenic(R)
+    end
+  end
+
+  local function branch_the_rest()
+    local min_g = min_group_id()
+
+    -- use a copy since LEVEL.rooms may be modified
+    local list = table.copy(LEVEL.rooms)
+
+    local join_chance = 65
+    if STYLE.scenics == "few"   then join_chance = 95 end
+    if STYLE.scenics == "heaps" then join_chance = 40 end
+
+    if STYLE.scenics == "none" or LEVEL.join_all then join_chance = 100 end
+
+    gui.debugf("Join Chance: %d\n", join_chance)
+
+    repeat
+      local changed = false
+
+      each R in list do
+        if R.c_group ~= min_g and R.kind ~= "scenic" then
+          if #R.conns == 0 then
+            handle_isolate(R, join_chance)
+          else
+            handle_rebel_group(list, R.c_group, min_g)
+          end
+
+          -- minimum group_id may have changed
+          min_g = min_group_id()
+          changed = true
+        end
+      end -- for R
+    until not changed
+  end
+
+  local function has_scenic_neigbour(R)
+    each N in R.neighbors do
+      if N.kind == "scenic" then return true end
+    end
     return false
   end
-
-
-  ---| Connect_teleporters |---
-
-  -- check if game / theme supports them
-  if not PARAM.teleporters then return end
-
-  if STYLE.teleporters == "none" then return end
-
-  -- determine number to make
-  local quota = style_sel("teleporters", 0, 1, 2, 3.7)
-
-  quota = quota * MAP_W / 5
-  quota = quota + rand.skew() * 1.7
-
-  quota = int(quota) -- round down
-
-  gui.printf("Teleporter quota: %d\n", quota)
-
-  if quota < 1 then return end
-
-  for i = 1,quota do
-    if not try_add_teleporter() then
-      break
-    end
-  end
-end
-
-
-
-function Connect_eval_direct(start_K, dir, mode)
-
-  -- see if we can make a direct connection to a neighboring room
-  -- (which touches the start room).
-
-  local end_K = start_K:neighbor(dir)
-
-  if not end_K then return end
-
-  local L1 = start_K.room or start_K.hall
-  local L2 =   end_K.room or   end_K.hall
-
-  if not L2 then return end
-
-  if L1 == L2 then return end
-
-  if not Connect_is_possible(L1, L2, mode) then return end
-
-  -- never extend onto big junction hallways
-  if L2.big_junc then return end
-
-
-  local score
-
-  if end_K.room then
-    local score1 = start_K:eval_exit(dir)
-    local score2 =   end_K:eval_exit(10 - dir)
-
-    score = (score1 + score2) * 10 + 100 * gui.random() ^ 1.7
-
-    -- prefer secret exits DO NOT connect to the start room
-    if L2.purpose == "START" then
-      score = score - 300
-    end
-  else
-    -- prefer not to connect onto existing hallways
-    score = -100 - end_K.num_conn - gui.random()
-  end
-
-  -- try damn hard _not_ to connect to crossover hallways
-  if end_K.hall and end_K.hall.crossover then
-    if mode != "emergency" then return end
-
-    score = score - 500
-  end
-
-
-  -- score is now computed : test it
-
-  if score < LEVEL.best_conn.score then return end
-
-
-  --- OK ---
-
-  local D1 = CONN_CLASS.new("normal", L2, L1, 10 - dir)
-
-  D1.K1 =   end_K
-  D1.K2 = start_K
-
-
-  LEVEL.best_conn =
-  {
-    score = score
-    D1 = D1
-    stats = {}
-    onto_hall_K = MID
-  }
-end
-
-
-
-function Connect_scan_sections(mode, min_score)
-  --|
-  --| evaluate all possible connections (within reason) and pick the
-  --| one with the highest score.
-  --|
-
-  LEVEL.best_conn = { score=min_score }
-
-  for kx = 1,SECTION_W do
-  for ky = 1,SECTION_H do
-    local K = SECTIONS[kx][ky]
-
-    if not (K and K.used and K.room) then continue end
-
-    -- only connect TO a street (never FROM one)
-    if K.room.is_street then continue end
-
-    -- ignore secret exits in normal mode, require them in secret mode
-    if (mode == "secret_exit") != (K.room.purpose == "SECRET_EXIT") then
-      continue
+    
+  local function sprinkle_scenics()
+    -- select some rooms as scenic rooms
+    if STYLE.scenics == "none" or STYLE.scenics == "few" then
+      return
     end
 
-    for dir = 2,8,2 do
-      Connect_eval_direct(K, dir, mode)
+    local side_prob = sel(STYLE.scenics == "heaps", 60, 10)
+    local mid_prob  = sel(STYLE.scenics == "heaps", 20, 3)
 
-      Hallway_scan(K, dir, mode)
-    end
+    local list = table.copy(LEVEL.rooms)
+    rand.shuffle(list)
 
-    -- this function can take a while to run, so check for user abort
-    -- (return true so we don't trigger an error)
-    if gui.abort() then return true end
-  end
-  end
-
-  -- failed to make any connection?
-  if not LEVEL.best_conn.D1 then
-    return false
+    each R in list do
+      if rand.odds(sel(R.touches_edge, side_prob, mid_prob)) and
+         not has_scenic_neigbour(R)
+      then
+        make_scenic(R)
+      end
+    end -- for R
   end
 
---[[ debug
-if mode == "cycle" then
-stderrf("\n\n==== CYCLE : %s / %s\n\n", LEVEL.best_conn.D1.L1:tostr(), LEVEL.best_conn.D1.L2:tostr())
-end
---]]
-
-  Connect_make_branch(LEVEL.best_conn, mode)
-
-  return true  -- OK
-end
-
-
-
-function Connect_start_room()
-  local locs = {}
-
-  each R in LEVEL.rooms do
-    R.start_score = R:eval_start()
-
-    gui.debugf("Start score @ %s (seeds:%d) --> %1.3f\n", R:tostr(), R.sw * R.sh, R.start_score)
-
-    if R.start_score >= 0 then
-      table.insert(locs, R)
-    end
-  end
-
-  assert(#locs > 0)
-
-  local room = table.pick_best(locs,
-    function(A, B) return A.start_score > B.start_score end)
-
-  gui.printf("Start room: %s\n", room:tostr())
-
-  LEVEL.start_room = room
-
-  room.purpose = "START"
-
-  if LEVEL.special != "street" and
-     not (LEVEL.hub_links and Hub_find_link("START")) and
-     rand.odds(80)
-  then
-
-    if room:add_closet("start") then
-      room.purpose_is_done = true
-    end
-  end
-end
-
-
-
-function Connect_rooms()
-  
-  -- this function ensures all rooms become connected together
-  -- (as a simple undirected graph, i.e. no loops).  Rooms can be
-  -- connected directly at a boundary, via a hallway, or via a
-  -- pair of teleporters.
-
-  -- we also decide the start room here.
-
-
-  local function initial_groups()
+  local function count_branches()
     each R in LEVEL.rooms do
-      R.conn_group = _index
+      R.num_branch = #R.conns + #R.teleports
+      if R.num_branch == 0 then
+        error("Room exists with no connections!")
+      end
+      gui.debugf("Branches in %s --> %d\n", R:tostr(), R.num_branch)
     end
   end
 
 
-  local function count_groups()
-    local groups = {}
-
-    each R in LEVEL.rooms do
-      if R.conn_group then
-        groups[R.conn_group] = 1
-      end
-    end
-
-    return table.size(groups)
-  end
-
-
-  local function natural_flow(L, visited)
-    assert(L.kind != "scenic")
-
---- stderrf("natural_flow @ %s\n", L:tostr())
-
-    visited[L] = true
-
-    if L.kind == "closet" then return end
-
-    if L.kind != "hallway" then
-      table.insert(LEVEL.rooms, L)
-    end
-
-    each D in L.conns do
-      if L == D.L2 and not visited[D.L1] then
-        D:swap()
-      end
-
-      if L == D.L1 and not visited[D.L2] then
-        D.L2.entry_conn = D
-
-        -- recursively handle adjacent room
-        natural_flow(D.L2, visited)
-      end
-    end
-  end
-
-
-  --==| Connect_rooms |==--
+  --==| Connect.connect_rooms |==--
 
   gui.printf("\n--==| Connecting Rooms |==--\n\n")
 
-  -- give each room a 'conn_group' value, starting at one.
-  -- connecting two rooms will merge the groups together.
-  -- at the end, only a single group will remain (#1).
-  initial_groups()
+  LEVEL.branched_one = false
 
-  Levels_invoke_hook("connect_rooms")
-
-  Hallway_prepare()
-
-  Connect_teleporters()
-  Connect_start_room()
-
-  -- secret exit must be done first
-  if LEVEL.secret_exit then
-    if not Connect_scan_sections("secret_exit", -9999) then
-      error("Failed to connect secret exit")
-    end
+  for c_group,R in ipairs(LEVEL.rooms) do
+    R.c_group = c_group
+    R.teleports = {}
   end
 
-  Hallway_add_streets()
+--!!!  sprinkle_scenics()
 
-  -- add connections until all rooms are reachable
-  while count_groups() >= 2 do
-    if not Connect_scan_sections("normal", -999) then
-      if not Connect_scan_sections("emergency", -99999) then
-        Plan_dump_rooms("Current Map:")
-        gui.printf("Rooms with no conns: %s\n", Room_list_no_conns())
-        Connect_dump_groups()
-        error("Failed to connect all rooms")
-      end
-    end
+  branch_big_rooms()
+  branch_the_rest()
 
-    if gui.abort() then return end
-  end
+  count_branches()
 
-  -- update connections so that 'src' and 'dest' follow the natural
-  -- flow of the level, i.e. player always walks src -> dest (except
-  -- when backtracking).  Room order is updated too, though quests
-  -- will normally change it again.
-  LEVEL.rooms = {}
-
-  natural_flow(LEVEL.start_room, {})
-
-  -- need this due to direct connections annexing a section
-  Plan_make_seeds()
-end
-
-
-------------------------------------------------------------------------
-
-
-function Connect_cycles()
-  
-  -- TODO: describe cycles........
-
-  local function find_room(D)
-    local L = D.L2
-
-    if L.kind != "hallway" then return L end
-
-    each D2 in L.conns do
-      if D2.L1 == L and not D2.lock then
-        return find_room(D2)
-      end
-    end
-
-    error("cycles: finding next room failed")
-  end
-
-  local function prepare_cycles()   -- FIXME: MOVE TO quests.lua
-    -- give each room a 'next_in_quest' field
-
-    each R in LEVEL.rooms do
-      each D in R.conns do
-        if D.L1 == R and not D.lock and not (D.kind == "teleporter" or D.kind == "closet") then
-          R.next_in_quest = find_room(D)
-          assert(R.quest == R.next_in_quest.quest)
-          break
-        end
-      end
-    end
-  end
-
-
-  ---| Connect_cycles |---
-
-  if STYLE.cycles != "none" then
-    prepare_cycles()
-
-    local quota = style_sel("cycles", 0, 0.3, 1, 5)
-
-    quota = int(quota * MAP_W + gui.random())
-
-    gui.printf("Cycle quota: %d\n", quota)
-
-    for i = 1,quota do
-      Connect_scan_sections("cycle", -500)
-
-      if gui.abort() then return end
-    end
-  end
-
----!!!!  Hallway_add_doubles()
-
-  each H in LEVEL.halls do
-    H:dump_path()
-  end
+  gui.printf("New Seed Map:\n")
+  Seed.dump_rooms()
 end
 

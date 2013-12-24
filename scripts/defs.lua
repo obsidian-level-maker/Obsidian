@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2012 Andrew Apted
+--  Copyright (C) 2006-2014 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -24,13 +24,13 @@ PARAM  = {}
 STYLE  = {}
 LEVEL  = {}
 THEME  = {}
+SEEDS  = {}
+EPISODE = {}
 
-SEEDS    = {}
-SECTIONS = {}
-EPISODE  = {}
 
 -- a place for unfinished stuff
 UNFINISHED = {}
+
 
 -- tables which interface with GUI code
 OB_CONFIG = {}
@@ -44,44 +44,81 @@ OB_MODULES = {}
 -- various special settings
 OB_ENGINES["nolimit"] =
 {
-  label = "Limit Removing",
-  priority = 95,  -- top most
+  label = "Limit Removing"
+  priority = 95  -- top most
 }
 
 
 OB_THEMES["mixed"] =
 {
-  label = "A Bit Mixed",
+  label = "Mix It Up"
   priority = 99,
 }
 
 OB_THEMES["jumble"] =
 {
-  label = "Jumbled Up",
-  priority = 97,
+  label = "Jumbled Up"
+  priority = 97
 }
 
 OB_THEMES["original"] =
 {
-  label = "As Original",
-  priority = 95,
+  label = "As Original"
+  priority = 95
 }
 
 OB_THEMES["psycho"] =
 {
-  label = "Psychedelic",
-  priority = -99,  -- bottom most
+  label = "Psychedelic"
+  priority = -99  -- bottom most
 }
 
 
 -- important constants
 
-SEED_SIZE = 256
+SEED_SIZE = 192
 
-EDGE_SEEDS  = 2
-DEPOT_SEEDS = 3
+EDGE_SEEDS  = 3
+DEPOT_SEEDS = 4
 
 EXTREME_H = 4000
 
-LIFT_H = 104
+SKILLS = { "easy", "medium", "hard" }
+   
+
+-- room stuff
+
+ROOM_SIZE_TABLE = { 0,0,6,9,4,1 }
+
+BIG_ROOM_TABLE =
+{
+  [11] = 25
+  [22] = 40, [12] = 10
+  [33] = 10, [23] = 10, [13] = 1
+  [44] = 1,  [34] = 1,  [24] = 1
+}
+
+
+-- monster amounts and toughness
+MONSTER_QUANTITIES =
+{
+  scarce=9, less=18, normal=27, more=40, heaps=60
+}
+
+COOP_MON_FACTOR = 1.5
+
+MONSTER_MAX_TIME   = { weak=12,  medium=18,  tough=24 }
+MONSTER_MAX_DAMAGE = { weak=80,  medium=200, tough=360 }
+MONSTER_LOW_DAMAGE = { weak=0.1, medium=1.0, tough=4 }
+
+MON_VARIATION_LOW  = 0.5
+MON_VARIATION_HIGH = 1.5
+
+HEALTH_AMMO_ADJUSTS =
+{
+  none=0, scarce=0.4, less=0.7, normal=1.0, more=1.5, heaps=2.5
+}
+
+COOP_HEALTH_FACTOR = 1.3
+COOP_AMMO_FACTOR   = 1.6
 

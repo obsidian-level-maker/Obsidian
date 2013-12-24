@@ -1,10 +1,10 @@
 ----------------------------------------------------------------
---  BUILDING TOOLS
+--  BUILDER
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2013 Andrew Apted
+--  Copyright (C) 2006-2014 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -18,63 +18,31 @@
 --
 ----------------------------------------------------------------
 
-
-GLOBAL_SKIN_DEFAULTS =
-{
-  outer = "?wall"
-  fence = "?wall"
-  floor = "?wall"
-  ceil  = "?floor"
-
-  tag = ""
-  special = ""
-  light = ""
-  style = ""
-  message = ""
-  wait = ""
-  targetname = ""
-}
+require 'defs'
+require 'util'
+require 'seed'
 
 
-CSG_BRUSHES =
-{
-  solid  = 1
-  detail = 1
-  clip   = 1
-
-  sky     = 1
-  liquid  = 1
-  trigger = 1
-  light   = 1
-}
-
-
-DOOM_LINE_FLAGS =
-{
-  blocked     = 0x01
-  block_mon   = 0x02
-  two_sided   = 0x04
-  sound_block = 0x40
-
-  draw_secret = 0x20
-  draw_never  = 0x80
-  draw_always = 0x100
-
--- BOOM:  pass_thru = 0x200
-}
-
-
-HEXEN_ACTIONS =
-{
-  W1 = 0x0000, WR = 0x0200,  -- walk
-  S1 = 0x0400, SR = 0x0600,  -- switch
-  M1 = 0x0800, MR = 0x0A00,  -- monster
-  G1 = 0x0c00, GR = 0x0E00,  -- gun / projectile
-  B1 = 0x1000, BR = 0x1200,  -- bump
-}
+Build = {}
+Trans = {}
 
 
 function raw_add_brush(brush)
+  each C in brush do
+    if C.face then
+      table.merge(C, C.face)
+      C.face = nil
+
+      -- compatibility cruft
+
+      if C.x_offset then C.u1 = C.x_offset ; C.x_offset = nil end
+      if C.y_offset then C.v1 = C.y_offset ; C.y_offset = nil end
+
+      if C.line_kind then C.special = C.line_kind ; C.line_kind = nil end
+      if C.line_tag  then C.tag     = C.line_tag  ; C.line_tag  = nil end
+    end
+  end
+
   gui.add_brush(brush)
 
   if GAME.add_brush_func then
@@ -109,54 +77,188 @@ function raw_add_model(model)
 end
 
 
-function Brush_collect_flags(C)
-  if GAME.format == "doom" then
-    local flags = C.flags or 0
+Trans.TRANSFORM =
+{
+  -- mirror_x  : flip horizontally (about given X)
+  -- mirror_y  : flip vertically (about given Y)
+  -- mirror_z
 
-    if C.act and PARAM.sub_format == "hexen" then
-      local spac = HEXEN_ACTIONS[C.act]
-      if not spac then
-        error("Unknown act value: " .. tostring(C.act))
-      end
-      flags = bit.bor(flags, spac)
-    end
+  -- scale_x   : scaling factor
+  -- scale_y
+  -- scale_z
 
-    each name,value in DOOM_LINE_FLAGS do
-      if C[name] and C[name] != 0 then
-        flags = bit.bor(flags, value)
-      end
-    end
+  -- rotate    : angle in degrees, counter-clockwise,
+  --             rotates about the origin
 
-    if flags != 0 then
-      C.flags = flags
+  -- add_x     : translation, i.e. new origin coords
+  -- add_y
+  -- add_z
+}
 
-      -- this makes sure the flags get applied
-      if not C.special then C.special = 0 end
-    end
-  end
+
+function Trans.clear()
+  Trans.TRANSFORM = {}
+end
+
+function Trans.set(T)
+  Trans.TRANSFORM = T
+end
+
+function Trans.modify(what, value)
+  Trans.TRANSFORM[what] = value
 end
 
 
-function brush_helper(brush)
-  local mode = brush[1].m
+function Trans.apply(x, y)
+  local T = Trans.TRANSFORM
 
-  each C in brush do
-    Brush_collect_flags(C)
+  -- apply mirroring first
+  if T.mirror_x then x = T.mirror_x * 2 - x end
+  if T.mirror_y then y = T.mirror_y * 2 - y end
+
+  -- apply scaling
+  x = x * (T.scale_x or 1)
+  y = y * (T.scale_y or 1)
+
+  -- apply rotation
+  if T.rotate then
+    x, y = geom.rotate_vec(x, y, T.rotate)
   end
 
-  raw_add_brush(brush)
+  -- apply translation last
+  x = x + (T.add_x or 0)
+  y = y + (T.add_y or 0)
+
+  return x, y
 end
 
 
-function entity_helper(name, x, y, z, props)
+function Trans.apply_z(z, slope)
+  local T = Trans.TRANSFORM
+
+  if slope then
+    slope = table.copy(slope)
+
+    slope.x1, slope.y1 = Trans.apply(slope.x1, slope.y1)
+    slope.x2, slope.y2 = Trans.apply(slope.x2, slope.y2)
+
+    if T.mirror_z then slope.dz = - slope.dz end
+  end
+
+  -- apply mirroring first
+  if T.mirror_z then z = T.mirror_z * 2 - z end
+
+  -- apply scaling
+  z = z * (T.scale_z or 1)
+
+  -- apply translation last
+  z = z + (T.add_z or 0)
+
+  return z, slope
+end
+
+
+function Trans.brush(kind, coords)
+  if not coords then
+    kind, coords = "solid", kind
+  end
+
+  -- FIXME: mirroring
+
+  -- apply transform
+  coords = table.copy(coords)
+
+  each C in coords do
+    if C.x then
+      C.x, C.y = Trans.apply(C.x, C.y)
+    elseif C.b then
+      C.b, C.slope = Trans.apply_z(C.b, C.slope)
+    else assert(C.t)
+      C.t, C.slope = Trans.apply_z(C.t, C.slope)
+    end
+  end
+
+  table.insert(coords, 1, { m=kind })
+
+  raw_add_brush(coords)
+end
+
+
+function Trans.old_brush(info, coords, z1, z2)
+---???  if type(info) ~= "table" then
+---???    info = get_mat(info)
+---???  end
+
+  -- check mirroring
+  local reverse_it = false
+
+  if Trans.TRANSFORM.mirror_x then reverse_it = not reverse_it end
+  if Trans.TRANSFORM.mirror_y then reverse_it = not reverse_it end
+
+  -- apply transform
+  coords = table.deep_copy(coords)
+
+  each C in coords do
+    C.x, C.y = Trans.apply(C.x, C.y)
+
+    if C.w_face then
+      C.face = C.w_face ; C.w_face = nil
+    else
+      C.face = info.w_face
+    end
+  end
+
+  if reverse_it then
+    -- make sure side properties (w_face, line_kind, etc)
+    -- are associated with the correct vertex....
+    local x1 = coords[1].x
+    local y1 = coords[1].y
+
+    for i = 1, #coords-1 do
+      coords[i].x = coords[i+1].x
+      coords[i].y = coords[i+1].y
+    end
+
+    coords[#coords].x = x1
+    coords[#coords].y = y1
+
+    table.reverse(coords)
+  end
+
+  if z2 < EXTREME_H - 1 then
+    table.insert(coords, { t=z2, face=info.t_face })
+
+    coords[#coords].special = info.sec_kind
+    coords[#coords].tag     = info.sec_tag
+  end
+
+  if z1 > -EXTREME_H + 1 then
+    table.insert(coords, { b=z1, face=info.b_face })
+
+    if info.delta_z then
+      coords[#coords].delta_z = info.delta_z
+    end
+
+    coords[#coords].special = info.sec_kind
+    coords[#coords].tag     = info.sec_tag
+  end
+
+
+  -- TODO !!!  transform slope coords (z1 or z2 == table)
+
+-- gui.printf("coords=\n%s\n", table.tostr(coords,4))
+
+  table.insert(coords, 1, { m="solid" })
+
+  raw_add_brush(coords)
+end
+
+
+function Trans.entity(name, x, y, z, props)
   assert(name)
 
-  local ent
-
-  if props then
-    ent = table.copy(props)
-  else
-    ent = {}
+  if not props then
+    props = {}
   end
 
   local info = GAME.ENTITIES[name] or
@@ -168,336 +270,122 @@ function entity_helper(name, x, y, z, props)
     gui.printf("\nLACKING ENTITY : %s\n\n", name)
     return
   end
+  assert(info.id)
 
-  local delta_z = info.delta_z or PARAM.entity_delta_z
+  if info.delta_z then
+    z = z + info.delta_z
+  elseif PARAM.entity_delta_z then
+    z = z + PARAM.entity_delta_z
+  end
 
-  ent.id = assert(info.id)
-
-  ent.x = x
-  ent.y = y
-  ent.z = z + (delta_z or 0)
+  x, y = Trans.apply(x, y)
 
   if info.spawnflags then
-    ent.spawnflags = ((props and props.spawnflags) or 0) + info.spawnflags
+    props.spawnflags = (props.spawnflags or 0) + info.spawnflags
   end
 
-  if info.fields then
-    each name,value in info.fields do ent[name] = value end
-  end
+  ent = table.copy(props)
+
+  ent.id = info.id
+  ent.x  = x
+  ent.y  = y
+  ent.z  = z
 
   raw_add_entity(ent)
 end
 
 
-function Brush_new_quad(x1,y1, x2,y2, b,t)
+-- COMPAT
+function entity_helper(...) return Trans.entity(...) end
+
+
+function Trans.quad(x1,y1, x2,y2, z1,z2, kind, w_face, p_face)
+  if not w_face then
+    -- convenient form: only a material name was given
+    kind, w_face, p_face = Mat_normal(kind)
+  end
+
   local coords =
   {
-    { x=x1, y=y1 }
-    { x=x2, y=y1 }
-    { x=x2, y=y2 }
-    { x=x1, y=y2 }
+    { x=x1, y=y1, face=w_face },
+    { x=x2, y=y1, face=w_face },
+    { x=x2, y=y2, face=w_face },
+    { x=x1, y=y2, face=w_face },
   }
 
-  if b then table.insert(coords, { b=b }) end
-  if t then table.insert(coords, { t=t }) end
+  if z1 then table.insert(coords, { b=z1, face=p_face }) end
+  if z2 then table.insert(coords, { t=z2, face=p_face }) end
 
-  return coords
+  Trans.brush(kind, coords)
 end
 
 
-function Brush_new_triangle(x1,y1, x2,y2, x3,y3, b,t)
-  local coords =
+function Trans.tri_coords(x1,y1, x2,y2, x3,y3)
+  return
   {
-    { x=x1, y=y1 }
-    { x=x2, y=y2 }
-    { x=x3, y=y3 }
+    { x=x1, y=y1 },
+    { x=x2, y=y2 },
+    { x=x3, y=y3 },
   }
+end
 
-  if b then table.insert(coords, { b=b }) end
-  if t then table.insert(coords, { t=t }) end
+function Trans.rect_coords(x1, y1, x2, y2)
+  return
+  {
+    { x=x2, y=y1 },
+    { x=x2, y=y2 },
+    { x=x1, y=y2 },
+    { x=x1, y=y1 },
+  }
+end
 
-  return coords
+function Trans.box_coords(x, y, w, h)
+  return
+  {
+    { x=x+w, y=y },
+    { x=x+w, y=y+h },
+    { x=x,   y=y+h },
+    { x=x,   y=y },
+  }
 end
 
 
-
-function Brush_dump(brush, title)
-  gui.debugf("%s:\n{\n", title or "Brush")
-
-  each C in brush do
-    local field_list = {}
-
-    each name,val in C do
-      local pos
-      if name == "m" or name == "x" or name == "b" or name == "t" then
-        pos = 1
-      elseif name == "y" then
-        pos = 2
-      end
-
-      if pos then
-        table.insert(field_list, pos, name) 
-      else
-        table.insert(field_list, name)
-      end
-    end
-
-    local line = ""
-
-    each name in field_list do
-      local val = C[name]
-      
-      if _index > 1 then line = line .. ", " end
-
-      line = line .. string.format("%s=%s", name, tostring(val))
-    end
-
-    gui.debugf("  { %s }\n", line)
-  end
-
-  gui.debugf("}\n")
+function Trans.old_quad(info, x1,y1, x2,y2, z1,z2)
+  Trans.old_brush(info, Trans.rect_coords(x1,y1, x2,y2), z1,z2)
 end
 
-
-function Brush_copy(brush)
-  local newb = {}
-
-  each C in brush do
-    table.insert(newb, table.copy(C))
-  end
-
-  return newb
+function Trans.triangle(info, x1,y1, x2,y2, x3,y3, z1,z2)
+  Trans.old_brush(info, Trans.tri_coords(x1,y1, x2,y2, x3,y3), z1,z2)
 end
 
+function Trans.strip(info, strip, z1, z2)
+  for i = 1, #strip - 1 do
+    local a = strip[i]
+    local b = strip[i+1]
 
-function Brush_middle(brush)
-  local sum_x = 0
-  local sum_y = 0
-  local total = 0
-
-  each C in brush do
-    if C.x then
-      sum_x = sum_x + C.x
-      sum_y = sum_y + C.y
-      total = total + 1
-    end
-  end
-
-  if total == 0 then
-    return 0, 0
-  end
-    
-  return sum_x / total, sum_y / total
-end
-
-
-function Brush_bbox(brush)
-  local x1, x2 = 9e9, -9e9
-  local y1, y2 = 9e9, -9e9
-
-  each C in brush do
-    if C.x then
-      x1 = math.min(x1, C.x) ; x2 = math.max(x2, C.x)
-      y1 = math.min(y1, C.y) ; y2 = math.max(y2, C.y)
-    end
-  end
-
-  assert(x1 < x2)
-  assert(y1 < y2)
-
-  return x1,y1, x2,y2
-end
-
-
-function Brush_add_top(brush, z, mat)
-  table.insert(brush, { t=z, mat=mat })
-end
-
-
-function Brush_add_bottom(brush, z, mat)
-  table.insert(brush, { b=z, mat=mat })
-end
-
-
-function Brush_get_b(brush)
-  each C in brush do
-    if C.b then return C.b end
-  end
-end
-
-
-function Brush_get_t(brush)
-  each C in brush do
-    if C.t then return C.t end
-  end
-end
-
-
-function Brush_mark_sky(brush)
-  Brush_set_mat(brush, "_SKY", "_SKY")
-
-  table.insert(brush, 1, { m="sky" })
-end
-
-
-function Brush_mark_liquid(brush)
-  assert(LEVEL.liquid)
-
-  Brush_set_mat(brush, "_LIQUID", "_LIQUID")
-
-  each C in brush do
-    if C.b or C.t then
-      C.special = LEVEL.liquid.special
-      C.light   = LEVEL.liquid.light
-    end
-  end
-end
-
-
-function Brush_is_quad(brush)
-  local x1,y1, x2,y2 = Brush_bbox(brush)
-
-  each C in brush do
-    if C.x then
-      if C.x > x1+0.1 and C.x < x2-0.1 then return false end
-      if C.y > y1+0.1 and C.y < y2-0.1 then return false end
-    end
-  end
-
-  return true
-end
-
-
-function Brush_line_cuts_brush(brush, px1, py1, px2, py2)
-  local front, back
-
-  for _,C in ipairs(brush) do
-    if C.x then
-      local d = geom.perp_dist(C.x, C.y, px1,py1, px2,py2)
-      if d >  0.5 then front = true end
-      if d < -0.5 then  back = true end
-
-      if front and back then return true end
-    end
-  end
-
-  return false
-end
-
-
-function Brush_cut(brush, px1, py1, px2, py2)
-  -- returns the cut-off piece (on back of given line)
-  -- NOTE: assumes the line actually cuts the brush!
-
-  local newb = {}
-
-  -- transfer XY coords to a separate list for processing
-  local coords = {}
-
-  for index = #brush,1,-1 do
-    local C = brush[index]
-    
-    if C.x then
-      table.insert(coords, 1, table.remove(brush, index))
-    else
-      -- copy non-XY-coordinates into new brush
-      table.insert(newb, table.copy(C))
-    end
-  end
-
-  for idx,C in ipairs(coords) do
-    local k = 1 + (idx % #coords)
-
-    local cx2 = coords[k].x
-    local cy2 = coords[k].y
-
-    local a = geom.perp_dist(C.x, C.y, px1,py1, px2,py2)
-    local b = geom.perp_dist(cx2, cy2, px1,py1, px2,py2)
-
-    local a_side = 0
-    local b_side = 0
-    
-    if a < -0.5 then a_side = -1 end
-    if a >  0.5 then a_side =  1 end
-
-    if b < -0.5 then b_side = -1 end
-    if b >  0.5 then b_side =  1 end
-
-    if a_side >= 0 then table.insert(brush, C) end
-    if a_side <= 0 then table.insert(newb,  table.copy(C)) end
-
-    if a_side != 0 and b_side != 0 and a_side != b_side then
-      -- this edge crosses the cutting line --
-
-      -- calc the intersection point
-      local along = a / (a - b)
-
-      local ix = C.x + along * (cx2 - C.x)
-      local iy = C.y + along * (cy2 - C.y)
-
-      local C1 = table.copy(C) ; C1.x = ix ; C1.y = iy
-      local C2 = table.copy(C) ; C2.x = ix ; C2.y = iy
-
-      table.insert(brush, C1)
-      table.insert(newb,  C2)
-    end
-  end
-
-  return newb
-end
-
-
-function Brush_clip_list_to_rects(brushes, rects)
-  local process_list = {}
-
-  -- transfer brushes to a separate list for processing, new brushes
-  -- will be added back into the 'brushes' lists (if any).
-  for index = 1,#brushes do
-    table.insert(process_list, table.remove(brushes))
-  end
-  
-  local function clip_to_line(B, x1, y1, x2, y2)
-    if Brush_line_cuts_brush(B, x1, y1, x2, y2) then
-       Brush_cut(B, x1, y1, x2, y2)
-    end
-  end
-
-  local function clip_brush(B, R)
-    B = Brush_copy(B)
-
-    clip_to_line(B, R.x1, R.y1, R.x1, R.y2)  -- left
-    clip_to_line(B, R.x2, R.y2, R.x2, R.y1)  -- right
-    clip_to_line(B, R.x1, R.y2, R.x2, R.y2)  -- top
-    clip_to_line(B, R.x2, R.y1, R.x1, R.y1)  -- bottom
-
-    local bx1,by1, bx2,by2 = Brush_bbox(B)
-
-    -- it lies completely outside the rectangle?
-    if bx2 <= R.x1 + 1 or bx1 >= R.x2 - 1 then return end
-    if by2 <= R.y1 + 1 or by1 >= R.y2 - 1 then return end
-
-    table.insert(brushes, B)
-  end
-
-  for _,B in ipairs(process_list) do
-    for _,R in ipairs(rects) do
-      clip_brush(B, R)
-    end
+    Trans.old_brush(info,
+    {
+      { x = a[1], y = a[2] },
+      { x = a[3], y = a[4] },
+      { x = b[3], y = b[4] },
+      { x = b[1], y = b[2] },
+    },
+    z1, z2)
   end
 end
 
 
 ------------------------------------------------------------------------
 
-function Mat_prepare_trip()
+
+function Build.prepare_trip()
 
   -- build the psychedelic mapping
   local m_before = {}
   local m_after  = {}
 
-  each m,def in GAME.MATERIALS do
+  for m,def in pairs(GAME.MATERIALS) do
     if not def.sane and
-       not def.rail_h and
        not (string.sub(m,1,1) == "_") and
        not (string.sub(m,1,2) == "SW") and
        not (string.sub(m,1,3) == "BUT")
@@ -517,20 +405,17 @@ function Mat_prepare_trip()
 end
 
 
-function Mat_lookup(name)
-  if not name then name = "_ERROR" end
-
+function safe_get_mat(name)
   if OB_CONFIG.theme == "psycho" and LEVEL.psycho_map[name] then
     name = LEVEL.psycho_map[name]
   end
 
   local mat = GAME.MATERIALS[name]
 
-  -- special handling for DOOM / HERETIC switches
+  -- special handling for DOOM switches
   if not mat and string.sub(name,1,3) == "SW2" then
-    local sw1_name = "SW1" .. string.sub(name,4)
-    mat = GAME.MATERIALS[sw1_name]
-    if mat and mat.t == sw1_name then
+    mat = GAME.MATERIALS["SW1" .. string.sub(name,4)]
+    if mat then
       mat = { t=name, f=mat.f }  -- create new SW2XXX material
       GAME.MATERIALS[name] = mat
     end
@@ -547,2071 +432,2810 @@ function Mat_lookup(name)
   return mat
 end
 
+function get_mat(wall, floor, ceil)
+  if not wall then wall = "_ERROR" end
 
-function Mat_similar(A, B)
-  A = GAME.MATERIALS[A]
-  B = GAME.MATERIALS[B]
+  local w_mat = safe_get_mat(wall)
 
-  if A and B then
-    if A.t == B.t then return true end
-    if A.f and A.f == B.f then return true end
+  local f_mat = w_mat
+  if floor then
+    f_mat = safe_get_mat(floor)
   end
 
-  return false
-end
-
-
-function Brush_set_tex(brush, wall, flat)
-  each C in brush do
-    if wall and C.x and not C.tex then
-      C.tex = wall
-    end
-    if flat and (C.b or C.t) and not C.tex then
-      C.tex = flat
-    end
+  local c_mat = f_mat
+  if ceil then
+    c_mat = safe_get_mat(ceil)
   end
-end
-
-
-function Brush_set_mat(brush, wall, flat)
-  if wall then
-    wall = Mat_lookup(wall)
-    wall = assert(wall.t)
-  end
-
-  if flat then
-    flat = Mat_lookup(flat)
-    flat = flat.f or assert(flat.t)
-  end
-
-  Brush_set_tex(brush, wall, flat)
-end
-
-
-function Brush_has_sky(brush)
-  each C in brush do
-    if C.mat == "_SKY" then return true end
-  end
-
-  return false
-end
-
-
-------------------------------------------------------------------------
-
-
-Trans = {}
-
-
-Trans.TRANSFORM =
-{
-  -- mirror_x  : flip horizontally (about given X)
-  -- mirror_y  : flip vertically (about given Y)
-  -- mirror_z
-
-  -- groups_x  : coordinate remapping groups
-  -- groups_y
-  -- groups_z
-
-  -- scale_x   : scaling factor
-  -- scale_y
-  -- scale_z
-
-  -- rotate    : angle in degrees, counter-clockwise,
-  --             rotates about the origin
-
-  -- add_x     : translation, i.e. new origin coords
-  -- add_y
-  -- add_z
-
-  -- fitted_x  : sizes which a "fitted" prefab needs to become
-  -- fitted_y
-  -- fitted_z
-}
-
-
---[[
-struct GROUP
-{
-  low,  high,  size   : the original coordinate range
-  low2, high2, size2  : the new coordinate range
-}
---]]
-
-
-function Trans.clear()
-  Trans.TRANSFORM = { }
-end
-
-function Trans.set(T)
-  Trans.TRANSFORM = table.copy(T)
-end
-
-function Trans.set_pos(x, y, z)
-  Trans.TRANSFORM = { add_x=x, add_y=y, add_z=z }
-end
-
-function Trans.modify(what, value)
-  Trans.TRANSFORM[what] = value
-end
-
-
-function Trans.set_cap(z1, z2)
-  -- either z1 or z2 can be nil
-  Trans.z1_cap = z1
-  Trans.z2_cap = z2
-end
-
-function Trans.clear_cap()
-  Trans.z1_cap = nil
-  Trans.z2_cap = nil
-end
-
-
-function Trans.dump_groups(name, groups)
-  gui.debugf("  %s =\n", name)
-  gui.debugf("  {\n")
-
-  each G in groups do
-    gui.debugf("    (%1.0f %1.0f %1.0f) --> (%1.0f %1.0f %1.0f)\n",
-               G.low  or -1, G.high  or -1, G.size  or -1,
-               G.low2 or -1, G.high2 or -1, G.size2 or -1)
-  end
-
-  gui.debugf("  }\n")
-end
-
-
-function Trans.dump(T, title)
-  -- debugging aid : show current transform
-
-  gui.debugf("%s:\n", title or "Transform")
-
-  if not T then
-    T = Trans.TRANSFORM
-    assert(T)
-  end
-
-  if T.mirror_x then gui.debugf("  mirror_x = %1.0f\n", T.mirror_x) end
-  if T.mirror_y then gui.debugf("  mirror_y = %1.0f\n", T.mirror_y) end
-  if T.mirror_z then gui.debugf("  mirror_z = %1.0f\n", T.mirror_z) end
-
-  if T.scale_x then gui.debugf("  scale_x = %1.0f\n", T.scale_x) end
-  if T.scale_y then gui.debugf("  scale_y = %1.0f\n", T.scale_y) end
-  if T.scale_z then gui.debugf("  scale_z = %1.0f\n", T.scale_z) end
-
-  if T.rotate then gui.debugf("  ROTATE = %1.1f\n", T.rotate) end
-
-  if T.add_x then gui.debugf("  add_x = %1.0f\n", T.add_x) end
-  if T.add_y then gui.debugf("  add_y = %1.0f\n", T.add_y) end
-  if T.add_z then gui.debugf("  add_z = %1.0f\n", T.add_z) end
-
-  if T.fitted_x then gui.debugf("  fitted_x = %1.0f\n", T.fitted_x) end
-  if T.fitted_y then gui.debugf("  fitted_y = %1.0f\n", T.fitted_y) end
-  if T.fitted_z then gui.debugf("  fitted_z = %1.0f\n", T.fitted_z) end
-
-  if T.groups_x then Trans.dump_groups("groups_x", T.groups_x) end
-  if T.groups_y then Trans.dump_groups("groups_y", T.groups_y) end
-  if T.groups_z then Trans.dump_groups("groups_z", T.groups_z) end
-end
-
-
-function Trans.remap_coord(groups, n)
-  if not groups then return n end
-
-  local T = #groups
-  assert(T >= 1)
-
-  if n <= groups[1].low  then return n + (groups[1].low2 -  groups[1].low)  end
-  if n >= groups[T].high then return n + (groups[T].high2 - groups[T].high) end
-
-  local idx = 1
-
-  while (idx < T) and (n > groups[idx].high) do
-    idx = idx + 1
-  end
-
-  local G = groups[idx]
-
-  return G.low2 + (n - G.low) * G.size2 / G.size;
-end
-
-
-function Trans.apply_xy(x, y)
-  local T = Trans.TRANSFORM
-
-  -- apply mirroring first
-  if T.mirror_x then x = T.mirror_x * 2 - x end
-  if T.mirror_y then y = T.mirror_y * 2 - y end
-
-  -- apply groups
-  if T.groups_x then x = Trans.remap_coord(T.groups_x, x) end
-  if T.groups_y then y = Trans.remap_coord(T.groups_y, y) end
-
-  -- apply scaling
-  x = x * (T.scale_x or 1)
-  y = y * (T.scale_y or 1)
-
-  -- apply rotation
-  if T.rotate then
-    x, y = geom.rotate_vec(x, y, T.rotate)
-  end
-
-  -- apply translation last
-  x = x + (T.add_x or 0)
-  y = y + (T.add_y or 0)
-
-  return x, y
-end
-
-
-function Trans.apply_z(z)
-  local T = Trans.TRANSFORM
-
-  -- apply mirroring first
-  if T.mirror_z then z = T.mirror_z * 2 - z end
-
-  -- apply groups
-  if T.groups_z then z = Trans.remap_coord(T.groups_z, z) end
-
-  -- apply scaling
-  z = z * (T.scale_z or 1)
-
-  -- apply translation last
-  z = z + (T.add_z or 0)
-
-  return z
-end
-
-
-function Trans.apply_slope(slope)
-  if not slope then return nil end
-
-  local T = Trans.TRANSFORM
-
-  slope = table.copy(slope)
-
-  slope.x1, slope.y1 = Trans.apply_xy(slope.x1, slope.y1)
-  slope.x2, slope.y2 = Trans.apply_xy(slope.x2, slope.y2)
-
-  if T.mirror_z then slope.dz = - slope.dz end
-
-  slope.dz = slope.dz * (T.scale_z or 1)
-
-  return slope
-end
-
-
-function Trans.apply_angle(ang)
-  local T = Trans.TRANSFORM
-
-  if not (T.rotate or T.mirror_x or T.mirror_y) then
-    return ang
-  end
-
-  if T.mirror_x or T.mirror_y then
-    local dx = math.cos(ang * math.pi / 180)
-    local dy = math.sin(ang * math.pi / 180)
-
-    if T.mirror_x then dx = -dx end
-    if T.mirror_y then dy = -dy end
-
-    ang = math.round(geom.calc_angle(dx, dy))
-  end
-
-  if T.rotate then ang = ang + T.rotate end
-
-  if ang >= 360 then ang = ang - 360 end
-  if ang <    0 then ang = ang + 360 end
-
-  return ang
-end
-
-
-function Trans.apply_mlook(ang)
-  local T = Trans.TRANSFORM
-
-  if T.mirror_z then
-    if ang == 0 then return 0 end
-    return 360 - ang
-  else
-    return ang
-  end
-end
-
-
--- handle three-part angle strings (Quake)
-function Trans.apply_angles_xy(ang_str)
-  local mlook, angle, roll = string.match(ang_str, "(%d+) +(%d+) +(%d+)")
-  angle = Trans.apply_angle(0 + angle)
-  return string.format("%d %d %d", mlook, angle, roll)
-end
-
-
-function Trans.apply_angles_z(ang_str)
-  local mlook, angle, roll = string.match(ang_str, "(%d+) +(%d+) +(%d+)")
-  mlook = Trans.apply_mlook(0 + mlook)
-  return string.format("%d %d %d", mlook, angle, roll)
-end
-
-
-
-function Trans.adjust_spot(x1,y1, x2,y2, z1,z2)  -- not used atm
-  local T = Trans.TRANSFORM
-
-  local x_size = (x2 - x1) * (T.scale_x or 1)
-  local y_size = (y2 - y1) * (T.scale_y or 1)
-  local z_size = (z2 - z1) * (T.scale_z or 1)
-
-  local spot = {}
-
-  spot.x, spot.y = Trans.apply_xy((x1+x2) / 2, (y1+y2) / 2)
-
-  spot.z = Trans.apply_z(z1)
-
-  spot.r = math.min(x_size, y_size)
-  spot.h = z_size
-
-  -- when rotated, find largest square that will fit inside it
-  if T.rotate then
-    local k = T.rotate % 90
-    if k > 45 then k = 90 - k end
-
-    local t = math.tan((45 - k) * math.pi / 180.0)
-    local s = math.sqrt(0.5 * (1 + t*t))
-
-    spot.r = spot.r * s
-  end
-
-  return spot
-end
-
-
-function Trans.spot_transform(x, y, z, dir)
-  local ANGS = { [2]=0, [8]=180, [4]=270, [6]=90 }
 
   return
   {
-    add_x = x
-    add_y = y
-    add_z = z
-    rotate = ANGS[dir]
+    w_face = { tex=w_mat.t },
+    t_face = { tex=f_mat.f or f_mat.t },
+    b_face = { tex=c_mat.f or c_mat.t },
   }
 end
 
+function Mat_normal(wall, floor)
+  if not wall then wall = "_ERROR" end
 
-function Trans.box_transform(x1, y1, x2, y2, z, dir)
-  if not dir then dir = 2 end
+  local w_mat = safe_get_mat(wall)
 
-  local XS   = { [2]=x1, [8]= x2, [4]= x1, [6]=x2 }
-  local YS   = { [2]=y1, [8]= y2, [4]= y2, [6]=y1 }
-  local ANGS = { [2]=0,  [8]=180, [4]=270, [6]=90 }
-
-  local T = {}
-
-  T.add_x = XS[dir]
-  T.add_y = YS[dir]
-  T.add_z = z
-
-  T.rotate = ANGS[dir]
-
-  if geom.is_vert(dir) then
-    T.fitted_x = x2 - x1
-    T.fitted_y = y2 - y1
-  else
-    T.fitted_x = y2 - y1
-    T.fitted_y = x2 - x1
+  local f_mat = w_mat
+  if floor then
+    f_mat = safe_get_mat(floor)
   end
 
-  T.bbox = { x1=x1, y1=y1, x2=x2, y2=y2 }
-
-  return T
+  return "solid", { tex=w_mat.t }, { tex=f_mat.f or f_mat.t }
 end
 
+function get_sky()
+  local mat = assert(GAME.MATERIALS["_SKY"])
 
-function Trans.section_transform(K, dir)
-  local x1, y1, x2, y2 = K:get_coords()
+  local light = LEVEL.sky_light or 0.75
 
-  return Trans.box_transform(x1, y1, x2, y2, K.floor_h or 0, dir)
-end
-
-
-function Trans.edge_transform(x1,y1, x2,y2, z, side, long1, long2, out, back)
-  if side == 4 then x2 = x1 + out ; x1 = x1 - back end
-  if side == 6 then x1 = x2 - out ; x2 = x2 + back end
-  if side == 2 then y2 = y1 + out ; y1 = y1 - back end
-  if side == 8 then y1 = y2 - out ; y2 = y2 + back end
-
-  if side == 2 then x1 = x2 - long2 ; x2 = x2 - long1 end
-  if side == 8 then x2 = x1 + long2 ; x1 = x1 + long1 end
-  if side == 4 then y2 = y1 + long2 ; y1 = y1 + long1 end
-  if side == 6 then y1 = y2 - long2 ; y2 = y2 - long1 end
-
-  return Trans.box_transform(x1,y1, x2,y2, z, 10 - side)
-end
-
-
-function Trans.set_fitted_z(T, z1, z2)
-  T.add_z    = z1
-  T.fitted_z = z2 - z1
-end
-
-
-function Trans.categorize_linkage(dir2, dir4, dir6, dir8)
-  local link_str = ""
-
-  if dir2 then link_str = link_str .. '2' end
-  if dir4 then link_str = link_str .. '4' end
-  if dir6 then link_str = link_str .. '6' end
-  if dir8 then link_str = link_str .. '8' end
-
-  -- nothing?
-  if link_str == "" then
-    return 'N', 2
-
-  -- facing one direction
-  elseif link_str == "2" then
-    return 'F', 2
-
-  elseif link_str == "4" then
-    return 'F', 4
-
-  elseif link_str == "6" then
-    return 'F', 6
-
-  elseif link_str == "8" then
-    return 'F', 8
-
-  -- straight through
-  elseif link_str == "28" then
-    return 'I', 2
-
-  elseif link_str == "46" then
-    return 'I', 4
-  
-  -- corner
-  elseif link_str == "26" then
-    return 'C', 6
-
-  elseif link_str == "24" then
-    return 'C', 2
-
-  elseif link_str == "48" then
-    return 'C', 4
-
-  elseif link_str == "68" then
-    return 'C', 8
-  
-  -- T junction
-  elseif link_str == "246" then
-    return 'T', 2
-
-  elseif link_str == "248" then
-    return 'T', 4
-
-  elseif link_str == "268" then
-    return 'T', 6
-
-  elseif link_str == "468" then
-    return 'T', 8
-
-  -- plus shape, all four directions
-  elseif link_str == "2468" then
-    return 'P', rand.pick { 2,4,6,8 }
-
-  else
-    error("categorize_linkage failed on: " .. link_str)
-  end
-end
-
-
-
-function Trans.expansion_groups(list, axis_name, fit_size, pf_size)
-  local extra = fit_size - pf_size
-
-  -- nothing needed if the size is the same
-  if math.abs(extra) < 1 then return nil end
-
-  if extra < 0 then
-    error("Prefab does not fit! (on " .. axis_name .. " axis)")
-  end
-
-  assert(extra > 0)
-
-  -- check some special keywords.
-  -- missing 'x_fit' field (etc) defaults to "stretch"
-
-  if not list or list == "stretch" then
-    local G =
-    {
-      low   = 0
-      high  = pf_size
-      low2  = 0
-      high2 = fit_size
-    }
-
-    G.size  = G.high  - G.low
-    G.size2 = G.high2 - G.low2
-
-    return { G }
-  
-  elseif list == "left" or list == "bottom" then
-    list = { 0, 1 }
-
-  elseif list == "right" or list == "top" then
-    list = { pf_size - 1, pf_size }
-
-  elseif list == "frame" then
-    list = { 0, 1, pf_size - 1, pf_size }
-  end
-
-
-  if type(list) != "table" then
-    error("Bad " .. axis_name .. "_fit field in prefab: " .. tostring(list))
-  end
-
-
-  -- validate list
-  for i = 1, #list-1 do
-    local A = list[i]
-    local B = list[i + 1]
-
-    if A >= B then
-      error("Bad ordering in " .. axis_name .. "_fit field in prefab")
-    end
-  end
-
-
-  -- construct the mapping groups
-  local groups = { }
-  local pos = list[1]
-
-  for i = 1,#list-1 do
-    local G =
-    {
-      low  = list[i]
-      high = list[i+1]
-    }
-
-    G.size = G.high - G.low
-
-    G.size2 = G.size
-
-    if (i % 2) == 1 then
-      G.size2 = G.size2 + extra / (#list / 2)
-    end
-
-    G.low2  = pos
-    G.high2 = pos + G.size2
-
-    pos = pos + G.size2
-
-    table.insert(groups, G)
-  end
-
-  return groups
-end
-
-
-------------------------------------------------------------------------
-
-
-function Trans.is_subst(value)
-  return type(value) == "string" and string.match(value, "^[!?]")
-end
-
-
-function Trans.substitute(SKIN, value)
-  if not Trans.is_subst(value) then
-    return value
-  end
-
-  -- a simple substitution is just: "?varname"
-  -- a more complex one has an operator: "?varname+3",  "?foo==1"
-
-  local neg, var_name, op, number = string.match(value, "(.)([%w_]*)(%p*)(%-?[%d.]*)");
-
-  if var_name == "" then var_name = nil end
-  if op       == "" then op       = nil end
-  if number   == "" then number   = nil end
-
-  if not var_name or (op and not number) or (op and neg == '!') then
-    error("bad substitution: " .. tostring(value));
-  end
-
-  -- first lookup variable name, abort if not present
-  value = SKIN[var_name]
-
-  if value == nil or Trans.is_subst(value) then
-    return value
-  end
-
-  -- apply the boolean negation
-  if neg == '!' then
-    return 1 - convert_bool(value)
-
-  -- apply the operator
-  elseif op then
-    value  = 0 + value
-    number = 0 + number
-
-    if op == "+" then return value + number end
-    if op == "-" then return value - number end
-
-    if op == "==" then return sel(value == number, 1, 0) end
-    if op == "!=" then return sel(value != number, 1, 0) end
-
-    error("bad subst operator: " .. tostring(op))
-  end
-
-  return value
-end
-
-
-function Fab_determine_bbox(fab)
-  local x1, y1, z1
-  local x2, y2, z2
-
-  -- Note: no need to handle slopes, they are defined to be "shrinky"
-  --       (i.e. never higher that t, never lower than b).
-
-  each B in fab.brushes do
-    if B[1].outlier then continue end
-    if B[1].m == "spot" then continue end
-
-    each C in B do
-
-      if C.x then 
-        if not x1 then
-          x1, y1 = C.x, C.y
-          x2, y2 = C.x, C.y
-        else
-          x1 = math.min(x1, C.x)
-          y1 = math.min(y1, C.y)
-          x2 = math.max(x2, C.x)
-          y2 = math.max(y2, C.y)
-        end
-
-      elseif C.b or C.t then
-        local z = C.b or C.t
-        if not z1 then
-          z1, z2 = z, z
-        else
-          z1 = math.min(z1, z)
-          z2 = math.max(z2, z)
-        end
-      end
-
-    end -- C
-  end -- B
-
-  assert(x1 and y1 and x2 and y2)
-
-  -- Note: it is OK when z1 and z2 are not set (this happens with
-  --       prefabs consisting entirely of infinitely tall solids).
-
-  -- Note: It is possible to get dz == 0
-
-  local dz
-  if z1 then dz = z2 - z1 end
-
-  fab.bbox = { x1=x1, x2=x2, dx=(x2 - x1),
-               y1=y1, y2=y2, dy=(y2 - y1),
-               z1=z1, z2=z2, dz=dz,
-             }
-
-  gui.debugf("bbox =\n%s\n", table.tostr(fab.bbox))
-end
-
-
-function Fab_transform_XY(fab, T)
-
-  local function brush_xy(brush)
-    each C in brush do
-      if C.x then C.x, C.y = Trans.apply_xy(C.x, C.y) end
-
-      -- Note: this does Z too (fixme?)
-      if C.s then C.s = Trans.apply_slope(C.s) end
-
-      if C.angle then C.angle = Trans.apply_angle(C.angle) end
-    end
-  end
-
-  
-  local function entity_xy(E)
-    if E.x then
-      E.x, E.y = Trans.apply_xy(E.x, E.y)
-    end
-
-    if E.angle then
-      E.angle = Trans.apply_angle(E.angle)
-    end
-
-    if E.angles then
-      E.angles = Trans.apply_angles_xy(E.angles)
-    end
-  end
-
-
-  local function model_xy(M)
-    M.x1, M.y1 = Trans.apply_xy(M.x1, M.y1)
-    M.x2, M.y2 = Trans.apply_xy(M.x2, M.y2)
-
-    -- handle rotation / mirroring
-    -- NOTE: we only support 0/90/180/270 rotations
-
-    if M.x1 > M.x2 then M.x1, M.x2 = M.x2, M.x1 ; M.y_face.u1, M.y_face.u2 = M.y_face.u2, M.y_face.u1 end
-    if M.y1 > M.y2 then M.y1, M.y2 = M.y2, M.y1 ; M.x_face.u1, M.x_face.u2 = M.x_face.u2, M.x_face.u1 end
-
-    -- handle 90 and 270 degree rotations : swap X and Y faces
-    local rotate = T.rotate or 0
-
-    if math.abs(T.rotate - 90) < 15 or math.abs(T.rotate - 270) < 15 then
-      M.x_face, M.y_face = M.y_face, M.x_face
-    end
-  end
-
-  
-  ---| Fab_transform_XY |---
-
-  assert(fab.state == "skinned")
-
-  fab.state = "transform_xy"
-
-  Trans.set(T)
-
-  local bbox = fab.bbox
-
-  --- X ---
-
-  if fab.x_fit or T.fitted_x then
-    if not T.fitted_x then
-      error("Fitted prefab used without fitted X transform")
-
-    elseif T.scale_x then
-      error("Fitted transform used with scale_x")
-
-    elseif math.abs(bbox.x1) > 0.1 then
-      error("Fitted prefab must have lowest X coord at 0")
-    end
-
-    Trans.TRANSFORM.groups_x = Trans.expansion_groups(fab.x_fit, "x", T.fitted_x, bbox.x2)
-
-  else
-    -- "loose" placement
-  end
-
-
-  --- Y ---
-
-  if fab.y_fit or T.fitted_y then
-    if not T.fitted_y then
-      error("Fitted prefab used without fitted Y transform")
-
-    elseif T.scale_y then
-      error("Fitted transform used with scale_y")
-
-    elseif math.abs(bbox.y1) > 0.1 then
-      error("Fitted prefab must have lowest Y coord at 0")
-    end
-
-    Trans.TRANSFORM.groups_y = Trans.expansion_groups(fab.y_fit, "y", T.fitted_y, bbox.y2)
-
-  else
-    -- "loose" placement
-  end
-
-  -- apply the coordinate transform to all parts of the prefab
-
-  each B in fab.brushes do
-    brush_xy(B)
-  end
-
-  each E in fab.entities do
-    entity_xy(E)
-  end
-
-  each M in fab.models do
-    model_xy(M)
-    entity_xy(M.entity)
-  end
-
-  Trans.clear()
-end
-
-
-
-function Fab_transform_Z(fab, T)
-
-  local function brush_z(brush)
-    local b, t
-
-    each C in brush do
-      if C.b  then C.b  = Trans.apply_z(C.b)  ; b = C.b end
-      if C.t  then C.t  = Trans.apply_z(C.t)  ; t = C.t end
-      if C.zv then C.zv = Trans.apply_z(C.zv) end
-
-      if Trans.mirror_z then
-        C.b, C.t = C.t, C.b
-      end
-    end
-
-    -- apply capping
-    if Trans.z1_cap and not b and (not t or t.t > Trans.z1_cap) then
-      table.insert(brush, { b = Trans.z1_cap })
-    end
-
-    if Trans.z2_cap and not t and (not b or b.b < Trans.z2_cap) then
-      table.insert(brush, { t = Trans.z2_cap })
-    end
-  end
-
-  
-  local function entity_z(E)
-    if E.z then
-      E.z = Trans.apply_z(E.z)
-
-      if E.delta_z then
-        E.z = E.z + E.delta_z
-        E.delta_z = nil
-      end
-
-      if E.angles then
-        E.angles = Trans.apply_angles_z(E.angles)
-      end
-    end
-  end
-
-
-  local function model_z(M)
-    M.z1 = Trans.apply_z(M.z1)
-    M.z2 = Trans.apply_z(M.z2)
-
-    if M.delta_z then
-      M.z1 = M.z1 + M.delta_z
-      M.z2 = M.z2 + M.delta_z
-    end
-
-    if Trans.mirror_z then
-      M.z1, M.z2 = M.z2, M.z1
-    end
-
-    -- handle QUAKE I / II platforms
-    if M.entity.height and T.scale_z then
-      M.entity.height = M.entity.height * T.scale_z
-    end
-  end
-
-  
-  ---| Fab_transform_Z |---
-
-  assert(fab.state == "transform_xy")
-
-  fab.state = "transform_z"
-
-  Trans.set(T)
-
-  local bbox = fab.bbox
-
-  --- Z ---
-
-  if fab.z_fit or T.fitted_z then
-    if not T.fitted_z then
-      error("Fitted prefab used without fitted Z transform")
-
-    elseif T.scale_z then
-      error("Fitted transform used with scale_z")
-
-    elseif not (bbox.dz and bbox.dz >= 1) then
-      error("Fitted prefab has no vertical range!")
-
-    elseif math.abs(bbox.z1) > 0.1 then
-      error("Fitted prefab must have lowest Z coord at 0")
-    end
-
-    Trans.TRANSFORM.groups_z = Trans.expansion_groups(fab.z_fit, "z", T.fitted_z, bbox.z2)
-
-  else
-    -- "loose" mode
-  end
-
-  -- apply the coordinate transform to all parts of the prefab
-
-  each B in fab.brushes do
-    brush_z(B)
-  end
-
-  each E in fab.entities do
-    entity_z(E)
-  end
-
-  each M in fab.models do
-    model_z(M)
-  end
-
-  Trans.clear()
-end
-
-
-
-function Fab_composition(parent, parent_skin)
-  -- FIXME : rework for WAD-fabs !!
-
-  -- handles "prefab" brushes, replacing them with the brushes of
-  -- the child prefab (transformed to fit into the "prefab" brush),
-  -- and adding all the child's entities and models too.
-  --
-  -- This function is called by Fab_apply_skins() and never needs
-  -- to be called by other code.
-
-  local function transform_child(brush, skin, dir)
-    local child = Fab_create(skin._prefab)
-
-    Fab_apply_skins(child, { parent_skin, skin })
-
-    -- TODO: support arbitrary rectangles (rotation etc)
-
-    local bx1, by1, bx2, by2 = Brush_bbox(brush)
-
-    local low_z  = Brush_get_b(brush)
-    local high_z = Brush_get_t(brush)
-
-    local T = Trans.box_transform(bx1, by1, bx2, by2, low_z, dir)
-     
-    if child.fitted and string.find(child.fitted, "z") then
-      Trans.set_fitted_z(T, low_z, high_z)
-    end
-
-    Fab_transform_XY(child, T)
-    Fab_transform_Z (child, T)
-
-    each B in child.brushes do
-      table.insert(parent.brushes, B)
-    end
-
-    each E in child.entities do
-      table.insert(parent.entities, E)
-    end
-
-    each M in child.models do
-      table.insert(parent.models, M)
-    end
-
-    child = nil
-  end
-
-
-  ---| Fab_composition |---
-
-  for index = #parent.brushes,1,-1 do
-    local B = parent.brushes[index]
-
-    if B[1].m == "prefab" then
-      table.remove(parent.brushes, index)
-
-      local child_name = assert(B[1].skin)
-      local child_skin = GAME.SKINS[child_name]
-      local child_dir  = B[1].dir or 2
-
-      if not child_skin then
-        error("prefab compostion: no such skin: " .. tostring(child_name))
-      end
-
-      transform_child(B, child_skin, child_dir)
-    end
-  end
-end
-
-
-
-function Fab_repetition_X__OLD(fab, T)
-
-  local orig_brushes  = #fab.brushes
-  local orig_models   = #fab.models
-  local orig_entities = #fab.entities
-
-  local function copy_brush(B, x_offset, y_offset)
-    local B2 = {}
-
-    each C in B do
-      C2 = table.copy(C)
-
-      if C.x then C2.x = C.x + x_offset end
-      if C.y then C2.y = C.y + y_offset end
-
-      -- FIXME: slopes
-
-      table.insert(B2, C2)
-    end
-
-    table.insert(fab.brushes, B2)
-  end
-
-
-  local function copy_model(M, x_offset, y_offset)
-    local M2 = table.copy(M)
-
-    M2.entity = table.copy(M.entity)
-
-    M2.x1 = M.x1 + x_offset
-    M2.x2 = M.x2 + x_offset
-
-    M2.y1 = M.y1 + y_offset
-    M2.y2 = M.y2 + y_offset
-
-    table.insert(fab.models, M2)
-  end
-
-
-  local function copy_entity(E, x_offset, y_offset)
-    local E2 = table.copy(E)
-
-    if E.x then E2.x = E.x + x_offset end
-    if E.y then E2.y = E.y + x_offset end
-
-    table.insert(fab.entities, E2)
-  end
-
-
-  local function replicate_w_offsets(x_offset, y_offset)
-    -- cannot use 'each B in' since we are changing the list (adding new ones)
-    for index = 1, orig_brushes do
-      local B = fab.brushes[index]
-      copy_brush(B, x_offset, y_offset)
-    end
-
-    for index = 1, orig_models do
-      local M = fab.models[index]
-      copy_model(M, x_offset, y_offset)
-    end
-
-    for index = 1, orig_entities do
-      local E = fab.entities[index]
-      copy_entity(E, x_offset, y_offset)
-    end
-  end
-
-
-  ---| Fab_repetition_X |---
-
-  if not fab.x_repeat then return end
-
-  if not T.fitted_x then
-    error("x_repeat used in loose prefab")
-  end
-
-  local count = math.floor(T.fitted_x / fab.x_repeat)
-
-  if count <= 1 then return end
-
-  for pass = 1,count-1 do
-    local x_offset = pass * fab.bbox.x2
-    local y_offset = 0
-
-    replicate_w_offsets(x_offset, y_offset)
-  end
-
-  -- update bbox
-  fab.bbox.x2 = fab.bbox.x2 * count
-
-  -- update ranges
-  if fab.x_ranges then
-    local new_x_ranges = {}
-
-    for pass = 1,count do
-      table.append(new_x_ranges, fab.x_ranges)
-    end
-
-    fab.x_ranges = new_x_ranges
-  end
-end
-
-
-
-function Fab_bound_brushes_Z(fab, z1, z2)
-  if not (z1 or z2) then return end
-
-  each B in fab.brushes do
-    if CSG_BRUSHES[B[1].m] then
-      local b = Brush_get_b(B)
-      local t = Brush_get_t(B)
-
-      if z1 and not b then table.insert(B, { b = z1 }) end
-      if z2 and not t then table.insert(B, { t = z2 }) end
-    end
-  end
-end
-
-
-
-function Fab_render(fab)
-
-  assert(fab.state == "transform_z")
-
-  fab.state = "rendered"
-
-  each B in fab.brushes do
-    if CSG_BRUSHES[B[1].m] then
-      --- DEBUG AID:
-      --- stderrf("brush %d/%d\n", _index, #fab.brushes)
-      -- Brush_dump(B)
-
-      raw_add_brush(B)
-    end
-  end
-
-  each M in fab.models do
-    raw_add_model(M)
-  end
-
-  each E in fab.entities do
-    raw_add_entity(E)
-  end
-
-end
-
-
-function Fab_read_spots(fab)
-  -- prefab must be rendered (or ready to render)
-
-  local function add_spot(list, B)
-    local x1,y1, x2,y2
-    local z1,z2
-
-    if Brush_is_quad(B) then
-      x1,y1, x2,y2 = Brush_bbox(B)
-
-      each C in B do
-        if C.b then z1 = C.b end
-        if C.t then z2 = C.t end
-      end
-    else
-      -- FIXME: use original brushes (assume quads), break into squares,
-      --        apply the rotated square formula from Trans.apply_spot. 
-      error("Unimplemented: cage spots on rotated prefabs")
-    end
-
-    if not z1 or not z2 then
-      error("monster spot brush is missing t/b coord")
-    end
-
-    local SPOT =
-    {
-      kind  = B[1].spot_kind
-      angle = B[1].angle
-      rank  = B[1].rank
-
-      x1 = x1, y1 = y1, z1 = z1
-      x2 = x2, y2 = y2, z2 = z2
-    }
-
-    table.insert(list, SPOT)
-  end
-
-  ---| Fab_read_spots |---
-
-  local list = {}
-
-  each B in fab.brushes do
-    if B[1].m == "spot" then
-      add_spot(list, B)
-    end
-  end
-
-  return list
-end
-
-
-
-function Fab_size_check(skin, long, deep)
-  -- the 'long' and 'deep' parameters can be nil : means anything is OK
-
-  if long and skin.long then
-    if type(skin.long) == "number" then
-      if long < skin.long then return false end
-    else
-      if long < skin.long[1] then return false end
-      if long > skin.long[2] then return false end
-    end
-  end
-
-  if deep and skin.deep then
-    if type(skin.deep) == "number" then
-      if deep < skin.deep then return false end
-    else
-      if deep < skin.deep[1] then return false end
-      if deep > skin.deep[2] then return false end
-    end
-  end
-
-  if skin._aspect then
-    -- we don't know the target size, so cannot guarantee any aspect ratio
-    if not (long and deep) then return false end
-
-    local aspect = long / deep
-
-    if type(skin._aspect) == "number" then
-      aspect = aspect / skin._aspect
-      -- fair bit of lee-way here
-      if aspect < 0.9 or aspect > 1.1 then return false end
-    else
-      if aspect < skin._aspect[1] * 0.95 then return false end
-      if aspect > skin._aspect[2] * 1.05 then return false end
-    end
-  end
-
-  return true  -- OK --
-end
-
-
-------------------------------------------------------------------------
-
-
-function Build_solid_quad(x1, y1, x2, y2, mat)
-  local brush = Brush_new_quad(x1, y1, x2, y2)
-  Brush_set_mat(brush, mat, mat)
-  brush_helper(brush)
-end
-
-
-function Build_sky_quad(x1, y1, x2, y2, sky_h)
-  local brush = Brush_new_quad(x1, y1, x2, y2, sky_h)
-  Brush_set_mat(brush, "_SKY", "_SKY")
-  table.insert(brush, 1, { m="sky" })
-  brush_helper(brush)
-end
-
-
-function Fab_parse_edges(skin)
-  --| convert the 'north', 'east' (etc) fields of a skin into
-  --| a list of portals in a 2D array.
-  
-  if skin._seed_map then return end
-
-  -- create the seed map
-  if not skin.seed_w then skin.seed_w = 1 end
-  if not skin.seed_h then skin.seed_h = 1 end
-
-  local W = skin.seed_w
-  local H = skin.seed_h
-
-  local map = table.array_2D(W, H)
-
-  skin._seed_map = map
-
-
-  -- initialize it
-  for x = 1, W do
-  for y = 1, H do
-    map[x][y] = { edges={} }
-  end
-  end
-
-
-  -- also determine the maximum floor_h (if absent from skin)
-  local max_floor_h = 0
-
-
-  local function lookup_edge(char)
-    if char == '#' then return nil end
-
-    if char == '.' then return { f_h=0 } end
-
-    if not string.match(char, "[a-z]") then
-      error("Illegal char in prefab edge string: " .. char)
-    end
-
-    local edge = skin.edges and skin.edges[char]
-
-    if not edge then
-      error("Unknown edge in prefab edge string: " .. char)
-    end
-
-    return edge
-  end
-
-
-  local function parse_edge(dir, str)
-    -- check stuff
-    if type(str) != "string" then
-      error("bad edge string in prefab skin")
-    elseif #str != geom.vert_sel(dir, W, H) then
-      error("edge string does not match prefab size")
-    end
-
-    -- process each element of the edge string
-    for n = 1, #str do
-      local x, y
-
-      if dir == 2 then x = n ; y = 1 end
-      if dir == 8 then x = n ; y = H end
-      if dir == 4 then x = 1 ; y = n end
-      if dir == 6 then x = W ; y = n end
-
-      local edge = lookup_edge(string.sub(str, n, n))
-
-      map[x][y].edges[dir] = edge
-
-      if type(edge) == "table" and edge.f_h then
-        max_floor_h = math.max(max_floor_h, edge.f_h)
-      end
-    end
-  end
-
-
-  each k, edge in skin do
-    if k == "north" then parse_edge(8, edge) end
-    if k == "south" then parse_edge(2, edge) end
-    if k == "east"  then parse_edge(6, edge) end
-    if k == "west"  then parse_edge(4, edge) end
-  end
-
-  if not skin.max_floor_h then
-    skin.max_floor_h = max_floor_h
-  end
-end
-
-
-------------------------------------------------------------------------
-
-
-WADFAB_ENTITIES =
-{
-  -- monster spots
-  
-  [3004] = { kind="monster",  r=20  }  -- zombieman
-  [3002] = { kind="monster",  r=32  }  -- demon
-  [3005] = { kind="flyer",    r=32  }  -- cacodemon
-  [  68] = { kind="monster",  r=64  }  -- arachnotron
-  [   7] = { kind="monster",  r=128 }  -- spider mastermind
-
-  -- item spots
-
-  [2015] = { kind="pickup",   r=16 }  -- armor helmet
-  [2018] = { kind="big_item", r=16 }  -- green armor vest
-
-  -- goal / purpose spot
-
-  [  37] = { kind="goal", r=64 }  -- red pillar with skull
-
-  -- lighting
-
-  [  34] = { kind="light" }  -- candle
-}
-
-
-WADFAB_LIGHT_DELTAS =
-{
-  [1]  =  48  -- random off
-  [2]  =  48  -- blink fast
-  [12] =  48  -- blink fast, sync
-  [3]  =  48  -- blink slow
-  [13] =  48  -- blink slow, sync
-  [8]  =  96  -- oscillates
-  [17] =  48  -- flickers
-}
-
-WADFAB_REACHABLE = 992
-
-
-function Fab_load_wad(name)
-
-  local fab
-
-  local function copy_coord(S, C, pass)
-
-    local C2 = { x=C.x, y=C.y }
-
-    local side
-    local line
-
-    if C.side then side = gui.wadfab_get_side(C.side) end
-    if C.line then line = gui.wadfab_get_line(C.line) end
-
-    local flags = (line and line.flags) or 0
-
-    --- determine texture to use ---
-
-    local upper_tex
-    local lower_tex
-    local   mid_tex
-
-    upper_tex = side and side.upper_tex
-    if upper_tex == "-" then upper_tex = nil end
-
-    lower_tex = side and side.lower_tex
-    if lower_tex == "-" then lower_tex = nil end
-
-    mid_tex = side and side.mid_tex
-    if mid_tex == "-" then mid_tex = nil end
-
-
--- detect stray back-quotes (Meh!)
-if upper_tex == "`" then upper_tex = nil end
-if lower_tex == "`" then lower_tex = nil end
-if   mid_tex == "`" then   mid_tex = nil end
-
---[[
-if upper_tex == "`" or lower_tex == "`" or mid_tex == "`" then
-error("FOUND STRAY QUOTE: line = " .. tostring(C.line))
-end
---]]
-
-
-    local tex
-
-    -- if line is one-sided, use the middle texture
-    if line and bit.band(flags, DOOM_LINE_FLAGS.two_sided) == 0 then
-      tex = mid_tex
-
-    elseif pass == 1 then
-      tex = lower_tex or upper_tex
-
-    else
-      tex = upper_tex or lower_tex
-    end
-
-    if tex then
-      C2.tex = tex
-    end
-
-    -- offsets --
-
-    if side and side.x_offset and side.x_offset != 0 then
-      C2.u1 = side.x_offset
-      if C2.u1 == 1 then C2.u1 = 0 end
-    end
-
-    if side and side.y_offset and side.y_offset != 0 then
-      C2.v1 = side.y_offset
-      if C2.v1 == 1 then C2.v1 = 0 end
-    end
-
-    -- line type --
-
-    if line and line.special and line.special > 0 then
-      C2.special = line.special
-    end
-
-    if line and line.tag and line.tag > 0 then
-      C2.tag = line.tag
-    end
-
-    -- line flags --
-
-    local MLF_UpperUnpegged = 0x0008
-    local MLF_LowerUnpegged = 0x0010
-
-    if not line then
-      -- nothing
-
-    else
-      if (bit.band(flags, MLF_LowerUnpegged) != 0 and pass == 1) or
-         (bit.band(flags, MLF_UpperUnpegged) != 0 and pass == 2) then
-        C2.unpeg = 1
-      end
-
-      -- keep these flags: block-all, block-mon, secret, no-draw,
-      --                   always-draw, block-sound, pass-thru
-      flags = bit.band(flags, 0x2E3)
-
-      if flags != 0 then
-        C2.flags = flags
-
-        -- this makes sure the flags get applied
-        if not C2.special then C2.special = 0 end
-      end
-    end
-
-    -- railings --
-
-    if pass == 1 and line and mid_tex and tex != mid_tex then
-      C2.rail = mid_tex
-    end
-
-    return C2
-  end
-
-
-  local function create_void_brush(coords)
-    local B =
-    {
-      { m="solid" }
-    }
-
-    each C in coords do
-      table.insert(B, copy_coord(S, C, 1))
-    end
-
-    -- add this new brush to the prefab
-    table.insert(fab.brushes, B)
-  end
-
-
-  local function create_brush(S, coords, pass)
-    
-    -- pass: 1 = create a floor brush (or solid wall)
-    --       2 = create a ceiling brush
-    
-    -- skip making a brush when the flat is FWATER4
-    if pass == 1 and S.floor_tex == "FWATER4" then return end
-    if pass == 2 and S. ceil_tex == "FWATER4" then return end
-
-    local B =
-    {
-      { m="solid" }
-    }
-
-    local is_door = (S.floor_h >= S.ceil_h)
-
-    if pass == 1 then
-      local C = { t=S.floor_h, tex=S.floor_tex }
-
-      if S.special == WADFAB_REACHABLE then
-        C.reachable = true
-      elseif S.special and S.special > 0 then
-        C.special = S.special
-      end
-
-      if S.tag and S.tag > 0 then
-        C.tag = S.tag
-      end
-
-      -- lighting specials need a 'light_delta' field (for best results)
-      local delta = WADFAB_LIGHT_DELTAS[S.special or 0]
-      if delta then
-        C.light_delta = delta
-      end
-
-      table.insert(B, C)
-
-    else
-      local C = { b=S.ceil_h, tex=S.ceil_tex }
-      table.insert(B, C)
-
-      -- to make closed doors we need to force a gap, otherwise the CSG
-      -- code will create void space.
-      if is_door then
-        C.b = S.floor_h + 1
-        C.delta_z = -1
-      end
-
-      -- automatically convert to a sky brush
-      if string.match(S.ceil_tex, "^F_SKY") then
-        B[1].m = "sky"
-      end
-    end
-
-    each C in coords do
-      table.insert(B, copy_coord(S, C, pass))
-    end
-
-    -- add this new brush to the prefab
-    table.insert(fab.brushes, B)
-  end
-
-
-  local function skill_to_rank(flags)
-    if not flags then return 2 end
-
-    if bit.band(flags, 2) != 0 then return 2 end
-    if bit.band(flags, 4) != 0 then return 3 end
-
-    return 1
-  end
-
-
-  local function angle_to_light(angle)
-    if not angle then return 184 end
-
-    if angle < 0 then angle = angle + 360 end
-
-    angle = math.clamp(0, angle, 315)
-
-    return 136 + int(angle * 16 / 45)
-  end
-
-
-  local function handle_entity(fab, E)
-    local spot_info = WADFAB_ENTITIES[E.id]
-
-    if not spot_info then
-      table.insert(fab.entities, E)
-      return
-    end
-
-    -- logic to add light entities:
-    --   - angle controls level (0 = 128, 45 = 144, ..., 315 = 240)
-    --   - skill bits determine the factor
-    if spot_info.kind == "light" then
-      E.id = "light"
-
-      E.light = angle_to_light(E.angle)
-      E.angle = nil
-
-      E.factor = 0.1 + 0.4 * skill_to_rank(E.flags)
-      E.flags  = nil
-
-      table.insert(fab.entities, E)
-      return
-    end
-
-    -- create a fake brush for the spot
-    -- (this brush is never sent to the CSG code -- it is simply a
-    --  handy way to get the spot translated and rotated)
-
-    local B =
-    {
-      { m = "spot" }
-    }
-
-    B[1].spot_kind = spot_info.kind
-    B[1].angle = E.angle
-    B[1].rank  = skill_to_rank(E.flags)
-
-    -- the "ambush" (aka Deaf) flag means a caged monster
-    local MTF_Ambush = 8
-
-    if spot_info.kind == "monster" and bit.band(E.flags or 0, MTF_Ambush) != 0 then
-      B[1].spot_kind = "cage"
-    end
-
-    local r = spot_info.r
-
-    table.insert(B, { x = E.x - r, y = E.y - r })
-    table.insert(B, { x = E.x + r, y = E.y - r })
-    table.insert(B, { x = E.x + r, y = E.y + r })
-    table.insert(B, { x = E.x - r, y = E.y + r })
-
-    table.insert(B, { b = E.z })
-    table.insert(B, { t = E.z + 128 })
-
-    table.insert(fab.brushes, B)
-  end
-
-
-  function load_it(name)
-    -- load the map structures into memory
-    gui.wadfab_load(name)
-
-    fab =
-    {
-      name  = name
-      state = "raw"
-
-      brushes  = {}
-      models   = {}
-      entities = {}
-    }
-
-    for thing_idx = 0,999 do
-      local E = gui.wadfab_get_thing(thing_idx)
-
-      -- nil result marks the end
-      if not E then break; end
-
-      handle_entity(fab, E)
-    end
-
-    for poly_idx = 0,999 do
-      local sec_idx, coords = gui.wadfab_get_polygon(poly_idx)
-
-      -- nil result marks the end
-      if not sec_idx then break; end
-
-      -- negative value means "void" space
-      if sec_idx < 0 then
-        create_void_brush(coords)
-        continue
-      end
-
-      local S = gui.wadfab_get_sector(sec_idx)
-      assert(S)
-
-      create_brush(S, coords, 1)  -- floor
-      create_brush(S, coords, 2)  -- ceil
-    end
-
-    gui.wadfab_free()
-
-    Fab_determine_bbox(fab)
-
-    return fab
-  end
-
-
-  ---| Fab_load_wad |---
-
-  -- see if already loaded
-  if not EPISODE.cached_wads then
-    EPISODE.cached_wads = {}
-  end
-
-  if not EPISODE.cached_wads[name] then
-    EPISODE.cached_wads[name] = load_it(name)
-  end
-  
-  local orig = EPISODE.cached_wads[name]
-  assert(orig)
-
-  return table.deep_copy(orig)
-end
-
-
-
-function Fab_bound_Z(fab, skin)
-  if skin.bound_z1 then
-    fab.bbox.z1 = math.min(fab.bbox.z1 or 9999, skin.bound_z1)
-  end
-
-  if skin.bound_z2 then
-    fab.bbox.z2 = math.max(fab.bbox.z2 or -9999, skin.bound_z2)
-  end
-
-  -- for lifts, we pretend the bbox only extends vertically to the
-  -- high floor height.  In combination with a reduced T.fitted_z
-  -- (only target_h - source_h), this will expand the lift correctly.
-  --
-  -- TODO: perhaps a cleaner (more general) solution
-
-  if skin.shape == "lift" then
-    fab.bbox.z2 = LIFT_H
-    assert(skin.z_fit == "top")
-  end
-
-  if fab.bbox.z1 and fab.bbox.z2 then
-    fab.bbox.dz = fab.bbox.z2 - fab.bbox.z1
-  end
-end
-
-
-
-function Fab_merge_skins(fab, main_skin, list)
-  --
-  -- merges the skin list into the main skin (from GAMES.SKIN table)
-  -- and also includes various default values.
-  --
-
-  local result = table.copy(GLOBAL_SKIN_DEFAULTS)
-
-  result.wall = GAME.MATERIALS["_ERROR"].t
-
-  if  GAME.SKIN_DEFAULTS then table.merge(result,  GAME.SKIN_DEFAULTS) end
-  if THEME.skin_defaults then table.merge(result, THEME.skin_defaults) end
-
-  table.merge(result, main_skin)
-
-  each skin in list do
-    table.merge(result, skin)
-  end
-
-  return result
-end
-
-
-
-function Fab_substitutions(fab, SKIN)
-  --
-  -- handle all subs (the "?xxx" syntax) and random tables.
-  -- the SKIN table is modified here.
-  --
-
-  local PREFIXES =
+  return
   {
-    "tex_", "flat_", "thing_",
-    "tag_", "line_", "sector_"
+    kind = "sky",
+    w_face = { tex=mat.t },
+    t_face = { tex=mat.f or mat.t },
+    b_face = { tex=mat.f or mat.t, light=light },
   }
+end
 
-  local function match_prefix(name)
-    each prefix in PREFIXES do
-      if string.match(name, "^" .. prefix) then
-        return true
+function get_liquid()
+  assert(LEVEL.liquid)
+  local mat = get_mat(LEVEL.liquid.mat)
+
+  mat.t_face.light = LEVEL.liquid.light
+  mat.b_face.light = LEVEL.liquid.light
+
+  mat.t_face.special = LEVEL.liquid.special
+  mat.b_face.special = LEVEL.liquid.special
+
+  return mat
+end
+
+function get_light(intensity)
+  return
+  {
+    kind = "light",
+    w_face = { tex="-" },
+    t_face = { tex="-" },
+    b_face = { tex="-", light=intensity },
+  }
+end
+
+function get_rail()
+  return
+  {
+    kind = "rail",
+    w_face = { tex="-" },
+    t_face = { tex="-" },
+    b_face = { tex="-" },
+  }
+end
+
+function rail_coord(x, y, name)
+  local rail = GAME.RAILS[name]
+
+  if not rail then
+    gui.printf("LACKING RAIL %s\n", name)
+    return { x=x, y=y }
+  end
+
+  return { x=x, y=y, w_face={ tex=rail.t }, line_flags=rail.line_flags }
+end
+
+
+function add_pegging(info, x_offset, y_offset, peg)
+  info.w_face.x_offset = x_offset or 0
+  info.w_face.y_offset = y_offset or 0
+  info.w_face.peg = sel(peg == nil, 1, peg)
+
+  return info
+end
+
+
+function get_transform_for_seed_side(S, side, thick)
+  
+  if not thick then thick = S.thick[side] end
+
+  local T = { }
+
+  if side == 8 then T.rotate = 180 end
+  if side == 4 then T.rotate = 270 end
+  if side == 6 then T.rotate =  90 end
+
+  if side == 2 then T.add_x, T.add_y = S.x1, S.y1 end
+  if side == 4 then T.add_x, T.add_y = S.x1, S.y2 end
+  if side == 6 then T.add_x, T.add_y = S.x2, S.y1 end
+  if side == 8 then T.add_x, T.add_y = S.x2, S.y2 end
+
+  return T, SEED_SIZE, thick
+end
+
+function get_transform_for_seed_center(S)
+  local T = { }
+
+  T.add_x = S.x1 + S.thick[4]
+  T.add_y = S.y1 + S.thick[2]
+
+  local long = S.x2 - S.thick[6] - T.add_x
+  local deep = S.y2 - S.thick[8] - T.add_y
+
+  return T, long, deep
+end
+
+
+function diagonal_coords(side, x1,y1, x2,y2)
+  if side == 9 then
+    return
+    {
+      { x=x2, y=y1 },
+      { x=x2, y=y2 },
+      { x=x1, y=y2 },
+    }
+  elseif side == 7 then
+    return
+    {
+      { x=x1, y=y2 },
+      { x=x1, y=y1 },
+      { x=x2, y=y2 },
+    }
+  elseif side == 3 then
+    return
+    {
+      { x=x2, y=y1 },
+      { x=x2, y=y2 },
+      { x=x1, y=y1 },
+    }
+  elseif side == 1 then
+    return
+    {
+      { x=x1, y=y2 },
+      { x=x1, y=y1 },
+      { x=x2, y=y1 },
+    }
+  else
+    error("bad side for diagonal_coords: " .. tostring(side))
+  end
+end
+
+
+function get_wall_coords(S, side, thick, pad)
+  assert(side ~= 5)
+
+  local x1, y1 = S.x1, S.y1
+  local x2, y2 = S.x2, S.y2
+
+  if side == 4 or side == 1 or side == 7 then
+    x2 = x1 + (thick or S.thick[4])
+    if pad then x1 = x1 + pad end
+  end
+
+  if side == 6 or side == 3 or side == 9 then
+    x1 = x2 - (thick or S.thick[6])
+    if pad then x2 = x2 - pad end
+  end
+
+  if side == 2 or side == 1 or side == 3 then
+    y2 = y1 + (thick or S.thick[2])
+    if pad then y1 = y1 + pad end
+  end
+
+  if side == 8 or side == 7 or side == 9 then
+    y1 = y2 - (thick or S.thick[8])
+    if pad then y2 = y2 - pad end
+  end
+
+  return Trans.rect_coords(x1,y1, x2,y2)
+end
+
+
+function shadowify_brush(coords, dist)
+  --
+  -- ALGORITHM
+  --
+  -- Each side of the brush can be in one of three states:
+  --    "light"  (not facing the shadow)
+  --    "dark"
+  --    "edge"   (parallel to shadow extrusion)
+  --
+  -- For each vertex we can do one of three operations:
+  --    KEEP : when both lines are light or edge
+  --    MOVE : when both lines are dark or edge
+  --    DUPLICATE : one line is dark, one is light
+
+  for i = 1,#coords do
+    local v1 = coords[i]
+    local v2 = coords[sel(i == #coords, 1, i+1)]
+
+    local dx = v2.x - v1.x
+    local dy = v2.y - v1.y
+
+    -- simplify detection : map extrusion to X axis
+    dy = dy + dx
+
+    if dy < -0.01 then
+      coords[i].light = true
+    elseif dy > 0.01 then
+      coords[i].dark = true
+    else
+      -- it is an edge : implied
+    end
+  end
+
+  local new_coords = {}
+
+  for i = 1,#coords do
+    local P = coords[sel(i == 1, #coords, i-1)]
+    local N = coords[i]
+
+    if not (P.dark or N.dark) then
+      -- KEEP
+      table.insert(new_coords, N)
+    else
+      local NEW = { x=N.x+dist, y=N.y-dist}
+
+      if not (P.light or N.light) then
+        -- MOVE
+        table.insert(new_coords, NEW)
+      else
+        -- DUPLICATE
+        assert(P.light or P.dark)
+        assert(N.light or N.dark)
+
+        if P.light and N.dark then
+          table.insert(new_coords, N)
+          table.insert(new_coords, NEW)
+        else
+          table.insert(new_coords, NEW)
+          table.insert(new_coords, N)
+        end
       end
     end
+  end
+
+  return new_coords
+end
+
+
+function Build.shadow(S, side, dist, z2)
+  assert(dist)
+
+  if not PARAM.outdoor_shadows then return end
+
+  if not S then return end
+
+  if side < 0 then
+    S = S:neighbor(-side)
+    if not (S and S.room and S.room.outdoor) then return end
+    side = 10 + side
+  end
+
+  local x1, y1 = S.x1, S.y1
+  local x2, y2 = S.x2, S.y2
+
+  if side == 8 then
+    local N = S:neighbor(6)
+    local clip = not (N and N.room and N.room.outdoor)
+
+    Trans.old_brush(get_light(-1),
+    {
+      { x=x2, y=y2 },
+      { x=x1, y=y2 },
+      { x=x1+dist, y=y2-dist },
+      { x=x2+sel(clip,0,dist), y=y2-dist },
+    },
+    -EXTREME_H, z2 or EXTREME_H)
+  end
+
+  if side == 4 then
+    local N = S:neighbor(2)
+    local clip = not (N and N.room and N.room.outdoor)
+
+    Trans.old_brush(get_light(-1),
+    {
+      { x=x1, y=y2 },
+      { x=x1, y=y1 },
+      { x=x1+dist, y=y1-sel(clip,0,dist) },
+      { x=x1+dist, y=y2-dist },
+    },
+    -EXTREME_H, z2 or EXTREME_H)
+  end
+end
+
+
+function Build.wall(S, side, mat)
+  local coords = get_wall_coords(S, side)
+
+  Trans.old_brush(get_mat(mat), coords, -EXTREME_H, EXTREME_H)
+end
+
+
+function Build.facade(S, side, mat)
+  local x1, y1 = S.x1, S.y1
+  local x2, y2 = S.x2, S.y2
+
+  local coords
+
+  if side == 2 then
+    coords = { {x=x1,y=y1}, {x=x2,y=y1}, {x=x2-8,y=y1+8}, {x=x1+8,y=y1+8} }
+  elseif side == 8 then
+    coords = { {x=x2,y=y2}, {x=x1,y=y2}, {x=x1+8,y=y2-8}, {x=x2-8,y=y2-8} }
+  elseif side == 4 then
+    coords = { {x=x1,y=y2}, {x=x1,y=y1}, {x=x1+8,y=y1+8}, {x=x1+8,y=y2-8} }
+  else
+    coords = { {x=x2,y=y1}, {x=x2,y=y2}, {x=x2-8,y=y2-8}, {x=x2-8,y=y1+8} }
+  end
+
+  Trans.old_brush(get_mat(mat), coords, -EXTREME_H, EXTREME_H)
+end
+
+
+function Build.fence(S, side, fence_h, skin)
+  local coords = get_wall_coords(S, side)
+
+  Trans.old_brush(get_mat(skin.wall, skin.floor), coords, -EXTREME_H, fence_h)
+
+  Build.shadow(S,  side, 40, fence_h-4)
+  Build.shadow(S, -side, 24, fence_h-4)
+end
+
+
+function Build.sky_fence(S, side, z_top, z_low, skin)
+  local wall_info = get_mat(skin.fence_w, skin.fence_f)
+
+  local sky_info = get_sky()
+  local sky_back = get_sky()
+
+
+  local wx1, wy1 = S.x1, S.y1
+  local wx2, wy2 = S.x2, S.y2
+
+  local sx1, sy1 = S.x1, S.y1
+  local sx2, sy2 = S.x2, S.y2
+
+  if S.thick[side] < 17 then
+    error("Sky fence not setup properly (thick <= 16)")
+  end
+
+  if side == 4 then
+    wx2 = wx1 + S.thick[4]
+    sx2 = wx1 + 16
+    wx1 = sx2
+
+  elseif side == 6 then
+    wx1 = wx2 - S.thick[6]
+    sx1 = wx2 - 16
+    wx2 = sx1
+
+  elseif side == 2 then
+    wy2 = wy1 + S.thick[2]
+    sy2 = wy1 + 16
+    wy1 = sy2
+
+  elseif side == 8 then
+    wy1 = wy2 - S.thick[8]
+    sy1 = wy2 - 16
+    wy2 = sy1
+  end
+
+  local w_coords =
+  {
+    { x=wx2, y=wy1 }, { x=wx2, y=wy2 },
+    { x=wx1, y=wy2 }, { x=wx1, y=wy1 },
+  }
+
+  local s_coords =
+  {
+    { x=sx2, y=sy1 }, { x=sx2, y=sy2 },
+    { x=sx1, y=sy2 }, { x=sx1, y=sy1 },
+  }
+
+  -- give back part the "never draw" linedef flag
+  s_coords[sel(geom.is_vert(side), 2,1)].line_flags = 128
+  s_coords[sel(geom.is_vert(side), 4,3)].line_flags = 128
+
+  Trans.old_brush(wall_info, w_coords, -EXTREME_H, z_top)
+  Trans.old_brush(wall_info, s_coords, -EXTREME_H, z_low)
+
+  Trans.old_brush(sky_info, w_coords, SKY_H, EXTREME_H)
+
+  if GAME.format == "quake" then
+    Trans.old_brush(sky_back, s_coords, z_low+4, EXTREME_H)
+  else
+    sky_back.delta_z = (z_low+4) - (SKY_H-2)
+    Trans.old_brush(sky_back, s_coords, SKY_H-2, EXTREME_H)
+  end
+end
+
+
+
+
+function Build.archway(S, side, z1, z2, skin)
+
+  local N = S:neighbor(side)
+  assert(N)
+
+
+  local N_deep = N.thick[10-side]
+
+  local T, long, deep = get_transform_for_seed_side(S, side)
+
+  local mx = int(long / 2)
+
+  local wall_info  = get_mat(skin.wall, skin.floor)
+  local other_info = get_mat(skin.other or skin.wall)
+
+  local frame_coords =
+  {
+    { x=long, y=-N_deep },
+    { x=long, y=deep, w_face = wall_info.w_face },
+    { x=0,    y=deep },
+    { x=0,    y=-N_deep },
+  }
+
+  Trans.set(T)
+
+  Trans.old_brush(other_info, frame_coords, z2, EXTREME_H)
+
+
+  assert(deep > 17 or N_deep > 17)
+
+  local break_info = wall_info
+  if skin.other and skin.other ~= skin.wall then
+    break_info = get_mat(skin.break_t)
+  end
+
+  for pass = 1,2 do
+    if pass == 2 then Trans.modify("mirror_x", mx) end
+
+    Trans.old_brush(wall_info,
+    {
+      { x=0,     y=-N_deep,    w_face = other_info.w_face },
+      { x=24+16, y=-N_deep,    w_face = other_info.w_face },
+      { x=36+16, y=-N_deep+16, w_face = break_info.w_face },
+      { x=36+16, y=deep-16 },
+      { x=24+16, y=deep },
+      { x=0,     y=deep },
+    },
+    -EXTREME_H, EXTREME_H)
+  end
+
+  Trans.clear()
+end
+
+
+function Build.door(S, side, z1, skin, skin2, tag, reversed)
+
+  tag2 = nil  -- FIXME !!!
+
+  local N = S:neighbor(side)
+  assert(N)
+
+
+  local DY = 24
+
+  local T, long, deep = get_transform_for_seed_side(S, side)
+
+  local mx = int(long / 2)
+  local my = 0
+
+  local door_h = skin.door_h or 112
+  local door_info = add_pegging(get_mat(skin.door_w))
+
+  door_info.b_face.light = 0.7
+  door_info.sec_tag = tag
+  door_info.delta_z = -8
+
+  local out_info = get_mat(skin2.outer, skin.frame_c)
+
+  local frame_info = get_mat(skin2.inner, skin.frame_c)
+
+  local step_info = get_mat(skin.step_w)
+  step_info.t_face.light = 0.7
+
+  local key_info = add_pegging(get_mat(skin.key_w or skin2.inner), skin.key_ox, skin.key_oy)
+
+
+  Trans.set(T)
+
+  Trans.old_quad(step_info, 0,my-DY, long,my+DY, -EXTREME_H, z1+8)
+
+  Trans.old_brush(out_info,
+  {
+    { x=long, y=my-DY },
+    { x=long, y=my+DY, w_face = frame_info.w_face },
+    { x=0,    y=my+DY },
+    { x=0,    y=my-DY },
+  },
+  z1+8+door_h, EXTREME_H)
+
+  local KIND = assert(skin.line_kind)
+
+  Trans.old_brush(door_info,
+  {
+    { x=mx+64, y=my-8, line_kind=KIND, line_tag=tag2 },
+    { x=mx+64, y=my+8, line_kind=KIND, line_tag=tag2 },
+    { x=mx-64, y=my+8, line_kind=KIND, line_tag=tag2 },
+    { x=mx-64, y=my-8, line_kind=KIND, line_tag=tag2 },
+  },
+  z1+16, EXTREME_H)
+
+  local track_i = add_pegging(get_mat(skin.track))
+
+
+  -- Heretic statues
+  if skin.statue then
+    local ey = sel(reversed, -40, 40)
+    Trans.entity(skin.statue, 16,     ey, z1)
+    Trans.entity(skin.statue, long-16, ey, z1)
+  end
+
+
+  for pass = 1,2 do
+    if pass == 2 then Trans.modify("mirror_x", mx) end
+
+    Trans.old_brush(key_info,
+    {
+      { x=mx-64,    y=my-8, w_face = track_i.w_face },
+      { x=mx-64,    y=my+8  },
+      { x=mx-64-18, y=my+DY },
+      { x=mx-64-18, y=my-DY },
+    },
+    -EXTREME_H, EXTREME_H)
+
+    Trans.old_brush(out_info,
+    {
+      { x=mx-64-18, y=my-DY },
+      { x=mx-64-18, y=my+DY, w_face = frame_info.w_face },
+      { x=0,        y=my+DY },
+      { x=0,        y=my-DY },
+    },
+    -EXTREME_H, EXTREME_H)
+  end
+
+  Trans.clear()
+end
+
+function Build.quake_door(S, side)
+  
+  -- FIXME : way incomplete
+
+  local m_ref = gui.q1_add_mapmodel(
+  {
+    y_face={ tex="edoor01_1" },
+    x_face={ tex="met5_1" },
+    z_face={ tex="met5_1" },
+  },
+  -1664+64,  -328-12, 0,
+  -1664+128, -328+12, 128)
+
+  gui.add_entity("func_door", 0, 0, 0,
+                 { angle="180", sounds="2",
+                   model=assert(m_ref)
+                 })
+
+
+  m_ref = gui.q1_add_mapmodel(
+  {
+    y_face={ tex="edoor01_1" },
+    x_face={ tex="met5_1" },
+    z_face={ tex="met5_1" },
+  },
+  -1664+128, -328-12, 0,
+  -1664+192, -328+12, 128)
+
+  gui.add_entity("func_door", 0, 0, 0,
+                 { angle="0", sounds="2",
+                   model=assert(m_ref)
+                 })
+end
+
+
+function Build.quake_exit_pad(S, z_top, skin, next_map)
+  local x1 = S.x1 + 64
+  local y1 = S.y1 + 64
+
+  local x2 = x1 + 64
+  local y2 = y1 + 64
+
+  -- trigger is a bit smaller than the pad
+  local m_ref = gui.q1_add_mapmodel(
+  {
+    y_face={ tex="trigger" },
+    x_face={ tex="trigger" },
+    z_face={ tex="trigger" },
+  },
+  x1+12,y1+12, z_top, x2-12,y2-12, z_top+256)
+
+  gui.add_entity("trigger_changelevel", 0, 0, 0,
+                 { map=next_map, model=assert(m_ref) })
+
+  -- the pad itself
+
+  local info = get_mat(skin.wall or skin.floor, skin.floor)
+  info.t_face.light = 0.8
+
+  Trans.old_quad(info, x1,y1, x2,y2, -EXTREME_H, z_top)
+end
+
+
+
+function Build.lowering_bars(S, side, z_top, skin, tag)
+
+  local T, long, deep = get_transform_for_seed_side(S, side)
+
+  local bar_w = 24
+  local bar_tw = 6+bar_w+6
+
+  local num_bars = int((long-16) / bar_tw)
+  local side_gap = int((long-16 - num_bars * bar_tw) / 2)
+
+  assert(num_bars >= 2)
+
+  local bar_info = get_mat(skin.bar_w, skin.bar_f)
+
+  add_pegging(bar_info, skin.x_offset, skin.y_offset)
+
+  bar_info.sec_tag = tag
+
+  local mx1 = 8 + side_gap + bar_w/2
+  local mx2 = long - 8 - side_gap - bar_w/2
+
+  Trans.set(T)
+
+  for i = 1,num_bars do
+    local mx = mx1 + (mx2 - mx1) * (i-1) / (num_bars-1)
+    local my = 0
+
+    Trans.old_quad(bar_info, mx-bar_w/2, my-bar_w/2, mx+bar_w/2, my+bar_w/2,
+        -EXTREME_H, z_top)
+  end
+
+  Trans.clear()
+end
+
+
+function Build.ceil_light(S, z2, skin)
+  assert(skin)
+  
+  local w = (skin.w or 64) / 2
+  local h = (skin.h or 64) / 2
+
+  local mx = int((S.x1 + S.x2)/2)
+  local my = int((S.y1 + S.y2)/2)
+
+  local light_info = get_mat(skin.lite_f)
+  light_info.b_face.light = 0.90
+
+  Trans.old_brush(light_info,
+  {
+    { x = mx+w, y = my-h },
+    { x = mx+w, y = my+h },
+    { x = mx-w, y = my+h },
+    { x = mx-w, y = my-h },
+  },
+  z2-12, EXTREME_H)
+
+
+  local trim_info = get_mat(skin.trim)
+  trim_info.b_face.light = 0.72
+
+  Trans.old_brush(trim_info,
+  {
+    { x = mx-w,     y = my-(h+8) },
+    { x = mx-w,     y = my+(h+8) },
+    { x = mx-(w+8), y = my+(h+8) },
+    { x = mx-(w+8), y = my-(h+8) },
+  },
+  z2-16, EXTREME_H)
+
+  Trans.old_brush(trim_info,
+  {
+    { x = mx+(w+8), y = my-(h+8) },
+    { x = mx+(w+8), y = my+(h+8) },
+    { x = mx+w,     y = my+(h+8) },
+    { x = mx+w,     y = my-(h+8) },
+  },
+  z2-16, EXTREME_H)
+
+  Trans.old_brush(trim_info,
+  {
+    { x = mx+(w+8), y = my-(h+8) },
+    { x = mx+(w+8), y = my-h },
+    { x = mx-(w+8), y = my-h },
+    { x = mx-(w+8), y = my-(h+8) },
+  },
+  z2-16, EXTREME_H)
+
+  Trans.old_brush(trim_info,
+  {
+    { x = mx+(w+8), y = my+h },
+    { x = mx+(w+8), y = my+(h+8) },
+    { x = mx-(w+8), y = my+(h+8) },
+    { x = mx-(w+8), y = my+h },
+  },
+  z2-16, EXTREME_H)
+ 
+
+--[[ connecting spokes....
+
+  Trans.old_brush(trim_info,
+  {
+    { x = mx+4, y = my+40 },
+    { x = mx+4, y = S.y2  },
+    { x = mx-4, y = S.y2  },
+    { x = mx-4, y = my+40 },
+  },
+  z2-10, EXTREME_H)
+
+  Trans.old_brush(trim_info,
+  {
+    { x = mx+4, y = S.y1  },
+    { x = mx+4, y = my-40 },
+    { x = mx-4, y = my-40 },
+    { x = mx-4, y = S.y1  },
+  },
+  z2-10, EXTREME_H)
+
+  Trans.old_brush(trim_info,
+  {
+    { x = mx-40, y = my-4, },
+    { x = mx-40, y = my+4, },
+    { x = S.x1 , y = my+4, },
+    { x = S.x1 , y = my-4, },
+  },
+  z2-10, EXTREME_H)
+
+  Trans.old_brush(trim_info,
+  {
+    { x = S.x2 , y = my-4, },
+    { x = S.x2 , y = my+4, },
+    { x = mx+40, y = my+4, },
+    { x = mx+40, y = my-4, },
+  },
+  z2-10, EXTREME_H)
+ 
+--]]
+end
+
+
+function Build.detailed_hall(S, side, z1, z2, skin)
+
+  local function compat_neighbor(side)
+    local N = S:neighbor(side)
+
+    if not N or not N.room then return false end
+
+    if N.room == S.room then return true end
+
+    if N.room.hallway then return true end
 
     return false
   end
 
+  local function get_hall_coords(thickness, pad, impassible)
 
-  local function matching_keys()
-    local list = { }
+    ---### S.thick[side] = thickness
 
-    each k,v in SKIN do
-      if match_prefix(k) then
-        table.insert(list, k)
-      end
+    local ox1, oy1, ox2, oy2 = S.x1,S.y1, S.x2,S.y2
+
+    if (side == 4 or side == 6) then
+      if compat_neighbor(2) then S.y1 = S.y1 - thickness end
+      if compat_neighbor(8) then S.y2 = S.y2 + thickness end
+    else
+      if compat_neighbor(4) then S.x1 = S.x1 - thickness end
+      if compat_neighbor(6) then S.x2 = S.x2 + thickness end
     end
 
-    return list
+    if compat_neighbor(side) then pad = 0 end
+
+    local res = get_wall_coords(S, side, thickness, pad)
+
+    S.x1,S.y1, S.x2,S.y2 = ox1, oy1, ox2, oy2
+
+    if impassible then
+      each c in res do c.line_flags = 1 end
+    end
+
+    return res
   end
 
 
-  local function random_pass(keys)
-    -- most fields with a table value are considered to be random
-    -- replacement, e.g. tex_FOO = { COMPSTA1=50, COMPSTA2=50 }.
+  if LEVEL.hall_trim then
+    Trans.old_brush(get_mat(skin.trim2),
+        get_hall_coords(32, 8, true), -EXTREME_H, z1 + 32)
 
-    each name in keys do
-      local value = SKIN[name]
-
-      if type(value) == "table" then
-        if table.size(value) == 0 then
-          error("Fab_substitutions: random table is empty: " .. tostring(name))
-        end
-
-        SKIN[name] = rand.key_by_probs(value)
-      end
-    end
+    Trans.old_brush(get_mat(skin.trim2),
+        get_hall_coords(32, 8, true), z2 - 32, EXTREME_H)
   end
 
 
-  local function do_substitution(value)
-    local seen = { }
+  Trans.old_brush(get_mat(skin.trim1),
+      get_hall_coords(64, 8), -EXTREME_H, z1 + 6)
 
-    while Trans.is_subst(value) do
-
-      if seen[value] then
-        -- failed !
-        gui.debugf("\nSKIN =\n%s\n\n", table.tostr(SKIN))
-        error("Fab_substitutions: recursive refs (" .. tostring(value) .. ")")
-      end
-
-      seen[value] = 1
-
-      value = Trans.substitute(SKIN, value)
-    end
-
-    return value
-  end
+  Trans.old_brush(get_mat(skin.trim1),
+      get_hall_coords(64, 8), z2 - 6, EXTREME_H)
 
 
-  local function subst_pass(keys)
-    each name in keys do
-      local value = SKIN[name]
-
-      if Trans.is_subst(value) then
-        SKIN[name] = do_substitution(value)
-      end
-    end
-  end
+  Trans.old_brush(get_mat(skin.wall),
+      get_hall_coords(24, 0), -EXTREME_H, EXTREME_H)
 
 
-  ---| Fab_substitutions |---
-
-  -- Note: iterate over a copy of the key names, since we cannot
-  --       safely modify a table while iterating through it.
-  --
-  -- Also we only process the replacement keywords, which have the
-  -- special prefixes listed above ("tex_" etc).
-  --
-  local keys = matching_keys()
-
-  random_pass(keys)
-
-  subst_pass(keys)
+  -- TODO : corners
 end
 
 
+-- NOT ACTUALLY USED:
+function Build.weird_hall(S, side, skin, z1, z2)
 
-function Fab_replacements(fab, skin)
+  local function get_hall_coords(thickness)
 
-  -- replaces textures (etc) in the brushes of the prefab with
-  -- stuff from the skin.
+    S.thick[side] = thickness
 
-  local function santize_char(ch)
-    if ch == "-" or ch == " " or ch == "_" then return "_" end
+    local ox1, oy1, ox2, oy2 = S.x1,S.y1, S.x2,S.y2
 
-    if string.match(ch, "%w") then return ch end
+    if (side == 4 or side == 6) then
 
-    -- convert a weird character to a lowercase letter
-    local num = string.byte(ch)
-    if (num < 0) then num = -num end
-    num = num % 26;
-
-    return string.sub("abcdefghijklmnopqrstuvwxyz", num, num)
-  end
-
-
-  local function santize(name)
-    name = string.upper(name)
-
-    local s = ""
-
-    for i = 1,#name do
-      s = s .. santize_char(string.sub(name, i, i))
-    end
-
-    if s == "" then return "XXX" end
-
-    return s
-  end
-
-
-  local function check(prefix, val)
-    local k = prefix .. "_" .. val
-
-    if skin[k] then return skin[k] end
-
-    return val
-  end
-
-
-  local function check_tex(val)
-    local k = "tex_" .. val
-
-    if skin[k] then
-      local mat = Mat_lookup(skin[k])
-
-      return assert(mat.t)
-    end
-
-    return val
-  end
-
-
-  local function check_flat(val, C)
-    local k = "flat_" .. val
-
-    -- give liquid brushes lighting and/or special type
-    if skin[k] == "_LIQUID" and LEVEL.liquid then
-      C.special = C.special or LEVEL.liquid.special
-      C.light   = LEVEL.liquid.light
-      C.factor = 0.6
-    end
-
-    if skin[k] then
-      local mat = Mat_lookup(skin[k])
-
-      return assert(mat.f or mat.t)
-    end
-
-    return val
-  end
-
-
-  local function check_tag(val)
-    local k = "tag_" .. val
-
-    -- if it is not already specified, allocate a new tag
-
-    if not skin[k] then
-      skin[k] = Plan_alloc_id("tag")
-    end
-
-    return skin[k]
-  end
-
-
-  local function check_thing(val)
-    local k = "thing_" .. val
-
-    if skin[k] then
-      local name = skin[k]
-
-      -- allow specifying a raw ID number
-      if type(name) == "number" then return name end
-
-      local info = GAME.ENTITIES[name] or
-                   GAME.MONSTERS[name] or
-                   GAME.WEAPONS[name]  or
-                   GAME.PICKUPS[name]
-
-      if not info then
-        gui.printf("\nLACKING ENTITY : %s\n\n", name)
-        return name
+      if S:neighbor(2) and S:neighbor(2).room == S.room then
+        S.y1 = S.y1 - thickness
       end
 
-      return assert(info.id)
+      if S:neighbor(8) and S:neighbor(8).room == S.room then
+        S.y2 = S.y2 + thickness
+      end
+
+    else
+      if S:neighbor(4) and S:neighbor(4).room == S.room then
+        S.x1 = S.x1 - thickness
+      end
+
+      if S:neighbor(6) and S:neighbor(6).room == S.room then
+        S.x2 = S.x2 + thickness
+      end
+
     end
 
-    return val
+    local res = get_wall_coords(S, side)
+
+    S.x1,S.y1, S.x2,S.y2 = ox1, oy1, ox2, oy2
+    
+    return res
   end
 
 
-  local function check_props(E)
-    local k = "props_" .. E.id
+  local info = get_mat(skin.wall)  -- e.g. SHAWN2
 
-    local tab = skin[k]
+  Trans.old_brush(info, get_hall_coords(24), -EXTREME_H, EXTREME_H)
 
-    if not tab then return end
+  Trans.old_brush(info, get_hall_coords(32), -EXTREME_H, z1 + 32)
+  Trans.old_brush(info, get_hall_coords(32), z2 - 32, EXTREME_H)
 
-    table.merge(E, tab)
+  Trans.old_brush(info, get_hall_coords(48), -EXTREME_H, z1 + 18)
+  Trans.old_brush(info, get_hall_coords(48), z2 - 18, EXTREME_H)
+
+  Trans.old_brush(info, get_hall_coords(64), -EXTREME_H, z1 + 6)
+  Trans.old_brush(info, get_hall_coords(64), z2 - 6, EXTREME_H)
+
+end
+
+
+function Build.diagonal(S, side, info, floor_h, ceil_h)
+
+  -- floor_h and ceil_h are usually absent, which makes a
+  -- totally solid diagonal piece.  One of them can be given
+  -- but not both to make a diagonal floor or ceiling piece.
+  assert(not (floor_h and ceil_h))
+  
+  local function get_thick(wsd)
+    if S.border[wsd].kind == "wall" then
+      return S.thick[wsd]
+    end
+
+    return 0
   end
 
+  local x1 = S.x1 + get_thick(4)
+  local y1 = S.y1 + get_thick(2)
 
-  ---| Fab_replacements |---
+  local x2 = S.x2 - get_thick(6)
+  local y2 = S.y2 - get_thick(8)
 
-  each B in fab.brushes do
-    each C in B do
-      if C.special and C.x     then C.special = check("line",   C.special) end
-      if C.special and not C.x then C.special = check("sector", C.special) end
 
-      if C.tag then C.tag = check_tag(C.tag) end
+  Trans.old_brush(info,
+      diagonal_coords(side,x1,y1,x2,y2),
+      ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+end
 
-      if C.tex and C.x     then C.tex = check_tex (santize(C.tex)) end
-      if C.tex and not C.x then C.tex = check_flat(santize(C.tex), C) end
+
+function Build.debug_arrow(S, dir, f_h)
+ 
+  local mx = int((S.x1 + S.x2)/2)
+  local my = int((S.y1 + S.y2)/2)
+
+  local dx, dy = geom.delta(dir)
+  local ax, ay = geom.delta(geom.RIGHT[dir])
+
+  Trans.old_brush(get_mat("FWATER1"),
+  {
+    { x = mx - ax*20,  y = my - ay * 20  },
+    { x = mx + ax*20,  y = my + ay * 20  },
+    { x = mx + dx*100, y = my + dy * 100 },
+  },
+  -EXTREME_H, f_h + 8)
+end
+
+
+function Build.curved_hall(steps, corn_x, corn_y,
+                           dx0, dx1, dx2, dx3,
+                           dy0, dy1, dy2, dy3,
+                           x_h, y_h, gap_h,
+                           wall_info, floor_info, ceil_info)
+
+gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
+           corn_x,corn_y, dx0,dx1,dx2,dx3, dy0,dy1,dy2,dy3);
+
+  assert((0 < dx0 and dx0 < dx1 and dx1 < dx2 and dx2 < dx3) or
+         (0 > dx0 and dx0 > dx1 and dx1 > dx2 and dx2 > dx3))
+
+  assert((0 < dy0 and dy0 < dy1 and dy1 < dy2 and dy2 < dy3) or
+         (0 > dy0 and dy0 > dy1 and dy1 > dy2 and dy2 > dy3))
+
+  local flipped = false
+  if sel(dx3 < 0, 1, 0) == sel(dy3 < 0, 1, 0) then
+    flipped = true
+  end
+
+  local function quantize(x)
+    return int(x * 8.0 + 0.5) / 8.0
+  end
+
+  local function arc_coords(p0, p1, dx0,dx1, dy0,dy1)
+    local px0 = math.cos(math.pi * p0 / 2.0)
+    local py0 = math.sin(math.pi * p0 / 2.0)
+
+    local px1 = math.cos(math.pi * p1 / 2.0)
+    local py1 = math.sin(math.pi * p1 / 2.0)
+
+    local cx0 = quantize(corn_x + dx0 * px0)
+    local cy0 = quantize(corn_y + dy0 * py0)
+    local fx0 = quantize(corn_x + dx1 * px0)
+    local fy0 = quantize(corn_y + dy1 * py0)
+
+    local cx1 = quantize(corn_x + dx0 * px1)
+    local cy1 = quantize(corn_y + dy0 * py1)
+    local fx1 = quantize(corn_x + dx1 * px1)
+    local fy1 = quantize(corn_y + dy1 * py1)
+
+    if flipped then
+      return
+      {
+        { x = cx0, y = cy0 },
+        { x = fx0, y = fy0 },
+        { x = fx1, y = fy1 },
+        { x = cx1, y = cy1 },
+      }
+    else
+      return
+      {
+        { x = cx1, y = cy1 },
+        { x = fx1, y = fy1 },
+        { x = fx0, y = fy0 },
+        { x = cx0, y = cy0 },
+      }
     end
   end
 
-  each E in fab.entities do
-    check_props(E)
+  --| Build.curved_hall |--
 
-    E.id = check_thing(E.id)
+  assert(steps >= 2)
+
+  for i = 1,steps do
+    local p0 = (i-1)/steps
+    local p1 = (i  )/steps
+
+    local f_h = x_h + (y_h - x_h) * (i-1) / (steps-1)
+    local c_h = f_h + gap_h
+
+    Trans.old_brush(wall_info, arc_coords(p0,p1, dx0,dx1, dy0,dy1), -EXTREME_H,EXTREME_H)
+    Trans.old_brush(wall_info, arc_coords(p0,p1, dx2,dx3, dy2,dy3), -EXTREME_H,EXTREME_H)
+
+    local coords = arc_coords(p0,p1, dx1,dx2, dy1,dy2)
+
+    Trans.old_brush(floor_info, coords, -EXTREME_H, f_h)
+    Trans.old_brush(ceil_info,  coords, c_h, EXTREME_H)
   end
 end
 
 
+function Build.ramp_x(skin, bx1,bx2,y1, tx1,tx2,y2, az,bz, exact)
+  assert(az and bz)
 
-function Fabricate(main_skin, T, skins)
-  if not main_skin.file then
-    error("Old-style prefab skin used")
+  local steps = int(math.abs(az-bz) / 14 + 0.9)
+  local z
+
+  if steps < 2 then steps = 2 end
+
+  if exact then steps = steps + 1 end
+
+  for i = 0,steps-1 do 
+    if exact then
+      z = az + (bz - az) * (i  ) / (steps-1)
+    else
+      z = az + (bz - az) * (i+1) / (steps+1)
+    end
+
+    local bx3 = bx1 + (bx2 - bx1) * i / steps
+    local bx4 = bx1 + (bx2 - bx1) * (i+1) / steps
+
+    local tx3 = tx1 + (tx2 - tx1) * i / steps
+    local tx4 = tx1 + (tx2 - tx1) * (i+1) / steps
+
+    bx3 = int(bx3) ; tx3 = int(tx3)
+    bx4 = int(bx4) ; tx4 = int(tx4)
+
+    Trans.old_brush(skin,
+    {
+      { x=bx4, y=y1 },
+      { x=tx4, y=y2 },
+      { x=tx3, y=y2 },
+      { x=bx3, y=y1 },
+    },
+    -EXTREME_H, z);
   end
-
-  gui.debugf("=========  FABRICATE %s\n", main_skin.file)
-
-  local fab = Fab_load_wad(main_skin.file)
-
-  Fab_bound_Z(fab, main_skin)
-
-  local skin = Fab_merge_skins(fab, main_skin, skins)
-
-  Fab_substitutions(fab, skin)
-  Fab_replacements(fab, skin)
-
-  fab.state  = "skinned"
-
-  fab.x_fit = main_skin.x_fit
-  fab.y_fit = main_skin.y_fit
-  fab.z_fit = main_skin.z_fit
-
-  Fab_transform_XY(fab, T)
-  Fab_transform_Z (fab, T)
-
-  Fab_render(fab)
-
-  return fab
 end
 
 
+function Build.ramp_y(skin, x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
+  assert(az and bz)
 
-function Fabricate_at(L, main_skin, T, skins)
-  -- L can be a room or a hallway
+  local steps = int(math.abs(az-bz) / 14 + 0.9)
+  local z
 
-  local fab = Fabricate(main_skin, T, skins)
+  if steps < 2 then steps = 2 end
 
-  if L then
-    Room_distribute_spots(L, Fab_read_spots(fab))
-  end
+  if exact then steps = steps + 1 end
 
-  if main_skin.add_sky then
-    if not L.sky_group then
-      error("Prefab with add_sky used in indoor room : " .. tostring(main_skin.name))
+  for i = 0,steps-1 do 
+    if exact then
+      z = az + (bz - az) * (i  ) / (steps-1)
+    else
+      z = az + (bz - az) * (i+1) / (steps+1)
     end
 
-    if not T.bbox then
-      error("Prefab with add_sky used in loose transform")
+    local ly3 = ly1 + (ly2 - ly1) * i / steps
+    local ly4 = ly1 + (ly2 - ly1) * (i+1) / steps
+
+    local ry3 = ry1 + (ry2 - ry1) * i / steps
+    local ry4 = ry1 + (ry2 - ry1) * (i+1) / steps
+
+    ly3 = int(ly3) ; ry3 = int(ry3)
+    ly4 = int(ly4) ; ry4 = int(ry4)
+
+    Trans.old_brush(skin,
+    {
+      { x=x2, y=ry3 },
+      { x=x2, y=ry4 },
+      { x=x1, y=ly4 },
+      { x=x1, y=ly3 },
+    },
+    -EXTREME_H, z);
+  end
+end
+
+
+function Build.niche_stair(S, skin, skin2)
+  local step_info = get_mat(skin.side_w or skin.step_w, skin.top_f)
+
+  local front_info = add_pegging(get_mat(skin.step_w))
+
+  for side = 2,8,2 do
+    S.thick[side] = 64
+  end
+
+  local T, long = get_transform_for_seed_side(S, S.stair_dir)
+  local deep = long
+
+  local z1 = S.stair_z2
+  local z2 = S.stair_z1
+
+  local niche_info = get_mat(skin2.wall, skin2.floor)
+
+  local W  = sel(z1 > z2, 48, 24)
+  local HB = sel(z1 > z2, 96, 64)
+  local HF = 40
+
+  Trans.set(T)
+
+  Trans.old_quad(niche_info, 0,0, W,deep, -EXTREME_H, z2)
+  Trans.old_quad(niche_info, long-W,0, long,deep, -EXTREME_H, z2)
+  Trans.old_quad(niche_info, W,deep-HB, long-W,deep, -EXTREME_H, z2)
+
+
+  if S.stair_z1 > S.stair_z2 then
+    local f_tex = S.f_tex or S.room.main_tex
+    local w_tex = S.w_tex or S.room.main_tex
+
+    local S2 = S:neighbor(S.stair_dir)
+    if S2 and S2.room == S.room and S2.kind == "walk" and S2.f_tex then
+      f_tex = S2.f_tex
     end
 
-    Build_sky_quad(T.bbox.x1, T.bbox.y1, T.bbox.x2, T.bbox.y2, L.sky_group.h)
+    Trans.old_quad(get_mat(w_tex, f_tex), W,0, long-W,HF, -EXTREME_H, z1)
+  else
+    HF = 0
   end
+
+
+  local steps = int(math.abs(z2 - z1) / 15 + 0.9)
+
+  if steps < 2 then steps = 2 end
+
+  for i = 0,steps-1 do 
+    local z = z1 + (z2 - z1) * (i+1) / (steps+1)
+
+    local by = int(HF + (deep-HF-HB) * (i)   / steps)
+    local ty = int(HF + (deep-HF-HB) * (i+1) / steps)
+
+    Trans.old_brush(step_info,
+    {
+      { x=long-W, y=by },
+      { x=long-W, y=ty, w_face = front_info.w_face },
+      { x=     W, y=ty },
+      { x=     W, y=by, w_face = front_info.w_face },
+    },
+    -EXTREME_H, int(z));
+  end
+
+  Trans.clear()
+end
+
+
+function Build.tall_curved_stair(S, skin, x_side,y_side, x_h,y_h)
+  assert(x_h and y_h)
+
+  local step_info = get_mat(skin.step_w, skin.top_f)
+  add_pegging(step_info)
+
+  local diff_h = math.abs(y_h - x_h)
+  local steps  = int(diff_h / 14 + 0.9)
+
+  if steps < 4 then
+    steps = 4
+  end
+
+  -- make sure there is a visible step at the bottom
+  if x_h+24 < y_h then
+    x_h = x_h + diff_h / (steps+2)
+    y_h = y_h - diff_h / (steps+2)
+  elseif y_h+24 < x_h then
+    y_h = y_h + diff_h / (steps+2)
+    x_h = x_h - diff_h / (steps+2)
+  end
+
+  local x1, y1 = S.x1, S.y1
+  local x2, y2 = S.x2, S.y2
+
+  local w = x2 - x1 + 1
+  local h = y2 - y1 + 1
+
+  local corn_x = x1
+  local corn_y = y1
+
+  local dx0, dx1, dx2, dx3 = 16, 40, w-32, w
+  local dy0, dy1, dy2, dy3 = 16, 40, h-32, h
+
+  if x_side == 6 then
+    corn_x = x2
+    dx0 = -dx0 ; dx1 = -dx1
+    dx2 = -dx2 ; dx3 = -dx3
+  end
+
+  if y_side == 8 then
+    corn_y = y2
+    dy0 = -dy0 ; dy1 = -dy1
+    dy2 = -dy2 ; dy3 = -dy3
+  end
+
+  local w_tex = S.w_tex or S.room.main_tex
+
+  local info = get_mat(w_tex)
+
+  Build.curved_hall(steps, corn_x, corn_y,
+                    dx0, dx1, dx2, dx3,
+                    dy0, dy1, dy2, dy3,
+                    y_h, x_h, 256,
+                    info, step_info, info)
+end
+
+
+function Build.low_curved_stair(S, skin, x_side,y_side, x_h,y_h)
+  local step_info = get_mat(skin.step_w, skin.top_f)
+  add_pegging(step_info)
+
+  -- create transform
+  local T =
+  {
+    add_x = S.x1,
+    add_y = S.y1,
+  }
+
+  local long = S.x2 - S.x1
+  local deep = S.y2 - S.y1
+
+  if x_side == 6 then
+    T.mirror_x = long / 2
+  end
+
+  if y_side == 8 then
+    T.mirror_y = deep / 2
+  end
+
+  local bord_W = 16
+
+  local steps = 2 * int(math.abs(y_h-x_h) / 30 + 0.9)
+
+  if steps < 4 then
+    steps = 4
+  end
+
+
+  Trans.set(T)
+
+
+  for i = steps,1,-1 do
+    local z = y_h + (x_h - y_h) * (i) / (steps+1)
+
+    local ang1 = (math.pi / 2.0) * (i-1) / steps
+    local ang2 = (math.pi / 2.0) * (i  ) / steps
+
+    local dx1, dy1 = math.cos(ang1), math.sin(ang1)
+    local dx2, dy2 = math.cos(ang2), math.sin(ang2)
+
+gui.debugf("DEL (%1.3f %1.3f)  (%1.3f %1.3f)\n", dx1, dy1, dx2,dy2)
+
+    local cx1 = 32 * dx1
+    local cy1 = 32 * dy1
+
+    local cx2 = 32 * dx2
+    local cy2 = 32 * dy2
+
+    local fx1 = (long - bord_W) * 1.42 * dx1
+    local fy1 = (deep - bord_W) * 1.42 * dy1
+
+    local fx2 = (long - bord_W) * 1.42 * dx2
+    local fy2 = (deep - bord_W) * 1.42 * dy2
+
+    fx1 = math.min(fx1, long - bord_W)
+    fy1 = math.min(fy1, deep - bord_W)
+
+    fx2 = math.min(fx2, long - bord_W)
+    fy2 = math.min(fy2, deep - bord_W)
+
+gui.debugf("(%d,%d) .. (%d,%d) .. (%d,%d) .. (%d,%d)\n",
+cx1,cy1, cx2,cy2, fx2,fy2, fx1,fy1)
+    Trans.old_brush(step_info,
+    {
+      { x=fx1, y=fy1 },
+      { x=fx2, y=fy2 },
+      { x=cx2, y=cy2 },
+      { x=cx1, y=cy1 },
+    },
+    -EXTREME_H, z)
+  end
+
+
+  local mat_info = get_mat("METAL")
+
+  local z3 = math.max(x_h, y_h)
+
+  Trans.old_quad(mat_info, 0,0, 32,32, -EXTREME_H, z3)
+
+  Trans.old_quad(mat_info, 0,deep-bord_W, long,deep, -EXTREME_H, z3)
+  Trans.old_quad(mat_info, long-bord_W,0, long,deep, -EXTREME_H, z3)
+
+  Trans.clear()
+end
+
+
+-- NOT ACTUALLY USED:
+function Build.outdoor_ramp_down(ST, f_tex, w_tex)
+  local conn_dir = assert(ST.S.conn_dir)
+
+  local oh  = ST.outer_h
+  local ih  = ST.inner_h
+
+  -- outer rectangle
+  local ox1 = SEEDS[ST.x1][ST.y1][1].x1
+  local oy1 = SEEDS[ST.x1][ST.y1][1].y1
+  local ox2 = SEEDS[ST.x2][ST.y2][1].x2
+  local oy2 = SEEDS[ST.x2][ST.y2][1].y2
+
+  -- inner rectangle
+  local ix1 = ST.S.x1
+  local iy1 = ST.S.y1
+  local ix2 = ST.S.x2
+  local iy2 = ST.S.y2
+
+  local info = get_mat(w_tex, f_tex)
+
+gui.debugf("Build.outdoor_ramp_down: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn_dir)
+
+  if conn_dir == 6 then
+    ix1 = ix2-96
+    Build.ramp_x(info, ox1,ix1,oy1, ox1,ix1,oy2, oh, ih, "exact")
+
+  elseif conn_dir == 4 then
+    ix2 = ix1 + 96
+    Build.ramp_x(info, ix2,ox2,oy1, ix2,ox2,oy2, ih, oh, "exact")
+
+  elseif conn_dir == 8 then
+    iy1 = iy2-96
+    Build.ramp_y(info, ox1,oy1,iy1, ox2,oy1,iy1, oh, ih, "exact")
+
+  elseif conn_dir == 2 then
+    iy2 = iy1 + 96
+    Build.ramp_y(info, ox1,iy2,oy2, ox2,iy2,oy2, ih, oh, "exact")
+  end
+
+
+  if geom.is_horiz(conn_dir) then
+    if iy2+64 < oy2 then
+      Build.ramp_y(info, ox1,iy2,oy2, ox2,iy2,oy2, ih, oh, "exact")
+    end
+    if iy1-64 > oy1 then
+      Build.ramp_y(info, ox1,oy1,iy1, ox2,oy1,iy1, oh, ih, "exact")
+    end
+  else -- is_vert
+    if ix2+64 < ox2 then
+      Build.ramp_x(info, ix2,ox2,oy1, ix2,ox2,oy2, ih, oh, "exact")
+    end
+    if ix1-64 > ox1 then
+      Build.ramp_x(info, ox1,ix1,oy1, ox1,ix1,oy2, oh, ih, "exact")
+    end
+  end
+
+  ST.done = true
+end
+
+-- NOT ACTUALLY USED:
+function Build.outdoor_ramp_up(ST, f_tex, w_tex)
+  local conn_dir = assert(ST.S.conn_dir)
+
+  local oh  = ST.outer_h
+  local ih  = ST.inner_h
+
+  -- outer rectangle
+  local ox1 = SEEDS[ST.x1][ST.y1][1].x1
+  local oy1 = SEEDS[ST.x1][ST.y1][1].y1
+  local ox2 = SEEDS[ST.x2][ST.y2][1].x2
+  local oy2 = SEEDS[ST.x2][ST.y2][1].y2
+
+  -- inner rectangle
+  local ix1 = ST.S.x1
+  local iy1 = ST.S.y1
+  local ix2 = ST.S.x2
+  local iy2 = ST.S.y2
+
+  local info = get_mat(w_tex, f_tex)
+
+gui.debugf("Build.outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn_dir)
+
+  if conn_dir == 6 then
+    ix1 = ix2 - 64
+    ox1 = ox1 + 32
+
+  elseif conn_dir == 4 then
+    ix2 = ix1 + 64
+    ox2 = ox2 - 32
+
+  elseif conn_dir == 8 then
+    iy1 = iy2 - 64
+    oy1 = oy1 + 32
+
+  elseif conn_dir == 2 then
+    iy2 = iy1 + 64
+    oy2 = oy2 - 32
+  end
+
+
+  assert(ih > oh)
+
+  local steps = int((ih - oh) / 12 + 0.9)
+  if steps < 4 then steps = 4 end
+
+  for i = 0,steps do
+
+    local z = ih + (oh - ih) * i / (steps+1)
+
+    local nx1 = ix1 + (ox1 - ix1) * i / (steps+0)
+    local ny1 = iy1 + (oy1 - iy1) * i / (steps+0)
+
+    local nx2 = ix2 + (ox2 - ix2) * i / (steps+0)
+    local ny2 = iy2 + (oy2 - iy2) * i / (steps+0)
+
+    if nx1 > nx2 then nx1,nx2 = nx2,nx1 end
+    if ny1 > ny2 then ny1,ny2 = ny2,ny1 end
+
+    nx1 = int(nx1) ; ny1 = int(ny1)
+    nx2 = int(nx2) ; ny2 = int(ny2)
+    z   = int(z)
+
+    Trans.old_brush(info,
+    {
+      { x=nx2, y=ny1 },
+      { x=nx2, y=ny2 },
+      { x=nx1, y=ny2 },
+      { x=nx1, y=ny1 },
+    },
+    -EXTREME_H, z)
+  end 
+
+  ST.done = true
+end
+
+
+function Build.lift(S, skin, skin2, tag)
+  assert(skin.walk_kind)
+  assert(skin.switch_kind)
+
+  local lift_info = get_mat(skin.side_w, skin.top_f)
+
+  local side = S.stair_dir
+
+  local low_z  = S.stair_z1
+  local high_z = S.stair_z2
+
+  if low_z > high_z then
+    low_z, high_z = high_z, low_z
+    side = 10 - side
+  end
+
+
+  local switch_dirs = {}
+
+  for dir = 2,8,2 do
+    local N = S:neighbor(dir)
+
+    if (dir == 10-side) or
+       (geom.is_perpendic(dir, side) and N and N.room == S.room
+        and N.floor_h and N.floor_h < high_z - 15)
+    then
+      switch_dirs[dir] = true
+    end
+  end
+
+
+  local f_tex = skin2.floor
+  local w_tex = skin2.wall
+
+  local S2 = S:neighbor(10-side)
+  if S2 and S2.room == S.room and S2.kind == "walk" and S2.f_tex then
+    f_tex = S2.f_tex
+  end
+
+
+  local sw_info = add_pegging(get_mat(skin.side_w))
+
+  local coords = get_wall_coords(S, side, 128)
+
+  -- FIXME: there must be a better way....
+  coords[1].line_kind = sel(switch_dirs[6], skin.switch_kind, skin.walk_kind)
+  coords[2].line_kind = sel(switch_dirs[8], skin.switch_kind, skin.walk_kind)
+  coords[3].line_kind = sel(switch_dirs[4], skin.switch_kind, skin.walk_kind)
+  coords[4].line_kind = sel(switch_dirs[2], skin.switch_kind, skin.walk_kind)
+
+  if switch_dirs[6] then coords[1].w_face = sw_info.w_face end
+  if switch_dirs[8] then coords[2].w_face = sw_info.w_face end
+  if switch_dirs[4] then coords[3].w_face = sw_info.w_face end
+  if switch_dirs[2] then coords[4].w_face = sw_info.w_face end
+
+  coords[1].line_tag = tag
+  coords[2].line_tag = tag
+  coords[3].line_tag = tag
+  coords[4].line_tag = tag
+
+  lift_info.sec_tag = tag
+
+  Trans.old_brush(lift_info, coords, -EXTREME_H, high_z - 8)
+
+
+  local front_coords = get_wall_coords(S, 10-side, 64)
+  local front_info   = get_mat(w_tex, f_tex)
+
+  Trans.old_brush(front_info, front_coords, -EXTREME_H, low_z);
+end
+
+
+function Build.pillar(S, z1, z2, skin)
+  
+  local mx = int((S.x1 + S.x2)/2)
+  local my = int((S.y1 + S.y2)/2)
+  local mz = int((z1 + z2)/2)
+
+  Trans.old_brush(add_pegging(get_mat(skin.pillar)),
+  {
+    { x=mx+32, y=my-32 }, { x=mx+32, y=my+32 },
+    { x=mx-32, y=my+32 }, { x=mx-32, y=my-32 },
+  },
+  -EXTREME_H, EXTREME_H)
+
+  for pass = 1,2 do
+--[[
+    Trans.old_brush(get_mat(skin.trim2),
+    {
+      { x=mx+40, y=my-40 }, { x=mx+40, y=my+40 },
+      { x=mx-40, y=my+40 }, { x=mx-40, y=my-40 },
+    },
+    sel(pass == 1, -EXTREME_H, z2-32),
+    sel(pass == 2,  EXTREME_H, z1+32)
+    )
+--]]
+    Trans.old_brush(get_mat(skin.trim1),
+    {
+      { x=mx-40, y=my-56 },
+      { x=mx+40, y=my-56 },
+      { x=mx+56, y=my-40 },
+      { x=mx+56, y=my+40 },
+      { x=mx+40, y=my+56 },
+      { x=mx-40, y=my+56 },
+      { x=mx-56, y=my+40 },
+      { x=mx-56, y=my-40 },
+    },
+    sel(pass == 1, -EXTREME_H, z2-6),
+    sel(pass == 2,  EXTREME_H, z1+6)
+    )
+  end
+end
+
+
+function Build.corner_beam(S, side, skin)
+  -- FIXME: at this stage the thick[] values are not decided yet
+
+  local x1 = S.x1 + 24 -- S.thick[4]
+  local y1 = S.y1 + 24 -- S.thick[2]
+  local x2 = S.x2 - 24 -- S.thick[6]
+  local y2 = S.y2 - 24 -- S.thick[8]
+
+  local w = assert(skin.w)
+
+  if side == 1 or side == 7 then x2 = x1 + w else x1 = x2 - w end
+  if side == 1 or side == 3 then y2 = y1 + w else y1 = y2 - w end
+  
+  local info = get_mat(skin.beam_w, skin.beam_f)
+
+  add_pegging(info, skin.x_offset, skin.y_offset, 0)
+
+  Trans.old_quad(info, x1,y1, x2,y2, -EXTREME_H, EXTREME_H)
+end
+
+
+function Build.cross_beam(S, dir, w, beam_z, mat)
+  local x1, y1 = S.x1, S.y1
+  local x2, y2 = S.x2, S.y2
+
+  -- FIXME: at this stage the thick[] values are not decided yet
+  if S.sx == S.room.sx1 then x1 = x1 + 24 elseif geom.is_horiz(dir) then x1 = x1 - 24 end
+  if S.sx == S.room.sx2 then x2 = x2 - 24 elseif geom.is_horiz(dir) then x2 = x2 + 24 end
+  if S.sy == S.room.sy1 then y1 = y1 + 24 elseif geom.is_vert(dir)  then y1 = y1 - 24 end
+  if S.sy == S.room.sy2 then y2 = y2 - 24 elseif geom.is_vert(dir)  then y2 = y2 + 24 end
+
+  local mx = int((x1 + x2) / 2)
+  local my = int((y1 + y2) / 2)
+
+  local coords
+  if geom.is_vert(dir) then
+    coords = Trans.rect_coords(mx-w/2, y1, mx+w/2, y2)
+  else
+    coords = Trans.rect_coords(x1, my-w/2, x2, my+w/2)
+  end
+
+  Trans.old_brush(get_mat(mat), coords, beam_z, EXTREME_H)
+end
+
+
+function Build.small_switch(S, dir, f_h, skin, tag)
+
+  local DT, long = get_transform_for_seed_side(S, 10-dir)
+  local deep = long
+
+  local mx = int(long / 2)
+  local my = int(deep / 2)
+
+
+  local info = get_mat(skin.side_w)
+  info.t_face.light = 0.66
+
+  local switch_info = get_mat(skin.switch_w)
+  add_pegging(switch_info, skin.x_offset, skin.y_offset)
+
+  local base_h   = skin.base_h or 12
+  local switch_h = skin.switch_h or 64
+
+  Trans.set(DT)
+
+  Trans.old_brush(info,
+  {
+    { x=mx-40, y=my-40 },
+    { x=mx+40, y=my-40 },
+    { x=mx+56, y=my-24 },
+    { x=mx+56, y=my+24 },
+    { x=mx+40, y=my+40 },
+    { x=mx-40, y=my+40 },
+    { x=mx-56, y=my+24 },
+    { x=mx-56, y=my-24 },
+  },
+  -EXTREME_H, f_h+base_h)
+
+  Trans.old_brush(info,
+  {
+    { x=mx+32, y=my-8 },
+    { x=mx+32, y=my+8, w_face = switch_info.w_face, line_kind=assert(skin.line_kind), line_tag=tag },
+    { x=mx-32, y=my+8 },
+    { x=mx-32, y=my-8 },
+  },
+  -EXTREME_H, f_h+base_h+switch_h)
+
+  Trans.clear()
+end
+
+                                      
+function Build.exit_pillar(S, z1, skin)
+  local DT, long = get_transform_for_seed_side(S, 8)
+
+  local mx = int((S.x1 + S.x2)/2)
+  local my = int((S.y1 + S.y2)/2)
+
+  Trans.old_brush(add_pegging(get_mat(skin.switch_w)),
+  {
+    { x=mx+32, y=my-32, line_kind=skin.line_kind or 11 },
+    { x=mx+32, y=my+32, line_kind=skin.line_kind or 11 },
+    { x=mx-32, y=my+32, line_kind=skin.line_kind or 11 },
+    { x=mx-32, y=my-32, line_kind=skin.line_kind or 11 },
+  },
+  -EXTREME_H, z1 + skin.h)
+
+--- NUKEM:  gui.add_entity("142", mx, my, z1+96, { lo_tag=-1 });
+
+
+  if skin.exitside then
+    local info = get_mat(skin.exitside)
+
+    local exit_info = get_mat(skin.exit_w)
+    add_pegging(exit_info)
+
+    info.t_face.light = 0.82
+   
+    Trans.set(DT)
+
+    local pos = long/2 - 68
+
+    for pass=1,4 do
+      Trans.modify("mirror_x", sel((pass % 2)==1, nil, long/2))
+      Trans.modify("mirror_y", sel(pass >= 3,     nil, long/2))
+
+      Trans.old_brush(info,
+      {
+        { x=pos+8,  y=pos+24 },
+        { x=pos+0,  y=pos+16, w_face = exit_info.w_face },
+        { x=pos+28, y=pos+0  },
+        { x=pos+36, y=pos+8  },
+      },
+      -EXTREME_H, z1 + skin.exit_h)
+    end
+
+    Trans.clear()
+  end
+end
+
+
+function Build.outdoor_exit_switch(S, dir, f_h, skin)
+
+  local DT, long = get_transform_for_seed_side(S, 10-dir)
+  local deep = long
+
+  local mx = int(long / 2)
+  local my = int(deep / 2)
+
+  
+  Trans.set(DT)
+
+
+  Trans.old_quad(get_mat(skin.podium), 32,32, long-32,deep-32,
+      -EXTREME_H, f_h+12)
+
+
+  local info = get_mat(skin.base)
+
+  local switch_info = get_mat(skin.switch_w)
+  add_pegging(switch_info, skin.x_offset, skin.y_offset)
+
+  Trans.old_brush(info,
+  {
+    { x=mx-36, y=my-24 },
+    { x=mx+36, y=my-24 },
+    { x=mx+44, y=my-16 },
+    { x=mx+44, y=my+16 },
+    { x=mx+36, y=my+24 },
+    { x=mx-36, y=my+24 },
+    { x=mx-44, y=my+16 },
+    { x=mx-44, y=my-16 },
+  },
+  -EXTREME_H, f_h+16)
+
+  Trans.old_brush(info,
+  {
+    { x=mx+32, y=my-8 },
+    { x=mx+32, y=my+8, w_face = switch_info.w_face, line_kind=11 },
+    { x=mx-32, y=my+8 },
+    { x=mx-32, y=my-8, w_face = switch_info.w_face, line_kind=11 },
+  },
+  -EXTREME_H, f_h+16+64)
+
+
+  if skin.exitside then
+    info = get_mat(skin.exitside)
+  end
+
+  local exit_info = get_mat(skin.exit_w)
+  add_pegging(exit_info)
+ 
+  for pass=1,4 do
+    Trans.modify("mirror_x", sel((pass % 2)==1, nil, long/2))
+    Trans.modify("mirror_y", sel(pass >= 3,     nil, deep/2))
+
+    Trans.old_brush(info,
+    {
+      { x=48+8,  y=40+24 },
+      { x=48+0,  y=40+16, w_face = exit_info.w_face },
+      { x=48+28, y=40+0  },
+      { x=48+36, y=40+8  },
+    },
+    -EXTREME_H, f_h+12+16)
+  end
+
+  Trans.clear()
+end
+
+
+function Build.small_exit(R, xt_info, skin, skin2)
+  assert(xt_info)
+  assert(#R.conns == 1)
+
+  local C = R.conns[1]
+  local S = C:seed(R)
+  local T = C:seed(C:neighbor(R))
+
+  gui.debugf("Building small exit @ %s\n", S:tostr())
+
+  local side = S.conn_dir
+
+  local f_h = C.conn_h or T.floor_h or T.room.floor_h or 0
+  local c_h = f_h + 128
+
+  local w_tex = rand.key_by_probs(xt_info.walls)
+  local f_tex = rand.key_by_probs(xt_info.floors)
+  local c_tex = rand.key_by_probs(xt_info.ceilings)
+
+  local inner_info = get_mat(w_tex, f_tex, c_tex)
+
+  local out_info = get_mat(skin2.wall, skin2.floor, skin2.ceil)
+
+
+  local DT, long = get_transform_for_seed_side(S, side)
+  local mx = int(long / 2)
+
+  Trans.set(DT)
+
+  Trans.old_quad(out_info, 8,0,   long-8,48, -EXTREME_H, f_h)
+  Trans.old_quad(out_info, 8,-24, long-8,48, c_h, EXTREME_H)
+
+  Trans.old_quad(inner_info, 8,48, long-8,long-8, -EXTREME_H, f_h)
+  Trans.old_quad(inner_info, 8,48, long-8,long-8, c_h, EXTREME_H)
+
+  Trans.clear()
+
+
+  S.thick[side] = 80
+
+  Trans.old_brush(inner_info, get_wall_coords(S, geom.RIGHT[side], 32, 8),
+                    -EXTREME_H, EXTREME_H)
+  Trans.old_brush(inner_info, get_wall_coords(S, geom.LEFT[side], 32, 8),
+                    -EXTREME_H, EXTREME_H)
+
+
+  -- make door
+
+  local door_info = add_pegging(get_mat(skin.door))
+  door_info.delta_z = -8
+
+  Trans.set(DT)
+
+  Trans.old_brush(door_info,
+  {
+    { x=mx+32, y=48, line_kind=1 },
+    { x=mx+32, y=64, line_kind=1 },
+    { x=mx-32, y=64, line_kind=1 },
+    { x=mx-32, y=48, line_kind=1 },
+  },
+  f_h+8, EXTREME_H)
+
+  local frame_i = get_mat(skin.frame_c)
+  inner_info.b_face = frame_i.b_face
+
+  Trans.old_brush(inner_info,
+  {
+    { x=mx+32, y=32 },
+    { x=mx+32, y=80 },
+    { x=mx-32, y=80 },
+    { x=mx-32, y=32, w_face = out_info.w_face },
+  },
+  f_h+72, EXTREME_H)
+
+  local exit_side = get_mat(skin.exitside)
+  local exit_info = add_pegging(get_mat(skin.exit))
+
+  local key_i   = add_pegging(get_mat(skin.key_w))
+  local track_i = add_pegging(get_mat(skin.track))
+
+  assert(not C.lock)
+
+  for pass = 1,2 do
+    if pass == 2 then Trans.modify("mirror_x", mx) end
+
+    Trans.old_brush(out_info,
+    {
+      { x=0,     y=80  },
+      { x=0,     y=-24 },
+      { x=mx-96, y=-24 },
+      { x=mx-32, y=32,  w_face = key_i.w_face },
+      { x=mx-32, y=48,  w_face = track_i.w_face },
+      { x=mx-32, y=64,  w_face = key_i.w_face },
+      { x=mx-32, y=80,  w_face = inner_info.w_face },
+    },
+    -EXTREME_H, EXTREME_H)
+
+    Trans.old_brush(exit_side,
+    {
+      { x=mx-68, y= -8 },
+      { x=mx-60, y=-16, w_face = exit_info.w_face },
+      { x=mx-32, y=  0 },
+      { x=mx-40, y=  8 },
+    },
+    c_h-16, EXTREME_H)
+  end
+
+  Trans.clear()
+
+
+  -- make switch
+
+  local WT
+  WT, long = get_transform_for_seed_side(S, 10-side)
+
+  mx = int(long / 2)
+  local swit_W = 64
+
+  local switch_i = add_pegging(get_mat(skin.switch), 0, 0, 0)
+  local break_i  = add_pegging(get_mat(skin.break_w))
+
+  Trans.set(WT)
+
+  Trans.old_brush(inner_info,
+  {
+    { x=long-8, y=8 },
+    { x=long-8, y=32 },
+    { x=mx+swit_W/2+8, y=32, w_face = break_i.w_face },
+    { x=mx+swit_W/2,   y=32, w_face = switch_i.w_face, line_kind=11 },
+    { x=mx-swit_W/2,   y=32, w_face = break_i.w_face },
+    { x=mx-swit_W/2-8, y=32 },
+    { x=8, y=32 },
+    { x=8, y=8 },
+  },
+  -EXTREME_H, EXTREME_H)
+
+
+  assert(not C.already_made_lock)
+  C.already_made_lock = true
+
+
+  if skin.items then
+    Trans.entity(rand.pick(skin.items), mx, 96, f_h)
+  end
+
+  Trans.clear()
+end
+
+
+function Build.window(S, side, width, mid_w, z1, z2, skin)
+  local inner_info = get_mat(skin.wall, skin.floor)
+
+  local side_info = get_mat(skin.side_t)
+
+  local wall_info = inner_info
+  if skin.facade then
+    wall_info = get_mat(skin.facade)
+  end
+
+  local T, long, deep = get_transform_for_seed_side(S, side)
+
+  local mx = int(long/2)
+
+  Trans.set(T)
+
+  -- top and bottom
+  local coords =
+  {
+    { x=mx-width/2, y=0 },
+    { x=mx+width/2, y=0 },
+    { x=mx+width/2, y=deep, w_face=inner_info.w_face },
+    { x=mx-width/2, y=deep },
+  }
+
+  Trans.old_brush(wall_info, coords, -EXTREME_H, z1)
+  Trans.old_brush(wall_info, coords, z2,  EXTREME_H)
+
+
+  -- center piece
+  if mid_w then
+    Trans.old_brush(wall_info,
+    {
+      { x=mx+mid_w/2, y=0,    w_face = side_info.w_face },
+      { x=mx+mid_w/2, y=deep, w_face = inner_info.w_face },
+      { x=mx-mid_w/2, y=deep, w_face = side_info.w_face },
+      { x=mx-mid_w/2, y=0 },
+    },
+    -EXTREME_H, EXTREME_H)
+  end
+
+
+  -- sides pieces
+  Trans.old_brush(wall_info,
+  {
+    { x=mx-width/2, y=0,    w_face = side_info.w_face },
+    { x=mx-width/2, y=deep, w_face = inner_info.w_face },
+    { x=0, y=deep },
+    { x=0, y=0 },
+  },
+  -EXTREME_H, EXTREME_H)
+
+  Trans.old_brush(wall_info,
+  {
+    { x=long, y=0 },
+    { x=long, y=deep, w_face = inner_info.w_face },
+    { x=mx+width/2, y=deep, w_face = side_info.w_face },
+    { x=mx+width/2, y=0 },
+  },
+  -EXTREME_H, EXTREME_H)
+
+  Trans.clear()
+end
+
+
+function Build.picture(S, side, z1, z2, skin)
+
+  local count = skin.count or 1
+
+  local T, long, deep = get_transform_for_seed_side(S, side)
+
+  local wall_info = get_mat(skin.wall, skin.floor)
+
+  local side_info = wall_info
+  if skin.side_t then side_info = get_mat(skin.side_t) end
+
+  local pic_info = get_mat(skin.pic_w)
+  add_pegging(pic_info, skin.x_offset, skin.y_offset, skin.peg or 0)
+
+
+  if not z2 then
+    z2 = z1 + assert(skin.height)
+  end
+
+  local WD  = assert(skin.width)
+  local HT  = assert(skin.depth)
+  local gap = skin.gap or WD
+
+  local total_w = count * WD + (count - 1) * gap
+  if total_w > SEED_SIZE-16 then
+    error("Picture is too wide: " .. tostring(skin.pic_w))
+  end
+
+  local mx = int(long/2)
+  local my = deep - HT
+
+
+  Trans.set(T)
+
+  -- wall around picture
+  Trans.old_quad(wall_info, 0,0, long,my-4, -EXTREME_H, EXTREME_H)
+  Trans.old_quad(wall_info, 0,my-4, 8,deep, -EXTREME_H, EXTREME_H)
+  Trans.old_quad(wall_info, long-8,my-4, long,deep, -EXTREME_H, EXTREME_H)
+
+
+  for n = 0,count do
+    local x = mx-total_w/2 + n * (WD+gap)
+
+    -- picture itself
+    if n < count then
+      Trans.old_brush(pic_info,
+      {
+        { x=x+WD, y=my-4, line_kind=skin.line_kind },
+        { x=x+WD, y=my,   line_kind=skin.line_kind },
+        { x=x,    y=my,   line_kind=skin.line_kind },
+        { x=x,    y=my-4, line_kind=skin.line_kind },
+      },
+      -EXTREME_H, EXTREME_H)
+    end
+
+    -- side wall
+    local x1 = sel(n == 0, 8, x - gap)
+    local x2 = sel(n == count, long-8, x)
+
+gui.debugf("x1..x2 : %d,%d\n", x1,x2)
+    Trans.old_brush(wall_info,
+    {
+      { x=x2, y=my-4, w_face = side_info.w_face },
+      { x=x2, y=deep },
+      { x=x1, y=deep, w_face = side_info.w_face },
+      { x=x1, y=my-4 },
+    },
+    -EXTREME_H, EXTREME_H)
+  end
+
+
+  -- top and bottom
+  local floor_info = get_mat(skin.wall, skin.floor)
+
+  floor_info.b_face.light = skin.light
+  floor_info.sec_kind = skin.sec_kind
+
+  local coords = Trans.rect_coords(mx-total_w/2,my-4, mx+total_w/2,deep)
+
+  each c in coords do c.line_flags = 1 end
+
+  Trans.old_brush(floor_info, coords, -EXTREME_H, z1)
+  Trans.old_brush(floor_info, coords, z2,  EXTREME_H)
+
+  Trans.clear()
+end
+
+
+function Build.pedestal(S, z1, skin)
+  local mx = int((S.x1+S.x2) / 2)
+  local my = int((S.y1+S.y2) / 2)
+
+  local info = get_mat(skin.wall or skin.floor, skin.floor)
+  info.t_face.light = 0.7
+
+  add_pegging(info, skin.x_offset, skin.y_offset, skin.peg)
+
+  Trans.old_quad(info, mx-32,my-32, mx+32,my+32, -EXTREME_H, z1+8)
+end
+
+function Build.lowering_pedestal(S, z1, skin)
+  local mx = int((S.x1+S.x2) / 2)
+  local my = int((S.y1+S.y2) / 2)
+
+  local tag = Plan_alloc_id("tag")
+
+  local info = get_mat(skin.wall or skin.floor, skin.floor)
+
+  add_pegging(info, skin.x_offset, skin.y_offset, skin.peg)
+  info.sec_tag = tag
+
+  Trans.old_brush(info,
+  {
+    { x=mx+32, y=my-32, line_kind=skin.line_kind, line_tag=tag },
+    { x=mx+32, y=my+32, line_kind=skin.line_kind, line_tag=tag },
+    { x=mx-32, y=my+32, line_kind=skin.line_kind, line_tag=tag },
+    { x=mx-32, y=my-32, line_kind=skin.line_kind, line_tag=tag },
+  },
+  -EXTREME_H, z1)
+end
+
+
+function Build.crate(x, y, z_top, skin, is_outdoor)
+  local info = add_pegging(get_mat(skin.side_w))
+
+  local coords = Trans.rect_coords(x-32,y-32, x+32,y+32)
+
+  Trans.old_brush(info, coords, -EXTREME_H, z_top)
+
+  if PARAM.outdoor_shadows and is_outdoor then
+    Trans.old_brush(get_light(-1), shadowify_brush(coords, 20), -EXTREME_H, z_top-4)
+  end
+end
+
+
+function Build.raising_start(S, face_dir, z1, skin)
+  local info = get_mat(skin.f_tex)
+
+  local sw_info = add_pegging(get_mat(skin.switch_w))
+
+  local tag = Plan_alloc_id("tag")
+
+  for side = 2,8,2 do
+    local T, long, deep = get_transform_for_seed_side(S, side, 48)
+
+    local mx = int(long / 2)
+
+    Trans.set(T)
+
+    if side == face_dir then
+      Trans.old_brush(info,
+      {
+        { x=long,  y=0 },
+        { x=long,  y=deep },
+        { x=mx+32, y=deep, w_face=sw_info.w_face, line_kind=18, line_tag=tag },
+        { x=mx-32, y=deep },
+        { x=0,     y=deep },
+        { x=0,     y=0 },
+      },
+      -EXTREME_H, z1)
+    
+    else
+      Trans.old_quad(info, 0,0, long,deep, -EXTREME_H, z1)
+    end
+
+    Trans.clear()
+  end
+
+
+  info.sec_tag = tag
+
+  local T, long, deep = get_transform_for_seed_center(S)
+
+  Trans.set(T)
+
+  Trans.old_quad(info, 0,0, long,deep, -EXTREME_H, z1 - 128)
+
+  Trans.clear()
+end
+
+
+function Build.popup_trap(S, z, skin, monster)
+  local info = get_mat(skin.wall, skin.floor)
+
+  for side = 2,8,2 do
+    S.thick[side] = S.thick[side] + 4
+
+    local T, long, deep = get_transform_for_seed_side(S, side)
+
+    Trans.set(T)
+
+    Trans.old_brush(info,
+    {
+      { x=long, y=0 },
+      { x=long, y=deep, w_face={ tex="-" } },
+      { x=0,    y=deep },
+      { x=0,    y=0 },
+    },
+    -EXTREME_H, z)
+
+    Trans.clear()
+  end
+
+  info.sec_tag = Plan_alloc_id("tag")
+
+  local T, long, deep = get_transform_for_seed_center(S)
+
+  Trans.set(T)
+
+  Trans.old_brush(info,
+  {
+    { x=long, y=0,    line_kind=19, line_tag=info.sec_tag },
+    { x=long, y=deep, line_kind=19, line_tag=info.sec_tag },
+    { x=0,    y=deep, line_kind=19, line_tag=info.sec_tag },
+    { x=0,    y=0,    line_kind=19, line_tag=info.sec_tag },
+  },
+  -EXTREME_H, z - 256)
+
+  Trans.entity(monster, long/2, deep/2, z1, { ambush=1 })
+
+  Trans.clear()
+end
+
+
+function Build.stairwell(R, skin)
+  assert(skin.wall)
+
+  local wall_info  = get_mat(skin.wall, skin.floor)
+  local floor_info = get_mat(skin.floor or skin.wall)
+  local ceil_info  = get_mat(skin.ceil or skin.floor or skin.wall)
+
+  local function build_stairwell_90(R)
+    assert(R.conns)
+
+    local A = R.conns[1]
+    local B = R.conns[2]
+
+    assert(A and B)
+
+    if A.dir == 2 or A.dir == 8 then
+      B, A = A, B
+    end
+
+    assert(A.dir == 4 or A.dir == 6)
+    assert(B.dir == 2 or B.dir == 8)
+
+    local AS = A:seed(R)
+    local BS = B:seed(R)
+
+    -- room size
+    local BL = SEEDS[R.sx1][R.sy1][1]
+    local TR = SEEDS[R.sx2][R.sy2][1]
+
+    local rx1, ry1 = BL.x1, BL.y1
+    local rx2, ry2 = TR.x2, TR.y2
+    local rw, rh   = rx2 - rx1, ry2 - ry1
+
+    local ax  = sel(AS.conn_dir == 4, rx1, rx2)
+    local ay1 = AS.y1
+    local ay2 = AS.y2
+
+    local by  = sel(BS.conn_dir == 2, ry1, ry2)
+    local bx1 = BS.x1
+    local bx2 = BS.x2
+
+    local dx1, dx2
+    local dy1, dy2
+
+    if AS.conn_dir == 4 then
+      dx1, dx2 = bx1 - ax, bx2 - ax
+---## if dx1 < MARG then dx1 = MARG end
+    else
+      dx1, dx2 = bx2 - ax, bx1 - ax
+    end
+
+    if BS.conn_dir == 2 then
+      dy1, dy2 = ay1 - by, ay2 - by
+    else
+      dy1, dy2 = ay2 - by, ay1 - by
+    end
+
+gui.printf("A @ (%d,%d/%d)  B @ (%d/%d,%d)\n", ax,ay1,ay2, bx1,bx2,by)
+gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
+
+
+    -- when space is tight, need to narrow the hallway
+    -- (so there is space for the wall brushes)
+    local MARG = 64
+
+    if math.abs(dx1) < MARG then dx1 = sel(dx2 < 0, -MARG, MARG) end
+    if math.abs(dy1) < MARG then dy1 = sel(dy2 < 0, -MARG, MARG) end
+
+    if math.abs(dx2) > rw-MARG then dx2 = sel(dx2 < 0, -(rw-MARG), rw-MARG) end
+    if math.abs(dy2) > rh-MARG then dy2 = sel(dy2 < 0, -(rh-MARG), rh-MARG) end
+
+    assert(math.abs(dx1) < math.abs(dx2))
+    assert(math.abs(dy1) < math.abs(dy2))
+
+    local dx0 = sel(dx2 < 0, -32, 32)
+    local dy0 = sel(dy2 < 0, -32, 32)
+
+    local dx3 = dx2 + sel(dx2 < 0, -32, 32)
+    local dy3 = dy2 + sel(dy2 < 0, -32, 32)
+
+
+    -- FIXME: need brushes to fill space at sides of each doorway
+
+    local x_h = B.conn_h or 0  -- FIXME: if steep, offset both by 16
+    local y_h = A.conn_h or 0
+
+    local steps = int(math.abs(x_h - y_h) / 16)
+    if steps < 5 then steps = 5 end
+
+    Build.curved_hall(steps, ax, by,
+                      dx0, dx1, dx2, dx3,
+                      dy0, dy1, dy2, dy3,
+                      x_h, y_h, 128,
+                      wall_info, floor_info, ceil_info)
+  end
+
+  local function build_stairwell_180(R)
+    local A = R.conns[1]
+    local B = R.conns[2]
+
+    -- require 180 degrees
+    local AS = A:seed(R)
+    local BS = B:seed(R)
+
+    -- swap so that A has lowest coords
+    if ((AS.conn_dir == 2 or AS.conn_dir == 8) and BS.x1 < AS.x1) or
+       ((AS.conn_dir == 4 or AS.conn_dir == 6) and BS.y1 < AS.y1)
+    then
+      A,  B  = B,  A
+      AS, BS = BS, AS
+    end
+
+    -- room size
+    local BL = SEEDS[R.sx1][R.sy1][1]
+    local TR = SEEDS[R.sx2][R.sy2][1]
+
+    local rx1, ry1 = BL.x1, BL.y1
+    local rx2, ry2 = TR.x2, TR.y2
+    local rw, rh   = rx2 - rx1, ry2 - ry1
+
+    local corn_x = (AS.x2 + BS.x1) / 2
+    local corn_y = (AS.y2 + BS.y1) / 2
+
+        if AS.conn_dir == 2 then corn_y = ry1
+    elseif AS.conn_dir == 8 then corn_y = ry2
+    elseif AS.conn_dir == 4 then corn_x = rx1
+    elseif AS.conn_dir == 6 then corn_x = rx2
+    else
+      error("Bad/missing conn_dir for stairwell!")
+    end
+
+    local h1 = A.conn_h or 0
+    local h3 = B.conn_h or 0
+    local h2 = (h1 + h3) / 2
+
+    local steps = int(math.abs(h2 - h1) / 16)
+    if steps < 6 then steps = 6 end
+
+    if AS.conn_dir == 2 or AS.conn_dir == 8 then
+
+      local dx0 = corn_x - AS.x2 + 16
+      local dx3 = corn_x - AS.x1 - 16
+      local dx1 = dx0 + 32
+      local dx2 = dx3 - 32
+
+      local dy0 = 24
+      local dy3 = ry2 - ry1 - 24
+      local dy2 = dy3 - 24
+      local dy1 = dy2 - 136
+
+      if AS.conn_dir == 8 then
+        dy0 = -dy0
+        dy1 = -dy1
+        dy2 = -dy2
+        dy3 = -dy3
+      end
+
+      -- left side
+      Build.curved_hall(steps, corn_x, corn_y,
+                        -dx0, -dx1, -dx2, -dx3,
+                        dy0, dy1, dy2, dy3,
+                        h1, h2, 128,
+                        wall_info, floor_info, ceil_info)
+
+      -- right side
+      Build.curved_hall(steps, corn_x, corn_y,
+                        dx0, dx1, dx2, dx3,
+                        dy0, dy1, dy2, dy3,
+                        h3, h2, 128,
+                        wall_info, floor_info, ceil_info)
+    else
+      local dy0 = corn_y - AS.y2 + 16
+      local dy3 = corn_y - AS.y1 - 16
+      local dy1 = dy0 + 32
+      local dy2 = dy3 - 32
+
+      local dx0 = 24
+      local dx3 = rx2 - rx1 - 24
+      local dx2 = dx3 - 24
+      local dx1 = dx2 - 136
+
+      if AS.conn_dir == 6 then
+        dx0 = -dx0
+        dx1 = -dx1
+        dx2 = -dx2
+        dx3 = -dx3
+      end
+
+      -- bottom section
+      Build.curved_hall(steps, corn_x, corn_y,
+                        dx0, dx1, dx2, dx3,
+                        -dy0, -dy1, -dy2, -dy3,
+                        h2, h1, 128,
+                        wall_info, floor_info, ceil_info)
+
+      -- top section
+      Build.curved_hall(steps, corn_x, corn_y,
+                        dx0, dx1, dx2, dx3,
+                        dy0, dy1, dy2, dy3,
+                        h2, h3, 128,
+                        wall_info, floor_info, ceil_info)
+    end
+  end
+
+  local function build_stairwell_0(R)
+    local A = R.conns[1]
+    local B = R.conns[2]
+
+    local AS = A:seed(R)
+    local BS = B:seed(R)
+
+    -- swap so that A has lowest coords
+    if ((AS.conn_dir == 2 or AS.conn_dir == 8) and BS.sx < AS.sx) or
+       ((AS.conn_dir == 4 or AS.conn_dir == 6) and BS.sy < AS.sy)
+    then
+      A,  B  = B,  A
+      AS, BS = BS, AS
+    end
+
+    -- room size
+    local BL = SEEDS[R.sx1][R.sy1][1]
+    local TR = SEEDS[R.sx2][R.sy2][1]
+
+    local rx1, ry1 = BL.x1, BL.y1
+    local rx2, ry2 = TR.x2, TR.y2
+    local rw, rh   = rx2 - rx1, ry2 - ry1
+
+
+    local h1 = A.conn_h or 0
+    local h3 = B.conn_h or 0
+    local h2 = (h1 + h3) / 2
+
+    local steps = int(math.abs(h2 - h1) / 16)
+    if steps < 5 then steps = 5 end
+
+
+    if AS.conn_dir == 2 or AS.conn_dir == 8 then
+
+      local corn_x = (AS.x2 + BS.x1) / 2
+      local corn_y = sel(AS.conn_dir == 2, ry1, ry2)
+
+      local dy1 = (ry2 - ry1) / 2 - 80
+      local dy2 = (ry2 - ry1) / 2 + 80
+      local dy0 = dy1 - 24
+      local dy3 = dy2 + 24
+
+      local dx0 = corn_x - AS.x2 + 16
+      local dx3 = corn_x - AS.x1 - 16
+      local dx1 = dx0 + 32
+      local dx2 = dx3 - 32
+
+      if AS.conn_dir == 8 then
+        dy0 = -dy0
+        dy1 = -dy1
+        dy2 = -dy2
+        dy3 = -dy3
+      end
+
+      -- left side
+      Build.curved_hall(steps, corn_x, corn_y,
+                        -dx0, -dx1, -dx2, -dx3,
+                        dy0, dy1, dy2, dy3,
+                        h1, h2, 128,
+                        wall_info, floor_info, ceil_info)
+
+      -- right side
+      corn_y = (ry1 + ry2) - corn_y
+
+      local dx0 = BS.x1 - corn_x + 16
+      local dx3 = BS.x2 - corn_x - 16
+      local dx1 = dx0 + 32
+      local dx2 = dx3 - 32
+
+      Build.curved_hall(steps, corn_x, corn_y,
+                        dx0, dx1, dx2, dx3,
+                        -dy0, -dy1, -dy2, -dy3,
+                        h3, h2, 128,
+                        wall_info, floor_info, ceil_info)
+
+    else
+      local corn_y = (AS.y2 + BS.y1) / 2
+      local corn_x = sel(AS.conn_dir == 4, rx1, rx2)
+
+      local dx1 = (rx2 - rx1) / 2 - 80
+      local dx2 = (rx2 - rx1) / 2 + 80
+      local dx0 = dx1 - 24
+      local dx3 = dx2 + 24
+
+      local dy0 = corn_y - AS.y2 + 16
+      local dy3 = corn_y - AS.y1 - 16
+      local dy1 = dy0 + 32
+      local dy2 = dy3 - 32
+
+      if AS.conn_dir == 6 then
+        dx0 = -dx0
+        dx1 = -dx1
+        dx2 = -dx2
+        dx3 = -dx3
+      end
+
+      -- bottom section
+      Build.curved_hall(steps, corn_x, corn_y,
+                        dx0, dx1, dx2, dx3,
+                        -dy0, -dy1, -dy2, -dy3,
+                        h2, h1, 128,
+                        wall_info, floor_info, ceil_info)
+
+      -- top section
+      corn_x = (rx1 + rx2) - corn_x
+
+      local dy0 = BS.y1 - corn_y + 16
+      local dy3 = BS.y2 - corn_y - 16
+      local dy1 = dy0 + 32
+      local dy2 = dy3 - 32
+
+      Build.curved_hall(steps, corn_x, corn_y,
+                        -dx0, -dx1, -dx2, -dx3,
+                        dy0, dy1, dy2, dy3,
+                        h2, h3, 128,
+                        wall_info, floor_info, ceil_info)
+    end
+  end
+
+  local function build_stairwell_straight(R)
+    local A = R.conns[1]
+    local B = R.conns[2]
+
+    local AS = A:seed(R)
+    local BS = B:seed(R)
+
+    -- swap so that A has lowest coords
+    if ((AS.conn_dir == 2 or AS.conn_dir == 8) and BS.sy < AS.sy) or
+       ((AS.conn_dir == 4 or AS.conn_dir == 6) and BS.sx < AS.sx)
+    then
+      A,  B  = B,  A
+      AS, BS = BS, AS
+    end
+
+    local x1 = math.min(AS.x1, BS.x1)
+    local x2 = math.max(AS.x2, BS.x2)
+
+    local y1 = math.min(AS.y1, BS.y1)
+    local y2 = math.max(AS.y2, BS.y2)
+
+    local x_diff = x2 - x1
+    local y_diff = y2 - y1
+
+    local function step_coords(p0, p1, side0, side1)
+      local cx, cy, fx, fy
+
+      if AS.conn_dir == 2 or AS.conn_dir == 8 then
+        cx = int(x1 + x_diff * side0)
+        fx = int(x1 + x_diff * side1)
+        cy = int(y1 + y_diff * p0)
+        fy = int(y1 + y_diff * p1)
+      else
+        cx = int(x1 + x_diff * p0)
+        fx = int(x1 + x_diff * p1)
+        cy = int(y1 + y_diff * side0)
+        fy = int(y1 + y_diff * side1)
+      end
+
+      return
+      {
+        { x=fx, y=cy },
+        { x=fx, y=fy },
+        { x=cx, y=fy },
+        { x=cx, y=cy },
+      }
+    end
+
+    local h1 = A.conn_h or 0
+    local h2 = B.conn_h or 0
+
+    local gap_h = 128
+
+    local steps = int(math.abs(h2 - h1) / 16)
+    if steps < 5 then steps = 5 end
+
+    for i = 1,steps do
+      local p0 = (i-1)/steps
+      local p1 = (i  )/steps
+
+      local f_h = h1 + (h2 - h1) * (i-1) / (steps-1)
+      local c_h = f_h + gap_h
+
+      Trans.old_brush(wall_info, step_coords(p0,p1, 0/6, 1/6), -EXTREME_H,EXTREME_H)
+      Trans.old_brush(wall_info, step_coords(p0,p1, 5/6, 6/6), -EXTREME_H,EXTREME_H)
+
+      local coords = step_coords(p0,p1, 1/6, 5/6)
+
+      Trans.old_brush(floor_info, coords, -EXTREME_H,f_h)
+      Trans.old_brush(ceil_info,  coords,  c_h,EXTREME_H)
+    end
+  end
+
+
+  ---| build_stairwell |--
+
+  assert(R.conns)
+
+  local A = R.conns[1]
+  local B = R.conns[2]
+  assert(A and B)
+
+  local AS = A:seed(R)
+  local BS = B:seed(R)
+  assert(AS and BS)
+
+  if geom.is_perpendic(AS.conn_dir, BS.conn_dir) then
+    build_stairwell_90(R)
+
+  elseif AS.conn_dir == BS.conn_dir then
+    build_stairwell_180(R)
+
+  else
+    assert(AS.conn_dir == 10-BS.conn_dir)
+
+    -- check for misalignment
+    local aligned = false
+    if AS.conn_dir == 2 or AS.conn_dir == 8 then
+      if AS.sx == BS.sx then aligned = true end
+    else
+      if AS.sy == BS.sy then aligned = true end
+    end
+
+    if aligned then
+      build_stairwell_straight(R)
+    else
+      build_stairwell_0(R)
+    end
+  end
+end
+
+
+function Build.sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
+                        outer_info, outer_z,
+                        inner_info, inner_z,
+                        trim, spokes)
+
+  local ox1 = SEEDS[sx1][sy1][1].x1
+  local oy1 = SEEDS[sx1][sy1][1].y1
+  local ox2 = SEEDS[sx2][sy2][1].x2
+  local oy2 = SEEDS[sx2][sy2][1].y2
+
+  local mx = (ox1 + ox2) / 2
+  local my = (oy1 + oy2) / 2
+
+  local x1, y1 = mx-mw/2, my-mh/2
+  local x2, y2 = mx+mw/2, my+mh/2
+
+  assert(ox1 < x1 and x1 < mx and mx < x2 and x2 < ox2)
+  assert(oy1 < y1 and y1 < my and my < y2 and y2 < oy2)
+
+  local diag_w = int(mw / 4)
+  local diag_h = int(mh / 4)
+
+  -- ensure ceiling brushes don't interfere with facades
+  if sx1 == SEEDS[sx1][sy1][1].room.sx1 then ox1 = ox1 + 4 end
+  if sy1 == SEEDS[sx1][sy1][1].room.sy1 then oy1 = oy1 + 4 end
+  if sx2 == SEEDS[sx2][sy2][1].room.sx2 then ox2 = ox2 - 4 end
+  if sy2 == SEEDS[sx2][sy2][1].room.sy2 then oy2 = oy2 - 4 end
+
+
+  if inner_info then
+    Trans.old_quad(inner_info, x1,y1,x2,y2, inner_z, EXTREME_H)
+  end
+
+
+  Trans.old_quad(outer_info, ox1,oy1,  x1,oy2, outer_z, EXTREME_H)
+  Trans.old_quad(outer_info,  x2,oy1, ox2,oy2, outer_z, EXTREME_H)
+  Trans.old_quad(outer_info,  x1,oy1,  x2, y1, outer_z, EXTREME_H)
+  Trans.old_quad(outer_info,  x1, y2,  x2,oy2, outer_z, EXTREME_H)
+
+  if kind == "round" then
+    Trans.old_brush(outer_info,
+                      diagonal_coords(1, x1, y1, x1+diag_w, y1+diag_h),
+                      outer_z, EXTREME_H)
+
+    Trans.old_brush(outer_info,
+                      diagonal_coords(3, x2-diag_w, y1, x2, y1+diag_h),
+                      outer_z, EXTREME_H)
+
+    Trans.old_brush(outer_info,
+                      diagonal_coords(7, x1, y2-diag_h, x1+diag_w, y2),
+                      outer_z, EXTREME_H)
+
+    Trans.old_brush(outer_info,
+                      diagonal_coords(9, x2-diag_w, y2-diag_h, x2, y2),
+                      outer_z, EXTREME_H)
+  end
+
+
+  -- TRIM --
+
+  if trim then trim = get_mat(trim) end
+
+  local w = 8 * int(1 + math.max(mw,mh) / 120)
+
+  local trim_h = 4 * int(1 + math.min(mw,mh) / 120)
+
+  if trim and kind == "square" then
+    Trans.old_quad(trim, x1-w,y1-w, x1+4,y2+w, outer_z-trim_h, EXTREME_H)
+    Trans.old_quad(trim, x2-4,y1-w, x2+w,y2+w, outer_z-trim_h, EXTREME_H)
+
+    Trans.old_quad(trim, x1+4,y1-w, x2-4,y1+4, outer_z-trim_h, EXTREME_H)
+    Trans.old_quad(trim, x1+4,y2-4, x2-4,y2+w, outer_z-trim_h, EXTREME_H)
+  end
+
+  if trim and kind == "round" then
+    Trans.old_quad(trim, x1-w,y1+diag_h, x1+4,y2-diag_h, outer_z-trim_h, EXTREME_H)
+    Trans.old_quad(trim, x2-4,y1+diag_h, x2+w,y2-diag_h, outer_z-trim_h, EXTREME_H)
+
+    Trans.old_quad(trim, x1+diag_w,y1-w, x2-diag_w,y1+4, outer_z-trim_h, EXTREME_H)
+    Trans.old_quad(trim, x1+diag_w,y2-4, x2-diag_w,y2+w, outer_z-trim_h, EXTREME_H)
+
+    Trans.old_brush(trim,  -- top left
+    {
+      { x=x1-w, y=y2-diag_h },
+      { x=x1+4, y=y2-diag_h },
+      { x=x1+diag_w, y=y2-4 },
+      { x=x1+diag_w, y=y2+w },
+    },
+    outer_z-trim_h, EXTREME_H)
+
+    Trans.old_brush(trim,  -- top right
+    {
+      { x=x2-diag_w, y=y2+w },
+      { x=x2-diag_w, y=y2-4 },
+      { x=x2-4, y=y2-diag_h },
+      { x=x2+w, y=y2-diag_h },
+    },
+    outer_z-trim_h, EXTREME_H)
+
+    Trans.old_brush(trim,  -- bottom left
+    {
+      { x=x1+4, y=y1+diag_h },
+      { x=x1-w, y=y1+diag_h },
+      { x=x1+diag_w, y=y1-w },
+      { x=x1+diag_w, y=y1+4 },
+    },
+    outer_z-trim_h, EXTREME_H)
+
+    Trans.old_brush(trim,  -- bottom right
+    {
+      { x=x2-diag_w, y=y1+4 },
+      { x=x2-diag_w, y=y1-w },
+      { x=x2+w, y=y1+diag_h },
+      { x=x2-4, y=y1+diag_h },
+    },
+    outer_z-trim_h, EXTREME_H)
+  end
+
+
+  -- SPOKES --
+
+  if spokes then spokes = get_mat(spokes) end
+
+  w = 6 * int(1 + math.max(mw,mh) / 192)
+
+  if spokes then
+    local pw = w * 2
+    local K = 16
+
+    Trans.old_quad(spokes, ox1+K,my-w, x1+pw,my+w, outer_z-trim_h*1.5, EXTREME_H)
+    Trans.old_quad(spokes, x2-pw,my-w, ox2-K,my+w, outer_z-trim_h*1.5, EXTREME_H)
+
+    Trans.old_quad(spokes, mx-w,oy1+K, mx+w,y1+pw, outer_z-trim_h*1.5, EXTREME_H)
+    Trans.old_quad(spokes, mx-w,y2-pw, mx+w,oy2-K, outer_z-trim_h*1.5, EXTREME_H)
+  end
+
+
+  -- mark seeds so we don't build normal ceiling there
+  for x = sx1,sx2 do for y = sy1,sy2 do
+    SEEDS[x][y][1].no_ceil = true
+  end end -- for x,y
+end
+
+
+---==========================================================---
+
+
+function Builder_quake_test()
+
+  Trans.old_quad(get_mat("METAL1_2"), 0, 128, 256, 384,  -24, 0)
+  Trans.old_quad(get_mat("CEIL1_1"),  0, 128, 256, 384,  192, 208)
+
+  if true then
+    Trans.old_quad(get_mat("METAL2_4"), 112, 192, 144, 208, 20, 30);
+  end
+
+  local wall_i = get_mat("COMP1_1")
+
+  Trans.old_quad(wall_i, 0,   128,  32, 384,  0, 192)
+  Trans.old_quad(wall_i, 224, 128, 256, 384,  0, 192)
+  Trans.old_quad(wall_i, 0,   128, 256, 144,  0, 192)
+  Trans.old_quad(wall_i, 0,   370, 256, 384,  0, 192)
+
+  Trans.entity("player1", 64, 256, 64)
 end
 

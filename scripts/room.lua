@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2013 Andrew Apted
+--  Copyright (C) 2006-2014 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -22,22 +22,20 @@
 
 class ROOM
 {
-  kind : keyword  -- "building" : constructed room
-                  -- "outdoor"  : room with sky
-                  -- "cave"     : natural room
+  kind : keyword  -- "normal" (layout-able room)
+                  -- "scenic" (unvisitable room)
+                  -- "hallway", "stairwell", "small_exit"
 
-  shape : keyword -- "rect" (perfect rectangle)
-                  -- "L"  "T"  "U"  "S"  "H"
-                  -- "plus"
-                  -- "odd" (everything else)
+  outdoor : bool  -- true for outdoor rooms
+  natural : bool  -- true for cave/landscape areas
+  scenic  : bool  -- true for scenic (unvisitable) areas
 
-  is_outdoor : bool  -- true for "outdoor" kind, or some caves
-  is_street  : bool  -- used in Street mode
+  conns : array(CONN)  -- connections with neighbor rooms
+  entry_conn : CONN
 
-  conns : list(CONN)  -- connections with neighbor rooms
+  branch_kind : keyword
 
-  entry_conn : CONN  -- the main connection used to enter the room
-  exit_conn  : CONN  -- the main unlocked connection which exits the room
+  hallway : HALLWAY_INFO   -- for hallways and stairwells
 
   symmetry : keyword   -- symmetry of room, or NIL
                        -- keywords are "x", "y", "xy"
@@ -45,1424 +43,285 @@ class ROOM
   sx1, sy1, sx2, sy2  -- \ Seed range
   sw, sh, svolume     -- /
 
-  kx1, ky1, kx2, ky2  -- \ Section range
-  kw, kh              -- /
-
-  sections : list  -- all sections of room
-
-  closets : list(CLOSET)
-
-  crossover_hall : HALLWAY  -- if present, a hallway crosses over this room
-
-  floor_limit : { low, high }  -- a limitation of floor heights
-
-
-  quest : QUEST
+  floor_h, ceil_h : number
 
   purpose : keyword   -- usually NIL, can be "EXIT" etc... (FIXME)
 
-  weapons : list(NAME)  -- weapons to add into room
-
-  walls   : list(WALL)
-  corners : list(CORNER)
-
-  fences[ROOM ID] : FENCE  -- what fences that this room has to make
-                           -- at the border to other outdoor rooms.
-                           -- NIL for none.
-
-  conn_group : number  -- traversibility group (used for Connect logic)
-
-  sky_group : number  -- outdoor rooms which directly touch will belong
-                      -- to the same sky_group (unless a solid wall is
-                      -- enforced, e.g. between zones).
-
-  hazard_health  -- health provided to offset environment hazards
-
-  cave_info : CAVE_INFO  -- (see simple.lua)
-}
+  quest : QUEST
 
 
-class CLOSET
-{
-  kind : keyword  -- "closet"  (differentiates from room types)
+  --- plan_sp code only:
 
-  closet_kind : keyword  -- "start", "exit"
-                         -- "secret", "trap", "teleporter"
+  lx1, ly1, lx2, ly2  -- coverage on the Land Map
 
-  section : SECTION
-
-  parent : ROOM  -- parent room
-
-  conn : CONN  -- connection to parent room
-
-  dir : 2/4/6/8
+  group_id : number  -- traversibility group
 
 }
-
-
-class WALL extends PORTAL
-{
-  kind : keyword  -- "wall" or "door"
-
-  corner_L : CORNER  -- corner to left (ACW) of wall
-  corner_R : CORNER  -- corner to right (CW) of wall
-}
-
-
-class CORNER extends PORTAL
-{
-  kind : keyword  -- "corner" or "outie"
-
-  (side will be 1, 3, 7 or 9)
-
-  wall_L : WALL   -- wall to left (ACW) of corner
-  wall_R : WALL   -- wall to right (CW) of corner
-}
-
-
-class FENCE
-{
-  kind : keyword   -- "none"   : can allow player to fall off
-                   -- "solid"  : make solid wall (no shared sky)
-
-  R1 : ROOM   -- room containing the fence
-  R2 : ROOM   -- the other room
-
-}
-
-
-class SKY_GROUP
-{
-  h : number  -- the sky height for the group
-}
-
-
-----------------------------------------------------------------]]
-
-
-ROOM_CLASS = {}
-
-function ROOM_CLASS.new(shape)
-  local id = Plan_alloc_id("room")
-  local R =
-  {
-    id = id
-    kind = "building"
-    shape = shape
-
-    conns = {}
-    sections = {}
-    middles = {}
-    floor_mats = {}
-
-    walls = {}
-    corners = {}
-    fences = {}   -- FIXME: just use 'walls' ??
-    gates = {}
-
-    num_windows = 0
-
-    goal_spots = {}
-    mon_spots  = {}
-    item_spots = {}
-    cage_spots = {}
-
-    closets = {}
-    prefabs = {}
-    decor   = {}
-
-    sky_rects = {}
-    exclusion_zones = {}
-
-    hazard_health = 0
-  }
-  table.set_class(R, ROOM_CLASS)
-  table.insert(LEVEL.rooms, R)
-  return R
-end
-
-
-function ROOM_CLASS.tostr(R)
-  return string.format("ROOM_%d", R.id)
-end
-
-
-function ROOM_CLASS.longstr(R)
-  return string.format("%s_ROOM_%d [%d,%d..%d,%d]",
-      string.upper(R.kind), R.id,
-      R.sx1, R.sy1, R.sx2, R.sy2)
-end
-
-
-function ROOM_CLASS.list_sections(R)
-  gui.debugf("SECTION LIST for %s:\n", R:tostr())
-  gui.debugf("{\n")
-  
-  for kx = 1,SECTION_W do for ky = 1,SECTION_H do
-    local K = SECTIONS[kx][ky]
-    if K.room == R then
-      gui.debugf("  %s : S(%d %d) .. (%d %d)\n", K:tostr(),
-                 K.sx1, K.sy1, K.sx2, K.sy2)
-    end
-  end end
-
-  gui.debugf("}\n")
-end
-
-
-function ROOM_CLASS.update_size(R)
-  R.sw, R.sh = geom.group_size(R.sx1, R.sy1, R.sx2, R.sy2)
-end
-
-
-function ROOM_CLASS.update_seed_bbox(R)
-  each K in R.sections do
-    R.sx1 = math.min(R.sx1, K.sx1)
-    R.sy1 = math.min(R.sy1, K.sy1)
-
-    R.sx2 = math.max(R.sx2, K.sx2)
-    R.sy2 = math.max(R.sy2, K.sy2)
-  end
-
-  R:update_size()
-end
-
-
-function ROOM_CLASS.add_section(R, K)
-  table.insert(R.sections, K)
-
-  R.kx1 = math.min(K.kx, R.kx1 or 99)
-  R.ky1 = math.min(K.ky, R.ky1 or 99)
-
-  R.kx2 = math.max(K.kx, R.kx2 or -1)
-  R.ky2 = math.max(K.ky, R.ky2 or -1)
-
-  R.kw, R.kh = geom.group_size(R.kx1, R.ky1, R.kx2, R.ky2)
-
-  R.kvolume = (R.kvolume or 0) + 1
-
-  if K.shape == "rect" then
-    R.map_volume = (R.map_volume or 0) + 1
-  end
-end
-
-
-function ROOM_CLASS.remove_section(R, K)
-  table.kill_elem(R.sections, K)
-
-  K.room = nil
-
-  for sx = K.sx1, K.sx2 do
-  for sy = K.sy1, K.sy2 do
-    local S = SEEDS[sx][sy]
-    S.room = nil
-  end
-  end
-end
-
-
-function ROOM_CLASS.fill_section(R, K)
-  for sx = K.sx1, K.sx2 do
-  for sy = K.sy1, K.sy2 do
-    local S = SEEDS[sx][sy]
-    assert(not S.hall)
-
-    S.room = K.room
-    S.section = K
-  end
-  end
-
-  if not R.sx1 or K.sx1 < R.sx1 then R.sx1 = K.sx1 end
-  if not R.sy1 or K.sy1 < R.sy1 then R.sy1 = K.sy1 end
-  if not R.sx2 or K.sx2 > R.sx2 then R.sx2 = K.sx2 end
-  if not R.sy2 or K.sy2 > R.sy2 then R.sy2 = K.sy2 end
-
-  R:update_size()
-
-  R.svolume = (R.svolume or 0) + (K.sw * K.sh)
-end
-
-
-function ROOM_CLASS.annex(R, K)
-  K:set_room(R)
-
-  R:add_section(K)
-end
-
-
-function ROOM_CLASS.contains_seed(R, x, y)
-  if x < R.sx1 or x > R.sx2 then return false end
-  if y < R.sy1 or y > R.sy2 then return false end
-  return true
-end
-
-
-function ROOM_CLASS.has_lock(R, lock)
-  each D in R.conns do
-    if D.lock == lock then return true end
-  end
-  return false
-end
-
-
-function ROOM_CLASS.has_any_lock(R)
-  each D in R.conns do
-    if D.lock then return true end
-  end
-  return false
-end
-
-
-function ROOM_CLASS.has_lock_kind(R, kind)
-  each D in R.conns do
-    if D.lock and D.lock.kind == kind then return true end
-  end
-  return false
-end
-
-
-function ROOM_CLASS.has_teleporter(R)
-  each D in R.conns do
-    if D.kind == "teleporter" then return true end
-  end
-  return false
-end
-
-function ROOM_CLASS.get_teleport_conn(R)
-  each D in R.conns do
-    if D.kind == "teleporter" then
-      return D
-    end
-  end
-
-  error("cannot find teleport conn")
-end
-
-
-function ROOM_CLASS.has_weapon_using_ammo(R, ammo)
-  if R.weapons and not PARAM.hexen_weapons then
-    each name in R.weapons do
-      local info = GAME.WEAPONS[name]
-      if info.ammo == ammo then return true end
-    end
-  end
-  return false
-end
-
-
-function ROOM_CLASS.dist_to_closest_conn(R, K, side)
-  -- TODO: improve this by calculating side coordinates
-  local best
-
-  each D in R.conns do
-    local K2 = D:section(R)
-    if K2 then
-      local dist = geom.dist(K.kx, K.ky, K2.kx, K2.ky)
-
-      if not best or dist < best then
-        best = dist
-      end
-    end
-  end
-
-  return best
-end
-
-
-function ROOM_CLASS.touches_map_edge(R)
-  if R.kx1 <= 2 or R.kx2 >= SECTION_W-1 then return true end
-  if R.ky1 <= 2 or R.ky2 >= SECTION_H-1 then return true end
-
-  return false
-end
-
-
-function ROOM_CLASS.eval_start(R)
-  -- already has a purpose? (e.g. secret exit room)
-  if R.purpose then return -1 end
-
-  local score = gui.random() * 10
-
-  -- really want a room touching the edge of the map
-  -- (since that gives two seeds for the start prefab)
-  if R:touches_map_edge() then score = score + 100 end
-
-  -- not too big !!
-  if R.svolume <= 70 then score = score + 10 end
-
-  -- not too small
-  if R.svolume >= 12 then score = score + 2 end
-
-  -- prefer an unusual shape
-  if R.shape != "rect" then score = score + 4 end
-
-  --??  if not R:has_teleporter() then score = score + 8 end
-
-  return score
-end
-
-
-function ROOM_CLASS.eval_teleporter(R)
-  -- can only have one teleporter per room
-  if R:has_teleporter() then return -1 end
-
-  -- not in a secret exit room
-  if R.purpose == "SECRET_EXIT" then return -1 end
-
-  -- room too small?
-  if R.sw < 3 or R.sh < 3 or R.svolume < 10 then return -1 end
-
-  -- sweet spot for size is around 2..4 map sections
-  local score = 10 - math.abs(R.map_volume - 3.2)
-
-  return score + 2.4 * gui.random() ^ 2
-end
-
-
-function ROOM_CLASS.is_near_exit(R)
-  if R.purpose == "EXIT" then return true end
-  each D in R.conns do
-    local N = D:neighbor(R)
-    if N.purpose == "EXIT" then return true end
-  end
-  return false
-end
-
-
-function ROOM_CLASS.in_floor_limit(R, h)
-  if not R.floor_limit then return true end
-
-  return math.in_range(R.floor_limit[1], h, R.floor_limit[2])
-end
-
-
-function ROOM_CLASS.ideal_conns(R)
-  -- determine number of connections to try
-
-  if R.shape == "rect" or R.shape == "odd" then
-    if R.map_volume <= 4 then
-      return 2
-    elseif R.map_volume <= rand.sel(30, 8, 9) then
-      return 3
-    else
-      return 4
-    end
-
-  else -- shaped room
-
-    if R.shape == "L" or R.shape == "S" then
-      return 2
-    elseif R.shape == "plus" or R.shape == "H" then
-      return 4
-    else
-      return 3
-    end
-  end
-end
-
-
-function ROOM_CLASS.big_score(R)
-  local score = R.map_volume + 2.5 * gui.random() ^ 2
-
-  -- large bonus for shaped rooms
-  if R.shape != "rect" and R.shape != "odd" then
-    score = score * 1.7
-  end
-
-  return score
-end
-
-
-function ROOM_CLASS.void_up_parts(R)
-  if not rand.odds(95) then return end
-
-  -- section list can be modified, need to iterate over a copy
-  each K in table.copy(R.sections) do
-    if K.sw == 1 and K.sh == 1 and K.shape == "junction" then
-      R:remove_section(K)
-    end
-  end
-end
-
-
-function ROOM_CLASS.has_walk(R, sx1, sy1, sx2, sy2)
-  for sx = sx1,sx2 do for sy = sy1,sy2 do
-    local S = SEEDS[sx][sy]
-    assert(S)
-
-    if S.is_walk then return true end
-  end end
-
-  return false
-end
-
-
-function ROOM_CLASS.straddles_concave_corner(R, sx1, sy1, sx2, sy2)
-  -- assumes all seeds in the range belong to this room
-
-  assert(R.sx1 <= sx1 and sx2 <= R.sx2)
-  assert(R.sy1 <= sy1 and sy2 <= R.sy2)
-
-  assert(SEEDS[sx1][sy1].room == R)
-  assert(SEEDS[sx2][sy2].room == R)
-
-  return (SEEDS[sx1][sy1]:same_room(2) != SEEDS[sx2][sy1]:same_room(2)) or
-         (SEEDS[sx1][sy2]:same_room(8) != SEEDS[sx2][sy2]:same_room(8)) or
-         (SEEDS[sx1][sy1]:same_room(4) != SEEDS[sx1][sy2]:same_room(4)) or
-         (SEEDS[sx2][sy1]:same_room(6) != SEEDS[sx2][sy2]:same_room(6))
-end
-
-
-function ROOM_CLASS.add_exclusion_zone(R, kind, x1, y1, x2, y2, extra_dist)
-  local zone =
-  {
-    kind = kind
-    x1 = x1 - (extra_dist or 0)
-    y1 = y1 - (extra_dist or 0)
-    x2 = x2 + (extra_dist or 0)
-    y2 = y2 + (extra_dist or 0)
-  }
-
-  table.insert(R.exclusion_zones, zone)
-end
-
-
-function ROOM_CLASS.clip_spot_list(R, list, x1, y1, x2, y2, strict_mode)
-  local new_list = {}
-
-  each spot in list do
-    if (spot.x2 <= x1) or (spot.x1 >= x2) or
-       (spot.y2 <= y1) or (spot.y1 >= y2)
-    then
-      -- unclipped
-
-    elseif strict_mode then
-      -- drop this spot
-      continue
-
-    else
-      local w1 = x1 - spot.x1
-      local w2 = spot.x2 - x2
-
-      local h1 = y1 - spot.y1
-      local h2 = spot.y2 - y2
-
-      -- totally clipped?
-      if math.max(w1, w2, h1, h2) < 8 then
-        continue
-      end
-
-      -- shrink the existing box (keep side with most free space)
-
-      if w1 >= math.max(w2, h1, h2) then
-        spot.x2 = spot.x1 + w1
-      elseif w2 >= math.max(w1, h1, h2) then
-        spot.x1 = spot.x2 - w2
-      elseif h1 >= math.max(w1, w2, h2) then
-        spot.y2 = spot.y1 + h1
-      else
-        spot.y1 = spot.y2 - h2
-      end
-
-      assert(spot.x2 > spot.x1)
-      assert(spot.y2 > spot.y1)
-    end
-
-    table.insert(new_list, spot)
-  end
-
-  return new_list
-end
-
-
-function ROOM_CLASS.clip_spots(R, x1, y1, x2, y2)
-  --| the given rectangle is where we _cannot_ have a spot
-
-  assert(x1 < x2)
-  assert(y1 < y2)
-
-  -- enlarge the zone a tiny bit
-  x1, y1 = x1 - 4, y1 - 4
-  x2, y2 = x2 + 4, y2 + 4
-
-  R.mon_spots  = R:clip_spot_list(R.mon_spots,  x1, y1, x2, y2)
-  R.item_spots = R:clip_spot_list(R.item_spots, x1, y1, x2, y2)
-  R.goal_spots = R:clip_spot_list(R.goal_spots, x1, y1, x2, y2, "strict")
-end
-
-
-function ROOM_CLASS.exclude_monsters_in_zones(R)
-  each zone in R.exclusion_zones do
-    if zone.kind == "empty" then
-      R:clip_spots(zone.x1, zone.y1, zone.x2, zone.y2)
-    end
-  end
-end
-
-
-function ROOM_CLASS.find_nonfacing_spot(R, x1, y1, x2, y2)
-  each zone in R.exclusion_zones do
-    if zone.kind == "nonfacing" and
-       geom.boxes_overlap(x1,y1, x2,y2, zone.x1,zone.y1, zone.x2,zone.y2)
-    then
-      local x = (zone.x1 + zone.x2) / 2
-      local y = (zone.y1 + zone.y2) / 2
-
-      return { x = x, y = y }
-    end
-  end
-
-  return nil  -- nothing touches
-end
-
-
-function ROOM_CLASS.find_entry_closet(R)
-  each CL in R.closets do
-    if CL.closet_kind == "start" then return CL end
-  end
-
-  if R:has_teleporter() then
-    local D = R:get_teleport_conn()
-
-    if D.L2 == R then
-      each CL in R.closets do
-        if CL.closet_kind == "teleporter" then return CL end
-      end
-    end
-  end
-
-  return nil  -- none
-end
-
-
-function ROOM_CLASS.entry_coord_from_spot(R, spot, add_z)
-  local mx, my = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
-
-  R.entry_coord = { x=mx, y=my, z=spot.z1 + add_z }
-end
-
-
-function ROOM_CLASS.entry_coord_from_section_side(R, K, side, other_side)
-  local x, y = K:edge_mid_point(side)
-  local dx, dy = geom.delta(10 - side)
-
-  if other_side then
-    dx, dy = -dx, -dy
-    side = 10 - side
-  end
-
-  x = x + dx * 70
-  y = y + dy * 70
-
-  local angle = geom.ANGLES[10 - side]
-
-  R.entry_coord = { x=x, y=y, z=R.entry_h + 40, angle=angle }
-end
-
-
-function ROOM_CLASS.furthest_dist_from_entry(R)
-  if not R.entry_coord then
-    -- rough guess
-    local S1 = SEEDS[R.sx1][R.sy1]
-    local S2 = SEEDS[R.sx2][R.sy2]
-
-    local w = S2.x2 - S1.x1
-    local h = S2.y2 - S1.y1
-
-    return math.max(w, h)
-  end
-
-  local result = 512
-
-  local ex = R.entry_coord.x
-  local ey = R.entry_coord.y
-
-  for sx = R.sx1, R.sx2 do
-  for sy = R.sy1, R.sy2 do
-    local S = SEEDS[sx][sy]
-
-    if S.room != R then continue end
-
-    local ox = sel(S.x1 < ex, S.x1, S.x2)
-    local oy = sel(S.y1 < ey, S.y1, S.y2)
-
-    local dist = geom.dist(ex, ey, ox, oy)
-
-    result = math.max(result, dist)
-  end
-  end
-
-  return result
-end
-
-
-function ROOM_CLASS.find_guard_spot(R)
-  -- finds a KEY or EXIT to guard -- returns coordinate table
-  each G in R.goals do
-    if G.content.kind == "KEY" or
-       G.content.kind == "EXIT"
-    then
-      local mx, my = geom.box_mid(G.x1, G.y1, G.x2, G.y2)
-
-      return { x=mx, y=my }
-    end
-  end
-
-  each CL in R.closets do
-    if CL.closet_kind == "exit" or
-       CL.closet_kind == "item"
-    then
-      -- create a fake spot in front of closet
-      local x, y = CL.section:edge_mid_point(CL.dir)
-      local dx, dy = geom.delta(CL.dir)
-
-      x = x + dx * 70
-      y = y + dy * 70
-
-      return { x=x, y=y }
-    end
-  end
-
-  return nil  -- none
-end
-
-
-function ROOM_CLASS.section_for_spot(R, spot)
-  local mx, my = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
-
-  -- spot lists will generally have all spots in a section being
-  -- contiguous in the list.  Hence we optimise by caching the last
-  -- found section and check that first.
-  local last_K = R.last_spot_section
-
-  if last_K and last_K:contains_point(mx, my) then
-    return last_K
-  end
-
-  each K in R.sections do
-    if K:contains_point(mx, my) then
-      R.last_spot_section = K
-      return K
-    end
-  end
-
-  return nil  -- not found
-end
-
-
-function ROOM_CLASS.num_crossovers(R)
-  if R.crossover_hall then return 1 end
-
-  return 0
-end
-
-
-function ROOM_CLASS.mid_point(R)
-  local x1 = SEEDS[R.sx1][R.sy1].x1
-  local y1 = SEEDS[R.sx1][R.sy1].y1
-
-  local x2 = SEEDS[R.sx2][R.sy2].x2
-  local y2 = SEEDS[R.sx2][R.sy2].y2
-
-  return (x1 + x2) / 2, (y1 + y2) / 2
-end
-
-
-function ROOM_CLASS.random_seed(R)
-  for loop = 1,999 do
-    local sx = rand.irange(R.sx1, R.sx2)
-    local sy = rand.irange(R.sy1, R.sy2)
-
-    local S = SEEDS[sx][sy]
-    if S.room == R then return S end
-  end
-
-  error("failure finding a random seed??")
-end
-
-
-function ROOM_CLASS.init_wall_dists(R)
-  for sx = R.sx1, R.sx2 do
-  for sy = R.sy1, R.sy2 do
-    local S = SEEDS[sx][sy]
-    if S.room != R then continue end
-
-    for dir = 1,9 do if dir != 5 then
-      if not S:same_room(dir) then
-        S.wall_dist = 0.5
-      end
-    end end -- dir
-
-  end -- sx, sy
-  end
-end
-
-
-function ROOM_CLASS.spread_wall_dists(R)
-  local changed = false
-
-  for sx = R.sx1, R.sx2 do
-  for sy = R.sy1, R.sy2 do
-    local S = SEEDS[sx][sy]
-    if S.room != R then continue end
-
-    for dir = 2,8,2 do
-      if S:same_room(dir) then
-        local N = S:neighbor(dir)
-
-        if S.wall_dist and S.wall_dist + 1 < (N.wall_dist or 999) then
-          N.wall_dist = S.wall_dist + 1
-          changed  = true
-        end
-      end
-    end
-
-  end  -- sx, sy
-  end
-
-  return changed
-end
-
-
-function ROOM_CLASS.compute_wall_dists(R)
-  R:init_wall_dists()
-
-  while R:spread_wall_dists() do end
-end
-
-
-function ROOM_CLASS.dist_to_edge(R, S, dir)
-  local count = 0
-
-  while true do
-    local N = S:neighbor(dir)
-
-    if not (N and N.room == R) then return count end
-
-    count = count + 1 ; S = N
-  end
-end
-
-
-function ROOM_CLASS.build(R)
-  if R.is_outdoor then
-    local sky_h = assert(R.sky_group.h)
-
-    each rect in R.sky_rects do
-      Build_sky_quad(rect.x1, rect.y1, rect.x2, rect.y2, sky_h)
-    end
-  end
-
-  Areas_kick_the_goals(R)
-
-  each CL in R.closets do
-    CL:build()
-  end
-end
-
-
-function Room_distribute_spots(L, list)
-  local seen = {}
-
-  each spot in list do
-    seen[spot.kind] = 1
-
-    if spot.kind == "cage" or spot.kind == "trap" then
-      table.insert(L.cage_spots, spot)
-    elseif spot.kind == "pickup" or spot.kind == "big_item" then
-      table.insert(L.item_spots, spot)
-    elseif spot.kind == "goal" then
-      if L.kind == "hallway" then
-        error("Goal spot used in hallway prefab")
-      end
-      table.insert(L.goal_spots, spot)
-    else
-      table.insert(L.mon_spots, spot)
-    end
-  end
-
-  -- 1. when no big item spots, convert goal spots
-  -- 2. when no small item spots, convert monster spots
-
-  each spot in list do
-
-    if not seen["big_item"] and spot.kind == "goal" then
-      local new_spot = table.copy(spot)
-      new_spot.kind = "big_item"
-      table.insert(L.item_spots, new_spot)
-    end
-
-    if not seen["pickup"] and spot.kind == "monster" then
-      local new_spot = table.copy(spot)
-      new_spot.kind = "pickup"
-      table.insert(L.item_spots, new_spot)
-    end
-
-  end
-end
-
-
-function Room_list_no_conns()
-  local list = ""
-
-  each R in LEVEL.rooms do
-    if #R.conns == 0 then
-      list = list .. R.id
-      list = list .. " "
-    end
-  end
-
-  return "{ " .. list .. "}"
-end
 
 
 ----------------------------------------------------------------
 
 
-CLOSET_CLASS = {}
-
-function CLOSET_CLASS.new(kind, parent)
-  local CL =
-  {
-    id = Plan_alloc_id("closet")
-    kind = "closet"
-    closet_kind = kind
-    parent = parent
-    conns = {}
-  }
-
-  table.set_class(CL, CLOSET_CLASS)
-  return CL
-end
+Room Layouting Notes
+====================
 
 
-function CLOSET_CLASS.tostr(CL)
-  return string.format("CLOSET_%d", CL.id)
-end
+DIAGONALS:
+   How they work:
+
+   1. basic model: seed is a liquid or walk area which has an
+      extra piece stuck in it (the diagonal) which is
+      either totally solid or same as a neighbouring higher floor.
+      We first build the extra bit, then convert the seed to what
+      it should be (change S.kind from "diagonal" --> "liquid" or "walk")
+      and build the ceiling/floor normally.
+
+   2. The '/' and '%' in patterns go horizontally, whereas
+      the 'Z' and 'N' go vertically.  If the pattern is
+      transposed then we exchange '/' with 'Z', '%' with 'N'.
+
+   3. once the room is fully laid out, then we can process
+      these diagonals and determine the main seed info
+      (e.g. liquid) and the Stuckie piece (e.g. void).
 
 
-function CLOSET_CLASS.install(CL)
-  local K = CL.section
-
-  for sx = K.sx1, K.sx2 do
-  for sy = K.sy1, K.sy2 do
-    local S = SEEDS[sx][sy]
-
-    assert(not S:used())
-
-    S.closet = CL
-  end
-  end
-end
+--------------------------------------------------------------]]
 
 
-function CLOSET_CLASS.get_floor_h(CL)
-  local portal = CL.conn.portal1 or CL.conn.portal2
-  assert(portal)
+require 'defs'
+require 'util'
 
-  return portal.floor_h
-end
+Rooms = { }
 
 
-function CLOSET_CLASS.build(CL)
-  local portal = CL.conn.portal1 or CL.conn.portal2
-  assert(portal)
+function Rooms.setup_theme(R)
+  R.facade = assert(R.zone.facade_mat)
 
-  local skin1 = CL.skin
-
-  local skin0 = table.copy(CL.parent.skin)
-
-  if CL.parent.is_outdoor then
-    skin0.wall = CL.section.facade
+  if not R.outdoor then
+    R.main_tex = rand.key_by_probs(R.theme.walls)
+    return
   end
 
-  -- FIXME: test room behind closet for 'outer' field
+---##  if not R.quest.courtyard_floor then
+---##    R.quest.courtyard_floor = rand.pick(LEVEL.courtyard_floors)
+---##  end
 
-  -- TODO:  get floor texture from touching area [via portal]
+  R.main_tex = rand.key_by_probs(R.theme.naturals or R.theme.floors)
+end
 
-  local skin2 = { }
+function Rooms.setup_theme_Scenic(R)
+  R.outdoor = true  -- ???
 
-  if CL.closet_kind == "teleporter" then
-    local conn = CL.parent:get_teleport_conn()
+  -- find closest non-scenic room
+  local mx = int((R.sx1 + R.sx2) / 2)
+  local my = int((R.sy1 + R.sy2) / 2)
 
-    if conn.L1 == CL.parent then
-      skin2. in_tag = conn.tele_tag2
-      skin2.out_tag = conn.tele_tag1
-    else
-      skin2. in_tag = conn.tele_tag1
-      skin2.out_tag = conn.tele_tag2
+  for dist = 1, SEED_W do
+  for  dir = 2, 8, 2 do
+
+    local sx, sy = geom.nudge(mx, my, dir, dist)
+
+    if Seed.valid(sx, sy, 1) then
+      local S = SEEDS[sx][sy][1]
+
+      if S.room and S.room.kind != "scenic" and
+         S.room.kind != "hallway"
+      then
+        R.theme = S.room.theme
+        break
+      end
     end
 
-    skin2. in_target = string.format("tele%d", skin2. in_tag)
-    skin2.out_target = string.format("tele%d", skin2.out_tag)
+  end  -- dist, dir
   end
 
-  if CL.closet_kind == "switch" then
-    skin2.tag_1 = CL.parent.purpose_lock.tag
-  end
+  assert(R.theme)
 
-  if CL.closet_kind == "item" then
-    skin2.item = assert(CL.item)
-  end
-
-  local floor_h = CL:get_floor_h()
-  assert(floor_h)
-
-  local x1, y1, x2, y2 = CL.section:get_coords()
-
-  -- align indoor closets with wall
-  local dx, dy = 0, 0
-  if not CL.parent.is_outdoor then
-    if CL.dir == 2 then y1 = y1 - 32 end
-    if CL.dir == 4 then x1 = x1 - 32 end
-    if CL.dir == 6 then x2 = x2 + 32 end
-    if CL.dir == 8 then y2 = y2 + 32 end
-  end
-
-  local T = Trans.box_transform(x1, y1, x2, y2, floor_h, CL.dir)
-
-  Fabricate_at(CL.parent, skin1, T, { skin0, skin1, skin2 })
-
-  CL.parent:clip_spots(x1, y1, x2, y2)
-
---[[
-  -- experiment !!
-  if CL.parent.kind == "outdoor" and C.floor_h + 208 < CL.parent.sky_h then
-    local sky_h = C.floor_h + 192
-
-    brush = Brush_new_quad(C.x1-16, C.y1-16, C.x2+16, C.y2+16, sky_h)
-
-    Brush_set_mat(brush, "_SKY", "_SKY")
-    table.insert(brush, 1, { m="sky" })
-
-    brush_helper(brush)
-  end
---]]
-end
-
-
-----------------------------------------------------------------
-
-
-function Room_player_angle(R, C)
-  if R.sh > R.sw then
-    if (C.sy1 + C.sy2) / 2 > (R.sy1 + R.sy2) / 2 then 
-      return 270
-    else
-      return 90
-    end
+  if R.outdoor then
+    R.main_tex = rand.key_by_probs(R.theme.naturals or R.theme.floors)
   else
-    if (C.sx1 + C.sx2) / 2 > (R.sx1 + R.sx2) / 2 then 
-      return 180
-    else
-      return 0
-    end
+    R.main_tex = rand.key_by_probs(R.theme.walls)
   end
 end
 
 
-function Room_select_textures()
+function Rooms.choose_themes()
+  each R in LEVEL.rooms do
+    Rooms.setup_theme(R)
+  end
 
-  local function select_textures(L)
-    local tab
+  each R in LEVEL.scenic_rooms do
+    Rooms.setup_theme_Scenic(R)
+  end
+end
 
-    if L.kind == "outdoor" or L.kind == "cave" then
-      tab = L.theme.naturals or THEME.naturals
-    else
-      tab = L.theme.walls or THEME.walls
+
+function Rooms.decide_hallways()
+  -- Marks certain rooms to be hallways, using the following criteria:
+  --   - indoor non-leaf room
+  --   - prefer small rooms
+  --   - prefer all neighbors are indoor
+  --   - no purpose (not a start room, exit room, key room)
+  --   - no teleporters
+  --   - not the destination of a locked door (anti-climactic)
+
+  local HALL_SIZE_PROBS = { 98, 84, 60, 40, 20, 10 }
+  local HALL_SIZE_HEAPS = { 98, 95, 90, 70, 50, 30 }
+  local REVERT_PROBS    = {  0,  0, 25, 75, 90, 98 }
+
+  local function eval_hallway(R)
+    if R.outdoor or R.natural or R.children or R.purpose then
+      return false
     end
 
-    assert(tab)
+    if #R.teleports > 0 then return false end
+    if R.num_branch < 2 then return false end
+    if R.num_branch > 4 then return false end
 
-    -- FIXME: too simple?
+    local outdoor_chance = 5
+    local lock_chance    = 50
 
-    L.wall_mat = rand.key_by_probs(tab)
+    if STYLE.hallways == "heaps" then
+      outdoor_chance = 50
+      lock_chance = 90
+    end
 
-    if L.kind == "cave" then
-
-      for loop = 1,2 do
-        L.floor_mat = rand.key_by_probs(L.theme.floors or tab)
-        if L.floor_mat != L.wall_mat then break; end
+    each C in R.conns do
+      local N = C:neighbor(R)
+      if N.outdoor and not rand.odds(outdoor_chance) then
+        return false
       end
 
-      if L.is_outdoor then
-        L.ceil_mat = "_SKY"
-      else
-        L.ceil_mat = L.wall_mat
-      end
-
-    else
-      if L.theme.floors then
-        L.floor_mat = rand.key_by_probs(L.theme.floors)
-      else
-        L.floor_mat = L.wall_mat
-      end
-
-      if L.theme.ceilings then
-        L.ceil_mat = rand.key_by_probs(L.theme.ceilings)
-      else
-        L.ceil_mat = L.wall_mat
+      if C.dest == R and C.lock and not rand.odds(lock_chance) then
+        return false
       end
     end
-  end 
 
+    local min_d = math.min(R.sw, R.sh)
 
-  local function setup_skin(L)
-    L.skin = {}
+    if min_d > 6 then return false end
 
-    L.skin.wall   = L.wall_mat
-    L.skin.facade = L.wall_mat
-    L.skin.spike_group = "spike" .. tostring(L.id)
-
-    if L.kind != "outdoor" and L.zone.facade_mat and
-       LEVEL.special != "street" -- in street mode, want distinctive buildings
-    then
-      L.skin.facade = L.zone.facade_mat
+    if STYLE.hallways == "heaps" then
+      return rand.odds(HALL_SIZE_HEAPS[min_d])
     end
+
+    if STYLE.hallways == "few" and rand.odds(66) then
+      return false end
+
+    return rand.odds(HALL_SIZE_PROBS[min_d])
+  end
+
+  local function hallway_neighbors(R)
+    local hall_nb = 0
+    each C in R.conns do
+      local N = C:neighbor(R)
+      if N.hallway then hall_nb = hall_nb + 1 end
+    end
+
+    return hall_nb
+  end
+
+  local function surrounded_by_halls(R)
+    local hall_nb = hallway_neighbors(R)
+    return (hall_nb == #R.conns) or (hall_nb >= 3)
+  end
+
+  local function stairwell_neighbors(R)
+    local swell_nb = 0
+    each C in R.conns do
+      local N = C:neighbor(R)
+      if N.stairwell then swell_nb = swell_nb + 1 end
+    end
+
+    return swell_nb
+  end
+
+  local function locked_neighbors(R)
+    local count = 0
+    each C in R.conns do
+      if C.lock then count = count + 1 end
+    end
+
+    return count
   end
 
 
-  ---| Room_select_textures |---
+  ---| Rooms.decide_hallways |---
+
+  if not THEME.hallway_walls then
+    gui.printf("Hallways disabled (no theme info)\n")
+    return
+  end
+
+  if STYLE.hallways == "none" then
+    return
+  end
 
   each R in LEVEL.rooms do
-    select_textures(R)
-    setup_skin(R)
+    if eval_hallway(R) then
+gui.debugf("  Made Hallway @ %s\n", R:tostr())
+      R.kind = "hallway"
+      R.hallway = { }
+      R.outdoor = nil
+    end
   end
 
-  each H in LEVEL.halls do
-    select_textures(H)
-    setup_skin(H)
-  end
-end
+  -- large rooms which are surrounded by hallways are wasted,
+  -- hence look for them and revert them back to normal.
+  each R in LEVEL.rooms do
+    if R.hallway and surrounded_by_halls(R) then
+      local min_d = math.min(R.sw, R.sh)
 
+      assert(min_d <= 6)
 
-
-function Layout_inner_outer_tex(skin, K, K2)
-  assert(K)
-  if not K2 then return end
-
-  local R = K.room
-  local N = K2.room
-
-  if N.kind == "REMOVED" then return end
-
-  skin.wall  = R.skin.wall
-  skin.outer = N.skin.wall
-
-  if R.kind == "outdoor" and N.kind != "outdoor" then
-    skin.wall  = N.facade or skin.outer
-  elseif N.kind == "outdoor" and R.kind != "outdoor" then
-    skin.outer = R.facade or skin.wall
-  end
-end
-
-
-
-function Room_match_user_stuff(tab)
-  -- 'tab' can be a skin or a group table.
-  -- returns a probability multiplier >= 0
-
-  local factor = 1
-
-  local function match(field, user)
-    if type(field) == "table" then
-      local v = field[user]
-      if not v then v = field["other"] or 0 end
-      factor = factor * v
-
-    else
-      if string.sub(field, 1, 1) == '!' then
-        field = string.sub(field, 2)
-        if field == user then factor = 0 end
-      else
-        if field != user then factor = 0 end
+      if rand.odds(REVERT_PROBS[min_d]) then
+        R.kind = "normal"
+        R.hallway = nil
+gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
       end
     end
   end
 
-  if tab.game  then match(tab.game,  OB_CONFIG.game) end
-  if tab.theme then match(tab.theme, LEVEL.super_theme) end
-  if tab.psycho and OB_CONFIG.theme != "psycho" then return 0 end
+  -- decide stairwells
+  each R in LEVEL.rooms do
+    if R.hallway and R.num_branch == 2 and
+       not R.purpose and #R.weapons == 0 and
+       stairwell_neighbors(R) == 0 and
+       locked_neighbors(R) == 0 and
+       THEME.stairwell_walls
+    then
+      local hall_nb = hallway_neighbors(R) 
 
-  if factor <= 0 then return 0 end
+      local prob = 80
+      if hall_nb >= 2 then prob = 2  end
+      if hall_nb == 1 then prob = 40 end
 
-  if tab.engine   then match(tab.engine,   OB_CONFIG.engine) end
-  if tab.playmode then match(tab.playmode, OB_CONFIG.mode) end
- 
-  if factor <= 0 then return 0 end
-
-  -- style stuff
-
-  if tab.liquid then
-    factor = factor * style_sel("liquids", 0, 0.25, 1.0, 3.0)
-  end
-
-  if tab.style then
-    local list = tab.style
-    if type(list) != "table" then
-      list = { [list]=1 }
-    end
-
-    each name,_ in list do
-      if not STYLE[name] then
-        error("Unknown style name in prefab skin: " .. tostring(name))
+      if rand.odds(prob) then
+        gui.printf("  Made Stairwell @ %s\n", R:tostr())
+        R.kind = "stairwell"
       end
-
-      factor = factor * style_sel(name, 0, 0.25, 1.0, 3.0)
     end
-  end
+  end -- for R
 
-  return factor
-end
+  -- we don't need archways where two hallways connect
+  each C in LEVEL.conns do
+    if not C.lock and C.src.hallway and C.dest.hallway then
+      local S = C.src_S
+      local T = C.dest_S
+      local dir = S.conn_dir
 
-
-
-function Room_matching_skins_for_req(env, reqs)
-
-  local function kind_from_filename(name)
-    assert(name)
-
-    local kind = string.match(name, "([%w_]+)/")
-
-    if not kind then
-      error("weird skin filename: " .. tostring(name))
-    end
-
-    return kind
-  end
-
-
-  local function match_size(env_w, skin_w)
-    -- skin defaults to 1
-    if not skin_w then skin_w = 1 end
-
-    if type(env_w) == "table" then
-      if #env_w != 2 or env_w[1] > env_w[2] then
-        error("Bad seed range in env table")
+      if S.border[S.conn_dir].kind == "arch" or
+         T.border[T.conn_dir].kind == "arch"
+      then
+        S.border[S.conn_dir].kind = "nothing"
+        T.border[T.conn_dir].kind = "nothing"
       end
-
-      return env_w[1] <= skin_w and skin_w <= env_w[2]
     end
-
-    return env_w == skin_w
-  end
-
-
-  local function match_size_with_rot(skin, rotate)
-    if rotate then
-      if env.seed_w and not match_size(env.seed_w, skin.seed_h) then return false end
-      if env.seed_h and not match_size(env.seed_h, skin.seed_w) then return false end
-    else
-      if env.seed_w and not match_size(env.seed_w, skin.seed_w) then return false end
-      if env.seed_h and not match_size(env.seed_h, skin.seed_h) then return false end
-    end
-
-    return true
-  end
-
-
-  local function match_room_kind(env_k, skin_k)
-    if skin_k == "indoor" then
-      return env_k != "outdoor"
-    end
-
-    return env_k == skin_k
-  end
-
-
-  local function match_word_or_table(req, tab)
-    if type(tab) == "table" then
-      return tab[req] and tab[req] > 0
-    else
-      return req == tab
-    end
-  end
-
-
-  local function match_requirements(skin)
-    -- type check
-    local kind = skin.kind or kind_from_filename(skin.file)
-
-    if reqs.kind != kind then return 0 end
-
-    -- placement check
-    if reqs.where != skin.where then return 0 end
-
-    -- group check
-    if not match_word_or_table(reqs.group, skin.group) then return 0 end
-
-    -- shape check
-    if not match_word_or_table(reqs.shape, skin.shape) then return 0 end
-
-    -- complexity check
-    if (skin.complexity or 1) > (reqs.max_complexity or 3) then return 0 end
-
-    -- key and switch check
-    if reqs.key != skin.key then return 0 end
-
-    if not match_word_or_table(reqs.switch, skin.switch) then return 0 end
-
-    -- hallway stuff
-    if reqs.narrow != skin.narrow then return 0 end
-    if reqs.door   != skin.door   then return 0 end
-    if reqs.secret != skin.secret then return 0 end
-
-    return 1
-  end
-
-
-  local function match_environment(skin)
-    -- size check -- seed based
-    if not match_size_with_rot(skin, false) then
-      if not env.can_rotate then return 0 end
-      if not match_size_with_rot(skin, true) then return 0 end
-    end
-
-    -- size check -- map units
---!!!! FIXME   if not Fab_size_check(skin, env.long, env.deep) then return 0 end
-
-    -- building type checks
-    if skin.room then
-      if not match_room_kind(env.room, skin.room) then return 0 end
-    end
-
-    if skin.neighbor then
-      if not match_room_kind(env.neighbor, skin.neighbor) then return 0 end
-    end
-
-    -- door check
-    if env.has_door and skin.no_door then return 0 end
-
-    -- liquid check
-    if skin.liquid then
-      if not LEVEL.liquid then return 0 end
-      if skin.liquid == "harmless" and     LEVEL.liquid.damage then return 0 end
-      if skin.liquid == "harmful"  and not LEVEL.liquid.damage then return 0 end
-    end
-
-    -- darkness check
-    if skin.dark_map and not LEVEL.is_dark then return 0 end
-
-    return 1
-  end
-
-
-  ---| Room_matching_skins_for_req |---
-
-  assert(reqs.kind)
-
-  local list = { }
-
-  each name,skin in GAME.SKINS do
-    if match_requirements(skin) <= 0 then continue end
-    if match_environment (skin) <= 0 then continue end
-
-    -- game, theme (etc) check
-    local prob = Room_match_user_stuff(skin)
-
-    prob = prob * (skin.prob or 50) * (reqs.prob_mul or 1)
-
-    if prob > 0 then
-      list[name] = prob
-    end
-  end
-
-  return list
+  end -- for C
 end
 
 
-function Room_match_skins(env, req_list)
-  local list = {}
-
-  each reqs in req_list do
-    local list2 = Room_matching_skins_for_req(env, reqs)
-
-    -- ensure earlier matches are kept (override later ones)
-    list = table.merge(list2, list)
-  end
-
-  return list
-end
-
-
-function Room_pick_skin(env, req_list)
-  local list = Room_match_skins(env, req_list)
-
-if DEBUG_MULTI_SKIN then
-   DEBUG_MULTI_SKIN = nil
-   stderrf("\n\nDEBUG MULTI SKIN = \n%s\n\n", table.tostr(list))
-end
-
-  if table.empty(list) then
-    gui.debugf("Room_pick_skin:\n")
-    gui.debugf("env   = \n%s\n", table.tostr(env))
-    gui.debugf("reqs1 = \n%s\n", table.tostr(req_list[1]))
-
-    error("No matching prefabs for: " .. req_list[1].kind)
-  end
-
-  local name = rand.key_by_probs(list)
-
-  return assert(GAME.SKINS[name])
-end
-
-
-
-function Room_match_groups(reqs)
-
-  local function match(group)
-    -- type check
-    if reqs.kind != group.kind then return 0 end
-
-    -- liquid check
-    if group.liquid then
-      if not LEVEL.liquid then return 0 end
-      if group.liquid == "harmless" and     LEVEL.liquid.damage then return 0 end
-      if group.liquid == "damaging" and not LEVEL.liquid.damage then return 0 end
-    end
-
-    -- hallway stuff
-    if group.narrow != group.narrow then return 0 end
-
-    -- game, theme (etc) check
-    return Room_match_user_stuff(group)
-  end
-
-
-  local list = { }
-
-  each name,group in GAME.GROUPS do
-    local prob = match(group) * (group.prob or 50)
-
-    if prob > 0 then
-      list[name] = prob
-    end
-  end
-
-  return list
-end
-
-
-function Room_pick_group(reqs)
-  assert(reqs.kind)
-
-  local list = Room_match_groups(reqs)
-
-  if table.empty(list) then
-    gui.debugf("Room_pick_group:\n")
-    gui.debugf("reqs = \n%s\n", table.tostr(reqs))
-
-    error("No matching groups for: " .. reqs.kind)
-  end
-
-  return rand.key_by_probs(list)
-end
-
-
-----------------------------------------------------------------
-
-
-function Room_setup_symmetry()
+function Rooms.setup_symmetry()
   -- The 'symmetry' field of each room already has a value
   -- (from the big-branch connection system).  Here we choose
   -- whether to keep that, expand it (rare) or discard it.
@@ -1487,7 +346,6 @@ function Room_setup_symmetry()
     end
   end
 
-
   local function prob_for_size(R, new_sym)
     local prob = 200
 
@@ -1510,7 +368,6 @@ function Room_setup_symmetry()
     return prob
   end
 
-
   local function decide_layout_symmetry(R)
     R.conn_symmetry = R.symmetry
 
@@ -1529,7 +386,7 @@ function Room_setup_symmetry()
     if STYLE.symmetry == "few"   then probs[1] = 500 end
     if STYLE.symmetry == "heaps" then probs[1] = 10  end
 
-    for _,sym in ipairs(SYM_LIST) do
+    each sym in SYM_LIST do
       local p1 = prob_for_size(R, sym)
       local p2 = prob_for_match(R.symmetry, sym)
 
@@ -1544,8 +401,40 @@ function Room_setup_symmetry()
     R.symmetry = sel(index > 1, syms[index], nil)
   end
 
+  local function mirror_horizontally(R)
+    if R.sw >= 2 then
+      for y = R.sy1, R.sy2 do
+        for dx = 0, int((R.sw-2) / 2) do
+          local LS = SEEDS[R.sx1 + dx][y][1]
+          local RS = SEEDS[R.sx2 - dx][y][1]
 
-  --| Room_setup_symmetry |--
+          if LS.room == R and RS.room == R then
+            LS.x_peer = RS
+            RS.x_peer = LS
+          end
+        end
+      end
+    end
+  end
+
+  local function mirror_vertically(R)
+    if R.sh >= 2 then
+      for x = R.sx1, R.sx2 do
+        for dy = 0, int((R.sh-2) / 2) do
+          local BS = SEEDS[x][R.sy1 + dy][1]
+          local TS = SEEDS[x][R.sy2 - dy][1]
+
+          if BS.room == R and TS.room == R then
+            BS.y_peer = TS
+            TS.y_peer = BS
+          end
+        end
+      end
+    end
+  end
+
+
+  --| Rooms.setup_symmetry |--
 
   each R in LEVEL.rooms do
     decide_layout_symmetry(R)
@@ -1560,1814 +449,2508 @@ function Room_setup_symmetry()
     if R.symmetry == "y" or R.symmetry == "xy" then
       R.mirror_y = true
     end
+
+    -- we ALWAYS setup the x_peer / y_peer refs
+    mirror_horizontally(R)
+    mirror_vertically(R)
   end
 end
 
 
+function Rooms.reckon_doors()
+  local DEFAULT_PROBS = {}
 
-function Room_merge_sky_groups(L1, L2)
-  assert(L1.sky_group)
-  assert(L2.sky_group)
+  local function door_chance(R1, R2)
+    local door_probs = THEME.door_probs or
+                       GAME.door_probs or
+                       DEFAULT_PROBS
 
-  if L1.sky_group == L2.sky_group then
-    return
-  end
+    if R1.outdoor and R2.outdoor then
+      return door_probs.out_both or 0
 
-  if L1.id > L2.id then L1, L2 = L2, L1 end
+    elseif R1.outdoor or R2.outdoor then
+      return door_probs.out_diff or 80
 
-  -- the second SKY_GROUP table will never be used again
-  local dead_group = L2.sky_group
+    elseif R1.kind == "stairwell" or R2.kind == "stairwell" then
+      return door_probs.stairwell or 1
 
-  dead_group.h = "dead"
+    elseif R1.hallway and R2.hallway then
+      return door_probs.hall_both or 2
 
-  each T in LEVEL.rooms do
-    if T.sky_group == dead_group then
-       T.sky_group = L1.sky_group
+    elseif R1.hallway or R2.hallway then
+      return door_probs.hall_diff or 60
+
+    elseif R1.main_tex ~= R2.main_tex then
+      return door_probs.combo_diff or 40
+
+    else
+      return door_probs.normal or 20
     end
   end
 
-  each T in LEVEL.halls do
-    if T.sky_group == dead_group then
-       T.sky_group = L1.sky_group
-    end
-  end
+
+  ---| Rooms.reckon_doors |---
+
+  each C in LEVEL.conns do
+    for who = 1,2 do
+      local S = sel(who == 1, C.src_S, C.dest_S)
+      local N = sel(who == 2, C.src_S, C.dest_S)
+      assert(S)
+
+      if S.conn_dir then
+        assert(N.conn_dir == 10-S.conn_dir)
+
+        local B  = S.border[S.conn_dir]
+        local B2 = N.border[N.conn_dir]
+
+        -- ensure when going from outside to inside that the arch/door
+        -- is made using the building combo (NOT the outdoor combo)
+        if B.kind == "arch" and
+           ((S.room.outdoor and not N.room.outdoor) or
+            (S.room == N.room.parent))
+        then
+          -- swap borders
+          S, N = N, S
+
+          S.border[S.conn_dir] = B
+          N.border[N.conn_dir] = B2
+        end
+
+        if B.kind == "arch" and GAME.DOORS and not B.tried_door then
+          B.tried_door = true
+
+          local prob = door_chance(C.src, C.dest)
+
+          if S.conn.lock and S.conn.lock.kind ~= "NULL" then
+            B.kind = "lock_door"
+            B.lock = S.conn.lock
+
+            -- FIXME: smells like a hack!!
+            if B.lock.item and string.sub(B.lock.item, 1, 4) == "bar_" then
+              B.kind = "bars"
+            end
+
+          elseif rand.odds(prob) then
+            B.kind = "door"
+
+          elseif (STYLE.fences == "none" or STYLE.fences == "few") and
+                 C.src.outdoor and C.dest.outdoor then
+            B.kind = "nothing"
+          end
+        end
+
+      end
+    end -- for who
+  end -- for C
 end
 
 
+function Rooms.synchronise_skies()
+  -- make sure that any two outdoor rooms which touch have the same sky_h
 
-function Room_create_sky_groups()
+  for loop = 1,10 do
+    local changes = false
 
-  -- this makes sure that any two outdoor rooms which touch will belong
-  -- to the same sky_group and hence get the same sky height.
+    for x = 1,SEED_W do for y = 1,SEED_H do
+      local S = SEEDS[x][y][1]
+      if S and S.room and S.room.sky_h then
+        for side = 2,8,2 do
+          local N = S:neighbor(side)
+          if N and N.room and N.room ~= S.room and N.room.sky_h and
+             S.room.sky_h ~= N.room.sky_h
+          then
+            S.room.sky_h = math.max(S.room.sky_h, N.room.sky_h)
+            N.room.sky_h = S.room.sky_h
+            changes = true
+          end
+        end -- for side
+      end
+    end end -- for x, y
 
-  -- setup each room
+    if not changes then break; end
+  end -- for loop
+end
 
-  each R in LEVEL.rooms do
-    if R.is_outdoor then
-      R.sky_group = { }
+
+function Rooms.border_up()
+
+  local function make_map_edge(R, S, side)
+    if R.outdoor then
+      -- a fence will be created by Layout.edge_of_map()
+      S.border[side].kind = "nothing"
+    else
+      S.border[side].kind = "wall"
+      S.border[side].can_fake_sky = true
+      S.thick[side] = 24
     end
   end
 
-  -- merge neighbors which touch each other
-
-  for kx = 1,SECTION_W do
-  for ky = 1,SECTION_H do
-
-    local K = SECTIONS[kx][ky]
-
-    if not (K and K.room and K.room.sky_group) then
-      continue
+  local function make_border(R1, S, R2, N, side)
+    if R1 == R2 then
+      -- same room : do nothing
+      S.border[side].kind = "nothing"
+      return
     end
 
-    -- only need to test south and west
-    for dir = 2,4,2 do
-      local N = K:neighbor(dir, dist)
+    if R1.outdoor and R2.natural then
+      S.border[side].kind = "fence"
 
-      if not (N and N.room and N.room.sky_group) then
-        continue
+    elseif R1.natural and R2.outdoor then
+      S.border[side].kind = "nothing"
+
+    elseif R1.outdoor then
+      if R2.outdoor or R2.natural then
+        S.border[side].kind = "fence"
+      else
+        S.border[side].kind = "facade"
+        S.border[side].facade = R2.facade
       end
 
-      Room_merge_sky_groups(N.room, K.room)
+--###   if N.kind == "small_exit" then
+--###     S.border[side].kind = "nothing"
+--###   end
 
-    end -- dir
-
-  end -- kx, ky
-  end --
-
-
-  -- Note: sky heights are determined later
-end
-
-
-function OLD_Room_decide_windows()
-
-  local function add_window(K, N, side)
-    gui.printf("Window from %s --> %s\n", K:tostr(), N:tostr())
-
-    -- FIXME
-
-    --[[ OLD OLD OLD
-    local USAGE =
-    {
-      kind = "window",
-      K1 = K, K2 = N, dir = side
-    }
-
-    local E1 = K.edges[side]
-    local E2 = N.edges[10-side]
-
-    E1.usage = USAGE
-    E2.usage = USAGE
-    --]]
-
-    K.room.num_windows = K.room.num_windows + 1
-    N.room.num_windows = N.room.num_windows + 1
-  end
-
-
-  local function can_add_window(K, side)
-    local N = K:neighbor(side)
-
-    if not N then return false end
-    if N.room == K.room then return false end
-    if N.room.kind == "REMOVED" then return false end
-
-    local E1 = K.edges[side]
-    local E2 = N.edges[10-side]
-
-    if not E1 or not E2 then return false end
-
-    if E1.usage or E2.usage then return false end
-
-    return true
-  end
-
-
-  local function try_add_windows(R, side, prob)
-    if STYLE.windows == "few"  and R.num_windows > 0 then return end
-    if STYLE.windows == "some" and R.num_windows > 2 then return end
-
-    each K in R.sections do
-      local N = K:neighbor(side)
-
-      -- FIXME: sometimes make windows from indoor to indoor
-
-      if can_add_window(K, side) and N.room.kind == "outdoor"
-         and rand.odds(prob)
+      if N.kind == "liquid" and R2.outdoor and
+        (S.kind == "liquid" or R1.quest == R2.quest)
+        --!!! or (N.room.kind == "scenic" and safe_falloff(S, side))
       then
-        add_window(K, N, side)      
+        S.border[side].kind = "nothing"
+      end
+
+      if STYLE.fences == "none" and R1.quest == R2.quest and R2.outdoor and
+         (S.kind ~= "liquid" or S.floor_h == N.floor_h)
+      then
+        S.border[side].kind = "nothing"
+      end
+
+    else -- R1 indoor
+
+      if R2.parent == R1 and not R2.outdoor then
+        S.border[side].kind = "nothing"
+        return
+      end
+
+      S.border[side].kind = "wall"
+      S.thick[side] = 24
+
+      -- liquid arches are a kind of window
+      if S.kind == "liquid" and N.kind == "liquid" and
+         (S.floor_h == N.floor_h)  --- and rand.odds(50)
+      then
+        S.border[side].kind = "liquid_arch"
+        N.border[10-side].kind = "straddle"
+        return
       end
     end
   end
 
-  
-  local function do_windows(R)
-    R.num_windows = 0
 
+  local function border_up(R)
+    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R then
+        for side = 2,8,2 do
+          if not S.border[side].kind then  -- don't clobber connections
+            local N = S:neighbor(side)
+  
+            if not (N and N.room) then
+              make_map_edge(R, S, side)
+            else
+              make_border(R, S, N.room, N, side)
+            end
+          end
+
+          assert(S.border[side].kind)
+        end -- for side
+      end
+    end end -- for x, y
+  end
+
+
+  local function get_border_list(R)
+    local list = {}
+
+    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R and not
+         (S.kind == "void" or S.kind == "diagonal" or
+          S.kind == "tall_stair")
+      then
+        for side = 2,8,2 do
+          if S.border[side].kind == "wall" then
+            table.insert(list, { S=S, side=side })
+          end
+        end -- for side
+      end
+    end end -- for x, y
+
+    return list
+  end
+
+  local function score_window_side(R, side, border_list)
+    local min_c1, max_f1 = 999, -999
+    local min_c2, max_f2 = 999, -999
+
+    local total   = 0
+    local scenics = 0
+    local doors   = 0
+    local futures = 0
+    local entry   = 0
+
+    local info = { side=side, seeds={} }
+
+    each C in R.conns do
+      local S = C:seed(R)
+      local B = S.border[side]
+
+      if S.conn_dir == side then
+        -- never any windows near a locked door
+        if B.kind == "lock_door" then
+          return nil
+        end
+
+        if B.kind == "door" or B.kind == "arch" then
+          doors = doors + 1
+        end
+
+        if C == R.entry_conn then
+          entry = 1
+        end
+      end
+    end
+
+
+    each bd in border_list do
+      local S = bd.S
+      local N = S:neighbor(side)
+
+      total = total + 1
+
+      if (bd.side == side) and S.floor_h and
+         (N and N.room and N.room.outdoor) and N.floor_h
+      -- (N.kind == "walk" or N.kind == "liquid")
+      then
+        table.insert(info.seeds, S)
+
+        if N.kind == "scenic" then
+          scenics = scenics + 1
+        end
+
+        if S.room.quest and N.room.quest and (S.room.quest.id < N.room.quest.id) then
+          futures = futures + 1
+        end
+        
+        min_c1 = math.min(min_c1, assert(S.ceil_h or R.ceil_h))
+        min_c2 = SKY_H
+
+        max_f1 = math.max(max_f1, S.floor_h)
+        max_f2 = math.max(max_f2, N.floor_h)
+
+        if N.room.natural then
+          max_f2 = math.max(max_f2, N.room.cave_floor_h + 128)
+        end
+      end 
+    end  -- for bd
+
+
+    -- nothing possible??
+    local usable = #info.seeds
+
+    if usable == 0 then return end
+
+    local min_c = math.min(min_c1, min_c2)
+    local max_f = math.max(max_f1, max_f2)
+
+    if min_c - max_f < 95 then return end
+
+    local score = 200 + gui.random() * 20
+
+    -- primary score is floor drop off
+    score = score + (max_f1 - max_f2)
+
+    score = score + (min_c  - max_f) / 8
+    score = score - usable * 22
+
+    if scenics >= 1 then score = score + 120 end
+    if entry   == 0 then score = score + 60 end
+
+    if doors   == 0 then score = score + 20 end
+    if futures == 0 then score = score + 10 end
+
+    gui.debugf("Window score @ %s ^%d --> %d\n", R:tostr(), side, score)
+
+    info.score = score
+
+
+    -- implement the window style
+    if (STYLE.windows == "few"  and score < 350) or
+       (STYLE.windows == "some" and score < 260)
+    then
+      return nil
+    end
+
+
+    -- determine height of window
+    if (min_c - max_f) >= 192 and rand.odds(20) then
+      info.z1 = max_f + 64
+      info.z2 = min_c - 64
+      info.is_tall = true
+    elseif (min_c - max_f) >= 160 and rand.odds(60) then
+      info.z1 = max_f + 32
+      info.z2 = min_c - 24
+      info.is_tall = true
+    elseif (max_f1 < max_f2) and rand.odds(30) then
+      info.z1 = min_c - 80
+      info.z2 = min_c - 32
+    else
+      info.z1 = max_f + 32
+      info.z2 = max_f + 80
+    end
+
+    -- determine width & doubleness
+    local thin_chance = math.min(6, usable) * 20 - 40
+    local dbl_chance  = 80 - math.min(3, usable) * 20
+
+    if usable >= 3 and rand.odds(thin_chance) then
+      info.width = 64
+    elseif usable <= 3 and rand.odds(dbl_chance) then
+      info.width = 192
+      info.mid_w = 64
+    elseif info.is_tall then
+      info.width = rand.sel(80, 128, 192)
+    else
+      info.width = rand.sel(20, 128, 192)
+    end
+
+    if info.width > SEED_SIZE-32 then
+       info.width = SEED_SIZE-32
+    end
+
+    return info
+  end
+
+  local function add_windows(R, info, border_list)
+    local side = info.side
+
+    each S in info.seeds do
+      S.border[side].kind = "window"
+
+      S.border[side].win_width = info.width
+      S.border[side].win_mid_w = info.mid_w
+      S.border[side].win_z1    = info.z1
+      S.border[side].win_z2    = info.z2
+
+      local N = S:neighbor(side)
+      assert(N and N.room)
+
+      N.border[10-side].kind = "nothing"
+    end -- for S
+  end
+
+  local function pick_best_side(poss)
+    local best
+
+    for side = 2,8,2 do
+      if poss[side] and (not best or poss[best].score < poss[side].score) then
+        best = side
+      end
+    end
+
+    return best
+  end
+
+  local function decide_windows(R, border_list)
+    if R.outdoor or R.natural or R.kind ~= "normal" then return end
+    if R.semi_outdoor then return end
     if STYLE.windows == "none" then return end
 
-    if R.is_outdoor then return end
+    local poss = {}
 
-    -- TODO: cavey see-through holes
-    if R.kind != "building" then return end
+    for side = 2,8,2 do
+      poss[side] = score_window_side(R, side, border_list)
+    end
 
-    local prob = style_sel("windows", 0, 20, 40, 80+19)
+    for loop = 1,2 do
+      local best = pick_best_side(poss)
 
-    local SIDES = { 2,4,6,8 }
-    rand.shuffle(SIDES)
+      if best then
+        add_windows(R, poss[best], border_list)
 
-    for _,side in ipairs(SIDES) do
-      try_add_windows(R, side, prob)
+        poss[best] = nil
+
+        -- remove the opposite side too
+        poss[10-best] = nil
+      end
     end
   end
 
 
-  ---| Room_decide_windows |---
+  local function select_picture(R, v_space, index)
+    v_space = v_space - 16
+    -- FIXME: needs more v_space checking
 
-  if STYLE.windows == "none" then return end
+    if not THEME.logos then
+      error("Game is missing logo skins")
+    end
 
-  each R in LEVEL.rooms do
-    do_windows(R)
-  end
-end
+    if rand.odds(sel(LEVEL.has_logo,7,40)) then
+      LEVEL.has_logo = true
+      return rand.key_by_probs(THEME.logos)
+    end
 
+    if R.has_liquid and index == 1 and rand.odds(75) then
+      if THEME.liquid_pics then
+        return rand.key_by_probs(THEME.liquid_pics)
+      end
+    end
 
+    local pic_tab = {}
 
-function Room_select_picture(R, v_space, index)
-  v_space = v_space - 16
-  -- FIXME: needs more v_space checking
+    local pictures = THEME.pictures
 
-  if THEME.logos and rand.odds(sel(LEVEL.has_logo, 7, 40)) then
-    LEVEL.has_logo = true
+    if pictures then
+      for name,prob in pairs(pictures) do
+        local info = GAME.PICTURES[name]
+        if info and info.height <= v_space then
+          pic_tab[name] = prob
+        end
+      end
+    end
+
+    if not table.empty(pic_tab) then
+      return rand.key_by_probs(pic_tab)
+    end
+
+    -- fallback
     return rand.key_by_probs(THEME.logos)
   end
 
-  if R.has_liquid and index == 1 and rand.odds(75) then
-    if THEME.liquid_pics then
-      return rand.key_by_probs(THEME.liquid_pics)
+  local function install_pic(R, bd, pic_name, v_space)
+    skin = assert(GAME.PICTURES[pic_name])
+
+    -- handles symmetry
+
+    for dx = 1,sel(R.mirror_x, 2, 1) do
+      for dy = 1,sel(R.mirror_y, 2, 1) do
+        local S    = bd.S
+        local side = bd.side
+
+        if dx == 2 then
+          S = S.x_peer
+          if not S then break; end
+          if geom.is_horiz(side) then side = 10-side end
+        end
+
+        if S and dy == 2 then
+          S = S.y_peer
+          if not S then break; end
+          if geom.is_vert(side) then side = 10-side end
+        end
+
+        local B = S.border[side]
+
+        if B.kind == "wall" and S.floor_h then
+          local raise = skin.raise or 32
+          if raise + skin.height > v_space-4 then
+            raise = int((v_space - skin.height) / 2)
+          end
+          B.kind = "picture"
+          B.pic_skin = skin
+          B.pic_z1 = S.floor_h + raise
+        end
+
+      end -- for dy
+    end -- for dx
+  end
+
+  local function decide_pictures(R, border_list)
+    if R.outdoor or R.natural or R.kind ~= "normal" then return end
+    if R.semi_outdoor then return end
+
+    -- filter border list to remove symmetrical peers, seeds
+    -- with pillars, etc..  Also determine vertical space.
+    local new_list = {}
+
+    local v_space = 999
+
+    each bd in border_list do
+      local S = bd.S
+      local side = bd.side
+
+      if (R.mirror_x and S.x_peer and S.sx > S.x_peer.sx) or
+         (R.mirror_y and S.y_peer and S.sy > S.y_peer.sy) or
+         (S.content == "pillar") or (S.kind == "lift")
+      then
+        -- skip it
+      else
+        table.insert(new_list, bd)
+
+        local h = (S.ceil_h or R.ceil_h) - S.floor_h
+        v_space = math.min(v_space, h)
+      end
+    end
+
+    if #new_list == 0 then return end
+
+
+    -- deice how many pictures we want
+    local perc = rand.pick { 20,30,40 }
+
+    if STYLE.pictures == "heaps" then perc = 50 end
+    if STYLE.pictures == "few"   then perc = 10 end
+
+    -- FIXME: support "none" but also force logos to appear
+    if STYLE.pictures == "none"  then perc =  7 end
+
+    local count = int(#border_list * perc / 100)
+
+    gui.debugf("Picture count @ %s --> %d\n", R:tostr(), count)
+
+    if R.mirror_x then count = int(count / 2) + 1 end
+    if R.mirror_y then count = int(count / 2) end
+
+
+    -- select one or two pictures to use
+    local pics = {}
+    pics[1] = select_picture(R, v_space, 1)
+    pics[2] = pics[1]
+
+    if #border_list >= 12 then
+      -- prefer a different pic for #2
+      for loop = 1,3 do
+        pics[2] = select_picture(R, v_space, 2)
+        if pics[2].pic_w ~= pics[1].pic_w then break; end
+      end
+    end
+
+    gui.debugf("Selected pics: %s %s\n", pics[1], pics[2])
+
+
+    for loop = 1,count do
+      if #new_list == 0 then break; end
+
+      -- FIXME !!!! SELECT GOOD SPOT
+      local b_index = rand.irange(1, #new_list)
+
+      local bd = table.remove(new_list, b_index)
+      
+      install_pic(R, bd, pics[1 + (loop-1) % 2], v_space)
+    end -- for loop
+  end
+
+
+  ---| Rooms.border_up |---
+  
+  each R in LEVEL.rooms do
+    border_up(R)
+  end
+  each R in LEVEL.scenic_rooms do
+    border_up(R)
+  end
+
+  each R in LEVEL.rooms do
+    decide_windows( R, get_border_list(R))
+    decide_pictures(R, get_border_list(R))
+  end
+end
+
+
+function Rooms.make_ceiling(R)
+
+  local function outdoor_ceiling()
+    if R.floor_max_h then
+      R.sky_h = math.max(R.sky or SKY_H, R.floor_max_h + 128)
     end
   end
 
-  local pic_tab = {}
+  local function periph_size(PER)
+    if PER[2] then return 3 end
+    if PER[1] then return 2 end
+    if PER[0] then return 1 end
+    return 0
+  end
 
-  local pictures = THEME.pictures
+  local function get_max_drop(side, offset)
+    local drop_z
+    local x1,y1, x2,y2 = geom.side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2, offset)
 
-  if pictures then
-    for name,prob in pairs(pictures) do
-      local info = GAME.PICTURES[name]
-      if info and info.height <= v_space then
-        pic_tab[name] = prob
+    for x = x1,x2 do for y = y1,y2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R then
+
+        local f_h
+        if S.kind == "walk" then
+          f_h = S.floor_h
+        elseif S.diag_new_kind == "walk" then
+          f_h = S.diag_new_z or S.floor_h
+        elseif S.kind == "stair" or S.kind == "lift" then
+          f_h = math.max(S.stair_z1, S.stair_z2)
+        elseif S.kind == "curve_stair" or S.kind == "tall_stair" then
+          f_h = math.max(S.x_height, S.y_height)
+        end
+
+        if f_h then
+          local diff_h = (S.ceil_h or R.ceil_h) - (f_h + 144)
+
+          if diff_h < 1 then return nil end
+
+          if not drop_z or (diff_h < drop_z) then
+            drop_z = diff_h
+          end
+        end
+      end
+    end end -- for x, y
+
+    return drop_z
+  end
+
+  local function add_periph_pillars(side, offset)
+    if not THEME.periph_pillar_mat then
+      return
+    end
+
+    local info = add_pegging(get_mat(THEME.periph_pillar_mat))
+
+    local x1,y1, x2,y2 = geom.side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2, offset)
+
+    if geom.is_vert(side) then x2 = x2-1 else y2 = y2-1 end
+
+    local x_dir = sel(side == 6, -1, 1)
+    local y_dir = sel(side == 8, -1, 1)
+
+    for x = x1,x2 do for y = y1,y2 do
+      local S = SEEDS[x][y][1]
+
+      -- check if all neighbors are in same room
+      local count = 0
+
+      for dx = 0,1 do for dy = 0,1 do
+        local nx = x + dx * x_dir
+        local ny = y + dy * y_dir
+
+        if Seed.valid(nx, ny, 1) and SEEDS[nx][ny][1].room == R then
+          count = count + 1
+        end
+      end end -- for dx,dy
+
+      if count == 4 then
+        local w = 12
+
+        local px = sel(x_dir < 0, S.x1, S.x2)
+        local py = sel(y_dir < 0, S.y1, S.y2)
+
+        Trans.old_quad(info, px-w, py-w, px+w, py+w, -EXTREME_H, EXTREME_H)
+        
+        R.has_periph_pillars = true
+
+        -- mark seeds [crude way to prevent stuck masterminds]
+        for dx = 0,1 do for dy = 0,1 do
+          local nx = x + dx * x_dir
+          local ny = y + dy * y_dir
+
+          SEEDS[nx][ny][1].solid_corner = true
+        end end -- for dx,dy
+      end
+    end end -- for x, y
+  end
+
+  local function create_periph_info(side, offset)
+    local t_size = sel(geom.is_horiz(side), R.tw, R.th)
+
+    if t_size < (3+offset*2) then return nil end
+
+    local drop_z = get_max_drop(side, offset)
+
+    if not drop_z or drop_z < 30 then return nil end
+
+    local PER = { max_drop=drop_z }
+
+    if t_size == (3+offset*2) then
+      PER.tight = true
+    end
+
+    if R.pillar_rows then
+      each row in R.pillar_rows do
+        if row.side == side and row.offset == offset then
+          PER.pillars = true
+        end
+      end
+    end
+
+    return PER
+  end
+
+  local function merge_periphs(side, offset)
+    local P1 = R.periphs[side][offset]
+    local P2 = R.periphs[10-side][offset]
+
+    if not (P1 and P2) then return nil end
+
+    if P1.tight and rand.odds(90) then return nil end
+
+    return
+    {
+      max_drop = math.min(P1.max_drop, P2.max_drop),
+      pillars  = P1.pillars or P2.pillars
+    }
+  end
+
+  local function decide_periphs()
+    -- a "periph" is a side of the room where we might lower
+    -- the ceiling height.  There is a "outer" one (touches the
+    -- wall) and an "inner" one (next to the outer one).
+
+    R.periphs = {}
+
+    for side = 2,8,2 do
+      R.periphs[side] = {}
+
+      for offset = 0,2 do
+        local PER = create_periph_info(side, offset)
+        R.periphs[side][offset] = PER
+      end
+    end
+
+
+    local SIDES = { 2,4 }
+    if (R.th > R.tw) or (R.th == R.tw and rand.odds(50)) then
+      SIDES = { 4,2 }
+    end
+    if rand.odds(10) then  -- swap 'em
+      SIDES[1], SIDES[2] = SIDES[2], SIDES[1]
+    end
+
+    for idx,side in ipairs(SIDES) do
+      if (R.symmetry == "xy" or R.symmetry == sel(side==2, "y", "x")) or
+         R.pillar_rows and geom.is_parallel(R.pillar_rows[1].side, side) or
+         rand.odds(50)
+      then
+        --- Symmetrical Mode ---
+
+        local PER_0 = merge_periphs(side, 0)
+        local PER_1 = merge_periphs(side, 1)
+
+        if PER_0 and PER_1 and rand.odds(sel(PER_1.pillars, 70, 10)) then
+          PER_0 = nil
+        end
+
+        if PER_0 then PER_0.drop_z = PER_0.max_drop / idx end
+        if PER_1 then PER_1.drop_z = PER_1.max_drop / idx / 2 end
+
+        R.periphs[side][0] = PER_0 ; R.periphs[10-side][0] = PER_0
+        R.periphs[side][1] = PER_1 ; R.periphs[10-side][1] = PER_1
+        R.periphs[side][2] = nil   ; R.periphs[10-side][2] = nil
+
+        if idx==1 and PER_0 and not R.pillar_rows and rand.odds(50) then
+          add_periph_pillars(side)
+          add_periph_pillars(10-side)
+        end
+      else
+        --- Funky Mode ---
+
+        -- pick one side to use   [FIXME]
+        local keep = rand.sel(50, side, 10-side)
+
+        for n = 0,2 do R.periphs[10-keep][n] = nil end
+
+        local PER_0 = R.periphs[keep][0]
+        local PER_1 = R.periphs[keep][1]
+
+        if PER_0 and PER_1 and rand.odds(5) then
+          PER_0 = nil
+        end
+
+        if PER_0 then PER_0.drop_z = PER_0.max_drop / idx end
+        if PER_1 then PER_1.drop_z = PER_1.max_drop / idx / 2 end
+
+        R.periphs[keep][2] = nil
+
+        if idx==1 and PER_0 and not R.pillar_rows and rand.odds(75) then
+          add_periph_pillars(keep)
+
+        --??  if PER_1 and rand.odds(10) then
+        --??    add_periph_pillars(keep, 1)
+        --??  end
+        end
       end
     end
   end
 
-  if not table.empty(pic_tab) then
-    return rand.key_by_probs(pic_tab)
+  local function calc_central_area()
+    R.cx1, R.cy1 = R.tx1, R.ty1
+    R.cx2, R.cy2 = R.tx2, R.ty2
+
+    for side = 2,8,2 do
+      local w = periph_size(R.periphs[side])
+
+          if side == 4 then R.cx1 = R.cx1 + w
+      elseif side == 6 then R.cx2 = R.cx2 - w
+      elseif side == 2 then R.cy1 = R.cy1 + w
+      elseif side == 8 then R.cy2 = R.cy2 - w
+      end
+    end
+
+    R.cw, R.ch = geom.group_size(R.cx1, R.cy1, R.cx2, R.cy2)
+
+    assert(R.cw >= 1)
+    assert(R.ch >= 1)
   end
 
-  return nil  -- failed
+  local function install_periphs()
+    for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R then
+      
+        local PX, PY
+
+            if x == R.tx1   then PX = R.periphs[4][0]
+        elseif x == R.tx2   then PX = R.periphs[6][0]
+        elseif x == R.tx1+1 then PX = R.periphs[4][1]
+        elseif x == R.tx2-1 then PX = R.periphs[6][1]
+        elseif x == R.tx1+2 then PX = R.periphs[4][2]
+        elseif x == R.tx2-2 then PX = R.periphs[6][2]
+        end
+
+            if y == R.ty1   then PY = R.periphs[2][0]
+        elseif y == R.ty2   then PY = R.periphs[8][0]
+        elseif y == R.ty1+1 then PY = R.periphs[2][1]
+        elseif y == R.ty2-1 then PY = R.periphs[8][1]
+        elseif y == R.ty1+2 then PY = R.periphs[2][2]
+        elseif y == R.ty2-2 then PY = R.periphs[8][2]
+        end
+
+        if PX and not PX.drop_z then PX = nil end
+        if PY and not PY.drop_z then PY = nil end
+
+        if PX or PY then
+          local drop_z = math.max((PX and PX.drop_z) or 0,
+                                  (PY and PY.drop_z) or 0)
+
+          S.ceil_h = R.ceil_h - drop_z
+        end
+
+      end -- if S.room == R
+    end end -- for x, y
+  end
+
+  local function fill_xyz(ch, is_sky, c_tex, c_light)
+    for x = R.cx1, R.cx2 do for y = R.cy1, R.cy2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R then
+      
+        S.ceil_h  = ch
+        S.is_sky  = is_sky
+        S.c_tex   = c_tex
+        S.c_light = c_light
+
+      end -- if S.room == R
+    end end -- for x, y
+  end
+
+  local function add_central_pillar()
+    -- big rooms only
+    if R.cw < 3 or R.ch < 3 then return end
+
+    -- centred only
+    if (R.cw % 2) == 0 or (R.ch % 2) == 0 then return end
+
+    local skin_names = THEME.big_pillars or THEME.pillars
+    if not skin_names then return end
+
+
+    local mx = R.cx1 + int(R.cw / 2)
+    local my = R.cy1 + int(R.ch / 2)
+
+    local S = SEEDS[mx][my][1]
+
+    -- seed is usable?
+    if S.room ~= R or S.content then return end
+    if not (S.kind == "walk" or S.kind == "liquid") then return end
+
+    -- neighbors the same?
+    for side = 2,8,2 do
+      local N = S:neighbor(side)
+      if not (N and N.room == S.room and N.kind == S.kind) then
+        return
+      end
+    end
+
+    -- OK !!
+    local which = rand.key_by_probs(skin_names)
+
+    S.content = "pillar"
+    S.pillar_skin = assert(GAME.PILLARS[which])
+
+    R.has_central_pillar = true
+
+    gui.debugf("Central pillar @ (%d,%d) skin:%s\n", S.sx, S.sy, which)
+  end
+
+  local function central_niceness()
+    local nice = 2
+
+    for x = R.cx1, R.cx2 do for y = R.cy1, R.cy2 do
+      local S = SEEDS[x][y][1]
+      
+      if S.room ~= R then return 0 end
+      
+      if S.kind == "void" or ---#  S.kind == "diagonal" or
+         S.kind == "tall_stair" or S.content == "pillar"
+      then
+        nice = 1
+      end
+    end end -- for x, y
+
+    return nice
+  end
+
+  local function test_cross_beam(dir, x1,y1, x2,y2, mode)
+    -- FIXME: count usable spots, return false for zero
+
+    for x = x1,x2 do for y = y1,y2 do
+      local S = SEEDS[x][y][1]
+      assert(S.room == R)
+
+      if S.kind == "lift" or S.kind == "tall_stair" or S.raising_start then
+        return false
+      end
+
+      if mode == "light" and (S.kind == "diagonal") then
+        return false
+      end
+    end end -- for x, y
+
+    return true
+  end
+
+  local function add_cross_beam(dir, x1,y1, x2,y2, mode)
+    local skin
+    
+    if mode == "light" then
+      if not R.quest.ceil_light then return end
+      skin = { w=R.lite_w, h=R.lite_h, lite_f=R.quest.ceil_light, trim=THEME.light_trim }
+    end
+
+    for x = x1,x2 do for y = y1,y2 do
+      local S = SEEDS[x][y][1]
+      local ceil_h = S.ceil_h or R.ceil_h
+
+      if ceil_h and S.kind ~= "void" then
+        if mode == "light" then
+          if S.content ~= "pillar" then
+            Build.ceil_light(S, ceil_h, skin)
+          end
+        else
+          Build.cross_beam(S, dir, 64, ceil_h - 16, THEME.beam_mat)
+        end
+      end
+    end end -- for x, y
+  end
+
+  local function decide_beam_pattern(poss, total, mode)
+    if table.empty(poss) then return false end
+
+    -- FIXME !!!
+    return true
+  end
+
+  local function criss_cross_beams(mode)
+    if not THEME.beam_mat then return false end
+
+    if R.children then return false end
+
+    R.lite_w = 64
+    R.lite_h = 64
+
+    local poss = {}
+
+    if R.cw > R.ch or (R.cw == R.ch and rand.odds(50)) then
+      -- vertical beams
+
+      if rand.odds(20) then R.lite_h = 192 end
+      if rand.odds(10) then R.lite_h = 128 end
+      if rand.odds(30) then R.lite_h = R.lite_w end
+
+      for x = R.cx1, R.cx2 do
+        poss[x - R.cx1 + 1] = test_cross_beam(8, x, R.ty1, x, R.ty2, mode)
+      end
+
+      if not decide_beam_pattern(poss, R.cx2 - R.cx1 + 1, mode) then
+        return false
+      end
+
+      for x = R.cx1, R.cx2 do
+        if poss[x - R.cx1 + 1] then
+          add_cross_beam(8, x, R.ty1, x, R.ty2)
+        end
+      end
+
+    else -- horizontal beams
+
+      if rand.odds(20) then R.lite_w = 192 end
+      if rand.odds(10) then R.lite_w = 128 end
+      if rand.odds(30) then R.lite_w = R.lite_h end
+
+      for y = R.cy1, R.cy2 do
+        poss[y - R.cy1 + 1] = test_cross_beam(6, R.tx1, y, R.tx2, y, mode)
+      end
+
+      if not decide_beam_pattern(poss, R.cy2 - R.cy1 + 1, mode) then
+        return false
+      end
+
+      for y = R.cy1, R.cy2 do
+        if poss[y - R.cy1 + 1] then
+          add_cross_beam(6, R.tx1, y, R.tx2, y, mode)
+        end
+      end
+    end
+
+    return true
+  end
+
+  local function corner_supports()
+    if not THEME.corner_supports then
+      return false
+    end
+
+    local mat = rand.key_by_probs(THEME.corner_supports)
+
+    local SIDES = { 1, 7, 3, 9 }
+
+    -- first pass only checks if possible
+    for loop = 1,2 do
+      local poss = 0
+
+      for where = 1,4 do
+        local cx = sel((where <= 2), R.tx1, R.tx2)
+        local cy = sel((where % 2) == 1, R.ty1, R.ty2)
+        local S = SEEDS[cx][cy][1]
+        if S.room == R and not S.conn and
+           (S.kind == "walk" or S.kind == "liquid")
+        then
+
+          poss = poss + 1
+
+          if loop == 2 then
+            local skin = { w=24, beam_w=mat, x_offset=0 }
+            ---## if R.has_lift or (R.id % 5) == 4 then
+            ---##   skin = { w=24, beam_w="SUPPORT3", x_offset=0 }
+            ---## end
+            Build.corner_beam(S, SIDES[where], skin)
+          end
+
+        end
+      end
+
+      if poss < 3 then return false end
+    end
+
+    return true
+  end
+
+  local function do_central_area()
+    calc_central_area()
+
+    local has_sky_nb = R:has_sky_neighbor()
+
+    if R.has_periph_pillars and not has_sky_nb and rand.odds(16) then
+      fill_xyz(R.ceil_h, true)
+      R.semi_outdoor = true
+      return
+    end
+
+
+    if (R.tw * R.th) <= 18 and rand.odds(20) then
+      if corner_supports() and rand.odds(35) then return end
+    end
+
+
+    if not R.quest.ceil_light and THEME.ceil_lights then
+      R.quest.ceil_light = rand.key_by_probs(THEME.ceil_lights)
+    end
+
+    local beam_chance = style_sel("beams", 0, 5, 25, 75)
+
+    if rand.odds(beam_chance) then
+      if criss_cross_beams("beam") then return end
+    end
+
+    if rand.odds(42) then
+      if criss_cross_beams("light") then return end
+    end
+
+
+    -- shrink central area until there are nothing which will
+    -- get in the way of a ceiling prefab.
+    local nice = central_niceness()
+
+gui.debugf("Original @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
+
+    while nice < 2 and (R.cw >= 3 or R.ch >= 3) do
+      
+      if R.cw > R.ch or (R.cw == R.ch and rand.odds(50)) then
+        assert(R.cw >= 3)
+        R.cx1 = R.cx1 + 1
+        R.cx2 = R.cx2 - 1
+      else
+        assert(R.ch >= 3)
+        R.cy1 = R.cy1 + 1
+        R.cy2 = R.cy2 - 1
+      end
+
+      R.cw, R.ch = geom.group_size(R.cx1, R.cy1, R.cx2, R.cy2)
+
+      nice = central_niceness()
+    end
+      
+gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
+
+
+    add_central_pillar()
+
+    if nice ~= 2 or not THEME.big_lights then return end
+
+      local ceil_info  = get_mat(R.main_tex)
+      local sky_info   = get_sky()
+      local brown_info = get_mat(rand.key_by_probs(R.theme.ceilings))
+
+      local light_name = rand.key_by_probs(THEME.big_lights)
+      local light_info = get_mat(light_name)
+      light_info.b_face.light = 0.85
+
+      -- lighting effects
+      -- (They can break lifts, hence the check here)
+      if not R.has_lift then
+            if rand.odds(10) then light_info.sec_kind = 8
+        elseif rand.odds(6)  then light_info.sec_kind = 3
+        elseif rand.odds(3)  then light_info.sec_kind = 2
+        end
+      end
+
+    local trim   = THEME.ceiling_trim
+    local spokes = THEME.ceiling_spoke
+
+    if STYLE.lt_swapped ~= "none" then
+      trim, spokes = spokes, trim
+    end
+
+    if STYLE.lt_trim == "none" or (STYLE.lt_trim == "some" and rand.odds(50)) then
+      trim = nil
+    end
+    if STYLE.lt_spokes == "none" or (STYLE.lt_spokes == "some" and rand.odds(70)) then
+      spokes = nil
+    end
+
+    if R.cw == 1 or R.ch == 1 then
+      fill_xyz(R.ceil_h+32, false, light_name, 0.75)
+      return
+    end
+
+    local shape = rand.sel(30, "square", "round")
+
+    local w = 96 + 140 * (R.cw - 1)
+    local h = 96 + 140 * (R.ch - 1)
+    local z = (R.cw + R.ch) * 8
+
+    Build.sky_hole(R.cx1,R.cy1, R.cx2,R.cy2, shape, w, h,
+                   ceil_info, R.ceil_h,
+                   sel(not has_sky_nb and not R.parent and rand.odds(60), sky_info,
+                       rand.sel(75, light_info, brown_info)), R.ceil_h + z,
+                   trim, spokes)
+  end
+
+  local function indoor_ceiling()
+    if R.natural or R.kind ~= "normal" then
+      return
+    end
+
+    assert(R.floor_max_h)
+
+    local avg_h = int((R.floor_min_h + R.floor_max_h) / 2)
+    local min_h = R.floor_max_h + 128
+
+    local tw = R.tw or R.sw
+    local th = R.th or R.sh
+
+    local approx_size = (2 * math.min(tw, th) + math.max(tw, th)) / 3.0
+    local tallness = (approx_size + rand.range(-0.6,1.6)) * 64.0
+
+    if tallness < 128 then tallness = 128 end
+    if tallness > 448 then tallness = 448 end
+
+    R.tallness = int(tallness / 32.0) * 32
+
+    gui.debugf("Tallness @ %s --> %d\n", R:tostr(), R.tallness)
+ 
+    R.ceil_h = math.max(min_h, avg_h + R.tallness)
+
+    R.ceil_tex = rand.key_by_probs(R.theme.ceilings)
+
+-- [[
+    decide_periphs()
+    install_periphs()
+
+    do_central_area()
+--]]
+
+--[[
+    if R.tx1 and R.tw >= 7 and R.th >= 7 then
+
+      Build.sky_hole(R.tx1,R.ty1, R.tx2,R.ty2,
+                     "round", w, h,
+                     outer_info, R.ceil_h,
+                     nil, R.ceil_h , ---  + z,
+                     metal, nil)
+
+      w = 96 + 110 * (R.tx2 - R.tx1 - 4)
+      h = 96 + 110 * (R.ty2 - R.ty1 - 4)
+
+      outer_info.b_face.tex = "F_SKY1"
+      outer_info.b_face.light = 0.8
+
+      Build.sky_hole(R.tx1+2,R.ty1+2, R.tx2-2,R.ty2-2,
+                     "round", w, h,
+                     outer_info, R.ceil_h + 96,
+                     inner_info, R.ceil_h + 104,
+                     metal, silver)
+    end
+
+    if R.tx1 and R.tw == 4 and R.th == 4 then
+      local w = 256
+      local h = 256
+
+      for dx = 0,1 do for dy = 0,0 do
+        local tx1 = R.tx1 + dx * 2
+        local ty1 = R.ty1 + dy * 2
+
+        local tx2 = R.tx1 + dx * 2 + 1
+        local ty2 = R.ty1 + dy * 2 + 3
+
+        Build.sky_hole(tx1,ty1, tx2,ty2,
+                       "square", w, h,
+                       outer_info, R.ceil_h,
+                       inner_info, R.ceil_h + 36,
+                       metal, metal)
+      end end -- for dx, dy
+    end
+
+    if R.tx1 and (R.tw == 3 or R.tw == 5) and (R.th == 3 or R.th == 5) then
+      for x = R.tx1+1, R.tx2-1, 2 do
+        for y = R.ty1+1, R.ty2-1, 2 do
+          local S = SEEDS[x][y][1]
+          if not (S.kind == "void" or S.kind == "diagonal") then
+            Build.sky_hole(x,y, x,y, "square", 160,160,
+                           metal,      R.ceil_h+16,
+                           inner_info, R.ceil_h+32,
+                           nil, silver)
+          end
+        end -- for y
+      end -- for x
+    end
+--]]
+  end
+
+
+  ---| Rooms.make_ceiling |---
+
+  if R.outdoor then
+    outdoor_ceiling()
+  else
+    indoor_ceiling()
+  end
 end
 
 
-------------------------------------------------------------------------
+function Rooms.add_crates(R)
 
+  -- NOTE: temporary crap!
+  -- (might be slightly useful for finding big spots for masterminds)
 
-function ROOM_CLASS.find_closet_spot(R, want_deep)
+  local function test_spot(S, x, y)
+    for dx = 0,1 do for dy = 0,1 do
+      local N = SEEDS[x+dx][y+dy][1]
+      if not N or N.room ~= S.room then return false end
 
-  local function eval_closet_spot(K, dir)
-    -- returns a score, or negative value if not possible at all
-    -- 'K' parameter is a section in the room
+      if N.kind ~= "walk" or not N.floor_h then return false end
 
-    local N = K:neighbor(dir)
+      if math.abs(N.floor_h - S.floor_h) > 0.5 then return false end
+    end end -- for dx, dy
 
-    if  not N then return -1 end
-    if N.used then return -1 end
-
-    local score = K:eval_exit(dir) * 100
-    assert(score >= 0)
-
-    local long, deep = N:long_deep(dir)
-
-    score = score + deep * 8
-
-    -- prefer edge of map (leave interior hallway channels free)
-    if (geom.is_horiz(dir) and (N.kx <= 2 or N.kx >= SECTION_W - 1)) or
-       (geom. is_vert(dir) and (N.ky <= 2 or N.ky >= SECTION_H - 1))
-    then
-      score = score + 50
-    end
-
-    return score
+    return true
   end
 
-  --- find_closet_spot ---
+  local function find_spots()
+    local list = {}
 
-  local deep = sel(want_deep, 2, 1)  -- FIXME!! not used yet
+    for x = R.tx1, R.tx2-1 do for y = R.ty1, R.ty2-1 do
+      local S = SEEDS[x][y][1]
+      if S.room == R and S.kind == "walk" and S.floor_h then
+        if test_spot(S, x, y) then
+          table.insert(list, { S=S, x=x, y=y })
+        end
+      end
+    end end -- for x, y
 
-  local best
-  local best_score = -9e9
+    return list
+  end
 
-  each K in R.sections do
+
+  --| Rooms.add_crates |--
+
+  if STYLE.crates == "none" then return end
+
+  if R.natural then return end
+  if R.kind ~= "normal" then return end
+
+  local skin
+  local skin_names
+
+  if R.outdoor then
+    -- FIXME: don't separate them
+    skin_names = THEME.out_crates
+  else
+    skin_names = THEME.crates
+  end
+
+  if not skin_names then return end
+  skin = assert(GAME.CRATES[rand.key_by_probs(skin_names)])
+
+  local chance
+
+  if STYLE.crates == "heaps" then
+    chance = sel(R.outdoor, 25, 40)
+    if rand.odds(20) then chance = chance * 2 end
+  else
+    chance = sel(R.outdoor, 15, 25)
+    if rand.odds(10) then chance = chance * 3 end
+  end
+
+  each spot in find_spots() do
+    if rand.odds(chance) then
+      spot.S.solid_corner = true
+      local z_top = spot.S.floor_h + (skin.h or 64)
+      Build.crate(spot.S.x2, spot.S.y2, z_top, skin, R.outdoor)
+    end
+  end
+end
+
+
+function Rooms.do_small_exit()
+  local C = R.conns[1]
+  local T = C:seed(C:neighbor(R))
+  local out_combo = T.room.main_tex
+  if T.room.outdoor then out_combo = R.main_tex end
+
+  -- FIXME: use single one over a whole episode
+  local skin_name = rand.key_by_probs(THEME.small_exits)
+  local skin = assert(GAME.EXITS[skin_name])
+
+  local skin2 =
+  {
+    wall = out_combo,
+    floor = T.f_tex or C.conn_ftex,
+    ceil = out_combo,
+  }
+
+  assert(THEME.exit.switches)
+  -- FIXME: hacky
+  skin.switch = rand.key_by_probs(THEME.exit.switches)
+
+  Build.small_exit(R, THEME.exit, skin, skin2)
+  return
+end
+
+
+function Rooms.do_stairwell(R)
+  if not LEVEL.well_tex then
+    LEVEL.well_tex   = rand.key_by_probs(THEME.stairwell_walls)
+    LEVEL.well_floor = rand.key_by_probs(THEME.stairwell_floors)
+  end
+
+  local skin = { wall=LEVEL.well_tex, floor=LEVEL.wall_floor }
+  Build.stairwell(R, skin)
+end
+
+
+function Rooms.build_seeds(R)
+
+  local function do_teleporter(S)
+    -- TEMP HACK CRUD JUNK
+
+    local idx = S.sx - S.room.sx1 + 1
+
+if idx < 1 then return end
+
+    if idx > #S.room.teleports then return end
+
+    local TELEP = S.room.teleports[idx]
+
+
+    local mx = int((S.x1 + S.x2)/2)
+    local my = int((S.y1 + S.y2)/2)
+
+    local x1 = mx - 32
+    local y1 = my - 32
+    local x2 = mx + 32
+    local y2 = my + 32
+
+    local z1 = (S.floor_h or R.floor_h) + 16
+
+    local tag = sel(TELEP.src == S.room, TELEP.src_tag, TELEP.dest_tag)
+    assert(tag)
+
+
+gui.printf("do_teleport\n")
+    local gate_info = get_mat(THEME.teleporter_mat)
+    gate_info.sec_tag = tag
+
+    Trans.old_quad(gate_info, x1,y1, x2,y2, -EXTREME_H, z1)
+
+    Trans.entity("teleport_spot", (x1+x2)/2, (y1+y2)/2, z1, { angle=0 })
+  end
+
+
+  local function dir_for_wotsit(S)
+    local dirs  = {}
+    local missing_dir
+  
     for dir = 2,8,2 do
-      local score = eval_closet_spot(K, dir)
+      local N = S:neighbor(dir)
+      if N and N.room == R and N.kind == "walk" and
+         N.floor_h and math.abs(N.floor_h - S.floor_h) < 17
+      then
+        table.insert(dirs, dir)
+      else
+        missing_dir = dir
+      end
+    end
 
--- stderrf("eval_closet_spot @ %s dir:%d --> %1.1f\n", K:tostr(), dir, score)
+    if #dirs == 1 then return dirs[1] end
 
-      if score >= 0 and score > best_score then
-        best = { K=K, dir=dir }
-        best_score = score
+    if #dirs == 3 then return 10 - missing_dir end
+
+    if S.room.entry_conn then
+      local entry_S = S.room.entry_conn:seed(S.room)
+      local exit_dir = assert(entry_S.conn_dir)
+
+      if #dirs == 0 then return exit_dir end
+
+      each dir in dirs do
+        if dir == exit_dir then return exit_dir end
+      end
+    end
+
+    if #dirs > 0 then
+      return rand.pick(dirs)
+    end
+
+    return rand.irange(1,4)*2
+  end
+
+  local function player_angle(S)
+    if R.sh > R.sw then
+      if S.sy > (R.sy1 + R.sy2) / 2 then 
+        return 270
+      else
+        return 90
+      end
+    else
+      if S.sx > (R.sx1 + R.sx2) / 2 then 
+        return 180
+      else
+        return 0
       end
     end
   end
 
-  if best then
-    return best.K, best.dir
+  local function do_purpose(S)
+    local sx, sy = S.sx, S.sy
+
+    local z1 = S.floor_h or R.floor_h
+    local z2 = S.ceil_h  or R.ceil_h or SKY_H
+
+    local mx, my = S:mid_point()
+
+    if R.purpose == "START" then
+      local angle = player_angle(S)
+      local dist = 56
+
+      -- TODO: fix this
+      if false and PARAM.raising_start and R.svolume >= 20 and not R.natural
+         and THEME.raising_start_switch and rand.odds(25)
+      then
+        gui.debugf("Raising Start made\n")
+
+        local skin =
+        {
+          f_tex = S.f_tex or R.main_tex,
+          switch_w = THEME.raising_start_switch,
+        }
+
+        Build.raising_start(S, 6, z1, skin)
+        angle = 0
+
+        S.no_floor = true
+        S.raising_start = true
+        R.has_raising_start = true
+      else
+        local skin = { floor="O_BOLT", x_offset=36, y_offset=-8, peg=1 }
+        Build.pedestal(S, z1, skin)
+      end
+
+      Trans.entity("player1", mx, my, z1, { angle=angle })
+
+      if GAME.ENTITIES["player2"] then
+        Trans.entity("player2", mx - dist, my, z1, { angle=angle })
+        Trans.entity("player3", mx + dist, my, z1, { angle=angle })
+        Trans.entity("player4", mx, my - dist, z1, { angle=angle })
+      end
+
+      -- save position for the demo generator
+      LEVEL.player_pos =
+      {
+        S=S, R=R, x=mx, y=my, z=z1, angle=angle,
+      }
+
+      -- never put monsters next to the start spot
+      for dir = 2,8,2 do
+        local N = S:neighbor(dir)
+        if N and N.room == R then
+          N.no_monster = true
+        end
+      end
+
+    elseif R.purpose == "EXIT" and OB_CONFIG.game == "quake" then
+      local skin = { floor="SLIP2", wall="SLIPSIDE" }
+
+      Build.quake_exit_pad(S, z1 + 16, skin, LEVEL.next_map)
+
+    elseif R.purpose == "EXIT" then
+      local CS = R.conns[1]:seed(R)
+      local dir = dir_for_wotsit(S)
+
+      if R.outdoor and THEME.out_exits then
+        -- FIXME: use single one for a whole episode
+        local skin_name = rand.key_by_probs(THEME.out_exits)
+        local skin = assert(GAME.EXITS[skin_name])
+        Build.outdoor_exit_switch(S, dir, z1, skin)
+
+      elseif THEME.exits then
+        -- FIXME: use single one for a whole episode
+        local skin_name = rand.key_by_probs(THEME.exits)
+        local skin = assert(GAME.EXITS[skin_name])
+        Build.exit_pillar(S, z1, skin)
+      end
+
+    elseif R.purpose == "KEY" then
+      local LOCK = assert(R.lock)
+
+      if rand.odds(15) and THEME.lowering_pedestal_skin then
+        local z_top = math.max(z1+128, R.floor_max_h+64)
+        if z_top > z2-32 then
+           z_top = z2-32
+        end
+
+        Build.lowering_pedestal(S, z_top, THEME.lowering_pedestal_skin)
+
+        Trans.entity(LOCK.item, mx, my, z_top)
+      else
+        if rand.odds(98) then
+          local skin = { floor=THEME.pedestal_mat }
+          Build.pedestal(S, z1, skin)
+        end
+        Trans.entity(LOCK.item, mx, my, z1)
+      end
+
+    elseif R.purpose == "SWITCH" then
+      local LOCK = assert(R.lock)
+gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
+      local INFO = assert(GAME.SWITCHES[LOCK.item])
+      Build.small_switch(S, dir_for_wotsit(S), z1, INFO.skin, LOCK.tag)
+
+    else
+      error("unknown purpose: " .. tostring(R.purpose))
+    end
   end
 
-  return nil
-end
 
+  local function do_weapon(S)
+    local sx, sy = S.sx, S.sy
 
-function ROOM_CLASS.install_closet(R, K, dir, kind, skin)
-  local N = K:neighbor(dir)
-  assert(N)
+    local z1 = S.floor_h or R.floor_h
+    local z2 = S.ceil_h  or R.ceil_h or SKY_H
 
-  -- create closet object
-  local CL = CLOSET_CLASS.new(kind, R)
+    local mx, my = S:mid_point()
 
-  gui.debugf("%s @ %s dir:%d\n", CL:tostr(), N:tostr(), 10 - dir)
+    local weapon = assert(S.content_weapon)
 
-  CL.closet_kind = kind
-  CL.skin = skin
+    if R.hallway or R == LEVEL.start_room then
+      Trans.entity(weapon, mx, my, z1)
 
-  CL.section = N
-  CL.dir = 10 - dir
+    elseif rand.odds(40) and THEME.lowering_pedestal_skin2 then
+      local z_top = math.max(z1+80, R.floor_max_h+40)
+      if z_top > z2-32 then
+         z_top = z2-32
+      end
 
-  CL.conn_group = R.conn_group  -- keep CONN:add_it() happy
+      Build.lowering_pedestal(S, z_top, THEME.lowering_pedestal_skin2)
 
-  -- FIXME: assumes a key, need a way to have other items
-  if kind == "item" then
-    CL.item = R.purpose_lock.key
-  end
+      Trans.entity(weapon, mx, my, z_top)
+    else
+      local skin = { floor=THEME.pedestal_mat }
+      Build.pedestal(S, z1, skin)
 
-  -- mark section as used
-  N:set_closet(CL)
+      Trans.entity(weapon, mx, my, z1)
+    end
 
-  CL:install()
-
-  table.insert(R.closets, CL)
-
-
-  -- create connection
-  local D = CONN_CLASS.new("closet", R, CL, dir)
-
-  D.K1 = K
-  D.K2 = N
-
-  D:add_it()
-
-  CL.conn = D
-end
-
-
-function ROOM_CLASS.add_closet(R, closet_kind)
-  -- check styles
-  local STYLE_NAMES =
-  {
-    trap = "traps"
-    secret = "secrets"
-  }
-
-  local style_name = STYLE_NAMES[closet_kind] or "closets"
-
-  if style_name then
-    local prob = style_sel(style_name, 0, 20, 60, 95)
-
-    if not rand.odds(prob) then return false end
+    gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", weapon, mx, my, z1)
   end
 
 
-  local env =
-  {
-    seed_w = 1
-    seed_h = 1
-
-    room = R.kind
-  }
-
-  local reqs =
-  {
-    kind  = closet_kind
-    where = "closet"
-  }
-
-  if closet_kind == "switch" then
-    reqs.switch = R.purpose_lock.switch
+  local function vis_mark_wall(S, side)
+    gui.debugf("VIS %d %d %s\n", S.sx, S.sy, side)
   end
 
+  local function vis_seed(S)
+    if S.kind == "void" then
+      -- vis_mark_solid(S)
+      return
+    end
 
-  local list = Room_match_skins(env, { reqs })
+    for side = 2,8,2 do
+      local N = S:neighbor(side)
+      local B_kind = S.border[side].kind
 
-  -- keep trying prefabs until one fits
-  while not table.empty(list) do
-    local skin_name = rand.key_by_probs(list)
-    list[skin_name] = nil
-
-    local skin = GAME.SKINS[skin_name]
-
-    local want_deep = false -- FIXME: proper "can fit" checking
-                            -- local long, deep = blah....
-
-    local K, dir = R:find_closet_spot(R, want_deep)
-
-    if not K then continue end
-
-    R:install_closet(K, dir, closet_kind, skin)
-
-    return true  -- OK
-  end
-
-  return false  -- nothing worked
-end
-
-
-
-function Room_add_closets()
-
-  -- handle exit room first (give it priority)
-  if LEVEL.exit_room:add_closet("exit") then
-    LEVEL.exit_room.purpose_is_done = true
-  end
-
-  local room_list = table.copy(LEVEL.rooms)
-
-  -- now do teleporters
-  rand.shuffle(room_list)
-
-  each R in room_list do
-    if R:has_teleporter() then
-      if R:add_closet("teleporter") then
-        R.has_teleporter_closet = true
+      if not N or N.free or N.kind == "void" or
+         B_kind == "wall" or B_kind == "picture"
+      then
+        vis_mark_wall(S, side)
       end
     end
   end
 
-  -- switch closets and key niches
-  rand.shuffle(room_list)
+  local function Split_quad(S, info, x1,y1, x2,y2, z1,z2)
+    local prec = GAME.lighting_precision or "medium"
 
-  each R in room_list do
-    if R.purpose == "SOLUTION" and R.purpose_lock.kind == "SWITCH" then
-      if R:add_closet("switch") then
-        R.purpose_is_done = true
+    if OB_CONFIG.game == "quake" then prec = "low" end
+    if R.outdoor then prec = "low" end
+    if S.content == "wotsit" then prec = "low" end
+
+    if prec == "high" then
+      for i = 0,5 do for k = 0,5 do
+        local ax = int((x1*i+x2*(6-i)) / 6)
+        local ay = int((y1*k+y2*(6-k)) / 6)
+        local bx = int((x1*(i+1)+x2*(5-i)) / 6)
+        local by = int((y1*(k+1)+y2*(5-k)) / 6)
+        
+        Trans.old_quad(info, ax,ay, bx,by, z1,z2)
+      end end
+
+    elseif prec == "medium" then
+      local ax = int((x1*2+x2) / 3)
+      local ay = int((y1*2+y2) / 3)
+      local bx = int((x1+x2*2) / 3)
+      local by = int((y1+y2*2) / 3)
+
+      Trans.old_quad(info, x1,y1, ax,ay, z1,z2)
+      Trans.old_quad(info, ax,y1, bx,ay, z1,z2)
+      Trans.old_quad(info, bx,y1, x2,ay, z1,z2)
+
+      Trans.old_quad(info, x1,ay, ax,by, z1,z2)
+      Trans.old_quad(info, ax,ay, bx,by, z1,z2)
+      Trans.old_quad(info, bx,ay, x2,by, z1,z2)
+
+      Trans.old_quad(info, x1,by, ax,y2, z1,z2)
+      Trans.old_quad(info, ax,by, bx,y2, z1,z2)
+      Trans.old_quad(info, bx,by, x2,y2, z1,z2)
+
+    else
+      Trans.old_quad(info, x1,y1, x2,y2, z1,z2)
+    end
+  end
+
+
+  local function build_seed(S)
+    if S.already_built then
+      return
+    end
+
+    vis_seed(S)
+
+    local x1 = S.x1
+    local y1 = S.y1
+    local x2 = S.x2
+    local y2 = S.y2
+
+    local z1 = S.floor_h or R.floor_h or (S.conn and S.conn.conn_h) or 0
+    local z2 = S.ceil_h  or R.ceil_h or R.sky_h or SKY_H
+
+    assert(z1 and z2)
+
+
+    local w_tex = S.w_tex or R.main_tex
+    local f_tex = S.f_tex or R.main_tex
+    local c_tex = S.c_tex or sel(R.outdoor, "_SKY", R.ceil_tex)
+
+    if R.kind == "hallway" then
+      w_tex = assert(LEVEL.hall_tex)
+    elseif R.kind == "stairwell" then
+      w_tex = assert(LEVEL.well_tex)
+    end
+
+    local o_tex = w_tex
+
+    if S.conn_dir then
+      local N = S:neighbor(S.conn_dir)
+
+      if N.room.hallway then
+        o_tex = LEVEL.hall_tex
+      elseif N.room.stairwell then
+        o_tex = LEVEL.well_tex
+      elseif not N.room.outdoor and N.room ~= R.parent then
+        o_tex = N.w_tex or N.room.main_tex
+      elseif N.room.outdoor and not (R.outdoor or R.natural) then
+        o_tex = R.facade or w_tex
       end
     end
 
-    if R.purpose == "SOLUTION" and R.purpose_lock.kind == "KEY" then
-      if R:add_closet("item") then
-        R.purpose_is_done = true
+
+    local sec_kind
+
+
+    -- coords for solid block floor and ceiling
+    local fx1, fy1 = x1, y1
+    local fx2, fy2 = x2, y2
+
+    local cx1, cy1 = x1, y1
+    local cx2, cy2 = x2, y2
+
+    local function shrink_floor(side, len)
+      if side == 2 then fy1 = fy1 + len end
+      if side == 8 then fy2 = fy2 - len end
+      if side == 4 then fx1 = fx1 + len end
+      if side == 6 then fx2 = fx2 - len end
+    end
+
+    local function shrink_ceiling(side, len)
+      if side == 2 then cy1 = cy1 + len end
+      if side == 8 then cy2 = cy2 - len end
+      if side == 4 then cx1 = cx1 + len end
+      if side == 6 then cx2 = cx2 - len end
+    end
+
+    local function shrink_both(side, len)
+      shrink_floor(side, len)
+      shrink_ceiling(side, len)
+    end
+
+
+    -- SIDES
+
+    for side = 2,8,2 do
+      local N = S:neighbor(side)
+
+      if R.outdoor and N and ((N.room and not N.room.outdoor) or
+                              (N.edge_of_map and N.building))
+      then
+        local dist = 24 + int((z2 - z1) / 4)
+        if dist > 160 then dist = 160 end
+        Build.shadow(S, side, dist)
+
+      elseif R.outdoor and N and N.edge_of_map and N.fence_h then
+        Build.shadow(S, side, 20, N.fence_h - 4)
+      end
+
+      local border = S.border[side]
+      local B_kind = S.border[side].kind
+
+      -- hallway hack
+      if R.hallway and not (S.kind == "void") and
+         ( (B_kind == "wall")
+          or
+           (S:neighbor(side) and S:neighbor(side).room == R and
+            S:neighbor(side).kind == "void")
+         )
+      then
+        local skin = { wall=LEVEL.hall_tex, trim1=THEME.hall_trim1, trim2=THEME.hall_trim2 }
+        Build.detailed_hall(S, side, z1, z2, skin)
+
+        S.border[side].kind = nil
+        B_kind = nil
+      end
+
+      if B_kind == "wall" and R.kind ~= "scenic" then  -- FIXME; scenic check is bogus
+        Build.wall(S, side, w_tex)
+        shrink_both(side, 4)
+      end
+
+      if B_kind == "facade" then
+        Build.facade(S, side, S.border[side].facade)
+      end
+
+      if B_kind == "window" then
+        local B = S.border[side]
+        local skin = { wall=w_tex, side_t=THEME.window_side_mat or w_tex, facade=R.facade or w_tex }
+        -- skin.floor = f_tex
+
+        Build.window(S, side, B.win_width, B.win_mid_w,
+                     B.win_z1, B.win_z2, skin)
+        shrink_both(side, 4)
+      end
+
+      if B_kind == "picture" then
+        local B = S.border[side]
+        B.pic_skin.wall = w_tex
+
+        Build.picture(S, side, B.pic_z1, B.pic_z2, B.pic_skin)
+        shrink_both(side, 4)
+      end
+
+      if B_kind == "fence"  then
+        local skin = { h=30, wall=w_tex, floor=f_tex }
+        Build.fence(S, side, R.fence_h or ((R.floor_h or z1)+skin.h), skin)
+        shrink_floor(side, 4)
+      end
+
+      if B_kind == "arch" then
+        local z = assert(S.conn and S.conn.conn_h)
+        local skin = { wall=w_tex, floor=f_tex, other=o_tex, break_t=THEME.track_mat }
+
+        Build.archway(S, side, z, z+112, skin)
+        shrink_ceiling(side, 4)
+
+        if R.outdoor and N.room.outdoor then
+          Build.shadow(S,  side, 96)
+          Build.shadow(S, -side, 96)
+        end
+
+        assert(not S.conn.already_made_lock)
+        S.conn.already_made_lock = true
+      end
+
+      if B_kind == "liquid_arch" then
+        local other_mat = sel(N.room.outdoor, R.facade, N.room.main_tex)
+        local skin = { wall=w_tex, floor=f_tex, other=other_mat, break_t=THEME.track_mat }
+        local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
+
+        Build.archway(S, side, z1, z_top, skin)
+        shrink_ceiling(side, 4)
+      end
+
+      if B_kind == "door" then
+        local z = assert(S.conn and S.conn.conn_h)
+
+        -- FIXME: better logic for selecting doors
+        local doors = THEME.doors
+        if not doors then
+          error("Game is missing doors table")
+        end
+
+        local door_name = rand.key_by_probs(doors)
+        local skin = assert(GAME.DOORS[door_name])
+
+        local skin2 = { inner=w_tex, outer=o_tex }
+
+        assert(skin.track)
+        assert(skin.step_w)
+
+        Build.door(S, side, z, skin, skin2, 0)
+        shrink_ceiling(side, 4)
+
+        assert(not S.conn.already_made_lock)
+        S.conn.already_made_lock = true
+      end
+
+      if B_kind == "lock_door" then
+        local z = assert(S.conn and S.conn.conn_h)
+
+        local LOCK = assert(S.border[side].lock)
+        local skin = assert(GAME.DOORS[LOCK.item])
+
+--if not skin.track then gui.printf("%s", table.tostr(skin,1)); end
+        assert(skin.track)
+
+        local skin2 = { inner=w_tex, outer=o_tex }
+
+        local reversed = (S == S.conn.dest_S)
+
+        Build.door(S, side, S.conn.conn_h, skin, skin2, LOCK.tag, reversed)
+        shrink_ceiling(side, 4)
+
+        assert(not S.conn.already_made_lock)
+        S.conn.already_made_lock = true
+      end
+
+      if B_kind == "bars" then
+        local LOCK = assert(S.border[side].lock)
+        local skin = assert(GAME.DOORS[LOCK.item])
+
+        local z_top = math.max(R.floor_max_h, N.room.floor_max_h) + skin.bar_h
+        local ceil_min = math.min(R.ceil_h or SKY_H, N.room.ceil_h or SKY_H)
+
+        if z_top > ceil_min-32 then
+           z_top = ceil_min-32
+        end
+
+        Build.lowering_bars(S, side, z_top, skin, LOCK.tag)
+
+        assert(not S.conn.already_made_lock)
+        S.conn.already_made_lock = true
+      end
+    end -- for side
+
+
+    if R.sides_only then return end
+
+
+    -- DIAGONALS
+
+    if S.kind == "diagonal" then
+
+      local diag_info = get_mat(w_tex, S.stuckie_ftex) ---### , c_tex)
+
+      Build.diagonal(S, S.stuckie_side, diag_info, S.stuckie_z)
+
+      S.kind = assert(S.diag_new_kind)
+
+      if S.diag_new_z then
+        S.floor_h = S.diag_new_z
+        z1 = S.floor_h
+      end
+      
+      if S.diag_new_ftex then
+        S.f_tex = S.diag_new_ftex
+        f_tex = S.f_tex
       end
     end
-  end
-
-  -- TODO: weapon niches
-
-  -- TODO ITEM / SECRET closets in start room
-
-  -- do the other kinds of closets now, visiting rooms in random order
-
-  for loop = 1,4 do
-    rand.shuffle(room_list)
-
-    each R in room_list do
-
-      local kind = rand.key_by_probs { trap=60, secret=10, item=20 }
-
---!!!! FIXME     R:add_closet(kind)
-    end
-  end      
-end
 
 
+    -- CEILING
 
-function Room_add_voids()
-  each R in LEVEL.rooms do
-    if R.kind == "building" then
-      R:void_up_parts()
-    end
-  end
-end
-
-
-------------------------------------------------------------------------
-
-
-function Room_add_sun()
-  -- game check
-  if not GAME.ENTITIES["sun"] then return end
-
-  local sun_r = 25000
-  local sun_h = 40000
-
-  -- nine lights in the sky, one is "the sun" and the rest are
-  -- to keep outdoor areas from getting too dark.
-
-  for i = 1,8 do
-    local angle = i * 45 - 22.5
-
-    local x = math.sin(angle * math.pi / 180.0) * sun_r
-    local y = math.cos(angle * math.pi / 180.0) * sun_r
-
-    local level = sel(i == 1, 32, 6)
-
-    entity_helper("sun", x, y, sun_h, { light=level })
-  end
-
-  entity_helper("sun", 0, 0, sun_h, { light=12 })
-end
-
-
-
-function Room_intermission_camera()
-  -- game check
-  if not GAME.ENTITIES["camera"] then return end
-
-  -- determine the room (biggest one, excluding starts and exits)
-  local room
-
-  each R in LEVEL.rooms do
-    if R.purpose != "START" and R.purpose != "EXIT" and
-       R.kind != "cave" and R.kind != "hallway" and not R.is_street
+    if S.kind ~= "void" and not S.no_ceil and 
+       (S.is_sky or c_tex == "_SKY")
     then
-      if not room or (R.kvolume > room.kvolume) then
-        room = R
+
+      Trans.old_quad(get_sky(), x1,y1, x2,y2, z2, EXTREME_H)
+
+    elseif S.kind ~= "void" and not S.no_ceil then
+      ---## local info = get_mat(S.u_tex or c_tex or w_tex, c_tex)
+      ---## info.b_face.light = S.c_light
+      ---## Trans.old_quad(info, cx1,cy1, cx2,cy2, z2, EXTREME_H)
+
+      local kind, w_face, p_face = Mat_normal(S.u_tex or c_tex or w_tex, c_tex)
+      p_face.light = S.c_light
+
+      Trans.quad(cx1,cy1, cx2,cy2, z2,nil, kind, w_face, p_face)
+
+      -- FIXME: this does not belong here
+      if R.hallway and LEVEL.hall_lights then
+        local x_num, y_num = 0,0
+
+        for side = 2,8,2 do
+          local N = S:neighbor(side)
+          if N and N.room == R and N.kind ~= "void" then
+            if side == 2 or side == 8 then
+              y_num = y_num + 1
+            else
+              x_num = x_num + 1
+            end
+          end
+        end
+
+        if x_num == 1 and y_num == 1 and LEVEL.hall_lite_ftex then
+          Build.ceil_light(S, z2, { lite_f=LEVEL.hall_lite_ftex, trim=THEME.light_trim })
+        end
       end
     end
-  end
-
-  if not room then room = rand.pick(LEVEL.rooms) end
-
-  -- determine place in room
-  local info
-
-  each C in room.chunks do  -- FIXME
-    local info2 = C:eval_camera()
-
-    if not info2 then continue end
-
-    if not info or info2.score > info.score then
-      info = info2
-    end
-  end
-
-  -- this should not happen, but just in case...
-  if not info then return end
-
-  gui.printf("Camera @ (%d %d %d)\n", info.x1, info.y1, info.z1)
-
-  local x1, y1, z1 = info.x1, info.y1, info.z1
-  local x2, y2, z2 = info.x2, info.y2, info.z2
-
-  local dist  = geom.dist(x1,y1, x2,y2)
-  local angle = geom.calc_angle(x2 - x1, y2 - y1)
-  local mlook = geom.calc_angle(dist, z1 - z2)
-
-  local angles = string.format("%d %d 0", mlook, angle)
-
-  entity_helper("camera", x1, y1, z1, { angles=angles })
-end
 
 
+    -- FLOOR
+    if S.kind == "void" then
 
-
-function Room_ambient_lighting__OLD()
-
-  -- FIXME: probably should pick colors from a list (e.g. ROOM_THEME.colors or THEME.colors)
-
-  local function rand_color()
-    local color = rand.irange(10000,10137)
-    if color == 10014 then color = color + 1 end
-    return color
-  end
-
-
-  local function colorize_loc(L)
-    local color
-
-    if L.kind == "outdoor" then
-      color = LEVEL.outdoor_color
-
---- elseif L.kind == "hallway" then
----   color = L.zone.hall_color
-
-    else
-      color = rand_color()
-    end
-
-    -- caves aren't made of chunks, need special logic for them
-    if L.kind == "cave" then
-
-      for sx = L.sx1, L.sx2 do
-      for sy = L.sy1, L.sy2 do
-        local S = SEEDS[sx][sy]
-
-        if S.room != L then continue end
-
-        raw_add_brush(
-        {
-          { m = "light", color = color }
-          { x = S.x1, y = S.y1 }
-          { x = S.x2, y = S.y1 }
-          { x = S.x2, y = S.y2 }
-          { x = S.x1, y = S.y2 }
-        })
-      end
+      if S.solid_feature and THEME.building_corners then
+        if not R.corner_tex then
+          R.corner_tex = rand.key_by_probs(THEME.building_corners)
+        end
+        w_tex = R.corner_tex
       end
 
-    else
+      Trans.old_quad(get_mat(w_tex), x1,y1, x2,y2, -EXTREME_H, EXTREME_H);
 
-      each C in L.chunks do
-        raw_add_brush(
-        {
-          { m = "light", color = color }
-          { x = C.x1, y = C.y1 }
-          { x = C.x2, y = C.y1 }
-          { x = C.x2, y = C.y2 }
-          { x = C.x1, y = C.y2 }
-        })
-      end
+    elseif S.kind == "stair" then
+      local skin2 = { wall=S.room.main_tex, floor=S.f_tex or S.room.main_tex }
+
+      Build.niche_stair(S, LEVEL.step_skin, skin2)
+
+    elseif S.kind == "curve_stair" then
+      Build.low_curved_stair(S, LEVEL.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
+
+    elseif S.kind == "tall_stair" then
+      Build.tall_curved_stair(S, LEVEL.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
+
+    elseif S.kind == "lift" then
+      local skin2 = { wall=S.room.main_tex, floor=S.f_tex or S.room.main_tex }
+      local tag = Plan_alloc_id("tag")
+
+      Build.lift(S, LEVEL.lift_skin, skin2, tag)
+
+    elseif S.kind == "popup" then
+      -- FIXME: monster!!
+      local skin = { wall=w_tex, floor=f_tex }
+      Build.popup_trap(S, z1, skin, "revenant")
+
+    elseif S.kind == "liquid" then
+      assert(LEVEL.liquid)
+      local info = get_liquid()
+
+      Trans.old_quad(info, fx1,fy1, fx2,fy2, -EXTREME_H, z1)
+
+    elseif not S.no_floor then
+      --!!!  local info = get_mat(S.l_tex or w_tex, f_tex)
+      --!!!  info.sec_kind = sec_kind
+      --!!!  Split_quad(S, info, fx1,fy1, fx2,fy2, -EXTREME_H, z1)
+
+      local kind, w_face, p_face = Mat_normal(S.l_tex or w_tex, f_tex)
+      p_face.kind = sec_kind
+
+      Trans.quad(fx1,fy1, fx2,fy2, nil,z1, kind, w_face, p_face)
     end
+
+
+    -- PREFABS
+
+    if S.content == "pillar" then
+      Build.pillar(S, z1, z2, assert(S.pillar_skin))
+    end
+
+    if S.content == "wotsit" and S.content_kind == "WEAPON" then
+      do_weapon(S)
+    elseif S.content == "wotsit" then
+      do_purpose(S)
+    end
+
+
+    -- restore diagonal kind for monster/item code
+    if S.diag_new_kind then
+      S.kind = "diagonal"
+    end
+
+  end -- build_seed()
+
+
+  ---==| Rooms.build_seeds |==---
+
+  if R.cave then
+    Rooms.build_cave(R)
   end
 
-
-  ---| Room_ambient_lighting |---
-
-  if not PARAM.light_brushes then
+  if R.kind == "smallexit" then
+    Rooms.do_small_exit(R)
     return
   end
 
-  -- At the moment this code only colorizes rooms for the Doom64 TC
-  if OB_CONFIG.game != "absolution" then return end
-
-  -- whole level has a single outdoor color
-  LEVEL.outdoor_color = rand_color()
-
-  -- each zone gets a hall color
-  each Z in LEVEL.zones do
-    Z.hall_color = rand_color()
+  if R.kind == "stairwell" then
+    Rooms.do_stairwell(R)
+    R.sides_only = true
   end
 
-  each R in LEVEL.rooms do
-    colorize_loc(R)
-  end
-
-  each H in LEVEL.halls do
-    colorize_loc(H)
-  end
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    local S = SEEDS[x][y][1]
+    if S.room == R then
+      build_seed(S)
+    end
+  end end -- for x, y
 end
 
 
-----------------------------------------------------------------
+function Room_find_pickup_spots(R)
 
-
-function Room_place_hub_gates()
-  if not LEVEL.hub_links then return end
-
-  local function calc_rough_space(R)
-    local space = R.svolume
-
-    if R.purpose then space = space - 4 end
-
-    space = space - 2 * #R.conns
-
-    if R.weapons then
-      space = space - 2 * #R.weapons
-    end
-
-    -- tie breaker
-    space = space - gui.random()
-
-    return space
-  end
-
-  local function pick_gate_room()
-    return table.pick_best(LEVEL.rooms, function(A, B) return A.rough_space > B.rough_space end)
-  end
-
-  --| Room_place_hub_gates |--
-
-  each R in LEVEL.rooms do
-    R.rough_space = calc_rough_space(R)
-  end
-
-  each link in LEVEL.hub_links do
-    if link.src.name == LEVEL.name and link.kind == "branch" then
-      local R = pick_gate_room()
-      table.insert(R.gates, link)
-
-      R.rough_space = R.rough_space - 4
-
-      gui.debugf("Adding gate to %s @ %s\n", link.dest.name, R:tostr())
-    end
-  end
-end
-
-
-
-function Room_analyse_fat_fences()
-  -- find places where fat fences are possible (between two outdoor
-  -- rooms), and decide whether or not to allow them.
+  -- Creates a map over the room of which seeds we can place
+  -- pickup items in.  We distinguish two types: 'big' items
+  -- (Mega Health or Blue Armor) and 'small' items:
   --
-  -- allowing them means that the sky heights of the rooms become
-  -- synchronised, and doing this too much can create levels with
-  -- overly high skies.
-
-  local seen = { }
-
-  for sx = 1, SEED_W do
-  for sy = 1, SEED_TOP do
-
-    local S = SEEDS[sx][sy]
-
-    if S:used() then continue end
-
-    for dir = 2,4,2 do
-      local N1 = S:neighbor(dir)
-      local N2 = S:neighbor(10 - dir)
-
-      if not (N1 and N1.room) then continue end
-      if not (N2 and N2.room) then continue end
-
-      local R1 = N1.room
-      local R2 = N2.room
-
-      if R1 == R2 then continue end
-
-      if R1.kind != "outdoor" then continue end
-      if R2.kind != "outdoor" then continue end
-
-      -- ok, here is a possible pair.
-
-      -- create a unique id for the pair
-      local id1 = math.min(R1.id, R2.id)
-      local id2 = math.max(R1.id, R2.id)
-
-      local pair = tostring(id1) .. "_" .. tostring(id2)
-
-      -- already processed this pair of rooms?
-      if seen[pair] then continue end
-
-      seen[pair] = true
-
-      if rand.odds(35) then
-        Room_merge_sky_groups(R1, R2)
-      end
-
-    end -- dir
-
-  end  -- sx, sy
-  end  --
-end
-
-
-
-function Room_analyse_outside_joiners()
-  -- find joiner hallways which connect two outdoor rooms, and
-  -- decide whether or not to allow an "outside" joiner.
-
-  each H in LEVEL.halls do
-    if H.is_joiner then
-      local R1, R2 = H:joiner_rooms()
-
-      if not (R1.sky_group and R2.sky_group) then continue end
-
-      if rand.odds(50) then
-        Room_merge_sky_groups(R1, R2)
-
-        H.sky_group = R1.sky_group
-      end
-    end
-  end
-end
-
-
-
-function Room_outdoor_borders()
+  -- 1. big items prefer to have a seed for itself, and
+  --    somewhere near to the centre of the room.
   --
-  --  BORDER ALGORITHM
+  -- 2. small items prefer to sit next to walls (or ledges)
+  --    and be grouped in clusters.
   --
-  --  (1) find unused seeds between TWO outdoor rooms and place
-  --      "fat_fences" there (or fake buildings or fat cages).
-  --
-  --      seeds get marked as 'scenic'
-  --
-  --  (2) at each edge of an outdoor room, check if edge would
-  --      touch edge of map if extended (check at least 4 seeds).
-  --
-  --      mark these seeds and sections as 'border'.
-  --
-  --         aa./        aa%%
-  --         aa./   -->  aa%%
-  --         .../        .../
-  --
-  --  (3) unused seeds which touch two scenic borders at a corner
-  --      (and don't touch any rooms) also become scenic border.
-  --
-  --         aa%%        aa%%
-  --         aa%%   -->  aa%%
-  --         %%..        %%%%
-  --      
-  --  (4) everywhere else that an outdoor room touches an unused
-  --      seed we need a fake building in that unused seed.
-  --      this includes seeds near the scenic_borders of a room.
-  --
-  --      where a run a these fake-building spots touches (or could
-  --      extend to touch) the edge of map, set texture of them all
-  --      to the same building (e.g. zone texture of nearest indoor
-  --      building).
-  --
-  --      otherwise get texture from a touching indoor building, or
-  --      some fallback method (e.g. zone of touching outdoor room).
-  -- 
+  -- To achieve this, our map will consist of two lists (big
+  -- and small) of seeds, sorted into best --> worst order
+  -- (with a healthy dose of randomness of course).
 
-  local function build_fake_building(env, reqs, x1, y1, x2, y2, dir,
-                                     room, facade, floor_h)
-
-    local skin1 = Room_pick_skin(env, { reqs })
-
-    assert(facade)
-
-    local skin2 = { wall=facade }
-
-    if not floor_h then
-      floor_h = assert(room.max_floor_h)
-    end
-
-    if dir == 1 or dir == 3 or dir == 7 or dir == 9 then
-      dir = geom.LEFT_45[dir]
-    end
-
-    local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
-
-    Fabricate_at(room, skin1, T, { skin1, skin2 })
-  end
-
-
-  local function add_fat_fence(S, dir)
-    local N1 = S:neighbor(dir)
-    local N2 = S:neighbor(10 - dir)
-
-    -- require same sky height on each side
-    local R1 = N1.room
-    local R2 = N2.room
-
-    if R1.sky_group != R2.sky_group then return end
-
-    -- mark as used
-    S.border = { kind = "fat_fence" }
-
-    local floor_h = math.max(R1.max_floor_h, R2.max_floor_h)
-
-    -- find matching prefab
-    local env =
+  local function add_big_spot(R, S, score)
+    local mx, my = S:mid_point()
+    table.insert(R.big_spots,
     {
-      seed_w = 1
-      seed_h = 1
-    }
+      S=S, score=score
 
-    local reqs =
-    {
-      kind   = "fake"
-      shape  = "I"
-    }
+      x1 = mx - 24, y1 = my - 24, z1 = (S.floor_h or 0),
+      x2 = mx + 24, y2 = my + 24, z2 = (S.floor_h or 0) + 64
 
-    build_fake_building(env, reqs, S.x1, S.y1, S.x2, S.y2, dir,
-                        R1, S.facade, floor_h)
+      -- FIXME: REMOVE
+      x=mx, y=my
+    })
   end
 
+  local function add_small_spots(R, S, side, count, score)
+    local dist = 40
 
-  local function find_fat_fences()
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_TOP do
-      local S = SEEDS[sx][sy]
+    for i = 1,count do  -- out from wall
+    for k = 1,5     do  -- along wall
+      local mx, my = S:mid_point()
 
-      if S:used() then continue end
+      local dx, dy = geom.delta(geom.RIGHT[side])
 
-      local cat_str = ""
+      mx = mx + (k - 3) * 28 * dx
+      my = my + (k - 3) * 28 * dy
 
-      for dir = 2,8,2 do
-        local N = S:neighbor(dir)
+      if side == 4 then mx = S.x1 + S.thick[4] + i*dist end
+      if side == 6 then mx = S.x2 - S.thick[6] - i*dist end
+      if side == 2 then my = S.y1 + S.thick[2] + i*dist end
+      if side == 8 then my = S.y2 - S.thick[8] - i*dist end
 
-        if not N then continue end
+      if side == 1 then mx, my = mx + i*dist, my + i*dist end
+      if side == 3 then mx, my = mx - i*dist, my + i*dist end
+      if side == 7 then mx, my = mx + i*dist, my - i*dist end
+      if side == 9 then mx, my = mx - i*dist, my - i*dist end
 
-        -- FIXME !!!  check that seed edge is "walk" or "liquid"
+      local dir = geom.RIGHT[side]  -- FIXME: NOT NEEDED, REMOVE
 
-        if N.room and N.room.kind == "outdoor" then
-          cat_str = cat_str .. tostring(dir)
-        end
+      table.insert(R.item_spots,
+      {
+        S=S, dir=dir, wall_dist=(i - 1), ---### score=score
+
+        x1 = mx - 12, y1 = my - 12, z1 = (S.floor_h or 0),
+        x2 = mx + 12, y2 = my + 12, z2 = (S.floor_h or 0) + 64
+
+        -- FIXME: REMOVE
+        x=mx, y=my,
+      })
+
+---##      -- the rows further away from the wall should only be
+---##      -- used when absolutely necessary.
+---##      score = score - 100
+    end
+    end
+  end
+
+  local function try_add_big_spot(R, S)
+    local score = gui.random()
+
+    if S.div_lev and S.div_lev >= 2 then score = score + 10 end
+
+    if S.sx > (R.tx1 or R.sx1) and S.sx < (R.tx2 or R.sx2) then score = score + 2.4 end
+    if S.sy > (R.ty1 or R.sy1) and S.sy < (R.ty2 or R.sy2) then score = score + 2.4 end
+
+    if not S.content then score = score + 1 end
+
+    add_big_spot(R, S, score)
+  end
+
+  local function try_add_small_spot(R, S)
+    local score = gui.random()
+
+    if R.entry_conn then
+      local e_dist
+      if geom.is_vert(R.entry_conn.dir) then
+        e_dist = math.abs(R.entry_conn.dest_S.sy - S.sy)
+      else
+        e_dist = math.abs(R.entry_conn.dest_S.sx - S.sx)
       end
 
-      local cat_dir
+      score = score + e_dist / 2.5
+    end
 
-      if cat_str == "46" then cat_dir = rand.sel(50, 4, 6) end
-      if cat_str == "28" then cat_dir = rand.sel(50, 2, 8) end
+    local walls = {}
 
-      -- FIXME: support 2x1 or 3x1 size (find runs)
-
-      if cat_dir then
-        add_fat_fence(S, cat_dir)
+    for side = 2,8,2 do
+      local N = S:neighbor(side)
+      if not N then
+        walls[side] = 1
+      elseif N.room ~= S.room then
+        if not S.conn then walls[side] = 2 end
+      elseif N.kind == "void" then
+        walls[side] = 3
+      elseif N.kind == "walk" and N.floor_h > S.floor_h then
+        walls[side] = 4
       end
-    end end
-  end
+    end -- for side
 
+    if table.empty(walls) then return end
 
-  local function extends_to_edge(S, dir, try_num, no_side_check)
-    local perp_dir = geom.RIGHT[dir]
+    if walls[4] and walls[6] then
+      add_small_spots(R, S, 4, 2, score)
+      add_small_spots(R, S, 6, 2, score - 0.3)
 
-    for i = 0, try_num do
-      local N = S:neighbor(dir, i)
+    elseif walls[2] and walls[8] then
+      add_small_spots(R, S, 2, 2, score)
+      add_small_spots(R, S, 8, 2, score - 0.3)
 
-      if not N then break; end
-
-      if N:used() then return false end
-
-      if no_side_check then continue end
-
-      local A = N:neighbor(perp_dir)
-      local B = N:neighbor(10 - perp_dir)
-
-      if A.room and A.room.kind == "outdoor" then return false end
-      if B.room and B.room.kind == "outdoor" then return false end
-    end
-
-    return true
-  end
-
-
-  local function do_mark_border(B)
-    for sx = B.sx1, B.sx2 do
-    for sy = B.sy1, B.sy2 do
-      SEEDS[sx][sy].border = B
-    end
-    end
-
-    table.insert(LEVEL.borders, B)
-  end
-
-
-  local function unmark_border(B)
-    for sx = B.sx1, B.sx2 do
-    for sy = B.sy1, B.sy2 do
-      SEEDS[sx][sy].border = nil
-    end
-    end
-
-    B.kind = "invalid"
-
-    table.kill_elem(LEVEL.borders, B)
-  end
-
-
-  local function try_mark_edge_group(SA, sx, sy, dir, room)
-    local along_dir = geom.vert_sel(dir, 6, 8)
-    local found = 0
-
-    for i = 0, 99 do
-      local S = SA:neighbor(along_dir, i)
-
-      if not S or S:used() then break; end
-      if not S:neighbor(10 - dir) then break; end
-
-      if not extends_to_edge(S, 10 - dir, 3) then break; end
-
-      local N = S:neighbor(dir)
-
-      if not (N and N.room == room) then break; end
-
-      found = found + 1
-    end
-
-    if found == 0 then return end
-
-    -- determine seed bbox
-    local sx2, sy2
-
-    if geom.is_horiz(dir) then
-      if dir == 6 then sx = sx - 1 end
-      sx2 = sx + 1
-      sy2 = sy + found - 1
     else
-      if dir == 8 then sy = sy - 1 end
-      sy2 = sy + 1
-      sx2 = sx + found - 1
-    end
-
-    local BORDER =
-    {
-      kind = "edge"
-      dir  = dir
-      room = room
-
-      sx1  = sx
-      sy1  = sy
-      sx2  = sx2
-      sy2  = sy2
-    }
-
-    do_mark_border(BORDER)
-  end
-
-
-  local function outdoor_edges()
-    local mid_x1 = 8
-    local mid_y1 = 8
-    local mid_x2 = SEED_W - 8
-    local mid_y2 = SEED_TOP - 8
-
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_TOP do
-      
-      -- skip middle of level (speed up large maps)
-      if mid_x1 <= sx and sx <= mid_x2 and
-         mid_y1 <= sy and sy <= mid_y2
-      then continue end
-
-      local S = SEEDS[sx][sy]
-
-      if S:used() then continue end
-
-      for dir = 2,8,2 do
-        local N = S:neighbor(dir)
-
-        if not N then continue end
-        if not (N.room and N.room.kind == "outdoor") then continue end
-
-        try_mark_edge_group(S, sx, sy, dir, N.room)
-      end
-
-    end -- sx, sy
-    end
-  end
-
-
-  local function corner_is_free(S, dir)
-    local T = S:neighbor(10 - dir)
-
-    if not T then return false end
-
-    local sx1 = math.min(S.sx, T.sx)
-    local sy1 = math.min(S.sy, T.sy)
-    local sx2 = math.max(S.sx, T.sx)
-    local sy2 = math.max(S.sy, T.sy)
-
-    for sx = sx1, sx2 do
-    for sy = sy1, sy2 do
-      local N = SEEDS[sx][sy]
-
-      if not N or N:used() then return false end
-    end
-    end
-
-    return true
-  end
-
-
-  local function outdoor_outies()
-    -- an "outie" is a corner sitting at a 270 degree bend in the room
-    -- (whereas normal corners sit at a 90 degree bend).
-
-    local mid_x1 = 8
-    local mid_y1 = 8
-    local mid_x2 = SEED_W - 8
-    local mid_y2 = SEED_TOP - 8
-
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_TOP do
-      
-      -- skip middle of level (speed up large maps)
-      if mid_x1 <= sx and sx <= mid_x2 and
-         mid_y1 <= sy and sy <= mid_y2
-      then continue end
-
-      local S = SEEDS[sx][sy]
-
-      if S:used() then continue end
-
-      for dir = 1,9,2 do if dir != 5 then
-        local N = S:neighbor(dir)
-
-        if not N then continue end
-        if not (N.room and N.room.kind == "outdoor") then continue end
-
-        if not corner_is_free(S, dir) then continue end
-
-        local L_dir = geom. LEFT_45[dir]
-        local R_dir = geom.RIGHT_45[dir]
-
-        local N2 = S:neighbor(L_dir)
-        local N3 = S:neighbor(R_dir)
-
-        if not (N2 and N2.room == N.room and
-                N3 and N3.room == N.room)
-        then continue end
-
-        local N4 = N2:neighbor(10 - R_dir)
-        local N5 = N3:neighbor(10 - L_dir)
-
-        if not (N4 and N4.room == N.room and
-                N5 and N5.room == N.room)
-        then continue end
-
-        if not extends_to_edge(S, 10 - R_dir, 3, "noside") or
-           not extends_to_edge(S, 10 - L_dir, 3, "noside")
-        then continue end
-
-        local SL = S:neighbor(10 - L_dir)
-        local SR = S:neighbor(10 - R_dir)
-
-        if not (SL and SR) then continue end
-
-        if not extends_to_edge(SL, 10 - R_dir, 3) or
-           not extends_to_edge(SR, 10 - L_dir, 3)
-        then continue end
-
-        local T = S:neighbor(10 - dir)
-
----stderrf("\n****** OUTIE @ %s dir:%d\n\n", S:tostr(), dir)
-
-        local BORDER =
-        {
-          kind = "outie"
-          dir  = dir
-          room = N.room
-
-          sx1  = math.min(S.sx, T.sx)
-          sy1  = math.min(S.sy, T.sy)
-          sx2  = math.max(S.sx, T.sx)
-          sy2  = math.max(S.sy, T.sy)
-        }
-
-        do_mark_border(BORDER)
-
-      end end  -- dir
-
-    end -- sx, sy
-    end
-  end
-
-
-  local function validate_outies()
-    -- we require outies to mate up with normal borders on the two sides
-
-    each B in table.copy(LEVEL.borders) do
-      if B.kind == "outie" then
-
-        local L_dir = 10 - geom. LEFT_45[B.dir]
-        local R_dir = 10 - geom.RIGHT_45[B.dir]
-
-        local bad = false
-
-        for sx = B.sx1, B.sx2 do
-        for sy = B.sy1, B.sy2 do
-
-          local S = SEEDS[sx][sy]
-
-          if (L_dir == 2 and sy == B.sy1) or
-             (L_dir == 8 and sy == B.sy2) or
-             (L_dir == 4 and sx == B.sx1) or
-             (L_dir == 6 and sx == B.sx2)
-          then
-            local N = S:neighbor(L_dir)
-
-            if not (N.border and N.border.kind != "fat_fence") then bad = true end
-          end
-          
-          if (R_dir == 2 and sy == B.sy1) or
-             (R_dir == 8 and sy == B.sy2) or
-             (R_dir == 4 and sx == B.sx1) or
-             (R_dir == 6 and sx == B.sx2)
-          then
-            local N = S:neighbor(R_dir)
-
-            if not (N.border and N.border.kind != "fat_fence") then bad = true end
-          end
-
-        end -- sx, sy
-        end
-
-        if bad then
-          unmark_border(B)
-        end
-      end
-    end
-  end
-
-
-  local function find_border_mate(sx1, sy1, sx2, sy2, side, room)
-    each B in LEVEL.borders do
-      if B.room != room then continue end
-
-      if geom.is_horiz(side) then
-        
-        if B.sy1 != sy1 then continue end
-        if B.sy2 != sy2 then continue end
-
-        if side == 4 and B.sx2 == sx1 - 1 then return B end
-        if side == 6 and B.sx1 == sx2 + 1 then return B end
-      
-      else  -- vert
-
-        if B.sx1 != sx1 then continue end
-        if B.sx2 != sx2 then continue end
-
-        if side == 2 and B.sy2 == sy1 - 1 then return B end
-        if side == 8 and B.sy1 == sy2 + 1 then return B end
-      end
-    end
-
-    return nil  -- not found
-  end
-
-
-  local function outdoor_corners()
-    local mid_x1 = 8
-    local mid_y1 = 8
-    local mid_x2 = SEED_W - 8
-    local mid_y2 = SEED_TOP - 8
-
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_TOP do
-      
-      -- skip middle of level (speed up large maps)
-      if mid_x1 <= sx and sx <= mid_x2 and
-         mid_y1 <= sy and sy <= mid_y2
-      then continue end
-
-      local S = SEEDS[sx][sy]
-
-      if S:used() then continue end
-
-      for dir = 1,9,2 do if dir != 5 then
-        local N = S:neighbor(dir)
-
-        if not N then continue end
-        if not (N.room and N.room.kind == "outdoor") then continue end
-
-        if not corner_is_free(S, dir) then continue end
-
-        -- look for edge borders that mate up with this corner
-
-        local T = S:neighbor(10 - dir)
-
-        local sx1 = math.min(S.sx, T.sx)
-        local sy1 = math.min(S.sy, T.sy)
-        local sx2 = math.max(S.sx, T.sx)
-        local sy2 = math.max(S.sy, T.sy)
-
-        local L_dir = geom. LEFT_45[dir]
-        local R_dir = geom.RIGHT_45[dir]
-
-        if find_border_mate(sx1, sy1, sx2, sy2, L_dir, N.room) and
-           find_border_mate(sx1, sy1, sx2, sy2, R_dir, N.room)
-        then
-          -- OK --
-
-          local BORDER =
-          {
-            kind = "corner"
-            dir  = dir
-            room = N.room
-
-            sx1  = sx1
-            sy1  = sy1
-            sx2  = sx2
-            sy2  = sy2
-          }
-
-          do_mark_border(BORDER)
-
+      for loop = 1,100 do
+        local side = rand.irange(1,4) * 2
+        if walls[side] then
+          add_small_spots(R, S, side, 4, score)
           break;
         end
-
-      end end  -- dir
-
-    end -- sx, sy
+      end
     end
   end
 
+  local function try_add_diagonal_spot(R, S)
+    if S.diag_new_kind ~= "walk" then return end
 
-  local function try_vert_betweener(B1, side, B2)
-    if B1.sy1 != B2.sy1 then return end
-    if B1.sy2 != B2.sy2 then return end
+    local score = 80 + gui.random()
 
-    if side == 4 and B2.sx2 != B1.sx1 - 2 then return end
-    if side == 6 and B2.sx1 != B1.sx2 + 2 then return end
-
-    -- may be possible : check seeds in-between them
-
-    local sx = sel(side == 4, B1.sx1 - 1, B1.sx2 + 1)
-
-    local sy = sel(B1.dir == 2, B1.sy1, B1.sy2)
-
-    local S = SEEDS[sx][sy]
-
-    if not extends_to_edge(S, 10 - B1.dir, 3) then return end
-
-    -- OK, so enlarge B1 (the edge border)
-
-    if side == 4 then
-      B1.sx1 = B1.sx1 - 1
-    else
-      B1.sx2 = B1.sx2 + 1
-    end
-
-    for ny = B1.sy1, B1.sy2 do
-      SEEDS[sx][ny].border = B1
-    end
+    add_small_spots(R, S, S.stuckie_side, 2, score)
   end
 
 
-  local function try_horiz_betweener(B1, side, B2)
-    if B1.sx1 != B2.sx1 then return end
-    if B1.sx2 != B2.sx2 then return end
+  ---| Room_find_pickup_spots |---
 
-    if side == 2 and B2.sy2 != B1.sy1 - 2 then return end
-    if side == 8 and B2.sy1 != B1.sy2 + 2 then return end
+  -- already there?? (caves)
+  if R.item_spots then
+    return
+  end
 
-    -- may be possible : check seeds in-between them
+  R.big_spots  = {}
+  R.item_spots = {}
 
-    local sy = sel(side == 2, B1.sy1 - 1, B1.sy2 + 1)
+  if R.kind == "stairwell" then return end
+  if R.kind == "smallexit" then return end
 
-    local sx = sel(B1.dir == 4, B1.sx1, B1.sx2)
+  gui.debugf("find_pickup_spots @ %s\n", R:tostr())
 
-    local S = SEEDS[sx][sy]
 
-    if not extends_to_edge(S, 10 - B1.dir, 3) then return end
+  local emerg_big
+  local emerg_small
 
-    -- OK, so enlarge B1 (the edge border)
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    local S = SEEDS[x][y][1]
+    local score
 
-    if side == 2 then
-      B1.sy1 = B1.sy1 - 1
-    else
-      B1.sy2 = B1.sy2 + 1
+    if S.room == R and S.kind == "walk" and
+       (not S.content or S.content == "monster")
+    then
+      try_add_big_spot(R, S)
+      try_add_small_spot(R, S)
+
+      if not emerg_big then emerg_big = S end
+      emerg_small = S
     end
 
-    for nx = B1.sx1, B1.sx2 do
-      SEEDS[nx][sy].border = B1
+    if S.room == R and S.kind == "diagonal" then
+      try_add_diagonal_spot(R, S)
     end
+  end end -- for x, y
+
+  -- luckily this is very rare
+  if not emerg_small then
+    gui.printf("No spots for pickups in %s\n", R:tostr())
+    R.no_pickup_spots = true
+    return
+  end
+
+  assert(emerg_big)
+
+  if #R.big_spots == 0 then
+    gui.debugf("No big spots found : using emergency\n")
+    add_big_spot(R, emerg_big, 0)
+  end
+
+  if #R.item_spots == 0 then
+    gui.debugf("No small spots found : using emergency\n")
+    add_small_spots(R, emerg_small, 2, 4, 0)
+  end
+end
+
+
+function Room_find_monster_spots(R)
+
+  local function add_small_mon_spot(S, h_diff)
+    -- FIXME: take walls (etc) into consideration
+
+    local mx, my = S:mid_point()
+
+    table.insert(R.mon_spots,
+    {
+      S=S, score=gui.random(),  -- FIXME score
+
+      x1=mx-64, y1=my-64, z1=(S.floor_h or 0),
+      x2=mx+64, y2=my+64, z2=(S.floor_h or 0) + h_diff,
+    })
+
+    SEEDS[S.sx][S.sy][1].no_monster = true
+  end
+
+  local function add_large_mon_spot(S, h_diff)
+    -- FIXME: take walls (etc) into consideration
+
+    local mx, my = S.x2, S.y2
+
+    table.insert(R.mon_spots,
+    {
+      S=S, score=gui.random(),  -- FIXME score
+
+      x1=mx-128, y1=my-128, z1=(S.floor_h or 0),
+      x2=mx+128, y2=my+128, z2=(S.floor_h or 0) + h_diff,
+    })
+
+    -- prevent other seeds in 2x2 group from being used
+    SEEDS[S.sx  ][S.sy  ][1].no_monster = true
+    SEEDS[S.sx+1][S.sy  ][1].no_monster = true
+    SEEDS[S.sx  ][S.sy+1][1].no_monster = true
+    SEEDS[S.sx+1][S.sy+1][1].no_monster = true
+  end
+
+  local function can_accommodate_small(S)
+    if S.content or S.no_monster or not S.floor_h then
+      return false
+    end
+
+    -- keep entryway clear
+    if R.entry_conn and S.conn == R.entry_conn then
+      return false
+    end
+
+    -- check seed kind
+    if S.kind ~= "walk" then
+      return false
+    end
+
+    local h_diff = (S.ceil_h or R.ceil_h or SKY_H) - (S.floor_h or 0)
+
+    return true, h_diff
+  end
+
+  local function can_accommodate_large(S, sx, sy)
+    if (sx+1 > R.sx2) or (sy+1 > R.sy2) then
+      return false
+    end
+
+    if S.solid_corner then return false end
+
+    local low_ceil = S.ceil_h or R.ceil_h or SKY_H
+    local hi_floor = S.floor_h or 0
+
+    for dx = 0,1 do for dy = 0,1 do
+      if dx > 0 or dy > 0 then
+        local S2 = SEEDS[sx+dx][sy+dy][1]
+
+        if S2.room ~= S.room then return false end
+
+        if not can_accommodate_small(S2) then return false end
+
+        if S2.solid_corner then return false end
+
+        if S2.ceil_h then
+          low_ceil = math.min(low_ceil, S2.ceil_h)
+        end
+
+        -- ensure no floor difference for huge monsters
+        local diff = math.abs((S.floor_h or 0) - (S2.floor_h or 0))
+
+        if diff > 1 then return false end
+      end
+    end end -- for dx, dy
+
+    -- NOTE: arachnotrons can fit in lower rooms, but we have to allow for
+    --       the tallest of the large monsters (Hexen bosses).
+    local h_diff = (low_ceil - hi_floor)
+
+---???   if h_diff < 128 then return false end
+
+    -- FIXME: ugh -- hack to allow more monsters in the room
+    if rand.odds(50) then return false end
+
+    return true, h_diff
   end
 
 
-  local function outdoor_betweeners()
-    -- Example:
-    --        aa bb       aa bb
-    --        %% %%  -->  %%%%%
-    --        %% %%       %%%%%
+  ---| Room_find_monster_spots |---
 
-    each B1 in LEVEL.borders do
-      
-      -- we want edge borders, since we can enlarge them easily
-      if B1.kind != "edge" then continue end
+  -- already there?? (caves)
+  if R.mon_spots then
+    return
+  end
 
-      each B2 in LEVEL.borders do
-        if geom.is_vert(B1.dir) then
-          try_vert_betweener(B1, 4, B2)
-          try_vert_betweener(B1, 6, B2)
-        else
-          try_horiz_betweener(B1, 2, B2)
-          try_horiz_betweener(B1, 8, B2)
+  R.mon_spots = {}
+
+  if R.kind == "stairwell" then return end
+  if R.kind == "smallexit" then return end
+
+  -- find large 2x2 spots in first pass, small 1x1 spots in second
+
+  for pass = 1,2 do
+    for x = R.sx1,R.sx2 do
+    for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+    
+      if S.room != R then continue end
+
+      if pass == 1 then
+        local large_ok, large_diff = can_accommodate_large(S, x, y)
+
+        if large_ok then
+          add_large_mon_spot(S, large_diff)
+        end
+
+      else
+        local small_ok, small_diff = can_accommodate_small(S)
+
+        if small_ok then
+          add_small_mon_spot(S, small_diff)
         end
       end
     end
-  end
-
-
-  local function build_border_fab(B, sx1, sy1, sx2, sy2, shape)
-    local S1 = SEEDS[sx1][sy1]
-    local S2 = SEEDS[sx2][sy2]
-
-    local cw = sx2 - sx1 + 1
-    local ch = sy2 - sy1 + 1
-
-    assert(cw <= 2 and ch <= 2)
-
-    if geom.is_horiz(B.dir) then
-      cw, ch = ch, cw
-    end
-
-    -- find matching prefab
-    local env =
-    {
-      seed_w = cw
-      seed_h = ch
-    }
-
-    local reqs =
-    {
-      kind   = "border"
-      group  = LEVEL.border_group
-      shape  = shape
-    }
-
-    local skin1 = Room_pick_skin(env, { reqs })
-
-    local skin2 = { wall=S1.facade }
-
-    local x1, y1 = S1.x1, S1.y1
-    local x2, y2 = S2.x2, S2.y2
-
-    local floor_h = assert(B.room.max_floor_h)
-
-    local dir = B.dir
-    if dir == 1 or dir == 3 or dir == 7 or dir == 9 then
-      dir = geom.LEFT_45[dir]
-    end
-
-    local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
-
-    Fabricate_at(B.room, skin1, T, { skin1, skin2 })
-  end
-
-
-  local function build_border_edge(B, sx1, sy1, sx2, sy2)
-    -- edge can be very wide (or tall) -- need to split it
-
-    local cw = sx2 - sx1 + 1
-    local ch = sy2 - sy1 + 1
-
-    while cw > 2 do
-      local w = rand.sel(75, 2, 1)
-
-      build_border_fab(B, sx1, sy1, sx1 + w - 1, sy2, "T")
-
-      sx1 = sx1 + w
-       cw =  cw - w
-    end
-      
-    while ch > 2 do
-      local h = rand.sel(75, 2, 1)
-
-      build_border_fab(B, sx1, sy1, sx2, sy1 + h - 1, "T")
-
-      sy1 = sy1 + h
-       ch =  ch - h
-    end
-      
-    build_border_fab(B, sx1, sy1, sx2, sy2, "T")
-  end
-
-
-  local function build_borders()
-    each B in LEVEL.borders do
-      
-      if B.kind == "edge" then
-        build_border_edge(B, B.sx1, B.sy1, B.sx2, B.sy2)
-
-      elseif B.kind == "corner" then
-        build_border_fab(B, B.sx1, B.sy1, B.sx2, B.sy2, "C")
-
-      elseif B.kind == "outie" then
-        build_border_fab(B, B.sx1, B.sy1, B.sx2, B.sy2, "O")
-
-      end
-    end
-  end
-
-
-  local function touches_outdoor_or_border(S, dir)
-    local N = S:neighbor(dir)
-
-    if not N then return nil end
-
-    if N.room and N.room.kind == "outdoor" then return N.room end
-
-    -- Note: border check is disabled, since some prefabs (esp. Cages)
-    --       do not work well against a border prefab.
-    do return nil end
-
-    if not N.border then return nil end
-
-    if N.border.kind != "edge" then return nil end
-
-    -- hits _back_ of the edge border?
-    if dir == N.border.dir then return nil end
-
-    return N.border.room  -- OK
-  end
-
-
-  local function try_fake_corner_at_seed(S, pass)
-    for dir = 1,9,2 do if dir != 5 then
-      local N = S:neighbor(dir)
-
-      if not N then continue end
-      if not (N.room and N.room.kind == "outdoor") then continue end
-
-      local L_dir = geom. LEFT_45[dir]
-      local R_dir = geom.RIGHT_45[dir]
-
-      -- only allow borders in second pass
-
-      if pass == 1 then
-        local N2 = S:neighbor(L_dir)
-        local N3 = S:neighbor(R_dir)
-
-        if not (N2 and N2.room and N2.room == N.room) then continue end
-        if not (N3 and N3.room and N3.room == N.room) then continue end
-
-      else
-        if touches_outdoor_or_border(S, L_dir) != N.room then continue end
-        if touches_outdoor_or_border(S, R_dir) != N.room then continue end
-      end
-
-      -- OK --
-
-      -- mark as used
-      S.border = { kind = "fake_building" }
-
-      local env =
-      {
-        seed_w = 1
-        seed_h = 1
-      }
-
-      local reqs =
-      {
-        kind   = "fake"
-        shape  = "C"
-      }
-
-      build_fake_building(env, reqs, S.x1, S.y1, S.x2, S.y2, dir,
-                          N.room, S.facade)
-
-      return true
-
-    end end  -- dir
-
-    return false
-  end
-
-
-  local function fake_corners()
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_TOP do
-      local S = SEEDS[sx][sy]
-
-      if S:used() then continue end
-
-      if not try_fake_corner_at_seed(S, 1) then
-             try_fake_corner_at_seed(S, 2)
-      end
-
-    end -- sx, sy
-    end
-  end
-
-
-  local function try_run_of_fake_edges(SA, sx, sy, dir, room)
-    local along_dir = geom.vert_sel(dir, 6, 8)
-    local found = 0
-
-    for i = 0, 99 do
-      local S = SA:neighbor(along_dir, i)
-
-      if not S or S:used() then break; end
-
-      if touches_outdoor_or_border(S, dir) != room then break; end
-
-      found = found + 1
-    end
-
-    if found == 0 then return end
-
-    -- OK --
-
-    local SZ = SA:neighbor(along_dir, found - 1)
-
-    local sx1 = math.min(sx, SZ.sx)
-    local sy1 = math.min(sy, SZ.sy)
-    local sx2 = math.max(sx, SZ.sx)
-    local sy2 = math.max(sy, SZ.sy)
-
-    SA = SEEDS[sx1][sy1]
-    SZ = SEEDS[sx2][sy2]
-
---    Build_solid_quad(SA.x1, SA.y1, SZ.x2, SZ.y2, "COMPBLUE")
-
-    -- mark as used
-    for sx = sx1, sx2 do
-    for sy = sy1, sy2 do
-      SEEDS[sx][sy].border = { kind = "fake_building" }
-
-        local S = SEEDS[sx][sy]
-
-        local env =
-        {
-          seed_w = 1
-          seed_h = 1
-        }
-
-        local reqs =
-        {
-          kind   = "fake"
-          shape  = "F"
-        }
-
-        build_fake_building(env, reqs, S.x1, S.y1, S.x2, S.y2, dir,
-                            room, S.facade)
-    end
-    end
-  end
-
-
-  local function fake_edges()
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_TOP do
-      local S = SEEDS[sx][sy]
-
-      if S:used() then continue end
-
-      for dir = 2,8,2 do
-        local room = touches_outdoor_or_border(S, dir)
-
-        if not room then continue end
-
-        try_run_of_fake_edges(S, sx, sy, dir, room)
-      end
-
-    end -- sx, sy
-    end
-  end
-
-
-  local function fill_remaining_seeds()
-    -- this is mainly to fix the borders of Sky Halls
-    -- (or other unintended gaps in the geometry)
-
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_TOP do
-      local S = SEEDS[sx][sy]
-
-      if S:used() then continue end
-
-      Build_solid_quad(S.x1, S.y1, S.x2, S.y2, S.facade)
-    end
-    end
-  end
-
-
-  ---| Room_outdoor_borders |---
-
-  -- decide the border group now
-  LEVEL.border_group = Room_pick_group({ kind = "border" })
-
-  gui.printf("Border group: %s\n", LEVEL.border_group)
-
-  LEVEL.borders = {}
-
-  find_fat_fences()
-
-  outdoor_outies()
-  outdoor_edges()
-  outdoor_corners()
-
-  -- betweeners are disabled, since we want border prefabs which are
-  -- open at the sides, and enabling betweeners would allow the player
-  -- to travel into rooms they shouldn't be able to get to.
-  if false then
-    outdoor_betweeners()
-  end
-
-  validate_outies()
-
-  Plan_dump_rooms("Border Map:")
-
-  build_borders()
-
-  fake_corners()
-  fake_edges()
-
-  fill_remaining_seeds()
+  end end
 end
 
 
-
-function Room_reckon_doors()
-
-  local  indoor_prob = style_sel("doors", 0, 10, 30,  90, 100)
-  local outdoor_prob = style_sel("doors", 0, 30, 90, 100, 100)
-
-
-  local function room_cost(L)
-    if L.kind == "hallway" then return 5 end
-    if L.kind == "cave" then return sel(L.is_outdoor, 4, 3) end
-    return sel(L.is_outdoor, 2, 1)
-  end
-
-
-  local function visit_conn(D)
-    -- locked doors are handled already
-    if D.lock then return end
-
-    if D.kind == "teleporter" then return end
-    if D.kind == "closet"     then return end
-    if D.kind == "secret"     then return end
-
-    -- for double halls, only decide a single side (the left)
-    if D.kind == "double_R"   then return end
-
-    local L1 = D.L1
-    local L2 = D.L2
-
-    if L1.is_outdoor and L2.is_outdoor then return end
-
-    local P1 = D.portal1
-    local P2 = D.portal2
-
-    if room_cost(L1) > room_cost(L2) then
-      L1, L2 = L2, L1
-      P1, P2 = P2, P1
-    end
-
-    assert(L1.kind != "hallway")
-
-
-    if not P1 then return end
-
-    if L2.is_joiner then return end
-
-
-    -- we nearly always want an arch (if no door)
-    P1.door_kind = "arch"
-
-
-    -- don't add two doors to a short hallway
-    if L2.kind == "hallway" then
-      if #L2.sections <= 2 and L2.has_a_door then return end
-    end
-
-
-    -- apply the random check
-    if L1.is_outdoor then
-      if not rand.odds(outdoor_prob) then return end
-    else
-      if not rand.odds(indoor_prob) then return end
-    end
-
-    -- OK --
-
-    P1.door_kind = "door"
-
-    L1.has_a_door = true
-    L2.has_a_door = true
-  end
-
-
-  ---| Room_reckon_doors |---
-
-  each D in LEVEL.conns do
-    visit_conn(D)
-  end
-end
-
-
-
-function Room_decide_fences()
-
-  local function check_room_pair(R1, R2, S, N)
-    if R1.quest == R2.quest then return end
-
-    if R1.quest.id > R2.quest.id then
-      R1, R2 = R2, R1
-       S, N  =  N, S
-    end
-
-    -- at here, R1 is an earlier quest than R2
-
-    if R1.max_floor_h + PARAM.jump_height + 14 < R2.min_floor_h then
-      -- cannot reach R2 from R1 due to height difference
-      return
-    end
- 
--- stderrf("need fence @ %s (bordering %s)\n", R1:tostr(), R2:tostr())
-
-    R1.fences[R2.id] = { kind="low", R1=R1, R2=R2 }
-  end
-
-
-  local function do_fences(R)
-    for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
-      local S = SEEDS[sx][sy]
-      if S.room != R then continue end
-
-      -- only check two directions (south and west)
-      for dir = 2,4,2 do
-        local N = S:neighbor(dir)
-
-        if not (N and N.room) or N.room == R then continue end
-
-        if N.room.kind != "outdoor" then continue end
-
-        check_room_pair(R, N.room, S, N) 
-      end
-    end end
-  end
-
-
-  ---| Room_decide_fences |---
-
-  gui.debugf("Room_decide_fences.........\n")
-
-  each R in LEVEL.rooms do
-    if R.kind == "outdoor" then
-      do_fences(R)
-    end
-  end
-end
-
-
-
-function Room_blow_chunks()
-  each R in LEVEL.rooms do
-    R:build()
-  end
-
-  each H in LEVEL.halls do
-    H:build()
-  end
-end
-
-
-
-function Room_build_all()
+function Rooms.build_all()
 
   gui.printf("\n--==| Build Rooms |==--\n\n")
 
-  gui.prog_step("Rooms");
+  gui.prog_step("Rooms")
 
-  Room_select_textures()
+  Rooms.choose_themes()
+  Rooms.decide_hallways()
 
----!!!  Room_setup_symmetry()
+  Rooms.setup_symmetry()
+  Rooms.reckon_doors()
 
-  Room_place_hub_gates()
+  if PARAM.tiled then
+    -- this is as far as we go for TILE based games
+    -- (code in tiler.lua will now kick in).
+    return
+  end
 
-  Hallway_divide_sections()
+  each R in LEVEL.rooms do
+    Layout.do_room(R)
+    Rooms.make_ceiling(R)
+    Rooms.add_crates(R)
+  end
 
-  Areas_handle_connections()
+  each R in LEVEL.scenic_rooms do
+    Layout.do_scenic(R)
+    Rooms.make_ceiling(R)
+  end
 
-  Room_reckon_doors()
+  Rooms.synchronise_skies()
 
-  Room_create_sky_groups()
-  Room_analyse_fat_fences()
-  Room_analyse_outside_joiners()
+  Rooms.border_up()
 
-  Areas_flesh_out()
+  Layout.edge_of_map()
 
-  Room_outdoor_borders()
----??  Room_ambient_lighting()
+  each R in LEVEL.scenic_rooms do Rooms.build_seeds(R) end
+  each R in LEVEL.rooms        do Rooms.build_seeds(R) end
 
-  Room_blow_chunks()
-
-  Room_add_sun()
-  Room_intermission_camera()
+  each R in LEVEL.rooms do
+    Room_find_monster_spots(R)
+    Room_find_pickup_spots(R)
+    R.cage_spots = {}
+  end
 end
 

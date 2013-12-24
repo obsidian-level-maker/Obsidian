@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008-2013 Andrew Apted
+--  Copyright (C) 2008-2014 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -899,6 +899,11 @@ function Monsters_do_pickups()
         dist = math.min(dist, d)
       end
 
+      -- prefer closest row to a wall
+      if spot.wall_dist then
+        dist = spot.wall_dist * 1000
+      end
+
       -- avoid already used spots
       if spot.used then dist = dist + 100000 end
 
@@ -1176,10 +1181,10 @@ function Monsters_in_room(L)
     if L.purpose == "EXIT" then return end
 
     -- occasionally break the rules
-    if rand.odds(2) then return end
+    if rand.odds(6) then return end
 
     -- often allow any monsters in caves
-    if L.kind == "cave" and rand.odds(30) then return end
+    if L.kind == "cave" and rand.odds(27) then return end
 
     -- value depends on total area of monster spots
     local area = 0
@@ -1191,15 +1196,18 @@ function Monsters_in_room(L)
     -- adjust result to be relative to a single seed
     area = area / (SEED_SIZE * SEED_SIZE)
 
+    gui.debugf("roam area = %1.2f\n", area)
+
+
     -- random adjustment
     area = area * rand.range(0.80, 1.25)
 
     -- caves are often large -- adjust for that
     if L.kind == "cave" then area = area / 2 - 8 end
 
-    if area < 6 then
+    if area < 4 then
       L.room_size = "small"
-    elseif area < 18 then
+    elseif area < 12 then
       L.room_size = "medium"
     else
       L.room_size = "large"
@@ -1425,9 +1433,9 @@ end
     if THEME.monster_prefs then
       prob = prob * (THEME.monster_prefs[mon] or 1)
     end
-    if L.theme.monster_prefs then
-      prob = prob * (L.theme.monster_prefs[mon] or 1)
-    end
+--!!!!    if L.theme.monster_prefs then
+--!!!!      prob = prob * (L.theme.monster_prefs[mon] or 1)
+--!!!!    end
 
     if spot_kind == "cage" then
       -- cage monsters need a long distance attack
@@ -1533,7 +1541,7 @@ end
 
     -- adjust the base number to account for room size
     local size = math.sqrt(L.svolume)
-    local num  = int(base_num * size / 8 + 0.6 + gui.random())
+    local num  = int(base_num * size / 7 + 0.6 + gui.random())
 
     if num < 1 then num = 1 end
     if num > 5 then num = 5 end
@@ -2076,7 +2084,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     L.mon_spots = Monsters_split_spots(L.mon_spots, r_max * 2)
 
     if r_max < 100 then
-      mark_ambush_spots()
+--!!!!      mark_ambush_spots()
     end
 
     -- collect monsters that match the size range
@@ -2479,9 +2487,9 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     assert(not L.scenic)
 
-    if L.kind == "hallway" and #L.sections == 1 then
-      return rand.odds(50)
-    end
+---???    if L.kind == "hallway" and #L.sections == 1 then
+---???      return rand.odds(50)
+---???    end
 
     return true
   end
@@ -2586,9 +2594,9 @@ function Monster_make_battles()
     Monsters_in_room(R)
   end
 
-  each H in LEVEL.halls do
-    Monsters_in_room(H)
-  end
+---##  each H in LEVEL.halls do
+---##    Monsters_in_room(H)
+---##  end
 
   Monsters_show_stats()
 

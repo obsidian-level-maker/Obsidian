@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2013 Andrew Apted
+--  Copyright (C) 2006-2014 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -106,57 +106,61 @@ require "quest"
 require "build"
 require "cave"
 require "simple"
-require "hallway"
-
-require "area"
+require "layout"
 require "room"
+
 require "fight"
 require "monster"
 require "naming"
-
-require "hex_dm"
 
 
 GLOBAL_STYLE_LIST =
 {
   -- these three correspond to buttons in the GUI
-  outdoors   = { none=2,  few=20, some=60, heaps=40, always=5 }
-  caves      = { none=40, few=50, some=30, heaps=12, always=2 }
+
+  outdoors   = { few=20, some=60, heaps=40 },
+  caves      = { none=10 } ---!!! , few=30, some=80, heaps=5 },
   traps      = { few=20, some=60, heaps=30 }
 
   -- things that affect the whole level
 
-  hallways    = { none=40, few=30, some=30, heaps=5 }
-  big_juncs   = { none=40, few=30, some=30, heaps=10 }
-  liquids     = { none=10, few=30, some=40, heaps=20 }
-  scenics     = { few=30, some=50, heaps=10 }
-  secrets     = { few=20, some=60, heaps=10 }
+  secrets    = { few=20, some=60, heaps=10 }
+  hallways   = { few=90, some=30, heaps=10 },
+  liquids    = { few=30, some=50, heaps=20 },
+  scenics    = { few=30, some=50, heaps=10 },
+  lakes      = { few=60, heaps=10 },
+  subrooms   = { none=40, some=80, heaps=5 },
+  islands    = { few=60, heaps=40 },
 
-  odd_shapes  = { none=10, few=40, some=60, heaps=4 }
+  ambushes    = { none=10, some=50, heaps=10 }
   big_rooms   = { none=6, few=20, some=40, heaps=60 }
+  big_juncs   = { none=40, few=30, some=30, heaps=10 }
   cycles      = { none=50, some=50, heaps=50 }
   crossovers  = { none=40 } --!!!! , some=40, heaps=40 }
+  mon_variety = { some=90, heaps=4 }
   teleporters = { none=30, few=30, some=30, heaps=5 }
 
-  -- things that affect individual rooms
+  room_shape  = { none=80, L=5, T=5, O=5, S=5, X=5 },
 
-  room_shape = { none=30, L=5, T=5, U=10, H=10, S=5 }
+  -- things that affect stuff in rooms
 
-  symmetry   = { few=20, some=60, heaps=20 }
-  pillars    = { few=30, some=60, heaps=20 }
-  crates     = { few=30, some=60, heaps=20 }
-  barrels    = { few=50, some=50, heaps=10 }
-  pictures   = { few=10, some=50, heaps=10 }
-  windows    = { few=5,  some=15, heaps=50 }
+  junk       = { few=10, some=60, heaps=20 },
+  symmetry   = { few=20, some=60, heaps=20 },
+  pillars    = { few=30, some=60, heaps=20 },
+  beams      = { few=25, some=50, heaps=5  },
+  barrels    = { few=50, some=50, heaps=10 },
   closets    = { few=10, some=30, heaps=30 }
-  doors      = { few=30, some=60, heaps=10 }
 
-  lakes      = { few=60, heaps=10 }
-  cages      = { none=50, few=50, some=30, heaps=10 }
-  bridges    = { none=10, some=40 }
-  ambushes   = { none=10, some=50, heaps=10 }
+  windows    = { few=20, some=50, heaps=20 },
+  pictures   = { few=10, some=50, heaps=10 },
+  cages      = { none=50, some=50, heaps=6 },
+  fences     = { none=30, few=30, some=10 },
+  crates     = { none=20, some=40, heaps=10 },
+  switches   = { none=2, few=6, some=60, heaps=6 },
 
-  mon_variety = { some=90, heaps=4 }
+  lt_trim    = { none=40, some=20, heaps=10 },
+  lt_spokes  = { none=90, some=20, heaps=5 },
+  lt_swapped = { none=90, heaps=20 },
 }
 
 
@@ -179,10 +183,9 @@ function Levels_clean_up()
   PARAM  = {}
   STYLE  = {}
 
-  LEVEL    = nil
-  EPISODE  = nil
-  SEEDS    = nil
-  SECTIONS = nil
+  LEVEL  = nil
+  EPISODE = nil
+  SEEDS  = nil
 
   collectgarbage("collect")
 end
@@ -197,7 +200,6 @@ function Levels_between_clean()
 end
 
 
-
 function Levels_merge_themes(theme_tab, tab)
   each name,sub_t in tab do
     if sub_t == REMOVE_ME then
@@ -209,7 +211,6 @@ function Levels_merge_themes(theme_tab, tab)
     end
   end
 end
-
 
 
 function Levels_merge_tab(name, tab)
@@ -230,11 +231,10 @@ function Levels_merge_tab(name, tab)
 end
 
 
-
 function Levels_merge_table_list(tab_list)
   each GT in tab_list do
     assert(GT)
-    each name,tab in GT do
+    for name,tab in pairs(GT) do
       -- upper-case names should always be tables to copy
       if string.match(name, "^[A-Z]") then
         if type(tab) != "table" then
@@ -245,7 +245,6 @@ function Levels_merge_table_list(tab_list)
     end
   end
 end
-
 
 
 function Levels_add_game()
@@ -282,7 +281,6 @@ function Levels_add_game()
 end
 
 
-
 function Levels_add_engine()
   local function recurse(name, child)
     local def = OB_ENGINES[name]
@@ -310,8 +308,7 @@ function Levels_add_engine()
 end
 
 
-
-function Levels_collect_modules()
+function Levels_sort_modules()
   GAME.modules = {}
 
   -- find all the visible & enabled modules
@@ -339,11 +336,10 @@ function Levels_collect_modules()
 end
 
 
-
 function Levels_invoke_hook(name, rseed, ...)
   -- two passes, for example: setup and setup2
   for pass = 1,2 do
-    each mod in GAME.modules do
+    for index,mod in ipairs(GAME.modules) do
       local func = mod.hooks and mod.hooks[name]
       if func then
         if rseed then gui.rand_seed(rseed) end
@@ -355,11 +351,10 @@ function Levels_invoke_hook(name, rseed, ...)
 end
 
 
-
 function Levels_setup()
   Levels_clean_up()
 
-  Levels_collect_modules()
+  Levels_sort_modules()
 
   -- first entry must be the game def, and second entry must be
   -- the engine def.  NOTE: neither of these are real modules.
@@ -385,65 +380,26 @@ function Levels_setup()
 
   PARAM = assert(GAME.PARAMETERS)
 
-  Levels_invoke_hook("setup", OB_CONFIG.seed)
+  Levels_invoke_hook("setup",  OB_CONFIG.seed)
 
   if PARAM.sub_format then
     gui.property("sub_format", PARAM.sub_format)
   end
 
-  if not OB_CONFIG.align then
-    gui.property("offset_map", "1")
-  end
+---##  if not OB_CONFIG.align then
+---##    gui.property("offset_map", "1")
+---##  end
 
   table.merge_missing(PARAM, GLOBAL_PARAMETERS)
 
-  table.name_up(GAME.SKINS)
-  table.name_up(GAME.GROUPS)
-
-  table.expand_copies(GAME.SKINS)
+  table.name_up(ROOM_PATTERNS)
+  table.expand_copies(ROOM_PATTERNS)
 end
-
 
 
 function Levels_decide_special_kinds()
   each EPI in GAME.episodes do
-
-    -- NOTE: this style is only set via the Level Control module
-    if STYLE.street_mode and STYLE.street_mode != "few" then
-      local prob = style_sel("street_mode", 0, 0, 25, 90)
-
-      each LEV in EPI.levels do
-        if rand.odds(prob) then
-          LEV.special = "street"
-        end
-      end
-
-    else
-      -- Street Mode is fairly rare, no more than once per episode
-      -- (and sometimes none at all, when street_idx > #levels)
-      local street_idx = rand.irange(1,14)
-
-      local LEV = EPI.levels[street_idx]  -- nil if absent
-      if LEV and not LEV.special and not STYLE.street_mode then
-        LEV.special = "street"
-      end
-    end
-
-    -- Surround Mode is even rarer
-    local surround_idx = rand.irange(1,32)
-
-    LEV = EPI.levels[surround_idx]
-    if LEV and not LEV.special then
-      LEV.special = "surround"
-    end
-
-    -- Wagon Wheel Mode : have a central hub room
-    local wagon_idx = rand.irange(1,10)
-
-    LEV = EPI.levels[wagon_idx]
-    if LEV and not LEV.special then
-      LEV.special = "wagon"
-    end
+    -- TODO
   end
 
   -- dump the results
@@ -465,21 +421,18 @@ function Levels_decide_special_kinds()
 end
 
 
-
 function Levels_choose_themes()
   gui.rand_seed(OB_CONFIG.seed * 200)
 
   local function set_level_theme(L, name)
     local info = assert(OB_THEMES[name])
 
-    L.super_theme = name
-
     if not L.name_theme then
       L.name_theme = info.name_theme
     end
 
     -- don't overwrite theme of special levels
-    if L.theme then return end
+    if L.sub_theme then return end
 
     local sub_tab = {}
     local sub_pattern = "^" .. name
@@ -495,10 +448,10 @@ function Levels_choose_themes()
       error("No sub-themes for " .. name)
     end
 
-    L.theme_name = rand.key_by_probs(sub_tab)
-    L.theme = assert(GAME.LEVEL_THEMES[L.theme_name])
+    local which = rand.key_by_probs(sub_tab)
+    L.sub_theme = assert(GAME.LEVEL_THEMES[which])
 
-    gui.printf("Theme for level %s = %s\n", L.name, L.theme_name)
+    gui.printf("Theme for level %s = %s\n", L.name, which)
   end
 
 
@@ -517,7 +470,7 @@ function Levels_choose_themes()
     return
   end
 
-  
+
   -- Psycheledic : pick randomly, honor the 'psycho_prob' field
   if OB_CONFIG.theme == "psycho" then
     local prob_tab = {}
@@ -531,7 +484,7 @@ function Levels_choose_themes()
     assert(not table.empty(prob_tab))
 
     each L in GAME.levels do
-      if not L.theme then
+      if not L.sub_theme then
         local name = rand.key_by_probs(prob_tab)
 
         if not L.name_theme and ((_index % 2) == 1) then
@@ -546,10 +499,11 @@ function Levels_choose_themes()
   end
 
 
-  -- collect usable themes
-  local prob_tab = {}
+  -- Mix It Up : choose a theme for each episode
+  local episode_list = {}
   local total = 0
 
+  local prob_tab = {}
   for name,info in pairs(OB_THEMES) do
     if info.shown and info.mixed_prob then
       prob_tab[name] = info.mixed_prob
@@ -570,11 +524,8 @@ function Levels_choose_themes()
   end
 
 
-  -- A Bit Mixed : choose a theme for each episode
-  local episode_list = {}
-
-  if OB_CONFIG.theme == "original" then
-    total = math.max(total, # GAME.episodes)
+  if OB_CONFIG.theme == "original" and GAME.original_themes then
+    total = math.max(total, # GAME.original_themes)
   end
 
   while not table.empty(prob_tab) do
@@ -584,9 +535,9 @@ function Levels_choose_themes()
     local info = OB_THEMES[name]
     local pos = rand.irange(1, total)
 
-    if OB_CONFIG.theme == "original" then
-      for i,epi in ipairs(GAME.episodes) do
-        if name == epi.theme and not episode_list[i] then
+    if OB_CONFIG.theme == "original" and GAME.original_themes then
+      for i,orig_theme in ipairs(GAME.original_themes) do
+        if name == orig_theme and not episode_list[i] then
           -- this can leave gaps, but they are filled later
           pos = i ; break
         end
@@ -603,10 +554,12 @@ function Levels_choose_themes()
   gui.debugf("Initial theme list = \n%s\n", table.tostr(episode_list))
 
   -- fill any gaps when in "As Original" mode
-  if OB_CONFIG.theme == "original" then
-    for i,epi in ipairs(GAME.episodes) do
+  if OB_CONFIG.theme == "original" and GAME.original_themes then
+    gui.debugf("original_themes =\n%s\n", table.tostr(GAME.original_themes))
+
+    for i,orig_theme in ipairs(GAME.original_themes) do
       if not episode_list[i] then
-        episode_list[i] = epi.theme
+        episode_list[i] = orig_theme
       end
     end
 
@@ -622,7 +575,7 @@ function Levels_choose_themes()
     table.insert(episode_list, episode_list[2 - dist])
   end
 
-  while #episode_list < 90 do
+  while #episode_list < 40 do
     table.insert(episode_list, episode_list[rand.irange(1, total)])
   end
 
@@ -633,7 +586,7 @@ function Levels_choose_themes()
     local count = 0
 
     each L in GAME.levels do
-      if count >= 4 or (count >= 2 and rand.odds(50)) then
+      if count >= 2 and (rand.odds(50) or count >= 5) then
         pos = pos + 1
         count = 0
       end
@@ -649,7 +602,6 @@ function Levels_choose_themes()
     set_level_theme(L, episode_list[L.episode.index])
   end
 end
-
 
 
 function Levels_rarify(seed_idx, tab)
@@ -723,7 +675,7 @@ function Levels_do_styles()
   -- decide the values
   STYLE = {}
 
-  each name,prob_tab in style_tab do
+  for name,prob_tab in pairs(style_tab) do
     STYLE[name] = rand.key_by_probs(prob_tab)
   end
 
@@ -737,7 +689,7 @@ function Levels_do_styles()
   SKY_H = rand.sel(5, 768, 512)
 
   if OB_CONFIG.theme == "psycho" then
-    Mat_prepare_trip()
+    Build.prepare_trip()
   end
 end
 
@@ -747,35 +699,33 @@ function Levels_build_it()
 
   -- does the level have a custom build function?
   if LEVEL.build_func then
-    LEVEL.build_func(LEVEL.build_data)
+    LEVEL.build_func()
     if gui.abort() then return "abort" end
     return "ok"
   end
 
-  -- Hex-DM test
-  if OB_CONFIG.hex_dm then
-    Hex_create_level()
-    if gui.abort() then return "abort" end
-    return "ok"
-  end
-
-
-  Plan_create_rooms()
+  Plan.create_rooms()
   if gui.abort() then return "abort" end
 
-  Connect_rooms()
+  Levels_invoke_hook("connect_rooms",  LEVEL.seed)
+
+  Connect.connect_rooms()
+
+  Quest.assign_quests()
   if gui.abort() then return "abort" end
 
-  Quest_make_quests()
+  Levels_invoke_hook("build_rooms",  LEVEL.seed)
+
+  Rooms.build_all()
   if gui.abort() then return "abort" end
 
-  Room_build_all()
-  if gui.abort() then return "abort" end
+  -- here is where the tiler.lua layout code used to kick in
+  assert(not PARAM.tiled)
+
+  Levels_invoke_hook("make_battles",  LEVEL.seed)
 
   Monster_make_battles()
   if gui.abort() then return "abort" end
-
-  gui.printf("\n")
 
   return "ok"
 end
@@ -801,53 +751,35 @@ function Levels_handle_prebuilt()
     -- FIXME: support other games (Wolf3d, Quake, etc)
   end
 
-  if LEVEL.description then
-    gui.property("description", LEVEL.description)
+  if not LEVEL.description and LEVEL.name_theme then
+    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
   end
 
   return "ok"
 end
 
 
-function Levels_make_level(L)
-  assert(L)
-  assert(L.name)
-  assert(L.theme)
+function Levels_make_level(L, index, NUM)
+  LEVEL = L
 
-  local index = L.index
-  local total = #GAME.levels
+  assert(LEVEL)
+  assert(LEVEL.name)
 
-  -- debugging aid : ability to build only a particular level
-  if OB_CONFIG.only and
-     string.lower(OB_CONFIG.only) != string.lower(L.name)
-  then
-    gui.printf("\nSkipping level: %s....\n\n", L.name)
-    return
-  end
-
-  -- must create the description before the copy (else games/modules won't see it)
-  if not L.description and L.name_theme then
-    L.description = Naming_grab_one(L.name_theme)
-  end
-
-  -- copy level info, so that all new information added into the LEVEL
-  -- object by the generator can be garbage collected once this level is
-  -- finished.  Without the copy the info would remain in GAME.levels
-  LEVEL = table.copy(L)
-
-  gui.at_level(LEVEL.name, index, total)
+  gui.at_level(LEVEL.name, index, NUM)
 
   gui.printf("\n\n~~~~~~| %s |~~~~~~\n", LEVEL.name)
-
 
   LEVEL.seed = OB_CONFIG.seed * 100 + index
   LEVEL.ids  = {}
 
-  THEME = table.copy(LEVEL.theme)
+  THEME = table.copy(assert(LEVEL.sub_theme))
 
   if GAME.THEME_DEFAULTS then
     table.merge_missing(THEME, GAME.THEME_DEFAULTS)
   end
+
+  --!!!!!! FIXME: BIG HACK !!!!!!
+  table.merge_missing(THEME, V3_THEME_DEFAULTS)
 
 
   -- use a pre-built level ?
@@ -880,6 +812,10 @@ function Levels_make_level(L)
   gui.property("error_tex",  error_mat.t)
   gui.property("error_flat", error_mat.f or error_mat.t)
 
+  if not LEVEL.description and LEVEL.name_theme then
+    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
+  end
+
   if LEVEL.description then
     gui.property("description", LEVEL.description)
   end
@@ -899,32 +835,33 @@ function Levels_make_level(L)
   gui.end_level()
 
 
-  if index < total then
-    Levels_between_clean()
-  end
+  -- intra-level cleanup
+  if index < NUM then
+    LEVEL = nil
+    SEEDS = nil
 
-  if gui.abort() then return "abort" end
+    collectgarbage("collect")
+  end
 
   return "ok"
 end
 
 
 function Levels_make_all()
-  GAME.levels   = {}
+
+  GAME.levels = {}
   GAME.episodes = {}
 
   Levels_invoke_hook("get_levels",  OB_CONFIG.seed)
 
   if #GAME.levels == 0 then
     error("Level list is empty!")
-  elseif #GAME.episodes == 0 then
-    error("Episode list is empty!")
   end
 
   table.index_up(GAME.levels)
   table.index_up(GAME.episodes)
 
---!!!!  Levels_decide_special_kinds()
+  Levels_decide_special_kinds()
 
   Levels_choose_themes()
 
@@ -936,7 +873,9 @@ function Levels_make_all()
     EPISODE = EPI
 
     each L in EPI.levels do
-      if Levels_make_level(L) == "abort" then
+      L.allowances = {}
+
+      if Levels_make_level(L, _index, #GAME.levels) == "abort" then
         return "abort"
       end
     end
