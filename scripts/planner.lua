@@ -919,7 +919,7 @@ function Plan.determine_size()
       local total = 4  -- border seeds around level
 
       for x = 1,W do
-        cols[x] = rand.index_by_probs(ROOM_SIZE_TABLE)
+        cols[x] = 2 + rand.index_by_probs(ROOM_SIZE_TABLE)
         total = total + cols[x]
       end
 
