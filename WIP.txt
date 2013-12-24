@@ -3,3 +3,31 @@ WORK IN PROGRESS
 ================
 
 
+3.57 Merger
+-----------
+
+-  copyright year : 2014
+
++  proper zones
+
+-  check monster sel (weaker than V5 ??)
+
+-  find_guard_spot
+
+-  ambush spots
+
++  intrusions: like "junking" a side, but connects two other rooms
+
++  texture for low_curved_stair
+
+-  dark skies
+
+-  logic to ensure Mastermind is added (esp. in guarded rooms)
+
++  fix Pegging: e.g. revert r9750 ??
+
+-  facades: simpler, have a table in LEVEL_THEME entry
+
+-  rename "normal" room kind --> "building" (etc?)
+
+
