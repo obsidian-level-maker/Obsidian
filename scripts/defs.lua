@@ -51,7 +51,7 @@ OB_ENGINES["nolimit"] =
 
 OB_THEMES["mixed"] =
 {
-  label = "Mix It Up"
+  label = "A Bit Mixed"
   priority = 99,
 }
 
