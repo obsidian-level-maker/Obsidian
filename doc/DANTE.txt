@@ -1,0 +1,92 @@
+I've used both Oblige and ObHack for several years now, and I must say both have their place, but they also have their differences. Generally I use Oblige more often than Obhack because it's updated much more often. Obhack hasn't been updated for one year now, which for me leaves one man standing. So I'll give it to you straight.
+
+In all honesty, I am impressed with the direction and decisions made with the overall current build of Oblige. Oblige to me is about the quality of randomization. That's why I use it to this day. If I wanted totally random game play then I would use ObHack. Obhack to me represents quantity which does have its place for Doom, but I don't want that to ever be the case for Oblige.
+
+What I want to see in the next possible version(s) of Oblige are rooms that look good randomized in place of prefabs. Prefabs in Doom for me is two sides of a coin. On one side, assuming only a tiny level is planned out, prefabs will look very realistic, provided there's only one of each. On larger levels (progressive), then it gets out of control as you have more than one prefab in one area alone so it looks like a massive copy pasta spaghetti.
+
+I'll explain my proposal in detail. What's needed are room plans, but that also requires some level of control for the depth of the levels' floors. The steepness must seldom be so much except in certain cases. I'll give you a sample of some ideas:
+
+*Rooms: Just normal rooms themselves. Between 1-9 connected with one another with either small "entryway" doors or the large doors, but not a mix of either. Unlocked by default, or requires switches, or keys.
+
+1. The "Storage Room":
+This is the most obvious successful randomization. A room full of small and large UAC boxes with random ammo and health sprawled around. This would be a simple implementation.
+
+2. The "Computer Room"
+Room with computer textures either mapped on a wall or a primitive representing a desk. I see these a lot in ObHack and they look very good if randomized just right.
+
+3. The "Waste Room"
+This would be a room where waste (damaging floor) would be used instead of everywhere in the level. Can be 'contained' (sectioned off for aesthetic) or 'spilled' (for gameplay).
+
+Now those are some example ideas for indoor like maps. The hard part is getting good *outside* areas. I'll try to be as realistic as I can:
+
+*Borders: Note this means for the *entire* map not just a part of it.
+
+ 1. Wooden Fences (with or without trees). Nicely done in 5.10. No changes.
+
+ 2. Bars. This would mean the entire map would be kinda like a prison though it would look wierd with SKY3 background.
+
+ 3. Jagged walls. One variation could be like E3M2 (Slough of Despair) for moon-like levels. Another variation might use different textures and trees for an earth level. Another variation could use water for a 'flooded island' level.
+
+*Buildings: As in actual buildings isolated from one another, like 'street mode' but not parallel to one another. Final Doom and Master Levels have some good examples of these. These 'buildings' are one story. meaning universal flatness. Windows are optional. Perhaps it might be best to redo the entire "street mode" algorithm so buildings can be positioned differently and have different sizes.
+
+ 1. The "Control Center"
+This is where you'll have multiple instances of "Computer Room" going on. Assuming there might be more than one of these, you could connect them with teleports. Kind of like a tech center/headquarters.
+
+ 2. The "Armory"
+This would rely on "Storage Room" setting where all the goodies are stored, but obviously well guarded.
+
+ 3. The "Recycling Center"
+This uses the "Waste Room" where either brown sewage or green toxic waste is either stored or spilled in the rooms for hazardous game play.
+
+All of this is just for the Tech/Urban theme. As for the "Hell theme" I'll have to think about that because generally I don't use it (tech is my favorite). My advice right now is just look at previous versions for a ' hell setting' revision but it might as well be totally randomized because who would know what hell is like, right?
+
+Just keep in mind that this is my suggestion for what it is. I've modified almost every version of Oblige that came out, just to 'fit' my specific needs, but as I said the direction of Oblige is already going that way so I can only offer advice for my specific desires.
+
+Now as for the Oblige program itself, the "steepness" setting is very missed I can assure you. The random "stairs" in the middle of the ground does provide good cover like a trench but it's very out of place looking. 
+
+Also an extra, optional module for controlling quantities of all the monsters would be nice. In addition to an overall maximum quantity (let's say 1000 for example) you could say 200 will be imps, 200 will be cacodemons, 500 will be chaingunners, and 100 will be lost souls.
+
+As for the .lua files, I must admit I'm not very good at Lua but at least it is understandable. I only request you try to make it easier to comment out lines so I can try isolating what Oblige cannot use to randomly generate a map. But if that will impact functionality then you can safely ignore this request. I used to comment out stuff like rooms and themes to see what results I liked.
+
+-------------------------------------------------------------------------------------
+
+Looking back at what I just posted, I might pitch the idea of "level layouts". This would replace the purpose of "Prebuilt maps". Here are a few:
+
+"Alcatraz 1"
+Borders: Bars with water (flooded island)
+Enemies: Zombies (guards), Pinky (guard dogs), Mancubus (turrets)
+Buldings: Armory, Prison (see below)
+
+"Alcatraz 2" (same as 1 except:)
+Enemies: SS Nazi, Pinky, Mancubus
+Textures: Wolfenstein
+Buildings: Prison Type 2 (see below)
+
+"Moon Base"
+Textures: UAC, Rocks
+Buildings: All
+Borders: Jagged
+Enemies: random
+
+"Military Base"
+Textures: UAC, Grass
+Borders: random
+Enemies: random
+Buildings: All
+
+"Fortress (Hell)" (Variation of Alcatraz except:)
+Borders: Jagged (Flooded Lava)
+Keys: Skulls
+Textures: Green stones, Green Bricks, Blood, Lava, Brown Gravel
+Enemies: All
+
+
+Also introducing new room types:
+
+ 1. The "Prison Bars" (Prison Type 1)
+Small enemies like zombies and imps will be enclosed in cube "bars" but not suspended high off the ground. This is purely for attack.
+
+ 2. The "Prison Room" (Prison Type 2, Wolfenstein)
+Larger rooms to contain everything else and you are intended to go inside them. Basically this is MAP31in Doom 2.
+
+
