@@ -56,7 +56,7 @@ DOOM2.ROOM_THEMES =
 {
   ----- Tech Base ---------------------------
 
-  Tech2_startan3 =
+  Tech_startan3 =
   {
     walls =
     {
@@ -94,7 +94,7 @@ DOOM2.ROOM_THEMES =
   }
 
 
-  Tech2_startan2 =
+  Tech_startan2 =
   {
     walls =
     {
@@ -132,7 +132,7 @@ DOOM2.ROOM_THEMES =
   }
 
 
-  Tech2_stargrey =
+  Tech_stargray =
   {
     rarity = "minor"
 
@@ -167,7 +167,7 @@ DOOM2.ROOM_THEMES =
   }
 
 
-  Tech2_tekgren =
+  Tech_tekgren =
   {
     walls =
     {
@@ -190,7 +190,7 @@ DOOM2.ROOM_THEMES =
   }
 
 
-  Tech2_metal2 =
+  Tech_metal2 =
   {
     walls =
     {
@@ -220,7 +220,7 @@ DOOM2.ROOM_THEMES =
   }
 
 
-  Tech2_cave =
+  Tech_cave =
   {
     naturals =
     {
@@ -238,7 +238,7 @@ DOOM2.ROOM_THEMES =
   }
 
 
-  Tech2_outdoors =
+  Tech_outdoors =
   {
     floors =
     {
@@ -268,7 +268,7 @@ DOOM2.ROOM_THEMES =
   }
 
 
-  Tech2_hallway =
+  Tech_hallway =
   {
     walls =
     {
@@ -305,7 +305,7 @@ DOOM2.ROOM_THEMES =
 
   ----- Hell / Gothic -------------------------
 
-  Hell2_hotbrick =
+  Hell_hotbrick =
   {
     walls =
     {
@@ -331,7 +331,7 @@ DOOM2.ROOM_THEMES =
     }
   }
 
-  Hell2_marble =
+  Hell_marble =
   {
     walls =
     {
@@ -359,7 +359,7 @@ DOOM2.ROOM_THEMES =
     }
   }
 
-  Hell2_hallway =
+  Hell_hallway =
   {
     walls =
     {
@@ -390,7 +390,7 @@ DOOM2.ROOM_THEMES =
     }
   }
 
-  Hell2_cave =
+  Hell_cave =
   {
     naturals =
     {
@@ -403,7 +403,7 @@ DOOM2.ROOM_THEMES =
     }
   }
 
-  Hell2_outdoors =
+  Hell_outdoors =
   {
     floors =
     {
@@ -786,13 +786,18 @@ DOOM2.LEVEL_THEMES =
 
     liquids = { nukage=90, water=25, slime=15, lava=5 }
 
-    buildings = { Tech2_startan3=60, Tech2_startan2=40,
-                  Tech2_stargrey=10,
-                  Tech2_tekgren=20, Tech2_metal2=10,
-                }
-    hallways  = { Tech2_hallway=50 }
-    caves     = { Tech2_cave=50 }
-    outdoors  = { Tech2_outdoors=50 }
+    buildings =
+    {
+      Tech_startan3 = 60
+      Tech_startan2 = 40
+      Tech_stargray = 10
+      Tech_tekgren  = 20
+      Tech_metal2   = 10
+    }
+
+    hallways  = { Tech_hallway=50 }
+    caves     = { Tech_cave=50 }
+    outdoors  = { Tech_outdoors=50 }
 
     monster_prefs = { arach=2.0 }
 
@@ -811,10 +816,15 @@ DOOM2.LEVEL_THEMES =
 
     keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
 
-    buildings = { Hell2_hotbrick=50, Hell2_marble=50 }
-    hallways  = { Hell2_hallway=50 }
-    outdoors  = { Hell2_outdoors=50 }
-    caves     = { Hell2_cave=50 }
+    buildings =
+    {
+      Hell_hotbrick = 50
+      Hell_marble   = 50
+    }
+
+    hallways  = { Hell_hallway=50 }
+    outdoors  = { Hell_outdoors=50 }
+    caves     = { Hell_cave=50 }
 
     facades =
     {
@@ -832,31 +842,20 @@ DOOM2.LEVEL_THEMES =
   }
 
 
-  -- AJA: not sure whether to keep this
-  Hmmm_hell2 =
-  {
-    prob = 25,
-
-    liquids = { lava=40, blood=90, slime=10 }
-
-    keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
-
-    buildings = { D2_Hot_room=50 }
-    outdoors  = { D2_Hot_outdoors=50 }
-    caves     = { D2_Hell_cave=50 }
-
-    monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0, vile=2.0 }
-  }
-
-
   urban1 =
   {
     prob = 50,
 
     liquids = { water=90, slime=50, blood=20, lava=20 }
 
-    buildings = { Urban_panel=20, Urban_brick=50, Urban_bigbrik=50,
-                  Urban_stone=60 }
+    buildings =
+    {
+      Urban_panel   = 20
+      Urban_brick   = 50
+      Urban_bigbrik = 50
+      Urban_stone   = 60
+    }
+
     hallways  = { Urban_hallway=50 }
     caves     = { Urban_cave=50 }
     outdoors  = { Urban_outdoors=50 }
@@ -880,7 +879,13 @@ DOOM2.LEVEL_THEMES =
 
     max_dominant_themes = 1
 
-    buildings = { Wolf_cells=50, Wolf_brick=30, Wolf_stein=50 }
+    buildings =
+    {
+      Wolf_cells = 50
+      Wolf_brick = 30
+      Wolf_stein = 50
+    }
+
     hallways  = { Wolf_hall=50 }
     caves     = { Wolf_cave=50 }
     outdoors  = { Wolf_outdoors=50 }
