@@ -6,20 +6,13 @@ WORK IN PROGRESS
 3.57 Merger
 -----------
 
-+  fix Pegging: e.g. revert r9750 ??
-
-   (a) uppers and lowers default to be "unpegged"
-   (b) make "peg" be a brush-wide flag
-   (c) automatically unpeg a 1S line next to a pegged ceiling brush
-
-
 -  find_guard_spot
 
 -  ambush spots
 
 +  intrusions: like "junking" a side, but connects two other rooms
 
-+  texture for low_curved_stair
+-  texture on curved corner stairs
 
 -  dark skies
 
@@ -27,10 +20,6 @@ WORK IN PROGRESS
 
 -  facades: simpler, have a table in LEVEL_THEME entry
 
--  rename "normal" room kind --> "building" (etc?)
-
 +  proper zones
-
--  check monster sel (weaker than V5 ??)
 
 
