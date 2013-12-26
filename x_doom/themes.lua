@@ -359,6 +359,109 @@ DOOM2.ROOM_THEMES =
     }
   }
 
+  Hell_gray =
+  {
+    walls =
+    {
+      MARBGRAY = 50
+    }
+
+    floors =
+    {
+      FLAT10   = 25
+      FLOOR7_1 = 30
+      DEM1_5  = 50
+      DEM1_6  = 30
+      FLOOR7_2  = 30
+    }
+
+    ceilings =
+    {
+      FLOOR7_2  = 50
+      DEM1_5  = 20
+      FLOOR6_1 = 20
+      FLOOR6_2 = 20
+      MFLR8_4  = 15
+    }
+  }
+
+  Hell_gstvine =
+  {
+    walls =
+    {
+      GSTVINE2 = 50
+      GSTVINE1 = 10
+    }
+
+    floors =
+    {
+      FLAT1 = 10
+      FLOOR7_1 = 10
+    }
+
+    ceilings =
+    {
+      FLAT1 = 10
+    }
+  }
+
+  Hell_stone =
+  {
+    walls =
+    {
+      STONE3 = 50
+    }
+
+    floors =
+    {
+      FLAT1 = 10
+    }
+
+    ceilings =
+    {
+      FLAT1 = 10
+    }
+  }
+
+  Hell_wood =
+  {
+    walls =
+    {
+      WOOD1 = 50
+    }
+
+    floors =
+    {
+      FLAT1 = 10
+    }
+
+    ceilings =
+    {
+      FLAT1 = 10
+    }
+  }
+
+  Hell_skin =
+  {
+    walls =
+    {
+      SKINMET1 = 50
+      SKINMET2 = 50
+      SKINCUT  = 5
+      SKINSYMB = 5
+    }
+
+    floors =
+    {
+      FLAT1 = 10
+    }
+
+    ceilings =
+    {
+      FLAT1 = 10
+    }
+  }
+
   Hell_hallway =
   {
     walls =
@@ -818,8 +921,14 @@ DOOM2.LEVEL_THEMES =
 
     buildings =
     {
-      Hell_hotbrick = 50
-      Hell_marble   = 50
+      Hell_hotbrick = 40
+      Hell_marble   = 40
+      Hell_gray     = 40
+
+      Hell_stone    = 15
+      Hell_gstvine  = 10
+      Hell_wood     = 10
+      Hell_skin     = 10
     }
 
     hallways  = { Hell_hallway=50 }
