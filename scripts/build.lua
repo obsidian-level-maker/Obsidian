@@ -248,7 +248,7 @@ function Trans.old_brush(info, coords, z1, z2)
 
 -- gui.printf("coords=\n%s\n", table.tostr(coords,4))
 
-  table.insert(coords, 1, { m="solid" })
+  table.insert(coords, 1, { m="solid", peg=info.peg })
 
   raw_add_brush(coords)
 end
@@ -530,7 +530,7 @@ end
 function add_pegging(info, x_offset, y_offset, peg)
   info.w_face.x_offset = x_offset or 0
   info.w_face.y_offset = y_offset or 0
-  info.w_face.peg = sel(peg == nil, 1, peg)
+  info.peg = peg or 1
 
   return info
 end
@@ -1881,7 +1881,7 @@ function Build.lift(S, skin, skin2, tag)
   assert(skin.walk_kind)
   assert(skin.switch_kind)
 
-  local lift_info = get_mat(skin.side_w, skin.top_f)
+  local lift_info = add_pegging(get_mat(skin.side_w, skin.top_f))
 
   local side = S.stair_dir
 
@@ -1917,7 +1917,7 @@ function Build.lift(S, skin, skin2, tag)
   end
 
 
-  local sw_info = add_pegging(get_mat(skin.side_w))
+  local sw_info = get_mat(skin.side_w)
 
   local coords = get_wall_coords(S, side, 128)
 

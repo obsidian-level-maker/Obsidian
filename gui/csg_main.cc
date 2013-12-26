@@ -820,7 +820,6 @@ int CSG_property(lua_State *L)
 //    
 //    x_offset  BLAH  FIXME
 //    y_offset
-//    peg
 //
 //    delta_z   : a post-CSG height adjustment (top & bottom only)
 //    mark      : separating number (top & bottom only)

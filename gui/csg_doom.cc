@@ -1103,7 +1103,8 @@ static int CalcRailYOffset(brush_vert_c *rail, doom_sector_c *F, doom_sector_c *
 static doom_sidedef_c * DM_MakeSidedef(
 	doom_sector_c *sec, doom_sector_c *back,
 	snag_c *snag, snag_c *other,
-	brush_vert_c *rail, bool *unpeg_L, bool *unpeg_U)
+	brush_vert_c *rail,
+	bool unpeg_L, bool unpeg_U)
 {
 	if (! sec)
 		return NULL;
@@ -1146,9 +1147,6 @@ static doom_sidedef_c * DM_MakeSidedef(
 		{
 			SD->mid = lower->face.getStr("tex", dummy_tex);
 
-			if (lower->face.getInt("unpeg"))
-				*unpeg_L = true;
-
 			int ox = lower->face.getInt("u1", IVAL_NONE);
 			int oy = lower->face.getInt("v1", IVAL_NONE);
 
@@ -1181,7 +1179,6 @@ static doom_sidedef_c * DM_MakeSidedef(
 
 		if (rail)
 		{
-			*unpeg_L = true;
 			SD->mid = rail->face.getStr("rail", "-");
 			r_ox = rail->face.getInt("u1", r_ox);
 		}
@@ -1191,21 +1188,6 @@ static doom_sidedef_c * DM_MakeSidedef(
 
 		int u_ox = upper->face.getInt("u1", IVAL_NONE);
 		int u_oy = upper->face.getInt("v1", IVAL_NONE);
-
-		// grab unpeg flags -- but only for the visible parts
-		if (lower->face.getInt("unpeg") && back &&
-		    (back->f_h > sec->f_h ||
-			 (back->f_h == sec->f_h && l_oy != IVAL_NONE)))
-		{
-			*unpeg_L = true;
-		}
-		
-		if (upper->face.getInt("unpeg") && back &&
-			(back->c_h < sec->c_h ||
-			 (back->c_h == sec->c_h && u_oy != IVAL_NONE)))
-		{
-			*unpeg_U = true;
-		}
 
 		if (r_ox != IVAL_NONE)
 			SD->x_offset = CalcXOffset(snag, rail,  r_ox);
@@ -1217,9 +1199,9 @@ static doom_sidedef_c * DM_MakeSidedef(
 		if (rail)
 			SD->y_offset = CalcRailYOffset(rail, sec, back);
 		else if (l_oy != IVAL_NONE)
-			SD->y_offset = CalcYOffset(lower, l_oy, *unpeg_U);
+			SD->y_offset = CalcYOffset(lower, l_oy, unpeg_L);
 		else if (u_oy != IVAL_NONE)
-			SD->y_offset = CalcYOffset(upper, u_oy, *unpeg_U);
+			SD->y_offset = CalcYOffset(upper, u_oy, unpeg_U);
 	}
 
 	return SD;
@@ -1360,6 +1342,60 @@ static brush_vert_c * DM_FindRail(const snag_c *S, const region_c *R, const regi
 }
 
 
+static void DM_DeterminePegging(doom_linedef_c *L,
+								doom_sector_c *front, doom_sector_c *back,
+								bool has_rail)
+{
+	// one-sided?
+	// set LOWER-UNPEG only when ceiling is a door
+	if (! back)
+	{
+		csg_brush_c *T = front->region->gaps.back() ->top;
+
+		if (T->props.getInt("peg"))
+		{
+			L->flags |= MLF_LowerUnpeg;
+		}
+
+		return;
+	}
+
+	// two-sided
+	// set LOWER-UNPEG unless one side is a lift with higher floor_h
+	// set UPPER-UNPEG unless one side is a door with lower ceil_h
+
+	csg_brush_c *B1 = front->region->gaps.front()->bottom;
+	csg_brush_c *T1 = front->region->gaps.back() ->top;
+
+	csg_brush_c *B2 =  back->region->gaps.front()->bottom;
+	csg_brush_c *T2 =  back->region->gaps.back() ->top;
+
+	if (has_rail)
+	{
+		L->flags |= MLF_LowerUnpeg;
+	}
+	else if ( (back->f_h > front->f_h && B2->props.getInt("peg")) ||
+			 (front->f_h >  back->f_h && B1->props.getInt("peg")))
+	{
+		// pegged lower
+	}
+	else
+	{
+		L->flags |= MLF_LowerUnpeg;
+	}
+
+	if ( (back->c_h < front->c_h && T2->props.getInt("peg")) ||
+		(front->c_h <  back->c_h && T1->props.getInt("peg")))
+	{
+		// pegged upper
+	}
+	else
+	{
+		L->flags |= MLF_UpperUnpeg;
+	}
+}
+
+
 static void DM_MakeLine(region_c *R, snag_c *S)
 {
 	region_c *N = S->partner ? S->partner->region : NULL;
@@ -1452,11 +1488,16 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 	L->CalcLength();
 
 
-	bool unpeg_L = false;
-	bool unpeg_U = false;
+	// set pegging _before_ making sidedefs
 
-	L->front = DM_MakeSidedef(front,  back, S->partner, S, rail, &unpeg_L, &unpeg_U);
-	L->back  = DM_MakeSidedef( back, front, S, S->partner, rail, &unpeg_L, &unpeg_U);
+	DM_DeterminePegging(L, front, back, rail ? true : false);
+
+	bool unpeg_L = (L->flags & MLF_LowerUnpeg) != 0;
+	bool unpeg_U = (L->flags & MLF_UpperUnpeg) != 0;
+
+
+	L->front = DM_MakeSidedef(front,  back, S->partner, S, rail, unpeg_L, unpeg_U);
+	L->back  = DM_MakeSidedef( back, front, S, S->partner, rail, unpeg_L, unpeg_U);
 
 	SYS_ASSERT(L->front || L->back);
 
@@ -1486,9 +1527,6 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 	else
 	{
 		L->flags |= MLF_TwoSided;
-
-		if (unpeg_L) L->flags |= MLF_LowerUnpeg;
-		if (unpeg_U) L->flags |= MLF_UpperUnpeg;
 	}
 
 	if (rail) L->flags |= rail->face.getInt("flags");
