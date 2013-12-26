@@ -1081,26 +1081,72 @@ static int CalcXOffset(snag_c *S, brush_vert_c *V, int ox)
 }
 
 
-static int CalcYOffset(brush_vert_c *V, int oy, bool unpeg_U)
+static int CalcYOffset_1S(brush_vert_c *V, doom_sector_c *sec, int oy, bool unpeg_L)
 {
-	// !!! FIXME: handle cut-offs (etc)
+	if (unpeg_L)
+		return oy;
+
+	// check if brush was normal size (not unfinitely high) and has been
+	// cut-off by the ceiling in this sector.
+
+	csg_brush_c *B = V->parent;
+
+	int z2 = I_ROUND(B->t.z);
+
+	if (z2 > EXTREME_H - 100)
+		return oy;
+
+	return oy + (z2 - sec->c_h);
+}
+
+
+static int CalcYOffset_Lower(brush_vert_c *V, doom_sector_c *sec,
+							 doom_sector_c *back, int oy, bool unpeg_L)
+{
+	// generally get here in pegged mode (rendered top-down).
+	// the lower may stll be cut-off by this sector's ceiling...
+	if (unpeg_L)
+		return oy;
+
+	csg_brush_c *B = V->parent;
+
+	int z2 = I_ROUND(B->t.z);
+
+	if (z2 > sec->c_h)
+		oy += z2 - sec->c_h;
+
 	return oy;
 }
 
 
-static int CalcRailYOffset(brush_vert_c *rail, doom_sector_c *F, doom_sector_c *B)
+static int CalcYOffset_Upper(brush_vert_c *V, doom_sector_c *sec,
+							 doom_sector_c *back, int oy, bool unpeg_U)
 {
+	if (! unpeg_U)	// pegged, i.e. rendered bottom-up (doors)
+		return oy;
+
+	csg_brush_c *B = V->parent;
+
+	int z2 = I_ROUND(B->t.z);
+
+	if (z2 > EXTREME_H - 100)
+		return oy;
+
+	return oy + (z2 - sec->c_h);
+}
+
+
+static int CalcYOffset_Rail(brush_vert_c *rail, doom_sector_c *F, doom_sector_c *B)
+{
+	// we don't check any "cut-off" situations here
+	// (such logic would also require forcing a light diff in each sector)
+
 	return rail->face.getInt("v1", 0);
-
-	/* ???
-	   int base_h = MAX(F->f_h, B->f_h);
-
-	   return I_ROUND(rail->parent->b.z) - base_h;
-	 */
 }
 
 
 static doom_sidedef_c * DM_MakeSidedef(
+	doom_linedef_c *L,
 	doom_sector_c *sec, doom_sector_c *back,
 	snag_c *snag, snag_c *other,
 	brush_vert_c *rail,
@@ -1154,7 +1200,7 @@ static doom_sidedef_c * DM_MakeSidedef(
 				SD->x_offset = CalcXOffset(snag, lower, ox);
 
 			if (oy != IVAL_NONE)
-				SD->y_offset = oy;  // !!! FIXME  CalcYOffset(upper, oy, ???)
+				SD->y_offset = CalcYOffset_1S(lower, sec, oy, unpeg_L);
 		}
 	}
 	else
@@ -1184,10 +1230,17 @@ static doom_sidedef_c * DM_MakeSidedef(
 		}
 
 		int l_ox = lower->face.getInt("u1", IVAL_NONE);
-		int l_oy = lower->face.getInt("v1", IVAL_NONE);
-
 		int u_ox = upper->face.getInt("u1", IVAL_NONE);
-		int u_oy = upper->face.getInt("v1", IVAL_NONE);
+
+		// on a pegged brush, default Y offset is zero
+		int l_oy = lower->face.getInt("v1", l_brush->props.getInt("peg") ? 0 : IVAL_NONE);
+		int u_oy = upper->face.getInt("v1", u_brush->props.getInt("peg") ? 0 : IVAL_NONE);
+
+		if (back && back->f_h > sec->f_h && !rail && l_oy != IVAL_NONE)
+		{
+			L->flags &= ~MLF_LowerUnpeg;
+			unpeg_L = false;
+		}
 
 		if (r_ox != IVAL_NONE)
 			SD->x_offset = CalcXOffset(snag, rail,  r_ox);
@@ -1197,11 +1250,11 @@ static doom_sidedef_c * DM_MakeSidedef(
 			SD->x_offset = CalcXOffset(snag, upper, u_ox);
 
 		if (rail)
-			SD->y_offset = CalcRailYOffset(rail, sec, back);
+			SD->y_offset = CalcYOffset_Rail(rail, sec, back);
 		else if (l_oy != IVAL_NONE)
-			SD->y_offset = CalcYOffset(lower, l_oy, unpeg_L);
+			SD->y_offset = CalcYOffset_Lower(lower, sec, back, l_oy, unpeg_L);
 		else if (u_oy != IVAL_NONE)
-			SD->y_offset = CalcYOffset(upper, u_oy, unpeg_U);
+			SD->y_offset = CalcYOffset_Upper(upper, sec, back, u_oy, unpeg_U);
 	}
 
 	return SD;
@@ -1363,6 +1416,9 @@ static void DM_DeterminePegging(doom_linedef_c *L,
 	// two-sided
 	// set LOWER-UNPEG unless one side is a lift with higher floor_h
 	// set UPPER-UNPEG unless one side is a door with lower ceil_h
+	//
+	// Note: later we will clear LOWER-UNPEG if lower is visible and it
+	//       has a y_offset.
 
 	csg_brush_c *B1 = front->region->gaps.front()->bottom;
 	csg_brush_c *T1 = front->region->gaps.back() ->top;
@@ -1496,8 +1552,8 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 	bool unpeg_U = (L->flags & MLF_UpperUnpeg) != 0;
 
 
-	L->front = DM_MakeSidedef(front,  back, S->partner, S, rail, unpeg_L, unpeg_U);
-	L->back  = DM_MakeSidedef( back, front, S, S->partner, rail, unpeg_L, unpeg_U);
+	L->front = DM_MakeSidedef(L, front,  back, S->partner, S, rail, unpeg_L, unpeg_U);
+	L->back  = DM_MakeSidedef(L, back, front, S, S->partner, rail, unpeg_L, unpeg_U);
 
 	SYS_ASSERT(L->front || L->back);
 
