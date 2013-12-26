@@ -655,7 +655,6 @@ DOOM2.ROOM_THEMES =
       ROCK3    = 70
     }
   }
-}
 
 
   ---- Wolfenstein 3D -------------
