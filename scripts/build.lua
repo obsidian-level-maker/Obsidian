@@ -203,7 +203,7 @@ function Trans.old_brush(info, coords, z1, z2)
 
     if C.w_face then
       C.face = C.w_face ; C.w_face = nil
-    else
+    elseif info.w_face then
       C.face = info.w_face
     end
   end
