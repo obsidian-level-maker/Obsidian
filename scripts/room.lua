@@ -22,7 +22,7 @@
 
 class ROOM
 {
-  kind : keyword  -- "normal" (layout-able room)
+  kind : keyword  -- "building" (layout-able room)
                   -- "scenic" (unvisitable room)
                   -- "hallway", "stairwell", "small_exit"
 
@@ -275,7 +275,7 @@ gui.debugf("  Made Hallway @ %s\n", R:tostr())
       assert(min_d <= 6)
 
       if rand.odds(REVERT_PROBS[min_d]) then
-        R.kind = "normal"
+        R.kind = "building"
         R.hallway = nil
 gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
       end
@@ -860,7 +860,7 @@ function Rooms.border_up()
   end
 
   local function decide_windows(R, border_list)
-    if R.outdoor or R.natural or R.kind ~= "normal" then return end
+    if R.outdoor or R.natural or R.kind != "building" then return end
     if R.semi_outdoor then return end
     if STYLE.windows == "none" then return end
 
@@ -964,7 +964,7 @@ function Rooms.border_up()
   end
 
   local function decide_pictures(R, border_list)
-    if R.outdoor or R.natural or R.kind ~= "normal" then return end
+    if R.outdoor or R.natural or R.kind != "building" then return end
     if R.semi_outdoor then return end
 
     -- filter border list to remove symmetrical peers, seeds
@@ -1661,7 +1661,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
   end
 
   local function indoor_ceiling()
-    if R.natural or R.kind ~= "normal" then
+    if R.natural or R.kind ~= "building" then
       return
     end
 
@@ -1801,7 +1801,7 @@ function Rooms.add_crates(R)
   if STYLE.crates == "none" then return end
 
   if R.natural then return end
-  if R.kind ~= "normal" then return end
+  if R.kind != "building" then return end
 
   local skin
   local skin_names

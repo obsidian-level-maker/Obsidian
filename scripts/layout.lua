@@ -2539,7 +2539,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   R.junk_thick = { [2]=0, [4]=0, [6]=0, [8]=0 }
 
-  if R.kind == "normal" and not (R.outdoor or R.natural or R.children) then
+  if R.kind == "building" and not (R.outdoor or R.natural or R.children) then
     junk_sides()
   end
 
@@ -2578,7 +2578,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     Layout.cave_monster_spots(R)
   end
 
-  if R.kind == "normal" and not (R.outdoor or R.natural) then
+  if R.kind == "building" and not (R.outdoor or R.natural) then
     add_pillars()
   end
 end

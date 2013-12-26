@@ -911,7 +911,7 @@ gui.debugf("Failed\n")
     local rooms = {}
 
     each R in LEVEL.rooms do
-      if R.svolume >= 1 and (R.kind == "normal") and not R.parent then
+      if R.svolume >= 1 and (R.kind == "building") and not R.parent then
         R.k_score = sel((R.sw%2)==1 and (R.sh%2)==1, 5, 0) + R.svolume + gui.random()
         table.insert(rooms, R)
       end

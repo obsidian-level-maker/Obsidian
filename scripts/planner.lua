@@ -343,7 +343,7 @@ gui.printf("Naturals: %d%%\n", perc)
     local bx, by = vis.x, vis.y
     
     if not room_map[bx][by] then
-      local ROOM = { id=id, kind="normal", conns={}, }
+      local ROOM = { id=id, kind="building", conns={}, }
       id = id + 1
 
       table.set_class(ROOM, ROOM_CLASS)
@@ -753,7 +753,7 @@ function Plan.sub_rooms()
     -- actually add it !
     local ROOM =
     {
-      id=id, kind="normal", conns={},
+      id=id, kind="building", conns={},
       big_w=1, big_h=1,
     }
 

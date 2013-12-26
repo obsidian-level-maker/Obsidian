@@ -1208,8 +1208,7 @@ function Quest_assign_room_themes()
 
       each R in LEVEL.rooms do
         if R.kind == kind or
-           (kind == "building" and R.kind == "normal") or
-           (kind == "hallway"  and R.kind == "stairwell")
+           (kind == "hallway" and R.kind == "stairwell")
         then
           total = total + R.svolume
         end
@@ -1352,7 +1351,6 @@ function Quest_assign_room_themes()
 
   local function assign_room_theme(R, try_rare)
     local kind = R.kind
-    if kind == "normal" then kind = "building" end
     if kind == "stairwell" then kind = "hallway" end
 
     local theme_list = R.zone.themes[kind]
@@ -1421,7 +1419,7 @@ function Quest_assign_room_themes()
     each C in H.conns do
       local R = C:neighbor(H)
 
-      if R.kind == "normal" then  -- TODO: caves
+      if R.kind == "building" then  -- TODO: caves
         table.insert(conn_rooms, R)
       end
     end
