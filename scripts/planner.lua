@@ -900,6 +900,116 @@ function Plan_determine_size()
 end
 
 
+function Plan_decide_outdoors()
+
+  local function turn_into_outdoor(R)
+    if R.kind != "cave" then
+       R.kind = "outdoor"
+    end
+
+    R.is_outdoor = true
+
+    R.sky_h = SKY_H  -- FIXME: use sky groups
+  end
+
+
+  local function score_room(R)
+    -- handle the surrounder room
+    if R.is_surrounder and rand.odds(style_sel("outdoors", 0, 15, 35, 80)) then
+      turn_into_outdoor(R)
+      return -1  -- ignore it now
+    end
+
+    -- too small ?
+    if R.svolume < 4 then return -1 end
+
+    -- never for secret exit
+    if R.purpose == "SECRET_EXIT" then return -1 end
+
+    local score = R.svolume
+
+    local what = 0
+
+    -- preference for the sides of map, even higher for the corners
+    if R.kx1 <= 3 or R.kx2 >= SECTION_W-2 then what = what + 1 end
+    if R.ky1 <= 3 or R.ky2 >= SECTION_H-2 then what = what + 1 end
+
+    score = score + 10 * what
+
+    score = score + 20 * gui.random() ^ 2
+
+    return score
+  end
+
+  
+  local function pick_room(list, quota)
+    -- remove rooms which don't meet the quota
+    for index = #list, 1, -1 do
+      local R = list[index]
+
+      if R.svolume > quota then
+        table.remove(list, index)
+      end
+    end
+
+    if table.empty(list) then return nil end
+
+    -- don't always pick the largest room
+    if #list >= 2 and rand.odds(40) then
+      return table.remove(list, 2)
+    end
+
+    return table.remove(list, 1)
+  end
+
+
+  ---| Plan_decide_outdoors |---
+
+  -- collect rooms which can be made outdoor
+  local room_list = {}
+  local total_seeds = 0
+
+  each R in LEVEL.rooms do
+    R.outdoor_score = score_room(R)
+
+    if R.outdoor_score > 0 then
+      table.insert(room_list, R)
+      total_seeds = total_seeds + R.svolume
+    end
+  end
+
+  if table.empty(room_list) or not THEME.outdoors then
+    gui.printf("Outdoor Quota: NONE\n")
+    return
+  end
+
+
+  -- compute the quota
+  local perc = style_sel("outdoors", 0, 15, 40, 75, 100)
+
+  local quota = total_seeds * perc / 100
+
+  gui.printf("Outdoor Quota: %d%% (%d seeds)\n", perc, quota)
+
+
+  -- sort rooms by score (highest first)
+  table.sort(room_list,
+    function(A, B) return A.outdoor_score > B.outdoor_score end)
+
+
+  while quota > 0 do
+    local R = pick_room(room_list, quota)
+
+    -- nothing possible?
+    if not R then break end
+
+    turn_into_outdoor(R)
+
+    quota = quota - R.svolume
+  end
+end
+
+
 function Plan_create_rooms()
 
   gui.printf("\n--==| Planning Rooms |==--\n\n")
@@ -935,6 +1045,8 @@ function Plan_create_rooms()
 
   gui.printf("Seed Map:\n")
   Seed_dump_rooms()
+
+--!!!  Plan_decide_outdoors()
 
   Plan_sub_rooms()
 

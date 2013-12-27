@@ -1082,61 +1082,6 @@ function Quest_select_textures()
 end
 
 
-function Quest_decide_outdoors()
-  local function choose(R)
-    if R.parent and R.parent.outdoor then return false end
-    if R.parent then return rand.odds(5) end
-
-    if R.natural then
-      if not THEME.landscape_walls then return false end
-    else
-      if not THEME.courtyard_floors then return false end
-    end
-
-    if STYLE.outdoors == "none"   then return false end
-    if STYLE.outdoors == "always" then return true end
-
-    if R.natural then
-      if STYLE.outdoors == "heaps" then return rand.odds(75) end
-      return rand.odds(25)
-    end
-
-    -- we would prefer KEY locked doors to touch at least one
-    -- indoor room.  However keys/switches are not decided yet,
-    -- so the following is a compromise solution.
-    if R:has_any_lock() and rand.odds(20) then return false end
-
-    if R.children then
-      if STYLE.outdoors == "few" then
-        return rand.odds(33)
-      else
-        return rand.odds(80)
-      end
-    end
-
-    if STYLE.outdoors == "heaps" then return rand.odds(50) end
-    if STYLE.outdoors == "few"   then return rand.odds(5) end
-
-    -- room on edge of map?
-    if R.touches_edge then
-      return rand.odds(30)
-    end
-
-    return rand.odds(10)
-  end
-
-  ---| Quest_decide_outdoors |---
-
-  each R in LEVEL.rooms do
-    if R.outdoor == nil then
-      R.outdoor = choose(R)
-    end
-    if R.outdoor then
-      R.sky_h = SKY_H
-    end
-  end
-end
-
 
 function Quest_create_zones()
   --
@@ -1678,7 +1623,6 @@ function Quest_assign_quests()
   Quest_add_weapons()
   Quest_find_storage_rooms()
 
-  Quest_decide_outdoors()
   Quest_assign_room_themes()
   Quest_select_textures()
 
