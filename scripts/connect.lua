@@ -38,9 +38,6 @@ class CONN
 --------------------------------------------------------------]]
 
 
-Connect = { }
-
-
 CONN_CLASS = {}
 
 function CONN_CLASS.neighbor(C, R)
@@ -93,7 +90,7 @@ end
 
 --- 2 way --->
 
-function Connect.gen_PC(long, deep)
+function Connect_gen_PC(long, deep)
   if long < 3 or long > 7 or (long % 2) == 0 or
      deep < 2 or deep > 7 or (long / deep) >= 3
   then
@@ -105,7 +102,7 @@ function Connect.gen_PC(long, deep)
   return {{ mx,1,2, mx,deep,8 }}
 end
 
-function Connect.gen_PA(long, deep)
+function Connect_gen_PA(long, deep)
   if long < 2 or long > 4 or deep < 2 or deep > 5 then
     return nil
   end
@@ -113,7 +110,7 @@ function Connect.gen_PA(long, deep)
   return {{ 1,1,2, 1,deep,8 }}
 end
 
-function Connect.gen_PR(long, deep)
+function Connect_gen_PR(long, deep)
   if long < 2 or deep < 1 or deep > 5 or
      (long*deep) >= 30 or (deep/long) > 2.1
   then
@@ -130,7 +127,7 @@ function Connect.gen_PR(long, deep)
   return configs
 end
 
-function Connect.gen_PX(long, deep)
+function Connect_gen_PX(long, deep)
   if long < 3 or long > 5 or deep < 1 or deep > 5 then
     return nil
   end
@@ -147,7 +144,7 @@ function Connect.gen_PX(long, deep)
   return configs
 end
 
-function Connect.gen_LS(long, deep)
+function Connect_gen_LS(long, deep)
   if long < 2 or long > 6 or deep ~= long then
     return nil
   end
@@ -163,7 +160,7 @@ function Connect.gen_LS(long, deep)
   return configs
 end
 
-function Connect.gen_LX(long, deep)
+function Connect_gen_LX(long, deep)
   if long < 3 or deep < 1 or long==deep or (long*deep) >= 30 then
     return nil
   end
@@ -180,7 +177,7 @@ function Connect.gen_LX(long, deep)
   return configs
 end
 
-function Connect.gen_U2(long, deep)
+function Connect_gen_U2(long, deep)
   if long < 3 or deep < 1 or long < deep or deep > 4 then
     return nil
   end
@@ -199,7 +196,7 @@ end
 
 --- 3 way --->
 
-function Connect.gen_TC(long, deep)
+function Connect_gen_TC(long, deep)
   if long < 3 or deep < 1 or deep > 7 or (long % 2) == 0 or (long*deep) >= 42 then
     return nil
   end
@@ -216,7 +213,7 @@ function Connect.gen_TC(long, deep)
   return configs
 end
 
-function Connect.gen_TX(long, deep)
+function Connect_gen_TX(long, deep)
   if long < 4 or deep < 1 or deep > 7 or (long*deep) >= 42 then
     return nil
   end
@@ -233,7 +230,7 @@ function Connect.gen_TX(long, deep)
   return configs
 end
 
-function Connect.gen_TY(long, deep)
+function Connect_gen_TY(long, deep)
   if long < 3 or deep < 1 or deep > 5 or (long % 2) == 0 then
     return nil
   end
@@ -250,7 +247,7 @@ function Connect.gen_TY(long, deep)
   return configs
 end
 
-function Connect.gen_F3(long, deep)
+function Connect_gen_F3(long, deep)
   if long < 4 or deep < 1 or (long/deep) < 2 then
     return nil
   end
@@ -267,7 +264,7 @@ function Connect.gen_F3(long, deep)
   return configs
 end
 
-function Connect.gen_M3(long, deep)
+function Connect_gen_M3(long, deep)
   if long < 5 or (long % 2) == 0 or long < deep or
      deep < 1 or deep > 5
   then
@@ -289,7 +286,7 @@ end
 
 --- 4 way --->
 
-function Connect.gen_XC(long, deep)
+function Connect_gen_XC(long, deep)
   if long < 3 or (long % 2) == 0 or
      deep < 3 or (deep % 2) == 0
   then
@@ -302,7 +299,7 @@ function Connect.gen_XC(long, deep)
   return {{ mx,1,2, mx,deep,8, 1,my,4, long,my,6 }}
 end
 
-function Connect.gen_XT(long, deep)
+function Connect_gen_XT(long, deep)
   if long < 3 or deep < 3 or (long % 2) == 0 then
     return nil
   end
@@ -318,7 +315,7 @@ function Connect.gen_XT(long, deep)
   return configs
 end
 
-function Connect.gen_XX(long, deep)
+function Connect_gen_XX(long, deep)
   if long < 5 or deep < 3 or (long*deep) >= 50 then
     return nil
   end
@@ -334,7 +331,7 @@ function Connect.gen_XX(long, deep)
   return configs
 end
 
-function Connect.gen_SW(long, deep)
+function Connect_gen_SW(long, deep)
   if long < 3 or deep < 3 then
     return nil
   end
@@ -351,7 +348,7 @@ function Connect.gen_SW(long, deep)
   return configs
 end
 
-function Connect.gen_HP(long, deep)
+function Connect_gen_HP(long, deep)
   if long < 3 or deep < 2 then
     return nil
   end
@@ -370,7 +367,7 @@ function Connect.gen_HP(long, deep)
   return configs
 end
 
-function Connect.gen_HT(long, deep)
+function Connect_gen_HT(long, deep)
   if long < 3 or deep < 2 or (long*deep) >= 50 then
     return nil
   end
@@ -387,7 +384,7 @@ function Connect.gen_HT(long, deep)
   return configs
 end
 
-function Connect.gen_F4(long, deep)
+function Connect_gen_F4(long, deep)
   if long < 4 or deep < 4 then
     return nil
   end
@@ -410,7 +407,7 @@ end
 
 --- 5,6 way --->
 
-function Connect.gen_KY(long, deep)
+function Connect_gen_KY(long, deep)
   if long < 5 or deep < 3 or (long*deep) < 21 or (long % 2) == 0 then
     return nil
   end
@@ -427,7 +424,7 @@ function Connect.gen_KY(long, deep)
   return configs
 end
 
-function Connect.gen_KT(long, deep)
+function Connect_gen_KT(long, deep)
   if long < 3 or deep < 4 or (long*deep) < 21 or (long % 2) == 0 then
     return nil
   end
@@ -445,7 +442,7 @@ function Connect.gen_KT(long, deep)
   return configs
 end
 
-function Connect.gen_M5(long, deep)
+function Connect_gen_M5(long, deep)
   if long < 5 or deep < 3 or (long % 2) == 0 or long < deep then
     return nil
   end
@@ -463,7 +460,7 @@ function Connect.gen_M5(long, deep)
   return configs
 end
 
-function Connect.gen_GG(long, deep)
+function Connect_gen_GG(long, deep)
   if long < 5 or deep < 3 or (long*deep) < 21 or (long % 2) == 0 then
     return nil
   end
@@ -481,83 +478,83 @@ function Connect.gen_GG(long, deep)
 end
 
 
-Connect.BRANCHES =
+BRANCH_TABLE =
 {
   -- pass through (one side to the other), perfectly centered
-  PC = { conn=2, prob=40, func=Connect.gen_PC, symmetry="x" },
+  PC = { conn=2, prob=40, func=Connect_gen_PC, symmetry="x" },
 
   -- pass through, along one side
-  PA = { conn=2, prob= 8, func=Connect.gen_PA, symmetry="y" },
+  PA = { conn=2, prob= 8, func=Connect_gen_PA, symmetry="y" },
 
   -- pass through, rotation symmetry
-  PR = { conn=2, prob=50, func=Connect.gen_PR, symmetry="R" },
+  PR = { conn=2, prob=50, func=Connect_gen_PR, symmetry="R" },
 
   -- pass through, garden variety
-  PX = { conn=2, prob= 3, func=Connect.gen_PX },
+  PX = { conn=2, prob= 3, func=Connect_gen_PX },
 
   -- L shape for square room (transpose symmetrical)
-  LS = { conn=2, prob=100, func=Connect.gen_LS, symmetry="T" },
+  LS = { conn=2, prob=100, func=Connect_gen_LS, symmetry="T" },
 
   -- L shape, garden variety
-  LX = { conn=2, prob= 3, func=Connect.gen_LX },
+  LX = { conn=2, prob= 3, func=Connect_gen_LX },
 
   -- U shape, both exits on a single wall
-  U2 = { conn=2, prob= 1, func=Connect.gen_U2, symmetry="x" },
+  U2 = { conn=2, prob= 1, func=Connect_gen_U2, symmetry="x" },
 
 
   -- T shape, centered main stem, leeway for side stems
-  TC = { conn=3, prob=200, func=Connect.gen_TC, symmetry="x" },
+  TC = { conn=3, prob=200, func=Connect_gen_TC, symmetry="x" },
 
   -- like TC but main stem not centered
-  TX = { conn=3, prob= 50, func=Connect.gen_TX },
+  TX = { conn=3, prob= 50, func=Connect_gen_TX },
 
   -- Y shape, two exits parallel to single centered entry
-  TY = { conn=3, prob=120, func=Connect.gen_TY, symmetry="x" },
+  TY = { conn=3, prob=120, func=Connect_gen_TY, symmetry="x" },
 
   -- F shape with three exits (mainly for rooms at corner of map)
-  F3 = { conn=3, prob=  2, func=Connect.gen_F3 },
+  F3 = { conn=3, prob=  2, func=Connect_gen_F3 },
 
   -- three exits along one wall, middle is centered
-  M3 = { conn=3, prob=  5, func=Connect.gen_M3, symmetry="x" },
+  M3 = { conn=3, prob=  5, func=Connect_gen_M3, symmetry="x" },
 
 
   -- Cross shape, all stems perfectly centered
-  XC = { conn=4, prob=1800, func=Connect.gen_XC, symmetry="xy" },
+  XC = { conn=4, prob=1800, func=Connect_gen_XC, symmetry="xy" },
 
   -- Cross shape, centered main stem, leeway for side stems
-  XT = { conn=4, prob=200, func=Connect.gen_XT, symmetry="x" },
+  XT = { conn=4, prob=200, func=Connect_gen_XT, symmetry="x" },
 
   -- Cross shape, no stems are centered
-  XX = { conn=4, prob= 50, func=Connect.gen_XX },
+  XX = { conn=4, prob= 50, func=Connect_gen_XX },
 
   -- H shape, parallel entries/exits at the four corners
-  HP = { conn=4, prob= 40, func=Connect.gen_HP, symmetry="x" },
+  HP = { conn=4, prob= 40, func=Connect_gen_HP, symmetry="x" },
 
   -- like HP but exits are perpendicular to entry dir
-  HT = { conn=4, prob= 40, func=Connect.gen_HT, symmetry="x" },
+  HT = { conn=4, prob= 40, func=Connect_gen_HT, symmetry="x" },
 
   -- Swastika shape
-  SW = { conn=4, prob= 50, func=Connect.gen_SW, symmetry="R" },
+  SW = { conn=4, prob= 50, func=Connect_gen_SW, symmetry="R" },
 
   -- F shape with two exits on each wall
-  F4 = { conn=4, prob=  5, func=Connect.gen_F4 },
+  F4 = { conn=4, prob=  5, func=Connect_gen_F4 },
 
 
   -- five-way star shapes
-  KY = { conn=5, prob=110, func=Connect.gen_KY, symmetry="x" },
-  KT = { conn=5, prob=110, func=Connect.gen_KT, symmetry="x" },
+  KY = { conn=5, prob=110, func=Connect_gen_KY, symmetry="x" },
+  KT = { conn=5, prob=110, func=Connect_gen_KT, symmetry="x" },
 
   -- two exits at bottom and three at top, all parallel
-  M5 = { conn=5, prob= 40, func=Connect.gen_M5, symmetry="x" },
+  M5 = { conn=5, prob= 40, func=Connect_gen_M5, symmetry="x" },
 
 
   -- gigantic six-way shapes
-  GG = { conn=6, prob=250, func=Connect.gen_GG, symmetry="x" },
+  GG = { conn=6, prob=250, func=Connect_gen_GG, symmetry="x" },
 }
 
 
-function Connect.test_branch_gen(name)
-  local info = assert(Connect.BRANCHES[name])
+function Connect_test_branch_gen(name)
+  local info = assert(BRANCH_TABLE[name])
 
   local function dump_exits(config, W, H)
     local DIR_CHARS = { [2]="|", [8]="|", [4]=">", [6]="<" }
@@ -611,7 +608,7 @@ function Connect.test_branch_gen(name)
 end
 
 
-function Connect.connect_rooms()
+function Connect_rooms()
 
   -- Guidelines:
   -- . prefer ground areas not to be leafs
@@ -849,8 +846,8 @@ gui.debugf("hit_conns = %d\n", hit_conns)
 
     R.branch_kind = K
 
-    if Connect.BRANCHES[K].symmetry then
-      R.symmetry = morph_symmetry(MORPH, Connect.BRANCHES[K].symmetry)
+    if BRANCH_TABLE[K].symmetry then
+      R.symmetry = morph_symmetry(MORPH, BRANCH_TABLE[K].symmetry)
     end
 
     dump_new_conns(conns)
@@ -871,7 +868,7 @@ gui.debugf("hit_conns = %d\n", hit_conns)
     -- 2. either flip the pattern horizontally or not
     -- 3. either flip the pattern vertically or not
 
-    local info = assert(Connect.BRANCHES[K])
+    local info = assert(BRANCH_TABLE[K])
 
     local rotates = { 0, 4 }
     local morphs  = { 0, 1, 2, 3 }
@@ -926,7 +923,7 @@ gui.debugf("Failed\n")
         gui.debugf("Branching BIG %s k_score: %1.3f\n", R:tostr(), R.k_score)
 
         local kinds = {}
-        for N,info in pairs(Connect.BRANCHES) do
+        for N,info in pairs(BRANCH_TABLE) do
           kinds[N] = assert(info.prob)
         end
 
@@ -1214,7 +1211,7 @@ gui.debugf("Failed\n")
   end
 
 
-  --==| Connect.connect_rooms |==--
+  --==| Connect_rooms |==--
 
   gui.printf("\n--==| Connecting Rooms |==--\n\n")
 
