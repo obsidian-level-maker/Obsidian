@@ -1644,6 +1644,17 @@ function Build.tall_curved_stair(S, skin, x_side,y_side, x_h,y_h)
                     dy0, dy1, dy2, dy3,
                     y_h, x_h, 256,
                     info, step_info, info)
+
+  -- fill in the 16x16 gap
+  local gx1 = corn_x
+  local gy1 = corn_y
+  local gx2 = corn_x
+  local gy2 = corn_y
+
+  if x_side == 6 then gx1 = gx1 - 20 else gx2 = gx2 + 20 end
+  if y_side == 8 then gy1 = gy1 - 20 else gy2 = gy2 + 20 end
+ 
+  Trans.old_quad(info, gx1,gy1,gx2,gy2, -EXTREME_H, EXTREME_H)
 end
 
 
