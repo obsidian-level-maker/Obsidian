@@ -931,8 +931,8 @@ function Plan_decide_outdoors()
     local what = 0
 
     -- preference for the sides of map, even higher for the corners
-    if R.kx1 <= 3 or R.kx2 >= SECTION_W-2 then what = what + 1 end
-    if R.ky1 <= 3 or R.ky2 >= SECTION_H-2 then what = what + 1 end
+--!!!! FIXME    if R.kx1 <= 3 or R.kx2 >= SECTION_W-2 then what = what + 1 end
+--!!!! FIXME    if R.ky1 <= 3 or R.ky2 >= SECTION_H-2 then what = what + 1 end
 
     score = score + 10 * what
 
@@ -1046,7 +1046,7 @@ function Plan_create_rooms()
   gui.printf("Seed Map:\n")
   Seed_dump_rooms()
 
---!!!  Plan_decide_outdoors()
+  Plan_decide_outdoors()
 
   Plan_sub_rooms()
 

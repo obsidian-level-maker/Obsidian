@@ -126,7 +126,7 @@ end
 function ROOM_CLASS.has_sky_neighbor(R)
   each D in R.conns do
     local N = D:neighbor(R)
-    if N.outdoor then return true end
+    if N.is_outdoor then return true end
   end
   return false
 end
@@ -201,7 +201,7 @@ end
 function Room_setup_theme(R)
   R.facade = assert(R.zone.facade_mat)
 
-  if not R.outdoor then
+  if not R.is_outdoor then
     R.main_tex = rand.key_by_probs(R.theme.walls)
     return
   end
@@ -214,7 +214,7 @@ function Room_setup_theme(R)
 end
 
 function Room_setup_theme_Scenic(R)
-  R.outdoor = true  -- ???
+  R.is_outdoor = true  -- ???
 
   -- find closest non-scenic room
   local mx = int((R.sx1 + R.sx2) / 2)
@@ -241,7 +241,7 @@ function Room_setup_theme_Scenic(R)
 
   assert(R.theme)
 
-  if R.outdoor then
+  if R.is_outdoor then
     R.main_tex = rand.key_by_probs(R.theme.naturals or R.theme.floors)
   else
     R.main_tex = rand.key_by_probs(R.theme.walls)
@@ -274,7 +274,7 @@ function Room_decide_hallways()
   local REVERT_PROBS    = {  0,  0, 25, 75, 90, 98 }
 
   local function eval_hallway(R)
-    if R.outdoor or R.natural or R.children or R.purpose then
+    if R.is_outdoor or R.natural or R.children or R.purpose then
       return false
     end
 
@@ -292,7 +292,7 @@ function Room_decide_hallways()
 
     each C in R.conns do
       local N = C:neighbor(R)
-      if N.outdoor and not rand.odds(outdoor_chance) then
+      if N.is_outdoor and not rand.odds(outdoor_chance) then
         return false
       end
 
@@ -366,7 +366,7 @@ function Room_decide_hallways()
 gui.debugf("  Made Hallway @ %s\n", R:tostr())
       R.kind = "hallway"
       R.hallway = { }
-      R.outdoor = nil
+      R.is_outdoor = nil
     end
   end
 
@@ -569,10 +569,10 @@ function Room_reckon_doors()
                        GAME.door_probs or
                        DEFAULT_PROBS
 
-    if R1.outdoor and R2.outdoor then
+    if R1.is_outdoor and R2.is_outdoor then
       return door_probs.out_both or 0
 
-    elseif R1.outdoor or R2.outdoor then
+    elseif R1.is_outdoor or R2.is_outdoor then
       return door_probs.out_diff or 80
 
     elseif R1.kind == "stairwell" or R2.kind == "stairwell" then
@@ -610,7 +610,7 @@ function Room_reckon_doors()
         -- ensure when going from outside to inside that the arch/door
         -- is made using the building combo (NOT the outdoor combo)
         if B.kind == "arch" and
-           ((S.room.outdoor and not N.room.outdoor) or
+           ((S.room.is_outdoor and not N.room.is_outdoor) or
             (S.room == N.room.parent))
         then
           -- swap borders
@@ -638,7 +638,7 @@ function Room_reckon_doors()
             B.kind = "door"
 
           elseif (STYLE.fences == "none" or STYLE.fences == "few") and
-                 C.src.outdoor and C.dest.outdoor then
+                 C.src.is_outdoor and C.dest.is_outdoor then
             B.kind = "nothing"
           end
         end
@@ -679,7 +679,7 @@ end
 function Room_border_up()
 
   local function make_map_edge(R, S, side)
-    if R.outdoor then
+    if R.is_outdoor then
       -- a fence will be created by Layout_edge_of_map()
       S.border[side].kind = "nothing"
     else
@@ -696,14 +696,14 @@ function Room_border_up()
       return
     end
 
-    if R1.outdoor and R2.natural then
+    if R1.is_outdoor and R2.natural then
       S.border[side].kind = "fence"
 
-    elseif R1.natural and R2.outdoor then
+    elseif R1.natural and R2.is_outdoor then
       S.border[side].kind = "nothing"
 
-    elseif R1.outdoor then
-      if R2.outdoor or R2.natural then
+    elseif R1.is_outdoor then
+      if R2.is_outdoor or R2.natural then
         S.border[side].kind = "fence"
       else
         S.border[side].kind = "facade"
@@ -714,14 +714,14 @@ function Room_border_up()
 --###     S.border[side].kind = "nothing"
 --###   end
 
-      if N.kind == "liquid" and R2.outdoor and
+      if N.kind == "liquid" and R2.is_outdoor and
         (S.kind == "liquid" or R1.quest == R2.quest)
         --!!! or (N.room.kind == "scenic" and safe_falloff(S, side))
       then
         S.border[side].kind = "nothing"
       end
 
-      if STYLE.fences == "none" and R1.quest == R2.quest and R2.outdoor and
+      if STYLE.fences == "none" and R1.quest == R2.quest and R2.is_outdoor and
          (S.kind != "liquid" or S.floor_h == N.floor_h)
       then
         S.border[side].kind = "nothing"
@@ -729,7 +729,7 @@ function Room_border_up()
 
     else -- R1 indoor
 
-      if R2.parent == R1 and not R2.outdoor then
+      if R2.parent == R1 and not R2.is_outdoor then
         S.border[side].kind = "nothing"
         return
       end
@@ -831,7 +831,7 @@ function Room_border_up()
       total = total + 1
 
       if (bd.side == side) and S.floor_h and
-         (N and N.room and N.room.outdoor) and N.floor_h
+         (N and N.room and N.room.is_outdoor) and N.floor_h
       -- (N.kind == "walk" or N.kind == "liquid")
       then
         table.insert(info.seeds, S)
@@ -964,7 +964,7 @@ function Room_border_up()
   end
 
   local function decide_windows(R, border_list)
-    if R.outdoor or R.natural or R.kind != "building" then return end
+    if R.is_outdoor or R.natural or R.kind != "building" then return end
     if R.semi_outdoor then return end
     if STYLE.windows == "none" then return end
 
@@ -1068,7 +1068,7 @@ function Room_border_up()
   end
 
   local function decide_pictures(R, border_list)
-    if R.outdoor or R.natural or R.kind != "building" then return end
+    if R.is_outdoor or R.natural or R.kind != "building" then return end
     if R.semi_outdoor then return end
 
     -- filter border list to remove symmetrical peers, seeds
@@ -1858,7 +1858,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
   ---| Room_make_ceiling |---
 
-  if R.outdoor then
+  if R.is_outdoor then
     outdoor_ceiling()
   else
     indoor_ceiling()
@@ -1910,7 +1910,7 @@ function Room_add_crates(R)
   local skin
   local skin_names
 
-  if R.outdoor then
+  if R.is_outdoor then
     -- FIXME: don't separate them
     skin_names = THEME.out_crates
   else
@@ -1923,10 +1923,10 @@ function Room_add_crates(R)
   local chance
 
   if STYLE.crates == "heaps" then
-    chance = sel(R.outdoor, 25, 40)
+    chance = sel(R.is_outdoor, 25, 40)
     if rand.odds(20) then chance = chance * 2 end
   else
-    chance = sel(R.outdoor, 15, 25)
+    chance = sel(R.is_outdoor, 15, 25)
     if rand.odds(10) then chance = chance * 3 end
   end
 
@@ -1934,7 +1934,7 @@ function Room_add_crates(R)
     if rand.odds(chance) then
       spot.S.solid_corner = true
       local z_top = spot.S.floor_h + (skin.h or 64)
-      Build.crate(spot.S.x2, spot.S.y2, z_top, skin, R.outdoor)
+      Build.crate(spot.S.x2, spot.S.y2, z_top, skin, R.is_outdoor)
     end
   end
 end
@@ -1944,7 +1944,7 @@ function Room_do_small_exit()
   local C = R.conns[1]
   local T = C:seed(C:neighbor(R))
   local out_combo = T.room.main_tex
-  if T.room.outdoor then out_combo = R.main_tex end
+  if T.room.is_outdoor then out_combo = R.main_tex end
 
   -- FIXME: use single one over a whole episode
   local skin_name = rand.key_by_probs(THEME.small_exits)
@@ -2134,7 +2134,7 @@ gui.printf("do_teleport\n")
       local CS = R.conns[1]:seed(R)
       local dir = dir_for_wotsit(S)
 
-      if R.outdoor and THEME.out_exits then
+      if R.is_outdoor and THEME.out_exits then
         -- FIXME: use single one for a whole episode
         local skin_name = rand.key_by_probs(THEME.out_exits)
         local skin = assert(GAME.EXITS[skin_name])
@@ -2238,7 +2238,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
     local prec = GAME.lighting_precision or "medium"
 
     if OB_CONFIG.game == "quake" then prec = "low" end
-    if R.outdoor then prec = "low" end
+    if R.is_outdoor then prec = "low" end
     if S.content == "wotsit" then prec = "low" end
 
     if prec == "high" then
@@ -2295,7 +2295,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
     local w_tex = S.w_tex or R.main_tex
     local f_tex = S.f_tex or R.main_tex
-    local c_tex = S.c_tex or sel(R.outdoor, "_SKY", R.ceil_tex)
+    local c_tex = S.c_tex or sel(R.is_outdoor, "_SKY", R.ceil_tex)
 
     if R.kind == "hallway" then
       w_tex = assert(LEVEL.hall_tex)
@@ -2312,9 +2312,9 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         o_tex = LEVEL.hall_tex
       elseif N.room.stairwell then
         o_tex = LEVEL.well_tex
-      elseif not N.room.outdoor and N.room != R.parent then
+      elseif not N.room.is_outdoor and N.room != R.parent then
         o_tex = N.w_tex or N.room.main_tex
-      elseif N.room.outdoor and not (R.outdoor or R.natural) then
+      elseif N.room.is_outdoor and not (R.is_outdoor or R.natural) then
         o_tex = R.facade or w_tex
       end
     end
@@ -2419,7 +2419,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
       end
 
       if B_kind == "liquid_arch" then
-        local other_mat = sel(N.room.outdoor, R.facade, N.room.main_tex)
+        local other_mat = sel(N.room.is_outdoor, R.facade, N.room.main_tex)
         local skin = { wall=w_tex, floor=f_tex, other=other_mat, break_t=THEME.track_mat }
         local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
 

@@ -608,7 +608,7 @@ function Layout_try_pattern(R, is_top, div_lev, req_sym, area, heights, f_texs)
   local function setup_floor(S, h, f_tex)
     S.floor_h = h
 
-    S.f_tex = sel(R.outdoor, R.main_tex, f_tex)
+    S.f_tex = sel(R.is_outdoor, R.main_tex, f_tex)
 
     if S.conn or S.pseudo_conn then
       local C = S.conn or S.pseudo_conn
@@ -625,7 +625,7 @@ function Layout_try_pattern(R, is_top, div_lev, req_sym, area, heights, f_texs)
     S.kind = "stair"
     S.stair_dir = assert(E.dir)
 
-    if not R.outdoor then
+    if not R.is_outdoor then
       S.f_tex = f_tex
     end
 
@@ -662,7 +662,7 @@ function Layout_try_pattern(R, is_top, div_lev, req_sym, area, heights, f_texs)
     S.x_side = sel(ch == 'L' or ch == 'F', 6, 4)
     S.y_side = sel(ch == 'L' or ch == 'J', 8, 2)
 
-    if not R.outdoor then
+    if not R.is_outdoor then
       S.f_tex = f_tex
     end
 
@@ -1138,8 +1138,8 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
       return false -- no liquids available
     end
 
-    if (info.environment == "indoor"  and R.outdoor) or
-       (info.environment == "outdoor" and not R.outdoor)
+    if (info.environment == "indoor"  and R.is_outdoor) or
+       (info.environment == "outdoor" and not R.is_outdoor)
     then
       return false -- wrong environment
     end
@@ -1721,7 +1721,7 @@ function Layout_do_room(R)
   local function select_floor_texs(focus_C)
     local f_texs  = {}
 
-    if focus_C.conn_ftex and (focus_C.src.outdoor == focus_C.dest.outdoor) and
+    if focus_C.conn_ftex and
        (focus_C.src.kind == focus_C.dest.kind) then
       table.insert(f_texs, focus_C.conn_ftex)
     end
@@ -1744,7 +1744,7 @@ function Layout_do_room(R)
 
     local function gen_group(base_h, num, dir)
       local list = {}
-      local delta_tab = sel(R.outdoor, OUTDOOR_DELTAS, INDOOR_DELTAS)
+      local delta_tab = sel(R.is_outdoor, OUTDOOR_DELTAS, INDOOR_DELTAS)
 
       for i = 1,num do
         table.insert(list, base_h)
@@ -1863,7 +1863,7 @@ function Layout_do_room(R)
 
       -- determine if can use tall stair
 
-      if not R.outdoor then
+      if not R.is_outdoor then
         local OX = S:neighbor(10 - S.x_side)
         local OY = S:neighbor(10 - S.y_side)
 
@@ -2187,7 +2187,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   R.junk_thick = { [2]=0, [4]=0, [6]=0, [8]=0 }
 
-  if R.kind == "building" and not (R.outdoor or R.natural or R.children) then
+  if R.kind == "building" and not R.children then
     junk_sides()
   end
 
@@ -2226,7 +2226,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     Layout_cave_monster_spots(R)
   end
 
-  if R.kind == "building" and not (R.outdoor or R.natural) then
+  if R.kind == "building" then
     add_pillars()
   end
 end
@@ -2239,7 +2239,7 @@ function Layout_edge_of_map()
     for loop = 1,3 do
       for x = 1,SEED_W do for y = 1,SEED_H do
         local S = SEEDS[x][y][1]
-        if (S.room and not S.room.outdoor) or (S.edge_of_map and S.building) then
+        if (S.room and not S.room.is_outdoor) or (S.edge_of_map and S.building) then
           if (S.move_loop or 0) < loop then
             for side = 2,8,2 do
               if not S.edge_of_map or S.building_side == side then
@@ -2268,7 +2268,7 @@ function Layout_edge_of_map()
             local other_h
             if N and N.edge_of_map and not N.building then
               other_h = N.walk_h
-            elseif N and N.room and N.room.outdoor then
+            elseif N and N.room and N.room.is_outdoor then
               other_h = N.room.floor_max_h
             end
 

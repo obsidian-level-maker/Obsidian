@@ -2494,16 +2494,12 @@ function Build.lowering_pedestal(S, z1, skin)
 end
 
 
-function Build.crate(x, y, z_top, skin, is_outdoor)
+function Build.crate(x, y, z_top, skin)
   local info = add_pegging(get_mat(skin.side_w))
 
   local coords = Trans.rect_coords(x-32,y-32, x+32,y+32)
 
   Trans.old_brush(info, coords, -EXTREME_H, z_top)
-
-  if PARAM.outdoor_shadows and is_outdoor then
-    Trans.old_brush(get_light(-1), shadowify_brush(coords, 20), -EXTREME_H, z_top-4)
-  end
 end
 
 

@@ -380,7 +380,7 @@ function Quest_decide_split(quest)  -- returns a LOCK
 
     local cost = math.abs(C.src_tvol - C.dest_tvol * 2)
 
-    if C.src.outdoor and C.dest.outdoor then
+    if C.src.is_outdoor and C.dest.is_outdoor then
       cost = cost + 40
     end
 
@@ -812,7 +812,7 @@ function Quest_choose_keys()
     LOCK.key_score = LOCK.distance or 0
 
     -- prefer not to use keyed doors between two outdoor rooms
-    if LOCK.conn and LOCK.conn.src.outdoor and LOCK.conn.dest.outdoor then
+    if LOCK.conn and LOCK.conn.src.is_outdoor and LOCK.conn.dest.is_outdoor then
       LOCK.key_score = 0
     end
 
@@ -846,7 +846,7 @@ function Quest_choose_keys()
 
       LOCK.kind = "SWITCH"
 
-      if num_bars > 0 and LOCK.conn.src.outdoor and LOCK.conn.dest.outdoor then
+      if num_bars > 0 and LOCK.conn.src.is_outdoor and LOCK.conn.dest.is_outdoor then
         LOCK.item = rand.key_by_probs(bar_tab)
         bar_tab[LOCK.item] = bar_tab[LOCK.item] / 8
       else
@@ -893,7 +893,7 @@ function Quest_add_keys()
     if quest.lock.kind == "EXIT" then
       assert(LEVEL.exit_room == R)
 
-      if not (R.outdoor or R.natural) and
+      if not (R.is_outdoor or R.natural) and
          not R:has_any_lock() and
          R.svolume < 25 and THEME.exit
       then
