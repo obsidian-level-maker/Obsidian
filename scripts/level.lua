@@ -711,7 +711,7 @@ function Levels_build_it()
 
   Connect.connect_rooms()
 
-  Quest.assign_quests()
+  Quest_assign_quests()
   if gui.abort() then return "abort" end
 
   Levels_invoke_hook("build_rooms",  LEVEL.seed)

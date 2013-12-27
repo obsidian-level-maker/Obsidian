@@ -126,15 +126,12 @@ and path, and they might get split again in the future.
 --------------------------------------------------------------]]
 
 
-Quest = { }
-
-
-function Quest.quest_before_lock(LOCK)
+function Quest_quest_before_lock(LOCK)
   assert(LOCK.conn)
   return assert(LOCK.conn.src.quest)
 end
 
-function Quest.quest_after_lock(LOCK)
+function Quest_quest_after_lock(LOCK)
   if LOCK.kind == "EXIT" then
     return nil
   end
@@ -144,7 +141,7 @@ function Quest.quest_after_lock(LOCK)
 end
 
 
-function Quest.decide_start_room(quest)
+function Quest_decide_start_room(quest)
 
   local function eval_room(R)
     local cost = R.svolume
@@ -193,7 +190,7 @@ function Quest.decide_start_room(quest)
   end
 
 
-  ---| Quest.decide_start_room |---
+  ---| Quest_decide_start_room |---
 
   each R in quest.rooms do
     R.start_cost = eval_room(R)
@@ -213,7 +210,7 @@ function Quest.decide_start_room(quest)
 end
 
 
-function Quest.update_tvols(quest)
+function Quest_update_tvols(quest)
 
   local function travel_volume(R, seen_conns)
     -- Determine total volume of rooms that are reachable from the
@@ -234,7 +231,7 @@ function Quest.update_tvols(quest)
   end
 
 
-  --| Quest.update_tvols |---  
+  --| Quest_update_tvols |---  
 
   each C in quest.conns do
     C.src_tvol  = travel_volume(C.src,  { [C]=true })
@@ -243,7 +240,7 @@ function Quest.update_tvols(quest)
 end
 
 
-function Quest.initial_path(quest)
+function Quest_initial_path(quest)
 
   -- TODO: preference for paths that contain many junctions
   --       [might be more significant than travel volume]
@@ -271,9 +268,9 @@ function Quest.initial_path(quest)
   end
 
 
-  --| Quest.initial_path |--
+  --| Quest_initial_path |--
 
-  Quest.update_tvols(quest)
+  Quest_update_tvols(quest)
 
   quest.path = {}
 
@@ -281,7 +278,7 @@ function Quest.initial_path(quest)
 
   for loop = 1,999 do
     if loop == 999 then
-      error("Quest.initial_path infinite loop!")
+      error("Quest_initial_path infinite loop!")
     end
 
     quest.target = R
@@ -297,7 +294,7 @@ function Quest.initial_path(quest)
 end
 
 
-function Quest.num_locks(num_rooms)
+function Quest_num_locks(num_rooms)
   local result
 
   local num_keys     = table.size(THEME.keys or {})
@@ -325,7 +322,7 @@ function Quest.num_locks(num_rooms)
 end
 
 
-function Quest.find_path_to_room(src, dest)
+function Quest_find_path_to_room(src, dest)
   local seen_rooms = {}
 
   local function recurse(R)
@@ -361,7 +358,7 @@ function Quest.find_path_to_room(src, dest)
 end
 
 
-function Quest.decide_split(quest)  -- returns a LOCK
+function Quest_decide_split(quest)  -- returns a LOCK
 
   local function eval_lock(C)
     --
@@ -421,9 +418,9 @@ function Quest.decide_split(quest)  -- returns a LOCK
   end
 
 
-  ---| Quest.decide_split |---
+  ---| Quest_decide_split |---
 
-  Quest.update_tvols(quest)
+  Quest_update_tvols(quest)
 
   -- choose connection which will get locked
   local poss_locks = {}
@@ -435,7 +432,7 @@ function Quest.decide_split(quest)  -- returns a LOCK
   end
  
   -- should always have at least one possible lock, otherwise the
-  -- Quest.decide_split() function should never have been called.
+  -- Quest_decide_split() function should never have been called.
   assert(#poss_locks > 0)
 
   dump_locks(poss_locks)
@@ -459,7 +456,7 @@ function Quest.decide_split(quest)  -- returns a LOCK
 end
 
 
-function Quest.split_quest(quest, LOCK)
+function Quest_split_quest(quest, LOCK)
 
   local function dump_quest(A, name)
     gui.debugf("%s QUEST  %s  %d+%d\n", name, tostring(A), #A.rooms, #A.conns)
@@ -482,7 +479,7 @@ function Quest.split_quest(quest, LOCK)
     gui.debugf("}\n")
   end
 
-  ---| Quest.split_quest |---
+  ---| Quest_split_quest |---
 
   dump_quest(quest, "INPUT")
 
@@ -536,7 +533,7 @@ function Quest.split_quest(quest, LOCK)
     -- create second half of front path
     front_A.start = LOCK.conn.src
     
-    Quest.initial_path(front_A)
+    Quest_initial_path(front_A)
 
     front_A.start = quest.start
 
@@ -577,7 +574,7 @@ function Quest.split_quest(quest, LOCK)
 
   -- BACK STUFF --
 
-  Quest.initial_path(back_A)
+  Quest_initial_path(back_A)
 
   if quest.back_path then
     -- create back_path
@@ -615,7 +612,7 @@ function Quest.split_quest(quest, LOCK)
 end
 
 
-function Quest.add_a_lock()
+function Quest_add_a_lock()
 
   local function conn_is_lockable(C)
     if C.lock then
@@ -676,7 +673,7 @@ function Quest.add_a_lock()
   end
 
 
-  --| Quest.add_a_lock |--
+  --| Quest_add_a_lock |--
 
   each C in LEVEL.conns do
     C.can_lock = conn_is_lockable(C)
@@ -700,13 +697,13 @@ gui.debugf("Quest %s  split_score:%1.4f\n", tostring(A), A.split_score)
     return
   end
 
-  local LOCK = Quest.decide_split(quest)
+  local LOCK = Quest_decide_split(quest)
 
-  Quest.split_quest(quest, LOCK)
+  Quest_split_quest(quest, LOCK)
 end
 
 
-function Quest.order_by_visit()
+function Quest_order_by_visit()
   -- put rooms in the 'all_rooms' list into the order which the
   -- player will most likely visit them.
 
@@ -745,7 +742,7 @@ function Quest.order_by_visit()
     end
   end
 
-  ---| Quest.order_by_visit |---
+  ---| Quest_order_by_visit |---
 
   each A in LEVEL.quests do
     visit_room(A.start, A.path, 1)
@@ -761,7 +758,7 @@ function Quest.order_by_visit()
 end
 
 
-function Quest.key_distances()
+function Quest_key_distances()
   -- determine distance (approx) between key and the door it opens.
   -- the biggest distances will use actual keys (which are limited)
   -- whereas everything else will use switched doors.
@@ -781,7 +778,7 @@ function Quest.key_distances()
 end
 
 
-function Quest.choose_keys()
+function Quest_choose_keys()
   -- there is always at least one "lock" (for EXIT room)
   local locks_needed = #LEVEL.locks - 1
   if locks_needed <= 0 then return end
@@ -867,7 +864,7 @@ function Quest.choose_keys()
 end
 
 
-function Quest.add_keys()
+function Quest_add_keys()
 
   local function make_small_exit(R)
     R.kind = "small_exit"
@@ -884,7 +881,7 @@ function Quest.add_keys()
     B2.kind = "straddle"
   end
 
-  --| Quest.add_keys |--
+  --| Quest_add_keys |--
 
   each quest in LEVEL.quests do
     local R = quest.target
@@ -910,7 +907,7 @@ function Quest.add_keys()
 end
 
 
-function Quest.add_weapons()
+function Quest_add_weapons()
  
   LEVEL.added_weapons = {}
 
@@ -1014,7 +1011,7 @@ function Quest.add_weapons()
   end
 
 
-  ---| Quest.add_weapons |---
+  ---| Quest_add_weapons |---
 
   each R in LEVEL.rooms do
     R.weapons = {}
@@ -1030,7 +1027,7 @@ function Quest.add_weapons()
 end
 
 
-function Quest.find_storage_rooms()
+function Quest_find_storage_rooms()
   -- a "storage room" is a dead-end room which does not contain
   -- anything special (keys, switches or weapons).  We place some
   -- of the ammo and health needed by the player elsewhere into
@@ -1053,7 +1050,7 @@ function Quest.find_storage_rooms()
 end
 
 
-function Quest.select_textures()
+function Quest_select_textures()
 
   if not LEVEL.outer_fence_tex then
     if THEME.outer_fences then
@@ -1085,7 +1082,7 @@ function Quest.select_textures()
 end
 
 
-function Quest.decide_outdoors()
+function Quest_decide_outdoors()
   local function choose(R)
     if R.parent and R.parent.outdoor then return false end
     if R.parent then return rand.odds(5) end
@@ -1128,7 +1125,7 @@ function Quest.decide_outdoors()
     return rand.odds(10)
   end
 
-  ---| Quest.decide_outdoors |---
+  ---| Quest_decide_outdoors |---
 
   each R in LEVEL.rooms do
     if R.outdoor == nil then
@@ -1610,7 +1607,7 @@ function Quest_setup_lev_alongs()
 end
 
 
-function Quest.assign_quests()
+function Quest_assign_quests()
 
   gui.printf("\n--==| Assign Quests |==--\n\n")
 
@@ -1638,18 +1635,18 @@ function Quest.assign_quests()
   LEVEL.quests = { QUEST }
   LEVEL.locks  = { LOCK  }
 
-  Quest.decide_start_room(QUEST)
+  Quest_decide_start_room(QUEST)
 
   LEVEL.start_room = QUEST.start
   LEVEL.start_room.purpose = "START"
 
 
-  Quest.initial_path(QUEST)
+  Quest_initial_path(QUEST)
 
-  local want_lock = Quest.num_locks(#QUEST.rooms)
+  local want_lock = Quest_num_locks(#QUEST.rooms)
 
   for i = 1,want_lock do
-    Quest.add_a_lock()
+    Quest_add_a_lock()
   end
 
   gui.printf("Quest count: %d\n", #LEVEL.quests)
@@ -1662,7 +1659,7 @@ function Quest.assign_quests()
     end
 
     if A.back_path == "FIND" then
-      A.back_path = Quest.find_path_to_room(A.target, A.lock.conn.src)
+      A.back_path = Quest_find_path_to_room(A.target, A.lock.conn.src)
     end
   end
 
@@ -1673,19 +1670,19 @@ function Quest.assign_quests()
   gui.printf("Exit room: %s\n", LEVEL.exit_room:tostr())
 
 
-  Quest.order_by_visit()
+  Quest_order_by_visit()
   Quest_create_zones()
   Quest_setup_lev_alongs()
-  Quest.key_distances()
+  Quest_key_distances()
 
-  Quest.add_weapons()
-  Quest.find_storage_rooms()
+  Quest_add_weapons()
+  Quest_find_storage_rooms()
 
-  Quest.decide_outdoors()
+  Quest_decide_outdoors()
   Quest_assign_room_themes()
-  Quest.select_textures()
+  Quest_select_textures()
 
-  Quest.choose_keys()
-  Quest.add_keys()
+  Quest_choose_keys()
+  Quest_add_keys()
 end
 
