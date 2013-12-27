@@ -41,7 +41,7 @@ function Plan_initial_rooms()
     local function room_char(R)
       if not R then return '.' end
       if R.kind == "scenic" then return '=' end
-      if R.natural then return '/' end
+      if R.kind == "cave" then return '/' end
       local n = 1 + (R.id % 26)
       return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
     end
@@ -687,7 +687,7 @@ function Plan_sub_rooms()
   local chance_tab = sel(STYLE.subrooms == "heaps", SUB_HEAPS, SUB_CHANCES)
 
   each R in LEVEL.rooms do
-    if not R.parent and not R.natural then
+    if not R.parent and R.kind != "cave" then
       local min_d = math.max(R.sw, R.sh)
       if min_d > 8 then min_d = 8 end
 

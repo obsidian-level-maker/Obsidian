@@ -23,12 +23,11 @@
 class ROOM
 {
   kind : keyword  -- "building" (layout-able room)
-                  -- "scenic" (unvisitable room)
+                  -- "outdoor", "cave"
                   -- "hallway", "stairwell", "small_exit"
+                  -- "scenic" (unvisitable room)
 
-  outdoor : bool  -- true for outdoor rooms
-  natural : bool  -- true for cave/landscape areas
-  scenic  : bool  -- true for scenic (unvisitable) areas
+  is_outdoor : bool  -- true for outdoor rooms / caves
 
   conns : array(CONN)  -- connections with neighbor rooms
   entry_conn : CONN
@@ -274,7 +273,7 @@ function Room_decide_hallways()
   local REVERT_PROBS    = {  0,  0, 25, 75, 90, 98 }
 
   local function eval_hallway(R)
-    if R.is_outdoor or R.natural or R.children or R.purpose then
+    if R.is_outdoor or (R.kind == "cave") or R.children or R.purpose then
       return false
     end
 
@@ -696,14 +695,14 @@ function Room_border_up()
       return
     end
 
-    if R1.is_outdoor and R2.natural then
+    if R1.is_outdoor and R2.kind == "cave" then
       S.border[side].kind = "fence"
 
-    elseif R1.natural and R2.is_outdoor then
+    elseif R1.kind == "cave" and R2.is_outdoor then
       S.border[side].kind = "nothing"
 
     elseif R1.is_outdoor then
-      if R2.is_outdoor or R2.natural then
+      if R2.is_outdoor or R2.kind == "cave" then
         S.border[side].kind = "fence"
       else
         S.border[side].kind = "facade"
@@ -850,7 +849,7 @@ function Room_border_up()
         max_f1 = math.max(max_f1, S.floor_h)
         max_f2 = math.max(max_f2, N.floor_h)
 
-        if N.room.natural then
+        if N.room.kind == "cave" then
           max_f2 = math.max(max_f2, N.room.cave_floor_h + 128)
         end
       end 
@@ -964,7 +963,7 @@ function Room_border_up()
   end
 
   local function decide_windows(R, border_list)
-    if R.is_outdoor or R.natural or R.kind != "building" then return end
+    if R.kind != "building" then return end
     if R.semi_outdoor then return end
     if STYLE.windows == "none" then return end
 
@@ -1068,7 +1067,7 @@ function Room_border_up()
   end
 
   local function decide_pictures(R, border_list)
-    if R.is_outdoor or R.natural or R.kind != "building" then return end
+    if R.kind != "building" then return end
     if R.semi_outdoor then return end
 
     -- filter border list to remove symmetrical peers, seeds
@@ -1765,7 +1764,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
   end
 
   local function indoor_ceiling()
-    if R.natural or R.kind != "building" then
+    if R.kind != "building" then
       return
     end
 
@@ -1904,8 +1903,7 @@ function Room_add_crates(R)
 
   if STYLE.crates == "none" then return end
 
-  if R.natural then return end
-  if R.kind != "building" then return end
+  if not (R.kind == "building" or R.kind == "outdoor") then return end
 
   local skin
   local skin_names
@@ -2081,8 +2079,9 @@ gui.printf("do_teleport\n")
       local dist = 56
 
       -- TODO: fix this
-      if false and PARAM.raising_start and R.svolume >= 20 and not R.natural
-         and THEME.raising_start_switch and rand.odds(25)
+      if false and PARAM.raising_start and R.svolume >= 20 and
+         R.kind != "cave" and
+         THEME.raising_start_switch and rand.odds(25)
       then
         gui.debugf("Raising Start made\n")
 
@@ -2314,7 +2313,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         o_tex = LEVEL.well_tex
       elseif not N.room.is_outdoor and N.room != R.parent then
         o_tex = N.w_tex or N.room.main_tex
-      elseif N.room.is_outdoor and not (R.is_outdoor or R.natural) then
+      elseif N.room.is_outdoor and not (R.is_outdoor or R.kind == "cave") then
         o_tex = R.facade or w_tex
       end
     end

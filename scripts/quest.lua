@@ -893,7 +893,7 @@ function Quest_add_keys()
     if quest.lock.kind == "EXIT" then
       assert(LEVEL.exit_room == R)
 
-      if not (R.is_outdoor or R.natural) and
+      if not (R.is_outdoor or R.kind == "cave") and
          not R:has_any_lock() and
          R.svolume < 25 and THEME.exit
       then
