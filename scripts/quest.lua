@@ -125,8 +125,6 @@ and path, and they might get split again in the future.
 
 --------------------------------------------------------------]]
 
-require 'defs'
-require 'util'
 
 Quest = { }
 

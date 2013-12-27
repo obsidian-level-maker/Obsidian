@@ -18,9 +18,8 @@
 --
 ----------------------------------------------------------------
 
-require 'defs'
-require 'util'
-require 'ht_fabs'
+require "ht_fabs"
+
 
 Layout = { }
 

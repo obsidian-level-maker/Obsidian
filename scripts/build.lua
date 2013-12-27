@@ -18,10 +18,6 @@
 --
 ----------------------------------------------------------------
 
-require 'defs'
-require 'util'
-require 'seed'
-
 
 Build = {}
 Trans = {}
