@@ -696,52 +696,6 @@ function shadowify_brush(coords, dist)
 end
 
 
-function Build.shadow(S, side, dist, z2)
-  assert(dist)
-
-  if not PARAM.outdoor_shadows then return end
-
-  if not S then return end
-
-  if side < 0 then
-    S = S:neighbor(-side)
-    if not (S and S.room and S.room.outdoor) then return end
-    side = 10 + side
-  end
-
-  local x1, y1 = S.x1, S.y1
-  local x2, y2 = S.x2, S.y2
-
-  if side == 8 then
-    local N = S:neighbor(6)
-    local clip = not (N and N.room and N.room.outdoor)
-
-    Trans.old_brush(get_light(-1),
-    {
-      { x=x2, y=y2 },
-      { x=x1, y=y2 },
-      { x=x1+dist, y=y2-dist },
-      { x=x2+sel(clip,0,dist), y=y2-dist },
-    },
-    -EXTREME_H, z2 or EXTREME_H)
-  end
-
-  if side == 4 then
-    local N = S:neighbor(2)
-    local clip = not (N and N.room and N.room.outdoor)
-
-    Trans.old_brush(get_light(-1),
-    {
-      { x=x1, y=y2 },
-      { x=x1, y=y1 },
-      { x=x1+dist, y=y1-sel(clip,0,dist) },
-      { x=x1+dist, y=y2-dist },
-    },
-    -EXTREME_H, z2 or EXTREME_H)
-  end
-end
-
-
 function Build.wall(S, side, mat)
   local coords = get_wall_coords(S, side)
 
@@ -773,9 +727,6 @@ function Build.fence(S, side, fence_h, skin)
   local coords = get_wall_coords(S, side)
 
   Trans.old_brush(get_mat(skin.wall, skin.floor), coords, -EXTREME_H, fence_h)
-
-  Build.shadow(S,  side, 40, fence_h-4)
-  Build.shadow(S, -side, 24, fence_h-4)
 end
 
 

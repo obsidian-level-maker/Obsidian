@@ -2665,12 +2665,6 @@ function Layout_edge_of_map()
 
         Build.sky_fence(S, side, S.fence_h, S.fence_h - 64, skin)
       end
-
-      if N and ((N.room and not N.room.outdoor) or
-                (N.edge_of_map and N.building))
-      then
-        Build.shadow(S, side, 64)
-      end
     end
 
     Trans.old_quad(get_mat(LEVEL.outer_fence_tex), x1,y1, x2,y2, -EXTREME_H, S.fence_h)

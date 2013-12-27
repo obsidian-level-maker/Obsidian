@@ -2355,16 +2355,6 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
     for side = 2,8,2 do
       local N = S:neighbor(side)
 
-      if R.outdoor and N and ((N.room and not N.room.outdoor) or
-                              (N.edge_of_map and N.building))
-      then
-        local dist = 24 + int((z2 - z1) / 4)
-        if dist > 160 then dist = 160 end
-        Build.shadow(S, side, dist)
-
-      elseif R.outdoor and N and N.edge_of_map and N.fence_h then
-        Build.shadow(S, side, 20, N.fence_h - 4)
-      end
 
       local border = S.border[side]
       local B_kind = S.border[side].kind
@@ -2423,11 +2413,6 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
         Build.archway(S, side, z, z+112, skin)
         shrink_ceiling(side, 4)
-
-        if R.outdoor and N.room.outdoor then
-          Build.shadow(S,  side, 96)
-          Build.shadow(S, -side, 96)
-        end
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
