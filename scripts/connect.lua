@@ -1222,6 +1222,8 @@ gui.debugf("Failed\n")
     R.teleports = {}
   end
 
+  Levels_invoke_hook("connect_rooms",  LEVEL.seed)
+
 --!!!  sprinkle_scenics()
 
   branch_big_rooms()

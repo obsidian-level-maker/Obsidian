@@ -575,7 +575,7 @@ function Levels_choose_themes()
     table.insert(episode_list, episode_list[2 - dist])
   end
 
-  while #episode_list < 40 do
+  while #episode_list < 90 do
     table.insert(episode_list, episode_list[rand.irange(1, total)])
   end
 
@@ -704,25 +704,24 @@ function Levels_build_it()
     return "ok"
   end
 
+  -- Hexagonal-DM test
+  if OB_CONFIG.hex_dm then
+    Hex_create_level()
+    if gui.abort() then return "abort" end
+    return "ok"
+  end
+
   Plan_create_rooms()
   if gui.abort() then return "abort" end
 
-  Levels_invoke_hook("connect_rooms",  LEVEL.seed)
-
   Connect_rooms()
+  if gui.abort() then return "abort" end
 
   Quest_assign_quests()
   if gui.abort() then return "abort" end
 
-  Levels_invoke_hook("build_rooms",  LEVEL.seed)
-
   Room_build_all()
   if gui.abort() then return "abort" end
-
-  -- here is where the tiler.lua layout code used to kick in
-  assert(not PARAM.tiled)
-
-  Levels_invoke_hook("make_battles",  LEVEL.seed)
 
   Monster_make_battles()
   if gui.abort() then return "abort" end
@@ -751,21 +750,35 @@ function Levels_handle_prebuilt()
     -- FIXME: support other games (Wolf3d, Quake, etc)
   end
 
-  if not LEVEL.description and LEVEL.name_theme then
-    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
-  end
-
   return "ok"
 end
 
 
-function Levels_make_level(L, index, NUM)
-  LEVEL = L
+function Levels_make_level(L, index)
+  assert(L)
+  assert(L.name)
 
-  assert(LEVEL)
-  assert(LEVEL.name)
+  local total = #GAME.levels
 
-  gui.at_level(LEVEL.name, index, NUM)
+  -- debugging aid : ability to build only a particular level
+  if OB_CONFIG.only and
+     string.lower(OB_CONFIG.only) != string.lower(L.name)
+  then
+    gui.printf("\nSkipping level: %s....\n\n", L.name)
+    return
+  end
+
+  -- must create the description before the copy (else games/modules won't see it)
+  if not L.description and L.name_theme then
+    L.description = Naming_grab_one(L.name_theme)
+  end
+
+  -- copy level info, so that all new information added into the LEVEL
+  -- object by the generator can be garbage collected once this level is
+  -- finished.  Without the copy the info would remain in GAME.levels
+  LEVEL = table.copy(L)
+
+  gui.at_level(LEVEL.name, index, total)
 
   gui.printf("\n\n~~~~~~| %s |~~~~~~\n", LEVEL.name)
 
@@ -812,10 +825,6 @@ function Levels_make_level(L, index, NUM)
   gui.property("error_tex",  error_mat.t)
   gui.property("error_flat", error_mat.f or error_mat.t)
 
-  if not LEVEL.description and LEVEL.name_theme then
-    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
-  end
-
   if LEVEL.description then
     gui.property("description", LEVEL.description)
   end
@@ -835,13 +844,11 @@ function Levels_make_level(L, index, NUM)
   gui.end_level()
 
 
-  -- intra-level cleanup
-  if index < NUM then
-    LEVEL = nil
-    SEEDS = nil
-
-    collectgarbage("collect")
+  if index < total then
+    Levels_between_clean()
   end
+
+  if gui.abort() then return "abort" end
 
   return "ok"
 end
@@ -875,7 +882,7 @@ function Levels_make_all()
     each L in EPI.levels do
       L.allowances = {}
 
-      if Levels_make_level(L, _index, #GAME.levels) == "abort" then
+      if Levels_make_level(L, _index) == "abort" then
         return "abort"
       end
     end
