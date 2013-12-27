@@ -118,7 +118,7 @@ function Rooms.setup_theme_Scenic(R)
 
     local sx, sy = geom.nudge(mx, my, dir, dist)
 
-    if Seed.valid(sx, sy, 1) then
+    if Seed_valid(sx, sy, 1) then
       local S = SEEDS[sx][sy][1]
 
       if S.room and S.room.kind != "scenic" and
@@ -1125,7 +1125,7 @@ function Rooms.make_ceiling(R)
         local nx = x + dx * x_dir
         local ny = y + dy * y_dir
 
-        if Seed.valid(nx, ny, 1) and SEEDS[nx][ny][1].room == R then
+        if Seed_valid(nx, ny, 1) and SEEDS[nx][ny][1].room == R then
           count = count + 1
         end
       end end -- for dx,dy

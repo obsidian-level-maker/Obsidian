@@ -59,8 +59,6 @@ class BORDER
 --------------------------------------------------------------]]
 
 
-Seed = { }
-
 SEED_W = 0
 SEED_H = 0
 SEED_D = 0
@@ -86,8 +84,8 @@ function SEED_CLASS.mid_point(S)
 end
 
 
-function Seed.init(map_W, map_H, map_D, free_W, free_H)
-  gui.printf("Seed.init: %dx%d  Free: %dx%d\n", map_W, map_H, free_W, free_H)
+function Seed_init(map_W, map_H, map_D, free_W, free_H)
+  gui.printf("Seed_init: %dx%d  Free: %dx%d\n", map_W, map_H, free_W, free_H)
 
   local W = map_W + free_W
   local H = map_H + free_H
@@ -142,7 +140,7 @@ function Seed.init(map_W, map_H, map_D, free_W, free_H)
 end
 
 
-function Seed.close()
+function Seed_close()
   SEEDS = nil
 
   SEED_W = 0
@@ -151,27 +149,27 @@ function Seed.close()
 end
 
 
-function Seed.valid(x, y, z)
+function Seed_valid(x, y, z)
   return (x >= 1 and x <= SEED_W) and
          (y >= 1 and y <= SEED_H) and
          (z >= 1 and z <= SEED_D)
 end
 
 
-function Seed.get_safe(x, y, z)
-  return Seed.valid(x, y, z) and SEEDS[x][y][z]
+function Seed_get_safe(x, y, z)
+  return Seed_valid(x, y, z) and SEEDS[x][y][z]
 end
 
 
-function Seed.is_free(x, y, z)
-  assert(Seed.valid(x, y, z))
+function Seed_is_free(x, y, z)
+  assert(Seed_valid(x, y, z))
 
   return not SEEDS[x][y][z].room
 end
 
 
-function Seed.valid_and_free(x, y, z)
-  if not Seed.valid(x, y, z) then
+function Seed_valid_and_free(x, y, z)
+  if not Seed_valid(x, y, z) then
     return false
   end
 
@@ -183,12 +181,12 @@ function Seed.valid_and_free(x, y, z)
 end
 
 
-function Seed.block_valid_and_free(x1,y1,z1, x2,y2,z2)
+function Seed_block_valid_and_free(x1,y1,z1, x2,y2,z2)
 
   assert(x1 <= x2 and y1 <= y2 and z1 <= z2)
 
-  if not Seed.valid(x1, y1, z1) then return false end
-  if not Seed.valid(x2, y2, z2) then return false end
+  if not Seed_valid(x1, y1, z1) then return false end
+  if not Seed_valid(x2, y2, z2) then return false end
 
   for x = x1,x2 do for y = y1,y2 do for z = z1,z2 do
     local S = SEEDS[x][y][z]
@@ -201,7 +199,7 @@ function Seed.block_valid_and_free(x1,y1,z1, x2,y2,z2)
 end
 
 
-function Seed.dump_rooms()
+function Seed_dump_rooms()
   local function seed_to_char(S)
     if not S then return "!" end
     if S.free then return "." end
@@ -231,7 +229,7 @@ function Seed.dump_rooms()
 end
 
 
-function Seed.flood_fill_edges()
+function Seed_flood_fill_edges()
   local active = {}
 
   for x = 1,SEED_W do for y = 1,SEED_H do

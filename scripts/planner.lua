@@ -683,7 +683,7 @@ function Plan.sub_rooms()
     local touches_other = nil
 
     for sx = x-1,x+w do for sy = y-1,y+h do
-      if Seed.valid(sx, sy, 1) then
+      if Seed_valid(sx, sy, 1) then
         local S = SEEDS[sx][sy][1]
         if S.room and S.room.parent == R then
 
@@ -821,7 +821,7 @@ function Plan.make_seeds()
   local function plant_rooms()
     each R in LEVEL.rooms do
       for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
-        assert(Seed.valid(sx, sy, 1))
+        assert(Seed_valid(sx, sy, 1))
         local S = SEEDS[sx][sy][1]
         assert(not S.room) -- no overlaps please!
         S.room = R
@@ -851,7 +851,7 @@ function Plan.make_seeds()
       local nx2,ny2 = R.sx2,R.sy2
 
       for x = R.sx1-1, R.sx2+1 do for y = R.sy1-1, R.sy2+1 do
-        if Seed.valid(x, y, 1) and not R:contains_seed(x, y) then
+        if Seed_valid(x, y, 1) and not R:contains_seed(x, y) then
           local S = SEEDS[x][y][1]
           if not S.room then
             S.room = R
@@ -889,12 +889,12 @@ gui.debugf("seed range @ %s\n", R:tostr())
   max_sx = max_sx + 2
   max_sy = max_sy + 2
 
-  Seed.init(max_sx-1, max_sy-1, 1, 3, 3)
+  Seed_init(max_sx-1, max_sy-1, 1, 3, 3)
 
   plant_rooms()
   fill_holes()
 
-  Seed.flood_fill_edges()
+  Seed_flood_fill_edges()
 end
 
 
@@ -1044,7 +1044,7 @@ function Plan.create_rooms()
   Plan.merge_naturals()
 
   gui.printf("Seed Map:\n")
-  Seed.dump_rooms()
+  Seed_dump_rooms()
 
   Plan.sub_rooms()
 
