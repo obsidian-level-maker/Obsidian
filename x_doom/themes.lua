@@ -540,18 +540,6 @@ DOOM2.ROOM_THEMES =
 
   Urban_panel =
   {
-    facades =
-    {
-      BIGBRIK1 = 30
-      BIGBRIK2 = 15
-      BLAKWAL2 = 10
-      MODWALL1 = 20
-      MODWALL3 = 10
-      CEMENT7 = 5
-      CEMENT9 = 5
-      METAL2 = 3
-    }
-
     walls =
     {
       PANEL6 = 50
@@ -899,8 +887,22 @@ DOOM2.LEVEL_THEMES =
     }
 
     hallways  = { Tech_hallway=50 }
-    caves     = { Tech_cave=50 }
     outdoors  = { Tech_outdoors=50 }
+    caves     = { Tech_cave=50 }
+
+    facades =
+    {
+      BROWN1   = 40
+      STARTAN3 = 40
+      STARG3   = 40
+      STARGR2  = 40
+      STARBR2  = 30
+      BROWN96  = 25
+      BROWNGRN = 25
+      SLADWALL = 20
+      METAL2   = 10
+      METAL1   = 5
+    }
 
     monster_prefs = { arach=2.0 }
 
@@ -966,8 +968,20 @@ DOOM2.LEVEL_THEMES =
     }
 
     hallways  = { Urban_hallway=50 }
-    caves     = { Urban_cave=50 }
     outdoors  = { Urban_outdoors=50 }
+    caves     = { Urban_cave=50 }
+
+    facades =
+    {
+      BIGBRIK1 = 30
+      BIGBRIK2 = 15
+      BLAKWAL2 = 10
+      MODWALL1 = 20
+      MODWALL3 = 10
+      CEMENT7 = 5
+      CEMENT9 = 5
+      METAL2 = 3
+    }
 
     room_types =
     {
