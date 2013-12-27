@@ -704,7 +704,7 @@ function Levels_build_it()
     return "ok"
   end
 
-  Plan.create_rooms()
+  Plan_create_rooms()
   if gui.abort() then return "abort" end
 
   Levels_invoke_hook("connect_rooms",  LEVEL.seed)

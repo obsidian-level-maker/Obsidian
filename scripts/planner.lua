@@ -19,10 +19,6 @@
 ----------------------------------------------------------------
 
 
-Plan = { }
-
-
-
 function Plan_alloc_id(kind)
   local result = (LEVEL.ids[kind] or 0) + 1
   LEVEL.ids[kind] = result
@@ -30,7 +26,7 @@ function Plan_alloc_id(kind)
 end
 
 
-function Plan.initial_rooms()
+function Plan_initial_rooms()
   
   -- creates rooms out of contiguous areas on the land-map
 
@@ -210,7 +206,7 @@ gui.printf("Naturals: %d%%\n", perc)
   end
 
 
-  ---| Plan.initial_rooms |---
+  ---| Plan_initial_rooms |---
 
   room_map = table.array_2D(LEVEL.W, LEVEL.H)
 
@@ -297,7 +293,7 @@ end
 
 
 
-function Plan.merge_naturals()
+function Plan_merge_naturals()
  
   local function merge_one_natural(src, dest)
     gui.printf("Merging Natural: %s --> %s\n", src:tostr(), dest:tostr())
@@ -322,7 +318,7 @@ function Plan.merge_naturals()
     end end -- for x, y
   end
 
-  ---| Plan.merge_naturals |---
+  ---| Plan_merge_naturals |---
 
   local room_list = LEVEL.rooms
   LEVEL.rooms = {}
@@ -341,7 +337,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Plan.nudge_rooms()
+function Plan_nudge_rooms()
   -- This resizes rooms by moving certain borders either one seed
   -- outward or one seed inward.  There are various constraints,
   -- in particular each room must remain a rectangle shape (so we
@@ -539,7 +535,7 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
   end
 
 
-  ---| Plan.nudge_rooms |---
+  ---| Plan_nudge_rooms |---
 
   each R in LEVEL.rooms do
     R.nudges = {}
@@ -552,7 +548,7 @@ end
 
 
 
-function Plan.sub_rooms()
+function Plan_sub_rooms()
   local id = LEVEL.last_id + 1
 
   --                    1  2  3   4   5   6   7   8+
@@ -684,7 +680,7 @@ function Plan.sub_rooms()
   end
 
 
-  ---| Plan.sub_rooms |---
+  ---| Plan_sub_rooms |---
 
   if STYLE.subrooms == "none" then return end
 
@@ -710,7 +706,7 @@ function Plan.sub_rooms()
 end
 
 
-function Plan.make_seeds()
+function Plan_make_seeds()
 
   local function plant_rooms()
     each R in LEVEL.rooms do
@@ -765,7 +761,7 @@ function Plan.make_seeds()
   end
 
 
-  ---| Plan.make_seeds |---
+  ---| Plan_make_seeds |---
 
   local max_sx = 1
   local max_sy = 1
@@ -779,7 +775,7 @@ gui.debugf("seed range @ %s\n", R:tostr())
   end
 
   -- two border seeds at top and right
-  -- (the left and bottom were handled in Plan.initial_rooms)
+  -- (the left and bottom were handled in Plan_initial_rooms)
   max_sx = max_sx + 2
   max_sy = max_sy + 2
 
@@ -792,7 +788,7 @@ gui.debugf("seed range @ %s\n", R:tostr())
 end
 
 
-function Plan.determine_size()
+function Plan_determine_size()
 
   local function show_sizes(name, t, N)
     name = name .. ": "
@@ -829,7 +825,7 @@ function Plan.determine_size()
   end
 
 
-  ---| Plan.determine_size |---
+  ---| Plan_determine_size |---
 
   local W, H  -- number of rooms
 
@@ -904,7 +900,7 @@ function Plan.determine_size()
 end
 
 
-function Plan.create_rooms()
+function Plan_create_rooms()
 
   gui.printf("\n--==| Planning Rooms |==--\n\n")
 
@@ -928,26 +924,25 @@ function Plan.create_rooms()
     LEVEL.liquid = assert(GAME.LIQUIDS[name])
   end
 
-  Plan.determine_size()
+  Plan_determine_size()
 
-  Plan.initial_rooms()
-  Plan.nudge_rooms()
+  Plan_initial_rooms()
+  Plan_nudge_rooms()
 
   -- must create the seeds _AFTER_ nudging
-  Plan.make_seeds()
-  Plan.merge_naturals()
+  Plan_make_seeds()
+  Plan_merge_naturals()
 
   gui.printf("Seed Map:\n")
   Seed_dump_rooms()
 
-  Plan.sub_rooms()
+  Plan_sub_rooms()
 
   each R in LEVEL.rooms do
     gui.printf("Final %s   size: %dx%d\n", R:tostr(), R.sw,R.sh)
   end
 
-
   LEVEL.skyfence_h = rand.sel(50, 192, rand.sel(50, 64, 320))
 
-end -- Plan.create_rooms
+end
 
