@@ -181,7 +181,7 @@ end
 
 
 function Trans.old_brush(info, coords, z1, z2)
----???  if type(info) ~= "table" then
+---???  if type(info) != "table" then
 ---???    info = get_mat(info)
 ---???  end
 
@@ -599,7 +599,7 @@ end
 
 
 function get_wall_coords(S, side, thick, pad)
-  assert(side ~= 5)
+  assert(side != 5)
 
   local x1, y1 = S.x1, S.y1
   local x2, y2 = S.x2, S.y2
@@ -880,7 +880,7 @@ function Build.archway(S, side, z1, z2, skin)
   assert(deep > 17 or N_deep > 17)
 
   local break_info = wall_info
-  if skin.other and skin.other ~= skin.wall then
+  if skin.other and skin.other != skin.wall then
     break_info = get_mat(skin.break_t)
   end
 

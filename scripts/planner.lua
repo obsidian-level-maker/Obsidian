@@ -277,17 +277,17 @@ gui.printf("Naturals: %d%%\n", perc)
       R.neighbors = {}
     end
 
-    for side = 1,9 do if side ~= 5 then
+    for side = 1,9 do if side != 5 then
       local nx, ny = geom.nudge(x, y, side)
       if valid_R(nx, ny) then
         local N = room_map[nx][ny]
-        if N ~= R then
+        if N != R then
           add_neighbor(R, side, N)
         end
       else
         R.touches_edge = true
       end
-    end end -- for side / if ~= 5
+    end end -- for side / if != 5
   end end -- for x, y
 end
 
@@ -567,7 +567,7 @@ function Plan_sub_rooms()
     
     for sx = x,x+w-1 do for sy = y,y+h-1 do
       local S = SEEDS[sx][sy][1]
-      if S.room ~= R then return nil end
+      if S.room != R then return nil end
     end end -- sx, sy
 
     local touches_other = nil
@@ -580,7 +580,7 @@ function Plan_sub_rooms()
           -- don't allow new sub-room to touch more than one
           -- existing sub-room, since it is possible to split
           -- the room into separate parts that way.
-          if touches_other and touches_other ~= S.room then
+          if touches_other and touches_other != S.room then
             return nil
           end
 
@@ -918,7 +918,7 @@ function Plan_create_rooms()
 
   gui.random() ; gui.random()
 
-  if not LEVEL.liquid and THEME.liquids and STYLE.liquids ~= "none" then
+  if not LEVEL.liquid and THEME.liquids and STYLE.liquids != "none" then
     local name = rand.key_by_probs(THEME.liquids)
     gui.printf("Liquid = %s\n", name)
     LEVEL.liquid = assert(GAME.LIQUIDS[name])

@@ -145,7 +145,7 @@ function Connect_gen_PX(long, deep)
 end
 
 function Connect_gen_LS(long, deep)
-  if long < 2 or long > 6 or deep ~= long then
+  if long < 2 or long > 6 or deep != long then
     return nil
   end
 
@@ -576,7 +576,7 @@ function Connect_test_branch_gen(name)
       local nx, ny = geom.nudge(x, y, dir)
       assert(nx==0 or nx==W+1 or ny==0 or ny==H+1)
 
-      if P[nx+1][ny+1] ~= " " then
+      if P[nx+1][ny+1] != " " then
         gui.printf("spot: (%d,%d):%d to (%d,%d)\n", x,y,dir, nx,ny)
         error("Bad branch!")
       end
@@ -650,7 +650,7 @@ function Connect_rooms()
   end
 
   local function swap_groups(id1, id2)
-    assert(id1 ~= id2)
+    assert(id1 != id2)
 
     each R in LEVEL.rooms do
       if R.c_group == id1 then
@@ -662,8 +662,8 @@ function Connect_rooms()
   end
 
   local function connect_seeds(S, T, dir)
-    assert(S.room and S.room.kind ~= "scenic")
-    assert(T.room and T.room.kind ~= "scenic")
+    assert(S.room and S.room.kind != "scenic")
+    assert(T.room and T.room.kind != "scenic")
 
     S.border[dir].kind    = "arch"
     T.border[10-dir].kind = "straddle"
@@ -801,7 +801,7 @@ T.sx,T.sy, T.room.id, T.room.c_group)
       local S = SEEDS[ x][ y][1]
       local N = SEEDS[nx][ny][1]
 
-      if S.room ~= R then return false end
+      if S.room != R then return false end
 
       -- handle hits on existing connections
       local existing = false
@@ -835,7 +835,7 @@ T.sx,T.sy, T.room.id, T.room.c_group)
       end
     end
 
-    if hit_conns ~= #R.conns then
+    if hit_conns != #R.conns then
       return false
     end
 
@@ -944,7 +944,7 @@ gui.debugf("Failed\n")
     -- Note: connections must be handled elsewhere
 
     gui.debugf("Making %s SCENIC\n", R:tostr())
-    assert(R.kind ~= "scenic")
+    assert(R.kind != "scenic")
 
     R.kind = "scenic"
 
@@ -1005,7 +1005,7 @@ gui.debugf("Failed\n")
     local N = SEEDS[nx][ny][1]
 
     assert(S.room == R)
-    assert(N.room ~= R)
+    assert(N.room != R)
 
     if not N.room or
        not N.room.c_group or
@@ -1035,7 +1035,7 @@ gui.debugf("Failed\n")
 
     -- prefer it away from other connections
     for dist = 1,3 do
-      for side = 2,8,2 do if side ~= n_side then
+      for side = 2,8,2 do if side != n_side then
         local N = S:neighbor(side, dist)
         if N and N.conn_dir then
           score = score - 40 / (dist ^ 2)
@@ -1056,7 +1056,7 @@ gui.debugf("Failed\n")
       if S.room == R then
         for side = 2,8,2 do
           local N = S:neighbor(side)
-          if N and N.room and N.room ~= R then
+          if N and N.room and N.room != R then
             local score = score_emerg_branch(R, S, side)
             table.insert(try_list, { x=x, y=y, dir=side, score=score })
           end
@@ -1157,7 +1157,7 @@ gui.debugf("Failed\n")
       local changed = false
 
       each R in list do
-        if R.c_group ~= min_g and R.kind ~= "scenic" then
+        if R.c_group != min_g and R.kind != "scenic" then
           if #R.conns == 0 then
             handle_isolate(R, join_chance)
           else

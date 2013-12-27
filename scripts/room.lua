@@ -584,7 +584,7 @@ function Room_reckon_doors()
     elseif R1.hallway or R2.hallway then
       return door_probs.hall_diff or 60
 
-    elseif R1.main_tex ~= R2.main_tex then
+    elseif R1.main_tex != R2.main_tex then
       return door_probs.combo_diff or 40
 
     else
@@ -625,7 +625,7 @@ function Room_reckon_doors()
 
           local prob = door_chance(C.src, C.dest)
 
-          if S.conn.lock and S.conn.lock.kind ~= "NULL" then
+          if S.conn.lock and S.conn.lock.kind != "NULL" then
             B.kind = "lock_door"
             B.lock = S.conn.lock
 
@@ -660,8 +660,8 @@ function Room_synchronise_skies()
       if S and S.room and S.room.sky_h then
         for side = 2,8,2 do
           local N = S:neighbor(side)
-          if N and N.room and N.room ~= S.room and N.room.sky_h and
-             S.room.sky_h ~= N.room.sky_h
+          if N and N.room and N.room != S.room and N.room.sky_h and
+             S.room.sky_h != N.room.sky_h
           then
             S.room.sky_h = math.max(S.room.sky_h, N.room.sky_h)
             N.room.sky_h = S.room.sky_h
@@ -722,7 +722,7 @@ function Room_border_up()
       end
 
       if STYLE.fences == "none" and R1.quest == R2.quest and R2.outdoor and
-         (S.kind ~= "liquid" or S.floor_h == N.floor_h)
+         (S.kind != "liquid" or S.floor_h == N.floor_h)
       then
         S.border[side].kind = "nothing"
       end
@@ -1123,7 +1123,7 @@ function Room_border_up()
       -- prefer a different pic for #2
       for loop = 1,3 do
         pics[2] = select_picture(R, v_space, 2)
-        if pics[2].pic_w ~= pics[1].pic_w then break; end
+        if pics[2].pic_w != pics[1].pic_w then break; end
       end
     end
 
@@ -1468,7 +1468,7 @@ function Room_make_ceiling(R)
     local S = SEEDS[mx][my][1]
 
     -- seed is usable?
-    if S.room ~= R or S.content then return end
+    if S.room != R or S.content then return end
     if not (S.kind == "walk" or S.kind == "liquid") then return end
 
     -- neighbors the same?
@@ -1496,7 +1496,7 @@ function Room_make_ceiling(R)
     for x = R.cx1, R.cx2 do for y = R.cy1, R.cy2 do
       local S = SEEDS[x][y][1]
       
-      if S.room ~= R then return 0 end
+      if S.room != R then return 0 end
       
       if S.kind == "void" or ---#  S.kind == "diagonal" or
          S.kind == "tall_stair" or S.content == "pillar"
@@ -1539,9 +1539,9 @@ function Room_make_ceiling(R)
       local S = SEEDS[x][y][1]
       local ceil_h = S.ceil_h or R.ceil_h
 
-      if ceil_h and S.kind ~= "void" then
+      if ceil_h and S.kind != "void" then
         if mode == "light" then
-          if S.content ~= "pillar" then
+          if S.content != "pillar" then
             Build.ceil_light(S, ceil_h, skin)
           end
         else
@@ -1713,7 +1713,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
     add_central_pillar()
 
-    if nice ~= 2 or not THEME.big_lights then return end
+    if nice != 2 or not THEME.big_lights then return end
 
       local ceil_info  = get_mat(R.main_tex)
       local sky_info   = get_sky()
@@ -1735,7 +1735,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
     local trim   = THEME.ceiling_trim
     local spokes = THEME.ceiling_spoke
 
-    if STYLE.lt_swapped ~= "none" then
+    if STYLE.lt_swapped != "none" then
       trim, spokes = spokes, trim
     end
 
@@ -1765,7 +1765,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
   end
 
   local function indoor_ceiling()
-    if R.natural or R.kind ~= "building" then
+    if R.natural or R.kind != "building" then
       return
     end
 
@@ -1874,9 +1874,9 @@ function Room_add_crates(R)
   local function test_spot(S, x, y)
     for dx = 0,1 do for dy = 0,1 do
       local N = SEEDS[x+dx][y+dy][1]
-      if not N or N.room ~= S.room then return false end
+      if not N or N.room != S.room then return false end
 
-      if N.kind ~= "walk" or not N.floor_h then return false end
+      if N.kind != "walk" or not N.floor_h then return false end
 
       if math.abs(N.floor_h - S.floor_h) > 0.5 then return false end
     end end -- for dx, dy
@@ -2312,7 +2312,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         o_tex = LEVEL.hall_tex
       elseif N.room.stairwell then
         o_tex = LEVEL.well_tex
-      elseif not N.room.outdoor and N.room ~= R.parent then
+      elseif not N.room.outdoor and N.room != R.parent then
         o_tex = N.w_tex or N.room.main_tex
       elseif N.room.outdoor and not (R.outdoor or R.natural) then
         o_tex = R.facade or w_tex
@@ -2384,7 +2384,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         B_kind = nil
       end
 
-      if B_kind == "wall" and R.kind ~= "scenic" then  -- FIXME; scenic check is bogus
+      if B_kind == "wall" and R.kind != "scenic" then  -- FIXME; scenic check is bogus
         Build.wall(S, side, w_tex)
         shrink_both(side, 4)
       end
@@ -2532,13 +2532,13 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
     -- CEILING
 
-    if S.kind ~= "void" and not S.no_ceil and 
+    if S.kind != "void" and not S.no_ceil and 
        (S.is_sky or c_tex == "_SKY")
     then
 
       Trans.old_quad(get_sky(), x1,y1, x2,y2, z2, EXTREME_H)
 
-    elseif S.kind ~= "void" and not S.no_ceil then
+    elseif S.kind != "void" and not S.no_ceil then
       ---## local info = get_mat(S.u_tex or c_tex or w_tex, c_tex)
       ---## info.b_face.light = S.c_light
       ---## Trans.old_quad(info, cx1,cy1, cx2,cy2, z2, EXTREME_H)
@@ -2554,7 +2554,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
         for side = 2,8,2 do
           local N = S:neighbor(side)
-          if N and N.room == R and N.kind ~= "void" then
+          if N and N.room == R and N.kind != "void" then
             if side == 2 or side == 8 then
               y_num = y_num + 1
             else
@@ -2773,7 +2773,7 @@ function Room_find_pickup_spots(R)
       local N = S:neighbor(side)
       if not N then
         walls[side] = 1
-      elseif N.room ~= S.room then
+      elseif N.room != S.room then
         if not S.conn then walls[side] = 2 end
       elseif N.kind == "void" then
         walls[side] = 3
@@ -2804,7 +2804,7 @@ function Room_find_pickup_spots(R)
   end
 
   local function try_add_diagonal_spot(R, S)
-    if S.diag_new_kind ~= "walk" then return end
+    if S.diag_new_kind != "walk" then return end
 
     local score = 80 + gui.random()
 
@@ -2920,7 +2920,7 @@ function Room_find_monster_spots(R)
     end
 
     -- check seed kind
-    if S.kind ~= "walk" then
+    if S.kind != "walk" then
       return false
     end
 
@@ -2943,7 +2943,7 @@ function Room_find_monster_spots(R)
       if dx > 0 or dy > 0 then
         local S2 = SEEDS[sx+dx][sy+dy][1]
 
-        if S2.room ~= S.room then return false end
+        if S2.room != S.room then return false end
 
         if not can_accommodate_small(S2) then return false end
 

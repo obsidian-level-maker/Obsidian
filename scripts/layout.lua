@@ -97,7 +97,7 @@ function Layout_test_room_fabs()
   end
 
   local function dump_one_pattern(info, x_sizes, y_sizes)
-    if (#info.structure ~= #y_sizes) then
+    if (#info.structure != #y_sizes) then
       error("Pattern " .. info.name .. " has bad y_size")
     end
 
@@ -142,7 +142,7 @@ function Layout_test_room_fabs()
     local width = #info.structure[1]
 
     each line in info.structure do
-      if #line ~= width then
+      if #line != width then
         error("Bad structure (uneven widths)")
       end
     end
@@ -185,7 +185,7 @@ function Layout_test_room_fabs()
         for x = P.x1,P.x2 do for y = P.y1,P.y2 do
           local line = info.structure[y]
           local ch = string.sub(line, x, x)
-          if ch ~= P.ch then
+          if ch != P.ch then
             error("Bad shape for sub area (not a full rectangle)")
           end
         end end -- for x, y
@@ -228,7 +228,7 @@ function Layout_test_room_fabs()
     for x = 1,half_x do
       local x2 = #s - (x-1)
 
-      if string.sub(s, x, x) ~= string.sub(s, x2, x2) then
+      if string.sub(s, x, x) != string.sub(s, x2, x2) then
         error("Broken size symmetry: " .. s)
       end
     end
@@ -449,7 +449,7 @@ function Layout_cave_monster_spots(R)
     if x2 > W or y2 > H then return false end
 
     for x = x1,x2 do for y = y1,y2 do
-      if flood[x][y] ~= flood.largest_empty.id then
+      if flood[x][y] != flood.largest_empty.id then
         return false
       end
       if used[x][y] then return false end
@@ -668,7 +668,7 @@ function Layout_do_natural(R, heights)
       local mx = (S.sx - R.sx1) * 3 + 2
       local my = (S.sy - R.sy1) * 3 + 2
 
-      if flood[mx][my] ~= reg.id then
+      if flood[mx][my] != reg.id then
         gui.debugf("cave failed connection check\n")
         return false
       end
@@ -700,7 +700,7 @@ function Layout_do_natural(R, heights)
         handle_wall(S, side)
       end
 
-      for side = 1,9,2 do if side ~= 5 then
+      for side = 1,9,2 do if side != 5 then
         handle_corner(S, side)
       end end
     end
@@ -1054,7 +1054,7 @@ gui.debugf("eval_pattern %s\n", T.info.name)
     end
 
     if not (not req_sym or req_sym == info_sym or info_sym == "xy") then
-gui.debugf("SYMMETRY MISMATCH (%s ~= %s\n", req_sym or "NONE", info_sym or "NONE")
+gui.debugf("SYMMETRY MISMATCH (%s != %s\n", req_sym or "NONE", info_sym or "NONE")
       return -1
     end
 
@@ -1243,7 +1243,7 @@ gui.debugf("end install_fab\n")
       end
     end
 
-    assert(OT.kind ~= "lift")
+    assert(OT.kind != "lift")
 
     if OT.kind == "stair" then
       S.stair_dir = assert(OT.stair_dir)
@@ -1309,7 +1309,7 @@ gui.debugf("Transposed : %s\n", string.bool(T.transpose))
             if (S.conn or S.pseudo_conn or S.must_walk) and
                not (OT.kind == "walk")
             then
-gui.debugf("symmetry_fill FAILED  S:%s ~= OT:%s\n", S:tostr(), OT:tostr())
+gui.debugf("symmetry_fill FAILED  S:%s != OT:%s\n", S:tostr(), OT:tostr())
               R.symmetry = nil
               return false
             end
@@ -1425,13 +1425,13 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
 
         -- drop symmetry requirement??
         if (new_sym == "x" or new_sym == "xy") and
-           ((new_area.x1 + new_area.x2) ~= (area.x1 + area.x2))
+           ((new_area.x1 + new_area.x2) != (area.x1 + area.x2))
         then
           new_sym = nil
         end
 
         if (new_sym == "y" or new_sym == "xy") and
-           ((new_area.y1 + new_area.y2) ~= (area.y1 + area.y2))
+           ((new_area.y1 + new_area.y2) != (area.y1 + area.y2))
         then
           new_sym = nil
         end
@@ -1540,8 +1540,8 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
     if R.children then return false end
     if R.natural  then return false end
 
-    assert(R.kind ~= "hallway")
-    assert(R.kind ~= "stairwell")
+    assert(R.kind != "hallway")
+    assert(R.kind != "stairwell")
 
     local sol_mul = 1.0
     if STYLE.junk == "heaps" then sol_mul = 3.0 end
@@ -1885,7 +1885,7 @@ function Layout_do_room(R)
           if who == 3 then S = R.mirror_y and S.y_peer end
 
           if S then
-            if S.room ~= R then return false end
+            if S.room != R then return false end
             if not (S.kind == "walk" or S.kind == "void") then return false end
 
             if S.conn or S.pseudo_conn then
@@ -2112,7 +2112,7 @@ function Layout_do_room(R)
     local mom_z = 0
     if R.entry_conn then
       local C2 = R.entry_conn.src.entry_conn
-      if C2 and C2.conn_h and C2.conn_h ~= base_h then
+      if C2 and C2.conn_h and C2.conn_h != base_h then
         mom_z = sel(C2.conn_h < base_h, 1, -1)
       end
 
@@ -2134,7 +2134,7 @@ function Layout_do_room(R)
 
       cost = cost + gui.random() * 40
 
-      if dir ~= mom_z       then cost = cost + 100 end
+      if dir != mom_z       then cost = cost + 100 end
       if hts[4] <= -100     then cost = cost + 200 end
       if hts[4] >= SKY_H+60 then cost = cost + 300 end
 
@@ -2305,7 +2305,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
       S.diag_new_z    = sel(who_solid == 'L', h_z   , l_z)
       S.diag_new_ftex = sel(who_solid == 'L', h_ftex, l_ftex)
 
-      assert(S.diag_new_kind ~= "void")
+      assert(S.diag_new_kind != "void")
 
       if low  and  low.room == R then  low.solid_feature = nil end
       if high and high.room == R then high.solid_feature = nil end
@@ -2393,7 +2393,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
         if S.content == "pillar" then return false end
       else
         assert(string.is_digit(ch))
-        if S.kind ~= "walk" or S.room ~= R or S.content or
+        if S.kind != "walk" or S.room != R or S.content or
            S.conn or S.pseudo_conn or S.must_walk
         then
           return false

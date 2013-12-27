@@ -164,7 +164,7 @@ function Quest_decide_start_room(quest)
   end
 
   local function natural_flow(R, visited)
-    assert(R.kind ~= "scenic")
+    assert(R.kind != "scenic")
 
     visited[R] = true
 
@@ -718,7 +718,7 @@ function Quest_order_by_visit()
     each C in R.conns do
       C.tmp_visit = 0
 
-      if C.src ~= R or C.lock then
+      if C.src != R or C.lock then
         -- ignore it
       elseif C == path[p_idx] then
         C.tmp_visit = 9  -- do path-to-key last
@@ -732,7 +732,7 @@ function Quest_order_by_visit()
     table.sort(R.conns, function(A,B) return A.tmp_visit < B.tmp_visit end)
 
     each C in R.conns do
-      if C.src ~= R or C.lock then
+      if C.src != R or C.lock then
         -- ignore it
       elseif C == path[p_idx] then
         visit_room(C.dest, path, p_idx+1)
@@ -886,7 +886,7 @@ function Quest_add_keys()
   each quest in LEVEL.quests do
     local R = quest.target
 
-    assert(quest.lock.kind ~= "UNSET")
+    assert(quest.lock.kind != "UNSET")
 
     R.lock = quest.lock
 
@@ -900,7 +900,7 @@ function Quest_add_keys()
         make_small_exit(R)
       end
 
-    elseif quest.lock.kind ~= "NULL" then
+    elseif quest.lock.kind != "NULL" then
       R.purpose = quest.lock.kind
     end
   end
@@ -1039,7 +1039,7 @@ function Quest_find_storage_rooms()
   end
 
   each R in LEVEL.rooms do
-    if R.kind ~= "scenic" and #R.conns == 1 and
+    if R.kind != "scenic" and #R.conns == 1 and
        not R.purpose and #R.weapons == 0
     then
       R.is_storage = true
