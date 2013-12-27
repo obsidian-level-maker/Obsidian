@@ -716,7 +716,7 @@ function Levels_build_it()
 
   Levels_invoke_hook("build_rooms",  LEVEL.seed)
 
-  Rooms.build_all()
+  Room_build_all()
   if gui.abort() then return "abort" end
 
   -- here is where the tiler.lua layout code used to kick in
