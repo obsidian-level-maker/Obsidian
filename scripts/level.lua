@@ -524,8 +524,8 @@ function Levels_choose_themes()
   end
 
 
-  if OB_CONFIG.theme == "original" and GAME.original_themes then
-    total = math.max(total, # GAME.original_themes)
+  if OB_CONFIG.theme == "original" then
+    total = math.max(total, # GAME.episodes)
   end
 
   while not table.empty(prob_tab) do
@@ -535,11 +535,11 @@ function Levels_choose_themes()
     local info = OB_THEMES[name]
     local pos = rand.irange(1, total)
 
-    if OB_CONFIG.theme == "original" and GAME.original_themes then
-      for i,orig_theme in ipairs(GAME.original_themes) do
-        if name == orig_theme and not episode_list[i] then
+    if OB_CONFIG.theme == "original" then
+      each epi in GAME.episodes do
+        if name == epi.theme and not episode_list[_index] then
           -- this can leave gaps, but they are filled later
-          pos = i ; break
+          pos = _index ; break
         end
       end
     end
@@ -554,12 +554,10 @@ function Levels_choose_themes()
   gui.debugf("Initial theme list = \n%s\n", table.tostr(episode_list))
 
   -- fill any gaps when in "As Original" mode
-  if OB_CONFIG.theme == "original" and GAME.original_themes then
-    gui.debugf("original_themes =\n%s\n", table.tostr(GAME.original_themes))
-
-    for i,orig_theme in ipairs(GAME.original_themes) do
-      if not episode_list[i] then
-        episode_list[i] = orig_theme
+  if OB_CONFIG.theme == "original" then
+    each epi in GAME.episodes do
+      if not episode_list[_index] then
+        episode_list[_index] = epi.theme
       end
     end
 
@@ -876,15 +874,19 @@ function Levels_make_all()
 --Levels_rarify(2, GAME.MONSTERS)
 --Levels_rarify(3, GAME.POWERUPS)
 
+  local index = 1
+
   each EPI in GAME.episodes do
     EPISODE = EPI
 
     each L in EPI.levels do
       L.allowances = {}
 
-      if Levels_make_level(L, _index) == "abort" then
+      if Levels_make_level(L, index) == "abort" then
         return "abort"
       end
+
+      index = index + 1
     end
   end
 
