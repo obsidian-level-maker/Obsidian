@@ -880,15 +880,15 @@ function Plan_sub_rooms()
     end
     
     for sx = x,x+w-1 do for sy = y,y+h-1 do
-      local S = SEEDS[sx][sy][1]
+      local S = SEEDS[sx][sy]
       if S.room != R then return nil end
     end end -- sx, sy
 
     local touches_other = nil
 
     for sx = x-1,x+w do for sy = y-1,y+h do
-      if Seed_valid(sx, sy, 1) then
-        local S = SEEDS[sx][sy][1]
+      if Seed_valid(sx, sy) then
+        local S = SEEDS[sx][sy]
         if S.room and S.room.parent == R then
 
           -- don't allow new sub-room to touch more than one
@@ -983,7 +983,7 @@ function Plan_sub_rooms()
     -- update seed map
     for sx = ROOM.sx1,ROOM.sx2 do
       for sy = ROOM.sy1,ROOM.sy2 do
-        SEEDS[sx][sy][1].room = ROOM
+        SEEDS[sx][sy].room = ROOM
       end
     end
   end
@@ -1019,8 +1019,8 @@ function Plan_make_seeds()
     each R in LEVEL.rooms do
       for sx = R.sx1, R.sx2 do
       for sy = R.sy1, R.sy2 do
-        assert(Seed_valid(sx, sy, 1))
-        local S = SEEDS[sx][sy][1]
+        assert(Seed_valid(sx, sy))
+        local S = SEEDS[sx][sy]
         assert(not S.room) -- no overlaps please!
         S.room = R
         S.kind = "walk"
@@ -1031,7 +1031,7 @@ function Plan_make_seeds()
     each R in LEVEL.scenic_rooms do
       for sx = R.sx1,R.sx2 do
       for sy = R.sy1,R.sy2 do
-        local S = SEEDS[sx][sy][1]
+        local S = SEEDS[sx][sy]
 
         if not S.room then -- overlap is OK for scenics
           assert(LEVEL.liquid)
@@ -1054,8 +1054,8 @@ function Plan_make_seeds()
 
       for x = R.sx1-1, R.sx2+1 do
       for y = R.sy1-1, R.sy2+1 do
-        if Seed_valid(x, y, 1) and not R:contains_seed(x, y) then
-          local S = SEEDS[x][y][1]
+        if Seed_valid(x, y) and not R:contains_seed(x, y) then
+          local S = SEEDS[x][y]
           if not S.room then
             S.room = R
             if x < R.sx1 then nx1 = x end

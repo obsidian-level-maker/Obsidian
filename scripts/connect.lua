@@ -796,10 +796,10 @@ T.sx,T.sy, T.room.id, T.room.c_group)
 
       local nx, ny = geom.nudge(x, y, dir)
 
-      if not Seed_valid(nx, ny, 1) then return false end
+      if not Seed_valid(nx, ny) then return false end
 
-      local S = SEEDS[ x][ y][1]
-      local N = SEEDS[nx][ny][1]
+      local S = SEEDS[ x][ y]
+      local N = SEEDS[nx][ny]
 
       if S.room != R then return false end
 
@@ -966,7 +966,7 @@ gui.debugf("Failed\n")
 
     for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
       for side = 2,8,2 do
-        local S = SEEDS[x][y][1]
+        local S = SEEDS[x][y]
         if S.room == R then
           local B = S.border[side]
           if B.kind == "arch" then
@@ -999,10 +999,10 @@ gui.debugf("Failed\n")
   local function try_emergency_connect(R, x, y, dir)
     local nx, ny = geom.nudge(x, y, dir)
 
-    if not Seed_valid(nx, ny, 1) then return false end
+    if not Seed_valid(nx, ny) then return false end
 
-    local S = SEEDS[ x][ y][1]
-    local N = SEEDS[nx][ny][1]
+    local S = SEEDS[ x][ y]
+    local N = SEEDS[nx][ny]
 
     assert(S.room == R)
     assert(N.room != R)
@@ -1052,7 +1052,7 @@ gui.debugf("Failed\n")
     local try_list = {}
 
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       if S.room == R then
         for side = 2,8,2 do
           local N = S:neighbor(side)

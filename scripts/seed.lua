@@ -61,7 +61,6 @@ class BORDER
 
 SEED_W = 0
 SEED_H = 0
-SEED_D = 0
 
 
 SEED_CLASS = {}
@@ -76,7 +75,7 @@ function SEED_CLASS.neighbor(S, dir, dist)
   if nx < 1 or nx > SEED_W or ny < 1 or ny > SEED_H then
     return nil
   end
-  return SEEDS[nx][ny][1]
+  return SEEDS[nx][ny]
 end
 
 function SEED_CLASS.mid_point(S)
@@ -97,49 +96,49 @@ function Seed_init(map_W, map_H, map_D, free_W, free_H)
   -- setup globals 
   SEED_W = W
   SEED_H = H
-  SEED_D = D
 
   SEEDS = table.array_2D(W, H)
 
-  for x = 1,W do for y = 1,H do
-    SEEDS[x][y] = {}
+  for x = 1, SEED_W do
+  for y = 1, SEED_H do
 
-    for z = 1,D do
-      local S =
-      {
-        sx=x, sy=y, sz=z,
+    local S =
+    {
+      sx = x
+      sy = y
 
-        x1 = (x-1) * SEED_SIZE,
-        y1 = (y-1) * SEED_SIZE,
+      x1 = (x-1) * SEED_SIZE
+      y1 = (y-1) * SEED_SIZE
 
-        thick  = {},
-        border = {},
-      }
+      thick  = {}
+      border = {}
+    }
 
-      -- centre the map : needed for Quake, OK for other games
-      -- (this formula ensures that 'coord 0' is still a seed boundary)
-      S.x1 = S.x1 - int(SEED_W / 2) * SEED_SIZE
-      S.y1 = S.y1 - int(SEED_H / 2) * SEED_SIZE
+    -- centre the map : needed for Quake, OK for other games
+    -- (this formula ensures that 'coord 0' is still a seed boundary)
+    S.x1 = S.x1 - int(SEED_W / 2) * SEED_SIZE
+    S.y1 = S.y1 - int(SEED_H / 2) * SEED_SIZE
 
-      S.x2 = S.x1 + SEED_SIZE
-      S.y2 = S.y1 + SEED_SIZE
+    S.x2 = S.x1 + SEED_SIZE
+    S.y2 = S.y1 + SEED_SIZE
 
-      table.set_class(S, SEED_CLASS)
+    table.set_class(S, SEED_CLASS)
 
-      for side = 2,8,2 do
-        S.border[side] = {}
-        S.thick[side] = 16
-      end
-
-      if x > map_W or y > map_H then
-        S.free = true
-      elseif x == 1 or x == map_W or y == 1 or y == map_H then
-        S.edge_of_map = true
-      end
-
-      SEEDS[x][y][z] = S
+    for side = 2,8,2 do
+      S.border[side] = {}
+      S.thick[side] = 16
     end
-  end end -- x,y
+
+    if x > map_W or y > map_H then
+      S.free = true
+    elseif x == 1 or x == map_W or y == 1 or y == map_H then
+      S.edge_of_map = true
+    end
+
+    SEEDS[x][y] = S
+
+  end -- x,y
+  end
 end
 
 
@@ -148,55 +147,51 @@ function Seed_close()
 
   SEED_W = 0
   SEED_H = 0
-  SEED_D = 0
 end
 
 
-function Seed_valid(x, y, z)
+function Seed_valid(x, y)
   return (x >= 1 and x <= SEED_W) and
-         (y >= 1 and y <= SEED_H) and
-         (z >= 1 and z <= SEED_D)
+         (y >= 1 and y <= SEED_H)
 end
 
 
-function Seed_get_safe(x, y, z)
-  return Seed_valid(x, y, z) and SEEDS[x][y][z]
+function Seed_get_safe(x, y)
+  return Seed_valid(x, y) and SEEDS[x][y]
 end
 
 
-function Seed_is_free(x, y, z)
-  assert(Seed_valid(x, y, z))
+function Seed_is_free(x, y)
+  assert(Seed_valid(x, y))
 
-  return not SEEDS[x][y][z].room
+  return not SEEDS[x][y].room
 end
 
 
-function Seed_valid_and_free(x, y, z)
-  if not Seed_valid(x, y, z) then
+function Seed_valid_and_free(x, y)
+  if not Seed_valid(x, y) then
     return false
   end
 
-  if SEEDS[x][y][z].room then
-    return false
-  end
-
-  return true
+  return Seed_is_free(x, y)
 end
 
 
-function Seed_block_valid_and_free(x1,y1,z1, x2,y2,z2)
+function Seed_block_valid_and_free(x1,y1, x2,y2)
 
-  assert(x1 <= x2 and y1 <= y2 and z1 <= z2)
+  assert(x1 <= x2 and y1 <= y2)
 
-  if not Seed_valid(x1, y1, z1) then return false end
-  if not Seed_valid(x2, y2, z2) then return false end
+  if not Seed_valid(x1, y1) then return false end
+  if not Seed_valid(x2, y2) then return false end
 
-  for x = x1,x2 do for y = y1,y2 do for z = z1,z2 do
+  for x = x1,x2 do
+  for y = y1,y2 do
     local S = SEEDS[x][y][z]
     if S.room then
       return false
     end
-  end end end -- x, y, z
+  end -- x, y
+  end
 
   return true
 end
@@ -223,7 +218,7 @@ function Seed_dump_rooms()
   for y = SEED_H,1,-1 do
     local line = "@c"
     for x = 1,SEED_W do
-      line = line .. seed_to_char(SEEDS[x][y][1])
+      line = line .. seed_to_char(SEEDS[x][y])
     end
     gui.printf("%s\n", line)
   end
@@ -235,12 +230,14 @@ end
 function Seed_flood_fill_edges()
   local active = {}
 
-  for x = 1,SEED_W do for y = 1,SEED_H do
-    local S = SEEDS[x][y][1]
+  for x = 1,SEED_W do
+  for y = 1,SEED_H do
+    local S = SEEDS[x][y]
     if S.edge_of_map then
       table.insert(active, S)
     end
-  end end -- for x, y
+  end -- for x, y
+  end
 
   while not table.empty(active) do
     local new_active = {}

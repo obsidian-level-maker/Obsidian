@@ -256,8 +256,8 @@ function Room_setup_theme_Scenic(R)
 
     local sx, sy = geom.nudge(mx, my, dir, dist)
 
-    if Seed_valid(sx, sy, 1) then
-      local S = SEEDS[sx][sy][1]
+    if Seed_valid(sx, sy) then
+      local S = SEEDS[sx][sy]
 
       if S.room and S.room.kind != "scenic" and
          S.room.kind != "hallway"
@@ -540,8 +540,8 @@ function Room_setup_symmetry()
     if R.sw >= 2 then
       for y = R.sy1, R.sy2 do
         for dx = 0, int((R.sw-2) / 2) do
-          local LS = SEEDS[R.sx1 + dx][y][1]
-          local RS = SEEDS[R.sx2 - dx][y][1]
+          local LS = SEEDS[R.sx1 + dx][y]
+          local RS = SEEDS[R.sx2 - dx][y]
 
           if LS.room == R and RS.room == R then
             LS.x_peer = RS
@@ -556,8 +556,8 @@ function Room_setup_symmetry()
     if R.sh >= 2 then
       for x = R.sx1, R.sx2 do
         for dy = 0, int((R.sh-2) / 2) do
-          local BS = SEEDS[x][R.sy1 + dy][1]
-          local TS = SEEDS[x][R.sy2 - dy][1]
+          local BS = SEEDS[x][R.sy1 + dy]
+          local TS = SEEDS[x][R.sy2 - dy]
 
           if BS.room == R and TS.room == R then
             BS.y_peer = TS
@@ -687,7 +687,7 @@ function Room_synchronise_skies()
     local changes = false
 
     for x = 1,SEED_W do for y = 1,SEED_H do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       if S and S.room and S.room.sky_h then
         for side = 2,8,2 do
           local N = S:neighbor(side)
@@ -782,7 +782,7 @@ function Room_border_up()
 
   local function border_up(R)
     for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       if S.room == R then
         for side = 2,8,2 do
           if not S.border[side].kind then  -- don't clobber connections
@@ -806,7 +806,7 @@ function Room_border_up()
     local list = {}
 
     for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       if S.room == R and not
          (S.kind == "void" or S.kind == "diagonal" or
           S.kind == "tall_stair")
@@ -1210,7 +1210,7 @@ function Room_make_ceiling(R)
     local x1,y1, x2,y2 = geom.side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2, offset)
 
     for x = x1,x2 do for y = y1,y2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       if S.room == R then
 
         local f_h
@@ -1254,7 +1254,7 @@ function Room_make_ceiling(R)
     local y_dir = sel(side == 8, -1, 1)
 
     for x = x1,x2 do for y = y1,y2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
 
       -- check if all neighbors are in same room
       local count = 0
@@ -1263,7 +1263,7 @@ function Room_make_ceiling(R)
         local nx = x + dx * x_dir
         local ny = y + dy * y_dir
 
-        if Seed_valid(nx, ny, 1) and SEEDS[nx][ny][1].room == R then
+        if Seed_valid(nx, ny) and SEEDS[nx][ny].room == R then
           count = count + 1
         end
       end end -- for dx,dy
@@ -1283,7 +1283,7 @@ function Room_make_ceiling(R)
           local nx = x + dx * x_dir
           local ny = y + dy * y_dir
 
-          SEEDS[nx][ny][1].solid_corner = true
+          SEEDS[nx][ny].solid_corner = true
         end end -- for dx,dy
       end
     end end -- for x, y
@@ -1433,7 +1433,7 @@ function Room_make_ceiling(R)
 
   local function install_periphs()
     for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       if S.room == R then
       
         local PX, PY
@@ -1470,7 +1470,7 @@ function Room_make_ceiling(R)
 
   local function fill_xyz(ch, is_sky, c_tex, c_light)
     for x = R.cx1, R.cx2 do for y = R.cy1, R.cy2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       if S.room == R then
       
         S.ceil_h  = ch
@@ -1496,7 +1496,7 @@ function Room_make_ceiling(R)
     local mx = R.cx1 + int(R.cw / 2)
     local my = R.cy1 + int(R.ch / 2)
 
-    local S = SEEDS[mx][my][1]
+    local S = SEEDS[mx][my]
 
     -- seed is usable?
     if S.room != R or S.content then return end
@@ -1525,7 +1525,7 @@ function Room_make_ceiling(R)
     local nice = 2
 
     for x = R.cx1, R.cx2 do for y = R.cy1, R.cy2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       
       if S.room != R then return 0 end
       
@@ -1543,7 +1543,7 @@ function Room_make_ceiling(R)
     -- FIXME: count usable spots, return false for zero
 
     for x = x1,x2 do for y = y1,y2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       assert(S.room == R)
 
       if S.kind == "lift" or S.kind == "tall_stair" or S.raising_start then
@@ -1567,7 +1567,7 @@ function Room_make_ceiling(R)
     end
 
     for x = x1,x2 do for y = y1,y2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       local ceil_h = S.ceil_h or R.ceil_h
 
       if ceil_h and S.kind != "void" then
@@ -1660,7 +1660,7 @@ function Room_make_ceiling(R)
       for where = 1,4 do
         local cx = sel((where <= 2), R.tx1, R.tx2)
         local cy = sel((where % 2) == 1, R.ty1, R.ty2)
-        local S = SEEDS[cx][cy][1]
+        local S = SEEDS[cx][cy]
         if S.room == R and not S.conn and
            (S.kind == "walk" or S.kind == "liquid")
         then
@@ -1873,7 +1873,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
     if R.tx1 and (R.tw == 3 or R.tw == 5) and (R.th == 3 or R.th == 5) then
       for x = R.tx1+1, R.tx2-1, 2 do
         for y = R.ty1+1, R.ty2-1, 2 do
-          local S = SEEDS[x][y][1]
+          local S = SEEDS[x][y]
           if not (S.kind == "void" or S.kind == "diagonal") then
             Build.sky_hole(x,y, x,y, "square", 160,160,
                            metal,      R.ceil_h+16,
@@ -1904,7 +1904,7 @@ function Room_add_crates(R)
 
   local function test_spot(S, x, y)
     for dx = 0,1 do for dy = 0,1 do
-      local N = SEEDS[x+dx][y+dy][1]
+      local N = SEEDS[x+dx][y+dy]
       if not N or N.room != S.room then return false end
 
       if N.kind != "walk" or not N.floor_h then return false end
@@ -1919,7 +1919,7 @@ function Room_add_crates(R)
     local list = {}
 
     for x = R.tx1, R.tx2-1 do for y = R.ty1, R.ty2-1 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       if S.room == R and S.kind == "walk" and S.floor_h then
         if test_spot(S, x, y) then
           table.insert(list, { S=S, x=x, y=y })
@@ -2676,7 +2676,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
   end
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    local S = SEEDS[x][y][1]
+    local S = SEEDS[x][y]
     if S.room == R then
       build_seed(S)
     end
@@ -2848,7 +2848,7 @@ function Room_find_pickup_spots(R)
   local emerg_small
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    local S = SEEDS[x][y][1]
+    local S = SEEDS[x][y]
     local score
 
     if S.room == R and S.kind == "walk" and
@@ -2902,7 +2902,7 @@ function Room_find_monster_spots(R)
       x2=mx+64, y2=my+64, z2=(S.floor_h or 0) + h_diff,
     })
 
-    SEEDS[S.sx][S.sy][1].no_monster = true
+    SEEDS[S.sx][S.sy].no_monster = true
   end
 
   local function add_large_mon_spot(S, h_diff)
@@ -2919,10 +2919,10 @@ function Room_find_monster_spots(R)
     })
 
     -- prevent other seeds in 2x2 group from being used
-    SEEDS[S.sx  ][S.sy  ][1].no_monster = true
-    SEEDS[S.sx+1][S.sy  ][1].no_monster = true
-    SEEDS[S.sx  ][S.sy+1][1].no_monster = true
-    SEEDS[S.sx+1][S.sy+1][1].no_monster = true
+    SEEDS[S.sx  ][S.sy  ].no_monster = true
+    SEEDS[S.sx+1][S.sy  ].no_monster = true
+    SEEDS[S.sx  ][S.sy+1].no_monster = true
+    SEEDS[S.sx+1][S.sy+1].no_monster = true
   end
 
   local function can_accommodate_small(S)
@@ -2957,7 +2957,7 @@ function Room_find_monster_spots(R)
 
     for dx = 0,1 do for dy = 0,1 do
       if dx > 0 or dy > 0 then
-        local S2 = SEEDS[sx+dx][sy+dy][1]
+        local S2 = SEEDS[sx+dx][sy+dy]
 
         if S2.room != S.room then return false end
 
@@ -3006,7 +3006,7 @@ function Room_find_monster_spots(R)
   for pass = 1,2 do
     for x = R.sx1,R.sx2 do
     for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
     
       if S.room != R then continue end
 

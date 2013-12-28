@@ -1706,10 +1706,10 @@ function Build.outdoor_ramp_down(ST, f_tex, w_tex)
   local ih  = ST.inner_h
 
   -- outer rectangle
-  local ox1 = SEEDS[ST.x1][ST.y1][1].x1
-  local oy1 = SEEDS[ST.x1][ST.y1][1].y1
-  local ox2 = SEEDS[ST.x2][ST.y2][1].x2
-  local oy2 = SEEDS[ST.x2][ST.y2][1].y2
+  local ox1 = SEEDS[ST.x1][ST.y1].x1
+  local oy1 = SEEDS[ST.x1][ST.y1].y1
+  local ox2 = SEEDS[ST.x2][ST.y2].x2
+  local oy2 = SEEDS[ST.x2][ST.y2].y2
 
   -- inner rectangle
   local ix1 = ST.S.x1
@@ -1766,10 +1766,10 @@ function Build.outdoor_ramp_up(ST, f_tex, w_tex)
   local ih  = ST.inner_h
 
   -- outer rectangle
-  local ox1 = SEEDS[ST.x1][ST.y1][1].x1
-  local oy1 = SEEDS[ST.x1][ST.y1][1].y1
-  local ox2 = SEEDS[ST.x2][ST.y2][1].x2
-  local oy2 = SEEDS[ST.x2][ST.y2][1].y2
+  local ox1 = SEEDS[ST.x1][ST.y1].x1
+  local oy1 = SEEDS[ST.x1][ST.y1].y1
+  local ox2 = SEEDS[ST.x2][ST.y2].x2
+  local oy2 = SEEDS[ST.x2][ST.y2].y2
 
   -- inner rectangle
   local ix1 = ST.S.x1
@@ -2618,8 +2618,8 @@ function Build.stairwell(R, skin)
     local BS = B:seed(R)
 
     -- room size
-    local BL = SEEDS[R.sx1][R.sy1][1]
-    local TR = SEEDS[R.sx2][R.sy2][1]
+    local BL = SEEDS[R.sx1][R.sy1]
+    local TR = SEEDS[R.sx2][R.sy2]
 
     local rx1, ry1 = BL.x1, BL.y1
     local rx2, ry2 = TR.x2, TR.y2
@@ -2705,8 +2705,8 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     end
 
     -- room size
-    local BL = SEEDS[R.sx1][R.sy1][1]
-    local TR = SEEDS[R.sx2][R.sy2][1]
+    local BL = SEEDS[R.sx1][R.sy1]
+    local TR = SEEDS[R.sx2][R.sy2]
 
     local rx1, ry1 = BL.x1, BL.y1
     local rx2, ry2 = TR.x2, TR.y2
@@ -2812,8 +2812,8 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     end
 
     -- room size
-    local BL = SEEDS[R.sx1][R.sy1][1]
-    local TR = SEEDS[R.sx2][R.sy2][1]
+    local BL = SEEDS[R.sx1][R.sy1]
+    local TR = SEEDS[R.sx2][R.sy2]
 
     local rx1, ry1 = BL.x1, BL.y1
     local rx2, ry2 = TR.x2, TR.y2
@@ -3032,10 +3032,10 @@ function Build.sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
                         inner_info, inner_z,
                         trim, spokes)
 
-  local ox1 = SEEDS[sx1][sy1][1].x1
-  local oy1 = SEEDS[sx1][sy1][1].y1
-  local ox2 = SEEDS[sx2][sy2][1].x2
-  local oy2 = SEEDS[sx2][sy2][1].y2
+  local ox1 = SEEDS[sx1][sy1].x1
+  local oy1 = SEEDS[sx1][sy1].y1
+  local ox2 = SEEDS[sx2][sy2].x2
+  local oy2 = SEEDS[sx2][sy2].y2
 
   local mx = (ox1 + ox2) / 2
   local my = (oy1 + oy2) / 2
@@ -3050,10 +3050,10 @@ function Build.sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
   local diag_h = int(mh / 4)
 
   -- ensure ceiling brushes don't interfere with facades
-  if sx1 == SEEDS[sx1][sy1][1].room.sx1 then ox1 = ox1 + 4 end
-  if sy1 == SEEDS[sx1][sy1][1].room.sy1 then oy1 = oy1 + 4 end
-  if sx2 == SEEDS[sx2][sy2][1].room.sx2 then ox2 = ox2 - 4 end
-  if sy2 == SEEDS[sx2][sy2][1].room.sy2 then oy2 = oy2 - 4 end
+  if sx1 == SEEDS[sx1][sy1].room.sx1 then ox1 = ox1 + 4 end
+  if sy1 == SEEDS[sx1][sy1].room.sy1 then oy1 = oy1 + 4 end
+  if sx2 == SEEDS[sx2][sy2].room.sx2 then ox2 = ox2 - 4 end
+  if sy2 == SEEDS[sx2][sy2].room.sy2 then oy2 = oy2 - 4 end
 
 
   if inner_info then
@@ -3166,7 +3166,7 @@ function Build.sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
 
   -- mark seeds so we don't build normal ceiling there
   for x = sx1,sx2 do for y = sy1,sy2 do
-    SEEDS[x][y][1].no_ceil = true
+    SEEDS[x][y].no_ceil = true
   end end -- for x,y
 end
 
