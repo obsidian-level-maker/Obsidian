@@ -18,6 +18,22 @@
 --
 ----------------------------------------------------------------
 
+--[[ *** CLASS INFORMATION ***
+
+class SECTION
+{
+  -- a section is a rectangular group of seeds.
+  -- sections are used for planning where to place rooms.
+
+  kx, ky  -- location in section map 
+
+  sx1, sy1, sx2, sy2, sw, sh  -- location in seed map
+
+  room   : ROOM
+}
+
+--------------------------------------------------------------]]
+
 
 function Plan_alloc_id(kind)
   local result = (LEVEL.ids[kind] or 0) + 1
@@ -31,6 +47,7 @@ function Plan_dump_rooms()
     if not R then return '.' end
     if R.kind == "scenic" then return '=' end
     if R.kind == "cave" then return '/' end
+    if not R.id then return '?' end
     local n = 1 + (R.id % 26)
     return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
   end
@@ -45,11 +62,64 @@ function Plan_dump_rooms()
   for y = LEVEL.H,1,-1 do
     local line = "  "
     for x = 1,LEVEL.W do
-      line = line .. room_char(sections[x][y])
+      line = line .. room_char(sections[x][y].room)
     end
     gui.printf("%s\n", line)
   end
   gui.printf("\n")
+end
+
+
+function Plan_determine_size()
+  local W, H  -- width and height
+
+  local ob_size = OB_CONFIG.size
+
+  -- there is no real "progression" when making a single level.
+  -- hence use mixed mode instead.
+  if ob_size == "prog" and OB_CONFIG.length == "single" then
+    ob_size = "mixed"
+  end
+
+  if ob_size == "mixed" then
+    W = 2 + rand.index_by_probs { 1,4,7,4,2,1 }
+    H = 2 + rand.index_by_probs { 4,7,4,2,1 }
+
+    if W < H then W, H = H, W end
+
+  elseif ob_size == "prog" then
+    local n = 1 + LEVEL.ep_along * 8.9
+
+    n = int(n)
+    if n < 1 then n = 1 end
+    if n > 9 then n = 9 end
+
+    local WIDTHS  = { 3,3,4, 5,5,6, 6,7,7 }
+    local HEIGHTS = { 2,3,3, 3,4,4, 5,5,6 }
+
+    W = WIDTHS[n]
+    H = HEIGHTS[n]
+
+  else
+    local WIDTHS  = { tiny=3, small=4, regular=6, large=7, extreme=9 }
+    local HEIGHTS = { tiny=2, small=3, regular=4, large=6, extreme=8 }
+
+    W =  WIDTHS[ob_size]
+    H = HEIGHTS[ob_size]
+
+    if not W then
+      error("Unknown size keyword: " .. tostring(ob_size))
+    end
+
+    if rand.odds(30) and not LEVEL.secret_exit then
+      W = W - 1
+    end
+  end
+
+  LEVEL.W = W
+  LEVEL.H = H
+
+  gui.printf("Map Size: %dx%d sections\n", LEVEL.W, LEVEL.H)
 end
 
 
@@ -92,59 +162,6 @@ function Plan_create_sections()
 
   ---| Plan_create_sections |---
 
-  local W, H  -- number of rooms
-
-  local ob_size = OB_CONFIG.size
-
----##  if ob_size == "normal" then ob_size = "regular" end
-
-  -- there is no real "progression" when making a single level
-  -- hence use mixed mode instead.
-  if ob_size == "prog" and OB_CONFIG.length == "single" then
-    ob_size = "mixed"
-  end
-
-  if ob_size == "mixed" then
-    W = 2 + rand.index_by_probs { 1,4,7,4,2,1 }
-    H = 2 + rand.index_by_probs { 4,7,4,2,1 }
-
-    if W < H then W, H = H, W end
-
-  elseif ob_size == "prog" then
-    local n = 1 + LEVEL.ep_along * 8.9
-
-    n = int(n)
-    if n < 1 then n = 1 end
-    if n > 9 then n = 9 end
-
-    local WIDTHS  = { 3,3,4, 5,5,6, 6,7,7 }
-    local HEIGHTS = { 2,3,3, 3,4,4, 5,5,6 }
-
-    W = WIDTHS[n]
-    H = HEIGHTS[n]
-
-  else
-    local WIDTHS  = { tiny=3, small=4, regular=6, large=7, extreme=9 }
-    local HEIGHTS = { tiny=2, small=3, regular=4, large=6, extreme=8 }
-
-    W = WIDTHS[ob_size]
-    H = HEIGHTS[ob_size]
-
-    if not W then
-      error("Unknown size keyword: " .. tostring(ob_size))
-    end
-
-    if rand.odds(30) and not LEVEL.secret_exit then
-      W = W - 1
-    end
-  end
-
-  LEVEL.W = W
-  LEVEL.H = H
-
-  gui.printf("Land size: %dx%d\n", LEVEL.W, LEVEL.H)
-
-
   -- initial sizes of rooms in each row and column
   local cols = {}
   local rows = {}
@@ -154,9 +171,9 @@ function Plan_create_sections()
   -- take border seeds (2+2) and free space (3) into account
   limit = limit - 7
 
-  cols = get_column_sizes(W, limit)
-  rows = get_column_sizes(H, limit)
-  
+  cols = get_column_sizes(LEVEL.W, limit)
+  rows = get_column_sizes(LEVEL.H, limit)
+
   LEVEL.col_W = cols
   LEVEL.row_H = rows
 
@@ -164,16 +181,33 @@ function Plan_create_sections()
   show_sizes("row_H", rows, LEVEL.H)
 
 
-  LEVEL.sections = table.array_2D(LEVEL.W, LEVEL.H)
-
   local col_x = { 3 }  -- two border seeds at [1] and [2]
   local col_y = { 3 }  --
 
-  for x = 2,LEVEL.W do col_x[x] = col_x[x-1] + LEVEL.col_W[x-1] end
-  for y = 2,LEVEL.H do col_y[y] = col_y[y-1] + LEVEL.row_H[y-1] end
+  for x = 2, LEVEL.W do col_x[x] = col_x[x-1] + LEVEL.col_W[x-1] end
+  for y = 2, LEVEL.H do col_y[y] = col_y[y-1] + LEVEL.row_H[y-1] end
 
   LEVEL.col_x = col_x
   LEVEL.col_y = col_y
+
+
+  -- create sections
+
+  LEVEL.sections = table.array_2D(LEVEL.W, LEVEL.H)
+
+  for x = 1, LEVEL.W do
+  for y = 1, LEVEL.H do
+    local SECTION =
+    {
+      kx = x
+      ky = y
+
+      -- FIXME: seed positions
+    }
+
+    LEVEL.sections[x][y] = SECTION
+  end
+  end
 end
 
 
@@ -196,7 +230,7 @@ function Plan_find_neighbors()
 
   for x = 1, LEVEL.W do
   for y = 1, LEVEL.H do
-    local R = sections[x][y]
+    local R = sections[x][y].room
 
     if not R then continue end
 
@@ -208,7 +242,7 @@ function Plan_find_neighbors()
     for side = 1,9 do if side != 5 then
       local nx, ny = geom.nudge(x, y, side)
       if valid_R(nx, ny) then
-        local N = sections[nx][ny]
+        local N = sections[nx][ny].room
         if N and N != R then
           add_neighbor(R, side, N)
         end
@@ -288,7 +322,7 @@ function Plan_add_normal_rooms()
 
     -- any other rooms in the way?
     for x = bx,bx+big_w-1 do for y=by,by+big_h-1 do
-      if sections[x][y] then
+      if sections[x][y].room then
         return 1, 1
       end
     end end
@@ -312,7 +346,7 @@ function Plan_add_normal_rooms()
   each vis in visits do
     local bx, by = vis.x, vis.y
     
-    if not sections[bx][by] then
+    if not sections[bx][by].room then
       local ROOM = { id=id, kind="building", conns={}, }
       id = id + 1
 
@@ -334,7 +368,7 @@ function Plan_add_normal_rooms()
       ROOM.sy2 = ROOM.sy1 + ROOM.sh - 1
 
       for x = bx,bx+big_w-1 do for y = by,by+big_h-1 do
-        sections[x][y] = ROOM
+        sections[x][y].room = ROOM
       end end
 
       gui.debugf("%s\n", ROOM:tostr())
@@ -1155,6 +1189,7 @@ function Plan_create_rooms()
     LEVEL.liquid = assert(GAME.LIQUIDS[name])
   end
 
+  Plan_determine_size()
   Plan_create_sections()
 
 --!! Plan_add_caves()
