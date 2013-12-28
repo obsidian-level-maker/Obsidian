@@ -104,6 +104,7 @@ require "connect"
 require "quest"
 
 require "build"
+require "prefab"
 require "cave"
 require "simple"
 require "layout"
