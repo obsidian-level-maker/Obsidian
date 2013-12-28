@@ -715,7 +715,7 @@ function Levels_build_it()
   Connect_rooms()
   if gui.abort() then return "abort" end
 
-  Quest_assign_quests()
+  Quest_make_quests()
   if gui.abort() then return "abort" end
 
   Room_build_all()

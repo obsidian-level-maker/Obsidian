@@ -1552,9 +1552,9 @@ function Quest_setup_lev_alongs()
 end
 
 
-function Quest_assign_quests()
+function Quest_make_quests()
 
-  gui.printf("\n--==| Assign Quests |==--\n\n")
+  gui.printf("\n--==| Make Quests |==--\n\n")
 
   Monsters_max_level()
 
