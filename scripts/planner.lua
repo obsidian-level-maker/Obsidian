@@ -55,8 +55,114 @@ end
 
 function Plan_create_sections()
   
+  local function show_sizes(name, t, N)
+    name = name .. ": "
+    for i = 1,N do
+      name = name .. tostring(t[i]) .. " "
+    end
+    gui.debugf("%s\n", name)
+  end
+
+  local function get_column_sizes(W, limit)
+    local cols = {}
+
+    assert(4 + W*2 <= limit)
+
+    for loop = 1,100 do
+      local total = 4  -- border seeds around level
+
+      for x = 1,W do
+        cols[x] = 2 + rand.index_by_probs(ROOM_SIZE_TABLE)
+        total = total + cols[x]
+      end
+
+      if total <= limit then
+        return cols  -- OK!
+      end
+    end
+
+    -- emergency fallback
+    gui.printf("Using emergency column sizes.\n")
+
+    for x = 1,W do cols[x] = 2 end
+
+    return cols
+  end
+
 
   ---| Plan_create_sections |---
+
+  local W, H  -- number of rooms
+
+  local ob_size = OB_CONFIG.size
+
+---##  if ob_size == "normal" then ob_size = "regular" end
+
+  -- there is no real "progression" when making a single level
+  -- hence use mixed mode instead.
+  if ob_size == "prog" and OB_CONFIG.length == "single" then
+    ob_size = "mixed"
+  end
+
+  if ob_size == "mixed" then
+    W = 2 + rand.index_by_probs { 1,4,7,4,2,1 }
+    H = 2 + rand.index_by_probs { 4,7,4,2,1 }
+
+    if W < H then W, H = H, W end
+
+  elseif ob_size == "prog" then
+    local n = 1 + LEVEL.ep_along * 8.9
+
+    n = int(n)
+    if n < 1 then n = 1 end
+    if n > 9 then n = 9 end
+
+    local WIDTHS  = { 3,3,4, 5,5,6, 6,7,7 }
+    local HEIGHTS = { 2,3,3, 3,4,4, 5,5,6 }
+
+    W = WIDTHS[n]
+    H = HEIGHTS[n]
+
+  else
+    local WIDTHS  = { tiny=3, small=4, regular=6, large=7, extreme=9 }
+    local HEIGHTS = { tiny=2, small=3, regular=4, large=6, extreme=8 }
+
+    W = WIDTHS[ob_size]
+    H = HEIGHTS[ob_size]
+
+    if not W then
+      error("Unknown size keyword: " .. tostring(ob_size))
+    end
+
+    if rand.odds(30) and not LEVEL.secret_exit then
+      W = W - 1
+    end
+  end
+
+  LEVEL.W = W
+  LEVEL.H = H
+
+  gui.printf("Land size: %dx%d\n", LEVEL.W, LEVEL.H)
+
+
+  -- initial sizes of rooms in each row and column
+  local cols = {}
+  local rows = {}
+
+  local limit = (PARAM.seed_limit or 56)
+
+  -- take border seeds (2+2) and free space (3) into account
+  limit = limit - 7
+
+  cols = get_column_sizes(W, limit)
+  rows = get_column_sizes(H, limit)
+  
+  LEVEL.col_W = cols
+  LEVEL.row_H = rows
+
+  show_sizes("col_W", cols, LEVEL.W)
+  show_sizes("row_H", rows, LEVEL.H)
+
 
   LEVEL.sections = table.array_2D(LEVEL.W, LEVEL.H)
 
@@ -88,8 +194,8 @@ function Plan_find_neighbors()
     end
   end
 
-  for x = 1, sections.w do
-  for y = 1, sections.h do
+  for x = 1, LEVEL.W do
+  for y = 1, LEVEL.H do
     local R = sections[x][y]
 
     if not R then continue end
@@ -674,8 +780,6 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
 end
 
 
-
-
 function Plan_sub_rooms()
   local id = LEVEL.last_id + 1
 
@@ -916,118 +1020,6 @@ gui.debugf("seed range @ %s\n", R:tostr())
 end
 
 
-function Plan_decide_map_size()
-
-  local function show_sizes(name, t, N)
-    name = name .. ": "
-    for i = 1,N do
-      name = name .. tostring(t[i]) .. " "
-    end
-    gui.debugf("%s\n", name)
-  end
-
-  local function get_column_sizes(W, limit)
-    local cols = {}
-
-    assert(4 + W*2 <= limit)
-
-    for loop = 1,100 do
-      local total = 4  -- border seeds around level
-
-      for x = 1,W do
-        cols[x] = 2 + rand.index_by_probs(ROOM_SIZE_TABLE)
-        total = total + cols[x]
-      end
-
-      if total <= limit then
-        return cols  -- OK!
-      end
-    end
-
-    -- emergency fallback
-    gui.printf("Using emergency column sizes.\n")
-
-    for x = 1,W do cols[x] = 2 end
-
-    return cols
-  end
-
-
-  ---| Plan_decide_map_size |---
-
-  local W, H  -- number of rooms
-
-  local ob_size = OB_CONFIG.size
-
----##  if ob_size == "normal" then ob_size = "regular" end
-
-  -- there is no real "progression" when making a single level
-  -- hence use mixed mode instead.
-  if ob_size == "prog" and OB_CONFIG.length == "single" then
-    ob_size = "mixed"
-  end
-
-  if ob_size == "mixed" then
-    W = 2 + rand.index_by_probs { 1,4,7,4,2,1 }
-    H = 2 + rand.index_by_probs { 4,7,4,2,1 }
-
-    if W < H then W, H = H, W end
-
-  elseif ob_size == "prog" then
-    local n = 1 + LEVEL.ep_along * 8.9
-
-    n = int(n)
-    if n < 1 then n = 1 end
-    if n > 9 then n = 9 end
-
-    local WIDTHS  = { 3,3,4, 5,5,6, 6,7,7 }
-    local HEIGHTS = { 2,3,3, 3,4,4, 5,5,6 }
-
-    W = WIDTHS[n]
-    H = HEIGHTS[n]
-
-  else
-    local WIDTHS  = { tiny=3, small=4, regular=6, large=7, extreme=9 }
-    local HEIGHTS = { tiny=2, small=3, regular=4, large=6, extreme=8 }
-
-    W = WIDTHS[ob_size]
-    H = HEIGHTS[ob_size]
-
-    if not W then
-      error("Unknown size keyword: " .. tostring(ob_size))
-    end
-
-    if rand.odds(30) and not LEVEL.secret_exit then
-      W = W - 1
-    end
-  end
-
-  LEVEL.W = W
-  LEVEL.H = H
-
-  gui.printf("Land size: %dx%d\n", LEVEL.W, LEVEL.H)
-
-
-  -- initial sizes of rooms in each row and column
-  local cols = {}
-  local rows = {}
-
-  local limit = (PARAM.seed_limit or 56)
-
-  -- take border seeds (2+2) and free space (3) into account
-  limit = limit - 7
-
-  cols = get_column_sizes(W, limit)
-  rows = get_column_sizes(H, limit)
-  
-  LEVEL.col_W = cols
-  LEVEL.row_H = rows
-
-  show_sizes("col_W", cols, LEVEL.W)
-  show_sizes("row_H", rows, LEVEL.H)
-end
-
-
 function Plan_decide_outdoors()
 
   local function turn_into_outdoor(R)
@@ -1162,8 +1154,6 @@ function Plan_create_rooms()
     gui.printf("Liquid = %s\n", name)
     LEVEL.liquid = assert(GAME.LIQUIDS[name])
   end
-
-  Plan_decide_map_size()
 
   Plan_create_sections()
 
