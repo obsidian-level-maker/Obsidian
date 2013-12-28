@@ -412,6 +412,8 @@ function Plan_add_normal_rooms()
     R.sx2 = R.sx1 + R.sw - 1
     R.sy2 = R.sy1 + R.sh - 1
 
+    R.svolume = R.sw * R.sh
+
     for x = bx,bx+big_w-1 do
     for y = by,by+big_h-1 do
       sections[x][y].room = R
@@ -1260,13 +1262,12 @@ function Plan_create_rooms()
   Plan_find_neighbors()
   Plan_dump_rooms()
 
+  Plan_decide_outdoors()
+
   Plan_nudge_rooms()
 
   -- must create the seeds _AFTER_ nudging
   Plan_make_seeds()
-
--- !! FIXME: do before nudge rooms, BUT need 'svolume'
-  Plan_decide_outdoors()
 
   gui.printf("Seed Map:\n")
   Seed_dump_rooms()
