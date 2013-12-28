@@ -138,74 +138,6 @@ function Plan_initial_rooms()
   end
 
 
-  local function replace_room(R, N)
-    for x = 1,LEVEL.W do for y = 1,LEVEL.H do
-      if room_map[x][y] == R then
-         room_map[x][y] = N
-      end
-    end end -- for x, y
-  end
-
-  local function plonk_new_natural(last_x, last_y)
-    if last_x then
-      local LAST = room_map[last_x][last_y]
-      local SIDES = { 2,4,6,8 }
-      rand.shuffle(SIDES)
-      each side in SIDES do
-        local nx, ny = geom.nudge(last_x, last_y, side)
-        if valid_R(nx, ny) then
-          local R = room_map[nx][ny]
-          if R and not R.natural then
-            R.natural = true
-            R.nature_parent = LAST.nature_parent or LAST
-            return nx, ny
-          end
-        end
-      end -- for side
-    end
-
-    -- no previous room, search randomly
-    -- (doesn't matter if we don't find any room to convert)
-
-    for loop = 1, 2*(LEVEL.W + LEVEL.H) do
-      local x = rand.irange(1, LEVEL.W)
-      local y = rand.irange(1, LEVEL.H)
-      local R = room_map[x][y]
-
-      if R and not R.natural then
-        R.natural = true
-        return x, y
-      end
-    end
-  end
-
-  local function make_naturals(room_num)
-    if not THEME.cave_walls then return end
-
-    if room_num <= 3 then return end
-
-    local perc = style_sel("caves", 0, 18, 46, 92)
-
-gui.printf("Naturals: %d%%\n", perc)
-    local count = int(room_num * perc / 100)
-    if count > room_num-2 then
-       count = room_num-2
-    end
-
-    local last_x, last_y
-
-    for i = 1,count do
-      local x, y = plonk_new_natural(last_x, last_y)
-
-      if rand.odds(85) then
-        last_x, last_y = x, y
-      else
-        last_x, last_y = nil, nil
-      end
-    end
-  end
-
-
   ---| Plan_initial_rooms |---
 
   room_map = table.array_2D(LEVEL.W, LEVEL.H)
@@ -261,8 +193,6 @@ gui.printf("Naturals: %d%%\n", perc)
 
   LEVEL.last_id = id
 
-  make_naturals(id)
-
   dump_rooms()
 
 
@@ -293,45 +223,230 @@ end
 
 
 
-function Plan_merge_naturals()
- 
-  local function merge_one_natural(src, dest)
-    gui.printf("Merging Natural: %s --> %s\n", src:tostr(), dest:tostr())
+function Plan_add_caves()
 
-    dest.sx1 = math.min(src.sx1, dest.sx1)
-    dest.sy1 = math.min(src.sy1, dest.sy1)
-
-    dest.sx2 = math.max(src.sx2, dest.sx2)
-    dest.sy2 = math.max(src.sy2, dest.sy2)
-
-    dest.sw = dest.sx2 - dest.sx1 + 1
-    dest.sh = dest.sy2 - dest.sy1 + 1
-    dest.svolume = dest.sw * dest.sh  -- not accurate
-
-    -- NB: connections are not established yet
-
-    for x = src.sx1,src.sx2 do for y = src.sy1,src.sy2 do
-      local S = SEEDS[x][y][1]
-      if S.room == src then
-         S.room = dest
+  local function handle_surrounder()
+    each R in LEVEL.rooms do
+      if R.is_surrounder then
+        if rand.odds(style_sel("caves", 0, 15, 35, 90)) then
+          R.kind = "cave"
+        end
       end
-    end end -- for x, y
-  end
-
-  ---| Plan_merge_naturals |---
-
-  local room_list = LEVEL.rooms
-  LEVEL.rooms = {}
-
-  each R in room_list do
-    if R.nature_parent then
-      -- this room is NOT added back into rooms list
-      merge_one_natural(R, R.nature_parent)
-    else
-      table.insert(LEVEL.rooms, R)
     end
   end
+
+
+  local function spot_is_free(mx1, my1, mx2, my2)
+    for x = mx1, mx2 do
+    for y = my1, my2 do
+      local K = Section_get_room(x, y)
+
+      if not K:usable_for_room() then return false end
+    end
+    end
+
+    return true
+  end
+
+
+  local function find_free_spot(side)
+    local dx, dy = geom.delta(side)
+
+    local mx1, mx2 = 1, MAP_W
+    local my1, my2 = 1, MAP_H
+
+        if dx < 0 then mx2 = 1
+    elseif dx > 0 then mx1 = MAP_W
+    end
+
+        if dy < 0 then my2 = 1
+    elseif dy > 0 then my1 = MAP_H
+    end
+
+    if side == 5 then
+      mx1 = 2
+      my1 = 2
+      mx2 = MAP_W - 2
+      my2 = MAP_H - 2
+    end
+
+    local mw = sel(side == 5, 2, 1)
+    local mh = mw
+
+    local spots = {}
+
+    for mx = mx1, mx2 do
+    for my = my1, my2 do
+      if spot_is_free(mx, my, mx + mw - 1, my + mh - 1) then
+        local SPOT =
+        {
+          mx1 = mx, mx2 = mx + mw - 1
+          my1 = my, my2 = my + mh - 1
+          mw  = mw, mh  = mh
+        }
+        table.insert(spots, SPOT)
+      end
+    end
+    end
+
+    if table.empty(spots) then
+      return nil
+    end
+
+    return rand.pick(spots)
+  end
+
+
+  local function new_room(spot)
+    local R = ROOM_CLASS.new("odd")
+
+    R.kind = "cave"
+
+    for mx = spot.mx1, spot.mx2 do
+    for my = spot.my1, spot.my2 do
+      local K = Section_get_room(mx, my)
+
+      K:set_room(R)
+    end
+    end
+
+    -- this cost ensures large areas _tend_ to be at end of list,
+    -- but are not forced to be (can be visited earlier).
+    R.cave_cost = math.max(spot.mw, spot.mh) + gui.random() * 1.7
+
+    return R
+  end
+
+
+  local function grow_room(R)
+    -- too big already?
+    if #R.sections >= MAP_W * (MAP_H - 1) then
+      return false
+    end
+
+    local locs = {}
+
+    for mx = 1, MAP_W do
+    for my = 1, MAP_H do
+      local K = Section_get_room(mx, my)
+
+      if K.room != R then continue end
+
+      for dir = 2,8,2 do
+        local nx, ny = geom.nudge(mx, my, dir)
+        N = Section_get_room(nx, ny)
+
+        if N and N:usable_for_room() then
+          table.insert(locs, { K=K, N=N })
+        end
+      end
+
+    end -- mx, my
+    end
+
+
+    if table.empty(locs) then return false end
+
+    local loc = rand.pick(locs)
+    local N   = loc.N
+
+    N:set_room(R)
+
+    R.cave_cost = R.cave_cost + rand.range(0.5, 1.0)
+
+    return true
+  end
+
+  
+  ---| Plan_add_caves |---
+
+  -- compute the quota
+  local perc = style_sel("caves", 0, 15, 35, 65, 100)
+
+  if perc == 0 or not THEME.caves then
+    gui.printf("Caves: NONE\n")
+    return
+  end
+
+
+  local num_free = Plan_count_free_room_sections()
+
+  local quota = num_free * perc / 100
+
+  gui.printf("Cave Quota: %d sections\n", quota)
+
+
+  handle_surrounder()
+
+
+  --- add starting spots ---
+
+  -- best starting spots are in a corner.
+  -- for middle of map, require a 2x2 sections
+  local locations = { [1]=50, [3]=50, [7]=50, [9]=50,
+                      [2]=20, [4]=20, [6]=20, [8]=20,
+                      [5]=90
+                    }
+
+  local areas = { }
+
+  -- this rough_size logic ensures that on bigger maps we tend to
+  -- create larger caves (rather than lots of smaller caves).
+  local rough_size = rand.irange(2, 5)
+  if (MAP_W + MAP_H) > 6  then rough_size = rough_size + 1 end
+  if (MAP_W + MAP_H) > 10 then rough_size = rough_size + 1 end
+
+  local min_rooms = 1
+  local max_rooms = 7
+
+  if STYLE.caves != "few" and
+     ((MAP_W + MAP_H) > 5 or rand.odds(perc))
+  then
+     min_rooms = 2
+  end
+
+  while #areas < max_rooms and
+       (#areas < min_rooms or quota / #areas > rough_size + 0.4)
+  do
+    -- pick a location
+    local side = rand.key_by_probs(locations)
+
+    -- don't use this location again (except for middle)
+    if side != 5 then
+      locations[side] = nil
+    end
+
+    local spot = find_free_spot(side)
+
+    if spot then
+      table.insert(areas, new_room(spot))
+      quota = quota - spot.mw * spot.mh
+    end
+  end
+
+
+  --- grow these rooms ---
+
+  for loop = 1,50 do
+    if quota < 1 then break; end
+
+    -- want to visit smallest ones first
+    table.sort(areas, function(A, B) return A.cave_cost < B.cave_cost end)
+
+    each R in areas do
+      if quota < 1 then break; end
+
+      if grow_room(R) then
+        quota = quota - 1
+      end
+    end
+  end
+
+  Plan_dump_sections("Sections with caves:")
 end
+
+
+
 
 
 ------------------------------------------------------------------------
@@ -788,7 +903,7 @@ gui.debugf("seed range @ %s\n", R:tostr())
 end
 
 
-function Plan_determine_size()
+function Plan_decide_map_size()
 
   local function show_sizes(name, t, N)
     name = name .. ": "
@@ -825,7 +940,7 @@ function Plan_determine_size()
   end
 
 
-  ---| Plan_determine_size |---
+  ---| Plan_decide_map_size |---
 
   local W, H  -- number of rooms
 
@@ -933,6 +1048,7 @@ function Plan_decide_outdoors()
     -- preference for the sides of map, even higher for the corners
 --!!!! FIXME    if R.kx1 <= 3 or R.kx2 >= SECTION_W-2 then what = what + 1 end
 --!!!! FIXME    if R.ky1 <= 3 or R.ky2 >= SECTION_H-2 then what = what + 1 end
+    if R.touches_edge then what = 1 end
 
     score = score + 10 * what
 
@@ -1034,19 +1150,22 @@ function Plan_create_rooms()
     LEVEL.liquid = assert(GAME.LIQUIDS[name])
   end
 
-  Plan_determine_size()
+  Plan_decide_map_size()
 
   Plan_initial_rooms()
+
+--!! Plan_add_caves()
+
   Plan_nudge_rooms()
 
   -- must create the seeds _AFTER_ nudging
   Plan_make_seeds()
-  Plan_merge_naturals()
+
+-- !! FIXME: do before nudge rooms, BUT need 'svolume'
+  Plan_decide_outdoors()
 
   gui.printf("Seed Map:\n")
   Seed_dump_rooms()
-
-  Plan_decide_outdoors()
 
   Plan_sub_rooms()
 
