@@ -180,7 +180,7 @@ function Plan_create_sections()
     for i = 1,N do
       name = name .. tostring(t[i]) .. " "
     end
-    gui.debugf("%s\n", name)
+    gui.printf("%s\n", name)
   end
 
   local function get_column_sizes(W, limit)
@@ -231,14 +231,14 @@ function Plan_create_sections()
   show_sizes("row_H", rows, LEVEL.H)
 
 
-  local col_x = { 3 }  -- two border seeds at [1] and [2]
-  local col_y = { 3 }  --
+  local col_X = { 3 }  -- two border seeds at [1] and [2]
+  local row_Y = { 3 }  --
 
-  for x = 2, LEVEL.W do col_x[x] = col_x[x-1] + LEVEL.col_W[x-1] end
-  for y = 2, LEVEL.H do col_y[y] = col_y[y-1] + LEVEL.row_H[y-1] end
+  for x = 2, LEVEL.W do col_X[x] = col_X[x-1] + LEVEL.col_W[x-1] end
+  for y = 2, LEVEL.H do row_Y[y] = row_Y[y-1] + LEVEL.row_H[y-1] end
 
-  LEVEL.col_x = col_x
-  LEVEL.col_y = col_y
+  LEVEL.col_X = col_X
+  LEVEL.row_Y = row_Y
 
 
   -- create sections
@@ -303,6 +303,23 @@ function Plan_find_neighbors()
 
   end -- for x, y
   end
+end
+
+
+function Plan_count_free_sections()
+  local count = 0
+
+  for mx = 1, LEVEL.W do
+  for my = 1, LEVEL.H do
+    local K = LEVEL.sections[mx][my]
+
+    if not K.room then
+      count = count + 1
+    end
+  end
+  end
+
+  return count
 end
 
 
@@ -389,8 +406,8 @@ function Plan_add_normal_rooms()
     R.sw = calc_width (bx, big_w)
     R.sh = calc_height(by, big_h)
 
-    R.sx1 = LEVEL.col_x[bx]
-    R.sy1 = LEVEL.col_y[by]
+    R.sx1 = LEVEL.col_X[bx]
+    R.sy1 = LEVEL.row_Y[by]
 
     R.sx2 = R.sx1 + R.sw - 1
     R.sy2 = R.sy1 + R.sh - 1
@@ -502,15 +519,15 @@ function Plan_add_caves()
 
 
   local function new_room(spot)
-    local R = ROOM_CLASS.new("odd")
+    local R = ROOM_CLASS.new()
 
     R.kind = "cave"
 
     for mx = spot.mx1, spot.mx2 do
     for my = spot.my1, spot.my2 do
-      local K = Section_get_room(mx, my)
+      local K = LEVEL.sections[mx][my]
 
-      K:set_room(R)
+--!!!!      K:set_room(R)
     end
     end
 
@@ -573,7 +590,7 @@ function Plan_add_caves()
   end
 
 
-  local num_free = Plan_count_free_room_sections()
+  local num_free = Plan_count_free_sections()
 
   local quota = num_free * perc / 100
 
@@ -1237,7 +1254,7 @@ function Plan_create_rooms()
   Plan_determine_size()
   Plan_create_sections()
 
---!! Plan_add_caves()
+--!!  Plan_add_caves()
   Plan_add_normal_rooms()
 
   Plan_find_neighbors()

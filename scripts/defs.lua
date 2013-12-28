@@ -88,7 +88,7 @@ SKILLS = { "easy", "medium", "hard" }
 
 -- room stuff
 
-ROOM_SIZE_TABLE = { 60,40,15,6,3 }  -- 3/4/5/6/7 wide
+ROOM_SIZE_TABLE = { 60,40,15,10,10 }  -- 3/4/5/6/7 wide
 
 BIG_ROOM_TABLE =
 {

@@ -1235,7 +1235,7 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
   ---==| Layout_try_pattern |==---
  
   if R.kind == "cave" then
-    Layout_do_natural(R, heights)
+    install_flat_floor(heights[1], "RROCK04")
     return
   end
 
@@ -1312,9 +1312,6 @@ function Layout_do_scenic(R)
     end
   end end -- for x, y
 
-  if R.kind == "cave" then
-    R.cave_floor_h = min_floor
-  end
 end
 
 
@@ -2222,8 +2219,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   end
 
   if R.kind == "cave" then
-    Layout_cave_pickup_spots(R)
-    Layout_cave_monster_spots(R)
+    ---?????????  Layout_cave_monster_spots(R)
   end
 
   if R.kind == "building" then

@@ -232,17 +232,19 @@ end
 function Room_setup_theme(R)
   R.facade = assert(R.zone.facade_mat)
 
+  if R.kind == "cave" then
+    R.main_tex = rand.key_by_probs(R.theme.naturals)
+    return
+  end
+
   if not R.is_outdoor then
     R.main_tex = rand.key_by_probs(R.theme.walls)
     return
   end
 
----##  if not R.quest.courtyard_floor then
----##    R.quest.courtyard_floor = rand.pick(LEVEL.courtyard_floors)
----##  end
-
   R.main_tex = rand.key_by_probs(R.theme.naturals or R.theme.floors)
 end
+
 
 function Room_setup_theme_Scenic(R)
   R.is_outdoor = true  -- ???
@@ -881,9 +883,6 @@ function Room_border_up()
         max_f1 = math.max(max_f1, S.floor_h)
         max_f2 = math.max(max_f2, N.floor_h)
 
-        if N.room.kind == "cave" then
-          max_f2 = math.max(max_f2, N.room.cave_floor_h + 128)
-        end
       end 
     end  -- for bd
 
