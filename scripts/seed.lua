@@ -84,6 +84,9 @@ function SEED_CLASS.mid_point(S)
 end
 
 
+----------------------------------------------------------------------
+
+
 function Seed_init(map_W, map_H, map_D, free_W, free_H)
   gui.printf("Seed_init: %dx%d  Free: %dx%d\n", map_W, map_H, free_W, free_H)
 

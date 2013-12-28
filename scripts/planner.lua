@@ -654,6 +654,7 @@ end
 
 
 function Plan_nudge_rooms()
+  --
   -- This resizes rooms by moving certain borders either one seed
   -- outward or one seed inward.  There are various constraints,
   -- in particular each room must remain a rectangle shape (so we
@@ -1016,26 +1017,31 @@ function Plan_make_seeds()
 
   local function plant_rooms()
     each R in LEVEL.rooms do
-      for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
+      for sx = R.sx1, R.sx2 do
+      for sy = R.sy1, R.sy2 do
         assert(Seed_valid(sx, sy, 1))
         local S = SEEDS[sx][sy][1]
         assert(not S.room) -- no overlaps please!
         S.room = R
         S.kind = "walk"
-      end end -- for sx,sy
-    end -- for R
+      end -- sx, sy
+      end
+    end
 
     each R in LEVEL.scenic_rooms do
-      for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
+      for sx = R.sx1,R.sx2 do
+      for sy = R.sy1,R.sy2 do
         local S = SEEDS[sx][sy][1]
+
         if not S.room then -- overlap is OK for scenics
           assert(LEVEL.liquid)
           S.room = R
           S.kind = "liquid"
 ---###    S.f_tex = "LAVA1"  -- TEMP CRUD !!!!
         end
-      end end -- for sx,sy
-    end -- for R
+      end -- sx, sy
+      end
+    end
   end
 
   local function fill_holes()
@@ -1043,10 +1049,11 @@ function Plan_make_seeds()
     rand.shuffle(sc_list)
 
     each R in sc_list do
-      local nx1,ny1 = R.sx1,R.sy1
-      local nx2,ny2 = R.sx2,R.sy2
+      local nx1, ny1 = R.sx1, R.sy1
+      local nx2, ny2 = R.sx2, R.sy2
 
-      for x = R.sx1-1, R.sx2+1 do for y = R.sy1-1, R.sy2+1 do
+      for x = R.sx1-1, R.sx2+1 do
+      for y = R.sy1-1, R.sy2+1 do
         if Seed_valid(x, y, 1) and not R:contains_seed(x, y) then
           local S = SEEDS[x][y][1]
           if not S.room then
@@ -1057,13 +1064,14 @@ function Plan_make_seeds()
             if y > R.sy2 then ny2 = y end
           end
         end
-      end end -- for x,y
+      end -- x, y
+      end
 
       R.sx1, R.sy1 = nx1, ny1
       R.sx2, R.sy2 = nx2, ny2
 
       R.sw, R.sh = geom.group_size(R.sx1, R.sy1, R.sx2, R.sy2)
-    end -- for R
+    end
   end
 
 
