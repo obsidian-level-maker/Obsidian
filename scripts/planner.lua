@@ -235,7 +235,6 @@ function Plan_find_neighbors()
     if not R then continue end
 
     if not R.neighbors then
-      table.insert(LEVEL.rooms, R)
       R.neighbors = {}
     end
 
@@ -259,9 +258,6 @@ end
 
 function Plan_add_normal_rooms()
   local sections = LEVEL.sections
-
-  local id = 1  -- FIXME
-
 
   local function calc_width(bx, big_w)
     local w = 0
@@ -330,7 +326,35 @@ function Plan_add_normal_rooms()
     return big_w, big_h
   end
 
-  
+
+  local function add_room(bx, by)
+    local big_w, big_h = choose_big_size(bx, by)
+
+    local R = ROOM_CLASS.new()
+
+    R.big_w = big_w
+    R.big_h = big_h
+
+    -- determine coverage on seed map
+    R.sw = calc_width (bx, big_w)
+    R.sh = calc_height(by, big_h)
+
+    R.sx1 = LEVEL.col_x[bx]
+    R.sy1 = LEVEL.col_y[by]
+
+    R.sx2 = R.sx1 + R.sw - 1
+    R.sy2 = R.sy1 + R.sh - 1
+
+    for x = bx,bx+big_w-1 do
+    for y = by,by+big_h-1 do
+      sections[x][y].room = R
+    end
+    end
+
+    gui.debugf("%s\n", R:tostr())
+  end
+
+
   ---| Plan_add_normal_rooms |---
 
   local visits = {}
@@ -347,35 +371,9 @@ function Plan_add_normal_rooms()
     local bx, by = vis.x, vis.y
     
     if not sections[bx][by].room then
-      local ROOM = { id=id, kind="building", conns={}, }
-      id = id + 1
-
-      table.set_class(ROOM, ROOM_CLASS)
-
-      local big_w, big_h = choose_big_size(bx, by)
-
-      ROOM.big_w = big_w
-      ROOM.big_h = big_h
-
-      -- determine coverage on seed map
-      ROOM.sw = calc_width (bx, big_w)
-      ROOM.sh = calc_height(by, big_h)
-
-      ROOM.sx1 = LEVEL.col_x[bx]
-      ROOM.sy1 = LEVEL.col_y[by]
-
-      ROOM.sx2 = ROOM.sx1 + ROOM.sw - 1
-      ROOM.sy2 = ROOM.sy1 + ROOM.sh - 1
-
-      for x = bx,bx+big_w-1 do for y = by,by+big_h-1 do
-        sections[x][y].room = ROOM
-      end end
-
-      gui.debugf("%s\n", ROOM:tostr())
+      add_room(bx, by)
     end
   end
-
-  LEVEL.last_id = id  -- FIXME
 end
 
 
@@ -815,7 +813,6 @@ end
 
 
 function Plan_sub_rooms()
-  local id = LEVEL.last_id + 1
 
   --                    1  2  3   4   5   6   7   8+
   local SUB_CHANCES = { 0, 0, 1,  3,  6, 10, 20, 30 }
@@ -905,13 +902,10 @@ function Plan_sub_rooms()
     local info = infos[rand.index_by_probs(probs)]
 
     -- actually add it !
-    local ROOM =
-    {
-      id=id, kind="building", conns={},
-      big_w=1, big_h=1,
-    }
+    local ROOM = ROOM_CLASS.new()
 
-    id = id + 1
+    ROOM.big_w = 1
+    ROOM.big_h = 1
 
     table.set_class(ROOM, ROOM_CLASS)
 
@@ -929,8 +923,6 @@ function Plan_sub_rooms()
 
     ROOM.is_island = (ROOM.sx1 > parent.sx1) and (ROOM.sx2 < parent.sx2) and
                      (ROOM.sy1 > parent.sy1) and (ROOM.sy2 < parent.sy2)
-
-    table.insert(LEVEL.rooms, ROOM)
 
     if not parent.children then parent.children = {} end
     table.insert(parent.children, ROOM)
@@ -967,8 +959,6 @@ function Plan_sub_rooms()
       end
     end
   end
-
-  LEVEL.last_id = id
 end
 
 

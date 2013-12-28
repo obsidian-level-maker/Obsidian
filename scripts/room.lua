@@ -89,6 +89,38 @@ DIAGONALS:
 
 ROOM_CLASS = {}
 
+function ROOM_CLASS.new()
+  local id = Plan_alloc_id("room")
+
+  local R =
+  {
+    id = id
+    kind = "building"
+    num_windows = 0
+
+    conns = {}
+    sections = {}
+
+--    goal_spots = {}
+--    mon_spots  = {}
+--    item_spots = {}
+--    cage_spots = {}
+
+    closets = {}
+    prefabs = {}
+    decor   = {}
+
+    sky_rects = {}
+    exclusion_zones = {}
+
+    hazard_health = 0
+  }
+
+  table.set_class(R, ROOM_CLASS)
+  table.insert(LEVEL.rooms, R)
+  return R
+end
+
 function ROOM_CLASS.tostr(R)
   return string.format("%s_%s [%d,%d..%d,%d]",
       sel(R.parent, "SUB_ROOM", "ROOM"),
