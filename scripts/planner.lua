@@ -70,6 +70,56 @@ function Plan_dump_rooms()
 end
 
 
+
+function Plan_choose_liquid()
+  if THEME.liquids and STYLE.liquids != "none" then
+    local name = rand.key_by_probs(THEME.liquids)
+    local liquid = GAME.LIQUIDS[name]
+
+    if not liquid then
+      error("No such liquid: " .. name)
+    end
+
+    gui.printf("Liquid: %s\n\n", name)
+
+    LEVEL.liquid = liquid
+
+     -- setup the special '_LIQUID' material
+    assert(liquid.mat)
+    assert(GAME.MATERIALS[liquid.mat])
+
+    GAME.MATERIALS["_LIQUID"] = GAME.MATERIALS[liquid.mat]
+
+  else
+    -- leave '_LIQUID' unset : it should not be used, but if does then
+    -- the _ERROR texture will appear (like any other unknown material.
+
+    gui.printf("Liquids disabled.\n\n")
+  end
+end
+
+
+function Plan_choose_darkness()
+  local prob = EPISODE.dark_prob or 0
+
+  -- NOTE: this style is only set via the Level Control module
+  if STYLE.darkness then
+    prob = style_sel("darkness", 0, 10, 30, 90)
+  end
+
+  if rand.odds(prob) then
+    gui.printf("Darkness falls across the land...\n\n")
+
+    LEVEL.is_dark = true
+    LEVEL.sky_light = 0
+    LEVEL.sky_shade = 0
+  else
+    LEVEL.sky_light = 192
+    LEVEL.sky_shade = 160
+  end
+end
+
+
 function Plan_determine_size()
   local W, H  -- width and height
 
@@ -1171,13 +1221,10 @@ function Plan_create_rooms()
   LEVEL.free_mark = 1
   LEVEL.ids = {}
 
-  gui.random() ; gui.random()
+  gui.random()
 
-  if not LEVEL.liquid and THEME.liquids and STYLE.liquids != "none" then
-    local name = rand.key_by_probs(THEME.liquids)
-    gui.printf("Liquid = %s\n", name)
-    LEVEL.liquid = assert(GAME.LIQUIDS[name])
-  end
+  Plan_choose_liquid()
+  Plan_choose_darkness()
 
   Plan_determine_size()
   Plan_create_sections()
