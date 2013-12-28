@@ -26,40 +26,102 @@ function Plan_alloc_id(kind)
 end
 
 
-function Plan_initial_rooms()
-  
-  -- creates rooms out of contiguous areas on the land-map
+function Plan_dump_rooms()
+  local function room_char(R)
+    if not R then return '.' end
+    if R.kind == "scenic" then return '=' end
+    if R.kind == "cave" then return '/' end
+    local n = 1 + (R.id % 26)
+    return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
+  end
 
-  local room_map
+  --- dump_rooms ---
+
+  local sections = LEVEL.sections
+
+  gui.printf("\n")
+  gui.printf("Room Map:\n")
+
+  for y = LEVEL.H,1,-1 do
+    local line = "  "
+    for x = 1,LEVEL.W do
+      line = line .. room_char(sections[x][y])
+    end
+    gui.printf("%s\n", line)
+  end
+  gui.printf("\n")
+end
+
+
+function Plan_create_sections()
+  
+
+  ---| Plan_create_sections |---
+
+  LEVEL.sections = table.array_2D(LEVEL.W, LEVEL.H)
+
+  local col_x = { 3 }  -- two border seeds at [1] and [2]
+  local col_y = { 3 }  --
+
+  for x = 2,LEVEL.W do col_x[x] = col_x[x-1] + LEVEL.col_W[x-1] end
+  for y = 2,LEVEL.H do col_y[y] = col_y[y-1] + LEVEL.row_H[y-1] end
+
+  LEVEL.col_x = col_x
+  LEVEL.col_y = col_y
+end
+
+
+function Plan_find_neighbors()
+  -- determines neighboring rooms of each room
+  -- (including diagonals, which may touch after nudging)
+  
+  local sections = LEVEL.sections
 
   local function valid_R(x, y)
     return 1 <= x and x <= LEVEL.W and
            1 <= y and y <= LEVEL.H
   end
 
-  local function dump_rooms()
-    local function room_char(R)
-      if not R then return '.' end
-      if R.kind == "scenic" then return '=' end
-      if R.kind == "cave" then return '/' end
-      local n = 1 + (R.id % 26)
-      return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
+  local function add_neighbor(R, side, N)
+    if not table.has_elem(R.neighbors, N) then
+      table.insert(R.neighbors, N)
     end
-
-    --- dump_rooms ---
-
-    gui.printf("\n")
-    gui.printf("Room Map:\n")
-
-    for y = LEVEL.H,1,-1 do
-      local line = "@c  "
-      for x = 1,LEVEL.W do
-        line = line .. room_char(room_map[x][y])
-      end
-      gui.printf("%s\n", line)
-    end
-    gui.printf("\n")
   end
+
+  for x = 1, sections.w do
+  for y = 1, sections.h do
+    local R = sections[x][y]
+
+    if not R then continue end
+
+    if not R.neighbors then
+      table.insert(LEVEL.rooms, R)
+      R.neighbors = {}
+    end
+
+    for side = 1,9 do if side != 5 then
+      local nx, ny = geom.nudge(x, y, side)
+      if valid_R(nx, ny) then
+        local N = sections[nx][ny]
+        if N and N != R then
+          add_neighbor(R, side, N)
+        end
+      else
+        R.touches_edge = true
+      end
+    end -- for side
+    end
+
+  end -- for x, y
+  end
+end
+
+
+function Plan_add_normal_rooms()
+  local sections = LEVEL.sections
+
+  local id = 1  -- FIXME
+
 
   local function calc_width(bx, big_w)
     local w = 0
@@ -75,15 +137,6 @@ function Plan_initial_rooms()
       h = h + LEVEL.row_H[y]
     end
     return h
-  end
-
-  local function add_neighbor(R, side, N)
-    -- check if already there
-    each O in R.neighbors do
-      if O == N then return end
-    end
-
-    table.insert(R.neighbors, N)
   end
 
   local function choose_big_size(bx, by)
@@ -129,7 +182,7 @@ function Plan_initial_rooms()
 
     -- any other rooms in the way?
     for x = bx,bx+big_w-1 do for y=by,by+big_h-1 do
-      if room_map[x][y] then
+      if sections[x][y] then
         return 1, 1
       end
     end end
@@ -137,32 +190,23 @@ function Plan_initial_rooms()
     return big_w, big_h
   end
 
-
-  ---| Plan_initial_rooms |---
-
-  room_map = table.array_2D(LEVEL.W, LEVEL.H)
-
-  local id = 1
-
-  local col_x = { 3 }  -- two border seeds at [1] and [2]
-  local col_y = { 3 }  --
-
-  for x = 2,LEVEL.W do col_x[x] = col_x[x-1] + LEVEL.col_W[x-1] end
-  for y = 2,LEVEL.H do col_y[y] = col_y[y-1] + LEVEL.row_H[y-1] end
-
+  
+  ---| Plan_add_normal_rooms |---
 
   local visits = {}
 
-  for x = 1,LEVEL.W do for y = 1,LEVEL.H do
+  for x = 1,LEVEL.W do
+  for y = 1,LEVEL.H do
     table.insert(visits, { x=x, y=y })
-  end end
+  end
+  end
 
   rand.shuffle(visits)
 
   each vis in visits do
     local bx, by = vis.x, vis.y
     
-    if not room_map[bx][by] then
+    if not sections[bx][by] then
       local ROOM = { id=id, kind="building", conns={}, }
       id = id + 1
 
@@ -177,50 +221,22 @@ function Plan_initial_rooms()
       ROOM.sw = calc_width (bx, big_w)
       ROOM.sh = calc_height(by, big_h)
 
-      ROOM.sx1 = col_x[bx]
-      ROOM.sy1 = col_y[by]
+      ROOM.sx1 = LEVEL.col_x[bx]
+      ROOM.sy1 = LEVEL.col_y[by]
 
       ROOM.sx2 = ROOM.sx1 + ROOM.sw - 1
       ROOM.sy2 = ROOM.sy1 + ROOM.sh - 1
 
       for x = bx,bx+big_w-1 do for y = by,by+big_h-1 do
-        room_map[x][y] = ROOM
+        sections[x][y] = ROOM
       end end
 
       gui.debugf("%s\n", ROOM:tostr())
     end
   end
 
-  LEVEL.last_id = id
-
-  dump_rooms()
-
-
-  -- determines neighboring rooms of each room
-  -- (including diagonals, which may touch after nudging)
-  
-  for x = 1,LEVEL.W do for y = 1,LEVEL.H do
-    local R = room_map[x][y]
-    
-    if not R.neighbors then
-      table.insert(LEVEL.rooms, R)
-      R.neighbors = {}
-    end
-
-    for side = 1,9 do if side != 5 then
-      local nx, ny = geom.nudge(x, y, side)
-      if valid_R(nx, ny) then
-        local N = room_map[nx][ny]
-        if N != R then
-          add_neighbor(R, side, N)
-        end
-      else
-        R.touches_edge = true
-      end
-    end end -- for side / if != 5
-  end end -- for x, y
+  LEVEL.last_id = id  -- FIXME
 end
-
 
 
 function Plan_add_caves()
@@ -444,9 +460,6 @@ function Plan_add_caves()
 
   Plan_dump_sections("Sections with caves:")
 end
-
-
-
 
 
 ------------------------------------------------------------------------
@@ -1152,9 +1165,13 @@ function Plan_create_rooms()
 
   Plan_decide_map_size()
 
-  Plan_initial_rooms()
+  Plan_create_sections()
 
 --!! Plan_add_caves()
+  Plan_add_normal_rooms()
+
+  Plan_find_neighbors()
+  Plan_dump_rooms()
 
   Plan_nudge_rooms()
 
