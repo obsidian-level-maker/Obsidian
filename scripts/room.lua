@@ -122,9 +122,7 @@ function ROOM_CLASS.new()
 end
 
 function ROOM_CLASS.tostr(R)
-  return string.format("%s_%s [%d,%d..%d,%d]",
-      sel(R.parent, "SUB_ROOM", "ROOM"),
-      R.id, R.sx1,R.sy1, R.sx2,R.sy2)
+  return string.format("%sROOM_%d", sel(R.parent, "SUB_", ""), R.id)
 end
 
 function ROOM_CLASS.contains_seed(R, x, y)
