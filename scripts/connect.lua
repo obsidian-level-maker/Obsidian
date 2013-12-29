@@ -22,13 +22,13 @@
 
 class CONN
 {
-  src    : source ROOM
-  dest   : destination ROOM
+  R1 : source ROOM
+  R2 : destination ROOM
 
-  src_S  : source SEED
-  dest_S : destination SEED
+  S1 : source SEED
+  S2 : destination SEED
 
-  dir    : direction 2/4/6/8 (from src_S to dest_S)
+  dir    : direction 2/4/6/8 (from S1 to S2)
 
   conn_h : floor height for connection
 
@@ -41,25 +41,25 @@ class CONN
 CONN_CLASS = {}
 
 function CONN_CLASS.neighbor(C, R)
-  if R == C.src then
-    return C.dest
+  if R == C.R1 then
+    return C.R2
   else
-    return C.src
+    return C.R1
   end
 end
 
 function CONN_CLASS.seed(C, R)
-  if R == C.src then
-    return C.src_S
+  if R == C.R1 then
+    return C.S1
   else
-    return C.dest_S
+    return C.S2
   end
 end
 
 function CONN_CLASS.tostr(C)
   return string.format("CONN [%d,%d -> %d,%d %sh:%s]",
-         C.src_S.sx,  C.src_S.sy,
-         C.dest_S.sx, C.dest_S.sy,
+         C.S1.sx, C.S1.sy,
+         C.S2.sx, C.S2.sy,
          sel(C.lock, "LOCK ", ""),
          tostring(C.conn_h))
 end
@@ -738,7 +738,7 @@ T.sx,T.sy, T.room.id, T.room.c_group)
 
     merge_groups(S.room.c_group, T.room.c_group)
 
-    local CONN = { dir=dir, src=S.room, dest=T.room, src_S=S, dest_S=T }
+    local CONN = { dir=dir, R1=S.room, R2=T.room, S1=S, S2=T }
 
     table.set_class(CONN, CONN_CLASS)
 
@@ -1053,8 +1053,8 @@ gui.debugf("Failed\n")
 
     table.insert(LEVEL.scenic_conns, C)
 
-    ---## C.src_S.conn  = nil; C.src_S.conn_dir  = nil
-    ---## C.dest_S.conn = nil; C.dest_S.conn_dir = nil
+    ---## C.S1.conn  = nil; C.S1.conn_dir  = nil
+    ---## C.S2.conn = nil; C.S2.conn_dir = nil
   end
 
   local function try_emergency_connect(R, x, y, dir)
@@ -1189,8 +1189,8 @@ gui.debugf("Failed\n")
     local c_copy = table.copy(LEVEL.conns)
 
     each C in c_copy do
-      if C.src.c_group == rebel_id then
-        assert(C.dest.c_group == rebel_id)
+      if C.R1.c_group == rebel_id then
+        assert(C.R2.c_group == rebel_id)
         make_conn_scenic(C)
       end
     end

@@ -361,12 +361,12 @@ function Simple_generate_cave(R)
 
 
   local function collect_important_points()
-    each D in R.conns do
-      if R == D.L1 and D.portal1 then
-        point_for_portal(D.portal1)
+    each C in R.conns do
+      if R == C.L1 and C.portal1 then
+        point_for_portal(C.portal1)
       end
-      if R == D.L2 and D.portal2 then
-        point_for_portal(D.portal2)
+      if R == C.L2 and C.portal2 then
+        point_for_portal(C.portal2)
       end
     end
 

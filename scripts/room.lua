@@ -132,29 +132,29 @@ function ROOM_CLASS.contains_seed(R, x, y)
 end
 
 function ROOM_CLASS.has_lock(R, lock)
-  each D in R.conns do
-    if D.lock == lock then return true end
+  each C in R.conns do
+    if C.lock == lock then return true end
   end
   return false
 end
 
 function ROOM_CLASS.has_any_lock(R)
-  each D in R.conns do
-    if D.lock then return true end
+  each C in R.conns do
+    if C.lock then return true end
   end
   return false
 end
 
 function ROOM_CLASS.has_lock_kind(R, kind)
-  each D in R.conns do
-    if D.lock and D.lock.kind == kind then return true end
+  each C in R.conns do
+    if C.lock and C.lock.kind == kind then return true end
   end
   return false
 end
 
 function ROOM_CLASS.has_sky_neighbor(R)
-  each D in R.conns do
-    local N = D:neighbor(R)
+  each C in R.conns do
+    local N = C:neighbor(R)
     if N.is_outdoor then return true end
   end
   return false
@@ -185,8 +185,8 @@ end
 
 function ROOM_CLASS.is_near_exit(R)
   if R.purpose == "EXIT" then return true end
-  each D in R.conns do
-    local N = D:neighbor(R)
+  each C in R.conns do
+    local N = C:neighbor(R)
     if N.purpose == "EXIT" then return true end
   end
   return false
@@ -327,7 +327,7 @@ function Room_decide_hallways()
         return false
       end
 
-      if C.dest == R and C.lock and not rand.odds(lock_chance) then
+      if C.R2 == R and C.lock and not rand.odds(lock_chance) then
         return false
       end
     end
@@ -440,9 +440,9 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
 
   -- we don't need archways where two hallways connect
   each C in LEVEL.conns do
-    if not C.lock and C.src.hallway and C.dest.hallway then
-      local S = C.src_S
-      local T = C.dest_S
+    if not C.lock and C.R1.hallway and C.R2.hallway then
+      local S = C.S1
+      local T = C.S2
       local dir = S.conn_dir
 
       if S.border[S.conn_dir].kind == "arch" or
@@ -628,8 +628,8 @@ function Room_reckon_doors()
 
   each C in LEVEL.conns do
     for who = 1,2 do
-      local S = sel(who == 1, C.src_S, C.dest_S)
-      local N = sel(who == 2, C.src_S, C.dest_S)
+      local S = sel(who == 1, C.S1, C.S2)
+      local N = sel(who == 2, C.S1, C.S2)
       assert(S)
 
       if S.conn_dir then
@@ -654,7 +654,7 @@ function Room_reckon_doors()
         if B.kind == "arch" and GAME.DOORS and not B.tried_door then
           B.tried_door = true
 
-          local prob = door_chance(C.src, C.dest)
+          local prob = door_chance(C.R1, C.R2)
 
           if S.conn.lock and S.conn.lock.kind != "NULL" then
             B.kind = "lock_door"
@@ -669,7 +669,7 @@ function Room_reckon_doors()
             B.kind = "door"
 
           elseif (STYLE.fences == "none" or STYLE.fences == "few") and
-                 C.src.is_outdoor and C.dest.is_outdoor then
+                 C.R1.is_outdoor and C.R2.is_outdoor then
             B.kind = "nothing"
           end
         end
@@ -2492,7 +2492,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
         local skin2 = { inner=w_tex, outer=o_tex }
 
-        local reversed = (S == S.conn.dest_S)
+        local reversed = (S == S.conn.S2)
 
         Build.door(S, side, S.conn.conn_h, skin, skin2, LOCK.tag, reversed)
         shrink_ceiling(side, 4)
@@ -2774,9 +2774,9 @@ function Room_find_pickup_spots(R)
     if R.entry_conn then
       local e_dist
       if geom.is_vert(R.entry_conn.dir) then
-        e_dist = math.abs(R.entry_conn.dest_S.sy - S.sy)
+        e_dist = math.abs(R.entry_conn.S2.sy - S.sy)
       else
-        e_dist = math.abs(R.entry_conn.dest_S.sx - S.sx)
+        e_dist = math.abs(R.entry_conn.S2.sx - S.sx)
       end
 
       score = score + e_dist / 2.5

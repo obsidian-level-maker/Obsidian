@@ -357,8 +357,8 @@ function Layout_spot_for_wotsit(R, kind)
       P.score = gui.random() + (S.div_lev or 0) * 20
 
       if R.entry_conn then
-        local dx = math.abs(R.entry_conn.dest_S.sx - x)
-        local dy = math.abs(R.entry_conn.dest_S.sy - y)
+        local dx = math.abs(R.entry_conn.S2.sx - x)
+        local dy = math.abs(R.entry_conn.S2.sy - y)
 
         P.score = P.score + dx + dy
       end
@@ -1719,7 +1719,7 @@ function Layout_do_room(R)
     local f_texs  = {}
 
     if focus_C.conn_ftex and
-       (focus_C.src.kind == focus_C.dest.kind) then
+       (focus_C.R1.kind == focus_C.R2.kind) then
       table.insert(f_texs, focus_C.conn_ftex)
     end
 
@@ -1760,7 +1760,7 @@ function Layout_do_room(R)
     -- determine vertical momentum
     local mom_z = 0
     if R.entry_conn then
-      local C2 = R.entry_conn.src.entry_conn
+      local C2 = R.entry_conn.R1.entry_conn
       if C2 and C2.conn_h and C2.conn_h != base_h then
         mom_z = sel(C2.conn_h < base_h, 1, -1)
       end

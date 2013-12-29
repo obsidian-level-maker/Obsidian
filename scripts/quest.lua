@@ -128,7 +128,7 @@ and path, and they might get split again in the future.
 
 function Quest_quest_before_lock(LOCK)
   assert(LOCK.conn)
-  return assert(LOCK.conn.src.quest)
+  return assert(LOCK.conn.R1.quest)
 end
 
 function Quest_quest_after_lock(LOCK)
@@ -137,15 +137,15 @@ function Quest_quest_after_lock(LOCK)
   end
 
   assert(LOCK.conn)
-  return assert(LOCK.conn.dest.quest)
+  return assert(LOCK.conn.R2.quest)
 end
 
 
 function Quest_natural_flow(quest)
 
   local function swap_conn(C)
-    C.src, C.dest = C.dest, C.src
-    C.src_S, C.dest_S = C.dest_S, C.src_S
+    C.R1, C.R2 = C.R2, C.R1
+    C.S1, C.S2 = C.S2, C.S1
     C.dir = 10 - C.dir
   end
 
@@ -155,22 +155,22 @@ function Quest_natural_flow(quest)
     visited[R] = true
 
     each C in R.conns do
-      if R == C.dest and not visited[C.src] then
+      if R == C.R2 and not visited[C.R1] then
         swap_conn(C)
       end
-      if R == C.src and not visited[C.dest] then
-        natural_flow(C.dest, visited)
-        C.dest.entry_conn = C
+      if R == C.R1 and not visited[C.R2] then
+        natural_flow(C.R2, visited)
+        C.R2.entry_conn = C
       end
     end
 
     each T in R.teleports do
-      if R == T.dest and not visited[T.src] then
+      if R == T.R2 and not visited[T.R1] then
         swap_conn(T)
       end
-      if R == T.src and not visited[T.dest] then
-        natural_flow(T.dest, visited)
-        T.dest.entry_conn = T
+      if R == T.R1 and not visited[T.R2] then
+        natural_flow(T.R2, visited)
+        T.R2.entry_conn = T
       end
     end
   end
@@ -206,8 +206,8 @@ function Quest_update_tvols(quest)
   --| Quest_update_tvols |---  
 
   each C in quest.conns do
-    C.src_tvol  = travel_volume(C.src,  { [C]=true })
-    C.dest_tvol = travel_volume(C.dest, { [C]=true })
+    C.src_tvol  = travel_volume(C.R1, { [C]=true })
+    C.dest_tvol = travel_volume(C.R2, { [C]=true })
   end
 end
 
@@ -222,7 +222,7 @@ function Quest_initial_path(quest)
     local best_tvol = -1
 
     each C in R.conns do
-      if C.src == R and not C.lock then
+      if C.R1 == R and not C.lock then
         if best_tvol < C.dest_tvol then
           best_tvol = C.dest_tvol
           best_C = C
@@ -236,7 +236,7 @@ function Quest_initial_path(quest)
 
     table.insert(path, best_C)
 
-    return best_C.dest
+    return best_C.R2
   end
 
 
@@ -352,7 +352,7 @@ function Quest_decide_split(quest)  -- returns a LOCK
 
     local cost = math.abs(C.src_tvol - C.dest_tvol * 2)
 
-    if C.src.is_outdoor and C.dest.is_outdoor then
+    if C.R1.is_outdoor and C.R2.is_outdoor then
       cost = cost + 40
     end
 
@@ -375,7 +375,7 @@ function Quest_decide_split(quest)  -- returns a LOCK
   local function locks_for_room(R, list)
     if R.is_junction then
       each C in R.conns do
-        if C.src == R and C.can_lock then
+        if C.R1 == R and C.can_lock then
           add_lock(list, C)
         end
       end
@@ -385,7 +385,7 @@ function Quest_decide_split(quest)  -- returns a LOCK
   local function dump_locks(list)
     each C in list do
       gui.debugf("Lock S(%d,%d) --> S(%d,%d) cost=%1.2f\n",
-                 C.src.sx1,C.src.sy1, C.dest.sx1,C.dest.sy1, C.lock_cost)
+                 C.R1.sx1, C.R1.sy1, C.R2.sx1, C.R2.sy1, C.lock_cost)
     end
   end
 
@@ -400,7 +400,7 @@ function Quest_decide_split(quest)  -- returns a LOCK
   locks_for_room(quest.start, poss_locks)
 
   each C in quest.path do
-    locks_for_room(C.dest, poss_locks)
+    locks_for_room(C.R2, poss_locks)
   end
  
   -- should always have at least one possible lock, otherwise the
@@ -444,7 +444,7 @@ function Quest_split_quest(quest, LOCK)
 
     each C in A.path do
       gui.debugf("  conn  %s  (%d,%d) -> (%d,%d)\n",
-                 tostring(C), C.src.sx1, C.src.sy1, C.dest.sx1, C.dest.sy1)
+                 tostring(C), C.R1.sx1, C.R1.sy1, C.R2.sx1, C.R2.sy1)
     end
 
     gui.debugf("  }\n")
@@ -478,7 +478,7 @@ function Quest_split_quest(quest, LOCK)
   {
     rooms = {},
     conns = {},
-    start = LOCK.conn.dest,
+    start = LOCK.conn.R2,
     lock  = quest.lock,
   }
 
@@ -487,9 +487,9 @@ function Quest_split_quest(quest, LOCK)
     table.insert(A.rooms, R)
 
     each C in R.conns do
-      if C.src == R and not C.lock then
+      if C.R1 == R and not C.lock then
         table.insert(A.conns, C)
-        collect_quest(A, C.dest)
+        collect_quest(A, C.R2)
       end
     end
   end
@@ -503,7 +503,7 @@ function Quest_split_quest(quest, LOCK)
   if LC.on_path then -- "ON" kind
 
     -- create second half of front path
-    front_A.start = LOCK.conn.src
+    front_A.start = LOCK.conn.R1
     
     Quest_initial_path(front_A)
 
@@ -536,7 +536,7 @@ function Quest_split_quest(quest, LOCK)
     for idx = #front_A.path, 1, -1 do
       local C = front_A.path[idx]
       table.insert(front_A.back_path, C)
-      if C.src == LOCK.conn.src then
+      if C.R1 == LOCK.conn.R1 then
         hit_lock = true ; break
       end
     end
@@ -609,7 +609,7 @@ function Quest_add_a_lock()
     local traversable = 0
 
     each C in R.conns do
-      if C.src == R then
+      if C.R1 == R then
         if C.can_lock then
           has_lockable = true
         end
@@ -629,7 +629,7 @@ function Quest_add_a_lock()
     local junctions = sel(R.is_junction, 1, 0)
 
     each C in quest.path do
-      if C.dest.is_junction then
+      if C.R2.is_junction then
         junctions = junctions + 1
       end
     end
@@ -690,11 +690,11 @@ function Quest_order_by_visit()
     each C in R.conns do
       C.tmp_visit = 0
 
-      if C.src != R or C.lock then
+      if C.R1 != R or C.lock then
         -- ignore it
       elseif C == path[p_idx] then
         C.tmp_visit = 9  -- do path-to-key last
-      elseif C.dest.parent == R then
+      elseif C.R2.parent == R then
         C.tmp_visit = 2 + gui.random()
       else
         C.tmp_visit = 4 + gui.random()
@@ -704,12 +704,12 @@ function Quest_order_by_visit()
     table.sort(R.conns, function(A,B) return A.tmp_visit < B.tmp_visit end)
 
     each C in R.conns do
-      if C.src != R or C.lock then
+      if C.R1 != R or C.lock then
         -- ignore it
       elseif C == path[p_idx] then
-        visit_room(C.dest, path, p_idx+1)
+        visit_room(C.R2, path, p_idx+1)
       else
-        visit_room(C.dest, {}, 1)
+        visit_room(C.R2, {}, 1)
       end
     end
   end
@@ -784,7 +784,7 @@ function Quest_choose_keys()
     LOCK.key_score = LOCK.distance or 0
 
     -- prefer not to use keyed doors between two outdoor rooms
-    if LOCK.conn and LOCK.conn.src.is_outdoor and LOCK.conn.dest.is_outdoor then
+    if LOCK.conn and LOCK.conn.R1.is_outdoor and LOCK.conn.R2.is_outdoor then
       LOCK.key_score = 0
     end
 
@@ -818,7 +818,7 @@ function Quest_choose_keys()
 
       LOCK.kind = "SWITCH"
 
-      if num_bars > 0 and LOCK.conn.src.is_outdoor and LOCK.conn.dest.is_outdoor then
+      if num_bars > 0 and LOCK.conn.R1.is_outdoor and LOCK.conn.R2.is_outdoor then
         LOCK.item = rand.key_by_probs(bar_tab)
         bar_tab[LOCK.item] = bar_tab[LOCK.item] / 8
       else
@@ -843,8 +843,8 @@ function Quest_add_keys()
 
     local C = assert(R.conns[1])
 
-    local S = C.src_S
-    local T = C.dest_S
+    local S = C.S1
+    local T = C.S2
 
     local B1 = S.border[S.conn_dir]
     local B2 = T.border[T.conn_dir]
@@ -1576,7 +1576,7 @@ function Quest_make_quests()
     end
 
     if A.back_path == "FIND" then
-      A.back_path = Quest_find_path_to_room(A.target, A.lock.conn.src)
+      A.back_path = Quest_find_path_to_room(A.target, A.lock.conn.R1)
     end
   end
 
