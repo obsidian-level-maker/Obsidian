@@ -906,7 +906,7 @@ function Plan_nudge_rooms()
 
   -- move vertically in first pass, horizontally in second
   for pass = 1,2 do
-  for loop = 1,4 do
+  for loop = 1,6 do
     nudge_rooms(pass)
   end
   end
