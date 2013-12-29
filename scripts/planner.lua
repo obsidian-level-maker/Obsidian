@@ -785,7 +785,7 @@ function Plan_nudge_rooms()
     return true
   end
 
-  local function try_nudge_room(R, side, grow)
+  local function try_nudge_room__OLD(R, side, grow)
     -- 'grow' is positive to nudge outward, negative to nudge inward
 
     -- Note: any shrinkage must pull neighbors too
@@ -921,6 +921,16 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
   end
 
 
+  function do_nudge_section(K, side, dist)
+    if side == 2 then K.sy1 = K.sy1 - dist end
+    if side == 8 then K.sy2 = K.sy2 + dist end
+    if side == 4 then K.sx1 = K.sx1 - dist end
+    if side == 6 then K.sx2 = K.sx2 + dist end
+
+    K.sw, K.sh = geom.group_size(K.sx1, K.sy1, K.sx2, K.sy2)
+  end
+
+
   function try_nudge_border(kx, ky, side)
     local K = LEVEL.sections[kx][ky]
 
@@ -934,7 +944,7 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
       return
     end
 
-    -- check for big rectangular rooms
+    -- leave big rectangular rooms alone
     local R = K.room
 
     if R.kind != "cave" then
@@ -943,17 +953,12 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
     end
 
     -- sometimes just leave it
-    if rand.odds(20) then return end
+    if rand.odds(10) then return end
 
     -- OK, nudge it
     local dist = rand.irange(1, EDGE_SEEDS - 1)
 
-    if side == 2 then K.sy1 = K.sy1 - dist end
-    if side == 8 then K.sy2 = K.sy2 + dist end
-    if side == 4 then K.sx1 = K.sx1 - dist end
-    if side == 6 then K.sx2 = K.sx2 + dist end
-
-    K.sw, K.sh = geom.group_size(K.sx1, K.sy1, K.sx2, K.sy2)
+    do_nudge_section(K, side, dist)
   end
 
 
@@ -970,6 +975,7 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
     local R = K.room
     if not R then return end
 
+    -- is neighbor valid?
     local nx, ny = geom.nudge(kx, ky, side)
 
     if not Section_valid(nx, ny) then return end
@@ -990,12 +996,32 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
       if geom.is_horiz(side) and (R2.big_h or 0) > 1 then return end
     end
 
-    -- previous nudge in opposite dir?
+    -- require sections to be flush (except at edge of map)
+    if geom.is_vert(side) then
+      if kx > 1       and K.sx1 != K2.sx1 then return end
+      if kx < LEVEL.W and K.sx2 != K2.sx2 then return end
+    else
+      if ky > 1       and K.sy1 != K2.sy1 then return end
+      if ky < LEVEL.H and K.sy2 != K2.sy2 then return end
+    end
+
+    -- already nudged in opposite direction?
     if K.nudges[side] < 0 then return end
 
-    -- don't make other room too small
+    -- don't make this section too large
+    if geom.vert_sel(side, K.sh, K.sw) >= 7 then return end
 
-    -- FIXME....
+    -- don't make other section too small
+    if geom.vert_sel(side, K2.sh, K2.sw) <= 3 then return end
+
+    -- OK, nudge it
+    local opp = 10 - side
+
+    do_nudge_section(K,  side, 1)
+    do_nudge_section(K2, opp, -1)
+
+    K .nudges[side] =  1
+    K2.nudges[opp]  = -1
   end
 
 
