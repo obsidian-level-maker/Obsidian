@@ -608,6 +608,67 @@ function Connect_test_branch_gen(name)
 end
 
 
+----------------------------------------------------------------------
+
+
+function Connect_teleporters()
+  -- TODO
+end
+
+
+function Connect_start_room()
+
+  local function eval_start(R)
+    -- already has a purpose? (e.g. secret exit room)
+    if R.purpose then return -1 end
+
+    local score = gui.random() * 10
+
+    -- prefer a room touching the edge of the map
+    -- (since it is guaranteed to have room for a start closet)
+--???  if R:touches_map_edge() then score = score + 100 end
+
+    -- not too big !!
+    if R.svolume <= 49 then score = score + 10 end
+
+    -- not too small
+    if R.svolume >= 12 then score = score + 2 end
+
+    --??  if not R:has_teleporter() then score = score + 5 end
+
+    return score
+  end
+
+
+  ---| Connect_start_room |---
+
+  local locs = {}
+
+  each R in LEVEL.rooms do
+    R.start_score = eval_start(R)
+
+    gui.debugf("Start score @ %s (seeds:%d) --> %1.3f\n", R:tostr(), R.sw * R.sh, R.start_score)
+
+    if R.start_score >= 0 then
+      table.insert(locs, R)
+    end
+  end
+
+  assert(#locs > 0)
+
+  local room = table.pick_best(locs,
+    function(A, B) return A.start_score > B.start_score end)
+
+  gui.printf("Start room: %s\n", room:tostr())
+
+  LEVEL.start_room = room
+
+  room.purpose = "START"
+
+  -- TODO: try add starting closet
+end
+
+
 function Connect_rooms()
 
   -- Guidelines:
@@ -1224,12 +1285,17 @@ gui.debugf("Failed\n")
 
   Levels_invoke_hook("connect_rooms",  LEVEL.seed)
 
+  Connect_teleporters()
+
+
 --!!!  sprinkle_scenics()
 
   branch_big_rooms()
   branch_the_rest()
 
   count_branches()
+
+  Connect_start_room()
 
   gui.printf("New Seed Map:\n")
   Seed_dump_rooms()

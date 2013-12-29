@@ -141,21 +141,7 @@ function Quest_quest_after_lock(LOCK)
 end
 
 
-function Quest_decide_start_room(quest)
-
-  local function eval_room(R)
-    local cost = R.svolume
-
-    -- preference for leaf rooms
-    cost = cost + 20 * #R.conns
-
-    -- large amount of randomness
-    cost = cost + 75 * (gui.random() ^ 0.5)
-
---  gui.printf("Start cost @ %s (svol:%d rconns:%d) --> %1.3f\n", R.svolume, #R.conns, cost)
-
-    return cost
-  end
+function Quest_natural_flow(quest)
 
   local function swap_conn(C)
     C.src, C.dest = C.dest, C.src
@@ -190,22 +176,8 @@ function Quest_decide_start_room(quest)
   end
 
 
-  ---| Quest_decide_start_room |---
+  ---| Quest_natural_flow |---
 
-  each R in quest.rooms do
-    R.start_cost = eval_room(R)
-    gui.debugf("%s : START COST : %1.4f\n", R:tostr(), R.start_cost)
-  end
-
-  quest.start = table.pick_best(quest.rooms, function(A,B) return A.start_cost < B.start_cost end)
-
-  assert(#quest.start.conns > 0)
-
-  gui.printf("Start room: %s\n", quest.start:tostr())
-
-  -- update connections so that 'src' and 'dest' follow the natural
-  -- flow of the level, i.e. player always walks src -> dest (except
-  -- when backtracking).
   natural_flow(quest.start, {})
 end
 
@@ -1573,18 +1545,18 @@ function Quest_make_quests()
   {
     rooms = table.copy(LEVEL.rooms),
     conns = table.copy(LEVEL.conns),
-    lock = LOCK,
+    lock  = LOCK,
+    start = LEVEL.start_room
   }
 
 
   LEVEL.quests = { QUEST }
   LEVEL.locks  = { LOCK  }
 
-  Quest_decide_start_room(QUEST)
-
-  LEVEL.start_room = QUEST.start
-  LEVEL.start_room.purpose = "START"
-
+  -- update connections so that 'src' and 'dest' follow the natural
+  -- flow of the level, i.e. player always walks src -> dest (except
+  -- when backtracking).
+  Quest_natural_flow(QUEST)
 
   Quest_initial_path(QUEST)
 
