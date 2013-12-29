@@ -283,10 +283,13 @@ function Plan_create_sections()
       kx = x
       ky = y
 
-      -- FIXME: seed positions
-
       sw = col_W[x]
       sh = row_H[y]
+
+      sx1 = col_X[x]
+      sy1 = row_Y[y]
+      sx2 = col_X[x] + col_W[x] - 1
+      sy2 = row_Y[y] + row_H[y] - 1
     }
 
     LEVEL.sections[x][y] = SECTION
@@ -464,25 +467,20 @@ function Plan_add_normal_rooms()
     R.big_w = big_w
     R.big_h = big_h
 
-    -- determine coverage on seed map
-    R.sw = calc_width (bx, big_w)
-    R.sh = calc_height(by, big_h)
-
-    R.sx1 = LEVEL.col_X[bx]
-    R.sy1 = LEVEL.row_Y[by]
-
-    R.sx2 = R.sx1 + R.sw - 1
-    R.sy2 = R.sy1 + R.sh - 1
-
-    R.svolume = R.sw * R.sh
-
     for x = bx, bx+big_w-1 do
     for y = by, by+big_h-1 do
+      assert(not sections[x][y].room)
       sections[x][y].room = R
     end
     end
 
-    gui.debugf("%s\n", R:tostr())
+    -- determine coverage on seed map
+    local sw = calc_width (bx, big_w)
+    local sh = calc_height(by, big_h)
+
+    R.svolume = sw * sh
+
+    gui.debugf("%s @ section[%d,%d]\n", R:tostr(), bx, by)
   end
 
 
@@ -745,19 +743,20 @@ function Plan_nudge_rooms()
   function try_nudge_border(kx, ky, side)
     local K = LEVEL.sections[kx][ky]
 
-    local nx, ny = geom.nudge(kx, ky, side)
+    local R = K.room
+    if not R then return end
 
     -- not edge of map?
+    local nx, ny = geom.nudge(kx, ky, side)
+
     if Section_valid(nx, ny) then return end
 
     -- outdoor rooms need their border [except caves]
-    if not K.room or (K.room.is_outdoor and not K.room.kind == "cave") then
+    if R.is_outdoor and K.room.kind != "cave" then
       return
     end
 
     -- leave big rectangular rooms alone
-    local R = K.room
-
     if R.kind != "cave" then
       if geom.is_vert (side) and (R.big_w or 0) > 1 then return end
       if geom.is_horiz(side) and (R.big_h or 0) > 1 then return end
@@ -817,7 +816,7 @@ function Plan_nudge_rooms()
     end
 
     -- already nudged in opposite direction?
-    if K.nudges[side] < 0 then return end
+    if (K.nudges[side] or 1) < 0 then return end
 
     -- don't make this section too large
     if geom.vert_sel(side, K.sh, K.sw) >= 7 then return end
@@ -932,6 +931,7 @@ function Plan_sub_rooms()
     return 200 / (vr * vr)
   end
 
+
   local function try_add_sub_room(parent)
     local infos = {}
     local probs = {}
@@ -960,39 +960,36 @@ function Plan_sub_rooms()
 
     local info = infos[rand.index_by_probs(probs)]
 
+
     -- actually add it !
-    local ROOM = ROOM_CLASS.new()
+    local R = ROOM_CLASS.new()
 
-    ROOM.big_w = 1
-    ROOM.big_h = 1
+    R.parent = parent
+    R.neighbors = { }  -- ???
 
-    table.set_class(ROOM, ROOM_CLASS)
+    R.sx1 = info.x
+    R.sy1 = info.y
+    R.sx2 = info.x + info.w - 1
+    R.sy2 = info.y + info.h - 1
 
-    ROOM.parent = parent
-    ROOM.neighbors = { }  -- ???
+    R.sw  = info.w
+    R.sh  = info.h
 
-    ROOM.sx1 = info.x
-    ROOM.sy1 = info.y
+    R.svolume = R.sw * R.sh
 
-    ROOM.sx2 = info.x + info.w - 1
-    ROOM.sy2 = info.y + info.h - 1
-
-    ROOM.sw, ROOM.sh = geom.group_size(ROOM.sx1, ROOM.sy1, ROOM.sx2, ROOM.sy2)
-    ROOM.svolume = ROOM.sw * ROOM.sh
-
-    ROOM.is_island = (ROOM.sx1 > parent.sx1) and (ROOM.sx2 < parent.sx2) and
-                     (ROOM.sy1 > parent.sy1) and (ROOM.sy2 < parent.sy2)
+    R.is_island = (R.sx1 > parent.sx1) and (R.sx2 < parent.sx2) and
+                     (R.sy1 > parent.sy1) and (R.sy2 < parent.sy2)
 
     if not parent.children then parent.children = {} end
-    table.insert(parent.children, ROOM)
+    table.insert(parent.children, R)
 
-    parent.svolume = parent.svolume - ROOM.svolume
+    parent.svolume = parent.svolume - R.svolume
 
     -- update seed map
-    for sx = ROOM.sx1,ROOM.sx2 do
-      for sy = ROOM.sy1,ROOM.sy2 do
-        SEEDS[sx][sy].room = ROOM
-      end
+    for sx = R.sx1, R.sx2 do
+    for sy = R.sy1, R.sy2 do
+      SEEDS[sx][sy].room = R
+    end
     end
   end
 
@@ -1024,72 +1021,51 @@ end
 function Plan_make_seeds()
 
   local function plant_rooms()
-    each R in LEVEL.rooms do
-      for sx = R.sx1, R.sx2 do
-      for sy = R.sy1, R.sy2 do
+    for kx = 1, LEVEL.W do
+    for ky = 1, LEVEL.H do
+
+      local K = LEVEL.sections[kx][ky]
+      local R = K.room
+
+      if not R then continue end
+
+      R.sx1 = math.min(K.sx1, R.sx1 or  9999)
+      R.sy1 = math.min(K.sy1, R.sy1 or  9999)
+      R.sx2 = math.max(K.sx2, R.sx2 or -9999)
+      R.sy2 = math.max(K.sy2, R.sy2 or -9999)
+
+      R.svolume = R.svolume + (K.sw * K.sh)
+
+      for sx = K.sx1, K.sx2 do
+      for sy = K.sy1, K.sy2 do
         assert(Seed_valid(sx, sy))
         local S = SEEDS[sx][sy]
+
         assert(not S.room) -- no overlaps please!
+
         S.room = R
         S.kind = "walk"
       end -- sx, sy
       end
-    end
 
-    each R in LEVEL.scenic_rooms do
-      for sx = R.sx1, R.sx2 do
-      for sy = R.sy1, R.sy2 do
-        assert(Seed_valid(sx, sy))
-
-        local S = SEEDS[sx][sy]
-
-        if not S.room then -- overlap is OK for scenics
-          assert(LEVEL.liquid)
-          S.room = R
-          S.kind = "liquid"
----###    S.f_tex = "LAVA1"  -- TEMP CRUD !!!!
-        end
-      end -- sx, sy
-      end
-    end
-  end
-
-  local function fill_holes()
-    local sc_list = table.copy(LEVEL.scenic_rooms)
-    rand.shuffle(sc_list)
-
-    each R in sc_list do
-      local nx1, ny1 = R.sx1, R.sy1
-      local nx2, ny2 = R.sx2, R.sy2
-
-      for x = R.sx1-1, R.sx2+1 do
-      for y = R.sy1-1, R.sy2+1 do
-        if Seed_valid(x, y) and not R:contains_seed(x, y) then
-          local S = SEEDS[x][y]
-          if not S.room then
-            S.room = R
-            if x < R.sx1 then nx1 = x end
-            if y < R.sy1 then ny1 = y end
-            if x > R.sx2 then nx2 = x end
-            if y > R.sy2 then ny2 = y end
-          end
-        end
-      end -- x, y
-      end
-
-      R.sx1, R.sy1 = nx1, ny1
-      R.sx2, R.sy2 = nx2, ny2
-
-      R.sw, R.sh = geom.group_size(R.sx1, R.sy1, R.sx2, R.sy2)
+    end -- kx, ky
     end
   end
 
 
   ---| Plan_make_seeds |---
 
+  -- recompute seed volume
+  each R in LEVEL.rooms do
+    R.svolume = 0
+  end
+
   plant_rooms()
 
-  fill_holes()
+  each R in LEVEL.rooms do
+    R.sw = R.sx2 - R.sx1 + 1
+    R.sh = R.sy2 - R.sy1 + 1
+  end
 
   Seed_flood_fill_edges()
 end
