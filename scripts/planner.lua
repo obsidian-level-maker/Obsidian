@@ -168,8 +168,6 @@ function Plan_determine_size()
 
   LEVEL.W = W
   LEVEL.H = H
-
-  gui.printf("Map Size: %dx%d sections\n", LEVEL.W, LEVEL.H)
 end
 
 
@@ -183,62 +181,95 @@ function Plan_create_sections()
     gui.printf("%s\n", name)
   end
 
-  local function get_column_sizes(W, limit)
-    local cols = {}
 
-    assert(4 + W*2 <= limit)
+  local function pick_sizes(W, limit)
+    local sizes = {}
 
     for loop = 1,100 do
-      local total = 4  -- border seeds around level
+      local total = 0
 
-      for x = 1,W do
-        cols[x] = 2 + rand.index_by_probs(ROOM_SIZE_TABLE)
-        total = total + cols[x]
+      for x = 1, W do
+        sizes[x] = 2 + rand.index_by_probs(ROOM_SIZE_TABLE)
+        total = total + sizes[x]
       end
 
       if total <= limit then
-        return cols  -- OK!
+        return sizes  -- OK!
       end
     end
 
-    -- emergency fallback
-    gui.printf("Using emergency column sizes.\n")
+    -- the above failed, so adjust the last set of sizes it made
 
-    for x = 1,W do cols[x] = 2 end
+    gui.printf("Adjusting column/row sizes....\n")
 
-    return cols
+    for loop = 1,200 do
+      -- find a section size to shrink
+      local x = rand.irange(1, W)
+
+      local min_size = sel(loop < 100, 3, 2)
+
+      while x <= W and sizes[x] <= min_size do
+        x = x + 1
+      end
+
+      if x <= W then
+        sizes[x] = sizes[x] - 1
+        total    = total - 1
+
+        if total <= limit then
+          return sizes
+        end
+      end
+    end
+
+    -- extremely unlikely to get here
+    error("failed to pick usable column/row sizes")
   end
 
 
   ---| Plan_create_sections |---
 
   -- initial sizes of rooms in each row and column
-  local cols = {}
-  local rows = {}
+  local col_W = {}
+  local row_H = {}
 
   local limit = (PARAM.seed_limit or 56)
 
-  -- take border seeds (2+2) and free space (3) into account
-  limit = limit - 7
-
-  cols = get_column_sizes(LEVEL.W, limit)
-  rows = get_column_sizes(LEVEL.H, limit)
-
-  LEVEL.col_W = cols
-  LEVEL.row_H = rows
-
-  show_sizes("col_W", cols, LEVEL.W)
-  show_sizes("row_H", rows, LEVEL.H)
+  -- take border seeds into account
+  limit = limit - EDGE_SEEDS * 2
 
 
-  local col_X = { 3 }  -- two border seeds at [1] and [2]
-  local row_Y = { 3 }  --
+  -- reduce level size if rooms would become too small
+  local max_W = int(limit / 3.5)
+  local max_H = int((limit - DEPOT_SEEDS) / 3.5)
 
-  for x = 2, LEVEL.W do col_X[x] = col_X[x-1] + LEVEL.col_W[x-1] end
-  for y = 2, LEVEL.H do row_Y[y] = row_Y[y-1] + LEVEL.row_H[y-1] end
+  if LEVEL.W > max_W then LEVEL.W = max_W end
+  if LEVEL.H > max_H then LEVEL.H = max_H end
+
+  gui.printf("Map Size: %dx%d sections\n", LEVEL.W, LEVEL.H)
+
+
+  col_W = pick_sizes(LEVEL.W, limit)
+  row_H = pick_sizes(LEVEL.H, limit - DEPOT_SEEDS)
+
+  show_sizes("col_W", col_W, LEVEL.W)
+  show_sizes("row_H", row_H, LEVEL.H)
+
+  LEVEL.col_W = col_W
+  LEVEL.row_H = row_H
+
+
+  local col_X = { EDGE_SEEDS+1 }
+  local row_Y = { EDGE_SEEDS+1 }
+
+  for x = 2, LEVEL.W + 1 do col_X[x] = col_X[x-1] + col_W[x-1] end
+  for y = 2, LEVEL.H + 1 do row_Y[y] = row_Y[y-1] + row_H[y-1] end
 
   LEVEL.col_X = col_X
   LEVEL.row_Y = row_Y
+
+  local total_W = col_X[LEVEL.W + 1] + EDGE_SEEDS - 1
+  local total_H = row_Y[LEVEL.H + 1] + EDGE_SEEDS - 1
 
 
   -- create sections
@@ -253,11 +284,19 @@ function Plan_create_sections()
       ky = y
 
       -- FIXME: seed positions
+
+      sw = col_W[x]
+      sh = row_H[y]
     }
 
     LEVEL.sections[x][y] = SECTION
   end
   end
+
+
+  -- create seeds
+
+  Seed_init(total_W, total_H, 0, DEPOT_SEEDS)
 end
 
 
@@ -414,8 +453,8 @@ function Plan_add_normal_rooms()
 
     R.svolume = R.sw * R.sh
 
-    for x = bx,bx+big_w-1 do
-    for y = by,by+big_h-1 do
+    for x = bx, bx+big_w-1 do
+    for y = by, by+big_h-1 do
       sections[x][y].room = R
     end
     end
@@ -679,8 +718,6 @@ function Plan_nudge_rooms()
   -- in particular each room must remain a rectangle shape (so we
   -- disallow nudges that would create an L shaped room).
   --
-  -- Big rooms must be handled first, because small rooms are
-  -- never able to nudge a big border.
 
   local function volume_after_nudge(R, side, grow)
     if (side == 6 or side == 4) then
@@ -1048,8 +1085,10 @@ function Plan_make_seeds()
     end
 
     each R in LEVEL.scenic_rooms do
-      for sx = R.sx1,R.sx2 do
-      for sy = R.sy1,R.sy2 do
+      for sx = R.sx1, R.sx2 do
+      for sy = R.sy1, R.sy2 do
+        assert(Seed_valid(sx, sy))
+
         local S = SEEDS[sx][sy]
 
         if not S.room then -- overlap is OK for scenics
@@ -1096,25 +1135,8 @@ function Plan_make_seeds()
 
   ---| Plan_make_seeds |---
 
-  local max_sx = 1
-  local max_sy = 1
-
-  each R in LEVEL.rooms do
-gui.debugf("seed range @ %s\n", R:tostr())
-    max_sx = math.max(max_sx, R.sx2)
-    max_sy = math.max(max_sy, R.sy2)
-
-    R.svolume = R.sw * R.sh
-  end
-
-  -- two border seeds at top and right
-  -- (the left and bottom were handled in Plan_initial_rooms)
-  max_sx = max_sx + 2
-  max_sy = max_sy + 2
-
-  Seed_init(max_sx-1, max_sy-1, 1, 3, 3)
-
   plant_rooms()
+
   fill_holes()
 
   Seed_flood_fill_edges()

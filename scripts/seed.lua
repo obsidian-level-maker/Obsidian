@@ -86,12 +86,11 @@ end
 ----------------------------------------------------------------------
 
 
-function Seed_init(map_W, map_H, map_D, free_W, free_H)
+function Seed_init(map_W, map_H, free_W, free_H)
   gui.printf("Seed_init: %dx%d  Free: %dx%d\n", map_W, map_H, free_W, free_H)
 
   local W = map_W + free_W
   local H = map_H + free_H
-  local D = map_D
 
   -- setup globals 
   SEED_W = W
