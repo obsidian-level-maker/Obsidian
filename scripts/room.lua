@@ -1900,6 +1900,8 @@ function Room_add_crates(R)
   -- (might be slightly useful for finding big spots for masterminds)
 
   local function test_spot(S, x, y)
+    if S.solid_corner then return false end
+
     for dx = 0,1 do for dy = 0,1 do
       local N = SEEDS[x+dx][y+dy]
       if not N or N.room != S.room then return false end
