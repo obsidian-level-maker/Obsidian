@@ -66,8 +66,7 @@ SEED_H = 0
 SEED_CLASS = {}
 
 function SEED_CLASS.tostr(S)
-  return string.format("SEED [%d,%d,%s]",
-      S.sx, S.sy, S.kind or "-")
+  return string.format("SEED [%d,%d]", S.sx, S.sy)
 end
 
 function SEED_CLASS.neighbor(S, dir, dist)
