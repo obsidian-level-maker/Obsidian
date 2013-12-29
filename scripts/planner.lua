@@ -1,6 +1,6 @@
----------------------------------------------------------------
+-------------------------------------------------------------------
 --  PLANNING : Single Player
-----------------------------------------------------------------
+-------------------------------------------------------------------
 --
 --  Oblige Level Maker
 --
@@ -16,7 +16,7 @@
 --  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 --  GNU General Public License for more details.
 --
-----------------------------------------------------------------
+-------------------------------------------------------------------
 
 --[[ *** CLASS INFORMATION ***
 
@@ -398,7 +398,7 @@ function Plan_add_normal_rooms()
     big_tab = table.copy(BIG_ROOM_TABLE)
 
     if STYLE.big_rooms == "few" then
-      big_tab[11] = big_tab[11] * 5
+      big_tab[11] = big_tab[11] * 10
     elseif STYLE.big_rooms == "heaps" then
       big_tab[11] = big_tab[11] / 10
     end
@@ -1021,9 +1021,9 @@ function Plan_sub_rooms()
 
   ---| Plan_sub_rooms |---
 
-  if STYLE.subrooms == "none" then return end
+  if STYLE.sub_rooms == "none" then return end
 
-  local chance_tab = sel(STYLE.subrooms == "heaps", SUB_HEAPS, SUB_CHANCES)
+  local chance_tab = sel(STYLE.sub_rooms == "heaps", SUB_HEAPS, SUB_CHANCES)
 
   each R in LEVEL.rooms do
     if not R.parent and R.kind != "cave" then
