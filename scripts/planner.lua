@@ -391,6 +391,20 @@ end
 function Plan_add_normal_rooms()
   local sections = LEVEL.sections
 
+  local big_tab
+
+
+  local function adjust_for_styles()
+    big_tab = table.copy(BIG_ROOM_TABLE)
+
+    if STYLE.big_rooms == "few" then
+      big_tab[11] = big_tab[11] * 5
+    elseif STYLE.big_rooms == "heaps" then
+      big_tab[11] = big_tab[11] / 10
+    end
+  end
+
+
   local function calc_width(bx, big_w)
     local w = 0
     for x = bx,bx+big_w-1 do
@@ -398,6 +412,7 @@ function Plan_add_normal_rooms()
     end
     return w
   end
+
 
   local function calc_height(by, big_h)
     local h = 0
@@ -407,8 +422,13 @@ function Plan_add_normal_rooms()
     return h
   end
 
+
   local function choose_big_size(bx, by)
-    local raw = rand.key_by_probs(BIG_ROOM_TABLE)
+    if STYLE.big_rooms == "none" then
+      return 1, 1
+    end
+
+    local raw = rand.key_by_probs(big_tab)
 
     local big_w = int(raw / 10)
     local big_h =    (raw % 10)
@@ -418,35 +438,38 @@ function Plan_add_normal_rooms()
     end
 
     -- make sure it fits
-    if bx+big_w-1 > LEVEL.W then big_w = LEVEL.W - bx + 1 end
-    if by+big_h-1 > LEVEL.H then big_h = LEVEL.H - by + 1 end
+    if bx + big_w - 1 > LEVEL.W then big_w = LEVEL.W - bx + 1 end
+    if by + big_h - 1 > LEVEL.H then big_h = LEVEL.H - by + 1 end
 
     assert(big_w > 0 and big_h > 0)
 
-    -- prefer to put big rooms away from the edge
-    if (bx == 1 or bx+big_w-1 == LEVEL.W or
-        by == 1 or by+big_h-1 == LEVEL.H)
-        and rand.odds(50)
-    then
-      big_w, big_h = 1, 1
-    end
+    -- never use the whole map (horizontally)
+    if big_w >= LEVEL.W then big_w = big_w - 1 end
 
     -- prevent excessively large rooms 
-    while calc_width(bx, big_w) > 11 do
-      big_w = big_w - 1
+    local sw, sh
+    local max_size = 11
+
+    sw = calc_width (bx, big_w)
+    sh = calc_height(by, big_h)
+
+    while sw > max_size do
+      big_w = big_w - 1 ;
+      sw = calc_width(bx, big_w)
     end
 
-    while calc_height(by, big_h) > 11 do
+    while sh > max_size do
       big_h = big_h - 1
-    end
-
-    -- never use the whole map
-    if big_w >= LEVEL.W and big_h >= LEVEL.H then
-      big_w = big_w - 1
-      big_h = big_h - 1
+      sh = calc_height(by, big_h)
     end
 
     assert(big_w > 0 and big_h > 0)
+
+    -- prevent very tall / narrow rooms
+    local max_aspect = 2.6
+
+    if big_w > big_h and sw / sh > max_aspect then big_w = big_w - 1 end
+    if big_h > big_w and sh / sw > max_aspect then big_h = big_h - 1 end
 
     -- any other rooms in the way?
     for x = bx,bx+big_w-1 do for y=by,by+big_h-1 do
@@ -485,6 +508,8 @@ function Plan_add_normal_rooms()
 
 
   ---| Plan_add_normal_rooms |---
+
+  adjust_for_styles()
 
   each vis in Plan_random_section_list() do
     local bx, by = vis.x, vis.y
