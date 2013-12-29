@@ -370,7 +370,7 @@ end
 
 
 function Monsters_max_level()
-  local max_level = 10 * (LEVEL.mon_along or 0.5)
+  local max_level = 10 * (LEVEL.mon_along or 0.5) + 1
 
   if OB_CONFIG.strength == "tough" then
     max_level = max_level * 1.7
@@ -1460,7 +1460,7 @@ end
     assert(info.level)
 
     if not L.purpose then
-      local max_level = LEVEL.max_level * L.lev_along
+      local max_level = LEVEL.max_level * (0.5 + L.lev_along / 2)
       if max_level < 2 then max_level = 2 end
 
       if info.level > max_level then
