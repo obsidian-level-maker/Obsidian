@@ -300,6 +300,14 @@ function Plan_create_sections()
 end
 
 
+function Section_valid(kx, ky)
+  if kx < 1 or kx > LEVEL.W then return false end
+  if ky < 1 or ky > LEVEL.H then return false end
+
+  return true
+end
+
+
 function Plan_find_neighbors()
   -- determines neighboring rooms of each room
   -- (including diagonals, which may touch after nudging)
@@ -359,6 +367,21 @@ function Plan_count_free_sections()
   end
 
   return count
+end
+
+
+function Plan_random_section_list()
+  local visits = {}
+
+  for x = 1, LEVEL.W do
+  for y = 1, LEVEL.H do
+    table.insert(visits, { x=x, y=y })
+  end
+  end
+
+  rand.shuffle(visits)
+
+  return visits
 end
 
 
@@ -465,17 +488,7 @@ function Plan_add_normal_rooms()
 
   ---| Plan_add_normal_rooms |---
 
-  local visits = {}
-
-  for x = 1,LEVEL.W do
-  for y = 1,LEVEL.H do
-    table.insert(visits, { x=x, y=y })
-  end
-  end
-
-  rand.shuffle(visits)
-
-  each vis in visits do
+  each vis in Plan_random_section_list() do
     local bx, by = vis.x, vis.y
     
     if not sections[bx][by].room then
@@ -908,14 +921,116 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
   end
 
 
-  ---| Plan_nudge_rooms |---
+  function try_nudge_border(kx, ky, side)
+    local K = LEVEL.sections[kx][ky]
 
-  each R in LEVEL.rooms do
-    R.nudges = {}
+    local nx, ny = geom.nudge(kx, ky, side)
+
+    -- not edge of map?
+    if Section_valid(nx, ny) then return end
+
+    -- outdoor rooms need their border [except caves]
+    if not K.room or (K.room.is_outdoor and not K.room.kind == "cave") then
+      return
+    end
+
+    -- check for big rectangular rooms
+    local R = K.room
+
+    if R.kind != "cave" then
+      if geom.is_vert (side) and (R.big_w or 0) > 1 then return end
+      if geom.is_horiz(side) and (R.big_h or 0) > 1 then return end
+    end
+
+    -- sometimes just leave it
+    if rand.odds(20) then return end
+
+    -- OK, nudge it
+    local dist = rand.irange(1, EDGE_SEEDS - 1)
+
+    if side == 2 then K.sy1 = K.sy1 - dist end
+    if side == 8 then K.sy2 = K.sy2 + dist end
+    if side == 4 then K.sx1 = K.sx1 - dist end
+    if side == 6 then K.sx2 = K.sx2 + dist end
+
+    K.sw, K.sh = geom.group_size(K.sx1, K.sy1, K.sx2, K.sy2)
   end
 
-  nudge_big_rooms()
-  nudge_the_rest()
+
+  function nudge_borders(side)
+    each pos in Plan_random_section_list() do
+      try_nudge_border(pos.x, pos.y, side)
+    end
+  end
+
+
+  function try_nudge_room(kx, ky, side)
+    local K = LEVEL.sections[kx][ky]
+
+    local R = K.room
+    if not R then return end
+
+    local nx, ny = geom.nudge(kx, ky, side)
+
+    if not Section_valid(nx, ny) then return end
+
+    local K2 = LEVEL.sections[nx][ny]
+    local R2 = K2.room
+
+    if not R2 or R2 == R then return end
+
+    -- check for big rooms : never nudge a "wide" edge
+    if R.kind != "cave" then
+      if geom.is_vert (side) and (R.big_w or 0) > 1 then return end
+      if geom.is_horiz(side) and (R.big_h or 0) > 1 then return end
+    end
+
+    if R2.kind != "cave" then
+      if geom.is_vert (side) and (R2.big_w or 0) > 1 then return end
+      if geom.is_horiz(side) and (R2.big_h or 0) > 1 then return end
+    end
+
+    -- previous nudge in opposite dir?
+    if K.nudges[side] < 0 then return end
+
+    -- don't make other room too small
+
+    -- FIXME....
+  end
+
+
+  function nudge_rooms(pass)
+    each pos in Plan_random_section_list() do
+      local side
+      if pass == 1 then
+        side = rand.sel(50, 2, 8)
+      else
+        side = rand.sel(50, 4, 6)
+      end
+
+      try_nudge_room(pos.x, pos.y, side)
+    end
+  end
+
+
+  ---| Plan_nudge_rooms |---
+
+  for x = 1, LEVEL.W do
+  for y = 1, LEVEL.H do
+    LEVEL.sections[x][y].nudges = {}
+  end
+  end
+
+  for dir = 2,8,2 do
+    nudge_borders(dir)
+  end
+
+  -- move vertically in first pass, horizontally in second
+  for pass = 1,2 do
+  for loop = 1,4 do
+    nudge_rooms(pass)
+  end
+  end
 end
 
 
