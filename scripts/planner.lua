@@ -537,9 +537,9 @@ function Plan_add_caves()
   local function spot_is_free(mx1, my1, mx2, my2)
     for x = mx1, mx2 do
     for y = my1, my2 do
-      local K = Section_get_room(x, y)
+      local K = LEVEL.sections[x][y]
 
-      if not K:usable_for_room() then return false end
+      if K.room then return false end
     end
     end
 
@@ -550,24 +550,25 @@ function Plan_add_caves()
   local function find_free_spot(side)
     local dx, dy = geom.delta(side)
 
-    local mx1, mx2 = 1, MAP_W
-    local my1, my2 = 1, MAP_H
+    local mx1, mx2 = 1, LEVEL.W
+    local my1, my2 = 1, LEVEL.H
 
         if dx < 0 then mx2 = 1
-    elseif dx > 0 then mx1 = MAP_W
+    elseif dx > 0 then mx1 = LEVEL.W
     end
 
         if dy < 0 then my2 = 1
-    elseif dy > 0 then my1 = MAP_H
+    elseif dy > 0 then my1 = LEVEL.H
     end
 
     if side == 5 then
       mx1 = 2
       my1 = 2
-      mx2 = MAP_W - 2
-      my2 = MAP_H - 2
+      mx2 = LEVEL.W - 2
+      my2 = LEVEL.H - 2
     end
 
+    -- wanted size : big for the middle of the map
     local mw = sel(side == 5, 2, 1)
     local mh = mw
 
@@ -599,17 +600,20 @@ function Plan_add_caves()
     local R = ROOM_CLASS.new()
 
     R.kind = "cave"
+    R.svolume = 0
 
     for mx = spot.mx1, spot.mx2 do
     for my = spot.my1, spot.my2 do
       local K = LEVEL.sections[mx][my]
 
---!!!!      K:set_room(R)
+      K.room = R
+
+      R.svolume = R.svolume + (K.sw * K.sh)
     end
     end
 
-    -- this cost ensures large areas _tend_ to be at end of list,
-    -- but are not forced to be (can be visited earlier).
+    -- this cost ensures large rooms _tend_ to be at end of list,
+    -- but may be visited earlier.
     R.cave_cost = math.max(spot.mw, spot.mh) + gui.random() * 1.7
 
     return R
@@ -617,25 +621,29 @@ function Plan_add_caves()
 
 
   local function grow_room(R)
-    -- too big already?
-    if #R.sections >= MAP_W * (MAP_H - 1) then
-      return false
-    end
+--????  -- too big already?
+--????  if #R.svolume >= LEVEL.W * (LEVEL.H - 1) then
+--????    return false
+--????  end
 
+    -- collect all possible grow spots
     local locs = {}
 
-    for mx = 1, MAP_W do
-    for my = 1, MAP_H do
-      local K = Section_get_room(mx, my)
+    for mx = 1, LEVEL.W do
+    for my = 1, LEVEL.H do
+      local K = LEVEL.sections[mx][my]
 
       if K.room != R then continue end
 
       for dir = 2,8,2 do
         local nx, ny = geom.nudge(mx, my, dir)
-        N = Section_get_room(nx, ny)
 
-        if N and N:usable_for_room() then
-          table.insert(locs, { K=K, N=N })
+        if not Section_valid(nx, ny) then continue end
+
+        local N = LEVEL.sections[nx][ny]
+
+        if not N.room then
+          table.insert(locs, N)
         end
       end
 
@@ -643,19 +651,24 @@ function Plan_add_caves()
     end
 
 
-    if table.empty(locs) then return false end
+    if table.empty(locs) then
+      -- nothing was possible
+      return false
+    end
 
-    local loc = rand.pick(locs)
-    local N   = loc.N
 
-    N:set_room(R)
+    local N = rand.pick(locs)
+
+    N.room = R
+
+    R.svolume = R.svolume + (N.sw * N.sh)
 
     R.cave_cost = R.cave_cost + rand.range(0.5, 1.0)
 
     return true
   end
 
-  
+
   ---| Plan_add_caves |---
 
   -- compute the quota
@@ -681,30 +694,35 @@ function Plan_add_caves()
 
   -- best starting spots are in a corner.
   -- for middle of map, require a 2x2 sections
-  local locations = { [1]=50, [3]=50, [7]=50, [9]=50,
-                      [2]=20, [4]=20, [6]=20, [8]=20,
-                      [5]=90
-                    }
+  local locations =
+  {
+    [1]=50, [3]=50, [7]=50, [9]=50
+    [2]=20, [4]=20, [6]=20, [8]=20
+    [5]=90
+  }
 
-  local areas = { }
+  local rooms = { }
 
   -- this rough_size logic ensures that on bigger maps we tend to
   -- create larger caves (rather than lots of smaller caves).
   local rough_size = rand.irange(2, 5)
-  if (MAP_W + MAP_H) > 6  then rough_size = rough_size + 1 end
-  if (MAP_W + MAP_H) > 10 then rough_size = rough_size + 1 end
+  local level_ext  = LEVEL.W + LEVEL.H
+
+  if level_ext > 6  then rough_size = rough_size + 1 end
+  if level_ext > 10 then rough_size = rough_size + 1 end
 
   local min_rooms = 1
   local max_rooms = 7
 
   if STYLE.caves != "few" and
-     ((MAP_W + MAP_H) > 5 or rand.odds(perc))
+     (level_ext > 5 or rand.odds(perc))
   then
      min_rooms = 2
   end
 
-  while #areas < max_rooms and
-       (#areas < min_rooms or quota / #areas > rough_size + 0.4)
+
+  while #rooms < max_rooms and
+       (#rooms < min_rooms or quota / #rooms > rough_size + 0.4)
   do
     -- pick a location
     local side = rand.key_by_probs(locations)
@@ -717,7 +735,7 @@ function Plan_add_caves()
     local spot = find_free_spot(side)
 
     if spot then
-      table.insert(areas, new_room(spot))
+      table.insert(rooms, new_room(spot))
       quota = quota - spot.mw * spot.mh
     end
   end
@@ -729,18 +747,18 @@ function Plan_add_caves()
     if quota < 1 then break; end
 
     -- want to visit smallest ones first
-    table.sort(areas, function(A, B) return A.cave_cost < B.cave_cost end)
+    table.sort(rooms, function(A, B) return A.cave_cost < B.cave_cost end)
 
-    each R in areas do
-      if quota < 1 then break; end
-
+    each R in rooms do
       if grow_room(R) then
         quota = quota - 1
       end
+
+      if quota < 1 then break; end
     end
   end
 
-  Plan_dump_sections("Sections with caves:")
+---  Plan_dump_sections("Sections with caves:")
 end
 
 
@@ -1231,7 +1249,7 @@ function Plan_create_rooms()
   Plan_determine_size()
   Plan_create_sections()
 
---!!  Plan_add_caves()
+  Plan_add_caves()
   Plan_add_normal_rooms()
 
   Plan_find_neighbors()

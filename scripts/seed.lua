@@ -204,7 +204,7 @@ function Seed_dump_rooms()
 
     if S.room.kind == "scenic" then return "=" end
 
-    if S.room.parent then
+    if S.room.kind == "cave" then
       local n = 1 + (S.room.id % 26)
       return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
     end
