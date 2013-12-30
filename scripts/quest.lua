@@ -141,41 +141,6 @@ function Quest_quest_after_lock(LOCK)
 end
 
 
-function Quest_natural_flow(quest)
-
-  local function natural_flow(R, visited)
-    assert(R.kind != "scenic")
-
-    visited[R] = true
-
-    each C in R.conns do
-      if R == C.R2 and not visited[C.R1] then
-        C:swap()
-      end
-      if R == C.R1 and not visited[C.R2] then
-        natural_flow(C.R2, visited)
-        C.R2.entry_conn = C
-      end
-    end
-
-    each T in R.teleports do
-      if R == T.R2 and not visited[T.R1] then
-        T:swap()
-      end
-      if R == T.R1 and not visited[T.R2] then
-        natural_flow(T.R2, visited)
-        T.R2.entry_conn = T
-      end
-    end
-  end
-
-
-  ---| Quest_natural_flow |---
-
-  natural_flow(quest.start, {})
-end
-
-
 function Quest_update_tvols(quest)
 
   local function travel_volume(R, seen_conns)
@@ -1531,26 +1496,21 @@ function Quest_make_quests()
 
   local LOCK =
   {
-    kind = "EXIT",
-    item = "normal",
+    kind = "EXIT"
+    item = "normal"
   }
 
   local QUEST =
   {
-    rooms = table.copy(LEVEL.rooms),
-    conns = table.copy(LEVEL.conns),
-    lock  = LOCK,
+    rooms = table.copy(LEVEL.rooms)
+    conns = table.copy(LEVEL.conns)
+    lock  = LOCK
     start = LEVEL.start_room
   }
 
 
   LEVEL.quests = { QUEST }
   LEVEL.locks  = { LOCK  }
-
-  -- update connections so that 'src' and 'dest' follow the natural
-  -- flow of the level, i.e. player always walks src -> dest (except
-  -- when backtracking).
-  Quest_natural_flow(QUEST)
 
   Quest_initial_path(QUEST)
 

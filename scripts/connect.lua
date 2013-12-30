@@ -706,6 +706,49 @@ function Connect_start_room()
 end
 
 
+function Connect_natural_flow()
+  --
+  -- Update connections so that 'src' and 'dest' follow the natural
+  -- flow of the level, i.e. player always walks from src --> dest
+  -- (except when backtracking).
+  --
+
+  local function recursive_flow(R, visited)
+    assert(R.kind != "scenic")
+
+  --- stderrf("natural_flow @ %s\n", R:tostr())
+
+    visited[R] = true
+
+    if R.kind == "closet" then return end
+
+    if R.kind != "hallway" then
+      table.insert(LEVEL.rooms, R)
+    end
+
+    each C in R.conns do
+      if R == C.R2 and not visited[C.R1] then
+        C:swap()
+      end
+
+      if R == C.R1 and not visited[C.R2] then
+        C.R2.entry_conn = C
+
+        -- recursively handle adjacent room
+        recursive_flow(C.R2, visited)
+      end
+    end
+  end
+
+
+  ---| Connect_natural_flow |---
+
+  LEVEL.rooms = {}
+
+  recursive_flow(LEVEL.start_room, {})
+end
+
+
 function Connect_rooms()
 
   -- Guidelines:
@@ -1332,8 +1375,9 @@ gui.debugf("Failed\n")
   count_branches()
 
   Connect_start_room()
+  Connect_natural_flow()
 
-  gui.printf("New Seed Map:\n")
-  Seed_dump_rooms()
+---  gui.printf("Updated Map:\n")
+---  Seed_dump_rooms()
 end
 
