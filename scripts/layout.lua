@@ -1734,8 +1734,8 @@ function Layout_do_room(R)
     return f_texs
   end
 
-  local INDOOR_DELTAS  = { [48]=2, [64]=20, [96]=20, [128]=20, [160]=2 }
-  local OUTDOOR_DELTAS = { [32]=2, [48]=30, [80]=30, [128]=2 }
+  local INDOOR_DELTAS  = { [32]=10, [48]=20, [64]=20, [96]=10, [128]=5 }
+  local OUTDOOR_DELTAS = { [32]=20, [48]=30, [80]=20, [112]=5 }
 
   local function select_heights(focus_C)
 
