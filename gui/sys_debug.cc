@@ -20,6 +20,7 @@
 
 #include "headers.h"
 #include "main.h"
+#include "lib_util.h"
 
 
 #define DEBUG_BUF_LEN  20000
@@ -35,7 +36,11 @@ void LogInit(const char *filename)
 {
 	if (filename)
 	{
-		log_file = fopen(filename, "w");
+		const char *path = StringPrintf("%s/filename", home_dir);
+
+		log_file = fopen(path, "w");
+
+		StringFree(path);
 	}
 
 	LogPrintf("====== START OF OBLIGE LOGS ======\n");

@@ -678,11 +678,7 @@ static int p_init_lua(lua_State *L)
 
 static void Script_SetScriptPath(lua_State *L, const char *subdir)
 {
-	if (StringCaseCmp(install_dir, home_dir) == 0)
-		script_path = StringPrintf("%s/%s/?.lua", install_dir, subdir);
-	else
-		script_path = StringPrintf("%s/%s/?.lua;%s/%s/?.lua", home_dir, subdir,
-				install_dir, subdir);
+	script_path = StringPrintf("%s/%s/?.lua", install_dir, subdir);
 
 	LogPrintf("script_path: [%s]\n", script_path);
 
@@ -700,12 +696,7 @@ static void Script_SetScriptPath(lua_State *L, const char *subdir)
 
 static void Script_SetDataPath(void)
 {
-	data_path = "./modules/data;./data";  // FIXME use $home_dir
-
-	if (StringCaseCmp(install_dir, home_dir) != 0)
-	{
-		data_path = StringPrintf("%s;%s/modules/data;%s/data", data_path, install_dir, install_dir);
-	}
+	data_path = StringPrintf("%s;%s/modules/data;%s/data", data_path, install_dir, install_dir);
 
 	LogPrintf("data_path:   [%s]\n\n", data_path);
 }
@@ -892,26 +883,11 @@ static bool Script_LoadAllFromDir(const char *path, const char *ext)
 
 static void Script_LoadSubDir(const char *subdir)
 {
-	// TODO: prevent loading a script from install directory if the same one
-	//       (e.g. games/doom.lua) exists in the working directory.  Right now
-	//       we end up loading both, which is OK but inefficient.
+	const char *path = StringPrintf("%s/%s", install_dir, subdir);
 
-	//  first pass = install directory
-	// second pass =    home directory
+	Script_LoadAllFromDir(path, "lua");
 
-	int num_pass = 2;
-
-	if (StringCaseCmp(install_dir, home_dir) == 0)
-		num_pass = 1;
-
-	for (int pass = 0 ; pass < num_pass ; pass++)
-	{
-		const char *path = StringPrintf("%s/%s", (pass == 0 ? install_dir : home_dir), subdir);
-
-		Script_LoadAllFromDir(path, "lua");
-
-		StringFree(path);
-	}
+	StringFree(path);
 }
 
 

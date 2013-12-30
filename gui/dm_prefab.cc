@@ -121,11 +121,7 @@ int wadfab_load(lua_State *L)
 
 	char filename[PATH_MAX];
 
-	sprintf(filename, "%s/x_doom/%s", home_dir, name);
-
-	// check home directory, if not found then try install dir
-	if (! FileExists(filename))
-		sprintf(filename, "%s/x_doom/%s", install_dir, name);
+	sprintf(filename, "%s/x_doom/%s", install_dir, name);
 
 	if (! FileExists(filename))
 		return luaL_error(L, "wadfab_load: no such file: %s", name);

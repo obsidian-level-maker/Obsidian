@@ -79,13 +79,16 @@ static void ShowInfo()
 		"Usage: Oblige [options...]\n"
 		"\n"
 		"Available options:\n"
-		"  -b --batch   <output>  Batch mode (no GUI)\n"
-		"  -c --config  <file>    Load configuration from a file\n"
-		"  -k --keep              Keep seed value from config file\n"
+		"     --home     <dir>     Home directory\n"
+		"     --install  <dir>     Installation directory\n"
 		"\n"
-		"  -d --debug             Enable debugging\n"
-		"  -t --terminal          Print log messages to stdout\n"
-		"  -h --help              Show this help message\n"
+		"  -b --batch    <output>  Batch mode (no GUI)\n"
+		"  -c --config   <file>    Load configuration from a file\n"
+		"  -k --keep               Keep seed value from config file\n"
+		"\n"
+		"  -d --debug              Enable debugging\n"
+		"  -t --terminal           Print log messages to stdout\n"
+		"  -h --help               Show this help message\n"
 		"\n"
 	);
 
@@ -111,6 +114,20 @@ void Determine_WorkingPath(const char *argv0)
 	// current directory.  That's the place where the CONFIG.txt
 	// and LOGS.txt files are, as well the temp files.
 
+	int home_arg = ArgvFind(0, "home");
+
+	if (home_arg >= 0)
+	{
+		if (home_arg+1 >= arg_count || ArgvIsOption(home_arg+1))
+		{
+			fprintf(stderr, "OBLIGE ERROR: missing path for --home\n");
+			exit(9);
+		}
+
+		home_dir = StringDup(arg_list[home_arg + 1]);
+		return;
+	}
+
 #ifndef FHS_INSTALL
 	home_dir = GetExecutablePath(argv0);  // FIXME !!!
 
@@ -131,11 +148,53 @@ void Determine_WorkingPath(const char *argv0)
 }
 
 
+static bool Verify_InstallDir(const char *path)
+{
+	const char *filename = StringPrintf("%s/scripts/oblige.lua", path);
+
+#if 0  // DEBUG
+	fprintf(stderr, "Trying install dir: [%s]\n", path);
+	fprintf(stderr, "  using file: [%s]\n\n", filename);
+#endif
+
+	bool exists = FileExists(filename);
+
+	StringFree(filename);
+
+	return exists;
+}
+
+
 void Determine_InstallDir(const char *argv0)
 {
 	// secondly find the "Install directory", and store the
 	// result in the global variable 'install_dir'.  This is
 	// where all the LUA scripts and other data files are.
+
+	int inst_arg = ArgvFind(0, "install");
+
+	if (inst_arg >= 0)
+	{
+		if (inst_arg+1 >= arg_count || ArgvIsOption(inst_arg+1))
+		{
+			fprintf(stderr, "OBLIGE ERROR: missing path for --install\n");
+			exit(9);
+		}
+
+		install_dir = StringDup(arg_list[inst_arg + 1]);
+
+		if (Verify_InstallDir(install_dir))
+			return;
+
+		Main_FatalError("Bad install directory specified!\n");
+	}
+
+	// if run from current directory, look there
+	if (argv0[0] == '.' && Verify_InstallDir("."))
+	{
+		install_dir = StringDup(".");
+		return;
+	}
 
 #ifndef FHS_INSTALL
 	install_dir = StringDup(home_dir);
@@ -148,24 +207,9 @@ void Determine_InstallDir(const char *argv0)
 
 	for (int i = 0; prefixes[i]; i++)
 	{
-#if 0  // Version specific dir
-		install_dir = StringPrintf("%s/share/oblige-%s", prefixes[i], OBLIGE_VERSION);
-#else
 		install_dir = StringPrintf("%s/share/oblige", prefixes[i]);
-#endif
 
-		const char *filename = StringPrintf("%s/scripts/oblige.lua", install_dir);
-
-#if 0  // DEBUG
-		fprintf(stderr, "Trying install dir: [%s]\n", install_dir);
-		fprintf(stderr, "  using file: [%s]\n\n", filename);
-#endif
-
-		bool exists = FileExists(filename);
-
-		StringFree(filename);
-
-		if (exists)
+		if (Verify_InstallDir(install_dir))
 			return;
 
 		StringFree(install_dir);
@@ -539,8 +583,6 @@ int main(int argc, char **argv)
 
 	Determine_WorkingPath(argv[0]);
 	Determine_InstallDir(argv[0]);
-
-	FileChangeDir(home_dir);  // FIXME !!! use absolute filenames
 
 
 	LogInit(batch_mode ? NULL : LOG_FILENAME);
