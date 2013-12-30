@@ -143,12 +143,6 @@ end
 
 function Quest_natural_flow(quest)
 
-  local function swap_conn(C)
-    C.R1, C.R2 = C.R2, C.R1
-    C.S1, C.S2 = C.S2, C.S1
-    C.dir = 10 - C.dir
-  end
-
   local function natural_flow(R, visited)
     assert(R.kind != "scenic")
 
@@ -156,7 +150,7 @@ function Quest_natural_flow(quest)
 
     each C in R.conns do
       if R == C.R2 and not visited[C.R1] then
-        swap_conn(C)
+        C:swap()
       end
       if R == C.R1 and not visited[C.R2] then
         natural_flow(C.R2, visited)
@@ -166,7 +160,7 @@ function Quest_natural_flow(quest)
 
     each T in R.teleports do
       if R == T.R2 and not visited[T.R1] then
-        swap_conn(T)
+        T:swap()
       end
       if R == T.R1 and not visited[T.R2] then
         natural_flow(T.R2, visited)
