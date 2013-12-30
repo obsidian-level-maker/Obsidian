@@ -154,15 +154,18 @@ function Quest_compute_tvols()
     -- given room R, including itself, but excluding connections
     -- that have been "locked" or already seen.
 
-    local r_count = 0
+    local r_count = 1
     local svolume = assert(R.svolume)
 
     each C in R.conns do
       if not C.lock and not seen_conns[C] then
         local N = C:neighbor(R)
         seen_conns[C] = true
-        r_count = r_count + 1
-        svolume = svolume + travel_volume(N, seen_conns)
+
+        local trav = travel_volume(N, seen_conns)
+
+        r_count = r_count + trav.r_count
+        svolume = svolume + trav.svolume
       end
     end
 
@@ -190,8 +193,8 @@ function Quest_initial_path(quest)
 
     each C in R.conns do
       if C.R1 == R and not C.lock then
-        if best_tvol < C.tvol_2 then
-          best_tvol = C.tvol_2
+        if best_tvol < C.trav_2.svolume then
+          best_tvol = C.trav_2.svolume
           best_C = C
         end
       end
@@ -209,7 +212,7 @@ function Quest_initial_path(quest)
 
   --| Quest_initial_path |--
 
-  Quest_update_tvols(quest)
+  Quest_compute_tvols(quest)
 
   quest.path = {}
 
@@ -359,7 +362,7 @@ function Quest_decide_split(quest)  -- returns a LOCK
 
   ---| Quest_decide_split |---
 
-  Quest_update_tvols(quest)
+  Quest_compute_tvols(quest)
 
   -- choose connection which will get locked
   local poss_locks = {}
@@ -1078,17 +1081,21 @@ end
 
 function Quest_create_zones2()
 
-
-  local function initial_zone()
+  local function new_zone()
     local Z =
     {
+      id = Plan_alloc_id("zone")
     }
 
-    Z.rooms = table.copy(LEVEL.rooms)
-    Z.conns = table.copy(LEVEL.conns)
+    return Z
+  end
 
-    each R in Z.rooms do
-      R.zone = R
+
+  local function initial_zone()
+    local Z = new_zone()
+
+    each R in LEVEL.rooms do
+      R.zone = Z
     end
 
     return Z
@@ -1107,6 +1114,8 @@ function Quest_create_zones2()
 
       local score = math.min(C.trav_1.svolume, C.trav_2.svolume)
 
+      score = score + gui.random()  -- tie breaker
+
       if score > best_score then
         best_C = C
         best_score = score
@@ -1117,6 +1126,21 @@ function Quest_create_zones2()
   end
 
 
+  local function assign_new_zone(R, Z1, Z2, seen_conns)
+    assert(R.zone == Z1)
+
+    R.zone = Z2
+
+    each C in R.conns do
+      if not C.lock and not seen_conns[C] then
+        seen_conns[C] = true
+
+        assign_new_zone(C:neighbor(R), Z1, Z2, seen_conns)
+      end
+    end
+  end
+
+
   local function try_split_a_zone()
     Quest_compute_tvols()
 
@@ -1124,7 +1148,55 @@ function Quest_create_zones2()
 
     if not C then return false end
 
-    --FIXME...
+    local LOCK =
+    {
+      kind = "ZONE"
+      tag  = Plan_alloc_id("tag")
+    }
+
+    C.lock = LOCK
+
+    local Z = assert(C.R1.zone)
+
+stderrf("splitting ZONE_%d at %s\n", Z.id, C.R1:tostr())
+
+    local Z2 = new_zone()
+
+    -- insert new zone
+    for i = 1, #LEVEL.zones do
+      if LEVEL.zones[i] == Z then
+        table.insert(LEVEL.zones, i + 1, Z2)
+        break;
+      end
+    end
+
+    assign_new_zone(C.R2, Z, Z2, {})
+
+    return true
+  end
+
+
+  local function count_rooms(Z)
+    local count = 0
+
+    each R in LEVEL.rooms do
+      if R.zone == Z then
+        count = count + 1
+      end
+    end
+
+    return count
+  end
+
+
+  local function find_head(Z)
+    each R in LEVEL.rooms do
+      if R.zone == Z then
+        return R
+      end
+    end
+
+    error("No room for zone!")
   end
 
 
@@ -1132,9 +1204,11 @@ function Quest_create_zones2()
     gui.printf("Zone list:\n")
 
     each Z in LEVEL.zones do
-      gui.printf("  %d: vol:%3.1f rooms:%d head:%s\n", Z.id,
-                 Z.volume or 0, #Z.rooms,
-                 (Z.rooms[1] and Z.rooms[1]:tostr()) or "NIL")
+      local R1 = find_head(Z)
+      gui.printf("  %d: rooms:%d head:%s\n", Z.id, count_rooms(Z), R1:tostr())
+---???      gui.printf("  %d: vol:%3.1f rooms:%d head:%s\n", Z.id,
+---???                 Z.volume or 0, #Z.rooms,
+---???                 (Z.rooms[1] and Z.rooms[1]:tostr()) or "NIL")
     end
   end
 
@@ -1145,11 +1219,13 @@ function Quest_create_zones2()
 
   local want_zones = int((LEVEL.W + LEVEL.H) / 4 + gui.random() * 2)
 
+stderrf("want_zones = %d\n", want_zones)
+
   local Z = initial_zone()
 
   table.insert(LEVEL.zones, Z)
 
-  for i = 1, want_zones-1 do
+  for i = 2, want_zones do
     if not try_split_a_zone() then
       break;
     end
@@ -1600,6 +1676,11 @@ function Quest_make_quests()
     lock  = LOCK
     start = LEVEL.start_room
   }
+
+
+Quest_create_zones2()
+
+error("FOO")
 
 
   LEVEL.quests = { QUEST }
