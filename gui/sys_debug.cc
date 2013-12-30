@@ -36,7 +36,7 @@ void LogInit(const char *filename)
 {
 	if (filename)
 	{
-		const char *path = StringPrintf("%s/filename", home_dir);
+		const char *path = StringPrintf("%s/%s", home_dir, filename);
 
 		log_file = fopen(path, "w");
 

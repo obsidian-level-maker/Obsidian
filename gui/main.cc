@@ -622,8 +622,8 @@ int main(int argc, char **argv)
 	LogPrintf("Library versions: FLTK %d.%d.%d\n\n",
 			  FL_MAJOR_VERSION, FL_MINOR_VERSION, FL_PATCH_VERSION);
 
-	LogPrintf("home_dir:    %s\n",   home_dir);
-	LogPrintf("install_dir: %s\n\n", install_dir);
+	LogPrintf("   home_dir: %s\n",   home_dir);
+	LogPrintf("install_dir: %s\n",   install_dir);
 	LogPrintf("config_file: %s\n\n", config_file);
 
 
