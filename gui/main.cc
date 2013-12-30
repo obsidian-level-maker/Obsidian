@@ -45,6 +45,7 @@
 
 const char *home_dir    = NULL;
 const char *install_dir = NULL;
+const char *config_file = NULL;
 
 int screen_w;
 int screen_h;
@@ -81,10 +82,11 @@ static void ShowInfo()
 		"Available options:\n"
 		"     --home     <dir>     Home directory\n"
 		"     --install  <dir>     Installation directory\n"
+		"     --config   <file>    Config file to use\n"
 		"\n"
 		"  -b --batch    <output>  Batch mode (no GUI)\n"
-		"  -c --config   <file>    Load configuration from a file\n"
-		"  -k --keep               Keep seed value from config file\n"
+		"  -l --load     <file>    Load settings from a file\n"
+		"  -k --keep               Keep SEED from loaded settings\n"
 		"\n"
 		"  -d --debug              Enable debugging\n"
 		"  -t --terminal           Print log messages to stdout\n"
@@ -222,6 +224,26 @@ void Determine_InstallDir(const char *argv0)
 }
 
 
+void Determine_ConfigFile(const char *argv0)
+{
+	int conf_arg = ArgvFind(0, "config");
+
+	if (conf_arg >= 0)
+	{
+		if (conf_arg+1 >= arg_count || ArgvIsOption(conf_arg+1))
+		{
+			fprintf(stderr, "OBLIGE ERROR: missing path for --config\n");
+			exit(9);
+		}
+
+		config_file = StringDup(arg_list[conf_arg + 1]);
+		return;
+	}
+
+	config_file = StringPrintf("%s/%s", home_dir, CONFIG_FILENAME);
+}
+
+
 bool Main_BackupFile(const char *filename, const char *ext)
 {
 	if (FileExists(filename))
@@ -316,8 +338,8 @@ void Main_Shutdown(bool error)
 	{
 		// on fatal error we cannot risk calling into the Lua runtime
 		// (it's state may be compromised by a script error).
-		if (! error)
-			Cookie_Save(CONFIG_FILENAME);
+		if (config_file && ! error)
+			Cookie_Save(config_file);
 
 		delete main_win;
 		main_win = NULL;
@@ -583,6 +605,7 @@ int main(int argc, char **argv)
 
 	Determine_WorkingPath(argv[0]);
 	Determine_InstallDir(argv[0]);
+	Determine_ConfigFile(argv[0]);
 
 
 	LogInit(batch_mode ? NULL : LOG_FILENAME);
@@ -601,31 +624,35 @@ int main(int argc, char **argv)
 
 	LogPrintf("home_dir:    %s\n",   home_dir);
 	LogPrintf("install_dir: %s\n\n", install_dir);
+	LogPrintf("config_file: %s\n\n", config_file);
+
 
 	if (! batch_mode)
-		Cookie_Load(CONFIG_FILENAME, true /* PRELOAD */);
+		Cookie_Load(config_file, true /* PRELOAD */);
 
 	if (ArgvFind('d', "debug") >= 0)
 		debug_messages = true;
 
 	LogEnableDebug(debug_messages);
 
-
 	if (! batch_mode)
-		Main_SetupFLTK();
-
-	const char *config_file = NULL;
-
-	int config_arg = ArgvFind('c', "config");
-	if (config_arg >= 0)
 	{
-		if (config_arg+1 >= arg_count || ArgvIsOption(config_arg+1))
+		Main_SetupFLTK();
+	}
+
+
+	const char *load_file = NULL;
+
+	int load_arg = ArgvFind('l', "load");
+	if (load_arg >= 0)
+	{
+		if (load_arg+1 >= arg_count || ArgvIsOption(load_arg+1))
 		{
-			fprintf(stderr, "OBLIGE ERROR: missing filename for --config\n");
+			fprintf(stderr, "OBLIGE ERROR: missing filename for --load\n");
 			exit(9);
 		}
 
-		config_file = arg_list[config_arg+1];
+		load_file = arg_list[load_arg+1];
 	}
 
 
@@ -635,9 +662,10 @@ int main(int argc, char **argv)
 
 		Batch_Defaults();
 
-		// only load an explicitly given config file
-		if (config_file)
-			Cookie_Load(config_file);
+		// batch mode never reads/writes the normal config file.
+		// but we can load settings from a explicitly specified file...
+		if (load_file)
+			Cookie_Load(load_file);
 
 		Cookie_ParseArguments();
 
@@ -648,95 +676,100 @@ int main(int argc, char **argv)
 			Main_Shutdown(false);
 			return 3;
 		}
+
+		Main_Shutdown(false);
+		return 0;
 	}
-	else
+
+
+	/* ---- normal GUI mode ---- */
+
+	Default_Location();
+
+	int main_w, main_h;
+	UI_MainWin::CalcWindowSize(false, &main_w, &main_h);
+
+	main_win = new UI_MainWin(main_w, main_h, OBLIGE_TITLE " " OBLIGE_VERSION);
+
+	Script_Open("x_doom");
+
+	// FIXME: main_win->Defaults();
+	main_win->game_box ->Defaults();
+	main_win->level_box->Defaults();
+	main_win->play_box ->Defaults();
+
+	// load config after creating window (will set widget values)
+	Cookie_Load(config_file);
+
+	if (load_file)
+		Cookie_Load(load_file);
+
+	Cookie_ParseArguments();
+
+	if (hide_module_panel)
+		main_win->HideModules(true);
+
+
+	// show window (pass some dummy arguments)
 	{
-		Default_Location();
+		char *argv[2];
+		argv[0] = strdup("Oblige.exe");
+		argv[1] = NULL;
 
-		int main_w, main_h;
-		UI_MainWin::CalcWindowSize(false, &main_w, &main_h);
+		main_win->show(1 /* argc */, argv);
+	}
 
-		main_win = new UI_MainWin(main_w, main_h, OBLIGE_TITLE " " OBLIGE_VERSION);
+	// kill the stupid bright background of the "plastic" scheme
+	if (! alternate_look)
+	{
+		delete Fl::scheme_bg_;
+		Fl::scheme_bg_ = NULL;
 
-		Script_Open("x_doom");
+		main_win->image(NULL);
+	}
 
-		// FIXME: main_win->Defaults();
-		main_win->game_box ->Defaults();
-		main_win->level_box->Defaults();
-		main_win->play_box ->Defaults();
+	Fl::add_handler(Main_key_handler);
 
-		// load config after creating window (will set widget values)
-		if (! config_file)
-			config_file = CONFIG_FILENAME;
-
-		Cookie_Load(config_file);
-
-		Cookie_ParseArguments();
-
-		if (hide_module_panel)
-			main_win->HideModules(true);
+	// draw an empty map (must be done after main window is
+	// shown() because that is when FLTK finalises the colors).
+	main_win->build_box->mini_map->EmptyMap();
 
 
-		// show window (pass some dummy arguments)
+	ConPrintf("All Globals: @b2table:e:0:0@\n\n");
+
+	ConPrintf("READY\n");
+
+
+	try
+	{
+		// run the GUI until the user quits
+		for (;;)
 		{
-			char *argv[2];
-			argv[0] = strdup("Oblige.exe");
-			argv[1] = NULL;
+			Fl::wait(0.2);
 
-			main_win->show(1 /* argc */, argv);
-		}
+			if (main_action == MAIN_QUIT)
+				break;
 
-		// kill the stupid bright background of the "plastic" scheme
-		if (! alternate_look)
-		{
-			delete Fl::scheme_bg_;
-			Fl::scheme_bg_ = NULL;
-
-			main_win->image(NULL);
-		}
-
-		Fl::add_handler(Main_key_handler);
-
-		// draw an empty map (must be done after main window is
-		// shown() because that is when FLTK finalises the colors).
-		main_win->build_box->mini_map->EmptyMap();
-
-
-		ConPrintf("All Globals: @b2table:e:0:0@\n\n");
-
-		ConPrintf("READY\n");
-
-
-		try
-		{
-			// run the GUI until the user quits
-			for (;;)
+			if (main_action == MAIN_BUILD)
 			{
-				Fl::wait(0.2);
+				main_action = 0;
 
-				if (main_action == MAIN_QUIT)
-					break;
+				// save config in case everything blows up
+				Cookie_Save(config_file);
 
-				if (main_action == MAIN_BUILD)
-				{
-					main_action = 0;
-
-					// save config in case everything blows up
-					Cookie_Save(CONFIG_FILENAME);
-
-					Build_Cool_Shit();
-				}
+				Build_Cool_Shit();
 			}
 		}
-		catch (assert_fail_c err)
-		{
-			Main_FatalError("Sorry, an internal error occurred:\n%s", err.GetMessage());
-		}
-		catch (...)
-		{
-			Main_FatalError("An unknown problem occurred (UI code)");
-		}
 	}
+	catch (assert_fail_c err)
+	{
+		Main_FatalError("Sorry, an internal error occurred:\n%s", err.GetMessage());
+	}
+	catch (...)
+	{
+		Main_FatalError("An unknown problem occurred (UI code)");
+	}
+
 
 	Main_Shutdown(false);
 
