@@ -22,6 +22,17 @@
 
 class CONN
 {
+  kind : keyword  -- "normal"
+                  -- "teleporter"
+
+  lock : LOCK
+
+  id : number  -- debugging aid
+
+  -- The two rooms are the vital (compulsory) information,
+  -- especially for the quest system.  For teleporters the
+  -- other info will be absent.
+
   R1 : source ROOM
   R2 : destination ROOM
 
@@ -31,14 +42,37 @@ class CONN
   dir    : direction 2/4/6/8 (from S1 to S2)
 
   conn_h : floor height for connection
-
-  lock   : LOCK
 }
 
 --------------------------------------------------------------]]
 
 
 CONN_CLASS = {}
+
+
+function CONN_CLASS.new(kind, R1, R2, dir)
+  local C =
+  {
+    kind = kind
+    id   = Plan_alloc_id("conn")
+    R1   = R1
+    R2   = R2
+    dir  = dir
+  }
+
+  table.set_class(C, CONN_CLASS)
+
+  table.insert(LEVEL.conns, C)
+
+  return C
+end
+
+
+function CONN_CLASS.tostr(C)
+  return string.format("CONN_%d [%s%s]", C.id, C.kind,
+         sel(C.is_cycle, "/cycle", ""))
+end
+
 
 function CONN_CLASS.neighbor(C, R)
   if R == C.R1 then
@@ -48,20 +82,13 @@ function CONN_CLASS.neighbor(C, R)
   end
 end
 
+
 function CONN_CLASS.seed(C, R)
   if R == C.R1 then
     return C.S1
   else
     return C.S2
   end
-end
-
-function CONN_CLASS.tostr(C)
-  return string.format("CONN [%d,%d -> %d,%d %sh:%s]",
-         C.S1.sx, C.S1.sy,
-         C.S2.sx, C.S2.sy,
-         sel(C.lock, "LOCK ", ""),
-         tostring(C.conn_h))
 end
 
 
@@ -738,9 +765,10 @@ T.sx,T.sy, T.room.id, T.room.c_group)
 
     merge_groups(S.room.c_group, T.room.c_group)
 
-    local CONN = { dir=dir, R1=S.room, R2=T.room, S1=S, S2=T }
+    local CONN = CONN_CLASS.new("normal", S.room, T.room, dir)
 
-    table.set_class(CONN, CONN_CLASS)
+    CONN.S1 = S
+    CONN.S2 = T
 
     assert(not S.conn and not S.conn_dir)
     assert(not T.conn and not T.conn_dir)
@@ -753,8 +781,6 @@ T.sx,T.sy, T.room.id, T.room.c_group)
 
     S.conn_peer = T
     T.conn_peer = S
-
-    table.insert(LEVEL.conns, CONN)
 
     table.insert(S.room.conns, CONN)
     table.insert(T.room.conns, CONN)
