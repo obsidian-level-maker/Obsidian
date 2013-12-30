@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2013 Andrew Apted
+//  Copyright (C) 2006-2014 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -798,7 +798,7 @@ qLump_c * BSP_CreateInfoLump()
 
   L->Printf("\n");
   L->Printf("-- Levels created by OBLIGE %s\n", OBLIGE_VERSION);
-  L->Printf("-- " OBLIGE_TITLE " (C) 2006-2013 Andrew Apted\n");
+  L->Printf("-- " OBLIGE_TITLE " (C) 2006-2014 Andrew Apted\n");
   L->Printf("-- http://oblige.sourceforge.net/\n");
   L->Printf("\n");
 
