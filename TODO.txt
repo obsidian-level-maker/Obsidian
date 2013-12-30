@@ -710,6 +710,8 @@ Name generator:
 
 +  an option for more compact GUI (fit on 640x480 screen)
 
+-  ability to specify log file: --log option
+
 -  simplify ui_chooser logic --> use Fl_Native_File_Chooser
 
 IDEA:
