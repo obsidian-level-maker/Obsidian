@@ -526,7 +526,7 @@ int main(int argc, char **argv)
 	int batch_arg = ArgvFind('b', "batch");
 	if (batch_arg >= 0)
 	{
-		if (batch_arg+1 >= arg_count || arg_list[batch_arg+1][0] == '-')
+		if (batch_arg+1 >= arg_count || ArgvIsOption(batch_arg+1))
 		{
 			fprintf(stderr, "OBLIGE ERROR: missing filename for --batch\n");
 			exit(9);
@@ -577,7 +577,7 @@ int main(int argc, char **argv)
 	int config_arg = ArgvFind('c', "config");
 	if (config_arg >= 0)
 	{
-		if (config_arg+1 >= arg_count || arg_list[config_arg+1][0] == '-')
+		if (config_arg+1 >= arg_count || ArgvIsOption(config_arg+1))
 		{
 			fprintf(stderr, "OBLIGE ERROR: missing filename for --config\n");
 			exit(9);
