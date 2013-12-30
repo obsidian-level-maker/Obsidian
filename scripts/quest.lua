@@ -959,6 +959,9 @@ function Quest_add_weapons()
     R.weapons = {}
   end
 
+--!!!!!! FIXME: Quest_add_weapons
+do return end
+
   for index,A in ipairs(LEVEL.quests) do
     if index == 1  then
       do_start_weapon(A)
@@ -1085,9 +1088,25 @@ function Quest_create_zones2()
     local Z =
     {
       id = Plan_alloc_id("zone")
+      rooms = {}
+      themes = {}
+      previous = {}
+      rare_used = {}
     }
 
     return Z
+  end
+
+
+  local function new_lock(kind)
+    local LOCK =
+    {
+      kind = kind
+      id   = Plan_alloc_id("lock")
+      tag  = Plan_alloc_id("tag")
+    }
+    table.insert(LEVEL.locks, LOCK)
+    return LOCK
   end
 
 
@@ -1097,6 +1116,8 @@ function Quest_create_zones2()
     each R in LEVEL.rooms do
       R.zone = Z
     end
+
+    Z.solution = new_lock("EXIT")
 
     return Z
   end
@@ -1110,7 +1131,11 @@ function Quest_create_zones2()
       if C.lock then continue end
       if C.kind == "teleporter" then continue end
 
-      if C.trav_1.r_count < 2 then continue end 
+      -- start room, key room, branch-off room
+      if C.trav_1.r_count < 3 then continue end 
+
+      -- other side should not be too small either
+      if C.trav_2.r_count < 2 then continue end 
 
       local score = math.min(C.trav_1.svolume, C.trav_2.svolume)
 
@@ -1148,13 +1173,10 @@ function Quest_create_zones2()
 
     if not C then return false end
 
-    local LOCK =
-    {
-      kind = "ZONE"
-      tag  = Plan_alloc_id("tag")
-    }
+    local LOCK = new_lock("ZONE")
 
     C.lock = LOCK
+    LOCK.conn = C
 
     local Z = assert(C.R1.zone)
 
@@ -1172,20 +1194,21 @@ stderrf("splitting ZONE_%d at %s\n", Z.id, C.R1:tostr())
 
     assign_new_zone(C.R2, Z, Z2, {})
 
+    -- new zone gets the previous lock to solve
+    -- old zone must solve _this_ lock
+    Z2.solution = Z.solution
+    Z .solution = LOCK
+
     return true
   end
 
 
-  local function count_rooms(Z)
-    local count = 0
-
+  local function collect_rooms(Z)
     each R in LEVEL.rooms do
       if R.zone == Z then
-        count = count + 1
+        table.insert(Z.rooms, R)
       end
     end
-
-    return count
   end
 
 
@@ -1205,10 +1228,36 @@ stderrf("splitting ZONE_%d at %s\n", Z.id, C.R1:tostr())
 
     each Z in LEVEL.zones do
       local R1 = find_head(Z)
-      gui.printf("  %d: rooms:%d head:%s\n", Z.id, count_rooms(Z), R1:tostr())
----???      gui.printf("  %d: vol:%3.1f rooms:%d head:%s\n", Z.id,
----???                 Z.volume or 0, #Z.rooms,
----???                 (Z.rooms[1] and Z.rooms[1]:tostr()) or "NIL")
+      local lock = Z.solution
+      gui.printf("  %d: rooms:%d head:%s solve:%s(%s)\n", Z.id,
+                 #Z.rooms, R1:tostr(),
+                 lock.kind, lock.item or lock.switch or "")
+    end
+  end
+
+
+  local function choose_keys()
+    assert(THEME.switches)
+
+    local key_list = table.copy(LEVEL.usable_keys or THEME.keys or {}) 
+    local switches = table.copy(THEME.switches)
+
+    local lock_list = table.copy(LEVEL.locks)
+    rand.shuffle(lock_list)
+
+    each lock in lock_list do
+      if lock.kind != "ZONE" then continue end
+
+      if table.empty(key_list) then
+        lock.kind = "SWITCH"
+        lock.switch = rand.key_by_probs(switches)
+      else
+        lock.kind = "KEY"
+        lock.item = rand.key_by_probs(key_list)
+
+        -- cannot use this key again
+        key_list[lock.item] = nil
+      end
     end
   end
 
@@ -1230,6 +1279,12 @@ stderrf("want_zones = %d\n", want_zones)
       break;
     end
   end
+
+  each Z in LEVEL.zones do
+    collect_rooms(Z)
+  end
+
+  choose_keys()
 
   dump_zones()
 end
@@ -1288,7 +1343,7 @@ function Quest_assign_room_themes()
     gui.debugf("Dominant themes:\n")
 
     each Z in LEVEL.zones do
-      gui.debugf("@ %s:\n", Z:tostr())
+      gui.debugf("@ ZONE_%d:\n", Z.id)
 
       each kind,extent in EXTENT_TAB do
         local line = ""
@@ -1575,7 +1630,7 @@ function Quest_assign_room_themes()
     -- [[ debugging
     gui.debugf("Pictures for zones:\n")
     each Z in LEVEL.zones do
-      gui.debugf("%s =\n%s\n", Z:tostr(), table.tostr(Z.pictures))
+      gui.debugf("ZONE_%d =\n%s\n", Z.id, table.tostr(Z.pictures))
     end
     --]]
   end
@@ -1592,7 +1647,7 @@ function Quest_assign_room_themes()
 
       assert(Z.facade_mat)
 
-      gui.printf("Facade for %s : %s\n", Z:tostr(), Z.facade_mat)
+      gui.printf("Facade for ZONE_%d : %s\n", Z.id, Z.facade_mat)
     end
   end
 
@@ -1663,70 +1718,39 @@ function Quest_make_quests()
     error("Level only has one room! (2 or more are needed)")
   end
 
-  local LOCK =
-  {
-    kind = "EXIT"
-    item = "normal"
-  }
 
-  local QUEST =
-  {
-    rooms = table.copy(LEVEL.rooms)
-    conns = table.copy(LEVEL.conns)
-    lock  = LOCK
-    start = LEVEL.start_room
-  }
+  LEVEL.locks = {}
+
+  Quest_create_zones2()
 
 
-Quest_create_zones2()
+  -- FIXME
+  local last_zone = LEVEL.zones[#LEVEL.zones]
 
-error("FOO")
-
-
-  LEVEL.quests = { QUEST }
-  LEVEL.locks  = { LOCK  }
-
-  Quest_initial_path(QUEST)
-
-  local want_lock = Quest_num_locks(#QUEST.rooms)
-
-  for i = 1,want_lock do
-    Quest_add_a_lock()
-  end
-
-  gui.printf("Quest count: %d\n", #LEVEL.quests)
-
-  for index,A in ipairs(LEVEL.quests) do
-    A.id = index
-
-    each R in A.rooms do
-      R.quest = A
-    end
-
-    if A.back_path == "FIND" then
-      A.back_path = Quest_find_path_to_room(A.target, A.lock.conn.R1)
-    end
-  end
-
-
-  LEVEL.exit_room = LEVEL.quests[#LEVEL.quests].target
+  LEVEL.exit_room = last_zone.rooms[#last_zone.rooms]
   LEVEL.exit_room.purpose = "EXIT"
 
   gui.printf("Exit room: %s\n", LEVEL.exit_room:tostr())
 
 
-  Quest_order_by_visit()
-  Quest_create_zones()
+  -- !!!!!!  TEMP HACK
+  each R in LEVEL.rooms do
+    R.quest = R.zone
+  end
+
+
+---??  Quest_order_by_visit()
+---??  Quest_create_zones()
   Quest_setup_lev_alongs()
-  Quest_key_distances()
+---??  Quest_key_distances()
 
   Quest_add_weapons()
-  Quest_find_storage_rooms()
+---??  Quest_find_storage_rooms()
 
   Quest_assign_room_themes()
   Quest_select_textures()
 
-  Quest_choose_keys()
-  Quest_add_keys()
+---??  Quest_choose_keys()
+---??  Quest_add_keys()
 end
 
