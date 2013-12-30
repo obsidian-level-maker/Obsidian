@@ -82,6 +82,12 @@ class LOCK
 }
 
 
+class ZONE
+{
+  FIXME....
+}
+
+
 ALGORITHM NOTES
 ~~~~~~~~~~~~~~~
 
@@ -141,32 +147,34 @@ function Quest_quest_after_lock(LOCK)
 end
 
 
-function Quest_update_tvols(quest)
+function Quest_compute_tvols()
 
   local function travel_volume(R, seen_conns)
     -- Determine total volume of rooms that are reachable from the
     -- given room R, including itself, but excluding connections
     -- that have been "locked" or already seen.
 
-    local total = assert(R.svolume)
+    local r_count = 0
+    local svolume = assert(R.svolume)
 
     each C in R.conns do
       if not C.lock and not seen_conns[C] then
         local N = C:neighbor(R)
         seen_conns[C] = true
-        total = total + travel_volume(N, seen_conns)
+        r_count = r_count + 1
+        svolume = svolume + travel_volume(N, seen_conns)
       end
     end
 
-    return total
+    return { r_count=r_count, svolume=svolume }
   end
 
 
-  --| Quest_update_tvols |---  
+  --| Quest_compute_tvols |---  
 
-  each C in quest.conns do
-    C.src_tvol  = travel_volume(C.R1, { [C]=true })
-    C.dest_tvol = travel_volume(C.R2, { [C]=true })
+  each C in LEVEL.conns do
+    C.trav_1 = travel_volume(C.R1, { [C]=true })
+    C.trav_2 = travel_volume(C.R2, { [C]=true })
   end
 end
 
@@ -182,8 +190,8 @@ function Quest_initial_path(quest)
 
     each C in R.conns do
       if C.R1 == R and not C.lock then
-        if best_tvol < C.dest_tvol then
-          best_tvol = C.dest_tvol
+        if best_tvol < C.tvol_2 then
+          best_tvol = C.tvol_2
           best_C = C
         end
       end
@@ -307,9 +315,9 @@ function Quest_decide_split(quest)  -- returns a LOCK
     --    (ugly) door frame.  Worse is when there is a big height
     --    difference.
 
-    assert(C.src_tvol and C.dest_tvol)
+--!!!    assert(C.tvol_1 and C.tvol_2)
 
-    local cost = math.abs(C.src_tvol - C.dest_tvol * 2)
+    local cost = 0 -- math.abs(C.tvol_1 - C.tvol_2 * 2)
 
     if C.R1.is_outdoor and C.R2.is_outdoor then
       cost = cost + 40
@@ -1065,6 +1073,91 @@ function Quest_create_zones()
 
   dump_zones()
 end
+
+
+
+function Quest_create_zones2()
+
+
+  local function initial_zone()
+    local Z =
+    {
+    }
+
+    Z.rooms = table.copy(LEVEL.rooms)
+    Z.conns = table.copy(LEVEL.conns)
+
+    each R in Z.rooms do
+      R.zone = R
+    end
+
+    return Z
+  end
+
+
+  local function pick_connection()
+    local best_C
+    local best_score = -1
+
+    each C in LEVEL.conns do
+      if C.lock then continue end
+      if C.kind == "teleporter" then continue end
+
+      if C.trav_1.r_count < 2 then continue end 
+
+      local score = math.min(C.trav_1.svolume, C.trav_2.svolume)
+
+      if score > best_score then
+        best_C = C
+        best_score = score
+      end
+    end
+
+    return best_C
+  end
+
+
+  local function try_split_a_zone()
+    Quest_compute_tvols()
+
+    local C = pick_connection()
+
+    if not C then return false end
+
+    --FIXME...
+  end
+
+
+  local function dump_zones()
+    gui.printf("Zone list:\n")
+
+    each Z in LEVEL.zones do
+      gui.printf("  %d: vol:%3.1f rooms:%d head:%s\n", Z.id,
+                 Z.volume or 0, #Z.rooms,
+                 (Z.rooms[1] and Z.rooms[1]:tostr()) or "NIL")
+    end
+  end
+
+
+  ---| Quest_create_zones2 |---
+
+  LEVEL.zones = {}
+
+  local want_zones = int((LEVEL.W + LEVEL.H) / 4 + gui.random() * 2)
+
+  local Z = initial_zone()
+
+  table.insert(LEVEL.zones, Z)
+
+  for i = 1, want_zones-1 do
+    if not try_split_a_zone() then
+      break;
+    end
+  end
+
+  dump_zones()
+end
+
 
 
 function Quest_assign_room_themes()
