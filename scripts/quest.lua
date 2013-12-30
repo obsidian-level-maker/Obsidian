@@ -1262,6 +1262,27 @@ stderrf("splitting ZONE_%d at %s\n", Z.id, C.R1:tostr())
   end
 
 
+  local function place_keys()
+    each Z in LEVEL.zones do
+      assert(Z.solution)
+      
+      local places = {}
+      each R in Z.rooms do
+        if not R.purpose then table.insert(places, R) end
+      end
+      assert(#places > 0)
+      local R = rand.pick(places)
+
+      R.purpose = Z.solution.kind
+      R.purpose_lock = Z.solution
+
+      if R.purpose == "EXIT" then
+        LEVEL.exit_room = R
+      end
+    end
+  end
+
+
   ---| Quest_create_zones2 |---
 
   LEVEL.zones = {}
@@ -1287,6 +1308,10 @@ stderrf("want_zones = %d\n", want_zones)
   choose_keys()
 
   dump_zones()
+
+  place_keys()
+
+  assert(LEVEL.exit_room)
 end
 
 
@@ -1725,10 +1750,10 @@ function Quest_make_quests()
 
 
   -- FIXME
-  local last_zone = LEVEL.zones[#LEVEL.zones]
-
-  LEVEL.exit_room = last_zone.rooms[#last_zone.rooms]
-  LEVEL.exit_room.purpose = "EXIT"
+---###  local last_zone = LEVEL.zones[#LEVEL.zones]
+---###
+---###  LEVEL.exit_room = last_zone.rooms[#last_zone.rooms]
+---###  LEVEL.exit_room.purpose = "EXIT"
 
   gui.printf("Exit room: %s\n", LEVEL.exit_room:tostr())
 

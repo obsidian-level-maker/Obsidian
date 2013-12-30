@@ -45,7 +45,9 @@ class ROOM
   floor_h, ceil_h : number
 
   purpose : keyword   -- usually NIL, can be "EXIT" etc... (FIXME)
+  purpose_lock : LOCK
 
+  zone  : ZONE
   quest : QUEST
 
 
@@ -2178,7 +2180,7 @@ gui.printf("do_teleport\n")
       end
 
     elseif R.purpose == "KEY" then
-      local LOCK = assert(R.lock)
+      local LOCK = assert(R.purpose_lock)
 
       if rand.odds(15) and THEME.lowering_pedestal_skin then
         local z_top = math.max(z1+128, R.floor_max_h+64)
@@ -2198,7 +2200,7 @@ gui.printf("do_teleport\n")
       end
 
     elseif R.purpose == "SWITCH" then
-      local LOCK = assert(R.lock)
+      local LOCK = assert(R.purpose_lock)
 gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
       local INFO = assert(GAME.SWITCHES[LOCK.item])
       Build.small_switch(S, dir_for_wotsit(S), z1, INFO.skin, LOCK.tag)
