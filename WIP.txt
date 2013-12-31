@@ -12,14 +12,20 @@ WORK IN PROGRESS
 
 +  intrusions: like "junking" a side, but connects two other rooms
 
--  texture on curved corner stairs
+-  room patterns:
+   (a) less chance for rooms you can skirt around the edges
+       (especially with something higher in middle)
 
--  dark skies
+
+-  get wad-fabs working again
+
+-  add light sources
 
 -  logic to ensure Mastermind is added (esp. in guarded rooms)
 
--  facades: simpler, have a table in LEVEL_THEME entry
++  weapon pref palettes
 
-+  proper zones
+-  windows in indoor rooms (never tall), esp. in sub-rooms
 
+-  ensure normal doors are usually monster-openable
 
