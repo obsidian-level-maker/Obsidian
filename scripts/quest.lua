@@ -1909,45 +1909,6 @@ function Quest_assign_room_themes()
   end
 
 
-  local function facade_from_room_themes(r_theme1, r_theme2, seen)
-    -- the first room theme must be valid, the second one is optional
-    assert(r_theme1)
-
-    r_theme1 = assert(GAME.ROOM_THEMES[r_theme1])
-
-    local facades1 = r_theme1.facades or THEME.facades or
-                     r_theme1.walls   or THEME.walls
-    assert(facades1)
-
-    local tab = table.copy(facades1)
-
-    if r_theme2 then
-      r_theme2 = assert(GAME.ROOM_THEMES[r_theme2])
-
-      local facades2 = r_theme2.facades or THEME.facades or
-                       r_theme2.walls   or THEME.walls
-      assert(facades2)
-
-      -- merge the two together, giving priority to the first theme
-      -- Note: it does not matter if facades1 == facades2
-      table.merge_missing(tab, facades2)
-    end
-
-    -- prefer not to use the same facade material again
-    each name in seen do
-      if tab[name] then
-        tab[name] = tab[name] / 10
-      end
-    end
-
-    local mat = rand.key_by_probs(tab)
-
-    seen[mat] = 1
-
-    return mat
-  end
-
-
   local function pictures_for_zones()
     each Z in LEVEL.zones do
       Z.logo_name = "BLAH" ---##  rand.key_by_probs(THEME.logos)
@@ -1999,15 +1960,19 @@ function Quest_assign_room_themes()
 
 
   local function select_facades_for_zones()
-    local seen = {}
+    if not THEME.facades then
+      error("Theme is missing facades table")
+    end
+
+    local tab = table.copy(THEME.facades)
 
     each Z in LEVEL.zones do
-      local r_theme1 = Z.themes["building"][1]
-      local r_theme2 = Z.themes["building"][2]  -- may be NIL
+      local mat = rand.key_by_probs(tab)
 
-      Z.facade_mat = facade_from_room_themes(r_theme1, r_theme2, seen)
+      Z.facade_mat = mat
 
-      assert(Z.facade_mat)
+      -- less likely to use it again
+      tab[mat] = tab[mat] / 5
 
       gui.printf("Facade for ZONE_%d : %s\n", Z.id, Z.facade_mat)
     end
@@ -2018,10 +1983,8 @@ function Quest_assign_room_themes()
 
   LEVEL.rare_used = {}
 
-  if not EPISODE.rare_used then EPISODE.rare_used = {} end
-
-  if THEME.facades then
-    LEVEL.global_facades = table.copy(THEME.facades)
+  if not EPISODE.rare_used then
+    EPISODE.rare_used = {}
   end
 
   determine_extents()
