@@ -39,9 +39,9 @@ class QUEST
                  --
                  -- start.entry_conn is the entry to this quest
 
-  target : ROOM  -- room containing the key/switch to exit this
-                 -- quest, _OR_ the level exit room itself.
-                 -- Never nil.
+///  target : ROOM  -- room containing the key/switch to exit this
+///                 -- quest, _OR_ the level exit room itself.
+///                 -- Never nil.
 
   lock : LOCK    -- lock info, which defines what the 'target' room
                  -- will hold (key, switch or an EXIT).  Also defines
@@ -1428,12 +1428,143 @@ stderrf("want_zones = %d\n", want_zones)
 end
 
 
+function Quest_divide_zones()
+  --
+  -- this divides the zones into stuff for the player to do ("quests"),
+  -- typically just finding a switch to open a remote door.  each zone
+  -- will consist of at least one quest, but usually several.
+  --
+  local active_locks = {}
+
+  local function new_quest(start)
+    local id = 1 + #LEVEL.quests
+
+    local QUEST =
+    {
+      id = id
+      start = start
+      rooms = {}
+      storage_rooms = {}
+    }
+
+    table.insert(LEVEL.quests, QUEST)
+
+    return QUEST
+  end
+
+
+  local function pick_an_active_lock()
+
+    
+  end
+
+
+  local function boring_flow(R, quest)
+    -- no locks will be added in this sub-tree of the zone
+
+    R.quest = quest
+
+    each exit in R:get_exits() do
+      -- ignore exits which leave the zone
+      if exit.R2.zone != R.zone then continue end
+
+      boring_flow(exit.R2, quest)
+    end
+  end
+
+
+  local function quest_flow(R, quest)
+    R.quest = quest
+
+    table.insert(quest.rooms, R)
+
+
+    local exits = {}
+
+    -- filter out exits which leave the zone
+    each exit in R:get_exits() do
+      if exit.R2.zone != R.zone then continue end
+      table.insert(exits, exit)
+    end
+
+
+    if table.empty(exits) then
+      --
+      -- room is a leaf
+      --
+
+      local lock = pick_an_active_lock()
+
+      if not lock then
+        -- room must solve the zone
+        add_solution(R, R.zone.solution)
+
+        -- we are completely finished now
+        return
+      end
+
+      add_solution(R, lock)
+ 
+      local new_Q = new_quest(lock.conn.R2)
+
+      -- continue on with new room and quest
+      quest_flow(new_Q.start, new_Q)
+
+    else
+      --
+      -- room has branches
+      --
+
+      local free_exit
+
+      -- pick the exit we will continue down
+      -- if a teleporter exists, we must use it
+      each C in exits do
+        if C.kind == "teleporter" then
+          assert(not free_exit)
+          free_exit = C
+        end
+      end
+
+      if not free_exit then
+        free_exit = pick_free_exit(exits)
+      end
+
+      -- lock up all other branches
+      each C in exits do
+        add_lock(R, C)
+      end
+
+      each exit in exits do
+        add_lock(exit)      -- alternatively, turn into storage
+      end
+
+      -- continue down the free exit
+      quest_flow(exit.R2, quest)
+    end
+  end
+
+
+  ---| Quest_divide_zones |---
+
+  local Q = new_quest(LEVEL.start_room)
+
+  if THEME.switches then
+    quest_flow(Q.start, Q)
+  else
+    boring_flow(Q.start, Q)
+  end
+
+end
+
+
 
 function Quest_assign_room_themes()
- 
+  --
   -- figure out how many room themes to use for each kind of room.
-  -- table keys are room kinds ("building" etc) and value is number of
-  -- themes per ZONE, where zero means the whole level.
+  -- table keys of EXTENT_TAB are room kinds ("building" etc) and
+  -- value is number of themes per ZONE, where zero means the whole level.
+  --
   local EXTENT_TAB = {}
 
   local function total_of_room_kind(kind)
@@ -1869,6 +2000,9 @@ function Quest_make_quests()
 ---###  LEVEL.exit_room.purpose = "EXIT"
 
   gui.printf("Exit room: %s\n", LEVEL.exit_room:tostr())
+
+
+  Quest_divide_zones()
 
 
   -- !!!!!!  TEMP HACK
