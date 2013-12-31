@@ -1193,18 +1193,21 @@ stderrf("splitting ZONE_%d at %s\n", Z.id, C.R1:tostr())
 
     Z2.start = C.R2
 
-    -- insert new zone -- must be AFTER current zone
+    -- insert new zone, it must be AFTER current zone
+    local old_pos
     for i = 1, #LEVEL.zones do
       if LEVEL.zones[i] == Z then
-        table.insert(LEVEL.zones, i + 1, Z2)
-        break;
+        old_pos = i ; break
       end
     end
+    assert(old_pos)
+
+    table.insert(LEVEL.zones, old_pos + 1, Z2)
 
     assign_new_zone(Z2.start, Z, Z2, {})
 
     -- new zone gets the previous lock to solve
-    -- old zone must solve _this_ lock
+    -- current zone must solve _this_ lock
     Z2.solution = Z.solution
     Z .solution = LOCK
 
