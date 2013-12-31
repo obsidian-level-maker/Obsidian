@@ -168,6 +168,18 @@ function ROOM_CLASS.valid_T(R, x, y)
   return true
 end
 
+function ROOM_CLASS.get_exits(R)
+  local exits = {}
+
+  each C in R.conns do
+    if C.R1 == R and not (C.kind == "double_R" or C.kind == "closet") then
+      table.insert(exits, C)
+    end
+  end
+
+  return exits
+end
+
 function ROOM_CLASS.conn_area(R)
   local lx, ly = 999,999
   local hx, hy = 0,0

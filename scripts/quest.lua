@@ -34,13 +34,13 @@ class QUEST
                        -- go between rooms in the same quest
 
   start : ROOM   -- room which player enters this quest
-                 -- (map's start room for the very first quest)
+                 -- (map start room for the very first quest)
                  -- Never nil.
                  --
                  -- start.entry_conn is the entry to this quest
 
   target : ROOM  -- room containing the key/switch to exit this
-                 -- quest, _OR_ the level's exit room itself.
+                 -- quest, _OR_ the level exit room itself.
                  -- Never nil.
 
   lock : LOCK    -- lock info, which defines what the 'target' room
@@ -105,7 +105,7 @@ says to themselves "what the hell is this key for ???".
 
 Hence we cannot add locked doors just anywhere into the level.
 This algorithm assumes that in each group of rooms (a QUEST)
-there is a path from the start to the target room (that's the
+there is a path from the start to the target room (that is the
 room which holds either a key or is the EXIT room of the map).
 So a locked door can be added to a room somewhere along that
 path.
@@ -185,6 +185,68 @@ function Quest_compute_tvols()
     C.trav_1 = travel_volume(C.R1, { [C]=true })
     C.trav_2 = travel_volume(C.R2, { [C]=true })
   end
+end
+
+
+function Quest_dump_zone_flow(Z)
+
+  function flow(R, indents, conn)
+    assert(R)
+
+    if not indents then
+      indents = {}
+    else
+      indents = table.copy(indents)
+    end
+
+    local line = "   "
+
+    for i = 1, #indents do
+      if i == #indents then
+        if conn.kind == "teleporter" then
+          line = line .. "|== "
+        elseif conn.lock then
+          line = line .. "|## "
+        else
+          line = line .. "|-- "
+        end
+      elseif indents[i] then
+        line = line .. "|   "
+      else
+        line = line .. "    "
+      end
+    end
+
+    gui.debugf("%s%s (%d seeds)\n", line, R:tostr(), R.svolume)
+
+    local exits = {}
+
+    -- filter out exits which leave the zone
+    each exit in R:get_exits() do
+      if exit.R2.zone == Z then
+        table.insert(exits, exit)
+      end
+    end
+
+    table.insert(indents, true)
+
+    each C in exits do
+      if _index == #exits then
+        indents[#indents] = false
+      end
+
+      flow(C.R2, indents, C)
+    end
+  end
+
+
+  ---| Quest_dump_zone_flow |---
+
+  gui.debugf("ZONE_%d FLOW:\n", Z.id)
+
+  flow(Z.start)
+
+  gui.debugf("\n")
 end
 
 
@@ -1123,6 +1185,8 @@ function Quest_create_zones2()
       R.zone = Z
     end
 
+    Z.start = LEVEL.start_room
+
     Z.solution = new_lock("EXIT")
 
     return Z
@@ -1315,6 +1379,8 @@ stderrf("want_zones = %d\n", want_zones)
 
   each Z in LEVEL.zones do
     collect_rooms(Z)
+
+    Quest_dump_zone_flow(Z)
   end
 
   choose_keys()
