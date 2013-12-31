@@ -1359,7 +1359,7 @@ stderrf("splitting ZONE_%d at %s\n", Z.id, C.R1:tostr())
 
       if table.empty(key_list) then
         lock.kind = "SWITCH"
-        lock.switch = rand.key_by_probs(switches)
+        lock.switch = "sw_hot" --FIXME !!!! rand.key_by_probs(switches)
       else
         lock.kind = "KEY"
         lock.item = rand.key_by_probs(key_list)
@@ -1371,7 +1371,7 @@ stderrf("splitting ZONE_%d at %s\n", Z.id, C.R1:tostr())
   end
 
 
-  local function place_keys()
+  local function place_keys__OLD()  -- FIXME: REMOVE
     each Z in LEVEL.zones do
       assert(Z.solution)
       
@@ -1422,10 +1422,10 @@ stderrf("want_zones = %d\n", want_zones)
 
   dump_zones()
 
-  place_keys()
+---  place_keys()
 
-  assert(LEVEL.exit_room)
 end
+
 
 
 function Quest_divide_zones()
@@ -1435,6 +1435,7 @@ function Quest_divide_zones()
   -- will consist of at least one quest, but usually several.
   --
   local active_locks = {}
+
 
   local function new_quest(start)
     local id = 1 + #LEVEL.quests
@@ -1453,9 +1454,98 @@ function Quest_divide_zones()
   end
 
 
-  local function pick_an_active_lock()
+  local function add_lock(R, C)
+    assert(C.kind != "double_L")
+    assert(C.kind != "closet")
+    assert(C.kind != "teleporter")
 
-    
+    local LOCK =
+    {
+      kind = "SWITCH"
+      switch = rand.key_by_probs(THEME.switches)
+      tag = Plan_alloc_id("tag")
+    }
+
+    C.lock = LOCK
+    LOCK.conn = C
+
+-- gui.debugf("add_lock: LOCK_%d to %s\n", LOCK.tag, D.L2:tostr())
+
+    -- keep newest locks at the front of the active list
+    table.insert(active_locks, 1, LOCK)
+
+    table.insert(LEVEL.locks, LOCK)
+  end
+
+
+  local function pick_lock_to_solve()
+    if table.empty(active_locks) then
+      return nil
+    end
+
+    -- choosing the newest lock (at index 1) produces the most linear
+    -- progression, which is easiest on the player.  Choosing older
+    -- locks produces more back-tracking.  Due to the zone system,
+    -- it doesn't matter too much which lock we choose.
+
+    local p = 1
+
+    while (p + 1) <= #active_locks and rand.odds(40) do
+       p = p + 1
+    end
+
+    return table.remove(active_locks, p)
+  end
+
+
+  local function add_solution(R, lock)
+stderrf("add_solution @ %s : LOCK %s\n", R:tostr(), lock.kind)
+stderrf("    got: %s\n", tostring(R.purpose))
+    assert(not R.purpose)
+
+    R.purpose = lock.kind
+    R.purpose_lock = lock
+
+    if R.purpose == "EXIT" then
+      LEVEL.exit_room = R
+    end
+  end
+
+
+  local function evaluate_exit(R, C)
+    -- generally want to visit the SMALLEST group of rooms first, since
+    -- that means the player's hard work to find the switch is rewarded
+    -- with a larger new area to explore.  In theory anyway :-)
+
+    -- FIXME !!!!
+    return gui.random() * 10
+  end
+
+
+  local function pick_free_exit(R, exits)
+    assert(#exits > 0)
+
+    if #exits == 1 then
+      return exits[1]
+    end
+
+    local best
+    local best_score = -9e9
+
+    each C in exits do
+      assert(C.kind != "teleporter")
+
+      local score = evaluate_exit(R, C)
+
+-- gui.debugf("exit score for %s = %1.1f", D:tostr(), score)
+
+      if score > best_score then
+        best = C
+        best_score = score
+      end
+    end
+
+    return best
   end
 
 
@@ -1493,10 +1583,10 @@ function Quest_divide_zones()
       -- room is a leaf
       --
 
-      local lock = pick_an_active_lock()
+      local lock = pick_lock_to_solve()
 
       if not lock then
-        -- room must solve the zone
+        -- room must solve the zone's lock instead
         add_solution(R, R.zone.solution)
 
         -- we are completely finished now
@@ -1517,8 +1607,8 @@ function Quest_divide_zones()
 
       local free_exit
 
-      -- pick the exit we will continue down
-      -- if a teleporter exists, we must use it
+      -- pick the exit we will continue travelling down.
+      -- if one of them is a teleporter, we must use it.
       each C in exits do
         if C.kind == "teleporter" then
           assert(not free_exit)
@@ -1527,32 +1617,35 @@ function Quest_divide_zones()
       end
 
       if not free_exit then
-        free_exit = pick_free_exit(exits)
+        free_exit = pick_free_exit(R, exits)
       end
 
+      table.kill_elem(exits, free_exit)
+
       -- lock up all other branches
+      -- FIXME: turn some into storage [or secrets]
       each C in exits do
         add_lock(R, C)
       end
 
-      each exit in exits do
-        add_lock(exit)      -- alternatively, turn into storage
-      end
-
       -- continue down the free exit
-      quest_flow(exit.R2, quest)
+      quest_flow(free_exit.R2, quest)
     end
   end
 
 
   ---| Quest_divide_zones |---
 
-  local Q = new_quest(LEVEL.start_room)
+  LEVEL.quests = {}
 
-  if THEME.switches then
-    quest_flow(Q.start, Q)
-  else
-    boring_flow(Q.start, Q)
+  each Z in LEVEL.zones do
+    local Q = new_quest(Z.start)
+
+    if THEME.switches then
+      quest_flow(Q.start, Q)
+    else
+      boring_flow(Q.start, Q)
+    end
   end
 
 end
@@ -1992,17 +2085,12 @@ function Quest_make_quests()
 
   Quest_create_zones2()
 
+  Quest_divide_zones()
 
-  -- FIXME
----###  local last_zone = LEVEL.zones[#LEVEL.zones]
----###
----###  LEVEL.exit_room = last_zone.rooms[#last_zone.rooms]
----###  LEVEL.exit_room.purpose = "EXIT"
+
+  assert(LEVEL.exit_room)
 
   gui.printf("Exit room: %s\n", LEVEL.exit_room:tostr())
-
-
-  Quest_divide_zones()
 
 
   -- !!!!!!  TEMP HACK
