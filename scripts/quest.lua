@@ -94,47 +94,6 @@ class ZONE
 }
 
 
-ALGORITHM NOTES
-~~~~~~~~~~~~~~~
-
-The fundamental requirement of a locked door is that the player
-needs to reach the door _before_ he/she reaches the key.  Then
-the player knows what they are looking for.  Without this, the
-player can just stumble on the key before finding the door and
-says to themselves "what the hell is this key for ???".
-
-Hence we cannot add locked doors just anywhere into the level.
-This algorithm assumes that in each group of rooms (a QUEST)
-there is a path from the start to the target room (that is the
-room which holds either a key or is the EXIT room of the map).
-So a locked door can be added to a room somewhere along that
-path.
-
-There are two different ways to add a lock:
-   - the "ON" type simply blocks the original path.
-
-   - the "OFF" type does not block the path itself, instead it
-     locks one of the connections coming off the path.  This
-     causes the existing target to change to a new room.
-
-The room where the lock is added must be a "junction", i.e. it
-must have a free branch where the player can travel along to
-find the key to the locked door.
-
-The "ON" type creates more linear progression (see door A,
-find key A, see door B, find key B, etc...).  The "OFF" type
-creates more memory strain (see door A, then see door B, then
-see door C, finally find C key, then find key B, then key A)
-and the level requires more back-tracking.
-
-Once we have found the connection to lock, the quest is split
-into two new quests: FRONT (which always contains the same
-start room) and BACK.  The two types (ON vs OFF) require
-different logic for splitting the quests.  After the split,
-the new quests will have their own start room, target room
-and path, and they might get split again in the future.
-
-
 --------------------------------------------------------------]]
 
 
@@ -2054,12 +2013,6 @@ function Quest_make_quests()
   assert(LEVEL.exit_room)
 
   gui.printf("Exit room: %s\n", LEVEL.exit_room:tostr())
-
-
-  -- !!!!!!  TEMP HACK
-  each R in LEVEL.rooms do
-    R.quest = R.zone
-  end
 
 
 ---??  Quest_order_by_visit()
