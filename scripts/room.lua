@@ -663,7 +663,7 @@ function Room_reckon_doors()
             B.lock = S.conn.lock
 
             -- FIXME: smells like a hack!!
-            if B.lock.item and string.sub(B.lock.item, 1, 4) == "bar_" then
+            if B.lock.switch and string.sub(B.lock.switch, 1, 4) == "bar_" then
               B.kind = "bars"
             end
 
@@ -2201,8 +2201,8 @@ gui.printf("do_teleport\n")
 
     elseif R.purpose == "SWITCH" then
       local LOCK = assert(R.purpose_lock)
-gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
-      local INFO = assert(GAME.SWITCHES[LOCK.item])
+gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
+      local INFO = assert(GAME.SWITCHES[LOCK.switch])
       Build.small_switch(S, dir_for_wotsit(S), z1, INFO.skin, LOCK.tag)
 
     else
@@ -2487,7 +2487,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         local z = assert(S.conn and S.conn.conn_h)
 
         local LOCK = assert(S.border[side].lock)
-        local skin = assert(GAME.DOORS[LOCK.item])
+        local skin = assert(GAME.DOORS[LOCK.switch or LOCK.item])
 
 --if not skin.track then gui.printf("%s", table.tostr(skin,1)); end
         assert(skin.track)
@@ -2505,7 +2505,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
       if B_kind == "bars" then
         local LOCK = assert(S.border[side].lock)
-        local skin = assert(GAME.DOORS[LOCK.item])
+        local skin = assert(GAME.DOORS[LOCK.switch or LOCK.item])
 
         local z_top = math.max(R.floor_max_h, N.room.floor_max_h) + skin.bar_h
         local ceil_min = math.min(R.ceil_h or SKY_H, N.room.ceil_h or SKY_H)
