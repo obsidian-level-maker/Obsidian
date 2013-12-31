@@ -2378,6 +2378,7 @@ if R.kind == "cave" then f_tex = "RROCK04" end --!!!!! TEMP
     local cx2, cy2 = x2, y2
 
     local function shrink_floor(side, len)
+do return end
       if side == 2 then fy1 = fy1 + len end
       if side == 8 then fy2 = fy2 - len end
       if side == 4 then fx1 = fx1 + len end
@@ -2650,7 +2651,16 @@ if R.kind == "cave" then f_tex = "RROCK04" end --!!!!! TEMP
       local kind, w_face, p_face = Mat_normal(S.l_tex or w_tex, f_tex)
       p_face.kind = sec_kind
 
-      Trans.quad(fx1,fy1, fx2,fy2, nil,z1, kind, w_face, p_face)
+      for bx = 0, 2 do
+      for by = 0, 2 do
+        local x1 = fx1 + int((fx2 - fx1) * bx / 3)
+        local y1 = fy1 + int((fy2 - fy1) * by / 3)
+        local x2 = fx1 + int((fx2 - fx1) * (bx + 1) / 3)
+        local y2 = fy1 + int((fy2 - fy1) * (by + 1) / 3)
+
+        Trans.quad(x1,y1, x2,y2, nil,z1, kind, w_face, p_face)
+      end
+      end
     end
 
 
