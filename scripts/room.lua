@@ -2341,6 +2341,9 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local f_tex = S.f_tex or R.main_tex
     local c_tex = S.c_tex or sel(R.is_outdoor, "_SKY", R.ceil_tex)
 
+if R.kind == "cave" then f_tex = "RROCK04" end --!!!!! TEMP
+
+
     if R.kind == "hallway" then
       w_tex = assert(LEVEL.hall_tex)
     elseif R.kind == "stairwell" then
