@@ -217,7 +217,7 @@ function Quest_dump_zone_flow(Z)
       end
     end
 
-    gui.debugf("%s%s (%d seeds)\n", line, R:tostr(), R.svolume)
+    gui.debugf("%s%s%s\n", line, R:tostr(), sel(R.on_zone_path, "*", ""))
 
     local exits = {}
 
@@ -1312,6 +1312,39 @@ stderrf("splitting ZONE_%d at %s\n", Z.id, C.R1:tostr())
   end
 
 
+  local function is_zone_start(R)
+    each Z in LEVEL.zones do
+      if R == Z.start then
+        return true
+      end
+    end
+
+    return false
+  end
+
+
+  local function mark_paths()
+    -- mark the rooms between a zone's start and its exit room as
+    -- being "on path" (including both start and exit).  These will
+    -- be bad places to put a key.
+    each lock in LEVEL.locks do
+      if lock.kind != "EXIT" then
+        local C = assert(lock.conn)
+        local R = C.R1
+
+        while true do
+          R.on_zone_path = true
+
+          if is_zone_start(R) then break; end
+          if not R.entry_conn then break; end
+
+          R = R.entry_conn.R1
+        end
+      end
+    end
+  end
+
+
   local function choose_keys()
     assert(THEME.switches)
 
@@ -1376,6 +1409,8 @@ stderrf("want_zones = %d\n", want_zones)
       break;
     end
   end
+
+  mark_paths()
 
   each Z in LEVEL.zones do
     collect_rooms(Z)
