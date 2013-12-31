@@ -585,7 +585,7 @@ function Levels_choose_themes()
     local count = 0
 
     each L in GAME.levels do
-      if count >= 2 and (rand.odds(50) or count >= 5) then
+      if count >= 4 or (count >= 2 and rand.odds(50)) then
         pos = pos + 1
         count = 0
       end
