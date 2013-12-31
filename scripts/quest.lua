@@ -84,7 +84,13 @@ class LOCK
 
 class ZONE
 {
-  FIXME....
+  id : number  -- debugging aid
+
+  rooms : list(ROOM)
+
+  start : ROOM  -- first room in the zone
+
+  solution  : LOCK  -- the key (etc) which this zone must solve
 }
 
 
@@ -1182,9 +1188,12 @@ function Quest_create_zones2()
 
 stderrf("splitting ZONE_%d at %s\n", Z.id, C.R1:tostr())
 
+
     local Z2 = new_zone()
 
-    -- insert new zone
+    Z2.start = C.R2
+
+    -- insert new zone -- must be AFTER current zone
     for i = 1, #LEVEL.zones do
       if LEVEL.zones[i] == Z then
         table.insert(LEVEL.zones, i + 1, Z2)
@@ -1192,7 +1201,7 @@ stderrf("splitting ZONE_%d at %s\n", Z.id, C.R1:tostr())
       end
     end
 
-    assign_new_zone(C.R2, Z, Z2, {})
+    assign_new_zone(Z2.start, Z, Z2, {})
 
     -- new zone gets the previous lock to solve
     -- old zone must solve _this_ lock
@@ -1287,7 +1296,7 @@ stderrf("splitting ZONE_%d at %s\n", Z.id, C.R1:tostr())
 
   LEVEL.zones = {}
 
-  local want_zones = int((LEVEL.W + LEVEL.H) / 4 + gui.random() * 2)
+  local want_zones = int((LEVEL.W + LEVEL.H) / 4 + gui.random() * 3)
 
 stderrf("want_zones = %d\n", want_zones)
 

@@ -510,7 +510,7 @@ function Monsters_zone_palettes()
 
       Z.guard_mon = list[i].mon
 
-      gui.debugf("Guard monster for %s --> %s\n", Z:tostr(), Z.guard_mon)
+      gui.debugf("Guard monster for ZONE_%s --> %s\n", Z.id, Z.guard_mon)
     end
   end
 
@@ -654,7 +654,7 @@ function Monsters_zone_palettes()
 
     Z.monster_pal = zone_pals[i].pal
 
-    gui.debugf("Monster palette in %s\n", Z:tostr())
+    gui.debugf("Monster palette in ZONE_%d\n", Z.id)
     dump_palette(Z.monster_pal)
   end
 end
