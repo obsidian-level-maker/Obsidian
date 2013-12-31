@@ -1013,6 +1013,14 @@ DOOM2.LEVEL_THEMES =
     caves     = { Wolf_cave=50 }
     outdoors  = { Wolf_outdoors=50 }
 
+    facades =
+    {
+      ZZWOLF1  = 50
+      ZZWOLF9  = 50
+      ZZWOLF11 = 20
+      ZZWOLF5  = 5
+    }
+
     force_mon_probs = { ss_dude=70, demon=20, shooter=20, zombie=20, other=0 }
 
     ---??? weap_prefs = { chain=3, shotty=3, super=3 }
