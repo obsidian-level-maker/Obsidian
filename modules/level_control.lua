@@ -28,17 +28,6 @@ LEVEL_CONTROL.CHOICES =
   "heaps",  "Heaps",
 }
 
-LEVEL_CONTROL.SHAPES =
-{
-  "mixed",  "Mix It Up",
-  "none",   "NONE",
-  "L",      "L",
-  "T",      "T",
-  "U",      "U",
-  "S",      "S",
-  "H",      "H",
-}
-
 
 function LEVEL_CONTROL.begin_level(self)
   for name,opt in pairs(self.options) do
@@ -87,8 +76,6 @@ OB_MODULES["level_control"] =
     symmetry    = { label="Symmetry",       choices=LEVEL_CONTROL.CHOICES }
     teleporters = { label="Teleporters",    choices=LEVEL_CONTROL.CHOICES }
     windows     = { label="Windows",        choices=LEVEL_CONTROL.CHOICES }
-
-    room_shape  = { label ="Room Shape", priority = 1, choices=LEVEL_CONTROL.SHAPES }
   }
 }
 
