@@ -1157,7 +1157,7 @@ function Monsters_do_pickups()
 end
 
 
-function Monsters_in_room(L)
+function Monsters_in_room(R)
 
   -- places monsters in a room _or_ hallway
 
@@ -1175,21 +1175,21 @@ function Monsters_in_room(L)
 
   local function categorize_room_size()
     -- hallways are always small : allow any monsters
-    if L.kind == "hallway" then return end
+    if R.kind == "hallway" then return end
 
     -- anything goes in the EXIT room
-    if L.purpose == "EXIT" then return end
+    if R.purpose == "EXIT" then return end
 
     -- occasionally break the rules
     if rand.odds(6) then return end
 
     -- often allow any monsters in caves
-    if L.kind == "cave" and rand.odds(27) then return end
+    if R.kind == "cave" and rand.odds(27) then return end
 
     -- value depends on total area of monster spots
     local area = 0
 
-    each spot in L.mon_spots do
+    each spot in R.mon_spots do
       area = area + (spot.x2 - spot.x1) * (spot.y2 - spot.y1)
     end
 
@@ -1203,14 +1203,14 @@ function Monsters_in_room(L)
     area = area * rand.range(0.80, 1.25)
 
     -- caves are often large -- adjust for that
-    if L.kind == "cave" then area = area / 2 - 8 end
+    if R.kind == "cave" then area = area / 2 - 8 end
 
     if area < 4 then
-      L.room_size = "small"
+      R.room_size = "small"
     elseif area < 12 then
-      L.room_size = "medium"
+      R.room_size = "medium"
     else
-      L.room_size = "large"
+      R.room_size = "large"
     end
   end
 
@@ -1218,16 +1218,16 @@ function Monsters_in_room(L)
   local function room_size_factor(mon)
     local info = GAME.MONSTERS[mon]
 
-    if not    L.room_size then return 1 end
+    if not    R.room_size then return 1 end
     if not info.room_size then return 1 end
 
     if room_size == "any" then return 1 end
 
     -- a good match
-    if info.room_size == L.room_size then return 1 end
+    if info.room_size == R.room_size then return 1 end
 
     -- close but no cigar
-    if info.room_size == "medium" or L.room_size == "medium" then
+    if info.room_size == "medium" or R.room_size == "medium" then
       return 1 / 3
     end
 
@@ -1253,7 +1253,7 @@ function Monsters_in_room(L)
       assert(qty)
 
       -- tend to have more monsters in later rooms and levels
-      qty = qty * (3 + L.lev_along + LEVEL.ep_along) / 5
+      qty = qty * (3 + R.lev_along + LEVEL.ep_along) / 5
     end
 
     -- random adjustment
@@ -1269,10 +1269,10 @@ function Monsters_in_room(L)
     end
 
     -- more in EXIT or KEY rooms (extra boost in small rooms)
-    if L.purpose and L.purpose != "START" then
+    if R.purpose and R.purpose != "START" then
       qty = qty * 1.5
 
-      if L.svolume <= 16 then qty = qty * 1.2 end
+      if R.svolume <= 16 then qty = qty * 1.2 end
     else
       -- large variation occasionally
           if rand.odds(7) then qty = qty * 2.1
@@ -1324,8 +1324,8 @@ end
       N2 = K:touch_neighbor(8)
     end
 
-    if N1 and N1.room != L then N1 = nil end
-    if N2 and N2.room != L then N2 = nil end
+    if N1 and N1.room != R then N1 = nil end
+    if N2 and N2.room != R then N2 = nil end
 
     if N1 and N2 then
       K = rand.sel(50, N1, N2)
@@ -1343,18 +1343,18 @@ end
 
 
   local function mark_ambush_spots()
-    if L.kind == "hallway" then return end
+    if R.kind == "hallway" then return end
 
     -- this also determines an angle facing the ambush focus,
     -- as well as a 'central_dist' value.
 
-    each spot in L.mon_spots do
+    each spot in R.mon_spots do
       -- already processed?
       if spot.marked then continue end
 
       spot.marked = true
 
-      local K = L:section_for_spot(spot)
+      local K = R:section_for_spot(spot)
 
       if not K then continue end
 
@@ -1433,8 +1433,8 @@ end
     if THEME.monster_prefs then
       prob = prob * (THEME.monster_prefs[mon] or 1)
     end
---!!!!    if L.theme.monster_prefs then
---!!!!      prob = prob * (L.theme.monster_prefs[mon] or 1)
+--!!!!    if R.theme.monster_prefs then
+--!!!!      prob = prob * (R.theme.monster_prefs[mon] or 1)
 --!!!!    end
 
     if spot_kind == "cage" then
@@ -1445,7 +1445,7 @@ end
       if info.float then prob = prob * 0.5 end
     end
 
-    if L.is_outdoor then
+    if R.is_outdoor then
       prob = prob * (info.outdoor_factor or 1)
     end
 
@@ -1459,8 +1459,8 @@ end
     -- level check (harder monsters occur in later rooms)
     assert(info.level)
 
-    if not L.purpose then
-      local max_level = LEVEL.max_level * (0.5 + L.lev_along / 2)
+    if not R.purpose then
+      local max_level = LEVEL.max_level * (0.5 + R.lev_along / 2)
       if max_level < 2 then max_level = 2 end
 
       if info.level > max_level then
@@ -1479,7 +1479,7 @@ end
     
     -- level check
     if OB_CONFIG.strength != "crazy" then
-      local max_level = LEVEL.max_level * L.lev_along
+      local max_level = LEVEL.max_level * R.lev_along
       if max_level < 2 then max_level = 2 end
 
       if info.level > max_level then
@@ -1488,7 +1488,7 @@ end
     end
 
     -- zone quantities
-    d = d * (L.zone.monster_pal[mon] or 1)
+    d = d * (R.zone.monster_pal[mon] or 1)
 
     -- room size check
     d = d * room_size_factor(mon) ^ 0.5
@@ -1499,7 +1499,7 @@ end
 
     -- would the monster take too long to kill?
 
-    local time = info.health / L.firepower
+    local time = info.health / R.firepower
 
     if PARAM.time_factor then
       time = time * PARAM.time_factor
@@ -1535,12 +1535,12 @@ end
 
     assert(base_num)
 
-    if L.kind == "hallway" then
+    if R.kind == "hallway" then
       return rand.index_by_probs { 20, 40, 60 }
     end
 
     -- adjust the base number to account for room size
-    local size = math.sqrt(L.svolume)
+    local size = math.sqrt(R.svolume)
     local num  = int(base_num * size / 7 + 0.6 + gui.random())
 
     if num < 1 then num = 1 end
@@ -1558,10 +1558,10 @@ end
   local function crazy_palette()
     local num_kinds
 
-    if L.kind == "hallway" then
+    if R.kind == "hallway" then
       num_kinds = rand.index_by_probs({ 20, 40, 60 })
     else
-      local size = math.sqrt(L.svolume)
+      local size = math.sqrt(R.svolume)
       num_kinds = int(size / 1.2)
     end
 
@@ -1617,7 +1617,7 @@ end
     local list = {}
     gui.debugf("Monster list:\n")
 
-    each mon,qty in L.zone.monster_pal do
+    each mon,qty in R.zone.monster_pal do
       local prob = prob_for_mon(mon, info)
 
       prob = prob * qty
@@ -1729,11 +1729,11 @@ end
       focus = spot.face
     end
 
-    if L.force_mon_angle then
-      return L.force_mon_angle
+    if R.force_mon_angle then
+      return R.force_mon_angle
     end
 
-    if rand.odds(L.random_face_prob) and not away then
+    if rand.odds(R.random_face_prob) and not away then
       focus = nil
     end
 
@@ -1776,17 +1776,17 @@ end
     local info = GAME.MONSTERS[mon]
 
     -- handle replacements
-    if LEVEL.mon_replacement[mon] and not L.no_replacement then
+    if LEVEL.mon_replacement[mon] and not R.no_replacement then
       mon  = rand.key_by_probs(LEVEL.mon_replacement[mon])
       info = assert(GAME.MONSTERS[mon])
     end
 
-    table.insert(L.monster_list, info)
+    table.insert(R.monster_list, info)
 
     -- decide deafness and where to look
     local deaf, focus
 
-    if L.kind == "cave" or L.kind == "hallway" or info.float then
+    if R.kind == "cave" or R.kind == "hallway" or info.float then
       deaf = rand.odds(65)
     elseif spot.ambush then
       deaf  = rand.odds(95)
@@ -1796,12 +1796,12 @@ end
     end
 
     if not focus then
-      focus = L.entry_coord
+      focus = R.entry_coord
     end
 
     local angle
 
-    if (is_cage or L.kind == "hallway") and spot.angle then
+    if (is_cage or R.kind == "hallway") and spot.angle then
       angle = spot.angle
     else
       angle = monster_angle(spot, x, y, z, focus)
@@ -1890,7 +1890,7 @@ end
   local function grab_monster_spot(mon, near_to, reqs)
     local total = 0
 
-    each spot in L.mon_spots do
+    each spot in R.mon_spots do
       local fit_num = mon_fits(mon, spot)
 
       if fit_num <= 0 then
@@ -1921,18 +1921,18 @@ end
       else
         spot.find_cost = 0
 
-        if reqs.baddie_far and L.entry_coord and L.baddie_dists[mon] then
+        if reqs.baddie_far and R.entry_coord and R.baddie_dists[mon] then
           local mx, my = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
-          local dist = geom.dist(L.entry_coord.x, L.entry_coord.y, mx, my)
+          local dist = geom.dist(R.entry_coord.x, R.entry_coord.y, mx, my)
 
-          dist = dist / L.furthest_dist
-          dist = math.abs(dist - L.baddie_dists[mon])
+          dist = dist / R.furthest_dist
+          dist = math.abs(dist - R.baddie_dists[mon])
 
           spot.find_cost = dist * 1.8
 
         -- prefer a different section than the last non-group spot
         -- (for better monster distribution in large rooms)
-        elseif (L.last_spot_section and spot.section == L.last_spot_section) then
+        elseif (R.last_spot_section and spot.section == R.last_spot_section) then
           spot.find_cost = spot.find_cost + 2
         end
       end 
@@ -1949,10 +1949,10 @@ end
     -- pick the best and remove it from the list
     -- TODO: for 'near_to' mode maybe trace_ray() to check spot
 
-    local spot = table.pick_best(L.mon_spots, spot_compare, "remove")
+    local spot = table.pick_best(R.mon_spots, spot_compare, "remove")
 
     if not near_to then
-      L.last_spot_section = spot.section
+      R.last_spot_section = spot.section
     end
 
     return spot
@@ -1972,7 +1972,7 @@ end
     if info.attack == "melee" then reqs.central = 1 end
     if info.float then reqs.central = -1 end
 
-    if rand.odds(L.sneakiness) or info.nasty then
+    if rand.odds(R.sneakiness) or info.nasty then
       reqs.ambush = 1
     else
       reqs.ambush = -1  -- want a visible spot
@@ -1980,7 +1980,7 @@ end
 
     -- sometimes pick a spot whose distance from the entry coord is
     -- depends on the relative toughness of the monster
-    if rand.odds(L.baddie_far_prob) then
+    if rand.odds(R.baddie_far_prob) then
       reqs.baddie_far = 1
     end
 
@@ -2041,9 +2041,9 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   local function calc_baddie_dists(palette)
     -- analyse palette and sort monsters into an ideal distance from
     -- the entry point of the room -- baddest dudes are furthest away.
-    L.baddie_dists = {}
+    R.baddie_dists = {}
 
-    if not L.furthest_dist then return end
+    if not R.furthest_dist then return end
     if table.size(palette) < 2 then return end
 
     local baddies = {}
@@ -2061,9 +2061,9 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     for idx = 1, #baddies do
       local mon = baddies[idx].mon
 
-      L.baddie_dists[mon] = idx / (#baddies + 1)
+      R.baddie_dists[mon] = idx / (#baddies + 1)
 
-      gui.debugf("   %s : %1.3f\n", mon, L.baddie_dists[mon])
+      gui.debugf("   %s : %1.3f\n", mon, R.baddie_dists[mon])
     end
   end
 
@@ -2074,14 +2074,14 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     if info.health <= 500 and rand.odds(30) then horde = horde + 1 end
     if info.health <= 100 then horde = horde + rand.index_by_probs { 90, 40, 10, 3, 0.5 } end
 
-    if L.kind == "hallway" then horde = horde + 1 end
+    if R.kind == "hallway" then horde = horde + 1 end
     
     return horde
   end
 
 
   local function fill_sized_monsters(wants, palette, r_min, r_max)
-    L.mon_spots = Monsters_split_spots(L.mon_spots, r_max * 2)
+    R.mon_spots = Monsters_split_spots(R.mon_spots, r_max * 2)
 
     if r_max < 100 then
 --!!!!      mark_ambush_spots()
@@ -2103,7 +2103,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- add these monsters until list is empty or no more spots
 
     while not table.empty(want2) and
-          not table.empty(L.mon_spots)
+          not table.empty(R.mon_spots)
     do
       local mon  = rand.key_by_probs(want2)
       local info = GAME.MONSTERS[mon]
@@ -2130,7 +2130,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- compute total number of monsters wanted
     local qty = calc_quantity()
 
-    local want_total = tally_spots(L.mon_spots)
+    local want_total = tally_spots(R.mon_spots)
 
     want_total = int(want_total * qty / 100 + gui.random())
 
@@ -2240,7 +2240,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
 
   local function fill_cages(spot_list, room_pal)
-    if table.empty(L.cage_spots) then return end
+    if table.empty(R.cage_spots) then return end
 
     local qty = calc_quantity()
 
@@ -2259,20 +2259,20 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
 
   local function add_guarding_monsters()
-    if not L.guard_coord then return end
+    if not R.guard_coord then return end
 
-    if not L.zone.guard_mon then return end
+    if not R.zone.guard_mon then return end
 
     -- convert coordinate into a fake spot  [no z coords!]
     local guard_spot =
     {
-      x1 = L.guard_coord.x - 16
-      y1 = L.guard_coord.y - 16
-      x2 = L.guard_coord.x + 16
-      y2 = L.guard_coord.y + 16
+      x1 = R.guard_coord.x - 16
+      y1 = R.guard_coord.y - 16
+      x2 = R.guard_coord.x + 16
+      y2 = R.guard_coord.y + 16
     }
 
-    local mon  = L.zone.guard_mon
+    local mon  = R.zone.guard_mon
     local info = GAME.MONSTERS[mon]
 
     local count = 2
@@ -2293,7 +2293,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
       -- look toward the important spot
       if rand.odds(75) then
-        spot.face = L.guard_coord
+        spot.face = R.guard_coord
       end
 
       local all_skills = (i == 1)
@@ -2312,7 +2312,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       palette = room_palette()
     end
 
-    local barrel_chance = sel(L.kind == "building", 15, 2)
+    local barrel_chance = sel(R.kind == "building", 15, 2)
 --!!    if R.natural then barrel_chance = 3 end
 --!!    if R.hallway then barrel_chance = 5 end
 
@@ -2323,7 +2323,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     -- sometimes prevent monster replacements
     if rand.odds(40) or OB_CONFIG.strength == "crazy" then
-      L.no_replacement = true
+      R.no_replacement = true
     end
 
     add_guarding_monsters()
@@ -2337,9 +2337,9 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- this value keeps track of the number of "normal" monsters
     -- (i.e. monsters not in cages or traps).  Later we use this
     -- value to only give monster drops for accessible monsters.
-    L.normal_count = #L.monster_list
+    R.normal_count = #R.monster_list
 
-    fill_cages(L.cage_spots, palette)
+    fill_cages(R.cage_spots, palette)
   end
 
 
@@ -2383,9 +2383,9 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   end
 
 
-  local function OLD__adjust_health(L, qty)
+  local function OLD__adjust_health(R, qty)
     -- perform calculation on a per-seed basis
-    local svol = L.svolume or 10
+    local svol = R.svolume or 10
 
     qty = qty / svol
 
@@ -2435,13 +2435,13 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
 
   local function battle_for_class(CL, hmodel)
-    local mon_list = L.monster_list
+    local mon_list = R.monster_list
 
     local weap_list = collect_weapons(hmodel)
 
-    local stats = L.fight_stats[CL]
+    local stats = R.fight_stats[CL]
 
-    gui.debugf("Fight Simulator @ %s  class: %s\n", L:tostr(), CL)
+    gui.debugf("Fight Simulator @ %s  class: %s\n", R:tostr(), CL)
 
     gui.debugf("weapons = \n")
     each info in weap_list do
@@ -2455,22 +2455,22 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 --  gui.debugf("raw result = \n%s\n", table.tostr(stats,1))
 
 ---###  -- normalize very large quantities of health 
----###  stats.health = adjust_health(L, stats.health)
+---###  stats.health = adjust_health(R, stats.health)
 
     user_adjust_result(stats)
 
 --  gui.debugf("adjusted result = \n%s\n", table.tostr(stats,1))
 
-    give_monster_drops(hmodel, mon_list, L.normal_count)
+    give_monster_drops(hmodel, mon_list, R.normal_count)
 
     subtract_stuff_we_have(stats, hmodel)
   end
 
 
   local function sim_battle()
-    assert(L.monster_list)
+    assert(R.monster_list)
 
-    if #L.monster_list >= 1 then
+    if #R.monster_list >= 1 then
       each CL,hmodel in LEVEL.hmodels do
         battle_for_class(CL, hmodel)
       end
@@ -2483,11 +2483,11 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       return false
     end
 
-    if L.no_monsters then return false end
+    if R.no_monsters then return false end
 
-    assert(not L.scenic)
+    assert(not R.scenic)
 
----???    if L.kind == "hallway" and #L.sections == 1 then
+---???    if R.kind == "hallway" and #R.sections == 1 then
 ---???      return rand.odds(50)
 ---???    end
 
@@ -2496,44 +2496,44 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
 
   local function prepare_room()
-    L.monster_list = {}
-    L.fight_stats  = make_empty_stats()
+    R.monster_list = {}
+    R.fight_stats  = make_empty_stats()
 
-    L.firepower = Player_firepower()
+    R.firepower = Player_firepower()
 
     categorize_room_size()
 
-    if L.kind != "hallway" then
-      L.guard_coord = L:find_guard_spot()
+    if R.kind != "hallway" then
+      R.guard_coord = R:find_guard_spot()
     end
 
-    L.sneakiness = rand.sel(30, 95, 25)
+    R.sneakiness = rand.sel(30, 95, 25)
 
-    if L.kind != "hallway" and L.entry_coord then
-      L.furthest_dist = L:furthest_dist_from_entry()
+    if R.kind != "hallway" and R.entry_coord then
+      R.furthest_dist = R:furthest_dist_from_entry()
     end
 
-    L.baddie_far_prob = rand.pick({ 20, 40, 60, 80 })
+    R.baddie_far_prob = rand.pick({ 20, 40, 60, 80 })
 
     if rand.odds(2) then
-      L.force_mon_angle = rand.irange(0,7) * 45
+      R.force_mon_angle = rand.irange(0,7) * 45
     end
 
-    L.random_face_prob = rand.sel(20, 90, 10)
+    R.random_face_prob = rand.sel(20, 90, 10)
 
     gui.debugf("Parameters:\n")
-    gui.debugf("  firepower  = %1.3f\n", L.firepower)
-    gui.debugf("  room_size  = %s\n", L.room_size or "UNSET")
-    gui.debugf("  sneakiness = %d%%\n", L.sneakiness)
-    gui.debugf("  baddie_far = %d%%\n", L.baddie_far_prob)
-    gui.debugf("  rand_face  = %d%%\n", L.random_face_prob)
-    gui.debugf("  same_angle = %s\n", sel(L.force_mon_angle, "TRUE", "false"))
+    gui.debugf("  firepower  = %1.3f\n", R.firepower)
+    gui.debugf("  room_size  = %s\n", R.room_size or "UNSET")
+    gui.debugf("  sneakiness = %d%%\n", R.sneakiness)
+    gui.debugf("  baddie_far = %d%%\n", R.baddie_far_prob)
+    gui.debugf("  rand_face  = %d%%\n", R.random_face_prob)
+    gui.debugf("  same_angle = %s\n", sel(R.force_mon_angle, "TRUE", "false"))
   end
 
 
   ---| Monsters_in_room |---
 
-  gui.debugf("Monsters_in_room @ %s\n", L:tostr())
+  gui.debugf("Monsters_in_room @ %s\n", R:tostr())
 
   prepare_room()
 
