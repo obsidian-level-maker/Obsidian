@@ -622,7 +622,7 @@ function Build.diagonal(S, side, info, floor_h, ceil_h)
 
 
   -- CURVINESS
-
+--[[
   local cx1 = x1 + int((x2 - x1) * 0.3)
   local cx2 = x1 + int((x2 - x1) * 0.7)
 
@@ -665,7 +665,68 @@ function Build.diagonal(S, side, info, floor_h, ceil_h)
         { { x=x2,y=y1 }, { x=x2,y=y2 }, { x=cx2, y=cy1 } },
         ceil_h or -EXTREME_H, floor_h or EXTREME_H)
   end
+--]]
 
+
+  -- EXTRA CURVY GOODNESS
+
+  local mx, my = geom.box_mid(x1, y1, x2, y2)
+
+  local dx = int((x2 - x1) * 0.13)
+  local dy = int((y2 - y1) * 0.13)
+
+  if side == 9 then
+    Trans.old_brush(info,
+        { {x=x2,y=y2}, {x=mx,y=y2}, {x=mx,y=y2-dy}, {x=x2-dx,y=my}, {x=x2,y=my} },
+        ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+
+    Trans.old_brush(info,
+        { {x=x2,y=y1}, {x=x2,y=my}, {x=x2-dx,y=my} },
+        ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+
+    Trans.old_brush(info,
+        { {x=x1,y=y2}, {x=mx,y=y2-dy}, {x=mx,y=y2} },
+        ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+
+  elseif side == 1 then
+    Trans.old_brush(info,
+        { {x=x1,y=y1}, {x=mx,y=y1}, {x=mx,y=y1+dy}, {x=x1+dx,y=my}, {x=x1,y=my} },
+        ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+
+    Trans.old_brush(info,
+        { {x=mx,y=y1}, {x=x2,y=y1}, {x=mx,y=y1+dy} },
+        ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+
+    Trans.old_brush(info,
+        { {x=x1,y=y2}, {x=x1,y=my}, {x=x1+dx,y=my} },
+        ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+
+  elseif side == 7 then
+    Trans.old_brush(info,
+        { {x=x1,y=y2}, {x=x1,y=my}, {x=x1+dx,y=my}, {x=mx,y=y2-dy}, {x=mx,y=y2} },
+        ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+
+    Trans.old_brush(info,
+        { {x=x1,y=my}, {x=x1,y=y1}, {x=x1+dx,y=my} },
+        ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+
+    Trans.old_brush(info,
+        { {x=mx,y=y2}, {x=mx,y=y2-dy}, {x=x2,y=y2} },
+        ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+
+  elseif side == 3 then
+    Trans.old_brush(info,
+        { {x=x2,y=y1}, {x=x2,y=my}, {x=x2-dx,y=my}, {x=mx,y=y1+dy}, {x=mx,y=y1} },
+        ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+
+    Trans.old_brush(info,
+        { {x=x1,y=y1}, {x=mx,y=y1}, {x=mx,y=y1+dy} },
+        ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+
+    Trans.old_brush(info,
+        { {x=x2,y=y2}, {x=x2-dx,y=my}, {x=x2,y=my} },
+        ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+  end
 end
 
 
