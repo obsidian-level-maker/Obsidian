@@ -182,9 +182,9 @@ function Player_give_map_stuff()
 end
 
 
-function Player_give_room_stuff(L)
-  if L.weapons and not PARAM.hexen_weapons then
-    each name in L.weapons do
+function Player_give_room_stuff(R)
+  if R.weapons and not PARAM.hexen_weapons then
+    each name in R.weapons do
       Player_give_weapon(name)
     end
   end
@@ -827,15 +827,15 @@ end
 
 function Monsters_do_pickups()
 
-  local function extract_big_item_spots(L)
-    L.big_spots = {}
+  local function extract_big_item_spots(R)
+    R.big_spots = {}
 
-    for i = #L.item_spots, 1, -1 do
-      local spot = L.item_spots[i]
+    for i = #R.item_spots, 1, -1 do
+      local spot = R.item_spots[i]
 
       if spot.kind == "big_item" then
-        table.remove(L.item_spots, i)
-        table.insert(L.big_spots, spot)
+        table.remove(R.item_spots, i)
+        table.insert(R.big_spots, spot)
 
         spot.score = (spot.rank or 1) * 5 + 7 * gui.random() ^ 3
       end
@@ -843,13 +843,13 @@ function Monsters_do_pickups()
   end
 
 
-  local function grab_a_big_spot(L)
-    local result = table.pick_best(L.big_spots,
+  local function grab_a_big_spot(R)
+    local result = table.pick_best(R.big_spots,
             function(A, B) return A.score > B.score end,
             "remove")
     
     -- update remaining scores so next one chosen is far away
-    each spot in L.big_spots do
+    each spot in R.big_spots do
       local dist = Monsters_dist_between_spots(spot, result, 80) / 256
 
       spot.score = spot.score + dist
@@ -879,9 +879,9 @@ function Monsters_do_pickups()
   end
 
 
-  local function find_cluster_spot(L, prev_spots, item_name)
+  local function find_cluster_spot(R, prev_spots, item_name)
     if #prev_spots == 0 then
-      local spot = table.remove(L.item_spots, 1)
+      local spot = table.remove(R.item_spots, 1)
       table.insert(prev_spots, spot)
       return spot
     end
@@ -890,8 +890,8 @@ function Monsters_do_pickups()
     local best_dist
 
     -- FIXME: optimise this!
-    for index = 1,#L.item_spots do
-      local spot = L.item_spots[index]
+    for index = 1,#R.item_spots do
+      local spot = R.item_spots[index]
       local dist = 9e9
 
       each prev in prev_spots do
@@ -915,7 +915,7 @@ function Monsters_do_pickups()
 
     assert(best_idx)
 
-    local spot = table.remove(L.item_spots, best_idx)
+    local spot = table.remove(R.item_spots, best_idx)
 
     if #prev_spots >= 3 then
       table.remove(prev_spots, 1)
@@ -927,14 +927,14 @@ function Monsters_do_pickups()
   end
 
 
-  local function place_item_list(L, item_list, CL)
+  local function place_item_list(R, item_list, CL)
     each pair in item_list do
       local item  = pair.item
       local count = pair.count
 
       -- big item?
-      if item.rank > 0 and count == 1 and not table.empty(L.big_spots) then
-        local spot = grab_a_big_spot(L)
+      if item.rank > 0 and count == 1 and not table.empty(R.big_spots) then
+        local spot = grab_a_big_spot(R)
         place_item_in_spot(item.name, spot)
         continue
       end
@@ -944,24 +944,24 @@ function Monsters_do_pickups()
       local prev_spots = {}
 
       for i = 1,count do
-        if table.empty(L.item_spots) then
+        if table.empty(R.item_spots) then
           gui.printf("Unable to place items: %s x %d\n", item.name, count+1-i)
           break;
         end
 
-        local spot = find_cluster_spot(L, prev_spots, item.name)
+        local spot = find_cluster_spot(R, prev_spots, item.name)
 
         place_item_in_spot(item.name, spot)
 
         -- reuse spots if they run out
         spot.used = true
-        table.insert(L.item_spots, spot)
+        table.insert(R.item_spots, spot)
       end
     end
   end
 
 
-  local function decide_pickup(L, stat, qty)
+  local function decide_pickup(R, stat, qty)
     local item_tab = {}
 
     for name,info in pairs(GAME.PICKUPS) do
@@ -971,7 +971,7 @@ function Monsters_do_pickups()
       then
         item_tab[name] = info.prob
 
-        if L.purpose == "START" and info.start_prob then
+        if R.purpose == "START" and info.start_prob then
           item_tab[name] = info.start_prob
         end
       end
@@ -1005,19 +1005,19 @@ function Monsters_do_pickups()
   end
 
 
-  local function bonus_for_room(L, stat)
+  local function bonus_for_room(R, stat)
     local bonus = 0
 
     -- more stuff in start room
-    if L.purpose == "START" then
+    if R.purpose == "START" then
       if stat == "health" then
         bonus = 20
       end
     end
 
     -- when getting a weapon, should get some ammo for it too
-    if L.weapons then
-      each name in L.weapons do
+    if R.weapons then
+      each name in R.weapons do
         local info = GAME.WEAPONS[name]
 
         if info.ammo and info.ammo == stat and info.bonus_ammo then
@@ -1031,19 +1031,19 @@ function Monsters_do_pickups()
     end
 
     -- compensation for environmental hazards
-    if stat == "health" and L.hazard_health then
-      bonus = bonus + L.hazard_health
+    if stat == "health" and R.hazard_health then
+      bonus = bonus + R.hazard_health
     end
 
     return bonus
   end
 
 
-  local function do_select_pickups(L, item_list, stat, qty)
+  local function do_select_pickups(R, item_list, stat, qty)
     assert(qty >= 0)
 
     while qty > 0 do
-      local item, count = decide_pickup(L, stat, qty)
+      local item, count = decide_pickup(R, stat, qty)
       table.insert(item_list, { item=item, count=count, random=gui.random() })
 
       if stat == "health" then
@@ -1059,7 +1059,7 @@ function Monsters_do_pickups()
   end
 
 
-  local function select_pickups(L, item_list, stat, qty, hmodel)
+  local function select_pickups(R, item_list, stat, qty, hmodel)
     assert(qty >= 0)
 
     local held_qty = hmodel.stats[stat] or 0
@@ -1077,9 +1077,9 @@ function Monsters_do_pickups()
 
     -- bonus stuff : this is _not_ applied to the hmodel
     -- (otherwise future rooms would get less of it).
-    actual_qty = actual_qty + bonus_for_room(L, stat)
+    actual_qty = actual_qty + bonus_for_room(R, stat)
 
-    local excess = do_select_pickups(L, item_list, stat, actual_qty)
+    local excess = do_select_pickups(R, item_list, stat, actual_qty)
 
     -- there will usually be a small excess amount, since items come
     -- in discrete quantities.  accumulate it into the hmodel...
@@ -1097,19 +1097,19 @@ function Monsters_do_pickups()
   end
 
 
-  local function pickups_for_hmodel(L, CL, hmodel)
+  local function pickups_for_hmodel(R, CL, hmodel)
     if table.empty(GAME.PICKUPS) then
       return
     end
 
-    local stats = L.fight_stats[CL]
+    local stats = R.fight_stats[CL]
     local item_list = {}
 
     each stat,qty in stats do
       -- this updates the hmodel too
-      select_pickups(L, item_list, stat, qty, hmodel)
+      select_pickups(R, item_list, stat, qty, hmodel)
 
-      gui.debugf("Item list for %s:%1.1f [%s] @ %s\n", stat,qty, CL, L:tostr())
+      gui.debugf("Item list for %s:%1.1f [%s] @ %s\n", stat,qty, CL, R:tostr())
 
       each pair in item_list do
         local item = pair.item
@@ -1118,11 +1118,11 @@ function Monsters_do_pickups()
       end
     end
 
-    rand.shuffle(L.item_spots)
+    rand.shuffle(R.item_spots)
 
     -- kludge to add some backpacks to DOOM maps
     -- TODO: better system for "nice start items" or so
-    if L.purpose == "START" and GAME.ENTITIES["backpack"] then
+    if R.purpose == "START" and GAME.ENTITIES["backpack"] then
       table.insert(item_list, 1, { item={ name="backpack", rank=4 }, count=1, random=1 })
     end
 
@@ -1130,17 +1130,17 @@ function Monsters_do_pickups()
     -- also: place large clusters before small ones
     table.sort(item_list, compare_items)
 
-    place_item_list(L, item_list, CL)
+    place_item_list(R, item_list, CL)
   end
 
 
-  local function pickups_in_room(L)
-    extract_big_item_spots(L)
+  local function pickups_in_room(R)
+    extract_big_item_spots(R)
 
-    L.item_spots = Monsters_split_spots(L.item_spots, 25)
+    R.item_spots = Monsters_split_spots(R.item_spots, 25)
 
     each CL,hmodel in LEVEL.hmodels do
-      pickups_for_hmodel(L, CL, hmodel)
+      pickups_for_hmodel(R, CL, hmodel)
     end
   end
 
@@ -1150,8 +1150,8 @@ function Monsters_do_pickups()
   gui.debugf("--- Monsters_do_pickups ---\n")
 
   each Z in LEVEL.zones do
-    each L in Z.rooms do
-      pickups_in_room(L)
+    each R in Z.rooms do
+      pickups_in_room(R)
     end
   end
 end
@@ -2593,10 +2593,6 @@ function Monster_make_battles()
     Player_give_room_stuff(R)
     Monsters_in_room(R)
   end
-
----##  each H in LEVEL.halls do
----##    Monsters_in_room(H)
----##  end
 
   Monsters_show_stats()
 
