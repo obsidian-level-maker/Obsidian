@@ -6,6 +6,8 @@ WORK IN PROGRESS
 3.57 Merger
 -----------
 
+>>>  fix weapons
+
 -  find_guard_spot
 
 -  ambush spots
@@ -25,7 +27,7 @@ WORK IN PROGRESS
 
 +  weapon pref palettes
 
--  windows in indoor rooms (never tall), esp. in sub-rooms
-
 -  ensure normal doors are usually monster-openable
+
+-  ability to centre doors (on two seeds), stretch arches (multiple seeds)
 
