@@ -19,6 +19,9 @@
 ----------------------------------------------------------------
 
 
+Build = {}
+
+
 function Build.wall(S, side, mat)
   local coords = get_wall_coords(S, side)
 

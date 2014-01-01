@@ -19,7 +19,6 @@
 ----------------------------------------------------------------
 
 
-Build = {}
 Trans = {}
 
 
@@ -318,15 +317,6 @@ function Trans.quad(x1,y1, x2,y2, z1,z2, kind, w_face, p_face)
 end
 
 
-function Trans.tri_coords(x1,y1, x2,y2, x3,y3)
-  return
-  {
-    { x=x1, y=y1 },
-    { x=x2, y=y2 },
-    { x=x3, y=y3 },
-  }
-end
-
 function Trans.rect_coords(x1, y1, x2, y2)
   return
   {
@@ -337,46 +327,16 @@ function Trans.rect_coords(x1, y1, x2, y2)
   }
 end
 
-function Trans.box_coords(x, y, w, h)
-  return
-  {
-    { x=x+w, y=y },
-    { x=x+w, y=y+h },
-    { x=x,   y=y+h },
-    { x=x,   y=y },
-  }
-end
-
 
 function Trans.old_quad(info, x1,y1, x2,y2, z1,z2)
   Trans.old_brush(info, Trans.rect_coords(x1,y1, x2,y2), z1,z2)
-end
-
-function Trans.triangle(info, x1,y1, x2,y2, x3,y3, z1,z2)
-  Trans.old_brush(info, Trans.tri_coords(x1,y1, x2,y2, x3,y3), z1,z2)
-end
-
-function Trans.strip(info, strip, z1, z2)
-  for i = 1, #strip - 1 do
-    local a = strip[i]
-    local b = strip[i+1]
-
-    Trans.old_brush(info,
-    {
-      { x = a[1], y = a[2] },
-      { x = a[3], y = a[4] },
-      { x = b[3], y = b[4] },
-      { x = b[1], y = b[2] },
-    },
-    z1, z2)
-  end
 end
 
 
 ------------------------------------------------------------------------
 
 
-function Build.prepare_trip()
+function Build_prepare_trip()
 
   -- build the psychedelic mapping
   local m_before = {}
@@ -490,38 +450,6 @@ function get_liquid()
 
   return mat
 end
-
-function get_light(intensity)
-  return
-  {
-    kind = "light",
-    w_face = { tex="-" },
-    t_face = { tex="-" },
-    b_face = { tex="-", light=intensity },
-  }
-end
-
-function get_rail()
-  return
-  {
-    kind = "rail",
-    w_face = { tex="-" },
-    t_face = { tex="-" },
-    b_face = { tex="-" },
-  }
-end
-
-function rail_coord(x, y, name)
-  local rail = GAME.RAILS[name]
-
-  if not rail then
-    gui.printf("LACKING RAIL %s\n", name)
-    return { x=x, y=y }
-  end
-
-  return { x=x, y=y, w_face={ tex=rail.t }, line_flags=rail.line_flags }
-end
-
 
 function add_pegging(info, x_offset, y_offset, peg)
   info.w_face.x_offset = x_offset or 0
