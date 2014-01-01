@@ -497,7 +497,7 @@ LIQUID_O1 =
 {
   kind = "liquid"
   shape = "O"
-  prob = 120
+  prob = 90
 
   structure =
   {
@@ -554,7 +554,7 @@ LIQUID_O4 =
 {
   kind = "liquid"
   shape = "O"
-  prob = 400
+  prob = 500
 
   structure =
   {
@@ -1902,47 +1902,11 @@ RECURSE_U2 =
 }
 
 
-
-RECURSE_O1 =
-{
-  shape = "O"
-  prob = 100
-
-  structure =
-  {
-    "....."
-    "....."
-    ".111."
-    "..^.."
-    "....."
-  }
-
-  x_sizes =
-  {
-    "11111", "12121", "13131", "14141", "15151"
-    "22122", "23132", "24142"
-  }
-
-  y_sizes =
-  {
-    "01210", "01310", "01410", "01510", "01610", "01710"
-    "11411", "11511", "11611", "11711", "11811", "11911"
-  }
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-  }
-
-  symmetry = "x"
-  low_ceil = true
-}
-
 RECURSE_O1_DIAG =
 {
   shape = "O"
   environment = "indoor"
-  prob = 300
+  prob = 30
 
   structure =
   {
@@ -1970,78 +1934,14 @@ RECURSE_O1_DIAG =
   }
 
   symmetry = "x"
-  low_ceil = true
 }
 
-RECURSE_O2 =
-{
-  copy = "RECURSE_O1"
-
-  structure =
-  {
-    "....."
-    "..v.."
-    ".111."
-    "..^.."
-    "....."
-  }
-
-  symmetry = "xy"
-}
-
-RECURSE_O2_DIAG =
-{
-  copy = "RECURSE_O1_DIAG"
-
-  structure =
-  {
-    "/...%"
-    "..v.."
-    ".111."
-    "..^.."
-    "%.../"
-  }
-
-  symmetry = "xy"
-}
-
-RECURSE_O3 =
-{
-  shape = "O"
-  prob = 100
-
-  structure =
-  {
-    "....."
-    "...v."
-    ".111."
-    ".^..."
-    "....."
-  }
-
-  x_sizes =
-  {
-    "11111", "11211", "11311", "11411", "11511", "11611", "11711"
-    "21312", "21412", "21512", "21612", "21712"
-  }
-
-  y_sizes =
-  {
-    "01210", "01310", "01410", "01510", "01610", "01710"
-    "11411", "11511", "11611", "11711", "11811", "11911"
-  }
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-  }
-}
 
 RECURSE_O3_DIAG =
 {
   shape = "O"
   environment = "indoor"
-  prob = 200
+  prob = 20
 
   structure =
   {
@@ -2068,111 +1968,6 @@ RECURSE_O3_DIAG =
   {
     { height=1, match="any", recurse=1 }
   }
-}
-
-RECURSE_O4 =
-{
-  copy = "RECURSE_O3"
-
-  prob = 90
-
-  structure =
-  {
-    "....."
-    ".v.v."
-    ".111."
-    ".^.^."
-    "....."
-  }
-
-  symmetry = "xy"
-}
-
-RECURSE_O4_DIAG =
-{
-  copy = "RECURSE_O3_DIAG"
-
-  prob = 90
-
-  structure =
-  {
-    "/...%"
-    ".v.v."
-    ".111."
-    ".^.^."
-    "%.../"
-  }
-
-  symmetry = "xy"
-}
-
-RECURSE_DOUBLE_O1 =
-{
-  shape = "O"
-  prob = 550
-
-  structure =
-  {
-    "....."
-    ".222."
-    "..^.."
-    ".111."
-    "..^.."
-  }
-
-  x_sizes =
-  {
-    "11111", "12121", "13131", "14141", "15151"
-  }
-
-  y_sizes =
-  {
-    "12121", "12131", "13131", "13141"
-    "14141", "14151", "15151"
-  }
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-    { height=2, match="any", recurse=1 }
-  }
-
-  symmetry = "x"
-}
-
-RECURSE_DOUBLE_O2 =
-{
-  shape = "O"
-  prob = 550
-
-  structure =
-  {
-    "....."
-    ".222."
-    "..^.."
-    ".111."
-    ">111<"
-    "....."
-  }
-
-  x_sizes =
-  {
-    "11111", "12121", "13131", "14141", "15151"
-  }
-
-  y_sizes =
-  {
-    "111121", "111131", "112131", "112141"
-    "113141", "113151", "114151"
-  }
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-    { height=2, match="any", recurse=1 }
-  }
-
-  symmetry = "x"
 }
 
 
