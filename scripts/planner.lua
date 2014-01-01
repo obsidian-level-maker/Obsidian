@@ -115,7 +115,7 @@ function Plan_choose_darkness()
     LEVEL.sky_shade = 0
   else
     LEVEL.sky_light = 192
-    LEVEL.sky_shade = 160
+    LEVEL.sky_shade = 144
   end
 end
 

@@ -244,7 +244,9 @@ function Trans.old_brush(info, coords, z1, z2)
 
 -- gui.printf("coords=\n%s\n", table.tostr(coords,4))
 
-  table.insert(coords, 1, { m="solid", peg=info.peg })
+  local kind = info.kind or "solid"
+
+  table.insert(coords, 1, { m=kind, peg=info.peg })
 
   raw_add_brush(coords)
 end
@@ -467,14 +469,12 @@ end
 function get_sky()
   local mat = assert(GAME.MATERIALS["_SKY"])
 
-  local light = LEVEL.sky_light or 0.75
-
   return
   {
-    kind = "sky",
-    w_face = { tex=mat.t },
-    t_face = { tex=mat.f or mat.t },
-    b_face = { tex=mat.f or mat.t, light=light },
+    kind = "sky"
+    w_face = { tex=mat.t }
+    t_face = { tex=mat.f or mat.t }
+    b_face = { tex=mat.f or mat.t }
   }
 end
 

@@ -195,7 +195,6 @@ function Build.door(S, side, z1, skin, skin2, tag, reversed)
   local door_h = skin.door_h or 112
   local door_info = add_pegging(get_mat(skin.door_w))
 
-  door_info.b_face.light = 0.7
   door_info.sec_tag = tag
   door_info.delta_z = -8
 
@@ -204,7 +203,6 @@ function Build.door(S, side, z1, skin, skin2, tag, reversed)
   local frame_info = get_mat(skin2.inner, skin.frame_c)
 
   local step_info = get_mat(skin.step_w)
-  step_info.t_face.light = 0.7
 
   local key_info = add_pegging(get_mat(skin.key_w or skin2.inner), skin.key_ox, skin.key_oy)
 
@@ -326,7 +324,6 @@ function Build.quake_exit_pad(S, z_top, skin, next_map)
   -- the pad itself
 
   local info = get_mat(skin.wall or skin.floor, skin.floor)
-  info.t_face.light = 0.8
 
   Trans.old_quad(info, x1,y1, x2,y2, -EXTREME_H, z_top)
 end
@@ -378,7 +375,7 @@ function Build.ceil_light(S, z2, skin)
   local my = int((S.y1 + S.y2)/2)
 
   local light_info = get_mat(skin.lite_f)
-  light_info.b_face.light = 0.90
+  light_info.b_face.light = 192
 
   Trans.old_brush(light_info,
   {
@@ -391,7 +388,6 @@ function Build.ceil_light(S, z2, skin)
 
 
   local trim_info = get_mat(skin.trim)
-  trim_info.b_face.light = 0.72
 
   Trans.old_brush(trim_info,
   {
@@ -1327,7 +1323,6 @@ function Build.small_switch(S, dir, f_h, skin, tag)
 
 
   local info = get_mat(skin.side_w)
-  info.t_face.light = 0.66
 
   local switch_info = get_mat(skin.switch_w)
   add_pegging(switch_info, skin.x_offset, skin.y_offset)
@@ -1387,8 +1382,6 @@ function Build.exit_pillar(S, z1, skin)
     local exit_info = get_mat(skin.exit_w)
     add_pegging(exit_info)
 
-    info.t_face.light = 0.82
-   
     Trans.set(DT)
 
     local pos = long/2 - 68
@@ -1769,7 +1762,6 @@ gui.debugf("x1..x2 : %d,%d\n", x1,x2)
   -- top and bottom
   local floor_info = get_mat(skin.wall, skin.floor)
 
-  floor_info.b_face.light = skin.light
   floor_info.sec_kind = skin.sec_kind
 
   local coords = Trans.rect_coords(mx-total_w/2,my-4, mx+total_w/2,deep)
@@ -1788,7 +1780,6 @@ function Build.pedestal(S, z1, skin)
   local my = int((S.y1+S.y2) / 2)
 
   local info = get_mat(skin.wall or skin.floor, skin.floor)
-  info.t_face.light = 0.7
 
   add_pegging(info, skin.x_offset, skin.y_offset, skin.peg)
 

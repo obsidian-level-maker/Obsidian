@@ -1763,7 +1763,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
       local light_name = rand.key_by_probs(THEME.big_lights)
       local light_info = get_mat(light_name)
-      light_info.b_face.light = 0.85
+--FIXME  light_info.b_face.light = 0.85
 
       -- lighting effects
       -- (They can break lifts, hence the check here)
@@ -2577,7 +2577,7 @@ do return end
       ---## Trans.old_quad(info, cx1,cy1, cx2,cy2, z2, EXTREME_H)
 
       local kind, w_face, p_face = Mat_normal(S.u_tex or c_tex or w_tex, c_tex)
-      p_face.light = S.c_light
+---##      p_face.light = S.c_light
 
       Trans.quad(cx1,cy1, cx2,cy2, z2,nil, kind, w_face, p_face)
 
