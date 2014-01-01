@@ -819,8 +819,10 @@ function Room_border_up()
   local function get_border_list(R)
     local list = {}
 
-    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
+    for x = R.sx1, R.sx2 do
+    for y = R.sy1, R.sy2 do
       local S = SEEDS[x][y]
+
       if S.room == R and not
          (S.kind == "void" or S.kind == "diagonal" or
           S.kind == "tall_stair")
@@ -829,9 +831,11 @@ function Room_border_up()
           if S.border[side].kind == "wall" then
             table.insert(list, { S=S, side=side })
           end
-        end -- for side
+        end
       end
-    end end -- for x, y
+
+    end -- for x, y
+    end
 
     return list
   end
@@ -840,10 +844,11 @@ function Room_border_up()
     local min_c1, max_f1 = 999, -999
     local min_c2, max_f2 = 999, -999
 
-    local total   = 0
+    local count   = 0
     local scenics = 0
     local doors   = 0
     local futures = 0
+    local indoors = 0
     local entry   = 0
 
     local info = { side=side, seeds={} }
@@ -873,15 +878,18 @@ function Room_border_up()
       local S = bd.S
       local N = S:neighbor(side)
 
-      total = total + 1
-
       if (bd.side == side) and S.floor_h and
-         (N and N.room and N.room.is_outdoor) and N.floor_h
-      -- (N.kind == "walk" or N.kind == "liquid")
+         (N and N.room) and N.floor_h
       then
         table.insert(info.seeds, S)
 
-        if N.kind == "scenic" then
+        count = count + 1
+
+        if not N.room.is_outdoor then
+          indoors = indoors + 1
+        end
+
+        if N.room.kind == "scenic" then
           scenics = scenics + 1
         end
 
@@ -917,9 +925,13 @@ function Room_border_up()
     score = score + (min_c  - max_f) / 8
     score = score - usable * 22
 
-    if scenics >= 1 then score = score + 120 end
-    if entry   == 0 then score = score + 60 end
+    -- sub-rooms are much better with windows
+    if R.parent then score = score + 60 end
 
+    if scenics >= 1 then score = score + 120 end
+    if entry   == 0 then score = score + 40 end
+
+    if indoors == 0 then score = score + 25 end
     if doors   == 0 then score = score + 20 end
     if futures == 0 then score = score + 10 end
 
@@ -928,20 +940,27 @@ function Room_border_up()
     info.score = score
 
 
+    -- prevent mixture of indoor and outdoor
+    info.outdoor = true
+
+    if indoors >= count / 2 then
+      info.outdoor = false
+    end
+
+
     -- implement the window style
-    if (STYLE.windows == "few"  and score < 350) or
-       (STYLE.windows == "some" and score < 260)
+    if (STYLE.windows == "few"  and score < 370) or
+       (STYLE.windows == "some" and score < 280)
     then
       return nil
     end
 
-
     -- determine height of window
-    if (min_c - max_f) >= 192 and rand.odds(20) then
+    if (min_c - max_f) >= 192 and rand.odds(30) and info.outdoor then
       info.z1 = max_f + 64
       info.z2 = min_c - 64
       info.is_tall = true
-    elseif (min_c - max_f) >= 160 and rand.odds(60) then
+    elseif (min_c - max_f) >= 160 and rand.odds(70) and info.outdoor then
       info.z1 = max_f + 32
       info.z2 = min_c - 24
       info.is_tall = true
@@ -979,15 +998,19 @@ function Room_border_up()
     local side = info.side
 
     each S in info.seeds do
+      local N = S:neighbor(side)
+      assert(N and N.room)
+
+      if sel(N.room.is_outdoor, 1, 0) != sel(info.outdoor, 1, 0) then
+        continue
+      end
+
       S.border[side].kind = "window"
 
       S.border[side].win_width = info.width
       S.border[side].win_mid_w = info.mid_w
       S.border[side].win_z1    = info.z1
       S.border[side].win_z2    = info.z2
-
-      local N = S:neighbor(side)
-      assert(N and N.room)
 
       N.border[10-side].kind = "nothing"
     end -- for S
