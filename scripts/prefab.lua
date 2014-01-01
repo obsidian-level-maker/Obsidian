@@ -610,9 +610,59 @@ function Build.diagonal(S, side, info, floor_h, ceil_h)
   local y2 = S.y2 - get_thick(8)
 
 
+--[[  PLAIN DIAGONAL
+
   Trans.old_brush(info,
       diagonal_coords(side,x1,y1,x2,y2),
       ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+--]]
+
+
+  -- CURVINESS
+
+  local cx1 = x1 + int((x2 - x1) * 0.3)
+  local cx2 = x1 + int((x2 - x1) * 0.7)
+
+  local cy1 = y1 + int((y2 - y1) * 0.3)
+  local cy2 = y1 + int((y2 - y1) * 0.7)
+
+  if side == 9 then
+    Trans.old_brush(info,
+        { { x=x2,y=y1 }, { x=x2,y=y2 }, { x=cx2, y=cy2 } },
+        ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+
+    Trans.old_brush(info,
+        { { x=x2,y=y2 }, { x=x1,y=y2 }, { x=cx2, y=cy2 } },
+        ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+
+  elseif side == 1 then
+    Trans.old_brush(info,
+        { { x=x1,y=y2 }, { x=x1,y=y1 }, { x=cx1, y=cy1 } },
+        ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+
+    Trans.old_brush(info,
+        { { x=x1,y=y1 }, { x=x2,y=y1 }, { x=cx1, y=cy1 } },
+        ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+
+  elseif side == 7 then
+    Trans.old_brush(info,
+        { { x=x1,y=y2 }, { x=x1,y=y1 }, { x=cx1, y=cy2 } },
+        ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+
+    Trans.old_brush(info,
+        { { x=x2,y=y2 }, { x=x1,y=y2 }, { x=cx1, y=cy2 } },
+        ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+
+  elseif side == 3 then
+    Trans.old_brush(info,
+        { { x=x1,y=y1 }, { x=x2,y=y1 }, { x=cx2, y=cy1 } },
+        ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+
+    Trans.old_brush(info,
+        { { x=x2,y=y1 }, { x=x2,y=y2 }, { x=cx2, y=cy1 } },
+        ceil_h or -EXTREME_H, floor_h or EXTREME_H)
+  end
+
 end
 
 
