@@ -97,21 +97,6 @@ class ZONE
 --------------------------------------------------------------]]
 
 
-function Quest_quest_before_lock(LOCK)
-  assert(LOCK.conn)
-  return assert(LOCK.conn.R1.quest)
-end
-
-function Quest_quest_after_lock(LOCK)
-  if LOCK.kind == "EXIT" then
-    return nil
-  end
-
-  assert(LOCK.conn)
-  return assert(LOCK.conn.R2.quest)
-end
-
-
 function Quest_compute_tvols()
 
   local function travel_volume(R, seen_conns)
@@ -209,87 +194,6 @@ function Quest_dump_zone_flow(Z)
 end
 
 
-function Quest_initial_path(quest)
-
-  -- TODO: preference for paths that contain many junctions
-  --       [might be more significant than travel volume]
-
-  local function select_next_room(R, path)
-    local best_C
-    local best_tvol = -1
-
-    each C in R.conns do
-      if C.R1 == R and not C.lock then
-        if best_tvol < C.trav_2.svolume then
-          best_tvol = C.trav_2.svolume
-          best_C = C
-        end
-      end
-    end
-
-    if not best_C then
-      return nil
-    end
-
-    table.insert(path, best_C)
-
-    return best_C.R2
-  end
-
-
-  --| Quest_initial_path |--
-
-  Quest_compute_tvols(quest)
-
-  quest.path = {}
-
-  local R = assert(quest.start)
-
-  for loop = 1,999 do
-    if loop == 999 then
-      error("Quest_initial_path infinite loop!")
-    end
-
-    quest.target = R
-
-    R = select_next_room(R, quest.path)
-
-    if not R then break; end
-  end
-
-  gui.debugf("Quest %s  start: S(%d,%d)  target: S(%d,%d)\n",
-             tostring(quest), quest.start.sx1, quest.start.sy1,
-             quest.target.sx1, quest.target.sy1)
-end
-
-
-function Quest_num_locks(num_rooms)
-  local result
-
-  local num_keys     = table.size(THEME.keys or {})
-  local num_switches = table.size(THEME.switches or {})
-
-  if STYLE.switches == "none" then
-    result = 0
-  elseif STYLE.switches == "heaps" then
-    result = num_rooms
-  elseif STYLE.switches == "few" then
-    result = int(num_rooms / 14 + gui.random())
-  else
-    result = int(num_rooms / 7 + (gui.random() ^ 2) * 4)
-  end
-
-  -- if we have no switches, then limit is number of keys
-  -- (since keys can only be used once per level)
-  if num_switches == 0 then
-    result = math.min(result, num_keys)
-  end
-
-  gui.printf("Number of locks: %d  (rooms:%d)\n", result, num_rooms)
-
-  return result
-end
-
 
 function Quest_find_path_to_room(src, dest)
   local seen_rooms = {}
@@ -326,350 +230,6 @@ function Quest_find_path_to_room(src, dest)
   return path
 end
 
-
-function Quest_decide_split(quest)  -- returns a LOCK
-
-  local function eval_lock(C)
-    --
-    -- Factors to consider:
-    --
-    -- 1) primary factor is how well this connection breaks up the
-    --    quest: a 50/50 split is the theoretical ideal, however we
-    --    actually go for 66/33 split, because locked doors are
-    --    better closer to the exit room than the start room
-    --    [extra space near the start room can be used for weapons
-    --    and other pickups].
-    --
-    -- 2) try to avoid Outside-->Outside connections, since we
-    --    cannot use keyed doors in DOOM without creating a tall
-    --    (ugly) door frame.  Worse is when there is a big height
-    --    difference.
-
---!!!    assert(C.tvol_1 and C.tvol_2)
-
-    local cost = 0 -- math.abs(C.tvol_1 - C.tvol_2 * 2)
-
-    if C.R1.is_outdoor and C.R2.is_outdoor then
-      cost = cost + 40
-    end
-
---??  -- small preference for "ON" kind
---??  if not C.on_path then
---??    cost = cost + 10
---??  end
-
-    return cost + gui.random() * 5
-  end
-
-  local function add_lock(list, C)
-    if not table.has_elem(list, C) then
-      C.on_path = table.has_elem(quest.path, C)
-      C.lock_cost = eval_lock(C)
-      table.insert(list, C)
-    end
-  end
-
-  local function locks_for_room(R, list)
-    if R.is_junction then
-      each C in R.conns do
-        if C.R1 == R and C.can_lock then
-          add_lock(list, C)
-        end
-      end
-    end
-  end
-
-  local function dump_locks(list)
-    each C in list do
-      gui.debugf("Lock S(%d,%d) --> S(%d,%d) cost=%1.2f\n",
-                 C.R1.sx1, C.R1.sy1, C.R2.sx1, C.R2.sy1, C.lock_cost)
-    end
-  end
-
-
-  ---| Quest_decide_split |---
-
-  Quest_compute_tvols(quest)
-
-  -- choose connection which will get locked
-  local poss_locks = {}
-
-  locks_for_room(quest.start, poss_locks)
-
-  each C in quest.path do
-    locks_for_room(C.R2, poss_locks)
-  end
- 
-  -- should always have at least one possible lock, otherwise the
-  -- Quest_decide_split() function should never have been called.
-  assert(#poss_locks > 0)
-
-  dump_locks(poss_locks)
-
-  local LC = table.pick_best(poss_locks, function(X,Y) return X.lock_cost < Y.lock_cost end)
-  assert(LC)
-
-  gui.debugf("Lock conn has COST:%1.2f on_path:%s\n",
-             LC.lock_cost, sel(LC.on_path, "YES", "NO"))
-
-  local LOCK =
-  {
-    -- kind and item set later!
-    kind = "UNSET",
-
-    conn = LC,
-    tag  = Plan_alloc_id("tag")
-  }
-
-  return LOCK
-end
-
-
-function Quest_split_quest(quest, LOCK)
-
-  local function dump_quest(A, name)
-    gui.debugf("%s QUEST  %s  %d+%d\n", name, tostring(A), #A.rooms, #A.conns)
-    gui.debugf("{\n")
-
-    gui.debugf("  start room  S(%d,%d)\n",  A.start.sx1, A.start.sy1)
-    gui.debugf("  target room S(%d,%d)\n", A.target.sx1, A.target.sy1)
-    -- NOTE: item not set yet!
-    gui.debugf("  lock: %s %s\n", A.lock.kind or "????", A.lock.item or "????")
-
-    gui.debugf("  PATH:\n")
-    gui.debugf("  {\n")
-
-    each C in A.path do
-      gui.debugf("  conn  %s  (%d,%d) -> (%d,%d)\n",
-                 tostring(C), C.R1.sx1, C.R1.sy1, C.R2.sx1, C.R2.sy1)
-    end
-
-    gui.debugf("  }\n")
-    gui.debugf("}\n")
-  end
-
-  ---| Quest_split_quest |---
-
-  dump_quest(quest, "INPUT")
-
-  local LC = LOCK.conn
-
-  LC.lock = LOCK
-
-  table.insert(LEVEL.locks, LOCK)
-
-
-  --- perform split ---
-
-  gui.debugf("Splitting quest, old sizes: %d+%d", #quest.rooms, #quest.conns)
-
-  local front_A =
-  {
-    rooms = {},
-    conns = {},
-    start = quest.start,
-    lock  = LOCK,
-  }
-
-  local back_A =
-  {
-    rooms = {},
-    conns = {},
-    start = LOCK.conn.R2,
-    lock  = quest.lock,
-  }
-
-
-  local function collect_quest(A, R)
-    table.insert(A.rooms, R)
-
-    each C in R.conns do
-      if C.R1 == R and not C.lock then
-        table.insert(A.conns, C)
-        collect_quest(A, C.R2)
-      end
-    end
-  end
-
-  collect_quest(front_A, front_A.start)
-  collect_quest(back_A,  back_A.start)
-
-
-  -- FRONT STUFF --
-
-  if LC.on_path then -- "ON" kind
-
-    -- create second half of front path
-    front_A.start = LOCK.conn.R1
-    
-    Quest_initial_path(front_A)
-
-    front_A.start = quest.start
-
-    -- create the back_path
-    front_A.back_path = table.copy(front_A.path)
-    table.reverse(front_A.back_path)
-
-    -- add first half of path
-    local hit_lock = false
-    for index,C in ipairs(quest.path) do
-      if C == LOCK.conn then
-        hit_lock = true ; break
-      end
-      table.insert(front_A.path, index, C)
-    end
-    assert(hit_lock)
-
-  else  -- "OFF" kind
-
-    -- this is easy (front path stays the same)
-    front_A.target = quest.target
-    front_A.path   = quest.path
-
-    -- a bit harder : create the back_path
-    front_A.back_path = {}
-
-    local hit_lock = false
-    for idx = #front_A.path, 1, -1 do
-      local C = front_A.path[idx]
-      table.insert(front_A.back_path, C)
-      if C.R1 == LOCK.conn.R1 then
-        hit_lock = true ; break
-      end
-    end
-    assert(hit_lock)
-  end
-
-
-  -- BACK STUFF --
-
-  Quest_initial_path(back_A)
-
-  if quest.back_path then
-    -- create back_path
-
-    if LC.on_path then -- "ON" kind
-      back_A.back_path = quest.back_path
-
-    else  -- "OFF" kind
-      back_A.back_path = "FIND"  -- find it later
-    end
-  end
-
-
-  -- find oldie to replace with the newbies...
-  -- [this logic ensures the 'quests' list stays in visit order]
-
-  local old_pos
-  for index,A in ipairs(LEVEL.quests) do
-    if quest == A then old_pos = index ; break end
-  end
-  assert(old_pos)
-
-
-  table.insert(LEVEL.quests, old_pos+1, front_A)
-  table.insert(LEVEL.quests, old_pos+2, back_A)
-
-  table.remove(LEVEL.quests, old_pos)
-
-  gui.debugf("Successful split, new sizes: %d+%d | %d+%d\n",
-             #front_A.rooms, #front_A.conns,
-              #back_A.rooms,  #back_A.conns)
-
-  dump_quest(front_A, "FRONT")
-  dump_quest( back_A, "BACK")
-end
-
-
-function Quest_add_a_lock()
-
-  local function conn_is_lockable(C)
-    if C.lock then
-      return false
-    end
-
-    -- Wolf3d: require two locked doors to be perpendicular
-    if PARAM.one_lock_tex and #LEVEL.locks == 2 then
-      local old_dir = LEVEL.locks[1].conn.dir -- FIXME !!!
-      assert(old_dir and C.dir)
-
-      if not geom.is_perpendic(old_dir, C.dir) then
-        return false
-      end
-    end
-
-    return true
-  end
-
-  local function room_is_junction(R)
-    local has_lockable = false
-    local traversable = 0
-
-    each C in R.conns do
-      if C.R1 == R then
-        if C.can_lock then
-          has_lockable = true
-        end
-
-        if not C.lock then
-          traversable = traversable + 1
-        end
-      end
-    end
-
-    return has_lockable and (traversable >= 2)
-  end
-
-  local function eval_quest(quest)
-    -- count junctions along path
-    local R = quest.start
-    local junctions = sel(R.is_junction, 1, 0)
-
-    each C in quest.path do
-      if C.R2.is_junction then
-        junctions = junctions + 1
-      end
-    end
-
-    -- a lock is impossible without a junction
-    if junctions == 0 then
-      return -1
-    end
-
-    local score = junctions + gui.random()
-
-    return score
-  end
-
-
-  --| Quest_add_a_lock |--
-
-  each C in LEVEL.conns do
-    C.can_lock = conn_is_lockable(C)
-  end
-
-  each R in LEVEL.rooms do
-    R.is_junction = room_is_junction(R)
-  end
-
-  -- choose quest to add the locked door into
-
-  each A in LEVEL.quests do
-    A.split_score = eval_quest(A)
-gui.debugf("Quest %s  split_score:%1.4f\n", tostring(A), A.split_score)
-  end
-
-  local quest = table.pick_best(LEVEL.quests, function(X,Y) return X.split_score > Y.split_score end)
-
-  if quest.split_score < 0 then
-    gui.debugf("No more locks could be made!\n")
-    return
-  end
-
-  local LOCK = Quest_decide_split(quest)
-
-  Quest_split_quest(quest, LOCK)
-end
 
 
 function Quest_order_by_visit()
@@ -726,154 +286,6 @@ function Quest_order_by_visit()
   end
 end
 
-
-function Quest_key_distances()
-  -- determine distance (approx) between key and the door it opens.
-  -- the biggest distances will use actual keys (which are limited)
-  -- whereas everything else will use switched doors.
-
-  gui.debugf("Key Distances:\n")
-
-  for index,A in ipairs(LEVEL.quests) do
-    if A.lock.kind == "EXIT" then
-      A.lock.distance = 0
-    elseif A.back_path then
-      A.lock.distance = 1 + #A.back_path 
-    else
-      A.lock.distance = rand.irange(1,12)
-    end
-    gui.debugf("  Quest #%d : lock_dist %1.1f\n", index, A.lock.distance)
-  end
-end
-
-
-function Quest_choose_keys()
-  -- there is always at least one "lock" (for EXIT room)
-  local locks_needed = #LEVEL.locks - 1
-  if locks_needed <= 0 then return end
-
-  local key_tab    = table.copy(THEME.keys     or {}) 
-  local switch_tab = table.copy(THEME.switches or {})
-  local bar_tab    = table.copy(THEME.bars     or {})
-
-  local num_keys     = table.size(key_tab)
-  local num_switches = table.size(switch_tab)
-  local num_bars     = table.size(bar_tab)
-
-  -- use less keys when number of locked doors is small
-  local want_keys = num_keys
-
-  if num_switches == 0 then
-    assert(locks_needed <= num_keys)
-  else
-    while want_keys > 1 and (want_keys*2 > locks_needed) and rand.odds(80) do
-      want_keys = want_keys - 1
-    end
-  end
-
-  gui.printf("locks_needed:%d  keys:%d (of %d)  switches:%d  bars:%d\n",
-              locks_needed, want_keys, num_keys, num_switches, num_bars);
-
-  --- STEP 1 : assign keys (distance based) ---
-
-  each LOCK in LEVEL.locks do
-    -- when the distance gets large, keys are better than switches
-    LOCK.key_score = LOCK.distance or 0
-
-    -- prefer not to use keyed doors between two outdoor rooms
-    if LOCK.conn and LOCK.conn.R1.is_outdoor and LOCK.conn.R2.is_outdoor then
-      LOCK.key_score = 0
-    end
-
-    LOCK.key_score = LOCK.key_score + gui.random() / 5.0
-  end
-
-  local lock_list = table.copy(LEVEL.locks)
-  table.sort(lock_list, function(A,B) return A.key_score > B.key_score end)
-
-  each LOCK in lock_list do
-    if table.empty(key_tab) or want_keys <= 0 then
-      break;
-    end
-
-    if LOCK.kind == "UNSET" then
-      LOCK.kind = "KEY"
-      LOCK.item = rand.key_by_probs(key_tab)
-
-      -- cannot use this key again
-      key_tab[LOCK.item] = nil
-
-      want_keys = want_keys - 1
-    end
-  end
-
-  --- STEP 2 : assign switches (random spread) ---
-
-  each LOCK in lock_list do
-    if LOCK.kind == "UNSET" then
-      assert(num_switches > 0)
-
-      LOCK.kind = "SWITCH"
-
-      if num_bars > 0 and LOCK.conn.R1.is_outdoor and LOCK.conn.R2.is_outdoor then
-        LOCK.item = rand.key_by_probs(bar_tab)
-        bar_tab[LOCK.item] = bar_tab[LOCK.item] / 8
-      else
-        LOCK.item = rand.key_by_probs(switch_tab)
-        switch_tab[LOCK.item] = switch_tab[LOCK.item] / 8
-      end
-    end
-  end
-
-  gui.printf("all_locks =\n{\n")
-  for idx,LOCK in ipairs(LEVEL.locks) do
-    gui.printf("  %d = %s : %s\n", idx, LOCK.kind, LOCK.item or "NIL")
-  end
-  gui.printf("}\n")
-end
-
-
-function Quest_add_keys()
-
-  local function make_small_exit(R)
-    R.kind = "small_exit"
-
-    local C = assert(R.conns[1])
-
-    local S = C.S1
-    local T = C.S2
-
-    local B1 = S.border[S.conn_dir]
-    local B2 = T.border[T.conn_dir]
-
-    B1.kind = "straddle"
-    B2.kind = "straddle"
-  end
-
-  --| Quest_add_keys |--
-
-  each quest in LEVEL.quests do
-    local R = quest.target
-
-    assert(quest.lock.kind != "UNSET")
-
-    R.lock = quest.lock
-
-    if quest.lock.kind == "EXIT" then
-      assert(LEVEL.exit_room == R)
-
-      if not (R.is_outdoor or R.kind == "cave") and
-         not R:has_any_lock() and
-         R.svolume < 25 and THEME.exit
-      then
-        make_small_exit(R)
-      end
-
-    elseif quest.lock.kind != "NULL" then
-      R.purpose = quest.lock.kind
-    end
-  end
-end
 
 
 function Quest_add_weapons()
@@ -1056,60 +468,6 @@ end
 
 
 function Quest_create_zones()
-  --
-  -- NOTE: temp rubbish to get the 5.10 monster code working
-  --
-
-  local function new_zone()
-    local Z = 
-    {
-      id = 1 + #LEVEL.zones
-      rooms = {}
-      themes = {}
-      previous = {}
-      rare_used = {}
-    }
-    table.insert(LEVEL.zones, Z)
-    Z.tostr = function(Z) return "ZONE_" .. Z.id end
-    return Z
-  end
-
-  local function dump_zones()
-    gui.printf("Zone list:\n")
-
-    each Z in LEVEL.zones do
-      gui.printf("  %d: vol:%3.1f rooms:%d head:%s\n", Z.id,
-                 Z.volume or 0, #Z.rooms,
-                 (Z.rooms[1] and ("ROOM_" .. Z.rooms[1].id)) or "NIL")
-    end
-  end
-
-
-  ---| Quest_create_zones |---
-
-  LEVEL.zones = {}
-
-  local zone
-
-  each quest in LEVEL.quests do
-    if not zone or #zone.rooms > 8 then
-      zone = new_zone()
-    end
-
-    quest.zone = zone
-
-    each R in quest.rooms do
-      R.zone = zone
-      table.insert(zone.rooms, R)
-    end
-  end
-
-  dump_zones()
-end
-
-
-
-function Quest_create_zones2()
 
   local function new_zone()
     local Z =
@@ -1330,30 +688,7 @@ stderrf("splitting ZONE_%d at %s\n", Z.id, C.R1:tostr())
   end
 
 
-  local function place_keys__OLD()  -- FIXME: REMOVE
-    each Z in LEVEL.zones do
-      assert(Z.solution)
-      
-      local places = {}
-      each R in Z.rooms do
-        if not R.purpose then table.insert(places, R) end
-      end
-      assert(#places > 0)
-      local R = rand.pick(places)
-
-      R.purpose = Z.solution.kind
-      R.purpose_lock = Z.solution
-
-      if R.purpose == "EXIT" then
-        LEVEL.exit_room = R
-      end
-    end
-  end
-
-
-  ---| Quest_create_zones2 |---
-
-  LEVEL.zones = {}
+  ---| Quest_create_zones |---
 
   local want_zones = int((LEVEL.W + LEVEL.H) / 4 + gui.random() * 3)
 
@@ -1380,9 +715,6 @@ stderrf("want_zones = %d\n", want_zones)
   choose_keys()
 
   dump_zones()
-
----  place_keys()
-
 end
 
 
@@ -1594,8 +926,6 @@ stderrf("    got: %s\n", tostring(R.purpose))
 
 
   ---| Quest_divide_zones |---
-
-  LEVEL.quests = {}
 
   each Z in LEVEL.zones do
     local Q = new_quest(Z.start)
@@ -2002,10 +1332,12 @@ function Quest_make_quests()
     error("Level only has one room! (2 or more are needed)")
   end
 
+  LEVEL.zones  = {}
+  LEVEL.quests = {}
+  LEVEL.locks  = {}
 
-  LEVEL.locks = {}
 
-  Quest_create_zones2()
+  Quest_create_zones()
 
   Quest_divide_zones()
 
@@ -2016,17 +1348,12 @@ function Quest_make_quests()
 
 
 ---??  Quest_order_by_visit()
----??  Quest_create_zones()
   Quest_setup_lev_alongs()
----??  Quest_key_distances()
 
   Quest_add_weapons()
 ---??  Quest_find_storage_rooms()
 
   Quest_assign_room_themes()
   Quest_select_textures()
-
----??  Quest_choose_keys()
----??  Quest_add_keys()
 end
 
