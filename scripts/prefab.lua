@@ -107,8 +107,8 @@ function Build.sky_fence(S, side, z_top, z_low, skin)
   }
 
   -- give back part the "never draw" linedef flag
-  s_coords[sel(geom.is_vert(side), 2,1)].line_flags = 128
-  s_coords[sel(geom.is_vert(side), 4,3)].line_flags = 128
+  s_coords[sel(geom.is_vert(side), 2,1)].draw_never = 1
+  s_coords[sel(geom.is_vert(side), 4,3)].draw_never = 1
 
   Trans.old_brush(wall_info, w_coords, -EXTREME_H, z_top)
   Trans.old_brush(wall_info, s_coords, -EXTREME_H, z_low)
@@ -506,7 +506,7 @@ function Build.detailed_hall(S, side, z1, z2, skin)
     S.x1,S.y1, S.x2,S.y2 = ox1, oy1, ox2, oy2
 
     if impassible then
-      each c in res do c.line_flags = 1 end
+      each C in res do C.blocked = 1 end
     end
 
     return res
@@ -1880,7 +1880,7 @@ gui.debugf("x1..x2 : %d,%d\n", x1,x2)
 
   local coords = Trans.rect_coords(mx-total_w/2,my-4, mx+total_w/2,deep)
 
-  each c in coords do c.line_flags = 1 end
+  each C in coords do C.blocked = 1 end
 
   Trans.old_brush(floor_info, coords, -EXTREME_H, z1)
   Trans.old_brush(floor_info, coords, z2,  EXTREME_H)

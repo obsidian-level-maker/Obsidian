@@ -22,6 +22,31 @@
 Trans = {}
 
 
+DOOM_LINE_FLAGS =
+{
+  blocked     = 0x01
+  block_mon   = 0x02
+  sound_block = 0x40
+
+  draw_secret = 0x20
+  draw_never  = 0x80
+  draw_always = 0x100
+
+  pass_thru   = 0x200  -- Boom
+}
+
+
+HEXEN_ACTIONS =
+{
+  W1 = 0x0000, WR = 0x0200  -- walk
+  S1 = 0x0400, SR = 0x0600  -- switch
+  M1 = 0x0800, MR = 0x0A00  -- monster
+  G1 = 0x0c00, GR = 0x0E00  -- gun / projectile
+  B1 = 0x1000, BR = 0x1200  -- bump
+}
+
+
+
 function raw_add_brush(brush)
   each C in brush do
     if C.face then
@@ -198,6 +223,40 @@ end
 
 
 
+function Brush_collect_flags(coords)
+  each C in coords do
+    -- these flags only apply to linedefs
+    if not C.x then continue end
+
+    if GAME.format == "doom" then
+      local flags = C.flags or 0
+
+      if C.act and PARAM.sub_format == "hexen" then
+        local spac = HEXEN_ACTIONS[C.act]
+        if not spac then
+          error("Unknown act value: " .. tostring(C.act))
+        end
+        flags = bit.bor(flags, spac)
+      end
+
+      each name,value in DOOM_LINE_FLAGS do
+        if C[name] and C[name] != 0 then
+          flags = bit.bor(flags, value)
+          C[name] = nil
+        end
+      end
+
+      if flags != 0 then
+        C.flags = flags
+
+        -- this makes sure the flags get applied
+        if not C.special then C.special = 0 end
+      end
+    end
+  end -- C
+end
+
+
 function Trans.brush(kind, coords)
   if not coords then
     kind, coords = "solid", kind
@@ -219,6 +278,8 @@ function Trans.brush(kind, coords)
   end
 
   table.insert(coords, 1, { m=kind })
+
+  Brush_collect_flags(coords)
 
   raw_add_brush(coords)
 end
@@ -291,6 +352,8 @@ function Trans.old_brush(info, coords, z1, z2)
   local kind = info.kind or "solid"
 
   table.insert(coords, 1, { m=kind, peg=info.peg })
+
+  Brush_collect_flags(coords)
 
   raw_add_brush(coords)
 end
