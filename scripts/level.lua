@@ -105,6 +105,7 @@ require "quest"
 
 require "build"
 require "prefab"
+require "wad_fab"
 require "cave"
 require "simple"
 require "layout"
