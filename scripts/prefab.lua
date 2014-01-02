@@ -227,10 +227,10 @@ function Build.door(S, side, z1, skin, skin2, tag, reversed)
 
   Trans.old_brush(door_info,
   {
-    { x=mx+64, y=my-8, line_kind=KIND, line_tag=tag2 },
-    { x=mx+64, y=my+8, line_kind=KIND, line_tag=tag2 },
-    { x=mx-64, y=my+8, line_kind=KIND, line_tag=tag2 },
-    { x=mx-64, y=my-8, line_kind=KIND, line_tag=tag2 },
+    { x=mx+64, y=my-8, special=KIND, tag=tag2 },
+    { x=mx+64, y=my+8, special=KIND, tag=tag2 },
+    { x=mx-64, y=my+8, special=KIND, tag=tag2 },
+    { x=mx-64, y=my-8, special=KIND, tag=tag2 },
   },
   z1+16, EXTREME_H)
 
@@ -1313,20 +1313,20 @@ function Build.lift(S, skin, skin2, tag)
   local coords = get_wall_coords(S, side, 128)
 
   -- FIXME: there must be a better way....
-  coords[1].line_kind = sel(switch_dirs[6], skin.switch_kind, skin.walk_kind)
-  coords[2].line_kind = sel(switch_dirs[8], skin.switch_kind, skin.walk_kind)
-  coords[3].line_kind = sel(switch_dirs[4], skin.switch_kind, skin.walk_kind)
-  coords[4].line_kind = sel(switch_dirs[2], skin.switch_kind, skin.walk_kind)
+  coords[1].special = sel(switch_dirs[6], skin.switch_kind, skin.walk_kind)
+  coords[2].special = sel(switch_dirs[8], skin.switch_kind, skin.walk_kind)
+  coords[3].special = sel(switch_dirs[4], skin.switch_kind, skin.walk_kind)
+  coords[4].special = sel(switch_dirs[2], skin.switch_kind, skin.walk_kind)
 
   if switch_dirs[6] then coords[1].w_face = sw_info.w_face end
   if switch_dirs[8] then coords[2].w_face = sw_info.w_face end
   if switch_dirs[4] then coords[3].w_face = sw_info.w_face end
   if switch_dirs[2] then coords[4].w_face = sw_info.w_face end
 
-  coords[1].line_tag = tag
-  coords[2].line_tag = tag
-  coords[3].line_tag = tag
-  coords[4].line_tag = tag
+  coords[1].tag = tag
+  coords[2].tag = tag
+  coords[3].tag = tag
+  coords[4].tag = tag
 
   lift_info.sec_tag = tag
 
@@ -1462,7 +1462,7 @@ function Build.small_switch(S, dir, f_h, skin, tag)
   Trans.old_brush(info,
   {
     { x=mx+32, y=my-8 },
-    { x=mx+32, y=my+8, w_face = switch_info.w_face, line_kind=assert(skin.line_kind), line_tag=tag },
+    { x=mx+32, y=my+8, w_face = switch_info.w_face, special=assert(skin.line_kind), tag=tag },
     { x=mx-32, y=my+8 },
     { x=mx-32, y=my-8 },
   },
@@ -1480,10 +1480,10 @@ function Build.exit_pillar(S, z1, skin)
 
   Trans.old_brush(add_pegging(get_mat(skin.switch_w)),
   {
-    { x=mx+32, y=my-32, line_kind=skin.line_kind or 11 },
-    { x=mx+32, y=my+32, line_kind=skin.line_kind or 11 },
-    { x=mx-32, y=my+32, line_kind=skin.line_kind or 11 },
-    { x=mx-32, y=my-32, line_kind=skin.line_kind or 11 },
+    { x=mx+32, y=my-32, special=skin.line_kind or 11 },
+    { x=mx+32, y=my+32, special=skin.line_kind or 11 },
+    { x=mx-32, y=my+32, special=skin.line_kind or 11 },
+    { x=mx-32, y=my-32, special=skin.line_kind or 11 },
   },
   -EXTREME_H, z1 + skin.h)
 
@@ -1556,9 +1556,9 @@ function Build.outdoor_exit_switch(S, dir, f_h, skin)
   Trans.old_brush(info,
   {
     { x=mx+32, y=my-8 },
-    { x=mx+32, y=my+8, w_face = switch_info.w_face, line_kind=11 },
+    { x=mx+32, y=my+8, w_face = switch_info.w_face, special=11 },
     { x=mx-32, y=my+8 },
-    { x=mx-32, y=my-8, w_face = switch_info.w_face, line_kind=11 },
+    { x=mx-32, y=my-8, w_face = switch_info.w_face, special=11 },
   },
   -EXTREME_H, f_h+16+64)
 
@@ -1643,10 +1643,10 @@ function Build.small_exit(R, xt_info, skin, skin2)
 
   Trans.old_brush(door_info,
   {
-    { x=mx+32, y=48, line_kind=1 },
-    { x=mx+32, y=64, line_kind=1 },
-    { x=mx-32, y=64, line_kind=1 },
-    { x=mx-32, y=48, line_kind=1 },
+    { x=mx+32, y=48, special=1 },
+    { x=mx+32, y=64, special=1 },
+    { x=mx-32, y=64, special=1 },
+    { x=mx-32, y=48, special=1 },
   },
   f_h+8, EXTREME_H)
 
@@ -1716,7 +1716,7 @@ function Build.small_exit(R, xt_info, skin, skin2)
     { x=long-8, y=8 },
     { x=long-8, y=32 },
     { x=mx+swit_W/2+8, y=32, w_face = break_i.w_face },
-    { x=mx+swit_W/2,   y=32, w_face = switch_i.w_face, line_kind=11 },
+    { x=mx+swit_W/2,   y=32, w_face = switch_i.w_face, special=11 },
     { x=mx-swit_W/2,   y=32, w_face = break_i.w_face },
     { x=mx-swit_W/2-8, y=32 },
     { x=8, y=32 },
@@ -1849,10 +1849,10 @@ function Build.picture(S, side, z1, z2, skin)
     if n < count then
       Trans.old_brush(pic_info,
       {
-        { x=x+WD, y=my-4, line_kind=skin.line_kind },
-        { x=x+WD, y=my,   line_kind=skin.line_kind },
-        { x=x,    y=my,   line_kind=skin.line_kind },
-        { x=x,    y=my-4, line_kind=skin.line_kind },
+        { x=x+WD, y=my-4, special=skin.line_kind },
+        { x=x+WD, y=my,   special=skin.line_kind },
+        { x=x,    y=my,   special=skin.line_kind },
+        { x=x,    y=my-4, special=skin.line_kind },
       },
       -EXTREME_H, EXTREME_H)
     end
@@ -1913,10 +1913,10 @@ function Build.lowering_pedestal(S, z1, skin)
 
   Trans.old_brush(info,
   {
-    { x=mx+32, y=my-32, line_kind=skin.line_kind, line_tag=tag },
-    { x=mx+32, y=my+32, line_kind=skin.line_kind, line_tag=tag },
-    { x=mx-32, y=my+32, line_kind=skin.line_kind, line_tag=tag },
-    { x=mx-32, y=my-32, line_kind=skin.line_kind, line_tag=tag },
+    { x=mx+32, y=my-32, special=skin.line_kind, tag=tag },
+    { x=mx+32, y=my+32, special=skin.line_kind, tag=tag },
+    { x=mx-32, y=my+32, special=skin.line_kind, tag=tag },
+    { x=mx-32, y=my-32, special=skin.line_kind, tag=tag },
   },
   -EXTREME_H, z1)
 end
@@ -1950,7 +1950,7 @@ function Build.raising_start(S, face_dir, z1, skin)
       {
         { x=long,  y=0 },
         { x=long,  y=deep },
-        { x=mx+32, y=deep, w_face=sw_info.w_face, line_kind=18, line_tag=tag },
+        { x=mx+32, y=deep, w_face=sw_info.w_face, special=18, tag=tag },
         { x=mx-32, y=deep },
         { x=0,     y=deep },
         { x=0,     y=0 },
@@ -2007,10 +2007,10 @@ function Build.popup_trap(S, z, skin, monster)
 
   Trans.old_brush(info,
   {
-    { x=long, y=0,    line_kind=19, line_tag=info.sec_tag },
-    { x=long, y=deep, line_kind=19, line_tag=info.sec_tag },
-    { x=0,    y=deep, line_kind=19, line_tag=info.sec_tag },
-    { x=0,    y=0,    line_kind=19, line_tag=info.sec_tag },
+    { x=long, y=0,    special=19, tag=info.sec_tag }
+    { x=long, y=deep, special=19, tag=info.sec_tag }
+    { x=0,    y=deep, special=19, tag=info.sec_tag }
+    { x=0,    y=0,    special=19, tag=info.sec_tag }
   },
   -EXTREME_H, z - 256)
 

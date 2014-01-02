@@ -57,9 +57,6 @@ function raw_add_brush(brush)
 
       if C.x_offset then C.u1 = C.x_offset ; C.x_offset = nil end
       if C.y_offset then C.v1 = C.y_offset ; C.y_offset = nil end
-
-      if C.line_kind then C.special = C.line_kind ; C.line_kind = nil end
-      if C.line_tag  then C.tag     = C.line_tag  ; C.line_tag  = nil end
     end
   end
 
