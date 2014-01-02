@@ -409,6 +409,19 @@ function Trans.old_quad(info, x1,y1, x2,y2, z1,z2)
 end
 
 
+function Trans.solid_quad(x1, y1, x2, y2, mat)
+  local brush = brushlib.quad(x1, y1, x2, y2)
+  brushlib.set_mat(brush, mat, mat)
+  Trans.brush("solid", brush)
+end
+
+
+function Trans.sky_quad(x1, y1, x2, y2, sky_h)
+  local brush = brushlib.quad(x1, y1, x2, y2, sky_h)
+  brushlib.set_mat(brush, "_SKY", "_SKY")
+  Trans.brush("sky", brush)
+end
+
 
 ------------------------------------------------------------------------
 --  Material  System
