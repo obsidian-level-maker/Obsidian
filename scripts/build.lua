@@ -150,17 +150,8 @@ function Trans.apply_xy(x, y)
 end
 
 
-function Trans.apply_z(z, slope)
+function Trans.apply_z(z)
   local T = Trans.TRANSFORM
-
-  if slope then
-    slope = table.copy(slope)
-
-    slope.x1, slope.y1 = Trans.apply_xy(slope.x1, slope.y1)
-    slope.x2, slope.y2 = Trans.apply_xy(slope.x2, slope.y2)
-
-    if T.mirror_z then slope.dz = - slope.dz end
-  end
 
   -- apply mirroring first
   if T.mirror_z then z = T.mirror_z * 2 - z end
@@ -171,7 +162,7 @@ function Trans.apply_z(z, slope)
   -- apply translation last
   z = z + (T.add_z or 0)
 
-  return z, slope
+  return z
 end
 
 
@@ -268,9 +259,13 @@ function Trans.brush(kind, coords)
     if C.x then
       C.x, C.y = Trans.apply_xy(C.x, C.y)
     elseif C.b then
-      C.b, C.slope = Trans.apply_z(C.b, C.slope)
-    else assert(C.t)
-      C.t, C.slope = Trans.apply_z(C.t, C.slope)
+      C.b = Trans.apply_z(C.b)
+    elseif C.t then
+      C.t = Trans.apply_z(C.t)
+    end
+
+    if C.slope then
+      C.slope = Trans.apply_slope(C.slope)
     end
   end
 
