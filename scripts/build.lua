@@ -104,7 +104,7 @@ function Trans.modify(what, value)
 end
 
 
-function Trans.apply(x, y)
+function Trans.apply_xy(x, y)
   local T = Trans.TRANSFORM
 
   -- apply mirroring first
@@ -134,8 +134,8 @@ function Trans.apply_z(z, slope)
   if slope then
     slope = table.copy(slope)
 
-    slope.x1, slope.y1 = Trans.apply(slope.x1, slope.y1)
-    slope.x2, slope.y2 = Trans.apply(slope.x2, slope.y2)
+    slope.x1, slope.y1 = Trans.apply_xy(slope.x1, slope.y1)
+    slope.x2, slope.y2 = Trans.apply_xy(slope.x2, slope.y2)
 
     if T.mirror_z then slope.dz = - slope.dz end
   end
@@ -165,7 +165,7 @@ function Trans.brush(kind, coords)
 
   each C in coords do
     if C.x then
-      C.x, C.y = Trans.apply(C.x, C.y)
+      C.x, C.y = Trans.apply_xy(C.x, C.y)
     elseif C.b then
       C.b, C.slope = Trans.apply_z(C.b, C.slope)
     else assert(C.t)
@@ -194,7 +194,7 @@ function Trans.old_brush(info, coords, z1, z2)
   coords = table.deep_copy(coords)
 
   each C in coords do
-    C.x, C.y = Trans.apply(C.x, C.y)
+    C.x, C.y = Trans.apply_xy(C.x, C.y)
 
     if C.w_face then
       C.face = C.w_face ; C.w_face = nil
@@ -275,7 +275,7 @@ function Trans.entity(name, x, y, z, props)
     z = z + PARAM.entity_delta_z
   end
 
-  x, y = Trans.apply(x, y)
+  x, y = Trans.apply_xy(x, y)
 
   if info.spawnflags then
     props.spawnflags = (props.spawnflags or 0) + info.spawnflags
