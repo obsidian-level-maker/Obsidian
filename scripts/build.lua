@@ -153,6 +153,51 @@ function Trans.apply_z(z, slope)
 end
 
 
+function Trans.apply_slope(slope)
+  if not slope then return nil end
+
+  local T = Trans.TRANSFORM
+
+  slope = table.copy(slope)
+
+  slope.x1, slope.y1 = Trans.apply_xy(slope.x1, slope.y1)
+  slope.x2, slope.y2 = Trans.apply_xy(slope.x2, slope.y2)
+
+  if T.mirror_z then slope.dz = - slope.dz end
+
+  slope.dz = slope.dz * (T.scale_z or 1)
+
+  return slope
+end
+
+
+function Trans.apply_angle(ang)
+  local T = Trans.TRANSFORM
+
+  if not (T.rotate or T.mirror_x or T.mirror_y) then
+    return ang
+  end
+
+  if T.mirror_x or T.mirror_y then
+    local dx = math.cos(ang * math.pi / 180)
+    local dy = math.sin(ang * math.pi / 180)
+
+    if T.mirror_x then dx = -dx end
+    if T.mirror_y then dy = -dy end
+
+    ang = math.round(geom.calc_angle(dx, dy))
+  end
+
+  if T.rotate then ang = ang + T.rotate end
+
+  if ang >= 360 then ang = ang - 360 end
+  if ang <    0 then ang = ang + 360 end
+
+  return ang
+end
+
+
+
 function Trans.brush(kind, coords)
   if not coords then
     kind, coords = "solid", kind
