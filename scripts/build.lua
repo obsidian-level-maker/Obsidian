@@ -24,42 +24,17 @@ Trans = {}
 brushlib = {}
 
 
-DOOM_LINE_FLAGS =
-{
-  blocked     = 0x01
-  block_mon   = 0x02
-  sound_block = 0x40
-
-  draw_secret = 0x20
-  draw_never  = 0x80
-  draw_always = 0x100
-
-  pass_thru   = 0x200  -- Boom
-}
-
-
-HEXEN_ACTIONS =
-{
-  W1 = 0x0000, WR = 0x0200  -- walk
-  S1 = 0x0400, SR = 0x0600  -- switch
-  M1 = 0x0800, MR = 0x0A00  -- monster
-  G1 = 0x0c00, GR = 0x0E00  -- gun / projectile
-  B1 = 0x1000, BR = 0x1200  -- bump
-}
-
-
-
 function raw_add_brush(brush)
   each C in brush do
+    -- compatibility cruft
+
     if C.face then
       table.merge(C, C.face)
       C.face = nil
-
-      -- compatibility cruft
-
-      if C.x_offset then C.u1 = C.x_offset ; C.x_offset = nil end
-      if C.y_offset then C.v1 = C.y_offset ; C.y_offset = nil end
     end
+
+    if C.x_offset then C.u1 = C.x_offset ; C.x_offset = nil end
+    if C.y_offset then C.v1 = C.y_offset ; C.y_offset = nil end
   end
 
   gui.add_brush(brush)
@@ -244,40 +219,6 @@ end
 
 
 
-function Brush_collect_flags(coords)
-  each C in coords do
-    -- these flags only apply to linedefs
-    if not C.x then continue end
-
-    if GAME.format == "doom" then
-      local flags = C.flags or 0
-
-      if C.act and PARAM.sub_format == "hexen" then
-        local spac = HEXEN_ACTIONS[C.act]
-        if not spac then
-          error("Unknown act value: " .. tostring(C.act))
-        end
-        flags = bit.bor(flags, spac)
-      end
-
-      each name,value in DOOM_LINE_FLAGS do
-        if C[name] and C[name] != 0 then
-          flags = bit.bor(flags, value)
-          C[name] = nil
-        end
-      end
-
-      if flags != 0 then
-        C.flags = flags
-
-        -- this makes sure the flags get applied
-        if not C.special then C.special = 0 end
-      end
-    end
-  end -- C
-end
-
-
 function Trans.brush(kind, coords)
   if not coords then
     kind, coords = "solid", kind
@@ -304,7 +245,7 @@ function Trans.brush(kind, coords)
 
   table.insert(coords, 1, { m=kind })
 
-  Brush_collect_flags(coords)
+  brushlib.collect_flags(coords)
 
   raw_add_brush(coords)
 end
@@ -378,7 +319,7 @@ function Trans.old_brush(info, coords, z1, z2)
 
   table.insert(coords, 1, { m=kind, peg=info.peg })
 
-  Brush_collect_flags(coords)
+  brushlib.collect_flags(coords)
 
   raw_add_brush(coords)
 end
@@ -400,7 +341,11 @@ function Trans.entity(name, x, y, z, props)
     gui.printf("\nLACKING ENTITY : %s\n\n", name)
     return
   end
+
   assert(info.id)
+
+  x, y = Trans.apply_xy(x, y)
+  z    = Trans.apply_z (z)
 
   if info.delta_z then
     z = z + info.delta_z
@@ -408,13 +353,11 @@ function Trans.entity(name, x, y, z, props)
     z = z + PARAM.entity_delta_z
   end
 
-  x, y = Trans.apply_xy(x, y)
-
   if info.spawnflags then
     props.spawnflags = (props.spawnflags or 0) + info.spawnflags
   end
 
-  ent = table.copy(props)
+  local ent = table.copy(props)
 
   ent.id = info.id
   ent.x  = x
@@ -698,6 +641,30 @@ end
 ------------------------------------------------------------------------
 
 
+DOOM_LINE_FLAGS =
+{
+  blocked     = 0x01
+  block_mon   = 0x02
+  sound_block = 0x40
+
+  draw_secret = 0x20
+  draw_never  = 0x80
+  draw_always = 0x100
+
+  pass_thru   = 0x200  -- Boom
+}
+
+
+HEXEN_ACTIONS =
+{
+  W1 = 0x0000, WR = 0x0200  -- walk
+  S1 = 0x0400, SR = 0x0600  -- switch
+  M1 = 0x0800, MR = 0x0A00  -- monster
+  G1 = 0x0c00, GR = 0x0E00  -- gun / projectile
+  B1 = 0x1000, BR = 0x1200  -- bump
+}
+
+
 function brushlib.quad(x1,y1, x2,y2, b,t)
   local coords =
   {
@@ -873,6 +840,40 @@ function brushlib.set_mat(brush, wall, flat)
   end
 
   brushlib.set_tex(brush, wall, flat)
+end
+
+
+function brushlib.collect_flags(coords)
+  each C in coords do
+    -- these flags only apply to linedefs
+    if not C.x then continue end
+
+    if GAME.format == "doom" then
+      local flags = C.flags or 0
+
+      if C.act and PARAM.sub_format == "hexen" then
+        local spac = HEXEN_ACTIONS[C.act]
+        if not spac then
+          error("Unknown act value: " .. tostring(C.act))
+        end
+        flags = bit.bor(flags, spac)
+      end
+
+      each name,value in DOOM_LINE_FLAGS do
+        if C[name] and C[name] != 0 then
+          flags = bit.bor(flags, value)
+          C[name] = nil
+        end
+      end
+
+      if flags != 0 then
+        C.flags = flags
+
+        -- this makes sure the flags get applied
+        if not C.special then C.special = 0 end
+      end
+    end
+  end -- C
 end
 
 
