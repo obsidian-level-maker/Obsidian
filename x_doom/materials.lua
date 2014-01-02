@@ -32,8 +32,8 @@ DOOM.SKIN_DEFAULTS =
 
 DOOM.LIQUIDS =
 {
-  water  = { mat="FWATER1", light=168, special=0 }
-  blood  = { mat="BLOOD1",  light=168, special=0 }
+  water  = { mat="FWATER1", light=168, special=5,  damage=10 }
+  blood  = { mat="BLOOD1",  light=168, special=5,  damage=10 }
   nukage = { mat="NUKAGE1", light=178, special=5,  damage=10 }
   lava   = { mat="LAVA1",   light=178, special=16, damage=20 }
 
