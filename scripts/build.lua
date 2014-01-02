@@ -99,6 +99,10 @@ Trans.TRANSFORM =
   -- mirror_x  : flip horizontally (about given X)
   -- mirror_y  : flip vertically (about given Y)
 
+  -- groups_x  : coordinate remapping groups
+  -- groups_y
+  -- groups_z
+
   -- scale_x   : scaling factor
   -- scale_y
   -- scale_z
@@ -125,12 +129,37 @@ function Trans.modify(what, value)
 end
 
 
+function Trans.remap_coord(groups, n)
+  if not groups then return n end
+
+  local T = #groups
+  assert(T >= 1)
+
+  if n <= groups[1].low  then return n + (groups[1].low2 -  groups[1].low)  end
+  if n >= groups[T].high then return n + (groups[T].high2 - groups[T].high) end
+
+  local idx = 1
+
+  while (idx < T) and (n > groups[idx].high) do
+    idx = idx + 1
+  end
+
+  local G = groups[idx]
+
+  return G.low2 + (n - G.low) * G.size2 / G.size;
+end
+
+
 function Trans.apply_xy(x, y)
   local T = Trans.TRANSFORM
 
   -- apply mirroring first
   if T.mirror_x then x = T.mirror_x * 2 - x end
   if T.mirror_y then y = T.mirror_y * 2 - y end
+
+  -- apply groups
+  if T.groups_x then x = Trans.remap_coord(T.groups_x, x) end
+  if T.groups_y then y = Trans.remap_coord(T.groups_y, y) end
 
   -- apply scaling
   x = x * (T.scale_x or 1)
@@ -151,6 +180,9 @@ end
 
 function Trans.apply_z(z)
   local T = Trans.TRANSFORM
+
+  -- apply groups
+  if T.groups_z then z = Trans.remap_coord(T.groups_z, z) end
 
   -- apply scaling
   z = z * (T.scale_z or 1)
