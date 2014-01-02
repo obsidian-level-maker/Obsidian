@@ -1822,7 +1822,7 @@ function Build.picture(S, side, z1, z2, skin)
   end
 
   local WD  = assert(skin.width)
-  local HT  = assert(skin.depth)
+  local HT  = 8 --- assert(skin.depth)
   local gap = skin.gap or WD
 
   local total_w = count * WD + (count - 1) * gap

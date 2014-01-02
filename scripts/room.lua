@@ -780,7 +780,7 @@ function Room_border_up()
       end
 
       S.border[side].kind = "wall"
-      S.thick[side] = 24
+      S.thick[side] = 16
 
       -- liquid arches are a kind of window
       if S.kind == "liquid" and N.kind == "liquid" and
@@ -788,6 +788,9 @@ function Room_border_up()
       then
         S.border[side].kind = "liquid_arch"
         N.border[10-side].kind = "straddle"
+
+        S.thick[side] = 24
+        N.thick[10 - side] = 24
         return
       end
     end
@@ -2451,7 +2454,7 @@ do return end
       end
 
       if B_kind == "facade" then
-        Build.facade(S, side, S.border[side].facade)
+        Build.wall(S, side, S.border[side].facade)
       end
 
       if B_kind == "window" then

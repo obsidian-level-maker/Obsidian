@@ -790,8 +790,7 @@ function Quest_divide_zones()
 
 
   local function add_solution(R, lock)
-stderrf("add_solution @ %s : LOCK %s\n", R:tostr(), lock.kind)
-stderrf("    got: %s\n", tostring(R.purpose))
+--stderrf("add_solution @ %s : LOCK %s\n", R:tostr(), lock.kind)
     assert(not R.purpose)
 
     R.purpose = lock.kind
