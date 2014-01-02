@@ -98,7 +98,6 @@ Trans.TRANSFORM =
 {
   -- mirror_x  : flip horizontally (about given X)
   -- mirror_y  : flip vertically (about given Y)
-  -- mirror_z
 
   -- scale_x   : scaling factor
   -- scale_y
@@ -153,9 +152,6 @@ end
 function Trans.apply_z(z)
   local T = Trans.TRANSFORM
 
-  -- apply mirroring first
-  if T.mirror_z then z = T.mirror_z * 2 - z end
-
   -- apply scaling
   z = z * (T.scale_z or 1)
 
@@ -175,8 +171,6 @@ function Trans.apply_slope(slope)
 
   slope.x1, slope.y1 = Trans.apply_xy(slope.x1, slope.y1)
   slope.x2, slope.y2 = Trans.apply_xy(slope.x2, slope.y2)
-
-  if T.mirror_z then slope.dz = - slope.dz end
 
   slope.dz = slope.dz * (T.scale_z or 1)
 
