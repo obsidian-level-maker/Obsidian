@@ -21,6 +21,8 @@
 
 Trans = {}
 
+brushlib = {}
+
 
 DOOM_LINE_FLAGS =
 {
@@ -92,6 +94,11 @@ function raw_add_model(model)
      GAME.add_model_func(model)
   end
 end
+
+
+------------------------------------------------------------------------
+--  Transformative  Geometry
+------------------------------------------------------------------------
 
 
 Trans.TRANSFORM =
@@ -459,6 +466,9 @@ function Trans.old_quad(info, x1,y1, x2,y2, z1,z2)
 end
 
 
+
+------------------------------------------------------------------------
+--  Material  System
 ------------------------------------------------------------------------
 
 
@@ -679,5 +689,253 @@ function get_wall_coords(S, side, thick, pad)
   end
 
   return Trans.rect_coords(x1,y1, x2,y2)
+end
+
+
+
+------------------------------------------------------------------------
+--  Brush  Library
+------------------------------------------------------------------------
+
+
+function brushlib.quad(x1,y1, x2,y2, b,t)
+  local coords =
+  {
+    { x=x1, y=y1 }
+    { x=x2, y=y1 }
+    { x=x2, y=y2 }
+    { x=x1, y=y2 }
+  }
+
+  if b then table.insert(coords, { b=b }) end
+  if t then table.insert(coords, { t=t }) end
+
+  return coords
+end
+
+
+function brushlib.triangle(x1,y1, x2,y2, x3,y3, b,t)
+  local coords =
+  {
+    { x=x1, y=y1 }
+    { x=x2, y=y2 }
+    { x=x3, y=y3 }
+  }
+
+  if b then table.insert(coords, { b=b }) end
+  if t then table.insert(coords, { t=t }) end
+
+  return coords
+end
+
+
+function brushlib.dump(brush, title)
+  gui.debugf("%s:\n{\n", title or "Brush")
+
+  each C in brush do
+    local field_list = {}
+
+    each name,val in C do
+      local pos
+      if name == "m" or name == "x" or name == "b" or name == "t" then
+        pos = 1
+      elseif name == "y" then
+        pos = 2
+      end
+
+      if pos then
+        table.insert(field_list, pos, name) 
+      else
+        table.insert(field_list, name)
+      end
+    end
+
+    local line = ""
+
+    each name in field_list do
+      local val = C[name]
+      
+      if _index > 1 then line = line .. ", " end
+
+      line = line .. string.format("%s=%s", name, tostring(val))
+    end
+
+    gui.debugf("  { %s }\n", line)
+  end
+
+  gui.debugf("}\n")
+end
+
+
+function brushlib.copy(brush)
+  local newb = {}
+
+  each C in brush do
+    table.insert(newb, table.copy(C))
+  end
+
+  return newb
+end
+
+
+function brushlib.mid_point(brush)
+  local sum_x = 0
+  local sum_y = 0
+  local total = 0
+
+  each C in brush do
+    if C.x then
+      sum_x = sum_x + C.x
+      sum_y = sum_y + C.y
+      total = total + 1
+    end
+  end
+
+  if total == 0 then
+    return 0, 0
+  end
+
+  return sum_x / total, sum_y / total
+end
+
+
+function brushlib.bbox(brush)
+  local x1, x2 = 9e9, -9e9
+  local y1, y2 = 9e9, -9e9
+
+  each C in brush do
+    if C.x then
+      x1 = math.min(x1, C.x) ; x2 = math.max(x2, C.x)
+      y1 = math.min(y1, C.y) ; y2 = math.max(y2, C.y)
+    end
+  end
+
+  assert(x1 < x2)
+  assert(y1 < y2)
+
+  return x1,y1, x2,y2
+end
+
+
+function brushlib.add_top(brush, z, mat)
+  -- Note: assumes brush has no top already!
+
+  table.insert(brush, { t=z, mat=mat })
+end
+
+
+function brushlib.add_bottom(brush, z, mat)
+  -- Note: assumes brush has no bottom already!
+
+  table.insert(brush, { b=z, mat=mat })
+end
+
+
+function brushlib.get_bottom_h(brush)
+  each C in brush do
+    if C.b then return C.b end
+  end
+
+  return nil -- none
+end
+
+
+function brushlib.get_top_h(brush)
+  each C in brush do
+    if C.t then return C.t end
+  end
+
+  return nil -- none
+end
+
+
+function brushlib.set_tex(brush, wall, flat)
+  each C in brush do
+    if wall and C.x and not C.tex then
+      C.tex = wall
+    end
+    if flat and (C.b or C.t) and not C.tex then
+      C.tex = flat
+    end
+  end
+end
+
+
+function brushlib.set_mat(brush, wall, flat)
+  if wall then
+    wall = Mat_lookup(wall)
+    wall = assert(wall.t)
+  end
+
+  if flat then
+    flat = Mat_lookup(flat)
+    flat = assert(flat.f or flat.t)
+  end
+
+  brushlib.set_tex(brush, wall, flat)
+end
+
+
+function brushlib.mark_sky(brush)
+  brushlib.set_mat(brush, "_SKY", "_SKY")
+
+  table.insert(brush, 1, { m="sky" })
+end
+
+
+function brushlib.has_sky(brush)
+  each C in brush do
+    if C.mat == "_SKY" then return true end
+  end
+
+  return false
+end
+
+
+function brushlib.mark_liquid(brush)
+  assert(LEVEL.liquid)
+
+  brushlib.set_mat(brush, "_LIQUID", "_LIQUID")
+
+  each C in brush do
+    if C.b or C.t then
+      C.special = LEVEL.liquid.special
+      C.light   = LEVEL.liquid.light
+    end
+  end
+end
+
+
+function brushlib.is_quad(brush)
+  local x1,y1, x2,y2 = brushlib.bbox(brush)
+
+  each C in brush do
+    if C.x then
+      if C.x > x1+0.1 and C.x < x2-0.1 then return false end
+      if C.y > y1+0.1 and C.y < y2-0.1 then return false end
+    end
+  end
+
+  return true
+end
+
+
+function brushlib.line_passes_through(brush, px1, py1, px2, py2)
+  -- Note: returns false if line merely touches an edge
+
+  local front, back
+
+  each C in brush do
+    if C.x then
+      local d = geom.perp_dist(C.x, C.y, px1,py1, px2,py2)
+
+      if d >  0.9 then front = true end
+      if d < -0.9 then  back = true end
+
+      if front and back then return true end
+    end
+  end
+
+  return false
 end
 
