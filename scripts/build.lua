@@ -455,7 +455,9 @@ function Build_prepare_trip()
 end
 
 
-function safe_get_mat(name)
+function Mat_lookup(name)
+  if not name then name = "_ERROR" end
+
   if OB_CONFIG.theme == "psycho" and LEVEL.psycho_map[name] then
     name = LEVEL.psycho_map[name]
   end
@@ -464,8 +466,9 @@ function safe_get_mat(name)
 
   -- special handling for DOOM switches
   if not mat and string.sub(name,1,3) == "SW2" then
-    mat = GAME.MATERIALS["SW1" .. string.sub(name,4)]
-    if mat then
+    local sw1_name = "SW1" .. string.sub(name,4)
+    mat = GAME.MATERIALS[sw1_name]
+    if mat and mat.t == sw1_name then
       mat = { t=name, f=mat.f }  -- create new SW2XXX material
       GAME.MATERIALS[name] = mat
     end
@@ -485,16 +488,16 @@ end
 function get_mat(wall, floor, ceil)
   if not wall then wall = "_ERROR" end
 
-  local w_mat = safe_get_mat(wall)
+  local w_mat = Mat_lookup(wall)
 
   local f_mat = w_mat
   if floor then
-    f_mat = safe_get_mat(floor)
+    f_mat = Mat_lookup(floor)
   end
 
   local c_mat = f_mat
   if ceil then
-    c_mat = safe_get_mat(ceil)
+    c_mat = Mat_lookup(ceil)
   end
 
   return
@@ -508,11 +511,11 @@ end
 function Mat_normal(wall, floor)
   if not wall then wall = "_ERROR" end
 
-  local w_mat = safe_get_mat(wall)
+  local w_mat = Mat_lookup(wall)
 
   local f_mat = w_mat
   if floor then
-    f_mat = safe_get_mat(floor)
+    f_mat = Mat_lookup(floor)
   end
 
   return "solid", { tex=w_mat.t }, { tex=f_mat.f or f_mat.t }
