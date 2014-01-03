@@ -707,7 +707,7 @@ function Quest_create_zones()
 
 
   local function try_mark_free_branch(R, next_R)
-    if not has_teleporter_exit(R) then
+    if has_teleporter_exit(R) then
       return false
     end
 
@@ -719,10 +719,12 @@ function Quest_create_zones()
     each C in exits do
       if C.R2 == next_R then
         C.free_exit_score = 999999
-
         gui.debugf("Marked conn to %s as free_exit\n", next_R:tostr())
+        return true
       end
     end
+
+    error("mark_free_branch: cannot find exit??")
   end
 
 
