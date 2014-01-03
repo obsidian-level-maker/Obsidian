@@ -161,7 +161,7 @@ function Quest_dump_zone_flow(Z)
       end
     end
 
-    gui.debugf("%s%s%s\n", line, R:tostr(), sel(R.on_zone_path, "*", ""))
+    gui.debugf("%s%s%s\n", line, R:tostr(), sel(R.is_zone_exit, "*", ""))
 
     local exits = {}
 
@@ -622,7 +622,7 @@ stderrf("splitting ZONE_%d at %s\n", Z.id, C.R1:tostr())
     each Z in LEVEL.zones do
       local R1 = find_head(Z)
       local lock = Z.solution
-      gui.printf("  %d: rooms:%d head:%s solve:%s(%s)\n", Z.id,
+      gui.printf("  ZONE_%d : rooms:%d head:%s solve:%s(%s)\n", Z.id,
                  #Z.rooms, R1:tostr(),
                  lock.kind, lock.item or lock.switch or "")
     end
@@ -657,6 +657,20 @@ stderrf("splitting ZONE_%d at %s\n", Z.id, C.R1:tostr())
 
           R = R.entry_conn.R1
         end
+      end
+    end
+
+    -- mark the room which exits the zone using the lock which the
+    -- zone solves.  Note: may not be any, the solution of some zones
+    -- is merely to unlock an earlier zone.
+
+    each Z in LEVEL.zones do
+      if Z.solution.kind == "EXIT" then continue end
+
+      assert(Z.solution.conn)
+
+      if Z.solution.conn.R1.zone == Z then
+        Z.solution.conn.R1.is_zone_exit = true
       end
     end
   end
@@ -757,10 +771,10 @@ function Quest_divide_zones()
       tag = Plan_alloc_id("tag")
     }
 
+    gui.debugf("locking conn to %s (SWITCH)\n", C.R2:tostr())
+
     C.lock = LOCK
     LOCK.conn = C
-
--- gui.debugf("add_lock: LOCK_%d to %s\n", LOCK.tag, D.L2:tostr())
 
     -- keep newest locks at the front of the active list
     table.insert(active_locks, 1, LOCK)
@@ -799,6 +813,8 @@ function Quest_divide_zones()
     if R.purpose == "EXIT" then
       LEVEL.exit_room = R
     end
+
+    gui.debugf("solving %s(%s) in %s\n", lock.kind, tostring(lock.item or lock.switch), R:tostr())
   end
 
 
@@ -927,6 +943,8 @@ function Quest_divide_zones()
   ---| Quest_divide_zones |---
 
   each Z in LEVEL.zones do
+    gui.debugf("\nDividing ZONE_%d\n", Z.id)
+
     local Q = new_quest(Z.start)
 
     if THEME.switches then
