@@ -161,7 +161,7 @@ function Quest_dump_zone_flow(Z)
       end
     end
 
-    gui.debugf("%s%s%s\n", line, R:tostr(), sel(R.is_zone_exit, "*", ""))
+    gui.debugf("%s%s%s\n", line, R:tostr(), sel(R.is_exit_leaf, "*", ""))
 
     local exits = {}
 
@@ -567,7 +567,7 @@ function Quest_create_zones()
 
     local Z = assert(C.R1.zone)
 
-stderrf("splitting ZONE_%d at %s\n", Z.id, C.R1:tostr())
+    gui.debugf("splitting ZONE_%d at %s\n", Z.id, C.R1:tostr())
 
 
     local Z2 = new_zone()
@@ -659,20 +659,32 @@ stderrf("splitting ZONE_%d at %s\n", Z.id, C.R1:tostr())
         end
       end
     end
+  end
 
-    -- mark the room which exits the zone using the lock which the
-    -- zone solves.  Note: may not be any, the solution of some zones
-    -- is merely to unlock an earlier zone.
 
-    each Z in LEVEL.zones do
-      if Z.solution.kind == "EXIT" then continue end
+  local function find_zone_exit_leaf(Z)
+    -- find a room which exits the zone using the same lock which the
+    -- zone solves _and_ is a leaf room.  It often does not exist, as
+    -- the solution of some zones is merely to unlock an earlier zone,
+    -- or because of the leaf requirement.
 
-      assert(Z.solution.conn)
-
-      if Z.solution.conn.R1.zone == Z then
-        Z.solution.conn.R1.is_zone_exit = true
-      end
+    if Z.solution.kind == "EXIT" then
+      return nil
     end
+
+    assert(Z.solution.conn)
+
+    local R = Z.solution.conn.R1
+
+    if R.zone != Z then return end
+
+    each C in R:get_exits() do
+      if C.R2.zone == Z then return nil end
+    end
+
+    R.is_exit_leaf = true
+
+    return R
   end
 
 
@@ -706,7 +718,7 @@ stderrf("splitting ZONE_%d at %s\n", Z.id, C.R1:tostr())
 
   local want_zones = int((LEVEL.W + LEVEL.H) / 4 + gui.random() * 3)
 
-stderrf("want_zones = %d\n", want_zones)
+  gui.debugf("want_zones = %d\n", want_zones)
 
   local Z = initial_zone()
 
@@ -722,6 +734,8 @@ stderrf("want_zones = %d\n", want_zones)
 
   each Z in LEVEL.zones do
     collect_rooms(Z)
+
+    Z.exit_leaf = find_zone_exit_leaf(Z)
 
     Quest_dump_zone_flow(Z)
   end
@@ -791,15 +805,16 @@ function Quest_divide_zones()
     -- if there is a choice and one of them leads to the zone's exit
     -- (an exit locked by the zone key), then choose that one.  This
     -- helps to prevent putting a key in same room as it unlocks.
-
+--[[
     if #active_locks == 2 then
       for n = 1, 2 do
         local C = active_locks[n].conn
-        if C.R2.is_zone_exit then
+        if C.R2.is_exit_leaf then
           return table.remove(active_locks, n)
         end
       end
     end
+--]]
 
     -- choosing the newest lock (at index 1) produces the most linear
     -- progression, which is easiest on the player.  Choosing older
@@ -826,6 +841,14 @@ function Quest_divide_zones()
     if R.purpose == "EXIT" then
       LEVEL.exit_room = R
     end
+
+-- [[ DEBUG
+each C in R.conns do
+  if C.lock == lock then
+    stderrf("*********** SAME LOCK @ %s\n", R:tostr())
+  end
+end
+--]]
 
     gui.debugf("solving %s(%s) in %s\n", lock.kind, tostring(lock.item or lock.switch), R:tostr())
   end
@@ -938,6 +961,8 @@ function Quest_divide_zones()
       if not free_exit then
         free_exit = pick_free_exit(R, exits)
       end
+
+      gui.debugf("using free exit --> %s\n", free_exit.R2:tostr())
 
       table.kill_elem(exits, free_exit)
 
