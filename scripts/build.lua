@@ -428,7 +428,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Build_prepare_trip()
+function Mat_prepare_trip()
 
   -- build the psychedelic mapping
   local m_before = {}
@@ -485,6 +485,7 @@ function Mat_lookup(name)
   return mat
 end
 
+
 function get_mat(wall, floor, ceil)
   if not wall then wall = "_ERROR" end
 
@@ -508,6 +509,7 @@ function get_mat(wall, floor, ceil)
   }
 end
 
+
 function Mat_normal(wall, floor)
   if not wall then wall = "_ERROR" end
 
@@ -521,6 +523,7 @@ function Mat_normal(wall, floor)
   return "solid", { tex=w_mat.t }, { tex=f_mat.f or f_mat.t }
 end
 
+
 function get_sky()
   local mat = assert(GAME.MATERIALS["_SKY"])
 
@@ -532,6 +535,7 @@ function get_sky()
     b_face = { tex=mat.f or mat.t }
   }
 end
+
 
 function get_liquid()
   assert(LEVEL.liquid)
@@ -545,6 +549,7 @@ function get_liquid()
 
   return mat
 end
+
 
 function add_pegging(info, x_offset, y_offset, peg)
   info.w_face.x_offset = x_offset or 0
