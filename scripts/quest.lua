@@ -18,72 +18,19 @@
 --
 ----------------------------------------------------------------
 
-
 --[[ *** CLASS INFORMATION ***
-
-class QUEST
-{
-  -- an Quest is a group of rooms, generally with a locked door
-  -- to a different quest (requiring the player to find the key
-  -- or switch).  There is a start room and a target room.
-
-  rooms : array(ROOM)  -- all the rooms in this quest
-
-  conns : array(CONN)  -- all the direct connections between rooms
-                       -- in this quest.  Note that teleporters always
-                       -- go between rooms in the same quest
-
-  start : ROOM   -- room which player enters this quest
-                 -- (map start room for the very first quest)
-                 -- Never nil.
-                 --
-                 -- start.entry_conn is the entry to this quest
-
-///  target : ROOM  -- room containing the key/switch to exit this
-///                 -- quest, _OR_ the level exit room itself.
-///                 -- Never nil.
-
-  lock : LOCK    -- lock info, which defines what the 'target' room
-                 -- will hold (key, switch or an EXIT).  Also defines
-                 -- connection to the next quest (the keyed door etc).
-                 -- Never nil.
-                 --
-                 -- lock.conn is the connection leaving this quest.
-                 --
-                 -- NOTE: the room on the front side of the connection
-                 --       may belong to a different quest.
-
-  path : array(CONN)  -- full path of rooms from 'start' to 'target'
-                      -- (actually only the connections are stored).
-                      -- The list may be empty.
-
-  back_path : array(CONN)
-                 -- path from 'target' to the room with the connection
-                 -- to the next quest.  You need to follow the full
-                 -- path to know whether each connection goes forward
-                 -- or backwards.  Not used for EXIT.
-                 --
-                 -- NOTE: some rooms may belong to other quests.
-}
-
-
-class LOCK
-{
-  kind : keyword  -- "UNSET" or "KEY" or "SWITCH" or "EXIT"
-  item : string   -- what kind of key or switch (game specific)
-
-  conn : CONN     -- connection between two rooms (and two quests)
-                  -- which is locked (keyed door, lowering bars, etc)
-                  -- Not used for EXITs.
-
-  distance : number  -- number of rooms between key and door
-
-  tag : number    -- tag number to use for a switched door
-}
-
 
 class ZONE
 {
+  -- A zone is a group of quests forming a large part of the level.
+  -- The whole level might be a single zone.  Zones are generally
+  -- connected via KEYED doors, whereas all the puzzles inside a
+  -- zone are SWITCHED doors.
+  --
+  -- Zones are also meant to have a distinctive look, e.g. each one
+  -- has a difference facade for buildings, different room and hallway
+  -- themes (etc), even a different monster palette.
+
   id : number  -- debugging aid
 
   rooms : list(ROOM)
@@ -91,6 +38,39 @@ class ZONE
   start : ROOM  -- first room in the zone
 
   solution  : LOCK  -- the key (etc) which this zone must solve
+}
+
+
+class QUEST
+{
+  -- A quest is a group of rooms with a particular purpose at the
+  -- end (the last room of the quest) -- often a switch to gain
+  -- access to a new quest, or a key to gain access to a new zone.
+  --
+  -- The final quest (in the final zone) always leads to a room
+  -- with an exit switch -- the end of the current map.
+  --
+  -- Quests and Zones are similar ideas, the main difference is
+  -- their scope (zones are large and contain one or more quests).
+
+  id : number  -- debugging aid
+
+  rooms : list(ROOM)
+}
+
+
+class LOCK
+{
+  kind : keyword  -- "KEY" or "SWITCH" or "EXIT"
+
+  switch : string  -- the type of key or switch
+  key    : string  --
+
+  conn : CONN     -- connection between two rooms (and two quests)
+                  -- which is locked (keyed door, lowering bars, etc)
+                  -- Not used for EXITs.
+
+  tag : number    -- tag number to use for a switched door
 }
 
 
