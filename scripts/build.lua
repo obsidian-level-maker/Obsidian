@@ -95,6 +95,10 @@ Trans.TRANSFORM =
   -- add_x     : translation, i.e. new origin coords
   -- add_y
   -- add_z
+
+  -- fitted_x  : size which a "fitted" prefab needs to become
+  -- fitted_y
+  -- fitted_z
 }
 
 
@@ -421,6 +425,70 @@ function Trans.sky_quad(x1, y1, x2, y2, sky_h)
   brushlib.set_mat(brush, "_SKY", "_SKY")
   Trans.brush("sky", brush)
 end
+
+
+function Trans.spot_transform(x, y, z, dir)
+  local ANGS = { [2]=0, [8]=180, [4]=270, [6]=90 }
+
+  return
+  {
+    add_x = x
+    add_y = y
+    add_z = z
+    rotate = ANGS[dir or 2]
+  }
+end
+
+
+function Trans.box_transform(x1, y1, x2, y2, z, dir)
+  if not dir then dir = 2 end
+
+  local XS   = { [2]=x1, [8]= x2, [4]= x1, [6]=x2 }
+  local YS   = { [2]=y1, [8]= y2, [4]= y2, [6]=y1 }
+  local ANGS = { [2]=0,  [8]=180, [4]=270, [6]=90 }
+
+  local T = {}
+
+  T.add_x = XS[dir]
+  T.add_y = YS[dir]
+  T.add_z = z
+
+  T.rotate = ANGS[dir]
+
+  if geom.is_vert(dir) then
+    T.fitted_x = x2 - x1
+    T.fitted_y = y2 - y1
+  else
+    T.fitted_x = y2 - y1
+    T.fitted_y = x2 - x1
+  end
+
+  T.bbox = { x1=x1, y1=y1, x2=x2, y2=y2 }
+
+  return T
+end
+
+
+function Trans.edge_transform(x1,y1, x2,y2, z, side, long1, long2, out, back)
+  if side == 4 then x2 = x1 + out ; x1 = x1 - back end
+  if side == 6 then x1 = x2 - out ; x2 = x2 + back end
+  if side == 2 then y2 = y1 + out ; y1 = y1 - back end
+  if side == 8 then y1 = y2 - out ; y2 = y2 + back end
+
+  if side == 2 then x1 = x2 - long2 ; x2 = x2 - long1 end
+  if side == 8 then x2 = x1 + long2 ; x1 = x1 + long1 end
+  if side == 4 then y2 = y1 + long2 ; y1 = y1 + long1 end
+  if side == 6 then y1 = y2 - long2 ; y2 = y2 - long1 end
+
+  return Trans.box_transform(x1,y1, x2,y2, z, 10 - side)
+end
+
+
+function Trans.set_fitted_z(T, z1, z2)
+  T.add_z    = z1
+  T.fitted_z = z2 - z1
+end
+
 
 
 ------------------------------------------------------------------------
