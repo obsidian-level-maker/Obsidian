@@ -788,6 +788,19 @@ function Quest_divide_zones()
       return nil
     end
 
+    -- if there is a choice and one of them leads to the zone's exit
+    -- (an exit locked by the zone key), then choose that one.  This
+    -- helps to prevent putting a key in same room as it unlocks.
+
+    if #active_locks == 2 then
+      for n = 1, 2 do
+        local C = active_locks[n].conn
+        if C.R2.is_zone_exit then
+          return table.remove(active_locks, n)
+        end
+      end
+    end
+
     -- choosing the newest lock (at index 1) produces the most linear
     -- progression, which is easiest on the player.  Choosing older
     -- locks produces more back-tracking.  Due to the zone system,
