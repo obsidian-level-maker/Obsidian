@@ -132,6 +132,20 @@ function Quest_compute_tvols()
 end
 
 
+function Quest_get_zone_exits(R)
+  -- filter out exits which leave the zone
+  local exits = {}
+
+  each C in R:get_exits() do
+    if C.R2.zone == R.zone then
+      table.insert(exits, C)
+    end
+  end
+
+  return exits
+end
+
+
 function Quest_dump_zone_flow(Z)
 
   function flow(R, indents, conn)
@@ -163,14 +177,7 @@ function Quest_dump_zone_flow(Z)
 
     gui.debugf("%s%s%s\n", line, R:tostr(), sel(R.is_exit_leaf, "*", ""))
 
-    local exits = {}
-
-    -- filter out exits which leave the zone
-    each exit in R:get_exits() do
-      if exit.R2.zone == Z then
-        table.insert(exits, exit)
-      end
-    end
+    local exits = Quest_get_zone_exits(R)
 
     table.insert(indents, true)
 
@@ -688,6 +695,64 @@ function Quest_create_zones()
   end
 
 
+  local function has_teleporter_exit(R)
+    each C in R.conns do
+      if C.R1 == R and C.kind == "teleporter" then
+        return true
+      end
+    end
+
+    return false
+  end
+
+
+  local function try_mark_free_branch(R, next_R)
+    if not has_teleporter_exit(R) then
+      return false
+    end
+
+    local exits = Quest_get_zone_exits(R)
+
+    if #exits < 2 then return false end
+
+    -- do it
+    each C in exits do
+      if C.R2 == next_R then
+        C.free_exit_score = 999999
+
+        gui.debugf("Marked conn to %s as free_exit\n", next_R:tostr())
+      end
+    end
+  end
+
+
+  local function prevent_key_in_same_room(Z)
+    -- attempt to prevent adding a key to the same room as the door
+    -- which it locks.  We do that by finding a branch which leads
+    -- to a zone exit leaf, and marking it as best candidate for a
+    -- free exit.
+
+    local LE = find_zone_exit_leaf(Z)
+
+    if not LE then return end
+
+    local last = LE
+    local R = last.entry_conn and last.entry_conn.R1
+
+    while R and R.zone == Z do
+      if try_mark_free_branch(R, last) then
+        return  -- OK!
+      end
+
+      -- keep going back until we run out of rooms
+      last = R
+      R = last.entry_conn and last.entry_conn.R1
+    end
+
+    -- failed!
+  end
+
+
   local function choose_keys()
     assert(THEME.switches)
 
@@ -730,12 +795,12 @@ function Quest_create_zones()
     end
   end
 
-  mark_paths()
+  mark_paths()  -- TODO: needed anymore?
 
   each Z in LEVEL.zones do
     collect_rooms(Z)
 
-    Z.exit_leaf = find_zone_exit_leaf(Z)
+    prevent_key_in_same_room(Z)
 
     Quest_dump_zone_flow(Z)
   end
@@ -859,6 +924,10 @@ end
     -- that means the player's hard work to find the switch is rewarded
     -- with a larger new area to explore.  In theory anyway :-)
 
+    if C.free_exit_score then
+      return C.free_exit_score
+    end
+
     -- FIXME !!!!
     return gui.random() * 10
   end
@@ -891,15 +960,17 @@ end
   end
 
 
+  -- TODO: secret_flow(R, quest)
+
+
   local function boring_flow(R, quest)
     -- no locks will be added in this sub-tree of the zone
 
     R.quest = quest
 
-    each exit in R:get_exits() do
-      -- ignore exits which leave the zone
-      if exit.R2.zone != R.zone then continue end
+    table.insert(quest.rooms, R)
 
+    each exit in Quest_get_zone_exits() do
       boring_flow(exit.R2, quest)
     end
   end
@@ -910,14 +981,7 @@ end
 
     table.insert(quest.rooms, R)
 
-
-    local exits = {}
-
-    -- filter out exits which leave the zone
-    each exit in R:get_exits() do
-      if exit.R2.zone != R.zone then continue end
-      table.insert(exits, exit)
-    end
+    local exits = Quest_get_zone_exits(R)
 
 
     if table.empty(exits) then
