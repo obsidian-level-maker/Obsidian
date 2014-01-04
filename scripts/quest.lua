@@ -161,7 +161,9 @@ function Quest_dump_zone_flow(Z)
       end
     end
 
-    gui.debugf("%s%s%s\n", line, R:tostr(), sel(R.is_exit_leaf, "*", ""))
+    gui.debugf("%s%s%s%s\n", line, R:tostr(),
+               sel(R.must_visit, "*", ""),
+               sel(R.is_exit_leaf, "^", ""))
 
     local exits = Quest_get_zone_exits(R)
 
@@ -633,7 +635,7 @@ function Quest_create_zones()
   end
 
 
-  local function mark_paths()
+  local function mark_paths__OLD()
     -- mark the rooms between a zone's start and its exit room as
     -- being "on path" (including both start and exit).  These will
     -- be bad places to put a key.
@@ -650,6 +652,36 @@ function Quest_create_zones()
 
           R = R.entry_conn.R1
         end
+      end
+    end
+  end
+
+
+  local function mark_room_and_ancestors(R)
+    while true do
+      R.must_visit = true
+
+      if not R.entry_conn then return end
+
+      local prev_R = R.entry_conn.R1
+
+      if prev_R.zone != R.zone then return end
+
+      R = prev_R
+    end
+  end
+
+
+  local function mark_must_visits(Z)
+    -- mark rooms which the player definitely needs to visit,
+    -- especially rooms which leave the zone (and their ancestors).
+    -- This allows us to know what we can safely turn into a secret.
+
+    Z.start.must_visit = true
+
+    each C in LEVEL.conns do
+      if C.R1.zone == Z and C.R2.zone != Z then
+        mark_room_and_ancestors(C.R1)
       end
     end
   end
@@ -783,11 +815,9 @@ function Quest_create_zones()
     end
   end
 
-  mark_paths()  -- TODO: needed anymore?
-
   each Z in LEVEL.zones do
     collect_rooms(Z)
-
+    mark_must_visits(Z)
     prevent_key_in_same_room(Z)
 
     Quest_dump_zone_flow(Z)
