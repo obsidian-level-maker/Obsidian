@@ -733,16 +733,24 @@ function Quest_create_zones()
 
     if #exits < 2 then return false end
 
-    -- do it
-    each C in exits do
-      if C.R2 == next_R then
-        C.free_exit_score = 999999
-        gui.debugf("Marked conn to %s as free_exit\n", next_R:tostr())
-        return true
-      end
-    end
+    --- do it ---
 
-    error("mark_free_branch: cannot find exit??")
+    local conn = next_R.entry_conn
+
+    assert(conn and conn.R1 == R)
+
+    conn.free_exit_score = 999999
+    gui.debugf("Marked conn to %s as free_exit\n", next_R:tostr())
+
+    -- also must ensure one of the exits gets locked (and not turned
+    -- into a secret or storage).
+    R.need_a_lock = true
+
+    -- Note: since this room (or a descendant) leaves the zone, it is
+    --       already guaranteed that it never becomes secret/storage.
+    assert(R.must_visit)
+
+    return true
   end
 
 
@@ -1070,10 +1078,16 @@ end
 
       table.kill_elem(exits, free_exit)
 
+      rand.shuffle(exits)
+      
+      local made_a_lock = false
+
       -- lock up all other branches
-      -- FIXME: turn some into storage [or secrets]
+      -- FIXME: probabilities for secret / storage
       each C in exits do
-        if can_make_secret(C) and rand.odds(99) then
+        if not made_a_lock and R.need_a_lock then
+          add_lock(R, C)
+        elseif can_make_secret(C) and rand.odds(99) then
           secret_flow(C.R2)
         elseif rand.odds(1) then
           boring_flow(C.R2, quest)
