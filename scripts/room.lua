@@ -642,55 +642,64 @@ function Room_reckon_doors()
 
   each C in LEVEL.conns do
     for who = 1,2 do
+
       local S = sel(who == 1, C.S1, C.S2)
       local N = sel(who == 2, C.S1, C.S2)
       assert(S)
 
-      if S.conn_dir then
-        assert(N.conn_dir == 10-S.conn_dir)
+      if not S.conn_dir then continue end
 
-        local B  = S.border[S.conn_dir]
-        local B2 = N.border[N.conn_dir]
+      assert(N.conn_dir == 10-S.conn_dir)
 
-        -- ensure when going from outside to inside that the arch/door
-        -- is made using the building combo (NOT the outdoor combo)
-        if B.kind == "arch" and
-           ((S.room.is_outdoor and not N.room.is_outdoor) or
-            (S.room == N.room.parent))
-        then
-          -- swap borders
-          S, N = N, S
+      local B  = S.border[S.conn_dir]
+      local B2 = N.border[N.conn_dir]
 
-          S.border[S.conn_dir] = B
-          N.border[N.conn_dir] = B2
-        end
+      -- ensure when going from outside to inside that the arch/door
+      -- is made using the building combo (NOT the outdoor combo)
+      if B.kind == "arch" and
+         ((S.room.is_outdoor and not N.room.is_outdoor) or
+          (S.room == N.room.parent))
+      then
+        -- swap borders
+        S, N = N, S
 
-        if B.kind == "arch" and GAME.DOORS and not B.tried_door then
-          B.tried_door = true
-
-          local prob = door_chance(C.R1, C.R2)
-
-          if S.conn.lock and S.conn.lock.kind != "NULL" then
-            B.kind = "lock_door"
-            B.lock = S.conn.lock
-
-            -- FIXME: smells like a hack!!
-            if B.lock.switch and string.sub(B.lock.switch, 1, 4) == "bar_" then
-              B.kind = "bars"
-            end
-
-          elseif rand.odds(prob) then
-            B.kind = "door"
-
-          elseif (STYLE.fences == "none" or STYLE.fences == "few") and
-                 C.R1.is_outdoor and C.R2.is_outdoor then
-            B.kind = "nothing"
-          end
-        end
-
+        S.border[S.conn_dir] = B
+        N.border[N.conn_dir] = B2
       end
-    end -- for who
-  end -- for C
+
+      if B.kind == "arch" and not B.tried_door and
+         S.room.quest.kind == "normal" and
+         N.room.quest.kind == "secret"
+      then
+        B.kind = "door"
+        B.is_secret = true
+        B.tried_door = true
+
+      elseif B.kind == "arch" and GAME.DOORS and not B.tried_door then
+        B.tried_door = true
+
+        local prob = door_chance(C.R1, C.R2)
+
+        if S.conn.lock and S.conn.lock.kind != "NULL" then
+          B.kind = "lock_door"
+          B.lock = S.conn.lock
+
+          -- FIXME: smells like a hack!!
+          if B.lock.switch and string.sub(B.lock.switch, 1, 4) == "bar_" then
+            B.kind = "bars"
+          end
+
+        elseif rand.odds(prob) then
+          B.kind = "door"
+
+        elseif (STYLE.fences == "none" or STYLE.fences == "few") and
+               C.R1.is_outdoor and C.R2.is_outdoor then
+          B.kind = "nothing"
+        end
+      end
+
+    end  -- who
+  end  -- C
 end
 
 
@@ -861,19 +870,19 @@ function Room_border_up()
       local S = C:seed(R)
       local B = S.border[side]
 
-      if S.conn_dir == side then
-        -- never any windows near a locked door
-        if B.kind == "lock_door" then
-          return nil
-        end
+      if S.conn_dir != side then continue end
 
-        if B.kind == "door" or B.kind == "arch" then
-          doors = doors + 1
-        end
+      -- never any windows near a locked door
+      if B.kind == "lock_door" then
+        return nil
+      end
 
-        if C == R.entry_conn then
-          entry = 1
-        end
+      if B.kind == "door" or B.kind == "arch" then
+        doors = doors + 1
+      end
+
+      if C == R.entry_conn then
+        entry = 1
       end
     end
 
@@ -2369,6 +2378,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local c_tex = S.c_tex or sel(R.is_outdoor, "_SKY", R.ceil_tex)
 
 if R.kind == "cave" then f_tex = "RROCK04" end --!!!!! TEMP
+if R.quest and R.quest.kind == "secret" then f_tex = "FLOOR1_7" end
 
 
     if R.kind == "hallway" then
@@ -2512,6 +2522,10 @@ do return end
         end
 
         local door_name = rand.key_by_probs(doors)
+
+-- FIXME: TEMP CRUD !!!
+if border.is_secret then door_name = "bigdoor4" end
+
         local skin = assert(GAME.DOORS[door_name])
 
         local skin2 = { inner=w_tex, outer=o_tex }

@@ -55,7 +55,13 @@ class QUEST
 
   id : number  -- debugging aid
 
+  kind : keyword  -- "normal", "secret"
+
   rooms : list(ROOM)
+
+  start : ROOM
+
+  target : ROOM  -- room containing the solution
 }
 
 
@@ -808,6 +814,7 @@ function Quest_divide_zones()
 
     local QUEST =
     {
+      kind  = "normal"
       id = id
       start = start
       rooms = {}
@@ -928,7 +935,24 @@ end
   end
 
 
-  -- TODO: secret_flow(R, quest)
+  local function secret_flow(R, quest)
+    if not quest then
+      quest = new_quest(R)
+      quest.kind = "secret"
+
+      gui.debugf("Secret quest @ %s\n", R:tostr())
+    end
+
+    R.quest = quest
+
+    table.insert(quest.rooms, R)
+
+    -- TODO: occasionally create secrets-in-a-secret
+
+    each exit in Quest_get_zone_exits(R) do
+      secret_flow(exit.R2, quest)
+    end
+  end
 
 
   local function boring_flow(R, quest)
@@ -938,8 +962,12 @@ end
 
     table.insert(quest.rooms, R)
 
-    each exit in Quest_get_zone_exits() do
-      boring_flow(exit.R2, quest)
+    each exit in Quest_get_zone_exits(R) do
+      if rand.odds(99) then
+        secret_flow(exit.R2)
+      else
+        boring_flow(exit.R2, quest)
+      end
     end
   end
 
@@ -956,6 +984,8 @@ end
       --
       -- room is a leaf
       --
+
+      quest.target = R
 
       local lock = pick_lock_to_solve()
 
@@ -1001,7 +1031,13 @@ end
       -- lock up all other branches
       -- FIXME: turn some into storage [or secrets]
       each C in exits do
-        add_lock(R, C)
+        if rand.odds(99) then
+          secret_flow(C.R2)
+        elseif rand.odds(1) then
+          boring_flow(C.R2, quest)
+        else
+          add_lock(R, C)
+        end
       end
 
       -- continue down the free exit
