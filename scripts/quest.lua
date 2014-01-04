@@ -965,6 +965,15 @@ end
   end
 
 
+  local function can_make_secret(C)
+    if C.kind == "teleporter" then return false end
+
+    if C.R2.must_visit then return false end
+
+    return true
+  end
+
+
   local function secret_flow(R, quest)
     if not quest then
       quest = new_quest(R)
@@ -977,10 +986,13 @@ end
 
     table.insert(quest.rooms, R)
 
-    -- TODO: occasionally create secrets-in-a-secret
-
-    each exit in Quest_get_zone_exits(R) do
-      secret_flow(exit.R2, quest)
+    each C in Quest_get_zone_exits(R) do
+      if rand.odds(10*5) then
+        secret_flow(C.R2)  -- makes a new secret quest
+        C.R2.quest.super_secret = true
+      else
+        secret_flow(C.R2, quest)
+      end
     end
   end
 
@@ -992,11 +1004,11 @@ end
 
     table.insert(quest.rooms, R)
 
-    each exit in Quest_get_zone_exits(R) do
-      if rand.odds(99) then
-        secret_flow(exit.R2)
+    each C in Quest_get_zone_exits(R) do
+      if can_make_secret(C) and rand.odds(99) then
+        secret_flow(C.R2)
       else
-        boring_flow(exit.R2, quest)
+        boring_flow(C.R2, quest)
       end
     end
   end
@@ -1061,7 +1073,7 @@ end
       -- lock up all other branches
       -- FIXME: turn some into storage [or secrets]
       each C in exits do
-        if rand.odds(99) then
+        if can_make_secret(C) and rand.odds(99) then
           secret_flow(C.R2)
         elseif rand.odds(1) then
           boring_flow(C.R2, quest)
