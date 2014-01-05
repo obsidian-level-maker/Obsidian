@@ -61,7 +61,7 @@ of primitives and idioms.
 
 <p>
 So right now I am working on merging the 3.57 room layout logic
-with the rest of the V4/V5 codebase.  This is major surgery,
+with the rest of the V5 codebase.  This is major surgery,
 made harder by changing the grid size back to 192x192 units,
 and it will take a while to get everything into a usable state again.
 But progress is being made, and I'm excited at being able to
