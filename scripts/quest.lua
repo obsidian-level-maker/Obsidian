@@ -62,6 +62,9 @@ class QUEST
   start : ROOM
 
   target : ROOM  -- room containing the solution
+
+  storage_leafs : list(ROOM)
+   secret_leafs : list(ROOM)
 }
 
 
@@ -83,29 +86,33 @@ class LOCK
 --------------------------------------------------------------]]
 
 
-function Quest_compute_tvols()
+function Quest_compute_tvols(same_zone)
 
   local function travel_volume(R, seen_conns)
     -- Determine total volume of rooms that are reachable from the
     -- given room R, including itself, but excluding connections
     -- that have been "locked" or already seen.
 
-    local r_count = 1
-    local svolume = assert(R.svolume)
+    local rooms    = 1
+    local volume   = assert(R.svolume)
 
     each C in R.conns do
-      if not C.lock and not seen_conns[C] then
-        local N = C:neighbor(R)
-        seen_conns[C] = true
-
-        local trav = travel_volume(N, seen_conns)
-
-        r_count = r_count + trav.r_count
-        svolume = svolume + trav.svolume
+      if (same_zone and C.R1.zone != C.R2.zone) or
+         C.lock or seen_conns[C]
+      then
+        continue
       end
+
+      local N = C:neighbor(R)
+      seen_conns[C] = true
+
+      local trav = travel_volume(N, seen_conns)
+
+      rooms  = rooms  + trav.rooms
+      volume = volume + trav.volume
     end
 
-    return { r_count=r_count, svolume=svolume }
+    return { rooms=rooms, volume=volume }
   end
 
 
@@ -406,29 +413,6 @@ do return end
 end
 
 
-function Quest_find_storage_rooms()
-  -- a "storage room" is a dead-end room which does not contain
-  -- anything special (keys, switches or weapons).  We place some
-  -- of the ammo and health needed by the player elsewhere into
-  -- these rooms to encourage exploration (i.e. to make these
-  -- rooms not totally useless).
-
-  each A in LEVEL.quests do
-    A.storage_rooms = {}
-  end
-
-  each R in LEVEL.rooms do
-    if R.kind != "scenic" and #R.conns == 1 and
-       not R.purpose and #R.weapons == 0
-    then
-      R.is_storage = true
-      table.insert(R.quest.storage_rooms, R)
-      gui.debugf("Storage room @ %s in QUEST_%d\n", R:tostr(), R.quest.id)
-    end
-  end
-end
-
-
 function Quest_select_textures()
 
   if not LEVEL.outer_fence_tex then
@@ -514,12 +498,12 @@ function Quest_create_zones()
       if C.kind == "teleporter" then continue end
 
       -- start room, key room, branch-off room
-      if C.trav_1.r_count < 3 then continue end 
+      if C.trav_1.rooms < 3 then continue end 
 
       -- other side should not be too small either
-      if C.trav_2.r_count < 2 then continue end 
+      if C.trav_2.rooms < 2 then continue end 
 
-      local score = math.min(C.trav_1.svolume, C.trav_2.svolume)
+      local score = math.min(C.trav_1.volume, C.trav_2.volume)
 
       score = score + gui.random()  -- tie breaker
 
@@ -856,7 +840,8 @@ function Quest_divide_zones()
       id = id
       start = start
       rooms = {}
-      storage_rooms = {}
+      storage_leafs = {}
+       secret_leafs = {}
     }
 
     table.insert(LEVEL.quests, QUEST)
@@ -973,12 +958,36 @@ end
   end
 
 
-  local function can_make_secret(C)
+  local function should_make_secret(C)
     if C.kind == "teleporter" then return false end
 
     if C.R2.must_visit then return false end
 
+    local prob      = style_sel("secrets", 0,  25,  50,  90)
+    local max_rooms = style_sel("secrets", 0, 1.8, 3.3, 6.5)
+    local max_vol   = style_sel("secrets", 0,  45, 100, 180)
+
+    max_rooms = int(max_rooms + gui.random())
+
+    if C.trav_2.rooms  >= max_rooms then return false end
+    if C.trav_2.volume >= max_vol   then return false end
+
+    if not rand.odds(prob) then return false end
+
     return true
+  end
+
+
+  local function check_make_storage(C)
+    if C.kind == "teleporter" and rand.odds(90) then return false end
+
+    if C.trav_2.rooms > 5 then return false end
+    if C.trav_2.rooms > 3 and rand.odds(80) then return false end
+
+    if C.trav_2.volume > 100 and rand.odds(90) then return false end
+    if C.trav_2.volume >  45 and rand.odds(50) then return false end
+
+    return rand.odds(50)
   end
 
 
@@ -994,9 +1003,17 @@ end
 
     table.insert(quest.rooms, R)
 
-    each C in Quest_get_zone_exits(R) do
-      if rand.odds(10*5) then
-        secret_flow(C.R2)  -- makes a new secret quest
+    local exits = Quest_get_zone_exits(R)
+
+    if table.empty(exits) then
+      table.insert(quest.secret_leafs, R)
+      return
+    end
+
+    each C in exits do
+      -- sometime make a secret-in-a-secret
+      if rand.odds(20) and should_make_secret(C) then
+        secret_flow(C.R2)
         C.R2.quest.super_secret = true
       else
         secret_flow(C.R2, quest)
@@ -1012,8 +1029,18 @@ end
 
     table.insert(quest.rooms, R)
 
-    each C in Quest_get_zone_exits(R) do
-      if can_make_secret(C) and rand.odds(99) then
+    local exits = Quest_get_zone_exits(R)
+
+    if table.empty(exits) then
+      if not R.must_visit then
+        table.insert(quest.storage_leafs, R)
+      end
+
+      return
+    end
+
+    each C in exits do
+      if should_make_secret(C) then
         secret_flow(C.R2)
       else
         boring_flow(C.R2, quest)
@@ -1087,9 +1114,9 @@ end
       each C in exits do
         if not made_a_lock and R.need_a_lock then
           add_lock(R, C)
-        elseif can_make_secret(C) and rand.odds(99) then
+        elseif should_make_secret(C) then
           secret_flow(C.R2)
-        elseif rand.odds(1) then
+        elseif check_make_storage(C) then
           boring_flow(C.R2, quest)
         else
           add_lock(R, C)
@@ -1103,6 +1130,8 @@ end
 
 
   ---| Quest_divide_zones |---
+
+  Quest_compute_tvols("same_zone")
 
   each Z in LEVEL.zones do
     gui.debugf("\nDividing ZONE_%d\n", Z.id)
@@ -1530,7 +1559,6 @@ function Quest_make_quests()
   Quest_setup_lev_alongs()
 
   Quest_add_weapons()
----??  Quest_find_storage_rooms()
 
   Quest_assign_room_themes()
   Quest_select_textures()
