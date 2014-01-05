@@ -970,9 +970,14 @@ end
 
     if C.R2.must_visit then return false end
 
-    local prob      = style_sel("secrets", 0,  25,  50,  90)
+    -- sub-rooms don't make good secrets
+    if C.R2.parent and C.R2.parent == C.R1 and rand.odds(80) then
+      return false
+    end
+
+    local prob      = style_sel("secrets", 0,  33,  50,  90)
     local max_rooms = style_sel("secrets", 0, 1.8, 3.3, 6.5)
-    local max_vol   = style_sel("secrets", 0,  45, 100, 180)
+    local max_vol   = style_sel("secrets", 0,  58,  98, 198)
 
     max_rooms = int(max_rooms + gui.random())
 
