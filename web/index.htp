@@ -36,6 +36,43 @@ OBLIGE 4.28 is the current version.
 
 <h3>NEWS</h3>
 
+<div class="newsdate">05-Jan-2014:</div>
+<blockquote class="news">
+
+Report on current activity:
+
+<p>
+Early last year (2013) I began work on another major version, V5,
+which had some big changes: a better lighting system,
+storing prefabs in standard Doom WAD format, and using large
+prefabs (768x768 units) for laying out rooms.  There were
+improvements in other areas too, such as better way to calculate
+how much health to put into maps.
+
+<p>
+However the large prefabs for rooms proved to be unsatisfactory.
+While they often looked good, it tended to make very repetitive
+levels.
+This could have been alleviated by making lots and lots of
+different prefabs, but I feel that was the wrong way to go.
+Instead I think a random map generator should be able to
+create interesting things by the combination of a moderate set
+of primitives and idioms.
+
+<p>
+So right now I am working on merging the 3.57 room layout logic
+with the rest of the V4/V5 codebase.  This is major surgery,
+made harder by changing the grid size back to 192x192 units,
+and it will take a while to get everything into a usable state again.
+But progress is being made, and I'm excited at being able to
+really take version 3.57 forward, and add lots of "new" stuff
+to it....
+
+</blockquote>
+
+
+<hr style="clear: right;">
+
 <div class="newsdate">02-Feb-2013:</div>
 <blockquote class="news">
 
