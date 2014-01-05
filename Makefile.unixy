@@ -36,7 +36,7 @@ OS=UNIX
 FLTK_FLAGS=
 FLTK_LIBS=-lfltk_images -lfltk \
 	  -lXext -lXft -lfontconfig -lXinerama -lX11 \
-	  -lpng -ljpeg
+	  -lpng -ljpeg -ldl
 
 CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Iglbsp_src $(FLTK_FLAGS)
 LDFLAGS=-L/usr/X11R6/lib 

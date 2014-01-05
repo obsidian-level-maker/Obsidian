@@ -33,7 +33,7 @@ FLTK_FLAGS=-I$(FLTK_DIR)
 FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
 	  $(FLTK_DIR)/lib/libfltk.a \
 	  -lXext -lXft -lfontconfig -lXinerama -lX11 \
-	  -lpng -ljpeg
+	  -lpng -ljpeg -ldl
 
 CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Iglbsp_src -Iajpoly_src $(FLTK_FLAGS)
 LDFLAGS=-L/usr/X11R6/lib
