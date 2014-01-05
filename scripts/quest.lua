@@ -851,7 +851,7 @@ function Quest_divide_zones()
     }
 
     table.insert(LEVEL.quests, QUEST)
-    table.insert(quest.zone.quests, QUEST)
+    table.insert(QUEST.zone.quests, QUEST)
 
     return QUEST
   end
