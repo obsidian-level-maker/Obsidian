@@ -991,7 +991,7 @@ DOOM.EXITS =
     items = { "medikit" },
   },
 
-} -- end of DOOM.DOORS
+}
 
 
 DOOM.SWITCHES =
@@ -1148,4 +1148,4 @@ DOOM.SWITCHES =
     }
   },
 
-} -- end of DOOM.SWITCHES
+}
