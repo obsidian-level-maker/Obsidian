@@ -38,6 +38,8 @@ class ZONE
   start : ROOM  -- first room in the zone
 
   solution  : LOCK  -- the key (etc) which this zone must solve
+
+  quests : list(QUEST)
 }
 
 
@@ -56,6 +58,8 @@ class QUEST
   id : number  -- debugging aid
 
   kind : keyword  -- "normal", "secret"
+
+  zone : ZONE
 
   rooms : list(ROOM)
 
@@ -453,6 +457,7 @@ function Quest_create_zones()
     {
       id = Plan_alloc_id("zone")
       rooms = {}
+      quests = {}
       themes = {}
       previous = {}
       rare_used = {}
@@ -839,12 +844,14 @@ function Quest_divide_zones()
       kind  = "normal"
       id = id
       start = start
+      zone  = start.zone
       rooms = {}
       storage_leafs = {}
        secret_leafs = {}
     }
 
     table.insert(LEVEL.quests, QUEST)
+    table.insert(quest.zone.quests, QUEST)
 
     return QUEST
   end
