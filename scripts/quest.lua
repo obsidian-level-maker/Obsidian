@@ -991,15 +991,22 @@ end
 
 
   local function check_make_storage(C)
-    if C.kind == "teleporter" and rand.odds(90) then return false end
+    if C.kind == "teleporter" and rand.odds(70) then return false end
 
-    if C.trav_2.rooms > 5 then return false end
-    if C.trav_2.rooms > 3 and rand.odds(80) then return false end
+    if STYLE.switches == "none" then return true end
 
-    if C.trav_2.volume > 100 and rand.odds(90) then return false end
-    if C.trav_2.volume >  45 and rand.odds(50) then return false end
+    local prob      = style_sel("switches", 0,  80,  50,  15)
+    local max_rooms = style_sel("switches", 0, 6.5, 3.3, 1.8)
+    local max_vol   = style_sel("switches", 0, 198,  98,  58)
 
-    return rand.odds(50)
+    max_rooms = int(max_rooms + gui.random())
+
+    if C.trav_2.rooms  >= max_rooms then return false end
+    if C.trav_2.volume >= max_vol   then return false end
+
+    if not rand.odds(prob) then return false end
+
+    return true
   end
 
 
@@ -1023,7 +1030,7 @@ end
     end
 
     each C in exits do
-      -- sometime make a secret-in-a-secret
+      -- sometime make a "super" secret
       if rand.odds(20) and should_make_secret(C) then
         secret_flow(C.R2)
         C.R2.quest.super_secret = true
@@ -1051,6 +1058,8 @@ end
       return
     end
 
+    rand.shuffle(exits)
+
     each C in exits do
       if should_make_secret(C) then
         secret_flow(C.R2)
@@ -1058,6 +1067,22 @@ end
         boring_flow(C.R2, quest)
       end
     end
+  end
+
+
+  local function boring_exit(quest)
+    local R
+    local num_leaf = #quest.storage_leafs
+
+    if num_leaf > 0 then
+      R = table.remove(quest.storage_leafs, num_leaf)
+    else
+      -- emergency fall back : use the last room
+      R = quest.rooms[#quest.rooms]
+    end
+
+    -- final room must solve the zone's lock instead
+    add_solution(R, R.zone.solution)
   end
 
 
@@ -1150,10 +1175,11 @@ end
 
     local Q = new_quest(Z.start)
 
-    if THEME.switches then
+    if THEME.switches and STYLE.switches != "none" then
       quest_flow(Q.start, Q)
     else
       boring_flow(Q.start, Q)
+      boring_exit(Q)
     end
   end
 
