@@ -284,130 +284,6 @@ end
 
 
 
-function Quest_add_weapons__OLD()
- 
-  LEVEL.added_weapons = {}
-
-  local function do_mark_weapon(name)
-    LEVEL.added_weapons[name] = true
-
-    local allow = LEVEL.allowances[name]
-    if allow then
-      LEVEL.allowances[name] = sel(allow > 1, allow-1, 0)
-    end
-  end
-
-  local function do_start_weapon(quest)
-    local name_tab = {}
-
-    for name,info in pairs(GAME.WEAPONS) do
-      local prob = info.start_prob
-
-      if OB_CONFIG.strength == "crazy" then
-        prob = info.add_prob
-      end
-
-      if LEVEL.allowances[name] == 0 then
-        prob = 0
-      end
-
-      if prob and prob > 0 then
-        name_tab[name] = prob
-      end
-    end -- for weapons
-
-    if table.empty(name_tab) then
-      gui.debugf("Start weapon: NONE!!\n")
-      return
-    end
-
-    local weapon = rand.key_by_probs(name_tab)
-    local info = GAME.WEAPONS[weapon]
-
-    gui.debugf("Start weapon: %s\n", weapon)
-
-    table.insert(quest.start.weapons, weapon)
-
-    quest.start.weapon_ammo = info.ammo  -- FIXME
-
-    do_mark_weapon(weapon)
-  end
-
-  local function do_new_weapon(quest)
-    local name_tab = {}
-
-    for name,info in pairs(GAME.WEAPONS) do
-      local prob = info.add_prob
-
-      if LEVEL.added_weapons[name] or LEVEL.allowances[name] == 0 then
-        prob = 0
-      end
-
-      if prob and prob > 0 then
-        name_tab[name] = info.add_prob
-      end
-    end
-
-    if table.empty(name_tab) then
-      gui.debugf("No weapon @ QUEST_%d\n", quest.id)
-      return
-    end
-
-    local weapon = rand.key_by_probs(name_tab)
-    local info = GAME.WEAPONS[weapon]
-
-    -- Select a room to put the weapon in.
-    -- This is very simplistic, either the start room of the
-    -- quest or a neighboring room.
-    local R = quest.start
-    local neighbors = {}
-
-    each C in R.conns do
-      local N = C:neighbor(R)
-      if N.quest == R.quest and not N.purpose then
-        table.insert(neighbors, N)
-      end
-    end
-
-    if #neighbors >= 1 and rand.odds(75) then
-      R = rand.pick(neighbors)
-    end
-
-    -- putting weapons in the exit room is a tad silly
-    if R.purpose == "EXIT" then
-      return
-    end
-
-    table.insert(R.weapons, weapon)
-
-    R.weapon_ammo = info.ammo  -- FIXME
-
-    do_mark_weapon(weapon)
-
-    gui.debugf("New weapon: %s @ %s QUEST_%d\n", weapon, R:tostr(), quest.id)
-  end
-
-
-  ---| Quest_add_weapons |---
-
-  each R in LEVEL.rooms do
-    R.weapons = {}
-  end
-
---!!!!!! FIXME: Quest_add_weapons
-do return end
-
-  for index,A in ipairs(LEVEL.quests) do
-    if index == 1  then
-      do_start_weapon(A)
-    elseif (index == 2) or rand.odds(sel((index % 2) == 1, 80, 20)) then
-      do_new_weapon(A)
-    end
-  end
-end
-
-
-
 function Quest_add_weapons()
 
   local function prob_for_weapon(name, info, is_start)
@@ -420,7 +296,8 @@ function Quest_add_weapons()
     -- ignore weapons already given
     if LEVEL.added_weapons[name] then return 0 end
 
-    if is_start then
+    -- for crazy monsters mode, player may need a bigger weapon
+    if is_start and OB_CONFIG.strength != "crazy" then
       if info.start_prob then
         prob = info.start_prob
       else
@@ -532,10 +409,59 @@ function Quest_add_weapons()
   end
 
 
-  local function add_weapon(Z, name)
+  local function eval_room_for_weapon(R, is_start, is_new)
+    -- putting weapons in the exit room is a tad silly
+    if R.purpose == "EXIT" then return -100 end
+
+    -- too many weapons already? (very unlikely to occur)
+    if #R.weapons >= 2 then return -60 end
+
+    -- not in secrets!
+    if R.quest.kind == "secret" then return -30 end
+
+    local score = 0
+
+    -- FIXME
+
+    return score
+  end
+
+
+  local function add_weapon(Z, name, is_start)
     gui.debugf("Add weapon '%s' --> ZONE_%d\n", name, Z.id)
 
-    -- TODO !!!!
+    -- check if weapon is "new" (player has never seen it before).
+    -- new weapons deserve their own quest, or at least require
+    -- some exploration to find it.
+
+    local is_new = false
+    if not EPISODE.seen_weapons[name] then
+      is_new = true
+      EPISODE.seen_weapons[name] = 1
+    end
+
+    -- berserk only lasts a single level : treat like a new weapon
+    if name == "berserk" then is_new = true end
+
+    -- evaluate each room and pick the best
+    each R in Z.rooms do
+      R.weap_score = eval_room_for_weapon(R, is_start, is_new)
+
+      -- tie breaker
+      R.weap_score = R.weap_score + gui.random()
+    end
+
+    local room = table.pick_best(Z.rooms,
+        function(A, B) return A.weap_score > B.weap_score end)
+
+    table.insert(room.weapons, name)
+
+    gui.debugf("|--> %s\n", room:tostr())
+  end
+
+
+  local function fall_back_start_weapon()
+    -- FIXME !!!!
   end
 
 
@@ -594,8 +520,15 @@ function Quest_add_weapons()
       local weapon = table.remove(list, 1)
       assert(weapon)
 
-      add_weapon(Z, weapon)
+      add_weapon(Z, weapon, i == 1)
     end
+  end
+
+  -- ensure there is always something (e.g. shotgun) in the
+  -- starting room of the level.
+
+  if table.empty(LEVEL.start_room.weapons) then
+    fall_back_start_weapon()
   end
 end
 

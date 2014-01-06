@@ -372,7 +372,10 @@ end
 function Monsters_max_level()
   local max_level = 10 * (LEVEL.mon_along or 0.5) + 1
 
-  if OB_CONFIG.strength == "tough" then
+  if OB_CONFIG.strength == "tough" or
+     OB_CONFIG.strength == "crazy"
+  then
+    -- this affects weapon choice too
     max_level = max_level * 1.7
   end
 
