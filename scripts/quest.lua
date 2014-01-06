@@ -478,7 +478,11 @@ function Quest_add_weapons()
     -- only swap when the ammo is the same
     if info1.ammo != info2.ammo then return false end
 
-    -- determine firepower
+    if info1.level != info2.level then
+      return info1.level > info2.level
+    end
+
+    -- same level, so test the firepower
     local fp1 = info1.rate * info1.damage
     local fp2 = info2.rate * info2.damage
 
@@ -487,15 +491,24 @@ function Quest_add_weapons()
 
 
   local function reorder_weapons(list)
-    for pass = 1,2 do
+    for pass = 1,3 do
       for i = 1, (#list - 1) do
       for k = (i + 1), #list do
         if should_swap(list[i], list[k]) then
-          list[i], list[k] = list[k], list[i]
+          local A, B = list[i], list[k]
+
+          list[i], list[k] = B, A
         end
       end -- i, k
       end
-    end
+    end -- pass
+  end
+
+
+  local function add_weapon(Z, name)
+    gui.debugf("Add weapon '%s' --> ZONE_%d\n", name, Z.id)
+
+    -- TODO !!!!
   end
 
 
@@ -507,9 +520,6 @@ function Quest_add_weapons()
     EPISODE.seen_weapons = {}
   end
 
-  each Z in LEVEL.zones do
-    Z.weapon_num = 0
-  end
 
   -- decide how many weapons to give
 
@@ -522,49 +532,47 @@ function Quest_add_weapons()
 
   gui.printf("Weapon quota: %d\n", quota)
 
-  -- start zone always gets a weapon
 
-  LEVEL.zones[1].weapon_num = 1
-  quota = quota - 1
-
-  -- distribute the rest over the (other) zones
-
-  for i = 2, 99 do
-    if quota <= 0 then break; end
-
-    if rand.odds(50) then
-      local zone_index = 1 + (i - 1) % #LEVEL.zones
-      local Z = LEVEL.zones[zone_index]
-
-      Z.weapon_num = (Z.weapon_num or 0) + 1
-      quota = quota - 1
-    end
-  end
-
-  gui.debugf("Weapon distribution:\n")
-  each Z in LEVEL.zones do
-    gui.debugf("   ZONE_%s : %d\n", Z.id, Z.weapon_num or 0)
-  end
-
-  -- actually decide the weapons and place them
+  -- decide which weapons to use
 
   local list = {}
 
   for k = 1, quota do
-    local weapon = decide_weapon()
+    local weapon = decide_weapon(k == 1)
 
     if not weapon then break; end
 
-    table.insert(list, i)
+    table.insert(list, weapon)
   end
 
-  assert(#list > 0)
+  quota = #list
+  assert(quota > 0)
 
   reorder_weapons(list)
 
-  gui.debugf("Weapon list:\n")
+  gui.printf("Weapon list:\n")
   each name in list do
     gui.debugf("   %s\n", name)
+  end
+
+
+  -- start zone always gets a weapon
+
+  add_weapon(LEVEL.zones[1], table.remove(list, 1))
+
+  -- distribute the rest over the (other) zones
+
+  for i = 2, 99 do
+    if table.empty(list) then
+      break;
+    end
+
+    if rand.odds(60) then
+      local zone_index = 1 + (i - 1) % #LEVEL.zones
+      local Z = LEVEL.zones[zone_index]
+
+      add_weapon(Z, table.remove(list, 1))
+    end
   end
 end
 
