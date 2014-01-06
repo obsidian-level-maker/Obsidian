@@ -901,7 +901,7 @@ function Monsters_do_pickups()
 
       -- prefer closest row to a wall
       if spot.wall_dist then
-        dist = spot.wall_dist * 1000
+        dist = dist + spot.wall_dist * 200
       end
 
       -- avoid already used spots

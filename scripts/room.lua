@@ -2771,9 +2771,10 @@ function Room_find_pickup_spots(R)
     local mx, my = S:mid_point()
     table.insert(R.big_spots,
     {
-      S=S, score=score
+      S = S
+      score = score
 
-      x1 = mx - 24, y1 = my - 24, z1 = (S.floor_h or 0),
+      x1 = mx - 24, y1 = my - 24, z1 = (S.floor_h or 0)
       x2 = mx + 24, y2 = my + 24, z2 = (S.floor_h or 0) + 64
 
       -- FIXME: REMOVE
@@ -2807,18 +2808,16 @@ function Room_find_pickup_spots(R)
 
       table.insert(R.item_spots,
       {
-        S=S, dir=dir, wall_dist=(i - 1), ---### score=score
+        S = S
+        dir = dir
+        wall_dist = (i - 1)
 
-        x1 = mx - 12, y1 = my - 12, z1 = (S.floor_h or 0),
+        x1 = mx - 12, y1 = my - 12, z1 = (S.floor_h or 0)
         x2 = mx + 12, y2 = my + 12, z2 = (S.floor_h or 0) + 64
 
         -- FIXME: REMOVE
-        x=mx, y=my,
+        x=mx, y=my
       })
-
----##      -- the rows further away from the wall should only be
----##      -- used when absolutely necessary.
----##      score = score - 100
     end
     end
   end
