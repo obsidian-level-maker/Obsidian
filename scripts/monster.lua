@@ -1256,6 +1256,11 @@ function Monsters_in_room(R)
       qty = qty * (3 + R.lev_along + LEVEL.ep_along) / 5
     end
 
+    -- less in secrets (usually much less)
+    if R.quest.kind == "secret" then
+      qty = qty / rand.pick { 2.5, 4.5, 7.5 }
+    end
+
     -- random adjustment
     qty = qty * rand.pick { 0.8, 1.0, 1.2 }
 
@@ -1433,9 +1438,9 @@ end
     if THEME.monster_prefs then
       prob = prob * (THEME.monster_prefs[mon] or 1)
     end
---!!!!    if R.theme.monster_prefs then
---!!!!      prob = prob * (R.theme.monster_prefs[mon] or 1)
---!!!!    end
+    if R.theme.monster_prefs then
+      prob = prob * (R.theme.monster_prefs[mon] or 1)
+    end
 
     if spot_kind == "cage" then
       -- cage monsters need a long distance attack
@@ -1454,6 +1459,11 @@ end
 
     -- apply user's Strength setting
     prob = prob * calc_strength_factor(info)
+
+    -- weaker monsters in secrets
+    if R.quest.kind == "secret" then
+      prob = prob / (info.level or 1)
+    end
 
 
     -- level check (harder monsters occur in later rooms)
@@ -1586,6 +1596,11 @@ end
         if info.replaces then
           prob = prob * (LEVEL.monster_prefs[info.replaces] or 1)
         end
+      end
+
+      -- weaker monsters in secrets
+      if R.quest.kind == "secret" then
+        prob = prob / (info.level or 1)
       end
 
       if prob > 0 then
