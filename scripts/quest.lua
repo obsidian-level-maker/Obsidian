@@ -243,54 +243,42 @@ function Quest_order_by_visit()
   -- likely visit them.  When there are choices or secrets, then the
   -- order chosen here will be quite arbitrary.
 
-  local visit_time = 1
-
-  local function visit_room(R, path, p_idx)
-    assert(not R.visit_time)
-
-    R.visit_time = visit_time
-    visit_time = visit_time + 1
-
-    each C in R.conns do
-      C.tmp_visit = 0
-
-      if C.R1 != R or C.lock then
-        -- ignore it
-      elseif C == path[p_idx] then
-        C.tmp_visit = 9  -- do path-to-key last
-      elseif C.R2.parent == R then
-        C.tmp_visit = 2 + gui.random()
-      else
-        C.tmp_visit = 4 + gui.random()
-      end
-    end
-
-    table.sort(R.conns, function(A,B) return A.tmp_visit < B.tmp_visit end)
-
-    each C in R.conns do
-      if C.R1 != R or C.lock then
-        -- ignore it
-      elseif C == path[p_idx] then
-        visit_room(C.R2, path, p_idx+1)
-      else
-        visit_room(C.R2, {}, 1)
-      end
-    end
+  local function sort_room_list(list)
+    table.sort(list, function(A,B) return A.lev_along < B.lev_along end)
   end
 
 
   ---| Quest_order_by_visit |---
 
-  each A in LEVEL.quests do
-    visit_room(A.start, A.path, 1)
+  each Z in LEVEL.zones do
+    local Z_len   = 1 / #LEVEL.zones
+    local Z_along = (_index - 1) * Z_len
+
+    Z.along = Z_along
+
+    each Q in Z.quests do
+      local Q_len   = 1 / #Z.quests
+      local Q_along = (_index - 1) * Q_len
+
+      each R in Q.rooms do
+        local R_len   = 1 / #Q.rooms
+        local R_along = _index * R_len
+
+        R.lev_along = Z_along + Z_len * (Q_along + Q_len * R_along)
+      end
+
+      sort_room_list(Q.rooms)
+    end
+
+    sort_room_list(Z.rooms)
   end
 
-  table.sort(LEVEL.rooms, function(A,B) return A.visit_time < B.visit_time end)
+  sort_room_list(LEVEL.rooms)
 
   gui.debugf("Room Visit Order:\n")
   each R in LEVEL.rooms do
-    gui.debugf("  %d : %s %s %s\n",
-               R.visit_time, R:tostr(), R.kind, R.purpose or "-");
+    gui.debugf("  %1.3f : ZONE_%d  QUEST_%d  %s\n",
+               R.lev_along, R.zone.id, R.quest.id, R:tostr())
   end
 end
 
@@ -1552,13 +1540,6 @@ function Quest_assign_room_themes()
 end
 
 
-function Quest_setup_lev_alongs()
-  each R in LEVEL.rooms do
-    R.lev_along  = _index / #LEVEL.rooms
-  end
-end
-
-
 function Quest_make_quests()
 
   gui.printf("\n--==| Make Quests |==--\n\n")
@@ -1585,8 +1566,7 @@ function Quest_make_quests()
   gui.printf("Exit room: %s\n", LEVEL.exit_room:tostr())
 
 
----??  Quest_order_by_visit()
-  Quest_setup_lev_alongs()
+  Quest_order_by_visit()
 
   Quest_add_weapons()
 
