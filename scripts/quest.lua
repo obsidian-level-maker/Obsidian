@@ -239,8 +239,9 @@ end
 
 
 function Quest_order_by_visit()
-  -- put rooms in the 'all_rooms' list into the order which the
-  -- player will most likely visit them.
+  -- put all rooms in the level into the order the player will most
+  -- likely visit them.  When there are choices or secrets, then the
+  -- order chosen here will be quite arbitrary.
 
   local visit_time = 1
 
@@ -276,6 +277,7 @@ function Quest_order_by_visit()
       end
     end
   end
+
 
   ---| Quest_order_by_visit |---
 
@@ -1045,6 +1047,7 @@ end
     -- no locks will be added in this sub-tree of the zone
 
     R.quest = quest
+    R.is_storage = true
 
     table.insert(quest.rooms, R)
 
@@ -1550,19 +1553,8 @@ end
 
 
 function Quest_setup_lev_alongs()
-  local w_along = LEVEL.mon_along or 0.5
-
   each R in LEVEL.rooms do
     R.lev_along  = _index / #LEVEL.rooms
-
-    local w_step = (R.svolume ^ 0.5) / ((SEED_W * SEED_H) ^ 0.5)
- 
-    R.weap_along = w_along + w_step / 3
-    R.weap_along = R.weap_along * (PARAM.weapon_factor or 1)
-
---stderrf("WEAPON ALONG : %1.2f\n", R.weap_along)
-
-    w_along = w_along + w_step * rand.range(0.5, 0.8)
   end
 end
 
