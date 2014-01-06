@@ -102,6 +102,7 @@ function ROOM_CLASS.new()
 
     conns = {}
     sections = {}
+    weapons = {}
 
 --    goal_spots = {}
 --    mon_spots  = {}

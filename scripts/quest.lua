@@ -284,7 +284,7 @@ end
 
 
 
-function Quest_add_weapons()
+function Quest_add_weapons__OLD()
  
   LEVEL.added_weapons = {}
 
@@ -405,6 +405,69 @@ do return end
     end
   end
 end
+
+
+
+function Quest_add_weapons()
+
+
+  local function hexen_weapons()
+    -- FIXME!!!
+  end
+
+
+  ---| Quest_add_weapons |---
+
+  -- special handling for HEXEN and HEXEN II
+  if PARAM.hexen_weapons then
+    hexen_add_weapons()
+    return
+  end
+
+  each Z in LEVEL.zones do
+    Z.weapon_num = 0
+  end
+
+  -- decide how many weapons to give
+
+  local weap_quota = #LEVEL.zones * rand.range(0.66, 1.33)
+
+  weap_quota = weap_quota * (PARAM.weapon_factor or 1)
+  weap_quota = int(weap_quota + 0.5)
+
+  if weap_quota < 1 then weap_quota = 1 end
+
+  gui.printf("Weapon quota: %d\n", weap_quota)
+
+  -- start zone always gets a weapon
+
+  LEVEL.zones[1].weapon_num = 1
+  weap_quota = weap_quota - 1
+
+  -- distribute the rest over the (other) zones
+
+  for i = 2, 99 do
+    if weap_quota <= 0 then break; end
+
+    if rand.odds(50) then
+      local zone_index = 1 + (i - 1) % #LEVEL.zones
+      local Z = LEVEL.zones[zone_index]
+
+      Z.weapon_num = (Z.weapon_num or 0) + 1
+      weap_quota = weap_quota - 1
+    end
+  end
+
+  gui.debugf("Weapon distribution:\n")
+  each Z in LEVEL.zones do
+    gui.debugf("   ZONE_%s : %d\n", Z.id, Z.weapon_num or 0)
+  end
+
+  -- actually decide the weapons and place them
+
+  -- TODO !!!
+end
+
 
 
 function Quest_select_textures()
