@@ -120,27 +120,27 @@ GLOBAL_STYLE_LIST =
 {
   -- these three correspond to buttons in the GUI
 
-  outdoors   = { few=20, some=60, heaps=40 }
-  caves      = { none=10 } ---!!! , few=30, some=80, heaps=5 }
+  outdoors   = { few=20, some=60, heaps=30 }
+  caves      = { none=30 } ---!!! , few=50, some=30, heaps=5 }
   traps      = { few=20, some=60, heaps=30 }
 
   -- things that affect the whole level
 
-  secrets    = { few=20, some=60, heaps=10 }
+  secrets    = { few=20, some=50, heaps=10 }
   hallways   = { few=90, some=30, heaps=10 }
   liquids    = { few=30, some=50, heaps=20 }
   scenics    = { few=30, some=50, heaps=10 }
   lakes      = { few=60, heaps=10 }
   islands    = { few=60, heaps=40 }
-  sub_rooms  = { none=70, some=40, heaps=5 }
+  sub_rooms  = { none=80, some=30, heaps=5 }
 
   ambushes    = { none=10, some=50, heaps=10 }
-  big_rooms   = { none=20, few=30, some=60, heaps=10 }
+  big_rooms   = { none=30, few=50, some=20, heaps=5 }
   big_juncs   = { none=40, few=30, some=30, heaps=10 }
   cycles      = { none=50, some=50, heaps=50 }
   crossovers  = { none=40 } --!!!! , some=40, heaps=40 }
   mon_variety = { some=90, heaps=4 }
-  teleporters = { none=30, few=30, some=30, heaps=5 }
+  teleporters = { none=40, few=30, some=30, heaps=5 }
 
   room_shape  = { none=80, L=5, T=5, O=5, S=5, X=5 }
 
@@ -155,7 +155,7 @@ GLOBAL_STYLE_LIST =
 
   windows    = { few=20, some=50, heaps=20 }
   pictures   = { few=10, some=50, heaps=10 }
-  cages      = { none=50, some=50, heaps=6 }
+  cages      = { none=50, few=50, some=50, heaps=5 }
   fences     = { none=30, few=30, some=10 }
   crates     = { none=20, some=40, heaps=10 }
   switches   = { none=2, few=6, some=60, heaps=6 }
