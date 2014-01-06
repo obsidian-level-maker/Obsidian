@@ -505,6 +505,33 @@ function Quest_add_weapons()
   end
 
 
+  local function num_weapons_for_zones(quota)
+    local counts = {}
+
+    for k = 1, #LEVEL.zones do
+      counts[k] = 0
+    end
+
+    -- first zone always gets a weapon
+    counts[1] = 1
+    quota = quota - 1
+
+    for i = 2, 99 do
+      if quota <= 0 then break; end
+
+      if rand.odds(60) then
+        local zone_idx = 1 + (i - 1) % #LEVEL.zones
+
+        counts[zone_idx] = counts[zone_idx] + 1
+
+        quota = quota - 1
+      end
+    end
+
+    return counts
+  end
+
+
   local function add_weapon(Z, name)
     gui.debugf("Add weapon '%s' --> ZONE_%d\n", name, Z.id)
 
@@ -556,22 +583,18 @@ function Quest_add_weapons()
   end
 
 
-  -- start zone always gets a weapon
+  -- distribute these weapons to the zones
 
-  add_weapon(LEVEL.zones[1], table.remove(list, 1))
+  local counts = num_weapons_for_zones(quota)
 
-  -- distribute the rest over the (other) zones
+  for i = 1, #LEVEL.zones do
+    local Z = LEVEL.zones[i]
 
-  for i = 2, 99 do
-    if table.empty(list) then
-      break;
-    end
+    for num = 1, counts[i] do
+      local weapon = table.remove(list, 1)
+      assert(weapon)
 
-    if rand.odds(60) then
-      local zone_index = 1 + (i - 1) % #LEVEL.zones
-      local Z = LEVEL.zones[zone_index]
-
-      add_weapon(Z, table.remove(list, 1))
+      add_weapon(Z, weapon)
     end
   end
 end
