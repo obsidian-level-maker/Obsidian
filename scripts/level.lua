@@ -872,9 +872,7 @@ function Levels_make_all()
 
   Levels_choose_themes()
 
---Levels_rarify(1, GAME.WEAPONS)
---Levels_rarify(2, GAME.MONSTERS)
---Levels_rarify(3, GAME.POWERUPS)
+--Levels_rarify_items()
 
   local index = 1
 

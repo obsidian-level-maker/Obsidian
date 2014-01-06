@@ -410,18 +410,101 @@ end
 
 function Quest_add_weapons()
 
+  local function prob_for_weapon(name, info, is_start)
+    local prob  = info.add_prob
+    local level = info.level or 1
 
-  local function hexen_weapons()
-    -- FIXME!!!
+    -- ignore weapons which lack a pick-up item
+    if not prob or prob <= 0 then return 0 end
+
+    -- ignore weapons already given
+    if LEVEL.added_weapons[name] then return 0 end
+
+    if is_start then
+      if info.start_prob then
+        prob = info.start_prob
+      else
+        prob = prob / level
+      end
+    end
+
+    -- make powerful weapons only appear in later levels
+    if level > LEVEL.max_level then return 0 end
+
+    -- theme adjustments
+    if LEVEL.weap_prefs then
+      prob = prob * (LEVEL.weap_prefs[name] or 1)
+    end
+    if THEME.weap_prefs then
+      prob = prob * (THEME.weap_prefs[name] or 1)
+    end
+
+    return prob
+  end
+
+
+  local function decide_weapon(is_start)
+    -- determine probabilities 
+    local name_tab = {}
+
+    each name,info in GAME.WEAPONS do
+      local prob = prob_for_weapon(name, info, is_start)
+
+      if prob > 0 then
+        name_tab[name] = prob
+      end
+    end
+
+    gui.debugf("decide_weapon list:\n%s\n", table.tostr(name_tab))
+
+    -- nothing is possible? ok
+    if table.empty(name_tab) then return nil end
+
+    local weapon = rand.key_by_probs(name_tab)
+
+    -- mark it as used
+    LEVEL.added_weapons[weapon] = true
+
+    return weapon
+  end
+
+
+  local function should_swap(early, later)
+    assert(early and later)
+
+    local info1 = assert(GAME.WEAPONS[early])
+    local info2 = assert(GAME.WEAPONS[later])
+
+    -- only swap when the ammo is the same
+    if info1.ammo != info2.ammo then return false end
+
+    -- determine firepower
+    local fp1 = info1.rate * info1.damage
+    local fp2 = info2.rate * info2.damage
+
+    return (fp1 > fp2)
+  end
+
+
+  local function reorder_weapons(list)
+    for pass = 1,2 do
+      for i = 1, (#list - 1) do
+      for k = (i + 1), #list do
+        if should_swap(list[i], list[k]) then
+          list[i], list[k] = list[k], list[i]
+        end
+      end -- i, k
+      end
+    end
   end
 
 
   ---| Quest_add_weapons |---
 
-  -- special handling for HEXEN and HEXEN II
-  if PARAM.hexen_weapons then
-    hexen_add_weapons()
-    return
+  LEVEL.added_weapons = {}
+
+  if not EPISODE.seen_weapons then
+    EPISODE.seen_weapons = {}
   end
 
   each Z in LEVEL.zones do
@@ -430,31 +513,31 @@ function Quest_add_weapons()
 
   -- decide how many weapons to give
 
-  local weap_quota = #LEVEL.zones * rand.range(0.66, 1.33)
+  local quota = #LEVEL.zones * rand.range(0.66, 1.33)
 
-  weap_quota = weap_quota * (PARAM.weapon_factor or 1)
-  weap_quota = int(weap_quota + 0.5)
+  quota = quota * (PARAM.weapon_factor or 1)
+  quota = int(quota + 0.5)
 
-  if weap_quota < 1 then weap_quota = 1 end
+  if quota < 1 then quota = 1 end
 
-  gui.printf("Weapon quota: %d\n", weap_quota)
+  gui.printf("Weapon quota: %d\n", quota)
 
   -- start zone always gets a weapon
 
   LEVEL.zones[1].weapon_num = 1
-  weap_quota = weap_quota - 1
+  quota = quota - 1
 
   -- distribute the rest over the (other) zones
 
   for i = 2, 99 do
-    if weap_quota <= 0 then break; end
+    if quota <= 0 then break; end
 
     if rand.odds(50) then
       local zone_index = 1 + (i - 1) % #LEVEL.zones
       local Z = LEVEL.zones[zone_index]
 
       Z.weapon_num = (Z.weapon_num or 0) + 1
-      weap_quota = weap_quota - 1
+      quota = quota - 1
     end
   end
 
@@ -465,7 +548,30 @@ function Quest_add_weapons()
 
   -- actually decide the weapons and place them
 
-  -- TODO !!!
+  local list = {}
+
+  for k = 1, quota do
+    local weapon = decide_weapon()
+
+    if not weapon then break; end
+
+    table.insert(list, i)
+  end
+
+  assert(#list > 0)
+
+  reorder_weapons(list)
+
+  gui.debugf("Weapon list:\n")
+  each name in list do
+    gui.debugf("   %s\n", name)
+  end
+end
+
+
+
+function Quest_do_hexen_weapons()
+  -- TODO
 end
 
 
@@ -900,7 +1006,7 @@ function Quest_divide_zones()
       zone  = start.zone
       rooms = {}
       storage_leafs = {}
-       secret_leafs = {}
+      secret_leafs = {}
     }
 
     table.insert(LEVEL.quests, QUEST)
@@ -1603,6 +1709,7 @@ function Quest_assign_room_themes()
 end
 
 
+
 function Quest_make_quests()
 
   gui.printf("\n--==| Make Quests |==--\n\n")
@@ -1618,22 +1725,23 @@ function Quest_make_quests()
   LEVEL.quests = {}
   LEVEL.locks  = {}
 
-
   Quest_create_zones()
-
   Quest_divide_zones()
-
 
   assert(LEVEL.exit_room)
 
   gui.printf("Exit room: %s\n", LEVEL.exit_room:tostr())
 
-
   Quest_order_by_visit()
-
-  Quest_add_weapons()
 
   Quest_assign_room_themes()
   Quest_select_textures()
+
+  -- special weapon handling for HEXEN and HEXEN II
+  if PARAM.hexen_weapons then
+    Quest_do_hexen_weapons()
+  else
+    Quest_add_weapons()
+  end
 end
 
