@@ -410,18 +410,36 @@ function Quest_add_weapons()
 
 
   local function eval_room_for_weapon(R, is_start, is_new)
+    -- never in secrets!
+    if R.quest.kind == "secret" then return -100 end
+
     -- putting weapons in the exit room is a tad silly
-    if R.purpose == "EXIT" then return -100 end
+    if R.purpose == "EXIT" then return -60 end
 
     -- too many weapons already? (very unlikely to occur)
-    if #R.weapons >= 2 then return -60 end
+    if #R.weapons >= 2 then return -30 end
 
-    -- not in secrets!
-    if R.quest.kind == "secret" then return -30 end
+    -- basic fitness of the room is the size
+    local score = R.svolume
 
-    local score = 0
+    if is_start and not is_new and R.purpose == "START" then
+      return rand.pick { 20, 120, 220 }
+    end
 
-    -- FIXME
+    -- big bonus for leaf rooms
+    if table.empty(Quest_get_zone_exits(R)) then
+      score = score + 60
+    end
+
+    -- small bonus for storage (bigger for new weapons)
+    if R.is_storage then
+      score = score + sel(is_new, 40, 10)
+    end
+
+    -- if there is a purpose or another weapon, adjust the size
+    if R.purpose then score = score / 5 end
+    if #R.weapons > 0 then score = score / 10 end
+    if R.kind == "hallway" then score = score / 20 end
 
     return score
   end
@@ -448,7 +466,7 @@ function Quest_add_weapons()
       R.weap_score = eval_room_for_weapon(R, is_start, is_new)
 
       -- tie breaker
-      R.weap_score = R.weap_score + gui.random()
+      R.weap_score = R.weap_score + gui.random() * 4
     end
 
     local room = table.pick_best(Z.rooms,
