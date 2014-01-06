@@ -1486,7 +1486,8 @@ function Fab_replacements(fab, skin)
       local info = GAME.ENTITIES[name] or
                    GAME.MONSTERS[name] or
                    GAME.WEAPONS[name]  or
-                   GAME.PICKUPS[name]
+                   GAME.PICKUPS[name] or
+                   GAME.NICE_ITEMS[name]
 
       if not info then
         gui.printf("\nLACKING ENTITY : %s\n\n", name)

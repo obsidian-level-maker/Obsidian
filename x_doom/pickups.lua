@@ -77,16 +77,6 @@ DOOM.PICKUPS =
     give = { {health=30} }
   }
 
-  blue_armor =
-  {
-    id = 2019
-    kind = "armor"
-    rank = 4
-    prob = 2
-    start_prob = 30
-    give = { {health=80} }
-  }
-
   -- AMMO --
 
   bullets =
@@ -179,7 +169,82 @@ DOOM.PICKUPS =
 }
 
 
-DOOM2.PICKUPS =
+--------------------------------------------------------------------
+
+
+DOOM.NICE_ITEMS =
+{
+  -- WEAPONS --
+
+  saw =
+  {
+    id = 2005
+    kind = "weapon"
+  }
+
+  berserk =
+  {
+    id = 2023
+    kind = "weapon"
+  }
+
+  -- HEALTH / ARMOR --
+
+  blue_armor =
+  {
+    id = 2019
+    kind = "armor"
+    rank = 4
+    prob = 2
+    start_prob = 30
+    give = { {health=80} }
+  }
+
+  -- POWERUP --
+
+  backpack =
+  {
+    id = 8
+    kind = "powerup"
+  }
+
+  invis =
+  {
+    id = 2024
+    kind = "powerup"
+    last_time = 100
+  }
+
+  invul =
+  {
+    id = 2022
+    kind = "powerup"
+    last_time = 30
+  }
+
+  allmap =
+  {
+    id = 2026
+    kind = "powerup"
+  }
+
+  goggles =
+  {
+    id = 2045
+    kind = "powerup"
+    last_time = 120
+  }
+
+
+  -- NOTES:
+  --
+  -- Radiation suit is not here, since it needs special logic
+  -- (namely to create areas with a nukage or lava floor which the
+  --  player is forced to cross).
+}
+
+
+DOOM2.NICE_ITEMS =
 {
   mega =
   {

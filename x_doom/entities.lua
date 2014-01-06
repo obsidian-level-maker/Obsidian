@@ -36,12 +36,9 @@ DOOM.ENTITIES =
 
   --- POWERUPS ---
 
-  backpack = { id=8 }
-  invul    = { id=2022 }
-  invis    = { id=2024 }
-  suit     = { id=2025 }
-  map      = { id=2026 }
-  goggles  = { id=2045 }
+  backpack = { id=8 }   -- FIXME: REMOVE
+
+  suit = { id=2025 }
 
 
   --- SCENERY ---
