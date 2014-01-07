@@ -478,8 +478,32 @@ function Quest_add_weapons()
   end
 
 
-  local function fall_back_start_weapon()
-    -- FIXME !!!!
+  local function fallback_start_weapon()
+    -- be a meanie sometimes...
+    if rand.odds(70) then
+      return
+    end
+
+    -- collect usable weapons, nothing too powerful
+    local tab = {}
+
+    each name,info in GAME.WEAPONS do
+      local prob = info.start_prob or info.add_prob
+
+      if prob and info.level and info.level <= 2 then
+        tab[name] = prob
+      end
+    end
+
+    if table.empty(tab) then
+      error("No possible fallback weapons!")
+    end
+
+    local name = rand.key_by_probs(tab)
+
+    table.insert(LEVEL.start_room.weapons, name)
+
+    gui.debugf("Fallback start weapon: %s\n", name)
   end
 
 
@@ -542,11 +566,11 @@ function Quest_add_weapons()
     end
   end
 
-  -- ensure there is always something (e.g. shotgun) in the
-  -- starting room of the level.
+  -- ensure there is usually something (e.g. shotgun) in the
+  -- starting room of the level
 
   if table.empty(LEVEL.start_room.weapons) then
-    fall_back_start_weapon()
+    fallback_start_weapon()
   end
 end
 
