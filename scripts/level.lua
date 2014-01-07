@@ -754,10 +754,11 @@ function Levels_handle_prebuilt()
 end
 
 
-function Levels_make_level(L, index)
+function Levels_make_level(L)
   assert(L)
   assert(L.name)
 
+  local index = L.index
   local total = #GAME.levels
 
   -- debugging aid : ability to build only a particular level
@@ -855,8 +856,7 @@ end
 
 
 function Levels_make_all()
-
-  GAME.levels = {}
+  GAME.levels   = {}
   GAME.episodes = {}
 
   Levels_invoke_hook("get_levels",  OB_CONFIG.seed)
@@ -874,19 +874,15 @@ function Levels_make_all()
 
 --Levels_rarify_items()
 
-  local index = 1
-
   each EPI in GAME.episodes do
     EPISODE = EPI
 
     each L in EPI.levels do
       L.allowances = {}
 
-      if Levels_make_level(L, index) == "abort" then
+      if Levels_make_level(L) == "abort" then
         return "abort"
       end
-
-      index = index + 1
     end
   end
 
