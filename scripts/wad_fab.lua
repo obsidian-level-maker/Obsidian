@@ -19,6 +19,36 @@
 ----------------------------------------------------------------
 
 
+GLOBAL_SKIN_DEFAULTS =
+{
+  outer = "?wall"
+  fence = "?wall"
+  floor = "?wall"
+  ceil  = "?floor"
+
+  tag = ""
+  special = ""
+  light = ""
+  style = ""
+  message = ""
+  wait = ""
+  targetname = ""
+}
+
+
+CSG_BRUSHES =
+{
+  solid  = 1
+  detail = 1
+  clip   = 1
+
+  sky     = 1
+  liquid  = 1
+  trigger = 1
+  light   = 1
+}
+
+
 WADFAB_ENTITIES =
 {
   -- monster spots
@@ -887,6 +917,9 @@ end
 ------------------------------------------------------------------------
 
 
+DOOM_TWO_SIDED_FLAG = 0x04
+
+
 function Fab_load_wad(name)
 
   local fab
@@ -934,7 +967,7 @@ end
     local tex
 
     -- if line is one-sided, use the middle texture
-    if line and bit.band(flags, DOOM_LINE_FLAGS.two_sided) == 0 then
+    if line and bit.band(flags, DOOM_TWO_SIDED_FLAG) == 0 then
       tex = mid_tex
 
     elseif pass == 1 then
@@ -1570,7 +1603,7 @@ function Fabricate_at(R, main_skin, T, skins)
   local fab = Fabricate(main_skin, T, skins)
 
   if R then
-    Room_distribute_spots(R, Fab_read_spots(fab))
+--!!!!!! FIXME    Room_distribute_spots(R, Fab_read_spots(fab))
   end
 
   if main_skin.add_sky then

@@ -2241,11 +2241,20 @@ gui.printf("do_teleport\n")
 
         Trans.entity(LOCK.item, mx, my, z_top)
       else
-        if rand.odds(98) then
-          local skin = { floor=THEME.pedestal_mat }
-          Build.pedestal(S, z1, skin)
+        if rand.odds(2) then
+          -- bare item
+          Trans.entity(LOCK.item, mx, my, z1)
+        else
+          local skin1 = GAME.SKINS["Item_Pedestal"]
+          assert(skin1)
+
+          local skin0 = { wall=w_tex }
+          local skin2 = { item=LOCK.item }
+
+          local T = Trans.spot_transform(mx, my, z1, 2) -- FIXME: spot_dir
+
+          Fabricate_at(R, skin1, T, { skin0, skin1, skin2 })
         end
-        Trans.entity(LOCK.item, mx, my, z1)
       end
 
     elseif R.purpose == "SWITCH" then
