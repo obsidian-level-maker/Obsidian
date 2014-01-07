@@ -670,7 +670,7 @@ function Player_weapon_palettes()
   local High    = 2.2
   local Highest = High ^ 2
   local Low     = 1 / High
-  local Lowest  = 1 / Lowest
+  local Lowest  = 1 / Highest
 
 
   local function initial_weapons()
@@ -696,37 +696,33 @@ function Player_weapon_palettes()
   end
 
 
+  local function insert_multiple(list, count, what)
+    for i = 1, count do
+      table.insert(list, what)
+    end
+  end
+
+
   local function decide_quantities(total)
     local list = {}
 
-    -- Note: result list is often longer than strictly required
+    -- Note: result is often longer than strictly required
 
-    if total >= 10 then
-      table.insert(list, Lowest)
-      table.insert(list, Highest)
+    local num_low  = int(total / 4 + gui.random())
+    local num_high = int(total / 4 + gui.random())
+    local num_very = int(total / 6 + gui.random())
 
-      total = total - 2
-    end
+    local num_mid  = total - num_low - num_high - num_very + 1
 
-    if total >= 4 then
-      table.insert(list, Lowest)
-      table.insert(list, Highest)
-      table.insert(list, Normal)
-
-      total = total - 2
-    end
-
-    local  low_num = int(total / 3 + gui.random())
-    local high_num = int(total / 3 + gui.random())
-    local  mid_num = total - (low_num + high_num)
-
-    for L = 1,  low_num do table.insert(list, Low) end
-    for H = 1, high_num do table.insert(list, High) end
-    for M = 1,  mid_num do table.insert(list, Middle) end
+    insert_multiple(list, num_very, Lowest)
+    insert_multiple(list, num_low,  Low)
+    insert_multiple(list, num_mid,  Middle)
+    insert_multiple(list, num_high, High)
+    insert_multiple(list, num_very, Highest)
 
     assert(#list >= total)
 
-    rand.shuffle(list)
+--  gui.debugf("weapon quantities:\n%s\n", table.tostr(list))
 
     return list
   end
