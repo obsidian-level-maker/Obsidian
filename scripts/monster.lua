@@ -655,10 +655,37 @@ function Monsters_zone_palettes()
   for i = 1, #LEVEL.zones do
     local Z = LEVEL.zones[i]
 
-    Z.monster_pal = zone_pals[i].pal
+    Z.mon_palette = zone_pals[i].pal
 
-    gui.debugf("Monster palette in ZONE_%d\n", Z.id)
-    dump_palette(Z.monster_pal)
+    gui.debugf("Monster palette in ZONE_%d:\n", Z.id)
+    dump_palette(Z.mon_palette)
+  end
+end
+
+
+
+function Player_weapon_palettes()
+
+  local function gen_palette()
+    -- FIXME
+    return LEVEL.weap_prefs or THEME.weap_prefs or {}
+  end
+
+
+  local function dump_palette(pal)
+    each weap,qty in pal do
+      gui.debugf("   %s  * %1.2f\n", weap, qty)
+    end
+  end
+
+
+  ---| Player_weapon_palettes |---
+
+  each Z in LEVEL.zones do
+    Z.weap_palette = gen_palette()
+
+    gui.debugf("Weapon palette in ZONE_%d:\n", Z.id)
+    dump_palette(Z.weap_palette)
   end
 end
 
@@ -1478,7 +1505,7 @@ function Monsters_in_room(R)
     end
 
     -- zone quantities
-    d = d * (R.zone.monster_pal[mon] or 1)
+    d = d * (R.zone.mon_palette[mon] or 1)
 
     -- room size check
     d = d * room_size_factor(mon) ^ 0.5
@@ -1612,7 +1639,7 @@ function Monsters_in_room(R)
     local list = {}
     gui.debugf("Monster list:\n")
 
-    each mon,qty in R.zone.monster_pal do
+    each mon,qty in R.zone.mon_palette do
       local prob = prob_for_mon(mon, info)
 
       prob = prob * qty
@@ -2373,20 +2400,6 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   end
 
 
-  local function OLD__adjust_health(R, qty)
-    -- perform calculation on a per-seed basis
-    local svol = R.svolume or 10
-
-    qty = qty / svol
-
-    if qty > 64 then qty = 64 end
-    if qty > 32 then qty = 32 + (qty - 32) / 4 end
-    if qty > 16 then qty = 16 + (qty - 16) / 2 end
-
-    return qty * svol
-  end
-
-
   local function user_adjust_result(stats)
     -- apply the user's health/ammo adjustments here
 
@@ -2438,14 +2451,9 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       gui.debugf("  %s\n", info.name)
     end
 
-    local weap_prefs = LEVEL.weap_prefs or THEME.weap_prefs or {}
-
-    Fight_Simulator(mon_list, weap_list, weap_prefs, stats)
+    Fight_Simulator(mon_list, weap_list, R.zone.weap_palette, stats)
 
 --  gui.debugf("raw result = \n%s\n", table.tostr(stats,1))
-
----###  -- normalize very large quantities of health 
----###  stats.health = adjust_health(R, stats.health)
 
     user_adjust_result(stats)
 
@@ -2570,6 +2578,8 @@ function Monster_make_battles()
   Monsters_init()
   Monsters_global_palette()
   Monsters_zone_palettes()
+
+  Player_weapon_palettes()
 
   Levels_invoke_hook("make_battles", LEVEL.seed)
 
