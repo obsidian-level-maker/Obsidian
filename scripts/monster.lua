@@ -628,7 +628,7 @@ function Monsters_zone_palettes()
 
   local function dump_palette(pal)
     each mon,qty in pal do
-      gui.debugf("   %s  * %1.2f\n", mon, qty)
+      gui.debugf("   %-12s* %1.2f\n", mon, qty)
     end
 
     gui.debugf("   TOUGHNESS: %d\n", palette_toughness(pal))
@@ -666,11 +666,11 @@ end
 
 function Player_weapon_palettes()
 
-  local Middle  = 1.0
-  local High    = 2.2
-  local Highest = High ^ 2
-  local Low     = 1 / High
-  local Lowest  = 1 / Highest
+  local Middle  = 1.00
+  local High    = 2.20
+  local Highest = 4.80
+  local Low     = 0.44
+  local Lowest  = 0.21
 
 
   local function initial_weapons()
@@ -708,21 +708,22 @@ function Player_weapon_palettes()
 
     -- Note: result is often longer than strictly required
 
-    local num_low  = int(total / 4 + gui.random())
-    local num_high = int(total / 4 + gui.random())
-    local num_very = int(total / 6 + gui.random())
+    local num_low  = int(total / 2 + gui.random())
+    local num_high = total - num_low
 
-    local num_mid  = total - num_low - num_high - num_very + 1
-
-    insert_multiple(list, num_very, Lowest)
     insert_multiple(list, num_low,  Low)
-    insert_multiple(list, num_mid,  Middle)
     insert_multiple(list, num_high, High)
-    insert_multiple(list, num_very, Highest)
+
+    if total >= 2 then
+      local num_very = int(total / 6 + gui.random())
+
+      insert_multiple(list, num_very, Lowest)
+      insert_multiple(list, num_very, Highest)
+    end
 
     assert(#list >= total)
 
---  gui.debugf("weapon quantities:\n%s\n", table.tostr(list))
+    rand.shuffle(list)
 
     return list
   end
@@ -740,20 +741,38 @@ function Player_weapon_palettes()
 
 
   local function gen_palette(got_weaps)
-    if PARAM.hexen_weapons then  -- TODO: support Hexen
-      return {}
-    end
+    local total = table.size(got_weaps)
 
-    local count = table.size(got_weaps)
-
-    if table.size(got_weaps) < 2 then
+    -- TODO: support Hexen
+    if total < 2 or PARAM.hexen_weapons then
       return {}
     end
 
     local pal = {}
 
-    -- FIXME
+    -- decide number of "normal" weapons : at least one!
+    local normal_num = int(total / 3 + gui.random())
+    if normal_num < 1 then normal_num = 1 end
 
+    got_weaps = table.copy(got_weaps)
+
+    for n = 1, normal_num do
+      local name = rand.key_by_probs(got_weaps)
+
+      pal[name] = Middle
+      got_weaps[name] = nil
+    end
+
+    -- decide what to give everything else
+    total = total - normal_num
+
+    local quants = decide_quantities(total)
+
+    each name,_ in got_weaps do
+      pal[name] = table.remove(quants, 1)
+    end
+
+    -- apply level and theme preferences
     apply_pref_table(pal, LEVEL.weap_prefs)
     apply_pref_table(pal, THEME.weap_prefs)
 
@@ -763,14 +782,16 @@ function Player_weapon_palettes()
 
   local function dump_palette(pal)
     each weap,qty in pal do
-      gui.debugf("   %s  * %1.2f\n", weap, qty)
+      gui.debugf("   %-9s* %1.2f\n", weap, qty)
     end
   end
 
 
   ---| Player_weapon_palettes |---
 
-  local got_weaps = initial_weapons()
+  -- Note: not using initial_weapons() here, they tend to be melee
+  --       weapons and it sucks to promote them.
+  local got_weaps = {}
 
   each Z in LEVEL.zones do
     add_weapons_from_zone(Z, got_weaps)
