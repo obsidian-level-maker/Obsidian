@@ -503,6 +503,8 @@ function Quest_add_weapons()
 
     table.insert(LEVEL.start_room.weapons, name)
 
+    LEVEL.added_weapons[name] = true
+
     gui.debugf("Fallback start weapon: %s\n", name)
   end
 

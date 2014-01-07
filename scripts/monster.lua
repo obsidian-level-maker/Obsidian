@@ -666,9 +666,102 @@ end
 
 function Player_weapon_palettes()
 
-  local function gen_palette()
+  local Middle  = 1.0
+  local High    = 2.2
+  local Highest = High ^ 2
+  local Low     = 1 / High
+  local Lowest  = 1 / Lowest
+
+
+  local function initial_weapons()
+    -- find with weapons the player always owns
+    local list = {}
+
+    each CL,hmodel in LEVEL.hmodels do
+      each name,_ in hmodel.weapons do
+        list[name] = 1
+      end
+    end
+
+    return list
+  end
+
+
+  local function add_weapons_from_zone(Z, list)
+    each R in Z.rooms do
+      each name in R.weapons do
+        list[name] = 1
+      end
+    end
+  end
+
+
+  local function decide_quantities(total)
+    local list = {}
+
+    -- Note: result list is often longer than strictly required
+
+    if total >= 10 then
+      table.insert(list, Lowest)
+      table.insert(list, Highest)
+
+      total = total - 2
+    end
+
+    if total >= 4 then
+      table.insert(list, Lowest)
+      table.insert(list, Highest)
+      table.insert(list, Normal)
+
+      total = total - 2
+    end
+
+    local  low_num = int(total / 3 + gui.random())
+    local high_num = int(total / 3 + gui.random())
+    local  mid_num = total - (low_num + high_num)
+
+    for L = 1,  low_num do table.insert(list, Low) end
+    for H = 1, high_num do table.insert(list, High) end
+    for M = 1,  mid_num do table.insert(list, Middle) end
+
+    assert(#list >= total)
+
+    rand.shuffle(list)
+
+    return list
+  end
+
+
+  local function apply_pref_table(pal, prefs)
+    if not prefs then return end
+
+    each name,factor in prefs do
+      if pal[name] then
+         pal[name] = pal[name] * factor
+      end
+    end
+  end
+
+
+  local function gen_palette(got_weaps)
+    if PARAM.hexen_weapons then  -- TODO: support Hexen
+      return {}
+    end
+
+    local count = table.size(got_weaps)
+
+    if table.size(got_weaps) < 2 then
+      return {}
+    end
+
+    local pal = {}
+
     -- FIXME
-    return LEVEL.weap_prefs or THEME.weap_prefs or {}
+
+    apply_pref_table(pal, LEVEL.weap_prefs)
+    apply_pref_table(pal, THEME.weap_prefs)
+
+    return pal
   end
 
 
@@ -681,8 +774,12 @@ function Player_weapon_palettes()
 
   ---| Player_weapon_palettes |---
 
+  local got_weaps = initial_weapons()
+
   each Z in LEVEL.zones do
-    Z.weap_palette = gen_palette()
+    add_weapons_from_zone(Z, got_weaps)
+
+    Z.weap_palette = gen_palette(got_weaps)
 
     gui.debugf("Weapon palette in ZONE_%d:\n", Z.id)
     dump_palette(Z.weap_palette)
