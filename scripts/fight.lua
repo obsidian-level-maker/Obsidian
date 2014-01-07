@@ -109,22 +109,16 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
     -- determine probability for each weapon
     local probs = {}
 
-    for idx,W in ipairs(weapons) do
-      probs[idx] = assert(W.pref)
+    each W in weapons do
+      local pref = W.pref * (weap_prefs[W.name] or 1)
 
-      -- support a 'pref_equiv' name, useful for modules
-      for pass = 1,2 do
-        local name = sel(pass==1, W.name, W.pref_equiv)
-        if name then
-          probs[idx] = probs[idx] * (weap_prefs[name] or 1)
+      -- handle monster-based weapon preferences
+      if first_mon.weap_prefs then
+        pref = pref * (first_mon.weap_prefs[W.name] or 1)
+      end
 
-          -- handle monster-based weapon preferences
-          if first_mon.weap_prefs then
-            probs[idx] = probs[idx] * (first_mon.weap_prefs[name] or 1)
-          end
-        end
-      end -- for pass
-    end -- for W
+      table.insert(probs, pref)
+    end
 
     assert(#probs == #weapons)
 
