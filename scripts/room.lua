@@ -107,7 +107,8 @@ function ROOM_CLASS.new()
 --    goal_spots = {}
 --    mon_spots  = {}
 --    item_spots = {}
---    cage_spots = {}
+
+    cage_spots = {}
 
     closets = {}
     prefabs = {}
@@ -236,6 +237,41 @@ function ROOM_CLASS.find_guard_spot(R)
 --]]
 
   return nil  -- none
+end
+
+function ROOM_CLASS.furthest_dist_from_entry(R)
+  if not R.entry_coord then
+    -- rough guess
+    local S1 = SEEDS[R.sx1][R.sy1]
+    local S2 = SEEDS[R.sx2][R.sy2]
+
+    local w = S2.x2 - S1.x1
+    local h = S2.y2 - S1.y1
+
+    return math.max(w, h)
+  end
+
+  local result = 512
+
+  local ex = R.entry_coord.x
+  local ey = R.entry_coord.y
+
+  for sx = R.sx1, R.sx2 do
+  for sy = R.sy1, R.sy2 do
+    local S = SEEDS[sx][sy]
+
+    if S.room != R then continue end
+
+    local ox = sel(S.x1 < ex, S.x1, S.x2)
+    local oy = sel(S.y1 < ey, S.y1, S.y2)
+
+    local dist = geom.dist(ex, ey, ox, oy)
+
+    result = math.max(result, dist)
+  end
+  end
+
+  return result
 end
 
 
@@ -3105,6 +3141,43 @@ function Room_find_monster_spots(R)
 end
 
 
+function Room_find_ambush_focus(R)
+  -- Note: computes 'entry_coord' too
+
+  -- FIXME: handle teleporter entry
+
+  local C = R.entry_conn
+
+  if not C then return end
+  if C.kind == "teleporter" then return end
+
+  local S, side
+  if C.R1 == R then
+    S = C.S1
+    side = C.dir
+  else
+    S = C.S2
+    side = 10 - C.dir
+  end
+
+  assert(S)
+  assert(S.floor_h)
+
+  local mx, my = S:mid_point()
+
+  local dx, dy = geom.delta(side)
+  local angle  = geom.ANGLES[10 - side]
+
+  mx = mx + dx * 48
+  my = my + dy * 48
+
+  R.entry_coord = { x=mx, y=my, z=S.floor_h + 40, angle=angle }
+
+  R.ambush_focus = R.entry_coord
+end
+
+
+
 function Room_build_all()
 
   gui.printf("\n--==| Build Rooms |==--\n\n")
@@ -3148,7 +3221,7 @@ function Room_build_all()
   each R in LEVEL.rooms do
     Room_find_monster_spots(R)
     Room_find_pickup_spots(R)
-    R.cage_spots = {}
+    Room_find_ambush_focus(R)
   end
 end
 

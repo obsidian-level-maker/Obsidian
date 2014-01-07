@@ -1313,48 +1313,28 @@ function Monsters_in_room(R)
   end
 
 
-  local function calc_central_dist(mx, my, K)
+  local function calc_central_dist(mx, my)
+    -- TODO: improve this
 
-    -- if K is not a 3x3 "room section", pick a neighbor that is
-    local N1, N2
+    local rx1 = SEEDS[R.sx1][R.sy1].x1
+    local ry1 = SEEDS[R.sx1][R.sy1].y1
+    local rx2 = SEEDS[R.sx2][R.sy2].x2
+    local ry2 = SEEDS[R.sx2][R.sy2].y2
 
--- FIXME !!!!
-if K.sw == 1 or K.sh == 1 then
-  return gui.random() * 0.6
-end
+    local cent_x, cent_y = geom.box_mid(rx1, ry1, rx2, ry2)
 
-    if K.sw == 1 then
-      N1 = K:touch_neighbor(4)
-      N2 = K:touch_neighbor(6)
-
-    elseif K.sh == 1 then
-      N1 = K:touch_neighbor(2)
-      N2 = K:touch_neighbor(8)
-    end
-
-    if N1 and N1.room != R then N1 = nil end
-    if N2 and N2.room != R then N2 = nil end
-
-    if N1 and N2 then
-      K = rand.sel(50, N1, N2)
-    else
-      K = N1 or N2 or K
-    end
-
-    local kx, ky = geom.box_mid(K:get_coords())
-
-    local dist = geom.dist(kx, ky, mx, my)
+    local dist = geom.dist(cent_x, cent_y, mx, my)
 
     -- normalize result to be in units of roomy sections
-    return dist / (math.max(K.sw, K.sh) * SEED_SIZE)
+    return dist / (SEED_SIZE * 4)
   end
 
 
   local function mark_ambush_spots()
     if R.kind == "hallway" then return end
+    if R.kind == "cave" then return end
 
-    -- this also determines an angle facing the ambush focus,
-    -- as well as a 'central_dist' value.
+    -- this also determines the 'central_dist' field of spots
 
     each spot in R.mon_spots do
       -- already processed?
@@ -1362,29 +1342,26 @@ end
 
       spot.marked = true
 
-      local K = R:section_for_spot(spot)
-
-      if not K then continue end
-
-      spot.section = K
-
       local mx, my = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
       local mz = spot.z1 + 50
 
-      spot.central_dist = calc_central_dist(mx, my, K)
+      spot.central_dist = calc_central_dist(mx, my)
 
-      if not K.ambush_focus then continue end
+      -- TODO: more than one ambush focus per room
+      local ambush_focus = R.ambush_focus
 
-      local ax = K.ambush_focus.x
-      local ay = K.ambush_focus.y
-      local az = K.ambush_focus.z
+      if not ambush_focus then continue end
+
+      local ax = ambush_focus.x
+      local ay = ambush_focus.y
+      local az = ambush_focus.z
 
       -- too close?
       if geom.dist(mx, my, ax, ay) < 80 then continue end
 
       spot.ambush_angle = geom.calc_angle(ax - mx, ay - my)
 
-      local ang = K.ambush_focus.angle
+      local ang = ambush_focus.angle
 
       -- check TWO points separated perpedicular to the entry angle
       local pdx = math.sin(ang * math.pi / 180) * 48
@@ -1393,7 +1370,7 @@ end
       if gui.trace_ray(mx, my, mz, ax + pdx, ay + pdy, az, "v") and
          gui.trace_ray(mx, my, mz, ax - pdx, ay - pdy, az, "v")
       then
-        spot.ambush = K
+        spot.ambush = ambush_focus
       end
     end
   end
@@ -1808,7 +1785,7 @@ end
       deaf = rand.odds(65)
     elseif spot.ambush then
       deaf  = rand.odds(95)
-      focus = assert(spot.ambush.ambush_focus)
+      focus = spot.ambush
     else
       deaf = rand.odds(35)
     end
@@ -1947,11 +1924,6 @@ end
           dist = math.abs(dist - R.baddie_dists[mon])
 
           spot.find_cost = dist * 1.8
-
-        -- prefer a different section than the last non-group spot
-        -- (for better monster distribution in large rooms)
-        elseif (R.last_spot_section and spot.section == R.last_spot_section) then
-          spot.find_cost = spot.find_cost + 2
         end
       end 
 
@@ -2102,7 +2074,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     R.mon_spots = Monsters_split_spots(R.mon_spots, r_max * 2)
 
     if r_max < 100 then
---!!!!      mark_ambush_spots()
+      mark_ambush_spots()
     end
 
     -- collect monsters that match the size range
