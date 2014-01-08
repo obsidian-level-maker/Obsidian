@@ -1006,19 +1006,19 @@ function Room_border_up()
     end
 
     -- determine height of window
-    if (min_c - max_f) >= 192 and rand.odds(30) and info.outdoor then
+    if (min_c - max_f) >= 192 and rand.odds(30 * 0) and info.outdoor then
       info.z1 = max_f + 64
       info.z2 = min_c - 64
       info.is_tall = true
     elseif (min_c - max_f) >= 160 and rand.odds(70) and info.outdoor then
-      info.z1 = max_f + 32
+      info.z1 = max_f
       info.z2 = min_c - 24
       info.is_tall = true
-    elseif (max_f1 < max_f2) and rand.odds(30) then
-      info.z1 = min_c - 80
+    elseif (max_f1 < max_f2) and rand.odds(30 * 0) then  --!!!!
+      info.z1 = min_c - 112
       info.z2 = min_c - 32
     else
-      info.z1 = max_f + 32
+      info.z1 = max_f
       info.z2 = max_f + 80
     end
 
@@ -2353,10 +2353,28 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
     local skin0 = { wall=w_tex }
 
-    local deep = 16
+    local deep = assert(skin1.deep)
 
     local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, S.floor_h,
                                    side, 0, 192, deep, 0)
+
+    Fabricate_at(R, skin1, T, { skin0, skin1 })
+  end
+
+
+  local function do_window(S, side, w_tex)
+    local skin1 = GAME.SKINS["Window_tiny_pair"]
+    assert(skin1)
+
+    local skin0 = { wall=w_tex, outer=R.facade or w_tex }
+
+    local deep = assert(skin1.deep)
+    deep = int(deep / 2)
+
+    local B = S.border[side]
+
+    local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, B.win_z1,
+                                   side, 0, 192, deep, deep)
 
     Fabricate_at(R, skin1, T, { skin0, skin1 })
   end
@@ -2539,12 +2557,8 @@ do return end
       end
 
       if B_kind == "window" then
-        local B = S.border[side]
-        local skin = { wall=w_tex, side_t=THEME.window_side_mat or w_tex, facade=R.facade or w_tex }
-        -- skin.floor = f_tex
+        do_window(S, side, w_tex)
 
-        Build.window(S, side, B.win_width, B.win_mid_w,
-                     B.win_z1, B.win_z2, skin)
         shrink_both(side, 4)
       end
 
