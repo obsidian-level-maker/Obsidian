@@ -81,9 +81,11 @@ WADFAB_LIGHT_DELTAS =
   [12] =  48  -- blink fast, sync
   [3]  =  48  -- blink slow
   [13] =  48  -- blink slow, sync
-  [8]  =  96  -- oscillates
   [17] =  48  -- flickers
+
+  [8]  =  96  -- oscillates
 }
+
 
 WADFAB_REACHABLE = 992
 WADFAB_MOVER     = 995

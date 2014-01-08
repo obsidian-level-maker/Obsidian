@@ -1006,20 +1006,15 @@ function Room_border_up()
     end
 
     -- determine height of window
-    if (min_c - max_f) >= 192 and rand.odds(30 * 0) and info.outdoor then
-      info.z1 = max_f + 64
-      info.z2 = min_c - 64
-      info.is_tall = true
-    elseif (min_c - max_f) >= 160 and rand.odds(70) and info.outdoor then
+    if (min_c - max_f) >= 160 and rand.odds(70+30) and info.outdoor then
       info.z1 = max_f
-      info.z2 = min_c - 24
+      info.z2 = min_c
       info.is_tall = true
-    elseif (max_f1 < max_f2) and rand.odds(30 * 0) then  --!!!!
+    -- !!! FIXME short windows which are up high
+    elseif (max_f1 < max_f2) and rand.odds(30 * 0) then
       info.z1 = min_c - 112
-      info.z2 = min_c - 32
     else
       info.z1 = max_f
-      info.z2 = max_f + 80
     end
 
     -- determine width & doubleness
@@ -1060,10 +1055,10 @@ function Room_border_up()
       S.border[side].win_width = info.width
       S.border[side].win_mid_w = info.mid_w
       S.border[side].win_z1    = info.z1
-      S.border[side].win_z2    = info.z2
+      S.border[side].win_z2    = info.z2  -- can be absent (=> non-fitted)
 
       N.border[10-side].kind = "nothing"
-    end -- for S
+    end
   end
 
   local function pick_best_side(poss)
@@ -2382,7 +2377,12 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
 
   local function do_window(S, side, w_tex)
-    local skin1 = GAME.SKINS["Window_tiny_pair"]
+    local B = S.border[side]
+
+    local fab_name = "Window_tiny_pair"
+    if B.win_z2 then fab_name = "Window_tall_pair" end
+
+    local skin1 = GAME.SKINS[fab_name]
     assert(skin1)
 
     local o_tex = outer_tex(S, side, w_tex)
@@ -2391,10 +2391,12 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local deep = assert(skin1.deep)
     deep = int(deep / 2)
 
-    local B = S.border[side]
-
     local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, B.win_z1,
                                    side, 0, 192, deep, deep)
+
+    if B.win_z2 then
+      T.fitted_z = B.win_z2 - B.win_z1
+    end
 
     Fabricate_at(R, skin1, T, { skin0, skin1 })
   end

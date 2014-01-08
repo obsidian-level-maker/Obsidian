@@ -20,7 +20,7 @@ DOOM.SKINS.Window_tiny_pair =
 -- Tall version (expands vertically)
 --
 
-DOOM.SKINS.Window_tiny_tall =
+DOOM.SKINS.Window_tall_pair =
 {
   file   = "window/tiny_pair.wad"
   where  = "edge"
@@ -30,7 +30,7 @@ DOOM.SKINS.Window_tiny_tall =
   bound_z1 = 0
   bound_z2 = 112
 
-  z_fit = { 48, 64 }
+  z_fit = { 64, 88 }
 
   prob = 90
 }
