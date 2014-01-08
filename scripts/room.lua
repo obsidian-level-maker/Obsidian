@@ -2169,24 +2169,24 @@ gui.printf("do_teleport\n")
   end
 
 
-  local function player_angle(S)
+  local function player_dir(S)
     if R.sh > R.sw then
       if S.sy > (R.sy1 + R.sy2) / 2 then 
-        return 270
+        return 2
       else
-        return 90
+        return 8
       end
     else
       if S.sx > (R.sx1 + R.sx2) / 2 then 
-        return 180
+        return 4
       else
-        return 0
+        return 6
       end
     end
   end
 
 
-  local function do_big_item(item, mx, my, z)
+  local function content_big_item(item, mx, my, z)
     local skin1 = GAME.SKINS["Item_Pedestal"]
     assert(skin1)
 
@@ -2194,6 +2194,19 @@ gui.printf("do_teleport\n")
     local skin2 = { item=item }
 
     local T = Trans.spot_transform(mx, my, z, 2) -- TODO: spot_dir
+
+    Fabricate_at(R, skin1, T, { skin0, skin1, skin2 })
+  end
+
+
+  local function content_start(mx, my, z, dir)
+    local skin1 = GAME.SKINS["Start_basic"]
+    assert(skin1)
+
+    local skin0 = { wall=R.main_tex }
+    local skin2 = { }
+
+    local T = Trans.spot_transform(mx, my, z, 10 - dir)
 
     Fabricate_at(R, skin1, T, { skin0, skin1, skin2 })
   end
@@ -2208,8 +2221,7 @@ gui.printf("do_teleport\n")
     local mx, my = S:mid_point()
 
     if R.purpose == "START" then
-      local angle = player_angle(S)
-      local dist = 56
+      local dir = player_dir(S)
 
       -- TODO: fix this
       if false and PARAM.raising_start and R.svolume >= 20 and
@@ -2231,25 +2243,17 @@ gui.printf("do_teleport\n")
         S.raising_start = true
         R.has_raising_start = true
       else
-        local skin = { floor="O_BOLT", x_offset=36, y_offset=-8, peg=1 }
-        Build.pedestal(S, z1, skin)
-      end
-
-      Trans.entity("player1", mx, my, z1, { angle=angle })
-
-      if GAME.ENTITIES["player2"] then
-        Trans.entity("player2", mx - dist, my, z1, { angle=angle })
-        Trans.entity("player3", mx + dist, my, z1, { angle=angle })
-        Trans.entity("player4", mx, my - dist, z1, { angle=angle })
+        content_start(mx, my, z1, dir)
       end
 
       -- save position for the demo generator
       LEVEL.player_pos =
       {
-        S=S, R=R, x=mx, y=my, z=z1, angle=angle,
+        S=S, R=R, x=mx, y=my, z=z1, angle=angle
       }
 
       -- never put monsters next to the start spot
+      -- FIXME: use a exclsuion zone
       for dir = 2,8,2 do
         local N = S:neighbor(dir)
         if N and N.room == R then
@@ -2296,7 +2300,7 @@ gui.printf("do_teleport\n")
           -- bare item
           Trans.entity(LOCK.item, mx, my, z1)
         else
-          do_big_item(LOCK.item, mx, my, z1)
+          content_big_item(LOCK.item, mx, my, z1)
         end
       end
 
@@ -2336,7 +2340,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
       Trans.entity(weapon, mx, my, z_top)
     else
-      do_big_item(weapon, mx, my, z1)
+      content_big_item(weapon, mx, my, z1)
     end
 
     gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", weapon, mx, my, z1)
