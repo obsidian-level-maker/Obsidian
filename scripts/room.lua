@@ -2186,6 +2186,25 @@ gui.printf("do_teleport\n")
   end
 
 
+  local function outer_tex(S, dir, w_tex)
+    local N = S:neighbor(dir)
+
+    if not (N and N.room) then
+      return w_tex
+    elseif N.room.hallway then
+      return LEVEL.hall_tex
+    elseif N.room.stairwell then
+      return LEVEL.well_tex
+    elseif not N.room.is_outdoor and N.room != R.parent then
+      return N.w_tex or N.room.main_tex
+    elseif N.room.is_outdoor and not (R.is_outdoor or R.kind == "cave") then
+      return R.facade or w_tex
+    else
+      return w_tex
+    end
+  end
+
+
   local function content_big_item(item, mx, my, z)
     local skin1 = GAME.SKINS["Item_Pedestal"]
     assert(skin1)
@@ -2366,7 +2385,8 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local skin1 = GAME.SKINS["Window_tiny_pair"]
     assert(skin1)
 
-    local skin0 = { wall=w_tex, outer=R.facade or w_tex }
+    local o_tex = outer_tex(S, side, w_tex)
+    local skin0 = { wall=w_tex, outer=o_tex or w_tex }
 
     local deep = assert(skin1.deep)
     deep = int(deep / 2)
@@ -2478,17 +2498,7 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLOOR1_7" end
     local o_tex = w_tex
 
     if S.conn_dir then
-      local N = S:neighbor(S.conn_dir)
-
-      if N.room.hallway then
-        o_tex = LEVEL.hall_tex
-      elseif N.room.stairwell then
-        o_tex = LEVEL.well_tex
-      elseif not N.room.is_outdoor and N.room != R.parent then
-        o_tex = N.w_tex or N.room.main_tex
-      elseif N.room.is_outdoor and not (R.is_outdoor or R.kind == "cave") then
-        o_tex = R.facade or w_tex
-      end
+      o_tex = outer_tex(S, S.conn_dir, w_tex)
     end
 
 
