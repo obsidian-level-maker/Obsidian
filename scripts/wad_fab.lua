@@ -1603,7 +1603,7 @@ function Fabricate_at(R, main_skin, T, skins)
   local fab = Fabricate(main_skin, T, skins)
 
   if R then
---!!!!!! FIXME    Room_distribute_spots(R, Fab_read_spots(fab))
+    Room_distribute_spots(R, Fab_read_spots(fab))
   end
 
   if main_skin.add_sky then

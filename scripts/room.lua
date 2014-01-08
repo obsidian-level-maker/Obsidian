@@ -104,10 +104,10 @@ function ROOM_CLASS.new()
     sections = {}
     weapons = {}
 
---    goal_spots = {}
---    mon_spots  = {}
---    item_spots = {}
-
+    mon_spots  = {}
+    item_spots = {}
+    big_spots  = {}
+    goal_spots = {}
     cage_spots = {}
 
     closets = {}
@@ -2821,6 +2821,47 @@ if border.is_secret then door_name = "bigdoor4" end
 end
 
 
+function Room_distribute_spots(R, list)
+  local seen = {}
+
+  each spot in list do
+    seen[spot.kind] = 1
+
+    if spot.kind == "cage" or spot.kind == "trap" then
+      table.insert(R.cage_spots, spot)
+    elseif spot.kind == "pickup" or spot.kind == "big_item" then
+      table.insert(R.item_spots, spot)
+    elseif spot.kind == "goal" then
+      if R.kind == "hallway" then
+        error("Goal spot used in hallway prefab")
+      end
+      table.insert(R.goal_spots, spot)
+    else
+      table.insert(R.mon_spots, spot)
+    end
+  end
+
+  -- 1. when no big item spots, convert goal spots
+  -- 2. when no small item spots, convert monster spots
+
+  each spot in list do
+
+    if not seen["big_item"] and spot.kind == "goal" then
+      local new_spot = table.copy(spot)
+      new_spot.kind = "big_item"
+      table.insert(R.item_spots, new_spot)
+    end
+
+    if not seen["pickup"] and spot.kind == "monster" then
+      local new_spot = table.copy(spot)
+      new_spot.kind = "pickup"
+      table.insert(R.item_spots, new_spot)
+    end
+
+  end
+end
+
+
 function Room_find_pickup_spots(R)
 
   -- Creates a map over the room of which seeds we can place
@@ -2966,13 +3007,7 @@ function Room_find_pickup_spots(R)
 
   ---| Room_find_pickup_spots |---
 
-  -- already there?? (caves)
-  if R.item_spots then
-    return
-  end
-
-  R.big_spots  = {}
-  R.item_spots = {}
+  if R.kind == "cave" then return end
 
   if R.kind == "stairwell" then return end
   if R.kind == "smallexit" then return end
@@ -3127,12 +3162,7 @@ function Room_find_monster_spots(R)
 
   ---| Room_find_monster_spots |---
 
-  -- already there?? (caves)
-  if R.mon_spots then
-    return
-  end
-
-  R.mon_spots = {}
+  if R.kind == "cave" then return end
 
   if R.kind == "stairwell" then return end
   if R.kind == "smallexit" then return end
