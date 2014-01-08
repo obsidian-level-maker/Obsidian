@@ -821,13 +821,13 @@ function Room_border_up()
 
     else -- R1 indoor
 
-      if R2.parent == R1 and not R2.is_outdoor then
-        S.border[side].kind = "nothing"
-        return
-      end
-
       S.border[side].kind = "wall"
       S.thick[side] = 16
+
+      if R2.parent == R1 then
+        S.border[side].kind = "facade"
+        S.border[side].facade = R2.main_tex
+      end
 
       -- liquid arches are a kind of window
       if S.kind == "liquid" and N.kind == "liquid" and
