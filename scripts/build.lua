@@ -481,7 +481,7 @@ function Trans.edge_transform(x1,y1, x2,y2, z, side, long1, long2, d_in, d_out)
   if side == 4 then y2 = y1 + long2 ; y1 = y1 + long1 end
   if side == 6 then y1 = y2 - long2 ; y2 = y2 - long1 end
 
-  return Trans.box_transform(x1,y1, x2,y2, z, 10 - side)
+  return Trans.box_transform(x1,y1, x2,y2, z, side)
 end
 
 
