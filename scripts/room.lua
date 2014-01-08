@@ -2379,8 +2379,10 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   local function do_window(S, side, w_tex)
     local B = S.border[side]
 
-    local fab_name = "Window_tiny_pair"
-    if B.win_z2 then fab_name = "Window_tall_pair" end
+--    local fab_name = "Window_tiny_pair"
+--    if B.win_z2 then fab_name = "Window_tall_pair" end
+    local fab_name = "Window_wide_short"
+    if B.win_z2 then fab_name = "Window_wide_tall" end
 
     local skin1 = GAME.SKINS[fab_name]
     assert(skin1)
