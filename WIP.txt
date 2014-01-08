@@ -6,12 +6,11 @@ WORK IN PROGRESS
 3.57 Merger
 -----------
 
->>>  fix weapons
-     --->  fall_back_start_weapon()
++  get outdoor bars working again
 
->>>  get outdoor bars working again
+-  put stuff in storage rooms and secrets
 
->>>  put stuff in storage rooms and secrets
+-  outdoor corners : 16x16 wadfab
 
 
 NICE_ITEMS table
@@ -21,26 +20,19 @@ NICE_ITEMS table
   -  powerups: invis, goggles, invul, etc...
 
 
--  find_guard_spot
-
--  ambush spots
-
-+  intrusions: like "junking" a side, but connects two other rooms
-
-
-+  get wad-fabs working again
-
 -  add light sources
 
--  logic to ensure Mastermind is added (esp. in guarded rooms)
-
-
-+  weapon pref palettes
-
--  ensure normal doors are usually monster-openable
 
 -  ability to centre doors (on two seeds), stretch arches (multiple seeds)
 
+-  ensure normal doors are usually monster-openable
+
 -  ensure secret doors cannot be opened by monsters
    (maybe 1% chance)
+
+
++  intrusions: like "junking" a side, but connects two other rooms
+
+IDEA: for Lighting, use limited set (96,128,160,192) from light sources,
+      but allow brushes to add 16/32/48/64 on top of that.
 
