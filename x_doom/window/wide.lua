@@ -2,9 +2,9 @@
 -- Window, wide but vertically short
 --
 
-DOOM.SKINS.Window_wide_short =
+DOOM.SKINS.Window_wide =
 {
-  file   = "window/widey.wad"
+  file   = "window/wide.wad"
   where  = "edge"
   long   = 192
   deep   = 32
@@ -22,7 +22,7 @@ DOOM.SKINS.Window_wide_short =
 
 DOOM.SKINS.Window_wide_tall =
 {
-  file   = "window/widey.wad"
+  file   = "window/wide.wad"
   where  = "edge"
   long   = 192
   deep   = 32

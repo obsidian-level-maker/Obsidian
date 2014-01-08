@@ -1,10 +1,10 @@
 --
--- Window with two 64x64 holes
+-- Window with two narrow holes
 --
 
-DOOM.SKINS.Window_tiny_pair =
+DOOM.SKINS.Window_double =
 {
-  file   = "window/tiny_pair.wad"
+  file   = "window/double.wad"
   where  = "edge"
   long   = 192
   deep   = 32
@@ -20,9 +20,9 @@ DOOM.SKINS.Window_tiny_pair =
 -- Tall version (expands vertically)
 --
 
-DOOM.SKINS.Window_tall_pair =
+DOOM.SKINS.Window_double_tall =
 {
-  file   = "window/tiny_pair.wad"
+  file   = "window/double.wad"
   where  = "edge"
   long   = 192
   deep   = 32
