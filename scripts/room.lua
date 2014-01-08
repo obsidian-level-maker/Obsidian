@@ -1006,7 +1006,7 @@ function Room_border_up()
     end
 
     -- determine height of window
-    if (min_c - max_f) >= 160 and rand.odds(70+30) and info.outdoor then
+    if (min_c - max_f) >= 160 and rand.odds(65) and info.outdoor then
       info.z1 = max_f
       info.z2 = min_c
       info.is_tall = true
@@ -1022,18 +1022,11 @@ function Room_border_up()
     local dbl_chance  = 80 - math.min(3, usable) * 20
 
     if usable >= 3 and rand.odds(thin_chance) then
-      info.width = 64
+      info.kind = "narrow"
     elseif usable <= 3 and rand.odds(dbl_chance) then
-      info.width = 192
-      info.mid_w = 64
-    elseif info.is_tall then
-      info.width = rand.sel(80, 128, 192)
+      info.kind = "double"
     else
-      info.width = rand.sel(20, 128, 192)
-    end
-
-    if info.width > SEED_SIZE-32 then
-       info.width = SEED_SIZE-32
+      info.kind = "wide"
     end
 
     return info
@@ -1052,8 +1045,7 @@ function Room_border_up()
 
       S.border[side].kind = "window"
 
-      S.border[side].win_width = info.width
-      S.border[side].win_mid_w = info.mid_w
+      S.border[side].win_kind  = info.kind
       S.border[side].win_z1    = info.z1
       S.border[side].win_z2    = info.z2  -- can be absent (=> non-fitted)
 
@@ -2379,10 +2371,11 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   local function do_window(S, side, w_tex)
     local B = S.border[side]
 
---    local fab_name = "Window_tiny_pair"
---    if B.win_z2 then fab_name = "Window_tall_pair" end
-    local fab_name = "Window_wide_short"
-    if B.win_z2 then fab_name = "Window_wide_tall" end
+    local fab_name = "Window_" .. B.win_kind
+
+    if B.win_z2 then
+      fab_name = fab_name .. "_tall"
+    end
 
     local skin1 = GAME.SKINS[fab_name]
     assert(skin1)

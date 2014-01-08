@@ -30,7 +30,7 @@ DOOM.SKINS.Window_narrow_tall =
   bound_z1 = 0
   bound_z2 = 112
 
-  z_fit = { 64, 88 }
+  z_fit = { 72, 96 }
 
   prob = 90
 }
