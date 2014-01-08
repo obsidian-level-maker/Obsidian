@@ -1710,71 +1710,6 @@ function Build.small_exit(R, xt_info, skin, skin2)
 end
 
 
-function Build.window(S, side, width, mid_w, z1, z2, skin)
-  local inner_info = get_mat(skin.wall, skin.floor)
-
-  local side_info = get_mat(skin.side_t)
-
-  local wall_info = inner_info
-  if skin.facade then
-    wall_info = get_mat(skin.facade)
-  end
-
-  local T, long, deep = get_transform_for_seed_side(S, side)
-
-  local mx = int(long/2)
-
-  Trans.set(T)
-
-  -- top and bottom
-  local coords =
-  {
-    { x=mx-width/2, y=0 },
-    { x=mx+width/2, y=0 },
-    { x=mx+width/2, y=deep, w_face=inner_info.w_face },
-    { x=mx-width/2, y=deep },
-  }
-
-  Trans.old_brush(wall_info, coords, -EXTREME_H, z1)
-  Trans.old_brush(wall_info, coords, z2,  EXTREME_H)
-
-
-  -- center piece
-  if mid_w then
-    Trans.old_brush(wall_info,
-    {
-      { x=mx+mid_w/2, y=0,    w_face = side_info.w_face },
-      { x=mx+mid_w/2, y=deep, w_face = inner_info.w_face },
-      { x=mx-mid_w/2, y=deep, w_face = side_info.w_face },
-      { x=mx-mid_w/2, y=0 },
-    },
-    -EXTREME_H, EXTREME_H)
-  end
-
-
-  -- sides pieces
-  Trans.old_brush(wall_info,
-  {
-    { x=mx-width/2, y=0,    w_face = side_info.w_face },
-    { x=mx-width/2, y=deep, w_face = inner_info.w_face },
-    { x=0, y=deep },
-    { x=0, y=0 },
-  },
-  -EXTREME_H, EXTREME_H)
-
-  Trans.old_brush(wall_info,
-  {
-    { x=long, y=0 },
-    { x=long, y=deep, w_face = inner_info.w_face },
-    { x=mx+width/2, y=deep, w_face = side_info.w_face },
-    { x=mx+width/2, y=0 },
-  },
-  -EXTREME_H, EXTREME_H)
-
-  Trans.clear()
-end
-
-
 function Build.picture(S, side, z1, z2, skin)
 
   local count = skin.count or 1
@@ -1861,17 +1796,6 @@ gui.debugf("x1..x2 : %d,%d\n", x1,x2)
   Trans.clear()
 end
 
-
-function Build.pedestal(S, z1, skin)
-  local mx = int((S.x1+S.x2) / 2)
-  local my = int((S.y1+S.y2) / 2)
-
-  local info = get_mat(skin.wall or skin.floor, skin.floor)
-
-  add_pegging(info, skin.x_offset, skin.y_offset, skin.peg)
-
-  Trans.old_quad(info, mx-32,my-32, mx+32,my+32, -EXTREME_H, z1+8)
-end
 
 function Build.lowering_pedestal(S, z1, skin)
   local mx = int((S.x1+S.x2) / 2)
