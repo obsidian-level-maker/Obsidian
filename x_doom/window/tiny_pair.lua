@@ -6,11 +6,31 @@ DOOM.SKINS.Window_tiny_pair =
 {
   file   = "window/tiny_pair.wad"
   where  = "edge"
-  long   = 160
+  long   = 192
   deep   = 32
 
   bound_z1 = 0
-  bound_z2 = 128
+  bound_z2 = 112
+
+  prob = 90
+}
+
+
+--
+-- Tall version (expands vertically)
+--
+
+DOOM.SKINS.Window_tiny_tall =
+{
+  file   = "window/tiny_pair.wad"
+  where  = "edge"
+  long   = 192
+  deep   = 32
+
+  bound_z1 = 0
+  bound_z2 = 112
+
+  z_fit = { 48, 64 }
 
   prob = 90
 }
