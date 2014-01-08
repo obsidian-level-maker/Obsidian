@@ -86,6 +86,7 @@ WADFAB_LIGHT_DELTAS =
 }
 
 WADFAB_REACHABLE = 992
+WADFAB_MOVER     = 995
 
 
 
@@ -1075,6 +1076,8 @@ end
 
       if S.special == WADFAB_REACHABLE then
         C.reachable = true
+      elseif S.special == WADFAB_MOVER then
+        B[1].mover = 1
       elseif S.special and S.special > 0 then
         C.special = S.special
       end
