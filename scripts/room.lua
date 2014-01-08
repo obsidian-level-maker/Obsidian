@@ -2168,6 +2168,7 @@ gui.printf("do_teleport\n")
     return rand.irange(1,4)*2
   end
 
+
   local function player_angle(S)
     if R.sh > R.sw then
       if S.sy > (R.sy1 + R.sy2) / 2 then 
@@ -2183,6 +2184,20 @@ gui.printf("do_teleport\n")
       end
     end
   end
+
+
+  local function do_big_item(item, mx, my, z)
+    local skin1 = GAME.SKINS["Item_Pedestal"]
+    assert(skin1)
+
+    local skin0 = { wall=R.main_tex }
+    local skin2 = { item=item }
+
+    local T = Trans.spot_transform(mx, my, z, 2) -- TODO: spot_dir
+
+    Fabricate_at(R, skin1, T, { skin0, skin1, skin2 })
+  end
+
 
   local function do_purpose(S)
     local sx, sy = S.sx, S.sy
@@ -2281,15 +2296,7 @@ gui.printf("do_teleport\n")
           -- bare item
           Trans.entity(LOCK.item, mx, my, z1)
         else
-          local skin1 = GAME.SKINS["Item_Pedestal"]
-          assert(skin1)
-
-          local skin0 = { wall=w_tex }
-          local skin2 = { item=LOCK.item }
-
-          local T = Trans.spot_transform(mx, my, z1, 2) -- FIXME: spot_dir
-
-          Fabricate_at(R, skin1, T, { skin0, skin1, skin2 })
+          do_big_item(LOCK.item, mx, my, z1)
         end
       end
 
@@ -2316,6 +2323,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local weapon = assert(S.content_weapon)
 
     if R.hallway or R == LEVEL.start_room then
+      -- bare item
       Trans.entity(weapon, mx, my, z1)
 
     elseif rand.odds(40) and THEME.lowering_pedestal_skin2 then
@@ -2328,10 +2336,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
       Trans.entity(weapon, mx, my, z_top)
     else
-      local skin = { floor=THEME.pedestal_mat }
-      Build.pedestal(S, z1, skin)
-
-      Trans.entity(weapon, mx, my, z1)
+      do_big_item(weapon, mx, my, z1)
     end
 
     gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", weapon, mx, my, z1)
