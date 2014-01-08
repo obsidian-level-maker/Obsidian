@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2013 Andrew Apted
+//  Copyright (C) 2006-2014 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -1233,8 +1233,8 @@ static doom_sidedef_c * DM_MakeSidedef(
 		int u_ox = upper->face.getInt("u1", IVAL_NONE);
 
 		// on a pegged brush, default Y offset is zero
-		int l_oy = lower->face.getInt("v1", l_brush->props.getInt("peg") ? 0 : IVAL_NONE);
-		int u_oy = upper->face.getInt("v1", u_brush->props.getInt("peg") ? 0 : IVAL_NONE);
+		int l_oy = lower->face.getInt("v1", l_brush->props.getInt("mover") ? 0 : IVAL_NONE);
+		int u_oy = upper->face.getInt("v1", u_brush->props.getInt("mover") ? 0 : IVAL_NONE);
 
 		if (back && back->f_h > sec->f_h && !rail && l_oy != IVAL_NONE)
 		{
@@ -1405,7 +1405,7 @@ static void DM_DeterminePegging(doom_linedef_c *L,
 	{
 		csg_brush_c *T = front->region->gaps.back() ->top;
 
-		if (T->props.getInt("peg"))
+		if (T->props.getInt("mover"))
 		{
 			L->flags |= MLF_LowerUnpeg;
 		}
@@ -1430,8 +1430,8 @@ static void DM_DeterminePegging(doom_linedef_c *L,
 	{
 		L->flags |= MLF_LowerUnpeg;
 	}
-	else if ( (back->f_h > front->f_h && B2->props.getInt("peg")) ||
-			 (front->f_h >  back->f_h && B1->props.getInt("peg")))
+	else if ( (back->f_h > front->f_h && B2->props.getInt("mover")) ||
+			 (front->f_h >  back->f_h && B1->props.getInt("mover")))
 	{
 		// pegged lower
 	}
@@ -1440,8 +1440,8 @@ static void DM_DeterminePegging(doom_linedef_c *L,
 		L->flags |= MLF_LowerUnpeg;
 	}
 
-	if ( (back->c_h < front->c_h && T2->props.getInt("peg")) ||
-		(front->c_h <  back->c_h && T1->props.getInt("peg")))
+	if ( (back->c_h < front->c_h && T2->props.getInt("mover")) ||
+		(front->c_h <  back->c_h && T1->props.getInt("mover")))
 	{
 		// pegged upper
 	}

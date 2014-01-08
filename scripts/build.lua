@@ -321,7 +321,7 @@ function Trans.old_brush(info, coords, z1, z2)
 
   local kind = info.kind or "solid"
 
-  table.insert(coords, 1, { m=kind, peg=info.peg })
+  table.insert(coords, 1, { m=kind, mover=info.peg })
 
   brushlib.collect_flags(coords)
 
