@@ -4,7 +4,7 @@
 
 DOOM.SKINS.Wall_plain =
 {
-  file   = "wall/plain.wad"
+  file   = "wall/wall_16.wad"
   where  = "edge"
   long   = 128
   deep   = 16

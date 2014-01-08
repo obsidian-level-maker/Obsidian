@@ -470,11 +470,11 @@ function Trans.box_transform(x1, y1, x2, y2, z, dir)
 end
 
 
-function Trans.edge_transform(x1,y1, x2,y2, z, side, long1, long2, out, back)
-  if side == 4 then x2 = x1 + out ; x1 = x1 - back end
-  if side == 6 then x1 = x2 - out ; x2 = x2 + back end
-  if side == 2 then y2 = y1 + out ; y1 = y1 - back end
-  if side == 8 then y1 = y2 - out ; y2 = y2 + back end
+function Trans.edge_transform(x1,y1, x2,y2, z, side, long1, long2, d_in, d_out)
+  if side == 4 then x2 = x1 + d_in ; x1 = x1 - d_out end
+  if side == 6 then x1 = x2 - d_in ; x2 = x2 + d_out end
+  if side == 2 then y2 = y1 + d_in ; y1 = y1 - d_out end
+  if side == 8 then y1 = y2 - d_in ; y2 = y2 + d_out end
 
   if side == 2 then x1 = x2 - long2 ; x2 = x2 - long1 end
   if side == 8 then x2 = x1 + long2 ; x1 = x1 + long1 end

@@ -2347,6 +2347,21 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   end
 
 
+  local function do_wall(S, side, w_tex)
+    local skin1 = GAME.SKINS["Wall_plain"]
+    assert(skin1)
+
+    local skin0 = { wall=w_tex }
+
+    local deep = 16
+
+    local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, S.floor_h,
+                                   side, 0, 192, deep, 0)
+
+    Fabricate_at(R, skin1, T, { skin0, skin1 })
+  end
+
+
   local function vis_mark_wall(S, side)
     gui.debugf("VIS %d %d %s\n", S.sx, S.sy, side)
   end
@@ -2515,12 +2530,12 @@ do return end
       end
 
       if B_kind == "wall" and R.kind != "scenic" then  -- FIXME; scenic check is bogus
-        Build.wall(S, side, w_tex)
+        do_wall(S, side, w_tex)
         shrink_both(side, 4)
       end
 
       if B_kind == "facade" then
-        Build.wall(S, side, S.border[side].facade)
+        do_wall(S, side, S.border[side].facade)
       end
 
       if B_kind == "window" then

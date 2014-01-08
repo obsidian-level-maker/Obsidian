@@ -22,33 +22,6 @@
 Build = {}
 
 
-function Build.wall(S, side, mat)
-  local coords = get_wall_coords(S, side)
-
-  Trans.old_brush(get_mat(mat), coords, -EXTREME_H, EXTREME_H)
-end
-
-
-function Build.facade(S, side, mat)
-  local x1, y1 = S.x1, S.y1
-  local x2, y2 = S.x2, S.y2
-
-  local coords
-
-  if side == 2 then
-    coords = { {x=x1,y=y1}, {x=x2,y=y1}, {x=x2-8,y=y1+8}, {x=x1+8,y=y1+8} }
-  elseif side == 8 then
-    coords = { {x=x2,y=y2}, {x=x1,y=y2}, {x=x1+8,y=y2-8}, {x=x2-8,y=y2-8} }
-  elseif side == 4 then
-    coords = { {x=x1,y=y2}, {x=x1,y=y1}, {x=x1+8,y=y1+8}, {x=x1+8,y=y2-8} }
-  else
-    coords = { {x=x2,y=y1}, {x=x2,y=y2}, {x=x2-8,y=y2-8}, {x=x2-8,y=y1+8} }
-  end
-
-  Trans.old_brush(get_mat(mat), coords, -EXTREME_H, EXTREME_H)
-end
-
-
 function Build.fence(S, side, fence_h, skin)
   local coords = get_wall_coords(S, side)
 
