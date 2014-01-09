@@ -910,7 +910,67 @@ DOOM2.LEVEL_THEMES =
     {
       naturals = { none=30, few=70, some=30, heaps=2 }
     }
+
+
+    ---!!!  TEMPORARY V3 STUFF  !!!---
+
+    building_corners =
+    {
+      STARGR1=40, METAL1=20, ICKWALL3=6
+      TEKWALL4=6, COMPTALL=3, COMPBLUE=3
+      METAL7=40, METAL2=10, METAL4=10
+      TEKWALL6=10, TEKBRON1=3
+    }
+    hallway_walls =
+    {
+      BROWN1=33, BROWNGRN=50, GRAY1=50, STARBR2=33
+    }
+    hallway_floors =
+    {
+      FLAT4=50, CEIL5_1=50, FLOOR1_1=50, FLOOR3_3=50
+    }
+    hallway_ceilings =
+    {
+      FLAT4=50, CEIL5_1=50, CEIL3_5=50, CEIL3_3=50
+    }
+    stairwell_walls =
+    {
+      BROWN1=50, GRAY1=50, STARGR1=50, METAL4=50
+    }
+    stairwell_floors =
+    {
+      FLAT1=50, FLOOR7_1=50
+    }
+    doors =
+    {
+      silver=20, silver_fast=33, silver_once=2
+      bigdoor2=5, bigdoor2_fast=8, bigdoor2_once=5
+      bigdoor4=5, bigdoor4_fast=8, bigdoor4_once=5
+      bigdoor3=5
+    }
+    steps = { step1=50, step3=50, step4b=50 }
+    lifts = { shiny=20, platform=40, rusty=10 }
+    ceil_lights =
+    {
+      TLITE6_5=50, TLITE6_6=30, TLITE6_1=30, FLOOR1_7=30
+      FLAT2=20,    CEIL3_4=10,  FLAT22=10
+      GRNLITE1=10
+    }
+    big_lights =
+    {
+      TLITE6_5=30, TLITE6_6=30, GRNLITE1=30, FLAT17=30, CEIL3_4=30
+      GRNLITE1=20
+    }
+    pillars = { metal1=70, tekwall4=20
+                teklite=50, silver2=10, shawn2=10, metal1=15 }
+    big_pillars = { big_red=50, big_blue=50 }
+    crates = { crate1=50, crate2=50, comp=70, lite5=20
+               space=90, mod=15 }
+    exits = { skull_pillar=50, stone_pillar=5 }
+    bars = { bar_silver=50, bar_gray=50 }
+
   }
+
 
 
   hell1 =
@@ -950,7 +1010,20 @@ DOOM2.LEVEL_THEMES =
     }
 
     monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0, vile=2.0 }
+
+
+    ---!!!  TEMPORARY V3 STUFF  !!!---
+
+    exits = { skin_pillar=40, skull_pillar=20
+             demon_pillar2=10, demon_pillar3=10 }
+    steps = { step1=50, step3=50, step4=50 }
+    lifts = { platform=10, rusty=50, spine=30 }
+    big_pillars = { big_red=50, sloppy=20, sloppy2=20, }
+    switches = { sw_skin=50, sw_vine=50, sw_wood=50 }
+    bars = { bar_wood=50, bar_metal=50 }
+    outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 }
   }
+
 
 
   urban1 =
@@ -992,15 +1065,27 @@ DOOM2.LEVEL_THEMES =
     {
       caco=1.3, revenant=1.2, knight=1.5, demon=1.2, gunner=1.5,
     }
+
+
+    ---!!!  TEMPORARY V3 STUFF  !!!---
+
+    exits = { demon_pillar2=20, demon_pillar3=20, stone_pillar=30 }
+    steps = { step6=50, }
+    lifts = { shiny=20, platform=20, rusty=50 }
+    switches = { sw_wood=50, sw_blue=50, sw_hot=50 }
+    bars = { bar_wood=50, bar_metal=50 }
   }
+
 
 
   -- this theme is not normally used (only for secret levels)
   wolf1 =
   {
-    prob = 10,
+    prob = 10
 
     max_dominant_themes = 1
+
+    square_caves = 1
 
     buildings =
     {
@@ -1029,6 +1114,11 @@ DOOM2.LEVEL_THEMES =
     {
       naturals = { none=40, few=60, some=10 }
     }
+
+
+    ---!!!  TEMPORARY V3 STUFF  !!!---
+
+    doors = { wolf_door=90, wolf_elev_door=5 }
   }
 }
 
