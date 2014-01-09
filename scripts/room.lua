@@ -2555,7 +2555,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local c_tex = S.c_tex or sel(R.is_outdoor, "_SKY", R.ceil_tex)
 
 if R.kind == "cave" then f_tex = "RROCK04" end --!!!!! TEMP
-if R.quest and R.quest.kind == "secret" then f_tex = "FLOOR1_7" end
+if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
 
 
     if R.kind == "hallway" then
