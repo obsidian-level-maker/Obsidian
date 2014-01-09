@@ -2662,9 +2662,21 @@ do return end
 
       if B_kind == "arch" then
         local z = assert(S.conn and S.conn.conn_h)
-        local skin = { wall=w_tex, floor=f_tex, other=o_tex, break_t=THEME.track_mat }
 
-        Build.archway(S, side, z, z+112, skin)
+        local skin1 = GAME.SKINS["Arch_plain"]
+        assert(skin1)
+
+        local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
+
+        if skin2.wall == skin2.outer then
+          skin2.track = skin2.wall
+        end
+
+        local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, z,
+                                       side, 0, 192, skin1.deep, skin1.over)
+
+        Fabricate_at(R, skin1, T, { skin1, skin2 })
+
         shrink_ceiling(side, 4)
 
         assert(not S.conn.already_made_lock)
@@ -2673,7 +2685,7 @@ do return end
 
       if B_kind == "liquid_arch" then
         local other_mat = sel(N.room.is_outdoor, R.facade, N.room.main_tex)
-        local skin = { wall=w_tex, floor=f_tex, other=other_mat, break_t=THEME.track_mat }
+        local skin = { wall=w_tex, floor=f_tex, outer=other_mat, break_t=THEME.track_mat }
         local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
 
         Build.archway(S, side, z1, z_top, skin)
