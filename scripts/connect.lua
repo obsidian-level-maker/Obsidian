@@ -648,8 +648,126 @@ end
 ----------------------------------------------------------------------
 
 
+function Connect_merge_groups(id1, id2)
+  if id1 > id2 then id1,id2 = id2,id1 end
+
+  each R in LEVEL.rooms do
+    if R.c_group == id2 then
+      R.c_group = id1
+    end
+  end
+end
+
+
 function Connect_teleporters()
-  -- TODO
+  
+  local function eval_room(R)
+    -- can only have one teleporter per room
+    if R.has_teleporter then return -1 end
+
+    -- never in a secret exit room
+    if R.purpose == "SECRET_EXIT" then return -1 end
+
+    -- score based on size, ignore if too small
+    if R.sw < 3 or R.sh < 3 or R.svolume < 8 then return -1 end
+
+    local v = math.sqrt(R.svolume)
+
+    local score = 10 - math.abs(v - 5.5)
+
+    return score + 2.1 * gui.random() ^ 2
+  end
+
+
+  local function collect_teleporter_locs()
+    local list = {}
+
+    each R in LEVEL.rooms do
+      local score = eval_room(R)
+
+      if score >= 0 then
+        table.insert(list, { R=R, score=score })
+      end
+    end
+
+    return list
+  end
+
+
+  local function connect_is_possible(R1, R2, mode)
+    if R1.c_group == R2.c_group then return false end
+
+    return true
+  end
+
+
+  local function add_teleporter(R1, R2)
+    gui.debugf("Teleporter connection: %s -- >%s\n", R1:tostr(), R2:tostr())
+
+    Connect_merge_groups(R1.c_group, R2.c_group)
+
+    local C = CONN_CLASS.new("teleporter", R1, R2)
+
+    table.insert(R1.conns, C)
+    table.insert(R2.conns, C)
+
+    C.tele_tag1 = Plan_alloc_id("tag")
+    C.tele_tag2 = Plan_alloc_id("tag")
+  end
+
+
+  local function try_add_teleporter()
+    local loc_list = collect_teleporter_locs()
+
+    -- sort the list, best score at the front
+    table.sort(loc_list, function(A, B) return A.score > B.score end)
+
+    -- need at least a source and a destination
+    while #loc_list >= 2 do
+
+      local R1 = loc_list[1].R
+      table.remove(loc_list, 1)
+
+      -- try to find a room we can connect to
+      each loc in loc_list do
+        local R2 = loc.R
+
+        if connect_is_possible(R1, R2, "teleporter") then
+          add_teleporter(R1, R2)
+          return true
+        end
+      end
+    end
+
+    return false
+  end
+
+
+  ---| Connect_teleporters |---
+
+  -- check if game / theme supports them
+  if not PARAM.teleporters or
+     STYLE.teleporters == "none"
+  then
+    gui.printf("Teleporter quota: NONE\n", quota)
+    return
+  end
+
+  -- determine number to make
+  local quota = style_sel("teleporters", 0, 1, 2, 3.7)
+
+  quota = quota * LEVEL.W / 5
+  quota = quota + rand.skew() * 1.7
+
+  quota = int(quota) -- round down
+
+  gui.printf("Teleporter quota: %d\n", quota)
+
+  for i = 1,quota do
+    if not try_add_teleporter() then
+      break;
+    end
+  end
 end
 
 
@@ -756,16 +874,6 @@ function Connect_rooms()
   -- . prefer big rooms to have 3 or more connections.
   -- . prefer small isolated rooms to be leafs (1 connection).
 
-  local function merge_groups(id1, id2)
-    if id1 > id2 then id1,id2 = id2,id1 end
-
-    each R in LEVEL.rooms do
-      if R.c_group == id2 then
-        R.c_group = id1
-      end
-    end
-  end
-
   local function min_group_id()
     local result
     
@@ -816,7 +924,7 @@ gui.debugf("connect_seeds S(%d,%d) ROOM_%d grp:%d --> S(%d,%d) ROOM_%d grp:%d\n"
 S.sx,S.sy, S.room.id, S.room.c_group,
 T.sx,T.sy, T.room.id, T.room.c_group)
 
-    merge_groups(S.room.c_group, T.room.c_group)
+    Connect_merge_groups(S.room.c_group, T.room.c_group)
 
     local CONN = CONN_CLASS.new("normal", S.room, T.room, dir)
 
