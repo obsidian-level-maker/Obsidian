@@ -3293,6 +3293,8 @@ function Room_find_ambush_focus(R)
 
   -- FIXME: handle teleporter entry
 
+  if R.kind == "stairwell" then return end
+
   local C = R.entry_conn
 
   if not C then return end
@@ -3309,6 +3311,7 @@ function Room_find_ambush_focus(R)
 
   assert(S)
   assert(S.floor_h)
+
 
   local mx, my = S:mid_point()
 
