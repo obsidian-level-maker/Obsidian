@@ -2,13 +2,13 @@
 -- Wall with hellish cross
 --
 
-DOOM.SKINS.Wall_cross1 =
+DOOM.SKINS.Wall_cross =
 {
-  file   = "wall/cross1.wad"
+  file   = "wall/cross.wad"
   where  = "edge"
 
   long   = 128
-  deep   = 32
+  deep   = 16
 
   x_fit  = "frame"
 --z_fit  = { 108,128 }
