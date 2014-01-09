@@ -767,6 +767,7 @@ function Room_synchronise_skies()
 end
 
 
+
 function Room_border_up()
 
   local function make_map_edge(R, S, side)
@@ -779,6 +780,7 @@ function Room_border_up()
       S.thick[side] = 24
     end
   end
+
 
   local function make_border(R1, S, R2, N, side)
     if R1 == R2 then
@@ -844,25 +846,89 @@ function Room_border_up()
   end
 
 
-  local function border_up(R)
-    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
-      local S = SEEDS[x][y]
-      if S.room == R then
-        for side = 2,8,2 do
-          if not S.border[side].kind then  -- don't clobber connections
-            local N = S:neighbor(side)
-  
-            if not (N and N.room) then
-              make_map_edge(R, S, side)
-            else
-              make_border(R, S, N.room, N, side)
-            end
-          end
+  local function try_make_corner(S, corner)
+    local R = S.room
+    local N = S:neighbor(corner)
 
-          assert(S.border[side].kind)
-        end -- for side
+    if not (N and N.room) then return end
+    if N.room == R then return end
+
+    if not (N.room.is_outdoor or N.room == R.parent) then return end
+
+    local A = S:neighbor(geom.RIGHT_45[corner])
+    local B = S:neighbor(geom. LEFT_45[corner])
+
+    if not (A and A.room) then return end
+    if not (B and B.room) then return end
+
+    if (A.room == R) or (B.room == R) then return end
+
+    if N.room.is_outdoor then
+      -- don't need external corners unless all three sides are outdoor
+      if not A.room.is_outdoor or not B.room.is_outdoor then return end
+    else
+      -- don't need internal corners unless the parent is on all three
+      -- sides of the corner.
+      if A.room != N.room or B.room != N.room then return end
+    end
+
+    -- OK
+
+    local x1, y1 = N.x1, N.y1
+    local x2, y2 = N.x2, N.y2
+
+    local thick = 16
+
+    if corner == 1 then x1 = x2 - thick ; y1 = y2 - thick end
+    if corner == 9 then x2 = x1 + thick ; y2 = y1 + thick end
+    if corner == 3 then x2 = x1 + thick ; y1 = y2 - thick end
+    if corner == 7 then x1 = x2 - thick ; y2 = y1 + thick end
+
+    local facade = R.facade
+
+    if not N.room.is_outdoor then facade = R.main_tex end
+
+    if "cool_corners" then
+      thick  = 24
+      facade = "METAL"
+    end
+
+    Trans.clear()
+    Trans.solid_quad(x1, y1, x2, y2, facade)
+  end
+
+
+  local function border_up(R)
+    local B_CORNERS = { 1,3,9,7 }
+
+    for x = R.sx1, R.sx2 do
+    for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y]
+
+      if S.room != R then continue end
+        
+      for side = 2,8,2 do
+        if not S.border[side].kind then  -- don't clobber connections
+          local N = S:neighbor(side)
+
+          if not (N and N.room) then
+            make_map_edge(R, S, side)
+          else
+            make_border(R, S, N.room, N, side)
+          end
+        end
+
+        assert(S.border[side].kind)
+      end -- side
+
+      each corner in B_CORNERS do
+        if not R.is_outdoor and R.kind != "cave" and R.kind != "hallway" then
+          try_make_corner(S, corner)
+        end
       end
-    end end -- for x, y
+
+    end -- x, y
+    end
   end
 
 
@@ -889,6 +955,7 @@ function Room_border_up()
 
     return list
   end
+
 
   local function score_window_side(R, side, border_list)
     local min_c1, max_f1 = 999, -999
@@ -1032,6 +1099,7 @@ function Room_border_up()
     return info
   end
 
+
   local function add_windows(R, info, border_list)
     local side = info.side
 
@@ -1053,6 +1121,7 @@ function Room_border_up()
     end
   end
 
+
   local function pick_best_side(poss)
     local best
 
@@ -1064,6 +1133,7 @@ function Room_border_up()
 
     return best
   end
+
 
   local function decide_windows(R, border_list)
     if R.kind != "building" then return end
@@ -1131,6 +1201,7 @@ function Room_border_up()
     return rand.key_by_probs(THEME.logos)
   end
 
+
   local function install_pic(R, bd, pic_name, v_space)
     skin = assert(GAME.PICTURES[pic_name])
 
@@ -1168,6 +1239,7 @@ function Room_border_up()
       end -- for dy
     end -- for dx
   end
+
 
   local function decide_pictures(R, border_list)
     if R.kind != "building" then return end
