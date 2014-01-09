@@ -2,54 +2,46 @@
 -- Pictures
 --
 
----- TECH ----
-
-DOOM.SKINS.Pic_Computer =
-{
-  file   = "wall/pic_128x48.wad"
-  where  = "edge"
-  long   = 192
-  deep   = 32
-
-  x_fit  = "frame"
-  y_fit  = "top"
-
-  bound_z1 = 0
-  bound_z2 = 112
-
-  theme = "tech"
-  prob  = 30
-
---[[
-  pic   = { COMPSTA1=50, COMPSTA2=50 }
-  pic_w = 128
-  pic_h = 48
-
-  light = 48
-  effect = { [0]=90, [1]=5 }  -- sometimes blink
-  fx_delta = -47
---]]
-}
-
-
----- URBAN ----
-
 DOOM.SKINS.Pic_Adolf =
 {
   file   = "wall/pic_128x128.wad"
   where  = "edge"
 
   long   = 192
-  deep   = 32
+  deep   = 16
   height = 192
 
   x_fit  = "frame"
   y_fit  = "top"
+  z_fit  = { 0,8, 152,176 }
 
   bound_z1 = 0
-  bound_z2 = 192
+  bound_z2 = 176
 
   theme = "urban"
   prob  = 20
+}
+
+
+DOOM.SKINS.Pic_Eagle =
+{
+  file   = "wall/pic_128x128.wad"
+  where  = "edge"
+
+  long   = 192
+  deep   = 16
+  height = 192
+
+  x_fit  = "frame"
+  y_fit  = "top"
+  z_fit  = { 0,8, 152,176 }
+
+  bound_z1 = 0
+  bound_z2 = 176
+
+  theme = "urban"
+  prob  = 20
+
+  tex_ZZWOLF7 = "ZZWOLF12"
 }
 
