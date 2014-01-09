@@ -1,5 +1,5 @@
 --
--- Logo pics
+-- Logo pictures
 --
 
 DOOM.SKINS.Logo_Carve =
@@ -7,7 +7,7 @@ DOOM.SKINS.Logo_Carve =
   file   = "wall/pic_64x64.wad"
   where  = "edge"
   long   = 128
-  deep   = 32
+  deep   = 16
 
   x_fit  = "frame"
   y_fit  = "top"
@@ -18,5 +18,37 @@ DOOM.SKINS.Logo_Carve =
   tex_GRAYPOIS = "O_CARVE"
 }
 
---TODO: Logo_Pill,  Logo_Neon
+
+DOOM.SKINS.Logo_Pill =
+{
+  file   = "wall/pic_128x32.wad"
+  where  = "edge"
+  long   = 192
+  deep   = 16
+
+  x_fit  = "frame"
+  y_fit  = "top"
+
+  bound_z1 = 0
+  bound_z2 = 128
+
+  tex_COMPSTA1 = "O_PILL"
+}
+
+
+DOOM.SKINS.Logo_Neon =
+{
+  file   = "wall/pic_128x128.wad"
+  where  = "edge"
+  long   = 192
+  deep   = 16
+
+  x_fit  = "frame"
+  y_fit  = "top"
+
+  bound_z1 = 0
+  bound_z2 = 176
+
+  tex_ZZWOLF7 = "O_NEON"
+}
 
