@@ -187,6 +187,7 @@ function ROOM_CLASS.conn_area(R)
   local hx, hy = 0,0
 
   each C in R.conns do
+    if C.kind == "teleporter" then continue end
     local S = C:seed(R)
     lx = math.min(lx, S.sx)
     ly = math.min(ly, S.sy)
@@ -678,6 +679,8 @@ function Room_reckon_doors()
   ---| Room_reckon_doors |---
 
   each C in LEVEL.conns do
+    if C.kind == "teleporter" then continue end
+
     for who = 1,2 do
 
       local S = sel(who == 1, C.S1, C.S2)
@@ -971,6 +974,8 @@ function Room_border_up()
     local info = { side=side, seeds={} }
 
     each C in R.conns do
+      if C.kind == "teleporter" then continue end
+
       local S = C:seed(R)
       local B = S.border[side]
 
@@ -2209,7 +2214,7 @@ gui.printf("do_teleport\n")
 
     if #dirs == 3 then return 10 - missing_dir end
 
-    if S.room.entry_conn then
+    if S.room.entry_conn and S.room.entry_conn.kind != "teleporter" then
       local entry_S = S.room.entry_conn:seed(S.room)
       local exit_dir = assert(entry_S.conn_dir)
 
@@ -3042,7 +3047,7 @@ function Room_find_pickup_spots(R)
   local function try_add_small_spot(R, S)
     local score = gui.random()
 
-    if R.entry_conn then
+    if R.entry_conn and R.entry_conn.kind != "teleporter" then
       local e_dist
       if geom.is_vert(R.entry_conn.dir) then
         e_dist = math.abs(R.entry_conn.S2.sy - S.sy)

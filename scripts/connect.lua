@@ -713,6 +713,9 @@ function Connect_teleporters()
 
     C.tele_tag1 = Plan_alloc_id("tag")
     C.tele_tag2 = Plan_alloc_id("tag")
+
+    R1.has_teleporter = C
+    R2.has_teleporter = C
   end
 
 

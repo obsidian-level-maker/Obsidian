@@ -356,7 +356,7 @@ function Layout_spot_for_wotsit(R, kind)
 
       P.score = gui.random() + (S.div_lev or 0) * 20
 
-      if R.entry_conn then
+      if R.entry_conn and R.entry_conn.kind != "teleporter" then
         local dx = math.abs(R.entry_conn.S2.sx - x)
         local dy = math.abs(R.entry_conn.S2.sy - y)
 
@@ -1358,6 +1358,7 @@ function Layout_do_hallway(R)
     local used_y = {}
 
     each C in R.conns do
+      if C.kind == "teleporter" then continue end
       local S = C:seed(R)
       if geom.is_vert(S.conn_dir) then
         used_x[S.sx] = 1
@@ -2208,7 +2209,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   post_processing()
 
   each C in R.conns do
-    assert(C.conn_h)
+--???????    assert(C.conn_h)
   end
 
 
