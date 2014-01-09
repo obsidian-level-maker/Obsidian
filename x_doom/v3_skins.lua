@@ -1,8 +1,8 @@
 
 V3_THEME_DEFAULTS =
 {
-  doors = { wooden=30, wooden_fast=20
-            wooden2=20, wooden2_fast=10 }
+  doors = { wooden=15, wooden_fast=2, wooden_once=6
+            wooden2=30, wooden2_fast=2 }
 
   steps = { step1=50 }
 

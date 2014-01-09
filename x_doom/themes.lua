@@ -2,7 +2,7 @@
 --  DOOM THEMES
 --------------------------------------------------------------------
 --
---  Copyright (C) 2006-2013 Andrew Apted
+--  Copyright (C) 2006-2014 Andrew Apted
 --  Copyright (C)      2011 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -943,10 +943,10 @@ DOOM2.LEVEL_THEMES =
     }
     doors =
     {
-      silver=20, silver_fast=33, silver_once=2
-      bigdoor2=5, bigdoor2_fast=8, bigdoor2_once=5
-      bigdoor4=5, bigdoor4_fast=8, bigdoor4_once=5
-      bigdoor3=5
+      silver=30, silver_fast=2, silver_once=6
+      bigdoor2=6, bigdoor2_fast=2, bigdoor2_once=6
+      bigdoor4=6, bigdoor4_fast=2, bigdoor4_once=6
+      bigdoor3=6
     }
     steps = { step1=50, step3=50, step4b=50 }
     lifts = { shiny=20, platform=40, rusty=10 }
