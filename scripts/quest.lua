@@ -1036,6 +1036,10 @@ function Quest_divide_zones()
       tag = Plan_alloc_id("tag")
     }
 
+    if THEME.bars and C.R1.is_outdoor and C.R2.is_outdoor then
+      LOCK.switch = rand.key_by_probs(THEME.bars)
+    end
+
     gui.debugf("locking conn to %s (SWITCH)\n", C.R2:tostr())
 
     C.lock = LOCK
