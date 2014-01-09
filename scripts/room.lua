@@ -874,15 +874,7 @@ function Room_border_up()
 
     -- OK
 
-    local x1, y1 = N.x1, N.y1
-    local x2, y2 = N.x2, N.y2
-
     local thick = 16
-
-    if corner == 1 then x1 = x2 - thick ; y1 = y2 - thick end
-    if corner == 9 then x2 = x1 + thick ; y2 = y1 + thick end
-    if corner == 3 then x2 = x1 + thick ; y1 = y2 - thick end
-    if corner == 7 then x1 = x2 - thick ; y2 = y1 + thick end
 
     local facade = R.facade
 
@@ -892,6 +884,14 @@ function Room_border_up()
       thick  = 24
       facade = "METAL"
     end
+
+    local x1, y1 = N.x1, N.y1
+    local x2, y2 = N.x2, N.y2
+
+    if corner == 1 then x1 = x2 - thick ; y1 = y2 - thick end
+    if corner == 9 then x2 = x1 + thick ; y2 = y1 + thick end
+    if corner == 3 then x2 = x1 + thick ; y1 = y2 - thick end
+    if corner == 7 then x1 = x2 - thick ; y2 = y1 + thick end
 
     Trans.clear()
     Trans.solid_quad(x1, y1, x2, y2, facade)
