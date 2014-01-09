@@ -28,11 +28,12 @@ DOOM.SKINS.Logo_Pill =
 
   x_fit  = "frame"
   y_fit  = "top"
+  z_fit  = { 0,4, 56,80 }
 
   bound_z1 = 0
-  bound_z2 = 128
+  bound_z2 = 80
 
-  tex_COMPSTA1 = "O_PILL"
+  tex_METAL6 = "O_PILL"
 }
 
 
