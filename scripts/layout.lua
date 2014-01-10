@@ -2160,6 +2160,10 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     focus_C.conn_h = SKY_H - rand.irange(4,7) * 64
   end
 
+  if focus_C.diff_h then
+    focus_C.conn_h = focus_C.conn_h + focus_C.diff_h
+  end
+
   R.floor_h = focus_C.conn_h  -- ??? BLEH
 
   -- special stuff

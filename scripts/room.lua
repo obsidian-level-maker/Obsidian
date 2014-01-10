@@ -750,6 +750,15 @@ function Room_reckon_doors()
 
     if rand.odds(prob) then
       B.kind = "door"
+      return
+    end
+
+    -- support arches which have a step in them
+
+    if S == C.S1 then
+      C.diff_h = 16
+    else
+      C.diff_h = -16
     end
   end
 
@@ -1141,7 +1150,7 @@ function Room_border_up()
       S.border[side].win_z1    = info.z1
       S.border[side].win_z2    = info.z2  -- can be absent (=> non-fitted)
 
-      N.border[10-side].kind = "nothing"
+      N.border[10-side].kind = "straddle"
     end
   end
 
@@ -2493,6 +2502,29 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   end
 
 
+  local function do_floor(S, z, indents, w_tex, f_tex)
+
+    local kind, w_face, p_face = Mat_normal(S.l_tex or w_tex, f_tex)
+--??    p_face.kind = sec_kind
+
+    for bx = 0, 2 do
+    for by = 0, 2 do
+      local x1 = S.x1 + int((S.x2 - S.x1) * bx / 3)
+      local y1 = S.y1 + int((S.y2 - S.y1) * by / 3)
+      local x2 = S.x1 + int((S.x2 - S.x1) * (bx + 1) / 3)
+      local y2 = S.y1 + int((S.y2 - S.y1) * (by + 1) / 3)
+
+      if bx == 0 then x1 = x1 + (indents[4] or 0) end
+      if bx == 2 then x2 = x2 - (indents[6] or 0) end
+      if by == 0 then y1 = y1 + (indents[2] or 0) end
+      if by == 2 then y2 = y2 - (indents[8] or 0) end
+
+      Trans.quad(x1,y1, x2,y2, nil,z, kind, w_face, p_face)
+    end
+    end
+  end
+
+
   local function vis_mark_wall(S, side)
     gui.debugf("VIS %d %d %s\n", S.sx, S.sy, side)
   end
@@ -2605,6 +2637,9 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
     local cx1, cy1 = x1, y1
     local cx2, cy2 = x2, y2
 
+    local f_indents = {}
+    local c_indents = {}
+
     local function shrink_floor(side, len)
 do return end
       if side == 2 then fy1 = fy1 + len end
@@ -2679,10 +2714,18 @@ do return end
         shrink_floor(side, 4)
       end
 
+      if B_kind == "straddle" then
+        f_indents[side] = 16
+      end
+
       if B_kind == "arch" then
         local z = assert(S.conn and S.conn.conn_h)
 
-        local skin1 = GAME.SKINS["Arch_plain"]
+        if S.conn.diff_h and S.conn.diff_h > 0 then
+          z = z - S.conn.diff_h
+        end
+
+        local skin1 = GAME.SKINS["Arch_stair"]  --!!!!
         assert(skin1)
 
         local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
@@ -2696,9 +2739,8 @@ do return end
 
         Fabricate_at(R, skin1, T, { skin1, skin2 })
 
-        shrink_ceiling(side, 4)
-
-
+        f_indents[side] = skin1.deep
+        c_indents[side] = skin1.deep
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
@@ -2890,19 +2932,7 @@ if B_kind == "secret_door" then door_name = "wolf_elev_door" end
       --!!!  info.sec_kind = sec_kind
       --!!!  Split_quad(S, info, fx1,fy1, fx2,fy2, -EXTREME_H, z1)
 
-      local kind, w_face, p_face = Mat_normal(S.l_tex or w_tex, f_tex)
-      p_face.kind = sec_kind
-
-      for bx = 0, 2 do
-      for by = 0, 2 do
-        local x1 = fx1 + int((fx2 - fx1) * bx / 3)
-        local y1 = fy1 + int((fy2 - fy1) * by / 3)
-        local x2 = fx1 + int((fx2 - fx1) * (bx + 1) / 3)
-        local y2 = fy1 + int((fy2 - fy1) * (by + 1) / 3)
-
-        Trans.quad(x1,y1, x2,y2, nil,z1, kind, w_face, p_face)
-      end
-      end
+      do_floor(S, z1, f_indents, w_tex, f_tex)
     end
 
 
