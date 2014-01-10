@@ -900,6 +900,10 @@ function Build.niche_stair(S, skin, skin2)
   local HB = sel(z1 > z2, 96, 64)
   local HF = 40
 
+  if z1 > z2 and (z1 - z2) < 44 then
+    HB = 128
+  end
+
   Trans.set(T)
 
   Trans.old_quad(niche_info, 0,0, W,deep, -EXTREME_H, z2)
