@@ -2202,42 +2202,6 @@ end
 
 function Room_build_seeds(R)
 
-  local function do_teleporter(S)
-    -- TEMP HACK CRUD JUNK
-
-    local idx = S.sx - S.room.sx1 + 1
-
-if idx < 1 then return end
-
-    if idx > #S.room.teleports then return end
-
-    local TELEP = S.room.teleports[idx]
-
-
-    local mx = int((S.x1 + S.x2)/2)
-    local my = int((S.y1 + S.y2)/2)
-
-    local x1 = mx - 32
-    local y1 = my - 32
-    local x2 = mx + 32
-    local y2 = my + 32
-
-    local z1 = (S.floor_h or R.floor_h) + 16
-
-    local tag = sel(TELEP.src == S.room, TELEP.src_tag, TELEP.dest_tag)
-    assert(tag)
-
-
-gui.printf("do_teleport\n")
-    local gate_info = get_mat(THEME.teleporter_mat)
-    gate_info.sec_tag = tag
-
-    Trans.old_quad(gate_info, x1,y1, x2,y2, -EXTREME_H, z1)
-
-    Trans.entity("teleport_spot", (x1+x2)/2, (y1+y2)/2, z1, { angle=0 })
-  end
-
-
   local function dir_for_wotsit(S)
     local dirs  = {}
     local missing_dir
@@ -2470,6 +2434,37 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     end
 
     gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", weapon, mx, my, z1)
+  end
+
+
+  local function do_teleporter(S)
+    local C = R.teleport_conn
+    assert(C)
+
+    local skin1 = GAME.SKINS["Teleporter1"]
+    assert(skin1)
+
+    local skin0 = { wall = R.main_tex }
+    local skin2 = {}
+
+    if C.R1 == R then
+      skin2. in_tag = C.tele_tag2
+      skin2.out_tag = C.tele_tag1
+    else
+      skin2. in_tag = C.tele_tag1
+      skin2.out_tag = C.tele_tag2
+    end
+
+    skin2. in_target = string.format("tele%d", skin2. in_tag)
+    skin2.out_target = string.format("tele%d", skin2.out_tag)
+
+    local mx, my = S:mid_point()
+    local spot_dir = 10 - dir_for_wotsit(S)
+    local z = S.floor_h or R.floor_h
+
+    local T = Trans.spot_transform(mx, my, z, spot_dir)
+
+    Fabricate_at(R, skin1, T, { skin0, skin1, skin2 })
   end
 
 
@@ -2982,6 +2977,8 @@ if B_kind == "secret_door" then door_name = "wolf_elev_door" end
 
     if S.content == "wotsit" and S.content_kind == "WEAPON" then
       do_weapon(S)
+    elseif S.content == "wotsit" and S.content_kind == "TELEPORTER" then
+      do_teleporter(S)
     elseif S.content == "wotsit" then
       do_purpose(S)
     end
@@ -3455,7 +3452,7 @@ function Room_build_all()
   end
 
   each R in LEVEL.rooms do
-    Layout_do_room(R)
+    Layout_room(R)
     Room_make_ceiling(R)
     Room_add_crates(R)
   end

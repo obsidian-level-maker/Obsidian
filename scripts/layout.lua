@@ -348,7 +348,8 @@ function Layout_spot_for_wotsit(R, kind)
   if R.mirror_x and R.tw >= 3 then bonus_x = int((R.tx1 + R.tx2) / 2) end
   if R.mirror_y and R.th >= 3 then bonus_y = int((R.ty1 + R.ty2) / 2) end
 
-  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+  for x = R.sx1,R.sx2 do
+  for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y]
 
     if S.room == R and S.kind == "walk" and not S.content and cave_spot_OK(x, y) then
@@ -370,7 +371,8 @@ function Layout_spot_for_wotsit(R, kind)
 
       table.insert(spots, P)
     end
-  end end -- for x, y
+  end -- x, y
+  end
 
 
   -- FIXME: no need to store spots
@@ -1464,7 +1466,7 @@ end
 
 
 
-function Layout_do_room(R)
+function Layout_room(R)
 
   local function junk_sides()
     -- Adds solid seeds (kind "void") to the edges of large rooms.
@@ -1551,6 +1553,7 @@ function Layout_do_room(R)
       return true
     end
 
+
     local function apply_junk_side(side)
       local th = R.junk_thick[side]
 
@@ -1630,6 +1633,21 @@ function Layout_do_room(R)
     R.guard_spot = S
   end
 
+
+  local function add_teleporter()
+    local sx, sy, S = Layout_spot_for_wotsit(R, "TELEPORTER")
+
+    -- sometimes guard it, but only for out-going teleporters
+    if not R.guard_spot and (R.teleport_conn.R1 == R) and
+       rand.odds(60)
+    then
+      R.guard_spot = S
+    end
+
+    -- FIXME !!!!  exclusion zone for teleporter
+  end
+
+
   local function add_weapon(weapon)
     local sx, sy, S = Layout_spot_for_wotsit(R, "WEAPON")
 
@@ -1639,6 +1657,7 @@ function Layout_do_room(R)
       R.guard_spot = S
     end
   end
+
 
   local function stairwell_height_diff(focus_C)
     local other_C = R.conns[2]
@@ -1658,6 +1677,7 @@ function Layout_do_room(R)
       if other_C.conn_h <   0 then other_C.conn_h =   0 end
     end
   end
+
 
   local function flood_fill_for_junk()
     -- sets the floor_h (etc) for seeds in a junked side
@@ -1715,6 +1735,7 @@ function Layout_do_room(R)
       unset_list = new_list
     end
   end
+
 
   local function select_floor_texs(focus_C)
     local f_texs  = {}
@@ -2146,7 +2167,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
   end
 
 
-  ---==| Layout_do_room |==---
+  ---==| Layout_room |==---
 
 gui.debugf("LAYOUT %s >>>>\n", R:tostr())
 
@@ -2181,6 +2202,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   if R.kind == "hallway" then
     Layout_do_hallway(R, focus_C.conn_h)
+    if R.teleport_conn then add_teleporter() end
     each name in R.weapons do add_weapon(name) end
     return
   end
@@ -2221,6 +2243,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
 
   if R.purpose then add_purpose() end
+  if R.teleport_conn then add_teleporter() end
 
   each name in R.weapons do
     add_weapon(name)
@@ -2234,6 +2257,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     add_pillars()
   end
 end
+
 
 
 function Layout_edge_of_map()
