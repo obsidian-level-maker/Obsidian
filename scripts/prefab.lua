@@ -179,6 +179,7 @@ function Build.door(S, side, z1, skin, skin2, tag, reversed)
   local frame_info = get_mat(skin2.inner, skin.frame_c)
 
   local step_info = get_mat(skin.step_w)
+  step_info.t_face.light = 152
 
   local key_info = add_pegging(get_mat(skin.key_w or skin2.inner), skin.key_ox, skin.key_oy)
 
@@ -207,7 +208,7 @@ function Build.door(S, side, z1, skin, skin2, tag, reversed)
   },
   z1+16, EXTREME_H)
 
-  local track_i = add_pegging(get_mat(skin.track))
+  local track_i = get_mat(skin.track)
 
 
   -- Heretic statues
@@ -1470,6 +1471,7 @@ function Build.exit_pillar(S, z1, skin)
 
   if skin.exitside then
     local info = get_mat(skin.exitside)
+    info.t_face.light = 180
 
     local exit_info = get_mat(skin.exit_w)
     add_pegging(exit_info)
