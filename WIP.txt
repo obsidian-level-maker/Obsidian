@@ -3,14 +3,17 @@ WORK IN PROGRESS
 ================
 
 
+>>>  Teleporters
+
+
 3.57 Merger
 -----------
 
-+  get outdoor bars working again
++  don't make "future" windows if no vertical room
+
+-  f_indent thing
 
 -  put stuff in storage rooms and secrets
-
--  outdoor corners : 16x16 wadfab
 
 
 NICE_ITEMS table
@@ -20,16 +23,13 @@ NICE_ITEMS table
   -  powerups: invis, goggles, invul, etc...
 
 
--  add light sources
-
-
 -  ability to centre doors (on two seeds), stretch arches (multiple seeds)
+
 
 -  ensure normal doors are usually monster-openable
 
 -  ensure secret doors cannot be opened by monsters
    (maybe 1% chance)
-
 
 +  intrusions: like "junking" a side, but connects two other rooms
 
