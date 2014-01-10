@@ -322,7 +322,9 @@ function Room_setup_theme_Scenic(R)
   end  -- dist, dir
   end
 
-  assert(R.theme)
+  if not R.theme then
+    R.theme = LEVEL.rooms[1].theme
+  end
 
   if R.is_outdoor then
     R.main_tex = rand.key_by_probs(R.theme.naturals or R.theme.floors)
@@ -645,6 +647,18 @@ end
 
 
 function Room_reckon_doors()
+
+  local  indoor_prob = style_sel("doors", 0, 10, 30,  90)
+  local outdoor_prob = style_sel("doors", 0, 30, 90, 100)
+
+
+  local function room_cost(R)
+    if R.kind == "hallway" then return 5 end
+    if R.kind == "cave" then return sel(R.is_outdoor, 4, 3) end
+    return sel(R.is_outdoor, 2, 1)
+  end
+
+
   local DEFAULT_PROBS = {}
 
   local function door_chance(R1, R2)
@@ -676,9 +690,65 @@ function Room_reckon_doors()
   end
 
 
+  local function visit_conn(C)
+    if C.kind == "teleporter" then return end
+    if C.kind == "closet"     then return end
+
+    local S = C.S1
+    local N = C.S2
+
+    assert(S.conn_dir)
+    assert(N.conn_dir)
+
+    local B  = S.border[S.conn_dir]
+    local B2 = N.border[N.conn_dir]
+
+    if B.kind != "arch" then
+      S, N  = N, S
+      B, B2 = B2, B
+    end
+
+    assert(B.kind == "arch")
+
+    -- ensure when going from outside to inside that the arch/door
+    -- is made using the building combo (NOT the outdoor combo)
+    if B.kind == "arch" and
+       ((S.room.is_outdoor and not N.room.is_outdoor) or
+        (S.room == N.room.parent))
+    then
+      -- swap borders
+      S, N = N, S
+
+      S.border[S.conn_dir] = B
+      N.border[N.conn_dir] = B2
+    end
+
+    -- locked door?
+
+    if C.lock then
+      B.kind = "lock_door"
+      B.lock = C.lock
+
+      -- FIXME: smells like a hack!!
+      if B.lock.switch and string.sub(B.lock.switch, 1, 4) == "bar_" then
+        B.kind = "bars"
+      end
+
+      return
+    end
+
+    -- FIXME
+  end
+
+
   ---| Room_reckon_doors |---
 
   each C in LEVEL.conns do
+    visit_conn(C)
+  end
+
+
+--[[ OLD CRUD : REMOVE
     if C.kind == "teleporter" then continue end
 
     for who = 1,2 do
@@ -740,6 +810,8 @@ function Room_reckon_doors()
 
     end  -- who
   end  -- C
+
+--]]
 end
 
 
@@ -2678,6 +2750,8 @@ do return end
         Fabricate_at(R, skin1, T, { skin1, skin2 })
 
         shrink_ceiling(side, 4)
+
+
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
