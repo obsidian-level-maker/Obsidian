@@ -737,6 +737,21 @@ function Room_reckon_doors()
       return
     end
 
+    -- secret door ?
+
+    local quest1 = S.room.quest
+    local quest2 = N.room.quest
+
+    if quest1 != quest2 and 
+       (quest1.kind == "secret" or quest2.kind == "secret")
+    then
+      -- FIXME: if both rooms are outdoor, make a ''secret fence''
+
+      B.kind = "secret_door"
+      return
+    end
+
+
     -- FIXME
   end
 
@@ -1054,7 +1069,7 @@ function Room_border_up()
       if S.conn_dir != side then continue end
 
       -- never any windows near a locked door
-      if B.kind == "lock_door" then
+      if C.lock then
         return nil
       end
 
@@ -2766,7 +2781,7 @@ do return end
         shrink_ceiling(side, 4)
       end
 
-      if B_kind == "door" then
+      if B_kind == "door" or B_kind == "secret_door" then
         local z = assert(S.conn and S.conn.conn_h)
 
         -- FIXME: better logic for selecting doors
@@ -2778,7 +2793,7 @@ do return end
         local door_name = rand.key_by_probs(doors)
 
 -- FIXME: TEMP CRUD !!!
-if border.is_secret then door_name = "bigdoor4" end
+if B_kind == "secret_door" then door_name = "wolf_elev_door" end
 
         local skin = assert(GAME.DOORS[door_name])
 
