@@ -1928,7 +1928,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
       local light_name = rand.key_by_probs(THEME.big_lights)
       local light_info = get_mat(light_name)
---FIXME  light_info.b_face.light = 0.85
+      light_info.b_face.light = 176
 
       -- lighting effects
       -- (They can break lifts, hence the check here)
