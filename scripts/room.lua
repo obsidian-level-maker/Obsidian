@@ -726,6 +726,9 @@ function Room_reckon_doors()
       -- TODO: if both rooms are outdoor, make a ''secret fence''
 
       B.kind = "secret_door"
+
+      -- mark the first seed so it can have the secret special
+      C.S2.mark_secret = true
       return
     end
 
@@ -1730,7 +1733,9 @@ function Room_make_ceiling(R)
       local S = SEEDS[x][y]
       assert(S.room == R)
 
-      if S.kind == "lift" or S.kind == "tall_stair" or S.raising_start then
+      if S.kind == "lift" or S.kind == "tall_stair" or
+         S.raising_start or S.mark_secret
+      then
         return false
       end
 
@@ -1756,7 +1761,7 @@ function Room_make_ceiling(R)
 
       if ceil_h and S.kind != "void" then
         if mode == "light" then
-          if S.content != "pillar" then
+          if S.content != "pillar" and not S.mark_secret then
             Build.ceil_light(S, ceil_h, skin)
           end
         else
@@ -2510,10 +2515,26 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   end
 
 
+  local function do_secret_floor(S, z, indents, w_tex, f_tex)
+    -- FIXME: this is game specific!!
+
+    local kind, w_face, t_face = Mat_normal(S.l_tex or w_tex, f_tex)
+
+    t_face.special = 9
+
+    local fx1 = S.x1 + (indents[4] or 0)
+    local fx2 = S.x2 + (indents[6] or 0)
+    local fy1 = S.y1 + (indents[2] or 0)
+    local fy2 = S.y2 + (indents[8] or 0)
+
+    Trans.quad(fx1,fy1, fx2,fy2, nil,z, kind, w_face, t_face)
+  end
+
+
   local function do_floor(S, z, indents, w_tex, f_tex)
 
-    local kind, w_face, p_face = Mat_normal(S.l_tex or w_tex, f_tex)
---??    p_face.kind = sec_kind
+    local kind, w_face, t_face = Mat_normal(S.l_tex or w_tex, f_tex)
+--??    t_face.kind = sec_kind
 
     for bx = 0, 2 do
     for by = 0, 2 do
@@ -2527,7 +2548,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
       if by == 0 then y1 = y1 + (indents[2] or 0) end
       if by == 2 then y2 = y2 - (indents[8] or 0) end
 
-      Trans.quad(x1,y1, x2,y2, nil,z, kind, w_face, p_face)
+      Trans.quad(x1,y1, x2,y2, nil,z, kind, w_face, t_face)
     end
     end
   end
@@ -2943,7 +2964,11 @@ if B_kind == "secret_door" then door_name = "wolf_elev_door" end
       --!!!  info.sec_kind = sec_kind
       --!!!  Split_quad(S, info, fx1,fy1, fx2,fy2, -EXTREME_H, z1)
 
-      do_floor(S, z1, f_indents, w_tex, f_tex)
+      if S.mark_secret then
+        do_secret_floor(S, z1, f_indents, w_tex, f_tex)
+      else
+        do_floor(S, z1, f_indents, w_tex, f_tex)
+      end
     end
 
 
