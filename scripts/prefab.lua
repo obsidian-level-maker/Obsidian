@@ -1414,6 +1414,7 @@ function Build.small_switch(S, dir, f_h, skin, tag)
 
 
   local info = get_mat(skin.side_w)
+  info.t_face.light = 160
 
   local switch_info = get_mat(skin.switch_w)
   add_pegging(switch_info, skin.x_offset, skin.y_offset)
