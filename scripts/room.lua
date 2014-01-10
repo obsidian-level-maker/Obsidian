@@ -42,13 +42,15 @@ class ROOM
   sx1, sy1, sx2, sy2  -- \ Seed range
   sw, sh, svolume     -- /
 
-  floor_h, ceil_h : number
+  zone  : ZONE
+  quest : QUEST
 
   purpose : keyword   -- usually NIL, can be "EXIT" etc... (FIXME)
   purpose_lock : LOCK
 
-  zone  : ZONE
-  quest : QUEST
+  teleport_conn : CONN  -- if exists, the teleporter connection to/from this room
+
+  floor_h, ceil_h : number
 
 
   --- plan_sp code only:

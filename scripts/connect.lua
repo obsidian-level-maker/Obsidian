@@ -663,7 +663,7 @@ function Connect_teleporters()
   
   local function eval_room(R)
     -- can only have one teleporter per room
-    if R.has_teleporter then return -1 end
+    if R.teleport_conn then return -1 end
 
     -- never in a secret exit room
     if R.purpose == "SECRET_EXIT" then return -1 end
@@ -714,8 +714,8 @@ function Connect_teleporters()
     C.tele_tag1 = Plan_alloc_id("tag")
     C.tele_tag2 = Plan_alloc_id("tag")
 
-    R1.has_teleporter = C
-    R2.has_teleporter = C
+    R1.teleport_conn = C
+    R2.teleport_conn = C
   end
 
 
@@ -784,7 +784,7 @@ function Connect_start_room()
 
     -- prefer a room touching the edge of the map
     -- (since it is guaranteed to have room for a start closet)
---???  if R:touches_map_edge() then score = score + 100 end
+--TODO  if R:touches_map_edge() then score = score + 12 end
 
     -- not too big !!
     if R.svolume <= 49 then score = score + 10 end
@@ -792,7 +792,7 @@ function Connect_start_room()
     -- not too small
     if R.svolume >= 12 then score = score + 2 end
 
-    --??  if not R:has_teleporter() then score = score + 5 end
+    if not R.teleport_conn then score = score + 5 end
 
     return score
   end
