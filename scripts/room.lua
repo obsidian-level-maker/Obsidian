@@ -491,22 +491,6 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
       end
     end
   end -- for R
-
-  -- we don't need archways where two hallways connect
-  each C in LEVEL.conns do
-    if not C.lock and C.R1.hallway and C.R2.hallway then
-      local S = C.S1
-      local T = C.S2
-      local dir = S.conn_dir
-
-      if S.border[S.conn_dir].kind == "arch" or
-         T.border[T.conn_dir].kind == "arch"
-      then
-        S.border[S.conn_dir].kind = "nothing"
-        T.border[T.conn_dir].kind = "nothing"
-      end
-    end
-  end -- for C
 end
 
 
@@ -652,13 +636,6 @@ function Room_reckon_doors()
   local outdoor_prob = style_sel("doors", 0, 30, 90, 100)
 
 
-  local function room_cost(R)
-    if R.kind == "hallway" then return 5 end
-    if R.kind == "cave" then return sel(R.is_outdoor, 4, 3) end
-    return sel(R.is_outdoor, 2, 1)
-  end
-
-
   local DEFAULT_PROBS = {}
 
   local function door_chance(R1, R2)
@@ -745,14 +722,35 @@ function Room_reckon_doors()
     if quest1 != quest2 and 
        (quest1.kind == "secret" or quest2.kind == "secret")
     then
-      -- FIXME: if both rooms are outdoor, make a ''secret fence''
+      -- TODO: if both rooms are outdoor, make a ''secret fence''
 
       B.kind = "secret_door"
       return
     end
 
+    -- don't need anything between two outdoor rooms
+    if (S.room.is_outdoor and N.room.is_outdoor) and rand.odds(90) then
+      B.kind  = "nothing"
+      B2.kind = "nothing"
+      return
+    end
 
-    -- FIXME
+    -- don't need archways where two hallways connect
+    if S.room.hallway and N.room.hallway then
+      B.kind  = "nothing"
+      B2.kind = "nothing"
+      return
+    end
+
+    -- apply the random check
+    local prob = indoor_prob
+    if S.room.is_outdoor or N.room.is_outdoor then
+      prob = outdoor_prob
+    end
+
+    if rand.odds(prob) then
+      B.kind = "door"
+    end
   end
 
 
@@ -761,72 +759,6 @@ function Room_reckon_doors()
   each C in LEVEL.conns do
     visit_conn(C)
   end
-
-
---[[ OLD CRUD : REMOVE
-    if C.kind == "teleporter" then continue end
-
-    for who = 1,2 do
-
-      local S = sel(who == 1, C.S1, C.S2)
-      local N = sel(who == 2, C.S1, C.S2)
-      assert(S)
-
-      if not S.conn_dir then continue end
-
-      assert(N.conn_dir == 10-S.conn_dir)
-
-      local B  = S.border[S.conn_dir]
-      local B2 = N.border[N.conn_dir]
-
-      -- ensure when going from outside to inside that the arch/door
-      -- is made using the building combo (NOT the outdoor combo)
-      if B.kind == "arch" and
-         ((S.room.is_outdoor and not N.room.is_outdoor) or
-          (S.room == N.room.parent))
-      then
-        -- swap borders
-        S, N = N, S
-
-        S.border[S.conn_dir] = B
-        N.border[N.conn_dir] = B2
-      end
-
-      if B.kind == "arch" and not B.tried_door and
-         S.room.quest.kind == "normal" and
-         N.room.quest.kind == "secret"
-      then
-        B.kind = "door"
-        B.is_secret = true
-        B.tried_door = true
-
-      elseif B.kind == "arch" and GAME.DOORS and not B.tried_door then
-        B.tried_door = true
-
-        local prob = door_chance(C.R1, C.R2)
-
-        if S.conn.lock and S.conn.lock.kind != "NULL" then
-          B.kind = "lock_door"
-          B.lock = S.conn.lock
-
-          -- FIXME: smells like a hack!!
-          if B.lock.switch and string.sub(B.lock.switch, 1, 4) == "bar_" then
-            B.kind = "bars"
-          end
-
-        elseif rand.odds(prob) then
-          B.kind = "door"
-
-        elseif (STYLE.fences == "none" or STYLE.fences == "few") and
-               C.R1.is_outdoor and C.R2.is_outdoor then
-          B.kind = "nothing"
-        end
-      end
-
-    end  -- who
-  end  -- C
-
---]]
 end
 
 
