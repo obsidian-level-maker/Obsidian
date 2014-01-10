@@ -1720,7 +1720,10 @@ function Layout_do_room(R)
     local f_texs  = {}
 
     if focus_C.conn_ftex and
-       (focus_C.R1.kind == focus_C.R2.kind) then
+       (focus_C.R1.kind == focus_C.R2.kind) and
+       focus_C.kind != "teleporter" and
+       not focus_C.fresh_floor
+    then
       table.insert(f_texs, focus_C.conn_ftex)
     end
 

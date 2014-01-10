@@ -711,6 +711,7 @@ function Room_reckon_doors()
         B.kind = "bars"
       end
 
+      C.fresh_floor = true
       return
     end
 
@@ -750,15 +751,22 @@ function Room_reckon_doors()
 
     if rand.odds(prob) then
       B.kind = "door"
+
+      if rand.odds(30) then
+        C.fresh_floor = true
+      end
+
       return
     end
 
-    -- support arches which have a step in them
-
-    if S == C.S1 then
-      C.diff_h = 16
-    else
-      C.diff_h = -16
+    if rand.odds(60) then
+      -- support arches which have a step in them
+      if S == C.S1 then
+        C.diff_h = 16
+      else
+        C.diff_h = -16
+      end
+      C.fresh_floor = true
     end
   end
 
@@ -2725,7 +2733,10 @@ do return end
           z = z - S.conn.diff_h
         end
 
-        local skin1 = GAME.SKINS["Arch_stair"]  --!!!!
+        local fab_name = "Arch_plain"
+        if S.conn.diff_h then fab_name = "Arch_stair" end
+
+        local skin1 = GAME.SKINS[fab_name]
         assert(skin1)
 
         local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
