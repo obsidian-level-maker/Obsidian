@@ -141,7 +141,8 @@ GLOBAL_STYLE_LIST =
   crossovers  = { none=40 } --!!!! , some=40, heaps=40 }
   mon_variety = { some=90, heaps=4 }
   teleporters = { none=40, few=30, some=30, heaps=5 }
-  switches    = { none=4, few=30, some=80, heaps=10 }
+  switches    = { none=5, few=50, some=50, heaps=10 }
+  doors       = { none=5, few=50, some=30, heaps=5 }
 
   room_shape  = { none=80, L=5, T=5, O=5, S=5, X=5 }
 
