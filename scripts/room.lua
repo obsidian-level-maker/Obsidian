@@ -1721,17 +1721,21 @@ function Room_make_ceiling(R)
   local function central_niceness()
     local nice = 2
 
-    for x = R.cx1, R.cx2 do for y = R.cy1, R.cy2 do
+    for x = R.cx1, R.cx2 do
+    for y = R.cy1, R.cy2 do
       local S = SEEDS[x][y]
       
       if S.room != R then return 0 end
       
-      if S.kind == "void" or ---#  S.kind == "diagonal" or
-         S.kind == "tall_stair" or S.content == "pillar"
+      if S.kind == "void" or
+         S.kind == "tall_stair" or
+         S.content == "pillar" or
+         S.mark_secret
       then
         nice = 1
       end
-    end end -- for x, y
+    end -- x, y
+    end
 
     return nice
   end
@@ -2021,12 +2025,12 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
     R.ceil_tex = rand.key_by_probs(R.theme.ceilings)
 
--- [[
+
     decide_periphs()
     install_periphs()
 
     do_central_area()
---]]
+
 
 --[[
     if R.tx1 and R.tw >= 7 and R.th >= 7 then
