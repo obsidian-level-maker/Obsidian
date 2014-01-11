@@ -365,7 +365,7 @@ function Room_decide_hallways()
       return false
     end
 
-    if #R.teleports > 0 then return false end
+    if R.teleport_conn  then return false end
     if R.num_branch < 2 then return false end
     if R.num_branch > 4 then return false end
 
