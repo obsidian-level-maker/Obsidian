@@ -1114,7 +1114,7 @@ DOOM2.LEVEL_THEMES =
 
     ---!!!  TEMPORARY V3 STUFF  !!!---
 
-    doors = { wolf_door=90, wolf_elev_door=5 }
+    doors = { wolf_door=90 }
   }
 }
 

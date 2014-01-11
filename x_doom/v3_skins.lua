@@ -748,14 +748,14 @@ DOOM.DOORS =
     line_kind=1, tag=0
   }
 
-  wolf_elev_door =
+  secret_door =
   {
     w=128, h=112, door_h=128
     key_w="DOORSTOP"
     door_w="ZELDOOR", door_c="FLAT23"
     step_w="STEP4"
     frame_c="FLAT18", track="DOORTRAK"
-    line_kind=1, tag=0
+    line_kind=117, tag=0
   }
 
 
