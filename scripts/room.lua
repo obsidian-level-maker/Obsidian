@@ -887,6 +887,13 @@ function Room_border_up()
         N.thick[10 - side] = 24
         return
       end
+
+      -- TODO: do this better, honor symmetry
+      if S.kind == "liquid" and S.border[side].kind == "wall"
+         and rand.odds(10)
+      then
+        S.border[side].kind = "liquid_fall"
+      end
     end
   end
 
@@ -2484,6 +2491,30 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   end
 
 
+  local function do_liquid_fall(S, side, w_tex, z2)
+    if z2 < S.floor_h + 160 then
+      do_wall(S, side, w_tex)
+      return
+    end
+
+    local skin1 = GAME.SKINS["Wall_liquid_fall"]
+    assert(skin1)
+
+    local skin0 = { wall=w_tex }
+
+    local deep = assert(skin1.deep)
+
+    local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, S.floor_h,
+                                   side, 0, 192, deep, 0)
+
+    if skin1.z_fit then
+      T.fitted_z = z2 - S.floor_h
+    end
+
+    Fabricate_at(R, skin1, T, { skin0, skin1 })
+  end
+
+
   local function do_window(S, side, w_tex)
     local B = S.border[side]
 
@@ -2870,6 +2901,11 @@ do return end
 
         Build.archway(S, side, z1, z_top, skin)
         shrink_ceiling(side, 4)
+      end
+
+      if B_kind == "liquid_fall" then
+        do_liquid_fall(S, side, w_tex, z2)
+        shrink_both(side, 4)
       end
 
       if B_kind == "door" or B_kind == "secret_door" then
