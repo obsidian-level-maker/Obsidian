@@ -1001,12 +1001,37 @@ function Room_border_up()
     if S.floor_h != S0.floor_h then return false end
     if N.floor_h != N0.floor_h then return false end
 
+    local S_kind = S.border[     side].kind
+    local N_kind = N.border[10 - side].kind
+
+    if not (S_kind == "wall" or S_kind == "facade") then return false end
+    if not (N_kind == "wall" or N_kind == "facade") then return false end
+
     return true
+  end
+
+  
+  local function repeat_arch(S0, side, off_dir, off_count)
+    local N0 = S0:neighbor(side)
+
+    for off_dist = 1, off_count do
+      local S = S0:neighbor(off_dir, off_dist)
+      local N = S:neighbor(side)
+
+      -- hmmmm, is it kosher to just re-use the border tables?
+
+      S.border[side]      = S0.border[side]
+      N.border[10 - side] = N0.border[10 - side]
+    end
   end
 
 
   local function try_widen_arch(R, R2, S, side)
-    -- we don't do doorways yet...
+    if R.kind == "stairwell" or R2.kind == "stairwell" then
+      return
+    end
+
+    -- we don't do doors yet...
     if S.border[side].kind != "arch" then return end
 
     local A_dir = geom.RIGHT[side]
@@ -1023,9 +1048,15 @@ function Room_border_up()
       B_num = B_num + 1
     end
 
-    stderrf("try_widen_arch @ %s dir:%d --> %d / %d\n", S:midstr(), side, A_num, B_num)
+    -- nothing possible?
+    if A_num == 0 and B_num == 0 then
+      return
+    end
 
-    -- TODO....
+    -- FIXME randomness
+
+    repeat_arch(S, side, A_dir, A_num)
+    repeat_arch(S, side, B_dir, B_num)
   end
 
 
@@ -2610,18 +2641,22 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   end
 
 
-  local function do_archway(S, side, f_tex, w_tex, o_tex)
-    local z = assert(S.conn and S.conn.conn_h)
+  local function do_archway(S, side, f_tex, w_tex)
+    local conn = S.border[side].conn
 
-    if S.conn.diff_h and S.conn.diff_h > 0 then
-      z = z - S.conn.diff_h
+    local z = assert(conn and conn.conn_h)
+
+    if conn.diff_h and conn.diff_h > 0 then
+      z = z - conn.diff_h
     end
 
     local fab_name = "Arch_plain"
-    if S.conn.diff_h then fab_name = "Arch_stair" end
+    if conn.diff_h then fab_name = "Arch_stair" end
 
     local skin1 = GAME.SKINS[fab_name]
     assert(skin1)
+
+    local o_tex = outer_tex(S, side, w_tex)
 
     local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
 
@@ -2964,13 +2999,13 @@ do return end
       end
 
       if B_kind == "arch" then
-        do_archway(S, side, f_tex, w_tex, o_tex)
+        do_archway(S, side, f_tex, w_tex)
 
         f_indents[side] = 16
         c_indents[side] = 16
 
-        assert(not S.conn.already_made_lock)
-        S.conn.already_made_lock = true
+---        assert(not S.conn.already_made_lock)
+---        S.conn.already_made_lock = true
       end
 
       if B_kind == "liquid_arch" then
