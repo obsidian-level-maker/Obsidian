@@ -967,8 +967,6 @@ DOOM2.LEVEL_THEMES =
     crates = { crate1=50, crate2=50, comp=70, lite5=20
                space=90, mod=15 }
     exits = { skull_pillar=50, stone_pillar=5 }
-    bars = { bar_silver=50, bar_gray=50 }
-
   }
 
 
@@ -1020,7 +1018,6 @@ DOOM2.LEVEL_THEMES =
     lifts = { platform=10, rusty=50, spine=30 }
     big_pillars = { big_red=50, sloppy=20, sloppy2=20, }
     switches = { sw_skin=50, sw_vine=50, sw_wood=50 }
-    bars = { bar_wood=50, bar_metal=50 }
     outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 }
   }
 
@@ -1073,7 +1070,6 @@ DOOM2.LEVEL_THEMES =
     steps = { step6=50, }
     lifts = { shiny=20, platform=20, rusty=50 }
     switches = { sw_wood=50, sw_blue=50, sw_hot=50 }
-    bars = { bar_wood=50, bar_metal=50 }
   }
 
 

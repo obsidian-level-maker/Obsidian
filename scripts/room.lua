@@ -2582,19 +2582,43 @@ if S.border[side].kind == "secret_door" then door_name = "wolf_elev_door" end
 
 
   function do_lowering_bars(S, side, f_tex, w_tex, o_tex)
+    local z = assert(S.conn and S.conn.conn_h)
+
     local LOCK = assert(S.border[side].lock)
     local skin = assert(GAME.DOORS[LOCK.switch or LOCK.item])
 
     local N = S:neighbor(side)
+    assert(N and N.room)
 
-    local z_top = math.max(R.floor_max_h, N.room.floor_max_h) + skin.bar_h
-    local ceil_min = math.min(R.ceil_h or SKY_H, N.room.ceil_h or SKY_H)
+    -- determine how much higher to make bars, based on nearby high
+    -- floors which the player could jump over them from.
 
-    if z_top > ceil_min-32 then
-       z_top = ceil_min-32
+    local extra_z = math.max(S.room.floor_max_h, N.room.floor_max_h) - z
+    if extra_z < 0 then extra_z = 0 end
+
+    local z_max = math.min(S.room.ceil_h or SKY_H, N.room.ceil_h or SKY_H) - 96
+
+    if extra_z > z_max - z then
+       extra_z = z_max - z
     end
 
-    Build.lowering_bars(S, side, z_top, skin, LOCK.tag)
+    if extra_z < 0 then extra_z = 0 end
+
+    local fab_name = "Bars_shiny"
+
+    local skin1 = GAME.SKINS[fab_name]
+    assert(skin1)
+
+    local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex }
+
+    skin2.tag_1 = LOCK.tag
+
+    local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, z,
+                                   side, 0, 192, skin1.deep, skin1.over)
+
+    T.fitted_z = skin1.bound_z2 + extra_z
+
+    Fabricate_at(R, skin1, T, { skin1, skin2 })
   end
 
 

@@ -6,6 +6,7 @@ DOOM.SKINS.Bars_shiny =
 {
   file   = "door/bars.wad"
   where  = "edge"
+
   long   = 192
   deep   = 16
   over   = 16
