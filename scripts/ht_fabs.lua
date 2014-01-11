@@ -1115,6 +1115,57 @@ HEIGHT_I3_OUT =
   }
 }
 
+HEIGHT_SOLID_I4 =
+{
+  environment = "indoor"
+  prob = 2000
+
+  structure =
+  {
+    "##1##"
+    "#Z1N#"
+    "#111#"
+    "Z.^.N"
+    "....."
+  }
+
+  x_sizes = { "11111", "11211", "11311" }
+  y_sizes = { "11110", "11111", "11210", "11211" }
+
+  subs =
+  {
+    { height=1, match="any" }
+  }
+
+  symmetry = "x"
+}
+
+HEIGHT_SOLID_I5 =
+{
+  environment = "indoor"
+  prob = 5000
+
+  structure =
+  {
+    "##222##"
+    "#Z1^1N#"
+    "#11111#"
+    "Z..^..N"
+    "......."
+  }
+
+  x_sizes = { "1101011", "1111111", "1112111", "1121211" }
+  y_sizes = { "11111", "11112", "11211", "11212" }
+
+  subs =
+  {
+    { height=1, match="any" }
+    { height=2, match="any" }
+  }
+
+  symmetry = "x"
+}
+
 HEIGHT_L1 =
 {
   prob = 300
