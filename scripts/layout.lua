@@ -316,7 +316,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Layout_spot_for_wotsit(R, kind)
+function Layout_spot_for_wotsit(R, kind, none_OK)
   local spots = {}
 
   local function cave_spot_OK(x, y)
@@ -380,6 +380,7 @@ function Layout_spot_for_wotsit(R, kind)
         function(A,B) return A.score > B.score end)
 
   if not P then
+    if none_OK then return nil end
     error("No usable spots in room!")
   end
 
@@ -1649,7 +1650,12 @@ function Layout_room(R)
 
 
   local function add_weapon(weapon)
-    local sx, sy, S = Layout_spot_for_wotsit(R, "WEAPON")
+    local sx, sy, S = Layout_spot_for_wotsit(R, "WEAPON", "none_OK")
+
+    if not S then
+      gui.printf("WARNING: no space for %s!\n", weapon)
+      return
+    end
 
     S.content_weapon = weapon
 
