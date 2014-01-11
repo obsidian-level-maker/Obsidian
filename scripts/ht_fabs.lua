@@ -111,6 +111,26 @@ SOLID_P3 =
   solid_feature = true
 }
 
+SOLID_P5 =
+{
+  environment = "indoor"
+  prob = 9999
+ 
+  structure =
+  {
+    "/...%"
+    "./#%."
+    ".###."
+    ".%#/."
+    "%.../"
+  }
+
+  x_sizes = { "11111", "11211" }
+  y_sizes = { "11111", "11211" }
+
+  symmetry = "xy"
+}
+
 SOLID_C1 =
 {
   kind = "solid"
