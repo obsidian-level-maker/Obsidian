@@ -2513,6 +2513,91 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   end
 
 
+  local function do_archway(S, side, f_tex, w_tex, o_tex)
+    local z = assert(S.conn and S.conn.conn_h)
+
+    if S.conn.diff_h and S.conn.diff_h > 0 then
+      z = z - S.conn.diff_h
+    end
+
+    local fab_name = "Arch_plain"
+    if S.conn.diff_h then fab_name = "Arch_stair" end
+
+    local skin1 = GAME.SKINS[fab_name]
+    assert(skin1)
+
+    local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
+
+    if skin2.wall == skin2.outer then
+      skin2.track = skin2.wall
+    end
+
+    local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, z,
+                                   side, 0, 192, skin1.deep, skin1.over)
+
+    Fabricate_at(R, skin1, T, { skin1, skin2 })
+  end
+
+
+  function do_door(S, side, f_tex, w_tex, o_tex)
+    local z = assert(S.conn and S.conn.conn_h)
+
+    -- FIXME: better logic for selecting doors
+    local doors = THEME.doors
+    if not doors then
+      error("Game is missing doors table")
+    end
+
+    local door_name = rand.key_by_probs(doors)
+
+-- FIXME: TEMP CRUD !!!
+if S.border[side].kind == "secret_door" then door_name = "wolf_elev_door" end
+
+    local skin = assert(GAME.DOORS[door_name])
+
+    local skin2 = { inner=w_tex, outer=o_tex }
+
+    assert(skin.track)
+    assert(skin.step_w)
+
+    Build.door(S, side, z, skin, skin2, 0)
+  end
+
+
+  function do_locked_door(S, side, f_tex, w_tex, o_tex)
+    local z = assert(S.conn and S.conn.conn_h)
+
+    local LOCK = assert(S.border[side].lock)
+    local skin = assert(GAME.DOORS[LOCK.switch or LOCK.item])
+
+--if not skin.track then gui.printf("%s", table.tostr(skin,1)); end
+    assert(skin.track)
+
+    local skin2 = { inner=w_tex, outer=o_tex }
+
+    local reversed = (S == S.conn.S2)
+
+    Build.door(S, side, z, skin, skin2, LOCK.tag, reversed)
+  end
+
+
+  function do_lowering_bars(S, side, f_tex, w_tex, o_tex)
+    local LOCK = assert(S.border[side].lock)
+    local skin = assert(GAME.DOORS[LOCK.switch or LOCK.item])
+
+    local N = S:neighbor(side)
+
+    local z_top = math.max(R.floor_max_h, N.room.floor_max_h) + skin.bar_h
+    local ceil_min = math.min(R.ceil_h or SKY_H, N.room.ceil_h or SKY_H)
+
+    if z_top > ceil_min-32 then
+       z_top = ceil_min-32
+    end
+
+    Build.lowering_bars(S, side, z_top, skin, LOCK.tag)
+  end
+
+
   local function do_secret_floor(S, z, indents, w_tex, f_tex)
     -- FIXME: this is game specific!!
 
@@ -2530,7 +2615,6 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
 
   local function do_floor(S, z, indents, w_tex, f_tex)
-
     local kind, w_face, t_face = Mat_normal(S.l_tex or w_tex, f_tex)
 --??    t_face.kind = sec_kind
 
@@ -2746,31 +2830,10 @@ do return end
       end
 
       if B_kind == "arch" then
-        local z = assert(S.conn and S.conn.conn_h)
+        do_archway(S, side, f_tex, w_tex, o_tex)
 
-        if S.conn.diff_h and S.conn.diff_h > 0 then
-          z = z - S.conn.diff_h
-        end
-
-        local fab_name = "Arch_plain"
-        if S.conn.diff_h then fab_name = "Arch_stair" end
-
-        local skin1 = GAME.SKINS[fab_name]
-        assert(skin1)
-
-        local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
-
-        if skin2.wall == skin2.outer then
-          skin2.track = skin2.wall
-        end
-
-        local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, z,
-                                       side, 0, 192, skin1.deep, skin1.over)
-
-        Fabricate_at(R, skin1, T, { skin1, skin2 })
-
-        f_indents[side] = skin1.deep
-        c_indents[side] = skin1.deep
+        f_indents[side] = 16
+        c_indents[side] = 16
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
@@ -2786,27 +2849,8 @@ do return end
       end
 
       if B_kind == "door" or B_kind == "secret_door" then
-        local z = assert(S.conn and S.conn.conn_h)
+        do_door(S, side, f_tex, w_tex, o_tex)
 
-        -- FIXME: better logic for selecting doors
-        local doors = THEME.doors
-        if not doors then
-          error("Game is missing doors table")
-        end
-
-        local door_name = rand.key_by_probs(doors)
-
--- FIXME: TEMP CRUD !!!
-if B_kind == "secret_door" then door_name = "wolf_elev_door" end
-
-        local skin = assert(GAME.DOORS[door_name])
-
-        local skin2 = { inner=w_tex, outer=o_tex }
-
-        assert(skin.track)
-        assert(skin.step_w)
-
-        Build.door(S, side, z, skin, skin2, 0)
         shrink_ceiling(side, 4)
 
         assert(not S.conn.already_made_lock)
@@ -2814,19 +2858,8 @@ if B_kind == "secret_door" then door_name = "wolf_elev_door" end
       end
 
       if B_kind == "lock_door" then
-        local z = assert(S.conn and S.conn.conn_h)
+        do_locked_door(S, side, f_tex, w_tex, o_tex)
 
-        local LOCK = assert(S.border[side].lock)
-        local skin = assert(GAME.DOORS[LOCK.switch or LOCK.item])
-
---if not skin.track then gui.printf("%s", table.tostr(skin,1)); end
-        assert(skin.track)
-
-        local skin2 = { inner=w_tex, outer=o_tex }
-
-        local reversed = (S == S.conn.S2)
-
-        Build.door(S, side, S.conn.conn_h, skin, skin2, LOCK.tag, reversed)
         shrink_ceiling(side, 4)
 
         assert(not S.conn.already_made_lock)
@@ -2834,17 +2867,7 @@ if B_kind == "secret_door" then door_name = "wolf_elev_door" end
       end
 
       if B_kind == "bars" then
-        local LOCK = assert(S.border[side].lock)
-        local skin = assert(GAME.DOORS[LOCK.switch or LOCK.item])
-
-        local z_top = math.max(R.floor_max_h, N.room.floor_max_h) + skin.bar_h
-        local ceil_min = math.min(R.ceil_h or SKY_H, N.room.ceil_h or SKY_H)
-
-        if z_top > ceil_min-32 then
-           z_top = ceil_min-32
-        end
-
-        Build.lowering_bars(S, side, z_top, skin, LOCK.tag)
+        do_lowering_bars(S, side, f_tex, w_tex, o_tex)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
