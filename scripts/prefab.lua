@@ -1757,6 +1757,7 @@ gui.debugf("x1..x2 : %d,%d\n", x1,x2)
   local floor_info = get_mat(skin.wall, skin.floor)
 
   floor_info.sec_kind = skin.sec_kind
+  floor_info.t_face.light = 148
 
   local coords = Trans.rect_coords(mx-total_w/2,my-4, mx+total_w/2,deep)
 
