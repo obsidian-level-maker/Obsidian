@@ -1037,6 +1037,10 @@ function Room_border_up()
     local A_dir = geom.RIGHT[side]
     local B_dir = geom. LEFT[side]
 
+    if A_dir > B_dir then
+       A_dir, B_dir = B_dir, A_dir
+    end
+
     local A_num = 0
     local B_num = 0
 
@@ -1055,8 +1059,36 @@ function Room_border_up()
 
     -- FIXME randomness
 
-    repeat_arch(S, side, A_dir, A_num)
-    repeat_arch(S, side, B_dir, B_num)
+    if false then
+      repeat_arch(S, side, A_dir, A_num)
+      repeat_arch(S, side, B_dir, B_num)
+      return
+    end
+
+    -- setup the leftmost/bottommost seed border as the wide arch
+
+    local base = S:neighbor(A_dir, A_num)
+
+    base.border[side] = S.border[side]
+    base.border[side].seed_w = 1 + A_num + B_num
+
+    if S != base then
+      S.border[side] = {}
+    end
+
+    -- and make all other seed borders be "straddle"
+
+    for dist = 0, A_num + B_num do
+      local T = base:neighbor(B_dir, dist)
+
+      if T != base then
+        T.border[side].kind = "straddle"
+      end
+
+      local TN = T:neighbor(side)
+
+      TN.border[10 - side].kind = "straddle"
+    end
   end
 
 
@@ -2669,7 +2701,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local seed_w = S.border[side].seed_w or 1
 
     if seed_w > 1 then
-      if geom.is_vert(side) then
+      if geom.is_horiz(side) then
         S2 = SEEDS[S.sx][S.sy + seed_w - 1]
       else
         S2 = SEEDS[S.sx + seed_w - 1][S.sy]
