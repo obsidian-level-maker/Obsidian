@@ -2582,7 +2582,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local door_name = rand.key_by_probs(doors)
 
 -- FIXME: TEMP CRUD !!!
-if S.border[side].kind == "secret_door" then door_name = "wolf_elev_door" end
+if S.border[side].kind == "secret_door" then door_name = "secret_door" end
 
     local skin = assert(GAME.DOORS[door_name])
 
