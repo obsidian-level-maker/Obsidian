@@ -2843,6 +2843,7 @@ do return end
            (S:neighbor(side) and S:neighbor(side).room == R and
             S:neighbor(side).kind == "void")
          )
+         and R.kind != "stairwell"
       then
         local skin = { wall=LEVEL.hall_tex, trim1=THEME.hall_trim1, trim2=THEME.hall_trim2 }
         Build.detailed_hall(S, side, z1, z2, skin)
