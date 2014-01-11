@@ -981,11 +981,11 @@ DOOM2.LEVEL_THEMES =
 
     buildings =
     {
-      Hell_hotbrick = 40
+      Hell_hotbrick = 25
       Hell_marble   = 40
       Hell_gray     = 40
 
-      Hell_stone    = 15
+      Hell_stone    = 10
       Hell_gstvine  = 10
       Hell_wood     = 10
       Hell_skin     = 10
