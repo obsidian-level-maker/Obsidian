@@ -984,6 +984,66 @@ function Room_border_up()
   end
 
 
+  local function can_travel(R, R2, S0, side, off_dir, off_dist)
+    local N0 = S0:neighbor(side)
+
+    local S = S0:neighbor(off_dir, off_dist)
+
+    if not (S and S.room == R) then return false end
+
+    local N = S:neighbor(side)
+
+    if not (N and N.room == R2) then return false end
+
+    if S.kind != "walk" then return false end
+    if N.kind != "walk" then return false end
+
+    if S.floor_h != S0.floor_h then return false end
+    if N.floor_h != N0.floor_h then return false end
+
+    return true
+  end
+
+
+  local function try_widen_arch(R, R2, S, side)
+    -- we don't do doorways yet...
+    if S.border[side].kind != "arch" then return end
+
+    local A_dir = geom.RIGHT[side]
+    local B_dir = geom. LEFT[side]
+
+    local A_num = 0
+    local B_num = 0
+
+    while A_num < 3 and can_travel(R, R2, S, side, A_dir, A_num+1) do
+      A_num = A_num + 1
+    end
+
+    while B_num < 3 and can_travel(R, R2, S, side, B_dir, B_num+1) do
+      B_num = B_num + 1
+    end
+
+    stderrf("try_widen_arch @ %s dir:%d --> %d / %d\n", S:midstr(), side, A_num, B_num)
+
+    -- TODO....
+  end
+
+
+  local function widen_arches(R)
+    -- sometimes make an archway or door between two rooms wider
+
+    each C in R.conns do
+      if C.R1 != R then continue end
+      if C.kind != "normal" then continue end
+      if C.lock then continue end
+
+      assert(C.S1)
+
+      try_widen_arch(R, C.R2, C.S1, C.dir)
+    end
+  end
+
+
   local function get_border_list(R)
     local list = {}
 
@@ -1381,6 +1441,8 @@ function Room_border_up()
   end
 
   each R in LEVEL.rooms do
+    widen_arches(R)
+
     decide_windows( R, get_border_list(R))
     decide_pictures(R, get_border_list(R))
   end
@@ -2567,8 +2629,20 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
       skin2.track = skin2.wall
     end
 
-    local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, z,
-                                   side, 0, 192, skin1.deep, skin1.over)
+    -- handling for extra-wide archways
+    local S2 = S
+    local seed_w = S.border[side].seed_w or 1
+
+    if seed_w > 1 then
+      if geom.is_vert(side) then
+        S2 = SEEDS[S.sx][S.sy + seed_w - 1]
+      else
+        S2 = SEEDS[S.sx + seed_w - 1][S.sy]
+      end
+    end
+
+    local T = Trans.edge_transform(S.x1, S.y1, S2.x2, S2.y2, z,
+                                   side, 0, seed_w * 192, skin1.deep, skin1.over)
 
     Fabricate_at(R, skin1, T, { skin1, skin2 })
   end
