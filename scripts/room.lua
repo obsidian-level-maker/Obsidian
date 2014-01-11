@@ -477,6 +477,7 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
   each R in LEVEL.rooms do
     if R.hallway and R.num_branch == 2 and
        not R.purpose and #R.weapons == 0 and
+       not R.teleport_conn and
        stairwell_neighbors(R) == 0 and
        locked_neighbors(R) == 0 and
        THEME.stairwell_walls
@@ -2498,11 +2499,11 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local o_tex = outer_tex(S, side, w_tex)
     local skin0 = { wall=w_tex, outer=o_tex or w_tex }
 
-    local deep = assert(skin1.deep)
-    deep = int(deep / 2)
+    assert(skin1.deep)
+    assert(skin1.over)
 
     local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, B.win_z1,
-                                   side, 0, 192, deep, deep)
+                                   side, 0, 192, skin1.deep, skin1.over)
 
     if B.win_z2 then
       T.fitted_z = B.win_z2 - B.win_z1

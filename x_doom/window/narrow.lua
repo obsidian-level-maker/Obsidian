@@ -7,7 +7,8 @@ DOOM.SKINS.Window_narrow =
   file   = "window/narrow.wad"
   where  = "edge"
   long   = 192
-  deep   = 32
+  deep   = 16
+  over   = 16
 
   bound_z1 = 0
   bound_z2 = 112
@@ -25,7 +26,8 @@ DOOM.SKINS.Window_narrow_tall =
   file   = "window/narrow.wad"
   where  = "edge"
   long   = 192
-  deep   = 32
+  deep   = 16
+  over   = 16
 
   bound_z1 = 0
   bound_z2 = 112
