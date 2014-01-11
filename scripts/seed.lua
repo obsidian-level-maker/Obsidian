@@ -81,6 +81,11 @@ function SEED_CLASS.mid_point(S)
   return int((S.x1 + S.x2) / 2), int((S.y1 + S.y2) / 2)
 end
 
+function SEED_CLASS.midstr(S)
+  local mx, my = S:mid_point()
+  return string.format("SEED(%+5d %+5d)", mx, my)
+end
+
 
 ----------------------------------------------------------------------
 
