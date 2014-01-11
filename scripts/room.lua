@@ -1382,10 +1382,15 @@ function Room_border_up()
   local function install_pic(R, bd, pic_name, v_space)
     skin = assert(GAME.PICTURES[pic_name])
 
+    local cross_hack  -- FIXME: TEMP RUBBISH
+    if THEME.keys and THEME.keys["ks_red"] then
+      cross_hack = true -- rand.odds(30)
+    end
+
     -- handles symmetry
 
     for dx = 1,sel(R.mirror_x, 2, 1) do
-      for dy = 1,sel(R.mirror_y, 2, 1) do
+    for dy = 1,sel(R.mirror_y, 2, 1) do
         local S    = bd.S
         local side = bd.side
 
@@ -1411,10 +1416,12 @@ function Room_border_up()
           B.kind = "picture"
           B.pic_skin = skin
           B.pic_z1 = S.floor_h + raise
+
+          if cross_hack then B.kind = "cross" end
         end
 
-      end -- for dy
-    end -- for dx
+    end -- dx, dy
+    end
   end
 
 
@@ -2644,6 +2651,19 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   end
 
 
+  local function do_cross(S, side, f_tex, w_tex)
+    local skin1 = GAME.SKINS["Wall_cross"]
+    assert(skin1)
+
+    local skin0 = { wall=w_tex }
+
+    local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, S.floor_h,
+                                   side, 0, 192, skin1.deep, 0)
+
+    Fabricate_at(R, skin1, T, { skin0, skin1 })
+  end
+
+
   local function do_window(S, side, w_tex)
     local B = S.border[side]
 
@@ -2851,7 +2871,7 @@ if S.border[side].kind == "secret_door" then door_name = "secret_door" end
       local B_kind = S.border[side].kind
 
       if not N or N.free or N.kind == "void" or
-         B_kind == "wall" or B_kind == "picture"
+         B_kind == "wall" or B_kind == "facade" or B_kind == "picture"
       then
         vis_mark_wall(S, side)
       end
@@ -3017,6 +3037,11 @@ do return end
         B.pic_skin.wall = w_tex
 
         Build.picture(S, side, B.pic_z1, B.pic_z2, B.pic_skin)
+        shrink_both(side, 4)
+      end
+
+      if B_kind == "cross" then  -- TEMPORARY !!
+        do_cross(S, side, f_tex, w_tex)
         shrink_both(side, 4)
       end
 

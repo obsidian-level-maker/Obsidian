@@ -7,7 +7,7 @@ DOOM.SKINS.Wall_cross =
   file   = "wall/cross.wad"
   where  = "edge"
 
-  long   = 128
+  long   = 192
   deep   = 16
 
   x_fit  = "frame"
