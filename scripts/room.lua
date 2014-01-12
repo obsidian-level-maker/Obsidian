@@ -2802,7 +2802,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   end
 
 
-  function do_door(S, side, f_tex, w_tex, o_tex)
+  function do_door(S, side, f_tex, w_tex)
     local z = assert(S.conn and S.conn.conn_h)
 
     -- FIXME: better logic for selecting doors
@@ -2818,6 +2818,7 @@ if S.border[side].kind == "secret_door" then door_name = "secret_door" end
 
     local skin = assert(GAME.DOORS[door_name])
 
+    local o_tex = outer_tex(S, side, w_tex)
     local skin2 = { inner=w_tex, outer=o_tex }
 
     assert(skin.track)
@@ -2827,7 +2828,7 @@ if S.border[side].kind == "secret_door" then door_name = "secret_door" end
   end
 
 
-  function do_locked_door(S, side, f_tex, w_tex, o_tex)
+  function do_locked_door(S, side, f_tex, w_tex)
     local z = assert(S.conn and S.conn.conn_h)
 
     local LOCK = assert(S.border[side].lock)
@@ -2836,6 +2837,7 @@ if S.border[side].kind == "secret_door" then door_name = "secret_door" end
 --if not skin.track then gui.printf("%s", table.tostr(skin,1)); end
     assert(skin.track)
 
+    local o_tex = outer_tex(S, side, w_tex)
     local skin2 = { inner=w_tex, outer=o_tex }
 
     local reversed = (S == S.conn.S2)
@@ -2844,7 +2846,7 @@ if S.border[side].kind == "secret_door" then door_name = "secret_door" end
   end
 
 
-  function do_lowering_bars(S, side, f_tex, w_tex, o_tex)
+  function do_lowering_bars(S, side, f_tex, w_tex)
     local z = assert(S.conn and S.conn.conn_h)
 
     local LOCK = assert(S.border[side].lock)
@@ -2872,6 +2874,7 @@ if S.border[side].kind == "secret_door" then door_name = "secret_door" end
     local skin1 = GAME.SKINS[fab_name]
     assert(skin1)
 
+    local o_tex = outer_tex(S, side, w_tex)
     local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex }
 
     skin2.tag_1 = LOCK.tag
@@ -3018,12 +3021,6 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
       w_tex = assert(LEVEL.well_tex)
     end
 
-    local o_tex = w_tex
-
-    if S.conn_dir then
-      o_tex = outer_tex(S, S.conn_dir, w_tex)
-    end
-
 
     local sec_kind
 
@@ -3147,7 +3144,7 @@ do return end
       end
 
       if B_kind == "door" or B_kind == "secret_door" then
-        do_door(S, side, f_tex, w_tex, o_tex)
+        do_door(S, side, f_tex, w_tex)
 
         shrink_ceiling(side, 4)
 
@@ -3156,7 +3153,7 @@ do return end
       end
 
       if B_kind == "lock_door" then
-        do_locked_door(S, side, f_tex, w_tex, o_tex)
+        do_locked_door(S, side, f_tex, w_tex)
 
         shrink_ceiling(side, 4)
 
@@ -3165,7 +3162,7 @@ do return end
       end
 
       if B_kind == "bars" then
-        do_lowering_bars(S, side, f_tex, w_tex, o_tex)
+        do_lowering_bars(S, side, f_tex, w_tex)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
