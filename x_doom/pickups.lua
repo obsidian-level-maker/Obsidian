@@ -176,7 +176,8 @@ DOOM.NICE_ITEMS =
     kind = "armor"
     rank = 3
     add_prob = 4
-    start_prob = 80
+    start_prob = 40
+    secret_prob = 20
     give = { {health=30} }
   }
 
@@ -186,7 +187,8 @@ DOOM.NICE_ITEMS =
     kind = "armor"
     rank = 4
     add_prob = 2
-    start_prob = 30
+    start_prob = 20
+    secret_prob = 50
     give = { {health=80} }
   }
 
@@ -196,7 +198,7 @@ DOOM.NICE_ITEMS =
     kind = "health"
     rank = 5
     add_prob = 3
-    start_prob = 5
+    secret_prob = 50
     give = { {health=150} }
   }
 
@@ -206,6 +208,9 @@ DOOM.NICE_ITEMS =
   {
     id = 8
     kind = "powerup"
+    add_prob = 50
+    start_prob = 70
+    secret_prob = 10
   }
 
   invis =
@@ -213,6 +218,8 @@ DOOM.NICE_ITEMS =
     id = 2024
     kind = "powerup"
     last_time = 100
+    add_prob = 1
+    secret_prob = 90
   }
 
   invul =
@@ -220,12 +227,16 @@ DOOM.NICE_ITEMS =
     id = 2022
     kind = "powerup"
     last_time = 30
+    add_prob = 1
+    secret_prob = 90
   }
 
   allmap =
   {
     id = 2026
     kind = "powerup"
+    add_prob = 1
+    secret_prob = 90
   }
 
   goggles =
@@ -233,6 +244,8 @@ DOOM.NICE_ITEMS =
     id = 2045
     kind = "powerup"
     last_time = 120
+    add_prob = 1
+    secret_prob = 90
   }
 
 
@@ -252,7 +265,7 @@ DOOM2.NICE_ITEMS =
     kind = "health"
     rank = 6
     add_prob = 1
-    start_prob = 8
+    secret_prob = 50
     give = { {health=200} }
   }
 }
