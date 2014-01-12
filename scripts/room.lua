@@ -1026,6 +1026,43 @@ function Room_border_up()
   end
 
 
+  local function apply_repeat_arch(S, side, A_dir, A_num, B_dir, B_num)
+
+    -- FIXME
+
+    repeat_arch(S, side, A_dir, A_num)
+    repeat_arch(S, side, B_dir, B_num)
+  end
+
+
+  local function apply_widen_arch(S, side, A_dir, A_num, B_dir, B_num)
+    -- setup the leftmost/bottommost seed border as the wide arch
+
+    local base = S:neighbor(A_dir, A_num)
+
+    base.border[side] = S.border[side]
+    base.border[side].seed_w = 1 + A_num + B_num
+
+    if S != base then
+      S.border[side] = {}
+    end
+
+    -- and make all other seed borders be "straddle"
+
+    for dist = 0, A_num + B_num do
+      local T = base:neighbor(B_dir, dist)
+
+      if T != base then
+        T.border[side].kind = "straddle"
+      end
+
+      local TN = T:neighbor(side)
+
+      TN.border[10 - side].kind = "straddle"
+    end
+  end
+
+
   local function try_widen_arch(R, R2, S, S2, side)
     if R.kind == "stairwell" or R2.kind == "stairwell" then
       return
@@ -1077,37 +1114,13 @@ function Room_border_up()
     assert(A_num >= 0)
     assert(B_num >= 0)
 
-    -- FIXME randomness
+    -- the wider the space, the less chance we make a single arch
+    local repeat_prob = (A_num + B_num + 1) * 15
 
-    if false then
-      repeat_arch(S, side, A_dir, A_num)
-      repeat_arch(S, side, B_dir, B_num)
-      return
-    end
-
-    -- setup the leftmost/bottommost seed border as the wide arch
-
-    local base = S:neighbor(A_dir, A_num)
-
-    base.border[side] = S.border[side]
-    base.border[side].seed_w = 1 + A_num + B_num
-
-    if S != base then
-      S.border[side] = {}
-    end
-
-    -- and make all other seed borders be "straddle"
-
-    for dist = 0, A_num + B_num do
-      local T = base:neighbor(B_dir, dist)
-
-      if T != base then
-        T.border[side].kind = "straddle"
-      end
-
-      local TN = T:neighbor(side)
-
-      TN.border[10 - side].kind = "straddle"
+    if rand.odds(repeat_prob) then
+      apply_repeat_arch(S, side, A_dir,A_num, B_dir,B_num)
+    else
+      apply_widen_arch (S, side, A_dir,A_num, B_dir,B_num)
     end
   end
 
