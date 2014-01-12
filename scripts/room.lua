@@ -2792,7 +2792,6 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     assert(skin1)
 
     local o_tex = outer_tex(S, side, w_tex)
-
     local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
 
     if skin2.wall == skin2.outer then
@@ -2828,10 +2827,6 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     end
 
     local door_name = rand.key_by_probs(doors)
-
--- FIXME: TEMP CRUD !!!
-if S.border[side].kind == "secret_door" then door_name = "secret_door" end
-
     local skin = assert(GAME.DOORS[door_name])
 
     local o_tex = outer_tex(S, side, w_tex)
@@ -2859,6 +2854,25 @@ if S.border[side].kind == "secret_door" then door_name = "secret_door" end
     local reversed = (S == S.conn.S2)
 
     Build.door(S, side, z, skin, skin2, LOCK.tag, reversed)
+  end
+
+
+  local function do_secret_door(S, side, f_tex, w_tex)
+    local conn = S.border[side].conn
+
+    local z = assert(conn and conn.conn_h)
+
+    local fab_name = "Door_secret"
+    local skin1 = GAME.SKINS[fab_name]
+    assert(skin1)
+
+    local o_tex = outer_tex(S, side, w_tex)
+    local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex }
+
+    local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, z,
+                                   side, 0, 192, skin1.deep, skin1.over)
+
+    Fabricate_at(R, skin1, T, { skin1, skin2 })
   end
 
 
@@ -3142,8 +3156,13 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
         shrink_both(side, 16)
       end
 
-      if B_kind == "door" or B_kind == "secret_door" then
+      if B_kind == "door" then
         do_door(S, side, f_tex, w_tex)
+        shrink_both(side, 16)
+      end
+
+      if B_kind == "secret_door" then
+        do_secret_door(S, side, f_tex, w_tex)
         shrink_both(side, 16)
       end
 
