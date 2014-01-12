@@ -674,7 +674,7 @@ function Plan_add_caves()
   -- compute the quota
   local perc = style_sel("caves", 0, 15, 35, 65, 100)
 
-  if perc == 0 or not THEME.caves then
+  if perc == 0 or not THEME.caves or true then  --!!!! FIXME
     gui.printf("Caves: NONE\n")
     return
   end
