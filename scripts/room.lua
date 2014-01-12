@@ -1220,7 +1220,9 @@ function Room_border_up()
       local N = S:neighbor(side)
 
       if (bd.side == side) and S.floor_h and
-         (N and N.room) and N.floor_h
+         (N and N.room) and N.floor_h and
+         N.kind != "void" and
+         N.kind != "diagonal"
       then
         table.insert(info.seeds, S)
 
@@ -1237,9 +1239,14 @@ function Room_border_up()
         if S.room.quest and N.room.quest and (S.room.quest.id < N.room.quest.id) then
           futures = futures + 1
         end
-        
+
         min_c1 = math.min(min_c1, assert(S.ceil_h or R.ceil_h))
-        min_c2 = SKY_H
+
+        if N.room.is_outdoor then
+          min_c2 = math.min(min_c2, SKY_H)
+        else
+          min_c2 = math.min(min_c2, assert(N.ceil_h or N.room.ceil_h))
+        end
 
         max_f1 = math.max(max_f1, S.floor_h)
         max_f2 = math.max(max_f2, N.floor_h)
