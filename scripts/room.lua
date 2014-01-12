@@ -2904,9 +2904,13 @@ if S.border[side].kind == "secret_door" then door_name = "secret_door" end
   end
 
 
-  local function do_floor(S, z, indents, w_tex, f_tex)
+  local function do_floor(S, z, indents, w_tex, f_tex, liq_info)
     local kind, w_face, t_face = Mat_normal(S.l_tex or w_tex, f_tex)
---??    t_face.kind = sec_kind
+
+    if liq_info then
+      w_face = liq_info.w_face
+      t_face = liq_info.t_face
+    end
 
     for bx = 0, 2 do
     for by = 0, 2 do
@@ -3257,9 +3261,7 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
 
     elseif S.kind == "liquid" then
       assert(LEVEL.liquid)
-      local info = get_liquid()
-
-      Trans.old_quad(info, fx1,fy1, fx2,fy2, -EXTREME_H, z1)
+      do_floor(S, z1, f_indents, w_tex, f_tex, get_liquid())
 
     elseif not S.no_floor then
       if S.mark_secret then
