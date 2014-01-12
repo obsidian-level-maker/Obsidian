@@ -285,6 +285,10 @@ end
 
 
 function Quest_add_weapons()
+  --
+  -- Decides which weapons to use for this level, and determines
+  -- which rooms to place them in.
+  --
 
   local function prob_for_weapon(name, info, is_start)
     local prob  = info.add_prob
@@ -582,6 +586,82 @@ function Quest_do_hexen_weapons()
   -- TODO
 end
 
+
+
+function Quest_nice_items()
+  --
+  -- Decides which nice items, including powerups, to use on this level,
+  -- especially for secrets but also for storage rooms, the start room,
+  -- and (rarely) in normal rooms.
+  --
+
+  local function initial_secret_palette()
+    local pal = {}
+
+    each name,info in GAME.NICE_ITEMS do
+      if info.secret_prob then
+        pal[name] = info.secret_prob
+      end
+    end
+
+    return pal
+  end
+
+
+  local function mark_item_seen(name)
+    -- prefer not to use this item again
+
+    local info = GAME.NICE_ITEMS[name]
+    assert(info)
+
+    if not LEVEL.secret_items[name] then return end
+
+    if info.kind == "powerup" or info.kind == "weapon" then
+      local old_prob = LEVEL.secret_items[name]
+
+      LEVEL.secret_items[name] = old_prob / 10
+    end
+  end
+
+
+  local function handle_secret_rooms()
+    -- collect all secret leafs
+    -- we need to visit them in random order
+    local rooms = {}
+
+    each Q in LEVEL.quests do
+      each R in Q.secret_leafs do
+        table.insert(rooms, R)
+      end
+    end
+
+    rand.shuffle(rooms)
+
+    each R in rooms do
+      local item = rand.key_by_probs(LEVEL.secret_items)
+      mark_item_seen(item)
+
+      table.insert(R.items, item)
+
+      gui.debugf("Secret item '%s' --> %s\n", item, R:tostr())
+    end
+  end
+
+
+  local function handle_normal_rooms()
+    -- TODO
+  end
+
+
+  ---| Quest_nice_items |---
+
+  LEVEL.secret_items = initial_secret_palette()
+ 
+  handle_normal_rooms()
+  handle_secret_rooms()
+
+  -- TODO: extra health/ammo in every secret room
+end
 
 
 function Quest_select_textures()
@@ -1755,5 +1835,7 @@ function Quest_make_quests()
   else
     Quest_add_weapons()
   end
+
+  Quest_nice_items()
 end
 
