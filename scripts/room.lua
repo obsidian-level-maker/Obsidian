@@ -890,7 +890,7 @@ function Room_border_up()
 
       -- TODO: do this better, honor symmetry
       if S.kind == "liquid" and S.border[side].kind == "wall"
-         and rand.odds(10)
+         and rand.odds(15)
       then
         S.border[side].kind = "liquid_fall"
       end
