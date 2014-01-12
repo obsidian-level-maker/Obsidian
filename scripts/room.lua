@@ -822,7 +822,7 @@ function Room_border_up()
     else
       S.border[side].kind = "wall"
       S.border[side].can_fake_sky = true
-      S.thick[side] = 24
+      S.thick[side] = 16
     end
   end
 
@@ -1064,6 +1064,18 @@ function Room_border_up()
     if A_num == 0 and B_num == 0 then
       return
     end
+
+    -- don't make TOO wide
+    while A_num + B_num > 4 do
+      if A_num > B_num or (A_num == B_num and rand.odds(50)) then
+        A_num = A_num - 1
+      else
+        B_num = B_num - 1
+      end
+    end
+
+    assert(A_num >= 0)
+    assert(B_num >= 0)
 
     -- FIXME randomness
 
