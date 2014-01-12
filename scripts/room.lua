@@ -2896,9 +2896,9 @@ if S.border[side].kind == "secret_door" then door_name = "secret_door" end
     t_face.special = 9
 
     local fx1 = S.x1 + (indents[4] or 0)
-    local fx2 = S.x2 + (indents[6] or 0)
     local fy1 = S.y1 + (indents[2] or 0)
-    local fy2 = S.y2 + (indents[8] or 0)
+    local fx2 = S.x2 - (indents[6] or 0)
+    local fy2 = S.y2 - (indents[8] or 0)
 
     Trans.quad(fx1,fy1, fx2,fy2, nil,z, kind, w_face, t_face)
   end
@@ -2996,11 +2996,6 @@ if S.border[side].kind == "secret_door" then door_name = "secret_door" end
 
     vis_seed(S)
 
-    local x1 = S.x1
-    local y1 = S.y1
-    local x2 = S.x2
-    local y2 = S.y2
-
     local z1 = S.floor_h or R.floor_h or (S.conn and S.conn.conn_h) or 0
     local z2 = S.ceil_h  or R.ceil_h or R.sky_h or SKY_H
 
@@ -3026,32 +3021,21 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
 
 
     -- coords for solid block floor and ceiling
-    local fx1, fy1 = x1, y1
-    local fx2, fy2 = x2, y2
-
-    local cx1, cy1 = x1, y1
-    local cx2, cy2 = x2, y2
-
     local f_indents = {}
     local c_indents = {}
 
     local function shrink_floor(side, len)
-do return end
-      if side == 2 then fy1 = fy1 + len end
-      if side == 8 then fy2 = fy2 - len end
-      if side == 4 then fx1 = fx1 + len end
-      if side == 6 then fx2 = fx2 - len end
+      assert(len <= 40)
+      f_indents[side] = len
     end
 
     local function shrink_ceiling(side, len)
-      if side == 2 then cy1 = cy1 + len end
-      if side == 8 then cy2 = cy2 - len end
-      if side == 4 then cx1 = cx1 + len end
-      if side == 6 then cx2 = cx2 - len end
+      assert(len <= 40)
+      c_indents[side] = len
     end
 
     local function shrink_both(side, len)
-      shrink_floor(side, len)
+      shrink_floor  (side, len)
       shrink_ceiling(side, len)
     end
 
@@ -3060,7 +3044,6 @@ do return end
 
     for side = 2,8,2 do
       local N = S:neighbor(side)
-
 
       local border = S.border[side]
       local B_kind = S.border[side].kind
@@ -3083,17 +3066,17 @@ do return end
 
       if B_kind == "wall" and R.kind != "scenic" then  -- FIXME; scenic check is bogus
         do_wall(S, side, w_tex)
-        shrink_both(side, 4)
+        shrink_both(side, 16)
       end
 
       if B_kind == "facade" then
         do_wall(S, side, S.border[side].facade)
+        shrink_both(side, 16)
       end
 
       if B_kind == "window" then
         do_window(S, side, w_tex)
-
-        shrink_both(side, 4)
+        shrink_both(side, 16)
       end
 
       if B_kind == "picture" then
@@ -3101,32 +3084,28 @@ do return end
         B.pic_skin.wall = w_tex
 
         Build.picture(S, side, B.pic_z1, B.pic_z2, B.pic_skin)
-        shrink_both(side, 4)
+        shrink_both(side, 16)
       end
 
       if B_kind == "cross" then  -- TEMPORARY !!
         do_cross(S, side, f_tex, w_tex)
-        shrink_both(side, 4)
+        shrink_both(side, 16)
       end
 
       if B_kind == "fence"  then
         local skin = { h=30, wall=w_tex, floor=f_tex }
         Build.fence(S, side, R.fence_h or ((R.floor_h or z1)+skin.h), skin)
-        shrink_floor(side, 4)
+        shrink_floor(side, 16)
       end
 
       if B_kind == "straddle" then
-        f_indents[side] = 16
+        -- TODO: ideally do both, cannot now due to lowering_bars
+        shrink_floor(side, 16)
       end
 
       if B_kind == "arch" then
         do_archway(S, side, f_tex, w_tex)
-
-        f_indents[side] = 16
-        c_indents[side] = 16
-
----        assert(not S.conn.already_made_lock)
----        S.conn.already_made_lock = true
+        shrink_both(side, 16)
       end
 
       if B_kind == "liquid_arch" then
@@ -3135,27 +3114,22 @@ do return end
         local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
 
         Build.archway(S, side, z1, z_top, skin)
-        shrink_ceiling(side, 4)
+        shrink_ceiling(side, 16)  -- Note: cannot shrink floor (atm)
       end
 
       if B_kind == "liquid_fall" then
         do_liquid_fall(S, side, w_tex, z2)
-        shrink_both(side, 4)
+        shrink_both(side, 16)
       end
 
       if B_kind == "door" or B_kind == "secret_door" then
         do_door(S, side, f_tex, w_tex)
-
-        shrink_ceiling(side, 4)
-
-        assert(not S.conn.already_made_lock)
-        S.conn.already_made_lock = true
+        shrink_both(side, 16)
       end
 
       if B_kind == "lock_door" then
         do_locked_door(S, side, f_tex, w_tex)
-
-        shrink_ceiling(side, 4)
+        shrink_both(side, 16)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
@@ -3163,6 +3137,7 @@ do return end
 
       if B_kind == "bars" then
         do_lowering_bars(S, side, f_tex, w_tex)
+        shrink_floor(side, 16)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
@@ -3197,11 +3172,16 @@ do return end
 
     -- CEILING
 
+    local cx1 = S.x1 + (c_indents[4] or 0)
+    local cy1 = S.y1 + (c_indents[2] or 0)
+    local cx2 = S.x2 - (c_indents[6] or 0)
+    local cy2 = S.y2 - (c_indents[8] or 0)
+
     if S.kind != "void" and not S.no_ceil and 
        (S.is_sky or c_tex == "_SKY")
     then
 
-      Trans.old_quad(get_sky(), x1,y1, x2,y2, z2, EXTREME_H)
+      Trans.old_quad(get_sky(), cx1,cy1, cx2,cy2, z2, EXTREME_H)
 
     elseif S.kind != "void" and not S.no_ceil then
       ---## local info = get_mat(S.u_tex or c_tex or w_tex, c_tex)
@@ -3236,6 +3216,12 @@ do return end
 
 
     -- FLOOR
+
+    local fx1 = S.x1 + (f_indents[4] or 0)
+    local fy1 = S.y1 + (f_indents[2] or 0)
+    local fx2 = S.x2 - (f_indents[6] or 0)
+    local fy2 = S.y2 - (f_indents[8] or 0)
+
     if S.kind == "void" then
 
       if S.solid_feature and THEME.building_corners then
@@ -3245,7 +3231,7 @@ do return end
         w_tex = R.corner_tex
       end
 
-      Trans.old_quad(get_mat(w_tex), x1,y1, x2,y2, -EXTREME_H, EXTREME_H);
+      Trans.old_quad(get_mat(w_tex), fx1,fy1, fx2,fy2, -EXTREME_H, EXTREME_H);
 
     elseif S.kind == "stair" then
       local skin2 = { wall=S.room.main_tex, floor=S.f_tex or S.room.main_tex }
@@ -3276,10 +3262,6 @@ do return end
       Trans.old_quad(info, fx1,fy1, fx2,fy2, -EXTREME_H, z1)
 
     elseif not S.no_floor then
-      --!!!  local info = get_mat(S.l_tex or w_tex, f_tex)
-      --!!!  info.sec_kind = sec_kind
-      --!!!  Split_quad(S, info, fx1,fy1, fx2,fy2, -EXTREME_H, z1)
-
       if S.mark_secret then
         do_secret_floor(S, z1, f_indents, w_tex, f_tex)
       else
