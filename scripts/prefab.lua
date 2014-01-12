@@ -1283,7 +1283,7 @@ function Build.lift(S, skin, skin2, tag)
 end
 
 
-function Build.pillar(S, z1, z2, skin)
+function Build.pillar(S, z1, z2, skin, is_big_pillar)
   
   local mx = int((S.x1 + S.x2)/2)
   local my = int((S.y1 + S.y2)/2)
@@ -1307,7 +1307,14 @@ function Build.pillar(S, z1, z2, skin)
     sel(pass == 2,  EXTREME_H, z1+32)
     )
 --]]
-    Trans.old_brush(get_mat(skin.trim1),
+    local trim = get_mat(skin.trim1)
+
+    if is_big_pillar then
+      trim.t_face.light  = 192
+      trim.t_face.factor = 1.5
+    end
+
+    Trans.old_brush(trim,
     {
       { x=mx-40, y=my-56 },
       { x=mx+40, y=my-56 },
@@ -1318,8 +1325,8 @@ function Build.pillar(S, z1, z2, skin)
       { x=mx-56, y=my+40 },
       { x=mx-56, y=my-40 },
     },
-    sel(pass == 1, -EXTREME_H, z2-6),
-    sel(pass == 2,  EXTREME_H, z1+6)
+    sel(pass == 1, -EXTREME_H, z2-8),
+    sel(pass == 2,  EXTREME_H, z1+8)
     )
   end
 end

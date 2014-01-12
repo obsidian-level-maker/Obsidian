@@ -1843,6 +1843,7 @@ function Room_make_ceiling(R)
     local which = rand.key_by_probs(skin_names)
 
     S.content = "pillar"
+    S.is_big_pillar = true
     S.pillar_skin = assert(GAME.PILLARS[which])
 
     R.has_central_pillar = true
@@ -3234,7 +3235,7 @@ do return end
     -- PREFABS
 
     if S.content == "pillar" then
-      Build.pillar(S, z1, z2, assert(S.pillar_skin))
+      Build.pillar(S, z1, z2, assert(S.pillar_skin), S.is_big_pillar)
     end
 
     if S.content == "wotsit" and S.content_kind == "WEAPON" then
@@ -3706,12 +3707,6 @@ function Room_build_all()
 
   Room_setup_symmetry()
   Room_reckon_doors()
-
-  if PARAM.tiled then
-    -- this is as far as we go for TILE based games
-    -- (code in tiler.lua will now kick in).
-    return
-  end
 
   each R in LEVEL.rooms do
     Layout_room(R)
