@@ -1027,11 +1027,26 @@ function Room_border_up()
 
 
   local function apply_repeat_arch(S, side, A_dir, A_num, B_dir, B_num)
-
-    -- FIXME
-
     repeat_arch(S, side, A_dir, A_num)
     repeat_arch(S, side, B_dir, B_num)
+
+    -- sometimes only keep the two arches on the edges
+
+    if (A_num + B_num) >= 2 and rand.odds(60) then
+      for i = -A_num + 1, B_num - 1 do
+        local T
+        if i < 0 then
+          T = S:neighbor(A_dir, -i)
+        else
+          T = S:neighbor(B_dir,  i)
+        end
+
+        local TN = T:neighbor(side)
+
+        T.border[side] = { kind="wall" }
+        TN.border[10 - side] = { kind="wall" }
+      end
+    end
   end
 
 
