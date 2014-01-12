@@ -105,6 +105,7 @@ function ROOM_CLASS.new()
     conns = {}
     sections = {}
     weapons = {}
+    items = {}
 
     mon_spots  = {}
     item_spots = {}
@@ -2513,7 +2514,7 @@ function Room_build_seeds(R)
   end
 
 
-  local function do_purpose(S)
+  local function content_purpose(S)
     local sx, sy = S.sx, S.sy
 
     local z1 = S.floor_h or R.floor_h
@@ -2617,7 +2618,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   end
 
 
-  local function do_weapon(S)
+  local function content_weapon(S)
     local sx, sy = S.sx, S.sy
 
     local z1 = S.floor_h or R.floor_h
@@ -2625,7 +2626,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
     local mx, my = S:mid_point()
 
-    local weapon = assert(S.content_weapon)
+    local weapon = assert(S.content_item)
 
     if R.hallway or R == LEVEL.start_room then
       -- bare item
@@ -2648,7 +2649,22 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   end
 
 
-  local function do_teleporter(S)
+  local function content_item(S)
+    local item = assert(S.content_item)
+
+    local mx, my = S:mid_point()
+    local z1 = S.floor_h or R.floor_h
+
+    if false then
+      content_big_item(item, mx, my, z1)
+    else
+      -- bare item
+      Trans.entity(item, mx, my, z1)
+    end
+  end
+
+
+  local function content_teleporter(S)
     local C = R.teleport_conn
     assert(C)
 
@@ -3278,12 +3294,16 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
       Build.pillar(S, z1, z2, assert(S.pillar_skin), S.is_big_pillar)
     end
 
-    if S.content == "wotsit" and S.content_kind == "WEAPON" then
-      do_weapon(S)
-    elseif S.content == "wotsit" and S.content_kind == "TELEPORTER" then
-      do_teleporter(S)
-    elseif S.content == "wotsit" then
-      do_purpose(S)
+    if S.content == "wotsit" then
+      if S.content_kind == "WEAPON" then
+        content_weapon(S)
+      elseif S.content_kind == "ITEM" then
+        content_item(S)
+      elseif S.content_kind == "TELEPORTER" then
+        content_teleporter(S)
+      else
+        content_purpose(S)
+      end
     end
 
 
@@ -3362,20 +3382,16 @@ end
 
 
 function Room_find_pickup_spots(R)
-
-  -- Creates a map over the room of which seeds we can place
-  -- pickup items in.  We distinguish two types: 'big' items
-  -- (Mega Health or Blue Armor) and 'small' items:
   --
-  -- 1. big items prefer to have a seed for itself, and
+  -- Creates a map over the room where we can place pickup items.
+  -- We distinguish two types:
+  --
+  -- 1. 'big items' prefer to have a seed for itself, and
   --    somewhere near to the centre of the room.
   --
-  -- 2. small items prefer to sit next to walls (or ledges)
+  -- 2. 'small items' prefer to sit next to walls (or ledges)
   --    and be grouped in clusters.
   --
-  -- To achieve this, our map will consist of two lists (big
-  -- and small) of seeds, sorted into best --> worst order
-  -- (with a healthy dose of randomness of course).
 
   local function add_big_spot(R, S, score)
     local mx, my = S:mid_point()

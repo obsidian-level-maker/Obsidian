@@ -1657,7 +1657,20 @@ function Layout_room(R)
       return
     end
 
-    S.content_weapon = weapon
+    S.content_item = weapon
+
+    if not R.guard_spot then
+      R.guard_spot = S
+    end
+  end
+
+
+  local function add_item(item)
+    local sx, sy, S = Layout_spot_for_wotsit(R, "ITEM", "none_OK")
+
+    if not S then return end
+
+    S.content_item = item
 
     if not R.guard_spot then
       R.guard_spot = S
@@ -2210,6 +2223,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     Layout_do_hallway(R, focus_C.conn_h)
     if R.teleport_conn then add_teleporter() end
     each name in R.weapons do add_weapon(name) end
+    each name in R.items   do add_item(name) end
     return
   end
 
@@ -2249,10 +2263,15 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
 
   if R.purpose then add_purpose() end
+
   if R.teleport_conn then add_teleporter() end
 
   each name in R.weapons do
     add_weapon(name)
+  end
+
+  each name in R.items do
+    add_item(name)
   end
 
   if R.kind == "cave" then
