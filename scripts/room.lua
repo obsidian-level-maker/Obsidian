@@ -2421,7 +2421,14 @@ function Room_build_seeds(R)
 
 
   local function content_big_item(item, mx, my, z)
-    local skin1 = GAME.SKINS["Item_Pedestal"]
+    local fab_name = "Item_pedestal"
+
+    -- FIXME: TEMP RUBBISH
+    if string.sub(item, 1, 2) == "ks" then
+      fab_name = "Item_pentagram"
+    end
+
+    local skin1 = GAME.SKINS[fab_name]
     assert(skin1)
 
     local skin0 = { wall=R.main_tex }
