@@ -765,8 +765,8 @@ function Room_reckon_doors()
       return
     end
 
-    if rand.odds(60) then
-      -- support arches which have a step in them
+    -- support arches which have a step in them
+    if (S.room.is_outdoor != N.room.is_outdoor) or rand.odds(50) then
       if S == C.S1 then
         C.diff_h = 16
       else
@@ -1154,6 +1154,15 @@ function Room_border_up()
   end
 
 
+  local function seed_is_blocked(S)
+    if S.kind == "void" then return true end
+    if S.kind == "diagonal" then return true end
+    if S.kind == "tall_stair" then return true end
+
+    return false
+  end
+
+
   local function get_border_list(R)
     local list = {}
 
@@ -1161,10 +1170,7 @@ function Room_border_up()
     for y = R.sy1, R.sy2 do
       local S = SEEDS[x][y]
 
-      if S.room == R and not
-         (S.kind == "void" or S.kind == "diagonal" or
-          S.kind == "tall_stair")
-      then
+      if S.room == R and not seed_is_blocked(S) then
         for side = 2,8,2 do
           if S.border[side].kind == "wall" then
             table.insert(list, { S=S, side=side })
@@ -1221,8 +1227,7 @@ function Room_border_up()
 
       if (bd.side == side) and S.floor_h and
          (N and N.room) and N.floor_h and
-         N.kind != "void" and
-         N.kind != "diagonal"
+         not seed_is_blocked(N)
       then
         table.insert(info.seeds, S)
 
