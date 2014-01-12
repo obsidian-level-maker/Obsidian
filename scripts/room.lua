@@ -1026,9 +1026,16 @@ function Room_border_up()
   end
 
 
-  local function try_widen_arch(R, R2, S, side)
+  local function try_widen_arch(R, R2, S, S2, side)
     if R.kind == "stairwell" or R2.kind == "stairwell" then
       return
+    end
+
+    -- got the wrong side?
+    if S.border[side].kind == "straddle" then
+      R, R2 = R2, R
+      S, S2 = S2, S
+      side = 10 - side
     end
 
     -- we don't do doors yet...
@@ -1051,6 +1058,7 @@ function Room_border_up()
     while B_num < 3 and can_travel(R, R2, S, side, B_dir, B_num+1) do
       B_num = B_num + 1
     end
+
 
     -- nothing possible?
     if A_num == 0 and B_num == 0 then
@@ -1092,17 +1100,16 @@ function Room_border_up()
   end
 
 
-  local function widen_arches(R)
+  local function widen_arches()
     -- sometimes make an archway or door between two rooms wider
 
-    each C in R.conns do
-      if C.R1 != R then continue end
+    each C in LEVEL.conns do
       if C.kind != "normal" then continue end
       if C.lock then continue end
 
       assert(C.S1)
 
-      try_widen_arch(R, C.R2, C.S1, C.dir)
+      try_widen_arch(C.R1, C.R2, C.S1, C.S2, C.dir)
     end
   end
 
@@ -1510,9 +1517,9 @@ function Room_border_up()
     border_up(R)
   end
 
-  each R in LEVEL.rooms do
-    widen_arches(R)
+  widen_arches()
 
+  each R in LEVEL.rooms do
     decide_windows( R, get_border_list(R))
     decide_pictures(R, get_border_list(R))
   end
