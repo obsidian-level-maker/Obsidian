@@ -10,7 +10,7 @@ DOOM.SKINS.Arch_plain =
   deep   = 16
   over   = 16
 
-  x_fit  = { 0,4, 84,108, 188,192 }
+  x_fit  = { 0,4, 80,112, 188,192 }
 
   bound_z1 = 0
   bound_z2 = 128
