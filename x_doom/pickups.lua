@@ -2,7 +2,7 @@
 --  DOOM PICKUPS
 --------------------------------------------------------------------
 --
---  Copyright (C) 2006-2013 Andrew Apted
+--  Copyright (C) 2006-2014 Andrew Apted
 --  Copyright (C)      2011 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@ DOOM.PICKUPS =
     id = 2014
     kind = "health"
     rank = 0
-    prob = 20
+    add_prob = 20
     cluster = { 4,7 }
     give = { {health=1} }
   }
@@ -31,7 +31,7 @@ DOOM.PICKUPS =
     id = 2011
     kind = "health"
     rank = 1
-    prob = 60
+    add_prob = 60
     cluster = { 2,5 }
     give = { {health=10} }
   }
@@ -41,7 +41,7 @@ DOOM.PICKUPS =
     id = 2012
     kind = "health"
     rank = 2
-    prob = 100
+    add_prob = 100
     give = { {health=25} }
   }
 
@@ -52,7 +52,7 @@ DOOM.PICKUPS =
     id = 2015
     kind = "armor"
     rank = 0
-    prob = 10
+    add_prob = 10
     cluster = { 4,7 }
     give = { {health=1} }
   }
@@ -64,7 +64,7 @@ DOOM.PICKUPS =
     id = 2007
     kind = "ammo"
     rank = 0
-    prob = 10
+    add_prob = 10
     cluster = { 2,5 }
     give = { {ammo="bullet",count=10} }
   }
@@ -74,7 +74,7 @@ DOOM.PICKUPS =
     id = 2048
     kind = "ammo"
     rank = 1
-    prob = 40
+    add_prob = 40
     give = { {ammo="bullet",count=50} }
   }
 
@@ -83,7 +83,7 @@ DOOM.PICKUPS =
     id = 2008
     kind = "ammo"
     rank = 0
-    prob = 20
+    add_prob = 20
     cluster = { 2,5 }
     give = { {ammo="shell",count=4} }
   }
@@ -93,7 +93,7 @@ DOOM.PICKUPS =
     id = 2049
     kind = "ammo"
     rank = 1
-    prob = 40
+    add_prob = 40
     give = { {ammo="shell",count=20} }
   }
 
@@ -102,7 +102,7 @@ DOOM.PICKUPS =
     id = 2010
     kind = "ammo"
     rank = 0
-    prob = 10
+    add_prob = 10
     cluster = { 4,7 }
     give = { {ammo="rocket",count=1} }
   }
@@ -112,7 +112,7 @@ DOOM.PICKUPS =
     id = 2046
     kind = "ammo"
     rank = 1
-    prob = 40
+    add_prob = 40
     give = { {ammo="rocket",count=5} }
   }
 
@@ -121,7 +121,7 @@ DOOM.PICKUPS =
     id = 2047
     kind = "ammo"
     rank = 0
-    prob = 20
+    add_prob = 20
     cluster = { 2,5 }
     give = { {ammo="cell",count=20} }
   }
@@ -131,7 +131,7 @@ DOOM.PICKUPS =
     id = 17
     kind = "ammo"
     rank = 2
-    prob = 40
+    add_prob = 40
     give = { {ammo="cell",count=100} }
   }
 
@@ -175,7 +175,7 @@ DOOM.NICE_ITEMS =
     id = 2018
     kind = "armor"
     rank = 3
-    prob = 4
+    add_prob = 4
     start_prob = 80
     give = { {health=30} }
   }
@@ -185,7 +185,7 @@ DOOM.NICE_ITEMS =
     id = 2019
     kind = "armor"
     rank = 4
-    prob = 2
+    add_prob = 2
     start_prob = 30
     give = { {health=80} }
   }
@@ -195,7 +195,7 @@ DOOM.NICE_ITEMS =
     id = 2013
     kind = "health"
     rank = 5
-    prob = 3
+    add_prob = 3
     start_prob = 5
     give = { {health=150} }
   }
@@ -251,7 +251,7 @@ DOOM2.NICE_ITEMS =
     id = 83
     kind = "health"
     rank = 6
-    prob = 1
+    add_prob = 1
     start_prob = 8
     give = { {health=200} }
   }

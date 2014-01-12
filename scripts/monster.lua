@@ -1109,11 +1109,14 @@ function Monsters_do_pickups()
     local item_tab = {}
 
     for name,info in pairs(GAME.PICKUPS) do
-      if info.prob and
+      -- compatibilty crud...
+      local prob = info.add_prob or info.prob
+
+      if prob and
          (stat == "health" and info.give[1].health) or
          (info.give[1].ammo == stat)
       then
-        item_tab[name] = info.prob
+        item_tab[name] = prob
 
         if R.purpose == "START" and info.start_prob then
           item_tab[name] = info.start_prob
