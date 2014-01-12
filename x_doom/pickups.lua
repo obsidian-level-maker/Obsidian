@@ -45,16 +45,6 @@ DOOM.PICKUPS =
     give = { {health=25} }
   }
 
-  soul =
-  {
-    id = 2013
-    kind = "health"
-    rank = 5
-    prob = 3
-    start_prob = 5
-    give = { {health=150} }
-  }
-
   -- ARMOR --
 
   helmet =
@@ -65,16 +55,6 @@ DOOM.PICKUPS =
     prob = 10
     cluster = { 4,7 }
     give = { {health=1} }
-  }
-
-  green_armor =
-  {
-    id = 2018
-    kind = "armor"
-    rank = 3
-    prob = 4
-    start_prob = 80
-    give = { {health=30} }
   }
 
   -- AMMO --
@@ -190,6 +170,16 @@ DOOM.NICE_ITEMS =
 
   -- HEALTH / ARMOR --
 
+  green_armor =
+  {
+    id = 2018
+    kind = "armor"
+    rank = 3
+    prob = 4
+    start_prob = 80
+    give = { {health=30} }
+  }
+
   blue_armor =
   {
     id = 2019
@@ -198,6 +188,16 @@ DOOM.NICE_ITEMS =
     prob = 2
     start_prob = 30
     give = { {health=80} }
+  }
+
+  soul =
+  {
+    id = 2013
+    kind = "health"
+    rank = 5
+    prob = 3
+    start_prob = 5
+    give = { {health=150} }
   }
 
   -- POWERUP --
