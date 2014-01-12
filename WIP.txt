@@ -3,15 +3,17 @@ WORK IN PROGRESS
 ================
 
 
->>>  Teleporters
-
-
 3.57 Merger
 -----------
 
+-  o_tex in do_door() and friends
+
 +  don't make "future" windows if no vertical room
+   >>>  bug, since windows are decided _after_ rooms are laid out
 
 -  f_indent thing
+
+-  use do_floor() logic for liquids too
 
 -  put stuff in storage rooms and secrets
 
@@ -23,8 +25,20 @@ NICE_ITEMS table
   -  powerups: invis, goggles, invul, etc...
 
 
--  ability to centre doors (on two seeds), stretch arches (multiple seeds)
+Later
+-----
 
++  Caves!
+
++  exclusion zones for teleporters
+
++  better spot_for_wotsit  (see V5 code)
+
+-  wider arches: be good to make them TALLER too
+
+-  fix texturing on some stairs and diagonals
+
+-  ability to centre doors (on two seeds)
 
 -  ensure normal doors are usually monster-openable
 
