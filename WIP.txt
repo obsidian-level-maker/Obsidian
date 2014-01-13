@@ -12,6 +12,9 @@ Later
 
 +  better spot_for_wotsit  (see V5 code)
 
++  outdoor fences should straddle both rooms (right ?)
+
+
 -  wider arches: be good to make them TALLER too
 
 -  fix texturing on some stairs and diagonals
@@ -19,6 +22,7 @@ Later
 -  in 2x2 rooms, place key/switch in middle of room
 
 -  ability to centre doors (on two seeds)
+
 
 -  ensure normal doors are usually monster-openable
 
@@ -28,6 +32,7 @@ Later
 -  perhaps make 'saw' and/or 'berserk' just be NICE_ITEMs ?
 
 +  intrusions: like "junking" a side, but connects two other rooms
+
 
 IDEA: for Lighting, use limited set (96,128,160,192) from light sources,
       but allow brushes to add 16/32/48/64 on top of that.
