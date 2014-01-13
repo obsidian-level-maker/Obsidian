@@ -3,19 +3,6 @@ WORK IN PROGRESS
 ================
 
 
-3.57 Merger
------------
-
--  put stuff in storage rooms and secrets
-
-
-NICE_ITEMS table
-  -  berserk, chainsaw   ( kind="weapon" )
-  -  backpack
-  -  blue armor, soul sphere, megasphere
-  -  powerups: invis, goggles, invul, etc...
-
-
 Later
 -----
 
@@ -37,6 +24,8 @@ Later
 
 -  ensure secret doors cannot be opened by monsters
    (maybe 1% chance)
+
+-  perhaps make 'saw' and/or 'berserk' just be NICE_ITEMs ?
 
 +  intrusions: like "junking" a side, but connects two other rooms
 
