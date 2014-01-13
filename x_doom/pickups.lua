@@ -189,16 +189,16 @@ DOOM.NICE_ITEMS =
     give = { {health=150} }
   }
 
-  -- POWERUP --
-
   backpack =
   {
     id = 8
-    kind = "powerup"
-    add_prob = 50
-    start_prob = 70
-    secret_prob = 20
+    kind = "other"
+    add_prob = 40
+    start_prob = 80
+    secret_prob = 10
   }
+
+  -- POWERUP --
 
   invis =
   {

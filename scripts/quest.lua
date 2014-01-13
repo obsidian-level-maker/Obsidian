@@ -624,10 +624,10 @@ function Quest_nice_items()
   local function get_start_palette()
     local pal = {}
 
-    -- no powerups in start room (unless it has a start_prob)
+    -- Note: no powerups in start room
 
     each name,info in GAME.NICE_ITEMS do
-      if info.kind == "powerup" and not info.start_prob then
+      if info.kind == "powerup" then
         continue
       end
 
