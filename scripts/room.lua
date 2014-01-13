@@ -882,7 +882,7 @@ function Room_border_up()
          (S.floor_h == N.floor_h)  --- and rand.odds(50)
       then
         S.border[side].kind = "liquid_arch"
-        N.border[10-side].kind = "straddle"
+        N.border[10-side].kind = "nothing"
 
         S.thick[side] = 24
         N.thick[10 - side] = 24
