@@ -595,12 +595,41 @@ function Quest_nice_items()
   -- and (rarely) in normal rooms.
   --
 
-  local function initial_secret_palette()
+  local function get_secret_palette()
     local pal = {}
 
     each name,info in GAME.NICE_ITEMS do
       if info.secret_prob then
         pal[name] = info.secret_prob
+      end
+    end
+
+    return pal
+  end
+
+
+  local function get_normal_palette()
+    local pal = {}
+
+    each name,info in GAME.NICE_ITEMS do
+      if info.add_prob then
+        pal[name] = info.add_prob
+      end
+    end
+
+    return pal
+  end
+
+
+  local function get_start_palette()
+    local pal = {}
+
+    -- Note: no powerups for start room
+
+    each name,info in GAME.NICE_ITEMS do
+      local prob = info.start_prob or info.add_prob
+      if prob and info.kind != "powerup" then
+        pal[name] = prob
       end
     end
 
@@ -639,9 +668,9 @@ function Quest_nice_items()
 
     each R in rooms do
       local item = rand.key_by_probs(LEVEL.secret_items)
-      mark_item_seen(item)
 
       table.insert(R.items, item)
+      mark_item_seen(item)
 
       gui.debugf("Secret item '%s' --> %s\n", item, R:tostr())
     end
@@ -649,16 +678,54 @@ function Quest_nice_items()
 
 
   local function handle_normal_rooms()
-    -- TODO
+    -- collect all unused storage leafs
+    -- (there is no need to shuffle them here)
+    local rooms = {}
+
+    each Q in LEVEL.quests do
+      each R in Q.storage_leafs do
+        if #R.weapons == 0 then
+          table.insert(rooms, R)
+        end
+      end
+    end
+
+    -- add the start room too, sometimes twice
+    table.insert(rooms, 1, LEVEL.start_room)
+
+    if rand.odds(25) then
+      table.insert(rooms, 1, LEVEL.start_room)
+    end
+
+    -- TODO: add some other rooms (have a whole-level quota)
+
+    -- choose items for each of these rooms
+    local normal_tab = get_normal_palette()
+    local  start_tab = get_start_palette()
+
+    each R in rooms do
+      local item
+
+      if R.purpose == "START" then
+        item = rand.key_by_probs(start_tab)
+      else
+        item = rand.key_by_probs(normal_tab)
+      end
+
+      table.insert(R.items, item)
+      mark_item_seen(item)
+
+      gui.debugf("Nice item '%s' --> %s\n", item, R:tostr())
+    end
   end
 
 
   ---| Quest_nice_items |---
 
-  LEVEL.secret_items = initial_secret_palette()
+  LEVEL.secret_items = get_secret_palette()
  
-  handle_normal_rooms()
   handle_secret_rooms()
+  handle_normal_rooms()
 
   -- TODO: extra health/ammo in every secret room
 end
