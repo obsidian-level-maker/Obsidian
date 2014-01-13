@@ -156,17 +156,8 @@ DOOM.NICE_ITEMS =
 {
   -- WEAPONS --
 
-  saw =
-  {
-    id = 2005
-    kind = "weapon"
-  }
-
-  berserk =
-  {
-    id = 2023
-    kind = "weapon"
-  }
+  --- TODO: decide whether 'saw' and 'berserk' should be here
+  --        instead of in WEAPONS table.
 
   -- HEALTH / ARMOR --
 
@@ -174,9 +165,8 @@ DOOM.NICE_ITEMS =
   {
     id = 2018
     kind = "armor"
-    rank = 3
-    add_prob = 4
-    start_prob = 40
+    add_prob = 10
+    start_prob = 60
     secret_prob = 20
     give = { {health=30} }
   }
@@ -185,8 +175,7 @@ DOOM.NICE_ITEMS =
   {
     id = 2019
     kind = "armor"
-    rank = 4
-    add_prob = 2
+    add_prob = 20
     start_prob = 20
     secret_prob = 50
     give = { {health=80} }
@@ -196,8 +185,7 @@ DOOM.NICE_ITEMS =
   {
     id = 2013
     kind = "health"
-    rank = 5
-    add_prob = 3
+    add_prob = 20
     secret_prob = 50
     give = { {health=150} }
   }
@@ -217,25 +205,24 @@ DOOM.NICE_ITEMS =
   {
     id = 2024
     kind = "powerup"
-    last_time = 100
-    add_prob = 1
-    secret_prob = 90
+    add_prob = 5
+    secret_prob = 70
+    time_limit = 100
   }
 
   invul =
   {
     id = 2022
     kind = "powerup"
-    last_time = 30
     add_prob = 1
     secret_prob = 90
+    time_limit = 30
   }
 
   allmap =
   {
     id = 2026
     kind = "powerup"
-    add_prob = 1
     secret_prob = 90
   }
 
@@ -243,17 +230,20 @@ DOOM.NICE_ITEMS =
   {
     id = 2045
     kind = "powerup"
-    last_time = 120
-    add_prob = 1
-    secret_prob = 90
+    add_prob = 5
+    secret_prob = 70
+    time_limit = 120
   }
 
-
+  --
   -- NOTES:
   --
   -- Radiation suit is not here, since it needs special logic
   -- (namely to create areas with a nukage or lava floor which the
   --  player is forced to cross).
+  --
+  -- The All-map is for secrets only, hence has no 'add_prob'.
+  --
 }
 
 
@@ -263,9 +253,8 @@ DOOM2.NICE_ITEMS =
   {
     id = 83
     kind = "health"
-    rank = 6
     add_prob = 1
-    secret_prob = 50
+    secret_prob = 70
     give = { {health=200} }
   }
 }
