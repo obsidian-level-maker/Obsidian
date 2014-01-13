@@ -140,8 +140,6 @@ DOOM.PICKUPS =
   --
   -- Berserk is handled as a WEAPON instead of a pickup.
   --
-  -- The backpack is handled as a POWERUP.
-  --
   -- Armor (all types) is modelled as health, because it merely
   -- saves the player's health when you are hit with damage.
   -- The BLUE jacket saves 50% of damage, hence it is roughly
@@ -186,6 +184,7 @@ DOOM.NICE_ITEMS =
     id = 2013
     kind = "health"
     add_prob = 20
+    start_prob = 5
     secret_prob = 50
     give = { {health=150} }
   }
@@ -198,7 +197,7 @@ DOOM.NICE_ITEMS =
     kind = "powerup"
     add_prob = 50
     start_prob = 70
-    secret_prob = 10
+    secret_prob = 20
   }
 
   invis =
