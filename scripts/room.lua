@@ -2628,7 +2628,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
     local weapon = assert(S.content_item)
 
-    if R.hallway or R == LEVEL.start_room then
+    if R == LEVEL.start_room or R.hallway then
       -- bare item
       Trans.entity(weapon, mx, my, z1)
 
@@ -2655,11 +2655,11 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local mx, my = S:mid_point()
     local z1 = S.floor_h or R.floor_h
 
-    if false then
-      content_big_item(item, mx, my, z1)
-    else
+    if R == LEVEL.start_room or R.hallway then
       -- bare item
       Trans.entity(item, mx, my, z1)
+    else
+      content_big_item(item, mx, my, z1)
     end
   end
 
