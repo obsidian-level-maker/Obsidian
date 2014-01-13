@@ -1267,12 +1267,6 @@ function Monsters_do_pickups()
 
     rand.shuffle(R.item_spots)
 
-    -- kludge to add some backpacks to DOOM maps
-    -- TODO: better system for "nice start items" or so
-    if R.purpose == "START" and GAME.ENTITIES["backpack"] then
-      table.insert(item_list, 1, { item={ name="backpack", rank=4 }, count=1, random=1 })
-    end
-
     -- sort items by rank
     -- also: place large clusters before small ones
     table.sort(item_list, compare_items)
