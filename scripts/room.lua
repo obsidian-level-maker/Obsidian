@@ -118,7 +118,7 @@ function ROOM_CLASS.new()
     decor   = {}
 
     sky_rects = {}
-    exclusion_zones = {}
+    exclusions = {}
 
     hazard_health = 0
   }
@@ -203,6 +203,7 @@ function ROOM_CLASS.conn_area(R)
   return lx,ly, hx,hy
 end
 
+
 function ROOM_CLASS.is_near_exit(R)
   if R.purpose == "EXIT" then return true end
   each C in R.conns do
@@ -211,6 +212,7 @@ function ROOM_CLASS.is_near_exit(R)
   end
   return false
 end
+
 
 function ROOM_CLASS.find_guard_spot(R)
   -- finds a KEY or EXIT to guard -- returns coordinate table
@@ -242,6 +244,7 @@ function ROOM_CLASS.find_guard_spot(R)
 
   return nil  -- none
 end
+
 
 function ROOM_CLASS.furthest_dist_from_entry(R)
   if not R.entry_coord then
@@ -276,6 +279,93 @@ function ROOM_CLASS.furthest_dist_from_entry(R)
   end
 
   return result
+end
+
+
+function ROOM_CLASS.add_exclusion(R, kind, x1, y1, x2, y2, extra_dist)
+  local area =
+  {
+    kind = kind
+    x1 = x1 - (extra_dist or 0)
+    y1 = y1 - (extra_dist or 0)
+    x2 = x2 + (extra_dist or 0)
+    y2 = y2 + (extra_dist or 0)
+  }
+
+  table.insert(R.exclusions, area)
+end
+
+
+function ROOM_CLASS.clip_spot_list(R, list, x1, y1, x2, y2, strict_mode)
+  local new_list = {}
+
+  each spot in list do
+    if (spot.x2 <= x1) or (spot.x1 >= x2) or
+       (spot.y2 <= y1) or (spot.y1 >= y2)
+    then
+      -- unclipped
+
+    elseif strict_mode then
+      -- drop this spot
+      continue
+
+    else
+      local w1 = x1 - spot.x1
+      local w2 = spot.x2 - x2
+
+      local h1 = y1 - spot.y1
+      local h2 = spot.y2 - y2
+
+      -- totally clipped?
+      if math.max(w1, w2, h1, h2) < 8 then
+        continue
+      end
+
+      -- shrink the existing box (keep side with most free space)
+
+      if w1 >= math.max(w2, h1, h2) then
+        spot.x2 = spot.x1 + w1
+      elseif w2 >= math.max(w1, h1, h2) then
+        spot.x1 = spot.x2 - w2
+      elseif h1 >= math.max(w1, w2, h2) then
+        spot.y2 = spot.y1 + h1
+      else
+        spot.y1 = spot.y2 - h2
+      end
+
+      assert(spot.x2 > spot.x1)
+      assert(spot.y2 > spot.y1)
+    end
+
+    table.insert(new_list, spot)
+  end
+
+  return new_list
+end
+
+
+function ROOM_CLASS.clip_spots(R, x1, y1, x2, y2)
+  -- the given rectangle is where we _cannot_ have a spot
+
+  assert(x1 < x2)
+  assert(y1 < y2)
+
+  -- enlarge the area a bit
+  x1, y1 = x1 - 4, y1 - 4
+  x2, y2 = x2 + 4, y2 + 4
+
+  R.mon_spots  = R:clip_spot_list(R.mon_spots,  x1, y1, x2, y2)
+  R.item_spots = R:clip_spot_list(R.item_spots, x1, y1, x2, y2)
+  R.big_spots  = R:clip_spot_list(R.big_spots,  x1, y1, x2, y2, "strict")
+end
+
+
+function ROOM_CLASS.exclude_monsters(R)
+  each area in R.exclusions do
+    if area.kind == "empty" then
+      R:clip_spots(area.x1, area.y1, area.x2, area.y2)
+    end
+  end
 end
 
 
@@ -3807,6 +3897,10 @@ function Room_build_all()
     Room_find_monster_spots(R)
     Room_find_pickup_spots(R)
     Room_find_ambush_focus(R)
+
+    if R.kind != "cave" then
+      R:exclude_monsters()
+    end
   end
 end
 

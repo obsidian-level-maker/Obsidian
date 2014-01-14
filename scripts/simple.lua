@@ -1734,7 +1734,7 @@ function Simple_render_cave(R)
     -- mark exclusion zones (e.g. area around a teleporter).
     -- gotta do it _after_ getting the item spots
 
-    each zone in R.exclusion_zones do
+    each zone in R.exclusions do
       if zone.kind == "empty" then
         local poly = Brush_new_quad(zone.x1, zone.y1, zone.x2, zone.y2)
         gui.spots_fill_poly(poly, SPOT_LEDGE)

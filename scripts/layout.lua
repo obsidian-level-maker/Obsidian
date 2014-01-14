@@ -387,12 +387,19 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
   P.S.content = "wotsit"
   P.S.content_kind = kind
 
-  if R.cave then
-    -- clear the middle cell
-    local mx = (P.x - R.sx1) * 3 + 2
-    local my = (P.y - R.sy1) * 3 + 2
+---##  if R.cave then
+---##    -- clear the middle cell
+---##    local mx = (P.x - R.sx1) * 3 + 2
+---##    local my = (P.y - R.sy1) * 3 + 2
+---##
+---##    R.flood[mx][my] = R.flood.largest_empty.id
+---##  end
 
-    R.flood[mx][my] = R.flood.largest_empty.id
+  -- no monsters near start spot or teleporters
+  if kind == "START" or kind == "TELEPORTER" then
+    local S = P.S
+    R:add_exclusion("empty",     S.x1, S.y1, S.x2, S.y2, 96)
+    R:add_exclusion("nonfacing", S.x1, S.y1, S.x2, S.y2, 384)
   end
 
   return P.x, P.y, P.S
