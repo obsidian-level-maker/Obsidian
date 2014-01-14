@@ -38,6 +38,9 @@ cp -av lua_src/*.[chr]* $dest/lua_src
 mkdir $dest/glbsp_src
 cp -av glbsp_src/*.[chr]* $dest/glbsp_src
 
+mkdir $dest/ajpoly_src
+cp -av ajpoly_src/*.[chr]* $dest/ajpoly_src
+
 mkdir $dest/tools
 mkdir $dest/tools/qsavetex
 cp -av tools/qsavetex/*.[ch]* $dest/tools/qsavetex
@@ -49,10 +52,12 @@ cp -av misc/pack*.sh $dest/misc
 mkdir $dest/obj_linux
 mkdir $dest/obj_linux/lua
 mkdir $dest/obj_linux/glbsp
+mkdir $dest/obj_linux/ajpoly
 
 mkdir $dest/obj_win32
 mkdir $dest/obj_win32/lua
 mkdir $dest/obj_win32/glbsp
+mkdir $dest/obj_win32/ajpoly
 
 #
 #  Game data
@@ -88,5 +93,6 @@ cp -av doc/*.* $dest/doc
 # all done
 #
 echo "------------------------------------"
-echo "All done."
+echo "mv PACK-SRC Oblige-X.XX-source"
+echo "zip -l -r oblige-XXX-source.zip Oblige-X.XX-source"
 
