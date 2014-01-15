@@ -1644,7 +1644,7 @@ static void DM_MergeColinearLines(bool show_count = true)
 					count++;
 
 	if (show_count)
-		LogPrintf("Merged %d colinear lines\n");
+		LogPrintf("Merged %d colinear lines\n", count);
 }
 
 
