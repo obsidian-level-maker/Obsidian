@@ -2,22 +2,30 @@
 WORK IN PROGRESS
 ================
 
-
-Later
------
++  Lighting : better algorithm?
+   
+   at very least, need to brighten up some rooms (esp. Urban/Hell themes)
 
 +  Caves!
 
-+  exclusion zones for teleporters
++  support secret exits
+
++  wall pictures
+
+
+DONE:  exclusion zones for teleporters
 
 +  better spot_for_wotsit  (see V5 code)
 
-+  outdoor fences should straddle both rooms (right ?)
-
-
--  wider arches: be good to make them TALLER too
++  item placement too close to wall
 
 -  fix texturing on some stairs and diagonals
+
+
+-  outdoor fences should straddle both rooms
+   (but need to handle corners and T junctions)
+
+-  wider arches: be good to make them TALLER too
 
 -  in 2x2 rooms, place key/switch in middle of room
 
