@@ -1578,6 +1578,8 @@ function Connect_reserved_rooms()
 
     table.kill_elem(LEVEL.reserved_rooms, R)
 
+    LEVEL.secret_exit_room = R
+
 --    R.kind = "building"
 
 --    table.insert(LEVEL.rooms, R)
@@ -1648,11 +1650,36 @@ function Connect_reserved_rooms()
 
     gui.debugf("Alternate Start room @ %s (%d %d)\n", R:tostr(), R.sx1, R.sy1)
 
-    LEVEL.alternate_start = R
+    LEVEL.alt_start = R
 
     table.kill_elem(LEVEL.reserved_rooms, R)
 
     -- FIXME: actually connect the rooms
+
+
+    -- partition players between the two rooms.  Since Co-op is often
+    -- played by two people, have a large tendency to place 'player1'
+    -- and 'player2' in different rooms.
+
+    local set1, set2
+
+    if rand.odds(10) then
+      set1 = { "player1", "player2" }
+      set2 = { "player3", "player4" } 
+    elseif rand.odds(50) then
+      set1 = { "player1", "player3" }
+      set2 = { "player2", "player4" } 
+    else
+      set1 = { "player1", "player4" }
+      set2 = { "player2", "player3" } 
+    end
+
+    if rand.odds(50) then
+      set1, set2 = set2, set1
+    end
+
+    LEVEL.start_room.player_pair = set1
+    LEVEL.alt_start .player_pair = set2
   end
 
 

@@ -2604,6 +2604,20 @@ function Room_build_seeds(R)
   end
 
 
+  local function content_coop_pair(mx, my, z, dir)
+    -- no prefab for this : add player entities directly
+
+    local angle = geom.ANGLES[dir]
+
+    local dx, dy = geom.delta(dir)
+
+    dx = dx * 24 ; dy = dy * 24
+
+    Trans.entity(R.player_pair[1], mx - dy, my + dx, z, { angle=angle })
+    Trans.entity(R.player_pair[2], mx + dy, my - dx, z, { angle=angle })
+  end
+
+
   local function content_purpose(S)
     local sx, sy = S.sx, S.sy
 
@@ -2615,11 +2629,14 @@ function Room_build_seeds(R)
     if R.purpose == "START" then
       local dir = player_dir(S)
 
-      -- TODO: fix this
-      if false and PARAM.raising_start and R.svolume >= 20 and
+      if R.player_pair then
+        content_coop_pair(mx, my, z1, dir)
+
+      elseif false and PARAM.raising_start and R.svolume >= 20 and
          R.kind != "cave" and
          THEME.raising_start_switch and rand.odds(25)
       then
+        -- TODO: fix this
         gui.debugf("Raising Start made\n")
 
         local skin =

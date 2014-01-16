@@ -396,7 +396,7 @@ function Plan_reserve_rooms()
 
   -- often have lots in Co-operative mode, try for an alternative start
   if rand.odds(5) or
-     (OB_CONFIG.mode == "coop" and rand.odds(70))
+     (OB_CONFIG.mode == "coop" and rand.odds(50))
   then
     quota = 9
   end
