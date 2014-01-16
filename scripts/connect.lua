@@ -659,6 +659,44 @@ function Connect_merge_groups(id1, id2)
 end
 
 
+function Connect_seed_pair(S, T, dir)
+  assert(S.room and S.room.kind != "scenic")
+  assert(T.room and T.room.kind != "scenic")
+
+  assert(not S.conn and not S.conn_dir)
+  assert(not T.conn and not T.conn_dir)
+
+  -- create connection object
+
+  local CONN = CONN_CLASS.new("normal", S.room, T.room, dir)
+
+  CONN.S1 = S
+  CONN.S2 = T
+
+  S.conn = CONN
+  T.conn = CONN
+
+  S.conn_dir = dir
+  T.conn_dir = 10-dir
+
+  S.border[dir].conn = CONN
+
+  table.insert(S.room.conns, CONN)
+  table.insert(T.room.conns, CONN)
+
+  -- setup border info
+
+  S.border[dir].kind    = "arch"
+  T.border[10-dir].kind = "straddle"
+
+  S.thick[dir] = 16
+  T.thick[10-dir] = 16
+
+  return CONN
+end
+
+
+
 function Connect_teleporters()
   
   local function eval_room(R)
@@ -917,47 +955,17 @@ function Connect_rooms()
     end
   end
 
+
   local function connect_seeds(S, T, dir)
-    assert(S.room and S.room.kind != "scenic")
-    assert(T.room and T.room.kind != "scenic")
-
-    S.border[dir].kind    = "arch"
-    T.border[10-dir].kind = "straddle"
-
-    S.thick[dir] = 16
-    T.thick[10-dir] = 16
-
-gui.debugf("connect_seeds S(%d,%d) ROOM_%d grp:%d --> S(%d,%d) ROOM_%d grp:%d\n",
-S.sx,S.sy, S.room.id, S.room.c_group,
-T.sx,T.sy, T.room.id, T.room.c_group)
+    gui.debugf("connect_seeds S(%d,%d) %s grp:%d --> S(%d,%d) %s grp:%d\n",
+      S.sx, S.sy, S.room:tostr(), S.room.c_group,
+      T.sx, T.sy, T.room:tostr(), T.room.c_group)
 
     Connect_merge_groups(S.room.c_group, T.room.c_group)
 
-    local CONN = CONN_CLASS.new("normal", S.room, T.room, dir)
-
-    CONN.S1 = S
-    CONN.S2 = T
-
-    assert(not S.conn and not S.conn_dir)
-    assert(not T.conn and not T.conn_dir)
-
-    S.conn = CONN
-    T.conn = CONN
-
-    S.conn_dir = dir
-    T.conn_dir = 10-dir
-
-    S.conn_peer = T
-    T.conn_peer = S
-
-    S.border[dir].conn = CONN
-
-    table.insert(S.room.conns, CONN)
-    table.insert(T.room.conns, CONN)
+    Connect_seed_pair(S, T, dir)
 
     LEVEL.branched_one = true
-
-    return CONN
   end
 
 
@@ -1345,6 +1353,7 @@ gui.debugf("Failed\n")
     make_scenic(R)
   end
 
+
   local function handle_rebel_group(list, rebel_id, min_g)
 
     -- if this group is bigger than the main group, swap them
@@ -1513,13 +1522,25 @@ function Connect_reserved_rooms()
   local best
 
 
+  local function change_room_kind(R)
+    -- FIXME: pick outdoots (based on style)
+    R.kind = "building"
+
+    R.num_branch = 1
+
+    table.kill_elem(LEVEL.reserved_rooms, R)
+
+    table.insert(LEVEL.rooms, R)
+  end
+
+
   local function eval_conn_for_secret_exit(R, S, dir, N)
     local R2 = N.room
 
     if R2.kind == "scenic"   then return end
     if R2.kind == "reserved" then return end
 
-    if N.conn_dir then return end
+    if N.conn then return end
 
     local score = R2.lev_along * 10
 
@@ -1576,13 +1597,7 @@ function Connect_reserved_rooms()
 
     gui.debugf("Secret exit @ %s\n", R:tostr())
 
-    table.kill_elem(LEVEL.reserved_rooms, R)
-
-    LEVEL.secret_exit_room = R
-
---    R.kind = "building"
-
---    table.insert(LEVEL.rooms, R)
+    change_room_kind(R)
 
     -- FIXME: MORE MORE MORE
   end
@@ -1594,7 +1609,7 @@ function Connect_reserved_rooms()
     if R2.kind == "scenic"   then return end
     if R2.kind == "reserved" then return end
 
-    if N.conn_dir then return end
+    if N.conn then return end
 
     -- other room must be belong to the very first quest
     if R2.quest != LEVEL.start_room.quest then return end
@@ -1647,14 +1662,35 @@ function Connect_reserved_rooms()
 
   local function make_alternate_start()
     local R = best.R
+    local S = best.S
 
     gui.debugf("Alternate Start room @ %s (%d %d)\n", R:tostr(), R.sx1, R.sy1)
 
     LEVEL.alt_start = R
 
-    table.kill_elem(LEVEL.reserved_rooms, R)
+    change_room_kind(R)
 
-    -- FIXME: actually connect the rooms
+
+    -- actually connect the rooms
+    local T = S:neighbor(best.dir)
+
+    local CONN = Connect_seed_pair(T, S, 10 - best.dir)
+
+    R.entry_conn = CONN
+
+
+    -- insert room into quest
+    local quest = T.room.quest
+    local zone  = T.room.zone
+
+    R.quest = quest
+    R.zone  = zone
+
+    -- place on end of room lists (ensuring it is laid out AFTER
+    -- the room it connects to).
+
+    table.insert(quest.rooms, R)
+    table.insert( zone.rooms, R)
 
 
     -- partition players between the two rooms.  Since Co-op is often

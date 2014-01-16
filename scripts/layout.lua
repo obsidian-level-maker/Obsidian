@@ -858,14 +858,18 @@ gui.debugf("install_pattern %s :  hash_h:%d  (%d,%d)..(%d,%d)\n",
 gui.debugf("end install_fab\n")
   end
 
+
   local function install_flat_floor(h, f_tex)
-    for x = area.x1,area.x2 do for y = area.y1,area.y2 do
+    for x = area.x1, area.x2 do
+    for y = area.y1, area.y2 do
       local S = SEEDS[x][y]
+
       if S.room == R and not S.floor_h then
         setup_floor(S, h, f_tex)
         S.div_lev = div_lev
       end
-    end end -- for x, y
+    end -- x, y
+    end
   end
 
 
