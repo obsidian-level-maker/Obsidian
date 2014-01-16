@@ -220,7 +220,7 @@ function Seed_dump_rooms()
   end
 
   for y = SEED_H,1,-1 do
-    local line = "@c"
+    local line = "  "
     for x = 1,SEED_W do
       line = line .. seed_to_char(SEEDS[x][y])
     end

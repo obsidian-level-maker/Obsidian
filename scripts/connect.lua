@@ -1513,17 +1513,57 @@ function Connect_reserved_rooms()
   local best
 
 
-  local function eval_conn_for_secret_exit()
-    -- TODO
+  local function eval_conn_for_secret_exit(R, S, dir, N)
+    local R2 = N.room
+
+    if R2.kind == "scenic"   then return end
+    if R2.kind == "reserved" then return end
+
+    if N.conn_dir then return end
+
+    local score = R2.lev_along * 10
+
+    -- TODO: take other factors into account?
+
+    -- tie-breaker
+    score = score + gui.random()
+
+    if score > best.score then
+      best.score = score
+      best.R = R
+      best.S = S
+      best.dir = dir
+    end
+  end
+
+
+  local function evaluate_secret_exit(R)
+    for sx = R.sx1, R.sx2 do
+    for sy = R.sy1, R.sy2 do
+      for dir = 2,8,2 do
+
+        local S = SEEDS[sx][sy]
+
+        if S.room != R then continue end
+
+        local N = S:neighbor(dir)
+
+        if (N and N.room and N.room != R) then
+          eval_conn_for_secret_exit(R, S, dir, N)
+        end
+
+      end -- dir
+    end -- sx, sy
+    end
   end
 
 
   local function pick_secret_exit()
     best = { score=-1 }
 
-    -- FIXME
-
-    best = { R = LEVEL.reserved_rooms[1] }
+    each R in LEVEL.reserved_rooms do
+      evaluate_secret_exit(R)    
+    end
   end
 
 
@@ -1552,12 +1592,33 @@ function Connect_reserved_rooms()
     if R2.kind == "scenic"   then return end
     if R2.kind == "reserved" then return end
 
+    if N.conn_dir then return end
+
     -- other room must be belong to the very first quest
     if R2.quest != LEVEL.start_room.quest then return end
 
-    -- TODO....
+    local score = 50
 
-    stderrf("possible alt start %s --> %s\n", R:tostr(), R2:tostr())
+    if R2 == LEVEL.start_room then
+      score = 30
+    elseif R2.purpose then
+      score = 40
+    end
+
+    -- prefer smaller rooms
+    score = score - math.sqrt(R.svolume) * 2
+
+    -- TODO: check if this doorway would be near another one
+
+    -- tie-breaker
+    score = score + gui.random() * 5
+
+    if score > best.score then
+      best.score = score
+      best.R = R
+      best.S = S
+      best.dir = dir
+    end
   end
 
 
@@ -1582,12 +1643,16 @@ function Connect_reserved_rooms()
   end
 
 
-  local function make_alternate_start(R)
-    -- TODO
+  local function make_alternate_start()
+    local R = best.R
 
-    gui.debugf("Alternate Start room @ %s\n", R:tostr())
+    gui.debugf("Alternate Start room @ %s (%d %d)\n", R:tostr(), R.sx1, R.sy1)
 
     LEVEL.alternate_start = R
+
+    table.kill_elem(LEVEL.reserved_rooms, R)
+
+    -- FIXME: actually connect the rooms
   end
 
 
