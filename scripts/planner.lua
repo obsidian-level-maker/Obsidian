@@ -319,16 +319,43 @@ function Plan_reserve_rooms()
   -- spare seeds for closets and traps.
   --
 
+  local function section_is_usable(kx, ky)
+    -- prevent a neighbor section (even diagonal) from also having
+    -- a reserved room, since that can cause a normal room to be
+    -- blocked off (at a corner of the map).
+
+    for dx = -1,1 do
+    for dy = -1,1 do
+      local nx = kx + dx
+      local ny = ky + dy
+
+      if Section_valid(nx, ny) then
+        local K = LEVEL.sections[nx][ny]
+
+        if K.room then return false end
+      end
+    end -- dx, dy
+    end
+
+    return true
+  end
+
+
   local function pick_a_section()
     -- FIXME: ensure not touch any other reserved rooms (even diagonally)
 
-    local kx = rand.irange(1, LEVEL.W)
-    local ky = rand.irange(1, LEVEL.H)
+    for loop = 1,100 do
+      local kx = rand.irange(1, LEVEL.W)
+      local ky = rand.irange(1, LEVEL.H)
 
-    local K = LEVEL.sections[kx][ky]
-    assert(not K.room)
+      local K = LEVEL.sections[kx][ky]
 
-    return K
+      if section_is_usable(kx, ky) then
+        return K
+      end
+    end
+
+    return nil  -- nothing possible
   end
 
 
@@ -349,15 +376,25 @@ function Plan_reserve_rooms()
 
     table.kill_elem(LEVEL.rooms, R)
 
-    LEVEL.reserved_room = R
+    table.insert(LEVEL.reserved_rooms, R)
   end
 
 
   ---| Plan_reserve_rooms |---
 
-  -- TODO: sometimes zero (unless LEVEL.secret_exit)
-  -- TODO: sometimes more (based on LEVEL.H)
-  local quota = 1
+  LEVEL.reserved_rooms = {}
+
+  local quota = rand.sel(60, 0, 1)
+
+  if LEVEL.secret_exit and quota < 1 then
+    quota = 1
+  end
+
+  if LEVEL.H >= 3 and rand.odds(20) then quota = quota + 1 end
+  if LEVEL.H >= 4 and rand.odds(70) then quota = quota + 1 end
+  if LEVEL.H >= 5 and rand.odds(70) then quota = quota + 1 end
+
+  if rand.odds(5) then quota = 9 end
 
   gui.printf("Reserved room quota: %d\n", quota)
 
@@ -893,6 +930,10 @@ function Plan_nudge_rooms()
     local R2 = K2.room
 
     if not R2 or R2 == R then return end
+
+    -- check for reserved rooms : growing these can potentially block
+    -- off a normal room (at a corner of the map).
+    if R.kind == "reserved" then return end
 
     -- check for big rooms : never nudge a "wide" edge
     if R.kind != "cave" then

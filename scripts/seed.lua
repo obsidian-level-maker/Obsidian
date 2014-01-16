@@ -207,7 +207,8 @@ function Seed_dump_rooms()
     if S.edge_of_map then return "#" end
     if not S.room then return "?" end
 
-    if S.room.kind == "scenic" then return "=" end
+    if S.room.kind == "scenic"   then return "=" end
+    if S.room.kind == "reserved" then return "*" end
 
     if S.room.kind == "cave" then
       local n = 1 + ((S.room.id - 1) % 26)
