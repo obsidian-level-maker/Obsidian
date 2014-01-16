@@ -2,9 +2,26 @@
 WORK IN PROGRESS
 ================
 
+
 +  Lighting : better algorithm?
    
    at very least, need to brighten up some rooms (esp. Urban/Hell themes)
+
+
+   IDEAS:
+
+   -  a greater focus on lower levels (144..176) with further distances
+
+   -  exponential drop-off
+      for example: 192 176 176 160 160 160 144 144 144 144 144 128 * 8
+
+   -  experiment with the square shape
+
+   -  narrow vertical gaps should diminish result (hard to do??)
+
+   -  move to quake-like system, point lights (and sky lights)
+      except test a few vertical heights
+
 
 +  Caves!
 
@@ -17,7 +34,11 @@ DONE:  exclusion zones for teleporters
 
 +  better spot_for_wotsit  (see V5 code)
 
++  rare stuck monsters (e.g. Mastermind on an exit switch)
+
 +  item placement too close to wall
+
+-  misaligned uppers (due to lighting and/or crates)
 
 -  fix texturing on some stairs and diagonals
 
