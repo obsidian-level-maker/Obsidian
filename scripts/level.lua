@@ -687,6 +687,12 @@ function Levels_do_styles()
     end
   end
 
+  -- if level needs a secret exit, make lots of secrets
+  -- (this is not strictly necessary, more an aesthetic choice)
+  if LEVEL.secret_exit then
+    STYLE.secrets = "heaps"
+  end
+
   SKY_H = rand.sel(5, 768, 512)
 
   if OB_CONFIG.theme == "psycho" then
