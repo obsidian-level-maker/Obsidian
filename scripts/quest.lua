@@ -1895,6 +1895,8 @@ function Quest_make_quests()
 
   gui.printf("Exit room: %s\n", LEVEL.exit_room:tostr())
 
+  Connect_reserved_rooms()
+
   Quest_order_by_visit()
 
   Quest_assign_room_themes()

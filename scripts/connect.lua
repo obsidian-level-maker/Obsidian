@@ -1,4 +1,4 @@
----------------------------------------------------------------
+----------------------------------------------------------------
 --  CONNECTIONS
 ----------------------------------------------------------------
 --
@@ -870,12 +870,16 @@ function Connect_natural_flow()
 end
 
 
-function Connect_rooms()
 
-  -- Guidelines:
-  -- . prefer ground areas not to be leafs
-  -- . prefer big rooms to have 3 or more connections.
-  -- . prefer small isolated rooms to be leafs (1 connection).
+function Connect_rooms()
+  --
+  -- This function ensures all rooms become connected together
+  -- (as a simple undirected graph, i.e. no loops).  The exception
+  -- is reserved rooms which are handled later.  Rooms can be
+  -- connected directly at a boundary or via teleporters.
+  --
+  -- We also decide the start room here.
+  --
 
   local function min_group_id()
     local result
@@ -1492,5 +1496,90 @@ gui.debugf("Failed\n")
 
 ---  gui.printf("Updated Map:\n")
 ---  Seed_dump_rooms()
+end
+
+
+----------------------------------------------------------------
+
+
+function Connect_reserved_rooms()
+  --
+  -- This handled reserved rooms, which have been ignored so far.
+  -- If the level requires a secret exit, one will be used for it.
+  -- Otherwise they can be become plain secrets, storage rooms, or
+  -- just something to look at (scenic rooms).
+  --
+
+  local best_R
+  local best_S
+  local best_dir
+
+
+  local function eval_conn_for_secret_exit()
+    -- TODO
+  end
+
+
+  local function pick_secret_exit()
+    -- TODO
+  end
+
+
+  local function make_secret_exit()
+    local R = best_R
+
+    if not R then
+      error("No reserved room available for secret exit")
+    end
+
+    table.kill_elem(LEVEL.reserved_rooms, R)
+
+    R.kind = "building"
+
+    table.insert(LEVEL.rooms, R)
+
+    -- FIXME: MORE MORE MORE
+  end
+
+
+  local function make_alternate_start(R)
+    -- TODO
+  end
+
+
+  local function find_alternate_start()
+    best_R = nil
+
+    each R in LEVEL.reserved_rooms do
+      
+    end
+
+    if best_R then
+      make_alternate_start()
+    end
+  end
+
+
+  local function convert_room(R)
+    -- FIXME
+  end
+
+
+  ---| Connect_reserved_rooms |---
+
+  if LEVEL.secret_exit then
+    pick_secret_exit()
+    make_secret_exit()
+  end
+
+  if OB_CONFIG.mode == "coop" then
+    find_alternate_start()
+  end
+
+  each R in LEVEL.reserved_rooms do
+    convert_room(R)
+  end
+
+  LEVEL.reserved_rooms = {}
 end
 
