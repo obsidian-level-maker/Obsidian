@@ -62,7 +62,7 @@ public:
 
 /***** VARIABLES **********/
 
-#define CLUSTER_SIZE  128.0
+#define CLUSTER_SIZE  192.0
 
 extern int cluster_X, cluster_Y;
 extern int cluster_W, cluster_H;
