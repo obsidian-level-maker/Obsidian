@@ -1670,6 +1670,8 @@ function Connect_reserved_rooms()
 
     change_room_kind(R)
 
+    R.purpose = "START"
+
 
     -- actually connect the rooms
     local T = S:neighbor(best.dir)

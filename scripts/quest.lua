@@ -414,6 +414,9 @@ function Quest_add_weapons()
 
 
   local function eval_room_for_weapon(R, is_start, is_new)
+    -- alternate starting rooms have special handling
+    if R == LEVEL.alt_start then return -200 end
+
     -- never in secrets!
     if R.quest.kind == "secret" then return -100 end
 
@@ -578,6 +581,11 @@ function Quest_add_weapons()
   if table.empty(LEVEL.start_room.weapons) then
     fallback_start_weapon()
   end
+
+  -- mirror weapons in a Co-op alternate start room
+  if LEVEL.alt_start then
+    LEVEL.alt_start.weapons = table.copy(LEVEL.start_room.weapons)
+  end
 end
 
 
@@ -697,7 +705,9 @@ function Quest_nice_items()
     -- add the start room too, sometimes twice
     table.insert(rooms, 1, LEVEL.start_room)
 
-    if rand.odds(25) then
+    if LEVEL.alt_start then
+      table.insert(rooms, 1, LEVEL.alt_start)
+    elseif rand.odds(25) then
       table.insert(rooms, 1, LEVEL.start_room)
     end
 
