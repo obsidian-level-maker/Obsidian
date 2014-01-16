@@ -394,7 +394,12 @@ function Plan_reserve_rooms()
   if LEVEL.H >= 4 and rand.odds(70) then quota = quota + 1 end
   if LEVEL.H >= 5 and rand.odds(70) then quota = quota + 1 end
 
-  if rand.odds(5) then quota = 9 end
+  -- often have lots in Co-operative mode, try for an alternative start
+  if rand.odds(5) or
+     (OB_CONFIG.mode == "coop" and rand.odds(70))
+  then
+    quota = 9
+  end
 
   gui.printf("Reserved room quota: %d\n", quota)
 
@@ -1197,13 +1202,19 @@ function Plan_make_seeds()
   ---| Plan_make_seeds |---
 
   -- recompute seed volume
-  each R in LEVEL.rooms do
+  local all_rooms = {}
+
+  table.append(all_rooms, LEVEL.rooms)
+  table.append(all_rooms, LEVEL.scenic_rooms)
+  table.append(all_rooms, LEVEL.reserved_rooms)
+
+  each R in all_rooms do
     R.svolume = 0
   end
 
   plant_rooms()
 
-  each R in LEVEL.rooms do
+  each R in all_rooms do
     R.sw = R.sx2 - R.sx1 + 1
     R.sh = R.sy2 - R.sy1 + 1
   end
