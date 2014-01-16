@@ -1510,9 +1510,7 @@ function Connect_reserved_rooms()
   -- just something to look at (scenic rooms).
   --
 
-  local best_R
-  local best_S
-  local best_dir
+  local best
 
 
   local function eval_conn_for_secret_exit()
@@ -1521,40 +1519,86 @@ function Connect_reserved_rooms()
 
 
   local function pick_secret_exit()
-    -- TODO
+    best = { score=-1 }
+
+    -- FIXME
+
+    best = { R = LEVEL.reserved_rooms[1] }
   end
 
 
   local function make_secret_exit()
-    local R = best_R
-
-    if not R then
+    if not best.R then
       error("No reserved room available for secret exit")
     end
 
+    local R = best.R
+
+    gui.debugf("Secret exit @ %s\n", R:tostr())
+
     table.kill_elem(LEVEL.reserved_rooms, R)
 
-    R.kind = "building"
+--    R.kind = "building"
 
-    table.insert(LEVEL.rooms, R)
+--    table.insert(LEVEL.rooms, R)
 
     -- FIXME: MORE MORE MORE
   end
 
 
+  local function eval_conn_for_alt_start(R, S, dir, N)
+    local R2 = N.room
+
+    if R2.kind == "scenic"   then return end
+    if R2.kind == "reserved" then return end
+
+    -- other room must be belong to the very first quest
+    if R2.quest != LEVEL.start_room.quest then return end
+
+    -- TODO....
+
+    stderrf("possible alt start %s --> %s\n", R:tostr(), R2:tostr())
+  end
+
+
+  local function evaluate_alt_start(R)
+    for sx = R.sx1, R.sx2 do
+    for sy = R.sy1, R.sy2 do
+      for dir = 2,8,2 do
+
+        local S = SEEDS[sx][sy]
+
+        if S.room != R then continue end
+
+        local N = S:neighbor(dir)
+
+        if (N and N.room and N.room != R) then
+          eval_conn_for_alt_start(R, S, dir, N)
+        end
+
+      end -- dir
+    end -- sx, sy
+    end
+  end
+
+
   local function make_alternate_start(R)
     -- TODO
+
+    gui.debugf("Alternate Start room @ %s\n", R:tostr())
+
+    LEVEL.alternate_start = R
   end
 
 
   local function find_alternate_start()
-    best_R = nil
+    best = { score=-1 }
 
     each R in LEVEL.reserved_rooms do
-      
+      evaluate_alt_start(R)    
     end
 
-    if best_R then
+    if best.R then
       make_alternate_start()
     end
   end
