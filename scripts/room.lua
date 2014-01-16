@@ -2591,7 +2591,7 @@ function Room_build_seeds(R)
   end
 
 
-  local function content_start(mx, my, z, dir)
+  local function content_start_pad(mx, my, z, dir)
     local skin1 = GAME.SKINS["Start_basic"]
     assert(skin1)
 
@@ -2618,6 +2618,62 @@ function Room_build_seeds(R)
   end
 
 
+  local function content_start(S, mx, my, z1)
+    local dir = player_dir(S)
+
+    if R.player_pair then
+      content_coop_pair(mx, my, z1, dir)
+
+    elseif false and PARAM.raising_start and R.svolume >= 20 and
+       R.kind != "cave" and
+       THEME.raising_start_switch and rand.odds(25)
+    then
+      -- TODO: fix this
+      gui.debugf("Raising Start made\n")
+
+      local skin =
+      {
+        f_tex = S.f_tex or R.main_tex,
+        switch_w = THEME.raising_start_switch,
+      }
+
+      Build.raising_start(S, 6, z1, skin)
+      angle = 0
+
+      S.no_floor = true
+      S.raising_start = true
+      R.has_raising_start = true
+    else
+      content_start_pad(mx, my, z1, dir)
+    end
+
+    -- save position for the demo generator
+    LEVEL.player_pos =
+    {
+      S=S, R=R, x=mx, y=my, z=z1, angle=angle
+    }
+  end
+
+
+  local function content_exit(S, mx, my, z1)
+    local CS = R.conns[1]:seed(R)
+    local dir = dir_for_wotsit(S)
+
+    if R.is_outdoor and THEME.out_exits then
+      -- FIXME: use single one for a whole episode
+      local skin_name = rand.key_by_probs(THEME.out_exits)
+      local skin = assert(GAME.EXITS[skin_name])
+      Build.outdoor_exit_switch(S, dir, z1, skin)
+
+    elseif THEME.exits then
+      -- FIXME: use single one for a whole episode
+      local skin_name = rand.key_by_probs(THEME.exits)
+      local skin = assert(GAME.EXITS[skin_name])
+      Build.exit_pillar(S, z1, skin)
+    end
+  end
+
+
   local function content_purpose(S)
     local sx, sy = S.sx, S.sy
 
@@ -2627,70 +2683,15 @@ function Room_build_seeds(R)
     local mx, my = S:mid_point()
 
     if R.purpose == "START" then
-      local dir = player_dir(S)
-
-      if R.player_pair then
-        content_coop_pair(mx, my, z1, dir)
-
-      elseif false and PARAM.raising_start and R.svolume >= 20 and
-         R.kind != "cave" and
-         THEME.raising_start_switch and rand.odds(25)
-      then
-        -- TODO: fix this
-        gui.debugf("Raising Start made\n")
-
-        local skin =
-        {
-          f_tex = S.f_tex or R.main_tex,
-          switch_w = THEME.raising_start_switch,
-        }
-
-        Build.raising_start(S, 6, z1, skin)
-        angle = 0
-
-        S.no_floor = true
-        S.raising_start = true
-        R.has_raising_start = true
-      else
-        content_start(mx, my, z1, dir)
-      end
-
-      -- save position for the demo generator
-      LEVEL.player_pos =
-      {
-        S=S, R=R, x=mx, y=my, z=z1, angle=angle
-      }
-
-      -- never put monsters next to the start spot
-      -- FIXME: use a exclsuion zone
-      for dir = 2,8,2 do
-        local N = S:neighbor(dir)
-        if N and N.room == R then
-          N.no_monster = true
-        end
-      end
+      content_start(S, mx, my, z1)
 
     elseif R.purpose == "EXIT" and OB_CONFIG.game == "quake" then
       local skin = { floor="SLIP2", wall="SLIPSIDE" }
 
       Build.quake_exit_pad(S, z1 + 16, skin, LEVEL.next_map)
 
-    elseif R.purpose == "EXIT" then
-      local CS = R.conns[1]:seed(R)
-      local dir = dir_for_wotsit(S)
-
-      if R.is_outdoor and THEME.out_exits then
-        -- FIXME: use single one for a whole episode
-        local skin_name = rand.key_by_probs(THEME.out_exits)
-        local skin = assert(GAME.EXITS[skin_name])
-        Build.outdoor_exit_switch(S, dir, z1, skin)
-
-      elseif THEME.exits then
-        -- FIXME: use single one for a whole episode
-        local skin_name = rand.key_by_probs(THEME.exits)
-        local skin = assert(GAME.EXITS[skin_name])
-        Build.exit_pillar(S, z1, skin)
-      end
+    elseif R.purpose == "EXIT" or R.purpose == "SECRET_EXIT" then
+      content_exit(S, mx, my, z1)
 
     elseif R.purpose == "KEY" then
       local LOCK = assert(R.purpose_lock)
