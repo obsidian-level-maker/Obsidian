@@ -1126,7 +1126,7 @@ function Quest_create_zones()
 
   ---| Quest_create_zones |---
 
-  local want_zones = int((LEVEL.W + LEVEL.H) / 4 + gui.random() * 3)
+  local want_zones = int((LEVEL.W + LEVEL.H) / 4 + gui.random() * 2.5)
 
   gui.debugf("want_zones = %d\n", want_zones)
 
