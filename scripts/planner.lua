@@ -386,8 +386,8 @@ function Plan_reserve_rooms()
 
   local quota = rand.sel(60, 0, 1)
 
-  if LEVEL.secret_exit and quota < 1 then
-    quota = 1
+  if LEVEL.secret_exit then
+    quota = quota + 1
   end
 
   if LEVEL.H >= 3 and rand.odds(20) then quota = quota + 1 end

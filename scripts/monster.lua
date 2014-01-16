@@ -1398,7 +1398,9 @@ function Monsters_in_room(R)
     end
 
     -- less in secrets (usually much less)
-    if R.quest.kind == "secret" then
+    if R.kind == "SECRET_EXIT" then
+      qty = qty / 1.6
+    elseif R.quest.kind == "secret" then
       qty = qty / rand.pick { 2.1, 2.9, 3.7 }
     end
 

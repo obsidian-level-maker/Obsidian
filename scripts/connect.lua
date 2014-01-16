@@ -1548,12 +1548,17 @@ function Connect_reserved_rooms()
 
     if N.conn then return end
 
-    local score = R2.lev_along * 10
+    local score = 10 * (R2.quest.id / #LEVEL.quests)
 
-    -- TODO: take other factors into account?
+    -- even better if other room is a secret
+    if R2.quest.super_secret then
+      score = score + 20
+    elseif R2.quest.kind == "secret" then
+      score = score + 8
+    end
 
     -- tie-breaker
-    score = score + gui.random()
+    score = score + gui.random() * 2
 
     if score > best.score then
       best.score = score
@@ -1600,10 +1605,31 @@ function Connect_reserved_rooms()
     end
 
     local R = best.R
+    local S = best.S
 
-    gui.debugf("Secret exit @ %s\n", R:tostr())
+    gui.debugf("Secret exit @ %s  (%d %d)\n", R:tostr(), R.sx1, R.sy1)
 
     change_room_kind(R)
+
+    R.purpose = "SECRET_EXIT"
+
+
+    -- actually connect the rooms
+    local T = S:neighbor(best.dir)
+
+    local CONN = Connect_seed_pair(T, S, 10 - best.dir)
+
+    R.entry_conn = CONN
+
+
+    R.lev_along = 1.05  -- HACK !!!
+
+-- FIXME: TEMP CRUD
+    local quest = T.room.quest
+    local zone  = T.room.zone
+    R.quest = quest
+    R.zone  = zone
+
 
     -- FIXME: MORE MORE MORE
   end

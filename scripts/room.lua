@@ -2659,17 +2659,20 @@ function Room_build_seeds(R)
     local CS = R.conns[1]:seed(R)
     local dir = dir_for_wotsit(S)
 
+    local sw_special = 11
+    if R.purpose == "SECRET_EXIT" then sw_special = 51 end
+
     if R.is_outdoor and THEME.out_exits then
       -- FIXME: use single one for a whole episode
       local skin_name = rand.key_by_probs(THEME.out_exits)
       local skin = assert(GAME.EXITS[skin_name])
-      Build.outdoor_exit_switch(S, dir, z1, skin)
+      Build.outdoor_exit_switch(S, dir, z1, skin, sw_special)
 
     elseif THEME.exits then
       -- FIXME: use single one for a whole episode
       local skin_name = rand.key_by_probs(THEME.exits)
       local skin = assert(GAME.EXITS[skin_name])
-      Build.exit_pillar(S, z1, skin)
+      Build.exit_pillar(S, z1, skin, sw_special)
     end
   end
 

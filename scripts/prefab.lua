@@ -1423,7 +1423,7 @@ function Build.small_switch(S, dir, f_h, skin, tag)
 end
 
                                       
-function Build.exit_pillar(S, z1, skin)
+function Build.exit_pillar(S, z1, skin, sw_special)
   local DT, long = get_transform_for_seed_side(S, 8)
 
   local mx = int((S.x1 + S.x2)/2)
@@ -1431,10 +1431,10 @@ function Build.exit_pillar(S, z1, skin)
 
   Trans.old_brush(add_pegging(get_mat(skin.switch_w)),
   {
-    { x=mx+32, y=my-32, special=skin.line_kind or 11 },
-    { x=mx+32, y=my+32, special=skin.line_kind or 11 },
-    { x=mx-32, y=my+32, special=skin.line_kind or 11 },
-    { x=mx-32, y=my-32, special=skin.line_kind or 11 },
+    { x=mx+32, y=my-32, special=sw_special },
+    { x=mx+32, y=my+32, special=sw_special },
+    { x=mx-32, y=my+32, special=sw_special },
+    { x=mx-32, y=my-32, special=sw_special },
   },
   -EXTREME_H, z1 + skin.h)
 
@@ -1471,7 +1471,7 @@ function Build.exit_pillar(S, z1, skin)
 end
 
 
-function Build.outdoor_exit_switch(S, dir, f_h, skin)
+function Build.outdoor_exit_switch(S, dir, f_h, skin, sw_special)
 
   local DT, long = get_transform_for_seed_side(S, 10-dir)
   local deep = long
@@ -1508,9 +1508,9 @@ function Build.outdoor_exit_switch(S, dir, f_h, skin)
   Trans.old_brush(info,
   {
     { x=mx+32, y=my-8 },
-    { x=mx+32, y=my+8, w_face = switch_info.w_face, special=11 },
+    { x=mx+32, y=my+8, w_face = switch_info.w_face, special=sw_special },
     { x=mx-32, y=my+8 },
-    { x=mx-32, y=my-8, w_face = switch_info.w_face, special=11 },
+    { x=mx-32, y=my-8, w_face = switch_info.w_face, special=sw_special },
   },
   -EXTREME_H, f_h+16+64)
 
