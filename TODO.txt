@@ -19,14 +19,10 @@ ______________________________________________________________________
 
 *  liquid areas (escapable too)
 
-*  support for Traps, Cages, Secrets, Powerups
+*  support for Traps, Cages
 
 *  add in more scenery: lamps, computers etc
 
-*  symmetrical rooms
-
-
-*  NSIS installer for Windows
 
 *  proper install for Unix / Linux systems
 
