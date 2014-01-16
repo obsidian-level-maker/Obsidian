@@ -935,8 +935,8 @@ function Room_border_up()
       if R2.is_outdoor or R2.kind == "cave" then
         S.border[side].kind = "fence"
       else
-        S.border[side].kind = "facade"
-        S.border[side].facade = R2.facade
+        S.border[side].kind = "wall"
+        S.border[side].w_tex = R2.facade
       end
 
 --###   if N.kind == "small_exit" then
@@ -963,8 +963,7 @@ function Room_border_up()
       S.thick[side] = 16
 
       if R2.parent == R1 then
-        S.border[side].kind = "facade"
-        S.border[side].facade = R2.main_tex
+        S.border[side].w_tex = R2.main_tex
       end
 
       -- liquid arches are a kind of window
@@ -1095,8 +1094,8 @@ function Room_border_up()
     local S_kind = S.border[     side].kind
     local N_kind = N.border[10 - side].kind
 
-    if not (S_kind == "wall" or S_kind == "facade") then return false end
-    if not (N_kind == "wall" or N_kind == "facade") then return false end
+    if S_kind != "wall" then return false end
+    if N_kind != "wall" then return false end
 
     return true
   end
@@ -1134,8 +1133,13 @@ function Room_border_up()
 
         local TN = T:neighbor(side)
 
-        T.border[side] = { kind="wall" }
-        TN.border[10 - side] = { kind="wall" }
+        -- reconstruct the walls
+
+        T.border[side] = {}
+        TN.border[10 - side] = {}
+
+        make_border(T.room, T, TN.room, TN, side)
+        make_border(TN.room, TN, T.room, T, 10 - side)
       end
     end
   end
@@ -3065,7 +3069,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
       local B_kind = S.border[side].kind
 
       if not N or N.free or N.kind == "void" or
-         B_kind == "wall" or B_kind == "facade" or B_kind == "picture"
+         B_kind == "wall" or B_kind == "picture"
       then
         vis_mark_wall(S, side)
       end
@@ -3189,12 +3193,7 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
       end
 
       if B_kind == "wall" and R.kind != "scenic" then  -- FIXME; scenic check is bogus
-        do_wall(S, side, w_tex)
-        shrink_both(side, 16)
-      end
-
-      if B_kind == "facade" then
-        do_wall(S, side, S.border[side].facade)
+        do_wall(S, side, border.w_tex or w_tex)
         shrink_both(side, 16)
       end
 

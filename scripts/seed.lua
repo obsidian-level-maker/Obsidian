@@ -49,8 +49,8 @@ class BORDER
 {
   kind  : nil (when not decided yet)
           "nothing", "straddle",
-          "wall", "facade", "fence", "window",
-          "arch", "door", "locked_door",
+          "wall", "window", "fence",
+          "arch", "door", "locked_door", "secret_door"
 
   other : SEED  -- seed we are connected to, or nil 
 
