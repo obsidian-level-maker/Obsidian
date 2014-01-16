@@ -1103,7 +1103,7 @@ static partition_c * ChoosePartition(group_c & group, bool *reached_chunk)
 		// which is optimal for avoiding region splits.  It would still work
 		// though if the Lua code used a different seed size.
 
-#define CHUNK_SIZE  256.0
+#define CHUNK_SIZE  384.0
 
 		double gx1, gy1, gx2, gy2;
 
