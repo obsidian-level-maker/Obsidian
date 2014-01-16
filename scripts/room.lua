@@ -939,10 +939,6 @@ function Room_border_up()
         S.border[side].w_tex = R2.facade
       end
 
---###   if N.kind == "small_exit" then
---###     S.border[side].kind = "nothing"
---###   end
-
       if N.kind == "liquid" and R2.is_outdoor and
         (S.kind == "liquid" or R1.quest == R2.quest)
         --!!! or (N.room.kind == "scenic" and safe_falloff(S, side))
@@ -3232,8 +3228,8 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
       end
 
       if B_kind == "liquid_arch" then
-        local other_mat = sel(N.room.is_outdoor, R.facade, N.room.main_tex)
-        local skin = { wall=w_tex, floor=f_tex, outer=other_mat, break_t=THEME.track_mat }
+        local o_tex = outer_tex(S, side, w_tex)
+        local skin = { wall=w_tex, floor=f_tex, outer=o_tex, break_t=THEME.track_mat }
         local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
 
         Build.archway(S, side, z1, z_top, skin)

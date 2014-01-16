@@ -311,6 +311,62 @@ function Section_valid(kx, ky)
 end
 
 
+function Plan_reserve_rooms()
+  --
+  -- Reserve rooms on certain sections of the map.
+  -- They are mainly for secrets, especially secret exits, but could
+  -- also be used for separate player starts for co-op, or simply as
+  -- spare seeds for closets and traps.
+  --
+
+  local function pick_a_section()
+    -- FIXME: ensure not touch any other reserved rooms (even diagonally)
+
+    local kx = rand.irange(1, LEVEL.W)
+    local ky = rand.irange(1, LEVEL.H)
+
+    local K = LEVEL.sections[kx][ky]
+    assert(not K.room)
+
+    return K
+  end
+
+
+  local function add_reserved_room()
+    local K = pick_a_section()
+
+    if not K then return end
+
+    local R = ROOM_CLASS.new()  
+
+    K.room = R
+
+    R.kind = "reserved"
+    R.svolume = K.sw * K.sh
+
+    R.main_tex = "BROWN96"   -- hack
+    R.facade   = R.main_tex  --
+
+    table.kill_elem(LEVEL.rooms, R)
+
+    LEVEL.reserved_room = R
+  end
+
+
+  ---| Plan_reserve_rooms |---
+
+  -- TODO: sometimes zero (unless LEVEL.secret_exit)
+  -- TODO: sometimes more (based on LEVEL.H)
+  local quota = 1
+
+  gui.printf("Reserved room quota: %d\n", quota)
+
+  for i = 1, quota do
+    add_reserved_room()
+  end
+end
+
+
 function Plan_find_neighbors()
   -- determines neighboring rooms of each room
   -- (including diagonals, which may touch after nudging)
@@ -1010,6 +1066,7 @@ function Plan_sub_rooms()
     R.parent = parent
     R.neighbors = { }  -- ???
 
+    -- must set seed range here (since sub-rooms are added AFTER Plan_make_seeds)
     R.sx1 = info.x
     R.sy1 = info.y
     R.sx2 = info.x + info.w - 1
@@ -1248,6 +1305,8 @@ function Plan_create_rooms()
 
   Plan_determine_size()
   Plan_create_sections()
+
+  Plan_reserve_rooms()
 
   Plan_add_caves()
   Plan_add_normal_rooms()
