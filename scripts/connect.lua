@@ -1523,8 +1523,14 @@ function Connect_reserved_rooms()
 
 
   local function change_room_kind(R)
-    -- FIXME: pick outdoots (based on style)
     R.kind = "building"
+
+    -- make it outdoors sometimes
+    if rand.odds(style_sel("outdoors", 0, 10, 30, 50, 100)) then
+      R.kind = "outdoor"
+      R.is_outdoor = true
+      R.sky_h = SKY_H  -- FIXME: use sky groups
+    end
 
     R.num_branch = 1
 
