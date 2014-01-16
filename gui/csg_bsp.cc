@@ -498,6 +498,19 @@ double region_c::DistanceToPoint(float x, float y) const
 }
 
 
+double region_c::SquareDistance(float x, float y) const
+{
+	double bx1, by1, bx2, by2;
+
+	GetBounds(&bx1, &by1, &bx2, &by2);
+
+	double x_dist = (x < bx1) ? (bx1 - x) : (x > bx2) ? (x - bx2) : 0;
+	double y_dist = (y < by1) ? (by1 - y) : (y > by2) ? (y - by2) : 0;
+
+	return MAX(x_dist, y_dist);
+}
+
+
 bool region_c::HasSameBrushes(const region_c *other) const
 {
 	// NOTE WELL: assumes brushes have been sorted

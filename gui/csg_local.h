@@ -142,6 +142,7 @@ public:
 
 	bool ContainsPoint(double x, double y) const;
 	double DistanceToPoint(float x, float y) const;
+	double SquareDistance (float x, float y) const;
 
 	void SortBrushes();
 

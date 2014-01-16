@@ -450,7 +450,7 @@ static void SHADE_RenderLeaf(region_c *leaf)
 {
 	stat_sources++;
 
-	double dist = leaf->DistanceToPoint(view_x, view_y);
+	double dist = leaf->SquareDistance(view_x, view_y);
 
 	if (dist >= DISTANCE_LIMIT)
 		return;
