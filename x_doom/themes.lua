@@ -3,7 +3,7 @@
 --------------------------------------------------------------------
 --
 --  Copyright (C) 2006-2014 Andrew Apted
---  Copyright (C)      2011 Chris Pisarczyk
+--  Copyright (C) 2011-2014 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -33,9 +33,12 @@ DOOM.NAME_THEMES =
     {
       a =
       {
-        Deimos=30
-        Phobos=30
-        ["Tei Tenga"]=15
+        Deimos=40
+        Phobos=40
+        Ganymede=20
+        Io=20
+        Europa=20
+        ["Tei Tenga"]=25
       }
 
       b =
@@ -78,6 +81,9 @@ DOOM2.ROOM_THEMES =
       SLIME16=10
       FLAT4 = 15
       FLOOR1_1 = 8
+      FLAT14 = 10
+      FLOOR4_6 = 15
+      FLAT5 = 10
     }
 
     ceilings =
@@ -89,6 +95,7 @@ DOOM2.ROOM_THEMES =
       CEIL4_2 = 10
       CEIL4_3=10
       CEIL5_1=10
+      FLAT23=5
       FLAT9=15
     }
   }
@@ -114,6 +121,8 @@ DOOM2.ROOM_THEMES =
       SLIME15=10
       SLIME16=10
       FLAT4=15
+      FLOOR0_5=5
+      FLAT5 = 5
     }
 
     ceilings =
@@ -125,7 +134,6 @@ DOOM2.ROOM_THEMES =
       FLAT4=20
       CEIL4_3=10
       CEIL5_1 = 15
-      CEIL5_2=10
       FLAT9=30
       FLAT19 = 20
     }
@@ -139,6 +147,8 @@ DOOM2.ROOM_THEMES =
     walls =
     {
       STARGR2=50
+      STARGR1=50
+      SHAWN2 = 5
     }
 
     floors =
@@ -160,8 +170,8 @@ DOOM2.ROOM_THEMES =
       CEIL3_1=20
       FLAT4=20
       CEIL4_3=10
-      CEIL5_2=10
-      FLAT9=30
+      FLAT23=10
+      FLAT9=20
       SLIME14 = 10
     }
   }
@@ -180,12 +190,18 @@ DOOM2.ROOM_THEMES =
       FLOOR0_3 = 20
       FLOOR3_3 = 40
       FLOOR5_1 = 20
+      FLOOR4_8 = 20
+      FLOOR4_6 = 20
+      FLOOR1_1 = 10
+      FLAT5 = 10
     }
 
     ceilings =
     {
       FLAT1   = 15
       CEIL3_5 = 5
+      SLIME15 = 5
+      SLIME14 = 5
     }
   }
 
@@ -320,6 +336,8 @@ DOOM2.ROOM_THEMES =
       FLOOR7_1 = 50
       FLAT5_7 = 10
       FLAT5_8 = 10
+      FLOOR6_1 = 10
+      FLOOR6_2 = 5
     }
 
     ceilings =
@@ -373,6 +391,7 @@ DOOM2.ROOM_THEMES =
       DEM1_5  = 50
       DEM1_6  = 30
       FLOOR7_2  = 30
+      FLAT5_4 = 15
     }
 
     ceilings =
@@ -397,11 +416,16 @@ DOOM2.ROOM_THEMES =
     {
       FLAT1 = 10
       FLOOR7_1 = 10
+      DEM1_6 = 5
+      DEM1_5 = 5
+      FLOOR7_2 = 10
     }
 
     ceilings =
     {
-      FLAT1 = 10
+      FLAT1 = 5
+      FLOOR7_2 = 20
+      FLOOR6_1 = 3
     }
   }
 
@@ -410,16 +434,19 @@ DOOM2.ROOM_THEMES =
     walls =
     {
       STONE3 = 50
+      STONE2 = 10
     }
 
     floors =
     {
       FLAT1 = 10
+      FLAT5_4 = 5
     }
 
     ceilings =
     {
       FLAT1 = 10
+      FLAT5_4 = 3
     }
   }
 
@@ -428,16 +455,25 @@ DOOM2.ROOM_THEMES =
     walls =
     {
       WOOD1 = 50
+      WOOD3 = 30
+      WOOD5 = 30
+      WOOD12 = 30
+      WOODVERT = 10
     }
 
     floors =
     {
-      FLAT1 = 10
+      FLAT5_1 = 30
+      FLAT5_2 = 30
+      FLAT5 = 5
+      FLOOR4_6 = 3
     }
 
     ceilings =
     {
-      FLAT1 = 10
+      CEIL1_1 = 30
+      FLAT5_2 = 10
+      FLOOR7_1 = 5
     }
   }
 
@@ -453,12 +489,20 @@ DOOM2.ROOM_THEMES =
 
     floors =
     {
-      FLAT1 = 10
+      SFLR6_1 = 40
+      SFLR6_4 = 40
+      FLOOR7_1 = 5
+      FLOOR6_1 = 10
     }
 
     ceilings =
     {
-      FLAT1 = 10
+      SFLR6_1 = 30
+      SFLR6_4 = 30
+      FLAT5_3 = 7
+      FLAT5_4 = 5
+      FLOOR7_2 = 10
+      DEM1_5 = 10
     }
   }
 
@@ -478,6 +522,7 @@ DOOM2.ROOM_THEMES =
     {
       FLAT1 = 50
       DEM1_6  = 30
+      FLOOR6_2 = 15
       FLOOR7_1  = 20
       FLOOR7_2  = 25
       FLAT10  = 20
@@ -490,6 +535,7 @@ DOOM2.ROOM_THEMES =
       SFLR6_4 = 20
       FLAT5_2 = 10
       FLOOR7_2 = 20
+      CEIL1_1 = 15
     }
   }
 
@@ -1007,7 +1053,7 @@ DOOM2.LEVEL_THEMES =
       BROWN1   = 5
     }
 
-    monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0, vile=2.0 }
+    monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0, vile=1.2 }
 
 
     ---!!!  TEMPORARY V3 STUFF  !!!---
