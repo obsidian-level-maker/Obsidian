@@ -83,11 +83,11 @@ static const int shading_table[7][10] =
 	// the minor index is distances, first is for 'level', second is
 	// for 'level - 16', third is for 'level - 32', etc...
 
-	/* 224 */ {  64,  64,  96,  96, 128, 128, 128, 192, 0 },
-	/* 192 */ {  64,  96,  96, 128, 128, 192,   0 },
+	/* 224 */ {  32,  64,  96,  96, 128, 128, 128, 192, 0 },
+	/* 192 */ {  32,  64,  96, 128, 128, 192,   0 },
 	/* 176 */ {  64,  96, 128, 128, 192,   0 },
 	/* 160 */ {  64,  96, 128, 192,   0 },
-	/* 144 */ { 128, 128, 192,   0 },
+	/* 144 */ {  96, 128, 192,   0 },
 	/* 128 */ { 128, 192,   0 },
 	/* 112 */ { 128,   0 },
 };
@@ -470,7 +470,7 @@ static void SHADE_RenderLeaf(region_c *leaf)
 {
 	stat_sources++;
 
-	double dist = leaf->SquareDistance(view_x, view_y);
+	double dist = leaf->DistanceToPoint(view_x, view_y);
 
 	if (dist >= DISTANCE_LIMIT)
 		return;
@@ -482,7 +482,7 @@ static void SHADE_RenderLeaf(region_c *leaf)
 
 		AngleRangeForLeaf(leaf, &ang_low, &ang_high);
 
-		if (leaf->index < 0)
+		if (leaf->index < 0 || leaf->isClosed())
 		{
 			Occlusion_Set(ang_low - OCL_EPSILON, ang_high + OCL_EPSILON);
 			return;

@@ -398,7 +398,7 @@ bool region_c::isClosed() const
 	csg_brush_c *B = gaps.front()->bottom;
 	csg_brush_c *T = gaps.back() ->top;
 
-	return (T->b.z - B->t.z < 2.5);
+	return (T->b.z - B->t.z < 9.5);
 }
 
 
