@@ -1310,8 +1310,8 @@ function Build.pillar(S, z1, z2, skin, is_big_pillar)
     local trim = get_mat(skin.trim1)
 
     if is_big_pillar then
-      trim.t_face.light  = 192
-      trim.t_face.factor = 1.5
+      trim.t_face.light  = 176
+      trim.t_face.factor = 1.0
     end
 
     Trans.old_brush(trim,
