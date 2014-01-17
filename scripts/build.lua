@@ -606,12 +606,14 @@ function get_sky()
 end
 
 
-function get_liquid()
+function get_liquid(is_outdoor)
   assert(LEVEL.liquid)
   local mat = get_mat(LEVEL.liquid.mat)
 
-  mat.t_face.light = LEVEL.liquid.light
-  mat.b_face.light = LEVEL.liquid.light
+  if not is_outdoor or LEVEL.is_dark then
+    mat.t_face.light = LEVEL.liquid.light
+    mat.b_face.light = LEVEL.liquid.light
+  end
 
   mat.t_face.special = LEVEL.liquid.special
   mat.b_face.special = LEVEL.liquid.special

@@ -3402,7 +3402,7 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
 
     elseif S.kind == "liquid" then
       assert(LEVEL.liquid)
-      do_floor(S, z1, f_indents, w_tex, f_tex, get_liquid())
+      do_floor(S, z1, f_indents, w_tex, f_tex, get_liquid(R.is_outdoor))
 
     elseif not S.no_floor then
       if S.mark_secret then
