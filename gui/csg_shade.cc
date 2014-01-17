@@ -76,6 +76,23 @@ static int stat_targets;
 static int stat_sources;
 
 
+static const int shading_table[7][10] =
+{
+	// the major index is the brightness (0 = brightest, 6 = dimmest).
+
+	// the minor index is distances, first is for 'level', second is
+	// for 'level - 16', third is for 'level - 32', etc...
+
+	/* 224 */ {  64,  64,  96,  96, 128, 128, 128, 192, 0 },
+	/* 192 */ {  64,  96,  96, 128, 128, 192,   0 },
+	/* 176 */ {  64,  96, 128, 128, 192,   0 },
+	/* 160 */ {  64,  96, 128, 192,   0 },
+	/* 144 */ { 128, 128, 192,   0 },
+	/* 128 */ { 128, 192,   0 },
+	/* 112 */ { 128,   0 },
+};
+
+
 static void SHADE_CollectLights()
 {
 	int face_count = 0;
@@ -384,29 +401,32 @@ static bool SHADE_CastRayTowardSky(region_c *R, float x1, float y1)
 }
 
 
-static inline void SHADE_ComputeLevel(quake_light_t& light, double x, double y)
-{
-	double dist = ComputeDist(x, y, light.x, light.y);
-
-	dist = dist / light.factor;
-
-	light.style = (light.level >> 8) - (int)dist / 6;
-
-	if (light.style > 0)
-		light.style &= 0xF0;
-}
-
-
-static inline int SHADE_ComputeLevel(float dist, int light, float factor)
+static int SHADE_ComputeLevel(float dist, int light, float factor)
 {
 	dist = dist / factor;
 
-	int result = light - (int)dist / 5;
+	if (light < 112)
+		return 0;
 
-	if (result > 0)
-		result &= 0xF0;
+	int index = (light - 112) / 16;
 
-	return result;
+	// this considers levels 192 and 208 as the same
+	if (index >= 7)
+		index = 6;
+	else if (index == 6)
+		index = 5;
+
+	const int *pos = &shading_table[index][0];
+
+	for ( ; *pos ; pos++, light -= 16)
+	{
+		if (dist <= *pos)
+			return light;
+
+		dist = dist - *pos;
+	}
+
+	return 0;
 }
 
 

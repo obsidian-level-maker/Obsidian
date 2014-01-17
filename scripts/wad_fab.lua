@@ -1136,13 +1136,13 @@ end
 
 
   local function angle_to_light(angle)
-    if not angle then return 184 end
+    if not angle then return 160 end
 
     if angle < 0 then angle = angle + 360 end
 
-    angle = math.clamp(0, angle, 315)
+    angle = math.clamp(0, angle, 300)
 
-    return 136 + int(angle * 16 / 45)
+    return 112 + int(angle * 16 / 45)
   end
 
 
@@ -1155,7 +1155,7 @@ end
     end
 
     -- logic to add light entities:
-    --   - angle controls level (0 = 128, 45 = 144, ..., 315 = 240)
+    --   - angle controls level (0 = 112, 45 = 128, ..., 270 = 224)
     --   - skill bits determine the factor
     if spot_info.kind == "light" then
       E.id = "light"
@@ -1163,7 +1163,7 @@ end
       E.light = angle_to_light(E.angle)
       E.angle = nil
 
-      E.factor = 0.1 + 0.4 * skill_to_rank(E.flags)
+      E.factor = 1.0  ---????  0.1 + 0.4 * skill_to_rank(E.flags)
       E.flags  = nil
 
       table.insert(fab.entities, E)
@@ -1489,7 +1489,7 @@ function Fab_replacements(fab, skin)
     if skin[k] == "_LIQUID" and LEVEL.liquid then
       C.special = C.special or LEVEL.liquid.special
       C.light   = LEVEL.liquid.light
-      C.factor = 0.6
+      C.factor = 1.0
     end
 
     if skin[k] then

@@ -23,7 +23,7 @@
 //
 //    -  use hash table to track 'infinite lines' which edges sit on.
 //    -  for each infinite line, collect all vertices, remove dups.
-//    -  for each edge of each face, find it's line and see if any
+//    -  for each edge of each face, find its line and see if any
 //       vertices would split the edge.
 //
 //------------------------------------------------------------------------
