@@ -1120,7 +1120,7 @@ function Room_border_up()
 
     -- sometimes only keep the two arches on the edges
 
-    if (A_num + B_num) >= 2 and rand.odds(60) then
+    if (A_num + B_num) >= 2 and rand.odds(75) then
       for i = -A_num + 1, B_num - 1 do
         local T
         if i < 0 then
