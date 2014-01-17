@@ -606,6 +606,23 @@ function get_sky()
 end
 
 
+function get_fake_sky()
+  local mat = assert(GAME.MATERIALS["_SKY"])
+
+  local light
+  if not LEVEL.is_dark then
+    light = LEVEL.sky_light - 8
+  end
+
+  return
+  {
+    w_face = { tex=mat.t }
+    t_face = { tex=mat.f or mat.t }
+    b_face = { tex=mat.f or mat.t, light=light }
+  }
+end
+
+
 function get_liquid(is_outdoor)
   assert(LEVEL.liquid)
   local mat = get_mat(LEVEL.liquid.mat)

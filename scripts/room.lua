@@ -1949,6 +1949,7 @@ function Room_make_ceiling(R)
     end end -- for x, y
   end
 
+
   local function fill_xyz(ch, is_sky, c_tex, c_light)
     for x = R.cx1, R.cx2 do for y = R.cy1, R.cy2 do
       local S = SEEDS[x][y]
@@ -1962,6 +1963,7 @@ function Room_make_ceiling(R)
       end -- if S.room == R
     end end -- for x, y
   end
+
 
   local function add_central_pillar()
     -- big rooms only
@@ -2003,6 +2005,7 @@ function Room_make_ceiling(R)
     gui.debugf("Central pillar @ (%d,%d) skin:%s\n", S.sx, S.sy, which)
   end
 
+
   local function central_niceness()
     local nice = 2
 
@@ -2025,6 +2028,7 @@ function Room_make_ceiling(R)
     return nice
   end
 
+
   local function test_cross_beam(dir, x1,y1, x2,y2, mode)
     -- FIXME: count usable spots, return false for zero
 
@@ -2045,6 +2049,7 @@ function Room_make_ceiling(R)
 
     return true
   end
+
 
   local function add_cross_beam(dir, x1,y1, x2,y2, mode)
     local skin
@@ -2070,12 +2075,14 @@ function Room_make_ceiling(R)
     end end -- for x, y
   end
 
+
   local function decide_beam_pattern(poss, total, mode)
     if table.empty(poss) then return false end
 
     -- FIXME !!!
     return true
   end
+
 
   local function criss_cross_beams(mode)
     if not THEME.beam_mat then return false end
@@ -2132,6 +2139,7 @@ function Room_make_ceiling(R)
     return true
   end
 
+
   local function corner_supports()
     if not THEME.corner_supports then
       return false
@@ -2172,6 +2180,7 @@ function Room_make_ceiling(R)
     return true
   end
 
+
   local function do_central_area()
     calc_central_area()
 
@@ -2184,22 +2193,24 @@ function Room_make_ceiling(R)
     end
 
 
-    if (R.tw * R.th) <= 18 and rand.odds(20) then
-      if corner_supports() and rand.odds(35) then return end
-    end
+    if rand.odds(20) then return end
+
+---##  if (R.tw * R.th) <= 18 and rand.odds(20) then
+---##    if corner_supports() and rand.odds(35) then return end
+---##  end
 
 
     if not R.quest.ceil_light and THEME.ceil_lights then
       R.quest.ceil_light = rand.key_by_probs(THEME.ceil_lights)
     end
 
-    local beam_chance = style_sel("beams", 0, 5, 25, 75)
+    local beam_chance = style_sel("beams", 0, 5, 25, 50)
 
     if rand.odds(beam_chance) then
       if criss_cross_beams("beam") then return end
     end
 
-    if rand.odds(42) then
+    if rand.odds(35) then
       if criss_cross_beams("light") then return end
     end
 
@@ -2232,19 +2243,20 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
     add_central_pillar()
 
-    if nice != 2 or not THEME.big_lights then return end
+    if nice != 2 then return end
 
       local ceil_info  = get_mat(R.main_tex)
-      local sky_info   = get_sky()
+      local sky_info   = get_fake_sky()
       local brown_info = get_mat(rand.key_by_probs(R.theme.ceilings))
 
-      local light_name = rand.key_by_probs(THEME.big_lights)
+      local light_name = rand.key_by_probs(THEME.big_lights or { FLOOR0_1=50 })
       local light_info = get_mat(light_name)
       light_info.b_face.light = 176
 
       -- lighting effects
       -- (They can break lifts, hence the check here)
-      if not R.has_lift then
+      -- FIXME !!
+      if not R.has_lift and false then
             if rand.odds(10) then light_info.sec_kind = 8
         elseif rand.odds(6)  then light_info.sec_kind = 3
         elseif rand.odds(3)  then light_info.sec_kind = 2
@@ -2276,12 +2288,24 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
     local h = 96 + 140 * (R.ch - 1)
     local z = (R.cw + R.ch) * 8
 
+    local prob = sel(THEME.big_lights, 60, 80)
+
+    if (not has_sky_nb or (R.sh >= 4 and R.sw >= 4)) and
+       not R.parent and rand.odds(prob)
+    then
+      light_info = sky_info
+    else
+      if not THEME.big_lights then return end
+
+      if rand.odds(20) then light_info = brown_info end
+    end
+
     Build.sky_hole(R.cx1,R.cy1, R.cx2,R.cy2, shape, w, h,
                    ceil_info, R.ceil_h,
-                   sel(not has_sky_nb and not R.parent and rand.odds(60), sky_info,
-                       rand.sel(75, light_info, brown_info)), R.ceil_h + z,
+                   light_info, R.ceil_h + z,
                    trim, spokes)
   end
+
 
   local function indoor_ceiling()
     if R.kind != "building" then
@@ -2383,6 +2407,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
     indoor_ceiling()
   end
 end
+
 
 
 function Room_add_crates(R)
@@ -3327,8 +3352,9 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
     if S.kind != "void" and not S.no_ceil and 
        (S.is_sky or c_tex == "_SKY")
     then
+      local info = sel(R.is_outdoor, get_sky(), get_fake_sky())
 
-      Trans.old_quad(get_sky(), cx1,cy1, cx2,cy2, z2, EXTREME_H)
+      Trans.old_quad(info, cx1,cy1, cx2,cy2, z2, EXTREME_H)
 
     elseif S.kind != "void" and not S.no_ceil then
       ---## local info = get_mat(S.u_tex or c_tex or w_tex, c_tex)
