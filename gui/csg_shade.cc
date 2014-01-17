@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2013 Andrew Apted
+//  Copyright (C) 2013-2014 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -78,17 +78,17 @@ static int stat_sources;
 
 static const int shading_table[7][10] =
 {
-	// the major index is the brightness (0 = brightest, 6 = dimmest).
+	// the major index is the brightness (reverse order!)
 
 	// the minor index is distances, first is for 'level', second is
 	// for 'level - 16', third is for 'level - 32', etc...
 
-	/* 224 */ {  32,  64,  96,  96, 128, 128, 128, 192, 0 },
-	/* 192 */ {  32,  64,  96, 128, 128, 192,   0 },
-	/* 176 */ {  64,  96, 128, 128, 192,   0 },
-	/* 160 */ {  64,  96, 128, 192,   0 },
-	/* 144 */ {  96, 128, 192,   0 },
-	/* 128 */ { 128, 192,   0 },
+	/* 224 */ {   4,  64,  96,  96, 128, 128, 128, 128, 0 },
+	/* 192 */ {   4,  64,  96, 128, 128, 128,   0 },
+	/* 176 */ {  64,  96, 128, 128, 128,   0 },
+	/* 160 */ {  64,  96, 128, 128,   0 },
+	/* 144 */ {  96, 128, 128,   0 },
+	/* 128 */ { 128, 128,   0 },
 	/* 112 */ { 128,   0 },
 };
 
@@ -393,7 +393,7 @@ static bool SHADE_CastRayTowardSky(region_c *R, float x1, float y1)
 	// end point
 	float x2 = x1 + 1024;
 	float y2 = y1 + 2048;
-	float z2 = z1 + 3072;
+	float z2 = z1 + 2560;
 
 	int vis = SHADE_RecursiveSkyCheck(bsp_root, NULL, x1, y1, z1, x2, y2, z2);
 
@@ -416,11 +416,11 @@ static int SHADE_ComputeLevel(float dist, int light, float factor)
 	else if (index == 6)
 		index = 5;
 
-	const int *pos = &shading_table[index][0];
+	const int *pos = &shading_table[6 - index][0];
 
 	for ( ; *pos ; pos++, light -= 16)
 	{
-		if (dist <= *pos)
+		if (dist < *pos)
 			return light;
 
 		dist = dist - *pos;
