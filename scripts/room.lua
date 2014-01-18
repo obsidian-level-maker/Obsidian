@@ -3384,7 +3384,7 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
         end
 
         if x_num == 1 and y_num == 1 and LEVEL.hall_lite_ftex then
-          Build.ceil_light(S, z2, { lite_f=LEVEL.hall_lite_ftex, trim=THEME.light_trim })
+          Build.ceil_light(S, z2, { lite_f=LEVEL.hall_lite_ftex, trim=THEME.light_trim }, 168)
         end
       end
     end

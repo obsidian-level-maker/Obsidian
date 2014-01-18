@@ -307,7 +307,7 @@ end
 
 
 
-function Build.ceil_light(S, z2, skin)
+function Build.ceil_light(S, z2, skin, bright)
   assert(skin)
   
   local w = (skin.w or 64) / 2
@@ -317,7 +317,7 @@ function Build.ceil_light(S, z2, skin)
   local my = int((S.y1 + S.y2)/2)
 
   local light_info = get_mat(skin.lite_f)
-  light_info.b_face.light = 192
+  light_info.b_face.light = bright or 192
 
   Trans.old_brush(light_info,
   {
