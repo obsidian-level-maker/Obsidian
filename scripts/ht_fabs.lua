@@ -1174,6 +1174,134 @@ HEIGHT_I3_OUT =
   }
 }
 
+HEIGHT_LIQ_I1 =
+{
+  kind = "liquid"
+  prob = 200
+
+  structure =
+  {
+    "111"
+    "~^~"
+    "..."
+  }
+
+  x_sizes = { "111", "212", "222", "313", "323" }
+
+  y_sizes = { "111", "112", "212", "213", "213" }
+
+  symmetry = "x"
+
+  subs =
+  {
+    { height=1, match="any" }
+  }
+}
+
+
+HEIGHT_LIQ_I3 =
+{
+  kind = "liquid"
+  prob = 400
+
+  structure =
+  {
+    "11111"
+    "~^~^~"
+    "....."
+  }
+
+  x_sizes = { "11111", "11211", "11311", "21212", "21312" }
+
+  y_sizes = { "111", "112", "212", "213", "213" }
+
+  symmetry = "x"
+
+  subs =
+  {
+    { height=1, match="any" }
+  }
+}
+
+
+HEIGHT_LIQ_O1 =
+{
+  kind = "liquid"
+  prob = 1000
+
+  structure =
+  {
+    "111"
+    "^~1"
+    ".~1"
+    ".~v"
+    "..."
+  }
+
+  x_sizes = { "111", "121", "131", "141" }
+
+  y_sizes = { "11011", "11111", "11211", "21211" }
+
+  subs =
+  {
+    { height=1, match="one" }
+  }
+}
+
+
+HEIGHT_LIQ_O2 =
+{
+  kind = "liquid"
+  prob = 1000
+
+  structure =
+  {
+    "111"
+    "1~1"
+    "^~^"
+    ".~."
+    "..."
+  }
+
+  x_sizes = { "111", "121", "131", "141" }
+
+  y_sizes = { "10101", "11101", "10111", "11111", "12121", "11112" }
+
+  symmetry = "x"
+
+  subs =
+  {
+    { height=1, match="one" }
+  }
+}
+
+
+HEIGHT_LIQ_U2 =
+{
+  kind = "liquid"
+  prob = 4000
+
+  structure =
+  {
+    "11~~~11"
+    "1v~~~v1"
+    "..N~Z.."
+    "......."
+  }
+
+  x_sizes = { "0110110", "0111110", "0112110", "1111111", "1112111" }
+
+  y_sizes = { "1111", "1112", "1113", "2112", "2113", "2114" }
+
+  symmetry = "x"
+
+  subs =
+  {
+    { height=1, match="one" }
+  }
+}
+
+
 HEIGHT_SOLID_I2 =
 {
   environment = "indoor"
