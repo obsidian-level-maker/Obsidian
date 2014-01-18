@@ -1377,6 +1377,27 @@ function Monsters_in_room(R)
   end
 
 
+  local function time_to_kill_factor(mon)
+    local info = GAME.MONSTERS[mon]
+
+    local time = info.health / R.firepower
+
+    if PARAM.time_factor then
+      time = time * PARAM.time_factor
+    end
+
+    local max_time = MONSTER_MAX_TIME[OB_CONFIG.strength] or 9
+
+    if time > max_time*2 then
+      return 1 / 4
+    elseif time > max_time then
+      return 1 / 2
+    else
+      return 1
+    end
+  end
+
+
   local function calc_quantity()
     local qty
 
@@ -1623,25 +1644,11 @@ function Monsters_in_room(R)
     -- room size check
     d = d * room_size_factor(mon) ^ 0.5
 
+    -- would the monster take too long to kill?
+    d = d * time_to_kill_factor(mon)
+
     -- random variation
     d = d * rand.range(0.8, 1.2)
-
-
-    -- would the monster take too long to kill?
-
-    local time = info.health / R.firepower
-
-    if PARAM.time_factor then
-      time = time * PARAM.time_factor
-    end
-
-    local max_time = MONSTER_MAX_TIME[OB_CONFIG.strength] or 9
-
-    if time > max_time*2 then
-      d = d / 4
-    elseif time > max_time then
-      d = d / 2
-    end
 
     return d
   end
