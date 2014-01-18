@@ -403,10 +403,12 @@ static bool SHADE_CastRayTowardSky(region_c *R, float x1, float y1)
 
 static int SHADE_ComputeLevel(float dist, int light, float factor)
 {
-	dist = dist / factor;
+	dist = dist * 1.2 / factor;
 
 	if (light < 112)
 		return 0;
+
+	light = light & 0xF0;
 
 	int index = (light - 112) / 16;
 
