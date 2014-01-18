@@ -2205,7 +2205,7 @@ function Room_make_ceiling(R)
       R.quest.ceil_light = rand.key_by_probs(THEME.ceil_lights)
     end
 
-    local beam_chance = style_sel("beams", 0, 5, 25, 50)
+    local beam_chance = style_sel("beams", 0, 5, 20, 50)
 
     if rand.odds(beam_chance) then
       if criss_cross_beams("beam") then return end
