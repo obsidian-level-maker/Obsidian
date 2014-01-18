@@ -1137,6 +1137,27 @@ HEIGHT_I3_OUT =
   }
 }
 
+HEIGHT_SOLID_I2 =
+{
+  environment = "indoor"
+  prob = 10000
+
+  structure =
+  {
+    "11111"
+    "Z^#^N"
+    "....."
+  }
+
+  x_sizes = { "01110", "01111", "11110", "11111", "11211" }
+  y_sizes = { "111", "112", "211", "212" }
+
+  subs =
+  {
+    { height=1, match="one" }
+  }
+}
+
 HEIGHT_SOLID_I4 =
 {
   environment = "indoor"
@@ -1190,7 +1211,7 @@ HEIGHT_SOLID_I5 =
 
 HEIGHT_C5 =
 {
-  prob = 10000
+  prob = 7000
 
   structure =
   {
@@ -1214,7 +1235,7 @@ HEIGHT_C5 =
 
 HEIGHT_C6 =
 {
-  prob = 20000
+  prob = 10000
 
   structure =
   {
