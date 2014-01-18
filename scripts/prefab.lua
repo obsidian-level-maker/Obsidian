@@ -538,7 +538,9 @@ function Build.diagonal(S, side, info, floor_h, ceil_h)
   assert(not (floor_h and ceil_h))
   
   local function get_thick(wsd)
-    if S.border[wsd].kind == "wall" then
+    if S.border[wsd].kind == "wall" or
+       S.border[wsd].kind == "facade"
+    then
       return S.thick[wsd]
     end
 

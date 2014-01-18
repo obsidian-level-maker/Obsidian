@@ -937,7 +937,7 @@ function Room_border_up()
       if R2.is_outdoor or R2.kind == "cave" then
         S.border[side].kind = "fence"
       else
-        S.border[side].kind = "wall"
+        S.border[side].kind = "facade"
         S.border[side].w_tex = R2.facade
       end
 
@@ -961,6 +961,7 @@ function Room_border_up()
       S.thick[side] = 16
 
       if R2.parent == R1 then
+        S.border[side].kind  = "facade"
         S.border[side].w_tex = R2.main_tex
       end
 
@@ -3113,7 +3114,8 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
       local B_kind = S.border[side].kind
 
       if not N or N.free or N.kind == "void" or
-         B_kind == "wall" or B_kind == "picture"
+         B_kind == "wall" or B_kind == "facade" or
+         B_kind == "picture"
       then
         vis_mark_wall(S, side)
       end
@@ -3236,7 +3238,7 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
         B_kind = nil
       end
 
-      if B_kind == "wall" and R.kind != "scenic" then  -- FIXME; scenic check is bogus
+      if B_kind == "wall" or B_kind == "facade" then
         do_wall(S, side, border.w_tex or w_tex)
         shrink_both(side, 16)
       end
