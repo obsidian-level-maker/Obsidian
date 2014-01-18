@@ -489,10 +489,9 @@ DOOM2.ROOM_THEMES =
 
     floors =
     {
-      SFLR6_1 = 40
-      SFLR6_4 = 40
-      FLOOR7_1 = 5
-      FLOOR6_1 = 10
+      SFLR6_1  = 10
+      FLOOR7_1 = 20
+      FLOOR6_1 = 40
     }
 
     ceilings =
