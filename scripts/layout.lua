@@ -2018,27 +2018,33 @@ gui.debugf("BOTH SAME HEIGHT\n")
 
     ---| post_processing |---
 
-    for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
+    for x = R.tx1, R.tx2 do
+    for y = R.ty1, R.ty2 do
       local S = SEEDS[x][y]
-      if S and S.room == R then
-        if S.kind == "stair" then
-          process_stair(S)
-        elseif S.kind == "curve_stair" then
-          process_curve_stair(S)
-        end
+
+      if not (S and S.room == R) then continue end
+
+      if S.kind == "stair" then
+        process_stair(S)
+      elseif S.kind == "curve_stair" then
+        process_curve_stair(S)
       end
-    end end -- for x, y
+    end -- for x, y
+    end
 
     -- need to do diagonals AFTER stairs
 
-    for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
+    for x = R.tx1, R.tx2 do
+    for y = R.ty1, R.ty2 do
       local S = SEEDS[x][y]
-      if S and S.room == R then
-        if S.kind == "diagonal" then
-          process_diagonal(S)
-        end
+
+      if not (S and S.room == R) then continue end
+
+      if S.kind == "diagonal" then
+        process_diagonal(S)
       end
-    end end -- for x, y
+    end -- x, y
+    end
   end
 
 
@@ -2079,6 +2085,46 @@ gui.debugf("BOTH SAME HEIGHT\n")
      "2--1---1--2",
   }
 
+
+  local function cpp_is_seed_bad(R, S, N)
+    if not N then return true end
+    if N.room != R then return true end
+    if N.kind == "void" then return true end
+    if not N.floor_h then return true end
+    if S.floor_h and N.floor_h > S.floor_h + 24 then return true end
+
+    return false
+  end
+
+
+  local function can_put_pillar_at(R, S)
+    if S.room != R then return false end
+
+    if S.content then return false end
+
+    if S.kind != "walk" or S.conn or S.pseudo_conn or S.must_walk then
+      return false
+    end
+
+    -- see if pillar would be annoyingly blocking
+    for dir = 2,4,2 do
+      local A = S:neighbor(dir)
+      local B = S:neighbor(10 - dir)
+
+      if cpp_is_seed_bad(R, S, A) and cpp_is_seed_bad(R, S, B) then
+        return false
+      end
+
+      if A.kind == "liquid" and B.kind == "liquid" then
+        return false
+      end
+    end
+
+    -- OK !
+    return true
+  end
+
+
   local function can_pillar_pattern(side, offset, pat)
     local x1,y1, x2,y2 = geom.side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2)
     local pos = 1
@@ -2086,7 +2132,8 @@ gui.debugf("BOTH SAME HEIGHT\n")
     x1,y1 = geom.nudge(x1, y1, 10-side, offset)
     x2,y2 = geom.nudge(x2, y2, 10-side, offset)
 
-    for x = x1,x2 do for y = y1,y2 do
+    for x = x1,x2 do
+    for y = y1,y2 do
       local S = SEEDS[x][y]
 
       local ch = string.sub(pat, pos, pos)
@@ -2097,16 +2144,16 @@ gui.debugf("BOTH SAME HEIGHT\n")
         if S.content == "pillar" then return false end
       else
         assert(string.is_digit(ch))
-        if S.kind != "walk" or S.room != R or S.content or
-           S.conn or S.pseudo_conn or S.must_walk
-        then
-          return false
-        end
+
+        if not can_put_pillar_at(R, S) then return false end
+
       end
-    end end -- for x, y
+    end -- x, y
+    end
 
     return true --OK--
   end
+
 
   local function make_pillar_pattern(side, offset, pat)
     local x1,y1, x2,y2 = geom.side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2)
@@ -2127,6 +2174,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
       end
     end end -- for x, y
   end
+
 
   local function add_pillars()
     if R.parent then return end
