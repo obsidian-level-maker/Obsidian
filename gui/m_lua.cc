@@ -661,6 +661,7 @@ int Script_RegisterLib(const char *name, const luaL_Reg *reg)
 	return 0;
 }
 
+
 static int p_init_lua(lua_State *L)
 {
 	/* stop collector during initialization */
@@ -675,6 +676,7 @@ static int p_init_lua(lua_State *L)
 
 	return 0;
 }
+
 
 static void Script_SetScriptPath(lua_State *L, const char *subdir)
 {
@@ -694,9 +696,10 @@ static void Script_SetScriptPath(lua_State *L, const char *subdir)
 	lua_pop(L, 1);
 }
 
+
 static void Script_SetDataPath(void)
 {
-	data_path = StringPrintf("%s;%s/modules/data;%s/data", data_path, install_dir, install_dir);
+	data_path = StringPrintf("%s/modules/data;%s/data", install_dir, install_dir);
 
 	LogPrintf("data_path:   [%s]\n\n", data_path);
 }
