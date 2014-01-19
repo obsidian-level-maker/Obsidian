@@ -1906,6 +1906,8 @@ function Build.stairwell(R, skin)
   local floor_info = get_mat(skin.floor or skin.wall)
   local ceil_info  = get_mat(skin.ceil or skin.floor or skin.wall)
 
+  local THICK = 16
+
   local function build_stairwell_90(R)
     assert(R.conns)
 
@@ -1928,17 +1930,17 @@ function Build.stairwell(R, skin)
     local BL = SEEDS[R.sx1][R.sy1]
     local TR = SEEDS[R.sx2][R.sy2]
 
-    local rx1, ry1 = BL.x1, BL.y1
-    local rx2, ry2 = TR.x2, TR.y2
+    local rx1, ry1 = BL.x1+THICK, BL.y1+THICK
+    local rx2, ry2 = TR.x2-THICK, TR.y2-THICK
     local rw, rh   = rx2 - rx1, ry2 - ry1
 
     local ax  = sel(AS.conn_dir == 4, rx1, rx2)
-    local ay1 = AS.y1
-    local ay2 = AS.y2
+    local ay1 = AS.y1+THICK
+    local ay2 = AS.y2-THICK
 
     local by  = sel(BS.conn_dir == 2, ry1, ry2)
-    local bx1 = BS.x1
-    local bx2 = BS.x2
+    local bx1 = BS.x1+THICK
+    local bx2 = BS.x2-THICK
 
     local dx1, dx2
     local dy1, dy2
@@ -2015,12 +2017,12 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     local BL = SEEDS[R.sx1][R.sy1]
     local TR = SEEDS[R.sx2][R.sy2]
 
-    local rx1, ry1 = BL.x1, BL.y1
-    local rx2, ry2 = TR.x2, TR.y2
+    local rx1, ry1 = BL.x1+THICK, BL.y1+THICK
+    local rx2, ry2 = TR.x2-THICK, TR.y2-THICK
     local rw, rh   = rx2 - rx1, ry2 - ry1
 
-    local corn_x = (AS.x2 + BS.x1) / 2
-    local corn_y = (AS.y2 + BS.y1) / 2
+    local corn_x = (AS.x2-THICK + BS.x1+THICK) / 2
+    local corn_y = (AS.y2-THICK + BS.y1+THICK) / 2
 
         if AS.conn_dir == 2 then corn_y = ry1
     elseif AS.conn_dir == 8 then corn_y = ry2
@@ -2039,8 +2041,8 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
 
     if AS.conn_dir == 2 or AS.conn_dir == 8 then
 
-      local dx0 = corn_x - AS.x2 + 16
-      local dx3 = corn_x - AS.x1 - 16
+      local dx0 = corn_x - AS.x2-THICK + 16
+      local dx3 = corn_x - AS.x1+THICK - 16
       local dx1 = dx0 + 32
       local dx2 = dx3 - 32
 
@@ -2070,8 +2072,8 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
                         h3, h2, 128,
                         wall_info, floor_info, ceil_info)
     else
-      local dy0 = corn_y - AS.y2 + 16
-      local dy3 = corn_y - AS.y1 - 16
+      local dy0 = corn_y - AS.y2-THICK + 16
+      local dy3 = corn_y - AS.y1+THICK - 16
       local dy1 = dy0 + 32
       local dy2 = dy3 - 32
 
@@ -2122,8 +2124,8 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     local BL = SEEDS[R.sx1][R.sy1]
     local TR = SEEDS[R.sx2][R.sy2]
 
-    local rx1, ry1 = BL.x1, BL.y1
-    local rx2, ry2 = TR.x2, TR.y2
+    local rx1, ry1 = BL.x1+THICK, BL.y1+THICK
+    local rx2, ry2 = TR.x2-THICK, TR.y2-THICK
     local rw, rh   = rx2 - rx1, ry2 - ry1
 
 
@@ -2137,7 +2139,7 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
 
     if AS.conn_dir == 2 or AS.conn_dir == 8 then
 
-      local corn_x = (AS.x2 + BS.x1) / 2
+      local corn_x = (AS.x2-THICK + BS.x1+THICK) / 2
       local corn_y = sel(AS.conn_dir == 2, ry1, ry2)
 
       local dy1 = (ry2 - ry1) / 2 - 80
@@ -2145,8 +2147,8 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       local dy0 = dy1 - 24
       local dy3 = dy2 + 24
 
-      local dx0 = corn_x - AS.x2 + 16
-      local dx3 = corn_x - AS.x1 - 16
+      local dx0 = corn_x - AS.x2-THICK + 16
+      local dx3 = corn_x - AS.x1+THICK - 16
       local dx1 = dx0 + 32
       local dx2 = dx3 - 32
 
@@ -2167,8 +2169,8 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       -- right side
       corn_y = (ry1 + ry2) - corn_y
 
-      local dx0 = BS.x1 - corn_x + 16
-      local dx3 = BS.x2 - corn_x - 16
+      local dx0 = BS.x1+THICK - corn_x + 16
+      local dx3 = BS.x2-THICK - corn_x - 16
       local dx1 = dx0 + 32
       local dx2 = dx3 - 32
 
@@ -2179,7 +2181,7 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
                         wall_info, floor_info, ceil_info)
 
     else
-      local corn_y = (AS.y2 + BS.y1) / 2
+      local corn_y = (AS.y2-THICK + BS.y1+THICK) / 2
       local corn_x = sel(AS.conn_dir == 4, rx1, rx2)
 
       local dx1 = (rx2 - rx1) / 2 - 80
@@ -2187,8 +2189,8 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       local dx0 = dx1 - 24
       local dx3 = dx2 + 24
 
-      local dy0 = corn_y - AS.y2 + 16
-      local dy3 = corn_y - AS.y1 - 16
+      local dy0 = corn_y - AS.y2-THICK + 16
+      local dy3 = corn_y - AS.y1+THICK - 16
       local dy1 = dy0 + 32
       local dy2 = dy3 - 32
 
@@ -2209,8 +2211,8 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       -- top section
       corn_x = (rx1 + rx2) - corn_x
 
-      local dy0 = BS.y1 - corn_y + 16
-      local dy3 = BS.y2 - corn_y - 16
+      local dy0 = BS.y1+THICK - corn_y + 16
+      local dy3 = BS.y2-THICK - corn_y - 16
       local dy1 = dy0 + 32
       local dy2 = dy3 - 32
 
@@ -2237,11 +2239,11 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       AS, BS = BS, AS
     end
 
-    local x1 = math.min(AS.x1, BS.x1)
-    local x2 = math.max(AS.x2, BS.x2)
+    local x1 = math.min(AS.x1+THICK, BS.x1+THICK)
+    local x2 = math.max(AS.x2-THICK, BS.x2-THICK)
 
-    local y1 = math.min(AS.y1, BS.y1)
-    local y2 = math.max(AS.y2, BS.y2)
+    local y1 = math.min(AS.y1+THICK, BS.y1+THICK)
+    local y2 = math.max(AS.y2-THICK, BS.y2-THICK)
 
     local x_diff = x2 - x1
     local y_diff = y2 - y1

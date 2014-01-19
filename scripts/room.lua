@@ -427,6 +427,7 @@ function Room_setup_theme_Scenic(R)
 end
 
 
+
 function Room_choose_themes()
   each R in LEVEL.rooms do
     Room_setup_theme(R)
@@ -436,6 +437,7 @@ function Room_choose_themes()
     Room_setup_theme_Scenic(R)
   end
 end
+
 
 
 function Room_decide_hallways()
@@ -509,22 +511,63 @@ function Room_decide_hallways()
   end
 
   local function stairwell_neighbors(R)
-    local swell_nb = 0
+    local count = 0
+
     each C in R.conns do
       local N = C:neighbor(R)
-      if N.stairwell then swell_nb = swell_nb + 1 end
+      if N.kind == "stairwell" then count = count + 1 end
     end
 
-    return swell_nb
+    return count
   end
 
   local function locked_neighbors(R)
     local count = 0
+
     each C in R.conns do
       if C.lock then count = count + 1 end
     end
 
     return count
+  end
+
+  local function check_stairwell_extents(R)
+    local sx1, sx2 = 999, 0
+    local sy1, sy2 = 999, 0
+
+    each C in R.conns do
+      local S = C:seed(R)
+
+      sx1 = math.min(sx1, S.sx) ; sx2 = math.max(sx2, S.sx)
+      sy1 = math.min(sy1, S.sy) ; sy2 = math.max(sy2, S.sy)
+    end
+
+    local seed_w = (sx2 - sx1 + 1)
+    local seed_h = (sy2 - sy1 + 1)
+
+    local C1 = R.conns[1]
+    local C2 = R.conns[2]
+
+---??    if geom.is_perpendic(C1.dir, C2.dir) then
+---??    end
+
+    return (seed_w >= 3) and (seed_h >= 3)
+  end
+
+
+  local function try_make_stairwell(R)
+    if R.hallway and R.num_branch == 2 and
+       not R.purpose and
+       #R.weapons == 0 and
+       #R.items == 0 and
+       not R.teleport_conn and
+       locked_neighbors(R) == 0 and
+       stairwell_neighbors(R) == 0 and
+       check_stairwell_extents(R)
+    then
+      gui.printf("--> Stairwell @ %s\n", R:tostr())
+      R.kind = "stairwell"
+    end
   end
 
 
@@ -541,7 +584,7 @@ function Room_decide_hallways()
 
   each R in LEVEL.rooms do
     if eval_hallway(R) then
-gui.debugf("  Made Hallway @ %s\n", R:tostr())
+gui.debugf("Hallway @ %s\n", R:tostr())
       R.kind = "hallway"
       R.hallway = { }
       R.is_outdoor = nil
@@ -564,28 +607,26 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
     end
   end
 
-  -- decide stairwells
-  each R in LEVEL.rooms do
-    if R.hallway and R.num_branch == 2 and
-       not R.purpose and #R.weapons == 0 and
-       not R.teleport_conn and
-       stairwell_neighbors(R) == 0 and
-       locked_neighbors(R) == 0 and
-       THEME.stairwell_walls
-    then
-      local hall_nb = hallway_neighbors(R) 
 
-      local prob = 80
-      if hall_nb >= 2 then prob = 2  end
-      if hall_nb == 1 then prob = 40 end
+  --- decide stairwells ---
 
-      if rand.odds(prob) then
-        gui.printf("  Made Stairwell @ %s\n", R:tostr())
-        R.kind = "stairwell"
-      end
-    end
-  end -- for R
+  if not THEME.stairwell_walls then return end
+
+  -- FIXME: the Build.stairwell() code is fucked, hence disabled.
+  --
+  --  Note: enabling this also requires placing Archways between a stairwell
+  --        and a normal hallway
+  do return end
+
+  -- visit rooms in random order
+  local room_list = table.copy(LEVEL.rooms)
+  rand.shuffle(room_list)
+
+  each R in room_list do
+    try_make_stairwell(R)
+  end
 end
+
 
 
 function Room_setup_symmetry()
@@ -2419,14 +2460,17 @@ function Room_add_crates(R)
   local function test_spot(S, x, y)
     if S.solid_corner then return false end
 
-    for dx = 0,1 do for dy = 0,1 do
+    for dx = 0,1 do
+    for dy = 0,1 do
       local N = SEEDS[x+dx][y+dy]
+
       if not N or N.room != S.room then return false end
 
       if N.kind != "walk" or not N.floor_h then return false end
 
       if math.abs(N.floor_h - S.floor_h) > 0.5 then return false end
-    end end -- for dx, dy
+    end -- dx, dy
+    end
 
     return true
   end
@@ -2434,14 +2478,17 @@ function Room_add_crates(R)
   local function find_spots()
     local list = {}
 
-    for x = R.tx1, R.tx2-1 do for y = R.ty1, R.ty2-1 do
+    for x = R.tx1, R.tx2-1 do
+    for y = R.ty1, R.ty2-1 do
       local S = SEEDS[x][y]
+
       if S.room == R and S.kind == "walk" and S.floor_h then
         if test_spot(S, x, y) then
           table.insert(list, { S=S, x=x, y=y })
         end
       end
-    end end -- for x, y
+    end
+    end
 
     return list
   end
