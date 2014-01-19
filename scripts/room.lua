@@ -993,7 +993,9 @@ function Room_border_up()
 
       if STYLE.fences == "none" and R1.quest == R2.quest and R2.is_outdoor and
          (S.kind != "liquid" or S.floor_h == N.floor_h) and
-         (R2.purpose != "EXIT")
+         (R2.purpose != "EXIT") and
+         not R.teleport_conn and not R2.teleport_conn and
+         R1.theme == R2.theme
       then
         S.border[side].kind = "nothing"
       end
