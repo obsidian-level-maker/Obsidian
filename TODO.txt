@@ -63,7 +63,7 @@ ______________________________________________________________________
 ----------------------------------------------
 
 
-+  "Steepness" option in level control module
+?  "Steepness" option in level control module
 
 
 -  review Dante's ideas : doc/DANTE.txt

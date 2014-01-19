@@ -9,13 +9,12 @@ WORK IN PROGRESS
 
 +  better spot_for_wotsit  (see V5 code)
 
-
 +  higher fences near a key / item / switch
+
 
 +  rare stuck monsters (e.g. Mastermind on an exit switch)
 
 +  item placement too close to wall
-
 
 -  misaligned uppers (due to lighting and/or crates)
 
@@ -37,6 +36,10 @@ Later
 =====
 
 +  intrusions: like "junking" a side, but connects two other rooms
+
++  closets (as in V4 / V5)
+
++  sky-halls
 
 -  in 2x2 rooms, place key/switch in middle of room
    [ monster/item spots are the hard part ]
