@@ -2383,7 +2383,7 @@ function Layout_edge_of_map()
 
   local function determine_walk_heights()
     -- TODO: OPTIMISE
-    for loop = 1,5 do
+    for loop = 1,4 do
       for x = 1,SEED_W do
       for y = 1,SEED_H do
         local S = SEEDS[x][y]
@@ -2393,23 +2393,23 @@ function Layout_edge_of_map()
             local N = S:neighbor(side)
 
             local other_h
-            if N and N.edge_of_map and not N.building then
+            if loop > 2 and N and N.edge_of_map and not N.building then
               other_h = N.walk_h
             elseif N and N.room and N.room.is_outdoor then
               other_h = N.room.floor_max_h
             end
             if other_h then
-              S.walk_h = math.max(S.walk_h or 0, other_h)
+              S.walk_h = math.max(S.walk_h or -999, other_h)
             end
 
             local sky_h
-            if N and N.edge_of_map and not N.building then
+            if loop > 2 and N and N.edge_of_map and not N.building then
               sky_h = N.sky_h
             elseif N and N.room and N.room.sky_group then
               sky_h = N.room.sky_group.h
             end
             if sky_h then
-              S.sky_h = math.max(S.sky_h or 0, sky_h)
+              S.sky_h = math.max(S.sky_h or -999, sky_h)
             end
           end -- side
 
@@ -2429,7 +2429,9 @@ function Layout_edge_of_map()
       return
     end
 
-    S.fence_h = SKY_H - 64  -- fallback value
+    local sky_h = S.sky_h or SKY_H
+
+    S.fence_h = sky_h - 64  -- fallback value
 
     if S.walk_h then
       S.fence_h = math.min(S.walk_h + 64, S.fence_h)
@@ -2448,8 +2450,6 @@ function Layout_edge_of_map()
     end
 
     local skin = { fence_w=LEVEL.outer_fence_tex }
-
-    local sky_h = S.sky_h or SKY_H
 
     for side = 2,8,2 do
       local N = S:neighbor(side)
