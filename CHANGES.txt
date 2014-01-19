@@ -6,28 +6,28 @@ The Good
 --------
 
 + new lighting system
-
-+ restored v3.57 room layouting logic, with improvements
-
++ WAD-based prefab system
++ restored v3.57 room layout logic (with improvements)
 + secret rooms, with nice items to get
-
++ more varied monsters, guard monsters
++ better health calculation (no more mountains of it)
 
 
 The Bad
 -------
 
-! no support for games other than DOOM family
+! no support for games other than DOOM
+! no closets (for starts, exits, teleporters, etc)
 ! no multiple paths between rooms
 ! no shaped rooms
+! no cages
 
 
 Contributions
 -------------
 
 + Heretic boss maps, thanks to LakiSoft
-
 + new E2M8 and MAP07 boss maps, thanks to Mr. Chris
-
 + new E1M8 boss map, contributed by SylandroProbopas
 
 
@@ -35,8 +35,10 @@ Other Changes
 -------------
 
 - replaced 'Secrets' button with 'Caves' in the GUI
-
 - support 'Always' setting for Outdoors and Caves
-
-- better health calculation (no more rooms overflowing with it)
+- the occasional dark outdoor level
+- better quests, often need to _find_ weapons and armor
+- Co-op: sometimes players start in different rooms
+- improved Sky generator module
+- improved caves [ pending... ]
 
