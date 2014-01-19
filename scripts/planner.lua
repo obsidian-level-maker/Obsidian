@@ -1223,6 +1223,37 @@ function Plan_decide_outdoors()
   end
 
 
+  local function room_touches_edge(R)
+    -- returns # of edges touched, in range 0 .. 2
+
+    local horiz = 0
+    local vert  = 0
+
+    for kx = 1, LEVEL.W do
+    for ky = 1, LEVEL.H do
+      local K = LEVEL.sections[kx][ky]
+
+      if K.room != R then continue end
+
+      for dir = 2,8,2 do
+        local nx, ny = geom.nudge(kx, ky, dir)
+
+        if not Section_valid(nx, ny) then
+          if geom.is_vert(dir) then
+            vert = 1
+          else
+            horiz = 1
+          end
+        end
+      end -- dir
+
+    end -- x, y
+    end
+
+    return horiz + vert
+  end
+
+
   local function score_room(R)
     -- handle the surrounder room
     if R.is_surrounder and rand.odds(style_sel("outdoors", 0, 15, 35, 80)) then
@@ -1238,15 +1269,10 @@ function Plan_decide_outdoors()
 
     local score = R.svolume
 
-    local what = 0
-
     -- preference for the sides of map, even higher for the corners
---!!!! FIXME    if R.kx1 <= 3 or R.kx2 >= SECTION_W-2 then what = what + 1 end
---!!!! FIXME    if R.ky1 <= 3 or R.ky2 >= SECTION_H-2 then what = what + 1 end
---!!!!    if R.touches_edge then what = 1 end
+    local what = room_touches_edge(R)
 
     score = score + 10 * what
-
     score = score + 20 * gui.random() ^ 2
 
     return score
