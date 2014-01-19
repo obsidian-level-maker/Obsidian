@@ -1205,6 +1205,7 @@ gui.debugf("Failed\n")
     end -- for R in rooms
   end
 
+
   local function make_scenic(R)
     -- Note: connections must be handled elsewhere
 
@@ -1212,35 +1213,32 @@ gui.debugf("Failed\n")
     assert(R.kind != "scenic")
 
     R.kind = "scenic"
+    R.c_group = -1
 
     -- move the room to the scenic list
 
-    for index,N in ipairs(LEVEL.rooms) do
-      if N == R then
-        table.remove(LEVEL.rooms, index)
-        R.c_group = -1
-        break;
-      end
-    end
+    table.kill_elem(LEVEL.rooms, R)
 
-    assert(R.c_group == -1)
-    
     table.insert(LEVEL.scenic_rooms, R)
 
     -- remove any arches (from connect_seeds)
 
-    for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
+    for x = R.sx1, R.sx2 do
+    for y = R.sy1, R.sy2 do
       for side = 2,8,2 do
         local S = SEEDS[x][y]
-        if S.room == R then
-          local B = S.border[side]
-          if B.kind == "arch" then
-            B.kind = nil
-          end
+
+        if S.room != R then continue end
+
+        local B = S.border[side]
+        if B.kind == "arch" then
+          B.kind = nil
         end
       end
-    end end -- for x, y
+    end -- x, y
+    end
   end
+
 
   local function make_conn_scenic(C)
     local found
@@ -1260,6 +1258,7 @@ gui.debugf("Failed\n")
     ---## C.S1.conn  = nil; C.S1.conn_dir  = nil
     ---## C.S2.conn = nil; C.S2.conn_dir = nil
   end
+
 
   local function try_emergency_connect(R, x, y, dir)
     local nx, ny = geom.nudge(x, y, dir)
@@ -1540,6 +1539,19 @@ function Connect_reserved_rooms()
   end
 
 
+  local function change_room_to_scenic(R)
+    R.kind = "scenic"
+
+    -- outdoor (or whatever) is decided in rooms.lua
+
+    table.kill_elem(LEVEL.reserved_rooms, R)
+
+    table.insert(LEVEL.scenic_rooms, R)
+
+    gui.debugf("Converted %s --> Scenic\n", R:tostr())
+  end
+
+
   local function eval_conn_for_secret_exit(R, S, dir, N)
     local R2 = N.room
 
@@ -1618,9 +1630,7 @@ function Connect_reserved_rooms()
     -- actually connect the rooms
     local T = S:neighbor(best.dir)
 
-    local CONN = Connect_seed_pair(T, S, 10 - best.dir)
-
-    R.entry_conn = CONN
+    R.entry_conn = Connect_seed_pair(T, S, 10 - best.dir)
 
 
     -- create quest, link room into quest and zone
@@ -1711,23 +1721,17 @@ function Connect_reserved_rooms()
     -- actually connect the rooms
     local T = S:neighbor(best.dir)
 
-    local CONN = Connect_seed_pair(T, S, 10 - best.dir)
-
-    R.entry_conn = CONN
+    R.entry_conn = Connect_seed_pair(T, S, 10 - best.dir)
 
 
-    -- insert room into quest
-    local quest = T.room.quest
-    local zone  = T.room.zone
-
-    R.quest = quest
-    R.zone  = zone
+    -- link room into the level
+    R.quest = T.room.quest
+    R.zone  = T.room.zone
 
     -- place on end of room lists (ensuring it is laid out AFTER
     -- the room it connects to).
-
-    table.insert(quest.rooms, R)
-    table.insert( zone.rooms, R)
+    table.insert(R.quest.rooms, R)
+    table.insert(R. zone.rooms, R)
 
 
     -- partition players between the two rooms.  Since Co-op is often
@@ -1760,7 +1764,7 @@ function Connect_reserved_rooms()
     best = { score=-1 }
 
     each R in LEVEL.reserved_rooms do
-      evaluate_alt_start(R)    
+      evaluate_alt_start(R)
     end
 
     if best.R then
@@ -1769,8 +1773,116 @@ function Connect_reserved_rooms()
   end
 
 
-  local function convert_room(R)
-    -- FIXME
+  local function eval_conn_for_other(R, S, dir, N)
+    local R2 = N.room
+
+    if R2.kind == "scenic"   then return end
+    if R2.kind == "reserved" then return end
+
+    if N.conn then return end
+
+    local score = 20
+
+    -- prefer smaller rooms
+    score = score - math.sqrt(R.svolume) * 2
+
+    -- TODO: check if this doorway would be near another one
+
+    -- tie-breaker
+    score = score + gui.random() * 5
+
+    if score > best.score then
+      best.score = score
+      best.R = R
+      best.S = S
+      best.dir = dir
+    end
+  end
+
+
+  local function evaluate_other(R)
+    for sx = R.sx1, R.sx2 do
+    for sy = R.sy1, R.sy2 do
+      for dir = 2,8,2 do
+
+        local S = SEEDS[sx][sy]
+
+        if S.room != R then continue end
+
+        local N = S:neighbor(dir)
+
+        if (N and N.room and N.room != R) then
+          eval_conn_for_other(R, S, dir, N)
+        end
+
+      end -- dir
+    end -- sx, sy
+    end
+  end
+
+
+  local function convert_other(R)
+    -- decide what to convert it into...
+
+    local secret_prob = style_sel("secrets", 0, 25, 50, 90)
+    local scenic_prob = style_sel("scenics", 0, 20, 40, 80)
+
+    R.is_secret = rand.odds(secret_prob)
+
+    if not R.is_secret and rand.odds(scenic_prob) then
+      change_room_to_scenic(R)
+      return
+    end
+
+
+    -- find where to connect to rest of map
+    best = { score=-1 }
+
+    evaluate_other(R)
+
+    if not best.R then
+      change_room_to_scenic(R)
+      return
+    end
+
+    change_room_kind(R)
+
+
+    -- actually connect the rooms
+    local S = best.S
+    local T = S:neighbor(best.dir)
+
+    R.entry_conn = Connect_seed_pair(T, S, 10 - best.dir)
+
+    R.zone = T.room.zone
+
+
+    if R.is_secret then
+      -- create a secret quest
+      R.quest = Quest_new(R)
+      R.quest.kind = "secret"
+
+      if T.room.is_secret then
+        R.quest.super_secret = true
+      end
+
+      table.insert(R.quest.secret_leafs, R)
+
+      gui.debugf("Converted %s --> SECRET\n", R:tostr())
+    else
+      -- make storage
+      R.quest = T.room.quest
+
+      R.is_storage = true
+
+      table.insert(R.quest.storage_leafs, R)
+
+      gui.debugf("Converted %s --> Storage\n", R:tostr())
+    end
+
+    -- link room into quest and zone
+    table.insert(R.quest.rooms, R)
+    table.insert(R. zone.rooms, R)
   end
 
 
@@ -1786,7 +1898,7 @@ function Connect_reserved_rooms()
   end
 
   each R in LEVEL.reserved_rooms do
-    convert_room(R)
+    convert_other(R)
   end
 
   LEVEL.reserved_rooms = {}
