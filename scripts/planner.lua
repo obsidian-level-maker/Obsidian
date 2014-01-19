@@ -409,49 +409,35 @@ function Plan_reserve_rooms()
 end
 
 
+
 function Plan_find_neighbors()
-  -- determines neighboring rooms of each room
-  -- (including diagonals, which may touch after nudging)
-  
-  local sections = LEVEL.sections
+  -- determines rooms which touch each other (via a seed boundary)
 
-  local function valid_R(x, y)
-    return 1 <= x and x <= LEVEL.W and
-           1 <= y and y <= LEVEL.H
+  local function add_neighbor(R1, R2)
+    table.add_unique(R1.neighbors, R2)
+    table.add_unique(R2.neighbors, R1)
   end
 
-  local function add_neighbor(R, side, N)
-    if not table.has_elem(R.neighbors, N) then
-      table.insert(R.neighbors, N)
-    end
-  end
-
-  for x = 1, LEVEL.W do
-  for y = 1, LEVEL.H do
-    local R = sections[x][y].room
+  for x = 1, SEED_W do
+  for y = 1, SEED_H do
+    local S = SEEDS[x][y]
+    local R = S.room
 
     if not R then continue end
 
-    if not R.neighbors then
-      R.neighbors = {}
+    for dir = 2,8,2 do
+      local N = S:neighbor(dir)
+
+      if not (N and N.room) then continue end
+      if N.room == R then continue end
+
+      add_neighbor(R, N.room)
     end
 
-    for side = 1,9 do if side != 5 then
-      local nx, ny = geom.nudge(x, y, side)
-      if valid_R(nx, ny) then
-        local N = sections[nx][ny].room
-        if N and N != R then
-          add_neighbor(R, side, N)
-        end
-      else
-        R.touches_edge = true
-      end
-    end -- for side
-    end
-
-  end -- for x, y
+  end -- x, y
   end
 end
+
 
 
 function Plan_count_free_sections()
@@ -469,6 +455,7 @@ function Plan_count_free_sections()
 
   return count
 end
+
 
 
 function Plan_random_section_list()
@@ -1110,7 +1097,6 @@ function Plan_sub_rooms()
     local R = ROOM_CLASS.new()
 
     R.parent = parent
-    R.neighbors = { }  -- ???
 
     -- must set seed range here (since sub-rooms are added AFTER Plan_make_seeds)
     R.sx1 = info.x
@@ -1223,6 +1209,7 @@ function Plan_make_seeds()
 end
 
 
+
 function Plan_decide_outdoors()
 
   local function turn_into_outdoor(R)
@@ -1256,7 +1243,7 @@ function Plan_decide_outdoors()
     -- preference for the sides of map, even higher for the corners
 --!!!! FIXME    if R.kx1 <= 3 or R.kx2 >= SECTION_W-2 then what = what + 1 end
 --!!!! FIXME    if R.ky1 <= 3 or R.ky2 >= SECTION_H-2 then what = what + 1 end
-    if R.touches_edge then what = 1 end
+--!!!!    if R.touches_edge then what = 1 end
 
     score = score + 10 * what
 
@@ -1363,11 +1350,11 @@ function Plan_create_rooms()
   Plan_add_caves()
   Plan_add_normal_rooms()
 
-  Plan_find_neighbors()
   Plan_dump_rooms()
 
   Plan_decide_outdoors()
 
+  -- nudging must occur after deciding outdoors
   Plan_nudge_rooms()
 
   -- must create the seeds _AFTER_ nudging
@@ -1377,6 +1364,7 @@ function Plan_create_rooms()
   Seed_dump_rooms()
 
   Plan_sub_rooms()
+  Plan_find_neighbors()
 
   each R in LEVEL.rooms do
     gui.printf("Final %s   size: %dx%d\n", R:tostr(), R.sw,R.sh)

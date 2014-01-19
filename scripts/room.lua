@@ -52,13 +52,11 @@ class ROOM
 
   floor_h, ceil_h : number
 
+  c_group : number    -- connection group (used for Connect logic)
 
-  --- plan_sp code only:
-
-  lx1, ly1, lx2, ly2  -- coverage on the Land Map
-
-  group_id : number  -- traversibility group
-
+  sky_group : number  -- outdoor rooms which directly touch will belong
+                      -- to the same sky_group (unless a solid wall is
+                      -- enforced, e.g. between zones).
 }
 
 
@@ -119,6 +117,7 @@ function ROOM_CLASS.new()
 
     sky_rects = {}
     exclusions = {}
+    neighbors = {}
 
     hazard_health = 0
   }
@@ -2241,11 +2240,6 @@ function Room_make_ceiling(R)
 
     if rand.odds(20) then return end
 
----##  if (R.tw * R.th) <= 18 and rand.odds(20) then
----##    if corner_supports() and rand.odds(35) then return end
----##  end
-
-
     if not R.quest.ceil_light and THEME.ceil_lights then
       R.quest.ceil_light = rand.key_by_probs(THEME.ceil_lights)
     end
@@ -2382,66 +2376,10 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
 
     decide_periphs()
+
     install_periphs()
 
     do_central_area()
-
-
---[[
-    if R.tx1 and R.tw >= 7 and R.th >= 7 then
-
-      Build.sky_hole(R.tx1,R.ty1, R.tx2,R.ty2,
-                     "round", w, h,
-                     outer_info, R.ceil_h,
-                     nil, R.ceil_h , ---  + z,
-                     metal, nil)
-
-      w = 96 + 110 * (R.tx2 - R.tx1 - 4)
-      h = 96 + 110 * (R.ty2 - R.ty1 - 4)
-
-      outer_info.b_face.tex = "F_SKY1"
-      outer_info.b_face.light = 0.8
-
-      Build.sky_hole(R.tx1+2,R.ty1+2, R.tx2-2,R.ty2-2,
-                     "round", w, h,
-                     outer_info, R.ceil_h + 96,
-                     inner_info, R.ceil_h + 104,
-                     metal, silver)
-    end
-
-    if R.tx1 and R.tw == 4 and R.th == 4 then
-      local w = 256
-      local h = 256
-
-      for dx = 0,1 do for dy = 0,0 do
-        local tx1 = R.tx1 + dx * 2
-        local ty1 = R.ty1 + dy * 2
-
-        local tx2 = R.tx1 + dx * 2 + 1
-        local ty2 = R.ty1 + dy * 2 + 3
-
-        Build.sky_hole(tx1,ty1, tx2,ty2,
-                       "square", w, h,
-                       outer_info, R.ceil_h,
-                       inner_info, R.ceil_h + 36,
-                       metal, metal)
-      end end -- for dx, dy
-    end
-
-    if R.tx1 and (R.tw == 3 or R.tw == 5) and (R.th == 3 or R.th == 5) then
-      for x = R.tx1+1, R.tx2-1, 2 do
-        for y = R.ty1+1, R.ty2-1, 2 do
-          local S = SEEDS[x][y]
-          if not (S.kind == "void" or S.kind == "diagonal") then
-            Build.sky_hole(x,y, x,y, "square", 160,160,
-                           metal,      R.ceil_h+16,
-                           inner_info, R.ceil_h+32,
-                           nil, silver)
-          end
-        end -- for y
-      end -- for x
-    end
---]]
   end
 
 
