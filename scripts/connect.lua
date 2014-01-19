@@ -1779,12 +1779,12 @@ function Connect_reserved_rooms()
     if R2.kind == "scenic"   then return end
     if R2.kind == "reserved" then return end
 
+    -- cannot build a storage room off a secret
+    if R.is_secret and not R2.is_secret then return end
+
     if N.conn then return end
 
     local score = 20
-
-    -- prefer smaller rooms
-    score = score - math.sqrt(R.svolume) * 2
 
     -- TODO: check if this doorway would be near another one
 
