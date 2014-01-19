@@ -1,4 +1,4 @@
-----------------------------------------------------------------
+---------------------------------------------------------------
 --  QUEST ASSIGNMENT
 ----------------------------------------------------------------
 --
@@ -1343,15 +1343,12 @@ end
     end
 
     R.quest = quest
+    R.is_secret = true
 
     table.insert(quest.rooms, R)
 
     local exits = Quest_get_zone_exits(R)
-
-    if table.empty(exits) then
-      table.insert(quest.secret_leafs, R)
-      return
-    end
+    local normal_exits = 0
 
     each C in exits do
       -- sometime make a "super" secret
@@ -1360,8 +1357,13 @@ end
         C.R2.quest.super_secret = true
       else
         secret_flow(C.R2, quest)
+        normal_exits = normal_exits + 1
       end
     end
+
+    if normal_exits == 0 then
+      table.insert(quest.secret_leafs, R)
+    end 
   end
 
 
@@ -1374,14 +1376,7 @@ end
     table.insert(quest.rooms, R)
 
     local exits = Quest_get_zone_exits(R)
-
-    if table.empty(exits) then
-      if not R.must_visit then
-        table.insert(quest.storage_leafs, R)
-      end
-
-      return
-    end
+    local normal_exits = 0
 
     rand.shuffle(exits)
 
@@ -1390,8 +1385,13 @@ end
         secret_flow(C.R2)
       else
         boring_flow(C.R2, quest)
+        normal_exits = normal_exits + 1
       end
     end
+
+    if normal_exits == 0 and not R.must_visit then
+      table.insert(quest.storage_leafs, R)
+    end 
   end
 
 
