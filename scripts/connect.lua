@@ -1612,6 +1612,7 @@ function Connect_reserved_rooms()
     change_room_kind(R)
 
     R.purpose = "SECRET_EXIT"
+    R.is_secret = true
 
 
     -- actually connect the rooms
@@ -1622,16 +1623,18 @@ function Connect_reserved_rooms()
     R.entry_conn = CONN
 
 
-    R.lev_along = 1.05  -- HACK !!!
+    -- create quest, link room into quest and zone
+    R.zone = T.room.zone
+    R.quest = Quest_new(R)
 
--- FIXME: TEMP CRUD
-    local quest = T.room.quest
-    local zone  = T.room.zone
-    R.quest = quest
-    R.zone  = zone
+    R.quest.kind = "secret"
 
+    if T.room.is_secret then
+      R.quest.super_secret = true
+    end
 
-    -- FIXME: MORE MORE MORE
+    table.insert(R.quest.rooms, R)
+    table.insert(R. zone.rooms, R)
   end
 
 
