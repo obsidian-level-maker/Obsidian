@@ -3344,7 +3344,11 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
 
       if B_kind == "fence"  then
         local skin = { h=30, wall=w_tex, floor=f_tex }
-        Build.fence(S, side, R.fence_h or ((R.floor_h or z1)+skin.h), skin)
+        local fence_h = R.fence_h or ((R.floor_h or z1) + skin.h)
+        if S.content == "wotsit" then
+          fence_h = fence_h + 24
+        end
+        Build.fence(S, side, fence_h, skin)
         shrink_floor(side, 16)
       end
 
