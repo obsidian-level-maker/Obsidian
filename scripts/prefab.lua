@@ -29,7 +29,7 @@ function Build.fence(S, side, fence_h, skin)
 end
 
 
-function Build.sky_fence(S, side, z_top, z_low, skin)
+function Build.sky_fence(S, side, z_top, z_low, skin, sky_h)
   local wall_info = get_mat(skin.fence_w, skin.fence_f)
 
   local sky_info = get_sky()
@@ -86,13 +86,13 @@ function Build.sky_fence(S, side, z_top, z_low, skin)
   Trans.old_brush(wall_info, w_coords, -EXTREME_H, z_top)
   Trans.old_brush(wall_info, s_coords, -EXTREME_H, z_low)
 
-  Trans.old_brush(sky_info, w_coords, SKY_H, EXTREME_H)
+  Trans.old_brush(sky_info, w_coords, sky_h, EXTREME_H)
 
   if GAME.format == "quake" then
     Trans.old_brush(sky_back, s_coords, z_low+4, EXTREME_H)
   else
-    sky_back.delta_z = (z_low+4) - (SKY_H-2)
-    Trans.old_brush(sky_back, s_coords, SKY_H-2, EXTREME_H)
+    sky_back.delta_z = (z_low+4) - (sky_h-2)
+    Trans.old_brush(sky_back, s_coords, sky_h-2, EXTREME_H)
   end
 end
 

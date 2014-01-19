@@ -2356,49 +2356,69 @@ function Layout_edge_of_map()
   local function stretch_buildings()
     -- TODO: OPTIMISE
     for loop = 1,3 do
-      for x = 1,SEED_W do for y = 1,SEED_H do
+      for x = 1,SEED_W do
+      for y = 1,SEED_H do
         local S = SEEDS[x][y]
         if (S.room and not S.room.is_outdoor) or (S.edge_of_map and S.building) then
-          if (S.move_loop or 0) < loop then
-            for side = 2,8,2 do
-              if not S.edge_of_map or S.building_side == side then
-                local N = S:neighbor(side)
-                if N and N.edge_of_map and not N.building then
-                  N.building = S.room or S.building
-                  N.building_side = side
-                  N.move_loop = loop
-                end
+        if (S.move_loop or 0) < loop then
+
+          for side = 2,8,2 do
+            if not S.edge_of_map or S.building_side == side then
+              local N = S:neighbor(side)
+              if N and N.edge_of_map and not N.building then
+                N.building = S.room or S.building
+                N.building_side = side
+                N.move_loop = loop
               end
-            end -- for side
-          end
+            end
+          end -- side
+
+        end -- if ...
         end
-      end end -- for x, y
-    end -- for loop
+      end -- x, y
+      end
+    end -- loop
   end
+
 
   local function determine_walk_heights()
     -- TODO: OPTIMISE
     for loop = 1,5 do
-      for x = 1,SEED_W do for y = 1,SEED_H do
+      for x = 1,SEED_W do
+      for y = 1,SEED_H do
         local S = SEEDS[x][y]
         if S.edge_of_map and not S.building then
+
           for side = 2,8,2 do
             local N = S:neighbor(side)
+
             local other_h
             if N and N.edge_of_map and not N.building then
               other_h = N.walk_h
             elseif N and N.room and N.room.is_outdoor then
               other_h = N.room.floor_max_h
             end
-
             if other_h then
               S.walk_h = math.max(S.walk_h or 0, other_h)
             end
-          end -- for side
+
+            local sky_h
+            if N and N.edge_of_map and not N.building then
+              sky_h = N.sky_h
+            elseif N and N.room and N.room.sky_group then
+              sky_h = N.room.sky_group.h
+            end
+            if sky_h then
+              S.sky_h = math.max(S.sky_h or 0, sky_h)
+            end
+          end -- side
+
         end
-      end end -- for x, y
-    end -- for loop
+      end -- x, y
+      end
+    end -- loop
   end
+
 
   local function build_edge(S)
     if S.building then
@@ -2409,10 +2429,10 @@ function Layout_edge_of_map()
       return
     end
 
-    S.fence_h = SKY_H - 128  -- fallback value
+    S.fence_h = SKY_H - 64  -- fallback value
 
     if S.walk_h then
-      S.fence_h = math.min(S.walk_h + 64, SKY_H - 64)
+      S.fence_h = math.min(S.walk_h + 64, S.fence_h)
     end
 
     local x1 = S.x1
@@ -2429,19 +2449,22 @@ function Layout_edge_of_map()
 
     local skin = { fence_w=LEVEL.outer_fence_tex }
 
+    local sky_h = S.sky_h or SKY_H
+
     for side = 2,8,2 do
       local N = S:neighbor(side)
       if not N or N.free then
         S.thick[side] = 48 ; shrink(side, 48)
 
-        Build.sky_fence(S, side, S.fence_h, S.fence_h - 64, skin)
+        Build.sky_fence(S, side, S.fence_h, S.fence_h - 64, skin, sky_h)
       end
     end
 
     Trans.old_quad(get_mat(LEVEL.outer_fence_tex), x1,y1, x2,y2, -EXTREME_H, S.fence_h)
 
-    Trans.old_quad(get_sky(), x1,y1, x2,y2, SKY_H, EXTREME_H)
+    Trans.old_quad(get_sky(), x1,y1, x2,y2, sky_h, EXTREME_H)
   end
+
 
   ---| Layout_edge_of_map |---
   
@@ -2451,11 +2474,14 @@ function Layout_edge_of_map()
 
   determine_walk_heights()
 
-  for x = 1,SEED_W do for y = 1,SEED_H do
+  for x = 1, SEED_W do
+  for y = 1, SEED_H do
     local S = SEEDS[x][y]
+
     if S.edge_of_map then
       build_edge(S)
     end
-  end end -- for x, y
+  end -- x, y
+  end
 end
 
