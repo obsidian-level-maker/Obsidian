@@ -1521,7 +1521,7 @@ function Connect_reserved_rooms()
   local best
 
 
-  local function change_room_kind(R)
+  local function change_room_kind(R, kill_it)
     R.kind = "building"
 
     -- make it outdoors sometimes
@@ -1533,7 +1533,9 @@ function Connect_reserved_rooms()
 
     R.num_branch = 1
 
-    table.kill_elem(LEVEL.reserved_rooms, R)
+    if kill_it then
+      table.kill_elem(LEVEL.reserved_rooms, R)
+    end
 
     table.insert(LEVEL.rooms, R)
   end
@@ -1543,8 +1545,6 @@ function Connect_reserved_rooms()
     R.kind = "scenic"
 
     -- outdoor (or whatever) is decided in rooms.lua
-
-    table.kill_elem(LEVEL.reserved_rooms, R)
 
     table.insert(LEVEL.scenic_rooms, R)
 
@@ -1621,7 +1621,7 @@ function Connect_reserved_rooms()
 
     gui.debugf("Secret exit @ %s  (%d %d)\n", R:tostr(), R.sx1, R.sy1)
 
-    change_room_kind(R)
+    change_room_kind(R, "kill_it")
 
     R.purpose = "SECRET_EXIT"
     R.is_secret = true
@@ -1713,7 +1713,7 @@ function Connect_reserved_rooms()
 
     LEVEL.alt_start = R
 
-    change_room_kind(R)
+    change_room_kind(R, "kill_it")
 
     R.purpose = "START"
 

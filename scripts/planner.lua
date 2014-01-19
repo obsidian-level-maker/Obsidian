@@ -394,8 +394,8 @@ function Plan_reserve_rooms()
   if LEVEL.H >= 4 and rand.odds(70) then quota = quota + 1 end
   if LEVEL.H >= 5 and rand.odds(70) then quota = quota + 1 end
 
-  -- often have lots in Co-operative mode, try for an alternative start
-  if rand.odds(5) or
+  -- often have lots in Co-operative mode [try for alternative start]
+  if rand.odds(10) or
      (OB_CONFIG.mode == "coop" and rand.odds(50))
   then
     quota = 9
