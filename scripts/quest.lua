@@ -90,6 +90,27 @@ class LOCK
 --------------------------------------------------------------]]
 
 
+function Quest_new(start)
+  local id = 1 + #LEVEL.quests
+
+  local QUEST =
+  {
+    kind  = "normal"
+    id = id
+    start = start
+    zone  = start.zone
+    rooms = {}
+    storage_leafs = {}
+    secret_leafs = {}
+  }
+
+  table.insert(LEVEL.quests, QUEST)
+  table.insert(QUEST.zone.quests, QUEST)
+
+  return QUEST
+end
+
+
 function Quest_compute_tvols(same_zone)
 
   local function travel_volume(R, seen_conns)
@@ -887,15 +908,7 @@ function Quest_create_zones()
     Z2.start = C.R2
 
     -- insert new zone, it must be AFTER current zone
-    local old_pos
-    for i = 1, #LEVEL.zones do
-      if LEVEL.zones[i] == Z then
-        old_pos = i ; break
-      end
-    end
-    assert(old_pos)
-
-    table.insert(LEVEL.zones, old_pos + 1, Z2)
+    table.add_after(LEVEL.zones, Z, Z2)
 
     assign_new_zone(Z2.start, Z, Z2, {})
 
@@ -1164,27 +1177,6 @@ function Quest_divide_zones()
   local active_locks = {}
 
 
-  local function new_quest(start)
-    local id = 1 + #LEVEL.quests
-
-    local QUEST =
-    {
-      kind  = "normal"
-      id = id
-      start = start
-      zone  = start.zone
-      rooms = {}
-      storage_leafs = {}
-      secret_leafs = {}
-    }
-
-    table.insert(LEVEL.quests, QUEST)
-    table.insert(QUEST.zone.quests, QUEST)
-
-    return QUEST
-  end
-
-
   local function add_lock(R, C)
     assert(C.kind != "double_L")
     assert(C.kind != "closet")
@@ -1344,7 +1336,7 @@ end
 
   local function secret_flow(R, quest)
     if not quest then
-      quest = new_quest(R)
+      quest = Quest_new(R)
       quest.kind = "secret"
 
       gui.debugf("Secret quest @ %s\n", R:tostr())
@@ -1446,7 +1438,7 @@ end
 
       add_solution(R, lock)
  
-      local new_Q = new_quest(lock.conn.R2)
+      local new_Q = Quest_new(lock.conn.R2)
 
       -- continue on with new room and quest
       quest_flow(new_Q.start, new_Q)
@@ -1506,7 +1498,7 @@ end
   each Z in LEVEL.zones do
     gui.debugf("\nDividing ZONE_%d\n", Z.id)
 
-    local Q = new_quest(Z.start)
+    local Q = Quest_new(Z.start)
 
     if THEME.switches and STYLE.switches != "none" then
       quest_flow(Q.start, Q)
