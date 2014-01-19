@@ -585,10 +585,11 @@ function Room_decide_hallways()
 
   each R in LEVEL.rooms do
     if eval_hallway(R) then
-gui.debugf("Hallway @ %s\n", R:tostr())
       R.kind = "hallway"
       R.hallway = { }
       R.is_outdoor = nil
+
+      gui.debugf("Hallway @ %s\n", R:tostr())
     end
   end
 
@@ -603,7 +604,8 @@ gui.debugf("Hallway @ %s\n", R:tostr())
       if rand.odds(REVERT_PROBS[min_d]) then
         R.kind = "building"
         R.hallway = nil
-gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
+
+        gui.debugf("Hallway REVERTED @ %s\n", R:tostr())
       end
     end
   end
@@ -764,6 +766,71 @@ function Room_setup_symmetry()
     mirror_vertically(R)
   end
 end
+
+
+
+function Room_merge_sky_groups(R1, R2)
+  assert(R1.sky_group)
+  assert(R2.sky_group)
+
+  if R1.sky_group == R2.sky_group then
+    return
+  end
+
+  if R1.id > R2.id then R1, R2 = R2, R1 end
+
+  -- the second SKY_GROUP table will never be used again
+  local dead_group = R2.sky_group
+
+  dead_group.h = "dead"
+
+  each T in LEVEL.rooms do
+    if T.sky_group == dead_group then
+       T.sky_group = R1.sky_group
+    end
+  end
+
+  each T in LEVEL.scenic_rooms do
+    if T.sky_group == dead_group then
+       T.sky_group = R1.sky_group
+    end
+  end
+end
+
+
+
+function Room_create_sky_groups()
+  --
+  -- This makes sure that any two outdoor rooms which touch will belong
+  -- to the same 'sky_group' and hence get the same sky height.
+  --
+  -- Note: actual sky heights are determined later.
+  --
+
+  -- setup each room
+
+  local all_rooms = {}
+
+  table.append(all_rooms, LEVEL.rooms)
+  table.append(all_rooms, LEVEL.scenic_rooms)
+
+  each R in all_rooms do
+    if R.is_outdoor then
+      R.sky_group = {}
+    end
+  end
+
+  -- merge neighbors which touch each other
+
+  each R in all_rooms do
+    each N in R.neighbors do
+      if R.sky_group and N.sky_group then
+        Room_merge_sky_groups(R, N)
+      end
+    end
+  end
+end
+
 
 
 function Room_reckon_doors()
@@ -993,7 +1060,7 @@ function Room_border_up()
       if STYLE.fences == "none" and R1.quest == R2.quest and R2.is_outdoor and
          (S.kind != "liquid" or S.floor_h == N.floor_h) and
          (R2.purpose != "EXIT") and
-         not R.teleport_conn and not R2.teleport_conn and
+         not R1.teleport_conn and not R2.teleport_conn and
          R1.theme == R2.theme
       then
         S.border[side].kind = "nothing"
@@ -3907,6 +3974,7 @@ function Room_build_all()
 
   Room_setup_symmetry()
   Room_reckon_doors()
+  Room_create_sky_groups()
 
   each R in LEVEL.rooms do
     Layout_room(R)
