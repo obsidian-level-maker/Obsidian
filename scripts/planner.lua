@@ -1218,8 +1218,6 @@ function Plan_decide_outdoors()
     end
 
     R.is_outdoor = true
-
-    R.sky_h = SKY_H  -- FIXME: use sky groups
   end
 
 

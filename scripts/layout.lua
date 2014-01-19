@@ -1294,21 +1294,24 @@ end
 
 
 function Layout_do_scenic(R)
-
   local min_floor = 1000
 
-  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+  for x = R.sx1,R.sx2 do
+  for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y]
-    if S.room == R then
-      S.kind = sel(LEVEL.liquid, "liquid", "void")
-      for side = 2,8,2 do
-        local N = S:neighbor(side)
-        if N and N.room and N.floor_h then
-          min_floor = math.min(min_floor, N.floor_h)
-        end
+    
+    if S.room != R then continue end
+
+    S.kind = sel(LEVEL.liquid, "liquid", "void")
+
+    for side = 2,8,2 do
+      local N = S:neighbor(side)
+      if N and N.room and N.floor_h then
+        min_floor = math.min(min_floor, N.floor_h)
       end
     end
-  end end -- for x,y
+  end -- x,y
+  end
 
   if min_floor < 999 then
     local h1 = rand.irange(1,6)
@@ -1319,13 +1322,17 @@ function Layout_do_scenic(R)
     R.liquid_h = -24
   end
 
-  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+  R.floor_max_h = R.liquid_h
+
+  for x = R.sx1,R.sx2 do
+  for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y]
+
     if S.room == R and S.kind == "liquid" then
       S.floor_h = R.liquid_h
     end
-  end end -- for x, y
-
+  end -- for x, y
+  end
 end
 
 

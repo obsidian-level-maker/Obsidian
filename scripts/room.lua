@@ -987,33 +987,6 @@ function Room_reckon_doors()
 end
 
 
-function Room_synchronise_skies()
-  -- make sure that any two outdoor rooms which touch have the same sky_h
-
-  for loop = 1,10 do
-    local changes = false
-
-    for x = 1,SEED_W do for y = 1,SEED_H do
-      local S = SEEDS[x][y]
-      if S and S.room and S.room.sky_h then
-        for side = 2,8,2 do
-          local N = S:neighbor(side)
-          if N and N.room and N.room != S.room and N.room.sky_h and
-             S.room.sky_h != N.room.sky_h
-          then
-            S.room.sky_h = math.max(S.room.sky_h, N.room.sky_h)
-            N.room.sky_h = S.room.sky_h
-            changes = true
-          end
-        end -- for side
-      end
-    end end -- for x, y
-
-    if not changes then break; end
-  end -- for loop
-end
-
-
 
 function Room_border_up()
 
@@ -1451,12 +1424,7 @@ function Room_border_up()
         end
 
         min_c1 = math.min(min_c1, assert(S.ceil_h or R.ceil_h))
-
-        if N.room.is_outdoor then
-          min_c2 = math.min(min_c2, SKY_H)
-        else
-          min_c2 = math.min(min_c2, assert(N.ceil_h or N.room.ceil_h))
-        end
+        min_c2 = math.min(min_c2, assert(N.ceil_h or N.room.ceil_h))
 
         max_f1 = math.max(max_f1, S.floor_h)
         max_f2 = math.max(max_f2, N.floor_h)
@@ -1783,13 +1751,17 @@ function Room_border_up()
 end
 
 
+
 function Room_make_ceiling(R)
 
   local function outdoor_ceiling()
-    if R.floor_max_h then
-      R.sky_h = math.max(R.sky or SKY_H, R.floor_max_h + 128)
-    end
+    local sky_h = R.floor_max_h + rand.pick { 144, 176, 208 }
+
+    R.sky_group.h = math.max(R.sky_group.h or SKY_H, sky_h)
+
+    R.ceil_h = R.sky_group.h
   end
+
 
   local function periph_size(PER)
     if PER[2] then return 3 end
@@ -1797,6 +1769,7 @@ function Room_make_ceiling(R)
     if PER[0] then return 1 end
     return 0
   end
+
 
   local function get_max_drop(side, offset)
     local drop_z
@@ -1831,6 +1804,7 @@ function Room_make_ceiling(R)
 
     return drop_z
   end
+
 
   local function add_periph_pillars(side, offset)
     if not THEME.periph_pillar_mat then
@@ -1882,6 +1856,7 @@ function Room_make_ceiling(R)
     end end -- for x, y
   end
 
+
   local function create_periph_info(side, offset)
     local t_size = sel(geom.is_horiz(side), R.tw, R.th)
 
@@ -1908,6 +1883,7 @@ function Room_make_ceiling(R)
     return PER
   end
 
+
   local function merge_periphs(side, offset)
     local P1 = R.periphs[side][offset]
     local P2 = R.periphs[10-side][offset]
@@ -1922,6 +1898,7 @@ function Room_make_ceiling(R)
       pillars  = P1.pillars or P2.pillars
     }
   end
+
 
   local function decide_periphs()
     -- a "periph" is a side of the room where we might lower
@@ -2004,6 +1981,7 @@ function Room_make_ceiling(R)
     end
   end
 
+
   local function calc_central_area()
     R.cx1, R.cy1 = R.tx1, R.ty1
     R.cx2, R.cy2 = R.tx2, R.ty2
@@ -2023,6 +2001,7 @@ function Room_make_ceiling(R)
     assert(R.cw >= 1)
     assert(R.ch >= 1)
   end
+
 
   local function install_periphs()
     for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
@@ -2765,7 +2744,7 @@ function Room_build_seeds(R)
     local sx, sy = S.sx, S.sy
 
     local z1 = S.floor_h or R.floor_h
-    local z2 = S.ceil_h  or R.ceil_h or SKY_H
+    local z2 = S.ceil_h  or R.ceil_h
 
     local mx, my = S:mid_point()
 
@@ -2817,7 +2796,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local sx, sy = S.sx, S.sy
 
     local z1 = S.floor_h or R.floor_h
-    local z2 = S.ceil_h  or R.ceil_h or SKY_H
+    local z2 = S.ceil_h  or R.ceil_h
 
     local mx, my = S:mid_point()
 
@@ -3086,7 +3065,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local extra_z = math.max(S.room.floor_max_h, N.room.floor_max_h) - z
     if extra_z < 0 then extra_z = 0 end
 
-    local z_max = math.min(S.room.ceil_h or SKY_H, N.room.ceil_h or SKY_H) - 96
+    local z_max = math.min(S.room.ceil_h, N.room.ceil_h) - 96
 
     if extra_z > z_max - z then
        extra_z = z_max - z
@@ -3227,7 +3206,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     vis_seed(S)
 
     local z1 = S.floor_h or R.floor_h or (S.conn and S.conn.conn_h) or 0
-    local z2 = S.ceil_h  or R.ceil_h or R.sky_h or SKY_H
+    local z2 = S.ceil_h  or R.ceil_h
 
     assert(z1 and z2)
 
@@ -3837,10 +3816,11 @@ function Room_find_monster_spots(R)
       return false
     end
 
-    local h_diff = (S.ceil_h or R.ceil_h or SKY_H) - (S.floor_h or 0)
+    local h_diff = (S.ceil_h or R.ceil_h) - (S.floor_h or 0)
 
     return true, h_diff
   end
+
 
   local function can_accommodate_large(S, sx, sy)
     if (sx+1 > R.sx2) or (sy+1 > R.sy2) then
@@ -3849,7 +3829,7 @@ function Room_find_monster_spots(R)
 
     if S.solid_corner then return false end
 
-    local low_ceil = S.ceil_h or R.ceil_h or SKY_H
+    local low_ceil = S.ceil_h or R.ceil_h
     local hi_floor = S.floor_h or 0
 
     for dx = 0,1 do for dy = 0,1 do
@@ -3986,8 +3966,6 @@ function Room_build_all()
     Layout_do_scenic(R)
     Room_make_ceiling(R)
   end
-
-  Room_synchronise_skies()
 
   Room_border_up()
 
