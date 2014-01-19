@@ -1755,11 +1755,11 @@ end
 function Room_make_ceiling(R)
 
   local function outdoor_ceiling()
-    local sky_h = R.floor_max_h + rand.pick { 144, 176, 208 }
+    local sky_h = R.floor_max_h + rand.pick { 144, 160, 176 }
 
     R.sky_group.h = math.max(R.sky_group.h or SKY_H, sky_h)
 
-    R.ceil_h = R.sky_group.h
+    -- ceil_h is set later, as this sky group may be raised again
   end
 
 
@@ -2440,6 +2440,40 @@ end
 
 
 
+function Room_layout_all()
+  each R in LEVEL.rooms do
+    Layout_room(R)
+  end
+
+  each R in LEVEL.scenic_rooms do
+    Layout_do_scenic(R)
+  end
+end
+
+
+
+function Room_plaster_ceilings()
+  each R in LEVEL.rooms do
+    Room_make_ceiling(R)
+  end
+
+  each R in LEVEL.scenic_rooms do
+    Room_make_ceiling(R)
+  end
+
+  -- get the final 'ceil_h' value for each room
+
+  each R in LEVEL.rooms do
+    if R.sky_group then R.ceil_h = R.sky_group.h end
+  end
+
+  each R in LEVEL.scenic_rooms do
+    if R.sky_group then R.ceil_h = R.sky_group.h end
+  end
+end
+
+
+
 function Room_add_crates(R)
 
   -- NOTE: temporary crap!
@@ -2519,6 +2553,18 @@ function Room_add_crates(R)
     end
   end
 end
+
+
+
+function Room_tizzy_up()
+
+  ---| Room_tizzy_up |---
+
+  each R in LEVEL.rooms do
+    Room_add_crates(R)
+  end
+end
+
 
 
 function Room_do_small_exit()
@@ -3763,6 +3809,7 @@ function Room_find_pickup_spots(R)
 end
 
 
+
 function Room_find_monster_spots(R)
 
   local function add_small_mon_spot(S, h_diff)
@@ -3941,6 +3988,26 @@ end
 
 
 
+function Room_run_builders()
+  each R in LEVEL.scenic_rooms do
+    Room_build_seeds(R)
+  end
+
+  each R in LEVEL.rooms do
+    Room_build_seeds(R)
+
+    Room_find_monster_spots(R)
+    Room_find_pickup_spots(R)
+    Room_find_ambush_focus(R)
+
+    if R.kind != "cave" then
+      R:exclude_monsters()
+    end
+  end
+end
+
+
+
 function Room_build_all()
 
   gui.printf("\n--==| Build Rooms |==--\n\n")
@@ -3956,32 +4023,14 @@ function Room_build_all()
   Room_reckon_doors()
   Room_create_sky_groups()
 
-  each R in LEVEL.rooms do
-    Layout_room(R)
-    Room_make_ceiling(R)
-    Room_add_crates(R)
-  end
+  Room_layout_all()
 
-  each R in LEVEL.scenic_rooms do
-    Layout_do_scenic(R)
-    Room_make_ceiling(R)
-  end
-
+  Room_plaster_ceilings()
+  Room_tizzy_up()
   Room_border_up()
 
   Layout_edge_of_map()
 
-  each R in LEVEL.scenic_rooms do Room_build_seeds(R) end
-  each R in LEVEL.rooms        do Room_build_seeds(R) end
-
-  each R in LEVEL.rooms do
-    Room_find_monster_spots(R)
-    Room_find_pickup_spots(R)
-    Room_find_ambush_focus(R)
-
-    if R.kind != "cave" then
-      R:exclude_monsters()
-    end
-  end
+  Room_run_builders()
 end
 
