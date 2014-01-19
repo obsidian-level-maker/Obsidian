@@ -194,6 +194,17 @@ function table.add_unique(t, v)
   end
 end
 
+function table.add_after(t, oldie, newbie)
+  for idx = 1, #t do
+    if t[idx] == oldie then
+      table.insert(t, idx + 1, newbie)
+      return
+    end
+  end
+
+  error("table.add_after: oldie not found")
+end
+
 function table.numbers(count)
   local t = {}
   for i = 1,count do t[i] = i end
