@@ -2,21 +2,41 @@
 CHANGES (since 4.28)
 ====================
 
-+ replaced 'Secrets' button with 'Caves' in the GUI
+The Good
+--------
 
-+ Heretic boss maps, thanks to DoomIIGuy
++ new lighting system
+
++ restored v3.57 room layouting logic, with improvements
+
++ secret rooms, with nice items to get
+
+
+
+The Bad
+-------
+
+! no support for games other than DOOM family
+! no multiple paths between rooms
+! no shaped rooms
+
+
+Contributions
+-------------
+
++ Heretic boss maps, thanks to LakiSoft
 
 + new E2M8 and MAP07 boss maps, thanks to Mr. Chris
 
 + new E1M8 boss map, contributed by SylandroProbopas
 
-- changed grid size to 256x256 (was 192x192)
 
-- fixed "Crazy" monsters setting to ignore 'level' values
+Other Changes
+-------------
 
-- workaround for rare error in Street mode
+- replaced 'Secrets' button with 'Caves' in the GUI
 
 - support 'Always' setting for Outdoors and Caves
 
-- try to prevent rooms overflowing with health
+- better health calculation (no more rooms overflowing with it)
 
