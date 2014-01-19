@@ -479,6 +479,8 @@ function Room_decide_hallways()
       if C.R2 == R and C.lock and not rand.odds(lock_chance) then
         return false
       end
+
+      if N.quest.kind == "secret" then return false end
     end
 
     local min_d = math.min(R.sw, R.sh)
