@@ -316,6 +316,61 @@ end
 ------------------------------------------------------------------------
 
 
+function Layout_compute_wall_dists(R)
+
+  local function init_dists()
+    for x = R.sx1, R.sx2 do
+    for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y]
+      if S.room != R then continue end
+
+      for dir = 1,9 do if dir != 5 then
+        local N = S:neighbor(dir)
+
+        if not (N and N.room == R) then
+          S.wall_dist = 0.5
+        end
+      end end -- dir
+
+    end -- sx, sy
+    end
+  end
+
+
+  local function spread_dists()
+    local changed = false
+
+    for x = R.sx1, R.sx2 do
+    for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y]
+      if S.room != R then continue end
+
+      for dir = 2,8,2 do
+        local N = S:neighbor(dir)
+        if not (N and N.room == R) then continue end
+
+        if S.wall_dist and S.wall_dist + 1 < (N.wall_dist or 999) then
+          N.wall_dist = S.wall_dist + 1
+          changed  = true
+        end
+      end
+
+    end  -- sx, sy
+    end
+
+    return changed
+  end
+
+
+  ---| Layout_compute_wall_dists |---
+
+  init_dists()
+
+  while spread_dists() do end
+end
+
+
+
 function Layout_spot_for_wotsit(R, kind, none_OK)
   local spots = {}
 
@@ -341,6 +396,98 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
 
     return false
   end
+
+
+  local function nearest_wall(T)
+    -- get the wall_dist from seed containing the spot
+
+    local S = Seed_from_coord(T.x1 + 32, T.y1 + 32)
+
+    -- sanity check
+    if S.room != R then return nil end
+
+    return assert(S.wall_dist)
+  end
+
+
+  local function nearest_portal(T)
+    local dist
+
+    each C in R.conns do
+      if C.kind == "normal" or C.kind == "closet" then
+        local S = C:seed(R)
+
+        local d = geom.box_dist(T.x1, T.y1, T.x2, T.y2,
+                                S.x1, S.y1, S.x2, S.y2)
+        d = d / SEED_SIZE
+        if not dist or d < dist then
+          dist = d
+        end
+      end
+    end
+
+    return dist
+  end
+
+
+  local function nearest_goal(T)
+    local dist
+
+    each G in R.goals do
+      local d = geom.box_dist(T.x1, T.y1, T.x2, T.y2,
+                              G.x1, G.y1, G.x2, G.y2)
+      d = d / SEED_SIZE
+      if not dist or d < dist then
+        dist = d
+      end
+    end
+
+    return dist
+  end
+
+
+  local function evaluate_spot(spot)
+    -- Factors we take into account:
+    --   1. distance from walls
+    --   2. distance from entrance / exits
+    --   3. distance from other goals
+    --   4. rank value from prefab
+
+    local   wall_dist = nearest_wall(spot)   or 20
+    local portal_dist = nearest_portal(spot) or 20
+    local   goal_dist = nearest_goal(spot)   or 20
+
+    -- combine portal_dist and goal_dist
+    local score = math.min(goal_dist, portal_dist * 1.2)
+
+    -- now combine with wall_dist.
+    -- in caves we need the spot to be away from the edges of the room
+    if R.cave_placement then
+      if wall_dist >= 1.2 then score = score + 100 end
+    else
+      score = score + wall_dist / 5
+    end
+
+    -- apply the skill bits from prefab
+    if spot.rank then
+      score = score + (spot.rank - 1) * 5 
+    end
+ 
+    -- tie breaker
+    score = score + 2.0 * gui.random() ^ 2
+
+--[[
+if R.id == 2 then --- R.purpose == "START" then
+local S = Seed_from_coord(spot.x1 + 32, spot.y1 + 32)
+gui.printf("  %s : wall:%1.1f portal:%1.1f goal:%1.1f --> score:%1.2f\n",
+    S:tostr(), wall_dist, portal_dist, goal_dist, score)
+end
+--]]
+    return score
+  end
+
+
+  ---| Layout_spot_for_wotsit |---
 
   -- for symmetrical rooms, prefer a centred item
   local bonus_x, bonus_y
@@ -387,13 +534,7 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
   P.S.content = "wotsit"
   P.S.content_kind = kind
 
----##  if R.cave then
----##    -- clear the middle cell
----##    local mx = (P.x - R.sx1) * 3 + 2
----##    local my = (P.y - R.sy1) * 3 + 2
----##
----##    R.flood[mx][my] = R.flood.largest_empty.id
----##  end
+  table.insert(R.goals, { S=P.S, kind=kind })
 
   -- no monsters near start spot or teleporters
   if kind == "START" or kind == "TELEPORTER" then
@@ -1293,7 +1434,7 @@ function Layout_set_floor_minmax(R)
 end
 
 
-function Layout_do_scenic(R)
+function Layout_scenic(R)
   local min_floor = 1000
 
   for x = R.sx1,R.sx2 do
@@ -1336,7 +1477,7 @@ function Layout_do_scenic(R)
 end
 
 
-function Layout_do_hallway(R)
+function Layout_hallway(R)
   local tx1,ty1, tx2,ty2 = R:conn_area()
   local tw, th = geom.group_size(tx1,ty1, tx2,ty2)
 
@@ -1406,7 +1547,7 @@ function Layout_do_hallway(R)
   end
 
 
-  ---| Layout_do_hallway |---
+  ---| Layout_hallway |---
 
   R.tx1, R.ty1 = R.sx1, R.sy1
   R.tx2, R.ty2 = R.sx2, R.sy2
@@ -2256,6 +2397,8 @@ gui.debugf("BOTH SAME HEIGHT\n")
 
 gui.debugf("LAYOUT %s >>>>\n", R:tostr())
 
+  Layout_compute_wall_dists(R)
+
   local focus_C = R.entry_conn
   if not focus_C then
     focus_C = assert(R.conns[1])
@@ -2286,7 +2429,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   end
 
   if R.kind == "hallway" then
-    Layout_do_hallway(R, focus_C.conn_h)
+    Layout_hallway(R, focus_C.conn_h)
     if R.teleport_conn then add_teleporter() end
     each name in R.weapons do add_weapon(name) end
     each name in R.items   do add_item(name) end
@@ -2327,6 +2470,12 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 --???????    assert(C.conn_h)
   end
 
+
+  --- place importants ---
+
+  if R.kind == "cave" or rand.odds(15) then
+    R.cave_placement = true
+  end
 
   if R.purpose then add_purpose() end
 

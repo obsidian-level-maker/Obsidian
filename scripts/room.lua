@@ -111,6 +111,7 @@ function ROOM_CLASS.new()
     goal_spots = {}
     cage_spots = {}
 
+    goals   = {}
     closets = {}
     prefabs = {}
     decor   = {}
@@ -2446,7 +2447,7 @@ function Room_layout_all()
   end
 
   each R in LEVEL.scenic_rooms do
-    Layout_do_scenic(R)
+    Layout_scenic(R)
   end
 end
 
