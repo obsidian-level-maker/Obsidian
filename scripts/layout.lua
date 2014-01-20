@@ -372,31 +372,7 @@ end
 
 
 function Layout_spot_for_wotsit(R, kind, none_OK)
-  local spots = {}
-
-  local function cave_spot_OK(x, y)
-    if not R.cave then return true end
-
-    local flood = R.flood
-
-    local mx = (x - R.sx1) * 3 + 2
-    local my = (y - R.sy1) * 3 + 2
-
-    if flood[mx][my] == flood.largest_empty.id then
-      return true
-    end
-
-    for side = 2,8,2 do
-      local nx, ny = geom.nudge(mx, my, side)
-
-      if flood[nx][ny] == flood.largest_empty.id then
-        return true
-      end
-    end
-
-    return false
-  end
-
+  local bonus_x, bonus_y
 
   local function nearest_wall(T)
     -- get the wall_dist from seed containing the spot
@@ -433,9 +409,11 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
   local function nearest_goal(T)
     local dist
 
-    each G in R.goals do
+    each goal in R.goals do
+      local S = assert(goal.S)
+
       local d = geom.box_dist(T.x1, T.y1, T.x2, T.y2,
-                              G.x1, G.y1, G.x2, G.y2)
+                              S.x1, S.y1, S.x2, S.y2)
       d = d / SEED_SIZE
       if not dist or d < dist then
         dist = d
@@ -446,7 +424,7 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
   end
 
 
-  local function evaluate_spot(spot)
+  local function evaluate_spot(spot, sx, sy)
     -- Factors we take into account:
     --   1. distance from walls
     --   2. distance from entrance / exits
@@ -472,6 +450,17 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
     if spot.rank then
       score = score + (spot.rank - 1) * 5 
     end
+
+    -- want a different height
+    if R.entry_conn and R.entry_conn.conn_h and spot.floor_h then
+      local diff_h = math.abs(R.entry_conn.conn_h - spot.floor_h)
+
+      score = score + diff_h / 10
+    end
+
+    -- for symmetrical rooms, prefer a centred item
+    if sx == bonus_x then score = score + 1.5 end
+    if sy == bonus_y then score = score + 1.5 end
  
     -- tie breaker
     score = score + 2.0 * gui.random() ^ 2
@@ -489,61 +478,46 @@ end
 
   ---| Layout_spot_for_wotsit |---
 
-  -- for symmetrical rooms, prefer a centred item
-  local bonus_x, bonus_y
-
   if R.mirror_x and R.tw >= 3 then bonus_x = int((R.tx1 + R.tx2) / 2) end
   if R.mirror_y and R.th >= 3 then bonus_y = int((R.ty1 + R.ty2) / 2) end
+
+  local best = {}
 
   for x = R.sx1,R.sx2 do
   for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y]
 
-    if S.room == R and S.kind == "walk" and not S.content and cave_spot_OK(x, y) then
-      local P = { x=x, y=y, S=S }
+    if S.room != R then continue end
+    if S.kind != "walk" or S.content then continue end
 
-      P.score = gui.random() + (S.div_lev or 0) * 20
+    local score = evaluate_spot(S, x, y)
 
-      if R.entry_conn and R.entry_conn.kind != "teleporter" then
-        local dx = math.abs(R.entry_conn.S2.sx - x)
-        local dy = math.abs(R.entry_conn.S2.sy - y)
-
-        P.score = P.score + dx + dy
-      end
-
-      if x == bonus_x then P.score = P.score + 15 end
-      if y == bonus_y then P.score = P.score + 15 end
-
-      if not S.conn then P.score = P.score + 40 end
-
-      table.insert(spots, P)
+    if not best.S or score > best.score then
+      best.x = x ; best.y = y
+      best.S = S ; best.score = score
     end
   end -- x, y
   end
 
+  local S = best.S
 
-  -- FIXME: no need to store spots
-  local P = table.pick_best(spots,
-        function(A,B) return A.score > B.score end)
-
-  if not P then
+  if not S then
     if none_OK then return nil end
     error("No usable spots in room!")
   end
 
-  P.S.content = "wotsit"
-  P.S.content_kind = kind
+  S.content = "wotsit"
+  S.content_kind = kind
 
-  table.insert(R.goals, { S=P.S, kind=kind })
+  table.insert(R.goals, { S=S, kind=kind })
 
   -- no monsters near start spot or teleporters
   if kind == "START" or kind == "TELEPORTER" then
-    local S = P.S
     R:add_exclusion("empty",     S.x1, S.y1, S.x2, S.y2, 96)
     R:add_exclusion("nonfacing", S.x1, S.y1, S.x2, S.y2, 384)
   end
 
-  return P.x, P.y, P.S
+  return best.x, best.y, best.S
 end
 
 
@@ -1486,7 +1460,8 @@ function Layout_set_floor_minmax(R)
   local min_h =  9e9
   local max_h = -9e9
 
-  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+  for x = R.sx1, R.sx2 do
+  for y = R.sy1, R.sy2 do
     local S = SEEDS[x][y]
     if S.room == R and S.kind == "walk" then
       assert(S.floor_h)
@@ -1494,7 +1469,8 @@ function Layout_set_floor_minmax(R)
       min_h = math.min(min_h, S.floor_h)
       max_h = math.max(max_h, S.floor_h)
     end
-  end end -- for x, y
+  end -- x, y
+  end
 
   assert(min_h <= max_h)
 
@@ -1504,12 +1480,14 @@ function Layout_set_floor_minmax(R)
   R.fence_h  = R.floor_max_h + 30
   R.liquid_h = R.floor_min_h - 48
 
-  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+  for x = R.sx1, R.sx2 do
+  for y = R.sy1, R.sy2 do
     local S = SEEDS[x][y]
     if S.room == R and S.kind == "liquid" then
       S.floor_h = R.liquid_h
     end
-  end end -- for x, y
+  end -- x, y
+  end
 end
 
 
@@ -1539,10 +1517,11 @@ function Layout_scenic(R)
 
     R.liquid_h = min_floor - (h1 + h2) * 16
   else
-    R.liquid_h = -24
+    R.liquid_h = 0
   end
 
   R.floor_max_h = R.liquid_h
+  R.floor_h     = R.liquid_h
 
   for x = R.sx1,R.sx2 do
   for y = R.sy1,R.sy2 do
@@ -1680,7 +1659,8 @@ function Layout_hallway(R)
     R.hall_sky = true
   end
 
-  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+  for x = R.sx1, R.sx2 do
+  for y = R.sy1, R.sy2 do
     local S = SEEDS[x][y]
     assert(S.room == R)
     if S.kind == "walk" then
@@ -1694,9 +1674,12 @@ function Layout_hallway(R)
         S.is_sky = true
       end
     end
-  end end -- for x, y
+  end -- x, y
+  end
 
   Layout_set_floor_minmax(R)
+
+  R.ceil_h = R.floor_max_h + height
 
   each C in R.conns do
     C.conn_h = h

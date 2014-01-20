@@ -2465,11 +2465,11 @@ function Room_plaster_ceilings()
   -- get the final 'ceil_h' value for each room
 
   each R in LEVEL.rooms do
-    if R.sky_group then R.ceil_h = R.sky_group.h end
+    if R.is_outdoor then R.ceil_h = R.sky_group.h end
   end
 
   each R in LEVEL.scenic_rooms do
-    if R.sky_group then R.ceil_h = R.sky_group.h end
+    if R.is_outdoor then R.ceil_h = R.sky_group.h end
   end
 end
 
@@ -3253,7 +3253,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     vis_seed(S)
 
     local z1 = S.floor_h or R.floor_h or (S.conn and S.conn.conn_h) or 0
-    local z2 = S.ceil_h  or R.ceil_h
+    local z2 = S.ceil_h  or R.ceil_h  or (z1 + 256)
 
     assert(z1 and z2)
 
