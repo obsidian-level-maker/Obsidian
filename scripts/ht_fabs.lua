@@ -1227,7 +1227,7 @@ HEIGHT_LIQ_I3 =
 HEIGHT_LIQ_O1 =
 {
   kind = "liquid"
-  prob = 1000
+  prob = 500
 
   structure =
   {
@@ -1252,7 +1252,7 @@ HEIGHT_LIQ_O1 =
 HEIGHT_LIQ_O2 =
 {
   kind = "liquid"
-  prob = 1000
+  prob = 500
 
   structure =
   {
@@ -1279,7 +1279,7 @@ HEIGHT_LIQ_O2 =
 HEIGHT_LIQ_U2 =
 {
   kind = "liquid"
-  prob = 4000
+  prob = 3000
 
   structure =
   {
@@ -1305,7 +1305,7 @@ HEIGHT_LIQ_U2 =
 HEIGHT_SOLID_I2 =
 {
   environment = "indoor"
-  prob = 10000
+  prob = 6000
 
   structure =
   {
@@ -1376,7 +1376,7 @@ HEIGHT_SOLID_I5 =
 
 HEIGHT_C5 =
 {
-  prob = 7000
+  prob = 4000
 
   structure =
   {
@@ -1400,7 +1400,7 @@ HEIGHT_C5 =
 
 HEIGHT_C6 =
 {
-  prob = 10000
+  prob = 8000
 
   structure =
   {
@@ -1488,7 +1488,7 @@ HEIGHT_CURV_2 =
   kind = "solid"
   shape = "O"
   level = "top"
-  prob = 3000,  -- very rarely occurs
+  prob = 5000   -- very rarely occurs
 
   structure =
   {
