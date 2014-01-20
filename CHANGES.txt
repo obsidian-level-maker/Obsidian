@@ -34,8 +34,8 @@ Contributions
 Other Changes
 -------------
 
-- replaced 'Secrets' button with 'Caves' in the GUI
-- support 'Always' setting for Outdoors and Caves
+- in the GUI replaced 'Secrets' button with 'Caves'
+- support an "Always" setting for Outdoors and Caves
 - the occasional dark outdoor level
 - better quests, often need to _find_ weapons and armor
 - Co-op: sometimes players start in different rooms
