@@ -3833,6 +3833,7 @@ function Room_find_monster_spots(R)
     SEEDS[S.sx][S.sy].no_monster = true
   end
 
+
   local function add_large_mon_spot(S, h_diff)
     -- FIXME: take walls (etc) into consideration
 
@@ -3852,6 +3853,7 @@ function Room_find_monster_spots(R)
     SEEDS[S.sx  ][S.sy+1].no_monster = true
     SEEDS[S.sx+1][S.sy+1].no_monster = true
   end
+
 
   local function can_accommodate_small(S)
     if S.content or S.no_monster or not S.floor_h then
@@ -3879,13 +3881,11 @@ function Room_find_monster_spots(R)
       return false
     end
 
-    if S.solid_corner then return false end
-
     local low_ceil = S.ceil_h or R.ceil_h
     local hi_floor = S.floor_h or 0
 
-    for dx = 0,1 do for dy = 0,1 do
-      if dx > 0 or dy > 0 then
+    for dx = 0,1 do
+    for dy = 0,1 do
         local S2 = SEEDS[sx+dx][sy+dy]
 
         if S2.room != S.room then return false end
@@ -3902,17 +3902,11 @@ function Room_find_monster_spots(R)
         local diff = math.abs((S.floor_h or 0) - (S2.floor_h or 0))
 
         if diff > 1 then return false end
-      end
-    end end -- for dx, dy
 
-    -- NOTE: arachnotrons can fit in lower rooms, but we have to allow for
-    --       the tallest of the large monsters (Hexen bosses).
+    end -- dx, dy
+    end
+
     local h_diff = (low_ceil - hi_floor)
-
----???   if h_diff < 128 then return false end
-
-    -- FIXME: ugh -- hack to allow more monsters in the room
-    if rand.odds(50) then return false end
 
     return true, h_diff
   end
@@ -3928,8 +3922,8 @@ function Room_find_monster_spots(R)
   -- find large 2x2 spots in first pass, small 1x1 spots in second
 
   for pass = 1,2 do
-    for x = R.sx1,R.sx2 do
-    for y = R.sy1,R.sy2 do
+    for x = R.sx1, R.sx2 do
+    for y = R.sy1, R.sy2 do
       local S = SEEDS[x][y]
     
       if S.room != R then continue end
