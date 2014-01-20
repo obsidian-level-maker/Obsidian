@@ -1279,7 +1279,7 @@ HEIGHT_LIQ_O2 =
 HEIGHT_LIQ_U2 =
 {
   kind = "liquid"
-  prob = 3000
+  prob = 2000
 
   structure =
   {
@@ -1305,7 +1305,7 @@ HEIGHT_LIQ_U2 =
 HEIGHT_SOLID_I2 =
 {
   environment = "indoor"
-  prob = 6000
+  prob = 4000
 
   structure =
   {
@@ -1376,7 +1376,7 @@ HEIGHT_SOLID_I5 =
 
 HEIGHT_C5 =
 {
-  prob = 4000
+  prob = 3000
 
   structure =
   {
