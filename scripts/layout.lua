@@ -578,7 +578,9 @@ function Layout_place_importants(R)
 
   Layout_compute_wall_dists(R)
 
-  if R.kind == "cave" or rand.odds(15) then
+  if R.kind == "cave" or
+     (rand.odds(15) and R.sw >= 3 and R.sh >= 3)
+  then
     R.cave_placement = true
   end
 
