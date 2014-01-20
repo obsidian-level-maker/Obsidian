@@ -7,27 +7,22 @@ WORK IN PROGRESS
 
 +  wall pictures
 
-+  better spot_for_wotsit  (see V5 code)
-
-+  higher fences near a key / item / switch
+DONE:  better spot_for_wotsit  (see V5 code)
+DONE:  higher fences near a key / item / switch
+DONE:  item placement too close to wall
+DONE:  Changelog
 
 
 +  rare stuck monsters (e.g. Mastermind on an exit switch)
-
-+  item placement too close to wall
 
 -  misaligned uppers (due to lighting and/or crates)
 
 -  fix texturing on some stairs and diagonals
 
--  ability to centre doors (on two seeds)
-
 
 +  Unix makefile / installation
 
 -  Debian package
-
--  Changelog
 
 -  rework History page for website
 
@@ -40,6 +35,11 @@ Later
 +  closets (as in V4 / V5)
 
 +  sky-halls
+
++  get stairwells working again, have outdoor version
+
+
+-  ability to centre doors (on two seeds)
 
 -  in 2x2 rooms, place key/switch in middle of room
    [ monster/item spots are the hard part ]
