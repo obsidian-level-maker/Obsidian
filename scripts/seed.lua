@@ -102,6 +102,17 @@ function Seed_init(map_W, map_H, free_W, free_H)
 
   SEEDS = table.array_2D(W, H)
 
+  BASE_X = 0
+  BASE_Y = 0
+
+  -- Centre the map : needed for Quake, Hexen2 (etc).
+  -- This formula ensures that 'coord 0' is still a seed boundary,
+  -- which is VITAL for the Quake visibility code.
+  if PARAM.centre_map then
+    BASE_X = 0 - int(SEED_W / 2) * SEED_SIZE
+    BASE_Y = 0 - int(SEED_H / 2) * SEED_SIZE
+  end
+
   for x = 1, SEED_W do
   for y = 1, SEED_H do
 
@@ -117,10 +128,10 @@ function Seed_init(map_W, map_H, free_W, free_H)
       border = {}
     }
 
-    -- centre the map : needed for Quake, OK for other games
-    -- (this formula ensures that 'coord 0' is still a seed boundary)
-    S.x1 = S.x1 - int(SEED_W / 2) * SEED_SIZE
-    S.y1 = S.y1 - int(SEED_H / 2) * SEED_SIZE
+    SEEDS[x][y] = S
+
+    S.x1 = BASE_X + (x-1) * SEED_SIZE
+    S.y1 = BASE_Y + (y-1) * SEED_SIZE
 
     S.x2 = S.x1 + SEED_SIZE
     S.y2 = S.y1 + SEED_SIZE
@@ -137,8 +148,6 @@ function Seed_init(map_W, map_H, free_W, free_H)
     elseif x == 1 or x == map_W or y == 1 or y == map_H then
       S.edge_of_map = true
     end
-
-    SEEDS[x][y] = S
 
   end -- x,y
   end
@@ -197,6 +206,18 @@ function Seed_block_valid_and_free(x1,y1, x2,y2)
   end
 
   return true
+end
+
+
+function Seed_from_coord(x, y)
+  local sx = 1 + math.floor((x - BASE_X) / SEED_SIZE)
+  local sy = 1 + math.floor((y - BASE_Y) / SEED_SIZE)
+
+  -- clamp to usable range, mainly to handle edge cases
+  sx = math.clamp(1, sx, SEED_W)
+  sy = math.clamp(1, sy, SEED_H)
+
+  return SEEDS[sx][sy]
 end
 
 
