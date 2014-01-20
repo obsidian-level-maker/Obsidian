@@ -548,6 +548,85 @@ end
 
 
 
+function Layout_place_importants(R)
+
+  local function add_purpose()
+    local sx, sy, S = Layout_spot_for_wotsit(R, R.purpose)
+
+    R.guard_spot = S
+  end
+
+
+  local function add_teleporter()
+    local sx, sy, S = Layout_spot_for_wotsit(R, "TELEPORTER")
+
+    -- sometimes guard it, but only for out-going teleporters
+    if not R.guard_spot and (R.teleport_conn.R1 == R) and
+       rand.odds(60)
+    then
+      R.guard_spot = S
+    end
+
+    -- FIXME !!!!  exclusion zone for teleporter
+  end
+
+
+  local function add_weapon(weapon)
+    local sx, sy, S = Layout_spot_for_wotsit(R, "WEAPON", "none_OK")
+
+    if not S then
+      gui.printf("WARNING: no space for %s!\n", weapon)
+      return
+    end
+
+    S.content_item = weapon
+
+    if not R.guard_spot then
+      R.guard_spot = S
+    end
+  end
+
+
+  local function add_item(item)
+    local sx, sy, S = Layout_spot_for_wotsit(R, "ITEM", "none_OK")
+
+    if not S then return end
+
+    S.content_item = item
+
+    if not R.guard_spot then
+      R.guard_spot = S
+    end
+  end
+
+
+  ---| Layout_place_importants |---
+
+  Layout_compute_wall_dists(R)
+
+  if R.kind == "cave" or rand.odds(15) then
+    R.cave_placement = true
+  end
+
+  if R.purpose then
+    add_purpose()
+  end
+
+  if R.teleport_conn then
+    add_teleporter()
+  end
+
+  each name in R.weapons do
+    add_weapon(name)
+  end
+
+  each name in R.items do
+    add_item(name)
+  end
+end
+
+
+
 function Layout_try_pattern(R, is_top, div_lev, req_sym, area, heights, f_texs)
   -- find a usable pattern in the ROOM_PATTERNS table and
   -- apply it to the room.
@@ -1787,56 +1866,6 @@ function Layout_room(R)
   end
 
 
-  local function add_purpose()
-    local sx, sy, S = Layout_spot_for_wotsit(R, R.purpose)
-
-    R.guard_spot = S
-  end
-
-
-  local function add_teleporter()
-    local sx, sy, S = Layout_spot_for_wotsit(R, "TELEPORTER")
-
-    -- sometimes guard it, but only for out-going teleporters
-    if not R.guard_spot and (R.teleport_conn.R1 == R) and
-       rand.odds(60)
-    then
-      R.guard_spot = S
-    end
-
-    -- FIXME !!!!  exclusion zone for teleporter
-  end
-
-
-  local function add_weapon(weapon)
-    local sx, sy, S = Layout_spot_for_wotsit(R, "WEAPON", "none_OK")
-
-    if not S then
-      gui.printf("WARNING: no space for %s!\n", weapon)
-      return
-    end
-
-    S.content_item = weapon
-
-    if not R.guard_spot then
-      R.guard_spot = S
-    end
-  end
-
-
-  local function add_item(item)
-    local sx, sy, S = Layout_spot_for_wotsit(R, "ITEM", "none_OK")
-
-    if not S then return end
-
-    S.content_item = item
-
-    if not R.guard_spot then
-      R.guard_spot = S
-    end
-  end
-
-
   local function stairwell_height_diff(focus_C)
     local other_C = R.conns[2]
     if other_C == focus_C then other_C = R.conns[1] end
@@ -2397,8 +2426,6 @@ gui.debugf("BOTH SAME HEIGHT\n")
 
 gui.debugf("LAYOUT %s >>>>\n", R:tostr())
 
-  Layout_compute_wall_dists(R)
-
   local focus_C = R.entry_conn
   if not focus_C then
     focus_C = assert(R.conns[1])
@@ -2430,9 +2457,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   if R.kind == "hallway" then
     Layout_hallway(R, focus_C.conn_h)
-    if R.teleport_conn then add_teleporter() end
-    each name in R.weapons do add_weapon(name) end
-    each name in R.items   do add_item(name) end
+    Layout_place_importants(R)
     return
   end
 
@@ -2466,28 +2491,10 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   post_processing()
 
-  each C in R.conns do
---???????    assert(C.conn_h)
-  end
-
 
   --- place importants ---
 
-  if R.kind == "cave" or rand.odds(15) then
-    R.cave_placement = true
-  end
-
-  if R.purpose then add_purpose() end
-
-  if R.teleport_conn then add_teleporter() end
-
-  each name in R.weapons do
-    add_weapon(name)
-  end
-
-  each name in R.items do
-    add_item(name)
-  end
+  Layout_place_importants(R)
 
   if R.kind == "cave" then
     ---?????????  Layout_cave_monster_spots(R)
