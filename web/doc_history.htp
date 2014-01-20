@@ -26,55 +26,69 @@ It was written in pure C++ and had a very limited architecture
 No monsters or items were added.
 A notable feature was a GUI window which
 showed you the shape of each generated area.
-The V1 codebase was never released, but rumor has it
-the code lurks somewhere deep in the SVN repository.
 
 <p>
 <b>Oblige V2</b> started development in June 2006, using Lua scripts
 for the level creation logic and C++ for the GUI front-end
-and WAD output code.  This evolved with many features and
-support for several games to become the first public release:
-OBLIGE 0.81 in January 2007.
-The last release of the V2 codebase was version 0.97 in May 2008.
+and WAD output code, and evolved with many features and
+support for several games, leading to the first public release
+early in 2007.
 
 <p>
-<b>Oblige V3</b> is the current incarnation.
-Severe limitations in the previous code prompted a huge rewrite,
-a process which continued for quite a while as
-many earlier features had not been re-implemented yet.
-The first public release of the V3 codebase
-occurred in April 2009 (at version 3.39)
-and the last release was version 3.57 in April 2010.
+<b>Oblige V3</b> was a huge rethink and rewrite, prompted by
+severe limitations in the previous design.
+The V3 codebase introduced the concept of constructing maps
+from brushes (similar to how Quake mapping works), and planned
+the levels using a grid of 192x192 unit squares called "seeds".
 
 <p>
-<b>Oblige V4</b> began as an experiment into a completely new way
-to layout rooms using prefabs for everything (including floors and ceilings).
-However this system proved to be unsatisfactory, so I scrapped it
-and went back to the drawing board.  Since then large portions of the
-Lua code were reworked or rewritten, and work continues to bring it
-up to the standards of previous releases (and beyond!).
+<b>Oblige V4 / V5</b> were both experimental designs,
+sharing a goal of building rooms with very large prefabs
+(a whole room could be a single prefab).
+However it proved to be unsatisfactory, so I scrapped it
+and went back to the previous layouting logic.
+The V5 codebase introduced an ability to create prefabs
+using normal WAD files, a very useful feature which
+(among other improvements made during V4 and V5 development)
+has been kept.
+
+<p>
+<b>Oblige V6</b> is the latest version, which aims to
+meld together the best features of the previous releases.
+My focus is a bit different too, concentrating less on the
+aesthetics of the levels and more on the fun factor.
+There is still so much to do, so I'd better stop yakking and
+resume hacking.... :-)
 
 
 <h3>RELEASE DATES</h3>
 
-<b>Version 4.28</b> : 2012-09-28  (first release of V4)<br>
+<b>Version 6.04</b> : 2014-??-??
+
+<p>
+<b>Version 5.10</b> : 2013-08-14 &nbsp; (unofficial "work in progress" package)<br>
+
+<p>
+<b>Version 4.28</b> : 2012-09-28<br>
 
 <p>
 <b>Version 3.57</b> : 2010-04-07<br>
 <b>Version 3.51</b> : 2010-02-24<br>
-
-<p>
 <b>Version 3.47</b> : 2009-09-22<br>
 <b>Version 3.43</b> : 2009-08-11<br>
-<b>Version 3.39</b> : 2009-04-12  (first release of V3)<br>
+<b>Version 3.39</b> : 2009-04-12<br>
 
 <p>
 <b>Version 0.97</b> : 2008-05-30<br>
-
-<p>
 <b>Version 0.94</b> : 2007-07-05<br>
 <b>Version 0.85</b> : 2007-02-19<br>
-<b>Version 0.81</b> : 2007-01-21  (first public release)<br>
+<b>Version 0.81</b> : 2007-01-21 &nbsp; (very first public release)<br>
+
+
+<h3 id="changes604">CHANGES IN 6.04</h3>
+<PRE>
+Pending.....
+</pre>
 
 
 <h3 id="changes428">CHANGES IN 4.28</h3>
