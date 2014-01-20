@@ -3650,7 +3650,7 @@ function Room_find_pickup_spots(R)
   end
 
   local function add_small_spots(R, S, side, count, score)
-    local dist = 40
+    local dist = 38
 
     for i = 1,count do  -- out from wall
     for k = 1,5     do  -- along wall
