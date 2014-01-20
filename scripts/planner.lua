@@ -757,7 +757,7 @@ function Plan_add_caves()
   ---| Plan_add_caves |---
 
   -- compute the quota
-  local perc = style_sel("caves", 0, 15, 35, 65, 100)
+  local perc = style_sel("caves", 0, 15, 35, 65, 130)
 
   if perc == 0 or not THEME.caves or true then  --!!!! FIXME
     gui.printf("Caves: NONE\n")
@@ -769,7 +769,9 @@ function Plan_add_caves()
 
   local quota = num_free * perc / 100
 
-  gui.printf("Cave Quota: %d sections\n", quota)
+  quota = quota * rand.range(0.8, 1.2)
+
+  gui.printf("Cave Quota: %1.1 sections\n", quota)
 
 
   handle_surrounder()
@@ -1304,7 +1306,11 @@ function Plan_decide_outdoors()
   local room_list = {}
   local total_seeds = 0
 
-  each R in LEVEL.rooms do
+  local all_rooms = {}
+  table.append(all_rooms, LEVEL.rooms)
+  table.append(all_rooms, LEVEL.reserved_rooms)
+
+  each R in all_rooms do
     R.outdoor_score = score_room(R)
 
     if R.outdoor_score > 0 then
@@ -1313,16 +1319,20 @@ function Plan_decide_outdoors()
     end
   end
 
-  if table.empty(room_list) or not THEME.outdoors then
+  if table.empty(room_list) or not THEME.outdoors or
+     STYLE.outdoors == "none"
+  then
     gui.printf("Outdoor Quota: NONE\n")
     return
   end
 
 
   -- compute the quota
-  local perc = style_sel("outdoors", 0, 15, 40, 72, 100)
+  local perc = style_sel("outdoors", 0, 15, 40, 72, 130)
 
   local quota = total_seeds * perc / 100
+
+  quota = quota * rand.range(0.8, 1.2)
 
   gui.printf("Outdoor Quota: %d%% (%d seeds)\n", perc, quota)
 
@@ -1343,6 +1353,7 @@ function Plan_decide_outdoors()
     quota = quota - R.svolume
   end
 end
+
 
 
 function Plan_create_rooms()
@@ -1393,8 +1404,5 @@ function Plan_create_rooms()
   each R in LEVEL.rooms do
     gui.printf("Final %s   size: %dx%d\n", R:tostr(), R.sw,R.sh)
   end
-
-  LEVEL.skyfence_h = rand.sel(50, 192, rand.sel(50, 64, 320))
-
 end
 

@@ -1522,12 +1522,10 @@ function Connect_reserved_rooms()
 
 
   local function change_room_kind(R, kill_it)
-    R.kind = "building"
-
-    -- make it outdoors sometimes
-    if rand.odds(style_sel("outdoors", 0, 10, 30, 50, 100)) then
+    if R.is_outdoor then
       R.kind = "outdoor"
-      R.is_outdoor = true
+    else
+      R.kind = "building"
     end
 
     R.num_branch = 1
