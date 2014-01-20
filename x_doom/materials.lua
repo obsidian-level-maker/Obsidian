@@ -390,7 +390,8 @@ DOOM.MATERIALS =
   O_RELIEF = { t="CEMENT3",  f="O_RELIEF", sane=1 }
   O_CARVE  = { t="CEMENT4",  f="O_CARVE",  sane=1 }
   O_NEON   = { t="CEMENT6",  f="CEIL5_1",  sane=1 }
-  O_MISC   = { t="CEMENT5",  f="CEIL5_1",  sane=1 }
+
+  O_BLACK  = { t="CEMENT5",  f="O_BLACK",  sane=1 }
 
 
   -- Missing stuff:
