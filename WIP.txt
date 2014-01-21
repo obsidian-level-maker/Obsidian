@@ -11,7 +11,60 @@ DONE:  better spot_for_wotsit  (see V5 code)
 DONE:  higher fences near a key / item / switch
 DONE:  item placement too close to wall
 DONE:  rare stuck monsters
+
 DONE:  Changelog
+DONE:  rework History page for website
+DONE:  move most stuff in misc/ --> attic/
+
+
+Theme system:
+
++  have "texture groups" like this:
+
+   DOOM.TEXTURE_GROUPS
+   {
+     STARTAN_group =
+     {
+       STARTAN3 = 50
+       STARG1   = 30
+       STARBR2  = 10
+     }
+
+     WOOD_flats =
+     {
+       FLAT5_4 = 20
+       FLAT5_2 = 30
+     }
+   }
+
+   then in a theme definition:
+
+   walls =
+   {
+     STARTAN_group = 50
+     METAL = 40
+   }
+
+   if a group is used in a room, then the chosen texture is randomly
+   chosen from the group -- otherwise it is the single texture.
+
+   as before, a selection of texture/groups are chosen for the walls,
+   floors and ceilings of a zone.  but now, we know that they are
+   actually distinct.
+
+   Q/ keep 'R.theme' field?
+
+
+   rename ROOM_THEMES --> ROOM_TYPES, and allow room types to supply
+   their own walls, floors, etc... (overriding theme)
+
+   call the field 'R.room_type'
+
+
+
+Q/ should LEVEL themes become ZONE themes ?
+   e.g. use both 'hell1' and 'hell2' in a single map?
+   --> NO
 
 
 -  misaligned uppers (due to lighting and/or crates)
@@ -23,7 +76,7 @@ DONE:  Changelog
 
 -  Debian package
 
--  rework History page for website
+
 
 
 Later
