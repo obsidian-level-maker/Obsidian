@@ -7,14 +7,12 @@ WORK IN PROGRESS
 
 +  wall pictures
 
-DONE:  better spot_for_wotsit  (see V5 code)
-DONE:  higher fences near a key / item / switch
-DONE:  item placement too close to wall
-DONE:  rare stuck monsters
+-  misaligned uppers (due to lighting and/or crates)
 
-DONE:  Changelog
-DONE:  rework History page for website
-DONE:  move most stuff in misc/ --> attic/
+-  fix texturing on some stairs and diagonals
+
+-  improve INSTALL.txt  (see Eureka's)
+
 
 
 Theme system:
@@ -65,17 +63,6 @@ Theme system:
 Q/ should LEVEL themes become ZONE themes ?
    e.g. use both 'hell1' and 'hell2' in a single map?
    --> NO
-
-
--  misaligned uppers (due to lighting and/or crates)
-
--  fix texturing on some stairs and diagonals
-
-
-+  Unix makefile / installation
-
--  Debian package
-
 
 
 
