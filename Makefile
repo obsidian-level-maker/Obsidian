@@ -208,10 +208,16 @@ install: stripped
 	svn export x_doom $(SCRIPT_DIR)/x_doom
 	chown -R root $(SCRIPT_DIR)/x_doom
 	chmod -R g-s  $(SCRIPT_DIR)/x_doom
+	#
+	xdg-desktop-menu  install --novendor misc/oblige.desktop
+	xdg-icon-resource install --novendor --size 32 misc/oblige.xpm
 
 uninstall:
 	rm -v $(PREFIX)/bin/oblige
 	rm -Rv $(SCRIPT_DIR) 
+	#
+	xdg-desktop-menu  uninstall --novendor misc/oblige.desktop
+	xdg-icon-resource uninstall --novendor --size 32 oblige
 
 .PHONY: all clean stripped install uninstall
 
