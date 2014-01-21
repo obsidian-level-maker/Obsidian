@@ -37,7 +37,7 @@ FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
 
 CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Iglbsp_src -Iajpoly_src $(FLTK_FLAGS)
 LDFLAGS=-L/usr/X11R6/lib
-LIBS=-lm -lz $(FLTK_LIBS) $(GLBSP_LIBS)
+LIBS=-lm -lz $(FLTK_LIBS)
 
 
 #----- OBLIGE Objects ----------------------------------------------
