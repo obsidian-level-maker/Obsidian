@@ -34,10 +34,10 @@ debbuild: debclean
 	install -o root -m 644 misc/oblige.desktop $(DEB_PREFIX)/share/applications/
 	install -o root -m 644 misc/oblige.xpm $(DEB_PREFIX)/share/pixmaps/
 	#
-	install -o root -m 755 scripts/*.lua $(DEB_DIR)/scripts
-	install -o root -m 755 data/*.*      $(DEB_DIR)/data
-	install -o root -m 755 engines/*.lua $(DEB_DIR)/engines
-	install -o root -m 755 modules/*.lua $(DEB_DIR)/modules
+	install -o root -m 644 scripts/*.lua $(DEB_DIR)/scripts
+	install -o root -m 644 data/*.*      $(DEB_DIR)/data
+	install -o root -m 644 engines/*.lua $(DEB_DIR)/engines
+	install -o root -m 644 modules/*.lua $(DEB_DIR)/modules
 	#
 	rm -Rf $(DEB_DIR)/x_doom
 	svn export x_doom $(DEB_DIR)/x_doom

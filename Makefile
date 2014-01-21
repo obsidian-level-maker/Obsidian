@@ -201,10 +201,10 @@ install: stripped
 	install -d $(SCRIPT_DIR)/engines
 	install -d $(SCRIPT_DIR)/modules
 	#
-	install -o root -m 755 scripts/*.lua $(SCRIPT_DIR)/scripts
-	install -o root -m 755 data/*.*      $(SCRIPT_DIR)/data
-	install -o root -m 755 engines/*.lua $(SCRIPT_DIR)/engines
-	install -o root -m 755 modules/*.lua $(SCRIPT_DIR)/modules
+	install -o root -m 644 scripts/*.lua $(SCRIPT_DIR)/scripts
+	install -o root -m 644 data/*.*      $(SCRIPT_DIR)/data
+	install -o root -m 644 engines/*.lua $(SCRIPT_DIR)/engines
+	install -o root -m 644 modules/*.lua $(SCRIPT_DIR)/modules
 	#
 	rm -Rf $(SCRIPT_DIR)/x_doom
 	svn export x_doom $(SCRIPT_DIR)/x_doom
