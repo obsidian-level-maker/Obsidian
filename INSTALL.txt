@@ -6,9 +6,8 @@ The gui/ directory contains the C++ code.
 
 OBLIGE uses makefiles for building:
 
--  Makefile.local for the Linux binary (local files)
--  Makefile.xming for the Win32 EXE
--  Makefile.unixy for a system-wide Linux install
+-  Makefile       : for a system-wide Linux install
+-  Makefile.xming : for the Win32 EXE
 
 These makefiles require GNU Make.
 
@@ -21,10 +20,9 @@ always seems to be a major pain in the arse.
 Sorry, but if you want to compile the Win32 binary under
 Windows then you are on your own.
 
-For a system-wide installation (with Makefile.unixy) you need
-to run "make install" as the superuser after building.  Users
-can override script and data files by placing a file with the
-same name (e.g. "games/doom.lua") in their $HOME/.oblige/ dir.
+For a system-wide Linux installation you should run "make install"
+as root (the superuser) after building, which installs all the
+script and data files.
 
 
 REQUIRED LIBRARIES
@@ -44,10 +42,7 @@ FLTK may require: libpng, jpeglib, zlib
 FLTK BUILDING HINTS
 ===================
 
-(1) Linux: ./configure --quiet --disable-shared --disable-gl \
-           --disable-localjpeg --disable-localzlib --disable-localpng
-
-(2) Win32 cross-compile:
+WIN32 cross-compile:
     (a) read README.CMake.txt and copy the cross-compiling snippet
         in there to a file: Toolchain-mingw32.cmake
 
