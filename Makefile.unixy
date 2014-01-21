@@ -6,8 +6,6 @@
 #
 # Using this makefile (make, make install) will place the
 # executable, script and data files in standard Unixy places.
-# The script and data files can be overridden by files in the
-# $HOME/.oblige directory.
 #
 # NOTE: a system-wide FLTK library is assumed
 #
@@ -15,13 +13,12 @@
 PROGRAM=oblige
 
 # prefix choices: /usr  /usr/local  /opt
-INSTALL_PREFIX=/usr/local
+PREFIX=/usr/local
 
-SCRIPT_DIR=$(INSTALL_PREFIX)/share/oblige
+SCRIPT_DIR=$(PREFIX)/share/oblige
 
 CXX=g++
 
-LIB_LOC=lib_linux
 OBJ_DIR=obj_linux
 
 OPTIMISE=-O2
@@ -184,20 +181,22 @@ stripped: $(PROGRAM)
 	strip --strip-unneeded $(PROGRAM)
 
 install: stripped
-	install -o root -m 755 $(PROGRAM) $(INSTALL_PREFIX)/bin/
+	install -o root -m 755 $(PROGRAM) $(PREFIX)/bin/
 	install -d $(SCRIPT_DIR)/scripts
 	install -d $(SCRIPT_DIR)/data
 	install -d $(SCRIPT_DIR)/games
 	install -d $(SCRIPT_DIR)/engines
-	install -d $(SCRIPT_DIR)/mods
+	install -d $(SCRIPT_DIR)/modules
 	install -o root -m 755 scripts/*.lua $(SCRIPT_DIR)/scripts
 	install -o root -m 755 data/*.*      $(SCRIPT_DIR)/data
 	install -o root -m 755 games/*.lua   $(SCRIPT_DIR)/games
 	install -o root -m 755 engines/*.lua $(SCRIPT_DIR)/engines
-	install -o root -m 755 mods/*.lua    $(SCRIPT_DIR)/mods
+	install -o root -m 755 modules/*.lua $(SCRIPT_DIR)/modules
+	#
+	intsall -o root -m 755 -v -t x_doom $(SCRIPT_DIR)
 
 uninstall:
-	rm -v $(INSTALL_PREFIX)/bin/$(PROGRAM)
+	rm -v $(PREFIX)/bin/$(PROGRAM)
 	rm -Rv $(SCRIPT_DIR) 
 
 .PHONY: all clean stripped install uninstall
