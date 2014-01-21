@@ -10,7 +10,7 @@ then
     exit
 fi
 
-if [ ! -d x_doom ]; then
+if [ ! -d lua_src ]; then
     echo "Run this script from the top level."
     exit 1
 fi
@@ -46,7 +46,7 @@ cp -av modules/*.* $dest/modules
 #
 #  Game data
 #
-svn export x_doom $dest/x_doom
+svn export games $dest/games
 
 #
 #  Data files

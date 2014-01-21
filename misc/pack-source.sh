@@ -62,7 +62,7 @@ mkdir $dest/obj_win32/ajpoly
 #
 #  Game data
 #
-svn export x_doom $dest/x_doom
+svn export games $dest/games
 
 #
 #  Data files

@@ -206,10 +206,10 @@ install: stripped
 	install -o root -m 644 engines/*.lua $(SCRIPT_DIR)/engines
 	install -o root -m 644 modules/*.lua $(SCRIPT_DIR)/modules
 	#
-	rm -Rf $(SCRIPT_DIR)/x_doom
-	svn export x_doom $(SCRIPT_DIR)/x_doom
-	chown -R root $(SCRIPT_DIR)/x_doom
-	chmod -R g-s  $(SCRIPT_DIR)/x_doom
+	rm -Rf $(SCRIPT_DIR)/games
+	svn export games $(SCRIPT_DIR)/games
+	chown -R root $(SCRIPT_DIR)/games
+	chmod -R g-s  $(SCRIPT_DIR)/games
 	#
 	xdg-desktop-menu  install --novendor misc/oblige.desktop
 	xdg-icon-resource install --novendor --size 32 misc/oblige.xpm
