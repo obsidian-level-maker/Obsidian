@@ -38,8 +38,6 @@ CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Iglbsp_src -Iajpoly_src $(FLTK_FLA
 LDFLAGS=-L/usr/X11R6/lib
 LIBS=-lm -lz $(FLTK_LIBS)
 
-CXXFLAGS += -DFHS_INSTALL
-
 
 #----- OBLIGE Objects ----------------------------------------------
 

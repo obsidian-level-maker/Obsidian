@@ -112,9 +112,8 @@ static void ShowInfo()
 
 void Determine_WorkingPath(const char *argv0)
 {
-	// firstly find the "Working directory", and set it as the
-	// current directory.  That's the place where the CONFIG.txt
-	// and LOGS.txt files are, as well the temp files.
+	// firstly find the "Working directory" : that's the place where
+	// the CONFIG.txt and LOGS.txt files are, as well the temp files.
 
 	int home_arg = ArgvFind(0, "home");
 
@@ -130,8 +129,8 @@ void Determine_WorkingPath(const char *argv0)
 		return;
 	}
 
-#ifndef FHS_INSTALL
-	home_dir = GetExecutablePath(argv0);  // FIXME !!!
+#ifdef WIN32
+	home_dir = GetExecutablePath(argv0);
 
 #else
 	char *path = StringNew(FL_PATH_MAX + 4);
@@ -142,7 +141,8 @@ void Determine_WorkingPath(const char *argv0)
 	home_dir = path;
 
 	// try to create it (doesn't matter if it already exists)
-	FileMakeDir(home_dir);
+	if (home_dir)
+		FileMakeDir(home_dir);
 #endif
 
 	if (! home_dir)
@@ -198,16 +198,18 @@ void Determine_InstallDir(const char *argv0)
 		return;
 	}
 
-#ifndef FHS_INSTALL
+#ifdef WIN32
 	install_dir = StringDup(home_dir);
 
 #else
 	static const char *prefixes[] =
 	{
-		"/usr/local", "/usr", "/opt", NULL
+		"/usr/local", "/usr", "/opt",
+		
+		NULL  // end of list
 	};
 
-	for (int i = 0; prefixes[i]; i++)
+	for (int i = 0 ; prefixes[i] ; i++)
 	{
 		install_dir = StringPrintf("%s/share/oblige", prefixes[i]);
 
