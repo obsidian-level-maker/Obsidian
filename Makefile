@@ -205,6 +205,7 @@ install: stripped
 	install -o root -m 755 engines/*.lua $(SCRIPT_DIR)/engines
 	install -o root -m 755 modules/*.lua $(SCRIPT_DIR)/modules
 	#
+	rm -Rf $(SCRIPT_DIR)/x_doom
 	svn export x_doom $(SCRIPT_DIR)/x_doom
 	chown -R root $(SCRIPT_DIR)/x_doom
 	chmod -R g-s  $(SCRIPT_DIR)/x_doom
