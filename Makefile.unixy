@@ -10,7 +10,7 @@
 # NOTE: a system-wide FLTK library is assumed
 #
 
-PROGRAM=oblige
+PROGRAM=Oblige
 
 # prefix choices: /usr  /usr/local  /opt
 PREFIX=/usr/local
@@ -35,8 +35,8 @@ FLTK_LIBS=-lfltk_images -lfltk \
 	  -lXext -lXft -lfontconfig -lXinerama -lX11 \
 	  -lpng -ljpeg -ldl
 
-CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Iglbsp_src $(FLTK_FLAGS)
-LDFLAGS=-L/usr/X11R6/lib 
+CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Iglbsp_src -Iajpoly_src $(FLTK_FLAGS)
+LDFLAGS=-L/usr/X11R6/lib
 LIBS=-lm -lz $(FLTK_LIBS)
 
 CXXFLAGS += -DFHS_INSTALL
@@ -70,6 +70,7 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/csg_doom.o  \
 	$(OBJ_DIR)/csg_nukem.o \
 	$(OBJ_DIR)/csg_quake.o \
+	$(OBJ_DIR)/csg_shade.o \
 	$(OBJ_DIR)/dm_extra.o  \
 	$(OBJ_DIR)/dm_prefab.o \
 	$(OBJ_DIR)/g_doom.o    \
@@ -165,6 +166,20 @@ $(OBJ_DIR)/glbsp/%.o: glbsp_src/%.cc
 	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $< 
 
 
+#----- AJ-Polygonator Objects --------------------------------------
+
+AJPOLY_OBJS= \
+	$(OBJ_DIR)/ajpoly/pl_map.o   \
+	$(OBJ_DIR)/ajpoly/pl_poly.o  \
+	$(OBJ_DIR)/ajpoly/pl_util.o  \
+	$(OBJ_DIR)/ajpoly/pl_wad.o
+
+AJPOLY_CXXFLAGS=$(OPTIMISE) -Wall
+
+$(OBJ_DIR)/ajpoly/%.o: ajpoly_src/%.cc
+	$(CXX) $(AJPOLY_CXXFLAGS) -o $@ -c $< 
+
+
 #----- Targets ----------------------------------------------------
 
 all: $(PROGRAM)
@@ -173,15 +188,16 @@ clean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
 	rm -f $(OBJ_DIR)/lua/*.o
 	rm -f $(OBJ_DIR)/glbsp/*.o
+	rm -f $(OBJ_DIR)/ajpoly/*.o
 
-$(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS)
-	$(CXX) $^ -o $@ $(LDFLAGS) $(LIBS)
+$(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(AJPOLY_OBJS)
+	$(CXX) -Wl,--warn-common $^ -o $@ $(LDFLAGS) $(LIBS)
 
 stripped: $(PROGRAM)
 	strip --strip-unneeded $(PROGRAM)
 
 install: stripped
-	install -o root -m 755 $(PROGRAM) $(PREFIX)/bin/
+	install -o root -m 755 $(PROGRAM) $(PREFIX)/bin/oblige
 	install -d $(SCRIPT_DIR)/scripts
 	install -d $(SCRIPT_DIR)/data
 	install -d $(SCRIPT_DIR)/games
@@ -196,7 +212,7 @@ install: stripped
 	intsall -o root -m 755 -v -t x_doom $(SCRIPT_DIR)
 
 uninstall:
-	rm -v $(PREFIX)/bin/$(PROGRAM)
+	rm -v $(PREFIX)/bin/oblige
 	rm -Rv $(SCRIPT_DIR) 
 
 .PHONY: all clean stripped install uninstall
