@@ -697,7 +697,7 @@ static void Script_SetDataPath(void)
 {
 	data_path = StringPrintf("%s/modules/data;%s/data", install_dir, install_dir);
 
-	LogPrintf("data_path:   [%s]\n\n", data_path);
+	LogPrintf("data_path: [%s]\n\n", data_path);
 }
 
 
@@ -922,7 +922,7 @@ void Script_Open(const char *game_name)
 	game_dir = StringPrintf("%s/games/%s", install_dir, game_name);
 
 	LogPrintf("\n--- OPENING LUA VM ---\n\n");
-	LogPrintf("game_dir: %s\n", game_dir);
+	LogPrintf("game_dir: %s\n\n", game_dir);
 
 
 	// create Lua state
