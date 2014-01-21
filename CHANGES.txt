@@ -34,9 +34,11 @@ Contributions
 Other Changes
 -------------
 
+- proper installation for Linux / Unix
 - in the GUI replaced 'Secrets' button with 'Caves'
 - support an "Always" setting for Outdoors and Caves
 - the occasional dark outdoor level
+
 - better quests, often need to _find_ weapons and armor
 - Co-op: sometimes players start in different rooms
 - improved Sky generator module
