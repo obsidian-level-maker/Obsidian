@@ -30,10 +30,9 @@ OS=UNIX
 #--- Internal stuff from here -----------------------------------
 
 # assumes system-wide FLTK installation
-FLTK_FLAGS=
-FLTK_LIBS=-lfltk_images -lfltk \
-	  -lXext -lXft -lfontconfig -lXinerama -lX11 \
-	  -lpng -ljpeg -ldl
+FLTK_CONFIG=fltk-config
+FLTK_FLAGS=$(shell $(FLTK_CONFIG) --cflags)
+FLTK_LIBS=$(shell $(FLTK_CONFIG) --use-images --ldflags)
 
 CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Iglbsp_src -Iajpoly_src $(FLTK_FLAGS)
 LDFLAGS=-L/usr/X11R6/lib
