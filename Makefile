@@ -202,11 +202,12 @@ install: stripped
 	install -d $(SCRIPT_DIR)/modules
 	install -o root -m 755 scripts/*.lua $(SCRIPT_DIR)/scripts
 	install -o root -m 755 data/*.*      $(SCRIPT_DIR)/data
-	install -o root -m 755 games/*.lua   $(SCRIPT_DIR)/games
 	install -o root -m 755 engines/*.lua $(SCRIPT_DIR)/engines
 	install -o root -m 755 modules/*.lua $(SCRIPT_DIR)/modules
 	#
-	intsall -o root -m 755 -v -t x_doom $(SCRIPT_DIR)
+	svn export x_doom $(SCRIPT_DIR)/x_doom
+	chown -R root $(SCRIPT_DIR)/x_doom
+	chmod -R g-s  $(SCRIPT_DIR)/x_doom
 
 uninstall:
 	rm -v $(PREFIX)/bin/oblige
