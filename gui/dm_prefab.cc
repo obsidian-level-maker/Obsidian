@@ -121,7 +121,9 @@ int wadfab_load(lua_State *L)
 
 	char filename[PATH_MAX];
 
-	sprintf(filename, "%s/x_doom/%s", install_dir, name);
+	SYS_ASSERT(game_dir);
+
+	sprintf(filename, "%s/%s", game_dir, name);
 
 	if (! FileExists(filename))
 		return luaL_error(L, "wadfab_load: no such file: %s", name);

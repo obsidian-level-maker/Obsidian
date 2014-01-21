@@ -38,8 +38,6 @@
 
 static lua_State *LUA_ST;
 
-static const char *script_path;
-
 const char *data_path;
 
 static bool has_loaded = false;
@@ -678,18 +676,16 @@ static int p_init_lua(lua_State *L)
 }
 
 
-static void Script_SetScriptPath(lua_State *L, const char *subdir)
+static void Script_SetScriptPath(lua_State *L, const char *path)
 {
-	script_path = StringPrintf("%s/%s/?.lua", install_dir, subdir);
-
-	LogPrintf("script_path: [%s]\n", script_path);
+	LogPrintf("script_path: [%s]\n", path);
 
 	lua_getglobal(L, "package");
 
 	if (lua_type(L, -1) == LUA_TNIL)
 		Main_FatalError("Script problem: no 'package' module!");
 
-	lua_pushstring(L, script_path);
+	lua_pushstring(L, path);
 
 	lua_setfield(L, -2, "path");
 
@@ -894,13 +890,11 @@ static void Script_LoadSubDir(const char *subdir)
 }
 
 
-void Script_LoadSkins(const char *game_dir)
+void Script_LoadSkins(void)
 {
-	const char *path = StringPrintf("%s/%s", install_dir, game_dir);
-
 	std::vector<std::string> subdir_list;
 
-	int count = ScanDir_GetSubDirs(path, subdir_list);
+	int count = ScanDir_GetSubDirs(game_dir, subdir_list);
 
 	if (count < 0)
 		Main_FatalError("Failed to scan prefab directory\n(error code %d)\n", count);
@@ -912,19 +906,25 @@ void Script_LoadSkins(const char *game_dir)
 
 	for (unsigned int i = 0 ; i < subdir_list.size() ; i++)
 	{
-		const char *subdir = StringPrintf("%s/%s", path, subdir_list[i].c_str());
+		const char *subdir = StringPrintf("%s/%s", game_dir, subdir_list[i].c_str());
 
 		Script_LoadAllFromDir(subdir, "lua");
 
 		StringFree(subdir);
 	}
-
-	StringFree(path);
 }
 
 
-void Script_Open(const char *game_dir)
+void Script_Open(const char *game_name)
 {
+	// set the 'game_dir' global var
+
+	game_dir = StringPrintf("%s/games/%s", install_dir, game_name);
+
+	LogPrintf("\n--- OPENING LUA VM ---\n\n");
+	LogPrintf("game_dir: %s\n", game_dir);
+
+
 	// create Lua state
 
 	LUA_ST = luaL_newstate();
@@ -942,7 +942,9 @@ void Script_Open(const char *game_dir)
 
 	LogPrintf("Loading main script: oblige.lua\n");
 
-	Script_SetScriptPath(LUA_ST, "scripts");
+	const char *script_path = StringPrintf("%s/scripts/?.lua", install_dir);
+
+	Script_SetScriptPath(LUA_ST, script_path);
 
 	Script_Require("oblige");
 
@@ -954,11 +956,13 @@ void Script_Open(const char *game_dir)
 
 	// load game-specific scripts
 
-	Script_SetScriptPath(LUA_ST, game_dir);
+	const char *game_path = StringPrintf("%s/?.lua", game_dir);
+
+	Script_SetScriptPath(LUA_ST, game_path);
 
 	Script_Require("games");
 
-	Script_LoadSkins(game_dir);
+	Script_LoadSkins();
 
 	has_loaded = true;
 
@@ -975,6 +979,10 @@ void Script_Close()
 		lua_close(LUA_ST);
 
 	LUA_ST = NULL;
+
+	game_dir = NULL;
+
+	LogPrintf("\n--- CLOSED LUA VM ---\n\n");
 }
 
 

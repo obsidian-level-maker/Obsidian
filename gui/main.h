@@ -33,6 +33,7 @@
 
 extern const char *home_dir;
 extern const char *install_dir;
+extern const char *game_dir;
 
 extern const char *data_path;
 

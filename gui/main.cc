@@ -45,6 +45,8 @@
 
 const char *home_dir    = NULL;
 const char *install_dir = NULL;
+const char *game_dir    = NULL;
+
 const char *config_file = NULL;
 
 int screen_w;
@@ -660,7 +662,7 @@ int main(int argc, char **argv)
 
 	if (batch_mode)
 	{
-		Script_Open("x_doom");
+		Script_Open("doom");
 
 		Batch_Defaults();
 
@@ -693,7 +695,7 @@ int main(int argc, char **argv)
 
 	main_win = new UI_MainWin(main_w, main_h, OBLIGE_TITLE " " OBLIGE_VERSION);
 
-	Script_Open("x_doom");
+	Script_Open("doom");
 
 	// FIXME: main_win->Defaults();
 	main_win->game_box ->Defaults();
