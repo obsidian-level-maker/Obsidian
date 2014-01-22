@@ -386,16 +386,27 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
   end
 
 
-  local function nearest_portal(T)
+  local function fuzzy_dist(mx, my, T)
+    local tx, ty = geom.box_mid(T.x1, T.y1, T.x2, T.y2)
+
+    local dx = math.abs(mx - tx)
+    local dy = math.abs(my - ty)
+
+    return dx + dy
+  end
+
+
+  local function nearest_conn(T)
     local dist
 
     each C in R.conns do
       if C.kind == "normal" or C.kind == "closet" then
         local S = C:seed(R)
+        local dir = sel(C.R1 == R, C.dir, 10 - C.dir)
 
-        local d = geom.box_dist(T.x1, T.y1, T.x2, T.y2,
-                                S.x1, S.y1, S.x2, S.y2)
-        d = d / SEED_SIZE
+        local ex, ey = S:edge_coord(dir)
+        local d = fuzzy_dist(ex, ey, T) / SEED_SIZE
+
         if not dist or d < dist then
           dist = d
         end
@@ -411,10 +422,9 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
 
     each goal in R.goals do
       local S = assert(goal.S)
+      local mx, my = S:mid_point()
+      local d = fuzzy_dist(mx, my, T) / SEED_SIZE
 
-      local d = geom.box_dist(T.x1, T.y1, T.x2, T.y2,
-                              S.x1, S.y1, S.x2, S.y2)
-      d = d / SEED_SIZE
       if not dist or d < dist then
         dist = d
       end
@@ -431,12 +441,12 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
     --   3. distance from other goals
     --   4. rank value from prefab
 
-    local   wall_dist = nearest_wall(spot)   or 20
-    local portal_dist = nearest_portal(spot) or 20
-    local   goal_dist = nearest_goal(spot)   or 20
+    local wall_dist = nearest_wall(spot) or 20
+    local conn_dist = nearest_conn(spot) or 20
+    local goal_dist = nearest_goal(spot) or 20
 
-    -- combine portal_dist and goal_dist
-    local score = math.min(goal_dist, portal_dist * 1.2)
+    -- combine conn_dist and goal_dist
+    local score = math.min(goal_dist, conn_dist * 1.5)
 
     -- now combine with wall_dist.
     -- in caves we need the spot to be away from the edges of the room
@@ -459,17 +469,16 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
     end
 
     -- for symmetrical rooms, prefer a centred item
-    if sx == bonus_x then score = score + 1.5 end
-    if sy == bonus_y then score = score + 1.5 end
+    if sx == bonus_x then score = score + 0.8 end
+    if sy == bonus_y then score = score + 0.8 end
  
     -- tie breaker
-    score = score + 2.0 * gui.random() ^ 2
+    score = score + gui.random() ^ 2
 
 --[[
-if R.id == 2 then --- R.purpose == "START" then
-local S = Seed_from_coord(spot.x1 + 32, spot.y1 + 32)
-gui.printf("  %s : wall:%1.1f portal:%1.1f goal:%1.1f --> score:%1.2f\n",
-    S:tostr(), wall_dist, portal_dist, goal_dist, score)
+if R.id == 6 then
+stderrf("  (%2d %2d) : wall:%1.1f conn:%1.1f goal:%1.1f --> score:%1.2f\n",
+    sx, sy, wall_dist, conn_dist, goal_dist, score)
 end
 --]]
     return score

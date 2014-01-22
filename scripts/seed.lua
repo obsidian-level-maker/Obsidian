@@ -69,6 +69,7 @@ function SEED_CLASS.tostr(S)
   return string.format("SEED [%d,%d]", S.sx, S.sy)
 end
 
+
 function SEED_CLASS.neighbor(S, dir, dist)
   local nx, ny = geom.nudge(S.sx, S.sy, dir, dist)
   if nx < 1 or nx > SEED_W or ny < 1 or ny > SEED_H then
@@ -77,13 +78,26 @@ function SEED_CLASS.neighbor(S, dir, dist)
   return SEEDS[nx][ny]
 end
 
+
 function SEED_CLASS.mid_point(S)
   return int((S.x1 + S.x2) / 2), int((S.y1 + S.y2) / 2)
 end
 
+
 function SEED_CLASS.midstr(S)
   local mx, my = S:mid_point()
   return string.format("SEED(%+5d %+5d)", mx, my)
+end
+
+
+function SEED_CLASS.edge_coord(S, side)
+  local mx, my = S:mid_point()
+  local dx, dy = geom.delta(side)
+
+  mx = mx + dx * (SEED_SIZE / 2)
+  my = my + dy * (SEED_SIZE / 2)
+
+  return mx, my
 end
 
 
