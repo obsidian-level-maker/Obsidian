@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  GAME DEFINITION : DOOM, DOOM II (etc)
+--  BASE DEFINITIONS for DOOM, DOOM II (etc)
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -72,7 +72,7 @@ require "resources"
 
 function DOOM1.setup()
   -- tweak monster probabilities
-  GAME.MONSTERS["Cyberdemon"].crazy_prob = 8
+  GAME.MONSTERS["Cyberdemon"].crazy_prob = 5
   GAME.MONSTERS["Mastermind"].crazy_prob = 12
 end
 
@@ -99,6 +99,7 @@ OB_GAMES["doom2"] =
     all_done   = DOOM2.all_done
   }
 }
+
 
 UNFINISHED["doom1"] =
 {
