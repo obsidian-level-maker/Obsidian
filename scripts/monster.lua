@@ -317,6 +317,10 @@ function Monsters_init()
     end
   end
 
+  if not EPISODE.seen_guards then
+    EPISODE.seen_guards = {}
+  end
+
   LEVEL.mon_stats = {}
 
   local low_q  = MONSTER_QUANTITIES.scarce
@@ -512,6 +516,11 @@ function Monsters_zone_palettes()
       local Z = LEVEL.zones[i]
 
       Z.guard_mon = list[i].mon
+
+      if not EPISODE.seen_guards[Z.guard_mon] then
+        EPISODE.seen_guards[Z.guard_mon] = 1
+        Z.guard_is_new = true
+      end
 
       gui.debugf("Guard monster for ZONE_%s --> %s\n", Z.id, Z.guard_mon)
     end
@@ -2412,9 +2421,14 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     local mon  = R.zone.guard_mon
     local info = GAME.MONSTERS[mon]
 
+    -- decide how many of them
     local count = 2
 
-    if info.level >= 8 then count = 1 end
+    if R.zone.guard_is_new or info.level >= 8 or
+       (info.nasty and rand.odds(50))
+    then
+      count = 1
+    end
 
     local reqs = {}
 
