@@ -960,7 +960,7 @@ void Script_Open(const char *game_name)
 
 	Script_SetScriptPath(LUA_ST, game_path);
 
-	Script_Require("games");
+	Script_Require("base");
 
 	Script_LoadSkins();
 
