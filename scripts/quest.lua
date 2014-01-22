@@ -1273,8 +1273,6 @@ end
     local best_score = -9e9
 
     each C in exits do
-      assert(C.kind != "teleporter")
-
       local score = evaluate_exit(R, C)
 
 -- gui.debugf("exit score for %s = %1.1f", D:tostr(), score)
@@ -1375,8 +1373,25 @@ end
 
     table.insert(quest.rooms, R)
 
+    if not R.purpose then
+      quest.emergency_exit = R
+    end
+
+
     local exits = Quest_get_zone_exits(R)
     local normal_exits = 0
+
+    local free_exit
+
+    if #exits > 0 then
+      -- don't need a "free exit" (which is guaranteed to not become
+      -- a secret) if there is at least one room we can use for the
+      -- solution for the zone's lock.
+      if not quest.emergency_exit or rand.odds(50) then
+        free_exit = pick_free_exit(R, exits)
+        table.kill_elem(exits, free_exit)
+      end
+    end
 
     rand.shuffle(exits)
 
@@ -1387,6 +1402,10 @@ end
         boring_flow(C.R2, quest)
         normal_exits = normal_exits + 1
       end
+    end
+
+    if free_exit then
+      return boring_flow(free_exit.R2, quest)
     end
 
     if normal_exits == 0 and not R.must_visit then
@@ -1401,9 +1420,11 @@ end
 
     if num_leaf > 0 then
       R = table.remove(quest.storage_leafs, num_leaf)
-    else
-      -- emergency fall back : use the last room
-      R = quest.rooms[#quest.rooms]
+    end
+
+    -- emergency fallback
+    if not R then
+      R = assert(quest.emergency_exit)
     end
 
     -- final room must solve the zone's lock instead
