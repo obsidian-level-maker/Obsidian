@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Oblige Level Maker
-Comment=generates random levels for DOOM (etc)
+Comment=Generate random levels for classic FPS games (DOOM etc)
 Exec=oblige
 Icon=oblige
 Terminal=false
