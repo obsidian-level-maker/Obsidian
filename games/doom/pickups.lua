@@ -166,6 +166,7 @@ DOOM.NICE_ITEMS =
     add_prob = 10
     start_prob = 60
     secret_prob = 20
+    crazy_prob = 5
     give = { {health=30} }
   }
 
@@ -214,7 +215,7 @@ DOOM.NICE_ITEMS =
     id = 2022
     kind = "powerup"
     add_prob = 1
-    secret_prob = 90
+    secret_prob = 110
     time_limit = 30
   }
 
@@ -231,6 +232,7 @@ DOOM.NICE_ITEMS =
     kind = "powerup"
     add_prob = 5
     secret_prob = 70
+    crazy_prob  = 10
     time_limit = 120
   }
 

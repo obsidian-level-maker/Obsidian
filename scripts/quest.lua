@@ -331,7 +331,9 @@ function Quest_add_weapons()
     end
 
     -- make powerful weapons only appear in later levels
-    if level > LEVEL.max_level then return 0 end
+    if OB_CONFIG.strength != "crazy" then
+      if level > LEVEL.max_level then return 0 end
+    end
 
     -- theme adjustments
     if LEVEL.weap_prefs then
@@ -624,7 +626,7 @@ function Quest_nice_items()
   -- and (rarely) in normal rooms.
   --
 
-  local function get_secret_palette()
+  local function secret_palette()
     local pal = {}
 
     each name,info in GAME.NICE_ITEMS do
@@ -637,7 +639,7 @@ function Quest_nice_items()
   end
 
 
-  local function get_normal_palette()
+  local function normal_palette()
     local pal = {}
 
     each name,info in GAME.NICE_ITEMS do
@@ -650,7 +652,7 @@ function Quest_nice_items()
   end
 
 
-  local function get_start_palette()
+  local function start_palette()
     local pal = {}
 
     -- Note: no powerups in start room
@@ -664,6 +666,20 @@ function Quest_nice_items()
       if prob then
         pal[name] = prob
       end
+    end
+
+    return pal
+  end
+
+
+  local function crazy_palette()
+    local pal = {}
+
+    each name,info in GAME.NICE_ITEMS do
+      -- ignore secret-only items
+      if not info.add_prob then continue end
+
+      pal[name] = info.crazy_prob or 50
     end
 
     return pal
@@ -735,8 +751,13 @@ function Quest_nice_items()
     -- TODO: add some other rooms (have a whole-level quota)
 
     -- choose items for each of these rooms
-    local normal_tab = get_normal_palette()
-    local  start_tab = get_start_palette()
+    local normal_tab = normal_palette()
+    local  start_tab = start_palette()
+
+    if OB_CONFIG.strength == "crazy" then
+      normal_tab = crazy_palette()
+       start_tab = crazy_palette()
+    end
 
     each R in rooms do
       local item
@@ -757,7 +778,7 @@ function Quest_nice_items()
 
   ---| Quest_nice_items |---
 
-  LEVEL.secret_items = get_secret_palette()
+  LEVEL.secret_items = secret_palette()
  
   handle_secret_rooms()
   handle_normal_rooms()
