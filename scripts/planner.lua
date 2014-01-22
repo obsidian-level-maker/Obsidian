@@ -997,9 +997,9 @@ function Plan_nudge_rooms()
 
   -- move vertically in first pass, horizontally in second
   for pass = 1,2 do
-  for loop = 1,6 do
-    nudge_rooms(pass)
-  end
+    for loop = 1,6 do
+      nudge_rooms(pass)
+    end
   end
 end
 
@@ -1069,7 +1069,9 @@ function Plan_sub_rooms()
   local function try_add_sub_room(parent)
     local infos = {}
     local probs = {}
-    for x = parent.sx1,parent.sx2 do for y = parent.sy1,parent.sy2 do
+
+    for x = parent.sx1, parent.sx2 do
+    for y = parent.sy1, parent.sy2 do
       for w = 2,6 do
         local prob = can_fit(parent, x, y, w, w)
         if prob then
@@ -1088,14 +1090,15 @@ function Plan_sub_rooms()
           table.insert(probs, prob)
         end
       end
-    end end -- x, y
+    end -- x, y
+    end
 
     if #infos == 0 then return end
 
     local info = infos[rand.index_by_probs(probs)]
 
 
-    -- actually add it !
+    -- actually add it!
     local R = ROOM_CLASS.new()
 
     R.parent = parent
@@ -1112,7 +1115,7 @@ function Plan_sub_rooms()
     R.svolume = R.sw * R.sh
 
     R.is_island = (R.sx1 > parent.sx1) and (R.sx2 < parent.sx2) and
-                     (R.sy1 > parent.sy1) and (R.sy2 < parent.sy2)
+                  (R.sy1 > parent.sy1) and (R.sy2 < parent.sy2)
 
     if not parent.children then parent.children = {} end
     table.insert(parent.children, R)
