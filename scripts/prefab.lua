@@ -191,8 +191,10 @@ function Build.door(S, side, z1, skin, skin2, tag, reversed)
   Trans.old_brush(out_info,
   {
     { x=long, y=my-DY },
+    { x=long, y=my,    w_face = frame_info.w_face },
     { x=long, y=my+DY, w_face = frame_info.w_face },
-    { x=0,    y=my+DY },
+    { x=0,    y=my+DY, w_face = frame_info.w_face },
+    { x=0,    y=my    },
     { x=0,    y=my-DY },
   },
   z1+8+door_h, EXTREME_H)
@@ -235,7 +237,8 @@ function Build.door(S, side, z1, skin, skin2, tag, reversed)
     {
       { x=mx-64-18, y=my-DY },
       { x=mx-64-18, y=my+DY, w_face = frame_info.w_face },
-      { x=0,        y=my+DY },
+      { x=0,        y=my+DY, w_face = frame_info.w_face },
+      { x=0,        y=my    },
       { x=0,        y=my-DY },
     },
     -EXTREME_H, EXTREME_H)
