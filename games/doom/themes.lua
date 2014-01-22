@@ -949,7 +949,12 @@ DOOM2.LEVEL_THEMES =
       METAL1   = 5
     }
 
-    monster_prefs = { arach=2.0 }
+    monster_prefs =
+    {
+      zombie  = 1.5
+      shooter = 1.2
+      arach   = 1.5
+    }
 
     style_list =
     {
@@ -1052,7 +1057,13 @@ DOOM2.LEVEL_THEMES =
       BROWN1   = 5
     }
 
-    monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0, vile=1.2 }
+    monster_prefs =
+    {
+      zombie  = 0.3
+      shooter = 0.6
+      vile    = 1.3
+      skull   = 2.0
+    }
 
 
     ---!!!  TEMPORARY V3 STUFF  !!!---
@@ -1105,7 +1116,9 @@ DOOM2.LEVEL_THEMES =
 
     monster_prefs =
     {
-      caco=1.3, revenant=1.2, knight=1.5, demon=1.2, gunner=1.5,
+      revenant = 1.2
+      knight   = 1.5
+      gunner   = 1.5
     }
 
 
