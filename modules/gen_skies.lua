@@ -396,7 +396,7 @@ end
 
 ----------------------------------------------------------------
 
-OB_MODULES["gen_skies_doom"] =
+OB_MODULES["sky_generator"] =
 {
   label = "Sky Generator (DOOM)"
 
