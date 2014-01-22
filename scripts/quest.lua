@@ -1248,21 +1248,42 @@ end
   end
 
 
-  local function evaluate_exit(R, C)
+  local function evaluate_exit(R, C, mode)
     -- generally want to visit the SMALLEST group of rooms first, since
     -- that means the player's hard work to find the switch is rewarded
     -- with a larger new area to explore.  In theory anyway :-)
+    --
+    -- however, for storage we want to visit the LARGEST group first,
+    -- since the final room is where the zone's solution will go.
 
     if C.free_exit_score then
       return C.free_exit_score
     end
 
-    -- FIXME !!!!
-    return gui.random() * 10
+    local score
+    if mode == "quest" then
+      score = 60 - math.sqrt(C.trav_2.volume)
+    else
+      score = 20 + math.sqrt(C.trav_2.volume)
+    end
+
+    -- prefer exit to be away from entrance
+    if C.dir and R.entry_conn and R.entry_conn.dir then
+      local S1 = C:seed(R)
+      local S2 = R.entry_conn:seed(R)
+
+      local dist = geom.dist(S1.sx, S1.sy, S2.sx, S2.sy)
+      if dist > 6 then dist = 6 end
+
+      score = score + dist / 2
+    end
+
+    -- tie breaker
+    return score + gui.random() / 5
   end
 
 
-  local function pick_free_exit(R, exits)
+  local function pick_free_exit(R, exits, mode)
     assert(#exits > 0)
 
     if #exits == 1 then
@@ -1273,7 +1294,7 @@ end
     local best_score = -9e9
 
     each C in exits do
-      local score = evaluate_exit(R, C)
+      local score = evaluate_exit(R, C, mode)
 
 -- gui.debugf("exit score for %s = %1.1f", D:tostr(), score)
 
@@ -1365,7 +1386,7 @@ end
   end
 
 
-  local function boring_flow(R, quest)
+  local function boring_flow(R, quest, need_solution)
     -- no locks will be added in this sub-tree of the zone
 
     R.quest = quest
@@ -1373,24 +1394,20 @@ end
 
     table.insert(quest.rooms, R)
 
-    if not R.purpose then
-      quest.emergency_exit = R
-    end
-
-
     local exits = Quest_get_zone_exits(R)
     local normal_exits = 0
 
     local free_exit
 
-    if #exits > 0 then
-      -- don't need a "free exit" (which is guaranteed to not become
-      -- a secret) if there is at least one room we can use for the
-      -- solution for the zone's lock.
-      if not quest.emergency_exit or rand.odds(50) then
-        free_exit = pick_free_exit(R, exits)
-        table.kill_elem(exits, free_exit)
+    if need_solution then
+      -- final room must solve the zone's lock instead
+      if table.empty(exits) then
+        add_solution(R, R.zone.solution)
+        return
       end
+
+      free_exit = pick_free_exit(R, exits, "storage")
+      table.kill_elem(exits, free_exit)
     end
 
     rand.shuffle(exits)
@@ -1399,36 +1416,18 @@ end
       if should_make_secret(C) then
         secret_flow(C.R2)
       else
-        boring_flow(C.R2, quest)
+        boring_flow(C.R2, quest, false)
         normal_exits = normal_exits + 1
       end
     end
 
     if free_exit then
-      return boring_flow(free_exit.R2, quest)
+      return boring_flow(free_exit.R2, quest, "need_solution")
     end
 
     if normal_exits == 0 and not R.must_visit then
       table.insert(quest.storage_leafs, R)
     end 
-  end
-
-
-  local function boring_exit(quest)
-    local R
-    local num_leaf = #quest.storage_leafs
-
-    if num_leaf > 0 then
-      R = table.remove(quest.storage_leafs, num_leaf)
-    end
-
-    -- emergency fallback
-    if not R then
-      R = assert(quest.emergency_exit)
-    end
-
-    -- final room must solve the zone's lock instead
-    add_solution(R, R.zone.solution)
   end
 
 
@@ -1481,7 +1480,7 @@ end
       end
 
       if not free_exit then
-        free_exit = pick_free_exit(R, exits)
+        free_exit = pick_free_exit(R, exits, "quest")
       end
 
       gui.debugf("using free exit --> %s\n", free_exit.R2:tostr())
@@ -1524,8 +1523,7 @@ end
     if THEME.switches and STYLE.switches != "none" then
       quest_flow(Q.start, Q)
     else
-      boring_flow(Q.start, Q)
-      boring_exit(Q)
+      boring_flow(Q.start, Q, "need_solution")
     end
   end
 
