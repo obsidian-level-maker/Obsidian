@@ -1236,7 +1236,7 @@ function Quest_divide_zones()
       LEVEL.exit_room = R
     end
 
--- [[ DEBUG
+--[[ DEBUG
 each C in R.conns do
   if C.lock == lock then
     stderrf("*********** SAME LOCK @ %s\n", R:tostr())
