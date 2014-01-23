@@ -294,7 +294,7 @@ function DOOM1.get_levels()
   -- create level info...
 
   for ep_index = 1,EP_NUM do
-    local EPI = GAME.episodes(ep_index)
+    local EPI = GAME.episodes[ep_index]
 
     for map = 1,MAP_NUM do
       local ep_along = map / LEV_MAX
