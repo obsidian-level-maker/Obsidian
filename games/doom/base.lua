@@ -5,7 +5,7 @@
 --  Oblige Level Maker
 --
 --  Copyright (C) 2006-2014 Andrew Apted
---  Copyright (C)      2011 Chris Pisarczyk
+--  Copyright (C) 2011,2014 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -101,7 +101,7 @@ OB_GAMES["doom2"] =
 }
 
 
-UNFINISHED["doom1"] =
+OB_GAMES["doom1"] =
 {
   label = "Doom 1"
 
@@ -124,7 +124,7 @@ UNFINISHED["doom1"] =
 }
 
 
-UNFINISHED["ultdoom"] =
+OB_GAMES["ultdoom"] =
 {
   label = "Ultimate Doom"
 
