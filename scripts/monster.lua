@@ -417,6 +417,19 @@ function Monsters_pick_single_for_level()
 end
 
 
+function Monsters_check_theme(info)
+  -- if no theme specified, usable in all themes
+  if not info.theme then return true end
+
+  -- anything goes in CRAZY mode
+  if OB_CONFIG.strength == "crazy" then return true end
+
+  -- TODO: handle tables and "!" syntax
+
+  return info.theme == LEVEL.super_theme
+end
+
+
 function Monsters_global_palette()
   -- Decides which monsters we will use on this level.
   -- Easiest way is to pick some monsters NOT to use.
@@ -439,7 +452,8 @@ function Monsters_global_palette()
     
     each name,info in GAME.MONSTERS do
       if info.prob  and info.prob > 0 and
-         info.level and info.level <= LEVEL.max_level
+         info.level and info.level <= LEVEL.max_level and
+         Monsters_check_theme(info)
       then
         LEVEL.global_pal[name] = 1
       end
@@ -1565,12 +1579,6 @@ function Monsters_in_room(R)
     local info = GAME.MONSTERS[mon]
     local prob = info.prob
 
-    if THEME.force_mon_probs then
-      prob = THEME.force_mon_probs[mon] or
-             THEME.force_mon_probs.other
-      if prob then return prob end
-    end
-
     prob = prob or 0
 
     if not LEVEL.global_pal[mon] then
@@ -1720,11 +1728,6 @@ function Monsters_in_room(R)
 
       if info.weap_needed and not Player_has_weapon(info.weap_needed) then
         prob = 0
-      end
-
-      if THEME.force_mon_probs then
-        prob = THEME.force_mon_probs[mon]  or
-               THEME.force_mon_probs.other or prob  
       end
 
       if prob > 0 and LEVEL.monster_prefs then

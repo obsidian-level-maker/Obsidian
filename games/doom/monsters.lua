@@ -329,7 +329,7 @@ DOOM2.MONSTERS =
     damage = 5
     attack = "hitscan"
     give = { {ammo="bullet",count=5} }
-    density = 2.0
+    density = 1.5
   }
 }
 

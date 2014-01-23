@@ -1182,13 +1182,19 @@ DOOM2.LEVEL_THEMES =
       ZZWOLF5  = 5
     }
 
-    force_mon_probs = { ss_dude=70, demon=20, shooter=20, zombie=20, other=0 }
-
-    ---??? weap_prefs = { chain=3, shotty=3, super=3 }
+    monster_prefs =
+    {
+      ss_dude = 100
+      zombie  = 20
+      shooter = 20
+      demon   = 20  -- like the dog
+      imp     =  5  -- like the mutant
+      gunner  =  5  -- like a boss
+    }
 
     style_list =
     {
-      naturals = { none=40, few=60, some=10 }
+      caves = { none=40, few=60, some=10 }
     }
 
 
