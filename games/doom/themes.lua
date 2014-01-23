@@ -898,22 +898,6 @@ DOOM2.ROOM_THEMES =
 }
 
 
---[[  
-   THEME IDEAS
-
-   (a) nature  (outdoor, grassy/rocky/muddy, water)
-   (b) urban   (outdoor, bricks/concrete,  slime)
-
-   (c) gothic     (indoor, gstone, blood, castles) 
-   (d) tech       (indoor, computers, lights, lifts) 
-   (e) cave       (indoor, rocky/ashy, darkness, lava)
-   (f) industrial (indoor, machines, lifts, crates, nukage)
-
-   (h) hell    (indoor+outdoor, fire/lava, bodies, blood)
---]]
-
-
-
 DOOM2.LEVEL_THEMES =
 {
   tech1 =
@@ -1187,9 +1171,9 @@ DOOM2.LEVEL_THEMES =
       ss_dude = 100
       zombie  = 20
       shooter = 20
-      demon   = 20  -- like the dog
-      imp     =  5  -- like the mutant
-      gunner  =  5  -- like a boss
+      demon   = 20  -- kinda like a dog
+      imp     =  5  -- kinda like a mutant
+      gunner  =  5  -- kinda like a boss
     }
 
     style_list =
@@ -1216,6 +1200,7 @@ OB_THEMES["tech"] =
   mixed_prob = 60
 }
 
+
 OB_THEMES["hell"] =
 {
   label = "Hell"
@@ -1223,6 +1208,7 @@ OB_THEMES["hell"] =
   name_theme = "GOTHIC"
   mixed_prob = 50
 }
+
 
 OB_THEMES["urban"] =
 {
@@ -1233,8 +1219,6 @@ OB_THEMES["urban"] =
   mixed_prob = 50
 }
 
-
--- themes specific to Doom II
 
 OB_THEMES["wolf"] =
 {
@@ -1248,10 +1232,10 @@ OB_THEMES["wolf"] =
 }
 
 
--- TNT Evilution themes
-
 UNFINISHED["egypt"] =
 {
+  -- TNT Evilution theme
+
   label = "Egypt"
   game = "tnt"
   name_theme = "GOTHIC"
