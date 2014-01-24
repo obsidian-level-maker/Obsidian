@@ -791,6 +791,35 @@ end
 
 function Quest_select_textures()
 
+  local function setup_theme(R)
+    R.facade = assert(R.zone.facade_mat)
+
+    if R.kind == "cave" then
+      R.main_tex = rand.key_by_probs(R.theme.naturals)
+      return
+    end
+
+    if not R.is_outdoor then
+      R.main_tex = rand.key_by_probs(R.theme.walls)
+      return
+    end
+
+    R.main_tex = rand.key_by_probs(R.theme.naturals or R.theme.floors)
+  end
+
+
+  ---| Quest_select_textures |---
+
+  each R in LEVEL.rooms do
+    setup_theme(R)
+  end
+
+  each R in LEVEL.scenic_rooms do
+    R.is_outdoor = true  -- ???
+    setup_theme(R)
+  end
+
+
   if not LEVEL.outer_fence_tex then
     if THEME.outer_fences then
       LEVEL.outer_fence_tex = rand.key_by_probs(THEME.outer_fences)
@@ -814,10 +843,6 @@ function Quest_select_textures()
       LEVEL.lift_skin = assert(GAME.LIFTS[name])
     end
   end
-
-
-  -- TODO: caves and landscapes
-
 end
 
 

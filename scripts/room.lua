@@ -372,37 +372,6 @@ end
 ------------------------------------------------------------------------
 
 
-function Room_setup_theme(R)
-  R.facade = assert(R.zone.facade_mat)
-
-  if R.kind == "cave" then
-    R.main_tex = rand.key_by_probs(R.theme.naturals)
-    return
-  end
-
-  if not R.is_outdoor then
-    R.main_tex = rand.key_by_probs(R.theme.walls)
-    return
-  end
-
-  R.main_tex = rand.key_by_probs(R.theme.naturals or R.theme.floors)
-end
-
-
-function Room_choose_themes()
-  each R in LEVEL.rooms do
-    Room_setup_theme(R)
-  end
-
-  each R in LEVEL.scenic_rooms do
-    R.is_outdoor = true  -- ???
-
-    Room_setup_theme(R)
-  end
-end
-
-
-
 function Room_decide_hallways()
   -- Marks certain rooms to be hallways, using the following criteria:
   --   - indoor non-leaf room
@@ -3976,7 +3945,6 @@ function Room_build_all()
 
   gui.prog_step("Rooms")
 
-  Room_choose_themes()
   Room_decide_hallways()
 
   Room_setup_symmetry()
