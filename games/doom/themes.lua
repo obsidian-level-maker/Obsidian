@@ -23,7 +23,7 @@ DOOM.THEME_DEFAULTS =
 }
 
 
-DOOM.NAME_THEMES =
+DOOM.NAMES =
 {
   -- these tables provide *additional* words to those in naming.lua
 
@@ -55,56 +55,84 @@ DOOM.NAME_THEMES =
 }
 
 
-DOOM2.ROOM_THEMES =
+DOOM2.ROOMS =
+{
+  GENERIC =
+  {
+  }
+
+  COMPUTER =
+  {
+    theme = "tech"
+    prob  = 50
+  }
+
+  STORAGE =
+  {
+    prob  = 50
+  }
+
+  WASTE =
+  {
+    style = "liquids"
+    prob  = 50
+  }
+
+  PRISON =
+  {
+    style = "cages"
+    prob  = 50
+  }
+
+  TORTURE =
+  {
+    theme = { hell=1, wolf=0.5, urban=0.1 }
+    prob  = 50
+  }
+}
+
+
+DOOM2.TEX_GROUPS =
+{
+  STARTAN_group1 =
+  {
+    STARTAN3 = 60
+    STARG3 = 40
+    STARG2 = 10
+  }
+
+  MARBLE_group =
+  {
+    MARBLE1 = 20
+    MARBLE2 = 50
+    MARBLE3 = 50
+  }
+
+  WOOD_group =
+  {
+    WOOD1 = 50
+    WOOD3 = 30
+    WOOD5 = 30
+    WOOD12 = 30
+    WOODVERT = 10
+  }
+}
+
+
+DOOM2.ZONES =
 {
   ----- Tech Base ---------------------------
 
-  Tech_startan3 =
+  tech_Startan3 =
   {
+    prob = 50
+
     walls =
     {
       STARTAN3 = 60
       STARG3 = 40
       STARG2 = 10
-    }
 
-    floors =
-    {
-      FLOOR4_8 = 50
-      FLOOR5_1 = 20
-      FLOOR5_3 = 30
-      FLOOR3_3 = 20
-      FLOOR0_1 = 20
-      FLOOR0_2 = 20
-      FLOOR0_3 = 30
-      SLIME15 = 10
-      SLIME16 = 10
-      FLAT4 = 15
-      FLOOR1_1 = 8
-      FLAT14 = 10
-      FLOOR4_6 = 15
-      FLAT5 = 10
-    }
-
-    ceilings =
-    {
-      CEIL3_3 = 15
-      CEIL3_5 = 20
-      CEIL3_1 = 20
-      FLAT4 = 20
-      CEIL4_2 = 10
-      CEIL4_3 = 10
-      CEIL5_1 = 10
-      FLAT23 = 5
-      FLAT9 = 15
-    }
-  }
-
-
-  Tech_startan2 =
-  {
-    walls =
-    {
       STARTAN2 = 50
       STARBR2  = 40
     }
@@ -112,15 +140,18 @@ DOOM2.ROOM_THEMES =
     floors =
     {
       FLOOR4_8 = 50
-      FLOOR5_1 = 25
       FLOOR5_3 = 30
-      FLOOR3_3 = 20
-      FLOOR0_1 = 20
-      FLOOR0_2 = 15
       FLOOR0_3 = 30
+      FLOOR5_1 = 25
+      FLOOR3_3 = 20
+      FLOOR0_2 = 20
+      FLOOR0_1 = 20
+      FLOOR4_6 = 15
+      FLAT4 = 15
+      FLAT14 = 10
       SLIME15 = 10
       SLIME16 = 10
-      FLAT4 = 15
+      FLOOR1_1 = 8
       FLOOR0_5 = 5
       FLAT5 = 5
     }
@@ -130,19 +161,25 @@ DOOM2.ROOM_THEMES =
       CEIL3_1 = 20
       CEIL3_2 = 20
       CEIL3_5 = 20
-      CEIL3_1 = 20
-      FLAT4 = 20
+      CEIL3_3 = 15
+      CEIL4_2 = 10
       CEIL4_3 = 10
       CEIL5_1 = 15
-      FLAT9 = 30
+
+      FLAT9  = 30
       FLAT19 = 20
+      FLAT4  = 20
+      FLAT9  = 15
+      FLAT23 = 5
     }
   }
 
 
-  Tech_stargray =
+  fixme_tech_Stargray =
   {
     rarity = "minor"
+
+    prob = 50
 
     walls =
     {
@@ -177,8 +214,10 @@ DOOM2.ROOM_THEMES =
   }
 
 
-  Tech_tekgren =
+  tech_Tekgren =
   {
+    prob = 50
+
     walls =
     {
       TEKGREN2 = 50
@@ -206,8 +245,10 @@ DOOM2.ROOM_THEMES =
   }
 
 
-  Tech_metal2 =
+  tech_Metal =
   {
+    prob = 50
+
     walls =
     {
       METAL2 = 50
@@ -236,7 +277,7 @@ DOOM2.ROOM_THEMES =
   }
 
 
-  Tech_cave =
+  tech_Cave =
   {
     naturals =
     {
@@ -254,7 +295,7 @@ DOOM2.ROOM_THEMES =
   }
 
 
-  Tech_outdoors =
+  tech_Outdoors =
   {
     floors =
     {
@@ -284,7 +325,7 @@ DOOM2.ROOM_THEMES =
   }
 
 
-  Tech_hallway =
+  tech_Hallway =
   {
     walls =
     {
@@ -319,10 +360,66 @@ DOOM2.ROOM_THEMES =
   }
 
 
+  generic_Stairwell =
+  {
+    kind = "stairwell"
+
+    walls =
+    {
+      BROWN1  = 50
+      GRAY1   = 50
+      STARGR1 = 50
+      METAL1  = 20
+    }
+
+    floors =
+    {
+      FLAT1 = 30
+      FLOOR7_1 = 50
+    }
+  }
+
+
   ----- Hell / Gothic -------------------------
 
-  Hell_hotbrick =
+  hell_Marble =
   {
+    prob = 100
+
+    walls =
+    {
+      MARBLE1 = 20
+      MARBLE2 = 50
+      MARBLE3 = 50
+
+      MARBGRAY = 80
+    }
+
+    floors =
+    {
+      DEM1_5   = 50
+      DEM1_6   = 30
+      FLAT10   = 25
+      FLAT5_4  = 15
+      FLOOR7_1 = 30
+      FLOOR7_2 = 30
+    }
+
+    ceilings =
+    {
+      FLOOR7_2 = 50
+      DEM1_5   = 20
+      FLOOR6_1 = 20
+      FLOOR6_2 = 20
+      MFLR8_4  = 15
+    }
+  }
+
+
+  hell_Hotbrick =
+  {
+    prob = 100
+
     walls =
     {
       SP_HOT1 = 50
@@ -349,63 +446,12 @@ DOOM2.ROOM_THEMES =
     }
   }
 
-  Hell_marble =
+
+  -- Hmmm, probably better as a 'speciality' theme...
+  hell_Viney =
   {
-    walls =
-    {
-      MARBLE1 = 20
-      MARBLE2 = 50
-      MARBLE3 = 50
-    }
+    prob = 20
 
-    floors =
-    {
-      FLAT10   = 25
-      FLOOR7_1 = 30
-      DEM1_5   = 50
-      DEM1_6   = 30
-      FLOOR7_2 = 30
-    }
-
-    ceilings =
-    {
-      FLOOR7_2 = 50
-      DEM1_5   = 20
-      FLOOR6_1 = 20
-      FLOOR6_2 = 20
-      MFLR8_4  = 15
-    }
-  }
-
-  Hell_gray =
-  {
-    walls =
-    {
-      MARBGRAY = 50
-    }
-
-    floors =
-    {
-      FLAT10   = 25
-      FLOOR7_1 = 30
-      DEM1_5   = 50
-      DEM1_6   = 30
-      FLOOR7_2 = 30
-      FLAT5_4  = 15
-    }
-
-    ceilings =
-    {
-      FLOOR7_2 = 50
-      DEM1_5   = 20
-      FLOOR6_1 = 20
-      FLOOR6_2 = 20
-      MFLR8_4  = 15
-    }
-  }
-
-  Hell_gstvine =
-  {
     walls =
     {
       GSTVINE2 = 50
@@ -429,8 +475,11 @@ DOOM2.ROOM_THEMES =
     }
   }
 
-  Hell_stone =
+
+  hell_Stone =
   {
+    prob = 50
+
     walls =
     {
       STONE3 = 50
@@ -450,8 +499,12 @@ DOOM2.ROOM_THEMES =
     }
   }
 
-  Hell_wood =
+
+  -- TODO: this also probably better as 'speciality' theme
+  hell_Wood =
   {
+    prob = 20
+
     walls =
     {
       WOOD1 = 50
@@ -477,8 +530,11 @@ DOOM2.ROOM_THEMES =
     }
   }
 
-  Hell_skin =
+
+  hell_Skin =
   {
+    prob = 20
+
     walls =
     {
       SKINMET1 = 50
@@ -505,7 +561,8 @@ DOOM2.ROOM_THEMES =
     }
   }
 
-  Hell_hallway =
+
+  hell_Hallway =
   {
     walls =
     {
@@ -538,7 +595,7 @@ DOOM2.ROOM_THEMES =
     }
   }
 
-  Hell_cave =
+  hell_Cave =
   {
     naturals =
     {
@@ -551,7 +608,7 @@ DOOM2.ROOM_THEMES =
     }
   }
 
-  Hell_outdoors =
+  hell_Outdoors =
   {
     floors =
     {
@@ -583,8 +640,10 @@ DOOM2.ROOM_THEMES =
 
 --PANEL7 looks silly as a facade --Chris
 
-  Urban_panel =
+  urban_Panel =
   {
+    prob = 50
+
     walls =
     {
       PANEL6 = 50
@@ -619,39 +678,11 @@ DOOM2.ROOM_THEMES =
     }
   }
 
-  Urban_bigbrik =
-  {
-    walls =
-    {
-      BIGBRIK1 = 50
-      BIGBRIK2 = 50
-    }
-
-    floors =
-    {
-      FLOOR0_1 = 20
-      FLAT1_1 = 50
-      FLOOR0_3 = 20
-      FLAT5_1 = 50
-      FLAT5_2 = 20
-      FLAT1 = 30
-      FLAT5 = 15
-      FLOOR5_4 = 10
-    }
-
-    ceilings =
-    {
-      FLAT1 = 50
-      RROCK10 = 20
-      RROCK14 = 20
-      MFLR8_1 = 10
-      CEIL1_1 = 15
-      FLAT5_2 = 10
-    }
-  }
 
   Urban_brick =
   {
+    prob = 70
+
     walls =
     {
       BRICK1  = 10
@@ -664,21 +695,29 @@ DOOM2.ROOM_THEMES =
       BRICK12 = 30
       BRICK11 = 3
       BRICK10 = 5
+
+      BIGBRIK1 = 90
+      BIGBRIK2 = 90
     }
 
     floors =
     {
+      FLAT1_1 = 50
+      FLAT1   = 30
+      FLAT5   = 15
+      FLAT5_1 = 50
+      FLAT5_2 = 20
+      FLAT5_2 = 30
+      FLAT5_4 = 20
+      FLAT5_5 = 30
+      FLAT8   = 50
+
       FLOOR0_1 = 20
       FLOOR0_2 = 20
       FLOOR0_3 = 20
       FLOOR4_6 = 20
       FLOOR5_3 = 25
-      FLAT8   = 50
-      FLAT5_1 = 50
-      FLAT5_2 = 30
-      FLAT5_4 = 20
-      FLAT5_5 = 30
-      FLAT1   = 30
+      FLOOR5_4 = 10
     }
 
     ceilings =
@@ -688,12 +727,16 @@ DOOM2.ROOM_THEMES =
       FLAT8   = 15
       RROCK10 = 20
       RROCK14 = 20
+      MFLR8_1 = 10
       SLIME13 = 5
     }
   }
 
-  Urban_stone =
+
+  urban_Stone =
   {
+    prob = 20
+
     walls =
     {
       STONE2 = 50
@@ -722,7 +765,8 @@ DOOM2.ROOM_THEMES =
     }
   }
 
-  Urban_hallway =
+
+  urban_Hallway =
   {
     walls =
     {
@@ -762,7 +806,8 @@ DOOM2.ROOM_THEMES =
     }
   }
 
-  Urban_cave =
+
+  urban_Cave =
   {
     naturals =
     {
@@ -774,7 +819,8 @@ DOOM2.ROOM_THEMES =
     }
   }
 
-  Urban_outdoors =
+
+  urban_Outdoors =
   {
     floors =
     {
@@ -795,7 +841,7 @@ DOOM2.ROOM_THEMES =
 
   ---- Wolfenstein 3D -------------
 
-  Wolf_cells =
+  wolf_Cells =
   {
     walls =
     {
@@ -813,7 +859,8 @@ DOOM2.ROOM_THEMES =
     }
   }
 
-  Wolf_stein =
+
+  wolf_Stone =
   {
     walls =
     {
@@ -832,7 +879,8 @@ DOOM2.ROOM_THEMES =
     }
   }
 
-  Wolf_brick =
+
+  wolf_Brick =
   {
     walls =
     {
@@ -850,7 +898,8 @@ DOOM2.ROOM_THEMES =
     }
   }
 
-  Wolf_hall =
+
+  wolf_Hallway =
   {
     walls =
     {
@@ -869,18 +918,8 @@ DOOM2.ROOM_THEMES =
     }
   }
 
-  Wolf_cave =
-  {
-    square_caves = true
 
-    naturals =
-    {
-      ROCK4 = 50
-      SP_ROCK1 = 10
-    }
-  }
-
-  Wolf_outdoors =
+  wolf_Outdoors =
   {
     floors =
     {
@@ -895,15 +934,27 @@ DOOM2.ROOM_THEMES =
       SP_ROCK1 = 10
     }
   }
+
+
+  wolf_Cave =
+  {
+    square_caves = true
+
+    naturals =
+    {
+      ROCK4 = 50
+      SP_ROCK1 = 10
+    }
+  }
 }
 
 
-DOOM2.LEVEL_THEMES =
+DOOM2.THEMES =
 {
-  tech1 =
-  {
-    prob = 60
+  -- Note: must be one entry here for each OB_THEMES definition
 
+  tech =
+  {
     liquids =
     {
       nukage = 90
@@ -911,19 +962,6 @@ DOOM2.LEVEL_THEMES =
       slime  = 20
       lava   = 5
     }
-
-    buildings =
-    {
-      Tech_startan3 = 60
-      Tech_startan2 = 40
-      Tech_stargray = 10
-      Tech_tekgren  = 20
-      Tech_metal2   = 10
-    }
-
-    hallways  = { Tech_hallway=50 }
-    outdoors  = { Tech_outdoors=50 }
-    caves     = { Tech_cave=50 }
 
     facades =
     {
@@ -1010,11 +1048,8 @@ DOOM2.LEVEL_THEMES =
   }
 
 
-
-  hell1 =
+  hell =
   {
-    prob = 50
-
     liquids =
     {
       lava   = 70
@@ -1028,22 +1063,6 @@ DOOM2.LEVEL_THEMES =
       ks_blue = 50
       ks_yellow = 50
     }
-
-    buildings =
-    {
-      Hell_hotbrick = 25
-      Hell_marble   = 40
-      Hell_gray     = 40
-
-      Hell_stone    = 10
-      Hell_gstvine  = 10
-      Hell_wood     = 10
-      Hell_skin     = 10
-    }
-
-    hallways  = { Hell_hallway=50 }
-    outdoors  = { Hell_outdoors=50 }
-    caves     = { Hell_cave=50 }
 
     facades =
     {
@@ -1079,10 +1098,8 @@ DOOM2.LEVEL_THEMES =
 
 
 
-  urban1 =
+  urban =
   {
-    prob = 50
-
     liquids =
     {
       water = 80
@@ -1090,18 +1107,6 @@ DOOM2.LEVEL_THEMES =
       blood = 25
       lava  = 5
     }
-
-    buildings =
-    {
-      Urban_panel   = 20
-      Urban_brick   = 50
-      Urban_bigbrik = 50
-      Urban_stone   = 60
-    }
-
-    hallways  = { Urban_hallway=50 }
-    outdoors  = { Urban_outdoors=50 }
-    caves     = { Urban_cave=50 }
 
     facades =
     {
@@ -1113,11 +1118,6 @@ DOOM2.LEVEL_THEMES =
       CEMENT7 = 5
       CEMENT9 = 5
       METAL2 = 3
-    }
-
-    room_types =
-    {
-      -- FIXME PRISON WAREHOUSE
     }
 
     monster_prefs =
@@ -1139,7 +1139,7 @@ DOOM2.LEVEL_THEMES =
 
 
   -- this theme is not normally used (only for secret levels)
-  wolf1 =
+  wolf =
   {
     prob = 10
 
@@ -1173,7 +1173,6 @@ DOOM2.LEVEL_THEMES =
       shooter = 20
       demon   = 20  -- kinda like a dog
       imp     =  5  -- kinda like a mutant
-      gunner  =  5  -- kinda like a boss
     }
 
     style_list =
