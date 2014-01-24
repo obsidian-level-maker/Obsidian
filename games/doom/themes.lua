@@ -1187,8 +1187,6 @@ DOOM2.THEMES =
   {
     prob = 10
 
-    max_dominant_themes = 1
-
     square_caves = 1
 
     buildings =
