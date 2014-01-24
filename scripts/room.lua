@@ -389,55 +389,15 @@ function Room_setup_theme(R)
 end
 
 
-function Room_setup_theme_Scenic(R)
-  R.is_outdoor = true  -- ???
-
-  -- find closest non-scenic room
-  local near_room
-
-  local mx, my = geom.box_mid(R.sx1, R.sy1, R.sx2, R.sy2)
-
-  for dist = 1, SEED_W do
-  for  dir = 1,9 do  if dir != 5 then
-
-    local sx, sy = geom.nudge(mx, my, dir, dist)
-
-    if Seed_valid(sx, sy) then
-      local S = SEEDS[sx][sy]
-
-      if S.room and S.room.kind != "scenic" and
-         S.room.kind != "hallway"
-      then
-        near_room = R
-        break;
-      end
-    end
-
-  end end  -- dir
-  end  -- dist
-
-  if not near_room then
-    near_room = LEVEL.rooms[1]
-  end
-
-  R.theme = near_room.theme
-
-  if R.is_outdoor then
-    R.main_tex = rand.key_by_probs(R.theme.naturals or R.theme.floors)
-  else
-    R.main_tex = rand.key_by_probs(R.theme.walls)
-  end
-end
-
-
-
 function Room_choose_themes()
   each R in LEVEL.rooms do
     Room_setup_theme(R)
   end
 
   each R in LEVEL.scenic_rooms do
-    Room_setup_theme_Scenic(R)
+    R.is_outdoor = true  -- ???
+
+    Room_setup_theme(R)
   end
 end
 
