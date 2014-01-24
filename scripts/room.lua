@@ -3976,8 +3976,6 @@ function Room_build_all()
 
   gui.prog_step("Rooms")
 
-  Levels_invoke_hook("build_rooms", LEVEL.seed)
-
   Room_choose_themes()
   Room_decide_hallways()
 

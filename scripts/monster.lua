@@ -2716,15 +2716,11 @@ function Monster_make_battles()
   Monsters_global_palette()
   Monsters_zone_palettes()
 
+  Player_give_map_stuff()
   Player_weapon_palettes()
 
-  Levels_invoke_hook("make_battles", LEVEL.seed)
-
-  -- Rooms have been sorted into a visitation order, so we
-  -- simply visit them one-by-one and insert some monsters
-  -- and simulate each battle.
-
-  Player_give_map_stuff()
+  -- Rooms have been sorted into a visitation order, so we just
+  -- insert some monsters into each one and simulate each battle.
 
   each R in LEVEL.rooms do
     Player_give_room_stuff(R)

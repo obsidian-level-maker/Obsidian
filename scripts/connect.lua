@@ -1444,7 +1444,7 @@ gui.debugf("Failed\n")
     return false
   end
     
-  local function sprinkle_scenics()
+  local function sprinkle_scenics__OLD()
     -- select some rooms as scenic rooms
     if STYLE.scenics == "none" or STYLE.scenics == "few" then
       return
@@ -1482,17 +1482,12 @@ gui.debugf("Failed\n")
 
   LEVEL.branched_one = false
 
-  for c_group,R in ipairs(LEVEL.rooms) do
-    R.c_group = c_group
+  each R in LEVEL.rooms do
+    R.c_group = _index
     R.teleports = {}
   end
 
-  Levels_invoke_hook("connect_rooms",  LEVEL.seed)
-
   Connect_teleporters()
-
-
---!!!  sprinkle_scenics()
 
   branch_big_rooms()
   branch_the_rest()
