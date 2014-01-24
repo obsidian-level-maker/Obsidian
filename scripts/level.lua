@@ -429,19 +429,22 @@ end
 
 
 function Levels_choose_themes()
-  gui.rand_seed(OB_CONFIG.seed * 200)
 
   local function set_level_theme(LEV, name)
-    local info = assert(OB_THEMES[name])
-
-    LEV.super_theme = name
-
-    if not LEV.name_theme then
-      LEV.name_theme = info.name_theme
+    -- don't overwrite theme of special levels
+    if LEV.theme_name then
+      name = LEV.theme_name
     end
 
-    -- don't overwrite theme of special levels
-    if LEV.sub_theme then return end
+    local info = assert(OB_THEMES[name])
+
+    LEV.theme_name = name
+
+    if not LEV.name_class then
+      LEV.name_class = assert(info.name_class)
+    end
+
+--[[  OLD STUFF  (PROBABLY OBSOLETE)
 
     local sub_tab = {}
     local sub_pattern = "^" .. name
@@ -458,34 +461,35 @@ function Levels_choose_themes()
     end
 
     local which = rand.key_by_probs(sub_tab)
-    LEV.sub_theme = assert(GAME.LEVEL_THEMES[which])
+--]]
 
-    gui.printf("Theme for level %s = %s\n", LEV.name, which)
+    LEV.theme = assert(GAME.THEMES[name])
+
+    gui.printf("Theme for level %s = %s\n", LEV.name, name)
   end
 
 
-  ---| Levels_choose_themes |---
-
-  gui.printf("\n")
-
-  -- the user can specify the main theme
-  if OB_CONFIG.theme != "mixed" and OB_CONFIG.theme != "jumble" and
-     OB_CONFIG.theme != "original" and OB_CONFIG.theme != "psycho"
-  then
+  local function set_single_theme(name)
     each LEV in GAME.levels do
-      set_level_theme(LEV, OB_CONFIG.theme)
+      set_level_theme(LEV, name)
     end
-
-    return
   end
 
 
-  -- Psycheledic : pick randomly, honor the 'psycho_prob' field
-  if OB_CONFIG.theme == "psycho" then
+  local function set_jumbled_themes(theme_tab)
+    each LEV in GAME.levels do
+      set_level_theme(LEV, rand.key_by_probs(theme_tab))
+    end
+  end
+
+
+  local function pick_psycho_themes()
     local prob_tab = {}
-    for name,info in pairs(OB_THEMES) do
+
+    each name,info in OB_THEMES do
       local prob = info.psycho_prob or info.mixed_prob or 0
-      if info.shown and prob then
+
+      if info.shown and prob > 0 then
         prob_tab[name] = prob
       end
     end
@@ -493,102 +497,18 @@ function Levels_choose_themes()
     assert(not table.empty(prob_tab))
 
     each LEV in GAME.levels do
-      if not LEV.sub_theme then
-        local name = rand.key_by_probs(prob_tab)
+      local name = rand.key_by_probs(prob_tab)
 
-        if not LEV.name_theme and ((_index % 2) == 1) then
-          LEV.name_theme = "PSYCHO"
-        end
-
-        set_level_theme(LEV, name)
+      if not LEV.name_class and ((_index % 2) == 1) then
+        LEV.name_class = "PSYCHO"
       end
-    end
 
-    return
-  end
-
-
-  -- Mix It Up : choose a theme for each episode
-  local episode_list = {}
-  local total = 0
-
-  local prob_tab = {}
-  for name,info in pairs(OB_THEMES) do
-    if info.shown and info.mixed_prob then
-      prob_tab[name] = info.mixed_prob
-      total = total + 1
+      set_level_theme(LEV, name)
     end
   end
 
-  assert(total > 0)
 
-
-  -- Jumbled Up : every level is purely random
-  if OB_CONFIG.theme == "jumble" then
-    each LEV in GAME.levels do
-      set_level_theme(LEV, rand.key_by_probs(prob_tab))
-    end
-
-    return
-  end
-
-
-  if OB_CONFIG.theme == "original" then
-    total = math.max(total, # GAME.episodes)
-  end
-
-  while not table.empty(prob_tab) do
-    local name = rand.key_by_probs(prob_tab)
-    prob_tab[name] = nil
-
-    local info = OB_THEMES[name]
-    local pos = rand.irange(1, total)
-
-    if OB_CONFIG.theme == "original" then
-      each epi in GAME.episodes do
-        if name == epi.theme and not episode_list[_index] then
-          -- this can leave gaps, but they are filled later
-          pos = _index ; break
-        end
-      end
-    end
-
-    if episode_list[pos] then
-      pos = table.find_unused(episode_list)
-    end
-
-    episode_list[pos] = name 
-  end
-
-  gui.debugf("Initial theme list = \n%s\n", table.tostr(episode_list))
-
-  -- fill any gaps when in "As Original" mode
-  if OB_CONFIG.theme == "original" then
-    each epi in GAME.episodes do
-      if not episode_list[_index] then
-        episode_list[_index] = epi.theme
-      end
-    end
-
-    assert(# episode_list == total)
-  end
-
-  gui.printf("Theme for episodes =\n%s\n", table.tostr(episode_list))
-
-  -- flesh it out
-  if total == 2 then
-    local dist = rand.sel(70, 0, 1)
-    table.insert(episode_list, episode_list[1 + dist])
-    table.insert(episode_list, episode_list[2 - dist])
-  end
-
-  while #episode_list < 90 do
-    table.insert(episode_list, episode_list[rand.irange(1, total)])
-  end
-
-
-  -- single episode is different: have a few small batches
-  if OB_CONFIG.length == "episode" then
+  local function batched_episodic_themes(episode_list)
     local pos = 1
     local count = 0
 
@@ -601,13 +521,131 @@ function Levels_choose_themes()
       set_level_theme(LEV, episode_list[pos])
       count = count + 1
     end
+  end
 
+
+  local function set_themes_by_episode(episode_list)
+    each LEV in GAME.levels do
+      set_level_theme(LEV, episode_list[LEV.episode.index])
+    end
+  end
+
+
+  local function create_episode_list(theme_tab, total)
+    local episode_list = {}
+
+    while not table.empty(theme_tab) do
+      local name = rand.key_by_probs(theme_tab)
+      theme_tab[name] = nil
+
+      local info = OB_THEMES[name]
+      local pos = rand.irange(1, total)
+
+      if OB_CONFIG.theme == "original" then
+        each epi in GAME.episodes do
+          if name == epi.theme and not episode_list[_index] then
+            -- this can leave gaps, but they are filled later
+            pos = _index ; break
+          end
+        end
+      end
+
+      if episode_list[pos] then
+        pos = table.find_unused(episode_list)
+      end
+
+      episode_list[pos] = name 
+    end
+
+    gui.debugf("Initial theme list = \n%s\n", table.tostr(episode_list))
+
+    -- fill any gaps when in "As Original" mode
+    if OB_CONFIG.theme == "original" then
+      each epi in GAME.episodes do
+        if not episode_list[_index] then
+          episode_list[_index] = epi.theme
+        end
+      end
+
+      assert(# episode_list == total)
+    end
+  end
+
+
+  local function flesh_out_episodes()
+    if total == 2 then
+      local dist = rand.sel(70, 0, 1)
+      table.insert(episode_list, episode_list[1 + dist])
+      table.insert(episode_list, episode_list[2 - dist])
+    end
+
+    while #episode_list < 90 do
+      table.insert(episode_list, episode_list[rand.irange(1, total)])
+    end
+  end
+
+
+  ---| Levels_choose_themes |---
+
+  gui.printf("\n")
+
+  gui.rand_seed(OB_CONFIG.seed * 200)
+
+  -- the user can specify the main theme
+  if OB_CONFIG.theme != "mixed"    and OB_CONFIG.theme != "jumble" and
+     OB_CONFIG.theme != "original" and OB_CONFIG.theme != "psycho"
+  then
+    set_single_theme(OB_CONFIG.theme)
     return
   end
 
-  each LEV in GAME.levels do
-    set_level_theme(LEV, episode_list[LEV.episode.index])
+
+  -- Psycheledic : pick randomly, honor the 'psycho_prob' field
+  if OB_CONFIG.theme == "psycho" then
+    pick_psycho_theme()
+    return
   end
+
+
+  -- Mix It Up : choose a theme for each episode
+  local total = 0
+
+  local prob_tab = {}
+
+  each name,info in OB_THEMES do
+    if info.shown and info.mixed_prob then
+      prob_tab[name] = info.mixed_prob
+      total = total + 1
+    end
+  end
+
+  assert(total > 0)
+
+
+  -- Jumbled Up : every level is purely random
+  if OB_CONFIG.theme == "jumble" then
+    set_jumbled_themes(prob_tab)
+    return
+  end
+
+
+  if OB_CONFIG.theme == "original" then
+    total = math.max(total, # GAME.episodes)
+  end
+
+  local episode_list = create_episode_list(prob_tab, total)
+
+  gui.printf("Theme for episodes =\n%s\n", table.tostr(episode_list))
+
+
+  flesh_out_episodes(episode_list)
+
+  -- single episode is different: have a few small batches
+  if OB_CONFIG.length == "episode" then
+    batched_episodic_themes(episode_list)
+  end
+
+  set_themes_by_episode(episode_list)
 end
 
 
@@ -737,8 +775,8 @@ function Levels_make_level(LEV)
   end
 
   -- must create the description before the copy (else games/modules won't see it)
-  if not LEV.description and LEV.name_theme then
-    LEV.description = Naming_grab_one(LEV.name_theme)
+  if not LEV.description and LEV.name_class then
+    LEV.description = Naming_grab_one(LEV.name_class)
   end
 
   -- copy level info, so that all new information added into the LEVEL

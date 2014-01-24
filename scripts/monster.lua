@@ -426,7 +426,7 @@ function Monsters_check_theme(info)
 
   -- TODO: handle tables and "!" syntax
 
-  return info.theme == LEVEL.super_theme
+  return info.theme == LEVEL.theme_name
 end
 
 

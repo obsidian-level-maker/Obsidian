@@ -159,10 +159,8 @@ function DOOM2.get_levels()
 
     -- secret levels
     if map == 31 or map == 32 then
-      LEV.theme_name = "wolf1"
-      LEV.sub_theme = GAME.LEVEL_THEMES[LEV.theme_name]
-
-      LEV.name_theme = "URBAN"
+      LEV.theme_name = "wolf"
+      LEV.name_class = "URBAN"
     end
 
     if map == 23 then
@@ -178,7 +176,7 @@ function DOOM2.get_levels()
     LEV.prebuilt = GAME.PREBUILT_LEVELS[pb_name]
 
     if LEV.prebuilt then
-      LEV.name_theme = LEV.prebuilt.name_theme or "BOSS"
+      LEV.name_class = LEV.prebuilt.name_class or "BOSS"
     end
 
     if MAP_NUM == 1 or (map % 10) == 3 then
@@ -327,7 +325,7 @@ function DOOM1.get_levels()
       LEV.prebuilt = GAME.PREBUILT_LEVELS[LEV.name]
 
       if LEV.prebuilt then
-        LEV.name_theme = LEV.prebuilt.name_theme or "BOSS"
+        LEV.name_class = LEV.prebuilt.name_class or "BOSS"
       end
 
       if MAP_NUM == 1 or map == 3 then

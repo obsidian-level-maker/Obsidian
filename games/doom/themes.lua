@@ -1195,7 +1195,7 @@ OB_THEMES["tech"] =
 {
   label = "Tech"
   priority = 8
-  name_theme = "TECH"
+  name_class = "TECH"
   mixed_prob = 60
 }
 
@@ -1204,7 +1204,7 @@ OB_THEMES["hell"] =
 {
   label = "Hell"
   priority = 4
-  name_theme = "GOTHIC"
+  name_class = "GOTHIC"
   mixed_prob = 50
 }
 
@@ -1214,7 +1214,7 @@ OB_THEMES["urban"] =
   label = "Urban"
   priority = 6
   game = "doom2"
-  name_theme = "URBAN"
+  name_class = "URBAN"
   mixed_prob = 50
 }
 
@@ -1224,7 +1224,7 @@ OB_THEMES["wolf"] =
   label = "Wolfenstein"
   priority = 2
   game = "doom2"
-  name_theme = "URBAN"
+  name_class = "URBAN"
 
   -- this theme is special, hence no mixed_prob
   psycho_prob = 5
@@ -1237,7 +1237,7 @@ UNFINISHED["egypt"] =
 
   label = "Egypt"
   game = "tnt"
-  name_theme = "GOTHIC"
+  name_class = "GOTHIC"
   mixed_prob = 5
 }
 
