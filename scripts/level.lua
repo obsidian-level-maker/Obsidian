@@ -569,10 +569,12 @@ function Levels_choose_themes()
 
       assert(# episode_list == total)
     end
+
+    return episode_list
   end
 
 
-  local function flesh_out_episodes()
+  local function flesh_out_episodes(episode_list, total)
     if total == 2 then
       local dist = rand.sel(70, 0, 1)
       table.insert(episode_list, episode_list[1 + dist])
@@ -638,7 +640,7 @@ function Levels_choose_themes()
   gui.printf("Theme for episodes =\n%s\n", table.tostr(episode_list))
 
 
-  flesh_out_episodes(episode_list)
+  flesh_out_episodes(episode_list, total)
 
   -- single episode is different: have a few small batches
   if OB_CONFIG.length == "episode" then
@@ -791,7 +793,7 @@ function Levels_make_level(LEV)
   LEVEL.seed = OB_CONFIG.seed * 100 + index
   LEVEL.ids  = {}
 
-  THEME = table.copy(assert(LEVEL.sub_theme))
+  THEME = table.copy(assert(LEVEL.theme))
 
   if GAME.THEME_DEFAULTS then
     table.merge_missing(THEME, GAME.THEME_DEFAULTS)
