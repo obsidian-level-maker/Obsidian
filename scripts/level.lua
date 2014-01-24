@@ -225,7 +225,7 @@ function Levels_merge_tab(name, tab)
   end
 
   -- special handling for theme tables
-  if name == "LEVEL_THEMES" or name == "ROOM_THEMES" then
+  if name == "THEMES" or name == "ZONES" then
     Levels_merge_themes(GAME[name], tab)
     return
   end

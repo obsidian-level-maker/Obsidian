@@ -40,6 +40,8 @@ class ZONE
   solution  : LOCK  -- the key (etc) which this zone must solve
 
   quests : list(QUEST)
+
+  themes[kind] : ZONE_THEME
 }
 
 
@@ -1552,7 +1554,7 @@ end
 
 
 
-function Quest_assign_room_themes()
+function Quest_assign_themes()
   --
   -- figure out how many room themes to use for each kind of room.
   -- table keys of EXTENT_TAB are room kinds ("building" etc) and
@@ -1576,6 +1578,7 @@ function Quest_assign_room_themes()
 
 
   local function extent_for_room_kind(kind, A, B)
+
     local qty = total_of_room_kind(kind)
 
     -- rough calculation of room area per zone
@@ -1859,7 +1862,50 @@ function Quest_assign_room_themes()
   end
 
 
-  local function select_facades_for_zones()
+  local function match_level_theme(name)
+    local kind = string.match(name, "([%w]+)_")
+
+    return (kind == LEVEL.theme_name) or (kind == "generic")
+  end
+
+
+  local function collect_usable_themes(kind)
+    local tab = {}
+
+    each name,info in GAME.ZONES do
+      if info.kind == kind and match_level_theme(name) then
+        tab[name] = info.prob or 50
+      end
+    end
+  end
+
+
+  local function pick_zone_theme(tab)
+    assert(not table.empty(tab))
+
+    local name = rand.key_by_probs(tab)
+
+    return assert(GAME.ZONES[name])
+  end
+
+
+  local function themes_for_zones()
+    local tab = {}
+
+    LEVEL.outdoors_theme  = pick_zone_theme(collect_usable_themes("outdoors"))
+    LEVEL.cave_theme      = pick_zone_theme(collect_usable_themes("cave"))
+    LEVEL.hallway_theme   = pick_zone_theme(collect_usable_themes("hallway"))
+    LEVEL.stairwell_theme = pick_zone_theme(collect_usable_themes("stairwell"))
+
+    local building_tab = collect_usable_themes("building")
+
+    each Z in LEVEL.zones do
+      Z.building_theme = pick_zone_theme(building_tab)
+    end
+  end
+
+
+  local function facades_for_zones()
     if not THEME.facades then
       error("Theme is missing facades table")
     end
@@ -1879,14 +1925,11 @@ function Quest_assign_room_themes()
   end
 
 
-  ---| Quest_assign_room_themes |---
+  ---| Quest_assign_themes |---
 
   LEVEL.rare_used = {}
 
-  if not EPISODE.rare_used then
-    EPISODE.rare_used = {}
-  end
-
+--[[
   determine_extents()
 
   each kind,extent in EXTENT_TAB do
@@ -1904,8 +1947,11 @@ function Quest_assign_room_themes()
       assign_room_theme(R, rare_ok)
     end
   end
+--]]
 
-  select_facades_for_zones()
+  themes_for_zones()
+
+  facades_for_zones()
 
   pictures_for_zones()
 
@@ -1941,8 +1987,8 @@ function Quest_make_quests()
 
   Quest_order_by_visit()
 
-  Quest_assign_room_themes()
-  Quest_select_textures()
+  Quest_assign_themes()
+  Quest_select_textures()  -- FIXME: merge from Room_choose_themes
 
   -- special weapon handling for HEXEN and HEXEN II
   if PARAM.hexen_weapons then

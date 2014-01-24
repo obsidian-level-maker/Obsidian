@@ -126,6 +126,7 @@ DOOM2.ZONES =
   tech_Startan3 =
   {
     prob = 50
+    kind = "building"
 
     walls =
     {
@@ -180,6 +181,7 @@ DOOM2.ZONES =
     rarity = "minor"
 
     prob = 50
+    kind = "building"
 
     walls =
     {
@@ -248,6 +250,7 @@ DOOM2.ZONES =
   tech_Metal =
   {
     prob = 50
+    kind = "building"
 
     walls =
     {
@@ -279,6 +282,8 @@ DOOM2.ZONES =
 
   tech_Cave =
   {
+    kind = "cave"
+
     naturals =
     {
       SP_ROCK1 = 50
@@ -297,6 +302,8 @@ DOOM2.ZONES =
 
   tech_Outdoors =
   {
+    kind = "outdoors"
+
     floors =
     {
       BROWN1 = 50
@@ -327,6 +334,8 @@ DOOM2.ZONES =
 
   tech_Hallway =
   {
+    kind = "hallway"
+
     walls =
     {
       TEKWALL6 = 50
@@ -385,6 +394,7 @@ DOOM2.ZONES =
   hell_Marble =
   {
     prob = 100
+    kind = "building"
 
     walls =
     {
@@ -419,6 +429,7 @@ DOOM2.ZONES =
   hell_Hotbrick =
   {
     prob = 100
+    kind = "building"
 
     walls =
     {
@@ -451,6 +462,7 @@ DOOM2.ZONES =
   hell_Viney =
   {
     prob = 20
+    kind = "building"
 
     walls =
     {
@@ -479,6 +491,7 @@ DOOM2.ZONES =
   hell_Stone =
   {
     prob = 50
+    kind = "building"
 
     walls =
     {
@@ -504,6 +517,7 @@ DOOM2.ZONES =
   hell_Wood =
   {
     prob = 20
+    kind = "building"
 
     walls =
     {
@@ -534,6 +548,7 @@ DOOM2.ZONES =
   hell_Skin =
   {
     prob = 20
+    kind = "building"
 
     walls =
     {
@@ -564,6 +579,8 @@ DOOM2.ZONES =
 
   hell_Hallway =
   {
+    kind = "hallway"
+
     walls =
     {
       MARBGRAY = 80
@@ -595,8 +612,11 @@ DOOM2.ZONES =
     }
   }
 
+
   hell_Cave =
   {
+    kind = "cave"
+
     naturals =
     {
       ROCKRED1 = 50
@@ -608,8 +628,11 @@ DOOM2.ZONES =
     }
   }
 
+
   hell_Outdoors =
   {
+    kind = "outdoors"
+
     floors =
     {
       FLOOR6_2 = 10
@@ -642,6 +665,7 @@ DOOM2.ZONES =
 
   urban_Panel =
   {
+    kind = "building"
     prob = 50
 
     walls =
@@ -681,6 +705,7 @@ DOOM2.ZONES =
 
   Urban_brick =
   {
+    kind = "building"
     prob = 70
 
     walls =
@@ -735,6 +760,7 @@ DOOM2.ZONES =
 
   urban_Stone =
   {
+    kind = "building"
     prob = 20
 
     walls =
@@ -768,6 +794,8 @@ DOOM2.ZONES =
 
   urban_Hallway =
   {
+    kind = "hallway"
+
     walls =
     {
       BIGBRIK1 = 50
@@ -809,6 +837,8 @@ DOOM2.ZONES =
 
   urban_Cave =
   {
+    kind = "cave"
+
     naturals =
     {
       ASHWALL2 = 50
@@ -822,6 +852,8 @@ DOOM2.ZONES =
 
   urban_Outdoors =
   {
+    kind = "outdoors"
+
     floors =
     {
       STONE = 50
@@ -843,6 +875,8 @@ DOOM2.ZONES =
 
   wolf_Cells =
   {
+    kind = "building"
+
     walls =
     {
       ZZWOLF9 = 50
@@ -862,6 +896,8 @@ DOOM2.ZONES =
 
   wolf_Stone =
   {
+    kind = "building"
+
     walls =
     {
       ZZWOLF1 = 50
@@ -882,6 +918,8 @@ DOOM2.ZONES =
 
   wolf_Brick =
   {
+    kind = "building"
+
     walls =
     {
       ZZWOLF11 = 50
@@ -901,6 +939,8 @@ DOOM2.ZONES =
 
   wolf_Hallway =
   {
+    kind = "hallway"
+
     walls =
     {
       ZZWOLF5 = 50
@@ -921,6 +961,8 @@ DOOM2.ZONES =
 
   wolf_Outdoors =
   {
+    kind = "outdoors"
+
     floors =
     {
       MFLR8_1 = 20
@@ -938,6 +980,8 @@ DOOM2.ZONES =
 
   wolf_Cave =
   {
+    kind = "cave"
+
     square_caves = true
 
     naturals =
