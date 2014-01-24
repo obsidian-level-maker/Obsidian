@@ -395,6 +395,10 @@ function Levels_setup()
 
   table.merge_missing(PARAM, GLOBAL_PARAMETERS)
 
+  table.name_up(GAME.ROOMS)
+  table.name_up(GAME.ZONES)
+  table.name_up(GAME.THEMES)
+
   table.name_up(ROOM_PATTERNS)
   table.expand_copies(ROOM_PATTERNS)
 end
@@ -427,17 +431,17 @@ end
 function Levels_choose_themes()
   gui.rand_seed(OB_CONFIG.seed * 200)
 
-  local function set_level_theme(L, name)
+  local function set_level_theme(LEV, name)
     local info = assert(OB_THEMES[name])
 
-    L.super_theme = name
+    LEV.super_theme = name
 
-    if not L.name_theme then
-      L.name_theme = info.name_theme
+    if not LEV.name_theme then
+      LEV.name_theme = info.name_theme
     end
 
     -- don't overwrite theme of special levels
-    if L.sub_theme then return end
+    if LEV.sub_theme then return end
 
     local sub_tab = {}
     local sub_pattern = "^" .. name
@@ -454,9 +458,9 @@ function Levels_choose_themes()
     end
 
     local which = rand.key_by_probs(sub_tab)
-    L.sub_theme = assert(GAME.LEVEL_THEMES[which])
+    LEV.sub_theme = assert(GAME.LEVEL_THEMES[which])
 
-    gui.printf("Theme for level %s = %s\n", L.name, which)
+    gui.printf("Theme for level %s = %s\n", LEV.name, which)
   end
 
 
@@ -468,8 +472,8 @@ function Levels_choose_themes()
   if OB_CONFIG.theme != "mixed" and OB_CONFIG.theme != "jumble" and
      OB_CONFIG.theme != "original" and OB_CONFIG.theme != "psycho"
   then
-    each L in GAME.levels do
-      set_level_theme(L, OB_CONFIG.theme)
+    each LEV in GAME.levels do
+      set_level_theme(LEV, OB_CONFIG.theme)
     end
 
     return
@@ -488,15 +492,15 @@ function Levels_choose_themes()
 
     assert(not table.empty(prob_tab))
 
-    each L in GAME.levels do
-      if not L.sub_theme then
+    each LEV in GAME.levels do
+      if not LEV.sub_theme then
         local name = rand.key_by_probs(prob_tab)
 
-        if not L.name_theme and ((_index % 2) == 1) then
-          L.name_theme = "PSYCHO"
+        if not LEV.name_theme and ((_index % 2) == 1) then
+          LEV.name_theme = "PSYCHO"
         end
 
-        set_level_theme(L, name)
+        set_level_theme(LEV, name)
       end
     end
 
@@ -521,8 +525,8 @@ function Levels_choose_themes()
 
   -- Jumbled Up : every level is purely random
   if OB_CONFIG.theme == "jumble" then
-    each L in GAME.levels do
-      set_level_theme(L, rand.key_by_probs(prob_tab))
+    each LEV in GAME.levels do
+      set_level_theme(LEV, rand.key_by_probs(prob_tab))
     end
 
     return
@@ -588,70 +592,24 @@ function Levels_choose_themes()
     local pos = 1
     local count = 0
 
-    each L in GAME.levels do
+    each LEV in GAME.levels do
       if count >= 4 or (count >= 2 and rand.odds(50)) then
         pos = pos + 1
         count = 0
       end
 
-      set_level_theme(L, episode_list[pos])
+      set_level_theme(LEV, episode_list[pos])
       count = count + 1
     end
 
     return
   end
 
-  each L in GAME.levels do
-    set_level_theme(L, episode_list[L.episode.index])
+  each LEV in GAME.levels do
+    set_level_theme(LEV, episode_list[LEV.episode.index])
   end
 end
 
-
-function Levels_rarify(seed_idx, tab)
-  gui.rand_seed(OB_CONFIG.seed * 200 + seed_idx)
-
-  local function Rarify(name, rarity)
-    for group = 1, #GAME.levels, rarity do
-      
-      -- this level in the group will allow the item, every other
-      -- level will forbid it (by setting the allowance to 0).
-      local which = rand.irange(0, rarity-1)
-
-      for offset = 0, rarity-1 do
-        local L = GAME.levels[group + offset]
-        if not L then break; end
-
-        L.allowances[name] = sel(offset == which, 1, 0)
-
-        -- spice it up a bit more
-        if rand.odds(10) then
-          L.allowances[name] = 1 - L.allowances[name]
-        end
-      end -- for offset
-    end -- for group
-  end
-
-  --| Levels_rarify |--
-
-  each L in GAME.levels do
-    if not L.allowances then
-      L.allowances = {}
-    end
-  end
-
-  for name,info in pairs(tab) do
-    if info.rarity and info.rarity > 1 then
-      Rarify(name, int(info.rarity))
-    end
-  end
-
-  each L in GAME.levels do
-    if not table.empty(L.allowances) then
-      gui.debugf("Allowances in level %s =\n", L.name)
-      gui.debugf("%s\n", table.tostr(L.allowances, 1))
-    end
-  end
-end
 
 
 function Levels_do_styles()
@@ -763,30 +721,30 @@ function Levels_handle_prebuilt()
 end
 
 
-function Levels_make_level(L)
-  assert(L)
-  assert(L.name)
+function Levels_make_level(LEV)
+  assert(LEV)
+  assert(LEV.name)
 
-  local index = L.index
+  local index = LEV.index
   local total = #GAME.levels
 
   -- debugging aid : ability to build only a particular level
   if OB_CONFIG.only and
-     string.lower(OB_CONFIG.only) != string.lower(L.name)
+     string.lower(OB_CONFIG.only) != string.lower(LEV.name)
   then
-    gui.printf("\nSkipping level: %s....\n\n", L.name)
+    gui.printf("\nSkipping level: %s....\n\n", LEV.name)
     return
   end
 
   -- must create the description before the copy (else games/modules won't see it)
-  if not L.description and L.name_theme then
-    L.description = Naming_grab_one(L.name_theme)
+  if not LEV.description and LEV.name_theme then
+    LEV.description = Naming_grab_one(LEV.name_theme)
   end
 
   -- copy level info, so that all new information added into the LEVEL
   -- object by the generator can be garbage collected once this level is
-  -- finished.  Without the copy the info would remain in GAME.levels
-  LEVEL = table.copy(L)
+  -- finished.
+  LEVEL = table.copy(LEV)
 
   gui.at_level(LEVEL.name, index, total)
 
@@ -881,15 +839,13 @@ function Levels_make_all()
 
   Levels_choose_themes()
 
---Levels_rarify_items()
-
   each EPI in GAME.episodes do
     EPISODE = EPI
 
-    each L in EPI.levels do
-      L.allowances = {}
+    each LEV in EPI.levels do
+      LEV.allowances = {}
 
-      if Levels_make_level(L) == "abort" then
+      if Levels_make_level(LEV) == "abort" then
         return "abort"
       end
     end
