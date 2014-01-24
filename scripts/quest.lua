@@ -1549,7 +1549,39 @@ end
       boring_flow(Q.start, Q, "need_solution")
     end
   end
+end
 
+
+
+function Quest_zones_for_scenics()
+  local total = #LEVEL.scenic_rooms
+  local scenic_list = table.copy(LEVEL.scenic_list)
+
+  local function grow_pass()
+    rand.shuffle(scenic_list)
+
+    each R in scenic_list do
+      if R.zone then continue end
+
+      each N in R.neighbors do
+        if N.zone then
+          R.zone = N.zone
+          total = total - 1
+          break;
+        end
+      end
+    end
+  end
+
+  for loop = 1,100 do
+    if total == 0 then
+      return
+    end
+
+    grow_pass()
+  end
+
+  error("Failed to assign zones to scenic rooms")
 end
 
 
@@ -1978,6 +2010,7 @@ function Quest_make_quests()
 
   Quest_create_zones()
   Quest_divide_zones()
+  Quest_zones_for_scenics()
 
   assert(LEVEL.exit_room)
 

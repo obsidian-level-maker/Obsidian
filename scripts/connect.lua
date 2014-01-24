@@ -1631,7 +1631,7 @@ function Connect_reserved_rooms()
 
 
     -- create quest, link room into quest and zone
-    R.zone = T.room.zone
+    R.zone  = T.room.zone
     R.quest = Quest_new(R)
 
     R.quest.kind = "secret"
