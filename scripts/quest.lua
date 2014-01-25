@@ -1619,6 +1619,8 @@ function Quest_choose_themes()
   local function match_level_theme(name)
     local kind = string.match(name, "([%w]+)_")
 
+    if string.match(name, "DEFAULT") then return false end
+
     return (kind == LEVEL.theme_name) or (kind == "generic")
   end
 
@@ -1626,7 +1628,7 @@ function Quest_choose_themes()
   local function collect_usable_themes(kind)
     local tab = {}
 
-    each name,info in GAME.ZONES do
+    each name,info in GAME.THEMES do
       if info.kind == kind and match_level_theme(name) then
         tab[name] = info.prob or 50
       end
@@ -1642,7 +1644,7 @@ function Quest_choose_themes()
 
     local name = rand.key_by_probs(tab)
 
-    return assert(GAME.ZONES[name])
+    return assert(GAME.THEMES[name])
   end
 
 

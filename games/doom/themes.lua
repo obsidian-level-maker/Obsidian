@@ -12,17 +12,6 @@
 --
 --------------------------------------------------------------------
 
-DOOM.THEME_DEFAULTS =
-{
-  keys = { kc_red=50, kc_blue=50, kc_yellow=50 }
-
-  -- TODO: sw_wood  sw_marble
-  switches = { sw_blue=50 }
-
-  cave_torches = { red_torch=60, green_torch=40, blue_torch=20 }
-}
-
-
 DOOM.NAMES =
 {
   -- these tables provide *additional* words to those in naming.lua
@@ -55,7 +44,7 @@ DOOM.NAMES =
 }
 
 
-DOOM2.ROOMS =
+DOOM.ROOMS =
 {
   GENERIC =
   {
@@ -85,6 +74,12 @@ DOOM2.ROOMS =
     prob = 10
   }
 
+  GARDEN =
+  {
+    environment = "outdoor"
+    prob = 50
+  }
+
   PRISON =
   {
     style = "cages"
@@ -101,7 +96,7 @@ DOOM2.ROOMS =
 
 DOOM2.TEX_GROUPS =
 {
-  STARTAN_group1 =
+  STARTAN_group =
   {
     STARTAN3 = 60
     STARG3 = 40
@@ -126,11 +121,147 @@ DOOM2.TEX_GROUPS =
 }
 
 
-DOOM2.ZONES =
+DOOM2.THEMES =
 {
-  ----- Tech Base ---------------------------
+  DEFAULTS =
+  {
+    keys =
+    {
+      kc_red    = 50
+      kc_blue   = 50
+      kc_yellow = 50
+    }
 
-  tech_Startan3 =
+    -- TODO: sw_wood  sw_marble
+    switches = { sw_blue=50 }
+
+    cave_torches =
+    {
+      red_torch   = 60
+      green_torch = 40
+      blue_torch  = 20
+    }
+  }
+
+
+  generic_Stairwell =
+  {
+    kind = "stairwell"
+
+    walls =
+    {
+      BROWN1  = 50
+      GRAY1   = 50
+      STARGR1 = 50
+      METAL1  = 20
+    }
+
+    floors =
+    {
+      FLAT1 = 30
+      FLOOR7_1 = 50
+    }
+  }
+
+
+-----  TECH BASE  --------------------------------
+
+  tech_DEFAULTS =
+  {
+    liquids =
+    {
+      nukage = 90
+      water  = 30
+      slime  = 20
+      lava   = 5
+    }
+
+    facades =
+    {
+      BROWN1   = 40
+      STARTAN3 = 40
+      STARG3   = 40
+      STARGR2  = 40
+      STARBR2  = 30
+      BROWN96  = 25
+      BROWNGRN = 25
+      SLADWALL = 20
+      METAL2   = 10
+      METAL1   = 5
+    }
+
+    monster_prefs =
+    {
+      zombie  = 1.5
+      shooter = 1.2
+      arach   = 1.5
+    }
+
+    style_list =
+    {
+      naturals = { none=30, few=70, some=30, heaps=2 }
+    }
+
+
+    ---!!!  TEMPORARY V3 STUFF  !!!---
+
+    building_corners =
+    {
+      STARGR1=40, METAL1=20, ICKWALL3=6
+      TEKWALL4=6, COMPTALL=3, COMPBLUE=3
+      METAL7=40, METAL2=10, METAL4=10
+      TEKWALL6=10, TEKBRON1=3
+    }
+    hallway_walls =
+    {
+      BROWN1=33, BROWNGRN=50, GRAY1=50, STARBR2=33
+    }
+    hallway_floors =
+    {
+      FLAT4=50, CEIL5_1=50, FLOOR1_1=50, FLOOR3_3=50
+    }
+    hallway_ceilings =
+    {
+      FLAT4=50, CEIL5_1=50, CEIL3_5=50, CEIL3_3=50
+    }
+    stairwell_walls =
+    {
+      BROWN1=50, GRAY1=50, STARGR1=50, METAL4=50
+    }
+    stairwell_floors =
+    {
+      FLAT1=50, FLOOR7_1=50
+    }
+    doors =
+    {
+      silver=30, silver_fast=2, silver_once=6
+      bigdoor2=6, bigdoor2_fast=2, bigdoor2_once=6
+      bigdoor4=6, bigdoor4_fast=2, bigdoor4_once=6
+      bigdoor3=6
+    }
+    steps = { step1=50, step3=50, step4b=50 }
+    lifts = { shiny=20, platform=40, rusty=10 }
+    ceil_lights =
+    {
+      TLITE6_5=50, TLITE6_6=30, TLITE6_1=30, FLOOR1_7=30
+      FLAT2=20,    CEIL3_4=10,  FLAT22=10
+      GRNLITE1=10
+    }
+    big_lights =
+    {
+      TLITE6_5=30, TLITE6_6=30, GRNLITE1=30, FLAT17=30, CEIL3_4=30
+      GRNLITE1=20
+    }
+    pillars = { metal1=70, tekwall4=20
+                teklite=50, silver2=10, shawn2=10, metal1=15 }
+    big_pillars = { big_red=50, big_blue=50 }
+    crates = { crate1=50, crate2=50, comp=70, lite5=20
+               space=90, mod=15 }
+    exits = { skull_pillar=50, stone_pillar=5 }
+  }
+
+
+  tech_Startan =
   {
     prob = 50
     kind = "building"
@@ -225,7 +356,8 @@ DOOM2.ZONES =
 
   tech_Tekgren =
   {
-    prob = 50
+    kind = "building"
+    prob = 25
 
     walls =
     {
@@ -377,27 +509,57 @@ DOOM2.ZONES =
   }
 
 
-  generic_Stairwell =
+----- HELL / GOTHIC -----------------------------
+
+
+  hell_DEFAULTS =
   {
-    kind = "stairwell"
-
-    walls =
+    liquids =
     {
-      BROWN1  = 50
-      GRAY1   = 50
-      STARGR1 = 50
-      METAL1  = 20
+      lava   = 70
+      blood  = 40
+      nukage = 5
     }
 
-    floors =
+    keys =
     {
-      FLAT1 = 30
-      FLOOR7_1 = 50
+      ks_red  = 50
+      ks_blue = 50
+      ks_yellow = 50
     }
+
+    facades =
+    {
+      MARBLE2  = 50
+      SP_HOT1  = 50
+      MARBGRAY = 30
+      STONE3   = 30
+      GSTVINE1 = 20
+      GSTVINE2 = 20
+      BRONZE1  = 5
+      BROWN1   = 5
+    }
+
+    monster_prefs =
+    {
+      zombie  = 0.3
+      shooter = 0.6
+      vile    = 1.3
+      skull   = 2.0
+    }
+
+
+    ---!!!  TEMPORARY V3 STUFF  !!!---
+
+    exits = { skin_pillar=40, skull_pillar=20
+             demon_pillar2=10, demon_pillar3=10 }
+    steps = { step1=50, step3=50, step4=50 }
+    lifts = { platform=10, rusty=50, spine=30 }
+    big_pillars = { big_red=50, sloppy=20, sloppy2=20, }
+    switches = { sw_skin=50, sw_vine=50, sw_wood=50 }
+    outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 }
   }
 
-
-  ----- Hell / Gothic -------------------------
 
   hell_Marble =
   {
@@ -442,6 +604,8 @@ DOOM2.ZONES =
     walls =
     {
       SP_HOT1 = 50
+
+      -- TODO: need more
     }
 
     floors =
@@ -667,9 +831,47 @@ DOOM2.ZONES =
   }
 
 
-  ---- Urban / City / Earth ---------------------
+----  URBAN / CITY / EARTH  -----------------------
 
---PANEL7 looks silly as a facade --Chris
+
+  urban_DEFAULTS =
+  {
+    liquids =
+    {
+      water = 80
+      slime = 40
+      blood = 25
+      lava  = 5
+    }
+
+    facades =
+    {
+      BIGBRIK1 = 30
+      BIGBRIK2 = 15
+      BLAKWAL2 = 10
+      MODWALL1 = 20
+      MODWALL3 = 10
+      CEMENT7 = 5
+      CEMENT9 = 5
+      METAL2 = 3
+    }
+
+    monster_prefs =
+    {
+      revenant = 1.2
+      knight   = 1.5
+      gunner   = 1.5
+    }
+
+
+    ---!!!  TEMPORARY V3 STUFF  !!!---
+
+    exits = { demon_pillar2=20, demon_pillar3=20, stone_pillar=30 }
+    steps = { step6=50, }
+    lifts = { shiny=20, platform=20, rusty=50 }
+    switches = { sw_wood=50, sw_blue=50, sw_hot=50 }
+  }
+
 
   urban_Panel =
   {
@@ -711,7 +913,7 @@ DOOM2.ZONES =
   }
 
 
-  Urban_brick =
+  urban_Brick =
   {
     kind = "building"
     prob = 70
@@ -879,7 +1081,54 @@ DOOM2.ZONES =
   }
 
 
-  ---- Wolfenstein 3D -------------
+----  Wolfenstein 3D Secret Levels  ------------
+
+
+  wolf_DEFAULTS =
+  {
+    prob = 10
+
+    square_caves = 1
+
+    buildings =
+    {
+      Wolf_cells = 50
+      Wolf_brick = 30
+      Wolf_stein = 50
+    }
+
+    hallways  = { Wolf_hall=50 }
+    caves     = { Wolf_cave=50 }
+    outdoors  = { Wolf_outdoors=50 }
+
+    facades =
+    {
+      ZZWOLF1  = 50
+      ZZWOLF9  = 50
+      ZZWOLF11 = 20
+      ZZWOLF5  = 5
+    }
+
+    monster_prefs =
+    {
+      ss_dude = 100
+      zombie  = 20
+      shooter = 20
+      demon   = 20  -- kinda like a dog
+      imp     =  5  -- kinda like a mutant
+    }
+
+    style_list =
+    {
+      caves = { none=40, few=60, some=10 }
+    }
+
+
+    ---!!!  TEMPORARY V3 STUFF  !!!---
+
+    doors = { wolf_door=90 }
+  }
+
 
   wolf_Cells =
   {
@@ -997,243 +1246,6 @@ DOOM2.ZONES =
       ROCK4 = 50
       SP_ROCK1 = 10
     }
-  }
-}
-
-
-DOOM2.THEMES =
-{
-  -- Note: must be one entry here for each OB_THEMES definition
-
-  tech =
-  {
-    liquids =
-    {
-      nukage = 90
-      water  = 30
-      slime  = 20
-      lava   = 5
-    }
-
-    facades =
-    {
-      BROWN1   = 40
-      STARTAN3 = 40
-      STARG3   = 40
-      STARGR2  = 40
-      STARBR2  = 30
-      BROWN96  = 25
-      BROWNGRN = 25
-      SLADWALL = 20
-      METAL2   = 10
-      METAL1   = 5
-    }
-
-    monster_prefs =
-    {
-      zombie  = 1.5
-      shooter = 1.2
-      arach   = 1.5
-    }
-
-    style_list =
-    {
-      naturals = { none=30, few=70, some=30, heaps=2 }
-    }
-
-
-    ---!!!  TEMPORARY V3 STUFF  !!!---
-
-    building_corners =
-    {
-      STARGR1=40, METAL1=20, ICKWALL3=6
-      TEKWALL4=6, COMPTALL=3, COMPBLUE=3
-      METAL7=40, METAL2=10, METAL4=10
-      TEKWALL6=10, TEKBRON1=3
-    }
-    hallway_walls =
-    {
-      BROWN1=33, BROWNGRN=50, GRAY1=50, STARBR2=33
-    }
-    hallway_floors =
-    {
-      FLAT4=50, CEIL5_1=50, FLOOR1_1=50, FLOOR3_3=50
-    }
-    hallway_ceilings =
-    {
-      FLAT4=50, CEIL5_1=50, CEIL3_5=50, CEIL3_3=50
-    }
-    stairwell_walls =
-    {
-      BROWN1=50, GRAY1=50, STARGR1=50, METAL4=50
-    }
-    stairwell_floors =
-    {
-      FLAT1=50, FLOOR7_1=50
-    }
-    doors =
-    {
-      silver=30, silver_fast=2, silver_once=6
-      bigdoor2=6, bigdoor2_fast=2, bigdoor2_once=6
-      bigdoor4=6, bigdoor4_fast=2, bigdoor4_once=6
-      bigdoor3=6
-    }
-    steps = { step1=50, step3=50, step4b=50 }
-    lifts = { shiny=20, platform=40, rusty=10 }
-    ceil_lights =
-    {
-      TLITE6_5=50, TLITE6_6=30, TLITE6_1=30, FLOOR1_7=30
-      FLAT2=20,    CEIL3_4=10,  FLAT22=10
-      GRNLITE1=10
-    }
-    big_lights =
-    {
-      TLITE6_5=30, TLITE6_6=30, GRNLITE1=30, FLAT17=30, CEIL3_4=30
-      GRNLITE1=20
-    }
-    pillars = { metal1=70, tekwall4=20
-                teklite=50, silver2=10, shawn2=10, metal1=15 }
-    big_pillars = { big_red=50, big_blue=50 }
-    crates = { crate1=50, crate2=50, comp=70, lite5=20
-               space=90, mod=15 }
-    exits = { skull_pillar=50, stone_pillar=5 }
-  }
-
-
-  hell =
-  {
-    liquids =
-    {
-      lava   = 70
-      blood  = 40
-      nukage = 5
-    }
-
-    keys =
-    {
-      ks_red  = 50
-      ks_blue = 50
-      ks_yellow = 50
-    }
-
-    facades =
-    {
-      MARBLE2  = 50
-      SP_HOT1  = 50
-      MARBGRAY = 30
-      STONE3   = 30
-      GSTVINE1 = 20
-      GSTVINE2 = 20
-      BRONZE1  = 5
-      BROWN1   = 5
-    }
-
-    monster_prefs =
-    {
-      zombie  = 0.3
-      shooter = 0.6
-      vile    = 1.3
-      skull   = 2.0
-    }
-
-
-    ---!!!  TEMPORARY V3 STUFF  !!!---
-
-    exits = { skin_pillar=40, skull_pillar=20
-             demon_pillar2=10, demon_pillar3=10 }
-    steps = { step1=50, step3=50, step4=50 }
-    lifts = { platform=10, rusty=50, spine=30 }
-    big_pillars = { big_red=50, sloppy=20, sloppy2=20, }
-    switches = { sw_skin=50, sw_vine=50, sw_wood=50 }
-    outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 }
-  }
-
-
-
-  urban =
-  {
-    liquids =
-    {
-      water = 80
-      slime = 40
-      blood = 25
-      lava  = 5
-    }
-
-    facades =
-    {
-      BIGBRIK1 = 30
-      BIGBRIK2 = 15
-      BLAKWAL2 = 10
-      MODWALL1 = 20
-      MODWALL3 = 10
-      CEMENT7 = 5
-      CEMENT9 = 5
-      METAL2 = 3
-    }
-
-    monster_prefs =
-    {
-      revenant = 1.2
-      knight   = 1.5
-      gunner   = 1.5
-    }
-
-
-    ---!!!  TEMPORARY V3 STUFF  !!!---
-
-    exits = { demon_pillar2=20, demon_pillar3=20, stone_pillar=30 }
-    steps = { step6=50, }
-    lifts = { shiny=20, platform=20, rusty=50 }
-    switches = { sw_wood=50, sw_blue=50, sw_hot=50 }
-  }
-
-
-
-  -- this theme is not normally used (only for secret levels)
-  wolf =
-  {
-    prob = 10
-
-    square_caves = 1
-
-    buildings =
-    {
-      Wolf_cells = 50
-      Wolf_brick = 30
-      Wolf_stein = 50
-    }
-
-    hallways  = { Wolf_hall=50 }
-    caves     = { Wolf_cave=50 }
-    outdoors  = { Wolf_outdoors=50 }
-
-    facades =
-    {
-      ZZWOLF1  = 50
-      ZZWOLF9  = 50
-      ZZWOLF11 = 20
-      ZZWOLF5  = 5
-    }
-
-    monster_prefs =
-    {
-      ss_dude = 100
-      zombie  = 20
-      shooter = 20
-      demon   = 20  -- kinda like a dog
-      imp     =  5  -- kinda like a mutant
-    }
-
-    style_list =
-    {
-      caves = { none=40, few=60, some=10 }
-    }
-
-
-    ---!!!  TEMPORARY V3 STUFF  !!!---
-
-    doors = { wolf_door=90 }
   }
 }
 

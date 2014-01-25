@@ -225,7 +225,7 @@ function Levels_merge_tab(name, tab)
   end
 
   -- special handling for theme tables
-  if name == "THEMES" or name == "ZONES" then
+  if name == "THEMES" then
     Levels_merge_themes(GAME[name], tab)
     return
   end
@@ -396,7 +396,6 @@ function Levels_setup()
   table.merge_missing(PARAM, GLOBAL_PARAMETERS)
 
   table.name_up(GAME.ROOMS)
-  table.name_up(GAME.ZONES)
   table.name_up(GAME.THEMES)
 
   table.name_up(ROOM_PATTERNS)
@@ -463,7 +462,7 @@ function Levels_choose_themes()
     local which = rand.key_by_probs(sub_tab)
 --]]
 
-    LEV.theme = assert(GAME.THEMES[name])
+    LEV.theme = assert(GAME.THEMES[name .. "_DEFAULTS"])
 
     gui.printf("Theme for level %s = %s\n", LEV.name, name)
   end
@@ -795,8 +794,8 @@ function Levels_make_level(LEV)
 
   THEME = table.copy(assert(LEVEL.theme))
 
-  if GAME.THEME_DEFAULTS then
-    table.merge_missing(THEME, GAME.THEME_DEFAULTS)
+  if GAME.THEMES.DEFAULTS then
+    table.merge_missing(THEME, GAME.THEMES.DEFAULTS)
   end
 
   --!!!!!! FIXME: BIG HACK !!!!!!
