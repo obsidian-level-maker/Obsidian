@@ -1920,10 +1920,6 @@ function Simple_render_cave(R)
   
   create_delta_map()
 
-  if true then
-    R.walkway_mat = choose_tex(R.floor_mat, R.theme.naturals or THEME.naturals)
-  end
-
 --!!!! FIXME  add_liquid_pools()
 
   for x = 1, info.W do

@@ -1580,7 +1580,7 @@ end
 
 function Quest_zones_for_scenics()
   local total = #LEVEL.scenic_rooms
-  local scenic_list = table.copy(LEVEL.scenic_list)
+  local scenic_list = table.copy(LEVEL.scenic_rooms)
 
   local function grow_pass()
     rand.shuffle(scenic_list)
@@ -1616,66 +1616,91 @@ function Quest_choose_themes()
   --  FIXME: describe this...
   --
 
-  local function assign_room_theme(R, try_rare)
-    local kind = R.kind
-    if kind == "stairwell" then kind = "hallway" end
+  local function match_level_theme(name)
+    local kind = string.match(name, "([%w]+)_")
 
-    local theme_list = R.zone.themes[kind]
-    local  prev_list = R.zone.previous[kind]
+    return (kind == LEVEL.theme_name) or (kind == "generic")
+  end
 
-    assert(theme_list)
-    assert( prev_list)
 
-    local theme_name
+  local function collect_usable_themes(kind)
+    local tab = {}
 
-    if try_rare then
-      theme_name = pick_rare_room(R)
-    end
-
-    if not theme_name and #theme_list == 1 then
-      theme_name = theme_list[1]
-    end
-
-    if not theme_name then
-      local prev_count = 0
-
-      if prev_list[1] then prev_count = 1 end
-      if prev_list[2] and prev_list[2] == prev_list[1] then prev_count = 2 end
-      if prev_list[3] and prev_list[3] == prev_list[1] then prev_count = 3 end
-
-      -- logic to re-use a previous theme
-      if (prev_count == 1 and rand.odds(80)) or
-         (prev_count == 2 and rand.odds(50)) or
-         (prev_count == 3 and rand.odds(20))
-      then
-        theme_name = prev_list[1]
-      else
-        -- use a new one
-        theme_name = theme_list[1]
-
-        -- rotate the theme list
-        table.insert(theme_list, table.remove(theme_list, 1))
+    each name,info in GAME.ZONES do
+      if info.kind == kind and match_level_theme(name) then
+        tab[name] = info.prob or 50
       end
     end
 
-    R.theme = GAME.ROOM_THEMES[theme_name]
+    return tab
+  end
 
-    if not R.theme then
-      error("No such room theme: " .. tostring(theme_name))
+
+  local function pick_zone_theme(tab)
+    assert(tab)
+    assert(not table.empty(tab))
+
+    local name = rand.key_by_probs(tab)
+
+    return assert(GAME.ZONES[name])
+  end
+
+
+  local function themes_for_zones()
+    local tab = {}
+
+    LEVEL.outdoors_theme  = pick_zone_theme(collect_usable_themes("outdoors"))
+    LEVEL.cave_theme      = pick_zone_theme(collect_usable_themes("cave"))
+    LEVEL.hallway_theme   = pick_zone_theme(collect_usable_themes("hallway"))
+    LEVEL.stairwell_theme = pick_zone_theme(collect_usable_themes("stairwell"))
+
+    local building_tab = collect_usable_themes("building")
+
+    each Z in LEVEL.zones do
+      Z.building_theme = pick_zone_theme(building_tab)
+    end
+  end
+
+
+  local function themes_for_rooms()
+    local all_rooms = {}
+    table.append(all_rooms, LEVEL.rooms)
+    table.append(all_rooms, LEVEL.scenic_rooms)
+
+    each R in all_rooms do
+      local Z = assert(R.zone)
+
+      -- Note: hallways and stairwells have not been decided yet
+
+      if R.kind == "cave" then
+        R.theme = Z.cave_theme or LEVEL.cave_theme
+      elseif R.is_outdoor then
+        R.theme = Z.outdoors_theme or LEVEL.outdoors_theme
+      else
+        R.theme = Z.building_theme or LEVEL.building_theme
+      end
+
+      assert(R.theme)
+    end
+  end
+
+
+  local function facades_for_zones()
+    if not THEME.facades then
+      error("Theme is missing facades table")
     end
 
-    gui.printf("Room theme for %s : %s\n", R:tostr(), theme_name)
+    local tab = table.copy(THEME.facades)
 
-    if not R.theme.rarity then
-      table.insert(prev_list, 1, theme_name)
-    elseif R.theme.rarity == "minor" then
-      -- do nothing
-    elseif R.theme.rarity == "zone" then
-      R.zone.rare_used[theme_name] = 1
-    elseif R.theme.rarity == "level" then
-      LEVEL.rare_used[theme_name] = 1
-    elseif R.theme.rarity == "episode" then
-      EPISODE.rare_used[theme_name] = 1
+    each Z in LEVEL.zones do
+      local mat = rand.key_by_probs(tab)
+
+      Z.facade_mat = mat
+
+      -- less likely to use it again
+      tab[mat] = tab[mat] / 5
+
+      gui.printf("Facade for ZONE_%d : %s\n", Z.id, Z.facade_mat)
     end
   end
 
@@ -1695,6 +1720,8 @@ function Quest_choose_themes()
     end
 
     --- distribute the pictures amongst the zones ---
+
+    -- FIXME !!!!  bottom up approach...
 
     local names = table.keys(THEME.pictures)
 
@@ -1721,75 +1748,12 @@ function Quest_choose_themes()
       Z.pictures[name] = THEME.pictures[name] / 4
     end
 
-    -- [[ debugging
+--[[ DEBUG
     gui.debugf("Pictures for zones:\n")
     each Z in LEVEL.zones do
       gui.debugf("ZONE_%d =\n%s\n", Z.id, table.tostr(Z.pictures))
     end
-    --]]
-  end
-
-
-  local function match_level_theme(name)
-    local kind = string.match(name, "([%w]+)_")
-
-    return (kind == LEVEL.theme_name) or (kind == "generic")
-  end
-
-
-  local function collect_usable_themes(kind)
-    local tab = {}
-
-    each name,info in GAME.ZONES do
-      if info.kind == kind and match_level_theme(name) then
-        tab[name] = info.prob or 50
-      end
-    end
-  end
-
-
-  local function pick_zone_theme(tab)
-    assert(not table.empty(tab))
-
-    local name = rand.key_by_probs(tab)
-
-    return assert(GAME.ZONES[name])
-  end
-
-
-  local function themes_for_zones()
-    local tab = {}
-
-    LEVEL.outdoors_theme  = pick_zone_theme(collect_usable_themes("outdoors"))
-    LEVEL.cave_theme      = pick_zone_theme(collect_usable_themes("cave"))
-    LEVEL.hallway_theme   = pick_zone_theme(collect_usable_themes("hallway"))
-    LEVEL.stairwell_theme = pick_zone_theme(collect_usable_themes("stairwell"))
-
-    local building_tab = collect_usable_themes("building")
-
-    each Z in LEVEL.zones do
-      Z.building_theme = pick_zone_theme(building_tab)
-    end
-  end
-
-
-  local function facades_for_zones()
-    if not THEME.facades then
-      error("Theme is missing facades table")
-    end
-
-    local tab = table.copy(THEME.facades)
-
-    each Z in LEVEL.zones do
-      local mat = rand.key_by_probs(tab)
-
-      Z.facade_mat = mat
-
-      -- less likely to use it again
-      tab[mat] = tab[mat] / 5
-
-      gui.printf("Facade for ZONE_%d : %s\n", Z.id, Z.facade_mat)
-    end
+--]]
   end
 
 
@@ -1797,34 +1761,12 @@ function Quest_choose_themes()
 
   LEVEL.rare_used = {}
 
---[[
-  determine_extents()
-
-  each kind,extent in EXTENT_TAB do
-    dominant_themes_for_kind(kind, extent)
-  end
-
-  dump_dominant_themes()
-
-  each R in LEVEL.rooms do
-    local rare_ok = (_index % 2 == 0) and rand.odds(THEME.rare_prob or 30)
-
-    if R.kind == "hallway" then
-      assign_hall_theme(R)
-    else
-      assign_room_theme(R, rare_ok)
-    end
-  end
---]]
-
   themes_for_zones()
+  themes_for_rooms()
 
   facades_for_zones()
 
   pictures_for_zones()
-
-  -- verify each room and hallway got a theme
-  each R in LEVEL.rooms do assert(R.theme) end
 end
 
 
@@ -1846,7 +1788,6 @@ function Quest_make_quests()
 
   Quest_create_zones()
   Quest_divide_zones()
-  Quest_zones_for_scenics()
 
   assert(LEVEL.exit_room)
 
@@ -1855,6 +1796,7 @@ function Quest_make_quests()
   Connect_reserved_rooms()
 
   Quest_order_by_visit()
+  Quest_zones_for_scenics()
 
   Quest_choose_themes()
   Quest_select_textures()

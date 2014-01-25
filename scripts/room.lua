@@ -501,6 +501,9 @@ function Room_decide_hallways()
     then
       gui.printf("--> Stairwell @ %s\n", R:tostr())
       R.kind = "stairwell"
+
+      R.theme = R.zone.stairwell_theme or LEVEL.stairwell_theme
+      assert(R.theme)
     end
   end
 
@@ -521,6 +524,9 @@ function Room_decide_hallways()
       R.kind = "hallway"
       R.hallway = { }
       R.is_outdoor = nil
+
+      R.theme = R.zone.hallway_theme or LEVEL.hallway_theme
+      assert(R.theme)
 
       gui.debugf("Hallway @ %s\n", R:tostr())
     end
