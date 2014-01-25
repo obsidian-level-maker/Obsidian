@@ -3,6 +3,8 @@ WORK IN PROGRESS
 ================
 
 
+!!  Theme system
+
 +  Caves!
 
 +  wall pictures
@@ -11,71 +13,22 @@ WORK IN PROGRESS
 
 -  fix texturing on some stairs and diagonals
 
--  improve INSTALL.txt  (see Eureka's)
-
-
-
-Theme system:
-
-+  have "texture groups" like this:
-
-   DOOM.TEXTURE_GROUPS
-   {
-     STARTAN_group =
-     {
-       STARTAN3 = 50
-       STARG1   = 30
-       STARBR2  = 10
-     }
-
-     WOOD_flats =
-     {
-       FLAT5_4 = 20
-       FLAT5_2 = 30
-     }
-   }
-
-   then in a theme definition:
-
-   walls =
-   {
-     STARTAN_group = 50
-     METAL = 40
-   }
-
-   if a group is used in a room, then the chosen texture is randomly
-   chosen from the group -- otherwise it is the single texture.
-
-   as before, a selection of texture/groups are chosen for the walls,
-   floors and ceilings of a zone.  but now, we know that they are
-   actually distinct.
-
-   Q/ keep 'R.theme' field?
-
-
-   rename ROOM_THEMES --> ROOM_TYPES, and allow room types to supply
-   their own walls, floors, etc... (overriding theme)
-
-   call the field 'R.room_type'
-
-
-
-Q/ should LEVEL themes become ZONE themes ?
-   e.g. use both 'hell1' and 'hell2' in a single map?
-   --> NO
-
 
 
 Later
 =====
 
 +  intrusions: like "junking" a side, but connects two other rooms
+   (they are really just a hallway, but merging itself with the
+    neighboring room as much as possible)
+
++  sky-halls (variation of the above, no?)
 
 +  closets (as in V4 / V5)
 
-+  sky-halls
++  get stairwells working again, have outdoor version w/ rails
 
-+  get stairwells working again, have outdoor version
++  apply nice items gotten in normal rooms to the HMODEL
 
 
 -  ability to centre doors (on two seeds)
