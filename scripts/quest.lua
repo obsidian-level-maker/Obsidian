@@ -1611,160 +1611,10 @@ end
 
 
 
-function Quest_assign_themes()
+function Quest_choose_themes()
   --
-  -- figure out how many room themes to use for each kind of room.
-  -- table keys of EXTENT_TAB are room kinds ("building" etc) and
-  -- value is number of themes per ZONE, where zero means the whole level.
+  --  FIXME: describe this...
   --
-  local EXTENT_TAB = {}
-
-  local function total_of_room_kind(kind)
-    local total = 0
-
-      each R in LEVEL.rooms do
-        if R.kind == kind or
-           (kind == "hallway" and R.kind == "stairwell")
-        then
-          total = total + R.svolume
-        end
-      end
-
-    return total
-  end
-
-
-  local function extent_for_room_kind(kind, A, B)
-
-    local qty = total_of_room_kind(kind)
-
-    -- rough calculation of room area per zone
-    qty = qty / #LEVEL.zones
-
-    A = A * 5
-    B = B * 5
-
-        if qty < A then EXTENT_TAB[kind] = 0
-    elseif qty < B then EXTENT_TAB[kind] = 1
-    else                EXTENT_TAB[kind] = 2
-    end
-
-    gui.debugf("EXTENT_TAB[%s] --> %d (qty:%1.1f)\n", kind, EXTENT_TAB[kind], qty)
-  end
-
-
-  local function determine_extents()
-    extent_for_room_kind("building", 3, 8)
-    extent_for_room_kind("cave",     3, 8)
-    extent_for_room_kind("outdoor",  3, 12)
-    extent_for_room_kind("hallway",  3, 20)
-  end
-
-
-  local function dump_dominant_themes()
-    gui.debugf("Dominant themes:\n")
-
-    each Z in LEVEL.zones do
-      gui.debugf("@ ZONE_%d:\n", Z.id)
-
-      each kind,extent in EXTENT_TAB do
-        local line = ""
-
-        each name in Z.themes[kind] do
-          line = line .. " " .. name
-        end
-
-        gui.debugf("   %s : {%s }\n", kind, line)
-      end
-    end
-  end
-
-
-  local function dominant_themes_for_kind(kind, extent)
-    if THEME.max_dominant_themes then
-      extent = math.min(extent, THEME.max_dominant_themes)
-    end
-
-    -- figure out which table to use
-    local tab_name = kind .. "s"
-    local tab = THEME[tab_name]
-
-    if not tab and kind == "hallway" then
-      tab = THEME["buildings"]
-    end
-
-    if not tab then
-      error("Theme is missing " .. tab_name .. " choices")
-    end
-
-    -- copy the table, so we can modify probabilities
-    local old_tab = tab ; tab = table.copy(tab)
-
-    -- remove the rare rooms
-    each name,prob in old_tab do
-      local rt = GAME.ROOM_THEMES[name]
-      if rt and rt.rarity then tab[name] = nil end
-    end
-
-    assert(not table.empty(tab))
-
-    local global_theme
-
-    if extent == 0 then
-      global_theme = rand.key_by_probs(tab)
-    end
-
-    each Z in LEVEL.zones do
-      Z.themes[kind] = {}
-      Z.previous[kind] = {}
-
-      if global_theme then
-        table.insert(Z.themes[kind], global_theme)
-        continue
-      end
-
-      for loop = 1, extent do
-        local name = rand.key_by_probs(tab)
-        -- try not to re-use the same theme again
-        tab[name] = tab[name] / 20
-
-        table.insert(Z.themes[kind], name)
-      end
-    end
-  end
-
-
-  local function pick_rare_room(R)
-    do return nil end  -- FIXME
-
-    local tab_name = R.kind .. "s"
-    local tab_orig = THEME[tab_name]
-
-    if not tab_orig then return nil end
-
-    local tab = table.copy(tab_orig)
-
-    -- remove non-rare themes and already used themes
-    each name,prob in tab_orig do
-      local rt = assert(GAME.ROOM_THEMES[name])
-
-      if not rt.rarity or
-         (rt.rarity == "zone"  and R.zone.rare_used[name]) or
-         (rt.rarity == "level" and  LEVEL.rare_used[name]) or
-         (rt.rarity == "episode" and EPISODE.rare_used[name])
-      then
-        tab[name] = nil
-      end
-    end
-
-    -- nothing is possible?
-    if table.empty(tab) then
-      return nil
-    end
-
-    return rand.key_by_probs(tab)
-  end
-
 
   local function assign_room_theme(R, try_rare)
     local kind = R.kind
@@ -1826,45 +1676,6 @@ function Quest_assign_themes()
       LEVEL.rare_used[theme_name] = 1
     elseif R.theme.rarity == "episode" then
       EPISODE.rare_used[theme_name] = 1
-    end
-  end
-
-
-  local function assign_hall_theme(H)
-    local conn_rooms = {}
-
-    each C in H.conns do
-      local R = C:neighbor(H)
-
-      if R.kind == "building" then  -- TODO: caves
-        table.insert(conn_rooms, R)
-      end
-    end
-
-    -- mini-halls just use the theme of the connected room
-    -- (unless between two outdoor rooms)
-    -- FIXME!!!! a way to FORCE this for larger halls
-    if #H.sections == 1 and #conn_rooms > 0 then
-      H.theme = conn_rooms[1].theme
-      return
-    end
-
-    -- see if any room themes specify hallways
-    -- (TODO: consider if this list needs sorting, e.g. by visit_id)
-    local theme_name = H.zone.themes["hallway"][1]
-
-    each R in conn_rooms do
-      if R.theme.hallways then
-        theme_name = rand.key_by_probs(R.theme.hallways)
-      end
-    end
-
-    assert(theme_name)
-
-    H.theme = GAME.ROOM_THEMES[theme_name]
-
-    if not H.theme then
-      error("No such room theme: " .. tostring(theme_name))
     end
   end
 
@@ -1982,7 +1793,7 @@ function Quest_assign_themes()
   end
 
 
-  ---| Quest_assign_themes |---
+  ---| Quest_choose_themes |---
 
   LEVEL.rare_used = {}
 
@@ -2045,8 +1856,8 @@ function Quest_make_quests()
 
   Quest_order_by_visit()
 
-  Quest_assign_themes()
-  Quest_select_textures()  -- FIXME: merge from Room_choose_themes
+  Quest_choose_themes()
+  Quest_select_textures()
 
   -- special weapon handling for HEXEN and HEXEN II
   if PARAM.hexen_weapons then
