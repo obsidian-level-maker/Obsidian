@@ -11,6 +11,49 @@ DOOM1.THEMES =
 
 ------ EPISODE 1 : Tech Bases ----------------------
 
+  tech_DEFAULTS =
+  {
+    liquids =
+    {
+      nukage=90
+      water=15
+      lava=10
+    }
+
+    facades =
+    {
+      BROWN1=50
+      BROWNGRN=20
+      BROWN96=5
+      STONE2=10
+      STONE3=10
+      STARTAN3=30
+      STARG3=20
+    }
+
+    style_list =
+    {
+      naturals = { none=30, few=70, some=30, heaps=2 }
+    }
+
+    ---!!!  TEMPORARY V3 CRUD  !!!---
+
+    doors =
+    {
+      silver=20
+      silver_fast=2
+      silver_once=5
+      bigdoor2=20
+      bigdoor2_fast=2
+      bigdoor2_once=5
+      bigdoor3=5
+      bigdoor4=10
+      bigdoor4_fast=2
+      bigdoor4_once=5
+    }
+  }
+
+
   tech_room =
   {
     walls =
@@ -47,18 +90,18 @@ DOOM1.THEMES =
 
     ceilings =
     {
-     CEIL5_1=20
-     CEIL3_3=15
-     CEIL3_5=50
-     FLAT1=20
-     FLAT4=15
-     FLAT18=20
-     FLOOR0_2=10
-     FLOOR4_1=30
-     FLOOR5_1=15
-     FLOOR5_4=10
-     CEIL4_1=15
-     CEIL4_2=15
+      CEIL5_1=20
+      CEIL3_3=15
+      CEIL3_5=50
+      FLAT1=20
+      FLAT4=15
+      FLAT18=20
+      FLOOR0_2=10
+      FLOOR4_1=30
+      FLOOR5_1=15
+      FLOOR5_4=10
+      CEIL4_1=15
+      CEIL4_2=15
     }
   }
 
@@ -90,18 +133,18 @@ DOOM1.THEMES =
 
     ceilings =
     {
-     CEIL5_1=20
-     CEIL3_3=15
-     CEIL3_5=50
-     FLAT1=20
-     FLOOR4_1=30
-     FLAT5_4=10
-     FLOOR5_4=10
+      CEIL5_1=20
+      CEIL3_3=15
+      CEIL3_5=50
+      FLAT1=20
+      FLOOR4_1=30
+      FLAT5_4=10
+      FLOOR5_4=10
     }
   }
 
 
- tech_Computer =
+  tech_Computer =
   {
     prob = 10
 
@@ -127,9 +170,9 @@ DOOM1.THEMES =
 
     ceilings =
     {
-     CEIL5_1=50
-     CEIL4_1=15
-     CEIL4_2=15
+      CEIL5_1=50
+      CEIL4_1=15
+      CEIL4_2=15
     }
   }
 
@@ -140,8 +183,8 @@ DOOM1.THEMES =
 
     walls =
     {
-     SHAWN2=50
-     METAL1=5
+      SHAWN2=50
+      METAL1=5
     }
 
     floors =
@@ -152,10 +195,9 @@ DOOM1.THEMES =
       FLAT23=60
     }
 
-
     ceilings =
     {
-     FLAT23=50
+      FLAT23=50
     }
   }
 
@@ -246,6 +288,56 @@ DOOM1.THEMES =
 
 ----- EPISODE 3 : Hell ---------------------------
 
+  hell_DEFAULTS =
+  {
+    --  Water is seen in a few locations in episode 3 -Chris
+
+    liquids =
+    {
+      lava=30
+      blood=90
+      nukage=5
+      water=10
+    }
+
+    keys =
+    {
+      ks_red=50
+      ks_blue=50
+      ks_yellow=50
+    }
+
+    facades =
+    {
+      STONE2=10
+      STONE3=15
+      WOOD1=50
+      GSTONE1=45
+      MARBLE1=30
+      BROWN1=5
+      BROWNGRN=5
+      WOOD5=25
+      SP_HOT1=10
+      SKINMET1=10
+      SKINMET2=10
+      SKINTEK1=10
+    }
+
+    monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0 }
+
+    ---!!!  TEMPORARY V3 CRUD  !!!---
+
+    doors =
+    {
+      wooden=20
+      wooden_fast=2
+      wooden_once=5
+      wooden2=20
+      wooden2_fast=2
+      wooden2_once=5
+    }
+  }
+
   hell_Marble =
   {
     walls =
@@ -292,7 +384,8 @@ DOOM1.THEMES =
 
     corners =
     {
-      SKULWALL=8, SKULWAL3=7
+      SKULWALL=8
+      SKULWAL3=7
     }
   }
 
@@ -303,9 +396,9 @@ DOOM1.THEMES =
 
     walls =
     {
-     WOOD1=50
-     WOOD3=30
-     WOOD5=20
+      WOOD1=50
+      WOOD3=30
+      WOOD5=20
     }
 
     floors =
@@ -315,12 +408,11 @@ DOOM1.THEMES =
       FLAT5_5=15
     }
 
-
     ceilings =
     {
-     CEIL1_1=50
-     FLAT5_2=30
-     FLAT5_1=15
+      CEIL1_1=50
+      FLAT5_2=30
+      FLAT5_1=15
     }
   }
 
@@ -331,18 +423,16 @@ DOOM1.THEMES =
 
     walls =
     {
-     SKIN2=15
-     SKINFACE=20
-     SKSNAKE2=20
-     SKINTEK1=10
-     SKINTEK2=10
-     SKINMET1=50
-     SKINMET2=40
-     SKINCUT=10
-     SKINSYMB=5
+      SKIN2=15
+      SKINFACE=20
+      SKSNAKE2=20
+      SKINTEK1=10
+      SKINTEK2=10
+      SKINMET1=50
+      SKINMET2=40
+      SKINCUT=10
+      SKINSYMB=5
     }
-
---Matched tweaking as of revision 10658 -Chris
 
     floors =
     {
@@ -353,7 +443,6 @@ DOOM1.THEMES =
       MFLR8_2=10
       MFLR8_4=10
     }
-
 
     ceilings =
     {
@@ -496,6 +585,52 @@ DOOM1.THEMES =
 
 
 ------ EPISODE 2 ------------------------------
+
+  -- Deimos theme by Mr. Chris
+
+  deimos_DEFAULTS =
+  {
+    liquids =
+    {
+      nukage=60
+      blood=20
+      water=10
+    }
+
+    -- Best facades would be STONE/2/3, BROVINE/2, BROWN1 and maybe a few others as I have not seen many
+    -- other textures on the episode 2 exterior.
+    facades =
+    {
+      STONE2=40
+      STONE3=60
+      BROVINE=30
+      BROVINE2=25
+      BROWN1=50
+      BROWNGRN=20
+    }
+
+    style_list =
+    {
+      naturals = { none=40, few=70, some=20, heaps=2 }
+    }
+
+    ---!!!  TEMPORARY V3 CRUD  !!!---
+
+    doors =
+    {
+      silver=20
+      silver_fast=2
+      silver_once=5
+      bigdoor2=20
+      bigdoor2_fast=2
+      bigdoor2_once=5
+      bigdoor3=5
+      bigdoor4=10
+      bigdoor4_fast=2
+      bigdoor4_once=5
+    }
+  }
+
 
   deimos_Room =
   {
@@ -720,12 +855,12 @@ DOOM1.THEMES =
 
     walls =
     {
-     MARBLE1=20
-     MARBLE2=20
-     MARBLE3=20
-     GSTONE1=20
-     BROVINE=20
-     COMPTILE=20
+      MARBLE1=20
+      MARBLE2=20
+      MARBLE3=20
+      GSTONE1=20
+      BROVINE=20
+      COMPTILE=20
     }
 
     floors =
@@ -810,6 +945,51 @@ DOOM1.THEMES =
 
 ----- EPISODE 4 -------------------------------
 
+  -- Thy Flesh Consumed by Mr. Chris
+  -- Basically a modified version of doom_hell1 to match id's E4 better
+
+  flesh_DEFAULTS =
+  {
+    liquids =
+    {
+      lava=30
+      blood=50
+      nukage=10
+      water=20
+    }
+
+    keys =
+    {
+      ks_red=50
+      ks_blue=50
+      ks_yellow=50
+    }
+
+    facades =
+    {
+      STONE2=20
+      STONE3=15
+      WOOD1=50
+      GSTONE1=30
+      MARBLE1=20
+      BROWN1=10
+      BROWNGRN=10
+      WOOD5=40
+      SP_HOT1=5
+      SKINMET1=10
+      SKINMET2=10
+    }
+
+    monster_prefs =
+    {
+      zombie=0.6
+      shooter=0.8
+      skull=1.2
+      demon=1.5
+    }
+  }
+
+
   flesh_Room =
   {
     walls =
@@ -869,13 +1049,13 @@ DOOM1.THEMES =
   {
     walls =
     {
-     WOOD1=50
-     WOOD3=30
-     WOOD5=20
-     SKINMET1=15
-     SKINMET2=15
-     SKINTEK1=6
-     SKINTEK2=6
+      WOOD1=50
+      WOOD3=30
+      WOOD5=20
+      SKINMET1=15
+      SKINMET2=15
+      SKINTEK1=6
+      SKINTEK2=6
     }
 
     floors =
@@ -889,10 +1069,10 @@ DOOM1.THEMES =
 
     ceilings =
     {
-     CEIL1_1=50
-     FLAT5_2=30
-     FLAT5_1=15
-     FLOOR7_1=10
+      CEIL1_1=50
+      FLAT5_2=30
+      FLAT5_1=15
+      FLOOR7_1=10
     }
   }
  
@@ -932,12 +1112,12 @@ DOOM1.THEMES =
 
     walls =
     {
-     MARBLE1=20
-     MARBLE2=20
-     MARBLE3=20
-     GSTONE1=20
-     BROVINE=20
-     COMPTILE=20
+      MARBLE1=20
+      MARBLE2=20
+      MARBLE3=20
+      GSTONE1=20
+      BROVINE=20
+      COMPTILE=20
     }
 
     floors =
@@ -1038,170 +1218,6 @@ DOOM1.THEMES =
       SKSNAKE1=10
       SKSNAKE2=10
     }
-  }
-}
-
-
-  tech_DEFAULTS =
-  {
-    liquids = { nukage=90, water=15, lava=10 }
-
-
-    facades =
-    {
-      BROWN1=50
-      BROWNGRN=20
-      BROWN96=5
-      STONE2=10
-      STONE3=10
-      STARTAN3=30
-      STARG3=20
-    }
-
-    style_list =
-    {
-      naturals = { none=30, few=70, some=30, heaps=2 }
-    }
-
-    ---!!!  TEMPORARY V3 CRUD  !!!---
-
-    doors =
-    {
-      silver=20
-      silver_fast=2
-      silver_once=5
-      bigdoor2=20
-      bigdoor2_fast=2
-      bigdoor2_once=5
-      bigdoor3=5
-      bigdoor4=10
-      bigdoor4_fast=2
-      bigdoor4_once=5
-    }
-  }
-
-
-  -- Deimos theme by Mr. Chris
-
-  deimos_DEFAULTS =
-  {
-    liquids = { nukage=60, water=10, blood=20 }
-
-    -- Best facades would be STONE/2/3, BROVINE/2, BROWN1 and maybe a few others as I have not seen many
-    -- other textures on the episode 2 exterior.
-    facades =
-    {
-      STONE2=40
-      STONE3=60
-      BROVINE=30
-      BROVINE2=25
-      BROWN1=50
-      BROWNGRN=20
-    }
-
-    style_list =
-    {
-      naturals = { none=40, few=70, some=20, heaps=2 }
-    }
-
-    ---!!!  TEMPORARY V3 CRUD  !!!---
-
-    doors =
-    {
-      silver=20
-      silver_fast=2
-      silver_once=5
-      bigdoor2=20
-      bigdoor2_fast=2
-      bigdoor2_once=5
-      bigdoor3=5
-      bigdoor4=10
-      bigdoor4_fast=2
-      bigdoor4_once=5
-    }
-  }
-
-
-  hell_DEFAULTS =
-  {
-    --  Water is seen in a few locations in episode 3 -Chris
-
-    liquids = { lava=30, blood=90, nukage=5, water=10 }
-
-    keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
-
-    facades =
-    {
-      STONE2=10
-      STONE3=15
-      WOOD1=50
-      GSTONE1=45
-      MARBLE1=30
-      BROWN1=5
-      BROWNGRN=5
-      WOOD5=25
-      SP_HOT1=10
-      SKINMET1=10
-      SKINMET2=10
-      SKINTEK1=10
-    }
-
-    monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0 }
-
-    ---!!!  TEMPORARY V3 CRUD  !!!---
-
-    doors =
-    {
-      wooden=20
-      wooden_fast=2
-      wooden_once=5
-      wooden2=20
-      wooden2_fast=2
-      wooden2_once=5
-    }
-
-  }
-
-
-  -- Thy Flesh Consumed by Mr. Chris
-  -- Basically a modified version of doom_hell1 to match id's E4 better
-
-  flesh_DEFAULTS =
-  {
-    keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
-
-    liquids = { lava=30, blood=50, nukage=10, water=20 }
-
-    buildings = { Flesh_room=50
-      Flesh_wood=30
-      Flesh_marble=20 }
-    caves     = { Flesh_cave=50 }
-    outdoors  = { Flesh_outdoors=50 }
-
-    facades =
-    {
-      STONE2=20
-      STONE3=15
-      WOOD1=50
-      GSTONE1=30
-      MARBLE1=20
-      BROWN1=10
-      BROWNGRN=10
-      WOOD5=40
-      SP_HOT1=5
-      SKINMET1=10
-      SKINMET2=10
-    }
-
-    monster_prefs =
-    {
-      zombie=0.6
-      shooter=0.8
-      skull=1.2
-      demon=1.5
-    }
-
-    ---!!!  TEMPORARY V3 CRUD  !!!---
   }
 }
 
