@@ -3423,11 +3423,11 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
 
     if S.kind == "void" then
 
-      if S.solid_feature and THEME.building_corners then
-        if not R.corner_tex then
-          R.corner_tex = rand.key_by_probs(THEME.building_corners)
+      if S.solid_feature and R.zone.corner_mats then
+        if not R.corner_mat then
+          R.corner_mat = rand.key_by_probs(R.zone.corner_mats)
         end
-        w_tex = R.corner_tex
+        w_tex = R.corner_mat
       end
 
       Trans.old_quad(get_mat(w_tex), fx1,fy1, fx2,fy2, -EXTREME_H, EXTREME_H);

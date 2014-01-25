@@ -205,11 +205,28 @@ DOOM2.THEMES =
       STARG3   = 40
       STARGR2  = 40
       STARBR2  = 30
+
       BROWN96  = 25
       BROWNGRN = 25
       SLADWALL = 20
       METAL2   = 10
       METAL1   = 5
+    }
+
+    corners =
+    {
+      STARGR1 = 50
+      METAL1 = 30
+      METAL7 = 50
+      METAL2 = 15
+      METAL4 = 15
+
+      ICKWALL3 = 10
+      TEKWALL4 = 10
+      TEKWALL6 = 15
+      TEKBRON1 = 5
+      COMPTALL = 5
+      COMPBLUE = 5
     }
 
     monster_prefs =
@@ -227,13 +244,6 @@ DOOM2.THEMES =
 
     ---!!!  TEMPORARY V3 STUFF  !!!---
 
-    building_corners =
-    {
-      STARGR1=40, METAL1=20, ICKWALL3=6
-      TEKWALL4=6, COMPTALL=3, COMPBLUE=3
-      METAL7=40, METAL2=10, METAL4=10
-      TEKWALL6=10, TEKBRON1=3
-    }
     doors =
     {
       silver=30, silver_fast=2, silver_once=6
