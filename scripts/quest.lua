@@ -795,20 +795,24 @@ function Quest_select_textures()
     R.facade = assert(R.zone.facade_mat)
 
     if R.kind == "cave" then
-      R.main_tex = rand.key_by_probs(R.theme.naturals)
+      R.main_tex = R.zone.cave_wall_mat
       return
     end
 
-    if not R.is_outdoor then
+    if R.is_outdoor then
+      R.main_tex = R.zone.natural_mat
+    else
       R.main_tex = rand.key_by_probs(R.theme.walls)
-      return
     end
-
-    R.main_tex = rand.key_by_probs(R.theme.naturals or R.theme.floors)
   end
 
 
   ---| Quest_select_textures |---
+
+  each Z in LEVEL.zones do
+    Z.natural_mat   = rand.key_by_probs(LEVEL.outdoors_theme.naturals)
+    Z.cave_wall_mat = rand.key_by_probs(LEVEL.cave_theme.naturals)
+  end
 
   each R in LEVEL.rooms do
     setup_theme(R)
@@ -1297,23 +1301,19 @@ end
 
 
   local function evaluate_exit(R, C, mode)
-    -- generally want to visit the SMALLEST group of rooms first, since
-    -- that means the player's hard work to find the switch is rewarded
-    -- with a larger new area to explore.  In theory anyway :-)
     --
-    -- however, for storage we want to visit the LARGEST group first,
-    -- since the final room is where the zone's solution will go.
+    -- we generally want to visit the LARGEST group first, to ensure
+    -- there isn't large sections of the zone turning into storage or
+    -- secrets.
+    --
 
     if C.free_exit_score then
       return C.free_exit_score
     end
 
     local score
-    if mode == "quest" then
-      score = 60 - math.sqrt(C.trav_2.volume)
-    else
-      score = 20 + math.sqrt(C.trav_2.volume)
-    end
+
+    score = 20 + math.sqrt(C.trav_2.volume)
 
     -- prefer exit to be away from entrance
     if C.dir and R.entry_conn and R.entry_conn.dir then
@@ -1344,7 +1344,7 @@ end
     each C in exits do
       local score = evaluate_exit(R, C, mode)
 
--- gui.debugf("exit score for %s = %1.1f", D:tostr(), score)
+--- gui.debugf("exit score %1.1f for %s", score, C:roomstr())
 
       if score > best_score then
         best = C
