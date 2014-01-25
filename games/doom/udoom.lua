@@ -6,11 +6,12 @@
 --Fixed up for future use in V6 -Chris
 
 
-DOOM1.ROOM_THEMES =
+DOOM1.THEMES =
 {
-  ----- Tech Bases -------------------------
 
-  D1_Tech_room =
+------ EPISODE 1 : Tech Bases ----------------------
+
+  tech_room =
   {
     walls =
     {
@@ -58,13 +59,11 @@ DOOM1.ROOM_THEMES =
      FLOOR5_4=10
      CEIL4_1=15
      CEIL4_2=15
-
     }
-
   }
 
 
-  D1_Tech_brown =
+  tech_brown =
   {
     walls =
     {
@@ -99,11 +98,13 @@ DOOM1.ROOM_THEMES =
      FLAT5_4=10
      FLOOR5_4=10
     }
-
   }
 
- D1_Tech_computer =
+
+ tech_Computer =
   {
+    prob = 10
+
     walls =
     {
       COMPSPAN=30
@@ -130,11 +131,13 @@ DOOM1.ROOM_THEMES =
      CEIL4_1=15
      CEIL4_2=15
     }
-}
+  }
 
-D1_Tech_shiny =
 
+  tech_Shiny =
   {
+    prob = 10
+
     walls =
     {
      SHAWN2=50
@@ -154,9 +157,10 @@ D1_Tech_shiny =
     {
      FLAT23=50
     }
-}
+  }
 
-  D1_Tech_hallway =
+
+  tech_Hallway =
   {
     walls =
     {
@@ -207,7 +211,7 @@ D1_Tech_shiny =
   }
 
 
-  D1_Tech_cave =
+  tech_Cave =
   {
     naturals =
     {
@@ -219,7 +223,7 @@ D1_Tech_shiny =
   }
 
 
-  D1_Tech_outdoors =
+  tech_Outdoors =
   {
     floors =
     {
@@ -240,9 +244,9 @@ D1_Tech_shiny =
   }
 
 
-  ----- Hell / Gothic -------------------------
+----- EPISODE 3 : Hell ---------------------------
 
-  D1_Marble_room =
+  hell_Marble =
   {
     walls =
     {
@@ -286,15 +290,17 @@ D1_Tech_shiny =
       CEIL1_1=5
     }
 
-    __corners =
+    corners =
     {
-      SKULWALL=8, SKULWAL3=7,
+      SKULWALL=8, SKULWAL3=7
     }
   }
 
-D1_Hell_wood =
 
+  hell_Wood =
   {
+    prob = 20
+
     walls =
     {
      WOOD1=50
@@ -316,11 +322,13 @@ D1_Hell_wood =
      FLAT5_2=30
      FLAT5_1=15
     }
-}
+  }
 
-D1_Hell_skin =
 
+  hell_Skin =
   {
+    prob = 20
+
     walls =
     {
      SKIN2=15
@@ -349,42 +357,14 @@ D1_Hell_skin =
 
     ceilings =
     {
-     SFLR6_1=30
-     SFLR6_4=10
-     FLOOR6_1=20
-    }
-}
-
-
-  D1_Marble_outdoors =
-  {
-    floors =
-    {
-      ASHWALL=30
-      FLAT5_4=5
-      FLAT10=20
-      FLOOR6_1=40
-      SFLR6_1=10
+      SFLR6_1=30
       SFLR6_4=10
-      MFLR8_2=15
-      MFLR8_4=10
-      FLAT5_2=5
-      FLAT5=5
-    }
-
-    naturals =
-    {
-      ASHWALL=50
-      GRAYVINE=20
-      SP_ROCK1=50
-      ROCKRED1=90
-      SKSNAKE1=10
-      SKSNAKE2=10
+      FLOOR6_1=20
     }
   }
 
 
-  D1_Hot_room =
+  hell_Hot =
   {
     walls =
     {
@@ -427,15 +407,49 @@ D1_Hell_skin =
       CEIL1_1=5
     }
 
-    __corners =
+    corners =
     {
-      SKULWALL=10, SKULWAL3=10, REDWALL1=15,
+      SKULWALL=10
+      SKULWAL3=10
+      REDWALL1=15
     }
   }
 
 
-  D1_Hot_outdoors =
+  hell_Outdoors =
   {
+    kind = "outdoors"
+
+    floors =
+    {
+      ASHWALL=30
+      FLAT5_4=5
+      FLAT10=20
+      FLOOR6_1=40
+      SFLR6_1=10
+      SFLR6_4=10
+      MFLR8_2=15
+      MFLR8_4=10
+      FLAT5_2=5
+      FLAT5=5
+    }
+
+    naturals =
+    {
+      ASHWALL=50
+      GRAYVINE=20
+      SP_ROCK1=50
+      ROCKRED1=90
+      SKSNAKE1=10
+      SKSNAKE2=10
+    }
+  }
+
+
+  hell_Outdoors_hot =
+  {
+    kind = "outdoors"
+
     floors =
     {
       FLAT5_6=5
@@ -464,8 +478,10 @@ D1_Hell_skin =
   }
 
 
-  D1_Hell_cave =
+  hell_Cave =
   {
+    kind = "cave"
+
     naturals =
     {
       ROCKRED1=90
@@ -479,9 +495,9 @@ D1_Hell_skin =
   }
 
 
-  ---- Episode 2 --------------------------
+------ EPISODE 2 ------------------------------
 
-  Deimos_room =
+  deimos_Room =
   {
     walls =
     {
@@ -548,10 +564,9 @@ D1_Hell_skin =
       FLOOR5_1=50
       FLOOR5_4=10
     }
+  }
 
-   }
-
-Deimos_hellish =
+  deimos_Hellish =
   {
     walls =
     {
@@ -600,11 +615,13 @@ Deimos_hellish =
       CEIL4_1=10
       CEIL4_2=10
     }
-
   }
 
-Deimos_lab =
+
+  deimos_Lab =
   {
+    prob = 10
+
     walls =
     {
       COMPTILE=40
@@ -631,12 +648,13 @@ Deimos_lab =
       FLOOR4_8=15
       FLAT14=10
     }
-
   }
 
 
-  Deimos_hallway =
+  deimos_Hallway =
   {
+    kind = "hallway"
+
     walls =
     {
       BROWN1=33
@@ -695,8 +713,11 @@ Deimos_lab =
     }
   }
 
-  Deimos_hellhall =
+
+  deimos_Hallway_hell =
   {
+    kind = "hallway"
+
     walls =
     {
      MARBLE1=20
@@ -751,8 +772,10 @@ Deimos_lab =
   }
 
 
-  Deimos_cave =
+  deimos_Cave =
   {
+    kind = "cave"
+
     naturals =
     {
       SP_ROCK1=90
@@ -762,30 +785,32 @@ Deimos_lab =
     }
   }
 
-  Deimos_outdoors =
+
+  deimos_Outdoors =
   {
+    kind = "outdoors"
+
 --Makes sense for high prob for SP_ROCK1 because the intermission screen shows
 --Deimos has a desolate, gray ground.
     floors = 
-{ 
+    { 
       BROWN144=30
       BROWN1=10
       STONE=10 
-}
+    }
 
     naturals = 
-  { 
+    { 
       SP_ROCK1=60
       ASHWALL=2
       FLAT10=3 
+    }
   }
 
-  }
 
+----- EPISODE 4 -------------------------------
 
-  ---- Episode 4 --------------------------
-
-  Flesh_room =
+  flesh_Room =
   {
     walls =
     {
@@ -837,11 +862,10 @@ Deimos_lab =
       FLAT5_2=5
       FLAT8=8
     }
-
   }
 
-Flesh_wood =
 
+  flesh_Wood =
   {
     walls =
     {
@@ -863,7 +887,6 @@ Flesh_wood =
       FLAT8=7
     }
 
-
     ceilings =
     {
      CEIL1_1=50
@@ -871,9 +894,10 @@ Flesh_wood =
      FLAT5_1=15
      FLOOR7_1=10
     }
-}
+  }
  
- Flesh_marble =
+
+  flesh_Marble =
   {
     walls =
     {
@@ -898,12 +922,72 @@ Flesh_wood =
       DEM1_6=50
       FLOOR6_2=5
     }
-
   }
 
 
-  Flesh_cave =
+  -- andrewj: this is a straight copy of deimos_Hallway_hell
+  flesh_Hallway_hell =
   {
+    kind = "hallway"
+
+    walls =
+    {
+     MARBLE1=20
+     MARBLE2=20
+     MARBLE3=20
+     GSTONE1=20
+     BROVINE=20
+     COMPTILE=20
+    }
+
+    floors =
+    {
+      FLAT4=30
+      CEIL4_1=15
+      CEIl4_2=15
+      CEIL5_1=30
+      FLAT14=20
+      FLAT5_4=20
+      FLOOR3_3=30
+      FLOOR4_8=40
+      FLOOR5_1=25
+      FLOOR5_2=10
+      FLAT5=20
+      FLOOR1_6=4
+      FLOOR7_2=15
+      FLAT5_1=15
+      FLAT5_2=15
+      DEM1_5=15
+      DEM1_6=15
+    }
+
+    ceilings =
+    {
+      FLAT4=20
+      CEIL4_1=15
+      CEIl4_2=15
+      CEIL5_1=30
+      CEIL3_5=25
+      CEIL3_3=20
+      FLAT18=15
+      FLAT19=20
+      FLAT5_4=10
+      FLOOR4_8=15
+      FLOOR5_1=20
+      FLOOR7_1=15
+      FLOOR7_2=15
+      FLAT5_1=15
+      FLAT5_2=15
+      DEM1_5=15
+      DEM1_6=15
+    }
+  }
+
+
+  flesh_Cave =
+  {
+    kind = "cave"
+
     naturals =
     {
       ROCKRED1=70
@@ -918,8 +1002,11 @@ Flesh_wood =
     }
   }
 
-  Flesh_outdoors =
+
+  flesh_Outdoors =
   {
+    kind = "outdoors"
+
     floors =
     {
       ASHWALL=12
@@ -955,33 +1042,10 @@ Flesh_wood =
 }
 
 
-DOOM1.LEVEL_THEMES =
-{
-  tech1 =
+  tech_DEFAULTS =
   {
-    prob = 60
-
     liquids = { nukage=90, water=15, lava=10 }
 
-    buildings = { D1_Tech_room=70
-		  D1_Tech_brown=25
-		  D1_Tech_computer=15
-		  D1_Tech_shiny=5 }
-
-    hallways  = { D1_Tech_hallway=50 }
-    caves     = { D1_Tech_cave=50 }
-    outdoors  = { D1_Tech_outdoors=50 }
-
-    doors = { silver=20
-	      silver_fast=12
-              silver_once=3
-              bigdoor2=20
-              bigdoor2_fast=10
-              bigdoor2_once=3
-              bigdoor3=5
-              bigdoor4=10
-              bigdoor4_fast=7
-              bigdoor4_once=2 }
 
     facades =
     {
@@ -998,35 +1062,30 @@ DOOM1.LEVEL_THEMES =
     {
       naturals = { none=30, few=70, some=30, heaps=2 }
     }
+
+    ---!!!  TEMPORARY V3 CRUD  !!!---
+
+    doors =
+    {
+      silver=20
+      silver_fast=2
+      silver_once=5
+      bigdoor2=20
+      bigdoor2_fast=2
+      bigdoor2_once=5
+      bigdoor3=5
+      bigdoor4=10
+      bigdoor4_fast=2
+      bigdoor4_once=5
+    }
   }
 
 
   -- Deimos theme by Mr. Chris
 
-  deimos1 =
+  deimos_DEFAULTS =
   {
-    prob = 50
-
     liquids = { nukage=60, water=10, blood=20 }
-
-    buildings = { Deimos_room=60
-		  Deimos_hellish=10
-		  Deimos_lab=15 }
-    caves     = { Deimos_cave=50 }
-    outdoors  = { Deimos_outdoors=50 }
-    hallways  = { Deimos_hallway=60
-		  Deimos_hellhall=10 }
-
-    doors = { silver=20
-	      silver_fast=12
-              silver_once=3
-              bigdoor2=20
-              bigdoor2_fast=10
-              bigdoor2_once=3
-              bigdoor3=5
-              bigdoor4=10
-              bigdoor4_fast=7
-              bigdoor4_once=2 }
 
     -- Best facades would be STONE/2/3, BROVINE/2, BROWN1 and maybe a few others as I have not seen many
     -- other textures on the episode 2 exterior.
@@ -1037,40 +1096,39 @@ DOOM1.LEVEL_THEMES =
       BROVINE=30
       BROVINE2=25
       BROWN1=50
-      BROWNGRN=20  -- etc...
+      BROWNGRN=20
     }
 
     style_list =
     {
       naturals = { none=40, few=70, some=20, heaps=2 }
     }
+
+    ---!!!  TEMPORARY V3 CRUD  !!!---
+
+    doors =
+    {
+      silver=20
+      silver_fast=2
+      silver_once=5
+      bigdoor2=20
+      bigdoor2_fast=2
+      bigdoor2_once=5
+      bigdoor3=5
+      bigdoor4=10
+      bigdoor4_fast=2
+      bigdoor4_once=5
+    }
   }
 
 
-  -- this is the greeny/browny/marbley Hell
-
-  --  Water is seen in a few locations in episode 3 -Chris
-
-  hell1 =
+  hell_DEFAULTS =
   {
-    prob = 40,
+    --  Water is seen in a few locations in episode 3 -Chris
 
     liquids = { lava=30, blood=90, nukage=5, water=10 }
 
     keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
-
-    buildings = { D1_Marble_room=50
-		  D1_Hell_wood=20 
-		  D1_Hell_skin=10	}
-    outdoors  = { D1_Marble_outdoors=50 }
-    caves     = { D1_Hell_cave=50 }
-
-    doors = { wooden=20
-	      wooden_fast=10
-              wooden_once=3
-              wooden2=20
-              wooden2_fast=10
-	      wooden2_once=3	}
 
     facades =
     {
@@ -1089,67 +1147,34 @@ DOOM1.LEVEL_THEMES =
     }
 
     monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0 }
-  }
 
+    ---!!!  TEMPORARY V3 CRUD  !!!---
 
-  -- this is the reddy/skinny/firey Hell
-
-  hell2 =
-  {
-    prob = 25,
-
-    liquids = { lava=90, blood=40, water=5 }
-
-    keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
-
-    buildings = { D1_Hot_room=50
-		  D1_Hell_wood=20
-		  D1_Hell_skin=15	     }
-    outdoors  = { D1_Hot_outdoors=50 }
-    caves     = { D1_Hell_cave=50 }
-
-    doors = { wooden=20
-	      wooden_fast=10
-              wooden_once=3
-              wooden2=20
-              wooden2_fast=10
-	      wooden2_once=3	}
-
-
-    facades =
+    doors =
     {
-      STONE2=10
-      STONE3=15
-      WOOD1=35
-      GSTONE1=15
-      MARBLE1=20
-      BROWN1=3
-      BROWNGRN=3
-      WOOD5=25
-      SP_HOT1=70
-      SKINMET1=10
-      SKINMET2=10
-      SKINTEK1=10
-      FIREBLU1=15
-      FIREBLU2=15
+      wooden=20
+      wooden_fast=2
+      wooden_once=5
+      wooden2=20
+      wooden2_fast=2
+      wooden2_once=5
     }
 
-    monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0 }
   }
 
 
   -- Thy Flesh Consumed by Mr. Chris
   -- Basically a modified version of doom_hell1 to match id's E4 better
 
-  flesh1 =
+  flesh_DEFAULTS =
   {
-    prob = 40,
+    keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
 
     liquids = { lava=30, blood=50, nukage=10, water=20 }
 
     buildings = { Flesh_room=50
-		  Flesh_wood=30
-		  Flesh_marble=20 }
+      Flesh_wood=30
+      Flesh_marble=20 }
     caves     = { Flesh_cave=50 }
     outdoors  = { Flesh_outdoors=50 }
 
@@ -1168,14 +1193,15 @@ DOOM1.LEVEL_THEMES =
       SKINMET2=10
     }
 
-    keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
-
     monster_prefs =
     {
-      zombie=0.6, shooter=0.8, skull=1.2,
-      demon=1.5, caco=0.8,
-      imp=1.5, baron=1.25
+      zombie=0.6
+      shooter=0.8
+      skull=1.2
+      demon=1.5
     }
+
+    ---!!!  TEMPORARY V3 CRUD  !!!---
   }
 }
 
