@@ -59,6 +59,7 @@ DOOM2.ROOMS =
 {
   GENERIC =
   {
+    environment = "any"
   }
 
   COMPUTER =
@@ -76,6 +77,12 @@ DOOM2.ROOMS =
   {
     style = "liquids"
     prob  = 50
+  }
+
+  LAUNCH =
+  {
+    environment = "outdoor"
+    prob = 10
   }
 
   PRISON =
@@ -313,7 +320,6 @@ DOOM2.ZONES =
       STONE3 = 40
       FLOOR4_8 = 10
       FLOOR5_4 = 20
-      GRASS1 = 40    -- MOVE TO naturals
       FLOOR5_4 = 20
     }
 
@@ -322,6 +328,8 @@ DOOM2.ZONES =
       ASHWALL2 = 50
       ASHWALL4 = 50
       SP_ROCK1 = 50
+      GRASS1   = 40
+
       ASHWALL6 = 20
       TANROCK4 = 15
       ZIMMER2  = 15
