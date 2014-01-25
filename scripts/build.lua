@@ -505,6 +505,7 @@ function Mat_prepare_trip()
 
   for m,def in pairs(GAME.MATERIALS) do
     if not def.sane and
+       not def.rail_h and
        not (string.sub(m,1,1) == "_") and
        not (string.sub(m,1,2) == "SW") and
        not (string.sub(m,1,3) == "BUT")

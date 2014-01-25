@@ -603,7 +603,7 @@ function Levels_choose_themes()
 
   -- Psycheledic : pick randomly, honor the 'psycho_prob' field
   if OB_CONFIG.theme == "psycho" then
-    pick_psycho_theme()
+    pick_psycho_themes()
     return
   end
 
