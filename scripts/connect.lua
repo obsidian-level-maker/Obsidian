@@ -74,6 +74,12 @@ function CONN_CLASS.tostr(C)
 end
 
 
+function CONN_CLASS.roomstr(C)
+  return string.format("CONN_%d [%s:%s --> %s]", C.id, C.kind,
+         C.R1:tostr(), C.R2:tostr())
+end
+
+
 function CONN_CLASS.swap(C)
   C.R1, C.R2 = C.R2, C.R1
   C.S1, C.S2 = C.S2, C.S1
