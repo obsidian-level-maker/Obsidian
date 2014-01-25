@@ -510,7 +510,7 @@ function Room_decide_hallways()
 
   ---| Room_decide_hallways |---
 
-  if not THEME.hallway_walls then
+  if not LEVEL.hallway_theme then
     gui.printf("Hallways disabled (no theme info)\n")
     return
   end
@@ -2606,9 +2606,9 @@ function Room_build_seeds(R)
     if not (N and N.room) then
       return w_tex
     elseif N.room.hallway then
-      return LEVEL.hall_tex
+      return N.room.zone.hall_tex
     elseif N.room.stairwell then
-      return LEVEL.well_tex
+      return N.room.zone.well_tex
     elseif not N.room.is_outdoor and N.room != R.parent then
       return N.w_tex or N.room.main_tex
     elseif N.room.is_outdoor and not (R.is_outdoor or R.kind == "cave") then
@@ -3205,9 +3205,9 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
 
 
     if R.kind == "hallway" then
-      w_tex = assert(LEVEL.hall_tex)
+      w_tex = assert(R.zone.hall_tex)
     elseif R.kind == "stairwell" then
-      w_tex = assert(LEVEL.well_tex)
+      w_tex = assert(R.zone.well_tex)
     end
 
 
@@ -3251,7 +3251,7 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
          )
          and R.kind != "stairwell"
       then
-        local skin = { wall=LEVEL.hall_tex, trim1=THEME.hall_trim1, trim2=THEME.hall_trim2 }
+        local skin = { wall=R.zone.hall_tex, trim1=THEME.hall_trim1, trim2=THEME.hall_trim2 }
         Build.detailed_hall(S, side, z1, z2, skin)
 
         S.border[side].kind = nil

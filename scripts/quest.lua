@@ -812,6 +812,13 @@ function Quest_select_textures()
   each Z in LEVEL.zones do
     Z.natural_mat   = rand.key_by_probs(LEVEL.outdoors_theme.naturals)
     Z.cave_wall_mat = rand.key_by_probs(LEVEL.cave_theme.naturals)
+
+    if LEVEL.hallway_theme then
+      local theme = LEVEL.hallway_theme
+      Z.hall_tex   = rand.key_by_probs(theme.walls)
+      Z.hall_floor = rand.key_by_probs(theme.floors)
+      Z.hall_ceil  = rand.key_by_probs(theme.ceilings)
+    end
   end
 
   each R in LEVEL.rooms do

@@ -1622,13 +1622,7 @@ function Layout_hallway(R)
   R.tx2, R.ty2 = R.sx2, R.sy2
   R.tw,  R.th  = R.sw,  R.sh
 
-  if not LEVEL.hall_tex then
-    assert(THEME.hallway_walls)
-
-    LEVEL.hall_tex   = rand.key_by_probs(THEME.hallway_walls)
-    LEVEL.hall_floor = rand.key_by_probs(THEME.hallway_floors)
-    LEVEL.hall_ceil  = rand.key_by_probs(THEME.hallway_ceilings)
-
+  if not LEVEL.hall_trim then
     LEVEL.hall_trim   = rand.odds(50)
     LEVEL.hall_lights = rand.odds(50)
 
@@ -1678,8 +1672,8 @@ function Layout_hallway(R)
       S.floor_h = h
       S.ceil_h = h + height
 
-      S.f_tex = LEVEL.hall_floor
-      S.c_tex = LEVEL.hall_ceil
+      S.f_tex = R.zone.hall_floor
+      S.c_tex = R.zone.hall_ceil
 
       if R.hall_sky then
         S.is_sky = true
