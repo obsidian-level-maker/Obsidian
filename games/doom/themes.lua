@@ -234,14 +234,6 @@ DOOM2.THEMES =
       METAL7=40, METAL2=10, METAL4=10
       TEKWALL6=10, TEKBRON1=3
     }
-    stairwell_walls =
-    {
-      BROWN1=50, GRAY1=50, STARGR1=50, METAL4=50
-    }
-    stairwell_floors =
-    {
-      FLAT1=50, FLOOR7_1=50
-    }
     doors =
     {
       silver=30, silver_fast=2, silver_once=6
