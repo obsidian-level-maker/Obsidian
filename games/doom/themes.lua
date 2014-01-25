@@ -51,6 +51,9 @@ DOOM.ROOMS =
     environment = "any"
   }
 
+
+  ---- Indoors ----
+
   COMPUTER =
   {
     theme = "tech"
@@ -64,20 +67,9 @@ DOOM.ROOMS =
 
   WASTE =
   {
+    theme = "!hell"
     style = "liquids"
     prob  = 50
-  }
-
-  LAUNCH =
-  {
-    environment = "outdoor"
-    prob = 10
-  }
-
-  GARDEN =
-  {
-    environment = "outdoor"
-    prob = 50
   }
 
   PRISON =
@@ -88,8 +80,38 @@ DOOM.ROOMS =
 
   TORTURE =
   {
-    theme = { hell=1, wolf=0.5, urban=0.1 }
+    theme = { hell=1, wolf=0.5, urban=0.2 }
     prob  = 50
+  }
+
+  CHAPEL =
+  {
+    theme = "hell"
+    prob  = 15
+  }
+
+
+  ---- Outdoors ----
+
+  LAUNCH =
+  {
+    environment = "outdoor"
+    theme = "tech"
+    prob = 10
+  }
+
+  GARDEN =
+  {
+    environment = "outdoor"
+    theme = "urban"
+    prob = 50
+  }
+
+  GRAVEYARD =
+  {
+    environment = "outdoor"
+    theme = { hell=1, urban=0.4 }
+    prob = 20
   }
 }
 
