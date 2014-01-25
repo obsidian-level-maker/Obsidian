@@ -234,18 +234,6 @@ DOOM2.THEMES =
       METAL7=40, METAL2=10, METAL4=10
       TEKWALL6=10, TEKBRON1=3
     }
-    hallway_walls =
-    {
-      BROWN1=33, BROWNGRN=50, GRAY1=50, STARBR2=33
-    }
-    hallway_floors =
-    {
-      FLAT4=50, CEIL5_1=50, FLOOR1_1=50, FLOOR3_3=50
-    }
-    hallway_ceilings =
-    {
-      FLAT4=50, CEIL5_1=50, CEIL3_5=50, CEIL3_3=50
-    }
     stairwell_walls =
     {
       BROWN1=50, GRAY1=50, STARGR1=50, METAL4=50
@@ -500,21 +488,27 @@ DOOM2.THEMES =
 
     walls =
     {
-      TEKWALL6 = 50
-      TEKGREN1 = 50
-      BROWNPIP = 20
-      PIPEWAL2 = 50
+      BROWNGRN = 90
+      BROWN1   = 90
+      GRAY1    = 70
+
+      TEKWALL6 = 30
+      TEKWALL4 = 10
+      TEKGREN1 = 40
       STARGR1 = 10
       STARBR2 = 10
+
+      BROWNPIP = 20
+      PIPEWAL2 = 40
       PIPE2 = 15
       PIPE4 = 15
-      TEKWALL4 = 10
     }
 
     floors =
     {
+      FLAT4  = 50
       FLAT14 = 50
-      FLAT1 = 20
+      FLAT1  = 20
       FLOOR4_8 = 15
       FLOOR0_2 = 20
       CEIL4_1 = 20
@@ -523,10 +517,10 @@ DOOM2.THEMES =
     ceilings =
     {
       CEIL3_5 = 50
-      CEIL3_6 = 20
       CEIL3_1 = 50
       RROCK03 = 50
       CEIL4_2 = 20
+      CEIL5_1 = 40
     }
   }
 
@@ -778,6 +772,9 @@ DOOM2.THEMES =
     walls =
     {
       MARBGRAY = 80
+      REDWALL  = 60
+      SKIN2    = 60
+
       GSTVINE1 = 40
       GSTVINE2 = 40
       GSTONE1  = 20
@@ -1030,14 +1027,16 @@ DOOM2.THEMES =
 
     walls =
     {
+      WOOD1    = 90
+      WOOD12   = 90
+      WOOD9    = 90
+      WOODVERT = 90
+
       BIGBRIK1 = 50
       BIGBRIK2 = 50
       BRICK10  = 50
       BRICK11  = 10
-      WOOD1    = 50
-      WOOD12   = 50
-      WOOD9    = 50
-      WOODVERT = 50
+
       PANEL1   = 50
       PANEL7   = 30
       STUCCO   = 30
@@ -1111,17 +1110,6 @@ DOOM2.THEMES =
     prob = 10
 
     square_caves = 1
-
-    buildings =
-    {
-      Wolf_cells = 50
-      Wolf_brick = 30
-      Wolf_stein = 50
-    }
-
-    hallways  = { Wolf_hall=50 }
-    caves     = { Wolf_cave=50 }
-    outdoors  = { Wolf_outdoors=50 }
 
     facades =
     {
