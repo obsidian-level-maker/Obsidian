@@ -1649,7 +1649,10 @@ function Quest_choose_themes()
 
   local function pick_zone_theme(tab)
     assert(tab)
-    assert(not table.empty(tab))
+
+    if table.empty(tab) then
+      error("pick_zone_theme: nothing matched!")
+    end
 
     local name = rand.key_by_probs(tab)
 
