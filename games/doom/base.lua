@@ -61,8 +61,6 @@ require "weapons"
 
 require "materials"
 require "themes"
-require "v3_skins"
-
 require "levels"
 require "resources"
 
