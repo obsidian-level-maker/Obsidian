@@ -759,7 +759,7 @@ function Plan_add_caves()
   -- compute the quota
   local perc = style_sel("caves", 0, 15, 35, 65, 130)
 
-  if perc == 0 or not THEME.caves or true then  --!!!! FIXME
+  if perc == 0 or true then  --!!!! FIXME
     gui.printf("Caves: NONE\n")
     return
   end
@@ -1322,7 +1322,7 @@ function Plan_decide_outdoors()
     end
   end
 
-  if table.empty(room_list) or not THEME.outdoors or
+  if table.empty(room_list) or
      STYLE.outdoors == "none"
   then
     gui.printf("Outdoor Quota: NONE\n")
