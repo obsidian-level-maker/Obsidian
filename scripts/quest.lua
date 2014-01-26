@@ -820,7 +820,7 @@ function Quest_select_textures()
       Z.hall_ceil  = rand.key_by_probs(theme.ceilings)
     end
 
-    Z.corner_mats = Z.building_theme.corners or LEVEL.theme.corners
+    Z.corner_mats = Z.building_theme.corners or THEME.corners
   end
 
   each R in LEVEL.rooms do
