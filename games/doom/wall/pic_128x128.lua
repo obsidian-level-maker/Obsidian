@@ -214,6 +214,6 @@ DOOM.SKINS.Pic_marbface_evil =
   theme = "hell"
   prob  = 50
 
-  tex_ZZWOLF7 = "MARBFACE=50"
+  tex_ZZWOLF7 = "MARBFACE"
 }
 
