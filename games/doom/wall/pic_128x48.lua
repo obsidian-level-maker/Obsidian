@@ -4,21 +4,24 @@
 
 ---- TECH ----
 
-DOOM.SKINS.Pic_Computer =
+DOOM.SKINS.Pic_computer1 =
 {
   file   = "wall/pic_128x48.wad"
   where  = "edge"
   long   = 192
-  deep   = 32
+  deep   = 16
 
   x_fit  = "frame"
   y_fit  = "top"
+  z_fit  = "top"
 
   bound_z1 = 0
   bound_z2 = 112
 
   theme = "tech"
   prob  = 30
+
+  tex_COMPSTA1 = { COMPSTA1=50, COMPSTA2=50 }
 
 --[[
   pic   = { COMPSTA1=50, COMPSTA2=50 }
