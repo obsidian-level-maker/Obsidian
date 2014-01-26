@@ -1509,9 +1509,39 @@ function Room_border_up()
   end
 
 
-  local function select_picture(R, v_space, index)
-    v_space = v_space - 16
-    -- FIXME: needs more v_space checking
+  local function collect_usable_pictures(z_space, kind)
+    local tab = {}
+
+    each name,info in GAME.SKINS do
+      if (kind == "logo" and string.match(name, "^Logo_")) or
+         (kind != "logo" and string.match(name, "^Pic_"))
+      then
+        -- FIXME: proper theme check
+        if info.theme and info.theme != LEVEL.theme_name then continue end
+
+        -- FIXME: proper room_type check
+        if kind == "waste" and info.room_type != "WASTE" then continue end
+
+        local height = info.height or info.bound_z2 or 128
+
+        if height > z_space then continue end
+
+        tab[name] = info.prob or 50
+      end
+    end
+
+    -- FIXME !!!!! HACK HACK HACK
+    if table.empty(tab) then
+      tab["Logo_Carve"] = 50
+    end
+
+    return tab
+  end
+
+
+  local function select_picture(R, z_space, index)
+    z_space = z_space - 16
+    -- FIXME: needs more z_space checking
 
     if not THEME.logos then
       error("Game is missing logo skins")
@@ -1519,44 +1549,19 @@ function Room_border_up()
 
     if rand.odds(sel(LEVEL.has_logo,7,40)) then
       LEVEL.has_logo = true
-      return rand.key_by_probs(THEME.logos)
+      return rand.key_by_probs(collect_usable_pictures(z_space, "logo"))
     end
 
     if R.has_liquid and index == 1 and rand.odds(75) then
-      if THEME.liquid_pics then
-        return rand.key_by_probs(THEME.liquid_pics)
-      end
+      return rand.key_by_probs(collect_usable_pictures(z_space, "waste"))
     end
 
-    local pic_tab = {}
-
-    local pictures = THEME.pictures
-
-    if pictures then
-      for name,prob in pairs(pictures) do
-        local info = GAME.PICTURES[name]
-        if info and info.height <= v_space then
-          pic_tab[name] = prob
-        end
-      end
-    end
-
-    if not table.empty(pic_tab) then
-      return rand.key_by_probs(pic_tab)
-    end
-
-    -- fallback
-    return rand.key_by_probs(THEME.logos)
+    return rand.key_by_probs(collect_usable_pictures(z_space, "normal"))
   end
 
 
-  local function install_pic(R, bd, pic_name, v_space)
-    skin = assert(GAME.PICTURES[pic_name])
-
-    local cross_hack  -- FIXME: TEMP RUBBISH
-    if THEME.keys and THEME.keys["ks_red"] then
-      cross_hack = true -- rand.odds(30)
-    end
+  local function install_pic(R, bd, pic_name, z_space)
+    local skin = assert(GAME.SKINS[pic_name])
 
     -- handles symmetry
 
@@ -1580,15 +1585,10 @@ function Room_border_up()
         local B = S.border[side]
 
         if B.kind == "wall" and S.floor_h then
-          local raise = skin.raise or 32
-          if raise + skin.height > v_space-4 then
-            raise = int((v_space - skin.height) / 2)
-          end
           B.kind = "picture"
           B.pic_skin = skin
-          B.pic_z1 = S.floor_h + raise
-
-          if cross_hack then B.kind = "cross" end
+          B.pic_z1 = S.floor_h
+          B.pic_fit_z = z_space
         end
 
     end -- dx, dy
@@ -1604,7 +1604,7 @@ function Room_border_up()
     -- with pillars, etc..  Also determine vertical space.
     local new_list = {}
 
-    local v_space = 999
+    local z_space = 999
 
     each bd in border_list do
       local S = bd.S
@@ -1619,7 +1619,7 @@ function Room_border_up()
         table.insert(new_list, bd)
 
         local h = (S.ceil_h or R.ceil_h) - S.floor_h
-        v_space = math.min(v_space, h)
+        z_space = math.min(z_space, h)
       end
     end
 
@@ -1645,13 +1645,13 @@ function Room_border_up()
 
     -- select one or two pictures to use
     local pics = {}
-    pics[1] = select_picture(R, v_space, 1)
+    pics[1] = select_picture(R, z_space, 1)
     pics[2] = pics[1]
 
     if #border_list >= 12 then
       -- prefer a different pic for #2
       for loop = 1,3 do
-        pics[2] = select_picture(R, v_space, 2)
+        pics[2] = select_picture(R, z_space, 2)
         if pics[2].pic_w != pics[1].pic_w then break; end
       end
     end
@@ -1667,7 +1667,7 @@ function Room_border_up()
 
       local bd = table.remove(new_list, b_index)
       
-      install_pic(R, bd, pics[1 + (loop-1) % 2], v_space)
+      install_pic(R, bd, pics[1 + (loop-1) % 2], z_space)
     end -- for loop
   end
 
@@ -2931,6 +2931,24 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   end
 
 
+  local function do_picture(S, side, w_tex)
+    local B = S.border[side]
+
+    local skin1 = B.pic_skin
+    assert(skin1)
+    assert(skin1.deep)
+
+    local skin0 = { wall=w_tex }
+
+    local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, B.pic_z1,
+                                   side, 0, 192, skin1.deep, 0)
+
+    T.fitted_z = B.pic_fit_z
+
+    Fabricate_at(R, skin1, T, { skin0, skin1 })
+  end
+
+
   local function do_archway(S, side, f_tex, w_tex)
     local conn = S.border[side].conn
 
@@ -3265,10 +3283,7 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
       end
 
       if B_kind == "picture" then
-        local B = S.border[side]
-        B.pic_skin.wall = w_tex
-
-        Build.picture(S, side, B.pic_z1, B.pic_z2, B.pic_skin)
+        do_picture(S, side, w_tex)
         shrink_both(side, 16)
       end
 
