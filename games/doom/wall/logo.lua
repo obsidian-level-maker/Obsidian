@@ -11,6 +11,7 @@ DOOM.SKINS.Logo_Carve =
 
   x_fit  = "frame"
   y_fit  = "top"
+  z_fit  = "top"
 
   bound_z1 = 0
   bound_z2 = 128
@@ -46,6 +47,7 @@ DOOM.SKINS.Logo_Neon =
 
   x_fit  = "frame"
   y_fit  = "top"
+  z_fit  = "frame"
 
   bound_z1 = 0
   bound_z2 = 176
