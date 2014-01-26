@@ -17,6 +17,6 @@ DOOM.SKINS.Pic_cross =
   bound_z2 = 128
 
   theme  = "hell"
-  prob   = 30
+  prob   = 50
 }
 
