@@ -890,6 +890,7 @@ DOOM2.THEMES =
     steps = { step6=50, }
     lifts = { shiny=20, platform=20, rusty=50 }
     switches = { sw_wood=50, sw_blue=50, sw_hot=50 }
+    big_pillars = { big_slad=30, big_wood6=30, big_garg=60 }
   }
 
 

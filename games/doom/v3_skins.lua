@@ -542,6 +542,10 @@ DOOM.PILLARS =
   big_red  = { pillar="REDWALL",  trim1="GRAY7", trim2="METAL" }
   big_blue = { pillar="LITEBLU4", trim1="GRAY7", trim2="METAL" }
 
+  big_slad = { pillar="SLADWALL", trim1="GRAY7", trim2="METAL" }
+  big_garg = { pillar="SW2GARG",  trim1="METAL", trim2="FLAT1" }
+  big_wood6 = { pillar="WOOD6",   trim1="GRAY7", trim2="METAL" }
+
   tekwall4 = { pillar="TEKWALL4", trim1="GRAY7", trim2="METAL1" }
   metal1   = { pillar="METAL1",   trim1="GRAY7", trim2="METAL" }
   blue1    = { pillar="COMPBLUE", trim1="SHAWN2", trim2="TEKWALL1" }
