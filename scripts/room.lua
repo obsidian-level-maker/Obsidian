@@ -2897,19 +2897,6 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   end
 
 
-  local function do_cross(S, side, f_tex, w_tex)
-    local skin1 = GAME.SKINS["Wall_cross"]
-    assert(skin1)
-
-    local skin0 = { wall=w_tex }
-
-    local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, S.floor_h,
-                                   side, 0, 192, skin1.deep, 0)
-
-    Fabricate_at(R, skin1, T, { skin0, skin1 })
-  end
-
-
   local function do_window(S, side, w_tex)
     local B = S.border[side]
 
@@ -3292,11 +3279,6 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
 
       if B_kind == "picture" then
         do_picture(S, side, w_tex)
-        shrink_both(side, 16)
-      end
-
-      if B_kind == "cross" then  -- TEMPORARY !!
-        do_cross(S, side, f_tex, w_tex)
         shrink_both(side, 16)
       end
 
