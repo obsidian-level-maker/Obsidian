@@ -172,3 +172,48 @@ DOOM.SKINS.Pic_sky2 =
   tex_ZZWOLF7 = "SKY2"
 }
 
+
+----| HELL |-----
+
+-- Fixme: this is same as Pic_marbface, merge later
+DOOM.SKINS.Pic_marbface_hell =
+{
+  file   = "wall/pic_128x128.wad"
+  where  = "edge"
+  long   = 192
+  deep   = 16
+
+  x_fit  = "frame"
+  y_fit  = "top"
+  z_fit  = { 0,8, 152,176 }
+
+  bound_z1 = 0
+  bound_z2 = 176
+
+  theme = "hell"
+  prob  = 10
+
+  tex_ZZWOLF7 = { MARBFAC2=50, MARBFAC3=50 }
+}
+
+
+DOOM.SKINS.Pic_marbface_evil =
+{
+  file   = "wall/pic_128x128.wad"
+  where  = "edge"
+  long   = 192
+  deep   = 16
+
+  x_fit  = "frame"
+  y_fit  = "top"
+  z_fit  = { 0,8, 152,176 }
+
+  bound_z1 = 0
+  bound_z2 = 176
+
+  theme = "hell"
+  prob  = 50
+
+  tex_ZZWOLF7 = "MARBFACE=50"
+}
+
