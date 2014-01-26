@@ -2,6 +2,51 @@
 -- Pictures : 128x128
 --
 
+----| TECH |-----
+
+DOOM.SKINS.Pic_silver3 =
+{
+  file   = "wall/pic_128x128.wad"
+  where  = "edge"
+  long   = 192
+  deep   = 16
+
+  x_fit  = "frame"
+  y_fit  = "top"
+  z_fit  = { 0,8, 152,176 }
+
+  bound_z1 = 0
+  bound_z2 = 176
+
+  theme = "tech"
+  prob  = 20
+
+  -- this is mapped to "PLANET1" for DOOM 1
+  tex_ZZWOLF7 = "SILVER3"
+}
+
+
+DOOM.SKINS.Pic_UAC =
+{
+  file   = "wall/pic_128x128.wad"
+  where  = "edge"
+  long   = 192
+  deep   = 16
+
+  x_fit  = "frame"
+  y_fit  = "top"
+  z_fit  = { 0,8, 152,176 }
+
+  bound_z1 = 0
+  bound_z2 = 176
+
+  theme = "tech"
+  prob  = 10
+
+  tex_ZZWOLF7 = "SHAWN1"
+}
+
+
 ----| URBAN |-----
 
 DOOM.SKINS.Pic_marbface =

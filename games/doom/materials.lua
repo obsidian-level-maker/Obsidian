@@ -506,6 +506,8 @@ DOOM1.MATERIALS =
   ASHWALL2 = { t="ASHWALL",  f="FLOOR6_2" }
   BRICKLIT = { t="LITEMET",  f="CEIL5_1" }
   PIPEWAL1 = { t="COMPWERD", f="CEIL5_1" }
+  SPACEW3  = { t="COMPUTE1", f="FLAT1" }
+  SILVER3  = { t="PLANET1",  f="FLAT23" }
   MIDBARS3 = { t="MIDGRATE", rail_h=128 }
 }
 

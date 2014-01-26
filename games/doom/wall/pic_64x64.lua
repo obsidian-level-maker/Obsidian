@@ -2,6 +2,51 @@
 -- Pictures : 64x64
 --
 
+----| TECH |----
+
+DOOM.SKINS.Pic_compwerd =
+{
+  file   = "wall/pic_64x64.wad"
+  where  = "edge"
+  long   = 128
+  deep   = 16
+
+  x_fit  = "frame"
+  y_fit  = "top"
+  z_fit  = "frame"
+
+  bound_z1 = 0
+  bound_z2 = 128
+
+  theme = "tech"
+  prob  = 25
+
+  tex_GRAYPOIS = "COMPWERD"
+}
+
+
+DOOM.SKINS.Pic_monitor =
+{
+  file   = "wall/pic_64x64.wad"
+  where  = "edge"
+  long   = 128
+  deep   = 16
+
+  x_fit  = "frame"
+  y_fit  = "top"
+  z_fit  = "top"
+
+  bound_z1 = 0
+  bound_z2 = 128
+
+  theme = "tech"
+  prob  = 10
+
+  -- this is mapped to "COMPUTE1" for DOOM 1
+  tex_GRAYPOIS = "SPACEW3"
+}
+
+
 ----| URBAN |----
 
 DOOM.SKINS.Pic_smallface =
