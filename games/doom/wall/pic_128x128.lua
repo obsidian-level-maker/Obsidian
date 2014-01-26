@@ -1,5 +1,5 @@
 --
--- Pictures
+-- Pictures : 128x128
 --
 
 DOOM.SKINS.Pic_Adolf =
@@ -9,7 +9,6 @@ DOOM.SKINS.Pic_Adolf =
 
   long   = 192
   deep   = 16
-  height = 192
 
   x_fit  = "frame"
   y_fit  = "top"
@@ -30,7 +29,6 @@ DOOM.SKINS.Pic_Eagle =
 
   long   = 192
   deep   = 16
-  height = 192
 
   x_fit  = "frame"
   y_fit  = "top"
