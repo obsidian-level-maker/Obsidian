@@ -2225,7 +2225,10 @@ function Room_make_ceiling(R)
     end
 
 
-    if rand.odds(20) then return end
+    if rand.odds(20) then
+      add_central_pillar()
+      return
+    end
 
     if not R.quest.ceil_light and THEME.ceil_lights then
       R.quest.ceil_light = rand.key_by_probs(THEME.ceil_lights)
@@ -2234,7 +2237,10 @@ function Room_make_ceiling(R)
     local beam_chance = style_sel("beams", 0, 5, 20, 50)
 
     if rand.odds(beam_chance) then
-      if criss_cross_beams("beam") then return end
+      if criss_cross_beams("beam") then
+        add_central_pillar()
+        return
+      end
     end
 
     if rand.odds(35) then
