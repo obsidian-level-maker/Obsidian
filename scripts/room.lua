@@ -1520,7 +1520,9 @@ function Room_border_up()
         if info.theme and info.theme != LEVEL.theme_name then continue end
 
         -- FIXME: proper room_type check
-        if kind == "waste" and info.room_type != "WASTE" then continue end
+        if info.room_type and info.room_type != string.upper(kind) then
+          continue
+        end
 
         local height = info.height or info.bound_z2 or 128
 
@@ -1556,7 +1558,7 @@ function Room_border_up()
       return rand.key_by_probs(collect_usable_pictures(z_space, "waste"))
     end
 
-    return rand.key_by_probs(collect_usable_pictures(z_space, "normal"))
+    return rand.key_by_probs(collect_usable_pictures(z_space, "generic"))
   end
 
 
