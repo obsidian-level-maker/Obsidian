@@ -490,7 +490,11 @@ function Room_decide_hallways()
 
 
   local function try_make_stairwell(R)
-    if R.hallway and R.num_branch == 2 and
+    local theme = R.zone.stairwell_theme or LEVEL.stairwell_theme
+
+    if theme and
+       R.hallway and
+       #R.conns == 2 and
        not R.purpose and
        #R.weapons == 0 and
        #R.items == 0 and
@@ -501,9 +505,7 @@ function Room_decide_hallways()
     then
       gui.printf("--> Stairwell @ %s\n", R:tostr())
       R.kind = "stairwell"
-
-      R.theme = R.zone.stairwell_theme or LEVEL.stairwell_theme
-      assert(R.theme)
+      R.theme = theme
     end
   end
 
@@ -551,8 +553,6 @@ function Room_decide_hallways()
 
 
   --- decide stairwells ---
-
-  if not THEME.stairwell_walls then return end
 
   -- FIXME: the Build.stairwell() code is fucked, hence disabled.
   --
@@ -2528,17 +2528,15 @@ function Room_do_small_exit()
   skin.switch = rand.key_by_probs(THEME.exit.switches)
 
   Build.small_exit(R, THEME.exit, skin, skin2)
-  return
 end
 
 
 function Room_do_stairwell(R)
-  if not LEVEL.well_tex then
-    LEVEL.well_tex   = rand.key_by_probs(THEME.stairwell_walls)
-    LEVEL.well_floor = rand.key_by_probs(THEME.stairwell_floors)
-  end
+  R.well_tex   = rand.key_by_probs(R.theme.walls)
+  R.well_floor = rand.key_by_probs(R.theme.floors)
 
-  local skin = { wall=LEVEL.well_tex, floor=LEVEL.wall_floor }
+  local skin = { wall=R.well_tex, floor=R.well_floor }
+
   Build.stairwell(R, skin)
 end
 
@@ -2607,8 +2605,6 @@ function Room_build_seeds(R)
       return w_tex
     elseif N.room.hallway then
       return N.room.zone.hall_tex
-    elseif N.room.stairwell then
-      return N.room.zone.well_tex
     elseif not N.room.is_outdoor and N.room != R.parent then
       return N.w_tex or N.room.main_tex
     elseif N.room.is_outdoor and not (R.is_outdoor or R.kind == "cave") then
@@ -3207,7 +3203,7 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
     if R.kind == "hallway" then
       w_tex = assert(R.zone.hall_tex)
     elseif R.kind == "stairwell" then
-      w_tex = assert(R.zone.well_tex)
+      w_tex = assert(R.well_tex)
     end
 
 
