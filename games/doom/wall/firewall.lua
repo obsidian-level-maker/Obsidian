@@ -10,8 +10,7 @@ DOOM.SKINS.Pic_firewall =
   deep   = 16
 
   x_fit  = "frame"
-  y_fit  = "top"
-  z_fit  = { 0,4, 144,160 }
+  z_fit  = "top"
 
   bound_z1 = 0
   bound_z2 = 160
