@@ -210,6 +210,10 @@ DOOM.MATERIALS =
   STONE2   = { t="STONE2", f="MFLR8_1" }
   STONE3   = { t="STONE3", f="MFLR8_1" }
 
+  SKY1     = { t="SKY1", f="FLAT1" }
+  SKY2     = { t="SKY2", f="FLAT1" }
+  SKY3     = { t="SKY3", f="FLAT1" }
+
   TEKWALL1 = { t="TEKWALL1",  f="CEIL5_1" }
   TEKWALL4 = { t="TEKWALL4",  f="CEIL5_1" }
 
@@ -396,7 +400,6 @@ DOOM.MATERIALS =
 
   -- Missing stuff:
   --   CEMENT#  : used by OBLIGE for various logos
-  --   SKY1/2/3 : not very useful
   --   ZZZFACE# : not generally useful
   --
   -- Note too that STEP1/2 are ambiguous, the flats are quite
