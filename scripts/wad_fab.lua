@@ -149,6 +149,17 @@ function Fab_expansion_groups(list, axis_name, fit_size, pf_size)
   end
 
 
+  -- compute total weight of expanding sections
+  local total_weight = 0
+
+  for i = 1, #list-1, 2 do
+    local weight = list[i+1] - list[i]
+    total_weight = total_weight + weight
+  end
+
+  assert(total_weight > 0)
+
+
   -- construct the mapping groups
   local groups = { }
   local pos = list[1]
@@ -165,7 +176,8 @@ function Fab_expansion_groups(list, axis_name, fit_size, pf_size)
     G.size2 = G.size
 
     if (i % 2) == 1 then
-      G.size2 = G.size2 + extra / (#list / 2)
+      local weight = list[i+1] - list[i]
+      G.size2 = G.size2 + extra * weight / total_weight
     end
 
     G.low2  = pos
