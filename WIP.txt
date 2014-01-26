@@ -3,8 +3,6 @@ WORK IN PROGRESS
 ================
 
 
-!!  Theme system
-
 +  Caves!
 
 +  wall pictures
@@ -12,6 +10,8 @@ WORK IN PROGRESS
 -  misaligned uppers (due to lighting and/or crates)
 
 -  fix texturing on some stairs and diagonals
+
+-  Chris's icon maps
 
 
 
