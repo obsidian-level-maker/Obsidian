@@ -314,7 +314,35 @@ function Simple_generate_cave(R)
   end
 
 
+  local function point_for_conn(C, S, side)
+    local b = cave_box_for_seed(S.sx, S.sy)
+
+    local POINT =
+    {
+      x = b.cx1 + 1
+      y = b.cy1 + 1
+    }
+
+    table.insert(point_list, POINT)
+
+    local IMP =
+    {
+      cx1 = b.cx1
+      cy1 = b.cy1
+      cx2 = b.cx2
+      cy2 = b.cy2
+
+      conn = C
+    }
+
+    table.insert(importants, IMP)
+  end
+
+
   local function point_for_goal(G)
+    local b = cave_box_for_seed(G.S.sx, G.S.sy)
+
+--[[ V5 METHOD
     -- expand bbox slightly
     local x1, y1 = G.x1 - 12, G.y1 - 12
     local x2, y2 = G.x2 + 12, G.y2 + 12
@@ -335,6 +363,12 @@ function Simple_generate_cave(R)
     cx2 = math.clamp(1, cx2, map.w)
     cy2 = math.clamp(1, cy2, map.h)
 
+--]]
+    local cx1 = b.cx1
+    local cy1 = b.cy1
+    local cx2 = b.cx2
+    local cy2 = b.cy2
+
     assert(cx1 <= cx2)
     assert(cy1 <= cy2)
 
@@ -352,8 +386,12 @@ function Simple_generate_cave(R)
 
     local POINT =
     {
+--[[
       x = math.i_mid(cx1, cx2)
       y = math.i_mid(cy1, cy2)
+--]]
+      x = b.cx1 + 1
+      y = b.cy1 + 1
     }
 
     table.insert(point_list, POINT)
@@ -362,11 +400,11 @@ function Simple_generate_cave(R)
 
   local function collect_important_points()
     each C in R.conns do
-      if R == C.L1 and C.portal1 then
-        point_for_portal(C.portal1)
+      if R == C.R1 and C.S1 then
+        point_for_conn(C, C.S1, C.dir)
       end
-      if R == C.L2 and C.portal2 then
-        point_for_portal(C.portal2)
+      if R == C.R2 and C.S2 then
+        point_for_conn(C, C.S2, 10 - C.dir)
       end
     end
 
@@ -1132,6 +1170,8 @@ end
 
 
 function Simple_floor_heights(R, entry_h)
+  assert(entry_h)
+
   local info = R.cave_info
 
 
@@ -1211,6 +1251,7 @@ function Simple_floor_heights(R, entry_h)
       A.floor_h = h
     end
 
+
     if A.liquid_bunch then
       spread_river_banks(A.liquid_bunch, h)
     end
@@ -1277,9 +1318,12 @@ function Simple_floor_heights(R, entry_h)
 
 
   local function update_min_max_floor()
+    R.floor_min_h = entry_h
+    R.floor_max_h = entry_h
+
     each A in info.floors do
-      R.min_floor_h = math.min(R.min_floor_h, A.floor_h)
-      R.max_floor_h = math.max(R.max_floor_h, A.floor_h)
+      R.floor_min_h = math.min(R.floor_min_h, A.floor_h)
+      R.floor_max_h = math.max(R.floor_max_h, A.floor_h)
     end
   end
 
@@ -1301,11 +1345,11 @@ function Simple_floor_heights(R, entry_h)
 
   local function update_fences()
     if info.liquid_mode == "lake" then
-      info.fence.floor_h = R.max_floor_h + 96
+      info.fence.floor_h = R.floor_max_h + 96
     end
 
     if info.sky_mode == "low_wall" then
-      info.wall.floor_h = R.max_floor_h + 80
+      info.wall.floor_h = R.floor_max_h + 80
     end
   end
 
@@ -1610,30 +1654,30 @@ function Simple_render_cave(R)
     local f_brush = brush_for_cell(x, y)
 
     if f_h then
-      Brush_add_top(f_brush, f_h)
+      brushlib.add_top(f_brush, f_h)
     end
 
     if f_liquid then
-      Brush_mark_liquid(f_brush)
+      brushlib.mark_liquid(f_brush)
     else
-      Brush_set_mat(f_brush, f_mat, f_mat)
+      brushlib.set_mat(f_brush, f_mat, f_mat)
     end
 
-    brush_helper(f_brush)
+    Trans.brush(f_brush)
 
 
     if c_h then
       local c_brush = brush_for_cell(x, y)
 
-      Brush_add_bottom(c_brush, c_h)
+      brushlib.add_bottom(c_brush, c_h)
 
       if c_sky then
-        Brush_mark_sky(c_brush)
+        brushlib.mark_sky(c_brush)
       else
-        Brush_set_mat(c_brush, c_mat, c_mat)
+        brushlib.set_mat(c_brush, c_mat, c_mat)
       end
 
-      brush_helper(c_brush)
+      Trans.brush(c_brush)
     end
   end
 
@@ -1680,7 +1724,7 @@ function Simple_render_cave(R)
 
 
   local function do_spot_decor(dec)
-    local poly = Brush_new_quad(dec.x1, dec.y1, dec.x2, dec.y2)
+    local poly = brushlib.quad(dec.x1, dec.y1, dec.x2, dec.y2)
 
     gui.spots_fill_poly(poly, SPOT_LEDGE)
   end
@@ -1736,7 +1780,7 @@ function Simple_render_cave(R)
 
     each zone in R.exclusions do
       if zone.kind == "empty" then
-        local poly = Brush_new_quad(zone.x1, zone.y1, zone.x2, zone.y2)
+        local poly = brushlib.quad(zone.x1, zone.y1, zone.x2, zone.y2)
         gui.spots_fill_poly(poly, SPOT_LEDGE)
       end
     end
@@ -1835,24 +1879,24 @@ function Simple_render_cave(R)
         local c_brush = brush_for_cell(x, y)
 
         if PARAM.deep_liquids then
-          Brush_add_top(f_brush, f_h-128)
-          Brush_set_mat(f_brush, f_mat, f_mat)
+          brushlib.add_top(f_brush, f_h-128)
+          brushlib.set_mat(f_brush, f_mat, f_mat)
 
-          brush_helper(f_brush)
+          Trans.brush(f_brush)
 
           local l_brush = brush_for_cell(x, y)
 
           table.insert(l_brush, 1, { m="liquid", medium=LEVEL.liquid.medium })
 
-          Brush_add_top(l_brush, f_h)
-          Brush_set_mat(l_brush, "_LIQUID", "_LIQUID")
+          brushlib.add_top(l_brush, f_h)
+          brushlib.set_mat(l_brush, "_LIQUID", "_LIQUID")
 
-          brush_helper(l_brush)
+          Trans.brush(l_brush)
 
           -- TODO: lighting
 
         else
-          Brush_add_top(f_brush, f_h)
+          brushlib.add_top(f_brush, f_h)
 
           -- damaging
           f_brush[#f_brush].special = LEVEL.liquid.special
@@ -1862,21 +1906,21 @@ function Simple_render_cave(R)
             f_brush[#f_brush].light = LEVEL.liquid.light
           end
 
-          Brush_set_mat(f_brush, l_mat, l_mat)
+          brushlib.set_mat(f_brush, l_mat, l_mat)
 
-          brush_helper(f_brush)
+          Trans.brush(f_brush)
         end
 
         -- common ceiling code
 
-        Brush_add_bottom(c_brush, c_h)
-        Brush_set_mat(c_brush, c_mat, c_mat)
+        brushlib.add_bottom(c_brush, c_h)
+        brushlib.set_mat(c_brush, c_mat, c_mat)
 
         if c_mat == "_SKY" then
           table.insert(c_brush, 1, { m="sky" })
         end
 
-        brush_helper(c_brush)
+        Trans.brush(c_brush)
       end
 
     end end -- x, y
@@ -1918,6 +1962,8 @@ function Simple_render_cave(R)
 
   ---| Simple_render_cave |---
   
+  Trans.clear()
+
   create_delta_map()
 
 --!!!! FIXME  add_liquid_pools()
@@ -2103,6 +2149,8 @@ function Simple_lake_fences(R)
 
   info.fence = FENCE
 
+do return end  --!!!!!!
+
   for sx = R.sx1, R.sx2 do
   for sy = R.sy1, R.sy2 do
     local S = SEEDS[sx][sy]
@@ -2124,8 +2172,10 @@ end
 function Simple_outdoor_borders(R)
   local info = R.cave_info
 
+do return end  --!!!!!!
+
   local f_mat = assert(R.main_tex)
-  local f_h   = R.min_floor_h - 256
+  local f_h   = R.floor_min_h - 256  -- WTF? we don't know floor_min yet
 
 
   local function sky_border(S, dir)
@@ -2137,12 +2187,12 @@ function Simple_outdoor_borders(R)
     if dir == 4 then x2 = x1 ; x1 = x1 - 16 end
     if dir == 6 then x1 = x2 ; x2 = x2 + 16 end
 
-    local brush = Brush_new_quad(x1, y1, x2, y2)
+    local brush = brushlib.quad(x1, y1, x2, y2)
     table.insert(brush, { t=f_h, reachable=true })
-    Brush_set_mat(brush, f_mat, f_mat)
-    brush_helper(brush)
+    brushlib.set_mat(brush, f_mat, f_mat)
+    Trans.brush(brush)
 
-    Build_sky_quad(x1, y1, x2, y2, f_h + 4)
+    Trans.sky_quad(x1, y1, x2, y2, f_h + 4)
   end
 
 
@@ -2321,7 +2371,7 @@ function Simple_decide_properties(R)
   local info = R.cave_info
 
   local   STEP_MODES = { walkway=25, up=15, down=10, mixed=65 }
-  local LIQUID_MODES = { none=20, some=80, lake=80 }
+  local LIQUID_MODES = { none=20, some=80, lake=80*0 }
 
   -- decide liquid mode
   if not LEVEL.liquid then
@@ -2380,7 +2430,7 @@ end
 
 
 
-function Simple_cave_or_maze(R)
+function Simple_cave_or_maze(R, entry_h)
   R.cave_info = {}
 
   Simple_decide_properties(R)
@@ -2394,7 +2444,7 @@ function Simple_cave_or_maze(R)
   Simple_bunch_areas(R, "liquid")
   Simple_bunch_areas(R, "sky")
 
-  Simple_floor_heights(R, R.entry_h)
+  Simple_floor_heights(R, entry_h)
   Simple_decorations(R)
 
   Simple_render_cave(R)

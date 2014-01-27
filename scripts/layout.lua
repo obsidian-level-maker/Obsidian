@@ -2463,7 +2463,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   if R.kind == "cave" then
     Layout_place_importants(R)
-    Simple_cave_or_maze(R)
+    Simple_cave_or_maze(R, R.floor_h)
     return
   end
 
