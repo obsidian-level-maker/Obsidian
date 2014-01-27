@@ -2054,7 +2054,7 @@ function Layout_room(R)
 
       -- check if too high, make a lift instead
       -- TODO: "lifty" mode, use > 55 or whatever
-      if THEME.lifts and math.abs(S.stair_z1 - S.stair_z2) > 110/3 then
+      if THEME.lifts and math.abs(S.stair_z1 - S.stair_z2) > 110 then
         S.kind = "lift"
         S.room.has_lift = true
       end
