@@ -705,7 +705,7 @@ DOOM2.THEMES =
   -- TODO: this also probably better as 'speciality' theme
   hell_Wood =
   {
-    prob = 20
+    prob = 40
     kind = "building"
 
     walls =
