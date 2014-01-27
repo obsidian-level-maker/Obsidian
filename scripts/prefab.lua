@@ -112,7 +112,7 @@ function Build.archway(S, side, z1, z2, skin)
   local mx = int(long / 2)
 
   local wall_info  = get_mat(skin.wall, skin.floor)
-  local other_info = get_mat(skin.other or skin.wall)
+  local outer_info = get_mat(skin.outer or skin.wall)
 
   local frame_coords =
   {
@@ -124,13 +124,13 @@ function Build.archway(S, side, z1, z2, skin)
 
   Trans.set(T)
 
-  Trans.old_brush(other_info, frame_coords, z2, EXTREME_H)
+  Trans.old_brush(outer_info, frame_coords, z2, EXTREME_H)
 
 
   assert(deep > 17 or N_deep > 17)
 
   local break_info = wall_info
-  if skin.other and skin.other != skin.wall then
+  if skin.outer and skin.outer != skin.wall then
     break_info = get_mat(skin.break_t)
   end
 
@@ -139,8 +139,8 @@ function Build.archway(S, side, z1, z2, skin)
 
     Trans.old_brush(wall_info,
     {
-      { x=0,     y=-N_deep,    w_face = other_info.w_face },
-      { x=24+16, y=-N_deep,    w_face = other_info.w_face },
+      { x=0,     y=-N_deep,    w_face = outer_info.w_face },
+      { x=24+16, y=-N_deep,    w_face = outer_info.w_face },
       { x=36+16, y=-N_deep+16, w_face = break_info.w_face },
       { x=36+16, y=deep-16 },
       { x=24+16, y=deep },
