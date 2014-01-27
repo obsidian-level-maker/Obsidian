@@ -759,7 +759,7 @@ function Plan_add_caves()
   -- compute the quota
   local perc = style_sel("caves", 0, 15, 35, 65, 130)
 
-  if perc == 0 or true then  --!!!! FIXME
+  if perc == 0 then
     gui.printf("Caves: NONE\n")
     return
   end
