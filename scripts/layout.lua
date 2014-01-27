@@ -2048,6 +2048,7 @@ function Layout_room(R)
         S.w_tex = N.w_tex
 
       elseif S.stair_z1 > S.stair_z2 then
+        S.top_tex = S.f_tex
         S.f_tex = N.f_tex
       end
 

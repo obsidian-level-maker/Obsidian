@@ -865,8 +865,6 @@ function Build.niche_stair(S, skin, skin2)
   local z1 = S.stair_z2
   local z2 = S.stair_z1
 
-  local niche_info = get_mat(skin2.wall, skin2.floor)
-
   local W  = sel(z1 > z2, 48, 24)
   local HB = sel(z1 > z2, 96, 64)
   local HF = 40
@@ -877,21 +875,15 @@ function Build.niche_stair(S, skin, skin2)
 
   Trans.set(T)
 
-  Trans.old_quad(niche_info, 0,0, W,deep, -EXTREME_H, z2)
-  Trans.old_quad(niche_info, long-W,0, long,deep, -EXTREME_H, z2)
-  Trans.old_quad(niche_info, W,deep-HB, long-W,deep, -EXTREME_H, z2)
-
 
   if S.stair_z1 > S.stair_z2 then
-    local f_tex = S.f_tex or S.room.main_tex
-    local w_tex = S.w_tex or S.room.main_tex
+    local f_tex = S.top_tex or S.f_tex or S.room.main_tex
+    local niche_info = get_mat(skin2.wall, f_tex)
 
-    local S2 = S:neighbor(S.stair_dir)
-    if S2 and S2.room == S.room and S2.kind == "walk" and S2.f_tex then
-      f_tex = S2.f_tex
-    end
+    Trans.old_quad(niche_info, 0,0, W,deep, -EXTREME_H, z2)
+    Trans.old_quad(niche_info, long-W,0, long,deep, -EXTREME_H, z2)
+    Trans.old_quad(niche_info, W,deep-HB, long-W,deep, -EXTREME_H, z2)
 
-    Trans.old_quad(get_mat(w_tex, f_tex), W,0, long-W,HF, -EXTREME_H, z1)
   else
     HF = 0
   end
@@ -1279,12 +1271,6 @@ function Build.lift(S, skin, skin2, tag)
   lift_info.sec_tag = tag
 
   Trans.old_brush(lift_info, coords, -EXTREME_H, high_z - 8)
-
-
----##  local front_coords = get_wall_coords(S, 10-side, 64)
----##  local front_info   = get_mat(w_tex, f_tex)
----##
----##  Trans.old_brush(front_info, front_coords, -EXTREME_H, low_z);
 end
 
 

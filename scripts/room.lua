@@ -3438,7 +3438,8 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
 
       Build.niche_stair(S, LEVEL.step_skin, skin2)
 
----      do_floor(S, z1, f_indents, w_tex, f_tex)
+      local low_z = math.min(S.stair_z1, S.stair_z2)
+      do_floor(S, low_z, f_indents, w_tex, S.f_tex)
 
     elseif S.kind == "curve_stair" then
       Build.low_curved_stair(S, LEVEL.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
@@ -3453,7 +3454,6 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
       Build.lift(S, LEVEL.lift_skin, skin2, tag)
 
       local low_z = math.min(S.stair_z1, S.stair_z2)
-
       do_floor(S, low_z, f_indents, w_tex, skin2.floor)
 
     elseif S.kind == "popup" then
