@@ -1007,6 +1007,8 @@ gui.debugf("install_pattern %s :  hash_h:%d  (%d,%d)..(%d,%d)\n",
   T.info.name, heights[1],
   area.x1, area.y1, area.x2, area.y2)
 
+    local use_solid_feature = rand.odds(75)
+
 -- dump_structure(T)
 
     for ex = 1,area.tw do for ey = 1,area.th do
@@ -1052,7 +1054,9 @@ gui.debugf("install_pattern %s :  hash_h:%d  (%d,%d)..(%d,%d)\n",
 
         elseif ch == '#' then
           S.kind = "void"
-          S.solid_feature = T.info.solid_feature
+          if use_solid_feature then
+            S.solid_feature = T.info.solid_feature
+          end
 
         elseif ch == '~' then
           -- NOTE: floor_h for liquids is determined later
