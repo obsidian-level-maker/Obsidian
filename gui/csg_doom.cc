@@ -1213,15 +1213,12 @@ static doom_sidedef_c * DM_MakeSidedef(
 		lower = snag->FindBrushVert(l_brush);
 		upper = snag->FindBrushVert(u_brush);
 
-		// fallback to something safe
-		if (! lower) lower = l_brush->verts[0];
-		if (! upper) upper = u_brush->verts[0];
-
-		SD->lower = lower->face.getStr("tex", dummy_tex);
-		SD->upper = upper->face.getStr("tex", dummy_tex);
-
 		// offset handling
 		int r_ox = IVAL_NONE;
+		int l_ox = IVAL_NONE;
+		int l_oy = IVAL_NONE;
+		int u_ox = IVAL_NONE;
+		int u_oy = IVAL_NONE;
 
 		if (rail)
 		{
@@ -1229,12 +1226,18 @@ static doom_sidedef_c * DM_MakeSidedef(
 			r_ox = rail->face.getInt("u1", r_ox);
 		}
 
-		int l_ox = lower->face.getInt("u1", IVAL_NONE);
-		int u_ox = upper->face.getInt("u1", IVAL_NONE);
+		if (lower)
+		{
+			l_ox = lower->face.getInt("u1", IVAL_NONE);
+			// on a moving brush, default Y offset is zero
+			l_oy = lower->face.getInt("v1", l_brush->props.getInt("mover") ? 0 : IVAL_NONE);
+		}
 
-		// on a pegged brush, default Y offset is zero
-		int l_oy = lower->face.getInt("v1", l_brush->props.getInt("mover") ? 0 : IVAL_NONE);
-		int u_oy = upper->face.getInt("v1", u_brush->props.getInt("mover") ? 0 : IVAL_NONE);
+		if (upper)
+		{
+			u_ox = upper->face.getInt("u1", IVAL_NONE);
+			u_oy = upper->face.getInt("v1", u_brush->props.getInt("mover") ? 0 : IVAL_NONE);
+		}
 
 		if (back && back->f_h > sec->f_h && !rail && l_oy != IVAL_NONE)
 		{
@@ -1255,6 +1258,13 @@ static doom_sidedef_c * DM_MakeSidedef(
 			SD->y_offset = CalcYOffset_Lower(lower, sec, back, l_oy, unpeg_L);
 		else if (u_oy != IVAL_NONE)
 			SD->y_offset = CalcYOffset_Upper(upper, sec, back, u_oy, unpeg_U);
+
+		// get textures, but fallback to something safe
+		if (! lower) lower = l_brush->verts[0];
+		if (! upper) upper = u_brush->verts[0];
+
+		SD->lower = lower->face.getStr("tex", dummy_tex);
+		SD->upper = upper->face.getStr("tex", dummy_tex);
 	}
 
 	return SD;
