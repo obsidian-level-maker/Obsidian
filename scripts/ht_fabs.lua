@@ -1317,6 +1317,8 @@ HEIGHT_SOLID_I2 =
   x_sizes = { "01110", "01111", "11110", "11111", "11211" }
   y_sizes = { "111", "112", "211", "212" }
 
+  solid_feature = true
+
   subs =
   {
     { height=1, match="one" }
