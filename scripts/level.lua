@@ -121,7 +121,7 @@ GLOBAL_STYLE_LIST =
   -- these three correspond to buttons in the GUI
 
   outdoors   = { few=20, some=60, heaps=30 }
-  caves      = { none=30 } ---!!! , few=50, some=30, heaps=5 }
+  caves      = { none=50, few=30, some=30, heaps=5 }
   traps      = { few=20, some=60, heaps=30 }
 
   -- things that affect the whole level
