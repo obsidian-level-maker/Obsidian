@@ -850,10 +850,12 @@ function Layout_try_pattern(R, is_top, div_lev, req_sym, area, heights, f_texs)
     assert(E.stair_src)
     if E.stair_src == '.' then
       S.stair_z1 = h
+      S.z1_tex   = f_tex
     else
       local s_idx = 0 + E.stair_src
       local sub = assert(T.info.subs[s_idx])
       S.stair_z1 = heights[1 + sub.height]
+      S.z1_tex   = f_texs [1 + sub.height]
     end
 
     assert(S.stair_z1)
@@ -1119,6 +1121,7 @@ gui.debugf("end install_fab\n")
     if OT.kind == "stair" then
       S.stair_dir = assert(OT.stair_dir)
       S.stair_z1  = assert(OT.stair_z1)
+      S.z1_tex    = assert(OT.z1_tex)
 
       if sym == "x" and geom.is_horiz(S.stair_dir) then
         S.stair_dir = 10 - S.stair_dir
@@ -2038,6 +2041,7 @@ function Layout_room(R)
       end
 
       S.stair_z2 = N.floor_h
+      S.z2_tex   = N.f_tex
 
       -- check if a stair is really needed
       if math.abs(S.stair_z1 - S.stair_z2) < 17 then
@@ -2046,10 +2050,6 @@ function Layout_room(R)
 
         S.f_tex = N.f_tex
         S.w_tex = N.w_tex
-
-      elseif S.stair_z1 > S.stair_z2 then
-        S.top_tex = S.f_tex
-        S.f_tex = N.f_tex
       end
 
       -- check if too high, make a lift instead

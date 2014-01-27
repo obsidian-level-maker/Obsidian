@@ -877,7 +877,7 @@ function Build.niche_stair(S, skin, skin2)
 
 
   if S.stair_z1 > S.stair_z2 then
-    local f_tex = S.top_tex or S.f_tex or S.room.main_tex
+    local f_tex = assert(S.z1_tex)
     local niche_info = get_mat(skin2.wall, f_tex)
 
     Trans.old_quad(niche_info, 0,0, W,deep, -EXTREME_H, z2)

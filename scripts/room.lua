@@ -3209,10 +3209,6 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local f_tex = S.f_tex or R.main_tex
     local c_tex = S.c_tex or sel(R.is_outdoor, "_SKY", R.ceil_tex)
 
-if R.kind == "cave" then f_tex = "RROCK04" end --!!!!! TEMP
-if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
-
-
     if R.kind == "hallway" then
       w_tex = assert(R.zone.hall_tex)
     elseif R.kind == "stairwell" then
@@ -3439,7 +3435,8 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
       Build.niche_stair(S, LEVEL.step_skin, skin2)
 
       local low_z = math.min(S.stair_z1, S.stair_z2)
-      do_floor(S, low_z, f_indents, w_tex, S.f_tex)
+      local low_tex = sel(low_z < S.stair_z2, S.z1_tex, S.z2_tex)
+      do_floor(S, low_z, f_indents, w_tex, low_tex or f_tex)
 
     elseif S.kind == "curve_stair" then
       Build.low_curved_stair(S, LEVEL.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
@@ -3454,7 +3451,8 @@ if R.quest and R.quest.kind == "secret" then f_tex = "FLAT1_3" end
       Build.lift(S, LEVEL.lift_skin, skin2, tag)
 
       local low_z = math.min(S.stair_z1, S.stair_z2)
-      do_floor(S, low_z, f_indents, w_tex, skin2.floor)
+      local low_tex = sel(low_z < S.stair_z2, S.z1_tex, S.z2_tex)
+      do_floor(S, low_z, f_indents, w_tex, low_tex)
 
     elseif S.kind == "popup" then
       -- FIXME: monster!!
