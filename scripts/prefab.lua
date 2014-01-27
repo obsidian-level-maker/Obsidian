@@ -1791,7 +1791,9 @@ end
 
 
 function Build.crate(x, y, z_top, skin)
-  local info = add_pegging(get_mat(skin.side_w))
+  local info = get_mat(skin.side_w)
+  info.w_face.x_offset = 0
+  info.w_face.y_offset = 0
 
   local coords = Trans.rect_coords(x-32,y-32, x+32,y+32)
 
