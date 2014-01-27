@@ -858,6 +858,10 @@ function Layout_try_pattern(R, is_top, div_lev, req_sym, area, heights, f_texs)
       S.z1_tex   = f_texs [1 + sub.height]
     end
 
+    if R.is_outdoor then
+      S.z1_tex = R.main_tex
+    end
+
     assert(S.stair_z1)
 
     S.floor_h = S.stair_z1
