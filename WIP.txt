@@ -5,14 +5,6 @@ WORK IN PROGRESS
 
 +  Caves!
 
-+  wall pictures
-
--  misaligned uppers (due to lighting and/or crates)
-
--  fix texturing on some stairs and diagonals
-
--  Chris's icon maps
-
 
 
 Later
@@ -30,6 +22,10 @@ Later
 
 +  apply nice items gotten in normal rooms to the HMODEL
 
+
+-  certain cases in DM_AlignTextures don't work well, especially
+   an upper where a crate straddles the periph (but does not directly
+   overlap any linedefs).
 
 -  ability to centre doors (on two seeds)
 
