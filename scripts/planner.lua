@@ -771,7 +771,7 @@ function Plan_add_caves()
 
   quota = quota * rand.range(0.8, 1.2)
 
-  gui.printf("Cave Quota: %1.1 sections\n", quota)
+  gui.printf("Cave Quota: %1.1f sections\n", quota)
 
 
   handle_surrounder()

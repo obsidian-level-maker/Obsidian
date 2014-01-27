@@ -492,8 +492,8 @@ end
 
   local best = {}
 
-  for x = R.sx1,R.sx2 do
-  for y = R.sy1,R.sy2 do
+  for x = R.sx1, R.sx2 do
+  for y = R.sy1, R.sy2 do
     local S = SEEDS[x][y]
 
     if S.room != R then continue end
@@ -588,7 +588,7 @@ function Layout_place_importants(R)
   Layout_compute_wall_dists(R)
 
   if R.kind == "cave" or
-     (rand.odds(15) and R.sw >= 3 and R.sh >= 3)
+     (rand.odds(5) and R.sw >= 3 and R.sh >= 3)
   then
     R.cave_placement = true
   end
@@ -2461,6 +2461,12 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     return
   end
 
+  if R.kind == "cave" then
+    Layout_place_importants(R)
+    Simple_cave_or_maze(R)
+    return
+  end
+
 
   R.tx1, R.ty1 = R.sx1, R.sy1
   R.tx2, R.ty2 = R.sx2, R.sy2
@@ -2495,10 +2501,6 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   --- place importants ---
 
   Layout_place_importants(R)
-
-  if R.kind == "cave" then
-    ---?????????  Layout_cave_monster_spots(R)
-  end
 
   if R.kind == "building" then
     add_pillars()

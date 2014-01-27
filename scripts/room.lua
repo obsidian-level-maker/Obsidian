@@ -621,12 +621,15 @@ function Room_setup_symmetry()
   local function decide_layout_symmetry(R)
     R.conn_symmetry = R.symmetry
 
+    if STYLE.symmetry == "none" or R.kind == "cave" then
+      R.symmetry = nil
+      return
+    end
+
     -- We discard 'R' rotate and 'T' transpose symmetry (for now...)
     if not (R.symmetry == "x" or R.symmetry == "y" or R.symmetry == "xy") then
       R.symmetry = nil
     end
-
-    if STYLE.symmetry == "none" then return end
 
     local SYM_LIST = { "x", "y", "xy" }
 
