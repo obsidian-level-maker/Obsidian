@@ -101,12 +101,12 @@ function Simple_generate_cave(R)
   local function cave_box_for_seed(sx, sy)
     local box =
     {
-      cx1 = (sx - R.sx1) * 4 + 1
-      cy1 = (sy - R.sy1) * 4 + 1
+      cx1 = (sx - R.sx1) * 3 + 1
+      cy1 = (sy - R.sy1) * 3 + 1
     }
 
-    box.cx2 = box.cx1 + 3
-    box.cy2 = box.cy1 + 3
+    box.cx2 = box.cx1 + 2
+    box.cy2 = box.cy1 + 2
     
     return box
   end
@@ -127,8 +127,8 @@ function Simple_generate_cave(R)
 
 
   local function create_map()
-    info.W = R.sw * 4
-    info.H = R.sh * 4
+    info.W = R.sw * 3
+    info.H = R.sh * 3
 
     info.blocks = table.array_2D(info.W, info.H)
 
@@ -160,26 +160,26 @@ function Simple_generate_cave(R)
 
       if S.room != R then continue end
 
-      local cx = (sx - R.sx1) * 4 + 1
-      local cy = (sy - R.sy1) * 4 + 1
+      local cx = (sx - R.sx1) * 3 + 1
+      local cy = (sy - R.sy1) * 3 + 1
 
-      map:fill(cx, cy, cx+3, cy+3, 0)
+      map:fill(cx, cy, cx+2, cy+2, 0)
 
       for dir = 2,8,2 do
         if not S:same_room(dir) then
-          set_side(cx, cy, cx+3, cy+3, dir, sel(is_lake, -1, 1))
+          set_side(cx, cy, cx+2, cy+2, dir, sel(is_lake, -1, 1))
         end
 
         -- in lake mode, clear whole seeds that touch edge of map
         -- (i.e. which will have a sky border next to them)
         if is_lake and S:need_lake_fence(dir) then
-          map:fill(cx, cy, cx+3, cy+3, -1)
+          map:fill(cx, cy, cx+2, cy+2, -1)
         end
       end
 
       for dir = 1,9,2 do if dir != 5 then
         if not S:same_room(dir) then
-          set_corner(cx, cy, cx+3, cy+3, dir, sel(is_lake, -1, 1))
+          set_corner(cx, cy, cx+2, cy+2, dir, sel(is_lake, -1, 1))
         end
       end end
 
@@ -225,10 +225,10 @@ function Simple_generate_cave(R)
 
       if rand.odds(85) then continue end
 
-      local cx = 1 + (sx - R.sx1) * 4
-      local cy = 1 + (sy - R.sy1) * 4
+      local cx = 1 + (sx - R.sx1) * 3
+      local cy = 1 + (sy - R.sy1) * 3
 
-      map:fill(cx, cy, cx+3, cy+3, -1)
+      map:fill(cx, cy, cx+2, cy+2, -1)
     end
     end
   end
@@ -1397,7 +1397,7 @@ function Simple_render_cave(R)
 
   local cave = info.cave
 
-  local cave_tex = R.wall_mat or "_ERROR"
+  local cave_tex = R.zone.cave_wall_mat or "_ERROR"
 
   local is_lake = (info.liquid_mode == "lake")
 
@@ -1601,7 +1601,7 @@ function Simple_render_cave(R)
     local f_mat = A.floor_mat or R.floor_mat or cave_tex
     local c_mat = A. ceil_mat or R.ceil_mat  or cave_tex
 
-    if A.wall then f_mat = A.wall_mat or R.wall_mat or cave_tex end
+    if A.wall then f_mat = A.wall_mat or R.main_tex or cave_tex end
 
     local f_liquid = A.liquid
     local c_sky    = A.sky
@@ -1768,7 +1768,7 @@ function Simple_render_cave(R)
       spot.z1 = f_h
       spot.z2 = c_h
 
-      spot.face_away = R:find_nonfacing_spot(spot.x1, spot.y1, spot.x2, spot.y2)
+--FIXME  spot.face_away = R:find_nonfacing_spot(spot.x1, spot.y1, spot.x2, spot.y2)
 
       table.insert(R.mon_spots, spot)
     end
@@ -2124,7 +2124,7 @@ end
 function Simple_outdoor_borders(R)
   local info = R.cave_info
 
-  local f_mat = assert(R.wall_mat)
+  local f_mat = assert(R.main_tex)
   local f_h   = R.min_floor_h - 256
 
 
