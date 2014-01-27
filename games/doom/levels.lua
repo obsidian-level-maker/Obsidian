@@ -56,8 +56,11 @@ DOOM2.PREBUILT_LEVELS =
 
   MAP30 =
   {
-    { prob=30, file="doom2_boss/icon1.wad", map="MAP30" }
+    { prob=50, file="doom2_boss/icon1.wad", map="MAP30" }
     { prob=50, file="doom2_boss/icon2.wad", map="MAP30" }
+    { prob=50, file="doom2_boss/icon3.wad", map="MAP01" }
+    { prob=50, file="doom2_boss/icon3.wad", map="MAP02" }
+    { prob=50, file="doom2_boss/icon3.wad", map="MAP03" }
   }
 
   GOTCHA =
