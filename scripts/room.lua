@@ -2788,7 +2788,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local sx, sy = S.sx, S.sy
 
     local z1 = S.floor_h or R.floor_h
-    local z2 = S.ceil_h  or R.ceil_h
+    local z2 = S.ceil_h  or R.ceil_h  or 999  --!!!!!! FIXME
 
     local mx, my = S:mid_point()
 
@@ -3242,7 +3242,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     end
 
 
-    -- SIDES
+    --- WALLS ---
 
     for side = 2,8,2 do
       local N = S:neighbor(side)
@@ -3346,7 +3346,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     if R.sides_only then return end
 
 
-    -- DIAGONALS
+    --- DIAGONALS ---
 
     if S.kind == "diagonal" then
 
@@ -3368,14 +3368,17 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     end
 
 
-    -- CEILING
+    --- CEILING ---
 
     local cx1 = S.x1 + (c_indents[4] or 0)
     local cy1 = S.y1 + (c_indents[2] or 0)
     local cx2 = S.x2 - (c_indents[6] or 0)
     local cy2 = S.y2 - (c_indents[8] or 0)
 
-    if S.kind != "void" and not S.no_ceil and 
+    if R.kind == "cave" and not R.is_outdoor then
+      -- nothing needed
+
+    elseif S.kind != "void" and not S.no_ceil and 
        (S.is_sky or c_tex == "_SKY")
     then
       local info = sel(R.is_outdoor, get_sky(), get_fake_sky())
@@ -3414,14 +3417,17 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     end
 
 
-    -- FLOOR
+    --- FLOOR ---
 
     local fx1 = S.x1 + (f_indents[4] or 0)
     local fy1 = S.y1 + (f_indents[2] or 0)
     local fx2 = S.x2 - (f_indents[6] or 0)
     local fy2 = S.y2 - (f_indents[8] or 0)
 
-    if S.kind == "void" then
+    if R.kind == "cave" then
+      -- nothing needed
+
+    elseif S.kind == "void" then
 
       if S.solid_feature and R.zone.corner_mats then
         if not R.corner_mat then
@@ -3475,7 +3481,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     end
 
 
-    -- PREFABS
+    --- GOALS / PREFABS ---
 
     if S.content == "pillar" then
       Build.pillar(S, z1, z2, assert(S.pillar_skin), S.is_big_pillar)
@@ -3503,10 +3509,6 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
 
   ---==| Room_build_seeds |==---
-
-  if R.cave then
-    Room_build_cave(R)
-  end
 
   if R.kind == "smallexit" then
     Room_do_small_exit(R)
@@ -3913,6 +3915,8 @@ function Room_find_ambush_focus(R)
     S = C.S2
     side = 10 - C.dir
   end
+
+if not S.floor_h then return end  --!!!!!! FIXME (caves)
 
   assert(S)
   assert(S.floor_h)
