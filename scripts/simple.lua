@@ -2298,8 +2298,6 @@ function Simple_decorations(R)
     for y = 2, info.H - 1 do
       if usable_corner(x, y) then
         table.insert(locs, { cx=x, cy=y })    
-
-
       end
     end
     end
@@ -2312,6 +2310,17 @@ function Simple_decorations(R)
     if not tab then return end
 
     return rand.key_by_probs(tab)
+  end
+
+
+  local function kill_nearby_locs(list, x, y)
+    each loc in list do
+      if math.abs(loc.cx - x) <= 1 and
+         math.abs(loc.cy - y) <= 1
+      then
+        loc.dead = true
+      end
+    end
   end
 
 
@@ -2340,18 +2349,26 @@ function Simple_decorations(R)
   end
 
 
-  local function place_torches_in_corners()
+  local function place_torches_in_corners(prob)
     local torch_ent = select_torch()
 
     if not torch_ent then return end
 
+    local perc = 18
+    if info.torch_mode == "few" then
+      perc = perc / 2.5
+    end
+
     find_corner_locs()
 
-    local prob = 11
+    -- TODO: use a quota system : shuffle and use first N
 
     each loc in locs do
+      if loc.dead then continue end
+
       if rand.odds(prob) then
         add_torch(loc.cx, loc.cy, torch_ent)
+        kill_nearby_locs(locs, loc.cx, loc.cy)
       end
     end
   end
@@ -2362,7 +2379,6 @@ function Simple_decorations(R)
   if info.torch_mode != "none" then
     place_torches_in_corners()
   end
-
 end
 
 
@@ -2371,7 +2387,7 @@ function Simple_decide_properties(R)
   local info = R.cave_info
 
   local   STEP_MODES = { walkway=10, up=20, down=20, mixed=60 }
-  local LIQUID_MODES = { none=20, some=80, lake=80*0 }
+  local LIQUID_MODES = { none=20, some=80, lake=80*0 }  --!!! FIXME
 
   -- decide liquid mode
   if not LEVEL.liquid then
@@ -2400,19 +2416,16 @@ function Simple_decide_properties(R)
   end
 
   -- decide torch mode
-  local prob = 95
-
-  if info.liquid_mode != "none" then
-    prob = sel(info.step_mode == "walkway", 65, 30)
+  if R.is_outdoor and not LEVEL.is_dark then
+    info.torch_mode = "none"
+  elseif info.sky_mode != "none" and not LEVEL.is_dark then
+    info.torch_mode = rand.sel(50, "none", "few")
+  elseif info.liquid_mode != "none" then
+    info.torch_mode = rand.key_by_probs({ none=10, few=40, some=40 })
+  else
+    -- no other light sources!
+    info.torch_mode = rand.key_by_probs({ none=2, few=10, some=90 })
   end
-
-  if not LEVEL.is_dark then
-    if R.is_outdoor or info.sky_mode != "none" then
-      prob = 0
-    end
-  end
-
-  info.torch_mode = rand.sel(prob, "some", "none")
 
   -- extra health for damaging liquid
   if LEVEL.liquid and LEVEL.liquid.damage then
