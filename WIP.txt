@@ -3,7 +3,20 @@ WORK IN PROGRESS
 ================
 
 
-+  Caves!
+Caves:
+
++  need walls in some places
+
++  non-straight wall fabs (make a few, pick randomly)
+
+-  if few caves (total svolume < N), use same wall in whole level,
+   otherwise use same wall in each zone
+
+-  tend to use different floors in each room
+
+-  reserved rooms: can turn into caves (if large + styles)
+
+-  ceiling: usually same as wall, occ. different
 
 
 
