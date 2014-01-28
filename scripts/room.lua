@@ -2735,7 +2735,7 @@ function Room_build_seeds(R)
   local function content_purpose(S)
     local sx, sy = S.sx, S.sy
 
-    local z1 = S.floor_h or R.floor_h
+    local z1 = assert(S.floor_h)
     local z2 = S.ceil_h  or R.ceil_h
 
     local mx, my = S:mid_point()
@@ -2787,8 +2787,8 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   local function content_weapon(S)
     local sx, sy = S.sx, S.sy
 
-    local z1 = S.floor_h or R.floor_h
-    local z2 = S.ceil_h  or R.ceil_h  or 999  --!!!!!! FIXME
+    local z1 = assert(S.floor_h)
+    local z2 = S.ceil_h  or R.ceil_h or 999
 
     local mx, my = S:mid_point()
 
@@ -2819,7 +2819,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local item = assert(S.content_item)
 
     local mx, my = S:mid_point()
-    local z1 = S.floor_h or R.floor_h
+    local z1 = assert(S.floor_h)
 
     if R == LEVEL.start_room or R.hallway then
       -- bare item
@@ -2853,7 +2853,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
     local mx, my = S:mid_point()
     local spot_dir = 10 - dir_for_wotsit(S)
-    local z = S.floor_h or R.floor_h
+    local z = assert(S.floor_h)
 
     local T = Trans.spot_transform(mx, my, z, spot_dir)
 
@@ -3202,7 +3202,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
     vis_seed(S)
 
-    local z1 = S.floor_h or R.floor_h or (S.conn and S.conn.conn_h) or 0
+    local z1 = S.floor_h or (S.conn and S.conn.conn_h) or 0
     local z2 = S.ceil_h  or R.ceil_h  or (z1 + 256)
 
     assert(z1 and z2)
@@ -3283,7 +3283,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
       if B_kind == "fence"  then
         local skin = { h=30, wall=w_tex, floor=f_tex }
-        local fence_h = R.fence_h or ((R.floor_h or z1) + skin.h)
+        local fence_h = R.fence_h or ((R.floor_max_h or z1) + skin.h)
         if S.content == "wotsit" then
           fence_h = fence_h + 24
         end
@@ -3829,7 +3829,7 @@ function Room_find_monster_spots(R)
       return false
     end
 
-    local low_ceil = S.ceil_h or R.ceil_h
+    local low_ceil = S.ceil_h  or R.ceil_h
     local hi_floor = S.floor_h or 0
 
     for dx = 0,1 do

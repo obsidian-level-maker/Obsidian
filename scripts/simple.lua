@@ -1282,7 +1282,7 @@ function Simple_floor_heights(R, entry_h)
   local function find_entry_area()
     each imp in R.cave_imps do
       assert(imp.area)
-      if imp.portal and imp.portal.floor_h then
+      if imp.conn and imp.conn.conn_h then
         return imp.area
       end
     end
@@ -1298,20 +1298,20 @@ function Simple_floor_heights(R, entry_h)
       assert(imp.area.floor_h)
 
       local G = imp.goal
-      local P = imp.portal
+      local C = imp.conn
 
       if G then
         G.z1 = imp.area.floor_h
         G.z2 = G.z1 + 160
+
+        G.S.floor_h = G.z1
       end
 
-      if P and not P.floor_h then
-        Portal_set_floor(P, imp.area.floor_h)
-      end
+      if C then
+        local S = C:seed(R)
 
-      if P and P.door_kind and not P.added_door then
-        Areas_add_wall(R, P.door_kind, P.sx1, P.sy1, P.sx2, P.sy2, P.side, P.floor_h, P.conn)
-        P.added_door = true
+        C.conn_h  = imp.area.floor_h
+        S.floor_h = imp.area.floor_h
       end
     end 
   end

@@ -2443,7 +2443,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     focus_C.conn_h = focus_C.conn_h + focus_C.diff_h
   end
 
-  R.floor_h = focus_C.conn_h  -- ??? BLEH
+  local entry_h = focus_C.conn_h
 
   -- special stuff
   if R.kind == "small_exit" then
@@ -2456,14 +2456,14 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   end
 
   if R.kind == "hallway" then
-    Layout_hallway(R, focus_C.conn_h)
+    Layout_hallway(R, entry_h)
     Layout_place_importants(R)
     return
   end
 
   if R.kind == "cave" then
     Layout_place_importants(R)
-    Simple_cave_or_maze(R, R.floor_h)
+    Simple_cave_or_maze(R, entry_h)
     return
   end
 
