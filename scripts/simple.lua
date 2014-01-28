@@ -2370,7 +2370,7 @@ end
 function Simple_decide_properties(R)
   local info = R.cave_info
 
-  local   STEP_MODES = { walkway=25, up=15, down=10, mixed=65 }
+  local   STEP_MODES = { walkway=10, up=20, down=20, mixed=60 }
   local LIQUID_MODES = { none=20, some=80, lake=80*0 }
 
   -- decide liquid mode
