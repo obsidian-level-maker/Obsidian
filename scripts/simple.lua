@@ -2355,16 +2355,15 @@ function Simple_decorations(R)
 
     if not torch_ent then return end
 
-    if info.torch_mode == "few" then
-      perc = perc / 2.5
-    end
-
     local locs = find_corner_locs()
 
     rand.shuffle(locs)
 
-    local perc = sel(info.torch_mode == "few", 7, 18)
-    local quota = int(#locs * perc / 100 + gui.random())
+    local perc  = sel(info.torch_mode == "few", 7, 18)
+    local quota = #locs * perc / 100
+
+    quota = quota * rand.range(0.8, 1.2)
+    quota = int(quota + gui.random())
 
     while quota > 0 do
       if table.empty(locs) then break; end
@@ -2421,14 +2420,14 @@ function Simple_decide_properties(R)
   if R.is_outdoor then
     info.sky_mode = rand.sel(50, "high_wall", "low_wall")
   else
-    info.sky_mode = rand.sel(30, "some", "none")
+    info.sky_mode = rand.sel(25, "some", "none")
   end
 
   -- decide torch mode
   if R.is_outdoor and not LEVEL.is_dark then
     info.torch_mode = "none"
   elseif info.sky_mode != "none" and not LEVEL.is_dark then
-    info.torch_mode = rand.sel(50, "none", "few")
+    info.torch_mode = "few"
   elseif info.liquid_mode != "none" then
     info.torch_mode = rand.key_by_probs({ none=10, few=40, some=40 })
   else
