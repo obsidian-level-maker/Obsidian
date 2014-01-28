@@ -2230,9 +2230,6 @@ function Simple_decorations(R)
   local cave = info.cave
 
 
-  local locs = {}
-
-
   local function block_is_bounded(x, y, A, dir)
     local nx, ny = geom.nudge(x, y, dir)
 
@@ -2294,6 +2291,8 @@ function Simple_decorations(R)
 
 
   local function find_corner_locs()
+    local locs = {}
+
     for x = 2, info.W - 1 do
     for y = 2, info.H - 1 do
       if usable_corner(x, y) then
@@ -2301,6 +2300,8 @@ function Simple_decorations(R)
       end
     end
     end
+
+    return locs
   end
 
 
@@ -2354,22 +2355,30 @@ function Simple_decorations(R)
 
     if not torch_ent then return end
 
-    local perc = 18
     if info.torch_mode == "few" then
       perc = perc / 2.5
     end
 
-    find_corner_locs()
+    local locs = find_corner_locs()
 
-    -- TODO: use a quota system : shuffle and use first N
+    rand.shuffle(locs)
 
-    each loc in locs do
+    local perc = sel(info.torch_mode == "few", 7, 18)
+    local quota = int(#locs * perc / 100 + gui.random())
+
+    while quota > 0 do
+      if table.empty(locs) then break; end
+
+      local loc = table.remove(locs, 1)
       if loc.dead then continue end
 
-      if rand.odds(prob) then
-        add_torch(loc.cx, loc.cy, torch_ent)
-        kill_nearby_locs(locs, loc.cx, loc.cy)
-      end
+      add_torch(loc.cx, loc.cy, torch_ent)
+
+      -- prevent adding a torch in a neighbor cell, since that can
+      -- block the player's path.
+      kill_nearby_locs(locs, loc.cx, loc.cy)
+
+      quota = quota - 1
     end
   end
 
