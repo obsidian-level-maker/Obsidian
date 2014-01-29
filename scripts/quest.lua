@@ -869,8 +869,6 @@ function Quest_create_zones()
       rooms = {}
       quests = {}
       themes = {}
-      previous = {}
-      rare_used = {}
     }
 
     return Z
@@ -1647,11 +1645,23 @@ function Quest_choose_themes()
   end
 
 
-  local function pick_zone_theme(tab)
-    assert(tab)
+  local function pick_zone_theme(theme_tab, previous)
+    assert(theme_tab)
 
-    if table.empty(tab) then
+    if table.empty(theme_tab) then
       error("pick_zone_theme: nothing matched!")
+    end
+
+    local tab = table.copy(theme_tab)
+
+    -- prefer not to use same theme as the last one
+    for n = 1,2 do
+      local prev = previous and previous[n]
+      local factor = sel(i == 1, 5, 2)
+
+      if prev and tab[prev] then
+        tab[prev] = tab[prev] / factor
+      end
     end
 
     local name = rand.key_by_probs(tab)
@@ -1670,8 +1680,14 @@ function Quest_choose_themes()
 
     local building_tab = collect_usable_themes("building")
 
+    -- TODO: this logic is not ideal, since zones are not necessarily
+    --       linear, e.g. zones[3] may be entered from zones[1]
+    local previous = {}
+
     each Z in LEVEL.zones do
-      Z.building_theme = pick_zone_theme(building_tab)
+      Z.building_theme = pick_zone_theme(building_tab, previous)
+
+      table.insert(previous, 1, Z.building_theme)
     end
   end
 
@@ -1772,8 +1788,6 @@ function Quest_choose_themes()
 
 
   ---| Quest_choose_themes |---
-
-  LEVEL.rare_used = {}
 
   themes_for_zones()
   themes_for_rooms()
