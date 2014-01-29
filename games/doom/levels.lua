@@ -314,7 +314,7 @@ function DOOM1.get_levels()
         patch = string.format("WILV%d%d", ep_index-1, map-1)
 
          ep_along = ep_along
-        mon_along = ep_along + (ep_index-1) / 5
+        mon_along = ep_along + (ep_index-1) / math.max(3, EP_NUM)
 
         secret_kind = (map == 9) and "plain"
       }
