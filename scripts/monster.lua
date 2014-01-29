@@ -381,7 +381,10 @@ function Monsters_max_level()
   if OB_CONFIG.strength == "tough" or
      OB_CONFIG.strength == "crazy"
   then
-    max_level = max_level * 1.7
+    max_level = max_level * 1.6
+
+  elseif OB_CONFIG.strength == "weak" then
+    max_level = max_level / 1.3
   end
 
   if max_level < 1 then max_level = 1 end
