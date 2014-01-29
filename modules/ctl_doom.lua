@@ -65,9 +65,12 @@ function CTL_DOOM.monster_setup(self)
       M.replaces = nil
 
       -- loosen some of the normal restrictions
-      M.level = 1
       M.skip_prob = nil
       M.crazy_prob = nil
+
+      if M.prob > 40 then
+        M.level = 1
+      end
     end
   end -- for opt
 end
