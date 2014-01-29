@@ -43,5 +43,5 @@ Other Changes
 - better quests, often need to _find_ weapons and armor
 - Co-op: sometimes players start in different rooms
 - improved Sky generator module
-- improved caves [ pending... ]
+- some cave improvements
 
