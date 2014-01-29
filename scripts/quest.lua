@@ -334,7 +334,7 @@ function Quest_add_weapons()
 
     -- make powerful weapons only appear in later levels
     if OB_CONFIG.strength != "crazy" then
-      if level > LEVEL.max_level then return 0 end
+      if level > LEVEL.weap_level then return 0 end
     end
 
     -- theme adjustments

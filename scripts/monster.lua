@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  MONSTERS/HEALTH/AMMO
+--  MONSTERS / HEALTH / AMMO
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -376,10 +376,11 @@ end
 function Monsters_max_level()
   local max_level = 10 * (LEVEL.mon_along or 0.5) + 1
 
+  LEVEL.weap_level = max_level
+
   if OB_CONFIG.strength == "tough" or
      OB_CONFIG.strength == "crazy"
   then
-    -- this affects weapon choice too
     max_level = max_level * 1.7
   end
 
