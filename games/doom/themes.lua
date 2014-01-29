@@ -90,6 +90,12 @@ DOOM.ROOMS =
     prob  = 15
   }
 
+  LIBRARY =
+  {
+    theme = "urban"
+    prob  = 15
+  }
+
 
   ---- Outdoors ----
 
