@@ -98,6 +98,47 @@ end
 
 
 
+function Build.cave_wall(S, side, mat)
+  local info = get_mat(mat)
+
+  local T = get_transform_for_seed_side(S, side, 16)
+
+  Trans.set(T)
+
+  local offsets = { 4,4, 24, 48,48 }
+  rand.shuffle(offsets)
+
+  Trans.old_brush(info,
+  {
+    { x =   0, y = 16 }
+    { x =   0, y = 0  }
+    { x =  64, y = 0 }
+    { x =  64, y = offsets[1] }
+  },
+  -EXTREME_H, EXTREME_H)
+
+  Trans.old_brush(info,
+  {
+    { x =  64, y = offsets[1] }
+    { x =  64, y = 0  }
+    { x = 128, y = 0 }
+    { x = 128, y = offsets[2] }
+  },
+  -EXTREME_H, EXTREME_H)
+
+  Trans.old_brush(info,
+  {
+    { x = 128, y = offsets[2] }
+    { x = 128, y = 0  }
+    { x = 192, y = 0 }
+    { x = 192, y = 16 }
+  },
+  -EXTREME_H, EXTREME_H)
+
+  Trans.clear()
+end
+
+
 
 function Build.archway(S, side, z1, z2, skin)
 

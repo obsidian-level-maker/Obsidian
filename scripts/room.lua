@@ -952,18 +952,19 @@ function Room_border_up()
     end
 
     if R1.is_outdoor and R2.kind == "cave" then
-      S.border[side].kind = "fence"
+      if R2.is_outdoor then
+        S.border[side].kind = "fence"
+      else
+        S.border[side].kind = "cave_wall"
+        S.border[side].w_tex = R2.main_tex
+      end
 
     elseif R1.kind == "cave" and R2.is_outdoor then
       S.border[side].kind = "nothing"
 
     elseif R1.is_outdoor then
-      if R2.is_outdoor or R2.kind == "cave" then
-        S.border[side].kind = "fence"
-      else
-        S.border[side].kind = "facade"
-        S.border[side].w_tex = R2.facade
-      end
+      S.border[side].kind = "facade"
+      S.border[side].w_tex = R2.facade
 
       if N.kind == "liquid" and R2.is_outdoor and
         (S.kind == "liquid" or R1.quest == R2.quest)
@@ -1067,6 +1068,11 @@ function Room_border_up()
 
   local function border_up(R)
     local B_CORNERS = { 1,3,9,7 }
+
+    -- indoor caves are handled elsewhere
+    if R.kind == "cave" and not R.is_outdoor then
+      return
+    end
 
     for x = R.sx1, R.sx2 do
     for y = R.sy1, R.sy2 do
@@ -3147,7 +3153,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
       if not N or N.free or N.kind == "void" or
          B_kind == "wall" or B_kind == "facade" or
-         B_kind == "picture"
+         B_kind == "picture" or B_kind == "cave_wall"
       then
         vis_mark_wall(S, side)
       end
@@ -3269,6 +3275,11 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
       if B_kind == "wall" or B_kind == "facade" then
         do_wall(S, side, border.w_tex or w_tex)
         shrink_both(side, 16)
+      end
+
+      if B_kind == "cave_wall" then
+        Build.cave_wall(S, side, border.w_tex or w_tex)
+        shrink_both(side, 4)
       end
 
       if B_kind == "window" then
