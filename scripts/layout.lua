@@ -2429,6 +2429,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
     local DIR_LIST = { 2,8,4,6 }
 
     local best_dir
+    local best_z
 
     each dir in DIR_LIST do
       local N = S:neighbor(dir)
@@ -2436,12 +2437,16 @@ gui.debugf("BOTH SAME HEIGHT\n")
       if not (N and N.room == R) then continue end
 
       if N.kind != "walk" then continue end
+      if N.content then continue end
+      if not N.floor_h then continue end
 
       best_dir = dir
+      best_z   = N.floor_h + 16
     end
 
     if best_dir then
       S.cage_dir = best_dir
+      S.cage_z   = best_z
 stderrf("@ %s cage_dir:%d\n", S:tostr(), S.cage_dir)
     end
   end

@@ -754,8 +754,8 @@ function Fab_read_spots(fab)
     local x1,y1, x2,y2
     local z1,z2
 
-    if Brush_is_quad(B) then
-      x1,y1, x2,y2 = Brush_bbox(B)
+    if brushlib.is_quad(B) then
+      x1,y1, x2,y2 = brushlib.bbox(B)
 
       each C in B do
         if C.b then z1 = C.b end

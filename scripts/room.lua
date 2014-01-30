@@ -2954,6 +2954,18 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   end
 
 
+  local function do_fat_cage(S, w_tex)
+    local skin1 = GAME.SKINS["Cage_fat"]
+    assert(skin1)
+
+    local skin0 = { wall=w_tex }
+
+    local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, S.cage_z, S.cage_dir)
+
+    Fabricate_at(R, skin1, T, { skin0, skin1 })
+  end
+
+
   local function do_archway(S, side, f_tex, w_tex)
     local conn = S.border[side].conn
 
@@ -3451,7 +3463,11 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
         w_tex = R.corner_mat
       end
 
-      Trans.old_quad(get_mat(w_tex), fx1,fy1, fx2,fy2, -EXTREME_H, EXTREME_H);
+      if S.cage_dir then
+        do_fat_cage(S, w_tex)
+      else
+        Trans.old_quad(get_mat(w_tex), fx1,fy1, fx2,fy2, -EXTREME_H, EXTREME_H);
+      end
 
     elseif S.kind == "stair" then
       local skin2 = { wall=S.room.main_tex, floor=S.f_tex or S.room.main_tex }
