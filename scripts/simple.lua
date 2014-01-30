@@ -234,7 +234,6 @@ function Simple_generate_cave(R)
 
     for dir = 2,8,2 do
       if check_need_wall(S, dir) then
-stderrf("add_needed_cave_wall @ %s dir:%d\n", S:tostr(), dir)
         if R.is_outdoor and info.sky_mode != "high_wall" then
           S.border[dir].kind = "fence"
         else

@@ -2372,7 +2372,8 @@ gui.debugf("BOTH SAME HEIGHT\n")
     local SIDES = { 2, 4 }
     rand.shuffle(SIDES)
 
-    each side in SIDES do for offset = 0,1 do
+    each side in SIDES do
+    for offset = 0,1 do
       local long, deep = R.tw, R.th
       if geom.is_horiz(side) then long,deep = deep,long end
 
@@ -2418,7 +2419,54 @@ gui.debugf("BOTH SAME HEIGHT\n")
           return --OK--
         end
       end
-    end end -- for side, offset
+    end -- side, offset
+    end
+  end
+
+
+  local function try_convert_cage(S)
+    -- try verticals before horizontals [due to symmetry]
+    local DIR_LIST = { 2,8,4,6 }
+
+    local best_dir
+
+    each dir in DIR_LIST do
+      local N = S:neighbor(dir)
+
+      if not (N and N.room == R) then continue end
+
+      if N.kind != "walk" then continue end
+
+      best_dir = dir
+    end
+
+    if best_dir then
+      S.cage_dir = best_dir
+stderrf("@ %s cage_dir:%d\n", S:tostr(), S.cage_dir)
+    end
+  end
+
+
+  local function add_cages()
+    local prob = style_sel("cages", 0, 20, 40, 80)
+
+    if not rand.odds(prob) then
+      return
+    end
+
+    -- we try to turn ALL "void" seeds into a fat cage
+
+    for x = R.sx1, R.sx2 do
+    for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y]
+
+      if S.room != R then continue end
+    
+      if S.kind != "void" then continue end
+
+      try_convert_cage(S)
+    end
+    end
   end
 
 
@@ -2505,6 +2553,8 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   if R.kind == "building" then
     add_pillars()
   end
+
+  add_cages()
 end
 
 
