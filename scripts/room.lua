@@ -1353,7 +1353,8 @@ function Room_border_up()
 
       if (bd.side == side) and S.floor_h and
          (N and N.room) and N.floor_h and
-         not seed_is_blocked(N)
+         not seed_is_blocked(N) and
+         not (N.room.kind == "cave")
       then
         table.insert(info.seeds, S)
 
@@ -2760,7 +2761,7 @@ function Room_build_seeds(R)
     elseif R.purpose == "KEY" then
       local LOCK = assert(R.purpose_lock)
 
-      if rand.odds(15) and THEME.lowering_pedestal_skin then
+      if rand.odds(15) and THEME.lowering_pedestal_skin and z2 then
         local z_top = math.max(z1+128, R.floor_max_h+64)
         if z_top > z2-32 then
            z_top = z2-32
