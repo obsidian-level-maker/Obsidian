@@ -1704,6 +1704,78 @@ end
 
 
 
+function Layout_add_cages(R)
+  local  junk_list = {}
+  local other_list = {}
+
+  local function test_seed(S)
+    -- try verticals before horizontals [due to symmetry]
+    local DIR_LIST = { 2,8,4,6 }
+
+    local best_dir
+    local best_z
+
+    each dir in DIR_LIST do
+      local N = S:neighbor(dir)
+
+      if not (N and N.room == R) then continue end
+
+      if N.kind != "walk" then continue end
+      if N.content then continue end
+      if not N.floor_h then continue end
+
+      best_dir = dir
+      best_z   = N.floor_h + 16
+    end
+
+    if best_dir then
+      local LOC = { S=S, dir=best_dir, z=best_z }
+
+      if S.junked then
+        table.insert(junk_list, LOC)
+      else
+        table.insert(other_list, LOC)
+      end
+    end
+  end
+
+
+  local function collect_cage_seeds()
+    for x = R.sx1, R.sx2 do
+    for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y]
+
+      if S.room != R then continue end
+    
+      if S.kind != "void" then continue end
+
+      test_seed(S)
+    end
+    end
+  end
+
+
+  ---| Layout_add_cages |---
+
+  -- never add cages to a start room
+  if R.purpose == "START" then return end
+
+  -- or rarely in secrets
+  if R.quest.kind == "secret" and rand.odds(90) then return end
+
+  -- style check...
+  local prob = style_sel("cages", 0, 20, 40, 80)
+
+  if not rand.odds(prob) then return end
+
+  -- we try to turn ALL "void" seeds into a fat cage
+
+  collect_cage_seeds()
+
+  --.... TODO
+end
+
+
 function Layout_room(R)
 
   local function junk_sides()
@@ -1816,6 +1888,7 @@ function Layout_room(R)
 --??              table.insert(p_conns, P)
             elseif S.kind == "walk" then
               S.kind = "void"
+              S.junked = true
             end
           end
         end -- for who
@@ -2424,61 +2497,6 @@ gui.debugf("BOTH SAME HEIGHT\n")
   end
 
 
-  local function try_convert_cage(S)
-    -- try verticals before horizontals [due to symmetry]
-    local DIR_LIST = { 2,8,4,6 }
-
-    local best_dir
-    local best_z
-
-    each dir in DIR_LIST do
-      local N = S:neighbor(dir)
-
-      if not (N and N.room == R) then continue end
-
-      if N.kind != "walk" then continue end
-      if N.content then continue end
-      if not N.floor_h then continue end
-
-      best_dir = dir
-      best_z   = N.floor_h + 16
-    end
-
-    if best_dir then
-      S.cage_dir = best_dir
-      S.cage_z   = best_z
-stderrf("@ %s cage_dir:%d\n", S:tostr(), S.cage_dir)
-    end
-  end
-
-
-  local function add_cages()
-    -- never add cages to a start room
-    if R.purpose == "START" then return end
-
-    -- or rarely in secrets
-    if R.quest.kind == "secret" and rand.odds(90) then return end
-
-    -- style check...
-    local prob = style_sel("cages", 0, 20, 40, 80)
-
-    if not rand.odds(prob) then return end
-
-    -- we try to turn ALL "void" seeds into a fat cage
-
-    for x = R.sx1, R.sx2 do
-    for y = R.sy1, R.sy2 do
-      local S = SEEDS[x][y]
-
-      if S.room != R then continue end
-    
-      if S.kind != "void" then continue end
-
-      try_convert_cage(S)
-    end
-    end
-  end
-
 
   ---==| Layout_room |==---
 
@@ -2564,7 +2582,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     add_pillars()
   end
 
-  add_cages()
+  Layout_add_cages()
 end
 
 
