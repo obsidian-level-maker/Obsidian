@@ -2453,11 +2453,16 @@ stderrf("@ %s cage_dir:%d\n", S:tostr(), S.cage_dir)
 
 
   local function add_cages()
+    -- never add cages to a start room
+    if R.purpose == "START" then return end
+
+    -- or rarely in secrets
+    if R.quest.kind == "secret" and rand.odds(90) then return end
+
+    -- style check...
     local prob = style_sel("cages", 0, 20, 40, 80)
 
-    if not rand.odds(prob) then
-      return
-    end
+    if not rand.odds(prob) then return end
 
     -- we try to turn ALL "void" seeds into a fat cage
 
