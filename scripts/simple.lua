@@ -214,6 +214,38 @@ function Simple_generate_cave(R)
 --]]
 
 
+  local function check_need_wall(S, dir)
+    -- don't clobber connections
+    if S.border[dir].kind then return false end
+
+    local N = S:neighbor(dir)
+
+    if not (N and N.room) then return true end
+
+    if N.room == R then return false end
+
+    return true
+  end
+
+
+  local function add_needed_cave_walls(S)
+    -- a seed has been cleared, but it may need a wall or fence on
+    -- one of the sides...
+
+    for dir = 2,8,2 do
+      if check_need_wall(S, dir) then
+stderrf("add_needed_cave_wall @ %s dir:%d\n", S:tostr(), dir)
+        if R.is_outdoor and info.sky_mode != "high_wall" then
+          S.border[dir].kind = "fence"
+        else
+          S.border[dir].kind = "cave_wall"
+          S.border[dir].w_tex = cave_tex
+        end
+      end
+    end
+  end
+
+
   local function clear_some_seeds()
     for sx = R.sx1, R.sx2 do
     for sy = R.sy1, R.sy2 do
@@ -422,6 +454,11 @@ function Simple_generate_cave(R)
   local function clear_importants()
     each imp in importants do
       map:fill(imp.cx1, imp.cy1, imp.cx2, imp.cy2, -1)
+
+      if imp.conn then
+        local S = imp.conn:seed(R)
+        add_needed_cave_walls(S)
+      end
     end
   end
 

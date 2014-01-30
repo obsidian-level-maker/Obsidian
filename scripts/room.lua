@@ -952,7 +952,7 @@ function Room_border_up()
     end
 
     if R1.is_outdoor and R2.kind == "cave" then
-      if R2.is_outdoor then
+      if R2.is_outdoor and R2.cave_info.sky_mode != "high_wall" then
         S.border[side].kind = "fence"
       else
         S.border[side].kind = "cave_wall"
