@@ -1,26 +1,14 @@
 --
--- Cage bordering room
+-- Fat Cage
 --
 
-DOOM.SKINS.Fake_cage1 =
+DOOM.SKINS.Cage_fat =
 {
-  file   = "fake/cage1.wad"
+  file   = "cage/fat_cage.wad"
+  where  = "void"
   shape  = "F"
 
-  prob   = 5
-  style  = "cages"
-}
-
---
--- Cage between two rooms
---
-
-DOOM.SKINS.Fake_cage1_fence =
-{
-  file   = "fake/cage_fence.wad"
-  shape  = "I"
-
-  prob   = 20
-  style  = "cages"
+  bound_z1 = 0
+  bound_z2 = 176
 }
 
