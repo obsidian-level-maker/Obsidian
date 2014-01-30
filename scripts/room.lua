@@ -3047,6 +3047,9 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local o_tex = outer_tex(S, side, w_tex)
     local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex }
 
+    -- this fixes a problem with caves (bit of a hack)
+    z = z + 2
+
     local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, z,
                                    side, 0, 192, skin1.deep, skin1.over)
 
