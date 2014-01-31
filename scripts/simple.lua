@@ -2189,11 +2189,18 @@ function Simple_lake_fences(R)
       cy1 = (y - R.sy1) * 3 + 1
 
       for dir = 1,9,2 do if dir != 5 then
-        local L_dir = geom. LEFT_45[dir]
-        local R_dir = geom.RIGHT_45[dir]
+        if S:same_room(dir) then continue end
 
-        if S:same_room(L_dir) and S:same_room(R_dir) and
-           not S:same_room(dir)
+        local A_dir = geom. LEFT_45[dir]
+        local B_dir = geom.RIGHT_45[dir]
+
+        local A = S:neighbor(A_dir)
+        local B = S:neighbor(B_dir)
+
+        if (A.room != S.room) or (B.room != S.room) then continue end
+
+        if A:need_lake_fence(B_dir) or
+           B:need_lake_fence(A_dir)
         then
           local cx, cy = geom.pick_corner(dir, cx1, cy1, cx1+2, cy1+2)
           info.blocks[cx][cy] = info.fence
