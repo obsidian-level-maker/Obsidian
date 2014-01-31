@@ -2374,7 +2374,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- determine quantity, applying user settings
     local qty = calc_quantity() + 20
 
-    local d = info.cage_density or 1
+    local d = info.cage_density or 0.4
     local f = gui.random()
 
     local want = int(total * d * qty / 100 + f * f * 2)
