@@ -148,7 +148,7 @@ GLOBAL_STYLE_LIST =
 
   -- things that affect stuff in rooms
 
-  junk       = { few=10, some=60, heaps=20 }
+  junk       = { few=10, some=60, heaps=30 }
   symmetry   = { few=40, some=60, heaps=20 }
   pillars    = { few=60, some=30, heaps=10 }
   beams      = { few=25, some=50, heaps=5  }
@@ -157,7 +157,7 @@ GLOBAL_STYLE_LIST =
 
   windows    = { few=20, some=50, heaps=20 }
   pictures   = { few=10, some=50, heaps=10 }
-  cages      = { none=80, few=40, some=20, heaps=5 }
+  cages      = { none=50, few=20, some=20, heaps=10 }
   fences     = { none=30, few=30, some=10 }
   crates     = { none=20, some=40, heaps=10 }
 

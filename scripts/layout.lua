@@ -1708,10 +1708,9 @@ function Layout_add_cages(R)
   local  junk_list = {}
   local other_list = {}
 
-  local function test_seed(S)
-    -- try verticals before horizontals [due to symmetry]
-    local DIR_LIST = { 2,8,4,6 }
+  local DIR_LIST
 
+  local function test_seed(S)
     local best_dir
     local best_z
 
@@ -1780,9 +1779,16 @@ function Layout_add_cages(R)
   if R.quest.kind == "secret" and rand.odds(90) then return end
 
   -- style check...
-  local prob = style_sel("cages", 0, 20, 40, 80)
+  local prob = style_sel("cages", 0, 20, 50, 90)
 
   if not rand.odds(prob) then return end
+
+  if rand.odds(50)then
+    -- try verticals before horizontals (for symmetry)
+    DIR_LIST = { 2,8,4,6 }
+  else
+    DIR_LIST = { 6,4,8,2 }
+  end
 
   collect_cage_seeds()
 
@@ -1799,7 +1805,9 @@ function Layout_add_cages(R)
 
   -- rarely use ALL the junked seeds
   local limited
-  if list == junk_list and rand.odds(80) then
+  if list == junk_list and
+     rand.odds(sel(STYLE.cages == "heaps", 50, 80))
+  then
     limited = true
   end
 
@@ -1821,23 +1829,12 @@ function Layout_room(R)
 
     -- FIXME: occasionaly make ledge-cages in OUTDOOR rooms
 
-    local JUNK_PROBS = { 0, 0,  3, 12, 20, 30, 40, 50 }
-    local JUNK_HEAPS = { 0, 0, 50, 75, 99, 99, 99, 99 }
+    local JUNK_PROBS = { 0, 0, 20, 35, 50 }
+    local JUNK_HEAPS = { 0, 0, 50, 85, 99 }
 
-
----##    local function max_junking(size)
----##      if size < min_space then return 0 end
----##      return size - min_space
----##    end
 
     local function eval_side(side)
       local th = R.junk_thick[side]
-
----##       if side == 2 or side == 8 then
----##         if R.junk_thick[2] + R.junk_thick[8] >= y_max then return -1 end
----##       else
----##         if R.junk_thick[4] + R.junk_thick[6] >= x_max then return -1 end
----##       end
 
       if STYLE.junk == "none" or (STYLE.junk == "few" and rand.odds(70)) then
         return false
@@ -1854,7 +1851,7 @@ function Layout_room(R)
 
       if long <= 2 then return false end
 
-      long = math.min(long, 8)
+      if long > 5 then long = 5 end
 
       local prob = JUNK_PROBS[long]
       if STYLE.junk == "heaps" then prob = JUNK_HEAPS[long] end
@@ -1872,7 +1869,8 @@ function Layout_room(R)
 
       local hit_conn = 0
 
-      for x = x1,x2 do for y = y1,y2 do
+      for x = x1, x2 do
+      for y = y1, y2 do
         for who = 1,3 do
           local S = SEEDS[x][y]
           if who == 2 then S = R.mirror_x and S.x_peer end
@@ -1886,8 +1884,9 @@ function Layout_room(R)
               hit_conn = hit_conn + 1
             end
           end
-        end -- for who
-      end end -- for x,y
+        end -- who
+      end -- x,y
+      end
 
       -- Cannot allow "gaps" for connections (yet....)
       if hit_conn > 0 then return false end
@@ -1907,7 +1906,8 @@ function Layout_room(R)
 
       local p_conns = {}
 
-      for x = x1,x2 do for y = y1,y2 do
+      for x = x1, x2 do
+      for y = y1, y2 do
         for who = 1,3 do
           local S = SEEDS[x][y]
           if who == 2 then S = R.mirror_x and S.x_peer end
@@ -1923,8 +1923,9 @@ function Layout_room(R)
               S.junked = true
             end
           end
-        end -- for who
-      end end -- for x,y
+        end -- who
+      end -- x,y
+      end
 
 --??      each P in p_conns do
 --??        SEEDS[P.x][P.y].pseudo_conn = P.conn
@@ -1935,7 +1936,7 @@ function Layout_room(R)
       gui.debugf("Junked side:%d @ %s\n", side, R:tostr())
 
       if (geom.is_horiz(side) and R.mirror_x) or
-         (geom.is_vert(side) and R.mirror_y)
+         (geom.is_vert (side) and R.mirror_y)
       then
         side = 10 - side
 
