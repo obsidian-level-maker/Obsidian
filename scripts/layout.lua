@@ -1755,6 +1755,22 @@ function Layout_add_cages(R)
   end
 
 
+  local function convert_list(list, limited)
+    each loc in list do
+      local S = loc.S
+
+      if limited then
+        if geom.is_vert (loc.dir) and (S.sx % 2) == 0 then continue end
+        if geom.is_horiz(loc.dir) and (S.sy % 2) == 0 then continue end
+      end
+
+      -- convert it
+      S.cage_dir = loc.dir
+      S.cage_z   = loc.z
+    end
+  end
+
+
   ---| Layout_add_cages |---
 
   -- never add cages to a start room
@@ -1768,12 +1784,28 @@ function Layout_add_cages(R)
 
   if not rand.odds(prob) then return end
 
-  -- we try to turn ALL "void" seeds into a fat cage
-
   collect_cage_seeds()
 
-  --.... TODO
+  -- either use the junked seeds OR the solid-room-fab seeds
+  local list
+
+  if #junk_list > 0 and #other_list > 0 then
+    list = rand.sel(35, junk_list, other_list)
+  elseif #junk_list > 0 then
+    list = junk_list
+  else
+    list = other_list
+  end
+
+  -- rarely use ALL the junked seeds
+  local limited
+  if list == junk_list and rand.odds(80) then
+    limited = true
+  end
+
+  convert_list(list, limited)
 end
+
 
 
 function Layout_room(R)
@@ -2582,7 +2614,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     add_pillars()
   end
 
-  Layout_add_cages()
+  Layout_add_cages(R)
 end
 
 
