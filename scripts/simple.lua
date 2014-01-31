@@ -2514,7 +2514,7 @@ function Simple_decide_properties(R)
   local info = R.cave_info
 
   local   STEP_MODES = { walkway=10, up=20, down=20, mixed=60 }
-  local LIQUID_MODES = { none=20, some=80, lake=80 }
+  local LIQUID_MODES = { none=50, some=80, lake=80 }
 
   -- decide liquid mode
   if not LEVEL.liquid then
