@@ -157,7 +157,7 @@ GLOBAL_STYLE_LIST =
 
   windows    = { few=20, some=50, heaps=20 }
   pictures   = { few=10, some=50, heaps=10 }
-  cages      = { none=50, few=20, some=20, heaps=10 }
+  cages      = { none=30, few=20, some=20, heaps=10 }
   fences     = { none=30, few=30, some=10 }
   crates     = { none=20, some=40, heaps=10 }
 
