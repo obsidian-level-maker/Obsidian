@@ -19,8 +19,7 @@ The Bad
 ! no support for games other than DOOM
 ! no closets (for starts, exits, teleporters, etc)
 ! no multiple paths between rooms
-! no shaped rooms
-! no cages
+! crappy hallways
 
 
 Contributions
