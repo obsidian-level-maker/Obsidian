@@ -2149,32 +2149,31 @@ function Simple_lake_fences(R)
 
     local S2 = S:neighbor(along_dir, count - 1)
 
-    local cx1 = 1 + (S.sx - R.sx1) * 4
-    local cy1 = 1 + (S.sy - R.sy1) * 4
+    local cx1 = 1 + (S.sx - R.sx1) * 3
+    local cy1 = 1 + (S.sy - R.sy1) * 3
 
-    local cx2 = 1 + (S2.sx - R.sx1) * 4 + 3
-    local cy2 = 1 + (S2.sy - R.sy1) * 4 + 3
+    local cx2 = 1 + (S2.sx - R.sx1) * 3 + 2
+    local cy2 = 1 + (S2.sy - R.sy1) * 3 + 2
 
     assert(cx2 > cx1 and cy2 > cy1)
 
     -- starting depth
     local deep = rand.sel(50, 1, 2)
 
-    for i = 1, count * 4 do
+    for i = 1, count * 3 do
       install_fence_post(cx1, cy1, cx2, cy2, dir, along_dir, i, deep)
 
       -- pick next depth
-          if deep == 1 then deep = rand.index_by_probs({ 50, 45,  5})
-      elseif deep == 2 then deep = rand.index_by_probs({ 35, 50, 15})
-      elseif deep == 3 then deep = rand.index_by_probs({  5, 45, 50})
-      end
+      deep = rand.sel(50, 1, 2)
     end
   end
 
 
   --| Simple_lake_fences |--
 
-  if info.liquid_mode != "lake" then return end
+  if info.liquid_mode != "lake" then
+    return
+  end
 
   local FENCE =  
   {
@@ -2185,11 +2184,9 @@ function Simple_lake_fences(R)
 
   info.fence = FENCE
 
-do return end  --!!!!!!
-
-  for sx = R.sx1, R.sx2 do
-  for sy = R.sy1, R.sy2 do
-    local S = SEEDS[sx][sy]
+  for x = R.sx1, R.sx2 do
+  for y = R.sy1, R.sy2 do
+    local S = SEEDS[x][y]
 
     if S.room != R then continue end
 
@@ -2205,10 +2202,8 @@ end
 
 
 
-function Simple_outdoor_borders(R)
+function Simple_outdoor_borders_OLD(R)
   local info = R.cave_info
-
-do return end  --!!!!!!
 
   local f_mat = assert(R.main_tex)
   local f_h   = R.floor_min_h - 256  -- WTF? we don't know floor_min yet
@@ -2240,18 +2235,20 @@ do return end  --!!!!!!
     return
   end
 
-  for sx = R.sx1, R.sx2 do
-  for sy = R.sy1, R.sy2 do
-    local S = SEEDS[sx][sy]
+  for x = R.sx1, R.sx2 do
+  for y = R.sy1, R.sy2 do
+    local S = SEEDS[x][y]
 
     if S.room != R then continue end
 
     for dir = 2,8,2 do
-      if not S:neighbor(dir) then
+      local N = S:neighbor(dir)
+
+      if not (N and N.room) then
         sky_border(S, dir)
       end
     end
-  end  -- sx, sy
+  end  -- x, y
   end
 end
 
@@ -2431,7 +2428,7 @@ function Simple_decide_properties(R)
   local info = R.cave_info
 
   local   STEP_MODES = { walkway=10, up=20, down=20, mixed=60 }
-  local LIQUID_MODES = { none=20, some=80, lake=80*0 }  --!!! FIXME
+  local LIQUID_MODES = { none=20, some=80, lake=80 }
 
   -- decide liquid mode
   if not LEVEL.liquid then
@@ -2457,6 +2454,10 @@ function Simple_decide_properties(R)
     info.sky_mode = rand.sel(50, "high_wall", "low_wall")
   else
     info.sky_mode = rand.sel(25, "some", "none")
+  end
+
+  if info.liquid_mode == "lake" then
+    info.sky_mode = "low_wall"
   end
 
   -- decide torch mode
@@ -2495,7 +2496,6 @@ function Simple_cave_or_maze(R, entry_h)
 
   Simple_lake_fences(R)
   Simple_fill_lakes(R)
-  Simple_outdoor_borders(R)
 
   Simple_create_areas(R)
   Simple_bunch_areas(R, "liquid")
