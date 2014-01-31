@@ -963,8 +963,12 @@ function Room_border_up()
       S.border[side].kind = "nothing"
 
     elseif R1.is_outdoor then
-      S.border[side].kind = "facade"
-      S.border[side].w_tex = R2.facade
+      if R2.is_outdoor then
+        S.border[side].kind = "fence"
+      else
+        S.border[side].kind = "facade"
+        S.border[side].w_tex = R2.facade
+      end
 
       if N.kind == "liquid" and R2.is_outdoor and
         (S.kind == "liquid" or R1.quest == R2.quest)
