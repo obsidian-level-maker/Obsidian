@@ -163,9 +163,8 @@ DOOM.NICE_ITEMS =
   {
     id = 2018
     kind = "armor"
-    add_prob = 10
+    add_prob = 30
     start_prob = 60
-    secret_prob = 20
     crazy_prob = 5
     give = { {health=30} }
   }
@@ -174,8 +173,8 @@ DOOM.NICE_ITEMS =
   {
     id = 2019
     kind = "armor"
-    add_prob = 20
-    start_prob = 20
+    add_prob = 5
+    start_prob = 10
     secret_prob = 50
     give = { {health=80} }
   }
@@ -231,7 +230,7 @@ DOOM.NICE_ITEMS =
     id = 2045
     kind = "powerup"
     add_prob = 5
-    secret_prob = 70
+    secret_prob = 40
     crazy_prob  = 10
     time_limit = 120
   }
