@@ -116,6 +116,7 @@ function SEED_CLASS.need_lake_fence(S, dir)
   if not N then return true end
   if not (S.room and N.room) then return false end
   if S.room == N.room then return false end
+  if S.conn or S.content then return false end
   return N.room.is_outdoor
 end
 

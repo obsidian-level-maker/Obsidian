@@ -179,7 +179,12 @@ function Simple_generate_cave(R)
 
       for dir = 1,9,2 do if dir != 5 then
         if not S:same_room(dir) then
-          set_corner(cx, cy, cx+2, cy+2, dir, sel(is_lake, -1, 1))
+          -- lakes require whole seed to be cleared (esp. at "innie corners")
+          if is_lake then
+            map:fill(cx, cy, cx+2, cy+2, -1)
+          else
+            set_corner(cx, cy, cx+2, cy+2, dir, 1)
+          end
         end
       end end
 
@@ -2169,6 +2174,38 @@ function Simple_lake_fences(R)
   end
 
 
+  local function do_innie_corners()
+    -- logic in mark_boundaries() assures that the whole seed at an
+    -- "innie corner" is cleared (and walkable).  Here we ensure there
+    -- is a single fence block touching that corner, to make the lake
+    -- fence flow nicely around the innie corner.
+
+    for x = R.sx1, R.sx2 do
+    for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y]
+      if S.room != R then continue end
+
+      cx1 = (x - R.sx1) * 3 + 1
+      cy1 = (y - R.sy1) * 3 + 1
+
+      for dir = 1,9,2 do if dir != 5 then
+        local L_dir = geom. LEFT_45[dir]
+        local R_dir = geom.RIGHT_45[dir]
+
+        if S:same_room(L_dir) and S:same_room(R_dir) and
+           not S:same_room(dir)
+        then
+          local cx, cy = geom.pick_corner(dir, cx1, cy1, cx1+2, cy1+2)
+          info.blocks[cx][cy] = info.fence
+        end
+
+      end end -- dir
+
+    end -- x, y
+    end
+  end
+
+
   --| Simple_lake_fences |--
 
   if info.liquid_mode != "lake" then
@@ -2198,6 +2235,8 @@ function Simple_lake_fences(R)
 
   end -- sx, sy
   end
+
+  do_innie_corners()
 end
 
 
