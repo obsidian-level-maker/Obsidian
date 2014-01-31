@@ -3,20 +3,14 @@ WORK IN PROGRESS
 ================
 
 
-Caves:
+Monsters
 
-+  need walls in some places
+-  later levels should not always have a Cyberdemon as a
+   guard monster -- especially in "weak" mode.
 
-+  non-straight wall fabs (make a few, pick randomly)
+-  improve guard_mon_prob() logic -- take control module into account
 
--  if few caves (total svolume < N), use same wall in whole level,
-   otherwise use same wall in each zone
-
--  tend to use different floors in each room
-
--  reserved rooms: can turn into caves (if large + styles)
-
--  ceiling: usually same as wall, occ. different
++  fix monsters stuck in "cave_wall", also doorways into cave
 
 
 
@@ -36,11 +30,19 @@ Later
 +  apply nice items gotten in normal rooms to the HMODEL
 
 
+-  reserved rooms: can turn into caves (if large + styles)
+
+-  if few caves (total svolume < N), use same wall over whole level
+
+-  improve connection logic out of cave rooms
+   (primary criterion should be distance from other conns)
+
 -  certain cases in DM_AlignTextures don't work well, especially
    an upper where a crate straddles the periph (but does not directly
    overlap any linedefs).
 
 -  ability to centre doors (on two seeds)
+
 
 -  in 2x2 rooms, place key/switch in middle of room
    [ monster/item spots are the hard part ]
