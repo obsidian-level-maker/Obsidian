@@ -442,18 +442,21 @@ DOOM2.THEMES =
 
     naturals =
     {
-      SP_ROCK1 = 50
       GRAYVINE = 50
+      BROVINE2 = 10
 
-      TEKWALL4 = 3
-      ASHWALL2 = 50
-      ASHWALL4 = 50
+      ZIMMER8  = 40
+      ZIMMER7  = 20
+      BROWN144 = 30
+      BSTONE1  = 30
+
+      ASHWALL2 = 20
       ASHWALL6 = 10
+      TANROCK2 = 10
+      TANROCK5 = 10
 
-      TANROCK7 = 10
-      ZIMMER1  = 15
-      ZIMMER3  = 20
-      ZIMMER7  = 15
+      STONE6   = 10
+      TEKWALL4 = 10
     }
   }
 
@@ -822,9 +825,17 @@ DOOM2.THEMES =
       ROCKRED1 = 50
       SP_ROCK1 = 25
       GSTVINE2 = 25
-      ZIMMER1  = 15
-      SKIN2 = 10
-      FIREBLU1 = 12
+      GSTVINE1 =  5
+
+      FIRELAVA = 20
+      FIREBLU1 = 10
+      SKINEDGE = 10
+      CRACKLE4 =  5
+      SKSNAKE1 =  5
+
+      ASHWALL2 = 20
+      ASHWALL4 = 20
+      STONE    = 10
     }
   }
 
@@ -1082,11 +1093,12 @@ DOOM2.THEMES =
 
     naturals =
     {
-      ASHWALL2 = 40
       ROCK2    = 40
+      ASHWALL2 = 40
       ASHWALL4 = 30
+      ZIMMER1  = 30
 
-      BSTONE1  = 20
+      BSTONE2  = 10
       ZIMMER5  = 20
       ZIMMER3  = 20
 
@@ -2391,8 +2403,7 @@ DOOM1.THEMES =
       SKSNAKE2 = 35
       FIREBLU1 = 50
       FIRELAVA = 50
-
-      ASHWALL2 = 10
+      ASHWALL  = 20
     }
   }
 
