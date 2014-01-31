@@ -98,7 +98,7 @@ end
 
 
 
-function Build.cave_wall(S, side, mat)
+function Build.cave_wall(S, side, mat, top_h)
   local info = get_mat(mat)
 
   local T = get_transform_for_seed_side(S, side, 16)
@@ -108,6 +108,8 @@ function Build.cave_wall(S, side, mat)
   local offsets = { 4,4, 24, 48,48 }
   rand.shuffle(offsets)
 
+  if not top_h then top_h = EXTREME_H end
+
   Trans.old_brush(info,
   {
     { x =   0, y = 16 }
@@ -115,7 +117,7 @@ function Build.cave_wall(S, side, mat)
     { x =  64, y = 0 }
     { x =  64, y = offsets[1] }
   },
-  -EXTREME_H, EXTREME_H)
+  -EXTREME_H, top_h)
 
   Trans.old_brush(info,
   {
@@ -124,7 +126,7 @@ function Build.cave_wall(S, side, mat)
     { x = 128, y = 0 }
     { x = 128, y = offsets[2] }
   },
-  -EXTREME_H, EXTREME_H)
+  -EXTREME_H, top_h)
 
   Trans.old_brush(info,
   {
@@ -133,7 +135,7 @@ function Build.cave_wall(S, side, mat)
     { x = 192, y = 0 }
     { x = 192, y = 16 }
   },
-  -EXTREME_H, EXTREME_H)
+  -EXTREME_H, top_h)
 
   Trans.clear()
 end
