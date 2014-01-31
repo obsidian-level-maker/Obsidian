@@ -791,11 +791,31 @@ end
 
 function Quest_select_textures()
 
+  local function setup_cave_theme(R)
+    R.main_tex = R.zone.cave_wall_mat
+
+    for loop = 1,2 do
+      R.floor_mat = rand.key_by_probs(LEVEL.cave_theme.naturals)
+      if R.floor_mat != R.main_tex then break; end
+    end
+
+    if not R.is_outdoor then
+      if rand.odds(20) then
+        R.ceil_mat = rand.key_by_probs(LEVEL.cave_theme.naturals)
+      elseif rand.odds(20) then
+        R.ceil_mat = R.floor_mat
+      else
+        R.ceil_mat = R.main_tex
+      end
+    end
+  end
+
+
   local function setup_theme(R)
     R.facade = assert(R.zone.facade_mat)
 
     if R.kind == "cave" then
-      R.main_tex = R.zone.cave_wall_mat
+      setup_cave_theme(R)
       return
     end
 
