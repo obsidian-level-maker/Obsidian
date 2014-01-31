@@ -253,7 +253,6 @@ DOOM2.THEMES =
     {
       silver=30, silver_fast=2, silver_once=6
       bigdoor2=6, bigdoor2_fast=2, bigdoor2_once=6
-      bigdoor4=6, bigdoor4_fast=2, bigdoor4_once=6
       bigdoor3=6
     }
     steps = { step1=50, step3=50, step4b=50 }
