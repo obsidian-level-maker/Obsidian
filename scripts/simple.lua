@@ -235,7 +235,7 @@ function Simple_generate_cave(R)
     for dir = 2,8,2 do
       if check_need_wall(S, dir) then
         if R.is_outdoor and info.sky_mode != "high_wall" then
-          S.border[dir].kind = "fence"
+          -- this is handled in border_up()
         else
           S.border[dir].kind = "cave_wall"
           S.border[dir].w_tex = cave_tex
