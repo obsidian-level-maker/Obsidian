@@ -962,6 +962,12 @@ function Room_border_up()
     elseif R1.kind == "cave" and R2.is_outdoor then
       S.border[side].kind = "nothing"
 
+      if R1.cave_info.liquid_mode == "lake" and not
+         S:need_lake_fence(side)
+      then
+        S.border[side].kind = "fence"
+      end
+
     elseif R1.is_outdoor then
       if R2.is_outdoor then
         S.border[side].kind = "fence"
