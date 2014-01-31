@@ -131,7 +131,6 @@ DOOM.MATERIALS =
   GSTONE1  = { t="GSTONE1",  f="FLOOR7_2"  }
   GSTONE2  = { t="GSTONE2",  f="FLOOR7_2"  }
   GSTSATYR = { t="GSTSATYR", f="FLOOR7_2"  }
-  GSTVINE1 = { t="GSTVINE1", f="FLOOR7_2"  }
   GSTVINE2 = { t="GSTVINE2", f="FLOOR7_2"  }
 
   ICKWALL1 = { t="ICKWALL1", f="FLAT19"  }
@@ -434,6 +433,7 @@ DOOM1.MATERIALS =
 
   DOORHI   = { t="DOORHI",   f="FLAT19" }
   GRAYDANG = { t="GRAYDANG", f="FLAT19" }
+  GSTVINE1 = { t="GSTVINE1", f="FLOOR7_2" }
   ICKDOOR1 = { t="ICKDOOR1", f="FLAT19" }
   ICKWALL6 = { t="ICKWALL6", f="FLAT18" }
 
@@ -564,6 +564,7 @@ DOOM2.MATERIALS =
   CRATE3   = { t="CRATE3",   f="CRATOP1" }
   MARBFAC4 = { t="MARBFAC4", f="DEM1_5" }
   MARBGRAY = { t="MARBGRAY", f="DEM1_5" }
+  GSTVINE1 = { t="GSTVINE1", f="RROCK16" }
 
   METAL2   = { t="METAL2",   f="CEIL5_2" }
   METAL3   = { t="METAL3",   f="CEIL5_2" }

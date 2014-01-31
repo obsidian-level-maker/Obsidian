@@ -821,20 +821,19 @@ DOOM2.THEMES =
 
     naturals =
     {
-      ROCKRED1 = 50
-      SP_ROCK1 = 25
-      GSTVINE2 = 25
-      GSTVINE1 =  5
+      ROCKRED1 = 40
+      SP_ROCK1 = 30
+      GSTVINE1 = 30
 
-      FIRELAVA = 20
+      ASHWALL2 = 30
+      RROCK04  = 20
+      STONE    = 10
+
+      FIRELAVA = 10
       FIREBLU1 = 10
       SKINEDGE = 10
-      CRACKLE4 =  5
-      SKSNAKE1 =  5
-
-      ASHWALL2 = 20
-      ASHWALL4 = 20
-      STONE    = 10
+      CRACKLE4 = 10
+      SKSNAKE1 = 10
     }
   }
 
