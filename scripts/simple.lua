@@ -521,17 +521,13 @@ function Simple_generate_cave(R)
 
       cave:generate(solid_prob)
 
-    cave:dump("Generated Cave:")
----      if is_lake then
----        cave:negate()
----      end
+      cave:dump("Generated Cave:")
 
       cave:remove_dots()
-
       cave:flood_fill()
 
       if is_cave_good(cave) then
-        break
+        break;
       end
 
       -- randomly clear some seeds in the room.
@@ -1734,12 +1730,37 @@ function Simple_render_cave(R)
   end
 
 
+  local function do_spot_at_border(A, x, y)
+    -- only needed for lake mode
+    if not is_lake then return end
+
+    for dir = 1,9 do if dir != 5 then
+      local nx, ny = geom.nudge(x, y, dir)
+
+      local A
+      if cave:valid_cell(nx, ny) then
+        A = info.blocks[nx][ny]
+      end
+
+      if not A then
+        local poly = brush_for_cell(x, y)
+        gui.spots_fill_poly(poly, SPOT_WALL)
+        return
+      end
+
+    end end -- dir
+  end
+
+
   local function do_spot_wall(A, x, y)
     local A2 = info.blocks[x][y]
 
-    if A2 == A then return end
+    if A2 == A then
+      return do_spot_at_border(A, x, y)
+    end
 
-    local near_area = false
+    -- if this cell touches the current area, mark it as solid
+    local touches = false
 
     for dir = 1,9 do if dir != 5 then
       local nx, ny = geom.nudge(x, y, dir)
@@ -1747,15 +1768,15 @@ function Simple_render_cave(R)
       if not cave:valid_cell(nx, ny) then continue end
 
       if info.blocks[nx][ny] == A then
-        near_area = true
+        touches = true
         break;
       end
     end end -- dir
 
-    if near_area then 
+    if touches then 
       local poly = brush_for_cell(x, y)
 
-      if cell == nil then
+      if not A2 or A2.wall then
         gui.spots_fill_poly(poly, SPOT_WALL)
       else
         gui.spots_fill_poly(poly, SPOT_LEDGE)
@@ -1766,6 +1787,19 @@ function Simple_render_cave(R)
 
   local function do_spot_decor(dec)
     local poly = brushlib.quad(dec.x1, dec.y1, dec.x2, dec.y2)
+
+    gui.spots_fill_poly(poly, SPOT_LEDGE)
+  end
+
+
+  local function do_spot_important(imp)
+    -- connections don't need to be kept clear (do they?)
+    if not imp.goal then return end
+
+    local G = imp.goal
+    local S = assert(G.S)
+
+    local poly = brushlib.quad(S.x1, S.y1, S.x2, S.y2)
 
     gui.spots_fill_poly(poly, SPOT_LEDGE)
   end
@@ -1801,7 +1835,13 @@ function Simple_render_cave(R)
     end
     end
 
-    -- step 3 : remove decorations
+    -- step 3 : remove importants
+
+    each imp in R.cave_imps do
+      do_spot_important(imp)
+    end
+
+    -- step 4 : remove decorations
 
     if A.decorations then
       each dec in A.decorations do
