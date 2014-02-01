@@ -3,6 +3,12 @@ WORK IN PROGRESS
 ================
 
 
++  rejig the TODO.txt
+
++  improve DOOM 2 themes
+
+
+
 Monsters
 
 -  later levels should not always have a Cyberdemon as a
