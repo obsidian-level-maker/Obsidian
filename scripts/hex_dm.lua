@@ -325,19 +325,23 @@ function HEXAGON_CLASS.to_brush(C)
 end
 
 
+function HEXAGON_CLASS.mid_vertex(C, dir)
+  local x = (C.vertex[dir].x + C.mid_x) / 2
+  local y = (C.vertex[dir].y + C.mid_y) / 2
+
+  return int(x), int(y)
+end
+
+
 function HEXAGON_CLASS.to_small_brush(C)
   local brush = {}
 
   for i = 6, 1, -1 do
     local dir = HEX_DIRS[i]
 
-    local coord =
-    {
-      x = int((C.vertex[dir].x + C.mid_x) / 2)
-      y = int((C.vertex[dir].y + C.mid_y) / 2)
-    }
+    local x, y = C:mid_vertex(dir)
 
-    table.insert(brush, coord)
+    table.insert(brush, { x=x, y=y })
   end
 
   return brush
@@ -355,6 +359,39 @@ function HEXAGON_CLASS.to_wall_brush(C, dir)
   table.insert(brush, table.copy(C.vertex[dir]))
 
   return brush
+end
+
+
+function HEXAGON_CLASS.build_floor(C, f_h, mat)
+  -- for lighting system we subdivide the cell into a small hexagon
+  -- and six trapezoids...
+
+  local m_brush = C:to_small_brush(C)
+  
+  brushlib.add_top(m_brush, f_h)
+  brushlib.set_mat(m_brush, mat, mat)
+
+  Trans.brush(m_brush)
+
+  for i = 1, 6 do
+    local k = HEX_LEFT[i]
+
+    local x1, y1 = C:mid_vertex(i)
+    local x4, y4 = C:mid_vertex(k)
+
+    local brush =
+    {
+      { x = x1, y = y1 }
+      { x = C.vertex[i].x, y = C.vertex[i].y }
+      { x = C.vertex[k].x, y = C.vertex[k].y }
+      { x = x4, y = y4 }
+    }
+
+    brushlib.add_top(brush, f_h)
+    brushlib.set_mat(brush, mat, mat)
+
+    Trans.brush(brush)
+  end
 end
 
 
@@ -411,7 +448,7 @@ end
 function HEXAGON_CLASS.build_content(C)
   local content = C.content
 
-  local f_h = C.floor_h or 0
+  local f_h = C.room.floor_h or 0
 
   if content.kind == "START" then
     local ent = "dm_player"
@@ -460,32 +497,16 @@ function HEXAGON_CLASS.build(C)
   local R = assert(C.room)
 
 
-  -- floor
+  -- floor --
 
-  local f_h
-  local c_h
-
-  local f_brush = C:to_brush()
-
-
-  f_h   = C.room.floor_h
+  local f_h = C.room.floor_h
 
   assert(f_h)
 
--- if C.kind == "used" then f_h = 16 end
+  C:build_floor(f_h, R.floor_mat)
 
 
-  brushlib.add_top(f_brush, f_h)
-  brushlib.set_mat(f_brush, R.floor_mat, R.floor_mat)
-
-if C.dist.item then
---## f_brush[#f_brush].tex = "IT_" .. C.dist.item
-end
-
-  Trans.brush(f_brush)
-
-
-  -- ceiling
+  -- ceiling --
 
   local c_h = f_h + 160
 
@@ -506,7 +527,7 @@ end
   Trans.brush(c_brush)
 
 
-  -- walls
+  -- walls --
 
   for dir = 1, 6 do
     C:build_wall(dir)
