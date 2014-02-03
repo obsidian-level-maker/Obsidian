@@ -1610,8 +1610,11 @@ function Connect_reserved_rooms()
 
 
   local function make_secret_exit()
+    -- this can happen because the reserved room gets surrounded by
+    -- scenic rooms (due to the connection logic).
     if not best.R then
-      error("No reserved room available for secret exit")
+      warning("Could not add secret exit (reserved room got cut off)\n")
+      return
     end
 
     local R = best.R
