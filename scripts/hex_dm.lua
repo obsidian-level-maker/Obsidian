@@ -342,8 +342,10 @@ end
 function HEXAGON_CLASS.build_wall(C, dir)
   local N = C.neighbor[dir]
 
-  -- no need if neighbor is solid
-  if N and (N.kind == "edge" or N.kind == "solid" or N.kind == "dead") then return end
+  -- no need if outdoor and neighbor is solid
+  if C.room.is_outdoor then
+    if N and (N.kind == "edge" or N.kind == "solid" or N.kind == "dead") then return end
+  end
 
   -- no need if part of same room
   if N and N.room == C.room then return end
