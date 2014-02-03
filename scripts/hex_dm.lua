@@ -2431,7 +2431,7 @@ function Hex_decide_room_kinds()
     -- choose between outdoor/indoor and cave/building
 
     -- already set?
-    if R.is_outdoor != nil then return end
+    if R.kind then return end
 
     R.is_outdoor = rand.odds(LEVEL.outdoor_prob)
     R.is_cave    = rand.odds(LEVEL.cave_prob)
@@ -2469,31 +2469,55 @@ end
 
 
 
-function Hex_choose_room_themes()
-  
-  local function pick_theme(tab)
-    local name = rand.key_by_probs(tab)
+function Hex_choose_themes()
 
-    local theme = GAME.ROOM_THEMES[name]
+  local function match_level_theme(name)
+    local kind = string.match(name, "([%w]+)_")
 
-    if not theme then
-      error("No such room theme: " .. tostring(name))
+    if string.match(name, "DEFAULT") then return false end
+
+    return (kind == LEVEL.theme_name) or (kind == "generic")
+  end
+
+
+  local function collect_usable_themes(kind)
+    local tab = {}
+
+    each name,info in GAME.THEMES do
+      if info.kind == kind and match_level_theme(name) then
+        tab[name] = info.prob or 50
+      end
     end
 
-    return theme
+    return tab
+  end
+
+
+  local function pick_zone_theme(theme_tab)
+    assert(theme_tab)
+
+    if table.empty(theme_tab) then
+      error("pick_zone_theme: nothing matched!")
+    end
+
+    local tab = table.copy(theme_tab)
+
+    local name = rand.key_by_probs(tab)
+
+    return assert(GAME.THEMES[name])
   end
 
 
   local function decide_room_theme(R)
     -- already set?
-    if R.theme != nil then return end
+    if R.theme then return end
 
     if R.is_outdoor then
       R.theme = LEVEL.outdoor_theme
     elseif R.is_cave then
       R.theme = LEVEL.cave_theme
     else
-      R.theme = rand.sel(70, LEVEL.building_theme1, LEVEL.building_theme2)
+      R.theme = LEVEL.building_theme
     end
 
     assert(R.theme)
@@ -2521,7 +2545,7 @@ function Hex_choose_room_themes()
 
   local function select_textures(R)
     -- already set?
-    if R.wall_mat != nil then return end
+    if R.wall_mat then return end
 
     local tab
 
@@ -2538,47 +2562,42 @@ function Hex_choose_room_themes()
     local floor_mat
     local  ceil_mat
 
-    if R.is_cave and not R.is_outdoor then
+    if R.is_cave then
        wall_mat = LEVEL.cave_wall
       floor_mat = LEVEL.cave_floor
        ceil_mat = wall_mat
 
+    elseif R.is_outdoor then
+       wall_mat = LEVEL.outdoor_mat
+      floor_mat = wall_mat
+       ceil_mat = wall_mat  -- not used (ceiling will be sky)
+
     else
        wall_mat = rand.key_by_probs(tab)
-      floor_mat = rand.key_by_probs(R.theme.floors or tab)
+      floor_mat = rand.key_by_probs(R.theme.floors   or tab)
        ceil_mat = rand.key_by_probs(R.theme.ceilings or tab)
     end
 
     do_set_tex(R, wall_mat, floor_mat, ceil_mat)
-
---[[ OLD CRUD
-    if R.cave and not R.outdoor then
-      each N in R.neighbors do
-        if N.wall_mat == nil and N.cave and not N.outdoor then
-          do_set_tex(N, wall_mat, floor_mat, ceil_mat)
-        end
-      end
-    end
---]]
   end
 
 
   ---| Hex_choose_room_themes |---
 
-  LEVEL.building_theme1 = pick_theme(THEME.buildings)
-  LEVEL.building_theme2 = pick_theme(THEME.buildings)
-  LEVEL.outdoor_theme   = pick_theme(THEME.outdoors)
+  LEVEL.building_theme = pick_zone_theme(collect_usable_themes("building"))
+  LEVEL.outdoor_theme  = pick_zone_theme(collect_usable_themes("outdoors"))
+  LEVEL.cave_theme     = pick_zone_theme(collect_usable_themes("cave"))
 
-  if not THEME.caves then
-    LEVEL.cave_prob = 0
-  else
-    LEVEL.cave_theme = pick_theme(THEME.caves)
-    LEVEL.cave_wall  = rand.key_by_probs(LEVEL.cave_theme.naturals or THEME.naturals)
-    LEVEL.cave_floor = rand.key_by_probs(LEVEL.cave_theme.naturals or THEME.naturals)
-  end
+  LEVEL.outdoor_mat = rand.key_by_probs(LEVEL.outdoor_theme.naturals or THEME.naturals)
+
+  LEVEL.cave_wall  = rand.key_by_probs(LEVEL.cave_theme.naturals or THEME.naturals)
+  LEVEL.cave_floor = rand.key_by_probs(LEVEL.cave_theme.naturals or THEME.naturals)
 
   each R in LEVEL.rooms do
     decide_room_theme(R)
+  end
+
+  each R in LEVEL.rooms do
     select_textures(R)
   end
 end
@@ -2633,7 +2652,7 @@ function Hex_create_level()
   LEVEL.zones = { ZONE }
 
   Hex_decide_room_kinds()
-  Hex_choose_room_themes()
+  Hex_choose_themes()
 
   Hex_build_all()
 end
