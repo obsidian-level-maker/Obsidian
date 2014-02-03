@@ -2582,6 +2582,23 @@ function Hex_choose_themes()
   end
 
 
+  local function base_trim_textures(R)
+    local is_red  = (R.base == "red")
+    local is_blue = (R.base == "blue")
+
+    if not (is_red or is_blue) then return end
+
+    local mat1 = sel(is_red, "ROCKRED1", "COMPBLUE")
+
+    R.base_trim = mat1
+
+    if R.flag_room then
+      R. wall_mat = mat1
+      R.floor_mat = mat1
+    end
+  end
+
+
   ---| Hex_choose_room_themes |---
 
   LEVEL.building_theme = pick_zone_theme(collect_usable_themes("building"))
@@ -2599,6 +2616,10 @@ function Hex_choose_themes()
 
   each R in LEVEL.rooms do
     select_textures(R)
+  end
+
+  each R in LEVEL.rooms do
+    base_trim_textures(R)
   end
 end
 
