@@ -2473,6 +2473,25 @@ end
 
 function Hex_choose_themes()
 
+  local UNWANTED_MATS =
+  {
+    -- these materials use base colors, and hence should not be used for
+    -- the walls/floors/ceilings of rooms.
+
+    -- TODO: move into game-specific data
+
+    BRICK11  = 1, COMPBLUE = 1, COMPTILE = 1, COMPOHSO = 1
+    CRACKLE2 = 1, FIREBLU1 = 1, FIRELAVA = 1, REDWALL  = 1
+    REDWALL1 = 1, ROCKRED1 = 1, SP_HOT1  = 1, A_REDROK = 1
+    DORED    = 1, EGREDI   = 1
+
+    CEIL4_1  = 1, CEIL4_2  = 1, CEIL4_3  = 1, FLAT14   = 1
+    FLAT22   = 1, FLOOR1_1 = 1, FLAT5_3  = 1, FLOOR1_6 = 1
+    FLOOR1_7 = 1, FLOOR6_1 = 1, RROCK01  = 1, RROCK05  = 1
+    SLIME09  = 1, TLITE6_5 = 1
+  }
+
+
   local function match_level_theme(name)
     local kind = string.match(name, "([%w]+)_")
 
@@ -2530,6 +2549,24 @@ function Hex_choose_themes()
   end
 
 
+  local function sel_usable_material(tab, fallback)
+    -- remove any base-colored materials in CTF mode
+    if LEVEL.CTF then
+      tab = table.copy(tab)
+
+      each name,_ in UNWANTED_MATS do
+        tab[name] = nil
+      end
+
+      if table.empty(tab) then
+        return fallback
+      end
+    end
+
+    return rand.key_by_probs(tab)
+  end
+
+
   local function do_set_tex(R, w_mat, f_mat, c_mat)
     R.wall_mat  = w_mat
     R.floor_mat = f_mat
@@ -2575,9 +2612,9 @@ function Hex_choose_themes()
        ceil_mat = wall_mat  -- not used (ceiling will be sky)
 
     else
-       wall_mat = rand.key_by_probs(tab)
-      floor_mat = rand.key_by_probs(R.theme.floors   or tab)
-       ceil_mat = rand.key_by_probs(R.theme.ceilings or tab)
+       wall_mat = sel_usable_material(tab, "BROWN96")
+      floor_mat = sel_usable_material(R.theme.floors   or tab, wall_mat)
+       ceil_mat = sel_usable_material(R.theme.ceilings or tab, wall_mat)
     end
 
     do_set_tex(R, wall_mat, floor_mat, ceil_mat)
@@ -2601,16 +2638,16 @@ function Hex_choose_themes()
   end
 
 
-  ---| Hex_choose_room_themes |---
+  ---| Hex_choose_themes |---
 
   LEVEL.building_theme = pick_zone_theme(collect_usable_themes("building"))
   LEVEL.outdoor_theme  = pick_zone_theme(collect_usable_themes("outdoors"))
   LEVEL.cave_theme     = pick_zone_theme(collect_usable_themes("cave"))
 
-  LEVEL.outdoor_mat = rand.key_by_probs(LEVEL.outdoor_theme.naturals or THEME.naturals)
+  LEVEL.outdoor_mat = sel_usable_material(LEVEL.outdoor_theme.naturals or THEME.naturals, "MFLR8_4")
 
-  LEVEL.cave_wall  = rand.key_by_probs(LEVEL.cave_theme.naturals or THEME.naturals)
-  LEVEL.cave_floor = rand.key_by_probs(LEVEL.cave_theme.naturals or THEME.naturals)
+  LEVEL.cave_wall   = sel_usable_material(LEVEL.cave_theme.naturals or THEME.naturals, "ASHWALL4")
+  LEVEL.cave_floor  = sel_usable_material(LEVEL.cave_theme.naturals or THEME.naturals, LEVEL.cave_wall)
 
   each R in LEVEL.rooms do
     decide_room_theme(R)
