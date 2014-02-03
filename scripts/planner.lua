@@ -1218,7 +1218,7 @@ end
 function Plan_decide_outdoors()
 
   local function turn_into_outdoor(R)
-    if R.kind != "cave" then
+    if R.kind != "reserved" and R.kind != "cave" then
        R.kind = "outdoor"
     end
 
