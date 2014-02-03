@@ -85,8 +85,8 @@ class ROOM
     base : keyword  -- "red" or "blue" if part of a team's base
                     -- unset for the neutral zone
 
-    outdoor : boolean  -- true for outdoor room
-    cave    : boolean  -- true for cave / natural room
+    kind : keyword  -- "building", "cave", "outdoors"
+    is_outdoor : boolean  -- true for outdoor room
 
     wall_mat  : string  -- texturing for this room
     floor_mat : string  --
@@ -355,22 +355,22 @@ function HEXAGON_CLASS.build_wall(C, dir)
 
   local w_mat = assert(C.room.wall_mat)
 
-  if not C.room.outdoor then  -- solid wall
+  if not C.room.is_outdoor then  -- solid wall
 
     local w_brush = C:to_wall_brush(dir)
 
-    Brush_set_mat(w_brush, w_mat, w_mat)
+    brushlib.set_mat(w_brush, w_mat, w_mat)
 
-    brush_helper(w_brush)
+    Trans.brush(w_brush)
 
   else  -- fence
 
     local f_brush = C:to_wall_brush(dir)
 
-    Brush_add_top(f_brush, 40)
-    Brush_set_mat(f_brush, w_mat, w_mat)
+    brushlib.add_top(f_brush, 40)
+    brushlib.set_mat(f_brush, w_mat, w_mat)
 
-    brush_helper(f_brush)
+    Trans.brush(f_brush)
   end
 end
 
@@ -423,9 +423,9 @@ function HEXAGON_CLASS.build(C)
 
     local w_mat = "ASHWALL4"
 
-    Brush_set_mat(w_brush, w_mat, w_mat)
+    brushlib.set_mat(w_brush, w_mat, w_mat)
 
-    brush_helper(w_brush)
+    Trans.brush(w_brush)
     return
   end
 
@@ -448,35 +448,35 @@ function HEXAGON_CLASS.build(C)
 -- if C.kind == "used" then f_h = 16 end
 
 
-  Brush_add_top(f_brush, f_h)
-  Brush_set_mat(f_brush, R.floor_mat, R.floor_mat)
+  brushlib.add_top(f_brush, f_h)
+  brushlib.set_mat(f_brush, R.floor_mat, R.floor_mat)
 
 if C.dist.item then
 --## f_brush[#f_brush].tex = "IT_" .. C.dist.item
 end
 
-  brush_helper(f_brush)
+  Trans.brush(f_brush)
 
 
   -- ceiling
 
   local c_h = f_h + 160
 
-  if R.outdoor then
+  if R.is_outdoor then
     c_h = LEVEL.sky_h
   end
 
   local c_brush = C:to_brush()
 
-  Brush_add_bottom(c_brush, c_h)
+  brushlib.add_bottom(c_brush, c_h)
 
-  if R.outdoor then
-    Brush_mark_sky(c_brush)
+  if R.is_outdoor then
+    brushlib.mark_sky(c_brush)
   else
-    Brush_set_mat(c_brush, R.wall_mat, R.ceil_mat)
+    brushlib.set_mat(c_brush, R.wall_mat, R.ceil_mat)
   end
 
-  brush_helper(c_brush)
+  Trans.brush(c_brush)
 
 
   -- walls
@@ -745,6 +745,7 @@ function Hex_setup()
 
   LEVEL.areas = {}
   LEVEL.rooms = {}
+  LEVEL.scenic_rooms = {}
 
   collectgarbage()
 end
@@ -2424,29 +2425,52 @@ end
 
 
 
-function Hex_decide_room_themes()
+function Hex_decide_room_kinds()
   
   local function decide_room_kind(R)
     -- choose between outdoor/indoor and cave/building
 
     -- already set?
-    if R.outdoor != nil then return end
+    if R.is_outdoor != nil then return end
 
-    R.outdoor = rand.odds(LEVEL.outdoor_prob)
-    R.cave    = rand.odds(LEVEL.cave_prob)
+    R.is_outdoor = rand.odds(LEVEL.outdoor_prob)
+    R.is_cave    = rand.odds(LEVEL.cave_prob)
+
+    if R.is_cave then
+      R.kind = "cave"
+    elseif R.is_outdoor then
+      R.kind = "outdoors"
+    else
+      R.kind = "building"
+    end
 
     -- prefer the CTF flag room to be indoor
-    if R.flag_room and rand.odds(50) then R.outdoor = false end
+    if R.flag_room and rand.odds(50) then R.is_outdoor = false end
 
     local N = R.peer
 
     if N then
-      N.outdoor = R.outdoor
-      N.cave    = R.cave
+      N.is_outdoor = R.is_outdoor
+      N.is_cave    = R.is_cave
     end
   end
 
 
+
+  ---| Hex_decide_room_kinds |---
+
+  LEVEL.outdoor_prob = style_sel("outdoors", 0, 15, 40, 75, 100)
+  LEVEL.cave_prob    = style_sel("caves",    0, 15, 35, 65, 100)
+
+  each R in LEVEL.rooms do
+    decide_room_kind(R)
+  end
+end
+
+
+
+function Hex_choose_room_themes()
+  
   local function pick_theme(tab)
     local name = rand.key_by_probs(tab)
 
@@ -2464,9 +2488,9 @@ function Hex_decide_room_themes()
     -- already set?
     if R.theme != nil then return end
 
-    if R.outdoor then
+    if R.is_outdoor then
       R.theme = LEVEL.outdoor_theme
-    elseif R.cave then
+    elseif R.is_cave then
       R.theme = LEVEL.cave_theme
     else
       R.theme = rand.sel(70, LEVEL.building_theme1, LEVEL.building_theme2)
@@ -2501,7 +2525,7 @@ function Hex_decide_room_themes()
 
     local tab
 
-    if R.outdoor or R.cave then
+    if R.is_outdoor or R.is_cave then
       tab = R.theme.naturals or THEME.naturals
     else
       tab = R.theme.walls or THEME.walls
@@ -2514,7 +2538,7 @@ function Hex_decide_room_themes()
     local floor_mat
     local  ceil_mat
 
-    if R.cave and not R.outdoor then
+    if R.is_cave and not R.is_outdoor then
        wall_mat = LEVEL.cave_wall
       floor_mat = LEVEL.cave_floor
        ceil_mat = wall_mat
@@ -2539,10 +2563,7 @@ function Hex_decide_room_themes()
   end
 
 
-  ---| Hex_decide_room_themes |---
-
-  LEVEL.outdoor_prob = style_sel("outdoors", 0, 15, 40, 75, 100)
-  LEVEL.cave_prob    = style_sel("caves",    0, 15, 35, 65, 100)
+  ---| Hex_choose_room_themes |---
 
   LEVEL.building_theme1 = pick_theme(THEME.buildings)
   LEVEL.building_theme2 = pick_theme(THEME.buildings)
@@ -2557,7 +2578,6 @@ function Hex_decide_room_themes()
   end
 
   each R in LEVEL.rooms do
-    decide_room_kind(R)
     decide_room_theme(R)
     select_textures(R)
   end
@@ -2566,6 +2586,8 @@ end
 
 
 function Hex_build_all()
+  Trans.clear()
+
   for cx = 1, HEX_W do
   for cy = 1, HEX_H do
     local C = HEX_CELLS[cx][cy]
@@ -2602,7 +2624,16 @@ function Hex_create_level()
     Hex_assign_bases()
   end
 
-  Hex_decide_room_themes()
+  -- create a zone
+  local ZONE =
+  {
+    id = 1
+    rooms = table.copy(LEVEL.rooms)
+  }
+  LEVEL.zones = { ZONE }
+
+  Hex_decide_room_kinds()
+  Hex_choose_room_themes()
 
   Hex_build_all()
 end
