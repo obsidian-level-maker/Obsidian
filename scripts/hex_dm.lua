@@ -325,6 +325,25 @@ function HEXAGON_CLASS.to_brush(C)
 end
 
 
+function HEXAGON_CLASS.to_small_brush(C)
+  local brush = {}
+
+  for i = 6, 1, -1 do
+    local dir = HEX_DIRS[i]
+
+    local coord =
+    {
+      x = int((C.vertex[dir].x + C.mid_x) / 2)
+      y = int((C.vertex[dir].y + C.mid_y) / 2)
+    }
+
+    table.insert(brush, coord)
+  end
+
+  return brush
+end
+
+
 function HEXAGON_CLASS.to_wall_brush(C, dir)
   local dir2 = HEX_RIGHT[dir]
 
@@ -403,10 +422,16 @@ function HEXAGON_CLASS.build_content(C)
   end
 
   if content.kind == "FLAG" then
-    -- FIXME: prefab
     assert(content.team)
+
+    -- simple pedestal
+    local brush = C:to_small_brush()
+    brushlib.add_top(brush, f_h + 12)
+    brushlib.set_mat(brush, "COMPSPAN", "COMPSPAN")
+    Trans.brush(brush)
+
     local ent = "ctf_" .. content.team .. "_flag"
-    entity_helper(ent, C.mid_x, C.mid_y, f_h, {})
+    entity_helper(ent, C.mid_x, C.mid_y, f_h + 12, { light=224 })
   end
 
   if content.kind == "ENTITY" or
