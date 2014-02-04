@@ -519,7 +519,7 @@ function HEXAGON_CLASS.build_content(C)
      content.kind == "WEAPON"
   then
     -- FIXME: prefab for weapons
-    entity_helper(content.entity, C.mid_x, C.mid_y, f_h, { angle=content.angle })
+    entity_helper(content.entity, C.mid_x, C.mid_y, f_h, { angle=content.angle, light=160 })
   end
 end
 
@@ -2049,10 +2049,8 @@ function Hex_place_stuff()
 
     tab["NONE"] = 20
 
-    each name,info in GAME.PICKUPS do
-      if (info.rank or 0) >= 2 and info.kind != "ammo" then
-        tab[name] = 10
-      end
+    each name,info in GAME.NICE_ITEMS do
+      tab[name] = 10
     end
 
     local item = rand.key_by_probs(tab)
