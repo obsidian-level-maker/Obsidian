@@ -2774,7 +2774,21 @@ function Hex_border_up()
     if N and N.room == C.room then return end
 
     -- no need if connection part of the path (i.e. walkable)
-    if C.path[dir] then return end
+    if C.path[dir] then
+      -- may need a stair though
+      local diff_h = N.room.floor_h - C.room.floor_h
+
+      -- down stair is handled by other cell
+      if diff_h <= 24 then return end
+
+      C.border[dir] =
+      {
+        kind = "step"
+        floor_h = math.i_mid(C.room.floor_h, N.room.floor_h)
+        floor_mat = "GRAY7"
+      }
+      return
+    end
 
     local B = {}
     C.border[dir] = B
