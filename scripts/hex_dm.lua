@@ -34,7 +34,7 @@ class HEXAGON
     content : CONTENT      -- what to make in middle of cell
 
     border[HDIR] : BORDER  -- what to make on edge of cell
-    corner[HDIR] : BORDER
+    corner[HDIR] : BORDER  -- these corners are ON THE OUTSIDE
 
     mid_x, mid_y  -- coordinate of mid point
 
@@ -181,6 +181,9 @@ function HEXAGON_CLASS.new(cx, cy)
     vertex = {}
     wall_vert = {}
     mid_vert = {}
+
+    border = {}
+    corner = {}
     path = {}
     dist = {}
 
@@ -325,7 +328,7 @@ function HEXAGON_CLASS.near_wall(C)
 end
 
 
-function HEXAGON_CLASS.to_brush(C)
+function HEXAGON_CLASS.get_brush(C)
   local brush = {}
 
   for i = 6, 1, -1 do
@@ -344,7 +347,7 @@ function HEXAGON_CLASS.to_brush(C)
 end
 
 
-function HEXAGON_CLASS.to_small_brush(C)
+function HEXAGON_CLASS.get_small_brush(C)
   local brush = {}
 
   for i = 6, 1, -1 do
@@ -363,7 +366,7 @@ function HEXAGON_CLASS.to_small_brush(C)
 end
 
 
-function HEXAGON_CLASS.to_wall_brush(C, dir)
+function HEXAGON_CLASS.get_wall_brush(C, dir)
   local dir2 = HEX_RIGHT[dir]
 
   local brush = {}
@@ -377,11 +380,34 @@ function HEXAGON_CLASS.to_wall_brush(C, dir)
 end
 
 
+function HEXAGON_CLASS.get_corner_brush(C, dir)
+  local dir2 = HEX_LEFT[dir]
+
+  local A = C.neighbor[dir2]
+  local B = C.neighbor[dir]
+
+  if not A or not B then
+    error("get_corner_brush: bad cell")
+  end
+
+  local dir3 = HEX_LEFT [HEX_LEFT [dir]]
+  local dir4 = HEX_RIGHT[HEX_RIGHT[dir]]
+
+  local brush = {}
+
+  table.insert(brush, table.copy(C.vertex[dir]))
+  table.insert(brush, table.copy(A.wall_vert[dir4]))
+  table.insert(brush, table.copy(B.wall_vert[dir3]))
+
+  return brush
+end
+
+
 function HEXAGON_CLASS.build_floor(C, f_h, mat)
   -- for lighting system we subdivide the cell into a small hexagon
   -- and six trapezoids...
 
-  local m_brush = C:to_small_brush(C)
+  local m_brush = C:get_small_brush(C)
   
   brushlib.add_top(m_brush, f_h)
   brushlib.set_mat(m_brush, mat, mat)
@@ -432,7 +458,7 @@ function HEXAGON_CLASS.build_wall(C, dir)
 
   if not B then return end
 
-  local brush = C:to_wall_brush(dir)
+  local brush = C:get_wall_brush(dir)
 
   C:build_border(brush, B)
 end
@@ -443,7 +469,7 @@ function HEXAGON_CLASS.build_corner(C, dir)
 
   if not B then return end
 
-  local brush = C:to_corner_brush(dir)
+  local brush = C:get_corner_brush(dir)
 
   C:build_border(brush, B)
 end
@@ -478,7 +504,7 @@ function HEXAGON_CLASS.build_content(C)
     assert(content.team)
 
     -- simple pedestal
-    local brush = C:to_small_brush()
+    local brush = C:get_small_brush()
     brushlib.add_top(brush, f_h + 12)
     brushlib.set_mat(brush, "COMPSPAN", "COMPSPAN")
     Trans.brush(brush)
@@ -499,7 +525,7 @@ end
 function HEXAGON_CLASS.build(C)
   
   if C.kind == "edge" or C.kind == "solid" or C.kind == "dead" then
-    local w_brush = C:to_brush()
+    local w_brush = C:get_brush()
 
     local w_mat = "ASHWALL4"
 
@@ -530,7 +556,7 @@ function HEXAGON_CLASS.build(C)
     c_h = LEVEL.sky_h
   end
 
-  local c_brush = C:to_brush()
+  local c_brush = C:get_brush()
 
   brushlib.add_bottom(c_brush, c_h)
 
@@ -2733,7 +2759,6 @@ end
 function Hex_border_up()
 
   local function border_on_side(C, dir)
-
     local N = C.neighbor[dir]
 
     -- no need if outdoor and neighbor is solid
@@ -2747,11 +2772,18 @@ function Hex_border_up()
     -- no need if connection part of the path (i.e. walkable)
     if C.path[dir] then return end
 
-    local w_mat = assert(C.room.wall_mat)
-    --.... TODO
+    local B = {}
+    C.border[dir] = B
 
-    B.kind = "fence"
-    B.fence_h = C.room.floor_h + 32
+    if not C.room.is_outdoor then
+      B.kind = "wall"
+      B.wall_mat = assert(C.room.wall_mat)
+      
+    else
+      B.kind = "fence"
+      B.floor_h = C.room.floor_h + 32
+      B.floor_mat = assert(C.room.wall_mat)
+    end
   end
 
 
@@ -2760,7 +2792,32 @@ function Hex_border_up()
       return
     end
 
-    --.... TODO
+    for dir = 1,6 do
+      border_on_side(C, dir)
+    end
+  end
+
+
+  local function corner_at_point(C, dir)
+    -- NOTE: this corner is on the OUTSIDE of the cell
+
+    -- get other two cells
+    local dir2 = HEX_LEFT[dir]
+
+    local A = C.neighbor[dir2]
+    local B = C.neighbor[dir]
+
+    if not A or not B then
+      return
+    end
+
+    if A.kind == "edge" or A.kind == "solid" or A.kind == "dead" or
+       B.kind == "edge" or B.kind == "solid" or B.kind == "dead"
+    then
+      return
+    end
+
+    -- TODO....
   end
 
 
@@ -2768,8 +2825,10 @@ function Hex_border_up()
     if C.kind == "edge" or C.kind == "solid" or C.kind == "dead" then
       return
     end
-     
-    --.... TODO
+
+    for dir = 1,6 do
+      corner_at_point(C, dir)
+    end
   end
 
 
