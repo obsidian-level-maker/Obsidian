@@ -445,6 +445,8 @@ function HEXAGON_CLASS.build_border(C, coords, B)
   end
 
   if B.kind == "fence" or B.kind == "step" then
+    assert(B.floor_h)
+
     brushlib.add_top(coords, B.floor_h)
     brushlib.set_mat(coords, B.floor_mat, B.floor_mat)
 
@@ -2846,6 +2848,27 @@ function Hex_border_up()
       else
         CORN.wall_mat = "METAL"
       end
+
+      C.corner[dir] = CORN
+    end
+
+    if AB and AB.kind == "fence" and
+       BB and BB.kind == "fence" and
+       not AD and
+       not BD
+    then
+      CORN =
+      {
+        kind = "fence"
+      }
+
+      if AB.floor_mat == BB.floor_mat then
+        CORN.floor_mat = AB.floor_mat
+      else
+        CORN.floor_mat = "METAL"
+      end
+
+      CORN.floor_h = math.max(AB.floor_h, BB.floor_h)
 
       C.corner[dir] = CORN
     end
