@@ -419,10 +419,10 @@ function HEXAGON_CLASS.build_floor(C, f_h, mat)
 
     local brush =
     {
-      { x = C.mid_vert[i].x, y = C.mid_vert[i].y }
-      { x = C.vertex  [i].x, y = C.vertex  [i].y }
-      { x = C.vertex  [k].x, y = C.vertex  [k].y }
-      { x = C.mid_vert[k].x, y = C.mid_vert[k].y }
+      table.copy(C.mid_vert[i])
+      table.copy(C.vertex  [i])
+      table.copy(C.vertex  [k])
+      table.copy(C.mid_vert[k])
     }
 
     brushlib.add_top(brush, f_h)
@@ -835,8 +835,8 @@ function Hex_setup()
     for dir = 1,6 do
       C.vertex[dir] = Hex_vertex_coord(C, dir)
 
-      C.wall_vert[dir] = Hex_vertex_along(C, dir, 0.8)
-      C. mid_vert[dir] = Hex_vertex_along(C, dir, 0.4)
+      C.wall_vert[dir] = Hex_vertex_along(C, dir, 0.75)
+      C. mid_vert[dir] = Hex_vertex_along(C, dir, 0.50)
     end
   end
   end
