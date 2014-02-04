@@ -27,11 +27,14 @@ class HEXAGON
     kind : keyword   -- "free", "used"
                      -- "edge", "solid", "dead"
 
-    content : CONTENT
-
     neighbor[HDIR] : HEXAGON   -- neighboring cells
                                -- will be NIL at edge of map
                                -- HDIR is 1 .. 6
+
+    content : CONTENT      -- what to make in middle of cell
+
+    border[HDIR] : BORDER  -- what to make on edge of cell
+    corner[HDIR] : BORDER
 
     mid_x, mid_y  -- coordinate of mid point
 
@@ -89,9 +92,9 @@ class ROOM
     kind : keyword  -- "building", "cave", "outdoors"
     is_outdoor : boolean  -- true for outdoor room
 
-    wall_mat  : string  -- texturing for this room
+     wall_mat : string  -- texturing for this room
     floor_mat : string  --
-    ceil_mat  : string  --
+     ceil_mat : string  --
 
     floor_h : number  -- floor height
 
@@ -99,16 +102,30 @@ class ROOM
 }
 
 
+class BORDER
+{
+    kind : keyword  -- "wall", "fence", "step"
+
+     wall_mat : string  --
+    floor_mat : string  -- texturing info
+     ceil_mat : string  --
+
+    floor_h : number  -- height for the fence or step
+
+    ceil_h  : number
+}
+
+
 class CONTENT
 {
-  kind : keyword  -- "START", "WEAPON", "ENTITY", etc...
+    kind : keyword  -- "START", "WEAPON", "ENTITY", etc...
 
-  entity : name
+    entity : name
 
-  team : keyword  -- "red" or "blue"  (for FLAG and START)
-                  -- not used for DM maps
+    team : keyword  -- "red" or "blue"  (for FLAG and START)
+                    -- not used for DM maps
 
-  no_mirror : boolean  -- do not mirror this
+    no_mirror : boolean  -- do not mirror this
 }
 
 
@@ -390,41 +407,45 @@ function HEXAGON_CLASS.build_floor(C, f_h, mat)
 end
 
 
+function HEXAGON_CLASS.build_border(C, coords, B)
+  if B.kind == "nothing" then
+    return
+  end
+
+  if B.kind == "wall" then
+    brushlib.set_mat(coords, B.wall_mat, B.wall_mat)
+
+    Trans.brush(coords)
+  end
+
+  if B.kind == "fence" or B.kind == "step" then
+    brushlib.add_top(coords, B.floor_h)
+    brushlib.set_mat(coords, B.floor_mat, B.floor_mat)
+
+    Trans.brush(coords)
+  end
+end
+
+
 function HEXAGON_CLASS.build_wall(C, dir)
-  local N = C.neighbor[dir]
+  local B = C.border[dir]
 
-  -- no need if outdoor and neighbor is solid
-  if C.room.is_outdoor then
-    if N and (N.kind == "edge" or N.kind == "solid" or N.kind == "dead") then return end
-  end
+  if not B then return end
 
-  -- no need if part of same room
-  if N and N.room == C.room then return end
+  local brush = C:to_wall_brush(dir)
 
-  -- no need if connection part of the path (i.e. walkable)
-  if C.path[dir] then return end
+  C:build_border(brush, B)
+end
 
-  -- create wall brush
 
-  local w_mat = assert(C.room.wall_mat)
+function HEXAGON_CLASS.build_corner(C, dir)
+  local B = C.corner[dir]
 
-  if not C.room.is_outdoor then  -- solid wall
+  if not B then return end
 
-    local w_brush = C:to_wall_brush(dir)
+  local brush = C:to_corner_brush(dir)
 
-    brushlib.set_mat(w_brush, w_mat, w_mat)
-
-    Trans.brush(w_brush)
-
-  else  -- fence
-
-    local f_brush = C:to_wall_brush(dir)
-
-    brushlib.add_top(f_brush, C.room.floor_h + 32)
-    brushlib.set_mat(f_brush, w_mat, w_mat)
-
-    Trans.brush(f_brush)
-  end
+  C:build_border(brush, B)
 end
 
 
@@ -526,8 +547,11 @@ function HEXAGON_CLASS.build(C)
 
   for dir = 1, 6 do
     C:build_wall(dir)
+    C:build_corner(dir)
   end
 
+
+  -- content --
 
   if C.content then
     C:build_content(C)
@@ -2706,6 +2730,72 @@ end
 
 
 
+function Hex_border_up()
+
+  local function border_on_side(C, dir)
+
+    local N = C.neighbor[dir]
+
+    -- no need if outdoor and neighbor is solid
+    if C.room.is_outdoor then
+      if N and (N.kind == "edge" or N.kind == "solid" or N.kind == "dead") then return end
+    end
+
+    -- no need if part of same room
+    if N and N.room == C.room then return end
+
+    -- no need if connection part of the path (i.e. walkable)
+    if C.path[dir] then return end
+
+    local w_mat = assert(C.room.wall_mat)
+    --.... TODO
+
+    B.kind = "fence"
+    B.fence_h = C.room.floor_h + 32
+  end
+
+
+  local function border_up(C)
+    if C.kind == "edge" or C.kind == "solid" or C.kind == "dead" then
+      return
+    end
+
+    --.... TODO
+  end
+
+
+  local function corner_up(C)
+    if C.kind == "edge" or C.kind == "solid" or C.kind == "dead" then
+      return
+    end
+     
+    --.... TODO
+  end
+
+
+  ---| Hex_border_up |---
+
+  for cx = 1, HEX_W do
+  for cy = 1, HEX_H do
+    local C = HEX_CELLS[cx][cy]
+    
+    border_up(C)
+  end
+  end
+
+  -- must do corners _after_ borders
+
+  for cx = 1, HEX_W do
+  for cy = 1, HEX_H do
+    local C = HEX_CELLS[cx][cy]
+    
+    corner_up(C)
+  end
+  end
+end
+
+
+
 function Hex_build_all()
   Trans.clear()
 
@@ -2756,6 +2846,7 @@ function Hex_create_level()
   Hex_decide_room_kinds()
   Hex_choose_themes()
 
+  Hex_border_up()
   Hex_build_all()
 end
 
