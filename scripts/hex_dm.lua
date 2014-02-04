@@ -396,8 +396,8 @@ function HEXAGON_CLASS.get_corner_brush(C, dir)
   local brush = {}
 
   table.insert(brush, table.copy(C.vertex[dir]))
-  table.insert(brush, table.copy(A.wall_vert[dir4]))
   table.insert(brush, table.copy(B.wall_vert[dir3]))
+  table.insert(brush, table.copy(A.wall_vert[dir4]))
 
   return brush
 end
@@ -524,6 +524,11 @@ end
 
 function HEXAGON_CLASS.build(C)
   
+  for dir = 1, 6 do
+    C:build_corner(dir)
+  end
+
+
   if C.kind == "edge" or C.kind == "solid" or C.kind == "dead" then
     local w_brush = C:get_brush()
 
@@ -573,7 +578,6 @@ function HEXAGON_CLASS.build(C)
 
   for dir = 1, 6 do
     C:build_wall(dir)
-    C:build_corner(dir)
   end
 
 
@@ -2778,7 +2782,7 @@ function Hex_border_up()
     if not C.room.is_outdoor then
       B.kind = "wall"
       B.wall_mat = assert(C.room.wall_mat)
-      
+
     else
       B.kind = "fence"
       B.floor_h = C.room.floor_h + 32
@@ -2817,15 +2821,38 @@ function Hex_border_up()
       return
     end
 
-    -- TODO....
+    local dir3 = HEX_LEFT[HEX_OPP[dir2]]
+
+    local CORN
+
+    local AB = A.border[HEX_OPP[dir2]]
+    local AD = A.border[dir3]
+
+    local BB = B.border[HEX_OPP[dir]]
+    local BD = B.border[HEX_OPP[dir3]]
+
+    if AB and AB.kind == "wall" and
+       BB and BB.kind == "wall" and
+       not (AD and AD.kind == "wall") and
+       not (BD and BD.kind == "wall")
+    then
+      CORN =
+      {
+        kind = "wall"
+      }
+
+      if AB.wall_mat == BB.wall_mat then
+        CORN.wall_mat = AB.wall_mat
+      else
+        CORN.wall_mat = "METAL"
+      end
+
+      C.corner[dir] = CORN
+    end
   end
 
 
   local function corner_up(C)
-    if C.kind == "edge" or C.kind == "solid" or C.kind == "dead" then
-      return
-    end
-
     for dir = 1,6 do
       corner_at_point(C, dir)
     end
