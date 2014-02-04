@@ -38,6 +38,7 @@ class HEXAGON
     vertex[HDIR] : { x=#, y=# }  -- leftmost vertex for each edge
 
     wall_vert[HDIR] : { x=#, y=# }
+     mid_vert[HDIR] : { x=#, y=# }
 
     path[HDIR] : HEXAGON  -- forms a cyclical pathway around the map
 
@@ -162,6 +163,7 @@ function HEXAGON_CLASS.new(cx, cy)
     neighbor = {}
     vertex = {}
     wall_vert = {}
+    mid_vert = {}
     path = {}
     dist = {}
 
@@ -325,23 +327,19 @@ function HEXAGON_CLASS.to_brush(C)
 end
 
 
-function HEXAGON_CLASS.mid_vertex(C, dir)
-  local x = (C.vertex[dir].x + C.mid_x) / 2
-  local y = (C.vertex[dir].y + C.mid_y) / 2
-
-  return int(x), int(y)
-end
-
-
 function HEXAGON_CLASS.to_small_brush(C)
   local brush = {}
 
   for i = 6, 1, -1 do
     local dir = HEX_DIRS[i]
 
-    local x, y = C:mid_vertex(dir)
+    local coord =
+    {
+      x = C.mid_vert[dir].x
+      y = C.mid_vert[dir].y
+    }
 
-    table.insert(brush, { x=x, y=y })
+    table.insert(brush, coord)
   end
 
   return brush
@@ -376,15 +374,12 @@ function HEXAGON_CLASS.build_floor(C, f_h, mat)
   for i = 1, 6 do
     local k = HEX_LEFT[i]
 
-    local x1, y1 = C:mid_vertex(i)
-    local x4, y4 = C:mid_vertex(k)
-
     local brush =
     {
-      { x = x1, y = y1 }
-      { x = C.vertex[i].x, y = C.vertex[i].y }
-      { x = C.vertex[k].x, y = C.vertex[k].y }
-      { x = x4, y = y4 }
+      { x = C.mid_vert[i].x, y = C.mid_vert[i].y }
+      { x = C.vertex  [i].x, y = C.vertex  [i].y }
+      { x = C.vertex  [k].x, y = C.vertex  [k].y }
+      { x = C.mid_vert[k].x, y = C.mid_vert[k].y }
     }
 
     brushlib.add_top(brush, f_h)
@@ -425,7 +420,7 @@ function HEXAGON_CLASS.build_wall(C, dir)
 
     local f_brush = C:to_wall_brush(dir)
 
-    brushlib.add_top(f_brush, 40)
+    brushlib.add_top(f_brush, C.room.floor_h + 32)
     brushlib.set_mat(f_brush, w_mat, w_mat)
 
     Trans.brush(f_brush)
@@ -722,14 +717,14 @@ function Hex_vertex_coord(C, dir)
 end
 
 
-function Hex_wall_coord(C, dir)
+function Hex_vertex_along(C, dir, along)
   local x = C.vertex[dir].x
   local y = C.vertex[dir].y
 
   return
   {
-    x = math.round((x * 3 + C.mid_x) / 4)
-    y = math.round((y * 3 + C.mid_y) / 4)
+    x = math.round(x * along + C.mid_x * (1 - along))
+    y = math.round(y * along + C.mid_y * (1 - along))
   }
 end
 
@@ -784,7 +779,8 @@ function Hex_setup()
     for dir = 1,6 do
       C.vertex[dir] = Hex_vertex_coord(C, dir)
 
-      C.wall_vert[dir] = Hex_wall_coord(C, dir)
+      C.wall_vert[dir] = Hex_vertex_along(C, dir, 0.8)
+      C. mid_vert[dir] = Hex_vertex_along(C, dir, 0.4)
     end
   end
   end
