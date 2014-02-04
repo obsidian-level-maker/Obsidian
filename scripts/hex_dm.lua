@@ -1847,7 +1847,7 @@ function Hex_place_stuff()
   end
 
 
-  local function place_anywhere(ent)
+  local function place_anywhere(ent, is_single)
     for loop = 1, 9000 do
       local cx = rand.irange(1, HEX_W)
       local cy = rand.irange(1, top_H)
@@ -1862,7 +1862,7 @@ function Hex_place_stuff()
       {
         kind   = "ENTITY"
         entity = ent
-        no_mirror = true
+        no_mirror = is_single
       }
 
       if string.match(ent, "player") then
@@ -1872,7 +1872,9 @@ function Hex_place_stuff()
       return -- OK
     end
 
-    error("Failed to place: " .. tostring(ent))
+    if is_single then
+      error("Failed to place: " .. tostring(ent))
+    end
   end
 
 
@@ -2161,7 +2163,13 @@ function Hex_place_stuff()
   place_player_starts()
 
   -- finally, add a single player start
-  place_anywhere("player1")
+  place_anywhere("player1", true)
+
+  -- and some deathmatch starts
+  place_anywhere("dm_player", false)
+  place_anywhere("dm_player", false)
+  place_anywhere("dm_player", false)
+  place_anywhere("dm_player", false)
 end
 
 
