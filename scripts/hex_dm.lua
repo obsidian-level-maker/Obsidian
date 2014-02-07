@@ -1375,6 +1375,103 @@ end
 
 
 
+function Hex_merge_rooms(room_list)
+  --
+  -- Rooms which are too small get merged into a neighboring room.
+  --
+
+  local MIN_ROOM_SIZE = 8
+
+
+  local function neighbor_for_merge(R)
+    local best
+
+    each C in R.cells do
+      for dir = 1, 6 do
+        local N = C.neighbor[dir]
+
+        if not (N and N.room) then continue end
+
+        local R2 = N.room
+
+        if (R2 == R) or (R2 == best) then continue end
+
+        if not best then
+          best = R2
+          continue
+        end
+
+        -- pick the smallest neighbor
+        if #R2.cells > #best.cells then continue end
+
+        if #R2.cells == #best.cells and rand.odds(50) then continue end
+
+        best = R2
+      end
+    end
+
+    -- best can be NIL, this only happens in CTF mode with rooms on the middle row
+    -- and near the far left / right edges.  Such a room will be removed.
+
+    return best
+  end
+
+
+  local function merge_rooms()
+
+    for idx = #room_list, 1, -1 do
+      local R = room_list[idx]
+
+      assert(not R.dead)
+
+      if R.flag_room then continue end
+
+      if #R.cells >= MIN_ROOM_SIZE then continue end
+
+      local N = neighbor_for_merge(R)
+
+      if N then
+        N:merge(R)
+      else
+        R:kill()
+      end
+
+      table.remove(room_list, idx)
+    end
+  end
+
+
+  ---| Hex_merge_rooms |---
+
+  for loop = 1, 2 do
+    merge_rooms()
+  end
+end
+
+
+
+function Hex_add_rooms_DM()
+  --
+  -- Algorithm:
+  --
+  --   1. spawn "seed" rooms around the usable map area.  Each seed
+  --      will be two hexagonal cells
+  --
+  --   2. find all places where a unused cell can "grow" -- it needs
+  --      two neighbors of the same room to become part of that room
+  --
+  --   3. repeat step 2 until the whole map is filled
+  --
+  --   4. ensure rooms are of a minimum size by merging tiny rooms
+  --      with a neighboring room
+  --
+
+  ---| Hex_add_rooms_DM |---
+
+  -- TODO
+end
+
+
 function Hex_add_rooms_CTF()
   --
   -- Algorithm:
@@ -1386,8 +1483,6 @@ function Hex_add_rooms_CTF()
   --   3. process each row away from that, pick room for each cell
   --      and occasionally create new rooms
   --
-
-  local MIN_ROOM_SIZE = 8
 
   local room_list = {}
 
@@ -1584,64 +1679,6 @@ function Hex_add_rooms_CTF()
   end
 
 
-  local function neighbor_for_merge(R)
-    local best
-
-    each C in R.cells do
-      for dir = 1, 6 do
-        local N = C.neighbor[dir]
-
-        if not (N and N.room) then continue end
-
-        local R2 = N.room
-
-        if (R2 == R) or (R2 == best) then continue end
-
-        if not best then
-          best = R2
-          continue
-        end
-
-        -- pick the smallest neighbor
-        if #R2.cells > #best.cells then continue end
-
-        if #R2.cells == #best.cells and rand.odds(50) then continue end
-
-        best = R2
-      end
-    end
-
-    -- best can be NIL, this only happens with rooms on the middle row
-    -- and near the far left / right edges.  Such a room will be removed.
-
-    return best
-  end
-
-
-  local function merge_rooms()
-
-    -- rooms which are too small get merged into a neighboring room
-
-    for idx = #room_list, 1, -1 do
-      local R = room_list[idx]
-
-      assert(not R.dead)
-
-      if R.flag_room then continue end
-
-      if #R.cells >= MIN_ROOM_SIZE then continue end
-
-      local N = neighbor_for_merge(R)
-
-      if N then
-        N:merge(R)
-      else
-        R:kill()
-      end
-
-      table.remove(room_list, idx)
-    end
-  end
 
 
   ---| Hex_add_rooms_CTF |---
@@ -1654,9 +1691,7 @@ function Hex_add_rooms_CTF()
     process_row(cy)
   end
 
-  for loop = 1, 2 do
-    merge_rooms()
-  end
+  Hex_merge_rooms(room_list)
 
   Hex_kill_unused_rooms(room_list)
 
@@ -1671,7 +1706,8 @@ function Hex_add_rooms()
 
   if LEVEL.CTF then
     Hex_add_rooms_CTF()
-    return
+  else
+    Hex_add_rooms_DM()
   end
 end
 
