@@ -1454,34 +1454,144 @@ function Hex_add_rooms_DM()
   --
   -- Algorithm:
   --
-  --   1. spawn "seed" rooms around the usable map area.  Each seed
-  --      will be two hexagonal cells
+  --   1. spawn "seed" rooms around the usable map area.  Each one
+  --      will be _TWO_ hexagonal cells.
   --
   --   2. find all places where a unused cell can "grow" -- it needs
-  --      two neighbors of the same room to become part of that room
+  --      two neighbors of the same room to become part of that room.
   --
-  --   3. repeat step 2 until the whole map is filled
+  --   3. repeat step 2 until the whole map is filled.
   --
   --   4. ensure rooms are of a minimum size by merging tiny rooms
-  --      with a neighboring room
+  --      with a neighboring room.
   --
+  local room_list = {}
+
+  local top_H = sel(LEVEL.CTF, HEX_MID_Y, HEX_H)
+
+
+  local function new_room()
+    local ROOM = HEX_ROOM_CLASS.new()
+    ROOM.grow_prob = rand.pick({ 10, 20, 40, 80 })
+    table.insert(room_list, ROOM)
+    return ROOM
+  end
+
+  
+  local function fungible_cell(C)
+    if C.kind == "edge" then return false end
+    if C.room then return false end
+
+    return true
+  end
+
+
+  local function num_fungible_cells()
+    local count = 0
+
+    for cx = 1, HEX_W do
+    for cy = 1, top_H do
+      local C = HEX_CELLS[cx][cy]
+
+      if fungible_cell(C) then
+        count = count + 1
+      end
+    end
+    end
+
+    return count
+  end
+
+
+  local function test_spot_for_seed(cx, cy, dir)
+    local C = HEX_CELLS[cx][cy]
+
+    local N = C.neighbor[dir]
+
+    return (N and fungible_cell(N))
+  end
+
+
+  local function add_room_seed(required)
+    -- pick spot
+    local MAX_LOOP = 8000
+
+    for loop = 1, MAX_LOOP do
+      local cx = rand.irange(2, HEX_W - 1)
+      local cy = rand.irange(2, top_H - 1)
+
+      local C = HEX_CELLS[cx][cy]
+
+      if not fungible_cell(C) then continue end
+
+      -- TODO: maybe require cell be on the path (kind == "used")
+
+      for pass = 1,4 do
+        local dir = rand.irange(1, 6)
+
+        local N = C.neighbor[dir]
+
+        if N and fungible_cell(N) then
+          -- found a usable spot!
+          C.room = new_room()
+          N.room = C.room
+          return
+        end
+
+      end  -- pass
+    end  -- loop
+
+    if required then
+      error("Failed to add an initial room")
+    end
+  end
+
+
+  local function initial_rooms()
+    -- decide number of starting rooms
+    local quota = num_fungible_cells()
+
+    quota = quota / rand.pick({ 8, 12, 16 }) + 1
+    quota = rand.int(quota)
+
+    gui.printf("Room quota: %d\n", quota)
+
+    for i = 1, quota do
+      add_room_seed(i <= 4)
+    end
+  end
+
+
+  local function grow_a_room()
+    -- TODO
+  end
+
 
   ---| Hex_add_rooms_DM |---
 
-  -- TODO
+  initial_rooms()
+
+  while grow_a_room() do end
+
+  Hex_merge_rooms(room_list)
+
+  Hex_kill_unused_rooms(room_list)
+
+  LEVEL.rooms = room_list
 end
+
 
 
 function Hex_add_rooms_CTF()
   --
   -- Algorithm:
   --
-  --   1. setup rooms on the middle row
+  --   1. setup rooms on the middle row.
   --
-  --   2. pick location for flag room
+  --   2. pick location for flag room.
   --
   --   3. process each row away from that, pick room for each cell
-  --      and occasionally create new rooms
+  --      and occasionally create new rooms.
   --
 
   local room_list = {}
@@ -1489,9 +1599,7 @@ function Hex_add_rooms_CTF()
 
   local function new_room()
     local ROOM = HEX_ROOM_CLASS.new()
-
     table.insert(room_list, ROOM)
-
     return ROOM
   end
 
@@ -1677,8 +1785,6 @@ function Hex_add_rooms_CTF()
       R:add_cell(C)
     end
   end
-
-
 
 
   ---| Hex_add_rooms_CTF |---
