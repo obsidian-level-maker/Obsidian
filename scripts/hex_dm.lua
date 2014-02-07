@@ -2374,7 +2374,7 @@ function Hex_place_stuff()
   decide_weapons()
   decide_big_item()
 
-  if rand.odds(50) then
+  if LEVEL.CTF and rand.odds(50) then
     place_item_in_middle()
   end
 
