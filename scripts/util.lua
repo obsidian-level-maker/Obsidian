@@ -504,6 +504,10 @@ function rand.irange(L,H)
   return math.floor(L + gui.random() * (H-L+0.9999))
 end
 
+function rand.int(val)
+  return math.floor(val + gui.random())
+end
+
 function rand.skew()
   return gui.random() - gui.random()
 end
