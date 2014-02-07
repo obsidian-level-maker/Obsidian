@@ -33,7 +33,7 @@ NO_PREBUILT_DOOM.PREBUILT_LEVELS =
 
 OB_MODULES["no_prebuilt_doom"] =
 {
-  label = "Disable Prebuilt Maps (DOOM)"
+  label = "Disable Prebuilt Non-Boss Maps"
 
   game = { doom1=1, doom2=1 }
 
