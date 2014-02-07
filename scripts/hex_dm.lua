@@ -1524,7 +1524,8 @@ function Hex_add_rooms_DM()
 
       if not fungible_cell(C) then continue end
 
-      -- TODO: maybe require cell be on the path (kind == "used")
+      -- require cell be on the path (unless we are getting desperate)
+      if loop < 200 and C.kind != "used" then continue end
 
       for pass = 1,4 do
         local dir = rand.irange(1, 6)
@@ -1533,8 +1534,9 @@ function Hex_add_rooms_DM()
 
         if N and fungible_cell(N) then
           -- found a usable spot!
-          C.room = new_room()
-          N.room = C.room
+          local R = new_room()
+          R:add_cell(C)
+          R:add_cell(N)
           return
         end
 
@@ -1562,8 +1564,71 @@ function Hex_add_rooms_DM()
   end
 
 
+  local function collect_possible_buds()
+    local list = {}
+
+    for cx = 1, HEX_W do
+    for cy = 1, top_H do
+      local C = HEX_CELLS[cx][cy]
+
+      if not fungible_cell(C) then continue end
+
+      local room_tab = {}  -- keys are ROOM objects, value is direction
+
+      for dir = 1,6 do
+        local dir2 = HEX_RIGHT[dir]
+
+        local N1 = C.neighbor[dir]
+        local N2 = C.neighbor[dir2]
+
+        if N1 and N1.room and N2 and N2.room and N1.room == N2.room then
+          room_tab[N1.room] = dir
+        end
+      end
+
+      each room,dir in room_tab do
+        local BUD =
+        {
+          C    = C
+          room = room
+          dir  = dir
+          prob = room.grow_prob
+        }
+
+        -- strong preference to grow along the path
+        if C.kind == "used" then
+          BUD.prob = BUD.prob * 5
+        end
+
+        table.insert(list, BUD)
+      end
+      
+    end -- cx, cy
+    end
+
+    return list
+  end
+
+
   local function grow_a_room()
-    -- TODO
+    local buds = collect_possible_buds()
+
+    -- nothing possible?  map must be completely filled...
+    if table.empty(buds) then return false end
+
+    local prob_tab = {}
+    for i = 1, #buds do
+      prob_tab[i] = buds[i].prob
+    end
+
+    local index = rand.index_by_probs(prob_tab)
+
+    local C = buds[index].C
+    local R = buds[index].room
+
+    R:add_cell(C)
+
+    return true
   end
 
 
@@ -1578,6 +1643,18 @@ function Hex_add_rooms_DM()
   Hex_kill_unused_rooms(room_list)
 
   LEVEL.rooms = room_list
+
+-- FIXME!!!
+for cx = 1, HEX_W do
+for cy = 1, top_H do
+  local C = HEX_CELLS[cx][cy]
+  if fungible_cell(C) then
+    stderrf("Missed : %s\n", C:tostr())
+    C.kind = "dead"
+  end
+end
+end
+
 end
 
 
@@ -3085,7 +3162,7 @@ function Hex_create_level()
   
   gui.printf("\n--==| Hexagonal Construction |==--\n\n")
 
-  LEVEL.CTF = true  -- FIXME  (OB_CONFIG.mode == "ctf")
+  LEVEL.CTF = (OB_CONFIG.mode == "ctf")
 
   Plan_choose_liquid()
 
