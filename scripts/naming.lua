@@ -217,7 +217,7 @@ namelib.NAMES =
         Lab=15, Laboratory=5,
         Station=20, Reactor=10, Tower=5,
         Refinery=15, Factory=10,
-        Gateway=10, Hanger=5, Outpost=10,
+        Gateway=10, Hangar=5, Outpost=10,
         Tunnels=10, Bunker=7, Facility=10,
         Gateway=5, Point=2, Turbine=3,
 
@@ -1033,7 +1033,7 @@ namelib.NAMES =
         Twilight=5, Midnight=5, Dreams=2,
         Tears=10, Helplessness=2, Misfortune=5,
         Misery=10, Turmoil=5, Decay=5,
-        Blood=10, Insanity=5, Delerium=2,
+        Blood=10, Insanity=5, Delirium=2,
         Sabotage=5, 
 
         -- residents
