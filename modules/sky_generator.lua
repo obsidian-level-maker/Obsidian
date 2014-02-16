@@ -164,6 +164,11 @@ SKY_GEN.colormaps =
     122, 120, 118, 116, 113
   }
 
+  DARKGREEN_HILLS =
+  {
+    0, 7, 127, 126, 125, 124
+  }
+
   HELL_HILLS =
   {
     0, 6, 47, 45, 43, 41, 39, 37, 35, 33
@@ -209,6 +214,12 @@ SKY_GEN.themes =
       GREENISH_HILLS = 30
       BLACK_HILLS = 5
     }
+
+    dark_hills =
+    {
+      DARKGREEN_HILLS = 50
+      DARKBROWN_HILLS = 50
+    }
   }
 
 
@@ -229,6 +240,12 @@ SKY_GEN.themes =
       BROWN_HILLS = 50
       DARKBROWN_HILLS = 50
       BLACK_HILLS = 50
+    }
+
+    dark_hills =
+    {
+      HELL_HILLS = 50
+      DARKBROWN_HILLS = 20
     }
   }
 
@@ -259,6 +276,8 @@ SKY_GEN.themes =
       WHITE_CLOUDS = 30
       HELLISH_CLOUDS = 20
     }
+
+    -- no dark_hills
   }
 }
 
@@ -298,15 +317,11 @@ function SKY_GEN.generate_skies()
     assert(EPI.sky_patch)
     assert(_index <= #theme_list)
 
-    if _index == starry_ep then
-      EPI.dark_prob = 90
-    else
-      EPI.dark_prob = 10
-    end
-
     local seed = int(gui.random() * 1000000)
 
     local squish = rand.index_by_probs({ 1, 4, 2 })
+
+    local is_starry = (_index == starry_ep)
 
 
     local theme_name = theme_list[_index]
@@ -328,10 +343,13 @@ function SKY_GEN.generate_skies()
     assert(theme.clouds)
     assert(theme.hills)
 
+    local hill_tab = theme.hills
+
 
     gui.fsky_create(256, 128, 0)
 
-    if _index == starry_ep then
+    if is_starry then
+
       --- Stars ---
 
       local name = "STARS"
@@ -341,10 +359,16 @@ function SKY_GEN.generate_skies()
         error("SKY_GEN: unknown colormap: " .. tostring(name))
       end
 
+      gui.printf("  %d = %s\n", _index, name)
+
       gui.set_colormap(1, colormap)
       gui.fsky_add_stars({ seed=seed, colmap=1 })
 
-      gui.printf("  %d = %s\n", _index, name)
+      if theme.dark_hills then
+        hill_tab = theme.dark_hills
+      end
+
+      EPI.dark_prob = 100  -- always, for flyingdeath
 
     else
       --- Clouds ---
@@ -358,19 +382,22 @@ function SKY_GEN.generate_skies()
         error("SKY_GEN: unknown colormap: " .. tostring(name))
       end
 
+      gui.printf("  %d = %s\n", _index, name)
+
       gui.set_colormap(1, colormap)
       gui.fsky_add_clouds({ seed=seed, colmap=1, squish=squish })
 
-      gui.printf("  %d = %s\n", _index, name)
+      EPI.dark_prob = 10
     end
 
 
     if rand.odds(80) then
+
       --- Hills ---
 
-      local name = rand.key_by_probs(theme.hills)
+      local name = rand.key_by_probs(hill_tab)
       -- don't use same one again
-      theme.hills[name] = nil
+      hill_tab[name] = hill_tab[name] / 1000
 
       local colormap = SKY_GEN.colormaps[name]
       if not colormap then
