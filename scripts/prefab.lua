@@ -214,6 +214,10 @@ function Build.door(S, side, z1, skin, skin2, tag, reversed)
   local door_h = skin.door_h or 112
   local door_info = add_pegging(get_mat(skin.door_w))
 
+  if door_h == 112 then
+    door_h = 128
+  end
+
   door_info.sec_tag = tag
   door_info.delta_z = -8
 
