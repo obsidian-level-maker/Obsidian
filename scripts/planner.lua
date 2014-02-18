@@ -48,7 +48,7 @@ function Plan_dump_rooms()
     if R.kind == "scenic" then return '=' end
     if R.kind == "cave" then return '/' end
     if not R.id then return '?' end
-    local n = 1 + (R.id % 26)
+    local n = 1 + ((R.id - 1) % 26)
     return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
   end
 
@@ -854,9 +854,9 @@ end
 
 function Plan_nudge_rooms()
   --
-  -- This resizes rooms by moving certain borders either one seed
-  -- outward or one seed inward.  There are various constraints,
-  -- in particular each room must remain a rectangle shape (so we
+  -- This resizes rooms by moving certain borders one seed outward
+  -- (hence shrinking a neigbor too).  There are various constraints,
+  -- in particular large room must remain a rectangle shape (so we
   -- disallow nudges that would create an L shaped room).
   --
 
@@ -867,6 +867,48 @@ function Plan_nudge_rooms()
     if side == 6 then K.sx2 = K.sx2 + dist end
 
     K.sw, K.sh = geom.group_size(K.sx1, K.sy1, K.sx2, K.sy2)
+  end
+
+
+  function shrink_would_disconnect(K, side)
+    -- compute new size of the section
+    local sx1, sy1 = K.sx1, K.sy1
+    local sx2, sy2 = K.sx2, K.sy2
+
+    if side == 2 then sy1 = sy1 + 1 end
+    if side == 8 then sy2 = sy2 - 1 end
+    if side == 4 then sx1 = sx1 + 1 end
+    if side == 6 then sx2 = sx2 - 1 end
+
+    for pass = 1,2 do
+      -- get neighbor above or below K (when side == 4 or 6)
+      local dir
+
+      if pass == 1 then
+        dir = geom.LEFT[side]
+      else
+        dir = geom.RIGHT[side]
+      end
+
+      local nx, ny = geom.nudge(K.kx, K.ky, dir)
+
+      if not Section_valid(nx, ny) then continue end
+
+      local K2 = LEVEL.sections[nx][ny]
+
+      if K2.room != K.room then continue end
+
+      if geom.is_vert(side) then
+        if sx2 < K2.sx1 then return true end
+        if sx1 > K2.sx2 then return true end
+      else
+        if sy2 < K2.sy1 then return true end
+        if sy1 > K2.sy2 then return true end
+      end
+      
+    end -- pass
+
+    return false
   end
 
 
@@ -958,9 +1000,12 @@ function Plan_nudge_rooms()
     -- don't make other section too small
     if geom.vert_sel(side, K2.sh, K2.sw) <= 3 then return end
 
-    -- OK, nudge it
+    -- prevent disconnection (only possible with caves)
     local opp = 10 - side
 
+    if shrink_would_disconnect(K2, opp) then return end
+
+    -- OK, nudge it
     do_nudge_section(K,  side, 1)
     do_nudge_section(K2, opp, -1)
 
