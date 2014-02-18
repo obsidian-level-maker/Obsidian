@@ -119,6 +119,9 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 	traps->selection_color(MY_GREEN);
 	traps->callback(callback_Traps, this);
 
+//FIXME !!!! does nothing, so hidden for now
+traps->hide();
+
 	setup_Traps();
 
 	add(traps);
