@@ -273,9 +273,11 @@ const char * UI_Level::size_syms[] =
 
 const char * UI_Level::outdoor_syms[] =
 {
+	// also used for Caves
+
 	"none",   "NONE",
 	"few",    "Rare",
-	"some",   "Medium",
+	"some",   "Some",
 	"heaps",  "Heaps",
 	"always", "Always",
 
@@ -287,11 +289,9 @@ const char * UI_Level::outdoor_syms[] =
 
 const char * UI_Level::trap_syms[] =
 {
-	// also used for: Secrets
-
 	"none",   "NONE",  
 	"few",    "Rare",
-	"some",   "Medium",
+	"some",   "Some",
 	"heaps",  "Heaps",
 
 	"mixed",  "Mix It Up",
