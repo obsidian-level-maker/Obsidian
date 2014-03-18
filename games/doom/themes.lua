@@ -2092,12 +2092,14 @@ DOOM1.THEMES =
 
     doors =
     {
-      wooden = 20
-      wooden_fast = 2
-      wooden_once = 5
       wooden2 = 20
       wooden2_fast = 2
       wooden2_once = 5
+
+-- These disabled (for now) since BIGDOOR6 is not tall enough
+--    wooden = 20
+--    wooden_fast = 2
+--    wooden_once = 5
     }
   }
 
