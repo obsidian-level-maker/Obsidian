@@ -34,6 +34,7 @@ cp -av Makefile.* $dest/
 
 mkdir $dest/lua_src
 cp -av lua_src/*.[chr]* $dest/lua_src
+cp -av lua_src/COPY* $dest/lua_src
 
 mkdir $dest/glbsp_src
 cp -av glbsp_src/*.[chr]* $dest/glbsp_src
