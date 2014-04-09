@@ -17,16 +17,11 @@ ______________________________________________________________________
 ______________________________________________________________________
 
 
-*  liquid areas (escapable too)
+*  escapable liquid areas
 
 *  support for Traps, Cages
 
 *  add in more scenery: lamps, computers etc
-
-
-*  proper install for Unix / Linux systems
-
-*  make a Debian package
 
 
 +  update Usage page:
@@ -543,11 +538,6 @@ IDEA: can compute the "toughness" of a monster palette by
       [assumes palette[m] is in range 0 to 1+, i.e. fraction]
 
 
-IDEA: give each monster a "class" field (e.g. class="undead")
-      and have a strong tendency to use the same class of
-      monster for the fodder in a room (or group of rooms).
-
-
 Starting Items:
 -  backpack (etc) chance is based on ep_along
 
@@ -555,14 +545,8 @@ Starting Items:
 Storage Rooms:
 -  actually use them for, um, storage
 
--  prefer adding weapons into these STORAGE rooms
-   (rather than another room in the quest, ESPECIALLY solution room)
-
 
 Weapons:
-+  update some games (Chex Quest etc) with 'level' fields,
-   removing 'rarity' fields and most 'start_prob' fields.
-
 -  update Immoral Conduct module too
 
 
@@ -808,8 +792,6 @@ Cancellation:
 
 -  Plutonia textures that have been changed:
      DBRAIN1..4  FIREBLU1..2  SW1SKULL
-
--  Plutonia has 'WFALL1..4' textures for water
 
 
 ----------------------------------------------
