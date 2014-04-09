@@ -103,10 +103,9 @@ static void ShowInfo()
 	);
 
 	printf(
-		"This program is free software, under the terms of the GNU General\n"
-		"Public License, and comes with ABSOLUTELY NO WARRANTY.  See the\n"
-		"documentation for more details, or visit the following web page:\n"
-		"   http://www.gnu.org/licenses/gpl.html\n"
+		"This program is free software, under the terms of the GNU General Public\n"
+		"License, and comes with ABSOLUTELY NO WARRANTY.  See the documentation\n"
+		"for more details, or visit http://www.gnu.org/licenses/gpl-2.0.txt\n"
 		"\n"
 	);
 }
