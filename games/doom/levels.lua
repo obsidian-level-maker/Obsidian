@@ -241,18 +241,21 @@ DOOM1.PREBUILT_LEVELS =
   {
     { prob=50,  file="doom1_boss/anomaly1.wad", map="E1M8" }
     { prob=50,  file="doom1_boss/anomaly2.wad", map="E1M8" }
-    { prob=150, file="doom1_boss/anomaly3.wad", map="E1M8" }
+    { prob=100, file="doom1_boss/anomaly3.wad", map="E1M8" }
+    { prob=200, file="doom1_boss/ult_anomaly.wad", map="E1M8" }
   }
 
   E2M8 =
   {
-    { prob=40, file="doom1_boss/tower1.wad", map="E2M8" }
-    { prob=80, file="doom1_boss/tower2.wad", map="E2M8" }
+    { prob=40,  file="doom1_boss/tower1.wad", map="E2M8" }
+    { prob=60,  file="doom1_boss/tower2.wad", map="E2M8" }
+    { prob=100, file="doom1_boss/ult_tower.wad", map="E2M8" }
   }
 
   E3M8 =
   {
-    { prob=50, file="doom1_boss/dis1.wad", map="E3M8" }
+    { prob=50,  file="doom1_boss/dis1.wad", map="E3M8" }
+    { prob=100, file="doom1_boss/ult_dis.wad", map="E3M8" }
   }
 
   E4M6 =

@@ -15,8 +15,8 @@ Chris Pisarczyk (Mr. Chris)
   - DOOM prefabs
   - Skulltag Monsters module
   - ZDoom Beastiary module
-  - DOOM 1 boss maps (E1M8, E2M8, E3M8)
-  - DOOM 2 "dead simple" boss map
+  - DOOM 1 boss maps (most of them in fact)
+  - DOOM 2 boss maps (e.g. "dead simple" one)
   - DOOM 1/2 theming
   - additions to name generator
   - lots of useful feedback
