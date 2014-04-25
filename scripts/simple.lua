@@ -244,6 +244,7 @@ function Simple_generate_cave(R)
         else
           S.border[dir].kind = "cave_wall"
           S.border[dir].w_tex = cave_tex
+          S.thick [dir] = 48
         end
       end
     end
@@ -1785,6 +1786,26 @@ function Simple_render_cave(R)
   end
 
 
+  local function do_spot_border(S, side)
+    local B     = S.border[side]
+    local thick = S.thick[side]
+
+    if not B.kind then return end
+
+    local x1, y1 = S.x1, S.y1
+    local x2, y2 = S.x2, S.y2
+
+    if side == 2 then y2 = y1 + thick end
+    if side == 8 then y1 = y2 - thick end
+    if side == 4 then x2 = x1 + thick end
+    if side == 6 then x1 = x2 - thick end
+
+    local poly = brushlib.quad(x1, y1, x2, y2)
+
+    gui.spots_fill_poly(poly, SPOT_WALL)
+  end
+
+
   local function do_spot_decor(dec)
     local poly = brushlib.quad(dec.x1, dec.y1, dec.x2, dec.y2)
 
@@ -1835,13 +1856,27 @@ function Simple_render_cave(R)
     end
     end
 
-    -- step 3 : remove importants
+    -- step 3 : handle connections and "cave_wall" borders
+
+    for sx = R.sx1, R.sx2 do
+    for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
+
+      if S.room == R then
+        for dir = 2,8,2 do
+          do_spot_border(S, dir)
+        end
+      end
+    end
+    end
+
+    -- step 4 : remove importants
 
     each imp in R.cave_imps do
       do_spot_important(imp)
     end
 
-    -- step 4 : remove decorations
+    -- step 5 : remove decorations
 
     if A.decorations then
       each dec in A.decorations do
