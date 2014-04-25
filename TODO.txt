@@ -6,8 +6,6 @@ OBLIGE TODO
 BUG: outdoor border placed next to an outdoor lake -- no wall is
      placed between them, can give a gap for the player to walk.
 
-BUG: traps are sometimes empty (support 'trap=true' in lua defs)
-
 BUG (WIN32): copy seed value and paste into filename --> crash.
 
 
@@ -50,7 +48,61 @@ ______________________________________________________________________
 -  Harmony
 -  Chex Quest 3
 
-?  Doom64 EX
+
+----------------------------------------------
+  V6 STUFF
+----------------------------------------------
+
+!!  coop player can be stuck in "cave_wall"
+
+!!  torches in a cave can obstruct the player
+
++  a secret exit may not be possible due to reserved room
+   becoming surrounded by scenic rooms (from connection logic).
+   
+   Need to review/rework connection logic.
+
++  intrusions: like "junking" a side, but connects two other rooms
+   (they are really just a hallway, but merging itself with the
+    neighboring room as much as possible)
+
++  sky-halls (variation of the above, no?)
+
++  closets (as in V4 / V5)
+
++  get stairwells working again, have outdoor version w/ rails
+
++  apply nice items gotten in normal rooms to the HMODEL
+
+
+-  ability to centre doors (on two seeds)
+
+-  if room before exit room (a) has no locked doors (b) is not small
+   and (c) exit room is small, then put guard monster there.
+
+-  improve guard_mon_prob() logic -- take control module into account
+
+-  reserved rooms: can turn into caves (if large + styles)
+
+-  if few caves (total svolume < N), use same wall over whole level
+
+-  improve connection logic out of cave rooms
+   (primary criterion should be distance from other conns)
+
+
+-  certain cases in DM_AlignTextures don't work well, especially
+   an upper where a crate straddles the periph (but does not directly
+   overlap any linedefs).
+
+-  in 2x2 rooms, place key/switch in middle of room
+   [ monster/item spots are the hard part ]
+
+-  outdoor fences should straddle both rooms
+   (but need to handle corners and T junctions)
+
+-  wider arches: be good to make them TALLER too
+
+-  ensure normal doors are usually monster-openable, secret doors not
 
 
 ----------------------------------------------

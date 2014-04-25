@@ -2,61 +2,12 @@
 WORK IN PROGRESS
 ================
 
+!!  escapable nukage pits
+
++  outdoor torches / prefabs for dark maps 
 
 +  rejig the TODO.txt
 
-+  improve DOOM 2 themes
-
-
-
-Monsters
-
--  later levels should not always have a Cyberdemon as a
++  later levels should not always have a Cyberdemon as a
    guard monster -- especially in "weak" mode.
-
--  improve guard_mon_prob() logic -- take control module into account
-
-+  fix monsters stuck in "cave_wall", also doorways into cave
-
-
-
-Later
-=====
-
-+  intrusions: like "junking" a side, but connects two other rooms
-   (they are really just a hallway, but merging itself with the
-    neighboring room as much as possible)
-
-+  sky-halls (variation of the above, no?)
-
-+  closets (as in V4 / V5)
-
-+  get stairwells working again, have outdoor version w/ rails
-
-+  apply nice items gotten in normal rooms to the HMODEL
-
-
--  reserved rooms: can turn into caves (if large + styles)
-
--  if few caves (total svolume < N), use same wall over whole level
-
--  improve connection logic out of cave rooms
-   (primary criterion should be distance from other conns)
-
--  certain cases in DM_AlignTextures don't work well, especially
-   an upper where a crate straddles the periph (but does not directly
-   overlap any linedefs).
-
--  ability to centre doors (on two seeds)
-
-
--  in 2x2 rooms, place key/switch in middle of room
-   [ monster/item spots are the hard part ]
-
--  outdoor fences should straddle both rooms
-   (but need to handle corners and T junctions)
-
--  wider arches: be good to make them TALLER too
-
--  ensure normal doors are usually monster-openable, secret doors not
 
