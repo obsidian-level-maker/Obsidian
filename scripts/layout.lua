@@ -1704,6 +1704,67 @@ end
 
 
 
+function Layout_escape_from_pits(R)
+
+  local function collect_pits()
+    local list = {}
+
+    -- TODO
+
+    return list
+  end
+
+
+  local function add_escape(pit)
+    local diff_h = pit.floor_h - pit.liquid_h
+
+    if diff_h <= PARAM.jump_height then
+      -- nothing needed : player can walk/jump out
+      return
+    end
+
+    local brush = brushlib.quad(pit.bx1, pit.by1, pit.bx2, pit.by2)
+
+    if diff_h <= (PARAM.jump_height * 2) then
+      -- a single stair will suffice
+
+      brushlib.add_top(brush, pit.liquid_h + int(diff_h / 2))
+      brushlib.set_mat(brush, "FLAT1", "FLAT1")
+
+      Trans.brush(brush)
+
+    else
+      -- need a lift?
+
+      brushlib.add_top(brush, pit.floor_h - 12)
+      brushlib.set_mat(brush, "SUPPORT2", "SUPPORT2")
+
+      local tag = Plan_alloc_id("tag")
+
+      local top = brushlib.get_top(brush)
+      top.tag = tag
+
+      each C in brush do
+        if C.x then
+          C.special = 62  -- FIXME : game specific
+          C.tag = tag
+        end
+      end
+
+      Trans.brush(brush)
+    end
+  end
+
+
+  ---| Layout_escape_from_pits |---
+
+  each pit in collect_pits() do
+    add_escape(pit)
+  end
+end
+
+
+
 function Layout_add_cages(R)
   local  junk_list = {}
   local other_list = {}
@@ -2605,6 +2666,8 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   Layout_set_floor_minmax(R)
 
   post_processing()
+
+  Layout_escape_from_pits(R)
 
 
   --- place importants ---
