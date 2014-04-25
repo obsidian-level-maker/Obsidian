@@ -1706,10 +1706,59 @@ end
 
 function Layout_escape_from_pits(R)
 
+  local function find_neighbor_pit(S)
+    for dir = 2,8,2 do
+      local N = S:neighbor(dir)
+
+      if N.room != R then continue end
+      if N.kind != "liquid" then continue end
+
+      if N.slime_pit then
+        return N.slime_pit
+      end
+    end
+
+    return nil  -- none
+  end
+
+
+  local function new_pit()
+    local PIT =
+    {
+      id = Plan_alloc_id("slime_pit")
+    }
+
+    return PIT
+  end
+
+
+  local function add_seed_to_pit(pit, S)
+    S.slime_pit = pit
+
+    -- FIXME
+  end
+
+
   local function collect_pits()
     local list = {}
 
-    -- TODO
+    for sx = R.sx1, R.sx2 do
+    for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
+
+      if S.room != R then continue end
+      if S.kind != "liquid" then continue end
+
+      local pit = find_neighbor_pit(S)
+
+      if not pit then
+        pit = new_pit()
+        table.insert(list, pit)
+      end
+
+      add_seed_to_pit(pit, S)
+    end
+    end
 
     return list
   end
