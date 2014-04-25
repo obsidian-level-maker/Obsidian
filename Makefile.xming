@@ -15,7 +15,7 @@ LIB_LOC=lib_win32
 OBJ_DIR=obj_win32
 
 FLTK_DIR=$(LIB_LOC)/fltk-1.3.2
-ZLIB_DIR=$(LIB_LOC)/zlib-1.2.3
+ZLIB_DIR=$(LIB_LOC)/zlib-1.2.6
 
 OPTIMISE=-O2
 
