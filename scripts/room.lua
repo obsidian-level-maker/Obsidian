@@ -845,6 +845,9 @@ function Room_reckon_doors()
       N.border[N.conn_dir] = B2
     end
 
+    S.thick[S.conn_dir] = 40
+    N.thick[N.conn_dir] = 40
+
     -- locked door?
 
     if C.lock then
@@ -957,6 +960,7 @@ function Room_border_up()
       else
         S.border[side].kind = "cave_wall"
         S.border[side].w_tex = R2.main_tex
+        S.thick[side] = 48
       end
 
     elseif R1.kind == "cave" and R2.is_outdoor then
@@ -3808,40 +3812,51 @@ end
 function Room_find_monster_spots(R)
 
   local function add_small_mon_spot(S, h_diff)
-    -- FIXME: take walls (etc) into consideration
+    local x1 = S.x1 + S.thick[4] + 8
+    local y1 = S.y1 + S.thick[2] + 8
+    local x2 = S.x2 - S.thick[6] - 8
+    local y2 = S.y2 - S.thick[8] - 8
 
-    local mx, my = S:mid_point()
+    assert(x2 > x1 and y2 > y1)
 
     table.insert(R.mon_spots,
     {
       S=S, score=gui.random(),  -- FIXME score
 
-      x1=mx-64, y1=my-64, z1=(S.floor_h or 0),
-      x2=mx+64, y2=my+64, z2=(S.floor_h or 0) + h_diff,
+      x1=x1, y1=y1, z1=(S.floor_h or 0),
+      x2=x2, y2=y2, z2=(S.floor_h or 0) + h_diff,
     })
 
-    SEEDS[S.sx][S.sy].no_monster = true
+    S.no_monster = true
   end
 
 
   local function add_large_mon_spot(S, h_diff)
-    -- FIXME: take walls (etc) into consideration
+    local S2 = SEEDS[S.sx + 1][S.sy]
+    local S3 = SEEDS[S.sx]    [S.sy + 1]
+    local S4 = SEEDS[S.sx + 1][S.sy + 1]
 
-    local mx, my = S.x2, S.y2
+    local x1 = S.x1 + 16 + math.max(S.thick[4], S3.thick[4])
+    local y1 = S.y1 + 16 + math.max(S.thick[2], S2.thick[2])
+
+    local x2 = S4.x2 - 16 - math.max(S2.thick[6], S4.thick[6])
+    local y2 = S4.y2 - 16 - math.max(S3.thick[8], S4.thick[8])
+
+    assert(x2 > x1 and y2 > y1)
 
     table.insert(R.mon_spots,
     {
       S=S, score=gui.random(),  -- FIXME score
 
-      x1=mx-128, y1=my-128, z1=(S.floor_h or 0),
-      x2=mx+128, y2=my+128, z2=(S.floor_h or 0) + h_diff,
+      x1=x1, y1=y1, z1=(S.floor_h or 0),
+      x2=x2, y2=y2, z2=(S.floor_h or 0) + h_diff,
     })
 
     -- prevent other seeds in 2x2 group from being used
-    SEEDS[S.sx  ][S.sy  ].no_monster = true
-    SEEDS[S.sx+1][S.sy  ].no_monster = true
-    SEEDS[S.sx  ][S.sy+1].no_monster = true
-    SEEDS[S.sx+1][S.sy+1].no_monster = true
+    S .no_monster = true
+    S2.no_monster = true
+    S3.no_monster = true
+    S4.no_monster = true
   end
 
 
