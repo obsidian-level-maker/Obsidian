@@ -1706,22 +1706,6 @@ end
 
 function Layout_escape_from_pits(R)
 
-  local function find_neighbor_pit(S)
-    for dir = 2,8,2 do
-      local N = S:neighbor(dir)
-
-      if N.room != R then continue end
-      if N.kind != "liquid" then continue end
-
-      if N.slime_pit then
-        return N.slime_pit
-      end
-    end
-
-    return nil  -- none
-  end
-
-
   local function new_pit()
     local PIT =
     {
@@ -1729,6 +1713,56 @@ function Layout_escape_from_pits(R)
     }
 
     return PIT
+  end
+
+
+  local function merge_pits(pit1, pit2)
+    if pit1.cost and pit2.cost and pit2.cost < pit1.cost then
+      pit1, pit2 = pit2, pit1
+    end
+
+    -- kill the other pit
+    pit2.id = "dead"
+    pit2.liquid_h = nil
+    pit2.out_h = nil
+
+    for sx = R.sx1, R.sx2 do
+    for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
+
+      if S.slime_pit == pit2 then
+         S.slime_pit = pit1
+      end
+    end
+    end
+
+    -- return the kept one
+    return pit1
+  end
+
+
+  local function find_neighbor_pit(S)
+    local pit
+
+    for dir = 2,8,2 do
+      local N = S:neighbor(dir)
+
+      if N.room != R then continue end
+      if N.kind != "liquid" then continue end
+
+      if not N.slime_pit then continue end
+
+      if pit == N.slime_pit then continue end
+
+      if pit then
+        -- we have found two different pits, need to merge them
+        pit = merge_pits(pit, N.slime_pit)
+      else
+        pit = N.slime_pit
+      end
+    end
+
+    return pit
   end
 
 
@@ -1892,7 +1926,9 @@ function Layout_escape_from_pits(R)
   ---| Layout_escape_from_pits |---
 
   each pit in collect_pits() do
-    add_escape(pit)
+    if pit.id != "dead" then
+      add_escape(pit)
+    end
   end
 end
 
