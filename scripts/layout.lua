@@ -1873,8 +1873,9 @@ function Layout_escape_from_pits(R)
 
       local tag = Plan_alloc_id("tag")
 
-      local top = brushlib.get_top(brush)
-      top.tag = tag
+      each C in brush do
+        if C.t then C.tag = tag end
+      end
 
       each C in brush do
         if C.x then
