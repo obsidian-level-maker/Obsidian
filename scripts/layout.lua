@@ -1792,7 +1792,12 @@ function Layout_escape_from_pits(R)
       return
     end
 
-    cost = cost + diff_h 
+    -- disabled the following cost, which prefers to place the step
+    -- out to the lowest height around.  Without this, the placement
+    -- is less predictable.
+    if false then
+      cost = cost + diff_h 
+    end
 
     -- tie breaker
     cost = cost + gui.random()
@@ -1809,7 +1814,7 @@ function Layout_escape_from_pits(R)
 
       local mx, my = S:mid_point()
 
-      local long = 96
+      local long = 64
       local deep = 24
 
       if geom.is_vert(dir) then
@@ -1872,7 +1877,7 @@ function Layout_escape_from_pits(R)
   end
 
 
-  local function add_escape(pit)
+  local function build_escape(pit)
     -- check for invalid pits
     if pit.out_h  == nil or
        pit.liquid_h == nil or
@@ -1895,7 +1900,7 @@ function Layout_escape_from_pits(R)
       -- a single stair will suffice
 
       brushlib.add_top(brush, pit.liquid_h + int(diff_h / 2))
-      brushlib.set_mat(brush, "FLAT1", "FLAT1")
+      brushlib.set_mat(brush, "METAL", "METAL")
 
       Trans.brush(brush)
 
@@ -1927,7 +1932,7 @@ function Layout_escape_from_pits(R)
 
   each pit in collect_pits() do
     if pit.id != "dead" then
-      add_escape(pit)
+      build_escape(pit)
     end
   end
 end
