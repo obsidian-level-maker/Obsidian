@@ -1732,10 +1732,84 @@ function Layout_escape_from_pits(R)
   end
 
 
+  local function evaluate_escape_pod(pit, S, dir, N)
+    local cost
+
+    if N.kind == "walk" then
+      cost = 0
+---##    elseif N.kind == "stair" then
+---##      cost = 80
+    else
+      -- not walkable
+      return
+    end
+
+    -- don't want to bump into a pillar or switch
+    if N.content then
+      cost = cost + 20
+    end
+
+    -- determine floor height once we get out
+    local out_h = assert(N.floor_h)
+
+    local diff_h = out_h - pit.liquid_h
+
+    if diff_h < 4 then
+      return
+    end
+
+    cost = cost + diff_h 
+
+    -- tie breaker
+    cost = cost + gui.random()
+
+    -- replace current pod with new one if better
+    if not pit.cost or (cost < pit.cost) then
+      pit.cost = cost
+      pit.out_h = out_h
+      pit.S = S
+      pit.dir = dir
+      
+      -- coordinates for the step / lift
+      local x1, y1, x2, y2
+
+      local mx, my = S:mid_point()
+
+      local long = 96
+      local deep = 24
+
+      if geom.is_vert(dir) then
+        x1, x2 = mx - long/2, mx + long/2
+      else
+        y1, y2 = my - long/2, my + long/2
+      end
+
+      if dir == 2 then y1 = S.y1 ; y2 = y1 + deep end
+      if dir == 8 then y2 = S.y2 ; y1 = y2 - deep end
+      if dir == 4 then x1 = S.x1 ; x2 = x1 + deep end
+      if dir == 6 then x2 = S.x2 ; x1 = x2 - deep end
+
+      assert(x1 and x2 and y1 and y2)
+
+      pit.bx1 = x1 ; pit.by1 = y1
+      pit.bx2 = x2 ; pit.by2 = y2
+    end
+  end
+
+
   local function add_seed_to_pit(pit, S)
     S.slime_pit = pit
 
-    -- FIXME
+    pit.liquid_h = math.min(S.floor_h, pit.liquid_h or 999)
+
+    -- check neighbors for a floor spot
+    for dir = 2,8,2 do
+      local N = S:neighbor(dir)
+
+      if N.room != R then continue end
+
+      evaluate_escape_pod(pit, S, dir, N)
+    end
   end
 
 
@@ -1765,7 +1839,16 @@ function Layout_escape_from_pits(R)
 
 
   local function add_escape(pit)
-    local diff_h = pit.floor_h - pit.liquid_h
+    -- check for invalid pits
+    if pit.out_h  == nil or
+       pit.liquid_h == nil or
+       pit.bx1 == nil
+    then
+      warning("unescapable pit in %s\n", R:tostr())
+      return
+    end
+
+    local diff_h = pit.out_h - pit.liquid_h
 
     if diff_h <= PARAM.jump_height then
       -- nothing needed : player can walk/jump out
@@ -1785,7 +1868,7 @@ function Layout_escape_from_pits(R)
     else
       -- need a lift?
 
-      brushlib.add_top(brush, pit.floor_h - 12)
+      brushlib.add_top(brush, pit.out_h - 12)
       brushlib.set_mat(brush, "SUPPORT2", "SUPPORT2")
 
       local tag = Plan_alloc_id("tag")

@@ -22,7 +22,7 @@
 
 class SEED
 {
-  sx, sy, sz  -- location in seed map
+  sx, sy  -- location in seed map
 
   room : ROOM
 
