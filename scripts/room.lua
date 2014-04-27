@@ -2469,11 +2469,17 @@ function Room_add_crates(R)
     return true
   end
 
+
   local function find_spots()
     local list = {}
 
-    for x = R.tx1, R.tx2-1 do
-    for y = R.ty1, R.ty2-1 do
+    local tx1 = R.tx1 or R.sx1
+    local ty1 = R.ty1 or R.sy1
+    local tx2 = R.tx2 or R.sx2
+    local ty2 = R.ty2 or R.sy2
+
+    for x = tx1, tx2-1 do
+    for y = ty1, ty2-1 do
       local S = SEEDS[x][y]
 
       if S.room == R and S.kind == "walk" and S.floor_h then
@@ -2488,41 +2494,102 @@ function Room_add_crates(R)
   end
 
 
+  local function mark_spot(S)
+    S.solid_corner = true
+  end
+
+
+  local function get_entity_coord(S, delta)
+    local x = S.x2 + rand.irange(-delta, delta)
+    local y = S.y2 + rand.irange(-delta, delta)
+
+    return x, y, S.floor_h
+  end
+
+
+  local function add_outdoor_torches()
+    if not (LEVEL.is_dark or rand.odds(5)) then return end
+
+    local torch_names = THEME.outdoor_torches or THEME.cave_torches
+    if not torch_names then return end
+
+    local torch_ent = rand.key_by_probs(torch_names)
+
+    local chance = rand.pick({ 15, 25, 35 })
+
+    each spot in find_spots() do
+      if rand.odds(chance) then
+        mark_spot(spot.S)
+        local x, y, z = get_entity_coord(spot.S, 16)
+        entity_helper(torch_ent, x, y, z, { light=192, factor=1.2 })
+      end
+    end
+  end
+
+
+  local function add_barrels()
+    if not GAME.ENTITIES["barrel"] then return end
+
+    local chance = THEME.barrel_prob or 3
+
+    each spot in find_spots() do
+      if rand.odds(chance) then
+        mark_spot(spot.S)
+        for loop = 1, rand.sel(75, 1, 2) do
+          local x, y, z = get_entity_coord(spot.S, 20)
+          entity_helper("barrel", x, y, z)
+        end
+      end
+    end
+  end
+
+
+  local function add_crates()
+    if STYLE.crates == "none" then return end
+
+    local skin
+    local skin_names
+
+    if R.is_outdoor then
+      -- FIXME: don't separate them
+      skin_names = THEME.out_crates
+    else
+      skin_names = THEME.crates
+    end
+
+    if not skin_names then return end
+    skin = assert(GAME.CRATES[rand.key_by_probs(skin_names)])
+
+    local chance
+
+    if STYLE.crates == "heaps" then
+      chance = sel(R.is_outdoor, 25, 40)
+      if rand.odds(20) then chance = chance * 2 end
+    else
+      chance = sel(R.is_outdoor, 15, 25)
+      if rand.odds(10) then chance = chance * 3 end
+    end
+
+    each spot in find_spots() do
+      if rand.odds(chance) then
+        mark_spot(spot.S)
+        local z_top = spot.S.floor_h + (skin.h or 64)
+        Build.crate(spot.S.x2, spot.S.y2, z_top, skin, R.is_outdoor)
+      end
+    end
+  end
+
+
   --| Room_add_crates |--
 
-  if STYLE.crates == "none" then return end
-
-  if not (R.kind == "building" or R.kind == "outdoor") then return end
-
-  local skin
-  local skin_names
-
-  if R.is_outdoor then
-    -- FIXME: don't separate them
-    skin_names = THEME.out_crates
-  else
-    skin_names = THEME.crates
+  if R.kind == "outdoor" then
+    add_outdoor_torches()
   end
 
-  if not skin_names then return end
-  skin = assert(GAME.CRATES[rand.key_by_probs(skin_names)])
+  add_barrels()
 
-  local chance
-
-  if STYLE.crates == "heaps" then
-    chance = sel(R.is_outdoor, 25, 40)
-    if rand.odds(20) then chance = chance * 2 end
-  else
-    chance = sel(R.is_outdoor, 15, 25)
-    if rand.odds(10) then chance = chance * 3 end
-  end
-
-  each spot in find_spots() do
-    if rand.odds(chance) then
-      spot.S.solid_corner = true
-      local z_top = spot.S.floor_h + (skin.h or 64)
-      Build.crate(spot.S.x2, spot.S.y2, z_top, skin, R.is_outdoor)
-    end
+  if R.kind == "building" or R.kind == "outdoor" then
+    add_crates()
   end
 end
 

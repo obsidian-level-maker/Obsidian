@@ -241,6 +241,13 @@ DOOM2.THEMES =
       arach   = 1.5
     }
 
+    outdoor_torches =
+    {
+      lamp   = 10
+      mercury_lamp = 40
+      short_lamp   = 40
+    }
+
     style_list =
     {
       naturals = { none=30, few=70, some=30, heaps=2 }
@@ -891,6 +898,14 @@ DOOM2.THEMES =
       CEMENT7 = 5
       CEMENT9 = 5
       METAL2 = 3
+    }
+
+    outdoor_torches =
+    {
+      blue_torch = 50
+      candelabra = 30
+      skull_rock = 30
+      burning_barrel = 10
     }
 
     monster_prefs =
