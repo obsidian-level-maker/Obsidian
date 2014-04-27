@@ -11,6 +11,7 @@ The Good
 + secret rooms, with nice items to get
 + more varied monsters, guard monsters
 + better health calculation (no more mountains of it)
++ escapable slime pits
 
 
 The Bad
@@ -29,6 +30,7 @@ Contributions
 + new E2M8 and MAP07 boss maps, thanks to Mr. Chris
 + new E1M8 boss map, contributed by SylandroProbopas
 + variations of MAP30 boss map, courtesy Mr. Chris
++ DOOM 1 "Ultra" boss maps, by Mr. Chris
 
 
 Other Changes
@@ -40,7 +42,7 @@ Other Changes
 - the occasional dark outdoor level
 
 - better quests, often need to _find_ weapons and armor
-- Co-op: sometimes players start in different rooms
+- co-op: sometimes players start in different rooms
 - improved Sky generator module
 - some cave improvements
 

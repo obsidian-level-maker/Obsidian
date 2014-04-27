@@ -15,8 +15,6 @@ ______________________________________________________________________
 ______________________________________________________________________
 
 
-*  escapable liquid areas
-
 *  support for Traps, Cages
 
 *  add in more scenery: lamps, computers etc
