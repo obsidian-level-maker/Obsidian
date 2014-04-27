@@ -2,12 +2,8 @@
 WORK IN PROGRESS
 ================
 
-!!  escapable nukage pits
-
-+  outdoor torches / prefabs for dark maps 
-
-+  rejig the TODO.txt
-
 +  later levels should not always have a Cyberdemon as a
    guard monster -- especially in "weak" mode.
+
+-  rejig the TODO.txt
 
