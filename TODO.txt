@@ -2,13 +2,6 @@
 OBLIGE TODO
 ===========
 
-
-BUG: outdoor border placed next to an outdoor lake -- no wall is
-     placed between them, can give a gap for the player to walk.
-
-BUG (WIN32): copy seed value and paste into filename --> crash.
-
-
 ______________________________________________________________________
 
   HIGH PRIORITY
@@ -22,6 +15,9 @@ ______________________________________________________________________
 
 +  update Usage page:
    -  the 'Seed' setting is no longer first
+
+
+BUG (WIN32): copy seed value and paste into filename --> crash.
 
 
 ______________________________________________________________________
@@ -106,6 +102,9 @@ ______________________________________________________________________
 ----------------------------------------------
   LEVEL STUFF
 ----------------------------------------------
+
+BUG: outdoor border placed next to an outdoor lake -- no wall is
+     placed between them, can give a gap for the player to walk.
 
 
 ?  "Steepness" option in level control module
@@ -580,25 +579,6 @@ Mazes:
    all the monsters close to each other, perhaps even
    have swarm patterns.
 
-IDEA: can compute the "toughness" of a monster palette by
-        each m in palette do sum += palette[m] * m.toughness end
-
-      hence could adjust a randomly chosen palette until the
-      toughness matches what is needed in a room/zone/level.
-      [assumes palette[m] is in range 0 to 1+, i.e. fraction]
-
-
-Starting Items:
--  backpack (etc) chance is based on ep_along
-
-
-Storage Rooms:
--  actually use them for, um, storage
-
-
-Weapons:
--  update Immoral Conduct module too
-
 
 ----------------------------------------------
   MISCELLANEOUS
@@ -610,20 +590,9 @@ Weapons:
 
 +  One-way Routes (see doc/Various_Notes.txt)
 
-+  system for texture coordinates:
-
-     x_offset is alternate term for u1  [u2 can be absent]
-     y_offset is alternate term for v1 or v2  (depends on 'peg' flag)
-
-+  DOORS (LOCKED TOO) in a whole mini-hall
-
 IDEA: GAME.SCOPED_VARS table which is like styles but (a) fields can
       be used in prefabs (b) a _scope field can be "zone", "level",
       "room", "episode" -- value remains constant over that scope.
-
-IDEA:  replaceable brushes in prefabs.
-       Use this mechanism to place windows and pictures
-       (especially in hallways)
 
 IDEA: "weak texturing" (especially on floors) which will try to
       use a texturing from adjoining floor (via a certain side).
@@ -634,22 +603,11 @@ IDEA: "weak texturing" (especially on floors) which will try to
 
 -  outdoor wall extender: 64x64 block with torch on top
 
--  fix for ugly sky in outdoor room near a hallway
-   (mark those seeds, detect in from_edge pass)
-
--  try position-based monster ordering for fight simulator
-
--  in a large (multi-section) room, if any section has no "events"
-   (a connection or switch or key or major item) then give it a
-   nice pickup item (etc) or at least a walk space.
-
 -  "mini stairs" : two areas have largish height diff (2-4 * step)
    and the "stair" is a short intrusion in the side of the lower
    chunk (say no more than 32 units deep, a prefab).
 
--  3D bridges can be 3D stairs [use better area touching rule]
-
--  3D chunk stuff : use z_low and z_high fields
+-  3D stairs
 
 -  double or triple switches: each one raises a 24 unit stair,
    but player can only traverse stairs when ALL are raised.
@@ -657,28 +615,13 @@ IDEA: "weak texturing" (especially on floors) which will try to
 
 -  ensure sky heights are higher than neighboring indoor rooms.
 
--  prevent escapes over fences/windows near key pedestals (etc) by
-   raising the height of the fences/windows there.
-
-DONE: brush conditionals:  if_true="?doomy"  if_false="?foobie"
-
--  IDEA: size conditionals : only_if_x=">320"  (really >= 320)
-                             only_if_z="<128"
-
--  ARCH_W_WINDOW prefab (window above archway)
-
--  can disable the pre-built levels
+-  prefab with window above archway (for Quake etc)
 
 -  smarter choosing health items, especially when health target is very high
 
 -  rarity for bfg10k and railgun for Skulltag
 
--  lifts often assume meshing up at 90 degree turns
-
 -  IDEA: STYLE to control # of lifts
-
--  IDEA: levels get inherently tougher to beat over a megawad
-         [assume player's skill increases].
 
 +  Music Re-ordering (see doc/Various_Notes.txt)
 
@@ -687,26 +630,12 @@ DONE: brush conditionals:  if_true="?doomy"  if_false="?foobie"
    read a directory.
 
 
-+  diagonal chunks
-
 -  exit via teleporter pad or holes in floor
 
 -  raising bridges (activate by a switch)
 
-+  put in some Cyberdemons or Spider Masterminds
-
--  IDEA: treat groups of rooms (esp: multi starts and forked
-         paths) as a SINGLE BATTLE ARENA.
-
 -  cage monsters: don't put hitscan snipers up really high.
 
-
--  in some (esp. large) rooms, sometimes try to always go up 
-   or always go down.  Rarely: do it for whole level
-
--  CSG: clipping rectangles (typically a room)
-
--  friendly monsters
 
 -  a module to randomly change DOOM monster / weapon stats via
    DEHACKED / DDF / DECORATE.
@@ -720,10 +649,8 @@ Secrets:
 -  fix battle simulator to ignore stuff got in secrets
    (push state onto stack, pop afterwards).
 
--  different item probs, e.g. invuln & berserk are good
 
-
-Co-op mode:
+Co-op IDEA:
 -  "checkpoint" areas that players pass through, with loads of
    ammunition or health, enough to allow players to restock
 
@@ -738,25 +665,19 @@ Name generator:
   GUI and C++ CODE
 ----------------------------------------------
 
-+  an option for more compact GUI (fit on 640x480 screen)
++  use OpenMP to speed up DOOM lighting algorithm
 
--  ability to specify log file: --log option
++  ability to specify log file: --log option
+
+-  an option for more compact GUI (fit on 640x480 screen)
 
 -  simplify ui_chooser logic --> use Fl_Native_File_Chooser
 
-IDEA:
-  - move main loop of OBLIGE into Lua (e.g. ob_main_loop)
-  - C++ can queue commands to perform, fetched by the Lua loop
-    (this is only mechanism for C++ to "call" Lua code)
-  ? the console is a text-based interface whereas the GUI
-    is the graphical interface, both using the same mechanism.
-  - build the debugger using Lua
-
 Console:
-  +  display lists better
+  -  display lists better
 
 Cancellation:
-  +  can abort monster code (Fight sim) midstream 
+  -  can abort monster code (Fight sim) midstream 
   -  can abort CSG_BSP() midstream
   -  can abort DOOM / Duke processing midstream
   -  can abort Quake I / II BSP generation midstream
@@ -781,8 +702,6 @@ Cancellation:
   DOOM and DOOM II
 ----------------------------------------------
 
->> for DOOM 1, have a separate theme for Episode 2
-
 +  support MAPINFO lumps (especially for ZDoom ports).
 
 -  support for the DECORATE lump
@@ -798,22 +717,23 @@ Cancellation:
    (use legacy method for GZDoom and Skulltag)
 
 -  support per-map Fog via sourceport features (MAPINFO etc)
+-  support lightning in ZDoom etc (via MAPINFO)
 
--  DOOM: fix y_offset values
-    (when have y_offset and brush side is truncated/extended)
-
--  only use separated teleporters in large rooms (kvol >= 3)
+-  use separated in/out teleporters in very large rooms
 
 -  log-print CSG stats (e.g. linedef count, plane count, etc)
 
--  generate episode names (M_EPI# etc).
+-  IDEA: generate episode names (M_EPI# etc).
 
--  Rail brushes: support fake 3D bridges
-                 (create dummy sector from brush's Z2)
+-  IDEA: generate end-of-episode texts
 
--  give sky_fence linedefs the 'never draw' flag
+-  IDEA: generate a TITLEPIC
 
--  support lightning in ZDoom etc (via MAPINFO)
++  Dead/gibbed player corpses sprinkled around on each level (Just
+   like Doom episode 1) with the chance of a weapon near their
+   remains (Shotgun 35%, chaingun 30%, Supershot 15%, rocket
+   launcher 15% and plasmagun 5%?)? Of course the weapon placement
+   by the body is at a chance (15-20% chance?)
 
 -  ZDoom slopes:
    340 = 0,   Plane_Align (1, 0)  // Slope front floor
@@ -825,17 +745,19 @@ Cancellation:
    346 = 0,   Plane_Align (2, 1)  // Slope b.f. and f.c.
    347 = 0,   Plane_Align (1, 2)  // Slope f.f. and b.c.
 
+EDGE: gui.property("solid_exfloor", 400)
+      gui.property("liquid_exfloor", 406)
+      gui.property("thing_exfloor_flags", "true")
 
-----------------------------------------------
-  FREEDOOM
-----------------------------------------------
-
--  support some of the TNT and Plutonia textures
+LEGACY: gui.property("solid_exfloor", 281)
+        gui.property("liquid_exfloor", 280)  -- 301
 
 
 ----------------------------------------------
   FINAL DOOM
 ----------------------------------------------
+
++  support some of the TNT and Plutonia textures
 
 -  TNT Evilution textures that have been changed:
      BLODGR1..4  SLADRIP1..3  SW1GSTON    SW1SKULL
@@ -848,7 +770,12 @@ Cancellation:
   HERETIC
 ----------------------------------------------
 
-!!  new 'damage' values for monsters
+!!  get it working again
+    -  games/heretic directory
+    -  separate files for Lua info (entities.lua, levels.lua, etc) 
+    -  minimal set of prefabs
+
++  new 'damage' values for monsters
 
 -  don't build Blaze doors into maps.
 
@@ -871,34 +798,35 @@ Sam's suggestions:
   HEXEN
 ----------------------------------------------
 
-!!!  new 'damage' values for monsters
+!!  get it working again
 
-!!  BOSS map : require the 2/3 hub keys to access boss room
++  new 'damage' values for monsters
+
++  BOSS map : require the 2/3 hub keys to access boss room
                NOTE: could use them to restrict progress along chain
 
-+   BOSS map : actually add the bosses (whatever else is needed)
++  BOSS map : actually add the bosses (whatever else is needed)
 
-!! fix weapons, which should be spawned for each class 
++  fix weapons, which should be spawned for each class 
+   -  put 'fighter only' bit on fighter's weapons, etc..
 
-!! proper hub system
++  proper hub system
+   -  need exit teleporter in final Hub
 
 +  separate prefab for switched vs locked doors
    [why?]
 
-+  support more skies
-
-+  put 'fighter only' bit on fighter's weapons, etc..
-
--  need exit teleporter in final Hub
+-  support more skies
 
 
 ----------------------------------------------
   PIPE DREAMS
 ----------------------------------------------
 
-+  make Oblige easier to mod
-
 +  generate the Boss maps (don't use prebuilt)
+   - control via a module
+
+-  make Oblige easier to mod
 
 -  deathmatch and CTF maps
       5130 = "Blue flag"
@@ -906,16 +834,7 @@ Sam's suggestions:
       5080 = "Blue Start"      
       5081 = "Red Start"
 
--  improved use of liquids.
-
--  a module or style for Claustrophic levels
-
--  PDAs or checkpoints, where the game is automatically saved
-   (and the player will return to that spot when they die).
-
 -  "Horror" mode: fewer but tougher monsters, fewer ammo, darker levels.
-
--  make DOOM lighting algorithm faster on multi-core CPUs.
 
 -  more Oblige logos, higher resolution ones too
 
@@ -940,30 +859,6 @@ Sam's suggestions:
    It is a hallway/room section that looks normal but when the player
    crosses the Lift-Lower-Wait-Rise linedef, it lowers to surprise the
    player with monsters on one or both sides of the lift.
-
--  Dead/gibbed player corpses sprinkled around on each level (Just
-   like Doom episode 1) with the chance of a weapon near their
-   remains (Shotgun 35%, chaingun 30%, Supershot 15%, rocket
-   launcher 15% and plasmagun 5%?)? Of course the weapon placement
-   by the body is at a chance (15-20% chance?)
-
--  Type of boss battles JohnnyRancid would like to see:
-      20+ revenants.
-      2-5 arch viles.
-      5-10 pain elementals
-      2 cyberdemons.
-      20+ hell barons or hell knights.
-      20+ cacodemons.
-      5-15 mancubi
-      5-15 arachnatrons
-
-
-EDGE: gui.property("solid_exfloor", 400)
-      gui.property("liquid_exfloor", 406)
-      gui.property("thing_exfloor_flags", "true")
-
-LEGACY: gui.property("solid_exfloor", 281)
-        gui.property("liquid_exfloor", 280)  -- 301
 
 
  _____________________
