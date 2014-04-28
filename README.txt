@@ -1,15 +1,8 @@
 
-OBLIGE 6.02 [WIP]
-=================
+OBLIGE 6.05
+===========
 
-by Andrew Apted.  Jan 2014
-
-
-** PREFACE **
-
-This package is just a SNAPSHOT or "Work In Progress" of
-current Oblige development.  This it NOT a proper release and
-is only intended for testing or for curiosity.
+by Andrew Apted.  Apr 2014
 
 
 INTRODUCTION
@@ -20,7 +13,7 @@ INTRODUCTION
 
   The planned features are:
 
-    * high quality levels, e.g. outdoor areas!
+    * high quality levels, e.g. outdoor areas and caves!
     * easy to use GUI interface (no messing with command lines)
     * built-in node builder, so the levels are ready to play
     * uses the LUA scripting language for easy customisation
@@ -73,6 +66,10 @@ COPYRIGHT and LICENSE
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
   GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this software.  If not, please visit the following
+  web page: http://www.gnu.org/licenses/gpl-2.0.txt
 
 
 CONTACT DETAILS
