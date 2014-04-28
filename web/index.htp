@@ -31,10 +31,42 @@ high quality levels which are fun to play.
 
 <h3>CURRENT VERSION</h3>
 
-OBLIGE 4.28 is the current version.
+OBLIGE 6.05 is the current version.
 
 
 <h3>NEWS</h3>
+
+<div class="newsdate">31-Apr-2014:</div>
+<blockquote class="news">
+
+Version 6.05 of OBLIGE has been released.
+
+<p>
+Since the 3.57 version, there has been a lot of
+experimenting with different approaches to lay out the levels
+and rooms which OBLIGE generates,
+and a lot of code has flowed under the bridge: written, improved,
+but ultimately discarded.
+V4 came but proved unsatisfactory.
+Then there was V5 which was better in many ways, but still not
+doing a particularly good job at generating interesting maps to play.
+
+<p>
+This version is a spiritual successor to 3.57, since it brings
+back the same algorithms for generating rooms and levels which
+version 3.57 used.
+But that is not the only change, there are numerous new
+things compared to 3.57 or 4.28
+-- such as the new lighting system --
+and a lot of improvements to general gameplay.
+While this release is far from perfect, I consider it the best
+version of OBLIGE to date.
+
+<p>
+TODO DOWN-LOAD LINK  (ETC?)
+
+</blockquote>
+
 
 <div class="newsdate">05-Jan-2014:</div>
 <blockquote class="news">
