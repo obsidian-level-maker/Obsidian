@@ -1,6 +1,6 @@
 
-CHANGES (since 4.28)
-====================
+CHANGES IN 6.05 (since 4.28)
+============================
 
 The Good
 --------
@@ -38,7 +38,7 @@ Other Changes
 
 - proper installation for Linux / Unix
 - in the GUI replaced 'Secrets' button with 'Caves'
-- support an "Always" setting for Outdoors and Caves
+- added "Always" setting for Outdoors and Caves
 - the occasional dark outdoor level
 
 - better quests, often need to _find_ weapons and armor
