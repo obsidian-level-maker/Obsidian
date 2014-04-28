@@ -479,20 +479,25 @@ function Monsters_zone_palettes()
 
     if (info.prob or 0) <= 0 then return 0 end
 
+    -- ignore theme-specific monsters (SS NAZI)
+    if info.theme then return 0 end
+
+    -- too strong for an early map?
     if info.level > LEVEL.max_level + 3 then return 0 end
 
-    if info.level > LEVEL.max_level + 2 then return 200 end
-    if info.level > LEVEL.max_level + 1 then return 400 end
-    if info.level > LEVEL.max_level     then return 800 end
-
-    local prob = info.level * 3
+    -- base probability : this value is designed to take into account
+    -- the settings of the monster control module
+    local prob = info.prob * (info.damage or 10)
+    prob = prob ^ 0.6
 
     -- huge monsters often won't fit in a room, so lower their chance
     if info.r > 60 then prob = prob / 3 end
 
-    if info.level < math.min(LEVEL.max_level, 9) - 4 then return 0 end
-    if info.level < math.min(LEVEL.max_level, 9) - 2 then return prob / 10 end
-    if info.level < math.min(LEVEL.max_level, 9)     then return prob / 3 end
+    if prob < 1 then prob = 1 end
+
+    if info.level > LEVEL.max_level + 2 then return prob * 20 end
+    if info.level > LEVEL.max_level + 1 then return prob * 40 end
+    if info.level > LEVEL.max_level     then return prob * 80 end
 
     return prob
   end
@@ -527,8 +532,10 @@ function Monsters_zone_palettes()
     end
 
 
-    table.sort(list,
-        function (A, B) return A.tough < B.tough end)
+    if LEVEL.max_level < 10 then
+      table.sort(list,
+          function (A, B) return A.tough < B.tough end)
+    end
 
     for i = 1, num_zones do
       local Z = LEVEL.zones[i]
