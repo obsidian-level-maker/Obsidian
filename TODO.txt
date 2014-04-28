@@ -8,13 +8,9 @@ ______________________________________________________________________
 ______________________________________________________________________
 
 
-*  support for Traps, Cages
+*  support for Traps and free-standing Cages
 
 *  add in more scenery: lamps, computers etc
-
-
-+  update Usage page:
-   -  the 'Seed' setting is no longer first
 
 
 BUG (WIN32): copy seed value and paste into filename --> crash.
@@ -30,17 +26,21 @@ ______________________________________________________________________
   OTHER GAMES
 ----------------------------------------------
 
-+  Heretic and Hexen support
++  Heretic support
 
-+  get Quake working again
++  Quake support
    -  ability to load .map files
    -  ability to scale, rotate, mirror them
    -  ability to replace textures and entities
    -  build maps with external tools, bundle them for each OS
 
--  HacX
--  Harmony
--  Chex Quest 3
+-  Hexen support
+
+?  Duke Nukem 3D
+
+?  HacX
+?  Chex Quest 3
+?  Harmony
 
 
 ----------------------------------------------
@@ -51,18 +51,22 @@ ______________________________________________________________________
 
 !!  torches in a cave can obstruct the player
 
+!!  closets (as in V4 / V5)
+
+
 +  a secret exit may not be possible due to reserved room
    becoming surrounded by scenic rooms (from connection logic).
    
    Need to review/rework connection logic.
+
++  improve connection logic out of cave rooms
+   (primary criterion should be distance from other conns)
 
 +  intrusions: like "junking" a side, but connects two other rooms
    (they are really just a hallway, but merging itself with the
     neighboring room as much as possible)
 
 +  sky-halls (variation of the above, no?)
-
-+  closets (as in V4 / V5)
 
 +  get stairwells working again, have outdoor version w/ rails
 
@@ -80,9 +84,6 @@ ______________________________________________________________________
 
 -  if few caves (total svolume < N), use same wall over whole level
 
--  improve connection logic out of cave rooms
-   (primary criterion should be distance from other conns)
-
 
 -  certain cases in DM_AlignTextures don't work well, especially
    an upper where a crate straddles the periph (but does not directly
@@ -93,8 +94,6 @@ ______________________________________________________________________
 
 -  outdoor fences should straddle both rooms
    (but need to handle corners and T junctions)
-
--  wider arches: be good to make them TALLER too
 
 -  ensure normal doors are usually monster-openable, secret doors not
 
@@ -113,13 +112,21 @@ BUG: outdoor border placed next to an outdoor lake -- no wall is
 -  review Dante's ideas : doc/DANTE.txt
 
 
-WAD Prefabs
+Prefab system:
+-  x_repeat, y_repeat
+
++  type of prefab is from the NAME
 
 -  mirror (horizontally) a 'T' or 'P' shaped hallway piece or big junction
 
 -  do mirroring in prefab space (only really need X)
 
--  x_repeat
++  priority for spots  (skill flag)
+       if EASY set OR nothing set --> priority = 1
+       elseif MEDIUM --> priority = 2
+       else              priority = 3
+
+   ALWAYS prefer a higher priority over a lower one.
 
 
 New Starting Logic
@@ -145,90 +152,26 @@ New Starting Logic
             especially a starting weapon. 
 
 
-V5 Stuff:
-
-+  ensure start room is not too full of monsters
-
-+  review monster numbers
-
-+  review monster progression : e.g. we expect Cybies / Masterminds
-   in the last map of an epsiode.
-
--  ease the health attrition formula
-
-+  type of prefab is from the NAME
-
--  have exclusion zones in front of START and TELEPORTER closets
-
-+  cycles: fix the "excess" height problem
+V5 STUFF:
 
 -  see why some traps or cages are empty
 
-??  a gui option to disable DOOM lighting algorithm
-
-
-+  move stuff in data/ into x_doom/ (etc)
+?  move stuff in data/ into games/doom/ (etc)
 
 +  Need logic to decide how to light up a room (windows vs wall
    lights vs ceilings lights etc).
-
-+  borders / fakers : support 'z_fit'
-
-+  support 'height' for floors
-
--  fix double halls
-
--  fake building with a fake window (or two)
-
--  fake building with torches (esp. for dark maps)
-
--  fake building and fences : support long ones, also deep ones
-   - also: allow a 'group' field to match border_group
-
--  a way to prevent repeating the same prefab in a row
-
--  hallway pieces: north and south (etc) should use STARTAN3 not BLAKWAL1
-
-+  Big junctions:
-   -  EITHER make C/T/I versions of Spokey and Circle
-        OR   create wall prefabs for them + logic to place it
-
-
-+  priority for spots  (skill flag)
-       if EASY set OR nothing set --> priority = 1
-       elseif MEDIUM --> priority = 2
-       else              priority = 3
-
-   ALWAYS prefer a higher priority over a lower one.
-
--  cycles: limit number of same-lock cycles e.g. 3 for heaps, 2 some, 1 few
-
--  "halfies" : fake buildings, cages (etc) which are 256x128 and
-   occupy half a seed (an unused seed between two rooms).
-
--  halfie closets
 
 +  'action' field in a switch prefab, must match door used
    values can be: "raise", "lower", "stair"
 
 -  get 'height' value into 'env' pick_skin() tables
 
--  support 'room' prefabs where the ceiling is a separate WAD
-
--  'conflict' keyword table for floor / ceiling pairings
-
--  handle the 'max_floor' in skins
-
--  IDEA: 'override' value for prefabs, default to zero.
+-  IDEA: 'override' value for prefabs, default is zero.
          when > 0, remove all other possible prefabs from the list
          which have a lower value
 
 
-+  better treatment for big Armor and Health items
-
-+  monster quantity (etc?) in hallways -- check prefabs
-
--  prefab to enter room via an elevator
+-  ability to enter room via an elevator
 
 -  Fight simulator: adjust monster 'damage' value based on Ambush
    usage, Cage usage, dark rooms, hitscanners/Archies in low cover
@@ -237,22 +180,6 @@ V5 Stuff:
 -  Fight simulator: re-implement monster infighting
 
 -  Mons: sometimes look toward important item (esp. keys)
-
--  in dark rooms, invis monsters higher prob, treat as non-replacing
-
--  guard monsters: if huge, ensure we pick a prefab with a spot for it
-
-+  properly test if a prefab fits (esp. with entry portal)
-
--  check we don't add walls if an edge is fence/solid ('#')
-
--  support 'anchor_dirs' : floor must have non-room on those sides
-   [and the opposite : floor must have room on specified sides]
-
-     perhaps: anchor = "d..x" i.e south is non-room, e/w is room, north don't care
-                              and 'd' is for a doorway
-
-   also want to control if direction has a connection
 
 
 Caves:
@@ -264,11 +191,10 @@ Caves:
 
 -  caves with steps: have two floor materials, pick randomly
 
--  MIDVINE sometimes used at cave transitions
-   (probably need a new prefab for this)
+-  MIDVINE sometimes used at cave transitions (via prefab?)
 
 -  support Cross-Overs
-   -  handle the Room's height limitation
+   -  respect the Room's height limitations
    -  create channels by lowering the floor cells
    -  for bridges, ensure ceiling cells are high enough
 
@@ -277,20 +203,15 @@ Street Mode:
 !!  get it working again
 
 +  fix bug : if one room surrounds another one, the "streets"
-   between them are isolated from the rest, leading to this error:
-
-     Script Error: Failed to find any height in grid neighbors
-    
-   --> detect this, make multiple "street" rooms
+   between them are isolated from the rest.  Need to make multiple
+   "street" rooms.
 
 +  limit number of locked rooms:
    (a) if too many rooms, merge some
    (b) make some rooms be optional (storehouses or weapon)
    (c) connect some rooms via bridges
 
-?  better looking "streets" (via prefabs)
-
--  fix the "big junc" situation, good place for a fountain
+-  better looking "streets" (via prefabs)
 
 -  a raised outdoory room might be cool
 
@@ -301,12 +222,18 @@ Street Mode:
 -  allow big monsters in the street [c.f. MAP12]
 
 
-
-Outdoor rooms: begin with whole space as "natural", create "constructed"
-               intrusions into that space.
+Outdoor room IDEA:
+  -  begin with whole space as "natural", create "constructed"
+     intrusions into that space.
 
 
 Outdoor Idioms:
+
++  Porches: this is 3 or more seeds around a door from outside->inside
+   with a non-sky ceiling and some pillars and a raised floor.
+
++  overhangs (building extensions with pillars, non-different floor)
+
 +  at edge of map, have rocky/jagged shape
    (needed where caves border outdoor room too)
 
@@ -314,8 +241,6 @@ Outdoor Idioms:
 
 +  large areas with water/blood, must be lowest area
    (especially good for Heretic maps)
-
-+  overhangs (building extensions with pillars)
 
 +  bridge over a river of lava/nukage
 
@@ -327,6 +252,8 @@ Outdoor Idioms:
 Closets:
 -  support START_SKY_CLOSET, need to recognise when a closet lies
    between two outdoor border prefabs.
+
+-  put exclusion zones in front of START and TELEPORTER closets
 
 +  set 'floor' material to match touching area
 
@@ -341,84 +268,57 @@ Closets:
 
 
 Theme System:
-+  proper room themes for QUAKE
-
--  proper room themes for QUAKE II
-
-+  IDEA: different monster palettes in each zone
++  proper themes for QUAKE
 
 -  if keys are left over, can use them for non-Zone locks
 
-DONE:  "minor" theme, like rare theme but can be repeated in a zone
-
--  IDEA: cycle through dominant themes by quest
-
-
-Teleporters:
--  able to place separate entry and exit spots
-   (especially for Quake and Quake II)
-
--  more games : Hexen (X_012) and Chex Quest 1/2/3
-
 
 Hallways:
-+  double hallways STILL busted (entry from the non-forky end)
++  use prefabs for each part of a hallway
 
-+  fix the '_in_between' flag (assumes a chunk order, but needs to check links)
-
--  a more generic system for the '_narrow' skin field.
-
--  ability to merge the section of a "simple" hallway into
-   one of the rooms [especially to make a "Porch"].
-
--  big junctions: _floors[] to set floors of connected mini-hall
-
-DONE: Special Hallway #1 : surround half the room, entrance either side
-  -   Special Hallway #3 : surround a room completely.
-  -   Special Hallway #4 : diagonal from one to another (alloc '+' shape)
++  support for stairs in hallways
 
 +  flat mismatch where hallways meet rooms
    (a) have a step (ideally not flush with wall)
    (b) put a door there
    (c) use floor texture in hallway (only works at one end)
 
-IDEA: a way to associate a skin with a hallway group
-   (an extra skin, "underneath" the actual skin for a hallway piece)
 
--  need a way for a room theme (if not level theme) to say
-   "hallways should use (or not) same theme as a connected room"
+CrossOvers:
+++  get the working again!
 
--  hallways field in room themes : allow use in caves/outdoor too
++  support "Crossover Junctions" which have a low path from S -> N
+   and a bridge (etc) going E -> W.
 
+-  automatically create bridges over channels
 
-Prefab system:
--  implement 'y_repeat' and 'z_repeat'
++  build the bridges / channels using prefabs
 
-   WISH: support repetition with prefab composition too
+-  sometimes make a dramatic height difference
 
+-  fix hallway vertical gaps
 
-Sky Halls:
--  if a hallway is "simply" connected (no lock) to an outdoor room
-   [or other.quest < hallway.quest]
-   then relax rule about f_h >= other.f_max
++  make a moving platform in Quake 1/2 maps
 
+-  a version with arches underneath
 
-Hallway Theming:
-  Wood# (Namely Wood1, Wood3 and Wood5...Wood4 is the one with skulls on it
-  and might look silly), Woodmet1, Skin2, GSTONE1/SP_HOT1 and Skinmet#
-  textures would fit well in the HELL theme (Note Woodmet# textures are Doom2
-  only, everything else works in both games)
+-  pillars holding up the bridge
 
-  PANCASE2 would fit well for Doom2 Urban hallways.
+-  channels which decrease height  [via prefab??]
+
+-  exclude some areas from height limitation.
+   These areas must be outside a certain bbox, a bbox including the
+   starting area and all crossovers chunks.
+
+   Better yet, give these areas a less restrictive limitation
+   (based on how far the player may jump/fall from a high height)
+   For channels, can remove the limitation.
 
 
 Hollow IDEA:
    a "hollow" is an open space under the floor of a normal AREA,
    turning that AREA into a 3D platform.
    
-   That space can/should be represented by separate chunks
-   (maybe an actual AREA object ??)
-
    The floor needs to match a touching AREA, perhaps the hollow
    chunks become part of that AREA.
 
@@ -442,60 +342,9 @@ Intrusions:
    as if it were part of the room you look into.  It may work
    best in Quake games where the intrusion is a 3D walkway.
 
-+  implement them by "adopting" a hallway consisting of
-   HORIZ + JUNC + VERT (around corner of the room)
-
--  could potentially adopt the whole section
-   [OR any seeds which are not part of the room paths]
-
-Q/ keep as a "hallway" or create an "area" ?
-
-
-CrossOvers:
-++  get the working again!
-
-+  support "Crossover Junctions" which have a low path from S -> N
-   and a bridge (etc) going E -> W.
-
--  automatically create bridges over channels
-
-+  build the bridges / channels using prefabs
-
--  sometimes make a dramatic height difference
-
--  fix hallway vertical gaps
-
-+  make a moving platform in Quake 1/2 maps
-
--  a version with arches underneath
-
--  pillars holding up the bridge
-
--  bridges which increase height (e.g. stair in middle)
-
--  channels which decrease height  [via prefab??]
-
-?  give areas near incompatible height a 'target_h' field
-
--  exclude some areas from height limitation.
-   These areas must be outside a certain bbox, a bbox including the
-   starting area and all crossovers chunks.
-
-   Better yet, give these areas a less restrictive limitation
-   (based on how far the player may jump/fall from a high height)
-   For channels, can remove the limitation.
-
-
-Porches:
--  this is 3 or more seeds around a door from outside->inside
-   with a non-sky ceiling and some pillars and a raised floor.
-
 
 Bridges:
-+  get 3D bridges working again: in the logic that decides what AREA
-   the new pattern will extend -- look for a possible bridge.
-   Q/ do bridges span two areas, or form part of one single area?
-   A/ two distinct areas
++  get 3D bridges working again
 
 
 Facades:
@@ -507,20 +356,9 @@ Facades:
 
 
 Quests:
--  currently broken if no switches
-   -  have a lock limit, if over then mark branches as "dead_wood"
-   -  keep track of number of "branches to go"
-
-IDEA: "single minis" : a single room (not too big, kvolume <= 2)
-      which contains something nice to get (weapon, powerup, etc).
-
-      NO ---> go with the "STORAGE" idiom instead
-
 -  sometimes lock another connection (ESP: symmetry)
    with the same lock as one we just added
    [ESP: when new lock goes to leaf or semi-leaf]
-
--  lowering bars between two outdoor rooms [even between zones]
 
 -  Lock postponing:
      after decided all locked conns, pick one and if next room is a
@@ -530,26 +368,17 @@ IDEA: "single minis" : a single room (not too big, kvolume <= 2)
      [especially when next "room" is a hallway]
 
 
-
 Planner:
 -  review / improve 'emergency' connections
 
 
-Ceilings:
-- put several small light fittings/sky holes with
-  simple patterns (e.g. inner 2x2 seeds, or outer corners)
-
-- big room with no sky neighbours: have a huge sky hole
-
-- mega sky holes (two in one, esp. outer has F_SKY1)
-
-
-Pictures:
-- implement "billboards", pictures which jut down from the
-  ceiling (above doors and low periphs).
-
-
 Cycles:
++  get them working again
+
++  cycles: fix the "excess" height problem
+
+-  cycles: limit number of same-lock cycles e.g. 3 for heaps, 2 some, 1 few
+
 -  allow joiners _iff_ the height diff is zero
 
 +  less chance if R2 (skipped room) is large
@@ -569,8 +398,6 @@ Mazes:
 ----------------------------------------------
   MONSTERS / ITEMS
 ----------------------------------------------
-
-+  SpiderMasterminds only appear very very rarely
 
 +  in later levels, low-level monsters should be used in bigger swarms
 
@@ -720,6 +547,7 @@ Cancellation:
 -  support lightning in ZDoom etc (via MAPINFO)
 
 -  use separated in/out teleporters in very large rooms
+   (especially in Quake maps)
 
 -  log-print CSG stats (e.g. linedef count, plane count, etc)
 
@@ -815,6 +643,8 @@ Sam's suggestions:
 
 +  separate prefab for switched vs locked doors
    [why?]
+
+-  support teleporters (flat X_012)
 
 -  support more skies
 
