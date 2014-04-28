@@ -10,7 +10,7 @@ ______________________________________________________________________
 
 *  support for Traps and free-standing Cages
 
-*  add in more scenery: lamps, computers etc
+*  add in more scenery: trees, computers etc
 
 
 BUG (WIN32): copy seed value and paste into filename --> crash.
@@ -47,11 +47,9 @@ ______________________________________________________________________
   V6 STUFF
 ----------------------------------------------
 
-!!  coop player can be stuck in "cave_wall"
+!!  BUG: coop player can be stuck in "cave_wall"
 
-!!  torches in a cave can obstruct the player
-
-!!  closets (as in V4 / V5)
+!!  BUG: torches in a cave can obstruct the player
 
 
 +  a secret exit may not be possible due to reserved room
@@ -112,6 +110,26 @@ BUG: outdoor border placed next to an outdoor lake -- no wall is
 -  review Dante's ideas : doc/DANTE.txt
 
 
+Closets:
+!!  get them working again
+
+-  support START_SKY_CLOSET, need to recognise when a closet lies
+   between two outdoor border prefabs.
+
+-  put exclusion zones in front of START and TELEPORTER closets
+
++  set 'floor' material to match touching area
+
+-  START closets 
+-  EXIT closets
+-  SECRET closets
+-  ITEM closets
+-  TELEPORTER closets
+-  GATE closets for Hexen
+-  HALL closets
+-  MONSTER closets
+
+
 Prefab system:
 -  x_repeat, y_repeat
 
@@ -169,7 +187,6 @@ V5 STUFF:
 -  IDEA: 'override' value for prefabs, default is zero.
          when > 0, remove all other possible prefabs from the list
          which have a lower value
-
 
 -  ability to enter room via an elevator
 
@@ -249,24 +266,6 @@ Outdoor Idioms:
 +  gazebo in centre with a nice item (or purpose)
 
 
-Closets:
--  support START_SKY_CLOSET, need to recognise when a closet lies
-   between two outdoor border prefabs.
-
--  put exclusion zones in front of START and TELEPORTER closets
-
-+  set 'floor' material to match touching area
-
--  START closets 
--  EXIT closets
--  SECRET closets
--  ITEM closets
--  TELEPORTER closets
--  GATE closets for Hexen
--  HALL closets
--  MONSTER closets
-
-
 Theme System:
 +  proper themes for QUAKE
 
@@ -274,7 +273,7 @@ Theme System:
 
 
 Hallways:
-+  use prefabs for each part of a hallway
++  use a wad-fab for each part of a hallway
 
 +  support for stairs in hallways
 
@@ -285,7 +284,7 @@ Hallways:
 
 
 CrossOvers:
-++  get the working again!
++  get them working again!
 
 +  support "Crossover Junctions" which have a low path from S -> N
    and a bridge (etc) going E -> W.
@@ -373,7 +372,7 @@ Planner:
 
 
 Cycles:
-+  get them working again
++  get them working again [ esp. for CO-OP ]
 
 +  cycles: fix the "excess" height problem
 
@@ -436,6 +435,7 @@ IDEA: "weak texturing" (especially on floors) which will try to
 
 -  3D stairs
 
+
 -  double or triple switches: each one raises a 24 unit stair,
    but player can only traverse stairs when ALL are raised.
    Might work best if stairs are parallel to height diff.
@@ -463,7 +463,6 @@ IDEA: "weak texturing" (especially on floors) which will try to
 
 -  cage monsters: don't put hitscan snipers up really high.
 
-
 -  a module to randomly change DOOM monster / weapon stats via
    DEHACKED / DDF / DECORATE.
 
@@ -486,6 +485,48 @@ Name generator:
 -  create random weird-looking words for names of Bosses, planets
    or whatever.  Use them multiple times over an episode or game
    to make it seem like there is a actual story to the maps.
+
+
+----------------------------------------------
+  PIPE DREAMS
+----------------------------------------------
+
++  generate the Boss maps (don't use prebuilt)
+   -  controlled via a module
+
+-  make Oblige easier to mod
+
+-  deathmatch and CTF maps
+      5130 = "Blue flag"
+      5131 = "Red flag"
+      5080 = "Blue Start"      
+      5081 = "Red Start"
+
+-  "Horror" mode: fewer but tougher monsters, fewer ammo, darker levels.
+
+-  more Oblige logos, higher resolution ones too
+
+-  Rooms that lock you in and you have to find the switch on
+   the other side of the room to get out.  All "normal" exits
+   would be closed off by a line trigger near the entry way.
+
+-  Pop-up Traps
+   you make a sector, lower it enough so monsters cannot see
+   the player but are facing him when it springs. The trap walls have
+   no lower texture and you set the trigger line to action 19 ( W1
+   floor lower to highest floor) and you set the trap monsters deaf so
+   they aren't awakened by player gunshots.
+
+   When the player trips the linedef, the floors instantly pop up to
+   the nearest floor height without the rising delay of some other
+   linedef actions. Another thing is to make sure the line that
+   triggers the trap can't be bypassed and thus the player can get
+   stuck in the hole if he falls in.
+
+-  Surprise Lifts:
+   It is a hallway/room section that looks normal but when the player
+   crosses the Lift-Lower-Wait-Rise linedef, it lowers to surprise the
+   player with monsters on one or both sides of the lift.
 
 
 ----------------------------------------------
@@ -550,6 +591,7 @@ Cancellation:
    (especially in Quake maps)
 
 -  log-print CSG stats (e.g. linedef count, plane count, etc)
+
 
 -  IDEA: generate episode names (M_EPI# etc).
 
@@ -647,48 +689,6 @@ Sam's suggestions:
 -  support teleporters (flat X_012)
 
 -  support more skies
-
-
-----------------------------------------------
-  PIPE DREAMS
-----------------------------------------------
-
-+  generate the Boss maps (don't use prebuilt)
-   - control via a module
-
--  make Oblige easier to mod
-
--  deathmatch and CTF maps
-      5130 = "Blue flag"
-      5131 = "Red flag"
-      5080 = "Blue Start"      
-      5081 = "Red Start"
-
--  "Horror" mode: fewer but tougher monsters, fewer ammo, darker levels.
-
--  more Oblige logos, higher resolution ones too
-
--  Rooms that lock you in and you have to find the switch on
-   the other side of the room to get out.  All "normal" exits
-   would be closed off by a line trigger near the entry way.
-
--  Pop-up Traps
-   you make a sector, lower it enough so monsters cannot see
-   the player but are facing him when it springs. The trap walls have
-   no lower texture and you set the trigger line to action 19 ( W1
-   floor lower to highest floor) and you set the trap monsters deaf so
-   they aren't awakened by player gunshots.
-
-   When the player trips the linedef, the floors instantly pop up to
-   the nearest floor height without the rising delay of some other
-   linedef actions. Another thing is to make sure the line that
-   triggers the trap can't be bypassed and thus the player can get
-   stuck in the hole if he falls in.
-
--  Surprise Lifts:
-   It is a hallway/room section that looks normal but when the player
-   crosses the Lift-Lower-Wait-Rise linedef, it lowers to surprise the
-   player with monsters on one or both sides of the lift.
 
 
  _____________________
