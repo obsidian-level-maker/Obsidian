@@ -40,7 +40,7 @@ from existing programs (like the famous <b>SLIGE</b>
 by David Chess)
 
 <ul class="features">
-  <li>high quality levels, e.g. outdoor areas!
+  <li>high quality levels, e.g. outdoor areas and caves!
   <li>easy to use GUI interface (no messing with command lines)
   <li>built-in node builder, the created levels are ready to play
   <li>uses the LUA scripting language for easy customisation
@@ -56,12 +56,12 @@ It is planned to fully support the following games:
   <li>Quake
 </ul>
 
-Other games, such as Quake 2 and Duke Nukem 3D,
+Other games, such as Duke Nukem 3D,
 might get supported in the future, but for now the
 focus is mainly on the games listed above.
 
 <p>
-<i>(See the <a href="http://oblige.svn.sourceforge.net/viewvc/oblige/trunk/WISHLIST.txt">WISHLIST</a>
+<i>(See the <a href="http://oblige.svn.sourceforge.net/viewvc/oblige/trunk/TODO.txt">TODO</a>
 for even more stuff we'd like to add)
 </i>
 
@@ -73,28 +73,6 @@ for even more stuff we'd like to add)
 <li>128 MB of RAM or higher.
 <li>Windows 2000, XP, Vista or later.  (Linux is supported too)
 </ul>
-
-
-<h3>KNOWN PROBLEMS</h3>
-
-<ul class="status">
-
-<li>very plain rooms, no liquids
-<li>no traps
-<li>no boss maps
-
-</ul>
-
-<!---
-See this forum thread (LINK) for a list of known problems
---->
-
-<!---
-[p]
-[i](The [a href="http://oblige.svn.sourceforge.net/viewvc/oblige/trunk/TODO.txt"]TODO[/a]
-contains a list of bugs and features currently being worked on)
-[/i]
---->
 
 
 <h3>GETTING IN CONTACT</h3>

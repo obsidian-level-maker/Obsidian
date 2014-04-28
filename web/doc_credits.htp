@@ -172,7 +172,7 @@ with code by Richard J. Wagner (15 May 2003 / rjwagner@writeme.com)
 based on code by Makoto Matsumoto, Takuji Nishimura, and Shawn Cokus.
 
 <p>
-OBLIGE uses the cool FLTK widget library
+OBLIGE uses the FLTK widget library :
 (<a href="http://www.fltk.org">http://www.fltk.org</a>).
 
 
@@ -194,7 +194,7 @@ of the License, or (at your option) any later version.
 OBLIGE is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a> for more details.
+See the <a href="http://www.gnu.org/licenses/gpl-2.0.txt">GNU General Public License</a> for more details.
 </div>
 
 
