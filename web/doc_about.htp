@@ -23,21 +23,22 @@
 OBLIGE is a random level maker for a bunch of classic FPS games.
 Just press a few buttons and <i>kazam!</i> out pops some fun maps
 to play.
-Well that's our goal anyway, it may take a while to fully achieve it.
+Well that's our goal anyway, it may take a long time to fully
+achieve it.
 
 <p>
-OBLIGE is <b>Free Software</b>, released under the GNU GPL license.
-Please note that it comes with absolutely NO WARRANTY of any kind.
-You can read the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a>
-for all the legal stuff.
+OBLIGE is <b>Free Software</b>, released under the GNU General
+Public License (GPL).
+Note that it comes with absolutely NO WARRANTY of any kind.
+Please see the <a href="http://www.gnu.org/licenses/gpl-2.0.txt">
+gpl-2.0.txt</a> document for all the legal stuff.
 
 
 <h3>FEATURES / GOALS</h3>
 
 <p>
-OBLIGE will have the following general features which set it apart
-from existing programs (like the famous <b>SLIGE</b>
-by David Chess)
+OBLIGE has the following features which set it apart
+from existing random map generators:
 
 <ul class="features">
   <li>high quality levels, e.g. outdoor areas and caves!
@@ -52,18 +53,12 @@ It is planned to fully support the following games:
 <ul class="gamelist">
   <li>DOOM and DOOM II
   <li>Heretic
-  <li>Hexen
   <li>Quake
 </ul>
 
-Other games, such as Duke Nukem 3D,
+Other games, such as Hexen and Duke Nukem 3D,
 might get supported in the future, but for now the
 focus is mainly on the games listed above.
-
-<p>
-<i>(See the <a href="http://oblige.svn.sourceforge.net/viewvc/oblige/trunk/TODO.txt">TODO</a>
-for even more stuff we'd like to add)
-</i>
 
 
 <h3>SYSTEM REQUIREMENTS</h3>
@@ -79,8 +74,8 @@ for even more stuff we'd like to add)
 
 The best way of getting in contact, especially when reporting bugs,
 is to visit the
-<a href="http://oblige.sourceforge.net/forum/">Oblige Forum</a>.
-Registering to create a new account there is fairly easy.
+<a href="http://oblige.sourceforge.net/forum/">Forum</a>.
+Creating a new account there is fairly easy.
 
 <p>
 Alternatively you can email me:
@@ -89,8 +84,8 @@ Alternatively you can email me:
 
 <p>
 Finally, you can visit the SourceForge
-<a href="http://sourceforge.net/projects/oblige">project page</a>
-for Oblige by clicking the SourceForge logo at the very bottom
+<a href="http://sourceforge.net/projects/oblige">Project Page</a>
+for OBLIGE by clicking the SourceForge logo at the very bottom
 of these pages.
 
 
