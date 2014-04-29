@@ -29,7 +29,7 @@ Enhas
   - ZDoom Marines module
   - Stealth Monsters module
   - Level Control module
-  - various Skulltag modules
+  - various Skulltag stuff
   - psychedelic level names
   - Chex Quest game definition
   - a DOOM "gotcha" style boss map

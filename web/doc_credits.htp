@@ -41,8 +41,8 @@ a DOOM source port with many enhanced features.
   <li>DOOM prefabs</li>
   <li>Skulltag Monsters module</li>
   <li>ZDoom Beastiary module</li>
-  <li>DOOM 1 boss maps (E1M8, E2M8, E3M8)</li>
-  <li>DOOM 2 "dead simple" boss map</li>
+  <li>DOOM 1 boss maps (most of them in fact)</li>
+  <li>DOOM 2 boss maps (e.g. "dead simple")</li>
   <li>DOOM 1/2 theming</li>
   <li>additions to name generator</li>
   <li>lots of useful feedback</li>
@@ -67,7 +67,7 @@ a DOOM source port with many enhanced features.
   <li>ZDoom Marines module
   <li>Stealth Monsters module
   <li>Level Control module
-  <li>various Skulltag modules
+  <li>various Skulltag stuff
   <li>psychedelic level names
   <li>Chex Quest game definition
   <li>a DOOM "gotcha" style boss map
