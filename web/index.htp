@@ -35,7 +35,7 @@ OBLIGE 6.05 is the current stable version.
 
 <h3>NEWS</h3>
 
-<div class="newsdate">31-Apr-2014:</div>
+<div class="newsdate">30-Apr-2014:</div>
 <blockquote class="news">
 
 Version 6.05 of OBLIGE has been released!
@@ -45,7 +45,7 @@ Since the 3.57 version, there has been a lot of
 experimenting with different approaches to lay out the levels
 and rooms which OBLIGE generates,
 and a huge amount of code has flowed under the bridge:
-written, improved, but ultimately discarded.
+written, improved, and ultimately discarded.
 V4 came along and supported many different games,
 but the levels were quite poor.
 Then there was V5 which was better in many ways, but still not
