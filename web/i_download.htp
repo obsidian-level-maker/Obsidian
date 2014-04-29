@@ -16,20 +16,20 @@
 <div class="rest">
 
 
-<span id="428"></span>
+<span id="current"></span>
 
-<h3>CURRENT VERSION : 4.28</h3>
+<h3>CURRENT STABLE VERSION : 6.05</h3>
 
-<b>Windows Package</b>:
-<a href="http://sourceforge.net/projects/oblige/files/Oblige/4.28/oblige-428-win.zip">oblige-428-win.zip</a> (1.2 MB)
-
-<p>
-<b>Linux Package</b>:
-<a href="http://sourceforge.net/projects/oblige/files/Oblige/4.28/oblige-428-linux.tar.gz">oblige-428-linux.tar.gz</a> (1.2 MB)
+<b>Windows package</b>:
+<a href="http://sourceforge.net/projects/oblige/files/Oblige/6.05/oblige-605-win.zip">oblige-605-win.zip</a>
 
 <p>
-<b>Source Code</b>:
-<a href="http://sourceforge.net/projects/oblige/files/Oblige/4.28/oblige-428b-source.zip">oblige-428b-source.zip</a> (1.2 MB)
+<b>Debian Linux package</b>:
+<a href="http://sourceforge.net/projects/oblige/files/Oblige/6.05/oblige-6.05-1_i386.deb">oblige-6.05-1_i386.deb</a>
+
+<p>
+<b>Source code</b>:
+<a href="http://sourceforge.net/projects/oblige/files/Oblige/6.05/oblige-605-source.zip">oblige-605-source.zip</a>
 
 
 <h3>OLDER VERSIONS</h3>
@@ -52,8 +52,9 @@ The following link lets you browse the source code:
 Browse Code</a>
 
 <p>
-Click here for
-<a href="http://sourceforge.net/scm/?type=svn&group_id=176314"> More Information </a> (goes to SourceForge).
+Click here for the
+<a href="http://sourceforge.net/projects/oblige">SourceForge Project</a>
+information about OBLIGE.
 
 
 <h3>COPYRIGHT / LICENSE</h3>
@@ -74,7 +75,8 @@ of the License, or (at your option) any later version.
 OBLIGE is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a> for more details.
+See the <a href="http://www.gnu.org/licenses/gpl-2.0.txt">
+GNU General Public License</a> for more details.
 
 </div>
 
