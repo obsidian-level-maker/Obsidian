@@ -2535,7 +2535,7 @@ function Room_add_crates(R)
     each spot in find_spots() do
       if rand.odds(chance) then
         mark_spot(spot.S)
-        for loop = 1, rand.sel(75, 1, 2) do
+        for loop = 1, rand.sel(99, 1, 2) do
           local x, y, z = get_entity_coord(spot.S, 20)
           entity_helper("barrel", x, y, z)
         end
