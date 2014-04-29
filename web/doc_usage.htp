@@ -252,10 +252,12 @@ Most games let you play at different skill levels
 (e.g. Hurt-Me-Plenty vs Ultra-Violence),
 and OBLIGE takes them into account.  Easier skill levels
 will have less monsters than harder skill levels,
-and health/ammo are also adjusted.
+while health and ammo remain the same.
 
 <p>
-You should use a Source Port to play the levels, because the
+You should use a
+<a href="doc_glossary.html#engine">Source Port</a>
+to play the levels, because the
 original DOOM.EXE, DOOM2.EXE (etc..) may not cope with the
 architecture which OBLIGE creates.  For example, you might
 get the "Visplane Overflow" error which quits the game.
