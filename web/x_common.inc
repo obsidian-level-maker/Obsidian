@@ -52,10 +52,6 @@
   <a href="i_download.html">Download</a>
 </block>
 
-<block IndexOldie>
-  <a href="i_oldie.html">Oldies</a>
-</block>
-
 <block IndexForums>
   <a href="http://oblige.sourceforge.net/forum/">Forum</a>
 </block>
