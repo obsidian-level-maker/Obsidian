@@ -261,6 +261,10 @@ Quest
 A group of rooms with a particular goal, usually
 a key or switch which allows progression to the next quest.
 The final quest always leads to the exit room of the level.
+
+<p>
+<i>(See also.... Zone)</i>
+
 </div>
 
 
@@ -365,8 +369,14 @@ Browse Code</a>
 <div id="zone" class="gloss_term">
 Zone
 </div><div class="gloss_define">
+Zones divide each level into several large pieces.
+Each zone will usually have a distinct appearance (sub-theme)
+and a distinct monster palette.
+Zones are further sub-divided into quests, and the doors
+connecting two zones are typically locked by a key,
+whereas all the puzzles (quests) inside a zone use switched
+doors.
 
-blah blah FIXME blah blah
 </div>
   
 
