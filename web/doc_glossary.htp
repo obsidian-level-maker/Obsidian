@@ -80,7 +80,7 @@ people made engines such as Darkplaces, FitzQuake, and ZQuake.
 Hence the term "Engine" or "Source Port" usually refer to one of
 these enhanced versions of the game, but it can also mean the original
 EXE which the game came with when you bought it.  That one is
-often called "Vanilla", since nothing extra has been added to it.
+called "Vanilla" since nothing extra has been added to it.
 
 <p>
 <i>(See also.... Limit Removing)</i>
@@ -101,18 +101,17 @@ are all entities.
 GUI, EXE
 </div><div class="gloss_define">
 GUI stands for Graphical User Interface,
-but I often use the term to mean the whole EXE
-(executable program) of OBLIGE,
+but here the term often refers to whole EXE
+(executable program) of OBLIGE.
 which is responsible not only for all the interactive
-elements (like the "Game" and "Build" buttons,
-the scrolling module panel, and the map preview),
+elements, like the "Build" button,
 but also for doing CSG operations and
 creating the output map formats.
 
 <p>
 This is in contrast to the Lua scripts which handle all the
-logic for building levels (e.g. deciding where to put rooms
-and how big they should be).
+logic for building levels, such as deciding how big to make
+all the rooms and what monsters to put in them.
 The Lua code is not stored inside the EXE,
 instead it is loaded from various folders
 when OBLIGE starts up.
@@ -129,12 +128,12 @@ Limit Removing
 A "Limit Removing" engine is one which people have removed some
 limitations that the original game had.
 For example, plain DOOM.EXE will crash if there are more than 128
-visplanes on the screen -- the VPO (Visplane Overflow) error which
-was a real headache for mappers.
+visplanes on the screen -- the dreaded VPO (Visplane Overflow) error
+which was a real headache for mappers.
 
 <p>
 However source ports like BOOM have removed this limitation
-(and others), and there can be as many visplanes on the screen
+(and others), so there can be as many visplanes on the screen
 as necessary to draw the level.
 
 <p>
@@ -155,9 +154,17 @@ logic in OBLIGE.
 The files in the <b>scripts/</b>, <b>games/</b>, <b>engines/</b> and
 <b>modules/</b> folders are all Lua scripts.
 You can edit these ".lua" files with an ordinary
-text editor (like NOTEPAD, but <u>not</u> MS Word),
+text editor (like NOTEPAD, but <i>not</i> MS Word),
 and those changes will be loaded the next time OBLIGE is run.
-This is very convenient, since you don't need to compile anything.
+This is very convenient, because you don't need to compile anything.
+
+<p>
+NOTE: the version of Lua used by OBLIGE has been extended
+with a few extra features, including cleaner data tables
+(commas are optional at end of a line)
+and a new "each" statement.  This means
+our Lua scripts are not compatible with some programming tools
+which only work with standard Lua syntax.
 
 <p>
 Visit the <a href="http://www.lua.org">Lua home page</a>
@@ -169,16 +176,16 @@ to discover more about this great programming language.
 Material
 </div><div class="gloss_define">
 With standard DOOM, there are two types of textures: one for walls
-and one for floors or ceilings.
-The first kind are called "textures" and the second kind "flats",
-and they are a nuisance because you cannot use flats on walls or
-textures on floors.
+and one for floors and ceilings.
+The first kind are called "textures" and the second kind "flats".
+This is quite a nuisance, because you cannot use flats on walls
+nor textures on floors and ceilings.
+The terminology can also get confusing.
 
 <p>
-So in OBLIGE, a "Material" is just a single name which can specify both
-parts (wall texture and floor flat),
-and the code makes sure to use them correctly 
-(put the texture name on walls and the flat name on floors and ceilings).
+So in OBLIGE, a "Material" is just a single name which specifies
+both parts: the wall texture and the floor flat, and the code
+makes sure they are used in the correct places.
 This makes a lot of things much simpler, as you only need to
 give the material name and not worry about the kind of surface
 it will be used on.
@@ -186,43 +193,18 @@ it will be used on.
 <p>
 While material names can be anything,
 they usually match the name of one of their components.
-For example the DOOM materials "SHAWN2" and "FLAT23" are equivalent
+For example, the DOOM materials "SHAWN2" and "FLAT23" are equivalent
 (they both specify <b>SHAWN2</b> as the wall texture
 and <b>FLAT23</b> as the flat)
 and hence they can be used interchangeably in OBLIGE.
-<!---
-The special "_SKY" material is an example of where the name does
-not match either the wall texture or flat name.
---->
 
 <p>
 Other games allow textures to be placed anywhere.
 However there are usually some which look good on walls
 but not on floors, and vice versa.
-So this material system is be useful for these games too.
+hence this material system can be useful for these games too.
 
-<p>
-In the future the material definitions may include more
-information, such as the general hue, tiling properties
-or even if it should emit light.
-This could be used to make better decisions about the
-selection and usage of materials.
 </div>
-
-
-<!---
-[div id="mega_seed" class="gloss_term"]
-Mega-Seed
-[/div][div class="gloss_define"]
-An area on the map consisting of more than one seed, used to
-create larger structures (like wide doors or big prefabs)
-which normally cannot fit in a single seed.
-
-[p]
-[i](See also.... Seed)[/i]
-
-[/div]
---->
 
 
 <div id="palette" class="gloss_term">
@@ -343,11 +325,6 @@ called the child and the outer room is the parent.
 </div>
 
 
-<!---
-Sub-Theme
---->
-
-
 <div id="svn" class="gloss_term">
 SVN
 </div><div class="gloss_define">
@@ -361,25 +338,36 @@ has message describing what was done.
 
 <p>
 You can view OBLIGE's SVN respository here:
-<a href="http://oblige.svn.sourceforge.net/viewvc/oblige/trunk">
+<a href="http://sourceforge.net/p/oblige/code/HEAD/tree/trunk/">
 Browse Code</a>
 
-<!--- LINK to subversion sight or SourceForge page about it --->
+<p>
+More information can be found at the official
+<a href="http://subversion.apache.org/">
+Subversion site</a>.
 
+</div>
+
+
+<div id="zone" class="gloss_term">
+Zone
+</div><div class="gloss_define">
+
+blah blah FIXME blah blah
 </div>
   
 
 <div id="versions" class="gloss_term">
-V1 &nbsp; V2 &nbsp; V3 &nbsp; V4
+V1 &nbsp; V2 &nbsp; V3 &nbsp; V4 &nbsp; V5 &nbsp; V6
 </div><div class="gloss_define">
 These designate the major versions of OBLIGE.
 V1 was merely a prototype and was never publicly released.
-V2 and V3 are older versions and are no longer being developed.
-V4 is the latest codebase.
+V2, V3, V4 and V5 are older versions which are no longer being developed.
+V6 is the latest codebase.
 
 <p>
-<i>(see the <a href="doc_history.html">History</a> page for
-more detailed information about OBLIGE versions)</i>
+See the <a href="doc_history.html">History</a> page for
+more detailed information about OBLIGE versions.</i>
 
 </div>
 
