@@ -27,7 +27,7 @@ Q/ What does the term XXX mean?
 <div class="faq_A">
 Please visit the <A href="doc_glossary.html">Glossary</A>
 for definitions of terms.
-If the phrase is not there, then feel free to ask me
+If the phrase is not there, then feel free to ask us
 (preferably on the forums).
 </div>
 
@@ -41,16 +41,16 @@ Short answer: <i>When it's ready.</i>
 
 <p>
 Long answer:
-There is no real planning involved, no roadmap.
-This is just a hobby project.
-With each release I try to fix as many problems as I can,
+This is just a hobby project, and
+while there is a little bit of long-term planning,
+there is no real roadmap,
+just a bunch of features we'd like to add one day.
+With each release we try to fix as many problems as we can,
 while introducing new features and better ways
 of doing things.
 Sometimes there will be some very experimental code,
 which you won't see because it will stay disabled until
 it's ready for general use.
-In the past some releases of OBLIGE have been a bit half-baked,
-and I intend to avoid that in the future.
 
 </div>
 
@@ -64,20 +64,18 @@ It depends greatly on the game...
 
 <p>
 Some games, like Wolf-3D, are simply too old and limited
-for the way that Oblige works.
+for the way that OBLIGE works.
 Supporting them would require a whole different method of
-generating the levels -- it's possible but not something I am
-keen to do.
-Plus I don't enjoy playing those games anymore.
+generating the levels -- and while it is definitely possible
+(as shown by the RANDWOLF program),
+there is absolutely no desire to work on it.
 
 <p>
 Modern games, anything released after 2000 or so
-(for example: Doom 3) have map formats which are too
-complicated, and often poorly documented (if at all).
+(like Doom 3, for example) have map formats which are too
+complicated and/or too poorly documented (if at all).
 Hence it becomes too hard to write the CSG code to
 generate those formats.
-Very modern games are excluded since they won't even
-run on my old computer.
 
 <p>
 Some games have a style of gameplay which is different
@@ -89,7 +87,7 @@ require a lot of new logic to support them well.
 
 <p>
 Finally, I am only one person and can only do so much.
-One day hopefully Oblige will become so popular that other
+One day hopefully OBLIGE will become so popular that other
 programmers will volunteer to develop and maintain the lua code
 for a particular game that they like.
 Until then, it is probably better to have a few games which
@@ -122,13 +120,8 @@ concentrate on tactics.
 Hence the layout and flow of the map
 is absolutely critical, and it should be nice to look at too
 since you are spending so much time in there.
-I think the bar is much much higher for generating these
+The bar is much higher for generating these
 kinds of maps.
-
-<p>
-Perhaps one day I will work on generating DM or CTF maps,
-as the topic does interest me,
-but right now I have bigger fish to fry.
 </div>
 
 
@@ -137,37 +130,15 @@ Q/ Water should not hurt the player!
 </div>
 
 <div class="faq_A">
-I agree!&nbsp;
-However, since there is no way to get out of deep pits yet,
-and since I like to see water being used in levels,
-this is the only option right now.
-</div>
-
-
-<div id="pits" class="faq_Q">
-Q/ Lava pits should have a way to get out of them.
-</div>
-
-<div class="faq_A">
-On the one hand, it is quite mean to let the player die from
-making a small mistake and falling into a pit.
-
-<p>
-On the other hand, I think knowing that those pits of lava,
-nukage (etc) are fatal adds some spice to the gameplay,
-dodging fireballs and weaving around monsters while trying
-not to fall in.
-
-<p>
-So I haven't really decided yet whether to add escape mechanisms
-or to keep the pits are fatal hazards.
-Perhaps giving the user a choice is the way to go.
-
+Agreed!&nbsp;
+However, since there are occasional liquid areas which the player
+cannot escape from, those areas need to remain damaging to
+the player.
 </div>
 
 
 <div id="prebuilt" class="faq_Q">
-Q/ I don't like the pre-built maps, will Oblige make its own Boss maps?
+Q/ I don't like the pre-built maps, will OBLIGE make its own Boss maps?
 </div>
 
 <div class="faq_A">
@@ -178,69 +149,8 @@ DOOM lowers a wall, and a teleporter takes you to a small
 dark room with a special floor type).
 
 <p>
-Perhaps one day Oblige can make them, but I don't
-consider it a very high priority.
-
-<p>
-Certain maps are so specialized that there is little
-scope for variation.  For example: the final map of DOOM 
-or the Chthon map in Quake.
-For these cases the pre-built maps are the best way.
-</div>
-
-
-<div id="quake_bugs" class="faq_Q">
-Q/ Quake maps have collision problems (invisible walls) and
-   rendering problems, what's up with that?
-</div>
-
-<div class="faq_A">
-The Quake code is still in its early stages,
-and with hindsight it would have been better to wait
-until the code was more robust instead of releasing it.
-
-<p>
-Anyway, I hope to fix the collision problems soon
-(before the next release), as well as implementing
-visibility and lighting.
-Visibility is especially important for playing large maps.
-
-<p>
-There are rendering issues when using standard QUAKE.EXE
-(or WinQuake) and I don't know what causes it yet.
-
-Playing with a port like
-FitzQuake or Darkplaces is recommended.
-</div>
-
-
-<div id="quake_MAP" class="faq_Q">
-Q/ Why don't you export Quake levels as .MAP files, and let people
-   run the normal BSP compiling tools on them?
-</div>
-
-<div class="faq_A">
-There are a number of reasons:
-
-<ol class="spacey_list">
-  <li> Convenience to users.
-       Most people wouldn't know how to use the compiling tools.
-
-  <li> Robustness.  The normal quake compiling tools can suffer
-       "leaks" causing the build process to fail.
-       This can never happen with OBLIGE's internal CSG method.
-
-  <li> Speed.  Especially for the visibility step,
-       I can take advantage of OBLIGE's grid system to
-       generate adequate (but not optimal) vis data
-       much much faster than it would normally take.
-
-  <li> Flexibility.  I am not limited by what the tools can do.
-       For example, I could implement my own lighting algorithms.
-</ol>
-
-Nevertheless, a method of creating .MAP files may still
-be added one day.
+Perhaps one day OBLIGE can make them, but it is not a high
+priority task.
 
 </div>
 
@@ -250,10 +160,10 @@ Q/ How do I compile the EXE?
 </div>
 
 <div class="faq_A">
-Firstly, be aware you can change any of the Lua files
-(such as games/doom.lua or scripts/rooms.lua)
+Firstly, be aware you can change the Lua files,
+such as games/doom/monsters.lua or scripts/rooms.lua,
 without having to compile anything.
-Oblige will load your changes the next time you run it.
+OBLIGE will load your changes the next time you run it.
 
 <p>
 Compiling Oblige.exe is fairly complicated,
@@ -276,17 +186,12 @@ Q/ You must do such and such, I demand it!
 <div class="faq_A">
 Hey, you got this program for free and nobody is
 getting paid to work on it.
-That means you have NO RIGHT to demand anything from me.
-However if you have a request and ask nicely, it will be
+That means you have NO RIGHT to demand anything from us.
+
+<p>
+However if you have a request and ask nicely, it <i>will</i> be
 considered.
 
-<!---
-People who behave in an insulting, threatening, harrassing
-or otherwise being unpleasant manner will be BANNED from the
-forum and my email.
-This is just a hobby and I don't need any grief like that.
-Be polite and respectful and we'll get along fine.
---->
 </div>
 
 
