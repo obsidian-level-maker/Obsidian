@@ -31,13 +31,13 @@ showed you the shape of each generated area.
 <b>Oblige V2</b> started development in June 2006, using Lua scripts
 for the level creation logic and C++ for the GUI front-end
 and WAD output code, and evolved with many features and
-support for several games, leading to the first public release
-early in 2007.
+support for several games, culminating in the first public
+release in early 2007.
 
 <p>
 <b>Oblige V3</b> was a huge rethink and rewrite, prompted by
 severe limitations in the previous design.
-The V3 codebase introduced the concept of constructing maps
+The V3 code introduced the concept of constructing maps
 from brushes (similar to how Quake mapping works), and planned
 the levels using a grid of 192x192 unit squares called "seeds".
 
@@ -47,23 +47,25 @@ sharing a goal of building rooms with very large prefabs
 (a whole room could be a single prefab).
 However it proved to be unsatisfactory, so I scrapped it
 and went back to the previous layouting logic.
-The V5 codebase introduced an ability to create prefabs
-using normal WAD files, a very useful feature which
-(among other improvements made during V4 and V5 development)
+The V5 code also introduced the capability
+of using normal WAD files for prefabs,
+a very useful feature which
+(along with other improvements made during this period)
 has been kept.
 
 <p>
 <b>Oblige V6</b> is the latest version, which aims to
 meld together the best features of the previous releases.
-My focus is a bit different too, concentrating less on the
-aesthetics of the levels and more on the fun factor.
+My focus has also shifted a bit these days,
+concentrating more on the fun factor of the levels and
+less on the aesthetics.
 There is still so much to do, so I'd better stop yakking and
-resume hacking.... :-)
+keep on hacking.... :-)
 
 
 <h3>RELEASE DATES</h3>
 
-<b>Version 6.04</b> : 2014-??-??
+<b>Version 6.05</b> : 2014-04-31
 
 <p>
 <b>Version 5.10</b> : 2013-08-14 &nbsp; (unofficial "work in progress" package)<br>
