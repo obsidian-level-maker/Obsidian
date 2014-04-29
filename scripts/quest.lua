@@ -581,7 +581,7 @@ function Quest_add_weapons()
 
   gui.printf("Weapon list:\n")
   each name in list do
-    gui.debugf("   %s\n", name)
+    gui.printf("   %s\n", name)
   end
 
 
