@@ -163,8 +163,8 @@ NOTE: the version of Lua used by OBLIGE has been extended
 with a few extra features, including cleaner data tables
 (commas are optional at end of a line)
 and a new "each" statement.  This means
-our Lua scripts are not compatible with some programming tools
-which only work with standard Lua syntax.
+our Lua scripts are not compatible with some programming tools,
+since they only work with standard Lua syntax.
 
 <p>
 Visit the <a href="http://www.lua.org">Lua home page</a>
@@ -228,6 +228,17 @@ A mapping structure, such as a window or door, whose shape
 and texturing have been previously designed by a person.
 This is in contrast to stuff like caves which are generated
 purely by an algorithm.
+
+<p>
+Starting with V5, most prefabs used by OBLIGE are in "wad"
+files, which can be created and edited by a DOOM map editor.
+There must also be a corresponding Lua file which contains
+various properties about the prefab, like its size and how it
+connects to its environment.
+
+<p>
+<i>(See also.... Skin)</i>
+
 </div>
 
 
@@ -277,43 +288,45 @@ but other shapes are possible too.
 <div id="seed" class="gloss_term">
 Seed
 </div><div class="gloss_define">
-In the GUI, the seed is a 6-digit value which is used to
-setup the random-number generator.  The same seed value
+In the Lua code, a seed is a square region on the 2D map
+which is 192x192 units in size (depending on the game).
+Each seed generally contains a single mapping concept:
+a walkway, a stair, a switch, a pillar, etc...
+The sides of each seed can be used for walls, doors,
+windows, etc...
+The decisions about where to place rooms, how big they are,
+and how they are connected are all done using seeds.
+
+<p>
+In the user interface, the seed is a 6-digit value which is used
+to setup the random number generator.  The same seed value
 produces the same random numbers, and hence the same levels
 (when all other settings are the same).
 The top four digits are guaranteed to be different on
 different days, so it would take about 27 <i>years</i> before
 they start repeating.
 The '+' (Bump) button only changes the bottom two digits.
-
-<p>
-In the Lua code, a seed is a square region on the 2D map.
-At the moment the size is 192x192 units,
-but this may change in the future.
-Each seed represents a single mapping concept,
-such as a walkway, stair, lift, switch, pillar, or a spot for a
-monster.  The sides of each seed can be used for walls, doors,
-windows, etc...
-The decisions about where to place rooms, how big they are,
-and how they are connected are all done using seeds.
 </div>
 
 
 <div id="skin" class="gloss_term">
 Skin
 </div><div class="gloss_define">
-Skins are used with prefabs, and are tables containing all
-the materials (i.e. textures) to use on the prefab.
-Hence they are a similar concept to skins used on models
-(like MD2 or MD3), where the model defines the 3D shape
-and the skin defines what it looks like.
+Skins are used with prefabs, they are tables containing
+various properties about the prefab,
+such as the dimensions of the prefab,
+how it can connect to other prefabs,
+which themes the prefab can be used with,
+and replacements for textures and entities.
 
 <p>
-Skins can also specify other properties, for example
-the skin of the PICTURE prefab
-must specify the width and height of the picture part,
-and the skin for doors and lifts must specify what
-linedef types to use (for DOOM anyway).
+Hence they are a similar concept to skins used on 3D models,
+where the model defines the 3D shape and the skin defines what
+it looks like.
+In games, models are often re-used by having more than one skin.
+Similarly in OBLIGE
+there can be more than one skin for each prefab.
+
 </div>
 
 
@@ -337,14 +350,14 @@ It also stores a history of all changes, where each change
 has message describing what was done.
 
 <p>
-You can view OBLIGE's SVN respository here:
-<a href="http://sourceforge.net/p/oblige/code/HEAD/tree/trunk/">
-Browse Code</a>
-
-<p>
 More information can be found at the official
 <a href="http://subversion.apache.org/">
 Subversion site</a>.
+
+<p>
+You can view OBLIGE's SVN respository here:
+<a href="http://sourceforge.net/p/oblige/code/HEAD/tree/trunk/">
+Browse Code</a>
 
 </div>
 
