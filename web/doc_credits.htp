@@ -26,10 +26,17 @@ I created OBLIGE and I continue to develop it.
 
 <p>
 Some other projects I have worked on include:
-<a href="http://glbsp.sourceforge.net/">glBSP</a>,
-a node builder for classic DOOM, and also:
+
+<a href="http://eureka-editor.sourceforge.net/">Eureka</a>,
+a map editor for classing DOOM, and also:
+
 <a href="http://edge.sourceforge.net/">EDGE</a>,
-a DOOM source port with many enhanced features.
+an OpenGL DOOM source port with many enhanced features.
+
+<!---
+[a href="http://glbsp.sourceforge.net/"]glBSP[/a],
+a node builder for classic DOOM, and also:
+--->
 
 
 <h3> CONTRIBUTORS </h3>
@@ -173,7 +180,7 @@ based on code by Makoto Matsumoto, Takuji Nishimura, and Shawn Cokus.
 
 <p>
 OBLIGE uses the FLTK widget library :
-(<a href="http://www.fltk.org">http://www.fltk.org</a>).
+(<a href="http://www.fltk.org">http://www.fltk.org</a>)
 
 
 <h3>COPYRIGHT / LICENSE</h3>
