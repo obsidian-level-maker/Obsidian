@@ -32,7 +32,7 @@ internet control panel to get it extracted properly).
 
 Double click on the OBLIGE icon (shown right) to run it.
 Select the target game in the top left panel,
-and any other options which take your fancy.
+and change any settings which take your fancy.
 Then click the <span class="button">Build</span> button
 in the bottom left panel,
 and enter an output filename, for example "TEST"
@@ -41,11 +41,11 @@ and enter an output filename, for example "TEST"
 <p>
 OBLIGE will then build all the maps, showing a blueprint of
 each one as it goes, and if everything goes smoothly the output
-file (e.g. "TEST.WAD") will be created at the end.
+file, for example "TEST.WAD", will have been created.
 Then you can play it using the normal method for playing
-mods with that game (e.g. for DOOM source ports:
-dragging -n- dropping the WAD file onto the source port's EXE
-is usually enough).
+mods with that game, e.g. with modern DOOM source ports
+dragging -n- dropping the WAD file onto the EXE
+is usually enough.
 
 <p>
 <i>(Some games, especially Quake, may need special setup before
@@ -106,7 +106,7 @@ making a full game, each episode will stick to a single theme.
 The "As Original" theme setting causes the themes in each episode
 to try and match the original game.  Note: when there are custom
 themes (from a module) the same ordering is not guaranteed
-since a custom theme could replace one of them.
+since a custom theme can replace one (or more) of them.
 
 
 <h3 id="playing">PLAYING STYLE</h3>
@@ -127,15 +127,14 @@ course of each episode.
 
 <p>
 The "Crazy" strength works a bit differently.
-It forgets all about trying to make battles
-which are fair (or somewhat fair), and throws any or all
-of the monsters at you, including bosses!
+It forgets all about trying to make battles which are fair,
+and throws any or all of the monsters at you, including bosses!
 Be warned though, playing maps on this setting can actually
 drive you insane -- hence the name.
 
 <p>
 <i>(Note that the <span class="button">Powerups</span> button
-doesn't do anything yet)</I>
+doesn't do anything yet)</i>
 
 
 <h3 id="modules">MODULES PANEL</h3>
@@ -156,7 +155,7 @@ Similarly they can depend on a certain engine (source port),
 and might even depend on other modules.
 E.g. a module which requires ZDoom will not be visible
 until ZDoom is chosen in the Game Settings panel.
-Changing the current game or the current engine (etc)
+So changing the current game or the current engine
 can cause some modules to appear and/or other modules
 to disappear.
 
@@ -172,7 +171,7 @@ those options are not shown while the module is disabled
 
 <h3 id="build">BUILD PANEL</h3>
 
-Once you've chosen the desired settings,
+Once you have chosen the desired settings,
 press the <span class="button">Build</span> button.
 This will open a Save-File dialog asking you what the output file
 should be.
@@ -182,7 +181,7 @@ OBLIGE will starting building the levels.
 <p>
 The levels created by OBLIGE are ready to play.  There is no
 need to run the output WAD file through a nodes-builder,
-since OBLIGE does this automatically.
+since OBLIGE includes a built-in version of glBSP.
 
 
 
@@ -195,16 +194,14 @@ Blah blah blag
 
 <h3 id="quake">QUAKE SETUP</h3>
 
-<i>(Note: the following applies to Hexen 2 as well)</i>
-
 <p>
 Quake levels have the unusual feature of including a full copy
 of every texture which they use.
 But this is a problem for OBLIGE, as it needs to get
 these textures from somewhere.
-I am not allowed to put a copy of them on 
+We are not allowed to put a copy of them on 
 SourceForge for you to download, because they are copyrighted
-material (belonging to Id Software).
+material belonging to Id Software.
 
 <p>
 The solution is to extract the textures using a program
@@ -220,26 +217,19 @@ in the 'tools' folder.  Here is what you need to do:
 
 <li>run qsavetex by double clicking on it
 
-<li>refresh the folder, a file called <b>qsavetex_log.txt</b>
+<li>refresh the folder. A file called <b>qsavetex_log.txt</b>
     should have appeared.  Read it (e.g. with NOTEPAD) to check
     whether the textures were extracted successfully.
-    If something went wrong, this file should have an
+    If something went wrong, this file should contain an
     error message in it
 
-<li>lastly, copy the <b>quake_tex.wd2</b> file into the 'data'
-    folder where OBLIGE is installed.
+<li>lastly copy the <b>quake_tex.wd2</b> file into the 'data'
+    folder where OBLIGE is installed
 
 </ol>
 
 You will know it has worked when OBLIGE can build some Quake
 maps without any error message about missing texture wads.
-
-<p>
-
-<!---
-<i>(Note that Quake support is still under development and is
-not functional just yet)</i>
---->
 
 
 <h3 id="misc">MISC NOTES</h3>
@@ -249,21 +239,22 @@ It will NOT work properly with shareware or demo versions,
 and never will.
 
 <p>
-Most games let you play at different skill levels
-(e.g. Hurt-Me-Plenty vs Ultra-Violence),
-and OBLIGE takes them into account.  Easier skill levels
-will have less monsters than harder skill levels,
+Most games let you play at different skill levels,
+for example: Hurt-Me-Plenty vs Ultra-Violence,
+and OBLIGE takes them into account.
+Easier skill levels will have less monsters than harder skill levels,
 while health and ammo remain the same.
 
 <p>
 You should use a
 <a href="doc_glossary.html#engine">Source Port</a>
-to play the levels, because the
-original DOOM.EXE, DOOM2.EXE (etc..) may not cope with the
-architecture which OBLIGE creates.  For example, you might
-get the "Visplane Overflow" error which quits the game.
-DOOM.EXE also crashes when saving a level which has
-too many things in it.
+to play the levels, because the original DOS versions,
+such as DOOM.EXE and DOOM2.EXE,
+cannot cope with the architecture which OBLIGE creates.
+For example, you will probably get the "Visplane Overflow" error
+which quits the game, or a crash when saving to a savegame.
+(Note that <b>Chocolate-Doom</b> has the same limitations
+as the original DOS versions, and should not be used either).
 
 <p>
 For Quake, call the output file <b>PAK2.pak</b> and place it
@@ -273,8 +264,8 @@ Delete the PAK2.pak file when you want to play the original
 Quake levels.
 
 <p>
-Playing Quake 2 maps is similar to Quake, but place the <b>PAK2.pak</b> file
-into the BASEQ2 folder where Quake 2 is installed, and
+Playing Quake 2 maps is similar to Quake, but place the <b>PAK2.pak</b>
+file into the BASEQ2 folder where Quake 2 is installed, and
 start a game normally.
 
 </div class="rest">
