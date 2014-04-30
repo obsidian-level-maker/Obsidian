@@ -83,6 +83,12 @@ dd { margin-bottom: 1em; }
 
 B { color: #742; }
 
+.button {
+    color: #393;
+    font-weight: bold;
+    font-family: monospace;
+}
+
 .newsdate { font-weight: bold; color: #742; }
 .news { margin-bottom: 2em; }
 

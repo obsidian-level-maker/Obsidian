@@ -23,16 +23,18 @@
 First, unpack the zip somewhere (e.g. My Documents).
 Make sure it is extracted with folders,
 and also make sure the OBLIGE.EXE file is extracted too
-(at least one person had the problem that Microsoft Windows
-would skip the EXE, and he had to change something in the
-control panels to get it extracted properly).
+(a few people have had the problem that Microsoft Windows
+would skip the EXE, and they had to change something in the
+internet control panel to get it extracted properly).
 
 <p>
-<img src="oblige_icon.png" width="64" height="64" border="0" class="floatR" alt="">
+<img src="oblige_icon.png" width="64" height="64" border="0" class="floatR" alt="ICON">
+
 Double click on the OBLIGE icon (shown right) to run it.
 Select the target game in the top left panel,
 and any other options which take your fancy.
-Then click the BUILD button in the bottom left panel,
+Then click the <span class="button">Build</span> button
+in the bottom left panel,
 and enter an output filename, for example "TEST"
 (without the quotes).
 
@@ -59,7 +61,7 @@ The panels are discussed in separate sections below.
 
 Also notice there is no menu bar.  To exit you can either
 click the window's standard close button, or
-click the "Quit" button in the Build Panel,
+click the <span class="button">Quit</span> button in the Build Panel,
 or just press the ESCAPE key.
 
 <div class="guioverview">
@@ -71,20 +73,20 @@ or just press the ESCAPE key.
 
 
 <p>
-The top left corner panel contains the most important settings.
+The top left panel contains the most important settings.
 
 <p>
-The first entry is the "SEED" number.
-Each SEED number produces a unique, distinctive level. 
+The last entry is the <span class="button">Seed</span> number.
+Each SEED number produces a unique, distinctive level.
 Using the same SEED number always produces the exact same level
-(as long as every other setting is the same).
+(as long as every other setting is the same, including modules).
 
 <p>
 Other settings include:
 <ul>
-  <li>the "Game" type (DOOM, HERETIC or HEXEN), 
-  <li>the "Mode" of the game (SINGLE-PLAYER, CO-OP, or DEATHMATCH)
-  <li>the "Length" of the output wad (SINGLE-LEVEL, ONE-EPISODE, FULL-GAME).
+  <li>the <span class="button">Game</span> type (DOOM, HERETIC, etc...)
+  <li>the <span class="button">Mode</span> of the game (SINGLE-PLAYER, CO-OP, or DEATHMATCH)
+  <li>the <span class="button">Length</span> of the output wad (SINGLE-LEVEL, ONE-EPISODE, FULL-GAME).
 </ul>
 
 <h3 id="level">LEVEL ARCHITECTURE</h3>
@@ -106,10 +108,6 @@ to try and match the original game.  Note: when there are custom
 themes (from a module) the same ordering is not guaranteed
 since a custom theme could replace one of them.
 
-<p>
-<i>(Note that the 'Secrets' and 'Traps' buttons don't do
-anything yet)</I>
-
 
 <h3 id="playing">PLAYING STYLE</h3>
 
@@ -118,8 +116,9 @@ Here you can control the amount and strength of the
 monsters, how much health and ammunition should be added, etc...
 
 <p>
-The 'Strength' button determines the overall toughness of
-the monsters.  The "Medium" setting is designed to give a mix
+The <span class="button">Strength</span> button determines the
+overall toughness of the monsters.
+The "Medium" setting is designed to give a mix
 of monsters similar to the levels in the original game.
 Compared to that, the "Weak" setting produces weaker
 monsters and the "Tough" setting gives tougher ones.
@@ -127,16 +126,16 @@ In all three cases the toughness increases over the
 course of each episode.
 
 <p>
-The "Crazy" setting works a bit differently.
+The "Crazy" strength works a bit differently.
 It forgets all about trying to make battles
 which are fair (or somewhat fair), and throws any or all
 of the monsters at you, including bosses!
 Be warned though, playing maps on this setting can actually
-drive you insane (hence the name).
+drive you insane -- hence the name.
 
 <p>
-<i>(Note that the 'Powerups' button doesn't do
-anything yet)</I>
+<i>(Note that the <span class="button">Powerups</span> button
+doesn't do anything yet)</I>
 
 
 <h3 id="modules">MODULES PANEL</h3>
@@ -152,9 +151,9 @@ Modules can even have their own option buttons.
 <p>
 First thing you need to know is: modules are usually
 specific to a single game, and will only show up in the
-module panel when that game is selected.  Similarly they
-can depend on a certain engine (source port), and might even
-depend on other modules.
+module panel when that game is selected.
+Similarly they can depend on a certain engine (source port),
+and might even depend on other modules.
 E.g. a module which requires ZDoom will not be visible
 until ZDoom is chosen in the Game Settings panel.
 Changing the current game or the current engine (etc)
@@ -168,12 +167,13 @@ Modules must be both enabled and shown
 in order to have any effect, otherwise they do nothing.
 When a module has options,
 those options are not shown while the module is disabled
-(though the option settings are never forgotten).
+(though the option settings are not forgotten).
 
 
 <h3 id="build">BUILD PANEL</h3>
 
-Once you've chosen the desired settings, press the "Build" button.
+Once you've chosen the desired settings,
+press the <span class="button">Build</span> button.
 This will open a Save-File dialog asking you what the output file
 should be.
 Enter something appropriate, e.g. TEST, and after that
@@ -181,8 +181,9 @@ OBLIGE will starting building the levels.
 
 <p>
 The levels created by OBLIGE are ready to play.  There is no
-need to run the output WAD file through a node-builder program,
+need to run the output WAD file through a nodes-builder,
 since OBLIGE does this automatically.
+
 
 
 <!--- 
