@@ -2,53 +2,6 @@
 WEB PAGE REORGANISATION
 =======================
 
-MAIN
-
-- main page:
-  - short introduction [DONE]
-  - news / changes     [DONE]
-
-- Screenshots [DONE]
-
-- downloads [DONE]
-
-- V2 page  [DONE]
-
-
-DOCS
-
-- usage
-  - Batch mode section!
-  - Options window
-
-- about page
-  - OBLIGE is FREE SOFTWARE with NO WARRANTY  [DONE]
-  - FEATURE list  [DONE]
-  - system requirments  [DONE]
-  - current status [DONE]
-  - future development  (LATER...)
-  - contact:  sourceforge devel page  [DONE]
-
-- credits
-  - author(s)  [DONE]
-  - acknowledgements  [DONE]
-  - license / copyright  [DONE]
-
-- history  [DONE]
-
-- games  (LATER....)
-
-- modules  (LATER....)
-
-
-MODDING  (LATER....)
-
-- basics
-   - Lua
-   - OB_CONFIG, OB_GAMES, OB_MODULES, OB_THEMES
-   - things, monsters, weapons, pickups
-   - materials, themes
- 
 
 BATCH MODE
 
@@ -68,55 +21,12 @@ Examples:
 [/code]
 
 
-LINKS??
-
--  HacX : http://www.sonic.net/~nostromo/hacx/Hacx.html
--  HexenII textures: http://www.raven-games.com/essentials
-(glbsp, FLTK, lua, yawn)
--  ObHack
-
-
 USER-GUIDE:
 but stupid windows blocks EXE files unless you go to control
 panel/internet options/security/(change to default level before you
 unzip)
 
-Size setting is the overall size of the map.
-
-Mix It Up means pick a random setting for each level.
-
-Monster strength is always progressive (except for Crazy mode).
-Medium gives you a good mix (like in the IWADs).  Weak gives less big
-monsters, and Tough gives less small monsters.
-
-Most importantly it supports custom mods: plop the lua file in the
-'mods' folder and Oblige will load it and you can enable/disable it in
-the GUI.
-
-note that you need full version of XXX to play the games
-(shareware won't work).
-
-built-in DOOM node builder (glBSP).
-
 note that Oblige does not merge any third party mods into the
 final WAD file, you need to run e.g. DOOM with both the mod _and_
 the Oblige output together.
-
-
-COMPILATION DEPENDENCIES
-
--  glBSP 2.27  (this needs ZLib)
--  Lua 5.1.4
--  FLTK 1.1.10
--  GNU C++ compiler (nothing else has been tested)
-
-
-MODDING GUIDE
-The core of OBLIGE is written in the LUA scripting language, and those
-files are located in the "obl_data" folder with names like
-"planner.lua" and "th_doom1.lua". Because they are simply text files,
-you can edit them with a text editor (Notepad) and, assuming nothing
-got borked up, the changes will be used the next time you run OBLIGE --
-no need to compile anything.
-
 

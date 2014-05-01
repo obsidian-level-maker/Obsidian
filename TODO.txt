@@ -12,6 +12,8 @@ ______________________________________________________________________
 
 *  add in more scenery: trees, computers etc
 
+*  honor the 'Powerups' GUI setting
+
 
 BUG (WIN32): copy seed value and paste into filename --> crash.
 
@@ -556,14 +558,24 @@ Cancellation:
   DOCUMENTATION / WEB SITE
 ----------------------------------------------
 
-+  information about creating prefabs
++  Usage page: new section: BATCH MODE
+
++  need new screenshots for website
+
+-  Usage page: document the 'Options' window
+
+-  modding guide: information about creating prefabs
+
+-  modding guide : code stuff:
+   - Lua
+   - OB_CONFIG, OB_GAMES, OB_MODULES, OB_THEMES
+   - things, monsters, weapons, pickups
+   - materials, themes
 
 -  transfer Lua_Extended.txt document to the website
    (part of modding guide).
 
--  new "RUNNING THE MAPS" section ?
-
-[etc.... merge WEB_TODO.txt into here...]
+IDEA:  new "RUNNING THE MAPS" section (on Usage page)
 
 
 ----------------------------------------------
