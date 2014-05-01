@@ -3,17 +3,8 @@
 
 if [ $# -eq 0 ]
 then
-	echo "USAGE: test-it <seed> [<length>]"
+	echo "USAGE: test-it  seed  oblige_options..."
 	exit
-fi
-
-seed=$1
-
-length="game"
-
-if [ $# -eq 2 ]
-then
-	length=$2
 fi
 
 if [ ! -d lua_src ]
@@ -22,26 +13,33 @@ then
 	exit 1
 fi
 
-GAMES="doom2 doom1 freedoom ultdoom tnt plutonia"
+seed=$1
+shift
 
-SIZES="prog mixed tiny small regular large"
+base="test_${seed}"
 
-THEMES="mixed jumble original psycho"
+# default values
+def_length=game
 
-for game in ${GAMES}; do
-	for size in ${SIZES}; do
-		for theme in ${THEMES}; do
-			echo ""
-			echo "==== $game / $size / $theme ===="
-			echo ""
+declare -a GAMES
+GAMES=("doom1" "doom2" "freedoom" "ultdoom" "tnt" "plutonia")
+index=$(($RANDOM % ${#GAMES}))
+def_game=${GAMES[$index]}
+echo def_game = $def_game
 
-			base="test_${game}_${size}_${theme}"
+declare -a SIZES
+SIZES=("prog" "mixed" "tiny" "small" "regular" "large")
+index=$(($RANDOM % ${#SIZES}))
+def_size=${SIZES[$index]}
+echo def_size = $def_size
 
-			./Oblige --nolight seed=${seed} game=${game} size=${size} \
-					 theme=${theme} -b ${base}.wad > ${base}.log
-		done
-	done
-done
+declare -a THEMES
+THEMES=("mixed" "mixed" "jumble" "original" "psycho")
+index=$(($RANDOM % ${#THEMES}))
+def_theme=${THEMES[$index]}
+echo def_theme = $def_theme
+
+## ./Oblige --nolight seed=${seed} length=${def_length} $@ -b ${base}.out > ${base}.log
 
 # --- editor settings ---
 # vi:ts=4:sw=4:noexpandtab
