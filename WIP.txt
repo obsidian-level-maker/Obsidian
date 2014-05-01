@@ -2,14 +2,3 @@
 WORK IN PROGRESS
 ================
 
-+  later levels should not always have a Cyberdemon as a
-   guard monster -- especially in "weak" mode.
-
-
-Web site:
-
-+  update Usage page:
-   -  the 'Seed' setting is no longer first
-
--  sync AUTHORS.txt to web version
-
