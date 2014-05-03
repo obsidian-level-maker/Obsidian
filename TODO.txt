@@ -53,6 +53,10 @@ ______________________________________________________________________
 
 !!  BUG: torches in a cave can obstruct the player
 
+-  BUG: escape-pit lifts are not pegged
+
+-  BUG: adding an outdoor door but no fence
+
 
 +  a secret exit may not be possible due to reserved room
    becoming surrounded by scenic rooms (from connection logic).
@@ -557,6 +561,8 @@ Cancellation:
 ----------------------------------------------
   DOCUMENTATION / WEB SITE
 ----------------------------------------------
+
++  manpage for the Debian package
 
 +  Usage page: new section: BATCH MODE
 
