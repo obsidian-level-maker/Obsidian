@@ -442,6 +442,48 @@ DOOM2.THEMES =
   }
 
 
+  tech_Gray =
+  {
+    prob = 25
+    kind = "building"
+
+    walls =
+    {
+      GRAY1 = 50
+      GRAY4 = 30
+      GRAY7 = 30
+      ICKWALL1 = 40
+      ICKWALL3 = 20
+    }
+
+    floors =
+    {
+      FLAT4 = 50
+      FLAT5_4 = 20
+      FLAT9 = 10
+      FLOOR0_5 = 40
+      FLOOR0_1 = 30
+      FLOOR0_3 = 10
+      FLOOR3_3 = 20
+      FLOOR5_1 = 10
+      SLIME14 = 10
+      SLIME15 = 10
+      SLIME16 = 10
+    }
+
+    ceilings =
+    {
+      CEIL5_1 = 10
+      CEIL3_1 = 20
+      CEIL3_5 = 20
+      FLAT5_4 = 20
+      FLAT4   = 10
+      FLAT5_5 = 5
+      FLAT1   = 5
+    }
+  }
+
+
   tech_Cave =
   {
     kind = "cave"
@@ -1605,6 +1647,41 @@ DOOM1.THEMES =
     ceilings =
     {
       FLAT23 = 50
+    }
+  }
+
+
+  tech_Gray =
+  {
+    prob = 20
+    kind = "building"
+
+    walls =
+    {
+      GRAY1 = 50
+      GRAY4 = 30
+      GRAY7 = 30
+      ICKWALL1 = 40
+      ICKWALL3 = 20
+    }
+
+    floors =
+    {
+      FLAT4 = 50
+      FLOOR0_3 = 30
+      FLAT5_4 = 25
+      FLAT19 = 15
+      FLAT1 = 15
+      FLOOR0_5 = 10
+    }
+
+    ceilings =
+    {
+      FLAT19 = 40
+      FLAT5_4 = 20
+      FLAT4  = 20
+      FLAT23 = 10
+      FLAT1 = 10
     }
   }
 
