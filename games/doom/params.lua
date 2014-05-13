@@ -29,7 +29,7 @@ DOOM.PARAMETERS =
 
   time_factor    = 1.0
   ammo_factor    = 1.0
-  health_factor  = 1.0
+  health_factor  = 0.8
   monster_factor = 1.0
 }
 
