@@ -1107,7 +1107,7 @@ function Simple_bunch_areas(R, mode)
 
     -- extra health to compensate player for crossing the river
     if mode == "liquid" and LEVEL.liquid.damage then
-      R.hazard_health = R.hazard_health + 30
+      R.hazard_health = R.hazard_health + 20
     end
   end
 
@@ -2596,7 +2596,7 @@ function Simple_decide_properties(R)
   -- extra health for damaging liquid
   if LEVEL.liquid and LEVEL.liquid.damage then
     if info.liquid_mode != "none" then
-      R.hazard_health = R.hazard_health + R.svolume
+      R.hazard_health = R.hazard_health + R.svolume * 0.7
     end
   end
 
