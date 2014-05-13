@@ -209,9 +209,9 @@ DOOM.MATERIALS =
   STONE2   = { t="STONE2", f="MFLR8_1" }
   STONE3   = { t="STONE3", f="MFLR8_1" }
 
-  SKY1     = { t="SKY1", f="FLAT1" }
-  SKY2     = { t="SKY2", f="FLAT1" }
-  SKY3     = { t="SKY3", f="FLAT1" }
+  SKY1     = { t="SKY1", f="FLAT1", sane=1 }
+  SKY2     = { t="SKY2", f="FLAT1", sane=1 }
+  SKY3     = { t="SKY3", f="FLAT1", sane=1 }
 
   TEKWALL1 = { t="TEKWALL1",  f="CEIL5_1" }
   TEKWALL4 = { t="TEKWALL4",  f="CEIL5_1" }
