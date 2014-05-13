@@ -88,8 +88,6 @@ cp -av GPL.txt $dest
 cp -av CHANGES.txt $dest
 cp -av AUTHORS.txt $dest
 
-### cat web/main.css web/index.html > $dest/README.htm
-
 #
 # all done
 #
