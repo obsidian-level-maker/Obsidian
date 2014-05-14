@@ -1221,6 +1221,8 @@ gui.debugf("Failed\n")
     R.kind = "scenic"
     R.c_group = -1
 
+    R.is_outdoor = true
+
     -- move the room to the scenic list
 
     table.kill_elem(LEVEL.rooms, R)
@@ -1542,7 +1544,7 @@ function Connect_reserved_rooms()
   local function change_room_to_scenic(R)
     R.kind = "scenic"
 
-    -- outdoor (or whatever) is decided in rooms.lua
+    R.is_outdoor = true
 
     table.insert(LEVEL.scenic_rooms, R)
 

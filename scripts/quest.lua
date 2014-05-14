@@ -848,7 +848,6 @@ function Quest_select_textures()
   end
 
   each R in LEVEL.scenic_rooms do
-    R.is_outdoor = true  -- ???
     setup_theme(R)
   end
 
