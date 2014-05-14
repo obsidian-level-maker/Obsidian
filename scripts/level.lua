@@ -443,25 +443,6 @@ function Levels_choose_themes()
       LEV.name_class = assert(info.name_class)
     end
 
---[[  OLD STUFF  (PROBABLY OBSOLETE)
-
-    local sub_tab = {}
-    local sub_pattern = "^" .. name
-
-    for which,theme in pairs(GAME.LEVEL_THEMES) do
-      local prob = theme.prob or 50
-      if prob > 0 and string.find(which, sub_pattern) then
-        sub_tab[which] = prob
-      end
-    end
-
-    if table.empty(sub_tab) then
-      error("No sub-themes for " .. name)
-    end
-
-    local which = rand.key_by_probs(sub_tab)
---]]
-
     LEV.theme = assert(GAME.THEMES[name .. "_DEFAULTS"])
 
     gui.printf("Theme for level %s = %s\n", LEV.name, name)

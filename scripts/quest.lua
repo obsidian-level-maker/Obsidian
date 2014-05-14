@@ -1044,28 +1044,6 @@ function Quest_create_zones()
   end
 
 
-  local function mark_paths__OLD()
-    -- mark the rooms between a zone's start and its exit room as
-    -- being "on path" (including both start and exit).  These will
-    -- be bad places to put a key.
-    each lock in LEVEL.locks do
-      if lock.kind != "EXIT" then
-        local C = assert(lock.conn)
-        local R = C.R1
-
-        while true do
-          R.on_zone_path = true
-
-          if is_zone_start(R) then break; end
-          if not R.entry_conn then break; end
-
-          R = R.entry_conn.R1
-        end
-      end
-    end
-  end
-
-
   local function mark_room_and_ancestors(R)
     while true do
       R.must_visit = true
