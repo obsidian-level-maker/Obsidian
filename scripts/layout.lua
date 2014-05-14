@@ -2860,6 +2860,9 @@ end
 function Layout_outdoor_borders()
 
   local all_rooms
+
+  local CORNERS = { 1,3,7,9 }
+
   
   local function collect_rooms()
     all_rooms = {}
@@ -2935,16 +2938,128 @@ function Layout_outdoor_borders()
   end
 
 
-  local function plan_room_borders(R)
-    -- FIXME
+  local function in_use(S)
+    return S.room or S.free or S.map_border
+  end
+
+
+  local function plan_room_borders(R, side)
+    local x1, y1 = R.sx1, R.sy1
+    local x2, y2 = R.sx2, R.sy2
+
+    if side == 2 then y2 = y1 end
+    if side == 8 then y1 = y2 end
+    if side == 4 then x2 = x1 end
+    if side == 6 then x1 = x2 end
+
+    -- check that we can build something (to be safe)
+
+    for sx = x1, x2 do
+    for sy = y1, y2 do
+      local S = SEEDS[sx][sy]
+
+      if S.room ~= R then return end
+
+      for dist = 1, 3 do
+        local N = S:neighbor(side, dist)
+
+        if not N then return end
+
+        if in_use(N) then return end
+      end
+    end
+    end
+
+    -- OK, this edge will have border fabs
+
+stderrf("Edge on side:%d of %s\n", side, R:tostr())
+ 
+    local BORDER =
+    {
+      kind = "edge"
+      side = side
+      room = R
+    }
+
+    R.border_edges[side] = true
+
+    table.insert(LEVEL.map_borders, BORDER)
+  end
+
+
+  local function plan_room_corners(R, corner)
+    local sx, sy
+
+    if corner == 1 or corner == 3 then
+      sy = R.sy1
+    else
+      sy = R.sy2
+    end
+
+    if corner == 1 or corner == 7 then
+      sx = R.sx1
+    else
+      sx = R.sx2
+    end
+
+    local S = SEEDS[sx][sy]
+
+    if S.room ~= R then return end
+
+    -- only build a corner if it will connect to an edge
+
+    local L_dir = geom.LEFT_45 [corner]
+    local R_dir = geom.RIGHT_45[corner]
+
+    if not R.border_edges[L_dir] and
+       not R.border_edges[R_dir]
+    then return end
+
+    -- check that we can build something there
+
+    for i = 1, 3 do
+    for k = 1, 3 do
+      local tmp = S:neighbor(L_dir, i)
+      if not tmp then return end
+
+      local N = tmp:neighbor(R_dir, k)
+      if not N then return end
+
+      if in_use(N) then return end
+    end
+    end
+
+stderrf("Corner on side:%d of %s\n", corner, R:tostr())
+ 
+    local BORDER =
+    {
+      kind = "corner"
+      side = corner
+      room = R
+    }
+
+    table.insert(LEVEL.map_borders, BORDER)
+  end
+
+
+  local function check_possible_borders(R)
+    R.border_edges = {}
+
+    for side = 2,8,2 do
+      plan_room_borders(R, side)
+    end
+
+    each corner in CORNERS do
+      plan_room_corners(R, corner)
+    end
   end
 
 
   local function plan_borders()
-    LEVEL.borders = {}
-
     each R in all_rooms do
-      plan_room_borders()
+      if R.is_outdoor then
+        check_possible_borders(R)
+      end
     end
   end
 
@@ -2958,14 +3073,18 @@ function Layout_outdoor_borders()
   
   gui.debugf("Layout_outdoor_borders...\n")
 
+  LEVEL.map_borders = {}
+
   collect_rooms()
 
   plan_borders()
 
   stretch_buildings()
 
-  each B in LEVEL.borders do
+  each B in LEVEL.map_borders do
     build_border(B)
   end
+
+  -- FIXME: fill gaps
 end
 
