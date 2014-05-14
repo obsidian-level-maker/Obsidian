@@ -2908,7 +2908,9 @@ function Layout_outdoor_borders()
 
       -- TODO : perhaps check for a nearby outdoor room (like V5)
 
-      Trans.old_quad(get_mat(tex), N.x1,N.y1, N.x2,N.y2, -EXTREME_H, EXTREME_H)
+      Trans.solid_quad(N.x1,N.y1, N.x2,N.y2, tex)
+
+      N.map_border = { kind="fake" }
     end
   end
 
@@ -2943,6 +2945,15 @@ function Layout_outdoor_borders()
   end
 
 
+  local function install_border(B)
+    for x = B.sx1, B.sx2 do
+    for y = N.sy1, B.sy2 do
+      SEEDS[x][y].map_border = B
+    end
+    end
+  end
+
+
   local function plan_room_borders(R, side)
     local x1, y1 = R.sx1, R.sy1
     local x2, y2 = R.sx2, R.sy2
@@ -2974,11 +2985,24 @@ function Layout_outdoor_borders()
 
 stderrf("Edge on side:%d of %s\n", side, R:tostr())
  
+    x1, y1 = R.sx1, R.sy1
+    x2, y2 = R.sx2, R.sy2
+
+    if side == 2 then y2 = y1 - 1 ; y1 = y2 - 2 end
+    if side == 8 then y1 = y2 + 1 ; y2 = y1 + 2 end
+    if side == 4 then x2 = x1 - 1 ; x1 = x2 - 2 end
+    if side == 6 then x1 = x2 + 1 ; x2 = x1 + 2 end
+
     local BORDER =
     {
       kind = "edge"
       side = side
       room = R
+
+      sx1 = x1
+      sy1 = y1
+      sx2 = x2
+      sy2 = y2
     }
 
     R.border_edges[side] = true
@@ -3017,6 +3041,8 @@ stderrf("Edge on side:%d of %s\n", side, R:tostr())
 
     -- check that we can build something there
 
+    local x1, y1, x2, y2
+
     for i = 1, 3 do
     for k = 1, 3 do
       local tmp = S:neighbor(L_dir, i)
@@ -3026,6 +3052,11 @@ stderrf("Edge on side:%d of %s\n", side, R:tostr())
       if not N then return end
 
       if in_use(N) then return end
+
+      x1 = math.min(N.sx, x1 or  999)
+      y1 = math.min(N.sy, y1 or  999)
+      x2 = math.max(N.sx, x2 or -999)
+      y2 = math.max(N.sy, y2 or -999)
     end
     end
 
@@ -3036,6 +3067,11 @@ stderrf("Corner on side:%d of %s\n", corner, R:tostr())
       kind = "corner"
       side = corner
       room = R
+
+      sx1 = x1
+      sy1 = y1
+      sx2 = x2
+      sy2 = y2
     }
 
     table.insert(LEVEL.map_borders, BORDER)
@@ -3069,6 +3105,51 @@ stderrf("Corner on side:%d of %s\n", corner, R:tostr())
   end
 
 
+  local function nearby_facade(S)
+    for pass = 1,2 do
+
+      for dist = 1,4 do
+      for dir = 2,8,2 do
+        local N = S:neighbor(dir, dist)
+
+        if not (N and N.room) then continue end
+
+        if pass == 1 and N.room.facade then
+          return N.room.facade
+        end
+
+        if pass == 2 and N.room.zone then
+          return assert(N.room.zone.facade_mat)
+        end
+      end -- dist, dir
+      end
+
+    end -- pass
+
+    -- emergency fallback --
+
+    local tex = LEVEL.zones[1].facade_mat
+    assert(tex)
+
+    return tex
+  end
+
+
+  local function fill_remaining_gaps()
+    -- this fills any unintended gaps in the geometry
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_TOP do
+      local S = SEEDS[sx][sy]
+
+      if not (S.room or S.map_border) then
+        Trans.solid_quad(S.x1, S.y1, S.x2, S.y2, nearby_facade(S))
+      end
+    end
+    end
+  end
+
+
   ---| Layout_outdoor_borders |---
   
   gui.debugf("Layout_outdoor_borders...\n")
@@ -3085,6 +3166,6 @@ stderrf("Corner on side:%d of %s\n", corner, R:tostr())
     build_border(B)
   end
 
-  -- FIXME: fill gaps
+  fill_remaining_gaps()
 end
 
