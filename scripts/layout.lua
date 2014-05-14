@@ -2859,8 +2859,7 @@ end
 
 function Layout_edge_of_map()
   
-  local function stretch_buildings()
-    -- TODO: OPTIMISE
+  local function stretch_buildings__OLD()
     for loop = 1,3 do
       for x = 1,SEED_W do
       for y = 1,SEED_H do
@@ -2884,6 +2883,75 @@ function Layout_edge_of_map()
       end -- x, y
       end
     end -- loop
+  end
+
+
+  local function extent_to_edge(S, dir)
+    -- see if this seed could be extended to an edge_of_map seed,
+    -- via a number of unused seeds.  Return number of fillable seeds
+    -- (including the 'edge_of_map' map seed), or NIL if not possible.
+
+    for dist = 1, 4 do
+      local N = S:neighbor(dir, dist)
+
+      if not N or N.free then
+        return dist - 1
+      end
+
+      if N.room then return nil end
+    end
+
+    return nil
+  end
+
+
+  local function try_extend_building(S, dir)
+    local dist = extent_to_edge(S, dir)
+
+    if not (dist and dist > 0) then
+      return
+    end
+
+gui.debugf("Filling @ %s dir:%d dist:%d\n", S:tostr(), dir, dist)
+
+    local tex = S.room.cave_tex or S.room.facade or S.room.main_tex
+    assert(tex)
+
+    for i = 1, dist do
+      local N = S:neighbor(dir, i)
+
+      Trans.old_quad(get_mat(tex), N.x1,N.y1, N.x2,N.y2, -EXTREME_H, EXTREME_H)
+    end
+  end
+
+
+  local function stretch_room(R)
+    for x = R.sx1, R.sx2 do
+    for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y]
+      if S.room ~= R then continue end
+
+      if x == R.sx1 then try_extend_building(S, 4) end
+      if x == R.sx2 then try_extend_building(S, 6) end
+
+      if y == R.sy1 then try_extend_building(S, 2) end
+      if y == R.sy2 then try_extend_building(S, 8) end
+    end
+    end
+  end
+
+
+  local function stretch_buildings()
+    local all_rooms = {}
+
+    table.append(all_rooms, LEVEL.rooms)
+    table.append(all_rooms, LEVEL.scenic_rooms)
+
+    each R in all_rooms do
+      if not R.is_outdoor then
+        stretch_room(R)
+      end
+    end
   end
 
 
@@ -2928,10 +2996,7 @@ function Layout_edge_of_map()
 
   local function build_edge(S)
     if S.building then
-      local tex = S.building.cave_tex or S.building.facade or S.building.main_tex
-      assert(tex)
 
-      Trans.old_quad(get_mat(tex), S.x1,S.y1, S.x2,S.y2, -EXTREME_H, EXTREME_H)
       return
     end
 
@@ -2977,6 +3042,8 @@ function Layout_edge_of_map()
   gui.debugf("Layout_edge_of_map\n")
 
   stretch_buildings()
+
+do return end --!!!!
 
   determine_walk_heights()
 

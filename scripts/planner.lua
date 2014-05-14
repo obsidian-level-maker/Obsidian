@@ -923,8 +923,8 @@ function Plan_nudge_rooms()
 
     if Section_valid(nx, ny) then return end
 
-    -- outdoor rooms need their border [except caves]
-    if R.is_outdoor and K.room.kind != "cave" then
+    -- outdoor rooms need their border
+    if R.is_outdoor then
       return
     end
 
@@ -1255,7 +1255,7 @@ function Plan_make_seeds()
     R.sh = R.sy2 - R.sy1 + 1
   end
 
-  Seed_flood_fill_edges()
+---???  Seed_flood_fill_edges()
 end
 
 
