@@ -1545,8 +1545,8 @@ function Layout_scenic(R)
   R.floor_max_h = R.liquid_h
   R.floor_h     = R.liquid_h
 
-  for x = R.sx1,R.sx2 do
-  for y = R.sy1,R.sy2 do
+  for x = R.sx1, R.sx2 do
+  for y = R.sy1, R.sy2 do
     local S = SEEDS[x][y]
 
     if S.room == R and S.kind == "liquid" then
@@ -2907,6 +2907,7 @@ function Layout_outdoor_borders()
       local N = S:neighbor(dir, i)
 
       -- TODO : perhaps check for a nearby outdoor room (like V5)
+      --        and build_fake_building()
 
       Trans.solid_quad(N.x1,N.y1, N.x2,N.y2, tex)
 
@@ -2919,7 +2920,7 @@ function Layout_outdoor_borders()
     for x = R.sx1, R.sx2 do
     for y = R.sy1, R.sy2 do
       local S = SEEDS[x][y]
-      if S.room ~= R then continue end
+      if S.room != R then continue end
 
       if x == R.sx1 then try_extend_building(S, 4) end
       if x == R.sx2 then try_extend_building(S, 6) end
@@ -2947,10 +2948,12 @@ function Layout_outdoor_borders()
 
   local function install_border(B)
     for x = B.sx1, B.sx2 do
-    for y = N.sy1, B.sy2 do
+    for y = B.sy1, B.sy2 do
       SEEDS[x][y].map_border = B
     end
     end
+
+    table.insert(LEVEL.map_borders, B)
   end
 
 
@@ -2969,14 +2972,14 @@ function Layout_outdoor_borders()
     for sy = y1, y2 do
       local S = SEEDS[sx][sy]
 
-      if S.room ~= R then return end
+      if S.room != R then stderrf("FUCK\n"); return end
 
       for dist = 1, 3 do
         local N = S:neighbor(side, dist)
 
-        if not N then return end
+        if not N then stderrf("NO_SPACE\n"); return end
 
-        if in_use(N) then return end
+        if in_use(N) then stderrf("IN_USE\n"); return end
       end
     end
     end
@@ -3007,7 +3010,7 @@ stderrf("Edge on side:%d of %s\n", side, R:tostr())
 
     R.border_edges[side] = true
 
-    table.insert(LEVEL.map_borders, BORDER)
+    install_border(BORDER)
   end
 
 
@@ -3028,7 +3031,7 @@ stderrf("Edge on side:%d of %s\n", side, R:tostr())
 
     local S = SEEDS[sx][sy]
 
-    if S.room ~= R then return end
+    if S.room != R then return end
 
     -- only build a corner if it will connect to an edge
 
@@ -3074,38 +3077,67 @@ stderrf("Corner on side:%d of %s\n", corner, R:tostr())
       sy2 = y2
     }
 
-    table.insert(LEVEL.map_borders, BORDER)
-  end
-
-
-  local function check_possible_borders(R)
-    R.border_edges = {}
-
-    for side = 2,8,2 do
-      plan_room_borders(R, side)
-    end
-
-    each corner in CORNERS do
-      plan_room_corners(R, corner)
-    end
+    install_border(BORDER)
   end
 
 
   local function plan_borders()
     each R in all_rooms do
+      R.border_edges = {}
+
       if R.is_outdoor then
-        check_possible_borders(R)
+        for side = 2,8,2 do
+stderrf("checking %s\n", R:tostr())
+          plan_room_borders(R, side)
+        end
+      end
+    end
+
+    each R in all_rooms do
+      if R.is_outdoor then
+        each corner in CORNERS do
+          plan_room_corners(R, corner)
+        end
       end
     end
   end
 
 
   local function build_border(B)
-    -- TODO
+stderrf("build %s @ [%d %d] side:%d\n", B.kind, B.sx1, B.sy1, B.side)
+    local x1 = SEEDS[B.sx1][B.sy1].x1
+    local y1 = SEEDS[B.sx1][B.sy1].y1
+    local x2 = SEEDS[B.sx2][B.sy2].x2
+    local y2 = SEEDS[B.sx2][B.sy2].y2
+
+    local skin0 = { wall=w_tex }
+
+    local floor_h = assert(B.room.floor_max_h)
+
+    if B.kind == "edge" then
+      local skin1 = GAME.SKINS["Border_dropoff_t"]
+      assert(skin1)
+
+      local T = Trans.box_transform(x1, y1, x2, y2, floor_h, 10 - B.side)
+
+      Fabricate_at(B.room, skin1, T, { skin0, skin1 })
+
+    elseif B.kind == "corner" then
+      local skin1 = GAME.SKINS["Border_dropoff_c"]
+      assert(skin1)
+
+      local dir = 10 - geom.LEFT_45[B.side]
+
+      local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
+
+      Fabricate_at(B.room, skin1, T, { skin0, skin1 })
+    end
   end
 
 
   local function nearby_facade(S)
+do return "CRACKLE2" end
+
     for pass = 1,2 do
 
       for dist = 1,4 do

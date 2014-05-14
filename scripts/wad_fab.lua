@@ -1635,7 +1635,7 @@ function Fabricate_at(R, main_skin, T, skins)
       error("Prefab with add_sky used in loose transform")
     end
 
-    Build_sky_quad(T.bbox.x1, T.bbox.y1, T.bbox.x2, T.bbox.y2, R.sky_group.h)
+    Trans.sky_quad(T.bbox.x1, T.bbox.y1, T.bbox.x2, T.bbox.y2, R.sky_group.h)
   end
 end
 
