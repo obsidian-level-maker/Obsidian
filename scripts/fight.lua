@@ -31,8 +31,8 @@ Inputs:
    weap_prefs : weapon preference table (can be empty)
 
 Output:
-   stats    : health that player needs to survive the battle
-              + ammo quantities required by the player
+   stats : health that player needs to survive the battle +
+           ammo quantities required by the player
 
 Notes:
 ------
@@ -65,13 +65,8 @@ Notes:
    missile attacks), and that melee monsters can only hurt
    you when they are first (at most second) in the list.
 
-*  Infighting between monsters is modelled but is toned
-   down, since the real layout will make a big difference
-   to the results, so we aim for some kind of average.
+*  Infighting between monsters is not modelled.
 
-TODO: this routine should accept some information
-      about the environment, such as amount of cover
-      the player has, and take it into account.
 
 ----------------------------------------------------------------]]
 
@@ -81,16 +76,6 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
   local active_mons = {}
 
   local PLAYER_ACCURACY = 0.8
-
-  local HITSCAN_DODGE = 0.25  -- UNUSED, REMOVE THESE
-  local MISSILE_DODGE = 0.85
-  local MELEE_DODGE   = 0.95
-
-  local HITSCAN_RATIOS = { 1.0, 0.75, 0.5, 0.25 }  -- UNUSED, REMOVE THESE
-  local MISSILE_RATIOS = { 1.0, 0.25 }
-  local MELEE_RATIOS   = { 1.0 }
-
-  local INFIGHT_RATIOS = { 0.7, 0.5, 0.3 }
 
 
   local function remove_dead_mon()
@@ -165,138 +150,6 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
   end
 
 
-  local function OLD__monster_hit_player(M, idx, time)
-    local info = M.info
-
-    -- how likely the monster is to hit the player
-    -- (depends on distance between them).
-    local hit_ratio
-
-    -- how well the player can dodge the monster's attack
-    -- TODO: take 'cover' and/or 'space' into account here
-    local dodge_ratio
-
-
-    if info.attack == "melee" then
-      hit_ratio   = MELEE_RATIOS[idx]
-      dodge_ratio = MELEE_DODGE
-
-    elseif info.attack == "hitscan" then
-      hit_ratio   = HITSCAN_RATIOS[idx]
-      dodge_ratio = HITSCAN_DODGE
-
-    elseif info.attack == "missile" then
-      hit_ratio   = MISSILE_RATIOS[idx]
-      dodge_ratio = MISSILE_DODGE
-
-    else
-      error("Unknown monster attack kind: " .. tostring(info.attack))
-    end
-
-    assert(dodge_ratio)
-
-    -- monster is too far away to hurt player?
-    if not hit_ratio then return end
-
-    -- how often the monster fights the player (instead of running
-    -- around or being in a pain state).
-    local active_ratio = info.activity or 0.5
-
-    local damage = info.damage * time * hit_ratio * active_ratio * (1.0 - dodge_ratio)
-
-    stats.health = stats.health + damage
-  end
-
-
-  local function calc_infight_mode(info1, info2)
-    -- looks up the monster pair in the infighting table.
-    -- this table has entries like this:
-    --    xxx__yyy  = "friend"
-    --    aaaa__bbb = "hurt"
-    --
-    -- result can be:
-    --    "friend"  : completely immune to each other
-    --    "hurt"    : can hurt each other, but won't retaliate
-    --    "infight" : can hurt and fight each other
-    --
-    -- the monster field 'infights' can be set to true, but
-    -- this only applies to monsters of the same species.
-    -- 
-
-    local species1 = info1.species or info1.name
-    local species2 = info2.species or info2.name
-
-    if species1 == species2 and info1.infights then
-      return "infight"
-    end
-
-    local sheet = GAME.INFIGHT_SHEET
-
-    -- have a reasonable default
-    if not sheet then
-      return sel(species1 == species2, "friend", "hurt")
-    end
-
-    local result
-
-    result = sheet[species1 .. "__" .. species2]
-    if result then return result end
-
-    -- try the pair reversed
-    result = sheet[species2 .. "__" .. species1]
-    if result then return result end
-
-    if species1 == species2 then
-      return sheet["same"] or "friend"
-    else
-      return sheet["different"]  or "hurt"
-    end
-  end
-
-
-  local function OLD__monster_hit_monster(M, other_idx, time, factor)
-    if other_idx < 1 then return end
-
-    -- 'N' for the monster nearer the player (earlier in the list)
-    local N = active_mons[other_idx] 
-
-    if M.health <= 0 or N.health <= 0 then return end
-
-    local mode = calc_infight_mode(M.info, N.info)
-
-    if mode == "friend" then return end
-
-    -- furthest monster hurts the nearest one
-    local dm1 = M.info.damage * (M.info.activity or 0.5) * time
-
-    N.health = N.health - dm1 * factor
-
-    if mode != "infight" then return end
-
-    -- nearest one retaliates sometimes
-    local dm2 = N.info.damage * (N.info.activity or 0.5) * time
-
-    M.health = M.health - dm2 * factor * 0.5
-  end
-
-
-  local function OLD__monsters_shoot(time)
-    for idx,M in ipairs(active_mons) do
-      -- skip dead monsters
-      if M.health <= 0 then continue end
-
-      if idx < 9 then
-        monster_hit_player(M, idx, time)
-      end
-
-      local infight_dist   = rand.irange(1,3)
-      local infight_factor = INFIGHT_RATIOS[infight_dist]
-
-      monster_hit_monster(M, idx - infight_dist, time, infight_factor)
-    end
-  end
-
-
   local function fixup_hexen_mana()
     if stats.dual_mana then
       stats.blue_mana  = (stats.blue_mana  or 0) + stats.dual_mana
@@ -331,12 +184,6 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
   table.sort(active_mons,
       function(A,B) return A.threat > B.threat end)
 
----##  -- let the monsters throw the first punch (albeit a weak one)
----##  monsters_shoot(0.5)
-
-  -- TODO: new infight logic : run through active_mons _once_ and
-  --       allow neighbors separated by 4 monsters to hurt each other.
-
   -- compute health needed by player
   each M in active_mons do
     stats.health = stats.health + M.info.damage
@@ -351,10 +198,8 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
     if shots < 2  then shots = 2  end
     if shots > 30 then shots = 30 end
 
-    for loop = 1,shots do
+    for loop = 1, shots do
       player_shoot(W)
- 
----##  monsters_shoot(time)
 
       remove_dead_mon()
     end
