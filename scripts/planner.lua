@@ -924,7 +924,12 @@ function Plan_nudge_rooms()
     if Section_valid(nx, ny) then return end
 
     -- outdoor rooms need their border
+    -- (and reserved rooms might become outdoor rooms)
     if R.is_outdoor then
+      return
+    end
+
+    if R.kind == "reserved" and rand.odds(75) then
       return
     end
 
