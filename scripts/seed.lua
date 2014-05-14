@@ -61,6 +61,7 @@ class BORDER
 
 SEED_W = 0
 SEED_H = 0
+SEED_TOP = 0
 
 
 SEED_CLASS = {}
@@ -133,6 +134,7 @@ function Seed_init(map_W, map_H, free_W, free_H)
   -- setup globals 
   SEED_W = W
   SEED_H = H
+  SEED_TOP = map_H
 
   SEEDS = table.array_2D(W, H)
 
