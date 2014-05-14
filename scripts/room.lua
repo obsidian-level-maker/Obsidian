@@ -937,7 +937,7 @@ function Room_border_up()
 
   local function make_map_edge(R, S, side)
     if R.is_outdoor then
-      -- a fence will be created by Layout_edge_of_map()
+      -- a fence will be created by Layout_outdoor_borders()
       S.border[side].kind = "nothing"
     else
       S.border[side].kind = "wall"
@@ -4099,7 +4099,7 @@ function Room_build_all()
   Room_tizzy_up()
   Room_border_up()
 
-  Layout_edge_of_map()
+  Layout_outdoor_borders()
 
   Room_run_builders()
 end

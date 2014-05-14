@@ -2857,39 +2857,22 @@ end
 
 
 
-function Layout_edge_of_map()
+function Layout_outdoor_borders()
+
+  local all_rooms
   
-  local function stretch_buildings__OLD()
-    for loop = 1,3 do
-      for x = 1,SEED_W do
-      for y = 1,SEED_H do
-        local S = SEEDS[x][y]
-        if (S.room and not S.room.is_outdoor) or (S.edge_of_map and S.building) then
-        if (S.move_loop or 0) < loop then
+  local function collect_rooms()
+    all_rooms = {}
 
-          for side = 2,8,2 do
-            if not S.edge_of_map or S.building_side == side then
-              local N = S:neighbor(side)
-              if N and N.edge_of_map and not N.building then
-                N.building = S.room or S.building
-                N.building_side = side
-                N.move_loop = loop
-              end
-            end
-          end -- side
-
-        end -- if ...
-        end
-      end -- x, y
-      end
-    end -- loop
+    table.append(all_rooms, LEVEL.rooms)
+    table.append(all_rooms, LEVEL.scenic_rooms)
   end
 
 
   local function extent_to_edge(S, dir)
-    -- see if this seed could be extended to an edge_of_map seed,
+    -- see if this seed could be extended to the edge of the map,
     -- via a number of unused seeds.  Return number of fillable seeds
-    -- (including the 'edge_of_map' map seed), or NIL if not possible.
+    -- or NIL if not possible.
 
     for dist = 1, 4 do
       local N = S:neighbor(dir, dist)
@@ -2912,13 +2895,15 @@ function Layout_edge_of_map()
       return
     end
 
-gui.debugf("Filling @ %s dir:%d dist:%d\n", S:tostr(), dir, dist)
+-- gui.debugf("Filling @ %s dir:%d dist:%d\n", S:tostr(), dir, dist)
 
     local tex = S.room.cave_tex or S.room.facade or S.room.main_tex
     assert(tex)
 
     for i = 1, dist do
       local N = S:neighbor(dir, i)
+
+      -- TODO : perhaps check for a nearby outdoor room (like V5)
 
       Trans.old_quad(get_mat(tex), N.x1,N.y1, N.x2,N.y2, -EXTREME_H, EXTREME_H)
     end
@@ -2942,11 +2927,6 @@ gui.debugf("Filling @ %s dir:%d dist:%d\n", S:tostr(), dir, dist)
 
 
   local function stretch_buildings()
-    local all_rooms = {}
-
-    table.append(all_rooms, LEVEL.rooms)
-    table.append(all_rooms, LEVEL.scenic_rooms)
-
     each R in all_rooms do
       if not R.is_outdoor then
         stretch_room(R)
@@ -2955,106 +2935,37 @@ gui.debugf("Filling @ %s dir:%d dist:%d\n", S:tostr(), dir, dist)
   end
 
 
-  local function determine_walk_heights()
-    -- TODO: OPTIMISE
-    for loop = 1,4 do
-      for x = 1,SEED_W do
-      for y = 1,SEED_H do
-        local S = SEEDS[x][y]
-        if S.edge_of_map and not S.building then
-
-          for side = 2,8,2 do
-            local N = S:neighbor(side)
-
-            local other_h
-            if loop > 2 and N and N.edge_of_map and not N.building then
-              other_h = N.walk_h
-            elseif N and N.room and N.room.is_outdoor then
-              other_h = N.room.floor_max_h
-            end
-            if other_h then
-              S.walk_h = math.max(S.walk_h or -999, other_h)
-            end
-
-            local sky_h
-            if loop > 2 and N and N.edge_of_map and not N.building then
-              sky_h = N.sky_h
-            elseif N and N.room and N.room.sky_group then
-              sky_h = N.room.sky_group.h
-            end
-            if sky_h then
-              S.sky_h = math.max(S.sky_h or -999, sky_h)
-            end
-          end -- side
-
-        end
-      end -- x, y
-      end
-    end -- loop
+  local function plan_room_borders(R)
+    -- FIXME
   end
 
 
-  local function build_edge(S)
-    if S.building then
+  local function plan_borders()
+    LEVEL.borders = {}
 
-      return
+    each R in all_rooms do
+      plan_room_borders()
     end
-
-    local sky_h = S.sky_h or SKY_H
-
-    S.fence_h = sky_h - 64  -- fallback value
-
-    if S.walk_h then
-      S.fence_h = math.min(S.walk_h + 64, S.fence_h)
-    end
-
-    local x1 = S.x1
-    local y1 = S.y1
-    local x2 = S.x2
-    local y2 = S.y2
-
-    local function shrink(side, len)
-      if side == 2 then y1 = y1 + len end
-      if side == 8 then y2 = y2 - len end
-      if side == 4 then x1 = x1 + len end
-      if side == 6 then x2 = x2 - len end
-    end
-
-    local skin = { fence_w=LEVEL.outer_fence_tex }
-
-    for side = 2,8,2 do
-      local N = S:neighbor(side)
-      if not N or N.free then
-        S.thick[side] = 48 ; shrink(side, 48)
-
-        Build.sky_fence(S, side, S.fence_h, S.fence_h - 64, skin, sky_h)
-      end
-    end
-
-    Trans.old_quad(get_mat(LEVEL.outer_fence_tex), x1,y1, x2,y2, -EXTREME_H, S.fence_h)
-
-    Trans.old_quad(get_sky(), x1,y1, x2,y2, sky_h, EXTREME_H)
   end
 
 
-  ---| Layout_edge_of_map |---
+  local function build_border(B)
+    -- TODO
+  end
+
+
+  ---| Layout_outdoor_borders |---
   
-  gui.debugf("Layout_edge_of_map\n")
+  gui.debugf("Layout_outdoor_borders...\n")
+
+  collect_rooms()
+
+  plan_borders()
 
   stretch_buildings()
 
-do return end --!!!!
-
-  determine_walk_heights()
-
-  for x = 1, SEED_W do
-  for y = 1, SEED_H do
-    local S = SEEDS[x][y]
-
-    if S.edge_of_map then
-      build_edge(S)
-    end
-  end -- x, y
+  each B in LEVEL.borders do
+    build_border(B)
   end
 end
 

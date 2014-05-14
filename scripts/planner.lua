@@ -1254,8 +1254,6 @@ function Plan_make_seeds()
     R.sw = R.sx2 - R.sx1 + 1
     R.sh = R.sy2 - R.sy1 + 1
   end
-
----???  Seed_flood_fill_edges()
 end
 
 

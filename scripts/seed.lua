@@ -261,8 +261,7 @@ function Seed_dump_rooms()
   local function seed_to_char(S)
     if not S then return "!" end
     if S.free then return "." end
-    if S.edge_of_map then return "#" end
-    if not S.room then return "?" end
+    if not S.room then return "#" end
 
     if S.room.kind == "scenic"   then return "=" end
     if S.room.kind == "reserved" then return "*" end
@@ -285,34 +284,5 @@ function Seed_dump_rooms()
   end
 
   gui.printf("\n")
-end
-
-
-function Seed_flood_fill_edges()
-  local active = {}
-
-  for x = 1,SEED_W do
-  for y = 1,SEED_H do
-    local S = SEEDS[x][y]
-
-    if S.edge_of_map then
-      table.insert(active, S)
-    end
-  end -- for x, y
-  end
-
-  while not table.empty(active) do
-    local new_active = {}
-
-    each S in active do for side = 2,8,2 do
-      local N = S:neighbor(side)
-      if N and not N.edge_of_map and not N.free and not N.room then
-        N.edge_of_map = true
-        table.insert(new_active, N)
-      end
-    end end -- for S, side
-
-    active = new_active
-  end
 end
 
