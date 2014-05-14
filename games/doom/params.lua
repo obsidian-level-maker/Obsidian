@@ -14,7 +14,6 @@
 DOOM.PARAMETERS =
 {
   teleporters = true
-  infighting = true
 
   jump_height = 24
 

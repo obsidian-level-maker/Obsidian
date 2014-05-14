@@ -333,13 +333,3 @@ DOOM2.MONSTERS =
   }
 }
 
-
-DOOM.INFIGHT_SHEET =
-{
-  -- default for same species : friends (no harm)
-  same = "friend"
-
-  -- default for different species : hurt and fight each other
-  different = "infight"
-}
-
