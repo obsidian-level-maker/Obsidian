@@ -948,8 +948,8 @@ function Room_border_up()
 
 
   local function make_border(R1, S, R2, N, side)
+    -- same room : do nothing
     if R1 == R2 then
-      -- same room : do nothing
       S.border[side].kind = "nothing"
       return
     end
@@ -1024,6 +1024,20 @@ function Room_border_up()
          and rand.odds(15)
       then
         S.border[side].kind = "liquid_fall"
+      end
+    end
+
+    -- don't place fences in a map_border which touch the very edge
+    -- of the map, because they interfere with sky fences
+    
+    if S.border[side].kind == "fence" and S.map_border then
+      for pass = 1,2 do
+        local dir = sel(pass == 1, geom.LEFT[side], geom.RIGHT[side])
+        local N = S:neighbor(dir)
+
+        if not N or N.free then
+          S.border[side].kind = "nothing"
+        end
       end
     end
   end
