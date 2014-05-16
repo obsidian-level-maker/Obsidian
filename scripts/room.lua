@@ -4095,11 +4095,13 @@ function Room_build_all()
 
   Room_layout_all()
 
+  Layout_plan_outdoor_borders()
+
   Room_plaster_ceilings()
   Room_tizzy_up()
   Room_border_up()
 
-  Layout_outdoor_borders()
+  Layout_build_outdoor_borders()
 
   Room_run_builders()
 end
