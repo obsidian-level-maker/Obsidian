@@ -2,3 +2,18 @@
 CHANGELOG
 =========
 
+
+- new 'tech_Gray' theme for DOOM, thanks to Mr. Chris
+
+- fixed using SKY1/2/3 as a normal texture in PSYCHEDELIC mode
+
+- tweaked the normal DOOM monster mix
+
+- small reduction in the overall health in levels
+
+- fixed uncounted secrets into CAVE rooms
+
+- fixed the silly "free standing" archways and doors
+
+- fixed pegging on lifts in slime pits
+
