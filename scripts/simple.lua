@@ -237,7 +237,8 @@ function Simple_generate_cave(R)
 
     for dir = 2,8,2 do
       if check_need_wall(S, dir) then
-        if R.is_outdoor and info.sky_mode != "high_wall" then
+        --!!!!!!!!!!!!!!!!!!! WHAT THE FUCK !!!!!!!!!!!!!!!!!!!
+        if R.is_outdoor and info.sky_mode != "high_wall" and false then
           -- this is handled in border_up()
         else
           S.border[dir].kind = "cave_wall"
@@ -458,9 +459,11 @@ function Simple_generate_cave(R)
     each imp in importants do
       map:fill(imp.cx1, imp.cy1, imp.cx2, imp.cy2, -1)
 
-      if imp.conn then
-        local S = imp.conn:seed(R)
-        add_needed_cave_walls(S)
+      if imp.conn or true then
+        local sx = R.sx1 + int(imp.cx1 / 3)
+        local sy = R.sy1 + int(imp.cy1 / 3)
+
+        add_needed_cave_walls(SEEDS[sx][sy])
       end
     end
   end
@@ -615,7 +618,7 @@ function Simple_create_areas(R)
       for cy = 1, info.H do
         local A = info.blocks[cx][cy]
 
-        if A.fence then
+        if A and A.fence then
           new_cave:set(cx, cy, nil)
         end
       end
@@ -936,7 +939,7 @@ step:dump("Step:")
     end
 
 
-    --| grow_an_area |--
+    --| grow_step_areas |--
 
     while #pos_list > 0 do
       local pos = table.remove(pos_list, rand.irange(1, #pos_list))
@@ -2626,7 +2629,7 @@ function Simple_outdoor_borders()
       for dir = 2,8,2 do
         local N = S:neighbor(dir)
 
-        if not N or N.free or not N:used() then
+        if not N or N.free or not N:in_use() then
           sky_border(R, S, dir)
         end
       end
