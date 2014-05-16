@@ -613,7 +613,9 @@ function Simple_create_areas(R)
     if info.fence then
       for cx = 1, info.W do
       for cy = 1, info.H do
-        if info.blocks[cx][cy] == info.fence then
+        local A = info.blocks[cx][cy]
+
+        if A.fence then
           new_cave:set(cx, cy, nil)
         end
       end
