@@ -2875,8 +2875,70 @@ function Layout_plan_outdoor_borders()
   end
 
 
-  local function in_use(S)
-    return S.room or S.free or S.map_border
+  local function extent_to_edge(S, dir)
+    -- see if this seed could be extended to the edge of the map,
+    -- via a number of unused seeds.  Return number of fillable seeds
+    -- or NIL if not possible.
+
+    for dist = 1, 4 do
+      local N = S:neighbor(dir, dist)
+
+      if not N or N.free then
+        return dist - 1
+      end
+
+      if N.room then return nil end
+    end
+
+    return nil
+  end
+
+
+  local function try_extend_building(S, dir)
+    local dist = extent_to_edge(S, dir)
+
+    if not (dist and dist > 0) then
+      return
+    end
+
+-- gui.debugf("Filling @ %s dir:%d dist:%d\n", S:tostr(), dir, dist)
+
+    local tex = S.room.cave_tex or S.room.facade or S.room.main_tex
+    assert(tex)
+
+    for i = 1, dist do
+      local N = S:neighbor(dir, i)
+
+      -- TODO : perhaps check for a nearby outdoor room (like V5)
+      --        and build_fake_building()
+
+      N.map_border = { kind="solid", tex=tex }
+    end
+  end
+
+
+  local function stretch_room(R)
+    for x = R.sx1, R.sx2 do
+    for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y]
+      if S.room != R then continue end
+
+      if x == R.sx1 then try_extend_building(S, 4) end
+      if x == R.sx2 then try_extend_building(S, 6) end
+
+      if y == R.sy1 then try_extend_building(S, 2) end
+      if y == R.sy2 then try_extend_building(S, 8) end
+    end
+    end
+  end
+
+
+  local function stretch_buildings()
+    each R in all_rooms do
+      if not R.is_outdoor then
+        stretch_room(R)
+      end
+    end
   end
 
 
@@ -2911,9 +2973,9 @@ function Layout_plan_outdoor_borders()
       for dist = 1, 3 do
         local N = S:neighbor(side, dist)
 
-        if not N then return end
+        if not N or N.free then return end
 
-        if in_use(N) then return end
+        if N:in_use() then return end
       end
     end
     end
@@ -2988,7 +3050,7 @@ stderrf("Edge on side:%d of %s\n", side, R:tostr())
       local N = tmp:neighbor(R_dir, k)
       if not N then return end
 
-      if in_use(N) then return end
+      if N:in_use() then return end
 
       x1 = math.min(N.sx, x1 or  999)
       y1 = math.min(N.sy, y1 or  999)
@@ -3042,91 +3104,14 @@ stderrf("Corner on side:%d of %s\n", corner, R:tostr())
 
   collect_rooms()
 
+  stretch_buildings()
+
   plan_borders()
 end
 
 
 
 function Layout_build_outdoor_borders()
-
-  local all_rooms
-
-  local function collect_rooms()
-    all_rooms = {}
-
-    table.append(all_rooms, LEVEL.rooms)
-    table.append(all_rooms, LEVEL.scenic_rooms)
-  end
-
-
-  local function extent_to_edge(S, dir)
-    -- see if this seed could be extended to the edge of the map,
-    -- via a number of unused seeds.  Return number of fillable seeds
-    -- or NIL if not possible.
-
-    for dist = 1, 4 do
-      local N = S:neighbor(dir, dist)
-
-      if not N or N.free then
-        return dist - 1
-      end
-
-      if N.room then return nil end
-    end
-
-    return nil
-  end
-
-
-  local function try_extend_building(S, dir)
-    local dist = extent_to_edge(S, dir)
-
-    if not (dist and dist > 0) then
-      return
-    end
-
--- gui.debugf("Filling @ %s dir:%d dist:%d\n", S:tostr(), dir, dist)
-
-    local tex = S.room.cave_tex or S.room.facade or S.room.main_tex
-    assert(tex)
-
-    for i = 1, dist do
-      local N = S:neighbor(dir, i)
-
-      -- TODO : perhaps check for a nearby outdoor room (like V5)
-      --        and build_fake_building()
-
-      Trans.solid_quad(N.x1,N.y1, N.x2,N.y2, tex)
-
-      N.map_border = { kind="fake" }
-    end
-  end
-
-
-  local function stretch_room(R)
-    for x = R.sx1, R.sx2 do
-    for y = R.sy1, R.sy2 do
-      local S = SEEDS[x][y]
-      if S.room != R then continue end
-
-      if x == R.sx1 then try_extend_building(S, 4) end
-      if x == R.sx2 then try_extend_building(S, 6) end
-
-      if y == R.sy1 then try_extend_building(S, 2) end
-      if y == R.sy2 then try_extend_building(S, 8) end
-    end
-    end
-  end
-
-
-  local function stretch_buildings()
-    each R in all_rooms do
-      if not R.is_outdoor then
-        stretch_room(R)
-      end
-    end
-  end
-
 
   local function build_border(B)
 -- stderrf("build %s @ [%d %d] side:%d\n", B.kind, B.sx1, B.sy1, B.side)
@@ -3199,7 +3184,10 @@ do return "CRACKLE2" end
     for sy = 1, SEED_TOP do
       local S = SEEDS[sx][sy]
 
-      if not (S.room or S.map_border) then
+      if S.map_border and S.map_border.kind == "solid" then
+        Trans.solid_quad(S.x1, S.y1, S.x2, S.y2, S.map_border.tex)
+
+      elseif not (S.room or S.map_border) then
         Trans.solid_quad(S.x1, S.y1, S.x2, S.y2, nearby_facade(S))
       end
     end
@@ -3208,10 +3196,6 @@ do return "CRACKLE2" end
 
 
   ---| Layout_build_outdoor_borders |---
-
-  collect_rooms()
-
-  stretch_buildings()
 
   each B in LEVEL.map_borders do
     build_border(B)
