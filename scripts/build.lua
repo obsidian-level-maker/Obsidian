@@ -953,6 +953,15 @@ function brushlib.set_mat(brush, wall, flat)
 end
 
 
+function brushlib.set_line_flag(brush, key, value)
+  each C in brush do
+    if C.x then
+      C[key] = value
+    end
+  end
+end
+
+
 function brushlib.collect_flags(coords)
   each C in coords do
     -- these flags only apply to linedefs

@@ -1907,8 +1907,11 @@ function Layout_escape_from_pits(R)
     else
       -- need a lift?
 
+      table.insert(brush, 1, { m="solid", mover=1 })
+
       brushlib.add_top(brush, pit.out_h - 12)
       brushlib.set_mat(brush, "SUPPORT2", "SUPPORT2")
+      brushlib.set_line_flag(brush, "y_offset", 0)
 
       local tag = Plan_alloc_id("tag")
 
