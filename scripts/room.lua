@@ -881,7 +881,10 @@ function Room_reckon_doors()
     end
 
     -- don't need anything between two outdoor rooms
-    if (S.room.is_outdoor and N.room.is_outdoor) and rand.odds(90) then
+    -- [ the style check prevents silly "free standing" arches ]
+    if (S.room.is_outdoor and N.room.is_outdoor) and
+       (rand.odds(90) or STYLE.fences == "none")
+    then
       B.kind  = "nothing"
       B2.kind = "nothing"
       return
