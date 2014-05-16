@@ -2953,7 +2953,7 @@ function Layout_plan_outdoor_borders()
   end
 
 
-  local function plan_room_borders(R, side)
+  local function plan_edge_fabs(R, side)
     local x1, y1 = R.sx1, R.sy1
     local x2, y2 = R.sx2, R.sy2
 
@@ -3010,7 +3010,7 @@ stderrf("Edge on side:%d of %s\n", side, R:tostr())
   end
 
 
-  local function plan_room_corners(R, corner)
+  local function plan_corner_fabs(R, corner)
     local sx, sy
 
     if corner == 1 or corner == 3 then
@@ -3028,6 +3028,13 @@ stderrf("Edge on side:%d of %s\n", side, R:tostr())
     local S = SEEDS[sx][sy]
 
     if S.room != R then return end
+
+    -- ensure we are actually at a corner of the map
+
+    local VR = S:neighbor(corner, 3)
+
+    if not (VR.sx == 1 or VR.sx == SEED_W)   then return end
+    if not (VR.sy == 1 or VR.sy == SEED_TOP) then return end
 
     -- only build a corner if it will connect to an edge
 
@@ -3083,7 +3090,7 @@ stderrf("Corner on side:%d of %s\n", corner, R:tostr())
 
       if R.kind == "outdoor" then
         for side = 2,8,2 do
-          plan_room_borders(R, side)
+          plan_edge_fabs(R, side)
         end
       end
     end
@@ -3091,7 +3098,7 @@ stderrf("Corner on side:%d of %s\n", corner, R:tostr())
     each R in all_rooms do
       if R.kind == "outdoor" then
         each corner in CORNERS do
-          plan_room_corners(R, corner)
+          plan_corner_fabs(R, corner)
         end
       end
     end
