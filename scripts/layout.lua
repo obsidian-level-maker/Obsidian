@@ -2906,14 +2906,14 @@ function Layout_plan_outdoor_borders()
     for sy = y1, y2 do
       local S = SEEDS[sx][sy]
 
-      if S.room != R then stderrf("FUCK\n"); return end
+      if S.room != R then return end
 
       for dist = 1, 3 do
         local N = S:neighbor(side, dist)
 
-        if not N then stderrf("NO_SPACE\n"); return end
+        if not N then return end
 
-        if in_use(N) then stderrf("IN_USE\n"); return end
+        if in_use(N) then return end
       end
     end
     end
@@ -3019,16 +3019,15 @@ stderrf("Corner on side:%d of %s\n", corner, R:tostr())
     each R in all_rooms do
       R.border_edges = {}
 
-      if R.is_outdoor then
+      if R.kind == "outdoor" then
         for side = 2,8,2 do
-stderrf("checking %s\n", R:tostr())
           plan_room_borders(R, side)
         end
       end
     end
 
     each R in all_rooms do
-      if R.is_outdoor then
+      if R.kind == "outdoor" then
         each corner in CORNERS do
           plan_room_corners(R, corner)
         end
@@ -3130,7 +3129,7 @@ function Layout_build_outdoor_borders()
 
 
   local function build_border(B)
-stderrf("build %s @ [%d %d] side:%d\n", B.kind, B.sx1, B.sy1, B.side)
+-- stderrf("build %s @ [%d %d] side:%d\n", B.kind, B.sx1, B.sy1, B.side)
     local x1 = SEEDS[B.sx1][B.sy1].x1
     local y1 = SEEDS[B.sx1][B.sy1].y1
     local x2 = SEEDS[B.sx2][B.sy2].x2

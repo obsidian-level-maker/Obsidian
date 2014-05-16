@@ -4152,9 +4152,9 @@ function Room_build_all()
   Room_reckon_doors()
   Room_create_sky_groups()
 
-  Room_layout_all()
-
   Layout_plan_outdoor_borders()
+
+  Room_layout_all()
 
   Room_plaster_ceilings()
   Room_tizzy_up()
