@@ -95,8 +95,6 @@ function Simple_generate_cave(R)
 
   local is_lake = (info.liquid_mode == "lake")
 
-  local need_border = is_lake or (info.sky_mode == "low_wall")
-
 
   local function cave_box_for_seed(sx, sy)
     local box =
@@ -2323,6 +2321,61 @@ end
 
 
 
+function Simple_outdoor_borders(R)
+  local info = R.cave_info
+
+  local f_mat = assert(R.main_tex)
+  local f_h   = R.floor_min_h - 256
+
+
+  local function sky_border(S, dir)
+    local x1, y1 = S.x1, S.y1
+    local x2, y2 = S.x2, S.y2
+
+    if dir == 2 then y2 = y1 ; y1 = y1 - 16 end
+    if dir == 8 then y1 = y2 ; y2 = y2 + 16 end
+    if dir == 4 then x2 = x1 ; x1 = x1 - 16 end
+    if dir == 6 then x1 = x2 ; x2 = x2 + 16 end
+
+    local brush = brushlib.quad(x1, y1, x2, y2)
+    table.insert(brush, { t=f_h, reachable=true })
+    brushlib.set_mat(brush, f_mat, f_mat)
+
+    Trans.brush(brush)
+
+    Trans.sky_quad(x1, y1, x2, y2, f_h + 4)
+  end
+
+
+  ---| Simple_outdoor_borders |---
+
+  if not (info.liquid_mode == "lake" or
+          info.sky_mode == "low_wall")
+  then
+    return
+  end
+
+  for sx = R.sx1, R.sx2 do
+  for sy = R.sy1, R.sy2 do
+    local S = SEEDS[sx][sy]
+
+    if S.room != R then continue end
+
+    for dir = 2,8,2 do
+      local N = S:neighbor(dir)
+
+      if not N or N.free or not N:used() then
+        sky_border(S, dir)
+
+        if N then N.map_border = { kind="simple" } end
+      end
+    end
+  end  -- sx, sy
+  end
+end
+
+
+
 function Simple_decorations(R)
   --|
   --| add torches (etc)
@@ -2574,5 +2627,6 @@ function Simple_cave_or_maze(R, entry_h)
   Simple_decorations(R)
 
   Simple_render_cave(R)
+  Simple_outdoor_borders(R)
 end
 
