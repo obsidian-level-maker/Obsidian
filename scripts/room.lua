@@ -3216,7 +3216,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   local function do_secret_floor(S, z, indents, w_tex, f_tex)
     -- FIXME: this is game specific!!
 
-    local kind, w_face, t_face = Mat_normal(S.l_tex or w_tex, f_tex)
+    local kind, w_face, t_face = Mat_normal(w_tex, f_tex)
 
     t_face.special = 9
 
@@ -3554,7 +3554,25 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local fy2 = S.y2 - (f_indents[8] or 0)
 
     if R.kind == "cave" then
-      -- nothing needed
+      -- nothing needed for caves (almost)
+
+      if S.mark_secret then
+        -- determine floor height (it's not in the seed itself)
+        local z
+
+        each C in R.conns do
+          if C.S1 == S or C.S2 == S then
+            z = C.conn_h + 1 ; break
+          end
+        end
+
+        local mat = R.floor_mat or R.zone.cave_wall_mat or R.main_tex
+        assert(mat)
+
+        if z then
+          do_secret_floor(S, z, f_indents, mat, mat)
+        end
+      end
 
     elseif S.kind == "void" then
 
@@ -3607,7 +3625,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
     elseif not S.no_floor then
       if S.mark_secret then
-        do_secret_floor(S, z1, f_indents, w_tex, f_tex)
+        do_secret_floor(S, z1, f_indents, S.l_tex or w_tex, f_tex)
       else
         do_floor(S, z1, f_indents, w_tex, f_tex)
       end
