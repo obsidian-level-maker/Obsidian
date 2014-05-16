@@ -1089,20 +1089,26 @@ function Room_border_up()
       return
     end
 
-    for x = R.sx1, R.sx2 do
-    for y = R.sy1, R.sy2 do
+    for x = R.sx1 - 4, R.sx2 + 4 do
+    for y = R.sy1 - 4, R.sy2 + 4 do
+      if not Seed_valid(x, y) then continue end
+
       local S = SEEDS[x][y]
 
-      if S.room != R then continue end
+      local S_frame = (S.map_border and S.map_border.room)
+
+      if not (S.room == R or S_frame == R) then continue end
         
       for side = 2,8,2 do
         if not S.border[side].kind then  -- don't clobber connections
           local N = S:neighbor(side)
 
-          if not (N and N.room) then
+          local N_frame = (N and N.map_border and N.map_border.room)
+
+          if not (N and (N.room or N_frame)) then
             make_map_edge(R, S, side)
           else
-            make_border(R, S, N.room, N, side)
+            make_border(S_frame or R, S, N_frame or N.room, N, side)
           end
         end
 
@@ -3299,7 +3305,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   end
 
 
-  local function build_seed(S)
+  local function build_seed(S, sides_only)
     if S.already_built then
       return
     end
@@ -3452,14 +3458,14 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     end -- for side
 
 
-    if R.sides_only then return end
+    if sides_only or R.sides_only then return end
 
 
     --- DIAGONALS ---
 
     if S.kind == "diagonal" then
 
-      local diag_info = get_mat(w_tex, S.stuckie_ftex) ---### , c_tex)
+      local diag_info = get_mat(w_tex, S.stuckie_ftex)
 
       Build.diagonal(S, S.stuckie_side, diag_info, S.stuckie_z)
 
@@ -3621,6 +3627,16 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   end -- build_seed()
 
 
+  local function build_mapborder_bits(B)
+    for x = B.sx1, B.sx2 do
+    for y = B.sy1, B.sy2 do
+      local S = SEEDS[x][y]
+      build_seed(S, "sides_only")
+    end -- x, y
+    end
+  end
+
+
   ---==| Room_build_seeds |==---
 
   if R.kind == "smallexit" then
@@ -3633,12 +3649,20 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     R.sides_only = true
   end
 
-  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+  for x = R.sx1, R.sx2 do
+  for y = R.sy1, R.sy2 do
     local S = SEEDS[x][y]
     if S.room == R then
       build_seed(S)
     end
-  end end -- for x, y
+  end -- x, y
+  end
+
+  each B in LEVEL.map_borders do
+    if B.room == R then
+      build_mapborder_bits(B)
+    end
+  end
 end
 
 

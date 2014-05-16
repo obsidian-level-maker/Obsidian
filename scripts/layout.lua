@@ -3038,8 +3038,6 @@ stderrf("checking %s\n", R:tostr())
   
   gui.debugf("Layout_plan_outdoor_borders...\n")
 
-  LEVEL.map_borders = {}
-
   collect_rooms()
 
   plan_borders()

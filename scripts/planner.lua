@@ -1418,6 +1418,7 @@ function Plan_create_rooms()
 
   LEVEL.scenic_rooms = {}
   LEVEL.scenic_conns = {}
+  LEVEL.map_borders  = {}
 
   LEVEL.free_tag  = 1
   LEVEL.free_mark = 1
