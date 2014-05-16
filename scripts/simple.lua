@@ -2275,7 +2275,8 @@ function Simple_lake_fences(R)
         local A = S:neighbor(A_dir)
         local B = S:neighbor(B_dir)
 
-        if (A.room != S.room) or (B.room != S.room) then continue end
+        if not A or (A.room != S.room) then continue end
+        if not B or (B.room != S.room) then continue end
 
         if A:need_lake_fence(B_dir) or
            B:need_lake_fence(A_dir)
@@ -2629,7 +2630,7 @@ function Simple_outdoor_borders()
       for dir = 2,8,2 do
         local N = S:neighbor(dir)
 
-        if not N or N.free or not N:in_use() then
+        if not N or N.free then
           sky_border(R, S, dir)
         end
       end
@@ -2645,11 +2646,11 @@ function Simple_outdoor_borders()
 
     local info = R.cave_info
 
-    if not (info.liquid_mode == "lake" or
-            info.sky_mode == "low_wall")
-    then continue end
-
-    process_room(R)
+    if info.liquid_mode == "lake" or
+       info.sky_mode == "low_wall"
+    then
+      process_room(R)
+    end
   end
 end
 

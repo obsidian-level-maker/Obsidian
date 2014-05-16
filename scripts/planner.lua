@@ -912,7 +912,7 @@ function Plan_nudge_rooms()
   end
 
 
-  function try_nudge_border(kx, ky, side)
+  function try_nudge_map_border(kx, ky, side)
     local K = LEVEL.sections[kx][ky]
 
     local R = K.room
@@ -925,7 +925,7 @@ function Plan_nudge_rooms()
 
     -- outdoor rooms need their border
     -- (and reserved rooms might become outdoor rooms)
-    if R.is_outdoor then
+    if R.kind == "outdoor" then
       return
     end
 
@@ -939,19 +939,26 @@ function Plan_nudge_rooms()
       if geom.is_horiz(side) and (R.big_h or 0) > 1 then return end
     end
 
-    -- sometimes just leave it
-    if rand.odds(10) then return end
-
     -- OK, nudge it
-    local dist = rand.irange(1, EDGE_SEEDS - 1)
+    local dist
+
+    if R.kind == "cave" then
+      -- caves always go to edge of map
+      dist = EDGE_SEEDS
+    else
+      -- sometimes never...
+      if rand.odds(10) then return end
+
+      dist = rand.index_by_probs({ 30, 20, 10 })
+    end
 
     do_nudge_section(K, side, dist)
   end
 
 
-  function nudge_borders(side)
+  function nudge_map_borders(side)
     each pos in Plan_random_section_list() do
-      try_nudge_border(pos.x, pos.y, side)
+      try_nudge_map_border(pos.x, pos.y, side)
     end
   end
 
@@ -1042,7 +1049,7 @@ function Plan_nudge_rooms()
   end
 
   for dir = 2,8,2 do
-    nudge_borders(dir)
+    nudge_map_borders(dir)
   end
 
   -- move vertically in first pass, horizontally in second
