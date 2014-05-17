@@ -24,7 +24,7 @@ class ROOM
 {
   kind : keyword  -- "building" (layout-able room)
                   -- "outdoor", "cave"
-                  -- "hallway", "stairwell", "small_exit"
+                  -- "hallway", "stairwell"
                   -- "scenic" (unvisitable room)
 
   is_outdoor : bool  -- true for outdoor rooms / caves
@@ -128,15 +128,26 @@ function ROOM_CLASS.new()
   return R
 end
 
-function ROOM_CLASS.tostr(R)
-  return string.format("%sROOM_%d", sel(R.parent, "SUB_", ""), R.id)
+
+function ROOM_CLASS.str_prefix(R)
+  if R.kind == "hallway" then return "HALLWAY_" end
+  if R.kind == "scenic" then return "SCENIC_" end
+  if R.parent then return "SUB_" end
+  return ""
 end
+
+
+function ROOM_CLASS.tostr(R)
+  return string.format("%sROOM_%d", R:str_prefix(), R.id)
+end
+
 
 function ROOM_CLASS.contains_seed(R, x, y)
   if x < R.sx1 or x > R.sx2 then return false end
   if y < R.sy1 or y > R.sy2 then return false end
   return true
 end
+
 
 function ROOM_CLASS.has_lock(R, lock)
   each C in R.conns do
@@ -145,6 +156,7 @@ function ROOM_CLASS.has_lock(R, lock)
   return false
 end
 
+
 function ROOM_CLASS.has_any_lock(R)
   each C in R.conns do
     if C.lock then return true end
@@ -152,12 +164,14 @@ function ROOM_CLASS.has_any_lock(R)
   return false
 end
 
+
 function ROOM_CLASS.has_lock_kind(R, kind)
   each C in R.conns do
     if C.lock and C.lock.kind == kind then return true end
   end
   return false
 end
+
 
 function ROOM_CLASS.has_sky_neighbor(R)
   each C in R.conns do
@@ -167,11 +181,13 @@ function ROOM_CLASS.has_sky_neighbor(R)
   return false
 end
 
+
 function ROOM_CLASS.valid_T(R, x, y)
   if x < R.tx1 or x > R.tx2 then return false end
   if y < R.ty1 or y > R.ty2 then return false end
   return true
 end
+
 
 function ROOM_CLASS.get_exits(R)
   local exits = {}
@@ -184,6 +200,7 @@ function ROOM_CLASS.get_exits(R)
 
   return exits
 end
+
 
 function ROOM_CLASS.conn_area(R)
   local lx, ly = 999,999
