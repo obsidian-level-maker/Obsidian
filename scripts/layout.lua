@@ -1,6 +1,6 @@
-----------------------------------------------------------------
+------------------------------------------------------------------------
 --  Layouting Logic
-----------------------------------------------------------------
+------------------------------------------------------------------------
 --
 --  Oblige Level Maker
 --
@@ -16,7 +16,7 @@
 --  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 --  GNU General Public License for more details.
 --
-----------------------------------------------------------------
+------------------------------------------------------------------------
 
 require "ht_fabs"
 
@@ -2905,7 +2905,7 @@ function Layout_plan_outdoor_borders()
 
 -- gui.debugf("Filling @ %s dir:%d dist:%d\n", S:tostr(), dir, dist)
 
-    local tex = S.room.cave_tex or S.room.facade or S.room.main_tex
+    local tex = S.room.facade or S.room.main_tex
     assert(tex)
 
     for i = 1, dist do

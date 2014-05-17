@@ -1830,10 +1830,7 @@ function Cave_render_cave(R)
 
 
   local function determine_spots(A)
-    -- determine bbox of area
-
-    -- TODO: this is whole cave, ideally have just the area
-
+    -- determine bbox (Note: this is whole cave)
     local x1 = info.x1 + 10
     local y1 = info.y1 + 10
 
@@ -1892,7 +1889,9 @@ function Cave_render_cave(R)
 
     local item_spots = {}
 
-    gui.spots_get_items(item_spots)
+    if not A.liquid then
+      gui.spots_get_items(item_spots)
+    end
 
     -- mark exclusion zones (e.g. area around a teleporter).
     -- gotta do it _after_ getting the item spots
@@ -1904,16 +1903,16 @@ function Cave_render_cave(R)
       end
     end
 
-  --  gui.spots_dump("Spot grid")
+    --- gui.spots_dump("Spot grid")
 
 
     local mon_spots  = {}
 
     gui.spots_get_mons(mon_spots)
 
-    if table.empty(item_spots) and mon_spots[1] then
-      table.insert(item_spots, mon_spots[1])
-    end
+---###  if table.empty(item_spots) and mon_spots[1] then
+---###    table.insert(item_spots, mon_spots[1])
+---###  end
 
 
     -- add to room, set Z positions
