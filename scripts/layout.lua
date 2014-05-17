@@ -3034,6 +3034,8 @@ stderrf("Edge on side:%d of %s\n", side, R:tostr())
 
     local VR = S:neighbor(corner, 3)
 
+    if not VR then return end
+
     if not (VR.sx == 1 or VR.sx == SEED_W)   then return end
     if not (VR.sy == 1 or VR.sy == SEED_TOP) then return end
 
