@@ -543,6 +543,7 @@ function ob_read_all_config(print_to_log)
   do_line("-- Playing Style --");
   do_line("mons = %s",    OB_CONFIG.mons or unknown)
   do_line("strength = %s",OB_CONFIG.strength or unknown)
+  do_line("weapons = %s", OB_CONFIG.weapons or unknown)
   do_line("powers = %s",  OB_CONFIG.powers or unknown)
   do_line("health = %s",  OB_CONFIG.health or unknown)
   do_line("ammo = %s",    OB_CONFIG.ammo or unknown)

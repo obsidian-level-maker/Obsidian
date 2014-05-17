@@ -91,6 +91,33 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 	cy += y_step + y_step; //  /2 - 1;
 
 
+	weaps = new UI_RChoice(cx, cy, cw, ch, "Weapons: ");
+	weaps->align(FL_ALIGN_LEFT);
+	weaps->selection_color(MY_RED);
+	weaps->callback(callback_Weapons, this);
+
+	setup_Weapons();
+
+	add(weaps);
+
+	cy += weaps->h() + y_step;
+
+
+	powers = new UI_RChoice(cx, cy, cw, ch, "Powerups: ");
+	powers->align(FL_ALIGN_LEFT);
+	powers->selection_color(MY_RED);
+	powers->callback(callback_Powers, this);
+
+	setup_Powers();
+
+	add(powers);
+
+	cy += powers->h() + y_step;
+
+
+	cy += y_step + y_step; //  /2 - 1;
+
+
 	health = new UI_RChoice(cx, cy, cw, ch, "Health: ");
 	health->align(FL_ALIGN_LEFT);
 	health->selection_color(MY_RED);
@@ -117,18 +144,6 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 	//  cy += y_step + y_step/2 - 1;
 
 
-	powers = new UI_RChoice(cx, cy, cw, ch, "Powerups: ");
-	powers->align(FL_ALIGN_LEFT);
-	powers->selection_color(MY_RED);
-	powers->callback(callback_Powers, this);
-
-	setup_Powers();
-
-	add(powers);
-
-	cy += powers->h() + y_step;
-
-
 	//  DebugPrintf("UI_Play: final h = %d\n", cy - y);
 
 	Signal_Watch("mode", notify_Mode, this);
@@ -148,6 +163,7 @@ void UI_Play::Locked(bool value)
 	{
 		mons  ->deactivate();
 		strength->deactivate();
+		weaps ->deactivate();
 		powers->deactivate();
 		health->deactivate();
 		ammo  ->deactivate();
@@ -156,6 +172,7 @@ void UI_Play::Locked(bool value)
 	{
 		mons  ->activate();
 		strength->activate();
+		weaps ->activate();
 		powers->activate();
 		health->activate();
 		ammo  ->activate();
@@ -173,6 +190,7 @@ void UI_Play::notify_Mode(const char *name, void *priv_dat)
 
 	const char *mode = main_win->game_box->mode->GetID();
 
+/* FIXME
 	if (strcmp(mode, "dm") == 0)
 	{
 		play->mons->label ("Players: ");
@@ -183,6 +201,7 @@ void UI_Play::notify_Mode(const char *name, void *priv_dat)
 		play->mons->label ("Monsters: ");
 		play->powers->label("Powerups: ");
 	}
+*/
 
 	play->redraw();
 }
@@ -203,6 +222,14 @@ void UI_Play::callback_Strength(Fl_Widget *w, void *data)
 	UI_Play *that = (UI_Play *) data;
 
 	ob_set_config("strength", that->strength->GetID());
+}
+
+
+void UI_Play::callback_Weapons(Fl_Widget *w, void *data)
+{
+	UI_Play *that = (UI_Play *) data;
+
+	ob_set_config("weapons", that->weaps->GetID());
 }
 
 
@@ -234,6 +261,7 @@ void UI_Play::Defaults()
 {
 	ParseValue("mons",    "normal");
 	ParseValue("strength","medium");
+	ParseValue("weapons", "normal");
 	ParseValue("powers",  "normal");
 	ParseValue("health",  "normal");
 	ParseValue("ammo",    "normal");
@@ -253,6 +281,13 @@ bool UI_Play::ParseValue(const char *key, const char *value)
 	{
 		strength->SetID(value);
 		callback_Strength(NULL, this);
+		return true;
+	}
+
+	if (StringCaseCmp(key, "weapons") == 0)
+	{
+		weaps->SetID(value);
+		callback_Weapons(NULL, this);
 		return true;
 	}
 
@@ -315,12 +350,12 @@ const char * UI_Play::strength_syms[] =
 
 const char * UI_Play::power_syms[] =
 {
-	// also used for: Weapons (DM)
+	// also used for: Weapons
 
-	"none",   "NONE",  
-	"less",   "Less",  
+	"none",   "NONE",
+	"less",   "Less",
 	"normal", "Normal",
-	"more",   "More", 
+	"more",   "More",
 
 	"mixed",  "Mix It Up",
 
@@ -345,7 +380,7 @@ const char * UI_Play::health_syms[] =
 
 void UI_Play::setup_Monsters()
 {
-	for (int i = 0; monster_syms[i]; i += 2)
+	for (int i = 0 ; monster_syms[i] ; i += 2)
 	{
 		mons->AddPair(monster_syms[i], monster_syms[i+1]);
 		mons->ShowOrHide(monster_syms[i], 1);
@@ -355,7 +390,7 @@ void UI_Play::setup_Monsters()
 
 void UI_Play::setup_Strength()
 {
-	for (int i = 0; strength_syms[i]; i += 2)
+	for (int i = 0 ; strength_syms[i] ; i += 2)
 	{
 		strength->AddPair(strength_syms[i], strength_syms[i+1]);
 		strength->ShowOrHide(strength_syms[i], 1);
@@ -365,7 +400,7 @@ void UI_Play::setup_Strength()
 
 void UI_Play::setup_Powers()
 {
-	for (int i = 0; power_syms[i]; i += 2)
+	for (int i = 0 ; power_syms[i] ; i += 2)
 	{
 		powers->AddPair(power_syms[i], power_syms[i+1]);
 		powers->ShowOrHide(power_syms[i], 1);
@@ -373,9 +408,19 @@ void UI_Play::setup_Powers()
 }
 
 
+void UI_Play::setup_Weapons()
+{
+	for (int i = 0 ; power_syms[i] ; i += 2)
+	{
+		weaps->AddPair(power_syms[i], power_syms[i+1]);
+		weaps->ShowOrHide(power_syms[i], 1);
+	}
+}
+
+
 void UI_Play::setup_Health()
 {
-	for (int i = 0; health_syms[i]; i += 2)
+	for (int i = 0 ; health_syms[i] ; i += 2)
 	{
 		health->AddPair(health_syms[i], health_syms[i+1]);
 		health->ShowOrHide(health_syms[i], 1);
@@ -386,7 +431,7 @@ void UI_Play::setup_Health()
 
 void UI_Play::setup_Ammo()
 {
-	for (int i = 0; health_syms[i]; i += 2)
+	for (int i = 0 ; health_syms[i] ; i += 2)
 	{
 		ammo->AddPair(health_syms[i], health_syms[i+1]);
 		ammo->ShowOrHide(health_syms[i], 1);

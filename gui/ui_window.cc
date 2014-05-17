@@ -70,13 +70,15 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 	int BOT_H  = H - TOP_H - 4;
 	int MOD_W  = W - PANEL_W*2 - 8;
 
+	int DF = 34 + KF*4;
+
 	game_box = new UI_Game(0, 0, PANEL_W, TOP_H);
 	add(game_box);
 
-	level_box = new UI_Level(PANEL_W+4, 0, PANEL_W, TOP_H);
+	level_box = new UI_Level(PANEL_W+4, 0, PANEL_W, TOP_H - DF);
 	add(level_box);
 
-	play_box = new UI_Play(PANEL_W+4, TOP_H+4, PANEL_W, BOT_H);
+	play_box = new UI_Play(PANEL_W+4, TOP_H+4 - DF, PANEL_W, BOT_H + DF);
 	add(play_box);
 
 

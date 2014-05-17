@@ -476,6 +476,7 @@ static void Batch_Defaults()
 	// Playing Style
 	ob_set_config("mons",    "normal");
 	ob_set_config("strength","medium");
+	ob_set_config("weapons", "normal");
 	ob_set_config("powers",  "normal");
 	ob_set_config("health",  "normal");
 	ob_set_config("ammo",    "normal");
