@@ -108,7 +108,7 @@ require "prefab"
 require "wad_fab"
 
 require "automata"
-require "simple"
+require "caves"
 require "layout"
 require "room"
 
