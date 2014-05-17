@@ -2638,7 +2638,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
         return false
       end
 
-      if A.kind == "liquid" and B.kind == "liquid" then
+      if (A and A.kind == "liquid") and (B and B.kind == "liquid") then
         return false
       end
     end
