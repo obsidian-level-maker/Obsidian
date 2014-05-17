@@ -181,14 +181,17 @@ $(OBJ_DIR)/ajpoly/%.o: ajpoly_src/%.cc
 
 all: $(PROGRAM)
 
+$(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(AJPOLY_OBJS)
+	$(CXX) -Wl,--warn-common $^ -o $@ $(LDFLAGS) $(LIBS)
+
 clean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
 	rm -f $(OBJ_DIR)/lua/*.o
 	rm -f $(OBJ_DIR)/glbsp/*.o
 	rm -f $(OBJ_DIR)/ajpoly/*.o
 
-$(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(AJPOLY_OBJS)
-	$(CXX) -Wl,--warn-common $^ -o $@ $(LDFLAGS) $(LIBS)
+halfclean:
+	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
 
 stripped: $(PROGRAM)
 	strip --strip-unneeded $(PROGRAM)
@@ -226,7 +229,7 @@ uninstall:
 	xdg-desktop-menu  uninstall --novendor misc/oblige.desktop
 	xdg-icon-resource uninstall --novendor --size 32 oblige
 
-.PHONY: all clean stripped install uninstall
+.PHONY: all clean halfclean stripped install uninstall
 
 #--- editor settings ------------
 # vi:ts=8:sw=8:noexpandtab
