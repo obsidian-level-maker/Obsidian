@@ -145,7 +145,7 @@ function Simple_generate_cave(R)
 
     info.wall = WALL_AREA
 
-    map = CAVE_CLASS.new(info.W, info.H)
+    map = AUTOMATA_CLASS.new(info.W, info.H)
   end
 
 
@@ -719,7 +719,7 @@ function Simple_create_areas(R)
   local function create_group_map()
     group_list = {}
 
-    group_map = CAVE_CLASS.blank_copy(info.cave)
+    group_map = AUTOMATA_CLASS.blank_copy(info.cave)
 
     each G in R.cave_imps do
       add_group_to_map(G)
@@ -853,7 +853,7 @@ function Simple_create_areas(R)
 
 -- free:dump("Free:")
 
-      step  = CAVE_CLASS.blank_copy(free)
+      step  = AUTOMATA_CLASS.blank_copy(free)
       s_cel = step.cells
 
       step:set_all(0)

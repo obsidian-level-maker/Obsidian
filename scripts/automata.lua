@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  CAVE / MAZE GENERATION
+--  CELLULAR AUTOMATA ( CAVE GENERATION )
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -26,7 +26,7 @@
 
 --[[ *** CLASS INFORMATION ***
 
-class CAVE
+class AUTOMATA_GRID
 {
   w, h   -- width and height (in cells)
   
@@ -39,7 +39,7 @@ class CAVE
   empty_id  -- the main empty area in the flood_fill
             -- this is set by the validate_conns() method
 
-  islands : list(CAVE)
+  islands : list(GRID)
 
   regions : table[id] -> REGION
 
@@ -60,77 +60,78 @@ class REGION
 --------------------------------------------------------------]]
 
 
-CAVE_CLASS = {}
+AUTOMATA_CLASS = {}
 
 
-function CAVE_CLASS.new(w, h)
-  local cave = { w=w, h=h }
-  table.set_class(cave, CAVE_CLASS)
-  cave.cells = table.array_2D(w, h)
-  return cave
+function AUTOMATA_CLASS.new(w, h)
+  local grid = { w=w, h=h }
+  table.set_class(grid, AUTOMATA_CLASS)
+  grid.cells = table.array_2D(w, h)
+  return grid
 end
 
 
-function CAVE_CLASS.blank_copy(cave)
-  return CAVE_CLASS.new(cave.w, cave.h)
+function AUTOMATA_CLASS.blank_copy(grid)
+  return AUTOMATA_CLASS.new(grid.w, grid.h)
 end
 
 
-function CAVE_CLASS.valid_cell(cave, x, y)
-  return (1 <= x and x <= cave.w) and (1 <= y and y <= cave.h)
+function AUTOMATA_CLASS.valid_cell(grid, x, y)
+  return (1 <= x and x <= grid.w) and (1 <= y and y <= grid.h)
 end
 
 
-function CAVE_CLASS.get(cave, x, y)
-  return cave.cells[x][y]
+function AUTOMATA_CLASS.get(grid, x, y)
+  return grid.cells[x][y]
 end
 
 
-function CAVE_CLASS.set(cave, x, y, val)
-  cave.cells[x][y] = val
+function AUTOMATA_CLASS.set(grid, x, y, val)
+  grid.cells[x][y] = val
 end
 
 
-function CAVE_CLASS.fill(cave, x1,y1, x2,y2, val)
+function AUTOMATA_CLASS.fill(grid, x1,y1, x2,y2, val)
   for x = x1, x2 do
   for y = y1, y2 do
-    cave.cells[x][y] = val
+    grid.cells[x][y] = val
   end
   end
 end
 
 
-function CAVE_CLASS.set_all(cave, val)
-  cave:fill(1, 1, cave.w, cave.h, val)
+function AUTOMATA_CLASS.set_all(grid, val)
+  grid:fill(1, 1, grid.w, grid.h, val)
 end
 
 
-function CAVE_CLASS.negate(cave, x1,y1, x2,y2)
+function AUTOMATA_CLASS.negate(grid, x1,y1, x2,y2)
   if not x1 then
-    x1, x2 = 1, cave.w
-    y1, y2 = 1, cave.h
+    x1, x2 = 1, grid.w
+    y1, y2 = 1, grid.h
   end
 
   for x = x1, x2 do
   for y = y1, y2 do
-    if cave.cells[x][y] then
-      cave.cells[x][y] = - cave.cells[x][y]
+    if grid.cells[x][y] then
+      grid.cells[x][y] = - grid.cells[x][y]
     end
   end
   end
 
-  return cave
+  return grid
 end
 
 
-function CAVE_CLASS.copy(cave)
-  -- only copies 'w', 'h' and 'cells' members
+function AUTOMATA_CLASS.copy(grid)
+  -- only copies 'w', 'h' and 'cells' members.
+  -- the cells themselves are NOT copied.
 
-  local newbie = cave:blank_copy()
+  local newbie = grid:blank_copy()
 
-  for x = 1, cave.w do
-  for y = 1, cave.h do
-    newbie.cells[x][y] = cave.cells[x][y]
+  for x = 1, grid.w do
+  for y = 1, grid.h do
+    newbie.cells[x][y] = grid.cells[x][y]
   end
   end
 
@@ -138,17 +139,17 @@ function CAVE_CLASS.copy(cave)
 end
 
 
-function CAVE_CLASS.dump(cave, title)
+function AUTOMATA_CLASS.dump(grid, title)
   if title then
     gui.debugf("%s\n", title)
   end
 
-  for y = cave.h,1,-1 do
+  for y = grid.h,1,-1 do
     local line = "@c| ";
     
-    for x = 1,cave.w do
+    for x = 1,grid.w do
       local ch = " "
-      local cell = cave.cells[x][y]
+      local cell = grid.cells[x][y]
 
       if  cell == 0      then ch = "/" end
       if (cell or 0) > 0 then ch = "#" end
@@ -164,59 +165,59 @@ function CAVE_CLASS.dump(cave, title)
 end
 
 
-function CAVE_CLASS.union(cave, other)
-  local W = math.min(cave.w, other.w)
-  local H = math.min(cave.h, other.h)
+function AUTOMATA_CLASS.union(grid, other)
+  local W = math.min(grid.w, other.w)
+  local H = math.min(grid.h, other.h)
 
   for x = 1, W do
   for y = 1, H do
-    if ( cave.cells[x][y] or 0) < 0 and
+    if ( grid.cells[x][y] or 0) < 0 and
        (other.cells[x][y] or 0) > 0
     then
-      cave.cells[x][y] = other.cells[x][y]
+      grid.cells[x][y] = other.cells[x][y]
     end
   end
   end
 end
 
 
-function CAVE_CLASS.intersection(cave, other)
-  local W = math.min(cave.w, other.w)
-  local H = math.min(cave.h, other.h)
+function AUTOMATA_CLASS.intersection(grid, other)
+  local W = math.min(grid.w, other.w)
+  local H = math.min(grid.h, other.h)
 
   for x = 1, W do
   for y = 1, H do
-    if ( cave.cells[x][y] or 0) > 0 and
+    if ( grid.cells[x][y] or 0) > 0 and
        (other.cells[x][y] or 0) < 0
     then
-      cave.cells[x][y] = other.cells[x][y]
+      grid.cells[x][y] = other.cells[x][y]
     end
   end
   end
 end
 
 
-function CAVE_CLASS.subtract(cave, other)
-  local W = math.min(cave.w, other.w)
-  local H = math.min(cave.h, other.h)
+function AUTOMATA_CLASS.subtract(grid, other)
+  local W = math.min(grid.w, other.w)
+  local H = math.min(grid.h, other.h)
 
-  local empty_id = cave.empty_id or -1
+  local empty_id = grid.empty_id or -1
 
   for x = 1, W do
   for y = 1, H do
-    if ( cave.cells[x][y] or 0) > 0 and
+    if ( grid.cells[x][y] or 0) > 0 and
        (other.cells[x][y] or 0) > 0
     then
-      cave.cells[x][y] = empty_id
+      grid.cells[x][y] = empty_id
     end
   end
   end
 end
 
 
-function CAVE_CLASS.generate(cave, solid_prob)
+function AUTOMATA_CLASS.generate(grid, solid_prob)
 
-  -- The initial contents of the cave form a map where the cave
+  -- The initial contents of the grid form a map where a cave
   -- will be generated.  The following values can be used:
   --
   --    nil : never touched
@@ -231,10 +232,10 @@ function CAVE_CLASS.generate(cave, solid_prob)
 
   solid_prob = solid_prob or 40
 
-  local W = cave.w
-  local H = cave.h
+  local W = grid.w
+  local H = grid.h
 
-  local map  = cave.cells
+  local map  = grid.cells
 
   -- these arrays only use 0 and 1 as values
   local work = table.array_2D(W, H)
@@ -314,18 +315,18 @@ function CAVE_CLASS.generate(cave, solid_prob)
   end
   end
 
-  cave.cells = work
+  grid.cells = work
 end
 
 
-function CAVE_CLASS.gen_empty(cave)
+function AUTOMATA_CLASS.gen_empty(grid)
   
   -- this is akin to generate(), but making all target cells empty
 
-  local W = cave.w
-  local H = cave.h
+  local W = grid.w
+  local H = grid.h
 
-  local cells = cave.cells
+  local cells = grid.cells
 
   for x = 1, W do
   for y = 1, H do
@@ -339,39 +340,39 @@ function CAVE_CLASS.gen_empty(cave)
   end
   end
 
-  return cave
+  return grid
 end
 
 
-function CAVE_CLASS.dump_regions(cave)
-  if not cave.regions then
+function AUTOMATA_CLASS.dump_regions(grid)
+  if not grid.regions then
     gui.debugf("No region info (flood_fill not called yet)\n")
     return
   end
 
   gui.debugf("Regions:\n")
 
-  each id,REG in cave.regions do
+  each id,REG in grid.regions do
     gui.debugf("  %+4d : (%d %d) .. (%d %d) size:%d\n",
                REG.id, REG.x1, REG.y1, REG.x2, REG.y2, REG.size)
   end
 
-  gui.debugf("Empty regions: %d (with %d cells)\n", cave.empty_regions, cave.empty_cells)
-  gui.debugf("Solid regions: %d (with %d cells)\n", cave.solid_regions, cave.solid_cells)
+  gui.debugf("Empty regions: %d (with %d cells)\n", grid.empty_regions, grid.empty_cells)
+  gui.debugf("Solid regions: %d (with %d cells)\n", grid.solid_regions, grid.solid_cells)
 end
 
 
-function CAVE_CLASS.flood_fill(cave)
+function AUTOMATA_CLASS.flood_fill(grid)
   -- generate the 'flood' member, an array where each contiguous region
   -- has a unique id.  Empty areas are negative, solid areas are positive,
   -- and everything else is NIL.
   --
   -- This also creates the 'regions' table.
 
-  local W = cave.w
-  local H = cave.h
+  local W = grid.w
+  local H = grid.h
 
-  local cells = cave.cells
+  local cells = grid.cells
   local flood = table.array_2D(W, H)
 
   local solid_id =  1
@@ -407,12 +408,12 @@ function CAVE_CLASS.flood_fill(cave)
     assert(id != 0)
 
     if id < 0 then
-      cave.empty_cells = cave.empty_cells + 1
+      grid.empty_cells = grid.empty_cells + 1
     else
-      cave.solid_cells = cave.solid_cells + 1
+      grid.solid_cells = grid.solid_cells + 1
     end
 
-    local REG = cave.regions[id]
+    local REG = grid.regions[id]
 
     if not REG then
       REG =
@@ -423,12 +424,12 @@ function CAVE_CLASS.flood_fill(cave)
         size = 0
       }
 
-      cave.regions[id] = REG
+      grid.regions[id] = REG
 
       if id < 0 then
-        cave.empty_regions = cave.empty_regions + 1
+        grid.empty_regions = grid.empty_regions + 1
       else
-        cave.solid_regions = cave.solid_regions + 1
+        grid.solid_regions = grid.solid_regions + 1
       end
     end
 
@@ -475,12 +476,12 @@ function CAVE_CLASS.flood_fill(cave)
 
   -- create information for each region
 
-  cave.regions = {}
+  grid.regions = {}
 
-  cave.empty_cells = 0
-  cave.solid_cells = 0
-  cave.empty_regions = 0
-  cave.solid_regions = 0
+  grid.empty_cells = 0
+  grid.solid_cells = 0
+  grid.empty_regions = 0
+  grid.solid_regions = 0
 
   for x = 1, W do
   for y = 1, H do
@@ -488,29 +489,29 @@ function CAVE_CLASS.flood_fill(cave)
   end
   end
 
-  cave.flood = flood
+  grid.flood = flood
 
-      cave:dump_regions()
+  --  grid:dump_regions()
 end
 
 
-function CAVE_CLASS.validate_conns(cave, point_list)
+function AUTOMATA_CLASS.validate_conns(grid, point_list)
 
   -- checks that all connections can reach each other.
 
   local empty_id = nil
 
-  if not cave.flood then
-    cave:flood_fill()
+  if not grid.flood then
+    grid:flood_fill()
   end
 
   each P in point_list do
-    if (cave.flood[P.x][P.y] or 0) >= 0 then
+    if (grid.flood[P.x][P.y] or 0) >= 0 then
       -- not valid : the cell is solid or absent
       return false
     end
 
-    local reg = cave.flood[P.x][P.y]
+    local reg = grid.flood[P.x][P.y]
 
     if not empty_id then
       empty_id = reg
@@ -520,19 +521,19 @@ function CAVE_CLASS.validate_conns(cave, point_list)
     end
   end -- P
 
-  cave.empty_id = empty_id
+  grid.empty_id = empty_id
 
   return true
 end
 
 
-function CAVE_CLASS.solidify_pockets(cave)
+function AUTOMATA_CLASS.solidify_pockets(grid)
   -- this removes the empty areas which are surrounded by solid
   -- (i.e. not part of the main walk area).
 
   local function find_one()
-    each id,REG in cave.regions do
-      if id < 0 and id != cave.empty_id then
+    each id,REG in grid.regions do
+      if id < 0 and id != grid.empty_id then
         return id
       end
     end
@@ -546,32 +547,32 @@ function CAVE_CLASS.solidify_pockets(cave)
 
     if not pocket_id then break end
 
-    local REG = cave.regions[pocket_id]
+    local REG = grid.regions[pocket_id]
     assert(REG)
 
     -- solidify the cells
     for x = REG.x1, REG.x2 do
     for y = REG.y1, REG.y2 do
-      if cave.flood[x][y] == pocket_id then
-        cave.cells[x][y] = 1
-        cave.flood[x][y] = nil
+      if grid.flood[x][y] == pocket_id then
+        grid.cells[x][y] = 1
+        grid.flood[x][y] = nil
       end
     end
     end
 
     -- remove the region info
-    cave.regions[pocket_id] = nil
+    grid.regions[pocket_id] = nil
   end
 end
 
 
-function CAVE_CLASS.copy_island(cave, reg_id)
-  local W = cave.w
-  local H = cave.h
+function AUTOMATA_CLASS.copy_island(grid, reg_id)
+  local W = grid.w
+  local H = grid.h
 
-  local flood = assert(cave.flood)
+  local flood = assert(grid.flood)
 
-  local island = cave:blank_copy()
+  local island = grid:blank_copy()
 
   for x = 1, W do
   for y = 1, H do
@@ -590,20 +591,20 @@ function CAVE_CLASS.copy_island(cave, reg_id)
 end
 
 
-function CAVE_CLASS.find_islands(cave)
+function AUTOMATA_CLASS.find_islands(grid)
   
   -- an "island" is contiguous solid area which never touches NIL
 
   local islands = {}
 
-  local W = cave.w
-  local H = cave.h
+  local W = grid.w
+  local H = grid.h
 
-  if not cave.flood then
-    cave:flood_fill()
+  if not grid.flood then
+    grid:flood_fill()
   end
 
-  local flood = cave.flood
+  local flood = grid.flood
 
   -- scan the cave, determine which regions are islands
 
@@ -627,7 +628,7 @@ function CAVE_CLASS.find_islands(cave)
       if potentials[reg] != "no" then
         for side = 2,8,2 do
           local nx, ny = geom.nudge(x, y, side)
-          if cave:valid_cell(nx, ny) and flood[nx][ny] == nil then
+          if grid:valid_cell(nx, ny) and flood[nx][ny] == nil then
             potentials[reg] = "no"
             break;
           end
@@ -642,22 +643,22 @@ function CAVE_CLASS.find_islands(cave)
 
   for reg,pot in pairs(potentials) do
     if pot == "maybe" then
-      table.insert(islands, cave:copy_island(reg))
+      table.insert(islands, grid:copy_island(reg))
     end
   end
 
-  cave.islands = islands
+  grid.islands = islands
 end
 
 
-function CAVE_CLASS.validate_size(cave)
-  assert(cave.empty_id)
+function AUTOMATA_CLASS.validate_size(grid)
+  assert(grid.empty_id)
 
-  local empty_reg = cave.regions[cave.empty_id]
+  local empty_reg = grid.regions[grid.empty_id]
   assert(empty_reg)
 
-  local W = cave.w
-  local H = cave.h
+  local W = grid.w
+  local H = grid.h
 
   local cw = empty_reg.x2 - empty_reg.x1 + 1
   local ch = empty_reg.y2 - empty_reg.y1 + 1
@@ -672,15 +673,15 @@ function CAVE_CLASS.validate_size(cave)
 end
 
 
-function CAVE_CLASS.grow(cave, keep_edges)
+function AUTOMATA_CLASS.grow(grid, keep_edges)
   -- grow the cave : it will have more solids, less empties.
   -- nil cells are not affected.
 
-  local W = cave.w
-  local H = cave.h
+  local W = grid.w
+  local H = grid.h
 
   local work = table.array_2D(W, H)
-  local cells = cave.cells
+  local cells = grid.cells
 
   local function value_for_spot(x, y)
     local val = cells[x][y]
@@ -689,7 +690,7 @@ function CAVE_CLASS.grow(cave, keep_edges)
     for dir = 2,8,2 do
       local nx, ny = geom.nudge(x, y, dir)
 
-      if not cave:valid_cell(nx, ny) or not cells[nx][ny] then
+      if not grid:valid_cell(nx, ny) or not cells[nx][ny] then
         hit_edge = true
       elseif cells[nx][ny] > 0 then
         val = cells[nx][ny]
@@ -711,18 +712,18 @@ function CAVE_CLASS.grow(cave, keep_edges)
   end
   end
 
-  cave.cells = work
+  grid.cells = work
 end
 
 
-function CAVE_CLASS.grow8(cave, keep_edges)
+function AUTOMATA_CLASS.grow8(grid, keep_edges)
   -- like grow() method but expands in all 8 directions
 
-  local W = cave.w
-  local H = cave.h
+  local W = grid.w
+  local H = grid.h
 
   local work = table.array_2D(W, H)
-  local cells = cave.cells
+  local cells = grid.cells
 
   local function value_for_spot(x, y)
     local val = cells[x][y]
@@ -731,7 +732,7 @@ function CAVE_CLASS.grow8(cave, keep_edges)
     for dir = 1,9 do if dir != 5 then
       local nx, ny = geom.nudge(x, y, dir)
 
-      if not cave:valid_cell(nx, ny) or not cells[nx][ny] then
+      if not grid:valid_cell(nx, ny) or not cells[nx][ny] then
         hit_edge = true
       elseif cells[nx][ny] > 0 then
         val = cells[nx][ny]
@@ -753,20 +754,20 @@ function CAVE_CLASS.grow8(cave, keep_edges)
   end
   end
 
-  cave.cells = work
+  grid.cells = work
 end
 
 
-function CAVE_CLASS.shrink(cave, keep_edges)
+function AUTOMATA_CLASS.shrink(grid, keep_edges)
   -- shrink the cave : it will have more empties, less solids.
   -- when 'keep_edges' is true, cells at edges are not touched.
   -- nil cells are not affected.
 
-  local W = cave.w
-  local H = cave.h
+  local W = grid.w
+  local H = grid.h
 
   local work = table.array_2D(W, H)
-  local cells = cave.cells
+  local cells = grid.cells
 
   local function value_for_spot(x, y)
     local val = cells[x][y]
@@ -775,7 +776,7 @@ function CAVE_CLASS.shrink(cave, keep_edges)
     for dir = 2,8,2 do
       local nx, ny = geom.nudge(x, y, dir)
     
-      if not cave:valid_cell(nx, ny) or not cells[nx][ny] then
+      if not grid:valid_cell(nx, ny) or not cells[nx][ny] then
         hit_edge = true
       elseif cells[nx][ny] < 0 then
         val = cells[nx][ny]
@@ -797,18 +798,18 @@ function CAVE_CLASS.shrink(cave, keep_edges)
   end
   end
 
-  cave.cells = work
+  grid.cells = work
 end
 
 
-function CAVE_CLASS.shrink8(cave, keep_edges)
+function AUTOMATA_CLASS.shrink8(grid, keep_edges)
   -- like shrink() method but checks all 8 directions
 
-  local W = cave.w
-  local H = cave.h
+  local W = grid.w
+  local H = grid.h
 
   local work = table.array_2D(W, H)
-  local cells = cave.cells
+  local cells = grid.cells
 
   local function value_for_spot(x, y)
     local val = cells[x][y]
@@ -817,7 +818,7 @@ function CAVE_CLASS.shrink8(cave, keep_edges)
     for dir = 1,9 do if dir != 5 then
       local nx, ny = geom.nudge(x, y, dir)
     
-      if not cave:valid_cell(nx, ny) or not cells[nx][ny] then
+      if not grid:valid_cell(nx, ny) or not cells[nx][ny] then
         hit_edge = true
       elseif cells[nx][ny] < 0 then
         val = cells[nx][ny]
@@ -839,24 +840,24 @@ function CAVE_CLASS.shrink8(cave, keep_edges)
   end
   end
 
-  cave.cells = work
+  grid.cells = work
 end
 
 
-function CAVE_CLASS.remove_dots(cave)
+function AUTOMATA_CLASS.remove_dots(grid)
   -- removes isolated cells (solid or empty) from the cave.
   -- diagonal cells are NOT checked.
 
-  local W = cave.w
-  local H = cave.h
+  local W = grid.w
+  local H = grid.h
 
-  local cells = cave.cells
+  local cells = grid.cells
 
   local function is_isolated(x, y, val)
     for dir = 2,8,2 do
       local nx, ny = geom.nudge(x, y, dir)
 
-      if not cave:valid_cell(nx, ny) or not cells[nx][ny] then
+      if not grid:valid_cell(nx, ny) or not cells[nx][ny] then
         -- ignore it
       elseif cells[nx][ny] == val then
         return false
@@ -879,12 +880,12 @@ function CAVE_CLASS.remove_dots(cave)
 end
 
 
-function CAVE_CLASS.is_land_locked(cave, x, y)
-  if x <= 1 or x >= cave.w or y <= 1 or y >= cave.h then
+function AUTOMATA_CLASS.is_land_locked(grid, x, y)
+  if x <= 1 or x >= grid.w or y <= 1 or y >= grid.h then
     return false
   end
 
-  local cells = cave.cells
+  local cells = grid.cells
 
   for dx = -1, 1 do
   for dy = -1, 1 do
@@ -898,12 +899,12 @@ function CAVE_CLASS.is_land_locked(cave, x, y)
 end
 
 
-function CAVE_CLASS.is_empty_locked(cave, x, y)
-  if x <= 1 or x >= cave.w or y <= 1 or y >= cave.h then
+function AUTOMATA_CLASS.is_empty_locked(grid, x, y)
+  if x <= 1 or x >= grid.w or y <= 1 or y >= grid.h then
     return false
   end
 
-  local cells = cave.cells
+  local cells = grid.cells
 
   for dx = -1,1 do
   for dy = -1,1 do
@@ -917,15 +918,15 @@ function CAVE_CLASS.is_empty_locked(cave, x, y)
 end
 
 
-function CAVE_CLASS.distance_map(cave, ref_points)
-  assert(cave.flood)
-  assert(cave.empty_id)
+function AUTOMATA_CLASS.distance_map(grid, ref_points)
+  assert(grid.flood)
+  assert(grid.empty_id)
 
-  local W = cave.w
-  local H = cave.h
+  local W = grid.w
+  local H = grid.h
 
   local work = table.array_2D(W, H)
-  local flood = cave.flood
+  local flood = grid.flood
 
   local next_points = {}
 
@@ -940,7 +941,7 @@ function CAVE_CLASS.distance_map(cave, ref_points)
         local F = flood[nx][ny]
         local W =  work[nx][ny]
 
-        if F == cave.empty_id and (not W or W > dist) then
+        if F == grid.empty_id and (not W or W > dist) then
           flood[nx][ny] = dist
           table.insert(next_points, { x=nx, y=ny })
         end
@@ -967,8 +968,8 @@ function CAVE_CLASS.distance_map(cave, ref_points)
 end
 
 
-function CAVE_CLASS.furthest_point(cave, ref_points)
-  local dist_map = cave:distance_map(ref_points)
+function AUTOMATA_CLASS.furthest_point(grid, ref_points)
+  local dist_map = grid:distance_map(ref_points)
 
   local best_x, best_y
   local best_dist = 9e9
@@ -983,7 +984,7 @@ function CAVE_CLASS.furthest_point(cave, ref_points)
       if y == 1 or y == H then dist = dist + 0.2 end
 
       -- prefer a spot away from the wall
-      if cave:is_empty_locked(x, y) then
+      if grid:is_empty_locked(x, y) then
         dist = dist - 2.4
       end
 
@@ -1007,7 +1008,7 @@ end
 ----------------------------------------------------------------
 
 
-function CAVE_CLASS.maze_generate(maze)
+function AUTOMATA_CLASS.maze_generate(maze)
 
   -- Generates a maze in the current object.
   --
@@ -1203,7 +1204,7 @@ end
 
 
 
-function CAVE_CLASS.maze_render(maze, brush_func, data)
+function AUTOMATA_CLASS.maze_render(maze, brush_func, data)
   local W = maze.w
   local H = maze.h
 
@@ -1248,7 +1249,7 @@ function Maze_test()
   local SIZE = 15
 
   for loop = 1,20 do
-    local maze = CAVE_CLASS.new(SIZE, SIZE)
+    local maze = AUTOMATA_CLASS.new(SIZE, SIZE)
 
     -- solid on outside, empty in middle
     maze:fill(1,1, SIZE,SIZE,     1)
