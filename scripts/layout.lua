@@ -2964,6 +2964,13 @@ function Layout_plan_outdoor_borders()
     if side == 4 then x2 = x1 end
     if side == 6 then x1 = x2 end
 
+    -- ensure we are actually at the edge of the map
+
+    if side == 2 and y1 != 1 + 3 then return end
+    if side == 8 and y1 != SEED_TOP - 3 then return end
+    if side == 4 and x1 != 1 + 3 then return end
+    if side == 6 and x1 != SEED_W - 3 then return end
+
     -- check that we can build something (to be safe)
 
     for sx = x1, x2 do
