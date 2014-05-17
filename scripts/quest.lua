@@ -563,7 +563,7 @@ function Quest_add_weapons()
   if OB_CONFIG.weapons == "more" then quota = quota * 1.7 end
 
   if OB_CONFIG.weapons == "mixed" then
-    quota = quota * rand.pick({ 0.6, 1.0, 1.8 })
+    quota = quota * rand.pick({ 0.6, 1.0, 1.7 })
   end
 
   quota = quota * (PARAM.weapon_factor or 1)

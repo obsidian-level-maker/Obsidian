@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  SIMPLE ROOMS : CAVES and MAZES
+--  CAVES and MAZES
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -84,7 +84,7 @@ SPOT_WALL  = 1
 SPOT_LEDGE = 2
 
 
-function Simple_generate_cave(R)
+function Cave_generate_cave(R)
   local info = R.cave_info
 
   local map
@@ -550,7 +550,7 @@ function Simple_generate_cave(R)
   end
 
 
-  ---| Simple_generate_cave |---
+  ---| Cave_generate_cave |---
 
   -- create the cave object and make the boundaries solid
   create_map()
@@ -566,7 +566,7 @@ end
 
 
 
-function Simple_area_host_parts(R, A)
+function Cave_area_host_parts(R, A)
   --|
   --| figure out if this area can host something inside it
   --| (e.g. a torch or a cage prefab).
@@ -583,7 +583,7 @@ end
 
 
 
-function Simple_create_areas(R)
+function Cave_create_areas(R)
   --|
   --| sub-divide the floor of the cave into areas of differing heights.
   --|
@@ -1001,7 +1001,7 @@ step:dump("Step:")
   end
 
 
-  ---| Simple_create_areas |---
+  ---| Cave_create_areas |---
 
   if info.step_mode == "walkway" then
     make_walkway()
@@ -1024,7 +1024,7 @@ end
 
 
 
-function Simple_bunch_areas(R, mode)
+function Cave_bunch_areas(R, mode)
   --|
   --| this picks a bunch of step areas which will become either liquid
   --| or sky (depending on 'mode' parameter).
@@ -1122,7 +1122,7 @@ function Simple_bunch_areas(R, mode)
   end
 
 
-  ---| Simple_bunch_areas |---
+  ---| Cave_bunch_areas |---
 
   if info.step_mode == "walkway" then return end
   if info.liquid_mode == "lake"  then return end
@@ -1155,7 +1155,7 @@ end
 
 
 
-function Simple_heights_near_area(R, A)
+function Cave_heights_near_area(R, A)
   local info = R.cave_info
   local cave = info.cave
 
@@ -1210,7 +1210,7 @@ end
 
 
 
-function Simple_floor_heights(R, entry_h)
+function Cave_floor_heights(R, entry_h)
   assert(entry_h)
 
   local info = R.cave_info
@@ -1400,7 +1400,7 @@ function Simple_floor_heights(R, entry_h)
       each A in info.lakes do
         if not A.floor_h then
         
-          local f_h = Simple_heights_near_area(R, A)
+          local f_h = Cave_heights_near_area(R, A)
 
           if f_h then
             A.floor_h = f_h - rand.pick({ 8, 16, 24 })
@@ -1448,7 +1448,7 @@ function Simple_floor_heights(R, entry_h)
   end
 
 
-  ---| Simple_floor_heights |---
+  ---| Cave_floor_heights |---
 
   local z_dir
 
@@ -1475,7 +1475,7 @@ end
 
 
 
-function Simple_render_cave(R)
+function Cave_render_cave(R)
 
   local info = R.cave_info
 
@@ -2079,7 +2079,7 @@ function Simple_render_cave(R)
   end
 
 
-  ---| Simple_render_cave |---
+  ---| Cave_render_cave |---
   
   Trans.clear()
 
@@ -2104,7 +2104,7 @@ end
 
 
 
-function Simple_fill_lakes(R)
+function Cave_fill_lakes(R)
   local info = R.cave_info
   local cave = info.cave
 
@@ -2145,7 +2145,7 @@ function Simple_fill_lakes(R)
   end
 
 
-  ---| Simple_fill_lakes |---
+  ---| Cave_fill_lakes |---
 
   info.lakes = {}
 
@@ -2169,7 +2169,7 @@ end
 
 
 
-function Simple_lake_fences(R)
+function Cave_lake_fences(R)
   local info = R.cave_info
 
   local function install_fence_post(cx1, cy1, cx2, cy2, dir, along_dir, i, deep)
@@ -2292,7 +2292,7 @@ function Simple_lake_fences(R)
   end
 
 
-  --| Simple_lake_fences |--
+  --| Cave_lake_fences |--
 
   if info.liquid_mode != "lake" then
     return
@@ -2329,7 +2329,7 @@ end
 
 
 
-function Simple_decorations(R)
+function Cave_decorations(R)
   --|
   --| add torches (etc)
   --|
@@ -2490,7 +2490,7 @@ function Simple_decorations(R)
   end
 
 
-  ---| Simple_decorations |---
+  ---| Cave_decorations |---
 
   if info.torch_mode != "none" then
     place_torches_in_corners()
@@ -2499,7 +2499,7 @@ end
 
 
 
-function Simple_decide_properties(R)
+function Cave_decide_properties(R)
   local info = R.cave_info
 
   local   STEP_MODES = { walkway=10, up=20, down=20, mixed=60 }
@@ -2563,28 +2563,28 @@ end
 
 
 
-function Simple_cave_or_maze(R, entry_h)
+function Cave_build_room(R, entry_h)
   R.cave_info = {}
 
-  Simple_decide_properties(R)
-  Simple_generate_cave(R)
+  Cave_decide_properties(R)
+  Cave_generate_cave(R)
 
-  Simple_lake_fences(R)
-  Simple_fill_lakes(R)
+  Cave_lake_fences(R)
+  Cave_fill_lakes(R)
 
-  Simple_create_areas(R)
-  Simple_bunch_areas(R, "liquid")
-  Simple_bunch_areas(R, "sky")
+  Cave_create_areas(R)
+  Cave_bunch_areas(R, "liquid")
+  Cave_bunch_areas(R, "sky")
 
-  Simple_floor_heights(R, entry_h)
-  Simple_decorations(R)
+  Cave_floor_heights(R, entry_h)
+  Cave_decorations(R)
 
-  Simple_render_cave(R)
+  Cave_render_cave(R)
 end
 
 
 
-function Simple_outdoor_borders()
+function Cave_outdoor_borders()
 
   local function sky_border(R, S, dir)
     local f_mat = assert(R.main_tex)
@@ -2639,7 +2639,7 @@ function Simple_outdoor_borders()
   end
 
 
-  ---| Simple_outdoor_borders |---
+  ---| Cave_outdoor_borders |---
 
   each R in LEVEL.rooms do
     if R.kind != "cave" then continue end

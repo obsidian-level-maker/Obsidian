@@ -4160,7 +4160,7 @@ function Room_build_all()
   Room_tizzy_up()
   Room_border_up()
 
-  Simple_outdoor_borders()
+  Cave_outdoor_borders()
   Layout_build_outdoor_borders()
 
   Room_run_builders()
