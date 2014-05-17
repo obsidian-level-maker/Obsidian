@@ -3087,11 +3087,24 @@ stderrf("Corner on side:%d of %s\n", corner, R:tostr())
   end
 
 
+  local function outdoor_or_scenic(R)
+    if R.kind == "outdoor" then
+      return true
+    end
+
+    if R.kind != "scenic" then
+      return false
+    end
+
+    return R.is_outdoor
+  end
+
+
   local function plan_borders()
     each R in all_rooms do
       R.border_edges = {}
 
-      if R.kind == "outdoor" then
+      if outdoor_or_scenic(R) then
         for side = 2,8,2 do
           plan_edge_fabs(R, side)
         end
@@ -3099,7 +3112,7 @@ stderrf("Corner on side:%d of %s\n", corner, R:tostr())
     end
 
     each R in all_rooms do
-      if R.kind == "outdoor" then
+      if outdoor_or_scenic(R) then
         each corner in CORNERS do
           plan_corner_fabs(R, corner)
         end
