@@ -512,7 +512,7 @@ function Quest_add_weapons()
 
   local function fallback_start_weapon()
     -- be a meanie sometimes...
-    if rand.odds(70) then
+    if rand.odds(70) or OB_CONFIG.weapons == "less" then
       return
     end
 
@@ -549,10 +549,22 @@ function Quest_add_weapons()
     EPISODE.seen_weapons = {}
   end
 
+  if OB_CONFIG.weapons == "none" then
+    gui.printf("Weapon quota: NONE\n")
+    return
+  end
+
 
   -- decide how many weapons to give
 
   local quota = #LEVEL.zones * rand.range(0.66, 1.33)
+
+  if OB_CONFIG.weapons == "less" then quota = quota / 1.7 end
+  if OB_CONFIG.weapons == "more" then quota = quota * 1.7 end
+
+  if OB_CONFIG.weapons == "mixed" then
+    quota = quota * rand.pick({ 0.6, 1.0, 1.8 })
+  end
 
   quota = quota * (PARAM.weapon_factor or 1)
   quota = int(quota + 0.5)
