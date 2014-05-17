@@ -2586,7 +2586,33 @@ end
 
 function Cave_outdoor_borders()
 
-  local function sky_border(R, S, dir)
+  local function need_sky_border(S, dir)
+    -- really at edge of map?
+    local N = S:neighbor(dir)
+
+    if not (not N or N.free) then return false end
+
+    if S.map_border then
+      return S.map_border.kind != "solid"
+    end
+
+    local R = S.room
+
+    if not R then return false end
+    if R.kind != "cave" then return false end
+
+    local info = R.cave_info
+
+    return info.liquid_mode == "lake" or
+           info.sky_mode == "low_wall"
+  end
+
+
+  local function build_sky_border(S, dir)
+    local R = S.room
+    if S.map_border then R = S.map_border.room end
+    assert(R)
+
     local f_mat = assert(R.main_tex)
     local f_h   = R.floor_min_h - 256
 
@@ -2605,52 +2631,21 @@ function Cave_outdoor_borders()
     Trans.brush(brush)
 
     Trans.sky_quad(x1, y1, x2, y2, f_h + 4)
-
-    -- mark neighbor seed (prevent gap filling there)
-
-    local N = S:neighbor(dir)
-
-    if not N or N.free then return end
-
-    if N.map_border then
-      N.map_border_conflict = true
-    else
-      N.map_border = { kind="simple" }
-    end
-  end
-
-
-  local function process_room(R)
-    for sx = R.sx1, R.sx2 do
-    for sy = R.sy1, R.sy2 do
-      local S = SEEDS[sx][sy]
-
-      if S.room != R then continue end
-
-      for dir = 2,8,2 do
-        local N = S:neighbor(dir)
-
-        if not N or N.free then
-          sky_border(R, S, dir)
-        end
-      end
-    end  -- sx, sy
-    end
   end
 
 
   ---| Cave_outdoor_borders |---
 
-  each R in LEVEL.rooms do
-    if R.kind != "cave" then continue end
+  for sx = 1, SEED_W do
+  for sy = 1, SEED_TOP do
+    local S = SEEDS[sx][sy]
 
-    local info = R.cave_info
-
-    if info.liquid_mode == "lake" or
-       info.sky_mode == "low_wall"
-    then
-      process_room(R)
+    for dir = 2,8,2 do
+      if need_sky_border(S, dir) then
+        build_sky_border(S, dir)
+      end
     end
+  end -- sx, sy
   end
 end
 

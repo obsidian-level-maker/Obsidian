@@ -1543,6 +1543,7 @@ function Layout_scenic(R)
   end
 
   R.floor_max_h = R.liquid_h
+  R.floor_min_h = R.liquid_h
   R.floor_h     = R.liquid_h
 
   for x = R.sx1, R.sx2 do
