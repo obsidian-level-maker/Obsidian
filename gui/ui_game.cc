@@ -44,7 +44,7 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
 
 	int y_step = 6 + KF;
 
-	int cx = x + 70 + KF * 11;
+	int cx = x + 72 + KF * 11;
 	int cy = y + y_step + KF * 3;
 
 	const char *heading_text = "Game Settings";
