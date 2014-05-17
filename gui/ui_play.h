@@ -71,7 +71,6 @@ private:
 	static const char * monster_syms[];
 	static const char * strength_syms[];
 	static const char * power_syms[];
-	static const char * trap_syms[];
 	static const char * health_syms[];
 };
 

@@ -30,7 +30,6 @@ public: /// private:
 
 	UI_RChoice *outdoors;
 	UI_RChoice *caves;
-	UI_RChoice *traps;
 
 
 public:
@@ -53,17 +52,14 @@ private:
 	void setup_Size();
 	void setup_Outdoors();
 	void setup_Caves();
-	void setup_Traps();
 
 	static void callback_Size    (Fl_Widget *, void*);
 	static void callback_Theme   (Fl_Widget *, void*);
 	static void callback_Outdoors(Fl_Widget *, void*);
 	static void callback_Caves   (Fl_Widget *, void*);
-	static void callback_Traps   (Fl_Widget *, void*);
 
 	static const char * size_syms[];
 	static const char * outdoor_syms[];
-	static const char * trap_syms[];
 };
 
 #endif /* __UI_LEVEL_H__ */

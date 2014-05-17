@@ -537,7 +537,6 @@ function ob_read_all_config(print_to_log)
   do_line("size = %s",    OB_CONFIG.size or unknown)
   do_line("outdoors = %s",OB_CONFIG.outdoors or unknown)
   do_line("caves = %s",   OB_CONFIG.caves or unknown)
-  do_line("traps = %s",   OB_CONFIG.traps or unknown)
   do_line("")
 
   do_line("-- Playing Style --");

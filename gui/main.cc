@@ -471,7 +471,6 @@ static void Batch_Defaults()
 	ob_set_config("size",     "prog");
 	ob_set_config("outdoors", "mixed");
 	ob_set_config("caves",    "mixed");
-	ob_set_config("traps",    "mixed");
 
 	// Playing Style
 	ob_set_config("mons",    "normal");

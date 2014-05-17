@@ -114,21 +114,6 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 	cy += caves->h() + y_step;
 
 
-	traps = new UI_RChoice(cx, cy, cw, ch, "Traps: ");
-	traps->align(FL_ALIGN_LEFT);
-	traps->selection_color(MY_GREEN);
-	traps->callback(callback_Traps, this);
-
-//FIXME !!!! does nothing, so hidden for now
-traps->hide();
-
-	setup_Traps();
-
-	add(traps);
-
-	cy += traps->h() + y_step;
-
-
 	//  DebugPrintf("UI_Level: final h = %d\n", cy - y);
 
 	resizable(0);  // don't resize our children
@@ -151,7 +136,6 @@ void UI_Level::Locked(bool value)
 
 		outdoors->deactivate();
 		caves   ->deactivate();
-		traps   ->deactivate();
 	}
 	else
 	{
@@ -160,7 +144,6 @@ void UI_Level::Locked(bool value)
 
 		outdoors->activate();
 		caves   ->activate();
-		traps   ->activate();
 	}
 }
 
@@ -180,14 +163,6 @@ void UI_Level::callback_Size(Fl_Widget *w, void *data)
 	UI_Level *that = (UI_Level *) data;
 
 	ob_set_config("size", that->size->GetID());
-}
-
-
-void UI_Level::callback_Traps(Fl_Widget *w, void *data)
-{
-	UI_Level *that = (UI_Level *) data;
-
-	ob_set_config("traps", that->traps->GetID());
 }
 
 
@@ -214,7 +189,6 @@ void UI_Level::Defaults()
 	ParseValue("size",     "prog");
 	ParseValue("outdoors", "mixed");
 	ParseValue("caves",    "mixed");
-	ParseValue("traps",    "mixed");
 }
 
 
@@ -240,13 +214,6 @@ bool UI_Level::ParseValue(const char *key, const char *value)
 	{
 		caves->SetID(value);
 		callback_Caves(NULL, this);
-		return true;
-	}
-
-	if (StringCaseCmp(key, "traps") == 0)
-	{
-		traps->SetID(value);
-		callback_Traps(NULL, this);
 		return true;
 	}
 
@@ -287,34 +254,6 @@ const char * UI_Level::outdoor_syms[] =
 };
 
 
-const char * UI_Level::trap_syms[] =
-{
-	"none",   "NONE",  
-	"few",    "Rare",
-	"some",   "Some",
-	"heaps",  "Heaps",
-
-	"mixed",  "Mix It Up",
-
-	NULL, NULL
-};
-
-
-#if 0
-const char * UI_Level::light_syms[] =
-{
-	"none",   "NONE",
-	"dark",   "Dark",
-	"normal", "Medium",
-	"bright", "Bright",
-
-	"mixed",  "Mix It Up",
-
-	NULL, NULL
-};
-#endif
-
-
 void UI_Level::setup_Size()
 {
 	for (int i = 0; size_syms[i]; i += 2)
@@ -341,16 +280,6 @@ void UI_Level::setup_Caves()
 	{
 		caves->AddPair(outdoor_syms[i], outdoor_syms[i+1]);
 		caves->ShowOrHide(outdoor_syms[i], 1);
-	}
-}
-
-
-void UI_Level::setup_Traps()
-{
-	for (int i = 0; trap_syms[i]; i += 2)
-	{
-		traps->AddPair(trap_syms[i], trap_syms[i+1]);
-		traps->ShowOrHide(trap_syms[i], 1);
 	}
 }
 
