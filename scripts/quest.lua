@@ -640,6 +640,33 @@ function Quest_nice_items()
   -- and (rarely) in normal rooms.
   --
 
+  local mixed_mul = rand.pick({ 0.3, 1.0, 4.0 })
+
+  local function adjust_powerup_probs(pal, factor)
+    -- apply the "Powerups" setting from the GUI
+
+    if not factor then factor = 5 end
+
+    each name,info in GAME.NICE_ITEMS do
+      if info.kind != "powerup" then continue end
+
+      if not pal[name] then continue end
+
+      if OB_CONFIG.powers == "none" then
+        pal[name] = nil
+      elseif OB_CONFIG.powers == "less" then
+        pal[name] = pal[name] / factor
+      elseif OB_CONFIG.powers == "more" then
+        pal[name] = pal[name] * factor
+      elseif OB_CONFIG.powers == "mixed" then
+        pal[name] = pal[name] * mixed_mul
+      end
+    end
+
+    assert(not table.empty(pal))
+  end
+
+
   local function secret_palette()
     local pal = {}
 
@@ -648,6 +675,8 @@ function Quest_nice_items()
         pal[name] = info.secret_prob
       end
     end
+
+    adjust_powerup_probs(pal)
 
     return pal
   end
@@ -661,6 +690,8 @@ function Quest_nice_items()
         pal[name] = info.add_prob
       end
     end
+
+    adjust_powerup_probs(pal)
 
     return pal
   end
@@ -696,6 +727,8 @@ function Quest_nice_items()
       pal[name] = info.crazy_prob or 50
     end
 
+    adjust_powerup_probs(pal)
+
     return pal
   end
 
@@ -711,7 +744,7 @@ function Quest_nice_items()
     if info.kind == "powerup" or info.kind == "weapon" then
       local old_prob = LEVEL.secret_items[name]
 
-      LEVEL.secret_items[name] = old_prob / 10
+      LEVEL.secret_items[name] = old_prob / 8
     end
   end
 
@@ -763,6 +796,7 @@ function Quest_nice_items()
     end
 
     -- TODO: add some other rooms (have a whole-level quota)
+    --       unless OB_CONFIG.powers == "less"
 
     -- choose items for each of these rooms
     local normal_tab = normal_palette()
