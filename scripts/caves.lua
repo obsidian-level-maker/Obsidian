@@ -2599,6 +2599,10 @@ function Cave_outdoor_borders()
     local R = S.room
 
     if not R then return false end
+
+    if R.kind == "outdoor" then return true end
+    if R.kind == "scenic" and R.is_outdoor then return true end
+
     if R.kind != "cave" then return false end
 
     local info = R.cave_info
