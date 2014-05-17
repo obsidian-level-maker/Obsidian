@@ -1746,7 +1746,7 @@ function Cave_render_cave(R)
         A = info.blocks[nx][ny]
       end
 
-      if not A then
+      if not A or A.fence then
         local poly = brush_for_cell(x, y)
         gui.spots_fill_poly(poly, SPOT_WALL)
         return
