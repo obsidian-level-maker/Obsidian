@@ -1747,7 +1747,8 @@ function Layout_escape_from_pits(R)
     for dir = 2,8,2 do
       local N = S:neighbor(dir)
 
-      if N.room != R then continue end
+      if not N or N.room != R then continue end
+
       if N.kind != "liquid" then continue end
 
       if not N.slime_pit then continue end
@@ -1845,7 +1846,7 @@ function Layout_escape_from_pits(R)
     for dir = 2,8,2 do
       local N = S:neighbor(dir)
 
-      if N.room != R then continue end
+      if not N or N.room != R then continue end
 
       evaluate_escape_pod(pit, S, dir, N)
     end
