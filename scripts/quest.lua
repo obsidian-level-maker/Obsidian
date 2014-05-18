@@ -773,6 +773,65 @@ function Quest_nice_items()
   end
 
 
+  local function eval_other_room(R)
+    -- primary criterion is the room size.
+    -- the final score will often be < 0
+
+    local score = R.svolume
+
+    if R.is_secret then return -1 end
+
+    if R.purpose or R.is_storage then
+      score = score - 50
+    end
+
+    score = score - 18 * #R.weapons
+
+    score = score - 1.4 * #R.conns
+
+    each C in R.conns do
+      if C.kind == "teleporter" then
+        score = score - 10 ; break
+      end
+    end
+
+    -- tie breaker
+    return score + rand.skew() * 4.0
+  end
+
+
+  local function choose_best_other_room()
+    local best_R
+    local best_score
+
+    each R in LEVEL.rooms do
+      local score = eval_other_room(R)
+
+      if score > (best_score or 0) then
+        best_R = R
+        best_score = score
+      end
+    end
+
+    return best_R  -- may be NIL
+  end
+
+
+  local function pick_other_rooms(list)
+    -- select some "ordinary" rooms for a powerup
+
+    local quota = 1   -- FIXME !!!!
+
+    for i = 1, quota do
+      local R = choose_best_other_room()
+
+      if not R then break; end
+
+      table.insert(list, R)
+    end
+  end
+
+
   local function handle_normal_rooms()
     -- collect all unused storage leafs
     -- (there is no need to shuffle them here)
@@ -797,6 +856,7 @@ function Quest_nice_items()
 
     -- TODO: add some other rooms (have a whole-level quota)
     --       unless OB_CONFIG.powers == "less"
+    pick_other_rooms(rooms)
 
     -- choose items for each of these rooms
     local normal_tab = normal_palette()
@@ -1590,7 +1650,6 @@ end
       local made_a_lock = false
 
       -- lock up all other branches
-      -- FIXME: probabilities for secret / storage
       each C in exits do
         if not made_a_lock and R.need_a_lock then
           add_lock(R, C)
@@ -1723,7 +1782,7 @@ function Quest_choose_themes()
 
     local building_tab = collect_usable_themes("building")
 
-    -- TODO: this logic is not ideal, since zones are not necessarily
+    -- Note: this logic is not ideal, since zones are not necessarily
     --       linear, e.g. zones[3] may be entered from zones[1]
     local previous = {}
 
