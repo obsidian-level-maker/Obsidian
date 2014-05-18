@@ -3055,8 +3055,6 @@ function Layout_plan_outdoor_borders()
 
     -- OK, this edge will have border fabs
 
-stderrf("Edge on side:%d of %s\n", side, R:tostr())
- 
     x1, y1 = R.sx1, R.sy1
     x2, y2 = R.sx2, R.sy2
 
@@ -3141,8 +3139,6 @@ stderrf("Edge on side:%d of %s\n", side, R:tostr())
     end
     end
 
-stderrf("Corner on side:%d of %s\n", corner, R:tostr())
- 
     local BORDER =
     {
       kind = "corner"
