@@ -779,13 +779,14 @@ function Quest_nice_items()
 
     local score = R.svolume
 
+    -- never in secrets or the starting room
     if R.is_secret then return -1 end
+    if R.purpose == "START" then return -1 end
 
-    if R.purpose or R.is_storage then
-      score = score - 40
-    end
+    if R.purpose    then score = score - 8 end
+    if R.is_storage then score = score - 30 end
 
-    score = score - 16 * #R.weapons
+    score = score - 16 * (#R.weapons + #R.items)
 
     score = score - 1.4 * #R.conns
 
@@ -817,28 +818,20 @@ function Quest_nice_items()
   end
 
 
-  local function pick_other_rooms(list)
-    -- select some "ordinary" rooms for a powerup
-
+  local function calc_extra_quota()
     local quota = (LEVEL.W + LEVEL.H) * rand.range(0.05, 0.25)
 
-    if OB_CONFIG.powers == "none" then return end
-    if OB_CONFIG.powers == "less" then return end
+    if OB_CONFIG.powers == "none" then return 0 end
+    if OB_CONFIG.powers == "less" then return 0 end
 
     if OB_CONFIG.powers == "more"  then quota = 1 + quota * 2 end
     if OB_CONFIG.powers == "mixed" then quota = quota * rand.pick({ 0.5, 1, 2 }) end
 
     quota = int(quota + 0.7)
 
-    gui.debugf("Other room quota: %d\n", quota)
+    gui.debugf("Extra bonus quota: %d\n", quota)
 
-    for i = 1, quota do
-      local R = choose_best_other_room()
-
-      if not R then break; end
-
-      table.insert(list, R)
-    end
+    return quota
   end
 
 
@@ -864,9 +857,6 @@ function Quest_nice_items()
       table.insert(rooms, 1, LEVEL.start_room)
     end
 
-    -- add some "ordinary" rooms
-    pick_other_rooms(rooms)
-
     -- choose items for each of these rooms
     local normal_tab = normal_palette()
     local  start_tab = start_palette()
@@ -889,6 +879,21 @@ function Quest_nice_items()
       mark_item_seen(item)
 
       gui.debugf("Nice item '%s' --> %s\n", item, R:tostr())
+    end
+
+    -- add extra items in a few "ordinary" rooms
+    local quota = calc_extra_quota()
+
+    for i = 1, quota do
+      local R = choose_best_other_room()
+      if not R then break; end
+
+      local item = rand.key_by_probs(normal_tab)
+
+      table.insert(R.items, item)
+      mark_item_seen(item)
+
+      gui.debugf("Extra item '%s' --> %s\n", item, R:tostr())
     end
   end
 
