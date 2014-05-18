@@ -3275,6 +3275,18 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   end
 
 
+  local function do_small_bridge(S)
+    local skin1 = GAME.SKINS["Bridge_curvey"]
+    assert(skin1)
+
+    local skin0 = { floor=S.bridge_tex, wall=R.main_tex }
+
+    local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, S.bridge_h, S.bridge_dir)
+
+    Fabricate_at(R, skin1, T, { skin0, skin1 })
+  end
+
+
   local function vis_mark_wall(S, side)
     gui.debugf("VIS %d %d %s\n", S.sx, S.sy, side)
   end
@@ -3656,9 +3668,11 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
     if S.content == "pillar" then
       Build.pillar(S, z1, z2, assert(S.pillar_skin), S.is_big_pillar)
-    end
 
-    if S.content == "wotsit" then
+    elseif S.content == "bridge" then
+      do_small_bridge(S)
+
+    elseif S.content == "wotsit" then
       if S.content_kind == "WEAPON" then
         content_weapon(S)
       elseif S.content_kind == "ITEM" then

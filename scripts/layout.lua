@@ -1794,12 +1794,9 @@ function Layout_escape_from_pits(R)
       return
     end
 
-    -- disabled the following cost, which prefers to place the step
-    -- out to the lowest height around.  Without this, the placement
-    -- is less predictable.
-    if false then
-      cost = cost + diff_h 
-    end
+    -- disabled this, which prefers to place the step next to the
+    -- lowest nearby floor.  Step placement is less predictable now.
+    --[[  cost = cost + diff_h  --]]
 
     -- tie breaker
     cost = cost + gui.random()
@@ -1809,8 +1806,9 @@ function Layout_escape_from_pits(R)
       pit.cost = cost
       pit.out_h = out_h
       pit.S = S
+      pit.N = N
       pit.dir = dir
-      
+
       -- coordinates for the step / lift
       local x1, y1, x2, y2
 
@@ -1896,6 +1894,8 @@ function Layout_escape_from_pits(R)
       return
     end
 
+    pit.N.escape_target = true
+
     local brush = brushlib.quad(pit.bx1, pit.by1, pit.bx2, pit.by2)
 
     if diff_h <= (PARAM.jump_height * 2) then
@@ -1939,6 +1939,68 @@ function Layout_escape_from_pits(R)
     if pit.id != "dead" then
       build_escape(pit)
     end
+  end
+end
+
+
+
+function Layout_add_bridges(R)
+
+  local function install_bridge(S, dir, L)
+    -- L is a liquid neighbor
+
+    S.content  = "bridge"
+    S.bridge_h = S.floor_h
+    S.bridge_dir = geom.RIGHT[dir]
+    S.bridge_tex = S.f_tex
+
+    S.kind = "liquid"
+    S.floor_h = L.floor_h
+
+-- stderrf("Bridge @ %s\n", S:tostr())
+  end
+
+
+  local function test_spot(S)
+    if S.kind != "walk" then return end
+
+    if S.content then return end
+    if S.conn then return end
+    if S.escape_target then return end
+
+    for dir = 2,4,2 do
+      local A = S:neighbor(dir)
+      local B = S:neighbor(10 - dir)
+
+      if not (A and A.room == R) then continue end
+      if not (B and B.room == R) then continue end
+
+      if A.kind != "liquid" then continue end
+      if B.kind != "liquid" then continue end
+
+      if A.bridge_h then continue end
+      if B.bridge_h then continue end
+
+      if math.abs(A.floor_h - B.floor_h) > 1 then continue end
+
+      -- OK --
+
+      install_bridge(S, dir, B)
+      return
+    end
+  end
+
+
+  ---| Layout_add_bridges |---
+
+  for x = R.sx1, R.sx2 do
+  for y = R.sy1, R.sy2 do
+    local S = SEEDS[x][y]
+
+    if S.room != R then continue end
+
+    test_spot(S)
+  end
   end
 end
 
@@ -2856,6 +2918,8 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   if R.kind == "building" then
     add_pillars()
   end
+
+  Layout_add_bridges(R)
 
   Layout_add_cages(R)
 end
