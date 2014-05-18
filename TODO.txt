@@ -12,8 +12,6 @@ ______________________________________________________________________
 
 *  add in more scenery: trees, computers etc
 
-*  honor the 'Powerups' GUI setting
-
 
 BUG (WIN32): copy seed value and paste into filename --> crash.
 
@@ -53,10 +51,6 @@ ______________________________________________________________________
 
 !!  BUG: torches in a cave can obstruct the player
 
--  BUG: escape-pit lifts are not pegged
-
--  BUG: adding an outdoor door but no fence
-
 
 +  a secret exit may not be possible due to reserved room
    becoming surrounded by scenic rooms (from connection logic).
@@ -74,7 +68,7 @@ ______________________________________________________________________
 
 +  get stairwells working again, have outdoor version w/ rails
 
-+  apply nice items gotten in normal rooms to the HMODEL
++  scenic rooms which player can fall into should have escape
 
 
 -  ability to centre doors (on two seeds)
@@ -100,6 +94,8 @@ ______________________________________________________________________
    (but need to handle corners and T junctions)
 
 -  ensure normal doors are usually monster-openable, secret doors not
+
+-  apply nice items gotten in normal rooms to the HMODEL
 
 
 ----------------------------------------------
@@ -199,8 +195,6 @@ V5 STUFF:
 -  Fight simulator: adjust monster 'damage' value based on Ambush
    usage, Cage usage, dark rooms, hitscanners/Archies in low cover
    rooms -- and lower values if killed by BFG or rocket launcher
-
--  Fight simulator: re-implement monster infighting
 
 -  Mons: sometimes look toward important item (esp. keys)
 

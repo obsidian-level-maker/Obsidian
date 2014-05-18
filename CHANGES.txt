@@ -11,9 +11,19 @@ CHANGELOG
 
 - small reduction in the overall health in levels
 
+- small increase in number of bonus items per level
+
 - fixed uncounted secrets into CAVE rooms
 
 - fixed the silly "free standing" archways and doors
 
 - fixed pegging on lifts in slime pits
+
++ new 'Weapons' setting in the main GUI
+
+- implemented the 'Powerups' setting in the GUI
+
+>>>  outdoor borders
+
+- never place pickup items in liquid areas in caves
 
