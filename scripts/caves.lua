@@ -629,6 +629,17 @@ function Cave_create_areas(R)
   end
 
 
+  local function alternate_floor_mat()
+    for loop = 1,3 do
+      R.alt_floor_mat = rand.key_by_probs(LEVEL.cave_theme.naturals)
+
+      if R.alt_floor_mat != R.floor_mat then
+        break;
+      end
+    end
+  end
+
+
   local function make_walkway()
 
     -- only have one area (the indentation / liquidy bits are considered a
@@ -638,6 +649,8 @@ function Cave_create_areas(R)
       touching = {}
 
       children = {}
+
+      floor_mat = R.floor_mat
     }
 
     table.insert(info.floors, AREA)
@@ -655,6 +668,8 @@ function Cave_create_areas(R)
     local WALK1 =
     {
       indent = 1
+
+      floor_mat = R.alt_floor_mat
     }
 
     local walk_way = copy_cave_without_fences()
@@ -1002,6 +1017,8 @@ step:dump("Step:")
 
 
   ---| Cave_create_areas |---
+
+  alternate_floor_mat()
 
   if info.step_mode == "walkway" then
     make_walkway()
@@ -2501,7 +2518,7 @@ end
 function Cave_decide_properties(R)
   local info = R.cave_info
 
-  local   STEP_MODES = { walkway=10, up=20, down=20, mixed=60 }
+  local   STEP_MODES = { walkway=20, up=20, down=20, mixed=65 }
   local LIQUID_MODES = { none=50, some=80, lake=80 }
 
   -- decide liquid mode
