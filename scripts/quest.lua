@@ -1,6 +1,6 @@
----------------------------------------------------------------
+------------------------------------------------------------------------
 --  QUEST ASSIGNMENT
-----------------------------------------------------------------
+------------------------------------------------------------------------
 --
 --  Oblige Level Maker
 --
@@ -16,7 +16,7 @@
 --  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 --  GNU General Public License for more details.
 --
-----------------------------------------------------------------
+------------------------------------------------------------------------
 
 --[[ *** CLASS INFORMATION ***
 
@@ -782,10 +782,10 @@ function Quest_nice_items()
     if R.is_secret then return -1 end
 
     if R.purpose or R.is_storage then
-      score = score - 50
+      score = score - 40
     end
 
-    score = score - 18 * #R.weapons
+    score = score - 16 * #R.weapons
 
     score = score - 1.4 * #R.conns
 
@@ -796,7 +796,7 @@ function Quest_nice_items()
     end
 
     -- tie breaker
-    return score + rand.skew() * 4.0
+    return score + rand.skew() * 5.0
   end
 
 
@@ -820,7 +820,17 @@ function Quest_nice_items()
   local function pick_other_rooms(list)
     -- select some "ordinary" rooms for a powerup
 
-    local quota = 1   -- FIXME !!!!
+    local quota = (LEVEL.W + LEVEL.H) * rand.range(0.05, 0.25)
+
+    if OB_CONFIG.powers == "none" then return end
+    if OB_CONFIG.powers == "less" then return end
+
+    if OB_CONFIG.powers == "more"  then quota = 1 + quota * 2 end
+    if OB_CONFIG.powers == "mixed" then quota = quota * rand.pick({ 0.5, 1, 2 }) end
+
+    quota = int(quota + 0.7)
+
+    gui.debugf("Other room quota: %d\n", quota)
 
     for i = 1, quota do
       local R = choose_best_other_room()
@@ -854,8 +864,7 @@ function Quest_nice_items()
       table.insert(rooms, 1, LEVEL.start_room)
     end
 
-    -- TODO: add some other rooms (have a whole-level quota)
-    --       unless OB_CONFIG.powers == "less"
+    -- add some "ordinary" rooms
     pick_other_rooms(rooms)
 
     -- choose items for each of these rooms
