@@ -1234,15 +1234,22 @@ gui.debugf("Failed\n")
     for x = R.sx1, R.sx2 do
     for y = R.sy1, R.sy2 do
       for side = 2,8,2 do
+        
         local S = SEEDS[x][y]
-
         if S.room != R then continue end
 
-        local B = S.border[side]
-        if B.kind == "arch" then
-          B.kind = nil
+        local N  = S:neighbor(side)
+
+        local B1 = S.border[side]
+        local B2 = N and N.border[10 - side]
+
+        if B1.kind == "arch" then
+          B1.kind = nil
+
+          if B2 then B2.kind = nil end
         end
-      end
+
+      end -- side
     end -- x, y
     end
   end
@@ -1251,20 +1258,19 @@ gui.debugf("Failed\n")
   local function make_conn_scenic(C)
     local found
 
-    for index,N in ipairs(LEVEL.conns) do
+    each N in LEVEL.conns do
       if N == C then
-        table.remove(LEVEL.conns, index)
-        found = true
-        break;
+        table.remove(LEVEL.conns, _index)
+        found = true ; break
       end
     end
 
     assert(found)
 
-    table.insert(LEVEL.scenic_conns, C)
+    if C.S1 then C.S1.conn = nil ; C.S1.conn_dir = nil end
+    if C.S2 then C.S2.conn = nil ; C.S2.conn_dir = nil end
 
-    ---## C.S1.conn  = nil; C.S1.conn_dir  = nil
-    ---## C.S2.conn = nil; C.S2.conn_dir = nil
+    C.kind = "DEAD"
   end
 
 
@@ -1398,9 +1404,7 @@ gui.debugf("Failed\n")
     gui.debugf("Killing rebel group %d (%d rooms)\n", rebel_id, #rebels)
 
     -- use a copy since we modify the original list
-    local c_copy = table.copy(LEVEL.conns)
-
-    each C in c_copy do
+    each C in table.copy(LEVEL.conns) do
       if C.R1.c_group == rebel_id then
         assert(C.R2.c_group == rebel_id)
         make_conn_scenic(C)
