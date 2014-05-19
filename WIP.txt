@@ -2,3 +2,36 @@
 WORK IN PROGRESS
 ================
 
+
+Border pieces:
+-  number of T pieces: int(seed_w / 3)
+-  fix stretching of T pieces
+-  fix textures on corner cage
+-  tidy up current pieces
+
+
+Fix handling of gaps inside caves (at border of cave)
+-  always do it in Cave_xxx code, NOT make_border() code
+-  "cave_wall" -- support as a low fence too ("cave_fence" ?)
+
+
+Bridges:
+-  bridges : check two/three seeds for LONG bridges
+-  have an actual bridge
+-  add mon/item spots to prefabs
+
+
+-  caves: sometimes junk a side or two
+   - only at edge of map
+   - 1 or 2 seeds deep
+
+-  normal junking : upto 2 seeds at edge of map
+
+
+Closets and Traps:
+-  can use unused seeds [inside map area]
+-  can use junked parts of a room
+-  can use a SOLID seed in a pattern (c.f. cage code)
+-  can steal part of a nearby scenic room [not touch another room]
+   especially one that used to be a reserved room
+
