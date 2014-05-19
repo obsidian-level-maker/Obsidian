@@ -930,6 +930,21 @@ function Room_reckon_doors()
       return
     end
 
+    -- different archways for caves
+    local R1 = S.room
+    local R2 = N.room
+
+    if R2.kind == "cave" and not R2.is_outdoor then
+      R1, R2 = R2, R1
+    end
+
+    if R1.kind == "cave" and not R1.is_outdoor then
+      if R2.kind != "building" then
+        B.fab_name = "Arch_woody"
+        return
+      end
+    end
+
     -- support arches which have a step in them
     if (S.room.is_outdoor != N.room.is_outdoor) or rand.odds(50) then
       if not (S.room.hallway or N.room.hallway) then
@@ -3097,7 +3112,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
       z = z - conn.diff_h
     end
 
-    local fab_name = "Arch_plain"
+    local fab_name = S.border[side].fab_name or "Arch_plain"
     if conn.diff_h then fab_name = "Arch_stair" end
 
     local skin1 = GAME.SKINS[fab_name]
