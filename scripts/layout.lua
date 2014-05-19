@@ -3156,13 +3156,12 @@ function Layout_plan_outdoor_borders()
 
 
   local function outdoor_or_scenic(R)
-    if R.kind == "outdoor" then
-      return true
-    end
+    -- ignore sub-rooms
+    if R.parent then return false end
 
-    if R.kind != "scenic" then
-      return false
-    end
+    if R.kind == "outdoor" then return true end
+
+    if R.kind != "scenic" then return false end
 
     return R.is_outdoor
   end
