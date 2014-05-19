@@ -443,27 +443,26 @@ function Monsters_global_palette()
   if not LEVEL.monster_prefs then
     LEVEL.monster_prefs = {}
   end
-
+  
+  -- skip monsters that are too strong for this map
+  each name,info in GAME.MONSTERS do
+    if info.prob  and info.prob > 0 and
+       info.level and info.level <= LEVEL.max_level and
+       Monsters_check_theme(info)
+    then
+      LEVEL.global_pal[name] = 1
+    end
+  end
 
   -- only one kind of monster in this level?
   if STYLE.mon_variety == "none" then
     local the_mon = Monsters_pick_single_for_level()
 
+    LEVEL.global_pal = {}
     LEVEL.global_pal[the_mon] = 1
-  
-  else
-    -- skip monsters that are too strong for this map
-    
-    each name,info in GAME.MONSTERS do
-      if info.prob  and info.prob > 0 and
-         info.level and info.level <= LEVEL.max_level and
-         Monsters_check_theme(info)
-      then
-        LEVEL.global_pal[name] = 1
-      end
-    end
-  end
 
+    LEVEL.single_mon = the_mon
+  end
 
   gui.debugf("Monster global palette:\n%s\n", table.tostr(LEVEL.global_pal))
 
@@ -505,6 +504,11 @@ function Monsters_zone_palettes()
 
   local function decide_guard_monsters()
     local tab = {}
+
+    if STYLE.mon_variety == "none" then
+      tab[LEVEL.single_mon] = 50
+      return tab
+    end
 
     each mon,_ in GAME.MONSTERS do
       local prob = prob_for_guard(mon)
@@ -1655,7 +1659,7 @@ function Monsters_in_room(R)
     local info = GAME.MONSTERS[mon]
 
     local d = info.density or 1
-    
+
     -- level check
     if OB_CONFIG.strength != "crazy" then
       local max_level = LEVEL.max_level * R.lev_along
@@ -1664,6 +1668,11 @@ function Monsters_in_room(R)
       if info.level > max_level then
         d = d / 4
       end
+    end
+
+    -- adjustment for single-monster levels
+    if STYLE.mon_variety == "none" then
+      d = (d + 1) / 2
     end
 
     -- zone quantities
