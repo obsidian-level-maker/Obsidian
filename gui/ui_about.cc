@@ -270,7 +270,7 @@ private:
 	{
 		UI_OptionsWin *that = (UI_OptionsWin *)data;
 
-		best_lighting = that->opt_lighting->value() ? true : false;
+		fast_lighting = that->opt_lighting->value() ? true : false;
 	}
 
 };
@@ -374,7 +374,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 
 	cy += 8;
 
-	heading = new Fl_Box(FL_NO_BOX, x()+6, cy, W-12, 24, "Quake 1/2 Options");
+	heading = new Fl_Box(FL_NO_BOX, x()+6, cy, W-12, 24, "Doom / Heretic / Hexen");
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 	heading->labeltype(FL_NORMAL_LABEL);
 	heading->labelfont(FL_HELVETICA_BOLD);
@@ -385,9 +385,9 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	cy += heading->h() + y_step;
 
 
-	opt_lighting = new Fl_Check_Button(cx, cy, 24, 24, "High Quality Lighting (much slower)");
+	opt_lighting = new Fl_Check_Button(cx, cy, 24, 24, "Bland Lighting Mode");
 	opt_lighting->align(FL_ALIGN_RIGHT);
-	opt_lighting->value(best_lighting ? 1 : 0);
+	opt_lighting->value(fast_lighting ? 1 : 0);
 	opt_lighting->callback(callback_Lighting, this);
 
 	add(opt_lighting);

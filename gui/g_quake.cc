@@ -1428,7 +1428,7 @@ bool quake1_game_interface_c::Start()
 {
   qk_game = 1;
   qk_sub_format = 0;
-  qk_lighting_quality = best_lighting ? +1 : 0;
+  qk_lighting_quality = fast_lighting ? -1 : +1;
 
   filename = Select_Output_File("pak");
 

@@ -58,7 +58,7 @@ extern bool alternate_look;
 extern bool create_backups;
 extern bool hide_module_panel;
 extern bool debug_messages;
-extern bool best_lighting;
+extern bool fast_lighting;
 
 
 void Main_FatalError(const char *msg, ...);
