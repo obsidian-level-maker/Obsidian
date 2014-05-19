@@ -3118,7 +3118,6 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     if conn.diff_h then fab_name = "Arch_stair" end
     
     if fab_name == "Arch_plain" and THEME.archy_arches then
-stderrf("ARCHY !!\n")
        fab_name = "Arch_archy"
     end
 

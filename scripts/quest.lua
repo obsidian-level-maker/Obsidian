@@ -947,11 +947,41 @@ function Quest_select_textures()
   end
 
 
+  local function total_volume_of_room_kind(kind)
+    local vol = 0
+
+    each R in LEVEL.rooms do
+      if R.kind == kind then
+        vol = vol + R.svolume
+      end
+    end
+
+    return vol
+  end
+
+
   ---| Quest_select_textures |---
 
+  local outdoor_volume = total_volume_of_room_kind("outdoor")
+  local cave_volume    = total_volume_of_room_kind("cave")
+
+  gui.debugf("outdoor_volume : %d\n", outdoor_volume)
+  gui.debugf("cave_volume : %d\n", cave_volume)
+
   each Z in LEVEL.zones do
-    Z.natural_mat   = rand.key_by_probs(LEVEL.outdoors_theme.naturals)
-    Z.cave_wall_mat = rand.key_by_probs(LEVEL.cave_theme.naturals)
+    -- when outdoors is limited, prefer same texture in each room
+    if _index >= 2 and outdoor_volume < 140 then
+      Z.natural_mat = LEVEL.zones[1].natural_mat
+    else
+      Z.natural_mat = rand.key_by_probs(LEVEL.outdoors_theme.naturals)
+    end
+
+    -- similarly for caves, if not many then use a consistent texture
+    if _index >= 2 and cave_volume < 180 then
+      Z.cave_wall_mat = LEVEL.zones[1].cave_wall_mat
+    else
+      Z.cave_wall_mat = rand.key_by_probs(LEVEL.cave_theme.naturals)
+    end
 
     if LEVEL.hallway_theme then
       local theme = LEVEL.hallway_theme
