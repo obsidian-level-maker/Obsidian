@@ -694,30 +694,44 @@ static void SHADE_MergeResults()
 }
 
 
-void SHADE_NoLighting()
+void SHADE_BlandLighting()
 {
+	SHADE_CollectLights();
+
 	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
 	{
 		region_c *R = all_regions[i];
 
-		R->shade = 160;
+		if (R->gaps.empty())
+			continue;
+
+		csg_brush_c *T = R->gaps.back()->top;
+		csg_brush_c *B = R->gaps.front()->bottom;
+
+		int base = MAX(R->c_light, MAX(R->f_light, R->e_light));
+
+		int height = I_ROUND(T->b.z - B->t.z);
+
+		if (T->bkind == BKIND_Sky)
+			R->shade = MAX(sky_light, MAX(R->f_light, 120));
+		else
+			R->shade = MAX(base, (height <= 160) ? 128 : 144);
 	} 
 }
 
 
 void CSG_Shade()
 {
-	if (ArgvFind(0, "nolight") >= 0)
-	{
-		LogPrintf("NOT LIGHTING LEVEL (-nolight specified)\n");
-		SHADE_NoLighting();
-		return;
-	}
-
+	stat_targets = stat_sources = 0;
 
 	LogPrintf("Lighting level...\n");
 
-	stat_targets = stat_sources = 0;
+	if (fast_lighting || ArgvFind(0, "nolight") >= 0)
+	{
+		LogPrintf("BLAND LIGHTING MODE!\n");
+		SHADE_BlandLighting();
+		return;
+	}
 
 	SHADE_CollectLights();
 
