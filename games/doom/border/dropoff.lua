@@ -45,5 +45,7 @@ DOOM.SKINS.Border_dropoff_s =
 DOOM.GROUPS.border_dropoff =
 {
   kind = "border"
+
+  fence_boost = 12
 }
 

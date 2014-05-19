@@ -3015,6 +3015,8 @@ function Layout_plan_outdoor_borders()
     end
     end
 
+    B.room.has_map_border = true
+
     table.insert(LEVEL.map_borders, B)
   end
 
@@ -3189,8 +3191,11 @@ function Layout_plan_outdoor_borders()
 
 
   ---| Layout_plan_outdoor_borders |---
-  
+
   gui.debugf("Layout_plan_outdoor_borders...\n")
+
+  LEVEL.border_group = GAME.GROUPS["border_dropoff"]
+  assert(LEVEL.border_group)
 
   collect_rooms()
 

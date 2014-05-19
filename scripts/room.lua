@@ -3467,9 +3467,17 @@ stderrf("ARCHY !!\n")
       if B_kind == "fence"  then
         local skin = { h=30, wall=w_tex, floor=f_tex }
         local fence_h = R.fence_h or ((R.floor_max_h or z1) + skin.h)
+
+        -- prevent player from getting over the fence via a border piece
+        if R.has_map_border then
+          fence_h = fence_h + (LEVEL.border_group.fence_boost or 0)
+        end
+
+        -- prevent player from getting over the fence via a pedestal
         if S.content == "wotsit" then
           fence_h = fence_h + 24
         end
+
         Build.fence(S, side, fence_h, skin)
         shrink_floor(side, 16)
       end
