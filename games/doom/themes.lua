@@ -624,6 +624,8 @@ DOOM2.THEMES =
       skull   = 2.0
     }
 
+    archy_arches = true
+
 
     ---!!!  TEMPORARY V3 STUFF  !!!---
 
@@ -956,6 +958,8 @@ DOOM2.THEMES =
       knight   = 1.5
       gunner   = 1.5
     }
+
+    archy_arches = true
 
 
     ---!!!  TEMPORARY V3 STUFF  !!!---
@@ -2180,6 +2184,8 @@ DOOM1.THEMES =
 
     monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0 }
 
+    archy_arches = true
+
     ---!!!  TEMPORARY V3 CRUD  !!!---
 
     doors =
@@ -2544,6 +2550,9 @@ DOOM1.THEMES =
       skull = 1.2
       demon = 1.5
     }
+
+    archy_arches = true
+
   }
 
 

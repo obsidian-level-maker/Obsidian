@@ -947,6 +947,8 @@ function Room_reckon_doors()
 
     -- support arches which have a step in them
     if (S.room.is_outdoor != N.room.is_outdoor) or rand.odds(50) then
+      if THEME.archy_arches then return end
+
       if not (S.room.hallway or N.room.hallway) then
         if S == C.S1 then
           C.diff_h = 16
@@ -3114,6 +3116,11 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
     local fab_name = S.border[side].fab_name or "Arch_plain"
     if conn.diff_h then fab_name = "Arch_stair" end
+    
+    if fab_name == "Arch_plain" and THEME.archy_arches then
+stderrf("ARCHY !!\n")
+       fab_name = "Arch_archy"
+    end
 
     local skin1 = GAME.SKINS[fab_name]
     assert(skin1)
