@@ -5,7 +5,7 @@ CHANGELOG
 
 - new 'tech_Gray' theme for DOOM, thanks to Mr. Chris
 
-- fixed using SKY1/2/3 as a normal texture in PSYCHEDELIC mode
+- fixed Psychedelic theme using SKY1/2/3 as a normal texture
 
 - tweaked the normal DOOM monster mix
 
@@ -21,9 +21,17 @@ CHANGELOG
 
 + new 'Weapons' setting in the main GUI
 
-- implemented the 'Powerups' setting in the GUI
++ implemented the GUI 'Powerups' setting
 
 >>>  outdoor borders
 
 - never place pickup items in liquid areas in caves
+
+- improved floor texturing in flat caves
+
+- added a wooden frame doorway for cave rooms
+
+- added a arch-shaped doorway for Urban and Hell themes
+
+- fixed error when setting Monster Variety to "none"
 
