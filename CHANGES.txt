@@ -2,36 +2,30 @@
 CHANGELOG
 =========
 
-
-- new 'tech_Gray' theme for DOOM, thanks to Mr. Chris
-
-- fixed Psychedelic theme using SKY1/2/3 as a normal texture
-
-- tweaked the normal DOOM monster mix
-
-- small reduction in the overall health in levels
-
-- small increase in number of bonus items per level
-
-- fixed uncounted secrets into CAVE rooms
-
-- fixed the silly "free standing" archways and doors
-
-- fixed pegging on lifts in slime pits
-
 + new 'Weapons' setting in the main GUI
 
 + implemented the GUI 'Powerups' setting
 
+- new GUI option: 'Bland Lighting Mode'
+
 >>>  outdoor borders
 
-- never place pickup items in liquid areas in caves
+- added 'tech_Gray' theme for DOOM, thanks to Mr. Chris
 
-- improved floor texturing in flat caves
+- tweaked the DOOM monster mix
+
+- small reduction in the overall health in levels
+- small increase in number of bonus items per level
 
 - added a wooden frame doorway for cave rooms
+- added arch-shaped doorway for Urban and Hell themes
 
-- added a arch-shaped doorway for Urban and Hell themes
+- caves: improved floor texturing in flat caves
+- caves: never place pickup items in liquid areas
 
 - fixed error when setting Monster Variety to "none"
+- fixed uncounted secrets that lead into CAVE rooms
+- fixed Psychedelic theme using SKY1/2/3 as a normal texture
+- fixed the silly "free standing" archways and doors
+- fixed pegging on lifts in slime pits
 
