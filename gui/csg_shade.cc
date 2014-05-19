@@ -726,7 +726,7 @@ void CSG_Shade()
 
 	LogPrintf("Lighting level...\n");
 
-	if (fast_lighting || ArgvFind(0, "nolight") >= 0)
+	if (fast_lighting || ArgvFind(0, "fastlight") >= 0)
 	{
 		LogPrintf("BLAND LIGHTING MODE!\n");
 		SHADE_BlandLighting();

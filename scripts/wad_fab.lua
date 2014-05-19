@@ -1167,15 +1167,14 @@ end
     end
 
     -- logic to add light entities:
-    --   - angle controls level (0 = 112, 45 = 128, ..., 270 = 224)
-    --   - skill bits determine the factor
+    --   - angle controls level (0 = 112, 45 = 128, ..., 315 = 224)
     if spot_info.kind == "light" then
       E.id = "light"
 
       E.light = angle_to_light(E.angle)
       E.angle = nil
 
-      E.factor = 1.0  ---????  0.1 + 0.4 * skill_to_rank(E.flags)
+      E.factor = 1.0
       E.flags  = nil
 
       table.insert(fab.entities, E)
