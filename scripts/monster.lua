@@ -2238,6 +2238,9 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
 
   local function calc_horde_size(mon, info)
+    -- do not produce groups of nasties
+    if info.nasty then return 1 end
+
     local horde = 1
 
     if info.health <= 500 and rand.odds(30) then horde = horde + 1 end
