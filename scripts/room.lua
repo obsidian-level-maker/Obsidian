@@ -797,6 +797,8 @@ function Room_reckon_doors()
   local  indoor_prob = style_sel("doors", 0, 10, 30,  90)
   local outdoor_prob = style_sel("doors", 0, 30, 90, 100)
 
+  local woody = rand.odds(25)
+
 
   local DEFAULT_PROBS = {}
 
@@ -916,7 +918,9 @@ function Room_reckon_doors()
 
     -- apply the random check
     local prob = indoor_prob
-    if S.room.is_outdoor or N.room.is_outdoor then
+    if (S.room.is_outdoor and N.room.kind != "cave") or
+       (N.room.is_outdoor and S.room.kind != "cave")
+    then
       prob = outdoor_prob
     end
 
@@ -930,7 +934,7 @@ function Room_reckon_doors()
       return
     end
 
-    -- different archways for caves
+    -- special archways for caves
     local R1 = S.room
     local R2 = N.room
 
@@ -940,7 +944,7 @@ function Room_reckon_doors()
 
     if R1.kind == "cave" and not R1.is_outdoor then
       if R2.kind != "building" then
-        B.fab_name = "Arch_woody"
+        B.fab_name = sel(woody, "Arch_woody", "Arch_viney")
         return
       end
     end
