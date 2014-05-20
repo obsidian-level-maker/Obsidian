@@ -696,8 +696,6 @@ static void SHADE_MergeResults()
 
 void SHADE_BlandLighting()
 {
-	SHADE_CollectLights();
-
 	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
 	{
 		region_c *R = all_regions[i];
@@ -722,21 +720,29 @@ void SHADE_BlandLighting()
 
 void CSG_Shade()
 {
-	stat_targets = stat_sources = 0;
+	bool bland_mode = false;
 
-	LogPrintf("Lighting level...\n");
+	stat_targets = stat_sources = 0;
 
 	if (fast_lighting || ArgvFind(0, "fastlight") >= 0)
 	{
 		LogPrintf("BLAND LIGHTING MODE!\n");
-		SHADE_BlandLighting();
-		return;
+		bland_mode = true;
+	}
+	else
+	{
+		LogPrintf("Lighting level...\n");
 	}
 
 	SHADE_CollectLights();
 
 	SHADE_GroupRegions();
-	SHADE_ProcessRegions();
+
+	if (bland_mode)
+		SHADE_BlandLighting();
+	else
+		SHADE_ProcessRegions();
+
 	SHADE_MergeResults();
 
 	LogPrintf("Lit %d targets (visited %d sources in total)\n",
