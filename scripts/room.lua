@@ -3204,22 +3204,30 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local z = assert(S.conn and S.conn.conn_h)
 
     local LOCK = assert(S.border[side].lock)
-    local skin = assert(GAME.DOORS[LOCK.switch or LOCK.item])
 
     if LOCK.item then
       do_keyed_door(S, side, f_tex, w_tex)
       return
     end
 
---if not skin.track then gui.printf("%s", table.tostr(skin,1)); end
-    assert(skin.track)
+    -- FIXME : find it properly
+    local fab_name = "Door_SW_blue"
+
+    local skin1 = GAME.SKINS[fab_name]
+    assert(skin1)
 
     local o_tex = outer_tex(S, side, w_tex)
-    local skin2 = { inner=w_tex, outer=o_tex }
+    local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
 
-    local reversed = (S == S.conn.S2)
+    skin2.tag_1 = LOCK.tag
 
-    Build.door(S, side, z, skin, skin2, LOCK.tag, reversed)
+    local S2 = S
+    local seed_w = 1
+
+    local T = Trans.edge_transform(S.x1, S.y1, S2.x2, S2.y2, z,
+                                   side, 0, seed_w * 192, skin1.deep, skin1.over)
+
+    Fabricate_at(R, skin1, T, { skin1, skin2 })
   end
 
 
