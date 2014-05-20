@@ -253,6 +253,8 @@ DOOM2.THEMES =
       naturals = { none=30, few=70, some=30, heaps=2 }
     }
 
+    techy_doors = true
+
 
     ---!!!  TEMPORARY V3 STUFF  !!!---
 
@@ -1483,6 +1485,8 @@ DOOM1.THEMES =
       naturals = { none=30, few=70, some=30, heaps=2 }
     }
 
+    techy_doors = true
+
     ---!!!  TEMPORARY V3 CRUD  !!!---
 
     doors =
@@ -1809,6 +1813,8 @@ DOOM1.THEMES =
     {
       naturals = { none=40, few=70, some=20, heaps=2 }
     }
+
+    techy_doors = true
 
     ---!!!  TEMPORARY V3 CRUD  !!!---
 

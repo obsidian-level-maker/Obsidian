@@ -3157,22 +3157,31 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   function do_door(S, side, f_tex, w_tex)
     local z = assert(S.conn and S.conn.conn_h)
 
-    -- FIXME: better logic for selecting doors
-    local doors = THEME.doors
-    if not doors then
-      error("Game is missing doors table")
+    -- FIXME : pick one properly
+    local fab_name
+    if THEME.techy_doors then
+      fab_name = "Door_techy"
+    else
+      fab_name = "Door_large"
     end
 
-    local door_name = rand.key_by_probs(doors)
-    local skin = assert(GAME.DOORS[door_name])
+    local skin1 = GAME.SKINS[fab_name]
+    assert(skin1)
 
     local o_tex = outer_tex(S, side, w_tex)
-    local skin2 = { inner=w_tex, outer=o_tex }
+    local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
 
-    assert(skin.track)
-    assert(skin.step_w)
+    if skin2.wall == skin2.outer then
+      skin2.track = skin2.wall
+    end
 
-    Build.door(S, side, z, skin, skin2, 0)
+    local S2 = S
+    local seed_w = 1
+
+    local T = Trans.edge_transform(S.x1, S.y1, S2.x2, S2.y2, z,
+                                   side, 0, seed_w * 192, skin1.deep, skin1.over)
+
+    Fabricate_at(R, skin1, T, { skin1, skin2 })
   end
 
 
