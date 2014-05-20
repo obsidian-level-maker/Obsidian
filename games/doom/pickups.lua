@@ -152,10 +152,9 @@ DOOM.PICKUPS =
 
 DOOM.NICE_ITEMS =
 {
-  -- WEAPONS --
-
-  --- TODO: decide whether 'saw' and 'berserk' should be here
-  --        instead of in WEAPONS table.
+  --- Note: 'saw' and 'berserk' could have been here, instead of
+  --        being weapons.  But as weapons their quantity can be
+  --        controlled via the Weapon Control module.
 
   -- HEALTH / ARMOR --
 
