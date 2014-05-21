@@ -698,6 +698,849 @@ end
 
 
 
+function Layout_set_floor_minmax(R)
+  local min_h =  9e9
+  local max_h = -9e9
+
+  for x = R.sx1, R.sx2 do
+  for y = R.sy1, R.sy2 do
+    local S = SEEDS[x][y]
+    if S.room == R and S.kind == "walk" then
+      assert(S.floor_h)
+
+      min_h = math.min(min_h, S.floor_h)
+      max_h = math.max(max_h, S.floor_h)
+    end
+  end -- x, y
+  end
+
+  assert(min_h <= max_h)
+
+  R.floor_min_h = min_h
+  R.floor_max_h = max_h
+
+  R.fence_h  = R.floor_max_h + 30
+  R.liquid_h = R.floor_min_h - 48
+
+  for x = R.sx1, R.sx2 do
+  for y = R.sy1, R.sy2 do
+    local S = SEEDS[x][y]
+    if S.room == R and S.kind == "liquid" then
+      S.floor_h = R.liquid_h
+    end
+  end -- x, y
+  end
+end
+
+
+function Layout_scenic(R)
+  local min_floor = 1000
+
+  for x = R.sx1,R.sx2 do
+  for y = R.sy1,R.sy2 do
+    local S = SEEDS[x][y]
+    
+    if S.room != R then continue end
+
+    S.kind = sel(LEVEL.liquid, "liquid", "void")
+
+    for side = 2,8,2 do
+      local N = S:neighbor(side)
+      if N and N.room and N.floor_h then
+        min_floor = math.min(min_floor, N.floor_h)
+      end
+    end
+  end -- x,y
+  end
+
+  if min_floor < 999 then
+    local h1 = rand.irange(1,6)
+    local h2 = rand.irange(1,6)
+
+    R.liquid_h = min_floor - (h1 + h2) * 16
+  else
+    R.liquid_h = 0
+  end
+
+  R.floor_max_h = R.liquid_h
+  R.floor_min_h = R.liquid_h
+  R.floor_h     = R.liquid_h
+
+  for x = R.sx1, R.sx2 do
+  for y = R.sy1, R.sy2 do
+    local S = SEEDS[x][y]
+
+    if S.room == R and S.kind == "liquid" then
+      S.floor_h = R.liquid_h
+    end
+  end -- for x, y
+  end
+end
+
+
+function Layout_hallway(R)
+  local tx1,ty1, tx2,ty2 = R:conn_area()
+  local tw, th = geom.group_size(tx1,ty1, tx2,ty2)
+
+  local function T_fill()
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      if x < tx1 or x > tx2 or y < ty1 or y > ty2 then
+        SEEDS[x][y].kind = "void"
+      end
+    end end -- for x, y
+  end
+
+  local function make_O()
+    for x = R.sx1+1,R.sx2-1 do for y = R.sy1+1,R.sy2-1 do
+      local S = SEEDS[x][y]
+      S.kind = "void"
+    end end -- for x, y
+  end
+
+  local function make_L()
+    local C1 = R.conns[1]
+    local C2 = R.conns[2]
+
+    local S1 = C1:seed(R)
+    local S2 = C2:seed(R)
+
+    if rand.odds(50) then S1,S2 = S2,S1 end
+
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      if x < tx1 or x > tx2 or y < ty1 or y > ty2 or
+         not (x == S1.sx or y == S2.sy)
+      then
+        SEEDS[x][y].kind = "void"
+      end
+    end end -- for x, y
+  end
+
+  local function criss_cross()
+    -- block out seeds that don't "trace" from a connection
+    local used_x = {}
+    local used_y = {}
+
+    each C in R.conns do
+      if C.kind == "teleporter" then continue end
+      local S = C:seed(R)
+      if geom.is_vert(S.conn_dir) then
+        used_x[S.sx] = 1
+      else
+        used_y[S.sy] = 1
+      end
+    end
+
+    -- all connections are parallel => fail
+    if table.empty(used_x) or table.empty(used_y) then
+      make_O()
+      return
+    end
+
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      if x < tx1 or x > tx2 or y < ty1 or y > ty2 or
+         not (used_x[x] or used_y[y])
+      then
+        SEEDS[x][y].kind = "void"
+      end
+    end end -- for x, y
+
+    return true
+  end
+
+
+  ---| Layout_hallway |---
+
+  R.tx1, R.ty1 = R.sx1, R.sy1
+  R.tx2, R.ty2 = R.sx2, R.sy2
+  R.tw,  R.th  = R.sw,  R.sh
+
+  if not LEVEL.hall_trim then
+    LEVEL.hall_trim   = rand.odds(50)
+    LEVEL.hall_lights = rand.odds(50)
+
+    if THEME.ceil_lights then
+      LEVEL.hall_lite_ftex = rand.key_by_probs(THEME.ceil_lights)
+    end
+  end
+
+
+  local entry_C = assert(R.entry_conn)
+  local h = assert(entry_C.conn_h)
+
+  local O_CHANCES = { 0, 10, 40, 70 }
+  local o_prob = O_CHANCES[math.min(4, #R.conns)]
+
+  -- FIXME: more shapes (U, S)
+
+  gui.debugf("Hall conn area: (%d,%d) .. (%d,%d)\n", tx1,ty1, tx2,ty2)
+
+  if R.sw >= 3 and R.sh >= 3 and rand.odds(o_prob) then
+    make_O()
+
+  elseif tw == 1 or th == 1 then
+    T_fill()
+
+  elseif #R.conns == 2 then
+    make_L()
+
+  else
+    criss_cross()
+  end
+
+
+  local height = 128
+  if rand.odds(20) then
+    height = 192
+  elseif rand.odds(10) then
+    height = 256
+    R.hall_sky = true
+  end
+
+  for x = R.sx1, R.sx2 do
+  for y = R.sy1, R.sy2 do
+    local S = SEEDS[x][y]
+    assert(S.room == R)
+    if S.kind == "walk" then
+      S.floor_h = h
+      S.ceil_h = h + height
+
+      S.f_tex = R.zone.hall_floor
+      S.c_tex = R.zone.hall_ceil
+
+      if R.hall_sky then
+        S.is_sky = true
+      end
+    end
+  end -- x, y
+  end
+
+  Layout_set_floor_minmax(R)
+
+  R.ceil_h = R.floor_max_h + height
+
+  each C in R.conns do
+    C.conn_h = h
+  end
+end
+
+
+
+function Layout_add_pillars(R)
+
+  local PILLAR_PATTERNS =
+  {
+     "-2-",
+     "1-1",
+     "111",
+
+     "-1-1-",
+     "1-2-1",
+
+     "1--1",
+     "1111",
+
+     "--1-1--",
+     "-1---1-",
+     "-1-2-1-",
+     "1--2--1",
+     "1-2-2-1",
+
+     "-1--1-",
+     "2-11-2",
+
+     "--1--1--",
+     "1-2--2-1",
+
+     "--1-2-1--",
+     "-1--2--1-",
+     "-1-2-2-1-",
+     "1---2---1",
+     "2-1---1-2",
+
+     "--1--2--1--",
+     "-1---2---1-",
+     "-1-1---1-1-",
+     "1----2----1",
+     "2--1---1--2",
+  }
+
+
+  local function cpp_is_seed_bad(R, S, N)
+    if not N then return true end
+    if N.room != R then return true end
+    if N.kind == "void" then return true end
+    if not N.floor_h then return true end
+    if S.floor_h and N.floor_h > S.floor_h + 24 then return true end
+
+    return false
+  end
+
+
+  local function can_put_pillar_at(R, S)
+    if S.room != R then return false end
+
+    if S.content then return false end
+
+    if S.kind != "walk" or S.conn or S.pseudo_conn or S.must_walk then
+      return false
+    end
+
+    -- see if pillar would be annoyingly blocking
+    for dir = 2,4,2 do
+      local A = S:neighbor(dir)
+      local B = S:neighbor(10 - dir)
+
+      if cpp_is_seed_bad(R, S, A) and cpp_is_seed_bad(R, S, B) then
+        return false
+      end
+
+      if (A and A.kind == "liquid") and (B and B.kind == "liquid") then
+        return false
+      end
+    end
+
+    -- OK !
+    return true
+  end
+
+
+  local function can_pillar_pattern(side, offset, pat)
+    local x1,y1, x2,y2 = geom.side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2)
+    local pos = 1
+
+    x1,y1 = geom.nudge(x1, y1, 10-side, offset)
+    x2,y2 = geom.nudge(x2, y2, 10-side, offset)
+
+    for x = x1,x2 do
+    for y = y1,y2 do
+      local S = SEEDS[x][y]
+
+      local ch = string.sub(pat, pos, pos)
+      pos = pos + 1
+      assert(ch)
+
+      if ch == '-' then
+        if S.content == "pillar" then return false end
+      else
+        assert(string.is_digit(ch))
+
+        if not can_put_pillar_at(R, S) then return false end
+
+      end
+    end -- x, y
+    end
+
+    return true --OK--
+  end
+
+
+  local function make_pillar_pattern(side, offset, pat)
+    local x1,y1, x2,y2 = geom.side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2)
+    local pos = 1
+
+    x1,y1 = geom.nudge(x1, y1, 10-side, offset)
+    x2,y2 = geom.nudge(x2, y2, 10-side, offset)
+
+    for x = x1,x2 do for y = y1,y2 do
+      local S = SEEDS[x][y]
+
+      local ch = string.sub(pat, pos, pos)
+      pos = pos + 1
+
+      if string.is_digit(ch) then
+        S.content = "pillar"
+        S.pillar_skin = assert(GAME.PILLARS[R.pillar_what])
+      end
+    end end -- for x, y
+  end
+
+
+  ---| Layout_add_pillars |---
+
+  if R.parent then return end
+
+  if not THEME.pillars then
+    return
+  end
+
+  -- FIXME this is too crude!
+  if STYLE.pillars == "none" or STYLE.pillars == "few" then
+    return
+  end
+
+  local skin_names = THEME.pillars
+  if not skin_names then return end
+  R.pillar_what = rand.key_by_probs(skin_names)
+
+  local SIDES = { 2, 4 }
+  rand.shuffle(SIDES)
+
+  each side in SIDES do
+  for offset = 0,1 do
+    local long, deep = R.tw, R.th
+    if geom.is_horiz(side) then long,deep = deep,long end
+
+    if deep >= 3+offset*2 and long >= 3 then
+      local lists = { {}, {} }
+
+      for where = 1,2 do
+        each pat in PILLAR_PATTERNS do
+          if #pat == long and
+             can_pillar_pattern(sel(where==1,side,10-side), offset, pat)
+          then
+            table.insert(lists[where], pat)
+          end
+        end -- for pat
+      end -- for where
+
+      -- FIXME: maintain symmetry : limit to symmetrical patterns
+      --        and on certain sides we require the same pattern.
+
+      if #lists[1] > 0 and #lists[2] > 0 then
+        local pat1
+        local pat2
+
+        -- preference for same pattern
+        for loop = 1,3 do
+          pat1 = rand.pick(lists[1])
+          pat2 = rand.pick(lists[2])
+          if pat1 == pat2 then break; end
+        end
+
+        gui.debugf("Pillar patterns @ %s : %d=%s | %d=%s\n",
+                   R:tostr(), side, pat1, 10-side, pat2)
+
+        make_pillar_pattern(side,    offset, pat1)
+        make_pillar_pattern(10-side, offset, pat2)
+
+        R.pillar_rows =
+        { 
+          { side=side,    offset=offset }
+          { side=10-side, offset=offset }
+        }
+
+        return --OK--
+      end
+    end
+  end -- side, offset
+  end
+end
+
+
+
+function Layout_escape_from_pits(R)
+
+  local function new_pit()
+    local PIT =
+    {
+      id = Plan_alloc_id("slime_pit")
+    }
+
+    return PIT
+  end
+
+
+  local function merge_pits(pit1, pit2)
+    if pit1.cost and pit2.cost and pit2.cost < pit1.cost then
+      pit1, pit2 = pit2, pit1
+    end
+
+    -- kill the other pit
+    pit2.id = "dead"
+    pit2.liquid_h = nil
+    pit2.out_h = nil
+
+    for sx = R.sx1, R.sx2 do
+    for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
+
+      if S.slime_pit == pit2 then
+         S.slime_pit = pit1
+      end
+    end
+    end
+
+    -- return the kept one
+    return pit1
+  end
+
+
+  local function find_neighbor_pit(S)
+    local pit
+
+    for dir = 2,8,2 do
+      local N = S:neighbor(dir)
+
+      if not N or N.room != R then continue end
+
+      if N.kind != "liquid" then continue end
+
+      if not N.slime_pit then continue end
+
+      if pit == N.slime_pit then continue end
+
+      if pit then
+        -- we have found two different pits, need to merge them
+        pit = merge_pits(pit, N.slime_pit)
+      else
+        pit = N.slime_pit
+      end
+    end
+
+    return pit
+  end
+
+
+  local function evaluate_escape_pod(pit, S, dir, N)
+    local cost
+
+    if N.kind == "walk" then
+      cost = 0
+---##    elseif N.kind == "stair" then
+---##      cost = 80
+    else
+      -- not walkable
+      return
+    end
+
+    -- don't want to bump into a pillar or switch
+    if N.content then
+      cost = cost + 20
+    end
+
+    -- determine floor height once we get out
+    local out_h = assert(N.floor_h)
+
+    local diff_h = out_h - pit.liquid_h
+
+    if diff_h < 4 then
+      return
+    end
+
+    -- disabled this, which prefers to place the step next to the
+    -- lowest nearby floor.  Step placement is less predictable now.
+    --[[  cost = cost + diff_h  --]]
+
+    -- tie breaker
+    cost = cost + gui.random()
+
+    -- replace current pod with new one if better
+    if not pit.cost or (cost < pit.cost) then
+      pit.cost = cost
+      pit.out_h = out_h
+      pit.S = S
+      pit.N = N
+      pit.dir = dir
+
+      -- coordinates for the step / lift
+      local x1, y1, x2, y2
+
+      local mx, my = S:mid_point()
+
+      local long = 64
+      local deep = 24
+
+      if geom.is_vert(dir) then
+        x1, x2 = mx - long/2, mx + long/2
+      else
+        y1, y2 = my - long/2, my + long/2
+      end
+
+      if dir == 2 then y1 = S.y1 ; y2 = y1 + deep end
+      if dir == 8 then y2 = S.y2 ; y1 = y2 - deep end
+      if dir == 4 then x1 = S.x1 ; x2 = x1 + deep end
+      if dir == 6 then x2 = S.x2 ; x1 = x2 - deep end
+
+      assert(x1 and x2 and y1 and y2)
+
+      pit.bx1 = x1 ; pit.by1 = y1
+      pit.bx2 = x2 ; pit.by2 = y2
+    end
+  end
+
+
+  local function add_seed_to_pit(pit, S)
+    S.slime_pit = pit
+
+    pit.liquid_h = math.min(S.floor_h, pit.liquid_h or 999)
+
+    -- check neighbors for a floor spot
+    for dir = 2,8,2 do
+      local N = S:neighbor(dir)
+
+      if not N or N.room != R then continue end
+
+      evaluate_escape_pod(pit, S, dir, N)
+    end
+  end
+
+
+  local function collect_pits()
+    local list = {}
+
+    for sx = R.sx1, R.sx2 do
+    for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
+
+      if S.room != R then continue end
+      if S.kind != "liquid" then continue end
+
+      local pit = find_neighbor_pit(S)
+
+      if not pit then
+        pit = new_pit()
+        table.insert(list, pit)
+      end
+
+      add_seed_to_pit(pit, S)
+    end
+    end
+
+    return list
+  end
+
+
+  local function build_escape(pit)
+    -- check for invalid pits
+    if pit.out_h  == nil or
+       pit.liquid_h == nil or
+       pit.bx1 == nil
+    then
+      warning("unescapable pit in %s\n", R:tostr())
+      return
+    end
+
+    local diff_h = pit.out_h - pit.liquid_h
+
+    if diff_h <= PARAM.jump_height then
+      -- nothing needed : player can walk/jump out
+      return
+    end
+
+    pit.N.escape_target = true
+
+    local brush = brushlib.quad(pit.bx1, pit.by1, pit.bx2, pit.by2)
+
+    if diff_h <= (PARAM.jump_height * 2) then
+      -- a single stair will suffice
+
+      brushlib.add_top(brush, pit.liquid_h + int(diff_h / 2))
+      brushlib.set_mat(brush, "METAL", "METAL")
+
+      Trans.brush(brush)
+
+    else
+      -- need a lift?
+
+      table.insert(brush, 1, { m="solid", mover=1 })
+
+      brushlib.add_top(brush, pit.out_h - 12)
+      brushlib.set_mat(brush, "SUPPORT2", "SUPPORT2")
+      brushlib.set_line_flag(brush, "y_offset", 0)
+
+      local tag = Plan_alloc_id("tag")
+
+      each C in brush do
+        if C.t then C.tag = tag end
+      end
+
+      each C in brush do
+        if C.x then
+          C.special = 62  -- FIXME : game specific
+          C.tag = tag
+        end
+      end
+
+      Trans.brush(brush)
+    end
+  end
+
+
+  ---| Layout_escape_from_pits |---
+
+  each pit in collect_pits() do
+    if pit.id != "dead" then
+      build_escape(pit)
+    end
+  end
+end
+
+
+
+function Layout_add_bridges(R)
+
+  local function install_bridge(S, dir, L)
+    -- L is a liquid neighbor
+
+    S.content  = "bridge"
+    S.bridge_h = S.floor_h
+    S.bridge_dir = geom.RIGHT[dir]
+    S.bridge_tex = S.f_tex
+
+    S.kind = "liquid"
+    S.floor_h = L.floor_h
+
+-- stderrf("Bridge @ %s\n", S:tostr())
+  end
+
+
+  local function test_spot(S)
+    if S.kind != "walk" then return end
+
+    if S.content then return end
+    if S.conn then return end
+    if S.escape_target then return end
+
+    for dir = 2,4,2 do
+      local A = S:neighbor(dir)
+      local B = S:neighbor(10 - dir)
+
+      if not (A and A.room == R) then continue end
+      if not (B and B.room == R) then continue end
+
+      if A.kind != "liquid" then continue end
+      if B.kind != "liquid" then continue end
+
+      if A.bridge_h then continue end
+      if B.bridge_h then continue end
+
+      if math.abs(A.floor_h - B.floor_h) > 1 then continue end
+
+      -- OK --
+
+      install_bridge(S, dir, B)
+      return
+    end
+  end
+
+
+  ---| Layout_add_bridges |---
+
+  for x = R.sx1, R.sx2 do
+  for y = R.sy1, R.sy2 do
+    local S = SEEDS[x][y]
+
+    if S.room != R then continue end
+
+    test_spot(S)
+  end
+  end
+end
+
+
+
+function Layout_add_cages(R)
+  local  junk_list = {}
+  local other_list = {}
+
+  local DIR_LIST
+
+  local function test_seed(S)
+    local best_dir
+    local best_z
+
+    each dir in DIR_LIST do
+      local N = S:neighbor(dir)
+
+      if not (N and N.room == R) then continue end
+
+      if N.kind != "walk" then continue end
+      if N.content then continue end
+      if not N.floor_h then continue end
+
+      best_dir = dir
+      best_z   = N.floor_h + 16
+    end
+
+    if best_dir then
+      local LOC = { S=S, dir=best_dir, z=best_z }
+
+      if S.junked then
+        table.insert(junk_list, LOC)
+      else
+        table.insert(other_list, LOC)
+      end
+    end
+  end
+
+
+  local function collect_cage_seeds()
+    for x = R.sx1, R.sx2 do
+    for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y]
+
+      if S.room != R then continue end
+    
+      if S.kind != "void" then continue end
+
+      test_seed(S)
+    end
+    end
+  end
+
+
+  local function convert_list(list, limited)
+    each loc in list do
+      local S = loc.S
+
+      if limited then
+        if geom.is_vert (loc.dir) and (S.sx % 2) == 0 then continue end
+        if geom.is_horiz(loc.dir) and (S.sy % 2) == 0 then continue end
+      end
+
+      -- convert it
+      S.cage_dir = loc.dir
+      S.cage_z   = loc.z
+    end
+  end
+
+
+  ---| Layout_add_cages |---
+
+  -- never add cages to a start room
+  if R.purpose == "START" then return end
+
+  -- or rarely in secrets
+  if R.quest.kind == "secret" and rand.odds(90) then return end
+
+  -- style check...
+  local prob = style_sel("cages", 0, 20, 50, 90)
+
+  if not rand.odds(prob) then return end
+
+  if rand.odds(50)then
+    -- try verticals before horizontals (for symmetry)
+    DIR_LIST = { 2,8,4,6 }
+  else
+    DIR_LIST = { 6,4,8,2 }
+  end
+
+  collect_cage_seeds()
+
+  -- either use the junked seeds OR the solid-room-fab seeds
+  local list
+
+  if #junk_list > 0 and #other_list > 0 then
+    list = rand.sel(35, junk_list, other_list)
+  elseif #junk_list > 0 then
+    list = junk_list
+  else
+    list = other_list
+  end
+
+  -- rarely use ALL the junked seeds
+  local limited
+  if list == junk_list and
+     rand.odds(sel(STYLE.cages == "heaps", 50, 80))
+  then
+    limited = true
+  end
+
+  convert_list(list, limited)
+end
+
+
+
 function Layout_try_pattern(R, is_top, div_lev, req_sym, area, heights, f_texs)
   -- find a usable pattern in the ROOM_PATTERNS table and
   -- apply it to the room.
@@ -1564,848 +2407,6 @@ gui.debugf("Failed @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
 end
 
 
-function Layout_set_floor_minmax(R)
-  local min_h =  9e9
-  local max_h = -9e9
-
-  for x = R.sx1, R.sx2 do
-  for y = R.sy1, R.sy2 do
-    local S = SEEDS[x][y]
-    if S.room == R and S.kind == "walk" then
-      assert(S.floor_h)
-
-      min_h = math.min(min_h, S.floor_h)
-      max_h = math.max(max_h, S.floor_h)
-    end
-  end -- x, y
-  end
-
-  assert(min_h <= max_h)
-
-  R.floor_min_h = min_h
-  R.floor_max_h = max_h
-
-  R.fence_h  = R.floor_max_h + 30
-  R.liquid_h = R.floor_min_h - 48
-
-  for x = R.sx1, R.sx2 do
-  for y = R.sy1, R.sy2 do
-    local S = SEEDS[x][y]
-    if S.room == R and S.kind == "liquid" then
-      S.floor_h = R.liquid_h
-    end
-  end -- x, y
-  end
-end
-
-
-function Layout_scenic(R)
-  local min_floor = 1000
-
-  for x = R.sx1,R.sx2 do
-  for y = R.sy1,R.sy2 do
-    local S = SEEDS[x][y]
-    
-    if S.room != R then continue end
-
-    S.kind = sel(LEVEL.liquid, "liquid", "void")
-
-    for side = 2,8,2 do
-      local N = S:neighbor(side)
-      if N and N.room and N.floor_h then
-        min_floor = math.min(min_floor, N.floor_h)
-      end
-    end
-  end -- x,y
-  end
-
-  if min_floor < 999 then
-    local h1 = rand.irange(1,6)
-    local h2 = rand.irange(1,6)
-
-    R.liquid_h = min_floor - (h1 + h2) * 16
-  else
-    R.liquid_h = 0
-  end
-
-  R.floor_max_h = R.liquid_h
-  R.floor_min_h = R.liquid_h
-  R.floor_h     = R.liquid_h
-
-  for x = R.sx1, R.sx2 do
-  for y = R.sy1, R.sy2 do
-    local S = SEEDS[x][y]
-
-    if S.room == R and S.kind == "liquid" then
-      S.floor_h = R.liquid_h
-    end
-  end -- for x, y
-  end
-end
-
-
-function Layout_hallway(R)
-  local tx1,ty1, tx2,ty2 = R:conn_area()
-  local tw, th = geom.group_size(tx1,ty1, tx2,ty2)
-
-  local function T_fill()
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      if x < tx1 or x > tx2 or y < ty1 or y > ty2 then
-        SEEDS[x][y].kind = "void"
-      end
-    end end -- for x, y
-  end
-
-  local function make_O()
-    for x = R.sx1+1,R.sx2-1 do for y = R.sy1+1,R.sy2-1 do
-      local S = SEEDS[x][y]
-      S.kind = "void"
-    end end -- for x, y
-  end
-
-  local function make_L()
-    local C1 = R.conns[1]
-    local C2 = R.conns[2]
-
-    local S1 = C1:seed(R)
-    local S2 = C2:seed(R)
-
-    if rand.odds(50) then S1,S2 = S2,S1 end
-
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      if x < tx1 or x > tx2 or y < ty1 or y > ty2 or
-         not (x == S1.sx or y == S2.sy)
-      then
-        SEEDS[x][y].kind = "void"
-      end
-    end end -- for x, y
-  end
-
-  local function criss_cross()
-    -- block out seeds that don't "trace" from a connection
-    local used_x = {}
-    local used_y = {}
-
-    each C in R.conns do
-      if C.kind == "teleporter" then continue end
-      local S = C:seed(R)
-      if geom.is_vert(S.conn_dir) then
-        used_x[S.sx] = 1
-      else
-        used_y[S.sy] = 1
-      end
-    end
-
-    -- all connections are parallel => fail
-    if table.empty(used_x) or table.empty(used_y) then
-      make_O()
-      return
-    end
-
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      if x < tx1 or x > tx2 or y < ty1 or y > ty2 or
-         not (used_x[x] or used_y[y])
-      then
-        SEEDS[x][y].kind = "void"
-      end
-    end end -- for x, y
-
-    return true
-  end
-
-
-  ---| Layout_hallway |---
-
-  R.tx1, R.ty1 = R.sx1, R.sy1
-  R.tx2, R.ty2 = R.sx2, R.sy2
-  R.tw,  R.th  = R.sw,  R.sh
-
-  if not LEVEL.hall_trim then
-    LEVEL.hall_trim   = rand.odds(50)
-    LEVEL.hall_lights = rand.odds(50)
-
-    if THEME.ceil_lights then
-      LEVEL.hall_lite_ftex = rand.key_by_probs(THEME.ceil_lights)
-    end
-  end
-
-
-  local entry_C = assert(R.entry_conn)
-  local h = assert(entry_C.conn_h)
-
-  local O_CHANCES = { 0, 10, 40, 70 }
-  local o_prob = O_CHANCES[math.min(4, #R.conns)]
-
-  -- FIXME: more shapes (U, S)
-
-  gui.debugf("Hall conn area: (%d,%d) .. (%d,%d)\n", tx1,ty1, tx2,ty2)
-
-  if R.sw >= 3 and R.sh >= 3 and rand.odds(o_prob) then
-    make_O()
-
-  elseif tw == 1 or th == 1 then
-    T_fill()
-
-  elseif #R.conns == 2 then
-    make_L()
-
-  else
-    criss_cross()
-  end
-
-
-  local height = 128
-  if rand.odds(20) then
-    height = 192
-  elseif rand.odds(10) then
-    height = 256
-    R.hall_sky = true
-  end
-
-  for x = R.sx1, R.sx2 do
-  for y = R.sy1, R.sy2 do
-    local S = SEEDS[x][y]
-    assert(S.room == R)
-    if S.kind == "walk" then
-      S.floor_h = h
-      S.ceil_h = h + height
-
-      S.f_tex = R.zone.hall_floor
-      S.c_tex = R.zone.hall_ceil
-
-      if R.hall_sky then
-        S.is_sky = true
-      end
-    end
-  end -- x, y
-  end
-
-  Layout_set_floor_minmax(R)
-
-  R.ceil_h = R.floor_max_h + height
-
-  each C in R.conns do
-    C.conn_h = h
-  end
-end
-
-
-
-function Layout_add_pillars(R)
-
-  local PILLAR_PATTERNS =
-  {
-     "-2-",
-     "1-1",
-     "111",
-
-     "-1-1-",
-     "1-2-1",
-
-     "1--1",
-     "1111",
-
-     "--1-1--",
-     "-1---1-",
-     "-1-2-1-",
-     "1--2--1",
-     "1-2-2-1",
-
-     "-1--1-",
-     "2-11-2",
-
-     "--1--1--",
-     "1-2--2-1",
-
-     "--1-2-1--",
-     "-1--2--1-",
-     "-1-2-2-1-",
-     "1---2---1",
-     "2-1---1-2",
-
-     "--1--2--1--",
-     "-1---2---1-",
-     "-1-1---1-1-",
-     "1----2----1",
-     "2--1---1--2",
-  }
-
-
-  local function cpp_is_seed_bad(R, S, N)
-    if not N then return true end
-    if N.room != R then return true end
-    if N.kind == "void" then return true end
-    if not N.floor_h then return true end
-    if S.floor_h and N.floor_h > S.floor_h + 24 then return true end
-
-    return false
-  end
-
-
-  local function can_put_pillar_at(R, S)
-    if S.room != R then return false end
-
-    if S.content then return false end
-
-    if S.kind != "walk" or S.conn or S.pseudo_conn or S.must_walk then
-      return false
-    end
-
-    -- see if pillar would be annoyingly blocking
-    for dir = 2,4,2 do
-      local A = S:neighbor(dir)
-      local B = S:neighbor(10 - dir)
-
-      if cpp_is_seed_bad(R, S, A) and cpp_is_seed_bad(R, S, B) then
-        return false
-      end
-
-      if (A and A.kind == "liquid") and (B and B.kind == "liquid") then
-        return false
-      end
-    end
-
-    -- OK !
-    return true
-  end
-
-
-  local function can_pillar_pattern(side, offset, pat)
-    local x1,y1, x2,y2 = geom.side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2)
-    local pos = 1
-
-    x1,y1 = geom.nudge(x1, y1, 10-side, offset)
-    x2,y2 = geom.nudge(x2, y2, 10-side, offset)
-
-    for x = x1,x2 do
-    for y = y1,y2 do
-      local S = SEEDS[x][y]
-
-      local ch = string.sub(pat, pos, pos)
-      pos = pos + 1
-      assert(ch)
-
-      if ch == '-' then
-        if S.content == "pillar" then return false end
-      else
-        assert(string.is_digit(ch))
-
-        if not can_put_pillar_at(R, S) then return false end
-
-      end
-    end -- x, y
-    end
-
-    return true --OK--
-  end
-
-
-  local function make_pillar_pattern(side, offset, pat)
-    local x1,y1, x2,y2 = geom.side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2)
-    local pos = 1
-
-    x1,y1 = geom.nudge(x1, y1, 10-side, offset)
-    x2,y2 = geom.nudge(x2, y2, 10-side, offset)
-
-    for x = x1,x2 do for y = y1,y2 do
-      local S = SEEDS[x][y]
-
-      local ch = string.sub(pat, pos, pos)
-      pos = pos + 1
-
-      if string.is_digit(ch) then
-        S.content = "pillar"
-        S.pillar_skin = assert(GAME.PILLARS[R.pillar_what])
-      end
-    end end -- for x, y
-  end
-
-
-  ---| Layout_add_pillars |---
-
-  if R.parent then return end
-
-  if not THEME.pillars then
-    return
-  end
-
-  -- FIXME this is too crude!
-  if STYLE.pillars == "none" or STYLE.pillars == "few" then
-    return
-  end
-
-  local skin_names = THEME.pillars
-  if not skin_names then return end
-  R.pillar_what = rand.key_by_probs(skin_names)
-
-  local SIDES = { 2, 4 }
-  rand.shuffle(SIDES)
-
-  each side in SIDES do
-  for offset = 0,1 do
-    local long, deep = R.tw, R.th
-    if geom.is_horiz(side) then long,deep = deep,long end
-
-    if deep >= 3+offset*2 and long >= 3 then
-      local lists = { {}, {} }
-
-      for where = 1,2 do
-        each pat in PILLAR_PATTERNS do
-          if #pat == long and
-             can_pillar_pattern(sel(where==1,side,10-side), offset, pat)
-          then
-            table.insert(lists[where], pat)
-          end
-        end -- for pat
-      end -- for where
-
-      -- FIXME: maintain symmetry : limit to symmetrical patterns
-      --        and on certain sides we require the same pattern.
-
-      if #lists[1] > 0 and #lists[2] > 0 then
-        local pat1
-        local pat2
-
-        -- preference for same pattern
-        for loop = 1,3 do
-          pat1 = rand.pick(lists[1])
-          pat2 = rand.pick(lists[2])
-          if pat1 == pat2 then break; end
-        end
-
-        gui.debugf("Pillar patterns @ %s : %d=%s | %d=%s\n",
-                   R:tostr(), side, pat1, 10-side, pat2)
-
-        make_pillar_pattern(side,    offset, pat1)
-        make_pillar_pattern(10-side, offset, pat2)
-
-        R.pillar_rows =
-        { 
-          { side=side,    offset=offset }
-          { side=10-side, offset=offset }
-        }
-
-        return --OK--
-      end
-    end
-  end -- side, offset
-  end
-end
-
-
-
-function Layout_escape_from_pits(R)
-
-  local function new_pit()
-    local PIT =
-    {
-      id = Plan_alloc_id("slime_pit")
-    }
-
-    return PIT
-  end
-
-
-  local function merge_pits(pit1, pit2)
-    if pit1.cost and pit2.cost and pit2.cost < pit1.cost then
-      pit1, pit2 = pit2, pit1
-    end
-
-    -- kill the other pit
-    pit2.id = "dead"
-    pit2.liquid_h = nil
-    pit2.out_h = nil
-
-    for sx = R.sx1, R.sx2 do
-    for sy = R.sy1, R.sy2 do
-      local S = SEEDS[sx][sy]
-
-      if S.slime_pit == pit2 then
-         S.slime_pit = pit1
-      end
-    end
-    end
-
-    -- return the kept one
-    return pit1
-  end
-
-
-  local function find_neighbor_pit(S)
-    local pit
-
-    for dir = 2,8,2 do
-      local N = S:neighbor(dir)
-
-      if not N or N.room != R then continue end
-
-      if N.kind != "liquid" then continue end
-
-      if not N.slime_pit then continue end
-
-      if pit == N.slime_pit then continue end
-
-      if pit then
-        -- we have found two different pits, need to merge them
-        pit = merge_pits(pit, N.slime_pit)
-      else
-        pit = N.slime_pit
-      end
-    end
-
-    return pit
-  end
-
-
-  local function evaluate_escape_pod(pit, S, dir, N)
-    local cost
-
-    if N.kind == "walk" then
-      cost = 0
----##    elseif N.kind == "stair" then
----##      cost = 80
-    else
-      -- not walkable
-      return
-    end
-
-    -- don't want to bump into a pillar or switch
-    if N.content then
-      cost = cost + 20
-    end
-
-    -- determine floor height once we get out
-    local out_h = assert(N.floor_h)
-
-    local diff_h = out_h - pit.liquid_h
-
-    if diff_h < 4 then
-      return
-    end
-
-    -- disabled this, which prefers to place the step next to the
-    -- lowest nearby floor.  Step placement is less predictable now.
-    --[[  cost = cost + diff_h  --]]
-
-    -- tie breaker
-    cost = cost + gui.random()
-
-    -- replace current pod with new one if better
-    if not pit.cost or (cost < pit.cost) then
-      pit.cost = cost
-      pit.out_h = out_h
-      pit.S = S
-      pit.N = N
-      pit.dir = dir
-
-      -- coordinates for the step / lift
-      local x1, y1, x2, y2
-
-      local mx, my = S:mid_point()
-
-      local long = 64
-      local deep = 24
-
-      if geom.is_vert(dir) then
-        x1, x2 = mx - long/2, mx + long/2
-      else
-        y1, y2 = my - long/2, my + long/2
-      end
-
-      if dir == 2 then y1 = S.y1 ; y2 = y1 + deep end
-      if dir == 8 then y2 = S.y2 ; y1 = y2 - deep end
-      if dir == 4 then x1 = S.x1 ; x2 = x1 + deep end
-      if dir == 6 then x2 = S.x2 ; x1 = x2 - deep end
-
-      assert(x1 and x2 and y1 and y2)
-
-      pit.bx1 = x1 ; pit.by1 = y1
-      pit.bx2 = x2 ; pit.by2 = y2
-    end
-  end
-
-
-  local function add_seed_to_pit(pit, S)
-    S.slime_pit = pit
-
-    pit.liquid_h = math.min(S.floor_h, pit.liquid_h or 999)
-
-    -- check neighbors for a floor spot
-    for dir = 2,8,2 do
-      local N = S:neighbor(dir)
-
-      if not N or N.room != R then continue end
-
-      evaluate_escape_pod(pit, S, dir, N)
-    end
-  end
-
-
-  local function collect_pits()
-    local list = {}
-
-    for sx = R.sx1, R.sx2 do
-    for sy = R.sy1, R.sy2 do
-      local S = SEEDS[sx][sy]
-
-      if S.room != R then continue end
-      if S.kind != "liquid" then continue end
-
-      local pit = find_neighbor_pit(S)
-
-      if not pit then
-        pit = new_pit()
-        table.insert(list, pit)
-      end
-
-      add_seed_to_pit(pit, S)
-    end
-    end
-
-    return list
-  end
-
-
-  local function build_escape(pit)
-    -- check for invalid pits
-    if pit.out_h  == nil or
-       pit.liquid_h == nil or
-       pit.bx1 == nil
-    then
-      warning("unescapable pit in %s\n", R:tostr())
-      return
-    end
-
-    local diff_h = pit.out_h - pit.liquid_h
-
-    if diff_h <= PARAM.jump_height then
-      -- nothing needed : player can walk/jump out
-      return
-    end
-
-    pit.N.escape_target = true
-
-    local brush = brushlib.quad(pit.bx1, pit.by1, pit.bx2, pit.by2)
-
-    if diff_h <= (PARAM.jump_height * 2) then
-      -- a single stair will suffice
-
-      brushlib.add_top(brush, pit.liquid_h + int(diff_h / 2))
-      brushlib.set_mat(brush, "METAL", "METAL")
-
-      Trans.brush(brush)
-
-    else
-      -- need a lift?
-
-      table.insert(brush, 1, { m="solid", mover=1 })
-
-      brushlib.add_top(brush, pit.out_h - 12)
-      brushlib.set_mat(brush, "SUPPORT2", "SUPPORT2")
-      brushlib.set_line_flag(brush, "y_offset", 0)
-
-      local tag = Plan_alloc_id("tag")
-
-      each C in brush do
-        if C.t then C.tag = tag end
-      end
-
-      each C in brush do
-        if C.x then
-          C.special = 62  -- FIXME : game specific
-          C.tag = tag
-        end
-      end
-
-      Trans.brush(brush)
-    end
-  end
-
-
-  ---| Layout_escape_from_pits |---
-
-  each pit in collect_pits() do
-    if pit.id != "dead" then
-      build_escape(pit)
-    end
-  end
-end
-
-
-
-function Layout_add_bridges(R)
-
-  local function install_bridge(S, dir, L)
-    -- L is a liquid neighbor
-
-    S.content  = "bridge"
-    S.bridge_h = S.floor_h
-    S.bridge_dir = geom.RIGHT[dir]
-    S.bridge_tex = S.f_tex
-
-    S.kind = "liquid"
-    S.floor_h = L.floor_h
-
--- stderrf("Bridge @ %s\n", S:tostr())
-  end
-
-
-  local function test_spot(S)
-    if S.kind != "walk" then return end
-
-    if S.content then return end
-    if S.conn then return end
-    if S.escape_target then return end
-
-    for dir = 2,4,2 do
-      local A = S:neighbor(dir)
-      local B = S:neighbor(10 - dir)
-
-      if not (A and A.room == R) then continue end
-      if not (B and B.room == R) then continue end
-
-      if A.kind != "liquid" then continue end
-      if B.kind != "liquid" then continue end
-
-      if A.bridge_h then continue end
-      if B.bridge_h then continue end
-
-      if math.abs(A.floor_h - B.floor_h) > 1 then continue end
-
-      -- OK --
-
-      install_bridge(S, dir, B)
-      return
-    end
-  end
-
-
-  ---| Layout_add_bridges |---
-
-  for x = R.sx1, R.sx2 do
-  for y = R.sy1, R.sy2 do
-    local S = SEEDS[x][y]
-
-    if S.room != R then continue end
-
-    test_spot(S)
-  end
-  end
-end
-
-
-
-function Layout_add_cages(R)
-  local  junk_list = {}
-  local other_list = {}
-
-  local DIR_LIST
-
-  local function test_seed(S)
-    local best_dir
-    local best_z
-
-    each dir in DIR_LIST do
-      local N = S:neighbor(dir)
-
-      if not (N and N.room == R) then continue end
-
-      if N.kind != "walk" then continue end
-      if N.content then continue end
-      if not N.floor_h then continue end
-
-      best_dir = dir
-      best_z   = N.floor_h + 16
-    end
-
-    if best_dir then
-      local LOC = { S=S, dir=best_dir, z=best_z }
-
-      if S.junked then
-        table.insert(junk_list, LOC)
-      else
-        table.insert(other_list, LOC)
-      end
-    end
-  end
-
-
-  local function collect_cage_seeds()
-    for x = R.sx1, R.sx2 do
-    for y = R.sy1, R.sy2 do
-      local S = SEEDS[x][y]
-
-      if S.room != R then continue end
-    
-      if S.kind != "void" then continue end
-
-      test_seed(S)
-    end
-    end
-  end
-
-
-  local function convert_list(list, limited)
-    each loc in list do
-      local S = loc.S
-
-      if limited then
-        if geom.is_vert (loc.dir) and (S.sx % 2) == 0 then continue end
-        if geom.is_horiz(loc.dir) and (S.sy % 2) == 0 then continue end
-      end
-
-      -- convert it
-      S.cage_dir = loc.dir
-      S.cage_z   = loc.z
-    end
-  end
-
-
-  ---| Layout_add_cages |---
-
-  -- never add cages to a start room
-  if R.purpose == "START" then return end
-
-  -- or rarely in secrets
-  if R.quest.kind == "secret" and rand.odds(90) then return end
-
-  -- style check...
-  local prob = style_sel("cages", 0, 20, 50, 90)
-
-  if not rand.odds(prob) then return end
-
-  if rand.odds(50)then
-    -- try verticals before horizontals (for symmetry)
-    DIR_LIST = { 2,8,4,6 }
-  else
-    DIR_LIST = { 6,4,8,2 }
-  end
-
-  collect_cage_seeds()
-
-  -- either use the junked seeds OR the solid-room-fab seeds
-  local list
-
-  if #junk_list > 0 and #other_list > 0 then
-    list = rand.sel(35, junk_list, other_list)
-  elseif #junk_list > 0 then
-    list = junk_list
-  else
-    list = other_list
-  end
-
-  -- rarely use ALL the junked seeds
-  local limited
-  if list == junk_list and
-     rand.odds(sel(STYLE.cages == "heaps", 50, 80))
-  then
-    limited = true
-  end
-
-  convert_list(list, limited)
-end
-
-
 
 function Layout_room(R)
 
@@ -2920,9 +2921,6 @@ gui.debugf("BOTH SAME HEIGHT\n")
     end -- x, y
     end
   end
-
-
-
 
 
   ---==| Layout_room |==---
