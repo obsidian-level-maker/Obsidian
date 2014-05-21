@@ -106,6 +106,47 @@ function Layout_process_patterns()
   -- structure into a more easily accessed form.
   --
 
+  local function find_stair_source(grid, x, y)
+    -- determine the source floor for this stair
+    -- (the destination floor is ALWAYS the pointed-to seed).
+    local G = grid[x][y]
+    assert(G.dir)
+
+    -- we try the back first
+    local DIRS =
+    {
+      10 - G.dir, geom.LEFT[G.dir], geom.RIGHT[G.dir]
+    }
+
+    each dir in DIRS do
+      local nx, ny = geom.nudge(x, y, dir)
+
+      if nx < 1 or nx > grid.w or ny < 1 or ny > grid.h then
+        continue
+      end
+
+      if grid[nx][ny].kind == "floor" then
+        -- found it
+        grid[x][y].src_dir = dir
+        return
+      end
+    end
+
+    error("Stair in pattern lacks a walkable neighbor!")
+  end
+
+
+  local function analyse_stairs(grid)
+    for x = 1, grid.w do
+    for y = 1, grid.h do
+      if grid[x][y].kind == "stair" then
+        find_stair_source(grid, x, y)
+      end
+    end -- x, y
+    end
+  end
+
+
   local function convert_pattern(pat, structure)
     local W = #structure[1]
     local H = #structure
@@ -120,6 +161,8 @@ function Layout_process_patterns()
       grid[x][y] = Layout_parse_char(ch)
     end -- x, y
     end
+
+    analyse_stairs(grid)
 
     return grid
   end
