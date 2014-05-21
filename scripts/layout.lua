@@ -217,6 +217,59 @@ function Layout_preprocess_patterns()
   end
 
 
+  local function check_is_symmetrical(grid, axis)
+    -- axis is either "x" or "y" [nothing else]
+
+    for x = 1, grid.w do
+    for y = 1, grid.h do
+      local nx, ny = x, y
+      local dir_mapping
+
+      if axis == "x" then
+        nx = grid.w + 1 - x
+        dir_mapping = geom.MIRROR_X
+      else
+        ny = grid.h + 1 - y
+        dir_mapping = geom.MIRROR_Y
+      end
+
+      local G1 = grid[x][y]
+      local G2 = grid[nx][ny]
+
+      if G1.kind != G2.kind then return false end
+
+      if G1.dir then
+        assert(G2.dir)
+
+        if G1.dir != dir_mapping[G2.dir] then return false end
+      end
+
+    end -- x, y
+    end
+
+    return true
+  end
+
+  
+  local function verify_symmetry(pat, grid)
+    if not grid then return end
+
+    if not pat.symmetry then return end
+
+    if pat.symmetry == "x" or pat.symmetry == "xy" then
+      if not check_is_symmetrical(grid, "x") then
+        error("Room pattern failed X symmetry test: " .. pat.name)
+      end
+    end
+
+    if pat.symmetry == "y" or pat.symmetry == "xy" then
+      if not check_is_symmetrical(grid, "y") then
+        error("Room pattern failed Y symmetry test: " .. pat.name)
+      end
+    end
+  end
+
+
   ---| Layout_preprocess_patterns |---
 
   table.name_up(ROOM_PATTERNS)
@@ -231,6 +284,9 @@ function Layout_preprocess_patterns()
     end
 
     determine_sub_areas(pat)
+
+    verify_symmetry(pat, pat._structure)
+    verify_symmetry(pat, pat._overlay)
   end
 
 --[[
