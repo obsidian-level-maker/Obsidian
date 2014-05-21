@@ -19,6 +19,27 @@
 ----------------------------------------------------------------
 
 
+-- 
+-- Symbols used here:
+--
+--    .         main floor (lowest or highest)
+--    1 2 3     other floors
+--
+--    ~         liquid
+--    #         solid block
+-- 
+--    / % Z N   diagonal pieces
+--
+--    < > v ^   stairs (straight)
+--
+--    L J F T   stairs which turn 90 degrees
+--
+--    K  V      stairs to a 3D floor
+--
+--    =  !      a 3D bridge
+--
+
+
 ROOM_PATTERNS =
 {
 
@@ -1508,6 +1529,55 @@ HEIGHT_CURV_2 =
     { height=1, match="any" }
     { height=2, match="one" }
   }
+}
+
+
+-----------------------
+--  MULTIPLE FLOORS  --
+-----------------------
+
+MULTI_U1 =
+{
+  prob = 10
+
+  structure =
+  {
+    "..."
+    ".K."
+    "..."
+  }
+
+  overlay =
+  {
+    "111"
+    "1  "
+    "111"
+  }
+
+  x_sizes = { "999" }
+  y_sizes = { "999" }
+}
+
+MULTI_T1 =
+{
+  prob = 10
+
+  structure =
+  {
+    ".K."
+    "..."
+    ".K."
+  }
+
+  overlay =
+  {
+    "1  "
+    "111"
+    "1  "
+  }
+
+  x_sizes = { "999" }
+  y_sizes = { "999" }
 }
 
 
