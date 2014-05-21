@@ -59,6 +59,44 @@ STAIR_DIRS =
 }
 
 
+function Layout_parse_char(ch)
+  if ch == ' ' then return nil end
+
+  if ch == '.' then return { kind="floor", floor=0 } end
+  if ch == '1' then return { kind="floor", floor=1 } end
+  if ch == '2' then return { kind="floor", floor=2 } end
+  if ch == '3' then return { kind="floor", floor=3 } end
+
+  if ch == '~' then return { kind="liquid" } end
+  if ch == '#' then return { kind="void"   } end
+
+  -- these can be curved, and 'dir' is towards the more open space
+  if ch == '/' then return { kind="diagonal", dir=3 } end
+  if ch == '%' then return { kind="diagonal", dir=1 } end
+  if ch == 'N' then return { kind="diagonal", dir=9 } end
+  if ch == 'Z' then return { kind="diagonal", dir=7 } end
+
+  if ch == '<' then return { kind="stair", dir=4 } end
+  if ch == '>' then return { kind="stair", dir=6 } end
+  if ch == '^' then return { kind="stair", dir=8 } end
+  if ch == 'v' then return { kind="stair", dir=2 } end
+
+  -- these stairs turn 90 degrees, 'dir' is the middle angle
+  if ch == 'F' then return { kind="curve_stair", dir=3 } end
+  if ch == 'T' then return { kind="curve_stair", dir=1 } end
+  if ch == 'L' then return { kind="curve_stair", dir=9 } end
+  if ch == 'J' then return { kind="curve_stair", dir=7 } end
+
+  -- in stairs to a 3D floor, 'dir' is always the "going up" direction
+  if ch == 'K' then return { kind="3d_stair", dir=4 } end
+  if ch == 'V' then return { kind="3d_stair", dir=2 } end
+
+  if ch == '=' then return { kind="3d_bridge" } end
+
+  error("Layout_parse_char: unknown symbol: " .. tostring(ch))
+end
+
+
 function Layout_test_room_fabs()
   
   local function pos_size(s, n)
