@@ -100,7 +100,7 @@ end
 -- function Layout_mirror_X(cell)
 
 
-function Layout_process_patterns()
+function Layout_preprocess_patterns()
   --
   -- Process each room pattern and convert the human-readable
   -- structure into a more easily accessed form.
@@ -168,7 +168,56 @@ function Layout_process_patterns()
   end
 
 
-  ---| Layout_process_patterns |---
+  local function find_sub_area(grid, floor_id)
+    local x1, y1 =  999,  999
+    local x2, y2 = -999, -999
+
+    for x = 1, grid.w do
+    for y = 1, grid.h do
+      if grid[x][y].kind == "floor" and
+         grid[x][y].floor == floor_id
+      then
+        x1 = math.min(x1, x)
+        y1 = math.min(y1, y)
+
+        x2 = math.max(x2, x)
+        y2 = math.max(y2, y)
+      end
+    end -- x, y
+    end
+
+    if x1 > x2 or y1 > y2 then
+      error("Cannot find recursive sub-area in room pattern")
+    end
+
+    -- verify it
+    for x = x1, x2 do
+    for y = y1, y2 do
+      if grid[x][y].floor != floor_id then
+        error("Recursive sub-area in pattern is not a rectangle")
+      end
+    end
+    end
+
+    return { x1=x1, y1=y1, x2=x2, y2=y2 }
+  end
+
+
+  local function determine_sub_areas(pat)
+    -- for recursive patterns, find the rectangle which corresponds
+    -- to each sub-area.
+    if pat.subs then
+      each sub in pat.subs do
+        if sub.recurse then
+          local floor_id = _index
+          sub._rect = find_sub_area(pat._structure, floor_id)
+        end
+      end
+    end
+  end
+
+
+  ---| Layout_preprocess_patterns |---
 
   table.name_up(ROOM_PATTERNS)
 
@@ -180,6 +229,8 @@ function Layout_process_patterns()
     if pat.overlay then
        pat._overlay = convert_pattern(pat, pat.overlay)
     end
+
+    determine_sub_areas(pat)
   end
 
 --[[
