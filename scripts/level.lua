@@ -399,8 +399,7 @@ function Levels_setup()
   table.name_up(GAME.ROOMS)
   table.name_up(GAME.THEMES)
 
-  table.name_up(ROOM_PATTERNS)
-  table.expand_copies(ROOM_PATTERNS)
+  Layout_process_patterns()
 end
 
 

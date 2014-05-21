@@ -60,7 +60,7 @@ STAIR_DIRS =
 
 
 function Layout_parse_char(ch)
-  if ch == ' ' then return nil end
+  if ch == ' ' then return { kind="empty" } end
 
   if ch == '.' then return { kind="floor", floor=0 } end
   if ch == '1' then return { kind="floor", floor=1 } end
@@ -97,7 +97,55 @@ function Layout_parse_char(ch)
 end
 
 
-function Layout_test_room_fabs()
+-- function Layout_mirror_X(cell)
+
+
+function Layout_process_patterns()
+  --
+  -- Process each room pattern and convert the human-readable
+  -- structure into a more easily accessed form.
+  --
+
+  local function convert_pattern(pat, structure)
+    local W = #structure[1]
+    local H = #structure
+
+    local grid = table.array_2D(W, H)
+
+    for x = 1, W do
+    for y = 1, H do
+      local line = structure[y]
+      local ch   = string.sub(line, x, x)
+
+      grid[x][y] = Layout_parse_char(ch)
+    end -- x, y
+    end
+
+    return grid
+  end
+
+
+  ---| Layout_process_patterns |---
+
+  table.name_up(ROOM_PATTERNS)
+
+  table.expand_copies(ROOM_PATTERNS)
+
+  each name,pat in ROOM_PATTERNS do
+    pat._structure = convert_pattern(pat, pat.structure)
+
+    if pat.overlay then
+       pat._overlay = convert_pattern(pat, pat.overlay)
+    end
+  end
+
+--[[
+    Layout_validate_patterns()
+--]]
+end
+
+
+function Layout_validate_patterns()
   
   local function pos_size(s, n)
     local ch = string.sub(s, n, n)
@@ -343,7 +391,7 @@ function Layout_test_room_fabs()
   end
 
 
-  ---| Test_room_fabs |---
+  ---| Layout_validate_patterns |---
   
   show_fab_list("ROOM", ROOM_PATTERNS)
 

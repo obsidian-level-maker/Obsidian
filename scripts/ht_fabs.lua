@@ -36,7 +36,7 @@
 --
 --    K  V      stairs to a 3D floor
 --
---    =  !      a 3D bridge
+--    =         3D bridge
 --
 
 
@@ -1556,6 +1556,8 @@ MULTI_U1 =
 
   x_sizes = { "999" }
   y_sizes = { "999" }
+
+  symmetry = "y"
 }
 
 MULTI_T1 =
@@ -1578,6 +1580,8 @@ MULTI_T1 =
 
   x_sizes = { "999" }
   y_sizes = { "999" }
+
+  symmetry = "y"
 }
 
 
