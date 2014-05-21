@@ -1791,6 +1791,209 @@ end
 
 
 
+function Layout_add_pillars(R)
+
+  local PILLAR_PATTERNS =
+  {
+     "-2-",
+     "1-1",
+     "111",
+
+     "-1-1-",
+     "1-2-1",
+
+     "1--1",
+     "1111",
+
+     "--1-1--",
+     "-1---1-",
+     "-1-2-1-",
+     "1--2--1",
+     "1-2-2-1",
+
+     "-1--1-",
+     "2-11-2",
+
+     "--1--1--",
+     "1-2--2-1",
+
+     "--1-2-1--",
+     "-1--2--1-",
+     "-1-2-2-1-",
+     "1---2---1",
+     "2-1---1-2",
+
+     "--1--2--1--",
+     "-1---2---1-",
+     "-1-1---1-1-",
+     "1----2----1",
+     "2--1---1--2",
+  }
+
+
+  local function cpp_is_seed_bad(R, S, N)
+    if not N then return true end
+    if N.room != R then return true end
+    if N.kind == "void" then return true end
+    if not N.floor_h then return true end
+    if S.floor_h and N.floor_h > S.floor_h + 24 then return true end
+
+    return false
+  end
+
+
+  local function can_put_pillar_at(R, S)
+    if S.room != R then return false end
+
+    if S.content then return false end
+
+    if S.kind != "walk" or S.conn or S.pseudo_conn or S.must_walk then
+      return false
+    end
+
+    -- see if pillar would be annoyingly blocking
+    for dir = 2,4,2 do
+      local A = S:neighbor(dir)
+      local B = S:neighbor(10 - dir)
+
+      if cpp_is_seed_bad(R, S, A) and cpp_is_seed_bad(R, S, B) then
+        return false
+      end
+
+      if (A and A.kind == "liquid") and (B and B.kind == "liquid") then
+        return false
+      end
+    end
+
+    -- OK !
+    return true
+  end
+
+
+  local function can_pillar_pattern(side, offset, pat)
+    local x1,y1, x2,y2 = geom.side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2)
+    local pos = 1
+
+    x1,y1 = geom.nudge(x1, y1, 10-side, offset)
+    x2,y2 = geom.nudge(x2, y2, 10-side, offset)
+
+    for x = x1,x2 do
+    for y = y1,y2 do
+      local S = SEEDS[x][y]
+
+      local ch = string.sub(pat, pos, pos)
+      pos = pos + 1
+      assert(ch)
+
+      if ch == '-' then
+        if S.content == "pillar" then return false end
+      else
+        assert(string.is_digit(ch))
+
+        if not can_put_pillar_at(R, S) then return false end
+
+      end
+    end -- x, y
+    end
+
+    return true --OK--
+  end
+
+
+  local function make_pillar_pattern(side, offset, pat)
+    local x1,y1, x2,y2 = geom.side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2)
+    local pos = 1
+
+    x1,y1 = geom.nudge(x1, y1, 10-side, offset)
+    x2,y2 = geom.nudge(x2, y2, 10-side, offset)
+
+    for x = x1,x2 do for y = y1,y2 do
+      local S = SEEDS[x][y]
+
+      local ch = string.sub(pat, pos, pos)
+      pos = pos + 1
+
+      if string.is_digit(ch) then
+        S.content = "pillar"
+        S.pillar_skin = assert(GAME.PILLARS[R.pillar_what])
+      end
+    end end -- for x, y
+  end
+
+
+  ---| Layout_add_pillars |---
+
+  if R.parent then return end
+
+  if not THEME.pillars then
+    return
+  end
+
+  -- FIXME this is too crude!
+  if STYLE.pillars == "none" or STYLE.pillars == "few" then
+    return
+  end
+
+  local skin_names = THEME.pillars
+  if not skin_names then return end
+  R.pillar_what = rand.key_by_probs(skin_names)
+
+  local SIDES = { 2, 4 }
+  rand.shuffle(SIDES)
+
+  each side in SIDES do
+  for offset = 0,1 do
+    local long, deep = R.tw, R.th
+    if geom.is_horiz(side) then long,deep = deep,long end
+
+    if deep >= 3+offset*2 and long >= 3 then
+      local lists = { {}, {} }
+
+      for where = 1,2 do
+        each pat in PILLAR_PATTERNS do
+          if #pat == long and
+             can_pillar_pattern(sel(where==1,side,10-side), offset, pat)
+          then
+            table.insert(lists[where], pat)
+          end
+        end -- for pat
+      end -- for where
+
+      -- FIXME: maintain symmetry : limit to symmetrical patterns
+      --        and on certain sides we require the same pattern.
+
+      if #lists[1] > 0 and #lists[2] > 0 then
+        local pat1
+        local pat2
+
+        -- preference for same pattern
+        for loop = 1,3 do
+          pat1 = rand.pick(lists[1])
+          pat2 = rand.pick(lists[2])
+          if pat1 == pat2 then break; end
+        end
+
+        gui.debugf("Pillar patterns @ %s : %d=%s | %d=%s\n",
+                   R:tostr(), side, pat1, 10-side, pat2)
+
+        make_pillar_pattern(side,    offset, pat1)
+        make_pillar_pattern(10-side, offset, pat2)
+
+        R.pillar_rows =
+        { 
+          { side=side,    offset=offset }
+          { side=10-side, offset=offset }
+        }
+
+        return --OK--
+      end
+    end
+  end -- side, offset
+  end
+end
+
+
+
 function Layout_escape_from_pits(R)
 
   local function new_pit()
@@ -2719,203 +2922,6 @@ gui.debugf("BOTH SAME HEIGHT\n")
   end
 
 
-  local PILLAR_PATTERNS =
-  {
-     "-2-",
-     "1-1",
-     "111",
-
-     "-1-1-",
-     "1-2-1",
-
-     "1--1",
-     "1111",
-
-     "--1-1--",
-     "-1---1-",
-     "-1-2-1-",
-     "1--2--1",
-     "1-2-2-1",
-
-     "-1--1-",
-     "2-11-2",
-
-     "--1--1--",
-     "1-2--2-1",
-
-     "--1-2-1--",
-     "-1--2--1-",
-     "-1-2-2-1-",
-     "1---2---1",
-     "2-1---1-2",
-
-     "--1--2--1--",
-     "-1---2---1-",
-     "-1-1---1-1-",
-     "1----2----1",
-     "2--1---1--2",
-  }
-
-
-  local function cpp_is_seed_bad(R, S, N)
-    if not N then return true end
-    if N.room != R then return true end
-    if N.kind == "void" then return true end
-    if not N.floor_h then return true end
-    if S.floor_h and N.floor_h > S.floor_h + 24 then return true end
-
-    return false
-  end
-
-
-  local function can_put_pillar_at(R, S)
-    if S.room != R then return false end
-
-    if S.content then return false end
-
-    if S.kind != "walk" or S.conn or S.pseudo_conn or S.must_walk then
-      return false
-    end
-
-    -- see if pillar would be annoyingly blocking
-    for dir = 2,4,2 do
-      local A = S:neighbor(dir)
-      local B = S:neighbor(10 - dir)
-
-      if cpp_is_seed_bad(R, S, A) and cpp_is_seed_bad(R, S, B) then
-        return false
-      end
-
-      if (A and A.kind == "liquid") and (B and B.kind == "liquid") then
-        return false
-      end
-    end
-
-    -- OK !
-    return true
-  end
-
-
-  local function can_pillar_pattern(side, offset, pat)
-    local x1,y1, x2,y2 = geom.side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2)
-    local pos = 1
-
-    x1,y1 = geom.nudge(x1, y1, 10-side, offset)
-    x2,y2 = geom.nudge(x2, y2, 10-side, offset)
-
-    for x = x1,x2 do
-    for y = y1,y2 do
-      local S = SEEDS[x][y]
-
-      local ch = string.sub(pat, pos, pos)
-      pos = pos + 1
-      assert(ch)
-
-      if ch == '-' then
-        if S.content == "pillar" then return false end
-      else
-        assert(string.is_digit(ch))
-
-        if not can_put_pillar_at(R, S) then return false end
-
-      end
-    end -- x, y
-    end
-
-    return true --OK--
-  end
-
-
-  local function make_pillar_pattern(side, offset, pat)
-    local x1,y1, x2,y2 = geom.side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2)
-    local pos = 1
-
-    x1,y1 = geom.nudge(x1, y1, 10-side, offset)
-    x2,y2 = geom.nudge(x2, y2, 10-side, offset)
-
-    for x = x1,x2 do for y = y1,y2 do
-      local S = SEEDS[x][y]
-
-      local ch = string.sub(pat, pos, pos)
-      pos = pos + 1
-
-      if string.is_digit(ch) then
-        S.content = "pillar"
-        S.pillar_skin = assert(GAME.PILLARS[R.pillar_what])
-      end
-    end end -- for x, y
-  end
-
-
-  local function add_pillars()
-    if R.parent then return end
-
-    if not THEME.pillars then
-      return
-    end
-
-    -- FIXME this is too crude!
-    if STYLE.pillars == "none" or STYLE.pillars == "few" then
-      return
-    end
-
-    local skin_names = THEME.pillars
-    if not skin_names then return end
-    R.pillar_what = rand.key_by_probs(skin_names)
-
-    local SIDES = { 2, 4 }
-    rand.shuffle(SIDES)
-
-    each side in SIDES do
-    for offset = 0,1 do
-      local long, deep = R.tw, R.th
-      if geom.is_horiz(side) then long,deep = deep,long end
-
-      if deep >= 3+offset*2 and long >= 3 then
-        local lists = { {}, {} }
-
-        for where = 1,2 do
-          each pat in PILLAR_PATTERNS do
-            if #pat == long and
-               can_pillar_pattern(sel(where==1,side,10-side), offset, pat)
-            then
-              table.insert(lists[where], pat)
-            end
-          end -- for pat
-        end -- for where
-
-        -- FIXME: maintain symmetry : limit to symmetrical patterns
-        --        and on certain sides we require the same pattern.
-
-        if #lists[1] > 0 and #lists[2] > 0 then
-          local pat1
-          local pat2
-
-          -- preference for same pattern
-          for loop = 1,3 do
-            pat1 = rand.pick(lists[1])
-            pat2 = rand.pick(lists[2])
-            if pat1 == pat2 then break; end
-          end
-
-          gui.debugf("Pillar patterns @ %s : %d=%s | %d=%s\n",
-                     R:tostr(), side, pat1, 10-side, pat2)
-
-          make_pillar_pattern(side,    offset, pat1)
-          make_pillar_pattern(10-side, offset, pat2)
-
-          R.pillar_rows =
-          { 
-            { side=side,    offset=offset },
-            { side=10-side, offset=offset },
-          }
-
-          return --OK--
-        end
-      end
-    end -- side, offset
-    end
-  end
 
 
 
@@ -3002,7 +3008,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   Layout_place_importants(R)
 
   if R.kind == "building" then
-    add_pillars()
+    Layout_add_pillars(R)
   end
 
   Layout_add_bridges(R)
