@@ -164,6 +164,10 @@ function Layout_preprocess_patterns()
       local ch = string.sub(line, x, x)
 
       grid[x][y] = Layout_parse_char(ch)
+
+      if grid[x][y].kind == "3d_bridge" then
+        pat.has_3d_bridge = true
+      end
     end -- x, y
     end
 
@@ -2416,6 +2420,12 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
        (pat.level == "sub" and div_lev == 1)
     then
       return 0 -- wrong level
+    end
+
+    if pat.overlay or pat.has_3d_bridge then
+      if not PARAM.extra_floors then
+        return 0 -- 3D floors not supported
+      end
     end
 
     -- enough symmetry?
