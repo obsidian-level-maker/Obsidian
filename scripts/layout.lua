@@ -98,12 +98,8 @@ end
 
 
 function Layout_parse_size_digit(ch)
-      if ch == 'A' then return 10
-  elseif ch == 'B' then return 11
-  elseif ch == 'C' then return 12
-  elseif ch == 'D' then return 13
-  else return 0 + (ch)
-  end
+  -- treat as hexadecimal
+  return 0 + ("0x" .. ch)
 end
 
 
@@ -2468,17 +2464,15 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
 
     -- enough symmetry?
     -- [NOTE: because of transposing, treat "x" == "y" here]
---[[ FIXME
-    if not req_sym then return true end
-    if pat.symmetry == "xy" then return true end
 
-    if req_sym == "xy" then return false end
-    if not pat.symmetry then return false end
---]]
+    if req_sym then
+      if pat.symmetry != "xy" then
+        if req_sym == "xy"  then return 0 end
+        if not pat.symmetry then return 0 end
+      end
+    end
 
-    -- TODO : game / theme checks
-
-    return pat.prob --OK--
+    return pat.prob  -- OK --
   end
 
 
