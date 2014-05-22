@@ -1485,12 +1485,15 @@ end
 
 
 
-function Layout_try_pattern(R, is_top, div_lev, req_sym, area, heights, f_texs)
+function Layout_try_pattern(R, div_lev, req_sym, area, heights, f_texs)
   -- find a usable pattern in the ROOM_PATTERNS table and
   -- apply it to the room.
 
   -- this function is responsible for setting floor_h in every
   -- seed in the given 'area'.
+
+  -- 'div_lev' is 1 for the main pattern, 2 or higher for recursive
+  -- patterns (inside a previously chosen pattern).
 
   area.tw, area.th = geom.group_size(area.x1, area.y1, area.x2, area.y2)
 
@@ -1846,7 +1849,7 @@ gui.debugf("CONN needs PLAIN WALK\n")
     end end -- for ex, ey
 
     -- for top-level pattern we require focus seed to hit a '.'
-    if is_top and not T.has_focus then
+    if div_lev == 1 and not T.has_focus then
 gui.debugf("FOCUS not touch dot\n");
       return -1
     end
@@ -2189,7 +2192,7 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
           new_sym = nil
         end
 
-        Layout_try_pattern(R, false, div_lev+1, new_sym, new_area, new_hs, new_ft)
+        Layout_try_pattern(R, div_lev+1, new_sym, new_area, new_hs, new_ft)
       end
     end
 
@@ -2251,8 +2254,8 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
       return false -- wrong z_direction
     end
 
-    if (info.level == "top" and not is_top) or
-       (info.level == "sub" and is_top)
+    if (info.level == "top" and div_lev != 1) or
+       (info.level == "sub" and div_lev == 1)
     then
       return false -- wrong level
     end
@@ -2335,10 +2338,7 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
 
   ---==| Layout_try_pattern |==---
  
-  if R.kind == "cave" then
-    install_flat_floor(heights[1], "RROCK04")
-    return
-  end
+  assert(R.kind != "cave")
 
   if do_try_divide() then
 gui.debugf("Success @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
@@ -2931,7 +2931,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   local heights = select_heights(focus_C)
   local f_texs  = select_floor_texs(focus_C)
 
-  Layout_try_pattern(R, true, 1, R.symmetry, area, heights, f_texs)
+  Layout_try_pattern(R, 1, R.symmetry, area, heights, f_texs)
 
 
 ---??  flood_fill_for_junk()
