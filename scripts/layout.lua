@@ -2546,8 +2546,8 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
 
 
   local function install_flat_floor()
-    local floor_h = heights[1]
-    local f_tex   = f_texs[1]
+    local f_h   = heights[1]
+    local f_tex = f_texs[1]
 
     for x = area.x1, area.x2 do
     for y = area.y1, area.y2 do
@@ -2557,7 +2557,7 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
       if S.room != R then continue end
 
       if S.room == R and not S.floor_h then
-        setup_floor(S, h, f_tex)
+        setup_floor(S, f_h, f_tex)
       end
     end -- x, y
     end
@@ -2639,23 +2639,79 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
   end
 
 
+  local function install_a_chunk(pat, T, x, y, S, gx, gy)
+    local E = pat._structure[gx][gy]
+    assert(E)
+
+    -- FIXME !!!!! TEMPORARY CRUD !!!
+
+    local f_h   = heights[1]
+    local f_tex = f_texs[1]
+
+    if E.kind == "floor" then
+      setup_floor(S, h, f_tex)
+    else
+      S.kind = "void"
+    end
+  end
+
+
   local function install_pattern(pat, T)
-    -- FIXME
+    for x = 1, area.tw do
+    for y = 1, area.th do
+      local sx = area.x1 + x - 1
+      local sy = area.y1 + y - 1
+
+      local S = SEEDS[sx][sy]
+
+      local gx, gy = transform_coord(T, x, y)
+
+      install_a_chunk(pat, T, x, y, S, gx, gy)
+
+    end -- x, y
+    end
   end
 
 
   local function eval_pattern(pat, T)
-    -- FIXME
+    local score = 100
+
+    for x = 1, area.tw do
+    for y = 1, area.th do
+
+      local sx = area.x1 + x - 1
+      local sy = area.y1 + y - 1
+      assert(Seed_valid(sx, sy))
+
+      local S = SEEDS[sx][sy]
+      assert(S and S.room == R)
+
+      local gx, gy = transform_coord(T, x, y)
+
+      assert(1 <= gx and gx <= pat._structure.w)
+      assert(1 <= gy and gy <= pat._structure.h)
+
+      local E  = pat._structure[gx][gy]
+
+      if (S.conn or S.pseudo_conn or S.must_walk) then
+        if E.kind != "floor" then
+          return -1
+        end
+      end
+
+    end -- x, y
+    end
+
+    score = score + gui.random()
+
+    return score
   end
 
 
-  local function try_one_pattern(name)
+  local function try_one_pattern(pat)
     -- test all eight possible transforms (transpose + mirror_x + mirror_y)
     -- and check which versions can be used in the area.  If at least one
     -- is successful, then pick it and install it into the room.
-
-    local pat = ROOM_PATTERNS[name]
-    assert(pat)
 
     local list = {}
 
@@ -2744,9 +2800,12 @@ if div_lev > 1 then return false end
       prob_tab[name] = nil
 
       local_debugf("  Trying pattern %s in %s (loop %d)......\n",
-                 name, R:tostr(), loop)
+                   name, R:tostr(), loop)
 
-      if try_one_pattern(name) then
+      local pat = ROOM_PATTERNS[name]
+      assert(pat)
+
+      if try_one_pattern(pat) then
         local_debugf("  SUCCESS with %s\n", name)
         return true
       end
@@ -2761,6 +2820,8 @@ if div_lev > 1 then return false end
 
   area.tw, area.th = geom.group_size(area.x1, area.y1, area.x2, area.y2)
 
+  local_debugf("Layout_pattern_in_area @ %s\n", R:tostr())
+
   assert(R.kind != "cave")
   assert(R.kind != "hallway")
   assert(R.kind != "stairwell")
@@ -2768,6 +2829,8 @@ if div_lev > 1 then return false end
   if not test_patterns() then
     install_flat_floor()
   end
+
+  local_debugf("\n")
 end
 
 
