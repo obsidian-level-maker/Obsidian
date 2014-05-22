@@ -2499,7 +2499,7 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
       end
 
       if pat.kind == "liquid" then
-        prob = prob * liq_mul
+        prob = prob * liquid_factor
       end
 
       if pat.shape == STYLE.room_shape then
@@ -2519,7 +2519,7 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
     local result
 
     each s in list do
-      if Layout_total_size(sz) == target then
+      if Layout_total_size(s) == target then
         if not result then result = {} end
         table.insert(result, s)
       end
@@ -2537,6 +2537,7 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
     local C = S.conn or S.pseudo_conn
 
     if C then
+---stderrf("conn_h : %s  !=  floor_h : %s\n", tostring(C.conn_h), tostring(S.floor_h))
       if C.conn_h then assert(C.conn_h == S.floor_h) end
 
       C.conn_h    = S.floor_h
@@ -2556,9 +2557,7 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
       -- currently this can only happen in rooms with sub-rooms
       if S.room != R then continue end
 
-      if S.room == R and not S.floor_h then
-        setup_floor(S, f_h, f_tex)
-      end
+      setup_floor(S, f_h, f_tex)
     end -- x, y
     end
   end
@@ -2581,8 +2580,13 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
 
 
   local function transform_coord(T, x, y)
-    -- input  : coordinate in room space (1,1 is bottom left of area)
+    -- input  : coordinate in room space : (1,1) is bottom left of area
     -- output : coordinate in pattern space
+
+---stderrf("transform_coord (%d %d) via\n%s\n", x, y, table.tostr(T))
+    if T.transpose then
+      x, y = y, x
+    end
 
     if T.mirror_x then
       x = T.long + 1 - x
@@ -2590,10 +2594,6 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
 
     if T.mirror_y then
       y = T.deep + 1 - y
-    end
-
-    if T.transpose then
-      x, y = y, x
     end
 
     x = transform_by_size(T.x_size, x)
@@ -2604,16 +2604,16 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
 
 
   local function transform_dir(T, dir)
+    if T.transpose then
+      dir = geom.TRANSPOSE[dir]
+    end
+
     if T.mirror_x then
       dir = geom.MIRROR_X[dir]
     end
 
     if T.mirror_y then
       dir = geom.MIRROR_Y[dir]
-    end
-
-    if T.transpose then
-      dir = geom.TRANSPOSE[dir]
     end
 
     return dir
@@ -2623,16 +2623,16 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
   local function untransform_dir(T, dir)
     -- this is opposite of transform_dir() above
 
-    if T.transpose then
-      dir = geom.TRANSPOSE[dir]
-    end
-
     if T.mirror_y then
       dir = geom.MIRROR_Y[dir]
     end
 
     if T.mirror_x then
       dir = geom.MIRROR_X[dir]
+    end
+
+    if T.transpose then
+      dir = geom.TRANSPOSE[dir]
     end
 
     return dir
@@ -2648,10 +2648,10 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
     local f_h   = heights[1]
     local f_tex = f_texs[1]
 
-    if E.kind == "floor" then
-      setup_floor(S, h, f_tex)
-    else
+    if E.kind == "liquid" or E.kind == "solid" then
       S.kind = "void"
+    else
+      setup_floor(S, f_h, f_tex)
     end
   end
 
@@ -2723,8 +2723,8 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
       T.long = sel(T.transpose, area.th, area.tw)
       T.deep = sel(T.transpose, area.tw, area.th)
 
-      local x_sizes = matching_sizes(info.x_sizes, T.long)
-      local y_sizes = matching_sizes(info.y_sizes, T.deep)
+      local x_sizes = matching_sizes(pat.x_sizes, T.long)
+      local y_sizes = matching_sizes(pat.y_sizes, T.deep)
 
       -- check if the pattern can fit in the area
       if not x_sizes or not y_sizes then
@@ -2777,6 +2777,8 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
     T = table.pick_best(list, function(A, B) return A.score > B.score end)
 
     install_pattern(pat, T)
+
+    return true
   end
 
 
@@ -2820,7 +2822,8 @@ if div_lev > 1 then return false end
 
   area.tw, area.th = geom.group_size(area.x1, area.y1, area.x2, area.y2)
 
-  local_debugf("Layout_pattern_in_area @ %s\n", R:tostr())
+  local_debugf("Layout_pattern_in_area @ %s  (%d x %d)\n", R:tostr(),
+               area.tw, area.th)
 
   assert(R.kind != "cave")
   assert(R.kind != "hallway")
@@ -3409,14 +3412,16 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   local area =
   {
-    x1 = R.tx1, y1 = R.ty1,
-    x2 = R.tx2, y2 = R.ty2,
+    x1 = R.tx1
+    y1 = R.ty1
+    x2 = R.tx2
+    y2 = R.ty2
   }
 
   local heights = select_heights(focus_C)
   local f_texs  = select_floor_texs(focus_C)
 
-  Layout_try_pattern(R, 1, R.symmetry, area, heights, f_texs)
+  Layout_pattern_in_area(R, area, 1, R.symmetry, heights, f_texs)
 
 
 ---??  flood_fill_for_junk()
