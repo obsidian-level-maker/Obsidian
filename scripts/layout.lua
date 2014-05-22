@@ -1513,6 +1513,7 @@ function Layout_try_pattern(R, div_lev, req_sym, area, heights, f_texs)
     end
   end
 
+
   local function total_size(s)
     local total = 0
     for i = 1,#s do
@@ -1520,6 +1521,7 @@ function Layout_try_pattern(R, div_lev, req_sym, area, heights, f_texs)
     end
     return total
   end
+
 
   local function pad_line(src, x_sizes)
     assert(#src == #x_sizes)
@@ -1538,6 +1540,7 @@ function Layout_try_pattern(R, div_lev, req_sym, area, heights, f_texs)
     return padded
   end
 
+
   local function matching_sizes(list, dim)
     local result
     
@@ -1551,6 +1554,7 @@ function Layout_try_pattern(R, div_lev, req_sym, area, heights, f_texs)
     return result
   end
 
+
   local function morph_dir(T, dir)
     if T.x_flip and geom.is_horiz(dir) then dir = 10-dir end
     if T.y_flip and geom.is_vert(dir)  then dir = 10-dir end
@@ -1559,6 +1563,7 @@ function Layout_try_pattern(R, div_lev, req_sym, area, heights, f_texs)
 
     return dir
   end
+
 
   local function morph_char(T, ch)
     if T.x_flip then
@@ -1575,6 +1580,7 @@ function Layout_try_pattern(R, div_lev, req_sym, area, heights, f_texs)
 
     return ch
   end
+
 
   local function convert_structure(T, info, x_sizes, y_sizes)
 
@@ -1694,6 +1700,7 @@ function Layout_try_pattern(R, div_lev, req_sym, area, heights, f_texs)
     return { x1=x1, y1=y1, x2=x2, y2=y2 }
   end
 
+
   local function setup_floor(S, h, f_tex)
     S.floor_h = h
 
@@ -1707,6 +1714,7 @@ function Layout_try_pattern(R, div_lev, req_sym, area, heights, f_texs)
       C.conn_ftex = f_tex
     end
   end
+
 
   local function setup_stair(T, S, E, h, f_tex)
     assert(not S.conn)
@@ -1749,6 +1757,7 @@ function Layout_try_pattern(R, div_lev, req_sym, area, heights, f_texs)
     N.must_walk = true
   end
 
+
   local function setup_curve_stair(S, E, ch, h, f_tex)
     assert(not S.conn)
 
@@ -1774,6 +1783,7 @@ function Layout_try_pattern(R, div_lev, req_sym, area, heights, f_texs)
       N.must_walk = true
     end
   end
+
 
   local function dump_structure(T)
     gui.debugf("T.structure =\n")
@@ -2023,6 +2033,7 @@ gui.debugf("end install_fab\n")
     end
   end
 
+
   local function symmetry_fill(T, box)
     gui.debugf("Symmetry fill @ %s : (%d %d) -> (%d %d)\n",
                R:tostr(), box.x1, box.y1, box.x2, box.y2)
@@ -2082,6 +2093,7 @@ gui.debugf("symmetry_fill FAILED  S:%s != OT:%s\n", S:tostr(), OT:tostr())
     return true  --OK--
   end
 
+
   local function clip_heights(tab, where)
     assert(tab and #tab >= 1)
 
@@ -2094,6 +2106,7 @@ gui.debugf("symmetry_fill FAILED  S:%s != OT:%s\n", S:tostr(), OT:tostr())
     assert(#new_tab >= 1)
     return new_tab
   end
+
 
   local function try_one_pattern(name, info)
     local possibles = {}
@@ -2221,6 +2234,7 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
 gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
   end
 
+
   local function can_use_fab(info)
     if not info.prob then
       return false
@@ -2271,6 +2285,7 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
     return true --OK--
   end
 
+
   local function add_fab_list(probs, infos, fabs, sol_mul, liq_mul)
     for name,info in pairs(fabs) do
       if can_use_fab(info) then
@@ -2289,6 +2304,7 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
       end
     end
   end
+
 
   local function do_try_divide()
     if LEVEL.plain_rooms then return false end
@@ -2344,6 +2360,144 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
 gui.debugf("Success @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
   else
 gui.debugf("Failed @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
+    install_flat_floor(heights[1], f_texs[1])
+  end
+end
+
+
+
+function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
+  -- find a usable pattern in the ROOM_PATTERNS table and
+  -- apply it to the room.
+
+  -- this function is responsible for setting floor_h in every
+  -- seed in the given 'area'.
+
+  -- 'div_lev' is 1 for the main pattern, 2 or higher for recursive
+  -- patterns (inside a previously chosen pattern).
+
+  area.tw, area.th = geom.group_size(area.x1, area.y1, area.x2, area.y2)
+
+
+  local function pattern_chance(pat)
+    if not pat.prob then
+      return 0
+    end
+
+    -- check if too big or too small
+    if not pat.min_size then
+      set_pattern_min_max(pat)
+    end
+
+    if pat.min_size > math.max(area.tw, area.th) or
+       pat.max_size < math.min(area.tw, area.th)
+    then
+      return 0
+    end
+
+
+    if pat.kind == "liquid" and not LEVEL.liquid then
+      return 0 -- no liquids available
+    end
+
+    if (pat.environment == "indoor"  and R.is_outdoor) or
+       (pat.environment == "outdoor" and not R.is_outdoor)
+    then
+      return 0 -- wrong environment
+    end
+
+    if (pat.z_direction == "up"   and (#heights < 2 or (heights[1] > heights[2]))) or
+       (pat.z_direction == "down" and (#heights < 2 or (heights[1] < heights[2])))
+    then
+      return 0 -- wrong z_direction
+    end
+
+    if (pat.level == "top" and div_lev != 1) or
+       (pat.level == "sub" and div_lev == 1)
+    then
+      return 0 -- wrong level
+    end
+
+    -- enough symmetry?
+    -- [NOTE: because of transposing, treat "x" == "y" here]
+--[[ FIXME
+    if not req_sym then return true end
+    if pat.symmetry == "xy" then return true end
+
+    if req_sym == "xy" then return false end
+    if not pat.symmetry then return false end
+--]]
+
+    return pat.prob --OK--
+  end
+
+
+  local function collect_usable_fabs()
+    local solid_factor = 1.0
+    if STYLE.junk == "heaps" then solid_factor = 3.0 end
+
+    local liquid_factor = style_sel("liquids", 0, 0.2, 1.0, 5.0)
+
+    local tab = {}
+
+    each name,pat in ROOM_PATTERNS do
+      local prob = pattern_chance(pat)
+
+      if pat.kind == "solid" then
+        prob = prob * solid_factor
+      end
+
+      if pat.kind == "liquid" then
+        prob = prob * liq_mul
+      end
+
+      if pat.shape == STYLE.room_shape then
+        prob = prob * 20
+      end
+
+      if prob > 0 then
+        tab[name] = pat.prob
+      end
+    end
+  end
+
+
+  local function test_patterns()
+    if R.children then return false end
+
+    local prob_tab = collect_usable_fabs()
+
+    local try_count = 8 + area.tw + area.th
+
+    for loop = 1, try_count do
+      if table.empty(prob_tab) then
+        return false
+      end
+
+      local name = rand.key_by_probs(prob_tab)
+      prob_tab[name] = nil
+
+      gui.debugf("Trying pattern %s in %s (loop %d)......\n",
+                 name, R:tostr(), loop)
+
+      if try_one_pattern(name) then
+        gui.debugf("SUCCESS with %s!\n", hich)
+        return true
+      end
+    end
+
+    gui.debugf("FAILED to apply any room pattern\n")
+    return false
+  end
+
+
+  ---| Layout_pattern_in_area |---
+
+  assert(R.kind != "cave")
+  assert(R.kind != "hallway")
+  assert(R.kind != "stairwell")
+
+  if not test_patterns() then
     install_flat_floor(heights[1], f_texs[1])
   end
 end
