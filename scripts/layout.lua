@@ -2423,6 +2423,14 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
   -- patterns (inside a previously chosen pattern).
 
 
+  -- only show debug messages for the top-level pattern
+  local function local_debugf(...)
+    if div_lev == 1 then
+      gui.debugf(...)
+    end
+  end
+
+
   local function pattern_chance(pat)
     if not pat.prob then
       return 0
@@ -2508,6 +2516,113 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
   end
 
 
+  local function matching_sizes(list, target)
+    local result
+
+    each s in list do
+      if Layout_total_size(sz) == target then
+        if not result then result = {} end
+        table.insert(result, s)
+      end
+    end
+
+    return result
+  end
+
+
+  local function install_flat_floor()
+    local floor_h = heights[1]
+    local f_tex   = f_texs[1]
+
+    -- FIXME
+  end
+
+
+  local function install_pattern(pat, T)
+    -- FIXME
+  end
+
+
+  local function eval_pattern(pat, T)
+    -- FIXME
+  end
+
+
+  local function try_one_pattern(name)
+    -- test all eight possible transforms (transpose + mirror_x + mirror_y)
+    -- and record which versions could be used in the area (if any).
+
+    local pat = ROOM_PATTERNS[name]
+    assert(pat)
+
+    local list = {}
+
+    local T = {}  -- represents current transform
+
+    for trans = 0, 1 do
+      T.transpose = (trans == 1)
+
+      T.long = sel(T.transpose, area.th, area.tw)
+      T.deep = sel(T.transpose, area.tw, area.th)
+
+      local x_sizes = matching_sizes(info.x_sizes, T.long)
+      local y_sizes = matching_sizes(info.y_sizes, T.deep)
+
+      -- check if the pattern can fit in the area
+      if not x_sizes or not y_sizes then
+        continue
+      end
+
+      rand.shuffle(x_sizes)
+      rand.shuffle(y_sizes)
+
+      -- iterate over the size possibilities
+      each xs in x_sizes do
+      each ys in y_sizes do
+        T.x_size = xs
+        T.y_size = ys
+
+        local x_mir_tot = 1
+        local y_mir_tot = 1
+
+        -- no need to try the mirrored version when symmetrical
+        if pat.symmetry == "x" or pat.symmetry == "xy" then x_mir_tot = 0 end
+        if pat.symmetry == "y" or pat.symmetry == "xy" then y_mir_tot = 0 end
+
+        -- iterate over each mirroring transform
+        for x_mir = 0, x_mir_tot do
+        for y_mir = 0, y_mir_tot do
+          T.mirror_x = (x_mir == 1)
+          T.mirror_y = (y_mir == 1)
+
+          T.score = eval_pattern(pat, T)
+
+          if T.score > 0 then
+            table.insert(list, table.copy(T))
+          end
+        end -- x_mir, y_mir
+        end
+
+      end -- xs, ys 
+      end
+
+    end -- trans
+
+    local_debugf("    Possible transforms: %d\n", #list)
+
+    if #list == 0 then
+      return false
+    end
+
+    -- pick one to install
+
+    T = table.pick_best(possibles,
+        function(A, B) return A.score > B.score end)
+
+    install_pattern(oat, T)
+  end
+
+
   local function test_patterns()
     if R.children then return false end
 
@@ -2517,32 +2632,26 @@ if div_lev > 1 then return false end
     local prob_tab = collect_usable_fabs()
 
     -- for speed reasons, limit number of patterns we try
-    local try_count = 10 + area.tw + area.th
+    local try_count = 20
 
     for loop = 1, try_count do
       if table.empty(prob_tab) then
-        return false
+        break;
       end
 
       local name = rand.key_by_probs(prob_tab)
       prob_tab[name] = nil
 
-      gui.debugf("Trying pattern %s in %s (loop %d)......\n",
+      local_debugf("  Trying pattern %s in %s (loop %d)......\n",
                  name, R:tostr(), loop)
 
       if try_one_pattern(name) then
-        if div_lev == 1 then
-          gui.debugf("  SUCCESS with %s\n", name)
-        end
-
+        local_debugf("  SUCCESS with %s\n", name)
         return true
       end
     end -- loop
 
-    if div_lev == 1 then
-      gui.debugf("  FAILED to apply any room pattern\n")
-    end
-
+    local_debugf("  FAILED to apply any room pattern\n")
     return false
   end
 
@@ -2556,7 +2665,7 @@ if div_lev > 1 then return false end
   assert(R.kind != "stairwell")
 
   if not test_patterns() then
-    install_flat_floor(heights[1], f_texs[1])
+    install_flat_floor()
   end
 end
 
