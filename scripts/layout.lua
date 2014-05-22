@@ -103,12 +103,11 @@ function Layout_parse_size_digit(ch)
 end
 
 
-function Layout_total_size(size_str)
+function Layout_total_size(s)
   local seeds = 0
 
-  for i = 1, #size_str do
-    local ch = string.sub(size_str, i, i)
-    seeds = seeds + Layout_parse_size_digit(ch)
+  for i = 1, #s do
+    seeds = seeds + Layout_parse_size_digit(string.sub(s, i, i))
   end
 
   return seeds
@@ -2530,11 +2529,113 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
   end
 
 
+  local function setup_floor(S, h, f_tex)
+    S.floor_h = h
+
+    S.f_tex = sel(R.is_outdoor, R.main_tex, f_tex)
+
+    local C = S.conn or S.pseudo_conn
+
+    if C then
+      if C.conn_h then assert(C.conn_h == S.floor_h) end
+
+      C.conn_h    = S.floor_h
+      C.conn_ftex = S.f_tex
+    end
+  end
+
+
   local function install_flat_floor()
     local floor_h = heights[1]
     local f_tex   = f_texs[1]
 
-    -- FIXME
+    for x = area.x1, area.x2 do
+    for y = area.y1, area.y2 do
+      local S = SEEDS[x][y]
+
+      -- currently this can only happen in rooms with sub-rooms
+      if S.room != R then continue end
+
+      if S.room == R and not S.floor_h then
+        setup_floor(S, h, f_tex)
+      end
+    end -- x, y
+    end
+  end
+
+
+  local function transform_by_size(s, x)
+    -- find the position in the size string (in pattern space)
+    -- corresponding to the given coordinate 'x' (in room space).
+
+    for i = 1, #s do
+      local size = Layout_parse_size_digit(string.sub(s, i, i))
+
+      if x <= size then return i end
+
+      x = x - size
+    end
+
+    error("transform bug, coordinate not found in size string: " .. s)
+  end
+
+
+  local function transform_coord(T, x, y)
+    -- input  : coordinate in room space (1,1 is bottom left of area)
+    -- output : coordinate in pattern space
+
+    if T.mirror_x then
+      x = T.long + 1 - x
+    end
+
+    if T.mirror_y then
+      y = T.deep + 1 - y
+    end
+
+    if T.transpose then
+      x, y = y, x
+    end
+
+    x = transform_by_size(T.x_size, x)
+    y = transform_by_size(T.y_size, y)
+
+    return x, y
+  end
+
+
+  local function transform_dir(T, dir)
+    if T.mirror_x then
+      dir = geom.MIRROR_X[dir]
+    end
+
+    if T.mirror_y then
+      dir = geom.MIRROR_Y[dir]
+    end
+
+    if T.transpose then
+      dir = geom.TRANSPOSE[dir]
+    end
+
+    return dir
+  end
+
+
+  local function untransform_dir(T, dir)
+    -- this is opposite of transform_dir() above
+
+    if T.transpose then
+      dir = geom.TRANSPOSE[dir]
+    end
+
+    if T.mirror_y then
+      dir = geom.MIRROR_Y[dir]
+    end
+
+    if T.mirror_x then
+      dir = geom.MIRROR_X[dir]
+    end
+
+    return dir
   end
 
 
@@ -2550,7 +2651,8 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
 
   local function try_one_pattern(name)
     -- test all eight possible transforms (transpose + mirror_x + mirror_y)
-    -- and record which versions could be used in the area (if any).
+    -- and check which versions can be used in the area.  If at least one
+    -- is successful, then pick it and install it into the room.
 
     local pat = ROOM_PATTERNS[name]
     assert(pat)
@@ -2616,10 +2718,9 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
 
     -- pick one to install
 
-    T = table.pick_best(possibles,
-        function(A, B) return A.score > B.score end)
+    T = table.pick_best(list, function(A, B) return A.score > B.score end)
 
-    install_pattern(oat, T)
+    install_pattern(pat, T)
   end
 
 
