@@ -5,9 +5,20 @@ WORK IN PROGRESS
 
 Border pieces:
 -  number of T pieces: int(seed_w / 3)
--  fix stretching of T pieces
 -  fix textures on corner cage
+-  only 30% chance of corner cage [or: apply style]
 -  tidy up current pieces
+
++  problem: piece may be inaccessible (due to max_floor_h or
+   walkable seed not occurring near a border)
+   ---> after layout room, detect which pieces are accessible
+
+-  IDEA: middle seed (etc) can become place for item/start/exit/teleporter
+
+-  support piece with spot for nice item, if room has item then
+   place it there
+-  support piece as start spot
+-  support piece which is EXIT
 
 
 Fix handling of gaps inside caves (at border of cave)
@@ -19,8 +30,10 @@ Bridges:
 -  bridges : check two/three seeds for LONG bridges
 -  have an actual bridge
 -  add mon/item spots to prefabs
+-  support a 3D floor [another special sector?]
 
 
+Junking:
 -  caves: sometimes junk a side or two
    - only at edge of map
    - 1 or 2 seeds deep
@@ -32,6 +45,14 @@ Closets and Traps:
 -  can use unused seeds [inside map area]
 -  can use junked parts of a room
 -  can use a SOLID seed in a pattern (c.f. cage code)
--  can steal part of a nearby scenic room [not touch another room]
-   especially one that used to be a reserved room
+
+-  can steal part of a nearby scenic, but require all three sides
+   (and two diagonals) to remain part of scenic room
+
+
+Doors
+-  texturing on door prefabs (for HELL, URBAN themes)
+-  door with bars
+-  make a two seed wide door prefab
+-  wide prefab with a switch in it [normal door]
 
