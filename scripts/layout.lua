@@ -270,6 +270,23 @@ function Layout_preprocess_patterns()
   end
 
 
+  local function verify_size_symmetry(pat, axis, sizes)
+    if not pat.symmetry then return end
+
+    if not string.match(pat.symmetry, axis) then return end
+
+    each s in sizes do
+      for i = 1, #s do
+        local k = #s + 1 - i
+
+        if string.sub(s, i, i) != string.sub(s, k, k) then
+          error("Broken size symmetry in " .. pat.name .. " : " .. s)
+        end
+      end
+    end
+  end
+
+
   ---| Layout_preprocess_patterns |---
 
   table.name_up(ROOM_PATTERNS)
@@ -287,6 +304,9 @@ function Layout_preprocess_patterns()
 
     verify_symmetry(pat, pat._structure)
     verify_symmetry(pat, pat._overlay)
+
+    verify_size_symmetry(pat, "x", pat.x_sizes)
+    verify_size_symmetry(pat, "y", pat.y_sizes)
   end
 
 --[[
