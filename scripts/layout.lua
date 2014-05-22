@@ -156,7 +156,12 @@ function Layout_preprocess_patterns()
     for x = 1, W do
     for y = 1, H do
       local line = structure[y]
-      local ch   = string.sub(line, x, x)
+
+      if #line != W then
+        error("Malformed structure in room pattern: " .. pat.name)
+      end
+
+      local ch = string.sub(line, x, x)
 
       grid[x][y] = Layout_parse_char(ch)
     end -- x, y
@@ -212,6 +217,29 @@ function Layout_preprocess_patterns()
           local floor_id = _index
           sub._rect = find_sub_area(pat._structure, floor_id)
         end
+      end
+    end
+  end
+
+
+  local function verify_extents(pat)
+    if pat._overlay then
+      if pat._overlay.w != pat._structure.w or
+         pat._overlay.h != pat._structure.h
+      then
+        error("Malformed overlay in room pattern: " .. pat.name)
+      end
+    end
+
+    each s in pat.x_sizes do
+      if #s != pat._structure.w then
+        error("Wrong x_size length in pattern: " .. pat.name)
+      end
+    end
+
+    each s in pat.y_sizes do
+      if #s != pat._structure.h then
+        error("Wrong y_size length in pattern: " .. pat.name)
       end
     end
   end
@@ -302,16 +330,16 @@ function Layout_preprocess_patterns()
 
     determine_sub_areas(pat)
 
+    -- validate various things
+
+    verify_extents(pat)
+
     verify_symmetry(pat, pat._structure)
     verify_symmetry(pat, pat._overlay)
 
     verify_size_symmetry(pat, "x", pat.x_sizes)
     verify_size_symmetry(pat, "y", pat.y_sizes)
   end
-
---[[
-    Layout_validate_patterns()
---]]
 end
 
 
