@@ -97,6 +97,28 @@ function Layout_parse_char(ch)
 end
 
 
+function Layout_parse_size_digit(ch)
+      if ch == 'A' then return 10
+  elseif ch == 'B' then return 11
+  elseif ch == 'C' then return 12
+  elseif ch == 'D' then return 13
+  else return 0 + (ch)
+  end
+end
+
+
+function Layout_total_size(size_str)
+  local seeds = 0
+
+  for i = 1, #size_str do
+    local ch = string.sub(size_str, i, i)
+    seeds = seeds + Layout_parse_size_digit(ch)
+  end
+
+  return seeds
+end
+
+
 -- function Layout_mirror_X(cell)
 
 
@@ -219,10 +241,32 @@ function Layout_preprocess_patterns()
       each sub in pat.subs do
         if sub.recurse then
           local floor_id = _index
-          sub._rect = find_sub_area(pat._structure, floor_id)
+          sub.area = find_sub_area(pat._structure, floor_id)
         end
       end
     end
+  end
+
+
+  local function calc_extents(pat)
+    local min_size =  999
+    local max_size = -999
+
+    for pass = 1,2 do
+      local size_list = sel(pass == 1, pat.x_sizes, pat.y_sizes)
+      
+      each s in size_list do
+        local w = Layout_total_size(s)
+
+        min_size = math.min(min_size, w)
+        max_size = math.max(max_size, w)
+      end
+    end
+
+    assert(min_size <= max_size)
+
+    pat.min_size = min_size
+    pat.max_size = max_size
   end
 
 
@@ -334,7 +378,9 @@ function Layout_preprocess_patterns()
 
     determine_sub_areas(pat)
 
-    -- validate various things
+    calc_extents(pat)
+
+    -- validate various things --
 
     verify_extents(pat)
 
@@ -2380,51 +2426,43 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
   -- 'div_lev' is 1 for the main pattern, 2 or higher for recursive
   -- patterns (inside a previously chosen pattern).
 
-  area.tw, area.th = geom.group_size(area.x1, area.y1, area.x2, area.y2)
-
 
   local function pattern_chance(pat)
     if not pat.prob then
       return 0
     end
 
-    -- check if too big or too small
-    if not pat.min_size then
-      set_pattern_min_max(pat)
-    end
-
     if pat.min_size > math.max(area.tw, area.th) or
        pat.max_size < math.min(area.tw, area.th)
     then
-      return 0
+      return 0  -- too big or too small
     end
 
-
     if pat.kind == "liquid" and not LEVEL.liquid then
-      return 0 -- no liquids available
+      return 0  -- liquids not available
     end
 
     if (pat.environment == "indoor"  and R.is_outdoor) or
        (pat.environment == "outdoor" and not R.is_outdoor)
     then
-      return 0 -- wrong environment
+      return 0  -- wrong environment
     end
 
     if (pat.z_direction == "up"   and (#heights < 2 or (heights[1] > heights[2]))) or
        (pat.z_direction == "down" and (#heights < 2 or (heights[1] < heights[2])))
     then
-      return 0 -- wrong z_direction
+      return 0  -- wrong z_direction
     end
 
     if (pat.level == "top" and div_lev != 1) or
        (pat.level == "sub" and div_lev == 1)
     then
-      return 0 -- wrong level
+      return 0  -- wrong level
     end
 
     if pat.overlay or pat.has_3d_bridge then
       if not PARAM.extra_floors then
-        return 0 -- 3D floors not supported
+        return 0  -- 3D floors not available
       end
     end
 
@@ -2437,6 +2475,8 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
     if req_sym == "xy" then return false end
     if not pat.symmetry then return false end
 --]]
+
+    -- TODO : game / theme checks
 
     return pat.prob --OK--
   end
@@ -2469,15 +2509,21 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
         tab[name] = pat.prob
       end
     end
+
+    return tab
   end
 
 
   local function test_patterns()
     if R.children then return false end
 
+-- FIXME: RECURSION DISABLED FOR NOW !!!
+if div_lev > 1 then return false end
+
     local prob_tab = collect_usable_fabs()
 
-    local try_count = 8 + area.tw + area.th
+    -- for speed reasons, limit number of patterns we try
+    local try_count = 10 + area.tw + area.th
 
     for loop = 1, try_count do
       if table.empty(prob_tab) then
@@ -2491,17 +2537,25 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
                  name, R:tostr(), loop)
 
       if try_one_pattern(name) then
-        gui.debugf("SUCCESS with %s!\n", hich)
+        if div_lev == 1 then
+          gui.debugf("  SUCCESS with %s\n", name)
+        end
+
         return true
       end
+    end -- loop
+
+    if div_lev == 1 then
+      gui.debugf("  FAILED to apply any room pattern\n")
     end
 
-    gui.debugf("FAILED to apply any room pattern\n")
     return false
   end
 
 
   ---| Layout_pattern_in_area |---
+
+  area.tw, area.th = geom.group_size(area.x1, area.y1, area.x2, area.y2)
 
   assert(R.kind != "cave")
   assert(R.kind != "hallway")
