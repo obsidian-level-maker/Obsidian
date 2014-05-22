@@ -62,7 +62,7 @@ bool alternate_look = false;
 bool create_backups = true;
 bool hide_module_panel = false;
 bool debug_messages = false;
-bool fast_lighting = false;
+bool fast_lighting = true;   // FIXME !!!! false
 
 
 game_interface_c * game_object = NULL;
