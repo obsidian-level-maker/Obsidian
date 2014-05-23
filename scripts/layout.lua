@@ -68,7 +68,7 @@ function Layout_parse_char(ch)
   if ch == '3' then return { kind="floor", floor=3 } end
 
   if ch == '~' then return { kind="liquid" } end
-  if ch == '#' then return { kind="void"   } end
+  if ch == '#' then return { kind="solid"  } end
 
   -- these can be curved, and 'dir' is towards the more open space
   if ch == '/' then return { kind="diagonal", dir=3 } end
@@ -2569,6 +2569,8 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
 
 
   local function install_flat_floor()
+    R.no_pattern = true
+
     local f_h   = heights[1]
     local f_tex = f_texs[1]
 
@@ -2646,12 +2648,14 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
   end
 
 
-  local function eval_a_chunk(pat, P, sx1, sy1, sw, sh)
+  local function eval_a_chunk(pat, px, py, T, sx1, sy1, sw, sh)
     local sx2 = sx1 + sw - 1
     local sy2 = sy1 + sh - 1
 
     assert(area.x1 <= sx1 and sx2 <= area.x2)
     assert(area.y1 <= sy1 and sy2 <= area.y2)
+
+    local P = pat._structure[px][py]
 
     for sx = sx1, sx2 do
     for sy = sy1, sy2 do
@@ -2672,13 +2676,16 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
   end
 
 
-  local function install_a_chunk(pat, T, P, sx1, sy1, sw, sh)
+  local function install_a_chunk(pat, px, py, T, sx1, sy1, sw, sh)
     local sx2 = sx1 + sw - 1
     local sy2 = sy1 + sh - 1
 
     local f_h   = heights[1]
     local f_tex = f_texs[1]
 
+    local P = pat._structure[px][py]
+
+    -- store the chunk information in a CHUNK object
     local CHUNK =
     {
       sx1 = sx1
@@ -2687,11 +2694,24 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
       sy2 = sy2
 
       kind = P.kind
+
+      overlay = {}
     }
 
     if P.dir then
       CHUNK.dir = transform_dir(T, dir)
     end
+
+    if pat._overlay then
+      if pat._overlay[px][py].kind != "empty" then
+        CHUNK.overlay.kind = pat._overlay[px][py].kind
+        CHUNK.overlay.dir  = pat._overlay[px][py].dir
+
+        R.has_3d_floor = true
+      end
+    end
+
+    -- update the seeds --
 
     for sx = sx1, sx2 do
     for sy = sy1, sy2 do
@@ -2723,13 +2743,11 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
 
     for px = 1, W do
     for py = 1, H do
-      local P = pat._structure[px][py]
-
       local sx, sy, sw, sh = transform_coord(T, px, py)
 
       if sw == 0 or sh == 0 then continue end
 
-      local eval = eval_a_chunk(pat, P, sx, sy, sw, sh)
+      local eval = eval_a_chunk(pat, px, py, T, sx, sy, sw, sh)
 
       if eval < 0 then
         return -1  -- pattern not possible
@@ -2748,13 +2766,11 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
   local function install_pattern(pat, T)
     for px = 1, pat._structure.w do
     for py = 1, pat._structure.h do
-      local P = pat._structure[px][py]
-
       local sx, sy, sw, sh = transform_coord(T, px, py)
 
       if sw == 0 or sh == 0 then continue end
 
-      install_a_chunk(pat, T, P, sx, sy, sw, sh)
+      install_a_chunk(pat, px, py, T, sx, sy, sw, sh)
     end -- x, y
     end
   end
@@ -2892,8 +2908,8 @@ end
 
 function Layout_post_processing(R)
   --
-  -- This function sets up some stuff after the room patterns
-  -- have been installed.  In particular it:
+  -- This function sets up some stuff after a room pattern has
+  -- been installed.  In particular it :
   --   1. determines heights for stairs
   --   2. handles diagonal seeds
   --
@@ -3091,6 +3107,10 @@ gui.debugf("BOTH SAME HEIGHT\n")
 
 
   ---| Layout_post_processing |---
+
+  Layout_set_floor_minmax(R)
+
+  if R.no_pattern then return end
 
   handle_stairs()
 
@@ -3429,9 +3449,6 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   local f_texs  = select_floor_texs(focus_C)
 
   Layout_pattern_in_area(R, area, 1, R.symmetry, heights, f_texs)
-
-
-  Layout_set_floor_minmax(R)
 
   Layout_post_processing(R)
 
