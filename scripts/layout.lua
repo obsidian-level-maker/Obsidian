@@ -3039,64 +3039,6 @@ function Layout_room(R)
   end
 
 
-  local function flood_fill_for_junk()
-    -- sets the floor_h (etc) for seeds in a junked side
-    -- (which are ignored by Layout_try_pattern).
-
-    gui.debugf("flood_fill_for_junk @ %s\n", R:tostr())
-
-    local unset_list = {}
-
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y]
-      if S.room == R and S.kind == "walk" and not S.floor_h then
-        if S.conn and S.conn.conn_h then
-          S.floor_h = S.conn.conn_h
-          S.f_tex   = S.conn.conn_ftex
-        else
-          table.insert(unset_list, S)
-        end
-      end
-    end end -- for x, y
-
-    local SIDES = { 2,4,6,8 }
-
-    gui.debugf("  unset num: %d\n", #unset_list);
-
-    while #unset_list > 0 do
-      local new_list = {}
-
-      each S in unset_list do
-        local did_fix = false
-        rand.shuffle(SIDES)
-        each side in SIDES do
-          local N = S:neighbor(side)
-          if N and N.room and N.room == R and N.floor_h and
-             (N.kind == "walk" or N.kind == "stair")
-          then
-            S.floor_h = N.floor_h
-            S.f_tex   = N.f_tex
-            did_fix   = true
-            break;
-          end
-        end
-
-        if not did_fix then
-          table.insert(new_list, S)
-        end
-      end
-
-      gui.debugf("  unset count now: %d\n", #new_list);
-
-      if #new_list > 0 and #new_list == #unset_list then
-        error("flood_fill_for_junk failed")
-      end
-
-      unset_list = new_list
-    end
-  end
-
-
   local function select_floor_texs(focus_C)
     local f_texs  = {}
 
@@ -3449,8 +3391,6 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   Layout_pattern_in_area(R, area, 1, R.symmetry, heights, f_texs)
 
-
----??  flood_fill_for_junk()
 
   Layout_set_floor_minmax(R)
 
