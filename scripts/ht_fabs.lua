@@ -70,6 +70,7 @@ SOLID_P1 =
   solid_feature = true
 }
 
+
 SOLID_P2 =
 {
   kind = "solid"
@@ -91,6 +92,7 @@ SOLID_P2 =
 
   solid_feature = true
 }
+
 
 SOLID_P3 =
 {
@@ -116,6 +118,7 @@ SOLID_P3 =
   solid_feature = true
 }
 
+
 SOLID_P5 =
 {
   environment = "indoor"
@@ -135,6 +138,7 @@ SOLID_P5 =
 
   symmetry = "xy"
 }
+
 
 SOLID_C1 =
 {
@@ -180,6 +184,7 @@ DIAG_C1 =
   symmetry = "y"
 }
 --]]
+
 
 DIAG_C2 =
 {
@@ -267,6 +272,7 @@ SOLID_T1 =
   solid_feature = true
 }
 
+
 DIAG_T1 =
 {
   kind = "solid"
@@ -285,6 +291,7 @@ DIAG_T1 =
 
   symmetry = "x"
 }
+
 
 SOLID_OPP1 =
 {
@@ -305,6 +312,7 @@ SOLID_OPP1 =
   solid_feature = true
 }
 
+
 DIAG_OPP1 =
 {
   kind = "solid"
@@ -315,12 +323,13 @@ DIAG_OPP1 =
   {
     "..%"
     "..."
-    "%.."
+    "N.."
   }
 
   x_sizes = { "111", "121", "131" }
   y_sizes = { "101", "111", "121", "131" }
 }
+
 
 SOLID_L1 =
 {
@@ -338,6 +347,7 @@ SOLID_L1 =
   x_sizes = { "22", "32" }
   y_sizes = { "22", "32" }
 }
+
 
 DIAG_L1 =
 {
@@ -358,6 +368,7 @@ DIAG_L1 =
   y_sizes = { "1111", "1211" }
 }
 
+
 DIAG_L2 =
 {
   kind = "solid"
@@ -376,6 +387,7 @@ DIAG_L2 =
   x_sizes = { "1011", "1111", "1211" }
   y_sizes = { "1011", "1111", "1211" }
 }
+
 
 DIAG_X_HMMM =
 {
@@ -429,7 +441,6 @@ DIAG_HT_BIG =
 }
 
 
-
 -----------------
 --   LIQUIDS   --
 -----------------
@@ -451,6 +462,7 @@ LIQUID_I =
   symmetry = "xy"
 }
 
+
 LIQUID_L1 =
 {
   kind = "liquid"
@@ -467,6 +479,7 @@ LIQUID_L1 =
   y_sizes = { "12", "13", "14", "15", "25", "26", "27", "28" }
 }
 
+
 LIQUID_L2 =
 {
   kind = "liquid"
@@ -482,6 +495,7 @@ LIQUID_L2 =
   x_sizes = { "22", "23", "24", "34", "35", "36", "37", "38" }
   y_sizes = { "22", "23", "24", "34", "35", "36", "37", "38" }
 }
+
 
 LIQUID_L3 =
 {
@@ -505,6 +519,7 @@ LIQUID_L3 =
     { height=1, match="any" }
   }
 }
+
 
 LIQUID_L3_OUT =
 {
@@ -540,6 +555,7 @@ LIQUID_O1 =
   symmetry = "xy"
 }
 
+
 LIQUID_O2 =
 {
   kind = "liquid"
@@ -562,6 +578,7 @@ LIQUID_O2 =
   symmetry = "xy"
 }
 
+
 LIQUID_O2_OUT =
 {
   copy = "LIQUID_O2"
@@ -579,6 +596,7 @@ LIQUID_O2_OUT =
 
   x_sizes = { "11111", "11211", "11311", "21212" }
 }
+
 
 LIQUID_O4 =
 {
@@ -632,6 +650,7 @@ LIQUID_U1 =
   symmetry = "x"
 }
 
+
 LIQUID_U2 =
 {
   kind = "liquid"
@@ -655,6 +674,7 @@ LIQUID_U2 =
   }
 }
 
+
 LIQUID_U3 =
 {
   kind = "liquid"
@@ -677,6 +697,7 @@ LIQUID_U3 =
   }
 }
 
+
 LIQUID_U4 =
 {
   kind = "liquid"
@@ -698,6 +719,7 @@ LIQUID_U4 =
   symmetry = "x"
 }
 
+
 LIQUID_U4_OUT =
 {
   copy = "LIQUID_U4"
@@ -712,6 +734,7 @@ LIQUID_U4_OUT =
     "....."
   }
 }
+
 
 LIQUID_E =
 {
@@ -733,6 +756,7 @@ LIQUID_E =
 
   symmetry = "y"
 }
+
 
 LIQUID_E2 =
 {
@@ -762,6 +786,7 @@ LIQUID_E2 =
   }
 }
 
+
 LIQUID_E3 =
 {
   kind = "liquid"
@@ -789,6 +814,7 @@ LIQUID_E3 =
   }
 }
 
+
 LIQUID_E4 =
 {
   kind = "liquid"
@@ -813,6 +839,7 @@ LIQUID_E4 =
   }
 }
 
+
 LIQUID_S1 =
 {
   kind = "liquid"
@@ -829,6 +856,7 @@ LIQUID_S1 =
   x_sizes = { "112", "212", "213", "222", "313" }
   y_sizes = { "111", "121", "131", "141", "222" }
 }
+
 
 LIQUID_S2 =
 {
@@ -856,6 +884,7 @@ LIQUID_S2 =
   }
 }
 
+
 LIQUID_BIG_S1 =
 {
   kind = "liquid"
@@ -873,6 +902,7 @@ LIQUID_BIG_S1 =
               
   y_sizes = { "111", "121", "131", "141", "222" }
 }
+
 
 LIQUID_BIG_S3 =
 {
@@ -903,6 +933,7 @@ LIQUID_BIG_S3 =
   }
 }
 
+
 LIQUID_BIG_S4 =
 {
   kind = "liquid"
@@ -928,6 +959,7 @@ LIQUID_BIG_S4 =
   }
 }
 
+
 LIQUID_CROSS_1 =
 {
   kind = "liquid"
@@ -946,6 +978,7 @@ LIQUID_CROSS_1 =
 
   symmetry = "xy"
 }
+
 
 LIQUID_CROSS_2 =
 {
@@ -984,6 +1017,7 @@ LIQUID_CROSS_2 =
   symmetry = "xy"
 }
 
+
 LIQUID_CROSS_2_OUT =
 {
   copy = "LIQUID_CROSS_2"
@@ -1020,6 +1054,7 @@ LIQUID_T1 =
 
   symmetry = "x"
 }
+
 
 LIQUID_T_NICE =
 {
@@ -1059,6 +1094,7 @@ LIQUID_H1 =
   symmetry = "xy"
 }
 
+
 LIQUID_H4 =
 {
   kind = "liquid"
@@ -1077,6 +1113,7 @@ LIQUID_H4 =
 
   symmetry = "x"
 }
+
 
 LIQUID_X1 =
 {
@@ -1122,6 +1159,7 @@ HEIGHT_I1 =
   }
 }
 
+
 HEIGHT_I2 =
 {
   prob = 200
@@ -1143,6 +1181,7 @@ HEIGHT_I2 =
 
   symmetry = "x"
 }
+
 
 HEIGHT_I3 =
 {
@@ -1168,6 +1207,7 @@ HEIGHT_I3 =
   symmetry = "x"
 }
 
+
 HEIGHT_I3_OUT =
 {
   copy = "HEIGHT_I3"
@@ -1182,6 +1222,7 @@ HEIGHT_I3_OUT =
     "....."
   }
 }
+
 
 HEIGHT_LIQ_I1 =
 {
@@ -1334,6 +1375,7 @@ HEIGHT_SOLID_I2 =
   }
 }
 
+
 HEIGHT_SOLID_I4 =
 {
   environment = "indoor"
@@ -1358,6 +1400,7 @@ HEIGHT_SOLID_I4 =
 
   symmetry = "x"
 }
+
 
 HEIGHT_SOLID_I5 =
 {
@@ -1385,6 +1428,7 @@ HEIGHT_SOLID_I5 =
   symmetry = "x"
 }
 
+
 HEIGHT_C5 =
 {
   prob = 3000
@@ -1409,6 +1453,7 @@ HEIGHT_C5 =
   }
 }
 
+
 HEIGHT_C6 =
 {
   prob = 8000
@@ -1432,6 +1477,7 @@ HEIGHT_C6 =
   }
 }
 
+
 HEIGHT_L1 =
 {
   prob = 300
@@ -1452,6 +1498,7 @@ HEIGHT_L1 =
   }
 }
 
+
 HEIGHT_L2 =
 {
   prob = 600
@@ -1471,6 +1518,7 @@ HEIGHT_L2 =
     { height=1, match="any" }
   }
 }
+
 
 HEIGHT_CURV_1 =
 {
@@ -1493,6 +1541,7 @@ HEIGHT_CURV_1 =
     { height=1, match="any" }
   }
 }
+
 
 HEIGHT_CURV_2 =
 {
@@ -1537,9 +1586,9 @@ MULTI_U1 =
 
   overlay =
   {
-    "111"
-    "1  "
-    "111"
+    "..."
+    ".  "
+    "..."
   }
 
   x_sizes = { "999" }
@@ -1547,6 +1596,7 @@ MULTI_U1 =
 
   symmetry = "y"
 }
+
 
 MULTI_T1 =
 {
@@ -1561,9 +1611,9 @@ MULTI_T1 =
 
   overlay =
   {
-    "1  "
-    "111"
-    "1  "
+    ".  "
+    "..."
+    ".  "
   }
 
   x_sizes = { "999" }
@@ -1608,6 +1658,7 @@ SOLID_CSUB =
   }
 }
 
+
 SOLID_CSUB4 =
 {
   kind = "solid"
@@ -1639,7 +1690,8 @@ SOLID_CSUB4 =
   }
 }
 
-SOLID_REC_C1 =
+
+REC_SOLID_C1 =
 {
   kind = "solid"
   environment = "indoor"
@@ -1671,7 +1723,8 @@ SOLID_REC_C1 =
   }
 }
 
-SOLID_REC_C2 =
+
+REC_SOLID_C2 =
 {
   kind = "solid"
   environment = "indoor"
@@ -1701,7 +1754,8 @@ SOLID_REC_C2 =
   }
 }
 
-SOLID_REC_C3 =
+
+REC_SOLID_C3 =
 {
   kind = "solid"
   environment = "indoor"
@@ -1732,7 +1786,8 @@ SOLID_REC_C3 =
   }
 }
 
-SOLID_REC_C4 =
+
+REC_SOLID_C4 =
 {
   kind = "solid"
   environment = "indoor"
@@ -1762,9 +1817,10 @@ SOLID_REC_C4 =
   }
 }
 
-SOLID_REC_HT_C1 =
+
+REC_SOLID_HT_C1 =
 {
-  copy = "SOLID_REC_C1"
+  copy = "REC_SOLID_C1"
   prob = 950
   
   subs =
@@ -1773,9 +1829,10 @@ SOLID_REC_HT_C1 =
   }
 }
 
-SOLID_REC_HT_C2 =
+
+REC_SOLID_HT_C2 =
 {
-  copy = "SOLID_REC_C2"
+  copy = "REC_SOLID_C2"
   prob = 950
   
   subs =
@@ -1784,9 +1841,10 @@ SOLID_REC_HT_C2 =
   }
 }
 
-SOLID_REC_HT_C3 =
+
+REC_SOLID_HT_C3 =
 {
-  copy = "SOLID_REC_C3"
+  copy = "REC_SOLID_C3"
   prob = 950
   
   subs =
@@ -1795,9 +1853,10 @@ SOLID_REC_HT_C3 =
   }
 }
 
-SOLID_REC_HT_C4 =
+
+REC_SOLID_HT_C4 =
 {
-  copy = "SOLID_REC_C4"
+  copy = "REC_SOLID_C4"
   prob = 950
   
   subs =
@@ -1806,7 +1865,8 @@ SOLID_REC_HT_C4 =
   }
 }
 
-DIAG_REC_C1 =
+
+REC_DIAG_C1 =
 {
   kind = "solid"
   environment = "indoor"
@@ -1835,7 +1895,8 @@ DIAG_REC_C1 =
   }
 }
 
-DIAG_REC_C3 =
+
+REC_DIAG_C3 =
 {
   kind = "solid"
   environment = "indoor"
@@ -1864,7 +1925,8 @@ DIAG_REC_C3 =
   }
 }
 
-DIAG_REC_C4 =
+
+REC_DIAG_C4 =
 {
   kind = "solid"
   environment = "indoor"
@@ -1891,9 +1953,10 @@ DIAG_REC_C4 =
   }
 }
 
-DIAG_REC_HT_C1 =
+
+REC_DIAG_HT_C1 =
 {
-  copy = "DIAG_REC_C1"
+  copy = "REC_DIAG_C1"
   prob = 950
   
   subs =
@@ -1902,9 +1965,10 @@ DIAG_REC_HT_C1 =
   }
 }
 
-DIAG_REC_HT_C3 =
+
+REC_DIAG_HT_C3 =
 {
-  copy = "DIAG_REC_C3"
+  copy = "REC_DIAG_C3"
   prob = 950
   
   subs =
@@ -1913,9 +1977,10 @@ DIAG_REC_HT_C3 =
   }
 }
 
-DIAG_REC_HT_C4 =
+
+REC_DIAG_HT_C4 =
 {
-  copy = "DIAG_REC_C4"
+  copy = "REC_DIAG_C4"
   prob = 950
   
   subs =
@@ -1953,6 +2018,7 @@ RECURSE_I1 =
   symmetry = "x"
 }
 
+
 RECURSE_I2 =
 {
   prob = 300
@@ -1987,6 +2053,7 @@ RECURSE_I2 =
   }
 }
 
+
 RECURSE_I3 =
 {
   environment = "indoor"
@@ -2020,6 +2087,7 @@ RECURSE_I3 =
     { height=1, match="one", recurse=1 }
   }
 }
+
 
 RECURSE_I3_OUT =
 {
@@ -2112,6 +2180,7 @@ RECURSE_L1 =
   }
 }
 
+
 RECURSE_L2 =
 {
   shape = "L"
@@ -2147,6 +2216,7 @@ RECURSE_L2 =
   }
 }
 
+
 RECURSE_L2_DIAG =
 {
   shape = "L"
@@ -2179,6 +2249,7 @@ RECURSE_L2_DIAG =
   }
 }
 
+
 RECURSE_L3_DIAG =
 {
   shape = "L"
@@ -2205,7 +2276,6 @@ RECURSE_L3_DIAG =
     { height=1, match="any", recurse=1 }
   }
 }
-
 
 
 RECURSE_U1 =
@@ -2238,6 +2308,7 @@ RECURSE_U1 =
     { height=1, match="one", recurse=1 }
   }
 }
+
 
 RECURSE_U2 =
 {
@@ -2378,6 +2449,7 @@ RECURSE_T1 =
   symmetry = "x"
 }
 
+
 RECURSE_T1_DIAG =
 {
   shape = "T"
@@ -2412,6 +2484,7 @@ RECURSE_T1_DIAG =
   symmetry = "x"
 }
 
+
 RECURSE_T1_NOSYM =
 {
   shape = "T"
@@ -2444,6 +2517,7 @@ RECURSE_T1_NOSYM =
     { height=1, match="one", recurse=1 }
   }
 }
+
 
 RECURSE_T3 =
 {
@@ -2481,6 +2555,7 @@ RECURSE_T3 =
     { height=1, match="any", sym_fill=1 }
   }
 }
+
 
 RECURSE_T3_NOSYM =
 {
@@ -2551,6 +2626,7 @@ RECURSE_H1 =
   }
 }
 
+
 RECURSE_H2 =
 {
   shape = "H"
@@ -2588,6 +2664,7 @@ RECURSE_H2 =
     { height=1, match="any", sym_fill=1 }
   }
 }
+
 
 RECURSE_H3 =
 {
@@ -2665,6 +2742,7 @@ RECURSE_S1 =
   }
 }
 
+
 RECURSE_S2 =
 {
   shape = "S"
@@ -2734,6 +2812,7 @@ RECURSE_WOW_LIQUID_O2 =
     { height=1, match="any", recurse=1 }
   }
 }
+
 
 RECURSE_WOW_LIQUID_O4 =
 {
