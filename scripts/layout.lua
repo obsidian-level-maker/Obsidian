@@ -2421,6 +2421,8 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
   -- 'div_lev' is 1 for the main pattern, 2 or higher for recursive
   -- patterns (inside a previously chosen pattern).
 
+  local use_solid_feature = rand.odds(75)
+
 
   -- only show debug messages for the top-level pattern
   local function local_debugf(...)
@@ -2543,6 +2545,26 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
       C.conn_h    = S.floor_h
       C.conn_ftex = S.f_tex
     end
+  end
+
+
+  local function setup_solid(S, pat)
+    assert(not S.conn)
+
+    S.kind = "void"
+
+    if pat.solid_feature and use_solid_feature then 
+      S.solid_feature = true
+    end
+  end
+
+
+  local function setup_liquid(S)
+    assert(LEVEL.liquid)
+    S.kind = "liquid"
+    R.has_liquid = true
+
+    -- NOTE: floor_h for liquids is determined later
   end
 
 
@@ -2679,8 +2701,12 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
 
       -- FIXME !!!!! TEMPORARY CRUD !!!
 
-      if P.kind == "liquid" or P.kind == "solid" then
-        S.kind = "void"
+      if P.kind == "liquid" then
+        setup_liquid(S)
+
+      elseif P.kind == "solid" then
+        setup_solid(S, pat)
+
       else
         setup_floor(S, f_h, f_tex)
       end
@@ -2827,7 +2853,7 @@ if div_lev > 1 then return false end
       local name = rand.key_by_probs(prob_tab)
       prob_tab[name] = nil
 
-      local_debugf("  Trying pattern %s in %s (loop %d)......\n",
+      local_debugf("  Trying %s in %s..... (loop %d)\n",
                    name, R:tostr(), loop)
 
       local pat = ROOM_PATTERNS[name]
@@ -2860,6 +2886,216 @@ if div_lev > 1 then return false end
   end
 
   local_debugf("\n")
+end
+
+
+
+function Layout_post_processing(R)
+  --
+  -- This function sets up some stuff after the room patterns
+  -- have been installed.  In particular it:
+  --   1. determines heights for stairs
+  --   2. handles diagonal seeds
+  --
+
+  local function process_stair(S)
+    local N = S:neighbor(S.stair_dir)
+
+    assert(N and N.room == R)
+    assert(R:contains_seed(N.sx, N.sy))
+
+    -- source height already determined (in setup_stair)
+    assert(S.stair_z1)
+
+    if not N.floor_h then
+      gui.debugf("Bad stair @ %s in %s\n", S:tostr(), S.room:tostr())
+      error("Bad stair : destination not walkable")
+    end
+
+    S.stair_z2 = N.floor_h
+    S.z2_tex   = N.f_tex
+
+    -- check if a stair is really needed
+    if math.abs(S.stair_z1 - S.stair_z2) < 17 then
+      S.kind = "walk"
+      S.floor_h = int((S.stair_z1 + S.stair_z2) / 2)
+
+      S.f_tex = N.f_tex
+      S.w_tex = N.w_tex
+    end
+
+    -- check if too high, make a lift instead
+    -- TODO: "lifty" mode, use > 55 or whatever
+    if THEME.lifts and math.abs(S.stair_z1 - S.stair_z2) > 110 then
+      S.kind = "lift"
+      S.room.has_lift = true
+    end
+  end
+
+  local function process_curve_stair(S)
+    assert(S.x_side and S.y_side)
+
+    local NX = S:neighbor(S.x_side)
+    local NY = S:neighbor(S.y_side)
+
+    S.x_height = assert(NX.floor_h)
+    S.y_height = assert(NY.floor_h)
+
+    S.floor_h = math.max(S.x_height, S.y_height)
+
+    -- check if a stair is really needed
+    if math.abs(S.x_height - S.y_height) < 17 then
+      S.kind = "walk"
+      S.floor_h = int((S.x_height + S.y_height) / 2)
+
+      S.f_tex = NX.f_tex or NY.f_tex
+      S.w_tex = NX.w_tex or NY.w_tex
+
+      return
+    end
+
+    -- determine if can use tall stair
+
+    if not R.is_outdoor then
+      local OX = S:neighbor(10 - S.x_side)
+      local OY = S:neighbor(10 - S.y_side)
+
+      local x_void = not (OX and OX.room and OX.room == R) or (OX.kind == "void")
+      local y_void = not (OY and OY.room and OY.room == R) or (OY.kind == "void")
+
+      if x_void and y_void then
+        S.kind = "tall_stair"
+      end
+    end
+  end
+
+
+  local function diag_neighbor(N)
+    if not (N and N.room and N.room == R) then
+      return "void"
+    end
+
+    if N.kind == "void" or N.kind == "diagonal" then
+      return "void"
+    end
+
+    if N.kind == "liquid" then
+      return "liquid", assert(N.floor_h), N.f_tex
+    end
+
+    return "walk", assert(N.floor_h), N.f_tex
+  end
+
+  local DIAG_CORNER_TAB =
+  {
+    ["L/"] = 7, ["L%"] = 1, ["LZ"] = 3, ["LN"] = 1,
+    ["H/"] = 3, ["H%"] = 9, ["HZ"] = 7, ["HN"] = 9,
+  }
+
+  local function process_diagonal(S)
+gui.debugf("Processing diagonal @ %s\n", S:tostr())
+    local low, high
+
+    if S.diag_char == 'Z' or S.diag_char == 'N' then
+      low  = S:neighbor(2)
+      high = S:neighbor(8)
+    else
+      low  = S:neighbor(4)
+      high = S:neighbor(6)
+    end
+
+    local l_kind, l_z, l_ftex
+    local h_kind, h_z, h_ftex
+
+    l_kind, l_z, l_ftex = diag_neighbor(low)
+    h_kind, h_z, h_ftex = diag_neighbor(high)
+
+    if l_kind == "void" and h_kind == "void" then
+gui.debugf("BOTH VOID\n")
+      S.kind = "void"
+      return
+    end
+
+    if l_kind == "liquid" and h_kind == "liquid" then
+gui.debugf("BOTH LIQUID\n")
+      S.kind = "liquid"
+      return
+    end
+
+    if l_kind == "walk" and h_kind == "walk" and math.abs(l_z-h_z) < 0.5 then
+gui.debugf("BOTH SAME HEIGHT\n")
+      S.kind = "walk"
+      S.floor_h = l_z
+      return
+    end
+
+    local who_solid
+
+        if l_kind == "void"   then who_solid = 'L'
+    elseif h_kind == "void"   then who_solid = 'H'
+    elseif l_kind == "liquid" then who_solid = 'H'
+    elseif h_kind == "liquid" then who_solid = 'L'
+    else
+      who_solid = sel(l_z > h_z, 'L', 'H')
+    end
+
+    S.stuckie_side = DIAG_CORNER_TAB[who_solid .. S.diag_char]
+    assert(S.stuckie_side)
+
+    S.stuckie_kind = sel(who_solid == 'L', l_kind, h_kind)
+    S.stuckie_z    = sel(who_solid == 'L', l_z   , h_z)
+    S.stuckie_ftex = sel(who_solid == 'L', l_ftex, h_ftex)
+
+    S.diag_new_kind = sel(who_solid == 'L', h_kind, l_kind)
+    S.diag_new_z    = sel(who_solid == 'L', h_z   , l_z)
+    S.diag_new_ftex = sel(who_solid == 'L', h_ftex, l_ftex)
+
+    assert(S.diag_new_kind != "void")
+
+    if low  and  low.room == R then  low.solid_feature = nil end
+    if high and high.room == R then high.solid_feature = nil end
+  end
+
+
+  local function handle_stairs()
+    for x = R.tx1, R.tx2 do
+    for y = R.ty1, R.ty2 do
+      local S = SEEDS[x][y]
+
+      assert(S.room == R)
+
+      if S.kind == "stair" then
+        process_stair(S)
+
+      elseif S.kind == "curve_stair" then
+        process_curve_stair(S)
+      end
+    end -- x, y
+    end
+  end
+
+
+  local function handle_diagonals()
+    for x = R.tx1, R.tx2 do
+    for y = R.ty1, R.ty2 do
+      local S = SEEDS[x][y]
+
+      assert(S.room == R)
+
+      if S.kind == "diagonal" then
+        process_diagonal(S)
+      end
+    end -- x, y
+    end
+  end
+
+
+  ---| Layout_post_processing |---
+
+  handle_stairs()
+
+  -- need to do diagonals AFTER stairs
+  handle_diagonals()
 end
 
 
@@ -3123,203 +3359,6 @@ function Layout_room(R)
     return g_info.hts
   end
 
-  local function post_processing()
-    -- this function sets up some stuff after the room patterns
-    -- have been installed.  In particular it:
-    -- (1) determines heights for stairs
-    -- (2) handles diagonal seeds
-
-    local function process_stair(S)
-
-      local N = S:neighbor(S.stair_dir)
-
-      assert(N and N.room == R)
-      assert(R:contains_seed(N.sx, N.sy))
-
-      -- source height already determined (in setup_stair)
-      assert(S.stair_z1)
-
-      if not N.floor_h then
-        gui.debugf("Bad stair @ %s in %s\n", S:tostr(), S.room:tostr())
-        error("Bad stair : destination not walkable")
-      end
-
-      S.stair_z2 = N.floor_h
-      S.z2_tex   = N.f_tex
-
-      -- check if a stair is really needed
-      if math.abs(S.stair_z1 - S.stair_z2) < 17 then
-        S.kind = "walk"
-        S.floor_h = int((S.stair_z1 + S.stair_z2) / 2)
-
-        S.f_tex = N.f_tex
-        S.w_tex = N.w_tex
-      end
-
-      -- check if too high, make a lift instead
-      -- TODO: "lifty" mode, use > 55 or whatever
-      if THEME.lifts and math.abs(S.stair_z1 - S.stair_z2) > 110 then
-        S.kind = "lift"
-        S.room.has_lift = true
-      end
-    end
-
-    local function process_curve_stair(S)
-      assert(S.x_side and S.y_side)
-
-      local NX = S:neighbor(S.x_side)
-      local NY = S:neighbor(S.y_side)
-
-      S.x_height = assert(NX.floor_h)
-      S.y_height = assert(NY.floor_h)
-
-      S.floor_h = math.max(S.x_height, S.y_height)
-
-      -- check if a stair is really needed
-      if math.abs(S.x_height - S.y_height) < 17 then
-        S.kind = "walk"
-        S.floor_h = int((S.x_height + S.y_height) / 2)
-
-        S.f_tex = NX.f_tex or NY.f_tex
-        S.w_tex = NX.w_tex or NY.w_tex
-
-        return
-      end
-
-      -- determine if can use tall stair
-
-      if not R.is_outdoor then
-        local OX = S:neighbor(10 - S.x_side)
-        local OY = S:neighbor(10 - S.y_side)
-
-        local x_void = not (OX and OX.room and OX.room == R) or (OX.kind == "void")
-        local y_void = not (OY and OY.room and OY.room == R) or (OY.kind == "void")
-
-        if x_void and y_void then
-          S.kind = "tall_stair"
-        end
-      end
-    end
-
-
-    local function diag_neighbor(N)
-      if not (N and N.room and N.room == R) then
-        return "void"
-      end
-
-      if N.kind == "void" or N.kind == "diagonal" then
-        return "void"
-      end
-
-      if N.kind == "liquid" then
-        return "liquid", assert(N.floor_h), N.f_tex
-      end
-
-      return "walk", assert(N.floor_h), N.f_tex
-    end
-
-    local DIAG_CORNER_TAB =
-    {
-      ["L/"] = 7, ["L%"] = 1, ["LZ"] = 3, ["LN"] = 1,
-      ["H/"] = 3, ["H%"] = 9, ["HZ"] = 7, ["HN"] = 9,
-    }
-
-    local function process_diagonal(S)
-gui.debugf("Processing diagonal @ %s\n", S:tostr())
-      local low, high
-
-      if S.diag_char == 'Z' or S.diag_char == 'N' then
-        low  = S:neighbor(2)
-        high = S:neighbor(8)
-      else
-        low  = S:neighbor(4)
-        high = S:neighbor(6)
-      end
-
-      local l_kind, l_z, l_ftex
-      local h_kind, h_z, h_ftex
-
-      l_kind, l_z, l_ftex = diag_neighbor(low)
-      h_kind, h_z, h_ftex = diag_neighbor(high)
-
-      if l_kind == "void" and h_kind == "void" then
-gui.debugf("BOTH VOID\n")
-        S.kind = "void"
-        return
-      end
-
-      if l_kind == "liquid" and h_kind == "liquid" then
-gui.debugf("BOTH LIQUID\n")
-        S.kind = "liquid"
-        return
-      end
-
-      if l_kind == "walk" and h_kind == "walk" and math.abs(l_z-h_z) < 0.5 then
-gui.debugf("BOTH SAME HEIGHT\n")
-        S.kind = "walk"
-        S.floor_h = l_z
-        return
-      end
-
-      local who_solid
-
-          if l_kind == "void"   then who_solid = 'L'
-      elseif h_kind == "void"   then who_solid = 'H'
-      elseif l_kind == "liquid" then who_solid = 'H'
-      elseif h_kind == "liquid" then who_solid = 'L'
-      else
-        who_solid = sel(l_z > h_z, 'L', 'H')
-      end
-
-      S.stuckie_side = DIAG_CORNER_TAB[who_solid .. S.diag_char]
-      assert(S.stuckie_side)
-
-      S.stuckie_kind = sel(who_solid == 'L', l_kind, h_kind)
-      S.stuckie_z    = sel(who_solid == 'L', l_z   , h_z)
-      S.stuckie_ftex = sel(who_solid == 'L', l_ftex, h_ftex)
-
-      S.diag_new_kind = sel(who_solid == 'L', h_kind, l_kind)
-      S.diag_new_z    = sel(who_solid == 'L', h_z   , l_z)
-      S.diag_new_ftex = sel(who_solid == 'L', h_ftex, l_ftex)
-
-      assert(S.diag_new_kind != "void")
-
-      if low  and  low.room == R then  low.solid_feature = nil end
-      if high and high.room == R then high.solid_feature = nil end
-    end
-
-
-    ---| post_processing |---
-
-    for x = R.tx1, R.tx2 do
-    for y = R.ty1, R.ty2 do
-      local S = SEEDS[x][y]
-
-      if not (S and S.room == R) then continue end
-
-      if S.kind == "stair" then
-        process_stair(S)
-      elseif S.kind == "curve_stair" then
-        process_curve_stair(S)
-      end
-    end -- for x, y
-    end
-
-    -- need to do diagonals AFTER stairs
-
-    for x = R.tx1, R.tx2 do
-    for y = R.ty1, R.ty2 do
-      local S = SEEDS[x][y]
-
-      if not (S and S.room == R) then continue end
-
-      if S.kind == "diagonal" then
-        process_diagonal(S)
-      end
-    end -- x, y
-    end
-  end
-
 
   ---==| Layout_room |==---
 
@@ -3394,7 +3433,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   Layout_set_floor_minmax(R)
 
-  post_processing()
+  Layout_post_processing(R)
 
   Layout_escape_from_pits(R)
 
@@ -3412,6 +3451,8 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   Layout_add_cages(R)
 end
 
+
+------------------------------------------------------------------------
 
 
 function Layout_plan_outdoor_borders()
