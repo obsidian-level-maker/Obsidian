@@ -1530,7 +1530,7 @@ end
 
 
 
-function Layout_try_pattern(R, div_lev, req_sym, area, heights, f_texs)
+function Layout_try_pattern(R, area, div_lev, req_sym, heights, f_texs)
   -- find a usable pattern in the ROOM_PATTERNS table and
   -- apply it to the room.
 
@@ -2250,7 +2250,7 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
           new_sym = nil
         end
 
-        Layout_try_pattern(R, div_lev+1, new_sym, new_area, new_hs, new_ft)
+        Layout_try_pattern(R, new_area, div_lev+1, new_sym, new_hs, new_ft)
       end
     end
 
@@ -2435,8 +2435,8 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
       return 0
     end
 
-    if pat.min_size > math.max(area.tw, area.th) or
-       pat.max_size < math.min(area.tw, area.th)
+    if pat.min_size > math.max(area.w, area.h) or
+       pat.max_size < math.min(area.w, area.h)
     then
       return 0  -- too big or too small
     end
@@ -2564,71 +2564,56 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
 
 
   local function transform_by_size(s, x)
-    -- find the position in the size string (in pattern space)
-    -- corresponding to the given coordinate 'x' (in room space).
+    local out_w = Layout_parse_size_digit(string.sub(s, x, x))
 
-    for i = 1, #s do
-      local size = Layout_parse_size_digit(string.sub(s, i, i))
+    local out_x = 1
 
-      if x <= size then return i end
-
-      x = x - size
+    while x >= 2 do
+      x = x - 1
+      out_x = out_x + Layout_parse_size_digit(string.sub(s, x, x))
     end
 
-    error("transform bug, coordinate not found in size string: " .. s)
+    return out_x, out_w
   end
 
 
   local function transform_coord(T, x, y)
-    -- input  : coordinate in room space : (1,1) is bottom left of area
-    -- output : coordinate in pattern space
+    -- input  : coordinate in pattern space
+    -- output : coord range in room space : (1,1) is bottom left of area
 
----stderrf("transform_coord (%d %d) via\n%s\n", x, y, table.tostr(T))
-    if T.transpose then
-      x, y = y, x
-    end
+    local w, h
+
+    x, w = transform_by_size(T.x_size, x)
+    y, h = transform_by_size(T.y_size, y)
 
     if T.mirror_x then
-      x = T.long + 1 - x
+      x = T.long + 2 - x - w
     end
 
     if T.mirror_y then
-      y = T.deep + 1 - y
+      y = T.deep + 2 - y - h
     end
 
-    x = transform_by_size(T.x_size, x)
-    y = transform_by_size(T.y_size, y)
+    if T.transpose then
+      x, y = y, x
+      w, h = h, w
+    end
 
-    return x, y
+    x = area.x1 + x - 1
+    y = area.y1 + y - 1
+
+    return x, y, w, h
   end
+
 
 
   local function transform_dir(T, dir)
-    if T.transpose then
-      dir = geom.TRANSPOSE[dir]
-    end
-
     if T.mirror_x then
       dir = geom.MIRROR_X[dir]
     end
 
     if T.mirror_y then
       dir = geom.MIRROR_Y[dir]
-    end
-
-    return dir
-  end
-
-
-  local function untransform_dir(T, dir)
-    -- this is opposite of transform_dir() above
-
-    if T.mirror_y then
-      dir = geom.MIRROR_Y[dir]
-    end
-
-    if T.mirror_x then
-      dir = geom.MIRROR_X[dir]
     end
 
     if T.transpose then
@@ -2639,72 +2624,113 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
   end
 
 
-  local function install_a_chunk(pat, T, x, y, S, gx, gy)
-    local E = pat._structure[gx][gy]
-    assert(E)
+  local function eval_a_chunk(pat, P, sx1, sy1, sw, sh)
+    local sx2 = sx1 + sw - 1
+    local sy2 = sy1 + sh - 1
 
-    -- FIXME !!!!! TEMPORARY CRUD !!!
+    assert(area.x1 <= sx1 and sx2 <= area.x2)
+    assert(area.y1 <= sy1 and sy2 <= area.y2)
+
+    for sx = sx1, sx2 do
+    for sy = sy1, sy2 do
+      local S = SEEDS[sx][sy]
+      assert(S and S.room == R)
+
+      -- connections must join onto a floor
+      if (S.conn or S.pseudo_conn or S.must_walk) then
+        if P.kind != "floor" then
+          return -1
+        end
+      end
+
+    end -- sx, sy
+    end
+
+    return 1  -- OK --
+  end
+
+
+  local function install_a_chunk(pat, T, P, sx1, sy1, sw, sh)
+    local sx2 = sx1 + sw - 1
+    local sy2 = sy1 + sh - 1
 
     local f_h   = heights[1]
     local f_tex = f_texs[1]
 
-    if E.kind == "liquid" or E.kind == "solid" then
-      S.kind = "void"
-    else
-      setup_floor(S, f_h, f_tex)
+    local CHUNK =
+    {
+      sx1 = sx1
+      sy1 = sy1
+      sx2 = sx2
+      sy2 = sy2
+
+      kind = P.kind
+    }
+
+    if P.dir then
+      CHUNK.dir = transform_dir(T, dir)
     end
-  end
 
-
-  local function install_pattern(pat, T)
-    for x = 1, area.tw do
-    for y = 1, area.th do
-      local sx = area.x1 + x - 1
-      local sy = area.y1 + y - 1
-
+    for sx = sx1, sx2 do
+    for sy = sy1, sy2 do
       local S = SEEDS[sx][sy]
 
-      local gx, gy = transform_coord(T, x, y)
+      S.chunk = CHUNK
 
-      install_a_chunk(pat, T, x, y, S, gx, gy)
+      -- FIXME !!!!! TEMPORARY CRUD !!!
 
-    end -- x, y
+      if P.kind == "liquid" or P.kind == "solid" then
+        S.kind = "void"
+      else
+        setup_floor(S, f_h, f_tex)
+      end
+    end -- sx, sy
     end
   end
 
 
   local function eval_pattern(pat, T)
-    local score = 100
+    local score = 10
 
-    for x = 1, area.tw do
-    for y = 1, area.th do
+    local W = pat._structure.w
+    local H = pat._structure.h
 
-      local sx = area.x1 + x - 1
-      local sy = area.y1 + y - 1
-      assert(Seed_valid(sx, sy))
+    for px = 1, W do
+    for py = 1, H do
+      local P = pat._structure[px][py]
 
-      local S = SEEDS[sx][sy]
-      assert(S and S.room == R)
+      local sx, sy, sw, sh = transform_coord(T, px, py)
 
-      local gx, gy = transform_coord(T, x, y)
+      if sw == 0 or sh == 0 then continue end
 
-      assert(1 <= gx and gx <= pat._structure.w)
-      assert(1 <= gy and gy <= pat._structure.h)
+      local eval = eval_a_chunk(pat, P, sx, sy, sw, sh)
 
-      local E  = pat._structure[gx][gy]
-
-      if (S.conn or S.pseudo_conn or S.must_walk) then
-        if E.kind != "floor" then
-          return -1
-        end
+      if eval < 0 then
+        return -1  -- pattern not possible
       end
 
-    end -- x, y
+      score = score + eval
+    end -- px, py
     end
 
     score = score + gui.random()
 
     return score
+  end
+
+
+  local function install_pattern(pat, T)
+    for px = 1, pat._structure.w do
+    for py = 1, pat._structure.h do
+      local P = pat._structure[px][py]
+
+      local sx, sy, sw, sh = transform_coord(T, px, py)
+
+      if sw == 0 or sh == 0 then continue end
+
+      install_a_chunk(pat, T, P, sx, sy, sw, sh)
+    end -- x, y
+    end
   end
 
 
@@ -2720,8 +2746,8 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
     for trans = 0, 1 do
       T.transpose = (trans == 1)
 
-      T.long = sel(T.transpose, area.th, area.tw)
-      T.deep = sel(T.transpose, area.tw, area.th)
+      T.long = sel(T.transpose, area.h, area.w)
+      T.deep = sel(T.transpose, area.w, area.h)
 
       local x_sizes = matching_sizes(pat.x_sizes, T.long)
       local y_sizes = matching_sizes(pat.y_sizes, T.deep)
@@ -2820,10 +2846,10 @@ if div_lev > 1 then return false end
 
   ---| Layout_pattern_in_area |---
 
-  area.tw, area.th = geom.group_size(area.x1, area.y1, area.x2, area.y2)
+  area.w, area.h = geom.group_size(area.x1, area.y1, area.x2, area.y2)
 
-  local_debugf("Layout_pattern_in_area @ %s  (%d x %d)\n", R:tostr(),
-               area.tw, area.th)
+  local_debugf("Layout_pattern_in_area @ %s : (%d %d) %dx%d\n", R:tostr(),
+               area.x1, area.y1, area.w, area.h)
 
   assert(R.kind != "cave")
   assert(R.kind != "hallway")
