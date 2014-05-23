@@ -17,15 +17,19 @@ CHANGELOG
 - small reduction in the overall health in levels
 - small increase in number of bonus items per level
 
-- added a wooden frame doorway for cave rooms
+- added a couple of special doorways for caves
 - added arch-shaped doorway for Urban and Hell themes
 
 - caves: improved floor texturing in flat caves
 - caves: never place pickup items in liquid areas
+- caves: if not many caves, have consistent texturing
 
 - fixed error when setting Monster Variety to "none"
 - fixed uncounted secrets that lead into CAVE rooms
 - fixed Psychedelic theme using SKY1/2/3 as a normal texture
 - fixed the silly "free standing" archways and doors
+- fixed the weird metal walls in large scenic areas
 - fixed pegging on lifts in slime pits
+
+/ build all doors using wad-fab system
 
