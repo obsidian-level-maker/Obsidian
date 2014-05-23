@@ -44,22 +44,6 @@ ROOM_PATTERNS =
 {
 
 
-PLAIN =
-{
-  prob = 10
-
-  structure =
-  {
-    "."
-  }
-
-  x_sizes = { "1", "2", "3", "4" }
-  y_sizes = { "1", "2", "3" }
-
-  symmetry = "xy"
-}
-
-
 ---------------------------
 --  SOLID and DIAGONALS  --
 ---------------------------
