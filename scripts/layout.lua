@@ -66,6 +66,7 @@ function Layout_parse_char(ch)
   if ch == '1' then return { kind="floor", floor=1 } end
   if ch == '2' then return { kind="floor", floor=2 } end
   if ch == '3' then return { kind="floor", floor=3 } end
+  if ch == '4' then return { kind="floor", floor=4 } end
 
   if ch == '~' then return { kind="liquid" } end
   if ch == '#' then return { kind="solid"  } end
@@ -3253,6 +3254,16 @@ function Layout_room(R)
 
     --| junk_sides |--
 
+    R.tx1, R.ty1 = R.sx1, R.sy1
+    R.tx2, R.ty2 = R.sx2, R.sy2
+    R.tw,  R.th  = R.sw,  R.sh
+
+    R.junk_thick = { [2]=0, [4]=0, [6]=0, [8]=0 }
+
+    if R.kind != "building" then return end
+    if R.children then return end
+
+
     local SIDES = { 2,4 }
     if not R.mirror_x then table.insert(SIDES,6) end
     if not R.mirror_y then table.insert(SIDES,8) end
@@ -3380,6 +3391,66 @@ function Layout_room(R)
   end
 
 
+  local function pick_unvisited_area()
+    each A in R.areas do
+      -- already done?
+      if A.filled then continue end
+
+      -- need an entry height
+      if not A.entry_h then continue end
+
+      return A  -- OK
+    end
+
+    return nil  -- all areas are filled
+  end
+
+
+  local function fill_room(focus_C)
+    -- create intiial area
+    local AREA =
+    {
+      x1 = R.tx1
+      y1 = R.ty1
+      x2 = R.tx2
+      y2 = R.ty2
+
+      entry_h = focus_C.conn_h
+    }
+
+    if focus_C.R1 == R then
+      AREA.entry_S = focus_C.S1  -- may be nil
+    else
+      AREA.entry_S = focus_C.S2  -- ditto
+    end
+
+    R.areas = { AREA }
+
+    local heights = select_heights(focus_C)
+    local f_texs  = select_floor_texs(focus_C)
+
+    -- iterate over areas until all are filled.
+    -- recursive patterns will add extra areas to the list.
+
+    while true do
+      local A = pick_unvisited_area()
+
+      if not A then break; end
+
+      Layout_pattern_in_area(R, A, 1, R.symmetry, heights, f_texs)
+
+      A.filled = true
+    end
+
+    -- validate all areas got filled
+    each A in R.areas do
+      if not A.filled then
+        error("Layout_room failed to fill all areas")
+      end
+    end
+  end
+
+
   ---==| Layout_room |==---
 
 gui.debugf("LAYOUT %s >>>>\n", R:tostr())
@@ -3388,8 +3459,6 @@ gui.debugf("LAYOUT %s >>>>\n", R:tostr())
   if not focus_C then
     focus_C = assert(R.conns[1])
   end
-
-  R.focus_conn = focus_C
 
 
   if not focus_C.conn_h then
@@ -3403,7 +3472,9 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   local entry_h = focus_C.conn_h
 
-  -- special stuff
+
+  -- special logic for some rooms --
+
   if R.kind == "small_exit" then
     return
   end
@@ -3426,29 +3497,10 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   end
 
 
-  R.tx1, R.ty1 = R.sx1, R.sy1
-  R.tx2, R.ty2 = R.sx2, R.sy2
-  R.tw,  R.th  = R.sw,  R.sh
+  junk_sides()
 
-  R.junk_thick = { [2]=0, [4]=0, [6]=0, [8]=0 }
+  fill_room(focus_C)
 
-  if R.kind == "building" and not R.children then
-    junk_sides()
-  end
-
-
-  local area =
-  {
-    x1 = R.tx1
-    y1 = R.ty1
-    x2 = R.tx2
-    y2 = R.ty2
-  }
-
-  local heights = select_heights(focus_C)
-  local f_texs  = select_floor_texs(focus_C)
-
-  Layout_pattern_in_area(R, area, 1, R.symmetry, heights, f_texs)
 
   Layout_post_processing(R)
 
