@@ -166,7 +166,7 @@ OB_GAMES["plutonia"] =
 
 OB_GAMES["freedoom"] =
 {
-  label = "FreeDoom 0.7"
+  label = "FreeDoom"
 
   extends = "doom2"
 
