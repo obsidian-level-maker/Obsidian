@@ -3,10 +3,27 @@ WORK IN PROGRESS
 ================
 
 
+Layout rework:
+-  score pattern higher based on # of different floors touched by conns
+
+-  link chunks together
+-  create chunks for flat square room
+
+-  recursive patterns!
+
+-  get stairs working again
+-  get diagonals working again
+-  get curved stairs working again
+
+-  get 3d bridges working
+-  get 3d floors working
+
+
 Border pieces:
 -  number of T pieces: int(seed_w / 3)
 -  fix textures on corner cage
--  only 30% chance of corner cage [or: apply style]
+-  only 30% chance of corner cage [apply style]
+-  support "gaps" in piece sides (filled by lowest nearby sector OR next lowest sector)
 -  tidy up current pieces
 
 +  problem: piece may be inaccessible (due to max_floor_h or
@@ -51,8 +68,9 @@ Closets and Traps:
 
 
 Doors
--  texturing on door prefabs (for HELL, URBAN themes)
 -  door with bars
 -  make a two seed wide door prefab
--  wide prefab with a switch in it [normal door]
+-  support wide doors [normal / locked]
+-  make wide prefab with a switch in it [normal door]
+-  texturing on door prefabs (for HELL, URBAN themes)
 
