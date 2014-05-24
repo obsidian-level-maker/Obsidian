@@ -1747,14 +1747,13 @@ function OLD__Layout_try_pattern(R, area, div_lev, req_sym, heights, f_texs)
   end
 
 
-  local function setup_floor(S, h, f_tex)
+  local function OLD__setup_floor(S, h, f_tex)
     S.floor_h = h
 
     S.f_tex = sel(R.is_outdoor, R.main_tex, f_tex)
 
     if S.conn or S.pseudo_conn then
       local C = S.conn or S.pseudo_conn
-      if C.conn_h then assert(C.conn_h == S.floor_h) end
 
       C.conn_h = S.floor_h
       C.conn_ftex = f_tex
@@ -2542,9 +2541,6 @@ function Layout_pattern_in_area(R, area, f_texs)
     local C = S.conn or S.pseudo_conn
 
     if C then
----stderrf("conn_h : %s  !=  floor_h : %s\n", tostring(C.conn_h), tostring(S.floor_h))
-      if C.conn_h then assert(C.conn_h == S.floor_h) end
-
       C.conn_h    = S.floor_h
       C.conn_ftex = S.f_tex
     end
@@ -2771,8 +2767,12 @@ function Layout_pattern_in_area(R, area, f_texs)
 
 
   local function install_pattern(pat, T)
+    -- this only happens for START room and teleporter destinations
+    if not T.entry_floor then
+---      T.entry_floor = 0
+    end
 
-stderrf("install_pattern : entry_floor = %s\n", tostring(T.entry_floor))
+stderrf("install_pattern @ %s : entry_floor = %s\n", R:tostr(), tostring(T.entry_floor))
 
     for px = 1, pat._structure.w do
     for py = 1, pat._structure.h do
@@ -3294,7 +3294,10 @@ function Layout_room(R)
   end
 
 
-  local function stairwell_height_diff(focus_C)
+  local function stairwell_height_diff()
+    -- FIXME: check all this
+    local focus_C = R.conns[1]
+
     local other_C = R.conns[2]
     if other_C == focus_C then other_C = R.conns[1] end
 
@@ -3314,18 +3317,20 @@ function Layout_room(R)
   end
 
 
-  local function select_floor_texs(focus_C)
+  local function select_floor_texs()
     local f_texs  = {}
 
-    if focus_C.conn_ftex and
-       (focus_C.R1.kind == focus_C.R2.kind) and
+    local focus_C = R.entry_conn
+
+    if focus_C and focus_C.conn_ftex and
+       focus_C.R1.kind == focus_C.R2.kind and
        focus_C.kind != "teleporter" and
        not focus_C.fresh_floor
     then
       table.insert(f_texs, focus_C.conn_ftex)
     end
 
-    for i = 1,4 do
+    for i = 1,7 do
       if R.theme.floors then
         table.insert(f_texs, rand.key_by_probs(R.theme.floors))
       else
@@ -3336,10 +3341,11 @@ function Layout_room(R)
     return f_texs
   end
 
+
   local INDOOR_DELTAS  = { [16]=5,  [32]=10, [48]=20, [64]=20, [96]=10, [128]=5 }
   local OUTDOOR_DELTAS = { [32]=20, [48]=30, [80]=20, [112]=5 }
 
-  local function select_heights(focus_C)
+  local function OLD__select_heights(focus_C)
 
     local function gen_group(base_h, num, dir)
       local list = {}
@@ -3437,7 +3443,7 @@ function Layout_room(R)
   end
 
 
-  local function fill_room(focus_C)
+  local function fill_room(entry_h)
     -- create intiial area
     local AREA =
     {
@@ -3446,13 +3452,15 @@ function Layout_room(R)
       x2 = R.tx2
       y2 = R.ty2
 
-      entry_h = focus_C.conn_h
+      entry_h = entry_h
     }
 
-    if focus_C.R1 == R then
-      AREA.entry_S = focus_C.S1  -- may be nil
-    else
-      AREA.entry_S = focus_C.S2  -- ditto
+    if R.entry_conn then
+      if R.entry_conn.R1 == R then
+        AREA.entry_S = R.entry_conn.S1  -- may be nil (teleporters)
+      else
+        AREA.entry_S = R.entry_conn.S2  -- ditto
+      end
     end
 
     R.areas = { AREA }
@@ -3461,7 +3469,7 @@ function Layout_room(R)
     AREA.symmetry = R.symmetry
     AREA.is_top   = true
 
-    local f_texs = select_floor_texs(focus_C)
+    local f_texs = select_floor_texs()
 
     -- iterate over areas until all are filled.
     -- recursive patterns will add extra areas to the list.
@@ -3476,7 +3484,7 @@ function Layout_room(R)
       A.filled = true
     end
 
-    -- validate all areas got filled
+    -- validate all areas were filled
     each A in R.areas do
       if not A.filled then
         error("Layout_room failed to fill all areas")
@@ -3489,32 +3497,30 @@ function Layout_room(R)
 
 gui.debugf("LAYOUT %s >>>>\n", R:tostr())
 
-  local focus_C = R.entry_conn
-  if not focus_C then
-    focus_C = assert(R.conns[1])
+  local entry_h
+
+  if R.entry_conn and R.entry_conn.conn_h then
+    entry_h = R.entry_conn.conn_h
+
+    -- support archways with steps
+    if R.entry_conn.diff_h then
+      entry_h = entry_h + R.entry_conn.diff_h
+    end
+  end
+
+  if not entry_h then
+    entry_h = SKY_H - rand.irange(4,7) * 64
   end
 
 
-  if not focus_C.conn_h then
-gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
-    focus_C.conn_h = SKY_H - rand.irange(4,7) * 64
-  end
-
-  if focus_C.diff_h then
-    focus_C.conn_h = focus_C.conn_h + focus_C.diff_h
-  end
-
-  local entry_h = focus_C.conn_h
-
-
-  -- special logic for some rooms --
+  -- special logic for certain kinds of rooms --
 
   if R.kind == "small_exit" then
     return
   end
 
   if R.kind == "stairwell" then
-    stairwell_height_diff(focus_C)
+    stairwell_height_diff()
     return
   end
 
@@ -3533,7 +3539,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   junk_sides()
 
-  fill_room(focus_C)
+  fill_room(entry_h)
 
 
   Layout_post_processing(R)
