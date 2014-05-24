@@ -173,7 +173,8 @@ function Layout_preprocess_patterns()
 
     for x = 1, W do
     for y = 1, H do
-      local line = structure[y]
+      -- textural representation must be inverted
+      local line = structure[H + 1 - y]
 
       if #line != W then
         error("Malformed structure in room pattern: " .. pat.name)
