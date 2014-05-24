@@ -1531,7 +1531,7 @@ end
 
 
 
-function Layout_try_pattern(R, area, div_lev, req_sym, heights, f_texs)
+function OLD__Layout_try_pattern(R, area, div_lev, req_sym, heights, f_texs)
   -- find a usable pattern in the ROOM_PATTERNS table and
   -- apply it to the room.
 
@@ -2412,22 +2412,19 @@ end
 
 
 
-function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
+function Layout_pattern_in_area(R, area, f_texs)
   -- find a usable pattern in the ROOM_PATTERNS table and
   -- apply it to the room.
 
   -- this function is responsible for setting floor_h in every
   -- seed in the given 'area'.
 
-  -- 'div_lev' is 1 for the main pattern, 2 or higher for recursive
-  -- patterns (inside a previously chosen pattern).
-
   local use_solid_feature = rand.odds(75)
 
 
   -- only show debug messages for the top-level pattern
   local function local_debugf(...)
-    if div_lev == 1 then
+    if area.is_top then
       gui.debugf(...)
     end
   end
@@ -2437,6 +2434,9 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
     if not pat.prob then
       return 0
     end
+
+--FIXME !!!!!! recursive patterns disabled for now
+    if pat.recurse then return 0 end
 
     if pat.min_size > math.max(area.w, area.h) or
        pat.max_size < math.min(area.w, area.h)
@@ -2454,14 +2454,16 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
       return 0  -- wrong environment
     end
 
+--[[
     if (pat.z_direction == "up"   and (#heights < 2 or (heights[1] > heights[2]))) or
        (pat.z_direction == "down" and (#heights < 2 or (heights[1] < heights[2])))
     then
       return 0  -- wrong z_direction
     end
+--]]
 
-    if (pat.level == "top" and div_lev != 1) or
-       (pat.level == "sub" and div_lev == 1)
+    if (pat.level == "top" and not area.is_top) or
+       (pat.level == "sub" and     area.is_top)
     then
       return 0  -- wrong level
     end
@@ -2475,9 +2477,9 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
     -- enough symmetry?
     -- [NOTE: because of transposing, treat "x" == "y" here]
 
-    if req_sym then
+    if area.symmetry then
       if pat.symmetry != "xy" then
-        if req_sym == "xy"  then return 0 end
+        if area.symmetry == "xy"  then return 0 end
         if not pat.symmetry then return 0 end
       end
     end
@@ -2572,7 +2574,7 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
   local function install_flat_floor()
     R.no_pattern = true
 
-    local f_h   = heights[1]
+    local f_h   = assert(area.entry_h)
     local f_tex = f_texs[1]
 
     for x = area.x1, area.x2 do
@@ -2631,7 +2633,6 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
   end
 
 
-
   local function transform_dir(T, dir)
     if T.mirror_x then
       dir = geom.MIRROR_X[dir]
@@ -2664,10 +2665,15 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
       assert(S and S.room == R)
 
       -- connections must join onto a floor
-      if (S.conn or S.pseudo_conn or S.must_walk) then
+      if (S == area.entry_S or S.conn or S.pseudo_conn or S.must_walk) then
         if P.kind != "floor" then
           return -1
         end
+      end
+
+      -- remember which floor-id we enter the area at
+      if S == area.entry_S then
+        T.entry_floor = P.floor
       end
 
     end -- sx, sy
@@ -2681,7 +2687,7 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
     local sx2 = sx1 + sw - 1
     local sy2 = sy1 + sh - 1
 
-    local f_h   = heights[1]
+    local f_h   = assert(area.entry_h)
     local f_tex = f_texs[1]
 
     local P = pat._structure[px][py]
@@ -2765,6 +2771,9 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
 
 
   local function install_pattern(pat, T)
+
+stderrf("install_pattern : entry_floor = %s\n", tostring(T.entry_floor))
+
     for px = 1, pat._structure.w do
     for py = 1, pat._structure.h do
       local sx, sy, sw, sh = transform_coord(T, px, py)
@@ -2822,6 +2831,8 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
           T.mirror_x = (x_mir == 1)
           T.mirror_y = (y_mir == 1)
 
+          T.entry_floor = nil
+
           T.score = eval_pattern(pat, T)
 
           if T.score > 0 then
@@ -2853,9 +2864,6 @@ function Layout_pattern_in_area(R, area, div_lev, req_sym, heights, f_texs)
 
   local function test_patterns()
     if R.children then return false end
-
--- FIXME: RECURSION DISABLED FOR NOW !!!
-if div_lev > 1 then return false end
 
     local prob_tab = collect_usable_fabs()
 
@@ -3328,7 +3336,7 @@ function Layout_room(R)
     return f_texs
   end
 
-  local INDOOR_DELTAS  = { [32]=10, [48]=20, [64]=20, [96]=10, [128]=5 }
+  local INDOOR_DELTAS  = { [16]=5,  [32]=10, [48]=20, [64]=20, [96]=10, [128]=5 }
   local OUTDOOR_DELTAS = { [32]=20, [48]=30, [80]=20, [112]=5 }
 
   local function select_heights(focus_C)
@@ -3391,6 +3399,29 @@ function Layout_room(R)
   end
 
 
+  local function select_deltas()
+    -- resulting table is indexed by a virtual floor id.
+    -- the [0] value is always 0, [-1] .. [-4] are negative and
+    -- [1] .. [4] are positive.
+
+    local tab = {}
+
+    local delta_tab = sel(R.is_outdoor, OUTDOOR_DELTAS, INDOOR_DELTAS)
+
+    tab[0] = 0
+
+    for i = 1, 4 do
+      local d1 = rand.key_by_probs(delta_tab)
+      local d2 = rand.key_by_probs(delta_tab)
+
+      tab[ i] = tab[ i - 1] + d1
+      tab[-i] = tab[-i + 1] - d2
+    end
+
+    return tab
+  end
+
+
   local function pick_unvisited_area()
     each A in R.areas do
       -- already done?
@@ -3426,8 +3457,11 @@ function Layout_room(R)
 
     R.areas = { AREA }
 
-    local heights = select_heights(focus_C)
-    local f_texs  = select_floor_texs(focus_C)
+    AREA.deltas   = select_deltas()
+    AREA.symmetry = R.symmetry
+    AREA.is_top   = true
+
+    local f_texs = select_floor_texs(focus_C)
 
     -- iterate over areas until all are filled.
     -- recursive patterns will add extra areas to the list.
@@ -3437,7 +3471,7 @@ function Layout_room(R)
 
       if not A then break; end
 
-      Layout_pattern_in_area(R, A, 1, R.symmetry, heights, f_texs)
+      Layout_pattern_in_area(R, A, f_texs)
 
       A.filled = true
     end
