@@ -2683,8 +2683,8 @@ function Layout_pattern_in_area(R, area, f_texs)
     local sx2 = sx1 + sw - 1
     local sy2 = sy1 + sh - 1
 
-    local f_h   = assert(area.entry_h)
-    local f_tex = f_texs[1]
+    local base_h = assert(area.entry_h)
+    local f_tex  = f_texs[1]
 
     local P = pat._structure[px][py]
 
@@ -2730,8 +2730,17 @@ function Layout_pattern_in_area(R, area, f_texs)
       elseif P.kind == "solid" then
         setup_solid(S, pat)
 
-      else
+      elseif P.kind == "floor" then
+        local idx = P.floor - T.entry_floor
+        local delta_z = area.deltas[idx]
+        assert(delta_z)
+
+        local f_h = base_h + delta_z  -- * T.z_mul
+
         setup_floor(S, f_h, f_tex)
+
+      else
+        setup_floor(S, base_h, "CRACKLE2")
       end
     end -- sx, sy
     end
@@ -2769,13 +2778,16 @@ function Layout_pattern_in_area(R, area, f_texs)
   local function install_pattern(pat, T)
     -- this only happens for START room and teleporter destinations
     if not T.entry_floor then
----      T.entry_floor = 0
+      T.entry_floor = 0
     end
 
-stderrf("install_pattern @ %s : entry_floor = %s\n", R:tostr(), tostring(T.entry_floor))
+    T.z_mul = rand.sel(40, -1, 1)
 
-    for px = 1, pat._structure.w do
-    for py = 1, pat._structure.h do
+    local W = pat._structure.w
+    local H = pat._structure.h
+
+    for px = 1, W do
+    for py = 1, H do
       local sx, sy, sw, sh = transform_coord(T, px, py)
 
       if sw == 0 or sh == 0 then continue end
