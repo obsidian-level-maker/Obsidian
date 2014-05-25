@@ -631,6 +631,15 @@ function Levels_choose_themes()
 end
 
 
+function Levels_episode_names()
+  each EPI in GAME.episodes do
+    -- only generate names for used episodes
+    if table.empty(EPI.levels) then continue end
+
+    EPI.description = Naming_grab_one("BOSS")
+  end
+end
+
 
 function Levels_do_styles()
   gui.rand_seed(LEVEL.seed)
@@ -858,6 +867,8 @@ function Levels_make_all()
   Levels_decide_special_kinds()
 
   Levels_choose_themes()
+
+  Levels_episode_names()
 
   each EPI in GAME.episodes do
     EPISODE = EPI
