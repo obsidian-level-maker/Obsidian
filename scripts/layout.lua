@@ -1738,27 +1738,40 @@ function Layout_pattern_in_area(R, area, f_texs)
 
     local P = pat._structure[px][py]
 
+    local OV
+    if pat._overlay then
+      OV = pat._overlay[px][py]
+    end
+
     for sx = sx1, sx2 do
     for sy = sy1, sy2 do
       local S = SEEDS[sx][sy]
       assert(S and S.room == R)
 
+      -- the overlay floor overrides any floor underneath
+      local floor = P.floor
+      if OV and OV.kind == "floor" then
+        floor = OV.floor
+      end
+
       -- connections must join onto a floor
       if (S == area.entry_S or S.conn or S.pseudo_conn or S.must_walk) then
-        if P.kind != "floor" then
-          return -1
+        if not floor then
+          return -1  -- FAIL --
         end
+
+        T.used_floors[floor] = 1
       end
 
       -- remember which floor-id we enter the area at
       if S == area.entry_S then
-        T.entry_floor = P.floor
+        T.entry_floor = floor
       end
 
     end -- sx, sy
     end
 
-    return 1  -- OK --
+    return 0  -- OK --
   end
 
 
@@ -1831,7 +1844,9 @@ function Layout_pattern_in_area(R, area, f_texs)
 
 
   local function eval_pattern(pat, T)
-    local score = 10
+    local score = 0
+
+    T.used_floors = {}
 
     local W = pat._structure.w
     local H = pat._structure.h
@@ -1852,9 +1867,11 @@ function Layout_pattern_in_area(R, area, f_texs)
     end -- px, py
     end
 
-    score = score + gui.random()
+    -- the more used floors, the better
+    score = score + 100 * table.size(T.used_floors)
 
-    return score
+    -- tie breaker
+    return score + gui.random()
   end
 
 
