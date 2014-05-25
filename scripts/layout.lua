@@ -131,6 +131,28 @@ function Layout_preprocess_patterns()
   end
 
 
+  local function analyse_curve_stair(grid, x, y)
+    local P = grid[x][y]
+    assert(P.dir)
+
+    local L_dir = geom.LEFT_45 [P.dir]
+    local R_dir = geom.RIGHT_45[P.dir]
+
+    local NL = neighbor(grid, x, y, L_dir)
+    local NR = neighbor(grid, x, y, R_dir)
+
+    if not (NL and NL.kind == "floor") or
+       not (NR and NR.kind == "floor")
+    then
+      error("Bad curve stair in pattern: not connecting to a floor")
+    end
+
+    -- record the floors
+    P. left_floor = NL.floor
+    P.right_floor = NR.floor
+  end
+
+
   local function analyse_3d_bridge(grid, x, y)
     local floors = {}
 
@@ -174,15 +196,21 @@ function Layout_preprocess_patterns()
 
 
   local function process_elements(pat, grid)
+    pat.elem_kinds = {}
+
     for x = 1, grid.w do
     for y = 1, grid.h do
       local kind = grid[x][y].kind
 
+      pat.elem_kinds[kind] = true
+
       if kind == "stair" then
         analyse_stair(grid, x, y)
-      end
+      
+      elseif kind == "curve_stair" then
+        analyse_curve_stair(grid, x, y)
 
-      if kind == "3d_bridge" then
+      elseif kind == "3d_bridge" then
         analyse_3d_bridge(grid, x, y)
       end
     end -- x, y
@@ -208,10 +236,6 @@ function Layout_preprocess_patterns()
       local ch = string.sub(line, x, x)
 
       grid[x][y] = Layout_parse_char(ch)
-
-      if grid[x][y].kind == "3d_bridge" then
-        pat.has_3d_bridge = true
-      end
     end -- x, y
     end
 
@@ -1613,7 +1637,7 @@ function Layout_pattern_in_area(R, area, f_texs)
       return 0  -- wrong level
     end
 
-    if pat.overlay or pat.has_3d_bridge then
+    if pat.overlay or pat.elem_kinds["3d_bridge"] then
       if not PARAM.extra_floors then
         return 0  -- 3D floors not available
       end
