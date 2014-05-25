@@ -86,41 +86,104 @@ function Layout_preprocess_patterns()
   -- structure into a more easily accessed form.
   --
 
-  local function find_stair_source(grid, x, y)
+  local function neighbor(grid, x, y, dir, dist)
+    local nx, ny = geom.nudge(x, y, dir, dist)
+
+    if nx < 1 or nx > grid.w then return nil end
+    if ny < 1 or ny > grid.h then return nil end
+
+    return grid[nx][ny]
+  end
+
+
+  local function analyse_stair(grid, x, y)
     -- determine the source floor for this stair
     -- (the destination floor is ALWAYS the pointed-to seed).
-    local G = grid[x][y]
-    assert(G.dir)
+    local P = grid[x][y]
+    assert(P.dir)
+
+    local N = neighbor(grid, x, y, P.dir)
+
+    if not (N and N.kind == "floor") then
+      error("bad stair in pattern: destination not a floor")
+    end
+
+    P.dest_floor = N.floor
 
     -- we try the back first
     local DIRS =
     {
-      10 - G.dir, geom.LEFT[G.dir], geom.RIGHT[G.dir]
+      10 - P.dir, geom.LEFT[P.dir], geom.RIGHT[P.dir]
     }
 
     each dir in DIRS do
-      local nx, ny = geom.nudge(x, y, dir)
+      local back = neighbor(grid, x, y, dir)
 
-      if nx < 1 or nx > grid.w or ny < 1 or ny > grid.h then
-        continue
-      end
-
-      if grid[nx][ny].kind == "floor" then
+      if back and back.kind == "floor" then
         -- found it
-        grid[x][y].src_dir = dir
+        P.src_dir   = dir
+        P.src_floor = back.floor
         return
       end
     end
 
-    error("Stair in pattern lacks a walkable neighbor!")
+    error("Bad stair in pattern: no walkable neighbor")
   end
 
 
-  local function analyse_stairs(grid)
+  local function analyse_3d_bridge(grid, x, y)
+    local floors = {}
+
+    for dir = 2,4,2 do
+      -- get neighbor on each side
+      local N1 = neighbor(grid, x, y, dir)
+      local N2 = neighbor(grid, x, y, 10 - dir)
+
+      -- require at least one normal floor
+      local F1 = (N1 and N1.kind == "floor" and N1.floor)
+      local F2 = (N2 and N2.kind == "floor" and N2.floor)
+
+      if not (F1 or F2) then
+        error("3D bridge in pattern: missing nearby floor")
+      end
+
+      -- if a floor on both sides, must be same
+      if F1 and F2 and F1 != F2 then
+        error("3D bridge in pattern: floor mismatch")
+      end
+
+      floors[dir] = F1 or F2
+    end
+
+    if floors[2] == floors[4] then
+      error("3D bridge in pattern: floors are all the same")
+    end
+
+    -- record the floors and a direction hint
+    local P = grid[x][y]
+
+    P.low_floor = math.min(floors[2], floors[4])
+    P. hi_floor = math.max(floors[2], floors[4])
+
+    if floors[2] > floors[4] then
+      P.dir = 2
+    else
+      P.dir = 4
+    end
+  end
+
+
+  local function process_elements(pat, grid)
     for x = 1, grid.w do
     for y = 1, grid.h do
-      if grid[x][y].kind == "stair" then
-        find_stair_source(grid, x, y)
+      local kind = grid[x][y].kind
+
+      if kind == "stair" then
+        analyse_stair(grid, x, y)
+      end
+
+      if kind == "3d_bridge" then
+        analyse_3d_bridge(grid, x, y)
       end
     end -- x, y
     end
@@ -152,7 +215,7 @@ function Layout_preprocess_patterns()
     end -- x, y
     end
 
-    analyse_stairs(grid)
+    process_elements(pat, grid)
 
     return grid
   end
@@ -1831,9 +1894,9 @@ function Layout_pattern_in_area(R, area, f_texs)
         local delta_z = area.deltas[idx]
         assert(delta_z)
 
-        local f_h = base_h + delta_z  -- * T.z_mul
+        CHUNK.floor_h = base_h + delta_z    --   * T.z_mul ???
 
-        setup_floor(S, f_h, f_tex)
+        setup_floor(S, CHUNK.floor_h, f_tex)
 
       else
         setup_floor(S, base_h, "CRACKLE2")
