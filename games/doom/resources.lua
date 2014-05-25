@@ -19,6 +19,7 @@ DOOM.LEVEL_GFX_COLORS =
   bronze = { 0,2, 191,188, 235,232, 221,218,215,213,211,209 }
   iron   = { 0,7,5, 111,109,107,104,101,98,94,90,86,81 }
 
+  red    = { 0,2, 191,189,187,185,183,181,179 }
   black  = { 0,0,0,0, 0,0,0,0 }
 }
 
@@ -39,7 +40,7 @@ function DOOM.make_cool_gfx()
   local RED =
   {
     0, 2, 188,185,184,183,182,181,
-    180,179,178,177,176,175,174,173
+    180,179,178,177,176,175,174,173,172
   }
 
 
@@ -77,9 +78,6 @@ end
 
 
 function DOOM.make_level_gfx()
-  assert(LEVEL.description)
-  assert(LEVEL.patch)
-
   -- decide color set
   if not GAME.level_gfx_colors then
     local kind = rand.key_by_probs(
@@ -92,26 +90,41 @@ function DOOM.make_level_gfx()
 
   gui.set_colormap(1, GAME.level_gfx_colors)
 
-  gui.wad_name_gfx(LEVEL.patch, LEVEL.description, 1)
+  if LEVEL.patch and LEVEL.description then
+    gui.wad_name_gfx(LEVEL.patch, LEVEL.description, 1)
+  end
+end
+
+
+function DOOM.make_episode_gfx()
+  local colors = assert(DOOM.LEVEL_GFX_COLORS["red"])
+
+  gui.set_colormap(2, colors)
+
+  for idx = 1, 4 do
+    local EPI = GAME.episodes[idx]
+    assert(EPI)
+
+    if EPI.name_patch and EPI.description then
+      gui.wad_name_gfx(EPI.name_patch, EPI.description, 2)
+    end
+  end
 end
 
 
 function DOOM1.end_level()
-  if LEVEL.description and LEVEL.patch then
-    DOOM.make_level_gfx()
-  end
+  DOOM.make_level_gfx()
 end
 
 
 function DOOM2.end_level()
-  if LEVEL.description and LEVEL.patch then
-    DOOM.make_level_gfx()
-  end
+  DOOM.make_level_gfx()
 end
 
 
 function DOOM1.all_done()
   DOOM.make_cool_gfx()
+  DOOM.make_episode_gfx()
 
   gui.wad_merge_sections("doom_falls.wad");
 end

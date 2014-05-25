@@ -210,6 +210,9 @@ DOOM1.EPISODES =
     theme = "tech"
     sky_patch = "SKY1"
     dark_prob = 10
+
+    name_patch = "M_EPI1"
+    description = "Knee-Deep in the Dead"
   }
 
   episode2 =
@@ -217,6 +220,9 @@ DOOM1.EPISODES =
     theme = "deimos"
     sky_patch = "SKY2"
     dark_prob = 40
+
+    name_patch = "M_EPI2"
+    description = "The Shores of Hell"
   }
 
   episode3 =
@@ -224,6 +230,9 @@ DOOM1.EPISODES =
     theme = "hell"
     sky_patch = "SKY3"
     dark_prob = 10
+
+    name_patch = "M_EPI3"
+    description = "Inferno"
   }
 
   episode4 =
@@ -231,6 +240,9 @@ DOOM1.EPISODES =
     theme = "flesh"
     sky_patch = "SKY4"
     dark_prob = 10
+
+    name_patch = "M_EPI4"
+    description  = "Thy Flesh Consumed"
   }
 }
 
