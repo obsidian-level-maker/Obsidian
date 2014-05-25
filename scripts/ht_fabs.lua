@@ -1528,6 +1528,56 @@ HEIGHT_CURV_2 =
 --  MULTIPLE FLOORS  --
 -----------------------
 
+MULTI_I1 =
+{
+  prob = 10
+
+  symmetry = "y"
+
+  structure =
+  {
+    "..."
+    ".K."
+    "..."
+  }
+
+  overlay =
+  {
+    "1  "
+    "1  "
+    "1  "
+  }
+
+  x_sizes = { "999" }
+  y_sizes = { "999" }
+}
+
+
+MULTI_I2 =
+{
+  prob = 10
+
+  symmetry = "y"
+
+  structure =
+  {
+    ".K."
+    "..."
+    ".K."
+  }
+
+  overlay =
+  {
+    "1  "
+    "1  "
+    "1  "
+  }
+
+  x_sizes = { "999" }
+  y_sizes = { "999" }
+}
+
+
 MULTI_U1 =
 {
   prob = 10
@@ -1543,9 +1593,9 @@ MULTI_U1 =
 
   overlay =
   {
-    "..."
-    ".  "
-    "..."
+    "111"
+    "1  "
+    "111"
   }
 
   x_sizes = { "999" }
@@ -1568,9 +1618,9 @@ MULTI_T1 =
 
   overlay =
   {
-    ".  "
-    "..."
-    ".  "
+    "1  "
+    "1.."
+    "1  "
   }
 
   x_sizes = { "999" }
