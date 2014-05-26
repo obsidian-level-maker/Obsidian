@@ -1013,12 +1013,12 @@ function Room_border_up()
       if R1.cave_info.liquid_mode == "lake" and not
          S:need_lake_fence(side)
       then
-        S.border[side].kind = "fence"
+        S.border[side].kind = "cave_wall"  -- FIXME : cave_fence
       end
 
     elseif R1.is_outdoor then
       if R2.is_outdoor then
-        S.border[side].kind = "fence"
+        S.border[side].kind = "cave_wall"  --!!! ???
       else
         S.border[side].kind = "facade"
         S.border[side].w_tex = R2.facade
@@ -1071,19 +1071,6 @@ function Room_border_up()
       end
     end
 
-    -- don't place fences in a map_border which touch the very edge
-    -- of the map, because they interfere with sky fences
-    
-    if S.border[side].kind == "fence" and S.map_border then
-      for pass = 1,2 do
-        local dir = sel(pass == 1, geom.LEFT[side], geom.RIGHT[side])
-        local N = S:neighbor(dir)
-
-        if not N or N.free then
-          S.border[side].kind = "nothing"
-        end
-      end
-    end
   end
 
 
@@ -1171,7 +1158,11 @@ function Room_border_up()
       if not (S.room == R or S_frame == R) then continue end
         
       for side = 2,8,2 do
-        if not S.border[side].kind then  -- don't clobber connections
+        if S.border[side].kind then
+          -- don't clobber connections
+          continue
+        end
+
           local N = S:neighbor(side)
 
           local N_frame = (N and N.map_border and N.map_border.room)
@@ -1181,7 +1172,6 @@ function Room_border_up()
           else
             make_border(S_frame or R, S, N_frame or N.room, N, side)
           end
-        end
 
         assert(S.border[side].kind)
       end -- side
@@ -1193,6 +1183,80 @@ function Room_border_up()
       end
 
     end -- x, y
+    end
+  end
+
+
+  local function try_make_fence(S, side)
+    local N = S:neighbor(side)
+
+    if not N or N.free then return end
+
+    local R1 = S.room
+    local R2 = N.room
+    
+    if S.map_border and S.map_border.room then
+      R1 = S.map_border.room
+    end
+
+    if N.map_border and N.map_border.room then
+      R2 = N.map_border.room
+    end
+
+    if not R1 or not R2 then return end
+    if R1 == R2 then return end
+
+    -- require both rooms be outdoorsy
+    if not (R1.is_outdoor and R2.is_outdoor) then return end
+
+    -- require one of the rooms be constructed (not cave)
+    if R1.kind == "cave" and R2.kind == "cave" then return end
+
+    if R1.kind == "cave" then
+      R1, R2 = R2, R1
+      S,  N  = N,  S
+      side   = 10 - side
+    end
+
+    -- nothing needed if neighbor cave has high walls
+    if R2.cave_info and R2.cave_info.sky_mode == "high_wall" then return end
+
+    -- OK --
+
+    S.border[side].kind = "fence"
+    N.border[10 - side].kind = "straddle"
+
+-- FIXME !!!!
+--[[
+    -- don't place fences in a map_border which touch the very edge
+    -- of the map, because they interfere with sky fences
+
+    if S.border[side].kind == "fence" and S.map_border then
+      for pass = 1,2 do
+        local dir = sel(pass == 1, geom.LEFT[side], geom.RIGHT[side])
+        local N = S:neighbor(dir)
+
+        if not N or N.free then
+          S.border[side].kind = "nothing"
+        end
+      end
+    end
+--]]
+  end
+
+
+  local function make_all_fences()
+    for x = 1, SEED_W do
+    for y = 1, SEED_TOP do
+      local S = SEEDS[x][y]
+
+      for side = 2,4,2 do
+        -- don't clobber connections
+        if S.border[side].kind then continue end
+
+        try_make_fence(S, side)
+      end
+    end
     end
   end
 
@@ -1778,6 +1842,8 @@ function Room_border_up()
 
   ---| Room_border_up |---
   
+  make_all_fences()
+
   each R in LEVEL.rooms do
     border_up(R)
   end
@@ -3260,11 +3326,19 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     -- determine how much higher to make a fence, based on nearby high
     -- floors which the player could jump over it from.
 
+gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
     local N = S:neighbor(side)
-    assert(N and N.room)
+    assert(N)
 
-    local f_max = math.max(S.room.fence_z, N.room.fence_z)
-    local c_min = math.min(S.room.ceil_h,  N.room.ceil_h)
+    -- we may be inside a map border
+    N_room = N.room
+    if not N_room then
+      assert(N.map_border)
+      N_room = assert(N.map_border.room)
+    end
+
+    local f_max = math.max(R.fence_z, N_room.fence_z)
+    local c_min = math.min(R.ceil_h,  N_room.ceil_h)
 
     local FENCE_H = 32  -- must match the prefab (ugh, hack)
 
@@ -3289,9 +3363,9 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
     local z = assert(conn and conn.conn_h)
 
-    local is_fence = conn.R1.is_outdoor and conn.R2.is_outdoor
+    local is_fence = (S.border[side].kind == "fence")
     local extra_z
-    
+
     if is_fence then
       extra_z = calc_fence_extra_z(S, side, z)
     end
@@ -3342,6 +3416,42 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex }
 
     skin2.tag_1 = LOCK.tag
+
+    local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, z,
+                                   side, 0, 192, skin1.deep, skin1.over)
+
+    T.fitted_z = skin1.bound_z2 + extra_z
+
+    Fabricate_at(R, skin1, T, { skin1, skin2 })
+  end
+
+
+  local function do_fence(S, side, w_tex, f_tex)
+--[[ OLD CODE
+    local skin = { wall=w_tex, floor=f_tex }
+    local fence_h = assert(R.fence_z) + LEVEL.fence_h
+
+    -- prevent player from getting over the fence via a pedestal
+    if S.content == "wotsit" then
+      fence_h = fence_h + 24
+    end
+
+    Build.fence(S, side, fence_h, skin)
+--]]
+
+    local z = R.fence_z
+
+    local extra_z = calc_fence_extra_z(S, side, z)
+
+    local fab_name = "Fence_plain"
+
+    local skin1 = GAME.SKINS[fab_name]
+    assert(skin1)
+
+    local o_tex = outer_tex(S, side, w_tex)
+    local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex }
+
+    -- TODO : less wide at edge of room
 
     local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, z,
                                    side, 0, 192, skin1.deep, skin1.over)
@@ -3546,9 +3656,14 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
         shrink_both(side, 16)
       end
 
-      if B_kind == "cave_wall" then
+      if B_kind == "cave_wall" or B_kind == "cave_fence" then
         Build.cave_wall(S, side, border.w_tex or w_tex)
         shrink_both(side, 4)
+      end
+
+      if B_kind == "fence" then
+        do_fence(S, side, w_tex, f_tex)
+        shrink_floor(side, 16)
       end
 
       if B_kind == "window" then
@@ -3561,21 +3676,8 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
         shrink_both(side, 16)
       end
 
-      if B_kind == "fence"  then
-        local skin = { wall=w_tex, floor=f_tex }
-        local fence_h = assert(R.fence_z) + LEVEL.fence_h
-
-        -- prevent player from getting over the fence via a pedestal
-        if S.content == "wotsit" then
-          fence_h = fence_h + 24
-        end
-
-        Build.fence(S, side, fence_h, skin)
-        shrink_floor(side, 16)
-      end
-
       if B_kind == "straddle" then
-        -- TODO: ideally do both, cannot now due to lowering_bars
+        -- TODO: ideally do both, cannot now due to fences / lowering_bars
         shrink_floor(side, 16)
       end
 
