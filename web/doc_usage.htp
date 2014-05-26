@@ -76,13 +76,7 @@ or just press the ESCAPE key.
 The top left panel contains the most important settings.
 
 <p>
-The last entry is the <span class="button">Seed</span> number.
-Each SEED number produces a unique, distinctive level.
-Using the same SEED number always produces the exact same level
-(as long as every other setting is the same, including modules).
-
-<p>
-Other settings include:
+These settings include:
 <ul>
   <li>the <span class="button">Game</span> type (DOOM, HERETIC, etc...)
   <li>the <span class="button">Mode</span> of the game (SINGLE-PLAYER, CO-OP, or DEATHMATCH)
