@@ -452,18 +452,33 @@ int Main_key_handler(int event)
 }
 
 
+static void Main_NewSeed()
+{
+	char buffer[64];
+
+	u32_t val = (u32_t)time(NULL);
+
+	// reverse the bits to get more random-looking seeds
+	u32_t flipped = 0;
+
+	for (int i = 0 ; i < 30 ; i++, val >>= 1)
+		flipped = (flipped << 1) | (val & 1);
+
+	// ensure it is only 9 digits
+	flipped &= 0x37FFFFFF;
+
+	sprintf(buffer, "%d", flipped);
+
+	ob_set_config("seed", buffer);
+}
+
+
 static void Batch_Defaults()
 {
 	// inform Lua code about batch mode (the value doesn't matter)
 	ob_set_config("batch", "yes");
 
-	int seed = time(NULL) & 0x7FFFF;
-
-	char seed_buffer[20];
-	sprintf(seed_buffer, "%d", seed);
-
 	// Game Settings
-	ob_set_config("seed",   seed_buffer);
 	ob_set_config("mode",   "sp");
 	ob_set_config("length", "single");
 
@@ -665,6 +680,8 @@ int main(int argc, char **argv)
 
 		Batch_Defaults();
 
+		Main_NewSeed();
+
 		// batch mode never reads/writes the normal config file.
 		// but we can load settings from a explicitly specified file...
 		if (load_file)
@@ -756,6 +773,8 @@ int main(int argc, char **argv)
 			if (main_action == MAIN_BUILD)
 			{
 				main_action = 0;
+
+				Main_NewSeed();
 
 				// save config in case everything blows up
 				Cookie_Save(config_file);
