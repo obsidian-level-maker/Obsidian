@@ -3363,7 +3363,7 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
 
     local z = assert(conn and conn.conn_h)
 
-    local is_fence = (S.border[side].kind == "fence")
+    local is_fence = (conn.R1.is_outdoor and conn.R2.is_outdoor)
     local extra_z
 
     if is_fence then
