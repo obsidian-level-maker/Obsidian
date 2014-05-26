@@ -108,7 +108,7 @@ namelib.NAMES =
         -- size
         Universal=20, Colossal=20, Prodigious=3,
         Secluded=10, Confined=5, Restricted=3,
-        Vast=10, Monstrous=5, Cramped=5,
+        Vast=10, Cramped=5,
 
         -- location
         Subterrestrial=10, Sub_terra=5,
@@ -746,7 +746,6 @@ namelib.NAMES =
         ["Guttural Breath"]=10
         ["Half Light"]=10
         ["Hell Arrives"]=10
-        ["Hellfire"]=10
         ["Helpless"]=10
         ["Herald of Demons"]=10
         ["Hope is Dead"]=10
@@ -1589,6 +1588,12 @@ namelib.NAMES =
   {
     patterns =
     {
+      -- places
+      ["%p of %j"] = 10
+      ["The %p of %j"] = 10
+      ["The %a %p"] = 20
+      ["A %a %p"] = 5
+
       -- homages to Episode 1
       ["%k-Deep in %j"] = 20
       ["%k-Deep in the %j"] = 5
@@ -1602,6 +1607,51 @@ namelib.NAMES =
 
     lexicon =
     {
+      p =
+      {
+        Citadel = 15
+        City = 15
+        Town = 15
+        Ghetto = 15
+        Towers = 15
+
+        World = 10
+        Planet = 5
+        Realm = 10
+        Shores  = 10
+        Land = 10
+        Fields = 10
+
+        Crypt = 5
+        Dungeons = 10
+        Underworld = 10
+
+        Facility = 10
+        Complex = 10
+        Quarters = 5
+        Domain = 10
+        Zone = 5
+      }
+
+      a =
+      {
+        Creepy = 20
+        Lonely = 20
+        Dark = 20
+        Menacing = 20
+        Cold = 20
+        Savage = 20
+        Deathly = 20
+
+        Monstrous = 10
+        Demonic = 10
+        Infested = 10
+        Doomed = 5
+        Hateful = 5
+        Forsaken = 15
+        Evil = 10
+      }
+
       k =
       {
         Knee  = 40
@@ -1630,9 +1680,12 @@ namelib.NAMES =
         Horror = 20
         Monsters = 10
         Zombies = 10
+
+        Terror = 10
         Fear = 10
         Flames = 10
         Despair = 5
+        Doom = 5
       }
 
       s =
@@ -1641,6 +1694,14 @@ namelib.NAMES =
         ["Aftershock"] = 10
 
         -- FIXME more !!
+
+        -- homages to DOOM 1 Episodes
+        ["Explosion"] = 3
+        ["Enter the Flames"] = 3
+        ["Burning in Hell"] = 3
+        ["Blazing Shores"] = 3
+        ["The Lakes of Fire"] = 3
+        ["Hellfires"] = 3
       }
     }
   }
