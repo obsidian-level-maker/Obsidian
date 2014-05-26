@@ -12,6 +12,10 @@ DOOM.SKINS.Fence_secret =
   over   = 16
 
   x_fit  = "frame"
+  z_fit  = "bottom"
+
+  bound_z1 = 0
+  bound_z2 = 128
 
   secret = 1
 }
