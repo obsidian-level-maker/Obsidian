@@ -4,7 +4,7 @@
 
 DOOM.SKINS.Fence_secret =
 {
-  file   = "door/secr_fence.wad"
+  file   = "fence/secr_fence.wad"
   where  = "edge"
   
   long   = 192

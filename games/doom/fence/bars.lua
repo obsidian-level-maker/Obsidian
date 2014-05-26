@@ -4,7 +4,7 @@
 
 DOOM.SKINS.Bars_shiny =
 {
-  file   = "door/bars.wad"
+  file   = "fence/bars.wad"
   where  = "edge"
 
   long   = 192
