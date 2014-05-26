@@ -3374,7 +3374,7 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
     if conn.R1.kind == "cave" or conn.R2.kind == "cave" then
       z = z + 2
 
-      if extra_z >= 2 then extra_z = extra_z - 2 end
+      if extra_z and extra_z >= 2 then extra_z = extra_z - 2 end
     end
 
     local fab_name = "Door_secret"
@@ -3427,18 +3427,6 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
 
 
   local function do_fence(S, side, w_tex, f_tex)
---[[ OLD CODE
-    local skin = { wall=w_tex, floor=f_tex }
-    local fence_h = assert(R.fence_z) + LEVEL.fence_h
-
-    -- prevent player from getting over the fence via a pedestal
-    if S.content == "wotsit" then
-      fence_h = fence_h + 24
-    end
-
-    Build.fence(S, side, fence_h, skin)
---]]
-
     local z = R.fence_z
 
     local extra_z = calc_fence_extra_z(S, side, z)
