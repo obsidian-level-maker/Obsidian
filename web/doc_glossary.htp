@@ -302,14 +302,13 @@ The decisions about where to place rooms, how big they are,
 and how they are connected are all done using seeds.
 
 <p>
-In the user interface, the seed is a 6-digit value which is used
-to setup the random number generator.  The same seed value
-produces the same random numbers, and hence the same levels
-(when all other settings are the same).
-The top four digits are guaranteed to be different on
-different days, so it would take about 27 <i>years</i> before
-they start repeating.
-The '+' (Bump) button only changes the bottom two digits.
+Another meaning of "seed" is a number used to setup a
+random number generator.  The same seed value will produce
+the same sequence of random numbers.
+OBLIGE chooses a unique seed number each time you
+build a set of levels, which ensures that the output wad
+is different than any previously built wad.
+
 </div>
 
 
