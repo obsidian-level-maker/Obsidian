@@ -1275,8 +1275,6 @@ namelib.NAMES =
     {
       s =
       {
-        ["A Price To Pay"]=10
-        ["Aftershock"]=10
         ["Angelic Exodus"]=10
         ["Arena of Terror"]=10
         ["Bad Dream"]=10
@@ -1583,6 +1581,70 @@ namelib.NAMES =
     }
   }
   -- end of 'PSYCHO' theme
+
+
+  --------------------------------------------------
+
+  EPISODE =
+  {
+    patterns =
+    {
+      -- homages to Episode 1
+      ["%k-Deep in %j"] = 20
+      ["%k-Deep in the %j"] = 5
+      ["%k-High in %j"] = 10
+      ["Drowning in %j"] = 10
+      ["Wading through the %j"] = 5
+
+      -- complete names
+      ["%s"] = 10
+    }
+
+    lexicon =
+    {
+      k =
+      {
+        Knee  = 40
+        Neck  = 20
+        Waist = 10
+        Chest = 3
+        Thigh = 3
+      }
+
+      j =
+      {
+        Gore = 30
+        Dead = 5
+        Corpses = 20
+        Bodies = 20
+        Bones = 10
+        Death = 15
+        Carnage = 20
+
+        Blood = 20
+        Slime = 10
+        Nukage = 10
+        Mush = 5
+
+        Destruction = 10
+        Horror = 20
+        Monsters = 10
+        Zombies = 10
+        Fear = 10
+        Flames = 10
+        Despair = 5
+      }
+
+      s =
+      {
+        ["A Price To Pay"] = 10
+        ["Aftershock"] = 10
+
+        -- FIXME more !!
+      }
+    }
+  }
+  -- end of 'EPISODE' theme
 }
 
 
@@ -1766,6 +1828,7 @@ function namelib.test()
   test_theme("GOTHIC")
   test_theme("URBAN")
   test_theme("BOSS")
+  test_theme("EPISODE")
 end
 
 

@@ -636,7 +636,7 @@ function Levels_episode_names()
     -- only generate names for used episodes
     if table.empty(EPI.levels) then continue end
 
-    EPI.description = Naming_grab_one("BOSS")
+    EPI.description = Naming_grab_one("EPISODE")
   end
 end
 
