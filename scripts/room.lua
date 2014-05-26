@@ -1139,7 +1139,20 @@ function Room_border_up()
   end
 
 
+  local function calc_fence_height(R)
+    -- fence_z is the _bottom_ height of the fence
+    R.fence_z = R.floor_max_h
+
+    -- prevent player from getting over the fence via a border piece
+    if R.has_map_border then
+      R.fence_z = R.fence_z + (LEVEL.border_group.fence_boost or 0)
+    end
+  end
+
+
   local function border_up(R)
+    calc_fence_height(R)
+
     local B_CORNERS = { 1,3,9,7 }
 
     -- indoor caves are handled elsewhere
@@ -3223,7 +3236,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     end
 
     -- FIXME : find it properly
-    local fab_name = "Door_SW_blue"
+    local fab_name = "Door_with_bars" --!!!! Door_SW_blue
 
     local skin1 = GAME.SKINS[fab_name]
     assert(skin1)
@@ -3243,50 +3256,82 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   end
 
 
+  local function calc_fence_extra_z(S, side, z)
+    -- determine how much higher to make a fence, based on nearby high
+    -- floors which the player could jump over it from.
+
+    local N = S:neighbor(side)
+    assert(N and N.room)
+
+    local f_max = math.max(S.room.fence_z, N.room.fence_z)
+    local c_min = math.min(S.room.ceil_h,  N.room.ceil_h)
+
+    local FENCE_H = 32  -- must match the prefab (ugh, hack)
+
+    -- this is where we get to when extra_z == 0
+    z = z + FENCE_H
+
+    local extra_z     = f_max + LEVEL.fence_h - z
+    local extra_limit = c_min - z - 64
+
+    if extra_z > extra_limit then
+       extra_z = extra_limit
+    end
+
+    if extra_z < 0 then extra_z = 0 end
+
+    return extra_z
+  end
+
+
   local function do_secret_door(S, side, f_tex, w_tex)
     local conn = S.border[side].conn
 
     local z = assert(conn and conn.conn_h)
 
+    local is_fence = conn.R1.is_outdoor and conn.R2.is_outdoor
+    local extra_z
+    
+    if is_fence then
+      extra_z = calc_fence_extra_z(S, side, z)
+    end
+
+    -- this fixes a problem with caves (bit of a hack)
+    if conn.R1.kind == "cave" or conn.R2.kind == "cave" then
+      z = z + 2
+
+      if extra_z >= 2 then extra_z = extra_z - 2 end
+    end
+
     local fab_name = "Door_secret"
+    if is_fence then
+      fab_name = "Fence_secret"
+    end
+
     local skin1 = GAME.SKINS[fab_name]
     assert(skin1)
 
     local o_tex = outer_tex(S, side, w_tex)
     local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex }
 
-    -- this fixes a problem with caves (bit of a hack)
-    z = z + 2
-
     local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, z,
                                    side, 0, 192, skin1.deep, skin1.over)
+
+    if is_fence then
+      T.fitted_z = skin1.bound_z2 + extra_z
+    end
 
     Fabricate_at(R, skin1, T, { skin1, skin2 })
   end
 
 
   function do_lowering_bars(S, side, f_tex, w_tex)
-    local z = assert(S.conn and S.conn.conn_h)
-
     local LOCK = assert(S.border[side].lock)
     local skin = assert(GAME.DOORS[LOCK.switch or LOCK.item])
 
-    local N = S:neighbor(side)
-    assert(N and N.room)
+    local z = assert(S.conn and S.conn.conn_h)
 
-    -- determine how much higher to make bars, based on nearby high
-    -- floors which the player could jump over them from.
-
-    local extra_z = math.max(S.room.floor_max_h, N.room.floor_max_h) - z
-    if extra_z < 0 then extra_z = 0 end
-
-    local z_max = math.min(S.room.ceil_h, N.room.ceil_h) - 96
-
-    if extra_z > z_max - z then
-       extra_z = z_max - z
-    end
-
-    if extra_z < 0 then extra_z = 0 end
+    local extra_z = calc_fence_extra_z(S, side, z)
 
     local fab_name = "Bars_shiny"
 
@@ -3517,13 +3562,8 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
       end
 
       if B_kind == "fence"  then
-        local skin = { h=30, wall=w_tex, floor=f_tex }
-        local fence_h = R.fence_h or ((R.floor_max_h or z1) + skin.h)
-
-        -- prevent player from getting over the fence via a border piece
-        if R.has_map_border then
-          fence_h = fence_h + (LEVEL.border_group.fence_boost or 0)
-        end
+        local skin = { wall=w_tex, floor=f_tex }
+        local fence_h = assert(R.fence_z) + LEVEL.fence_h
 
         -- prevent player from getting over the fence via a pedestal
         if S.content == "wotsit" then
@@ -3565,7 +3605,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
       if B_kind == "secret_door" then
         do_secret_door(S, side, f_tex, w_tex)
-        shrink_both(side, 16)
+        shrink_floor(side, 16) --!!!! both for door
       end
 
       if B_kind == "lock_door" then
@@ -4258,6 +4298,8 @@ function Room_build_all()
   gui.printf("\n--==| Build Rooms |==--\n\n")
 
   gui.prog_step("Rooms")
+
+  LEVEL.fence_h = 32
 
   Room_decide_hallways()
 

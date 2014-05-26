@@ -213,6 +213,10 @@ function Layout_preprocess_patterns()
       elseif kind == "3d_bridge" then
         analyse_3d_bridge(grid, x, y)
       end
+
+      -- NOTE: 3d_stair is not handled here, since it needs to
+      --       access both _structure and _overlay grids.
+
     end -- x, y
     end
   end
@@ -759,7 +763,6 @@ function Layout_set_floor_minmax(R)
   R.floor_min_h = min_h
   R.floor_max_h = max_h
 
-  R.fence_h  = R.floor_max_h + 30
   R.liquid_h = R.floor_min_h - 48
 
   for x = R.sx1, R.sx2 do

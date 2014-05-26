@@ -25,7 +25,7 @@ Build = {}
 function Build.fence(S, side, fence_h, skin)
   local coords = get_wall_coords(S, side)
 
-  Trans.old_brush(get_mat(skin.wall, skin.floor), coords, -EXTREME_H, fence_h)
+  Trans.old_brush(get_mat(skin.wall), coords, -EXTREME_H, fence_h)
 end
 
 

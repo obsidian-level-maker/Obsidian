@@ -84,7 +84,7 @@ DEPOT_SEEDS = 4
 EXTREME_H = 4000
 
 SKILLS = { "easy", "medium", "hard" }
-   
+
 
 -- room stuff
 
