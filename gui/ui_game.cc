@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2012 Andrew Apted
+//  Copyright (C) 2006-2014 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -61,7 +61,7 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
 
 
 	int cw = 130 + KF * 14;
-	int ch = 24 + KF*2;
+	int ch = 24 + KF * 2;
 
 	game = new UI_RChoice(cx, cy, cw, ch, "Game: ");
 	game->align(FL_ALIGN_LEFT);
@@ -113,25 +113,6 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
 	cy += y_step + y_step/2;
 
 
-	seed = new Fl_Int_Input(cx, cy, 66+KF*6, 24+KF*2, "Seed: ");
-	seed->align(FL_ALIGN_LEFT);
-	seed->selection_color(FL_BLUE);
-	seed->maximum_size(6);
-	seed->callback(callback_Seed, this);
-	seed->value("1");
-
-	bump = new Fl_Button(cx + cw - (60+KF*4), cy, 24+KF*4, 24+KF*2, "+");
-	bump->labelsize(FL_NORMAL_SIZE+2);
-	bump->callback(callback_Bump, this);
-
-	add(seed);
-
-	add(bump);
-
-	cy += seed->h() + y_step;
-
-
-
 	//  DebugPrintf("UI_Game: final h = %d\n", cy - y);
 
 	resizable(0);  // don't resize our children
@@ -146,68 +127,6 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
 //
 UI_Game::~UI_Game()
 { }
-
-
-void UI_Game::SetSeed(u32_t new_val)
-{
-	char num_buf[40];
-
-	sprintf(num_buf, "%06d", new_val % 1000000);
-
-	seed->value(num_buf);
-
-	ob_set_config("seed", seed->value());
-}
-
-
-// the xor here is to prevent the first digit of seed being zero
-#define TIME_CALC  (u32_t)time(NULL) ^ 0x44444444
-
-void UI_Game::FreshSeed()
-{
-	u32_t val   = TIME_CALC;
-	u32_t usage = IntHash(val) % 100;
-
-	SetSeed((val/43200) * 100 + usage);
-}
-
-
-void UI_Game::StaleSeed(u32_t old_val)
-{
-	u32_t val   = TIME_CALC;
-	u32_t usage = IntHash(val) % 100;
-
-	// when the day is the same, simply Bump the old value
-	if ((val/43200) % 10000 == (old_val/100) % 10000)
-		usage = (old_val+1) % 100;
-
-	SetSeed((val/43200) * 100 + usage);
-}
-
-
-void UI_Game::BumpSeed()
-{
-	u32_t val   = atoi(seed->value());
-	u32_t usage = (val+1) % 100;
-
-	SetSeed((val / 100) * 100 + usage);
-}
-
-
-void UI_Game::callback_Seed(Fl_Widget *w, void *data)
-{
-	UI_Game *that = (UI_Game *)data;
-
-	ob_set_config("seed", that->seed->value());
-}
-
-
-void UI_Game::callback_Bump(Fl_Widget *w, void *data)
-{
-	UI_Game *that = (UI_Game *)data;
-
-	that->BumpSeed();
-}
 
 
 void UI_Game::callback_Game(Fl_Widget *w, void *data)
@@ -249,9 +168,6 @@ void UI_Game::Locked(bool value)
 {
 	if (value)
 	{
-		seed->deactivate();
-		bump->deactivate();
-
 		game->deactivate();
 		mode->deactivate();
 		length->deactivate();
@@ -259,9 +175,6 @@ void UI_Game::Locked(bool value)
 	}
 	else
 	{
-		seed->activate();
-		bump->activate();
-
 		game->activate();
 		mode->activate();
 		length->activate();
@@ -276,8 +189,6 @@ void UI_Game::Locked(bool value)
 void UI_Game::Defaults()
 {
 	// Note: game, engine are handled by LUA code (ob_init)
-
-	FreshSeed();
 
 	ParseValue("mode", "sp");
 	ParseValue("length", "few");
@@ -347,12 +258,6 @@ void UI_Game::setup_Length()
 		length->AddPair(length_syms[i], length_syms[i+1]);
 		length->ShowOrHide(length_syms[i], 1);
 	}
-}
-
-
-const char *UI_Game::get_Seed()
-{
-	return seed->value();
 }
 
 

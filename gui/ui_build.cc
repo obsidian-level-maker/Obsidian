@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2011 Andrew Apted
+//  Copyright (C) 2006-2014 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -52,8 +52,8 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 	int cy = y + 18 + KF * 4;
 
 	int mini_w = 100 + KF * 12;
-	int mini_h = 76 + KF *  6;
-	int mini_x = x + 14 + KF*2;
+	int mini_h = 106 + KF *  6;
+	int mini_x = x + 12 + KF * 2;
 
 	mini_map = new UI_MiniMap(mini_x, cy, mini_w, mini_h);
 
@@ -62,20 +62,28 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
 	int button_w = 74 + KF * 16;
 	int button_h = 30 + KF * 4;
-	int button_x = x + w-14-KF*2 - button_w;
+	int button_x = x + 120 + KF * 16;
 
-	int about_x = button_x;
-
-	about = new Fl_Button(about_x, cy, button_w, button_h, "About");
+	about = new Fl_Button(button_x, cy, button_w, button_h, "About");
 	about->labelsize(FL_NORMAL_SIZE + 0);
 	about->callback(about_callback, this);
 
 	add(about);
 
+	cy += about->h() + 8 + KF;
+
+
+	options = new Fl_Button(button_x, cy, button_w, button_h, "Options");
+	options->labelsize(FL_NORMAL_SIZE + 0);
+	options->callback(options_callback, this);
+
+	add(options);
+
+	cy += options->h() + 16 + KF;
+
+
 
 	const char *build_text = "Build";
-
-	cy += about->h() + 14 + KF;
 
 	build = new Fl_Button(button_x, cy, button_w, button_h, build_text);
 	build->labelfont(FL_HELVETICA_BOLD);
@@ -84,16 +92,8 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
 	add(build);
 
-	cy += build->h() + 14 + KF;
+	cy += build->h() + 8 + KF;
 
-
-	options = new Fl_Button(x+20, cy, button_w, button_h, "Options");
-	options->labelsize(FL_NORMAL_SIZE + 0);
-	options->callback(options_callback, this);
-
-	add(options);
-
-	// cy += options->h() + 6;
 
 	quit = new Fl_Button(button_x, cy, button_w, button_h, "Quit");
 	quit->labelsize(FL_NORMAL_SIZE + 0);
@@ -103,7 +103,8 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
 	cy += quit->h();
 
-	cy += 6 + KF;
+
+	cy = y + h - 70;
 
 
 	status = new Fl_Box(FL_FLAT_BOX, x+12, cy, w-22, 24+KF*2, "Ready to go!");

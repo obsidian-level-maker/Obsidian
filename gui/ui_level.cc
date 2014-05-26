@@ -75,7 +75,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 
 	cy += size->h() + y_step;
 
-	cy += y_step + y_step/2;
+//	cy += y_step + y_step/2;
 
 
 	theme = new UI_RChoice(cx, cy, cw, ch, "Theme: ");
@@ -110,8 +110,6 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 	setup_Caves();
 
 	add(caves);
-
-	cy += caves->h() + y_step;
 
 
 	//  DebugPrintf("UI_Level: final h = %d\n", cy - y);

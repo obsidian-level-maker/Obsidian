@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2012 Andrew Apted
+//  Copyright (C) 2006-2014 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -66,19 +66,17 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
 	int PANEL_W = 212 + KF*32;
 
-	int TOP_H  = 214 + KF*22;
+	int TOP_H  = 180 + KF*18;
 	int BOT_H  = H - TOP_H - 4;
 	int MOD_W  = W - PANEL_W*2 - 8;
-
-	int DF = 34 + KF*4;
 
 	game_box = new UI_Game(0, 0, PANEL_W, TOP_H);
 	add(game_box);
 
-	level_box = new UI_Level(PANEL_W+4, 0, PANEL_W, TOP_H - DF);
+	level_box = new UI_Level(PANEL_W+4, 0, PANEL_W, TOP_H);
 	add(level_box);
 
-	play_box = new UI_Play(PANEL_W+4, TOP_H+4 - DF, PANEL_W, BOT_H + DF);
+	play_box = new UI_Play(PANEL_W+4, TOP_H+4, PANEL_W, BOT_H);
 	add(play_box);
 
 

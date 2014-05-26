@@ -134,23 +134,11 @@ static void Cookie_SetValue(const char *name, const char *value)
 	// need special handling for the 'seed' value
 	if (StringCaseCmp(name, "seed") == 0)
 	{
-		if (main_win)
-		{
-			int seed = atoi(value);
+		// ignore seed when loading a config file unless
+		// the -k / --keep option is given.
 
-			if (context == CCTX_Arguments || keep_seed)
-				main_win->game_box->SetSeed(seed);
-			else
-				main_win->game_box->StaleSeed(seed);
-		}
-		else
-		{
-			// ignore seed when loading a config file in Batch mode
-			// unless the -k / --keep option is given.
-
-			if (context == CCTX_Arguments || keep_seed)
-				ob_set_config(name, value);
-		}
+		if (context == CCTX_Arguments || keep_seed)
+			ob_set_config(name, value);
 
 		return;
 	}

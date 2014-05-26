@@ -23,10 +23,6 @@
 
 class UI_Game : public Fl_Group
 {
-private:
-	Fl_Int_Input *seed;
-	Fl_Button *bump;
-
 public:
 	UI_RChoice *game;
 	UI_RChoice *mode;
@@ -39,16 +35,7 @@ public:
 	virtual ~UI_Game();
 
 public:
-
-	void SetSeed(u32_t new_val);
-
-	void FreshSeed();
-	void StaleSeed(u32_t old_val);
-	void BumpSeed();
-
 	void Locked(bool value);
-
-	const char *get_Seed();
 
 	void Defaults();
 
@@ -61,9 +48,6 @@ public:
 private:
 	void setup_Mode();
 	void setup_Length();
-
-	static void callback_Seed(Fl_Widget *, void*);
-	static void callback_Bump(Fl_Widget *, void*);
 
 	static void callback_Game  (Fl_Widget *, void*);
 	static void callback_Mode  (Fl_Widget *, void*);

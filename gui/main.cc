@@ -573,9 +573,6 @@ bool Build_Cool_Shit()
 		main_win->build_box->SetAbortButton(false);
 
 		main_win->Locked(false);
-
-		if (was_ok)
-			main_win->game_box->BumpSeed();
 	}
 
 	if (main_action == MAIN_CANCEL)
