@@ -1591,8 +1591,8 @@ namelib.NAMES =
       -- places
       ["%p of %j"] = 15
       ["The %p of %j"] = 15
-      ["The %a %p"] = 30
-      ["A %a %p/s"] = 5
+      ["The %a %p"] = 20
+      ["A %a %p/s"] = 20
       ["%j %q"] = 10
 
       -- homages to Episode 1
@@ -1745,6 +1745,20 @@ function namelib.fix_up(name)
   -- convert "A" to "AN" where necessary
   name = string.gsub(name, "^[aA] ([aAeEiIoOuU])", "An %1")
 
+  -- the "+s" means to add "S" to a word (pluralize it)
+  name = string.gsub(name, "s%+s", "s")
+  name = string.gsub(name, "x%+s", "xes")
+  name = string.gsub(name, "z%+s", "zes")
+  name = string.gsub(name, "ay%+s", "ays")
+  name = string.gsub(name, "oy%+s", "ays")
+  name = string.gsub(name, "y%+s", "ies")
+  name = string.gsub(name, "%+s", "s")
+
+  -- the "/s" means to remove a trailing "S" from a word
+  name = string.gsub(name, "ies/s", "y")
+  name = string.gsub(name, "s/s", "")
+  name = string.gsub(name, "/s", "")
+
   return name
 end
 
@@ -1797,7 +1811,7 @@ function namelib.one_from_pattern(DEF)
     local c = string.sub(pattern, pos, pos)
     pos = pos + 1
 
-    if c != "%" then
+    if c != '%' then
       name = name .. c
     else
       assert(pos <= #pattern)
