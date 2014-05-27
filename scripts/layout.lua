@@ -1893,8 +1893,9 @@ function Layout_pattern_in_area(R, area, f_texs)
 
     if pat._overlay then
       if pat._overlay[px][py].kind != "empty" then
-        CHUNK.overlay.kind = pat._overlay[px][py].kind
-        CHUNK.overlay.dir  = pat._overlay[px][py].dir
+        CHUNK.overlay.kind  = pat._overlay[px][py].kind
+        CHUNK.overlay.dir   = pat._overlay[px][py].dir
+        CHUNK.overlay.floor = pat._overlay[px][py].floor
 
         R.has_3d_floor = true
       end

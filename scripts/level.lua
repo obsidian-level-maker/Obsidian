@@ -774,7 +774,7 @@ function Levels_make_level(LEV)
 
   gui.printf("\n\n~~~~~~| %s |~~~~~~\n", LEVEL.name)
 
-  LEVEL.seed = OB_CONFIG.seed + index * 47
+  LEVEL.seed = OB_CONFIG.seed + index * 10
   LEVEL.ids  = {}
 
   THEME = table.copy(assert(LEVEL.theme))
