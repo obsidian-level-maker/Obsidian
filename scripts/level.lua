@@ -340,16 +340,17 @@ function Levels_sort_modules()
 end
 
 
-function Levels_invoke_hook(name, rseed, ...)
+function Levels_invoke_hook(name, ...)
   -- two passes, for example: setup and setup2
   for pass = 1,2 do
     for index,mod in ipairs(GAME.modules) do
       local func = mod.hooks and mod.hooks[name]
+
       if func then
-        if rseed then gui.rand_seed(rseed) end
         func(mod, ...)
       end
     end
+
     name = name .. "2"
   end
 end
@@ -384,7 +385,7 @@ function Levels_setup()
 
   PARAM = assert(GAME.PARAMETERS)
 
-  Levels_invoke_hook("setup",  OB_CONFIG.seed)
+  Levels_invoke_hook("setup")
 
   if PARAM.sub_format then
     gui.property("sub_format", PARAM.sub_format)
@@ -571,8 +572,6 @@ function Levels_choose_themes()
 
   gui.printf("\n")
 
-  gui.rand_seed(OB_CONFIG.seed * 200)
-
   -- the user can specify the main theme
   if OB_CONFIG.theme != "mixed"    and OB_CONFIG.theme != "jumble" and
      OB_CONFIG.theme != "original" and OB_CONFIG.theme != "psycho"
@@ -642,8 +641,6 @@ end
 
 
 function Levels_do_styles()
-  gui.rand_seed(LEVEL.seed)
-
   local style_tab = table.copy(GLOBAL_STYLE_LIST)
 
   -- adjust styles for Co-operative multiplayer
@@ -691,8 +688,6 @@ end
 
 
 function Levels_build_it()
-  gui.rand_seed(LEVEL.seed)
-
   -- does the level have a custom build function?
   if LEVEL.build_func then
     LEVEL.build_func()
@@ -779,7 +774,7 @@ function Levels_make_level(LEV)
 
   gui.printf("\n\n~~~~~~| %s |~~~~~~\n", LEVEL.name)
 
-  LEVEL.seed = OB_CONFIG.seed * 100 + index
+  LEVEL.seed = OB_CONFIG.seed + index * 47
   LEVEL.ids  = {}
 
   THEME = table.copy(assert(LEVEL.theme))
@@ -788,21 +783,24 @@ function Levels_make_level(LEV)
     table.merge_missing(THEME, GAME.THEMES.DEFAULTS)
   end
 
-  --!!!!!! FIXME: BIG HACK !!!!!!
+  --!!!! FIXME: BIG HACK !!!!
   table.merge_missing(THEME, V3_THEME_DEFAULTS)
+
+
+  gui.rand_seed(LEVEL.seed + 0)
 
 
   -- use a pre-built level ?
 
   if LEVEL.prebuilt then
-    Levels_invoke_hook("begin_level",  LEVEL.seed)
+    Levels_invoke_hook("begin_level")
 
     local res = Levels_handle_prebuilt()
     if res != "ok" then
       return res
     end
 
-    Levels_invoke_hook("end_level",  LEVEL.seed)
+    Levels_invoke_hook("end_level")
     return "ok"
   end
 
@@ -810,9 +808,11 @@ function Levels_make_level(LEV)
   gui.begin_level()
   gui.property("level_name", LEVEL.name);
 
+  gui.rand_seed(LEVEL.seed + 1)
+
   Levels_do_styles()
 
-  Levels_invoke_hook("begin_level",  LEVEL.seed)
+  Levels_invoke_hook("begin_level")
 
   gui.printf("\nStyles = \n%s\n\n", table.tostr(STYLE, 1))
 
@@ -827,13 +827,15 @@ function Levels_make_level(LEV)
   end
 
 
+  gui.rand_seed(LEVEL.seed + 2)
+
   local res = Levels_build_it()
   if res != "ok" then
     return res
   end
 
 
-  Levels_invoke_hook("end_level",  LEVEL.seed)
+  Levels_invoke_hook("end_level")
 
   if LEVEL.sky_light then gui.property("sky_light", LEVEL.sky_light) end
   if LEVEL.sky_shade then gui.property("sky_shade", LEVEL.sky_shade) end
@@ -855,7 +857,9 @@ function Levels_make_all()
   GAME.levels   = {}
   GAME.episodes = {}
 
-  Levels_invoke_hook("get_levels",  OB_CONFIG.seed)
+  gui.rand_seed(OB_CONFIG.seed + 0)
+
+  Levels_invoke_hook("get_levels")
 
   if #GAME.levels == 0 then
     error("Level list is empty!")
@@ -864,11 +868,18 @@ function Levels_make_all()
   table.index_up(GAME.levels)
   table.index_up(GAME.episodes)
 
-  Levels_decide_special_kinds()
+
+  gui.rand_seed(OB_CONFIG.seed + 1)
 
   Levels_choose_themes()
 
+
+  gui.rand_seed(OB_CONFIG.seed + 2)
+
+  Levels_decide_special_kinds()
+
   Levels_episode_names()
+
 
   each EPI in GAME.episodes do
     EPISODE = EPI
@@ -882,7 +893,7 @@ function Levels_make_all()
     end
   end
 
-  Levels_invoke_hook("all_done",  OB_CONFIG.seed)
+  Levels_invoke_hook("all_done")
 
   return "ok"
 end
