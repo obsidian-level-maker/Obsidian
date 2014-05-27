@@ -672,6 +672,7 @@ namelib.NAMES =
         ["Cries of Pain"]=10
         ["Crimson Tears"]=10
         ["Crown of Snakes"]=10
+        ["Crucifix of the Damned"] = 10
         ["Cynicism of Vitality"]=10
         ["Dare to Dream"]=10
         ["Dark Citadel"]=10
@@ -1149,6 +1150,7 @@ namelib.NAMES =
         ["Polygraph"]=10
         ["Pinciple of War"]=10
         ["Pitch Black"]=10
+        ["Point of No Return"] = 10
         ["Primetime Killing"]=10
         ["Punctured"]=10
         ["Quietus"]=10
@@ -1556,6 +1558,7 @@ namelib.NAMES =
       ["A %a %p/s"] = 40
       ["%j %q"] = 20
       ["Gateway to %j"] = 5
+      ["%p/s of No Return"] = 5
 
       -- homages to Episode 1
       ["%k-Deep in %j"] = 10
@@ -1607,12 +1610,12 @@ namelib.NAMES =
 
         ["All Around"] = 10
         ["Awaits Thee"] = 5
-        ["Galore"] = 5
+        ["Galore"] = 10
       }
 
       a =
       {
-        Creepy = 20
+        Creepy = 10
         Lonely = 20
         Dark = 20
         Menacing = 20
@@ -1699,13 +1702,11 @@ namelib.NAMES =
         ["Left for Dead"] = 10
         ["New Beginning"] = 10
         ["Oblivion Upon Us"] = 10
-        ["Point of No Return"] = 10
         ["The Healer Stalks"] = 10
         ["When Ashes Rise"] = 10
 
         ["Abandon all Hope"] = 10
         ["Chaos Rising"] = 10
-        ["Crucifix of the Damned"] = 10
         ["Ex Nihilo"] = 10
         ["Genesis of Genocide"] = 10
         ["The Devil's Emissary"] = 10
@@ -1716,6 +1717,16 @@ namelib.NAMES =
         ["Vengeance Denied"] = 10
         ["Where the Devils Spawn"] = 10
 
+        ["Evil Unleashed"] = 10
+        ["The Lost Base"] = 10
+        ["Hell's Playground"] = 10
+        ["Crimson Reprieve"] = 10
+        ["Souls of the Damned"] = 10
+        ["Dawn of Eternity"] = 10
+        ["In the Face of Armageddon"] = 10
+        ["Highway to Hell"] = 10
+        ["Time to Bleed"] = 10
+
         -- homages to DOOM 1 Episodes
         ["Explosion"] = 3
         ["Enter the Flames"] = 3
@@ -1725,6 +1736,7 @@ namelib.NAMES =
         ["Hellfires"] = 3
 
         ["Thou Shalt Die"] = 5
+        ["Consumed by Flames"] = 3
       }
     }
   }
