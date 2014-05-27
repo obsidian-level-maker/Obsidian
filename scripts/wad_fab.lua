@@ -1449,7 +1449,7 @@ function Fab_replacements(fab, skin)
   -- replaces textures (etc) in the brushes of the prefab with
   -- stuff from the skin.
 
-  local function santize_char(ch)
+  local function sanitize_char(ch)
     if ch == "-" or ch == " " or ch == "_" then return "_" end
 
     if string.match(ch, "%w") then return ch end
@@ -1463,13 +1463,13 @@ function Fab_replacements(fab, skin)
   end
 
 
-  local function santize(name)
+  local function sanitize(name)
     name = string.upper(name)
 
     local s = ""
 
     for i = 1,#name do
-      s = s .. santize_char(string.sub(name, i, i))
+      s = s .. sanitize_char(string.sub(name, i, i))
     end
 
     if s == "" then return "XXX" end
@@ -1580,8 +1580,10 @@ function Fab_replacements(fab, skin)
 
       if C.tag then C.tag = check_tag(C.tag) end
 
-      if C.tex and C.x     then C.tex = check_tex (santize(C.tex)) end
-      if C.tex and not C.x then C.tex = check_flat(santize(C.tex), C) end
+      if C.tex and C.x     then C.tex = check_tex (sanitize(C.tex)) end
+      if C.tex and not C.x then C.tex = check_flat(sanitize(C.tex), C) end
+
+      if C.rail and C.x    then C.rail = check_tex(sanitize(C.rail)) end
     end
   end
 
