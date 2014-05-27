@@ -953,6 +953,9 @@ function Fab_load_wad(name)
 
     local flags = (line and line.flags) or 0
 
+    local two_sided = (bit.band(flags, DOOM_TWO_SIDED_FLAG) != 0)
+
+
     --- determine texture to use ---
 
     local upper_tex
@@ -984,7 +987,7 @@ end
     local tex
 
     -- if line is one-sided, use the middle texture
-    if line and bit.band(flags, DOOM_TWO_SIDED_FLAG) == 0 then
+    if line and not two_sided then
       tex = mid_tex
 
     elseif pass == 1 then
@@ -1048,7 +1051,7 @@ end
 
     -- railings --
 
-    if pass == 1 and line and mid_tex and tex != mid_tex then
+    if pass == 1 and two_sided and mid_tex then
       C2.rail = mid_tex
     end
 
