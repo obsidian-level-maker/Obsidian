@@ -1589,20 +1589,22 @@ namelib.NAMES =
     patterns =
     {
       -- places
-      ["%p of %j"] = 10
-      ["The %p of %j"] = 10
-      ["The %a %p"] = 20
-      ["A %a %p"] = 5
+      ["%p of %j"] = 15
+      ["The %p of %j"] = 15
+      ["The %a %p"] = 30
+      ["A %a %p/s"] = 5
+      ["%j %q"] = 10
 
       -- homages to Episode 1
-      ["%k-Deep in %j"] = 20
+      ["%k-Deep in %j"] = 10
       ["%k-Deep in the %j"] = 5
-      ["%k-High in %j"] = 10
-      ["Drowning in %j"] = 10
+      ["%k-High in %j"] = 5
+      ["Drowning in %j"] = 15
       ["Wading through the %j"] = 5
+      ["Endless %j"] = 10
 
       -- complete names
-      ["%s"] = 10
+      ["%s"] = 20
     }
 
     lexicon =
@@ -1611,26 +1613,38 @@ namelib.NAMES =
       {
         Citadel = 15
         City = 15
-        Town = 15
         Ghetto = 15
         Towers = 15
 
         World = 10
         Planet = 5
         Realm = 10
-        Shores  = 10
+        Shores = 30
         Land = 10
-        Fields = 10
+        Fields = 15
 
         Crypt = 5
         Dungeons = 10
         Underworld = 10
+        Dimension = 20
 
-        Facility = 10
+        Facility = 5
         Complex = 10
         Quarters = 5
         Domain = 10
-        Zone = 5
+        House = 5
+      }
+
+      q =
+      {
+        Town = 20
+        City = 5
+        Zone = 20
+        Central = 20
+
+        ["All Around"] = 10
+        ["Awaits Thee"] = 5
+        ["Galore"] = 5
       }
 
       a =
@@ -1642,6 +1656,7 @@ namelib.NAMES =
         Cold = 20
         Savage = 20
         Deathly = 20
+        Strange = 10
 
         Monstrous = 10
         Demonic = 10
@@ -1654,8 +1669,8 @@ namelib.NAMES =
 
       k =
       {
-        Knee  = 40
-        Neck  = 20
+        Knee = 30
+        Neck = 20
         Waist = 10
         Chest = 3
         Thigh = 3
@@ -1670,17 +1685,20 @@ namelib.NAMES =
         Bones = 10
         Death = 15
         Carnage = 20
+        Slaughter = 10
 
         Blood = 20
         Slime = 10
         Nukage = 10
         Mush = 5
+        Filth = 10
 
         Destruction = 10
         Horror = 20
         Monsters = 10
         Zombies = 10
 
+        Pain = 10
         Terror = 10
         Fear = 10
         Flames = 10
