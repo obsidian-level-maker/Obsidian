@@ -127,6 +127,7 @@ function DOOM1.all_done()
   DOOM.make_episode_gfx()
 
   gui.wad_merge_sections("doom_falls.wad");
+  gui.wad_merge_sections("short_bars.wad");
 end
 
 

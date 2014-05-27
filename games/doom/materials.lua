@@ -456,7 +456,6 @@ DOOM1.MATERIALS =
   SKULWALL = { t="SKULWALL", f="FLAT5_6" }
   SLADRIP1 = { t="SLADRIP1", f="FLOOR7_1" }
 
-  SP_DUDE3 = { t="SP_DUDE3", f="DEM1_5" }
   SP_DUDE6 = { t="SP_DUDE6", f="DEM1_5" }
   SP_ROCK1 = { t="SP_ROCK1", f="MFLR8_3" }
   STARTAN1 = { t="STARTAN1", f="FLOOR4_1" }
@@ -492,6 +491,9 @@ DOOM1.MATERIALS =
   MIDVINE1 = { t="MIDVINE1", rail_h=128 }
   MIDVINE2 = { t="MIDVINE2", rail_h=128 }
 
+  -- this is the MIDBARS3 texture from FreeDoom
+  MIDBARS3 = { t="SP_DUDE3", rail_h=72 }
+
 
   -- liquid stuff (using new patches)
   BFALL1   = { t="BLODGR1",  f="BLOOD1", sane=1 }
@@ -508,7 +510,6 @@ DOOM1.MATERIALS =
   PIPEWAL1 = { t="COMPWERD", f="CEIL5_1" }
   SPACEW3  = { t="COMPUTE1", f="FLAT1" }
   SILVER3  = { t="PLANET1",  f="FLAT23" }
-  MIDBARS3 = { t="MIDGRATE", rail_h=128 }
 }
 
  

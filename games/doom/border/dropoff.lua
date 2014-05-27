@@ -11,6 +11,8 @@ DOOM.SKINS.Border_dropoff_c =
   seed_h = 3
 
   add_sky = 1
+
+  tex_MIDBARS3 = "MIDBARS3"
 }
 
 
@@ -23,6 +25,8 @@ DOOM.SKINS.Border_dropoff_t =
   seed_h = 3
 
   add_sky = 1
+
+  tex_MIDBARS3 = "MIDBARS3"
 }
 
 
@@ -35,6 +39,8 @@ DOOM.SKINS.Border_dropoff_s =
   seed_h = 3
 
   add_sky = 1
+
+  tex_MIDBARS3 = "MIDBARS3"
 }
 
 
