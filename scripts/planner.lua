@@ -654,8 +654,11 @@ function Plan_add_caves()
     end
 
     -- wanted size : big for the middle of the map
-    local mw = sel(side == 5, 2, 1)
-    local mh = mw
+    local mw = 1
+    local mh = 1
+
+    if side == 5 and rand.odds(90) then mw = 2 end
+    if side == 5 and rand.odds(90) then mh = 2 end
 
     local spots = {}
 
@@ -808,9 +811,13 @@ function Plan_add_caves()
   end
 
 
-  while #rooms < max_rooms and
+  for loop = 1, 100 do
+    if #rooms >= max_rooms and
        (#rooms < min_rooms or quota / #rooms > rough_size + 0.4)
-  do
+    then
+      break;
+    end
+
     -- pick a location
     local side = rand.key_by_probs(locations)
 
