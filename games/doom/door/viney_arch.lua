@@ -21,5 +21,7 @@ DOOM.SKINS.Arch_viney =
   neighbor = "outdoor"
 
   rank = 2
+
+  tex_SP_DUDE2 = "MIDVINE2"
 }
 

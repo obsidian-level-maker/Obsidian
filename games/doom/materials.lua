@@ -763,7 +763,7 @@ DOOM2.MATERIALS =
   MIDSPACE = { t="MIDSPACE", rail_h=128 }
 
   -- scaled MIDVINE2 from FreeDoom
-  FMIDVINE = { t="SP_DUDE8", rail_h=128 }
+  MIDVINE2 = { t="SP_DUDE8", rail_h=128 }
 
 
   -- liquid stuff (keep them recognisable)
