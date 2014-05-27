@@ -1589,22 +1589,23 @@ namelib.NAMES =
     patterns =
     {
       -- places
-      ["%p of %j"] = 15
-      ["The %p of %j"] = 15
-      ["The %a %p"] = 20
-      ["A %a %p/s"] = 20
-      ["%j %q"] = 10
+      ["%p of %j"] = 30
+      ["The %p of %j"] = 30
+      ["The %a %p"] = 40
+      ["A %a %p/s"] = 40
+      ["%j %q"] = 20
+      ["Gateway to %j"] = 5
 
       -- homages to Episode 1
       ["%k-Deep in %j"] = 10
       ["%k-Deep in the %j"] = 5
       ["%k-High in %j"] = 5
-      ["Drowning in %j"] = 15
+      ["Drowning in %j"] = 10
       ["Wading through the %j"] = 5
       ["Endless %j"] = 10
 
       -- complete names
-      ["%s"] = 20
+      ["%s"] = 50
     }
 
     lexicon =
@@ -1718,7 +1719,7 @@ namelib.NAMES =
         ["Enter the Flames"] = 3
         ["Burning in Hell"] = 3
         ["Blazing Shores"] = 3
-        ["The Lakes of Fire"] = 3
+        ["Lakes of Fire"] = 3
         ["Hellfires"] = 3
       }
     }
@@ -1846,10 +1847,10 @@ function namelib.choose_one(DEF, max_len)
   until #name <= max_len
 
   -- adjust probabilities
-  for c,divisor in pairs(DEF.divisors) do
-    if not DEF.lexicon[c] then continue end
+  each c,word_tab in DEF.lexicon do
+    local divisor = DEF.divisors[c] or 10
 
-    for w,prob in pairs(DEF.lexicon[c]) do
+    each w,prob in word_tab do
       if namelib.match_parts(w, parts) then
         DEF.lexicon[c][w] = prob / divisor
       end
@@ -1933,6 +1934,7 @@ function Naming_grab_one(theme)
   local cache = GAME.name_cache
 
   if not cache[theme] or table.empty(cache[theme]) then
+    namelib.test()
     cache[theme] = namelib.generate(theme, 30, PARAM.max_name_length)
   end
 
