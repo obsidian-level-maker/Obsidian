@@ -118,6 +118,7 @@ function ROOM_CLASS.new()
     closets = {}
     prefabs = {}
     decor   = {}
+    chunks  = {}
 
     sky_rects = {}
     exclusions = {}
@@ -3492,6 +3493,19 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
   end
 
 
+  local function do_extra_floor(S, z, indents, w_tex, f_tex)
+    local kind, w_face, t_face = Mat_normal(S.l_tex or w_tex, f_tex)
+
+    local x1 = S.x1 + (indents[4] or 0)
+    local y1 = S.y1 + (indents[2] or 0)
+    local x2 = S.x2 - (indents[6] or 0)
+    local y2 = S.y2 - (indents[8] or 0)
+
+stderrf("doing extra floor...\n")
+    Trans.quad(x1,y1, x2,y2, z-16,z, kind, w_face, t_face)
+  end
+
+
   local function do_small_bridge(S)
     local skin1 = GAME.SKINS["Bridge_curvey"]
     assert(skin1)
@@ -3873,6 +3887,11 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
       else
         do_floor(S, z1, f_indents, w_tex, f_tex)
       end
+    end
+
+
+    if S.chunk and S.chunk.overlay and S.chunk.overlay.floor then
+      do_extra_floor(S, z1 + 160, f_indents, w_tex, f_tex)
     end
 
 

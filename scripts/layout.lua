@@ -758,6 +758,10 @@ function Layout_set_floor_minmax(R)
   end -- x, y
   end
 
+  if R.has_3d_floor then
+    max_h = max_h + 160
+  end
+
   assert(min_h <= max_h)
 
   R.floor_min_h = min_h
@@ -1819,6 +1823,82 @@ function Layout_pattern_in_area(R, area, f_texs)
   end
 
 
+  local function assign_conns_to_overlay()
+    -- pick which connections are on the second floor.
+    -- when there are 2 or more conns, require at least one on
+    -- each 3d floor.  If only one, pick the upper floor, since
+    -- importants can only exist on the lower floor.
+
+    local total = 0
+
+    local hit_both = {}
+
+    each C in R.conns do
+      local S = C:seed(R)
+
+      -- ignore teleporters
+      if not S then continue end
+
+      total = total + 1
+
+      local hit_lower = (S.kind == "walk")
+
+      local hit_upper = (S.chunk and S.chunk.overlay)
+
+      if hit_lower and hit_upper then
+        table.insert(hit_both, C)
+      end
+    end
+
+stderrf("assign_conns_to_overlay @ %s : total:%d  hit_both:%d\n",
+        R:tostr(), total, #hit_both)
+
+    -- decide how many of hit_both[] to assign to upper floor
+
+    local raise_num = #hit_both
+
+    if total == 2 and raise_num >= 2 then
+    end 
+
+    -- FIXME
+  end
+
+
+  local function calc_overlay_height()
+    -- if there are connections underneath the overlay, then the gap
+    -- must be >= 144 units.  Otherwise gap must be >= 96 units.
+
+    local max_h
+
+    for x = area.x1, area.x2 do
+    for y = area.y1, area.y2 do
+      local S = SEEDS[x][y]
+      assert(S.room == R)
+
+      if not S.floor_h then continue end
+
+      if S.chunk and S.chunk.overlay then
+        local h = S.floor_h
+
+        h = h + sel(S.conn, 144, 96)
+
+        -- overlay thickness : hard-coded currently
+        h = h + 24
+
+        max_h = math.max(h, max_h or -9999)
+      end
+
+    end -- x, y
+    end
+
+    assert(max_h)
+
+    each K in R.chunks do
+      K.floor_h = max_h
+    end
+  end
+
+
   local function eval_a_chunk(pat, px, py, T, sx1, sy1, sw, sh)
     local sx2 = sx1 + sw - 1
     local sy2 = sy1 + sh - 1
@@ -1883,22 +1963,23 @@ function Layout_pattern_in_area(R, area, f_texs)
       sy2 = sy2
 
       kind = P.kind
-
-      overlay = {}
     }
+
+    table.insert(R.chunks, CHUNK)
 
     if P.dir then
       CHUNK.dir = transform_dir(T, dir)
     end
 
-    if pat._overlay then
-      if pat._overlay[px][py].kind != "empty" then
-        CHUNK.overlay.kind  = pat._overlay[px][py].kind
-        CHUNK.overlay.dir   = pat._overlay[px][py].dir
-        CHUNK.overlay.floor = pat._overlay[px][py].floor
+    if pat._overlay and pat._overlay[px][py].kind != "empty" then
+      CHUNK.overlay =
+      {
+        kind  = pat._overlay[px][py].kind
+        dir   = pat._overlay[px][py].dir
+        floor = pat._overlay[px][py].floor
+      }
 
-        R.has_3d_floor = true
-      end
+      R.has_3d_floor = true
     end
 
     -- update the seeds --
@@ -1985,6 +2066,11 @@ function Layout_pattern_in_area(R, area, f_texs)
 
       install_a_chunk(pat, px, py, T, sx, sy, sw, sh)
     end -- x, y
+    end
+
+    if pat._overlay then
+      assign_conns_to_overlay()
+      calc_overlay_height()
     end
   end
 
