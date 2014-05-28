@@ -2136,6 +2136,12 @@ public:
 			SD->mid   = info[index]->tex;
 			SD->lower = info[index]->tex;
 		}
+		else
+		{
+			SD->upper = dummy_wall_tex;
+			SD->mid   = dummy_wall_tex;
+			SD->lower = dummy_wall_tex;
+		}
 
 		SD->x_offset = 0;
 		SD->y_offset = 0;
