@@ -1733,6 +1733,8 @@ namelib.NAMES =
         ["Into the Shadows"] = 10
         ["And Now You Die"] = 10
         ["Halls of Lamentation"] = 10
+        ["Intruder Alert"] = 10
+        ["Security Breach"] = 10
 
         -- homages to DOOM 1 Episodes
         ["Explosion"] = 3
