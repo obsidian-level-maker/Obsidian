@@ -1287,6 +1287,7 @@ namelib.NAMES =
         ["Hardball"]=10
         ["Hellmouth"]=10
         ["Into The Ground"]=10
+        ["I Expect You to Die"]=10
         ["Kill Frenzy"]=10
         ["Killswitch"]=10
         ["Kingdom Come"]=10
@@ -1330,6 +1331,7 @@ namelib.NAMES =
         ["The Purge"]=10
         ["The Second Coming"]=10
         ["The Trap"]=10
+        ["There Can Be No Victory"]=10
         ["Total Doom"]=10
         ["Trapped"]=10
         ["Trial by Fire"]=10
@@ -1338,6 +1340,7 @@ namelib.NAMES =
         ["Unmaker"]=10
         ["Unwelcome"]=10
         ["Victory Zero"]=10
+        ["Welcome to Thy Doom"]=10
         ["What Color is Death?"]=10
         ["You May Not Pass!"]=10
       }
@@ -1727,6 +1730,10 @@ namelib.NAMES =
         ["Highway to Hell"] = 10
         ["Time to Bleed"] = 10
 
+        ["Into the Shadows"] = 10
+        ["And Now You Die"] = 10
+        ["Halls of Lamentation"] = 10
+
         -- homages to DOOM 1 Episodes
         ["Explosion"] = 3
         ["Enter the Flames"] = 3
@@ -1735,6 +1742,8 @@ namelib.NAMES =
         ["Lakes of Fire"] = 3
         ["Hellfires"] = 3
 
+        ["Thy Soul Devoured"] = 5
+        ["Thy Shrivelled Mind"] = 5
         ["Thou Shalt Die"] = 5
         ["Consumed by Flames"] = 3
       }
