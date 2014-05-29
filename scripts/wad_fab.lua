@@ -941,10 +941,15 @@ function Fab_load_wad(name)
 
   local fab
 
-  local function copy_coord(S, C, pass)
+  local rail_lines = {}
+
+
+  local function decode_polygon_side(S, C, pass)
+    -- pass is 1 for floor, 2 for ceiling
 
     local C2 = { x=C.x, y=C.y }
 
+    -- these will be NIL for mini-segs (i.e. sector splits)
     local side
     local line
 
@@ -953,7 +958,7 @@ function Fab_load_wad(name)
 
     local flags = (line and line.flags) or 0
 
-    local two_sided = (bit.band(flags, DOOM_TWO_SIDED_FLAG) != 0)
+    local two_sided = (line and line.left and line.right)
 
 
     --- determine texture to use ---
@@ -1039,8 +1044,9 @@ function Fab_load_wad(name)
 
     -- railings --
 
-    if pass == 1 and two_sided and mid_tex then
-      C2.rail = mid_tex
+    if pass == 1 and C.line and two_sided and mid_tex then
+      -- we only remember the railing here (for later processing)
+      rail_lines[C.line] = true
     end
 
     return C2
@@ -1054,7 +1060,7 @@ function Fab_load_wad(name)
     }
 
     each C in coords do
-      table.insert(B, copy_coord(S, C, 1))
+      table.insert(B, decode_polygon_side(S, C, 1))
     end
 
     -- add this new brush to the prefab
@@ -1068,6 +1074,7 @@ function Fab_load_wad(name)
     --       2 = create a ceiling brush
     
     -- skip making a brush when the flat is FWATER4
+    -- TODO : make texture controllable via GAME defs
     if pass == 1 and S.floor_tex == "FWATER4" then return end
     if pass == 2 and S. ceil_tex == "FWATER4" then return end
 
@@ -1127,11 +1134,18 @@ function Fab_load_wad(name)
     end
 
     each C in coords do
-      table.insert(B, copy_coord(S, C, pass))
+      table.insert(B, decode_polygon_side(S, C, pass))
     end
 
     -- add this new brush to the prefab
     table.insert(fab.brushes, B)
+  end
+
+  
+  local function create_railing(line_idx)
+    -- creates a "rail" brush for railings
+    -- FIXME
+stderrf("process_railing for line #%d\n", line_idx)
   end
 
 
@@ -1253,6 +1267,10 @@ function Fab_load_wad(name)
 
       create_brush(S, coords, 1)  -- floor
       create_brush(S, coords, 2)  -- ceil
+    end
+
+    each line_idx,_ in rail_lines do
+      create_railing(line_idx)
     end
 
     gui.wadfab_free()
