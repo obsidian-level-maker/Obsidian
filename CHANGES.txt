@@ -6,11 +6,16 @@ CHANGELOG
 
 + implemented the GUI 'Powerups' setting
 
+! removed the Seed setting from the GUI
+! removed the 'Hide Modules' option
+
 - new GUI option: 'Bland Lighting Mode'
 
 >>>  outdoor borders
 
 - added 'tech_Gray' theme for DOOM, thanks to Mr. Chris
+
+- generate some DOOM 1 episode name graphics
 
 - tweaked the DOOM monster mix
 
@@ -19,6 +24,7 @@ CHANGELOG
 
 - added a couple of special doorways for caves
 - added arch-shaped doorway for Urban and Hell themes
+- better secret connections in outdoor rooms
 
 - caves: improved floor texturing in flat caves
 - caves: never place pickup items in liquid areas
