@@ -1482,12 +1482,12 @@ function Fab_replacements(fab, skin)
     local k = "tex_" .. val
 
     if skin[k] then
-      local mat = Mat_lookup(skin[k])
-
-      return assert(mat.t)
+      val = skin[k]
     end
 
-    return val
+    local mat = Mat_lookup(val)
+
+    return assert(mat.t)
   end
 
 
@@ -1502,12 +1502,12 @@ function Fab_replacements(fab, skin)
     end
 
     if skin[k] then
-      local mat = Mat_lookup(skin[k])
-
-      return assert(mat.f or mat.t)
+      val = skin[k]
     end
 
-    return val
+    local mat = Mat_lookup(val)
+
+    return assert(mat.f or mat.t)
   end
 
 
