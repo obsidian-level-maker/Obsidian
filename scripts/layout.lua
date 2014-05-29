@@ -1648,6 +1648,10 @@ function Layout_pattern_in_area(R, area, f_texs)
       if not PARAM.extra_floors then
         return 0  -- 3D floors not available
       end
+
+      if not area.is_top then
+        return 0  -- cannot use 3d floors in sub-areas
+      end
     end
 
     -- enough symmetry?
@@ -1823,10 +1827,21 @@ function Layout_pattern_in_area(R, area, f_texs)
   end
 
 
+  local function mark_conn_as_overlay(C)
+    assert(C)
+
+    if C.R1 == R then
+      C.where1 = "overlay"
+    else
+      C.where2 = "overlay"
+    end
+  end
+
+
   local function assign_conns_to_overlay()
-    -- pick which connections are on the second floor.
-    -- when there are 2 or more conns, require at least one on
-    -- each 3d floor.  If only one, pick the upper floor, since
+    -- Pick which connections will enter/leave on the second floor.
+    -- When there are 2 or more conns, we want at least one on each
+    -- 3d floor.  If only one connection, pick the upper floor since
     -- importants can only exist on the lower floor.
 
     local lower = 0
@@ -1846,10 +1861,13 @@ function Layout_pattern_in_area(R, area, f_texs)
 
       if hit_lower and hit_upper then
         table.insert(hit_both, C)
-      elseif hit_lower then
-        lower = lower + 1
+
       elseif hit_upper then
+        mark_conn_as_overlay(C)
         upper = upper + 1
+
+      else
+        lower = lower + 1
       end
     end
 
@@ -1869,7 +1887,12 @@ function Layout_pattern_in_area(R, area, f_texs)
 
     local raise_num = rand.irange(raise_min, raise_max)
 
-    -- FIXME
+    -- actually assign them...
+    rand.shuffle(hit_both)
+
+    for i = 1, raise_num do
+      mark_conn_as_overlay(hit_both[i])
+    end
   end
 
 

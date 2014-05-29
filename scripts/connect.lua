@@ -42,6 +42,9 @@ class CONN
   dir    : direction 2/4/6/8 (from S1 to S2)
 
   conn_h : floor height for connection
+
+  where1  : usually NIL, is "overlay" to enter/exit a 3D floor
+  where2  :
 }
 
 --------------------------------------------------------------]]
