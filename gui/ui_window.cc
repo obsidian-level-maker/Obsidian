@@ -99,13 +99,13 @@ UI_MainWin::~UI_MainWin()
 { }
 
 
-void UI_MainWin::CalcWindowSize(bool hide_modules, int *W, int *H)
+void UI_MainWin::CalcWindowSize(int *W, int *H)
 {
 	*W = MIN_WINDOW_W + KF * 64;
 	*H = MIN_WINDOW_H + KF * 44;
 
-	if (! hide_modules)
-		*W += 304 + KF * 32;
+	// modules panel
+	*W += 304 + KF * 32;
 }
 
 
@@ -118,30 +118,6 @@ void UI_MainWin::Locked(bool value)
 	mod_box  ->Locked(value);
 }
 
-
-void UI_MainWin::HideModules(bool hide)
-{
-	int new_w, new_h;
-
-	CalcWindowSize(hide, &new_w, &new_h);
-
-	if (hide)
-	{
-		mod_box->hide();
-		mod_box->position(0, 0);
-
-		size(new_w, new_h);
-	}
-	else
-	{
-		size(new_w, new_h);
-
-		mod_box->position(w() - mod_box->w(), 0);
-		mod_box->show();
-	}
-
-	redraw();
-}
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

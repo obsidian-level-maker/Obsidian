@@ -69,11 +69,6 @@ static bool ParseMiscOption(const char *name, const char *value)
 		if (context == CCTX_PreLoad)
 			fast_lighting = atoi(value) ? true : false;
 	}
-	else if (StringCaseCmp(name, "hide_modules") == 0)
-	{
-		if (context == CCTX_PreLoad)
-			hide_module_panel = atoi(value) ? true : false;
-	}
 	else if (StringCaseCmp(name, "alternate_look") == 0)
 	{
 		if (context == CCTX_PreLoad)
@@ -320,9 +315,8 @@ bool Cookie_Save(const char *filename)
 	fprintf(cookie_fp, "-- Misc Options --\n");
 	fprintf(cookie_fp, "create_backups = %d\n", create_backups ? 1 : 0);
 	fprintf(cookie_fp, "debug_messages = %d\n", debug_messages ? 1 : 0);
-	fprintf(cookie_fp, "fast_lighting = %d\n",  fast_lighting ? 1 : 0);
-	fprintf(cookie_fp, "hide_modules = %d\n",   hide_module_panel ? 1 : 0);
 	fprintf(cookie_fp, "alternate_look = %d\n", alternate_look ? 1 : 0);
+	fprintf(cookie_fp, "fast_lighting = %d\n",  fast_lighting ? 1 : 0);
 	fprintf(cookie_fp, "last_file = %s\n", UI_GetLastFile());
 	fprintf(cookie_fp, "\n");
 

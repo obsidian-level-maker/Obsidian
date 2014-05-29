@@ -44,11 +44,9 @@ public:
 	UI_MainWin(int W, int H, const char *title);
 	virtual ~UI_MainWin();
 
-	static void CalcWindowSize(bool hide_modules, int *W, int *H);
+	static void CalcWindowSize(int *W, int *H);
 
 	void Locked(bool value);
-
-	void HideModules(bool hide);
 };
 
 extern int KF;  // Kromulent Factor

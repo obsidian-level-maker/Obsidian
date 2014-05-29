@@ -206,7 +206,6 @@ private:
 	bool want_quit;
 
 	Fl_Check_Button *opt_alt_look;
-	Fl_Check_Button *opt_modules;
 	Fl_Check_Button *opt_backups;
 	Fl_Check_Button *opt_debug;
 	Fl_Check_Button *opt_lighting;
@@ -248,14 +247,6 @@ private:
 		UI_OptionsWin *that = (UI_OptionsWin *)data;
 
 		create_backups = that->opt_backups->value() ? true : false;
-	}
-
-	static void callback_Modules(Fl_Widget *w, void *data)
-	{
-		UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-		hide_module_panel = that->opt_modules->value() ? true : false;
-		main_win->HideModules(hide_module_panel);
 	}
 
 	static void callback_Debug(Fl_Widget *w, void *data)
@@ -323,16 +314,6 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	add(opt_alt_look);
 
 	cy += opt_alt_look->h() + y_step;
-
-
-	opt_modules = new Fl_Check_Button(cx, cy, 24, 24, "Hide Modules Panel (same as F5 key)");
-	opt_modules->align(FL_ALIGN_RIGHT);
-	opt_modules->value(hide_module_panel ? 1 : 0);
-	opt_modules->callback(callback_Modules, this);
-
-	add(opt_modules);
-
-	cy += opt_modules->h() + y_step;
 
 
 	//----------------
@@ -429,12 +410,6 @@ int UI_OptionsWin::handle(int event)
 		{
 			case FL_Escape:
 				want_quit = true;
-				return 1;
-
-				// intercept the F5 key and toggle the associated checkbox
-			case FL_F+5:
-				opt_modules->value(opt_modules->value() ? 0 : 1);    
-				callback_Modules(opt_modules, this);
 				return 1;
 
 			default:

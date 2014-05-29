@@ -60,7 +60,6 @@ const char *batch_output_file = NULL;
 
 bool alternate_look = false;
 bool create_backups = true;
-bool hide_module_panel = false;
 bool debug_messages = false;
 bool fast_lighting = true;   // FIXME !!!! false
 
@@ -436,11 +435,6 @@ int Main_key_handler(int event)
 			DLG_OptionsEditor();
 			return 1;
 
-		case FL_F+5:   // F5 = TOGGLE MODULES
-			hide_module_panel = ! hide_module_panel;
-			main_win->HideModules(hide_module_panel);
-			return 1;
-
 		case FL_F+7:
 			UI_ToggleConsole();
 			return 1;
@@ -704,7 +698,7 @@ int main(int argc, char **argv)
 	Default_Location();
 
 	int main_w, main_h;
-	UI_MainWin::CalcWindowSize(false, &main_w, &main_h);
+	UI_MainWin::CalcWindowSize(&main_w, &main_h);
 
 	main_win = new UI_MainWin(main_w, main_h, OBLIGE_TITLE " " OBLIGE_VERSION);
 
@@ -722,9 +716,6 @@ int main(int argc, char **argv)
 		Cookie_Load(load_file);
 
 	Cookie_ParseArguments();
-
-	if (hide_module_panel)
-		main_win->HideModules(true);
 
 
 	// show window (pass some dummy arguments)
