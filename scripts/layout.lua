@@ -1829,7 +1829,8 @@ function Layout_pattern_in_area(R, area, f_texs)
     -- each 3d floor.  If only one, pick the upper floor, since
     -- importants can only exist on the lower floor.
 
-    local total = 0
+    local lower = 0
+    local upper = 0
 
     local hit_both = {}
 
@@ -1839,26 +1840,34 @@ function Layout_pattern_in_area(R, area, f_texs)
       -- ignore teleporters
       if not S then continue end
 
-      total = total + 1
-
       local hit_lower = (S.kind == "walk")
 
       local hit_upper = (S.chunk and S.chunk.overlay)
 
       if hit_lower and hit_upper then
         table.insert(hit_both, C)
+      elseif hit_lower then
+        lower = lower + 1
+      elseif hit_upper then
+        upper = upper + 1
       end
     end
 
-stderrf("assign_conns_to_overlay @ %s : total:%d  hit_both:%d\n",
-        R:tostr(), total, #hit_both)
+---stderrf("assign_conns_to_overlay @ %s : lower:%d  upper:%d  both:%d  ",
+---        R:tostr(), lower, upper, #hit_both)
+
+    -- nothing to do?
+    local both = #hit_both
+
+    if both == 0 then return end
 
     -- decide how many of hit_both[] to assign to upper floor
+    local raise_min = sel(upper < 1, 1, 0)
+    local raise_max = both - sel(upper > lower, 1, 0)
 
-    local raise_num = #hit_both
+    assert(raise_min <= raise_max)
 
-    if total == 2 and raise_num >= 2 then
-    end 
+    local raise_num = rand.irange(raise_min, raise_max)
 
     -- FIXME
   end
