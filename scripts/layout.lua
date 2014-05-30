@@ -85,6 +85,8 @@ function Layout_preprocess_patterns()
   -- Process each room pattern and convert the human-readable
   -- structure into a more easily accessed form.
   --
+  local floor_tab
+
 
   local function neighbor(grid, x, y, dir, dist)
     local nx, ny = geom.nudge(x, y, dir, dist)
@@ -93,6 +95,11 @@ function Layout_preprocess_patterns()
     if ny < 1 or ny > grid.h then return nil end
 
     return grid[nx][ny]
+  end
+
+
+  local function analyse_floor(pat, P)
+    floor_tab[P.floor] = 1
   end
 
 
@@ -204,7 +211,10 @@ function Layout_preprocess_patterns()
 
       pat.elem_kinds[kind] = true
 
-      if kind == "stair" then
+      if kind == "floor" then
+        analyse_floor(pat, grid[x][y])
+
+      elseif kind == "stair" then
         analyse_stair(grid, x, y)
       
       elseif kind == "curve_stair" then
@@ -246,6 +256,27 @@ function Layout_preprocess_patterns()
     process_elements(pat, grid)
 
     return grid
+  end
+
+
+  local function count_floors(pat)
+    if not floor_tab[0] then
+      error("Missing floors in pattern: " .. pat.name)
+    end
+
+    local num = 5
+
+    while num > 0 and not floor_tab[num] do
+      num = num - 1
+    end
+
+    for i = 0, num do
+      if not floor_tab[num] then
+        error("Floor gaps in pattern: " .. pat.name)
+      end
+    end
+
+    pat.floor_num = num + 1
   end
 
 
@@ -420,11 +451,15 @@ function Layout_preprocess_patterns()
   table.expand_copies(ROOM_PATTERNS)
 
   each name,pat in ROOM_PATTERNS do
+    floor_tab = {}
+
     pat._structure = convert_pattern(pat, pat.structure)
 
     if pat.overlay then
        pat._overlay = convert_pattern(pat, pat.overlay)
     end
+
+    count_floors(pat)
 
     determine_sub_areas(pat)
 
