@@ -1589,10 +1589,11 @@ function Layout_pattern_in_area(R, area, f_texs)
   -- find a usable pattern in the ROOM_PATTERNS table and
   -- apply it to the room.
 
-  -- this function is responsible for setting floor_h in every
-  -- seed in the given 'area'.
-
   local use_solid_feature = rand.odds(75)
+
+  -- FIXME : area field (for recursive patterns)
+  local vhr_base = 5
+  local vhr_dir
 
 
   -- only show debug messages for the top-level pattern
@@ -1711,9 +1712,11 @@ function Layout_pattern_in_area(R, area, f_texs)
   end
 
 
-  local function setup_floor(S, h, f_tex)
-    S.floor_h = h
+  local function setup_floor(S, vhr, f_tex)
+    -- set "virtual" floor here, actual height decided later
+    S.vhr = h
 
+    -- FIXME: do this later too (with floor_h)
     S.f_tex = f_tex  --!!!!! sel(R.is_outdoor, R.main_tex, f_tex)
 
     local C = S.conn or S.pseudo_conn
@@ -1722,6 +1725,14 @@ function Layout_pattern_in_area(R, area, f_texs)
       C.conn_h    = S.floor_h
       C.conn_ftex = S.f_tex
     end
+
+    if not R.floors[vhr] then
+      R.floors[vhr] = {}
+      R.floors[vhr].vhr = vhr
+    end
+
+    R.min_vhr = math.min(vhr, R.min_vhr or  99)
+    R.max_vhr = math.max(vhr, R.max_vhr or -99)
   end
 
 
@@ -1758,7 +1769,7 @@ function Layout_pattern_in_area(R, area, f_texs)
       -- currently this can only happen in rooms with sub-rooms
       if S.room != R then continue end
 
-      setup_floor(S, f_h, f_tex)
+      setup_floor(S, vhr_base, f_tex)
     end -- x, y
     end
   end
@@ -2000,13 +2011,14 @@ function Layout_pattern_in_area(R, area, f_texs)
       CHUNK.dir = transform_dir(T, dir)
     end
 
-    if pat._overlay and pat._overlay[px][py].kind != "empty" then
-      CHUNK.overlay =
-      {
-        kind  = pat._overlay[px][py].kind
-        dir   = pat._overlay[px][py].dir
-        floor = pat._overlay[px][py].floor
-      }
+    if pat._overlay then
+      local OV = pat._overlay[px][py]
+
+      if OV.kind == "floor" then
+        CHUNK.overlay = {}
+
+        CHUNK.overlay.vhr = vhr_base + OV.floor - T.entry_floor
+      end
 
       R.has_3d_floor = true
     end
@@ -2028,16 +2040,12 @@ function Layout_pattern_in_area(R, area, f_texs)
         setup_solid(S, pat)
 
       elseif P.kind == "floor" then
-        local idx = P.floor - T.entry_floor
-        local delta_z = area.deltas[idx]
-        assert(delta_z)
+        local vhr = vhr_base + P.floor - T.entry_floor
 
-        CHUNK.floor_h = base_h + delta_z    --   * T.z_mul ???
-
-        setup_floor(S, CHUNK.floor_h, f_tex)
+        setup_floor(S, vhr, f_tex)
 
       else
-        setup_floor(S, base_h, "CRACKLE2")
+        setup_floor(S, vhr, "CRACKLE2")
       end
     end -- sx, sy
     end
@@ -2099,7 +2107,7 @@ function Layout_pattern_in_area(R, area, f_texs)
 
     if pat._overlay then
       assign_conns_to_overlay()
-      calc_overlay_height()
+---      calc_overlay_height()
     end
   end
 
@@ -2229,6 +2237,54 @@ function Layout_pattern_in_area(R, area, f_texs)
   end
 
   local_debugf("\n")
+end
+
+
+
+function Layout_height_realization(R)
+  --
+  -- the virtual becomes reality, and it happens here
+  --
+
+  local INDOOR_DELTAS  = { [16]=5,  [32]=10, [48]=20, [64]=20, [96]=10, [128]=5 }
+  local OUTDOOR_DELTAS = { [32]=20, [48]=30, [80]=20, [112]=5 }
+
+  local function select_deltas()
+    -- resulting table is indexed by a virtual floor id.
+    -- the [0] value is always 0, [-1] .. [-4] are negative and
+    -- [1] .. [4] are positive.
+
+    local tab = {}
+
+    local delta_tab = sel(R.is_outdoor, OUTDOOR_DELTAS, INDOOR_DELTAS)
+
+    tab[0] = 0
+
+    for i = 1, 4 do
+      local d1 = rand.key_by_probs(delta_tab)
+      local d2 = rand.key_by_probs(delta_tab)
+
+      tab[ i] = tab[ i - 1] + d1
+      tab[-i] = tab[-i + 1] - d2
+    end
+
+    return tab
+  end
+
+
+  ---| Layout_height_realization |---
+
+  -- check the vhr list
+  assert(R.min_vhr)
+
+  for i = R.min_vhr, R.max_vhr do
+    assert(R.floors[i])
+  end
+
+  -- NEED ENTRY_VHR 
+
+
+  Layout_set_floor_minmax(R)
 end
 
 
@@ -2434,8 +2490,6 @@ gui.debugf("BOTH SAME HEIGHT\n")
 
 
   ---| Layout_post_processing |---
-
-  Layout_set_floor_minmax(R)
 
   if R.no_pattern then return end
 
@@ -2660,9 +2714,6 @@ function Layout_room(R)
   end
 
 
-  local INDOOR_DELTAS  = { [16]=5,  [32]=10, [48]=20, [64]=20, [96]=10, [128]=5 }
-  local OUTDOOR_DELTAS = { [32]=20, [48]=30, [80]=20, [112]=5 }
-
   local function OLD__select_heights(focus_C)
 
     local function gen_group(base_h, num, dir)
@@ -2723,29 +2774,6 @@ function Layout_room(R)
   end
 
 
-  local function select_deltas()
-    -- resulting table is indexed by a virtual floor id.
-    -- the [0] value is always 0, [-1] .. [-4] are negative and
-    -- [1] .. [4] are positive.
-
-    local tab = {}
-
-    local delta_tab = sel(R.is_outdoor, OUTDOOR_DELTAS, INDOOR_DELTAS)
-
-    tab[0] = 0
-
-    for i = 1, 4 do
-      local d1 = rand.key_by_probs(delta_tab)
-      local d2 = rand.key_by_probs(delta_tab)
-
-      tab[ i] = tab[ i - 1] + d1
-      tab[-i] = tab[-i + 1] - d2
-    end
-
-    return tab
-  end
-
-
   local function pick_unvisited_area()
     each A in R.areas do
       -- already done?
@@ -2783,7 +2811,8 @@ function Layout_room(R)
 
     R.areas = { AREA }
 
-    AREA.deltas   = select_deltas()
+    R.floors = {}
+
     AREA.symmetry = R.symmetry
     AREA.is_top   = true
 
@@ -2859,6 +2888,7 @@ gui.debugf("LAYOUT %s >>>>\n", R:tostr())
 
   fill_room(entry_h)
 
+  Layout_height_realization(R)
 
   Layout_post_processing(R)
 
