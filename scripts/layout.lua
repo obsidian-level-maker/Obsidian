@@ -1591,10 +1591,6 @@ function Layout_pattern_in_area(R, area, f_texs)
 
   local use_solid_feature = rand.odds(75)
 
-  -- FIXME : area field (for recursive patterns)
-  local vhr_base = 5
-  local vhr_dir
-
 
   -- only show debug messages for the top-level pattern
   local function local_debugf(...)
@@ -1643,6 +1639,9 @@ function Layout_pattern_in_area(R, area, f_texs)
     end
 
     if pat.overlay then
+
+do return 0 end -- FIXME !!!!!! TEMP DISABLE
+
       if not PARAM.extra_floors then
         return 0  -- 3D floors not available
       end
@@ -1714,7 +1713,9 @@ function Layout_pattern_in_area(R, area, f_texs)
 
   local function setup_floor(S, vhr, f_tex)
     -- set "virtual" floor here, actual height decided later
-    S.vhr = h
+    assert(1 <= vhr and vhr <= 9)
+
+    S.vhr = vhr
 
     -- FIXME: do this later too (with floor_h)
     S.f_tex = f_tex  --!!!!! sel(R.is_outdoor, R.main_tex, f_tex)
@@ -1722,7 +1723,7 @@ function Layout_pattern_in_area(R, area, f_texs)
     local C = S.conn or S.pseudo_conn
 
     if C then
-      C.conn_h    = S.floor_h
+--!!!!      C.conn_h    = S.floor_h
       C.conn_ftex = S.f_tex
     end
 
@@ -1766,10 +1767,21 @@ function Layout_pattern_in_area(R, area, f_texs)
     for y = area.y1, area.y2 do
       local S = SEEDS[x][y]
 
-      -- currently this can only happen in rooms with sub-rooms
+      -- currently this only happens in rooms with sub-rooms
       if S.room != R then continue end
 
-      setup_floor(S, vhr_base, f_tex)
+      -- FIXME: BETTER CHUNK ARRANGEMENT
+      local CHUNK =
+      {
+        sx1 = x, sx2 = x
+        sy1 = y, sy2 = y
+
+        vhr = area.entry_vhr
+      }
+
+      S.chunk = CHUNK
+
+      setup_floor(S, CHUNK.vhr, f_tex)
     end -- x, y
     end
   end
@@ -1904,41 +1916,6 @@ function Layout_pattern_in_area(R, area, f_texs)
   end
 
 
-  local function calc_overlay_height()
-    -- if there are connections underneath the overlay, then the gap
-    -- must be >= 144 units.  Otherwise gap must be >= 96 units.
-
-    local max_h
-
-    for x = area.x1, area.x2 do
-    for y = area.y1, area.y2 do
-      local S = SEEDS[x][y]
-      assert(S.room == R)
-
-      if not S.floor_h then continue end
-
-      if S.chunk and S.chunk.overlay then
-        local h = S.floor_h
-
-        h = h + sel(S.conn, 144, 96)
-
-        -- overlay thickness : hard-coded currently
-        h = h + 24
-
-        max_h = math.max(h, max_h or -9999)
-      end
-
-    end -- x, y
-    end
-
-    assert(max_h)
-
-    each K in R.chunks do
-      K.floor_h = max_h
-    end
-  end
-
-
   local function eval_a_chunk(pat, px, py, T, sx1, sy1, sw, sh)
     local sx2 = sx1 + sw - 1
     local sy2 = sy1 + sh - 1
@@ -2017,7 +1994,7 @@ function Layout_pattern_in_area(R, area, f_texs)
       if OV.kind == "floor" then
         CHUNK.overlay = {}
 
-        CHUNK.overlay.vhr = vhr_base + OV.floor - T.entry_floor
+        CHUNK.overlay.vhr = area.entry_vhr + OV.floor - T.entry_floor
       end
 
       R.has_3d_floor = true
@@ -2040,12 +2017,12 @@ function Layout_pattern_in_area(R, area, f_texs)
         setup_solid(S, pat)
 
       elseif P.kind == "floor" then
-        local vhr = vhr_base + P.floor - T.entry_floor
+        CHUNK.vhr = area.entry_vhr + P.floor - T.entry_floor
 
-        setup_floor(S, vhr, f_tex)
+        setup_floor(S, CHUNK.vhr, f_tex)
 
       else
-        setup_floor(S, vhr, "CRACKLE2")
+        setup_floor(S, 5, "CRACKLE2")
       end
     end -- sx, sy
     end
@@ -2249,16 +2226,54 @@ function Layout_height_realization(R)
   local INDOOR_DELTAS  = { [16]=5,  [32]=10, [48]=20, [64]=20, [96]=10, [128]=5 }
   local OUTDOOR_DELTAS = { [32]=20, [48]=30, [80]=20, [112]=5 }
 
+
+  local function calc_overlay_height()
+    -- if there are connections underneath the overlay, then the gap
+    -- must be >= 144 units.  Otherwise gap must be >= 96 units.
+
+    local max_h
+
+    for x = area.x1, area.x2 do
+    for y = area.y1, area.y2 do
+      local S = SEEDS[x][y]
+      assert(S.room == R)
+
+      if not S.floor_h then continue end
+
+      if S.chunk and S.chunk.overlay then
+        local h = S.floor_h
+
+        h = h + sel(S.conn, 144, 96)
+
+        -- overlay thickness : hard-coded currently
+        h = h + 24
+
+        max_h = math.max(h, max_h or -9999)
+      end
+
+    end -- x, y
+    end
+
+    assert(max_h)
+
+    each K in R.chunks do
+      K.floor_h = max_h
+    end
+  end
+
+
+  local function adjust_for_3d_floors()
+  end
+
+
   local function select_deltas()
     -- resulting table is indexed by a virtual floor id.
-    -- the [0] value is always 0, [-1] .. [-4] are negative and
-    -- [1] .. [4] are positive.
 
     local tab = {}
 
     local delta_tab = sel(R.is_outdoor, OUTDOOR_DELTAS, INDOOR_DELTAS)
 
-    tab[0] = 0
+    tab[5] = 0
 
     for i = 1, 4 do
       local d1 = rand.key_by_probs(delta_tab)
@@ -2274,14 +2289,18 @@ function Layout_height_realization(R)
 
   ---| Layout_height_realization |---
 
-  -- check the vhr list
+  -- check that no floors are missing (gaps in the list)
   assert(R.min_vhr)
 
   for i = R.min_vhr, R.max_vhr do
     assert(R.floors[i])
   end
 
-  -- NEED ENTRY_VHR 
+  local entry_vhr = assert(R.entry_vhr)
+
+  assert(R.min_vhr <= entry_vhr and entry_vhr <= R.max_vhr)
+
+
 
 
   Layout_set_floor_minmax(R)
@@ -2790,6 +2809,8 @@ function Layout_room(R)
 
 
   local function fill_room(entry_h)
+    R.entry_vhr = 5
+
     -- create intiial area
     local AREA =
     {
@@ -2799,6 +2820,8 @@ function Layout_room(R)
       y2 = R.ty2
 
       entry_h = entry_h
+
+      entry_vhr = R.entry_vhr
     }
 
     if R.entry_conn then
@@ -2888,7 +2911,7 @@ gui.debugf("LAYOUT %s >>>>\n", R:tostr())
 
   fill_room(entry_h)
 
-  Layout_height_realization(R)
+  Layout_height_realization(R, entry_h)
 
   Layout_post_processing(R)
 
