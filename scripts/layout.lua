@@ -2286,14 +2286,15 @@ gui.debugf("  gap_z --> %d  want_gap --> %d\n", gap_z, want_gap)
       set_floor(S, floor_h)
 
       if chunk.overlay then
-        floor_h = deltas[chunk.overlay.vhr]
+        floor_h = entry_h + deltas[chunk.overlay.vhr]
 
         chunk.overlay.floor_h = floor_h
 
         -- FIXME : must be a better (less hacky) way??
         --         e.g. have a FLOOR object with a conns[] list
         if S.conn and S.conn:get_where(R) == "overlay" then
-          S.conn_h = floor_h
+gui.debugf("  %s --> %d\n", S.conn:tostr(), floor_h)
+          S.conn.conn_h = floor_h
         end
       end
     end -- x, y
@@ -2324,7 +2325,7 @@ gui.debugf("  gap_z --> %d  want_gap --> %d\n", gap_z, want_gap)
 
   adjust_for_3d_floors(deltas)
 
-gui.debugf("deltas =\n%s\n", table.tostr(deltas))
+gui.debugf("entry_h:%d deltas =\n%s\n", entry_h, table.tostr(deltas))
 
 
   -- apply the results to all the seeds / chunks
@@ -2898,6 +2899,8 @@ function Layout_room(R)
     else
       C.where2 = "overlay"
     end
+
+gui.debugf("  marking conn %s --> %s as overlay\n", C:tostr(), C:neighbor(R):tostr())
   end
 
 
@@ -2969,6 +2972,8 @@ function Layout_room(R)
 
   if R.entry_conn and R.entry_conn.conn_h then
     entry_h = R.entry_conn.conn_h
+
+gui.debugf("  ENTRY_H %d from %s\n", entry_h, R.entry_conn:tostr())
 
     -- support archways with steps
     if R.entry_conn.diff_h then
