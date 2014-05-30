@@ -1726,9 +1726,6 @@ function Layout_pattern_in_area(R, area, f_texs)
       R.floors[vhr] = {}
       R.floors[vhr].vhr = vhr
     end
-
-    R.min_vhr = math.min(vhr, R.min_vhr or  99)
-    R.max_vhr = math.max(vhr, R.max_vhr or -99)
   end
 
 
@@ -1775,6 +1772,8 @@ function Layout_pattern_in_area(R, area, f_texs)
 
         vhr = area.entry_vhr
       }
+
+      table.insert(R.chunks, CHUNK)
 
       S.chunk = CHUNK
 
@@ -2147,6 +2146,28 @@ function Layout_height_realization(R, entry_h)
   local OUTDOOR_DELTAS = { [32]=20, [48]=30, [80]=20, [112]=5 }
 
 
+  local function find_vhr_range()
+    R.min_vhr =  999
+    R.max_vhr = -999
+
+    each chunk in R.chunks do
+      for pass = 1,2 do
+        local vhr = chunk.vhr
+        if pass == 2 and chunk.overlay then
+          vhr = chunk.overlay.vhr
+        end
+
+        if vhr then
+          R.min_vhr = math.min(R.min_vhr, vhr)
+          R.max_vhr = math.max(R.max_vhr, vhr)
+        end
+      end
+    end
+
+    assert(R.min_vhr <= R.max_vhr)
+  end
+
+
   local function adjust_list(deltas, vhr, dir, extra_z)
     while deltas[vhr] do
       deltas[vhr] = deltas[vhr] + extra_z
@@ -2181,7 +2202,7 @@ function Layout_height_realization(R, entry_h)
         end
       end
 
-stderrf("adjust_deltas : vhr range %d..%d\n", v_low, v_high)
+gui.debugf("adjust_deltas : vhr range %d..%d\n", v_low, v_high)
       assert(v_high > v_low)
 
       assert(deltas[v_low])
@@ -2193,14 +2214,14 @@ stderrf("adjust_deltas : vhr range %d..%d\n", v_low, v_high)
       local want_gap = 104
 
       if S.conn then
-        local where = S.conn.where2
-        if S.conn.R1 == R then where = S.conn.where1 end
+        local where = S.conn:get_where(R)
+gui.debugf("  conn where = %s\n", tostring(where))
 
         if where != "overlay" then
           want_gap = 176
         end
       end
-stderrf("  gap_z --> %d  want_gap --> %d\n", gap_z, want_gap)
+gui.debugf("  gap_z --> %d  want_gap --> %d\n", gap_z, want_gap)
 
       if gap_z < want_gap then
         -- need to increase the gap between these two floors
@@ -2263,6 +2284,18 @@ stderrf("  gap_z --> %d  want_gap --> %d\n", gap_z, want_gap)
       local floor_h = entry_h + deltas[chunk.vhr]
 
       set_floor(S, floor_h)
+
+      if chunk.overlay then
+        floor_h = deltas[chunk.overlay.vhr]
+
+        chunk.overlay.floor_h = floor_h
+
+        -- FIXME : must be a better (less hacky) way??
+        --         e.g. have a FLOOR object with a conns[] list
+        if S.conn and S.conn:get_where(R) == "overlay" then
+          S.conn_h = floor_h
+        end
+      end
     end -- x, y
     end
   end
@@ -2270,12 +2303,16 @@ stderrf("  gap_z --> %d  want_gap --> %d\n", gap_z, want_gap)
 
   ---| Layout_height_realization |---
 
+  find_vhr_range()
+
   -- check that no floors are missing (gaps in the list)
   assert(R.min_vhr)
 
+--[[ ???
   for i = R.min_vhr, R.max_vhr do
     assert(R.floors[i])
   end
+--]]
 
 
   -- which virtual floor did we enter this room?
@@ -2286,6 +2323,8 @@ stderrf("  gap_z --> %d  want_gap --> %d\n", gap_z, want_gap)
   local deltas = select_deltas()
 
   adjust_for_3d_floors(deltas)
+
+gui.debugf("deltas =\n%s\n", table.tostr(deltas))
 
 
   -- apply the results to all the seeds / chunks

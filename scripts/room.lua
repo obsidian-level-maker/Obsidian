@@ -3501,7 +3501,8 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
     local x2 = S.x2 - (indents[6] or 0)
     local y2 = S.y2 - (indents[8] or 0)
 
-    Trans.quad(x1,y1, x2,y2, z-16,z, kind, w_face, t_face)
+stderrf("do_extra_floor\n")
+    Trans.quad(x1,y1, x2,y2, z-24,z, kind, w_face, t_face)
   end
 
 
@@ -3603,6 +3604,10 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
     elseif R.kind == "stairwell" then
       w_tex = assert(R.well_tex)
     end
+
+if S.chunk and string.match(S.chunk.kind, "stair") then
+  f_tex = "FLAT23"
+end
 
 
     local sec_kind
@@ -3889,8 +3894,8 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
     end
 
 
-    if S.chunk and S.chunk.overlay and S.chunk.overlay.floor then
-      do_extra_floor(S, z1 + 160, f_indents, w_tex, f_tex)
+    if S.chunk and S.chunk.overlay and S.chunk.overlay.floor_h then
+      do_extra_floor(S, S.chunk.overlay.floor_h, f_indents, w_tex, f_tex)
     end
 
 

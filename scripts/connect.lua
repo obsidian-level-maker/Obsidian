@@ -111,6 +111,15 @@ function CONN_CLASS.seed(C, R)
 end
 
 
+function CONN_CLASS.get_where(C, R)
+  if R == C.R1 then
+    return C.where1
+  else
+    return C.where2
+  end
+end
+
+
 -- Generator functions for "big branches" (mostly for large rooms
 -- which deserve 3/4/5 exits).
 -- 
