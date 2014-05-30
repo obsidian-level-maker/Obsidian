@@ -276,7 +276,7 @@ function Layout_preprocess_patterns()
       end
     end
 
-    pat.floor_num = num + 1
+    pat.num_floors = num + 1
   end
 
 
@@ -318,12 +318,17 @@ function Layout_preprocess_patterns()
   local function determine_sub_areas(pat)
     -- for recursive patterns, find the rectangle which corresponds
     -- to each sub-area.
-    if pat.subs then
-      each sub in pat.subs do
-        if sub.recurse then
-          local floor_id = _index
-          sub.area = find_sub_area(pat._structure, floor_id)
-        end
+    if pat.sub_count then
+      pat.sub_areas = {}
+      assert(pat.sub_count < pat.num_floors)
+
+      -- recursive areas are not real floors
+      pat.num_floors = pat.num_floors - pat.sub_count
+
+      for i = 1, pat.sub_count do
+        local floor_id = pat.num_floors + i - 1
+        local area = find_sub_area(pat._structure, floor_id)
+        table.insert(pat.sub_areas, area)
       end
     end
   end
