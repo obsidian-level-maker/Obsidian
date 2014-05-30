@@ -36,8 +36,6 @@
 --
 --    K  V      stairs to a 3D floor
 --
---    =         3D bridge
---
 
 
 ROOM_PATTERNS =

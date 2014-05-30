@@ -54,8 +54,6 @@ function Layout_parse_char(ch)
   if ch == 'K' then return { kind="3d_stair", dir=4 } end
   if ch == 'V' then return { kind="3d_stair", dir=2 } end
 
-  if ch == '=' then return { kind="3d_bridge" } end
-
   error("Layout_parse_char: unknown symbol: " .. tostring(ch))
 end
 
@@ -160,48 +158,6 @@ function Layout_preprocess_patterns()
   end
 
 
-  local function analyse_3d_bridge(grid, x, y)
-    local floors = {}
-
-    for dir = 2,4,2 do
-      -- get neighbor on each side
-      local N1 = neighbor(grid, x, y, dir)
-      local N2 = neighbor(grid, x, y, 10 - dir)
-
-      -- require at least one normal floor
-      local F1 = (N1 and N1.kind == "floor" and N1.floor)
-      local F2 = (N2 and N2.kind == "floor" and N2.floor)
-
-      if not (F1 or F2) then
-        error("3D bridge in pattern: missing nearby floor")
-      end
-
-      -- if a floor on both sides, must be same
-      if F1 and F2 and F1 != F2 then
-        error("3D bridge in pattern: floor mismatch")
-      end
-
-      floors[dir] = F1 or F2
-    end
-
-    if floors[2] == floors[4] then
-      error("3D bridge in pattern: floors are all the same")
-    end
-
-    -- record the floors and a direction hint
-    local P = grid[x][y]
-
-    P.low_floor = math.min(floors[2], floors[4])
-    P. hi_floor = math.max(floors[2], floors[4])
-
-    if floors[2] > floors[4] then
-      P.dir = 2
-    else
-      P.dir = 4
-    end
-  end
-
-
   local function process_elements(pat, grid)
     pat.elem_kinds = {}
 
@@ -219,9 +175,6 @@ function Layout_preprocess_patterns()
       
       elseif kind == "curve_stair" then
         analyse_curve_stair(grid, x, y)
-
-      elseif kind == "3d_bridge" then
-        analyse_3d_bridge(grid, x, y)
       end
 
       -- NOTE: 3d_stair is not handled here, since it needs to
@@ -1688,7 +1641,7 @@ function Layout_pattern_in_area(R, area, f_texs)
       return 0  -- wrong level
     end
 
-    if pat.overlay or pat.elem_kinds["3d_bridge"] then
+    if pat.overlay then
       if not PARAM.extra_floors then
         return 0  -- 3D floors not available
       end
