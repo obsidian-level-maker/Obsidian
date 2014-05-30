@@ -1638,10 +1638,7 @@ function Layout_pattern_in_area(R, area, f_texs)
       return 0  -- wrong level
     end
 
-    if pat.overlay then
-
-do return 0 end -- FIXME !!!!!! TEMP DISABLE
-
+    if pat._overlay then
       if not PARAM.extra_floors then
         return 0  -- 3D floors not available
       end
@@ -2150,37 +2147,10 @@ function Layout_height_realization(R, entry_h)
   local OUTDOOR_DELTAS = { [32]=20, [48]=30, [80]=20, [112]=5 }
 
 
-  local function calc_overlay_height()
-    -- if there are connections underneath the overlay, then the gap
-    -- must be >= 144 units.  Otherwise gap must be >= 96 units.
-
-    local max_h
-
-    for x = area.x1, area.x2 do
-    for y = area.y1, area.y2 do
-      local S = SEEDS[x][y]
-      assert(S.room == R)
-
-      if not S.floor_h then continue end
-
-      if S.chunk and S.chunk.overlay then
-        local h = S.floor_h
-
-        h = h + sel(S.conn, 144, 96)
-
-        -- overlay thickness : hard-coded currently
-        h = h + 24
-
-        max_h = math.max(h, max_h or -9999)
-      end
-
-    end -- x, y
-    end
-
-    assert(max_h)
-
-    each K in R.chunks do
-      K.floor_h = max_h
+  local function adjust_list(deltas, vhr, dir, extra_z)
+    while deltas[vhr] do
+      deltas[vhr] = deltas[vhr] + extra_z
+      vhr = vhr + dir
     end
   end
 
@@ -2189,7 +2159,61 @@ function Layout_height_realization(R, entry_h)
     -- this ensures that there is enough room between two storeys
     -- for the player to pass, even more space for connections.
 
-    -- FIXME
+    for x = R.tx1, R.tx2 do
+    for y = R.ty1, R.ty2 do
+      local S = SEEDS[x][y]
+      if S.room != R then continue end
+
+      local chunk = S.chunk
+      if not chunk then continue end
+      if not chunk.overlay then continue end
+
+      local v_low  = chunk.vhr
+      local v_high = chunk.overlay.vhr
+
+      assert(v_high)
+
+      if not v_low then
+        if chunk.kind == "liquid" then
+          v_low = assert(R.min_vhr)
+        else  -- FIXME !!!! handle stairs (etc) here
+          continue
+        end
+      end
+
+stderrf("adjust_deltas : vhr range %d..%d\n", v_low, v_high)
+      assert(v_high > v_low)
+
+      assert(deltas[v_low])
+      assert(deltas[v_high])
+
+      local gap_z = deltas[v_high] - deltas[v_low]
+
+      -- gap includes thickness of floor
+      local want_gap = 104
+
+      if S.conn then
+        local where = S.conn.where2
+        if S.conn.R1 == R then where = S.conn.where1 end
+
+        if where != "overlay" then
+          want_gap = 176
+        end
+      end
+stderrf("  gap_z --> %d  want_gap --> %d\n", gap_z, want_gap)
+
+      if gap_z < want_gap then
+        -- need to increase the gap between these two floors
+        -- TODO : if vhr diff >= 2, adjust vhrs in between
+        if v_high > R.entry_vhr then
+          adjust_list(deltas, v_high, 1, want_gap - gap_z)
+        else
+          assert(v_low < R.entry_vhr)
+          adjust_list(deltas, v_low, -1, gap_z - want_gap)
+        end
+      end
+    end -- x, y
+    end
   end
 
 
@@ -2871,8 +2895,10 @@ function Layout_room(R)
       end
     end
 
----stderrf("assign_conns_to_overlay @ %s : lower:%d  upper:%d  both:%d  ",
----        R:tostr(), lower, upper, #hit_both)
+--[[ DEBUG
+    stderrf("assign_conns_to_overlay @ %s : lower:%d  upper:%d  both:%d  ",
+            R:tostr(), lower, upper, #hit_both)
+--]]
 
     -- nothing to do?
     local both = #hit_both
@@ -2898,7 +2924,7 @@ function Layout_room(R)
 
   ---==| Layout_room |==---
 
-gui.debugf("LAYOUT %s >>>>\n", R:tostr())
+  gui.debugf("LAYOUT %s >>>>\n", R:tostr())
 
   local entry_h
 
