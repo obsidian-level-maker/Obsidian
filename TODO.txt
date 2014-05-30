@@ -2,6 +2,9 @@
 OBLIGE TODO
 ===========
 
+
+BUG : secret sector being split (ceiling detail? lighting??)
+
 ______________________________________________________________________
 
   HIGH PRIORITY
@@ -11,9 +14,6 @@ ______________________________________________________________________
 *  support for Traps and free-standing Cages
 
 *  add in more scenery: trees, computers etc
-
-
-BUG (WIN32): copy seed value and paste into filename --> crash.
 
 
 ______________________________________________________________________
@@ -76,12 +76,6 @@ ______________________________________________________________________
 -  if room before exit room (a) has no locked doors (b) is not small
    and (c) exit room is small, then put guard monster there.
 
--  improve guard_mon_prob() logic -- take control module into account
-
--  reserved rooms: can turn into caves (if large + styles)
-
--  if few caves (total svolume < N), use same wall over whole level
-
 
 -  certain cases in DM_AlignTextures don't work well, especially
    an upper where a crate straddles the periph (but does not directly
@@ -95,7 +89,7 @@ ______________________________________________________________________
 
 -  ensure normal doors are usually monster-openable, secret doors not
 
--  apply nice items gotten in normal rooms to the HMODEL
++  apply nice items gotten in normal rooms to the HMODEL
 
 
 ----------------------------------------------
@@ -106,7 +100,7 @@ BUG: outdoor border placed next to an outdoor lake -- no wall is
      placed between them, can give a gap for the player to walk.
 
 
-?  "Steepness" option in level control module
++  "Steepness" option in level control module
 
 
 -  review Dante's ideas : doc/DANTE.txt
@@ -207,8 +201,6 @@ Caves:
 -  handle solid islands, sometimes make pools, or become a step
 
 -  caves with steps: have two floor materials, pick randomly
-
--  MIDVINE sometimes used at cave transitions (via prefab?)
 
 -  support Cross-Overs
    -  respect the Room's height limitations
@@ -467,6 +459,12 @@ IDEA: "weak texturing" (especially on floors) which will try to
    DEHACKED / DDF / DECORATE.
 
 
+Warzone Mode:
+-  player progresses from one side to the other of the map.
+   it is fairly open and interconnected, and monsters form the
+   main obstacles (instead of a key hunt).
+
+
 Batch Mode:
 +  detect invalid game=XXX (etc) keywords
 
@@ -493,6 +491,8 @@ Name generator:
 
 +  generate the Boss maps (don't use prebuilt)
    -  controlled via a module
+
++  generate random music (incorporate SoundHelix ?)
 
 -  make Oblige easier to mod
 
@@ -540,6 +540,8 @@ Name generator:
 -  an option for more compact GUI (fit on 640x480 screen)
 
 -  simplify ui_chooser logic --> use Fl_Native_File_Chooser
+
+-  a tool to view / extract the OBLIGDAT lump in a wad
 
 Console:
   -  display lists better
@@ -604,8 +606,6 @@ IDEA:  new "RUNNING THE MAPS" section (on Usage page)
 
 -  log-print CSG stats (e.g. linedef count, plane count, etc)
 
-
--  IDEA: generate episode names (M_EPI# etc).
 
 -  IDEA: generate end-of-episode texts
 
