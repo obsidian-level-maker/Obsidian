@@ -1715,8 +1715,6 @@ do return 0 end -- FIXME !!!!!! TEMP DISABLE
     -- set "virtual" floor here, actual height decided later
     assert(1 <= vhr and vhr <= 9)
 
-    S.vhr = vhr
-
     -- FIXME: do this later too (with floor_h)
     S.f_tex = f_tex  --!!!!! sel(R.is_outdoor, R.main_tex, f_tex)
 
@@ -1775,6 +1773,8 @@ do return 0 end -- FIXME !!!!!! TEMP DISABLE
       {
         sx1 = x, sx2 = x
         sy1 = y, sy2 = y
+
+        kind = "floor"
 
         vhr = area.entry_vhr
       }
@@ -2008,21 +2008,18 @@ do return 0 end -- FIXME !!!!!! TEMP DISABLE
 
       S.chunk = CHUNK
 
-      -- FIXME !!!!! TEMPORARY CRUD !!!
-
       if P.kind == "liquid" then
         setup_liquid(S)
 
       elseif P.kind == "solid" then
         setup_solid(S, pat)
 
-      elseif P.kind == "floor" then
-        CHUNK.vhr = area.entry_vhr + P.floor - T.entry_floor
+      -- FIXME !!!!! TEMPORARY CRUD !!!
+
+      else --[[ if P.kind == "floor" then ]]
+        CHUNK.vhr = area.entry_vhr + (P.floor or 0) - T.entry_floor
 
         setup_floor(S, CHUNK.vhr, f_tex)
-
-      else
-        setup_floor(S, 5, "CRACKLE2")
       end
     end -- sx, sy
     end
@@ -2218,9 +2215,9 @@ end
 
 
 
-function Layout_height_realization(R)
+function Layout_height_realization(R, entry_h)
   --
-  -- the virtual becomes reality, and it happens here
+  -- the virtual becomes reality, and it happens here...
   --
 
   local INDOOR_DELTAS  = { [16]=5,  [32]=10, [48]=20, [64]=20, [96]=10, [128]=5 }
@@ -2262,7 +2259,11 @@ function Layout_height_realization(R)
   end
 
 
-  local function adjust_for_3d_floors()
+  local function adjust_for_3d_floors(deltas)
+    -- this ensures that there is enough room between two storeys
+    -- for the player to pass, even more space for connections.
+
+    -- FIXME
   end
 
 
@@ -2275,15 +2276,45 @@ function Layout_height_realization(R)
 
     tab[5] = 0
 
-    for i = 1, 4 do
+    for i = 0, 3 do
       local d1 = rand.key_by_probs(delta_tab)
       local d2 = rand.key_by_probs(delta_tab)
 
-      tab[ i] = tab[ i - 1] + d1
-      tab[-i] = tab[-i + 1] - d2
+      tab[6 + i] = tab[5 + i] + d1
+      tab[4 - i] = tab[5 - i] - d2
     end
 
     return tab
+  end
+
+
+  local function set_floor(S, floor_h)
+    S.floor_h = floor_h
+
+    local C = S.conn or S.pseudo_conn
+
+    if C then
+      C.conn_h    = S.floor_h
+--!!!      C.conn_ftex = S.f_tex
+    end
+  end
+
+
+  local function apply_deltas(deltas)
+    for x = R.tx1, R.tx2 do
+    for y = R.ty1, R.ty2 do
+      local S = SEEDS[x][y]
+      if S.room != R then continue end
+
+      local chunk = S.chunk
+
+      if not (chunk and chunk.vhr) then continue end
+
+      local floor_h = entry_h + deltas[chunk.vhr]
+
+      set_floor(S, floor_h)
+    end -- x, y
+    end
   end
 
 
@@ -2296,12 +2327,19 @@ function Layout_height_realization(R)
     assert(R.floors[i])
   end
 
+
+  -- which virtual floor did we enter this room?
   local entry_vhr = assert(R.entry_vhr)
 
   assert(R.min_vhr <= entry_vhr and entry_vhr <= R.max_vhr)
 
+  local deltas = select_deltas()
+
+  adjust_for_3d_floors(deltas)
 
 
+  -- apply the results to all the seeds / chunks
+  apply_deltas(deltas)
 
   Layout_set_floor_minmax(R)
 end
