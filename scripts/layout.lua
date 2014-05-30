@@ -1847,75 +1847,6 @@ do return 0 end -- FIXME !!!!!! TEMP DISABLE
   end
 
 
-  local function mark_conn_as_overlay(C)
-    assert(C)
-
-    if C.R1 == R then
-      C.where1 = "overlay"
-    else
-      C.where2 = "overlay"
-    end
-  end
-
-
-  local function assign_conns_to_overlay()
-    -- Pick which connections will enter/leave on the second floor.
-    -- When there are 2 or more conns, we want at least one on each
-    -- 3d floor.  If only one connection, pick the upper floor since
-    -- importants can only exist on the lower floor.
-
-    local lower = 0
-    local upper = 0
-
-    local hit_both = {}
-
-    each C in R.conns do
-      local S = C:seed(R)
-
-      -- ignore teleporters
-      if not S then continue end
-
-      local hit_lower = (S.kind == "walk")
-
-      local hit_upper = (S.chunk and S.chunk.overlay)
-
-      if hit_lower and hit_upper then
-        table.insert(hit_both, C)
-
-      elseif hit_upper then
-        mark_conn_as_overlay(C)
-        upper = upper + 1
-
-      else
-        lower = lower + 1
-      end
-    end
-
----stderrf("assign_conns_to_overlay @ %s : lower:%d  upper:%d  both:%d  ",
----        R:tostr(), lower, upper, #hit_both)
-
-    -- nothing to do?
-    local both = #hit_both
-
-    if both == 0 then return end
-
-    -- decide how many of hit_both[] to assign to upper floor
-    local raise_min = sel(upper < 1, 1, 0)
-    local raise_max = both - sel(upper > lower, 1, 0)
-
-    assert(raise_min <= raise_max)
-
-    local raise_num = rand.irange(raise_min, raise_max)
-
-    -- actually assign them...
-    rand.shuffle(hit_both)
-
-    for i = 1, raise_num do
-      mark_conn_as_overlay(hit_both[i])
-    end
-  end
-
-
   local function eval_a_chunk(pat, px, py, T, sx1, sy1, sw, sh)
     local sx2 = sx1 + sw - 1
     local sy2 = sy1 + sh - 1
@@ -2077,11 +2008,6 @@ do return 0 end -- FIXME !!!!!! TEMP DISABLE
 
       install_a_chunk(pat, px, py, T, sx, sy, sw, sh)
     end -- x, y
-    end
-
-    if pat._overlay then
-      assign_conns_to_overlay()
----      calc_overlay_height()
     end
   end
 
@@ -2901,6 +2827,75 @@ function Layout_room(R)
   end
 
 
+  local function mark_conn_as_overlay(C)
+    assert(C)
+
+    if C.R1 == R then
+      C.where1 = "overlay"
+    else
+      C.where2 = "overlay"
+    end
+  end
+
+
+  local function assign_conns_to_overlay()
+    -- Pick which connections will enter/leave on the second floor.
+    -- When there are 2 or more conns, we want at least one on each
+    -- 3d floor.  If only one connection, pick the upper floor since
+    -- importants can only exist on the lower floor.
+
+    local lower = 0
+    local upper = 0
+
+    local hit_both = {}
+
+    each C in R.conns do
+      local S = C:seed(R)
+
+      -- ignore teleporters
+      if not S then continue end
+
+      local hit_lower = (S.kind == "walk")
+
+      local hit_upper = (S.chunk and S.chunk.overlay)
+
+      if hit_lower and hit_upper then
+        table.insert(hit_both, C)
+
+      elseif hit_upper then
+        mark_conn_as_overlay(C)
+        upper = upper + 1
+
+      else
+        lower = lower + 1
+      end
+    end
+
+---stderrf("assign_conns_to_overlay @ %s : lower:%d  upper:%d  both:%d  ",
+---        R:tostr(), lower, upper, #hit_both)
+
+    -- nothing to do?
+    local both = #hit_both
+
+    if both == 0 then return end
+
+    -- decide how many of hit_both[] to assign to upper floor
+    local raise_min = sel(upper < 1, 1, 0)
+    local raise_max = both - sel(upper > lower, 1, 0)
+
+    assert(raise_min <= raise_max)
+
+    local raise_num = rand.irange(raise_min, raise_max)
+
+    -- actually assign them...
+    rand.shuffle(hit_both)
+
+    for i = 1, raise_num do
+      mark_conn_as_overlay(hit_both[i])
+    end
+  end
+
+
   ---==| Layout_room |==---
 
 gui.debugf("LAYOUT %s >>>>\n", R:tostr())
@@ -2948,6 +2943,9 @@ gui.debugf("LAYOUT %s >>>>\n", R:tostr())
   junk_sides()
 
   fill_room(entry_h)
+
+  assign_conns_to_overlay()
+
 
   Layout_height_realization(R, entry_h)
 
