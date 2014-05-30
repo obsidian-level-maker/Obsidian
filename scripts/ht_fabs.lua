@@ -387,11 +387,6 @@ DIAG_HT_BIG =
   y_sizes = { "10101", "10111", "11111"
               "10121", "11121", "12121"
               "12131", "13131" }
-
-  subs =
-  {
-    { height=1, match="one" }
-  }
 }
 
 
@@ -468,11 +463,6 @@ LIQUID_L3 =
 
   x_sizes = { "111", "121", "131" }
   y_sizes = { "111", "121", "131" }
-
-  subs =
-  {
-    { height=1, match="any" }
-  }
 }
 
 
@@ -622,11 +612,6 @@ LIQUID_U2 =
 
   x_sizes = { "111", "121", "131", "141" }
   y_sizes = { "12",  "13", "14" }
-
-  subs =
-  {
-    { height=1, match="one" }
-  }
 }
 
 
@@ -644,12 +629,6 @@ LIQUID_U3 =
 
   x_sizes = { "121", "131", "141" }
   y_sizes = { "11", "12",  "13", "14" }
-
-  subs =
-  {
-    { height=1, match="any" }
-    { height=2, match="one" }
-  }
 }
 
 
@@ -734,11 +713,6 @@ LIQUID_E2 =
 
   x_sizes = { "12", "13", "14", "23", "24" }
   y_sizes = { "1111111", "1112111", "1121211", "1122211" }
-
-  subs =
-  {
-    { height=1, match="any" }
-  }
 }
 
 
@@ -761,12 +735,6 @@ LIQUID_E3 =
 
   x_sizes = { "12", "13", "14", "23", "24" }
   y_sizes = { "1111111", "1112111", "1121211", "1122211" }
-
-  subs =
-  {
-    { height=1, match="any" }
-    { height=2, match="one" }
-  }
 }
 
 
@@ -787,11 +755,6 @@ LIQUID_E4 =
 
   x_sizes = { "111", "112", "113", "213" }
   y_sizes = { "11111", "12111", "12121", "12221"  }
-
-  subs =
-  {
-    { height=1, match="any" }
-  }
 }
 
 
@@ -832,11 +795,6 @@ LIQUID_S2 =
 
   y_sizes = { "10101", "11101", "10111"
               "11111", "12111", "11121", "12121" }
-
-  subs =
-  {
-    { height=1, match="any" }
-  }
 }
 
 
@@ -880,12 +838,6 @@ LIQUID_BIG_S3 =
   }
 
   y_sizes = { "111", "121", "131", "141" }
-
-  subs =
-  {
-    { height=1, match="any" }
-    { height=2, match="one" }
-  }
 }
 
 
@@ -906,12 +858,6 @@ LIQUID_BIG_S4 =
               "12121", "13121", "12131", "13131" }
 
   y_sizes = { "111", "121", "131", "141" }
-
-  subs =
-  {
-    { height=1, match="any" }
-    { height=2, match="one" }
-  }
 }
 
 
@@ -1107,11 +1053,6 @@ HEIGHT_I1 =
 
   x_sizes = { "011", "111", "112" }
   y_sizes = { "012", "111", "112" }
-
-  subs =
-  {
-    { height=1, match="any" }
-  }
 }
 
 
@@ -1130,11 +1071,6 @@ HEIGHT_I2 =
 
   x_sizes = { "101", "111", "121", }
   y_sizes = { "012", "111", "112", "212" }
-
-  subs =
-  {
-    { height=1, match="any" }
-  }
 }
 
 
@@ -1155,11 +1091,6 @@ HEIGHT_I3 =
 
   x_sizes = { "10101", "11111", "12121" }
   y_sizes = { "1111", "1121" }
-
-  subs =
-  {
-    { height=1, match="any" }
-  }
 }
 
 
@@ -1196,11 +1127,6 @@ HEIGHT_LIQ_I1 =
   x_sizes = { "111", "212", "222", "313", "323" }
 
   y_sizes = { "111", "112", "212", "213", "213" }
-
-  subs =
-  {
-    { height=1, match="any" }
-  }
 }
 
 
@@ -1221,11 +1147,6 @@ HEIGHT_LIQ_I3 =
   x_sizes = { "11111", "11211", "11311", "21212", "21312" }
 
   y_sizes = { "111", "112", "212", "213", "213" }
-
-  subs =
-  {
-    { height=1, match="any" }
-  }
 }
 
 
@@ -1246,11 +1167,6 @@ HEIGHT_LIQ_O1 =
   x_sizes = { "11011", "11111", "11211", "21112" }
 
   y_sizes = { "11011", "11111", "11211", "21211" }
-
-  subs =
-  {
-    { height=1, match="one" }
-  }
 }
 
 
@@ -1273,11 +1189,6 @@ HEIGHT_LIQ_O2 =
   x_sizes = { "111", "121", "131", "141" }
 
   y_sizes = { "10101", "11101", "10111", "11111", "12121", "11112" }
-
-  subs =
-  {
-    { height=1, match="one" }
-  }
 }
 
 
@@ -1299,11 +1210,6 @@ HEIGHT_LIQ_U2 =
   x_sizes = { "0110110", "0111110", "0112110", "1111111", "1112111" }
 
   y_sizes = { "1111", "1112", "1113", "2112", "2113", "2114" }
-
-  subs =
-  {
-    { height=1, match="one" }
-  }
 }
 
 
@@ -1323,11 +1229,6 @@ HEIGHT_SOLID_I2 =
 
   x_sizes = { "01110", "01111", "11110", "11111", "11211" }
   y_sizes = { "111", "112", "211", "212" }
-
-  subs =
-  {
-    { height=1, match="one" }
-  }
 }
 
 
@@ -1349,11 +1250,6 @@ HEIGHT_SOLID_I4 =
 
   x_sizes = { "11111", "11211", "11311" }
   y_sizes = { "11110", "11111", "11210", "11211" }
-
-  subs =
-  {
-    { height=1, match="any" }
-  }
 }
 
 
@@ -1375,12 +1271,6 @@ HEIGHT_SOLID_I5 =
 
   x_sizes = { "1101011", "1111111", "1112111", "1121211" }
   y_sizes = { "11111", "11112", "11211", "11212" }
-
-  subs =
-  {
-    { height=1, match="any" }
-    { height=2, match="any" }
-  }
 }
 
 
@@ -1401,11 +1291,6 @@ HEIGHT_C5 =
               "111112", "211111", "211112" }
 
   y_sizes = { "11011", "11111", "11211", "21111", "21112", "21212" }
-
-  subs =
-  {
-    { height=1, match="any" }
-  }
 }
 
 
@@ -1424,12 +1309,6 @@ HEIGHT_C6 =
 
   x_sizes = { "11011", "11111", "21011", "21111", "31111" }
   y_sizes = { "11011", "11111", "11112", "21112", "21211" }
-
-  subs =
-  {
-    { height=1, match="any" }
-    { height=2, match="one" }
-  }
 }
 
 
@@ -1446,11 +1325,6 @@ HEIGHT_L1 =
 
   x_sizes = { "012", "013", "112" }
   y_sizes = { "110", "210", "111" }
-
-  subs =
-  {
-    { height=1, match="any" }
-  }
 }
 
 
@@ -1467,11 +1341,6 @@ HEIGHT_L2 =
 
   x_sizes = { "12", "13" }
   y_sizes = { "110", "210", "111" }
-
-  subs =
-  {
-    { height=1, match="any" }
-  }
 }
 
 
@@ -1490,11 +1359,6 @@ HEIGHT_CURV_1 =
 
   x_sizes = { "121", "131", "141" }
   y_sizes = { "121", "131", "141" }
-
-  subs =
-  {
-    { height=1, match="any" }
-  }
 }
 
 
@@ -1515,12 +1379,6 @@ HEIGHT_CURV_2 =
 
   x_sizes = { "121", "131", "141", "151", }
   y_sizes = { "1201", "1211", "1301", "1311" }
-
-  subs =
-  {
-    { height=1, match="any" }
-    { height=2, match="one" }
-  }
 }
 
 
@@ -1530,7 +1388,7 @@ HEIGHT_CURV_2 =
 
 MULTI_I1 =
 {
-  prob = 10
+  prob = 10000
 
   symmetry = "y"
 
@@ -1548,8 +1406,8 @@ MULTI_I1 =
     "1  "
   }
 
-  x_sizes = { "999" }
-  y_sizes = { "999" }
+  x_sizes = { "111", "211", "311", "312" }
+  y_sizes = { "111", "212", "313" }
 }
 
 
@@ -1638,6 +1496,7 @@ SOLID_CSUB =
   kind = "solid"
 
   recurse = "diff"
+  sub_count = 1
   environment = "indoor"
   solid_feature = true
 
@@ -1657,11 +1516,6 @@ SOLID_CSUB =
 
   y_sizes = { "121", "131", "141", "151", "161", "171"
               "181", "191", "1A1", "1B1" }
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-  }
 }
 
 
@@ -1671,6 +1525,7 @@ SOLID_CSUB4 =
   kind = "solid"
 
   recurse = "diff"
+  sub_count = 1
   environment = "indoor"
   solid_feature = true
   symmetry = "xy"
@@ -1689,11 +1544,6 @@ SOLID_CSUB4 =
 
   x_sizes = { "11111", "12121", "12221"
               "13131", "13231", "14141", "14241" }
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-  }
 }
 
 
@@ -1703,6 +1553,7 @@ REC_SOLID_C1 =
   kind = "solid"
 
   recurse = "same"
+  sub_count = 1
   environment = "indoor"
   solid_feature = true
   symmetry = "xy"
@@ -1722,11 +1573,6 @@ REC_SOLID_C1 =
   y_sizes = { "11111", "11211", "12121", "12221"
               "13131", "13231", "14141", "14241"
               "24142" }
-
-  subs =
-  {
-    { height=0, match="any", recurse=1 }
-  }
 }
 
 
@@ -1736,6 +1582,7 @@ REC_SOLID_C2 =
   kind = "solid"
 
   recurse = "same"
+  sub_count = 1
   environment = "indoor"
   solid_feature = true
 
@@ -1754,11 +1601,6 @@ REC_SOLID_C2 =
   y_sizes = { "11011", "11111", "11211", "11311"
               "11411", "11511", "11611", "11711"
               "21512", "21612", "21712" }
-
-  subs =
-  {
-    { height=0, match="any", recurse=1 }
-  }
 }
 
 
@@ -1768,6 +1610,7 @@ REC_SOLID_C3 =
   kind = "solid"
 
   recurse = "same"
+  sub_count = 1
   environment = "indoor"
   solid_feature = true
   symmetry = "xy"
@@ -1786,11 +1629,6 @@ REC_SOLID_C3 =
 
   y_sizes = { "11111", "11211", "11311", "11411", "11511"
               "11611", "11711", "11811", "11911" }
-
-  subs =
-  {
-    { height=0, match="any", recurse=1 }
-  }
 }
 
 
@@ -1800,6 +1638,7 @@ REC_SOLID_C4 =
   kind = "solid"
 
   recurse = "same"
+  sub_count = 1
   environment = "indoor"
   solid_feature = true
 
@@ -1818,11 +1657,6 @@ REC_SOLID_C4 =
   y_sizes = { "11011", "11111", "11211", "11311"
               "11411", "11511", "11611", "11711"
               "21512", "21612", "21712" }
-
-  subs =
-  {
-    { height=0, match="any", recurse=1 }
-  }
 }
 
 
@@ -1833,11 +1667,6 @@ REC_SOLID_HT_C1 =
   prob = 950
 
   recurse = "diff"
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-  }
 }
 
 
@@ -1848,11 +1677,6 @@ REC_SOLID_HT_C2 =
   prob = 950
 
   recurse = "diff"
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-  }
 }
 
 
@@ -1863,11 +1687,6 @@ REC_SOLID_HT_C3 =
   prob = 950
 
   recurse = "diff"
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-  }
 }
 
 
@@ -1878,11 +1697,6 @@ REC_SOLID_HT_C4 =
   prob = 950
 
   recurse = "diff"
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-  }
 }
 
 
@@ -1892,6 +1706,7 @@ REC_DIAG_C1 =
   kind = "solid"
 
   recurse = "same"
+  sub_count = 1
   environment = "indoor"
   symmetry = "xy"
 
@@ -1909,11 +1724,6 @@ REC_DIAG_C1 =
 
   y_sizes = { "11111", "12121", "13131", "14141", "15151"
               "13231", "14241" }
-
-  subs =
-  {
-    { height=0, match="any", recurse=1 }
-  }
 }
 
 
@@ -1923,6 +1733,7 @@ REC_DIAG_C3 =
   kind = "solid"
 
   recurse = "same"
+  sub_count = 1
   environment = "indoor"
   symmetry = "xy"
 
@@ -1940,11 +1751,6 @@ REC_DIAG_C3 =
 
   y_sizes = { "11111", "11211", "11311", "11411", "11511"
               "11611", "11711", "11811", "11911" }
-
-  subs =
-  {
-    { height=0, match="any", recurse=1 }
-  }
 }
 
 
@@ -1954,6 +1760,7 @@ REC_DIAG_C4 =
   kind = "solid"
 
   recurse = "same"
+  sub_count = 1
   environment = "indoor"
 
   structure =
@@ -1970,11 +1777,6 @@ REC_DIAG_C4 =
 
   y_sizes = { "11011", "11111", "11211", "11311"
               "11411", "11511", "11611", "11711" }
-
-  subs =
-  {
-    { height=0, match="any", recurse=1 }
-  }
 }
 
 
@@ -1985,11 +1787,6 @@ REC_DIAG_HT_C1 =
   prob = 950
 
   recurse = "diff"
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-  }
 }
 
 
@@ -2000,11 +1797,6 @@ REC_DIAG_HT_C3 =
   prob = 950
 
   recurse = "diff"
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-  }
 }
 
 
@@ -2015,11 +1807,6 @@ REC_DIAG_HT_C4 =
   prob = 950
 
   recurse = "diff"
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-  }
 }
 
 
@@ -2028,6 +1815,7 @@ RECURSE_I1 =
   prob = 400
 
   recurse = "diff"
+  sub_count = 1
   symmetry = "x"
 
   structure =
@@ -2045,11 +1833,6 @@ RECURSE_I1 =
     "113", "114", "115", "116", "117"
     "118", "119", "11A", "11B", "11C"
   }
-
-  subs =
-  {
-    { height=1, match="one", recurse=1 }
-  }
 }
 
 
@@ -2058,6 +1841,7 @@ RECURSE_I2 =
   prob = 300
 
   recurse = "diff"
+  sub_count = 1
 
   structure =
   {
@@ -2082,11 +1866,6 @@ RECURSE_I2 =
     "113", "114", "115", "116", "117"
     "118", "119", "11A", "11B", "11C"
   }
-
-  subs =
-  {
-    { height=1, match="one", recurse=1 }
-  }
 }
 
 
@@ -2095,6 +1874,7 @@ RECURSE_I3 =
   prob = 300
 
   recurse = "diff"
+  sub_count = 1
   environment = "indoor"
   symmetry = "x"
 
@@ -2117,11 +1897,6 @@ RECURSE_I3 =
     "013", "014"
     "113", "114", "115", "116", "117"
     "118", "119", "11A", "11B", "11C"
-  }
-
-  subs =
-  {
-    { height=1, match="one", recurse=1 }
   }
 }
 
@@ -2148,6 +1923,7 @@ RECURSE_T_SOLID =
   shape = "T"
 
   recurse = "diff"
+  sub_count = 1
   environment = "indoor"
   symmetry = "x"
 
@@ -2168,11 +1944,6 @@ RECURSE_T_SOLID =
               "12101", "10121", "11121", "12111", "12121"
               "13111", "11131", "12131", "13131", "13231"
               "14111", "11141", "14141", "14241" }
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-  }
 }
 
 
@@ -2182,6 +1953,7 @@ RECURSE_L1 =
   shape = "L"
 
   recurse = "diff"
+  sub_count = 1
 
   structure =
   {
@@ -2213,11 +1985,6 @@ RECURSE_L1 =
     "113", "114", "115", "116", "117"
     "118", "119", "11A", "11B"
   }
-
-  subs =
-  {
-    { height=1, match="one", recurse=1 }
-  }
 }
 
 
@@ -2227,6 +1994,7 @@ RECURSE_L2 =
   shape = "L"
 
   recurse = "diff"
+  sub_count = 1
 
   structure =
   {
@@ -2251,11 +2019,6 @@ RECURSE_L2 =
     "1171", "1181", "1191", "11A1"
     "2171", "2181", "2191"
   }
-
-  subs =
-  {
-    { height=1, match="one", recurse=1 }
-  }
 }
 
 
@@ -2265,6 +2028,7 @@ RECURSE_L2_DIAG =
   shape = "L"
 
   recurse = "diff"
+  sub_count = 1
   environment = "indoor"
 
   structure =
@@ -2286,11 +2050,6 @@ RECURSE_L2_DIAG =
     "1131", "1141", "1141", "1151", "1161"
     "1171", "1181", "1191", "11A1"
   }
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-  }
 }
 
 
@@ -2300,6 +2059,7 @@ RECURSE_L3_DIAG =
   shape = "L"
 
   recurse = "diff"
+  sub_count = 1
   environment = "indoor"
 
   structure =
@@ -2316,11 +2076,6 @@ RECURSE_L3_DIAG =
 
   y_sizes = { "11011", "11111", "11211", "11311", "11411"
               "11511", "11611", "11711", "11811", "11911" }
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-  }
 }
 
 
@@ -2330,6 +2085,7 @@ RECURSE_U1 =
   shape = "U"
 
   recurse = "diff"
+  sub_count = 1
 
   structure =
   {
@@ -2350,11 +2106,6 @@ RECURSE_U1 =
     "013", "014", "015", "016"
     "115", "116", "117", "118", "119", "11A", "11B"
   }
-
-  subs =
-  {
-    { height=1, match="one", recurse=1 }
-  }
 }
 
 
@@ -2364,6 +2115,7 @@ RECURSE_U2 =
   shape = "U"
 
   recurse = "diff"
+  sub_count = 1
   symmetry = "x"
 
   structure =
@@ -2386,11 +2138,6 @@ RECURSE_U2 =
     "1013", "1014", "1015", "1016", "1017", "1019", "101B"
     "1310", "1410", "1510", "1610", "1810", "1A10"
   }
-
-  subs =
-  {
-    { height=1, match="one", recurse=1 }
-  }
 }
 
 
@@ -2400,6 +2147,7 @@ RECURSE_O1_DIAG =
   shape = "O"
 
   recurse = "diff"
+  sub_count = 1
   environment = "indoor"
   symmetry = "x"
 
@@ -2422,11 +2170,6 @@ RECURSE_O1_DIAG =
     "11211", "11311", "11411", "11511", "11611"
     "11711", "11811", "11911"
   }
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-  }
 }
 
 
@@ -2436,6 +2179,7 @@ RECURSE_O3_DIAG =
   shape = "O"
 
   recurse = "diff"
+  sub_count = 1
   environment = "indoor"
 
   structure =
@@ -2458,11 +2202,6 @@ RECURSE_O3_DIAG =
     "11211", "11311", "11411", "11511", "11611"
     "11711", "11811", "11911"
   }
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-  }
 }
 
 
@@ -2472,6 +2211,7 @@ RECURSE_T1 =
   shape = "T"
 
   recurse = "diff"
+  sub_count = 2
   symmetry = "x"
 
   structure =
@@ -2494,12 +2234,6 @@ RECURSE_T1 =
     "114", "115", "116", "117"
     "118", "119", "11A", "11B"
   }
-
-  subs =
-  {
-    { height=1, match="one", recurse=1 }
-    { height=1, match="any", sym_fill=1 }
-  }
 }
 
 
@@ -2509,6 +2243,7 @@ RECURSE_T1_DIAG =
   shape = "T"
 
   recurse = "diff"
+  sub_count = 2
   symmetry = "x"
 
   structure =
@@ -2530,12 +2265,6 @@ RECURSE_T1_DIAG =
     "113", "114", "115", "116", "117"
     "118", "119", "11A", "11B"
   }
-
-  subs =
-  {
-    { height=1, match="one", recurse=1 }
-    { height=1, match="any", sym_fill=1 }
-  }
 }
 
 
@@ -2545,6 +2274,7 @@ RECURSE_T1_NOSYM =
   shape = "T"
 
   recurse = "diff"
+  sub_count = 2
 
   structure =
   {
@@ -2566,21 +2296,16 @@ RECURSE_T1_NOSYM =
     "114", "115", "116", "117"
     "118", "119", "11A", "11B"
   }
-
-  subs =
-  {
-    { height=1, match="one", recurse=1 }
-    { height=1, match="one", recurse=1 }
-  }
 }
 
 
 RECURSE_T3 =
 {
-  prob = 599
+  prob = 500
   shape = "T"
 
   recurse = "diff"
+  sub_count = 2
   solid_feature = true
   symmetry = "x"
 
@@ -2604,12 +2329,6 @@ RECURSE_T3 =
     "1210", "1310", "1410", "1510", "1610", "2610", "2710"
     "2313"
   }
-
-  subs =
-  {
-    { height=1, match="one", recurse=1 }
-    { height=1, match="any", sym_fill=1 }
-  }
 }
 
 
@@ -2619,6 +2338,7 @@ RECURSE_T3_NOSYM =
   shape = "T"
 
   recurse = "diff"
+  sub_count = 2
   solid_feature = true
 
   structure =
@@ -2640,12 +2360,6 @@ RECURSE_T3_NOSYM =
     "1111", "1121", "1131", "1141", "1151"
     "2151", "2161", "2171", "2181", "2191"
   }
-
-  subs =
-  {
-    { height=1, match="one", recurse=1 }
-    { height=1, match="one", recurse=1 }
-  }
 }
 
 
@@ -2655,6 +2369,7 @@ RECURSE_H1 =
   shape = "H"
 
   recurse = "diff"
+  sub_count = 2
 
   structure =
   {
@@ -2677,12 +2392,6 @@ RECURSE_H1 =
     "01310", "01410", "01510", "01610"
     "11511", "11611", "11711", "11811", "11911"
   }
-
-  subs =
-  {
-    { height=1, match="one", recurse=1 }
-    { height=1, match="any", recurse=1 }
-  }
 }
 
 
@@ -2692,6 +2401,7 @@ RECURSE_H2 =
   shape = "H"
 
   recurse = "diff"
+  sub_count = 2
   symmetry = "x"
 
   structure =
@@ -2717,12 +2427,6 @@ RECURSE_H2 =
     "01310", "01410", "01510", "01610"
     "11511", "11611", "11711", "11811", "11911"
   }
-
-  subs =
-  {
-    { height=1, match="one", recurse=1 }
-    { height=1, match="any", sym_fill=1 }
-  }
 }
 
 
@@ -2732,6 +2436,7 @@ RECURSE_H3 =
   shape = "H"
 
   recurse = "diff"
+  sub_count = 2
 
   structure =
   {
@@ -2754,12 +2459,6 @@ RECURSE_H3 =
     "11101", "12101", "13101", "14101", "15101"
     "24102", "25102", "26102", "27102", "28102"
   }
-
-  subs =
-  {
-    { height=1, match="one", recurse=1 }
-    { height=1, match="any", recurse=1 }
-  }
 }
 
 
@@ -2769,6 +2468,7 @@ RECURSE_S1 =
   shape = "S"
 
   recurse = "diff"
+  sub_count = 2
 
   structure =
   {
@@ -2798,12 +2498,6 @@ RECURSE_S1 =
     "11311", "11411", "11511", "11611"
     "11711", "11811", "11911"
   }
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-    { height=1, match="any", recurse=1 }
-  }
 }
 
 
@@ -2813,6 +2507,7 @@ RECURSE_S2 =
   shape = "S"
 
   recurse = "diff"
+  sub_count = 2
 
   structure =
   {
@@ -2839,12 +2534,6 @@ RECURSE_S2 =
     "1111111", "1112111", "2111112", "2112112"
     "3111113", "3112113", "4111114"
   }
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-    { height=1, match="any", recurse=1 }
-  }
 }
 
 
@@ -2855,6 +2544,7 @@ RECURSE_WOW_LIQUID_O2 =
   shape = "O"
 
   recurse = "diff"
+  sub_count = 1
   symmetry = "xy"
 
   structure =
@@ -2873,11 +2563,6 @@ RECURSE_WOW_LIQUID_O2 =
 
   y_sizes = { "1110111", "1111111", "1121211", "1131311", "1141411"
               "2111112", "2121212", "2131312" }
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-  }
 }
 
 
@@ -2888,6 +2573,7 @@ RECURSE_WOW_LIQUID_O4 =
   shape = "O"
 
   recurse = "diff"
+  sub_count = 1
   symmetry = "xy"
 
   structure =
@@ -2906,11 +2592,6 @@ RECURSE_WOW_LIQUID_O4 =
 
   y_sizes = { "1111111", "1121211", "1131311", "1141411"
               "2111112", "2121212", "2131312" }
-
-  subs =
-  {
-    { height=1, match="any", recurse=1 }
-  }
 }
 
 
