@@ -2807,6 +2807,13 @@ function Layout_room(R)
       end
 
       last_tex = F.floor_tex
+
+      -- handle connections too
+      each C in F.conns do
+        if C.R1 == R then
+          C.conn_ftex = F.floor_tex
+        end
+      end
     end
 
     assign_floor_texs()
