@@ -60,6 +60,8 @@ OB_MODULES["level_control"] =
     hallways    = { label="Hallways",       choices=LEVEL_CONTROL.CHOICES }
     lakes       = { label="Lakes",          choices=LEVEL_CONTROL.CHOICES }
     liquids     = { label="Liquids",        choices=LEVEL_CONTROL.CHOICES }
+    ex_floors   = { label="3D Floors",      choices=LEVEL_CONTROL.CHOICES }
+
     mon_variety = { label="Monster Variety",choices=LEVEL_CONTROL.CHOICES }
     pictures    = { label="Pictures",       choices=LEVEL_CONTROL.CHOICES }
     pillars     = { label="Pillars",        choices=LEVEL_CONTROL.CHOICES }
@@ -77,7 +79,6 @@ OB_MODULES["level_control"] =
 --  big_juncs   = { label="Big Junctions",  choices=LEVEL_CONTROL.CHOICES }
 --  crossovers  = { label="Cross-Overs",    choices=LEVEL_CONTROL.CHOICES }
 --  cycles      = { label="Multiple Paths", choices=LEVEL_CONTROL.CHOICES }
---  odd_shapes  = { label="Odd Shapes",     choices=LEVEL_CONTROL.CHOICES }
 --  street_mode = { label="Street Mode",    choices=LEVEL_CONTROL.CHOICES }
   }
 }
