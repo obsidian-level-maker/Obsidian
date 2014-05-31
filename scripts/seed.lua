@@ -40,6 +40,8 @@ class SEED
 
   x1, y1, x2, y2  -- 2D map coordinates
 
+  chunk : CHUNK
+
   floor_h, ceil_h -- floor and ceiling heights
   f_tex,   c_tex  -- floor and ceiling textures
 }
@@ -54,6 +56,16 @@ class BORDER
 
   other : SEED  -- seed we are connected to, or nil 
 
+}
+
+
+class CHUNK
+{
+  kind : keyword  -- "floor", "liquid", "void" (etc)
+
+  floor : FLOOR
+
+  overlay : FLOOR  -- generally NIL, used for 3D floors
 }
 
 --------------------------------------------------------------]]

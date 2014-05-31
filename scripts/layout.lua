@@ -1600,6 +1600,20 @@ function Layout_pattern_in_area(R, area, f_texs)
   end
 
 
+  local function new_floor(vhr)
+    if not R.floors[vhr] then
+      local FLOOR =
+      {
+        vhr = vhr
+      }
+
+      R.floors[vhr] = FLOOR
+    end
+
+    return R.floors[vhr]
+  end
+
+
   local function pattern_chance(pat)
     if not pat.prob then
       return 0
@@ -1752,8 +1766,7 @@ function Layout_pattern_in_area(R, area, f_texs)
   local function install_flat_floor()
     R.no_pattern = true
 
-    local f_h   = assert(area.entry_h)
-    local f_tex = f_texs[1]
+    local FLOOR = new_floor(area.entry_vhr)
 
     for x = area.x1, area.x2 do
     for y = area.y1, area.y2 do
@@ -1770,7 +1783,7 @@ function Layout_pattern_in_area(R, area, f_texs)
 
         kind = "floor"
 
-        vhr = area.entry_vhr
+        floor = FLOOR
       }
 
       table.insert(R.chunks, CHUNK)
@@ -2152,14 +2165,15 @@ function Layout_height_realization(R, entry_h)
 
     each chunk in R.chunks do
       for pass = 1,2 do
-        local vhr = chunk.vhr
+        local F = chunk.floor
         if pass == 2 and chunk.overlay then
-          vhr = chunk.overlay.vhr
+          F = chunk.overlay.floor
         end
 
-        if vhr then
-          R.min_vhr = math.min(R.min_vhr, vhr)
-          R.max_vhr = math.max(R.max_vhr, vhr)
+        if F then
+          assert(F.vhr)
+          R.min_vhr = math.min(R.min_vhr, F.vhr)
+          R.max_vhr = math.max(R.max_vhr, F.vhr)
         end
       end
     end
@@ -2862,15 +2876,13 @@ function Layout_room(R)
 
     R.areas = { AREA }
 
-    R.floors = {}
-
     AREA.symmetry = R.symmetry
     AREA.is_top   = true
 
     local f_texs = select_floor_texs()
 
     -- iterate over areas until all are filled.
-    -- recursive patterns will add extra areas to the list.
+    -- recursive patterns will add extra areas as we go.
 
     while true do
       local A = pick_unvisited_area()

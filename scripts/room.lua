@@ -29,7 +29,7 @@ class ROOM
 
   is_outdoor : bool  -- true for outdoor rooms / caves
 
-  conns : array(CONN)  -- connections with neighbor rooms
+  conns : list(CONN)  -- connections with neighbor rooms
   entry_conn : CONN
 
   branch_kind : keyword
@@ -60,6 +60,19 @@ class ROOM
   sky_group : number  -- outdoor rooms which directly touch will belong
                       -- to the same sky_group (unless a solid wall is
                       -- enforced, e.g. between zones).
+}
+
+
+class FLOOR
+{
+  vhr : number  -- virtual height (1..9)
+
+  floor_h
+  floor_tex
+
+  chunks : list(CHUNK)
+
+  conns : list(CONN)   -- all the connections which join this floor
 }
 
 
@@ -119,6 +132,7 @@ function ROOM_CLASS.new()
     prefabs = {}
     decor   = {}
     chunks  = {}
+    floors  = {}
 
     sky_rects = {}
     exclusions = {}
