@@ -583,6 +583,11 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
       score = score + wall_dist / 5
     end
 
+    -- teleporters should never be underneath a 3D floor
+    if kind == "TELEPORTER" and spot.chunk and spot.chunk.overlay then
+      score = score - 10
+    end
+
     -- apply the skill bits from prefab
     if spot.rank then
       score = score + (spot.rank - 1) * 5 
