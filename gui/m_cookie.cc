@@ -312,7 +312,9 @@ bool Cookie_Save(const char *filename)
 	fprintf(cookie_fp, "-- " OBLIGE_TITLE " (C) 2006-2014 Andrew Apted\n");
 	fprintf(cookie_fp, "-- http://oblige.sourceforge.net/\n\n");
 
-	fprintf(cookie_fp, "-- Misc Options --\n");
+	fprintf(cookie_fp, "---- Options ----\n");
+	fprintf(cookie_fp, "\n");
+
 	fprintf(cookie_fp, "create_backups = %d\n", create_backups ? 1 : 0);
 	fprintf(cookie_fp, "debug_messages = %d\n", debug_messages ? 1 : 0);
 	fprintf(cookie_fp, "alternate_look = %d\n", alternate_look ? 1 : 0);

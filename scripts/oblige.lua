@@ -523,7 +523,8 @@ function ob_read_all_config(print_to_log)
 
   local unknown = "XXX"
 
-  do_line("-- Game Settings --");
+  do_line("---- Settings ----");
+  do_line("")
 
   do_line("seed = %d",   OB_CONFIG.seed or 0)
   do_line("game = %s",   OB_CONFIG.game or unknown)
@@ -532,14 +533,12 @@ function ob_read_all_config(print_to_log)
   do_line("length = %s", OB_CONFIG.length or unknown)
   do_line("")
 
-  do_line("-- Level Architecture --");
   do_line("theme = %s",   OB_CONFIG.theme or unknown)
   do_line("size = %s",    OB_CONFIG.size or unknown)
   do_line("outdoors = %s",OB_CONFIG.outdoors or unknown)
   do_line("caves = %s",   OB_CONFIG.caves or unknown)
   do_line("")
 
-  do_line("-- Playing Style --");
   do_line("mons = %s",    OB_CONFIG.mons or unknown)
   do_line("strength = %s",OB_CONFIG.strength or unknown)
   do_line("weapons = %s", OB_CONFIG.weapons or unknown)
@@ -548,23 +547,21 @@ function ob_read_all_config(print_to_log)
   do_line("ammo = %s",    OB_CONFIG.ammo or unknown)
   do_line("")
 
-  do_line("----- Modules -----")
+  do_line("---- Modules ----")
   do_line("")
 
   each name in table.keys_sorted(OB_MODULES) do
     local def = OB_MODULES[name]
 
     do_line("@%s = %s", name, sel(def.enabled, "1", "0"))
+    do_line("")
 
     -- module options
-    if def.options then
-      do_line("{")
-
+    if def.options and not table.empty(def.options) then
       each o_name,opt in def.options do
-        do_line("  %s = %s", o_name, opt.value or unknown)
+        do_line("%s = %s", o_name, opt.value or unknown)
       end
 
-      do_line("}")
       do_line("")
     end
   end
