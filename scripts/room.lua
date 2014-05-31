@@ -70,8 +70,6 @@ class FLOOR
   floor_h
   floor_tex
 
-  chunks : list(CHUNK)
-
   conns : list(CONN)   -- all the connections which join this floor
 }
 

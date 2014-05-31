@@ -43,7 +43,7 @@ class CONN
 
   conn_h : floor height for connection
 
-  where1  : usually NIL, otherwise a virtual floor number (1..9)
+  where1  : usually NIL, otherwise a FLOOR object
   where2  :
 }
 
@@ -111,11 +111,11 @@ function CONN_CLASS.seed(C, R)
 end
 
 
-function CONN_CLASS.set_where(C, R, vhr)
+function CONN_CLASS.set_where(C, R, floor)
   if R == C.R1 then
-    C.where1 = vhr
+    C.where1 = floor
   else
-    C.where2 = vhr
+    C.where2 = floor
   end
 end
 

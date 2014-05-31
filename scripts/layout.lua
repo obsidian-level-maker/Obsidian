@@ -1605,6 +1605,7 @@ function Layout_pattern_in_area(R, area, f_texs)
       local FLOOR =
       {
         vhr = vhr
+        conns = {}
       }
 
       R.floors[vhr] = FLOOR
@@ -1722,27 +1723,6 @@ function Layout_pattern_in_area(R, area, f_texs)
   end
 
 
-  local function setup_floor(S, vhr, f_tex)
-    -- set "virtual" floor here, actual height decided later
-    assert(1 <= vhr and vhr <= 9)
-
-    -- FIXME: do this later too (with floor_h)
-    S.f_tex = f_tex  --!!!!! sel(R.is_outdoor, R.main_tex, f_tex)
-
-    local C = S.conn or S.pseudo_conn
-
-    if C then
---!!!!      C.conn_h    = S.floor_h
-      C.conn_ftex = S.f_tex
-    end
-
-    if not R.floors[vhr] then
-      R.floors[vhr] = {}
-      R.floors[vhr].vhr = vhr
-    end
-  end
-
-
   local function setup_solid(S, pat)
     assert(not S.conn)
 
@@ -1790,7 +1770,11 @@ function Layout_pattern_in_area(R, area, f_texs)
 
       S.chunk = CHUNK
 
-      setup_floor(S, CHUNK.vhr, f_tex)
+      local C = S.conn or S.pseudo_conn
+
+      if C then
+        table.insert(FLOOR.conns, C)
+      end
     end -- x, y
     end
   end
@@ -1928,13 +1912,22 @@ function Layout_pattern_in_area(R, area, f_texs)
       CHUNK.dir = transform_dir(T, dir)
     end
 
+    if P.kind == "floor" or
+      -- FIXME !!!!! TEMPORARY CRUD !!!
+       (P.kind != "liquid" and P.kind != "solid")
+    then
+      local vhr = area.entry_vhr + (P.floor or 0) - T.entry_floor
+
+      CHUNK.floor = new_floor(vhr)
+    end
+
     if pat._overlay then
       local OV = pat._overlay[px][py]
 
       if OV.kind == "floor" then
-        CHUNK.overlay = {}
+        local vhr = area.entry_vhr + OV.floor - T.entry_floor
 
-        CHUNK.overlay.vhr = area.entry_vhr + OV.floor - T.entry_floor
+        CHUNK.overlay = new_floor(vhr)
       end
 
       R.has_3d_floor = true
@@ -1954,12 +1947,9 @@ function Layout_pattern_in_area(R, area, f_texs)
       elseif P.kind == "solid" then
         setup_solid(S, pat)
 
-      -- FIXME !!!!! TEMPORARY CRUD !!!
-
       else --[[ if P.kind == "floor" then ]]
-        CHUNK.vhr = area.entry_vhr + (P.floor or 0) - T.entry_floor
+        --???
 
-        setup_floor(S, CHUNK.vhr, f_tex)
       end
     end -- sx, sy
     end
@@ -2231,7 +2221,7 @@ gui.debugf("adjust_deltas : vhr range %d..%d\n", v_low, v_high)
         local where = S.conn:get_where(R)
 gui.debugf("  conn where = %s\n", tostring(where))
 
-        if where != "overlay" then
+        if where and where.vhr < v_high then
           want_gap = 176
         end
       end
@@ -2302,7 +2292,7 @@ gui.debugf("  gap_z --> %d  want_gap --> %d\n", gap_z, want_gap)
   end
 
 
-  local function apply_deltas(deltas)
+  local function OLD__apply_deltas(deltas)
     for x = R.tx1, R.tx2 do
     for y = R.ty1, R.ty2 do
       local S = SEEDS[x][y]
@@ -2340,11 +2330,9 @@ gui.debugf("  %s --> %d\n", S.conn:tostr(), floor_h)
   -- check that no floors are missing (gaps in the list)
   assert(R.min_vhr)
 
---[[ ???
   for i = R.min_vhr, R.max_vhr do
     assert(R.floors[i])
   end
---]]
 
 
   -- which virtual floor did we enter this room?
@@ -2920,7 +2908,17 @@ function Layout_room(R)
   end
 
 
-  local function assign_conns_to_overlay()
+  local function assign_a_conn(C, floor)
+    assert(floor.vhr)
+    assert(R.floors[floor.vhr] == floor)
+
+    C:set_where(R, floor)
+
+    table.insert(floor.conns, C)
+  end
+
+
+  local function assign_conns_to_floors()
     -- Pick which connections will enter/leave on the second floor.
     -- When there are 2 or more conns, we want at least one on each
     -- 3d floor.  If only one connection, pick the upper floor since
@@ -2939,28 +2937,24 @@ function Layout_room(R)
 
       local chunk = assert(S.chunk)
 
-      local hit_lower = (chunk.kind == "floor")
-      local hit_upper = (chunk.overlay and chunk.overlay.kind == "floor")
+      local hit_lower = (chunk.floor)
+      local hit_upper = (chunk.overlay)
 
       if hit_lower and hit_upper then
         table.insert(hit_both, { conn=C, chunk=chunk })
 
       elseif hit_upper then
         upper = upper + 1
-
-        assert(chunk.overlay.vhr)
-        C:set_where(chunk.overlay.vhr)
+        assign_a_conn(C, assert(chunk.overlay))
 
       else
         lower = lower + 1
-
-        assert(chunk.vhr)
-        C:set_where(chunk.vhr)
+        assign_a_conn(C, assert(chunk.floor))
       end
     end
 
 --[[ DEBUG
-    stderrf("assign_conns_to_overlay @ %s : lower:%d  upper:%d  both:%d  ",
+    stderrf("assign_conns @ %s : lower:%d  upper:%d  both:%d  ",
             R:tostr(), lower, upper, #hit_both)
 --]]
 
@@ -2980,14 +2974,19 @@ function Layout_room(R)
     -- actually assign them...
     rand.shuffle(hit_both)
 
-    for i = 1, raise_num do
+    for i = 1, #hit_both do
       local conn  = hit_both[i].conn
       local chunk = hit_both[i].chunk
 
-      assert(chunk.overlay)
-      assert(chunk.overlay.vhr)
+      local floor
 
-      conn:set_where(chunk.overlay.vhr)
+      if i <= raise_num then
+        floor = assert(chunk.overlay)
+      else
+        floor = assert(chunk.floor)
+      end
+
+      assign_a_conn(C, floor)
     end
   end
 
@@ -3042,7 +3041,7 @@ gui.debugf("  ENTRY_H %d from %s\n", entry_h, R.entry_conn:tostr())
 
   fill_room(entry_h)
 
-  assign_conns_to_overlay()
+  assign_conns_to_floors()
 
 
   Layout_height_realization(R, entry_h)
