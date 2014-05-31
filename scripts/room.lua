@@ -3209,8 +3209,8 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
     local z = assert(conn and conn.conn_h)
 
-    if conn.diff_h and conn.diff_h > 0 then
-      z = z - conn.diff_h
+    if conn.diff_h and conn.diff_h < 0 then
+      z = z + conn.diff_h
     end
 
     local fab_name = S.border[side].fab_name or "Arch_plain"
