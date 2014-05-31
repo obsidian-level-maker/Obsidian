@@ -2273,6 +2273,23 @@ gui.debugf("  gap_z --> %d  want_gap --> %d\n", gap_z, want_gap)
   end
 
 
+  local function assign_heights(deltas)
+    for vhr = 1,9 do
+      local F = R.floors[vhr]
+
+      if F then
+        F.floor_h = entry_h + deltas[vhr]
+
+        each C in F.conns do
+          if C.R1 == R then
+            C.conn_h = F.floor_h
+          end
+        end
+      end
+    end
+  end
+
+
   local function set_floor(S, floor_h)
     S.floor_h = floor_h
 
@@ -2341,9 +2358,9 @@ gui.debugf("  %s --> %d\n", S.conn:tostr(), floor_h)
 
 gui.debugf("entry_h:%d deltas =\n%s\n", entry_h, table.tostr(deltas))
 
+  -- apply the results to all the FLOOR objects
+  assign_heights(deltas)
 
-  -- apply the results to all the seeds / chunks
-  apply_deltas(deltas)
 
   Layout_set_floor_minmax(R)
 end
@@ -2903,19 +2920,6 @@ function Layout_room(R)
   end
 
 
-  local function mark_conn_as_overlay(C)
-    assert(C)
-
-    if C.R1 == R then
-      C.where1 = "overlay"
-    else
-      C.where2 = "overlay"
-    end
-
-gui.debugf("  marking conn %s --> %s as overlay\n", C:tostr(), C:neighbor(R):tostr())
-  end
-
-
   local function assign_conns_to_overlay()
     -- Pick which connections will enter/leave on the second floor.
     -- When there are 2 or more conns, we want at least one on each
@@ -2933,19 +2937,25 @@ gui.debugf("  marking conn %s --> %s as overlay\n", C:tostr(), C:neighbor(R):tos
       -- ignore teleporters
       if not S then continue end
 
-      local hit_lower = (S.kind == "walk")
+      local chunk = assert(S.chunk)
 
-      local hit_upper = (S.chunk and S.chunk.overlay)
+      local hit_lower = (chunk.kind == "floor")
+      local hit_upper = (chunk.overlay and chunk.overlay.kind == "floor")
 
       if hit_lower and hit_upper then
-        table.insert(hit_both, C)
+        table.insert(hit_both, { conn=C, chunk=chunk })
 
       elseif hit_upper then
-        mark_conn_as_overlay(C)
         upper = upper + 1
+
+        assert(chunk.overlay.vhr)
+        C:set_where(chunk.overlay.vhr)
 
       else
         lower = lower + 1
+
+        assert(chunk.vhr)
+        C:set_where(chunk.vhr)
       end
     end
 
@@ -2959,7 +2969,7 @@ gui.debugf("  marking conn %s --> %s as overlay\n", C:tostr(), C:neighbor(R):tos
 
     if both == 0 then return end
 
-    -- decide how many of hit_both[] to assign to upper floor
+    -- decide how many of hit_both[] to assign to the upper floor
     local raise_min = sel(upper < 1, 1, 0)
     local raise_max = both - sel(upper > lower, 1, 0)
 
@@ -2971,7 +2981,13 @@ gui.debugf("  marking conn %s --> %s as overlay\n", C:tostr(), C:neighbor(R):tos
     rand.shuffle(hit_both)
 
     for i = 1, raise_num do
-      mark_conn_as_overlay(hit_both[i])
+      local conn  = hit_both[i].conn
+      local chunk = hit_both[i].chunk
+
+      assert(chunk.overlay)
+      assert(chunk.overlay.vhr)
+
+      conn:set_where(chunk.overlay.vhr)
     end
   end
 
