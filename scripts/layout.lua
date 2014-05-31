@@ -751,6 +751,10 @@ function Layout_set_floor_minmax(R)
 
       min_h = math.min(min_h, S.floor_h)
       max_h = math.max(max_h, S.floor_h)
+
+      if S.chunk and S.chunk.overlay then
+        max_h = math.max(max_h, S.chunk.overlay.floor_h)
+      end
     end
   end -- x, y
   end
@@ -2191,11 +2195,14 @@ function Layout_height_realization(R, entry_h)
 
       local chunk = S.chunk
       if not chunk then continue end
+
+      if not chunk.floor   then continue end
       if not chunk.overlay then continue end
 
-      local v_low  = chunk.vhr
+      local v_low  = chunk.floor.vhr
       local v_high = chunk.overlay.vhr
 
+      assert(v_low)
       assert(v_high)
 
       if not v_low then
@@ -2280,19 +2287,7 @@ gui.debugf("  gap_z --> %d  want_gap --> %d\n", gap_z, want_gap)
   end
 
 
-  local function set_floor(S, floor_h)
-    S.floor_h = floor_h
-
-    local C = S.conn or S.pseudo_conn
-
-    if C then
-      C.conn_h    = S.floor_h
---!!!      C.conn_ftex = S.f_tex
-    end
-  end
-
-
-  local function OLD__apply_deltas(deltas)
+  local function fix_up_seeds()
     for x = R.tx1, R.tx2 do
     for y = R.ty1, R.ty2 do
       local S = SEEDS[x][y]
@@ -2300,23 +2295,8 @@ gui.debugf("  gap_z --> %d  want_gap --> %d\n", gap_z, want_gap)
 
       local chunk = S.chunk
 
-      if not (chunk and chunk.vhr) then continue end
-
-      local floor_h = entry_h + deltas[chunk.vhr]
-
-      set_floor(S, floor_h)
-
-      if chunk.overlay then
-        floor_h = entry_h + deltas[chunk.overlay.vhr]
-
-        chunk.overlay.floor_h = floor_h
-
-        -- FIXME : must be a better (less hacky) way??
-        --         e.g. have a FLOOR object with a conns[] list
-        if S.conn and S.conn:get_where(R) == "overlay" then
-gui.debugf("  %s --> %d\n", S.conn:tostr(), floor_h)
-          S.conn.conn_h = floor_h
-        end
+      if chunk and chunk.floor then
+        S.floor_h = assert(chunk.floor.floor_h)
       end
     end -- x, y
     end
@@ -2346,9 +2326,11 @@ gui.debugf("  %s --> %d\n", S.conn:tostr(), floor_h)
 
 gui.debugf("entry_h:%d deltas =\n%s\n", entry_h, table.tostr(deltas))
 
+
   -- apply the results to all the FLOOR objects
   assign_heights(deltas)
 
+  fix_up_seeds()
 
   Layout_set_floor_minmax(R)
 end
@@ -2975,7 +2957,7 @@ function Layout_room(R)
     rand.shuffle(hit_both)
 
     for i = 1, #hit_both do
-      local conn  = hit_both[i].conn
+      local C     = hit_both[i].conn
       local chunk = hit_both[i].chunk
 
       local floor
