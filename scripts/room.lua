@@ -3907,7 +3907,7 @@ end
 
 
     if S.chunk and S.chunk.overlay and S.chunk.overlay.floor_h then
-      do_extra_floor(S, S.chunk.overlay.floor_h, f_indents, w_tex, f_tex)
+      do_extra_floor(S, S.chunk.overlay.floor_h, f_indents, w_tex, S.chunk.overlay.floor_tex)
     end
 
 
