@@ -3207,6 +3207,10 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   local function do_archway(S, side, f_tex, w_tex)
     local conn = S.border[side].conn
 
+    if conn.conn_ftex then
+      f_tex = conn.conn_ftex
+    end
+
     local z = assert(conn and conn.conn_h)
 
     if conn.diff_h and conn.diff_h < 0 then
