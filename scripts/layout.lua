@@ -1589,7 +1589,7 @@ end
 
 
 
-function Layout_pattern_in_area(R, area, f_texs)
+function Layout_pattern_in_area(R, area)
   -- find a usable pattern in the ROOM_PATTERNS table and
   -- apply it to the room.
 
@@ -1895,7 +1895,6 @@ function Layout_pattern_in_area(R, area, f_texs)
     local sy2 = sy1 + sh - 1
 
     local base_h = assert(area.entry_h)
-    local f_tex  = f_texs[1]
 
     local P = pat._structure[px][py]
 
@@ -2737,8 +2736,48 @@ function Layout_room(R)
   end
 
 
+  local function pick_floor_texture(last_tex)
+    if R.kind == "outdoor" then
+      return R.main_tex
+    end
+
+    if not R.theme.floors then
+      return R.main_tex
+    end
+
+    local tex
+
+    for loop = 1, 3 do
+      tex = rand.key_by_probs(R.theme.floors)
+
+      if not last_tex or tex != last_tex then
+        break;
+      end
+    end
+
+    return tex
+  end
+
+
+  local function assign_floor_texs()
+    for x = R.tx1, R.tx2 do
+    for y = R.ty1, R.ty2 do
+      local S = SEEDS[x][y]
+      if S.room != R then continue end
+
+      local chunk = S.chunk
+
+      if chunk and chunk.floor then
+        S.f_tex = assert(chunk.floor.floor_tex)
+      end
+    end -- x, y
+    end
+  end
+
+
   local function select_floor_texs()
-    local f_texs  = {}
+    local entry_f_tex
+    local entry_vhr = R.entry_vhr
 
     local focus_C = R.entry_conn
 
@@ -2747,18 +2786,30 @@ function Layout_room(R)
        focus_C.kind != "teleporter" and
        not focus_C.fresh_floor
     then
-      table.insert(f_texs, focus_C.conn_ftex)
+      entry_f_tex = focus_C.conn_ftex
     end
 
-    for i = 1,7 do
-      if R.theme.floors then
-        table.insert(f_texs, rand.key_by_probs(R.theme.floors))
+    local last_tex
+
+    for vhr = 1, 9 do
+      local F = R.floors[vhr]
+
+      if not F then continue end
+
+      if vhr == entry_vhr and entry_f_tex then
+        F.floor_tex = entry_f_tex
+
+      elseif vhr == (entry_vhr - 1) and entry_f_tex then
+        F.floor_tex = pick_floor_texture(entry_f_tex)
+
       else
-        table.insert(f_texs, f_texs[1] or R.main_tex)
+        F.floor_tex = pick_floor_texture(last_tex)
       end
+
+      last_tex = F.floor_tex
     end
 
-    return f_texs
+    assign_floor_texs()
   end
 
 
@@ -2866,8 +2917,6 @@ function Layout_room(R)
     AREA.symmetry = R.symmetry
     AREA.is_top   = true
 
-    local f_texs = select_floor_texs()
-
     -- iterate over areas until all are filled.
     -- recursive patterns will add extra areas as we go.
 
@@ -2876,7 +2925,7 @@ function Layout_room(R)
 
       if not A then break; end
 
-      Layout_pattern_in_area(R, A, f_texs)
+      Layout_pattern_in_area(R, A)
 
       A.filled = true
     end
@@ -3024,6 +3073,8 @@ gui.debugf("  ENTRY_H %d from %s\n", entry_h, R.entry_conn:tostr())
   fill_room(entry_h)
 
   assign_conns_to_floors()
+
+  select_floor_texs()
 
 
   Layout_height_realization(R, entry_h)
