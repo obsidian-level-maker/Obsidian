@@ -263,18 +263,31 @@ private:
 		that->SaveToFile(filename);
 	}
 
-	static void callback_Cut(Fl_Widget *w, void *data)
-	{
-		UI_Manage_Config *that = (UI_Manage_Config *)data;
-
-		// FIXME
-	}
-
 	static void callback_Copy(Fl_Widget *w, void *data)
 	{
 		UI_Manage_Config *that = (UI_Manage_Config *)data;
 
-		// FIXME
+		if (that->text_buf->length() == 0)
+		{
+			fl_beep();
+			return;
+		}
+
+		const char *str = that->text_buf->text();
+
+		Fl::copy(str, strlen(str), 1);
+
+		free((void*)str);
+	}
+
+	static void callback_Cut(Fl_Widget *w, void *data)
+	{
+		UI_Manage_Config *that = (UI_Manage_Config *)data;
+
+		callback_Copy(w, data);
+
+		if (that->text_buf->length() > 0)
+			that->Clear();
 	}
 
 	static void callback_Paste(Fl_Widget *w, void *data)
