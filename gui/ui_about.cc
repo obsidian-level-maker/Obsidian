@@ -166,7 +166,7 @@ UI_About::UI_About(int W, int H, const char *label) :
 	int bw = 60 + KF * 10;
 	int bh = 30 + KF * 3;
 
-	Fl_Button *button = new Fl_Button(W-30-bw, H-10-bh, bw, bh, "OK");
+	Fl_Button *button = new Fl_Button(W/2 - bw/2, H-10-bh, bw, bh, "OK");
 	button->callback(callback_Quit, this);
 	darkish->add(button);
 }
@@ -390,11 +390,11 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	add(darkish);
 
 
-	// finally add an "OK" button
+	// finally add an "Close" button
 	int bw = 60 + KF * 10;
 	int bh = 30 + KF * 3;
 
-	Fl_Button *button = new Fl_Button(W-30-bw, H-10-bh, bw, bh, "OK");
+	Fl_Button *button = new Fl_Button(W-30-bw, H-10-bh, bw, bh, "Close");
 	button->callback(callback_Quit, this);
 	darkish->add(button);
 }
