@@ -375,7 +375,7 @@ void UI_Build::menu_do_options(Fl_Widget *w, void *data)
 
 void UI_Build::menu_do_manage_config(Fl_Widget *w, void *data)
 {
-	fl_beep();
+	DLG_ManageConfig();
 }
 
 void UI_Build::menu_do_console(Fl_Widget *w, void *data)

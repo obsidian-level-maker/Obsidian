@@ -25,10 +25,10 @@
 #include "main.h"
 
 
-#define WINDOW_MIN_W  620
-#define WINDOW_MIN_H  380
+#define MANAGE_WIN_W  620
+#define MANAGE_WIN_H  380
 
-#define BG_COLOR  fl_rgb_color(0x66, 0x5E, 0x55)
+#define BG_COLOR  fl_gray_ramp(10)
 
 
 class UI_Manage_Config : public Fl_Double_Window
@@ -36,7 +36,9 @@ class UI_Manage_Config : public Fl_Double_Window
 public:
 	bool want_quit;
 
-	Fl_Text_Display *conf_text;
+	Fl_Text_Buffer *text_buf;
+
+	Fl_Text_Display *conf_disp;
 
 	Fl_Button *load_but;
 	Fl_Button *extract_but;
@@ -49,7 +51,7 @@ public:
 	Fl_Button *paste_but;
 
 public:
-	UI_Manage_Config();
+	UI_Manage_Config(const char *label = NULL);
 
 	virtual ~UI_Manage_Config();
 
@@ -71,62 +73,82 @@ private:
 //
 // Constructor
 //
-UI_Manage_Config::UI_Manage_Config() :
-    Fl_Double_Window(WINDOW_MIN_W, WINDOW_MIN_H, "Manage Configs"),
+UI_Manage_Config::UI_Manage_Config(const char *label) :
+    Fl_Double_Window(MANAGE_WIN_W, MANAGE_WIN_H, label),
 	want_quit(false)
 {
-	size_range(WINDOW_MIN_W, WINDOW_MIN_H,
-	           2000, 2000);
+	size_range(MANAGE_WIN_W, MANAGE_WIN_H);
+
+	if (alternate_look)
+		color(FL_DARK2, FL_DARK2);
+	else
+		color(BG_COLOR, BG_COLOR);
 
 	callback(callback_Quit, this);
 
-	color(FL_DARK2, FL_DARK2);
+
+	text_buf = new Fl_Text_Buffer();
+	text_buf->append("This\nIs\nA\nTest");
 
 
-	conf_text = new Fl_Text_Display(190, 30, 410, 288, " Configuration : current OBLIGE settings");
-	conf_text->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+	conf_disp = new Fl_Text_Display(190, 30, 410, 288, " Configuration : current OBLIGE settings");
+	conf_disp->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+	conf_disp->labelsize(16);
+	conf_disp->buffer(text_buf);
 
 
 	/* Main Buttons */
 
-	load_but = new Fl_Button(20, 25, 120, 35, "  Load @-3>");
-	load_but->labelsize(18);
+	Fl_Box * o;
 
-	extract_but = new Fl_Button(20, 85, 120, 35, "  Extract @-3>");
-	extract_but->labelsize(18);
+	load_but = new Fl_Button(20, 25, 100, 35, "  Load @-3>");
+	load_but->labelsize(FL_NORMAL_SIZE + 0);
 
-	new Fl_Box(15, 116, 171, 39, "from a WAD or PAK file");
+	extract_but = new Fl_Button(20, 85, 100, 35, "  Extract @-3>");
+	extract_but->labelsize(FL_NORMAL_SIZE);
 
-	save_but = new Fl_Button(20, 165, 120, 35, "Save");
-	save_but->labelsize(18);
+	o = new Fl_Box(15, 116, 171, 40, "from a WAD or PAK file");
+	o->align(Fl_Align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE));
+	o->labelsize(14);
 
-	use_but = new Fl_Button(20, 225, 120, 35, "Use");
-	use_but->labelsize(18);
+	save_but = new Fl_Button(20, 165, 100, 35, "Save");
+	save_but->labelsize(FL_NORMAL_SIZE);
 
-	new Fl_Box(15, 256, 173, 39, "replace all current\nsettings in OBLIGE");
+	use_but = new Fl_Button(20, 225, 100, 35, "Use");
+	use_but->labelsize(FL_NORMAL_SIZE);
+
+	o = new Fl_Box(15, 256, 173, 50, "Note: this will replace\nall current settings!");
+	o->align(Fl_Align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE));
+	o->labelsize(14);
 
 	close_but = new Fl_Button(30, 320, 100, 40, "Close");
-	close_but->labelfont(1);
-	close_but->labelsize(18);
+	close_but->labelfont(FL_HELVETICA_BOLD);
+	close_but->labelsize(FL_NORMAL_SIZE);
 	close_but->callback(callback_Quit, this);
 
 
 	/* Clipboard buttons */
 
-	{ Fl_Box* o = new Fl_Box(215, 318, 355, 29, " Clipboard Operations");
-	  o->align(Fl_Align(FL_ALIGN_CENTER|FL_ALIGN_INSIDE));
-	}
+	o = new Fl_Box(215, 318, 355, 29, " Clipboard Operations");
+	o->align(Fl_Align(FL_ALIGN_CENTER | FL_ALIGN_INSIDE));
+	o->labelsize(14);
 
 	cut_but = new Fl_Button(245, 345, 80, 25, "Cut");
+	cut_but->labelsize(FL_NORMAL_SIZE - 2);
+	cut_but->shortcut(FL_CTRL + 'x');
 
 	copy_but = new Fl_Button(360, 345, 80, 25, "Copy");
+	copy_but->labelsize(FL_NORMAL_SIZE - 2);
+	copy_but->shortcut(FL_CTRL + 'c');
 
 	paste_but = new Fl_Button(475, 345, 80, 25, "Paste");
+	paste_but->labelsize(FL_NORMAL_SIZE - 2);
+	paste_but->shortcut(FL_CTRL + 'v');
 
 
 	end();
 
-	resizable(conf_text);
+	resizable(conf_disp);
 }
 
 
@@ -144,8 +166,9 @@ void DLG_ManageConfig(void)
 	if (config_window)  // already in use?
 		return;
 
-	config_window = new UI_Manage_Config(); /// opt_w, opt_h, "Oblige Options");
+	config_window = new UI_Manage_Config("OBLIGE Config Manager");
 
+	config_window->set_modal();
 	config_window->show();
 
 	// run the GUI until the user closes
