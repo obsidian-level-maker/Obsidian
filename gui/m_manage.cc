@@ -34,6 +34,35 @@
 #define BG_COLOR  fl_gray_ramp(10)
 
 
+//
+// this prevents the text display widget from selecting areas,
+// as well as eating the CTRL-A and CTRL-C keyboard events.
+//
+class Fl_Text_Display_NoSelect : public Fl_Text_Display
+{
+public:
+	Fl_Text_Display_NoSelect(int X, int Y, int W, int H, const char *label = 0) : 
+		Fl_Text_Display(X, Y, W, H, label)
+	{ }
+
+	virtual ~Fl_Text_Display_NoSelect()
+	{ }
+
+	virtual int handle(int e)
+	{
+		switch (e)
+		{
+			case FL_KEYBOARD: case FL_KEYUP:
+			case FL_PUSH: case FL_RELEASE:
+			case FL_DRAG:
+				return Fl_Group::handle(e);
+		}
+
+		return Fl_Text_Display::handle(e);
+	}
+};
+
+
 class UI_Manage_Config : public Fl_Double_Window
 {
 public:
@@ -41,7 +70,7 @@ public:
 
 	Fl_Text_Buffer *text_buf;
 
-	Fl_Text_Display *conf_disp;
+	Fl_Text_Display_NoSelect *conf_disp;
 
 	Fl_Button *load_but;
 	Fl_Button *extract_but;
@@ -122,7 +151,16 @@ public:
 			text_buf->append("\n");
 		}
 
+		Enable();
+
 		MarkSource("CURRENT SETTINGS");
+	}
+
+	void ReplaceWithString(const char *new_text)
+	{
+		Clear();
+
+		text_buf->append(new_text);
 
 		Enable();
 	}
@@ -167,6 +205,8 @@ public:
 
 	void SaveToFile(const char *filename)
 	{
+		// (checking FLTK code, the file is opened in "w" mode,
+		//  hence should end-of-line in an OS-appropriate way).
 		int res = text_buf->savefile(filename);
 
 		int err_no = errno;
@@ -178,6 +218,30 @@ public:
 
 			DLG_ShowError("Unable to save the file:\n\n%s", reason);
 		}
+	}
+
+private:
+	// FLTK virtual method for handling input events
+	int handle(int event)
+	{
+		if (event == FL_PASTE)
+		{
+			const char *text = Fl::event_text();
+			SYS_ASSERT(text);
+
+			if (strlen(text) == 0)
+			{
+				fl_beep();
+			}
+			else
+			{
+				ReplaceWithString(text);
+				MarkSource("PASTED TEXT");
+			}
+			return 1;
+		}
+
+		return Fl_Double_Window::handle(event);
 	}
 
 private:
@@ -197,6 +261,27 @@ private:
 			return;
 
 		that->SaveToFile(filename);
+	}
+
+	static void callback_Cut(Fl_Widget *w, void *data)
+	{
+		UI_Manage_Config *that = (UI_Manage_Config *)data;
+
+		// FIXME
+	}
+
+	static void callback_Copy(Fl_Widget *w, void *data)
+	{
+		UI_Manage_Config *that = (UI_Manage_Config *)data;
+
+		// FIXME
+	}
+
+	static void callback_Paste(Fl_Widget *w, void *data)
+	{
+		UI_Manage_Config *that = (UI_Manage_Config *)data;
+
+		Fl::paste(*that, 1);
 	}
 };
 
@@ -221,7 +306,7 @@ UI_Manage_Config::UI_Manage_Config(const char *label) :
 	text_buf = new Fl_Text_Buffer();
 
 
-	conf_disp = new Fl_Text_Display(190, 30, 410, 288, " Reading Config....");
+	conf_disp = new Fl_Text_Display_NoSelect(190, 30, 410, 288, " Reading Config....");
 	conf_disp->align(Fl_Align(FL_ALIGN_TOP_LEFT));
 	conf_disp->labelsize(16);
 	conf_disp->buffer(text_buf);
@@ -280,14 +365,17 @@ UI_Manage_Config::UI_Manage_Config(const char *label) :
 		cut_but = new Fl_Button(245, 345, 80, 25, "Cut");
 		cut_but->labelsize(FL_NORMAL_SIZE - 2);
 		cut_but->shortcut(FL_CTRL + 'x');
+		cut_but->callback(callback_Cut, this);
 
 		copy_but = new Fl_Button(360, 345, 80, 25, "Copy");
 		copy_but->labelsize(FL_NORMAL_SIZE - 2);
 		copy_but->shortcut(FL_CTRL + 'c');
+		copy_but->callback(callback_Copy, this);
 
 		paste_but = new Fl_Button(475, 345, 80, 25, "Paste");
 		paste_but->labelsize(FL_NORMAL_SIZE - 2);
 		paste_but->shortcut(FL_CTRL + 'v');
+		paste_but->callback(callback_Paste, this);
 
 		g->end();
 	}
