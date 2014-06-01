@@ -46,6 +46,8 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 	if (! alternate_look)
 		color(BUILD_BG, BUILD_BG);
 
+	resizable(NULL);
+
 	status_label[0] = 0;
 
 
@@ -53,8 +55,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
 	int mini_w = 100 + KF * 12;
 	int mini_h = 106 + KF *  6;
-	int mini_x = x + 12 + KF * 2;
-mini_x = x + 100 + KF * 16;
+	int mini_x = x + 100 + KF * 16;
 
 	mini_map = new UI_MiniMap(mini_x, cy + 14, mini_w, mini_h);
 
@@ -63,20 +64,9 @@ mini_x = x + 100 + KF * 16;
 
 	int button_w = 74 + KF * 16;
 	int button_h = 30 + KF * 4;
-	int button_x = x + 120 + KF * 16;
-button_x = x + 12 + KF * 2;
-
-	about = new Fl_Button(button_x, cy, button_w, button_h, "About");
-	about->labelsize(FL_NORMAL_SIZE + 0);
-	// about->callback(about_callback, this);
-about->hide();
-
-	add(about);
-
-///	cy += about->h() + 8 + KF;
+	int button_x = x + 12 + KF * 2;
 
 
-Fl_Menu_Across *
 	misc_menu = new Fl_Menu_Across(button_x, cy, button_w, button_h, "     Menu @-3>");
 	misc_menu->labelsize(FL_NORMAL_SIZE + 0);
 	misc_menu->selection_color(fl_rgb_color(120,80,20));
@@ -89,21 +79,10 @@ Fl_Menu_Across *
 	add(misc_menu);
 
 
-
-	options = new Fl_Button(button_x, cy, button_w, button_h, "Options");
-	options->labelsize(FL_NORMAL_SIZE + 0);
-	// options->callback(options_callback, this);
-options->hide();
-
-	add(options);
-
-	cy += options->h() + 16 + KF;
+	cy += button_h + 16 + KF;
 
 
-
-	const char *build_text = "Build";
-
-	build = new Fl_Button(button_x, cy, button_w, button_h, build_text);
+	build = new Fl_Button(button_x, cy, button_w, button_h, "Build");
 	build->labelfont(FL_HELVETICA_BOLD);
 	build->labelsize(FL_NORMAL_SIZE + 2);
 	build->callback(build_callback, this);
@@ -112,8 +91,7 @@ options->hide();
 	add(build);
 
 	cy += build->h() + 8 + KF;
-
-cy += 10;
+	cy += 10;
 
 
 	quit = new Fl_Button(button_x, cy, button_w, button_h, "Quit");
@@ -124,8 +102,7 @@ cy += 10;
 	add(quit);
 
 
-	cy += quit->h();
-
+	/* --- Status Area --- */
 
 	cy = y + h - 88;
 
@@ -149,11 +126,6 @@ cy += 10;
 	progress->labelsize(16);
 
 	add(progress);
-
-	cy += progress->h() + 12;
-
-
-	resizable(NULL);
 }
 
 
@@ -165,15 +137,13 @@ void UI_Build::Locked(bool value)
 {
 	if (value)
 	{
+		misc_menu->deactivate();
 		build->deactivate();
-		about->deactivate();
-		options->deactivate();
 	}
 	else
 	{
+		misc_menu->activate();
 		build->activate();
-		about->activate();
-		options->activate();
 	}
 }
 

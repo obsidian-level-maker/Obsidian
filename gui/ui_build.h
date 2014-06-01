@@ -39,9 +39,9 @@ private:
 
 	std::vector<std::string> step_names;
 
+	Fl_Menu_Across *misc_menu;
+
 	Fl_Button *build;
-	Fl_Button *about;
-	Fl_Button *options;
 	Fl_Button *quit;
 
 public:
