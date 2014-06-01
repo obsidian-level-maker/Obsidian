@@ -324,7 +324,7 @@ UI_Manage_Config::UI_Manage_Config(const char *label) :
 	conf_disp->labelsize(16);
 	conf_disp->buffer(text_buf);
 	conf_disp->textfont(FL_COURIER);
-	conf_disp->textsize(16);
+	conf_disp->textsize(12);
 
 
 	/* Main Buttons */
