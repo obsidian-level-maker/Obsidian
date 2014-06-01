@@ -21,6 +21,8 @@
 #ifndef __OB_HDR_UI_H__
 #define __OB_HDR_UI_H__
 
+#include "zf_menu.h"
+
 #include "ui_dialog.h"
 #include "ui_about.h"
 #include "ui_hyper.h"
@@ -33,7 +35,6 @@
 #include "ui_level.h"
 #include "ui_module.h"
 #include "ui_play.h"
-
 #include "ui_window.h"
 
 #endif /* __OB_HDR_UI_H__ */

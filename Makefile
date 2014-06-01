@@ -97,7 +97,9 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/ui_module.o \
 	$(OBJ_DIR)/ui_rchoice.o \
 	$(OBJ_DIR)/ui_play.o   \
-	$(OBJ_DIR)/ui_window.o
+	$(OBJ_DIR)/ui_window.o \
+	\
+	$(OBJ_DIR)/zf_menu.o
 
 $(OBJ_DIR)/%.o: gui/%.cc
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
