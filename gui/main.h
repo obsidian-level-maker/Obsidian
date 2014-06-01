@@ -27,8 +27,9 @@
 #define OBLIGE_HEX_VER  0x606
 
 
-#define CONFIG_FILENAME  "CONFIG.txt"
-#define LOG_FILENAME     "LOGS.txt"
+#define CONFIG_FILENAME   "CONFIG.txt"
+#define OPTIONS_FILENAME  "OPTIONS.txt"
+#define LOG_FILENAME      "LOGS.txt"
 
 
 extern const char *home_dir;
@@ -41,7 +42,8 @@ extern bool batch_mode;
 
 extern const char *batch_output_file;
 
-// when this is true, user pressed 'Cancel' or has quit the program
+
+// this records the user action, e.g. Cancel or Quit buttons
 typedef enum
 {
 	MAIN_NONE = 0,
@@ -52,6 +54,7 @@ typedef enum
 main_action_kind_e;
 
 extern int main_action;
+
 
 // Misc Options
 extern bool alternate_look;
@@ -64,6 +67,14 @@ void Main_FatalError(const char *msg, ...);
 void Main_ProgStatus(const char *msg, ...);
 bool Main_BackupFile(const char *filename, const char *ext);
 void Main_Ticker();
+
+
+// Dialog Windows
+void DLG_ShowError(const char *msg, ...);
+
+void DLG_AboutText(void);
+void DLG_OptionsEditor(void);
+void DLG_ManageConfig(void);
 
 
 class game_interface_c

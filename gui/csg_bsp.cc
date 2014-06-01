@@ -32,8 +32,6 @@
 #include "csg_main.h"
 #include "csg_local.h"
 
-#include "ui_dialog.h"
-
 
 double QUANTIZE_GRID;
 

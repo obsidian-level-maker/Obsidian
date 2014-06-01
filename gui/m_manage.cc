@@ -137,7 +137,7 @@ UI_Manage_Config::~UI_Manage_Config()
 { }
 
 
-void DLG_ManageConfig()
+void DLG_ManageConfig(void)
 {
 	static UI_Manage_Config * config_window = NULL;
 
