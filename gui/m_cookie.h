@@ -21,7 +21,7 @@
 #ifndef __OBLIGE_COOKIE_H__
 #define __OBLIGE_COOKIE_H__
 
-bool Cookie_Load(const char *filename, bool pre_load = false);
+bool Cookie_Load(const char *filename);
 bool Cookie_Save(const char *filename);
 
 void Cookie_ParseArguments(void);

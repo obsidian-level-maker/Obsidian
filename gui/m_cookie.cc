@@ -33,7 +33,6 @@
 
 typedef enum
 {
-	CCTX_PreLoad = 0,
 	CCTX_Load,
 	CCTX_Save,
 	CCTX_Arguments
@@ -52,11 +51,6 @@ static bool keep_seed;
 
 static void Cookie_SetValue(const char *name, const char *value)
 {
-	// skip everything else during PRELOAD
-	if (context == CCTX_PreLoad)
-		return;
-
-
 	if (context == CCTX_Load)
 		DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name, value);
 	else if (context == CCTX_Arguments)
@@ -162,9 +156,7 @@ static bool Cookie_ParseLine(char *buf)
 
 	if (! (isalpha(*buf) || *buf == '@'))
 	{
-		if (context != CCTX_PreLoad)
-			LogPrintf("Weird config line: [%s]\n", buf);
-
+		LogPrintf("Weird config line: [%s]\n", buf);
 		return false;
 	}
 
@@ -182,9 +174,7 @@ static bool Cookie_ParseLine(char *buf)
 
 	if (*buf != '=')
 	{
-		if (context != CCTX_PreLoad)
-			LogPrintf("Config line missing '=': [%s]\n", buf);
-
+		LogPrintf("Config line missing '=': [%s]\n", buf);
 		return false;
 	}
 
@@ -195,9 +185,7 @@ static bool Cookie_ParseLine(char *buf)
 
 	if (*buf == 0)
 	{
-		if (context != CCTX_PreLoad)
-			LogPrintf("Config line missing value!\n");
-
+		LogPrintf("Config line missing value!\n");
 		return false;
 	}
 
@@ -208,9 +196,9 @@ static bool Cookie_ParseLine(char *buf)
 
 //------------------------------------------------------------------------
 
-bool Cookie_Load(const char *filename, bool pre_load)
+bool Cookie_Load(const char *filename)
 {
-	context = pre_load ? CCTX_PreLoad : CCTX_Load;
+	context = CCTX_Load;
 
 	keep_seed = (ArgvFind('k', "keep") >= 0);
 
@@ -220,13 +208,11 @@ bool Cookie_Load(const char *filename, bool pre_load)
 
 	if (! cookie_fp)
 	{
-		if (! pre_load)
-			LogPrintf("Missing Config file -- using defaults.\n\n");
-
+		LogPrintf("Missing Config file -- using defaults.\n\n");
 		return false;
 	}
 
-	LogPrintf("Loading Config (%s)...\n", pre_load ? "PRELOAD" : "FULL");
+	LogPrintf("Loading Config...\n");
 
 	// simple line-by-line parser
 	char buffer[MSG_BUF_LEN];
@@ -239,7 +225,7 @@ bool Cookie_Load(const char *filename, bool pre_load)
 			error_count += 1;
 	}
 
-	if (error_count > 0 && ! pre_load)
+	if (error_count > 0)
 		LogPrintf("DONE (found %d parse errors)\n\n", error_count);
 	else
 		LogPrintf("DONE.\n\n");
