@@ -14,6 +14,15 @@
 //     http://www.fltk.org/str.php
 //
 
+//----------------------------------------------------------------
+//
+// Modified 1/June/2014 by Andrew Apted, from FLTK 1.3.2
+//
+// Provides an Fl_Menu_Across, based on Fl_Menu_Button, which puts
+// the menu to the right of the button (instead of under it).
+//
+//----------------------------------------------------------------
+
 #include "headers.h"
 #include "hdr_fltk.h"
 

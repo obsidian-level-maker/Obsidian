@@ -14,8 +14,14 @@
 //     http://www.fltk.org/str.php
 //
 
-/* \file
-   Fl_Menu_Button widget . */
+//----------------------------------------------------------------
+//
+// Modified 1/June/2014 by Andrew Apted, from FLTK 1.3.2
+//
+// Provides an Fl_Menu_Across, based on Fl_Menu_Button, which puts
+// the menu to the right of the button (instead of under it).
+//
+//----------------------------------------------------------------
 
 #ifndef Fl_Menu_ACROSS_H
 #define Fl_Menu_ACROSS_H
