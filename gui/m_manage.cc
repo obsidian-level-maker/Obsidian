@@ -134,6 +134,10 @@ private:
 
 		that->want_quit = true;
 	}
+
+	static void callback_Save(Fl_Widget *w, void *data)
+	{
+	}
 };
 
 
@@ -244,11 +248,11 @@ void DLG_ManageConfig(void)
 {
 	static UI_Manage_Config * config_window = NULL;
 
-	if (config_window)  // already in use?
-		return;
+	// if it already exists, simply re-show it
+	if (! config_window)
+		config_window = new UI_Manage_Config("OBLIGE Config Manager");
 
-	config_window = new UI_Manage_Config("OBLIGE Config Manager");
-
+	config_window->want_quit = false;
 	config_window->set_modal();
 	config_window->show();
 
@@ -258,10 +262,8 @@ void DLG_ManageConfig(void)
 	while (! config_window->WantQuit())
 		Fl::wait();
 
-	// this deletes all the child widgets too...
-	delete config_window;
-
-	config_window = NULL;
+	config_window->set_non_modal();
+	config_window->hide();
 }
 
 //--- editor settings ---
