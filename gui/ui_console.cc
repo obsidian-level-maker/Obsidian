@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2010 Andrew Apted
+//  Copyright (C) 2010,2014 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -182,7 +182,7 @@ private:
 		// convert the text into one or more Fl_Boxs
 
 		int color = 7;
-		int font  = FL_HELVETICA;
+		int font  = FL_COURIER;
 
 		char *text = StringDup(unparsed.c_str());
 		char *pos  = text;
@@ -218,14 +218,6 @@ private:
 					{
 						case 'b':
 							next = ParseButton(px, next);
-							break;
-
-						case 'c':
-							font = FL_COURIER;
-							break;
-
-						case 'h':
-							font = FL_HELVETICA;
 							break;
 
 						default:

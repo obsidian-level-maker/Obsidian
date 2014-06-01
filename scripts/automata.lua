@@ -145,7 +145,7 @@ function AUTOMATA_CLASS.dump(grid, title)
   end
 
   for y = grid.h,1,-1 do
-    local line = "@c| ";
+    local line = "| ";
     
     for x = 1,grid.w do
       local ch = " "
