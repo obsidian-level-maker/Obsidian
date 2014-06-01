@@ -192,7 +192,6 @@ void DLG_AboutText(void)
 
 	// this deletes all the child widgets too...
 	delete about_window;
-
 	about_window = NULL;
 }
 

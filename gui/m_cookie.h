@@ -26,6 +26,11 @@ bool Cookie_Save(const char *filename);
 
 void Cookie_ParseArguments(void);
 
+/* m_options stuff */
+
+bool Options_Load(const char *filename);
+bool Options_Save(const char *filename);
+
 #endif /* __OBLIGE_COOKIE_H__ */
 
 //--- editor settings ---

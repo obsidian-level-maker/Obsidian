@@ -30,8 +30,6 @@
 #include "m_cookie.h"
 #include "m_lua.h"
 
-#include "ui_chooser.h"
-
 
 typedef enum
 {
@@ -52,48 +50,8 @@ static std::string active_module;
 static bool keep_seed;
 
 
-static bool ParseMiscOption(const char *name, const char *value)
-{
-	if (StringCaseCmp(name, "create_backups") == 0)
-	{
-		if (context == CCTX_PreLoad)
-			create_backups = atoi(value) ? true : false;
-	}
-	else if (StringCaseCmp(name, "debug_messages") == 0)
-	{
-		if (context == CCTX_PreLoad)
-			debug_messages = atoi(value) ? true : false;
-	}
-	else if (StringCaseCmp(name, "fast_lighting") == 0)
-	{
-		if (context == CCTX_PreLoad)
-			fast_lighting = atoi(value) ? true : false;
-	}
-	else if (StringCaseCmp(name, "alternate_look") == 0)
-	{
-		if (context == CCTX_PreLoad)
-			alternate_look = atoi(value) ? true : false;
-	}
-	else if (StringCaseCmp(name, "last_file") == 0)
-	{
-		if (context == CCTX_PreLoad)
-			UI_SetLastFile(value);
-	}
-	else
-	{
-		return false;  // not a misc option
-	}
-
-	return true;
-}
-
-
 static void Cookie_SetValue(const char *name, const char *value)
 {
-	// -- Misc Options --
-	if (ParseMiscOption(name, value))
-		return;
-
 	// skip everything else during PRELOAD
 	if (context == CCTX_PreLoad)
 		return;
@@ -312,17 +270,7 @@ bool Cookie_Save(const char *filename)
 	fprintf(cookie_fp, "-- " OBLIGE_TITLE " (C) 2006-2014 Andrew Apted\n");
 	fprintf(cookie_fp, "-- http://oblige.sourceforge.net/\n\n");
 
-	fprintf(cookie_fp, "---- Options ----\n");
-	fprintf(cookie_fp, "\n");
-
-	fprintf(cookie_fp, "create_backups = %d\n", create_backups ? 1 : 0);
-	fprintf(cookie_fp, "debug_messages = %d\n", debug_messages ? 1 : 0);
-	fprintf(cookie_fp, "alternate_look = %d\n", alternate_look ? 1 : 0);
-	fprintf(cookie_fp, "fast_lighting = %d\n",  fast_lighting ? 1 : 0);
-	fprintf(cookie_fp, "last_file = %s\n", UI_GetLastFile());
-	fprintf(cookie_fp, "\n");
-
-
+	// settings...
 	std::vector<std::string> lines;
 
 	ob_read_all_config(&lines);

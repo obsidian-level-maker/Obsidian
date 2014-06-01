@@ -47,7 +47,8 @@ const char *home_dir    = NULL;
 const char *install_dir = NULL;
 const char *game_dir    = NULL;
 
-const char *config_file = NULL;
+const char *config_file  = NULL;
+const char *options_file = NULL;
 
 int screen_w;
 int screen_h;
@@ -597,6 +598,8 @@ int main(int argc, char **argv)
 	Determine_InstallDir(argv[0]);
 	Determine_ConfigFile(argv[0]);
 
+	options_file = StringPrintf("%s/%s", home_dir, OPTIONS_FILENAME);
+
 
 	LogInit(batch_mode ? NULL : LOG_FILENAME);
 
@@ -618,7 +621,9 @@ int main(int argc, char **argv)
 
 
 	if (! batch_mode)
-		Cookie_Load(config_file, true /* PRELOAD */);
+	{
+		Options_Load(options_file);
+	}
 
 	if (ArgvFind('d', "debug") >= 0)
 		debug_messages = true;

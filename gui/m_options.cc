@@ -1,6 +1,6 @@
-//------------------------------------------------------------------------
+//----------------------------------------------------------------------
 //  Options Editor
-//------------------------------------------------------------------------
+//----------------------------------------------------------------------
 //
 //  Oblige Level Maker
 //
@@ -16,13 +16,174 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 //
-//------------------------------------------------------------------------
+//----------------------------------------------------------------------
 
 #include "headers.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 
+#include "lib_argv.h"
+#include "lib_util.h"
+
 #include "main.h"
+#include "m_cookie.h"
+
+#include "ui_chooser.h"
+
+
+static void Parse_Option(const char *name, const char *value)
+{
+	if (StringCaseCmp(name, "create_backups") == 0)
+	{
+		create_backups = atoi(value) ? true : false;
+	}
+	else if (StringCaseCmp(name, "debug_messages") == 0)
+	{
+		debug_messages = atoi(value) ? true : false;
+	}
+	else if (StringCaseCmp(name, "fast_lighting") == 0)
+	{
+		fast_lighting = atoi(value) ? true : false;
+	}
+	else if (StringCaseCmp(name, "alternate_look") == 0)
+	{
+		alternate_look = atoi(value) ? true : false;
+	}
+	else if (StringCaseCmp(name, "last_file") == 0)
+	{
+		UI_SetLastFile(value);
+	}
+	else
+	{
+		LogPrintf("Unknown option: '%s'\n", name);
+	}
+}
+
+
+static bool Options_ParseLine(char *buf)
+{
+	// remove whitespace
+	while (isspace(*buf))
+		buf++;
+
+	int len = strlen(buf);
+
+	while (len > 0 && isspace(buf[len-1]))
+		buf[--len] = 0;
+
+	// ignore blank lines and comments
+	if (*buf == 0)
+		return true;
+
+	if (buf[0] == '-' && buf[1] == '-')
+		return true;
+
+	if (! isalpha(*buf))
+	{
+		LogPrintf("Weird option line: [%s]\n", buf);
+		return false;
+	}
+
+	// Righteo, line starts with an identifier.  It should be of the
+	// form "name = value".  We'll terminate the identifier, and pass
+	// the name/value strings to the matcher function.
+
+	const char *name = buf;
+
+	for (buf++ ; isalnum(*buf) || *buf == '_' || *buf == '.' ; buf++)
+	{ /* nothing here */ }
+
+	while (isspace(*buf))
+		*buf++ = 0;
+
+	if (*buf != '=')
+	{
+		LogPrintf("Option line missing '=': [%s]\n", buf);
+		return false;
+	}
+
+	*buf++ = 0;
+
+	while (isspace(*buf))
+		buf++;
+
+	if (*buf == 0)
+	{
+		LogPrintf("Option line missing value!\n");
+		return false;
+	}
+
+	Parse_Option(name, buf);
+	return true;
+}
+
+
+bool Options_Load(const char *filename)
+{
+	FILE *option_fp = fopen(filename, "r");
+
+	if (! option_fp)
+	{
+		LogPrintf("Missing Options file -- using defaults.\n\n");
+		return false;
+	}
+
+	LogPrintf("Loading Options...\n");
+
+	// simple line-by-line parser
+	char buffer[MSG_BUF_LEN];
+
+	int error_count = 0;
+
+	while (fgets(buffer, MSG_BUF_LEN-2, option_fp))
+		if (! Options_ParseLine(buffer))
+			error_count += 1;
+
+	if (error_count > 0)
+		LogPrintf("DONE (found %d parse errors)\n\n", error_count);
+	else
+		LogPrintf("DONE.\n\n");
+
+	fclose(option_fp);
+
+	return true;
+}
+
+
+bool Options_Save(const char *filename)
+{
+	FILE *option_fp = fopen(filename, "w");
+
+	if (! option_fp)
+	{
+		LogPrintf("Error: unable to create file: %s\n(%s)\n\n",
+				  filename, strerror(errno));
+		return false;
+	}
+
+	LogPrintf("Saving Options...\n");
+
+	fprintf(option_fp, "-- OPTIONS FILE : OBLIGE %s\n", OBLIGE_VERSION); 
+	fprintf(option_fp, "-- " OBLIGE_TITLE " (C) 2006-2014 Andrew Apted\n");
+	fprintf(option_fp, "-- http://oblige.sourceforge.net/\n\n");
+
+	fprintf(option_fp, "create_backups = %d\n", create_backups ? 1 : 0);
+	fprintf(option_fp, "debug_messages = %d\n", debug_messages ? 1 : 0);
+	fprintf(option_fp, "alternate_look = %d\n", alternate_look ? 1 : 0);
+	fprintf(option_fp, "fast_lighting = %d\n",  fast_lighting ? 1 : 0);
+
+	fprintf(option_fp, "last_file = %s\n", UI_GetLastFile());
+	fprintf(option_fp, "\n");
+
+	fclose(option_fp);
+
+	LogPrintf("DONE.\n\n");
+
+	return true;
+}
+
+
+//----------------------------------------------------------------------
 
 
 class UI_OptionsWin : public Fl_Window
@@ -271,8 +432,10 @@ void DLG_OptionsEditor(void)
 
 	// this deletes all the child widgets too...
 	delete option_window;
-
 	option_window = NULL;
+
+	// save the options now
+	Options_Save(options_file);
 }
 
 //--- editor settings ---
