@@ -24,7 +24,7 @@
 
 #define WINDOW_BG  fl_gray_ramp(3)
 
-#define BUILD_BG   fl_gray_ramp(4)
+#define BUILD_BG   fl_gray_ramp(2)
 
 
 class UI_MainWin : public Fl_Double_Window
