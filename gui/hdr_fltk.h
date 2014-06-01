@@ -32,6 +32,7 @@
 #include <FL/Fl_Counter.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_File_Chooser.H>
+#include <FL/Fl_Native_File_Chooser.H>
 #include <FL/Fl_File_Icon.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Image.H>

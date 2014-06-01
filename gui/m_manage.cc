@@ -127,6 +127,59 @@ public:
 		Enable();
 	}
 
+	const char * AskSaveFilename()
+	{
+		Fl_Native_File_Chooser chooser;
+
+		chooser.title("Pick file to save to");
+		chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
+		chooser.filter("Text files\t*.txt\nConfig files\t*.cfg");
+
+		// FIXME: chooser.directory(LAST_USED_DIRECTORY)
+
+		switch (chooser.show())
+		{
+			case -1:
+				LogPrintf("Error choosing save file:\n");
+				LogPrintf("   %s\n", chooser.errmsg());
+
+				DLG_ShowError("Unable to save the file:\n\n%s", chooser.errmsg());
+				return NULL;
+
+			case 1:  // cancelled
+				return NULL;
+
+			default:
+				break;  // OK
+		}
+
+		static char filename[FL_PATH_MAX + 10];
+
+		strcpy(filename, chooser.filename());
+
+		// if extension is missing then add ".txt"
+		char *pos = (char *)fl_filename_ext(filename);
+		if (! *pos)
+			strcat(filename, ".txt");
+
+		return filename;
+	}
+
+	void SaveToFile(const char *filename)
+	{
+		int res = text_buf->savefile(filename);
+
+		int err_no = errno;
+
+		if (res)
+		{
+			const char *reason = (res == 1 && err_no) ? strerror(err_no) :
+								 "Error writing to file.";
+
+			DLG_ShowError("Unable to save the file:\n\n%s", reason);
+		}
+	}
+
 private:
 	static void callback_Quit(Fl_Widget *w, void *data)
 	{
@@ -137,6 +190,13 @@ private:
 
 	static void callback_Save(Fl_Widget *w, void *data)
 	{
+		UI_Manage_Config *that = (UI_Manage_Config *)data;
+
+		const char *filename = that->AskSaveFilename();
+		if (! filename)
+			return;
+
+		that->SaveToFile(filename);
 	}
 };
 
@@ -189,6 +249,7 @@ UI_Manage_Config::UI_Manage_Config(const char *label) :
 
 		save_but = new Fl_Button(30, 165, 100, 35, "Save");
 		save_but->labelsize(FL_NORMAL_SIZE);
+		save_but->callback(callback_Save, this);
 
 		use_but = new Fl_Button(30, 225, 100, 35, "Use");
 		use_but->labelsize(FL_NORMAL_SIZE);
