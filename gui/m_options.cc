@@ -262,6 +262,7 @@ void DLG_OptionsEditor(void)
 
 	option_window = new UI_OptionsWin(opt_w, opt_h, "Oblige Options");
 
+	option_window->set_modal();
 	option_window->show();
 
 	// run the GUI until the user closes
