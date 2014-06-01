@@ -2,20 +2,27 @@
 CHANGELOG
 =========
 
-+ new 'Weapons' setting in the main GUI
++ new 'Weapons' setting
 
-+ implemented the GUI 'Powerups' setting
++ implemented the 'Powerups' setting
 
-! removed the Seed setting from the GUI
++ new 'Menu' button, replaces 'About' and 'Options'
+
+>>> new Config Manager window 
+
+! removed the 'Seed' setting
 ! removed the 'Hide Modules' option
 
-- new GUI option: 'Bland Lighting Mode'
+- store options in OPTIONS.txt, separate from normal settings
 
->>>  outdoor borders
+>>> new GUI option: 'Bland Lighting Mode'
+
+
++ generate DOOM 1 episode name graphics
+
+>>> outdoor borders
 
 - added 'tech_Gray' theme for DOOM, thanks to Mr. Chris
-
-- generate some DOOM 1 episode name graphics
 
 - tweaked the DOOM monster mix
 
@@ -25,6 +32,7 @@ CHANGELOG
 - added a couple of special doorways for caves
 - added arch-shaped doorway for Urban and Hell themes
 - better secret connections in outdoor rooms
+- build all doors and fences using the wad-fab system
 
 - caves: improved floor texturing in flat caves
 - caves: never place pickup items in liquid areas
@@ -35,7 +43,6 @@ CHANGELOG
 - fixed Psychedelic theme using SKY1/2/3 as a normal texture
 - fixed the silly "free standing" archways and doors
 - fixed the weird metal walls in large scenic areas
+- fixed rare infinite loop when planning cave rooms
 - fixed pegging on lifts in slime pits
-
-/ build all doors using wad-fab system
 
