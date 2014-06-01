@@ -44,6 +44,7 @@ LIBS=-lm -lz $(FLTK_LIBS)
 OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/m_cookie.o  \
 	$(OBJ_DIR)/m_lua.o     \
+	$(OBJ_DIR)/m_manage.o  \
 	$(OBJ_DIR)/m_spots.o   \
 	$(OBJ_DIR)/lib_argv.o  \
 	$(OBJ_DIR)/lib_file.o  \
