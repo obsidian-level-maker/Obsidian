@@ -122,7 +122,7 @@ public:
 			text_buf->append("\n");
 		}
 
-		MarkSource("current settings");
+		MarkSource("CURRENT SETTINGS");
 
 		Enable();
 	}
@@ -169,25 +169,32 @@ UI_Manage_Config::UI_Manage_Config(const char *label) :
 
 	Fl_Box * o;
 
-	load_but = new Fl_Button(30, 25, 100, 35, "  Load @-3>");
-	load_but->labelsize(FL_NORMAL_SIZE + 0);
+	{
+		Fl_Group *g = new Fl_Group(0, 0, conf_disp->x(), conf_disp->h());
+		g->resizable(NULL);
 
-	extract_but = new Fl_Button(30, 85, 100, 35, "  Extract @-3>");
-	extract_but->labelsize(FL_NORMAL_SIZE);
+		load_but = new Fl_Button(30, 25, 100, 35, "  Load @-3>");
+		load_but->labelsize(FL_NORMAL_SIZE + 0);
 
-	o = new Fl_Box(15, 116, 171, 40, "from a WAD or PAK file");
-	o->align(Fl_Align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE));
-	o->labelsize(14);
+		extract_but = new Fl_Button(30, 85, 100, 35, "  Extract @-3>");
+		extract_but->labelsize(FL_NORMAL_SIZE);
 
-	save_but = new Fl_Button(30, 165, 100, 35, "Save");
-	save_but->labelsize(FL_NORMAL_SIZE);
+		o = new Fl_Box(15, 116, 171, 40, "from a WAD or PAK file");
+		o->align(Fl_Align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE));
+		o->labelsize(14);
 
-	use_but = new Fl_Button(30, 225, 100, 35, "Use");
-	use_but->labelsize(FL_NORMAL_SIZE);
+		save_but = new Fl_Button(30, 165, 100, 35, "Save");
+		save_but->labelsize(FL_NORMAL_SIZE);
 
-	o = new Fl_Box(15, 256, 173, 50, "Note: this will replace\nall current settings!");
-	o->align(Fl_Align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE));
-	o->labelsize(14);
+		use_but = new Fl_Button(30, 225, 100, 35, "Use");
+		use_but->labelsize(FL_NORMAL_SIZE);
+
+		o = new Fl_Box(15, 256, 173, 50, "Note: this will replace\nall current settings!");
+		o->align(Fl_Align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE));
+		o->labelsize(14);
+
+		g->end();
+	}
 
 	close_but = new Fl_Button(30, 325, 100, 40, "Close");
 	close_but->labelfont(FL_HELVETICA_BOLD);
