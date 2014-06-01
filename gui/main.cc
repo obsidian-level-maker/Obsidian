@@ -420,25 +420,6 @@ int Main_key_handler(int event)
 				return 0;
 			}
 
-		case FL_F+1:   // F1 = HELP
-			DLG_AboutText();
-			return 1;
-
-		case FL_F+2:   // F1 = BUILD
-			if (main_action == 0)
-			{
-				main_action = MAIN_BUILD;
-			}
-			return 1;
-
-		case FL_F+4:   // F4 = OPTIONS
-			DLG_OptionsEditor();
-			return 1;
-
-		case FL_F+7:
-			UI_ToggleConsole();
-			return 1;
-
 		default: break;
 	}
 

@@ -35,7 +35,7 @@ static Fl_Menu_Across	*pressed_across_menu_ = 0;
 void Fl_Menu_Across::draw() {
   int H = (labelsize()-3)&-2;
   int X = x()+w()-H-Fl::box_dx(box())-Fl::box_dw(box())-1;
-  int Y = y()+(h()-H)/2;
+//int Y = y()+(h()-H)/2;
   draw_box(pressed_across_menu_ == this ? fl_down(box()) : box(), color());
   draw_label(x()+Fl::box_dx(box()), y(), X-x()+2, h());
   if (Fl::focus() == this) draw_focus();

@@ -54,8 +54,9 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 	int mini_w = 100 + KF * 12;
 	int mini_h = 106 + KF *  6;
 	int mini_x = x + 12 + KF * 2;
+mini_x = x + 100 + KF * 16;
 
-	mini_map = new UI_MiniMap(mini_x, cy, mini_w, mini_h);
+	mini_map = new UI_MiniMap(mini_x, cy + 14, mini_w, mini_h);
 
 	add(mini_map);
 
@@ -63,19 +64,36 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 	int button_w = 74 + KF * 16;
 	int button_h = 30 + KF * 4;
 	int button_x = x + 120 + KF * 16;
+button_x = x + 12 + KF * 2;
 
 	about = new Fl_Button(button_x, cy, button_w, button_h, "About");
 	about->labelsize(FL_NORMAL_SIZE + 0);
-	about->callback(about_callback, this);
+	// about->callback(about_callback, this);
+about->hide();
 
 	add(about);
 
-	cy += about->h() + 8 + KF;
+///	cy += about->h() + 8 + KF;
+
+
+Fl_Menu_Across *
+	misc_menu = new Fl_Menu_Across(button_x, cy, button_w, button_h, "     Menu @-3>");
+	misc_menu->labelsize(FL_NORMAL_SIZE + 0);
+	misc_menu->selection_color(fl_rgb_color(120,80,20));
+
+	misc_menu->add("About",            FL_F+1, menu_do_about);
+	misc_menu->add("Options",          FL_F+4, menu_do_options);
+	misc_menu->add("Manage Config   ", FL_F+9, menu_do_manage_config);
+	misc_menu->add("Console",          FL_F+7, menu_do_console);
+
+	add(misc_menu);
+
 
 
 	options = new Fl_Button(button_x, cy, button_w, button_h, "Options");
 	options->labelsize(FL_NORMAL_SIZE + 0);
-	options->callback(options_callback, this);
+	// options->callback(options_callback, this);
+options->hide();
 
 	add(options);
 
@@ -89,22 +107,27 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 	build->labelfont(FL_HELVETICA_BOLD);
 	build->labelsize(FL_NORMAL_SIZE + 2);
 	build->callback(build_callback, this);
+	build->shortcut(FL_F+2);
 
 	add(build);
 
 	cy += build->h() + 8 + KF;
 
+cy += 10;
+
 
 	quit = new Fl_Button(button_x, cy, button_w, button_h, "Quit");
 	quit->labelsize(FL_NORMAL_SIZE + 0);
 	quit->callback(quit_callback, this);
+	quit->shortcut(FL_COMMAND + 'q');
 
 	add(quit);
+
 
 	cy += quit->h();
 
 
-	cy = y + h - 70;
+	cy = y + h - 88;
 
 
 	status = new Fl_Box(FL_FLAT_BOX, x+12, cy, w-22, 24+KF*2, "Ready to go!");
@@ -115,10 +138,10 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
 	add(status);
 
-	cy += status->h() + 12;
+	cy += status->h() + 14;
 
 
-	progress = new Fl_Progress(x+14+KF*2, cy, w-28-KF*4, 20);
+	progress = new Fl_Progress(x+14+KF*2, cy, w-28-KF*4, 26);
 	progress->align(FL_ALIGN_INSIDE);
 	progress->box(FL_FLAT_BOX);
 	progress->color(alternate_look ? INACTIVE_BG2 : INACTIVE_BG, FL_BLACK);
@@ -356,16 +379,6 @@ void UI_Build::build_callback(Fl_Widget *w, void *data)
 	}
 }
 
-void UI_Build::about_callback(Fl_Widget *w, void *data)
-{
-	DLG_AboutText();
-}
-
-void UI_Build::options_callback(Fl_Widget *w, void *data)
-{
-	DLG_OptionsEditor();
-}
-
 void UI_Build::stop_callback(Fl_Widget *w, void *data)
 {
 	if (main_action != MAIN_QUIT)
@@ -377,6 +390,27 @@ void UI_Build::stop_callback(Fl_Widget *w, void *data)
 void UI_Build::quit_callback(Fl_Widget *w, void *data)
 {
 	main_action = MAIN_QUIT;
+}
+
+
+void UI_Build::menu_do_about(Fl_Widget *w, void *data)
+{
+	DLG_AboutText();
+}
+
+void UI_Build::menu_do_options(Fl_Widget *w, void *data)
+{
+	DLG_OptionsEditor();
+}
+
+void UI_Build::menu_do_manage_config(Fl_Widget *w, void *data)
+{
+	fl_beep();
+}
+
+void UI_Build::menu_do_console(Fl_Widget *w, void *data)
+{
+	UI_ToggleConsole();
 }
 
 //--- editor settings ---
