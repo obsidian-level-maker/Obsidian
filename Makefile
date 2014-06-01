@@ -42,9 +42,11 @@ LIBS=-lm -lz $(FLTK_LIBS)
 #----- OBLIGE Objects ----------------------------------------------
 
 OBJS=	$(OBJ_DIR)/main.o      \
+	$(OBJ_DIR)/m_about.o  \
 	$(OBJ_DIR)/m_cookie.o  \
 	$(OBJ_DIR)/m_lua.o     \
 	$(OBJ_DIR)/m_manage.o  \
+	$(OBJ_DIR)/m_options.o  \
 	$(OBJ_DIR)/m_spots.o   \
 	$(OBJ_DIR)/lib_argv.o  \
 	$(OBJ_DIR)/lib_file.o  \
@@ -86,7 +88,6 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/twister.o   \
 	$(OBJ_DIR)/tx_forge.o  \
 	$(OBJ_DIR)/tx_skies.o  \
-	$(OBJ_DIR)/ui_about.o  \
 	$(OBJ_DIR)/ui_build.o  \
 	$(OBJ_DIR)/ui_chooser.o \
 	$(OBJ_DIR)/ui_console.o \
