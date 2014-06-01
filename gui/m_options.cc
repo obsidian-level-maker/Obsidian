@@ -260,7 +260,7 @@ void DLG_OptionsEditor(void)
 	int opt_w = 350 + KF * 30;
 	int opt_h = 370 + KF * 40;
 
-	option_window = new UI_OptionsWin(opt_w, opt_h, "Oblige Options");
+	option_window = new UI_OptionsWin(opt_w, opt_h, "OBLIGE Options");
 
 	option_window->set_modal();
 	option_window->show();

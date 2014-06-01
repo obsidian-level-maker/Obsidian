@@ -182,7 +182,7 @@ void DLG_AboutText(void)
 	int about_w = 400 + KF * 30;
 	int about_h = 370 + KF * 40;
 
-	about_window = new UI_About(about_w, about_h, "About Box");
+	about_window = new UI_About(about_w, about_h, "About OBLIGE");
 
 	about_window->show();
 
