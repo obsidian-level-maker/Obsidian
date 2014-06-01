@@ -44,6 +44,7 @@ LIBS=-lm -lz $(FLTK_LIBS)
 OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/m_about.o  \
 	$(OBJ_DIR)/m_cookie.o  \
+	$(OBJ_DIR)/m_dialog.o  \
 	$(OBJ_DIR)/m_lua.o     \
 	$(OBJ_DIR)/m_manage.o  \
 	$(OBJ_DIR)/m_options.o  \
@@ -91,7 +92,6 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/ui_build.o  \
 	$(OBJ_DIR)/ui_chooser.o \
 	$(OBJ_DIR)/ui_console.o \
-	$(OBJ_DIR)/ui_dialog.o \
 	$(OBJ_DIR)/ui_game.o   \
 	$(OBJ_DIR)/ui_hyper.o  \
 	$(OBJ_DIR)/ui_level.o  \
