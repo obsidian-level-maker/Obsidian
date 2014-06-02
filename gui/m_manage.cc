@@ -44,39 +44,91 @@ class UI_Manage_Config;
 // The text is appended into the given text buffer.
 // Returns false if no config can be found in the file.
 // 
+#define LOOKAHEAD_SIZE  1024
 
 class Lookahead_Stream_c
 {
 private:
 	FILE *fp;
 
-    // always at least 128 bytes of look-ahead (unless at EOF)
+	char buffer[LOOKAHEAD_SIZE];
+
+	// number of characters in buffer, usually the buffer is full
+	int buf_len;
+
+	// read position in buffer, < LOOKAHEAD_SIZE/2 except at EOF
+	int pos;
+
+private:
+	void shift_data()
+	{
+		SYS_ASSERT(pos > 0);
+		SYS_ASSERT(pos <= buf_len);
+
+		// compute the new length of buffer
+		// (we are eating 'pos' characters at the head)
+		buf_len -= pos;
+
+		if (buf_len > 0)
+			memmove(buffer, buffer + pos, buf_len);
+
+		pos = 0;
+	}
+
+	void read_data()
+	{
+		int want_len = LOOKAHEAD_SIZE - buf_len;
+		SYS_ASSERT(want_len > 0);
+
+		int got_len = fread(buffer + buf_len, 1, want_len, fp);
+
+		if (got_len < 0)
+			got_len = 0;
+
+		buf_len = buf_len + got_len;
+	}
 
 public:
-	Lookahead_Stream_c(FILE *_fp) : fp(_fp)
+	Lookahead_Stream_c(FILE *_fp) : fp(_fp), buf_len(0), pos(0)
 	{
+		// need an initial packet of data
+		read_data();
 	}
 
 	virtual ~Lookahead_Stream_c()
 	{ }
 
-private:
-	
-
 public:
 	bool hit_eof()
 	{
-		// TODO
+		return (pos >= buf_len);
 	}
 
 	char peek_char(int offset = 0)
 	{
-		// TODO
+		int new_pos = pos + offset;
+
+		if (new_pos >= buf_len)
+			return 0;
+
+		return buffer[new_pos];
 	}
 
 	char get_char()
 	{
-		// TODO
+		if (hit_eof())
+			return 0;
+
+		int ch = buffer[pos++];
+
+		// time to read more from the file?
+		if (pos >= LOOKAHEAD_SIZE / 2)
+		{
+			shift_data();
+			read_data();
+		}
+
+		return ch;
 	}
 
 	bool match(const char *str)
