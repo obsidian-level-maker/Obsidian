@@ -388,7 +388,7 @@ public:
 		{
 			const char *B = fl_filename_name(filenames[k]);
 
-			if (fl_utf8_strcasecmp(A, B) == 0)
+			if (fl_utf_strcasecmp(A, B) == 0)
 				return k;
 		}
 
@@ -431,33 +431,50 @@ public:
 		if (f >= 0)
 			erase(f);
 
-		push_front(file)
+		push_front(file);
 	}
 
-	void WriteAll(FILE * fp, const char *keyword, const char *comment)
+	void remove(const char *file)
 	{
-		fprintf(stderr, "-- %s --\n\n", comment);
+		int f = find(file);
 
-		// file is in opposite order, newest at the end
-		// (this allows the parser to merely insert() items in the
-		//  order they are read).
+		if (f >= 0)
+			erase(f);
+	}
+
+	void write_all(FILE * fp, const char *keyword) const
+	{
+		// Files are written in opposite order, newest at the end.
+		// This allows the parser to merely insert() items in the
+		// order they are read.
 
 		for (int k = size - 1 ; k >= 0 ; k--)
 		{
-			fprintf(fp, "%s = \"%s\"\n", filenames[k]);
+			fprintf(fp, "%s = \"%s\"\n", keyword, filenames[k]);
 		}
 
-		fprintf(fp, "\n");
+		if (size > 0)
+			fprintf(fp, "\n");
 	}
 
-	void Format(char *buffer, int index) const
+	bool get_name(int index, char *buffer, bool for_menu) const
 	{
-		SYS_ASSERT(index < size);
+		if (index >= size)
+			return false;
 
-		const char *name = fl_filename_name(filenames[index]);
-		// const char *map  = map_names[index];
+		const char *name = filenames[index];
 
-		sprintf(buffer, "%-.42s", name);
+		if (for_menu)
+		{
+			sprintf(buffer, "%-.32s", fl_filename_name(name));
+		}
+		else
+		{
+			strncpy(buffer, name, FL_PATH_MAX);
+			buffer[FL_PATH_MAX - 1] = 0;
+		}
+
+		return true;
 	}
 };
 
@@ -478,8 +495,10 @@ void Recent_Parse(const char *name, const char *value)
 
 void Recent_Write(FILE *fp)
 {
-	recent_wads   .WriteAll(fp, "recent_wad",    "Output files");
-	recent_configs.WriteAll(fp, "recent_config", "Config files");
+	fprintf(fp, "-- Recent Files --\n\n");
+
+	recent_wads   .write_all(fp, "recent_wad");
+	recent_configs.write_all(fp, "recent_config");
 }
 
 
@@ -487,7 +506,19 @@ void Recent_AddFile(int group, const char *filename)
 {
 	SYS_ASSERT(0 <= group && group < RECG_NUM_GROUPS);
 
-	// FIXME
+	switch (group)
+	{
+		case RECG_Output:
+			recent_wads.insert(filename);
+			break;
+
+		case RECG_Config:
+			recent_configs.insert(filename);
+			break;
+	}
+
+	// push to disk now -- why wait?
+	Options_Save(options_file);
 }
 
 
@@ -495,15 +526,32 @@ void Recent_RemoveFile(int group, const char *filename)
 {
 	SYS_ASSERT(0 <= group && group < RECG_NUM_GROUPS);
 
-	// FIXME
+	switch (group)
+	{
+		case RECG_Output:
+			recent_wads.remove(filename);
+			break;
+
+		case RECG_Config:
+			recent_configs.remove(filename);
+			break;
+	}
 }
 
 
 bool Recent_GetName(int group, int index, char *name_buf, bool for_menu)
 {
 	SYS_ASSERT(0 <= group && group < RECG_NUM_GROUPS);
+	SYS_ASSERT(index >= 0);
 
-	// FIXME
+	switch (group)
+	{
+		case RECG_Output:
+			return recent_wads.get_name(index, name_buf, for_menu);
+
+		case RECG_Config:
+			return recent_configs.get_name(index, name_buf, for_menu);
+	}
 
 	return false;
 }

@@ -41,7 +41,7 @@ void Recent_Write(FILE *fp);
 typedef enum
 {
 	RECG_Output = 0,   // generated WAD or PAK file
-	RECG_Config = 1    // file saved from Config Manager
+	RECG_Config = 1,   // file saved from Config Manager
 
 	RECG_NUM_GROUPS
 
