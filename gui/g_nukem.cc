@@ -27,13 +27,15 @@
 
 #include "lib_file.h"
 #include "lib_util.h"
+#include "lib_grp.h"
 
 #include "main.h"
+#include "m_cookie.h"
 #include "m_lua.h"
+
 #include "img_all.h"
 
 #include "csg_main.h"
-#include "lib_grp.h"
 #include "q_common.h"  // qLump_c
 
 #include "g_nukem.h"
@@ -516,6 +518,8 @@ bool nukem_game_interface_c::Finish(bool build_ok)
   // remove the file if an error occurred
   if (! build_ok)
     FileDelete(filename);
+	else
+		Recent_AddFile(RECG_Output, filename);
 
   return build_ok;
 }

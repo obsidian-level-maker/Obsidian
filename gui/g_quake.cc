@@ -27,7 +27,9 @@
 #include "lib_util.h"
 #include "lib_pak.h"
 #include "lib_wad.h"
+
 #include "main.h"
+#include "m_cookie.h"
 
 #include "q_common.h"
 #include "q_light.h"
@@ -1462,6 +1464,8 @@ bool quake1_game_interface_c::Finish(bool build_ok)
   // remove the file if an error occurred
   if (! build_ok)
     FileDelete(filename);
+  else
+		Recent_AddFile(RECG_Output, filename);
 
   return build_ok;
 }

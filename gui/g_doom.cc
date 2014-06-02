@@ -28,6 +28,7 @@
 #include "lib_wad.h"
 
 #include "main.h"
+#include "m_cookie.h"
 #include "m_lua.h"
 
 #include "csg_main.h"
@@ -753,6 +754,10 @@ bool doom_game_interface_c::Finish(bool build_ok)
 	{
 		// remove the WAD if an error occurred
 		FileDelete(filename);
+	}
+	else
+	{
+		Recent_AddFile(RECG_Output, filename);
 	}
 
 	return build_ok;
