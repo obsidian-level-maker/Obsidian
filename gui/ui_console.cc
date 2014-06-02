@@ -804,6 +804,10 @@ int UI_Console::handle(int event)
 				PageDown();
 				return 1;
 
+			case FL_F+7:
+				UI_CloseConsole();
+				return 1;
+
 			default: break;
 		}
 	}
