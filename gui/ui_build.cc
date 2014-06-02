@@ -111,7 +111,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 	status->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
 
 	if (! alternate_look)
-		status->color(FL_DARK2, FL_DARK2);
+		status->color(FL_DARK2 - 2, FL_DARK2 - 2);
 
 	add(status);
 
