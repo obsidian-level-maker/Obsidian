@@ -399,10 +399,16 @@ public:
 
 			DLG_ShowError("Unable to save the file:\n\n%s", reason);
 		}
+		else
+		{
+			Recent_AddFile(RECG_Config, filename);
+		}
 	}
 
-	int PopulateRecentMenu(Fl_Menu_Across *menu, int group)
+	int PopulateRecentMenu(Fl_Menu_Across *menu, int group, int max_num)
 	{
+		SYS_ASSERT(max_num <= RECENT_NUM);
+
 		recent_file_data_t *ptr;
 
 		if (group == RECG_Output)
@@ -419,7 +425,7 @@ public:
 
 		int i;
 
-		for (i = 0 ; i < RECENT_NUM ; i++, ptr++)
+		for (i = 0 ; i < max_num ; i++, ptr++)
 		{
 			if (! Recent_GetName(group, i, ptr->short_name, true /* for_menu */))
 				break;
@@ -436,11 +442,13 @@ public:
 
 	void SetupRecent()
 	{
-		int count1 = PopulateRecentMenu(recent_menu, RECG_Config);
+		recent_menu->clear();
+
+		int count1 = PopulateRecentMenu(recent_menu, RECG_Config, 6);
 
 		recent_menu->add("", 0, 0, 0, FL_MENU_DIVIDER|FL_MENU_INACTIVE);
 
-		int count2 = PopulateRecentMenu(recent_menu, RECG_Output);
+		int count2 = PopulateRecentMenu(recent_menu, RECG_Output, 8);
 
 		if (count1 + count2 > 0)
 			recent_menu->activate();
