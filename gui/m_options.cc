@@ -33,6 +33,12 @@
 
 static void Parse_Option(const char *name, const char *value)
 {
+	if (StringCaseCmpPartial(name, "recent") == 0)
+	{
+		Recent_Parse(name, value);
+		return;
+	}
+
 	if (StringCaseCmp(name, "create_backups") == 0)
 	{
 		create_backups = atoi(value) ? true : false;
@@ -174,6 +180,8 @@ bool Options_Save(const char *filename)
 
 	fprintf(option_fp, "last_file = %s\n", UI_GetLastFile());
 	fprintf(option_fp, "\n");
+
+	Recent_Write(option_fp);
 
 	fclose(option_fp);
 

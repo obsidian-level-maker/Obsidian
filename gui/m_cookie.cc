@@ -1,6 +1,6 @@
-//------------------------------------------------------------------------
+//----------------------------------------------------------------------
 //  COOKIE : Save/Load user settings
-//------------------------------------------------------------------------
+//----------------------------------------------------------------------
 //
 //  Oblige Level Maker
 //
@@ -16,7 +16,7 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 //
-//------------------------------------------------------------------------
+//----------------------------------------------------------------------
 
 #include "headers.h"
 #include "hdr_fltk.h"
@@ -194,7 +194,7 @@ static bool Cookie_ParseLine(char *buf)
 }
 
 
-//------------------------------------------------------------------------
+//----------------------------------------------------------------------
 
 bool Cookie_Load(const char *filename)
 {
@@ -338,6 +338,174 @@ void Cookie_ParseArguments(void)
 
 		StringFree(name);
 	}
+}
+
+
+//----------------------------------------------------------------------
+//   RECENT FILE HANDLING
+//----------------------------------------------------------------------
+
+#define MAX_RECENT  10
+
+
+class RecentFiles_c
+{
+public:
+	int size;
+
+	// newest is at index [0]
+	const char * filenames[MAX_RECENT];
+
+public:
+	RecentFiles_c() : size(0)
+	{
+		for (int k = 0 ; k < MAX_RECENT ; k++)
+			filenames[k] = NULL;
+	}
+
+	~RecentFiles_c()
+	{
+		clear();
+	}
+
+	void clear()
+	{
+		for (int k = 0 ; k < size ; k++)
+		{
+			StringFree(filenames[k]);
+			filenames[k] = NULL;
+		}
+
+		size = 0;
+	}
+
+	int find(const char *file)
+	{
+		// ignore the path when matching filenames
+		const char *A = fl_filename_name(file);
+
+		for (int k = 0 ; k < size ; k++)
+		{
+			const char *B = fl_filename_name(filenames[k]);
+
+			if (fl_utf8_strcasecmp(A, B) == 0)
+				return k;
+		}
+
+		return -1;  // not found
+	}
+
+	void erase(int index)
+	{
+		SYS_ASSERT(index < size);
+
+		StringFree(filenames[index]);
+
+		size--;
+
+		for ( ; index < size ; index++)
+			filenames[index] = filenames[index + 1];
+
+		filenames[index] = NULL;
+	}
+
+	void push_front(const char *file)
+	{
+		if (size >= MAX_RECENT)
+			erase(MAX_RECENT - 1);
+
+		// shift elements up
+		for (int k = size - 1 ; k >= 0 ; k--)
+			filenames[k + 1] = filenames[k];
+
+		filenames[0] = StringDup(file);
+
+		size++;
+	}
+
+	void insert(const char *file)
+	{
+		// ensure filename (without any path) is unique
+		int f = find(file);
+
+		if (f >= 0)
+			erase(f);
+
+		push_front(file)
+	}
+
+	void WriteAll(FILE * fp, const char *keyword, const char *comment)
+	{
+		fprintf(stderr, "-- %s --\n\n", comment);
+
+		// file is in opposite order, newest at the end
+		// (this allows the parser to merely insert() items in the
+		//  order they are read).
+
+		for (int k = size - 1 ; k >= 0 ; k--)
+		{
+			fprintf(fp, "%s = \"%s\"\n", filenames[k]);
+		}
+
+		fprintf(fp, "\n");
+	}
+
+	void Format(char *buffer, int index) const
+	{
+		SYS_ASSERT(index < size);
+
+		const char *name = fl_filename_name(filenames[index]);
+		// const char *map  = map_names[index];
+
+		sprintf(buffer, "%-.42s", name);
+	}
+};
+
+
+static RecentFiles_c  recent_wads;
+static RecentFiles_c  recent_configs;
+
+
+void Recent_Parse(const char *name, const char *value)
+{
+	if (StringCaseCmp(name, "recent_wad") == 0)
+		recent_wads.insert(value);
+
+	else if (StringCaseCmp(name, "recent_config") == 0)
+		recent_configs.insert(value);
+}
+
+
+void Recent_Write(FILE *fp)
+{
+	recent_wads   .WriteAll(fp, "recent_wad",    "Output files");
+	recent_configs.WriteAll(fp, "recent_config", "Config files");
+}
+
+
+void Recent_AddFile(int group, const char *filename)
+{
+	SYS_ASSERT(0 <= group && group < RECG_NUM_GROUPS);
+
+	// FIXME
+}
+
+
+void Recent_RemoveFile(int group, const char *filename)
+{
+	SYS_ASSERT(0 <= group && group < RECG_NUM_GROUPS);
+
+	// FIXME
+}
+
+
+bool Recent_GetName(int group, int index, char *name_buf, bool for_menu)
+{
+	SYS_ASSERT(0 <= group && group < RECG_NUM_GROUPS);
+
+	// FIXME
+
+	return false;
 }
 
 //--- editor settings ---
