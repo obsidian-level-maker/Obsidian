@@ -248,8 +248,8 @@ public:
 
 	Fl_Text_Display_NoSelect *conf_disp;
 
-	Fl_Menu_Across *load_menu;
-	Fl_Menu_Across *extract_menu;
+	Fl_Button *load_but;
+	Fl_Menu_Across *recent_menu;
 
 	Fl_Button *save_but;
 	Fl_Button *use_but;
@@ -275,9 +275,9 @@ public:
 	void MarkSource(const char *where)
 	{
 		if (! where)
-			where = "NONE";
+			where = "";
 
-		char *full = StringPrintf(" Configuration Text  [%s]", where);
+		char *full = StringPrintf(" Text :   [%s]", where);
 
 		conf_disp->copy_label(full);
 
@@ -386,8 +386,8 @@ public:
 
 	void SaveToFile(const char *filename)
 	{
-		// (checking FLTK code, the file is opened in "w" mode,
-		//  hence should end-of-line in an OS-appropriate way).
+		// looking at FLTK code, the file is opened in "w" mode, so
+		// it should handle end-of-line in an OS-appropriate way.
 		int res = text_buf->savefile(filename);
 
 		int err_no = errno;
@@ -401,7 +401,7 @@ public:
 		}
 	}
 
-	void PopulateRecentMenu(Fl_Menu_Across *menu, int group)
+	int PopulateRecentMenu(Fl_Menu_Across *menu, int group)
 	{
 		recent_file_data_t *ptr;
 
@@ -413,10 +413,13 @@ public:
 		for (int k = 0 ; k < RECENT_NUM ; k++)
 		{
 			ptr[k].group  = -1;
+			ptr[k].index  = -1;
 			ptr[k].widget = NULL;
 		}
 
-		for (int i = 0 ; i < RECENT_NUM ; i++, ptr++)
+		int i;
+
+		for (i = 0 ; i < RECENT_NUM ; i++, ptr++)
 		{
 			if (! Recent_GetName(group, i, ptr->short_name, true /* for_menu */))
 				break;
@@ -427,34 +430,36 @@ public:
 
 			menu->add(ptr->short_name, 0, callback_Recent, ptr);
 		}
+
+		return i;  // total number
 	}
 
 	void SetupRecent()
 	{
-		load_menu->clear();
-		load_menu->add("Browse for file...  ", FL_CTRL+'l', callback_Load, this);
-		load_menu->add("", 0, 0, 0, FL_MENU_DIVIDER|FL_MENU_INACTIVE);
+		int count1 = PopulateRecentMenu(recent_menu, RECG_Config);
 
-		PopulateRecentMenu(load_menu,    RECG_Config);
+		recent_menu->add("", 0, 0, 0, FL_MENU_DIVIDER|FL_MENU_INACTIVE);
 
-		extract_menu->clear();
-		extract_menu->add("Browse for file...  ", FL_CTRL+'e', callback_Extract, this);
-		extract_menu->add("", 0, 0, 0, FL_MENU_DIVIDER|FL_MENU_INACTIVE);
+		int count2 = PopulateRecentMenu(recent_menu, RECG_Output);
 
-		PopulateRecentMenu(extract_menu, RECG_Output);
+		if (count1 + count2 > 0)
+			recent_menu->activate();
+		else
+			recent_menu->deactivate();
 	}
 
-	const char * AskLoadFilename(int group)
+	const char * AskLoadFilename()
 	{
 		Fl_Native_File_Chooser chooser;
 
 		chooser.title("Select file to load");
 		chooser.type(Fl_Native_File_Chooser::BROWSE_FILE);
 
-		if (group == RECG_Output)
-			chooser.filter("WAD files\t*.wad\nPAK files\t*.pak\nGRP files\t*.grp\nLump files\t*.lmp");
-		else
-			chooser.filter("Text files\t*.txt\nConfig files\t*.cfg");
+		chooser.filter("Text files\t*.txt\n"
+		               "Config files\t*.cfg\n"
+		               "WAD files\t*.wad\n"
+					   "GRP files\t*.grp\n"
+					   "PAK files\t*.pak\n");
 
 		// FIXME: chooser.directory(LAST_USED_DIRECTORY)
 
@@ -542,18 +547,7 @@ private:
 	{
 		UI_Manage_Config *that = (UI_Manage_Config *)data;
 
-		const char *filename = that->AskLoadFilename(RECG_Config);
-		if (! filename)
-			return;
-
-		that->LoadFromFile(filename);
-	}
-
-	static void callback_Extract(Fl_Widget *w, void *data)
-	{
-		UI_Manage_Config *that = (UI_Manage_Config *)data;
-
-		const char *filename = that->AskLoadFilename(RECG_Output);
+		const char *filename = that->AskLoadFilename();
 		if (! filename)
 			return;
 
@@ -584,6 +578,8 @@ private:
 			return;
 
 		that->SaveToFile(filename);
+
+		that->SetupRecent();
 	}
 
 	static void callback_Use(Fl_Widget *w, void *data)
@@ -691,15 +687,17 @@ UI_Manage_Config::UI_Manage_Config(const char *label) :
 		Fl_Group *g = new Fl_Group(0, 0, conf_disp->x(), conf_disp->h());
 		g->resizable(NULL);
 
-		load_menu = new Fl_Menu_Across(30, 25, 100, 35, "  Load @-3>");
-		load_menu->labelsize(FL_NORMAL_SIZE);
+		load_but = new Fl_Button(30, 25, 100, 35, "Load");
+		load_but->labelsize(FL_NORMAL_SIZE);
+		load_but->callback(callback_Load, this);
+		load_but->shortcut(FL_CTRL + 'l');
 
-		extract_menu = new Fl_Menu_Across(30, 85, 100, 35, "  Extract @-3>");
-		extract_menu->labelsize(FL_NORMAL_SIZE);
-
-		o = new Fl_Box(15, 116, 171, 40, "from a WAD or PAK file");
-		o->align(Fl_Align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE));
+		o = new Fl_Box(10, 65, 160, 40, "(can be WAD or PAK)");
+		o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE));
 		o->labelsize(14);
+
+		recent_menu = new Fl_Menu_Across(30, 95, 100, 35, "   Recent @-3>");
+		recent_menu->labelsize(FL_NORMAL_SIZE);
 
 		save_but = new Fl_Button(30, 165, 100, 35, "Save");
 		save_but->labelsize(FL_NORMAL_SIZE);
@@ -710,8 +708,8 @@ UI_Manage_Config::UI_Manage_Config(const char *label) :
 		use_but->labelsize(FL_NORMAL_SIZE);
 		use_but->callback(callback_Use, this);
 
-		o = new Fl_Box(15, 256, 173, 50, "Note: this will replace\nall current settings!");
-		o->align(Fl_Align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE));
+		o = new Fl_Box(5, 265, 170, 50, "Note: this will replace\nall current settings!");
+		o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE));
 		o->labelsize(14);
 
 		g->end();
