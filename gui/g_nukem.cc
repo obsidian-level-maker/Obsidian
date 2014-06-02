@@ -487,7 +487,10 @@ private:
 
 bool nukem_game_interface_c::Start()
 {
-  filename = DLG_OutputFilename("grp");
+	if (batch_mode)
+		filename = StringDup(batch_output_file);
+	else
+    filename = DLG_OutputFilename("grp");
 
   if (! filename)
   {
