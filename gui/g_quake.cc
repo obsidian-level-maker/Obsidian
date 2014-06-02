@@ -38,7 +38,6 @@
 #include "csg_local.h"
 #include "csg_quake.h"
 
-#include "ui_chooser.h"
 #include "img_all.h"
 
 

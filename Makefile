@@ -91,7 +91,6 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/tx_forge.o  \
 	$(OBJ_DIR)/tx_skies.o  \
 	$(OBJ_DIR)/ui_build.o  \
-	$(OBJ_DIR)/ui_chooser.o \
 	$(OBJ_DIR)/ui_game.o   \
 	$(OBJ_DIR)/ui_hyper.o  \
 	$(OBJ_DIR)/ui_level.o  \

@@ -31,8 +31,6 @@
 #include "m_lua.h"
 
 #include "csg_main.h"
-#include "ui_chooser.h"
-
 #include "q_common.h"  // qLump_c
 
 #include "dm_extra.h"

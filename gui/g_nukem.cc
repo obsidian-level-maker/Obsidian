@@ -32,8 +32,6 @@
 #include "m_lua.h"
 #include "img_all.h"
 
-#include "ui_chooser.h"
-
 #include "csg_main.h"
 #include "lib_grp.h"
 #include "q_common.h"  // qLump_c

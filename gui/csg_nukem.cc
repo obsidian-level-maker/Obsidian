@@ -28,8 +28,6 @@
 #include "lib_util.h"
 #include "main.h"
 
-#include "ui_chooser.h"
-
 #include "csg_main.h"
 #include "csg_local.h"
 

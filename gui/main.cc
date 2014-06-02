@@ -37,8 +37,6 @@
 #include "csg_main.h"
 #include "g_nukem.h"
 
-#include "ui_chooser.h"
-
 
 #define TICKER_TIME  50 /* ms */
 

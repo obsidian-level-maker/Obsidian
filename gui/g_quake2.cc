@@ -36,8 +36,6 @@
 #include "csg_main.h"
 #include "csg_quake.h"
 
-#include "ui_chooser.h"
-
 
 #define LEAF_PADDING   4
 #define NODE_PADDING   16
