@@ -65,7 +65,7 @@ class CHUNK
 
   floor : FLOOR
 
-  overlay : FLOOR  -- generally NIL, used for 3D floors
+  overlay : CHUNK  -- generally NIL, used for 3D floors
 }
 
 --------------------------------------------------------------]]

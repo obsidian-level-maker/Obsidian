@@ -583,7 +583,9 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
       score = score + wall_dist / 5
     end
 
-    -- teleporters should never be underneath a 3D floor
+    -- teleporters should never be underneath a 3D floor, because
+    -- player will unexpected activate it while on the floor above,
+    -- and because the sector tag is needed by the teleporter.
     if kind == "TELEPORTER" and spot.chunk and spot.chunk.overlay then
       score = score - 10
     end
@@ -758,7 +760,11 @@ function Layout_set_floor_minmax(R)
       max_h = math.max(max_h, S.floor_h)
 
       if S.chunk and S.chunk.overlay then
-        max_h = math.max(max_h, S.chunk.overlay.floor_h)
+        local K2 = S.chunk.overlay
+
+        if K2.floor then
+          max_h = math.max(max_h, K2.floor.floor_h)
+        end
       end
     end
   end -- x, y
@@ -1935,7 +1941,12 @@ function Layout_pattern_in_area(R, area)
       if OV.kind == "floor" then
         local vhr = area.entry_vhr + OV.floor - T.entry_floor
 
-        CHUNK.overlay = new_floor(vhr)
+        CHUNK.overlay =
+        {
+          kind = "floor"
+
+          floor = new_floor(vhr)
+        }
       end
 
       R.has_3d_floor = true
@@ -2202,9 +2213,10 @@ function Layout_height_realization(R, entry_h)
 
       if not chunk.floor   then continue end
       if not chunk.overlay then continue end
+      if not chunk.overlay.floor then continue end
 
       local v_low  = chunk.floor.vhr
-      local v_high = chunk.overlay.vhr
+      local v_high = chunk.overlay.floor.vhr
 
       assert(v_low)
       assert(v_high)
@@ -2981,14 +2993,14 @@ function Layout_room(R)
       local chunk = assert(S.chunk)
 
       local hit_lower = (chunk.floor)
-      local hit_upper = (chunk.overlay)
+      local hit_upper = (chunk.overlay and chunk.overlay.floor)
 
       if hit_lower and hit_upper then
         table.insert(hit_both, { conn=C, chunk=chunk })
 
       elseif hit_upper then
         upper = upper + 1
-        assign_a_conn(C, assert(chunk.overlay))
+        assign_a_conn(C, assert(chunk.overlay.floor))
 
       else
         lower = lower + 1
@@ -3024,7 +3036,7 @@ function Layout_room(R)
       local floor
 
       if i <= raise_num then
-        floor = assert(chunk.overlay)
+        floor = assert(chunk.overlay.floor)
       else
         floor = assert(chunk.floor)
       end

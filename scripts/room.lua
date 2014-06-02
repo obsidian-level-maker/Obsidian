@@ -3910,8 +3910,14 @@ end
     end
 
 
-    if S.chunk and S.chunk.overlay and S.chunk.overlay.floor_h then
-      do_extra_floor(S, S.chunk.overlay.floor_h, f_indents, w_tex, S.chunk.overlay.floor_tex)
+    if S.chunk and S.chunk.overlay then
+      local K2 = S.chunk.overlay
+      
+      if K2.floor then
+        assert(K2.floor.floor_h)
+
+        do_extra_floor(S, K2.floor.floor_h, f_indents, w_tex, K2.floor.floor_tex)
+      end
     end
 
 
