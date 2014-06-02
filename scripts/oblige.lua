@@ -523,14 +523,11 @@ function ob_read_all_config(print_to_log)
 
   local unknown = "XXX"
 
-  do_line("---- Settings ----");
-  do_line("")
-
-  do_line("seed = %d",   OB_CONFIG.seed or 0)
   do_line("game = %s",   OB_CONFIG.game or unknown)
   do_line("mode = %s",   OB_CONFIG.mode or unknown)
   do_line("engine = %s", OB_CONFIG.engine or unknown)
   do_line("length = %s", OB_CONFIG.length or unknown)
+  do_line("seed = %d",   OB_CONFIG.seed or 0)
   do_line("")
 
   do_line("theme = %s",   OB_CONFIG.theme or unknown)

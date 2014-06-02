@@ -681,7 +681,7 @@ int main(int argc, char **argv)
 
 	/* ---- normal GUI mode ---- */
 
-	Default_Location();
+//???	Default_Location();
 
 	int main_w, main_h;
 	UI_MainWin::CalcWindowSize(&main_w, &main_h);

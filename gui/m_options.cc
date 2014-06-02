@@ -57,7 +57,7 @@ static void Parse_Option(const char *name, const char *value)
 	}
 	else if (StringCaseCmp(name, "last_file") == 0)
 	{
-		UI_SetLastFile(value);
+//???		UI_SetLastFile(value);
 	}
 	else
 	{
@@ -91,7 +91,7 @@ static bool Options_ParseLine(char *buf)
 	}
 
 	// Righteo, line starts with an identifier.  It should be of the
-	// form "name = value".  We'll terminate the identifier, and pass
+	// form "name = value".  We terminate the identifier and pass
 	// the name/value strings to the matcher function.
 
 	const char *name = buf;
@@ -110,8 +110,13 @@ static bool Options_ParseLine(char *buf)
 
 	*buf++ = 0;
 
-	while (isspace(*buf))
-		buf++;
+	if (isspace(*buf))
+		*buf++ = 0;
+
+	// everything after the " = " (note: single space) is the value,
+	// and it does not need escaping since our values never contain
+	// newlines or embedded spaces (nor control characters, but may
+	// contain UTF-8 encoded filenames).
 
 	if (*buf == 0)
 	{
@@ -178,7 +183,7 @@ bool Options_Save(const char *filename)
 	fprintf(option_fp, "alternate_look = %d\n", alternate_look ? 1 : 0);
 	fprintf(option_fp, "fast_lighting = %d\n",  fast_lighting ? 1 : 0);
 
-	fprintf(option_fp, "last_file = %s\n", UI_GetLastFile());
+//???	fprintf(option_fp, "last_file = %s\n", UI_GetLastFile());
 	fprintf(option_fp, "\n");
 
 	Recent_Write(option_fp);

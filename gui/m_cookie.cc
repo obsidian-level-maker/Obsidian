@@ -450,7 +450,7 @@ public:
 
 		for (int k = size - 1 ; k >= 0 ; k--)
 		{
-			fprintf(fp, "%s = \"%s\"\n", keyword, filenames[k]);
+			fprintf(fp, "%s = %s\n", keyword, filenames[k]);
 		}
 
 		if (size > 0)
@@ -495,7 +495,7 @@ void Recent_Parse(const char *name, const char *value)
 
 void Recent_Write(FILE *fp)
 {
-	fprintf(fp, "-- Recent Files --\n\n");
+	fprintf(fp, "---- Recent Files ----\n\n");
 
 	recent_wads   .write_all(fp, "recent_wad");
 	recent_configs.write_all(fp, "recent_config");
