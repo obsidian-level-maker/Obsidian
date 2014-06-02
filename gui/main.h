@@ -73,6 +73,8 @@ void Main_Ticker();
 // Dialog Windows
 void DLG_ShowError(const char *msg, ...);
 
+const char * DLG_OutputFilename(const char *ext);
+
 void DLG_AboutText(void);
 void DLG_OptionsEditor(void);
 void DLG_ManageConfig(void);

@@ -1,10 +1,10 @@
-//------------------------------------------------------------------------
+//----------------------------------------------------------------------
 //  DIALOG when all fucked up
-//------------------------------------------------------------------------
+//----------------------------------------------------------------------
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2014 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -16,11 +16,14 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 //
-//------------------------------------------------------------------------
+//----------------------------------------------------------------------
 
 #include "headers.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
+
+#include "lib_util.h"
+
 #include "main.h"
 
 static int dialog_result;
@@ -196,6 +199,59 @@ void DLG_ShowError(const char *msg, ...)
 
 	if (! batch_mode)
 		DialogShowAndRun(buffer, "Oblige - Error Message", link_title, link_url);
+}
+
+
+//----------------------------------------------------------------------
+
+
+const char * DLG_OutputFilename(const char *ext)
+{
+	char kind_buf[200];
+
+	sprintf(kind_buf, "%s files\t*.%s", ext, ext);
+
+	// uppercase the first word
+	for (char *p = kind_buf ; *p && *p != ' ' ; p++)
+		*p = toupper(*p);
+
+
+	Fl_Native_File_Chooser  chooser;
+
+	chooser.title("Select output file");
+	chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
+	chooser.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM);
+	chooser.filter(kind_buf);
+
+	// FIXME: chooser.directory(LAST_USED_DIRECTORY)
+
+	switch (chooser.show())
+	{
+		case -1:
+			LogPrintf("Error choosing output file:\n");
+			LogPrintf("   %s\n", chooser.errmsg());
+
+			DLG_ShowError("Unable to select the file:\n\n%s", chooser.errmsg());
+			return NULL;
+
+		case 1:  // cancelled
+			return NULL;
+
+		default:
+			break;  // OK
+	}
+
+
+	static char filename[FL_PATH_MAX + 16];
+
+	strcpy(filename, chooser.filename());
+
+	// add extension is missing
+	char *pos = (char *)fl_filename_ext(filename);
+	if (! *pos)
+		strcat(filename, ext);
+
+	return StringDup(filename);
 }
 
 //--- editor settings ---

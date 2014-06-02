@@ -1430,7 +1430,7 @@ bool quake1_game_interface_c::Start()
   qk_sub_format = 0;
   qk_lighting_quality = fast_lighting ? -1 : +1;
 
-  filename = Select_Output_File("pak");
+  filename = DLG_OutputFilename("pak");
 
   if (! filename)
   {

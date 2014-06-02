@@ -487,7 +487,7 @@ private:
 
 bool nukem_game_interface_c::Start()
 {
-  filename = Select_Output_File("grp");
+  filename = DLG_OutputFilename("grp");
 
   if (! filename)
   {
