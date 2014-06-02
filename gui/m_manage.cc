@@ -35,8 +35,24 @@
 #define BG_COLOR  fl_gray_ramp(10)
 
 
+// forward decls
 class UI_Manage_Config;
 
+
+//
+// This does the job of scanning a file and extracting any config.
+// The text is appended into the given text buffer.
+// Returns false if no config can be found in the file.
+// 
+static bool ExtractConfigData(FILE *fp, Fl_Text_Buffer *buf)
+{
+	// FIXME
+
+	return false;
+}
+
+
+//------------------------------------------------------------------------
 
 //
 // this prevents the text display widget from selecting areas,
@@ -253,11 +269,15 @@ public:
 		else
 			ptr = &recent_configs[0];
 
-		memset(ptr, 0, RECENT_NUM * sizeof(recent_file_data_t));
-
-		for (int i = 0 ; i < RECENT_NUM ; i++)
+		for (int k = 0 ; k < RECENT_NUM ; k++)
 		{
-			if (! Recent_GetName(group, i, ptr->short_name))
+			ptr[k].group  = -1;
+			ptr[k].widget = NULL;
+		}
+
+		for (int i = 0 ; i < RECENT_NUM ; i++, ptr++)
+		{
+			if (! Recent_GetName(group, i, ptr->short_name, true /* for_menu */))
 				break;
 
 			ptr->group = group;
@@ -271,16 +291,79 @@ public:
 	void SetupRecent()
 	{
 		load_menu->clear();
-		load_menu->add("Browse for file...  ", FL_CTRL+'l', callback_Load);
+		load_menu->add("Browse for file...  ", FL_CTRL+'l', callback_Load, this);
 		load_menu->add("", 0, 0, 0, FL_MENU_DIVIDER|FL_MENU_INACTIVE);
 
 		PopulateRecentMenu(load_menu,    RECG_Config);
 
 		extract_menu->clear();
-		extract_menu->add("Browse for file...  ", FL_CTRL+'e', callback_Extract);
+		extract_menu->add("Browse for file...  ", FL_CTRL+'e', callback_Extract, this);
 		extract_menu->add("", 0, 0, 0, FL_MENU_DIVIDER|FL_MENU_INACTIVE);
 
 		PopulateRecentMenu(extract_menu, RECG_Output);
+	}
+
+	const char * AskLoadFilename(int group)
+	{
+		Fl_Native_File_Chooser chooser;
+
+		chooser.title("Select file to load");
+		chooser.type(Fl_Native_File_Chooser::BROWSE_FILE);
+
+		if (group == RECG_Output)
+			chooser.filter("WAD files\t*.wad\nPAK files\t*.pak\nGRP files\t*.grp\nLump files\t*.lmp");
+		else
+			chooser.filter("Text files\t*.txt\nConfig files\t*.cfg");
+
+		// FIXME: chooser.directory(LAST_USED_DIRECTORY)
+
+		switch (chooser.show())
+		{
+			case -1:
+				LogPrintf("Error choosing load file:\n");
+				LogPrintf("   %s\n", chooser.errmsg());
+
+				DLG_ShowError("Unable to load the file:\n\n%s", chooser.errmsg());
+				return NULL;
+
+			case 1:  // cancelled
+				return NULL;
+
+			default:
+				break;  // OK
+		}
+
+		static char filename[FL_PATH_MAX + 10];
+
+		strcpy(filename, chooser.filename());
+
+		return filename;
+	}
+
+	void LoadFromFile(const char *filename)
+	{
+		FILE *fp = fl_fopen(filename, "rb");
+
+		if (! fp)
+		{
+			// FIXME
+			DLG_ShowError("CANNOT OPEN FILE");
+			return;
+		}
+
+		Clear();
+
+		if (! ExtractConfigData(fp, text_buf))
+		{
+			// FIXME
+			DLG_ShowError("NO CONFIG FOUND IN FILE");
+			return;
+		}
+
+		Enable();
+
+		// FIXME
+		MarkSource("From a bloody file");
 	}
 
 private:
@@ -314,14 +397,22 @@ private:
 	{
 		UI_Manage_Config *that = (UI_Manage_Config *)data;
 
-		// FIXME
+		const char *filename = that->AskLoadFilename(RECG_Config);
+		if (! filename)
+			return;
+
+		that->LoadFromFile(filename);
 	}
 
 	static void callback_Extract(Fl_Widget *w, void *data)
 	{
 		UI_Manage_Config *that = (UI_Manage_Config *)data;
 
-		// FIXME
+		const char *filename = that->AskLoadFilename(RECG_Output);
+		if (! filename)
+			return;
+
+		that->LoadFromFile(filename);
 	}
 
 	static void callback_Recent(Fl_Widget *w, void *data)
@@ -542,7 +633,6 @@ void DLG_ManageConfig(void)
 	config_window->show();
 
 	config_window->SetupRecent();
-
 	config_window->ReadCurrentSettings();
 
 	// run the GUI until the user closes
