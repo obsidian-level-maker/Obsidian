@@ -172,6 +172,7 @@ public:
 
 		chooser.title("Pick file to save to");
 		chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
+		chooser.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM);
 		chooser.filter("Text files\t*.txt\nConfig files\t*.cfg");
 
 		// FIXME: chooser.directory(LAST_USED_DIRECTORY)
