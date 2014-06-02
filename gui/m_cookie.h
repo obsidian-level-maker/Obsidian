@@ -24,6 +24,8 @@
 bool Cookie_Load(const char *filename);
 bool Cookie_Save(const char *filename);
 
+bool Cookie_LoadString(const char *str);
+
 void Cookie_ParseArguments(void);
 
 /* m_options stuff */

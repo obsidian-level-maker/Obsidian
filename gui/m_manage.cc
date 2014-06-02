@@ -25,6 +25,7 @@
 #include "lib_util.h"
 
 #include "main.h"
+#include "m_cookie.h"
 #include "m_lua.h"
 
 
@@ -256,12 +257,51 @@ private:
 	{
 		UI_Manage_Config *that = (UI_Manage_Config *)data;
 
+		if (that->text_buf->length() == 0)
+		{
+			fl_beep();
+			return;
+		}
+
 		const char *filename = that->AskSaveFilename();
 		if (! filename)
 			return;
 
 		that->SaveToFile(filename);
 	}
+
+	static void callback_Load(Fl_Widget *w, void *data)
+	{
+		UI_Manage_Config *that = (UI_Manage_Config *)data;
+
+		// FIXME
+	}
+
+	static void callback_Extract(Fl_Widget *w, void *data)
+	{
+		UI_Manage_Config *that = (UI_Manage_Config *)data;
+
+		// FIXME
+	}
+
+	static void callback_Use(Fl_Widget *w, void *data)
+	{
+		UI_Manage_Config *that = (UI_Manage_Config *)data;
+
+		if (that->text_buf->length() == 0)
+		{
+			fl_beep();
+			return;
+		}
+
+		const char *str = that->text_buf->text();
+
+		Cookie_LoadString(str);
+
+		free((void*)str);
+	}
+
+	/* Clipboard stuff */
 
 	static void callback_Copy(Fl_Widget *w, void *data)
 	{
@@ -348,9 +388,11 @@ UI_Manage_Config::UI_Manage_Config(const char *label) :
 		save_but = new Fl_Button(30, 165, 100, 35, "Save");
 		save_but->labelsize(FL_NORMAL_SIZE);
 		save_but->callback(callback_Save, this);
+		save_but->shortcut(FL_CTRL + 's');
 
 		use_but = new Fl_Button(30, 225, 100, 35, "Use");
 		use_but->labelsize(FL_NORMAL_SIZE);
+		use_but->callback(callback_Use, this);
 
 		o = new Fl_Box(15, 256, 173, 50, "Note: this will replace\nall current settings!");
 		o->align(Fl_Align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE));
@@ -363,6 +405,7 @@ UI_Manage_Config::UI_Manage_Config(const char *label) :
 	close_but->labelfont(FL_HELVETICA_BOLD);
 	close_but->labelsize(FL_NORMAL_SIZE);
 	close_but->callback(callback_Quit, this);
+	close_but->shortcut(FL_CTRL + 'w');
 
 
 	/* Clipboard buttons */

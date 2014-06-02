@@ -236,6 +236,29 @@ bool Cookie_Load(const char *filename)
 }
 
 
+bool Cookie_LoadString(const char *str)
+{
+	context = CCTX_Load;
+	keep_seed = false;
+
+	active_module.clear();
+
+	LogPrintf("Reading Config (from manager)...\n");
+
+	// simple line-by-line parser
+	char buffer[MSG_BUF_LEN];
+
+	while (mem_gets(buffer, MSG_BUF_LEN-2, &str))
+	{
+		Cookie_ParseLine(buffer);
+	}
+
+	LogPrintf("DONE.\n\n");
+
+	return true;
+}
+
+
 bool Cookie_Save(const char *filename)
 {
 	context = CCTX_Save;
