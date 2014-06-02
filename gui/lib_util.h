@@ -33,6 +33,8 @@ char *StringDup(const char *orig, int limit = -1);
 char *StringPrintf(const char *str, ...); // GCCATTR((format (printf, 1, 2)));
 void StringFree(const char *str);
 
+char *mem_gets(char *buf, int size, const char ** str_ptr);
+
 /* time utilities */
 
 u32_t TimeGetMillies();

@@ -156,6 +156,44 @@ void StringFree(const char *str)
 }
 
 
+char *mem_gets(char *buf, int size, const char ** str_ptr)
+{
+	// This is like fgets() but reads lines from a string.
+	// The pointer at 'str_ptr' will point to the next line
+	// after this call (or the trailing NUL).
+	// Lines which are too long will be truncated (silently).
+	// Returns NULL when at end of the string.
+
+	SYS_ASSERT(str_ptr && *str_ptr);
+	SYS_ASSERT(size >= 4);
+
+	const char *p = *str_ptr;
+
+	if (! *p)
+		return NULL;
+	
+	char *dest = buf;
+	char *dest_end = dest + (size - 2);
+
+	for ( ; *p && *p != '\n' ; p++)
+	{
+		if (dest < dest_end)
+			*dest++ = *p;
+	}
+
+	if (*p == '\n')
+	{
+		*dest++ = *p++;
+	}
+
+	*dest = 0;
+
+	*str_ptr = p;
+
+	return buf;
+}
+
+
 //------------------------------------------------------------------------
 
 /* Thomas Wang's 32-bit Mix function */
