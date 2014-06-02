@@ -59,11 +59,6 @@ The following diagram shows the GUI for OBLIGE.
 You can see that the window is divided into five distinct panels.
 The panels are discussed in separate sections below.
 
-Also notice there is no menu bar.  To exit you can either
-click the window's standard close button, or
-click the <span class="button">Quit</span> button in the Build Panel,
-or just press the ESCAPE key.
-
 <div class="guioverview">
 <img src="gui_overview2.png" width="596" height="364" border="0" alt="SCREENSHOT">
 </div>
