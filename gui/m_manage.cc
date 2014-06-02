@@ -35,6 +35,9 @@
 #define BG_COLOR  fl_gray_ramp(10)
 
 
+class UI_Manage_Config;
+
+
 //
 // this prevents the text display widget from selecting areas,
 // as well as eating the CTRL-A and CTRL-C keyboard events.
@@ -64,6 +67,21 @@ public:
 };
 
 
+#define RECENT_NUM  10
+
+typedef struct
+{
+	int group;
+	int index;
+
+	char short_name[100];
+
+	UI_Manage_Config *widget;
+
+} recent_file_data_t;
+
+
+
 class UI_Manage_Config : public Fl_Double_Window
 {
 public:
@@ -73,8 +91,9 @@ public:
 
 	Fl_Text_Display_NoSelect *conf_disp;
 
-	Fl_Button *load_but;
-	Fl_Button *extract_but;
+	Fl_Menu_Across *load_menu;
+	Fl_Menu_Across *extract_menu;
+
 	Fl_Button *save_but;
 	Fl_Button *use_but;
 	Fl_Button *close_but;
@@ -82,6 +101,9 @@ public:
 	Fl_Button *cut_but;
 	Fl_Button *copy_but;
 	Fl_Button *paste_but;
+
+	static recent_file_data_t recent_wads   [RECENT_NUM];
+	static recent_file_data_t recent_configs[RECENT_NUM];
 
 public:
 	UI_Manage_Config(const char *label = NULL);
@@ -222,6 +244,45 @@ public:
 		}
 	}
 
+	void PopulateRecentMenu(Fl_Menu_Across *menu, int group)
+	{
+		recent_file_data_t *ptr;
+
+		if (group == RECG_Output)
+			ptr = &recent_wads[0];
+		else
+			ptr = &recent_configs[0];
+
+		memset(ptr, 0, RECENT_NUM * sizeof(recent_file_data_t));
+
+		for (int i = 0 ; i < RECENT_NUM ; i++)
+		{
+			if (! Recent_GetName(group, i, ptr->short_name))
+				break;
+
+			ptr->group = group;
+			ptr->index = i;
+			ptr->widget = this;
+
+			menu->add(ptr->short_name, 0, callback_Recent, ptr);
+		}
+	}
+
+	void SetupRecent()
+	{
+		load_menu->clear();
+		load_menu->add("Browse for file...  ", FL_CTRL+'l', callback_Load);
+		load_menu->add("", 0, 0, 0, FL_MENU_DIVIDER|FL_MENU_INACTIVE);
+
+		PopulateRecentMenu(load_menu,    RECG_Config);
+
+		extract_menu->clear();
+		extract_menu->add("Browse for file...  ", FL_CTRL+'e', callback_Extract);
+		extract_menu->add("", 0, 0, 0, FL_MENU_DIVIDER|FL_MENU_INACTIVE);
+
+		PopulateRecentMenu(extract_menu, RECG_Output);
+	}
+
 private:
 	// FLTK virtual method for handling input events
 	int handle(int event)
@@ -247,12 +308,30 @@ private:
 	}
 
 private:
-	static void callback_Quit(Fl_Widget *w, void *data)
+	/* Loading stuff */
+
+	static void callback_Load(Fl_Widget *w, void *data)
 	{
 		UI_Manage_Config *that = (UI_Manage_Config *)data;
 
-		that->want_quit = true;
+		// FIXME
 	}
+
+	static void callback_Extract(Fl_Widget *w, void *data)
+	{
+		UI_Manage_Config *that = (UI_Manage_Config *)data;
+
+		// FIXME
+	}
+
+	static void callback_Recent(Fl_Widget *w, void *data)
+	{
+		recent_file_data_t *priv = (recent_file_data_t *)data;
+
+		// FIXME
+	}
+
+	/* Saving and Using */
 
 	static void callback_Save(Fl_Widget *w, void *data)
 	{
@@ -271,20 +350,6 @@ private:
 		that->SaveToFile(filename);
 	}
 
-	static void callback_Load(Fl_Widget *w, void *data)
-	{
-		UI_Manage_Config *that = (UI_Manage_Config *)data;
-
-		// FIXME
-	}
-
-	static void callback_Extract(Fl_Widget *w, void *data)
-	{
-		UI_Manage_Config *that = (UI_Manage_Config *)data;
-
-		// FIXME
-	}
-
 	static void callback_Use(Fl_Widget *w, void *data)
 	{
 		UI_Manage_Config *that = (UI_Manage_Config *)data;
@@ -300,6 +365,15 @@ private:
 		Cookie_LoadString(str);
 
 		free((void*)str);
+	}
+
+	/* Leaving */
+
+	static void callback_Quit(Fl_Widget *w, void *data)
+	{
+		UI_Manage_Config *that = (UI_Manage_Config *)data;
+
+		that->want_quit = true;
 	}
 
 	/* Clipboard stuff */
@@ -340,6 +414,11 @@ private:
 };
 
 
+// define the recent arrays
+recent_file_data_t UI_Manage_Config::recent_wads   [RECENT_NUM];
+recent_file_data_t UI_Manage_Config::recent_configs[RECENT_NUM];
+
+
 //
 // Constructor
 //
@@ -376,11 +455,11 @@ UI_Manage_Config::UI_Manage_Config(const char *label) :
 		Fl_Group *g = new Fl_Group(0, 0, conf_disp->x(), conf_disp->h());
 		g->resizable(NULL);
 
-		load_but = new Fl_Button(30, 25, 100, 35, "  Load @-3>");
-		load_but->labelsize(FL_NORMAL_SIZE + 0);
+		load_menu = new Fl_Menu_Across(30, 25, 100, 35, "  Load @-3>");
+		load_menu->labelsize(FL_NORMAL_SIZE);
 
-		extract_but = new Fl_Button(30, 85, 100, 35, "  Extract @-3>");
-		extract_but->labelsize(FL_NORMAL_SIZE);
+		extract_menu = new Fl_Menu_Across(30, 85, 100, 35, "  Extract @-3>");
+		extract_menu->labelsize(FL_NORMAL_SIZE);
 
 		o = new Fl_Box(15, 116, 171, 40, "from a WAD or PAK file");
 		o->align(Fl_Align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE));
@@ -461,6 +540,8 @@ void DLG_ManageConfig(void)
 	config_window->want_quit = false;
 	config_window->set_modal();
 	config_window->show();
+
+	config_window->SetupRecent();
 
 	config_window->ReadCurrentSettings();
 
