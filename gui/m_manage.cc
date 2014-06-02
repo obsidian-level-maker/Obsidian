@@ -44,11 +44,100 @@ class UI_Manage_Config;
 // The text is appended into the given text buffer.
 // Returns false if no config can be found in the file.
 // 
+
+class Lookahead_Stream_c
+{
+private:
+	FILE *fp;
+
+    // always at least 128 bytes of look-ahead (unless at EOF)
+
+public:
+	Lookahead_Stream_c(FILE *_fp) : fp(_fp)
+	{
+	}
+
+	virtual ~Lookahead_Stream_c()
+	{ }
+
+private:
+	
+
+public:
+	bool hit_eof()
+	{
+		// TODO
+	}
+
+	char peek_char(int offset = 0)
+	{
+		// TODO
+	}
+
+	char get_char()
+	{
+		// TODO
+	}
+
+	bool match(const char *str)
+	{
+		for (int offset = 0 ; *str ; str++, offset++)
+			if (peek_char(offset) != *str)
+				return false;
+
+		return true;
+	}
+};
+
+
 static bool ExtractConfigData(FILE *fp, Fl_Text_Buffer *buf)
 {
-	// FIXME
+	Lookahead_Stream_c stream(fp);
 
-	return false;
+	/* look for a starting string */
+
+	while (1)
+	{
+		if (stream.hit_eof())
+			return false;  // not found
+
+		if (stream.match("-- CONFIG FILE : OBLIGE ") ||
+			stream.match("-- Levels created by OBLIGE "))
+		{
+			break;  // found it
+		}
+
+		stream.get_char();
+	}
+
+	/* copy lines until we hit the end */
+
+	char mini_buf[4];
+
+	while (! stream.hit_eof())
+	{
+		if (stream.match("-- END"))
+		{
+			buf->append("-- END --\n\n");
+			break;
+		}
+
+		int ch = stream.get_char();
+
+		if (ch == 0 || ch == 26)
+			break;
+
+		// remove CR (Carriage Return) characters
+		if (ch == '\r')
+			continue;
+
+		mini_buf[0] = ch;
+		mini_buf[1] = 0;
+
+		buf->append(mini_buf);
+	}
+
+	return true;  // Success!
 }
 
 
@@ -348,6 +437,7 @@ public:
 		{
 			// FIXME
 			DLG_ShowError("CANNOT OPEN FILE");
+			fclose(fp);
 			return;
 		}
 
@@ -357,8 +447,11 @@ public:
 		{
 			// FIXME
 			DLG_ShowError("NO CONFIG FOUND IN FILE");
+			fclose(fp);
 			return;
 		}
+
+		fclose(fp);
 
 		Enable();
 
