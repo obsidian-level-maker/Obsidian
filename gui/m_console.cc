@@ -64,6 +64,9 @@ static bool console_active;
 // forward decls
 void ConExecute(const char *cmd);
 
+void UI_OpenConsole();
+void UI_CloseConsole();
+
 
 #define MY_FL_COLOR(R,G,B) \
 			(Fl_Color) (((R) << 24) | ((G) << 16) | ((B) << 8))
@@ -870,7 +873,7 @@ void UI_CloseConsole()
 }
 
 
-void UI_ToggleConsole()
+void DLG_ToggleConsole(void)
 {
 	if (console_active)
 		UI_CloseConsole();

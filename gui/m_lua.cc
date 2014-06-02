@@ -45,6 +45,8 @@ static bool has_added_buttons = false;
 
 static std::vector<std::string> * conf_line_buffer;
 
+extern bool debug_onto_console;
+
 
 // random number generator (Mersenne Twister)
 static MT_rand_c GUI_RNG(0);
