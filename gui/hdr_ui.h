@@ -26,7 +26,6 @@
 #include "ui_hyper.h"
 #include "ui_map.h"
 #include "ui_rchoice.h"
-#include "ui_console.h"
 
 #include "ui_build.h"
 #include "ui_game.h"
