@@ -231,7 +231,7 @@ const char * DLG_OutputFilename(const char *ext)
 	chooser.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM);
 	chooser.filter(kind_buf);
 
-	// FIXME: chooser.directory(LAST_USED_DIRECTORY)
+	// TODO: chooser.directory(LAST_USED_DIRECTORY)
 
 
 	int result = chooser.show();

@@ -365,7 +365,7 @@ public:
 		chooser.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM);
 		chooser.filter("Text files\t*.txt");
 
-		// FIXME: chooser.directory(LAST_USED_DIRECTORY)
+		// TODO: chooser.directory(LAST_USED_DIRECTORY)
 
 		switch (chooser.show())
 		{
@@ -485,7 +485,7 @@ public:
 					   "PAK files\t*.pak\n");
 #endif
 
-		// FIXME: chooser.directory(LAST_USED_DIRECTORY)
+		// TODO: chooser.directory(LAST_USED_DIRECTORY)
 
 		switch (chooser.show())
 		{
@@ -516,8 +516,7 @@ public:
 
 		if (! fp)
 		{
-			// FIXME
-			DLG_ShowError("CANNOT OPEN FILE");
+			DLG_ShowError("Cannot open: %s\n\n%s", filename, strerror(errno));
 			return false;
 		}
 
@@ -525,8 +524,7 @@ public:
 
 		if (! ExtractConfigData(fp, text_buf))
 		{
-			// FIXME
-			DLG_ShowError("NO CONFIG FOUND IN FILE");
+			DLG_ShowError("No config found in file.");
 			fclose(fp);
 			return false;
 		}
