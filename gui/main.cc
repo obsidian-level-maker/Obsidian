@@ -307,9 +307,11 @@ void Main_SetupFLTK()
 		KF = 2;
 	else if (ArgvFind(0, "medium") >= 0)
 		KF = 1;
+	else if (ArgvFind(0, "small") >= 0)
+		KF = 0;
 
 	// default font size for widgets
-	FL_NORMAL_SIZE = 14 + KF * 9 / 2;
+	FL_NORMAL_SIZE = 14 + KF * 4;
 
 	 small_font_size = 12 + KF * 3;
 	header_font_size = 16 + KF * 6;
