@@ -185,20 +185,18 @@ void UI_Play::notify_Mode(const char *name, void *priv_dat)
 	UI_Play *play = (UI_Play *)priv_dat;
 	SYS_ASSERT(play);
 
-/* FIXME
 	const char *mode = main_win->game_box->mode->GetID();
 
 	if (strcmp(mode, "dm") == 0)
 	{
 		play->mons->label ("Players: ");
-		play->powers->label("Weapons: ");
+		play->strength->deactivate();
 	}
 	else
 	{
 		play->mons->label ("Monsters: ");
-		play->powers->label("Powerups: ");
+		play->strength->activate();
 	}
-*/
 
 	play->redraw();
 }
