@@ -63,7 +63,7 @@ UI_Module::UI_Module(int x, int y, int w, int h,
 	if (! alternate_look)
 		color(BUILD_BG, BUILD_BG);
 
-	mod_button = new Fl_Check_Button(x+5, y+4, w-20, 24+KF*2, label);
+	mod_button = new Fl_Check_Button(x + kf_w(6), y + kf_h(4), w - kf_w(12), kf_h(24), label);
 
 	add(mod_button);
 
@@ -85,10 +85,10 @@ opt_callback_data_t;
 
 void UI_Module::AddOption(const char *opt, const char *label)
 {
-	int nw = 112 + KF * 16;
-	int nh = 28 + KF * 2;
+	int nw = kf_w(112);
+	int nh = kf_h(30);
 
-	int nx = x() + w() - nw - 10;
+	int nx = x() + w() - nw - kf_w(10);
 	int ny = y() + children() * nh;
 
 	// make label with ': ' suffixed
@@ -97,7 +97,7 @@ void UI_Module::AddOption(const char *opt, const char *label)
 	strcpy(new_label, label);
 	strcat(new_label, ": ");
 
-	UI_RChoice *rch = new UI_RChoice(nx, ny, nw, 24+KF*2, new_label);
+	UI_RChoice *rch = new UI_RChoice(nx, ny, nw, kf_h(24), new_label);
 	rch->align(FL_ALIGN_LEFT);
 	rch->selection_color(MY_PURPLE);
 
@@ -119,10 +119,10 @@ void UI_Module::AddOption(const char *opt, const char *label)
 
 int UI_Module::CalcHeight() const
 {
-	int h = 4 + 24 + KF*2 + 6;  // check button
+	int h = kf_h(34);  // check button
 
 	if (mod_button->value() && children() > 1)
-		h += (children() - 1) * (28 + KF*2) + 4;
+		h += (children() - 1) * kf_h(30) + kf_h(4);
 
 	return h;
 }
@@ -216,10 +216,10 @@ UI_CustomMods::UI_CustomMods(int x, int y, int w, int h, const char *label) :
 
 
 	// area for module list
-	mx = x+0;
+	mx = x;
 	my = cy;
-	mw = w-0 - Fl::scrollbar_size();
-	mh = y+h-cy;
+	mw = w - Fl::scrollbar_size();
+	mh = y + h - cy;
 
 	offset_y = 0;
 	total_h  = 0;
@@ -258,7 +258,7 @@ UI_CustomMods::~UI_CustomMods()
 
 void UI_CustomMods::AddModule(const char *id, const char *label)
 {
-	UI_Module *M = new UI_Module(mx, my, mw-4, 34, id, label);
+	UI_Module *M = new UI_Module(mx, my, mw-4, kf_h(34), id, label);
 
 	M->mod_button->callback(callback_ModEnable, M);
 
