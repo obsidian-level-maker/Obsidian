@@ -2130,7 +2130,7 @@ void CSG_BSP_Free()
 
 //------------------------------------------------------------------------
 
-#define MINI_MAP_SCALE  64.0
+static int MINI_MAP_SCALE;
 
 
 static void AddMiniMapLine(region_c *R, snag_c *S)
@@ -2180,6 +2180,8 @@ void CSG_MakeMiniMap(void)
 {
 	if (! main_win)
 		return;
+
+	MINI_MAP_SCALE = 64 - KF * 10;
 
 	main_win->build_box->mini_map->MapBegin();
 
