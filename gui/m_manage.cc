@@ -710,7 +710,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) :
 	text_buf = new Fl_Text_Buffer();
 
 
-	int conf_w = kf_w(410);
+	int conf_w = kf_w(420);
 	int conf_h = kf_h(288) + KF * 10;
 	int conf_x = W - conf_w - kf_w(10);
 	int conf_y = kf_h(30) + KF * 4;
@@ -724,7 +724,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) :
 
 	/* Main Buttons */
 
-	int button_x = kf_w(30);
+	int button_x = kf_w(20);
 	int button_w = kf_w(100);
 	int button_h = kf_h(35);
 
@@ -738,7 +738,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) :
 		load_but->callback(callback_Load, this);
 		load_but->shortcut(FL_CTRL + 'l');
 
-		o = new Fl_Box(kf_w(10), kf_h(65), kf_w(160), kf_h(40), "(can be WAD or PAK)");
+		o = new Fl_Box(0, kf_h(65), kf_w(160), kf_h(40), "(can be WAD or PAK)");
 		o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE));
 		o->labelsize(small_font_size);
 
@@ -751,7 +751,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) :
 		use_but = new Fl_Button(button_x, kf_h(225), button_w, button_h, "Use");
 		use_but->callback(callback_Use, this);
 
-		o = new Fl_Box(kf_w(5), kf_h(265), kf_w(170), kf_h(50), "Note: this will replace\nall current settings!");
+		o = new Fl_Box(0, kf_h(265), kf_w(170), kf_h(50), "Note: this will replace\nall current settings!");
 		o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE));
 		o->labelsize(small_font_size);
 
@@ -827,7 +827,7 @@ void DLG_ManageConfig(void)
 	// if it already exists, simply re-show it
 	if (! config_window)
 	{
-		int manage_w = kf_w(620);
+		int manage_w = kf_w(600);
 		int manage_h = kf_h(380) + KF * 20;
 
 		config_window = new UI_Manage_Config(manage_w, manage_h, "OBLIGE Config Manager");
