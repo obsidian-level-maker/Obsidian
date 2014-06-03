@@ -33,7 +33,7 @@
 
 class UI_About : public Fl_Window
 {
-private:
+public:
 	bool want_quit;
 
 public:
@@ -188,23 +188,24 @@ void DLG_AboutText(void)
 {
 	static UI_About * about_window = NULL;
 
-	if (about_window)  // already up?
-		return;
+	if (! about_window)
+	{
+		int about_w = kf_w(400);
+		int about_h = kf_h(380) + KF * 50;
 
-	int about_w = kf_w(400);
-	int about_h = kf_h(380) + KF * 50;
+		about_window = new UI_About(about_w, about_h, "About OBLIGE");
+	}
 
-	about_window = new UI_About(about_w, about_h, "About OBLIGE");
-
+	about_window->want_quit = false;
+	about_window->set_modal();
 	about_window->show();
 
 	// run the GUI until the user closes
 	while (! about_window->WantQuit())
 		Fl::wait();
 
-	// this deletes all the child widgets too...
-	delete about_window;
-	about_window = NULL;
+	about_window->set_non_modal();
+	about_window->hide();
 }
 
 //--- editor settings ---

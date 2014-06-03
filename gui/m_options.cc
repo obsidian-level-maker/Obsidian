@@ -199,9 +199,10 @@ bool Options_Save(const char *filename)
 
 class UI_OptionsWin : public Fl_Window
 {
-private:
+public:
 	bool want_quit;
 
+private:
 	Fl_Check_Button *opt_alt_look;
 	Fl_Check_Button *opt_backups;
 	Fl_Check_Button *opt_debug;
@@ -425,14 +426,15 @@ void DLG_OptionsEditor(void)
 {
 	static UI_OptionsWin * option_window = NULL;
 
-	if (option_window)  // already in use?
-		return;
+	if (! option_window)
+	{
+		int opt_w = kf_w(350);
+		int opt_h = kf_h(370) + KF * 30;
 
-	int opt_w = kf_w(350);
-	int opt_h = kf_h(370) + KF * 30;
+		option_window = new UI_OptionsWin(opt_w, opt_h, "OBLIGE Options");
+	}
 
-	option_window = new UI_OptionsWin(opt_w, opt_h, "OBLIGE Options");
-
+	option_window->want_quit = false;
 	option_window->set_modal();
 	option_window->show();
 
@@ -440,9 +442,8 @@ void DLG_OptionsEditor(void)
 	while (! option_window->WantQuit())
 		Fl::wait();
 
-	// this deletes all the child widgets too...
-	delete option_window;
-	option_window = NULL;
+	option_window->set_non_modal();
+	option_window->hide();
 
 	// save the options now
 	Options_Save(options_file);

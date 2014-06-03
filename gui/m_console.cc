@@ -854,9 +854,6 @@ void UI_CloseConsole()
 		SYS_ASSERT(console_win);
 
 		console_win->hide();
-
-		///    delete console_win;
-		///    console_win = NULL;
 	}
 }
 
