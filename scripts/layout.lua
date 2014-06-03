@@ -3220,6 +3220,31 @@ function Layout_plan_outdoor_borders()
   end
 
 
+  local function subdivide_foo(long, num) 
+    local num = int(long / 3)
+    assert(num >= 1)
+
+    local foo = {}
+
+    for i = 1, num do
+      foo[i] = 3 ; long = long - 3
+    end
+
+    assert(long >= 0)
+    assert(long <  3)
+
+    for pass = 1,2 do
+      for i = 1, num do
+        if long > 0 then
+          foo[i] = foo[i] + 1 ; long = long - 1
+        end
+      end
+    end
+
+    return foo
+  end
+
+
   local function plan_edge_fabs(R, side)
     local x1, y1 = R.sx1, R.sy1
     local x2, y2 = R.sx2, R.sy2
@@ -3264,21 +3289,43 @@ function Layout_plan_outdoor_borders()
     if side == 4 then x2 = x1 - 1 ; x1 = x2 - 2 end
     if side == 6 then x1 = x2 + 1 ; x2 = x1 + 2 end
 
-    local BORDER =
-    {
-      kind = "edge"
-      side = side
-      room = R
+    -- if very wide, sub-divide
+    local long = geom.vert_sel(side, x2 - x1, y2 - y1) + 1
 
-      sx1 = x1
-      sy1 = y1
-      sx2 = x2
-      sy2 = y2
-    }
+    local widths = subdivide_foo(long)
+
+    each W in widths do
+      local nw = x2 - x1 + 1
+      local nh = y2 - y1 + 1
+
+      if geom.is_vert(side) then
+        nw = W
+      else
+        nh = W
+      end
+
+      local BORDER =
+      {
+        kind = "edge"
+        side = side
+        room = R
+
+        sx1 = x1
+        sy1 = y1
+        sx2 = x1 + nw - 1
+        sy2 = y1 + nh - 1
+      }
+
+      install_border(BORDER)
+
+      if geom.is_vert(side) then
+        x1 = x1 + W
+      else
+        y1 = y1 + W
+      end
+    end
 
     R.border_edges[side] = true
-
-    install_border(BORDER)
   end
 
 
