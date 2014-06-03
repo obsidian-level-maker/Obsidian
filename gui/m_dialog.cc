@@ -26,6 +26,7 @@
 
 #include "main.h"
 
+
 static int dialog_result;
 
 static void dialog_close_CB(Fl_Widget *w, void *data)
@@ -33,13 +34,14 @@ static void dialog_close_CB(Fl_Widget *w, void *data)
 	dialog_result = 1;
 }
 
-#define BTN_W  100
-#define BTN_H  30
+#define BTN_W  kf_w(100)
+#define BTN_H  kf_h(30)
 
-#define ICON_W  40
-#define ICON_H  40
+#define ICON_W  kf_w(40)
+#define ICON_H  ICON_W
 
-#define FONT_SIZE  18
+#define FONT_SIZE  (18 + KF * 2)
+
 
 static void DialogShowAndRun(const char *message, const char *title,
                              const char *link_title, const char *link_url)
@@ -47,27 +49,27 @@ static void DialogShowAndRun(const char *message, const char *title,
 	dialog_result = 0;
 
 	// determine required size
-	int mesg_W = 480;  // NOTE: fl_measure will wrap to this!
+	int mesg_W = kf_w(480);  // NOTE: fl_measure will wrap to this!
 	int mesg_H = 0;
 
 	fl_font(FL_HELVETICA, FONT_SIZE);
 	fl_measure(message, mesg_W, mesg_H);
 
-	if (mesg_W < 200)
-		mesg_W = 200;
+	if (mesg_W < kf_w(200))
+		mesg_W = kf_w(200);
 
 	if (mesg_H < ICON_H)
 		mesg_H = ICON_H;
 
 	// add a little wiggle room
-	mesg_W += 16;
-	mesg_H += 8;
+	mesg_W += kf_w(16);
+	mesg_H += kf_h(8);
 
-	int total_W = 10 + ICON_W + 10 + mesg_W + 10;
-	int total_H = 10 + mesg_H + 10 + BTN_H  + 10;
+	int total_W = ICON_W + mesg_W + kf_w(30);
+	int total_H = mesg_H + BTN_H  + kf_h(30);
 
 	if (link_title)
-		total_H += FONT_SIZE + 8;
+		total_H += FONT_SIZE + kf_h(10);
 
 	// create window...
 	Fl_Window *dialog = new Fl_Window(0, 0, total_W, total_H, title);
@@ -77,19 +79,19 @@ static void DialogShowAndRun(const char *message, const char *title,
 	dialog->callback((Fl_Callback *) dialog_close_CB);
 
 	// create the error icon...
-	Fl_Box *icon = new Fl_Box(10, 10, ICON_W, ICON_H, "!");
+	Fl_Box *icon = new Fl_Box(kf_w(10), kf_h(15), ICON_W, ICON_H, "!");
 
 	icon->box(FL_OVAL_BOX);
 	icon->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
 	icon->color(FL_RED, FL_RED);
 	icon->labelfont(FL_HELVETICA_BOLD);
-	icon->labelsize(24);
+	icon->labelsize(24 + KF * 3);
 	icon->labelcolor(FL_WHITE);
 
 	dialog->add(icon);
 
 	// create the message area...
-	Fl_Box *box = new Fl_Box(ICON_W + 20, 10, mesg_W, mesg_H, message);
+	Fl_Box *box = new Fl_Box(ICON_W + kf_w(20), kf_h(10), mesg_W, mesg_H, message);
 
 	box->align(FL_ALIGN_LEFT | FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_WRAP);
 	box->labelfont(FL_HELVETICA);
@@ -102,7 +104,7 @@ static void DialogShowAndRun(const char *message, const char *title,
 	{
 		SYS_ASSERT(link_url);
 
-		UI_HyperLink *link = new UI_HyperLink(ICON_W + 20, 10 + mesg_H, mesg_W, 24,
+		UI_HyperLink *link = new UI_HyperLink(ICON_W + kf_w(20), kf_h(10) + mesg_H, mesg_W, 24,
 				link_title, link_url);
 		link->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
 		link->labelfont(FL_HELVETICA);
@@ -113,7 +115,7 @@ static void DialogShowAndRun(const char *message, const char *title,
 
 	// create button...
 	Fl_Button *button =
-		new Fl_Button(total_W - BTN_W - 20, total_H - BTN_H - 12,
+		new Fl_Button(total_W - BTN_W - kf_w(20), total_H - BTN_H - kf_h(12),
 				BTN_W, BTN_H, "Close");
 
 	button->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
@@ -198,7 +200,7 @@ void DLG_ShowError(const char *msg, ...)
 	ParseHyperLink(buffer, sizeof(buffer), &link_title, &link_url);
 
 	if (! batch_mode)
-		DialogShowAndRun(buffer, "Oblige - Error Message", link_title, link_url);
+		DialogShowAndRun(buffer, "OBLIGE - Error Message", link_title, link_url);
 }
 
 
