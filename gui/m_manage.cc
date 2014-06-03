@@ -363,7 +363,7 @@ public:
 		chooser.title("Pick file to save to");
 		chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
 		chooser.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM);
-		chooser.filter("Text files\t*.txt\nConfig files\t*.cfg");
+		chooser.filter("Text files\t*.txt");
 
 		// FIXME: chooser.directory(LAST_USED_DIRECTORY)
 
@@ -474,11 +474,16 @@ public:
 		chooser.title("Select file to load");
 		chooser.type(Fl_Native_File_Chooser::BROWSE_FILE);
 
+		// These filters (in FLTK's own browser at least) are a choice
+		// and only one is active at a time.  That sucks, since only
+		// files matching the active filter are shown.
+#if 0
 		chooser.filter("Text files\t*.txt\n"
 		               "Config files\t*.cfg\n"
 		               "WAD files\t*.wad\n"
 					   "GRP files\t*.grp\n"
 					   "PAK files\t*.pak\n");
+#endif
 
 		// FIXME: chooser.directory(LAST_USED_DIRECTORY)
 
