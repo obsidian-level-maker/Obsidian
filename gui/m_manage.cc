@@ -29,9 +29,6 @@
 #include "m_lua.h"
 
 
-#define MANAGE_WIN_W  620
-#define MANAGE_WIN_H  380
-
 #define BG_COLOR  fl_gray_ramp(10)
 
 
@@ -263,7 +260,7 @@ public:
 	static recent_file_data_t recent_configs[RECENT_NUM];
 
 public:
-	UI_Manage_Config(const char *label = NULL);
+	UI_Manage_Config(int W, int H, const char *label = NULL);
 
 	virtual ~UI_Manage_Config();
 
@@ -662,11 +659,11 @@ recent_file_data_t UI_Manage_Config::recent_configs[RECENT_NUM];
 //
 // Constructor
 //
-UI_Manage_Config::UI_Manage_Config(const char *label) :
-    Fl_Double_Window(MANAGE_WIN_W, MANAGE_WIN_H, label),
+UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) :
+    Fl_Double_Window(W, H, label),
 	want_quit(false)
 {
-	size_range(MANAGE_WIN_W, MANAGE_WIN_H);
+	size_range(W, H);
 
 	if (alternate_look)
 		color(FL_DARK2, FL_DARK2);
@@ -679,7 +676,12 @@ UI_Manage_Config::UI_Manage_Config(const char *label) :
 	text_buf = new Fl_Text_Buffer();
 
 
-	conf_disp = new Fl_Text_Display_NoSelect(190, 30, 410, 288, " Reading Config....");
+	int conf_w = kf_w(410);
+	int conf_h = kf_h(288) + KF * 10;
+	int conf_x = W - conf_w - kf_w(10);
+	int conf_y = kf_h(30) + KF * 4;
+
+	conf_disp = new Fl_Text_Display_NoSelect(conf_x, conf_y, conf_w, conf_h, " Reading Config....");
 	conf_disp->align(Fl_Align(FL_ALIGN_TOP_LEFT));
 	conf_disp->buffer(text_buf);
 	conf_disp->textfont(FL_COURIER);
@@ -688,37 +690,41 @@ UI_Manage_Config::UI_Manage_Config(const char *label) :
 
 	/* Main Buttons */
 
+	int button_x = kf_w(30);
+	int button_w = kf_w(100);
+	int button_h = kf_h(35);
+
 	Fl_Box * o;
 
 	{
 		Fl_Group *g = new Fl_Group(0, 0, conf_disp->x(), conf_disp->h());
 		g->resizable(NULL);
 
-		load_but = new Fl_Button(30, 25, 100, 35, "Load");
+		load_but = new Fl_Button(button_x, kf_h(25), button_w, button_h, "Load");
 		load_but->callback(callback_Load, this);
 		load_but->shortcut(FL_CTRL + 'l');
 
-		o = new Fl_Box(10, 65, 160, 40, "(can be WAD or PAK)");
+		o = new Fl_Box(kf_w(10), kf_h(65), kf_w(160), kf_h(40), "(can be WAD or PAK)");
 		o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE));
-		o->labelsize(14);
+		o->labelsize(small_font_size);
 
-		recent_menu = new Fl_Menu_Across(30, 95, 100, 35, "   Recent @-3>");
+		recent_menu = new Fl_Menu_Across(button_x, kf_h(95), button_w, button_h, "   Recent @-3>");
 
-		save_but = new Fl_Button(30, 165, 100, 35, "Save");
+		save_but = new Fl_Button(button_x, kf_h(165), button_w, button_h, "Save");
 		save_but->callback(callback_Save, this);
 		save_but->shortcut(FL_CTRL + 's');
 
-		use_but = new Fl_Button(30, 225, 100, 35, "Use");
+		use_but = new Fl_Button(button_x, kf_h(225), button_w, button_h, "Use");
 		use_but->callback(callback_Use, this);
 
-		o = new Fl_Box(5, 265, 170, 50, "Note: this will replace\nall current settings!");
+		o = new Fl_Box(kf_w(5), kf_h(265), kf_w(170), kf_h(50), "Note: this will replace\nall current settings!");
 		o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE));
-		o->labelsize(14);
+		o->labelsize(small_font_size);
 
 		g->end();
 	}
 
-	close_but = new Fl_Button(30, 325, 100, 40, "Close");
+	close_but = new Fl_Button(button_x, H - kf_h(55), button_w, button_h + 5, "Close");
 	close_but->labelfont(FL_HELVETICA_BOLD);
 	close_but->labelsize(FL_NORMAL_SIZE + 2);
 	close_but->callback(callback_Quit, this);
@@ -728,24 +734,38 @@ UI_Manage_Config::UI_Manage_Config(const char *label) :
 	/* Clipboard buttons */
 
 	{
-		Fl_Group *g = new Fl_Group(conf_disp->x(), 318, conf_disp->w(), MANAGE_WIN_H - 318);
+		int cx = conf_x + kf_w(40);
+
+		int base_y = H - kf_h(62) - KF * 5;
+
+		Fl_Group *g = new Fl_Group(conf_x, base_y, conf_w, H - base_y);
 		g->resizable(NULL);
 
-		o = new Fl_Box(215, 318, 355, 30, " Clipboard Operations");
+		o = new Fl_Box(cx, base_y, W - cx - 10, kf_h(30), " Clipboard Operations");
 		o->align(Fl_Align(FL_ALIGN_CENTER | FL_ALIGN_INSIDE));
 		o->labelsize(small_font_size);
 
-		cut_but = new Fl_Button(245, 345, 80, 25, "Cut");
+		cx += kf_w(30);
+		base_y += kf_h(30);
+
+		button_w = kf_w(80);
+		button_h = kf_h(25);
+
+		cut_but = new Fl_Button(cx, base_y, button_w, button_h, "Cut");
 		cut_but->labelsize(small_font_size);
 		cut_but->shortcut(FL_CTRL + 'x');
 		cut_but->callback(callback_Cut, this);
 
-		copy_but = new Fl_Button(360, 345, 80, 25, "Copy");
+		cx += kf_w(115);
+
+		copy_but = new Fl_Button(cx, base_y, button_w, button_h, "Copy");
 		copy_but->labelsize(small_font_size);
 		copy_but->shortcut(FL_CTRL + 'c');
 		copy_but->callback(callback_Copy, this);
 
-		paste_but = new Fl_Button(475, 345, 80, 25, "Paste");
+		cx += kf_w(115);
+
+		paste_but = new Fl_Button(cx, base_y, button_w, button_h, "Paste");
 		paste_but->labelsize(small_font_size);
 		paste_but->shortcut(FL_CTRL + 'v');
 		paste_but->callback(callback_Paste, this);
@@ -772,7 +792,12 @@ void DLG_ManageConfig(void)
 
 	// if it already exists, simply re-show it
 	if (! config_window)
-		config_window = new UI_Manage_Config("OBLIGE Config Manager");
+	{
+		int manage_w = kf_w(620);
+		int manage_h = kf_h(380) + KF * 20;
+
+		config_window = new UI_Manage_Config(manage_w, manage_h, "OBLIGE Config Manager");
+	}
 
 	config_window->want_quit = false;
 	config_window->set_modal();
