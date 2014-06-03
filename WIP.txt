@@ -3,26 +3,76 @@ WORK IN PROGRESS
 ================
 
 
+KF to fix:
+  -  error dialog
+
+
+GUI : work on Config Manager
+
+  +  recent menu : actually make it work
+                   if file cannot be found, Recent_RemoveFile()
+
+  +  MarkSource properly
+
+
+About and Options : same hide/reshow logic as for Config Manager
+
+???  last_file stuff?  Default_location??
+
+
+>>>  overhangs (periphs) do not take 3D floors into account
+
+
+RAIL ISSUE : cannot control offsets on BACK SIDE of a brush vert
+
+--->  need rail brushes (perhaps two for a two-sided railing??)
+
+
+Non-working wad-fab textures:
+  CEMENT5 (logo)
+  FIRELAV2
+
+
+Extra floors
+
++ style_sel("ex_floors")
+
+
 Layout rework:
--  score pattern higher based on # of different floors touched by conns
+??  the 'is_top' pattern must touch the entry_conn (if present)
+
++  create chunks for ALL non-cave rooms
+
+-  CHUNK_CLASS ?   put in seed.lua
 
 -  link chunks together
--  create chunks for flat square room
 
--  recursive patterns!
+-  create chunks for flat square room
+   V
+-  split big chunks: 4 = 2/2  5 = 2/1/2 or 1/3/1  6 = 2/2/2  (etc)
+   (maintain symmetry if chunk straddles middle of room)
+
+-  split any chunks which contain TWO importants or conns
+   (detect if horiz or vertical, and where)
+
+IDEA:  automatically merge 2x2 seeds (if floor) into a single chunk
 
 -  get stairs working again
--  get diagonals working again
 -  get curved stairs working again
+-  get diagonals working again
+
+-  recursive patterns!
 
 -  get 3d bridges working
 -  get 3d floors working
 
 
+Stuckies : do not use "kind = diagonal" in seeds
+
+
 Border pieces:
--  number of T pieces: int(seed_w / 3)
 -  fix textures on corner cage
--  only 30% chance of corner cage [apply style]
+-  only 25% chance of corner cage [apply style]
 -  support "gaps" in piece sides (filled by lowest nearby sector OR next lowest sector)
 -  tidy up current pieces
 
@@ -52,7 +102,7 @@ Bridges:
 
 Junking:
 -  caves: sometimes junk a side or two
-   - only at edge of map
+   - only at edge of map (?)
    - 1 or 2 seeds deep
 
 -  normal junking : upto 2 seeds at edge of map
@@ -68,7 +118,7 @@ Closets and Traps:
 
 
 Doors
--  door with bars
+-  Door_with_bars : use it
 -  make a two seed wide door prefab
 -  support wide doors [normal / locked]
 -  make wide prefab with a switch in it [normal door]

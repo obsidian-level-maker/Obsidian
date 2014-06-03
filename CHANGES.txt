@@ -8,14 +8,16 @@ CHANGELOG
 
 + new 'Menu' button, replaces 'About' and 'Options'
 
->>> new Config Manager window 
++ new 'Config Manager' window 
 
 ! removed the 'Seed' setting
 ! removed the 'Hide Modules' option
 
-- store options in OPTIONS.txt, separate from normal settings
+- store options separately from normal settings
 
 >>> new GUI option: 'Bland Lighting Mode'
+
+>>> better adapting to high-resolution screens
 
 
 + generate DOOM 1 episode name graphics

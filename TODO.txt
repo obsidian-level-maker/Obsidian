@@ -3,7 +3,11 @@ OBLIGE TODO
 ===========
 
 
+BUG : no exclusion zone around teleporter
+
 BUG : secret sector being split (ceiling detail? lighting??)
+
++  use Fl_Native_File_Chooser instead of ui_chooser stuff
 
 ______________________________________________________________________
 
@@ -532,6 +536,8 @@ Name generator:
 ----------------------------------------------
   GUI and C++ CODE
 ----------------------------------------------
+
++  use fl_utf8.h functions (fl_fopen, etc) for file handling
 
 +  use OpenMP to speed up DOOM lighting algorithm
 
