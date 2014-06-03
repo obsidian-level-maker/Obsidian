@@ -271,21 +271,35 @@ public:
 
 	void MarkSource(const char *where)
 	{
-		if (! where)
-			where = "";
-
-		char *full = StringPrintf(" Text :   [%s]", where);
+		char *full = StringPrintf(" Text :  [%s]", where);
 
 		conf_disp->copy_label(full);
 
 		StringFree(full);
+		redraw();
+	}
 
+	void MarkSource_FILE(const char *filename)
+	{
+		char *full;
+
+		// abbreviate the filename if too long
+		int len = strlen(filename);
+
+		if (len < 42)
+			full = StringPrintf(" Text :  [%s]", filename);
+		else
+			full = StringPrintf(" Text :  [%.10s....%s]", filename, filename + (len - 30));
+
+		conf_disp->copy_label(full);
+
+		StringFree(full);
 		redraw();
 	}
 
 	void Clear()
 	{
-		MarkSource(NULL);
+		MarkSource("");
 
 		text_buf->select(0, text_buf->length());
 		text_buf->remove_selection();
@@ -517,8 +531,7 @@ public:
 
 		Enable();
 
-		// FIXME
-		MarkSource("From a bloody file");
+		MarkSource_FILE(filename);
 	}
 
 private:
