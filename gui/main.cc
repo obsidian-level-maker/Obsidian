@@ -271,7 +271,8 @@ bool Main_BackupFile(const char *filename, const char *ext)
 
 void Main_SetupFLTK()
 {
-	bool hires_adapt = true;  // TODO : make a normal option
+	bool hires_adapt = true;  // TODO : make it an option
+	                          //   OR : a choice: tiny/smaller/normal/larger/huge
 
 	Fl::visual(FL_RGB);
 
@@ -292,7 +293,7 @@ void Main_SetupFLTK()
 #endif
 
 	// determine the Kromulent factor
-	KF = 2;
+	KF = 0;
 
 	if (hires_adapt)
 	{
@@ -301,6 +302,11 @@ void Main_SetupFLTK()
 		else if (screen_w >= 1200 && screen_h >= 600)
 			KF = 1;
 	}
+
+	if (ArgvFind(0, "big") >= 0)
+		KF = 2;
+	else if (ArgvFind(0, "medium") >= 0)
+		KF = 1;
 
 	// default font size for widgets
 	FL_NORMAL_SIZE = 14 + KF * 9 / 2;
