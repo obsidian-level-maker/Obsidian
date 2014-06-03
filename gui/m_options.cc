@@ -284,15 +284,16 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 		color(BUILD_BG, BUILD_BG);
 
 
-	int y_step = 6 + KF;
+	int y_step = 6 + KF * 2;
+	int pad    = kf_w(6);
 
-	int cx = x() + 24 + KF*3;
+	int cx = x() + kf_w(24);
 	int cy = y() + y_step;
 
 	Fl_Box *heading;
 
 
-	heading = new Fl_Box(FL_NO_BOX, x()+6, cy, W-12, 24, "Appearance");
+	heading = new Fl_Box(FL_NO_BOX, x()+pad, cy, W-pad*2, kf_h(24), "Appearance");
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 	heading->labeltype(FL_NORMAL_LABEL);
 	heading->labelfont(FL_HELVETICA_BOLD);
@@ -303,8 +304,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	cy += heading->h() + y_step;
 
 
-	opt_alt_look = new Fl_Check_Button(cx, cy, 24, 24, "Alternate Look (requires a restart)");
-	opt_alt_look->align(FL_ALIGN_RIGHT);
+	opt_alt_look = new Fl_Check_Button(cx, cy, W-cx-pad, kf_h(24), " Alternate Look (requires a restart)");
 	opt_alt_look->value(alternate_look ? 1 : 0);
 	opt_alt_look->callback(callback_AltLook, this);
 
@@ -315,9 +315,9 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 
 	//----------------
 
-	cy += 8;
+	cy += y_step + y_step/2;
 
-	heading = new Fl_Box(FL_NO_BOX, x()+6, cy, W-12, 24, "File Options");
+	heading = new Fl_Box(FL_NO_BOX, x()+pad, cy, W-pad*2, kf_h(24), "File Options");
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 	heading->labeltype(FL_NORMAL_LABEL);
 	heading->labelfont(FL_HELVETICA_BOLD);
@@ -328,8 +328,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	cy += heading->h() + y_step;
 
 
-	opt_backups = new Fl_Check_Button(cx, cy, 24, 24, "Create Backups");
-	opt_backups->align(FL_ALIGN_RIGHT);
+	opt_backups = new Fl_Check_Button(cx, cy, W-cx-pad, kf_h(24), " Create Backups");
 	opt_backups->value(create_backups ? 1 : 0);
 	opt_backups->callback(callback_Backups, this);
 
@@ -338,8 +337,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	cy += opt_backups->h() + y_step;
 
 
-	opt_debug = new Fl_Check_Button(cx, cy, 24, 24, "Debugging Messages (in LOGS.txt)");
-	opt_debug->align(FL_ALIGN_RIGHT);
+	opt_debug = new Fl_Check_Button(cx, cy, W-cx-pad, kf_h(24), " Debugging Messages (in LOGS.txt)");
 	opt_debug->value(debug_messages ? 1 : 0);
 	opt_debug->callback(callback_Debug, this);
 
@@ -350,9 +348,9 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 
 	//----------------
 
-	cy += 8;
+	cy += y_step + y_step/2;
 
-	heading = new Fl_Box(FL_NO_BOX, x()+6, cy, W-12, 24, "Doom / Heretic / Hexen");
+	heading = new Fl_Box(FL_NO_BOX, x()+pad, cy, W-pad*2, kf_h(24), "Doom / Heretic / Hexen");
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 	heading->labeltype(FL_NORMAL_LABEL);
 	heading->labelfont(FL_HELVETICA_BOLD);
@@ -363,8 +361,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	cy += heading->h() + y_step;
 
 
-	opt_lighting = new Fl_Check_Button(cx, cy, 24, 24, "Bland Lighting Mode");
-	opt_lighting->align(FL_ALIGN_RIGHT);
+	opt_lighting = new Fl_Check_Button(cx, cy, W-cx-pad, kf_h(24), " Bland Lighting Mode");
 	opt_lighting->value(fast_lighting ? 1 : 0);
 	opt_lighting->callback(callback_Lighting, this);
 
@@ -376,10 +373,9 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 
 	//----------------
 
-	int dh = 50 + KF * 4;
+	int dh = 60 + KF * 16;
 
-	Fl_Group *darkish = new Fl_Group(0, H-dh, W, dh);
-
+	Fl_Group *darkish = new Fl_Group(0, H - dh, W, dh);
 	darkish->end();
 	darkish->box(FL_FLAT_BOX);
 	if (! alternate_look)
@@ -389,10 +385,12 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 
 
 	// finally add an "Close" button
-	int bw = 60 + KF * 10;
-	int bh = 30 + KF * 3;
+	int bw = kf_w(60);
+	int bh = kf_h(30);
+	int bx = W - kf_w(40) - bw;
+	int by = H - dh/2 - bh/2;
 
-	Fl_Button *button = new Fl_Button(W-30-bw, H-10-bh, bw, bh, "Close");
+	Fl_Button *button = new Fl_Button(bx, by, bw, bh, "Close");
 	button->callback(callback_Quit, this);
 	darkish->add(button);
 }
@@ -430,8 +428,8 @@ void DLG_OptionsEditor(void)
 	if (option_window)  // already in use?
 		return;
 
-	int opt_w = 350 + KF * 30;
-	int opt_h = 370 + KF * 40;
+	int opt_w = kf_w(350);
+	int opt_h = kf_h(370) + KF * 30;
 
 	option_window = new UI_OptionsWin(opt_w, opt_h, "OBLIGE Options");
 
