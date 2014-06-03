@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2014 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -46,12 +46,14 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 		color(BUILD_BG, BUILD_BG);
 
 
-	int y_step = 6 + KF;
+	int y_step = 6 + KF * 2;
 
-	int cx = x + 96 + KF * 11;
-	int cy = y + y_step + KF * 3;
+	int cx = x + kf_w(96) + KF * 4;
+	int cy = y + y_step;
 
-	Fl_Box *heading = new Fl_Box(FL_NO_BOX, x+6, cy, w-12, 24, "Playing Style");
+	const char *heading_text = "Playing Style";
+
+	Fl_Box *heading = new Fl_Box(FL_NO_BOX, x + kf_w(6), cy, w - kf_w(12), kf_h(24), heading_text);
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 	heading->labeltype(FL_NORMAL_LABEL);
 	heading->labelfont(FL_HELVETICA_BOLD);
@@ -62,8 +64,8 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 	cy += heading->h() + y_step;
 
 
-	int cw = 114 + KF * 14;
-	int ch = 24 + KF * 2;
+	int cw = kf_w(108);
+	int ch = kf_h(24);
 
 	mons = new UI_RChoice(cx, cy, cw, ch, "Monsters: ");
 	mons->align(FL_ALIGN_LEFT);
@@ -88,7 +90,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
 	cy += strength->h() + y_step;
 
-	cy += y_step + y_step; //  /2 - 1;
+	cy += y_step * 2;
 
 
 	weaps = new UI_RChoice(cx, cy, cw, ch, "Weapons: ");
@@ -114,8 +116,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
 	cy += powers->h() + y_step;
 
-
-	cy += y_step + y_step; //  /2 - 1;
+	cy += y_step * 2;
 
 
 	health = new UI_RChoice(cx, cy, cw, ch, "Health: ");
@@ -141,10 +142,6 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
 	cy += ammo->h() + y_step;
 
-	//  cy += y_step + y_step/2 - 1;
-
-
-	//  DebugPrintf("UI_Play: final h = %d\n", cy - y);
 
 	Signal_Watch("mode", notify_Mode, this);
 }

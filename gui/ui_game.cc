@@ -42,14 +42,15 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
 	if (! alternate_look)
 		color(BUILD_BG, BUILD_BG);
 
-	int y_step = 6 + KF;
+	int y_step = 6 + KF * 2;
 
-	int cx = x + 72 + KF * 11;
-	int cy = y + y_step + KF * 3;
+	int cx = x + kf_w(76) + KF * 4;
+	int cy = y + y_step;
+
 
 	const char *heading_text = "Game Settings";
 
-	Fl_Box *heading = new Fl_Box(FL_NO_BOX, x+6, cy, w-12, 24, heading_text);
+	Fl_Box *heading = new Fl_Box(FL_NO_BOX, x + kf_w(6), cy, w - kf_w(12), kf_h(24), heading_text);
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 	heading->labeltype(FL_NORMAL_LABEL);
 	heading->labelfont(FL_HELVETICA_BOLD);
@@ -60,8 +61,8 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
 	cy += heading->h() + y_step;
 
 
-	int cw = 130 + KF * 14;
-	int ch = 24 + KF * 2;
+	int cw = kf_w(130);
+	int ch = kf_h(24);
 
 	game = new UI_RChoice(cx, cy, cw, ch, "Game: ");
 	game->align(FL_ALIGN_LEFT);
@@ -88,8 +89,6 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
 	mode = new UI_RChoice(cx, cy, cw, ch, "Mode: ");
 	mode->align(FL_ALIGN_LEFT);
 	mode->selection_color(FL_BLUE);
-	///---  mode->add("Single Player|Co-op|Deathmatch");
-	///---  mode->value(0);
 	mode->callback(callback_Mode, this);
 
 	setup_Mode();
@@ -110,12 +109,8 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
 
 	cy += length->h() + y_step;
 
-	cy += y_step + y_step/2;
 
-
-	//  DebugPrintf("UI_Game: final h = %d\n", cy - y);
-
-	resizable(0);  // don't resize our children
+	resizable(NULL);  // don't resize our children
 
 
 	length->SetID("episode");
@@ -199,8 +194,6 @@ bool UI_Game::ParseValue(const char *key, const char *value)
 {
 	// Note: game, engine are handled by LUA code
 	//
-	// Note 2: seed is handled specially in cookie code
-
 	if (StringCaseCmp(key, "mode") == 0)
 	{
 		mode->SetID(value);

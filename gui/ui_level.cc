@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2014 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -45,12 +45,14 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 		color(BUILD_BG, BUILD_BG);
 
 
-	int y_step = 6 + KF;
+	int y_step = 6 + KF * 2;
 
-	int cx = x + 90 + KF * 11;
-	int cy = y + y_step + KF * 3;
+	int cx = x + kf_w(90) + KF * 4;
+	int cy = y + y_step;
 
-	Fl_Box *heading = new Fl_Box(FL_NO_BOX, x+6, cy, w-12, 24, "Level Architecture");
+	const char *heading_text = "Level Architecture";
+
+	Fl_Box *heading = new Fl_Box(FL_NO_BOX, x + kf_w(6), cy, w - kf_w(12), kf_h(24), heading_text);
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 	heading->labeltype(FL_NORMAL_LABEL);
 	heading->labelfont(FL_HELVETICA_BOLD);
@@ -61,8 +63,8 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 	cy += heading->h() + y_step;
 
 
-	int cw = 114 + KF * 14;
-	int ch = 24 + KF * 2;
+	int cw = kf_w(114);
+	int ch = kf_h(24);
 
 	size = new UI_RChoice(cx, cy, cw, ch, "Size: ");
 	size->align(FL_ALIGN_LEFT);
@@ -74,8 +76,6 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 	add(size);
 
 	cy += size->h() + y_step;
-
-//	cy += y_step + y_step/2;
 
 
 	theme = new UI_RChoice(cx, cy, cw, ch, "Theme: ");
@@ -112,9 +112,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 	add(caves);
 
 
-	//  DebugPrintf("UI_Level: final h = %d\n", cy - y);
-
-	resizable(0);  // don't resize our children
+	resizable(NULL);  // don't resize our children
 }
 
 
