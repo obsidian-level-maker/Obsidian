@@ -216,6 +216,12 @@ const char * DLG_OutputFilename(const char *ext)
 		*p = toupper(*p);
 
 
+	// save and restore the font height
+	// (because FLTK's own browser get totally borked)
+	int old_font_h = FL_NORMAL_SIZE;
+	FL_NORMAL_SIZE = 14 + KF;
+
+
 	Fl_Native_File_Chooser  chooser;
 
 	chooser.title("Select output file");
@@ -225,7 +231,12 @@ const char * DLG_OutputFilename(const char *ext)
 
 	// FIXME: chooser.directory(LAST_USED_DIRECTORY)
 
-	switch (chooser.show())
+
+	int result = chooser.show();
+
+	FL_NORMAL_SIZE = old_font_h;
+
+	switch (result)
 	{
 		case -1:
 			LogPrintf("Error choosing output file:\n");

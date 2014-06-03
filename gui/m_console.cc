@@ -129,7 +129,7 @@ private:
 		}
 
 		// FIXME: measure properly
-		int bw = 14 + strlen(lab) * 6;
+		int bw = 14 + strlen(lab) * (6 + KF * 4);
 
 		px += 4;
 
@@ -436,19 +436,6 @@ private:
 
 //----------------------------------------------------------------
 
-class My_ClipGroup : public Fl_Group
-{
-public:
-	My_ClipGroup(int X, int Y, int W, int H, const char *L = NULL) :
-		Fl_Group(X, Y, W, H, L)
-	{
-		clip_children(1);
-	}
-
-	virtual ~My_ClipGroup()
-	{ }
-};
-
 
 class UI_Console : public Fl_Double_Window
 {
@@ -492,12 +479,12 @@ public:
 	{
 		end(); // cancel begin() in Fl_Group constructor
 
-		size_range(240, 160);
+		size_range(kf_w(240), kf_h(160));
 		color(CONSOLE_BG, CONSOLE_BG);
 
 
 		int sb_w = Fl::scrollbar_size();
-		int in_h = 28 + KF * 2;
+		int in_h = kf_h(28);
 
 
 		sbar = new Fl_Scrollbar(x + w - sb_w, y, sb_w, h);
@@ -514,8 +501,9 @@ public:
 		add(input);
 
 
-		all_lines = new My_ClipGroup(x+4, y+4, w-sb_w-8, h-in_h-4);
+		all_lines = new Fl_Group(x+4, y+4, w-sb_w-8, h-in_h-4);
 		all_lines->end();
+		all_lines->clip_children(1);
 
 		all_lines->box(FL_FLAT_BOX);
 		all_lines->color(CONSOLE_BG);
@@ -531,9 +519,6 @@ public:
 
 	virtual ~UI_Console()
 	{
-		///--     last_W = w();
-		///--     last_H = h();
-
 		console_win = NULL;
 		console_active = false;
 	}
@@ -844,7 +829,10 @@ void UI_OpenConsole()
 
 	if (! console_win)
 	{
-		console_win = new UI_Console(0, 0, 600, 400, "OBLIGE DEBUG CONSOLE");
+		int con_w = 600 + KF * 200;
+		int con_h = 400 + KF * 100;
+
+		console_win = new UI_Console(0, 0, con_w, con_h, "OBLIGE DEBUG CONSOLE");
 	}
 
 	console_win->show();
@@ -949,7 +937,7 @@ void CMD_Args(void)
 {
 	ConPrintf("Arguments:\n");
 
-	for (int i = 0; i < console_argc; i++)
+	for (int i = 0 ; i < console_argc ; i++)
 	{
 		const char *arg = console_argv[i];
 

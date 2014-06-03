@@ -344,7 +344,7 @@ public:
 
 	const char * AskSaveFilename()
 	{
-		Fl_Native_File_Chooser chooser;
+		Fl_Native_File_Chooser  chooser;
 
 		chooser.title("Pick file to save to");
 		chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
@@ -552,7 +552,15 @@ private:
 	{
 		UI_Manage_Config *that = (UI_Manage_Config *)data;
 
+		// save and restore the font height
+		// (because FLTK's own browser gets totally borked)
+		int old_font_h = FL_NORMAL_SIZE;
+		FL_NORMAL_SIZE = 14 + KF;
+
 		const char *filename = that->AskLoadFilename();
+
+		FL_NORMAL_SIZE = old_font_h;
+
 		if (! filename)
 			return;
 
@@ -578,7 +586,15 @@ private:
 			return;
 		}
 
+		// save and restore the font height
+		// (because FLTK's own browser gets totally borked)
+		int old_font_h = FL_NORMAL_SIZE;
+		FL_NORMAL_SIZE = 14 + KF;
+
 		const char *filename = that->AskSaveFilename();
+
+		FL_NORMAL_SIZE = old_font_h;
+
 		if (! filename)
 			return;
 
