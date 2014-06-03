@@ -271,7 +271,7 @@ bool Main_BackupFile(const char *filename, const char *ext)
 
 void Main_SetupFLTK()
 {
-	bool hires_adapt = true;
+	bool hires_adapt = true;  // TODO : make a normal option
 
 	Fl::visual(FL_RGB);
 
@@ -292,20 +292,23 @@ void Main_SetupFLTK()
 #endif
 
 	// determine the Kromulent factor
-	KF = 0;
+	KF = 2;
 
 	if (hires_adapt)
 	{
-		if (screen_w > 1100 && screen_h > 720)
+		if (screen_w >= 1600 && screen_h >= 720)
 			KF = 2;
-		else if (screen_w > 950 && screen_h > 660)
+		else if (screen_w >= 1200 && screen_h >= 600)
 			KF = 1;
 	}
 
 	// default font size for widgets
-	FL_NORMAL_SIZE = 14 + KF * 2;
+	FL_NORMAL_SIZE = 14 + KF * 9 / 2;
 
-	fl_message_font(FL_HELVETICA /* _BOLD */, 18);
+	 small_font_size = 12 + KF * 3;
+	header_font_size = 16 + KF * 6;
+
+	fl_message_font(FL_HELVETICA, 16 + KF * 4);
 
 	// load icons for file chooser
 #ifndef WIN32

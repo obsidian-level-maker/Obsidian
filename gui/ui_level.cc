@@ -54,7 +54,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 	heading->labeltype(FL_NORMAL_LABEL);
 	heading->labelfont(FL_HELVETICA_BOLD);
-	heading->labelsize(FL_NORMAL_SIZE + 2);
+	heading->labelsize(header_font_size);
 
 	add(heading);
 

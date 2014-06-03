@@ -239,7 +239,7 @@ UI_CustomMods::UI_CustomMods(int x, int y, int w, int h, const char *label) :
 
 	mod_pack->align(FL_ALIGN_INSIDE);
 	mod_pack->labeltype(FL_NORMAL_LABEL);
-	mod_pack->labelsize(FL_NORMAL_SIZE+8);
+	mod_pack->labelsize(FL_NORMAL_SIZE * 3 / 2);
 
 	if (alternate_look)
 		mod_pack->labelcolor(FL_DARK1);

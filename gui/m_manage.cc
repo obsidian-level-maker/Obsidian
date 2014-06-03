@@ -681,10 +681,9 @@ UI_Manage_Config::UI_Manage_Config(const char *label) :
 
 	conf_disp = new Fl_Text_Display_NoSelect(190, 30, 410, 288, " Reading Config....");
 	conf_disp->align(Fl_Align(FL_ALIGN_TOP_LEFT));
-	conf_disp->labelsize(16);
 	conf_disp->buffer(text_buf);
 	conf_disp->textfont(FL_COURIER);
-	conf_disp->textsize(12);
+	conf_disp->textsize(12 + KF * 2);
 
 
 	/* Main Buttons */
@@ -696,7 +695,6 @@ UI_Manage_Config::UI_Manage_Config(const char *label) :
 		g->resizable(NULL);
 
 		load_but = new Fl_Button(30, 25, 100, 35, "Load");
-		load_but->labelsize(FL_NORMAL_SIZE);
 		load_but->callback(callback_Load, this);
 		load_but->shortcut(FL_CTRL + 'l');
 
@@ -705,15 +703,12 @@ UI_Manage_Config::UI_Manage_Config(const char *label) :
 		o->labelsize(14);
 
 		recent_menu = new Fl_Menu_Across(30, 95, 100, 35, "   Recent @-3>");
-		recent_menu->labelsize(FL_NORMAL_SIZE);
 
 		save_but = new Fl_Button(30, 165, 100, 35, "Save");
-		save_but->labelsize(FL_NORMAL_SIZE);
 		save_but->callback(callback_Save, this);
 		save_but->shortcut(FL_CTRL + 's');
 
 		use_but = new Fl_Button(30, 225, 100, 35, "Use");
-		use_but->labelsize(FL_NORMAL_SIZE);
 		use_but->callback(callback_Use, this);
 
 		o = new Fl_Box(5, 265, 170, 50, "Note: this will replace\nall current settings!");
@@ -725,7 +720,7 @@ UI_Manage_Config::UI_Manage_Config(const char *label) :
 
 	close_but = new Fl_Button(30, 325, 100, 40, "Close");
 	close_but->labelfont(FL_HELVETICA_BOLD);
-	close_but->labelsize(FL_NORMAL_SIZE);
+	close_but->labelsize(FL_NORMAL_SIZE + 2);
 	close_but->callback(callback_Quit, this);
 	close_but->shortcut(FL_CTRL + 'w');
 
@@ -738,20 +733,20 @@ UI_Manage_Config::UI_Manage_Config(const char *label) :
 
 		o = new Fl_Box(215, 318, 355, 30, " Clipboard Operations");
 		o->align(Fl_Align(FL_ALIGN_CENTER | FL_ALIGN_INSIDE));
-		o->labelsize(14);
+		o->labelsize(small_font_size);
 
 		cut_but = new Fl_Button(245, 345, 80, 25, "Cut");
-		cut_but->labelsize(FL_NORMAL_SIZE - 2);
+		cut_but->labelsize(small_font_size);
 		cut_but->shortcut(FL_CTRL + 'x');
 		cut_but->callback(callback_Cut, this);
 
 		copy_but = new Fl_Button(360, 345, 80, 25, "Copy");
-		copy_but->labelsize(FL_NORMAL_SIZE - 2);
+		copy_but->labelsize(small_font_size);
 		copy_but->shortcut(FL_CTRL + 'c');
 		copy_but->callback(callback_Copy, this);
 
 		paste_but = new Fl_Button(475, 345, 80, 25, "Paste");
-		paste_but->labelsize(FL_NORMAL_SIZE - 2);
+		paste_but->labelsize(small_font_size);
 		paste_but->shortcut(FL_CTRL + 'v');
 		paste_but->callback(callback_Paste, this);
 

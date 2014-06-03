@@ -28,8 +28,6 @@
 #include "main.h"
 #include "m_cookie.h"
 
-#include "ui_chooser.h"
-
 
 static void Parse_Option(const char *name, const char *value)
 {
@@ -298,7 +296,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 	heading->labeltype(FL_NORMAL_LABEL);
 	heading->labelfont(FL_HELVETICA_BOLD);
-	heading->labelsize(FL_NORMAL_SIZE + 2);
+	heading->labelsize(header_font_size);
 
 	add(heading);
 
@@ -323,7 +321,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 	heading->labeltype(FL_NORMAL_LABEL);
 	heading->labelfont(FL_HELVETICA_BOLD);
-	heading->labelsize(FL_NORMAL_SIZE + 2);
+	heading->labelsize(header_font_size);
 
 	add(heading);
 
@@ -358,7 +356,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 	heading->labeltype(FL_NORMAL_LABEL);
 	heading->labelfont(FL_HELVETICA_BOLD);
-	heading->labelsize(FL_NORMAL_SIZE + 2);
+	heading->labelsize(header_font_size);
 
 	add(heading);
 
@@ -381,6 +379,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	int dh = 50 + KF * 4;
 
 	Fl_Group *darkish = new Fl_Group(0, H-dh, W, dh);
+
 	darkish->end();
 	darkish->box(FL_FLAT_BOX);
 	if (! alternate_look)

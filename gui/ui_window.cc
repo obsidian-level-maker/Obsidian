@@ -34,13 +34,16 @@
 #endif
 
 
-#define MIN_WINDOW_W  428
+#define MIN_WINDOW_W  732
 #define MIN_WINDOW_H  432
 
 
 UI_MainWin *main_win;
 
 int KF = 0;
+
+int  small_font_size;
+int header_font_size;
 
 
 static void main_win_close_CB(Fl_Widget *w, void *data)
@@ -64,9 +67,9 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
 	color(WINDOW_BG, WINDOW_BG);
 
-	int PANEL_W = 212 + KF*32;
+	int PANEL_W = 212 + KF * 64;
+	int TOP_H   = 180 + KF * 32;
 
-	int TOP_H  = 180 + KF*18;
 	int BOT_H  = H - TOP_H - 4;
 	int MOD_W  = W - PANEL_W*2 - 8;
 
@@ -101,11 +104,8 @@ UI_MainWin::~UI_MainWin()
 
 void UI_MainWin::CalcWindowSize(int *W, int *H)
 {
-	*W = MIN_WINDOW_W + KF * 64;
-	*H = MIN_WINDOW_H + KF * 44;
-
-	// modules panel
-	*W += 304 + KF * 32;
+	*W = MIN_WINDOW_W + KF * 200;
+	*H = MIN_WINDOW_H + KF * 100;
 }
 
 

@@ -68,7 +68,6 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
 
 	misc_menu = new Fl_Menu_Across(button_x, cy, button_w, button_h, "     Menu @-3>");
-	misc_menu->labelsize(FL_NORMAL_SIZE + 0);
 	misc_menu->selection_color(fl_rgb_color(120,80,20));
 
 	misc_menu->add("About",            FL_F+1, menu_do_about);
@@ -95,7 +94,6 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
 
 	quit = new Fl_Button(button_x, cy, button_w, button_h, "Quit");
-	quit->labelsize(FL_NORMAL_SIZE + 0);
 	quit->callback(quit_callback, this);
 	quit->shortcut(FL_COMMAND + 'q');
 

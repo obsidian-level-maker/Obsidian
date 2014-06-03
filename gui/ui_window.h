@@ -27,6 +27,16 @@
 #define BUILD_BG   fl_gray_ramp(2)
 
 
+// support for scaling up the GUI
+extern int KF;  // Kromulent Factor : 0 .. 2
+
+#define kf_w(w)  ((w) + KF * (w) / 4)
+#define kf_h(h)  ((h) + KF * (h) / 6)
+
+extern int  small_font_size;
+extern int header_font_size;
+
+
 class UI_MainWin : public Fl_Double_Window
 {
 public:
@@ -48,8 +58,6 @@ public:
 
 	void Locked(bool value);
 };
-
-extern int KF;  // Kromulent Factor
 
 extern UI_MainWin * main_win;
 
