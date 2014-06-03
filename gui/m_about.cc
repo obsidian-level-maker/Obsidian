@@ -25,10 +25,10 @@
 #include "main.h"
 
 
-#define TITLE_COLOR  fl_color_cube(3,0,1)
+#define TITLE_COLOR  fl_color_cube(0,3,1)
 
-#define INFO_COLOR   fl_color_cube(3,6,0)
-#define INFO_COLOR2  fl_rgb_color(255, 255, 144)
+#define INFO_COLOR   fl_color_cube(1,6,0)
+#define INFO_COLOR2  fl_rgb_color(127, 255, 144)
 
 
 class UI_About : public Fl_Window
@@ -111,50 +111,61 @@ UI_About::UI_About(int W, int H, const char *label) :
 	// cancel Fl_Group's automatic add crap
 	end();
 
-
 	// non-resizable
 	size_range(W, H, W, H);
+
+	if (alternate_look)
+		color(FL_LIGHT3, FL_LIGHT3);
+
 	callback(callback_Quit, this);
 
-	int cy = 6;
+
+	int cy = 6 + KF * 4;
 
 	// nice big logo text
 	const char *logo_text = OBLIGE_TITLE " " OBLIGE_VERSION;
 
-	Fl_Box *box = new Fl_Box(0, cy, W, 50, logo_text);
+	Fl_Box *box = new Fl_Box(0, cy, W, kf_h(50), logo_text);
 	box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
 	box->labelcolor(TITLE_COLOR);
-	box->labelsize(24);
+	box->labelsize(FL_NORMAL_SIZE * 5 / 3);
 	add(box);
 
+	cy += box->h() + kf_h(4) + KF * 4;
 
-	cy += box->h() + 4;
-
-	int pad = 12 + KF * 6;
 
 	// the very informative text
-	box = new Fl_Box(pad, cy, W-pad-pad, H-172, Text);
+	int pad = kf_w(22);
+
+	int text_h = kf_h(210) + KF * 32;
+
+	box = new Fl_Box(pad, cy, W-pad-pad, text_h, Text);
 	box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
 	box->box(FL_UP_BOX);
 	box->color(alternate_look ? INFO_COLOR2 : INFO_COLOR);
 	add(box);
 
-	cy += box->h() + 10;
+	cy += box->h() + kf_h(10);
 
 
 	// website address
+	pad = kf_w(8);
 
-	UI_HyperLink *link = new UI_HyperLink(10, cy, W-20, 30, URL, URL);
+	UI_HyperLink *link = new UI_HyperLink(pad, cy, W-pad*2, kf_h(30), URL, URL);
 	link->align(FL_ALIGN_CENTER);
-	link->labelsize(20);
+	link->labelsize(FL_NORMAL_SIZE * 3 / 2);
+	if (alternate_look)
+		link->color(FL_LIGHT3, FL_LIGHT3);
+
 	add(link);
 
-	cy += link->h() + 10;
-
+	cy += link->h() + kf_h(16);
 
 	SYS_ASSERT(cy < H);
 
-	Fl_Group *darkish = new Fl_Group(0, cy, W, H-cy);
+
+	// finally add an "OK" button
+	Fl_Group *darkish = new Fl_Group(0, cy, W, H - cy);
 	darkish->end();
 	darkish->box(FL_FLAT_BOX);
 	if (! alternate_look)
@@ -162,11 +173,12 @@ UI_About::UI_About(int W, int H, const char *label) :
 
 	add(darkish);
 
-	// finally add an "OK" button
-	int bw = 60 + KF * 10;
-	int bh = 30 + KF * 3;
 
-	Fl_Button *button = new Fl_Button(W/2 - bw/2, H-10-bh, bw, bh, "OK");
+	int bw = kf_w(60);
+	int bh = kf_h(30);
+	int by = H - kf_h(10) - bh;
+
+	Fl_Button *button = new Fl_Button(W/2 - bw/2, by, bw, bh, "OK");
 	button->callback(callback_Quit, this);
 	darkish->add(button);
 }
@@ -179,8 +191,8 @@ void DLG_AboutText(void)
 	if (about_window)  // already up?
 		return;
 
-	int about_w = 400 + KF * 30;
-	int about_h = 370 + KF * 40;
+	int about_w = kf_w(400);
+	int about_h = kf_h(380) + KF * 50;
 
 	about_window = new UI_About(about_w, about_h, "About OBLIGE");
 
