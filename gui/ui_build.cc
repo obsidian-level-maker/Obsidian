@@ -51,20 +51,22 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 	status_label[0] = 0;
 
 
-	int cy = y + 18 + KF * 4;
+	int cy = y + kf_h(18);
 
-	int mini_w = 100 + KF * 12;
-	int mini_h = 106 + KF *  6;
-	int mini_x = x + 100 + KF * 16;
 
-	mini_map = new UI_MiniMap(mini_x, cy + 14, mini_w, mini_h);
+	int button_w = kf_w(74);
+	int button_h = kf_h(30);
+	int button_x = x + kf_w(12);
+
+
+	int mini_w = kf_w(100);
+	int mini_h = kf_h(100);
+	int mini_x = button_x + button_w + kf_w(12);
+
+	mini_map = new UI_MiniMap(mini_x, cy + kf_h(14), mini_w, mini_h);
 
 	add(mini_map);
 
-
-	int button_w = 74 + KF * 16;
-	int button_h = 30 + KF * 4;
-	int button_x = x + 12 + KF * 2;
 
 
 	misc_menu = new Fl_Menu_Across(button_x, cy, button_w, button_h, "     Menu @-3>");
@@ -78,10 +80,10 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 	add(misc_menu);
 
 
-	cy += button_h + 16 + KF;
+	cy += button_h + kf_h(16);
 
 
-	build = new Fl_Button(button_x, cy, button_w, button_h, "Build");
+	build = new Fl_Button(button_x, cy, button_w, button_h + 4, "Build");
 	build->labelfont(FL_HELVETICA_BOLD);
 	build->labelsize(FL_NORMAL_SIZE + 2);
 	build->callback(build_callback, this);
@@ -89,8 +91,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
 	add(build);
 
-	cy += build->h() + 8 + KF;
-	cy += 10;
+	cy += build->h() + kf_h(16);
 
 
 	quit = new Fl_Button(button_x, cy, button_w, button_h, "Quit");
@@ -102,10 +103,10 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
 	/* --- Status Area --- */
 
-	cy = y + h - 88;
+	cy = y + h - kf_h(90);
 
 
-	status = new Fl_Box(FL_FLAT_BOX, x+12, cy, w-22, 24+KF*2, "Ready to go!");
+	status = new Fl_Box(FL_FLAT_BOX, x + kf_w(14), cy, w - kf_w(28), kf_h(26), "Ready to go!");
 	status->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
 
 	if (! alternate_look)
@@ -113,15 +114,15 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
 	add(status);
 
-	cy += status->h() + 14;
+	cy += status->h() + kf_h(14);
 
 
-	progress = new Fl_Progress(x+14+KF*2, cy, w-28-KF*4, 26);
+	progress = new Fl_Progress(x + kf_w(14), cy, w - kf_w(28), kf_h(26));
 	progress->align(FL_ALIGN_INSIDE);
 	progress->box(FL_FLAT_BOX);
 	progress->color(alternate_look ? INACTIVE_BG2 : INACTIVE_BG, FL_BLACK);
 	progress->value(0.0);
-	progress->labelsize(16);
+	progress->labelsize(FL_NORMAL_SIZE + 2);
 
 	add(progress);
 }
