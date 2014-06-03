@@ -536,6 +536,9 @@ void Recent_RemoveFile(int group, const char *filename)
 			recent_configs.remove(filename);
 			break;
 	}
+
+	// push to disk now -- why wait?
+	Options_Save(options_file);
 }
 
 

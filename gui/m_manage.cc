@@ -510,7 +510,7 @@ public:
 		return filename;
 	}
 
-	void LoadFromFile(const char *filename)
+	bool LoadFromFile(const char *filename)
 	{
 		FILE *fp = fl_fopen(filename, "rb");
 
@@ -518,8 +518,7 @@ public:
 		{
 			// FIXME
 			DLG_ShowError("CANNOT OPEN FILE");
-			fclose(fp);
-			return;
+			return false;
 		}
 
 		Clear();
@@ -529,7 +528,7 @@ public:
 			// FIXME
 			DLG_ShowError("NO CONFIG FOUND IN FILE");
 			fclose(fp);
-			return;
+			return false;
 		}
 
 		fclose(fp);
@@ -537,6 +536,8 @@ public:
 		Enable();
 
 		MarkSource_FILE(filename);
+
+		return true;
 	}
 
 private:
@@ -589,7 +590,32 @@ private:
 	{
 		recent_file_data_t *priv = (recent_file_data_t *)data;
 
-		// FIXME
+		// invalid data? -- should not happen, but don't choke on it
+		if (priv->index < 0)
+		{
+			LogPrintf("WARNING: callback_Recent with dud data\n");
+			return;
+		}
+
+		static char filename[FL_PATH_MAX];
+
+		// this also should not happen...
+		if (! Recent_GetName(priv->group, priv->index, filename))
+		{
+			LogPrintf("WARNING: callback_Recent with bad index\n");
+			return;
+		}
+
+		UI_Manage_Config *that = priv->widget;
+		SYS_ASSERT(that);
+
+		if (! that->LoadFromFile(filename))
+		{
+			// unable to load that file, it has probably been deleted
+			// so remove it from the recent list
+			Recent_RemoveFile(priv->group, filename);
+			that->SetupRecent();
+		}
 	}
 
 	/* Saving and Using */
