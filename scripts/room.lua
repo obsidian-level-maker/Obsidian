@@ -1013,7 +1013,7 @@ function Room_border_up()
 
     if R1.is_outdoor and R2.kind == "cave" then
       if R2.is_outdoor and R2.cave_info.sky_mode != "high_wall" then
-        S.border[side].kind = "fence"
+        S.border[side].kind = "cave_wall" --?????
       else
         S.border[side].kind = "cave_wall"
         S.border[side].w_tex = R2.main_tex

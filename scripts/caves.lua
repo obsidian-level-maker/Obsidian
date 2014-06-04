@@ -2601,6 +2601,16 @@ end
 
 
 function Cave_outdoor_borders()
+  --
+  -- This adds sky fences where outdoor cave rooms touch the edge
+  -- of the map.  It also adds them for outdoor rooms where the
+  -- border pieces touch the edge of the map (which simplifies
+  -- the design of border pieces).
+  --
+  -- These sky fences sit outside of any room seeds.  Hence they
+  -- must occur at the real edge of the map -- otherwise the
+  -- contents of normal seeds would muck them up.
+  --
 
   local function need_sky_border(S, dir)
     -- really at edge of map?
