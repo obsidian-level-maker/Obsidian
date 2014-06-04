@@ -1,6 +1,6 @@
-----------------------------------------------------------------
+------------------------------------------------------------------------
 --  WAD PREFAB SYSTEM
-----------------------------------------------------------------
+------------------------------------------------------------------------
 --
 --  Oblige Level Maker
 --
@@ -16,7 +16,7 @@
 --  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 --  GNU General Public License for more details.
 --
-----------------------------------------------------------------
+------------------------------------------------------------------------
 
 
 GLOBAL_SKIN_DEFAULTS =
@@ -944,6 +944,25 @@ function Fab_load_wad(name)
   local rail_lines = {}
 
 
+  local function add_railing(line_idx, side, C, tex, floor_h)
+    if not rail_lines[line_idx] then
+      rail_lines[line_idx] =
+      {
+        poly_parts = {}
+        texs = {}
+        floors = {}
+      }
+    end
+
+    local info = rail_lines[line_idx]
+
+    info.texs[side]   = tex
+    info.floors[side] = floor_h
+
+    table.insert(info.poly_parts, { side=side, coord=C })
+  end
+
+
   local function decode_polygon_side(S, C, pass)
     -- pass is 1 for floor, 2 for ceiling
 
@@ -1046,7 +1065,8 @@ function Fab_load_wad(name)
 
     if pass == 1 and C.line and two_sided and mid_tex then
       -- we only remember the railing here (for later processing)
-      rail_lines[C.line] = true
+      assert(S)
+      add_railing(C.line, C.side, C, mid_tex, S.floor_h)
     end
 
     return C2
@@ -1060,7 +1080,7 @@ function Fab_load_wad(name)
     }
 
     each C in coords do
-      table.insert(B, decode_polygon_side(S, C, 1))
+      table.insert(B, decode_polygon_side(nil, C, 1))
     end
 
     -- add this new brush to the prefab
@@ -1142,10 +1162,48 @@ function Fab_load_wad(name)
   end
 
   
-  local function create_railing(line_idx)
+  local function grab_rail_info(C, line, where, prefix)
+    -- FIXME
+
+    local sd_num = sel(where == 0, line.right, line.left)
+    assert(sd_num)
+
+    local side = gui.wadfab_get_side(sd_num)
+
+    assert(side.mid_tex != "-")
+
+    C.rail = side.mid_tex
+  end
+
+
+  local function create_railing(line_idx, info)
     -- creates a "rail" brush for railings
     -- FIXME
 stderrf("process_railing for line #%d\n", line_idx)
+
+    local line = gui.wadfab_get_line(line_idx)
+
+    -- decide which side of line will get the 'rail' information
+    local side
+
+    if info.texs[0] and info.texs[1] then
+      if info.floors[0] <= info.floors[1] then
+        side = 0
+      else
+        side = 1
+      end
+    else if info.texs[0] then
+      side = 0
+    else
+      side = 1
+    end
+
+    each part in info.poly_parts do
+      if part.side == side then
+        grab_rail_info(part.coord, line, side, "")
+--!!!   grab_rail_info(part.coord, line, 1 - sd_num, "back_")
+      end
+    end
   end
 
 
@@ -1269,8 +1327,8 @@ stderrf("process_railing for line #%d\n", line_idx)
       create_brush(S, coords, 2)  -- ceil
     end
 
-    each line_idx,_ in rail_lines do
-      create_railing(line_idx)
+    each line_idx,info in rail_lines do
+      create_railing(line_idx, info)
     end
 
     gui.wadfab_free()
