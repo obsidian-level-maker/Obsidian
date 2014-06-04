@@ -1185,8 +1185,6 @@ function Fab_load_wad(name)
       return
     end
 
-stderrf("  side_idx : %d  (where:%s)\n", side_idx, where)
-
     C[prefix .. "rail"] = side.mid_tex
     C[prefix .. "u1"]   = side.x_offset
     C[prefix .. "v1"]   = side.y_offset
@@ -1194,8 +1192,6 @@ stderrf("  side_idx : %d  (where:%s)\n", side_idx, where)
 
 
   local function create_railing(line_idx, info)
-stderrf("process_railing %s line #%d\n", name, line_idx)
-
     local line = gui.wadfab_get_line(line_idx)
 
     -- decide which side of line will get the 'rail' information
@@ -1214,10 +1210,12 @@ stderrf("process_railing %s line #%d\n", name, line_idx)
       where = "right"
     end
 
+    local other = sel(where == "left", "right", "left")
+
     each part in info.poly_parts do
       if part.where == where then
         grab_rail_info(part.coord, line, where, "")
---!!!   grab_rail_info(part.coord, line, 1 - sd_num, "back_")
+        grab_rail_info(part.coord, line, other, "back_")
       end
     end
   end
@@ -1350,7 +1348,6 @@ stderrf("process_railing %s line #%d\n", name, line_idx)
     gui.wadfab_free()
 
     Fab_determine_bbox(fab)
-gui.debugf("fab =\n%s\n\n", table.tostr(fab, 4))
 
     return fab
   end
