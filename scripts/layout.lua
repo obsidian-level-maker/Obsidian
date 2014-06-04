@@ -159,13 +159,13 @@ function Layout_preprocess_patterns()
 
 
   local function process_elements(pat, grid)
-    pat.elem_kinds = {}
+    pat.elements = {}
 
     for x = 1, grid.w do
     for y = 1, grid.h do
       local kind = grid[x][y].kind
 
-      pat.elem_kinds[kind] = true
+      pat.elements[kind] = (pat.elements[kind] or 0) + 1
 
       if kind == "floor" then
         analyse_floor(pat, grid[x][y])
@@ -1644,7 +1644,7 @@ function Layout_pattern_in_area(R, area)
       return 0  -- too big or too small
     end
 
-    if pat.kind == "liquid" and not LEVEL.liquid then
+    if pat.elements["liquid"] and not LEVEL.liquid then
       return 0  -- liquids not available
     end
 
@@ -1674,7 +1674,7 @@ function Layout_pattern_in_area(R, area)
       end
 
       if not area.is_top then
-        return 0  -- cannot use 3d floors in sub-areas
+        return 0  -- cannot use 3D floors in sub-areas
       end
     end
 
@@ -1703,11 +1703,11 @@ function Layout_pattern_in_area(R, area)
     each name,pat in ROOM_PATTERNS do
       local prob = pattern_chance(pat)
 
-      if pat.kind == "solid" then
+      if pat.elements["solid"] then
         prob = prob * solid_factor
       end
 
-      if pat.kind == "liquid" then
+      if pat.elements["liquid"] then
         prob = prob * liquid_factor
       end
 
@@ -2976,7 +2976,7 @@ function Layout_room(R)
   local function assign_conns_to_floors()
     -- Pick which connections will enter/leave on the second floor.
     -- When there are 2 or more conns, we want at least one on each
-    -- 3d floor.  If only one connection, pick the upper floor since
+    -- 3D floor.  If only one connection, pick the upper floor since
     -- importants can only exist on the lower floor.
 
     local lower = 0

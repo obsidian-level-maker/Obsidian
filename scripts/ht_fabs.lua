@@ -49,7 +49,6 @@ ROOM_PATTERNS =
 SOLID_P1 =
 {
   prob = 130
-  kind = "solid"
   shape = "P"
 
   environment = "indoor"
@@ -71,7 +70,6 @@ SOLID_P1 =
 SOLID_P2 =
 {
   prob = 70
-  kind = "solid"
   shape = "P"
 
   environment = "indoor"
@@ -94,7 +92,6 @@ SOLID_P2 =
 SOLID_P3 =
 {
   prob = 50
-  kind = "solid"
   shape = "P"
 
   environment = "indoor"
@@ -139,7 +136,6 @@ SOLID_P5 =
 SOLID_C1 =
 {
   prob = 100
-  kind = "solid"
 
   environment = "indoor"
   solid_feature = true
@@ -160,7 +156,6 @@ SOLID_C1 =
 DIAG_C2 =
 {
   prob = 600
-  kind = "solid"
 
   environment = "indoor"
   symmetry = "xy"
@@ -182,7 +177,6 @@ DIAG_C2 =
 SOLID_C3 =
 {
   prob = 200
-  kind = "solid"
 
   environment = "indoor"
   solid_feature = true
@@ -203,7 +197,6 @@ SOLID_C3 =
 SOLID_T1 =
 {
   prob = 50
-  kind = "solid"
   shape = "T"
 
   environment = "indoor"
@@ -224,7 +217,6 @@ SOLID_T1 =
 DIAG_T1 =
 {
   prob = 80
-  kind = "solid"
   shape = "T"
 
   environment = "indoor"
@@ -244,7 +236,6 @@ DIAG_T1 =
 SOLID_OPP1 =
 {
   prob = 100
-  kind = "solid"
 
   environment = "indoor"
   solid_feature = true
@@ -264,7 +255,6 @@ SOLID_OPP1 =
 DIAG_OPP1 =
 {
   prob = 300
-  kind = "solid"
 
   environment = "indoor"
 
@@ -283,7 +273,6 @@ DIAG_OPP1 =
 SOLID_L1 =
 {
   prob = 2000
-  kind = "solid"
   shape = "L"
 
   environment = "indoor"
@@ -302,7 +291,6 @@ SOLID_L1 =
 DIAG_L1 =
 {
   prob = 600
-  kind = "solid"
   shape = "L"
 
   environment = "indoor"
@@ -323,7 +311,6 @@ DIAG_L1 =
 DIAG_L2 =
 {
   prob = 300
-  kind = "solid"
   shape = "L"
 
   environment = "indoor"
@@ -344,7 +331,6 @@ DIAG_L2 =
 DIAG_X_HMMM =
 {
   prob = 300
-  kind = "solid"
   shape = "X"
 
   environment = "indoor"
@@ -395,7 +381,6 @@ DIAG_HT_BIG =
 LIQUID_I =
 {
   prob = 50
-  kind = "liquid"
 
   symmetry = "xy"
 
@@ -413,7 +398,6 @@ LIQUID_I =
 LIQUID_L1 =
 {
   prob = 20
-  kind = "liquid"
   shape = "L"
 
   structure =
@@ -430,7 +414,6 @@ LIQUID_L1 =
 LIQUID_L2 =
 {
   prob = 190
-  kind = "liquid"
   shape = "L"
 
   structure =
@@ -447,7 +430,6 @@ LIQUID_L2 =
 LIQUID_L3 =
 {
   prob = 555
-  kind = "liquid"
   shape = "L"
 
   environment = "indoor"
@@ -482,7 +464,6 @@ LIQUID_L3_OUT =
 LIQUID_O1 =
 {
   prob = 90
-  kind = "liquid"
   shape = "O"
 
   symmetry = "xy"
@@ -502,7 +483,6 @@ LIQUID_O1 =
 LIQUID_O2 =
 {
   prob = 300
-  kind = "liquid"
   shape = "O"
 
   environment = "indoor"
@@ -544,7 +524,6 @@ LIQUID_O2_OUT =
 LIQUID_O4 =
 {
   prob = 500
-  kind = "liquid"
   shape = "O"
 
   symmetry = "xy"
@@ -578,7 +557,6 @@ LIQUID_O4 =
 LIQUID_U1 =
 {
   prob = 30
-  kind = "liquid"
   shape = "U"
 
   symmetry = "x"
@@ -597,7 +575,6 @@ LIQUID_U1 =
 LIQUID_U2 =
 {
   prob = 300
-  kind = "liquid"
   shape = "U"
 
   symmetry = "x"
@@ -616,7 +593,6 @@ LIQUID_U2 =
 LIQUID_U3 =
 {
   prob = 300
-  kind = "liquid"
   shape = "U"
 
   structure =
@@ -633,7 +609,6 @@ LIQUID_U3 =
 LIQUID_U4 =
 {
   prob = 200
-  kind = "liquid"
   shape = "U"
   environment = "indoor"
 
@@ -671,7 +646,6 @@ LIQUID_U4_OUT =
 LIQUID_E =
 {
   prob = 110
-  kind = "liquid"
   shape = "E"
 
   symmetry = "y"
@@ -692,7 +666,6 @@ LIQUID_E =
 
 LIQUID_E2 =
 {
-  kind = "liquid"
   shape = "E"
   prob = 200
 
@@ -717,7 +690,6 @@ LIQUID_E2 =
 LIQUID_E3 =
 {
   prob = 999
-  kind = "liquid"
   shape = "E"
 
   structure =
@@ -739,7 +711,6 @@ LIQUID_E3 =
 LIQUID_E4 =
 {
   prob = 999
-  kind = "liquid"
   shape = "E"
 
   structure =
@@ -759,7 +730,6 @@ LIQUID_E4 =
 LIQUID_S1 =
 {
   prob = 120
-  kind = "liquid"
   shape = "S"
 
   structure =
@@ -777,7 +747,6 @@ LIQUID_S1 =
 LIQUID_S2 =
 {
   prob = 200
-  kind = "liquid"
   shape = "S"
 
   structure =
@@ -799,7 +768,6 @@ LIQUID_S2 =
 LIQUID_BIG_S1 =
 {
   prob = 50
-  kind = "liquid"
   shape = "S"
 
   structure =
@@ -818,7 +786,6 @@ LIQUID_BIG_S1 =
 LIQUID_BIG_S3 =
 {
   prob = 999
-  kind = "liquid"
   shape = "S"
 
   structure =
@@ -842,7 +809,6 @@ LIQUID_BIG_S3 =
 LIQUID_BIG_S4 =
 {
   prob = 699
-  kind = "liquid"
   shape = "S"
 
   structure =
@@ -862,7 +828,6 @@ LIQUID_BIG_S4 =
 LIQUID_CROSS_1 =
 {
   prob = 300
-  kind = "liquid"
   shape = "X"
 
   symmetry = "xy"
@@ -882,7 +847,6 @@ LIQUID_CROSS_1 =
 LIQUID_CROSS_2 =
 {
   prob = 300
-  kind = "liquid"
   shape = "X"
 
   environment = "indoor"
@@ -939,7 +903,6 @@ LIQUID_CROSS_2_OUT =
 LIQUID_T1 =
 {
   prob = 250
-  kind = "liquid"
   shape = "T"
 
   symmetry = "x"
@@ -958,7 +921,6 @@ LIQUID_T1 =
 LIQUID_T_NICE =
 {
   prob = 591
-  kind = "liquid"
   shape = "T"
 
   symmetry = "x"
@@ -978,7 +940,6 @@ LIQUID_T_NICE =
 LIQUID_H1 =
 {
   prob = 221
-  kind = "liquid"
 
   symmetry = "xy"
 
@@ -997,7 +958,6 @@ LIQUID_H1 =
 LIQUID_H4 =
 {
   prob = 500
-  kind = "liquid"
 
   symmetry = "x"
 
@@ -1017,7 +977,6 @@ LIQUID_H4 =
 LIQUID_X1 =
 {
   prob = 200
-  kind = "liquid"
 
   symmetry = "xy"
 
@@ -1111,7 +1070,6 @@ HEIGHT_I3_OUT =
 HEIGHT_LIQ_I1 =
 {
   prob = 200
-  kind = "liquid"
 
   symmetry = "x"
 
@@ -1131,7 +1089,6 @@ HEIGHT_LIQ_I1 =
 HEIGHT_LIQ_I3 =
 {
   prob = 400
-  kind = "liquid"
 
   symmetry = "x"
 
@@ -1151,7 +1108,6 @@ HEIGHT_LIQ_I3 =
 HEIGHT_LIQ_O1 =
 {
   prob = 5000
-  kind = "liquid"
 
   structure =
   {
@@ -1171,7 +1127,6 @@ HEIGHT_LIQ_O1 =
 HEIGHT_LIQ_O2 =
 {
   prob = 500
-  kind = "liquid"
 
   symmetry = "x"
 
@@ -1193,7 +1148,6 @@ HEIGHT_LIQ_O2 =
 HEIGHT_LIQ_U2 =
 {
   prob = 2000
-  kind = "liquid"
 
   symmetry = "x"
 
@@ -1345,7 +1299,6 @@ HEIGHT_L2 =
 HEIGHT_CURV_1 =
 {
   prob = 999
-  kind = "solid"
   shape = "O"
 
   structure =
@@ -1363,7 +1316,6 @@ HEIGHT_CURV_1 =
 HEIGHT_CURV_2 =
 {
   prob = 5000   -- very rarely occurs
-  kind = "solid"
   shape = "O"
   level = "top"
 
@@ -1380,9 +1332,9 @@ HEIGHT_CURV_2 =
 }
 
 
------------------------
---  MULTIPLE FLOORS  --
------------------------
+-----------------
+--  3D FLOORS  --
+-----------------
 
 MULTI_I1 =
 {
@@ -1475,7 +1427,7 @@ MULTI_T1 =
   overlay =
   {
     "1  "
-    "1.."
+    "111"
     "1  "
   }
 
@@ -1491,7 +1443,6 @@ MULTI_T1 =
 SOLID_CSUB =
 {
   prob = 200
-  kind = "solid"
 
   recurse = "diff"
   sub_count = 1
@@ -1520,7 +1471,6 @@ SOLID_CSUB =
 SOLID_CSUB4 =
 {
   prob = 300
-  kind = "solid"
 
   recurse = "diff"
   sub_count = 1
@@ -1548,7 +1498,6 @@ SOLID_CSUB4 =
 REC_SOLID_C1 =
 {
   prob = 500
-  kind = "solid"
 
   recurse = "same"
   sub_count = 1
@@ -1577,7 +1526,6 @@ REC_SOLID_C1 =
 REC_SOLID_C2 =
 {
   prob = 900
-  kind = "solid"
 
   recurse = "same"
   sub_count = 1
@@ -1605,7 +1553,6 @@ REC_SOLID_C2 =
 REC_SOLID_C3 =
 {
   prob = 900
-  kind = "solid"
 
   recurse = "same"
   sub_count = 1
@@ -1633,7 +1580,6 @@ REC_SOLID_C3 =
 REC_SOLID_C4 =
 {
   prob = 900
-  kind = "solid"
 
   recurse = "same"
   sub_count = 1
@@ -1701,7 +1647,6 @@ REC_SOLID_HT_C4 =
 REC_DIAG_C1 =
 {
   prob = 900
-  kind = "solid"
 
   recurse = "same"
   sub_count = 1
@@ -1728,7 +1673,6 @@ REC_DIAG_C1 =
 REC_DIAG_C3 =
 {
   prob = 900
-  kind = "solid"
 
   recurse = "same"
   sub_count = 1
@@ -1755,7 +1699,6 @@ REC_DIAG_C3 =
 REC_DIAG_C4 =
 {
   prob = 900
-  kind = "solid"
 
   recurse = "same"
   sub_count = 1
@@ -1917,7 +1860,6 @@ RECURSE_I3_OUT =
 RECURSE_T_SOLID =
 {
   prob = 999
-  kind = "solid"
   shape = "T"
 
   recurse = "diff"
@@ -2538,7 +2480,6 @@ RECURSE_S2 =
 RECURSE_WOW_LIQUID_O2 =
 {
   prob = 900
-  kind = "liquid"
   shape = "O"
 
   recurse = "diff"
@@ -2567,7 +2508,6 @@ RECURSE_WOW_LIQUID_O2 =
 RECURSE_WOW_LIQUID_O4 =
 {
   prob = 600
-  kind = "liquid"
   shape = "O"
 
   recurse = "diff"
