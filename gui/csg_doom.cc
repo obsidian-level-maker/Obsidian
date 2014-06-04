@@ -1147,7 +1147,7 @@ static doom_sidedef_c * DM_MakeSidedef(
 	doom_linedef_c *L,
 	doom_sector_c *sec, doom_sector_c *back,
 	snag_c *snag, snag_c *other,
-	brush_vert_c *rail,
+	brush_vert_c *rail, int rail_side,
 	bool unpeg_L, bool unpeg_U)
 {
 	if (! sec)
@@ -1215,13 +1215,22 @@ static doom_sidedef_c * DM_MakeSidedef(
 		int r_ox = IVAL_NONE;
 		int l_ox = IVAL_NONE;
 		int l_oy = IVAL_NONE;
+
+		int r_oy = IVAL_NONE;
 		int u_ox = IVAL_NONE;
 		int u_oy = IVAL_NONE;
 
 		if (rail)
 		{
-			SD->mid = rail->face.getStr("rail", "-");
-			r_ox = rail->face.getInt("u1", r_ox);
+			const char *rail_tex = rail->face.getStr(rail_side ? "back_rail" : "rail", NULL);
+
+			if (rail_tex)
+			{
+				SD->mid = rail_tex;
+
+				r_ox = rail->face.getInt(rail_side ? "back_u1" : "u1", IVAL_NONE);
+				r_oy = rail->face.getInt(rail_side ? "back_v1" : "v1", IVAL_NONE);
+			}
 		}
 
 		if (lower)
@@ -1250,8 +1259,8 @@ static doom_sidedef_c * DM_MakeSidedef(
 		else if (u_ox != IVAL_NONE)
 			SD->x_offset = CalcXOffset(snag, upper, u_ox);
 
-		if (rail)
-			SD->y_offset = CalcYOffset_Rail(rail, sec, back);
+		if (r_oy != IVAL_NONE)
+			SD->y_offset = r_oy; //??? CalcYOffset_Rail(rail, sec, back);
 		else if (l_oy != IVAL_NONE)
 			SD->y_offset = CalcYOffset_Lower(lower, sec, back, l_oy, unpeg_L);
 		else if (u_oy != IVAL_NONE)
@@ -1362,10 +1371,11 @@ static csg_property_set_c * DM_FindSpecial(snag_c *S, region_c *R1, region_c *R2
 }
 
 
-static brush_vert_c * DM_FindRail(const snag_c *S, const region_c *R, const region_c *N)
+static brush_vert_c * DM_FindRail(const snag_c *S, const region_c *R, const region_c *N,
+                                  int *rail_side)
 {
 	// railings require a two-sided line
-	if (! R || ! N)
+	if (! R || ! N || ! S->partner)
 		return NULL;
 
 	if (R->gaps.size() == 0 || N->gaps.size() == 0)
@@ -1380,9 +1390,6 @@ static brush_vert_c * DM_FindRail(const snag_c *S, const region_c *R, const regi
 	{
 		const snag_c *test_S = (side == 0) ? S->partner : S;
 
-		if (! test_S)
-			continue;
-
 		for (unsigned int k = 0 ; k < test_S->sides.size() ; k++)
 		{
 			brush_vert_c *V = test_S->sides[k];
@@ -1390,10 +1397,10 @@ static brush_vert_c * DM_FindRail(const snag_c *S, const region_c *R, const regi
 			if (! (V->parent == B1 || V->parent == B2))
 				continue;
 
-			const char *tex = V->face.getStr("rail", "-");
-
-			if (tex[0] != '-')
+			if (V->face.getStr("rail", NULL) ||
+			    V->face.getStr("back_rail", NULL))
 			{
+				*rail_side = side;
 				return V;  // found it
 			}
 		}
@@ -1494,7 +1501,8 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 		back = dm_sectors[N->index];
 
 
-	brush_vert_c *rail = DM_FindRail(S, R, N);
+	int rail_side = 0;
+	brush_vert_c *rail = DM_FindRail(S, R, N, &rail_side);
 
 	csg_property_set_c *spec = DM_FindSpecial(S, R, N);
 	csg_property_set_c *trig = DM_FindTrigger(S, front, back);
@@ -1560,8 +1568,8 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 	bool unpeg_U = (L->flags & MLF_UpperUnpeg) != 0;
 
 
-	L->front = DM_MakeSidedef(L, front,  back, S->partner, S, rail, unpeg_L, unpeg_U);
-	L->back  = DM_MakeSidedef(L, back, front, S, S->partner, rail, unpeg_L, unpeg_U);
+	L->front = DM_MakeSidedef(L, front, back, S->partner, S, rail,   rail_side, unpeg_L, unpeg_U);
+	L->back  = DM_MakeSidedef(L, back, front, S, S->partner, rail, 1-rail_side, unpeg_L, unpeg_U);
 
 	SYS_ASSERT(L->front || L->back);
 
