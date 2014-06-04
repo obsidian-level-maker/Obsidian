@@ -735,9 +735,9 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) :
 
 
 	int conf_w = kf_w(420);
-	int conf_h = kf_h(288) + KF * 10;
+	int conf_h = H * 0.75;
 	int conf_x = W - conf_w - kf_w(10);
-	int conf_y = kf_h(30) + KF * 4;
+	int conf_y = kf_h(30);
 
 	conf_disp = new Fl_Text_Display_NoSelect(conf_x, conf_y, conf_w, conf_h, " Reading Config....");
 	conf_disp->align(Fl_Align(FL_ALIGN_TOP_LEFT));
@@ -782,7 +782,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) :
 		g->end();
 	}
 
-	close_but = new Fl_Button(button_x, H - kf_h(55), button_w, button_h + 5, "Close");
+	close_but = new Fl_Button(button_x, H - kf_h(50), button_w, button_h + 5, "Close");
 	close_but->labelfont(FL_HELVETICA_BOLD);
 	close_but->labelsize(FL_NORMAL_SIZE + 2);
 	close_but->callback(callback_Quit, this);
@@ -794,7 +794,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) :
 	{
 		int cx = conf_x + kf_w(40);
 
-		int base_y = H - kf_h(62) - KF * 5;
+		int base_y = conf_y + conf_h + 1;
 
 		Fl_Group *g = new Fl_Group(conf_x, base_y, conf_w, H - base_y);
 		g->resizable(NULL);
@@ -852,7 +852,7 @@ void DLG_ManageConfig(void)
 	if (! config_window)
 	{
 		int manage_w = kf_w(600);
-		int manage_h = kf_h(380) + KF * 20;
+		int manage_h = kf_h(380);
 
 		config_window = new UI_Manage_Config(manage_w, manage_h, "OBLIGE Config Manager");
 	}

@@ -301,7 +301,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 		color(BUILD_BG, BUILD_BG);
 
 
-	int y_step = 6 + KF * 2;
+	int y_step = kf_h(6);
 	int pad    = kf_w(6);
 
 	int cx = x() + kf_w(24);
@@ -401,7 +401,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 
 	//----------------
 
-	int dh = 60 + KF * 16;
+	int dh = kf_h(60);
 
 	Fl_Group *darkish = new Fl_Group(0, H - dh, W, dh);
 	darkish->end();
@@ -462,7 +462,7 @@ void DLG_OptionsEditor(void)
 	if (! option_window)
 	{
 		int opt_w = kf_w(350);
-		int opt_h = kf_h(370) + KF * 30;
+		int opt_h = kf_h(380);
 
 		option_window = new UI_OptionsWin(opt_w, opt_h, "OBLIGE Options");
 	}

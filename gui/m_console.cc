@@ -829,8 +829,8 @@ void UI_OpenConsole()
 
 	if (! console_win)
 	{
-		int con_w = 600 + KF * 200;
-		int con_h = 400 + KF * 100;
+		int con_w = kf_w(600);
+		int con_h = kf_h(400);
 
 		console_win = new UI_Console(0, 0, con_w, con_h, "OBLIGE DEBUG CONSOLE");
 	}
