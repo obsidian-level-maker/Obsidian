@@ -3864,7 +3864,7 @@ end
       if S.cage_dir then
         do_fat_cage(S, w_tex)
       else
-        Trans.old_quad(get_mat(w_tex), fx1,fy1, fx2,fy2, -EXTREME_H, EXTREME_H);
+        Trans.old_quad(get_mat(w_tex), S.x1,S.y1, S.x2,S.y2, -EXTREME_H, EXTREME_H);
       end
 
     elseif S.kind == "stair" then

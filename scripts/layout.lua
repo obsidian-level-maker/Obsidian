@@ -795,6 +795,10 @@ end
 function Layout_scenic(R)
   local min_floor = 1000
 
+  if not LEVEL.liquid then
+    R.main_tex = R.zone.facade_mat
+  end
+
   for x = R.sx1,R.sx2 do
   for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y]
@@ -3461,6 +3465,8 @@ function Layout_build_outdoor_borders()
     local x2 = SEEDS[B.sx2][B.sy2].x2
     local y2 = SEEDS[B.sx2][B.sy2].y2
 
+    local w_tex = B.room.facade or B.room.main_tex
+
     local skin0 = { wall=w_tex }
 
     local floor_h = assert(B.room.floor_max_h)
@@ -3487,7 +3493,7 @@ function Layout_build_outdoor_borders()
 
 
   local function nearby_facade(S)
-do return "CRACKLE2" end
+---  do return "CRACKLE2" end
 
     for pass = 1,2 do
 
