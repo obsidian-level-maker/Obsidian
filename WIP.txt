@@ -3,20 +3,6 @@ WORK IN PROGRESS
 ================
 
 
-KF to fix:
-  -  error dialog
-
-
-GUI : work on Config Manager
-
-  +  recent menu : actually make it work
-                   if file cannot be found, Recent_RemoveFile()
-
-  +  MarkSource properly
-
-
-About and Options : same hide/reshow logic as for Config Manager
-
 ???  last_file stuff?  Default_location??
 
 
@@ -26,11 +12,6 @@ About and Options : same hide/reshow logic as for Config Manager
 RAIL ISSUE : cannot control offsets on BACK SIDE of a brush vert
 
 --->  need rail brushes (perhaps two for a two-sided railing??)
-
-
-Non-working wad-fab textures:
-  CEMENT5 (logo)
-  FIRELAV2
 
 
 Extra floors

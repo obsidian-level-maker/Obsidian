@@ -7,8 +7,6 @@ BUG : no exclusion zone around teleporter
 
 BUG : secret sector being split (ceiling detail? lighting??)
 
-+  use Fl_Native_File_Chooser instead of ui_chooser stuff
-
 ______________________________________________________________________
 
   HIGH PRIORITY
@@ -40,7 +38,7 @@ ______________________________________________________________________
 
 -  Hexen support
 
-?  Duke Nukem 3D
+-  Duke Nukem 3D
 
 ?  HacX
 ?  Chex Quest 3
@@ -544,10 +542,6 @@ Name generator:
 +  ability to specify log file: --log option
 
 -  an option for more compact GUI (fit on 640x480 screen)
-
--  simplify ui_chooser logic --> use Fl_Native_File_Chooser
-
--  a tool to view / extract the OBLIGDAT lump in a wad
 
 Console:
   -  display lists better
