@@ -1702,6 +1702,8 @@ function Layout_pattern_in_area(R, area)
 
     local liquid_factor = style_sel("liquids", 0, 0.2, 1.0, 5.0)
 
+    local exfl_factor = style_sel("ex_floors", 0, 0.2, 1.0, 5.0)
+
     local tab = {}
 
     each name,pat in ROOM_PATTERNS do
@@ -1713,6 +1715,10 @@ function Layout_pattern_in_area(R, area)
 
       if pat.elements["liquid"] then
         prob = prob * liquid_factor
+      end
+
+      if pat._overlay then
+        prob = prob * exfl_factor
       end
 
       if pat.shape == STYLE.room_shape then
