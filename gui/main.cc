@@ -58,6 +58,7 @@ bool batch_mode = false;
 const char *batch_output_file = NULL;
 
 bool alternate_look = false;
+int  window_size = 0;  // Auto
 bool create_backups = true;
 bool debug_messages = false;
 bool fast_lighting = true;   // FIXME !!!! false
@@ -269,11 +270,32 @@ bool Main_BackupFile(const char *filename, const char *ext)
 }
 
 
+int Main_DetermineScaling()
+{
+	/* computation of the Kromulent factor */
+
+	// command-line overrides
+	if (ArgvFind(0, "tiny")   >= 0) return -1;
+	if (ArgvFind(0, "small")  >= 0) return 0;
+	if (ArgvFind(0, "medium") >= 0) return 1;
+	if (ArgvFind(0, "large")  >= 0) return 2;
+	if (ArgvFind(0, "huge")   >= 0) return 3;
+
+	// user option setting
+	if (window_size > 0)
+		return window_size - 2;
+
+	// automatic selection
+	if (screen_w >= 1600 && screen_h >= 720) return 2;
+	if (screen_w >= 1200 && screen_h >= 600) return 1;
+	if (screen_w <= 640  && screen_h <= 480) return -1;
+
+	return 0;
+}
+
+
 void Main_SetupFLTK()
 {
-	bool hires_adapt = true;  // TODO : make it an option
-	                          //   OR : a choice: tiny/smaller/normal/larger/huge
-
 	Fl::visual(FL_RGB);
 
 	if (! alternate_look)
@@ -292,23 +314,7 @@ void Main_SetupFLTK()
 	fprintf(stderr, "Screen dimensions = %dx%d\n", screen_w, screen_h);
 #endif
 
-	// determine the Kromulent factor
-	KF = 0;
-
-	if (hires_adapt)
-	{
-		if (screen_w >= 1600 && screen_h >= 720)
-			KF = 2;
-		else if (screen_w >= 1200 && screen_h >= 600)
-			KF = 1;
-	}
-
-	if (ArgvFind(0, "big") >= 0)
-		KF = 2;
-	else if (ArgvFind(0, "medium") >= 0)
-		KF = 1;
-	else if (ArgvFind(0, "small") >= 0)
-		KF = 0;
+	KF = Main_DetermineScaling();
 
 	// default font size for widgets
 	FL_NORMAL_SIZE = 14 + KF * 4;
@@ -317,6 +323,14 @@ void Main_SetupFLTK()
 	header_font_size = 16 + KF * 6;
 
 	fl_message_font(FL_HELVETICA, 16 + KF * 4);
+
+	if (KF < 0)
+	{
+		FL_NORMAL_SIZE = 12;
+		small_font_size = 10;
+		header_font_size = 15;
+		fl_message_font(FL_HELVETICA, 12);
+	}
 
 	// load icons for file chooser
 #ifndef WIN32

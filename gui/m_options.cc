@@ -37,7 +37,16 @@ static void Parse_Option(const char *name, const char *value)
 		return;
 	}
 
-	if (StringCaseCmp(name, "create_backups") == 0)
+	if (StringCaseCmp(name, "alternate_look") == 0)
+	{
+		alternate_look = atoi(value) ? true : false;
+	}
+	else if (StringCaseCmp(name, "window_size") == 0)
+	{
+		window_size = atoi(value);
+		window_size = CLAMP(0, window_size, 5);
+	}
+	else if (StringCaseCmp(name, "create_backups") == 0)
 	{
 		create_backups = atoi(value) ? true : false;
 	}
@@ -48,10 +57,6 @@ static void Parse_Option(const char *name, const char *value)
 	else if (StringCaseCmp(name, "fast_lighting") == 0)
 	{
 		fast_lighting = atoi(value) ? true : false;
-	}
-	else if (StringCaseCmp(name, "alternate_look") == 0)
-	{
-		alternate_look = atoi(value) ? true : false;
 	}
 	else if (StringCaseCmp(name, "last_file") == 0)
 	{
@@ -176,10 +181,11 @@ bool Options_Save(const char *filename)
 	fprintf(option_fp, "-- " OBLIGE_TITLE " (C) 2006-2014 Andrew Apted\n");
 	fprintf(option_fp, "-- http://oblige.sourceforge.net/\n\n");
 
+	fprintf(option_fp, "alternate_look = %d\n", alternate_look ? 1 : 0);
+	fprintf(option_fp, "window_size    = %d\n", window_size);
 	fprintf(option_fp, "create_backups = %d\n", create_backups ? 1 : 0);
 	fprintf(option_fp, "debug_messages = %d\n", debug_messages ? 1 : 0);
-	fprintf(option_fp, "alternate_look = %d\n", alternate_look ? 1 : 0);
-	fprintf(option_fp, "fast_lighting = %d\n",  fast_lighting ? 1 : 0);
+	fprintf(option_fp, "fast_lighting  = %d\n",  fast_lighting ? 1 : 0);
 
 //???	fprintf(option_fp, "last_file = %s\n", UI_GetLastFile());
 	fprintf(option_fp, "\n");
@@ -204,8 +210,11 @@ public:
 
 private:
 	Fl_Check_Button *opt_alt_look;
+	Fl_Choice       *opt_win_size;
+
 	Fl_Check_Button *opt_backups;
 	Fl_Check_Button *opt_debug;
+
 	Fl_Check_Button *opt_lighting;
 
 public:
@@ -238,6 +247,13 @@ private:
 		UI_OptionsWin *that = (UI_OptionsWin *)data;
 
 		alternate_look = that->opt_alt_look->value() ? true : false;
+	}
+
+	static void callback_WinSize(Fl_Widget *w, void *data)
+	{
+		UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+		window_size = that->opt_win_size->value();
 	}
 
 	static void callback_Backups(Fl_Widget *w, void *data)
@@ -302,10 +318,21 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 
 	add(heading);
 
-	cy += heading->h() + y_step;
+	cy += heading->h();
 
 
-	opt_alt_look = new Fl_Check_Button(cx, cy, W-cx-pad, kf_h(24), " Alternate Look (requires a restart)");
+	opt_win_size = new Fl_Choice(145 + KF * 40, cy, kf_w(120), kf_h(24), "Window Size: ");
+	opt_win_size->align(FL_ALIGN_LEFT);
+	opt_win_size->add("Auto|Tiny|Small|Medium|Large|Huge");
+	opt_win_size->callback(callback_WinSize, this);
+	opt_win_size->value(window_size);
+
+	add(opt_win_size);
+
+	cy += opt_win_size->h() + y_step;
+
+
+	opt_alt_look = new Fl_Check_Button(cx, cy, W-cx-pad, kf_h(24), " Alternate Look");
 	opt_alt_look->value(alternate_look ? 1 : 0);
 	opt_alt_look->callback(callback_AltLook, this);
 
@@ -394,6 +421,12 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	Fl_Button *button = new Fl_Button(bx, by, bw, bh, "Close");
 	button->callback(callback_Quit, this);
 	darkish->add(button);
+
+
+	heading = new Fl_Box(FL_NO_BOX, x()+pad, H - dh - kf_h(30), W-pad*2, kf_h(14), "Note: some options require a restart.");
+	heading->align(FL_ALIGN_INSIDE);
+	heading->labelsize(small_font_size);
+	add(heading);
 }
 
 
