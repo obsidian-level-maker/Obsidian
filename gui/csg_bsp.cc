@@ -39,6 +39,7 @@ static bool csg_is_clip_hull;
 
 static double mini_centre_x;
 static double mini_centre_y;
+static  float mini_scale;
 
 static std::vector<region_c*> dead_regions;
 
@@ -2130,8 +2131,6 @@ void CSG_BSP_Free()
 
 //------------------------------------------------------------------------
 
-static int MINI_MAP_SCALE;
-
 
 static void AddMiniMapLine(region_c *R, snag_c *S)
 {
@@ -2140,11 +2139,11 @@ static void AddMiniMapLine(region_c *R, snag_c *S)
 
 	// the map centre is computed within CSG_BSP()
 
-	int x1 = map_W/2 + I_ROUND(S->x1 - mini_centre_x) / MINI_MAP_SCALE;
-	int y1 = map_H/2 + I_ROUND(S->y1 - mini_centre_y) / MINI_MAP_SCALE;
+	int x1 = map_W/2 + (S->x1 - mini_centre_x) * mini_scale;
+	int y1 = map_H/2 + (S->y1 - mini_centre_y) * mini_scale;
 
-	int x2 = map_W/2 + I_ROUND(S->x2 - mini_centre_x) / MINI_MAP_SCALE;
-	int y2 = map_H/2 + I_ROUND(S->y2 - mini_centre_y) / MINI_MAP_SCALE;
+	int x2 = map_W/2 + (S->x2 - mini_centre_x) * mini_scale;
+	int y2 = map_H/2 + (S->y2 - mini_centre_y) * mini_scale;
 
 	u8_t r = 255;
 	u8_t g = 255;
@@ -2181,7 +2180,7 @@ void CSG_MakeMiniMap(void)
 	if (! main_win)
 		return;
 
-	MINI_MAP_SCALE = 64 - KF * 10;
+	mini_scale = kf_w(100) / 6400.0;
 
 	main_win->build_box->mini_map->MapBegin();
 
