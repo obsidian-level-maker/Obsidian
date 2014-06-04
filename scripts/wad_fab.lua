@@ -944,22 +944,32 @@ function Fab_load_wad(name)
   local rail_lines = {}
 
 
-  local function add_railing(line_idx, side, C, tex, floor_h)
+  local function add_railing(line_idx, line, side_idx, C, floor_h)
     if not rail_lines[line_idx] then
       rail_lines[line_idx] =
       {
         poly_parts = {}
-        texs = {}
         floors = {}
       }
     end
 
     local info = rail_lines[line_idx]
 
-    info.texs[side]   = tex
-    info.floors[side] = floor_h
+    -- check if we are on the right (front) or left (back) of linedef
+    local where
 
-    table.insert(info.poly_parts, { side=side, coord=C })
+    if side_idx == line.right then
+      where = "right"
+    elseif side_idx == line.left then
+      where = "left"
+    else
+      -- TODO : relax this
+      error("weird polygonation result (sidedef not found)")
+    end
+
+    info.floors[where] = floor_h
+
+    table.insert(info.poly_parts, { where=where, coord=C })
   end
 
 
@@ -1066,7 +1076,7 @@ function Fab_load_wad(name)
     if pass == 1 and C.line and two_sided and mid_tex then
       -- we only remember the railing here (for later processing)
       assert(S)
-      add_railing(C.line, C.side, C, mid_tex, S.floor_h)
+      add_railing(C.line, line, C.side, C2, S.floor_h)
     end
 
     return C2
@@ -1163,44 +1173,50 @@ function Fab_load_wad(name)
 
   
   local function grab_rail_info(C, line, where, prefix)
-    -- FIXME
+    local side_idx = sel(where == "left", line.left, line.right)
+    -- railings can only occur on two-sided lines
+    assert(side_idx)
 
-    local sd_num = sel(where == 0, line.right, line.left)
-    assert(sd_num)
+    local side = gui.wadfab_get_side(side_idx)
+    assert(side)
 
-    local side = gui.wadfab_get_side(sd_num)
+    if side.mid_tex == "-" then
+      -- the railing might only occur on a single side
+      return
+    end
 
-    assert(side.mid_tex != "-")
+stderrf("  side_idx : %d  (where:%s)\n", side_idx, where)
 
-    C.rail = side.mid_tex
+    C[prefix .. "rail"] = side.mid_tex
+    C[prefix .. "u1"]   = side.x_offset
+    C[prefix .. "v1"]   = side.y_offset
   end
 
 
   local function create_railing(line_idx, info)
-    -- creates a "rail" brush for railings
-    -- FIXME
-stderrf("process_railing for line #%d\n", line_idx)
+stderrf("process_railing %s line #%d\n", name, line_idx)
 
     local line = gui.wadfab_get_line(line_idx)
 
     -- decide which side of line will get the 'rail' information
-    local side
+    local where
 
-    if info.texs[0] and info.texs[1] then
-      if info.floors[0] <= info.floors[1] then
-        side = 0
+    if info.floors["left"] and info.floors["right"] then
+      if info.floors["left"] > info.floors["right"] then
+        where = "left"
       else
-        side = 1
+        where = "right"
       end
-    else if info.texs[0] then
-      side = 0
+    elseif info.floors["left"] then
+      where = "left"
     else
-      side = 1
+      assert(info.floors["right"])
+      where = "right"
     end
 
     each part in info.poly_parts do
-      if part.side == side then
-        grab_rail_info(part.coord, line, side, "")
+      if part.where == where then
+        grab_rail_info(part.coord, line, where, "")
 --!!!   grab_rail_info(part.coord, line, 1 - sd_num, "back_")
       end
     end
@@ -1334,6 +1350,7 @@ stderrf("process_railing for line #%d\n", line_idx)
     gui.wadfab_free()
 
     Fab_determine_bbox(fab)
+gui.debugf("fab =\n%s\n\n", table.tostr(fab, 4))
 
     return fab
   end
