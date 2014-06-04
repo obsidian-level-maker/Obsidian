@@ -34,8 +34,8 @@
 #endif
 
 
-#define MIN_WINDOW_W  732
-#define MIN_WINDOW_H  432
+#define BASE_WINDOW_W  732
+#define BASE_WINDOW_H  432
 
 
 UI_MainWin *main_win;
@@ -67,11 +67,11 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
 	color(WINDOW_BG, WINDOW_BG);
 
-	int PANEL_W = 212 + KF * 64;
-	int TOP_H   = 180 + KF * 32;
+	int MOD_W   = W * 2 / 5;
+	int TOP_H   = H * 2 / 5;
 
-	int BOT_H  = H - TOP_H - 4;
-	int MOD_W  = W - PANEL_W*2 - 8;
+	int PANEL_W = (W - MOD_W) / 2 - 4;
+	int BOT_H   = H - TOP_H - 4;
 
 	game_box = new UI_Game(0, 0, PANEL_W, TOP_H);
 	add(game_box);
@@ -104,8 +104,10 @@ UI_MainWin::~UI_MainWin()
 
 void UI_MainWin::CalcWindowSize(int *W, int *H)
 {
-	*W = MIN_WINDOW_W + KF * 200;
-	*H = MIN_WINDOW_H + KF * 100;
+	*W = kf_w(BASE_WINDOW_W);
+	*H = kf_h(BASE_WINDOW_H);
+
+	if (KF < 0) *W -= 20;
 }
 
 

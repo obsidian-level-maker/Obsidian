@@ -91,7 +91,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
 	add(build);
 
-	cy += build->h() + kf_h(16);
+	cy += button_h + kf_h(16);
 
 
 	quit = new Fl_Button(button_x, cy, button_w, button_h, "Quit");

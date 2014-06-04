@@ -120,7 +120,7 @@ UI_About::UI_About(int W, int H, const char *label) :
 	callback(callback_Quit, this);
 
 
-	int cy = 6 + KF * 4;
+	int cy = kf_h(6);
 
 	// nice big logo text
 	const char *logo_text = OBLIGE_TITLE " " OBLIGE_VERSION;
@@ -131,13 +131,13 @@ UI_About::UI_About(int W, int H, const char *label) :
 	box->labelsize(FL_NORMAL_SIZE * 5 / 3);
 	add(box);
 
-	cy += box->h() + kf_h(4) + KF * 4;
+	cy += box->h() + kf_h(6);
 
 
 	// the very informative text
 	int pad = kf_w(22);
 
-	int text_h = kf_h(210) + KF * 32;
+	int text_h = H * 0.55;
 
 	box = new Fl_Box(pad, cy, W-pad-pad, text_h, Text);
 	box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
@@ -191,7 +191,7 @@ void DLG_AboutText(void)
 	if (! about_window)
 	{
 		int about_w = kf_w(400);
-		int about_h = kf_h(380) + KF * 50;
+		int about_h = kf_h(400) + KF * 20;
 
 		about_window = new UI_About(about_w, about_h, "About OBLIGE");
 	}

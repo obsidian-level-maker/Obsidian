@@ -28,10 +28,10 @@
 
 
 // support for scaling up the GUI
-extern int KF;  // Kromulent Factor : 0 .. 2
+extern int KF;  // Kromulent Factor : -1 .. 3
 
-#define kf_w(w)  ((w) + KF * (w) / 4)
-#define kf_h(h)  ((h) + KF * (h) / 6)
+#define kf_w(w)  ((w) + KF * (w) / (KF >= 0 ? 4 : 8))
+#define kf_h(h)  ((h) + KF * (h) / (KF >= 0 ? 5 : 10))
 
 extern int  small_font_size;
 extern int header_font_size;
