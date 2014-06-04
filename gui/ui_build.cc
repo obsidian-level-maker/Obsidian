@@ -36,8 +36,8 @@
 #define NODE_PROGRESS_FG  fl_color_cube(1,4,2)
 
 
-UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
-	Fl_Group(x, y, w, h, label)
+UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
+	Fl_Group(X, Y, W, H, label)
 {
 	end(); // cancel begin() in Fl_Group constructor
 
@@ -51,16 +51,16 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 	status_label[0] = 0;
 
 
-	int cy = y + kf_h(18);
+	int cy = Y + kf_h(18);
 
 
-	int button_w = kf_w(74);
+	int button_w = W * 0.35;
 	int button_h = kf_h(30);
-	int button_x = x + kf_w(12);
+	int button_x = X + kf_w(12);
 
 
-	int mini_w = kf_w(100);
-	int mini_h = kf_h(100);
+	int mini_w = W * 0.45;
+	int mini_h = mini_w;
 	int mini_x = button_x + button_w + kf_w(12);
 
 	mini_map = new UI_MiniMap(mini_x, cy + kf_h(14), mini_w, mini_h);
@@ -80,7 +80,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 	add(misc_menu);
 
 
-	cy += button_h + kf_h(16);
+	cy += misc_menu->h() + kf_h(17);
 
 
 	build = new Fl_Button(button_x, cy, button_w, button_h + 4, "Build");
@@ -91,7 +91,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
 	add(build);
 
-	cy += button_h + kf_h(16);
+	cy += build->h() + kf_h(17);
 
 
 	quit = new Fl_Button(button_x, cy, button_w, button_h, "Quit");
@@ -103,10 +103,12 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
 	/* --- Status Area --- */
 
-	cy = y + h - kf_h(90);
+	cy = Y + H - kf_h(90);
 
 
-	status = new Fl_Box(FL_FLAT_BOX, x + kf_w(14), cy, w - kf_w(28), kf_h(26), "Ready to go!");
+	int pad = kf_w(14);
+
+	status = new Fl_Box(FL_FLAT_BOX, X + pad, cy, W - pad*2, kf_h(26), "Ready to go!");
 	status->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
 
 	if (! alternate_look)
@@ -117,7 +119,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 	cy += status->h() + kf_h(14);
 
 
-	progress = new Fl_Progress(x + kf_w(14), cy, w - kf_w(28), kf_h(26));
+	progress = new Fl_Progress(X + pad, cy, W - pad*2, kf_h(26));
 	progress->align(FL_ALIGN_INSIDE);
 	progress->box(FL_FLAT_BOX);
 	progress->color(alternate_look ? INACTIVE_BG2 : INACTIVE_BG, FL_BLACK);
