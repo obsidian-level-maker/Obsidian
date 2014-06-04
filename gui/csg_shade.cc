@@ -724,7 +724,7 @@ void CSG_Shade()
 
 	stat_targets = stat_sources = 0;
 
-	if (fast_lighting || ArgvFind(0, "fastlight") >= 0)
+	if (fast_lighting || ArgvFind(0, "fastlight") >= 0 || true) //!!!!!!
 	{
 		LogPrintf("BLAND LIGHTING MODE!\n");
 		bland_mode = true;
