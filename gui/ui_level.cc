@@ -34,8 +34,8 @@
 //
 // Constructor
 //
-UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
-    Fl_Group(x, y, w, h, label)
+UI_Level::UI_Level(int X, int Y, int W, int H, const char *label) :
+    Fl_Group(X, Y, W, H, label)
 {
 	end(); // cancel begin() in Fl_Group constructor
 
@@ -45,14 +45,14 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 		color(BUILD_BG, BUILD_BG);
 
 
-	int y_step = 6 + KF * 2;
+	int y_step = kf_h(6) + KF;
 
-	int cx = x + kf_w(90) + KF * 4;
-	int cy = y + y_step;
+	int cx = X + W * 0.42;
+	int cy = Y + y_step;
 
 	const char *heading_text = "Level Architecture";
 
-	Fl_Box *heading = new Fl_Box(FL_NO_BOX, x + kf_w(6), cy, w - kf_w(12), kf_h(24), heading_text);
+	Fl_Box *heading = new Fl_Box(FL_NO_BOX, X + kf_w(6), cy, W - kf_w(12), kf_h(24), heading_text);
 	heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 	heading->labeltype(FL_NORMAL_LABEL);
 	heading->labelfont(FL_HELVETICA_BOLD);
@@ -63,7 +63,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 	cy += heading->h() + y_step;
 
 
-	int cw = kf_w(114);
+	int cw = W * 0.54;
 	int ch = kf_h(24);
 
 	size = new UI_RChoice(cx, cy, cw, ch, "Size: ");
@@ -85,9 +85,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 
 	add(theme);
 
-	cy += theme->h() + y_step;
-
-	cy += y_step + y_step/2;
+	cy += theme->h() + y_step * 2;
 
 
 	outdoors = new UI_RChoice(cx, cy, cw, ch, "Outdoors: ");
