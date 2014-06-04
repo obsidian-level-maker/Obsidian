@@ -10,14 +10,14 @@ CHANGELOG
 
 + new 'Config Manager' window 
 
++ better window scaling, new 'Window Size' option
+
 ! removed the 'Seed' setting
 ! removed the 'Hide Modules' option
 
 - store options separately from normal settings
 
 >>> new GUI option: 'Bland Lighting Mode'
-
->>> better adapting to high-resolution screens
 
 
 + generate DOOM 1 episode name graphics
