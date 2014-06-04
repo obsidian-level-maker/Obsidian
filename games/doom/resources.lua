@@ -127,6 +127,7 @@ function DOOM1.all_done()
   DOOM.make_episode_gfx()
 
   gui.wad_merge_sections("doom_falls.wad");
+  gui.wad_merge_sections("metal_step.wad");
   gui.wad_merge_sections("short_bars.wad");
 end
 
@@ -135,6 +136,7 @@ function DOOM2.all_done()
   DOOM.make_cool_gfx()
 
   gui.wad_merge_sections("doom_falls.wad");
+  gui.wad_merge_sections("metal_step.wad");
   gui.wad_merge_sections("vine_dude.wad");
 
   if OB_CONFIG.length == "game" then
