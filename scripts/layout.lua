@@ -34,10 +34,11 @@ function Layout_parse_char(ch)
   if ch == '#' then return { kind="solid"  } end
 
   -- these can be curved, and 'dir' is towards the more open space
-  if ch == '/' then return { kind="diagonal", dir=3 } end
-  if ch == '%' then return { kind="diagonal", dir=1 } end
-  if ch == 'N' then return { kind="diagonal", dir=9 } end
-  if ch == 'Z' then return { kind="diagonal", dir=7 } end
+-- FIXME !!!!!
+  if ch == '/' then return { kind="solid", dir=3 } end
+  if ch == '%' then return { kind="solid", dir=1 } end
+  if ch == 'N' then return { kind="solid", dir=9 } end
+  if ch == 'Z' then return { kind="solid", dir=7 } end
 
   if ch == '<' then return { kind="stair", dir=4 } end
   if ch == '>' then return { kind="stair", dir=6 } end
