@@ -1160,6 +1160,7 @@ function Fab_load_wad(name)
       -- automatically convert to a sky brush
       if string.match(S.ceil_tex, "^F_SKY") then
         B[1].m = "sky"
+        C.tex  = "_SKY"
       end
     end
 

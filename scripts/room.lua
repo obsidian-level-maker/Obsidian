@@ -3524,7 +3524,6 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
     local x2 = S.x2 - (indents[6] or 0)
     local y2 = S.y2 - (indents[8] or 0)
 
-stderrf("do_extra_floor\n")
     Trans.quad(x1,y1, x2,y2, z-24,z, kind, w_face, t_face)
   end
 
