@@ -757,22 +757,20 @@ function Layout_set_floor_minmax(R)
     if S.room == R and S.kind == "walk" then
       assert(S.floor_h)
 
-      min_h = math.min(min_h, S.floor_h)
-      max_h = math.max(max_h, S.floor_h)
+      S.floor_max_h = S.floor_h
 
       if S.chunk and S.chunk.overlay then
         local K2 = S.chunk.overlay
 
         if K2.floor then
-          max_h = math.max(max_h, K2.floor.floor_h)
+          S.floor_max_h = K2.floor.floor_h
         end
       end
+
+      min_h = math.min(min_h, S.floor_h)
+      max_h = math.max(max_h, S.floor_max_h)
     end
   end -- x, y
-  end
-
-  if R.has_3d_floor then
-    max_h = max_h + 160
   end
 
   assert(min_h <= max_h)

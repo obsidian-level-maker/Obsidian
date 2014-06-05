@@ -1910,7 +1910,7 @@ function Room_make_ceiling(R)
 
         local f_h
         if S.kind == "walk" then
-          f_h = S.floor_h
+          f_h = S.floor_max_h or S.floor_h
         elseif S.diag_new_kind == "walk" then
           f_h = S.diag_new_z or S.floor_h
         elseif S.kind == "stair" or S.kind == "lift" then
