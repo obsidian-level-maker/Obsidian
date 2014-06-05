@@ -42,34 +42,34 @@ quake_subformat_e;
 class qLump_c
 {
 private:
-  std::vector<u8_t> buffer;
+	std::vector<u8_t> buffer;
 
-  std::string name;
+	std::string name;
 
-  // when true Printf() converts '\n' to CR/LF pair
-  bool crlf;
+	// when true Printf() converts '\n' to CR/LF pair
+	bool crlf;
 
 public:
-   qLump_c();
-  ~qLump_c();
+	qLump_c();
+	~qLump_c();
 
-  void Append(const void *data, u32_t len);
-  void Append(qLump_c *other);
+	void Append(const void *data, u32_t len);
+	void Append(qLump_c *other);
 
-  void Prepend(const void *data, u32_t len);
+	void Prepend(const void *data, u32_t len);
 
-  void Printf (const char *str, ...);
-  void KeyPair(const char *key, const char *val, ...);
-  void SetCRLF(bool enable);
+	void Printf (const char *str, ...);
+	void KeyPair(const char *key, const char *val, ...);
+	void SetCRLF(bool enable);
 
-  int GetSize() const;
-  const u8_t *GetBuffer() const;
+	int GetSize() const;
+	const u8_t *GetBuffer() const;
 
-  void SetName(const char *_name);
-  const char *GetName() const;
+	void SetName(const char *_name);
+	const char *GetName() const;
 
 private:
-  void RawPrintf(const char *str);
+	void RawPrintf(const char *str);
 };
 
 
@@ -127,31 +127,31 @@ void QCOM_Fix_T_Junctions();
 
 typedef struct
 {
-  u32_t start;
-  u32_t length;
+	u32_t start;
+	u32_t length;
 
 } PACKEDATTR lump_t;
 
 typedef struct
 {
-  s32_t version;
-  lump_t lumps[Q1_HEADER_LUMPS];
+	s32_t version;
+	lump_t lumps[Q1_HEADER_LUMPS];
 
 } PACKEDATTR dheader_t;
 
 typedef struct
 {
-  char   ident[4];
-  s32_t  version;  
+	char   ident[4];
+	s32_t  version;  
 
-  lump_t lumps[Q2_HEADER_LUMPS];
+	lump_t lumps[Q2_HEADER_LUMPS];
 
 } PACKEDATTR dheader2_t;
 
 
 typedef struct
 {
-  float x, y, z;
+	float x, y, z;
 
 } PACKEDATTR dvertex_t;
 
@@ -159,15 +159,15 @@ typedef struct
 // counterclockwise use of the edge in a face
 typedef struct
 {
-  u16_t v[2]; // vertex numbers
+	u16_t v[2]; // vertex numbers
 
 } PACKEDATTR dedge_t;
 
 typedef struct
 {
-  float normal[3];
-  float dist;
-  s32_t type; // PLANE_X - PLANE_ANYZ 
+	float normal[3];
+	float dist;
+	s32_t type; // PLANE_X - PLANE_ANYZ 
 
 } PACKEDATTR dplane_t;
 
@@ -186,17 +186,17 @@ typedef struct
 
 typedef struct
 {
-  s16_t planenum;
-  s16_t side;
+	s16_t planenum;
+	s16_t side;
 
-  s32_t firstedge;    // we must support > 64k edges
-  s16_t numedges;
-  s16_t texinfo;
+	s32_t firstedge;    // we must support > 64k edges
+	s16_t numedges;
+	s16_t texinfo;
 
-  // lighting info
-  u8_t  styles[NUM_STYLES];
+	// lighting info
+	u8_t  styles[NUM_STYLES];
 
-  s32_t lightofs;   // start of [numstyles*surfsize] samples
+	s32_t lightofs;   // start of [numstyles*surfsize] samples
 
 } PACKEDATTR dface_t;
 
@@ -204,4 +204,4 @@ typedef struct
 #endif /* __OBLIGE_BSPOUT_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

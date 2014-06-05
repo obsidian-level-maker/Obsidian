@@ -42,4 +42,4 @@ extern const logo_image_t font_CWILV;
 #endif /* __OBLIGE_LOGOS_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

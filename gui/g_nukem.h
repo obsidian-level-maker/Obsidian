@@ -44,14 +44,14 @@ int NK_NumSprites();
 
 typedef struct
 {
-  u32_t version;
+	u32_t version;
 
-  s32_t pos_x;
-  s32_t pos_y;
-  s32_t pos_z;
+	s32_t pos_x;
+	s32_t pos_y;
+	s32_t pos_z;
 
-  u16_t angle;
-  u16_t sector;
+	u16_t angle;
+	u16_t sector;
 
 } PACKEDATTR raw_nukem_map_t;
 
@@ -60,37 +60,37 @@ typedef struct
 
 typedef struct
 {
-  u16_t wall_ptr;
-  u16_t wall_num;
+	u16_t wall_ptr;
+	u16_t wall_num;
 
-  s32_t ceil_h;
-  s32_t floor_h;
+	s32_t ceil_h;
+	s32_t floor_h;
 
-  u16_t ceil_flags;
-  u16_t floor_flags;
+	u16_t ceil_flags;
+	u16_t floor_flags;
 
-  u16_t ceil_pic;
-  s16_t ceil_slope;
+	u16_t ceil_pic;
+	s16_t ceil_slope;
 
-  s8_t ceil_shade;
-  u8_t ceil_palette;
-  u8_t ceil_xpan;
-  u8_t ceil_ypan;
+	s8_t ceil_shade;
+	u8_t ceil_palette;
+	u8_t ceil_xpan;
+	u8_t ceil_ypan;
 
-  u16_t floor_pic;
-  s16_t floor_slope;
+	u16_t floor_pic;
+	s16_t floor_slope;
 
-  s8_t floor_shade;
-  u8_t floor_palette;
-  u8_t floor_xpan;
-  u8_t floor_ypan;
+	s8_t floor_shade;
+	u8_t floor_palette;
+	u8_t floor_xpan;
+	u8_t floor_ypan;
 
-  u8_t visibility;
-  u8_t _pad;
+	u8_t visibility;
+	u8_t _pad;
 
-  u16_t lo_tag;
-  u16_t hi_tag;
-  u16_t extra;
+	u16_t lo_tag;
+	u16_t hi_tag;
+	u16_t extra;
 
 } PACKEDATTR raw_nukem_sector_t;
 
@@ -106,25 +106,25 @@ typedef struct
 
 typedef struct
 {
-  s32_t x, y;
+	s32_t x, y;
 
-  u16_t right_wall;
-  u16_t back_wall;
-  u16_t back_sec;
+	u16_t right_wall;
+	u16_t back_wall;
+	u16_t back_sec;
 
-  u16_t flags;
+	u16_t flags;
 
-  u16_t pic;
-  u16_t mask_pic;
+	u16_t pic;
+	u16_t mask_pic;
 
-  s8_t shade;
-  u8_t palette;
+	s8_t shade;
+	u8_t palette;
 
-  u8_t xscale, yscale;
-  u8_t xpan,   ypan;
+	u8_t xscale, yscale;
+	u8_t xpan,   ypan;
 
-  u16_t lo_tag, hi_tag;
-  u16_t extra;
+	u16_t lo_tag, hi_tag;
+	u16_t extra;
 
 } PACKEDATTR raw_nukem_wall_t;
 
@@ -145,27 +145,27 @@ typedef struct
 
 typedef struct
 {
-  s32_t x, y, z;
+	s32_t x, y, z;
 
-  u16_t flags;
-  u16_t pic;
+	u16_t flags;
+	u16_t pic;
 
-  s8_t shade;
-  u8_t palette;
-  u8_t clip_dist;
-  u8_t _pad;
+	s8_t shade;
+	u8_t palette;
+	u8_t clip_dist;
+	u8_t _pad;
 
-  u8_t xscale,  yscale;
-  s8_t xoffset, yoffset;
+	u8_t xscale,  yscale;
+	s8_t xoffset, yoffset;
 
-  u16_t sector;
-  u16_t status;
-  u16_t angle;
+	u16_t sector;
+	u16_t status;
+	u16_t angle;
 
-  u16_t owner;
-  u16_t xvel, yvel, zvel;
-  u16_t lo_tag, hi_tag;
-  u16_t extra;
+	u16_t owner;
+	u16_t xvel, yvel, zvel;
+	u16_t lo_tag, hi_tag;
+	u16_t extra;
 
 } PACKEDATTR raw_nukem_sprite_t;
 
@@ -188,17 +188,17 @@ typedef struct
 
 typedef struct
 {
-  u32_t version;
+	u32_t version;
 
-  u32_t num_pics;
-  u32_t first_pic;
-  u32_t last_pic;
+	u32_t num_pics;
+	u32_t first_pic;
+	u32_t last_pic;
 
-  // s16_t width[NUM_PICS];
-  // s16_t height[NUM_PICS];
-  // s32_t anim[NUM_PICS];
+	// s16_t width[NUM_PICS];
+	// s16_t height[NUM_PICS];
+	// s32_t anim[NUM_PICS];
 
-  // block_of_pixels_t pics[NUM_PICS];
+	// block_of_pixels_t pics[NUM_PICS];
 
 } PACKEDATTR raw_art_header_t;
 
@@ -206,4 +206,4 @@ typedef struct
 #endif /* __OBLIGE_NUKEM_LEVEL_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab

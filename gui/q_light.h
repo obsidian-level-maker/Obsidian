@@ -33,66 +33,66 @@ class quake_face_c;
 class qLightmap_c
 {
 public:
-  int width, height;
-  int num_styles;
+	int width, height;
+	int num_styles;
 
-  byte * samples;
-  byte * current_pos;
+	byte * samples;
+	byte * current_pos;
 
-  // for small maps, store data directly here
-  byte data[SMALL_LIGHTMAP];
+	// for small maps, store data directly here
+	byte data[SMALL_LIGHTMAP];
 
-  byte styles[4];
+	byte styles[4];
 
-  // final offset in lightmap lump (if not flat)
-  int offset;
+	// final offset in lightmap lump (if not flat)
+	int offset;
 
-  // these not valid until CalcScore()
-  int score;
-  int average;
+	// these not valid until CalcScore()
+	int score;
+	int average;
 
 public:
-  qLightmap_c(int w, int h, int value = -1);
+	qLightmap_c(int w, int h, int value = -1);
 
-  ~qLightmap_c();
+	~qLightmap_c();
 
-  inline bool isFlat() const
-  {
-    return (width == 1 && height == 1 && num_styles == 1);
-  }
+	inline bool isFlat() const
+	{
+		return (width == 1 && height == 1 && num_styles == 1);
+	}
 
-  void Fill(int value);
+	void Fill(int value);
 
-  inline void Set(int s, int t, int raw)
-  {
-    raw >>= 8;
+	inline void Set(int s, int t, int raw)
+	{
+		raw >>= 8;
 
-    if (raw < 0)   raw = 0;
-    if (raw > 255) raw = 255;
+		if (raw < 0)   raw = 0;
+		if (raw > 255) raw = 255;
 
-    current_pos[t * width + s] = raw;
-  }
+		current_pos[t * width + s] = raw;
+	}
 
-  bool hasStyle(byte style) const;
+	bool hasStyle(byte style) const;
 
-  // returns false if too many styles
-  bool AddStyle(byte style);
+	// returns false if too many styles
+	bool AddStyle(byte style);
 
-  // transfer from blocklights[] array
-  void Store();
+	// transfer from blocklights[] array
+	void Store();
 
-  void CalcScore();
+	void CalcScore();
 
-  void Flatten();
+	void Flatten();
 
-  void Write(qLump_c *lump);
+	void Write(qLump_c *lump);
 
-  int CalcOffset() const;
+	int CalcOffset() const;
 
 private:
-  void Store_Fast();
-  void Store_Normal();
-  void Store_Best();
+	void Store_Fast();
+	void Store_Normal();
+	void Store_Best();
 };
 
 
@@ -106,14 +106,14 @@ quake_light_kind_e;
 
 typedef struct
 {
-  int kind;
+	int kind;
 
-  float x, y, z;
-  float radius;
-  float factor;
+	float x, y, z;
+	float radius;
+	float factor;
 
-  int level;  // 16.8 fixed point
-  int style;
+	int level;  // 16.8 fixed point
+	int style;
 }
 quake_light_t;
 
@@ -144,4 +144,4 @@ void QCOM_LightAllFaces();
 #endif /* __QUAKE_LIGHTING_H__ */
 
 //--- editor settings ---
-// vi:ts=2:sw=2:expandtab
+// vi:ts=4:sw=4:noexpandtab
