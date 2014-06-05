@@ -1725,6 +1725,11 @@ function Layout_pattern_in_area(R, area)
         prob = prob * 20
       end
 
+-- FIXME !!! : DISABLED CURVE_STAIR patterns for now
+if pat.elements["curve_stair"] then
+  prob = 0
+end
+
       if prob > 0 then
         tab[name] = pat.prob
       end

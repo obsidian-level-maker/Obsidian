@@ -1030,7 +1030,10 @@ function Room_border_up()
       end
 
     elseif R1.is_outdoor then
-      if R2.is_outdoor then
+      if R2.is_outdoor and N and N.kind == "void" then
+        S.border[side].kind = "nothing"
+        return
+      elseif R2.is_outdoor then
         S.border[side].kind = "cave_wall"  --!!! ???
       else
         S.border[side].kind = "facade"
@@ -1176,6 +1179,8 @@ function Room_border_up()
           continue
         end
 
+        if S.kind == "void" then continue end
+
           local N = S:neighbor(side)
 
           local N_frame = (N and N.map_border and N.map_border.room)
@@ -1204,6 +1209,8 @@ function Room_border_up()
     local N = S:neighbor(side)
 
     if not N or N.free then return end
+
+    if S.kind == "void" or N.kind == "void" then return end
 
     local R1 = S.room
     local R2 = N.room
