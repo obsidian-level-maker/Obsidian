@@ -320,7 +320,7 @@ void Main_SetupFLTK()
 	FL_NORMAL_SIZE = 14 + KF * 4;
 
 	 small_font_size = 12 + KF * 3;
-	header_font_size = 16 + KF * 6;
+	header_font_size = 16 + KF * 5;
 
 	fl_message_font(FL_HELVETICA, 16 + KF * 4);
 
