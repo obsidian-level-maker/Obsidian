@@ -23,8 +23,8 @@
 
 #define OBLIGE_TITLE  "OBLIGE Level Maker"
 
-#define OBLIGE_VERSION  "6.07"
-#define OBLIGE_HEX_VER  0x607
+#define OBLIGE_VERSION  "6.08"
+#define OBLIGE_HEX_VER  0x608
 
 
 #define CONFIG_FILENAME   "CONFIG.txt"
