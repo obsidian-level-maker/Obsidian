@@ -2295,8 +2295,15 @@ static void DM_SolidExtraFloor(doom_sector_c *sec, gap_c *gap1, gap_c *gap2)
 
 	if (sec->misc_flags & SEC_FLOOR_SPECIAL)
 	{
-		EF->u_special = sec->special;
-		sec->special  = gap2->bottom->t.face.getInt("special");
+		if (ef_solid_type == 281)  // Legacy mode
+		{
+			EF->u_special = gap2->bottom->t.face.getInt("special");
+		}
+		else   // EDGE mode
+		{
+			EF->u_special = sec->special;
+			sec->special  = gap2->bottom->t.face.getInt("special");
+		}
 	}
 
 	EF->top_h    = I_ROUND(gap2->bottom->t.z);
