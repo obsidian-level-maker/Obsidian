@@ -1281,6 +1281,22 @@ function Room_border_up()
   end
 
 
+  local function same_floors(S1, S2)
+    -- this checks any 3D floors too...
+    local K1 = S1.chunk
+    local K2 = S2.chunk
+
+    while K1 and K2 do
+      if K1.floor != K2.floor then return false end
+
+      K1 = K1.overlay
+      K2 = K2.overlay
+    end
+
+    return (not K1) and (not K2)
+  end
+
+
   local function can_travel(R, R2, S0, side, off_dir, off_dist)
     local N0 = S0:neighbor(side)
 
@@ -1295,8 +1311,8 @@ function Room_border_up()
     if S.kind != "walk" then return false end
     if N.kind != "walk" then return false end
 
-    if S.floor_h != S0.floor_h then return false end
-    if N.floor_h != N0.floor_h then return false end
+    if not same_floors(S, S0) then return false end
+    if not same_floors(N, N0) then return false end
 
     local S_kind = S.border[     side].kind
     local N_kind = N.border[10 - side].kind
