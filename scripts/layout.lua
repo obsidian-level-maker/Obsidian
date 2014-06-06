@@ -757,7 +757,9 @@ function Layout_set_floor_minmax(R)
     if S.room == R and S.kind == "walk" then
       assert(S.floor_h)
 
-      S.floor_max_h = S.floor_h
+      if not S.floor_max_h then
+        S.floor_max_h = S.floor_h
+      end
 
       if S.chunk and S.chunk.overlay then
         local K2 = S.chunk.overlay
