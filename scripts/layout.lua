@@ -782,6 +782,10 @@ function Layout_set_floor_minmax(R)
 
   R.liquid_h = R.floor_min_h - 48
 
+  if R.has_3d_liq_bridge then
+    R.liquid_h = R.liquid_h - 48
+  end
+
   for x = R.sx1, R.sx2 do
   for y = R.sy1, R.sy2 do
     local S = SEEDS[x][y]
@@ -1979,6 +1983,10 @@ end
       end
 
       R.has_3d_floor = true
+
+      if CHUNK.kind == "liquid" then
+        R.has_3d_liq_bridge = true
+      end
     end
 
     -- update the seeds --

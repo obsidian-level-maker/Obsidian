@@ -1349,7 +1349,7 @@ HEIGHT_CURV_2 =
 
 MULTI_I1 =
 {
-  prob = 10000
+  prob = 4000
 
   symmetry = "y"
 
@@ -1445,6 +1445,33 @@ MULTI_T1 =
   x_sizes = { "999" }
   y_sizes = { "999" }
 }
+
+
+MULTI_LIQUID_H1 =
+{
+  prob = 9000
+
+  symmetry = "xy"
+
+  structure =
+  {
+    ".~."
+    ".~."
+    ".~."
+  }
+
+  overlay =
+  {
+    "   "
+    " . "
+    "   "
+  }
+
+  x_sizes = { "121", "131", "222" }
+  y_sizes = { "111", "212" }
+}
+
+
 
 
 --------------------------
