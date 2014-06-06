@@ -3,6 +3,11 @@ OBLIGE TODO
 ===========
 
 
+!!  BUG: coop player can be stuck in "cave_wall"
+    ---> limit cave_wall extents if S.content or S.conn
+
+!!  BUG: torches in a cave can obstruct the player
+
 BUG : no exclusion zone around teleporter
 
 BUG : secret sector being split (ceiling detail? lighting??)
@@ -48,10 +53,6 @@ ______________________________________________________________________
 ----------------------------------------------
   V6 STUFF
 ----------------------------------------------
-
-!!  BUG: coop player can be stuck in "cave_wall"
-
-!!  BUG: torches in a cave can obstruct the player
 
 
 +  a secret exit may not be possible due to reserved room
@@ -171,8 +172,6 @@ New Starting Logic
 V5 STUFF:
 
 -  see why some traps or cages are empty
-
-?  move stuff in data/ into games/doom/ (etc)
 
 +  Need logic to decide how to light up a room (windows vs wall
    lights vs ceilings lights etc).
@@ -334,10 +333,6 @@ Intrusions:
    It's like a kind of window, except the intrusion is built
    as if it were part of the room you look into.  It may work
    best in Quake games where the intrusion is a 3D walkway.
-
-
-Bridges:
-+  get 3D bridges working again
 
 
 Facades:
@@ -583,6 +578,8 @@ IDEA:  new "RUNNING THE MAPS" section (on Usage page)
 ----------------------------------------------
   DOOM and DOOM II
 ----------------------------------------------
+
++  move stuff in data/ into games/doom/ (etc)
 
 +  support MAPINFO lumps (especially for ZDoom ports).
 

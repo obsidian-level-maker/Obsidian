@@ -3,28 +3,19 @@ WORK IN PROGRESS
 ================
 
 
-???  last_file stuff?  Default_location??
+border_up logic : process walls like fences, i.e. pass over all seeds
 
-
->>>  overhangs (periphs) do not take 3D floors into account
-
-
-RAIL ISSUE : cannot control offsets on BACK SIDE of a brush vert
-
---->  need rail brushes (perhaps two for a two-sided railing??)
-
-
-Extra floors
-
-+ style_sel("ex_floors")
+Fix handling of gaps inside caves (at border of cave)
+-  mark them in cave code, handle them in border_up code
+-  "cave_wall" -- support as a low fence too ("cave_fence" ?)
 
 
 Layout rework:
-??  the 'is_top' pattern must touch the entry_conn (if present)
-
 +  create chunks for ALL non-cave rooms
 
 -  CHUNK_CLASS ?   put in seed.lua
+
+-  CHUNK.content (not SEED.content)
 
 -  link chunks together
 
@@ -38,21 +29,15 @@ Layout rework:
 
 IDEA:  automatically merge 2x2 seeds (if floor) into a single chunk
 
--  get stairs working again
 -  get curved stairs working again
 -  get diagonals working again
 
--  recursive patterns!
++  recursive patterns!
 
--  get 3d bridges working
--  get 3d floors working
-
-
-Stuckies : do not use "kind = diagonal" in seeds
+??  the 'is_top' pattern must touch the entry_conn (if present)
 
 
 Border pieces:
--  fix textures on corner cage
 -  only 25% chance of corner cage [apply style]
 -  support "gaps" in piece sides (filled by lowest nearby sector OR next lowest sector)
 -  tidy up current pieces
@@ -67,11 +52,6 @@ Border pieces:
    place it there
 -  support piece as start spot
 -  support piece which is EXIT
-
-
-Fix handling of gaps inside caves (at border of cave)
--  always do it in Cave_xxx code, NOT make_border() code
--  "cave_wall" -- support as a low fence too ("cave_fence" ?)
 
 
 Bridges:
@@ -104,4 +84,15 @@ Doors
 -  support wide doors [normal / locked]
 -  make wide prefab with a switch in it [normal door]
 -  texturing on door prefabs (for HELL, URBAN themes)
+
+
+RAIL ISSUE : cannot control offsets on BACK SIDE of a brush vert
+--->  test new logic....
+
+
+???  last_file stuff?  Default_location??
+
+
+code formatting in q_common / q_light / q_tjunc / q_vis
+
 
