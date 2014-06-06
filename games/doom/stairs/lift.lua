@@ -4,7 +4,7 @@
 
 DOOM.SKINS.Lift_outie =
 {
-  file   = "stair/lift.wad"
+  file   = "stairs/lift.wad"
   where  = "chunk"
 
   z_fit  = "bottom"

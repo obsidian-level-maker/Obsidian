@@ -831,7 +831,6 @@ function Layout_scenic(R)
   for x = R.sx1, R.sx2 do
   for y = R.sy1, R.sy2 do
     local S = SEEDS[x][y]
-
     if S.room == R and S.kind == "liquid" then
       S.floor_h = R.liquid_h
     end
@@ -1772,6 +1771,11 @@ end
   end
 
 
+  local function setup_stair(S)
+    S.kind = "stair"
+  end
+
+
   local function install_flat_floor()
     R.no_pattern = true
 
@@ -1865,7 +1869,7 @@ end
       dir = geom.TRANSPOSE[dir]
     end
 
-    return dir
+    return assert(dir)
   end
 
 
@@ -1937,10 +1941,19 @@ end
     table.insert(R.chunks, CHUNK)
 
     if P.dir then
-      CHUNK.dir = transform_dir(T, dir)
+      CHUNK.dir = transform_dir(T, P.dir)
     end
 
-    if P.kind == "floor" or
+    if P.kind == "stair" then
+      assert(CHUNK.dir)
+
+      local vhr1 = area.entry_vhr + (P.src_floor  - T.entry_floor)
+      local vhr2 = area.entry_vhr + (P.dest_floor - T.entry_floor)
+
+      CHUNK.src_floor  = new_floor(vhr1)
+      CHUNK.dest_floor = new_floor(vhr2)
+
+    elseif P.kind == "floor" or
       -- FIXME !!!!! TEMPORARY CRUD !!!
        (P.kind != "liquid" and P.kind != "solid")
     then
@@ -1979,6 +1992,9 @@ end
 
       elseif P.kind == "solid" then
         setup_solid(S, pat)
+
+      elseif P.kind == "stair" then
+        S.kind = "stair"
 
       else --[[ if P.kind == "floor" then ]]
         --???
@@ -2186,18 +2202,20 @@ function Layout_height_realization(R, entry_h)
     R.min_vhr =  999
     R.max_vhr = -999
 
-    each chunk in R.chunks do
-      for pass = 1,2 do
-        local F = chunk.floor
-        if pass == 2 and chunk.overlay then
-          F = chunk.overlay.floor
-        end
+    local function add_floor(F)
+      if not F then return end
+      assert(F.vhr)
+      R.min_vhr = math.min(R.min_vhr, F.vhr)
+      R.max_vhr = math.max(R.max_vhr, F.vhr)
+    end
 
-        if F then
-          assert(F.vhr)
-          R.min_vhr = math.min(R.min_vhr, F.vhr)
-          R.max_vhr = math.max(R.max_vhr, F.vhr)
-        end
+    each chunk in R.chunks do
+      add_floor(chunk.floor)
+      add_floor(chunk.src_floor)
+      add_floor(chunk.dest_floor)
+
+      if chunk.overlay then
+        add_floor(chunk.overlay.floor)
       end
     end
 
@@ -2327,6 +2345,14 @@ gui.debugf("  gap_z --> %d  want_gap --> %d\n", gap_z, want_gap)
 
       if chunk and chunk.floor then
         S.floor_h = assert(chunk.floor.floor_h)
+
+      elseif chunk and chunk.src_floor then
+        -- stairs
+        local z1 = assert(chunk. src_floor.floor_h)
+        local z2 = assert(chunk.dest_floor.floor_h)
+
+        S.floor_h     = math.min(z1, z2)
+        S.floor_max_h = math.max(z1, z2)
       end
     end -- x, y
     end
@@ -2571,7 +2597,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
 
   if R.no_pattern then return end
 
-  handle_stairs()
+---???  handle_stairs()
 
   -- need to do diagonals AFTER stairs
   handle_diagonals()

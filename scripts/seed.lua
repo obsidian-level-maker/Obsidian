@@ -32,7 +32,7 @@ class SEED
                   -- "liquid"
 
   content : keyword  -- normally nil, but can be:
-                     -- "pillar"
+                     -- "wotsit", "pillar"
 
   border[DIR] : BORDER
 

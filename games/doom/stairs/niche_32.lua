@@ -4,13 +4,12 @@
 
 DOOM.SKINS.Stair_niche_32 =
 {
-  file   = "stair/niche_32.wad"
+  file   = "stairs/niche_32.wad"
   where  = "chunk"
 
-  z_fit = "bottom"
+  z_fit = "stretch"
 
   bound_z1 = 0
-  bound_z2 = 96
 
   prob = 90
 }

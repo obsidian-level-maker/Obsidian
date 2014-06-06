@@ -4,7 +4,7 @@
 
 DOOM.SKINS.Stair_outie_32 =
 {
-  file   = "stair/stair_32.wad"
+  file   = "stairs/stair_32.wad"
   where  = "chunk"
 
   bound_x1 = 0
@@ -12,7 +12,10 @@ DOOM.SKINS.Stair_outie_32 =
   bound_x2 = 192
   bound_y2 = 192
 
+  z_fit = "stretch"
+
   bound_z1 = 0
+  bound_z2 = 32
 
   prob = 90
 }

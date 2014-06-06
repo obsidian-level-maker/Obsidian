@@ -1913,8 +1913,8 @@ function Room_make_ceiling(R)
           f_h = S.floor_max_h or S.floor_h
         elseif S.diag_new_kind == "walk" then
           f_h = S.diag_new_z or S.floor_h
-        elseif S.kind == "stair" or S.kind == "lift" then
-          f_h = math.max(S.stair_z1, S.stair_z2)
+---##        elseif S.kind == "stair" or S.kind == "lift" then
+---##          f_h = math.max(S.stair_z1, S.stair_z2)
         elseif S.kind == "curve_stair" or S.kind == "tall_stair" then
           f_h = math.max(S.x_height, S.y_height)
         end
@@ -3528,6 +3528,65 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
   end
 
 
+  local function do_stair(S, w_tex, f_indents)
+    local K = assert(S.chunk)
+    assert(K.src_floor and K.dest_floor)
+
+    local z1 = K. src_floor.floor_h
+    local z2 = K.dest_floor.floor_h
+
+    local dir, high_tex
+
+    if z1 < z2 then
+      do_floor(S, z1, f_indents, w_tex, K.src_floor.floor_tex)
+      high_tex = K.dest_floor.floor_tex
+      dir = K.dir
+    else
+      do_floor(S, z2, f_indents, w_tex, K.dest_floor.floor_tex)
+      high_tex = K.src_floor.floor_tex
+      dir = 10 - K.dir
+    end
+
+    -- really need one?
+    local diff_z = math.abs(z1 - z2)
+
+    if diff_z <= PARAM.step_height then return end
+
+    -- TODO select properly
+    local fab_name
+
+    local mode = sel(z1 > z2, "niche", "outie")
+    local top_z
+
+    if diff_z > 96 then
+      top_z = 96 ; fab_name = "Lift_" .. mode
+    elseif diff_z >= 56 then
+      top_z = 56 ; fab_name = "Stair_".. mode .. "_56"
+    elseif diff_z >= 32 then
+      top_z = 32 ; fab_name = "Stair_".. mode .. "_32"
+    else
+      error("no stair for floor height difference of " .. diff_z)
+    end
+
+    local skin1 = GAME.SKINS[fab_name]
+    assert(skin1)
+
+    local skin0 = { wall=w_tex, floor=high_tex }
+
+    -- FIXME: chunk coordinates
+    local x1 = S.x1
+    local y1 = S.y1
+    local x2 = S.x2
+    local y2 = S.y2
+
+    local T = Trans.box_transform(x1, y1, x2, y2, math.min(z1, z2), dir)
+
+    T.fitted_z = diff_z
+
+    Fabricate_at(R, skin1, T, { skin0, skin1 })
+  end
+
+
   local function do_small_bridge(S)
     local skin1 = GAME.SKINS["Bridge_curvey"]
     assert(skin1)
@@ -3874,13 +3933,12 @@ end
       end
 
     elseif S.kind == "stair" then
-      local skin2 = { wall=S.room.main_tex, floor=S.f_tex or S.room.main_tex }
+---###      local skin2 = { wall=S.room.main_tex, floor=S.f_tex or S.room.main_tex }
+---###      Build.niche_stair(S, LEVEL.step_skin, skin2)
 
-      Build.niche_stair(S, LEVEL.step_skin, skin2)
-
-      local low_z = math.min(S.stair_z1, S.stair_z2)
-      local low_tex = sel(low_z < S.stair_z2, S.z1_tex, S.z2_tex)
-      do_floor(S, low_z, f_indents, w_tex, low_tex or f_tex)
+---###      local low_z = math.min(S.stair_z1, S.stair_z2)
+---###      local low_tex = sel(low_z < S.stair_z2, S.z1_tex, S.z2_tex)
+      do_stair(S, w_tex, f_indents)
 
     elseif S.kind == "curve_stair" then
       Build.low_curved_stair(S, LEVEL.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
