@@ -510,6 +510,8 @@ DOOM1.MATERIALS =
   PIPEWAL1 = { t="COMPWERD", f="CEIL5_1" }
   SPACEW3  = { t="COMPUTE1", f="FLAT1" }
   SILVER3  = { t="PLANET1",  f="FLAT23" }
+  WOOD9    = { t="WOOD1",    f="FLAT5_2" }
+  WOOD10   = { t="WOOD1",    f="FLAT5_2" }
 }
 
  

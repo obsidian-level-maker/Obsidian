@@ -2819,7 +2819,6 @@ DOOM1.THEMES =
     {
       ASHWALL = 30
       GRAYVINE = 20
-      SP_ROCK2 = 15
       SP_ROCK1 = 70
       ROCKRED1 = 70
       BROWNHUG = 20
