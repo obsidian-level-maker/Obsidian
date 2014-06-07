@@ -8,7 +8,7 @@ CHANGELOG
 + new 'Config Manager' window 
 
 + better window scaling, new 'Window Size' option
-+ experimental 'Bland Lighting Mode' -- forced on
++ experimental 'Bland Lighting Mode' -- forced on atm
 - store options separately from normal settings
 
 ! removed the 'Seed' setting
@@ -19,10 +19,10 @@ CHANGELOG
 + experimental support for 3D floors
 + added 'tech_Gray' theme for DOOM, thanks to Mr. Chris
 
-- new theme choices: "Mostly Tech", "Mostly Urban", "Mostly Hell"
+- new theme choices: Mostly Tech, Mostly Urban, Mostly Hell
+- reorganized the 'Theme' menu, added a separator
 
 - tweaked the DOOM monster mix
-
 - small reduction in the overall health in levels
 - small increase in number of bonus items per level
 

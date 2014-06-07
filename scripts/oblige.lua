@@ -632,6 +632,11 @@ function ob_init()
       table.insert(list, def)
     end
 
+    -- this creates a separator for the 'Theme' menu
+    if what == "theme" then
+      table.insert(list, { priority=-1, name="_", label="_" })
+    end
+
     table.sort(list, button_sorter)
 
     each def in list do
@@ -691,6 +696,8 @@ function ob_init()
   OB_CONFIG.game   = create_buttons("game",   OB_GAMES)
   OB_CONFIG.engine = create_buttons("engine", OB_ENGINES)
   OB_CONFIG.theme  = create_buttons("theme",  OB_THEMES)
+
+  OB_CONFIG.theme  = "mixed"
 
   create_buttons("module", OB_MODULES)
   create_mod_options()

@@ -153,6 +153,14 @@ void UI_RChoice::Recreate()
 	{
 		choice_data_c *P = opt_list[j];
 
+		// is it just a separator?
+		if (strcmp(P->label, "_") == 0)
+		{
+			P->mapped = -1;
+			add("", 0, 0, 0, FL_MENU_DIVIDER|FL_MENU_INACTIVE);
+			continue;
+		}
+
 		if (! P->shown)
 		{
 			P->mapped = -1;
