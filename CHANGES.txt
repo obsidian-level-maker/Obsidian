@@ -25,6 +25,7 @@ CHANGELOG
 - tweaked the DOOM monster mix
 - small reduction in the overall health in levels
 - small increase in number of bonus items per level
+- increased size of exclusion zones around teleporters
 
 - added a couple of special doorways for caves
 - added arch-shaped doorway for Urban and Hell themes

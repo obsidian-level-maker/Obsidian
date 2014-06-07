@@ -424,6 +424,9 @@ IDEA: "weak texturing" (especially on floors) which will try to
 
 -  3D stairs
 
+-  IDEA: recursive room patterns could say that floor '0' should
+         build walls (windows/fences/etc) into other sub-areas
+
 
 -  double or triple switches: each one raises a 24 unit stair,
    but player can only traverse stairs when ALL are raised.

@@ -5,6 +5,7 @@ WORK IN PROGRESS
 
 border_up logic : process walls like fences, i.e. pass over all seeds
 
+
 Fix handling of gaps inside caves (at border of cave)
 -  mark them in cave code, handle them in border_up code
 -  "cave_wall" -- support as a low fence too ("cave_fence" ?)
