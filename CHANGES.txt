@@ -3,28 +3,23 @@ CHANGELOG
 =========
 
 + new 'Weapons' setting
-
 + implemented the 'Powerups' setting
-
 + new 'Menu' button, replaces 'About' and 'Options'
-
 + new 'Config Manager' window 
 
 + better window scaling, new 'Window Size' option
++ experimental 'Bland Lighting Mode' -- forced on
+- store options separately from normal settings
 
 ! removed the 'Seed' setting
 ! removed the 'Hide Modules' option
 
-- store options separately from normal settings
-
->>> new GUI option: 'Bland Lighting Mode'
-
-
 + generate DOOM 1 episode name graphics
++ partial work on outdoor borders (like in V5)
++ experimental support for 3D floors
++ added 'tech_Gray' theme for DOOM, thanks to Mr. Chris
 
->>> outdoor borders
-
-- added 'tech_Gray' theme for DOOM, thanks to Mr. Chris
+- new theme choices: "Mostly Tech", "Mostly Urban", "Mostly Hell"
 
 - tweaked the DOOM monster mix
 
@@ -35,6 +30,7 @@ CHANGELOG
 - added arch-shaped doorway for Urban and Hell themes
 - better secret connections in outdoor rooms
 - build all doors and fences using the wad-fab system
+- build all stairs and lifts via wad prefabs
 
 - caves: improved floor texturing in flat caves
 - caves: never place pickup items in liquid areas
