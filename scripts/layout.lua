@@ -160,8 +160,6 @@ function Layout_preprocess_patterns()
 
 
   local function process_elements(pat, grid)
-    pat.elements = {}
-
     for x = 1, grid.w do
     for y = 1, grid.h do
       local kind = grid[x][y].kind
@@ -413,6 +411,8 @@ function Layout_preprocess_patterns()
 
   each name,pat in ROOM_PATTERNS do
     floor_tab = {}
+
+    pat.elements = {}
 
     pat._structure = convert_pattern(pat, pat.structure)
 
