@@ -1735,6 +1735,7 @@ namelib.NAMES =
         ["Halls of Lamentation"] = 10
         ["Intruder Alert"] = 10
         ["Security Breach"] = 10
+        ["Arena From Hell"] = 10
 
         -- homages to DOOM 1 Episodes
         ["Explosion"] = 3
