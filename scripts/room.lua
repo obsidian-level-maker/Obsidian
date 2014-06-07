@@ -4500,9 +4500,7 @@ function Room_run_builders()
     Room_find_pickup_spots(R)
     Room_find_ambush_focus(R)
 
-    if R.kind != "cave" then
-      R:exclude_monsters()
-    end
+    R:exclude_monsters()
   end
 end
 

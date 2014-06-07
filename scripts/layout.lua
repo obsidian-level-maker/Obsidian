@@ -656,8 +656,13 @@ end
   table.insert(R.goals, { S=S, kind=kind })
 
   -- no monsters near start spot or teleporters
-  if kind == "START" or kind == "TELEPORTER" then
+  -- FIXME: do this later (for chunks)
+  if kind == "START" then
     R:add_exclusion("empty",     S.x1, S.y1, S.x2, S.y2, 96)
+    R:add_exclusion("nonfacing", S.x1, S.y1, S.x2, S.y2, 512)
+
+  elseif kind == "TELEPORTER" then
+    R:add_exclusion("empty",     S.x1, S.y1, S.x2, S.y2, 144)
     R:add_exclusion("nonfacing", S.x1, S.y1, S.x2, S.y2, 384)
   end
 
