@@ -724,69 +724,6 @@ function Build.ramp_y(skin, x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
 end
 
 
-function Build.niche_stair(S, skin, skin2)
-  local step_info = get_mat(skin.side_w or skin.step_w, skin.top_f)
-
-  local front_info = add_pegging(get_mat(skin.step_w))
-
-  for side = 2,8,2 do
-    S.thick[side] = 64
-  end
-
-  local T, long = get_transform_for_seed_side(S, S.stair_dir)
-  local deep = long
-
-  local z1 = S.stair_z2
-  local z2 = S.stair_z1
-
-  local W  = sel(z1 > z2, 48, 24)
-  local HB = sel(z1 > z2, 96, 64)
-  local HF = 40
-
-  if z1 > z2 and (z1 - z2) < 44 then
-    HB = 128
-  end
-
-  Trans.set(T)
-
-
-  if S.stair_z1 > S.stair_z2 then
-    local f_tex = assert(S.z1_tex)
-    local niche_info = get_mat(skin2.wall, f_tex)
-
-    Trans.old_quad(niche_info, 0,0, W,deep, -EXTREME_H, z2)
-    Trans.old_quad(niche_info, long-W,0, long,deep, -EXTREME_H, z2)
-    Trans.old_quad(niche_info, W,deep-HB, long-W,deep, -EXTREME_H, z2)
-
-  else
-    HF = 0
-  end
-
-
-  local steps = int(math.abs(z2 - z1) / 15 + 0.9)
-
-  if steps < 2 then steps = 2 end
-
-  for i = 0,steps-1 do 
-    local z = z1 + (z2 - z1) * (i+1) / (steps+1)
-
-    local by = int(HF + (deep-HF-HB) * (i)   / steps)
-    local ty = int(HF + (deep-HF-HB) * (i+1) / steps)
-
-    Trans.old_brush(step_info,
-    {
-      { x=long-W, y=by },
-      { x=long-W, y=ty, w_face = front_info.w_face },
-      { x=     W, y=ty },
-      { x=     W, y=by, w_face = front_info.w_face },
-    },
-    -EXTREME_H, int(z));
-  end
-
-  Trans.clear()
-end
-
-
 function Build.tall_curved_stair(S, skin, x_side,y_side, x_h,y_h)
   assert(x_h and y_h)
 

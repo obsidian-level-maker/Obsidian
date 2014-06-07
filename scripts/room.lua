@@ -3949,11 +3949,6 @@ end
       end
 
     elseif S.kind == "stair" then
----###      local skin2 = { wall=S.room.main_tex, floor=S.f_tex or S.room.main_tex }
----###      Build.niche_stair(S, LEVEL.step_skin, skin2)
-
----###      local low_z = math.min(S.stair_z1, S.stair_z2)
----###      local low_tex = sel(low_z < S.stair_z2, S.z1_tex, S.z2_tex)
       do_stair(S, w_tex, f_indents)
 
     elseif S.kind == "curve_stair" then
