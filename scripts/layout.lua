@@ -1270,6 +1270,9 @@ function Layout_escape_from_pits(R)
       return
     end
 
+    -- cannot escape through a 3D floor
+    if S.chunk and S.chunk.overlay then return end
+
     -- don't want to bump into a pillar or switch
     if N.content then
       cost = cost + 20
