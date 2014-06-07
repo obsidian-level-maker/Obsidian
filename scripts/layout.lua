@@ -34,7 +34,7 @@ function Layout_parse_char(ch)
   if ch == '#' then return { kind="solid"  } end
 
   -- these can be curved, and 'dir' is towards the more open space
--- FIXME !!!!!
+-- FIXME !!!!! diagonal
   if ch == '/' then return { kind="solid", dir=3 } end
   if ch == '%' then return { kind="solid", dir=1 } end
   if ch == 'N' then return { kind="solid", dir=9 } end
@@ -689,8 +689,6 @@ function Layout_place_importants(R)
     then
       R.guard_spot = S
     end
-
-    -- FIXME !!!!  exclusion zone for teleporter
   end
 
 

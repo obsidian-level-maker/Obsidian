@@ -237,7 +237,7 @@ function Cave_generate_cave(R)
 
     for dir = 2,8,2 do
       if check_need_wall(S, dir) then
-        --!!!!!!!!!!!!!!!!!!! WHAT THE FUCK !!!!!!!!!!!!!!!!!!!
+        --!!!! WTF
         if R.is_outdoor and info.sky_mode != "high_wall" and false then
           -- this is handled in border_up()
         else
