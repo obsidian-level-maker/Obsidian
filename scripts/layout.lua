@@ -1451,6 +1451,19 @@ function Layout_add_bridges(R)
   end
 
 
+  local function seed_is_liquidy(N)
+    if N.kind != "liquid" then return false end
+
+    -- ignore previously made bridges
+    if N.bridge_h then return false end
+
+    -- ignore a 3D floor -- it probably joins onto the "walk" seed
+    if N.chunk and N.chunk.overlay then return false end
+
+    return true
+  end
+
+
   local function test_spot(S)
     if S.kind != "walk" then return end
 
@@ -1465,11 +1478,8 @@ function Layout_add_bridges(R)
       if not (A and A.room == R) then continue end
       if not (B and B.room == R) then continue end
 
-      if A.kind != "liquid" then continue end
-      if B.kind != "liquid" then continue end
-
-      if A.bridge_h then continue end
-      if B.bridge_h then continue end
+      if not seed_is_liquidy(A) then continue end
+      if not seed_is_liquidy(B) then continue end
 
       if math.abs(A.floor_h - B.floor_h) > 1 then continue end
 
