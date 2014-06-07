@@ -466,6 +466,48 @@ function Levels_choose_themes()
   end
 
 
+  local function set_mostly_a_theme(prob_tab, theme)
+    if not prob_tab[theme] then
+      error("Broken mostly_" .. theme .." theme")
+    end
+
+    prob_tab[theme] = nil
+
+    local last_same = 0
+    local last_diff = 99  -- force first map to be desired theme
+
+    local max_same = 3
+    local max_diff = 1
+
+    if OB_CONFIG.length == "game" then
+      max_same = 5
+      max_diff = 2
+    end
+
+    each LEV in GAME.levels do
+      local what
+
+      if last_diff >= max_diff then
+        what = theme
+      elseif (last_same < max_same) and rand.odds(65) then
+        what = theme
+      else
+        what = rand.key_by_probs(prob_tab)
+      end
+
+      set_level_theme(LEV, what)
+
+      if what == theme then
+        last_same = last_same + 1
+        last_diff = 0
+      else
+        last_diff = last_diff + 1
+        last_same = 0
+      end
+    end
+  end
+
+
   local function pick_psycho_themes()
     local prob_tab = {}
 
@@ -574,9 +616,12 @@ function Levels_choose_themes()
 
   gui.printf("\n")
 
+  local mostly_theme = string.match(OB_CONFIG.theme, "mostly_(%w+)")
+
   -- the user can specify the main theme
   if OB_CONFIG.theme != "mixed"    and OB_CONFIG.theme != "jumble" and
-     OB_CONFIG.theme != "original" and OB_CONFIG.theme != "psycho"
+     OB_CONFIG.theme != "original" and OB_CONFIG.theme != "psycho" and
+     not mostly_theme
   then
     set_single_theme(OB_CONFIG.theme)
     return
@@ -608,6 +653,11 @@ function Levels_choose_themes()
   -- Jumbled Up : every level is purely random
   if OB_CONFIG.theme == "jumble" then
     set_jumbled_themes(prob_tab)
+    return
+  end
+
+  if mostly_theme then
+    set_mostly_a_theme(prob_tab, mostly_theme)
     return
   end
 

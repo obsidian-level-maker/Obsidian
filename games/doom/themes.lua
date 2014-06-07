@@ -1356,7 +1356,7 @@ DOOM2.THEMES =
 OB_THEMES["tech"] =
 {
   label = "Tech"
-  priority = 8
+  priority = 18
   name_class = "TECH"
   mixed_prob = 60
 }
@@ -1365,7 +1365,7 @@ OB_THEMES["tech"] =
 OB_THEMES["hell"] =
 {
   label = "Hell"
-  priority = 4
+  priority = 14
   name_class = "GOTHIC"
   mixed_prob = 50
 }
@@ -1374,10 +1374,35 @@ OB_THEMES["hell"] =
 OB_THEMES["urban"] =
 {
   label = "Urban"
-  priority = 6
+  priority = 16
   game = "doom2"
   name_class = "URBAN"
   mixed_prob = 50
+}
+
+
+OB_THEMES["mostly_tech"] =
+{
+  label = "Mostly Tech"
+  priority = 8
+  name_class = "TECH"
+}
+
+
+OB_THEMES["mostly_urban"] =
+{
+  label = "Mostly Urban"
+  priority = 4
+  game = "doom2"
+  name_class = "URBAN"
+}
+
+
+OB_THEMES["Mostly Hell"] =
+{
+  label = "Mostly Hell"
+  priority = 6
+  name_class = "HELL"
 }
 
 
@@ -1404,6 +1429,7 @@ UNFINISHED["egypt"] =
 
   label = "Egypt"
   game = "tnt"
+  priority = 3
   name_class = "GOTHIC"
   mixed_prob = 5
 }
@@ -2807,7 +2833,7 @@ DOOM1.THEMES =
 OB_THEMES["deimos"] =
 {
   label = "Deimos"
-  priority = 6
+  priority = 16
   game = "doom1"
   name_class = "TECH"
   mixed_prob = 30
@@ -2817,7 +2843,7 @@ OB_THEMES["deimos"] =
 OB_THEMES["flesh"] =
 {
   label = "Thy Flesh"
-  priority = 2
+  priority = 12
   game = "ultdoom"
   name_class = "GOTHIC"
   mixed_prob = 20
