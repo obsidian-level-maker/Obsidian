@@ -1896,7 +1896,7 @@ DOOM1.THEMES =
       FLOOR0_7 = 10
       FLOOR3_3 = 20
       FLOOR7_1 = 20
-      CEIL_4_2 = 10
+      CEIL4_2 = 10
       FLOOR4_1 = 30
       FLOOR4_6 = 20
       FLOOR4_8 = 50
@@ -2043,7 +2043,7 @@ DOOM1.THEMES =
     {
       FLAT4 = 30
       CEIL4_1 = 15
-      CEIl4_2 = 15
+      CEIL4_2 = 15
       CEIL5_1 = 30
       FLAT14 = 20
       FLAT5_4 = 20
