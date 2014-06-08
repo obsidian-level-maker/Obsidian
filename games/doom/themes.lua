@@ -1398,7 +1398,7 @@ OB_THEMES["mostly_urban"] =
 }
 
 
-OB_THEMES["Mostly Hell"] =
+OB_THEMES["mostly_hell"] =
 {
   label = "Mostly Hell"
   priority = 6
