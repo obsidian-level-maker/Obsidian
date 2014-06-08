@@ -1,6 +1,6 @@
--------------------------------------------------------------------
+------------------------------------------------------------------------
 --  PLANNING : Single Player
--------------------------------------------------------------------
+------------------------------------------------------------------------
 --
 --  Oblige Level Maker
 --
@@ -16,7 +16,7 @@
 --  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 --  GNU General Public License for more details.
 --
--------------------------------------------------------------------
+------------------------------------------------------------------------
 
 --[[ *** CLASS INFORMATION ***
 
@@ -757,10 +757,37 @@ function Plan_add_caves()
   end
 
 
+  local function try_add_start_spot(rooms, locations)
+    -- try several times to find a usable spot
+
+    for loop = 1, 10 do
+      local side = rand.key_by_probs(locations)
+
+      -- don't use this location again (except for middle)
+      if side != 5 then
+        locations[side] = nil
+      end
+
+      local spot = find_free_spot(side)
+
+      if not spot then
+        continue
+      end
+
+      table.insert(rooms, new_room(spot))
+
+      return spot.mw * spot.mh  -- OK!
+    end
+
+    return nil  -- failed
+  end
+
+
   ---| Plan_add_caves |---
 
-  -- compute the quota
-  local perc = style_sel("caves", 0, 15, 35, 65, 130)
+  --- compute the quotas ---
+
+  local perc = style_sel("caves", 0, 12, 30, 65, 150)
 
   if perc == 0 then
     gui.printf("Caves: NONE\n")
@@ -774,13 +801,35 @@ function Plan_add_caves()
 
   quota = quota * rand.range(0.8, 1.2)
 
-  gui.printf("Cave Quota: %1.1f sections\n", quota)
+  -- this rough_size logic ensures that on bigger maps we tend to
+  -- create larger caves (rather than lots of smaller caves).
+
+  local rough_size = 3.8
+  local level_ext  = LEVEL.W + LEVEL.H
+
+  if level_ext > 6  then rough_size = rough_size + 1 end
+  if level_ext > 10 then rough_size = rough_size + 1 end
+
+  local num_rooms = rand.int(quota / rough_size)
+
+  -- this is mainly to help small maps get a cave
+  if STYLE.caves != "few" and rand.odds(20) then
+    num_rooms = num_rooms + 1
+  end
+
+  gui.printf("Cave Quota: %d rooms / %1.1f sections\n", num_rooms, quota)
+
+  if num_rooms == 0 then
+    return
+  end
 
 
-  handle_surrounder()
+---??  handle_surrounder()
 
 
   --- add starting spots ---
+
+  local rooms = {}
 
   -- best starting spots are in a corner.
   -- for middle of map, require a 2x2 sections
@@ -791,46 +840,11 @@ function Plan_add_caves()
     [5]=90
   }
 
-  local rooms = { }
+  for i = 1, num_rooms do
+    local size = try_add_start_spot(rooms, locations)
 
-  -- this rough_size logic ensures that on bigger maps we tend to
-  -- create larger caves (rather than lots of smaller caves).
-  local rough_size = rand.irange(2, 5)
-  local level_ext  = LEVEL.W + LEVEL.H
-
-  if level_ext > 6  then rough_size = rough_size + 1 end
-  if level_ext > 10 then rough_size = rough_size + 1 end
-
-  local min_rooms = 1
-  local max_rooms = 7
-
-  if STYLE.caves != "few" and
-     (level_ext > 5 or rand.odds(perc))
-  then
-     min_rooms = 2
-  end
-
-
-  for loop = 1, 100 do
-    if #rooms >= max_rooms and
-       (#rooms < min_rooms or quota / #rooms > rough_size + 0.4)
-    then
-      break;
-    end
-
-    -- pick a location
-    local side = rand.key_by_probs(locations)
-
-    -- don't use this location again (except for middle)
-    if side != 5 then
-      locations[side] = nil
-    end
-
-    local spot = find_free_spot(side)
-
-    if spot then
-      table.insert(rooms, new_room(spot))
-      quota = quota - spot.mw * spot.mh
+    if size then
+      quota = quota - size
     end
   end
 
