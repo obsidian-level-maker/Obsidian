@@ -258,12 +258,6 @@ DOOM2.THEMES =
 
     ---!!!  TEMPORARY V3 STUFF  !!!---
 
-    doors =
-    {
-      silver=30, silver_fast=2, silver_once=6
-      bigdoor2=6, bigdoor2_fast=2, bigdoor2_once=6
-      bigdoor3=6
-    }
     steps = { step1=50, step3=50, step4b=50 }
     lifts = { shiny=20, platform=40, rusty=10 }
     ceil_lights =
@@ -1222,11 +1216,6 @@ DOOM2.THEMES =
     {
       caves = { none=40, few=60, some=10 }
     }
-
-
-    ---!!!  TEMPORARY V3 STUFF  !!!---
-
-    doors = { wolf_door=90 }
   }
 
 
@@ -1514,20 +1503,6 @@ DOOM1.THEMES =
     techy_doors = true
 
     ---!!!  TEMPORARY V3 CRUD  !!!---
-
-    doors =
-    {
-      silver = 20
-      silver_fast = 2
-      silver_once = 5
-      bigdoor2 = 20
-      bigdoor2_fast = 2
-      bigdoor2_once = 5
-      bigdoor3 = 5
-      bigdoor4 = 10
-      bigdoor4_fast = 2
-      bigdoor4_once = 5
-    }
   }
 
 
@@ -1841,22 +1816,6 @@ DOOM1.THEMES =
     }
 
     techy_doors = true
-
-    ---!!!  TEMPORARY V3 CRUD  !!!---
-
-    doors =
-    {
-      silver = 20
-      silver_fast = 2
-      silver_once = 5
-      bigdoor2 = 20
-      bigdoor2_fast = 2
-      bigdoor2_once = 5
-      bigdoor3 = 5
-      bigdoor4 = 10
-      bigdoor4_fast = 2
-      bigdoor4_once = 5
-    }
   }
 
 
@@ -2217,20 +2176,6 @@ DOOM1.THEMES =
     monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0 }
 
     archy_arches = true
-
-    ---!!!  TEMPORARY V3 CRUD  !!!---
-
-    doors =
-    {
-      wooden2 = 20
-      wooden2_fast = 2
-      wooden2_once = 5
-
--- These disabled (for now) since BIGDOOR6 is not tall enough
---    wooden = 20
---    wooden_fast = 2
---    wooden_once = 5
-    }
   }
 
 
