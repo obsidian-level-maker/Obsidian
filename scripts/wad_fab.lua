@@ -1666,7 +1666,8 @@ function Fab_replacements(fab, skin)
       if C.tex and C.x     then C.tex = check_tex (sanitize(C.tex)) end
       if C.tex and not C.x then C.tex = check_flat(sanitize(C.tex), C) end
 
-      if C.rail and C.x    then C.rail = check_tex(sanitize(C.rail)) end
+      if C.x and C.rail then C.rail = check_tex(sanitize(C.rail)) end
+      if C.x and C.back_rail then C.back_rail = check_tex(sanitize(C.back_rail)) end
     end
   end
 
