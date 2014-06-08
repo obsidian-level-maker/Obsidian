@@ -82,9 +82,9 @@ GZDOOM.PARAMETERS =
 
 
 function GZDOOM.setup()
-  -- extrafloors : use EDGE types  [FIXME: use Legacy types]
-  gui.property("ef_solid_type",  400)
-  gui.property("ef_liquid_type", 405)
+  -- extrafloors : use Legacy types
+  gui.property("ef_solid_type",  281)
+  gui.property("ef_liquid_type", 301)
 end
 
 
