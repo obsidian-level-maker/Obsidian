@@ -266,7 +266,15 @@ const char * DLG_OutputFilename(const char *ext)
 		strcat(filename, ".");
 		strcat(filename, ext);
 
-		// FIXME: check if exists, ask for confirmation
+		// check if exists, ask for confirmation
+		FILE *fp = fl_fopen(filename, "rb");
+		if (fp)
+		{
+			fclose(fp);
+			if (! fl_choice("%s", fl_cancel, fl_ok, NULL,
+							Fl_Native_File_Chooser::file_exists_message))
+				return NULL;  // cancelled
+		}
 	}
 
 	return StringDup(filename);
