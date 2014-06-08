@@ -262,7 +262,12 @@ const char * DLG_OutputFilename(const char *ext)
 	// add extension is missing
 	char *pos = (char *)fl_filename_ext(filename);
 	if (! *pos)
+	{
+		strcat(filename, ".");
 		strcat(filename, ext);
+
+		// FIXME: check if exists, ask for confirmation
+	}
 
 	return StringDup(filename);
 }
