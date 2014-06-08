@@ -3281,7 +3281,9 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
     -- FIXME : pick one properly
     local fab_name
-    if THEME.techy_doors then
+    if LEVEL.theme_name == "wolf" then
+      fab_name = "Door_wolf"
+    elseif THEME.techy_doors then
       fab_name = "Door_techy"
     else
       fab_name = "Door_large"
@@ -3441,7 +3443,6 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
 
   function do_lowering_bars(S, side, f_tex, w_tex)
     local LOCK = assert(S.border[side].lock)
-    local skin = assert(GAME.DOORS[LOCK.switch or LOCK.item])
 
     local z = assert(S.conn and S.conn.conn_h)
 
