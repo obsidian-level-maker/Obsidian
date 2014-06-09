@@ -698,6 +698,21 @@ public:
 
 
 
+struct fs_thing_t
+{
+	int x, y, z;
+
+	// this will point into a std::string in a csg_entity_c in the
+	// all_entities list -- guaranteed to stay around until map is
+	// fully written.
+	const char *fs_name;
+
+	int angle;
+	int options;
+};
+
+
+
 /********* TABLES *********/
 
 
@@ -710,6 +725,7 @@ class dummy_sector_c;
 
 static std::vector<dummy_sector_c *> dm_dummies;
 static std::vector<extrafloor_c *>   dm_exfloors;
+static std::vector<fs_thing_t>       dm_fs_things;
 
 static std::map<int, unsigned int>   dm_vertex_map;
 
@@ -2670,11 +2686,17 @@ static void DM_AddThing_FraggleScript(int x, int y, int z, csg_entity_c *E,
 		return;
 	}
 
-	// TODO
-	//
-	// fs_thing_t  thing(x, y, z, fs_name, angle, options);
-	// fragglescript_things.push_back(thing);
-	//
+	fs_thing_t thing;
+
+	thing.x = x;
+	thing.y = y;
+	thing.z = z;
+	thing.fs_name = fs_name;
+	thing.angle = angle;
+	thing.options = options;
+
+	dm_fs_things.push_back(thing);
+
 fprintf(stderr, "\n*** FraggleScript thing '%s' @ (%d %d %d)\n\n", fs_name, x, y, z);
 }
 
@@ -2761,6 +2783,59 @@ static void DM_WriteThings()
 }
 
 
+static void DM_WriteFraggleScript()
+{
+	// TODO: support [level info] stuff
+
+	// WISHLIST: support adding script text from Lua
+
+	if (ef_thing_mode != 1)
+		return;
+	
+	// We create three scripts:
+	//
+	//   script 1 : spawns everything with easy bit set
+	//   script 2 : spawns medium things (easy bit clear)
+	//   script 3 : spawns things with only the hard bit set
+	//
+	// (this precludes several combos, like "only on EASY skill")
+	//
+
+	DM_HeaderPrintf("[scripts]\n\n");
+
+	for (int i = 1 ; i <= 3 ; i++)
+	{
+		DM_HeaderPrintf("script %d\n{\n", i);
+
+		for (unsigned int k = 0 ; k < dm_fs_things.size() ; k++)
+		{
+			fs_thing_t& thing = dm_fs_things[k];
+
+			int which;  // which script to use
+
+			if (thing.options & MTF_Easy)
+				which = 1;
+			else if (thing.options & MTF_Medium)
+				which = 2;
+			else
+				which = 3;
+
+			if (which != i)
+				continue;
+
+			DM_HeaderPrintf("  spawn(%s, %d, %d, %d, %d);\n",
+							thing.fs_name, thing.x, thing.y, thing.z, thing.angle);
+		}
+
+		DM_HeaderPrintf("}\n\n");
+	}
+
+	DM_HeaderPrintf("startscript(1);\n");
+	DM_HeaderPrintf("if (gameskill() >= 3) startscript(2);\n");
+	DM_HeaderPrintf("if (gameskill() >= 4) startscript(3);\n");
+}
+
+
 //------------------------------------------------------------------------
 
 void DM_FreeStuff()
@@ -2782,6 +2857,8 @@ void DM_FreeStuff()
 
 	dm_exfloors.clear();
 	dm_dummies .clear();
+
+	dm_fs_things.clear();
 
 	dm_vertex_map.clear();
 }
@@ -2820,6 +2897,7 @@ void CSG_DOOM_Write()
 	DM_WriteLinedefs();
 
 	DM_WriteThings();
+	DM_WriteFraggleScript();
 
 	DM_FreeStuff();
 }

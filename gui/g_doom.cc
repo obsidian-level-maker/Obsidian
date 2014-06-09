@@ -278,6 +278,23 @@ void DM_EndLevel(const char *level_name)
 
 //------------------------------------------------------------------------
 
+
+void DM_HeaderPrintf(const char *str, ...)
+{
+	static char message_buf[MSG_BUF_LEN];
+
+	va_list args;
+
+	va_start(args, str);
+	vsnprintf(message_buf, MSG_BUF_LEN, str, args);
+	va_end(args);
+
+	message_buf[MSG_BUF_LEN-1] = 0;
+
+	header_lump->Append(message_buf, strlen(message_buf));
+}
+
+
 void DM_AddVertex(int x, int y)
 {
 	if (dm_offset_map)
@@ -511,10 +528,10 @@ static void GB_PrintMsg(const char *str, ...)
 	va_list args;
 
 	va_start(args, str);
-	vsnprintf(message_buf, MSG_BUF_LEN-1, str, args);
+	vsnprintf(message_buf, MSG_BUF_LEN, str, args);
 	va_end(args);
 
-	message_buf[MSG_BUF_LEN-2] = 0;
+	message_buf[MSG_BUF_LEN-1] = 0;
 
 	LogPrintf("GLBSP: %s", message_buf);
 }
@@ -529,10 +546,10 @@ static void GB_FatalError(const char *str, ...)
 	va_list args;
 
 	va_start(args, str);
-	vsnprintf(message_buf, MSG_BUF_LEN-1, str, args);
+	vsnprintf(message_buf, MSG_BUF_LEN, str, args);
 	va_end(args);
 
-	message_buf[MSG_BUF_LEN-2] = 0;
+	message_buf[MSG_BUF_LEN-1] = 0;
 
 	Main_FatalError("glBSP Failure:\n%s", message_buf);
 	/* NOT REACHED */

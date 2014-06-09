@@ -53,6 +53,9 @@ void DM_WriteLump(const char *name, qLump_c *lump);
 void DM_AddSectionLump(char section, const char *name, qLump_c *lump);
 
 
+void DM_HeaderPrintf(const char *str, ...);
+
+
 void DM_AddVertex(int x, int y);
 
 void DM_AddSector(int f_h, const char * f_tex, 
