@@ -313,7 +313,7 @@ bool csg_brush_c::IntersectRay(float x1, float y1, float z1,
 }
 
 
-csg_entity_c::csg_entity_c() : id(), x(0), y(0), z(0), props()
+csg_entity_c::csg_entity_c() : id(), x(0), y(0), z(0), props(), ex_floor(-1)
 { }
 
 csg_entity_c::~csg_entity_c()

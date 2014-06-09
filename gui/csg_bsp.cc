@@ -69,6 +69,7 @@ class group_c
 {
 public:
 	std::vector<region_c *> regs;
+
 	std::vector<csg_entity_c *> ents;
 
 public:
@@ -1698,7 +1699,7 @@ void CSG_SwallowBrushes()
 }
 
 
-static gap_c *GapForEntity(const region_c *R, const csg_entity_c *E)
+static gap_c *GapForEntity(const region_c *R, csg_entity_c *E)
 {
 	for (unsigned int i = 0 ; i < R->gaps.size() ; i++)
 	{
@@ -1709,7 +1710,11 @@ static gap_c *GapForEntity(const region_c *R, const csg_entity_c *E)
 		double z2 = (G->   top->b.z + G->   top->t.z) / 2.0;
 
 		if (z1 < E->z && E->z < z2)
+		{
+			E->ex_floor = (int)i;
+
 			return G;
+		}
 	}
 
 	return NULL; // not found
@@ -1718,6 +1723,8 @@ static gap_c *GapForEntity(const region_c *R, const csg_entity_c *E)
 
 static void MarkGapsWithEntities()
 {
+	// this function also sets entity_c::ex_floor
+
 	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
 	{
 		region_c *R = all_regions[i];
@@ -2036,6 +2043,10 @@ void CSG_DiscoverGaps()
 	RemoveUnusedGaps();
 
 	DetermineLiquids();
+
+	// call this again to set entity 'ex_floor' field
+	// (gap removal can invalidate the previously found value).
+	MarkGapsWithEntities();
 }
 
 

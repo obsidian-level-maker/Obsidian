@@ -191,10 +191,10 @@ public:
 
 	void ComputeBBox();
 
-	const char * Validate();
 	// makes sure there are enough vertices and they are in
 	// anti-clockwise order.  Returns NULL if OK, otherwise an
 	// error message string.
+	const char * Validate();
 
 	bool IntersectRay(float x1, float y1, float z1,
 			float x2, float y2, float z2) const;
@@ -209,6 +209,9 @@ public:
 	double x, y, z;
 
 	csg_property_set_c props;
+
+	// this only used by DOOM Extrafloor code, -1 until known
+	int ex_floor;
 
 public:
 	csg_entity_c();
