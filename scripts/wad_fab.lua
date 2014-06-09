@@ -744,7 +744,6 @@ function Fab_render(fab)
   each E in fab.entities do
     raw_add_entity(E)
   end
-
 end
 
 
@@ -1631,12 +1630,16 @@ function Fab_replacements(fab, skin)
                    GAME.PICKUPS[name] or
                    GAME.NICE_ITEMS[name]
 
-      if not info then
-        gui.printf("\nLACKING ENTITY : %s\n\n", name)
-        return name
+      if info then
+        return assert(info.id)
       end
 
-      return assert(info.id)
+      -- show a warning, but silently ignore "player5" .. "player8"
+      if not string.match(name, "^player") then
+        gui.printf("\nLACKING ENTITY : %s\n\n", name)
+      end
+
+      return nil
     end
 
     return val
@@ -1674,6 +1677,7 @@ function Fab_replacements(fab, skin)
   each E in fab.entities do
     check_props(E)
 
+    -- unknown entities set the 'id' to NIL
     E.id = check_thing(E.id)
   end
 end
