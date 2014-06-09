@@ -2686,6 +2686,7 @@ static void DM_AddThing_FraggleScript(int x, int y, int z, csg_entity_c *E,
 		return;
 	}
 
+	// merely remember the thing for now, to be processed later
 	fs_thing_t thing;
 
 	thing.x = x;
@@ -2696,8 +2697,6 @@ static void DM_AddThing_FraggleScript(int x, int y, int z, csg_entity_c *E,
 	thing.options = options;
 
 	dm_fs_things.push_back(thing);
-
-fprintf(stderr, "\n*** FraggleScript thing '%s' @ (%d %d %d)\n\n", fs_name, x, y, z);
 }
 
 
@@ -2803,6 +2802,8 @@ static void DM_WriteFraggleScript()
 
 	DM_HeaderPrintf("[scripts]\n\n");
 
+	DM_HeaderPrintf("include(\"things.h\");\n\n");
+
 	for (int i = 1 ; i <= 3 ; i++)
 	{
 		DM_HeaderPrintf("script %d\n{\n", i);
@@ -2824,7 +2825,7 @@ static void DM_WriteFraggleScript()
 				continue;
 
 			DM_HeaderPrintf("  spawn(%s, %d, %d, %d, %d);\n",
-							thing.fs_name, thing.x, thing.y, thing.z, thing.angle);
+							thing.fs_name, thing.x, thing.y, thing.angle, thing.z);
 		}
 
 		DM_HeaderPrintf("}\n\n");

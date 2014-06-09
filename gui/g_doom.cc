@@ -257,6 +257,10 @@ void DM_BeginLevel()
 
 void DM_EndLevel(const char *level_name)
 {
+	// terminate header lump with trailing NUL
+	const byte nuls[4] = { 0,0,0,0 };
+	header_lump->Append(nuls, 1);
+
 	DM_WriteLump(level_name, header_lump);
 
 	DM_WriteLump("THINGS",   thing_lump);
