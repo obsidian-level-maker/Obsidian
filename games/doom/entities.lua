@@ -21,6 +21,13 @@ DOOM.ENTITIES =
   player3 = { id=3, r=16, h=56 }
   player4 = { id=4, r=16, h=56 }
 
+  -- these are not standard, but most source ports will handle them or
+  -- ignore them with a warning.
+  player5 = { id=4001, r=16, h=56 }
+  player6 = { id=4002, r=16, h=56 }
+  player7 = { id=4003, r=16, h=56 }
+  player8 = { id=4004, r=16, h=56 }
+
   dm_player     = { id=11 }
   teleport_spot = { id=14 }
 
