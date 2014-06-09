@@ -85,6 +85,10 @@ function GZDOOM.setup()
   -- extrafloors : use Legacy types
   gui.property("ef_solid_type",  281)
   gui.property("ef_liquid_type", 301)
+
+  -- currently using Fragglescript for things on 3D floors
+  -- [later we will use the Hexen map format]
+  gui.property("ef_thing_mode", 1)
 end
 
 

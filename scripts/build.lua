@@ -53,6 +53,12 @@ function raw_add_entity(ent)
     ent.mangle = ent.angles ; ent.angles = nil
   end
 
+  if GAME.format == "doom" then
+    -- this is mainly for Legacy (spawning things on 3D floors)
+    -- it is OK for this to be NIL
+    ent.fs_name = FRAGGLESCRIPT_THINGS[ent.id]
+  end
+
   gui.add_entity(ent)
 
   if GAME.add_entity_func then

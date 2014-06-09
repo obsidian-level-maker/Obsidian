@@ -127,6 +127,7 @@ end
 function EDGE.setup()
   gui.property("ef_solid_type",  400)
   gui.property("ef_liquid_type", 405)
+  gui.property("ef_thing_mode", 2)
 end
 
 

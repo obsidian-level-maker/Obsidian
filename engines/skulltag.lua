@@ -88,6 +88,7 @@ function SKULLTAG.setup()
   -- extrafloors : use Legacy types
   gui.property("ef_solid_type",  281)
   gui.property("ef_liquid_type", 301)
+  gui.property("ef_thing_mode", 1)
 end
 
 
