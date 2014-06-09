@@ -40,6 +40,11 @@
 int ef_solid_type;
 int ef_liquid_type;
 
+// How to place things on 3D floors:
+// 1 = use FraggleScript (in header lump)
+// 2 = use EDGE thing flags
+int ef_thing_mode;
+
 
 // valid after DM_CreateLinedefs()
 static int map_bound_x1;
@@ -59,6 +64,8 @@ double light_dist_factor = 800.0;
 
 #define MTF_HEXEN_CLASSES  (32 + 64 + 128)
 #define MTF_HEXEN_MODES    (256 + 512 + 1024)
+
+#define MTF_EDGE_EXFLOOR_SHIFT  10
 
 
 // fake linedef special for lower-unpegging
@@ -2651,6 +2658,27 @@ static void DM_WriteLinedefs()
 }
 
 
+static void DM_AddThing_FraggleScript(int x, int y, int z, csg_entity_c *E,
+									  int type, int angle, int options)
+{
+	// this is set in the Lua code (raw_add_entity)
+	const char *fs_name = E->props.getStr("fs_name", NULL);
+
+	if (! fs_name)
+	{
+		LogPrintf("WARNING: entity lost (no fragglescript name for type #%d)\n", type);
+		return;
+	}
+
+	// TODO
+	//
+	// fs_thing_t  thing(x, y, z, fs_name, angle, options);
+	// fragglescript_things.push_back(thing);
+	//
+fprintf(stderr, "\n*** FraggleScript thing '%s' @ (%d %d %d)\n\n", fs_name, x, y, z);
+}
+
+
 static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E)
 {
 	// ignore light entities
@@ -2667,7 +2695,9 @@ static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E)
 
 	int x = I_ROUND(E->x);
 	int y = I_ROUND(E->y);
-	int h = I_ROUND(E->z) - S->f_h;
+	int z = I_ROUND(E->z);
+
+	int h = z - S->f_h;
 
 	if (h < 0) h = 0;
 
@@ -2689,6 +2719,21 @@ static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E)
 	byte args[5] = { 0,0,0,0,0 };
 
 	E->props.getHexenArgs(args);
+
+	if (E->ex_floor > 0)
+	{
+		if (ef_thing_mode == 1)
+		{
+			// Use FraggleScript to place the thing on a 3D floor
+			DM_AddThing_FraggleScript(x, y, z, E, type, angle, options);
+			return;
+		}
+		else if (ef_thing_mode == 2)
+		{
+			// EDGE extrafloor flags
+			options |= (E->ex_floor << MTF_EDGE_EXFLOOR_SHIFT);
+		}
+	}
 
 	DM_AddThing(x, y, h, type, angle, options, tid, special, args);
 }

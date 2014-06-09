@@ -44,7 +44,7 @@ extern void CSG_DOOM_Write();
 
 extern int ef_solid_type;
 extern int ef_liquid_type;
-extern int ef_liquid_special;
+extern int ef_thing_mode;
 
 extern int sky_light;
 extern int sky_shade;
@@ -57,6 +57,7 @@ int dm_sub_format;
 
 int dm_offset_map;
 
+static qLump_c *header_lump;
 static qLump_c *thing_lump;
 static qLump_c *vertex_lump;
 static qLump_c *sector_lump;
@@ -232,6 +233,7 @@ bool DM_EndWAD()
 
 static void DM_FreeLumps()
 {
+	delete header_lump;  header_lump  = NULL;
 	delete thing_lump;   thing_lump   = NULL;
 	delete sector_lump;  sector_lump  = NULL;
 	delete vertex_lump;  vertex_lump  = NULL;
@@ -244,6 +246,7 @@ void DM_BeginLevel()
 {
 	DM_FreeLumps();
 
+	header_lump  = new qLump_c();
 	thing_lump   = new qLump_c();
 	vertex_lump  = new qLump_c();
 	sector_lump  = new qLump_c();
@@ -254,7 +257,7 @@ void DM_BeginLevel()
 
 void DM_EndLevel(const char *level_name)
 {
-	DM_WriteLump(level_name, NULL, 0);
+	DM_WriteLump(level_name, header_lump);
 
 	DM_WriteLump("THINGS",   thing_lump);
 	DM_WriteLump("LINEDEFS", linedef_lump);
@@ -692,6 +695,7 @@ bool doom_game_interface_c::Start()
 
 	ef_solid_type = 0;
 	ef_liquid_type = 0;
+	ef_thing_mode = 0;
 
 	if (batch_mode)
 		filename = StringDup(batch_output_file);
@@ -806,6 +810,10 @@ void doom_game_interface_c::Property(const char *key, const char *value)
 	else if (StringCaseCmp(key, "ef_liquid_type") == 0)
 	{
 		ef_liquid_type = atoi(value);
+	}
+	else if (StringCaseCmp(key, "ef_thing_mode") == 0)
+	{
+		ef_thing_mode = atoi(value);
 	}
 	else if (StringCaseCmp(key, "sky_light") == 0)
 	{
