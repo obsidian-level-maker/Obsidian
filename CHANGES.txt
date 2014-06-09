@@ -19,6 +19,8 @@ CHANGELOG
 + experimental support for 3D floors
 + added 'tech_Gray' theme for DOOM, thanks to Mr. Chris
 
+- support upto 8 players in CO-OP mode
+
 - new theme choices: Mostly Tech, Mostly Urban, Mostly Hell
 - reorganized the 'Theme' menu, added a separator
 

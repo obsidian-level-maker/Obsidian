@@ -535,11 +535,11 @@ Name generator:
 
 +  use fl_utf8.h functions (fl_fopen, etc) for file handling
 
-+  use OpenMP to speed up DOOM lighting algorithm
+-  use OpenMP to speed up DOOM lighting algorithm
 
-+  ability to specify log file: --log option
+-  option to save log to same base filename (TEST.wad + TEST.log)
 
--  an option for more compact GUI (fit on 640x480 screen)
+-  ability to specify log file: --log option
 
 Console:
   -  display lists better
