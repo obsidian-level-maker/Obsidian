@@ -2936,15 +2936,23 @@ function Room_build_seeds(R)
 
     dx = dx * 24 ; dy = dy * 24
 
-    Trans.entity(R.player_pair[1], mx - dy, my + dx, z, { angle=angle })
-    Trans.entity(R.player_pair[2], mx + dy, my - dx, z, { angle=angle })
+    Trans.entity(R.player_set[1], mx - dy, my + dx, z, { angle=angle })
+    Trans.entity(R.player_set[2], mx + dy, my - dx, z, { angle=angle })
+
+    if GAME.ENTITIES["player8"] then
+      mx = mx - dx * 2
+      my = my - dy * 2
+
+      Trans.entity(R.player_set[3], mx - dy, my + dx, z, { angle=angle })
+      Trans.entity(R.player_set[4], mx + dy, my - dx, z, { angle=angle })
+    end
   end
 
 
   local function content_start(S, mx, my, z1)
     local dir = player_dir(S)
 
-    if R.player_pair then
+    if R.player_set then
       content_coop_pair(mx, my, z1, dir)
 
     elseif false and PARAM.raising_start and R.svolume >= 20 and

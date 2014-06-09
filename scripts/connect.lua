@@ -1769,22 +1769,22 @@ function Connect_reserved_rooms()
     local set1, set2
 
     if rand.odds(10) then
-      set1 = { "player1", "player2" }
-      set2 = { "player3", "player4" } 
+      set1 = { "player1", "player2", "player5", "player6" }
+      set2 = { "player3", "player4", "player7", "player8" } 
     elseif rand.odds(50) then
-      set1 = { "player1", "player3" }
-      set2 = { "player2", "player4" } 
+      set1 = { "player1", "player3", "player5", "player7" }
+      set2 = { "player2", "player4", "player6", "player8" } 
     else
-      set1 = { "player1", "player4" }
-      set2 = { "player2", "player3" } 
+      set1 = { "player1", "player4", "player6", "player7" }
+      set2 = { "player2", "player3", "player5", "player8" } 
     end
 
     if rand.odds(50) then
       set1, set2 = set2, set1
     end
 
-    LEVEL.start_room.player_pair = set1
-    LEVEL.alt_start .player_pair = set2
+    LEVEL.start_room.player_set = set1
+    LEVEL.alt_start .player_set = set2
   end
 
 
