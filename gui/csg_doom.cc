@@ -71,7 +71,7 @@ double light_dist_factor = 800.0;
 // fake linedef special for lower-unpegging
 #define LIN_FAKE_UNPEGGED  991
 
-// fake sector special to get floor texture from a neighbor
+// fake sector special to merge sector with lowest neighbor floor
 #define SEC_GRAB_NB_FLOOR  993
 
 
@@ -972,26 +972,85 @@ static void DM_CreateSectors()
 }
 
 
-static bool DM_TryGrabFloor(doom_sector_c *D1, doom_sector_c *D2)
+static void DM_TryGrabFloor(doom_sector_c *D1, int sec_idx)
 {
-	if (D2->special == SEC_GRAB_NB_FLOOR)
-	{
-		std::swap(D1, D2);
-	}
-
-	if (D1->special != SEC_GRAB_NB_FLOOR  ||
-	    D2->special == SEC_GRAB_NB_FLOOR)
-		return false;
-
-	if (D1->f_h != D2->f_h)
-		return false;
-
-	// grab the other floor, remove the fake special
-
-	D1->f_tex   = D2->f_tex;
+	// clear the fake special now
 	D1->special = 0;
 
-	return true;
+	std::string got_tex;
+	int got_floor = IVAL_NONE;
+	int got_special = 0;
+
+	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+	{
+		region_c *R = all_regions[i];
+
+		if (R->index != sec_idx)
+			continue;
+
+		for (unsigned int k = 0 ; k < R->snags.size() ; k++)
+		{
+			snag_c *S = R->snags[k];
+
+			region_c *N = S->partner ? S->partner->region : NULL;
+
+			if (!N || N->index < 0)
+				continue;
+
+			// require partner in a different sector
+
+			doom_sector_c *D2 = dm_sectors[N->index];
+
+			SYS_ASSERT(! D2->isUnused());
+
+			if (D2 == D1)
+				continue;
+
+			if (D2->f_h >= D1->f_h)
+				continue;
+
+			if (got_floor != IVAL_NONE && D2->f_h != got_floor)
+			{
+				// Failed : two neighbors at different heights
+				return;
+			}
+
+			got_tex     = D2->f_tex;
+			got_floor   = D2->f_h;
+			got_special = D2->special;
+		}
+	}
+
+	if (got_floor == IVAL_NONE)
+	{
+		// no lower neighbor sector to grab
+		return;
+	}
+
+	D1->f_tex   = got_tex;
+	D1->f_h     = got_floor;
+	D1->special = got_special;
+}
+
+
+static void DM_GrabNeighborFloors()
+{
+	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+	{
+		region_c *R = all_regions[i];
+
+		if (R->index < 0)
+			continue;
+
+		doom_sector_c *D1 = dm_sectors[R->index];
+
+		SYS_ASSERT(! D1->isUnused());
+
+		if (D1->special == SEC_GRAB_NB_FLOOR)
+		{
+			DM_TryGrabFloor(D1, R->index);
+		}
+	}
 }
 
 
@@ -1023,9 +1082,6 @@ static int DM_CoalescePass()
 
 			doom_sector_c *D2 = dm_sectors[N->index];
 
-			if (DM_TryGrabFloor(D1, D2))
-				changes++;
-
 			if (D2->Match(D1))
 			{
 				D2->MarkUnused();
@@ -1047,6 +1103,8 @@ static void DM_CoalesceSectors()
 {
 	while (DM_CoalescePass() > 0)
 	{ }
+
+  	DM_GrabNeighborFloors();
 
 	// Note: we cannot remove & delete the unused sectors since the
 	// region_c::index fields would need to be updated as well.
