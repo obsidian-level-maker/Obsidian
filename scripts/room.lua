@@ -3430,6 +3430,7 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
     local fab_name = "Door_secret"
     if is_fence then
       fab_name = "Fence_secret"
+w_tex = "CEMENT9"
     end
 
     local skin1 = GAME.SKINS[fab_name]
@@ -3481,6 +3482,7 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
     local extra_z = calc_fence_extra_z(S, side, z)
 
     local fab_name = "Fence_plain"
+w_tex = "CEMENT9"
 
     local skin1 = GAME.SKINS[fab_name]
     assert(skin1)
@@ -4127,21 +4129,32 @@ function Room_find_pickup_spots(R)
   --
 
   local function add_big_spot(R, S, score)
+    local z = rand.sel(50, S.floor_max_h, S.floor_h)
+    
     local mx, my = S:mid_point()
+
     table.insert(R.big_spots,
     {
       S = S
       score = score
 
-      x1 = mx - 24, y1 = my - 24, z1 = (S.floor_h or 0)
-      x2 = mx + 24, y2 = my + 24, z2 = (S.floor_h or 0) + 64
-
-      -- FIXME: REMOVE
-      x=mx, y=my
+      x1 = mx - 24, y1 = my - 24, z1 = z
+      x2 = mx + 24, y2 = my + 24, z2 = z + 64
     })
   end
 
-  local function add_small_spots(R, S, side, count, score)
+  local function add_small_spots(R, S, side, count, try_overlay)
+    local z = rand.sel(50, S.floor_max_h, S.floor_h)
+
+    if try_overlay then
+      local OV = S.chunk
+      if OV and OV.overlay then
+         OV = OV.overlay
+      end
+      if not OV or OV.kind != "floor" then return end
+      z = OV.floor.floor_h
+    end
+
     local dist = 38
 
     for i = 1,count do  -- out from wall
@@ -4171,11 +4184,8 @@ function Room_find_pickup_spots(R)
         dir = dir
         wall_dist = (i - 1)
 
-        x1 = mx - 12, y1 = my - 12, z1 = (S.floor_h or 0)
-        x2 = mx + 12, y2 = my + 12, z2 = (S.floor_h or 0) + 64
-
-        -- FIXME: REMOVE
-        x=mx, y=my
+        x1 = mx - 12, y1 = my - 12, z1 = z
+        x2 = mx + 12, y2 = my + 12, z2 = z + 64
       })
     end
     end
@@ -4194,7 +4204,7 @@ function Room_find_pickup_spots(R)
     add_big_spot(R, S, score)
   end
 
-  local function try_add_small_spot(R, S)
+  local function try_add_small_spot(R, S, try_overlay)
     local score = gui.random()
 
     if R.entry_conn and R.entry_conn.kind != "teleporter" then
@@ -4226,18 +4236,18 @@ function Room_find_pickup_spots(R)
     if table.empty(walls) then return end
 
     if walls[4] and walls[6] then
-      add_small_spots(R, S, 4, 2, score)
-      add_small_spots(R, S, 6, 2, score - 0.3)
+      add_small_spots(R, S, 4, 2, try_overlay)
+      add_small_spots(R, S, 6, 2, try_overlay)
 
     elseif walls[2] and walls[8] then
-      add_small_spots(R, S, 2, 2, score)
-      add_small_spots(R, S, 8, 2, score - 0.3)
+      add_small_spots(R, S, 2, 2, try_overlay)
+      add_small_spots(R, S, 8, 2, try_overlay)
 
     else
       for loop = 1,100 do
         local side = rand.irange(1,4) * 2
         if walls[side] then
-          add_small_spots(R, S, side, 4, score)
+          add_small_spots(R, S, side, 4, try_overlay)
           break;
         end
       end
@@ -4271,13 +4281,17 @@ function Room_find_pickup_spots(R)
     local score
 
     if S.room == R and S.kind == "walk" and
-       (not S.content or S.content == "monster")
+       (not S.content)
     then
       try_add_big_spot(R, S)
       try_add_small_spot(R, S)
 
       if not emerg_big then emerg_big = S end
       emerg_small = S
+    end
+
+    if S.room == R and S.kind == "liquid" and not S.content then
+      try_add_small_spot(R, S, "try_overlay")
     end
 
     if S.room == R and S.kind == "diagonal" then
@@ -4309,7 +4323,7 @@ end
 
 function Room_find_monster_spots(R)
 
-  local function add_small_mon_spot(S, h_diff)
+  local function add_small_mon_spot(S, z, h_diff)
     local x1 = S.x1 + S.thick[4] + 8
     local y1 = S.y1 + S.thick[2] + 8
     local x2 = S.x2 - S.thick[6] - 8
@@ -4321,15 +4335,13 @@ function Room_find_monster_spots(R)
     {
       S=S, score=gui.random(),  -- FIXME score
 
-      x1=x1, y1=y1, z1=(S.floor_h or 0),
-      x2=x2, y2=y2, z2=(S.floor_h or 0) + h_diff,
+      x1=x1, y1=y1, z1=z
+      x2=x2, y2=y2, z2=z + h_diff,
     })
-
-    S.no_monster = true
   end
 
 
-  local function add_large_mon_spot(S, h_diff)
+  local function add_large_mon_spot(S, z, h_diff)
     local S2 = SEEDS[S.sx + 1][S.sy]
     local S3 = SEEDS[S.sx]    [S.sy + 1]
     local S4 = SEEDS[S.sx + 1][S.sy + 1]
@@ -4358,8 +4370,31 @@ function Room_find_monster_spots(R)
   end
 
 
-  local function can_accommodate_small(S)
-    if S.content or S.no_monster or not S.floor_h then
+  local function can_accommodate_small(S, try_overlay)
+    local z
+
+    local OV = S.chunk
+    if OV and OV.overlay then
+       OV = OV.overlay
+    else
+       OV = nil
+    end
+
+    if try_overlay then
+      if not OV or OV.kind != "floor" then return false end
+      z = OV.floor.floor_h
+
+    else
+      -- check seed kind
+      if S.kind != "walk" then
+        return false
+      end
+
+      z = S.floor_h
+    end
+
+    -- already used?
+    if S.content or S.no_monster then
       return false
     end
 
@@ -4368,18 +4403,22 @@ function Room_find_monster_spots(R)
       return false
     end
 
-    -- check seed kind
-    if S.kind != "walk" then
-      return false
+    local ceil_h = S.ceil_h or R.ceil_h
+
+    if not try_overlay and OV and OV.floor then
+      ceil_h = OV.floor.floor_h - 24
     end
 
-    local h_diff = (S.ceil_h or R.ceil_h) - (S.floor_h or 0)
+    local h_diff = ceil_h - z
+    assert(h_diff > 0)
 
-    return true, h_diff
+    return true, z, h_diff
   end
 
 
-  local function can_accommodate_large(S, sx, sy)
+  local function can_accommodate_large(S)
+    local sx, sy = S.sx, S.sy
+
     if (sx+1 > R.sx2) or (sy+1 > R.sy2) then
       return false
     end
@@ -4387,13 +4426,16 @@ function Room_find_monster_spots(R)
     local low_ceil = S.ceil_h  or R.ceil_h
     local hi_floor = S.floor_h or 0
 
+    local z = S.floor_h
+    if not z then return false end
+
     for dx = 0,1 do
     for dy = 0,1 do
         local S2 = SEEDS[sx+dx][sy+dy]
 
-        if S2.room != S.room then return false end
-
-        if not can_accommodate_small(S2) then return false end
+        if S2.room != R then return false end
+        if S2.kind != "walk" then return false end
+        if S2.content or S2.no_monster then return false end
 
         if S2.solid_corner then return false end
 
@@ -4402,7 +4444,7 @@ function Room_find_monster_spots(R)
         end
 
         -- ensure no floor difference for huge monsters
-        local diff = math.abs((S.floor_h or 0) - (S2.floor_h or 0))
+        local diff = math.abs(z - S2.floor_h)
 
         if diff > 1 then return false end
 
@@ -4411,7 +4453,7 @@ function Room_find_monster_spots(R)
 
     local h_diff = (low_ceil - hi_floor)
 
-    return true, h_diff
+    return true, z, h_diff
   end
 
 
@@ -4424,7 +4466,7 @@ function Room_find_monster_spots(R)
 
   -- find large 2x2 spots in first pass, small 1x1 spots in second
 
-  for pass = 1,2 do
+  for pass = 1,3 do
     for x = R.sx1, R.sx2 do
     for y = R.sy1, R.sy2 do
       local S = SEEDS[x][y]
@@ -4432,17 +4474,18 @@ function Room_find_monster_spots(R)
       if S.room != R then continue end
 
       if pass == 1 then
-        local large_ok, large_diff = can_accommodate_large(S, x, y)
+        local ok, z, diff = can_accommodate_large(S)
 
-        if large_ok then
-          add_large_mon_spot(S, large_diff)
+        if ok then
+          add_large_mon_spot(S, z, diff)
         end
 
       else
-        local small_ok, small_diff = can_accommodate_small(S)
+        local try_overlay = (pass == 3)
+        local ok, z, diff = can_accommodate_small(S, try_overlay)
 
-        if small_ok then
-          add_small_mon_spot(S, small_diff)
+        if ok then
+          add_small_mon_spot(S, z, diff)
         end
       end
     end
