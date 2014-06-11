@@ -26,6 +26,36 @@ DOOM.SKINS.Border_rocky_t =
 }
 
 
+DOOM.SKINS.Border_rocky_start =
+{
+  file   = "border/rocky_start.wad"
+  group  = "border_rocky"
+  shape  = "T"
+
+  purpose = "START"
+
+  seed_w = 3
+  seed_h = 3
+
+  add_sky = 1
+}
+
+
+DOOM.SKINS.Border_rocky_exit =
+{
+  file   = "border/rocky_exit.wad"
+  group  = "border_rocky"
+  shape  = "T"
+
+  purpose = "EXIT"
+
+  seed_w = 3
+  seed_h = 3
+
+  add_sky = 1
+}
+
+
 --
 -- Group information
 --
