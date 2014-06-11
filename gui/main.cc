@@ -457,14 +457,16 @@ static void Main_NewSeed()
 
 	u32_t val = (u32_t)time(NULL);
 
-	// reverse the bits to get more random-looking seeds
+	// only use 31 bits (to allow adding values without overflow)
+	val = (val & 0x7FFFFFFF);
+
+	// reorder the bits to get more random-looking seeds
 	u32_t flipped = 0;
 
-	for (int i = 0 ; i < 30 ; i++, val >>= 1)
-		flipped = (flipped << 1) | (val & 1);
-
-	// ensure it is only 9 digits
-	flipped &= 0x37FFFFFF;
+	for (int i = 0 ; i < 31 ; i++)
+	{
+		flipped = (flipped << 1) | !! (val & (1 << ((i * 5) % 31)));
+	}
 
 	sprintf(buffer, "%d", flipped);
 
