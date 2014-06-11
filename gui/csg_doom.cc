@@ -977,6 +977,10 @@ static void DM_TryGrabFloor(doom_sector_c *D1, int sec_idx)
 	// clear the fake special now
 	D1->special = 0;
 
+	// to prevent creating inescapable pits, we ensure that only a
+	// single lower neighbor can be used (copied from) -- multiple
+	// ones cause the floor to stay the same.
+
 	std::string got_tex;
 	int got_floor = IVAL_NONE;
 	int got_special = 0;
