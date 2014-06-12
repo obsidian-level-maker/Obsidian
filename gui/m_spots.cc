@@ -47,6 +47,9 @@ static int * grid_lefties;
 static int * grid_righties;
 
 
+// declare this here (don't pull in all CSG headers)
+extern void CSG_spot_processing(int x1, int y1, int x2, int y2, int floor_h);
+
 
 void SPOT_CreateGrid(byte content, int min_x, int min_y, int max_x, int max_y)
 {
@@ -793,7 +796,7 @@ static int polygon_coord(lua_State *L, int stack_pos,
 	lua_getfield(L, stack_pos, "x");
 	lua_getfield(L, stack_pos, "y");
 
-	// ignore non-XY coordinates, to allow brushes
+	// ignore non-XY coordinates, to allow passing whole brushes
 
 	if (! lua_isnil(L, -2))
 	{
@@ -846,6 +849,18 @@ int SPOT_fill_poly(lua_State *L)
 		return luaL_error(L, "gui.spots_fill_poly: bad polygon");
 
 	SPOT_FillPolygon(content, points);
+
+	return 0;
+}
+
+
+// LUA: spots_apply_brushes(floor_h)
+//
+int SPOT_apply_brushes(lua_State *L)
+{
+	int floor_h = luaL_checkint(L, 1);
+
+	CSG_spot_processing(grid_min_x, grid_min_y, grid_max_x, grid_max_y, floor_h);
 
 	return 0;
 }
