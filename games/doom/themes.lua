@@ -1412,7 +1412,179 @@ OB_THEMES["wolf"] =
 --  TNT Evilution
 --------------------------------------------------------------------
 
-UNFINISHED["egypt"] =
+TNT.THEMES =
+{
+  egypt_DEFAULTS =
+  {
+    liquids =
+    {
+      water = 60
+      slime = 30
+      blood = 10
+      lava  = 15
+    }
+
+--May need new themage!!
+--Some textures still need to be done for this to work -Chris
+    facades =
+    {
+      STONEW1 = 30
+      STWALL = 20
+      SMSTONE6 = 10
+    }
+
+    outdoor_torches =
+    {
+      blue_torch = 50
+      green_torch = 50
+      red_torch = 50
+      candelabra = 20
+    }
+
+--Mostly based on what is seen in TNT.WAD MAP31
+    monster_prefs =
+    {
+      gunner = 1.2
+      mancubus = 1.3
+      demon   = 1.5
+    }
+
+    archy_arches = true
+
+--Any rocky/stonelike/metal doors (IE METALDR) would do great for this theme -Chris
+
+
+    ---!!!  TEMPORARY V3 STUFF  !!!---
+
+    exits = { demon_pillar2=20, demon_pillar3=20, stone_pillar=40 }
+    switches = { sw_wood=80, sw_blue=30, sw_hot=50 }
+    big_pillars = { big_slad=30, big_wood6=30, big_garg=60 }
+  }
+
+
+  egypt_Tomb =
+  {
+    prob = 90
+    kind = "building"
+
+    walls =
+    {
+      STWALL = 30
+      BIGWALL = 10
+      STONEW1 = 10
+      STONEW5 = 5
+    }
+
+    floors =
+    {
+      FLAT5 = 20
+      FLOOR5_4 = 20
+      FLOOR5_3 = 15
+      RROCK09 = 15
+      FLAT1_1 = 10
+      FLAT1_2 = 10
+      FLAT8   = 10
+      FLAT5_5 = 5
+    }
+
+    ceilings =
+    {
+      FLAT8 = 20
+      FLAT1_1 = 20
+      RROCK09 = 15
+      RROCK11 = 10
+      RROCK12 = 10
+      RROCK15 = 10
+      CEIL1_1 = 5
+    }
+
+    corners =
+    {
+      MURAL1 = 15
+      MURAL2 = 15
+      STONEW5 = 3
+    }
+  }
+
+
+  egypt_Hallway =
+  {
+    kind = "hallway"
+
+    walls =
+    {
+      STWALL = 30
+      MURAL1 = 15
+      MURAL2 = 15
+      STONE6 = 10
+      BIGMURAL = 5
+    }
+
+    floors =
+    {
+      FLAT5 = 30
+      FLAT1_1 = 30
+      FLAT1_2 = 30
+      FLAT8   = 20
+      FLOOR5_3 = 20
+    }
+
+    ceilings =
+    {
+      FLAT5 = 20
+      FLAT1_1 = 20
+      FLAT1_2 = 20
+      FLAT8   = 20
+      RROCK12 = 20
+      RROCK15 = 20
+      CEIL1_1 = 20
+    }
+  }
+
+
+  egypt_Outdoors =
+  {
+    kind = "outdoors"
+
+    floors =
+    {
+      RROCK09 = 50
+      RROCK16 = 30
+      RROCK03 = 15
+    }
+
+    naturals =
+    {
+      STONEW1 = 50
+      SMSTONE6 = 25
+      ROCK4 = 25
+      ROCK5 = 25
+      STONE6 = 15
+    }
+  }
+
+  egypt_Cave =
+  {
+    kind = "cave"
+
+    naturals =
+    {
+      CAVERN6 = 50
+      CAVERN7 = 50
+      ALTAQUA = 50
+
+      ROCK4 = 30
+      ROCK5 = 30
+      TANROCK4 = 30
+      TANROCK5 = 30
+      ASHWALL7 = 20
+      BROWNHUG = 10
+    }
+  }
+}
+
+
+OB_THEMES["egypt"] =
 {
   -- TNT Evilution theme
 
