@@ -1990,12 +1990,23 @@ end
       if OV.kind == "floor" then
         local vhr = area.entry_vhr + OV.floor - T.entry_floor
 
-        CHUNK.overlay =
+        local OV_CHUNK =
         {
           kind = "floor"
 
+          sx1 = sx1
+          sy1 = sy1
+          sx2 = sx2
+          sy2 = sy2
+
           floor = new_floor(vhr)
+
+          is_overlay = true
         }
+
+        table.insert(R.chunks, OV_CHUNK)
+
+        CHUNK.overlay = OV_CHUNK
       end
 
       R.has_3d_floor = true
@@ -2239,10 +2250,6 @@ function Layout_height_realization(R, entry_h)
       add_floor(chunk.floor)
       add_floor(chunk.src_floor)
       add_floor(chunk.dest_floor)
-
-      if chunk.overlay then
-        add_floor(chunk.overlay.floor)
-      end
     end
 
     assert(R.min_vhr <= R.max_vhr)
