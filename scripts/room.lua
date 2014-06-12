@@ -4550,6 +4550,22 @@ end
 
 
 function Room_determine_spots()
+  
+  -- Algorithm:
+  --
+  -- For each floor of each room:
+  --
+  --   1. initialize grid to be CLEAR, to represent the current floor.
+  --      the floor itself is never set or cleared, as polygon drawing
+  --      always fills any pixel touched by the polygon, leading to
+  --      making somewhat too big areas
+  --  
+  --   2. kill the sides of the room
+  --
+  --   3. kill all seeds not part of the current floor
+  --
+  --   4. use the CSG code to kill any blocking brushes 
+  --
 
   local function store_spots_w_heights(src, dest, f_h, c_h)
     each spot in src do
@@ -4571,24 +4587,78 @@ function Room_determine_spots()
   end
 
 
+  local function solidify_edge(side, x1, y1, x2, y2)
+    if geom.is_vert(side) then
+      x1 = x1 - 100 ; x2 = x2 + 100
+    else
+      y1 = y1 - 100 ; y2 = y2 + 100
+    end
+
+    if side == 2 then y2 = y1 ; y1 = y1 - 100 end
+    if side == 8 then y1 = y2 ; y2 = y2 + 100 end
+    if side == 4 then x2 = x1 ; x1 = x1 - 100 end
+    if side == 6 then x1 = x2 ; x2 = x2 + 100 end
+
+    local poly = brushlib.quad(x1, y1, x2, y2)
+
+    gui.spots_fill_poly(poly, SPOT_LEDGE)
+  end
+
+
+  local function solidify_seed(S)
+    local poly = brushlib.quad(S.x1, S.y1, S.x2, S.y2)
+
+    gui.spots_fill_poly(poly, SPOT_LEDGE)
+  end
+
+
+  local function try_solidify_seed(S, floor)
+    local K = S.chunk
+
+    while K do
+      if K.kind == "floor" and K.floor == floor then
+        return -- found the floor, so leave it alone
+      end
+
+      K = K.overlay
+    end
+
+    -- that floor is not here
+    solidify_seed(S)
+  end
+
+
   local function spots_for_floor(R, floor)
     -- get bbox of room
     local S1 = SEEDS[R.sx1][R.sy1]
     local S2 = SEEDS[R.sx2][R.sy2]
 
-    local rx1 = S1.x1 - 10
-    local ry1 = S1.y1 - 10
-    local rx2 = S2.x2 + 10
-    local ry2 = S2.y2 + 10
+    local rx1 = S1.x1
+    local ry1 = S1.y1
+    local rx2 = S2.x2
+    local ry2 = S2.y2
 
-    -- initialize grid to "ledge"
-    gui.spots_begin(rx1, ry1, rx2, ry2, SPOT_LEDGE)
+    -- initialize grid to "clear"
+    gui.spots_begin(rx1 - 48, ry1 - 48, rx2 + 48, ry2 + 48, SPOT_CLEAR)
 
-    -- clear the floor areas
-    each K in R.chunks do
-      if K.floor == floor then
-        clear_chunk(K)
+    -- handle edges of room
+    for side = 2,8,2 do
+      solidify_edge(side, rx1, ry1, rx2, ry2)
+    end
+
+    -- any seeds which _DONT_ belong to this floor, solidify them
+    for sx = R.sx1, R.sx2 do
+    for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
+
+      -- this check handles sub-rooms
+      if S.room != R then
+        solidify_seed(S)
+        continue
       end
+
+      try_solidify_seed(S, floor)
+    end
     end
 
     -- remove walls and blockers (using nearby brushes)
