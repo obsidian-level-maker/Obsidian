@@ -4116,7 +4116,7 @@ function Room_distribute_spots(R, list)
 end
 
 
-function Room_find_pickup_spots(R)
+function Room_find_pickup_spots__OLD(R)
   --
   -- Creates a map over the room where we can place pickup items.
   -- We distinguish two types:
@@ -4321,7 +4321,7 @@ end
 
 
 
-function Room_find_monster_spots(R)
+function Room_find_monster_spots__OLD(R)
 
   local function add_small_mon_spot(S, z, h_diff)
     local x1 = S.x1 + S.thick[4] + 8
@@ -4561,6 +4561,16 @@ function Room_determine_spots()
   end
 
 
+  local function clear_chunk(K)
+    local S1 = SEEDS[K.sx1][K.sy1]
+    local S2 = SEEDS[K.sx2][K.sy2]
+
+    local poly = brushlib.quad(S1.x1, S1.y1, S2.x2, S2.y2)
+
+    gui.spots_fill_poly(poly, SPOT_CLEAR)
+  end
+
+
   local function spots_for_floor(R, floor)
     -- get bbox of room
     local S1 = SEEDS[R.sx1][R.sy1]
@@ -4575,12 +4585,13 @@ function Room_determine_spots()
     gui.spots_begin(rx1, ry1, rx2, ry2, SPOT_LEDGE)
 
     -- clear the floor areas
-
-    -- FIXME !!!!
     each K in R.chunks do
+      if K.floor == floor then
+        clear_chunk(K)
+      end
     end
 
-    -- remove walls and blockers (from nearby brushes)
+    -- remove walls and blockers (using nearby brushes)
     gui.spots_apply_brushes(floor.floor_h);
 
     -- FIXME !!!! remove solid decor entities
@@ -4594,6 +4605,8 @@ function Room_determine_spots()
 
     gui.spots_get_items(item_spots)
     gui.spots_get_mons(mon_spots)
+
+stderrf("mon_spots @ %s floor:%d : %d\n", R:tostr(), f_h, #mon_spots)
 
     store_spots_w_heights(item_spots, R.item_spots, f_h, c_h)
     store_spots_w_heights( mon_spots, R. mon_spots, f_h, c_h)
@@ -4609,7 +4622,7 @@ function Room_determine_spots()
     if R.kind == "stairwell" then return end
     if R.kind == "smallexit" then return end
 
-    each floor in R.floors do
+    each vhr,floor in R.floors do
       spots_for_floor(R, floor)
     end
   end
@@ -4652,6 +4665,7 @@ function Room_build_all()
   Layout_build_outdoor_borders()
 
   Room_run_builders()
+
   Room_determine_spots()
 end
 
