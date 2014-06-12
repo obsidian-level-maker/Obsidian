@@ -18,6 +18,7 @@ Chris Pisarczyk (Mr. Chris)
   - DOOM 1 boss maps (most of them in fact)
   - DOOM 2 boss maps (e.g. "dead simple" one)
   - DOOM 1/2 theming
+  - Egypt theme for TNT Evilution
   - additions to name generator
   - lots of useful feedback
   - general encouragement and support
