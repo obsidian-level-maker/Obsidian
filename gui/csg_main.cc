@@ -43,6 +43,13 @@ std::string dummy_wall_tex;
 std::string dummy_plane_tex;
 
 
+// m_spots.cc
+#define SPOT_WALL   1
+#define SPOT_LEDGE  2
+
+extern void SPOT_FillPolygon(byte content, const int *shape, int count);
+
+
 slope_info_c::slope_info_c() :
 	sx(0),sy(0), ex(1),ey(0),dz(0)
 { }
@@ -442,11 +449,8 @@ private:
 		return B->IntersectRay(x1, y1, z1, x2, y2, z2);
 	}
 
-	bool RayTouchesBox(double x1, double y1, double x2, double y2) const
+	bool BoxTouchesThis(double x1, double y1, double x2, double y2) const
 	{
-		// TODO: a _proper_ line/box test will be much more optimal
-		//       (assuming the average ray is fairly long).
-
 		if (MAX(x1, x2) < lo_x) return false;
 		if (MAX(y1, y2) < lo_y) return false;
 
@@ -454,6 +458,14 @@ private:
 		if (MIN(y1, y2) > hi_y()) return false;
 
 		return true;
+	}
+
+	bool RayTouchesBox(double x1, double y1, double x2, double y2) const
+	{
+		// TODO: a _proper_ line/box test will be much more optimal
+		//       (assuming the average ray is fairly long).
+
+		return BoxTouchesThis(x1, y1, x2, y2);
 	}
 
 public:
@@ -476,6 +488,69 @@ public:
 		}
 
 		return false;  // did not hit anything
+	}
+
+private:
+	void SpotTestBrush(const csg_brush_c *B,
+					   int x1, int y1, int x2, int y2, int floor_h)
+	{
+		// ignore non-solid brushes
+		if (B->bkind == BKIND_Detail || B->bkind >= BKIND_Liquid)
+			return;
+
+		// bbox check (skip if merely touching the bbox)
+		if (B->max_x <= x1 || B->min_x >= x2 ||
+		    B->max_y <= y1 || B->min_y >= y2)
+			return;
+
+		// skip brushes underneath the floor (or the floor itself)
+		if (B->t.z < floor_h + 1)
+			return;
+
+		// skip brushes far above the floor (like ceilings)
+		if (B->b.z > floor_h + 90)
+			return;
+
+		/* this brush is a potential blocker */
+
+		int content = SPOT_LEDGE;
+
+		if (B->b.z <= floor_h && B->t.z >= floor_h + 32)
+			content = SPOT_WALL;
+
+		// build the polygon
+		std::vector<int> shape;
+
+		int num_vert = (int)B->verts.size();
+
+		for (int i = 0 ; i < num_vert ; i++)
+		{
+			const brush_vert_c *V = B->verts[i];
+
+			// rounding to integer here, I don't think it is any problem,
+			// as the spot polygon-drawing code is fairly robust.
+			shape.push_back(I_ROUND(V->x));
+			shape.push_back(I_ROUND(V->y));
+		}
+
+		SPOT_FillPolygon(content, &shape[0], num_vert);
+	}
+
+public:
+	void SpotStuff(int x1, int y1, int x2, int y2, int floor_h)
+	{
+		for (unsigned int k = 0 ; k < brushes.size() ; k++)
+			SpotTestBrush(brushes[k], x1,y1, x2,y2, floor_h);
+
+		if (children[0][0])
+		{
+			for (int cx = 0 ; cx < 2 ; cx++)
+			for (int cy = 0 ; cy < 2 ; cy++)
+			{
+				if (children[cx][cy]->BoxTouchesThis(x1,y1, x2,y2))
+					children[cx][cy]->SpotStuff(x1,y1, x2,y2, floor_h);
+			}
+		}
 	}
 };
 
@@ -916,6 +991,12 @@ int CSG_trace_ray(lua_State *L)
 
 	lua_pushboolean(L, result ? 1 : 0);
 	return 1;
+}
+
+
+void CSG_spot_processing(int x1, int y1, int x2, int y2, int floor_h)
+{
+	brush_quad_tree->SpotStuff(x1, y1, x2, y2, floor_h);
 }
 
 
