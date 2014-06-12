@@ -217,3 +217,27 @@ DOOM.SKINS.Pic_marbface_evil =
   tex_ZZWOLF7 = "MARBFACE"
 }
 
+
+----| EGYPT |-----
+
+DOOM.SKINS.Pic_mural12 =
+{
+  file   = "wall/pic_128x128.wad"
+  where  = "edge"
+  long   = 192
+  deep   = 16
+
+  x_fit  = "frame"
+  y_fit  = "top"
+  z_fit  = { 0,8, 152,176 }
+
+  bound_z1 = 0
+  bound_z2 = 176
+
+  theme = "egypt"
+  prob  = 50
+
+  tex_ZZWOLF7 = { MURAL1=50, MURAL2=50 }
+}
+
+
