@@ -813,14 +813,15 @@ TNT.MATERIALS =
   SUPPORT3 = { t="EGSUPRT3", f="CEIL5_2" }
   ASHWALL2 = { t="ASPHALT",  f="MFLR8_4" }
   MFLR8_4  = { t="ASPHALT",  f="MFLR8_4" }
+  FLAT8    = { f="FLAT8",    t="DOKODO1B" }
 
   CAVERN1  = { t="CAVERN1",  f="RROCK07" }
   CAVERN4  = { t="CAVERN4",  f="MFLR8_3" }
   CAVERN6  = { t="CAVERN6",  f="RROCK17" }
   CAVERN7  = { t="CAVERN7",  f="RROCK16" }
 
-  SMSTONE6 = { t="SMSTONE6", f="RROCK20" }
-  STONEW1  = { t="STONEW1",  f="FLAT1_2" }
+  SMSTONE6 = { t="SMSTONE6", f="RROCK09" }
+  STONEW1  = { t="STONEW1",  f="RROCK09" }
   STONEW5  = { t="STONEW5",  f="MFLR8_3" }
 
   -- All the crates here! --
@@ -901,14 +902,14 @@ TNT.MATERIALS =
   MURAL2   = { t="MURAL2",   f="FLAT1_1" }
 
   PILLAR   = { t="PILLAR",   f="FLAT1_1" }
-  BIGWALL  = { t="BIGWALL",  f="FLAT1_1" } --256x128, Egyptian mural decor
+  BIGWALL  = { t="BIGWALL",  f="FLAT8"   } --256x128, Egyptian mural decor
   DRSIDE1  = { t="DRSIDE1",  f="FLAT1_1" } --32x128, useful for small supports, doesn't tile too well
   DRSIDE2  = { t="DRSIDE2",  f="FLAT1_1" } --32x128, useful for small supports, doesn't tile too well
   DRTOPFR  = { t="DRTOPFR",  f="FLAT1_1" } --32x65
   DRTOPSID = { t="DRTOPSID", f="FLAT1_1" } --32x65
   LONGWALL = { t="LONGWALL", f="FLAT1_1" } --256x128, Anubis mural
   SKIRTING = { t="SKIRTING", f="FLAT1_1" } --256x43, Egyptian hieroglyphics
-  STWALL   = { t="STWALL",   f="FLAT1_1" }
+  STWALL   = { t="STWALL",   f="CRATOP2" }
   DRFRONT  = { t="DRFRONT",  rail_h=128  } --Transparent in center, not really useful
 
   -- Transparent openings --

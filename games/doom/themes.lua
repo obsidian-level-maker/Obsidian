@@ -1418,10 +1418,17 @@ TNT.THEMES =
   {
     liquids =
     {
-      water = 60
-      slime = 30
-      blood = 10
-      lava  = 15
+      slime = 60
+      blood = 30
+      water = 20
+      lava  = 10
+    }
+
+    keys =
+    {
+      ks_red  = 50
+      ks_blue = 50
+      ks_yellow = 50
     }
 
 --May need new themage!!
@@ -1464,12 +1471,11 @@ TNT.THEMES =
 
   egypt_Tomb =
   {
-    prob = 90
     kind = "building"
 
     walls =
     {
-      STWALL = 30
+      STWALL  = 30
       BIGWALL = 10
       STONEW1 = 10
       STONEW5 = 5
@@ -1489,7 +1495,7 @@ TNT.THEMES =
 
     ceilings =
     {
-      FLAT8 = 20
+      FLAT8   = 20
       FLAT1_1 = 20
       RROCK09 = 15
       RROCK11 = 10
