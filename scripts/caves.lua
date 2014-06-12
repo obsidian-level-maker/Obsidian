@@ -79,11 +79,6 @@ class AREA
 --------------------------------------------------------------]]
 
 
-SPOT_CLEAR = 0
-SPOT_WALL  = 1
-SPOT_LEDGE = 2
-
-
 function Cave_generate_cave(R)
   local info = R.cave_info
 

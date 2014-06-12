@@ -4543,9 +4543,82 @@ function Room_run_builders()
   each R in LEVEL.rooms do
     Room_build_seeds(R)
 
-    Room_find_monster_spots(R)
-    Room_find_pickup_spots(R)
     Room_find_ambush_focus(R)
+  end
+end
+
+
+
+function Room_determine_spots()
+
+  local function store_spots_w_heights(src, dest, f_h, c_h)
+    each spot in src do
+      spot.z1 = f_h
+      spot.z2 = c_h
+
+      table.insert(dest, spot)
+    end
+  end
+
+
+  local function spots_for_floor(R, floor)
+    -- get bbox of room
+    local S1 = SEEDS[R.sx1][R.sy1]
+    local S2 = SEEDS[R.sx2][R.sy2]
+
+    local rx1 = S1.x1 - 10
+    local ry1 = S1.y1 - 10
+    local rx2 = S2.x2 + 10
+    local ry2 = S2.y2 + 10
+
+    -- initialize grid to "ledge"
+    gui.spots_begin(rx1, ry1, rx2, ry2, SPOT_LEDGE)
+
+    -- clear the floor areas
+
+    -- FIXME !!!!
+    each K in R.chunks do
+    end
+
+    -- remove walls and blockers (from nearby brushes)
+    gui.spots_apply_brushes(floor.floor_h);
+
+    -- FIXME !!!! remove solid decor entities
+
+    -- grab the spots and set heights
+    local f_h = assert(floor.floor_h)
+    local c_h = floor.ceil_h or (f_h + 160)
+
+    local item_spots = {}
+    local  mon_spots = {}
+
+    gui.spots_get_items(item_spots)
+    gui.spots_get_mons(mon_spots)
+
+    store_spots_w_heights(item_spots, R.item_spots, f_h, c_h)
+    store_spots_w_heights( mon_spots, R. mon_spots, f_h, c_h)
+
+    gui.spots_end();
+  end
+
+
+  local function spots_in_room(R)
+    -- caves already done
+    if R.kind == "cave" then return end
+
+    if R.kind == "stairwell" then return end
+    if R.kind == "smallexit" then return end
+
+    each floor in R.floors do
+      spots_for_floor(R, floor)
+    end
+  end
+
+
+  ---| Room_determine_spots |---
+
+  each R in LEVEL.rooms do
+    spots_in_room(R)
 
     R:exclude_monsters()
   end
@@ -4579,5 +4652,6 @@ function Room_build_all()
   Layout_build_outdoor_borders()
 
   Room_run_builders()
+  Room_determine_spots()
 end
 
