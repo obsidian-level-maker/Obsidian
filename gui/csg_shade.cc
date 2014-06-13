@@ -76,6 +76,9 @@ static int stat_targets;
 static int stat_sources;
 
 
+static std::vector< csg_entity_c *> cave_lights;
+
+
 static const int shading_table[7][10] =
 {
 	// the major index is the brightness (reverse order!)
@@ -98,6 +101,8 @@ static void SHADE_CollectLights()
 	int face_count = 0;
 	int sky_count  = 0;
 	int ent_count  = 0;
+
+	cave_lights.clear();
 
 	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
 	{
@@ -145,6 +150,9 @@ static void SHADE_CollectLights()
 		for (unsigned int k = 0 ; k < R->entities.size() ; k++)
 		{
 			csg_entity_c *E = R->entities[k];
+
+			if (E->props.getInt("cave_light", 0) > 0)
+				cave_lights.push_back(E);
 
 			int e_light = E->props.getInt("light", 0);
 
@@ -694,8 +702,78 @@ static void SHADE_MergeResults()
 }
 
 
+void SHADE_LightCaves()
+{
+	/* collect cavey regions */
+
+	std::vector< region_c * > regions;
+
+	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+	{
+		region_c *R = all_regions[i];
+
+		if (R->gaps.empty())
+			continue;
+
+		csg_brush_c *B = R->gaps.front()->bottom;
+
+		if (! B->t.face.getInt("cavelit"))
+			continue;
+
+		regions.push_back(R);
+	}
+
+fprintf(stderr, "\n\nCavey regions: %u  lights: %u\n\n", regions.size(), cave_lights.size());
+
+	/* iterate over all cavey light sources */
+
+	for (unsigned int k = 0 ; k < cave_lights.size() ; k++)
+	{
+		csg_entity_c *E = cave_lights[k];
+
+		double x1 = E->x;
+		double y1 = E->y;
+		double z1 = E->z + 64.0;
+
+		int brightness = E->props.getInt("cave_light", 0);
+
+		for (unsigned int i = 0 ; i < regions.size() ; i++)
+		{
+			region_c *R = regions[i];
+
+			double x2 = R->mid_x;
+			double y2 = R->mid_y;
+
+			// basic distance check
+			if (fabs(x1 - x2) > 800 || fabs(y1 - y2) > 800)
+				continue;
+
+			// more complex distance check
+			double dist = ComputeDist(x1, y1, x2, y2);
+
+			int level = brightness - (int)(dist / 100.0) * 16;
+
+			if (level <= MIN_SHADE)
+				continue;
+
+			csg_brush_c *B = R->gaps.front()->bottom;
+
+			double z2 = B->t.z + 64.0;
+
+			// line of sight blocked?
+//!!!!!!			if (CSG_TraceRay(x1,y1,z1, x2,y2,z2, "v"))
+//!!!!!!				continue;
+
+			R->e_light = MAX(R->e_light, level);
+		}
+	}
+}
+
+
 void SHADE_BlandLighting()
 {
+	SHADE_LightCaves();
+
 	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
 	{
 		region_c *R = all_regions[i];
@@ -711,7 +789,7 @@ void SHADE_BlandLighting()
 		int height = I_ROUND(T->b.z - B->t.z);
 
 		if (B->t.face.getInt("cavelit"))
-			R->shade = MAX(base, 96);
+			R->shade = MAX(base, MIN_SHADE);
 		else if (T->bkind == BKIND_Sky)
 			R->shade = MAX(sky_light, MAX(R->f_light, 120));
 		else
@@ -749,6 +827,8 @@ void CSG_Shade()
 
 	LogPrintf("Lit %d targets (visited %d sources in total)\n",
 			stat_targets, stat_sources);
+
+	cave_lights.clear();
 }
 
 //--- editor settings ---
