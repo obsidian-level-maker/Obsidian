@@ -42,6 +42,8 @@
 Doom Lighting Model
 -------------------
 
+( OUT OF DATE !!!! )
+
 1. light comes from entities (points in 3D space) and flat surfaces.
    these diminish by distance (with a controllable factor).
 
@@ -64,7 +66,7 @@ Doom Lighting Model
 #define DISTANCE_LIMIT  1440
 
 
-int sky_light;
+int sky_bright;
 int sky_shade;
 
 #define SKY_SHADE_FACTOR  2.0
@@ -639,11 +641,11 @@ static void SHADE_LightRegion(region_c *R)
 
 	SHADE_RecursiveRenderView(bsp_root, NULL);
 
-	if (sky_light > 0 && SHADE_CastRayTowardSky(R, view_x, view_y))
+	if (sky_bright > 0 && SHADE_CastRayTowardSky(R, view_x, view_y))
 	{
 		// use a lower light for non-sky regions
 		// (since it will affect the ceiling surface too)
-		int light = (T->bkind == BKIND_Sky) ? sky_light : sky_shade;
+		int light = (T->bkind == BKIND_Sky) ? sky_bright : sky_shade;
 
 		R->shade = MAX(R->shade, light);
 	}
@@ -702,7 +704,43 @@ static void SHADE_MergeResults()
 }
 
 
-void SHADE_LightCaves()
+static bool SHADE_CanRegionSeeSun(region_c *R)
+{
+/*
+	if (SHADE_CastRayTowardSky(R, view_x, view_y))
+		return true;
+*/
+	return false;
+}
+
+
+static void SHADE_SunLight()
+{
+	if (sky_bright <= MIN_SHADE)
+		return;
+
+	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+	{
+		region_c *R = all_regions[i];
+
+		if (R->index < 0)
+			break;
+
+		if (SHADE_CanRegionSeeSun(R))
+		{
+			// use a lower light for non-sky regions
+			// (since it will affect the ceiling surface too)
+			csg_brush_c *T = R->gaps.back()->top;
+
+			int light = (T->bkind == BKIND_Sky) ? sky_bright : sky_shade;
+
+			R->f_light = MAX(R->f_light, light);
+		}
+	}
+}
+
+
+void SHADE_CaveLighting()
 {
 	/* collect cavey regions */
 
@@ -772,7 +810,13 @@ fprintf(stderr, "\n\nCavey regions: %u  lights: %u\n\n", regions.size(), cave_li
 
 void SHADE_BlandLighting()
 {
-	SHADE_LightCaves();
+	SHADE_SunLight();
+
+	Main_Ticker();
+
+	SHADE_CaveLighting();
+
+	Main_Ticker();
 
 	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
 	{
@@ -791,7 +835,7 @@ void SHADE_BlandLighting()
 		if (B->t.face.getInt("cavelit"))
 			R->shade = MAX(base, MIN_SHADE);
 		else if (T->bkind == BKIND_Sky)
-			R->shade = MAX(sky_light, MAX(R->f_light, 120));
+			R->shade = MAX(sky_shade, MAX(R->f_light, 112));
 		else
 			R->shade = MAX(base, (height <= 160) ? 128 : 144);
 	} 
