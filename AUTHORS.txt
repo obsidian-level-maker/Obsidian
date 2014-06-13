@@ -85,8 +85,8 @@ OBLIGE was written from scratch. It does not contain any code
 from SLIGE (by David Chess) or from any other random level
 generator.
 
-The cave algorithm used in OBLIGE was described by Jim Babcock
-in his article: "Cellular Automata Method for Generating
+Part of the cave algorithm used in OBLIGE was described by Jim
+Babcock in his article: "Cellular Automata Method for Generating
 Random Cave-Like Levels".
 
 The random number generator used by OBLIGE is the Mersenne Twister,
