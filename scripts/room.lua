@@ -4676,7 +4676,7 @@ function Room_determine_spots()
     gui.spots_get_items(item_spots)
     gui.spots_get_mons(mon_spots)
 
-stderrf("mon_spots @ %s floor:%d : %d\n", R:tostr(), f_h, #mon_spots)
+--  stderrf("mon_spots @ %s floor:%d : %d\n", R:tostr(), f_h, #mon_spots)
 
     store_spots_w_heights(item_spots, R.item_spots, f_h, c_h)
     store_spots_w_heights( mon_spots, R. mon_spots, f_h, c_h)

@@ -144,12 +144,6 @@ function Cave_generate_cave(R)
   end
 
 
-  local function create_light_map()
-    -- FIXME: only in indoor caves or dark outdoors
-    info.lit_blocks = table.array_2D(info.W, info.H)
-  end
-
-
   local function mark_boundaries()
     -- this also sets most parts of the cave to zero
 
@@ -555,7 +549,6 @@ function Cave_generate_cave(R)
 
   -- create the cave object and make the boundaries solid
   create_map()
-  create_light_map()
 
   collect_important_points()
 
@@ -1494,52 +1487,6 @@ end
 
 
 
-function Cave_light_up_cells(info, tx, ty, tz, brightness)
-
-  local function blocked_ray(cx, cy, cz)
-    local x1 = info.x1 + (tx - 0.5) * 64
-    local y1 = info.y1 + (ty - 0.5) * 64
-    local z1 = tz + 64
-    
-    local x2 = info.x1 + (cx - 0.5) * 64
-    local y2 = info.y1 + (cy - 0.5) * 64
-    local z2 = cz + 64
-
-    return gui.trace_ray(x1,y1,z1, x2,y2,z2, "v")
-  end
-
-
-  ---| Cave_light_up_cells |---
-
-  if not info.lit_blocks then return end
-
-  local W = info.blocks.w
-  local H = info.blocks.h
-
-  for x = tx - 11, tx + 11 do
-  for y = ty - 11, ty + 11 do
-    local dist = geom.dist(tx, ty, x, y)
-    local level = brightness - int(dist / 1.7) * 16
-    if level <= 96 then continue end
-
-    if x < 1 or x > W or y < 1 or y > W then continue end
-
-    local A = info.blocks[x][y]
-    if not (A and A.floor_h) then continue end
-
-    -- line-of-sight test
-    if dist > 1 and blocked_ray(x, y, A.floor_h) then
-      continue
-    end
-
-    info.lit_blocks[x][y] = math.max(info.lit_blocks[x][y] or 0, level)
-
-  end -- x, y
-  end
-end
-
-
-
 function Cave_render_cave(R)
 
   local info = R.cave_info
@@ -1761,12 +1708,12 @@ function Cave_render_cave(R)
 
     if f_h then
       local top = { t=f_h }
-      table.insert(f_brush, top)
 
-      if info.lit_blocks then
+      if info.cave_lighting then
         top.cavelit = 1
-        top.light = info.lit_blocks[x][y]
       end
+
+      table.insert(f_brush, top)
     end
 
     if f_liquid then
@@ -2510,7 +2457,7 @@ function Cave_decorations(R)
     local mx = info.x1 + (x-1) * 64 + 32
     local my = info.y1 + (y-1) * 64 + 32
 
-    Trans.entity(torch_ent, mx, my, A.floor_h, { light=192, factor=1.2 })
+    Trans.entity(torch_ent, mx, my, A.floor_h, { cave_light=192, factor=1.2 })
 
     -- remember bbox, prevent placing items/monsters here
 
@@ -2525,8 +2472,6 @@ function Cave_decorations(R)
     end
 
     table.insert(A.decorations, DECOR)
-
-    Cave_light_up_cells(info, x, y, A.floor_h, 192)
   end
 
 
@@ -2617,6 +2562,10 @@ function Cave_decide_properties(R)
   else
     -- no other light sources!
     info.torch_mode = rand.key_by_probs({ none=2, few=10, some=90 })
+  end
+
+  if LEVEL.is_dark or not R.is_outdoor then
+    info.cave_lighting = 1
   end
 
   -- extra health for damaging liquid
