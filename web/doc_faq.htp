@@ -88,7 +88,7 @@ require a lot of new logic to support them well.
 <p>
 Finally, I am only one person and can only do so much.
 One day hopefully OBLIGE will become so popular that other
-programmers will volunteer to develop and maintain the lua code
+programmers will volunteer to develop and maintain the code
 for a particular game that they like.
 Until then, it is probably better to have a few games which
 work really well, instead of lots of games where each one is
@@ -97,6 +97,36 @@ only very basic.
 <p>
 <i>See also this forum post:</i>
 <a href="http://oblige.sourceforge.net/forum/index.php?topic=118.0">Possible Games</a>.
+</div>
+
+
+<div id="seed" class="faq_Q">
+Q/ Why was the Seed setting removed?
+</div>
+
+<div class="faq_A">
+The primary reason is because it does not serve any
+useful purpose anymore.
+The original idea was to allow people to share
+the seed number and reproduce the exact same level.
+This requires all other settings to be the same, which was fairly
+easy when there were only a handful of settings, but now it is a
+lot harder (especially with modules, it may require ensuring that
+100 settings are exactly the same).  These days it is easier to
+just share the generated wad.
+
+<p>
+The only other purpose is what I call the "toy" aspect, an ability
+to just throw in some number (like 666 or your birthday) and see what
+comes out.  Well, for me that is not a good enough reason to keep it.
+
+<p>
+Finally, it seems nobody was really happy with how the Seed setting
+worked -- it was never long enough, was not random enough, etc....
+For such a small part of the user interface, the amount of complaints
+and misunderstanding was incredible, and at times quite demoralizing
+for me personally.
+
 </div>
 
 
