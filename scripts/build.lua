@@ -617,7 +617,7 @@ function get_fake_sky()
 
   local light
   if not LEVEL.is_dark then
-    light = LEVEL.sky_light - 8
+    light = LEVEL.sky_bright - 8
   end
 
   return

@@ -3166,8 +3166,8 @@ function Hex_create_level()
 
   Plan_choose_liquid()
 
-  LEVEL.sky_light = 192
-  LEVEL.sky_shade = 160
+  LEVEL.sky_bright = 192
+  LEVEL.sky_shade  = 160
 
   Hex_plan()
   Hex_shrink_edges()

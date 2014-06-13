@@ -111,11 +111,11 @@ function Plan_choose_darkness()
     gui.printf("Darkness falls across the land...\n\n")
 
     LEVEL.is_dark = true
-    LEVEL.sky_light = 0
-    LEVEL.sky_shade = 0
+    LEVEL.sky_bright = 0
+    LEVEL.sky_shade  = 0
   else
-    LEVEL.sky_light = 192
-    LEVEL.sky_shade = 144
+    LEVEL.sky_bright = 192
+    LEVEL.sky_shade  = 144
   end
 end
 
