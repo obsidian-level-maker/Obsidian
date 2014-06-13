@@ -1494,7 +1494,23 @@ end
 
 
 
-function Cave_light_up_cells(info, tx, ty, brightness)
+function Cave_light_up_cells(info, tx, ty, tz, brightness)
+
+  local function blocked_ray(cx, cy, cz)
+    local x1 = info.x1 + (tx - 0.5) * 64
+    local y1 = info.y1 + (ty - 0.5) * 64
+    local z1 = tz + 64
+    
+    local x2 = info.x1 + (cx - 0.5) * 64
+    local y2 = info.y1 + (cy - 0.5) * 64
+    local z2 = cz + 64
+
+    return gui.trace_ray(x1,y1,z1, x2,y2,z2, "v")
+  end
+
+
+  ---| Cave_light_up_cells |---
+
   if not info.lit_blocks then return end
 
   local W = info.blocks.w
@@ -1503,12 +1519,18 @@ function Cave_light_up_cells(info, tx, ty, brightness)
   for x = tx - 11, tx + 11 do
   for y = ty - 11, ty + 11 do
     local dist = geom.dist(tx, ty, x, y)
-    local level = brightness - int(dist / 1.6) * 16
+    local level = brightness - int(dist / 1.7) * 16
     if level <= 96 then continue end
 
     if x < 1 or x > W or y < 1 or y > W then continue end
 
-    -- FIXME : trace_ray test
+    local A = info.blocks[x][y]
+    if not (A and A.floor_h) then continue end
+
+    -- line-of-sight test
+    if dist > 1 and blocked_ray(x, y, A.floor_h) then
+      continue
+    end
 
     info.lit_blocks[x][y] = math.max(info.lit_blocks[x][y] or 0, level)
 
@@ -2503,6 +2525,8 @@ function Cave_decorations(R)
     end
 
     table.insert(A.decorations, DECOR)
+
+    Cave_light_up_cells(info, x, y, A.floor_h, 192)
   end
 
 
@@ -2528,8 +2552,6 @@ function Cave_decorations(R)
       if loc.dead then continue end
 
       add_torch(loc.cx, loc.cy, torch_ent)
-
-      Cave_light_up_cells(info, loc.cx, loc.cy, 192)
 
       -- prevent adding a torch in a neighbor cell, since that can
       -- block the player's path.
