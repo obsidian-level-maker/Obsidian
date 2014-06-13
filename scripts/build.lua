@@ -382,10 +382,6 @@ function Trans.entity(name, x, y, z, props)
 end
 
 
--- COMPAT
-function entity_helper(...) return Trans.entity(...) end
-
-
 function Trans.quad(x1,y1, x2,y2, z1,z2, kind, w_face, p_face)
   if not w_face then
     -- convenient form: only a material name was given

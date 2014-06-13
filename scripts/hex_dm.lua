@@ -485,7 +485,7 @@ function HEXAGON_CLASS.debug_path(C, dir)
   local x = (C.vertex[dir].x + C.vertex[dir2].x) * 0.35 + C.mid_x * 0.3
   local y = (C.vertex[dir].y + C.vertex[dir2].y) * 0.35 + C.mid_y * 0.3
 
-  entity_helper("lamp", x, y, 0)
+  Trans.entity("lamp", x, y, 0)
 end
 
 
@@ -499,7 +499,7 @@ function HEXAGON_CLASS.build_content(C)
     if content.team then
       ent = "ctf_" .. content.team .. "_start"
     end
-    entity_helper(ent, C.mid_x, C.mid_y, f_h, { angle=content.angle })
+    Trans.entity(ent, C.mid_x, C.mid_y, f_h, { angle=content.angle })
   end
 
   if content.kind == "FLAG" then
@@ -512,14 +512,14 @@ function HEXAGON_CLASS.build_content(C)
     Trans.brush(brush)
 
     local ent = "ctf_" .. content.team .. "_flag"
-    entity_helper(ent, C.mid_x, C.mid_y, f_h + 12, { light=224 })
+    Trans.entity(ent, C.mid_x, C.mid_y, f_h + 12, { light=224 })
   end
 
   if content.kind == "ENTITY" or
      content.kind == "WEAPON"
   then
     -- FIXME: prefab for weapons
-    entity_helper(content.entity, C.mid_x, C.mid_y, f_h, { angle=content.angle, light=160 })
+    Trans.entity(content.entity, C.mid_x, C.mid_y, f_h, { angle=content.angle, light=160 })
   end
 end
 

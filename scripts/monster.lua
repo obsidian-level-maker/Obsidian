@@ -1050,7 +1050,7 @@ function Monsters_do_pickups()
       props.flags = DOOM_FLAGS.EASY + DOOM_FLAGS.MEDIUM + DOOM_FLAGS.HARD
     end
 
-    entity_helper(item_name, x, y, z, props)
+    Trans.entity(item_name, x, y, z, props)
   end
 
 
@@ -2009,7 +2009,7 @@ function Monsters_in_room(R)
       if (skill <= 2) then props.flags = props.flags + DOOM_FLAGS.MEDIUM end
     end
 
-    entity_helper(mon, x, y, z, props)
+    Trans.entity(mon, x, y, z, props)
   end
 
 

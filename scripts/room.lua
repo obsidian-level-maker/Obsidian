@@ -2700,7 +2700,7 @@ function Room_add_crates(R)
       if rand.odds(chance) then
         mark_spot(spot.S)
         local x, y, z = get_entity_coord(spot.S, 16)
-        entity_helper(torch_ent, x, y, z, { light=192, factor=1.2 })
+        Trans.entity(torch_ent, x, y, z, { light=192, factor=1.2 })
       end
     end
   end
@@ -2714,9 +2714,9 @@ function Room_add_crates(R)
     each spot in find_spots() do
       if rand.odds(chance) then
         mark_spot(spot.S)
-        for loop = 1, rand.sel(99, 1, 2) do
+        for loop = 1, 1 do
           local x, y, z = get_entity_coord(spot.S, 20)
-          entity_helper("barrel", x, y, z)
+          Trans.entity("barrel", x, y, z)
         end
       end
     end

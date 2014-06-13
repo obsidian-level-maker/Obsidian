@@ -2451,7 +2451,7 @@ function Cave_decorations(R)
     local mx = info.x1 + (x-1) * 64 + 32
     local my = info.y1 + (y-1) * 64 + 32
 
-    entity_helper(torch_ent, mx, my, A.floor_h, { light=192, factor=1.2 })
+    Trans.entity(torch_ent, mx, my, A.floor_h, { light=192, factor=1.2 })
 
     -- remember bbox, prevent placing items/monsters here
 
