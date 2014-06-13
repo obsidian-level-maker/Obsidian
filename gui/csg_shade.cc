@@ -706,11 +706,59 @@ static void SHADE_MergeResults()
 
 static bool SHADE_CanRegionSeeSun(region_c *R)
 {
-/*
-	if (SHADE_CastRayTowardSky(R, view_x, view_y))
-		return true;
-*/
-	return false;
+	// We want this test to be conservative, and fail if any part
+	// of the region cannot trace a ray to the sky.  Otherwise the 
+	// shadows in low-wall cavey areas tend to look bad, with sharp
+	// triangular shapes.
+
+	unsigned int k;
+
+	if (R->gaps.empty() || R->degenerate)
+		return false;
+
+	// we always test the middle point
+	if (! SHADE_CastRayTowardSky(R, R->mid_x, R->mid_y))
+		return false;
+
+	// test corners (for regions over a certain size)
+////	if (R->rw < 20 && R->rh < 20)
+////		return true;
+
+	for (k = 0 ; k < R->snags.size() ; k++)
+	{
+		snag_c *snag = R->snags[k];
+
+		double sx = snag->x1;
+		double sy = snag->y1;
+
+		double x = sx * 0.9 + R->mid_x * 0.1;
+		double y = sy * 0.9 + R->mid_y * 0.1;
+
+		if (! SHADE_CastRayTowardSky(R, x, y))
+			return false;
+	}
+
+	// test points near the size (for even larger regions)
+////	if (R->rw < 50 && R->rh < 50)
+////		return true;
+
+#if 0
+	for (k = 0 ; k < R->snags.size() ; k++)
+	{
+		snag_c *snag = R->snags[k];
+
+		double sx = (snag->x1 + snag->x2) / 2.0;
+		double sy = (snag->y1 + snag->y2) / 2.0;
+
+		double x = sx * 0.9 + R->mid_x * 0.1;
+		double y = sy * 0.9 + R->mid_y * 0.1;
+
+		if (! SHADE_CastRayTowardSky(R, x, y))
+			return false;
+	}
+#endif
+
+	return true;
 }
 
 
