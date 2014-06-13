@@ -144,6 +144,12 @@ function Cave_generate_cave(R)
   end
 
 
+  local function create_light_map()
+    -- FIXME: only in indoor caves or dark outdoors
+    info.lit_blocks = table.array_2D(info.W, info.H)
+  end
+
+
   local function mark_boundaries()
     -- this also sets most parts of the cave to zero
 
@@ -549,6 +555,7 @@ function Cave_generate_cave(R)
 
   -- create the cave object and make the boundaries solid
   create_map()
+  create_light_map()
 
   collect_important_points()
 
@@ -1487,6 +1494,30 @@ end
 
 
 
+function Cave_light_up_cells(info, tx, ty, brightness)
+  if not info.lit_blocks then return end
+
+  local W = info.blocks.w
+  local H = info.blocks.h
+
+  for x = tx - 11, tx + 11 do
+  for y = ty - 11, ty + 11 do
+    local dist = geom.dist(tx, ty, x, y)
+    local level = brightness - int(dist / 1.6) * 16
+    if level <= 96 then continue end
+
+    if x < 1 or x > W or y < 1 or y > W then continue end
+
+    -- FIXME : trace_ray test
+
+    info.lit_blocks[x][y] = math.max(info.lit_blocks[x][y] or 0, level)
+
+  end -- x, y
+  end
+end
+
+
+
 function Cave_render_cave(R)
 
   local info = R.cave_info
@@ -1707,7 +1738,13 @@ function Cave_render_cave(R)
     local f_brush = brush_for_cell(x, y)
 
     if f_h then
-      brushlib.add_top(f_brush, f_h)
+      local top = { t=f_h }
+      table.insert(f_brush, top)
+
+      if info.lit_blocks then
+        top.cavelit = 1
+        top.light = info.lit_blocks[x][y]
+      end
     end
 
     if f_liquid then
@@ -2435,8 +2472,8 @@ function Cave_decorations(R)
 
   local function kill_nearby_locs(list, x, y)
     each loc in list do
-      if math.abs(loc.cx - x) <= 1 and
-         math.abs(loc.cy - y) <= 1
+      if math.abs(loc.cx - x) <= 2 and
+         math.abs(loc.cy - y) <= 2
       then
         loc.dead = true
       end
@@ -2491,6 +2528,8 @@ function Cave_decorations(R)
       if loc.dead then continue end
 
       add_torch(loc.cx, loc.cy, torch_ent)
+
+      Cave_light_up_cells(info, loc.cx, loc.cy, 192)
 
       -- prevent adding a torch in a neighbor cell, since that can
       -- block the player's path.
