@@ -59,7 +59,7 @@ Doom Lighting Model
 
 */
 
-#define MIN_SHADE  96
+#define MIN_SHADE  112
 
 #define DISTANCE_LIMIT  1440
 
@@ -758,11 +758,11 @@ fprintf(stderr, "\n\nCavey regions: %u  lights: %u\n\n", regions.size(), cave_li
 
 			csg_brush_c *B = R->gaps.front()->bottom;
 
-			double z2 = B->t.z + 64.0;
+			double z2 = B->t.z + 84.0;
 
 			// line of sight blocked?
-//!!!!!!			if (CSG_TraceRay(x1,y1,z1, x2,y2,z2, "v"))
-//!!!!!!				continue;
+			if (CSG_TraceRay(x1,y1,z1, x2,y2,z2, "v"))
+				continue;
 
 			R->e_light = MAX(R->e_light, level);
 		}

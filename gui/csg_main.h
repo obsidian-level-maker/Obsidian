@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2010 Andrew Apted
+//  Copyright (C) 2006-2014 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -235,6 +235,9 @@ extern std::string dummy_plane_tex;
 /***** FUNCTIONS ****************/
 
 void CSG_Main_Free();
+
+bool CSG_TraceRay(double x1, double y1, double z1,
+				  double x2, double y2, double z2, const char *mode);
 
 void CSG_MakeMiniMap();
 

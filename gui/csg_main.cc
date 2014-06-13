@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2013 Andrew Apted
+//  Copyright (C) 2006-2014 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -991,6 +991,15 @@ int CSG_trace_ray(lua_State *L)
 
 	lua_pushboolean(L, result ? 1 : 0);
 	return 1;
+}
+
+
+bool CSG_TraceRay(double x1, double y1, double z1,
+				  double x2, double y2, double z2, const char *mode)
+{
+	SYS_ASSERT(brush_quad_tree);
+
+	return brush_quad_tree->TraceRay(x1, y1, z1, x2, y2, z2, mode);
 }
 
 
