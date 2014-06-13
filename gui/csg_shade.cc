@@ -710,7 +710,9 @@ void SHADE_BlandLighting()
 
 		int height = I_ROUND(T->b.z - B->t.z);
 
-		if (T->bkind == BKIND_Sky)
+		if (B->t.face.getInt("cavelit"))
+			R->shade = MAX(base, 96);
+		else if (T->bkind == BKIND_Sky)
 			R->shade = MAX(sky_light, MAX(R->f_light, 120));
 		else
 			R->shade = MAX(base, (height <= 160) ? 128 : 144);
