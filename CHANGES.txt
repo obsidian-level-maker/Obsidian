@@ -5,14 +5,14 @@ CHANGELOG
 + new 'Weapons' setting
 + implemented the 'Powerups' setting
 + new 'Menu' button, replaces 'About' and 'Options'
-+ new 'Config Manager' window 
 
++ new 'Config Manager' window 
 + better window scaling, new 'Window Size' option
-+ experimental 'Bland Lighting Mode' -- forced on atm
-- store options separately from normal settings
++ store options separately from normal settings
 
 ! removed the 'Seed' setting
 ! removed the 'Hide Modules' option
+! reverted indoor lighting to a simpler model
 
 + generate DOOM 1 episode name graphics
 + partial work on outdoor borders (like in V5)
@@ -38,7 +38,7 @@ CHANGELOG
 
 - caves: improved floor texturing in flat caves
 - caves: never place pickup items in liquid areas
-- caves: if not many caves, have consistent texturing
+- caves: if not many caves, keep texturing consistent
 
 - fixed error when setting Monster Variety to "none"
 - fixed uncounted secrets that lead into CAVE rooms
@@ -46,5 +46,6 @@ CHANGELOG
 - fixed the silly "free standing" archways and doors
 - fixed the weird metal walls in large scenic areas
 - fixed rare infinite loop when planning cave rooms
+- fixed torches in caves to never obstruct the player
 - fixed pegging on lifts in slime pits
 

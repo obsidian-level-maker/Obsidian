@@ -6,10 +6,6 @@ OBLIGE TODO
 !!  BUG: coop player can be stuck in "cave_wall"
     ---> limit cave_wall extents if S.content or S.conn
 
-!!  BUG: torches in a cave can obstruct the player
-
-BUG : no exclusion zone around teleporter
-
 BUG : secret sector being split (ceiling detail? lighting??)
 
 ______________________________________________________________________
@@ -260,6 +256,10 @@ Outdoor Idioms:
 
 
 Theme System:
+-  IDEA: fairly rare "mix in" themes, e.g. Egypt for TNT
+
+-  "Mostly Original" theme
+
 +  proper themes for QUAKE
 
 -  if keys are left over, can use them for non-Zone locks
@@ -358,6 +358,10 @@ Quests:
 
 Planner:
 -  review / improve 'emergency' connections
+
+
+Sub-rooms:
+-  plus shape : a 2x2 room in each corner
 
 
 Cycles:
