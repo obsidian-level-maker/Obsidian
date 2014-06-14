@@ -1741,7 +1741,11 @@ function Cave_render_cave(R)
     local f_liquid = A.liquid
 
 
-if not A.wall then render_floor_subdiv(x, y, A, f_mat, f_liquid) ; return end
+    -- for outdoor non-dark rooms, sub-divide the floor cell into
+    -- smaller pieces to allow the Sun lighting to work better.
+    if not A.wall and R.is_outdoor and not LEVEL.is_dark then
+      return render_floor_subdiv(x, y, A, f_mat, f_liquid)
+    end
 
 
     local f_brush = brush_for_cell(x, y)
