@@ -74,32 +74,6 @@ class FLOOR
 }
 
 
-----------------------------------------------------------------
-
-
-Room Layouting Notes
-====================
-
-
-DIAGONALS:
-   How they work:
-
-   1. basic model: seed is a liquid or walk area which has an
-      extra piece stuck in it (the diagonal) which is
-      either totally solid or same as a neighbouring higher floor.
-      We first build the extra bit, then convert the seed to what
-      it should be (change S.kind from "diagonal" --> "liquid" or "walk")
-      and build the ceiling/floor normally.
-
-   2. The '/' and '%' in patterns go horizontally, whereas
-      the 'Z' and 'N' go vertically.  If the pattern is
-      transposed then we exchange '/' with 'Z', '%' with 'N'.
-
-   3. once the room is fully laid out, then we can process
-      these diagonals and determine the main seed info
-      (e.g. liquid) and the Stuckie piece (e.g. void).
-
-
 --------------------------------------------------------------]]
 
 
@@ -4277,6 +4251,11 @@ function Room_determine_spots()
 
       -- this check handles sub-rooms
       if S.room != R then
+        solidify_seed(S)
+        continue
+      end
+
+      if S.content == "bridge" then
         solidify_seed(S)
         continue
       end
