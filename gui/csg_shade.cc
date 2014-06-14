@@ -39,31 +39,28 @@
 
 /*
 
-Doom Lighting Model
--------------------
+Lighting Model
+--------------
 
-( OUT OF DATE !!!! )
+1. indoor rooms have a fairly low default lighting, lower still
+   for low areas of the room (under periphs).  for outdoor rooms,
+   when the ceiling is SKY then use the 'sky_shade' value.
 
-1. light comes from entities (points in 3D space) and flat surfaces.
-   these diminish by distance (with a controllable factor).
+2. liquid areas and ceiling lights supply extra 'light' values.
 
-2. we also do a sky test -- cast a ray from floor to see if hit a sky
-   brush.  When hit, use the 'sky_light' value.
+3. (NOT DONE YET) light brushes can be used to light up areas of
+   non-cave rooms.
 
-3. result value is MAXIMUM of all tests made.
+4. outdoor rooms do a sky test -- cast a ray from floor to see if a
+   sky brush is hit -- if hit, use the 'sky_bright' value.
 
-4. result is clamped to a certain minimum (e.g. 96)
-
-5. solid walls and close doors block light.
-
-6. since closed doors don't get lit, their value is computed later
-   using the light from an adjacent sector.
+5. in caves, certain entities (torches) are used as light sources,
+   and we trace rays to see what nearby cells should be lit by them
+   (less light for further distances).
 
 */
 
 #define MIN_SHADE  112
-
-#define DISTANCE_LIMIT  1440
 
 
 int sky_bright;
@@ -76,23 +73,6 @@ static int current_region_group;
 
 
 static std::vector< csg_entity_c *> cave_lights;
-
-
-static const int shading_table[7][10] =
-{
-	// the major index is the brightness (reverse order!)
-
-	// the minor index is distances, first is for 'level', second is
-	// for 'level - 16', third is for 'level - 32', etc...
-
-	/* 224 */ {   4,  64,  96,  96, 128, 128, 128, 128, 0 },
-	/* 192 */ {   4,  64,  96, 128, 128, 128,   0 },
-	/* 176 */ {  64,  96, 128, 128, 128,   0 },
-	/* 160 */ {  64,  96, 128, 128,   0 },
-	/* 144 */ {  96, 128, 128,   0 },
-	/* 128 */ { 128, 128,   0 },
-	/* 112 */ { 128,   0 },
-};
 
 
 static void SHADE_CollectLights()
