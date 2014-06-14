@@ -272,26 +272,43 @@ static int SHADE_CheckSkyLeaf(region_c *leaf,
 		double a = -PerpDist(x1,y1, snag->x1,snag->y1, snag->x2,snag->y2);
 		double b = -PerpDist(x2,y2, snag->x1,snag->y1, snag->x2,snag->y2);
 
+		int a_side = (fabs(a) < 0.1) ? 0 : (a < 0) ? -1 : +1;
+		int b_side = (fabs(b) < 0.1) ? 0 : (b < 0) ? -1 : +1;
+
 		// ray is completely outside the region?
-		if (a > 0 && b > 0)
+		if (a_side > 0 && b_side > 0)
 			return false;
 
 		// ray is completely inside it?
-		if (a <= 0 && b <= 0)
+		if (a_side <= 0 && b_side <= 0)
 			continue;
 
-		// gotta clip the ray
+		// ray touches the edge?
+		if (a_side == 0 && b_side > 0)
+		{
+			x2 = x1; y2 = y1; z2 = z1;
+			continue;
+		}
+		else if (b_side == 0 && a_side > 0)
+		{
+			x1 = x2; y1 = y2; z1 = z2;
+			continue;
+		}
+
+		// clip the ray
 
 		double frac = a / (double)(a - b);
 
 		if (a > 0)
 		{
+			// start of ray lies on outside of region, move it to edge
 			x1 = x1 + (x2 - x1) * frac;
 			y1 = y1 + (y2 - y1) * frac;
 			z1 = z1 + (z2 - z1) * frac;
 		}
 		else
 		{
+			// end of ray lies on outside of region, move it to edge
 			x2 = x1 + (x2 - x1) * frac;
 			y2 = y1 + (y2 - y1) * frac;
 			z2 = z1 + (z2 - z1) * frac;
@@ -307,8 +324,8 @@ static int SHADE_CheckSkyLeaf(region_c *leaf,
 	{
 		csg_brush_c *B = leaf->brushes[k];
 
-		if (z1 > B->t.z) continue;
-		if (z2 < B->b.z) continue;
+		if (z1 > B->t.z + 0.2) continue;
+		if (z2 < B->b.z - 0.2) continue;
 
 		if (B->bkind == BKIND_Sky)
 			return +1;
@@ -337,53 +354,76 @@ static int SHADE_RecursiveSkyCheck(bsp_node_c *node, region_c *leaf,
 		double a = PerpDist(x1,y1, node->x1,node->y1, node->x2,node->y2);
 		double b = PerpDist(x2,y2, node->x1,node->y1, node->x2,node->y2);
 
-		int a_side = (a < 0) ? -1 : +1;
-		int b_side = (b < 0) ? -1 : +1;
+		int a_side = (fabs(a) < 0.1) ? 0 : (a < 0) ? -1 : +1;
+		int b_side = (fabs(b) < 0.1) ? 0 : (b < 0) ? -1 : +1;
 
-		if (a_side != b_side)
+		if (a_side == b_side && a_side != 0)
 		{
-			// compute intersection point
-
-			double frac = a / (double)(a - b);
-
-			float mx = x1 + (x2 - x1) * frac;
-			float my = y1 + (y2 - y1) * frac;
-			float mz = z1 + (z2 - z1) * frac;
-
-			int front, back;
-
-			// traverse down the side containing the start point
+			// traverse down a single side of the node
 
 			if (a_side < 0)
-				front = SHADE_RecursiveSkyCheck(node-> back_node, node-> back_leaf, x1, y1, z1, mx, my, mz);
+			{
+				leaf = node->back_leaf;
+				node = node->back_node;
+			}
 			else
-				front = SHADE_RecursiveSkyCheck(node->front_node, node->front_leaf, x1, y1, z1, mx, my, mz);
+			{
+				leaf = node->front_leaf;
+				node = node->front_node;
+			}
 
-			if (front != 0)
-				return front;
-
-			// traverse down the side containing the end point
-
-			if (a_side < 0)
-				back = SHADE_RecursiveSkyCheck(node->front_node, node->front_leaf, mx, my, mz, x2, y2, z2);
-			else
-				back = SHADE_RecursiveSkyCheck(node-> back_node, node-> back_leaf, mx, my, mz, x2, y2, z2);
-
-			return back;
+			continue;
 		}
 
-		// traverse down a single side of the node
+		int front, back;
+
+		if (a_side == 0 && b_side == 0)
+		{
+			// ray is (more-or-less) co-linear with partition line,
+			// hence try both sides with unmodified ray coordinates.
+
+			front = SHADE_RecursiveSkyCheck(node->front_node, node->front_leaf, x1, y1, z1, x2, y2, z2);
+
+//			if (front != 0)
+//				return front;
+
+			back = SHADE_RecursiveSkyCheck(node-> back_node, node-> back_leaf, x1, y1, z1, x2, y2, z2);
+
+			if (front < 0 || back < 0)
+				return -1;
+
+			if (front > 0 || back > 0)
+				return +1;
+
+			return 0;
+		}
+
+		// compute intersection point
+
+		double frac = a / (double)(a - b);
+
+		float mx = x1 + (x2 - x1) * frac;
+		float my = y1 + (y2 - y1) * frac;
+		float mz = z1 + (z2 - z1) * frac;
+
+		// traverse down the side containing the start point
 
 		if (a_side < 0)
-		{
-			leaf = node->back_leaf;
-			node = node->back_node;
-		}
+			front = SHADE_RecursiveSkyCheck(node-> back_node, node-> back_leaf, x1, y1, z1, mx, my, mz);
 		else
-		{
-			leaf = node->front_leaf;
-			node = node->front_node;
-		}
+			front = SHADE_RecursiveSkyCheck(node->front_node, node->front_leaf, x1, y1, z1, mx, my, mz);
+
+		if (front != 0)
+			return front;
+
+		// traverse down the side containing the end point
+
+		if (a_side < 0)
+			back = SHADE_RecursiveSkyCheck(node->front_node, node->front_leaf, mx, my, mz, x2, y2, z2);
+		else
+			back = SHADE_RecursiveSkyCheck(node-> back_node, node-> back_leaf, mx, my, mz, x2, y2, z2);
+
+		return back;
 	}
 
 	if (! leaf || leaf->degenerate)
@@ -398,7 +438,7 @@ static bool SHADE_CastRayTowardSky(region_c *R, float x1, float y1)
 	// starting Z
 	csg_brush_c *B = R->gaps.front()->bottom;
 
-	float z1 = B->t.z + 0.5;
+	float z1 = B->t.z + 1.2;
 
 	// end point
 	float x2 = x1 + 1024;
@@ -706,24 +746,17 @@ static void SHADE_MergeResults()
 
 static bool SHADE_CanRegionSeeSun(region_c *R)
 {
-	// We want this test to be conservative, and fail if any part
-	// of the region cannot trace a ray to the sky.  Otherwise the 
-	// shadows in low-wall cavey areas tend to look bad, with sharp
-	// triangular shapes.
-
 	unsigned int k;
 
 	if (R->gaps.empty() || R->degenerate)
 		return false;
 
-	// we always test the middle point
-	if (! SHADE_CastRayTowardSky(R, R->mid_x, R->mid_y))
-		return false;
+	// just test the middle point for smallish brushes
+	if (R->rw < 30 && R->rh < 30)
+		return SHADE_CastRayTowardSky(R, R->mid_x, R->mid_y);
 
-	// test corners (for regions over a certain size)
-////	if (R->rw < 20 && R->rh < 20)
-////		return true;
-
+	// otherwise test several points inside the region, and
+	// require them all to succeed.
 	for (k = 0 ; k < R->snags.size() ; k++)
 	{
 		snag_c *snag = R->snags[k];
@@ -731,32 +764,12 @@ static bool SHADE_CanRegionSeeSun(region_c *R)
 		double sx = snag->x1;
 		double sy = snag->y1;
 
-		double x = sx * 0.9 + R->mid_x * 0.1;
-		double y = sy * 0.9 + R->mid_y * 0.1;
+		double x = sx * 0.7 + R->mid_x * 0.3;
+		double y = sy * 0.7 + R->mid_y * 0.3;
 
 		if (! SHADE_CastRayTowardSky(R, x, y))
 			return false;
 	}
-
-	// test points near the size (for even larger regions)
-////	if (R->rw < 50 && R->rh < 50)
-////		return true;
-
-#if 0
-	for (k = 0 ; k < R->snags.size() ; k++)
-	{
-		snag_c *snag = R->snags[k];
-
-		double sx = (snag->x1 + snag->x2) / 2.0;
-		double sy = (snag->y1 + snag->y2) / 2.0;
-
-		double x = sx * 0.9 + R->mid_x * 0.1;
-		double y = sy * 0.9 + R->mid_y * 0.1;
-
-		if (! SHADE_CastRayTowardSky(R, x, y))
-			return false;
-	}
-#endif
 
 	return true;
 }
