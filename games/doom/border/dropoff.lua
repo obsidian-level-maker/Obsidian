@@ -11,6 +11,10 @@ DOOM.SKINS.Border_dropoff_c =
   seed_w = 3
   seed_h = 3
 
+  -- need this due to diagonal outlier part
+  bound_x1 = 0
+  bound_y1 = 0
+
   add_sky = 1
 }
 
