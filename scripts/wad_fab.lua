@@ -1373,14 +1373,18 @@ end
 
 
 function Fab_bound_it(fab, skin)
-  if skin.bound_x1 then fab.bbox.x1 = math.min(fab.bbox.x1 or  9999, skin.bound_x1) end
-  if skin.bound_x2 then fab.bbox.x2 = math.max(fab.bbox.x2 or -9999, skin.bound_x2) end
+  -- the skin can directly override the prefab bounding box.
+  -- this can be used to supply brushes outside of the normally
+  -- occupied space.
 
-  if skin.bound_y1 then fab.bbox.y1 = math.min(fab.bbox.y1 or  9999, skin.bound_y1) end
-  if skin.bound_y2 then fab.bbox.y2 = math.max(fab.bbox.y2 or -9999, skin.bound_y2) end
+  if skin.bound_x1 then fab.bbox.x1 = skin.bound_x1 end
+  if skin.bound_x2 then fab.bbox.x2 = skin.bound_x2 end
 
-  if skin.bound_z1 then fab.bbox.z1 = math.min(fab.bbox.z1 or  9999, skin.bound_z1) end
-  if skin.bound_z2 then fab.bbox.z2 = math.max(fab.bbox.z2 or -9999, skin.bound_z2) end
+  if skin.bound_y1 then fab.bbox.y1 = skin.bound_y1 end
+  if skin.bound_y2 then fab.bbox.y2 = skin.bound_y2 end
+
+  if skin.bound_z1 then fab.bbox.z1 = skin.bound_z1 end
+  if skin.bound_z2 then fab.bbox.z2 = skin.bound_z2 end
 
   -- for lifts, we pretend the bbox only extends vertically to the
   -- high floor height.  In combination with a reduced T.fitted_z
