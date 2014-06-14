@@ -114,8 +114,8 @@ function Plan_choose_darkness()
     LEVEL.sky_bright = 0
     LEVEL.sky_shade  = 0
   else
-    LEVEL.sky_bright = 192
-    LEVEL.sky_shade  = 144
+    LEVEL.sky_bright = rand.odds(50, 192, 176)
+    LEVEL.sky_shade  = LEVEL.sky_bright - 32
   end
 end
 
