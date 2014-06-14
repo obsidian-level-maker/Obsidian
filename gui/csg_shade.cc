@@ -74,9 +74,6 @@ int sky_shade;
 
 static int current_region_group;
 
-static int stat_targets;
-static int stat_sources;
-
 
 static std::vector< csg_entity_c *> cave_lights;
 
@@ -255,6 +252,34 @@ static void SHADE_GroupRegions()
 	// (this has a side-effect of placing all solid regions at the end)
 
 	std::sort(all_regions.begin(), all_regions.end(), region_index_Compare());
+}
+
+
+static void SHADE_MergeResults()
+{
+	unsigned int i, k, n;
+
+	// ensure groups get same value in every region
+
+	for (i = 0 ; i < all_regions.size() ; i = k + 1)
+	{
+		if (all_regions[i]->index < 0)
+			break;
+
+		k = i;
+
+		for (k = i ; k + 1 < all_regions.size() &&
+					 all_regions[k+1]->index == all_regions[i]->index ; k++)
+		{ }
+
+		int result = 0;
+
+		for (n = i ; n <= k ; n++)
+			result = MAX(result, all_regions[n]->shade);
+
+		for (n = i ; n <= k ; n++)
+			all_regions[n]->shade = result;
+	}
 }
 
 
@@ -451,299 +476,6 @@ static bool SHADE_CastRayTowardSky(region_c *R, float x1, float y1)
 }
 
 
-static int SHADE_ComputeLevel(float dist, int light, float factor)
-{
-	dist = dist * 1.2 / factor;
-
-	if (light < 112)
-		return 0;
-
-	light = light & 0xF0;
-
-	int index = (light - 112) / 16;
-
-	// this considers levels 192 and 208 as the same
-	if (index >= 7)
-		index = 6;
-	else if (index == 6)
-		index = 5;
-
-	const int *pos = &shading_table[6 - index][0];
-
-	for ( ; *pos ; pos++, light -= 16)
-	{
-		if (dist < *pos)
-			return light;
-
-		dist = dist - *pos;
-	}
-
-	return 0;
-}
-
-
-
-static float view_x, view_y;
-static region_c * view_reg;
-
-// bool debug_light_rend;
-
-
-static void AngleRangeForLeaf(region_c *leaf, float *low, float *high)
-{
-	// output angles range from -180.0 to +540.0 with *low < *high
-
-	SYS_ASSERT(leaf->snags.size() > 0);
-
-	float baseline = CalcAngle(view_x, view_y, leaf->mid_x, leaf->mid_y);
-
-	float l_diff = 0;
-	float h_diff = 0;
-
-	for (unsigned int k = 0 ; k < leaf->snags.size() ; k++)
-	{
-		snag_c *S = leaf->snags[k];
-
-		float ang = DiffAngle(baseline, CalcAngle(view_x, view_y, S->x1, S->y1));
-
-		l_diff = MIN(l_diff, ang);
-		h_diff = MAX(h_diff, ang);
-	}
-
-	*low  = baseline + l_diff;
-	*high = baseline + h_diff;
-}
-
-
-#define OCL_EPSILON  0.02
-
-
-static void SHADE_RenderLeaf(region_c *leaf)
-{
-	stat_sources++;
-
-	double dist = leaf->DistanceToPoint(view_x, view_y);
-
-	if (dist >= DISTANCE_LIMIT)
-		return;
-
-	if (! leaf->ContainsPoint(view_x, view_y))
-	{
-		float ang_low  = 0;
-		float ang_high = 0;
-
-		AngleRangeForLeaf(leaf, &ang_low, &ang_high);
-
-		if (leaf->index < 0 || leaf->isClosed())
-		{
-			Occlusion_Set(ang_low - OCL_EPSILON, ang_high + OCL_EPSILON);
-			return;
-		}
-
-		if (Occlusion_Blocked(ang_low, ang_high))
-		{
-			return;
-		}
-	}
-
-
-#if 0
-	if (debug_light_rend)
-	{
-		fprintf(stderr, "SHADE_RenderLeaf %p @ (%1.0f %1.0f)\n", leaf, mid_x, mid_y);
-		fprintf(stderr, "   gaps: %u  dist: %1.0f\n", leaf->gaps.size(), dist);
-		fprintf(stderr, "   angle range: %1.5f .. %1.5f\n", ang_low, ang_high);
-		fprintf(stderr, "   lights: %d / %d / %d\n", leaf->f_light, leaf->c_light, leaf->e_light);
-
-		Occlusion_Dump();
-	}
-#endif
-
-
-	// apply lighting from this region
-
-	if (leaf->f_light > MIN_SHADE)
-	{
-		int f_shade = SHADE_ComputeLevel(dist, leaf->f_light, leaf->f_factor);
-		view_reg->shade = MAX(view_reg->shade, f_shade);
-	}
-
-	if (leaf->c_light > MIN_SHADE)
-	{
-		int c_shade = SHADE_ComputeLevel(dist, leaf->c_light, leaf->c_factor);
-		view_reg->shade = MAX(view_reg->shade, c_shade);
-	}
-
-	if (leaf->e_light > MIN_SHADE)
-	{
-		int e_shade = SHADE_ComputeLevel(dist, leaf->e_light, leaf->e_factor);
-		view_reg->shade = MAX(view_reg->shade, e_shade);
-	}
-}
-
-
-static bool SHADE_IsNodeOccluded(bsp_node_c *node)
-{
-	// determine rough relative position of node bbox to view
-	int x_pos, y_pos;
-
-	if (node->bb_x1 > view_x)
-		x_pos = 2;
-	else if (node->bb_x2 < view_x)
-		x_pos = 0;
-	else
-		x_pos = 1;
-
-	if (node->bb_y1 > view_y)
-		y_pos = 2;
-	else if (node->bb_y2 < view_y)
-		y_pos = 0;
-	else
-		y_pos = 1;
-
-	int pos = y_pos * 3 + x_pos;
-
-	// node surrounds view point?
-	if (pos == 4)
-		return false;
-
-	// determine corners of bbox to use
-
-	float x1 = (0x00f & (1 << pos)) ? node->bb_x2 : node->bb_x1;
-	float x2 = (0x1c8 & (1 << pos)) ? node->bb_x2 : node->bb_x1;
-
-	float y1 = (0x126 & (1 << pos)) ? node->bb_y2 : node->bb_y1;
-	float y2 = (0x04b & (1 << pos)) ? node->bb_y2 : node->bb_y1;
-
-	float high = CalcAngle(view_x, view_y, x1, y1);
-	float low  = CalcAngle(view_x, view_y, x2, y2);
-
-	return Occlusion_Blocked(low, high);
-}
-
-
-static void SHADE_RecursiveRenderView(bsp_node_c *node, region_c *leaf)
-{
-	while (node)
-	{
-		// distance check  [TODO: better check]
-		if (node->bb_x1 >= view_x + DISTANCE_LIMIT ||
-			node->bb_x2 <= view_x - DISTANCE_LIMIT ||
-			node->bb_y1 >= view_y + DISTANCE_LIMIT ||
-			node->bb_y2 <= view_y - DISTANCE_LIMIT)
-		{
-			return;
-		}
-
-		if (SHADE_IsNodeOccluded(node))
-			return;
-
-		// decide which side to visit first
-
-		double a = PerpDist(view_x,view_y, node->x1,node->y1, node->x2,node->y2);
-
-		if (a > -0.01)
-		{
-			SHADE_RecursiveRenderView(node->front_node, node->front_leaf);
-
-			leaf = node->back_leaf;
-			node = node->back_node;
-		}
-		else
-		{
-			SHADE_RecursiveRenderView(node-> back_node, node-> back_leaf);
-
-			leaf = node->front_leaf;
-			node = node->front_node;
-		}
-	}
-
-	if (! leaf || leaf->degenerate)
-		return;
-
-	SHADE_RenderLeaf(leaf);
-}
-
-
-static void SHADE_LightRegion(region_c *R)
-{
-	SYS_ASSERT(R->gaps.size() > 0);
-
-	csg_brush_c *T = R->gaps.back()->top;
-
-	R->shade = MIN_SHADE;
-
-	view_x = R->mid_x;
-	view_y = R->mid_y;
-	view_reg = R;
-
-	Occlusion_Clear();
-
-	SHADE_RecursiveRenderView(bsp_root, NULL);
-
-	if (sky_bright > 0 && SHADE_CastRayTowardSky(R, view_x, view_y))
-	{
-		// use a lower light for non-sky regions
-		// (since it will affect the ceiling surface too)
-		int light = (T->bkind == BKIND_Sky) ? sky_bright : sky_shade;
-
-		R->shade = MAX(R->shade, light);
-	}
-}
-
-
-static void SHADE_ProcessRegions()
-{
-	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
-	{
-		region_c *R = all_regions[i];
-
-		if (R->index < 0)
-			break;
-
-		SHADE_LightRegion(all_regions[i]);
-
-		stat_targets++;
-
-		if (stat_targets % 400 == 0)
-		{
-			Main_Ticker();
-
-			if (main_action >= MAIN_CANCEL)
-				break;
-		}
-	}
-}
-
-
-static void SHADE_MergeResults()
-{
-	unsigned int i, k, n;
-
-	// ensure groups get same value in every region
-
-	for (i = 0 ; i < all_regions.size() ; i = k + 1)
-	{
-		if (all_regions[i]->index < 0)
-			break;
-
-		k = i;
-
-		for (k = i ; k + 1 < all_regions.size() &&
-					 all_regions[k+1]->index == all_regions[i]->index ; k++)
-		{ }
-
-		int result = 0;
-
-		for (n = i ; n <= k ; n++)
-			result = MAX(result, all_regions[n]->shade);
-
-		for (n = i ; n <= k ; n++)
-			all_regions[n]->shade = result;
-	}
-}
-
-
 static bool SHADE_CanRegionSeeSun(region_c *R)
 {
 	unsigned int k;
@@ -905,33 +637,12 @@ void SHADE_BlandLighting()
 
 void CSG_Shade()
 {
-	bool bland_mode = false;
-
-	stat_targets = stat_sources = 0;
-
-	if (fast_lighting || ArgvFind(0, "fastlight") >= 0 || true) //!!!!!!
-	{
-		LogPrintf("BLAND LIGHTING MODE!\n");
-		bland_mode = true;
-	}
-	else
-	{
-		LogPrintf("Lighting level...\n");
-	}
+	LogPrintf("Lighting level...\n");
 
 	SHADE_CollectLights();
-
 	SHADE_GroupRegions();
-
-	if (bland_mode)
-		SHADE_BlandLighting();
-	else
-		SHADE_ProcessRegions();
-
+	SHADE_BlandLighting();
 	SHADE_MergeResults();
-
-	LogPrintf("Lit %d targets (visited %d sources in total)\n",
-			stat_targets, stat_sources);
 
 	cave_lights.clear();
 }
