@@ -1686,6 +1686,51 @@ function Cave_render_cave(R)
   end
 
 
+  local function render_floor_subdiv(x, y, A, f_mat, f_liquid)
+    local coords = brush_for_cell(x, y)
+
+    local mid_x = info.x1 + (x - 0.5) * 64
+    local mid_y = info.y1 + (y - 0.5) * 64
+
+    local edge_points = {}
+
+    for pass = 1, 4 do
+      local n = (pass % 4) + 1
+
+      local x1 = coords[pass].x
+      local y1 = coords[pass].y
+      local x2 = coords[n].x
+      local y2 = coords[n].y
+
+      local mx = (x1 + x2) / 2
+      local my = (y1 + y2) / 2
+
+      table.insert(edge_points, { x=mx, y=my })
+    end
+
+    for pass = 1, 4 do
+      local n = (pass % 4) + 1
+
+      local f_brush =
+      {
+        { t=A.floor_h, cavelit = 1 }
+        { x=mid_x, y=mid_y }
+        table.copy(edge_points[pass])
+        table.copy(coords[n])
+        table.copy(edge_points[n])
+      }
+
+      if f_liquid then
+        brushlib.mark_liquid(f_brush)
+      else
+        brushlib.set_mat(f_brush, f_mat, f_mat)
+      end
+
+      Trans.brush(f_brush)
+    end
+  end
+
+
   local function render_floor(x, y, A)
     local f_h = A.floor_h
 
@@ -1694,6 +1739,9 @@ function Cave_render_cave(R)
     if A.wall then f_mat = A.wall_mat or R.main_tex or cave_tex end
 
     local f_liquid = A.liquid
+
+
+if not A.wall then render_floor_subdiv(x, y, A, f_mat, f_liquid) ; return end
 
 
     local f_brush = brush_for_cell(x, y)
