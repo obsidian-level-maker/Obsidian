@@ -27,7 +27,7 @@
 
 #define TITLE_COLOR  fl_color_cube(0,3,1)
 
-#define INFO_COLOR   fl_color_cube(1,6,0)
+#define INFO_COLOR   fl_color_cube(2,7,0)
 #define INFO_COLOR2  fl_rgb_color(127, 255, 144)
 
 
