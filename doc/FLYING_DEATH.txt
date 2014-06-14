@@ -387,3 +387,22 @@ would vertical and horizontal accuracy be independant variables?
 
 Im not sure how to test this but I will give it some thought.
 
+
+========================================================================
+
+Rogue-Like mode:
+
+Generates totally nonlinear maps, where the start and finish are in
+fairly random locations. Keys and switches generally allow access to
+useful or necessary weapons, health, ammo etc, and rarely are needed to
+reach the exit.  There's not really enough ammo or health to kill every
+enemy, but there are quite a few parts of the map with no enemies. The
+focus will be on exploring and scavenging as much as possible from a map
+before going to the next, avoiding enemies if possible.
+
+Difficulty should ramp up steeply so that if you do not find a good
+enough weapon, or enough ammo, you may not be able to finish the next
+map. Also maps should become progressively darker as the game goes on.
+Also anyone who plays on this mode must delete the wad if they die, and
+generate a new one :-)
+
