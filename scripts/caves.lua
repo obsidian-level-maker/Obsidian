@@ -2417,21 +2417,11 @@ function Cave_decorations(R)
     local N = info.blocks[nx][ny]
 
     if not (N and N.floor_h) then return true end
-    if N.wall or N.fence then return true end
+    if N.wall or N.fence or N.liquid then return true end
 
-    if N.liquid then return false end
+    if math.abs(N.floor_h - A.floor_h) > 16 then return true end
 
-    if N.floor_h < (A.floor_h + 78) then return false end
-
-    -- check opposite side
-
-    nx, ny = geom.nudge(x, y, 10 - dir)
-
-    if not cave:valid_cell(nx, ny) then return false end
-
-    N = info.blocks[nx][ny]
-
-    return (N == A)
+    return false
   end
 
 
@@ -2439,33 +2429,25 @@ function Cave_decorations(R)
     local A = info.blocks[x][y]
 
     if not (A and A.floor_h) then return false end
-    if A.wall or A.fence or A.liquid then return false end
-    if A.goal_type then return false end
 
-    -- analyse N/S/E/W...
-    local got_dir = {}
+    -- analyse neighborhood of cell
+    local nb_str = ""
 
-    for dir = 2,8,2 do
+    for dir = 1,9 do
       if block_is_bounded(x, y, A, dir) then
-        got_dir[dir] = 1
+        nb_str = nb_str .. "1"
+      else
+        nb_str = nb_str .. "0"
       end
     end
 
-    if table.size(got_dir) != 2 then return false end
+    -- match neighborhood string
+    -- Note: each '.' in the pattern means "Dont Care"
 
-    local v_dir = got_dir[2] or got_dir[8]
-    local h_dir = got_dir[4] or got_dir[6]
-
-    if not (v_dir and h_dir) then return false end
-
-    -- check corner cell
-    local dx = sel(h_dir == 4, -1, 1)
-    local dy = sel(v_dir == 2, -1, 1)
-
-    if info.blocks[x + dx][y + dy] != A then return false end
-
-    -- OK!
-    return true
+    return string.match(nb_str, "^11.100.00$") or
+           string.match(nb_str, "^.1100100.$") or
+           string.match(nb_str, "^.0010011.$") or
+           string.match(nb_str, "^00.001.11$")
   end
 
 
@@ -2543,6 +2525,11 @@ function Cave_decorations(R)
 
     quota = quota * rand.range(0.8, 1.2)
     quota = int(quota + gui.random())
+
+    -- very rarely add lots of torches
+    if info.torch_mode != "few" and rand.odds(1) then
+      quota = #locs
+    end
 
     while quota > 0 do
       if table.empty(locs) then break; end
