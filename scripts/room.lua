@@ -2899,7 +2899,7 @@ function Room_build_seeds(R)
 
     -- FIXME: TEMP RUBBISH
     if string.sub(item, 1, 2) == "ks" then
-      fab_name = "Item_pentagram"
+      fab_name = "Item_podium"
     end
 
     local skin1 = GAME.SKINS[fab_name]
