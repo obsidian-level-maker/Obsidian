@@ -1686,22 +1686,14 @@ function Cave_render_cave(R)
   end
 
 
-  local function render_cell(x, y)
-    local A = info.blocks[x][y]
-
-    if not A then return end
-
-
+  local function render_floor(x, y, A)
     local f_h = A.floor_h
-    local c_h = A.ceil_h  
 
     local f_mat = A.floor_mat or R.floor_mat or cave_tex
-    local c_mat = A. ceil_mat or R.ceil_mat  or cave_tex
 
     if A.wall then f_mat = A.wall_mat or R.main_tex or cave_tex end
 
     local f_liquid = A.liquid
-    local c_sky    = A.sky
 
 
     local f_brush = brush_for_cell(x, y)
@@ -1723,20 +1715,34 @@ function Cave_render_cave(R)
     end
 
     Trans.brush(f_brush)
+  end
 
 
-    if c_h then
-      local c_brush = brush_for_cell(x, y)
+  local function render_ceiling(x, y, A)
+    if not A.ceil_h then return end
 
-      brushlib.add_bottom(c_brush, c_h)
+    local c_mat = A. ceil_mat or R.ceil_mat  or cave_tex
 
-      if c_sky then
-        brushlib.mark_sky(c_brush)
-      else
-        brushlib.set_mat(c_brush, c_mat, c_mat)
-      end
+    local c_brush = brush_for_cell(x, y)
 
-      Trans.brush(c_brush)
+    brushlib.add_bottom(c_brush, A.ceil_h)
+
+    if A.sky then
+      brushlib.mark_sky(c_brush)
+    else
+      brushlib.set_mat(c_brush, c_mat, c_mat)
+    end
+
+    Trans.brush(c_brush)
+  end
+
+
+  local function render_cell(x, y)
+    local A = info.blocks[x][y]
+
+    if A then
+      render_floor  (x, y, A)
+      render_ceiling(x, y, A)
     end
   end
 
