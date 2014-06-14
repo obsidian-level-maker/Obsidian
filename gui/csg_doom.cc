@@ -984,6 +984,7 @@ static void DM_TryGrabFloor(doom_sector_c *D1, int sec_idx)
 	std::string got_tex;
 	int got_floor = IVAL_NONE;
 	int got_special = 0;
+	int got_light = 0;
 
 	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
 	{
@@ -1022,6 +1023,7 @@ static void DM_TryGrabFloor(doom_sector_c *D1, int sec_idx)
 			got_tex     = D2->f_tex;
 			got_floor   = D2->f_h;
 			got_special = D2->special;
+			got_light   = D2->light;
 		}
 	}
 
@@ -1034,6 +1036,7 @@ static void DM_TryGrabFloor(doom_sector_c *D1, int sec_idx)
 	D1->f_tex   = got_tex;
 	D1->f_h     = got_floor;
 	D1->special = got_special;
+	D1->light   = got_light;
 }
 
 
