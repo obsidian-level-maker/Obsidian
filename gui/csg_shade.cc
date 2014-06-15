@@ -534,8 +534,6 @@ void SHADE_CaveLighting()
 		regions.push_back(R);
 	}
 
-fprintf(stderr, "\n\nCavey regions: %u  lights: %u\n\n", regions.size(), cave_lights.size());
-
 	/* iterate over all cavey light sources */
 
 	for (unsigned int k = 0 ; k < cave_lights.size() ; k++)
