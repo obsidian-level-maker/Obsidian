@@ -3474,7 +3474,7 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
 
     w_tex = LEVEL.fence_mat or w_tex
 
-    local fab_name = "Fence_plain"
+    local fab_name = "Fence_gappy"
 
     local skin1 = GAME.SKINS[fab_name]
     assert(skin1)
@@ -3959,16 +3959,6 @@ end
 
     elseif S.kind == "tall_stair" then
       Build.tall_curved_stair(S, LEVEL.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
-
-    elseif S.kind == "lift" then
-      local skin2 = { wall=S.room.main_tex, floor=S.f_tex or S.room.main_tex }
-      local tag = Plan_alloc_id("tag")
-
-      Build.lift(S, LEVEL.lift_skin, skin2, tag)
-
-      local low_z = math.min(S.stair_z1, S.stair_z2)
-      local low_tex = sel(low_z < S.stair_z2, S.z1_tex, S.z2_tex)
-      do_floor(S, low_z, f_indents, w_tex, low_tex)
 
     elseif S.kind == "popup" then
       -- FIXME: monster!!
