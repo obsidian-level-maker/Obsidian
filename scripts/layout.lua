@@ -1920,6 +1920,13 @@ end
         floor = OV.floor
       end
 
+      -- don't place 3D floors on a marked secret
+      -- (it does not work well with the DOOM secret sector special)
+      -- FIXME : relax this for Quake
+      if S.mark_secret and OV and OV.kind != "empty" then
+        return -1
+      end
+
       -- connections must join onto a floor
       if (S == area.entry_S or S.conn or S.pseudo_conn or S.must_walk) then
         if not floor then
