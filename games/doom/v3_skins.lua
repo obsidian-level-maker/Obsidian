@@ -5,11 +5,6 @@ V3_THEME_DEFAULTS =
 
   lifts = { shiny=20, platform=10, rusty=30 }
 
-  outer_fences = { BROWN144=50, STONE2=30, BROWNHUG=10
-                   BROVINE2=10, GRAYVINE=10, ICKWALL3=2
-                   GRAY1=10, STONE=20
-                 }
-
   logos = { carve=50, pill=50, neon=50 }
 
   crates = { crate1=50, crate2=50, }

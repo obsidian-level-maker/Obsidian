@@ -968,6 +968,12 @@ function Quest_select_textures()
   gui.debugf("outdoor_volume : %d\n", outdoor_volume)
   gui.debugf("cave_volume : %d\n", cave_volume)
 
+
+  if THEME.fences then
+    LEVEL.fence_mat = rand.key_by_probs(THEME.fences)
+  end
+
+
   each Z in LEVEL.zones do
     -- when outdoors is limited, prefer same texture in each room
     if _index >= 2 and outdoor_volume < 140 then
@@ -993,37 +999,13 @@ function Quest_select_textures()
     Z.corner_mats = Z.building_theme.corners or THEME.corners
   end
 
+
   each R in LEVEL.rooms do
     setup_theme(R)
   end
 
   each R in LEVEL.scenic_rooms do
     setup_theme(R)
-  end
-
-
-  if not LEVEL.outer_fence_tex then
-    if THEME.outer_fences then
-      LEVEL.outer_fence_tex = rand.key_by_probs(THEME.outer_fences)
-    end
-  end
-
-  if not LEVEL.step_skin then
-    if not THEME.steps then
-      error("Theme is missing step skins") 
-    else
-      local name = rand.key_by_probs(THEME.steps)
-      LEVEL.step_skin = assert(GAME.STEPS[name])
-    end
-  end
-
-  if not LEVEL.lift_skin then
-    if not THEME.lifts then
-      -- OK
-    else
-      local name = rand.key_by_probs(THEME.lifts)
-      LEVEL.lift_skin = assert(GAME.LIFTS[name])
-    end
   end
 end
 

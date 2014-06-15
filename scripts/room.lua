@@ -3404,7 +3404,7 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
     local fab_name = "Door_secret"
     if is_fence then
       fab_name = "Fence_secret"
-w_tex = "CEMENT9"
+      w_tex = LEVEL.fence_mat or w_tex
     end
 
     local skin1 = GAME.SKINS[fab_name]
@@ -3431,6 +3431,8 @@ w_tex = "CEMENT9"
 
     local extra_z = calc_fence_extra_z(S, side, z)
 
+    w_tex = LEVEL.fence_mat or w_tex
+
     local fab_name = "Bars_shiny"
 
     local skin1 = GAME.SKINS[fab_name]
@@ -3455,8 +3457,9 @@ w_tex = "CEMENT9"
 
     local extra_z = calc_fence_extra_z(S, side, z)
 
+    w_tex = LEVEL.fence_mat or w_tex
+
     local fab_name = "Fence_plain"
-w_tex = "CEMENT9"
 
     local skin1 = GAME.SKINS[fab_name]
     assert(skin1)
@@ -3464,7 +3467,7 @@ w_tex = "CEMENT9"
     local o_tex = outer_tex(S, side, w_tex)
     local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex }
 
-    -- TODO : less wide at edge of room
+    -- ??? TODO : less wide at edge of room
 
     local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, z,
                                    side, 0, 192, skin1.deep, skin1.over)
