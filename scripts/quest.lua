@@ -1713,6 +1713,55 @@ end
 
 
 
+function Quest_final_battle()
+  -- Generally the last battle of the map is in the EXIT room.
+  -- however the previous room will often be a better place, so
+  -- look for that here.  [ Idea for this by flyingdeath ]
+
+  ---| Quest_final_battle |---
+
+  local E = assert(LEVEL.exit_room)
+
+  gui.printf("Exit room: %s\n", E:tostr())
+
+  -- will clear this if we choose a different room
+  E.final_battle = true
+
+  -- check previous room...
+  assert(E.entry_conn)
+
+  local prev = E.entry_conn:neighbor(E)
+
+  if prev.purpose == "START" then return end
+
+  -- a locked connection means the player must do other stuff first
+  -- (find a key or switch) -- hence other room would not be _THE_
+  -- final battle.
+  if E.entry_conn.lock then return end
+
+  if prev.svolume > (E.svolume * 1.5 + 2) then
+    -- usually pick previous room if significantly bigger
+    if rand.odds(10) then return end
+
+  elseif E.svolume > (prev.svolume * 1.5 + 2) then
+    return
+
+  else
+    -- rooms are roughly similar sizes
+    if rand.odds(35) then return end
+  end
+
+  -- OK --
+  E.final_battle = false
+  E.cool_down = true
+
+  prev.final_battle = true
+
+  gui.printf("Final Battle in %s\n", prev:tostr())
+end
+
+
+
 function Quest_zones_for_scenics()
   local total = #LEVEL.scenic_rooms
   local scenic_list = table.copy(LEVEL.scenic_rooms)
@@ -1944,10 +1993,7 @@ function Quest_make_quests()
 
   Quest_create_zones()
   Quest_divide_zones()
-
-  assert(LEVEL.exit_room)
-
-  gui.printf("Exit room: %s\n", LEVEL.exit_room:tostr())
+  Quest_final_battle()
 
   Connect_reserved_rooms()
 
