@@ -1356,8 +1356,8 @@ function Monsters_in_room(R)
     -- hallways are always small : allow any monsters
     if R.kind == "hallway" then return end
 
-    -- anything goes in the EXIT room
-    if R.purpose == "EXIT" then return end
+    -- anything goes for the final battle
+    if R.final_battle then return end
 
     -- occasionally break the rules
     if rand.odds(6) then return end
@@ -1464,7 +1464,7 @@ function Monsters_in_room(R)
     end
 
     -- random adjustment
-    qty = qty * rand.pick { 0.8, 1.0, 1.2 }
+    qty = qty * rand.pick { 0.7, 1.0, 1.2 }
 
     -- game and theme adjustments
     qty = qty * (PARAM.monster_factor or 1)
@@ -1475,15 +1475,23 @@ function Monsters_in_room(R)
       qty = qty * COOP_MON_FACTOR
     end
 
-    -- more in EXIT or KEY rooms (extra boost in small rooms)
-    if R.purpose and R.purpose != "START" then
-      qty = qty * 1.5
+    -- make the final battle (of map) as epic as possible
+    if R.final_battle then
+      qty = qty * 2.4
+
+    -- after the big battle, give player a breather
+    elseif R.cool_down then
+      qty = qty * 0.7
+
+    -- more in KEY rooms (extra boost in small rooms)
+    elseif R.purpose == "KEY" or R.purpose == "SWITCH" then
+      qty = qty * 1.4
 
       if R.svolume <= 16 then qty = qty * 1.2 end
     else
       -- large variation occasionally
-          if rand.odds(7) then qty = qty * 2.1
-      elseif rand.odds(7) then qty = qty / 2.1
+          if rand.odds(4) then qty = qty * 2.1
+      elseif rand.odds(4) then qty = qty / 2.1
       end
     end
 
@@ -1642,7 +1650,7 @@ function Monsters_in_room(R)
     -- level check (harder monsters occur in later rooms)
     assert(info.level)
 
-    if not R.purpose then
+    if not (R.purpose or R.final_battle) then
       local max_level = LEVEL.max_level * (0.5 + R.lev_along / 2)
       if max_level < 2 then max_level = 2 end
 

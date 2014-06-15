@@ -1740,18 +1740,19 @@ function Quest_final_battle()
   if E.entry_conn.lock then return end
 
   if prev.svolume > (E.svolume * 1.5 + 2) then
-    -- usually pick previous room if significantly bigger
-    if rand.odds(10) then return end
+    -- always pick previous room if significantly bigger
 
   elseif E.svolume > (prev.svolume * 1.5 + 2) then
+    -- never pick if significantly smaller
     return
 
   else
     -- rooms are roughly similar sizes
-    if rand.odds(35) then return end
+    if rand.odds(25) then return end
   end
 
   -- OK --
+
   E.final_battle = false
   E.cool_down = true
 
