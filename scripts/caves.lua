@@ -2597,6 +2597,10 @@ function Cave_decide_properties(R)
     info.sky_mode = "low_wall"
   end
 
+  if info.sky_mode == "high_wall" then
+    R.high_wall = true
+  end
+
   -- decide torch mode
   if R.is_outdoor and not LEVEL.is_dark then
     info.torch_mode = "none"

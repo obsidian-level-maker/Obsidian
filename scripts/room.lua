@@ -3387,7 +3387,11 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
 
     local z = assert(conn and conn.conn_h)
 
-    local is_fence = (conn.R1.is_outdoor and conn.R2.is_outdoor)
+    local is_fence = conn.R1.is_outdoor and
+                     conn.R2.is_outdoor and
+                     not conn.R1.high_wall and
+                     not conn.R2.high_wall
+
     local extra_z
 
     if is_fence then
