@@ -30,6 +30,8 @@ DOOM.PARAMETERS =
   ammo_factor    = 1.0
   health_factor  = 0.8
   monster_factor = 1.0
+
+  bex_map_prefix = "HUSTR_"
 }
 
 
@@ -42,5 +44,17 @@ DOOM2.PARAMETERS =
   doom2_skies    = true  -- RSKY# patches
 
   skip_monsters = { 20,30,45 }
+}
+
+
+TNT.PARAMETERS =
+{
+  bex_map_prefix = "THUSTR_"
+}
+
+
+PLUTONIA.PARAMETERS =
+{
+  bex_map_prefix = "PHUSTR_"
 }
 

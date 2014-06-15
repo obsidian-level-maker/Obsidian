@@ -34,7 +34,7 @@ BOOM.PARAMETERS =
 
 
 function BOOM.create_dehacked()
-
+  
   local data =
   {
     "#\n"
@@ -46,12 +46,14 @@ function BOOM.create_dehacked()
   local strings_marker = false;
 
   each L in GAME.levels do
-    if L.description then
+    local prefix = PARAM.bex_map_prefix
+
+    if L.description and prefix then
       local id
 
       if string.sub(L.name, 1, 1) == 'E' then
         -- Doom I : HUSTR_ExMy
-        id = "HUSTR_" .. L.name
+        id = prefix .. L.name
 
       else
         local pos = 4
@@ -59,8 +61,8 @@ function BOOM.create_dehacked()
           pos = pos + 1
         end
 
-        -- Doom II : HUSTR_%d
-        id = "HUSTR_" .. string.sub(L.name, pos)
+        -- Doom II / Final Doom : HUSTR_%d
+        id = prefix .. string.sub(L.name, pos)
       end
 
       local text = L.name .. ": " .. L.description;
