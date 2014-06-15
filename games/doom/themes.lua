@@ -168,6 +168,23 @@ DOOM2.THEMES =
       green_torch = 40
       blue_torch  = 20
     }
+
+    fences =
+    {
+      BROWN144 = 60
+      WOOD5    = 40
+      STONE    = 30
+      SLADWALL = 30
+      CEMENT9  = 30
+      BRICK12  = 20
+      BSTONE2  = 20
+
+      GSTVINE2 = 15
+      SP_ROCK  = 10
+      BRICK10  = 10
+      BRICK11  = 10
+      STUCCO3  = 10
+    }
   }
 
 
@@ -1627,6 +1644,19 @@ DOOM1.THEMES =
       red_torch   = 60
       green_torch = 40
       blue_torch  = 20
+    }
+
+    fences =
+    {
+      BROWN144 = 60
+      WOOD5    = 40
+      STONE    = 30
+      SLADWALL = 20
+
+      BROVINE  = 15
+      GRAYVINE = 15
+      GSTVINE2 = 15
+      SP_ROCK  = 15
     }
   }
 
