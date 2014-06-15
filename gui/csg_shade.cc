@@ -583,13 +583,23 @@ fprintf(stderr, "\n\nCavey regions: %u  lights: %u\n\n", regions.size(), cave_li
 
 void SHADE_BlandLighting()
 {
-	SHADE_SunLight();
+	int min_shade = MIN_SHADE;
 
-	Main_Ticker();
+	if (ArgvFind(0, "nolight") >= 0)
+	{
+		LogPrintf("SKIPPING SUN / CAVE LIGHTS (-nolight specified)\n");
+		min_shade = 144;
+	}
+	else
+	{
+		SHADE_SunLight();
 
-	SHADE_CaveLighting();
+		Main_Ticker();
 
-	Main_Ticker();
+		SHADE_CaveLighting();
+
+		Main_Ticker();
+	}
 
 	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
 	{
@@ -606,9 +616,9 @@ void SHADE_BlandLighting()
 		int height = I_ROUND(T->b.z - B->t.z);
 
 		if (B->t.face.getInt("cavelit"))
-			R->shade = MAX(base, MIN_SHADE);
+			R->shade = MAX(base, min_shade);
 		else if (T->bkind == BKIND_Sky)
-			R->shade = MAX(sky_shade, MAX(R->f_light, 112));
+			R->shade = MAX(sky_shade, MAX(R->f_light, min_shade));
 		else
 			R->shade = MAX(base, (height <= 160) ? 128 : 144);
 	} 
