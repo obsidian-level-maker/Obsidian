@@ -33,6 +33,7 @@ CHANGELOG
 - added a couple of special doorways for caves
 - added arch-shaped doorway for Urban and Hell themes
 - better secret connections in outdoor rooms
+- better texturing for outdoor fences
 - build all doors and fences using the wad-fab system
 - build all stairs and lifts via wad prefabs
 
@@ -45,7 +46,9 @@ CHANGELOG
 - fixed Psychedelic theme using SKY1/2/3 as a normal texture
 - fixed the silly "free standing" archways and doors
 - fixed the weird metal walls in large scenic areas
+- fixed pegging on lifts in slime pits
+
 - fixed rare infinite loop when planning cave rooms
 - fixed torches in caves to never obstruct the player
-- fixed pegging on lifts in slime pits
+- fixed missing automap names for TNT and Plutonia maps
 
