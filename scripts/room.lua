@@ -1203,6 +1203,9 @@ function Room_border_up()
     -- require both rooms be outdoorsy
     if not (R1.is_outdoor and R2.is_outdoor) then return end
 
+    -- not needed between two scenic rooms
+    if R1.kind == "scenic" and R2.kind == "scenic" then return end
+
     -- require one of the rooms be constructed (not cave)
     if R1.kind == "cave" and R2.kind == "cave" then return end
 
