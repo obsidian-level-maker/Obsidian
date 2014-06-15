@@ -3375,6 +3375,14 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
     local extra_z     = f_max + LEVEL.fence_h - z
     local extra_limit = c_min - z - 64
 
+    -- make fence higher near item pedestals (etc)
+    if S.content == "wotsit" then
+      extra_z = math.max(extra_z, S.floor_max_h + 56 - z)
+    end
+    if N.content == "wotsit" then
+      extra_z = math.max(extra_z, N.floor_max_h + 56 - z)
+    end
+
     if extra_z > extra_limit then
        extra_z = extra_limit
     end
