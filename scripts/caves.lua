@@ -232,14 +232,12 @@ function Cave_generate_cave(R)
 
     for dir = 2,8,2 do
       if check_need_wall(S, dir) then
-        --!!!! WTF
-        if R.is_outdoor and info.sky_mode != "high_wall" and false then
-          -- this is handled in border_up()
-        else
-          S.border[dir].kind = "cave_wall"
-          S.border[dir].w_tex = cave_tex
-          S.thick [dir] = 48
-        end
+        -- merely mark it here, handled by border_up()
+        S.border[dir].cave_gap = true
+
+        ---##  S.border[dir].kind = "cave_wall"
+        ---##  S.border[dir].w_tex = cave_tex
+        ---##  S.thick [dir] = 48
       end
     end
   end
