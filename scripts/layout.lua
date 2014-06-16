@@ -3714,7 +3714,61 @@ function Layout_build_outdoor_borders()
   end
 
 
+  local function check_border_accessible(R, B)
+    if B.kind == "corner" then return end
+
+    -- range of seeds to test  [ B.side is relative to room, not piece ]
+    local tx1, ty1 = B.sx1, B.sy1
+    local tx2, ty2 = B.sx2, B.sy2
+
+    local piece_floor_h = assert(R.floor_max_h)
+
+    if B.side == 8 then ty1 = ty1 - 1 ; ty2 = ty1 end
+    if B.side == 2 then ty2 = ty2 + 1 ; ty1 = ty2 end
+    if B.side == 6 then tx1 = tx1 - 1 ; tx2 = tx1 end
+    if B.side == 4 then tx2 = tx2 + 1 ; tx1 = tx2 end
+
+    for x = tx1, tx2 do
+    for y = ty1, ty2 do
+      assert(Seed_valid(x, y))
+
+      local S = SEEDS[x][y]
+
+      if S.room != R then return end  -- child room
+
+      if S.kind != "walk" then return end
+
+      if S.content then return end  -- stairs (etc)
+
+      local floor_h = assert(S.floor_max_h)
+
+      if math.abs(floor_h - piece_floor_h) > 8 then return end
+
+    end -- x, y
+    end
+
+    -- OK --
+
+stderrf("Border piece @ (%d %d) is accessible\n", B.sx1, B.sy1)
+
+    B.is_accessible = true
+  end
+
+
+  local function look_for_special_usage(R)
+    each B in LEVEL.map_borders do
+      if B.room != R then continue end
+
+      check_border_accessible(R, B)
+    end
+  end
+
+
   ---| Layout_build_outdoor_borders |---
+
+  each R in LEVEL.rooms do
+    look_for_special_usage(R)
+  end
 
   each B in LEVEL.map_borders do
     build_border(B)
