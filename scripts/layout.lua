@@ -3645,6 +3645,11 @@ function Layout_build_outdoor_borders()
 
     if B.kind == "edge" then
       local skin1 = GAME.SKINS["Border_dropoff_t"]
+
+--FIXME !!!!!! TEST CRUD
+if B.foobie then
+      skin1 = GAME.SKINS["Border_dropoff_exit"]
+end
       assert(skin1)
 
       local T = Trans.box_transform(x1, y1, x2, y2, floor_h, 10 - B.side)
@@ -3714,7 +3719,29 @@ function Layout_build_outdoor_borders()
   end
 
 
-  local function check_border_accessible(R, B)
+  local function compute_entry_dist(R, B)
+    -- compute distance from entrace
+    if R.entry_conn then
+      local entry_S = R.entry_conn:seed(R)
+      if entry_S then
+        local mx = (B.sx1 + B.sx2) / 2
+        local my = (B.sy1 + B.sy2) / 2
+
+        local dist = geom.dist(entry_S.sx, entry_S.sy, mx, my)
+
+        -- tie breaker
+        return dist + gui.random() / 10
+      end
+
+      -- TODO : handle teleporter entry
+    end
+
+    -- arbitrary fallback value
+    return gui.random() * 10
+  end
+
+
+  local function check_border_accessible(R, B, list)
     if B.kind == "corner" then return end
 
     -- range of seeds to test  [ B.side is relative to room, not piece ]
@@ -3752,15 +3779,28 @@ function Layout_build_outdoor_borders()
 stderrf("Border piece @ (%d %d) is accessible\n", B.sx1, B.sy1)
 
     B.is_accessible = true
+
+    table.insert(list, B)
+
+    B.entry_dist = compute_entry_dist(R, B)
+stderrf("  Entry dist: %1.2f\n", B.entry_dist)
   end
 
 
   local function look_for_special_usage(R)
+    local list = {}
+
     each B in LEVEL.map_borders do
       if B.room != R then continue end
 
-      check_border_accessible(R, B)
+      check_border_accessible(R, B, list)
     end
+
+    if #list == 0 then return end
+
+    local use_B = table.pick_best(list, function(A, B) return A.entry_dist > B.entry_dist end)
+
+    use_B.foobie = true
   end
 
 
