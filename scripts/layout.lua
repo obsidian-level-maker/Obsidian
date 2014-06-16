@@ -1894,6 +1894,77 @@ end
     return assert(dir)
   end
 
+  
+  local function touches_outdoor_border(tx1, ty1, tx2, ty2)
+    for x = tx1, tx2 do
+    for y = ty1, ty2 do
+      if not Seed_valid(x, y) then continue end
+
+      local B = SEEDS[x][y].map_border
+
+      if B and B.room == R then return true end
+    end
+    end
+
+    return false
+  end
+
+
+  local function touches_building_on_side(tx1, ty1, tx2, ty2)
+    local seen_R
+
+    for x = tx1, tx2 do
+    for y = ty1, ty2 do
+      if not Seed_valid(x, y) then continue end
+
+      local S = SEEDS[x][y]
+
+      local R2 = S.room
+
+      if not R2 then return nil end
+      if R2 == R then return nil end
+
+      if R2.is_outdoor then return nil end
+      if R2.kind == "cave" then return nil end
+
+      seen_R = R2
+
+    end -- x, y
+    end
+
+    return assert(seen_R)
+  end
+
+
+  local function touches_a_building(sx1, sy1, sx2, sy2)
+    local got_R
+    local got_side
+
+    for side = 2,8,2 do
+      local tx1, ty1 = sx1, sy1
+      local tx2, ty2 = sx2, sy2
+
+      if side == 2 then ty1 = ty1 - 1 ; ty2 = ty1 end
+      if side == 8 then ty2 = ty2 + 1 ; ty1 = ty2 end
+      if side == 4 then tx1 = tx1 - 1 ; tx2 = tx1 end
+      if side == 6 then tx2 = tx2 + 1 ; tx1 = tx2 end
+
+      -- do not allow outdoor solids to touch a border piece
+      if touches_outdoor_border(tx1, ty1, tx2, ty2) then
+        return nil
+      end
+
+      local R2 = touches_building_on_side(tx1, ty1, tx2, ty2)
+
+      if R2 then
+        got_R = R2
+        got_side = side
+      end
+    end
+
+    return got_R, got_side
+  end
+
 
   local function eval_a_chunk(pat, px, py, T, sx1, sy1, sw, sh)
     local sx2 = sx1 + sw - 1
@@ -1908,6 +1979,16 @@ end
     if pat._overlay then
       OV = pat._overlay[px][py]
     end
+
+    -- in outdoor rooms, a solid at edge of pattern must touch a building
+    if P.kind == "solid" and R.is_outdoor and
+       (px == 1 or px == pat._structure.w or
+        py == 1 or py == pat._structure.h)
+    then
+      if not touches_a_building(sx1, sy1, sx2, sy2) then
+        return -1
+      end
+    end 
 
     for sx = sx1, sx2 do
     for sy = sy1, sy2 do
