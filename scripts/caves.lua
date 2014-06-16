@@ -2402,6 +2402,106 @@ end
 
 
 
+function Cave_make_waterfalls(R)
+  --| this checks if two lakes can be connected by a short run of
+  --| intermediate cells.
+
+  local info = R.cave_info
+  local cave = info.cave
+
+
+  local function try_from_loc(lake, x, y, dir)
+    if info.blocks[x][y] != lake then
+      return false
+    end
+
+    local nx, ny = geom.nudge(x, y, dir)
+
+    if not cave:valid_cell(nx, ny) then return false end
+
+    local B = info.blocks[nx][ny]
+
+    if not B or B == lake then return false end
+    if B.liquid or B.fence or B.wall then return false end
+
+    local length = 1
+    local max_length = 4
+
+    for dist = 2, 9 do
+      if length > max_length then return false end
+
+      local ox, oy = geom.nudge(x, y, dir, dist)
+
+      if not cave:valid_cell(ox, oy) then return false end
+
+      local B2 = info.blocks[ox][oy]
+      
+      if not B2 or B2 == lake then return false end
+
+      -- found another lake?
+      if B2.liquid then
+        if lake.floor_h - B2.floor_h < 30 then return false end
+        break;
+      end
+
+      if B.fence or B.wall then return false end
+
+      length = length + 1
+    end
+
+    -- OK --
+
+    for dist = 1, length do
+      local ox, oy = geom.nudge(x, y, dir, dist)
+
+      info.blocks[ox][oy] = lake
+    end
+
+    return true
+  end
+
+
+  local function try_waterfall(lake, dir)
+    local cx1, cy1 = lake.cx1, lake.cy1
+    local cx2, cy2 = lake.cx2, lake.cy2
+
+    if dir == 2 then cy2 = math.min(lake.cy2, cy1 + 2) end
+    if dir == 8 then cy1 = math.max(lake.cy1, cy2 - 2) end
+    if dir == 4 then cx2 = math.min(lake.cx2, cx1 + 2) end
+    if dir == 6 then cx1 = math.max(lake.cx1, cx2 - 2) end
+
+    for x = cx1, cx2 do
+    for y = cy1, cy2 do
+      if try_from_loc(lake, x, y, dir, dist) then
+        return true
+      end
+    end -- x, y
+    end
+
+    return false
+  end
+
+
+  ---| Cave_make_waterfalls |---
+
+  if info.liquid_mode != "lake" then return end
+
+  each lake in info.lakes do
+    local w, h = geom.group_size(lake.cx1, lake.cy1, lake.cx2, lake.cy2)
+
+    -- too large? (probably the main lake)
+    if w > 15 or h > 15 then continue end
+
+    local DIRS = { 2,4,6,8 }
+    rand.shuffle(DIRS)
+
+    each dir in DIRS do
+      if try_waterfall(lake, dir) then
+        break;
+      end
+    end
+  end
+end
 
 
 function Cave_decorations(R)
@@ -2643,10 +2743,12 @@ function Cave_build_room(R, entry_h)
   Cave_fill_lakes(R)
 
   Cave_create_areas(R)
+
   Cave_bunch_areas(R, "liquid")
   Cave_bunch_areas(R, "sky")
 
   Cave_floor_heights(R, entry_h)
+  Cave_make_waterfalls(R)
   Cave_decorations(R)
 
   Cave_render_cave(R)
