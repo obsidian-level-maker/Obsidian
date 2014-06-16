@@ -221,38 +221,6 @@ function ROOM_CLASS.is_near_exit(R)
 end
 
 
-function ROOM_CLASS.find_guard_spot(R)
-  -- finds a KEY or EXIT to guard -- returns coordinate table
-  if R.purpose == "KEY" or R.purpose == "EXIT" then
-
-    if R.guard_spot then
-      local mx, my = R.guard_spot:mid_point()
-
-      return { x=mx, y=my }
-    end
-  end
-
---[[  FUTURE
-  each CL in R.closets do
-    if CL.closet_kind == "exit" or
-       CL.closet_kind == "item"
-    then
-      -- create a fake spot in front of closet
-      local x, y = CL.section:edge_mid_point(CL.dir)
-      local dx, dy = geom.delta(CL.dir)
-
-      x = x + dx * 70
-      y = y + dy * 70
-
-      return { x=x, y=y }
-    end
-  end
---]]
-
-  return nil  -- none
-end
-
-
 function ROOM_CLASS.furthest_dist_from_entry(R)
   if not R.entry_coord then
     -- rough guess

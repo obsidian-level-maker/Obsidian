@@ -111,6 +111,17 @@ function CONN_CLASS.seed(C, R)
 end
 
 
+function CONN_CLASS.get_dir(C, R)
+  if not C.dir then return nil end
+
+  if R == C.R1 then
+    return C.dir
+  else
+    return 10 - C.dir
+  end
+end
+
+
 function CONN_CLASS.set_where(C, R, floor)
   if R == C.R1 then
     C.where1 = floor

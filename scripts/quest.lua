@@ -1739,10 +1739,10 @@ function Quest_final_battle()
   -- final battle.
   if E.entry_conn.lock then return end
 
-  if prev.svolume > (E.svolume * 1.5 + 2) then
+  if prev.svolume > (E.svolume * 1.4 + 2) then
     -- always pick previous room if significantly bigger
 
-  elseif E.svolume > (prev.svolume * 1.5 + 2) then
+  elseif E.svolume > (prev.svolume * 1.4 + 2) then
     -- never pick if significantly smaller
     return
 

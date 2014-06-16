@@ -2661,6 +2661,57 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   end
 
 
+  local function guard_spot_for_conn(C)
+    local S = C:seed(R)
+
+    if not S then return nil end  -- teleporter
+
+    local mx, my = S:mid_point()
+
+    return { x=mx, y=my }
+  end
+
+
+  local function find_guard_spot()
+    -- Finds a KEY or EXIT to guard -- returns coordinate table (or NIL)
+
+    -- in a pseudo-exit room, need to guard the door to real exit.
+    -- we skip teleporters here, the code further down will handle it.
+    if R.final_battle and R.purpose != "EXIT" then
+      each C in R.conns do
+        if C.kind == "teleporter" then continue end
+
+        local nb = C:neighbor(R)
+
+        if nb.purpose == "EXIT" then
+          return guard_spot_for_conn(C)
+        end
+      end
+    end
+
+    if R.purpose == "KEY" or R.purpose == "EXIT" or R.final_battle then
+      -- the wotsit placement code will have set this
+      if R.guard_spot then
+        local mx, my = R.guard_spot:mid_point()
+
+        return { x=mx, y=my }
+      end
+    end
+
+  --[[  FUTURE
+    each CL in R.closets do
+      if CL.closet_kind == "exit" or
+         CL.closet_kind == "item"
+      then
+        return guard_spot_for_conn(CL.conn)
+      end
+    end
+  --]]
+
+    return nil  -- none
+  end
+
+
   local function prepare_room()
     R.monster_list = {}
     R.fight_stats  = make_empty_stats()
@@ -2670,7 +2721,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     categorize_room_size()
 
     if R.kind != "hallway" then
-      R.guard_coord = R:find_guard_spot()
+      R.guard_coord = find_guard_spot()
     end
 
     R.sneakiness = rand.sel(30, 95, 25)
