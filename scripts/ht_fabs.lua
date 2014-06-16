@@ -51,7 +51,6 @@ SOLID_P1 =
   prob = 130
   shape = "P"
 
-  environment = "indoor"
   solid_feature = true
   symmetry = "xy"
 
@@ -139,7 +138,6 @@ SOLID_C1 =
 {
   prob = 100
 
-  environment = "indoor"
   solid_feature = true
   symmetry = "xy"
 
@@ -239,7 +237,7 @@ SOLID_OPP1 =
 {
   prob = 100
 
-  environment = "indoor"
+--  environment = "indoor"
   solid_feature = true
 
   structure =
@@ -274,10 +272,8 @@ DIAG_OPP1 =
 
 SOLID_L1 =
 {
-  prob = 2000
+  prob = 200
   shape = "L"
-
-  environment = "indoor"
 
   structure =
   {
@@ -285,8 +281,8 @@ SOLID_L1 =
     ".."
   }
 
-  x_sizes = { "22", "32" }
-  y_sizes = { "22", "32" }
+  x_sizes = { "21", "22", "32" }
+  y_sizes = { "21", "22", "32" }
 }
 
 
