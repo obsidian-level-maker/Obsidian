@@ -79,6 +79,35 @@ class AREA
 --------------------------------------------------------------]]
 
 
+CELL_CORNERS = { 1,3,9,7 }
+
+
+function Cave_brush(info, x, y)
+  local bx = info.x1 + (x - 1) * 64
+  local by = info.y1 + (y - 1) * 64
+
+  local coords = {}
+
+  each side in CELL_CORNERS do
+    local dx, dy = geom.delta(side)
+
+    local fx = bx + sel(dx < 0, 0, 64)
+    local fy = by + sel(dy < 0, 0, 64)
+
+    local cx =  x + sel(dx < 0, 0, 1)
+    local cy =  y + sel(dy < 0, 0, 1)
+
+    fx = fx + (info.delta_x_map[cx][cy] or 0)
+    fy = fy + (info.delta_y_map[cx][cy] or 0)
+
+    table.insert(coords, { x=fx, y=fy })
+  end
+
+  return coords
+end
+
+
+
 function Cave_generate_cave(R)
   local info = R.cave_info
 
@@ -1504,8 +1533,6 @@ function Cave_render_cave(R)
   local dw = info.W + 1
   local dh = info.H + 1
 
-  local B_CORNERS = { 1,3,9,7 }
-
 
   local function grab_cell(x, y)
     if not cave:valid_cell(x, y) then
@@ -1627,6 +1654,9 @@ function Cave_render_cave(R)
     delta_x_map = table.array_2D(dw, dh)
     delta_y_map = table.array_2D(dw, dh)
 
+    info.delta_x_map = delta_x_map
+    info.delta_y_map = delta_y_map
+
     if square_cave then return end
 
     for x = 1, dw do
@@ -1634,31 +1664,6 @@ function Cave_render_cave(R)
       analyse_corner(x, y)
     end
     end
-  end
-
-
-  local function brush_for_cell(x, y)
-    local bx = info.x1 + (x - 1) * 64
-    local by = info.y1 + (y - 1) * 64
-
-    local coords = {}
-
-    each side in B_CORNERS do
-      local dx, dy = geom.delta(side)
-
-      local fx = bx + sel(dx < 0, 0, 64)
-      local fy = by + sel(dy < 0, 0, 64)
-
-      local cx =  x + sel(dx < 0, 0, 1)
-      local cy =  y + sel(dy < 0, 0, 1)
-
-      fx = fx + (delta_x_map[cx][cy] or 0)
-      fy = fy + (delta_y_map[cx][cy] or 0)
-
-      table.insert(coords, { x=fx, y=fy })
-    end
-
-    return coords
   end
 
 
@@ -1685,7 +1690,7 @@ function Cave_render_cave(R)
 
 
   local function render_floor_subdiv(x, y, A, f_mat, f_liquid)
-    local coords = brush_for_cell(x, y)
+    local coords = Cave_brush(info, x, y)
 
     local mid_x = info.x1 + (x - 0.5) * 64
     local mid_y = info.y1 + (y - 0.5) * 64
@@ -1746,7 +1751,7 @@ function Cave_render_cave(R)
     end
 
 
-    local f_brush = brush_for_cell(x, y)
+    local f_brush = Cave_brush(info, x, y)
 
     if f_h then
       local top = { t=f_h }
@@ -1773,7 +1778,7 @@ function Cave_render_cave(R)
 
     local c_mat = A. ceil_mat or R.ceil_mat  or cave_tex
 
-    local c_brush = brush_for_cell(x, y)
+    local c_brush = Cave_brush(info, x, y)
 
     brushlib.add_bottom(c_brush, A.ceil_h)
 
@@ -1794,222 +1799,6 @@ function Cave_render_cave(R)
       render_floor  (x, y, A)
       render_ceiling(x, y, A)
     end
-  end
-
-
-  local function do_spot_floor(A, x, y)
-    local A2 = info.blocks[x][y]
-
-    if A != A2 then return end
-
-    local poly = brush_for_cell(x, y)
-
-    gui.spots_fill_poly(poly, SPOT_CLEAR)
-  end
-
-
-  local function do_spot_at_border(A, x, y)
-    -- only needed for lake mode
-    if not is_lake then return end
-
-    for dir = 1,9 do if dir != 5 then
-      local nx, ny = geom.nudge(x, y, dir)
-
-      local A
-      if cave:valid_cell(nx, ny) then
-        A = info.blocks[nx][ny]
-      end
-
-      if not A or A.fence then
-        local poly = brush_for_cell(x, y)
-        gui.spots_fill_poly(poly, SPOT_WALL)
-        return
-      end
-
-    end end -- dir
-  end
-
-
-  local function do_spot_wall(A, x, y)
-    local A2 = info.blocks[x][y]
-
-    if A2 == A then
-      return do_spot_at_border(A, x, y)
-    end
-
-    -- if this cell touches the current area, mark it as solid
-    local touches = false
-
-    for dir = 1,9 do if dir != 5 then
-      local nx, ny = geom.nudge(x, y, dir)
-
-      if not cave:valid_cell(nx, ny) then continue end
-
-      if info.blocks[nx][ny] == A then
-        touches = true
-        break;
-      end
-    end end -- dir
-
-    if touches then 
-      local poly = brush_for_cell(x, y)
-
-      if not A2 or A2.wall then
-        gui.spots_fill_poly(poly, SPOT_WALL)
-      else
-        gui.spots_fill_poly(poly, SPOT_LEDGE)
-      end
-    end
-  end
-
-
-  local function do_spot_border(S, side)
-    local B     = S.border[side]
-    local thick = S.thick[side]
-
-    if not B.kind then return end
-
-    local x1, y1 = S.x1, S.y1
-    local x2, y2 = S.x2, S.y2
-
-    if side == 2 then y2 = y1 + thick end
-    if side == 8 then y1 = y2 - thick end
-    if side == 4 then x2 = x1 + thick end
-    if side == 6 then x1 = x2 - thick end
-
-    local poly = brushlib.quad(x1, y1, x2, y2)
-
-    gui.spots_fill_poly(poly, SPOT_WALL)
-  end
-
-
-  local function do_spot_decor(dec)
-    local poly = brushlib.quad(dec.x1, dec.y1, dec.x2, dec.y2)
-
-    gui.spots_fill_poly(poly, SPOT_LEDGE)
-  end
-
-
-  local function do_spot_important(imp)
-    -- connections don't need to be kept clear (do they?)
-    if not imp.goal then return end
-
-    local G = imp.goal
-    local S = assert(G.S)
-
-    local poly = brushlib.quad(S.x1, S.y1, S.x2, S.y2)
-
-    gui.spots_fill_poly(poly, SPOT_LEDGE)
-  end
-
-
-  local function determine_spots(A)
-    -- determine bbox (Note: this is whole cave)
-    local x1 = info.x1 + 10
-    local y1 = info.y1 + 10
-
-    local x2 = info.x2 - 10
-    local y2 = info.y2 - 10
-
-    gui.spots_begin(x1, y1, x2, y2, SPOT_LEDGE)
-
-
-    -- step 1 : handle floors
-
-    for cx = 1, info.W do
-    for cy = 1, info.H do
-      do_spot_floor(A, cx, cy)
-    end
-    end
-
-    -- step 2 : handle nearby walls
-
-    for cx = 1, info.W do
-    for cy = 1, info.H do
-      do_spot_wall(A, cx, cy)
-    end
-    end
-
-    -- step 3 : handle connections and "cave_wall" borders
-
-    for sx = R.sx1, R.sx2 do
-    for sy = R.sy1, R.sy2 do
-      local S = SEEDS[sx][sy]
-
-      if S.room == R then
-        for dir = 2,8,2 do
-          do_spot_border(S, dir)
-        end
-      end
-    end
-    end
-
-    -- step 4 : remove importants
-
-    each imp in R.cave_imps do
-      do_spot_important(imp)
-    end
-
-    -- step 5 : remove decorations
-
-    if A.decorations then
-      each dec in A.decorations do
-        do_spot_decor(dec)
-      end
-    end
-
-
-    -- now grab all the spots...
-
-    local item_spots = {}
-
-    if not A.liquid then
-      gui.spots_get_items(item_spots)
-    end
-
-    -- mark exclusion zones (e.g. area around a teleporter).
-    -- gotta do it _after_ getting the item spots
-
-    each zone in R.exclusions do
-      if zone.kind == "empty" then
-        local poly = brushlib.quad(zone.x1, zone.y1, zone.x2, zone.y2)
-        gui.spots_fill_poly(poly, SPOT_LEDGE)
-      end
-    end
-
-    --- gui.spots_dump("Spot grid")
-
-
-    local mon_spots  = {}
-
-    gui.spots_get_mons(mon_spots)
-
----###  if table.empty(item_spots) and mon_spots[1] then
----###    table.insert(item_spots, mon_spots[1])
----###  end
-
-
-    -- add to room, set Z positions
-    local f_h = assert(A.floor_h)
-    local c_h = A.ceil_h or (f_h + 160)
-
-    each spot in item_spots do
-      spot.z1 = f_h
-      spot.z2 = c_h
-
-      table.insert(R.item_spots, spot)
-    end
-
-    each spot in mon_spots do
-      spot.z1 = f_h
-      spot.z2 = c_h
-
---FIXME  spot.face_away = R:find_nonfacing_spot(spot.x1, spot.y1, spot.x2, spot.y2)
-
-      table.insert(R.mon_spots, spot)
-    end
-
-    gui.spots_end()
   end
 
 
@@ -2067,8 +1856,8 @@ function Cave_render_cave(R)
         -- do not render a wall here
         cave:set(x, y, 0)
 
-        local f_brush = brush_for_cell(x, y)
-        local c_brush = brush_for_cell(x, y)
+        local f_brush = Cave_brush(info, x, y)
+        local c_brush = Cave_brush(info, x, y)
 
         if PARAM.deep_liquids then
           brushlib.add_top(f_brush, f_h-128)
@@ -2076,7 +1865,7 @@ function Cave_render_cave(R)
 
           Trans.brush(f_brush)
 
-          local l_brush = brush_for_cell(x, y)
+          local l_brush = Cave_brush(info, x, y)
 
           table.insert(l_brush, 1, { m="liquid", medium=LEVEL.liquid.medium })
 
@@ -2164,10 +1953,6 @@ function Cave_render_cave(R)
   for y = 1, info.H do
     render_cell(x, y)
   end
-  end
-
-  each A in info.floors do
-    determine_spots(A)
   end
 
   if R.is_outdoor then
@@ -2750,6 +2535,240 @@ function Cave_build_room(R, entry_h)
   Cave_decorations(R)
 
   Cave_render_cave(R)
+end
+
+
+
+function Cave_determine_spots(R)
+  local info = R.cave_info
+  local cave = info.cave
+
+
+  local function do_spot_floor(A, x, y)
+    local A2 = info.blocks[x][y]
+
+    if A != A2 then return end
+
+    local poly = Cave_brush(info, x, y)
+
+    gui.spots_fill_poly(poly, SPOT_CLEAR)
+  end
+
+
+  local function do_spot_at_border(A, x, y)
+    -- only needed for lake mode
+    if not is_lake then return end
+
+    for dir = 1,9 do if dir != 5 then
+      local nx, ny = geom.nudge(x, y, dir)
+
+      local A
+      if cave:valid_cell(nx, ny) then
+        A = info.blocks[nx][ny]
+      end
+
+      if not A or A.fence then
+        local poly = Cave_brush(info, x, y)
+        gui.spots_fill_poly(poly, SPOT_WALL)
+        return
+      end
+
+    end end -- dir
+  end
+
+
+  local function do_spot_wall(A, x, y)
+    local A2 = info.blocks[x][y]
+
+    if A2 == A then
+      return do_spot_at_border(A, x, y)
+    end
+
+    -- if this cell touches the current area, mark it as solid
+    local touches = false
+
+    for dir = 1,9 do if dir != 5 then
+      local nx, ny = geom.nudge(x, y, dir)
+
+      if not cave:valid_cell(nx, ny) then continue end
+
+      if info.blocks[nx][ny] == A then
+        touches = true
+        break;
+      end
+    end end -- dir
+
+    if touches then 
+      local poly = Cave_brush(info, x, y)
+
+      if not A2 or A2.wall then
+        gui.spots_fill_poly(poly, SPOT_WALL)
+      else
+        gui.spots_fill_poly(poly, SPOT_LEDGE)
+      end
+    end
+  end
+
+
+  local function do_spot_border(S, side)
+    local B     = S.border[side]
+    local thick = S.thick[side]
+
+    if not B.kind then return end
+
+    local x1, y1 = S.x1, S.y1
+    local x2, y2 = S.x2, S.y2
+
+    if side == 2 then y2 = y1 + thick end
+    if side == 8 then y1 = y2 - thick end
+    if side == 4 then x2 = x1 + thick end
+    if side == 6 then x1 = x2 - thick end
+
+    local poly = brushlib.quad(x1, y1, x2, y2)
+
+    gui.spots_fill_poly(poly, SPOT_WALL)
+  end
+
+
+  local function do_spot_decor(dec)
+    local poly = brushlib.quad(dec.x1, dec.y1, dec.x2, dec.y2)
+
+    gui.spots_fill_poly(poly, SPOT_LEDGE)
+  end
+
+
+  local function do_spot_important(imp)
+    -- connections don't need to be kept clear (do they?)
+    if not imp.goal then return end
+
+    local G = imp.goal
+    local S = assert(G.S)
+
+    local poly = brushlib.quad(S.x1, S.y1, S.x2, S.y2)
+
+    gui.spots_fill_poly(poly, SPOT_LEDGE)
+  end
+
+
+  local function determine_spots(A)
+    -- determine bbox (Note: this is whole cave)
+    local x1 = info.x1 + 10
+    local y1 = info.y1 + 10
+
+    local x2 = info.x2 - 10
+    local y2 = info.y2 - 10
+
+    gui.spots_begin(x1, y1, x2, y2, SPOT_LEDGE)
+
+
+    -- step 1 : handle floors
+
+    for cx = 1, info.W do
+    for cy = 1, info.H do
+      do_spot_floor(A, cx, cy)
+    end
+    end
+
+    -- step 2 : handle nearby walls
+
+    for cx = 1, info.W do
+    for cy = 1, info.H do
+      do_spot_wall(A, cx, cy)
+    end
+    end
+
+    -- step 3 : handle connections and "cave_wall" borders
+
+    for sx = R.sx1, R.sx2 do
+    for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
+
+      if S.room == R then
+        for dir = 2,8,2 do
+          do_spot_border(S, dir)
+        end
+      end
+    end
+    end
+
+    -- step 4 : remove importants
+
+    each imp in R.cave_imps do
+      do_spot_important(imp)
+    end
+
+    -- step 5 : remove decorations
+
+    if A.decorations then
+      each dec in A.decorations do
+        do_spot_decor(dec)
+      end
+    end
+
+
+    -- now grab all the spots...
+
+    local item_spots = {}
+
+    if not A.liquid then
+      gui.spots_get_items(item_spots)
+    end
+
+
+--[[  REMOVE THIS -- IT IS DONE ELSEWHERE
+    -- mark exclusion zones (e.g. area around a teleporter).
+    -- gotta do it _after_ getting the item spots
+
+    each zone in R.exclusions do
+      if zone.kind == "empty" then
+        local poly = brushlib.quad(zone.x1, zone.y1, zone.x2, zone.y2)
+        gui.spots_fill_poly(poly, SPOT_LEDGE)
+      end
+    end
+--]]
+
+
+    --- gui.spots_dump("Spot grid")
+
+
+    local mon_spots  = {}
+
+    gui.spots_get_mons(mon_spots)
+
+---###  if table.empty(item_spots) and mon_spots[1] then
+---###    table.insert(item_spots, mon_spots[1])
+---###  end
+
+
+    -- add to room, set Z positions
+    local f_h = assert(A.floor_h)
+    local c_h = A.ceil_h or (f_h + 160)
+
+    each spot in item_spots do
+      spot.z1 = f_h
+      spot.z2 = c_h
+
+      table.insert(R.item_spots, spot)
+    end
+
+    each spot in mon_spots do
+      spot.z1 = f_h
+      spot.z2 = c_h
+
+--FIXME  spot.face_away = R:find_nonfacing_spot(spot.x1, spot.y1, spot.x2, spot.y2)
+
+      table.insert(R.mon_spots, spot)
+    end
+
+    gui.spots_end()
+  end
+
+
+  ---| Cave_determine_spots |---
+
+  each A in info.floors do
+    determine_spots(A)
+  end
 end
 
 

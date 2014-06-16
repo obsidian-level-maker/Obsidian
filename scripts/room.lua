@@ -4265,8 +4265,11 @@ function Room_determine_spots()
 
 
   local function spots_in_room(R)
-    -- caves already done
-    if R.kind == "cave" then return end
+    -- special code for caves 
+    if R.kind == "cave" then
+      Cave_determine_spots(R)
+      return
+    end
 
     if R.kind == "stairwell" then return end
     if R.kind == "smallexit" then return end
