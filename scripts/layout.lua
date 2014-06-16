@@ -1773,10 +1773,11 @@ end
   end
 
 
-  local function setup_solid(S, pat)
+  local function setup_solid(S, pat, solid_tex)
     assert(not S.conn)
 
     S.kind = "void"
+    S.w_tex = solid_tex  -- can be NIL
 
     if pat.solid_feature and use_solid_feature then 
       S.solid_feature = true
@@ -2104,6 +2105,20 @@ end
       end
     end
 
+    -- solid edge bits in outdoor rooms -- they conceptually extend the
+    -- touching building
+    local solid_tex
+
+    if P.kind == "solid" and R.is_outdoor and
+       (px == 1 or px == pat._structure.w or
+        py == 1 or py == pat._structure.h)
+    then
+      local R2 = touches_a_building(sx1, sy1, sx2, sy2)
+      assert(R2)
+
+      solid_tex = R2.facade
+    end
+
     -- update the seeds --
 
     for sx = sx1, sx2 do
@@ -2116,7 +2131,7 @@ end
         setup_liquid(S)
 
       elseif P.kind == "solid" then
-        setup_solid(S, pat)
+        setup_solid(S, pat, solid_tex)
 
       elseif P.kind == "stair" then
         S.kind = "stair"
