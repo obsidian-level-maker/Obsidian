@@ -1391,9 +1391,11 @@ function Cave_floor_heights(R, entry_h)
 
       if C then
         local S = C:get_seed(R)
-
-        C.conn_h  = imp.area.floor_h
         S.floor_h = imp.area.floor_h
+
+        if not C.conn_h then
+          C.conn_h  = imp.area.floor_h
+        end
       end
     end 
   end

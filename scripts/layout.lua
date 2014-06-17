@@ -989,7 +989,9 @@ function Layout_hallway(R)
   R.ceil_h = R.floor_max_h + height
 
   each C in R.conns do
-    C.conn_h = h
+    if not C.conn_h then
+      C.conn_h = h
+    end
   end
 end
 
