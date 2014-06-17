@@ -3763,9 +3763,7 @@ end
 
       if S.room != R then return end  -- child room
 
-      if S.kind != "walk" then return end
-
-      if S.content then return end  -- stairs (etc)
+      if S.kind != "walk" then return end  -- e.g. stairs, liquid
 
       local floor_h = assert(S.floor_max_h)
 
