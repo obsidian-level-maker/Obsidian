@@ -361,9 +361,11 @@ function Room_decide_hallways()
   local REVERT_PROBS    = {  0,  0, 25, 75, 90, 98 }
 
   local function eval_hallway(R)
-    if R.is_outdoor or (R.kind == "cave") or R.children or R.purpose then
+    if R.is_outdoor or (R.kind == "cave") or R.children then
       return false
     end
+
+    if R.purpose or R.final_battle then return false end
 
     if R.teleport_conn  then return false end
     if R.num_branch < 2 then return false end
