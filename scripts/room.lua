@@ -198,7 +198,7 @@ function ROOM_CLASS.conn_area(R)
 
   each C in R.conns do
     if C.kind == "teleporter" then continue end
-    local S = C:seed(R)
+    local S = C:get_seed(R)
     lx = math.min(lx, S.sx)
     ly = math.min(ly, S.sy)
     hx = math.max(hx, S.sx)
@@ -445,7 +445,7 @@ function Room_decide_hallways()
     local sy1, sy2 = 999, 0
 
     each C in R.conns do
-      local S = C:seed(R)
+      local S = C:get_seed(R)
 
       sx1 = math.min(sx1, S.sx) ; sx2 = math.max(sx2, S.sx)
       sy1 = math.min(sy1, S.sy) ; sy2 = math.max(sy2, S.sy)
@@ -1464,7 +1464,7 @@ function Room_border_up()
     each C in R.conns do
       if C.kind == "teleporter" then continue end
 
-      local S = C:seed(R)
+      local S = C:get_seed(R)
       local B = S.border[side]
 
       if S.conn_dir != side then continue end
@@ -2732,7 +2732,7 @@ end
 
 function Room_do_small_exit()
   local C = R.conns[1]
-  local T = C:seed(C:neighbor(R))
+  local T = C:get_seed(C:neighbor(R))
   local out_combo = T.room.main_tex
   if T.room.is_outdoor then out_combo = R.main_tex end
 
@@ -2787,7 +2787,7 @@ function Room_build_seeds(R)
     if #dirs == 3 then return 10 - missing_dir end
 
     if S.room.entry_conn and S.room.entry_conn.kind != "teleporter" then
-      local entry_S = S.room.entry_conn:seed(S.room)
+      local entry_S = S.room.entry_conn:get_seed(S.room)
       local exit_dir = assert(entry_S.conn_dir)
 
       if #dirs == 0 then return exit_dir end
@@ -2932,7 +2932,7 @@ function Room_build_seeds(R)
 
 
   local function content_exit(S, mx, my, z1)
-    local CS = R.conns[1]:seed(R)
+    local CS = R.conns[1]:get_seed(R)
     local dir = dir_for_wotsit(S)
 
     local sw_special = 11

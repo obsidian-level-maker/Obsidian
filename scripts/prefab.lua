@@ -1281,8 +1281,8 @@ function Build.small_exit(R, xt_info, skin, skin2)
   assert(#R.conns == 1)
 
   local C = R.conns[1]
-  local S = C:seed(R)
-  local T = C:seed(C:neighbor(R))
+  local S = C:get_seed(R)
+  local T = C:get_seed(C:neighbor(R))
 
   gui.debugf("Building small exit @ %s\n", S:tostr())
 
@@ -1659,8 +1659,8 @@ function Build.stairwell(R, skin)
     assert(A.dir == 4 or A.dir == 6)
     assert(B.dir == 2 or B.dir == 8)
 
-    local AS = A:seed(R)
-    local BS = B:seed(R)
+    local AS = A:get_seed(R)
+    local BS = B:get_seed(R)
 
     -- room size
     local BL = SEEDS[R.sx1][R.sy1]
@@ -1738,8 +1738,8 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     local B = R.conns[2]
 
     -- require 180 degrees
-    local AS = A:seed(R)
-    local BS = B:seed(R)
+    local AS = A:get_seed(R)
+    local BS = B:get_seed(R)
 
     -- swap so that A has lowest coords
     if ((AS.conn_dir == 2 or AS.conn_dir == 8) and BS.x1 < AS.x1) or
@@ -1845,8 +1845,8 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     local A = R.conns[1]
     local B = R.conns[2]
 
-    local AS = A:seed(R)
-    local BS = B:seed(R)
+    local AS = A:get_seed(R)
+    local BS = B:get_seed(R)
 
     -- swap so that A has lowest coords
     if ((AS.conn_dir == 2 or AS.conn_dir == 8) and BS.sx < AS.sx) or
@@ -1964,8 +1964,8 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     local A = R.conns[1]
     local B = R.conns[2]
 
-    local AS = A:seed(R)
-    local BS = B:seed(R)
+    local AS = A:get_seed(R)
+    local BS = B:get_seed(R)
 
     -- swap so that A has lowest coords
     if ((AS.conn_dir == 2 or AS.conn_dir == 8) and BS.sy < AS.sy) or
@@ -2042,8 +2042,8 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
   local B = R.conns[2]
   assert(A and B)
 
-  local AS = A:seed(R)
-  local BS = B:seed(R)
+  local AS = A:get_seed(R)
+  local BS = B:get_seed(R)
   assert(AS and BS)
 
   if geom.is_perpendic(AS.conn_dir, BS.conn_dir) then

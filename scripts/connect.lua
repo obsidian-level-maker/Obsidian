@@ -102,7 +102,7 @@ function CONN_CLASS.neighbor(C, R)
 end
 
 
-function CONN_CLASS.seed(C, R)
+function CONN_CLASS.get_seed(C, R)
   if R == C.R1 then
     return C.S1
   else

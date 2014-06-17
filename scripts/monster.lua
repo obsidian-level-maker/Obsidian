@@ -2662,7 +2662,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
 
   local function guard_spot_for_conn(C)
-    local S = C:seed(R)
+    local S = C:get_seed(R)
 
     if not S then return nil end  -- teleporter
 

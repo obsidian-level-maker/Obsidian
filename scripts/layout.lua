@@ -529,7 +529,7 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
 
     each C in R.conns do
       if C.kind == "normal" or C.kind == "closet" then
-        local S = C:seed(R)
+        local S = C:get_seed(R)
         local dir = sel(C.R1 == R, C.dir, 10 - C.dir)
 
         local ex, ey = S:edge_coord(dir)
@@ -871,8 +871,8 @@ function Layout_hallway(R)
     local C1 = R.conns[1]
     local C2 = R.conns[2]
 
-    local S1 = C1:seed(R)
-    local S2 = C2:seed(R)
+    local S1 = C1:get_seed(R)
+    local S2 = C2:get_seed(R)
 
     if rand.odds(50) then S1,S2 = S2,S1 end
 
@@ -892,7 +892,7 @@ function Layout_hallway(R)
 
     each C in R.conns do
       if C.kind == "teleporter" then continue end
-      local S = C:seed(R)
+      local S = C:get_seed(R)
       if geom.is_vert(S.conn_dir) then
         used_x[S.sx] = 1
       else
@@ -3161,7 +3161,7 @@ function Layout_room(R)
     local hit_both = {}
 
     each C in R.conns do
-      local S = C:seed(R)
+      local S = C:get_seed(R)
 
       -- ignore teleporters
       if not S then continue end
@@ -3722,7 +3722,7 @@ end
   local function compute_entry_dist(R, B)
     -- compute distance from entrace
     if R.entry_conn then
-      local entry_S = R.entry_conn:seed(R)
+      local entry_S = R.entry_conn:get_seed(R)
       if entry_S then
         local mx = (B.sx1 + B.sx2) / 2
         local my = (B.sy1 + B.sy2) / 2

@@ -1453,8 +1453,8 @@ end
 
     -- prefer exit to be away from entrance
     if C.dir and R.entry_conn and R.entry_conn.dir then
-      local S1 = C:seed(R)
-      local S2 = R.entry_conn:seed(R)
+      local S1 = C:get_seed(R)
+      local S2 = R.entry_conn:get_seed(R)
 
       local dist = geom.dist(S1.sx, S1.sy, S2.sx, S2.sy)
       if dist > 6 then dist = 6 end
