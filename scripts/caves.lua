@@ -52,6 +52,8 @@ class AREA
   --| (and generally shared between multiple cells).
 
   wall   : boolean  -- true for solid walls
+  fence  : boolean  -- true for a lake fence
+
   liquid : boolean  -- true for a liquid floor
   sky    : boolean  -- true for a sky ceiling
 
@@ -2265,25 +2267,109 @@ function Cave_make_waterfalls(R)
   end
 
 
+  local function connect_pools()
+    each lake in info.lakes do
+      local w, h = geom.group_size(lake.cx1, lake.cy1, lake.cx2, lake.cy2)
+
+      -- too large? (probably the main lake)
+      if w > 15 or h > 15 then continue end
+
+      local DIRS = { 2,4,6,8 }
+      rand.shuffle(DIRS)
+
+      each dir in DIRS do
+        if try_waterfall(lake, dir) then
+          break;
+        end
+      end
+    end
+  end
+
+
+  local function cells_are_fences(cx1, cy1, cx2, cy2)
+    for x = cx1, cx2 do
+    for y = cy1, cy2 do
+      assert(cave:valid_cell(x, y))
+      local B = info.blocks[x][y]
+      if not (B and B.fence) then return false end
+    end
+    end
+
+    return true
+  end
+
+
+  local function try_fence_fall(S, dir)
+    -- Note: 'dir' faces inwards (away from fence)
+
+    -- must be at edge of room
+    local N = S:neighbor(10 - dir)
+    if N and N.room == R then return end
+
+    -- we try pairs of seeds along the edge
+    if geom.is_vert(dir) then
+      if (S.sx % 2) == 0 then return end
+    else
+      if (S.sy % 2) == 0 then return end
+    end
+
+    -- check second seed in pair
+    local S2 = S:neighbor(geom.vert_sel(dir, 6, 8))
+    if not (S2 and S2.room == R) then return end
+
+    local N2 = S2:neighbor(10 - dir)
+    if N2 and N2.room == R then return end
+
+
+    local cx1 = 1 + (S.sx - R.sx1) * 3
+    local cy1 = 1 + (S.sy - R.sy1) * 3
+
+    if dir == 4 then cx1 = cx1 + 2 end
+    if dir == 2 then cy1 = cy1 + 2 end
+
+    local cx2, cy2 = cx1, cy1
+
+    -- we test middle four cells in the seed pair
+    if geom.is_vert(dir) then
+      cx1 = cx1 + 1
+      cx2 = cx1 + 3
+    else
+      cy1 = cy1 + 1
+      cy2 = cy1 + 3
+    end
+
+    -- all these cells should be fences : verify
+    if not cells_are_fences(cx1, cy1, cx2, cy2) then
+      return
+    end
+
+stderrf("Potential fence fall @ %s dir:%d\n", S:tostr(), dir)
+  end
+
+
+  local function fence_falls()
+    for x = R.sx1, R.sx2 do
+    for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y]
+
+      if S.room != R then continue end
+
+      for dir = 2,8,2 do
+        try_fence_fall(S, dir)
+      end
+
+    end -- sx, sy
+    end
+  end
+
+
   ---| Cave_make_waterfalls |---
 
   if info.liquid_mode != "lake" then return end
 
-  each lake in info.lakes do
-    local w, h = geom.group_size(lake.cx1, lake.cy1, lake.cx2, lake.cy2)
+  connect_pools()
 
-    -- too large? (probably the main lake)
-    if w > 15 or h > 15 then continue end
-
-    local DIRS = { 2,4,6,8 }
-    rand.shuffle(DIRS)
-
-    each dir in DIRS do
-      if try_waterfall(lake, dir) then
-        break;
-      end
-    end
-  end
+  fence_falls()
 end
 
 
