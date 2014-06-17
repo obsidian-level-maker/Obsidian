@@ -22,7 +22,7 @@
 Build = {}
 
 
-function Build.cave_wall(S, side, mat, top_h)
+function Build.cave_wall(S, side, mat, top_h, narrow)
   local info = get_mat(mat)
 
   local T = get_transform_for_seed_side(S, side, 16)
@@ -30,6 +30,11 @@ function Build.cave_wall(S, side, mat, top_h)
   Trans.set(T)
 
   local offsets = { 4,4, 24, 48,48 }
+
+  if narrow then
+    offsets = { 4,4, 28,28 }
+  end
+
   rand.shuffle(offsets)
 
   if not top_h then top_h = EXTREME_H end

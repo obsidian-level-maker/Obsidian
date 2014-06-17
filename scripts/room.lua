@@ -3691,7 +3691,8 @@ end
       end
 
       if B_kind == "cave_wall" or B_kind == "cave_fence" then
-        Build.cave_wall(S, side, border.w_tex or w_tex)
+        local narrow = (S.conn or S.content)
+        Build.cave_wall(S, side, border.w_tex or w_tex, nil, narrow)
         shrink_both(side, 4)
       end
 

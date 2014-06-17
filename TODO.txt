@@ -3,9 +3,6 @@ OBLIGE TODO
 ===========
 
 
-!!  BUG: coop player can be stuck in "cave_wall"
-    ---> limit cave_wall extents if S.content or S.conn
-
 ______________________________________________________________________
 
   HIGH PRIORITY
