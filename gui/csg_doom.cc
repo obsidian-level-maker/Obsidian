@@ -230,6 +230,18 @@ public:
 				SameExtraFloors(other);
 	}
 
+	bool ShouldMerge(const doom_sector_c *other) const
+	{
+		// special logic for secrets
+		if (special == 9 && other->special == 9)
+		{
+			return	(mark == other->mark) &&
+					(f_h  == other->f_h);
+		}
+
+		return Match(other);
+	}
+
 	int Write();
 };
 
@@ -1089,7 +1101,7 @@ static int DM_CoalescePass()
 
 			doom_sector_c *D2 = dm_sectors[N->index];
 
-			if (D2->Match(D1))
+			if (D2->ShouldMerge(D1))
 			{
 				D2->MarkUnused();
 
