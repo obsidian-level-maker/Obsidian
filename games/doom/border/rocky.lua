@@ -56,6 +56,21 @@ DOOM.SKINS.Border_rocky_exit =
 }
 
 
+DOOM.SKINS.Border_rocky_item =
+{
+  file   = "border/rocky_item.wad"
+  group  = "border_rocky"
+  shape  = "T"
+
+  purpose = "ITEM"
+
+  seed_w = 3
+  seed_h = 3
+
+  add_sky = 1
+}
+
+
 --
 -- Group information
 --
