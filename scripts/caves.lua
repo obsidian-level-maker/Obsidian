@@ -2299,14 +2299,75 @@ function Cave_make_waterfalls(R)
   end
 
 
+  local function check_side_floors(cx, cy, dir, walk_A)
+    dir = geom.RIGHT[dir]
+
+    for pass = 1, 2 do
+      local nx, ny = geom.nudge(cx, cy, dir)
+
+      if not cave:valid_cell(nx, ny) then return false end
+
+      local N = info.blocks[nx][ny]
+      if not N then return false end
+
+      -- allow fence or liquid
+      if N.fence or N.liquid then continue end
+
+      if N.wall or not N.floor_h then return false end
+
+      if N != walk_A then return false end
+
+      dir = 10 - dir
+    end
+
+    return true
+  end
+
+
+  local function attempt_a_fence_fall(cx, cy, dir)
+    -- create a string describing what we can see
+    local str = ""
+
+    for i = 0, 8 do
+      local nx, ny = geom.nudge(cx, cy, dir, i)
+      if not cave:valid_cell(nx, ny) then return false end
+      
+      local BL = info.blocks[nx][ny]
+      if not BL or BL.wall or BL.goal_type then return false end
+      
+      if BL.fence then
+        str = str .. "F"
+      elseif BL.liquid then
+        str = str .. "L"
+      elseif BL.floor_h then
+        if not check_side_floors(nx, ny, dir, BL) then
+          return false
+        end
+        str = str .. "W"
+      else
+        return false
+      end
+    end
+
+    -- check if possible
+    if not string.match(str, "F+W+L") then
+      return false
+    end
+
+    stderrf("  string = '%s'\n", str)
+  end
+
+
   local function try_fence_fall(S, dir)
     -- Note: 'dir' faces inwards (away from fence)
+
+    local along_dir = geom.vert_sel(dir, 6, 8)
 
     -- must be at edge of room
     local N = S:neighbor(10 - dir)
     if N and N.room == R then return end
 
-    -- we try pairs of seeds along the edge
+    -- we only try pairs of seeds along the edge
     if geom.is_vert(dir) then
       if (S.sx % 2) == 0 then return end
     else
@@ -2314,7 +2375,7 @@ function Cave_make_waterfalls(R)
     end
 
     -- check second seed in pair
-    local S2 = S:neighbor(geom.vert_sel(dir, 6, 8))
+    local S2 = S:neighbor(along_dir)
     if not (S2 and S2.room == R) then return end
 
     local N2 = S2:neighbor(10 - dir)
@@ -2344,6 +2405,17 @@ function Cave_make_waterfalls(R)
     end
 
 stderrf("Potential fence fall @ %s dir:%d\n", S:tostr(), dir)
+    local deltas = { 0,1,2,3 }
+    rand.shuffle(deltas)
+
+    for i = 1, 4 do
+      local cx, cy = geom.nudge(cx1, cy1, along_dir, i - 1)
+
+      if attempt_a_fence_fall(cx, cy, dir) then
+stderrf("  MADE ONE !!!!!!!!\n")
+        return
+      end
+    end
   end
 
 
