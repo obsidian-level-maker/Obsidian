@@ -1656,7 +1656,15 @@ function Layout_pattern_in_area(R, area)
   end
 
 
+  local SYMMETRY_SUMMARY =
+  {
+    x = 1, y = 1, xy = 2
+  }
+
+
   local function pattern_chance(pat)
+    local factor = 1
+
     if not pat.prob then
       return 0
     end
@@ -1706,15 +1714,23 @@ function Layout_pattern_in_area(R, area)
 
     -- enough symmetry?
     -- [NOTE: because of transposing, treat "x" == "y" here]
+    local area_sym = SYMMETRY_SUMMARY[area.symmetry] or 0
+    local  pat_sym = SYMMETRY_SUMMARY[ pat.symmetry] or 0
 
-    if area.symmetry then
-      if pat.symmetry != "xy" then
-        if area.symmetry == "xy"  then return 0 end
-        if not pat.symmetry then return 0 end
+    if pat_sym < area_sym then return 0 end
+
+    -- allow patterns with more symmetry than room, but reduce chance
+    if pat_sym > area_sym then
+      if pat_sym > area_sym + 1 then
+        factor = factor / 10
+      else
+        factor = factor / 3
       end
     end
 
-    return pat.prob  -- OK --
+    -- OK --
+
+    return pat.prob * factor
   end
 
 
