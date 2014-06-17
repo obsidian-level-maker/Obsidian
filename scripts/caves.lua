@@ -2225,7 +2225,7 @@ function Cave_make_waterfalls(R)
 
       -- found another lake?
       if B2.liquid then
-        if lake.floor_h - B2.floor_h < 30 then return false end
+        if lake.floor_h - B2.floor_h < 50 then return false end
         break;
       end
 
@@ -2310,8 +2310,12 @@ function Cave_make_waterfalls(R)
       local N = info.blocks[nx][ny]
       if not N then return false end
 
-      -- allow fence or liquid
-      if N.fence or N.liquid then continue end
+      -- allow fences
+      if N.fence then continue end
+
+      -- this check prevents odd-looking falls (want only a single side of
+      -- the LOW_POOL to be visible)
+      if N.liquid then return false end
 
       if N.wall or not N.floor_h then return false end
 
@@ -2328,31 +2332,60 @@ function Cave_make_waterfalls(R)
     -- create a string describing what we can see
     local str = ""
 
+    local low_floor
+    local liq_area
+
     for i = 0, 7 do
       local nx, ny = geom.nudge(cx, cy, dir, i)
       if not cave:valid_cell(nx, ny) then return false end
       
       local BL = info.blocks[nx][ny]
       if not BL or BL.wall or BL.goal_type then return false end
+
+      -- do not join onto a previously built waterfall
+      if BL.waterfall then return false end
       
       if BL.fence then
         str = str .. "F"
       elseif BL.liquid then
         str = str .. "L"
+        liq_area = BL
       elseif BL.floor_h then
+        str = str .. "W"
+
+        if not low_floor then
+          low_floor = BL
+        else
+          if BL != low_floor then return end
+        end
+
         if not check_side_floors(nx, ny, dir, BL) then
           return false
         end
-        str = str .. "W"
+
       else
         return false
       end
     end
 
+
     -- check if possible
     if not string.match(str, "F+W+L") then
       return false
     end
+
+    assert(low_floor)
+    assert(liq_area)
+
+    if low_floor.floor_h - liq_area.floor_h < 50 then
+      return false  -- the "falls" would be too low
+    end
+
+    -- random chance of not making it
+    if rand.odds(50) then
+      return false
+    end
+
 
     -- OK, do it --
 
@@ -2363,30 +2396,27 @@ function Cave_make_waterfalls(R)
     {
       liquid  = true
       floor_h = F1.floor_h - 16
+      waterfall = true
     }
 
-    local LOW_POOL
+    local LOW_POOL =
+    {
+      liquid  = true
+      floor_h = low_floor.floor_h - 12
+      waterfall = true
+    }
 
-    for i = 0, 7 do
+    info.blocks[cx][cy] = HIGH_POOL
+
+    for i = 1, 7 do
       local ch = string.sub(str, i+1, i+1)
       local nx, ny = geom.nudge(cx, cy, dir, i)
 
       if ch == 'L' then break; end
 
-      if ch == 'F' then
+      if ch == 'F' and i == 1 and string.sub(str, 3, 3) == 'F' then
         info.blocks[nx][ny] = HIGH_POOL
         continue
-      end
-
-      if not LOW_POOL then
-        local W1 = info.blocks[nx][ny]
-        assert(W1.floor_h)
-
-        LOW_POOL =
-        {
-          liquid = true
-          floor_h = W1.floor_h - 16
-        }
       end
 
       info.blocks[nx][ny] = LOW_POOL
@@ -2442,7 +2472,6 @@ function Cave_make_waterfalls(R)
       return
     end
 
-stderrf("Potential fence fall @ %s dir:%d\n", S:tostr(), dir)
     local deltas = { 0,1,2,3 }
     rand.shuffle(deltas)
 
