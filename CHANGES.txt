@@ -29,6 +29,7 @@ CHANGELOG
 - small reduction in the overall health in levels
 - small increase in number of bonus items per level
 - increased size of exclusion zones around teleporters
+- sometimes change the pacing near the exit room
 
 - added a couple of special doorways for caves
 - added arch-shaped doorway for Urban and Hell themes
@@ -40,6 +41,7 @@ CHANGELOG
 - caves: improved floor texturing in flat caves
 - caves: never place pickup items in liquid areas
 - caves: if not many caves, keep texturing consistent
+- caves: added some waterfalls near lakes
 
 - fixed error when setting Monster Variety to "none"
 - fixed uncounted secrets that lead into CAVE rooms
@@ -51,4 +53,5 @@ CHANGELOG
 - fixed rare infinite loop when planning cave rooms
 - fixed torches in caves to never obstruct the player
 - fixed missing automap names for TNT and Plutonia maps
+- fixed secret sectors from being split by lighting
 

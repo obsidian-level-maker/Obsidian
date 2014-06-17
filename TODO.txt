@@ -6,8 +6,6 @@ OBLIGE TODO
 !!  BUG: coop player can be stuck in "cave_wall"
     ---> limit cave_wall extents if S.content or S.conn
 
-BUG : secret sector being split (ceiling detail? lighting??)
-
 ______________________________________________________________________
 
   HIGH PRIORITY
@@ -269,6 +267,9 @@ Hallways:
 +  use a wad-fab for each part of a hallway
 
 +  support for stairs in hallways
+
++  double halls : detect a 6x4 or larger room with one or two exits
+   and place the hallway around it
 
 +  flat mismatch where hallways meet rooms
    (a) have a step (ideally not flush with wall)
