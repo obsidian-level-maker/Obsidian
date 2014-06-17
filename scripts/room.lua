@@ -558,42 +558,46 @@ function Room_setup_symmetry()
 
   local function calc_branch_factor(old_sym, new_sym)
     if old_sym == new_sym then
-      return sel(old_sym == "xy", 4000, 400)
+      return sel(old_sym == "xy", 100, 6)
 
     elseif new_sym == "xy" then
-      -- rarely upgrade from NONE --> XY symmetry
-      return sel(old_sym, 30, 3)
+      -- rarely upgrade from NONE --> XY
+      return sel(old_sym, 1, 0.1)
 
     elseif old_sym == "xy" then
-      return 150
+      -- rarely downgrade from XY --> NONE
+      return sel(new_sym, 1, 0.1)
+
+    elseif old_sym and new_sym then
+      -- rarely change from X --> Y or vice versa
+      return 0.1
 
     else
-      -- rarely change from X --> Y or vice versa
-      return sel(old_sym, 6, 60)
+      return 1
     end
   end
 
 
   local function calc_size_factor(R, new_sym)
-    local prob = 200
+    -- never in tiny rooms
+    if R.sw <= 2 then return 0 end
+    if R.sh <= 2 then return 0 end
 
-    if new_sym == "x" or new_sym == "xy" then
-      if R.sw <= 2 then return 0 end
-      if R.sw <= 4 then prob = prob / 2 end
+    -- never in very narrow / tall rooms
+    if R.sw > R.sh * 2.4 then return 0 end
+    if R.sh > R.sw * 2.4 then return 0 end
 
-      if R.sw > R.sh * 3.1 then return 0 end
-      if R.sw > R.sh * 2.1 then prob = prob / 3 end
-    end
+    -- we need to use symmetry sparingly in small rooms, since it
+    -- greatly limits which room patterns can be used in the room.
+    local factor = 1
 
-    if new_sym == "y" or new_sym == "xy" then
-      if R.sh <= 2 then return 0 end
-      if R.sh <= 4 then prob = prob / 2 end
+    if R.svolume <= 20 then factor = factor / 2 end
+    if R.svolume <= 10 then factor = factor / 2 end
 
-      if R.sh > R.sw * 3.1 then return 0 end
-      if R.sh > R.sw * 2.1 then prob = prob / 3 end
-    end
+    -- symmetry works best indoors
+    if R.is_outdoor then factor = factor / 1.5 end
 
-    return prob
+    return factor
   end
 
 
@@ -607,25 +611,24 @@ function Room_setup_symmetry()
     end
 
     if STYLE.symmetry == "none" or
-       R.kind == "cave" or
-       R.kind == "hallway"
+       R.kind == "cave" or R.kind == "hallway"
     then
       R.symmetry = nil
       return
     end
 
 
-    -- the chance of 'none' depends on the STYLE setting
+    -- build the probability table....
+
     local tab =
     {
-      none = style_sel("symmetry", 0, 500, 100, 20)
+      none = 100
     }
-
 
     local SYM_LIST = { "x", "y", "xy" }
 
     each sym in SYM_LIST do
-      local p = 100
+      local p = style_sel("symmetry", 0, 10, 50, 200)
 
       p = p * calc_branch_factor(R.symmetry, sym)
       p = p * calc_size_factor(R, sym)
