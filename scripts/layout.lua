@@ -1721,11 +1721,7 @@ function Layout_pattern_in_area(R, area)
 
     -- allow patterns with more symmetry than room, but reduce chance
     if pat_sym > area_sym then
-      if pat_sym > area_sym + 1 then
-        factor = factor / 10
-      else
-        factor = factor / 3
-      end
+      factor = factor / 10
     end
 
     -- OK --
@@ -1769,7 +1765,7 @@ if pat.elements["curve_stair"] then
 end
 
       if prob > 0 then
-        tab[name] = pat.prob
+        tab[name] = prob
       end
     end
 
@@ -3666,7 +3662,7 @@ function Layout_build_outdoor_borders()
 
 --FIXME !!!!!! TEST CRUD
 if B.foobie then
-      skin1 = GAME.SKINS["Border_dropoff_item"]
+      skin1 = GAME.SKINS["Border_dropoff_start"]
 end
       assert(skin1)
 

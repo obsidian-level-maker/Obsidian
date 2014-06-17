@@ -646,9 +646,6 @@ function Room_setup_symmetry()
     else
       R.symmetry = result
     end
-
-    gui.debugf("Final symmetry in %s --> %s (was %s)\n", R:tostr(),
-               tostring(R.symmetry), tostring(R.branch_symmetry))
   end
 
 
@@ -694,6 +691,10 @@ function Room_setup_symmetry()
 
   each R in LEVEL.rooms do
     decide_layout_symmetry(R)
+
+    gui.debugf("Symmetry in %s --> %s (was: %s)\n", R:tostr(),
+               R.symmetry or "none",
+               R.branch_symmetry or "none")
 
     if R.symmetry == "x" or R.symmetry == "xy" then
       R.mirror_x = true
