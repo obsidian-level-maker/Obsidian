@@ -2328,7 +2328,7 @@ function Cave_make_waterfalls(R)
     -- create a string describing what we can see
     local str = ""
 
-    for i = 0, 8 do
+    for i = 0, 7 do
       local nx, ny = geom.nudge(cx, cy, dir, i)
       if not cave:valid_cell(nx, ny) then return false end
       
@@ -2354,7 +2354,45 @@ function Cave_make_waterfalls(R)
       return false
     end
 
-    stderrf("  string = '%s'\n", str)
+    -- OK, do it --
+
+    local F1 = info.blocks[cx][cy]
+    assert(F1.floor_h)
+
+    local HIGH_POOL =
+    {
+      liquid  = true
+      floor_h = F1.floor_h - 16
+    }
+
+    local LOW_POOL
+
+    for i = 0, 7 do
+      local ch = string.sub(str, i+1, i+1)
+      local nx, ny = geom.nudge(cx, cy, dir, i)
+
+      if ch == 'L' then break; end
+
+      if ch == 'F' then
+        info.blocks[nx][ny] = HIGH_POOL
+        continue
+      end
+
+      if not LOW_POOL then
+        local W1 = info.blocks[nx][ny]
+        assert(W1.floor_h)
+
+        LOW_POOL =
+        {
+          liquid = true
+          floor_h = W1.floor_h - 16
+        }
+      end
+
+      info.blocks[nx][ny] = LOW_POOL
+    end
+
+    return true
   end
 
 
