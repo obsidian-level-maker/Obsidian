@@ -54,4 +54,5 @@ CHANGELOG
 - fixed torches in caves to never obstruct the player
 - fixed missing automap names for TNT and Plutonia maps
 - fixed secret sectors from being split by lighting
+- fixed rare problem of co-op player stuck in cave wall
 
