@@ -32,6 +32,23 @@ DOOM.SKINS.Border_dropoff_t =
 }
 
 
+DOOM.SKINS.Border_dropoff_start =
+{
+  file   = "border/dropoff_start.wad"
+  group  = "border_dropoff"
+  shape  = "T"
+
+  purpose = "START"
+
+  seed_w = 3
+  seed_h = 3
+
+  x_fit = "frame"
+
+  add_sky = 1
+}
+
+
 DOOM.SKINS.Border_dropoff_exit =
 {
   file   = "border/dropoff_exit.wad"
