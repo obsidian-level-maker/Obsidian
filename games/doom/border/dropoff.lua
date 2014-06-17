@@ -49,6 +49,23 @@ DOOM.SKINS.Border_dropoff_exit =
 }
 
 
+DOOM.SKINS.Border_dropoff_item =
+{
+  file   = "border/dropoff_item.wad"
+  group  = "border_dropoff"
+  shape  = "T"
+
+  purpose = "ITEM"
+
+  seed_w = 3
+  seed_h = 3
+
+  x_fit = "frame"
+
+  add_sky = 1
+}
+
+
 --
 -- Group information
 --
