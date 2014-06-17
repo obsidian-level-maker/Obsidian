@@ -556,9 +556,9 @@ function Room_setup_symmetry()
   -- The new value applies to everything made in the room
   -- (as much as possible) from now on.
 
-  local function prob_for_match(old_sym, new_sym)
+  local function calc_branch_factor(old_sym, new_sym)
     if old_sym == new_sym then
-      return sel(old_sym == "xy", 8000, 400)
+      return sel(old_sym == "xy", 4000, 400)
 
     elseif new_sym == "xy" then
       -- rarely upgrade from NONE --> XY symmetry
@@ -573,7 +573,8 @@ function Room_setup_symmetry()
     end
   end
 
-  local function prob_for_size(R, new_sym)
+
+  local function calc_size_factor(R, new_sym)
     local prob = 200
 
     if new_sym == "x" or new_sym == "xy" then
@@ -595,69 +596,91 @@ function Room_setup_symmetry()
     return prob
   end
 
-  local function decide_layout_symmetry(R)
-    R.conn_symmetry = R.symmetry
 
-    if STYLE.symmetry == "none" or R.kind == "cave" then
+  local function decide_layout_symmetry(R)
+    R.branch_symmetry = R.symmetry
+
+    -- discard 'R' rotate and 'T' transpose symmetry
+    if not (R.symmetry == "x" or R.symmetry == "y" or R.symmetry == "xy") then
       R.symmetry = nil
       return
     end
 
-    -- We discard 'R' rotate and 'T' transpose symmetry (for now...)
-    if not (R.symmetry == "x" or R.symmetry == "y" or R.symmetry == "xy") then
+    if STYLE.symmetry == "none" or
+       R.kind == "cave" or
+       R.kind == "hallway"
+    then
       R.symmetry = nil
+      return
     end
+
+
+    -- the chance of 'none' depends on the STYLE setting
+    local tab =
+    {
+      none = style_sel("symmetry", 0, 500, 100, 20)
+    }
+
 
     local SYM_LIST = { "x", "y", "xy" }
 
-    local syms  = { "none" }
-    local probs = { 100 }
-
-    if STYLE.symmetry == "few"   then probs[1] = 500 end
-    if STYLE.symmetry == "heaps" then probs[1] = 10  end
-
     each sym in SYM_LIST do
-      local p1 = prob_for_size(R, sym)
-      local p2 = prob_for_match(R.symmetry, sym)
+      local p = 100
 
-      if p1 > 0 and p2 > 0 then
-        table.insert(syms, sym)
-        table.insert(probs, p1*p2/100)
+      p = p * calc_branch_factor(R.symmetry, sym)
+      p = p * calc_size_factor(R, sym)
+
+      if p > 0 then
+        tab[sym] = p
       end
     end
 
-    local index = rand.index_by_probs(probs)
 
-    R.symmetry = sel(index > 1, syms[index], nil)
+    local result = rand.key_by_probs(tab)
+
+    if result == "none" then
+      R.symmetry = nil
+    else
+      R.symmetry = result
+    end
+
+    gui.debugf("Final symmetry in %s --> %s (was %s)\n", R:tostr(),
+               tostring(R.symmetry), tostring(R.branch_symmetry))
   end
 
-  local function mirror_horizontally(R)
-    if R.sw >= 2 then
-      for y = R.sy1, R.sy2 do
-        for dx = 0, int((R.sw-2) / 2) do
-          local LS = SEEDS[R.sx1 + dx][y]
-          local RS = SEEDS[R.sx2 - dx][y]
 
-          if LS.room == R and RS.room == R then
-            LS.x_peer = RS
-            RS.x_peer = LS
-          end
+  local function mirror_horizontally(R)
+    if R.sw < 2 then return end
+
+    local half_W = int(R.sw / 2)
+
+    for y = R.sy1, R.sy2 do
+      for dx = 0, half_W - 1 do
+        local S1 = SEEDS[R.sx1 + dx][y]
+        local S2 = SEEDS[R.sx2 - dx][y]
+
+        if S1.room == R and S2.room == R then
+          S1.x_peer = S2
+          S2.x_peer = S1
         end
       end
     end
   end
 
-  local function mirror_vertically(R)
-    if R.sh >= 2 then
-      for x = R.sx1, R.sx2 do
-        for dy = 0, int((R.sh-2) / 2) do
-          local BS = SEEDS[x][R.sy1 + dy]
-          local TS = SEEDS[x][R.sy2 - dy]
 
-          if BS.room == R and TS.room == R then
-            BS.y_peer = TS
-            TS.y_peer = BS
-          end
+  local function mirror_vertically(R)
+    if R.sh < 2 then return end
+
+    local half_H = int(R.sh / 2)
+
+    for x = R.sx1, R.sx2 do
+      for dy = 0, half_H - 1 do
+        local S1 = SEEDS[x][R.sy1 + dy]
+        local S2 = SEEDS[x][R.sy2 - dy]
+
+        if S1.room == R and S2.room == R then
+          S1.y_peer = S2
+          S2.y_peer = S1
         end
       end
     end
@@ -668,9 +691,6 @@ function Room_setup_symmetry()
 
   each R in LEVEL.rooms do
     decide_layout_symmetry(R)
-
-    gui.debugf("Final symmetry @ %s : %s --> %s\n", R:tostr(),
-               tostring(R.conn_symmetry), tostring(R.symmetry))
 
     if R.symmetry == "x" or R.symmetry == "xy" then
       R.mirror_x = true

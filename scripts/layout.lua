@@ -3650,7 +3650,7 @@ function Layout_build_outdoor_borders()
 
 --FIXME !!!!!! TEST CRUD
 if B.foobie then
-      skin1 = GAME.SKINS["Border_dropoff_exit"]
+      skin1 = GAME.SKINS["Border_dropoff_item"]
 end
       assert(skin1)
 
