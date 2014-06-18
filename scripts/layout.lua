@@ -3494,19 +3494,26 @@ function Layout_plan_outdoor_borders()
         nh = W
       end
 
-      local BORDER =
-      {
-        kind = "edge"
-        side = side
-        room = R
+      -- occasionally skip it (allow using seeds for closets or cages)
+      -- TODO : large "fake building" prefabs
 
-        sx1 = x1
-        sy1 = y1
-        sx2 = x1 + nw - 1
-        sy2 = y1 + nh - 1
-      }
+      if rand.odds(20) then
+        -- skip it
+      else
+        local BORDER =
+        {
+          kind = "edge"
+          side = side
+          room = R
 
-      install_border(BORDER)
+          sx1 = x1
+          sy1 = y1
+          sx2 = x1 + nw - 1
+          sy2 = y1 + nh - 1
+        }
+
+        install_border(BORDER)
+      end
 
       if geom.is_vert(side) then
         x1 = x1 + W
@@ -3519,7 +3526,7 @@ function Layout_plan_outdoor_borders()
   end
 
 
-  local function corner_connects_to_edge(R, side, sx1, sy1, sx2, sy2)
+  local function corner_joins_to_edge(R, side, sx1, sy1, sx2, sy2)
     -- the 'side' parameter is relative to corner itself
 
     -- we only test a single seed
@@ -3593,14 +3600,22 @@ function Layout_plan_outdoor_borders()
     end
     end
 
-    -- only build a corner if it will join with one edge (ideally TWO)
+    -- only build a corner if it joins an edge (ideally TWO edges)
 
-    local L_join = corner_connects_to_edge(R, 10 - R_dir, x1, y1, x2, y2)
-    local R_join = corner_connects_to_edge(R, 10 - L_dir, x1, y1, x2, y2)
+    local L_join = corner_joins_to_edge(R, 10 - R_dir, x1, y1, x2, y2)
+    local R_join = corner_joins_to_edge(R, 10 - L_dir, x1, y1, x2, y2)
 
-    if not (L_join or R_join) then return end
+    if L_join and R_join then
+      -- occasionally skip (when touches two edges)
+      -- TODO: large fake building corner thingy
+      if rand.odds(10) then return end
+    
+    elseif L_join or R_join then
+      if rand.odds(50) then return end
 
-    if not (L_join and R_join) and rand.odds(70) then return end
+    else
+      return
+    end
 
     -- OK --
 
