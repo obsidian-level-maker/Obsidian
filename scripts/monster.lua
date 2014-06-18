@@ -1460,11 +1460,11 @@ function Monsters_in_room(R)
     if R.kind == "SECRET_EXIT" then
       qty = qty / 1.6
     elseif R.quest.kind == "secret" then
-      qty = qty / rand.pick { 2.1, 2.9, 3.7 }
+      qty = qty / rand.pick { 2, 3, 4, 9 }
     end
 
     -- random adjustment
-    qty = qty * rand.pick { 0.7, 1.0, 1.2 }
+    qty = qty * rand.range(0.8, 1.2)
 
     -- game and theme adjustments
     qty = qty * (PARAM.monster_factor or 1)
@@ -1477,7 +1477,7 @@ function Monsters_in_room(R)
 
     -- make the final battle (of map) as epic as possible
     if R.final_battle then
-      qty = qty * 2.4
+      qty = qty * 2.2
 
     -- after the big battle, give player a breather
     elseif R.cool_down then
@@ -1488,11 +1488,6 @@ function Monsters_in_room(R)
       qty = qty * 1.4
 
       if R.svolume <= 16 then qty = qty * 1.2 end
-    else
-      -- large variation occasionally
-          if rand.odds(4) then qty = qty * 2.1
-      elseif rand.odds(4) then qty = qty / 2.1
-      end
     end
 
     gui.debugf("Quantity = %1.1f\n", qty)

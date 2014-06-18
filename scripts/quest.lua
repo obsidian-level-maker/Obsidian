@@ -30,6 +30,7 @@ class ZONE
   -- Zones are also meant to have a distinctive look, e.g. each one
   -- has a difference facade for buildings, different room and hallway
   -- themes (etc), even a different monster palette.
+  --
 
   id : number  -- debugging aid
 
@@ -1708,6 +1709,11 @@ end
     else
       boring_flow(Q.start, Q, "need_solution")
     end
+
+    -- make room after a keyed door often be a breather
+    if Z.id != 1 and not Z.start.purpose and rand.odds(70) then
+      Z.start.cool_down = true
+    end
   end
 end
 
@@ -1757,6 +1763,7 @@ function Quest_final_battle()
   E.cool_down = true
 
   prev.final_battle = true
+  prev.cool_down = false
 
   gui.printf("Final Battle in %s\n", prev:tostr())
 end
