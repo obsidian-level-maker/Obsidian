@@ -1443,7 +1443,8 @@ function Fab_merge_skins(fab, room, list)
 
   if GAME.SKIN_DEFAULTS then table.merge(result,  GAME.SKIN_DEFAULTS) end
 
-  if THEME.skin then table.merge(result, THEME.skin) end
+  if THEME.base_skin then table.merge(result, THEME.base_skin) end
+  if THEME.skin      then table.merge(result, THEME.skin) end
 
   if room and room.skin then
     table.merge(result, room.skin)
