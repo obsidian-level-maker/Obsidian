@@ -910,6 +910,7 @@ function Quest_nice_items()
 end
 
 
+
 function Quest_select_textures()
 
   local function setup_cave_theme(R)
@@ -937,14 +938,21 @@ function Quest_select_textures()
 
     if R.kind == "cave" then
       setup_cave_theme(R)
-      return
+    else
+      if R.is_outdoor then
+        R.main_tex = R.zone.natural_mat
+      else
+        R.main_tex = rand.key_by_probs(R.theme.walls)
+      end
     end
 
-    if R.is_outdoor then
-      R.main_tex = R.zone.natural_mat
-    else
-      R.main_tex = rand.key_by_probs(R.theme.walls)
-    end
+    -- create a skin (for prefabs)
+    R.skin =
+    {
+      wall  = R.main_tex
+      floor = R.floor_mat
+      ceil  = R.ceil_mat
+    }
   end
 
 
