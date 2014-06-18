@@ -502,6 +502,7 @@ end
 function Layout_spot_for_wotsit(R, kind, none_OK)
   local bonus_x, bonus_y
 
+
   local function nearest_wall(T)
     -- get the wall_dist from seed containing the spot
 
@@ -649,6 +650,9 @@ end
     if none_OK then return nil end
     error("No usable spots in room!")
   end
+
+
+  -- OK --
 
   S.content = "wotsit"
   S.content_kind = kind
@@ -3845,6 +3849,44 @@ stderrf("  Entry dist: %1.2f\n", B.entry_dist)
   end
 
 
+  local function remove_wotsit(S)
+    S.content = nil
+    S.content_kind = nil
+    S.content_item = nil
+  end
+
+
+  local function try_replace_goal(kind, B)
+    local R = B.room
+    
+    if R.kind == "scenic" then return end
+
+    -- level has two starting rooms for CO-OP ?
+    if kind == "START" and LEVEL.alt_start then return end
+
+    each goal in R.goals do
+      if goal.kind != kind then continue end
+
+      -- found it
+      local S = assert(goal.S)
+
+      B.content_kind = kind
+      B.content_item = goal.S.content_item
+
+      goal.border = B
+
+      -- disable the original wotsit
+      remove_wotsit(goal.S)
+
+      goal.S = nil
+
+stderrf("\nUsing border piece for %s\n\n", kind)
+
+      break;
+    end
+  end
+
+
   local function look_for_special_usage(R)
     local list = {}
 
@@ -3858,7 +3900,12 @@ stderrf("  Entry dist: %1.2f\n", B.entry_dist)
 
     local use_B = table.pick_best(list, function(A, B) return A.entry_dist > B.entry_dist end)
 
-    use_B.foobie = true
+    if try_replace_goal("START", use_B) or
+       try_replace_goal("EXIT",  use_B) or
+       try_replace_goal("KEY",   use_B)
+    then
+      -- Woohoo
+    end
   end
 
 
