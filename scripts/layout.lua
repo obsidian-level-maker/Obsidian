@@ -3680,7 +3680,9 @@ function Layout_plan_outdoor_borders()
 
   gui.debugf("Layout_plan_outdoor_borders...\n")
 
-  LEVEL.border_group = GROUPS["border_dropoff"]
+  LEVEL.border_name  = "Border_dropoff"
+
+  LEVEL.border_group = GROUPS[string.lower(LEVEL.border_name)]
   assert(LEVEL.border_group)
 
   collect_rooms()
@@ -3694,6 +3696,8 @@ end
 
 function Layout_build_outdoor_borders()
 
+-- TODO : build_edge()  +  build_corner()
+
   local function build_border(B)
 -- stderrf("build %s @ [%d %d] side:%d\n", B.kind, B.sx1, B.sy1, B.side)
     local x1 = SEEDS[B.sx1][B.sy1].x1
@@ -3701,19 +3705,30 @@ function Layout_build_outdoor_borders()
     local x2 = SEEDS[B.sx2][B.sy2].x2
     local y2 = SEEDS[B.sx2][B.sy2].y2
 
-    local w_tex = B.room.facade or B.room.main_tex
-
-    local skin1 = { }
+    local skin1 = {}
 
     local floor_h = assert(B.room.floor_max_h)
 
-    if B.kind == "edge" then
-      local def = PREFABS["Border_dropoff_t"]
+    -- TODO : proper way to find the prefabs
+    local prefix = LEVEL.border_name
 
---FIXME !!!!!! TEST CRUD
-if B.foobie then
-      def = PREFABS["Border_dropoff_start"]
-end
+    if B.kind == "edge" then
+      local fab_name = prefix .. "_t"
+
+      if B.content_kind == "START" then
+        fab_name = prefix .. "_start"
+
+      elseif B.content_kind == "EXIT" then
+        fab_name = prefix .. "_exit"
+        
+      elseif B.content_kind == "KEY" then
+        fab_name = prefix .. "_item"
+
+        skin1.item = B.content_item
+      end
+
+
+      local def = PREFABS[fab_name]
       assert(def)
 
       local T = Trans.box_transform(x1, y1, x2, y2, floor_h, 10 - B.side)
@@ -3721,7 +3736,10 @@ end
       Fabricate(B.room, def, T, { skin1 })
 
     elseif B.kind == "corner" then
-      local def = PREFABS["Border_dropoff_c"]
+
+      local fab_name = prefix .. "_c"
+
+      local def = PREFABS[fab_name]
       assert(def)
 
       local dir = 10 - geom.LEFT_45[B.side]
@@ -3734,8 +3752,6 @@ end
 
 
   local function nearby_facade(S)
----  do return "CRACKLE2" end
-
     for pass = 1,2 do
 
       for dist = 1,4 do
@@ -3864,11 +3880,16 @@ stderrf("  Entry dist: %1.2f\n", B.entry_dist)
     -- level has two starting rooms for CO-OP ?
     if kind == "START" and LEVEL.alt_start then return end
 
+    -- FIXME : check if a usable prefab exists  (i.e. def.purpose == B.content_kind) 
+
     each goal in R.goals do
       if goal.kind != kind then continue end
 
       -- found it
       local S = assert(goal.S)
+
+      -- FIXME : check distance, if border is much closer then do not use it
+      --         (not really an issue from non-key ITEMs)
 
       B.content_kind = kind
       B.content_item = goal.S.content_item
@@ -3879,6 +3900,8 @@ stderrf("  Entry dist: %1.2f\n", B.entry_dist)
       remove_wotsit(goal.S)
 
       goal.S = nil
+
+      -- TODO : R.guard_spot
 
 stderrf("\nUsing border piece for %s\n\n", kind)
 
