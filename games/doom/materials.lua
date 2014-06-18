@@ -12,7 +12,7 @@
 --
 --------------------------------------------------------------------
 
-DOOM.SKIN_DEFAULTS =
+DOOM.PREFAB_DEFAULTS =
 {
   tex_STARTAN3  = "?wall"
   flat_FLOOR5_3 = "?wall"
@@ -27,6 +27,32 @@ DOOM.SKIN_DEFAULTS =
 
   flat_NUKAGE3 = "_LIQUID"
   tex_SFALL3   = "_LIQUID"
+
+  -- this allow players to be remapped or removed
+  -- (e.g. non-standard players can be removed if not supported)
+  thing_1 = "?p1"
+  thing_2 = "?p2"
+  thing_3 = "?p3"
+  thing_4 = "?p4"
+
+  thing_4001 = "?p5"
+  thing_4002 = "?p6"
+  thing_4003 = "?p7"
+  thing_4004 = "?p8"
+}
+
+
+DOOM.SKIN_DEFAULTS =
+{
+  p1 = "player1"
+  p2 = "player2"
+  p3 = "player3"
+  p4 = "player4"
+
+  p5 = "player5"
+  p6 = "player6"
+  p7 = "player7"
+  p8 = "player8"
 }
 
 
