@@ -3064,6 +3064,73 @@ function Cave_outdoor_borders()
   end
 
 
+  local function is_seed_outdoor(S)
+    if S.room then return S.room.is_outdoor end
+
+    if S.map_border then return true end
+
+    return false
+  end
+
+
+  local function add_range_for_outdoor(sx1, sy1, sx2, sy2)
+    for x = sx1, sx2 do
+    for y = sy1, sy2 do
+      SEEDS[x][y].sun_done = true
+    end
+    end
+
+stderrf("outdoor range: (%2d %2d) .. (%2d %2d)\n", sx1, sy1, sx2, sy2)
+
+    local S1 = SEEDS[sx1][sy1]
+    local S2 = SEEDS[sx2][sy2]
+
+    local brush = brushlib.quad(S1.x1, S1.y1, S2.x2, S2.y2)
+
+    table.insert(brush, 1, { m="outdoor" })
+
+    -- send it directly to the CSG [ no exporting to .map ]
+    -- gui.add_brush(brush)
+  end
+
+
+  local function test_range_for_outdoor(sx, sy, sw, sh)
+    local sx2 = sx + sw - 1
+    local sy2 = sy + sh - 1
+
+    if not Seed_valid(sx2, sy2) then return false end
+
+    for x = sx, sx2 do
+    for y = sy, sy2 do
+      local S = SEEDS[x][y]
+      if S.sun_done then return false end
+      if not is_seed_outdoor(S) then return false end
+    end
+    end
+
+    add_range_for_outdoor(sx, sy, sx2, sy2)
+
+    return true
+  end
+
+
+  local function send_outdoor_areas(S, sx, sy)
+    -- tell the CSG code which areas are outdoor, so it can limit
+    -- the expensive Sun lighting tests to those areas.
+
+    if S.sun_done then return end
+
+    if not is_seed_outdoor(S) then return end
+    
+    if test_range_for_outdoor(sx, sy, 3, 3) or
+       test_range_for_outdoor(sx, sy, 2, 2) or
+       test_range_for_outdoor(sx, sy, 1, 1)
+    then
+       -- OK
+    end
+  end
+
+
   ---| Cave_outdoor_borders |---
 
   for sx = 1, SEED_W do
@@ -3075,6 +3142,9 @@ function Cave_outdoor_borders()
         build_sky_border(S, dir)
       end
     end
+
+    send_outdoor_areas(S, sx, sy)
+
   end -- sx, sy
   end
 end
