@@ -3519,6 +3519,28 @@ function Layout_plan_outdoor_borders()
   end
 
 
+  local function corner_connects_to_edge(R, side, sx1, sy1, sx2, sy2)
+    -- the 'side' parameter is relative to corner itself
+
+    -- we only test a single seed
+    local tx = math.i_mid(sx1, sx2)
+    local ty = math.i_mid(sy1, sy2)
+
+    if side == 2 then ty = sy1 - 1 end
+    if side == 8 then ty = sy2 + 1 end
+    if side == 4 then tx = sx1 - 1 end
+    if side == 6 then tx = sx2 + 1 end
+
+    if not Seed_valid(tx, ty) then return false end
+
+    local T = SEEDS[tx][ty]
+
+    return T.map_border and
+           T.map_border.room == R and
+           T.map_border.kind == "edge"
+  end
+
+
   local function plan_corner_fabs(R, corner)
     local sx, sy
 
@@ -3547,16 +3569,10 @@ function Layout_plan_outdoor_borders()
     if not (VR.sx == 1 or VR.sx == SEED_W)   then return end
     if not (VR.sy == 1 or VR.sy == SEED_TOP) then return end
 
-    -- only build a corner if it will connect to an edge
+    -- check that we can build something there
 
     local L_dir = geom.LEFT_45 [corner]
     local R_dir = geom.RIGHT_45[corner]
-
-    if not R.border_edges[L_dir] and
-       not R.border_edges[R_dir]
-    then return end
-
-    -- check that we can build something there
 
     local x1, y1, x2, y2
 
@@ -3576,6 +3592,17 @@ function Layout_plan_outdoor_borders()
       y2 = math.max(N.sy, y2 or -999)
     end
     end
+
+    -- only build a corner if it will join with one edge (ideally TWO)
+
+    local L_join = corner_connects_to_edge(R, 10 - R_dir, x1, y1, x2, y2)
+    local R_join = corner_connects_to_edge(R, 10 - L_dir, x1, y1, x2, y2)
+
+    if not (L_join or R_join) then return end
+
+    if not (L_join and R_join) and rand.odds(70) then return end
+
+    -- OK --
 
     local BORDER =
     {
@@ -3615,6 +3642,8 @@ function Layout_plan_outdoor_borders()
         end
       end
     end
+    
+    -- must do all edges _before_ all corners
 
     each R in all_rooms do
       if outdoor_or_scenic(R) then
