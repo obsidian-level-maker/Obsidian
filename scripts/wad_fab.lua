@@ -207,9 +207,7 @@ end
 
 
 function Fab_apply_substitute(value, SKIN)
-  if not is_subst(value) then
-    return value
-  end
+  assert(is_subst(value))
 
   -- a simple substitution is just: "?varname"
   -- a more complex one has an operator: "?varname+3",  "?foo==1"
@@ -233,6 +231,10 @@ function Fab_apply_substitute(value, SKIN)
 
   -- recursive substitution is handled by caller
   if is_subst(value) then
+    if op then
+      error("subst operator fail on recursive var: " .. var_name)
+    end
+
     return value
   end
 
@@ -1458,9 +1460,9 @@ end
 
 function Fab_substitutions(fab, SKIN)
   --
-  -- handle all subs (the "?xxx" syntax) and random tables.
+  -- Handle all subs (the "?xxx" syntax) and random tables.
   --
-  -- the prefab fields with certain prefixes (like tex_) will be
+  -- The prefab fields with certain prefixes (like tex_) will be
   -- checked and replaced if a substitution has been used.
   --
 
@@ -1545,27 +1547,33 @@ function Fab_substitutions(fab, SKIN)
   --
   local keys = matching_keys()
 
-  random_pass(keys)
+  -- this order is important : random tables must be handled after
+  -- keyword substitutions.
 
   subst_pass(keys)
+
+  random_pass(keys)
 end
 
 
 
-function Fab_replacements(fab, skin)
-
-  -- replaces textures (etc) in the brushes of the prefab with
+function Fab_replacements(fab, SKIN)
+  --
+  -- Replaces textures (etc) in the brushes of the prefab with
   -- stuff from the skin.
+  --
+  -- This happens _after_ the substitutions.
+  --
 
   local function sanitize_char(ch)
-    if ch == "-" or ch == " " or ch == "_" then return "_" end
+    if ch == " " or ch == "-" or ch == "_" then return "_" end
 
     if string.match(ch, "%w") then return ch end
 
     -- convert a weird character to a lowercase letter
     local num = string.byte(ch)
     if (num < 0) then num = -num end
-    num = num % 26;
+    num = (num % 26) + 1
 
     return string.sub("abcdefghijklmnopqrstuvwxyz", num, num)
   end
@@ -1589,7 +1597,7 @@ function Fab_replacements(fab, skin)
   local function check(prefix, val)
     local k = prefix .. "_" .. val
 
-    if skin[k] then return skin[k] end
+    if SKIN[k] then return SKIN[k] end
 
     return val
   end
@@ -1598,8 +1606,8 @@ function Fab_replacements(fab, skin)
   local function check_tex(val)
     local k = "tex_" .. val
 
-    if skin[k] then
-      val = skin[k]
+    if SKIN[k] then
+      val = SKIN[k]
     end
 
     local mat = Mat_lookup(val)
@@ -1612,14 +1620,14 @@ function Fab_replacements(fab, skin)
     local k = "flat_" .. val
 
     -- give liquid brushes lighting and/or special type
-    if skin[k] == "_LIQUID" and LEVEL.liquid then
+    if SKIN[k] == "_LIQUID" and LEVEL.liquid then
       C.special = C.special or LEVEL.liquid.special
       C.light   = LEVEL.liquid.light
       C.factor = 1.0
     end
 
-    if skin[k] then
-      val = skin[k]
+    if SKIN[k] then
+      val = SKIN[k]
     end
 
     local mat = Mat_lookup(val)
@@ -1633,19 +1641,19 @@ function Fab_replacements(fab, skin)
 
     -- if it is not already specified, allocate a new tag
 
-    if not skin[k] then
-      skin[k] = Plan_alloc_id("tag")
+    if not SKIN[k] then
+      SKIN[k] = Plan_alloc_id("tag")
     end
 
-    return skin[k]
+    return SKIN[k]
   end
 
 
   local function check_thing(val)
     local k = "thing_" .. val
 
-    if skin[k] then
-      local name = skin[k]
+    if SKIN[k] then
+      local name = SKIN[k]
 
       -- allow specifying a raw ID number
       if type(name) == "number" then return name end
@@ -1660,7 +1668,7 @@ function Fab_replacements(fab, skin)
         return assert(info.id)
       end
 
-      -- show a warning, but silently ignore "player5" .. "player8"
+      -- show a warning, but silently non-standard players
       if not string.match(name, "^player") then
         gui.printf("\nLACKING ENTITY : %s\n\n", name)
       end
@@ -1675,11 +1683,9 @@ function Fab_replacements(fab, skin)
   local function check_props(E)
     local k = "props_" .. E.id
 
-    local tab = skin[k]
-
-    if not tab then return end
-
-    table.merge(E, tab)
+    if SKIN[k] then
+      table.merge(E, SKIN[k])
+    end
   end
 
 
@@ -1692,6 +1698,7 @@ function Fab_replacements(fab, skin)
 
       if C.tag then C.tag = check_tag(C.tag) end
 
+      -- do textures last (may add e.g. special for liquids)
       if C.tex and C.x     then C.tex = check_tex (sanitize(C.tex)) end
       if C.tex and not C.x then C.tex = check_flat(sanitize(C.tex), C) end
 
@@ -1704,13 +1711,16 @@ function Fab_replacements(fab, skin)
     check_props(E)
 
     -- unknown entities set the 'id' to NIL
+    -- (which the CSG code will reject)
     E.id = check_thing(E.id)
   end
+
+  -- TODO : models (for Quake)
 end
 
 
 
-function Fab_render_sky(fab, room)
+function Fab_render_sky(fab, room, T)
   if fab.add_sky then
     if not room then
       error("Prefab with add_sky used without any room")
@@ -1752,7 +1762,7 @@ function Fabricate(R, def, T, skins)
   Fab_transform_Z (fab, T)
 
   Fab_render(fab)
-  Fab_render_sky(fab, R)
+  Fab_render_sky(fab, R, T)
 
   if R then
     Room_distribute_spots(R, Fab_read_spots(fab))
