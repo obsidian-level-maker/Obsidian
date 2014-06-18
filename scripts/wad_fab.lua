@@ -19,8 +19,15 @@
 ------------------------------------------------------------------------
 
 
+GLOBAL_PREFAB_DEFAULTS =
+{
+}
+
+
 GLOBAL_SKIN_DEFAULTS =
 {
+  wall  = "_ERROR"
+
   outer = "?wall"
   fence = "?wall"
   floor = "?wall"
@@ -936,7 +943,7 @@ end
 DOOM_TWO_SIDED_FLAG = 0x04
 
 
-function Fab_load_wad(name)
+function Fab_load_wad(def)
 
   local fab
 
@@ -1299,20 +1306,31 @@ function Fab_load_wad(name)
   end
 
 
+  function create_it(name)
+    fab = table.copy(GLOBAL_PREFAB_DEFAULTS)
+
+    if GAME.PREFAB_DEFAULTS then
+      table.merge(fab, GAME.PREFAB_DEFAULTS)
+    end
+
+    -- cannot have THEME defaults, due to caching
+
+    table.merge(fab, def)
+
+    fab.name  = name
+    fab.state = "raw"
+
+    fab.brushes  = {}
+    fab.models   = {}
+    fab.entities = {}
+  end
+
+
   function load_it(name)
+    create_it(name)
+
     -- load the map structures into memory
     gui.wadfab_load(name)
-
-    fab =
-    {
-      name  = name
-      state = "raw"
-
-      brushes  = {}
-      models   = {}
-      entities = {}
-    }
-
     for thing_idx = 0,999 do
       local E = gui.wadfab_get_thing(thing_idx)
 
@@ -1355,16 +1373,18 @@ function Fab_load_wad(name)
 
   ---| Fab_load_wad |---
 
+  local name = def.file
+
   -- see if already loaded
-  if not EPISODE.cached_wads then
-    EPISODE.cached_wads = {}
+  if not GAME.cached_wads then
+    GAME.cached_wads = {}
   end
 
-  if not EPISODE.cached_wads[name] then
-    EPISODE.cached_wads[name] = load_it(name)
+  if not GAME.cached_wads[name] then
+    GAME.cached_wads[name] = load_it(name)
   end
   
-  local orig = EPISODE.cached_wads[name]
+  local orig = GAME.cached_wads[name]
   assert(orig)
 
   return table.deep_copy(orig)
@@ -1372,19 +1392,19 @@ end
 
 
 
-function Fab_bound_it(fab, def)
+function Fab_bound_it(fab)
   -- the definition can directly override the prefab bounding box.
   -- this can be used to supply brushes outside of the normally
   -- occupied space.
 
-  if def.bound_x1 then fab.bbox.x1 = def.bound_x1 end
-  if def.bound_x2 then fab.bbox.x2 = def.bound_x2 end
+  if fab.bound_x1 then fab.bbox.x1 = fab.bound_x1 end
+  if fab.bound_x2 then fab.bbox.x2 = fab.bound_x2 end
 
-  if def.bound_y1 then fab.bbox.y1 = def.bound_y1 end
-  if def.bound_y2 then fab.bbox.y2 = def.bound_y2 end
+  if fab.bound_y1 then fab.bbox.y1 = fab.bound_y1 end
+  if fab.bound_y2 then fab.bbox.y2 = fab.bound_y2 end
 
-  if def.bound_z1 then fab.bbox.z1 = def.bound_z1 end
-  if def.bound_z2 then fab.bbox.z2 = def.bound_z2 end
+  if fab.bound_z1 then fab.bbox.z1 = fab.bound_z1 end
+  if fab.bound_z2 then fab.bbox.z2 = fab.bound_z2 end
 
 
   if fab.bbox.x1 and fab.bbox.x2 then
@@ -1402,7 +1422,7 @@ end
 
 
 
-function Fab_merge_skins(fab, main_skin, list)
+function Fab_merge_skins(fab, list)
   --
   -- merges the skin list into the main skin (from GAMES.SKIN table)
   -- and also includes various default values.
@@ -1410,12 +1430,11 @@ function Fab_merge_skins(fab, main_skin, list)
 
   local result = table.copy(GLOBAL_SKIN_DEFAULTS)
 
-  result.wall = GAME.MATERIALS["_ERROR"].t
-
   if  GAME.SKIN_DEFAULTS then table.merge(result,  GAME.SKIN_DEFAULTS) end
-  if THEME.skin_defaults then table.merge(result, THEME.skin_defaults) end
 
-  table.merge(result, main_skin)
+  if THEME.skin then table.merge(result, THEME.skin) end
+
+  -- TODO??  table.merge(result, R.skin) end
 
   each skin in list do
     table.merge(result, skin)
@@ -1693,22 +1712,16 @@ function Fabricate(def, T, skins)
 
   gui.debugf("=========  FABRICATE %s\n", def.file)
 
-  local fab = Fab_load_wad(def.file)
+  local fab = Fab_load_wad(def)
 
-  fab.def = def
+  Fab_bound_it(fab)
 
-  Fab_bound_it(fab, def)
-
-  local skin = Fab_merge_skins(fab, def, skins)
+  local skin = Fab_merge_skins(fab, skins)
 
   Fab_substitutions(fab, skin)
-  Fab_replacements(fab, skin)
+  Fab_replacements (fab, skin)
 
-  fab.state  = "skinned"
-
-  fab.x_fit = def.x_fit
-  fab.y_fit = def.y_fit
-  fab.z_fit = def.z_fit
+  fab.state = "skinned"
 
   Fab_transform_XY(fab, T)
   Fab_transform_Z (fab, T)
