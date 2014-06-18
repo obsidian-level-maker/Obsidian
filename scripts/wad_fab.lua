@@ -1456,12 +1456,11 @@ end
 
 
 
-function Fab_substitutions(fab, SKIN)
+function Fab_collect_fields(fab)
   --
-  -- Handle all subs (the "?xxx" syntax) and random tables.
-  --
-  -- The prefab fields with certain prefixes (like tex_) will be
-  -- checked and replaced if a substitution has been used.
+  -- Find all the prefab fields with special prefixes (like tex_)
+  -- used for replacing textures (etc) in a prefab, and collect
+  -- collect them into a table.
   --
 
   local function match_prefix(name)
@@ -1477,7 +1476,7 @@ function Fab_substitutions(fab, SKIN)
   end
 
 
-  local function matching_keys()
+  local function matching_fields()
     local list = { }
 
     each k,v in fab do
@@ -1490,12 +1489,30 @@ function Fab_substitutions(fab, SKIN)
   end
 
 
+  ---| Fab_collect_fields |---
+
+  fab.fields = {}
+
+  each k in matching_fields() do
+    fab.fields[k] = fab[k] ; fab[k] = nil
+  end
+end
+
+
+
+function Fab_substitutions(fab, SKIN)
+  --
+  -- Handle all subs (the "?xxx" syntax) and random tables.
+  --
+  -- This only affects the replacement fields (tex_FOO etc).
+  --
+
   local function random_pass(keys)
     -- most fields with a table value are considered to be random
     -- replacement, e.g. tex_FOO = { COMPSTA1=50, COMPSTA2=50 }.
 
     each name in keys do
-      local value = fab[name]
+      local value = fab.fields[name]
 
       if type(value) != "table" then continue end
 
@@ -1503,7 +1520,7 @@ function Fab_substitutions(fab, SKIN)
         error("Fab_substitutions: random table is empty: " .. tostring(name))
       end
 
-      fab[name] = rand.key_by_probs(value)
+      fab.fields[name] = rand.key_by_probs(value)
     end
   end
 
@@ -1529,10 +1546,10 @@ function Fab_substitutions(fab, SKIN)
 
   local function subst_pass(keys)
     each name in keys do
-      local value = fab[name]
+      local value = fab.fields[name]
 
       if is_subst(value) then
-        fab[name] = do_substitution(value)
+        fab.fields[name] = do_substitution(value)
       end
     end
   end
@@ -1543,7 +1560,7 @@ function Fab_substitutions(fab, SKIN)
   -- Note: iterate over a copy of the key names, since we cannot
   --       safely modify a table while iterating through it.
   --
-  local keys = matching_keys()
+  local keys = table.keys(fab.fields)
 
   -- this order is important : random tables must be handled after
   -- keyword substitutions.
@@ -1555,7 +1572,7 @@ end
 
 
 
-function Fab_replacements(fab, SKIN)
+function Fab_replacements(fab)
   --
   -- Replaces textures (etc) in the brushes of the prefab with
   -- stuff from the skin.
@@ -1595,7 +1612,7 @@ function Fab_replacements(fab, SKIN)
   local function check(prefix, val)
     local k = prefix .. "_" .. val
 
-    if SKIN[k] then return SKIN[k] end
+    if fab.fields[k] then return fab.fields[k] end
 
     return val
   end
@@ -1604,8 +1621,8 @@ function Fab_replacements(fab, SKIN)
   local function check_tex(val)
     local k = "tex_" .. val
 
-    if SKIN[k] then
-      val = SKIN[k]
+    if fab.fields[k] then
+      val = fab.fields[k]
     end
 
     local mat = Mat_lookup(val)
@@ -1617,15 +1634,15 @@ function Fab_replacements(fab, SKIN)
   local function check_flat(val, C)
     local k = "flat_" .. val
 
+    if fab.fields[k] then
+      val = fab.fields[k]
+    end
+
     -- give liquid brushes lighting and/or special type
-    if SKIN[k] == "_LIQUID" and LEVEL.liquid then
+    if val == "_LIQUID" and LEVEL.liquid then
       C.special = C.special or LEVEL.liquid.special
       C.light   = LEVEL.liquid.light
       C.factor = 1.0
-    end
-
-    if SKIN[k] then
-      val = SKIN[k]
     end
 
     local mat = Mat_lookup(val)
@@ -1639,19 +1656,19 @@ function Fab_replacements(fab, SKIN)
 
     -- if it is not already specified, allocate a new tag
 
-    if not SKIN[k] then
-      SKIN[k] = Plan_alloc_id("tag")
+    if not fab.fields[k] then
+      fab.fields[k] = Plan_alloc_id("tag")
     end
 
-    return SKIN[k]
+    return fab.fields[k]
   end
 
 
   local function check_thing(val)
     local k = "thing_" .. val
 
-    if SKIN[k] then
-      local name = SKIN[k]
+    if fab.fields[k] then
+      local name = fab.fields[k]
 
       -- allow specifying a raw ID number
       if type(name) == "number" then return name end
@@ -1679,11 +1696,15 @@ function Fab_replacements(fab, SKIN)
 
 
   local function check_props(E)
+    -- DISABLED : MAYBE REMOVE THIS
+
+--[[
     local k = "props_" .. E.id
 
-    if SKIN[k] then
-      table.merge(E, SKIN[k])
+    if fab.fields[k] then
+      table.merge(E, fab.fields[k])
     end
+--]]
   end
 
 
@@ -1704,6 +1725,7 @@ function Fab_replacements(fab, SKIN)
       if C.x and C.back_rail then C.back_rail = check_tex(sanitize(C.back_rail)) end
     end
   end
+
 
   each E in fab.entities do
     check_props(E)
@@ -1751,8 +1773,9 @@ function Fabricate(room, def, T, skins)
 
   local skin = Fab_merge_skins(fab, room, skins)
 
+  Fab_collect_fields(fab)
   Fab_substitutions(fab, skin)
-  Fab_replacements (fab, skin)
+  Fab_replacements (fab)
 
   fab.state = "skinned"
 
