@@ -3699,32 +3699,32 @@ function Layout_build_outdoor_borders()
 
     local w_tex = B.room.facade or B.room.main_tex
 
-    local skin0 = { wall=w_tex }
+    local skin1 = { }
 
     local floor_h = assert(B.room.floor_max_h)
 
     if B.kind == "edge" then
-      local skin1 = PREFABS["Border_dropoff_t"]
+      local def = PREFABS["Border_dropoff_t"]
 
 --FIXME !!!!!! TEST CRUD
 if B.foobie then
-      skin1 = PREFABS["Border_dropoff_start"]
+      def = PREFABS["Border_dropoff_start"]
 end
-      assert(skin1)
+      assert(def)
 
       local T = Trans.box_transform(x1, y1, x2, y2, floor_h, 10 - B.side)
 
-      Fabricate_at(B.room, skin1, T, { skin0, skin1 })
+      Fabricate(B.room, def, T, { skin1 })
 
     elseif B.kind == "corner" then
-      local skin1 = PREFABS["Border_dropoff_c"]
-      assert(skin1)
+      local def = PREFABS["Border_dropoff_c"]
+      assert(def)
 
       local dir = 10 - geom.LEFT_45[B.side]
 
       local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
 
-      Fabricate_at(B.room, skin1, T, { skin0, skin1 })
+      Fabricate(B.room, def, T, { skin0 })
     end
   end
 

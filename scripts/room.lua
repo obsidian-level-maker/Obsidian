@@ -2756,7 +2756,7 @@ end
 
 
 
-function Room_do_small_exit()
+function Room_do_small_exit__OLD()
   local C = R.conns[1]
   local T = C:get_seed(C:neighbor(R))
   local out_combo = T.room.main_tex
@@ -2781,6 +2781,7 @@ function Room_do_small_exit()
 end
 
 
+
 function Room_do_stairwell(R)
   R.well_tex   = rand.key_by_probs(R.theme.walls)
   R.well_floor = rand.key_by_probs(R.theme.floors)
@@ -2789,6 +2790,7 @@ function Room_do_stairwell(R)
 
   Build.stairwell(R, skin)
 end
+
 
 
 function Room_build_seeds(R)
@@ -2873,28 +2875,24 @@ function Room_build_seeds(R)
       fab_name = "Item_podium"
     end
 
-    local skin1 = PREFABS[fab_name]
-    assert(skin1)
+    local def = PREFABS[fab_name]
+    assert(def)
 
-    local skin0 = { wall=R.main_tex }
-    local skin2 = { item=item }
+    local skin1 = { item=item }
 
     local T = Trans.spot_transform(mx, my, z, 2) -- TODO: spot_dir
 
-    Fabricate_at(R, skin1, T, { skin0, skin1, skin2 })
+    Fabricate(R, def, T, { skin1 })
   end
 
 
   local function content_start_pad(mx, my, z, dir)
-    local skin1 = PREFABS["Start_basic"]
-    assert(skin1)
-
-    local skin0 = { wall=R.main_tex }
-    local skin2 = { }
+    local def = PREFABS["Start_basic"]
+    assert(def)
 
     local T = Trans.spot_transform(mx, my, z, 10 - dir)
 
-    Fabricate_at(R, skin1, T, { skin0, skin1, skin2 })
+    Fabricate(R, def, T, { })
   end
 
 
@@ -3081,22 +3079,21 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local C = R.teleport_conn
     assert(C)
 
-    local skin1 = PREFABS["Teleporter1"]
-    assert(skin1)
+    local def = PREFABS["Teleporter1"]
+    assert(def)
 
-    local skin0 = { wall = R.main_tex }
-    local skin2 = {}
+    local skin1 = {}
 
     if C.R1 == R then
-      skin2. in_tag = C.tele_tag2
-      skin2.out_tag = C.tele_tag1
+      skin1. in_tag = C.tele_tag2
+      skin1.out_tag = C.tele_tag1
     else
-      skin2. in_tag = C.tele_tag1
-      skin2.out_tag = C.tele_tag2
+      skin1. in_tag = C.tele_tag1
+      skin1.out_tag = C.tele_tag2
     end
 
-    skin2. in_target = string.format("tele%d", skin2. in_tag)
-    skin2.out_target = string.format("tele%d", skin2.out_tag)
+    skin1. in_target = string.format("tele%d", skin1. in_tag)
+    skin1.out_target = string.format("tele%d", skin1.out_tag)
 
     local mx, my = S:mid_point()
     local spot_dir = 10 - dir_for_wotsit(S)
@@ -3104,22 +3101,22 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
     local T = Trans.spot_transform(mx, my, z, spot_dir)
 
-    Fabricate_at(R, skin1, T, { skin0, skin1, skin2 })
+    Fabricate(R, def, T, { skin1 })
   end
 
 
   local function do_wall(S, side, w_tex)
-    local skin1 = PREFABS["Wall_plain"]
-    assert(skin1)
+    local def = PREFABS["Wall_plain"]
+    assert(def)
 
-    local skin0 = { wall=w_tex }
+    local skin1 = { wall=w_tex }
 
-    local deep = assert(skin1.deep)
+    local deep = assert(def.deep)
 
     local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, S.floor_h,
                                    side, 0, 192, deep, 0)
 
-    Fabricate_at(R, skin1, T, { skin0, skin1 })
+    Fabricate(R, def, T, { skin1 })
   end
 
 
@@ -3129,21 +3126,21 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
       return
     end
 
-    local skin1 = PREFABS["Wall_liquid_fall"]
-    assert(skin1)
+    local def = PREFABS["Wall_liquid_fall"]
+    assert(def)
 
-    local skin0 = { wall=w_tex }
+    local skin1 = { wall=w_tex }
 
-    local deep = assert(skin1.deep)
+    local deep = assert(def.deep)
 
     local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, S.floor_h,
                                    side, 0, 192, deep, 0)
 
-    if skin1.z_fit then
+    if def.z_fit then
       T.fitted_z = z2 - S.floor_h
     end
 
-    Fabricate_at(R, skin1, T, { skin0, skin1 })
+    Fabricate(R, def, T, { skin1 })
   end
 
 
@@ -3156,53 +3153,53 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
       fab_name = fab_name .. "_tall"
     end
 
-    local skin1 = PREFABS[fab_name]
-    assert(skin1)
+    local def = PREFABS[fab_name]
+    assert(def)
 
     local o_tex = outer_tex(S, side, w_tex)
-    local skin0 = { wall=w_tex, outer=o_tex or w_tex }
+    local skin1 = { wall=w_tex, outer=o_tex or w_tex }
 
-    assert(skin1.deep)
-    assert(skin1.over)
+    assert(def.deep)
+    assert(def.over)
 
     local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, B.win_z1,
-                                   side, 0, 192, skin1.deep, skin1.over)
+                                   side, 0, 192, def.deep, def.over)
 
     if B.win_z2 then
       T.fitted_z = B.win_z2 - B.win_z1
     end
 
-    Fabricate_at(R, skin1, T, { skin0, skin1 })
+    Fabricate(R, def, T, { skin1 })
   end
 
 
   local function do_picture(S, side, w_tex)
     local B = S.border[side]
 
-    local skin1 = B.pic_skin
-    assert(skin1)
-    assert(skin1.deep)
+    local def = B.pic_skin
+    assert(def)
+    assert(def.deep)
 
-    local skin0 = { wall=w_tex }
+    local skin1 = { wall=w_tex }
 
     local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, B.pic_z1,
-                                   side, 0, 192, skin1.deep, 0)
+                                   side, 0, 192, def.deep, 0)
 
     T.fitted_z = B.pic_fit_z
 
-    Fabricate_at(R, skin1, T, { skin0, skin1 })
+    Fabricate(R, def, T, { skin1 })
   end
 
 
   local function do_fat_cage(S, w_tex)
-    local skin1 = PREFABS["Cage_fat"]
-    assert(skin1)
+    local def = PREFABS["Cage_fat"]
+    assert(def)
 
-    local skin0 = { wall=w_tex }
+    local skin1 = { wall=w_tex }
 
     local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, S.cage_z, S.cage_dir)
 
-    Fabricate_at(R, skin1, T, { skin0, skin1 })
+    Fabricate(R, def, T, { skin1 })
   end
 
 
@@ -3226,14 +3223,14 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
        fab_name = "Arch_archy"
     end
 
-    local skin1 = PREFABS[fab_name]
-    assert(skin1)
+    local def = PREFABS[fab_name]
+    assert(def)
 
     local o_tex = outer_tex(S, side, w_tex)
-    local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
+    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
 
-    if skin2.wall == skin2.outer then
-      skin2.track = skin2.wall
+    if skin1.wall == skin1.outer then
+      skin1.track = skin1.wall
     end
 
     -- handling for extra-wide archways
@@ -3249,9 +3246,9 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     end
 
     local T = Trans.edge_transform(S.x1, S.y1, S2.x2, S2.y2, z,
-                                   side, 0, seed_w * 192, skin1.deep, skin1.over)
+                                   side, 0, seed_w * 192, def.deep, def.over)
 
-    Fabricate_at(R, skin1, T, { skin1, skin2 })
+    Fabricate(R, def, T, { skin1 })
   end
 
 
@@ -3268,23 +3265,23 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
       fab_name = "Door_large"
     end
 
-    local skin1 = PREFABS[fab_name]
-    assert(skin1)
+    local def = PREFABS[fab_name]
+    assert(def)
 
     local o_tex = outer_tex(S, side, w_tex)
-    local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
+    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
 
-    if skin2.wall == skin2.outer then
-      skin2.track = skin2.wall
+    if skin1.wall == skin1.outer then
+      skin1.track = skin1.wall
     end
 
     local S2 = S
     local seed_w = 1
 
     local T = Trans.edge_transform(S.x1, S.y1, S2.x2, S2.y2, z,
-                                   side, 0, seed_w * 192, skin1.deep, skin1.over)
+                                   side, 0, seed_w * 192, def.deep, def.over)
 
-    Fabricate_at(R, skin1, T, { skin1, skin2 })
+    Fabricate(R, def, T, { skin1 })
   end
 
 
@@ -3296,19 +3293,19 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     -- FIXME : find it properly
     local fab_name = "Locked_" .. LOCK.item
 
-    local skin1 = PREFABS[fab_name]
-    assert(skin1)
+    local def = PREFABS[fab_name]
+    assert(def)
 
     local o_tex = outer_tex(S, side, w_tex)
-    local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
+    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
 
     local S2 = S
     local seed_w = 1
 
     local T = Trans.edge_transform(S.x1, S.y1, S2.x2, S2.y2, z,
-                                   side, 0, seed_w * 192, skin1.deep, skin1.over)
+                                   side, 0, seed_w * 192, def.deep, def.over)
 
-    Fabricate_at(R, skin1, T, { skin1, skin2 })
+    Fabricate(R, def, T, { skin1 })
   end
 
 
@@ -3325,21 +3322,21 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     -- FIXME : find it properly
     local fab_name = "Door_with_bars" --!!!! Door_SW_blue
 
-    local skin1 = PREFABS[fab_name]
-    assert(skin1)
+    local def = PREFABS[fab_name]
+    assert(def)
 
     local o_tex = outer_tex(S, side, w_tex)
-    local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
+    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
 
-    skin2.tag_1 = LOCK.tag
+    skin1.tag_1 = LOCK.tag
 
     local S2 = S
     local seed_w = 1
 
     local T = Trans.edge_transform(S.x1, S.y1, S2.x2, S2.y2, z,
-                                   side, 0, seed_w * 192, skin1.deep, skin1.over)
+                                   side, 0, seed_w * 192, def.deep, def.over)
 
-    Fabricate_at(R, skin1, T, { skin1, skin2 })
+    Fabricate(R, def, T, { skin1 })
   end
 
 
@@ -3416,20 +3413,20 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
       w_tex = LEVEL.fence_mat or w_tex
     end
 
-    local skin1 = PREFABS[fab_name]
-    assert(skin1)
+    local def = PREFABS[fab_name]
+    assert(def)
 
     local o_tex = outer_tex(S, side, w_tex)
-    local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex }
+    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex }
 
     local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, z,
-                                   side, 0, 192, skin1.deep, skin1.over)
+                                   side, 0, 192, def.deep, def.over)
 
     if is_fence then
-      T.fitted_z = skin1.bound_z2 + extra_z
+      T.fitted_z = def.bound_z2 + extra_z
     end
 
-    Fabricate_at(R, skin1, T, { skin1, skin2 })
+    Fabricate(R, def, T, { skin1 })
   end
 
 
@@ -3444,20 +3441,20 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
 
     local fab_name = "Bars_shiny"
 
-    local skin1 = PREFABS[fab_name]
-    assert(skin1)
+    local def = PREFABS[fab_name]
+    assert(def)
 
     local o_tex = outer_tex(S, side, w_tex)
-    local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex }
+    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex }
 
-    skin2.tag_1 = LOCK.tag
+    skin1.tag_1 = LOCK.tag
 
     local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, z,
-                                   side, 0, 192, skin1.deep, skin1.over)
+                                   side, 0, 192, def.deep, def.over)
 
-    T.fitted_z = skin1.bound_z2 + extra_z
+    T.fitted_z = def.bound_z2 + extra_z
 
-    Fabricate_at(R, skin1, T, { skin1, skin2 })
+    Fabricate(R, def, T, { skin1 })
   end
 
 
@@ -3470,20 +3467,20 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
 
     local fab_name = "Fence_gappy"
 
-    local skin1 = PREFABS[fab_name]
-    assert(skin1)
+    local def = PREFABS[fab_name]
+    assert(def)
 
     local o_tex = outer_tex(S, side, w_tex)
-    local skin2 = { wall=w_tex, floor=f_tex, outer=o_tex }
+    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex }
 
     -- ??? TODO : less wide at edge of room
 
     local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, z,
-                                   side, 0, 192, skin1.deep, skin1.over)
+                                   side, 0, 192, def.deep, def.over)
 
-    T.fitted_z = skin1.bound_z2 + extra_z
+    T.fitted_z = def.bound_z2 + extra_z
 
-    Fabricate_at(R, skin1, T, { skin1, skin2 })
+    Fabricate(R, def, T, { skin1 })
   end
 
 
@@ -3581,10 +3578,10 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
       error("no stair for floor height difference of " .. diff_z)
     end
 
-    local skin1 = PREFABS[fab_name]
-    assert(skin1)
+    local def = PREFABS[fab_name]
+    assert(def)
 
-    local skin0 = { wall=w_tex, floor=high_tex }
+    local skin1 = { wall=w_tex, floor=high_tex }
 
     -- FIXME: chunk coordinates
     local x1 = S.x1
@@ -3596,19 +3593,19 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
 
     T.fitted_z = diff_z
 
-    Fabricate_at(R, skin1, T, { skin0, skin1 })
+    Fabricate(R, def, T, { skin1 })
   end
 
 
   local function do_small_bridge(S)
-    local skin1 = PREFABS["Bridge_curvey"]
-    assert(skin1)
+    local def = PREFABS["Bridge_curvey"]
+    assert(def)
 
-    local skin0 = { floor=S.bridge_tex, wall=R.main_tex }
+    local skin1 = { floor=S.bridge_tex, wall=R.main_tex }
 
     local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, S.bridge_h, S.bridge_dir)
 
-    Fabricate_at(R, skin1, T, { skin0, skin1 })
+    Fabricate(R, def, T, { skin1 })
   end
 
 
