@@ -1422,7 +1422,7 @@ end
 
 
 
-function Fab_merge_skins(fab, list)
+function Fab_merge_skins(fab, room, list)
   --
   -- merges the skin list into the main skin (from GAMES.SKIN table)
   -- and also includes various default values.
@@ -1430,11 +1430,13 @@ function Fab_merge_skins(fab, list)
 
   local result = table.copy(GLOBAL_SKIN_DEFAULTS)
 
-  if  GAME.SKIN_DEFAULTS then table.merge(result,  GAME.SKIN_DEFAULTS) end
+  if GAME.SKIN_DEFAULTS then table.merge(result,  GAME.SKIN_DEFAULTS) end
 
   if THEME.skin then table.merge(result, THEME.skin) end
 
-  -- TODO??  table.merge(result, R.skin) end
+  if room and room.skin then
+    table.merge(result, room.skin)
+  end
 
   each skin in list do
     table.merge(result, skin)
@@ -1705,7 +1707,27 @@ end
 
 
 
-function Fabricate(def, T, skins)
+function Fab_render_sky(fab, room)
+  if fab.add_sky then
+    if not room then
+      error("Prefab with add_sky used without any room")
+    end
+
+    if not R.sky_group then
+      error("Prefab with add_sky used in indoor room : " .. tostring(fab.name))
+    end
+
+    if not T.bbox then
+      error("Prefab with add_sky used in loose transform")
+    end
+
+    Trans.sky_quad(T.bbox.x1, T.bbox.y1, T.bbox.x2, T.bbox.y2, R.sky_group.h)
+  end
+end
+
+
+
+function Fabricate(R, def, T, skins)
   if not def.file then
     error("Old-style prefab skin used")
   end
@@ -1716,7 +1738,7 @@ function Fabricate(def, T, skins)
 
   Fab_bound_it(fab)
 
-  local skin = Fab_merge_skins(fab, skins)
+  local skin = Fab_merge_skins(fab, R, skins)
 
   Fab_substitutions(fab, skin)
   Fab_replacements (fab, skin)
@@ -1727,28 +1749,10 @@ function Fabricate(def, T, skins)
   Fab_transform_Z (fab, T)
 
   Fab_render(fab)
-
-  return fab
-end
-
-
-function Fabricate_at(R, def, T, skins)
-  local fab = Fabricate(def, T, skins)
+  Fab_render_sky(fab, R)
 
   if R then
     Room_distribute_spots(R, Fab_read_spots(fab))
-  end
-
-  if def.add_sky then
-    if not R.sky_group then
-      error("Prefab with add_sky used in indoor room : " .. tostring(def.name))
-    end
-
-    if not T.bbox then
-      error("Prefab with add_sky used in loose transform")
-    end
-
-    Trans.sky_quad(T.bbox.x1, T.bbox.y1, T.bbox.x2, T.bbox.y2, R.sky_group.h)
   end
 end
 
