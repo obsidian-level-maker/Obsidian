@@ -200,12 +200,13 @@ function Fab_expansion_groups(list, axis_name, fit_size, pf_size)
 end
 
 
+
 function is_subst(value)
   return type(value) == "string" and string.match(value, "^[!?]")
 end
 
 
-function Fab_substitute(SKIN, value)
+function Fab_apply_substitute(value, SKIN)
   if not is_subst(value) then
     return value
   end
@@ -226,7 +227,12 @@ function Fab_substitute(SKIN, value)
   -- first lookup variable name, abort if not present
   value = SKIN[var_name]
 
-  if value == nil or is_subst(value) then
+  if value == nil then
+    return nil
+  end
+
+  -- recursive substitution is handled by caller
+  if is_subst(value) then
     return value
   end
 
@@ -250,6 +256,7 @@ function Fab_substitute(SKIN, value)
 
   return value
 end
+
 
 
 function Fab_determine_bbox(fab)
@@ -306,6 +313,7 @@ function Fab_determine_bbox(fab)
 
   gui.debugf("bbox =\n%s\n", table.tostr(fab.bbox))
 end
+
 
 
 function Fab_transform_XY(fab, T)
@@ -752,6 +760,7 @@ function Fab_render(fab)
     raw_add_entity(E)
   end
 end
+
 
 
 function Fab_read_spots(fab)
@@ -1450,21 +1459,19 @@ end
 function Fab_substitutions(fab, SKIN)
   --
   -- handle all subs (the "?xxx" syntax) and random tables.
-  -- the SKIN table is modified here.
+  --
+  -- the prefab fields with certain prefixes (like tex_) will be
+  -- checked and replaced if a substitution has been used.
   --
 
-  local PREFIXES =
-  {
-    "tex_", "flat_", "thing_"
-    "tag_", "line_", "sector_"
-  }
-
   local function match_prefix(name)
-    each prefix in PREFIXES do
-      if string.match(name, "^" .. prefix) then
-        return true
-      end
-    end
+    if string.match(name, "^tex_")    then return true end
+    if string.match(name, "^flat_")   then return true end
+    if string.match(name, "^thing_")  then return true end
+
+    if string.match(name, "^line_")   then return true end
+    if string.match(name, "^sector_") then return true end
+    if string.match(name, "^tag_")    then return true end
 
     return false
   end
@@ -1473,7 +1480,7 @@ function Fab_substitutions(fab, SKIN)
   local function matching_keys()
     local list = { }
 
-    each k,v in SKIN do
+    each k,v in fab do
       if match_prefix(k) then
         table.insert(list, k)
       end
@@ -1488,33 +1495,32 @@ function Fab_substitutions(fab, SKIN)
     -- replacement, e.g. tex_FOO = { COMPSTA1=50, COMPSTA2=50 }.
 
     each name in keys do
-      local value = SKIN[name]
+      local value = fab[name]
 
-      if type(value) == "table" then
-        if table.size(value) == 0 then
-          error("Fab_substitutions: random table is empty: " .. tostring(name))
-        end
+      if type(value) != "table" then continue end
 
-        SKIN[name] = rand.key_by_probs(value)
+      if table.size(value) == 0 then
+        error("Fab_substitutions: random table is empty: " .. tostring(name))
       end
+
+      fab[name] = rand.key_by_probs(value)
     end
   end
 
 
   local function do_substitution(value)
-    local seen = { }
+    local seen = {}
 
     while is_subst(value) do
 
+      -- found a cyclic reference?
       if seen[value] then
-        -- failed !
-        gui.debugf("\nSKIN =\n%s\n\n", table.tostr(SKIN))
-        error("Fab_substitutions: recursive refs (" .. tostring(value) .. ")")
+        error("Fab_substitutions: cyclic ref (" .. tostring(value) .. ")")
       end
 
       seen[value] = 1
 
-      value = Fab_substitute(SKIN, value)
+      value = Fab_apply_substitute(value, SKIN)
     end
 
     return value
@@ -1523,10 +1529,10 @@ function Fab_substitutions(fab, SKIN)
 
   local function subst_pass(keys)
     each name in keys do
-      local value = SKIN[name]
+      local value = fab[name]
 
       if is_subst(value) then
-        SKIN[name] = do_substitution(value)
+        fab[name] = do_substitution(value)
       end
     end
   end
@@ -1536,9 +1542,6 @@ function Fab_substitutions(fab, SKIN)
 
   -- Note: iterate over a copy of the key names, since we cannot
   --       safely modify a table while iterating through it.
-  --
-  -- Also we only process the replacement keywords, which have the
-  -- special prefixes listed above ("tex_" etc).
   --
   local keys = matching_keys()
 
