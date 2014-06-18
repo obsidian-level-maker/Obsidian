@@ -3328,7 +3328,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local o_tex = outer_tex(S, side, w_tex)
     local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
 
-    skin1.tag_1 = LOCK.tag
+    skin1.lock_tag = LOCK.tag
 
     local S2 = S
     local seed_w = 1
@@ -3447,7 +3447,7 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
     local o_tex = outer_tex(S, side, w_tex)
     local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex }
 
-    skin1.tag_1 = LOCK.tag
+    skin1.lock_tag = LOCK.tag
 
     local T = Trans.edge_transform(S.x1, S.y1, S.x2, S.y2, z,
                                    side, 0, 192, def.deep, def.over)

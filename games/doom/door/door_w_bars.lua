@@ -16,5 +16,7 @@ PREFABS.Door_with_bars =
 
   tex_COMPBLUE = "GRAY1"
   flat_FLAT14  = "GRAY1"
+
+  tag_1 = "?lock_tag"
 }
 

@@ -17,5 +17,7 @@ PREFABS.Bars_shiny =
   bound_z2 = 128
 
   prob = 90
+
+  tag_1 = "?lock_tag"
 }
 

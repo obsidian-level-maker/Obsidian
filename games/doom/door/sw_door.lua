@@ -13,5 +13,7 @@ PREFABS.Door_SW_blue =
   long   = 192
   deep   = 16
   over   = 16
+
+  tag_1  = "?lock_tag"
 }
 
