@@ -3,7 +3,37 @@ WORK IN PROGRESS
 ================
 
 
-border_up logic : process walls like fences, i.e. pass over all seeds
+>>>  Sun lighting : limit to outdoor rooms (supply bboxes)
+     -  add_brush ... { m="outdoor" }
+
+
+>>>  Border goal pieces
+
+(a) pick an outdoor border for level
+
+(b) use the start / exit / item pieces properly
+
+(c) add a height requirement
+
+
+
+Fabricate : have 'sky_h' field in ROOM.skin (rather than special logic) ??
+
+   -  after tizzy_up_room, transfer the value
+
+
+"onion" layouting : patterns which do something to one (or more) sides
+                    of a room and recurse for the remaining part
+
+
+
+6.08 Stuff
+----------
+
+3D floors next to room with liquid -- odd gap is possible
+
+
+--------->
 
 
 Fix handling of gaps inside caves (at border of cave)
@@ -37,29 +67,23 @@ IDEA:  automatically merge 2x2 seeds (if floor) into a single chunk
 
 ??  the 'is_top' pattern must touch the entry_conn (if present)
 
+IDEA:  auto-sub-areas : in huge room, sub-divide into smaller rectangles
+       and place "intra connections" between them.  Place patterns in
+       each sub-area, ensuring the intra connections are "floor".
+
 
 Border pieces:
++  need a 'height' field, if not high enough then skip
+
+-  support pieces with a "purpose" (START, EXIT, ITEM)
+
 -  only 25% chance of corner cage [apply style]
--  support "gaps" in piece sides (filled by lowest nearby sector OR next lowest sector)
--  tidy up current pieces
-
-+  problem: piece may be inaccessible (due to max_floor_h or
-   walkable seed not occurring near a border)
-   ---> after layout room, detect which pieces are accessible
-
--  IDEA: middle seed (etc) can become place for item/start/exit/teleporter
-
--  support piece with spot for nice item, if room has item then
-   place it there
--  support piece as start spot
--  support piece which is EXIT
 
 
 Bridges:
+-  have an actual bridge [Urban theme]
 -  bridges : check two/three seeds for LONG bridges
--  have an actual bridge
 -  add mon/item spots to prefabs
--  support a 3D floor [another special sector?]
 
 
 Junking:
@@ -81,19 +105,32 @@ Closets and Traps:
 
 Doors
 -  Door_with_bars : use it
++  make a dark-metal switch for Door_with_bars
 -  make a two seed wide door prefab
 -  support wide doors [normal / locked]
 -  make wide prefab with a switch in it [normal door]
 -  texturing on door prefabs (for HELL, URBAN themes)
 
 
+Cave lighting:
+-  keys / switches (etc) should be lit up
+
+
+MISCELLANEA
+===========
+
+-  "outside bbox" pieces via sector type #987
+
+
 RAIL ISSUE : cannot control offsets on BACK SIDE of a brush vert
 --->  test new logic....
 
 
+Fences : support dropping them between rooms  [ i.e. honor STYLE ]
+
+
+wad-fab loader : x_offset handling not right (if line is split)
+
+
 ???  last_file stuff?  Default_location??
-
-
-code formatting in q_common / q_light / q_tjunc / q_vis
-
 
