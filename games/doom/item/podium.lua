@@ -8,8 +8,6 @@ PREFABS.Item_podium =
   where = "middle"
   item_kind = "key"
 
-  theme = "egypt"
-
-  thing_5 = "?item"
+  theme = { urban=1, egypt=1 }
 }
 

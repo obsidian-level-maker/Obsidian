@@ -14,19 +14,27 @@
 
 DOOM.PREFAB_DEFAULTS =
 {
-  tex_STARTAN3  = "?wall"
+  -- very common texturing stuff --
+
+   tex_STARTAN3 = "?wall"
   flat_FLOOR5_3 = "?wall"
 
   tex_BLAKWAL1  = "?outer"
 
+   tex_GRAY5    = "?floor"
   flat_FLOOR0_6 = "?floor"
-  tex_GRAY5     = "?floor"
 
+   tex_STARBR2  = "?ceil"
   flat_CEIL3_1  = "?ceil"
-  tex_STARBR2   = "?ceil"
 
+   tex_SFALL3  = "_LIQUID"
   flat_NUKAGE3 = "_LIQUID"
-  tex_SFALL3   = "_LIQUID"
+
+  -- other stuff
+
+  tex_DOORTRAK = "?track"
+
+  thing_5 = "?item"
 
   -- this allow players to be remapped or removed
   -- (e.g. non-standard players can be removed if not supported)
@@ -44,6 +52,8 @@ DOOM.PREFAB_DEFAULTS =
 
 DOOM.SKIN_DEFAULTS =
 {
+  track = "DOORTRAK"
+
   p1 = "player1"
   p2 = "player2"
   p3 = "player3"

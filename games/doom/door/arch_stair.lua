@@ -16,7 +16,5 @@ PREFABS.Arch_stair =
   bound_z2 = 128
 
   prob = 90
-
-  tex_DOORTRAK = "?track"
 }
 
