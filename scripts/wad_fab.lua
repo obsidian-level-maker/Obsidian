@@ -1317,7 +1317,7 @@ function Fab_load_wad(def)
   end
 
 
-  function create_it(name)
+  function create_it()
     fab = table.copy(GLOBAL_PREFAB_DEFAULTS)
 
     if GAME.PREFAB_DEFAULTS then
@@ -1328,7 +1328,6 @@ function Fab_load_wad(def)
 
     table.merge(fab, def)
 
-    fab.name  = name
     fab.state = "raw"
 
     fab.brushes  = {}
@@ -1337,11 +1336,12 @@ function Fab_load_wad(def)
   end
 
 
-  function load_it(name)
-    create_it(name)
+  function load_it()
+    create_it()
 
     -- load the map structures into memory
-    gui.wadfab_load(name)
+    gui.wadfab_load(def.file)
+
     for thing_idx = 0,999 do
       local E = gui.wadfab_get_thing(thing_idx)
 
@@ -1384,18 +1384,15 @@ function Fab_load_wad(def)
 
   ---| Fab_load_wad |---
 
-  local name = def.file
-
-  -- see if already loaded
   if not GAME.cached_wads then
     GAME.cached_wads = {}
   end
 
-  if not GAME.cached_wads[name] then
-    GAME.cached_wads[name] = load_it(name)
+  if not GAME.cached_wads[def] then
+    GAME.cached_wads[def] = load_it()
   end
-  
-  local orig = GAME.cached_wads[name]
+
+  local orig = GAME.cached_wads[def]
   assert(orig)
 
   return table.deep_copy(orig)
@@ -1727,7 +1724,7 @@ function Fab_render_sky(fab, room, T)
       error("Prefab with add_sky used without any room")
     end
 
-    if not R.sky_group then
+    if not room.sky_group then
       error("Prefab with add_sky used in indoor room : " .. tostring(fab.name))
     end
 
@@ -1735,13 +1732,13 @@ function Fab_render_sky(fab, room, T)
       error("Prefab with add_sky used in loose transform")
     end
 
-    Trans.sky_quad(T.bbox.x1, T.bbox.y1, T.bbox.x2, T.bbox.y2, R.sky_group.h)
+    Trans.sky_quad(T.bbox.x1, T.bbox.y1, T.bbox.x2, T.bbox.y2, room.sky_group.h)
   end
 end
 
 
 
-function Fabricate(R, def, T, skins)
+function Fabricate(room, def, T, skins)
   if not def.file then
     error("Old-style prefab skin used")
   end
@@ -1752,7 +1749,7 @@ function Fabricate(R, def, T, skins)
 
   Fab_bound_it(fab)
 
-  local skin = Fab_merge_skins(fab, R, skins)
+  local skin = Fab_merge_skins(fab, room, skins)
 
   Fab_substitutions(fab, skin)
   Fab_replacements (fab, skin)
@@ -1763,10 +1760,10 @@ function Fabricate(R, def, T, skins)
   Fab_transform_Z (fab, T)
 
   Fab_render(fab)
-  Fab_render_sky(fab, R, T)
+  Fab_render_sky(fab, room, T)
 
-  if R then
-    Room_distribute_spots(R, Fab_read_spots(fab))
+  if room then
+    Room_distribute_spots(room, Fab_read_spots(fab))
   end
 end
 
