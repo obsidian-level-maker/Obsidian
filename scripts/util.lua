@@ -508,8 +508,13 @@ function rand.int(val)
   return math.floor(val + gui.random())
 end
 
-function rand.skew()
-  return gui.random() - gui.random()
+function rand.skew(mid, dist)
+  if not mid  then mid  = 0 end
+  if not dist then dist = 1 end
+
+  local raw = gui.random() - gui.random()
+
+  return mid + raw * dist
 end
 
 function rand.dir()
