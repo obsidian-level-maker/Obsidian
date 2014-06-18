@@ -2,7 +2,7 @@
 -- Firewall picture
 --
 
-DOOM.SKINS.Pic_firewall =
+PREFABS.Pic_firewall =
 {
   file   = "wall/firewall.wad"
   where  = "edge"

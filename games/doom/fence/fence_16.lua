@@ -2,7 +2,7 @@
 -- Plain fence
 --
 
-DOOM.SKINS.Fence_plain =
+PREFABS.Fence_plain =
 {
   file   = "fence/fence_16.wad"
   where  = "edge"

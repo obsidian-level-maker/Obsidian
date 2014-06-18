@@ -2,7 +2,7 @@
 -- Secret outdoor fence
 --
 
-DOOM.SKINS.Fence_secret =
+PREFABS.Fence_secret =
 {
   file   = "fence/secr_fence.wad"
   where  = "edge"

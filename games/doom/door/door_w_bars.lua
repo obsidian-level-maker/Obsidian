@@ -2,7 +2,7 @@
 -- Door with lowering bars (remote activated)
 --
 
-DOOM.SKINS.Door_with_bars =
+PREFABS.Door_with_bars =
 {
   file   = "door/door_w_bars.wad"
   where  = "edge"

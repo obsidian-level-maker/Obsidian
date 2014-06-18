@@ -2,7 +2,7 @@
 -- Archway with an actual arch
 --
 
-DOOM.SKINS.Arch_archy =
+PREFABS.Arch_archy =
 {
   file   = "door/archy_arch.wad"
   where  = "edge"

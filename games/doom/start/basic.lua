@@ -2,7 +2,7 @@
 -- Start pedestal
 --
 
-DOOM.SKINS.Start_basic =
+PREFABS.Start_basic =
 {
   file   = "start/basic.wad"
   where  = "middle"

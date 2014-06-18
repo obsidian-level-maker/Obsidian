@@ -2,7 +2,7 @@
 -- Low door with techy texture
 --
 
-DOOM.SKINS.Door_techy =
+PREFABS.Door_techy =
 {
   file   = "door/techy.wad"
   where  = "edge"

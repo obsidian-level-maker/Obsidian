@@ -2,7 +2,7 @@
 -- Wolfenstein doors
 --
 
-DOOM.SKINS.Door_wolf =
+PREFABS.Door_wolf =
 {
   file   = "door/wolfen.wad"
   where  = "edge"

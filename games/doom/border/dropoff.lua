@@ -2,7 +2,7 @@
 -- Drop-off border prefabs
 --
 
-DOOM.SKINS.Border_dropoff_c =
+PREFABS.Border_dropoff_c =
 {
   file   = "border/dropoff_c2.wad"
   group  = "border_dropoff"
@@ -19,7 +19,7 @@ DOOM.SKINS.Border_dropoff_c =
 }
 
 
-DOOM.SKINS.Border_dropoff_t =
+PREFABS.Border_dropoff_t =
 {
   file   = "border/dropoff_t.wad"
   group  = "border_dropoff"
@@ -32,7 +32,7 @@ DOOM.SKINS.Border_dropoff_t =
 }
 
 
-DOOM.SKINS.Border_dropoff_start =
+PREFABS.Border_dropoff_start =
 {
   file   = "border/dropoff_start.wad"
   group  = "border_dropoff"
@@ -49,7 +49,7 @@ DOOM.SKINS.Border_dropoff_start =
 }
 
 
-DOOM.SKINS.Border_dropoff_exit =
+PREFABS.Border_dropoff_exit =
 {
   file   = "border/dropoff_exit.wad"
   group  = "border_dropoff"
@@ -66,7 +66,7 @@ DOOM.SKINS.Border_dropoff_exit =
 }
 
 
-DOOM.SKINS.Border_dropoff_item =
+PREFABS.Border_dropoff_item =
 {
   file   = "border/dropoff_item.wad"
   group  = "border_dropoff"
@@ -87,7 +87,7 @@ DOOM.SKINS.Border_dropoff_item =
 -- Group information
 --
 
-DOOM.GROUPS.border_dropoff =
+GROUPS.border_dropoff =
 {
   kind = "border"
 

@@ -2,7 +2,7 @@
 -- Teleporter closet
 --
 
-DOOM.SKINS.Teleporter_Closet2 =
+PREFABS.Teleporter_Closet2 =
 {
   file  = "teleporter/closet2.wad"
   where = "closet"

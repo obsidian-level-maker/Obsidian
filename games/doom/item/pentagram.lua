@@ -2,7 +2,7 @@
 -- Hellish pentagram
 --
 
-DOOM.SKINS.Item_pentagram =
+PREFABS.Item_pentagram =
 {
   file  = "item/pentagram.wad"
   where = "middle"

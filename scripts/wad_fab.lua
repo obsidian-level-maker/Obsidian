@@ -587,7 +587,7 @@ function Fab_composition(parent, parent_skin)
       table.remove(parent.brushes, index)
 
       local child_name = assert(B[1].skin)
-      local child_skin = GAME.SKINS[child_name]
+      local child_skin = PREFABS[child_name]
       local child_dir  = B[1].dir or 2
 
       if not child_skin then
@@ -1372,29 +1372,27 @@ end
 
 
 
-function Fab_bound_it(fab, skin)
-  -- the skin can directly override the prefab bounding box.
+function Fab_bound_it(fab, def)
+  -- the definition can directly override the prefab bounding box.
   -- this can be used to supply brushes outside of the normally
   -- occupied space.
 
-  if skin.bound_x1 then fab.bbox.x1 = skin.bound_x1 end
-  if skin.bound_x2 then fab.bbox.x2 = skin.bound_x2 end
+  if def.bound_x1 then fab.bbox.x1 = def.bound_x1 end
+  if def.bound_x2 then fab.bbox.x2 = def.bound_x2 end
 
-  if skin.bound_y1 then fab.bbox.y1 = skin.bound_y1 end
-  if skin.bound_y2 then fab.bbox.y2 = skin.bound_y2 end
+  if def.bound_y1 then fab.bbox.y1 = def.bound_y1 end
+  if def.bound_y2 then fab.bbox.y2 = def.bound_y2 end
 
-  if skin.bound_z1 then fab.bbox.z1 = skin.bound_z1 end
-  if skin.bound_z2 then fab.bbox.z2 = skin.bound_z2 end
+  if def.bound_z1 then fab.bbox.z1 = def.bound_z1 end
+  if def.bound_z2 then fab.bbox.z2 = def.bound_z2 end
 
-  -- for lifts, we pretend the bbox only extends vertically to the
-  -- high floor height.  In combination with a reduced T.fitted_z
-  -- (only target_h - source_h), this will expand the lift correctly.
-  --
-  -- TODO: perhaps a cleaner (more general) solution
 
-  if skin.shape == "lift" then
-    fab.bbox.z2 = LIFT_H
-    assert(skin.z_fit == "top")
+  if fab.bbox.x1 and fab.bbox.x2 then
+    fab.bbox.dx = fab.bbox.x2 - fab.bbox.x1
+  end
+
+  if fab.bbox.y1 and fab.bbox.y2 then
+    fab.bbox.dy = fab.bbox.y2 - fab.bbox.y1
   end
 
   if fab.bbox.z1 and fab.bbox.z2 then
@@ -1688,27 +1686,29 @@ end
 
 
 
-function Fabricate(main_skin, T, skins)
-  if not main_skin.file then
+function Fabricate(def, T, skins)
+  if not def.file then
     error("Old-style prefab skin used")
   end
 
-  gui.debugf("=========  FABRICATE %s\n", main_skin.file)
+  gui.debugf("=========  FABRICATE %s\n", def.file)
 
-  local fab = Fab_load_wad(main_skin.file)
+  local fab = Fab_load_wad(def.file)
 
-  Fab_bound_it(fab, main_skin)
+  fab.def = def
 
-  local skin = Fab_merge_skins(fab, main_skin, skins)
+  Fab_bound_it(fab, def)
+
+  local skin = Fab_merge_skins(fab, def, skins)
 
   Fab_substitutions(fab, skin)
   Fab_replacements(fab, skin)
 
   fab.state  = "skinned"
 
-  fab.x_fit = main_skin.x_fit
-  fab.y_fit = main_skin.y_fit
-  fab.z_fit = main_skin.z_fit
+  fab.x_fit = def.x_fit
+  fab.y_fit = def.y_fit
+  fab.z_fit = def.z_fit
 
   Fab_transform_XY(fab, T)
   Fab_transform_Z (fab, T)
@@ -1719,16 +1719,16 @@ function Fabricate(main_skin, T, skins)
 end
 
 
-function Fabricate_at(R, main_skin, T, skins)
-  local fab = Fabricate(main_skin, T, skins)
+function Fabricate_at(R, def, T, skins)
+  local fab = Fabricate(def, T, skins)
 
   if R then
     Room_distribute_spots(R, Fab_read_spots(fab))
   end
 
-  if main_skin.add_sky then
+  if def.add_sky then
     if not R.sky_group then
-      error("Prefab with add_sky used in indoor room : " .. tostring(main_skin.name))
+      error("Prefab with add_sky used in indoor room : " .. tostring(def.name))
     end
 
     if not T.bbox then

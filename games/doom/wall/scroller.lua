@@ -5,7 +5,7 @@
 
 ----| TECH |-----
 
-DOOM.SKINS.Pic_tekwall1 =
+PREFABS.Pic_tekwall1 =
 {
   file   = "wall/scroller.wad"
   where  = "edge"
@@ -26,7 +26,7 @@ DOOM.SKINS.Pic_tekwall1 =
 }
 
 
-DOOM.SKINS.Pic_tekwall4 =
+PREFABS.Pic_tekwall4 =
 {
   file   = "wall/scroller.wad"
   where  = "edge"
@@ -49,7 +49,7 @@ DOOM.SKINS.Pic_tekwall4 =
 
 ----| HELL |-----
 
-DOOM.SKINS.Pic_scroll_spine =
+PREFABS.Pic_scroll_spine =
 {
   file   = "wall/scroller.wad"
   where  = "edge"
@@ -68,7 +68,7 @@ DOOM.SKINS.Pic_scroll_spine =
 }
 
 
-DOOM.SKINS.Pic_scroll_face =
+PREFABS.Pic_scroll_face =
 {
   file   = "wall/scroller.wad"
   where  = "edge"

@@ -2,7 +2,7 @@
 -- Archway with stair
 --
 
-DOOM.SKINS.Arch_stair =
+PREFABS.Arch_stair =
 {
   file   = "door/arch_stair.wad"
   where  = "edge"

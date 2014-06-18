@@ -4,7 +4,7 @@
 
 ---- TECH ----
 
-DOOM.SKINS.Pic_computer1 =
+PREFABS.Pic_computer1 =
 {
   file   = "wall/pic_128x48.wad"
   where  = "edge"

@@ -2,7 +2,7 @@
 -- Bridge (jump over) with curves
 --
 
-DOOM.SKINS.Bridge_curvey =
+PREFABS.Bridge_curvey =
 {
   file   = "bridge/curvey.wad"
 

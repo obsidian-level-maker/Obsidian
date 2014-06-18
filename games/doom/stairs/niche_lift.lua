@@ -2,7 +2,7 @@
 -- Lift : niche style
 --
 
-DOOM.SKINS.Lift_niche =
+PREFABS.Lift_niche =
 {
   file   = "stairs/niche_lift.wad"
   where  = "chunk"

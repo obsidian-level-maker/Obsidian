@@ -2,7 +2,7 @@
 --  Basic item pedestal
 --
 
-DOOM.SKINS.Item_pedestal =
+PREFABS.Item_pedestal =
 {
   file  = "item/pedestal.wad"
   where = "middle"

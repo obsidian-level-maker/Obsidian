@@ -1685,7 +1685,7 @@ function Room_border_up()
   local function collect_usable_pictures(z_space, kind)
     local tab = {}
 
-    each name,info in GAME.SKINS do
+    each name,info in PREFABS do
       if (kind == "logo" and string.match(name, "^Logo_")) or
          (kind != "logo" and string.match(name, "^Pic_"))
       then
@@ -1736,7 +1736,7 @@ function Room_border_up()
 
 
   local function install_pic(R, bd, pic_name, z_space)
-    local skin = assert(GAME.SKINS[pic_name])
+    local skin = assert(PREFABS[pic_name])
 
     -- handles symmetry
 
@@ -2873,7 +2873,7 @@ function Room_build_seeds(R)
       fab_name = "Item_podium"
     end
 
-    local skin1 = GAME.SKINS[fab_name]
+    local skin1 = PREFABS[fab_name]
     assert(skin1)
 
     local skin0 = { wall=R.main_tex }
@@ -2886,7 +2886,7 @@ function Room_build_seeds(R)
 
 
   local function content_start_pad(mx, my, z, dir)
-    local skin1 = GAME.SKINS["Start_basic"]
+    local skin1 = PREFABS["Start_basic"]
     assert(skin1)
 
     local skin0 = { wall=R.main_tex }
@@ -3081,7 +3081,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     local C = R.teleport_conn
     assert(C)
 
-    local skin1 = GAME.SKINS["Teleporter1"]
+    local skin1 = PREFABS["Teleporter1"]
     assert(skin1)
 
     local skin0 = { wall = R.main_tex }
@@ -3109,7 +3109,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
 
   local function do_wall(S, side, w_tex)
-    local skin1 = GAME.SKINS["Wall_plain"]
+    local skin1 = PREFABS["Wall_plain"]
     assert(skin1)
 
     local skin0 = { wall=w_tex }
@@ -3129,7 +3129,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
       return
     end
 
-    local skin1 = GAME.SKINS["Wall_liquid_fall"]
+    local skin1 = PREFABS["Wall_liquid_fall"]
     assert(skin1)
 
     local skin0 = { wall=w_tex }
@@ -3156,7 +3156,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
       fab_name = fab_name .. "_tall"
     end
 
-    local skin1 = GAME.SKINS[fab_name]
+    local skin1 = PREFABS[fab_name]
     assert(skin1)
 
     local o_tex = outer_tex(S, side, w_tex)
@@ -3195,7 +3195,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
 
 
   local function do_fat_cage(S, w_tex)
-    local skin1 = GAME.SKINS["Cage_fat"]
+    local skin1 = PREFABS["Cage_fat"]
     assert(skin1)
 
     local skin0 = { wall=w_tex }
@@ -3226,7 +3226,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
        fab_name = "Arch_archy"
     end
 
-    local skin1 = GAME.SKINS[fab_name]
+    local skin1 = PREFABS[fab_name]
     assert(skin1)
 
     local o_tex = outer_tex(S, side, w_tex)
@@ -3268,7 +3268,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
       fab_name = "Door_large"
     end
 
-    local skin1 = GAME.SKINS[fab_name]
+    local skin1 = PREFABS[fab_name]
     assert(skin1)
 
     local o_tex = outer_tex(S, side, w_tex)
@@ -3296,7 +3296,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     -- FIXME : find it properly
     local fab_name = "Locked_" .. LOCK.item
 
-    local skin1 = GAME.SKINS[fab_name]
+    local skin1 = PREFABS[fab_name]
     assert(skin1)
 
     local o_tex = outer_tex(S, side, w_tex)
@@ -3325,7 +3325,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     -- FIXME : find it properly
     local fab_name = "Door_with_bars" --!!!! Door_SW_blue
 
-    local skin1 = GAME.SKINS[fab_name]
+    local skin1 = PREFABS[fab_name]
     assert(skin1)
 
     local o_tex = outer_tex(S, side, w_tex)
@@ -3416,7 +3416,7 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
       w_tex = LEVEL.fence_mat or w_tex
     end
 
-    local skin1 = GAME.SKINS[fab_name]
+    local skin1 = PREFABS[fab_name]
     assert(skin1)
 
     local o_tex = outer_tex(S, side, w_tex)
@@ -3444,7 +3444,7 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
 
     local fab_name = "Bars_shiny"
 
-    local skin1 = GAME.SKINS[fab_name]
+    local skin1 = PREFABS[fab_name]
     assert(skin1)
 
     local o_tex = outer_tex(S, side, w_tex)
@@ -3470,7 +3470,7 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
 
     local fab_name = "Fence_gappy"
 
-    local skin1 = GAME.SKINS[fab_name]
+    local skin1 = PREFABS[fab_name]
     assert(skin1)
 
     local o_tex = outer_tex(S, side, w_tex)
@@ -3581,7 +3581,7 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
       error("no stair for floor height difference of " .. diff_z)
     end
 
-    local skin1 = GAME.SKINS[fab_name]
+    local skin1 = PREFABS[fab_name]
     assert(skin1)
 
     local skin0 = { wall=w_tex, floor=high_tex }
@@ -3601,7 +3601,7 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
 
 
   local function do_small_bridge(S)
-    local skin1 = GAME.SKINS["Bridge_curvey"]
+    local skin1 = PREFABS["Bridge_curvey"]
     assert(skin1)
 
     local skin0 = { floor=S.bridge_tex, wall=R.main_tex }

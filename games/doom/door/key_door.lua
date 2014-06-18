@@ -2,7 +2,7 @@
 -- Keyed doors
 --
 
-DOOM.SKINS.Locked_kc_blue =
+PREFABS.Locked_kc_blue =
 {
   file   = "door/key_door.wad"
   where  = "edge"
@@ -18,7 +18,7 @@ DOOM.SKINS.Locked_kc_blue =
 }
 
 
-DOOM.SKINS.Locked_kc_yellow =
+PREFABS.Locked_kc_yellow =
 {
   file   = "door/key_door.wad"
   where  = "edge"
@@ -34,7 +34,7 @@ DOOM.SKINS.Locked_kc_yellow =
 }
 
 
-DOOM.SKINS.Locked_kc_red =
+PREFABS.Locked_kc_red =
 {
   file   = "door/key_door.wad"
   where  = "edge"
@@ -47,7 +47,7 @@ DOOM.SKINS.Locked_kc_red =
 }
 
 
-DOOM.SKINS.Locked_ks_blue =
+PREFABS.Locked_ks_blue =
 {
   file   = "door/key_door.wad"
   where  = "edge"
@@ -63,7 +63,7 @@ DOOM.SKINS.Locked_ks_blue =
 }
 
 
-DOOM.SKINS.Locked_ks_yellow =
+PREFABS.Locked_ks_yellow =
 {
   file   = "door/key_door.wad"
   where  = "edge"
@@ -79,7 +79,7 @@ DOOM.SKINS.Locked_ks_yellow =
 }
 
 
-DOOM.SKINS.Locked_ks_red =
+PREFABS.Locked_ks_red =
 {
   file   = "door/key_door.wad"
   where  = "edge"

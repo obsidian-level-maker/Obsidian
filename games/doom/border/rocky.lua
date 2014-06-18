@@ -2,7 +2,7 @@
 -- Rocky border prefabs
 --
 
-DOOM.SKINS.Border_rocky_c =
+PREFABS.Border_rocky_c =
 {
   file   = "border/rocky_c.wad"
   group  = "border_rocky"
@@ -14,7 +14,7 @@ DOOM.SKINS.Border_rocky_c =
 }
 
 
-DOOM.SKINS.Border_rocky_t =
+PREFABS.Border_rocky_t =
 {
   file   = "border/rocky_t.wad"
   group  = "border_rocky"
@@ -26,7 +26,7 @@ DOOM.SKINS.Border_rocky_t =
 }
 
 
-DOOM.SKINS.Border_rocky_start =
+PREFABS.Border_rocky_start =
 {
   file   = "border/rocky_start.wad"
   group  = "border_rocky"
@@ -41,7 +41,7 @@ DOOM.SKINS.Border_rocky_start =
 }
 
 
-DOOM.SKINS.Border_rocky_exit =
+PREFABS.Border_rocky_exit =
 {
   file   = "border/rocky_exit.wad"
   group  = "border_rocky"
@@ -56,7 +56,7 @@ DOOM.SKINS.Border_rocky_exit =
 }
 
 
-DOOM.SKINS.Border_rocky_item =
+PREFABS.Border_rocky_item =
 {
   file   = "border/rocky_item.wad"
   group  = "border_rocky"
@@ -75,7 +75,7 @@ DOOM.SKINS.Border_rocky_item =
 -- Group information
 --
 
-DOOM.GROUPS.border_rocky =
+GROUPS.border_rocky =
 {
   kind = "border"
 }

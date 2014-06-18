@@ -2,7 +2,7 @@
 -- Logo pictures
 --
 
-DOOM.SKINS.Logo_Carve =
+PREFABS.Logo_Carve =
 {
   file   = "wall/pic_64x64.wad"
   where  = "edge"
@@ -20,7 +20,7 @@ DOOM.SKINS.Logo_Carve =
 }
 
 
-DOOM.SKINS.Logo_Pill =
+PREFABS.Logo_Pill =
 {
   file   = "wall/pic_128x32.wad"
   where  = "edge"
@@ -38,7 +38,7 @@ DOOM.SKINS.Logo_Pill =
 }
 
 
-DOOM.SKINS.Logo_Neon =
+PREFABS.Logo_Neon =
 {
   file   = "wall/pic_128x128.wad"
   where  = "edge"

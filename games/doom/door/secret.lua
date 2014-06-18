@@ -2,7 +2,7 @@
 -- Secret door
 --
 
-DOOM.SKINS.Door_secret =
+PREFABS.Door_secret =
 {
   file   = "door/secret.wad"
   where  = "edge"

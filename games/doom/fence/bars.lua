@@ -2,7 +2,7 @@
 -- Lowering bars  (for outdoor locks)
 --
 
-DOOM.SKINS.Bars_shiny =
+PREFABS.Bars_shiny =
 {
   file   = "fence/bars.wad"
   where  = "edge"

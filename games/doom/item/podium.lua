@@ -2,7 +2,7 @@
 -- Small podium
 --
 
-DOOM.SKINS.Item_podium =
+PREFABS.Item_podium =
 {
   file  = "item/podium.wad"
   where = "middle"

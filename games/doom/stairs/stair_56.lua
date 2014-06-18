@@ -2,7 +2,7 @@
 -- Stair : outie style, 56 units high
 --
 
-DOOM.SKINS.Stair_outie_56 =
+PREFABS.Stair_outie_56 =
 {
   file   = "stairs/stair_56.wad"
   where  = "chunk"

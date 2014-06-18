@@ -2,7 +2,7 @@
 -- Window, wide but vertically short
 --
 
-DOOM.SKINS.Window_wide =
+PREFABS.Window_wide =
 {
   file   = "window/wide.wad"
   where  = "edge"
@@ -21,7 +21,7 @@ DOOM.SKINS.Window_wide =
 -- Tall version (expands vertically)
 --
 
-DOOM.SKINS.Window_wide_tall =
+PREFABS.Window_wide_tall =
 {
   file   = "window/wide.wad"
   where  = "edge"

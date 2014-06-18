@@ -2,7 +2,7 @@
 -- Narrow wooden bridge
 --
 
-DOOM.SKINS.Bridge_narrow =
+PREFABS.Bridge_narrow =
 {
   file   = "bridge/narrow.wad"
 

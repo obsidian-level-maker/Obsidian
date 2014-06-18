@@ -2,7 +2,7 @@
 -- Window with two narrow holes
 --
 
-DOOM.SKINS.Window_double =
+PREFABS.Window_double =
 {
   file   = "window/double.wad"
   where  = "edge"
@@ -21,7 +21,7 @@ DOOM.SKINS.Window_double =
 -- Tall version (expands vertically)
 --
 
-DOOM.SKINS.Window_double_tall =
+PREFABS.Window_double_tall =
 {
   file   = "window/double.wad"
   where  = "edge"

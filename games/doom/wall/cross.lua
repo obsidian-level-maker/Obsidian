@@ -2,7 +2,7 @@
 -- Wall with hellish cross
 --
 
-DOOM.SKINS.Pic_cross =
+PREFABS.Pic_cross =
 {
   file   = "wall/cross.wad"
   where  = "edge"

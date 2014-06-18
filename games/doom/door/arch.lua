@@ -2,7 +2,7 @@
 -- Archway
 --
 
-DOOM.SKINS.Arch_plain =
+PREFABS.Arch_plain =
 {
   file   = "door/arch.wad"
   where  = "edge"

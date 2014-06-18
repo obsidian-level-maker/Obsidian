@@ -2,7 +2,7 @@
 -- Large door (128x120 units)
 --
 
-DOOM.SKINS.Door_large =
+PREFABS.Door_large =
 {
   file   = "door/large.wad"
   where  = "edge"

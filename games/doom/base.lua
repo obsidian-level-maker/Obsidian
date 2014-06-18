@@ -29,24 +29,11 @@ PLUTONIA = { }
 FREEDOOM = { }
 
 
--- skin tables
-DOOM .SKINS = { }
-DOOM1.SKINS = { }
-DOOM2.SKINS = { }
+-- prefab stuff
 
-TNT.SKINS      = { }
-PLUTONIA.SKINS = { }
-FREEDOOM.SKINS = { }
+PREFABS = {}
 
-
--- group tables
-DOOM .GROUPS = { }
-DOOM1.GROUPS = { }
-DOOM2.GROUPS = { }
-
-TNT.GROUPS      = { }
-PLUTONIA.GROUPS = { }
-FREEDOOM.GROUPS = { }
+GROUPS = {}
 
 
 ------------------------------------------------------------

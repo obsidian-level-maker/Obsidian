@@ -2,7 +2,7 @@
 -- Fence with two narrow gaps
 --
 
-DOOM.SKINS.Fence_tall_gap =
+PREFABS.Fence_tall_gap =
 {
   file   = "fence/tall_gap.wad"
   where  = "edge"

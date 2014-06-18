@@ -2,7 +2,7 @@
 -- Window, narrow and short
 --
 
-DOOM.SKINS.Window_narrow =
+PREFABS.Window_narrow =
 {
   file   = "window/narrow.wad"
   where  = "edge"
@@ -21,7 +21,7 @@ DOOM.SKINS.Window_narrow =
 -- Tall version (expands vertically)
 --
 
-DOOM.SKINS.Window_narrow_tall =
+PREFABS.Window_narrow_tall =
 {
   file   = "window/narrow.wad"
   where  = "edge"

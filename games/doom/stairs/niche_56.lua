@@ -2,7 +2,7 @@
 -- Stair : niche style, 56 units high
 --
 
-DOOM.SKINS.Stair_niche_56 =
+PREFABS.Stair_niche_56 =
 {
   file   = "stairs/niche_56.wad"
   where  = "chunk"

@@ -2,7 +2,7 @@
 -- Pair of 64x64 pictures
 --
 
-DOOM.SKINS.Pic_waste1 =
+PREFABS.Pic_waste1 =
 {
   file   = "wall/double_64.wad"
   where  = "edge"

@@ -2,7 +2,7 @@
 -- Wall with a nukage/lava/water fall
 --
 
-DOOM.SKINS.Wall_liquid_fall =
+PREFABS.Wall_liquid_fall =
 {
   file   = "wall/liq_fall.wad"
   where  = "edge"

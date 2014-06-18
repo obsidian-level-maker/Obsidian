@@ -4,7 +4,7 @@
 
 ----| TECH |-----
 
-DOOM.SKINS.Pic_silver3 =
+PREFABS.Pic_silver3 =
 {
   file   = "wall/pic_128x128.wad"
   where  = "edge"
@@ -26,7 +26,7 @@ DOOM.SKINS.Pic_silver3 =
 }
 
 
-DOOM.SKINS.Pic_UAC =
+PREFABS.Pic_UAC =
 {
   file   = "wall/pic_128x128.wad"
   where  = "edge"
@@ -49,7 +49,7 @@ DOOM.SKINS.Pic_UAC =
 
 ----| URBAN |-----
 
-DOOM.SKINS.Pic_marbface =
+PREFABS.Pic_marbface =
 {
   file   = "wall/pic_128x128.wad"
   where  = "edge"
@@ -70,7 +70,7 @@ DOOM.SKINS.Pic_marbface =
 }
 
 
-DOOM.SKINS.Pic_adolf =
+PREFABS.Pic_adolf =
 {
   file   = "wall/pic_128x128.wad"
   where  = "edge"
@@ -89,7 +89,7 @@ DOOM.SKINS.Pic_adolf =
 }
 
 
-DOOM.SKINS.Pic_eagle =
+PREFABS.Pic_eagle =
 {
   file   = "wall/pic_128x128.wad"
   where  = "edge"
@@ -110,7 +110,7 @@ DOOM.SKINS.Pic_eagle =
 }
 
 
-DOOM.SKINS.Pic_eagle2 =
+PREFABS.Pic_eagle2 =
 {
   file   = "wall/pic_128x128.wad"
   where  = "edge"
@@ -131,7 +131,7 @@ DOOM.SKINS.Pic_eagle2 =
 }
 
 
-DOOM.SKINS.Pic_wreath =
+PREFABS.Pic_wreath =
 {
   file   = "wall/pic_128x128.wad"
   where  = "edge"
@@ -152,7 +152,7 @@ DOOM.SKINS.Pic_wreath =
 }
 
 
-DOOM.SKINS.Pic_sky2 =
+PREFABS.Pic_sky2 =
 {
   file   = "wall/pic_128x128.wad"
   where  = "edge"
@@ -176,7 +176,7 @@ DOOM.SKINS.Pic_sky2 =
 ----| HELL |-----
 
 -- Fixme: this is same as Pic_marbface, merge later
-DOOM.SKINS.Pic_marbface_hell =
+PREFABS.Pic_marbface_hell =
 {
   file   = "wall/pic_128x128.wad"
   where  = "edge"
@@ -197,7 +197,7 @@ DOOM.SKINS.Pic_marbface_hell =
 }
 
 
-DOOM.SKINS.Pic_marbface_evil =
+PREFABS.Pic_marbface_evil =
 {
   file   = "wall/pic_128x128.wad"
   where  = "edge"
@@ -220,7 +220,7 @@ DOOM.SKINS.Pic_marbface_evil =
 
 ----| EGYPT |-----
 
-DOOM.SKINS.Pic_mural12 =
+PREFABS.Pic_mural12 =
 {
   file   = "wall/pic_128x128.wad"
   where  = "edge"

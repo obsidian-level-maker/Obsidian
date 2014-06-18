@@ -4,7 +4,7 @@
 
 ----| TECH |----
 
-DOOM.SKINS.Pic_compwerd =
+PREFABS.Pic_compwerd =
 {
   file   = "wall/pic_64x64.wad"
   where  = "edge"
@@ -25,7 +25,7 @@ DOOM.SKINS.Pic_compwerd =
 }
 
 
-DOOM.SKINS.Pic_monitor =
+PREFABS.Pic_monitor =
 {
   file   = "wall/pic_64x64.wad"
   where  = "edge"
@@ -49,7 +49,7 @@ DOOM.SKINS.Pic_monitor =
 
 ----| URBAN |----
 
-DOOM.SKINS.Pic_smallface =
+PREFABS.Pic_smallface =
 {
   file   = "wall/pic_64x64.wad"
   where  = "edge"
@@ -70,7 +70,7 @@ DOOM.SKINS.Pic_smallface =
 }
 
 
-DOOM.SKINS.Pic_bstone3 =
+PREFABS.Pic_bstone3 =
 {
   file   = "wall/pic_64x64.wad"
   where  = "edge"

@@ -2,7 +2,7 @@
 -- Lift : outie style
 --
 
-DOOM.SKINS.Lift_outie =
+PREFABS.Lift_outie =
 {
   file   = "stairs/lift.wad"
   where  = "chunk"

@@ -2,7 +2,7 @@
 -- Cavey archway with vines
 --
 
-DOOM.SKINS.Arch_viney =
+PREFABS.Arch_viney =
 {
   file   = "door/viney_arch.wad"
   where  = "edge"

@@ -2,7 +2,7 @@
 -- Archway with wooden supports
 --
 
-DOOM.SKINS.Arch_woody =
+PREFABS.Arch_woody =
 {
   file   = "door/wood_arch.wad"
   where  = "edge"

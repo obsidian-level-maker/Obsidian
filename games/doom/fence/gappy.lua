@@ -2,7 +2,7 @@
 -- Fence with a barred gap
 --
 
-DOOM.SKINS.Fence_gappy =
+PREFABS.Fence_gappy =
 {
   file   = "fence/gappy.wad"
   where  = "edge"

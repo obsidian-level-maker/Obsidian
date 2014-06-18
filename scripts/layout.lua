@@ -3629,6 +3629,8 @@ function Layout_plan_outdoor_borders()
       sy1 = y1
       sx2 = x2
       sy2 = y2
+
+      fully_joined = (L_join and R_join)
     }
 
     install_border(BORDER)
@@ -3674,7 +3676,7 @@ function Layout_plan_outdoor_borders()
 
   gui.debugf("Layout_plan_outdoor_borders...\n")
 
-  LEVEL.border_group = GAME.GROUPS["border_dropoff"]
+  LEVEL.border_group = GROUPS["border_dropoff"]
   assert(LEVEL.border_group)
 
   collect_rooms()
@@ -3702,11 +3704,11 @@ function Layout_build_outdoor_borders()
     local floor_h = assert(B.room.floor_max_h)
 
     if B.kind == "edge" then
-      local skin1 = GAME.SKINS["Border_dropoff_t"]
+      local skin1 = PREFABS["Border_dropoff_t"]
 
 --FIXME !!!!!! TEST CRUD
 if B.foobie then
-      skin1 = GAME.SKINS["Border_dropoff_start"]
+      skin1 = PREFABS["Border_dropoff_start"]
 end
       assert(skin1)
 
@@ -3715,7 +3717,7 @@ end
       Fabricate_at(B.room, skin1, T, { skin0, skin1 })
 
     elseif B.kind == "corner" then
-      local skin1 = GAME.SKINS["Border_dropoff_c"]
+      local skin1 = PREFABS["Border_dropoff_c"]
       assert(skin1)
 
       local dir = 10 - geom.LEFT_45[B.side]

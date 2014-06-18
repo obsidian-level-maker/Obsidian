@@ -2,7 +2,7 @@
 -- Teleporter pad
 --
 
-DOOM.SKINS.Teleporter1 =
+PREFABS.Teleporter1 =
 {
   file   = "teleporter/pad1.wad"
   where  = "middle"

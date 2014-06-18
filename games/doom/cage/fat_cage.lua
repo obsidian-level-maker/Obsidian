@@ -2,7 +2,7 @@
 -- Fat Cage
 --
 
-DOOM.SKINS.Cage_fat =
+PREFABS.Cage_fat =
 {
   file   = "cage/fat_cage.wad"
   where  = "void"

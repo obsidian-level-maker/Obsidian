@@ -2,7 +2,7 @@
 -- Switched doors
 --
 
-DOOM.SKINS.Door_SW_blue =
+PREFABS.Door_SW_blue =
 {
   file   = "door/sw_door.wad"
   where  = "edge"

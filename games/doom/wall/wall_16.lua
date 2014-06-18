@@ -2,7 +2,7 @@
 -- Plain wall
 --
 
-DOOM.SKINS.Wall_plain =
+PREFABS.Wall_plain =
 {
   file   = "wall/wall_16.wad"
   where  = "edge"
