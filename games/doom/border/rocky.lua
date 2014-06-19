@@ -67,6 +67,8 @@ PREFABS.Border_rocky_item =
   seed_w = 3
   seed_h = 3
 
+  height = 224
+
   add_sky = 1
 }
 

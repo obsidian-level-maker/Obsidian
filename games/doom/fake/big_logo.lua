@@ -11,6 +11,8 @@ PREFABS.Fake_big_logo =
   seed_w = 3
   seed_h = 3
 
+  x_fit = "frame"
+
   bound_z1 = 0
 
   add_sky = 1
