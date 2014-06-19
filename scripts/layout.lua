@@ -3680,7 +3680,11 @@ function Layout_plan_outdoor_borders()
 
   gui.debugf("Layout_plan_outdoor_borders...\n")
 
-  LEVEL.border_name  = "Border_dropoff"
+  if rand.odds(25) then
+    LEVEL.border_name  = "Border_dropoff"
+  else
+    LEVEL.border_name  = "Border_rocky"
+  end
 
   LEVEL.border_group = GROUPS[string.lower(LEVEL.border_name)]
   assert(LEVEL.border_group)
