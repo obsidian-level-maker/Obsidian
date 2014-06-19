@@ -1,0 +1,24 @@
+#------------------------------------------------------------------------
+#  Eureka definition for OBLIGE prefabs
+#------------------------------------------------------------------------
+
+#--- LINE SPECIALS ---
+
+linegroup o "OBLIGE"
+
+line 991 o "-- OBL: Lower Unpeg"
+
+
+#--- SECTOR SPECIALS ---
+
+sector 992 "OBL: Moving Floor"
+sector 996 "OBL: Door"
+
+
+#--- THING TYPES ---
+
+thinggroup o 8F8 "OBLIGE Mon"
+thinggroup q F8F "OBLIGE Other"
+
+thing 3004 o - 20 NULL "OBL: Monster r20"
+
