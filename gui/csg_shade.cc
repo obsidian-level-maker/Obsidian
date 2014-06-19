@@ -111,11 +111,25 @@ static void SHADE_CollectBoxes()
 			continue;
 		}
 
-fprintf(stderr, "************ got box (%d %d) .. (%d %d)\n",
-box.x1, box.y1, box.x2, box.y2);
-
 		outdoor_boxes.push_back(box);
 	}
+}
+
+
+static inline bool SHADE_IsPointOutdoor(int x, int y)
+{
+	for (unsigned int k = 0 ; k < outdoor_boxes.size() ; k++)
+	{
+		const outdoor_box_t& box = outdoor_boxes[k];
+
+		if (box.x1 <= x && x <= box.x2 &&
+			box.y1 <= y && y <= box.y2)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 
@@ -124,9 +138,6 @@ static void SHADE_CollectLights()
 	int face_count = 0;
 	int sky_count  = 0;
 	int ent_count  = 0;
-
-	cave_lights.clear();
-	outdoor_boxes.clear();
 
 	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
 	{
@@ -507,6 +518,10 @@ static bool SHADE_CanRegionSeeSun(region_c *R)
 
 	if (R->gaps.empty() || R->degenerate)
 		return false;
+	
+	// limit to outdoor areas
+	if (! SHADE_IsPointOutdoor(R->mid_x, R->mid_y))
+		return false;
 
 	// just test the middle point for smallish brushes
 	if (R->rw < 30 && R->rh < 30)
@@ -671,6 +686,9 @@ void SHADE_BlandLighting()
 void CSG_Shade()
 {
 	LogPrintf("Lighting level...\n");
+
+	cave_lights.clear();
+	outdoor_boxes.clear();
 
 	SHADE_CollectBoxes();
 	SHADE_CollectLights();
