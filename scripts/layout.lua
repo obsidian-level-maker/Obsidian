@@ -3696,57 +3696,62 @@ end
 
 function Layout_build_outdoor_borders()
 
--- TODO : build_edge()  +  build_corner()
+  local prefix = LEVEL.border_name
 
-  local function build_border(B)
--- stderrf("build %s @ [%d %d] side:%d\n", B.kind, B.sx1, B.sy1, B.side)
-    local x1 = SEEDS[B.sx1][B.sy1].x1
-    local y1 = SEEDS[B.sx1][B.sy1].y1
-    local x2 = SEEDS[B.sx2][B.sy2].x2
-    local y2 = SEEDS[B.sx2][B.sy2].y2
 
+  local function do_edge_piece(B)
     local skin1 = {}
 
+    -- TODO : proper way to find the prefabs
+    local fab_name = prefix .. "_t"
+
+    if B.content_kind == "START" then
+      fab_name = prefix .. "_start"
+
+    elseif B.content_kind == "EXIT" then
+      fab_name = prefix .. "_exit"
+      
+    elseif B.content_kind == "KEY" then
+      fab_name = prefix .. "_item"
+
+      skin1.item = B.content_item
+    end
+
+    local def = PREFABS[fab_name]
+    assert(def)
+
+    local x1, y1, x2, y2 = Seed_coord_range(B.sx1, B.sy1, B.sx2, B.sy2)
     local floor_h = assert(B.room.floor_max_h)
 
-    -- TODO : proper way to find the prefabs
-    local prefix = LEVEL.border_name
+    local T = Trans.box_transform(x1, y1, x2, y2, floor_h, 10 - B.side)
 
+    Fabricate(B.room, def, T, { skin1 })
+  end
+
+
+  local function do_corner_piece(B)
+    local fab_name = prefix .. "_c"
+
+    local def = PREFABS[fab_name]
+    assert(def)
+
+    local dir = 10 - geom.LEFT_45[B.side]
+
+    local x1, y1, x2, y2 = Seed_coord_range(B.sx1, B.sy1, B.sx2, B.sy2)
+    local floor_h = assert(B.room.floor_max_h)
+
+    local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
+
+    Fabricate(B.room, def, T, { })
+  end
+
+
+  local function build_border(B)
     if B.kind == "edge" then
-      local fab_name = prefix .. "_t"
-
-      if B.content_kind == "START" then
-        fab_name = prefix .. "_start"
-
-      elseif B.content_kind == "EXIT" then
-        fab_name = prefix .. "_exit"
-        
-      elseif B.content_kind == "KEY" then
-        fab_name = prefix .. "_item"
-
-        skin1.item = B.content_item
-      end
-
-
-      local def = PREFABS[fab_name]
-      assert(def)
-
-      local T = Trans.box_transform(x1, y1, x2, y2, floor_h, 10 - B.side)
-
-      Fabricate(B.room, def, T, { skin1 })
+      do_edge_piece(B)
 
     elseif B.kind == "corner" then
-
-      local fab_name = prefix .. "_c"
-
-      local def = PREFABS[fab_name]
-      assert(def)
-
-      local dir = 10 - geom.LEFT_45[B.side]
-
-      local T = Trans.box_transform(x1, y1, x2, y2, floor_h, dir)
-
-      Fabricate(B.room, def, T, { skin0 })
+      do_corner_piece(B)
     end
   end
 
@@ -3885,7 +3890,10 @@ stderrf("  Entry dist: %1.2f\n", B.entry_dist)
     each goal in R.goals do
       if goal.kind != kind then continue end
 
-      -- found it
+      if goal.closet then continue end
+
+      -- found it --
+
       local S = assert(goal.S)
 
       -- FIXME : check distance, if border is much closer then do not use it

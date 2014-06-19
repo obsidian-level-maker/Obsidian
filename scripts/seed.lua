@@ -265,6 +265,17 @@ function Seed_block_valid_and_free(x1,y1, x2,y2)
 end
 
 
+function Seed_coord_range(sx1, sy1, sx2, sy2)
+  assert(Seed_valid(sx1, sy1))
+  assert(Seed_valid(sx2, sy2))
+
+  local S1 = SEEDS[sx1][sy1]
+  local S2 = SEEDS[sx2][sy2]
+
+  return S1.x1, S1.y1, S2.x2, S2.y2
+end
+
+
 function Seed_from_coord(x, y)
   local sx = 1 + math.floor((x - BASE_X) / SEED_SIZE)
   local sy = 1 + math.floor((y - BASE_Y) / SEED_SIZE)

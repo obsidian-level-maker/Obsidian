@@ -3080,8 +3080,6 @@ function Cave_outdoor_borders()
     end
     end
 
-stderrf("outdoor range: (%2d %2d) .. (%2d %2d)\n", sx1, sy1, sx2, sy2)
-
     local S1 = SEEDS[sx1][sy1]
     local S2 = SEEDS[sx2][sy2]
 
