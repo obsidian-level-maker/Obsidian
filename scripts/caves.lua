@@ -3085,12 +3085,20 @@ stderrf("outdoor range: (%2d %2d) .. (%2d %2d)\n", sx1, sy1, sx2, sy2)
     local S1 = SEEDS[sx1][sy1]
     local S2 = SEEDS[sx2][sy2]
 
-    local brush = brushlib.quad(S1.x1, S1.y1, S2.x2, S2.y2)
+    local ent =
+    {
+      id = "box"
+      
+      box_type = "outdoor"
 
-    table.insert(brush, 1, { m="outdoor" })
+      x1 = S1.x1
+      y1 = S1.y1
+      x2 = S2.x2
+      y2 = S2.y2
+    }
 
     -- send it directly to the CSG [ no exporting to .map ]
-    -- gui.add_brush(brush)
+    gui.add_entity(ent)
   end
 
 

@@ -2779,8 +2779,9 @@ static void DM_AddThing_FraggleScript(int x, int y, int z, csg_entity_c *E,
 
 static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E)
 {
-	// ignore light entities
-	if (strcmp(E->id.c_str(), "light") == 0)
+	// ignore light entities and boxes
+	if (strcmp(E->id.c_str(), "light") == 0 ||
+		strcmp(E->id.c_str(), "box") == 0)
 		return;
 
 	int type = atoi(E->id.c_str());

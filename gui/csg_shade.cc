@@ -72,7 +72,51 @@ int sky_shade;
 static int current_region_group;
 
 
+struct outdoor_box_t
+{
+	int x1, y1, x2, y2;
+};
+
+
 static std::vector< csg_entity_c *> cave_lights;
+
+static std::vector< outdoor_box_t > outdoor_boxes;
+
+
+static void SHADE_CollectBoxes()
+{
+	outdoor_box_t box;
+
+	for (unsigned int i = 0 ; i < all_entities.size() ; i++)
+	{
+		csg_entity_c *E = all_entities[i];
+
+		if (strcmp(E->id.c_str(), "box") != 0)
+			continue;
+
+		const char *box_type = E->props.getStr("box_type", "");
+
+		if (strcmp(box_type, "outdoor") != 0)
+			continue;
+
+		box.x1 = E->props.getInt("x1");
+		box.y1 = E->props.getInt("y1");
+		box.x2 = E->props.getInt("x2");
+		box.y2 = E->props.getInt("y2");
+
+		if (box.x1 >= box.x2 || box.y1 >= box.y2)
+		{
+			LogPrintf("WARNING: bad outdoor box: (%d %d) .. (%d %d)\n",
+					  box.x1, box.y1, box.x2, box.y2);
+			continue;
+		}
+
+fprintf(stderr, "************ got box (%d %d) .. (%d %d)\n",
+box.x1, box.y1, box.x2, box.y2);
+
+		outdoor_boxes.push_back(box);
+	}
+}
 
 
 static void SHADE_CollectLights()
@@ -82,6 +126,7 @@ static void SHADE_CollectLights()
 	int ent_count  = 0;
 
 	cave_lights.clear();
+	outdoor_boxes.clear();
 
 	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
 	{
@@ -627,12 +672,14 @@ void CSG_Shade()
 {
 	LogPrintf("Lighting level...\n");
 
+	SHADE_CollectBoxes();
 	SHADE_CollectLights();
 	SHADE_GroupRegions();
 	SHADE_BlandLighting();
 	SHADE_MergeResults();
 
 	cave_lights.clear();
+	outdoor_boxes.clear();
 }
 
 //--- editor settings ---
