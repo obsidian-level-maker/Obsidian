@@ -35,7 +35,9 @@ GLOBAL_SKIN_DEFAULTS =
 
   tag = ""
   special = ""
+  item = ""
   light = ""
+
   style = ""
   message = ""
   wait = ""
@@ -232,7 +234,7 @@ function Fab_apply_substitute(value, SKIN)
   -- recursive substitution is handled by caller
   if is_subst(value) then
     if op then
-      error("subst operator fail on recursive var: " .. var_name)
+      error("subst op failed on recursive var: " .. var_name)
     end
 
     return value
@@ -1532,12 +1534,18 @@ function Fab_substitutions(fab, SKIN)
 
       -- found a cyclic reference?
       if seen[value] then
-        error("Fab_substitutions: cyclic ref (" .. tostring(value) .. ")")
+        error("cyclic substitution ref: " .. tostring(value))
       end
 
       seen[value] = 1
 
-      value = Fab_apply_substitute(value, SKIN)
+      local new_val = Fab_apply_substitute(value, SKIN)
+
+      if new_val == nil then
+        error("unknown substitution ref: " .. tostring(value))
+      end
+
+      value = new_val
     end
 
     return value
@@ -1771,10 +1779,11 @@ function Fabricate(room, def, T, skins)
 
   Fab_bound_it(fab)
 
-  local skin = Fab_merge_skins(fab, room, skins)
+  local SKIN = Fab_merge_skins(fab, room, skins)
 
   Fab_collect_fields(fab)
-  Fab_substitutions(fab, skin)
+
+  Fab_substitutions(fab, SKIN)
   Fab_replacements (fab)
 
   fab.state = "skinned"
