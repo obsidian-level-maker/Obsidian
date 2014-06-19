@@ -3883,6 +3883,7 @@ stderrf("  Entry dist: %1.2f\n", B.entry_dist)
 
   local function try_replace_goal(kind, B)
     local R = B.room
+    local R_height = R.sky_group.h - R.floor_max_h
     
     if R.kind == "scenic" then return end
 
@@ -3896,6 +3897,9 @@ stderrf("  Entry dist: %1.2f\n", B.entry_dist)
 
       if goal.closet then continue end
 
+      -- FIXME : proper height check (use prefab .height)
+      if kind == "KEY" and R_height < 224 then return end
+
       -- found it --
 
       local S = assert(goal.S)
@@ -3904,7 +3908,11 @@ stderrf("  Entry dist: %1.2f\n", B.entry_dist)
       --         (not really an issue from non-key ITEMs)
 
       B.content_kind = kind
-      B.content_item = goal.S.content_item
+
+      if kind == "KEY" then
+        local LOCK = assert(B.room.purpose_lock)
+        B.content_item = assert(LOCK.item)
+      end
 
       goal.border = B
 
