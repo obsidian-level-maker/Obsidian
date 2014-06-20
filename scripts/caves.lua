@@ -1528,8 +1528,6 @@ function Cave_render_cave(R)
 
   local cave = info.cave
 
-  local cave_tex = R.main_tex
-
   local is_lake = (info.liquid_mode == "lake")
 
   -- the delta map specifies how to move each corner of the 64x64 cells
@@ -1744,9 +1742,11 @@ function Cave_render_cave(R)
   local function render_floor(x, y, A)
     local f_h = A.floor_h
 
-    local f_mat = A.floor_mat or R.floor_mat or cave_tex
+    local f_mat = A.floor_mat or R.floor_mat or R.main_tex
 
-    if A.wall then f_mat = A.wall_mat or R.main_tex or cave_tex end
+    if A.wall or A.fence then
+      f_mat = A.wall_mat or R.main_tex or R.main_tex
+    end
 
     local f_liquid = A.liquid
 
@@ -1783,7 +1783,7 @@ function Cave_render_cave(R)
   local function render_ceiling(x, y, A)
     if not A.ceil_h then return end
 
-    local c_mat = A. ceil_mat or R.ceil_mat  or cave_tex
+    local c_mat = A.ceil_mat or R.ceil_mat or R.main_tex
 
     local c_brush = Cave_brush(info, x, y)
 
@@ -2484,7 +2484,7 @@ function Cave_make_waterfalls(R)
       local cx, cy = geom.nudge(cx1, cy1, along_dir, i - 1)
 
       if attempt_a_fence_fall(cx, cy, dir) then
-stderrf("  MADE ONE !!!!!!!!\n")
+        -- yay!
         return
       end
     end

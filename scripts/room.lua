@@ -1117,22 +1117,19 @@ function Room_border_up()
 
 
   local function try_make_border(R1, S, R2, N, side)
+    local SB = S.border[side]
+
+    SB.kind = "nothing"
+
     -- solid seed?
     if S.kind == "void" then return end
 
-    local SB = S.border[side]
-
     -- same room : do nothing
-    if R1 == R2 then
-      SB.kind = "nothing"
-      return
-    end
+    if R1 == R2 then return end
 
     -- edge of map?
     if not R2 then
-      if R1.is_outdoor or R1.kind == "cave" then
-        SB.kind = "nothing"
-      else
+      if not (R1.is_outdoor or R1.kind == "cave") then
         SB.kind = "wall"
         SB.touches_edge = true
         S.thick[side] = 16
@@ -1162,6 +1159,12 @@ function Room_border_up()
         end
       end
 
+      -- however outdoor caves with low walls need to build the facades
+      -- of nearby buildings
+      if not R1.is_outdoor or R1.high_wall then
+        return
+      end
+
 ---???    elseif R1.kind == "cave" and R2.is_outdoor then
 ---???      S.border[side].kind = "nothing"
 ---???
@@ -1171,7 +1174,6 @@ function Room_border_up()
 ---???        S.border[side].kind = "cave_wall"  -- FIXME : cave_fence
 ---???      end
 
-      return
     end
 
     --- Indoor room ---
@@ -1195,7 +1197,7 @@ function Room_border_up()
     end
 
     --- Outdoor room ---
-    
+
     if R2.kind == "cave" then
       SB.kind  = "cave_wall"
       SB.w_tex = R2.main_tex
@@ -1208,11 +1210,7 @@ function Room_border_up()
         SB.cave_fence_h = R2.cave_fence_z
       end
 
-    elseif R2.is_outdoor then
-      -- this _should_ have been handled by fence code
-
-    else
-      -- building
+    elseif R2.kind == "building" then
       SB.kind = "facade"
       SB.w_tex = R2.facade
     end
@@ -1222,6 +1220,8 @@ function Room_border_up()
   local function try_make_corner(S, corner)
     local R = S.room
     local N = S:neighbor(corner)
+
+if not R then return end
 
     if R.is_outdoor or R.kind == "cave" then return end
 
@@ -1311,7 +1311,7 @@ function Room_border_up()
 
         local N_frame = (N and N.map_border and N.map_border.room)
 
-        try_make_border(S_frame or R, S, N_frame or N.room, N, side)
+        try_make_border(S_frame or R, S, N_frame or (N and N.room), N, side)
       end
 
       each corner in geom.CORNERS do
@@ -3788,7 +3788,11 @@ end
       if B_kind == "cave_wall" or B_kind == "cave_fence" then
         local narrow = (S.conn or S.content)
         Build.cave_wall(S, side, border.w_tex or w_tex, border.cave_fence_h, narrow)
-        shrink_both(side, 4)
+
+        if B_kind == "cave_wall" then
+          shrink_ceiling(side, 4)
+        end
+        shrink_floor(side, 4)
       end
 
       if B_kind == "fence" then
