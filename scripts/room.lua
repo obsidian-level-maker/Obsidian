@@ -1070,6 +1070,29 @@ function Room_border_up()
   end
 
 
+-- TODO : SUPPORT FENCE DROPPING
+--[[
+    if STYLE.fences == "none" and R1.quest == R2.quest and R2.is_outdoor and
+       (S.kind != "liquid" or S.floor_h == N.floor_h) and
+       (R2.purpose != "EXIT") and
+       not R1.teleport_conn and not R2.teleport_conn and
+       R1.theme == R2.theme
+    then
+      S.border[side].kind = "nothing"
+    end
+--]]
+
+-- TODO : LIQUID DROP-OFFS
+--[[
+      if N.kind == "liquid" and R2.is_outdoor and
+        (S.kind == "liquid" or R1.quest == R2.quest)
+        --!!! or (N.room.kind == "scenic" and safe_falloff(S, side))
+      then
+        S.border[side].kind = "nothing"
+      end
+--]]
+
+
   local function make_all_fences()
     for x = 1, SEED_W do
     for y = 1, SEED_TOP do
@@ -1086,14 +1109,17 @@ function Room_border_up()
   end
 
 
-  local function make_border(R1, S, R2, N, side)
-    -- same room : do nothing
-    if R1 == R2 then
-      S.border[side].kind = "nothing"
-      return
-    end
+  local function try_make_border(R1, S, R2, N, side)
+    -- solid seed?
+    if S.kind == "void" then return end
 
     local SB = S.border[side]
+
+    -- same room : do nothing
+    if R1 == R2 then
+      SB.kind = "nothing"
+      return
+    end
 
     -- edge of map?
     if not R2 then
@@ -1108,7 +1134,52 @@ function Room_border_up()
       return
     end
 
-    if R1.is_outdoor and R2.kind == "cave" then
+    assert(N)
+
+    --- Caves ---
+
+    if R1.kind == "cave" then
+      -- caves (both indoor and outdoor) are usually self-bounded
+      -- and only need a wall in special circumstances, e.g. when a
+      -- whole seed was cleared for a connection.
+
+      -- FIXME
+
+---???    elseif R1.kind == "cave" and R2.is_outdoor then
+---???      S.border[side].kind = "nothing"
+---???
+---???      if R1.cave_info.liquid_mode == "lake" and not
+---???         S:need_lake_fence(side)
+---???      then
+---???        S.border[side].kind = "cave_wall"  -- FIXME : cave_fence
+---???      end
+
+      return
+    end
+
+    --- Indoor room ---
+
+    if not R1.is_outdoor then
+      if R2.parent == R1 then
+        SB.kind  = "facade"
+        SB.w_tex = R2.main_tex
+      else
+        SB.kind = "wall"
+      end
+
+      S.thick[side] = 16
+
+      -- FIXME: this is a kind of picture, do it better, honor symmetry
+      if SB.kind == "wall" and S.kind == "liquid" and rand.odds(15) then
+        SB.kind = "liquid_fall"
+      end
+
+      return
+    end
+
+    --- Outdoor room ---
+    
+    if R2.kind == "cave" then
       if R2.is_outdoor and R2.cave_info.sky_mode != "high_wall" then
         S.border[side].kind = "cave_wall" --?????
       else
@@ -1117,75 +1188,14 @@ function Room_border_up()
         S.thick[side] = 48
       end
 
-    elseif R1.kind == "cave" and R2.is_outdoor then
-      S.border[side].kind = "nothing"
+    elseif R2.is_outdoor then
+      -- this _should_ have been handled by fence code
 
-      if R1.cave_info.liquid_mode == "lake" and not
-         S:need_lake_fence(side)
-      then
-        S.border[side].kind = "cave_wall"  -- FIXME : cave_fence
-      end
-
-    elseif R1.is_outdoor then
-      if R2.is_outdoor and N and N.kind == "void" then
-        S.border[side].kind = "nothing"
-        return
-      elseif R2.is_outdoor then
-        S.border[side].kind = "cave_wall"  --!!! ???
-      else
-        S.border[side].kind = "facade"
-        S.border[side].w_tex = R2.facade
-      end
-
---???      if N.kind == "liquid" and R2.is_outdoor and
---???        (S.kind == "liquid" or R1.quest == R2.quest)
---???        --!!! or (N.room.kind == "scenic" and safe_falloff(S, side))
---???      then
---???        S.border[side].kind = "nothing"
---???      end
-
-      if STYLE.fences == "none" and R1.quest == R2.quest and R2.is_outdoor and
-         (S.kind != "liquid" or S.floor_h == N.floor_h) and
-         (R2.purpose != "EXIT") and
-         not R1.teleport_conn and not R2.teleport_conn and
-         R1.theme == R2.theme
-      then
-        S.border[side].kind = "nothing"
-      end
-
-    else -- R1 indoor
-
-      S.border[side].kind = "wall"
-      S.thick[side] = 16
-
-      if R2.parent == R1 then
-        S.border[side].kind  = "facade"
-        S.border[side].w_tex = R2.main_tex
-      end
-
-      -- TODO: do this better, honor symmetry
-      if S.kind == "liquid" and S.border[side].kind == "wall"
-         and rand.odds(15)
-      then
-        S.border[side].kind = "liquid_fall"
-      end
+    else
+      -- building
+      SB.kind = "facade"
+      SB.w_tex = R2.facade
     end
-  end
-
-
-  local function try_make_border(R, S, side)
-    if S.kind == "void" then return end
-
-    if S.border[side].kind then
-      -- don't clobber connections
-      continue
-    end
-
-    local N = S:neighbor(side)
-
-    local N_frame = (N and N.map_border and N.map_border.room)
-
-    make_border(S_frame or R, S, N_frame or N.room, N, side)
   end
 
 
@@ -1257,7 +1267,7 @@ function Room_border_up()
   local function border_up(R)
     calc_fence_height(R)
 
-    -- expand bbox so we can handle border areas
+    -- expand bbox so we can handle border pieces
     -- [ mainly ones which touch a cave ]
     for x = R.sx1 - 4, R.sx2 + 4 do
     for y = R.sy1 - 4, R.sy2 + 4 do
@@ -1270,7 +1280,16 @@ function Room_border_up()
       if not (S.room == R or S_frame == R) then continue end
         
       for side = 2,8,2 do
-        try_make_border(R, S, side)
+        if S.border[side].kind then
+          -- don't clobber connections
+          continue
+        end
+
+        local N = S:neighbor(side)
+
+        local N_frame = (N and N.map_border and N.map_border.room)
+
+        try_make_border(S_frame or R, S, N_frame or N.room, N, side)
       end
 
       each corner in geom.CORNERS do
