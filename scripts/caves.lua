@@ -265,10 +265,6 @@ function Cave_generate_cave(R)
       if check_need_wall(S, dir) then
         -- merely mark it here, handled by border_up()
         S.border[dir].cave_gap = true
-
-        ---##  S.border[dir].kind = "cave_wall"
-        ---##  S.border[dir].w_tex = cave_tex
-        ---##  S.thick [dir] = 48
       end
     end
   end
@@ -1430,10 +1426,17 @@ function Cave_floor_heights(R, entry_h)
   local function update_fences()
     if info.liquid_mode == "lake" then
       info.fence.floor_h = R.floor_max_h + 96
-    end
+      info. wall.floor_h = info.fence.floor_h
 
-    if info.sky_mode == "low_wall" then
+      R.cave_fence_z = info.fence.floor_h
+    
+    elseif info.sky_mode == "low_wall" then
       info.wall.floor_h = R.floor_max_h + 80
+
+      R.cave_fence_z = info.wall.floor_h
+    
+    else
+      -- do not need a cave_fence_z
     end
   end
 
@@ -1525,7 +1528,7 @@ function Cave_render_cave(R)
 
   local cave = info.cave
 
-  local cave_tex = R.zone.cave_wall_mat or "_ERROR"
+  local cave_tex = R.main_tex
 
   local is_lake = (info.liquid_mode == "lake")
 

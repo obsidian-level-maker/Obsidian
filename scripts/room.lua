@@ -1035,22 +1035,29 @@ function Room_border_up()
       return
     end
 
-    -- we NEVER add a normal fence next to a cave
-    if R1.kind == "cave" or R2.kind == "cave" then return end
---[[
     if R1.kind == "cave" then
-      R1, R2 = R2, R1
       S,  N  = N,  S
+      SB, NB = NB, SB
+      R1, R2 = R2, R1
       side   = 10 - side
     end
-    -- nothing needed if neighbor cave has high walls
-    if R2.cave_info and R2.cave_info.sky_mode == "high_wall" then return end
---]]
+
+    -- NEVER need a fence between two caves
+    if R1.kind == "cave" then return end
+
+    -- don't add a normal fence next to a cave UNLESS the high parts
+    -- of the cave are lower than the room's highest floor (which would
+    -- allow the player to travel into the outdoor cave).
+    if R2.kind == "cave" then
+      if not R2.cave_fence_z then return end
+
+      if R2.cave_fence_z >= R1.floor_max_h + PARAM.jump_height + 4 then return end
+    end
 
     -- don't place fences in a map_border which touch the very edge
     -- of the map, purely for aesthetic reasons
 
-    if S.map_border then
+    if S.map_border and R2.kind != "cave" then
       for pass = 1,2 do
         local dir = sel(pass == 1, geom.LEFT[side], geom.RIGHT[side])
         local T = S:neighbor(dir)
@@ -1143,7 +1150,17 @@ function Room_border_up()
       -- and only need a wall in special circumstances, e.g. when a
       -- whole seed was cleared for a connection.
 
-      -- FIXME
+      if SB.cave_gap then
+        SB.kind = "cave_wall"
+        SB.w_tex = R1.main_tex
+
+        S.thick[side] = 48
+
+        if R1.is_outdoor and R1.cave_fence_z then
+          SB.kind = "cave_fence"
+          SB.cave_fence_h = R1.cave_fence_z
+        end
+      end
 
 ---???    elseif R1.kind == "cave" and R2.is_outdoor then
 ---???      S.border[side].kind = "nothing"
@@ -1180,12 +1197,15 @@ function Room_border_up()
     --- Outdoor room ---
     
     if R2.kind == "cave" then
-      if R2.is_outdoor and R2.cave_info.sky_mode != "high_wall" then
-        S.border[side].kind = "cave_wall" --?????
-      else
-        S.border[side].kind = "cave_wall"
-        S.border[side].w_tex = R2.main_tex
-        S.thick[side] = 48
+      SB.kind  = "cave_wall"
+      SB.w_tex = R2.main_tex
+
+      S.thick[side] = 48
+
+      -- see if actually need a cave fence
+      if R2.is_outdoor and R2.cave_fence_z then
+        SB.kind = "cave_fence"
+        SB.cave_fence_h = R2.cave_fence_z
       end
 
     elseif R2.is_outdoor then
@@ -1254,12 +1274,14 @@ function Room_border_up()
 
 
   local function calc_fence_height(R)
-    -- fence_z is the _bottom_ height of the fence
-    R.fence_z = R.floor_max_h
+    if not R.fence_z then
+      -- fence_z is the _bottom_ height of the fence
+      R.fence_z = R.floor_max_h
 
-    -- prevent player from getting over the fence via a border piece
-    if R.has_map_border then
-      R.fence_z = R.fence_z + (LEVEL.border_group.fence_boost or 0)
+      -- prevent player from getting over the fence via a border piece
+      if R.has_map_border then
+        R.fence_z = R.fence_z + (LEVEL.border_group.fence_boost or 0)
+      end
     end
   end
 
@@ -3765,7 +3787,7 @@ end
 
       if B_kind == "cave_wall" or B_kind == "cave_fence" then
         local narrow = (S.conn or S.content)
-        Build.cave_wall(S, side, border.w_tex or w_tex, nil, narrow)
+        Build.cave_wall(S, side, border.w_tex or w_tex, border.cave_fence_h, narrow)
         shrink_both(side, 4)
       end
 
