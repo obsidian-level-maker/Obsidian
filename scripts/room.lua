@@ -1,6 +1,6 @@
-----------------------------------------------------------------
+------------------------------------------------------------------------
 --  Room Management
-----------------------------------------------------------------
+------------------------------------------------------------------------
 --
 --  Oblige Level Maker
 --
@@ -16,7 +16,7 @@
 --  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 --  GNU General Public License for more details.
 --
-----------------------------------------------------------------
+------------------------------------------------------------------------
 
 --[[ *** CLASS INFORMATION ***
 
@@ -978,8 +978,8 @@ function Room_border_up()
     if S.kind != "liquid" then return end
     if N.kind != "liquid" then return end
 
-    -- TODO : relax this
-    if S.floor_h != N.floor_h then return end
+    -- floor height check
+    if math.abs(S.floor_h - N.floor_h) > 24 then return end
 
     -- player can travel between rooms, so limit their scope
     if R1.zone != R2.zone then return end
@@ -1394,8 +1394,8 @@ if not R then return end
         T.border[side] = {}
         TN.border[10 - side] = {}
 
-        make_border(T.room, T, TN.room, TN, side)
-        make_border(TN.room, TN, T.room, T, 10 - side)
+        try_make_border(T.room, T, TN.room, TN, side)
+        try_make_border(TN.room, TN, T.room, T, 10 - side)
       end
     end
   end
@@ -3403,6 +3403,31 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
   end
 
 
+  local function do_liquid_arch(S, side, f_tex, w_tex)
+    local z = S.floor_h
+
+    local fab_name = "Window_liquid_arch"
+    
+    local def = PREFABS[fab_name]
+    assert(def)
+
+    local o_tex = outer_tex(S, side, w_tex)
+    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex }
+
+    if skin1.wall == skin1.outer then
+      skin1.track = skin1.wall
+    end
+
+    local S2 = S
+    local seed_w = 1
+
+    local T = Trans.edge_transform(S.x1, S.y1, S2.x2, S2.y2, z,
+                                   side, 0, seed_w * 192, def.deep, def.over)
+
+    Fabricate(R, def, T, { skin1 })
+  end
+
+
   local function calc_fence_extra_z(S, side, z)
     -- determine how much higher to make a fence, based on nearby high
     -- floors which the player could jump over it from.
@@ -3812,11 +3837,7 @@ end
       end
 
       if B_kind == "liquid_arch" then
-        local o_tex = outer_tex(S, side, w_tex)
-        local skin = { wall=w_tex, floor=f_tex, outer=o_tex, break_t=THEME.track_mat }
-        local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
-
-        Build.archway(S, side, z1, z_top, skin)
+        do_liquid_arch(S, side, f_tex, w_tex)
         shrink_ceiling(side, 16)  -- Note: cannot shrink floor (atm)
       end
 
