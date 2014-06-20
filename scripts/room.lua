@@ -960,6 +960,86 @@ end
 
 function Room_border_up()
 
+  local function try_make_fence(S, side)
+    local N = S:neighbor(side)
+
+    if not N or N.free then return end
+
+    if S.kind == "void" or N.kind == "void" then return end
+
+    local R1 = S.room
+    local R2 = N.room
+
+    if S.map_border and S.map_border.room then
+      R1 = S.map_border.room
+    end
+
+    if N.map_border and N.map_border.room then
+      R2 = N.map_border.room
+    end
+
+    if not R1 or not R2 then return end
+    if R1 == R2 then return end
+
+    -- require both rooms be outdoorsy
+    if not (R1.is_outdoor and R2.is_outdoor) then return end
+
+    -- not needed between two scenic rooms
+    if R1.kind == "scenic" and R2.kind == "scenic" then return end
+
+    -- require one of the rooms be constructed (not cave)
+    if R1.kind == "cave" and R2.kind == "cave" then return end
+
+    if R1.kind == "cave" then
+      R1, R2 = R2, R1
+      S,  N  = N,  S
+      side   = 10 - side
+    end
+
+    -- nothing needed if neighbor cave has high walls
+    if R2.cave_info and R2.cave_info.sky_mode == "high_wall" then return end
+
+    -- OK --
+
+    S.border[side].kind = "fence"
+    N.border[10 - side].kind = "straddle"
+
+-- FIXME !!!!
+--[[
+    -- don't place fences in a map_border which touch the very edge
+    -- of the map, because they interfere with sky fences
+
+    if S.border[side].kind == "fence" and S.map_border then
+      for pass = 1,2 do
+        local dir = sel(pass == 1, geom.LEFT[side], geom.RIGHT[side])
+        local N = S:neighbor(dir)
+
+        if not N or N.free then
+          S.border[side].kind = "nothing"
+        end
+      end
+    end
+--]]
+  end
+
+
+  local function make_all_fences()
+    for x = 1, SEED_W do
+    for y = 1, SEED_TOP do
+      local S = SEEDS[x][y]
+
+      for side = 2,4,2 do
+        -- don't clobber connections
+        if S.border[side].kind then continue end
+
+        try_make_fence(S, side)
+      end
+    end
+    end
+  end
+
+
+
   local function make_map_edge(R, S, side)
     if R.is_outdoor then
       -- a fence will be created by Layout_outdoor_borders()
@@ -1169,85 +1249,6 @@ function Room_border_up()
       end
 
     end -- x, y
-    end
-  end
-
-
-  local function try_make_fence(S, side)
-    local N = S:neighbor(side)
-
-    if not N or N.free then return end
-
-    if S.kind == "void" or N.kind == "void" then return end
-
-    local R1 = S.room
-    local R2 = N.room
-    
-    if S.map_border and S.map_border.room then
-      R1 = S.map_border.room
-    end
-
-    if N.map_border and N.map_border.room then
-      R2 = N.map_border.room
-    end
-
-    if not R1 or not R2 then return end
-    if R1 == R2 then return end
-
-    -- require both rooms be outdoorsy
-    if not (R1.is_outdoor and R2.is_outdoor) then return end
-
-    -- not needed between two scenic rooms
-    if R1.kind == "scenic" and R2.kind == "scenic" then return end
-
-    -- require one of the rooms be constructed (not cave)
-    if R1.kind == "cave" and R2.kind == "cave" then return end
-
-    if R1.kind == "cave" then
-      R1, R2 = R2, R1
-      S,  N  = N,  S
-      side   = 10 - side
-    end
-
-    -- nothing needed if neighbor cave has high walls
-    if R2.cave_info and R2.cave_info.sky_mode == "high_wall" then return end
-
-    -- OK --
-
-    S.border[side].kind = "fence"
-    N.border[10 - side].kind = "straddle"
-
--- FIXME !!!!
---[[
-    -- don't place fences in a map_border which touch the very edge
-    -- of the map, because they interfere with sky fences
-
-    if S.border[side].kind == "fence" and S.map_border then
-      for pass = 1,2 do
-        local dir = sel(pass == 1, geom.LEFT[side], geom.RIGHT[side])
-        local N = S:neighbor(dir)
-
-        if not N or N.free then
-          S.border[side].kind = "nothing"
-        end
-      end
-    end
---]]
-  end
-
-
-  local function make_all_fences()
-    for x = 1, SEED_W do
-    for y = 1, SEED_TOP do
-      local S = SEEDS[x][y]
-
-      for side = 2,4,2 do
-        -- don't clobber connections
-        if S.border[side].kind then continue end
-
-        try_make_fence(S, side)
-      end
-    end
     end
   end
 
@@ -1848,7 +1849,8 @@ function Room_border_up()
 
 
   ---| Room_border_up |---
-  
+
+  -- fences straddle two rooms, so handle them first
   make_all_fences()
 
   each R in LEVEL.rooms do
