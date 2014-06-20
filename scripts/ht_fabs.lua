@@ -1112,7 +1112,7 @@ HEIGHT_LIQ_I3 =
 
 HEIGHT_LIQ_O1 =
 {
-  prob = 5000
+  prob = 1000
 
   structure =
   {
@@ -1172,7 +1172,7 @@ HEIGHT_LIQ_U2 =
 
 HEIGHT_SOLID_I2 =
 {
-  prob = 4000
+  prob = 1000
   environment = "indoor"
 
   solid_feature = true
