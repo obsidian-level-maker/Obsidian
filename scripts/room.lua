@@ -1127,9 +1127,16 @@ function Room_border_up()
     -- same room : do nothing
     if R1 == R2 then return end
 
+    -- handle cave_gap here (it can occur at edge of map)
+    if SB.cave_gap then
+      SB.kind = "cave_wall"
+      SB.w_tex = R1.main_tex
+      S.thick[side] = 48
+    end
+
     -- edge of map?
     if not R2 then
-      if not (R1.is_outdoor or R1.kind == "cave") then
+      if R1.kind == "building" then
         SB.kind = "wall"
         SB.touches_edge = true
         S.thick[side] = 16
@@ -1148,10 +1155,7 @@ function Room_border_up()
       -- whole seed was cleared for a connection.
 
       if SB.cave_gap then
-        SB.kind = "cave_wall"
-        SB.w_tex = R1.main_tex
-
-        S.thick[side] = 48
+        -- main case handled above : check for fence
 
         if R1.is_outdoor and R1.cave_fence_z then
           SB.kind = "cave_fence"
