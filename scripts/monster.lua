@@ -1697,8 +1697,10 @@ function Monsters_in_room(R)
   local function number_of_kinds()
     local base_num
 
-    if STYLE.mon_variety == "heaps" or rand.odds(5) then return 9 end
-    if STYLE.mon_variety != "some"  or rand.odds(1) then return 1 end
+    if not R.cool_down then
+      if STYLE.mon_variety == "heaps" or rand.odds(5) then return 9 end
+      if STYLE.mon_variety != "some"  or rand.odds(1) then return 1 end
+    end
 
     if OB_CONFIG.mons == "mixed" then
       base_num = rand.range(MONSTER_KIND_TAB.scarce, MONSTER_KIND_TAB.heaps)
@@ -1723,8 +1725,10 @@ function Monsters_in_room(R)
     if num < 1 then num = 1 end
     if num > 5 then num = 5 end
 
-    if rand.odds(30) then num = num + 1 end
-    if rand.odds(3)  then num = num + 1 end
+    if not R.cool_down then
+      if rand.odds(30) then num = num + 1 end
+      if rand.odds(3)  then num = num + 1 end
+    end
 
     gui.debugf("number_of_kinds: %d (base: %d)\n", num, base_num)
 

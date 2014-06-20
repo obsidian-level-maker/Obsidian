@@ -3870,7 +3870,6 @@ stderrf("Border piece @ (%d %d) is accessible\n", B.sx1, B.sy1)
     table.insert(list, B)
 
     B.entry_dist = compute_entry_dist(R, B)
-stderrf("  Entry dist: %1.2f\n", B.entry_dist)
   end
 
 
