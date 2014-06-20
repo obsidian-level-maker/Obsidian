@@ -1132,6 +1132,12 @@ function Room_border_up()
       SB.kind = "cave_wall"
       SB.w_tex = R1.main_tex
       S.thick[side] = 48
+
+      -- make a fence instead?
+      if R1.is_outdoor and R1.cave_fence_z then
+        SB.kind = "cave_fence"
+        SB.cave_fence_h = R1.cave_fence_z
+      end
     end
 
     -- edge of map?
@@ -1154,30 +1160,11 @@ function Room_border_up()
       -- and only need a wall in special circumstances, e.g. when a
       -- whole seed was cleared for a connection.
 
-      if SB.cave_gap then
-        -- main case handled above : check for fence
-
-        if R1.is_outdoor and R1.cave_fence_z then
-          SB.kind = "cave_fence"
-          SB.cave_fence_h = R1.cave_fence_z
-        end
-      end
-
       -- however outdoor caves with low walls need to build the facades
       -- of nearby buildings
       if not R1.is_outdoor or R1.high_wall then
         return
       end
-
----???    elseif R1.kind == "cave" and R2.is_outdoor then
----???      S.border[side].kind = "nothing"
----???
----???      if R1.cave_info.liquid_mode == "lake" and not
----???         S:need_lake_fence(side)
----???      then
----???        S.border[side].kind = "cave_wall"  -- FIXME : cave_fence
----???      end
-
     end
 
     --- Indoor room ---
