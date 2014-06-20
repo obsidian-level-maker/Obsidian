@@ -85,6 +85,22 @@ ______________________________________________________________________
 
 +  apply nice items gotten in normal rooms to the HMODEL
 
+-  wad-fab: "outside bbox" pieces via sector type #987
+
+
+Fences:
+-  support dropping them between rooms  [ honor STYLE ]
+
+
+Border pieces:
+-  only 25% chance of corner cage [apply style]
+
+
+Bridges:
+-  have an actual bridge [Urban theme]
+-  bridges : check two/three seeds for LONG bridges
+-  add mon/item spots to prefabs
+
 
 ----------------------------------------------
   LEVEL STUFF

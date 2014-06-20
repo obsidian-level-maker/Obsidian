@@ -3,42 +3,26 @@ WORK IN PROGRESS
 ================
 
 
->>>  Sun lighting : limit to outdoor rooms (supply bboxes)
-     -  add_brush ... { m="outdoor" }
-
-
->>>  Border goal pieces
-
-(a) pick an outdoor border for level
-
-(b) use the start / exit / item pieces properly
-
-(c) add a height requirement
-
-
-
-Fabricate : have 'sky_h' field in ROOM.skin (rather than special logic) ??
-
-   -  after tizzy_up_room, transfer the value
+>>>  sub_area stuff in patterns
 
 
 "onion" layouting : patterns which do something to one (or more) sides
                     of a room and recurse for the remaining part
 
 
+3D Floors:
+-  next to room with liquid -- odd gap is possible
 
-6.08 Stuff
-----------
+-  cutting off windows / player can run out them
+-  cutting off pictures
 
-3D floors next to room with liquid -- odd gap is possible
-
-
---------->
+-  light from above can "go right through"
 
 
-Fix handling of gaps inside caves (at border of cave)
--  mark them in cave code, handle them in border_up code
--  "cave_wall" -- support as a low fence too ("cave_fence" ?)
+
+Spot handling:
+-  check _two_ heights (e.g. 72 and 128) (game dependent)
+
 
 
 Layout rework:
@@ -64,26 +48,19 @@ IDEA:  automatically merge 2x2 seeds (if floor) into a single chunk
 -  get diagonals working again
 
 +  recursive patterns!
+   -  use 'a', 'b', 'c' and 'd' instead of '1', '2' (etc)
+
+   -  detect if no stair was used, automatically and randomly
+      pick "intra conn" when installing into the room
+
+   -  have "floor_groups" -- each seed in the group must get the
+      same VHR floor [ probably OK if different floors above/below ]
 
 ??  the 'is_top' pattern must touch the entry_conn (if present)
 
 IDEA:  auto-sub-areas : in huge room, sub-divide into smaller rectangles
        and place "intra connections" between them.  Place patterns in
        each sub-area, ensuring the intra connections are "floor".
-
-
-Border pieces:
-+  need a 'height' field, if not high enough then skip
-
--  support pieces with a "purpose" (START, EXIT, ITEM)
-
--  only 25% chance of corner cage [apply style]
-
-
-Bridges:
--  have an actual bridge [Urban theme]
--  bridges : check two/three seeds for LONG bridges
--  add mon/item spots to prefabs
 
 
 Junking:
@@ -119,14 +96,12 @@ Cave lighting:
 MISCELLANEA
 ===========
 
--  "outside bbox" pieces via sector type #987
+
+corner_up : a pass over all seeds (like fences)
 
 
 RAIL ISSUE : cannot control offsets on BACK SIDE of a brush vert
 --->  test new logic....
-
-
-Fences : support dropping them between rooms  [ i.e. honor STYLE ]
 
 
 wad-fab loader : x_offset handling not right (if line is split)
