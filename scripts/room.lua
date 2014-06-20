@@ -3290,7 +3290,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     assert(def)
 
     local o_tex = outer_tex(S, side, w_tex)
-    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
+    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex }
 
     if skin1.wall == skin1.outer then
       skin1.track = skin1.wall
@@ -3332,7 +3332,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     assert(def)
 
     local o_tex = outer_tex(S, side, w_tex)
-    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
+    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex }
 
     if skin1.wall == skin1.outer then
       skin1.track = skin1.wall
@@ -3360,7 +3360,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     assert(def)
 
     local o_tex = outer_tex(S, side, w_tex)
-    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
+    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex }
 
     local S2 = S
     local seed_w = 1
@@ -3389,7 +3389,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
     assert(def)
 
     local o_tex = outer_tex(S, side, w_tex)
-    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex, track=THEME.track_mat }
+    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex }
 
     skin1.lock_tag = LOCK.tag
 

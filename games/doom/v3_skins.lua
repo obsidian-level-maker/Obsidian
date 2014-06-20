@@ -35,7 +35,6 @@ V3_THEME_DEFAULTS =
   hall_trim1 = "GRAY7"
   hall_trim2 = "METAL"
   window_side_mat = "DOORSTOP"
-  track_mat = "DOORTRAK"
 
   lowering_pedestal_skin =
   {
