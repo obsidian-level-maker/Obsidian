@@ -854,6 +854,30 @@ int SPOT_fill_poly(lua_State *L)
 }
 
 
+// LUA: spots_fill_box(x1, y1, x2, y2, content)
+//
+int SPOT_fill_box(lua_State *L)
+{
+	int x1 = luaL_checkint(L, 1);
+	int y1 = luaL_checkint(L, 2);
+	int x2 = luaL_checkint(L, 3);
+	int y2 = luaL_checkint(L, 4);
+
+	int content = luaL_checkint(L, 5);
+
+	std::vector<grid_point_c> points;
+
+	points.push_back(grid_point_c(x1, y1));
+	points.push_back(grid_point_c(x2, y1));
+	points.push_back(grid_point_c(x2, y2));
+	points.push_back(grid_point_c(x1, y2));
+
+	SPOT_FillPolygon(content, points);
+
+	return 0;
+}
+
+
 // LUA: spots_apply_brushes(floor_h)
 //
 int SPOT_apply_brushes(lua_State *L)
