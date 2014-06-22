@@ -30,6 +30,11 @@ function Layout_parse_char(ch)
   if ch == '3' then return { kind="floor", floor=3 } end
   if ch == '4' then return { kind="floor", floor=4 } end
 
+  if ch == 'a' then return { kind="sub_area", area=1 } end
+  if ch == 'b' then return { kind="sub_area", area=2 } end
+  if ch == 'c' then return { kind="sub_area", area=3 } end
+  if ch == 'd' then return { kind="sub_area", area=4 } end
+
   if ch == '~' then return { kind="liquid" } end
   if ch == '#' then return { kind="solid"  } end
 
@@ -53,6 +58,7 @@ function Layout_parse_char(ch)
 
   -- in stairs to a 3D floor, 'dir' is always the "going up" direction
   if ch == 'K' then return { kind="3d_stair", dir=4 } end
+  if ch == 'A' then return { kind="3d_stair", dir=8 } end
   if ch == 'V' then return { kind="3d_stair", dir=2 } end
 
   error("Layout_parse_char: unknown symbol: " .. tostring(ch))
@@ -110,9 +116,9 @@ function Layout_preprocess_patterns()
 
     local N = neighbor(grid, x, y, P.dir)
 
-    if not (N and N.kind == "floor") then
-      error("bad stair in pattern: destination not a floor")
-    end
+--!!!!!    if not (N and N.kind == "floor") then
+--!!!!!      error("bad stair in pattern: destination not a floor")
+--!!!!!    end
 
     P.dest_floor = N.floor
 
@@ -232,14 +238,14 @@ function Layout_preprocess_patterns()
   end
 
 
-  local function find_sub_area(grid, floor_id)
+  local function find_sub_area(grid, area_id)
     local x1, y1 =  999,  999
     local x2, y2 = -999, -999
 
     for x = 1, grid.w do
     for y = 1, grid.h do
-      if grid[x][y].kind == "floor" and
-         grid[x][y].floor == floor_id
+      if grid[x][y].kind == "sub_area" and
+         grid[x][y].area == area_id
       then
         x1 = math.min(x1, x)
         y1 = math.min(y1, y)
@@ -251,13 +257,13 @@ function Layout_preprocess_patterns()
     end
 
     if x1 > x2 or y1 > y2 then
-      error("Cannot find recursive sub-area in room pattern")
+      return nil  -- NONE
     end
 
     -- verify it
     for x = x1, x2 do
     for y = y1, y2 do
-      if grid[x][y].floor != floor_id then
+      if grid[x][y].area != area_id then
         error("Recursive sub-area in pattern is not a rectangle")
       end
     end
@@ -270,20 +276,17 @@ function Layout_preprocess_patterns()
   local function determine_sub_areas(pat)
     -- for recursive patterns, find the rectangle which corresponds
     -- to each sub-area.
-    if not pat.sub_count then
-      pat.sub_count = 1
-    end
 
     pat.sub_areas = {}
-    assert(pat.sub_count < pat.num_floors)
 
-    -- recursive areas are not real floors
-    pat.num_floors = pat.num_floors - pat.sub_count
+    for id = 1, 4 do
+      local area = find_sub_area(pat._structure, id)
+      if not area then break; end
+      pat.sub_areas[id] = area
+    end
 
-    for i = 1, pat.sub_count do
-      local floor_id = pat.num_floors + i - 1
-      local area = find_sub_area(pat._structure, floor_id)
-      table.insert(pat.sub_areas, area)
+    if table.empty(pat.sub_areas) then
+      error("Recursive pattern has no sub-areas: " .. pat.name)
     end
   end
 

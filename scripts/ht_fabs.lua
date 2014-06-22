@@ -23,7 +23,9 @@
 -- Symbols used here:
 --
 --    .         main floor (lowest or highest)
---    1 2 3     other floors
+--    1 2 3 4   other floors
+--
+--    a b c d   sub-areas (for recursive patterns)
 --
 --    ~         liquid
 --    #         solid block
@@ -34,7 +36,7 @@
 --
 --    F T L J   stairs which turn 90 degrees
 --
---    K  V      stairs to a 3D floor
+--    K V A     stairs to a 3D floor
 --
 
 
@@ -1554,14 +1556,13 @@ SOLID_CSUB =
   prob = 200
 
   recurse = "diff"
-  sub_count = 1
   environment = "indoor"
   solid_feature = true
 
   structure =
   {
     "#..v..#"
-    "..111.."
+    "..aaa.."
     "#..^..#"
   }
 
@@ -1582,7 +1583,6 @@ SOLID_CSUB4 =
   prob = 300
 
   recurse = "diff"
-  sub_count = 1
   environment = "indoor"
   solid_feature = true
   symmetry = "xy"
@@ -1590,9 +1590,9 @@ SOLID_CSUB4 =
   structure =
   {
     "#.v.#"
-    ".111."
-    ">111<"
-    ".111."
+    ".aaa."
+    ">aaa<"
+    ".aaa."
     "#.^.#"
   }
 
@@ -1609,18 +1609,17 @@ REC_SOLID_C1 =
   prob = 500
 
   recurse = "same"
-  sub_count = 1
   environment = "indoor"
   solid_feature = true
   symmetry = "xy"
 
   structure =
   {
-    "#1#"
-    ".1."
-    ">1<"
-    ".1."
-    "#1#"
+    "#a#"
+    ".a."
+    ">a<"
+    ".a."
+    "#a#"
   }
 
   x_sizes = { "121", "131", "141", "151", "161"
@@ -1637,17 +1636,16 @@ REC_SOLID_C2 =
   prob = 900
 
   recurse = "same"
-  sub_count = 1
   environment = "indoor"
   solid_feature = true
 
   structure =
   {
-    "#1#"
-    ".1<"
-    ".1."
-    ">1."
-    "#1#"
+    "#a#"
+    ".a<"
+    ".a."
+    ">a."
+    "#a#"
   }
 
   x_sizes = { "121", "131", "141", "151", "161"
@@ -1664,18 +1662,17 @@ REC_SOLID_C3 =
   prob = 900
 
   recurse = "same"
-  sub_count = 1
   environment = "indoor"
   solid_feature = true
   symmetry = "xy"
 
   structure =
   {
-    "#1#"
-    ">1<"
-    ".1."
-    ">1<"
-    "#1#"
+    "#a#"
+    ">a<"
+    ".a."
+    ">a<"
+    "#a#"
   }
 
   x_sizes = { "121", "131", "141", "151", "161"
@@ -1691,17 +1688,16 @@ REC_SOLID_C4 =
   prob = 900
 
   recurse = "same"
-  sub_count = 1
   environment = "indoor"
   solid_feature = true
 
   structure =
   {
-    "#1#"
-    ".1<"
-    ".1."
-    ">1."
-    "#1#"
+    "#a#"
+    ".a<"
+    ".a."
+    ">a."
+    "#a#"
   }
 
   x_sizes = { "121", "131", "141", "151", "161"
@@ -1758,17 +1754,16 @@ REC_DIAG_C1 =
   prob = 900
 
   recurse = "same"
-  sub_count = 1
   environment = "indoor"
   symmetry = "xy"
 
   structure =
   {
-    "/1%"
-    ".1."
-    ">1<"
-    ".1."
-    "N1Z"
+    "/a%"
+    ".a."
+    ">a<"
+    ".a."
+    "NaZ"
   }
 
   x_sizes = { "121", "131", "141", "151", "161"
@@ -1784,17 +1779,16 @@ REC_DIAG_C3 =
   prob = 900
 
   recurse = "same"
-  sub_count = 1
   environment = "indoor"
   symmetry = "xy"
 
   structure =
   {
-    "/1%"
-    ">1<"
-    ".1."
-    ">1<"
-    "N1Z"
+    "/a%"
+    ">a<"
+    ".a."
+    ">a<"
+    "NaZ"
   }
 
   x_sizes = { "121", "131", "141", "151", "161"
@@ -1810,16 +1804,15 @@ REC_DIAG_C4 =
   prob = 900
 
   recurse = "same"
-  sub_count = 1
   environment = "indoor"
 
   structure =
   {
-    "/1%"
-    ".1<"
-    ".1."
-    ">1."
-    "N1Z"
+    "/a%"
+    ".a<"
+    ".a."
+    ">a."
+    "NaZ"
   }
 
   x_sizes = { "121", "131", "141", "151", "161"
@@ -1865,12 +1858,11 @@ RECURSE_I1 =
   prob = 400
 
   recurse = "diff"
-  sub_count = 1
   symmetry = "x"
 
   structure =
   {
-    "111"
+    "aaa"
     ".^."
     "..."
   }
@@ -1891,11 +1883,10 @@ RECURSE_I2 =
   prob = 300
 
   recurse = "diff"
-  sub_count = 1
 
   structure =
   {
-    "111"
+    "aaa"
     ".^."
     "..."
   }
@@ -1924,13 +1915,12 @@ RECURSE_I3 =
   prob = 300
 
   recurse = "diff"
-  sub_count = 1
   environment = "indoor"
   symmetry = "x"
 
   structure =
   {
-    "1111111"
+    "aaaaaaa"
     "..^.^.."
     "%...../"
   }
@@ -1959,7 +1949,7 @@ RECURSE_I3_OUT =
 
   structure =
   {
-    "1111111"
+    "aaaaaaa"
     "..^.^.."
     "......."
   }
@@ -1972,16 +1962,15 @@ RECURSE_T_SOLID =
   shape = "T"
 
   recurse = "diff"
-  sub_count = 1
   environment = "indoor"
   symmetry = "x"
 
   structure =
   {
     "#..v..#"
-    ".11111."
-    ">11111<"
-    ".11111."
+    ".aaaaa."
+    ">aaaaa<"
+    ".aaaaa."
     ".Z###N."
   }
 
@@ -2002,11 +1991,10 @@ RECURSE_L1 =
   shape = "L"
 
   recurse = "diff"
-  sub_count = 1
 
   structure =
   {
-    ".111"
+    ".aaa"
     "..^."
     "...."
   }
@@ -2043,12 +2031,11 @@ RECURSE_L2 =
   shape = "L"
 
   recurse = "diff"
-  sub_count = 1
 
   structure =
   {
-    ".>11"
-    "..11"
+    ".>aa"
+    "..aa"
     "...^"
     "...."
   }
@@ -2077,13 +2064,12 @@ RECURSE_L2_DIAG =
   shape = "L"
 
   recurse = "diff"
-  sub_count = 1
   environment = "indoor"
 
   structure =
   {
-    ".>11"
-    "..11"
+    ".>aa"
+    "..aa"
     "%..^"
     "#%.."
   }
@@ -2108,16 +2094,15 @@ RECURSE_L3_DIAG =
   shape = "L"
 
   recurse = "diff"
-  sub_count = 1
   environment = "indoor"
 
   structure =
   {
     "/...%"
     ".v..."
-    "111.."
-    "111<."
-    "111./"
+    "aaa.."
+    "aaa<."
+    "aaa./"
   }
 
   x_sizes = { "11011", "11111", "11211", "11311", "11411"
@@ -2134,11 +2119,10 @@ RECURSE_U1 =
   shape = "U"
 
   recurse = "diff"
-  sub_count = 1
 
   structure =
   {
-    ".111."
+    ".aaa."
     "..^.."
     "....."
   }
@@ -2164,14 +2148,13 @@ RECURSE_U2 =
   shape = "U"
 
   recurse = "diff"
-  sub_count = 1
   symmetry = "x"
 
   structure =
   {
-    "..1.."
-    ".>1<."
-    "..1.."
+    "..a.."
+    ".>a<."
+    "..a.."
     "....."
   }
 
@@ -2196,7 +2179,6 @@ RECURSE_O1_DIAG =
   shape = "O"
 
   recurse = "diff"
-  sub_count = 1
   environment = "indoor"
   symmetry = "x"
 
@@ -2204,7 +2186,7 @@ RECURSE_O1_DIAG =
   {
     "/...%"
     "....."
-    ".111."
+    ".aaa."
     "..^.."
     "%.../"
   }
@@ -2228,14 +2210,13 @@ RECURSE_O3_DIAG =
   shape = "O"
 
   recurse = "diff"
-  sub_count = 1
   environment = "indoor"
 
   structure =
   {
     "/...%"
     "...v."
-    ".111."
+    ".aaa."
     ".^..."
     "%.../"
   }
@@ -2260,12 +2241,11 @@ RECURSE_T1 =
   shape = "T"
 
   recurse = "diff"
-  sub_count = 2
   symmetry = "x"
 
   structure =
   {
-    "111.222"
+    "aaa.bbb"
     ".^...^."
     "......."
   }
@@ -2292,12 +2272,11 @@ RECURSE_T1_DIAG =
   shape = "T"
 
   recurse = "diff"
-  sub_count = 2
   symmetry = "x"
 
   structure =
   {
-    "111.222"
+    "aaa.bbb"
     ".^...^."
     "%...../"
   }
@@ -2323,11 +2302,10 @@ RECURSE_T1_NOSYM =
   shape = "T"
 
   recurse = "diff"
-  sub_count = 2
 
   structure =
   {
-    "111.222"
+    "aaa.bbb"
     ".^...^."
     "......."
   }
@@ -2354,15 +2332,14 @@ RECURSE_T3 =
   shape = "T"
 
   recurse = "diff"
-  sub_count = 2
   solid_feature = true
   symmetry = "x"
 
   structure =
   {
-    "1...2"
-    "1<.>2"
-    "1...2"
+    "a...b"
+    "a<.>b"
+    "a...b"
     "..#.."
   }
 
@@ -2387,14 +2364,13 @@ RECURSE_T3_NOSYM =
   shape = "T"
 
   recurse = "diff"
-  sub_count = 2
   solid_feature = true
 
   structure =
   {
-    "1<..2"
-    "1...2"
-    "1..>2"
+    "a<..b"
+    "a...b"
+    "a..>b"
     "..#.."
   }
 
@@ -2418,13 +2394,12 @@ RECURSE_H1 =
   shape = "H"
 
   recurse = "diff"
-  sub_count = 2
 
   structure =
   {
     "....."
     "...v."
-    "11.22"
+    "aa.bb"
     ".^..."
     "....."
   }
@@ -2450,14 +2425,13 @@ RECURSE_H2 =
   shape = "H"
 
   recurse = "diff"
-  sub_count = 2
   symmetry = "x"
 
   structure =
   {
     "......."
     "......."
-    "111.222"
+    "aaa.bbb"
     ".^...^."
     "......."
   }
@@ -2485,14 +2459,13 @@ RECURSE_H3 =
   shape = "H"
 
   recurse = "diff"
-  sub_count = 2
 
   structure =
   {
     "....."
-    "1...2"
-    "1<.>2"
-    "1...2"
+    "a...b"
+    "a<.>b"
+    "a...b"
     "....."
   }
 
@@ -2517,15 +2490,14 @@ RECURSE_S1 =
   shape = "S"
 
   recurse = "diff"
-  sub_count = 2
 
   structure =
   {
-    "111...."
-    "111..v."
-    "111.222"
-    ".^..222"
-    "....222"
+    "aaa...."
+    "aaa..v."
+    "aaa.bbb"
+    ".^..bbb"
+    "....bbb"
   }
 
   x_sizes =
@@ -2556,17 +2528,16 @@ RECURSE_S2 =
   shape = "S"
 
   recurse = "diff"
-  sub_count = 2
 
   structure =
   {
-    "1.."
-    "1<."
-    "1.."
-    "1.2"
-    "..2"
-    ".>2"
-    "..2"
+    "a.."
+    "a<."
+    "a.."
+    "a.b"
+    "..b"
+    ".>b"
+    "..b"
   }
 
   x_sizes =
@@ -2592,16 +2563,15 @@ RECURSE_WOW_LIQUID_O2 =
   shape = "O"
 
   recurse = "diff"
-  sub_count = 1
   symmetry = "xy"
 
   structure =
   {
     "~~~.~~~"
     "~..v..~"
-    "~.111.~"
-    "~.111.~"
-    "~.111.~"
+    "~.aaa.~"
+    "~.aaa.~"
+    "~.aaa.~"
     "~..^..~"
     "~~~.~~~"
   }
@@ -2620,16 +2590,15 @@ RECURSE_WOW_LIQUID_O4 =
   shape = "O"
 
   recurse = "diff"
-  sub_count = 1
   symmetry = "xy"
 
   structure =
   {
     "~~~.~~~"
     "~..v..~"
-    "~.111.~"
-    ".>111<."
-    "~.111.~"
+    "~.aaa.~"
+    ".>aaa<."
+    "~.aaa.~"
     "~..^..~"
     "~~~.~~~"
   }
