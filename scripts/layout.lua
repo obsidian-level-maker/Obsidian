@@ -34,6 +34,8 @@ function Layout_parse_char(ch)
   if ch == 'b' then return { kind="sub_area", area=2 } end
   if ch == 'c' then return { kind="sub_area", area=3 } end
   if ch == 'd' then return { kind="sub_area", area=4 } end
+  if ch == 'e' then return { kind="sub_area", area=5 } end
+  if ch == 'f' then return { kind="sub_area", area=6 } end
 
   if ch == '~' then return { kind="liquid" } end
   if ch == '#' then return { kind="solid"  } end
