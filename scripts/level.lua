@@ -181,7 +181,12 @@ COOP_STYLE_LIST =
 GLOBAL_PARAMETERS =
 {
   map_limit = 10000
+
   step_height = 16
+  jump_height = 24
+
+  spot_low_h  = 72
+  spot_high_h = 128
 }
 
 
@@ -389,15 +394,10 @@ function Levels_setup()
 
   PARAM = assert(GAME.PARAMETERS)
 
+  gui.rand_seed(OB_CONFIG.seed + 0)
+
   Levels_invoke_hook("setup")
 
-  if PARAM.sub_format then
-    gui.property("sub_format", PARAM.sub_format)
-  end
-
----##  if not OB_CONFIG.align then
----##    gui.property("offset_map", "1")
----##  end
 
   table.merge_missing(PARAM, GLOBAL_PARAMETERS)
 
@@ -405,6 +405,14 @@ function Levels_setup()
   table.name_up(GAME.THEMES)
 
   Layout_preprocess_patterns()
+
+
+  if PARAM.sub_format then
+    gui.property("sub_format", PARAM.sub_format)
+  end
+
+  gui.property("spot_low_h",  PARAM.spot_low_h)
+  gui.property("spot_high_h", PARAM.spot_high_h)
 end
 
 
@@ -911,7 +919,7 @@ function Levels_make_all()
   GAME.levels   = {}
   GAME.episodes = {}
 
-  gui.rand_seed(OB_CONFIG.seed + 0)
+  gui.rand_seed(OB_CONFIG.seed + 1)
 
   Levels_invoke_hook("get_levels")
 
@@ -923,12 +931,12 @@ function Levels_make_all()
   table.index_up(GAME.episodes)
 
 
-  gui.rand_seed(OB_CONFIG.seed + 1)
+  gui.rand_seed(OB_CONFIG.seed + 2)
 
   Levels_choose_themes()
 
 
-  gui.rand_seed(OB_CONFIG.seed + 2)
+  gui.rand_seed(OB_CONFIG.seed + 3)
 
   Levels_decide_special_kinds()
 
