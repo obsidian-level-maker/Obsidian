@@ -265,6 +265,11 @@ DOOM2.THEMES =
       short_lamp   = 40
     }
 
+    base_skin =
+    {
+      big_door = "BIGDOOR2"
+    }
+
     style_list =
     {
       naturals = { none=30, few=70, some=30, heaps=2 }
@@ -629,6 +634,10 @@ DOOM2.THEMES =
       BROWN1   = 5
     }
 
+    base_skin =
+    {
+    }
+
     monster_prefs =
     {
       zombie  = 0.3
@@ -964,6 +973,10 @@ DOOM2.THEMES =
       burning_barrel = 10
     }
 
+    base_skin =
+    {
+    }
+
     monster_prefs =
     {
       revenant = 1.2
@@ -1228,6 +1241,10 @@ DOOM2.THEMES =
       imp     =  5  -- kinda like a mutant
     }
 
+    base_skin =
+    {
+    }
+
     style_list =
     {
       caves = { none=40, few=60, some=10 }
@@ -1462,6 +1479,11 @@ TNT.THEMES =
       green_torch = 50
       red_torch = 50
       candelabra = 20
+    }
+
+    base_skin =
+    {
+      big_door = "METALDR"
     }
 
 --Mostly based on what is seen in TNT.WAD MAP31
@@ -1700,6 +1722,11 @@ DOOM1.THEMES =
       STONE3 = 10
       STARTAN3 = 30
       STARG3 = 20
+    }
+
+    base_skin =
+    {
+      big_door = "BIGDOOR2"
     }
 
     style_list =
@@ -2015,6 +2042,11 @@ DOOM1.THEMES =
       BROVINE2 = 25
       BROWN1 = 50
       BROWNGRN = 20
+    }
+
+    base_skin =
+    {
+      big_door = "BIGDOOR2"
     }
 
     style_list =
@@ -2380,7 +2412,16 @@ DOOM1.THEMES =
       SKINTEK1 = 10
     }
 
-    monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0 }
+    base_skin =
+    {
+    }
+
+    monster_prefs =
+    {
+      zombie  = 0.3
+      shooter = 0.6
+      skull   = 2.0
+    }
 
     archy_arches = true
   }
@@ -2725,6 +2766,10 @@ DOOM1.THEMES =
       SP_HOT1 = 5
       SKINMET1 = 10
       SKINMET2 = 10
+    }
+
+    base_skin =
+    {
     }
 
     monster_prefs =

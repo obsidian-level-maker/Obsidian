@@ -13,8 +13,11 @@ PREFABS.Locked_kc_blue =
   deep   = 48
   over   = 32
 
-  tex_DOORRED = "DOORBLU"
+  tex_DOORRED  = "DOORBLU"
   line_33 = 32
+
+  tex_BIGDOOR2 = "?big_door"
+  flat_FLAT23  = "?big_door"
 }
 
 
@@ -29,8 +32,11 @@ PREFABS.Locked_kc_yellow =
   deep   = 48
   over   = 32
 
-  tex_DOORRED = "DOORYEL"
+  tex_DOORRED  = "DOORYEL"
   line_33 = 34
+
+  tex_BIGDOOR2 = "?big_door"
+  flat_FLAT23  = "?big_door"
 }
 
 
@@ -44,6 +50,11 @@ PREFABS.Locked_kc_red =
   long   = 192
   deep   = 48
   over   = 32
+
+  -- prefab has DOORRED texture and line special #33
+
+  tex_BIGDOOR2 = "?big_door"
+  flat_FLAT23  = "?big_door"
 }
 
 
@@ -58,8 +69,11 @@ PREFABS.Locked_ks_blue =
   deep   = 48
   over   = 32
 
-  tex_DOORRED = "DOORBLU2"
+  tex_DOORRED  = "DOORBLU2"
   line_33 = 32
+
+  tex_BIGDOOR2 = "?big_door"
+  flat_FLAT23  = "?big_door"
 }
 
 
@@ -74,8 +88,11 @@ PREFABS.Locked_ks_yellow =
   deep   = 48
   over   = 32
 
-  tex_DOORRED = "DOORYEL2";
+  tex_DOORRED  = "DOORYEL2"
   line_33 = 34
+
+  tex_BIGDOOR2 = "?big_door"
+  flat_FLAT23  = "?big_door"
 }
 
 
@@ -90,6 +107,9 @@ PREFABS.Locked_ks_red =
   deep   = 48
   over   = 32
 
-  tex_DOORRED = "DOORRED2"
+  tex_DOORRED  = "DOORRED2"
+
+  tex_BIGDOOR2 = "?big_door"
+  flat_FLAT23  = "?big_door"
 }
 
