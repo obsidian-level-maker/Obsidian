@@ -1243,6 +1243,7 @@ DOOM2.THEMES =
 
     base_skin =
     {
+      big_door = "ZELDOOR"
     }
 
     style_list =
