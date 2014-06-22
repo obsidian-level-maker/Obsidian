@@ -3,13 +3,6 @@ WORK IN PROGRESS
 ================
 
 
->>>  sub_area stuff in patterns
-
-
-"onion" layouting : patterns which do something to one (or more) sides
-                    of a room and recurse for the remaining part
-
-
 3D Floors:
 -  next to room with liquid -- odd gap is possible
 
@@ -21,7 +14,15 @@ WORK IN PROGRESS
 
 
 Spot handling:
--  check _two_ heights (e.g. 72 and 128) (game dependent)
+-  update Cave code
+   -  get bbox (real coord / cells) for each AREA
+   -  only use that bbox
+   +  initial state should be CLEAR
+
+   -  _skip_ cells of the floor itself
+   -  use R:spots_do_edges()
+   -  use gui.spots_apply_brushes()
+   +  copy logic for height checking
 
 
 
@@ -55,6 +56,9 @@ IDEA:  automatically merge 2x2 seeds (if floor) into a single chunk
 
    -  have "floor_groups" -- each seed in the group must get the
       same VHR floor [ probably OK if different floors above/below ]
+
+   -  perhaps have "recurse = onion" patterns, and we try a certain
+      quota (based on depth) of these BEFORE all other patterns.
 
 ??  the 'is_top' pattern must touch the entry_conn (if present)
 
@@ -91,6 +95,7 @@ Doors
 
 Cave lighting:
 -  keys / switches (etc) should be lit up
+
 
 
 MISCELLANEA

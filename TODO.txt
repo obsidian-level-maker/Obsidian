@@ -550,9 +550,12 @@ Name generator:
   GUI and C++ CODE
 ----------------------------------------------
 
-+  use fl_utf8.h functions (fl_fopen, etc) for file handling
++  rename m_spots.cc --> csg_spots, tidy up duplications
 
--  use OpenMP to speed up DOOM lighting algorithm
+-  use fl_utf8.h functions (fl_fopen, etc) for file handling
+   [ BUT : glBSP, ajpoly, etc.... would need to use them too ]
+
+-  use OpenMP to speed up lighting stuff (etc ?)
 
 -  option to save log to same base filename (TEST.wad + TEST.log)
 
