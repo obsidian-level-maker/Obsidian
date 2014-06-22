@@ -4241,16 +4241,6 @@ function Room_determine_spots()
   --   4. use the CSG code to kill any blocking brushes 
   --
 
-  local function store_spots_w_heights(src, dest, f_h, c_h)
-    each spot in src do
-      spot.z1 = f_h
-      spot.z2 = c_h
-
-      table.insert(dest, spot)
-    end
-  end
-
-
   local function clear_chunk(K)
     local S1 = SEEDS[K.sx1][K.sy1]
     local S2 = SEEDS[K.sx2][K.sy2]
@@ -4285,7 +4275,8 @@ function Room_determine_spots()
     local rx1, ry1, rx2, ry2 = R:get_bbox()
 
     -- initialize grid to "clear"
-    gui.spots_begin(rx1 - 48, ry1 - 48, rx2 + 48, ry2 + 48, SPOT_CLEAR)
+    gui.spots_begin(rx1 - 48, ry1 - 48, rx2 + 48, ry2 + 48,
+                    floor.floor_h, SPOT_CLEAR)
 
     -- handle edges of room
     R:spots_do_edges()
@@ -4311,13 +4302,11 @@ function Room_determine_spots()
     end
 
     -- remove walls and blockers (using nearby brushes)
-    gui.spots_apply_brushes(floor.floor_h);
+    gui.spots_apply_brushes();
 
     -- FIXME !!!! remove solid decor entities
 
-    -- grab the spots and set heights
-    local f_h = assert(floor.floor_h)
-    local c_h = floor.ceil_h or (f_h + 160)
+    -- add the spots to the room
 
     local item_spots = {}
     local  mon_spots = {}
@@ -4327,8 +4316,13 @@ function Room_determine_spots()
 
 --  stderrf("mon_spots @ %s floor:%d : %d\n", R:tostr(), f_h, #mon_spots)
 
-    store_spots_w_heights(item_spots, R.item_spots, f_h, c_h)
-    store_spots_w_heights( mon_spots, R. mon_spots, f_h, c_h)
+    each spot in item_spots do
+      table.insert(R.item_spots, spot)
+    end
+
+    each spot in mon_spots do
+      table.insert(R.mon_spots, spot)
+    end
 
     gui.spots_end();
   end

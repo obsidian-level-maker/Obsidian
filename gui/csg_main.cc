@@ -44,8 +44,13 @@ std::string dummy_plane_tex;
 
 
 // m_spots.cc
-#define SPOT_WALL   1
-#define SPOT_LEDGE  2
+#define SPOT_LOW_CEIL  1
+#define SPOT_WALL      2
+#define SPOT_LEDGE     3
+
+int spot_low_h  = 72;
+int spot_high_h = 128;
+
 
 extern void SPOT_FillPolygon(byte content, const int *shape, int count);
 
@@ -508,14 +513,17 @@ private:
 			return;
 
 		// skip brushes far above the floor (like ceilings)
-		if (B->b.z > floor_h + 90)
+		if (B->b.z >= floor_h + spot_high_h)
 			return;
 
 		/* this brush is a potential blocker */
 
 		int content = SPOT_LEDGE;
 
-		if (B->b.z <= floor_h && B->t.z >= floor_h + 32)
+		if (B->b.z >= floor_h + spot_low_h)
+			content = SPOT_LOW_CEIL;
+
+		else if (B->b.z <= floor_h && B->t.z >= floor_h + spot_low_h)
 			content = SPOT_WALL;
 
 		// build the polygon

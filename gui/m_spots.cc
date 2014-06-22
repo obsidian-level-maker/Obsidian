@@ -1,10 +1,10 @@
-//------------------------------------------------------------------------
+//----------------------------------------------------------------------
 //  SPOTS for MONSTERS / ITEMS
-//------------------------------------------------------------------------
+//----------------------------------------------------------------------
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2010 Andrew Apted
+//  Copyright (C) 2010,2014 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -16,7 +16,7 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 //
-//------------------------------------------------------------------------
+//----------------------------------------------------------------------
 
 #include "headers.h"
 #include "hdr_lua.h"
@@ -30,13 +30,26 @@
 #define GRID_SIZE  20
 
 
+#define SPOT_CLEAR     0
+#define SPOT_LOW_CEIL  1
+#define SPOT_WALL      2
+#define SPOT_LEDGE     3
+
+
 #define NEAR_WALL  0x08
 #define HAS_ITEM   0x10
 #define HAS_MON    0x20
+#define IS_DUD     0x40
 
 
 static int grid_min_x, grid_min_y;
 static int grid_max_x, grid_max_y;
+
+static int grid_floor_h;
+
+extern int spot_low_h;
+extern int spot_high_h;
+
 
 // number of grid squares
 static int grid_W, grid_H;
@@ -119,10 +132,12 @@ void SPOT_DumpGrid(const char *info)
 				buffer[x] = 'm';
 			else if (content & HAS_ITEM)
 				buffer[x] = 'i';
-			else if (content & 1)
-				buffer[x] = '#';
-			else if (content & 6)
+			else if ((content & 3) == SPOT_LEDGE)
 				buffer[x] = '/';
+			else if ((content & 3) == SPOT_WALL)
+				buffer[x] = '#';
+			else if ((content & 3) == SPOT_LOW_CEIL)
+				buffer[x] = '=';
 			else if (content & NEAR_WALL)
 				buffer[x] = '%';
 			else
@@ -230,11 +245,21 @@ static void test_item_spot(int x, int y, std::vector<grid_point_c> & spots)
 
 	spots.push_back(grid_point_c(real_x, real_y));
 
-	// reserve this spot, prevent overlap of with items
+	// reserve these cells, prevent overlapping item spots
 	spot_grid[x+0][y+0] |= HAS_ITEM;
 	spot_grid[x+0][y+1] |= HAS_ITEM;
 	spot_grid[x+1][y+0] |= HAS_ITEM;
 	spot_grid[x+1][y+1] |= HAS_ITEM;
+}
+
+
+static void clean_up_grid()
+{
+	for (int x = 0 ; x < grid_W ; x++)
+	for (int y = 0 ; y < grid_H ; y++)
+	{
+		spot_grid[x][y] &= 7;
+	}
 }
 
 
@@ -252,7 +277,7 @@ void SPOT_ItemSpots(std::vector<grid_point_c> & spots)
 	for (x = 0 ; x < grid_W ; x++)
 	for (y = 0 ; y < grid_H ; y++)
 	{
-		if (spot_grid[x][y] & 1)
+		if ((spot_grid[x][y] & 3) == SPOT_WALL)
 		{
 			if (x > 0)  spot_grid[x-1][y] |= NEAR_WALL;
 			if (x < w2) spot_grid[x+1][y] |= NEAR_WALL;
@@ -267,19 +292,25 @@ void SPOT_ItemSpots(std::vector<grid_point_c> & spots)
 	{
 		test_item_spot(x, y, spots);
 	}
+}
 
-	// clean up
-	for (x = 0 ; x < grid_W ; x++)
-	for (y = 0 ; y < grid_H ; y++)
+
+//----------------------------------------------------------------------
+
+
+static void remove_dud_cells()
+{
+	for (int x = 0 ; x < grid_W ; x++)
+	for (int y = 0 ; y < grid_H ; y++)
 	{
-		spot_grid[x][y] &= 7;
+		spot_grid[x][y] &= ~IS_DUD;
 	}
 }
 
 
-static int biggest_gap(int *y1, int *y2)
+static int biggest_gap(int *y1, int *y2, int want)
 {
-	// Note: this also fills in single square spots, which will never
+	// Note: this also duds any single square spots, which will never
 	//       get used because they'll never form a 2x2 group.
 
 	int best_x   = -1;
@@ -306,7 +337,7 @@ static int biggest_gap(int *y1, int *y2)
 			if (num == 1)
 			{
 				// single squares are useless, remove them now
-				spot_grid[x][y] |= HAS_MON;
+				spot_grid[x][y] |= IS_DUD;
 			}
 			else if (num > best_num)
 			{
@@ -325,41 +356,44 @@ static int biggest_gap(int *y1, int *y2)
 }
 
 
-static bool test_mon_area(int x1, int y1, int x2, int y2)
+static bool test_mon_area(int x1, int y1, int x2, int y2, int want)
 {
 	if (x1 < 0 or x2 >= grid_W or y1 < 0 or y2 >= grid_H)
 		return false;
 
 	for (int x = x1 ; x <= x2 ; x++)
-		for (int y = y1 ; y <= y2 ; y++)
-		{
-			if (spot_grid[x][y])
-				return false;
-		}
+	for (int y = y1 ; y <= y2 ; y++)
+	{
+		byte content = spot_grid[x][y];
+
+		if (content & (HAS_MON | IS_DUD))
+			return false;
+
+		if ((content & 3) > want)
+			return false;
+	}
 
 	return true;
 }
 
 
-static bool grow_spot(int& x1, int& y1, int& x2, int& y2)
+static bool grow_spot(int& x1, int& y1, int& x2, int& y2, int want)
 {
 	// (passing parameters by reference for nicer code)
 
-#if 1
 	// special case for initial square, try to become a 2x2 square
 	// since that is the minimum requirement.
 
 	if (x1 == x2 && y1 == y2)
 	{
-		if (test_mon_area(x1, y1, x2+1, y2+1)) { x2++; y2++; return true; }
-		if (test_mon_area(x1, y1-1, x2+1, y2)) { x2++; y1--; return true; }
-		if (test_mon_area(x1-1, y1, x2, y2+1)) { x1--; y2++; return true; }
-		if (test_mon_area(x1-1, y1-1, x2, y2)) { x1--; y1--; return true; }
+		if (test_mon_area(x1, y1, x2+1, y2+1, want)) { x2++; y2++; return true; }
+		if (test_mon_area(x1, y1-1, x2+1, y2, want)) { x2++; y1--; return true; }
+		if (test_mon_area(x1-1, y1, x2, y2+1, want)) { x1--; y2++; return true; }
+		if (test_mon_area(x1-1, y1-1, x2, y2, want)) { x1--; y1--; return true; }
 
 		// return now, will mark this square as a dud
 		return false;
 	}
-#endif
 
 	// determine the order of sides to try and grow
 	int x1_pass = 0;
@@ -395,28 +429,28 @@ static bool grow_spot(int& x1, int& y1, int& x2, int& y2)
 
 	for (int pass = 0 ; pass < 4 ; pass++)
 	{
-		if (pass == x1_pass && test_mon_area(x1-1, y1, x1-1, y2)) { x1--; return true; }
-		if (pass == x2_pass && test_mon_area(x2+1, y1, x2+1, y2)) { x2++; return true; }
+		if (pass == x1_pass && test_mon_area(x1-1, y1, x1-1, y2, want)) { x1--; return true; }
+		if (pass == x2_pass && test_mon_area(x2+1, y1, x2+1, y2, want)) { x2++; return true; }
 
-		if (pass == y1_pass && test_mon_area(x1, y1-1, x2, y1-1)) { y1--; return true; }
-		if (pass == y2_pass && test_mon_area(x1, y2+1, x2, y2+1)) { y2++; return true; }
+		if (pass == y1_pass && test_mon_area(x1, y1-1, x2, y1-1, want)) { y1--; return true; }
+		if (pass == y2_pass && test_mon_area(x1, y2+1, x2, y2+1, want)) { y2++; return true; }
 	}
 
 	return false;
 }
 
 
-static void mark_monster(int x1, int y1, int x2, int y2)
+static void mark_monster(int x1, int y1, int x2, int y2, byte flag)
 {
 	for (int x = x1 ; x <= x2 ; x++)
 	for (int y = y1 ; y <= y2 ; y++)
 	{
-		spot_grid[x][y] |= HAS_MON;
+		spot_grid[x][y] |= flag;
 	}
 }
 
 
-void SPOT_MonsterSpots(std::vector<grid_point_c> & spots)
+void SPOT_MonsterSpots(std::vector<grid_point_c> & spots, int want)
 {
 	// Algorithm:
 	//   find the biggest vertical gap which is free, and use the
@@ -430,25 +464,25 @@ void SPOT_MonsterSpots(std::vector<grid_point_c> & spots)
 		int x1, x2;
 		int y1=0, y2=0;
 
-		x1 = biggest_gap(&y1, &y2);
+		x1 = biggest_gap(&y1, &y2, want);
 
 		if (x1 < 0)
 			return;
 
 		y1 = (y1 + y2) / 2;
 
-		SYS_ASSERT(! spot_grid[x1][y1]);
+		SYS_ASSERT((spot_grid[x1][y1] & 3) <= want);
 
 		x2 = x1;
 		y2 = y1;
 
-		while (grow_spot(x1,y1, x2,y2))
+		while (grow_spot(x1,y1, x2,y2, want))
 		{ }
-
-		mark_monster(x1,y1, x2,y2);
 
 		if (x2 > x1 && y2 > y1)
 		{
+			mark_monster(x1,y1, x2,y2, HAS_MON);
+
 			int real_x1 = grid_min_x + (x1 - 1) * GRID_SIZE;
 			int real_y1 = grid_min_y + (y1 - 1) * GRID_SIZE;
 
@@ -460,6 +494,12 @@ void SPOT_MonsterSpots(std::vector<grid_point_c> & spots)
 			spots.push_back(grid_point_c(real_x2, real_y2));
 
 			DebugPrintf("Monster spot ---> [%d %d] size [%d %d]\n", x1,y1, x2-x1+1,y2-y1+1);
+		}
+		else
+		{
+			// mark the cells as useless
+			// [ need this marking so that processing will eventually finish ]
+			mark_monster(x1,y1, x2,y2, IS_DUD);
 		}
 	}
 }
@@ -712,11 +752,11 @@ void SPOT_DebuggingTest()
 
 	LogPrintf("\n--- SPOT_DebuggingTest ---\n\n");
 
-	SPOT_CreateGrid(0 /* content */, 0, 0, 1000, 1000);
+	SPOT_CreateGrid(SPOT_CLEAR, 0, 0, 1000, 1000);
 
-	SPOT_FillPolygon(1, shape_A, 4);  
-	SPOT_FillPolygon(1, shape_B, 4);  
-	SPOT_FillPolygon(1, shape_C, 6);
+	SPOT_FillPolygon(SPOT_WALL, shape_A, 4);
+	SPOT_FillPolygon(SPOT_WALL, shape_B, 4);  
+	SPOT_FillPolygon(SPOT_WALL, shape_C, 6);
 
 	SPOT_DumpGrid("Raw");
 
@@ -734,7 +774,9 @@ void SPOT_DebuggingTest()
 
 	items.clear();
 
-	SPOT_MonsterSpots(items);
+	clean_up_grid();
+
+	SPOT_MonsterSpots(items, 0);
 
 	LogPrintf("\nTotal monster spots = %u\n\n", items.size() / 2);
 
@@ -747,7 +789,7 @@ void SPOT_DebuggingTest()
 //------------------------------------------------------------------------
 
 
-// LUA: spots_begin(min_x, min_y, max_x, max_y, content)
+// LUA: spots_begin(min_x, min_y, max_x, max_y, floor_h, content)
 //
 int SPOT_begin(lua_State *L)
 {
@@ -757,7 +799,9 @@ int SPOT_begin(lua_State *L)
 	int max_x = (int) ceil(luaL_checknumber(L, 3));
 	int max_y = (int) ceil(luaL_checknumber(L, 4));
 
-	int content = luaL_checkint(L, 5);
+	grid_floor_h = luaL_checkint(L, 5);
+
+	int content = luaL_checkint(L, 6);
 
 	SPOT_CreateGrid(content, min_x, min_y, max_x, max_y);
 
@@ -882,9 +926,8 @@ int SPOT_fill_box(lua_State *L)
 //
 int SPOT_apply_brushes(lua_State *L)
 {
-	int floor_h = luaL_checkint(L, 1);
-
-	CSG_spot_processing(grid_min_x, grid_min_y, grid_max_x, grid_max_y, floor_h);
+	CSG_spot_processing(grid_min_x, grid_min_y, grid_max_x, grid_max_y,
+						grid_floor_h);
 
 	return 0;
 }
@@ -892,8 +935,11 @@ int SPOT_apply_brushes(lua_State *L)
 
 static void store_mon_or_item(lua_State *L, int stack_pos,
 		unsigned int index,
-		int x1, int y1, int x2, int y2)
+		int x1, int y1, int x2, int y2,
+		bool low_ceil = true)
 {
+	int ceil_h = grid_floor_h + (low_ceil ? spot_low_h : spot_high_h);
+
 	// clip rectangle to the original room/chunk boundaries
 	x1 = MAX(x1, grid_min_x);
 	y1 = MAX(y1, grid_min_y);
@@ -906,7 +952,7 @@ static void store_mon_or_item(lua_State *L, int stack_pos,
 	lua_pushinteger(L, index);
 
 	// build the coordinate table
-	//   e.g. { x1=50, y1=200, x2=150, y2=400 }
+	//   e.g. { x1=50, y1=200, x2=150, y2=400, z1=0, z2=72 }
 
 	lua_newtable(L);
 
@@ -921,6 +967,12 @@ static void store_mon_or_item(lua_State *L, int stack_pos,
 
 	lua_pushinteger(L, y2);
 	lua_setfield(L, -2, "y2");
+
+	lua_pushinteger(L, grid_floor_h);
+	lua_setfield(L, -2, "z1");
+
+	lua_pushinteger(L, ceil_h);
+	lua_setfield(L, -2, "z2");
 
 	// store coordinate table into user-provided list
 	lua_settable(L, stack_pos);
@@ -948,12 +1000,30 @@ int SPOT_get_mons(lua_State *L)
 
 	std::vector<grid_point_c> mons;
 
-	SPOT_MonsterSpots(mons);
+	// Two passes :
+	//   - want = 0 grabs spots with a high ceiling
+	//   - want = 1 grabs spots with a low ceiling
+	//
+	// Note: order of passes matters, second pass depends on the
+	//       'HAS_MON' flag added during the first pass.
 
-	for (unsigned int m = 0 ; m < mons.size() ; m += 2)
+	clean_up_grid();
+
+	for (int want = 0 ; want < 2 ; want++)
 	{
-		store_mon_or_item(L, 1, 1+m/2, mons[m+0].x, mons[m+0].y,
-						  mons[m+1].x, mons[m+1].y);
+		SPOT_MonsterSpots(mons, want);
+
+		for (unsigned int m = 0 ; m < mons.size() ; m += 2)
+		{
+			store_mon_or_item(L, 1, 1+m/2, mons[m+0].x, mons[m+0].y,
+							  mons[m+1].x, mons[m+1].y,
+							  (want > 0) /* low_ceil */);
+		}
+
+		// All the usable cells became either HAS_MON or IS_DUD.
+		// Need to clear all the dud flags now, to allow monsters
+		// which straddle a low ceiling and a high ceiling.
+		remove_dud_cells();
 	}
 
 	return 0;
@@ -968,6 +1038,8 @@ int SPOT_get_items(lua_State *L)
 		return luaL_argerror(L, 1, "missing table: items");
 
 	std::vector<grid_point_c> items;
+
+	clean_up_grid();
 
 	SPOT_ItemSpots(items);
 

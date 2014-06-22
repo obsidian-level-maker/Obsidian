@@ -2888,7 +2888,7 @@ function Cave_determine_spots(R)
     local x2 = info.x2 - 10
     local y2 = info.y2 - 10
 
-    gui.spots_begin(x1, y1, x2, y2, SPOT_LEDGE)
+    gui.spots_begin(x1, y1, x2, y2, A.floor_h, SPOT_LEDGE)
 
 
     -- step 1 : handle floors
@@ -2944,31 +2944,17 @@ function Cave_determine_spots(R)
       gui.spots_get_items(item_spots)
     end
 
-
-    --- gui.spots_dump("Spot grid")
-
-
-    local mon_spots  = {}
-
-    gui.spots_get_mons(mon_spots)
-
-    -- add to room, set Z positions
-    local f_h = assert(A.floor_h)
-    local c_h = A.ceil_h or (f_h + 160)
-
     each spot in item_spots do
-      spot.z1 = f_h
-      spot.z2 = c_h
-
       table.insert(R.item_spots, spot)
     end
 
+
+    local mon_spots = {}
+
+    gui.spots_get_mons(mon_spots)
+
     each spot in mon_spots do
-      spot.z1 = f_h
-      spot.z2 = c_h
-
 --FIXME  spot.face_away = R:find_nonfacing_spot(spot.x1, spot.y1, spot.x2, spot.y2)
-
       table.insert(R.mon_spots, spot)
     end
 

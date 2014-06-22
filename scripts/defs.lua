@@ -85,9 +85,10 @@ EXTREME_H = 4000
 
 SKILLS = { "easy", "medium", "hard" }
 
-SPOT_CLEAR = 0
-SPOT_WALL  = 1
-SPOT_LEDGE = 2
+SPOT_CLEAR    = 0
+SPOT_LOW_CEIL = 1
+SPOT_WALL     = 2
+SPOT_LEDGE    = 3
 
 
 -- room stuff
