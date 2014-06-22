@@ -219,6 +219,8 @@ function Layout_preprocess_patterns()
 
   local function count_floors(pat)
     if not floor_tab[0] then
+      if pat.recurse == "pure" then return end
+
       error("Missing floors in pattern: " .. pat.name)
     end
 
