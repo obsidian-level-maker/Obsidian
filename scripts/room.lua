@@ -139,6 +139,14 @@ function ROOM_CLASS.contains_seed(R, x, y)
 end
 
 
+function ROOM_CLASS.get_bbox(R)
+  local S1 = SEEDS[R.sx1][R.sy1]
+  local S2 = SEEDS[R.sx2][R.sy2]
+
+  return S1.x1, S1.y1, S2.x2, S2.y2
+end
+
+
 function ROOM_CLASS.has_lock(R, lock)
   each C in R.conns do
     if C.lock == lock then return true end
@@ -254,6 +262,26 @@ function ROOM_CLASS.furthest_dist_from_entry(R)
   end
 
   return result
+end
+
+
+function ROOM_CLASS.spots_do_edges(R)
+  for side = 2,8,2 do
+    local x1, y1, x2, y2 = R:get_bbox()
+
+    if geom.is_vert(side) then
+      x1 = x1 - 100 ; x2 = x2 + 100
+    else
+      y1 = y1 - 100 ; y2 = y2 + 100
+    end
+
+    if side == 2 then y2 = y1 ; y1 = y1 - 100 end
+    if side == 8 then y1 = y2 ; y2 = y2 + 100 end
+    if side == 4 then x2 = x1 ; x1 = x1 - 100 end
+    if side == 6 then x1 = x2 ; x2 = x2 + 100 end
+
+    gui.spots_fill_box(x1, y1, x2, y2, SPOT_LEDGE)
+  end
 end
 
 
@@ -4227,34 +4255,12 @@ function Room_determine_spots()
     local S1 = SEEDS[K.sx1][K.sy1]
     local S2 = SEEDS[K.sx2][K.sy2]
 
-    local poly = brushlib.quad(S1.x1, S1.y1, S2.x2, S2.y2)
-
-    gui.spots_fill_poly(poly, SPOT_CLEAR)
-  end
-
-
-  local function solidify_edge(side, x1, y1, x2, y2)
-    if geom.is_vert(side) then
-      x1 = x1 - 100 ; x2 = x2 + 100
-    else
-      y1 = y1 - 100 ; y2 = y2 + 100
-    end
-
-    if side == 2 then y2 = y1 ; y1 = y1 - 100 end
-    if side == 8 then y1 = y2 ; y2 = y2 + 100 end
-    if side == 4 then x2 = x1 ; x1 = x1 - 100 end
-    if side == 6 then x1 = x2 ; x2 = x2 + 100 end
-
-    local poly = brushlib.quad(x1, y1, x2, y2)
-
-    gui.spots_fill_poly(poly, SPOT_LEDGE)
+    gui.spots_fill_box(S1.x1, S1.y1, S2.x2, S2.y2, SPOT_CLEAR)
   end
 
 
   local function solidify_seed(S)
-    local poly = brushlib.quad(S.x1, S.y1, S.x2, S.y2)
-
-    gui.spots_fill_poly(poly, SPOT_LEDGE)
+    gui.spots_fill_box(S.x1, S.y1, S.x2, S.y2, SPOT_LEDGE)
   end
 
 
@@ -4276,21 +4282,13 @@ function Room_determine_spots()
 
   local function spots_for_floor(R, floor)
     -- get bbox of room
-    local S1 = SEEDS[R.sx1][R.sy1]
-    local S2 = SEEDS[R.sx2][R.sy2]
-
-    local rx1 = S1.x1
-    local ry1 = S1.y1
-    local rx2 = S2.x2
-    local ry2 = S2.y2
+    local rx1, ry1, rx2, ry2 = R:get_bbox()
 
     -- initialize grid to "clear"
     gui.spots_begin(rx1 - 48, ry1 - 48, rx2 + 48, ry2 + 48, SPOT_CLEAR)
 
     -- handle edges of room
-    for side = 2,8,2 do
-      solidify_edge(side, rx1, ry1, rx2, ry2)
-    end
+    R:spots_do_edges()
 
     -- any seeds which _DONT_ belong to this floor, solidify them
     for sx = R.sx1, R.sx2 do

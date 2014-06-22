@@ -2945,30 +2945,12 @@ function Cave_determine_spots(R)
     end
 
 
---[[  REMOVE THIS -- IT IS DONE ELSEWHERE
-    -- mark exclusion zones (e.g. area around a teleporter).
-    -- gotta do it _after_ getting the item spots
-
-    each zone in R.exclusions do
-      if zone.kind == "empty" then
-        local poly = brushlib.quad(zone.x1, zone.y1, zone.x2, zone.y2)
-        gui.spots_fill_poly(poly, SPOT_LEDGE)
-      end
-    end
---]]
-
-
     --- gui.spots_dump("Spot grid")
 
 
     local mon_spots  = {}
 
     gui.spots_get_mons(mon_spots)
-
----###  if table.empty(item_spots) and mon_spots[1] then
----###    table.insert(item_spots, mon_spots[1])
----###  end
-
 
     -- add to room, set Z positions
     local f_h = assert(A.floor_h)
