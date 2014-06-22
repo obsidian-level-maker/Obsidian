@@ -68,6 +68,7 @@ OB_MODULES["level_control"] =
     scenics     = { label="Scenic Rooms",   choices=LEVEL_CONTROL.CHOICES }
     secrets     = { label="Secrets",        choices=LEVEL_CONTROL.CHOICES }
     sub_rooms   = { label="Sub-Rooms",      choices=LEVEL_CONTROL.CHOICES }
+    steepness   = { label="Steepness",      choices=LEVEL_CONTROL.CHOICES }
     switches    = { label="Switched Doors", choices=LEVEL_CONTROL.CHOICES }
     symmetry    = { label="Symmetry",       choices=LEVEL_CONTROL.CHOICES }
     teleporters = { label="Teleporters",    choices=LEVEL_CONTROL.CHOICES }

@@ -2356,7 +2356,7 @@ function Layout_height_realization(R, entry_h)
   --
 
   local INDOOR_DELTAS  = { [16]=5,  [32]=10, [48]=20, [64]=20, [96]=10, [128]=5 }
-  local OUTDOOR_DELTAS = { [32]=20, [48]=30, [80]=20, [112]=5 }
+  local OUTDOOR_DELTAS = {          [32]=20, [48]=30, [80]=20, [112]=5 }
 
 
   local function find_vhr_range()
@@ -2454,12 +2454,42 @@ gui.debugf("  gap_z --> %d  want_gap --> %d\n", gap_z, want_gap)
   end
 
 
+  local function delta_tab_for_room()
+    -- apply the Steepness style
+
+    if STYLE.steepness == "none" then
+      return { [16] = 50 }
+    end
+
+    local tab
+
+    if R.is_outdoor then
+      tab = table.copy(OUTDOOR_DELTAS)
+    else
+      tab = table.copy(INDOOR_DELTAS)
+    end
+
+    if STYLE.steepness == "few" then
+      if tab[16] then tab[16] = tab[16] * 8 end
+      if tab[32] then tab[32] = tab[32] * 4 end
+      if tab[48] then tab[48] = tab[48] * 2 end
+
+    elseif STYLE.steepness == "heaps" then
+      if tab[16] then tab[16] = tab[16] / 8 end
+      if tab[32] then tab[32] = tab[32] / 4 end
+      if tab[48] then tab[48] = tab[48] / 2 end
+    end
+
+    return tab
+  end
+
+
   local function select_deltas()
     -- resulting table is indexed by a virtual floor id.
 
     local tab = {}
 
-    local delta_tab = sel(R.is_outdoor, OUTDOOR_DELTAS, INDOOR_DELTAS)
+    local delta_tab = delta_tab_for_room() sel(R.is_outdoor, OUTDOOR_DELTAS, INDOOR_DELTAS)
 
     tab[5] = 0
 
