@@ -23,8 +23,6 @@ require "util"
 
 require "level"
 
--- require 'Profiler'  -- Pepperfish's
-
 
 function ob_traceback(msg)
 
@@ -739,24 +737,11 @@ function ob_build_cool_shit()
 
   gui.ticker()
 
-  if _profiler then
-    profiler = newProfiler()
-    profiler:start()
-  end
-
   Levels_setup()
 
   local status = Levels_make_all()
 
   Levels_clean_up()
-
-  if _profiler then
-    profiler:stop()
-
-    local outfile = io.open("PROFILE.txt", "w+")
-    profiler:report(outfile)
-    outfile:close()
-  end
 
   gui.printf("\n")
 
