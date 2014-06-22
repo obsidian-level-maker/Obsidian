@@ -513,7 +513,6 @@ extern int SPOT_apply_brushes(lua_State *L);
 extern int SPOT_dump(lua_State *L);
 extern int SPOT_get_mons(lua_State *L);
 extern int SPOT_get_items(lua_State *L);
-extern int SPOT_read_grid(lua_State *L);
 extern int SPOT_end(lua_State *L);
 
 extern int CSG_begin_level(lua_State *L);
@@ -634,7 +633,6 @@ static const luaL_Reg gui_script_funcs[] =
 	{ "spots_dump",      SPOT_dump },
 	{ "spots_get_mons",  SPOT_get_mons },
 	{ "spots_get_items", SPOT_get_items },
-	{ "spots_read_grid", SPOT_read_grid },
 	{ "spots_end",       SPOT_end },
 
 	{ NULL, NULL } // the end

@@ -170,51 +170,6 @@ public:
 };
 
 
-#define ADD_ACTIVE(x, y)  actives.push_back(grid_point_c(x, y))
-
-
-void SPOT_FloodOutside()
-{
-	// NOTE: currently not used 
-
-	int w2 = grid_W-1;
-	int h2 = grid_H-1;
-
-	std::list<grid_point_c> actives;
-
-	for (int x = 0 ; x < grid_W ; x++)
-	{
-		if (! spot_grid[x][0])  ADD_ACTIVE(x, 0);
-		if (! spot_grid[x][h2]) ADD_ACTIVE(x, h2);
-	} 
-
-	for (int y = 0 ; y < grid_H ; y++)
-	{
-		if (! spot_grid[0 ][y]) ADD_ACTIVE(0,  y);
-		if (! spot_grid[w2][y]) ADD_ACTIVE(w2, y);
-	} 
-
-	while (! actives.empty())
-	{
-		int x = actives.front().x;
-		int y = actives.front().y;
-
-		actives.pop_front();
-
-		if (! spot_grid[x][y])
-		{
-			spot_grid[x][y] = 1;
-
-			if (x > 0  && ! spot_grid[x-1][y]) ADD_ACTIVE(x-1, y);
-			if (x < w2 && ! spot_grid[x+1][y]) ADD_ACTIVE(x+1, y);
-
-			if (y > 0  && ! spot_grid[x][y-1]) ADD_ACTIVE(x, y-1);
-			if (y < h2 && ! spot_grid[x][y+1]) ADD_ACTIVE(x, y+1);
-		}
-	}
-}
-
-
 static void test_item_spot(int x, int y, std::vector<grid_point_c> & spots)
 {
 	int near_walls = 0;
@@ -505,35 +460,6 @@ void SPOT_MonsterSpots(std::vector<grid_point_c> & spots, int want)
 }
 
 
-int SPOT_FloorArea(int x1, int y1, int x2, int y2)
-{
-	SYS_ASSERT(x1 <= x2 && y1 <= y2);
-
-	if (x1 >= grid_W || x2 < 0) return 4;
-	if (y1 >= grid_H || y2 < 0) return 4;
-
-	if (x1 < 0) x1 = 0;
-	if (y1 < 0) y1 = 0;
-
-	if (x2 >= grid_W) x2 = grid_W-1;
-	if (y2 >= grid_H) y2 = grid_H-1;
-
-	int result = 0;
-
-	for (int x = x1 ; x <= x2 ; x++)
-		for (int y = y1 ; y <= y2 ; y++)
-		{
-			int val = spot_grid[x][y];
-
-			if (val == 0) result |= 1;  // free
-			if (val == 2) result |= 2;  // walk
-			if (val == 1) result |= 4;  // solid
-		}
-
-	return result;
-}
-
-
 //------------------------------------------------------------------------
 //  POLYGON FILLING
 //------------------------------------------------------------------------
@@ -759,10 +685,6 @@ void SPOT_DebuggingTest()
 	SPOT_FillPolygon(SPOT_WALL, shape_C, 6);
 
 	SPOT_DumpGrid("Raw");
-
-	SPOT_FloodOutside();
-
-	SPOT_DumpGrid("Flooded");
 
 
 	std::vector<grid_point_c> items;
@@ -1050,25 +972,6 @@ int SPOT_get_items(lua_State *L)
 	}
 
 	return 0;
-}
-
-
-// LUA: spots_read_grid(x, y, w, h)
-//
-int SPOT_read_grid(lua_State *L)
-{
-	int x = luaL_checkint(L, 1);
-	int y = luaL_checkint(L, 2);
-	int w = luaL_checkint(L, 3);
-	int h = luaL_checkint(L, 4);
-
-	SYS_ASSERT(w >= 1);
-	SYS_ASSERT(h >= 1);
-
-	int value = SPOT_FloorArea(x-1, y-1, x+w-2, y+h-2);
-
-	lua_pushinteger(L, value);
-	return 1;
 }
 
 
