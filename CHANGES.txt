@@ -40,6 +40,8 @@ CHANGELOG
 - build all doors and fences using the wad-fab system
 - build all stairs and lifts via wad prefabs
 
+- more robust logic for finding monster and item spots
+
 - caves: improved floor texturing in flat caves
 - caves: never place pickup items in liquid areas
 - caves: if not many caves, keep texturing consistent
