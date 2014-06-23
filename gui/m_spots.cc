@@ -29,6 +29,8 @@
 
 #define GRID_SIZE  20
 
+#define MAX_MON_CELLS  14  /* i.e. 280 units */
+
 
 #define SPOT_CLEAR     0
 #define SPOT_LOW_CEIL  1
@@ -381,6 +383,10 @@ static bool grow_spot(int& x1, int& y1, int& x2, int& y2, int want)
 	// don't make long narrow areas, i.e. keep aspect nice
 	if (w > h*2) x1_pass = x2_pass = -1;
 	if (h > w*2) y1_pass = y2_pass = -1;
+
+	// prevent growing too large
+	if (w + 1 >= MAX_MON_CELLS) x1_pass = x2_pass = -1;
+	if (h + 1 >= MAX_MON_CELLS) y1_pass = y2_pass = -1;
 
 	for (int pass = 0 ; pass < 4 ; pass++)
 	{
@@ -931,15 +937,20 @@ int SPOT_get_mons(lua_State *L)
 
 	clean_up_grid();
 
+	unsigned int index = 1;
+
 	for (int want = 0 ; want < 2 ; want++)
 	{
+		mons.clear();
+
 		SPOT_MonsterSpots(mons, want);
 
 		for (unsigned int m = 0 ; m < mons.size() ; m += 2)
 		{
-			store_mon_or_item(L, 1, 1+m/2, mons[m+0].x, mons[m+0].y,
+			store_mon_or_item(L, 1, index, mons[m+0].x, mons[m+0].y,
 							  mons[m+1].x, mons[m+1].y,
 							  (want > 0) /* low_ceil */);
+			index++;
 		}
 
 		// All the usable cells became either HAS_MON or IS_DUD.
