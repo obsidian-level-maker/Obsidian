@@ -1007,11 +1007,25 @@ end
 
 
 
-function Monsters_do_pickups()
+function Monsters_collect_big_spots(R)
 
-  local function extract_big_item_spots(R)
-    R.big_spots = {}
+  local function big_spots_from_mon_spots()
+    each spot in R.mon_spots do
+      local w = spot.x2 - spot.x1
+      local h = spot.y2 - spot.y1
 
+      if w >= 220 and h >= 220 then
+        local new_spot = table.copy(spot)
+
+        new_spot.score = rand.range(1, 10)
+
+        table.insert(R.big_spots, new_spot)
+      end
+    end
+  end
+
+
+  local function extract_big_item_spots()
     for i = #R.item_spots, 1, -1 do
       local spot = R.item_spots[i]
 
@@ -1025,11 +1039,21 @@ function Monsters_do_pickups()
   end
 
 
+  ---| Monsters_collect_big_spots |---
+
+  big_spots_from_mon_spots()
+
+  extract_big_item_spots()
+end
+
+
+
+function Monsters_do_pickups()
+
   local function grab_a_big_spot(R)
     local result = table.pick_best(R.big_spots,
-            function(A, B) return A.score > B.score end,
-            "remove")
-    
+            function(A, B) return A.score > B.score end, "remove")
+
     -- update remaining scores so next one chosen is far away
     each spot in R.big_spots do
       local dist = Monsters_dist_between_spots(spot, result, 80) / 256
@@ -1115,7 +1139,7 @@ function Monsters_do_pickups()
       local count = pair.count
 
       -- big item?
-      if item.rank > 0 and count == 1 and not table.empty(R.big_spots) then
+      if (item.rank or 0) >= 2 and count == 1 and not table.empty(R.big_spots) then
         local spot = grab_a_big_spot(R)
         place_item_in_spot(item.name, spot)
         continue
@@ -1273,8 +1297,8 @@ function Monsters_do_pickups()
 
 
   local function compare_items(A, B)
-    local A_rank = A.item.rank
-    local B_rank = B.item.rank
+    local A_rank = A.item.rank or 0
+    local B_rank = B.item.rank or 0
 
     if A_rank != B_rank then return A_rank > B_rank end
 
@@ -1314,8 +1338,6 @@ function Monsters_do_pickups()
 
 
   local function pickups_in_room(R)
-    extract_big_item_spots(R)
-
     R.item_spots = Monsters_split_spots(R.item_spots, 25)
 
     each CL,hmodel in LEVEL.hmodels do
@@ -2805,6 +2827,7 @@ function Monster_make_battles()
 
   each R in LEVEL.rooms do
     Player_give_room_stuff(R)
+    Monsters_collect_big_spots(R)
     Monsters_in_room(R)
   end
 

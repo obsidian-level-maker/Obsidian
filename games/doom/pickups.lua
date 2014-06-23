@@ -20,7 +20,6 @@ DOOM.PICKUPS =
   {
     id = 2014
     kind = "health"
-    rank = 0
     add_prob = 20
     cluster = { 4,7 }
     give = { {health=1} }
@@ -30,7 +29,6 @@ DOOM.PICKUPS =
   {
     id = 2011
     kind = "health"
-    rank = 1
     add_prob = 60
     cluster = { 2,5 }
     give = { {health=10} }
@@ -51,7 +49,6 @@ DOOM.PICKUPS =
   {
     id = 2015
     kind = "armor"
-    rank = 0
     add_prob = 10
     cluster = { 4,7 }
     give = { {health=1} }
@@ -63,7 +60,6 @@ DOOM.PICKUPS =
   {
     id = 2007
     kind = "ammo"
-    rank = 0
     add_prob = 10
     cluster = { 2,5 }
     give = { {ammo="bullet",count=10} }
@@ -73,7 +69,7 @@ DOOM.PICKUPS =
   {
     id = 2048
     kind = "ammo"
-    rank = 1
+    rank = 2
     add_prob = 40
     give = { {ammo="bullet",count=50} }
   }
@@ -82,7 +78,6 @@ DOOM.PICKUPS =
   {
     id = 2008
     kind = "ammo"
-    rank = 0
     add_prob = 20
     cluster = { 2,5 }
     give = { {ammo="shell",count=4} }
@@ -92,7 +87,7 @@ DOOM.PICKUPS =
   {
     id = 2049
     kind = "ammo"
-    rank = 1
+    rank = 2
     add_prob = 40
     give = { {ammo="shell",count=20} }
   }
@@ -101,7 +96,6 @@ DOOM.PICKUPS =
   {
     id = 2010
     kind = "ammo"
-    rank = 0
     add_prob = 10
     cluster = { 4,7 }
     give = { {ammo="rocket",count=1} }
@@ -111,7 +105,7 @@ DOOM.PICKUPS =
   {
     id = 2046
     kind = "ammo"
-    rank = 1
+    rank = 2
     add_prob = 40
     give = { {ammo="rocket",count=5} }
   }
@@ -120,7 +114,6 @@ DOOM.PICKUPS =
   {
     id = 2047
     kind = "ammo"
-    rank = 0
     add_prob = 20
     cluster = { 2,5 }
     give = { {ammo="cell",count=20} }

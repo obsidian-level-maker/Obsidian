@@ -358,15 +358,16 @@ function ROOM_CLASS.clip_spots(R, x1, y1, x2, y2)
   x2, y2 = x2 + 4, y2 + 4
 
   R.mon_spots  = R:clip_spot_list(R.mon_spots,  x1, y1, x2, y2)
-  R.item_spots = R:clip_spot_list(R.item_spots, x1, y1, x2, y2)
-  R.big_spots  = R:clip_spot_list(R.big_spots,  x1, y1, x2, y2, "strict")
+
+---??  R.item_spots = R:clip_spot_list(R.item_spots, x1, y1, x2, y2)
+---??  R.big_spots  = R:clip_spot_list(R.big_spots,  x1, y1, x2, y2, "strict")
 end
 
 
 function ROOM_CLASS.exclude_monsters(R)
-  each area in R.exclusions do
-    if area.kind == "empty" then
-      R:clip_spots(area.x1, area.y1, area.x2, area.y2)
+  each box in R.exclusions do
+    if box.kind == "empty" then
+      R:clip_spots(box.x1, box.y1, box.x2, box.y2)
     end
   end
 end
