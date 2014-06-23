@@ -1064,7 +1064,7 @@ function Layout_add_pillars(R)
 
     if S.content then return false end
 
-    if S.kind != "walk" or S.conn or S.pseudo_conn or S.must_walk then
+    if S.kind != "walk" or S.conn or S.pseudo_conn or S.intra_conn or S.must_walk then
       return false
     end
 
@@ -1856,6 +1856,15 @@ end
       if C then
         table.insert(FLOOR.conns, C)
       end
+
+      if S.intra_conn then
+        local sub = S.intra_conn.other_sub
+        if not sub.entry_vhr then
+          sub.entry_vhr = CHUNK.floor.vhr
+          sub.entry_S   = S:neighbor(S.intra_conn.dir)
+        end
+      end
+
     end -- x, y
     end
   end
@@ -1931,10 +1940,10 @@ end
 
 
   local function all_subs_connected(sub_areas)
-    local id = sub_areas[1].conn_id
+    local g = sub_areas[1].group
 
-    each sub in sub_areas do
-      if sub.conn_id != id then return false end
+    each index,sub in sub_areas do
+      if sub.group != g then return false end
     end
 
     return true
@@ -1943,14 +1952,14 @@ end
 
   local function merge_two_subs(sub_areas, A, B)
     assert(A and B)
-    assert(A.id != B.id)
+    assert(A.group != B.group)
 
-    local old_id = A.id
-    local new_id = B.id
+    local old_g = A.group
+    local new_g = B.group
 
-    each sub in sub_areas do
-      if sub.conn_id == old_id then
-         sub.conn_id =  new_id
+    each index,sub in sub_areas do
+      if sub.group == old_g then
+         sub.group =  new_g
       end
     end
   end
@@ -1968,7 +1977,7 @@ end
       if S.conn or S.pseudo_conn or S.intra_conn then continue end
 
       for dir = 6,8,2 do
-        local N = S:neighbor(S)
+        local N = S:neighbor(dir)
 
         if not N or N.free then continue end
 
@@ -1978,8 +1987,8 @@ end
         if not N.sub_area then continue end
 
         if N.conn or N.pseudo_conn or N.intra_conn then continue end
-        
-        if N.sub_area.conn_id == S.sub_area.conn_id then continue end
+
+        if N.sub_area.group == S.sub_area.group then continue end
 
         -- OK this is possible
         table.insert(locs, { S=S, N=N, dir=dir, score=gui.random() })
@@ -1995,8 +2004,8 @@ end
 
     local loc = table.pick_best(locs, function(A, B) return A.score > B.score end)
 
-    loc.S.intra_conn = { dir=loc.dir }
-    loc.N.intra_conn = { dir=10 - loc.dir }
+    loc.S.intra_conn = { dir=loc.dir,      other_sub=loc.N.sub_area }
+    loc.N.intra_conn = { dir=10 - loc.dir, other_sub=loc.S.sub_area }
 
     merge_two_subs(sub_areas, loc.S.sub_area, loc.N.sub_area)
   end
@@ -2005,12 +2014,36 @@ end
   local function connect_sub_areas(sub_areas)
     if table.size(sub_areas) < 2 then return end
 
-    each sub in sub_areas do
-      sub.conn_id = _index
+    each index,sub in sub_areas do
+      sub.group = index
     end
 
     while not all_subs_connected(sub_areas) do
       try_connect_two_subs(sub_areas)
+    end
+  end
+
+
+  local function find_entry_in_subs(sub_areas)
+    if table.empty(sub_areas) then return end
+
+    if not area.entry_S then
+      -- assign entry_vhr to a random sub
+      local idx = rand.irange(1, table.size(sub_areas))
+      local sub = sub_areas[idx]
+
+      sub.entry_vhr = area.entry_vhr
+      return
+    end
+
+    each index,sub in sub_areas do
+      if geom.inside_box(area.entry_S.sx, area.entry_S.sy,
+                         sub.x1, sub.y1, sub.x2, sub.y2)
+      then
+        sub.entry_vhr = area.entry_vhr
+        sub.entry_S   = area.entry_S
+        return
+      end
     end
   end
 
@@ -2134,7 +2167,7 @@ end
       end
 
       -- connections must join onto a floor
-      if (S == area.entry_S or S.conn or S.pseudo_conn or S.must_walk) then
+      if (S == area.entry_S or S.conn or S.pseudo_conn or S.intra_conn or S.must_walk) then
         if not floor then
           return -1  -- FAIL --
         end
@@ -2168,8 +2201,6 @@ end
         sub = {}
 
         T.sub_areas[P.area] = sub
-
-        sub.entry_vhr = area.entry_vhr  --!!!!!!!!! TESTING CRAP
 
         table.insert(R.areas, sub)
       end
@@ -2215,10 +2246,8 @@ end
       CHUNK.src_floor  = new_floor(vhr1)
       CHUNK.dest_floor = new_floor(vhr2)
 
-    elseif P.kind == "floor" or
-      -- FIXME !!!!! TEMPORARY CRUD !!!
-       (P.kind != "liquid" and P.kind != "solid")
-    then
+    elseif P.kind == "floor" then
+
       local vhr = area.entry_vhr + (P.floor or 0) - T.entry_floor
 
       CHUNK.floor = new_floor(vhr)
@@ -2287,8 +2316,16 @@ end
       elseif P.kind == "stair" then
         S.kind = "stair"
 
-      else --[[ if P.kind == "floor" then ]]
-        --???
+      elseif P.kind == "floor" then
+
+        -- handle intra connections (i.e. between sub-areas)
+        if S.intra_conn then
+          local sub = S.intra_conn.other_sub
+          if not sub.entry_vhr then
+            sub.entry_vhr = CHUNK.floor.vhr
+            sub.entry_S   = S:neighbor(S.intra_conn.dir)
+          end
+        end
 
       end
     end -- sx, sy
@@ -2350,6 +2387,8 @@ end
     end
 
     connect_sub_areas(T.sub_areas)
+
+    find_entry_in_subs(T.sub_areas)
 
     clear_sub_areas()
   end
@@ -2990,7 +3029,7 @@ function Layout_room(R)
             if S.room != R then return false end
             if not (S.kind == "walk" or S.kind == "void") then return false end
 
-            if S.conn or S.pseudo_conn then
+            if S.conn or S.pseudo_conn or S.intra_conn then
               hit_conn = hit_conn + 1
             end
           end
