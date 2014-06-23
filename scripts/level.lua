@@ -136,7 +136,7 @@ GLOBAL_STYLE_LIST =
   sub_rooms  = { none=80, some=30, heaps=5 }
 
   ambushes    = { none=10, some=50, heaps=10 }
-  big_rooms   = { none=30, few=50, some=20, heaps=5 }
+  big_rooms   = { none=20, few=50, some=30, heaps=10 }
   big_juncs   = { none=40, few=30, some=30, heaps=10 }
   cycles      = { none=50, some=50, heaps=50 }
   crossovers  = { none=40 } --!!!! , some=40, heaps=40 }

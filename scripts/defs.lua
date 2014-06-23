@@ -93,7 +93,7 @@ SPOT_LEDGE    = 3
 
 -- room stuff
 
-ROOM_SIZE_TABLE = { 60,40,15,10,10 }  -- 3/4/5/6/7 wide
+ROOM_SIZE_TABLE = { 60,40,20,10,10 }  -- 3/4/5/6/7 wide
 
 BIG_ROOM_TABLE =
 {

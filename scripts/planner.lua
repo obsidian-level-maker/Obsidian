@@ -42,6 +42,7 @@ function Plan_alloc_id(kind)
 end
 
 
+
 function Plan_dump_rooms()
   local function room_char(R)
     if not R then return '.' end
@@ -99,6 +100,7 @@ function Plan_choose_liquid()
 end
 
 
+
 function Plan_choose_darkness()
   local prob = EPISODE.dark_prob or 0
 
@@ -118,6 +120,7 @@ function Plan_choose_darkness()
     LEVEL.sky_shade  = LEVEL.sky_bright - 32
   end
 end
+
 
 
 function Plan_determine_size()
@@ -169,6 +172,7 @@ function Plan_determine_size()
   LEVEL.W = W
   LEVEL.H = H
 end
+
 
 
 function Plan_create_sections()
@@ -303,12 +307,14 @@ function Plan_create_sections()
 end
 
 
+
 function Section_valid(kx, ky)
   if kx < 1 or kx > LEVEL.W then return false end
   if ky < 1 or ky > LEVEL.H then return false end
 
   return true
 end
+
 
 
 function Plan_reserve_rooms()
@@ -473,6 +479,7 @@ function Plan_random_section_list()
 end
 
 
+
 function Plan_add_normal_rooms()
   local sections = LEVEL.sections
 
@@ -483,9 +490,10 @@ function Plan_add_normal_rooms()
     big_tab = table.copy(BIG_ROOM_TABLE)
 
     if STYLE.big_rooms == "few" then
-      big_tab[11] = big_tab[11] * 10
+      big_tab[11] = big_tab[11] * 6
     elseif STYLE.big_rooms == "heaps" then
-      big_tab[11] = big_tab[11] / 10
+      big_tab[11] = 1
+      big_tab[33] = 500
     end
   end
 
@@ -533,19 +541,17 @@ function Plan_add_normal_rooms()
 
     -- prevent excessively large rooms 
     local sw, sh
-    local max_size = 11
+    local max_size = 12
 
     sw = calc_width (bx, big_w)
     sh = calc_height(by, big_h)
 
-    while sw > max_size do
-      big_w = big_w - 1 ;
-      sw = calc_width(bx, big_w)
+    if sw > max_size then
+      big_w = big_w - 1
     end
 
-    while sh > max_size do
+    if sh > max_size then
       big_h = big_h - 1
-      sh = calc_height(by, big_h)
     end
 
     assert(big_w > 0 and big_h > 0)
@@ -604,6 +610,7 @@ function Plan_add_normal_rooms()
     end
   end
 end
+
 
 
 function Plan_add_caves()
@@ -1082,6 +1089,7 @@ function Plan_nudge_rooms()
 end
 
 
+
 function Plan_sub_rooms()
 
   --                    1  2  3   4   5   6   7   8+
@@ -1231,6 +1239,7 @@ function Plan_sub_rooms()
     end
   end
 end
+
 
 
 function Plan_make_seeds()
