@@ -516,6 +516,17 @@ function Plan_add_normal_rooms()
   end
 
 
+  local function big_range_free(bx, by, bw, bh)
+    for x = bx, bx+bw-1 do
+    for y = by, by+bh-1 do
+      if sections[x][y].room then return false end
+    end
+    end
+
+    return true
+  end
+
+
   local function choose_big_size(bx, by)
     if STYLE.big_rooms == "none" then
       return 1, 1
@@ -562,12 +573,28 @@ function Plan_add_normal_rooms()
     if big_w > big_h and sw / sh > max_aspect then big_w = big_w - 1 end
     if big_h > big_w and sh / sw > max_aspect then big_h = big_h - 1 end
 
-    -- any other rooms in the way?
-    for x = bx,bx+big_w-1 do for y=by,by+big_h-1 do
-      if sections[x][y].room then
-        return 1, 1
+    -- if any other rooms in the way, shrink and try again
+    while not big_range_free(bx, by, big_w, big_h) do
+      local shrink_x = false
+
+      if big_w != big_h then
+        if big_w > big_h then shrink_x = true end
+
+      else
+        assert(big_w >= 2)
+        assert(big_h >= 2)
+
+        if rand.odds(40) then shrink_x = true end
       end
-    end end
+
+      if shrink_x then
+        big_w = big_w - 1
+      else
+        big_h = big_h - 1
+      end
+    end
+
+    -- OK --
 
     return big_w, big_h
   end
