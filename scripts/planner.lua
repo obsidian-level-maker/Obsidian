@@ -585,6 +585,16 @@ function Plan_add_normal_rooms()
         assert(big_h >= 2)
 
         if rand.odds(40) then shrink_x = true end
+
+        if big_w == 3 and big_h == 3 then
+          if big_range_free(bx, by, 3, 2) then
+            return 3, 2
+          end
+          
+          if big_range_free(bx, by, 2, 3) then
+            return 2, 3
+          end
+        end
       end
 
       if shrink_x then
