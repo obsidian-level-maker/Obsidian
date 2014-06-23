@@ -1641,12 +1641,10 @@ function Layout_pattern_in_area(R, area)
   -- find a usable pattern in the ROOM_PATTERNS table and
   -- apply it to the room.
 
-  local use_solid_feature = rand.odds(75)
-
 
   -- only show debug messages for the top-level pattern
   local function local_debugf(...)
-    if area.is_top then
+    if area.is_top or true then --!!!!!!!!!
       gui.debugf(...)
     end
   end
@@ -1681,7 +1679,9 @@ function Layout_pattern_in_area(R, area)
     end
 
 --FIXME !!!!!! recursive patterns disabled for now
-    if pat.recurse then return 0 end
+    if pat.recurse and pat.recurse != "pure" then return 0 end
+
+if pat.recurse == "pure" then factor = factor * 100 end
 
     if pat.min_size > math.max(area.w, area.h) or
        pat.max_size < math.min(area.w, area.h)
@@ -1804,7 +1804,7 @@ end
     S.kind = "void"
     S.w_tex = solid_tex  -- can be NIL
 
-    if pat.solid_feature and use_solid_feature then 
+    if pat.solid_feature and R.use_solid_feature then 
       S.solid_feature = true
     end
   end
@@ -1921,6 +1921,100 @@ end
   end
 
   
+  local function clear_sub_areas()
+    for x = area.x1, area.x2 do
+    for y = area.y1, area.y2 do
+      SEEDS[x][y].sub_area = nil
+    end
+    end
+  end
+
+
+  local function all_subs_connected(sub_areas)
+    local id = sub_areas[1].conn_id
+
+    each sub in sub_areas do
+      if sub.conn_id != id then return false end
+    end
+
+    return true
+  end
+
+
+  local function merge_two_subs(sub_areas, A, B)
+    assert(A and B)
+    assert(A.id != B.id)
+
+    local old_id = A.id
+    local new_id = B.id
+
+    each sub in sub_areas do
+      if sub.conn_id == old_id then
+         sub.conn_id =  new_id
+      end
+    end
+  end
+
+
+  local function try_connect_two_subs(sub_areas)
+    local locs = {}
+
+    for x = area.x1, area.x2 do
+    for y = area.y1, area.y2 do
+      local S = SEEDS[x][y]
+
+      if not S.sub_area then continue end
+
+      if S.conn or S.pseudo_conn or S.intra_conn then continue end
+
+      for dir = 6,8,2 do
+        local N = S:neighbor(S)
+
+        if not N or N.free then continue end
+
+        if N.sx > area.x2 then continue end
+        if N.sy > area.y2 then continue end
+
+        if not N.sub_area then continue end
+
+        if N.conn or N.pseudo_conn or N.intra_conn then continue end
+        
+        if N.sub_area.conn_id == S.sub_area.conn_id then continue end
+
+        -- OK this is possible
+        table.insert(locs, { S=S, N=N, dir=dir, score=gui.random() })
+
+      end -- dir
+
+    end -- x, y
+    end
+
+    if #locs == 0 then
+      error("Failed to connect sub-areas in recursive pattern")
+    end
+
+    local loc = table.pick_best(locs, function(A, B) return A.score > B.score end)
+
+    loc.S.intra_conn = { dir=loc.dir }
+    loc.N.intra_conn = { dir=10 - loc.dir }
+
+    merge_two_subs(sub_areas, loc.S.sub_area, loc.N.sub_area)
+  end
+
+
+  local function connect_sub_areas(sub_areas)
+    if table.size(sub_areas) < 2 then return end
+
+    each sub in sub_areas do
+      sub.conn_id = _index
+    end
+
+    while not all_subs_connected(sub_areas) do
+      try_connect_two_subs(sub_areas)
+    end
+  end
+
+
   local function touches_outdoor_border(tx1, ty1, tx2, ty2)
     for x = tx1, tx2 do
     for y = ty1, ty2 do
@@ -1958,7 +2052,7 @@ end
     end -- x, y
     end
 
-    return assert(seen_R)
+    return seen_R
   end
 
 
@@ -2000,6 +2094,11 @@ end
     assert(area.y1 <= sy1 and sy2 <= area.y2)
 
     local P = pat._structure[px][py]
+
+    if P.kind == "sub_area" then
+      -- sub-areas of recursive patterns trivially succeed
+      return 0
+    end
 
     local OV
     if pat._overlay then
@@ -2059,9 +2158,36 @@ end
     local sx2 = sx1 + sw - 1
     local sy2 = sy1 + sh - 1
 
-    local base_h = assert(area.entry_h)
-
     local P = pat._structure[px][py]
+
+    -- for recursive sub-areas, merely mark the bounds
+    if P.kind == "sub_area" then
+      local sub = T.sub_areas[P.area]
+
+      if not sub then
+        sub = {}
+
+        T.sub_areas[P.area] = sub
+
+        sub.entry_vhr = area.entry_vhr  --!!!!!!!!! TESTING CRAP
+
+        table.insert(R.areas, sub)
+      end
+
+      sub.x1 = math.min(sx1, sub.x1 or  999)
+      sub.y1 = math.min(sy1, sub.y1 or  999)
+      sub.x2 = math.max(sx2, sub.x2 or -999)
+      sub.y2 = math.max(sy2, sub.y2 or -999)
+
+      -- this is only needed for connect_sub_areas()
+      for sx = sx1, sx2 do
+      for sy = sy1, sy2 do
+        SEEDS[sx][sy].sub_area = sub
+      end
+      end
+
+      return
+    end
 
     -- store the chunk information in a CHUNK object
     local CHUNK =
@@ -2208,7 +2334,7 @@ end
       T.entry_floor = 0
     end
 
-    T.z_mul = rand.sel(40, -1, 1)
+    T.sub_areas = {}
 
     local W = pat._structure.w
     local H = pat._structure.h
@@ -2222,6 +2348,10 @@ end
       install_a_chunk(pat, px, py, T, sx, sy, sw, sh)
     end -- x, y
     end
+
+    connect_sub_areas(T.sub_areas)
+
+    clear_sub_areas()
   end
 
 
@@ -2497,7 +2627,7 @@ gui.debugf("  gap_z --> %d  want_gap --> %d\n", gap_z, want_gap)
 
     tab[5] = 0
 
-    for i = 0, 3 do
+    for i = 0, 40 do  --!!!!!! FIXME 0, 4
       local d1 = rand.key_by_probs(delta_tab)
       local d2 = rand.key_by_probs(delta_tab)
 
@@ -3134,7 +3264,7 @@ function Layout_room(R)
       if A.filled then continue end
 
       -- need an entry height
-      if not A.entry_h then continue end
+      if not A.entry_vhr then continue end
 
       return A  -- OK
     end
@@ -3146,6 +3276,8 @@ function Layout_room(R)
   local function fill_room(entry_h)
     R.entry_vhr = 5
 
+    R.use_solid_feature = rand.odds(75)
+
     -- create intiial area
     local AREA =
     {
@@ -3153,8 +3285,6 @@ function Layout_room(R)
       y1 = R.ty1
       x2 = R.tx2
       y2 = R.ty2
-
-      entry_h = entry_h
 
       entry_vhr = R.entry_vhr
     }
