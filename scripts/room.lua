@@ -1241,7 +1241,7 @@ function Room_border_up()
     local R = S.room
     local N = S:neighbor(corner)
 
-if not R then return end
+    if not R then return end
 
     if R.is_outdoor or R.kind == "cave" then return end
 
@@ -1293,6 +1293,19 @@ if not R then return end
   end
 
 
+  local function make_outdoor_corners()
+    for x = 1, SEED_W do
+    for y = 1, SEED_TOP do
+      local S = SEEDS[x][y]
+
+      each corner in geom.CORNERS do
+        try_make_corner(S, corner)
+      end
+    end
+    end
+  end
+
+
   local function calc_fence_height(R)
     if not R.fence_z then
       -- fence_z is the _bottom_ height of the fence
@@ -1332,10 +1345,6 @@ if not R then return end
         local N_frame = (N and N.map_border and N.map_border.room)
 
         try_make_border(S_frame or R, S, N_frame or (N and N.room), N, side)
-      end
-
-      each corner in geom.CORNERS do
-        try_make_corner(S, corner)
       end
 
     end -- x, y
@@ -1949,6 +1958,8 @@ if not R then return end
   each R in LEVEL.scenic_rooms do
     border_up(R)
   end
+
+  make_outdoor_corners()
 
   widen_arches()
 

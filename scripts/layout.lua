@@ -3717,7 +3717,7 @@ function Layout_plan_outdoor_borders()
 
   gui.debugf("Layout_plan_outdoor_borders...\n")
 
-  if rand.odds(25) then
+  if rand.odds(35) then
     LEVEL.border_name  = "Border_dropoff"
   else
     LEVEL.border_name  = "Border_rocky"
