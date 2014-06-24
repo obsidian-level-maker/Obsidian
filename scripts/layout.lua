@@ -1642,6 +1642,13 @@ function Layout_pattern_in_area(R, area)
   -- apply it to the room.
 
 
+  local MIN_VHR = area.min_vhr or 1
+  local MAX_VHR = area.max_vhr or 9
+
+  assert(area.entry_vhr >= MIN_VHR)
+  assert(area.entry_vhr <= MAX_VHR)
+
+
   -- only show debug messages for the top-level pattern
   local function local_debugf(...)
     if area.is_top or true then --!!!!!!!!!
@@ -1717,10 +1724,6 @@ if pat.recurse == "pure" then factor = factor * 100 end
       if not PARAM.extra_floors then
         return 0  -- 3D floors not available
       end
-
-      if not area.is_top then
-        return 0  -- cannot use 3D floors in sub-areas
-      end
     end
 
     -- enough symmetry?
@@ -1748,6 +1751,9 @@ if pat.recurse == "pure" then factor = factor * 100 end
     local liquid_factor = style_sel("liquids", 0, 0.2, 1.0, 5.0)
 
     local exfl_factor = style_sel("ex_floors", 0, 0.2, 1.0, 5.0)
+
+--!!!!!!
+exfl_factor = 100
 
     local tab = {}
 
@@ -1974,7 +1980,7 @@ end
 
       if not S.sub_area then continue end
 
-      if S.conn or S.pseudo_conn or S.intra_conn then continue end
+      if S.intra_conn then continue end
 
       for dir = 6,8,2 do
         local N = S:neighbor(dir)
@@ -1986,7 +1992,7 @@ end
 
         if not N.sub_area then continue end
 
-        if N.conn or N.pseudo_conn or N.intra_conn then continue end
+        if N.intra_conn then continue end
 
         if N.sub_area.group == S.sub_area.group then continue end
 
@@ -2248,7 +2254,7 @@ end
 
     elseif P.kind == "floor" then
 
-      local vhr = area.entry_vhr + (P.floor or 0) - T.entry_floor
+      local vhr = area.entry_vhr + P.floor - T.entry_floor
 
       CHUNK.floor = new_floor(vhr)
     end
@@ -2310,6 +2316,15 @@ end
       if P.kind == "liquid" then
         setup_liquid(S)
 
+if S.intra_conn then
+  assert(CHUNK.overlay)
+  local sub = S.intra_conn.other_sub
+  if not sub.entry_vhr then
+    sub.entry_vhr = CHUNK.overlay.floor.vhr
+    sub.entry_S   = S:neighbor(S.intra_conn.dir)
+  end
+end
+
       elseif P.kind == "solid" then
         setup_solid(S, pat, solid_tex)
 
@@ -2318,14 +2333,18 @@ end
 
       elseif P.kind == "floor" then
 
-        -- handle intra connections (i.e. between sub-areas)
-        if S.intra_conn then
-          local sub = S.intra_conn.other_sub
-          if not sub.entry_vhr then
-            sub.entry_vhr = CHUNK.floor.vhr
-            sub.entry_S   = S:neighbor(S.intra_conn.dir)
-          end
-        end
+-- handle intra connections (i.e. between sub-areas)
+if S.intra_conn then
+  local sub = S.intra_conn.other_sub
+  if not sub.entry_vhr then
+    sub.entry_vhr = CHUNK.floor.vhr
+    sub.entry_S   = S:neighbor(S.intra_conn.dir)
+
+    if CHUNK.overlay and rand.odds(50) then
+      sub.entry_vhr = assert(CHUNK.overlay.floor.vhr)
+    end
+  end
+end
 
       end
     end -- sx, sy
@@ -2333,8 +2352,21 @@ end
   end
 
 
+  local function check_vhr_overflow(T)
+    each floor,_ in T.used_floors do
+      local vhr = area.entry_vhr + floor - T.entry_floor
+
+      if vhr > MAX_VHR or vhr < MIN_VHR then return true end
+    end
+
+    return false  -- OK --
+  end
+
+
   local function eval_pattern(pat, T)
     local score = 0
+
+    T.entry_floor = nil
 
     T.used_floors = {}
 
@@ -2357,6 +2389,16 @@ end
     end -- px, py
     end
 
+    -- this only happens for START room and teleporter destinations
+    -- (and pure recursive patterns)
+    if not T.entry_floor then
+      T.entry_floor = 0
+    end
+
+    if check_vhr_overflow(T) then
+      return -1
+    end
+
     -- the more used floors, the better
     score = score + 100 * table.size(T.used_floors)
 
@@ -2366,11 +2408,6 @@ end
 
 
   local function install_pattern(pat, T)
-    -- this only happens for START room and teleporter destinations
-    if not T.entry_floor then
-      T.entry_floor = 0
-    end
-
     T.sub_areas = {}
 
     local W = pat._structure.w
@@ -2438,8 +2475,6 @@ end
         for y_mir = 0, y_mir_tot do
           T.mirror_x = (x_mir == 1)
           T.mirror_y = (y_mir == 1)
-
-          T.entry_floor = nil
 
           T.score = eval_pattern(pat, T)
 
@@ -3208,7 +3243,7 @@ function Layout_room(R)
 
     local last_tex
 
-    for vhr = 1, 9 do
+    for vhr = 1,9 do
       local F = R.floors[vhr]
 
       if not F then continue end
