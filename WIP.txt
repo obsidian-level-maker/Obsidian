@@ -14,6 +14,9 @@ WORK IN PROGRESS
 
 
 Spot handling:
+
+!!  handle torches and barrels in normal rooms
+
 -  update Cave code
    -  get bbox (real coord / cells) for each AREA
    -  only use that bbox
@@ -27,6 +30,33 @@ Spot handling:
 
 
 Layout rework:
+
+-  pure patterns : have two basic kinds (I and P) and ensure
+   no (or little) overlap in the sizes which can use them
+   (in particular : I pattern should be tall and narrow)
+
+-  recursive patterns : in sizes support a '+' symbol (or?) which
+   means that the size must be (e.g.) 6 seeds _or_more_
+   e.g. "3+13+'
+
+-  recursive : figure out how to handle symmetry
+
+IDEA: '?' in patterns means "don't care" / "filler"
+      the chunk becomes same as a nearby sub-area cell
+      if installed on a conn (etc), require neighbor to be walk
+
+-  recursive : when stair goes INTO a sub-area, it means all its floors
+               should have HIGHER vhr than any in the outer pattern,
+               or should be LOWER vhr than any in outer pattern
+               [ pick UP or DOWN based on z_dir ]
+
+               if stair into sub-area would hit 3D floor (above normal floor)
+               then pick _LOW_ one when stair goes up, and _HIGH_ one when
+               stair goes down.
+
+               disallow stairs FROM a sub-area
+
+
 +  create chunks for ALL non-cave rooms
 
 -  CHUNK_CLASS ?   put in seed.lua
@@ -49,7 +79,7 @@ IDEA:  automatically merge 2x2 seeds (if floor) into a single chunk
 -  get diagonals working again
 
 +  recursive patterns!
-   -  use 'a', 'b', 'c' and 'd' instead of '1', '2' (etc)
+   DONE:  use 'a', 'b', 'c' and 'd' instead of '1', '2' (etc)
 
    -  detect if no stair was used, automatically and randomly
       pick "intra conn" when installing into the room
@@ -59,8 +89,6 @@ IDEA:  automatically merge 2x2 seeds (if floor) into a single chunk
 
    -  perhaps have "recurse = onion" patterns, and we try a certain
       quota (based on depth) of these BEFORE all other patterns.
-
-??  the 'is_top' pattern must touch the entry_conn (if present)
 
 IDEA:  auto-sub-areas : in huge room, sub-divide into smaller rectangles
        and place "intra connections" between them.  Place patterns in
@@ -100,9 +128,6 @@ Cave lighting:
 
 MISCELLANEA
 ===========
-
-
-corner_up : a pass over all seeds (like fences)
 
 
 RAIL ISSUE : cannot control offsets on BACK SIDE of a brush vert
