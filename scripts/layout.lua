@@ -2010,10 +2010,16 @@ end
 
     local loc = table.pick_best(locs, function(A, B) return A.score > B.score end)
 
-    loc.S.intra_conn = { dir=loc.dir,      other_sub=loc.N.sub_area }
-    loc.N.intra_conn = { dir=10 - loc.dir, other_sub=loc.S.sub_area }
+    local S = loc.S
+    local N = loc.N
 
-    merge_two_subs(sub_areas, loc.S.sub_area, loc.N.sub_area)
+    S.intra_conn = { dir=loc.dir,      other_sub=N.sub_area }
+    N.intra_conn = { dir=10 - loc.dir, other_sub=S.sub_area }
+
+    gui.debugf("Connected subs %d --> %d @ %s dir:%d\n",
+               S.sub_area.id, N.sub_area.id, S:tostr(), loc.dir)
+
+    merge_two_subs(sub_areas, S.sub_area, N.sub_area)
   end
 
 
@@ -2050,6 +2056,18 @@ end
         sub.entry_S   = area.entry_S
         return
       end
+    end
+  end
+
+  
+  local function dump_sub_areas(sub_areas)
+    if table.empty(sub_areas) then return end
+
+    gui.debugf("Sub areas:\n")
+
+    each idx,sub in sub_areas do
+      gui.debugf("  SUB_%d : (%d %d) .. (%d %d)\n", sub.id,
+                 sub.x1, sub.y1, sub.x2, sub.y2)
     end
   end
 
@@ -2204,7 +2222,10 @@ end
       local sub = T.sub_areas[P.area]
 
       if not sub then
-        sub = {}
+        sub =
+        {
+          id = Plan_alloc_id("sub_area")
+        }
 
         T.sub_areas[P.area] = sub
 
@@ -2313,17 +2334,36 @@ end
 
       S.chunk = CHUNK
 
-      if P.kind == "liquid" then
-        setup_liquid(S)
+if sx == 24 and sy == 16 then
+gui.debugf("intra_conn = %s\n", tostring(S.intra_conn))
+gui.debugf("Installing '%s' @ %s\n", P.kind, S:tostr())
+end
 
+
+-- handle intra connections (i.e. between sub-areas)
 if S.intra_conn then
-  assert(CHUNK.overlay)
   local sub = S.intra_conn.other_sub
   if not sub.entry_vhr then
-    sub.entry_vhr = CHUNK.overlay.floor.vhr
+    local vhr
+    if CHUNK.kind == "floor" then
+      vhr = CHUNK.floor.vhr
+    end
+    local OV = CHUNK.overlay
+    if OV and OV.kind == "floor" then
+      if not vhr or rand.odds(50) then
+        vhr = OV.floor.vhr
+      end
+    end
+
+    assert(vhr)
+
+    sub.entry_vhr = vhr
     sub.entry_S   = S:neighbor(S.intra_conn.dir)
   end
 end
+
+      if P.kind == "liquid" then
+        setup_liquid(S)
 
       elseif P.kind == "solid" then
         setup_solid(S, pat, solid_tex)
@@ -2332,19 +2372,7 @@ end
         S.kind = "stair"
 
       elseif P.kind == "floor" then
-
--- handle intra connections (i.e. between sub-areas)
-if S.intra_conn then
-  local sub = S.intra_conn.other_sub
-  if not sub.entry_vhr then
-    sub.entry_vhr = CHUNK.floor.vhr
-    sub.entry_S   = S:neighbor(S.intra_conn.dir)
-
-    if CHUNK.overlay and rand.odds(50) then
-      sub.entry_vhr = assert(CHUNK.overlay.floor.vhr)
-    end
-  end
-end
+        --???
 
       end
     end -- sx, sy
@@ -2422,6 +2450,8 @@ end
       install_a_chunk(pat, px, py, T, sx, sy, sw, sh)
     end -- x, y
     end
+
+    dump_sub_areas(T.sub_areas)
 
     connect_sub_areas(T.sub_areas)
 
@@ -2542,8 +2572,8 @@ end
 
   area.w, area.h = geom.group_size(area.x1, area.y1, area.x2, area.y2)
 
-  local_debugf("Layout_pattern_in_area @ %s : (%d %d) %dx%d\n", R:tostr(),
-               area.x1, area.y1, area.w, area.h)
+  local_debugf("Layout_pattern @ %s : SUB_%d (%d %d) %dx%d\n",
+               R:tostr(), area.id, area.x1, area.y1, area.w, area.h)
 
   assert(R.kind != "cave")
   assert(R.kind != "hallway")
@@ -3338,7 +3368,9 @@ function Layout_room(R)
       if A.filled then continue end
 
       -- need an entry height
-      if not A.entry_vhr then continue end
+      if not A.entry_vhr then
+gui.debugf("(skip SUB_%s : no entry_vhr)\n", tostring(A.id))
+      continue end
 
       return A  -- OK
     end
@@ -3355,6 +3387,8 @@ function Layout_room(R)
     -- create intiial area
     local AREA =
     {
+      id = Plan_alloc_id("sub_area")
+
       x1 = R.tx1
       y1 = R.ty1
       x2 = R.tx2
