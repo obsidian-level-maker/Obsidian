@@ -23,6 +23,8 @@ DOOM2.EPISODES =
 {
   episode1 =
   {
+    ep_index = 1
+
     theme = "tech"
     sky_patch = "RSKY1"
     dark_prob = 10
@@ -30,6 +32,8 @@ DOOM2.EPISODES =
 
   episode2 =
   {
+    ep_index = 2
+
     theme = "urban"
     sky_patch = "RSKY2"
     dark_prob = 40
@@ -37,6 +41,8 @@ DOOM2.EPISODES =
 
   episode3 =
   {
+    ep_index = 3
+
     theme = "hell"
     sky_patch = "RSKY3"
     dark_prob = 10
@@ -150,10 +156,7 @@ function DOOM2.get_levels()
 
     LEV.secret_exit = GAME.SECRET_EXITS[LEV.name]
 
-    if map == 31 or map == 32 then
-      -- secret levels are easy
-      LEV.mon_along = 0.35
-    elseif OB_CONFIG.length == "single" then
+    if OB_CONFIG.length == "single" then
       LEV.mon_along = ep_along
     else
       -- difficulty ramps up over whole wad
@@ -164,6 +167,9 @@ function DOOM2.get_levels()
     if map == 31 or map == 32 then
       LEV.theme_name = "wolf"
       LEV.name_class = "URBAN"
+      LEV.is_secret = true
+      -- secret levels are easy
+      LEV.mon_along = 0.35
     end
 
     if map == 23 then
@@ -207,6 +213,8 @@ DOOM1.EPISODES =
 {
   episode1 =
   {
+    ep_index = 1
+
     theme = "tech"
     sky_patch = "SKY1"
     dark_prob = 10
@@ -217,6 +225,8 @@ DOOM1.EPISODES =
 
   episode2 =
   {
+    ep_index = 2
+
     theme = "deimos"
     sky_patch = "SKY2"
     dark_prob = 40
@@ -227,6 +237,8 @@ DOOM1.EPISODES =
 
   episode3 =
   {
+    ep_index = 3
+
     theme = "hell"
     sky_patch = "SKY3"
     dark_prob = 10
@@ -237,6 +249,8 @@ DOOM1.EPISODES =
 
   episode4 =
   {
+    ep_index = 4
+
     theme = "flesh"
     sky_patch = "SKY4"
     dark_prob = 10
@@ -338,6 +352,10 @@ function DOOM1.get_levels()
       table.insert(GAME.levels, LEV)
 
       LEV.secret_exit = GAME.SECRET_EXITS[LEV.name]
+
+      if map == 9 then
+        LEV.is_secret = true
+      end
 
       -- prebuilt levels
       LEV.prebuilt = GAME.PREBUILT_LEVELS[LEV.name]
