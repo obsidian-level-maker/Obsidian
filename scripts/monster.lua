@@ -1862,40 +1862,6 @@ function Monsters_in_room(R)
   end
 
 
-  local function FIXME__monster_fits(S, mon, info)
-    if S.usage or S.no_monster or not S.floor_h then
-      return false
-    end
-
-    -- keep entryway clear
-    if R.entry_conn and S:has_conn(R.entry_conn) then
-      return false
-    end
-
-    -- check seed kind
-    -- (floating monsters can go in more places)
-    if S.kind == "walk" or (S.kind == "liquid" and info.float) then
-      -- OK
-    else
-      return false
-    end
-
-    -- check if fits vertically
-    local ceil_h = S.ceil_h or R.ceil_h or SKY_H
-    local ent = assert(GAME.MONSTERS[mon])
-
-    if ent.h >= (ceil_h - S.floor_h - 1) then
-      return false
-    end
-
-    if is_huge(mon) and S.solid_corner then
-      return false
-    end
-
-    return true
-  end
-
-
   local function quantize_angle(a)
     if PARAM.fine_angles then return a end
 
@@ -2045,8 +2011,7 @@ function Monsters_in_room(R)
   local function mon_fits(mon, spot)
     local info  = GAME.MONSTERS[mon]
 
-    -- FIXME !!!
-    -- if info.h >= (spot.z2 - spot.z1) then return 0 end
+    if info.h >= (spot.z2 - spot.z1) then return 0 end
 
     local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
 
