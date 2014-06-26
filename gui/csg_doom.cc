@@ -1179,67 +1179,76 @@ static int CalcXOffset(snag_c *S, brush_vert_c *V, int ox)
 }
 
 
-static int CalcYOffset_1S(brush_vert_c *V, doom_sector_c *sec, int oy, bool unpeg_L)
+static int NormalizeYOffset(int oy)
 {
-	if (unpeg_L)
-		return oy;
-
-	// check if brush was normal size (not unfinitely high) and has been
-	// cut-off by the ceiling in this sector.
-
-	csg_brush_c *B = V->parent;
-
-	int z2 = I_ROUND(B->t.z);
-
-	if (z2 > EXTREME_H - 100)
-		return oy;
-
-	return oy + (z2 - sec->c_h);
-}
-
-
-static int CalcYOffset_Lower(brush_vert_c *V, doom_sector_c *sec,
-							 doom_sector_c *back, int oy, bool unpeg_L)
-{
-	// generally get here in pegged mode (rendered top-down).
-	// the lower may stll be cut-off by this sector's ceiling...
-	if (unpeg_L)
-		return oy;
-
-	csg_brush_c *B = V->parent;
-
-	int z2 = I_ROUND(B->t.z);
-
-	if (z2 > sec->c_h)
-		oy += z2 - sec->c_h;
+	if (oy >= 256)
+		oy &= 255;
+	else if (oy < -256)
+		oy = - (-oy & 255);
 
 	return oy;
 }
 
 
-static int CalcYOffset_Upper(brush_vert_c *V, doom_sector_c *sec,
-							 doom_sector_c *back, int oy, bool unpeg_U)
+static int Default_ZA(csg_brush_c *B)
+{
+	// default anchor point for a brush
+
+	int z1 = I_ROUND(B->b.z);
+	int z2 = I_ROUND(B->t.z);
+
+	if (z2 < EXTREME_H - 100)
+		return z2;
+	
+	if (z1 > EXTREME_H + 100)
+		return z1;
+	
+	return 0;
+}
+
+
+static int CalcYOffset_1S(brush_vert_c *V, int oy, int ceil_h,
+						  int za, bool unpeg_L)
+{
+	if (unpeg_L)
+		return oy;
+
+	csg_brush_c *B = V->parent;
+
+	if (za == IVAL_NONE)
+		za = Default_ZA(B);
+
+	return za - ceil_h + oy;
+}
+
+
+static int CalcYOffset_Lower(brush_vert_c *V, int oy, int ceil_h,
+							 int za, bool unpeg_L)
+{
+	if (! unpeg_L)  // pegged, i.e. rendered top-down
+		return oy;
+
+	csg_brush_c *B = V->parent;
+
+	if (za == IVAL_NONE)
+		za = Default_ZA(B);
+
+	return za - ceil_h + oy;
+}
+
+
+static int CalcYOffset_Upper(brush_vert_c *V, int oy, int ceil_h,
+							 int za, bool unpeg_U)
 {
 	if (! unpeg_U)	// pegged, i.e. rendered bottom-up (doors)
 		return oy;
 
 	csg_brush_c *B = V->parent;
 
-	int z2 = I_ROUND(B->t.z);
+	if (za == IVAL_NONE)
+		za = Default_ZA(B);
 
-	if (z2 > EXTREME_H - 100)
-		return oy;
-
-	return oy + (z2 - sec->c_h);
-}
-
-
-static int CalcYOffset_Rail(brush_vert_c *rail, doom_sector_c *F, doom_sector_c *B)
-{
-	// we don't check any "cut-off" situations here
-	// (such logic would also require forcing a light diff in each sector)
-
-	return rail->face.getInt("v1", 0);
+	return za - ceil_h + oy;
 }
 
 
@@ -1294,11 +1303,13 @@ static doom_sidedef_c * DM_MakeSidedef(
 			int ox = lower->face.getInt("u1", IVAL_NONE);
 			int oy = lower->face.getInt("v1", IVAL_NONE);
 
+			int za = lower->face.getInt("za", IVAL_NONE);
+
 			if (ox != IVAL_NONE)
 				SD->x_offset = CalcXOffset(snag, lower, ox);
 
 			if (oy != IVAL_NONE)
-				SD->y_offset = CalcYOffset_1S(lower, sec, oy, unpeg_L);
+				SD->y_offset = CalcYOffset_1S(lower, oy, sec->c_h, za, unpeg_L);
 		}
 	}
 	else
@@ -1313,12 +1324,15 @@ static doom_sidedef_c * DM_MakeSidedef(
 
 		// offset handling
 		int r_ox = IVAL_NONE;
+		int r_oy = IVAL_NONE;
+
 		int l_ox = IVAL_NONE;
 		int l_oy = IVAL_NONE;
+		int l_za = IVAL_NONE;
 
-		int r_oy = IVAL_NONE;
 		int u_ox = IVAL_NONE;
 		int u_oy = IVAL_NONE;
+		int u_za = IVAL_NONE;
 
 		if (rail)
 		{
@@ -1338,12 +1352,14 @@ static doom_sidedef_c * DM_MakeSidedef(
 			l_ox = lower->face.getInt("u1", IVAL_NONE);
 			// on a moving brush, default Y offset is zero
 			l_oy = lower->face.getInt("v1", l_brush->props.getInt("mover") ? 0 : IVAL_NONE);
+			l_za = lower->face.getInt("za", IVAL_NONE);
 		}
 
 		if (upper)
 		{
 			u_ox = upper->face.getInt("u1", IVAL_NONE);
 			u_oy = upper->face.getInt("v1", u_brush->props.getInt("mover") ? 0 : IVAL_NONE);
+			u_za = upper->face.getInt("za", IVAL_NONE);
 		}
 
 		if (back && back->f_h > sec->f_h && !rail && l_oy != IVAL_NONE)
@@ -1360,11 +1376,11 @@ static doom_sidedef_c * DM_MakeSidedef(
 			SD->x_offset = CalcXOffset(snag, upper, u_ox);
 
 		if (r_oy != IVAL_NONE)
-			SD->y_offset = r_oy; //??? CalcYOffset_Rail(rail, sec, back);
+			SD->y_offset = r_oy;
 		else if (l_oy != IVAL_NONE)
-			SD->y_offset = CalcYOffset_Lower(lower, sec, back, l_oy, unpeg_L);
+			SD->y_offset = CalcYOffset_Lower(lower, l_oy, sec->c_h, l_za, unpeg_L);
 		else if (u_oy != IVAL_NONE)
-			SD->y_offset = CalcYOffset_Upper(upper, sec, back, u_oy, unpeg_U);
+			SD->y_offset = CalcYOffset_Upper(upper, u_oy, sec->c_h, u_za, unpeg_U);
 
 		// get textures, but fallback to something safe
 		if (! lower) lower = l_brush->verts[0];
@@ -1373,6 +1389,8 @@ static doom_sidedef_c * DM_MakeSidedef(
 		SD->lower = lower->face.getStr("tex", dummy_tex);
 		SD->upper = upper->face.getStr("tex", dummy_tex);
 	}
+
+	SD->y_offset = NormalizeYOffset(SD->y_offset);
 
 	return SD;
 }
