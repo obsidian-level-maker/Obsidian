@@ -20,7 +20,8 @@ THEME_CONTROL = { }
 
 THEME_CONTROL.CHOICES =
 {
-  "keep",   "NO CHANGE"
+  "no_change", "NO CHANGE"
+
   "tech",   "Tech"
   "urban",  "Urban"
   "hell",   "Hell"
@@ -29,17 +30,42 @@ THEME_CONTROL.CHOICES =
 }
 
 
+function THEME_CONTROL.set_a_theme(LEV, opt)
+  if opt.value == "no_change" then
+    return
+  end
+
+  if opt.value == "egypt" and OB_CONFIG.game != "tnt" then
+    error("Can only use Egypt theme with TNT Evilution.")
+  end
+
+  LEV.theme_name = opt.value
+end
+
+
 function THEME_CONTROL.get_levels(self)
-  -- FIXME !!!
-  for name,opt in pairs(self.options) do
-    local blah = self.options[name].value
+  each LEV in GAME.levels do
+    local name
+
+    if LEV.is_secret then
+      name = "secret"
+    else
+      name = "episode" .. tostring(LEV.episode.ep_index)
+    end
+
+    local opt = self.options[name]
+
+    -- ignore unknown episodes
+    if not opt then continue end
+
+    THEME_CONTROL.set_a_theme(LEV, opt)
   end
 end
 
 
-OB_MODULES["theme_control"] =
+OB_MODULES["theme_ctl_doom2"] =
 {
-  label = "Doom Theme Control"
+  label = "Doom 2 Theme Control"
 
   game = { doom2=1 }
 
@@ -54,6 +80,43 @@ OB_MODULES["theme_control"] =
     episode2  = { label="Episode 2",     choices=THEME_CONTROL.CHOICES }
     episode3  = { label="Episode 3",     choices=THEME_CONTROL.CHOICES }
     secret    = { label="Secret Levels", choices=THEME_CONTROL.CHOICES }
+  }
+}
+
+
+------------------------------------------------------------------------
+
+
+THEME_CONTROL.DOOM1_CHOICES =
+{
+  "no_change", "NO CHANGE"
+
+  "tech",   "Tech"
+  "deimos", "Deimos"
+  "hell",   "Hell"
+  "flesh",  "Flesh"
+}
+
+
+OB_MODULES["theme_ctl_doom1"] =
+{
+  label = "Doom 1 Theme Control"
+
+  game = { doom1=1 }
+
+  hooks =
+  {
+    -- using same function for both Doom 1 and Doom 2 modules
+    get_levels = THEME_CONTROL.get_levels
+  }
+
+  options =
+  {
+    episode1  = { label="Episode 1",     choices=THEME_CONTROL.DOOM1_CHOICES }
+    episode2  = { label="Episode 2",     choices=THEME_CONTROL.DOOM1_CHOICES }
+    episode3  = { label="Episode 3",     choices=THEME_CONTROL.DOOM1_CHOICES }
+    episode4  = { label="Episode 4",     choices=THEME_CONTROL.DOOM1_CHOICES }
+    secret    = { label="Secret Levels", choices=THEME_CONTROL.DOOM1_CHOICES }
   }
 }
 
