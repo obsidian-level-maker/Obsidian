@@ -867,6 +867,16 @@ int CSG_property(lua_State *L)
 		dummy_plane_tex = std::string(value);
 		return 0;
 	}
+	else if (strcmp(key, "spot_low_h") == 0)
+	{
+		spot_low_h = atoi(value);
+		return 0;
+	}
+	else if (strcmp(key, "spot_high_h") == 0)
+	{
+		spot_high_h = atoi(value);
+		return 0;
+	}
 
 	SYS_ASSERT(game_object);
 
@@ -1036,6 +1046,9 @@ void CSG_Main_Free()
 
 	dummy_wall_tex .clear();
 	dummy_plane_tex.clear();
+
+	spot_low_h  = 72;
+	spot_high_h = 128;
 }
 
 
