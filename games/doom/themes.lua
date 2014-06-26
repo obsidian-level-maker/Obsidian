@@ -1437,7 +1437,6 @@ OB_THEMES["wolf"] =
   name_class = "URBAN"
 
   -- this theme is special, hence no mixed_prob
-  psycho_prob = 5
 }
 
 
