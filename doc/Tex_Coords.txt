@@ -10,25 +10,13 @@ top    texture: tu, tv fields in brush sides
 (usually placed in every side, but if only in a single side
 then the texture is axis aligned and 1:1 scale)
 
-side texture: u1 and/or u2 in brush sides
-              v1 and/or v2 in brush sides
-(if only one of v1/v2 is present, other is computed from brush height)
-(u2 can be absent, but u2 without u1 is not supported)
-(can put v1 in t coord, v2 in b coords, for default value of all sides)
+also: tscale in brush top, bscale in brush bottom
 
-new coord kind: zv = height, used with v1 or v2 to vertically anchor
-all the side textures (without any v1 or v2) to a certain height.
+side texture: u1 and/or uscale in brush sides
+              v1 and/or vscale in brush sides
 
-x_offset is a synonym for u1
-y_offset is a synonym for v1
-
-DOOM and other games don't support scaling.  When both u1 and u2, or
-v1 and v2 are present on brush sides, only u1 or v1 are used.
-Similarly any floor/ceiling texture coordinates are ignored.
-
-The 'peg' flag is only for DOOM-based engines, causing the texture to
-move with the sector's floor or ceiling -- needed for doors and lifts,
-and useful in some other places (like alignment on window lowers).
-This flag will change how texturing is applied (in the DOOM engine)
-but has no effect on how the final y_offset is computed.
+new coord kind: za = height, specifies absolute Z anchor coordinate
+(i.e. for top of the texture).
+can be used with or without v1 or vscale.
+default is top of brush, or bottom if no top, otherwise 0.
 

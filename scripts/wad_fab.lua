@@ -445,7 +445,7 @@ function Fab_transform_Z(fab, T)
     each C in brush do
       if C.b  then C.b  = Trans.apply_z(C.b)  ; b = C.b end
       if C.t  then C.t  = Trans.apply_z(C.t)  ; t = C.t end
-      if C.zv then C.zv = Trans.apply_z(C.zv) end
+      if C.za then C.za = Trans.apply_z(C.za) end
 
       if Trans.mirror_z then
         C.b, C.t = C.t, C.b
