@@ -533,7 +533,7 @@ end
 function Mat_lookup(name)
   if not name then name = "_ERROR" end
 
-  if OB_CONFIG.theme == "psycho" and LEVEL.psycho_map[name] then
+  if LEVEL.psychedelic and LEVEL.psycho_map[name] then
     name = LEVEL.psycho_map[name]
   end
 

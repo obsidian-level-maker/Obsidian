@@ -441,12 +441,40 @@ end
 
 
 function Levels_choose_themes()
+  local theme_tab = {}
+
+
+  local function collect_mixed_themes()
+    each name,info in OB_THEMES do
+      if info.shown and info.mixed_prob then
+        theme_tab[name] = info.mixed_prob
+      end
+    end
+
+    if table.empty(theme_tab) then
+      error("Game is missing usable themes.")
+    end
+  end
+
 
   local function set_level_theme(LEV, name)
     -- don't overwrite theme of special levels
     if LEV.theme_name then
       name = LEV.theme_name
     end
+
+    -- special handling for Psychedelic theme
+    if name == "psycho" then
+      LEV.psychedelic = true
+
+      if not LEV.name_class and ((_index % 2) == 1) then
+        LEV.name_class = "PSYCHO"
+      end
+
+      -- pick a real theme to use
+      name = rand.key_by_probs(theme_tab)
+    end
+
 
     local info = assert(OB_THEMES[name])
 
@@ -469,19 +497,19 @@ function Levels_choose_themes()
   end
 
 
-  local function set_jumbled_themes(theme_tab)
+  local function set_jumbled_themes()
     each LEV in GAME.levels do
       set_level_theme(LEV, rand.key_by_probs(theme_tab))
     end
   end
 
 
-  local function set_mostly_a_theme(prob_tab, theme)
-    if not prob_tab[theme] then
+  local function set_mostly_a_theme(theme)
+    if not theme_tab[theme] then
       error("Broken mostly_" .. theme .." theme")
     end
 
-    prob_tab[theme] = nil
+    theme_tab[theme] = nil
 
     local last_same = 0
     local last_diff = 99  -- force first map to be desired theme
@@ -502,7 +530,7 @@ function Levels_choose_themes()
       elseif (last_same < max_same) and rand.odds(65) then
         what = theme
       else
-        what = rand.key_by_probs(prob_tab)
+        what = rand.key_by_probs(theme_tab)
       end
 
       set_level_theme(LEV, what)
@@ -514,31 +542,6 @@ function Levels_choose_themes()
         last_diff = last_diff + 1
         last_same = 0
       end
-    end
-  end
-
-
-  local function pick_psycho_themes()
-    local prob_tab = {}
-
-    each name,info in OB_THEMES do
-      local prob = info.psycho_prob or info.mixed_prob or 0
-
-      if info.shown and prob > 0 then
-        prob_tab[name] = prob
-      end
-    end
-
-    assert(not table.empty(prob_tab))
-
-    each LEV in GAME.levels do
-      local name = rand.key_by_probs(prob_tab)
-
-      if not LEV.name_class and ((_index % 2) == 1) then
-        LEV.name_class = "PSYCHO"
-      end
-
-      set_level_theme(LEV, name)
     end
   end
 
@@ -566,7 +569,7 @@ function Levels_choose_themes()
   end
 
 
-  local function create_episode_list(theme_tab, total)
+  local function create_episode_list(total)
     local episode_list = {}
 
     while not table.empty(theme_tab) do
@@ -626,64 +629,47 @@ function Levels_choose_themes()
 
   gui.printf("\n")
 
+  -- need to do this first
+  collect_mixed_themes()
+
+
   local mostly_theme = string.match(OB_CONFIG.theme, "mostly_(%w+)")
 
   -- the user can specify the main theme
   if OB_CONFIG.theme != "mixed"    and OB_CONFIG.theme != "jumble" and
-     OB_CONFIG.theme != "original" and OB_CONFIG.theme != "psycho" and
-     not mostly_theme
+     OB_CONFIG.theme != "original" and not mostly_theme
   then
     set_single_theme(OB_CONFIG.theme)
     return
   end
 
 
-  -- Psycheledic : pick randomly, honor the 'psycho_prob' field
-  if OB_CONFIG.theme == "psycho" then
-    pick_psycho_themes()
-    return
-  end
-
-
-  -- Mix It Up : choose a theme for each episode
-  local total = 0
-
-  local prob_tab = {}
-
-  each name,info in OB_THEMES do
-    if info.shown and info.mixed_prob then
-      prob_tab[name] = info.mixed_prob
-      total = total + 1
-    end
-  end
-
-  assert(total > 0)
-
-
   -- Jumbled Up : every level is purely random
   if OB_CONFIG.theme == "jumble" then
-    set_jumbled_themes(prob_tab)
+    set_jumbled_themes()
     return
   end
 
   if mostly_theme then
-    set_mostly_a_theme(prob_tab, mostly_theme)
+    set_mostly_a_theme(mostly_theme)
     return
   end
 
 
+  local total = table.size(theme_tab)
+
   if OB_CONFIG.theme == "original" then
-    total = math.max(total, # GAME.episodes)
+    total = math.max(total, #GAME.episodes)
   end
 
-  local episode_list = create_episode_list(prob_tab, total)
+  local episode_list = create_episode_list(total)
 
   gui.printf("Theme for episodes =\n%s\n", table.tostr(episode_list))
 
 
   flesh_out_episodes(episode_list, total)
 
-  -- single episode is different: have a few small batches
+  -- single episode is different : have a few small batches
   if OB_CONFIG.length == "episode" then
     batched_episodic_themes(episode_list)
   end
