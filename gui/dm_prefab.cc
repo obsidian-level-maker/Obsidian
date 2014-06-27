@@ -224,8 +224,12 @@ int wadfab_get_sector(lua_State *L)
 	lua_pushinteger(L, SEC->light);
 	lua_setfield(L, -2, "light");
 
-	lua_pushinteger(L, SEC->tag);
-	lua_setfield(L, -2, "tag");
+	// if we have 3D floors here, do not send the tag
+	if (SEC->num_floors == 0)
+	{
+		lua_pushinteger(L, SEC->tag);
+		lua_setfield(L, -2, "tag");
+	}
 
 	lua_pushstring(L, SEC->floor_tex);
 	lua_setfield(L, -2, "floor_tex");
