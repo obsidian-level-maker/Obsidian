@@ -466,6 +466,20 @@ public:
 		return (start != NULL);
 	}
 
+	bool TouchesCoord(int x, int y) const
+	{
+		if (isValid())
+		{
+			if (start->x == x && start->y == y)
+				return true;
+
+			if (end->x == x && end->y == y)
+				return true;
+		}
+
+		return false;
+	}
+
 	void Kill()
 	{
 		start->RemoveLine(this);
