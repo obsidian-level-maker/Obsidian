@@ -28,8 +28,8 @@
 //  --> no result
 //  
 //  wadfab_get_polygon(index)
-//  -->  sector_num, { {x=#,y=#,side=#,line=# } ... }
-//  
+//  -->  sector_num, { {x=#,y=#,side=#,line=#,along=# } ... }
+// 
 //  wadfab_get_sector(index)
 //  -->  { floor_h=#, floor_tex="...",
 //          ceil_h=#,  ceil_tex="...",
@@ -302,9 +302,27 @@ int wadfab_get_line(lua_State *L)
 }
 
 
+static double calc_along_dist(const ajpoly::edge_c * E)
+{
+	const ajpoly::linedef_c *LD = E->linedef;
+
+	SYS_ASSERT(LD);
+
+	double ref_x = (E->side == 1) ? LD->start->x : LD->end->x;
+	double ref_y = (E->side == 1) ? LD->start->y : LD->end->y;
+
+	double dx = ref_x - E->end->x;
+	double dy = ref_y - E->end->y;
+
+	return hypot(dx, dy);
+}
+
+
 static void push_edge(lua_State *L, int tab_index, const ajpoly::edge_c * E)
 {
 	lua_newtable(L);
+
+	// using 'end' coord since edges face outwards
 
 	lua_pushnumber(L, E->end->x);
 	lua_setfield(L, -2, "x");
@@ -316,6 +334,9 @@ static void push_edge(lua_State *L, int tab_index, const ajpoly::edge_c * E)
 	{
 		lua_pushinteger(L, E->linedef->index);
 		lua_setfield(L, -2, "line");
+
+		lua_pushnumber(L, calc_along_dist(E));
+		lua_setfield(L, -2, "along");
 
 		const ajpoly::sidedef_c * SD;
 

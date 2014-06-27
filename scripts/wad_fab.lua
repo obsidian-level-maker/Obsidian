@@ -1066,14 +1066,19 @@ function Fab_load_wad(def)
 
     if heights_are_same(sec, other_sec, pass) then
       -- do not copy the offsets to the brush
-    else
-      if side and side.x_offset and side.x_offset != 0 then
+
+    elseif side and line then
+      if side.x_offset and side.x_offset != 0 then
         C2.u1 = side.x_offset
         if C2.u1 == 1 then C2.u1 = 0 end
+
+        -- adjust X offset for split edges
+        if C.along then
+          C2.u1 = C2.u1 + C.along
+        end
       end
 
-      if side and side.y_offset and side.y_offset != 0 then
-
+      if side.y_offset and side.y_offset != 0 then
         C2.v1 = side.y_offset
         if C2.v1 == 1 then C2.v1 = 0 end
       end
@@ -1235,8 +1240,16 @@ function Fab_load_wad(def)
     end
 
     C[prefix .. "rail"] = side.mid_tex
-    C[prefix .. "u1"]   = side.x_offset
-    C[prefix .. "v1"]   = side.y_offset
+
+    -- handle offsets --
+
+    local x_offset = side.x_offset
+    local y_offset = side.y_offset
+
+    if C.along then x_offset = x_offset + C.along end
+
+    C[prefix .. "u1"] = x_offset
+    C[prefix .. "v1"] = y_offset
   end
 
 
