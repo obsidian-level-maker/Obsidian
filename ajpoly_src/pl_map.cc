@@ -51,6 +51,11 @@ int num_polygons;
 int num_wall_tips;
 
 
+// EDGE line specials for 3D floors
+#define  SOLID_EXTRA_FLOOR  400
+#define LIQUID_EXTRA_FLOOR  405
+
+
 /* ------- access functions --------- */
 
 vertex_c * Vertex(int index)
@@ -617,9 +622,7 @@ void CheckSectorIsDummy(sector_c *sec)
 
 	// OK found one
 
-//!!!!	sec->light = DUMMY_SECTOR;
-
-fprintf(stderr, "\n\n****** DUMMY SECTOR %d *******\n\n", sec->index);
+	sec->light = DUMMY_SECTOR;
 }
 
 
@@ -668,6 +671,70 @@ void FindDummySectors()
 			CheckSectorIsDummy(all_sectors[i]);
 
 	delete[] joined_secs;
+}
+
+
+int CollectFloorsAtSector(sector_c *sec, bool count_only)
+{
+	int total = 0;
+
+	for (int i = 0 ; i < num_linedefs ; i++)
+	{
+		linedef_c *line = all_linedefs[i];
+
+		// line must be in a dummy sector
+		if (! (line->right && line->right->sector &&
+			   line->right->sector->light == DUMMY_SECTOR))
+			continue;
+
+		// special must be an extrafloor
+		if (! (line->special == SOLID_EXTRA_FLOOR ||
+			   line->special == LIQUID_EXTRA_FLOOR))
+			continue;
+
+		// tag must match this sector
+		if (line->tag != sec->tag)
+			continue;
+
+		total++;
+
+		if (! count_only)
+			all_ex_floors.push_back(line);
+	}
+
+	return total;
+}
+
+
+void ProcessExtraFloors()
+{
+	for (int k = 0 ; k < num_sectors ; k++)
+	{
+		sector_c *sec = all_sectors[k];
+
+		if (sec->index < 0 || sec->index == VOID_SECTOR_IDX)
+			continue;
+
+		if (sec->tag <= 0)
+			continue;
+
+		// skip dummy sectors too
+		if (sec->light == DUMMY_SECTOR)
+			continue;
+
+		int total = CollectFloorsAtSector(sec, true /* count_only */);
+
+		if (total == 0)
+			continue;
+
+		//!!!!! WRONG WRONG  :  pointers mucked after mem realloc
+		sec->extrafloors = & all_ex_floors.back();
+
+		CollectFloorsAtSector(sec, false);
+
+		// terminate the list with a NULL pointer
+		all_ex_floors.push_back(NULL);
+	}
 }
 
 
@@ -1133,6 +1200,8 @@ bool OpenMap(const char *level_name)
 	if (! DetectDuplicateVertices()) return false;
 
 	if (! CalculateWallTips()) return false;
+
+	ProcessExtraFloors();
 
 	return true;  // OK
 }
