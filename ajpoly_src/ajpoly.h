@@ -31,6 +31,7 @@ namespace ajpoly
 
 class wall_tip_c;
 class sector_c;
+class linedef_c;
 class edge_c;
 
 
@@ -80,14 +81,21 @@ public:
 
 	edge_c * edge_list;
 
+	// list of extrafloor linedefs, terminated with a NULL.
+	// most of the time this pointer is NULL.
+	linedef_c ** extrafloors;
+
 public:
 	sector_c() : index(-1), floor_h(), ceil_h(),
-	             light(), special(), tag(), edge_list()
+	             light(), special(), tag(),
+				 edge_list(), extrafloors()
 	{
 		floor_tex[0] = 0;
 		 ceil_tex[0] = 0;
 	}
 };
+
+#define VOID_SECTOR_IDX  0xFFFF
 
 
 class sidedef_c

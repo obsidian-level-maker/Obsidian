@@ -156,7 +156,7 @@ static int calc_thing_z(int x, int y)
 		const ajpoly::polygon_c * poly = ajpoly::Polygon(p);
 	
 		// ignore void space
-		if (poly->sector->index < 0 || poly->sector->index == 0xFFFF)
+		if (poly->sector->index < 0 || poly->sector->index == VOID_SECTOR_IDX)
 			continue;
 
 		if (poly->ContainsPoint(x, y))
@@ -376,7 +376,7 @@ int wadfab_get_polygon(lua_State *L)
 	// result #1 : SECTOR
 	int sect_id  = poly->sector->index;
 
-	if (sect_id == 0xFFFF)
+	if (sect_id == VOID_SECTOR_IDX)
 		sect_id = -1;
 
 	lua_pushinteger(L, sect_id);
@@ -414,7 +414,7 @@ int wadfab_get_3d_floor(lua_State *L)
 
 	const ajpoly::polygon_c * poly = ajpoly::Polygon(poly_idx);
 
-	if (! poly->extrafloors)
+	if (! poly->sector->extrafloors)
 		return 0;
 
 	// check that 'floor_idx' is valid
@@ -422,19 +422,18 @@ int wadfab_get_3d_floor(lua_State *L)
 		return 0;
 	
 	for (int k = 0 ; k <= floor_idx ; k++)
-		if (! poly->extrafloors[k])
+		if (! poly->sector->extrafloors[k])
 			return 0;
 
 
 	// determine line and dummy sector
 
-	const ajpoly::linedef_c * LD = poly->extrafloors[floor_idx];
+	const ajpoly::linedef_c * LD = poly->sector->extrafloors[floor_idx];
 
 	const ajpoly::sector_c * SEC = LD->right->sector;
 
 	if (! SEC)
 		return 0;
-
 
 	// save the information
 

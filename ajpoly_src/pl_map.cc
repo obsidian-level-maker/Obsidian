@@ -37,6 +37,7 @@ std::vector<  vertex_c *> all_splits;
 std::vector<    edge_c *> all_edges;
 std::vector< polygon_c *> all_polygons;
 std::vector<wall_tip_c *> all_wall_tips;
+std::vector< linedef_c *> all_ex_floors;
 
 int num_vertices;
 int num_linedefs;
@@ -282,7 +283,7 @@ bool LoadSectors()
 	// create a dummy sector to represent VOID space
 	void_sector = NewSector();
 
-	void_sector->index = 0xffff;
+	void_sector->index = VOID_SECTOR_IDX;
 
 	return true;  // OK
 }
@@ -1030,6 +1031,7 @@ void CloseMap()
 	all_edges.clear();
 	all_polygons.clear();
 	all_wall_tips.clear();
+	all_ex_floors.clear();
 
 	num_vertices = 0;
 	num_linedefs = 0;
