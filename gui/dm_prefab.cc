@@ -38,7 +38,7 @@
 // 
 //  wadfab_get_side(index)
 //  -->  { upper_tex="", mid_tex="", lower_tex="",
-//         x_offset=#, y_offset=#
+//         x_offset=#, y_offset=#, sector=#
 //       }
 // 
 //  wadfab_get_line(index)
@@ -246,6 +246,12 @@ int wadfab_get_side(lua_State *L)
 
 	lua_pushinteger(L, SD->y_offset);
 	lua_setfield(L, -2, "y_offset");
+
+	if (SD->sector)
+	{
+		lua_pushinteger(L, SD->sector->index);
+		lua_setfield(L, -2, "sector");
+	}
 
 	lua_pushstring(L, SD->upper_tex);
 	lua_setfield(L, -2, "upper_tex");
