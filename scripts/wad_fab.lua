@@ -1136,6 +1136,18 @@ function Fab_load_wad(def)
   end
 
 
+  local function decode_3d_floor_side(exfl, C)
+    local C2 = { x=C.x, y=C.y }
+
+    C2.tex = exfl.side_tex
+
+    C2.u1  = exfl.x_offset
+    C2.v1  = exfl.y_offset
+
+    return C2
+  end
+
+
   local function create_void_brush(coords)
     local B =
     {
@@ -1225,7 +1237,34 @@ function Fab_load_wad(def)
     table.insert(fab.brushes, B)
   end
 
-  
+
+  local function create_3d_floor(exfl, coords)
+    -- TODO : support liquids
+
+    local B =
+    {
+      { m="solid" }
+    }
+
+    -- top of brush
+    local BOT = { b=exfl.bottom_h, tex=exfl.bottom_tex }
+
+    table.insert(B, BOT)
+
+    -- bottom of brush
+    local TOP = { t=exfl.top_h, tex=exfl.top_tex }
+
+    table.insert(B, TOP)
+
+    -- sides
+    each C in coords do
+      table.insert(B, decode_3d_floor_side(exfl, C))
+    end
+
+    table.insert(fab.brushes, B)
+  end
+
+
   local function grab_rail_info(C, line, where, prefix)
     local side_idx = sel(where == "left", line.left, line.right)
     -- railings can only occur on two-sided lines
@@ -1412,6 +1451,14 @@ function Fab_load_wad(def)
 
       create_brush(S, coords, 1)  -- floor
       create_brush(S, coords, 2)  -- ceil
+
+      -- check for 3D floors
+      for fl_idx = 0,9 do
+        local exfl = gui.wadfab_get_3d_floor(poly_idx, fl_idx)
+        if not exfl then break; end
+
+        create_3d_floor(exfl, coords)
+      end
     end
 
     each line_idx,info in rail_lines do
