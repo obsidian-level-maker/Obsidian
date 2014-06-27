@@ -564,9 +564,110 @@ void DetermineMapLimits()
 }
 
 
+void CheckSectorIsDummy(sector_c *sec)
+{
+	if (sec->index < 0 || sec->index == VOID_SECTOR_IDX)
+		return;
+
+	int line_count = 0;
+
+	int bound_x1 = +999999;
+	int bound_y1 = +999999;
+	int bound_x2 = -999999;
+	int bound_y2 = -999999;
+
+	for (int k = 0 ; k < num_linedefs ; k++)
+	{
+		linedef_c *line = all_linedefs[k];
+
+		// sector exists on back of a line?  disqualify...
+		if (line->left && line->left->sector == sec)
+			return;
+
+		if (! line->right)
+			continue;
+
+		if (line->right->sector != sec)
+			continue;
+
+		// disqualify if sector contains a two-sided line
+		if (line->left)
+			return;
+
+		line_count++;
+
+		for (int pass = 0 ; pass < 2 ; pass++)
+		{
+			int x = pass ? line->end->x : line->start->x;
+			int y = pass ? line->end->y : line->start->y;
+
+			bound_x1 = MIN(bound_x1, x);
+			bound_y1 = MIN(bound_y1, y);
+
+			bound_x2 = MAX(bound_x2, x);
+			bound_y2 = MAX(bound_y2, y);
+		}
+	}
+
+	if (line_count < 3 || line_count > 4)
+		return;
+
+	if (bound_x2 - bound_x1 > 32) return;
+	if (bound_y2 - bound_y1 > 32) return;
+
+	// OK found one
+
+//!!!!	sec->light = DUMMY_SECTOR;
+
+fprintf(stderr, "\n\n****** DUMMY SECTOR %d *******\n\n", sec->index);
+}
+
+
 void FindDummySectors()
 {
-	// FIXME : FindDummySectors
+	// Requirements for a dummy sector:
+	//   1. total size <= 32 on each axis
+	//   2. total # of lines <= 4
+	//   3. does not touch any other sector
+	//
+	// Perform step 3 first to quickly rule out most candidates.
+	//
+	
+	int i;
+
+	if (num_sectors <= 1)
+		return;
+
+	byte *joined_secs = new byte[num_sectors];
+
+	memset(joined_secs, 0, num_sectors);
+
+	for (i = 0 ; i < num_linedefs ; i++)
+	{
+		linedef_c *line = all_linedefs[i];
+
+		if (! (line->left && line->right))
+			continue;
+
+		// this line straddles two sectors
+		// (or possible a single one -- that too rules it out)
+
+		for (int pass = 0 ; pass < 2 ; pass++)
+		{
+			sector_c *sec = pass ? line->right->sector : line->left->sector;
+
+			if (! sec || sec->index < 0 || sec->index == VOID_SECTOR_IDX)
+				continue;
+
+			joined_secs[sec->index] = 1;
+		}
+	}
+
+	for (i = 0 ; i < num_sectors ; i++)
+		if (! joined_secs[i])
+			CheckSectorIsDummy(all_sectors[i]);
+
+	delete[] joined_secs;
 }
 
 
