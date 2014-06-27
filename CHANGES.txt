@@ -44,6 +44,9 @@ CHANGELOG
 
 - more robust logic for finding monster and item spots
 
+- CSG: better handling of Y offsets
+- CSG: improved handling of railing textures
+
 - caves: improved floor texturing in flat caves
 - caves: never place pickup items in liquid areas
 - caves: if not many caves, keep texturing consistent
