@@ -415,21 +415,16 @@ int wadfab_get_3d_floor(lua_State *L)
 
 	const ajpoly::polygon_c * poly = ajpoly::Polygon(poly_idx);
 
-	if (! poly->sector || ! poly->sector->extrafloors)
+	if (! poly->sector || poly->sector->num_floors <= 0)
 		return 0;
-
-	// check that 'floor_idx' is valid
-	if (floor_idx < 0)
-		return 0;
-	
-	for (int k = 0 ; k <= floor_idx ; k++)
-		if (! poly->sector->extrafloors[k])
-			return 0;
 
 
 	// determine line and dummy sector
 
-	const ajpoly::linedef_c * LD = poly->sector->extrafloors[floor_idx];
+	const ajpoly::linedef_c * LD = poly->sector->getExtraFloor(floor_idx);
+
+	if (! LD)
+		return 0;
 
 	const ajpoly::sector_c * SEC = LD->right->sector;
 

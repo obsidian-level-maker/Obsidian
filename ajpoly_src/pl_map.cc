@@ -126,6 +126,15 @@ inline sidedef_c * SafeSidedef(u16_t num)
 }
 
 
+linedef_c * sector_c::getExtraFloor(int index)
+{
+	if (index < 0 || index >= num_floors)
+		return NULL;
+	
+	return all_ex_floors[floor_start + index];
+}
+
+
 /* ------- creation functions --------- */
 
 vertex_c * NewVertex()
@@ -727,8 +736,8 @@ void ProcessExtraFloors()
 		if (total == 0)
 			continue;
 
-		//!!!!! WRONG WRONG  :  pointers mucked after mem realloc
-		sec->extrafloors = & all_ex_floors.back();
+		sec->num_floors  = total;
+		sec->floor_start = (int) all_ex_floors.size();
 
 		CollectFloorsAtSector(sec, false);
 

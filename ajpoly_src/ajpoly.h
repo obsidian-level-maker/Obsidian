@@ -81,18 +81,21 @@ public:
 
 	edge_c * edge_list;
 
-	// list of extrafloor linedefs, terminated with a NULL.
-	// most of the time this pointer is NULL.
-	linedef_c ** extrafloors;
+	// this keeps track of 3D floors in this sector
+	// (floor_start is really private)
+	int num_floors;
+	int floor_start;
 
 public:
 	sector_c() : index(-1), floor_h(), ceil_h(),
 	             light(), special(), tag(),
-				 edge_list(), extrafloors()
+				 edge_list(), num_floors(), floor_start()
 	{
 		floor_tex[0] = 0;
 		 ceil_tex[0] = 0;
 	}
+
+	linedef_c * getExtraFloor(int index);
 };
 
 #define VOID_SECTOR_IDX  0xFFFF
