@@ -30,6 +30,8 @@
 --    ~         liquid
 --    #         solid block
 -- 
+--    ?         filler (in recurisve patterns)
+--
 --    / % N Z   diagonal pieces
 --
 --    < > v ^   stairs (straight)
@@ -1682,6 +1684,27 @@ RECURSE_PURE_P3 =
               "417", "517", "717", "818", "919",
               "323", "424", "525", "626", "727", "828" }
 }
+
+
+--[[  IDEA...
+RECURSE_SOLID_C4 =
+{
+  prob = 1200
+
+  recurse = "pure"
+
+  structure =
+  {
+    "#?#"
+    "?a?"
+    "#?#"
+  }
+
+  x_sizes = { "1 3+ 1", "2 6+ 2" }
+
+  y_sizes = { "1 2+ 1", "2 6+ 2" }
+}
+--]]
 
 
 SOLID_CSUB =
