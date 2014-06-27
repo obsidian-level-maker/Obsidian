@@ -156,7 +156,8 @@ static int calc_thing_z(int x, int y)
 		const ajpoly::polygon_c * poly = ajpoly::Polygon(p);
 	
 		// ignore void space
-		if (poly->sector->index < 0 || poly->sector->index == VOID_SECTOR_IDX)
+		if (!poly->sector || poly->sector->index < 0 ||
+		     poly->sector->index == VOID_SECTOR_IDX)
 			continue;
 
 		if (poly->ContainsPoint(x, y))
@@ -374,7 +375,7 @@ int wadfab_get_polygon(lua_State *L)
 
 
 	// result #1 : SECTOR
-	int sect_id  = poly->sector->index;
+	int sect_id  = poly->sector ? poly->sector->index : -1;
 
 	if (sect_id == VOID_SECTOR_IDX)
 		sect_id = -1;
@@ -414,7 +415,7 @@ int wadfab_get_3d_floor(lua_State *L)
 
 	const ajpoly::polygon_c * poly = ajpoly::Polygon(poly_idx);
 
-	if (! poly->sector->extrafloors)
+	if (! poly->sector || ! poly->sector->extrafloors)
 		return 0;
 
 	// check that 'floor_idx' is valid

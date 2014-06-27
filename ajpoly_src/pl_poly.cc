@@ -941,7 +941,7 @@ bool ProcessOneSector(sector_c * sec)
 
 bool ProcessSectors()
 {
-	// this automatically includes the dummy 'void_sector'
+	// this automatically includes the 'void_sector'
 
 	for (int i = 0 ; i < num_sectors ; i++)
 	{
@@ -949,6 +949,10 @@ bool ProcessSectors()
 
 		// skip unused sectors
 		if (! sec->edge_list)
+			continue;
+
+		// skip dummy sectors
+		if (sec->light == DUMMY_SECTOR)
 			continue;
 
 #if DEBUG_POLY
@@ -1012,6 +1016,11 @@ void CreateEdges()
 	for (i = 0 ; i < num_linedefs ; i++)
 	{
 		linedef_c *line = Linedef(i);
+
+		// ignore dummy sectors
+		if (line->right && line->right->sector &&
+			line->right->sector->light == DUMMY_SECTOR)
+			continue;
 
 		right = CreateAnEdge(line, line->start, line->end, line->right, 0);
 

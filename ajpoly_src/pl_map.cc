@@ -280,7 +280,7 @@ bool LoadSectors()
 		sector->tag     = LE_S16(raw->tag);
 	}
 
-	// create a dummy sector to represent VOID space
+	// create a fake sector to represent VOID space
 	void_sector = NewSector();
 
 	void_sector->index = VOID_SECTOR_IDX;
@@ -540,6 +540,11 @@ void DetermineMapLimits()
 	{
 		linedef_c *L = Linedef(i);
 
+		// ignore dummy sectors
+		if (L->right && L->right->sector &&
+			L->right->sector->light == DUMMY_SECTOR)
+			continue;
+
 		{
 			int x1 = (int)L->start->x;
 			int y1 = (int)L->start->y;
@@ -556,6 +561,12 @@ void DetermineMapLimits()
 
 	Appl_Printf("Map goes from (%d,%d) to (%d,%d)\n",
 				limit_x1, limit_y1, limit_x2, limit_y2);
+}
+
+
+void FindDummySectors()
+{
+	// FIXME : FindDummySectors
 }
 
 
@@ -932,6 +943,11 @@ bool VerifyOuterLines()
 		if (L->left && L->right)
 			continue;
 
+		// ignore lines of dummy sectors
+		if (L->right && L->right->sector &&
+			L->right->sector->light == DUMMY_SECTOR)
+			continue;
+
 		if (x1 == limit_x1 && x2 == limit_x2 && y1 == limit_y2 && y2 == y1)
 		{
 			seen |= 0x0008; L->is_border = 1;
@@ -1007,6 +1023,8 @@ bool OpenMap(const char *level_name)
 
 	Appl_Printf("Loaded %d vertices, %d sectors, %d sides, %d lines, %d things\n", 
 				num_vertices, num_sectors, num_sidedefs, num_linedefs, num_things);
+
+	FindDummySectors();
 
 	DetermineMapLimits();
 
