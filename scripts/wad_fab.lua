@@ -957,7 +957,6 @@ DOOM_TWO_SIDED_FLAG = 0x04
 
 
 function Fab_load_wad(def)
-
   local fab
 
   local rail_lines = {}
@@ -992,8 +991,33 @@ function Fab_load_wad(def)
   end
 
 
+  local function back_sector(line, side_idx)
+    assert(line)
+
+    if not side_idx then return nil end
+
+    local other_idx
+
+    if side_idx == line.right then
+      other_idx = line.left
+    elseif side_idx == line.left then
+      other_idx = line.right
+    end
+
+    if not other_idx then return nil end
+
+    local other_side = gui.wadfab_get_side(other_idx)
+
+    if not other_side then return nil end
+    if not other_side.sector then return nil end
+
+    return gui.wadfab_get_sector(other_side.sector)
+  end
+
+
   local function decode_polygon_side(S, C, pass)
     -- pass is 1 for floor, 2 for ceiling
+    -- S will be NIL for a polygon in void space
 
     local C2 = { x=C.x, y=C.y }
 
@@ -1053,6 +1077,19 @@ function Fab_load_wad(def)
       C2.v1 = side.y_offset
       if C2.v1 == 1 then C2.v1 = 0 end
     end
+
+    -- texture anchoring --
+
+    if not S and C2.v1 and
+       line and side and side.sector
+    then
+      local face_sec = gui.wadfab_get_sector(side.sector)
+
+      if face_sec then
+        C2.za = face_sec.ceil_h
+      end
+    end
+
 
     -- line type --
 
