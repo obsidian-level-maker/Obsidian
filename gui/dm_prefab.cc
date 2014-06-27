@@ -44,6 +44,12 @@
 //  wadfab_get_line(index)
 //  -->  { special=#, tag=#, flags=#, right=#, left=# }
 //  
+//  wadfab_get_3d_floor(poly_idx, floor_idx)
+//  -->  { bottom_h=#, bottom_tex="...",
+//            top_h=#,    top_tex="...",
+//         side_tex="...", x_offset=#, y_offset=#
+//       }
+// 
 //  wadfab_get_thing(index)
 //  -->  { id=#, x=#, y=#, z=#, angle=#, flags=# }
 //
@@ -395,6 +401,70 @@ int wadfab_get_polygon(lua_State *L)
 	}
 
 	return 2;
+}
+
+
+int wadfab_get_3d_floor(lua_State *L)
+{
+	int  poly_idx = luaL_checkint(L, 1);
+	int floor_idx = luaL_checkint(L, 2);
+
+	if (poly_idx < 0 || poly_idx >= ajpoly::num_polygons)
+		return 0;
+
+	const ajpoly::polygon_c * poly = ajpoly::Polygon(poly_idx);
+
+	if (! poly->extrafloors)
+		return 0;
+
+	// check that 'floor_idx' is valid
+	if (floor_idx < 0)
+		return 0;
+	
+	for (int k = 0 ; k <= floor_idx ; k++)
+		if (! poly->extrafloors[k])
+			return 0;
+
+
+	// determine line and dummy sector
+
+	const ajpoly::linedef_c * LD = poly->extrafloors[floor_idx];
+
+	const ajpoly::sector_c * SEC = LD->right->sector;
+
+	if (! SEC)
+		return 0;
+
+
+	// save the information
+
+	lua_newtable(L);
+
+	// BOTTOM
+	lua_pushinteger(L, SEC->floor_h);
+	lua_setfield(L, -2, "bottom_h");
+
+	lua_pushstring(L, SEC->floor_tex);
+	lua_setfield(L, -2, "bottom_tex");
+
+	// TOP
+	lua_pushinteger(L, SEC->ceil_h);
+	lua_setfield(L, -2, "top_h");
+
+	lua_pushstring(L, SEC->ceil_tex);
+	lua_setfield(L, -2, "top_tex");
+
+	// SIDE
+	lua_pushstring(L, LD->right->mid_tex);
+	lua_setfield(L, -2, "side_tex");
+
+	lua_pushinteger(L, LD->right->x_offset);
+	lua_setfield(L, -2, "x_offset");
+
+	lua_pushinteger(L, LD->right->y_offset);
+	lua_setfield(L, -2, "y_offset");
+
+	return 1;
 }
 
 
