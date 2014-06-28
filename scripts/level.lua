@@ -467,7 +467,7 @@ function Levels_choose_themes()
     if name == "psycho" then
       LEV.psychedelic = true
 
-      if not LEV.name_class and ((_index % 2) == 1) then
+      if not LEV.name_class and ((LEV.index % 2) == 1) then
         LEV.name_class = "PSYCHO"
       end
 
