@@ -376,6 +376,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 
 	//----------------
 
+
+#if 0  // OLD
 	cy += y_step + y_step/2;
 
 	heading = new Fl_Box(FL_NO_BOX, x()+pad, cy, W-pad*2, kf_h(24), "Doom / Heretic / Hexen");
@@ -396,6 +398,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	add(opt_lighting);
 
 	cy += opt_lighting->h() + y_step;
+#endif
 
 
 
