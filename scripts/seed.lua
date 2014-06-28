@@ -40,7 +40,9 @@ class SEED
 
   x1, y1, x2, y2  -- 2D map coordinates
 
-  chunk : CHUNK
+  chunk[1..n] : CHUNK  -- [1] is the ground floor (or liquid), NIL for void (etc)
+                       -- [2] is the 3D floor above (usually NIL)
+                       -- [3] can be yet another 3D floor, etc...
 
   floor_h, ceil_h -- floor and ceiling heights
   f_tex,   c_tex  -- floor and ceiling textures
@@ -64,8 +66,6 @@ class CHUNK
   kind : keyword  -- "floor", "liquid", "void" (etc)
 
   floor : FLOOR
-
-  overlay : CHUNK  -- generally NIL, used for 3D floors
 }
 
 --------------------------------------------------------------]]
@@ -182,6 +182,7 @@ function Seed_init(map_W, map_H, free_W, free_H)
 
       thick  = {}
       border = {}
+      chunk  = {}
     }
 
     SEEDS[x][y] = S

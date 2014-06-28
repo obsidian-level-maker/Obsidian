@@ -595,7 +595,7 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
     -- teleporters should never be underneath a 3D floor, because
     -- player will unexpected activate it while on the floor above,
     -- and because the sector tag is needed by the teleporter.
-    if kind == "TELEPORTER" and spot.chunk and spot.chunk.overlay then
+    if kind == "TELEPORTER" and spot.chunk[2] then
       score = score - 10
     end
 
@@ -775,8 +775,10 @@ function Layout_set_floor_minmax(R)
         S.floor_max_h = S.floor_h
       end
 
-      if S.chunk and S.chunk.overlay then
-        local K2 = S.chunk.overlay
+      for i = 2,9 do
+        local K2 = S.chunk[i]
+
+        if not K2 then break; end
 
         if K2.floor then
           S.floor_max_h = K2.floor.floor_h
@@ -1287,7 +1289,7 @@ function Layout_escape_from_pits(R)
     end
 
     -- cannot escape through a 3D floor
-    if S.chunk and S.chunk.overlay then return end
+    if S.chunk[2] then return end
 
     -- don't want to bump into a pillar or switch
     if N.content then
@@ -1477,7 +1479,7 @@ function Layout_add_bridges(R)
     if N.bridge_h then return false end
 
     -- ignore a 3D floor -- it probably joins onto the "walk" seed
-    if N.chunk and N.chunk.overlay then return false end
+    if N.chunk[2] then return false end
 
     return true
   end
@@ -1855,7 +1857,7 @@ end
 
       table.insert(R.chunks, CHUNK)
 
-      S.chunk = CHUNK
+      S.chunk[1] = CHUNK
 
       local C = S.conn or S.pseudo_conn
 
@@ -2280,13 +2282,16 @@ end
       CHUNK.floor = new_floor(vhr)
     end
 
+
+    local OVERLAY
+
     if pat._overlay then
       local OV = pat._overlay[px][py]
 
       if OV.kind == "floor" then
         local vhr = area.entry_vhr + OV.floor - T.entry_floor
 
-        local OV_CHUNK =
+        OVERLAY =
         {
           kind = "floor"
 
@@ -2300,9 +2305,7 @@ end
           is_overlay = true
         }
 
-        table.insert(R.chunks, OV_CHUNK)
-
-        CHUNK.overlay = OV_CHUNK
+        table.insert(R.chunks, OVERLAY)
       end
 
       R.has_3d_floor = true
@@ -2332,7 +2335,8 @@ end
     for sy = sy1, sy2 do
       local S = SEEDS[sx][sy]
 
-      S.chunk = CHUNK
+      S.chunk[1] = CHUNK
+      S.chunk[2] = OVERLAY
 
 if sx == 24 and sy == 16 then
 gui.debugf("intra_conn = %s\n", tostring(S.intra_conn))
@@ -2348,10 +2352,9 @@ if S.intra_conn then
     if CHUNK.kind == "floor" then
       vhr = CHUNK.floor.vhr
     end
-    local OV = CHUNK.overlay
-    if OV and OV.kind == "floor" then
+    if OVERLAY and OVERLAY.kind == "floor" then
       if not vhr or rand.odds(50) then
-        vhr = OV.floor.vhr
+        vhr = OVERLAY.floor.vhr
       end
     end
 
@@ -2630,20 +2633,24 @@ function Layout_height_realization(R, entry_h)
     -- this ensures that there is enough room between two storeys
     -- for the player to pass, even more space for connections.
 
+    -- TODO : support more than one overlay !!!
+
     for x = R.tx1, R.tx2 do
     for y = R.ty1, R.ty2 do
       local S = SEEDS[x][y]
       if S.room != R then continue end
 
-      local chunk = S.chunk
+      local chunk   = S.chunk[1]
+      local overlay = S.chunk[2]
+
       if not chunk then continue end
+      if not chunk.floor then continue end
 
-      if not chunk.floor   then continue end
-      if not chunk.overlay then continue end
-      if not chunk.overlay.floor then continue end
+      if not overlay then continue end
+      if not overlay.floor then continue end
 
-      local v_low  = chunk.floor.vhr
-      local v_high = chunk.overlay.floor.vhr
+      local v_low  =   chunk.floor.vhr
+      local v_high = overlay.floor.vhr
 
       assert(v_low)
       assert(v_high)
@@ -3448,6 +3455,8 @@ gui.debugf("(skip SUB_%s : no entry_vhr)\n", tostring(A.id))
     -- 3D floor.  If only one connection, pick the upper floor since
     -- importants can only exist on the lower floor.
 
+    -- TODO : support more 3D floors than one !!!
+
     local lower = 0
     local upper = 0
 
@@ -3459,17 +3468,18 @@ gui.debugf("(skip SUB_%s : no entry_vhr)\n", tostring(A.id))
       -- ignore teleporters
       if not S then continue end
 
-      local chunk = assert(S.chunk)
+      local chunk = assert(S.chunk[1])
+      local overlay = S.chunk[2]
 
       local hit_lower = (chunk.floor)
-      local hit_upper = (chunk.overlay and chunk.overlay.floor)
+      local hit_upper = (overlay and overlay.floor)
 
       if hit_lower and hit_upper then
-        table.insert(hit_both, { conn=C, chunk=chunk })
+        table.insert(hit_both, { conn=C, chunk=chunk, overlay=overlay })
 
       elseif hit_upper then
         upper = upper + 1
-        assign_a_conn(C, assert(chunk.overlay.floor))
+        assign_a_conn(C, assert(overlay.floor))
 
       else
         lower = lower + 1
@@ -3501,11 +3511,12 @@ gui.debugf("(skip SUB_%s : no entry_vhr)\n", tostring(A.id))
     for i = 1, #hit_both do
       local C     = hit_both[i].conn
       local chunk = hit_both[i].chunk
+      local overlay = hit_both[i].overlay
 
       local floor
 
       if i <= raise_num then
-        floor = assert(chunk.overlay.floor)
+        floor = assert(overlay.floor)
       else
         floor = assert(chunk.floor)
       end

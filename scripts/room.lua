@@ -1402,18 +1402,20 @@ function Room_border_up()
 
 
   local function same_floors(S1, S2)
-    -- this checks any 3D floors too...
-    local K1 = S1.chunk
-    local K2 = S2.chunk
+    -- this checks 3D floors too...
 
-    while K1 and K2 do
+    for i = 1,9 do
+      local K1 = S1.chunk[i]
+      local K2 = S2.chunk[i]
+
+      if not K1 and not K2 then break; end
+
+      if not K1 or not K2 then return false end
+
       if K1.floor != K2.floor then return false end
-
-      K1 = K1.overlay
-      K2 = K2.overlay
     end
 
-    return (not K1) and (not K2)
+    return true
   end
 
 
@@ -4109,13 +4111,17 @@ end
     end
 
 
-    if S.chunk and S.chunk.overlay then
-      local K2 = S.chunk.overlay
+    --- 3D FLOORS ---
+
+    for i = 2, 9 do
+      local K2 = S.chunk[i]
+
+      if not K2 then break; end
       
       if K2.floor then
-        assert(K2.floor.floor_h)
+        local z2 = assert(K2.floor.floor_h)
 
-        do_extra_floor(S, K2.floor.floor_h, f_indents, w_tex, K2.floor.floor_tex)
+        do_extra_floor(S, z2, f_indents, w_tex, K2.floor.floor_tex)
       end
     end
 
@@ -4318,14 +4324,12 @@ function Room_determine_spots()
 
 
   local function try_solidify_seed(S, floor)
-    local K = S.chunk
+    for i = 1,9 do
+      local K = S.chunk[i]
 
-    while K do
       if K.kind == "floor" and K.floor == floor then
         return -- found the floor, so leave it alone
       end
-
-      K = K.overlay
     end
 
     -- that floor is not here
