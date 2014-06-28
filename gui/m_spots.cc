@@ -591,6 +591,25 @@ static void draw_line(int x1, int y1, int x2, int y2)
 }
 
 
+static inline void replace_cell(int x, int y, byte content)
+{
+	byte& target = spot_grid[x][y];
+
+	// Note : we allow SPOT_CLEAR to replace anything, though
+	//        generally it is only used to initialize the grid.
+
+	// never replace a WALL
+	if (content != SPOT_CLEAR && target == SPOT_WALL)
+		return;
+
+	// LOW_CEIL cannot replace a LEDGE
+	if (content == SPOT_LOW_CEIL && target == SPOT_LEDGE)
+		return;
+
+	target = content;
+}
+
+
 static void fill_rows(byte content)
 {
 	int w2 = grid_W-1;
@@ -604,7 +623,7 @@ static void fill_rows(byte content)
 		int high_x = MIN(w2, grid_righties[y]);
 
 		for (int x = low_x ; x <= high_x ; x++)
-			spot_grid[x][y] = content;
+			replace_cell(x, y, content);
 	}
 }
 

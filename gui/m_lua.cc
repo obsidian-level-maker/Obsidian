@@ -1,10 +1,10 @@
-//------------------------------------------------------------------------
+//----------------------------------------------------------------------
 //  LUA interface
-//------------------------------------------------------------------------
+//----------------------------------------------------------------------
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2013 Andrew Apted
+//  Copyright (C) 2006-2014 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -16,7 +16,7 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 //
-//------------------------------------------------------------------------
+//----------------------------------------------------------------------
 
 #include "headers.h"
 
