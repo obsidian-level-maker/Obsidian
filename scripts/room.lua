@@ -101,10 +101,9 @@ function ROOM_CLASS.new()
 
     goals   = {}
     closets = {}
-    prefabs = {}
-    decor   = {}
     chunks  = {}
     floors  = {}
+    decor   = {}
 
     sky_rects = {}
     exclusions = {}
@@ -281,6 +280,56 @@ function ROOM_CLASS.spots_do_edges(R)
     if side == 6 then x1 = x2 ; x2 = x2 + 100 end
 
     gui.spots_fill_box(x1, y1, x2, y2, SPOT_LEDGE)
+  end
+end
+
+
+function ROOM_CLASS.add_decor(R, name, x, y, z)
+  local info = GAME.ENTITIES[name]
+
+  if not info then
+    warning("Unknown decor entity: %s\n", tostring(name))
+
+    info = { r=32, h=96 }
+  end
+
+  local DECOR =
+  {
+    name = name
+    x = x
+    y = y
+    z = z
+
+    r = info.r
+    h = info.h
+    pass = info.pass
+  }
+
+  table.insert(R.decor, DECOR)
+end
+
+
+function ROOM_CLASS.spots_do_decor(R, floor_h)
+  local low_h  = PARAM.spot_low_h
+  local high_h = PARAM.spot_high_h
+
+  each D in R.decor do
+    -- not solid?
+    if D.pass then continue end
+
+    local z1 = D.z
+    local z2 = D.z + D.h
+
+    if z1 >= floor_h + high_h then continue end
+    if z2 <= floor_h then continue end
+
+    local content = SPOT_LEDGE
+    if z1 >= floor_h + low_h then content = SPOT_LOW_CEIL end
+
+    local x1, y1 = D.x - D.r, D.y - D.r
+    local x2, y2 = D.x + D.r, D.y + D.r
+
+    gui.spots_fill_box(x1, y1, x2, y2, content)
   end
 end
 
@@ -4313,10 +4362,11 @@ function Room_determine_spots()
     end
     end
 
+    -- remove decoration entities
+    R:spots_do_decor(floor.floor_h)
+
     -- remove walls and blockers (using nearby brushes)
     gui.spots_apply_brushes();
-
-    -- FIXME !!!! remove solid decor entities
 
     -- add the spots to the room
 
