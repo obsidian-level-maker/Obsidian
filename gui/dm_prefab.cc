@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2012-2013 Andrew Apted
+//  Copyright (C) 2012-2014 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -48,6 +48,7 @@
 //  -->  { bottom_h=#, bottom_tex="...",
 //            top_h=#,    top_tex="...",
 //         side_tex="...", x_offset=#, y_offset=#
+//         special=#, light=#
 //       }
 // 
 //  wadfab_get_thing(index)
@@ -462,6 +463,13 @@ int wadfab_get_3d_floor(lua_State *L)
 
 	lua_pushinteger(L, LD->right->y_offset);
 	lua_setfield(L, -2, "y_offset");
+
+	// PROPERTIES
+	lua_pushinteger(L, SEC->special);
+	lua_setfield(L, -2, "special");
+
+	lua_pushinteger(L, SEC->light);
+	lua_setfield(L, -2, "light");
 
 	return 1;
 }

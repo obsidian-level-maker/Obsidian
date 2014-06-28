@@ -1141,8 +1141,8 @@ function Fab_load_wad(def)
 
     C2.tex = exfl.side_tex
 
-    C2.u1  = exfl.x_offset
-    C2.v1  = exfl.y_offset
+--??  C2.u1  = exfl.x_offset
+--??  C2.v1  = exfl.y_offset
 
     return C2
   end
