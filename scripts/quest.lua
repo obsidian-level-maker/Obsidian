@@ -1719,8 +1719,9 @@ end
     end
 
     -- make room after a keyed door often be a breather
-    if Z.id != 1 and not Z.start.purpose and rand.odds(70) then
+    if Z.id >= 2 and not Z.start.purpose and rand.odds(70) then
       Z.start.cool_down = true
+      gui.debugf("Cooling down @ %s\n", Z.start:tostr())
     end
   end
 end
