@@ -21,6 +21,7 @@ CHANGELOG
 + added 'tech_Gray' theme for DOOM, thanks to Mr. Chris
 + new 'Egypt' theme for TNT Evilution, courtesy Mr. Chris
 + new 'Theme Control' module for DOOM 1 and 2
++ new 'Music Swapper' module (for Boom compatible ports)
 
 - support upto 8 players in CO-OP mode
 
@@ -46,6 +47,7 @@ CHANGELOG
 
 - CSG: better handling of Y offsets
 - CSG: improved handling of railing textures
+- support 3D floors in wad prefabs
 
 - caves: improved floor texturing in flat caves
 - caves: never place pickup items in liquid areas
