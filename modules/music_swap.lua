@@ -111,8 +111,7 @@ OB_MODULES["music_swapper"] =
 
   game = { doom1=1, doom2=1 }
 
-  -- Legacy is not here, it does not handle the [MUSIC] section
-  engine = { boom=1, edge=1, zdoom=1 }
+  engine = { boom=1 }
 
   hooks =
   {

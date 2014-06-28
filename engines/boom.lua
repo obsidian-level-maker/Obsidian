@@ -42,7 +42,8 @@ function BOOM.create_dehacked()
     "#\n\n"
   }
 
-  -- Level names...
+  --- level names ---
+
   local strings_marker = false;
 
   each L in GAME.levels do
@@ -76,9 +77,15 @@ function BOOM.create_dehacked()
     end
   end -- for L
 
-  -- TODO: music replacement
-
   table.insert(data, "\n");
+
+
+  --- music replacement ---
+
+  if GAME.music_mapping then
+    table.insert(data, GAME.music_mapping)
+    table.insert(data, "\n");
+  end
 
   gui.wad_add_text_lump("DEHACKED", data);
 end
