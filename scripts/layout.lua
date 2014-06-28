@@ -2773,7 +2773,7 @@ gui.debugf("  gap_z --> %d  want_gap --> %d\n", gap_z, want_gap)
       local S = SEEDS[x][y]
       if S.room != R then continue end
 
-      local chunk = S.chunk
+      local chunk = S.chunk[1]
 
       if chunk and chunk.floor then
         S.floor_h = assert(chunk.floor.floor_h)
@@ -3248,13 +3248,14 @@ function Layout_room(R)
   end
 
 
+  -- TODO : this is similar to fix_up_seeds(), maybe merge ??
   local function assign_floor_texs()
     for x = R.tx1, R.tx2 do
     for y = R.ty1, R.ty2 do
       local S = SEEDS[x][y]
       if S.room != R then continue end
 
-      local chunk = S.chunk
+      local chunk = S.chunk[1]
 
       if chunk and chunk.floor then
         S.f_tex = assert(chunk.floor.floor_tex)

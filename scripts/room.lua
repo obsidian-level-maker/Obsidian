@@ -3720,7 +3720,7 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
 
 
   local function do_stair(S, w_tex, f_indents)
-    local K = assert(S.chunk)
+    local K = assert(S.chunk[1])
     assert(K.src_floor and K.dest_floor)
 
     local z1 = K. src_floor.floor_h
@@ -3836,10 +3836,6 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
     elseif R.kind == "stairwell" then
       w_tex = assert(R.well_tex)
     end
-
-if S.chunk and string.match(S.chunk.kind, "stair") then
-  f_tex = "FLAT23"
-end
 
 
     local sec_kind
@@ -4326,6 +4322,8 @@ function Room_determine_spots()
   local function try_solidify_seed(S, floor)
     for i = 1,9 do
       local K = S.chunk[i]
+
+      if not K then break; end
 
       if K.kind == "floor" and K.floor == floor then
         return -- found the floor, so leave it alone
