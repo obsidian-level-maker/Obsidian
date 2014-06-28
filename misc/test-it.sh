@@ -1,9 +1,9 @@
 #!/bin/bash
 # set -e
 
-if [ $# -eq 0 ]
+if [ "$1" == "--help" ]
 then
-	echo "USAGE: test-it  seed  oblige_options..."
+	echo "USAGE: test-it  oblige_options..."
 	exit
 fi
 
@@ -13,8 +13,9 @@ then
 	exit 1
 fi
 
-seed=$1
-shift
+seed=$RANDOM
+
+echo "SEED = " ${seed}
 
 base="test_${seed}"
 
@@ -23,22 +24,22 @@ def_length=game
 
 declare -a GAMES
 GAMES=("doom1" "doom2" "freedoom" "ultdoom" "tnt" "plutonia")
-index=$(($RANDOM % ${#GAMES}))
+index=$(($RANDOM % 6))
 def_game=${GAMES[$index]}
 
 declare -a ENGINES
 ENGINES=("nolimit" "boom" "edge" "legacy" "zdoom")
-index=$(($RANDOM % ${#ENGINES}))
+index=$(($RANDOM % 5))
 def_engine=${ENGINES[$index]}
 
 declare -a SIZES
 SIZES=("prog" "mixed" "tiny" "small" "regular" "large")
-index=$(($RANDOM % ${#SIZES}))
+index=$(($RANDOM % 6))
 def_size=${SIZES[$index]}
 
 declare -a THEMES
 THEMES=("mixed" "mixed" "jumble" "original" "psycho")
-index=$(($RANDOM % ${#THEMES}))
+index=$(($RANDOM % 5))
 def_theme=${THEMES[$index]}
 
 set -x
