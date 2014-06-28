@@ -26,6 +26,11 @@ GAMES=("doom1" "doom2" "freedoom" "ultdoom" "tnt" "plutonia")
 index=$(($RANDOM % ${#GAMES}))
 def_game=${GAMES[$index]}
 
+declare -a ENGINES
+ENGINES=("nolimit" "boom" "edge" "legacy" "zdoom")
+index=$(($RANDOM % ${#ENGINES}))
+def_engine=${ENGINES[$index]}
+
 declare -a SIZES
 SIZES=("prog" "mixed" "tiny" "small" "regular" "large")
 index=$(($RANDOM % ${#SIZES}))
@@ -38,7 +43,8 @@ def_theme=${THEMES[$index]}
 
 set -x
 ./Oblige --nolight seed=${seed} length=${def_length} \
-		game=${def_game} size=${def_size} theme=${def_theme} \
+		game=${def_game} engine=${def_engine} \
+		size=${def_size} theme=${def_theme} \
 		$@ -b ${base}.out > ${base}.log
 set +x
 
