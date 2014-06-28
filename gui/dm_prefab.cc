@@ -471,6 +471,12 @@ int wadfab_get_3d_floor(lua_State *L)
 	lua_pushinteger(L, SEC->light);
 	lua_setfield(L, -2, "light");
 
+	if (LD->special == 405)
+	{
+		lua_pushinteger(L, 1);
+		lua_setfield(L, -2, "liquid");
+	}
+
 	return 1;
 }
 
