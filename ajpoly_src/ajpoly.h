@@ -86,10 +86,13 @@ public:
 	int num_floors;
 	int floor_start;
 
+	char is_dummy;	// private
+
 public:
 	sector_c() : index(-1), floor_h(), ceil_h(),
 	             light(), special(), tag(),
-				 edge_list(), num_floors(), floor_start()
+				 edge_list(), num_floors(), floor_start(),
+				 is_dummy()
 	{
 		floor_tex[0] = 0;
 		 ceil_tex[0] = 0;

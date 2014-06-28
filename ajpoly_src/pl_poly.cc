@@ -952,7 +952,7 @@ bool ProcessSectors()
 			continue;
 
 		// skip dummy sectors
-		if (sec->light == DUMMY_SECTOR)
+		if (sec->is_dummy)
 			continue;
 
 #if DEBUG_POLY
@@ -1019,7 +1019,7 @@ void CreateEdges()
 
 		// ignore dummy sectors
 		if (line->right && line->right->sector &&
-			line->right->sector->light == DUMMY_SECTOR)
+			line->right->sector->is_dummy)
 			continue;
 
 		right = CreateAnEdge(line, line->start, line->end, line->right, 0);

@@ -17,9 +17,6 @@
 #ifndef __AJPOLY_MAP_H__
 #define __AJPOLY_MAP_H__
 
-// use this in sector_c::light
-#define DUMMY_SECTOR  0xBEEF
-
 
 /* ----- OBJECTS --------------------------------- */
 

@@ -556,21 +556,19 @@ void DetermineMapLimits()
 
 		// ignore dummy sectors
 		if (L->right && L->right->sector &&
-			L->right->sector->light == DUMMY_SECTOR)
+			L->right->sector->is_dummy)
 			continue;
 
-		{
-			int x1 = (int)L->start->x;
-			int y1 = (int)L->start->y;
-			int x2 = (int)L->end->x;
-			int y2 = (int)L->end->y;
+		int x1 = (int)L->start->x;
+		int y1 = (int)L->start->y;
+		int x2 = (int)L->end->x;
+		int y2 = (int)L->end->y;
 
-			limit_x1 = MIN(limit_x1, MIN(x1, x2));
-			limit_y1 = MIN(limit_y1, MIN(y1, y2));
+		limit_x1 = MIN(limit_x1, MIN(x1, x2));
+		limit_y1 = MIN(limit_y1, MIN(y1, y2));
 
-			limit_x2 = MAX(limit_x2, MAX(x1, x2));
-			limit_y2 = MAX(limit_y2, MAX(y1, y2));
-		}
+		limit_x2 = MAX(limit_x2, MAX(x1, x2));
+		limit_y2 = MAX(limit_y2, MAX(y1, y2));
 	}
 
 	Appl_Printf("Map goes from (%d,%d) to (%d,%d)\n",
@@ -631,7 +629,7 @@ void CheckSectorIsDummy(sector_c *sec)
 
 	// OK found one
 
-	sec->light = DUMMY_SECTOR;
+	sec->is_dummy = 1;
 }
 
 
@@ -693,7 +691,7 @@ int CollectFloorsAtSector(sector_c *sec, bool count_only)
 
 		// line must be in a dummy sector
 		if (! (line->right && line->right->sector &&
-			   line->right->sector->light == DUMMY_SECTOR))
+			   line->right->sector->is_dummy))
 			continue;
 
 		// special must be an extrafloor
@@ -728,7 +726,7 @@ void ProcessExtraFloors()
 			continue;
 
 		// skip dummy sectors too
-		if (sec->light == DUMMY_SECTOR)
+		if (sec->is_dummy)
 			continue;
 
 		int total = CollectFloorsAtSector(sec, true /* count_only */);
@@ -1122,7 +1120,7 @@ bool VerifyOuterLines()
 
 		// ignore lines of dummy sectors
 		if (L->right && L->right->sector &&
-			L->right->sector->light == DUMMY_SECTOR)
+			L->right->sector->is_dummy)
 			continue;
 
 		if (x1 == limit_x1 && x2 == limit_x2 && y1 == limit_y2 && y2 == y1)
