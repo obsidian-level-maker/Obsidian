@@ -618,26 +618,21 @@ function Cave_create_areas(R)
 
 
   local function install_area(A, a_cave, mul)
-    A.cx1 =  9999
-    A.cy1 =  9999
-    A.cx2 = -9999
-    A.cy2 = -9999
-
     for cx = 1, info.W do
     for cy = 1, info.H do
       if ((a_cave:get(cx, cy) or 0) * mul) > 0 then
         info.blocks[cx][cy] = A
 
-        A.cx1 = math.min(A.cx1, cx)
-        A.cy1 = math.min(A.cy1, cy)
+        A.cx1 = math.min(A.cx1 or 9999, cx)
+        A.cy1 = math.min(A.cy1 or 9999, cy)
 
-        A.cx2 = math.max(A.cx2, cx)
-        A.cy2 = math.max(A.cy2, cy)
+        A.cx2 = math.max(A.cx2 or -9999, cx)
+        A.cy2 = math.max(A.cy2 or -9999, cy)
       end
     end
     end
 
-    if A.cx2 < A.cx1 then
+    if not A.cx1 then
       error("Cave install_area: no cells!")
     end
   end
@@ -2730,10 +2725,10 @@ function Cave_decide_properties(R)
   end
 
   gui.debugf("Cave properties in %s\n", R:tostr())
-  gui.debugf("    step_mode : %s\n", info.step_mode);
-  gui.debugf("  liquid_mode : %s\n", info.liquid_mode);
-  gui.debugf("     sky_mode : %s\n", info.sky_mode);
-  gui.debugf("   torch_mode : %s\n", info.torch_mode);
+  gui.debugf("    step_mode : %s\n", info.step_mode)
+  gui.debugf("  liquid_mode : %s\n", info.liquid_mode)
+  gui.debugf("     sky_mode : %s\n", info.sky_mode)
+  gui.debugf("   torch_mode : %s\n", info.torch_mode)
 end
 
 
@@ -2772,11 +2767,13 @@ function Cave_determine_spots(R)
 
     local A2 = info.blocks[x][y]
 
+    if not A2 then return end
+
     if A2 == A then return end
 
     -- higher floors are handled by gui.spots_apply_brushes()
-    if A2.floor_h and A2.floor_h >= A.floor_h then return end
-    if A.wall then return end
+    if A.wall or A.fence then return end
+    if A2.floor_h and A2.floor_h > A.floor_h + 1 then return end
 
     -- skip area if not near the floor
     if A2.cx1 then
@@ -2882,7 +2879,7 @@ function Cave_determine_spots(R)
     local y1 = info.y1 + (A.cy1 - 1) * 64 
 
     local x2 = info.x1 + (A.cx2) * 64
-    local y2 = info.y2 + (A.cy2) * 64
+    local y2 = info.y1 + (A.cy2) * 64
 
     gui.spots_begin(x1, y1, x2, y2, A.floor_h, SPOT_CLEAR)
 
@@ -2917,7 +2914,10 @@ function Cave_determine_spots(R)
     R:spots_do_decor(A.floor_h)
 
     -- remove walls and blockers (using nearby brushes)
-    gui.spots_apply_brushes();
+    gui.spots_apply_brushes()
+
+
+--- gui.spots_dump("Spot dump")
 
 
     -- now grab all the spots...
