@@ -72,8 +72,6 @@ class AREA
 
   host_spots : list(BBOX)  -- spots which can host a torch/prefab
 
-  decorations : list(BBOX)
-
   -- stuff for walkways only
   children : list[AREA]
 }
@@ -2611,20 +2609,7 @@ function Cave_decorations(R)
     local my = info.y1 + (y-1) * 64 + 32
 
     Trans.entity(torch_ent, mx, my, A.floor_h, { cave_light=192, factor=1.2 })
-
-    -- remember bbox, prevent placing items/monsters here
-
-    local DECOR =
-    {
-      x1 = mx - 32, x2 = mx + 32
-      y1 = my - 32, y2 = my + 32
-    }
-
-    if not A.decorations then
-      A.decorations = {}
-    end
-
-    table.insert(A.decorations, DECOR)
+    R:add_decor (torch_ent, mx, my, A.floor_h)
   end
 
 
@@ -2929,11 +2914,7 @@ function Cave_determine_spots(R)
 
     -- step 5 : remove decorations
 
-    if A.decorations then
-      each dec in A.decorations do
-        do_spot_decor(dec)
-      end
-    end
+    R:spots_do_decor(A.floor_h)
 
 
     -- now grab all the spots...

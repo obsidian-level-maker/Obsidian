@@ -2824,6 +2824,7 @@ function Room_add_crates(R)
         mark_spot(spot.S)
         local x, y, z = get_entity_coord(spot.S, 16)
         Trans.entity(torch_ent, x, y, z, { light=192, factor=1.2 })
+        R:add_decor (torch_ent, x, y, z)
       end
     end
   end
@@ -2840,6 +2841,7 @@ function Room_add_crates(R)
         for loop = 1, 1 do
           local x, y, z = get_entity_coord(spot.S, 20)
           Trans.entity("barrel", x, y, z)
+          R:add_decor ("barrel", x, y, z)
         end
       end
     end
