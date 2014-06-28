@@ -618,12 +618,27 @@ function Cave_create_areas(R)
 
 
   local function install_area(A, a_cave, mul)
+    A.cx1 =  9999
+    A.cy1 =  9999
+    A.cx2 = -9999
+    A.cy2 = -9999
+
     for cx = 1, info.W do
     for cy = 1, info.H do
       if ((a_cave:get(cx, cy) or 0) * mul) > 0 then
         info.blocks[cx][cy] = A
+
+        A.cx1 = math.min(A.cx1, cx)
+        A.cy1 = math.min(A.cy1, cy)
+
+        A.cx2 = math.max(A.cx2, cx)
+        A.cy2 = math.max(A.cy2, cy)
       end
     end
+    end
+
+    if A.cx2 < A.cx1 then
+      error("Cave install_area: no cells!")
     end
   end
 
@@ -659,9 +674,9 @@ function Cave_create_areas(R)
 
 
   local function make_walkway()
+    -- only have one area : the indentation / liquidy bits are
+    -- considered to be a variation of it (child areas)
 
-    -- only have one area (the indentation / liquidy bits are considered a
-    -- minor variation of it).
     local AREA =
     {
       touching = {}
@@ -921,18 +936,10 @@ step:dump("Step:")
 
         install_area(prev_A, step, 1)
 
-        prev_A.cx1 = math.min(prev_A.cx1, cx1)
-        prev_A.cy1 = math.min(prev_A.cy1, cy1)
-        prev_A.cx2 = math.max(prev_A.cx2, cx2)
-        prev_A.cy2 = math.max(prev_A.cy2, cy2)
-
       else
         local AREA =
         {
           touching = {}
-
-          cx1 = cx1, cy1 = cy1
-          cx2 = cx2, cy2 = cy2
         }
 
         table.insert(info.floors, AREA)
@@ -2759,18 +2766,34 @@ function Cave_determine_spots(R)
   local cave = info.cave
 
 
-  local function do_spot_floor(A, x, y)
+  local function do_spot_cell(A, x, y)
+    if x < 1 or x > info.W then return end
+    if y < 1 or y > info.H then return end
+
     local A2 = info.blocks[x][y]
 
-    if A != A2 then return end
+    if A2 == A then return end
+
+    -- higher floors are handled by gui.spots_apply_brushes()
+    if A2.floor_h and A2.floor_h >= A.floor_h then return end
+    if A.wall then return end
+
+    -- skip area if not near the floor
+    if A2.cx1 then
+      if A2.cx2 < A.cx1 then return end
+      if A2.cy2 < A.cy1 then return end
+
+      if A2.cx1 > A.cx2 then return end
+      if A2.cy1 > A.cy2 then return end
+    end
 
     local poly = Cave_brush(info, x, y)
 
-    gui.spots_fill_poly(poly, SPOT_CLEAR)
+    gui.spots_fill_poly(poly, SPOT_LEDGE)
   end
 
 
-  local function do_spot_at_border(A, x, y)
+  local function do_spot_at_border(A, x, y)  -- NOT NEEDED ??
     -- only needed for lake mode
     if not is_lake then return end
 
@@ -2792,7 +2815,7 @@ function Cave_determine_spots(R)
   end
 
 
-  local function do_spot_wall(A, x, y)
+  local function do_spot_wall(A, x, y)  -- NOT NEEDED ??
     local A2 = info.blocks[x][y]
 
     if A2 == A then
@@ -2825,96 +2848,76 @@ function Cave_determine_spots(R)
   end
 
 
-  local function do_spot_border(S, side)
-    local B     = S.border[side]
-    local thick = S.thick[side]
-
-    if not B.kind then return end
+  local function do_spot_conn(S)
+    if not S.conn then return end
+    if not S.conn_dir then return end
 
     local x1, y1 = S.x1, S.y1
     local x2, y2 = S.x2, S.y2
 
-    if side == 2 then y2 = y1 + thick end
-    if side == 8 then y1 = y2 - thick end
-    if side == 4 then x2 = x1 + thick end
-    if side == 6 then x1 = x2 - thick end
+    if S.conn_dir == 2 then y2 = y1 + 64 end
+    if S.conn_dir == 8 then y1 = y2 - 64 end
+    if S.conn_dir == 4 then x2 = x1 + 64 end
+    if S.conn_dir == 6 then x1 = x2 - 64 end
 
-    local poly = brushlib.quad(x1, y1, x2, y2)
-
-    gui.spots_fill_poly(poly, SPOT_WALL)
-  end
-
-
-  local function do_spot_decor(dec)
-    local poly = brushlib.quad(dec.x1, dec.y1, dec.x2, dec.y2)
-
-    gui.spots_fill_poly(poly, SPOT_LEDGE)
+    gui.spots_fill_box(x1, y1, x2, y2, SPOT_WALL)
   end
 
 
   local function do_spot_important(imp)
-    -- connections don't need to be kept clear (do they?)
     if not imp.goal then return end
 
     local G = imp.goal
     local S = assert(G.S)
 
-    local poly = brushlib.quad(S.x1, S.y1, S.x2, S.y2)
-
-    gui.spots_fill_poly(poly, SPOT_LEDGE)
+    gui.spots_fill_box(S.x1, S.y1, S.x2, S.y2, SPOT_LEDGE)
   end
 
 
   local function determine_spots(A)
-    -- determine bbox (Note: this is whole cave)
-    local x1 = info.x1 + 10
-    local y1 = info.y1 + 10
+    assert(A.cx1 and A.cy2)
 
-    local x2 = info.x2 - 10
-    local y2 = info.y2 - 10
+    -- determine bbox
+    local x1 = info.x1 + (A.cx1 - 1) * 64
+    local y1 = info.y1 + (A.cy1 - 1) * 64 
 
-    gui.spots_begin(x1, y1, x2, y2, A.floor_h, SPOT_LEDGE)
+    local x2 = info.x1 + (A.cx2) * 64
+    local y2 = info.y2 + (A.cy2) * 64
+
+    gui.spots_begin(x1, y1, x2, y2, A.floor_h, SPOT_CLEAR)
 
 
-    -- step 1 : handle floors
+    -- start with room edges
+    R:spots_do_edges()
 
-    for cx = 1, info.W do
-    for cy = 1, info.H do
-      do_spot_floor(A, cx, cy)
+    -- handle nearby areas
+    for cx = A.cx1 - 1, A.cx2 + 1 do
+    for cy = A.cy1 - 1, A.cy2 + 1 do
+      do_spot_cell(A, cx, cy)
     end
     end
 
-    -- step 2 : handle nearby walls
-
-    for cx = 1, info.W do
-    for cy = 1, info.H do
-      do_spot_wall(A, cx, cy)
-    end
-    end
-
-    -- step 3 : handle connections and "cave_wall" borders
-
+    -- handle connections
     for sx = R.sx1, R.sx2 do
     for sy = R.sy1, R.sy2 do
       local S = SEEDS[sx][sy]
 
       if S.room == R then
-        for dir = 2,8,2 do
-          do_spot_border(S, dir)
-        end
+        do_spot_conn(S)
       end
     end
     end
 
-    -- step 4 : remove importants
-
+    -- remove importants
     each imp in R.cave_imps do
       do_spot_important(imp)
     end
 
-    -- step 5 : remove decorations
-
+    -- remove decorations
     R:spots_do_decor(A.floor_h)
+
+    -- remove walls and blockers (using nearby brushes)
+    gui.spots_apply_brushes();
 
 
     -- now grab all the spots...

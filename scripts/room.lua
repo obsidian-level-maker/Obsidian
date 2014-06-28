@@ -269,15 +269,15 @@ function ROOM_CLASS.spots_do_edges(R)
     local x1, y1, x2, y2 = R:get_bbox()
 
     if geom.is_vert(side) then
-      x1 = x1 - 100 ; x2 = x2 + 100
+      x1 = x1 - 200 ; x2 = x2 + 200
     else
-      y1 = y1 - 100 ; y2 = y2 + 100
+      y1 = y1 - 200 ; y2 = y2 + 200
     end
 
-    if side == 2 then y2 = y1 ; y1 = y1 - 100 end
-    if side == 8 then y1 = y2 ; y2 = y2 + 100 end
-    if side == 4 then x2 = x1 ; x1 = x1 - 100 end
-    if side == 6 then x1 = x2 ; x2 = x2 + 100 end
+    if side == 2 then y2 = y1 ; y1 = y1 - 200 end
+    if side == 8 then y1 = y2 ; y2 = y2 + 200 end
+    if side == 4 then x2 = x1 ; x1 = x1 - 200 end
+    if side == 6 then x1 = x2 ; x2 = x2 + 200 end
 
     gui.spots_fill_box(x1, y1, x2, y2, SPOT_LEDGE)
   end
