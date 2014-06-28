@@ -4,6 +4,11 @@ WORK IN PROGRESS
 
 
 3D Floors:
++  detect "floating corners" -- place a support beam there
+   (unless chunk has a middle beam)
+
+-  64x64 middle beams for some 3D floors
+
 -  next to room with liquid -- odd gap is possible
 
 -  cutting off windows / player can run out them
@@ -13,23 +18,7 @@ WORK IN PROGRESS
 
 
 
-Spot handling:
-
-!!  handle torches and barrels in normal rooms
-
--  update Cave code
-   -  get bbox (real coord / cells) for each AREA
-   -  only use that bbox
-   +  initial state should be CLEAR
-
-   -  _skip_ cells of the floor itself
-   -  use R:spots_do_edges()
-   -  use gui.spots_apply_brushes()
-   +  copy logic for height checking
-
-
-
-Layout rework:
+Recursive Patterns :
 
 -  pure patterns : have two basic kinds (I and P) and ensure
    no (or little) overlap in the sizes which can use them
@@ -38,6 +27,10 @@ Layout rework:
 -  recursive patterns : in sizes support a '+' symbol (or?) which
    means that the size must be (e.g.) 6 seeds _or_more_
    e.g. "3+13+'
+
+   also: ranges like '3-7'
+   also: spaces for legibility
+   also : 'R' means to repeat previous size range
 
 -  recursive : figure out how to handle symmetry
 
@@ -56,6 +49,12 @@ IDEA: '?' in patterns means "don't care" / "filler"
 
                disallow stairs FROM a sub-area
 
+
+Layout rework:
+
++  use S.chunks[1] and S.chunks[2]  -- not [.]overlay
+
+-  give lower chunk (if two) a ceil_h
 
 +  create chunks for ALL non-cave rooms
 
@@ -133,9 +132,5 @@ MISCELLANEA
 RAIL ISSUE : cannot control offsets on BACK SIDE of a brush vert
 --->  test new logic....
 
-
-wad-fab loader : x_offset handling not right (if line is split)
-
-
-???  last_file stuff?  Default_location??
+Review spot handling in Cave code
 
