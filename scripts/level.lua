@@ -484,7 +484,11 @@ function Levels_choose_themes()
       LEV.name_class = assert(info.name_class)
     end
 
-    LEV.theme = assert(GAME.THEMES[name .. "_DEFAULTS"])
+    LEV.theme = GAME.THEMES[name .. "_DEFAULTS"]
+
+    if not LEV.theme then
+      error("Unknown theme : " .. name)
+    end
 
     gui.printf("Theme for level %s = %s\n", LEV.name, name)
   end
