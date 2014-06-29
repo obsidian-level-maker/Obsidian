@@ -3241,17 +3241,11 @@ function Room_build_seeds(R)
 
         Trans.entity(LOCK.item, mx, my, z_top)
       else
-        if rand.odds(2) then
-          -- bare item
-          Trans.entity(LOCK.item, mx, my, z1)
-        else
-          content_big_item(LOCK.item, mx, my, z1)
-        end
+        content_big_item(LOCK.item, mx, my, z1)
       end
 
     elseif R.purpose == "SWITCH" then
       local LOCK = assert(R.purpose_lock)
-gui.debugf("SWITCH ITEM = %s\n", LOCK.switch)
       local INFO = assert(GAME.SWITCHES[LOCK.switch])
       Build.small_switch(S, dir_for_wotsit(S), z1, INFO.skin, LOCK.tag)
 
