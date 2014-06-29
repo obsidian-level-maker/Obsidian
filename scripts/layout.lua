@@ -3444,7 +3444,25 @@ gui.debugf("(skip SUB_%s : no entry_vhr)\n", tostring(A.id))
   end
 
 
-  local function assign_a_conn(C, floor)
+  local function assign_a_conn(C, S, place)
+    -- place is "lower" for the ground floor and "upper" for any 3D
+    -- floor above the ground floor.
+
+    local chunk = S.chunk[1]
+
+    if place == "upper" then
+      local n = 2
+
+      while S.chunk[n + 1] and rand.odds(60) do
+        n = n + 1
+      end
+
+      chunk = assert(S.chunk[n])
+    end
+
+
+    local floor = assert(chunk.floor)
+
     assert(floor.vhr)
     assert(R.floors[floor.vhr] == floor)
 
@@ -3455,12 +3473,17 @@ gui.debugf("(skip SUB_%s : no entry_vhr)\n", tostring(A.id))
 
 
   local function assign_conns_to_floors()
-    -- Pick which connections will enter/leave on the second floor.
-    -- When there are 2 or more conns, we want at least one on each
-    -- 3D floor.  If only one connection, pick the upper floor since
-    -- importants can only exist on the lower floor.
-
-    -- TODO : support more 3D floors than one !!!
+    --
+    -- Pick which connections will enter/leave on what (3D) floors.
+    --
+    -- When there are 2 or more conns, we want at least one of each.
+    -- If only one connection, usually pick the upper floor since
+    -- most importants can only exist in a 3D-floor-free spot.
+    --
+    -- The decision logic here only looks at two floors (lower and
+    -- upper), however when assigning connections to "upper" it can
+    -- use any extra 3D floors that exist.
+    --
 
     local lower = 0
     local upper = 0
@@ -3473,6 +3496,8 @@ gui.debugf("(skip SUB_%s : no entry_vhr)\n", tostring(A.id))
       -- ignore teleporters
       if not S then continue end
 
+      assert(S.conn == C)
+
       local chunk = assert(S.chunk[1])
       local overlay = S.chunk[2]
 
@@ -3480,15 +3505,15 @@ gui.debugf("(skip SUB_%s : no entry_vhr)\n", tostring(A.id))
       local hit_upper = (overlay and overlay.floor)
 
       if hit_lower and hit_upper then
-        table.insert(hit_both, { conn=C, chunk=chunk, overlay=overlay })
+        table.insert(hit_both, S)
 
       elseif hit_upper then
         upper = upper + 1
-        assign_a_conn(C, assert(overlay.floor))
+        assign_a_conn(C, S, "upper")
 
       else
         lower = lower + 1
-        assign_a_conn(C, assert(chunk.floor))
+        assign_a_conn(C, S, "lower")
       end
     end
 
@@ -3502,31 +3527,28 @@ gui.debugf("(skip SUB_%s : no entry_vhr)\n", tostring(A.id))
 
     if both == 0 then return end
 
-    -- decide how many of hit_both[] to assign to the upper floor
-    local raise_min = sel(upper < 1, 1, 0)
+
+    -- decide how many of hit_both[] to assign to an overlay.
+    local raise_min = sel(upper < 1 and rand.odds(50), 1, 0)
     local raise_max = both - sel(upper > lower, 1, 0)
 
     assert(raise_min <= raise_max)
 
     local raise_num = rand.irange(raise_min, raise_max)
 
+
     -- actually assign them...
     rand.shuffle(hit_both)
 
     for i = 1, #hit_both do
-      local C     = hit_both[i].conn
-      local chunk = hit_both[i].chunk
-      local overlay = hit_both[i].overlay
-
-      local floor
+      local S = hit_both[i]
+      local C = S.conn
 
       if i <= raise_num then
-        floor = assert(overlay.floor)
+        assign_a_conn(C, S, "upper")
       else
-        floor = assert(chunk.floor)
+        assign_a_conn(C, S, "lower")
       end
-
-      assign_a_conn(C, floor)
     end
   end
 
