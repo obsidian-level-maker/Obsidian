@@ -2043,34 +2043,32 @@ function Room_make_ceiling(R)
 
   local function get_max_drop(side, offset)
     local drop_z
+
     local x1,y1, x2,y2 = geom.side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2, offset)
 
-    for x = x1,x2 do for y = y1,y2 do
+    for x = x1,x2 do
+    for y = y1,y2 do
       local S = SEEDS[x][y]
-      if S.room == R then
 
-        local f_h
-        if S.kind == "walk" then
-          f_h = S.floor_max_h or S.floor_h
-        elseif S.diag_new_kind == "walk" then
-          f_h = S.diag_new_z or S.floor_h
----##        elseif S.kind == "stair" or S.kind == "lift" then
----##          f_h = math.max(S.stair_z1, S.stair_z2)
-        elseif S.kind == "curve_stair" or S.kind == "tall_stair" then
-          f_h = math.max(S.x_height, S.y_height)
-        end
+      if S.room != R then continue end
 
-        if f_h then
-          local diff_h = (S.ceil_h or R.ceil_h) - (f_h + 144)
+      -- ignore void seeds (cages too)
+      if S.kind == "void" then continue end
 
-          if diff_h < 1 then return nil end
+      local f_h = S.floor_max_h or S.floor_h
 
-          if not drop_z or (diff_h < drop_z) then
-            drop_z = diff_h
-          end
-        end
+      assert(f_h)
+
+      local diff_h = (S.ceil_h or R.ceil_h) - (f_h + 144)
+
+      if diff_h < 1 then return nil end
+
+      if not drop_z or (diff_h < drop_z) then
+        drop_z = diff_h
       end
-    end end -- for x, y
+
+    end -- x, y
+    end
 
     return drop_z
   end
