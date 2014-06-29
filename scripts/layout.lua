@@ -118,6 +118,7 @@ function Layout_preprocess_patterns()
 
     local N = neighbor(grid, x, y, P.dir)
 
+-- FIXME: need to handle destination being a sub-area
 --!!!!!    if not (N and N.kind == "floor") then
 --!!!!!      error("bad stair in pattern: destination not a floor")
 --!!!!!    end
@@ -1761,9 +1762,6 @@ if pat.recurse == "pure" then factor = factor * 100 end
 
     local exfl_factor = style_sel("ex_floors", 0, 0.2, 1.0, 5.0)
 
---!!!!!!
-exfl_factor = 100
-
     local tab = {}
 
     each name,pat in ROOM_PATTERNS do
@@ -2745,7 +2743,7 @@ gui.debugf("  gap_z --> %d  want_gap --> %d\n", gap_z, want_gap)
 
     tab[5] = 0
 
-    for i = 0, 40 do  --!!!!!! FIXME 0, 4
+    for i = 0, 4 do
       local d1 = rand.key_by_probs(delta_tab)
       local d2 = rand.key_by_probs(delta_tab)
 
