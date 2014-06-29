@@ -768,26 +768,33 @@ function Layout_set_floor_minmax(R)
   for x = R.sx1, R.sx2 do
   for y = R.sy1, R.sy2 do
     local S = SEEDS[x][y]
-    if S.room == R and S.kind == "walk" then
-      assert(S.floor_h)
 
-      if not S.floor_max_h then
-        S.floor_max_h = S.floor_h
-      end
+    if S.room != R then continue end
 
-      for i = 2,9 do
-        local K2 = S.chunk[i]
+    if S.kind == "void" then continue end
 
-        if not K2 then break; end
+    -- liquids are done later
+    if S.kind == "liquid" then continue end
 
-        if K2.floor then
-          S.floor_max_h = K2.floor.floor_h
-        end
-      end
+    assert(S.floor_h)
 
-      min_h = math.min(min_h, S.floor_h)
-      max_h = math.max(max_h, S.floor_max_h)
+    if not S.floor_max_h then
+      S.floor_max_h = S.floor_h
     end
+
+    for i = 2,9 do
+      local K2 = S.chunk[i]
+
+      if not K2 then break; end
+
+      if K2.floor then
+        S.floor_max_h = K2.floor.floor_h
+      end
+    end
+
+    min_h = math.min(min_h, S.floor_h)
+    max_h = math.max(max_h, S.floor_max_h)
+
   end -- x, y
   end
 
