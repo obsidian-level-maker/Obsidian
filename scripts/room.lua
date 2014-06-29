@@ -2392,10 +2392,10 @@ function Room_make_ceiling(R)
 
       if S.room != R then continue end
       
-      S.ceil_h  = ch
-      S.is_sky  = is_sky
+      S.ceil_h  = ceil_h
       S.c_tex   = c_tex
       S.c_light = c_light
+      S.is_sky  = is_sky
 
     end -- for x, y
     end
