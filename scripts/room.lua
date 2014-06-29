@@ -2375,12 +2375,15 @@ function Room_make_ceiling(R)
   end
 
 
-  local function fill_xyz(ch, is_sky, c_tex, c_light)
+  local function fill_xyz(ceil_h, is_sky, c_tex, c_light)
     -- for sky ceilings, don't make them too large
     if is_sky then
       shrink_to_volume(0.31)
+      local cw, ch = geom.group_size(R.cx1, R.cy1, R.cx2, R.cy2)
+      ceil_h = ceil_h + (ch + cw) * 12
     else
       shrink_to_volume(0.62)
+      ceil_h = ceil_h + 24
     end
 
     for x = R.cx1, R.cx2 do
@@ -2621,7 +2624,7 @@ function Room_make_ceiling(R)
     local has_sky_nb = R:has_sky_neighbor()
 
     if R.has_periph_pillars and not has_sky_nb and rand.odds(18) then
-      fill_xyz(R.ceil_h, true)
+      fill_xyz(R.ceil_h, "is_sky")
       R.semi_outdoor = true
       return
     end
@@ -2713,7 +2716,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
     end
 
     if R.cw == 1 or R.ch == 1 then
-      fill_xyz(R.ceil_h+32, false, light_name, 0.75)
+      fill_xyz(R.ceil_h, false, light_name, 0.75)
       return
     end
 
