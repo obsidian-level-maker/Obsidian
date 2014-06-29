@@ -2767,7 +2767,14 @@ function Cave_determine_spots(R)
 
     local A2 = info.blocks[x][y]
 
-    if not A2 then return end
+    -- need to remove cells which are not part of the cave
+    if not A2 then
+      local x1 = info.x1 + (x - 1) * 64
+      local y1 = info.y1 + (y - 1) * 64 
+
+      gui.spots_fill_box(x1, y1, x1+64, y1+64, SPOT_WALL)
+      return
+    end
 
     if A2 == A then return end
 
