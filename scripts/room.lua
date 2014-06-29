@@ -2311,18 +2311,91 @@ function Room_make_ceiling(R)
   end
 
 
-  local function fill_xyz(ch, is_sky, c_tex, c_light)
-    for x = R.cx1, R.cx2 do for y = R.cy1, R.cy2 do
-      local S = SEEDS[x][y]
-      if S.room == R then
-      
-        S.ceil_h  = ch
-        S.is_sky  = is_sky
-        S.c_tex   = c_tex
-        S.c_light = c_light
+  local function shrink_to_volume(frac)
+    local vert_first = 0
 
-      end -- if S.room == R
-    end end -- for x, y
+    if R.cy2 - R.cy1 > R.cx2 - R.cx1 then
+      vert_first = 1
+    end
+
+    local max_vol = R.tvolume * frac
+    if max_vol < 2 then max_vol = 2 end
+
+    for pass = 1, 4 do
+      local cw, ch = geom.group_size(R.cx1, R.cy1, R.cx2, R.cy2)
+
+      -- stop when small enough
+      if cw * ch <= max_vol then break; end
+
+      local do_vert = (((pass + vert_first) % 2) == 0)
+
+      if do_vert then
+        if ch < 2 then continue end
+
+        -- do both sides?
+        if ch >= 5 or (ch >= 4 and rand.odds(50)) then
+          R.cy1 = R.cy1 + 1
+          R.cy2 = R.cy2 - 1
+
+        -- prefer move a side away from the edge of room
+        elseif R.cy1 <= R.ty1 and R.cy2 < R.ty2 then
+          R.cy1 = R.cy1 + 1
+        elseif R.cy2 >= R.ty2 and R.cy1 > R.ty1 then
+          R.cy2 = R.cy2 - 1
+
+        -- otherwise pick randomly
+        elseif rand.odds(50) then
+          R.cy1 = R.cy1 + 1
+        else
+          R.cy2 = R.cy2 - 1
+        end
+
+      else
+        -- horizontal (same logic as above)
+
+        if cw < 2 then continue end
+
+        if cw >= 5 or (cw >= 4 and rand.odds(50)) then
+          R.cx1 = R.cx1 + 1
+          R.cx2 = R.cx2 - 1
+
+        elseif R.cx1 <= R.tx1 and R.cx2 < R.tx2 then
+          R.cx1 = R.cx1 + 1
+        elseif R.cx2 >= R.tx2 and R.cx1 > R.tx1 then
+          R.cx2 = R.cx2 - 1
+
+        elseif rand.odds(50) then
+          R.cx1 = R.cx1 + 1
+        else
+          R.cx2 = R.cx2 - 1
+        end
+      end -- do_vert
+
+    end -- pass
+  end
+
+
+  local function fill_xyz(ch, is_sky, c_tex, c_light)
+    -- for sky ceilings, don't make them too large
+    if is_sky then
+      shrink_to_volume(0.31)
+    else
+      shrink_to_volume(0.62)
+    end
+
+    for x = R.cx1, R.cx2 do
+    for y = R.cy1, R.cy2 do
+      local S = SEEDS[x][y]
+
+      if S.room != R then continue end
+      
+      S.ceil_h  = ch
+      S.is_sky  = is_sky
+      S.c_tex   = c_tex
+      S.c_light = c_light
+
+    end -- for x, y
+    end
   end
 
 
@@ -2547,7 +2620,7 @@ function Room_make_ceiling(R)
 
     local has_sky_nb = R:has_sky_neighbor()
 
-    if R.has_periph_pillars and not has_sky_nb and rand.odds(16) then
+    if R.has_periph_pillars and not has_sky_nb and rand.odds(18) then
       fill_xyz(R.ceil_h, true)
       R.semi_outdoor = true
       return
@@ -2599,7 +2672,7 @@ gui.debugf("Original @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
       nice = central_niceness()
     end
-      
+
 gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
 

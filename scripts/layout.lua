@@ -3142,6 +3142,8 @@ function Layout_room(R)
             elseif S.kind == "walk" then
               S.kind = "void"
               S.junked = true
+
+              R.tvolume = R.tvolume - 1
             end
           end
         end -- who
@@ -3173,6 +3175,8 @@ function Layout_room(R)
     R.tx1, R.ty1 = R.sx1, R.sy1
     R.tx2, R.ty2 = R.sx2, R.sy2
     R.tw,  R.th  = R.sw,  R.sh
+
+    R.tvolume = R.svolume
 
     R.junk_thick = { [2]=0, [4]=0, [6]=0, [8]=0 }
 
