@@ -815,6 +815,7 @@ function Layout_set_floor_minmax(R)
     local S = SEEDS[x][y]
     if S.room == R and S.kind == "liquid" then
       S.floor_h = R.liquid_h
+      S.floor_max_h = S.floor_max_h or S.floor_h
     end
   end -- x, y
   end

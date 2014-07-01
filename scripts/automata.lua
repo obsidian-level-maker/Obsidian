@@ -1,6 +1,6 @@
-----------------------------------------------------------------
+------------------------------------------------------------------------
 --  CELLULAR AUTOMATA ( CAVE GENERATION )
-----------------------------------------------------------------
+------------------------------------------------------------------------
 --
 --  Oblige Level Maker
 --
@@ -16,13 +16,13 @@
 --  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 --  GNU General Public License for more details.
 --
-----------------------------------------------------------------
+------------------------------------------------------------------------
 --
 --  The cave algorithm used here in the generate() function was
 --  described by Jim Babcock in his article: "Cellular Automata
 --  Method for Generating Random Cave-Like Levels".
 --
-----------------------------------------------------------------
+------------------------------------------------------------------------
 
 --[[ *** CLASS INFORMATION ***
 

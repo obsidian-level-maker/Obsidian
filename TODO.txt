@@ -88,6 +88,15 @@ ______________________________________________________________________
 -  wad-fab: "outside bbox" pieces via sector type #987
 
 
+3D Floors:
+-  proper handling of windows (eval each combo of floors)
+
+-  proper handling of pictures (decide which floor to use)
+
+-  64x64 middle beams for some 3D floors
+   (which disables the corner supports)
+
+
 Fences:
 -  support dropping them between rooms  [ honor STYLE ]
 
@@ -458,8 +467,6 @@ IDEA: "weak texturing" (especially on floors) which will try to
 -  rarity for bfg10k and railgun for Skulltag
 
 -  IDEA: STYLE to control # of lifts
-
-+  Music Re-ordering (see doc/Various_Notes.txt)
 
 +  ability to replace music using MUS/OGG/MP3 from a bunch of files
    placed in a certain folder (e.g. "music/").  Needs a Lua API to

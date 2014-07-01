@@ -1661,12 +1661,16 @@ function Room_border_up()
     end
 
 
+    -- FIXME : properly handle 3D floors
+    -- (current logic just uses floor_max_h)
+
+
     each bd in border_list do
       local S = bd.S
       local N = S:neighbor(side)
 
-      if (bd.side == side) and S.floor_h and
-         (N and N.room) and N.floor_h and
+      if (bd.side == side) and S.floor_max_h and
+         (N and N.room) and N.floor_max_h and
          not seed_is_blocked(N) and
          not (N.room.kind == "cave")
       then
@@ -1689,8 +1693,8 @@ function Room_border_up()
         min_c1 = math.min(min_c1, assert(S.ceil_h or R.ceil_h))
         min_c2 = math.min(min_c2, assert(N.ceil_h or N.room.ceil_h))
 
-        max_f1 = math.max(max_f1, S.floor_h)
-        max_f2 = math.max(max_f2, N.floor_h)
+        max_f1 = math.max(max_f1, S.floor_max_h)
+        max_f2 = math.max(max_f2, N.floor_max_h)
 
       end 
     end  -- for bd
@@ -1913,7 +1917,7 @@ function Room_border_up()
         if B.kind == "wall" and S.floor_h then
           B.kind = "picture"
           B.pic_skin = skin
-          B.pic_z1 = S.floor_h
+          B.pic_z1 = S.floor_max_h
           B.pic_fit_z = z_space
         end
 
@@ -1932,6 +1936,8 @@ function Room_border_up()
 
     local z_space = 999
 
+    -- FIXME : properly handle 3D floors
+
     each bd in border_list do
       local S = bd.S
       local side = bd.side
@@ -1944,7 +1950,7 @@ function Room_border_up()
       else
         table.insert(new_list, bd)
 
-        local h = (S.ceil_h or R.ceil_h) - S.floor_h
+        local h = (S.ceil_h or R.ceil_h) - S.floor_max_h
         z_space = math.min(z_space, h)
       end
     end
