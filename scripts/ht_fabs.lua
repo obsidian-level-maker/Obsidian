@@ -1,6 +1,6 @@
-----------------------------------------------------------------
+------------------------------------------------------------------------
 --  Height/Liquid Fabs
-----------------------------------------------------------------
+------------------------------------------------------------------------
 --
 --  Oblige Level Maker
 --
@@ -16,21 +16,22 @@
 --  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 --  GNU General Public License for more details.
 --
-----------------------------------------------------------------
+------------------------------------------------------------------------
 
 
 -- 
 -- Symbols used here:
 --
---    .         main floor (lowest or highest)
---    1 2 3 4   other floors
+--    .         main floor (the lowest one)
+--    1 2 3 4   other floors (higher numbers are higher floors)
 --
---    a b c d   sub-areas (for recursive patterns)
+--    #         solid block
 --
 --    ~         liquid
---    #         solid block
 -- 
---    ?         filler (in recurisve patterns)
+--    a b c d   sub-areas (for recursive patterns)
+--
+--    ?         filler (in recursive patterns)
 --
 --    / % N Z   diagonal pieces
 --
@@ -38,7 +39,7 @@
 --
 --    F T L J   stairs which turn 90 degrees
 --
---    K V A     stairs to a 3D floor
+--    { } V A   stairs to a higher layer (3D floor)
 --
 
 
@@ -1380,9 +1381,9 @@ MULTI_I2 =
 
   structure =
   {
-    ".K."
+    ".{."
     "..."
-    ".K."
+    ".{."
   }
 
   overlay =
@@ -1406,7 +1407,7 @@ MULTI_U1 =
   structure =
   {
     "..."
-    ".K."
+    ".{."
     "..."
   }
 
@@ -1430,9 +1431,9 @@ MULTI_T1 =
 
   structure =
   {
-    ".K."
+    ".{."
     "..."
-    ".K."
+    ".{."
   }
 
   overlay =

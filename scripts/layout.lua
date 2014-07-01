@@ -22,14 +22,20 @@ require "ht_fabs"
 
 
 function Layout_parse_char(ch)
-  if ch == ' ' then return { kind="empty" } end
+  if ch == ' ' then return { kind="empty"  } end
+  if ch == '#' then return { kind="solid"  } end
+  if ch == '~' then return { kind="liquid" } end
 
+  -- walkable floors
   if ch == '.' then return { kind="floor", floor=0 } end
   if ch == '1' then return { kind="floor", floor=1 } end
   if ch == '2' then return { kind="floor", floor=2 } end
   if ch == '3' then return { kind="floor", floor=3 } end
   if ch == '4' then return { kind="floor", floor=4 } end
+  if ch == '5' then return { kind="floor", floor=5 } end
+  if ch == '6' then return { kind="floor", floor=6 } end
 
+  -- sub-areas (recursive patterns)
   if ch == 'a' then return { kind="sub_area", area=1 } end
   if ch == 'b' then return { kind="sub_area", area=2 } end
   if ch == 'c' then return { kind="sub_area", area=3 } end
@@ -37,16 +43,14 @@ function Layout_parse_char(ch)
   if ch == 'e' then return { kind="sub_area", area=5 } end
   if ch == 'f' then return { kind="sub_area", area=6 } end
 
-  if ch == '~' then return { kind="liquid" } end
-  if ch == '#' then return { kind="solid"  } end
-
-  -- these can be curved, and 'dir' is towards the more open space
+  -- diagonals : can be curved, so 'dir' is towards the more open space
 -- FIXME !!!!! diagonal
   if ch == '/' then return { kind="solid", dir=3 } end
   if ch == '%' then return { kind="solid", dir=1 } end
   if ch == 'N' then return { kind="solid", dir=9 } end
   if ch == 'Z' then return { kind="solid", dir=7 } end
 
+  -- straight stairs
   if ch == '<' then return { kind="stair", dir=4 } end
   if ch == '>' then return { kind="stair", dir=6 } end
   if ch == '^' then return { kind="stair", dir=8 } end
@@ -58,8 +62,9 @@ function Layout_parse_char(ch)
   if ch == 'L' then return { kind="curve_stair", dir=9 } end
   if ch == 'J' then return { kind="curve_stair", dir=7 } end
 
-  -- in stairs to a 3D floor, 'dir' is always the "going up" direction
-  if ch == 'K' then return { kind="3d_stair", dir=4 } end
+  -- stairs to a higher layer, 'dir' is always the "going up" direction
+  if ch == '{' then return { kind="3d_stair", dir=4 } end
+  if ch == '}' then return { kind="3d_stair", dir=6 } end
   if ch == 'A' then return { kind="3d_stair", dir=8 } end
   if ch == 'V' then return { kind="3d_stair", dir=2 } end
 
