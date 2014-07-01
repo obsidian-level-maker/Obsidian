@@ -2080,6 +2080,24 @@ function Room_make_ceiling(R)
   end
 
 
+  local function add_3d_corner_pillar(S, top_h)
+    -- already there?
+    if S.solid_corner then return end
+
+    if not THEME.periph_pillar_mat then
+      return
+    end
+
+    local px = S.x2
+    local py = S.y2
+    local pw = 12
+
+    local info = add_pegging(get_mat(THEME.periph_pillar_mat))
+
+    Trans.old_quad(info, px-pw, py-pw, px+pw, py+pw, -EXTREME_H, top_h)
+  end
+
+
   local function add_periph_pillars(side, offset)
     if not THEME.periph_pillar_mat then
       return
@@ -2785,6 +2803,99 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
   end
 
 
+  local function test_3d_corner_for_floor(x, y, corner, f_idx)
+    local orig_x = x
+    local orig_y = y
+
+    if corner == 3 or corner == 9 then x = x + 1 end
+    if corner == 7 or corner == 9 then y = y + 1 end
+
+    local S = SEEDS[x][y]
+    corner = 10 - corner
+
+    local K = S.chunk[f_idx]
+    if not K then return "hit_last" end
+
+    local floor = assert(K.floor)
+    local f_h   = assert(floor.floor_h)
+
+    for pass = 1,2 do
+      local dir
+
+      -- only need to test two neighbors (connected edges)
+      if pass == 1 then
+        dir = geom.LEFT_45[corner]
+      else
+        dir = geom.RIGHT_45[corner]
+      end
+
+      local N = S:neighbor(dir)
+      assert(N.room == R)
+
+      -- ground floor is equal / above this floor?
+      if N.floor_h >= f_h - 16 then return end
+
+      -- other floor connects?
+      for i = 2,9 do
+        local K2 = N.chunk[i]
+        if not K2 then break; end
+        if K2.floor and math.abs(K2.floor.floor_h - f_h) < 12 then return end
+      end
+    end
+
+    -- OK, this corner is jutting out
+
+    add_3d_corner_pillar(SEEDS[orig_x][orig_y], f_h + 1)
+
+    return "found"
+  end
+
+
+  local function find_3d_corner_at_seed(x, y)
+    -- basic usability test
+    local overlays = false
+
+    for dx = 0, 1 do
+    for dy = 0, 1 do
+      local S = SEEDS[x + dx][y + dy]
+      if S.room != R then return end
+
+      if S.kind == "void" then return end
+
+      if S.chunk[2] then overlays = true end
+    end -- dx, dy
+    end
+
+    if not overlays then return end
+
+    each corner in geom.CORNERS do
+      for f_idx = 2,9 do
+        local res = test_3d_corner_for_floor(x, y, corner, f_idx)
+
+        if res == "found" then
+          return  -- don't try any more corners
+        end
+
+        if res == "hit_last" then
+          break;  -- no more higher floors
+        end
+      end
+    end
+  end
+
+
+  local function find_3d_corners()
+    -- find corners of 3D floors that jut out into the room, and
+    -- place a narrow pillar there (seeming to support the floor).
+
+    for x = R.sx1, R.sx2 - 1 do
+    for y = R.sy1, R.sy2 - 1 do
+      find_3d_corner_at_seed(x, y, corner)
+    end
+    end
+  end
+
+
   ---| Room_make_ceiling |---
 
   if R.is_outdoor then
@@ -2792,6 +2903,8 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
   else
     indoor_ceiling()
   end
+
+  find_3d_corners()
 end
 
 
