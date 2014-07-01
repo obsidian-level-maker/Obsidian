@@ -3,22 +3,10 @@ WORK IN PROGRESS
 ================
 
 
-3D Floors:
-+  detect "floating corners" -- place a support beam there
-   (unless chunk has a middle beam)
-
--  64x64 middle beams for some 3D floors
-
--  next to room with liquid -- odd gap is possible
-
--  cutting off windows / player can run out them
--  cutting off pictures
-
--  light from above can "go right through"
-
-
 
 Recursive Patterns :
+
+!!!  fix the "cannot connect sub-area" problem
 
 -  pure patterns : have two basic kinds (I and P) and ensure
    no (or little) overlap in the sizes which can use them
@@ -38,6 +26,9 @@ IDEA: '?' in patterns means "don't care" / "filler"
       the chunk becomes same as a nearby sub-area cell
       if installed on a conn (etc), require neighbor to be walk
 
+IDEA: fency patterns (between two sub-areas and/or normal area <-> sub-area)
+      _OR_ pick a certain floor to be "fency"
+
 -  recursive : when stair goes INTO a sub-area, it means all its floors
                should have HIGHER vhr than any in the outer pattern,
                or should be LOWER vhr than any in outer pattern
@@ -49,10 +40,26 @@ IDEA: '?' in patterns means "don't care" / "filler"
 
                disallow stairs FROM a sub-area
 
++  recursive patterns!
+   DONE:  use 'a', 'b', 'c' and 'd' instead of '1', '2' (etc)
+
+   -  detect if no stair was used, automatically and randomly
+      pick "intra conn" when installing into the room
+
+   -  have "floor_groups" -- each seed in the group must get the
+      same VHR floor [ probably OK if different floors above/below ]
+
+   -  perhaps have "recurse = onion" patterns, and we try a certain
+      quota (based on depth) of these BEFORE all other patterns.
+
+IDEA:  auto-sub-areas : in huge room, sub-divide into smaller rectangles
+       and place "intra connections" between them.  Place patterns in
+       each sub-area, ensuring the intra connections are "floor".
+
 
 Layout rework:
 
-+  use S.chunks[1] and S.chunks[2]  -- not [.]overlay
+-  sometimes make a floor use same material as top (not room wall)
 
 -  give lower chunk (if two) a ceil_h
 
@@ -74,24 +81,15 @@ Layout rework:
 
 IDEA:  automatically merge 2x2 seeds (if floor) into a single chunk
 
--  get curved stairs working again
--  get diagonals working again
++  get curved stairs working again
 
-+  recursive patterns!
-   DONE:  use 'a', 'b', 'c' and 'd' instead of '1', '2' (etc)
++  get diagonals working again
 
-   -  detect if no stair was used, automatically and randomly
-      pick "intra conn" when installing into the room
 
-   -  have "floor_groups" -- each seed in the group must get the
-      same VHR floor [ probably OK if different floors above/below ]
+3D Floors:
+-  light from above can "go right through"
 
-   -  perhaps have "recurse = onion" patterns, and we try a certain
-      quota (based on depth) of these BEFORE all other patterns.
-
-IDEA:  auto-sub-areas : in huge room, sub-divide into smaller rectangles
-       and place "intra connections" between them.  Place patterns in
-       each sub-area, ensuring the intra connections are "floor".
+-  next to room with liquid -- odd gap is possible
 
 
 Junking:
@@ -133,4 +131,6 @@ RAIL ISSUE : cannot control offsets on BACK SIDE of a brush vert
 --->  test new logic....
 
 Review spot handling in Cave code
+
+rocky_exit : switch can be stretched
 
