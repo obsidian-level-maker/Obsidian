@@ -3,67 +3,84 @@ WORK IN PROGRESS
 ================
 
 
-
 Recursive Patterns :
-
 !!!  fix the "cannot connect sub-area" problem
 
+   -  maybe have "floor_groups" -- each seed in the group must get the
+      same VHR floor [ OK if other floors exist ]
+
 -  pure patterns : have two basic kinds (I and P) and ensure
-   no (or little) overlap in the sizes which can use them
+   not much overlap in the sizes which can use them
    (in particular : I pattern should be tall and narrow)
 
--  recursive patterns : in sizes support a '+' symbol (or?) which
-   means that the size must be (e.g.) 6 seeds _or_more_
-   e.g. "3+13+'
+-  figure out how symmetry works with recursive patterns
 
-   also: ranges like '3-7'
-   also: spaces for legibility
-   also : 'R' means to repeat previous size range
+-  support "huge" patterns : these take one (or more?) of the
+   largest sizes strings and automatically expands it to fill a
+   room e.g. 626 --> 939
+   
+-  new pattern char '?' which means "don't care" / "filler"
+   the chunk (usually) becomes same as a nearby sub-area cell
+   if installed on a conn (etc), transmit "must_walk" to neighbor
 
--  recursive : figure out how to handle symmetry
+-  when stair goes INTO a sub-area, it means all its floors
+   should have HIGHER vhr than any in the outer pattern,
+   or should be LOWER vhr than any in outer pattern
+   [ pick UP or DOWN based on z_dir ]
 
-IDEA: '?' in patterns means "don't care" / "filler"
-      the chunk becomes same as a nearby sub-area cell
-      if installed on a conn (etc), require neighbor to be walk
+   if stair into sub-area would hit multiple floors, then
+   pick _LOW_ one when stair goes up, and _HIGH_ one when
+   stair goes down.
 
-IDEA: fency patterns (between two sub-areas and/or normal area <-> sub-area)
-      _OR_ pick a certain floor to be "fency"
+   disallow stairs FROM a sub-area (e.g. "11>..")
 
--  recursive : when stair goes INTO a sub-area, it means all its floors
-               should have HIGHER vhr than any in the outer pattern,
-               or should be LOWER vhr than any in outer pattern
-               [ pick UP or DOWN based on z_dir ]
+-  patterns which mix normal floors and sub-areas are problematic,
+   since the normal floor may be separated into 2+ distinct areas,
+   hence need either:
+   (a) explicit stairs
+   (b) _OR_ more analysis code to detect the separate regions of
+       each floor (meh)
+   (c) _OR_ disallow having separate areas (need analysis code to
+       validate them)
 
-               if stair into sub-area would hit 3D floor (above normal floor)
-               then pick _LOW_ one when stair goes up, and _HIGH_ one when
-               stair goes down.
+IDEA: recurse = "onion" patterns, and we try a small quota of
+      there BEFORE all other patterns.
 
-               disallow stairs FROM a sub-area
+IDEA: fence patterns (place a fence between two sub-areas and/or
+      between a normal area <-> sub-area)
+      _OR_ pick a certain floor to be "fenced"
 
-+  recursive patterns!
-   DONE:  use 'a', 'b', 'c' and 'd' instead of '1', '2' (etc)
++  divide non-rectangular rooms (currently only parent rooms)
+   into rectangles and use same "intra connection" logic as for
+   pure recursive patterns.
 
-   -  detect if no stair was used, automatically and randomly
-      pick "intra conn" when installing into the room
-
-   -  have "floor_groups" -- each seed in the group must get the
-      same VHR floor [ probably OK if different floors above/below ]
-
-   -  perhaps have "recurse = onion" patterns, and we try a certain
-      quota (based on depth) of these BEFORE all other patterns.
-
-IDEA:  auto-sub-areas : in huge room, sub-divide into smaller rectangles
-       and place "intra connections" between them.  Place patterns in
-       each sub-area, ensuring the intra connections are "floor".
+   --> thereby create chunks for ALL non-cave rooms
 
 
-Layout rework:
+3D Floors:
++  light from above can "go right through"
 
--  sometimes make a floor use same material as top (not room wall)
+-  next to room with liquid -- odd gap is possible
+
+IDEA: in patterns, specify number of 3D components (default to 1)
+      and include them all in the 'structure' field.  For example:
+
+      layers = 4
+
+      structure =
+      {
+        "...",  "111",  "2>3",  "   "
+        "1<.",  "  v",  "2  ",  "  3"
+        "2..",  "  2",  "22 ",  "333"
+      }
+
+
+Chunks:
+!!  completely decide what a chunk is, and how much representation
+    cunrrently in seeds should to be moved into chunks.
+    e.g. all 'S.floor_h' be replaced with 'S.chunk[1].floor.h' ??
 
 -  give lower chunk (if two) a ceil_h
-
-+  create chunks for ALL non-cave rooms
 
 -  CHUNK_CLASS ?   put in seed.lua
 
@@ -71,25 +88,23 @@ Layout rework:
 
 -  link chunks together
 
--  create chunks for flat square room
-   V
 -  split big chunks: 4 = 2/2  5 = 2/1/2 or 1/3/1  6 = 2/2/2  (etc)
    (maintain symmetry if chunk straddles middle of room)
 
 -  split any chunks which contain TWO importants or conns
    (detect if horiz or vertical, and where)
 
-IDEA:  automatically merge 2x2 seeds (if floor) into a single chunk
+-  often merge 2x2 seeds with exact same floors (and no stairs etc)
+   into a single chunk
+
+
+Layout rework:
 
 +  get curved stairs working again
 
 +  get diagonals working again
 
-
-3D Floors:
--  light from above can "go right through"
-
--  next to room with liquid -- odd gap is possible
+-  sometimes make a floor use same material as top (not room wall)
 
 
 Junking:
