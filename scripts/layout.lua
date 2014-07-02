@@ -4236,8 +4236,6 @@ function Layout_build_outdoor_borders()
 
     -- OK --
 
-stderrf("Border piece @ (%d %d) is accessible\n", B.sx1, B.sy1)
-
     B.is_accessible = true
 
     table.insert(list, B)
@@ -4295,7 +4293,7 @@ stderrf("Border piece @ (%d %d) is accessible\n", B.sx1, B.sy1)
 
       -- TODO : R.guard_spot
 
-stderrf("\nUsing border piece for %s\n\n", kind)
+      gui.debugf("\nUsing border piece for %s\n\n", kind)
 
       break;
     end
