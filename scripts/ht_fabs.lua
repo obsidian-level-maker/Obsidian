@@ -1475,7 +1475,7 @@ MULTI_LIQUID_H1 =
 
 MULTI_LIQUID_T1 =
 {
-  prob = 40000
+  prob = 8000
 
   symmetry = "y"
 
@@ -1504,7 +1504,7 @@ MULTI_LIQUID_T1 =
 
 MULTI_LIQUID_S1 =
 {
-  prob = 20000
+  prob = 2000
 
   structure =
   {
@@ -1527,7 +1527,7 @@ MULTI_LIQUID_S1 =
 
 MULTI_SPIRAL =
 {
-  prob = 80000
+  prob = 4000
 
   structure =
   {
