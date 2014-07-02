@@ -2445,6 +2445,7 @@ function Room_make_ceiling(R)
     -- seed is usable?
     if S.room != R or S.content then return end
     if not (S.kind == "walk" or S.kind == "liquid") then return end
+    if S.chunk[2] then return end
 
     -- neighbors the same?
     for side = 2,8,2 do
