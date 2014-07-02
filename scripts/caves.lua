@@ -617,7 +617,7 @@ function Cave_create_areas(R)
   local group_map
 
 
-  local function install_area(A, a_cave, mul)
+  local function install_area(A, a_cave, mul, empty_ok)
     for cx = 1, info.W do
     for cy = 1, info.H do
       if ((a_cave:get(cx, cy) or 0) * mul) > 0 then
@@ -632,7 +632,7 @@ function Cave_create_areas(R)
     end
     end
 
-    if not A.cx1 then
+    if not A.cx1 and not empty_ok then
       error("Cave install_area: no cells!")
     end
   end
@@ -712,7 +712,7 @@ function Cave_create_areas(R)
 --    walk_way:shrink(true)
     walk_way:remove_dots()
 
-    install_area(WALK1, walk_way, 1)
+    install_area(WALK1, walk_way, 1, "empty_ok")
 
 
     local WALK2 =
@@ -729,7 +729,7 @@ function Cave_create_areas(R)
 --    walk_way:shrink(true)
     walk_way:remove_dots()
 
-    install_area(WALK2, walk_way, 1)
+    install_area(WALK2, walk_way, 1, "empty_ok")
 
 
     table.insert(AREA.children, WALK1)
