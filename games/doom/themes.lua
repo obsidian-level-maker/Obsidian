@@ -2266,7 +2266,7 @@ DOOM1.THEMES =
     {
       FLAT4 = 20
       CEIL4_1 = 15
-      CEIl4_2 = 15
+      CEIL4_2 = 15
       CEIL5_1 = 30
       CEIL3_5 = 25
       CEIL3_3 = 50
@@ -2303,7 +2303,7 @@ DOOM1.THEMES =
     {
       FLAT4 = 30
       CEIL4_1 = 15
-      CEIl4_2 = 15
+      CEIL4_2 = 15
       CEIL5_1 = 30
       FLAT14 = 20
       FLAT5_4 = 20
@@ -2324,7 +2324,7 @@ DOOM1.THEMES =
     {
       FLAT4 = 20
       CEIL4_1 = 15
-      CEIl4_2 = 15
+      CEIL4_2 = 15
       CEIL5_1 = 30
       CEIL3_5 = 25
       CEIL3_3 = 20
@@ -2643,7 +2643,7 @@ DOOM1.THEMES =
     ceilings =
     {
       FLAT4 = 20
-      CEIl4_2 = 15
+      CEIL4_2 = 15
       CEIL5_1 = 30
       CEIL3_3 = 50
       FLAT19 = 20
@@ -2933,7 +2933,7 @@ DOOM1.THEMES =
     {
       FLAT4 = 30
       CEIL4_1 = 15
-      CEIl4_2 = 15
+      CEIL4_2 = 15
       CEIL5_1 = 30
       FLAT14 = 20
       FLAT5_4 = 20
@@ -2954,7 +2954,7 @@ DOOM1.THEMES =
     {
       FLAT4 = 20
       CEIL4_1 = 15
-      CEIl4_2 = 15
+      CEIL4_2 = 15
       CEIL5_1 = 30
       CEIL3_5 = 25
       CEIL3_3 = 20
