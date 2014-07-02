@@ -2896,6 +2896,106 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
     end
   end
 
+  
+  local function eval_3d_beam(bx, by, f_idx)
+    local S = SEEDS[bx][by]
+
+    if S.conn or S.content then return -1 end
+
+    local K1 = S.chunk[f_idx]
+
+    if not K1 or not K1.floor then return -1 end
+
+    -- count number of neighbors with same floor
+    local count = 0
+
+    for dir = 2,8,2 do
+      local N = S:neighbor(dir)
+
+      if not N or N.free then continue end
+      if N.room != R then continue end
+
+      each n_idx, K2 in N.chunk do
+        if n_idx >= 2 and K2.floor == K1.floor then
+          count = count + 1
+        end
+      end
+    end
+
+    if count < 2 then return -1 end
+
+    local h = K1.floor.floor_h
+
+    local score = h + count * 100 + gui.random()
+
+    return score, h
+  end
+
+
+  local function place_one_support_beam(bx, by, top_h)
+    local S = SEEDS[bx][by]
+
+    local mx, my = S:mid_point()
+
+    local brush = brushlib.quad(mx - 32, my - 32, mx + 32, my + 32)
+
+    brushlib.add_top(brush, top_h - 25)
+    brushlib.set_mat(brush, "METAL", "METAL")
+
+    Trans.brush(brush)
+  end
+
+
+  local function place_3d_support_beams()
+    -- look for three seeds in a row which have an overlay floor
+    -- (the same one), and attempt to place a 64x64 support under
+    -- the middle one.
+
+    local list = {}
+
+    for x = R.sx1, R.sx2 do
+    for y = R.sy1, R.sy2 do
+      local S = SEEDS[x][y]
+
+      if S.room != R then continue end
+
+      for f_idx = 2,9 do
+        if not S.chunk[f_idx] then break; end
+
+        local score, h = eval_3d_beam(x, y, f_idx)
+
+        if score >= 0 then
+          table.insert(list, { x=x, y=y, h=h, score=score })
+        end
+      end
+    end
+    end
+
+    if #list == 0 then return end
+
+
+    -- add the beams, doing the highest score ones first
+
+    table.sort(list,
+        function (A, B) return A.score > B.score end)
+
+    for i = 1,#list do
+      if list[i].dead then continue end
+
+      local bx = list[i].x
+      local by = list[i].y
+
+      place_one_support_beam(bx, by, list[i].h)
+
+      -- dud any immediate neighbors
+      for k = 1,#list do
+        local dist = geom.dist(bx, by, list[k].x, list[k].y)
+
+        if dist < 1.2 then list[k].dead = true end
+      end
+    end
+  end
+
 
   ---| Room_make_ceiling |---
 
@@ -2906,6 +3006,8 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
   end
 
   find_3d_corners()
+
+  place_3d_support_beams()
 end
 
 
