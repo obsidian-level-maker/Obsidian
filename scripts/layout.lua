@@ -1654,8 +1654,14 @@ end
 
 
 function Layout_pattern_in_area(R, area)
-  -- find a usable pattern in the ROOM_PATTERNS table and
-  -- apply it to the room.
+  --
+  -- This picks and installs a SINGLE room pattern into a SINGLE
+  -- area of the room.
+  --
+  -- Recursive patterns merely add extra areas to the room's areas
+  -- list, causing the caller to call this function again, until
+  -- all areas are filled.  (i.e. we do not use recursion here)
+  --
 
 
   local MIN_VHR = area.min_vhr or 1
@@ -1667,7 +1673,7 @@ function Layout_pattern_in_area(R, area)
 
   -- only show debug messages for the top-level pattern
   local function local_debugf(...)
-    if area.is_top or true then --!!!!!!!!!
+    if area.is_top or true then
       gui.debugf(...)
     end
   end
@@ -1692,6 +1698,47 @@ function Layout_pattern_in_area(R, area)
   {
     x = 1, y = 1, xy = 2
   }
+
+
+  local function new_walk_group()
+    local GROUP =
+    {
+      -- each element is: { S, sub }
+      seeds = {}
+
+      -- this set to true when visited (by an actual floor)
+      filled = false
+    }
+
+    return GROUP
+  end
+
+
+  local function add_seed_to_walk_group(group, S, sub)
+    table.insert(group.seeds, { S=S, sub=sub })
+  end
+
+
+  local function install_vhr_to_walk_group(S, group, vhr)
+    assert(vhr)
+
+    local group = S.walk_group
+
+    if not group then return end
+    if group.filled then return end
+
+    group.filled = true
+
+    -- activate all inactive sub-areas in this group
+
+    each G in group.seeds do
+      -- already active?
+      if not G.sub.entry_vhr then
+        G.sub.entry_vhr = vhr
+        G.sub.entry_S   = G.S
+      end
+    end
+  end
 
 
   local function pattern_chance(pat)
@@ -1876,6 +1923,9 @@ end
         table.insert(FLOOR.conns, C)
       end
 
+      install_vhr_to_walk_group(S, FLOOR.vhr)
+
+      --REMOVE REMOVE
       if S.intra_conn then
         local sub = S.intra_conn.other_sub
         if not sub.entry_vhr then
@@ -1993,6 +2043,7 @@ end
 
       if not S.sub_area then continue end
 
+      -- REMOVE REMOVE
       if S.intra_conn then continue end
 
       for dir = 6,8,2 do
@@ -2005,9 +2056,15 @@ end
 
         if not N.sub_area then continue end
 
+        -- REMOVE REMOVE
         if N.intra_conn then continue end
 
+        -- sub areas already connected (or the same) ?
         if N.sub_area.group == S.sub_area.group then continue end
+
+        -- both seeds already in a walk_group
+        -- ( not allowed because we cannot merge walkgroups )
+        if S.walk_group and N.walk_group then continue end
 
         -- OK this is possible
         table.insert(locs, { S=S, N=N, dir=dir, score=gui.random() })
@@ -2026,6 +2083,18 @@ end
     local S = loc.S
     local N = loc.N
 
+    local group = S.walk_group or N.walk_group
+    if not group then
+      group = new_walk_group()
+    end
+
+    add_seed_to_walk_group(group, S, S.sub_area)
+    add_seed_to_walk_group(group, N, N.sub_area)
+
+    S.walk_group = group
+    N.walk_group = group
+
+    -- REMOVE REMOVE
     S.intra_conn = { dir=loc.dir,      other_sub=N.sub_area }
     N.intra_conn = { dir=10 - loc.dir, other_sub=S.sub_area }
 
@@ -2353,8 +2422,24 @@ if sx == 24 and sy == 16 then
 gui.debugf("intra_conn = %s\n", tostring(S.intra_conn))
 gui.debugf("Installing '%s' @ %s\n", P.kind, S:tostr())
 end
+      if S.walk_group then
+        local vhr
 
+        if CHUNK.kind == "floor" then
+          vhr = CHUNK.floor.vhr
+        end
+        if OVERLAY and OVERLAY.kind == "floor" then
+          if not vhr or rand.odds(50) then
+            vhr = OVERLAY.floor.vhr
+          end
+        end
 
+        assert(vhr)
+
+        install_vhr_to_walk_group(S, vhr)
+      end
+
+-- REMOVE REMOVE
 -- handle intra connections (i.e. between sub-areas)
 if S.intra_conn then
   local sub = S.intra_conn.other_sub
