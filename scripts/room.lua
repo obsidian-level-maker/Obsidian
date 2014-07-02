@@ -2081,7 +2081,7 @@ function Room_make_ceiling(R)
 
 
   local function add_3d_corner_pillar(S, top_h)
-    -- already there?
+    -- already a periph pillar?
     if S.solid_corner then return end
 
     if not THEME.periph_pillar_mat then
@@ -2804,9 +2804,6 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
 
   local function test_3d_corner_for_floor(x, y, corner, f_idx)
-    local orig_x = x
-    local orig_y = y
-
     if corner == 3 or corner == 9 then x = x + 1 end
     if corner == 7 or corner == 9 then y = y + 1 end
 
@@ -2814,7 +2811,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
     corner = 10 - corner
 
     local K = S.chunk[f_idx]
-    if not K then return "hit_last" end
+    if not K then return nil end
 
     local floor = assert(K.floor)
     local f_h   = assert(floor.floor_h)
@@ -2833,26 +2830,24 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
       assert(N.room == R)
 
       -- ground floor is equal / above this floor?
-      if N.floor_h >= f_h - 16 then return end
+      if N.floor_h >= f_h - 16 then return nil end
 
       -- other floor connects?
       for i = 2,9 do
         local K2 = N.chunk[i]
         if not K2 then break; end
-        if K2.floor and math.abs(K2.floor.floor_h - f_h) < 12 then return end
+        if K2.floor and math.abs(K2.floor.floor_h - f_h) < 12 then return nil end
       end
     end
 
     -- OK, this corner is jutting out
 
-    add_3d_corner_pillar(SEEDS[orig_x][orig_y], f_h + 1)
-
-    return "found"
+    return f_h
   end
 
 
   local function find_3d_corner_at_seed(x, y)
-    -- basic usability test
+    -- basic usability test...
     local overlays = false
 
     for dx = 0, 1 do
@@ -2868,17 +2863,23 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
     if not overlays then return end
 
-    each corner in geom.CORNERS do
-      for f_idx = 2,9 do
-        local res = test_3d_corner_for_floor(x, y, corner, f_idx)
+    -- more complex tests...
 
-        if res == "found" then
-          return  -- don't try any more corners
-        end
+    for f_idx = 9,2,-1 do
+      -- test all four corners, pick highest pillar (if any)
+      local best_h
 
-        if res == "hit_last" then
-          break;  -- no more higher floors
+      each corner in geom.CORNERS do
+        local top_h = test_3d_corner_for_floor(x, y, corner, f_idx)
+
+        if top_h and (not best_h or top_h > best_h) then
+          best_h = top_h
         end
+      end
+
+      if best_h then
+        add_3d_corner_pillar(SEEDS[x][y], best_h + 1)
+        return
       end
     end
   end
