@@ -1832,7 +1832,7 @@ function Cave_render_cave(R)
     end  -- x, y
     end
 
---!!!! FIXME  assert(min_floor < max_ceil)
+--!!! FIXME  assert(min_floor < max_ceil)
 
     return min_floor, max_ceil
   end
@@ -1954,7 +1954,7 @@ function Cave_render_cave(R)
 
   create_delta_map()
 
---!!!! FIXME  add_liquid_pools()
+---???  add_liquid_pools()
 
   for x = 1, info.W do
   for y = 1, info.H do

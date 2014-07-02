@@ -61,7 +61,7 @@ bool alternate_look = false;
 int  window_size = 0;  // Auto
 bool create_backups = true;
 bool debug_messages = false;
-bool fast_lighting = true;   // FIXME !!!! false
+bool fast_lighting = false;
 
 
 game_interface_c * game_object = NULL;

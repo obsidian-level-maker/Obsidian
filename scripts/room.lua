@@ -1860,7 +1860,7 @@ function Room_border_up()
       end
     end
 
-    -- FIXME !!!!! HACK HACK HACK
+    -- FIXME !!! HACK HACK HACK
     if table.empty(tab) then
       tab["Logo_Carve"] = 50
     end
@@ -1994,7 +1994,7 @@ function Room_border_up()
     for loop = 1,count do
       if #new_list == 0 then break; end
 
-      -- FIXME !!!! SELECT GOOD SPOT
+      -- FIXME !!! SELECT GOOD SPOT
       local b_index = rand.irange(1, #new_list)
 
       local bd = table.remove(new_list, b_index)
@@ -3769,7 +3769,7 @@ function Room_build_seeds(R)
     end
 
     -- FIXME : find it properly
-    local fab_name = "Door_with_bars" --!!!! Door_SW_blue
+    local fab_name = "Door_with_bars" --!!! Door_SW_blue
 
     local def = PREFABS[fab_name]
     assert(def)
@@ -4235,7 +4235,7 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
 
       if B_kind == "secret_door" then
         do_secret_door(S, side, f_tex, w_tex)
-        shrink_floor(side, 16) --!!!! both for door
+        shrink_floor(side, 16) --!!! both for door
       end
 
       if B_kind == "lock_door" then
@@ -4532,6 +4532,8 @@ function Room_find_ambush_focus(R)
 
   if R.kind == "stairwell" then return end
 
+  if R.kind == "cave" then return end
+
   local C = R.entry_conn
 
   if not C then return end
@@ -4545,8 +4547,6 @@ function Room_find_ambush_focus(R)
     S = C.S2
     side = 10 - C.dir
   end
-
-if not S.floor_h then return end  --!!!!!! FIXME (caves)
 
   assert(S)
   assert(S.floor_h)

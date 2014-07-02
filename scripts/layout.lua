@@ -44,7 +44,7 @@ function Layout_parse_char(ch)
   if ch == 'f' then return { kind="sub_area", area=6 } end
 
   -- diagonals : can be curved, so 'dir' is towards the more open space
--- FIXME !!!!! diagonal
+-- FIXME !!!!!! diagonal
   if ch == '/' then return { kind="solid", dir=3 } end
   if ch == '%' then return { kind="solid", dir=1 } end
   if ch == 'N' then return { kind="solid", dir=9 } end
@@ -1756,7 +1756,7 @@ function Layout_pattern_in_area(R, area)
       return 0
     end
 
---FIXME !!!!!! recursive patterns disabled for now
+--FIXME !!!!!! non-pure recursive patterns disabled for now
     if pat.recurse and pat.recurse != "pure" then return 0 end
 
 if pat.recurse == "pure" then factor = factor * 100 end
