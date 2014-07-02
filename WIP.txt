@@ -3,36 +3,40 @@ WORK IN PROGRESS
 ================
 
 
+
+------------------------------------------------------------------------
+
 Recursive Patterns :
-!!!  fix the "cannot connect sub-area" problem
-
-   -  maybe have "floor_groups" -- each seed in the group must get the
-      same VHR floor [ OK if other floors exist ]
-
 -  pure patterns : have two basic kinds (I and P) and ensure
    not much overlap in the sizes which can use them
    (in particular : I pattern should be tall and narrow)
 
 -  figure out how symmetry works with recursive patterns
 
--  support "huge" patterns : these take one (or more?) of the
-   largest sizes strings and automatically expands it to fill a
-   room e.g. 626 --> 939
+-  support "huge" patterns : these specify a size string which
+   automatically expands to fill the w/h of room
+
+   x_big_size = "626"  ---> 939 in a 21 seed wide room
+
+   [ '1' never expands, '2' sometimes becomes '3' (rarely: '4')
+     '3' can become '4' or '5' or '6'
+     '4' and above will expand to as big as necessary ]
    
 -  new pattern char '?' which means "don't care" / "filler"
    the chunk (usually) becomes same as a nearby sub-area cell
    if installed on a conn (etc), transmit "must_walk" to neighbor
 
 -  when stair goes INTO a sub-area, it means all its floors
-   should have HIGHER vhr than any in the outer pattern,
-   or should be LOWER vhr than any in outer pattern
-   [ pick UP or DOWN based on z_dir ]
+   should have HIGHER vhr than any in the outer pattern
+   (or LOWER vhr than any in outer pattern)
+
+   --> stair_mode field, can be "up", "down", "flat", "random"
 
    if stair into sub-area would hit multiple floors, then
    pick _LOW_ one when stair goes up, and _HIGH_ one when
    stair goes down.
 
-   disallow stairs FROM a sub-area (e.g. "11>..")
+   disallow stairs FROM a sub-area (e.g. "aa>..")
 
 -  patterns which mix normal floors and sub-areas are problematic,
    since the normal floor may be separated into 2+ distinct areas,
@@ -58,12 +62,16 @@ IDEA: fence patterns (place a fence between two sub-areas and/or
 
 
 3D Floors:
++  SEED.k_top  :  number of chunks in chunk[]
+
 +  light from above can "go right through"
 
 -  next to room with liquid -- odd gap is possible
 
-IDEA: in patterns, specify number of 3D components (default to 1)
-      and include them all in the 'structure' field.  For example:
++  in patterns, specify number of 3D components (default to 1)
+   and include them all in the 'structure' field.
+
+   For example:
 
       layers = 4
 
@@ -73,6 +81,8 @@ IDEA: in patterns, specify number of 3D components (default to 1)
         "1<.",  "  v",  "2  ",  "  3"
         "2..",  "  2",  "22 ",  "333"
       }
+
+      AND HENCE : _structure becomes a three dimensional array
 
 
 Chunks:
@@ -94,12 +104,11 @@ Chunks:
 -  split any chunks which contain TWO importants or conns
    (detect if horiz or vertical, and where)
 
--  often merge 2x2 seeds with exact same floors (and no stairs etc)
-   into a single chunk
+-  often merge 1x2 or 2x2 seeds with exact same floors (and no stairs etc)
+   into a single chunk  --  try 2x2 before 1x2 / 2x1
 
 
 Layout rework:
-
 +  get curved stairs working again
 
 +  get diagonals working again

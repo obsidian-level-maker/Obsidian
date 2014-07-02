@@ -89,6 +89,9 @@ ______________________________________________________________________
 
 
 3D Floors:
++  thick support beam intersects with 3D floor => wrong side texture
+   [ CSG issue ]
+
 -  proper handling of windows (eval each combo of floors)
 
 -  proper handling of pictures (decide which floor to use)
