@@ -2817,16 +2817,14 @@ gui.debugf("  gap_z --> %d  want_gap --> %d\n", gap_z, want_gap)
 
 
   local function assign_heights(deltas)
-    for vhr = 1,9 do
-      local F = R.floors[vhr]
+    each vhr,F in R.floors do
+      assert(deltas[vhr])
 
-      if F then
-        F.floor_h = entry_h + deltas[vhr]
+      F.floor_h = entry_h + deltas[vhr]
 
-        each C in F.conns do
-          if C.R1 == R then
-            C.conn_h = F.floor_h
-          end
+      each C in F.conns do
+        if C.R1 == R then
+          C.conn_h = F.floor_h
         end
       end
     end
@@ -3351,11 +3349,7 @@ function Layout_room(R)
 
     local last_tex
 
-    for vhr = 1,9 do
-      local F = R.floors[vhr]
-
-      if not F then continue end
-
+    each vhr,F in R.floors do
       if vhr == entry_vhr and entry_f_tex then
         F.floor_tex = entry_f_tex
 
