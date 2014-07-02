@@ -1504,7 +1504,7 @@ MULTI_LIQUID_T1 =
 
 MULTI_LIQUID_S1 =
 {
-  prob = 2000
+  prob = 1500
 
   structure =
   {

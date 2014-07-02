@@ -2939,6 +2939,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
     local brush = brushlib.quad(mx - 32, my - 32, mx + 32, my + 32)
 
+    -- FIXME: - 25 is a hack (just below the 3d floor)
     brushlib.add_top(brush, top_h - 25)
     brushlib.set_mat(brush, "METAL", "METAL")
 
