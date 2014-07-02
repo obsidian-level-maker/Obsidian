@@ -1080,7 +1080,7 @@ function Layout_add_pillars(R)
 
     if S.content then return false end
 
-    if S.kind != "walk" or S.conn or S.pseudo_conn or S.intra_conn or S.must_walk then
+    if S.kind != "walk" or S.conn or S.pseudo_conn or S.walk_group or S.must_walk then
       return false
     end
 
@@ -1703,11 +1703,12 @@ function Layout_pattern_in_area(R, area)
   local function new_walk_group()
     local GROUP =
     {
-      -- each element is: { S, sub }
-      seeds = {}
+      seeds =
+      {
+        -- each element is: { S, sub }
+      }
 
-      -- this set to true when visited (by an actual floor)
-      filled = false
+      -- 'vhr' field : non-NIL for installed groups
     }
 
     return GROUP
@@ -1716,18 +1717,25 @@ function Layout_pattern_in_area(R, area)
 
   local function add_seed_to_walk_group(group, S, sub)
     table.insert(group.seeds, { S=S, sub=sub })
+
+    -- if walk group has a vhr already, activate the sub-area now
+
+    if group.vhr and not sub.entry_vhr then
+      sub.entry_vhr = group.vhr
+      sub.entry_S   = S
+    end
   end
 
 
-  local function install_vhr_to_walk_group(S, group, vhr)
+  local function install_vhr_to_walk_group(S, vhr)
     assert(vhr)
 
     local group = S.walk_group
 
     if not group then return end
-    if group.filled then return end
+    if group.vhr then return end
 
-    group.filled = true
+    group.vhr = vhr
 
     -- activate all inactive sub-areas in this group
 
@@ -1925,15 +1933,6 @@ end
 
       install_vhr_to_walk_group(S, FLOOR.vhr)
 
-      --REMOVE REMOVE
-      if S.intra_conn then
-        local sub = S.intra_conn.other_sub
-        if not sub.entry_vhr then
-          sub.entry_vhr = CHUNK.floor.vhr
-          sub.entry_S   = S:neighbor(S.intra_conn.dir)
-        end
-      end
-
     end -- x, y
     end
   end
@@ -2008,6 +2007,37 @@ end
   end
 
 
+  local function activate_entry_sub(sub_areas)
+    if table.empty(sub_areas) then return end
+
+    -- this happens in start rooms or teleporter entry
+    -- hence pick a random sub-area to activate
+    if not area.entry_S then
+      local idx = rand.irange(1, table.size(sub_areas))
+      local sub = sub_areas[idx]
+
+      sub.entry_vhr = area.entry_vhr
+      return
+    end
+
+    local sx = area.entry_S.sx
+    local sy = area.entry_S.sy
+
+    each index,sub in sub_areas do
+      if geom.inside_box(sx, sy, sub.x1, sub.y1, sub.x2, sub.y2)
+      then
+        sub.entry_vhr = area.entry_vhr
+        sub.entry_S   = area.entry_S
+        return
+      end
+    end
+
+    -- getting here means area.entry_S touches a non-sub part of
+    -- the pattern (i.e. a normal floor), and therefore a sub
+    -- should have been activated already via a walk_group.
+  end
+
+
   local function all_subs_connected(sub_areas)
     local g = sub_areas[1].group
 
@@ -2043,9 +2073,6 @@ end
 
       if not S.sub_area then continue end
 
-      -- REMOVE REMOVE
-      if S.intra_conn then continue end
-
       for dir = 6,8,2 do
         local N = S:neighbor(dir)
 
@@ -2055,9 +2082,6 @@ end
         if N.sy > area.y2 then continue end
 
         if not N.sub_area then continue end
-
-        -- REMOVE REMOVE
-        if N.intra_conn then continue end
 
         -- sub areas already connected (or the same) ?
         if N.sub_area.group == S.sub_area.group then continue end
@@ -2094,10 +2118,6 @@ end
     S.walk_group = group
     N.walk_group = group
 
-    -- REMOVE REMOVE
-    S.intra_conn = { dir=loc.dir,      other_sub=N.sub_area }
-    N.intra_conn = { dir=10 - loc.dir, other_sub=S.sub_area }
-
     gui.debugf("Connected subs %d --> %d @ %s dir:%d\n",
                S.sub_area.id, N.sub_area.id, S:tostr(), loc.dir)
 
@@ -2118,38 +2138,15 @@ end
   end
 
 
-  local function find_entry_in_subs(sub_areas)
-    if table.empty(sub_areas) then return end
-
-    if not area.entry_S then
-      -- assign entry_vhr to a random sub
-      local idx = rand.irange(1, table.size(sub_areas))
-      local sub = sub_areas[idx]
-
-      sub.entry_vhr = area.entry_vhr
-      return
-    end
-
-    each index,sub in sub_areas do
-      if geom.inside_box(area.entry_S.sx, area.entry_S.sy,
-                         sub.x1, sub.y1, sub.x2, sub.y2)
-      then
-        sub.entry_vhr = area.entry_vhr
-        sub.entry_S   = area.entry_S
-        return
-      end
-    end
-  end
-
-  
   local function dump_sub_areas(sub_areas)
     if table.empty(sub_areas) then return end
 
     gui.debugf("Sub areas:\n")
 
     each idx,sub in sub_areas do
-      gui.debugf("  SUB_%d : (%d %d) .. (%d %d)\n", sub.id,
-                 sub.x1, sub.y1, sub.x2, sub.y2)
+      gui.debugf("  SUB_%d : (%d %d) .. (%d %d)  entry: %s  %s\n",
+                 sub.id, sub.x1, sub.y1, sub.x2, sub.y2,
+                 tostring(sub.entry_vhr), sel(sub.filled, "FILLED", ""))
     end
   end
 
@@ -2273,7 +2270,7 @@ end
       end
 
       -- connections must join onto a floor
-      if (S == area.entry_S or S.conn or S.pseudo_conn or S.intra_conn or S.must_walk) then
+      if (S == area.entry_S or S.conn or S.pseudo_conn or S.walk_group or S.must_walk) then
         if not floor then
           return -1  -- FAIL --
         end
@@ -2418,10 +2415,6 @@ end
       S.chunk[1] = CHUNK
       S.chunk[2] = OVERLAY
 
-if sx == 24 and sy == 16 then
-gui.debugf("intra_conn = %s\n", tostring(S.intra_conn))
-gui.debugf("Installing '%s' @ %s\n", P.kind, S:tostr())
-end
       if S.walk_group then
         local vhr
 
@@ -2434,32 +2427,8 @@ end
           end
         end
 
-        assert(vhr)
-
         install_vhr_to_walk_group(S, vhr)
       end
-
--- REMOVE REMOVE
--- handle intra connections (i.e. between sub-areas)
-if S.intra_conn then
-  local sub = S.intra_conn.other_sub
-  if not sub.entry_vhr then
-    local vhr
-    if CHUNK.kind == "floor" then
-      vhr = CHUNK.floor.vhr
-    end
-    if OVERLAY and OVERLAY.kind == "floor" then
-      if not vhr or rand.odds(50) then
-        vhr = OVERLAY.floor.vhr
-      end
-    end
-
-    assert(vhr)
-
-    sub.entry_vhr = vhr
-    sub.entry_S   = S:neighbor(S.intra_conn.dir)
-  end
-end
 
       if P.kind == "liquid" then
         setup_liquid(S)
@@ -2550,12 +2519,13 @@ end
     end -- x, y
     end
 
-    dump_sub_areas(T.sub_areas)
+    activate_entry_sub(T.sub_areas)
 
     connect_sub_areas(T.sub_areas)
 
-    find_entry_in_subs(T.sub_areas)
+    dump_sub_areas(T.sub_areas)
 
+    -- remove seed.sub_area fields
     clear_sub_areas()
   end
 
@@ -3197,7 +3167,7 @@ function Layout_room(R)
             if S.room != R then return false end
             if not (S.kind == "walk" or S.kind == "void") then return false end
 
-            if S.conn or S.pseudo_conn or S.intra_conn then
+            if S.conn or S.pseudo_conn then
               hit_conn = hit_conn + 1
             end
           end
