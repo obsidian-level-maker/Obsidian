@@ -2095,6 +2095,8 @@ function Room_make_ceiling(R)
     local info = add_pegging(get_mat(THEME.periph_pillar_mat))
 
     Trans.old_quad(info, px-pw, py-pw, px+pw, py+pw, -EXTREME_H, top_h)
+
+    S.solid_corner = true
   end
 
 
@@ -3452,7 +3454,7 @@ function Room_build_seeds(R)
     elseif R.purpose == "KEY" then
       local LOCK = assert(R.purpose_lock)
 
-      if rand.odds(15) and THEME.lowering_pedestal_skin and z2 then
+      if rand.odds(15) and THEME.lowering_pedestal_skin and z2 and not S.chunk[2] then
         local z_top = math.max(z1+128, R.floor_max_h+64)
         if z_top > z2-32 then
            z_top = z2-32
@@ -3490,7 +3492,7 @@ function Room_build_seeds(R)
       -- bare item
       Trans.entity(weapon, mx, my, z1)
 
-    elseif rand.odds(40) and THEME.lowering_pedestal_skin2 then
+    elseif rand.odds(40) and THEME.lowering_pedestal_skin2 and not S.chunk[2] then
       local z_top = math.max(z1+80, R.floor_max_h+40)
       if z_top > z2-32 then
          z_top = z2-32
