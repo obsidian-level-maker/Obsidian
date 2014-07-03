@@ -779,27 +779,23 @@ function Layout_set_floor_minmax(R)
 
     if S.kind == "void" then continue end
 
-    -- liquids are done later
-    if S.kind == "liquid" then continue end
+    for i = 1,9 do
+      local K = S.chunk[i]
 
-    assert(S.floor_h)
+      if not K then break; end
 
-    if not S.floor_max_h then
-      S.floor_max_h = S.floor_h
-    end
+      -- ignore liquids : height not set yet
 
-    for i = 2,9 do
-      local K2 = S.chunk[i]
+      if K.kind == "floor" then
+        local f_h = assert(K.floor.floor_h)
 
-      if not K2 then break; end
+        S.floor_h     = math.min(S.floor_h     or f_h, f_h)
+        S.floor_max_h = math.max(S.floor_max_h or f_h, f_h)
 
-      if K2.floor then
-        S.floor_max_h = K2.floor.floor_h
+        min_h = math.min(min_h, f_h)
+        max_h = math.max(max_h, f_h)
       end
-    end
-
-    min_h = math.min(min_h, S.floor_h)
-    max_h = math.max(max_h, S.floor_max_h)
+    end -- i
 
   end -- x, y
   end
@@ -808,6 +804,8 @@ function Layout_set_floor_minmax(R)
 
   R.floor_min_h = min_h
   R.floor_max_h = max_h
+
+  -- set liquid height
 
   R.liquid_h = R.floor_min_h - 48
 
