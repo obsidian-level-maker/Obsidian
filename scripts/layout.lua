@@ -779,6 +779,12 @@ function Layout_set_floor_minmax(R)
 
     if S.kind == "void" then continue end
 
+    -- this for hallways
+    if S.floor_h then
+      min_h = math.min(min_h, S.floor_h)
+      max_h = math.max(max_h, S.floor_h)
+    end
+
     for i = 1,9 do
       local K = S.chunk[i]
 
@@ -878,18 +884,22 @@ function Layout_hallway(R)
   local tw, th = geom.group_size(tx1,ty1, tx2,ty2)
 
   local function T_fill()
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    for x = R.sx1,R.sx2 do
+    for y = R.sy1,R.sy2 do
       if x < tx1 or x > tx2 or y < ty1 or y > ty2 then
         SEEDS[x][y].kind = "void"
       end
-    end end -- for x, y
+    end -- x, y
+    end
   end
 
   local function make_O()
-    for x = R.sx1+1,R.sx2-1 do for y = R.sy1+1,R.sy2-1 do
+    for x = R.sx1+1,R.sx2-1 do
+    for y = R.sy1+1,R.sy2-1 do
       local S = SEEDS[x][y]
       S.kind = "void"
-    end end -- for x, y
+    end -- x, y
+    end
   end
 
   local function make_L()
@@ -901,13 +911,15 @@ function Layout_hallway(R)
 
     if rand.odds(50) then S1,S2 = S2,S1 end
 
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    for x = R.sx1,R.sx2 do
+    for y = R.sy1,R.sy2 do
       if x < tx1 or x > tx2 or y < ty1 or y > ty2 or
          not (x == S1.sx or y == S2.sy)
       then
         SEEDS[x][y].kind = "void"
       end
-    end end -- for x, y
+    end -- x, y
+    end
   end
 
   local function criss_cross()
@@ -931,13 +943,15 @@ function Layout_hallway(R)
       return
     end
 
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    for x = R.sx1,R.sx2 do
+    for y = R.sy1,R.sy2 do
       if x < tx1 or x > tx2 or y < ty1 or y > ty2 or
          not (used_x[x] or used_y[y])
       then
         SEEDS[x][y].kind = "void"
       end
-    end end -- for x, y
+    end -- x, y
+    end
 
     return true
   end
