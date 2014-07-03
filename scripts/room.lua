@@ -2114,20 +2114,23 @@ function Room_make_ceiling(R)
     local x_dir = sel(side == 6, -1, 1)
     local y_dir = sel(side == 8, -1, 1)
 
-    for x = x1,x2 do for y = y1,y2 do
+    for x = x1,x2 do
+    for y = y1,y2 do
       local S = SEEDS[x][y]
 
       -- check if all neighbors are in same room
       local count = 0
 
-      for dx = 0,1 do for dy = 0,1 do
+      for dx = 0,1 do
+      for dy = 0,1 do
         local nx = x + dx * x_dir
         local ny = y + dy * y_dir
 
         if Seed_valid(nx, ny) and SEEDS[nx][ny].room == R then
           count = count + 1
         end
-      end end -- for dx,dy
+      end -- for dx,dy
+      end
 
       if count == 4 then
         local w = 12
@@ -2140,14 +2143,18 @@ function Room_make_ceiling(R)
         R.has_periph_pillars = true
 
         -- mark seeds [crude way to prevent stuck masterminds]
-        for dx = 0,1 do for dy = 0,1 do
+        for dx = 0,1 do
+        for dy = 0,1 do
           local nx = x + dx * x_dir
           local ny = y + dy * y_dir
 
           SEEDS[nx][ny].solid_corner = true
-        end end -- for dx,dy
+        end -- for dx,dy
+        end
       end
-    end end -- for x, y
+
+    end -- for x, y
+    end
   end
 
 
@@ -2298,9 +2305,11 @@ function Room_make_ceiling(R)
 
 
   local function install_periphs()
-    for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
+    for x = R.tx1, R.tx2 do
+    for y = R.ty1, R.ty2 do
       local S = SEEDS[x][y]
-      if S.room == R then
+
+      if S.room != R then continue end
       
         local PX, PY
 
@@ -2330,8 +2339,8 @@ function Room_make_ceiling(R)
           S.ceil_h = R.ceil_h - drop_z
         end
 
-      end -- if S.room == R
-    end end -- for x, y
+    end -- for x, y
+    end
   end
 
 
@@ -2494,7 +2503,8 @@ function Room_make_ceiling(R)
   local function test_cross_beam(dir, x1,y1, x2,y2, mode)
     -- FIXME: count usable spots, return false for zero
 
-    for x = x1,x2 do for y = y1,y2 do
+    for x = x1,x2 do
+    for y = y1,y2 do
       local S = SEEDS[x][y]
       assert(S.room == R)
 
@@ -2507,7 +2517,8 @@ function Room_make_ceiling(R)
       if mode == "light" and (S.kind == "diagonal") then
         return false
       end
-    end end -- for x, y
+    end -- for x, y
+    end
 
     return true
   end
@@ -2521,7 +2532,8 @@ function Room_make_ceiling(R)
       skin = { w=R.lite_w, h=R.lite_h, lite_f=R.quest.ceil_light, trim=THEME.light_trim }
     end
 
-    for x = x1,x2 do for y = y1,y2 do
+    for x = x1,x2 do
+    for y = y1,y2 do
       local S = SEEDS[x][y]
       local ceil_h = S.ceil_h or R.ceil_h
 
@@ -2534,7 +2546,9 @@ function Room_make_ceiling(R)
           Build.cross_beam(S, dir, 64, ceil_h - 16, THEME.beam_mat)
         end
       end
-    end end -- for x, y
+
+    end -- for x, y
+    end
   end
 
 
