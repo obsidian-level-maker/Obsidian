@@ -2142,15 +2142,11 @@ function Room_make_ceiling(R)
         
         R.has_periph_pillars = true
 
-        -- mark seeds [crude way to prevent stuck masterminds]
-        for dx = 0,1 do
-        for dy = 0,1 do
-          local nx = x + dx * x_dir
-          local ny = y + dy * y_dir
+        -- mark seed
+        local nx = x + sel(x_dir < 0, -1, 0)
+        local ny = y + sel(y_dir < 0, -1, 0)
 
-          SEEDS[nx][ny].solid_corner = true
-        end -- for dx,dy
-        end
+        SEEDS[nx][ny].solid_corner = true
       end
 
     end -- for x, y
