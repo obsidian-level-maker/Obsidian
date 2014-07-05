@@ -576,9 +576,11 @@ function Levels_choose_themes()
   local function create_episode_list(total)
     local episode_list = {}
 
-    while not table.empty(theme_tab) do
-      local name = rand.key_by_probs(theme_tab)
-      theme_tab[name] = nil
+    local tab = table.copy(theme_tab)
+
+    while not table.empty(tab) do
+      local name = rand.key_by_probs(tab)
+      tab[name] = nil
 
       local info = OB_THEMES[name]
       local pos = rand.irange(1, total)
@@ -733,7 +735,7 @@ function Levels_do_styles()
 
   SKY_H = rand.sel(5, 768, 512)
 
-  if OB_CONFIG.theme == "psycho" then
+  if LEVEL.psychedelic then
     Mat_prepare_trip()
   end
 end
