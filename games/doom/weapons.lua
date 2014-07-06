@@ -121,7 +121,7 @@ DOOM.WEAPONS =
   {
     id = 2003
     level = 3
-    pref = 50
+    pref = 30
     add_prob = 25
     attack = "missile"
     rate = 1.7
