@@ -3352,6 +3352,41 @@ function Room_build_seeds(R)
   end
 
 
+  local function content_very_big_item(S, item, z1, is_weapon)
+    -- sometimes make a lowering pedestal
+
+    local prob = sel(is_weapon, 40, 20)
+
+    if rand.odds(prob) and
+       THEME.lowering_pedestal_skin and
+       not S.chunk[2]
+    then
+      local mx, my = S:mid_point()
+      local z_top
+
+      if R.kind == "cave" then
+        z_top = z1 + rand.pick({ 64, 96 })
+
+      else
+        local z2 = S.ceil_h or S.room.ceil_h or (z1 + 256)
+
+        if z2 < z1 + 152 then
+          z_top = z1 + 64
+        else
+          z_top = z1 + 128
+        end
+      end
+
+      Build.lowering_pedestal(S, z_top, THEME.lowering_pedestal_skin)
+
+      Trans.entity(item, mx, my, z_top)
+    
+    else
+      content_big_item(item, mx, my, z1)
+    end
+  end
+
+
   local function content_start_pad(mx, my, z, dir)
     local def = PREFABS["Start_basic"]
     assert(def)
@@ -3464,19 +3499,7 @@ function Room_build_seeds(R)
 
     elseif R.purpose == "KEY" then
       local LOCK = assert(R.purpose_lock)
-
-      if rand.odds(15) and THEME.lowering_pedestal_skin and z2 and not S.chunk[2] then
-        local z_top = math.max(z1+128, R.floor_max_h+64)
-        if z_top > z2-32 then
-           z_top = z2-32
-        end
-
-        Build.lowering_pedestal(S, z_top, THEME.lowering_pedestal_skin)
-
-        Trans.entity(LOCK.item, mx, my, z_top)
-      else
-        content_big_item(LOCK.item, mx, my, z1)
-      end
+      content_very_big_item(S, LOCK.item, z1)
 
     elseif R.purpose == "SWITCH" then
       local LOCK = assert(R.purpose_lock)
@@ -3502,18 +3525,8 @@ function Room_build_seeds(R)
     if R == LEVEL.start_room or R.hallway then
       -- bare item
       Trans.entity(weapon, mx, my, z1)
-
-    elseif rand.odds(40) and THEME.lowering_pedestal_skin2 and not S.chunk[2] then
-      local z_top = math.max(z1+80, R.floor_max_h+40)
-      if z_top > z2-32 then
-         z_top = z2-32
-      end
-
-      Build.lowering_pedestal(S, z_top, THEME.lowering_pedestal_skin2)
-
-      Trans.entity(weapon, mx, my, z_top)
     else
-      content_big_item(weapon, mx, my, z1)
+      content_very_big_item(S, weapon, z1, "is_weapon")
     end
 
     gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", weapon, mx, my, z1)
