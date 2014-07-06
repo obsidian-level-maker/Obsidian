@@ -14,8 +14,8 @@
 
 <h3>ADDING NEW MONSTERS</h3>
 
-This tutorial will show how to create a module which adds new monsters
-for OBLIGE to use.
+This tutorial will show how to create a module which adds new monster
+definitions for OBLIGE to use.
 
 
 <h3>Step 1</h3>
@@ -116,11 +116,11 @@ are perfectly valid.
 </blockquote>
 
 <blockquote>
-<b>damage</b> : approximately how much the damage per second
-that the monster could inflict on the player.
-For melee monsters, this is how
-much damage it can do when up close to the player -- OBLIGE already
-knows that a far-away melee monster cannot hurt the player.
+<b>damage</b> : approximately how much damage the monster would
+do the player (on average).
+This is basically the amount of health which OBLIGE will add
+into the map to compensate for fighting one of these monsters
+(the exact amount depends on user settings).
 </blockquote>
 
 <blockquote>
@@ -133,32 +133,57 @@ There are three possible values: "melee", "missile", and "hitscan"
 <b>Optional Fields:</b>
 
 <blockquote>
-<b>level</b> : this is a rough indicator of where, in an episode
-or megawad, the monster should first appear.  
-Generally easy monsters have low numbers (1 to 3),
-tougher monsters are from 4 to 7,
-and boss monsters have values of 8 or 9.
-When no level value is present, the monster can appear in any map.
-</blockquote>
-
-<blockquote>
-<b>skip_prob</b> : a probability value of skipping this monster
-for the whole map.  Again this is not a percentage or absolute
-value -- but higher values mean more chance of it being skipped.
+<b>level</b> : this is an indicator of the toughness of a
+monster.
+Easy monsters should have low numbers (1 to 3),
+tougher monsters are between 4 to 7,
+and bosses have values of 8 or 9.
+This also controls, roughly, how far along in an episode or
+full game the monster will be first introduced.
+The default value is '1'.
 </blockquote>
 
 <blockquote>
 <b>density</b> : this controls how many monsters to use in a room,
-where 1.0 is normal, and higher values produce more monsters.
+where 1.0 is normal, higher values produce more monsters,
+and lower values produce less monsters.
 For particularly nasty monsters, like the Archvile in DOOM, low
-numbers like 0.2 is good for ensuring they are used sparingly.
+numbers like 0.2 are good for ensuring there are used sparingly
+in a room.
+</blockquote>
+
+<blockquote>
+<b>crazy_prob</b> : this probability value is used when the
+Strength setting of "Crazy" is selected.  It allows some fine
+tuning of the monster balance, but more importantly allows using
+a monster which would not normally appear, like the SS Nazi of
+DOOM 2.
 </blockquote>
 
 <blockquote>
 <b>float</b> : set this to "true" (without the quotes) for
 monsters which fly.  OBLIGE can place flying monsters in places
-which wouldn't make sense for walking ones.
+which wouldn't make sense for walking ones, like in liquid areas.
 </blockquote>
+
+<blockquote>
+<b>invis</b> : set to "true" (without the quotes) for monsters
+which are partially or completely invisible.
+</blockquote>
+
+<blockquote>
+<b>nasty</b> : set to "true" (without the quotes) if the monster
+is particularly nasty.  This has a few effects, the main obvious
+one is the monster will not be placed on the map in groups
+(not on purpose, anyway).
+</blockquote>
+
+<i>
+(Note: the are several more fields which are supported by OBLIGE.
+These are beyond the scope of this article.
+If you are interested then I suggest looking at some existing monster
+definitions, such as those for DOOM 2.)
+</i>
 
 
 <h3>Step 5</h3>
@@ -167,9 +192,9 @@ Start OBLIGE (if it was already open then close it first), and your
 new module should appear in the modules list.  Enable your module,
 and build some levels, and the new monster(s) should appear.
 
-When playing the levels, be sure to load the WADs or PK3s which contains
-the monster graphics (etc) in addition to the OBLIGE WAD (which only
-contains the generated levels).
+When playing the levels, be sure to load any WADs or PK3s which
+contain the monster graphics (etc) in addition to the WAD created
+by OBLIGE (which only contains the generated levels).
 
 
 <p>
@@ -179,15 +204,14 @@ contains the generated levels).
 <li>
 you can set a 'prob' value much higher than normal (like 999) to
 make sure that the monster gets added into the levels.
-Once it is working, then set the 'prob' value to something sane.
+Once it is working, then set the 'prob' value back to normal.
 
 <li>
-OBLIGE sometimes skips using a monster for a whole level, so if
-it hasn't appeared on the first level, check some other levels.
-
-<!---
-Also, monsters with a high 'level' value will usually not appear
-in the early levels of an episode or whole game. --->
+OBLIGE sometimes skips using a monster for a zone, and possibly
+the whole level, so if it hasn't appeared on the first level,
+check some other levels.
+Also, monsters with a high 'level' value usually don't appear
+in the early levels of an episode or whole game.
 
 </ol>
 
