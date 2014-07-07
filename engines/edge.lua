@@ -155,7 +155,7 @@ OB_ENGINES["edge"] =
   hooks =
   {
     setup    = EDGE.setup
-    all_done = EDGE.all_done
+--  all_done = EDGE.all_done
   }
 }
 
