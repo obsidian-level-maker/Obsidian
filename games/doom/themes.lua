@@ -434,9 +434,9 @@ DOOM2.THEMES =
 
     walls =
     {
-      METAL2 = 60
+      METAL2 = 70
       METAL4 = 15
-      METAL1 = 10
+      METAL1 = 15
       STARGR2 = 10
       PIPE4 = 10
     }
