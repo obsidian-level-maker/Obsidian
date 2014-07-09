@@ -436,6 +436,8 @@ end
 function Trans.spot_transform(x, y, z, dir)
   local ANGS = { [2]=0, [8]=180, [4]=270, [6]=90 }
 
+  assert(x and y)
+
   return
   {
     add_x = x

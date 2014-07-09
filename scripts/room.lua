@@ -3354,14 +3354,14 @@ function Room_build_seeds(R)
 
   local function content_very_big_item(S, item, z1, is_weapon)
     -- sometimes make a lowering pedestal
-
     local prob = sel(is_weapon, 40, 20)
+
+    local mx, my = S:mid_point()
 
     if rand.odds(prob) and
        THEME.lowering_pedestal_skin and
        not S.chunk[2]
     then
-      local mx, my = S:mid_point()
       local z_top
 
       if R.kind == "cave" then
@@ -3370,7 +3370,7 @@ function Room_build_seeds(R)
       else
         local z2 = S.ceil_h or S.room.ceil_h or (z1 + 256)
 
-        if z2 < z1 + 152 then
+        if z2 < z1 + 170 then
           z_top = z1 + 64
         else
           z_top = z1 + 128
