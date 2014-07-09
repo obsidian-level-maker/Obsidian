@@ -3349,6 +3349,8 @@ function Room_build_seeds(R)
     local T = Trans.spot_transform(mx, my, z, 2) -- TODO: spot_dir
 
     Fabricate(R, def, T, { skin1 })
+
+    Trans.entity("light", mx, my, z+112, { cave_light=176 })
   end
 
 
@@ -3380,7 +3382,8 @@ function Room_build_seeds(R)
       Build.lowering_pedestal(S, z_top, THEME.lowering_pedestal_skin)
 
       Trans.entity(item, mx, my, z_top)
-    
+      Trans.entity("light", mx, my, z_top + 24, { cave_light=176 })
+
     else
       content_big_item(item, mx, my, z1)
     end
@@ -3474,6 +3477,7 @@ function Room_build_seeds(R)
       local skin_name = rand.key_by_probs(THEME.exits)
       local skin = assert(GAME.EXITS[skin_name])
       Build.exit_pillar(S, z1, skin, sw_special)
+      Trans.entity("light", mx, my, z1+144, { cave_light=176 })
     end
   end
 
@@ -3505,6 +3509,7 @@ function Room_build_seeds(R)
       local LOCK = assert(R.purpose_lock)
       local INFO = assert(GAME.SWITCHES[LOCK.switch])
       Build.small_switch(S, dir_for_wotsit(S), z1, INFO.skin, LOCK.tag)
+      Trans.entity("light", mx, my, z1+112, { cave_light=176 })
 
     else
       error("unknown purpose: " .. tostring(R.purpose))
