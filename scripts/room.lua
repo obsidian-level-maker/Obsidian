@@ -3676,6 +3676,48 @@ function Room_build_seeds(R)
   end
 
 
+  local function do_door_base(S, side, z, w_tex, o_tex)
+    -- ensure that doors that connect to a 3D floor have a decent
+    -- wall underneath them.
+
+    -- need to try both sides
+    for pass = 1,2 do
+      local N = S ; if pass == 2 then N = S:neighbor(side) end
+      local N_side = side
+      local N_tex = w_tex
+
+      if pass == 2 then
+        N = S:neighbor(side)
+        N_side = 10 - side
+        N_tex = o_tex
+      end
+
+      if not N.chunk[2] then continue end
+
+      local x1, y1 = N.x1, N.y1
+      local x2, y2 = N.x2, N.y2
+
+      if N_side == 2 then y2 = y1 + 64 end
+      if N_side == 8 then y1 = y2 - 64 end
+      if N_side == 4 then x2 = x1 + 64 end
+      if N_side == 6 then x1 = x2 - 64 end
+--[[
+      if geom.is_vert(N_side) then
+        x1 = x1 + 8 ; x2 = x2 - 8
+      else
+        y1 = y1 + 8 ; y2 = y2 - 8
+      end
+--]]
+      local brush = brushlib.quad(x1, y1, x2, y2)
+
+      brushlib.add_top(brush, z - 6)
+      brushlib.set_mat(brush, N_tex, N_tex)
+
+      Trans.brush(brush)
+    end
+  end
+
+
   local function do_archway(S, side, f_tex, w_tex)
     local conn = S.border[side].conn
 
@@ -3722,6 +3764,8 @@ function Room_build_seeds(R)
                                    side, 0, seed_w * 192, def.deep, def.over)
 
     Fabricate(R, def, T, { skin1 })
+
+    do_door_base(S, side, z, w_tex, o_tex)
   end
 
 
@@ -3755,6 +3799,8 @@ function Room_build_seeds(R)
                                    side, 0, seed_w * 192, def.deep, def.over)
 
     Fabricate(R, def, T, { skin1 })
+
+    do_door_base(S, side, z, w_tex, o_tex)
   end
 
 
@@ -3779,6 +3825,8 @@ function Room_build_seeds(R)
                                    side, 0, seed_w * 192, def.deep, def.over)
 
     Fabricate(R, def, T, { skin1 })
+
+    do_door_base(S, side, z, w_tex, o_tex)
   end
 
 
@@ -3810,6 +3858,8 @@ function Room_build_seeds(R)
                                    side, 0, seed_w * 192, def.deep, def.over)
 
     Fabricate(R, def, T, { skin1 })
+
+    do_door_base(S, side, z, w_tex, o_tex)
   end
 
 
@@ -4257,17 +4307,18 @@ gui.debugf("calc @ %s side:%d\n", S:tostr(), side)
         shrink_both(side, 16)
       end
 
-      if B_kind == "secret_door" then
-        do_secret_door(S, side, f_tex, w_tex)
-        shrink_floor(side, 16) --!!! both for door
-      end
-
       if B_kind == "lock_door" then
         do_locked_door(S, side, f_tex, w_tex)
         shrink_both(side, 16)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
+      end
+
+      if B_kind == "secret_door" then
+        do_secret_door(S, side, f_tex, w_tex)
+        -- no base necessary
+        shrink_floor(side, 16) --!!! both for door
       end
 
       if B_kind == "bars" then
