@@ -1279,7 +1279,7 @@ function Room_border_up()
         SB.cave_fence_h = R2.cave_fence_z
       end
 
-    elseif R2.kind == "building" then
+    elseif R2.kind == "building" or R2.kind == "hallway" then
       SB.kind = "facade"
       SB.w_tex = R2.facade
     end
