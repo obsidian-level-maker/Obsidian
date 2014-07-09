@@ -2624,7 +2624,7 @@ function Cave_decorations(R)
 
     rand.shuffle(locs)
 
-    local perc  = sel(info.torch_mode == "few", 7, 18)
+    local perc  = sel(info.torch_mode == "few", 5, 12)
     local quota = #locs * perc / 100
 
     quota = quota * rand.range(0.8, 1.2)
@@ -2632,7 +2632,7 @@ function Cave_decorations(R)
 
     -- very rarely add lots of torches
     if info.torch_mode != "few" and rand.odds(1) then
-      quota = #locs
+      quota = #locs / 2
     end
 
     while quota > 0 do
