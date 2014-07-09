@@ -34,6 +34,7 @@ function Layout_parse_char(ch)
   if ch == '4' then return { kind="floor", floor=4 } end
   if ch == '5' then return { kind="floor", floor=5 } end
   if ch == '6' then return { kind="floor", floor=6 } end
+  if ch == '7' then return { kind="floor", floor=7 } end
 
   -- sub-areas (recursive patterns)
   if ch == 'a' then return { kind="sub_area", area=1 } end
@@ -2871,12 +2872,9 @@ gui.debugf("  gap_z --> %d  want_gap --> %d\n", gap_z, want_gap)
 
   find_vhr_range()
 
-  -- check that no floors are missing (gaps in the list)
   assert(R.min_vhr)
 
-  for i = R.min_vhr, R.max_vhr do
-    assert(R.floors[i])
-  end
+  -- NOTE: gaps in R.floors[] are allowed
 
 
   -- which virtual floor did we enter this room?
