@@ -394,12 +394,13 @@ function Levels_setup()
 
   PARAM = assert(GAME.PARAMETERS)
 
+  table.merge_missing(PARAM, GLOBAL_PARAMETERS)
+
+
   gui.rand_seed(OB_CONFIG.seed + 0)
 
   Levels_invoke_hook("setup")
 
-
-  table.merge_missing(PARAM, GLOBAL_PARAMETERS)
 
   table.name_up(GAME.ROOMS)
   table.name_up(GAME.THEMES)
