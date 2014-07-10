@@ -1575,6 +1575,15 @@ function Layout_add_cages(R)
 
       best_dir = dir
       best_z   = N.floor_h + 16
+
+      -- 3D floors [MEH : TODO better logic]
+      if S.chunk[2] and S.chunk[2].floor then
+        local z2 = S.chunk[2].floor.floor_h
+
+        if z2 - best_z < (128 + 32) then
+          best_z = z2
+        end
+      end
     end
 
     if best_dir then
