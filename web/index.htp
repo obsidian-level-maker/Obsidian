@@ -30,7 +30,7 @@ high quality levels which are fun to play.
 
 <h3>CURRENT VERSION</h3>
 
-OBLIGE 6.05 is the current stable version.
+OBLIGE 6.10 is the current stable version.
 
 <p>
 <i>(Note: this version only supports the DOOM games.
@@ -39,6 +39,41 @@ For other games please try version 4.28)
 
 
 <h3>NEWS</h3>
+
+<div class="newsdate">11-Jul-2014:</div>
+<blockquote class="news">
+
+OBLIGE 6.10 has been released!
+
+<p>
+It is hard to summarize this release, there have lots of improvements
+and lots of bugs fixed since the 6.05 version.
+Perhaps the most outstanding new feature is support for 3D floors.
+The user interface has changed quite a bit too:
+there is a new 'Weapons' setting,
+the 'Powerups' setting actually works now,
+and there is a built-in 'Config Manager' tool for
+inspecting / saving / loading of config settings.
+The most controversial change would be the removal of the 'Seed'
+setting, which I feel is no longer useful or necessary.
+
+<p>
+What I hope to do next is have a holiday :-).
+But afterwards I plan to implement traps and other kinds
+of closets, make the general shape of rooms more interesting
+(less square), finish the rework of the layout code,
+and whatever else in the TODO which takes my fancy.
+One thing I am <b>not</b> planning to do is get other games
+working again, there is still so much needed for DOOM yet....
+
+<p>
+See the full list of changes here:
+<a href="doc_history.html#changes610">Change Log</a>
+
+</blockquote>
+
+
+<hr style="clear: right;">
 
 <div class="newsdate">30-Apr-2014:</div>
 <blockquote class="news">
