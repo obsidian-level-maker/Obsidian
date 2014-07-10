@@ -14,6 +14,7 @@ fi
 
 for (( ; 1 ; )) do
   misc/test-it.sh $*
+  sleep 30
 done
 
 # --- editor settings ---
