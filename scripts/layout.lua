@@ -3473,7 +3473,7 @@ gui.debugf("(skip SUB_%s : no entry_vhr)\n", tostring(A.id))
   local function fill_room(entry_h)
     R.entry_vhr = 5
 
-    R.use_solid_feature = rand.odds(75)
+    R.use_solid_feature = rand.odds(75) and (not R.is_outdoor)
 
     -- create intiial area
     local AREA =
