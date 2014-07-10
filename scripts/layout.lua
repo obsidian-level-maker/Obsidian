@@ -1577,11 +1577,11 @@ function Layout_add_cages(R)
       best_z   = N.floor_h + 16
 
       -- 3D floors [MEH : TODO better logic]
-      if S.chunk[2] and S.chunk[2].floor then
-        local z2 = S.chunk[2].floor.floor_h
+      if N.chunk[2] and N.chunk[2].floor then
+        local z2 = N.chunk[2].floor.floor_h
 
         if z2 - best_z < (128 + 32) then
-          best_z = z2
+          best_z = z2 + 16
         end
       end
     end
