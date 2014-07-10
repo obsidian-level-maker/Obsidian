@@ -3,9 +3,6 @@ WORK IN PROGRESS
 ================
 
 
-
-------------------------------------------------------------------------
-
 Recursive Patterns :
 -  pure patterns : have two basic kinds (I and P) and ensure
    not much overlap in the sizes which can use them
@@ -62,6 +59,8 @@ IDEA: fence patterns (place a fence between two sub-areas and/or
 
 
 3D Floors:
+!!  fix lighting
+
 +  SEED.k_top  :  number of chunks in chunk[]
 
 +  light from above can "go right through"
@@ -142,10 +141,6 @@ Doors
 -  texturing on door prefabs (for HELL, URBAN themes)
 
 
-Cave lighting:
--  keys / switches (etc) should be lit up
-
-
 
 MISCELLANEA
 ===========
@@ -153,6 +148,8 @@ MISCELLANEA
 
 RAIL ISSUE : cannot control offsets on BACK SIDE of a brush vert
 --->  test new logic....
+
+Wrong texturing when pillar (underneath a 3D bridge) intersects
 
 Review spot handling in Cave code
 

@@ -13,6 +13,8 @@ ______________________________________________________________________
 
 *  add in more scenery: trees, computers etc
 
+*  fix lighting with 3D floors
+
 
 ______________________________________________________________________
 
@@ -486,6 +488,11 @@ IDEA: "weak texturing" (especially on floors) which will try to
    DEHACKED / DDF / DECORATE.
 
 
+If one engine "extends" another, and both have an 'all_done' hook
+(for example), then only the extended engine's hook is called.
+Should it be like that, OR call both ???
+
+
 Warzone Mode:
 -  player progresses from one side to the other of the map.
    it is fairly open and interconnected, and monsters form the
@@ -510,6 +517,8 @@ Name generator:
 -  create random weird-looking words for names of Bosses, planets
    or whatever.  Use them multiple times over an episode or game
    to make it seem like there is a actual story to the maps.
+
+-  random output filenames (as an option)
 
 
 ----------------------------------------------
