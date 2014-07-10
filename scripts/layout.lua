@@ -2244,6 +2244,12 @@ end
   end
 
 
+  local function update_seen_floors(T, floor_num)
+    T.min_floor = math.min(T.min_floor or  99, floor_num)
+    T.max_floor = math.max(T.max_floor or -99, floor_num)
+  end
+
+
   local function eval_a_chunk(pat, px, py, T, sx1, sy1, sw, sh)
     local sx2 = sx1 + sw - 1
     local sy2 = sy1 + sh - 1
@@ -2273,16 +2279,20 @@ end
       end
     end 
 
+    -- the overlay floor overrides any floor underneath
+    local floor = P.floor
+    if OV and OV.kind == "floor" then
+      floor = OV.floor
+    end
+
+    if         P.kind == "floor" then update_seen_floors(T,  P.floor) end
+    if OV and OV.kind == "floor" then update_seen_floors(T, OV.floor) end
+
+
     for sx = sx1, sx2 do
     for sy = sy1, sy2 do
       local S = SEEDS[sx][sy]
       assert(S and S.room == R)
-
-      -- the overlay floor overrides any floor underneath
-      local floor = P.floor
-      if OV and OV.kind == "floor" then
-        floor = OV.floor
-      end
 
       -- don't place 3D floors on a marked secret
       -- (it does not work well with the DOOM secret sector special)
@@ -2297,7 +2307,7 @@ end
           return -1  -- FAIL --
         end
 
-        T.used_floors[floor] = 1
+        T.joined_floors[floor] = 1
       end
 
       -- remember which floor-id we enter the area at
@@ -2471,22 +2481,29 @@ end
 
 
   local function check_vhr_overflow(T)
-    each floor,_ in T.used_floors do
-      local vhr = area.entry_vhr + floor - T.entry_floor
+    -- there will be NO floors with pure recursive patterns
+    if not T.min_floor then return end
+    assert(T.max_floor)
 
-      if vhr > MAX_VHR or vhr < MIN_VHR then return true end
-    end
+    local vhr1 = area.entry_vhr + T.min_floor - T.entry_floor
+    local vhr2 = area.entry_vhr + T.max_floor - T.entry_floor
 
-    return false  -- OK --
+    if vhr1 < MIN_VHR then return true end
+    if vhr2 > MAX_VHR then return true end
+
+    return false  -- all is well
   end
 
 
   local function eval_pattern(pat, T)
     local score = 0
 
+    T.min_floor = nil
+    T.max_floor = nil
+
     T.entry_floor = nil
 
-    T.used_floors = {}
+    T.joined_floors = {}
 
     local W = pat._structure.w
     local H = pat._structure.h
@@ -2518,7 +2535,7 @@ end
     end
 
     -- the more used floors, the better
-    score = score + 100 * table.size(T.used_floors)
+    score = score + 100 * table.size(T.joined_floors)
 
     -- tie breaker
     return score + gui.random()
