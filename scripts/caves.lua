@@ -2200,6 +2200,30 @@ function Cave_make_waterfalls(R)
   local cave = info.cave
 
 
+  local function can_still_traverse(cx, cy, dir)
+    -- see if cells on each side has same floor
+
+    local A_dir = geom.LEFT [dir]
+    local B_dir = geom.RIGHT[dir]
+
+    local ax, ay = geom.nudge(cx, cy, A_dir)
+    local bx, by = geom.nudge(cx, cy, B_dir)
+
+    if not cave:valid_cell(ax, ay) then return false end
+    if not cave:valid_cell(bx, by) then return false end
+
+    local A = info.blocks[ax][ay]
+    local B = info.blocks[bx][by]
+
+    if not A or not B then return false end
+
+    if A.wall or not A.floor_h then return false end
+    if B.wall or not B.floor_h then return false end
+
+    return math.abs(A.floor_h - B.floor_h) < 4
+  end
+
+
   local function try_from_loc(lake, x, y, dir)
     if info.blocks[x][y] != lake then
       return false
@@ -2239,6 +2263,20 @@ function Cave_make_waterfalls(R)
       length = length + 1
     end
 
+    -- check player can traverse (somewhere along the new channel)
+
+    local trav_count = 0
+
+    for dist = 1, length do
+      local ox, oy = geom.nudge(x, y, dir, dist)
+
+      if can_still_traverse(ox, oy, dir) then 
+        trav_count = trav_count + 1
+      end
+    end
+
+    if trav_count == 0 then return false end
+
     -- OK --
 
     for dist = 1, length do
@@ -2276,7 +2314,8 @@ function Cave_make_waterfalls(R)
     each lake in info.lakes do
       local w, h = geom.group_size(lake.cx1, lake.cy1, lake.cx2, lake.cy2)
 
-      -- too large? (probably the main lake)
+      -- too large?
+      -- we skip the main lake (only test cases beginning at a pool)
       if w > 15 or h > 15 then continue end
 
       local DIRS = { 2,4,6,8 }
@@ -2664,7 +2703,7 @@ end
 function Cave_decide_properties(R)
   local info = R.cave_info
 
-  local   STEP_MODES = { walkway=20, up=20, down=20, mixed=65 }
+  local   STEP_MODES = { walkway=25, up=20, down=20, mixed=75 }
   local LIQUID_MODES = { none=50, some=80, lake=80 }
 
   -- decide liquid mode
