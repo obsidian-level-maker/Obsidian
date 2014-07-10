@@ -1258,7 +1258,9 @@ function Room_border_up()
       S.thick[side] = 16
 
       -- FIXME: this is a kind of picture, do it better, honor symmetry
-      if SB.kind == "wall" and S.kind == "liquid" and rand.odds(15) then
+      if SB.kind == "wall" and S.kind == "liquid" and
+         not S.chunk[2] and rand.odds(15)
+      then
         SB.kind = "liquid_fall"
       end
 
