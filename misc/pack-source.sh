@@ -8,7 +8,7 @@ fi
 
 echo "Creating the source package for Oblige..."
 
-dest=~/PACK-SRC
+dest=PACK-SRC
 
 mkdir $dest
 

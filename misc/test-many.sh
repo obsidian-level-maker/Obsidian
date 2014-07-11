@@ -14,7 +14,8 @@ fi
 
 for (( ; 1 ; )) do
   misc/test-it.sh $*
-  sleep 30
+  echo "Sleeping for 60 seconds...."
+  sleep 60
 done
 
 # --- editor settings ---
