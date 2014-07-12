@@ -102,8 +102,8 @@ resume hacking.... :-)
 + better outdoor borders (like in V5)
 + preliminary support for 3D floors
 
-+ added 'tech_Gray' theme for DOOM, thanks to Mr. Chris
-+ new 'Egypt' theme for TNT Evilution, courtesy Mr. Chris
++ added 'tech_Gray' theme for DOOM, thanks to Chris
++ new 'Egypt' theme for TNT Evilution, courtesy Chris
 + new 'Theme Control' module for DOOM 1 and 2
 + new 'Music Swapper' module (for Boom compatible ports)
 
@@ -184,10 +184,10 @@ Contributions
 -------------
 
 + Heretic boss maps, thanks to LakiSoft
-+ new E2M8 and MAP07 boss maps, thanks to Mr. Chris
++ new E2M8 and MAP07 boss maps, thanks to Chris
 + new E1M8 boss map, contributed by SylandroProbopas
-+ variations of MAP30 boss map, courtesy Mr. Chris
-+ DOOM 1 "Ultra" boss maps, by Mr. Chris
++ variations of MAP30 boss map, courtesy Chris
++ DOOM 1 "Ultra" boss maps, by Chris
 
 Other Changes
 -------------
@@ -226,9 +226,9 @@ Other Changes
 - support for Chex Quest 3
 - preliminary work on Hexen II and Half-Life [not usable yet]
 
-- DOOM themes for Episodes 2 and 4, courtesy Mr Chris
+- DOOM themes for Episodes 2 and 4, courtesy Chris
 - monsters are progressive over a full game in DOOM 2
-- more naming goodies, thanks to Mr Chris
+- more naming goodies, thanks to Chris
 
 - improved progress bar and status messages
 - output file is deleted if an error occurs

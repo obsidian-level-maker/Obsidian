@@ -2025,7 +2025,7 @@ DOOM1.THEMES =
 
 ------ EPISODE 2 ------------------------------
 
-  -- Deimos theme by Mr. Chris
+  -- Deimos theme by Chris Pisarczyk
 
   deimos_DEFAULTS =
   {
@@ -2737,7 +2737,7 @@ DOOM1.THEMES =
 
 ----- EPISODE 4 -------------------------------
 
-  -- Thy Flesh Consumed by Mr. Chris
+  -- Thy Flesh Consumed by Chris Pisarczyk
   -- Basically a modified version of doom_hell1 to match id's E4 better
 
   flesh_DEFAULTS =

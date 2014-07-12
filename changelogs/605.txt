@@ -27,10 +27,10 @@ Contributions
 -------------
 
 + Heretic boss maps, thanks to LakiSoft
-+ new E2M8 and MAP07 boss maps, thanks to Mr. Chris
++ new E2M8 and MAP07 boss maps, thanks to Chris
 + new E1M8 boss map, contributed by SylandroProbopas
-+ variations of MAP30 boss map, courtesy Mr. Chris
-+ DOOM 1 "Ultra" boss maps, by Mr. Chris
++ variations of MAP30 boss map, courtesy Chris
++ DOOM 1 "Ultra" boss maps, by Chris
 
 
 Other Changes

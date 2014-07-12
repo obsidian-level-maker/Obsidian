@@ -11,7 +11,7 @@ I created OBLIGE and I continue to develop it.
 
 CONTRIBUTORS:
 
-Chris Pisarczyk (Mr. Chris)
+Chris Pisarczyk (Glaice)
   - DOOM prefabs
   - Skulltag Monsters module
   - ZDoom Beastiary module

@@ -14,8 +14,8 @@ CHANGES IN 6.10 (since 6.05)
 + better outdoor borders (like in V5)
 + preliminary support for 3D floors
 
-+ added 'tech_Gray' theme for DOOM, thanks to Mr. Chris
-+ new 'Egypt' theme for TNT Evilution, courtesy Mr. Chris
++ added 'tech_Gray' theme for DOOM, thanks to Chris
++ new 'Egypt' theme for TNT Evilution, courtesy Chris
 + new 'Theme Control' module for DOOM 1 and 2
 + new 'Music Swapper' module (for Boom compatible ports)
 
