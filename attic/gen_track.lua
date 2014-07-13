@@ -14,8 +14,8 @@ function compute_controls(points, cyclic)
   
 
   local function project_end(x, y, ang)
-    x = x + math.cos(ang * math.pi / 180) * 100
-    y = y + math.sin(ang * math.pi / 180) * 100
+    x = x + 64 * math.cos(ang * math.pi / 180)
+    y = y + 64 * math.sin(ang * math.pi / 180)
 
     return x, y
   end
@@ -26,8 +26,8 @@ function compute_controls(points, cyclic)
     local ay1 = P1.y
     local ax2, ay2 = project_end(ax1, ay1, P1.ang)
 
-    local bx2 = P2.x
-    local by2 = P2.y
+    local bx1 = P2.x
+    local by1 = P2.y
     local bx2, by2 = project_end(bx1, by1, P2.ang)
 
     local k1 = geom.perp_dist(bx1, by1, ax1,ay1,ax2,ay2)
@@ -35,8 +35,8 @@ function compute_controls(points, cyclic)
 
     local d = k1 / (k1 - k2)
 
-    local ix = ax1 + d * (ax2 - ax1)
-    local iy = ay1 + d * (ay2 - ay1)
+    local ix = bx1 + d * (bx2 - bx1)
+    local iy = by1 + d * (by2 - by1)
 
     return ix, iy
   end
@@ -52,6 +52,13 @@ function compute_controls(points, cyclic)
 
     local P1 = points[i]
     local P2 = points[k]
+
+    local ix, iy = calc_intersection(P1, P2)
+
+    P1.ctl = { x=ix, y=iy }
+
+    -- use this if we need to reverse the points
+    P2.back_ctl = P1.ctl
   end
 end
 
@@ -60,20 +67,17 @@ function render(points, cyclic)
 
   local im = gd.createTrueColor(500, 500)
 
-  local black = im:colorAllocate(0, 0, 0)
-  local gray  = im:colorAllocate(127, 127, 127)
-  local white = im:colorAllocate(255, 255, 255)
+  local BLACK  = im:colorAllocate(0, 0, 0)
+  local WHITE  = im:colorAllocate(255, 255, 255)
+  local RED    = im:colorAllocate(200, 0, 0)
+  local BLUE   = im:colorAllocate(0, 0, 200)
+  local YELLOW = im:colorAllocate(200, 200, 0)
+  local GREEN  = im:colorAllocate(0, 200, 0)
 
-  local red    = im:colorAllocate(200, 0, 0)
-  local blue   = im:colorAllocate(0, 0, 200)
-  local purple = im:colorAllocate(200, 0, 200)
-  local yellow = im:colorAllocate(200, 200, 0)
-  local green  = im:colorAllocate(0, 200, 0)
+  im:filledRectangle(0, 0, 500, 500, BLACK)
 
-  im:filledRectangle(0, 0, 500, 500, black)
-
-  im:line(250, 0, 250, 500, blue)
-  im:line(0, 250, 500, 250, blue)
+  im:line(250, 0, 250, 500, BLUE)
+  im:line(0, 250, 500, 250, BLUE)
 
 
   local function transform(x, y)
@@ -83,10 +87,10 @@ function render(points, cyclic)
   end
 
 
-  local function render_point(P)
+  local function render_point(P, col)
     local x, y = transform(P.x, P.y)
 
-    im:filledRectangle(x-1, y-1, x+1, y+1, red)
+    im:filledRectangle(x-1, y-1, x+1, y+1, col)
   end
 
 
@@ -111,28 +115,32 @@ function render(points, cyclic)
       local x1, y1 = bezier_calc(P1, PC, P2, t)
       local x2, y2 = bezier_calc(P1, PC, P2, t + step)
 
-      im:line(x1, y1, x2, y2, yellow)
+      im:line(x1, y1, x2, y2, YELLOW)
     end
   end
 
 
   -- draw the curves
 
-  for i = 1,#points,2 do
-    local k = i + 2
+  for i = 1,#points do
+    local k = i + 1
 
     if k > #points then
       if not cyclic then break; end
       k = 1
     end
 
-    render_curve(points[i], points[i+1], points[k])
+    render_curve(points[i], points[i].ctl, points[k])
   end
 
-  -- draw connection points
+  -- draw the points
 
-  for i = 1,#points,2 do
-    render_point(points[i])
+  for i = 1,#points do
+    render_point(points[i], RED)
+
+    if points[i].ctl then
+      render_point(points[i].ctl, GREEN)
+    end
   end
 
   -- save image
@@ -164,14 +172,16 @@ ALL_SHAPES =
 
     points =
     {
-      { x=  0,  y=-70, ang=0 }
-      { x= 50,  y=-40, ang=135 }
-      { x= 30,  y= 30, ang=90 }
-      { x=  0,  y= 70, ang=180 }
+      { x=  0,  y=-70, ang=0   },
+      { x= 60,  y=-40, ang=135 },
+      { x= 30,  y= 25, ang=90  },
+      { x=  0,  y= 70, ang=180 },
     }
   },
 }
 
 
--- render(ALL_SHAPES[2].points)
+compute_controls(ALL_SHAPES[2].points)
+
+render(ALL_SHAPES[2].points)
 
