@@ -222,7 +222,7 @@ DOOM.NICE_ITEMS =
     id = 2045
     kind = "powerup"
     add_prob = 5
-    secret_prob = 40
+    secret_prob = 25
     crazy_prob  = 10
     time_limit = 120
   }
