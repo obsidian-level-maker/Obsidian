@@ -290,9 +290,63 @@ function inspect_raw_shape(idx)
 end
 
 
+
+function concatenate_shapes(idx1, idx2)
+  local s1 = ALL_SHAPES[idx1]
+  local s2 = ALL_SHAPES[idx2]
+
+  assert(s1 and s2)
+
+  local points = {}
+
+
+  local function add_point(P, mirror)
+    -- make a copy
+    P = table.copy(P)
+
+    if P.ctl then
+      P.ctl = table.copy(P.ctl)
+    end
+
+    P.back_ctl = nil
+
+    if mirror then
+      P.x = -P.x
+      P.y = -P.y
+
+      if P.ctl then
+        P.ctl.x = -P.ctl.x
+        P.ctl.y = -P.ctl.y
+      end
+    end
+
+    table.insert(points, P)
+  end
+
+
+  -- TODO : ability to reverse points
+
+  for i = 1, #s1.points - 1 do
+    add_point(s1.points[i])
+  end
+
+  for i = 1, #s2.points - 1 do
+    add_point(s2.points[i], "mirror")
+  end
+
+  return points
+end
+
+
 -- main --
 
 preprocess_all_shapes()
 
-inspect_raw_shape(5)
+track = concatenate_shapes(2, 3)
+
+-- skew_track(track, 0, -0.5)
+
+-- TODO : automatically scale the result if too large
+
+render_track(track, "cyclic")
 
