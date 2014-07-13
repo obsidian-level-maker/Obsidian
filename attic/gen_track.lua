@@ -12,6 +12,9 @@ require 'util'
 -- coordinate range : -100 to +100
 -- points go clockwise from TOP to BOTTOM.
 
+-- TODO : start/end always same : add automatically
+
+
 ALL_SHAPES =
 {
   -- very basic curve --
@@ -46,15 +49,34 @@ ALL_SHAPES =
     points =
     {
       { x=  0,  y= 70, ang=0   },
-      { x= 40,  y= 70, ang=0   },
-      { x= 70,  y= 60, ang=270 },
+      { x= 50,  y= 70, ang=0   },
+      { x= 80,  y= 60, ang=270 },
       { x= 45,  y= 40, ang=180 },
       { x= 45,  y=-20, ang=315 },
-      { x= 55,  y=-60, ang=270 },
+      { x= 57,  y=-60, ang=270 },
       { x= 35,  y=-80, ang=145 },
       { x=  0,  y=-70, ang=180 },
     },
   },
+
+  -- elephant nose --
+  {
+    comp = 1,
+
+    points =
+    {
+      { x=  0,  y= 70,  ang=0   },
+      
+      { x= 50,  y= 30,  ang=260 },
+      { x= 70,  y=-50,  ang=300 },
+      { x= 60,  y=-70,  ang=210 },
+      { x= 30,  y=-10,  ang=100 },
+      { x= 15,  y=-35,  ang=260 },
+
+      { x=  0,  y=-70,  ang=180 },
+    },
+  },
+
 }
 
 
@@ -121,6 +143,17 @@ function compute_controls(points, cyclic)
 end
 
 
+
+function compute_all_controls()
+  for i = 1, #ALL_SHAPES do
+    local shape = ALL_SHAPES[i]
+
+    compute_controls(shape.points)
+  end
+end
+
+
+
 function skew_track(points, x_factor, y_factor)
   -- this must be used _after_ computing the bezier control points,
   -- since we do not modify the angle fields here.
@@ -149,7 +182,8 @@ function skew_track(points, x_factor, y_factor)
 end
 
 
-function render(points, cyclic)
+
+function render_track(points, cyclic)
 
   local im = gd.createTrueColor(500, 500)
 
@@ -236,7 +270,18 @@ function render(points, cyclic)
 end
 
 
-compute_controls(ALL_SHAPES[3].points)
 
-render(ALL_SHAPES[3].points)
+function inspect_raw_shape(idx)
+  local shape = ALL_SHAPES[idx]
+  assert(shape)
+
+  render_track(shape.points)
+end
+
+
+-- main --
+
+compute_all_controls()
+
+inspect_raw_shape(4)
 
