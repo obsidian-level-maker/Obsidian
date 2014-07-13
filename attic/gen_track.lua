@@ -9,6 +9,56 @@ require 'gd'
 require 'util'
 
 
+-- coordinate range : -100 to +100
+-- points go clockwise from TOP to BOTTOM.
+
+ALL_SHAPES =
+{
+  -- very basic curve --
+  {
+    comp = 1,
+
+    points =
+    {
+      { x=  0,  y= 70,  ang=0   },
+      { x= 50,  y=  0,  ang=270 },
+      { x=  0,  y=-70,  ang=180 },
+    },
+  },
+
+  -- half a bell --
+  {
+    comp = 2,
+
+    points =
+    {
+      { x=  0,  y= 70, ang=0   },
+      { x= 30,  y= 25, ang=270 },
+      { x= 60,  y=-40, ang=315 },
+      { x=  0,  y=-70, ang=180 },
+    },
+  },
+
+  -- number '3' shape --
+  {
+    comp = 4,
+
+    points =
+    {
+      { x=  0,  y= 70, ang=0   },
+      { x= 40,  y= 70, ang=0   },
+      { x= 70,  y= 60, ang=270 },
+      { x= 45,  y= 40, ang=180 },
+      { x= 45,  y=-20, ang=315 },
+      { x= 55,  y=-60, ang=270 },
+      { x= 35,  y=-80, ang=145 },
+      { x=  0,  y=-70, ang=180 },
+    },
+  },
+}
+
+
+
 function compute_controls(points, cyclic)
   -- compute bezier control points (from angle information)
   
@@ -32,6 +82,14 @@ function compute_controls(points, cyclic)
 
     local k1 = geom.perp_dist(bx1, by1, ax1,ay1,ax2,ay2)
     local k2 = geom.perp_dist(bx2, by2, ax1,ay1,ax2,ay2)
+
+    -- straight line?
+    if math.abs(k1 - k2) < 1 then
+      local ix = (ax1 + bx1) / 2
+      local iy = (ay1 + by1) / 2
+
+      return ix, iy
+    end
 
     local d = k1 / (k1 - k2)
 
@@ -178,40 +236,7 @@ function render(points, cyclic)
 end
 
 
--- coordinate range : -100 to +100
+compute_controls(ALL_SHAPES[3].points)
 
-ALL_SHAPES =
-{
-  -- #1 : very basic curve
-  {
-    comp = 1,
-
-    points =
-    {
-      { x=  0,  y=-70,  ang=0   },
-      { x= 50,  y=  0,  ang=90  },
-      { x=  0,  y= 70,  ang=180 },
-    }
-  },
-
-  -- #2 : half a bell
-  {
-    comp = 2,
-
-    points =
-    {
-      { x=  0,  y=-70, ang=0   },
-      { x= 60,  y=-40, ang=135 },
-      { x= 30,  y= 25, ang=90  },
-      { x=  0,  y= 70, ang=180 },
-    }
-  },
-}
-
-
-compute_controls(ALL_SHAPES[2].points)
-
-skew_track(ALL_SHAPES[2].points, 0, 0.4)
-
-render(ALL_SHAPES[2].points)
+render(ALL_SHAPES[3].points)
 
