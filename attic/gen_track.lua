@@ -6,6 +6,55 @@
 
 require 'gd'
 
+require 'util'
+
+
+function compute_controls(points, cyclic)
+  -- compute bezier control points (from angle information)
+  
+
+  local function project_end(x, y, ang)
+    x = x + math.cos(ang * math.pi / 180) * 100
+    y = y + math.sin(ang * math.pi / 180) * 100
+
+    return x, y
+  end
+
+
+  local function calc_intersection(P1, P2)
+    local ax1 = P1.x
+    local ay1 = P1.y
+    local ax2, ay2 = project_end(ax1, ay1, P1.ang)
+
+    local bx2 = P2.x
+    local by2 = P2.y
+    local bx2, by2 = project_end(bx1, by1, P2.ang)
+
+    local k1 = geom.perp_dist(bx1, by1, ax1,ay1,ax2,ay2)
+    local k2 = geom.perp_dist(bx2, by2, ax1,ay1,ax2,ay2)
+
+    local d = k1 / (k1 - k2)
+
+    local ix = ax1 + d * (ax2 - ax1)
+    local iy = ay1 + d * (ay2 - ay1)
+
+    return ix, iy
+  end
+
+
+  for i = 1,#points do
+    local k = i + 1
+
+    if k > #points then
+      if not cyclic then break; end
+      k = 1
+    end
+
+    local P1 = points[i]
+    local P2 = points[k]
+  end
+end
+
 
 function render(points, cyclic)
 
@@ -23,10 +72,13 @@ function render(points, cyclic)
 
   im:filledRectangle(0, 0, 500, 500, black)
 
+  im:line(250, 0, 250, 500, blue)
+  im:line(0, 250, 500, 250, blue)
+
 
   local function transform(x, y)
-    x = 250 + 250 * x
-    y = 250 - 250 * y  -- adjust for positive Y being north
+    x = 250 + 2.5 * x
+    y = 250 - 2.5 * y  -- adjust for positive Y being north
     return x, y
   end
 
@@ -34,7 +86,7 @@ function render(points, cyclic)
   local function render_point(P)
     local x, y = transform(P.x, P.y)
 
-    im:filledRectangle(x, y, x+1, y+1, red)
+    im:filledRectangle(x-1, y-1, x+1, y+1, red)
   end
 
 
@@ -90,13 +142,36 @@ function render(points, cyclic)
 end
 
 
-TEST_SHAPE =
+-- coordinate range : -100 to +100
+
+ALL_SHAPES =
 {
-  -- normal points       -- control points
-  { x=-0.9, y=-0.5 },    { x= 0,   y=-0.9 },
-  { x= 0.9, y=-0.5 },    { x= 0.9, y= 0.9 },
-  { x= 0,   y= 0.9 },    { x=-0.9, y= 0.9 },
+  -- #1 : very basic curve
+  {
+    comp = 1,
+
+    points =
+    {
+      { x=  0,  y=-70,  ang=0   },
+      { x= 50,  y=  0,  ang=90  },
+      { x=  0,  y= 70,  ang=180 },
+    }
+  },
+
+  -- #2 : half a bell
+  {
+    comp = 2,
+
+    points =
+    {
+      { x=  0,  y=-70, ang=0 }
+      { x= 50,  y=-40, ang=135 }
+      { x= 30,  y= 30, ang=90 }
+      { x=  0,  y= 70, ang=180 }
+    }
+  },
 }
 
-render(TEST_SHAPE, "cyclic")
+
+-- render(ALL_SHAPES[2].points)
 
