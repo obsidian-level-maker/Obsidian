@@ -11,8 +11,7 @@ require 'util'
 
 -- coordinate range : -100 to +100
 -- points go clockwise from TOP to BOTTOM.
-
--- TODO : start/end always same : add automatically
+-- start and end points are implied (added in preprocess)
 
 
 ALL_SHAPES =
@@ -23,9 +22,7 @@ ALL_SHAPES =
 
     points =
     {
-      { x=  0,  y= 70,  ang=0   },
       { x= 50,  y=  0,  ang=270 },
-      { x=  0,  y=-70,  ang=180 },
     },
   },
 
@@ -35,10 +32,8 @@ ALL_SHAPES =
 
     points =
     {
-      { x=  0,  y= 70, ang=0   },
       { x= 30,  y= 25, ang=270 },
       { x= 60,  y=-40, ang=315 },
-      { x=  0,  y=-70, ang=180 },
     },
   },
 
@@ -48,32 +43,44 @@ ALL_SHAPES =
 
     points =
     {
-      { x=  0,  y= 70, ang=0   },
       { x= 50,  y= 70, ang=0   },
       { x= 80,  y= 60, ang=270 },
       { x= 45,  y= 40, ang=180 },
       { x= 45,  y=-20, ang=315 },
       { x= 57,  y=-60, ang=270 },
       { x= 35,  y=-80, ang=145 },
-      { x=  0,  y=-70, ang=180 },
     },
   },
 
   -- elephant nose --
   {
-    comp = 1,
+    comp = 3,
 
     points =
     {
-      { x=  0,  y= 70,  ang=0   },
-      
       { x= 50,  y= 30,  ang=260 },
       { x= 70,  y=-50,  ang=300 },
       { x= 60,  y=-70,  ang=210 },
       { x= 30,  y=-10,  ang=100 },
       { x= 15,  y=-35,  ang=260 },
+    },
+  },
 
-      { x=  0,  y=-70,  ang=180 },
+  -- door knob --
+  {
+    comp = 4,
+
+    points =
+    {
+      { x= 15,  y= 60, ang=285 },
+      { x= 35,  y= 30, ang=0   },
+      { x= 55,  y= 60, ang=65  },
+      { x= 70,  y= 30, ang=280 },
+
+      { x= 65,  y=-10, ang=260 },
+      { x= 65,  y=-40, ang=260 },
+      { x= 40,  y=-60, ang=150 },
+      { x= 20,  y=-60, ang=245 },
     },
   },
 
@@ -144,9 +151,13 @@ end
 
 
 
-function compute_all_controls()
+function preprocess_all_shapes()
   for i = 1, #ALL_SHAPES do
     local shape = ALL_SHAPES[i]
+
+    -- add common start and end points
+    table.insert(shape.points, 1, { x= 0, y= 70, ang=0   })
+    table.insert(shape.points,    { x= 0, y=-70, ang=180 })
 
     compute_controls(shape.points)
   end
@@ -281,7 +292,7 @@ end
 
 -- main --
 
-compute_all_controls()
+preprocess_all_shapes()
 
-inspect_raw_shape(4)
+inspect_raw_shape(5)
 
