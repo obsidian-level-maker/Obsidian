@@ -63,6 +63,34 @@ function compute_controls(points, cyclic)
 end
 
 
+function skew_track(points, x_factor, y_factor)
+  -- this must be used _after_ computing the bezier control points,
+  -- since we do not modify the angle fields here.
+  -- one of 'x_factor' or 'y_factor' should be zero!
+
+  local function transform(P)
+    local nx = P.x + P.y * x_factor
+    local ny = P.y + P.x * y_factor
+
+    P.x = nx
+    P.y = ny
+  end
+
+
+  for i = 1, #points do
+    local P = points[i]
+
+    transform(P)
+
+    if P.ctl then
+      transform(P.ctl)
+    end
+
+    -- no need to do 'back_ctl' (always corresponds to a normal 'ctl')
+  end
+end
+
+
 function render(points, cyclic)
 
   local im = gd.createTrueColor(500, 500)
@@ -182,6 +210,8 @@ ALL_SHAPES =
 
 
 compute_controls(ALL_SHAPES[2].points)
+
+skew_track(ALL_SHAPES[2].points, 0, 0.4)
 
 render(ALL_SHAPES[2].points)
 
