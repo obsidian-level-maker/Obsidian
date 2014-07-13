@@ -507,7 +507,7 @@ function Monsters_zone_palettes()
 
     if STYLE.mon_variety == "none" then
       tab[LEVEL.single_mon] = 50
-      return tab
+      return
     end
 
     each mon,_ in GAME.MONSTERS do
@@ -637,11 +637,9 @@ function Monsters_zone_palettes()
 
 
   local function generate_palette(base_pal)
-    assert(not table.empty(base_pal))
-
     local total = table.size(base_pal)
 
-    if total == 1 then
+    if total <= 1 then
       return table.copy(base_pal)
     end
 
@@ -1187,6 +1185,7 @@ function Monsters_do_pickups()
     end
 
     assert(not table.empty(item_tab))
+
     local name = rand.key_by_probs(item_tab)
     local info = GAME.PICKUPS[name]
 
@@ -2510,7 +2509,9 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- value to only give monster drops for accessible monsters.
     R.normal_count = #R.monster_list
 
-    fill_cages(R.cage_spots, palette)
+    if not table.empty(palette) then
+      fill_cages(R.cage_spots, palette)
+    end
   end
 
 

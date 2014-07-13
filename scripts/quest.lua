@@ -529,7 +529,8 @@ function Quest_add_weapons()
     end
 
     if table.empty(tab) then
-      error("No possible fallback weapons!")
+      gui.printf("No possible fallback weapons!")
+      return
     end
 
     local name = rand.key_by_probs(tab)
@@ -587,8 +588,13 @@ function Quest_add_weapons()
     table.insert(list, weapon)
   end
 
+  if #list == 0 then
+    gui.printf("Weapon list: NONE\n")
+    return
+  end
+
+
   quota = #list
-  assert(quota > 0)
 
   reorder_weapons(list)
 
@@ -663,8 +669,6 @@ function Quest_nice_items()
         pal[name] = pal[name] * mixed_mul
       end
     end
-
-    assert(not table.empty(pal))
   end
 
 
@@ -751,6 +755,10 @@ function Quest_nice_items()
 
 
   local function handle_secret_rooms()
+    if table.empty(LEVEL.secret_items) then
+      return
+    end
+
     -- collect all secret leafs
     -- we need to visit them in random order
     local rooms = {}
@@ -868,13 +876,17 @@ function Quest_nice_items()
     end
 
     each R in rooms do
-      local item
+      local tab
 
       if R.purpose == "START" then
-        item = rand.key_by_probs(start_tab)
+        tab = start_tab
       else
-        item = rand.key_by_probs(normal_tab)
+        tab = normal_tab
       end
+
+      if table.empty(tab) then continue end
+
+      local item = rand.key_by_probs(tab)
 
       table.insert(R.items, item)
       mark_item_seen(item)
@@ -888,6 +900,8 @@ function Quest_nice_items()
     for i = 1, quota do
       local R = choose_best_other_room()
       if not R then break; end
+
+      if table.empty(normal_tab) then continue end
 
       local item = rand.key_by_probs(normal_tab)
 
