@@ -6,7 +6,20 @@
 
 require 'gd'
 
+
+gui =
+{
+  random = math.random
+}
+
 require '_util'
+
+
+if arg[1] then
+  local seed = 0 + arg[1]
+  print("Seed =", seed)
+  math.randomseed(seed)
+end
 
 
 -- coordinate range : -100 to +100
@@ -16,8 +29,6 @@ require '_util'
 
 ALL_SHAPES =
 {
---[[
-
   -- very basic curve --
   {
     comp = 1,
@@ -141,7 +152,7 @@ ALL_SHAPES =
 
   -- lizard tongue --
   {
-    comp = 6,
+    comp = 8,
 
     points =
     {
@@ -160,7 +171,6 @@ ALL_SHAPES =
       { x= 30, y=-60, ang=225 },
     },
   },
---]]
 
   -- square with hairpin --
   {
@@ -182,6 +192,9 @@ ALL_SHAPES =
     },
   },
 }
+
+
+-- TODO : shapes which join at Y = +/- 20
 
 
 
@@ -423,9 +436,6 @@ function render_track(points, cyclic, lx, ly, hx, hy)
     ly, hy = 0, IMG_H
   end
 
-hx=hx*3
-hy=hy*3
-
   local mx = (lx + hx) / 2
   local my = (ly + hy) / 2
 
@@ -505,11 +515,11 @@ end
 
 
 
-function inspect_raw_shapes()
+function inspect_raw_shapes(start)
   local wx = 0
   local wy = 0
 
-  for idx = 1, 99 do
+  for idx = start, 999 do
     local shape = ALL_SHAPES[idx]
     if not shape then return end
 
@@ -525,7 +535,7 @@ end
 
 
 
-function concatenate_shapes(idx1, idx2)
+function concatenate_shapes(idx1, rev1, idx2, rev2)
   local s1 = ALL_SHAPES[idx1]
   local s2 = ALL_SHAPES[idx2]
 
@@ -580,8 +590,8 @@ function concatenate_shapes(idx1, idx2)
   end
 
 
-  add_shape(s1.points, "reverse" or nil, nil)
-  add_shape(s2.points, nil, "mirror")
+  add_shape(s1.points, rev1 and "reverse", nil)
+  add_shape(s2.points, rev2 and "reverse", "mirror")
 
   return points
 end
@@ -594,7 +604,7 @@ local function scale_down_track(points, cyclic)
 
   local bbox = measure_track(points, cyclic)
 
-  print(string.format("bbox: (%1.1f %1.1f) .. (%1.1f %1.1f)", bbox.x1, bbox.y1, bbox.x2, bbox.y2))
+  -- print(string.format("bbox: (%1.1f %1.1f) .. (%1.1f %1.1f)", bbox.x1, bbox.y1, bbox.x2, bbox.y2))
 
   local xx = math.max(math.abs(bbox.x1), bbox.x2)
   local yy = math.max(math.abs(bbox.y1), bbox.y2)
@@ -614,25 +624,68 @@ local function scale_down_track(points, cyclic)
 end
 
 
+
+function create_a_track(lx, ly, hx, hy)
+  local num_shapes = #ALL_SHAPES
+
+  local s1 = rand.irange(1, num_shapes)
+  local s2 = rand.irange(1, num_shapes)
+
+  while s1 == s2 do
+    s2 = rand.irange(1, num_shapes)
+  end
+
+  local rev1 = rand.odds(50)
+  local rev2 = rand.odds(50)
+
+  local track = concatenate_shapes(s1, rev1, s2, rev2)
+
+  if rand.odds(50) then
+    if rand.odds(20) then
+      local y_skew = rand.pick({ -0.5, 0.5 })
+      skew_track(track, 0, y_skew)
+    else
+      local x_skew = rand.pick({ -0.7, 0.7 })
+      skew_track(track, x_skew, 0)
+    end
+  end
+
+  if rand.odds(50) then
+    rotate_track(track)
+  end
+
+  scale_down_track(track, "cyclic")
+
+  render_track(track, "cyclic", lx, ly, hx, hy)
+end
+
+
+
+function create_some_tracks()
+  local wx = 0
+  local wy = 0
+
+  for loop = 1, 12 do
+    create_a_track(wx, wy, wx + 190, wy + 190)
+
+    wx = wx + 200
+    if wx > (IMG_W - 8) then
+      wx = 0
+      wy = wy + 200
+    end
+  end
+end
+
+
 -- main --
 
 preprocess_all_shapes()
 
-inspect_raw_shapes()
-
---[[
-
-track = concatenate_shapes(2, 3)
-
--- rotate_track(track)
-
-skew_track(track, -0.9, 0)
-
-scale_down_track(track, "cyclic")
-
-render_track(track, "cyclic")
-
---]]
+if false then
+  inspect_raw_shapes(1)
+else
+  create_some_tracks()
+end
 
 save_image()
 
