@@ -16,6 +16,8 @@ require '_util'
 
 ALL_SHAPES =
 {
+--[[
+
   -- very basic curve --
   {
     comp = 1,
@@ -134,6 +136,29 @@ ALL_SHAPES =
       { x= 45,  y=-60, ang=115 },
       { x= 27,  y=-40, ang=180 },
       { x= 15,  y=-60, ang=245 },
+    },
+  },
+--]]
+
+  -- lizard tongue --
+  {
+    comp = 6,
+
+    points =
+    {
+      { x= 90,  y=  0, ang=270 },
+      { x= 65,  y=-40, ang=180 },
+      { x= 37,  y=  0, ang=90  },
+
+      { x= 47,  y= 15, ang=0   },
+      { x= 57,  y=  0, ang=270 },
+      { x= 67,  y=-15, ang=0   },
+
+      { x= 75,  y=  0, ang=90  },
+      { x= 50,  y= 30, ang=180 },
+      { x= 12,  y=  0, ang=270 },
+      { x= 24,  y=-30, ang=305 },
+      { x= 30,  y=-60, ang=225 },
     },
   },
 }
@@ -377,6 +402,9 @@ function render_track(points, cyclic, lx, ly, hx, hy)
     lx, hx = 0, IMG_W
     ly, hy = 0, IMG_H
   end
+
+hx=hx*3
+hy=hy*3
 
   local mx = (lx + hx) / 2
   local my = (ly + hy) / 2
