@@ -84,6 +84,26 @@ ALL_SHAPES =
     },
   },
 
+  -- squiggly --
+  {
+    comp = 5,
+
+    points =
+    {
+      { x= 30,  y= 65, ang=335 },
+      { x= 30,  y= 50, ang=200 },
+      { x= 10,  y= 32, ang=270 },
+      { x= 30,  y= 15, ang=0   },
+
+      { x= 70,  y=  0, ang=270 },
+
+      { x= 50,  y=-10, ang=180 },
+      { x= 30,  y=-30, ang=270 },
+      { x= 50,  y=-50, ang=330 },
+      { x= 35,  y=-67, ang=200 },
+    },
+  },
+
 }
 
 
@@ -303,26 +323,44 @@ end
 
 
 
-function render_track(points, cyclic)
+IMG_W = 800
+IMG_H = 600
 
-  local im = gd.createTrueColor(500, 500)
+-- create image, alloc colors
 
-  local BLACK  = im:colorAllocate(0, 0, 0)
-  local WHITE  = im:colorAllocate(255, 255, 255)
-  local RED    = im:colorAllocate(200, 0, 0)
-  local BLUE   = im:colorAllocate(0, 0, 200)
-  local YELLOW = im:colorAllocate(200, 200, 0)
-  local GREEN  = im:colorAllocate(0, 200, 0)
+im = gd.createTrueColor(IMG_W, IMG_H)
 
-  im:filledRectangle(0, 0, 500, 500, BLACK)
+BLACK  = im:colorAllocate(0, 0, 0)
+WHITE  = im:colorAllocate(255, 255, 255)
+RED    = im:colorAllocate(200, 0, 0)
+BLUE   = im:colorAllocate(0, 0, 200)
+YELLOW = im:colorAllocate(200, 200, 0)
+GREEN  = im:colorAllocate(0, 200, 0)
 
-  im:line(250, 0, 250, 500, BLUE)
-  im:line(0, 250, 500, 250, BLUE)
+im:filledRectangle(0, 0, IMG_W, IMG_H, BLACK)
+
+
+function render_track(points, cyclic, lx, ly, hx, hy)
+  if not lx then
+    lx, hx = 0, IMG_W
+    ly, hy = 0, IMG_H
+  end
+
+  local mx = (lx + hx) / 2
+  local my = (ly + hy) / 2
+
+  local x_scale = (hx - lx) / 200
+  local y_scale = (hy - ly) / 200
+
+  im:rectangle(lx + 1, ly + 1, hx - 1, hy - 1, BLUE)
+
+  im:line(mx, ly, mx, hy, BLUE)
+  im:line(lx, my, hx, my, BLUE)
 
 
   local function transform(x, y)
-    x = 250 + 2.5 * x
-    y = 250 - 2.5 * y  -- adjust for positive Y being north
+    x = mx + x * x_scale
+    y = my - y * y_scale  -- adjust for positive Y being north
     return x, y
   end
 
@@ -364,17 +402,22 @@ function render_track(points, cyclic)
     render_curve(points[i], points[i].ctl, points[k])
   end
 
-  -- draw the points
+  -- draw the points, control first
 
   for i = 1,#points do
-    render_point(points[i], RED)
-
     if points[i].ctl then
       render_point(points[i].ctl, GREEN)
     end
   end
 
-  -- save image
+  for i = 1,#points do
+    render_point(points[i], RED)
+  end
+end
+
+
+
+function save_image()
   im:png("__shape.png")
 
   im = nil ; collectgarbage("collect")
@@ -382,11 +425,22 @@ end
 
 
 
-function inspect_raw_shape(idx)
-  local shape = ALL_SHAPES[idx]
-  assert(shape)
+function inspect_raw_shapes()
+  local wx = 0
+  local wy = 0
 
-  render_track(shape.points)
+  for idx = 1, 99 do
+    local shape = ALL_SHAPES[idx]
+    if not shape then return end
+
+    render_track(shape.points, false, wx, wy, wx + 190, wy + 190)
+
+    wx = wx + 200
+    if wx > (IMG_W - 8) then
+      wx = 0
+      wy = wy + 200
+    end
+  end
 end
 
 
@@ -484,6 +538,10 @@ end
 
 preprocess_all_shapes()
 
+inspect_raw_shapes()
+
+--[[
+
 track = concatenate_shapes(2, 3)
 
 -- rotate_track(track)
@@ -493,4 +551,8 @@ skew_track(track, -0.9, 0)
 scale_down_track(track, "cyclic")
 
 render_track(track, "cyclic")
+
+--]]
+
+save_image()
 
