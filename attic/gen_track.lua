@@ -37,6 +37,18 @@ ALL_SHAPES =
     },
   },
 
+  -- whale's head --
+  {
+    comp = 2,
+
+    points =
+    {
+      { x= 90,  y= 10, ang=270 },
+      { x= 60,  y=-20, ang=180 },
+      { x= 30,  y=-45, ang=270 },
+    },
+  },
+
   -- number '3' shape --
   {
     comp = 4,
@@ -86,7 +98,7 @@ ALL_SHAPES =
 
   -- squiggly --
   {
-    comp = 5,
+    comp = 6,
 
     points =
     {
@@ -104,6 +116,26 @@ ALL_SHAPES =
     },
   },
 
+  -- yawning hippo --
+  {
+    comp = 4,
+
+    points =
+    {
+      { x= 35,  y= 85, ang=45  },
+      { x= 62,  y=100, ang=0   },
+      { x= 90,  y= 70, ang=270 },
+      { x= 62,  y= 35, ang=180 },
+
+      { x= 40,  y=  0, ang=270 },
+
+      { x= 50,  y=-35, ang=315 },
+      { x= 60,  y=-70, ang=205 },
+      { x= 45,  y=-60, ang=115 },
+      { x= 27,  y=-40, ang=180 },
+      { x= 15,  y=-60, ang=245 },
+    },
+  },
 }
 
 
