@@ -193,6 +193,28 @@ function skew_track(points, x_factor, y_factor)
 end
 
 
+
+function scale_track(points, x_factor, y_factor)
+  -- simple scaling, only used by shrinking logic
+
+  local function transform(P)
+    P.x = P.x * x_factor
+    P.y = P.y * y_factor
+  end
+
+  for i = 1, #points do
+    local P = points[i]
+
+    transform(P)
+
+    if P.ctl then
+      transform(P.ctl)
+    end
+  end
+end
+
+
+
 function rotate_track(points)
   -- rotate track by 90 degrees
 
@@ -213,6 +235,70 @@ function rotate_track(points)
       transform(P.ctl)
     end
   end
+end
+
+
+
+function bezier_calc(P1, PC, P2, t)
+  local k1 = (1 - t) * (1 - t)
+  local kc = 2 * (1 - t) * t
+  local k2 = t * t
+
+  local x = P1.x * k1 + PC.x * kc + P2.x * k2
+  local y = P1.y * k1 + PC.y * kc + P2.y * k2
+
+  return x, y
+end
+
+
+
+function measure_track(points, cyclic)
+  -- compute the bounding box of all curves
+  -- result won't be 100% accurate
+
+  local bbox =
+  {
+    x1 =  9e9,
+    y1 =  9e9,
+    x2 = -9e9,
+    y2 = -9e9,
+  }
+
+  local function do_curve(P1, PC, P2)
+    -- PC is the bezier control point
+
+    local step = 0.01
+
+    for t = 0, 1 - step, step do
+      local x1, y1 = bezier_calc(P1, PC, P2, t)
+      local x2, y2 = bezier_calc(P1, PC, P2, t + step)
+
+      bbox.x1 = math.min(bbox.x1, x1, x2)
+      bbox.y1 = math.min(bbox.y1, y1, y2)
+
+      bbox.x2 = math.max(bbox.x2, x1, x2)
+      bbox.y2 = math.max(bbox.y2, y1, y2)
+    end
+  end
+
+
+  -- measure the curves
+
+  for i = 1,#points do
+    local k = i + 1
+
+    if k > #points then
+      if not cyclic then break; end
+      k = 1
+    end
+
+    do_curve(points[i], points[i].ctl, points[k])
+  end
+
+  assert(bbox.x1 < bbox.x2)
+  assert(bbox.y1 < bbox.y2)
+
+  return bbox
 end
 
 
@@ -248,18 +334,6 @@ function render_track(points, cyclic)
   end
 
 
-  local function bezier_calc(P1, PC, P2, t)
-    local k1 = (1 - t) * (1 - t)
-    local kc = 2 * (1 - t) * t
-    local k2 = t * t
-
-    local x = P1.x * k1 + PC.x * kc + P2.x * k2
-    local y = P1.y * k1 + PC.y * kc + P2.y * k2
-
-    return transform(x, y)
-  end
-
-
   local function render_curve(P1, PC, P2)
     -- PC is the bezier control point
 
@@ -268,6 +342,9 @@ function render_track(points, cyclic)
     for t = 0, 1 - step, step do
       local x1, y1 = bezier_calc(P1, PC, P2, t)
       local x2, y2 = bezier_calc(P1, PC, P2, t + step)
+
+      x1, y1 = transform(x1, y1)
+      x2, y2 = transform(x2, y2)
 
       im:line(x1, y1, x2, y2, YELLOW)
     end
@@ -376,17 +453,44 @@ function concatenate_shapes(idx1, idx2)
 end
 
 
+
+local function scale_down_track(points, cyclic)
+  -- check if track is too large (due to skewing, or certain patterns)
+  -- and shrink it if necessary.
+
+  local bbox = measure_track(points, cyclic)
+
+  print(string.format("bbox: (%1.1f %1.1f) .. (%1.1f %1.1f)", bbox.x1, bbox.y1, bbox.x2, bbox.y2))
+
+  local xx = math.max(math.abs(bbox.x1), bbox.x2)
+  local yy = math.max(math.abs(bbox.y1), bbox.y2)
+
+  local x_scale = 90 / xx
+  local y_scale = 90 / yy
+
+  if x_scale > 1 and y_scale > 1 then return end
+
+  if x_scale > y_scale then
+    x_scale = math.max(y_scale, math.min(x_scale, 0.6))
+  else
+    y_scale = math.max(x_scale, math.min(y_scale, 0.6))
+  end
+
+  scale_track(points, x_scale, y_scale)  
+end
+
+
 -- main --
 
 preprocess_all_shapes()
 
 track = concatenate_shapes(2, 3)
 
--- skew_track(track, 0, -0.5)
+-- rotate_track(track)
 
-rotate_track(track)
+skew_track(track, -0.9, 0)
 
--- TODO : automatically scale the result if too large
+scale_down_track(track, "cyclic")
 
 render_track(track, "cyclic")
 
