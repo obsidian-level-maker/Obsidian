@@ -6,7 +6,7 @@
 
 require 'gd'
 
-require 'util'
+require '_util'
 
 
 -- coordinate range : -100 to +100
@@ -193,6 +193,29 @@ function skew_track(points, x_factor, y_factor)
 end
 
 
+function rotate_track(points)
+  -- rotate track by 90 degrees
+
+  local function transform(P)
+    local nx =  P.y
+    local ny = -P.x
+
+    P.x = nx
+    P.y = ny
+  end
+
+  for i = 1, #points do
+    local P = points[i]
+
+    transform(P)
+
+    if P.ctl then
+      transform(P.ctl)
+    end
+  end
+end
+
+
 
 function render_track(points, cyclic)
 
@@ -300,15 +323,27 @@ function concatenate_shapes(idx1, idx2)
   local points = {}
 
 
-  local function add_point(P, mirror)
+  local function add_point(P, reverse, mirror)
     -- make a copy
     P = table.copy(P)
+
+    if reverse then
+      P.ctl = P.back_ctl
+    end
+
+    P.back_ctl = nil
 
     if P.ctl then
       P.ctl = table.copy(P.ctl)
     end
 
-    P.back_ctl = nil
+    if reverse then
+      P.y = -P.y
+
+      if P.ctl then
+        P.ctl.y = -P.ctl.y
+      end
+    end
 
     if mirror then
       P.x = -P.x
@@ -324,15 +359,18 @@ function concatenate_shapes(idx1, idx2)
   end
 
 
-  -- TODO : ability to reverse points
+  local function add_shape(points, reverse, mirror)
+    for i = 1, #points - 1 do
+      local k = i
+      if reverse then k = #points - (i - 1) end
 
-  for i = 1, #s1.points - 1 do
-    add_point(s1.points[i])
+      add_point(points[k], reverse, mirror)
+    end
   end
 
-  for i = 1, #s2.points - 1 do
-    add_point(s2.points[i], "mirror")
-  end
+
+  add_shape(s1.points, "reverse" or nil, nil)
+  add_shape(s2.points, nil, "mirror")
 
   return points
 end
@@ -345,6 +383,8 @@ preprocess_all_shapes()
 track = concatenate_shapes(2, 3)
 
 -- skew_track(track, 0, -0.5)
+
+rotate_track(track)
 
 -- TODO : automatically scale the result if too large
 
