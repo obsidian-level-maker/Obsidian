@@ -31,7 +31,7 @@ ALL_SHAPES =
 {
   -- very basic curve --
   {
-    comp = 1,
+    comp = 0,
 
     points =
     {
@@ -41,7 +41,7 @@ ALL_SHAPES =
 
   -- half a bell --
   {
-    comp = 2,
+    comp = 1,
 
     points =
     {
@@ -52,7 +52,7 @@ ALL_SHAPES =
 
   -- nose --
   {
-    comp = 2,
+    comp = 1,
 
     points =
     {
@@ -68,7 +68,7 @@ ALL_SHAPES =
 
   -- whale's head --
   {
-    comp = 2,
+    comp = 1,
 
     points =
     {
@@ -80,7 +80,7 @@ ALL_SHAPES =
 
   -- number '3' shape --
   {
-    comp = 4,
+    comp = 2,
 
     points =
     {
@@ -95,7 +95,7 @@ ALL_SHAPES =
 
   -- elephant trunk --
   {
-    comp = 3,
+    comp = 2,
 
     points =
     {
@@ -109,7 +109,7 @@ ALL_SHAPES =
 
   -- door knob --
   {
-    comp = 4,
+    comp = 3,
 
     points =
     {
@@ -127,7 +127,7 @@ ALL_SHAPES =
 
   -- squiggly --
   {
-    comp = 6,
+    comp = 3,
 
     points =
     {
@@ -147,7 +147,7 @@ ALL_SHAPES =
 
   -- yawning hippo --
   {
-    comp = 4,
+    comp = 3,
 
     points =
     {
@@ -168,7 +168,7 @@ ALL_SHAPES =
 
   -- lizard tongue --
   {
-    comp = 8,
+    comp = 5,
 
     points =
     {
@@ -207,9 +207,6 @@ ALL_SHAPES =
     },
   },
 }
-
-
--- TODO : shapes which join at Y = +/- 20
 
 
 
@@ -645,8 +642,8 @@ function create_a_track(lx, ly, hx, hy)
 
   -- TODO : shuffle two lists from 1..#ALL_SHAPES (in parent func)
   --        and pick s1 and s2 from each list
-  --
-  -- Also TODO : ensure comp1 + comp1 <= THRESHHOLD (e.g. 10) and >= 4
+  --        add in some extra shapes with comp <= 2
+  --        tendency to have comp1 + comp2 >= 2, <= 6
 
   local s1 = rand.irange(1, num_shapes)
   local s2 = rand.irange(1, num_shapes)
