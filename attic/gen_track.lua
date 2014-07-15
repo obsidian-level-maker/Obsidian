@@ -27,6 +27,9 @@ end
 -- start and end points are implied (added in preprocess)
 
 
+-- TODO : replace 'comp' with dup_prob / skip_prob
+
+
 ALL_SHAPES =
 {
   -- very basic curve --
@@ -189,7 +192,7 @@ ALL_SHAPES =
 
   -- square with hairpin --
   {
-    comp = 3,
+    comp = 4,
 
     points =
     {
@@ -637,20 +640,56 @@ end
 
 
 
-function create_a_track(lx, ly, hx, hy)
+function draw_shuffled_shape(list)
+  -- when list is empty (like on first usage), we fill it
+
+  local function gen_sequence()
+    local seq = {}
+
+    for i = 1,99 do
+      local shape = ALL_SHAPES[i]
+      if not shape then break; end
+
+      -- sometimes skip if quite complex
+      if shape.comp >= 4 and rand.odds(50) then
+        -- skip
+      else
+        table.insert(seq, i)
+      end
+
+      -- add in an extra copy if not too complex (and not too simple)
+      if shape.comp >= 1 and shape.comp <= 2 then
+        table.insert(seq, i)
+      end
+    end
+
+    rand.shuffle(seq)
+
+    return seq
+  end
+
+
+  if table.empty(list) then
+    table.append(list, gen_sequence())
+  end
+
+  return table.remove(list, 1)
+end
+
+
+
+function create_a_track(lefts, rights, lx, ly, hx, hy)
   local num_shapes = #ALL_SHAPES
 
-  -- TODO : shuffle two lists from 1..#ALL_SHAPES (in parent func)
-  --        and pick s1 and s2 from each list
-  --        add in some extra shapes with comp <= 2
-  --        tendency to have comp1 + comp2 >= 2, <= 6
+  -- draw two shape numbers out of shuffled lists
+  local s1, s2
 
-  local s1 = rand.irange(1, num_shapes)
-  local s2 = rand.irange(1, num_shapes)
+  s1 = draw_shuffled_shape(lefts)
 
-  while s1 == s2 do
-    s2 = rand.irange(1, num_shapes)
-  end
+  repeat
+    s2 = draw_shuffled_shape(rights)
+  until s1 ~= s2
+
 
   local rev1 = rand.odds(50)
   local rev2 = rand.odds(50)
@@ -682,8 +721,12 @@ function create_some_tracks()
   local wx = 0
   local wy = 0
 
+  -- these get filled on first usage
+  local lefts  = {}
+  local rights = {}
+
   for loop = 1, 12 do
-    create_a_track(wx, wy, wx + 190, wy + 190)
+    create_a_track(lefts, rights, wx, wy, wx + 190, wy + 190)
 
     wx = wx + 200
     if wx > (IMG_W - 8) then
