@@ -50,6 +50,22 @@ ALL_SHAPES =
     },
   },
 
+  -- nose --
+  {
+    comp = 2,
+
+    points =
+    {
+      { x= 20, y= 60, ang=315 },
+      { x= 60, y= 10, ang=315 },
+      { x= 50, y=-10, ang=205 },
+
+      { x= 30, y=-10, ang=180 },
+      { x= 12, y=-20, ang= 90 },
+      { x= 12, y=-60, ang= 90 },
+    },
+  },
+
   -- whale's head --
   {
     comp = 2,
@@ -77,7 +93,7 @@ ALL_SHAPES =
     },
   },
 
-  -- elephant nose --
+  -- elephant trunk --
   {
     comp = 3,
 
@@ -156,19 +172,18 @@ ALL_SHAPES =
 
     points =
     {
-      { x= 90, y=  0, ang=270 },
+      { x= 95, y=  0, ang=270 },
       { x= 65, y=-40, ang=180 },
-      { x= 37, y=  0, ang=90  },
+      { x= 30, y=  0, ang=90  },
 
-      { x= 47, y= 15, ang=0   },
-      { x= 57, y=  0, ang=270 },
-      { x= 67, y=-15, ang=0   },
+      { x= 42, y= 15, ang=0   },
+      { x= 53, y=  0, ang=270 },
+      { x= 65, y=-15, ang=0   },
 
       { x= 75, y=  0, ang=90  },
-      { x= 50, y= 30, ang=180 },
+      { x= 45, y= 40, ang=180 },
       { x= 12, y=  0, ang=270 },
-      { x= 24, y=-30, ang=305 },
-      { x= 30, y=-60, ang=225 },
+      { x= 12, y=-45, ang=270 },
     },
   },
 
@@ -187,8 +202,8 @@ ALL_SHAPES =
       { x= 51, y= -5, ang=105 },
 
       { x= 40, y= 10, ang=195 },
-      { x= 33, y=-10, ang=300 },
-      { x= 33, y=-70, ang=187 },
+      { x= 33, y=-10, ang=290 },
+      { x= 27, y=-70, ang=187 },
     },
   },
 }
@@ -627,6 +642,11 @@ end
 
 function create_a_track(lx, ly, hx, hy)
   local num_shapes = #ALL_SHAPES
+
+  -- TODO : shuffle two lists from 1..#ALL_SHAPES (in parent func)
+  --        and pick s1 and s2 from each list
+  --
+  -- Also TODO : ensure comp1 + comp1 <= THRESHHOLD (e.g. 10) and >= 4
 
   local s1 = rand.irange(1, num_shapes)
   local s2 = rand.irange(1, num_shapes)
