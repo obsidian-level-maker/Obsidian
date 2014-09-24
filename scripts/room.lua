@@ -1014,6 +1014,7 @@ function Room_reckon_doors()
     -- support arches which have a step in them
     if (S.room.is_outdoor != N.room.is_outdoor) or rand.odds(50) then
       if THEME.archy_arches then return end
+      if STYLE.steepness == "none" then return end
 
       if not (S.room.hallway or N.room.hallway) then
         if S == C.S1 then
