@@ -14,6 +14,8 @@ require '_util'
 
 SHOW_GHOST = false
 
+ALLOW_CLOSED_SQUARES = false
+
 
 if arg[1] then
   local seed = 0 + arg[1]
@@ -137,6 +139,25 @@ function is_diagonal_blocked(P, dir)
 end
 
 
+function would_close_a_square(P, dir, N)
+  if ALLOW_CLOSED_SQUARES then return false end
+
+  for pass = 1, 2 do
+    local dir2 = sel(pass == 1, geom.LEFT[dir], geom.RIGHT[dir])
+
+    local P2 = P.neighbor[dir2]
+
+    if P2 then
+      if P.edge[dir2] and N.edge[dir2] and P2.edge[dir] then
+        return true
+      end
+    end
+  end
+
+  return false
+end
+
+
 function eval_edge_at_point(P, dir)
   -- returns < 0 if impossible, score > 0 if possible
 
@@ -162,6 +183,8 @@ function eval_edge_at_point(P, dir)
   if P.edge[L_dir] or P.edge[R_dir] then return -1 end
   
   if N.edge[10 - L_dir] or N.edge[10 - R_dir] then return -1 end
+
+  if would_close_a_square(P, dir, N) then return -1 end
 
   -- OK --
 
