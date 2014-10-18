@@ -86,25 +86,46 @@ function add_edge(gx, gy, dir)
   local P = GRID[gx][gy]
 
   P.edge[dir] = true
-  P.num_edges  = P.num_edges + 1
+  P.num_edges = P.num_edges + 1
 
   local N = P.neighbor[dir]
+  assert(N)
 
-  if N then
-    N.edge[10 - dir] = true
-    N.num_edges = N.num_edges + 1
-  end
+  N.edge[10 - dir] = true
+  N.num_edges = N.num_edges + 1
+end
+
+
+function remove_edge(gx, gy, dir)
+  local N = P.neighbor[dir]
+  assert(N)
+
+  assert(P.edge[dir])
+  assert(N.edge[10 - dir])
+
+  P.edge[dir] = nil
+  N.edge[10 - dir] = nil
+
+  P.ghost[dir] = true
+  N.ghost[10 - dir] = true
+
+  P.num_edges = P.num_edges - 1
+  N.num_edges = N.num_edges - 1
 end
 
 
 function is_diagonal_blocked(P, dir)
+  -- not a diagonal?
+  if not (dir == 1 or dir == 3 or dir == 7 or dir == 9) then
+    return false
+  end
+
   local L_dir = geom.LEFT_45[dir]
 
   local N = P.neighbor[L_dir]
   if not N then return true end
 
-  local dir2 = geom.RIGHT[dir]
-  return N.edge[dir]
+  return N.edge[geom.RIGHT[dir]]
 end
 
 
@@ -114,6 +135,9 @@ function eval_edge_at_point(P, dir)
   local N = P.neighbor[dir]
 
   if not N then return -1 end
+
+  -- already an edge there?
+  if P.edge[dir] then return -1 end
 
   -- ensure it does not cross another diagonal
   if is_diagonal_blocked(P, dir) then return -1 end
@@ -220,12 +244,12 @@ function save_as_svg()
   local max_x = GRID_W * SIZE
   local max_y = GRID_H * SIZE
 
-  for x = 0, GRID_W do
-    wr_line(fp, x * SIZE, 0, x * SIZE, max_y, "#bbb")
+  for x = 1, GRID_W do
+    wr_line(fp, x * SIZE, SIZE, x * SIZE, max_y, "#bbb")
   end
 
-  for y = 0, GRID_H do
-    wr_line(fp, 0, y * SIZE, max_x, y * SIZE, "#bbb")
+  for y = 1, GRID_H do
+    wr_line(fp, SIZE, y * SIZE, max_x, y * SIZE, "#bbb")
   end
 
   -- points
@@ -236,14 +260,23 @@ function save_as_svg()
     for dir = 6,9 do
       local N = P.neighbor[dir]
 
-      if P.edge[dir] then
-        wr_line(fp, x * SIZE, y * SIZE, N.gx * SIZE, N.gy * SIZE, "#00f", 3)
+      if N then
+        local x1 = x * SIZE
+        local y1 = (GRID_H - y + 1) * SIZE
 
-      elseif P.ghost[dir] then
-        wr_line(fp, x * SIZE, y * SIZE, N.gx * SIZE, N.gy * SIZE, "#f00", 1)
+        local x2 = N.gx * SIZE
+        local y2 = (GRID_H - N.gy + 1) * SIZE
+
+        if P.edge[dir] then
+          wr_line(fp, x1, y1, x2, y2, "#00f", 3)
+
+        elseif P.ghost[dir] then
+          wr_line(fp, x1, y1, x2, y2, "#f00", 1)
+        end
       end
-    end
-  end
+
+    end -- dir
+  end -- x, y
   end
 
   -- end
