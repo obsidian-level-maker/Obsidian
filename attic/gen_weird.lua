@@ -12,6 +12,9 @@ gui =
 require '_util'
 
 
+SHOW_GHOST = true
+
+
 if arg[1] then
   local seed = 0 + arg[1]
   print("Seed =", seed)
@@ -32,6 +35,8 @@ end
     dead : boolean  -- true if cannot make any more edges off here
 
     ghost : table[DIR] --> edges which were killed (dead ends)
+
+    limit_edges : number  -- do not allow more than this
 --]]
 
 GRID = {}
@@ -56,6 +61,8 @@ function create_points()
     }
     
     GRID[gx][gy] = P
+
+    P.limit_edges = rand.pick({ 2, 3, 3, 3})
   end
   end
 
@@ -66,7 +73,7 @@ function create_points()
     local P = GRID[gx][gy]
 
     for dir = 1, 9 do
-    if dir ~= 5 then
+    if  dir ~= 5 then
       local nx, ny = geom.nudge(gx, gy, dir)
 
       if table.valid_pos(GRID, nx, ny) then
@@ -97,6 +104,7 @@ end
 
 
 function remove_edge(gx, gy, dir)
+  local P = GRID[gx][gy]
   local N = P.neighbor[dir]
   assert(N)
 
@@ -135,6 +143,7 @@ function eval_edge_at_point(P, dir)
   local N = P.neighbor[dir]
 
   if not N then return -1 end
+  if N.dead then return -1 end
 
   -- already an edge there?
   if P.edge[dir] then return -1 end
@@ -143,8 +152,8 @@ function eval_edge_at_point(P, dir)
   if is_diagonal_blocked(P, dir) then return -1 end
 
   -- rule # 1 : no more than 3 edges at any point
-  if P.num_edges >= 3 then return -1 end
-  if N.num_edges >= 3 then return -1 end
+  if P.num_edges >= P.limit_edges then return -1 end
+  if N.num_edges >= N.limit_edges then return -1 end
 
   -- rule # 2 : never make sharp (45-degree) angles
   local L_dir = geom. LEFT_45[dir]
@@ -219,8 +228,33 @@ function try_add_edge()
 end
 
 
+function remove_dud_point(P)
+  for dir = 1, 9 do
+  if  dir ~= 5 then
+    if P.edge[dir] then
+      remove_edge(P.gx, P.gy, dir)
+    end
+  end
+  end
+end
+
+
 function remove_dead_ends()
-  -- TODO
+  local found = false
+
+  for gx = 1, GRID_W do
+  for gy = 1, GRID_H do
+    local P = GRID[gx][gy]
+
+    if P.num_edges == 1 then
+      found = true
+
+      remove_dud_point(P)
+    end
+  end
+  end
+
+  return found
 end
 
 
@@ -270,7 +304,7 @@ function save_as_svg()
         if P.edge[dir] then
           wr_line(fp, x1, y1, x2, y2, "#00f", 3)
 
-        elseif P.ghost[dir] then
+        elseif P.ghost[dir] and SHOW_GHOST then
           wr_line(fp, x1, y1, x2, y2, "#f00", 1)
         end
       end
@@ -292,11 +326,13 @@ create_points()
 
 add_edge(GRID_W / 2, GRID_H / 2, 6)
 
-for loop = 1, GRID_W * GRID_H * 2 do
-  try_add_edge()
-end
+for pass = 1, 4 do
+  for loop = 1, GRID_W * GRID_H * 2 do
+    try_add_edge()
+  end
 
-remove_dead_ends()
+  while remove_dead_ends() do end
+end
 
 save_as_svg()
 
