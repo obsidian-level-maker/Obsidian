@@ -30,6 +30,8 @@ end
     num_edges : number
 
     dead : boolean  -- true if cannot make any more edges off here
+
+    ghost : table[DIR] --> edges which were killed (dead ends)
 --]]
 
 GRID = {}
@@ -49,6 +51,7 @@ function create_points()
       gy = gy,
       neighbor = {},
       edge = {},
+      ghost = {},
       num_edges = 0
     }
     
@@ -94,8 +97,101 @@ function add_edge(gx, gy, dir)
 end
 
 
+function is_diagonal_blocked(P, dir)
+  local L_dir = geom.LEFT_45[dir]
+
+  local N = P.neighbor[L_dir]
+  if not N then return true end
+
+  local dir2 = geom.RIGHT[dir]
+  return N.edge[dir]
+end
+
+
+function eval_edge_at_point(P, dir)
+  -- returns < 0 if impossible, score > 0 if possible
+
+  local N = P.neighbor[dir]
+
+  if not N then return -1 end
+
+  -- ensure it does not cross another diagonal
+  if is_diagonal_blocked(P, dir) then return -1 end
+
+  -- rule # 1 : no more than 3 edges at any point
+  if P.num_edges >= 3 then return -1 end
+  if N.num_edges >= 3 then return -1 end
+
+  -- rule # 2 : never make sharp (45-degree) angles
+  local L_dir = geom. LEFT_45[dir]
+  local R_dir = geom.RIGHT_45[dir]
+
+  if P.edge[L_dir] or P.edge[R_dir] then return -1 end
+  
+  if N.edge[10 - L_dir] or N.edge[10 - R_dir] then return -1 end
+
+  -- OK --
+
+  return 1
+end
+
+
+function try_edge_at_point(P)
+  assert(not P.dead)
+
+  local tab = {}
+
+  for dir = 1, 9 do
+  if  dir ~= 5 then
+    local score = eval_edge_at_point(P, dir)
+
+    if score > 0 then
+      tab[dir] = score
+    end
+  end
+  end
+
+  -- nothing was possible
+  if table.empty(tab) then
+    P.dead = true
+    return nil
+  end
+
+  local dir = rand.key_by_probs(tab)
+
+  add_edge(P.gx, P.gy, dir)
+
+  -- indicate success by returning neighbor
+  return P.neighbor[dir]
+end
+
+
 function try_add_edge()
-  -- TODO
+  local points = {}
+
+  for gx = 1, GRID_W do
+  for gy = 1, GRID_H do
+    local P = GRID[gx][gy]
+
+    if P.num_edges > 0 and P.num_edges < 3 and not P.dead then
+      table.insert(points, P)
+    end
+  end
+  end
+
+--- print("active_points", #points)
+
+  if table.empty(points) then
+    return
+  end
+
+  local P = rand.pick(points)
+
+  -- keep going until hit dead end or shape joins back onto itself
+
+  repeat
+    P = try_edge_at_point(P)
+  until not (P and P.num_edges == 0)
 end
 
 
@@ -138,10 +234,13 @@ function save_as_svg()
     local P = GRID[x][y]
 
     for dir = 6,9 do
-      if P.edge[dir] then
-        local N = P.neighbor[dir]
+      local N = P.neighbor[dir]
 
+      if P.edge[dir] then
         wr_line(fp, x * SIZE, y * SIZE, N.gx * SIZE, N.gy * SIZE, "#00f", 3)
+
+      elseif P.ghost[dir] then
+        wr_line(fp, x * SIZE, y * SIZE, N.gx * SIZE, N.gy * SIZE, "#f00", 1)
       end
     end
   end
@@ -160,7 +259,7 @@ create_points()
 
 add_edge(GRID_W / 2, GRID_H / 2, 6)
 
-for loop = 1, GRID_W * GRID_H * 1 do
+for loop = 1, GRID_W * GRID_H * 2 do
   try_add_edge()
 end
 
