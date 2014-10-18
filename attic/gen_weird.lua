@@ -12,7 +12,7 @@ gui =
 require '_util'
 
 
-SHOW_GHOST = true
+SHOW_GHOST = false
 
 
 if arg[1] then
@@ -41,8 +41,8 @@ end
 
 GRID = {}
 
-GRID_W = 48
-GRID_H = 30
+GRID_W = 46
+GRID_H = 28
 
 
 function create_points()
@@ -62,7 +62,7 @@ function create_points()
     
     GRID[gx][gy] = P
 
-    P.limit_edges = rand.pick({ 2, 3, 3, 3})
+    P.limit_edges = 3 -- rand.pick({ 2, 3, 3, 3})
   end
   end
 
@@ -258,6 +258,54 @@ function remove_dead_ends()
 end
 
 
+function check_point_is_staircase(P)
+  -- NOTE: only finds outie corners which can be diagonalized
+
+  if P.num_edges ~= 2 then return false end
+
+  if P.edge[1] or P.edge[3] or P.edge[7] or P.edge[9] then return false end
+
+  if P.edge[4] and P.edge[6] then return false end
+  if P.edge[2] and P.edge[8] then return false end
+
+  local x_dir = sel(P.edge[4], 4, 6)
+  local y_dir = sel(P.edge[2], 2, 8)
+
+  assert(P.edge[x_dir])
+  assert(P.edge[y_dir])
+
+  local NX = P.neighbor[x_dir]
+  local NY = P.neighbor[y_dir]
+
+  assert(NX and NY)
+
+  -- diagonal direction from NX 
+  local corner
+  if x_dir == 4 then
+    corner = sel(y_dir == 2, 3, 9)
+  else
+    corner = sel(y_dir == 2, 1, 7)
+  end
+
+  -- check for sharp angles (< 90) at these neighbor points
+
+  if NX.edge[y_dir] or NY.edge[x_dir] then return false end
+
+  return true
+end
+
+
+function find_staircases()
+  for gx = 1, GRID_W do
+  for gy = 1, GRID_H do
+    local P = GRID[gx][gy]
+
+    P.is_staircase = check_point_is_staircase(P)
+  end
+  end
+end
+
+
 function wr_line(fp, x1, y1, x2, y2, color, width)
   fp:write(string.format('<line x1="%d" y1="%d" x2="%d" y2="%d" stroke="%s" stroke-width="%d" />\n',
            x1, y1, x2, y2, color, width or 1))
@@ -291,13 +339,13 @@ function save_as_svg()
   for y = 1, GRID_H do
     local P = GRID[x][y]
 
+    local x1 = x * SIZE
+    local y1 = (GRID_H - y + 1) * SIZE
+
     for dir = 6,9 do
       local N = P.neighbor[dir]
 
       if N then
-        local x1 = x * SIZE
-        local y1 = (GRID_H - y + 1) * SIZE
-
         local x2 = N.gx * SIZE
         local y2 = (GRID_H - N.gy + 1) * SIZE
 
@@ -310,6 +358,11 @@ function save_as_svg()
       end
 
     end -- dir
+
+    if P.is_staircase then
+      fp:write(string.format('<circle cx="%d" cy="%d" r="5" fill="#f0f" />\n', x1, y1))
+    end
+
   end -- x, y
   end
 
@@ -333,6 +386,8 @@ for pass = 1, 4 do
 
   while remove_dead_ends() do end
 end
+
+find_staircases()
 
 save_as_svg()
 
