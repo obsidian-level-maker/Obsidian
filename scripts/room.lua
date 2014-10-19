@@ -88,6 +88,8 @@ function ROOM_CLASS.new()
     kind = "building"
     num_windows = 0
 
+    seeds = {}
+
     conns = {}
     sections = {}
     weapons = {}
@@ -4825,5 +4827,36 @@ function Room_build_all()
   Room_run_builders()
 
   Room_determine_spots()
+end
+
+
+------------------------------------------------------------------------
+
+
+function Weird_build_diagonal(R, S)
+  
+  -- determine coordinates of triangle
+
+
+  -- FIXME Weird_build_diagonal
+end
+
+
+function Weird_build_seed(R, S)
+  if S.diagonal then
+    World_build_diagonal(R, S)
+    return
+  end
+
+  -- FIXME Weird_build_seed
+end
+
+
+function Weird_build_rooms()
+  each R in LEVEL.rooms do
+    each S in R.seeds do
+      Weird_build_seed(R, S)
+    end
+  end
 end
 

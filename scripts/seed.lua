@@ -24,6 +24,21 @@ class SEED
 {
   sx, sy  -- location in seed map
 
+
+  diagonal : DIR  -- if non-nil, then seed is split into two halves down a
+                  -- diagonal line.  DIR == 1 or 3
+
+  top : SEED   -- if seed is split by a diagonal, then this refers to the
+               -- information for the TOP half (i.e. the half occupying the
+               -- top edge), and the main seed contains the BOTTOM half.
+
+  bottom : SEED   -- used in 'top' seed to refer to the other half.
+
+
+  ////////////////////////
+
+  area : AREA
+
   room : ROOM
 
   kind : keyword  -- main usage of seed:

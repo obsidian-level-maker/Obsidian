@@ -370,12 +370,23 @@ end
 
 
 
+function Weird_group_areas()
+
+
+  ---| Weird_group_areas |---
+
+  -- TODO
+end
+
+
+
 function Weird_create_rooms()
 
   gui.printf("\n--==| Planning WEIRD Rooms |==--\n\n")
 
   assert(LEVEL.ep_along)
 
+  LEVEL.areas = {}
   LEVEL.rooms = {}
   LEVEL.conns = {}
 
@@ -393,6 +404,7 @@ function Weird_create_rooms()
 
   Weird_create_areas()
 
+  Weird_group_areas()
 
 --TODO  Weird_decide_outdoors()
 

@@ -751,12 +751,17 @@ function Levels_build_it()
     return "ok"
   end
 
-  -- Hexagonal-DM test
-  if OB_CONFIG.hex_dm then
-    Hex_create_level()
+  -- Weird stuff
+  do
+    Weird_create_rooms()
     if gui.abort() then return "abort" end
+
+    Weird_build_rooms()
+    if gui.abort() then return "abort" end
+
     return "ok"
   end
+
 
   Plan_create_rooms()
   if gui.abort() then return "abort" end
@@ -912,6 +917,11 @@ end
 function Levels_make_all()
   GAME.levels   = {}
   GAME.episodes = {}
+
+
+-- FIXME: !!!!!!  fixed seed for testing weird stuff
+OB_CONFIG.seed = 1
+
 
   gui.rand_seed(OB_CONFIG.seed + 1)
 
