@@ -48,6 +48,7 @@ GRID_H = 40
 
 
 function Weird_create_areas()
+  local did_change
 
   local function create_points()
     GRID = table.array_2D(GRID_W, GRID_H)
@@ -398,18 +399,114 @@ function Weird_create_areas()
   end
 
 
+  -- FIXME : setup 'border' from edge info !!!!
+
+
+  local function squarify_seed(S)
+    S.diagonal = nil
+    S.top = nil
+  end
+
+
   local function assign_area_numbers()
+    local area_num = 1
+
     for sx = 1, SEED_W do
     for sy = 1, SEED_H do
-      -- TODO
+      local S = SEEDS[sx][sy]
 
+      S.area_num = area_num
+
+      if S.top then S.top = area_num + 1 end
+
+      area_num = area_num + 2
     end -- sx, sy
     end
   end
 
 
+  local function flood_check_pair(S, dir)
+    if not S then return end
+
+    -- blocked by an edge, cannot flood across it
+    if S.border[dir] then return end
+
+    local N = S:diag_neighbor(dir)
+
+    if not N then return end
+
+    -- already the same?
+    if S.area_num == N.area_num then return end
+
+    local new_num = math.min(S.area_num, N.area_num)
+
+    S.area_num = new_num
+    N.area_num = new_num
+  end
+
+
+  local function flood_fill_pass()
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      local S  = SEEDS[sx][sy]
+      local S2 = S.top
+
+      for dir = 1, 9 do
+        flood_check_pair(S,  dir)
+        flood_check_pair(S2, dir)
+      end
+
+      if S.diagonal and S.top.area_num == S.area_num then
+        squarify_seed(S)
+      end
+    end
+    end
+  end
+
+
+  local function area_for_number(num)
+    local area = LEVEL.temp_area_map[num]
+
+    if not area then
+      area =
+      {
+        id = Plan_alloc_id("weird_area")
+      }
+
+      LEVEL.temp_area_map[num] = area
+    end
+
+    return area
+  end
+
+
+  local function create_the_areas()
+    LEVEL.temp_area_map = {}
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      local S  = SEEDS[sx][sy]
+      local S2 = S.top
+
+      S.area = area_for_number(S.area_num)
+
+      if S2 then S2.area = area_for_number(S2.area_num) end
+    end
+    end
+
+    LEVEL.temp_area_map = nil
+  end
+
+
   local function flood_fill_areas()
-    -- FIXME
+    assign_area_numbers()
+
+    repeat
+      did_change = false
+      flood_fill_pass()
+    until not did_change
+
+    create_the_areas()
   end
 
 
