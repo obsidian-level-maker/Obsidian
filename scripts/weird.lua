@@ -351,13 +351,76 @@ function Weird_create_areas()
   end
 
 
+  local function add_initial_edge()
+    local ix = GRID_W / 2
+    local iy = GRID_H / 2
+
+    local P = GRID[ix][iy]
+    local N = P.neighbor[6]
+
+    -- disable edge limits (in case both end up as zero)
+    P.limit_edges = 3
+    N.limit_edges = 3
+
+    add_edge(P.gx, P.gy, 6)
+  end
+
+
+  local function convert_to_seeds()
+    for gx = 1, GRID_W - 1 do
+    for gy = 1, GRID_H - 1 do
+      local S = SEEDS[gx][gy]
+
+      local P1 = GRID[gx][gy]
+      local P2 = GRID[gx][gy + 1]
+
+      if P1.edge[9] or P2.edge[3] then
+        S.diagonal = sel(P1.edge[9], 1, 3)
+
+        local S2 = Seed_create(S.sx, S.sy)
+
+        S2.x1 = S.x1 ; S2.y1 = S.y1
+        S2.x2 = S.x2 ; S2.y2 = S.y2
+
+        S2.edge_of_map = S.edge_of_map
+
+        -- link fake seed with real one
+        S.top = S2
+        S2.bottom = S
+      
+      else
+        -- normal square seed
+
+      end
+
+    end -- gx, gy
+    end
+  end
+
+
+  local function assign_area_numbers()
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      -- TODO
+
+    end -- sx, sy
+    end
+  end
+
+
+  local function flood_fill_areas()
+    -- FIXME
+  end
+
+
   ---| Weird_create_areas |---
 
   create_points()
 
-  add_edge(GRID_W / 2, GRID_H / 2, 6)
+  -- this gets the ball rolling
+  add_initial_edge()
 
-  for pass = 1, 4 do
+  for pass = 1, 2 do
     for loop = 1, GRID_W * GRID_H * 2 do
       try_add_edge()
     end
@@ -371,6 +434,9 @@ end
 
 
 function Weird_group_areas()
+  --
+  -- This actually creates the rooms by grouping a bunch of areas together.
+  --
 
 
   ---| Weird_group_areas |---
@@ -400,7 +466,11 @@ function Weird_create_rooms()
   Plan_choose_liquid()
   Plan_choose_darkness()
 
+
 --TODO  Weird_determine_size()
+
+  Seed_init(GRID_W - 1, GRID_H - 1, 0, DEPOT_SEEDS)
+
 
   Weird_create_areas()
 
@@ -409,8 +479,8 @@ function Weird_create_rooms()
 --TODO  Weird_decide_outdoors()
 
 
-  -- must create the seeds _AFTER_ nudging
-  Weird_make_seeds()
+  gui.printf("Seed Map:\n")
+  Seed_dump_rooms()
 
   each R in LEVEL.rooms do
     gui.printf("Final %s   size: %dx%d\n", R:tostr(), R.sw, R.sh)

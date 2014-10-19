@@ -98,6 +98,8 @@ function SEED_CLASS.tostr(S)
 end
 
 
+-- for WEIRD experiment :
+
 function SEED_CLASS.neighbor(S, dir, dist)
   local nx, ny = geom.nudge(S.sx, S.sy, dir, dist)
   if nx < 1 or nx > SEED_W or ny < 1 or ny > SEED_H then
@@ -160,6 +162,28 @@ end
 ----------------------------------------------------------------------
 
 
+function Seed_create(sx, sy)
+  local S =
+  {
+    sx = sx
+    sy = sy
+
+    thick  = {}
+    border = {}
+    chunk  = {}
+  }
+
+  table.set_class(S, SEED_CLASS)
+
+  for side = 2,8,2 do
+    S.border[side] = {}
+    S.thick[side] = 16
+  end
+
+  return S
+end
+
+
 function Seed_init(map_W, map_H, free_W, free_H)
   gui.printf("Seed_init: %dx%d  Free: %dx%d\n", map_W, map_H, free_W, free_H)
 
@@ -186,19 +210,7 @@ function Seed_init(map_W, map_H, free_W, free_H)
 
   for x = 1, SEED_W do
   for y = 1, SEED_H do
-
-    local S =
-    {
-      sx = x
-      sy = y
-
-      x1 = (x-1) * SEED_SIZE
-      y1 = (y-1) * SEED_SIZE
-
-      thick  = {}
-      border = {}
-      chunk  = {}
-    }
+    local S = Seed_create(x, y)
 
     SEEDS[x][y] = S
 
@@ -207,13 +219,6 @@ function Seed_init(map_W, map_H, free_W, free_H)
 
     S.x2 = S.x1 + SEED_SIZE
     S.y2 = S.y1 + SEED_SIZE
-
-    table.set_class(S, SEED_CLASS)
-
-    for side = 2,8,2 do
-      S.border[side] = {}
-      S.thick[side] = 16
-    end
 
     if x > map_W or y > map_H then
       S.free = true
@@ -309,6 +314,8 @@ function Seed_dump_rooms()
     if not S then return "!" end
     if S.free then return "." end
     if not S.room then return "#" end
+    if S.diagonal == 1 then return "/" end
+    if S.diagonal == 3 then return "\\" end
 
     if S.room.kind == "scenic"   then return "=" end
     if S.room.kind == "reserved" then return "*" end
