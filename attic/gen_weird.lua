@@ -13,8 +13,12 @@ require '_util'
 
 
 SHOW_GHOST = false
+SHOW_STAIRCASE = false
 
-ALLOW_CLOSED_SQUARES = false
+ALLOW_CLOSED_SQUARES = true
+
+-- lower this to make larger areas
+T_BRANCH_PROB = 55
 
 
 if arg[1] then
@@ -64,7 +68,7 @@ function create_points()
     
     GRID[gx][gy] = P
 
-    P.limit_edges = 3 -- rand.pick({ 2, 3, 3, 3})
+    P.limit_edges = rand.sel(T_BRANCH_PROB, 3, 2)
   end
   end
 
@@ -186,6 +190,14 @@ function eval_edge_at_point(P, dir)
 
   if would_close_a_square(P, dir, N) then return -1 end
 
+  if P.no_diagonals or N.no_diagonals then
+    if dir == 1 or dir == 3 or dir == 7 or dir == 9 then return -1 end
+  end
+
+  if P.no_straights or N.no_straights then
+    if dir == 2 or dir == 4 or dir == 6 or dir == 8 then return -1 end
+  end
+
   -- OK --
 
   return 1
@@ -291,6 +303,18 @@ function check_point_is_staircase(P)
   if P.edge[4] and P.edge[6] then return false end
   if P.edge[2] and P.edge[8] then return false end
 
+--[[
+  -- skip this point if a connected neighbor point is a staircase
+  for dir = 1, 9 do
+  if  dir ~= 5 then
+    if P.edge[dir] and P.neighbor[dir].is_staircase then
+      return false
+    end
+  end
+  end
+--]]
+
+
   local x_dir = sel(P.edge[4], 4, 6)
   local y_dir = sel(P.edge[2], 2, 8)
 
@@ -382,7 +406,7 @@ function save_as_svg()
 
     end -- dir
 
-    if P.is_staircase then
+    if P.is_staircase and SHOW_STAIRCASE then
       fp:write(string.format('<circle cx="%d" cy="%d" r="5" fill="#f0f" />\n', x1, y1))
     end
 
