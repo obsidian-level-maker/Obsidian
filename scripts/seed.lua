@@ -117,9 +117,11 @@ end
 --
 function SEED_CLASS.diag_neighbor(S, dir)
   if not S.diagonal then
-    if not (dir == 2 or dir == 4 or dir == 6 or dir == 8) then return nil end
-
-    return S:neighbor(dir)
+    if dir == 2 or dir == 4 or dir == 6 or dir == 8 then
+      return S:neighbor(dir)
+    else
+      return "nodir"
+    end
   end
 
   local N
@@ -253,9 +255,9 @@ function Seed_create(sx, sy)
 
   table.set_class(S, SEED_CLASS)
 
-  for side = 2,8,2 do
-    S.border[side] = {}
-    S.thick[side] = 16
+  each dir in geom.ALL_DIRS do
+    S.border[dir] = {}
+    S.thick [dir] = 16
   end
 
   return S

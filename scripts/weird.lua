@@ -77,8 +77,7 @@ function Weird_create_areas()
     for gy = 1, GRID_H do
       local P = GRID[gx][gy]
 
-      for dir = 1, 9 do
-      if  dir ~= 5 then
+      each dir in geom.ALL_DIRS do
         local nx, ny = geom.nudge(gx, gy, dir)
 
         if table.valid_pos(GRID, nx, ny) then
@@ -87,7 +86,6 @@ function Weird_create_areas()
 
           P.neighbor[dir] = N
         end
-      end
       end
     end
     end
@@ -208,14 +206,12 @@ function Weird_create_areas()
 
     local tab = {}
 
-    for dir = 1, 9 do
-    if  dir ~= 5 then
+    each dir in geom.ALL_DIRS do
       local score = eval_edge_at_point(P, dir)
 
       if score > 0 then
         tab[dir] = score
       end
-    end
     end
 
     -- nothing was possible
@@ -263,12 +259,10 @@ function Weird_create_areas()
 
 
   local function remove_dud_point(P)
-    for dir = 1, 9 do
-    if  dir ~= 5 then
+    each dir in geom.ALL_DIRS do
       if P.edge[dir] then
         remove_edge(P.gx, P.gy, dir)
       end
-    end
     end
   end
 
@@ -368,7 +362,7 @@ function Weird_create_areas()
 
 
   local function set_border(S, dir)
-    S.border[dir] = { kind="area" }
+    S.border[dir].kind = "area"
   end
 
 
@@ -437,18 +431,17 @@ function Weird_create_areas()
   end
 
 
-  -- FIXME : setup 'border' from edge info !!!!
-
-
   local function squarify_seed(S)
+    assert(not S.bottom)
+
     local S2 = S.top
 
     for dir = 2,8,2 do
-      S.border[dir] = S.border[dir] or S2.border[dir]
+      S.border[dir].kind = S.border[dir].kind or S2.border[dir].kind
     end
 
-    for dir = 1,9,2 do
-      S.border[dir] = nil
+    each dir in geom.CORNERS do
+      S.border[dir].kind = nil
     end
 
     S.diagonal = nil
@@ -484,11 +477,14 @@ function Weird_create_areas()
     if not S then return end
 
     -- blocked by an edge, cannot flood across it
-    if S.border[dir] then return end
+    if S.border[dir].kind then return end
 
     local N = S:diag_neighbor(dir)
 
     if not N or N == "nodir" then return end
+
+gui.debugf("check_pair %s:%d  [%s / %s]\n", S:tostr(), dir,
+S.area_num, N.area_num)
 
     -- already the same?
     if S.area_num == N.area_num then return end
@@ -508,7 +504,7 @@ function Weird_create_areas()
       local S  = SEEDS[sx][sy]
       local S2 = S.top
 
-      for dir = 1, 9 do
+      each dir in geom.ALL_DIRS do
         flood_check_pair(S,  dir)
         flood_check_pair(S2, dir)
       end
@@ -541,6 +537,7 @@ function Weird_create_areas()
     assign_area_numbers()
 
     repeat
+gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
       did_change = false
       flood_fill_pass()
     until not did_change
@@ -613,7 +610,6 @@ function Weird_group_areas()
   -- This actually creates the rooms by grouping a bunch of areas together.
   --
 
-  
   local function collect_seeds(R)
     local sx1, sx2 = 999, -999
     local sy1, sy2 = 999, -999
