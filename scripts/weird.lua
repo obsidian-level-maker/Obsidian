@@ -460,7 +460,7 @@ function Weird_create_areas()
     local area_num = 1
 
     for sx = 1, SEED_W do
-    for sy = 1, SEED_H do
+    for sy = 1, SEED_TOP do
       local S = SEEDS[sx][sy]
 
       S.area_num = area_num
@@ -481,7 +481,7 @@ function Weird_create_areas()
 
     local N = S:diag_neighbor(dir)
 
-    if not N or N == "nodir" then return end
+    if not N or N == "nodir" or N.free then return end
 
 gui.debugf("check_pair %s:%d  [%s / %s]\n", S:tostr(), dir,
 S.area_num, N.area_num)
@@ -500,7 +500,7 @@ S.area_num, N.area_num)
 
   local function flood_fill_pass()
     for sx = 1, SEED_W do
-    for sy = 1, SEED_H do
+    for sy = 1, SEED_TOP do
       local S  = SEEDS[sx][sy]
       local S2 = S.top
 
@@ -548,7 +548,7 @@ gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
     -- detects when a diagonal seed has same area on each half
 
     for sx = 1, SEED_W do
-    for sy = 1, SEED_H do
+    for sy = 1, SEED_TOP do
       local S  = SEEDS[sx][sy]
 
       if S.diagonal and S.top.area_num == S.area_num then
@@ -567,7 +567,7 @@ gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
     LEVEL.temp_area_map = {}
 
     for sx = 1, SEED_W do
-    for sy = 1, SEED_H do
+    for sy = 1, SEED_TOP do
       local S  = SEEDS[sx][sy]
       local S2 = S.top
 
@@ -622,7 +622,7 @@ function Weird_group_areas()
     end
 
     for sx = 1, SEED_W do
-    for sy = 1, SEED_H do
+    for sy = 1, SEED_TOP do
       local S  = SEEDS[sx][sy]
       local S2 = S.top
     
