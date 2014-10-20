@@ -4845,10 +4845,20 @@ end
 
 function dummy_sector(R, S)
   if not R.floor_h then
-    R.floor_h = rand.irange(0, 64)
-    R.ceil_h = 192 + rand.irange(0, 64)
+    R.floor_h = rand.irange(-4, 6) * 16
+    R.ceil_h = 192 + rand.irange(0, 128)
     R.floor_mat = rand.pick({ "FLAT1", "FLAT10", "FLAT14", "FLAT4",
                               "FLAT5_3", "FLAT8", "RROCK03", "SLIME13" })
+    R.ceil_mat = R.floor_mat
+
+    if rand.odds(15) then
+      R.ceil_mat = "_SKY"
+      R.ceil_h   = 512
+    else
+      if (R.sw <= 2 and R.sh <= 2) or rand.odds(15) then
+        R.is_void = true
+      end
+    end
   end
 
   -- get parent seed
@@ -4875,14 +4885,24 @@ function dummy_sector(R, S)
   end
 
 
+  if R.is_void then
+    local w_brush = bare_brush
+
+    brushlib.set_mat(w_brush, "STARTAN3")
+
+    Trans.brush(w_brush)
+    return
+  end
+
+
   local f_brush = table.deep_copy(bare_brush)
   local c_brush = bare_brush
 
   table.insert(f_brush, { t=R.floor_h })
   table.insert(c_brush, { b=R. ceil_h })
 
-  brushlib.set_mat(f_brush, R.floor_mat)
-  brushlib.set_mat(c_brush, R.floor_mat)
+  brushlib.set_mat(f_brush, R.floor_mat, R.floor_mat)
+  brushlib.set_mat(c_brush, R. ceil_mat, R. ceil_mat)
 
   Trans.brush(f_brush)
   Trans.brush(c_brush)
