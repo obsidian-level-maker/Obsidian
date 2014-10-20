@@ -441,8 +441,25 @@ function Weird_create_areas()
 
 
   local function squarify_seed(S)
+    local S2 = S.top
+
+    for dir = 2,8,2 do
+      S.border[dir] = S.border[dir] or S2.border[dir]
+    end
+
+    for dir = 1,9,2 do
+      S.border[dir] = nil
+    end
+
     S.diagonal = nil
     S.top = nil
+
+    S2.kind = "dead"
+    S2.diagonal = "dead"
+
+    S2.border = nil
+    S2.area = nil
+    S2.room = nil
   end
 
 
@@ -501,10 +518,16 @@ function Weird_create_areas()
 
   local function check_squarify_seeds()
     -- detects when a diagonal seed has same area on each half
-  -- FIXME
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      local S  = SEEDS[sx][sy]
+
       if S.diagonal and S.top.area_num == S.area_num then
         squarify_seed(S)
       end
+    end
+    end
   end
 
 
@@ -518,13 +541,29 @@ function Weird_create_areas()
       }
 
       LEVEL.temp_area_map[num] = area
+
+      table.insert(LEVEL.areas, area)
     end
 
     return area
   end
 
 
+  local function flood_fill_areas()
+    assign_area_numbers()
+
+    repeat
+      did_change = false
+      flood_fill_pass()
+    until not did_change
+  end
+
+
   local function create_the_areas()
+    flood_fill_areas()
+
+    check_squarify_seeds()
+
     LEVEL.temp_area_map = {}
 
     for sx = 1, SEED_W do
@@ -539,18 +578,6 @@ function Weird_create_areas()
     end
 
     LEVEL.temp_area_map = nil
-  end
-
-
-  local function flood_fill_areas()
-    assign_area_numbers()
-
-    repeat
-      did_change = false
-      flood_fill_pass()
-    until not did_change
-
-    create_the_areas()
   end
 
 
@@ -573,7 +600,7 @@ function Weird_create_areas()
 
   convert_to_seeds()
 
-  flood_fill_areas()
+  create_the_areas()
 end
 
 
