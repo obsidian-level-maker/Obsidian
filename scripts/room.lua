@@ -29,6 +29,15 @@ class ROOM
 
   is_outdoor : bool  -- true for outdoor rooms / caves
 
+
+  areas = list(AREA)
+
+  half_seeds = list(SEED)
+
+
+  //////////////////////
+
+
   conns : list(CONN)  -- connections with neighbor rooms
   entry_conn : CONN
 
@@ -88,7 +97,8 @@ function ROOM_CLASS.new()
     kind = "building"
     num_windows = 0
 
-    seeds = {}
+    areas = {}
+    half_seeds = {}
 
     conns = {}
     sections = {}
@@ -4849,11 +4859,13 @@ end
 
 
 function Weird_build_rooms()
+  
+  gui.printf("\n---=====  Build WEIRD rooms =====---\n\n")
+
   each R in LEVEL.rooms do
-    each S in R.seeds do
+    each S in R.half_seeds do
       if S.diagonal then
-        World_build_diagonal(R, S.top)
-        World_build_diagonal(R, S)
+        Weird_build_diagonal(R, S)
       else
         Weird_build_square(R, S)
       end

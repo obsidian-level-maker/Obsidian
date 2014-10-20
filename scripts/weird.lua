@@ -472,7 +472,7 @@ function Weird_create_areas()
 
       S.area_num = area_num
 
-      if S.top then S.top = area_num + 1 end
+      if S.top then S.top.area_num = area_num + 1 end
 
       area_num = area_num + 2
     end -- sx, sy
@@ -497,6 +497,8 @@ function Weird_create_areas()
 
     S.area_num = new_num
     N.area_num = new_num
+
+    did_change = true
   end
 
 
@@ -509,22 +511,6 @@ function Weird_create_areas()
       for dir = 1, 9 do
         flood_check_pair(S,  dir)
         flood_check_pair(S2, dir)
-      end
-
-    end
-    end
-  end
-
-
-  local function check_squarify_seeds()
-    -- detects when a diagonal seed has same area on each half
-
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_H do
-      local S  = SEEDS[sx][sy]
-
-      if S.diagonal and S.top.area_num == S.area_num then
-        squarify_seed(S)
       end
     end
     end
@@ -550,12 +536,29 @@ function Weird_create_areas()
 
 
   local function flood_fill_areas()
+    gui.printf("flood_fill_areas....\n")
+
     assign_area_numbers()
 
     repeat
       did_change = false
       flood_fill_pass()
     until not did_change
+  end
+
+
+  local function check_squarify_seeds()
+    -- detects when a diagonal seed has same area on each half
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      local S  = SEEDS[sx][sy]
+
+      if S.diagonal and S.top.area_num == S.area_num then
+        squarify_seed(S)
+      end
+    end
+    end
   end
 
 
@@ -610,10 +613,62 @@ function Weird_group_areas()
   -- This actually creates the rooms by grouping a bunch of areas together.
   --
 
+  
+  local function collect_seeds(R)
+    local sx1, sx2 = 999, -999
+    local sy1, sy2 = 999, -999
+
+    local function update(x, y)
+      sx1 = math.min(sx1, x)
+      sy1 = math.min(sy1, y)
+      sx2 = math.max(sx2, x)
+      sy2 = math.max(sy2, y)
+    end
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      local S  = SEEDS[sx][sy]
+      local S2 = S.top
+    
+      if S.area and S.area.room == R then
+        S.room = R
+        table.insert(R.half_seeds, S)
+        update(sx, sy)
+      end
+
+      if S2 and S2.area and S2.area.room == R then
+        S2.room = R
+        table.insert(R.half_seeds, S2)
+        update(sx, sy)
+      end
+    end
+    end
+
+    if sx1 > sx2 then
+      error("Room with no seeds!")
+    end
+
+    R.sx1 = sx1 ; R.sx2 = sx2
+    R.sy1 = sy1 ; R.sy2 = sy2
+
+    R.sw = R.sx2 - R.sx1 + 1
+    R.sh = R.sy2 - R.sy1 + 1
+  end
+
 
   ---| Weird_group_areas |---
 
-  -- TODO
+  -- FIXME : this creates a ROOM from every area  [ as a test only ]
+
+  each A in LEVEL.areas do
+    local R = ROOM_CLASS.new()
+
+    A.room = R
+
+    table.insert(R.areas, A)
+
+    collect_seeds(R)
+  end
 end
 
 
