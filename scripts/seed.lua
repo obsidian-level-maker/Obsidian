@@ -98,14 +98,92 @@ function SEED_CLASS.tostr(S)
 end
 
 
--- for WEIRD experiment :
-
 function SEED_CLASS.neighbor(S, dir, dist)
   local nx, ny = geom.nudge(S.sx, S.sy, dir, dist)
   if nx < 1 or nx > SEED_W or ny < 1 or ny > SEED_H then
     return nil
   end
   return SEEDS[nx][ny]
+end
+
+
+--
+-- for WEIRD experiment : for a diagonal seed, 'S' should be one particular
+-- half ('top' or 'bottom'), and the result 'N' will also be a certain half.
+--
+-- returns "nodir" string but when 'dir' makes no sense
+-- (i.e. for square seed, only 2/4/6/8, and for a diagonal, only 3 dirs).
+-- returns NIL for edge of map (as normal neighbor method).
+--
+function SEED_CLASS.diag_neighbor(S, dir)
+  if not S.diagonal then
+    if not (dir == 2 or dir == 4 or dir == 6 or dir == 8) then return nil end
+
+    return S:neighbor(dir)
+  end
+
+  local N
+
+  if S.diagonal == 1 and S.top then
+    if dir == 2 then
+      N = S:neighbor(dir)
+      if N and N.diagonal then N = N.top end
+      return N
+    elseif dir == 6 then
+      N = S:neighbor(dir)
+      if N and N.diagonal and N.diagonal == 1 then N = N.top end
+      return N
+    elseif dir == 7 then
+      return S.top
+    else
+      return "nodir"
+    end
+
+  elseif S.diagonal == 1 and S.bottom then
+    if dir == 8 then
+      return S:neighbor(dir)
+    elseif dir == 4 then
+      N = S:neighbor(dir)
+      if N and N.diagonal and N.diagonal == 3 then N = N.top end
+      return N
+    elseif dir == 3 then
+      return S.bottom
+    else
+      return "nodir"
+    end
+
+  elseif S.diagonal == 3 and S.top then
+    if dir == 2 then
+      N = S:neighbor(dir)
+      if N and N.diagonal then N = N.top end
+      return N
+    elseif dir == 4 then
+      N = S:neighbor(dir)
+      if N and N.diagonal and N.diagonal == 3 then N = N.top end
+      return N
+    elseif dir == 9 then
+      return S.top
+    else
+      return "nodir"
+    end
+
+  elseif S.diagonal == 3 and S.bottom then
+    if dir == 8 then
+      return S:neighbor(dir)
+    elseif dir == 6 then
+      N = S:neighbor(dir)
+      if N and N.diagonal and N.diagonal == 1 then N = N.top end
+      return N
+    elseif dir == 1 then
+      return S.bottom
+    else
+      return "nodir"
+    end
+
+  else
+    debugf("Invalid seed @ %s\n", S:tostr())
+    error("Invalid diagonal seed!")
+  end
 end
 
 

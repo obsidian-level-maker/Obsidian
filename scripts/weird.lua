@@ -380,6 +380,8 @@ function Weird_create_areas()
 
         local S2 = Seed_create(S.sx, S.sy)
 
+        S2.diagonal = S.diagonal
+
         S2.x1 = S.x1 ; S2.y1 = S.y1
         S2.x2 = S.x2 ; S2.y2 = S.y2
 
@@ -433,7 +435,7 @@ function Weird_create_areas()
 
     local N = S:diag_neighbor(dir)
 
-    if not N then return end
+    if not N or N == "nodir" then return end
 
     -- already the same?
     if S.area_num == N.area_num then return end
