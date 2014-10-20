@@ -367,6 +367,11 @@ function Weird_create_areas()
   end
 
 
+  local function set_border(S, dir)
+    S.border[dir] = { kind="area" }
+  end
+
+
   local function convert_to_seeds()
     for gx = 1, GRID_W - 1 do
     for gy = 1, GRID_H - 1 do
@@ -374,6 +379,7 @@ function Weird_create_areas()
 
       local P1 = GRID[gx][gy]
       local P2 = GRID[gx][gy + 1]
+      local P3 = GRID[gx + 1][gy]
 
       if P1.edge[9] or P2.edge[3] then
         S.diagonal = sel(P1.edge[9], 1, 3)
@@ -391,9 +397,39 @@ function Weird_create_areas()
         S.top = S2
         S2.bottom = S
       
+        -- check borders
+
+        if S.diagonal == 1 then
+          set_border(S, 7)
+          set_border(S2, 3)
+        else
+          set_border(S, 9)
+          set_border(S2, 1)
+        end
+
+        local T2, T4, T6, T8
+
+        T2 = S ; T8 = S2
+        T4 = S ; T6 = S2
+
+        if S.diagonal == 1 then
+          T4, T6 = T6, T4
+        end
+
+        if P1.edge[8] then set_border(T4, 4) end
+        if P3.edge[8] then set_border(T6, 6) end
+
+        if P1.edge[6] then set_border(T2, 2) end
+        if P2.edge[6] then set_border(T8, 8) end
+
       else
         -- normal square seed
 
+        if P1.edge[8] then set_border(S, 4) end
+        if P3.edge[8] then set_border(S, 6) end
+
+        if P1.edge[6] then set_border(S, 2) end
+        if P2.edge[6] then set_border(S, 8) end
       end
 
     end -- gx, gy
@@ -458,11 +494,17 @@ function Weird_create_areas()
         flood_check_pair(S2, dir)
       end
 
+    end
+    end
+  end
+
+
+  local function check_squarify_seeds()
+    -- detects when a diagonal seed has same area on each half
+  -- FIXME
       if S.diagonal and S.top.area_num == S.area_num then
         squarify_seed(S)
       end
-    end
-    end
   end
 
 
@@ -528,6 +570,10 @@ function Weird_create_areas()
   end
 
   find_staircases()
+
+  convert_to_seeds()
+
+  flood_fill_areas()
 end
 
 

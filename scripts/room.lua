@@ -4842,20 +4842,21 @@ function Weird_build_diagonal(R, S)
 end
 
 
-function Weird_build_seed(R, S)
-  if S.diagonal then
-    World_build_diagonal(R, S)
-    return
-  end
+function Weird_build_square(R, S)
 
-  -- FIXME Weird_build_seed
+  -- FIXME Weird_build_square
 end
 
 
 function Weird_build_rooms()
   each R in LEVEL.rooms do
     each S in R.seeds do
-      Weird_build_seed(R, S)
+      if S.diagonal then
+        World_build_diagonal(R, S.top)
+        World_build_diagonal(R, S)
+      else
+        Weird_build_square(R, S)
+      end
     end
   end
 end
