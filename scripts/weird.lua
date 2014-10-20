@@ -159,6 +159,20 @@ function Weird_create_areas()
   end
 
 
+  local function would_be_90_degree(P, dir)
+    if P.num_edges ~= 1 then return false end
+
+    each dir2 in geom.ALL_DIRS do
+      if P.edge[dir2] then
+        return geom.is_perpendic(dir, dir2)
+      end
+    end
+
+    -- uhh wtf
+    return false
+  end
+
+
   local function eval_edge_at_point(P, dir)
     -- returns < 0 if impossible, score > 0 if possible
 
@@ -196,6 +210,11 @@ function Weird_create_areas()
     end
 
     -- OK --
+
+    -- lass chance if this will form a 90 degree angle
+    if would_be_90_degree(P, dir) then
+      return 0.1
+    end
 
     return 1
   end
