@@ -4843,6 +4843,58 @@ end
 ------------------------------------------------------------------------
 
 
+function dummy_sector(R, S)
+  if not R.floor_h then
+    R.floor_h = rand.irange(0, 64)
+    R.ceil_h = 192 + rand.irange(0, 64)
+    R.floor_mat = rand.pick({ "FLAT1", "FLAT10", "FLAT14", "FLAT4",
+                              "FLAT5_3", "FLAT8", "RROCK03", "SLIME13" })
+  end
+
+  -- get parent seed
+  if S.bottom then S = S.bottom end
+
+  local bare_brush =
+  {
+    { x=S.x1, y=S.y1 }
+    { x=S.x2, y=S.y1 }
+    { x=S.x2, y=S.y2 }
+    { x=S.x1, y=S.y2 }
+  }
+
+      if S.diagonal == 1 and S.room == R then
+    table.remove(bare_brush, 4)
+  elseif S.diagonal == 1 and S.top.room == R then
+    table.remove(bare_brush, 2)
+  elseif S.diagonal == 3 and S.room == R then
+    table.remove(bare_brush, 3)
+  elseif S.diagonal == 3 and S.top.room == R then
+    table.remove(bare_brush, 1)
+  elseif S.diagonal then
+    error("Invalid diagonal seed!")
+  end
+
+
+  local f_brush = table.deep_copy(bare_brush)
+  local c_brush = bare_brush
+
+  table.insert(f_brush, { t=R.floor_h })
+  table.insert(c_brush, { b=R. ceil_h })
+
+  brushlib.set_mat(f_brush, R.floor_mat)
+  brushlib.set_mat(c_brush, R.floor_mat)
+
+  Trans.brush(f_brush)
+  Trans.brush(c_brush)
+
+  if not S.diagonal and not LEVEL.has_player then
+    Trans.entity("player1", S.x1 + 96, S.y1 + 96, R.floor_h)
+
+    LEVEL.has_player = true
+  end
+end
+
+
 function Weird_build_diagonal(R, S)
   
   -- determine coordinates of triangle
@@ -4864,7 +4916,11 @@ function Weird_build_rooms()
 
   each R in LEVEL.rooms do
     each S in R.half_seeds do
+      dummy_sector(R, S)
+      do continue end
+
       if S.diagonal then
+        Weird_build_diagonal(R, S)
         Weird_build_diagonal(R, S)
       else
         Weird_build_square(R, S)
