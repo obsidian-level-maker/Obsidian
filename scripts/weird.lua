@@ -44,7 +44,7 @@ T_BRANCH_PROB = 55
 GRID = {}
 
 GRID_W = 40
-GRID_H = 30
+GRID_H = 40
 
 
 function Weird_save_svg()
@@ -55,7 +55,7 @@ function Weird_save_svg()
   end
 
   -- grid size
-  local SIZE = 20
+  local SIZE = 14
 
   local fp = io.open("_weird.svg", "w")
 
@@ -277,6 +277,12 @@ function Weird_create_areas()
     
     if N.edge[10 - L_dir] or N.edge[10 - R_dir] then return -1 end
 
+    -- mirroring checks
+    if LEVEL.mirror_gx and N.gx > LEVEL.mirror_gx then return -1 end
+    if LEVEL.mirror_gy and N.gy > LEVEL.mirror_gy then return -1 end
+
+    -- other checks [ NOT ACTUALLY USED : REMOVE ]
+
     if would_close_a_square(P, dir, N) then return -1 end
 
     if P.no_diagonals or N.no_diagonals then
@@ -380,6 +386,17 @@ function Weird_create_areas()
     end
 
     return found
+  end
+
+
+  local function add_lotsa_edges(qty)
+    local count = 10 + GRID_W * GRID_H * qty 
+
+    for loop = 1, count do
+      try_add_edge()
+    end
+
+    while remove_dead_ends() do end
   end
 
 
@@ -618,6 +635,45 @@ function Weird_create_areas()
   end
 
 
+  local function mirror_horizontally()
+    -- NOTE : this is broken
+    -- we have to mirror the WHOLE left half of the map
+    -- (it doesn't work to partially mirror a section)
+
+    local gx1 = LEVEL.mirror_gx + 1
+    local gx2 = gx1 + int(GRID_W / 5)
+
+    local gy1 = LEVEL.edge_margin + LEVEL.boundary_margin + 2
+    local gy2 = GRID_H - gy1 + 1
+
+    local CHECK_DIRS = { 1,4,7,8 }
+
+    for x = gx1, gx2 do
+    for y = gy1, gy2 do
+      local mx = LEVEL.mirror_gx - (x - LEVEL.mirror_gx)
+
+      local M = GRID[mx][y]
+
+      each dir in CHECK_DIRS do
+        if M.edge[geom.MIRROR_X[dir]] then
+          add_edge(x, y, dir)
+        end
+      end
+    end -- x, y
+    end
+  end
+
+
+  local function mirror_stuff()
+    LEVEL.mirror_gx = int(GRID_W / 2)
+
+    mirror_horizontally()  
+  end
+
+
+  ------------------------------------------------------------
+
+
   local function set_border(S, dir)
     S.border[dir].kind = "area"
   end
@@ -847,12 +903,8 @@ gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
 
   install_boundary_shape()
 
-  for pass = 1, 2 do
-    for loop = 1, GRID_W * GRID_H * 2 do
-      try_add_edge()
-    end
-
-    while remove_dead_ends() do end
+  for pass = 1, 4 do
+    add_lotsa_edges(2 / pass)
   end
 
   Weird_save_svg()
