@@ -43,7 +43,7 @@ T_BRANCH_PROB = 55
 
 GRID = {}
 
-GRID_W = 30
+GRID_W = 40
 GRID_H = 30
 
 
@@ -446,7 +446,7 @@ function Weird_create_areas()
   ------------------------------------------------------------
 
 
-  local function add_initial_edge()
+  local function add_initial_edge__OLD()
     local ix = GRID_W / 2
     local iy = GRID_H / 2
 
@@ -476,17 +476,13 @@ function Weird_create_areas()
 
     local m2 = LEVEL.edge_margin + LEVEL.boundary_margin
 
-stderrf("next (%d %d)  |  (%d %d) .. (%d %d)\n", 
-nx, ny, m2, m2, GRID_W - m2 + 1, GRID_H - m2 + 1)
     if nx > m2 and nx < (GRID_W - m2 + 1) and
        ny > m2 and ny < (GRID_H - m2 + 1)
     then return false end
 
     -- OK --
 
-stderrf("add_boundary: (%d %d) dir:%d\n", bp.x, bp.y, dir)
-
-    add_edge(bp.x, bp.y, dir)
+    table.insert(bp.edges, { x=bp.x, y=bp.y, dir=dir })
 
     bp.x = nx
     bp.y = ny
@@ -532,6 +528,7 @@ stderrf("add_boundary: (%d %d) dir:%d\n", bp.x, bp.y, dir)
   local function iterate_boundary(bp)
     -- returns 'false' when done (cannot continue any further)
 
+    -- FIXME: local tab = {} ...
     for loop = 1,99 do
       if loop == 99 then
         error("iterate_boundary failed")
@@ -554,7 +551,6 @@ stderrf("add_boundary: (%d %d) dir:%d\n", bp.x, bp.y, dir)
     if check_new_quadrant(bp) then
       bp.dir = geom.LEFT[bp.dir]
       bp.fresh = true
-stderrf("new quadrent, dir ---> %d\n", bp.dir)
 
       -- have we come full circle?
       if bp.dir == 6 then return false end
@@ -581,7 +577,40 @@ stderrf("new quadrent, dir ---> %d\n", bp.dir)
     bp.x = LEVEL.edge_margin + 2
     bp.y = bp.x
 
+    bp.start_x = bp.x
+    bp.start_y = bp.y
+
     while iterate_boundary(bp) do end
+
+    if not (bp.x == bp.start_x and bp.y == bp.start_y) then
+      -- it failed to hit same point, try again
+      -- TODO : a way to "steer" edges which get near the finish point
+      --        OR : keep going around until we hit a visited point
+      return nil
+    end
+
+    return bp.edges
+  end
+
+
+  local function install_boundary_shape()
+    -- create boundary shapes until one is successful
+    local edges
+
+    for loop = 1,999 do
+      if loop == 999 then
+        error("Failed to create a boundary shape.")
+      end
+
+stderrf("create_boundary_shape : loop %d\n", loop)
+      edges = create_boundary_shape()
+      if edges then break; end
+    end
+
+    -- install the edges
+    each E in edges do
+      add_edge(E.x, E.y, E.dir)
+    end
   end
 
 
@@ -812,7 +841,7 @@ gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
   -- this gets the ball rolling
 ---  add_initial_edge()
 
-create_boundary_shape()
+  install_boundary_shape()
 
   for pass = 1, 2 do
     for loop = 1, GRID_W * GRID_H * 2 do
