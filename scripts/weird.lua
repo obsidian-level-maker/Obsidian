@@ -44,7 +44,76 @@ T_BRANCH_PROB = 55
 GRID = {}
 
 GRID_W = 40
-GRID_H = 40
+GRID_H = 30
+
+
+function Weird_save_svg()
+
+  local function wr_line(fp, x1, y1, x2, y2, color, width)
+    fp:write(string.format('<line x1="%d" y1="%d" x2="%d" y2="%d" stroke="%s" stroke-width="%d" />\n',
+             x1, y1, x2, y2, color, width or 1))
+  end
+
+  -- grid size
+  local SIZE = 20
+
+  local fp = io.open("_weird.svg", "w")
+
+  if not fp then error("Cannot create file") end
+
+  -- header
+  fp:write('<svg xmlns="http://www.w3.org/2000/svg" version="1.1">\n')
+
+  -- grid
+  local max_x = GRID_W * SIZE
+  local max_y = GRID_H * SIZE
+
+  for x = 1, GRID_W do
+    wr_line(fp, x * SIZE, SIZE, x * SIZE, max_y, "#bbb")
+  end
+
+  for y = 1, GRID_H do
+    wr_line(fp, SIZE, y * SIZE, max_x, y * SIZE, "#bbb")
+  end
+
+  -- points
+  for x = 1, GRID_W do
+  for y = 1, GRID_H do
+    local P = GRID[x][y]
+
+    local x1 = x * SIZE
+    local y1 = (GRID_H - y + 1) * SIZE
+
+    for dir = 6,9 do
+      local N = P.neighbor[dir]
+
+      if N then
+        local x2 = N.gx * SIZE
+        local y2 = (GRID_H - N.gy + 1) * SIZE
+
+        if P.edge[dir] then
+          wr_line(fp, x1, y1, x2, y2, "#00f", 3)
+
+        elseif P.ghost[dir] and SHOW_GHOST then
+          wr_line(fp, x1, y1, x2, y2, "#f00", 1)
+        end
+      end
+
+    end -- dir
+
+    if P.is_staircase and SHOW_STAIRCASE then
+      fp:write(string.format('<circle cx="%d" cy="%d" r="5" fill="#f0f" />\n', x1, y1))
+    end
+
+  end -- x, y
+  end
+
+  -- end
+  fp:write('</svg>\n')
+
+  fp:close()
+end
+
 
 
 function Weird_create_areas()
@@ -380,6 +449,49 @@ function Weird_create_areas()
   end
 
 
+  local function try_add_boundary_edge(bp, dir)
+    -- currently always works
+
+    local nx, ny = geom.nudge(bp.x, bp.y, dir)
+
+  end
+
+
+  local function check_new_quadrant(bp)
+    local dx = bp.x - bp.mid_x
+    local dy = bp.y - bp.mid_y
+
+    if bp.dir == 6 then return dx >= -dy end
+    if bp.dir == 4 then return dx <= -dy end
+
+    if bp.dir == 8 then return dx <= dy end
+    if bp.dir == 2 then return dx >= dy end
+
+    error("bad dir for check_new_quadrant")
+  end
+
+
+  local function iterate_boundary(bp)
+    -- returns 'false' when done (cannot add any more edges)
+
+    local dir = bp.dir
+
+    if rand.odds(50) then
+      dir = rand.sel(50, geom.LEFT_45[dir], geom.RIGHT_45[dir])
+    end
+
+    try_add_boundary_edge(bp, dir)
+
+    if check_new_quadrant(bp) then
+      if bp.dir == 6 then return false end
+
+      bp.dir = geom.LEFT[bp.dir]
+    end
+
+    return true
+  end
+
+
   local function create_boundary_shape()
     -- keep this number of points free at map edge (never allow boundary there)
     LEVEL.edge_margin = 4
@@ -390,13 +502,18 @@ function Weird_create_areas()
     -- how many points to keep free at center of map 
     LEVEL.center_margin = 4
 
-    -- starting point
-    local ix = GRID_W / 2
-    local iy = LEVEL.edge_margin + 2
-    local idir = 6
-    local iquant = 3
+    -- current point
+    local bp =
+    {
+      mid_x = int(GRID_W / 2)
+      mid_y = int(GRID_H / 2)
+      dir = 6
+    }
 
-    -- TODO ....
+    bp.x = LEVEL.edge_margin + 2
+    bp.y = bp.x
+
+    while iterate_boundary(bp) do end
   end
 
 
@@ -634,6 +751,8 @@ gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
 
     while remove_dead_ends() do end
   end
+
+  Weird_save_svg()
 
   find_staircases()
 
