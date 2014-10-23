@@ -43,7 +43,7 @@ T_BRANCH_PROB = 55
 
 GRID = {}
 
-GRID_W = 40
+GRID_W = 30
 GRID_H = 30
 
 
@@ -65,6 +65,9 @@ function Weird_save_svg()
   fp:write('<svg xmlns="http://www.w3.org/2000/svg" version="1.1">\n')
 
   -- grid
+  local min_x = 1 * SIZE
+  local min_y = 1 * SIZE
+
   local max_x = GRID_W * SIZE
   local max_y = GRID_H * SIZE
 
@@ -74,6 +77,12 @@ function Weird_save_svg()
 
   for y = 1, GRID_H do
     wr_line(fp, SIZE, y * SIZE, max_x, y * SIZE, "#bbb")
+  end
+
+  -- for testing boundary outline
+  if true then
+    wr_line(fp, min_x, min_y, max_x, max_y, "#f00")
+    wr_line(fp, max_x, min_y, min_x, max_y, "#f00")
   end
 
   -- points
@@ -434,6 +443,9 @@ function Weird_create_areas()
   end
 
 
+  ------------------------------------------------------------
+
+
   local function add_initial_edge()
     local ix = GRID_W / 2
     local iy = GRID_H / 2
@@ -450,42 +462,98 @@ function Weird_create_areas()
 
 
   local function try_add_boundary_edge(bp, dir)
-    -- currently always works
+    local P = GRID[bp.x][bp.y]
+
+    if P.edge[dir] then return false end
 
     local nx, ny = geom.nudge(bp.x, bp.y, dir)
 
+    if nx <= LEVEL.edge_margin then return false end
+    if ny <= LEVEL.edge_margin then return false end
+
+    if nx >= (GRID_W - LEVEL.edge_margin + 1) then return false end
+    if ny >= (GRID_H - LEVEL.edge_margin + 1) then return false end
+
+    local m2 = LEVEL.edge_margin + LEVEL.boundary_margin
+
+stderrf("next (%d %d)  |  (%d %d) .. (%d %d)\n", 
+nx, ny, m2, m2, GRID_W - m2 + 1, GRID_H - m2 + 1)
+    if nx > m2 and nx < (GRID_W - m2 + 1) and
+       ny > m2 and ny < (GRID_H - m2 + 1)
+    then return false end
+
+    -- OK --
+
+stderrf("add_boundary: (%d %d) dir:%d\n", bp.x, bp.y, dir)
+
+    add_edge(bp.x, bp.y, dir)
+
+    bp.x = nx
+    bp.y = ny
+
+    return true  -- IT WORKED !!
   end
 
 
   local function check_new_quadrant(bp)
-    local dx = bp.x - bp.mid_x
-    local dy = bp.y - bp.mid_y
 
-    if bp.dir == 6 then return dx >= -dy end
-    if bp.dir == 4 then return dx <= -dy end
+    local m2 = LEVEL.edge_margin + LEVEL.boundary_margin
 
-    if bp.dir == 8 then return dx <= dy end
-    if bp.dir == 2 then return dx >= dy end
+    if bp.dir == 6 then
+      local dx = bp.x - (GRID_W - m2 + 1)
+      local dy = m2 - bp.y
 
-    error("bad dir for check_new_quadrant")
+      return dx >= dy
+
+    elseif bp.dir == 4 then
+      local dx = m2 - bp.x
+      local dy = bp.y - (GRID_H - m2 + 1)
+
+      return dx >= dy
+
+    elseif bp.dir == 8 then
+      local dx = bp.x - (GRID_W - m2 + 1)
+      local dy = bp.y - (GRID_H - m2 + 1)
+
+      return dy >= dx
+
+    elseif bp.dir == 2 then
+      local dx = m2 - bp.x
+      local dy = m2 - bp.y
+
+      return dy >= dx
+
+    else
+      error("bad quadrant")
+    end
   end
 
 
   local function iterate_boundary(bp)
-    -- returns 'false' when done (cannot add any more edges)
+    -- returns 'false' when done (cannot continue any further)
 
-    local dir = bp.dir
+    for loop = 1,99 do
+      if loop == 99 then
+stderrf("pos : (%d %d) dir:%d\n", bp.x, bp.y, bp.dir)
+Weird_save_svg()
+        error("iterate_boundary failed")
+      end
 
-    if rand.odds(50) then
-      dir = rand.sel(50, geom.LEFT_45[dir], geom.RIGHT_45[dir])
+      local dir = bp.dir
+
+      if rand.odds(70) then
+        dir = rand.sel(50, geom.LEFT_45[dir], geom.RIGHT_45[dir])
+      end
+
+      if try_add_boundary_edge(bp, dir) then break; end
     end
 
-    try_add_boundary_edge(bp, dir)
-
     if check_new_quadrant(bp) then
-      if bp.dir == 6 then return false end
-
       bp.dir = geom.LEFT[bp.dir]
+stderrf("new quadrent, dir ---> %d\n", bp.dir)
+
+      -- have we come full circle?
+      if bp.dir == 6 then return false end
     end
 
     return true
@@ -497,16 +565,11 @@ function Weird_create_areas()
     LEVEL.edge_margin = 4
 
     -- how many points we can use for the boundary line
-    LEVEL.boundary_margin = 4
-
-    -- how many points to keep free at center of map 
-    LEVEL.center_margin = 4
+    LEVEL.boundary_margin = 5
 
     -- current point
     local bp =
     {
-      mid_x = int(GRID_W / 2)
-      mid_y = int(GRID_H / 2)
       dir = 6
     }
 
@@ -742,9 +805,11 @@ gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
   create_points()
 
   -- this gets the ball rolling
-  add_initial_edge()
+---  add_initial_edge()
 
-  for pass = 1, 2 do
+create_boundary_shape()
+
+  for pass = 1, 0 do
     for loop = 1, GRID_W * GRID_H * 2 do
       try_add_edge()
     end
