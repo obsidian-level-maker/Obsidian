@@ -534,22 +534,26 @@ stderrf("add_boundary: (%d %d) dir:%d\n", bp.x, bp.y, dir)
 
     for loop = 1,99 do
       if loop == 99 then
-stderrf("pos : (%d %d) dir:%d\n", bp.x, bp.y, bp.dir)
-Weird_save_svg()
         error("iterate_boundary failed")
       end
 
       local dir = bp.dir
 
-      if rand.odds(70) then
+      -- the 'fresh' field forces a straight line after changing the
+      -- quadrant -- prevents creating a 45 degree angles there.
+
+      if rand.odds(70) and not bp.fresh then
         dir = rand.sel(50, geom.LEFT_45[dir], geom.RIGHT_45[dir])
       end
 
       if try_add_boundary_edge(bp, dir) then break; end
     end
 
+    bp.fresh = false
+
     if check_new_quadrant(bp) then
       bp.dir = geom.LEFT[bp.dir]
+      bp.fresh = true
 stderrf("new quadrent, dir ---> %d\n", bp.dir)
 
       -- have we come full circle?
@@ -565,12 +569,13 @@ stderrf("new quadrent, dir ---> %d\n", bp.dir)
     LEVEL.edge_margin = 4
 
     -- how many points we can use for the boundary line
-    LEVEL.boundary_margin = 5
+    LEVEL.boundary_margin = 4
 
     -- current point
     local bp =
     {
       dir = 6
+      fresh = true
     }
 
     bp.x = LEVEL.edge_margin + 2
@@ -809,7 +814,7 @@ gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
 
 create_boundary_shape()
 
-  for pass = 1, 0 do
+  for pass = 1, 2 do
     for loop = 1, GRID_W * GRID_H * 2 do
       try_add_edge()
     end
