@@ -79,8 +79,8 @@ function Weird_save_svg()
     wr_line(fp, SIZE, y * SIZE, max_x, y * SIZE, "#bbb")
   end
 
-  -- for testing boundary outline
-  if true then
+  -- for testing boundary outline (only works in GRID_W == GRID_H)
+  if SHOW_RED_CROSS then
     wr_line(fp, min_x, min_y, max_x, max_y, "#f00")
     wr_line(fp, max_x, min_y, min_x, max_y, "#f00")
   end
@@ -528,20 +528,24 @@ function Weird_create_areas()
   local function iterate_boundary(bp)
     -- returns 'false' when done (cannot continue any further)
 
-    -- FIXME: local tab = {} ...
-    for loop = 1,99 do
-      if loop == 99 then
+    local tab = { [bp.dir] = 50 }
+
+    -- the 'fresh' field forces a straight line after changing the
+    -- quadrant : prevents creating a 45 degree angles there.
+    if not bp.fresh then
+      tab[geom. LEFT_45[bp.dir]] = 60
+      tab[geom.RIGHT_45[bp.dir]] = 60
+    end
+
+    -- find a usable direction
+    -- [ luckily we don't need to backtrack ]
+    while true do
+      if table.empty(tab) then
         error("iterate_boundary failed")
       end
 
-      local dir = bp.dir
-
-      -- the 'fresh' field forces a straight line after changing the
-      -- quadrant -- prevents creating a 45 degree angles there.
-
-      if rand.odds(70) and not bp.fresh then
-        dir = rand.sel(50, geom.LEFT_45[dir], geom.RIGHT_45[dir])
-      end
+      local dir = rand.key_by_probs(tab)
+      tab[dir] = nil
 
       if try_add_boundary_edge(bp, dir) then break; end
     end
@@ -562,7 +566,7 @@ function Weird_create_areas()
 
   local function create_boundary_shape()
     -- keep this number of points free at map edge (never allow boundary there)
-    LEVEL.edge_margin = 4
+    LEVEL.edge_margin = 3
 
     -- how many points we can use for the boundary line
     LEVEL.boundary_margin = 4
@@ -603,7 +607,6 @@ function Weird_create_areas()
         error("Failed to create a boundary shape.")
       end
 
-stderrf("create_boundary_shape : loop %d\n", loop)
       edges = create_boundary_shape()
       if edges then break; end
     end
