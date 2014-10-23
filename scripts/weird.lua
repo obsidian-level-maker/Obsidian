@@ -572,6 +572,7 @@ function Weird_create_areas()
     {
       dir = 6
       fresh = true
+      edges = {}
     }
 
     bp.x = LEVEL.edge_margin + 2
