@@ -1943,3 +1943,10 @@ function Connect_reserved_rooms()
   LEVEL.reserved_rooms = {}
 end
 
+
+------------------------------------------------------------------------
+
+
+function Weird_connect_stuff()
+end
+

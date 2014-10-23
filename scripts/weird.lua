@@ -380,6 +380,26 @@ function Weird_create_areas()
   end
 
 
+  local function create_boundary_shape()
+    -- keep this number of points free at map edge (never allow boundary there)
+    LEVEL.edge_margin = 4
+
+    -- how many points we can use for the boundary line
+    LEVEL.boundary_margin = 4
+
+    -- how many points to keep free at center of map 
+    LEVEL.center_margin = 4
+
+    -- starting point
+    local ix = GRID_W / 2
+    local iy = LEVEL.edge_margin + 2
+    local idir = 6
+    local iquant = 3
+
+    -- TODO ....
+  end
+
+
   local function set_border(S, dir)
     S.border[dir].kind = "area"
   end
