@@ -986,7 +986,7 @@ stderrf("AREA_%d is boundary\n", area.id)
 
   create_the_areas()
 
---  mark_boundary_areas()
+  mark_boundary_areas()
 end
 
 
