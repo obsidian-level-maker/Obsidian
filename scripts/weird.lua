@@ -588,10 +588,10 @@ function Weird_create_areas()
 
   local function create_boundary_shape()
     -- keep this number of points free at map edge (never allow boundary there)
-    LEVEL.edge_margin = 3
+    LEVEL.edge_margin = EDGE_SIZE
 
     -- how many points we can use for the boundary line
-    LEVEL.boundary_margin = 4
+    LEVEL.boundary_margin = BOUNDARY_SIZE
 
     -- current point
     local bp =
@@ -700,7 +700,7 @@ function Weird_create_areas()
       if diag_edge then
         S.diagonal = sel(P1.edge[9], 1, 3)
 
-        local S2 = Seed_create(S.sx, S.sy)
+        local S2 = Seed_create(S.sx, S.sy, S.x1, S.y1)
 
         S2.diagonal = S.diagonal
 
@@ -804,9 +804,6 @@ function Weird_create_areas()
     local N = S:diag_neighbor(dir)
 
     if not N or N == "nodir" or N.free then return end
-
-gui.debugf("check_pair %s:%d  [%s / %s]\n", S:tostr(), dir,
-S.area_num, N.area_num)
 
     -- already the same?
     if S.area_num == N.area_num then return end
@@ -1078,7 +1075,7 @@ function Weird_create_rooms()
 
 --TODO  Weird_determine_size()
 
-  Seed_init(GRID_W - 1, GRID_H - 1, 0, DEPOT_SEEDS)
+  Seed_init(GRID_W - 1, GRID_H - 1, DEPOT_SIZE)
 
 
   Weird_create_areas()

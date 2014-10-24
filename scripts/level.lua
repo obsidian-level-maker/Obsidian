@@ -200,6 +200,7 @@ function Levels_clean_up()
   LEVEL  = nil
   EPISODE = nil
   SEEDS  = nil
+  DEPOT_SEEDS = nil
 
   collectgarbage("collect")
 end
@@ -209,6 +210,7 @@ function Levels_between_clean()
   LEVEL    = nil
   SEEDS    = nil
   SECTIONS = nil
+  DEPOT_SEEDS = nil
 
   collectgarbage("collect")
 end
@@ -922,7 +924,7 @@ function Levels_make_all()
 
 
 -- FIXME: !!!!!!  fixed seed for testing weird stuff
-OB_CONFIG.seed = 2
+OB_CONFIG.seed = 3
 
 
   gui.rand_seed(OB_CONFIG.seed + 1)

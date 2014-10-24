@@ -26,6 +26,7 @@ LEVEL  = {}
 THEME  = {}
 SEEDS  = {}
 EPISODE = {}
+DEPOT_SEEDS = {}
 
 
 -- a place for unfinished stuff
@@ -78,8 +79,9 @@ OB_THEMES["psycho"] =
 
 SEED_SIZE = 192
 
-EDGE_SEEDS  = 3
-DEPOT_SEEDS = 4
+EDGE_SIZE  = 3  -- # of seeds
+DEPOT_SIZE = 4  -- 
+BOUNDARY_SIZE = 4
 
 EXTREME_H = 4000
 

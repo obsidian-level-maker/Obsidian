@@ -88,7 +88,7 @@ class CHUNK
 
 SEED_W = 0
 SEED_H = 0
-SEED_TOP = 0
+SEED_TOP = 0  -- FIXME : REMOVE
 
 
 SEED_CLASS = {}
@@ -247,16 +247,22 @@ end
 ----------------------------------------------------------------------
 
 
-function Seed_create(sx, sy)
+function Seed_create(sx, sy, x1, y1)
   local S =
   {
     sx = sx
     sy = sy
 
+    x1 = x1
+    y1 = y1
+
     thick  = {}
     border = {}
     chunk  = {}
   }
+
+  S.x2 = S.x1 + SEED_SIZE
+  S.y2 = S.y1 + SEED_SIZE
 
   table.set_class(S, SEED_CLASS)
 
@@ -269,18 +275,18 @@ function Seed_create(sx, sy)
 end
 
 
-function Seed_init(map_W, map_H, free_W, free_H)
-  gui.printf("Seed_init: %dx%d  Free: %dx%d\n", map_W, map_H, free_W, free_H)
-
-  local W = map_W + free_W
-  local H = map_H + free_H
+function Seed_init(map_W, map_H, depot_H)
+  gui.printf("Seed_init: %dx%d  Depot: %dx%d\n", map_W, map_H, map_W, depot_H)
 
   -- setup globals 
-  SEED_W = W
-  SEED_H = H
+  SEED_W = map_W
+  SEED_H = map_H
+
+  -- compatibility cruft (TO BE REMOVED)
   SEED_TOP = map_H
 
-  SEEDS = table.array_2D(W, H)
+
+  SEEDS = table.array_2D(SEED_W, SEED_H)
 
   BASE_X = 0
   BASE_Y = 0
@@ -293,24 +299,28 @@ function Seed_init(map_W, map_H, free_W, free_H)
     BASE_Y = 0 - int(SEED_H / 2) * SEED_SIZE
   end
 
-  for x = 1, SEED_W do
-  for y = 1, SEED_H do
-    local S = Seed_create(x, y)
+  for sx = 1, SEED_W do
+  for sy = 1, SEED_H do
+    local x1 = BASE_X + (sx-1) * SEED_SIZE
+    local y1 = BASE_Y + (sy-1) * SEED_SIZE
 
-    SEEDS[x][y] = S
+    SEEDS[sx][sy] = Seed_create(sx, sy, x1, y1)
+  end -- x,y
+  end
 
-    S.x1 = BASE_X + (x-1) * SEED_SIZE
-    S.y1 = BASE_Y + (y-1) * SEED_SIZE
+  -- create depot area [ for teleport-in monsters ]
 
-    S.x2 = S.x1 + SEED_SIZE
-    S.y2 = S.y1 + SEED_SIZE
+  DEPOT_SEEDS = table.array_2D(map_W, depot_H)
 
-    if x > map_W or y > map_H then
-      S.free = true
-    elseif x == 1 or x == map_W or y == 1 or y == map_H then
-      S.edge_of_map = true
-    end
+  for sx = 1, DEPOT_SEEDS.w do
+  for sy = 1, DEPOT_SEEDS.h do
+    local x1 = BASE_X + (sx-1) * SEED_SIZE
+    local y1 = BASE_Y + (SEED_H + sy) * SEED_SIZE
 
+    local S = Seed_create(sx, sy, x1, y1)
+    S.kind = "depot"
+
+    DEPOT_SEEDS[sx][sy] = S
   end -- x,y
   end
 end
@@ -397,7 +407,7 @@ end
 function Seed_dump_rooms()
   local function seed_to_char(S)
     if not S then return "!" end
-    if S.free then return "." end
+    if S.free then return "!" end
     if not S.room then return "#" end
     if S.diagonal == 1 then return "/" end
     if S.diagonal == 3 then return "\\" end
