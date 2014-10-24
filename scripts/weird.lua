@@ -1123,6 +1123,11 @@ function Weird_group_areas()
   -- [ in the future will probably have multiple areas per room ]
 
   each A in LEVEL.areas do
+    A.svolume = volume_of_area(A)
+  end
+
+
+  each A in LEVEL.areas do
     if A.is_boundary then continue end
 
     local R = ROOM_CLASS.new()
@@ -1133,7 +1138,6 @@ function Weird_group_areas()
 
     collect_seeds(R)
 
-    A.svolume = volume_of_area(A)
     R.svolume = A.svolume
   end
 end

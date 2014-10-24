@@ -4865,9 +4865,21 @@ end
 
 
 function largest_area()
-  return table.pick_best(LEVEL.areas,
-      function(A, B) return A.svolume > B.svolume end)
+  local best
+
+  each A in LEVEL.areas do
+    if A.mode == "normal" then
+      if not best or (A.svolume > best.svolume) then
+        best = A
+      end
+    end
+  end
+
+  assert(best)
+
+  return best
 end
+
 
 
 function Weird_void_some_areas()
@@ -4875,7 +4887,13 @@ function Weird_void_some_areas()
 
 
   local function flood_fill(A, visited)
-    -- FIXME...
+    visited[A.id] = true
+
+    each N in A.neighbors do
+      if N.mode == "normal" and not visited[N.id] then
+        flood_fill(N, visited)
+      end
+    end
 
     return visited
   end
@@ -4883,7 +4901,7 @@ function Weird_void_some_areas()
 
   local function check_visited(visited)
     each A in LEVEL.areas do
-      if A.kind == "normal" then
+      if A.mode == "normal" then
         if not visited[A.id] then return false end
       end
     end
@@ -4898,10 +4916,10 @@ function Weird_void_some_areas()
     A.mode = "void"
 
     -- we flood first starting from the largest area (which is never void)
-    local start = LEVEL.areas[1]
+    local start = largest
     assert(start.mode == "normal")
 
-    local visited = flood_fill(largest, {})
+    local visited = flood_fill(start, {})
 
     local result = check_visited(visited)
 
@@ -4919,7 +4937,7 @@ function Weird_void_some_areas()
     local list = {}
 
     each A in LEVEL.areas do
-      if A.mode == "normal" and not A.no_void and A.svolume < 20 then
+      if A.mode == "normal" and not A.no_void and A.svolume < 209 then --!!!! FIXME
         table.insert(list, A)
       end
     end
@@ -4940,16 +4958,12 @@ function Weird_void_some_areas()
   ---| Weird_void_some_areas |---
 
   -- have a quota
-  local quota = walkable_svolume() * 0.5
+  local quota = walkable_svolume() * 0.8
   
-  -- the largest areas can never become VOID
+  -- the largest area can never become VOID
   largest = largest_area()
 
-  for i = 1, 3 do
-    if LEVEL.areas[i] then
-      LEVEL.areas[i].no_void = true
-    end
-  end
+  largest.no_void = true
 
   while quota > 0 do
     local A = pick_area_to_void()
@@ -4986,14 +5000,10 @@ function dummy_sector(A, S)
       A.ceil_mat  = "_SKY"
       A.ceil_h    = 512
 
-    elseif rand.odds(20) then
+    elseif A.mode != "void" and rand.odds(20) then
       A.ceil_mat = "_SKY"
       A.ceil_h   = 512
 
-    else
-      if (A.svolume <= 4) or rand.odds(15) then
-        A.mode = "void"
-      end
     end
   end
 
@@ -5024,7 +5034,7 @@ function dummy_sector(A, S)
   if A.mode == "void" then
     local w_brush = bare_brush
 
-    brushlib.set_mat(w_brush, "STARTAN3")
+    brushlib.set_mat(w_brush, "BLAKWAL1")
 
     Trans.brush(w_brush)
     return
@@ -5075,6 +5085,8 @@ end
 function Weird_build_rooms()
   
   gui.printf("\n---=====  Build WEIRD rooms =====---\n\n")
+
+Weird_void_some_areas()
 
   each A in LEVEL.areas do
     each S in A.half_seeds do
