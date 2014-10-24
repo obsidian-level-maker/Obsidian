@@ -679,8 +679,10 @@ function Weird_create_areas()
   ------------------------------------------------------------
 
 
-  local function set_border(S, dir, kind)
-    S.border[dir].kind = kind
+  local function try_set_border(S, dir, kind)
+    if kind then
+      S.border[dir].kind = kind
+    end
   end
 
 
@@ -693,9 +695,9 @@ function Weird_create_areas()
       local P2 = GRID[gx][gy + 1]
       local P3 = GRID[gx + 1][gy]
 
-      local edge = P1.edge[9] or P2.edge[3]
+      local diag_edge = P1.edge[9] or P2.edge[3]
 
-      if edge then
+      if diag_edge then
         S.diagonal = sel(P1.edge[9], 1, 3)
 
         local S2 = Seed_create(S.sx, S.sy)
@@ -714,11 +716,11 @@ function Weird_create_areas()
         -- check borders
 
         if S.diagonal == 1 then
-          set_border(S,  7, edge)
-          set_border(S2, 3, edge)
+          try_set_border(S,  7, diag_edge)
+          try_set_border(S2, 3, diag_edge)
         else
-          set_border(S,  9, edge)
-          set_border(S2, 1, edge)
+          try_set_border(S,  9, diag_edge)
+          try_set_border(S2, 1, diag_edge)
         end
 
         local T2, T4, T6, T8
@@ -730,20 +732,20 @@ function Weird_create_areas()
           T4, T6 = T6, T4
         end
 
-        if P1.edge[8] then set_border(T4, 4) end
-        if P3.edge[8] then set_border(T6, 6) end
-
-        if P1.edge[6] then set_border(T2, 2) end
-        if P2.edge[6] then set_border(T8, 8) end
+        try_set_border(T4, 4, P1.edge[8])
+        try_set_border(T6, 6, P3.edge[8])
+                                                 
+        try_set_border(T2, 2, P1.edge[6])
+        try_set_border(T8, 8, P2.edge[6])
 
       else
         -- normal square seed
 
-        if P1.edge[8] then set_border(S, 4) end
-        if P3.edge[8] then set_border(S, 6) end
-
-        if P1.edge[6] then set_border(S, 2) end
-        if P2.edge[6] then set_border(S, 8) end
+        try_set_border(S, 4, P1.edge[8])
+        try_set_border(S, 6, P3.edge[8])
+                                                
+        try_set_border(S, 2, P1.edge[6])
+        try_set_border(S, 8, P2.edge[6])
       end
 
     end -- gx, gy
