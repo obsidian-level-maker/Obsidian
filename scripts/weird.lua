@@ -100,7 +100,10 @@ function Weird_save_svg()
         local x2 = N.gx * SIZE
         local y2 = (GRID_H - N.gy + 1) * SIZE
 
-        if P.edge[dir] then
+        if P.edge[dir] == "boundary" then
+          wr_line(fp, x1, y1, x2, y2, "#0f0", 3)
+
+        elseif P.edge[dir] then
           wr_line(fp, x1, y1, x2, y2, "#00f", 3)
 
         elseif P.ghost[dir] and SHOW_GHOST then
@@ -170,16 +173,18 @@ function Weird_create_areas()
   end
 
 
-  local function add_edge(gx, gy, dir)
+  local function add_edge(gx, gy, dir, kind)
+    if not kind then kind = "normal" end
+
     local P = GRID[gx][gy]
 
-    P.edge[dir] = true
+    P.edge[dir] = kind
     P.num_edges = P.num_edges + 1
 
     local N = P.neighbor[dir]
     assert(N)
 
-    N.edge[10 - dir] = true
+    N.edge[10 - dir] = kind
     N.num_edges = N.num_edges + 1
   end
 
@@ -373,8 +378,8 @@ function Weird_create_areas()
   local function remove_dead_ends()
     local found = false
 
-    for gx = 1, GRID_W do
-    for gy = 1, GRID_H do
+    for gx = 2, GRID_W-1 do
+    for gy = 2, GRID_H-1 do
       local P = GRID[gx][gy]
 
       if P.num_edges == 1 then
@@ -630,7 +635,7 @@ function Weird_create_areas()
 
     -- install the edges
     each E in edges do
-      add_edge(E.x, E.y, E.dir)
+      add_edge(E.x, E.y, E.dir, "boundary")
     end
   end
 
