@@ -984,7 +984,6 @@ gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
       if not area.is_inner then
         area.mode = "scenic"
         area.is_boundary = true
-stderrf("AREA_%d is boundary\n", area.id)
       end
     end
   end
@@ -1063,9 +1062,25 @@ function Weird_group_areas()
   end
 
 
+  local function volume_of_area(A)
+    local volume = 0
+
+    each S in A.half_seeds do
+      if S.diagonal then
+        volume = volume + 0.5
+      else
+        volume = volume + 1
+      end
+    end
+
+    return volume
+  end
+
+
   ---| Weird_group_areas |---
 
   -- this creates a ROOM from every area
+  -- [ in the future will probably have multiple areas per room ]
 
   each A in LEVEL.areas do
     if A.is_boundary then continue end
@@ -1077,6 +1092,9 @@ function Weird_group_areas()
     table.insert(R.areas, A)
 
     collect_seeds(R)
+
+    A.svolume = volume_of_area(A)
+    R.svolume = A.svolume
   end
 end
 

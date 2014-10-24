@@ -4853,25 +4853,27 @@ end
 ------------------------------------------------------------------------
 
 
-function dummy_sector(R, S)
-  if not R.floor_h then
-    R.floor_h = rand.irange(-4, 6) * 16
-    R.ceil_h = 192 + rand.irange(0, 128)
-    R.floor_mat = rand.pick({ "FLAT1", "FLAT10", "FLAT14", "FLAT4",
+function dummy_sector(A, S)
+  if not A.floor_h then
+    A.floor_h = rand.irange(-4, 6) * 16
+    A.ceil_h = 192 + rand.irange(0, 128)
+    A.floor_mat = rand.pick({ "FLAT1", "FLAT10", "FLAT14", "FLAT4",
                               "FLAT5_3", "FLAT8", "RROCK03", "SLIME13" })
-    R.ceil_mat = R.floor_mat
+    A.ceil_mat = A.floor_mat
 
-    if R.areas[1].kind == "boundary" then
-      R.floor_mat = "FWATER1"
-      R.floor_h   = -128
+    if A.mode == "scenic" then
+      A.floor_mat = "LAVA1"
+      A.floor_h   = -128
+      A.ceil_mat  = "_SKY"
+      A.ceil_h    = 512
 
-    elseif rand.odds(15) then
-      R.ceil_mat = "_SKY"
-      R.ceil_h   = 512
+    elseif rand.odds(20) then
+      A.ceil_mat = "_SKY"
+      A.ceil_h   = 512
 
     else
-      if (R.sw <= 2 and R.sh <= 2) or rand.odds(15) then
-        R.is_void = true
+      if (A.svolume <= 4) or rand.odds(15) then
+        A.mode = "void"
       end
     end
   end
@@ -4887,20 +4889,20 @@ function dummy_sector(R, S)
     { x=S.x1, y=S.y2 }
   }
 
-      if S.diagonal == 1 and S.room == R then
+      if S.diagonal == 1 and S.area == A then
     table.remove(bare_brush, 4)
-  elseif S.diagonal == 1 and S.top.room == R then
+  elseif S.diagonal == 1 and S.top.area == A then
     table.remove(bare_brush, 2)
-  elseif S.diagonal == 3 and S.room == R then
+  elseif S.diagonal == 3 and S.area == A then
     table.remove(bare_brush, 3)
-  elseif S.diagonal == 3 and S.top.room == R then
+  elseif S.diagonal == 3 and S.top.area == A then
     table.remove(bare_brush, 1)
   elseif S.diagonal then
     error("Invalid diagonal seed!")
   end
 
 
-  if R.is_void then
+  if A.mode == "void" then
     local w_brush = bare_brush
 
     brushlib.set_mat(w_brush, "STARTAN3")
@@ -4910,20 +4912,26 @@ function dummy_sector(R, S)
   end
 
 
+  local light = 160
+  if A.ceil_mat == "_SKY" then light = 192 end
+
+
   local f_brush = table.deep_copy(bare_brush)
   local c_brush = bare_brush
 
-  table.insert(f_brush, { t=R.floor_h })
-  table.insert(c_brush, { b=R. ceil_h })
+  table.insert(f_brush, { t=A.floor_h })
+  table.insert(c_brush, { b=A. ceil_h, light=light })
 
-  brushlib.set_mat(f_brush, R.floor_mat, R.floor_mat)
-  brushlib.set_mat(c_brush, R. ceil_mat, R. ceil_mat)
+  brushlib.set_mat(f_brush, A.floor_mat, A.floor_mat)
+  brushlib.set_mat(c_brush, A. ceil_mat, A. ceil_mat)
 
   Trans.brush(f_brush)
   Trans.brush(c_brush)
 
-  if not S.diagonal and not LEVEL.has_player then
-    Trans.entity("player1", S.x1 + 96, S.y1 + 96, R.floor_h)
+  if not S.diagonal and not (A.mode == "scenic") and
+     not LEVEL.has_player
+  then
+    Trans.entity("player1", S.x1 + 96, S.y1 + 96, A.floor_h)
 
     LEVEL.has_player = true
   end
@@ -4949,9 +4957,9 @@ function Weird_build_rooms()
   
   gui.printf("\n---=====  Build WEIRD rooms =====---\n\n")
 
-  each R in LEVEL.rooms do
-    each S in R.half_seeds do
-      dummy_sector(R, S)
+  each A in LEVEL.areas do
+    each S in A.half_seeds do
+      dummy_sector(A, S)
       do continue end
 
       if S.diagonal then
