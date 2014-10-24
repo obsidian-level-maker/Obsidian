@@ -870,6 +870,7 @@ function Weird_create_areas()
         id = Plan_alloc_id("weird_area")
 
         half_seeds = {}
+        neighbors  = {}
       }
 
       LEVEL.temp_area_map[num] = area
@@ -916,6 +917,48 @@ gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
   end
 
 
+  local function area_pair_str(A1, A2)
+    if A1.id > A2.id then
+      A1, A2 = A2, A1
+    end
+
+    return string.format("%d_%d", A1.id, A2.id)
+  end
+
+
+  local function try_add_neighbors(A1, A2, nb_map)
+    local str = area_pair_str(A1, A2)
+
+    -- already seen this pair?
+    if nb_map[str] then return end
+
+--    assert(not table.has_elem(A1.neighbors, A2))
+--    assert(not table.has_elem(A2.neighbors, A1))
+
+    table.insert(A1.neighbors, A2)
+    table.insert(A2.neighbors, A1)
+
+    nb_map[str] = 1
+  end
+
+
+  local function find_area_neighbors()
+    local nb_map = {}
+
+    each A in LEVEL.areas do
+      each S in A.half_seeds do
+        each dir in geom.ALL_DIRS do
+          local N = S:diag_neighbor(dir)
+
+          if N and N.area and N.area != A then
+            try_add_neighbors(A, N.area, nb_map)
+          end
+        end
+      end
+    end
+  end
+
+
   local function create_the_areas()
     flood_fill_areas()
 
@@ -935,13 +978,8 @@ gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
     end
 
     LEVEL.temp_area_map = nil
-  end
 
-
-  local function area_neighbors()
-    each A in LEVEL.areas do
-      -- TODO ??
-    end
+    find_area_neighbors()
   end
 
 
