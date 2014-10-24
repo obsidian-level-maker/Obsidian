@@ -4685,7 +4685,7 @@ function Room_determine_spots()
   --   1. initialize grid to be CLEAR, to represent the current floor.
   --      the floor itself is never set or cleared, as polygon drawing
   --      always fills any pixel touched by the polygon, leading to
-  --      making somewhat too big areas
+  --      making somewhat-too-big areas
   --  
   --   2. kill the sides of the room
   --
@@ -4841,6 +4841,125 @@ end
 
 
 ------------------------------------------------------------------------
+
+
+function walkable_svolume()
+  local vol = 0
+
+  each A in LEVEL.areas do
+    if A.mode == "normal" then
+      vol = vol + A.svolume
+    end
+  end
+
+  return vol
+end
+
+
+function sort_areas_by_volume()
+  -- biggest first
+
+  table.sort(LEVEL.areas,
+      function(A, B) return A.svolume > B.svolume end)
+end
+
+
+function largest_area()
+  return table.pick_best(LEVEL.areas,
+      function(A, B) return A.svolume > B.svolume end)
+end
+
+
+function Weird_void_some_areas()
+  local largest
+
+
+  local function flood_fill(A, visited)
+    -- FIXME...
+
+    return visited
+  end
+
+
+  local function check_visited(visited)
+    each A in LEVEL.areas do
+      if A.kind == "normal" then
+        if not visited[A.id] then return false end
+      end
+    end
+
+    return true -- OK --
+  end
+
+
+  local function can_void_area(A)
+    -- make sure than if 'A' is voided, all other areas remain reachable
+    
+    A.mode = "void"
+
+    -- we flood first starting from the largest area (which is never void)
+    local start = LEVEL.areas[1]
+    assert(start.mode == "normal")
+
+    local visited = flood_fill(largest, {})
+
+    local result = check_visited(visited)
+
+    -- leave it void if check succeeded
+    if result then
+      return true
+    end
+
+    A.mode = "normal"
+    return false
+  end
+
+
+  local function pick_area_to_void()
+    local list = {}
+
+    each A in LEVEL.areas do
+      if A.mode == "normal" and not A.no_void and A.svolume < 20 then
+        table.insert(list, A)
+      end
+    end
+
+    while not table.empty(list) do
+      local A = rand.pick(list)
+
+      if can_void_area(A) then return A end
+
+      -- never try this one again
+      A.no_void = true
+    end
+
+    return nil  -- nothing was possible    
+  end
+
+
+  ---| Weird_void_some_areas |---
+
+  -- have a quota
+  local quota = walkable_svolume() * 0.5
+  
+  -- the largest areas can never become VOID
+  largest = largest_area()
+
+  for i = 1, 3 do
+    if LEVEL.areas[i] then
+      LEVEL.areas[i].no_void = true
+    end
+  end
+
+  while quota > 0 do
+    local A = pick_area_to_void()
+
+    if not A then break; end
+
+    quota = quota - A.svolume
+  end
+end
+
 
 
 function Weird_choose_area_types()

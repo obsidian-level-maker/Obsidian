@@ -70,8 +70,8 @@ T_BRANCH_PROB = 55
 
 GRID = {}
 
-GRID_W = 40
-GRID_H = 40
+GRID_W = 36
+GRID_H = 36
 
 
 function Weird_save_svg()
@@ -865,6 +865,8 @@ function Weird_create_areas()
     if not area then
       area =
       {
+        mode = "normal"  -- may become "void" or "scenic" later
+
         id = Plan_alloc_id("weird_area")
 
         half_seeds = {}
