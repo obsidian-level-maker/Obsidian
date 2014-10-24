@@ -4851,9 +4851,14 @@ function dummy_sector(R, S)
                               "FLAT5_3", "FLAT8", "RROCK03", "SLIME13" })
     R.ceil_mat = R.floor_mat
 
-    if rand.odds(15) then
+    if R.areas[1].kind == "boundary" then
+      R.floor_mat = "FWATER1"
+      R.floor_h   = -128
+
+    elseif rand.odds(15) then
       R.ceil_mat = "_SKY"
       R.ceil_h   = 512
+
     else
       if (R.sw <= 2 and R.sh <= 2) or rand.odds(15) then
         R.is_void = true

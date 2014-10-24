@@ -174,7 +174,7 @@ function Weird_create_areas()
 
 
   local function add_edge(gx, gy, dir, kind)
-    if not kind then kind = "normal" end
+    if not kind then kind = "area" end
 
     local P = GRID[gx][gy]
 
@@ -679,8 +679,8 @@ function Weird_create_areas()
   ------------------------------------------------------------
 
 
-  local function set_border(S, dir)
-    S.border[dir].kind = "area"
+  local function set_border(S, dir, kind)
+    S.border[dir].kind = kind
   end
 
 
@@ -693,7 +693,9 @@ function Weird_create_areas()
       local P2 = GRID[gx][gy + 1]
       local P3 = GRID[gx + 1][gy]
 
-      if P1.edge[9] or P2.edge[3] then
+      local edge = P1.edge[9] or P2.edge[3]
+
+      if edge then
         S.diagonal = sel(P1.edge[9], 1, 3)
 
         local S2 = Seed_create(S.sx, S.sy)
@@ -712,11 +714,11 @@ function Weird_create_areas()
         -- check borders
 
         if S.diagonal == 1 then
-          set_border(S, 7)
-          set_border(S2, 3)
+          set_border(S,  7, edge)
+          set_border(S2, 3, edge)
         else
-          set_border(S, 9)
-          set_border(S2, 1)
+          set_border(S,  9, edge)
+          set_border(S2, 1, edge)
         end
 
         local T2, T4, T6, T8
@@ -838,6 +840,8 @@ S.area_num, N.area_num)
       area =
       {
         id = Plan_alloc_id("weird_area")
+
+        half_seeds = {}
       }
 
       LEVEL.temp_area_map[num] = area
@@ -877,6 +881,13 @@ gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
   end
 
 
+  local function set_area(S)
+    S.area = area_for_number(S.area_num)
+
+    table.insert(S.area.half_seeds, S)
+  end
+
+
   local function create_the_areas()
     flood_fill_areas()
 
@@ -889,13 +900,66 @@ gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
       local S  = SEEDS[sx][sy]
       local S2 = S.top
 
-      S.area = area_for_number(S.area_num)
+      set_area(S)
 
-      if S2 then S2.area = area_for_number(S2.area_num) end
+      if S2 then set_area(S2) end
     end
     end
 
     LEVEL.temp_area_map = nil
+  end
+
+
+  local function area_neighbors()
+    each A in LEVEL.areas do
+      -- TODO ??
+    end
+  end
+
+
+  local function flood_inner_areas(A)
+    A.is_inner = true
+
+    each S in A.half_seeds do
+    each dir in geom.ALL_DIRS do
+      local N = S:diag_neighbor(dir)
+
+      if not (N and N.area) then continue end
+
+      if N.area.is_inner then continue end
+
+      if S.border[dir].kind == "boundary" then continue end
+
+      flood_inner_areas(N.area)
+    end
+    end
+  end
+
+
+  local function mark_boundary_areas()
+    -- mark areas that lie outside of the boundary outline.
+    
+    -- middle seed will be normal (non-boundary)
+    local mx = int(SEED_W / 2)
+    local my = int(SEED_H / 2)
+
+    local S1 = SEEDS[mx][my]
+
+    flood_inner_areas(assert(S1.area))
+
+    -- bottom left seed will be boundary
+    local S2 = SEEDS[1][1]
+
+    if S2.area.is_inner then
+      error("mark_boundary_areas failed")
+    end
+
+    each area in LEVEL.areas do
+      if not area.is_inner then
+        area.kind = "boundary"
+stderrf("AREA_%d is boundary\n", area.id)
+      end
+    end
   end
 
 
@@ -919,6 +983,8 @@ gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
   convert_to_seeds()
 
   create_the_areas()
+
+--  mark_boundary_areas()
 end
 
 
