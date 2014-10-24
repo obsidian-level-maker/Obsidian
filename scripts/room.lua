@@ -4843,6 +4843,16 @@ end
 ------------------------------------------------------------------------
 
 
+function Weird_choose_area_types()
+
+  
+
+end
+
+
+------------------------------------------------------------------------
+
+
 function dummy_sector(R, S)
   if not R.floor_h then
     R.floor_h = rand.irange(-4, 6) * 16

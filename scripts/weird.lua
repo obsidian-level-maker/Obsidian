@@ -18,6 +18,33 @@
 --
 ------------------------------------------------------------------------
 
+
+-- class AREA
+--[[
+    id : number
+
+    mode : keyword  -- "normal", "void", "scenic"
+
+    kind : keyword  -- "building", "hallway",
+                    -- "cave", "cave_water",
+                    -- "landscape", "land_water",
+                    -- "courtyard"
+
+    is_boundary   -- true for areas outside the boundary line
+
+    half_seeds : list(SEED)
+
+    svolume : number   -- number of seeds (0.5 for diagonals)
+
+    neighbors : list(AREA)
+
+    room : ROOM
+
+--]]
+
+
+
+
 ALLOW_CLOSED_SQUARES = true
 
 -- lower this to make larger areas
@@ -782,7 +809,7 @@ function Weird_create_areas()
     local area_num = 1
 
     for sx = 1, SEED_W do
-    for sy = 1, SEED_TOP do
+    for sy = 1, SEED_H do
       local S = SEEDS[sx][sy]
 
       S.area_num = area_num
@@ -819,7 +846,7 @@ function Weird_create_areas()
 
   local function flood_fill_pass()
     for sx = 1, SEED_W do
-    for sy = 1, SEED_TOP do
+    for sy = 1, SEED_H do
       local S  = SEEDS[sx][sy]
       local S2 = S.top
 
@@ -869,7 +896,7 @@ gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
     -- detects when a diagonal seed has same area on each half
 
     for sx = 1, SEED_W do
-    for sy = 1, SEED_TOP do
+    for sy = 1, SEED_H do
       local S  = SEEDS[sx][sy]
 
       if S.diagonal and S.top.area_num == S.area_num then
@@ -895,7 +922,7 @@ gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
     LEVEL.temp_area_map = {}
 
     for sx = 1, SEED_W do
-    for sy = 1, SEED_TOP do
+    for sy = 1, SEED_H do
       local S  = SEEDS[sx][sy]
       local S2 = S.top
 
@@ -955,7 +982,8 @@ gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
 
     each area in LEVEL.areas do
       if not area.is_inner then
-        area.kind = "boundary"
+        area.mode = "scenic"
+        area.is_boundary = true
 stderrf("AREA_%d is boundary\n", area.id)
       end
     end
@@ -1005,7 +1033,7 @@ function Weird_group_areas()
     end
 
     for sx = 1, SEED_W do
-    for sy = 1, SEED_TOP do
+    for sy = 1, SEED_H do
       local S  = SEEDS[sx][sy]
       local S2 = S.top
     
@@ -1037,9 +1065,11 @@ function Weird_group_areas()
 
   ---| Weird_group_areas |---
 
-  -- FIXME : this creates a ROOM from every area  [ as a test only ]
+  -- this creates a ROOM from every area
 
   each A in LEVEL.areas do
+    if A.is_boundary then continue end
+
     local R = ROOM_CLASS.new()
 
     A.room = R
