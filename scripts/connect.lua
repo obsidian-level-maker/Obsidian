@@ -698,11 +698,14 @@ end
 
 
 function Connect_seed_pair(S, T, dir)
+
+stderrf("Connect_seed_pair: %s dir:%d\n", S:tostr(), dir)
+
   assert(S.room and S.room.kind != "scenic")
   assert(T.room and T.room.kind != "scenic")
 
-  assert(not S.conn and not S.conn_dir)
-  assert(not T.conn and not T.conn_dir)
+--!!!!??  assert(not S.conn and not S.conn_dir)
+--!!!!??  assert(not T.conn and not T.conn_dir)
 
   -- create connection object
 
@@ -1952,7 +1955,7 @@ function Weird_connect_stuff()
 
   local function where_can_connect(R1, R2)
     -- returns a list where two rooms can connect
-    -- each element is: { S=seed, dir=dir }
+    -- each element is: { S=seed, N=seed, dir=dir }
 
     local list = {}
 
@@ -1961,12 +1964,46 @@ function Weird_connect_stuff()
       
       local N = S:diag_neighbor(dir)
 
-      -- FIXME @@@@
-      
+      if N and N.room == R2 then
+        table.insert(list, { S=S, N=N, dir=dir })
+      end
+
     end -- S, dir
     end
 
     return list
+  end
+
+
+  local function pick_hallway_conn_spots(R, where1, where2)
+    -- main thing is to not use the same seed
+    -- (also nice if seed pair is far apart)
+
+    rand.shuffle(where1)
+    rand.shuffle(where2)
+
+    local best_dist
+    local best1, best2
+
+    for loop = 1, 30 do
+      local loc1 = rand.pick(where1)
+      local loc2 = rand.pick(where2)
+
+      local mx1, my1 = loc1.S:mid_point()
+      local mx2, my2 = loc1.S:mid_point()
+
+      local dist = geom.dist(mx1, my1, mx2, my2)
+
+      if not best_dist or dist > best_dist then
+        best_dist = dist
+        best1 = loc1
+        best2 = loc2
+      end
+    end
+
+    assert(best1 and best2)
+
+    return best1, best2
   end
 
 
@@ -1999,8 +2036,19 @@ function Weird_connect_stuff()
 
     -- OK --
 
+    local where1 = where_can_connect(R, N1)
+    local where2 = where_can_connect(R, N2)
+
+    assert(not table.empty(where1))
+    assert(not table.empty(where2))
+
+    local loc1, loc2 = pick_hallway_conn_spots(R, where1, where2)
+
     Connect_merge_groups(R.c_group, N1.c_group)
     Connect_merge_groups(R.c_group, N2.c_group)
+
+    Connect_seed_pair(loc1.S, loc1.N, loc1.dir)
+    Connect_seed_pair(loc2.S, loc2.N, loc2.dir)
 
     return true
   end
