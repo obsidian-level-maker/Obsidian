@@ -5144,26 +5144,48 @@ function dummy_sector(A, S)
   if not A.floor_h then
     A.floor_h = rand.irange(-4, 6) * 16
     A.ceil_h = 192 + rand.irange(0, 128)
-    A.floor_mat = rand.pick({ "FLAT1", "FLAT10", "FLAT14", "FLAT4",
-                              "FLAT5_3", "FLAT8", "RROCK03", "SLIME13" })
-    A.ceil_mat = A.floor_mat
+
+    if A.kind == "building" then
+      A.wall_mat  = "BIGBRIK1"
+      A.floor_mat = "RROCK12"
+
+    elseif A.kind == "courtyard" then
+      A.floor_mat = "STONE"
+
+    elseif A.kind == "landscape" then
+      A.floor_mat = "RROCK19"
+
+    elseif A.kind == "cave" then
+      A.wall_mat  = "ASHWALL4"
+      A.floor_mat = "RROCK04"
+
+    else
+      A.floor_mat = "CRACKLE2"
+    end
 
     if A.mode == "scenic" then
       A.floor_mat = "LAVA1"
-      A.floor_h   = -128
-      A.ceil_mat  = "_SKY"
-      A.ceil_h    = 512
+      A.floor_h   = -160
+      A.is_outdoor = true
 
     elseif A.mode == "hallway" then
       A.ceil_h = A.floor_h + 72
-      A.ceil_mat = "WOOD1"
-      A.wall_mat = "WOOD1"
+      A.floor_mat = "WOOD1"
+      A.wall_mat  = "WOOD1"
 
-    elseif A.mode != "void" and rand.odds(20) then
-      A.ceil_mat = "_SKY"
-      A.ceil_h   = 512
+    elseif A.mode == "water" then
+      A.floor_h = -80
+      A.floor_mat = "FWATER1"
 
     end
+
+    if A.is_outdoor then
+      A.ceil_mat = "_SKY"
+      A.ceil_h   = 512
+    end
+
+    A.wall_mat = A.wall_mat or A.floor_mat
+    A.ceil_mat = A.ceil_mat or A.wall_mat
   end
 
   -- get parent seed
