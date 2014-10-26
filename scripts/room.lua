@@ -4859,8 +4859,13 @@ end
 function sort_areas_by_volume()
   -- biggest first
 
-  table.sort(LEVEL.areas,
-      function(A, B) return A.svolume > B.svolume end)
+  local list = table.copy(LEVEL.areas)
+
+  each A in list do A.sort_rand = gui.random() end
+
+  table.sort(list, function(A, B) return A.svolume + A.sort_rand > B.svolume + B.sort_rand end)
+
+  return list
 end
 
 
@@ -4985,6 +4990,17 @@ function Weird_assign_hallways()
   local visit_list
 
 
+  local function num_normal_neighbors(A)
+    local count = 0
+
+    each N in A.neighbors do
+      if N.mode == "normal" then count = count + 1 end
+    end
+
+    return count
+  end
+
+
   local function pick_area_to_hall_up()
     while not table.empty(visit_list) do
       local A = table.remove(visit_list, 1)
@@ -4994,6 +5010,9 @@ function Weird_assign_hallways()
       if A.mode != "normal" then continue end
 
       if A.svolume > 20 then continue end
+
+      -- need at least two normal neighbors
+      if num_normal_neighbors(A) < 2 then continue end
 
       return A
     end
@@ -5028,9 +5047,51 @@ end
 
 
 
-function Weird_choose_area_types()
+function Weird_choose_area_kinds()
 
-  
+  local KIND_TAB =
+  {
+    -- indoorsy
+    building = 150
+
+    -- outdoorsy
+    courtyard = 50
+    landscape = 50
+    land_water = 20
+
+    -- cavey
+    cave = 70
+    cave_water = 20
+  }
+
+
+  local function pick_kind_for_area(A, prev)
+    local tab = table.copy(KIND_TAB)
+
+    -- for large areas, choose different kind than previous one
+    if prev and prev.kind and A.svolume > 9 then
+      tab[prev.kind] = nil
+      if prev.kind == "landscape" then tab.land_water = nil end
+      if prev.kind == "cave"      then tab.cave_water = nil end
+    end
+
+    A.kind = rand.key_by_probs(tab)
+  end
+
+
+  ---| Weird_choose_area_kinds |---
+
+  local list = sort_areas_by_volume()
+
+  local prev
+
+  each A in list do
+    if A.mode == "normal" then
+      pick_kind_for_area(A, prev)
+
+      prev = A
+    end
+  end
 end
 
 
@@ -5144,6 +5205,10 @@ function Weird_build_rooms()
 
 Weird_void_some_areas()
 Weird_assign_hallways()
+Weird_choose_area_kinds()
+
+-- TODO : Weird_connect_stuff()
+
 
   each A in LEVEL.areas do
     each S in A.half_seeds do
