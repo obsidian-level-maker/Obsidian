@@ -23,12 +23,13 @@
 --[[
     id : number
 
-    mode : keyword  -- "normal", "hallway", "void", "scenic", "cage"
+    mode : keyword  -- "normal", "hallway", "water",
+                    -- "void", "scenic", "cage"
 
-    kind : keyword  -- "building", "hallway",
-                    -- "cave", "cave_water",
-                    -- "landscape", "land_water",
-                    -- "courtyard"
+    kind : keyword  -- "building", "courtyard",
+                    -- "cave", "landscape"
+
+    is_outdoor : bool
 
     is_boundary   -- true for areas outside the boundary line
 

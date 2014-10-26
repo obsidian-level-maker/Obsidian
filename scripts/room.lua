@@ -5051,35 +5051,75 @@ function Weird_choose_area_kinds()
 
   local KIND_TAB =
   {
-    -- indoorsy
+    -- indoors + constructed
     building = 150
 
-    -- outdoorsy
+    -- outdoors + constructed
     courtyard = 50
-    landscape = 50
-    land_water = 20
 
-    -- cavey
+    -- outdoors + natural
+    landscape = 50
+
+    -- indoors + natural
     cave = 70
-    cave_water = 20
   }
+
+
+  local function kind_for_small_area(A)
+    rand.shuffle(A.neighbors)
+
+    each N in A.neighbors do
+      if N.kind then
+        A.kind = N.kind
+        A.is_outdoor = N.is_outdoor
+        return true
+      end
+    end
+
+    return false
+  end
 
 
   local function pick_kind_for_area(A, prev)
     local tab = table.copy(KIND_TAB)
 
+    -- small areas : prefer same as a neighbor
+    if A.svolume < 8 then
+      if kind_for_small_area(A) then return end
+
+    else
     -- for large areas, choose different kind than previous one
-    if prev and prev.kind and A.svolume > 9 then
-      tab[prev.kind] = nil
-      if prev.kind == "landscape" then tab.land_water = nil end
-      if prev.kind == "cave"      then tab.cave_water = nil end
+
+      if A.svolume >= 8 and prev and prev.kind then
+        tab[prev.kind] = nil
+      end
     end
 
     A.kind = rand.key_by_probs(tab)
+
+    if A.kind == "courtyard" or A.kind == "landscape" then
+      A.is_outdoor = true
+    end
+  end
+
+
+  local function waterify_some_areas()
+    local list = table.copy(LEVEL.areas)
+    rand.shuffle(list)
+
+    each A in list do
+      if A.mode == "normal" and rand.odds(30) then
+        if A.kind == "cave" or A.kind == "landscape" then
+          A.mode = "water"
+        end
+      end
+    end
   end
 
 
   ---| Weird_choose_area_kinds |---
+
+  -- TODO QUOTAs for CAVES and OUTDOORS and WATER AREAS
 
   local list = sort_areas_by_volume()
 
@@ -5092,6 +5132,8 @@ function Weird_choose_area_kinds()
       prev = A
     end
   end
+
+  waterify_some_areas()
 end
 
 
