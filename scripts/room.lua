@@ -4885,6 +4885,8 @@ end
 function Weird_void_some_areas()
   local largest
 
+  local visit_list
+
 
   local function flood_fill(A, visited)
     visited[A.id] = true
@@ -4934,21 +4936,16 @@ function Weird_void_some_areas()
 
 
   local function pick_area_to_void()
-    local list = {}
+    while not table.empty(visit_list) do
+      local A = table.remove(visit_list, 1)
 
-    each A in LEVEL.areas do
-      if A.mode == "normal" and not A.no_void and A.svolume < 209 then --!!!! FIXME
-        table.insert(list, A)
-      end
-    end
+      if A.no_void then continue end
 
-    while not table.empty(list) do
-      local A = rand.pick(list)
+      if A.mode != "normal" then continue end
+
+      if A.svolume > 20 then continue end
 
       if can_void_area(A) then return A end
-
-      -- never try this one again
-      A.no_void = true
     end
 
     return nil  -- nothing was possible    
@@ -4958,12 +4955,17 @@ function Weird_void_some_areas()
   ---| Weird_void_some_areas |---
 
   -- have a quota
-  local quota = walkable_svolume() * 0.8
+  local quota = walkable_svolume() * 0.2
   
   -- the largest area can never become VOID
   largest = largest_area()
 
   largest.no_void = true
+
+  -- visit areas in random order
+  visit_list = table.copy(LEVEL.areas)
+
+  rand.shuffle(visit_list)
 
   while quota > 0 do
     local A = pick_area_to_void()
@@ -4976,10 +4978,59 @@ end
 
 
 
+function Weird_assign_hallways()
+  -- pick some areas to become hallways
+  -- [ does not actually connect them here ]
+
+  local visit_list
+
+
+  local function pick_area_to_hall_up()
+    while not table.empty(visit_list) do
+      local A = table.remove(visit_list, 1)
+
+      if A.no_hallway then continue end
+
+      if A.mode != "normal" then continue end
+
+      if A.svolume > 20 then continue end
+
+      return A
+    end
+
+    return nil  -- nothing was possible    
+  end
+
+
+  ---| Weird_assign_hallways |---
+
+  local quota = walkable_svolume() * 0.5
+
+  local largest = largest_area()
+
+  largest.no_hallway = true
+
+  -- visit areas in random order
+  visit_list = table.copy(LEVEL.areas)
+
+  rand.shuffle(visit_list)
+
+  while quota > 0 do
+    local A = pick_area_to_hall_up()
+
+    if not A then break; end
+
+    A.mode = "hallway"
+
+    quota = quota - A.svolume
+  end
+end
+
+
+
 function Weird_choose_area_types()
 
   
-
 end
 
 
@@ -4999,6 +5050,11 @@ function dummy_sector(A, S)
       A.floor_h   = -128
       A.ceil_mat  = "_SKY"
       A.ceil_h    = 512
+
+    elseif A.mode == "hallway" then
+      A.ceil_h = A.floor_h + 72
+      A.ceil_mat = "WOOD1"
+      A.wall_mat = "WOOD1"
 
     elseif A.mode != "void" and rand.odds(20) then
       A.ceil_mat = "_SKY"
@@ -5087,6 +5143,7 @@ function Weird_build_rooms()
   gui.printf("\n---=====  Build WEIRD rooms =====---\n\n")
 
 Weird_void_some_areas()
+Weird_assign_hallways()
 
   each A in LEVEL.areas do
     each S in A.half_seeds do

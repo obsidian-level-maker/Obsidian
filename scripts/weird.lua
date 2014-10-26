@@ -23,7 +23,7 @@
 --[[
     id : number
 
-    mode : keyword  -- "normal", "void", "scenic"
+    mode : keyword  -- "normal", "hallway", "void", "scenic", "cage"
 
     kind : keyword  -- "building", "hallway",
                     -- "cave", "cave_water",
