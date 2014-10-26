@@ -1985,14 +1985,16 @@ function Weird_connect_stuff()
     local best_dist
     local best1, best2
 
-    for loop = 1, 30 do
+    for loop = 1, 20 do
       local loc1 = rand.pick(where1)
       local loc2 = rand.pick(where2)
 
       local mx1, my1 = loc1.S:mid_point()
-      local mx2, my2 = loc1.S:mid_point()
+      local mx2, my2 = loc2.S:mid_point()
 
       local dist = geom.dist(mx1, my1, mx2, my2)
+
+      dist = dist + gui.random()
 
       if not best_dist or dist > best_dist then
         best_dist = dist

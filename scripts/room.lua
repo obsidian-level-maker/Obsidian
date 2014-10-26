@@ -5155,10 +5155,12 @@ function dummy_arch(S, dir)
   if dir == 4 then mx = int((mx + S.x1 * 3) / 4) end
   if dir == 6 then mx = int((mx + S.x2 * 3) / 4) end
 
-  if dir == 1 then mx = mx - 32 ; my = my - 32 end
-  if dir == 3 then mx = mx + 32 ; my = my - 32 end
-  if dir == 7 then mx = mx - 32 ; my = my + 32 end
-  if dir == 9 then mx = mx + 32 ; my = my + 32 end
+--[[ FIXME
+  if dir == 1 then mx = mx - 40 ; my = my - 40 end
+  if dir == 3 then mx = mx + 40 ; my = my - 40 end
+  if dir == 7 then mx = mx - 40 ; my = my + 40 end
+  if dir == 9 then mx = mx + 40 ; my = my + 40 end
+--]]
 
   Trans.entity("green_armor", mx, my, assert(S.area.floor_h))
 end

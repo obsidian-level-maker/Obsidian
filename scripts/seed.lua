@@ -206,19 +206,19 @@ function SEED_CLASS.mid_point(S)
   local mx = (S.x1 + S.x2) / 2
   local my = (S.y1 + S.y2) / 2
 
-  if S.diagonal == 1 and S.top then
+  if S.diagonal == 3 and S.top then
     mx = (S.x1 + mx) / 2
     my = (S.y1 + my) / 2
 
-  elseif S.diagonal == 3 and S.top then
+  elseif S.diagonal == 1 and S.top then
     mx = (S.x2 + mx) / 2
     my = (S.y1 + my) / 2
 
-  elseif S.diagonal == 1 and S.bottom then
+  elseif S.diagonal == 3 and S.bottom then
     mx = (S.x2 + mx) / 2
     my = (S.y2 + my) / 2
 
-  elseif S.diagonal == 3 and S.bottom then
+  elseif S.diagonal == 1 and S.bottom then
     mx = (S.x1 + mx) / 2
     my = (S.y2 + my) / 2
   end 
