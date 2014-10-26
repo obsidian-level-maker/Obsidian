@@ -5270,10 +5270,6 @@ function Weird_build_rooms()
   
   gui.printf("\n---=====  Build WEIRD rooms =====---\n\n")
 
-Weird_void_some_areas()
-Weird_assign_hallways()
-Weird_choose_area_kinds()
-
 -- TODO : Weird_connect_stuff()
 
   each A in LEVEL.areas do

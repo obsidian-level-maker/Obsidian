@@ -1056,6 +1056,22 @@ end
 
 
 
+function volume_of_area(A)
+    local volume = 0
+
+    each S in A.half_seeds do
+      if S.diagonal then
+        volume = volume + 0.5
+      else
+        volume = volume + 1
+      end
+    end
+
+    return volume
+end
+
+
+
 function Weird_group_areas()
   --
   -- This actually creates the rooms by grouping a bunch of areas together.
@@ -1103,33 +1119,14 @@ function Weird_group_areas()
   end
 
 
-  local function volume_of_area(A)
-    local volume = 0
-
-    each S in A.half_seeds do
-      if S.diagonal then
-        volume = volume + 0.5
-      else
-        volume = volume + 1
-      end
-    end
-
-    return volume
-  end
-
-
   ---| Weird_group_areas |---
 
   -- this creates a ROOM from every area
   -- [ in the future will probably have multiple areas per room ]
 
   each A in LEVEL.areas do
-    A.svolume = volume_of_area(A)
-  end
-
-
-  each A in LEVEL.areas do
-    if A.is_boundary then continue end
+    if A.mode == "scenic" then continue end
+    if A.mode == "void" then continue end
 
     local R = ROOM_CLASS.new()
 
@@ -1140,6 +1137,8 @@ function Weird_group_areas()
     collect_seeds(R)
 
     R.svolume = A.svolume
+
+    if A.mode == "hallway" then R.is_hallway = true end
   end
 end
 
@@ -1172,6 +1171,14 @@ function Weird_create_rooms()
 
 
   Weird_create_areas()
+
+  each A in LEVEL.areas do
+    A.svolume = volume_of_area(A)
+  end
+
+  Weird_void_some_areas()
+  Weird_assign_hallways()
+  Weird_choose_area_kinds()
 
   Weird_group_areas()
 

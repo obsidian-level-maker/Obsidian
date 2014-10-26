@@ -1948,5 +1948,89 @@ end
 
 
 function Weird_connect_stuff()
+
+
+  local function kill_hallway(R)
+    R.areas[1].mode = "normal"
+    R.is_hallway = nil
+  end
+
+
+  local function eval_hallway_conn1(R, N)
+    -- TODO
+
+    return -1
+  end
+
+
+  local function try_connect_hallway(R)
+    local conn1_list = {}
+    local conn1_dud  = {}
+
+    conn1_dud[R] = true
+
+    each NA in R.areas[1].neighbors do
+      local N = NA.room
+
+      if not N then continue end
+
+      -- seen before
+      if conn1_list[N] then continue end
+      if conn1_dud [N] then continue end
+
+      local score = eval_hallway_conn1(R, N)
+
+      if score < 0 then
+        conn1_dud[N] = true
+      else
+        conn1_list[N] = score
+      end
+    end
+
+    if table.size(conn1_list) < 2 then
+      stderrf("hallway %s has %d possible conns : killing it\n", R:tostr(), table.size(conn1_list))
+      kill_hallway(R)
+      return
+    end
+
+    -- MORE........... !!!!
+  end
+
+
+  local function handle_hallways()
+    -- we handle all the hallways first, as sometimes it will not be
+    -- possible to use a hallway (which requires connecting two previously
+    -- unconnected groups) -- these hallways need to be detected early
+    -- and converted to a normal room (or VOID, etc..)
+
+    -- visit from smallest to biggest
+    local visit_list = table.copy(LEVEL.rooms)
+
+    -- TODO : sort_rand to break ties
+
+    table.sort(visit_list, function(A, B) return A.svolume < B.svolume end)
+
+    each R in visit_list do
+      if R.is_hallway then
+        try_connect_hallway(R)
+      end
+    end
+  end
+
+  
+
+  ---| Weird_connect_stuff |---
+
+  -- give each room a conn_group 
+  each R in LEVEL.rooms do
+    R.c_group = _index
+    R.teleports = {}
+  end
+
+  handle_hallways()
+
+  --TODO teleporters
+
+  --FIXME: start_room
 end
 
