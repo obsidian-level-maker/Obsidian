@@ -717,14 +717,14 @@ function Connect_seed_pair(S, T, dir)
   S.conn_dir = dir
   T.conn_dir = 10-dir
 
-  S.border[dir].conn = CONN
-
   table.insert(S.room.conns, CONN)
   table.insert(T.room.conns, CONN)
 
   -- setup border info
 
-  S.border[dir].kind    = "arch"
+  S.border[dir].kind = "arch"
+  S.border[dir].conn = CONN
+
   T.border[10-dir].kind = "straddle"
 
   S.thick[dir] = 16
@@ -1950,24 +1950,67 @@ end
 function Weird_connect_stuff()
 
 
+  local function where_can_connect(R1, R2)
+    -- returns a list where two rooms can connect
+    -- each element is: { S=seed, dir=dir }
+
+    local list = {}
+
+    each S in R1.areas[1].half_seeds do
+    each dir in geom.ALL_DIRS do
+      
+      local N = S:diag_neighbor(dir)
+
+      -- FIXME @@@@
+      
+    end -- S, dir
+    end
+
+    return list
+  end
+
+
   local function kill_hallway(R)
     R.areas[1].mode = "normal"
     R.is_hallway = nil
   end
 
 
-  local function eval_hallway_conn1(R, N)
-    -- TODO
+  local function eval_hallway_conn(R, N)
+    if R.c_group == N.c_group then
+      -- already connected
+      return -1
+    end
 
-    return -1
+    local score = 0
+
+    -- tie break
+    return score + gui.random()
+  end
+
+
+  local function test_hallway_pair(R, N1, N2)
+    assert(N1.c_group != R.c_group)
+    assert(N2.c_group != R.c_group)
+
+    if N2.c_group == N1.c_group then
+      return false
+    end
+
+    -- OK --
+
+    Connect_merge_groups(R.c_group, N1.c_group)
+    Connect_merge_groups(R.c_group, N2.c_group)
+
+    return true
   end
 
 
   local function try_connect_hallway(R)
-    local conn1_list = {}
-    local conn1_dud  = {}
+    local conn_list = {}
+    local conn_dud  = {}
 
-    conn1_dud[R] = true
+    conn_dud[R] = true
 
     each NA in R.areas[1].neighbors do
       local N = NA.room
@@ -1975,25 +2018,39 @@ function Weird_connect_stuff()
       if not N then continue end
 
       -- seen before
-      if conn1_list[N] then continue end
-      if conn1_dud [N] then continue end
+      if conn_list[N] then continue end
+      if conn_dud [N] then continue end
 
-      local score = eval_hallway_conn1(R, N)
+      local score = eval_hallway_conn(R, N)
 
       if score < 0 then
-        conn1_dud[N] = true
+        conn_dud[N] = true
       else
-        conn1_list[N] = score
+        conn_list[N] = score
       end
     end
 
-    if table.size(conn1_list) < 2 then
-      stderrf("hallway %s has %d possible conns : killing it\n", R:tostr(), table.size(conn1_list))
-      kill_hallway(R)
-      return
+    while table.size(conn_list) >= 2 do
+      local N1 = rand.key_by_probs(conn_list)
+      conn_list[N1] = nil
+
+      -- TODO : evaluate all these (conn2)
+      local tab = table.copy(conn_list)
+
+      while not table.empty(tab) do
+        local N2 = rand.key_by_probs(tab)
+        tab[N2] = nil
+
+        if test_hallway_pair(R, N1, N2) then
+          stderrf("hallway %s connected %s / %s\n", R:tostr(), N1:tostr(), N2:tostr())
+          return -- OK --
+        end
+      end
     end
 
-    -- MORE........... !!!!
+    stderrf("hallway %s could not connect : killing it\n", R:tostr())
+
+    kill_hallway(R)
   end
 
 
@@ -2017,9 +2074,10 @@ function Weird_connect_stuff()
     end
   end
 
-  
 
   ---| Weird_connect_stuff |---
+
+  LEVEL.area_matrix = {}
 
   -- give each room a conn_group 
   each R in LEVEL.rooms do
