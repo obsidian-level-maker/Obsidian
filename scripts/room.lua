@@ -5126,7 +5126,9 @@ function Weird_choose_area_kinds()
   local prev
 
   each A in list do
-    if A.mode == "normal" then
+    -- pick a kind for "hallway" too, since they may become normal rooms during
+    -- the connection phase.
+    if A.mode == "normal" or A.mode == "hallway" then
       pick_kind_for_area(A, prev)
 
       prev = A
@@ -5170,8 +5172,9 @@ function dummy_sector(A, S)
 
     elseif A.mode == "hallway" then
       A.ceil_h = A.floor_h + 72
-      A.floor_mat = "WOOD1"
+      A.floor_mat = "FLAT5_1"
       A.wall_mat  = "WOOD1"
+      A.ceil_mat  = "WOOD1"
 
     elseif A.mode == "water" then
       A.floor_h = -80
@@ -5272,7 +5275,6 @@ Weird_assign_hallways()
 Weird_choose_area_kinds()
 
 -- TODO : Weird_connect_stuff()
-
 
   each A in LEVEL.areas do
     each S in A.half_seeds do
