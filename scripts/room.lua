@@ -5142,8 +5142,117 @@ end
 ------------------------------------------------------------------------
 
 
+function dummy_wall(S, dir)
+  -- FIXME
+end
+
+
+function dummy_arch(S, dir)
+  local mx, my = S:mid_point()
+
+  if dir == 2 then my = int((my + S.y1 * 3) / 4) end
+  if dir == 8 then my = int((my + S.y2 * 3) / 4) end
+  if dir == 4 then mx = int((mx + S.x1 * 3) / 4) end
+  if dir == 6 then mx = int((mx + S.x2 * 3) / 4) end
+
+  if dir == 1 then mx = mx - 32 ; my = my - 32 end
+  if dir == 3 then mx = mx + 32 ; my = my - 32 end
+  if dir == 7 then mx = mx - 32 ; my = my + 32 end
+  if dir == 9 then mx = mx + 32 ; my = my + 32 end
+
+  Trans.entity("green_armor", mx, my, assert(S.area.floor_h))
+end
+
+
 function dummy_sector(A, S)
-  if not A.floor_h then
+  assert(S.area == A)
+
+  -- get parent seed
+  local PS = S
+  if S.bottom then PS = S.bottom end
+
+  local bare_brush =
+  {
+    { x=PS.x1, y=PS.y1 }
+    { x=PS.x2, y=PS.y1 }
+    { x=PS.x2, y=PS.y2 }
+    { x=PS.x1, y=PS.y2 }
+  }
+
+      if S.diagonal == 1 and PS.area == A then
+    table.remove(bare_brush, 4)
+  elseif S.diagonal == 1 and PS.top.area == A then
+    table.remove(bare_brush, 2)
+  elseif S.diagonal == 3 and PS.area == A then
+    table.remove(bare_brush, 3)
+  elseif S.diagonal == 3 and PS.top.area == A then
+    table.remove(bare_brush, 1)
+  elseif S.diagonal then
+    error("Invalid diagonal seed!")
+  end
+
+
+  if A.mode == "void" then
+    local w_brush = bare_brush
+
+    brushlib.set_mat(w_brush, "BLAKWAL1")
+
+    Trans.brush(w_brush)
+    return
+  end
+
+
+  local light = 160
+  if A.ceil_mat == "_SKY" then light = 192 end
+
+
+  local f_brush = table.deep_copy(bare_brush)
+  local c_brush = bare_brush
+
+  table.insert(f_brush, { t=A.floor_h })
+  table.insert(c_brush, { b=A. ceil_h, light=light })
+
+  brushlib.set_mat(f_brush, A.floor_mat, A.floor_mat)
+  brushlib.set_mat(c_brush, A. ceil_mat, A. ceil_mat)
+
+  Trans.brush(f_brush)
+  Trans.brush(c_brush)
+
+  if not S.diagonal and A.mode == "normal" and
+     not LEVEL.has_player
+  then
+    local mx, my = S:mid_point()
+
+    Trans.entity("player1", mx, my, A.floor_h)
+
+    LEVEL.has_player = true
+  end
+
+  -- walls
+
+  each dir in geom.ALL_DIRS do
+    local N = S:diag_neighbor(dir)
+
+    if not (N and N.area) then continue end
+
+    if N.area == S.area then continue end
+
+    local B_kind = S.border[dir].kind
+
+    if B_kind == "arch" then
+      dummy_arch(S, dir)
+
+    elseif B_kind == "straddle" then
+      -- nothing
+
+    else
+      dummy_wall(S, dir)
+    end
+  end
+end
+
+
+function dummy_properties(A)
     A.floor_h = rand.irange(-4, 6) * 16
     A.ceil_h = 192 + rand.irange(0, 128)
 
@@ -5189,65 +5298,6 @@ function dummy_sector(A, S)
 
     A.wall_mat = A.wall_mat or A.floor_mat
     A.ceil_mat = A.ceil_mat or A.wall_mat
-  end
-
-  -- get parent seed
-  if S.bottom then S = S.bottom end
-
-  local bare_brush =
-  {
-    { x=S.x1, y=S.y1 }
-    { x=S.x2, y=S.y1 }
-    { x=S.x2, y=S.y2 }
-    { x=S.x1, y=S.y2 }
-  }
-
-      if S.diagonal == 1 and S.area == A then
-    table.remove(bare_brush, 4)
-  elseif S.diagonal == 1 and S.top.area == A then
-    table.remove(bare_brush, 2)
-  elseif S.diagonal == 3 and S.area == A then
-    table.remove(bare_brush, 3)
-  elseif S.diagonal == 3 and S.top.area == A then
-    table.remove(bare_brush, 1)
-  elseif S.diagonal then
-    error("Invalid diagonal seed!")
-  end
-
-
-  if A.mode == "void" then
-    local w_brush = bare_brush
-
-    brushlib.set_mat(w_brush, "BLAKWAL1")
-
-    Trans.brush(w_brush)
-    return
-  end
-
-
-  local light = 160
-  if A.ceil_mat == "_SKY" then light = 192 end
-
-
-  local f_brush = table.deep_copy(bare_brush)
-  local c_brush = bare_brush
-
-  table.insert(f_brush, { t=A.floor_h })
-  table.insert(c_brush, { b=A. ceil_h, light=light })
-
-  brushlib.set_mat(f_brush, A.floor_mat, A.floor_mat)
-  brushlib.set_mat(c_brush, A. ceil_mat, A. ceil_mat)
-
-  Trans.brush(f_brush)
-  Trans.brush(c_brush)
-
-  if not S.diagonal and not (A.mode == "scenic") and
-     not LEVEL.has_player
-  then
-    Trans.entity("player1", S.x1 + 96, S.y1 + 96, A.floor_h)
-
-    LEVEL.has_player = true
-  end
 end
 
 
@@ -5273,6 +5323,8 @@ function Weird_build_rooms()
 -- TODO : Weird_connect_stuff()
 
   each A in LEVEL.areas do
+    dummy_properties(A)
+
     each S in A.half_seeds do
       dummy_sector(A, S)
       do continue end
