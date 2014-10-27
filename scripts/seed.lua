@@ -106,6 +106,7 @@ function SEED_CLASS.tostr(S)
 end
 
 
+-- NOTE: this is "raw" and does not handle diagonal seeds
 function SEED_CLASS.neighbor(S, dir, dist)
   local nx, ny = geom.nudge(S.sx, S.sy, dir, dist)
   if nx < 1 or nx > SEED_W or ny < 1 or ny > SEED_H then
@@ -119,129 +120,116 @@ end
 -- for WEIRD experiment : for a diagonal seed, 'S' should be one particular
 -- half ('top' or 'bottom'), and the result 'N' will also be a certain half.
 --
--- returns "nodir" string but when 'dir' makes no sense
+-- returns 'nodir' parameter when 'dir' makes no sense
 -- (i.e. for square seed, only 2/4/6/8, and for a diagonal, only 3 dirs).
 -- returns NIL for edge of map (as normal neighbor method).
 --
-function SEED_CLASS.diag_neighbor(S, dir)
+function SEED_CLASS.diag_neighbor(S, dir, nodir)
   local N
+
+  -- handle square seeds
 
   if not S.diagonal then
     if not (dir == 2 or dir == 4 or dir == 6 or dir == 8) then
-      return "nodir"
+      return nodir
     end
 
     N = S:neighbor(dir)
 
-    if N and (N.diagonal == 1) and (dir == 2 or dir == 6) then return N.top end
-    if N and (N.diagonal == 3) and (dir == 2 or dir == 4) then return N.top end
+    if N then
+      if dir == 2 and N.diagonal then return N.top end
+
+      if dir == 4 and N.diagonal == 1 then return N.top end
+      if dir == 6 and N.diagonal == 3 then return N.top end
+    end
 
     return N
   end
 
-  if S.diagonal == 1 and S.top then
-    if dir == 2 then
-      N = S:neighbor(dir)
-      if N and N.diagonal then N = N.top end
-      return N
-    elseif dir == 6 then
-      N = S:neighbor(dir)
-      if N and N.diagonal and N.diagonal == 1 then N = N.top end
-      return N
-    elseif dir == 7 then
-      return S.top
-    else
-      return "nodir"
-    end
+  -- handle diagonal seeds
 
-  elseif S.diagonal == 1 and S.bottom then
-    if dir == 8 then
-      return S:neighbor(dir)
-    elseif dir == 4 then
-      N = S:neighbor(dir)
-      if N and N.diagonal and N.diagonal == 3 then N = N.top end
-      return N
-    elseif dir == 3 then
-      return S.bottom
-    else
-      return "nodir"
-    end
-
-  elseif S.diagonal == 3 and S.top then
-    if dir == 2 then
-      N = S:neighbor(dir)
-      if N and N.diagonal then N = N.top end
-      return N
-    elseif dir == 4 then
-      N = S:neighbor(dir)
-      if N and N.diagonal and N.diagonal == 3 then N = N.top end
-      return N
-    elseif dir == 9 then
-      return S.top
-    else
-      return "nodir"
-    end
-
-  elseif S.diagonal == 3 and S.bottom then
-    if dir == 8 then
-      return S:neighbor(dir)
-    elseif dir == 6 then
-      N = S:neighbor(dir)
-      if N and N.diagonal and N.diagonal == 1 then N = N.top end
-      return N
-    elseif dir == 1 then
-      return S.bottom
-    else
-      return "nodir"
-    end
-
-  else
-    debugf("Invalid seed @ %s\n", S:tostr())
-    error("Invalid diagonal seed!")
+  if (S.diagonal == 7 or S.diagonal == 9) and dir == 8 then
+    return S:neighbor(dir)
   end
+  
+  if (S.diagonal == 1 or S.diagonal == 3) and dir == 2 then
+    N = S:neighbor(dir)
+    if N and N.diagonal then return N.top end
+    return N
+  end
+
+  if (S.diagonal == 1 or S.diagonal == 7) and dir == 4 then
+    N = S:neighbor(dir)
+    if N and N.diagonal == 1 then return N.top end
+    return N
+  end
+  
+  if (S.diagonal == 3 or S.diagonal == 9) and dir == 6 then
+    N = S:neighbor(dir)
+    if N and N.diagonal == 3 then return N.top end
+    return N
+  end
+  
+  -- diagonal directions in directions seeds
+
+  if S.diagonal == 1 and dir == 9 then return S.top end
+  if S.diagonal == 3 and dir == 7 then return S.top end
+
+  if S.diagonal == 7 and dir == 3 then return S.bottom end
+  if S.diagonal == 9 and dir == 1 then return S.bottom end
+
+  return nodir
 end
 
 
 function SEED_CLASS.same_room(S, dir)
-  local N = S:neighbor(dir)
+  local N = S:diag_neighbor(dir)
 
   return N and (N.room == S.room)
 end
 
 
-function SEED_CLASS.mid_point(S)
+function SEED_CLASS.calc_mid_point(S)
   -- 'S' can be a half-seed too
   local mx = (S.x1 + S.x2) / 2
   local my = (S.y1 + S.y2) / 2
 
-  if S.diagonal == 3 and S.top then
+  if S.diagonal == 1 then
     mx = (S.x1 + mx) / 2
     my = (S.y1 + my) / 2
 
-  elseif S.diagonal == 1 and S.top then
+  elseif S.diagonal == 3 then
     mx = (S.x2 + mx) / 2
     my = (S.y1 + my) / 2
 
-  elseif S.diagonal == 3 and S.bottom then
-    mx = (S.x2 + mx) / 2
+  elseif S.diagonal == 7 then
+    mx = (S.x1 + mx) / 2
     my = (S.y2 + my) / 2
 
-  elseif S.diagonal == 1 and S.bottom then
-    mx = (S.x1 + mx) / 2
+  elseif S.diagonal == 9 then
+    mx = (S.x2 + mx) / 2
     my = (S.y2 + my) / 2
   end 
 
-  return int(mx), int(my)
+  S.mid_x = int(mx)
+  S.mid_y = int(my)
+end
+
+
+function SEED_CLASS.mid_point(S)
+  assert(S.mid_x)
+
+  return S.mid_x, S.mid_y
 end
 
 
 function SEED_CLASS.midstr(S)
-  local mx, my = S:mid_point()
-  return string.format("SEED(%+5d %+5d)", mx, my)
+  return string.format("SEED(%+5d %+5d)", S.mid_x, S.mid_y)
 end
 
 
 function SEED_CLASS.edge_coord(S, side)
+  -- FIXME !!!  borked for half-seeds
   local mx, my = S:mid_point()
   local dx, dy = geom.delta(side)
 
@@ -299,6 +287,8 @@ function Seed_create(sx, sy, x1, y1)
     S.border[dir] = {}
     S.thick [dir] = 16
   end
+
+  S:calc_mid_point()
 
   return S
 end

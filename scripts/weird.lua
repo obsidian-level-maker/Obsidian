@@ -831,7 +831,7 @@ function Weird_create_areas()
 
     local N = S:diag_neighbor(dir)
 
-    if not N or N == "nodir" or N.free then return end
+    if not N then return end
 
     -- already the same?
     if S.area_num == N.area_num then return end
