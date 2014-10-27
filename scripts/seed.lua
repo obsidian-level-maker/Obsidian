@@ -24,9 +24,15 @@ class SEED
 {
   sx, sy  -- location in seed map
 
+  diagonal : DIR  -- if non-nil, then seed is split into two halves.
+                  -- DIR is the corner associated with the triangle
+                  -- (and the direction *away* from the diagonal line)
 
-  diagonal : DIR  -- if non-nil, then seed is split into two halves down a
-                  -- diagonal line.  DIR == 1 or 3
+                     +---+   +---+
+                     |\ 9|   |7 /|
+                     | \ |   | / |
+                     |1 \|   |/ 3|
+                     +---+   +---+
 
   top : SEED   -- if seed is split by a diagonal, then this refers to the
                -- information for the TOP half (i.e. the half occupying the
@@ -54,6 +60,8 @@ class SEED
   thick[DIR]  -- thickness of each border
 
   x1, y1, x2, y2  -- 2D map coordinates
+
+  mid_x, mid_y  -- mid point coordinate
 
   chunk[1..n] : CHUNK  -- [1] is the ground floor (or liquid), NIL for void (etc)
                        -- [2] is the 3D floor above (usually NIL)
