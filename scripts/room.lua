@@ -5181,13 +5181,13 @@ function dummy_sector(A, S)
     { x=PS.x1, y=PS.y2 }
   }
 
-      if S.diagonal == 1 and PS.area == A then
+      if S.diagonal == 3 then
     table.remove(bare_brush, 4)
-  elseif S.diagonal == 1 and PS.top.area == A then
+  elseif S.diagonal == 7 then
     table.remove(bare_brush, 2)
-  elseif S.diagonal == 3 and PS.area == A then
+  elseif S.diagonal == 1 then
     table.remove(bare_brush, 3)
-  elseif S.diagonal == 3 and PS.top.area == A then
+  elseif S.diagonal == 9 then
     table.remove(bare_brush, 1)
   elseif S.diagonal then
     error("Invalid diagonal seed!")
@@ -5255,7 +5255,7 @@ end
 
 
 function dummy_properties(A)
-    A.floor_h = rand.irange(-4, 6) * 16
+    A.floor_h = rand.irange(0, 16)
     A.ceil_h = 192 + rand.irange(0, 128)
 
     if A.kind == "building" then
@@ -5278,7 +5278,7 @@ function dummy_properties(A)
 
     if A.mode == "scenic" then
       A.floor_mat = "LAVA1"
-      A.floor_h   = -160
+      A.floor_h   = -128
       A.is_outdoor = true
 
     elseif A.mode == "hallway" then
@@ -5288,7 +5288,7 @@ function dummy_properties(A)
       A.ceil_mat  = "WOOD1"
 
     elseif A.mode == "water" then
-      A.floor_h = -80
+      A.floor_h = -8
       A.floor_mat = "FWATER1"
 
     end

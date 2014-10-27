@@ -726,11 +726,13 @@ function Weird_create_areas()
       local diag_edge = P1.edge[9] or P2.edge[3]
 
       if diag_edge then
-        S:split(S, sel(P1.edge[9], 3, 1))
+        S:split(sel(P1.edge[9], 3, 1))
+
+        local S2 = S.top
 
         -- check borders
 
-        if S.diagonal == 1 then
+        if S.diagonal == 3 then
           try_set_border(S,  7, diag_edge)
           try_set_border(S2, 3, diag_edge)
         else
@@ -743,7 +745,7 @@ function Weird_create_areas()
         T2 = S ; T8 = S2
         T4 = S ; T6 = S2
 
-        if S.diagonal == 1 then
+        if S.diagonal == 3 then
           T4, T6 = T6, T4
         end
 
