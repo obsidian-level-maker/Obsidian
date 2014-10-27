@@ -726,21 +726,8 @@ function Weird_create_areas()
       local diag_edge = P1.edge[9] or P2.edge[3]
 
       if diag_edge then
-        S.diagonal = sel(P1.edge[9], 1, 3)
+        S:split(S, sel(P1.edge[9], 3, 1))
 
-        local S2 = Seed_create(S.sx, S.sy, S.x1, S.y1)
-
-        S2.diagonal = S.diagonal
-
-        S2.x1 = S.x1 ; S2.y1 = S.y1
-        S2.x2 = S.x2 ; S2.y2 = S.y2
-
-        S2.edge_of_map = S.edge_of_map
-
-        -- link fake seed with real one
-        S.top = S2
-        S2.bottom = S
-      
         -- check borders
 
         if S.diagonal == 1 then
@@ -778,31 +765,6 @@ function Weird_create_areas()
 
     end -- gx, gy
     end
-  end
-
-
-  local function squarify_seed(S)
-    assert(not S.bottom)
-
-    local S2 = S.top
-
-    for dir = 2,8,2 do
-      S.border[dir].kind = S.border[dir].kind or S2.border[dir].kind
-    end
-
-    each dir in geom.CORNERS do
-      S.border[dir].kind = nil
-    end
-
-    S.diagonal = nil
-    S.top = nil
-
-    S2.kind = "dead"
-    S2.diagonal = "dead"
-
-    S2.border = nil
-    S2.area = nil
-    S2.room = nil
   end
 
 
@@ -904,7 +866,7 @@ gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
       local S  = SEEDS[sx][sy]
 
       if S.diagonal and S.top.area_num == S.area_num then
-        squarify_seed(S)
+        S:join_halves()
       end
     end
     end

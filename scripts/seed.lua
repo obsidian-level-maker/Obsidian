@@ -106,6 +106,63 @@ function SEED_CLASS.tostr(S)
 end
 
 
+--
+-- convert a square seed to a pair of diagonal seeds.
+-- the 'S' parameter becomes the bottom half.
+--
+-- NOTE: must be done fairly early, e.g. assumes nothing in border[] yet
+--
+function SEED_CLASS.split(S, diagonal)
+  assert(diagonal == 1 or diagonal == 3)
+  assert(not S.diagonal)
+
+  S.diagonal = diagonal
+
+  local S2 = Seed_create(S.sx, S.sy, S.x1, S.y1)
+
+  S2.diagonal = 10 - diagonal
+
+  S2.x1 = S.x1 ; S2.y1 = S.y1
+  S2.x2 = S.x2 ; S2.y2 = S.y2
+
+  S2.edge_of_map = S.edge_of_map
+
+  -- link fake seed with real one
+  S.top = S2 ; S2.bottom = S
+
+  -- update mid-points
+  S :calc_mid_point()
+  S2:calc_mid_point()
+end
+
+
+function SEED_CLASS.join_halves(S)
+  assert(S.diagonal)
+  assert(S.top and not S.bottom)
+
+  local S2 = S.top
+
+  for dir = 2,8,2 do
+    S.border[dir].kind = S.border[dir].kind or S2.border[dir].kind
+  end
+
+  each dir in geom.CORNERS do
+    S.border[dir].kind = nil
+  end
+
+  S.diagonal = nil
+  S.top = nil
+
+  -- kill the other half
+  S2.kind = "dead"
+  S2.diagonal = "dead"
+
+  S2.border = nil
+  S2.area = nil
+  S2.room = nil
+end
+
+
 -- NOTE: this is "raw" and does not handle diagonal seeds
 function SEED_CLASS.neighbor(S, dir, dist)
   local nx, ny = geom.nudge(S.sx, S.sy, dir, dist)
