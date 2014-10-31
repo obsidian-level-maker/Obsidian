@@ -5300,7 +5300,9 @@ function dummy_sector(A, S)
     elseif B_kind == "straddle" then
       -- nothing
 
-    elseif A.mode == "hallway" then
+    elseif A.mode == "hallway" or
+        (rand.odds(80) and (A.kind == "building" or A.kind == "cave"))
+    then
       dummy_fence_or_wall(S, dir, A.wall_mat)
       
     else
