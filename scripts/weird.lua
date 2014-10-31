@@ -45,7 +45,6 @@
 
 
 
-
 ALLOW_CLOSED_SQUARES = true
 
 -- lower this to make larger areas
@@ -156,7 +155,11 @@ end
 
 
 
-function Weird_create_areas()
+function Weird_generate()
+  --
+  -- Generates weird shapes in the point grid --> GRID[][]
+  --
+
   local did_change
 
   local function create_points()
@@ -166,11 +169,11 @@ function Weird_create_areas()
     for gy = 1, GRID_H do
       local P =
       {
-        gx = gx,
-        gy = gy,
-        neighbor = {},
-        edge = {},
-        ghost = {},
+        gx = gx
+        gy = gy
+        neighbor = {}
+        edge = {}
+        ghost = {}
         num_edges = 0
       }
       
@@ -704,8 +707,30 @@ function Weird_create_areas()
   end
 
 
-  ------------------------------------------------------------
+  ---| Weird_generate |---
 
+  create_points()
+
+  -- this gets the ball rolling
+---  add_initial_edge()
+
+  install_boundary_shape()
+
+  for pass = 1, 4 do
+    add_lotsa_edges(2 / pass)
+  end
+
+  find_staircases()
+
+  Weird_save_svg()
+end
+
+
+
+function Weird_create_areas()
+  --
+  -- Converts the point grid into areas and seeds.
+  --
 
   local function try_set_border(S, dir, kind)
     if kind then
@@ -996,21 +1021,6 @@ gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
 
   ---| Weird_create_areas |---
 
-  create_points()
-
-  -- this gets the ball rolling
----  add_initial_edge()
-
-  install_boundary_shape()
-
-  for pass = 1, 4 do
-    add_lotsa_edges(2 / pass)
-  end
-
-  Weird_save_svg()
-
-  find_staircases()
-
   convert_to_seeds()
 
   create_the_areas()
@@ -1134,6 +1144,7 @@ function Weird_create_rooms()
   Seed_init(GRID_W - 1, GRID_H - 1, DEPOT_SIZE)
 
 
+  Weird_generate()
   Weird_create_areas()
 
   each A in LEVEL.areas do
