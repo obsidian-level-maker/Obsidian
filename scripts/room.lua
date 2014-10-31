@@ -5164,24 +5164,24 @@ function dummy_fence_or_wall(S, dir, mat, fence_h)
   elseif dir == 3 or dir == 7 then
     brush =
     {
-      { x1 - TK, y1 + TK }
-      { x1 - TK, y1 - TK }
-      { x1 + TK, y1 - TK }
+      { x=x1 - TK, y=y1 + TK }
+      { x=x1 - TK, y=y1 - TK }
+      { x=x1 + TK, y=y1 - TK }
 
-      { x2 + TK, y2 - TK }
-      { x2 + TK, y2 + TK }
-      { x2 - TK, y2 + TK }
+      { x=x2 + TK, y=y2 - TK }
+      { x=x2 + TK, y=y2 + TK }
+      { x=x2 - TK, y=y2 + TK }
     }
   else
     brush =
     {
-      { x2 - TK, y1 - TK }
-      { x2 + TK, y1 - TK }
-      { x2 + TK, y1 + TK }
+      { x=x2 - TK, y=y1 - TK }
+      { x=x2 + TK, y=y1 - TK }
+      { x=x2 + TK, y=y1 + TK }
 
-      { x1 + TK, y2 + TK }
-      { x1 - TK, y2 + TK }
-      { x1 - TK, y2 - TK }
+      { x=x1 + TK, y=y2 + TK }
+      { x=x1 - TK, y=y2 + TK }
+      { x=x1 - TK, y=y2 - TK }
     }
   end
 
@@ -5189,7 +5189,7 @@ function dummy_fence_or_wall(S, dir, mat, fence_h)
     table.insert(brush, { t=fence_h })
   end
 
-  brushlib.set_mat(f_brush, mat, mat)
+  brushlib.set_mat(brush, mat, mat)
 
   Trans.brush(brush)
 end
@@ -5295,8 +5295,11 @@ function dummy_sector(A, S)
     elseif B_kind == "straddle" then
       -- nothing
 
+    elseif A.mode == "hallway" then
+      dummy_fence_or_wall(S, dir, A.wall_mat)
+      
     else
-      dummy_wall(S, dir)
+      dummy_fence_or_wall(S, dir, A.wall_mat, A.floor_h + 30)
     end
   end
 end
