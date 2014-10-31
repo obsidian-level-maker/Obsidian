@@ -209,11 +209,15 @@ function Weird_generate()
 
     local P = GRID[gx][gy]
 
+    assert(P.edge[dir] == nil)
+
     P.edge[dir] = kind
     P.num_edges = P.num_edges + 1
 
     local N = P.neighbor[dir]
+
     assert(N)
+    assert(N.edge[10 - dir] == nil)
 
     N.edge[10 - dir] = kind
     N.num_edges = N.num_edges + 1
@@ -662,14 +666,16 @@ function Weird_generate()
   ------------------------------------------------------------
 
 
-  local function recount_edges(P)
-    P.num_edges = 0
+  local function validate_count(P)
+    local count = 0
 
     each dir in geom.ALL_DIRS do
       if P.edge[dir] then
-        P.num_edges = P.num_edges + 1
+        count = count + 1
       end
     end
+
+    assert(P.num_edges == count)
   end
 
 
@@ -687,15 +693,18 @@ function Weird_generate()
       local P = GRID[gx][gy]
       local N = GRID[gx][mid_gy + (mid_gy - gy)]
 
-      each dir in sel(gy == mid_gy, HALF_DIRS, geom.ALL_DIRS) do
+      local dir_list = sel(gy == mid_gy, HALF_DIRS, geom.ALL_DIRS) 
+
+      each dir in dir_list do
         if N.edge[dir] then
           remove_edge(N.gx, N.gy, dir)
         end
       end
 
-      each dir in geom.ALL_DIRS do
-        if P.edge[dir] then
-          add_edge(N.gx, N.gy, geom.MIRROR_Y[dir], P.edge[dir])
+      each dir in dir_list do
+        local dir2 = geom.MIRROR_Y[dir]
+        if P.edge[dir2] then
+          add_edge(N.gx, N.gy, dir, P.edge[dir2])
         end
       end
     end
@@ -706,38 +715,42 @@ function Weird_generate()
   local function mirror_horizontally()
     assert((GRID_W % 2) == 1)
 
-    -- NOTE : this is broken
-    -- we have to mirror the WHOLE left half of the map
-    -- (it doesn't work to partially mirror a section)
+    local mid_gx = (GRID_W + 1) / 2
 
-    local gx1 = LEVEL.mirror_gx + 1
-    local gx2 = gx1 + int(GRID_W / 5)
+    local HALF_DIRS = { 2,8, 3,6,9 }
 
-    local gy1 = LEVEL.edge_margin + LEVEL.boundary_margin + 2
-    local gy2 = GRID_H - gy1 + 1
+    -- this fills the right half, mirroring the left half
 
-    local CHECK_DIRS = { 1,4,7,8 }
+    for gx = 1, mid_gx do
+    for gy = 1, GRID_H do
+      local P = GRID[gx][gy]
+      local N = GRID[mid_gx + (mid_gx - gx)][gy]
 
-    for x = gx1, gx2 do
-    for y = gy1, gy2 do
-      local mx = LEVEL.mirror_gx - (x - LEVEL.mirror_gx)
+      local dir_list = sel(gx == mid_gx, HALF_DIRS, geom.ALL_DIRS) 
 
-      local M = GRID[mx][y]
-
-      each dir in CHECK_DIRS do
-        if M.edge[geom.MIRROR_X[dir]] then
-          add_edge(x, y, dir)
+      each dir in dir_list do
+        if N.edge[dir] then
+          remove_edge(N.gx, N.gy, dir)
         end
       end
-    end -- x, y
+
+      each dir in dir_list do
+        local dir2 = geom.MIRROR_X[dir]
+        if P.edge[dir2] then
+          add_edge(N.gx, N.gy, dir, P.edge[dir2])
+        end
+      end
+    end
     end
   end
 
 
   local function mirror_stuff()
-    LEVEL.mirror_gx = int(GRID_W / 2)
+--    mirror_vertically()
 
     mirror_horizontally()  
+
+    remove_dead_ends()
   end
 
 
@@ -752,7 +765,7 @@ function Weird_generate()
     add_lotsa_edges(2 / pass)
   end
 
-  mirror_vertically()
+  mirror_stuff()
 
   find_staircases()
 
