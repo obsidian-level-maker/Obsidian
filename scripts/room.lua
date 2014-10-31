@@ -5142,8 +5142,56 @@ end
 ------------------------------------------------------------------------
 
 
-function dummy_wall(S, dir)
-  -- FIXME
+function dummy_fence_or_wall(S, dir, mat, fence_h)
+  local TK = 16
+
+  local x1 = S.x1
+  local y1 = S.y1
+  local x2 = S.x2
+  local y2 = S.y2
+
+  if dir == 2 then y2 = y1 end
+  if dir == 8 then y1 = y2 end
+
+  if dir == 4 then x2 = x1 end
+  if dir == 6 then x1 = x2 end
+
+  local brush
+
+  if dir == 2 or dir == 4 or dir == 6 or dir == 8 then
+    brush = brushlib.quad(x1 - TK, y1 - TK, x2 + TK, y2 + TK)
+
+  elseif dir == 3 or dir == 7 then
+    brush =
+    {
+      { x1 - TK, y1 + TK }
+      { x1 - TK, y1 - TK }
+      { x1 + TK, y1 - TK }
+
+      { x2 + TK, y2 - TK }
+      { x2 + TK, y2 + TK }
+      { x2 - TK, y2 + TK }
+    }
+  else
+    brush =
+    {
+      { x2 - TK, y1 - TK }
+      { x2 + TK, y1 - TK }
+      { x2 + TK, y1 + TK }
+
+      { x1 + TK, y2 + TK }
+      { x1 - TK, y2 + TK }
+      { x1 - TK, y2 - TK }
+    }
+  end
+
+  if fence_h then
+    table.insert(brush, { t=fence_h })
+  end
+
+  brushlib.set_mat(f_brush, mat, mat)
+
+  Trans.brush(brush)
 end
 
 
@@ -5255,7 +5303,7 @@ end
 
 
 function dummy_properties(A)
-    A.floor_h = rand.irange(0, 16)
+    A.floor_h = 0 -- rand.irange(0, 16)
     A.ceil_h = 192 + rand.irange(0, 128)
 
     if A.kind == "building" then
