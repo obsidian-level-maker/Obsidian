@@ -70,8 +70,8 @@ T_BRANCH_PROB = 55
 
 GRID = {}
 
-GRID_W = 36
-GRID_H = 36
+GRID_W = 37
+GRID_H = 37
 
 
 function Weird_save_svg()
@@ -662,11 +662,50 @@ function Weird_generate()
   ------------------------------------------------------------
 
 
+  local function recount_edges(P)
+    P.num_edges = 0
+
+    each dir in geom.ALL_DIRS do
+      if P.edge[dir] then
+        P.num_edges = P.num_edges + 1
+      end
+    end
+  end
+
+
   local function mirror_vertically()
+    assert((GRID_H % 2) == 1)
+
+    local mid_gy = (GRID_H + 1) / 2
+
+    local HALF_DIRS = { 4,6, 7,8,9 }
+
+    -- this fills the top half, mirroring the bottom half
+
+    for gy = 1, mid_gy do
+    for gx = 1, GRID_W do
+      local P = GRID[gx][gy]
+      local N = GRID[gx][mid_gy + (mid_gy - gy)]
+
+      each dir in sel(gy == mid_gy, HALF_DIRS, geom.ALL_DIRS) do
+        if N.edge[dir] then
+          remove_edge(N.gx, N.gy, dir)
+        end
+      end
+
+      each dir in geom.ALL_DIRS do
+        if P.edge[dir] then
+          add_edge(N.gx, N.gy, geom.MIRROR_Y[dir], P.edge[dir])
+        end
+      end
+    end
+    end
   end
 
 
   local function mirror_horizontally()
+    assert((GRID_W % 2) == 1)
+
     -- NOTE : this is broken
     -- we have to mirror the WHOLE left half of the map
     -- (it doesn't work to partially mirror a section)
@@ -712,6 +751,8 @@ function Weird_generate()
   for pass = 1, 4 do
     add_lotsa_edges(2 / pass)
   end
+
+  mirror_vertically()
 
   find_staircases()
 
