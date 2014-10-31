@@ -859,7 +859,7 @@ function Connect_start_room()
     -- already has a purpose? (e.g. secret exit room)
     if R.purpose then return -1 end
 
-    local score = gui.random() * 10
+    local score = 0
 
     -- prefer a room touching the edge of the map
     -- (since it is guaranteed to have room for a start closet)
@@ -873,7 +873,8 @@ function Connect_start_room()
 
     if not R.teleport_conn then score = score + 5 end
 
-    return score
+    -- tie breaker
+    return score + gui.random() * 10
   end
 
 
@@ -2125,6 +2126,95 @@ function Weird_connect_stuff()
   end
 
 
+  local function check_all_connected()
+    local first_R = LEVEL.rooms[1]
+
+    each R in LEVEL.rooms do
+      if R.c_group != first_R.c_group then
+        return false
+      end
+    end
+
+    return true
+  end
+
+
+  local function eval_normal_conn(S, dir)
+    local N = S:diag_neighbor(dir)
+
+    if not (N and N.room) then return -1 end
+
+    local R1 = S.room
+    local R2 = N.room
+
+    if not R2 then return -1 end
+
+    assert(R1.c_group)
+    assert(R2.c_group)
+
+    if R1.c_group == R2.c_group then return -2 end
+
+    -- connection is possible, evaluate it --
+
+    local score = 1
+
+    -- we done hallways already, no more please
+    if R1.is_hallway and R2.is_hallway then
+      -- score = 1
+    elseif R1.is_hallway or R2.is_hallway then
+      score = 1000
+    else
+      score = 2000
+    end
+
+    -- try not to have more than one connection in a seed
+    if not (S.conn or N.conn) then
+      score = score + 500
+    end
+
+    -- TODO : more stuff, e.g. dist from existing conns
+
+    -- prefer not making big hubs
+    local conn_max = math.max(#R1.conns, #R2.conns, 8)
+    score = score + (8 - conn_max) * 5
+
+    -- tie breaker
+    return score + 12 * gui.random()
+  end
+
+
+  local function add_a_connection()
+    local best_S
+    local best_dir
+    local best_score = 0
+
+    each A in LEVEL.areas do
+      if not A.room then continue end
+
+      each S in A.half_seeds do
+
+        -- only need to try half the directions
+        for dir = 6, 9 do
+          local score = eval_normal_conn(S, dir)
+
+          if score > best_score then
+            best_S = S
+            best_dir = dir
+            best_score = score
+          end
+        end
+      end 
+    end
+  end
+
+
+  local function handle_the_rest()
+    while not check_all_connected() do
+      add_a_connection()
+    end
+  end
+
+
   ---| Weird_connect_stuff |---
 
   LEVEL.area_matrix = {}
@@ -2139,6 +2229,9 @@ function Weird_connect_stuff()
 
   --TODO teleporters
 
-  --FIXME: start_room
+  handle_the_rest()  
+
+  Connect_start_room()
+  Connect_natural_flow()
 end
 

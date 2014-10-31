@@ -5220,7 +5220,7 @@ function dummy_sector(A, S)
   Trans.brush(f_brush)
   Trans.brush(c_brush)
 
-  if not S.diagonal and A.mode == "normal" and
+  if S.room and S.room.purpose == "START" and
      not LEVEL.has_player
   then
     local mx, my = S:mid_point()
