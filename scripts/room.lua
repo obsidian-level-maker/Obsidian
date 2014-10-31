@@ -5071,7 +5071,10 @@ function Weird_choose_area_kinds()
     each N in A.neighbors do
       if N.kind then
         A.kind = N.kind
-        A.is_outdoor = N.is_outdoor
+
+        if A.mode != "hallway" then
+          A.is_outdoor = N.is_outdoor
+        end
         return true
       end
     end
@@ -5097,8 +5100,10 @@ function Weird_choose_area_kinds()
 
     A.kind = rand.key_by_probs(tab)
 
-    if A.kind == "courtyard" or A.kind == "landscape" then
-      A.is_outdoor = true
+    if A.mode != "hallway" then
+      if A.kind == "courtyard" or A.kind == "landscape" then
+        A.is_outdoor = true
+      end
     end
   end
 
@@ -5198,10 +5203,10 @@ end
 function dummy_arch(S, dir)
   local mx, my = S:mid_point()
 
-  if dir == 2 then my = int((my + S.y1 * 3) / 4) end
-  if dir == 8 then my = int((my + S.y2 * 3) / 4) end
-  if dir == 4 then mx = int((mx + S.x1 * 3) / 4) end
-  if dir == 6 then mx = int((mx + S.x2 * 3) / 4) end
+  if dir == 2 then my = int((my + S.y1 * 7) / 8) end
+  if dir == 8 then my = int((my + S.y2 * 7) / 8) end
+  if dir == 4 then mx = int((mx + S.x1 * 7) / 8) end
+  if dir == 6 then mx = int((mx + S.x2 * 7) / 8) end
 
 --[[ FIXME
   if dir == 1 then mx = mx - 40 ; my = my - 40 end
@@ -5210,7 +5215,7 @@ function dummy_arch(S, dir)
   if dir == 9 then mx = mx + 40 ; my = my + 40 end
 --]]
 
-  Trans.entity("green_armor", mx, my, assert(S.area.floor_h))
+  Trans.entity("candle", mx, my, assert(S.area.floor_h))
 end
 
 
@@ -5329,7 +5334,7 @@ function dummy_properties(A)
 
     if A.mode == "scenic" then
       A.floor_mat = "LAVA1"
-      A.floor_h   = -128
+      A.floor_h   = -64
       A.is_outdoor = true
 
     elseif A.mode == "hallway" then
