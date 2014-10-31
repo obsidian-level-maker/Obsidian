@@ -407,21 +407,24 @@ function Weird_generate()
 
 
   local function remove_dead_ends()
-    local found = false
+    local found
 
-    for gx = 2, GRID_W-1 do
-    for gy = 2, GRID_H-1 do
-      local P = GRID[gx][gy]
+    repeat
+      found = false
 
-      if P.num_edges == 1 then
-        found = true
+      for gx = 2, GRID_W-1 do
+      for gy = 2, GRID_H-1 do
+        local P = GRID[gx][gy]
 
-        remove_dud_point(P)
+        if P.num_edges == 1 then
+          found = true
+
+          remove_dud_point(P)
+        end
       end
-    end
-    end
+      end
 
-    return found
+    until not found
   end
 
 
@@ -432,7 +435,7 @@ function Weird_generate()
       try_add_edge()
     end
 
-    while remove_dead_ends() do end
+    remove_dead_ends()
   end
 
 
@@ -497,21 +500,6 @@ function Weird_generate()
 
 
   ------------------------------------------------------------
-
-
-  local function add_initial_edge__OLD()
-    local ix = GRID_W / 2
-    local iy = GRID_H / 2
-
-    local P = GRID[ix][iy]
-    local N = P.neighbor[6]
-
-    -- disable edge limits (in case both end up as zero)
-    P.limit_edges = 3
-    N.limit_edges = 3
-
-    add_edge(P.gx, P.gy, 6)
-  end
 
 
   local function try_add_boundary_edge(bp, dir)
@@ -671,6 +659,13 @@ function Weird_generate()
   end
 
 
+  ------------------------------------------------------------
+
+
+  local function mirror_vertically()
+  end
+
+
   local function mirror_horizontally()
     -- NOTE : this is broken
     -- we have to mirror the WHOLE left half of the map
@@ -711,9 +706,7 @@ function Weird_generate()
 
   create_points()
 
-  -- this gets the ball rolling
----  add_initial_edge()
-
+  -- boundary also serves as a place to spawn edges from
   install_boundary_shape()
 
   for pass = 1, 4 do
