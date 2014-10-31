@@ -2205,6 +2205,21 @@ function Weird_connect_stuff()
         end
       end 
     end
+
+    -- perform the connection --
+
+    if not best_S then
+      error("Unable to find place for connection!")
+    end
+
+    local N = best_S:diag_neighbor(best_dir)
+
+    local R1 = assert(best_S.room)
+    local R2 = assert(N.room)
+
+    Connect_merge_groups(R1.c_group, R2.c_group)
+
+    Connect_seed_pair(best_S, N, best_dir)
   end
 
 
