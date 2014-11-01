@@ -582,6 +582,15 @@ function Weird_generate()
       tab[geom.RIGHT_45[bp.dir]] = 60
     end
 
+    -- reduce chance of staircases like: /\/\/
+    if bp.last_dir and geom.is_corner(bp.last_dir) then
+      local dir1 = geom.LEFT [bp.last_dir]
+      local dir2 = geom.RIGHT[bp.last_dir]
+
+      if tab[dir1] then tab[dir1] = 5 end
+      if tab[dir2] then tab[dir2] = 5 end
+    end 
+
     -- find a usable direction
     -- [ luckily we don't need to backtrack ]
     while true do
@@ -592,7 +601,10 @@ function Weird_generate()
       local dir = rand.key_by_probs(tab)
       tab[dir] = nil
 
-      if try_add_boundary_edge(bp, dir) then break; end
+      if try_add_boundary_edge(bp, dir) then
+        bp.last_dir = dir
+        break;
+      end
     end
 
     bp.fresh = false
