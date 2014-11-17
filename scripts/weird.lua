@@ -758,9 +758,13 @@ function Weird_generate()
 
 
   local function mirror_stuff()
---    mirror_vertically()
+    if false then
+      mirror_vertically()
+    end
 
-    mirror_horizontally()  
+    if false then
+      mirror_horizontally()
+    end
 
     remove_dead_ends()
   end
