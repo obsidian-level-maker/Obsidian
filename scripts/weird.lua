@@ -41,6 +41,13 @@
 
     room : ROOM
 
+    
+    inner_points : list(SEED)  -- points are stored as seeds
+                               -- (refer to bottom-left coordinate)
+
+    openness : number  -- measure of largest space in the area
+                       -- can be zero [perhaps ideal for hallways]
+
 --]]
 
 
@@ -924,6 +931,7 @@ function Weird_create_areas()
 
         half_seeds = {}
         neighbors  = {}
+        inner_points = {}
       }
 
       LEVEL.temp_area_map[num] = area
@@ -1109,6 +1117,55 @@ end
 
 
 
+function Weird_analyse_areas()
+  --
+  -- See how much open space is in each area, etc...
+  --
+
+  local function collect_inner_points(A)
+    each S in A.half_seeds do
+      -- point is outside of area
+      if S.diagonal == 9 then continue end
+
+      -- point is part of boundary, skip it 
+      if S.diagonal == 3 or S.diagonal == 7 then continue end
+
+      local NA = S:diag_neighbor(4)
+      local NB = S:diag_neighbor(2)
+
+      if not (NA and NA.area == A) then continue end
+      if not (NB and NB.area == A) then continue end
+
+      local NC = NA:diag_neighbor(2)
+      local ND = NB:diag_neighbor(4)
+
+      if not (NC and NC.area == A) then continue end
+
+      if ND != NC then continue end
+
+      -- OK --
+      table.insert(A.inner_points, S)
+    end
+  end
+
+
+  local function space_in_area(A)
+    
+  end
+
+
+  ---| Weird_analyse_areas |---
+
+  each A in LEVEL.areas do
+    A.svolume = volume_of_area(A)
+
+    collect_inner_points(A)
+    space_in_area(A)
+  end
+end
+
+
+
 function Weird_group_areas()
   --
   -- This actually creates the rooms by grouping a bunch of areas together.
@@ -1210,9 +1267,7 @@ function Weird_create_rooms()
   Weird_generate()
   Weird_create_areas()
 
-  each A in LEVEL.areas do
-    A.svolume = volume_of_area(A)
-  end
+  Weird_analyse_areas()
 
   Weird_void_some_areas()
   Weird_assign_hallways()

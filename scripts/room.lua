@@ -1486,6 +1486,15 @@ function Weird_build_rooms()
         Weird_build_square(R, S)
       end
     end
+
+-- TEST CRUD !!! 
+    if A.mode != "void" then
+      local ent_name = rand.pick({"potion", "stimpack", "helmet", "shells", "rocket", "cells", "allmap"});
+      each P in A.inner_points do
+        Trans.entity(ent_name, P.x1, P.y1, A.floor_h)
+      end
+    end
+
   end
 end
 
