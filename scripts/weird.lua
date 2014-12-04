@@ -1269,7 +1269,7 @@ function Weird_create_rooms()
 
   Weird_analyse_areas()
 
-  Weird_void_some_areas()
+--!!!!  Weird_void_some_areas()
   Weird_assign_hallways()
   Weird_choose_area_kinds()
 

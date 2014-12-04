@@ -1351,10 +1351,13 @@ function dummy_sector(A, S)
   if A.ceil_mat == "_SKY" then light = 192 end
 
 
+local tag = math.ceil(100 * #A.inner_points / A.svolume)
+
+
   local f_brush = table.deep_copy(bare_brush)
   local c_brush = bare_brush
 
-  table.insert(f_brush, { t=A.floor_h })
+  table.insert(f_brush, { t=A.floor_h, tag=tag })
   table.insert(c_brush, { b=A. ceil_h, light=light })
 
   brushlib.set_mat(f_brush, A.floor_mat, A.floor_mat)
