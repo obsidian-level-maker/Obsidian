@@ -406,8 +406,6 @@ function Levels_setup()
   table.name_up(GAME.ROOMS)
   table.name_up(GAME.THEMES)
 
-  Layout_preprocess_patterns()
-
 
   if PARAM.sub_format then
     gui.property("sub_format", PARAM.sub_format)
