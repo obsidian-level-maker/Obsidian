@@ -316,20 +316,19 @@ function Connect_start_room()
 
     local score = 0
 
-    -- prefer a room touching the edge of the map
-    -- (since it is guaranteed to have room for a start closet)
---TODO  if R:touches_map_edge() then score = score + 12 end
+    -- not too small
+    if #R.inner_points >= 5 then score = score + 16 end
 
     -- not too big !!
-    if R.svolume <= 49 then score = score + 10 end
+    if R.svolume <= 49 then score = score + 6 end
 
-    -- not too small
-    if R.svolume >= 12 then score = score + 2 end
+    if not R.teleport_conn then score = score + 8 end
 
-    if not R.teleport_conn then score = score + 5 end
+    -- prefer a room where could have a start closet
+--TODO  if R:touches_void_area() then score = score + 4 end
 
     -- tie breaker
-    return score + gui.random() * 10
+    return score + gui.random() * 4
   end
 
 
