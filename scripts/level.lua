@@ -108,8 +108,6 @@ require "prefab"
 require "wad_fab"
 
 require "weird"
-require "automata"
-require "caves"
 require "layout"
 require "room"
 
