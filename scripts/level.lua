@@ -731,6 +731,10 @@ function Levels_do_styles()
     end
   end
 
+  -- FIXME : temp workaround, need to rename "caves"
+  STYLE.naturals = STYLE.caves
+  STYLE.caves    = nil
+
   -- if level needs a secret exit, make lots of secrets
   -- (this is not strictly necessary, more an aesthetic choice)
   if LEVEL.secret_exit then
@@ -924,7 +928,7 @@ function Levels_make_all()
 
 
 -- FIXME: !!!!!!  fixed seed for testing weird stuff
-OB_CONFIG.seed = 2
+OB_CONFIG.seed = 5
 
 
   gui.rand_seed(OB_CONFIG.seed + 1)
