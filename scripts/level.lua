@@ -756,33 +756,20 @@ function Levels_build_it()
   end
 
   -- Weird stuff
-  do
-    Weird_create_rooms()
-    if gui.abort() then return "abort" end
 
-    Weird_connect_stuff()
-
-    Weird_build_rooms()
-    if gui.abort() then return "abort" end
-
-    return "ok"
-  end
-
-
-  Plan_create_rooms()
+  Weird_create_rooms()
   if gui.abort() then return "abort" end
 
-  Connect_rooms()
+  Weird_connect_stuff()
+
+--!!!!  Quest_make_quests()
+--!!!!  if gui.abort() then return "abort" end
+
+  Weird_build_rooms()
   if gui.abort() then return "abort" end
 
-  Quest_make_quests()
-  if gui.abort() then return "abort" end
-
-  Room_build_all()
-  if gui.abort() then return "abort" end
-
-  Monster_make_battles()
-  if gui.abort() then return "abort" end
+--!!!!  Monster_make_battles()
+--!!!!  if gui.abort() then return "abort" end
 
   return "ok"
 end
