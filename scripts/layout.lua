@@ -18,8 +18,6 @@
 --
 ------------------------------------------------------------------------
 
-require "ht_fabs"
-
 
 function Layout_parse_char(ch)
   if ch == ' ' then return { kind="empty"  } end
