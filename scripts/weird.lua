@@ -1217,14 +1217,19 @@ function Weird_group_into_rooms()
 -- FIXME: create a room for each hallway area
 
 
+  local function new_temp_room(A)
+    return { id=_index, size=A.svolume }
+  end
+
+
   local function rand_max_room_size()
     -- this value is mainly what controls whether two compatible areas can be
     -- merged into a single room.
 
     local SIZES =
     {
-      [128] = 80
-      [64]  = 40
+      [128] = 40
+      [64]  = 30
       [32]  = 20
       [16]  = 10
     }
@@ -1244,7 +1249,7 @@ function Weird_group_into_rooms()
 
       table.insert(usable_areas, A)
 
-      A.temp_room = { id=_index, size=A.svolume }
+      A.temp_room = new_temp_room(A)
 
       A.max_room_size = rand_max_room_size()
     end
@@ -1268,7 +1273,108 @@ function Weird_group_into_rooms()
   end
 
 
+  local function try_merge_two_areas(A1, A2)
+    assert(A1.temp_room)
+    assert(A2.temp_room)
+
+    assert(A1.temp_room != A2.temp_room)
+
+    -- check size constraints
+    local max_size = math.min(A1.max_room_size, A2.max_room_size)
+
+    if A1.temp_room.size + A2.temp_room > max_size then
+      return false
+    end
+
+    -- FIXME : check for "robust" border (# of shared edges)
+
+    -- OK --
+
+    merge_temp_rooms(A1.temp_room, A2.temp_room)
+
+    return true
+  end
+
+
+  local function try_merge_a_neighbor(A)
+    local poss = {}
+
+    each N in A.neighbors do
+      if N.temp_room and N.temp_room != A.temp_room then
+        table.insert(poss, N)
+      end
+    end
+
+    local N2 = rand.pick(poss)
+
+    if N2 then
+      return try_merge_two_areas(A, N2)
+    end
+
+    return false
+  end
+
+
+  local function iterate_merges()
+    local num_loop = #usable_areas
+
+    for loop = 1, num_loop do
+      rand.shuffle(usable_areas)
+
+      each A in usable_areas do
+        if rand.odds(50) then
+          try_merge_a_neighbor(A)
+        end
+      end
+    end
+  end
+
+
+  local function handle_tiny_rooms()
+    local list = {}
+
+    each A in LEVEL.areas do
+      if A.mode == "normal" and not A.temp_room then
+        A.temp_room = new_temp_room(A)
+        table.insert(list, A)
+      end
+    end
+
+    for pass = 1,3 do
+      each A in list do
+        for loop = 1,10 do
+          if try_merge_a_neighbor(A) then break; end
+        end
+      end
+    end
+  end
+
+
+  local function handle_hallways()
+    each A in LEVEL.areas do
+      A.temp_room = new_temp_room(A)
+    end
+  end
+
+
+  local function create_rooms()
+    -- FIXME
+  end
+
+
   ---| Weird_group_into_rooms |---
+
+  collect_usable_areas()
+
+  for main_loop = 1, 10 do
+    iterate_merges()
+  end
+
+  handle_tiny_rooms()
+  handle_hallways()
+
+  create_rooms()
+
 
   -- this creates a ROOM from every area
   -- [ in the future will probably have multiple areas per room ]
