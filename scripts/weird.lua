@@ -1159,10 +1159,13 @@ end
 
 
 
-function Weird_group_areas()
+function Weird_group_into_rooms()
   --
   -- This actually creates the rooms by grouping a bunch of areas together.
   --
+
+  local usable_areas
+
 
   local function collect_seeds(R)
     local sx1, sx2 = 999, -999
@@ -1206,7 +1209,66 @@ function Weird_group_areas()
   end
 
 
-  ---| Weird_group_areas |---
+  local function area_is_tiny(A)
+    return A.svolume < 6
+  end
+
+
+-- FIXME: create a room for each hallway area
+
+
+  local function rand_max_room_size()
+    -- this value is mainly what controls whether two compatible areas can be
+    -- merged into a single room.
+
+    local SIZES =
+    {
+      [128] = 80
+      [64]  = 40
+      [32]  = 20
+      [16]  = 10
+    }
+
+    return rand.key_by_probs(SIZES)
+  end
+
+
+  local function collect_usable_areas()
+    usable_areas = {}
+
+    each A in LEVEL.areas do
+      if A.mode != "normal" then continue end
+
+      -- very small rooms are handled specially (later on)
+      if area_is_tiny(A) then continue end
+
+      table.insert(usable_areas, A)
+
+      A.temp_room = { id=_index, size=A.svolume }
+
+      A.max_room_size = rand_max_room_size()
+    end
+  end
+
+
+  local function merge_temp_rooms(T1, T2)
+    if T1.id > T2.id then
+      T1, T2 = T2, T1
+    end
+    
+    each A in LEVEL.areas do
+      if A.temp_room == T2 then
+        A.temp_room = T1
+
+        T1.size = T1.size + A.svolume
+      end
+    end
+
+    T2.is_dead = true
+  end
+
+
+  ---| Weird_group_into_rooms |---
 
   -- this creates a ROOM from every area
   -- [ in the future will probably have multiple areas per room ]
@@ -1267,7 +1329,7 @@ function Weird_create_rooms()
   Weird_assign_hallways()
   Weird_choose_area_kinds()
 
-  Weird_group_areas()
+  Weird_group_into_rooms()
 
 --TODO  Weird_decide_outdoors()
 
