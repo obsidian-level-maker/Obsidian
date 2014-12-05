@@ -1230,6 +1230,15 @@ function Weird_choose_area_kinds()
   end
 
 
+  local function starts_from_quota(seed_quota)
+    local rough_size = 90 * rand.skew(1.0, 0.4)
+
+    local num = rand.int(seed_quota / rough_size)
+
+    return math.min(num, 1)
+  end
+
+
   local function area_for_position(pos)
     local dx, dy = geom.delta(pos)
 
@@ -1270,9 +1279,9 @@ function Weird_choose_area_kinds()
     if what == "outdoor" then A.is_outdoor = true end
     if what == "natural" then A.is_natural = true end
 
-    table.insert(list[i].areas, A)
+    table.insert(L.areas, A)
 
-    list[i].quota = list[i].quota - A.svolume
+    L.quota = L.quota - A.svolume
   end
 
 
@@ -1296,6 +1305,11 @@ function Weird_choose_area_kinds()
 
 
   local function spread_kind(what, start_num, seed_quota)
+gui.printf("spread_kind '%s' : starts=%d  quota=%d\n", what, start_num, seed_quota)
+    if start_num  < 1 then return end
+    if seed_quota < 1 then return end
+
+
     local list = {}
 
     local POSITIONS =
@@ -1376,21 +1390,19 @@ stderrf("spread '%s' -- stopped at loop %d\n", what, loop)
 
   ---| Weird_choose_area_kinds |---
 
-  local out_quota = style_sel("outdoors", 0, 15, 40, 72, 130)
-  local nat_quota = style_sel("naturals", 0, 12, 30, 65, 150)
+  local total_seeds = SEED_W * SEED_H
 
-  out_quota = SEED_W * SEED_H * out_quota
-  nat_quota = SEED_W * SEED_H * nat_quota
+  local out_quota = style_sel("outdoors", 0, 12, 30, 60, 120)
+  local nat_quota = style_sel("naturals", 0, 10, 25, 50, 120)
 
-  local out_starts = style_sel("outdoors", 0, 1, 2, 3, 5)
-  local nat_starts = style_sel("naturals", 0, 1, 2, 3, 5)
+  out_quota = total_seeds * out_quota / 100
+  nat_quota = total_seeds * nat_quota / 100
 
-  if out_starts >= 2 then
-    out_starts = out_starts + rand.pick({ -1, 0, 0, 1, 1, 2 })
-  end
+  local out_starts = starts_from_quota(out_quota)
+  local nat_starts = starts_from_quota(nat_quota)
 
-  if nat_starts >= 2 then
-    nat_starts = nat_starts + rand.pick({ -1, 0, 0, 1 })
+  if rand.odds(65) then
+    out_starts = out_starts + 1
   end
 
   spread_kind("outdoor", out_starts, out_quota)
@@ -1521,7 +1533,7 @@ function dummy_sector(A, S)
   if A.ceil_mat == "_SKY" then light = 192 end
 
 
-local tag = math.ceil(100 * #A.inner_points / A.svolume)
+local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
 
 
   local f_brush = table.deep_copy(bare_brush)
@@ -1547,6 +1559,8 @@ local tag = math.ceil(100 * #A.inner_points / A.svolume)
   end
 
   -- walls
+
+do return end --!!!!!
 
   each dir in geom.ALL_DIRS do
     local N = S:diag_neighbor(dir)
@@ -1577,9 +1591,9 @@ end
 
 function dummy_properties(A)
     A.floor_h = 0 -- rand.irange(0, 16)
-    A.ceil_h = 192 + rand.irange(0, 128)
+    A.ceil_h = 192  --!!!!! + rand.irange(0, 128)
 
-    if A.kind == "building" then
+    if A.kind == "building" or true then
       A.wall_mat  = "BIGBRIK1"
       A.floor_mat = "RROCK12"
 
@@ -1597,6 +1611,8 @@ function dummy_properties(A)
       A.floor_mat = "CRACKLE2"
     end
 
+--[[ !!!!!
+
     if A.mode == "scenic" then
       A.floor_mat = "LAVA1"
       A.floor_h   = -64
@@ -1613,6 +1629,8 @@ function dummy_properties(A)
       A.floor_mat = "FWATER1"
 
     end
+
+--]]
 
     if A.is_outdoor then
       A.ceil_mat = "_SKY"

@@ -154,7 +154,7 @@ end
 
 function Connect_seed_pair(S, T, dir)
 
-stderrf("Connect_seed_pair: %s dir:%d\n", S:tostr(), dir)
+-- stderrf("Connect_seed_pair: %s dir:%d\n", S:tostr(), dir)
 
   assert(S.room and S.room.kind != "scenic")
   assert(T.room and T.room.kind != "scenic")
@@ -950,7 +950,7 @@ function Weird_connect_stuff()
         tab[N2] = nil
 
         if test_hallway_pair(R, N1, N2) then
-          stderrf("hallway %s connected %s / %s\n", R:tostr(), N1:tostr(), N2:tostr())
+---       stderrf("hallway %s connected %s / %s\n", R:tostr(), N1:tostr(), N2:tostr())
           return -- OK --
         end
       end
