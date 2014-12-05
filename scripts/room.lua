@@ -96,6 +96,7 @@ function ROOM_CLASS.new()
     id = id
     kind = "building"
     num_windows = 0
+    total_inner_points = 0
 
     areas = {}
     half_seeds = {}
@@ -1077,8 +1078,6 @@ function Weird_assign_hallways()
   -- pick some areas to become hallways
   -- [ does not actually connect them here ]
 
-  local visit_list
-
 
   local function num_normal_neighbors(A)
     local count = 0
@@ -1091,23 +1090,47 @@ function Weird_assign_hallways()
   end
 
 
+  local function eval_hallway(A)
+    if A.no_hallway then return -1 end
+
+    -- ignore scenic or void areas
+    if A.mode != "normal" then return -1 end
+
+    -- too big?
+    if A.svolume > 24 then return -1 end
+
+    -- too open?
+    if A.openness >= 0.5 then return -1 end
+
+    -- need at least two normal neighbors
+    if num_normal_neighbors(A) < 2 then return -1 end
+
+    local score = (1.0 - A.openness) * 10
+
+    score = score + A.svolume / 4
+
+    return score + gui.random()
+  end
+
+
   local function pick_area_to_hall_up()
-    while not table.empty(visit_list) do
-      local A = table.remove(visit_list, 1)
+    local best
+    local best_score = 0
 
-      if A.no_hallway then continue end
+    each A in LEVEL.areas do
+      local score = eval_hallway(A)
 
-      if A.mode != "normal" then continue end
+      if score < 0 then
+        A.no_hallway = true
+      end
 
-      if A.svolume > 20 then continue end
-
-      -- need at least two normal neighbors
-      if num_normal_neighbors(A) < 2 then continue end
-
-      return A
+      if score > best_score then
+        best = A
+        best_score = score
+      end
     end
 
-    return nil  -- nothing was possible    
+    return best
   end
 
 
@@ -1118,11 +1141,6 @@ function Weird_assign_hallways()
   local largest = largest_area()
 
   largest.no_hallway = true
-
-  -- visit areas in random order
-  visit_list = table.copy(LEVEL.areas)
-
-  rand.shuffle(visit_list)
 
   while quota > 0 do
     local A = pick_area_to_hall_up()

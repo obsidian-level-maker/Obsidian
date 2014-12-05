@@ -45,9 +45,6 @@
     inner_points : list(SEED)  -- points are stored as seeds
                                -- (refer to bottom-left coordinate)
 
-    openness : number  -- measure of largest space in the area
-                       -- can be zero [perhaps ideal for hallways]
-
 --]]
 
 
@@ -1149,18 +1146,14 @@ function Weird_analyse_areas()
   end
 
 
-  local function space_in_area(A)
-    
-  end
-
-
   ---| Weird_analyse_areas |---
 
   each A in LEVEL.areas do
+    collect_inner_points(A)
+
     A.svolume = volume_of_area(A)
 
-    collect_inner_points(A)
-    space_in_area(A)
+    A.openness = #A.inner_points / A.svolume
   end
 end
 
@@ -1231,6 +1224,7 @@ function Weird_group_areas()
     collect_seeds(R)
 
     R.svolume = A.svolume
+    R.total_inner_points = #A.inner_points
 
     if A.mode == "hallway" then R.is_hallway = true end
   end
