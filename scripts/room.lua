@@ -1560,8 +1560,6 @@ local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
 
   -- walls
 
-do return end --!!!!!
-
   each dir in geom.ALL_DIRS do
     local N = S:diag_neighbor(dir)
 
@@ -1591,9 +1589,9 @@ end
 
 function dummy_properties(A)
     A.floor_h = 0 -- rand.irange(0, 16)
-    A.ceil_h = 192  --!!!!! + rand.irange(0, 128)
+    A.ceil_h = 192 + rand.irange(0, 128)
 
-    if A.kind == "building" or true then
+    if A.kind == "building" then
       A.wall_mat  = "BIGBRIK1"
       A.floor_mat = "RROCK12"
 
@@ -1611,8 +1609,6 @@ function dummy_properties(A)
       A.floor_mat = "CRACKLE2"
     end
 
---[[ !!!!!
-
     if A.mode == "scenic" then
       A.floor_mat = "LAVA1"
       A.floor_h   = -64
@@ -1629,8 +1625,6 @@ function dummy_properties(A)
       A.floor_mat = "FWATER1"
 
     end
-
---]]
 
     if A.is_outdoor then
       A.ceil_mat = "_SKY"
