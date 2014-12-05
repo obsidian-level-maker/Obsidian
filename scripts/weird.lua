@@ -1279,6 +1279,14 @@ function Weird_group_into_rooms()
 
     assert(A1.temp_room != A2.temp_room)
 
+    -- check areas are compatible
+    -- [ relaxed for tiny rooms ]
+    if not A1.was_tiny then
+      if A1.kind != A2.kind then
+        return false
+      end
+    end
+
     -- check size constraints
     local max_size = math.min(A1.max_room_size, A2.max_room_size)
 
@@ -1291,6 +1299,13 @@ function Weird_group_into_rooms()
     -- OK --
 
     merge_temp_rooms(A1.temp_room, A2.temp_room)
+
+    if A1.was_tiny then
+      A1.kind = A2.kind
+
+      A1.is_outdoor = A2.is_outdoor
+      A1.is_natural = A2.is_natural
+    end
 
     return true
   end
@@ -1330,13 +1345,14 @@ function Weird_group_into_rooms()
   end
 
 
-  local function handle_tiny_rooms()
+  local function handle_tiny_areas()
     local list = {}
 
     each A in LEVEL.areas do
       if A.mode == "normal" and not A.temp_room then
         A.temp_room = new_temp_room(A)
         table.insert(list, A)
+        A.was_tiny = true
       end
     end
 
@@ -1357,8 +1373,41 @@ function Weird_group_into_rooms()
   end
 
 
+  local function room_from_area(A, T)
+    local ROOM = ROOM_CLASS.new()
+
+    if A.mode == "hallway" then R.is_hallway = true end
+
+    ROOM.svolume = T.size
+    ROOM.total_inner_points = 0
+
+    return ROOM
+  end
+
+
+  local function room_add_area(R, A)
+    A.room = R
+
+    table.insert(R.areas, A)
+
+    R.total_inner_points = R.total_inner_points + #A.inner_points
+  end
+
+
   local function create_rooms()
-    -- FIXME
+    -- all "roomish" areas should now have a 'temp_room' table
+
+    each A in LEVEL.areas do
+      local T = A.temp_room
+
+      if not T then continue end
+
+      if not T.room then
+        T.room = room_from_area(A, T)
+      end
+
+      room_add_area(T.room, A)
+    end
   end
 
 
@@ -1370,31 +1419,13 @@ function Weird_group_into_rooms()
     iterate_merges()
   end
 
-  handle_tiny_rooms()
+  handle_tiny_areas()
   handle_hallways()
 
   create_rooms()
 
-
-  -- this creates a ROOM from every area
-  -- [ in the future will probably have multiple areas per room ]
-
-  each A in LEVEL.areas do
-    if A.mode == "scenic" then continue end
-    if A.mode == "void" then continue end
-
-    local R = ROOM_CLASS.new()
-
-    A.room = R
-
-    table.insert(R.areas, A)
-
+  each R in LEVEL.rooms do
     collect_seeds(R)
-
-    R.svolume = A.svolume
-    R.total_inner_points = #A.inner_points
-
-    if A.mode == "hallway" then R.is_hallway = true end
   end
 end
 
