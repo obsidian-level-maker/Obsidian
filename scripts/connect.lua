@@ -314,10 +314,12 @@ function Connect_start_room()
     -- already has a purpose? (e.g. secret exit room)
     if R.purpose then return -1 end
 
+    if R.is_hallway then return -1 end
+
     local score = 0
 
     -- not too small
-    if #R.inner_points >= 5 then score = score + 16 end
+    if R.total_inner_points >= 5 then score = score + 16 end
 
     -- not too big !!
     if R.svolume <= 49 then score = score + 6 end
