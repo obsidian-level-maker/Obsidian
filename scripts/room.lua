@@ -1230,6 +1230,65 @@ function Weird_choose_area_kinds()
   end
 
 
+  local function area_for_position(pos)
+    local dx, dy = geom.delta(pos)
+
+    local sx = 0.5 + dx * rand.sel(50, 0.25, 0.4)
+    local sy = 0.5 + dy * rand.sel(50, 0.25, 0.4)
+
+    if pos == 5 then
+      sx = sx + rand.pick({ -0.1, 0, 0.1 })
+      sy = sy + rand.pick({ -0.1, 0, 0.1 })
+    end
+
+    sx = int(sx * SEED_W)
+    sy = int(sy * SEED_H)
+
+    assert(Seed_valid(sx, sy))
+
+    local S = SEEDS[sx][sy]
+    assert(S)
+
+    if S.top and rand.odds(50) then
+      S = S.top
+    end
+
+    -- for this, void and hallways are OK
+    return assert(S.area)
+  end
+
+
+  local function spread_kind(what, start_num, seed_quota)
+    local list = {}
+
+    local POSITIONS =
+    {
+      [5] = 50,
+      [1] = 70, [3] = 70, [7] = 70, [9] = 70,
+      [2] = 10, [4] = 10, [6] = 10, [8] = 10
+    }
+
+    for i = 1, start_num do
+      local quota = seed_quota / start_num
+      quota = quota * rand.skew(1.0, 0.5)
+
+      list[i] = { quota=quota, areas={} }
+
+      -- pick start area
+      local pos = rand.key_by_probs(POSITIONS)
+      POSITIONS[pos] = nil
+
+      local A = area_for_position(pos)
+      assert(A)
+
+      table.insert(list[i].areas, A)
+    end
+
+    
+    -- TODO : spread stuff until quota reached
+  end
+
+
   ---| Weird_choose_area_kinds |---
 
   -- TODO QUOTAs for CAVES and OUTDOORS and WATER AREAS
