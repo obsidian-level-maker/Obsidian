@@ -971,9 +971,14 @@ function Weird_connect_stuff()
     -- visit from smallest to biggest
     local visit_list = table.copy(LEVEL.rooms)
 
-    -- TODO : sort_rand to break ties
+    -- randomize size (tie breaker)
+    each R in visit_list do
+      R.h_order = R.svolume + gui.random()
+    end
 
-    table.sort(visit_list, function(A, B) return A.svolume < B.svolume end)
+    table.sort(visit_list, function(A, B)
+        return A.h_order < B.h_order
+    end)
 
     each R in visit_list do
       if R.is_hallway then
