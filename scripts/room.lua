@@ -1352,25 +1352,55 @@ stderrf("spread '%s' -- stopped at loop %d\n", what, loop)
   end
 
 
-  ---| Weird_choose_area_kinds |---
+  local function assign_proper_kinds()
+    -- converts 'is_outdoor' / 'is_natural' fields to a kind value
 
-  -- TODO QUOTAs for CAVES and OUTDOORS and WATER AREAS
+    each A in LEVEL.areas do
+      local out_str = sel(A.is_outdoor, "o", "")  
+      local nat_str = sel(A.is_natural, "n", "")  
 
-  local list = sort_areas_by_volume()
+      local str = out_str .. nat_str
 
-  local prev
-
-  each A in list do
-    -- pick a kind for "hallway" too, since they may become normal rooms during
-    -- the connection phase.
-    if A.mode == "normal" or A.mode == "hallway" then
-      pick_kind_for_area(A, prev)
-
-      prev = A
+      if str == "on" then
+        A.kind = "landscape"
+      elseif str == "o" then
+        A.kind = "courtyard"
+      elseif str == "n" then
+        A.kind = "cave"
+      else
+        A.kind = "building"
+      end
     end
   end
 
-  waterify_some_areas()
+
+  ---| Weird_choose_area_kinds |---
+
+  local out_quota = style_sel("outdoors", 0, 15, 40, 72, 130)
+  local nat_quota = style_sel("naturals", 0, 12, 30, 65, 150)
+
+  out_quota = SEED_W * SEED_H * out_quota
+  nat_quota = SEED_W * SEED_H * nat_quota
+
+  local out_starts = style_sel("outdoors", 0, 1, 2, 3, 5)
+  local nat_starts = style_sel("naturals", 0, 1, 2, 3, 5)
+
+  if out_starts >= 2 then
+    out_starts = out_starts + rand.pick({ -1, 0, 0, 1, 1, 2 })
+  end
+
+  if nat_starts >= 2 then
+    nat_starts = nat_starts + rand.pick({ -1, 0, 0, 1 })
+  end
+
+  spread_kind("outdoor", out_starts, out_quota)
+  spread_kind("natural", nat_starts, nat_quota)
+
+  assign_proper_kinds()
+
+--???  fixup_small_areas()
+
+---  waterify_some_areas()
 end
 
 
