@@ -1258,6 +1258,43 @@ function Weird_choose_area_kinds()
   end
 
 
+  local function already_set(A, what)
+    if what == "outdoor" then return A.is_outdoor end
+    if what == "natural" then return A.is_natural end
+
+    error("internal error: unknown area what: " .. tostring(what))
+  end
+
+
+  local function set_area(L, A, what)
+    if what == "outdoor" then A.is_outdoor = true end
+    if what == "natural" then A.is_natural = true end
+
+    table.insert(list[i].areas, A)
+
+    list[i].quota = list[i].quota - A.svolume
+  end
+
+
+  local function pick_area(L, what)
+    -- collect possible neighbors
+    local poss = {}
+
+    each A in L.areas do
+      each N in A.neighbors do
+        if not already_set(N, what) then
+          -- could use 'add_unique' here, but this favors common neighbors
+          -- (which should make these groups more "clumpy" -- what we want)
+          table.insert(poss, N)
+        end
+      end
+    end
+
+    -- poss may be empty (returns nil)
+    return rand.pick(poss)
+  end
+
+
   local function spread_kind(what, start_num, seed_quota)
     local list = {}
 
@@ -1281,11 +1318,37 @@ function Weird_choose_area_kinds()
       local A = area_for_position(pos)
       assert(A)
 
-      table.insert(list[i].areas, A)
+      set_area(list[i], A, what)
     end
 
-    
-    -- TODO : spread stuff until quota reached
+
+    -- spread stuff round-robin until quotas are reached
+
+    for loop = 1, 999 do
+      if table.empty(list) then
+stderrf("spread '%s' -- stopped at loop %d\n", what, loop)
+        break;
+      end
+
+      for i = #list, 1, -1 do
+        local L = list[i]
+
+        if L.quota < 1 then
+          table.remove(list, i)
+          continue
+        end
+
+        local A = pick_area(L, what)
+
+        -- nothing possible
+        if not A then
+          L.quota = -1
+          continue
+        end
+
+        set_area(L, A, what)
+      end
+    end
   end
 
 
