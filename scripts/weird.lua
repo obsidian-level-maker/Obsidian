@@ -1214,11 +1214,8 @@ function Weird_group_into_rooms()
   end
 
 
--- FIXME: create a room for each hallway area
-
-
   local function new_temp_room(A)
-    return { id=_index, size=A.svolume }
+    return { id=Plan_alloc_id("temp_room"), size=A.svolume }
   end
 
 
@@ -1228,9 +1225,9 @@ function Weird_group_into_rooms()
 
     local SIZES =
     {
-      [128] = 40
-      [64]  = 30
-      [32]  = 20
+      [128] = 40,
+      [64]  = 30,
+      [32]  = 20,
       [16]  = 10
     }
 
@@ -1288,10 +1285,13 @@ function Weird_group_into_rooms()
     end
 
     -- check size constraints
-    local max_size = math.min(A1.max_room_size, A2.max_room_size)
+    -- [ relaxed for tiny rooms ]
+    if not A1.was_tiny then
+      local max_size = math.min(A1.max_room_size, A2.max_room_size)
 
-    if A1.temp_room.size + A2.temp_room > max_size then
-      return false
+      if A1.temp_room.size + A2.temp_room.size > max_size then
+        return false
+      end
     end
 
     -- FIXME : check for "robust" border (# of shared edges)
@@ -1376,7 +1376,7 @@ function Weird_group_into_rooms()
   local function room_from_area(A, T)
     local ROOM = ROOM_CLASS.new()
 
-    if A.mode == "hallway" then R.is_hallway = true end
+    if A.mode == "hallway" then ROOM.is_hallway = true end
 
     ROOM.svolume = T.size
     ROOM.total_inner_points = 0
@@ -1401,6 +1401,8 @@ function Weird_group_into_rooms()
       local T = A.temp_room
 
       if not T then continue end
+
+      assert(not T.is_dead)
 
       if not T.room then
         T.room = room_from_area(A, T)
