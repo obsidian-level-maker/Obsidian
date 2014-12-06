@@ -1215,13 +1215,15 @@ function Weird_group_into_rooms()
 
 
   local function new_temp_room(A)
-    return { id=Plan_alloc_id("temp_room"), size=A.svolume }
+    return { id=A.id, size=A.svolume }
   end
 
 
   local function rand_max_room_size()
     -- this value is mainly what controls whether two compatible areas can be
     -- merged into a single room.
+
+do return 9999 end  --!!!!!!
 
     local SIZES =
     {
@@ -1239,10 +1241,11 @@ function Weird_group_into_rooms()
     usable_areas = {}
 
     each A in LEVEL.areas do
+      -- hallways are handled later
       if A.mode != "normal" then continue end
 
       -- very small rooms are handled specially (later on)
-      if area_is_tiny(A) then continue end
+      if area_is_tiny(A) then A.is_tiny = true ; continue end
 
       table.insert(usable_areas, A)
 
@@ -1257,7 +1260,7 @@ function Weird_group_into_rooms()
     if T1.id > T2.id then
       T1, T2 = T2, T1
     end
-    
+
     each A in LEVEL.areas do
       if A.temp_room == T2 then
         A.temp_room = T1
@@ -1278,7 +1281,7 @@ function Weird_group_into_rooms()
 
     -- check areas are compatible
     -- [ relaxed for tiny rooms ]
-    if not A1.was_tiny then
+    if not A1.is_tiny then
       if A1.kind != A2.kind then
         return false
       end
@@ -1286,7 +1289,7 @@ function Weird_group_into_rooms()
 
     -- check size constraints
     -- [ relaxed for tiny rooms ]
-    if not A1.was_tiny then
+    if not A1.is_tiny then
       local max_size = math.min(A1.max_room_size, A2.max_room_size)
 
       if A1.temp_room.size + A2.temp_room.size > max_size then
@@ -1300,7 +1303,7 @@ function Weird_group_into_rooms()
 
     merge_temp_rooms(A1.temp_room, A2.temp_room)
 
-    if A1.was_tiny then
+    if A1.is_tiny then
       A1.kind = A2.kind
 
       A1.is_outdoor = A2.is_outdoor
@@ -1349,17 +1352,16 @@ function Weird_group_into_rooms()
     local list = {}
 
     each A in LEVEL.areas do
-      if A.mode == "normal" and not A.temp_room then
+      if A.is_tiny then
         A.temp_room = new_temp_room(A)
         table.insert(list, A)
-        A.was_tiny = true
       end
     end
 
-    for pass = 1,3 do
-      each A in list do
-        for loop = 1,10 do
-          if try_merge_a_neighbor(A) then break; end
+    each A in list do
+      for loop = 1,10 do
+        if try_merge_a_neighbor(A) then
+          break;
         end
       end
     end
@@ -1368,7 +1370,10 @@ function Weird_group_into_rooms()
 
   local function handle_hallways()
     each A in LEVEL.areas do
-      A.temp_room = new_temp_room(A)
+      if A.mode == "hallway" then
+        assert(not A.temp_room)
+        A.temp_room = new_temp_room(A)
+      end
     end
   end
 
