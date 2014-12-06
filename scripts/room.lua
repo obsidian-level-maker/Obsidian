@@ -1079,11 +1079,11 @@ function Weird_assign_hallways()
   -- [ does not actually connect them here ]
 
 
-  local function num_normal_neighbors(A)
+  local function num_neighbor_with_mode(A, mode)
     local count = 0
 
     each N in A.neighbors do
-      if N.mode == "normal" then count = count + 1 end
+      if N.mode == mode then count = count + 1 end
     end
 
     return count
@@ -1100,10 +1100,14 @@ function Weird_assign_hallways()
     if A.svolume > 24 then return -1 end
 
     -- too open?
-    if A.openness >= 0.5 then return -1 end
+    if A.openness > 0.4 then return -1 end
+
+    -- don't touch an existing hallway
+    -- [ TODO : relax this when style == "heaps" ]
+    if num_neighbor_with_mode(A, "hallway") > 0 then return -1 end
 
     -- need at least two normal neighbors
-    if num_normal_neighbors(A) < 2 then return -1 end
+    if num_neighbor_with_mode(A, "normal") < 2 then return -1 end
 
     local score = (1.0 - A.openness) * 10
 
@@ -1136,7 +1140,7 @@ function Weird_assign_hallways()
 
   ---| Weird_assign_hallways |---
 
-  local quota = walkable_svolume() * 0.5
+  local quota = walkable_svolume() * 0.3
 
   local largest = largest_area()
 
