@@ -96,7 +96,6 @@ class CHUNK
 
 SEED_W = 0
 SEED_H = 0
-SEED_TOP = 0  -- FIXME : REMOVE
 
 
 SEED_CLASS = {}
@@ -357,9 +356,6 @@ function Seed_init(map_W, map_H, depot_H)
   -- setup globals 
   SEED_W = map_W
   SEED_H = map_H
-
-  -- compatibility cruft (TO BE REMOVED)
-  SEED_TOP = map_H
 
 
   SEEDS = table.array_2D(SEED_W, SEED_H)
