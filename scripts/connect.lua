@@ -968,7 +968,8 @@ function Weird_connect_stuff()
     -- unconnected groups) -- these hallways need to be detected early
     -- and converted to a normal room (or VOID, etc..)
 
-    -- visit from smallest to biggest
+    -- visit from biggest to smallest
+    -- (so less chance of needing to kill a large hallway)
     local visit_list = table.copy(LEVEL.rooms)
 
     -- randomize size (tie breaker)
@@ -977,7 +978,7 @@ function Weird_connect_stuff()
     end
 
     table.sort(visit_list, function(A, B)
-        return A.h_order < B.h_order
+        return A.h_order > B.h_order
     end)
 
     each R in visit_list do
