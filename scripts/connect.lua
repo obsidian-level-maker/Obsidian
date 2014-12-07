@@ -868,8 +868,7 @@ function Weird_connect_stuff()
 
 
   local function kill_hallway(R)
-    R.areas[1].mode = "normal"
-    R.is_hallway = nil
+    R:kill_it()
   end
 
 

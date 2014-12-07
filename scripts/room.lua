@@ -144,6 +144,26 @@ function ROOM_CLASS.tostr(R)
 end
 
 
+function ROOM_CLASS.kill_it(R)
+  each A in R.areas do
+    A.mode = "void"
+    A.room = nil
+
+    each S in A.half_seeds do
+      S.room = nil
+    end
+  end
+
+  table.kill_elem(LEVEL.rooms, R)
+
+  R.kind = "DEAD"
+
+  R.sx1   = nil
+  R.areas = nil
+  R.conns = nil
+end
+
+
 function ROOM_CLASS.contains_seed(R, x, y)
   if x < R.sx1 or x > R.sx2 then return false end
   if y < R.sy1 or y > R.sy2 then return false end
