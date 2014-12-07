@@ -1341,7 +1341,6 @@ gui.printf("spread_kind '%s' : starts=%d  quota=%d\n", what, start_num, seed_quo
 
     for loop = 1, 999 do
       if table.empty(list) then
-stderrf("spread '%s' -- stopped at loop %d\n", what, loop)
         break;
       end
 
@@ -1385,8 +1384,6 @@ stderrf("spread '%s' -- stopped at loop %d\n", what, loop)
       else
         A.kind = "building"
       end
-
-stderrf("AREA_%d kind --> %s ('%s')\n", A.id, A.kind, str)
     end
   end
 
@@ -1603,11 +1600,11 @@ function dummy_properties(A)
 ---##  if A.mode != "scenic" then A.mode = "normal" end
 
     if A.kind == "building" then
-      A.wall_mat  = "BIGBRIK1"
-      A.floor_mat = "RROCK12"
+      A.wall_mat  = "STARTAN3"
+      A.floor_mat = "FLOOR4_8"
 
     elseif A.kind == "courtyard" then
-      A.floor_mat = "STONE"
+      A.floor_mat = "BROWN1"
 
     elseif A.kind == "landscape" then
       A.floor_mat = "RROCK19"
