@@ -1161,21 +1161,6 @@ end
 
 function Weird_choose_area_kinds()
 
-  local KIND_TAB =
-  {
-    -- indoors + constructed
-    building = 150
-
-    -- outdoors + constructed
-    courtyard = 50
-
-    -- outdoors + natural
-    landscape = 50
-
-    -- indoors + natural
-    cave = 70
-  }
-
 
   local function kind_for_small_area(A)
     rand.shuffle(A.neighbors)
@@ -1195,7 +1180,7 @@ function Weird_choose_area_kinds()
   end
 
 
-  local function pick_kind_for_area(A, prev)
+  local function OLD__pick_kind_for_area(A, prev)
     local tab = table.copy(KIND_TAB)
 
     -- small areas : prefer same as a neighbor
@@ -1289,6 +1274,18 @@ function Weird_choose_area_kinds()
   end
 
 
+  local function set_area_or_room(L, A, what)
+    if A.room then
+      each B in A.room.areas do
+        set_area(L, B, what)
+      end
+
+    else
+      set_area(L, A, what)
+    end
+  end
+
+
   local function pick_area(L, what)
     -- collect possible neighbors
     local poss = {}
@@ -1336,7 +1333,7 @@ gui.printf("spread_kind '%s' : starts=%d  quota=%d\n", what, start_num, seed_quo
       local A = area_for_position(pos)
       assert(A)
 
-      set_area(list[i], A, what)
+      set_area_or_room(list[i], A, what)
     end
 
 
@@ -1364,13 +1361,13 @@ stderrf("spread '%s' -- stopped at loop %d\n", what, loop)
           continue
         end
 
-        set_area(L, A, what)
+        set_area_or_room(L, A, what)
       end
     end
   end
 
 
-  local function assign_proper_kinds()
+  local function convert_to_proper_kinds()
     -- converts 'is_outdoor' / 'is_natural' fields to a kind value
 
     each A in LEVEL.areas do
@@ -1388,6 +1385,8 @@ stderrf("spread '%s' -- stopped at loop %d\n", what, loop)
       else
         A.kind = "building"
       end
+
+stderrf("AREA_%d kind --> %s ('%s')\n", A.id, A.kind, str)
     end
   end
 
@@ -1412,7 +1411,7 @@ stderrf("spread '%s' -- stopped at loop %d\n", what, loop)
   spread_kind("outdoor", out_starts, out_quota)
   spread_kind("natural", nat_starts, nat_quota)
 
-  assign_proper_kinds()
+  convert_to_proper_kinds()
 
 --???  fixup_small_areas()
 
@@ -1538,6 +1537,7 @@ function dummy_sector(A, S)
 
 
 local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
+if A.room then tag = A.room.svolume ; light = A.room.id ; end
 
 
   local f_brush = table.deep_copy(bare_brush)
@@ -1571,6 +1571,8 @@ local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
 
     if N.area == S.area then continue end
 
+    local same_room = (N.room and N.room == S.room)
+
     local B_kind = S.border[dir].kind
 
     if B_kind == "arch" then
@@ -1579,13 +1581,14 @@ local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
     elseif B_kind == "straddle" then
       -- nothing
 
-    elseif A.mode == "hallway" or
-        (rand.odds(80) and (A.kind == "building" or A.kind == "cave"))
-    then
+--!!!!    elseif A.mode == "hallway" or
+--!!!!        (rand.odds(80) and (A.kind == "building" or A.kind == "cave"))
+--!!!!    then
+    elseif not same_room then
       dummy_fence_or_wall(S, dir, A.wall_mat)
       
     else
-      dummy_fence_or_wall(S, dir, A.wall_mat, A.floor_h + 30)
+      dummy_fence_or_wall(S, dir, A.wall_mat, A.floor_h + 20)
     end
   end
 end
@@ -1593,7 +1596,11 @@ end
 
 function dummy_properties(A)
     A.floor_h = 0 -- rand.irange(0, 16)
-    A.ceil_h = 192 + rand.irange(0, 128)
+    A.ceil_h = 192 --- + rand.irange(0, 128)
+
+--DEBUG
+---##  A.kind = "building"
+---##  if A.mode != "scenic" then A.mode = "normal" end
 
     if A.kind == "building" then
       A.wall_mat  = "BIGBRIK1"
@@ -1616,7 +1623,6 @@ function dummy_properties(A)
     if A.mode == "scenic" then
       A.floor_mat = "LAVA1"
       A.floor_h   = -64
-      A.is_outdoor = true
 
     elseif A.mode == "hallway" then
       A.ceil_h = A.floor_h + 72

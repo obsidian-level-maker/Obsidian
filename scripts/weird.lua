@@ -1223,14 +1223,14 @@ function Weird_group_into_rooms()
     -- this value is mainly what controls whether two compatible areas can be
     -- merged into a single room.
 
-do return 9999 end  --!!!!!!
+-- do return 9999 end  --!!!!!!
 
     local SIZES =
     {
-      [128] = 40,
+      [96]  = 40,
       [64]  = 30,
       [32]  = 20,
-      [16]  = 10
+      [16]  =  5
     }
 
     return rand.key_by_probs(SIZES)
@@ -1279,13 +1279,13 @@ do return 9999 end  --!!!!!!
 
     assert(A1.temp_room != A2.temp_room)
 
-    -- check areas are compatible
-    -- [ relaxed for tiny rooms ]
-    if not A1.is_tiny then
-      if A1.kind != A2.kind then
-        return false
-      end
-    end
+---##    -- check areas are compatible
+---##    -- [ relaxed for tiny rooms ]
+---##    if not A1.is_tiny then
+---##      if A1.kind != A2.kind then
+---##        return false
+---##      end
+---##    end
 
     -- check size constraints
     -- [ relaxed for tiny rooms ]
@@ -1303,12 +1303,12 @@ do return 9999 end  --!!!!!!
 
     merge_temp_rooms(A1.temp_room, A2.temp_room)
 
-    if A1.is_tiny then
-      A1.kind = A2.kind
-
-      A1.is_outdoor = A2.is_outdoor
-      A1.is_natural = A2.is_natural
-    end
+---##    if A1.is_tiny then
+---##      A1.kind = A2.kind
+---##
+---##      A1.is_outdoor = A2.is_outdoor
+---##      A1.is_natural = A2.is_natural
+---##    end
 
     return true
   end
@@ -1353,8 +1353,8 @@ do return 9999 end  --!!!!!!
 
     each A in LEVEL.areas do
       if A.is_tiny then
-        A.temp_room = new_temp_room(A)
         table.insert(list, A)
+        A.temp_room = new_temp_room(A)
       end
     end
 
@@ -1470,12 +1470,10 @@ function Weird_create_rooms()
   Weird_analyse_areas()
 
 --!!!!  Weird_void_some_areas()
-  Weird_assign_hallways()
-  Weird_choose_area_kinds()
-
+--!!!!  Weird_assign_hallways()
   Weird_group_into_rooms()
 
---TODO  Weird_decide_outdoors()
+  Weird_choose_area_kinds()
 
 
   gui.printf("Seed Map:\n")
