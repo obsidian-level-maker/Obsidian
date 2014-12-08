@@ -1417,6 +1417,95 @@ end
 ------------------------------------------------------------------------
 
 
+function Weird_floor_heights()
+
+  local function pick_delta_h(min_d, max_d, up_chance)
+    if rand.odds(up_chance) then
+      return max_d + 24
+    else
+      return min_d - 24
+    end
+  end
+
+
+  local function area_assign_delta(A, up_chance)
+    local min_d, max_d
+
+    each N in A.neighbors do
+      if N.room == A.room then
+        if N.delta_h then
+          min_d = math.min(N.delta_h, min_d or  9999)
+          max_d = math.max(N.delta_h, max_d or  9999)
+        end
+      end
+    end
+
+    if not min_d then
+      A.delta_h = 0
+    else
+      A.delta_h = pick_delta_h(min_d, max_d, up_chance)
+    end
+
+    each N in A.neighbors do
+      if N.room == A.room and not N.delta_h then
+        area_assign_delta(N, up_chance)
+      end
+    end
+  end
+
+
+  local function process_room(R, entry_h, entry_area)
+    local start_area = rand.pick(R.areas)
+
+    local up_chance = rand.pick({ 10, 50, 90 })
+
+    -- recursively flow delta heights from a random starting area
+    -- TODO : remember the "path" through the areas
+    area_assign_delta(start_area, up_chance)
+
+    local adjust_h = 0
+    if entry_area then adjust_h = entry_area.delta_h end
+
+    each A in R.areas do
+      -- check each area got a delta_h
+      assert(A.delta_h)
+
+      A.floor_h = entry_h + A.delta_h - adjust_h
+    end
+  end
+
+
+  local function visit_room(R, entry_h, entry_area)
+    if entry_area then
+      assert(entry_area.room == R)
+    end
+
+    if not entry_h then
+      entry_h = rand.irange(4,8) * 64
+    end
+
+    process_room(R, entry_h, entry_area)
+
+    -- recurse to neighbors
+    each C in R.conns do
+      if C.R1 == R then
+        assert(C.A1)
+        assert(C.A1.floor_h)
+        visit_room(C.R2, C.A1.floor_h, C.A2)
+      end
+    end
+  end
+
+
+  ---| Weird_floor_heights |---
+
+  visit_room(LEVEL.start_room)
+end
+
+
+------------------------------------------------------------------------
+
+
 function dummy_fence_or_wall(S, dir, mat, fence_h)
   local TK = 16
 
@@ -1570,8 +1659,11 @@ if A.room then tag = A.room.svolume ; light = A.room.id ; end
 
     local B_kind = S.border[dir].kind
 
-    if B_kind == "arch" then
+    if B_kind == "arch" or B_kind == "lock_door" then
       dummy_arch(S, dir)
+
+    elseif B_kind == "lock_door" then
+      dummy_arch(S, dir)  -- FIXME
 
     elseif B_kind == "straddle" then
       -- nothing
@@ -1583,15 +1675,20 @@ if A.room then tag = A.room.svolume ; light = A.room.id ; end
       dummy_fence_or_wall(S, dir, A.wall_mat)
       
     else
-      dummy_fence_or_wall(S, dir, A.wall_mat, A.floor_h + 20)
+--!!!      dummy_fence_or_wall(S, dir, A.wall_mat, A.floor_h + 8)
     end
   end
 end
 
 
 function dummy_properties(A)
-    A.floor_h = 0 -- rand.irange(0, 16)
-    A.ceil_h = 192 --- + rand.irange(0, 128)
+    if not A.floor_h then
+      A.floor_h = -7
+    end
+
+    if not A.ceil_h then
+      A.ceil_h = A.floor_h + 200
+    end
 
 --DEBUG
 ---##  A.kind = "building"
@@ -1664,6 +1761,8 @@ function Weird_build_rooms()
 
   Room_create_sky_groups()
   Room_reckon_doors()
+
+  Weird_floor_heights()
 
 
   each A in LEVEL.areas do
