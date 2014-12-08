@@ -30,11 +30,14 @@ class CONN
   id : number  -- debugging aid
 
   -- The two rooms are the vital (compulsory) information,
-  -- especially for the quest system.  For teleporters the
-  -- other info will be absent.
+  -- especially for the quest system.  For teleporters the seed
+  -- info will be absent (and area info done when pads are placed)
 
   R1 : source ROOM
   R2 : destination ROOM
+
+  A1 : source AREA
+  A2 : destination AREA
 
   S1 : source SEED
   S2 : destination SEED
@@ -166,6 +169,9 @@ function Connect_seed_pair(S, T, dir)
 
   local CONN = CONN_CLASS.new("normal", S.room, T.room, dir)
 
+  CONN.A1 = assert(S.area)
+  CONN.A2 = assert(T.area)
+
   CONN.S1 = S
   CONN.S2 = T
 
@@ -241,6 +247,8 @@ function Connect_teleporters()
     Connect_merge_groups(R1.c_group, R2.c_group)
 
     local C = CONN_CLASS.new("teleporter", R1, R2)
+
+    -- area fields are set when pads are placed in room
 
     table.insert(R1.conns, C)
     table.insert(R2.conns, C)
@@ -379,9 +387,8 @@ function Connect_natural_flow()
 
     if R.kind == "closet" then return end
 
----###    if R.kind != "hallway" then
----###      table.insert(LEVEL.rooms, R)
----###    end
+    -- add back into the level list
+    table.insert(LEVEL.rooms, R)
 
     each C in R.conns do
       if R == C.R2 and not visited[C.R1] then
