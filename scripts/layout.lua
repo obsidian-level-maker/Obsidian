@@ -138,14 +138,14 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
   end
 
 
-  local function evaluate_spot(spot, sx, sy)
+  local function evaluate_spot(spot)
     -- Factors we take into account:
     --   1. distance from walls
     --   2. distance from entrance / exits
     --   3. distance from other goals
     --   4. rank value from prefab
 
-    local wall_dist = nearest_wall(spot) or 20
+    local wall_dist = assert(spot.wall_dist)
     local conn_dist = nearest_conn(spot) or 20
     local goal_dist = nearest_goal(spot) or 20
 
@@ -172,16 +172,16 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
       score = score + (spot.rank - 1) * 5 
     end
 
-    -- want a different height
+    -- want a different height   [ FIXME !!!! ]
     if R.entry_conn and R.entry_conn.conn_h and spot.floor_h then
       local diff_h = math.abs(R.entry_conn.conn_h - spot.floor_h)
 
       score = score + diff_h / 10
     end
 
-    -- for symmetrical rooms, prefer a centred item
-    if sx == bonus_x then score = score + 0.8 end
-    if sy == bonus_y then score = score + 0.8 end
+---???    -- for symmetrical rooms, prefer a centred item
+---???    if sx == bonus_x then score = score + 0.8 end
+---???    if sy == bonus_y then score = score + 0.8 end
  
     -- tie breaker
     score = score + gui.random() ^ 2
@@ -201,51 +201,61 @@ end
   if R.mirror_x and R.tw >= 3 then bonus_x = int((R.tx1 + R.tx2) / 2) end
   if R.mirror_y and R.th >= 3 then bonus_y = int((R.ty1 + R.ty2) / 2) end
 
-  local best = {}
-
-  for x = R.sx1, R.sx2 do
-  for y = R.sy1, R.sy2 do
-    local S = SEEDS[x][y]
-
-    if S.room != R then continue end
-    if S.kind != "walk" or S.content then continue end
-
-    local score = evaluate_spot(S, x, y)
-
-    if not best.S or score > best.score then
-      best.x = x ; best.y = y
-      best.S = S ; best.score = score
-    end
-  end -- x, y
-  end
-
-  local S = best.S
-
-  if not S then
+  local list = R.normal_wotsits
+  if table.empty(list) then list = R.emergency_wotsits end
+  if table.empty(list) then list = R.dire_wotsits end
+  
+  if table.empty(list) then
     if none_OK then return nil end
     error("No usable spots in room!")
   end
 
 
-  -- OK --
+  local best
+  local best_score = 0
 
-  S.content = "wotsit"
-  S.content_kind = kind
+  each spot in list do
+    local score = evaluate_spot(spot)
 
-  table.insert(R.goals, { S=S, kind=kind })
+    if score > best_score then
+      best = spot
+      best_score = score
+    end
+  end
+
+  assert(best)
+
+
+
+  --- OK ---
+
+
+  -- never use it again
+  table.kill_elem(list, spot)
+
+  spot.content_kind = kind
+  
+  table.insert(R.goals, spot)
+
+
+  local x1 = spot.x - 96
+  local y1 = spot.y - 96
+  local x2 = spot.x + 96
+  local y2 = spot.y + 96
 
   -- no monsters near start spot or teleporters
   -- FIXME: do this later (for chunks)
   if kind == "START" then
-    R:add_exclusion("empty",     S.x1, S.y1, S.x2, S.y2, 96)
-    R:add_exclusion("nonfacing", S.x1, S.y1, S.x2, S.y2, 512)
+    R:add_exclusion("empty",     x1, y1, x2, y2, 96)
+    R:add_exclusion("nonfacing", x1, y1, x2, y2, 512)
 
   elseif kind == "TELEPORTER" then
-    R:add_exclusion("empty",     S.x1, S.y1, S.x2, S.y2, 144)
-    R:add_exclusion("nonfacing", S.x1, S.y1, S.x2, S.y2, 384)
+    R:add_exclusion("empty",     x1, y1, x2, y2, 144)
+    R:add_exclusion("nonfacing", x1, y1, x2, y2, 384)
   end
 
-  return best.x, best.y, best.S
+
+  return spot
 end
 
 
@@ -253,49 +263,49 @@ end
 function Layout_place_importants(R)
 
   local function add_purpose()
-    local sx, sy, S = Layout_spot_for_wotsit(R, R.purpose)
+    local spot = Layout_spot_for_wotsit(R, R.purpose)
 
-    R.guard_spot = S
+    R.guard_spot = spot
   end
 
 
   local function add_teleporter()
-    local sx, sy, S = Layout_spot_for_wotsit(R, "TELEPORTER")
+    local spot = Layout_spot_for_wotsit(R, "TELEPORTER")
 
     -- sometimes guard it, but only for out-going teleporters
     if not R.guard_spot and (R.teleport_conn.R1 == R) and
        rand.odds(60)
     then
-      R.guard_spot = S
+      R.guard_spot = spot
     end
   end
 
 
   local function add_weapon(weapon)
-    local sx, sy, S = Layout_spot_for_wotsit(R, "WEAPON", "none_OK")
+    local spot = Layout_spot_for_wotsit(R, "WEAPON", "none_OK")
 
-    if not S then
+    if not spot then
       gui.printf("WARNING: no space for %s!\n", weapon)
       return
     end
 
-    S.content_item = weapon
+    spot.content_item = weapon
 
     if not R.guard_spot then
-      R.guard_spot = S
+      R.guard_spot = spot
     end
   end
 
 
   local function add_item(item)
-    local sx, sy, S = Layout_spot_for_wotsit(R, "ITEM", "none_OK")
+    local spot = Layout_spot_for_wotsit(R, "ITEM", "none_OK")
 
-    if not S then return end
+    if not spot then return end
 
-    S.content_item = item
+    spot.content_item = item
 
     if not R.guard_spot then
-      R.guard_spot = S
+      R.guard_spot = spot
     end
   end
 
@@ -317,6 +327,7 @@ function Layout_place_importants(R)
     R.emergency_wotsits = {}
 
     each S in R.seeds do
+      if S.content or S.conn then continue end
       if not S.diagonal then
         local mx, my = S.mid_point()
         local wall_dist = rand.range(0.4, 0.5)
