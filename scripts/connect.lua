@@ -88,6 +88,7 @@ end
 
 function CONN_CLASS.swap(C)
   C.R1, C.R2 = C.R2, C.R1
+  C.A1, C.A2 = C.A2, C.A1
   C.S1, C.S2 = C.S2, C.S1
 
   if C.dir then

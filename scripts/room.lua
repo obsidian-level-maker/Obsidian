@@ -1432,11 +1432,9 @@ function Weird_floor_heights()
     local min_d, max_d
 
     each N in A.neighbors do
-      if N.room == A.room then
-        if N.delta_h then
-          min_d = math.min(N.delta_h, min_d or  9999)
-          max_d = math.max(N.delta_h, max_d or  9999)
-        end
+      if N.room == A.room and N.delta_h then
+        min_d = math.min(N.delta_h, min_d or  9999)
+        max_d = math.max(N.delta_h, max_d or -9999)
       end
     end
 
@@ -1481,7 +1479,7 @@ function Weird_floor_heights()
     end
 
     if not entry_h then
-      entry_h = rand.irange(4,8) * 64
+      entry_h = rand.irange(0, 4) * 64
     end
 
     process_room(R, entry_h, entry_area)
@@ -1490,8 +1488,9 @@ function Weird_floor_heights()
     each C in R.conns do
       if C.R1 == R then
         assert(C.A1)
+        assert(C.A1.room == R)
         assert(C.A1.floor_h)
-        visit_room(C.R2, C.A1.floor_h, C.A2)
+        visit_room(C.R2, C.A1.floor_h + 8, C.A2)
       end
     end
   end
