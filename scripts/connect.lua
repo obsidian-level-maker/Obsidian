@@ -379,9 +379,9 @@ function Connect_natural_flow()
 
     if R.kind == "closet" then return end
 
-    if R.kind != "hallway" then
-      table.insert(LEVEL.rooms, R)
-    end
+---###    if R.kind != "hallway" then
+---###      table.insert(LEVEL.rooms, R)
+---###    end
 
     each C in R.conns do
       if R == C.R2 and not visited[C.R1] then
