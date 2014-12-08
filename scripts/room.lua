@@ -1419,6 +1419,13 @@ end
 
 function Weird_floor_heights()
 
+  local function fix_up_seeds(A)
+    each S in A.half_seeds do
+      S.floor_h = A.floor_h
+    end
+  end
+
+
   local function pick_delta_h(min_d, max_d, up_chance)
     if rand.odds(up_chance) then
       return max_d + 24
@@ -1469,6 +1476,8 @@ function Weird_floor_heights()
       assert(A.delta_h)
 
       A.floor_h = entry_h + A.delta_h - adjust_h
+
+      fix_up_seeds(A)
     end
   end
 
@@ -1766,6 +1775,8 @@ function Weird_build_rooms()
   each R in LEVEL.rooms do
     Layout_place_importants(R)
   end
+
+  Layout_build_importants()
 
 
   -- TODO : tidy up this crud

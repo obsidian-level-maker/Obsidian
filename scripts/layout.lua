@@ -301,6 +301,7 @@ function Layout_place_importants(R)
       each S in A.inner_points do
         -- FIXME : wall_dist
         local wall_dist = rand.range(0.5, 2.5)
+        local z = assert(S.floor_h)
         table.insert(R.normal_wotsits, { x=S.x1, y=S.y1, wall_dist=wall_dist })
       end
     end
@@ -309,22 +310,24 @@ function Layout_place_importants(R)
     R.emergency_wotsits = {}
 
     each S in R.half_seeds do
-      if S.content or S.conn then continue end
+      if S.conn then continue end
       if not S.diagonal then
         local mx, my = S:mid_point()
         local wall_dist = rand.range(0.4, 0.5)
-        table.insert(R.emergency_wotsits, { x=mx, y=my, wall_dist=wall_dist })
+        local z = assert(S.area and S.area.floor_h)
+        table.insert(R.emergency_wotsits, { x=mx, y=my, z=z, wall_dist=wall_dist })
       end
     end
 
-    -- dire emergency spots are the middle of diagonal seeds
+    -- dire emergency spots are inside diagonal seeds
     R.dire_wotsits = {}
 
     each S in R.half_seeds do
       if S.diagonal then
         local mx, my = S:mid_point()
         local wall_dist = rand.range(0.2, 0.3)
-        table.insert(R.dire_wotsits, { x=mx, y=my, wall_dist=wall_dist })
+        local z = assert(S.area and S.area.floor_h)
+        table.insert(R.dire_wotsits, { x=mx, y=my, z=z, wall_dist=wall_dist })
       end
     end
   end
@@ -590,5 +593,16 @@ function Layout_add_cages(R)
   end
 
   convert_list(list, limited)
+end
+
+
+------------------------------------------------------------------------
+
+
+function Layout_build_importants()
+
+  ---| Layout_build_importants |---
+
+  -- FIXME
 end
 
