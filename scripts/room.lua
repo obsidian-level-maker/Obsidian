@@ -1776,8 +1776,6 @@ function Weird_build_rooms()
     Layout_place_importants(R)
   end
 
-  Layout_build_importants()
-
 
   -- TODO : tidy up this crud
 
@@ -1807,5 +1805,8 @@ function Weird_build_rooms()
 --]]
 
   end
+
+
+  Layout_build_importants()
 end
 

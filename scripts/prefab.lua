@@ -1109,7 +1109,7 @@ function Build.small_switch(S, dir, f_h, skin, tag)
 end
 
                                       
-function Build.exit_pillar(S, z1, skin, sw_special)
+function Build.exit_pillar__OLD(S, z1, skin, sw_special)
   local DT, long = get_transform_for_seed_side(S, 8)
 
   local mx = int((S.x1 + S.x2)/2)

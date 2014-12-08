@@ -601,8 +601,304 @@ end
 
 function Layout_build_importants()
 
+  -- the current room
+  local R
+
+
+  local function player_dir(spot)
+
+do return 2 end --!!!!! FIXME  player_dir
+
+    if R.sh > R.sw then
+      if S.sy > (R.sy1 + R.sy2) / 2 then 
+        return 2
+      else
+        return 8
+      end
+    else
+      if S.sx > (R.sx1 + R.sx2) / 2 then 
+        return 4
+      else
+        return 6
+      end
+    end
+  end
+
+
+  local function content_big_item(spot, item)
+    local fab_name = "Item_pedestal"
+
+    -- FIXME: TEMP RUBBISH
+    if string.sub(item, 1, 2) == "ks" then
+      fab_name = "Item_podium"
+    end
+
+    local def = PREFABS[fab_name]
+    assert(def)
+
+    local skin1 = { item=item }
+
+    local T = Trans.spot_transform(spot.x, spot.y, spot.z, 2) -- TODO: spot_dir
+
+    Fabricate(R, def, T, { skin1 })
+
+    Trans.entity("light", spot.x, spot.y, spot.z+112, { cave_light=176 })
+  end
+
+
+  local function content_very_big_item(spot, item, is_weapon)
+    -- sometimes make a lowering pedestal
+    local prob = sel(is_weapon, 40, 20)
+
+--[[  FIXME : LOWERING PEDESTALS
+
+    if rand.odds(prob) and
+       THEME.lowering_pedestal_skin and
+       not S.chunk[2]
+    then
+      local mx, my = spot.x, spot.y
+      local z1 = spot.z
+
+      local z_top
+
+      if R.kind == "cave" then
+        z_top = z1 + rand.pick({ 64, 96 })
+
+      else
+        local z2 = S.ceil_h or S.room.ceil_h or (z1 + 256)
+
+        if z2 < z1 + 170 then
+          z_top = z1 + 64
+        else
+          z_top = z1 + 128
+        end
+      end
+
+      Build.lowering_pedestal(S, z_top, THEME.lowering_pedestal_skin)
+
+      Trans.entity(item, mx, my, z_top)
+      Trans.entity("light", mx, my, z_top + 24, { cave_light=176 })
+
+      return
+    end
+--]]
+
+    content_big_item(spot, item)
+  end
+
+
+  local function content_start_pad(spot, dir)
+    local def = PREFABS["Start_basic"]
+    assert(def)
+
+    local T = Trans.spot_transform(spot.x, spot.y, spot.z, 10 - dir)
+
+    Fabricate(R, def, T, { })
+  end
+
+
+  local function content_coop_pair(spot, dir)
+    -- no prefab for this : add player entities directly
+
+    local mx = spot.x
+    local my = spot.y
+    local  z = spot.z
+
+    local angle = geom.ANGLES[dir]
+
+    local dx, dy = geom.delta(dir)
+
+    dx = dx * 24 ; dy = dy * 24
+
+    Trans.entity(R.player_set[1], mx - dy, my + dx, z, { angle=angle })
+    Trans.entity(R.player_set[2], mx + dy, my - dx, z, { angle=angle })
+
+    if GAME.ENTITIES["player8"] then
+      mx = mx - dx * 2
+      my = my - dy * 2
+
+      Trans.entity(R.player_set[3], mx - dy, my + dx, z, { angle=angle })
+      Trans.entity(R.player_set[4], mx + dy, my - dx, z, { angle=angle })
+    end
+  end
+
+
+  local function content_start(spot)
+    local dir = player_dir(spot)
+
+    if R.player_set then
+      content_coop_pair(spot, dir)
+
+--[[
+    elseif false and PARAM.raising_start and R.svolume >= 20 and
+       R.kind != "cave" and
+       THEME.raising_start_switch and rand.odds(25)
+    then
+      -- TODO: fix this
+      gui.debugf("Raising Start made\n")
+
+      local skin =
+      {
+        f_tex = S.f_tex or R.main_tex,
+        switch_w = THEME.raising_start_switch,
+      }
+
+      Build.raising_start(S, 6, z1, skin)
+      angle = 0
+
+      S.no_floor = true
+      S.raising_start = true
+      R.has_raising_start = true
+    else
+--]]
+
+      content_start_pad(spot, dir)
+    end
+  end
+
+
+  local function content_exit(spot)
+
+---???    local CS = R.conns[1]:get_seed(R)
+---???    local dir = dir_for_wotsit(S)
+
+    local sw_special = 11
+    if R.purpose == "SECRET_EXIT" then sw_special = 51 end
+
+--[[
+    if R.is_outdoor and THEME.out_exits then
+      -- FIXME: use single one for a whole episode
+      local skin_name = rand.key_by_probs(THEME.out_exits)
+      local skin = assert(GAME.EXITS[skin_name])
+      Build.outdoor_exit_switch(S, dir, z1, skin, sw_special)
+
+    elseif THEME.exits then
+--]]
+
+      -- FIXME: use single one for a whole episode
+      local skin_name = rand.key_by_probs(THEME.exits)
+      local skin = assert(GAME.EXITS[skin_name])
+      Build.exit_pillar(S, z1, skin, sw_special)
+      Trans.entity("light", mx, my, z1+144, { cave_light=176 })
+
+---    end
+  end
+
+
+  local function content_purpose(spot)
+    local sx, sy = S.sx, S.sy
+
+    local z1 = assert(S.floor_h)
+    local z2 = S.ceil_h  or R.ceil_h
+
+    local mx, my = S:mid_point()
+
+    if R.purpose == "START" then
+      content_start(S, mx, my, z1)
+
+    elseif R.purpose == "EXIT" and OB_CONFIG.game == "quake" then
+      local skin = { floor="SLIP2", wall="SLIPSIDE" }
+
+      Build.quake_exit_pad(S, z1 + 16, skin, LEVEL.next_map)
+
+    elseif R.purpose == "EXIT" or R.purpose == "SECRET_EXIT" then
+      content_exit(S, mx, my, z1)
+
+    elseif R.purpose == "KEY" then
+      local LOCK = assert(R.purpose_lock)
+      content_very_big_item(spot, LOCK.item)
+
+    elseif R.purpose == "SWITCH" then
+      local LOCK = assert(R.purpose_lock)
+      local INFO = assert(GAME.SWITCHES[LOCK.switch])
+      Build.small_switch(S, dir_for_wotsit(S), z1, INFO.skin, LOCK.tag)
+      Trans.entity("light", mx, my, z1+112, { cave_light=176 })
+
+    else
+      error("unknown purpose: " .. tostring(R.purpose))
+    end
+  end
+
+
+  local function content_weapon(G)
+    local weapon = assert(spot.content_item)
+
+    if R == LEVEL.start_room or R.is_hallway then
+      -- bare item
+      Trans.entity(weapon, spot.x, spot.y, spot.z)
+    else
+      content_very_big_item(spot, weapon, "is_weapon")
+    end
+
+    gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", weapon, spot.x, spot.y, spot.z)
+  end
+
+
+  local function content_item(spot)
+    local item = assert(spot.content_item)
+
+    if R == LEVEL.start_room or R.hallway then
+      -- bare item
+      Trans.entity(item, spot.x, spot.y, spot.z)
+    else
+      content_big_item(item, spot.x, spot.y, spot.z)
+    end
+  end
+
+
+  local function content_teleporter(spot)
+    -- FIXME !!!!  content_teleporter
+
+    local C = R.teleport_conn
+    assert(C)
+
+    local def = PREFABS["Teleporter1"]
+    assert(def)
+
+    local skin1 = {}
+
+    if C.R1 == R then
+      skin1. in_tag = C.tele_tag2
+      skin1.out_tag = C.tele_tag1
+    else
+      skin1. in_tag = C.tele_tag1
+      skin1.out_tag = C.tele_tag2
+    end
+
+    skin1. in_target = string.format("tele%d", skin1. in_tag)
+    skin1.out_target = string.format("tele%d", skin1.out_tag)
+
+    local mx, my = S:mid_point()
+    local spot_dir = 10 - dir_for_wotsit(S)
+    local z = assert(S.floor_h)
+
+    local T = Trans.spot_transform(mx, my, z, spot_dir)
+
+    Fabricate(R, def, T, { skin1 })
+  end
+
+
+  local function build_goal(G)
+    if G.content_kind == "WEAPON" then
+      content_weapon(G)
+    elseif G.content_kind == "ITEM" then
+      content_item(G)
+    elseif G.content_kind == "TELEPORTER" then
+      content_teleporter(G)
+    else
+      content_purpose(G)
+    end
+  end
+
+
   ---| Layout_build_importants |---
 
-  -- FIXME
+  each room in LEVEL.rooms do
+    R = room
+
+    each goal in R.goals do
+      build_goal(goal)
+    end
+  end
 end
 
