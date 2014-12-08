@@ -66,9 +66,6 @@ class ROOM
 
   c_group : number    -- connection group (used for Connect logic)
 
-  sky_group : number  -- outdoor rooms which directly touch will belong
-                      -- to the same sky_group (unless a solid wall is
-                      -- enforced, e.g. between zones).
 }
 
 
@@ -458,36 +455,6 @@ end
 ------------------------------------------------------------------------
 
 
-function Room_merge_sky_groups(R1, R2)
-  assert(R1.sky_group)
-  assert(R2.sky_group)
-
-  if R1.sky_group == R2.sky_group then
-    return
-  end
-
-  if R1.id > R2.id then R1, R2 = R2, R1 end
-
-  -- the second SKY_GROUP table will never be used again
-  local dead_group = R2.sky_group
-
-  dead_group.h = "dead"
-
-  each T in LEVEL.rooms do
-    if T.sky_group == dead_group then
-       T.sky_group = R1.sky_group
-    end
-  end
-
-  each T in LEVEL.scenic_rooms do
-    if T.sky_group == dead_group then
-       T.sky_group = R1.sky_group
-    end
-  end
-end
-
-
-
 function Room_create_sky_groups()
   --
   -- This makes sure that any two outdoor rooms which touch will belong
@@ -496,26 +463,31 @@ function Room_create_sky_groups()
   -- Note: actual sky heights are determined later.
   --
 
-  -- setup each room
+  local function new_sky_group()
+    return { id = Plan_alloc_id("sky_group") }
+  end
 
-  local all_rooms = {}
 
-  table.append(all_rooms, LEVEL.rooms)
-  table.append(all_rooms, LEVEL.scenic_rooms)
-
-  each R in all_rooms do
-    if R.is_outdoor then
-      R.sky_group = {}
+  local function spread_group(A)
+    each N in A.neighbors do
+      if N.is_outdoor and not N.sky_group then
+        N.sky_group = A.sky_group
+        spread_group(N)
+      end
     end
   end
 
-  -- merge neighbors which touch each other
 
-  each R in all_rooms do
-    each N in R.neighbors do
-      if R.sky_group and N.sky_group then
-        Room_merge_sky_groups(R, N)
-      end
+  ---| Room_create_sky_groups |---
+
+  -- this is area based, will handle VOID and HALLWAYs too
+  -- (sky may potentially be used there, e.g. if VOID becomes an outdoor cage)
+
+  each A in LEVEL.areas do
+    if A.is_outdoor and not A.sky_group then
+      A.sky_group = new_sky_group()
+stderrf("NEW SKY GROUP #%d\n", A.sky_group.id)
+      spread_group(A)
     end
   end
 end
@@ -1598,7 +1570,6 @@ if A.room then tag = A.room.svolume ; light = A.room.id ; end
 
     local B_kind = S.border[dir].kind
 
-stderrf("B_kind: %s\n", B_kind)
     if B_kind == "arch" then
       dummy_arch(S, dir)
 
@@ -1691,6 +1662,7 @@ function Weird_build_rooms()
   gui.printf("\n---=====  Build WEIRD rooms =====---\n\n")
 
 
+  Room_create_sky_groups()
   Room_reckon_doors()
 
 

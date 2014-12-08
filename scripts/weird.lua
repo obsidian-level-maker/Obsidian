@@ -45,6 +45,9 @@
     inner_points : list(SEED)  -- points are stored as seeds
                                -- (refer to bottom-left coordinate)
 
+    sky_group : table   -- outdoor areas which directly touch will belong
+                        -- to the same sky_group (unless a solid wall is
+                        -- enforced, e.g. between zones).
 --]]
 
 
