@@ -646,6 +646,11 @@ function Room_reckon_doors()
       return
     end
 
+
+--!!!!!!1 DISABLED NORMAL DOORS (etc) FOR NOW
+do return end
+
+
     -- apply the random check
     local prob = indoor_prob
     if (S.room.is_outdoor and N.room.kind != "cave") or
@@ -663,6 +668,7 @@ function Room_reckon_doors()
 
       return
     end
+
 
     -- special archways for caves
     local R1 = S.room
@@ -1592,6 +1598,7 @@ if A.room then tag = A.room.svolume ; light = A.room.id ; end
 
     local B_kind = S.border[dir].kind
 
+stderrf("B_kind: %s\n", B_kind)
     if B_kind == "arch" then
       dummy_arch(S, dir)
 
@@ -1678,11 +1685,14 @@ function Weird_build_square(R, S)
 end
 
 
+
 function Weird_build_rooms()
   
   gui.printf("\n---=====  Build WEIRD rooms =====---\n\n")
 
--- TODO : Weird_connect_stuff()
+
+  Room_reckon_doors()
+
 
   each A in LEVEL.areas do
     dummy_properties(A)
@@ -1700,12 +1710,14 @@ function Weird_build_rooms()
     end
 
 -- TEST CRUD !!! 
+--[[
     if A.mode != "void" then
       local ent_name = rand.pick({"potion", "stimpack", "helmet", "shells", "rocket", "cells", "allmap"});
       each P in A.inner_points do
         Trans.entity(ent_name, P.x1, P.y1, A.floor_h)
       end
     end
+--]]
 
   end
 end

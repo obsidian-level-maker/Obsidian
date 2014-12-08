@@ -1351,7 +1351,7 @@ function Quest_create_zones()
   ---| Quest_create_zones |---
 
   -- FIXME: choose based on # of rooms
-  local want_zones = 3 --!!!! int((SEED_W + SEED_H) / 20 + gui.random() * 2.5)
+  local want_zones = 4 --!!!! int((SEED_W + SEED_H) / 20 + gui.random() * 2.5)
 
   gui.debugf("want_zones = %d\n", want_zones)
 
