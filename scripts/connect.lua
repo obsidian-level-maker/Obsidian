@@ -293,7 +293,7 @@ function Connect_teleporters()
   -- determine number to make
   local quota = style_sel("teleporters", 0, 1, 2, 3.7)
 
-  quota = quota * LEVEL.W / 5
+  quota = quota * SEED_W / 16
   quota = quota + rand.skew() * 1.7
 
   quota = int(quota) -- round down

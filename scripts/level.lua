@@ -760,8 +760,8 @@ function Levels_build_it()
 
   Weird_connect_stuff()
 
---!!!!  Quest_make_quests()
---!!!!  if gui.abort() then return "abort" end
+  Quest_make_quests()
+  if gui.abort() then return "abort" end
 
   Weird_build_rooms()
   if gui.abort() then return "abort" end

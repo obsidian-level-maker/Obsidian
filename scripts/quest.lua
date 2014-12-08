@@ -828,7 +828,7 @@ function Quest_nice_items()
 
 
   local function calc_extra_quota()
-    local quota = (LEVEL.W + LEVEL.H) * rand.range(0.05, 0.25)
+    local quota = (SEED_W + SEED_H) / rand.pick({ 10, 20, 35, 55, 80 })
 
     if OB_CONFIG.powers == "none" then return 0 end
     if OB_CONFIG.powers == "less" then return 0 end
@@ -1145,8 +1145,8 @@ function Quest_create_zones()
 
     assign_new_zone(Z2.start, Z, Z2, {})
 
-    -- new zone gets the previous lock to solve
-    -- current zone must solve _this_ lock
+    -- new zone gets the previous lock to solve.
+    -- current zone must solve _this_ lock.
     Z2.solution = Z.solution
     Z .solution = LOCK
 
@@ -1350,7 +1350,8 @@ function Quest_create_zones()
 
   ---| Quest_create_zones |---
 
-  local want_zones = int((LEVEL.W + LEVEL.H) / 4 + gui.random() * 2.5)
+  -- FIXME: choose based on # of rooms
+  local want_zones = 3 --!!!! int((SEED_W + SEED_H) / 20 + gui.random() * 2.5)
 
   gui.debugf("want_zones = %d\n", want_zones)
 
@@ -1516,6 +1517,9 @@ end
 
 
   local function should_make_secret(C)
+
+do return false end --!!!!!!
+
     if C.kind == "teleporter" then return false end
 
     if C.R2.must_visit then return false end
@@ -1726,11 +1730,11 @@ end
 
     local Q = Quest_new(Z.start)
 
-    if THEME.switches and STYLE.switches != "none" then
-      quest_flow(Q.start, Q)
-    else
+---???    if THEME.switches and STYLE.switches != "none" then
+---???      quest_flow(Q.start, Q)
+---???    else
       boring_flow(Q.start, Q, "need_solution")
-    end
+---???    end
 
     -- make room after a keyed door often be a breather
     if Z.id >= 2 and not Z.start.purpose and rand.odds(70) then
@@ -2026,7 +2030,7 @@ function Quest_make_quests()
   Quest_divide_zones()
   Quest_final_battle()
 
-  Connect_reserved_rooms()
+---!!!  Connect_reserved_rooms()
 
   Quest_order_by_visit()
   Quest_zones_for_scenics()
