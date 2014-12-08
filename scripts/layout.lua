@@ -302,7 +302,7 @@ function Layout_place_importants(R)
         -- FIXME : wall_dist
         local wall_dist = rand.range(0.5, 2.5)
         local z = assert(S.floor_h)
-        table.insert(R.normal_wotsits, { x=S.x1, y=S.y1, wall_dist=wall_dist })
+        table.insert(R.normal_wotsits, { x=S.x1, y=S.y1, z=z, wall_dist=wall_dist })
       end
     end
 
@@ -606,8 +606,10 @@ function Layout_build_importants()
 
 
   local function player_dir(spot)
+    -- FIXME : analyse all 4 directions, pick one which can see the most
+    --         [ or opposite of one which can see the least ]
 
-do return 2 end --!!!!! FIXME  player_dir
+    local S = Seed_from_coord(spot.x, spot.y)
 
     if R.sh > R.sw then
       if S.sy > (R.sy1 + R.sy2) / 2 then 
@@ -629,7 +631,8 @@ do return 2 end --!!!!! FIXME  player_dir
     local fab_name = "Item_pedestal"
 
     -- FIXME: TEMP RUBBISH
-    if string.sub(item, 1, 2) == "ks" then
+    if string.sub(item, 1, 2) == "kc" or
+       string.sub(item, 1, 2) == "ks" then
       fab_name = "Item_podium"
     end
 
@@ -638,7 +641,7 @@ do return 2 end --!!!!! FIXME  player_dir
 
     local skin1 = { item=item }
 
-    local T = Trans.spot_transform(spot.x, spot.y, spot.z, 2) -- TODO: spot_dir
+    local T = Trans.spot_transform(spot.x, spot.y, spot.z, spot.dir)
 
     Fabricate(R, def, T, { skin1 })
 
@@ -647,10 +650,10 @@ do return 2 end --!!!!! FIXME  player_dir
 
 
   local function content_very_big_item(spot, item, is_weapon)
+--[[  FIXME : LOWERING PEDESTALS
+
     -- sometimes make a lowering pedestal
     local prob = sel(is_weapon, 40, 20)
-
---[[  FIXME : LOWERING PEDESTALS
 
     if rand.odds(prob) and
        THEME.lowering_pedestal_skin and
@@ -758,61 +761,44 @@ do return 2 end --!!!!! FIXME  player_dir
 
 
   local function content_exit(spot)
+    local def = PREFABS["Exit_switch"]
+    assert(def)
 
----???    local CS = R.conns[1]:get_seed(R)
----???    local dir = dir_for_wotsit(S)
+    local skin1 = { }
 
-    local sw_special = 11
-    if R.purpose == "SECRET_EXIT" then sw_special = 51 end
+    if R.purpose == "SECRET_EXIT" then skin1.special = 51 end
 
---[[
-    if R.is_outdoor and THEME.out_exits then
-      -- FIXME: use single one for a whole episode
-      local skin_name = rand.key_by_probs(THEME.out_exits)
-      local skin = assert(GAME.EXITS[skin_name])
-      Build.outdoor_exit_switch(S, dir, z1, skin, sw_special)
+    local dir = spot.dir or 2
 
-    elseif THEME.exits then
---]]
+    local T = Trans.spot_transform(spot.x, spot.y, spot.z, 10 - dir)
 
-      -- FIXME: use single one for a whole episode
-      local skin_name = rand.key_by_probs(THEME.exits)
-      local skin = assert(GAME.EXITS[skin_name])
-      Build.exit_pillar(S, z1, skin, sw_special)
-      Trans.entity("light", mx, my, z1+144, { cave_light=176 })
-
----    end
+    Fabricate(R, def, T, { skin1 })
   end
 
 
   local function content_purpose(spot)
-    local sx, sy = S.sx, S.sy
-
-    local z1 = assert(S.floor_h)
-    local z2 = S.ceil_h  or R.ceil_h
-
-    local mx, my = S:mid_point()
-
     if R.purpose == "START" then
-      content_start(S, mx, my, z1)
+      content_start(spot)
 
-    elseif R.purpose == "EXIT" and OB_CONFIG.game == "quake" then
-      local skin = { floor="SLIP2", wall="SLIPSIDE" }
-
-      Build.quake_exit_pad(S, z1 + 16, skin, LEVEL.next_map)
+---???    elseif R.purpose == "EXIT" and OB_CONFIG.game == "quake" then
+---???      local skin = { floor="SLIP2", wall="SLIPSIDE" }
+---???
+---???      Build.quake_exit_pad(S, z1 + 16, skin, LEVEL.next_map)
 
     elseif R.purpose == "EXIT" or R.purpose == "SECRET_EXIT" then
-      content_exit(S, mx, my, z1)
+      content_exit(spot)
 
     elseif R.purpose == "KEY" then
       local LOCK = assert(R.purpose_lock)
       content_very_big_item(spot, LOCK.item)
 
     elseif R.purpose == "SWITCH" then
+--[[ FIXME: BUILD SWITCHES
       local LOCK = assert(R.purpose_lock)
       local INFO = assert(GAME.SWITCHES[LOCK.switch])
       Build.small_switch(S, dir_for_wotsit(S), z1, INFO.skin, LOCK.tag)
       Trans.entity("light", mx, my, z1+112, { cave_light=176 })
+--]]
 
     else
       error("unknown purpose: " .. tostring(R.purpose))
@@ -820,10 +806,10 @@ do return 2 end --!!!!! FIXME  player_dir
   end
 
 
-  local function content_weapon(G)
+  local function content_weapon(spot)
     local weapon = assert(spot.content_item)
 
-    if R == LEVEL.start_room or R.is_hallway then
+    if R.purpose == "START" or R.is_hallway then
       -- bare item
       Trans.entity(weapon, spot.x, spot.y, spot.z)
     else
@@ -837,11 +823,11 @@ do return 2 end --!!!!! FIXME  player_dir
   local function content_item(spot)
     local item = assert(spot.content_item)
 
-    if R == LEVEL.start_room or R.hallway then
+    if R.purpose == "START" or R.is_hallway then
       -- bare item
       Trans.entity(item, spot.x, spot.y, spot.z)
     else
-      content_big_item(item, spot.x, spot.y, spot.z)
+      content_big_item(spot, item)
     end
   end
 
