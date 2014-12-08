@@ -300,9 +300,48 @@ function Layout_place_importants(R)
   end
 
 
+  local function collect_wotsit_spots()
+    -- main spots are "inner points" of areas
+
+    R.normal_wotsits = {}
+
+    each A in R.areas do
+      each S in A.inner_points do
+        -- FIXME : wall_dist
+        local wall_dist = rand.range(0.5, 2.5)
+        table.insert(R.normal_wotsits, { x=S.x1, y=S.y1, wall_dist=wall_dist })
+      end
+    end
+
+    -- emergency spots are the middle of whole (square) seeds
+    R.emergency_wotsits = {}
+
+    each S in R.seeds do
+      if not S.diagonal then
+        local mx, my = S.mid_point()
+        local wall_dist = rand.range(0.4, 0.5)
+        table.insert(R.emergency_wotsits, { x=mx, y=my, wall_dist=wall_dist })
+      end
+    end
+
+    -- dire emergency spots are the middle of diagonal seeds
+    R.dire_wotsits = {}
+
+    each S in R.seeds do
+      if S.diagonal then
+        local mx, my = S.mid_point()
+        local wall_dist = rand.range(0.2, 0.3)
+        table.insert(R.dire_wotsits, { x=mx, y=my, wall_dist=wall_dist })
+      end
+    end
+  end
+
+
   ---| Layout_place_importants |---
 
-  Layout_compute_wall_dists(R)
+  collect_wotsit_spots()
+
+---???  Layout_compute_wall_dists(R)
 
   if R.kind == "cave" or
      (rand.odds(5) and R.sw >= 3 and R.sh >= 3)
