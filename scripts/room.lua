@@ -1763,6 +1763,12 @@ function Weird_build_rooms()
 
   Weird_floor_heights()
 
+  each R in LEVEL.rooms do
+    Layout_place_importants(R)
+  end
+
+
+  -- TODO : tidy up this crud
 
   each A in LEVEL.areas do
     dummy_properties(A)

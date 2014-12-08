@@ -78,29 +78,7 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
   local bonus_x, bonus_y
 
 
-  local function nearest_wall(T)
-    -- get the wall_dist from seed containing the spot
-
-    local S = Seed_from_coord(T.x1 + 32, T.y1 + 32)
-
-    -- sanity check
-    if S.room != R then return nil end
-
-    return assert(S.wall_dist)
-  end
-
-
-  local function fuzzy_dist(mx, my, T)
-    local tx, ty = geom.box_mid(T.x1, T.y1, T.x2, T.y2)
-
-    local dx = math.abs(mx - tx)
-    local dy = math.abs(my - ty)
-
-    return dx + dy
-  end
-
-
-  local function nearest_conn(T)
+  local function nearest_conn(spot)
     local dist
 
     each C in R.conns do
@@ -109,7 +87,10 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
         local dir = sel(C.R1 == R, C.dir, 10 - C.dir)
 
         local ex, ey = S:edge_coord(dir)
-        local d = fuzzy_dist(ex, ey, T) / SEED_SIZE
+        local d = geom.dist(ex, ey, spot.x, spot.y) / SEED_SIZE
+
+        -- tie breaker
+        d = d + gui.random() / 1024
 
         if not dist or d < dist then
           dist = d
@@ -121,13 +102,14 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
   end
 
 
-  local function nearest_goal(T)
+  local function nearest_goal(spot)
     local dist
 
     each goal in R.goals do
-      local S = assert(goal.S)
-      local mx, my = S:mid_point()
-      local d = fuzzy_dist(mx, my, T) / SEED_SIZE
+      local d = geom.dist(goal.x, goal.y, spot.x, spot.y) / SEED_SIZE
+
+      -- tie breaker
+      d = d + gui.random() / 1024
 
       if not dist or d < dist then
         dist = d
@@ -223,11 +205,11 @@ end
     end
   end
 
-  assert(best)
-
 
 
   --- OK ---
+
+  local spot = assert(best)
 
 
   -- never use it again
@@ -326,10 +308,10 @@ function Layout_place_importants(R)
     -- emergency spots are the middle of whole (square) seeds
     R.emergency_wotsits = {}
 
-    each S in R.seeds do
+    each S in R.half_seeds do
       if S.content or S.conn then continue end
       if not S.diagonal then
-        local mx, my = S.mid_point()
+        local mx, my = S:mid_point()
         local wall_dist = rand.range(0.4, 0.5)
         table.insert(R.emergency_wotsits, { x=mx, y=my, wall_dist=wall_dist })
       end
@@ -338,9 +320,9 @@ function Layout_place_importants(R)
     -- dire emergency spots are the middle of diagonal seeds
     R.dire_wotsits = {}
 
-    each S in R.seeds do
+    each S in R.half_seeds do
       if S.diagonal then
-        local mx, my = S.mid_point()
+        local mx, my = S:mid_point()
         local wall_dist = rand.range(0.2, 0.3)
         table.insert(R.dire_wotsits, { x=mx, y=my, wall_dist=wall_dist })
       end
