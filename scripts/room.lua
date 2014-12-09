@@ -486,7 +486,6 @@ function Room_create_sky_groups()
   each A in LEVEL.areas do
     if A.is_outdoor and not A.sky_group then
       A.sky_group = new_sky_group()
-stderrf("NEW SKY GROUP #%d\n", A.sky_group.id)
       spread_group(A)
     end
   end

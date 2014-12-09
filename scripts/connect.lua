@@ -963,7 +963,7 @@ function Weird_connect_stuff()
       end
     end
 
-    stderrf("hallway %s could not connect : killing it\n", R:tostr())
+    gui.printf("hallway %s could not connect : killing it\n", R:tostr())
 
     kill_hallway(R)
   end

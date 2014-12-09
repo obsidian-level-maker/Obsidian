@@ -304,7 +304,7 @@ function Layout_place_importants(R)
         -- FIXME : wall_dist
         local wall_dist = rand.range(0.5, 2.5)
         local z = assert(S.floor_h)
-        table.insert(R.normal_wotsits, { x=S.x1, y=S.y1, z=z, wall_dist=wall_dist })
+        table.insert(R.normal_wotsits, { x=S.x1 + 32, y=S.y1 + 32, z=z, wall_dist=wall_dist })
       end
     end
 
