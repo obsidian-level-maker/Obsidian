@@ -1384,7 +1384,10 @@ function Weird_group_into_rooms()
   local function room_from_area(A, T)
     local ROOM = ROOM_CLASS.new()
 
-    if A.mode == "hallway" then ROOM.is_hallway = true end
+    if A.mode == "hallway" then
+      ROOM.is_hallway = true
+      ROOM.kind = "hallway"
+    end
 
     ROOM.svolume = T.size
     ROOM.total_inner_points = 0
