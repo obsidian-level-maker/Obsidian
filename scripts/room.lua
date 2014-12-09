@@ -1391,7 +1391,7 @@ gui.printf("spread_kind '%s' : starts=%d  quota=%d\n", what, start_num, seed_quo
 
   local total_seeds = SEED_W * SEED_H
 
-  local out_quota = style_sel("outdoors", 0, 12, 30, 60, 120)
+  local out_quota = style_sel("outdoors", 0, 10, 25, 50, 120)
   local nat_quota = style_sel("naturals", 0, 10, 25, 50, 120)
 
   out_quota = total_seeds * out_quota / 100
