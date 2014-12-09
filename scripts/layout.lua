@@ -189,6 +189,8 @@ end
   
   if table.empty(list) then
     if none_OK then return nil end
+--- stderrf("FUCKED UP IN %s\n", R:tostr())
+---    do return { x=0, y=0, z=0, wall_dist=0} end
     error("No usable spots in room!")
   end
 
@@ -323,7 +325,7 @@ function Layout_place_importants(R)
     R.dire_wotsits = {}
 
     each S in R.half_seeds do
-      if S.diagonal then
+      if S.diagonal or S.conn then
         local mx, my = S:mid_point()
         local wall_dist = rand.range(0.2, 0.3)
         local z = assert(S.area and S.area.floor_h)
