@@ -1586,6 +1586,49 @@ function dummy_arch(S, dir)
 end
 
 
+
+function build_edge(A, S, dir)
+
+
+  ---| build_edge |---
+
+  local N = S:diag_neighbor(dir, "NODIR")
+
+  if N == "NODIR" then return end
+
+  -- edge of map  :  FIXME
+  if not (N and N.area) then return end
+
+  -- same area ?   nothing needed
+  if N.area == S.area then return end
+
+
+  local same_room = (N.room and N.room == S.room)
+
+  local B_kind = S.border[dir].kind
+
+  if B_kind == "arch" or B_kind == "lock_door" then
+    dummy_arch(S, dir)
+
+  elseif B_kind == "lock_door" then
+    dummy_arch(S, dir)  -- FIXME
+
+  elseif B_kind == "straddle" then
+    -- nothing
+
+--!!!!    elseif A.mode == "hallway" or
+--!!!!        (rand.odds(80) and (A.kind == "building" or A.kind == "cave"))
+--!!!!    then
+  elseif not same_room then
+    dummy_fence_or_wall(S, dir, A.wall_mat)
+    
+  else
+--!!!      dummy_fence_or_wall(S, dir, A.wall_mat, A.floor_h + 8)
+  end
+end
+
+
+
 function dummy_sector(A, S)
   assert(S.area == A)
 
@@ -1601,7 +1644,7 @@ function dummy_sector(A, S)
     { x=PS.x1, y=PS.y2 }
   }
 
-      if S.diagonal == 3 then
+  if S.diagonal == 3 then
     table.remove(bare_brush, 4)
   elseif S.diagonal == 7 then
     table.remove(bare_brush, 2)
@@ -1629,7 +1672,7 @@ function dummy_sector(A, S)
 
 
 local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
-if A.room then tag = A.room.svolume ; light = A.room.id ; end
+if A.room then tag = A.room.id end
 
 
   local f_brush = table.deep_copy(bare_brush)
@@ -1657,36 +1700,28 @@ if A.room then tag = A.room.svolume ; light = A.room.id ; end
   -- walls
 
   each dir in geom.ALL_DIRS do
-    local N = S:diag_neighbor(dir)
-
-    if not (N and N.area) then continue end
-
-    if N.area == S.area then continue end
-
-    local same_room = (N.room and N.room == S.room)
-
-    local B_kind = S.border[dir].kind
-
-    if B_kind == "arch" or B_kind == "lock_door" then
-      dummy_arch(S, dir)
-
-    elseif B_kind == "lock_door" then
-      dummy_arch(S, dir)  -- FIXME
-
-    elseif B_kind == "straddle" then
-      -- nothing
-
---!!!!    elseif A.mode == "hallway" or
---!!!!        (rand.odds(80) and (A.kind == "building" or A.kind == "cave"))
---!!!!    then
-    elseif not same_room then
-      dummy_fence_or_wall(S, dir, A.wall_mat)
-      
-    else
---!!!      dummy_fence_or_wall(S, dir, A.wall_mat, A.floor_h + 8)
-    end
+    build_edge(A, S, dir)
   end
 end
+
+
+
+function build_area(A)
+  each S in A.half_seeds do
+    dummy_sector(A, S)
+  end
+
+-- TEST CRUD !!! 
+--[[
+    if A.mode != "void" then
+      local ent_name = rand.pick({"potion", "stimpack", "helmet", "shells", "rocket", "cells", "allmap"});
+      each P in A.inner_points do
+        Trans.entity(ent_name, P.x1, P.y1, A.floor_h)
+      end
+    end
+--]]
+end
+
 
 
 function dummy_properties(A)
@@ -1746,21 +1781,6 @@ function dummy_properties(A)
 end
 
 
-function Weird_build_diagonal(R, S)
-  
-  -- determine coordinates of triangle
-
-
-  -- FIXME Weird_build_diagonal
-end
-
-
-function Weird_build_square(R, S)
-
-  -- FIXME Weird_build_square
-end
-
-
 
 function Weird_build_rooms()
   
@@ -1776,36 +1796,11 @@ function Weird_build_rooms()
     Layout_place_importants(R)
   end
 
-
-  -- TODO : tidy up this crud
-
   each A in LEVEL.areas do
     dummy_properties(A)
 
-    each S in A.half_seeds do
-      dummy_sector(A, S)
-      do continue end
-
-      if S.diagonal then
-        Weird_build_diagonal(R, S)
-        Weird_build_diagonal(R, S)
-      else
-        Weird_build_square(R, S)
-      end
-    end
-
--- TEST CRUD !!! 
---[[
-    if A.mode != "void" then
-      local ent_name = rand.pick({"potion", "stimpack", "helmet", "shells", "rocket", "cells", "allmap"});
-      each P in A.inner_points do
-        Trans.entity(ent_name, P.x1, P.y1, A.floor_h)
-      end
-    end
---]]
-
+    build_area(A)
   end
-
 
   Layout_build_importants()
 end

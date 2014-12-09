@@ -911,7 +911,7 @@ function Levels_make_all()
 
 
 -- FIXME: !!!!!!  fixed seed for testing weird stuff
-OB_CONFIG.seed = 222
+OB_CONFIG.seed = 225
 
 
   gui.rand_seed(OB_CONFIG.seed + 1)
