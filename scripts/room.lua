@@ -573,6 +573,7 @@ function Room_reckon_doors()
 
     if C.lock then
       B.kind = "lock_door"
+      B.conn = C
       B.lock = C.lock
 
       -- FIXME: smells like a hack!!
@@ -1589,6 +1590,95 @@ end
 
 function build_edge(A, S, dir)
 
+  local bord = S.border[dir]
+  local LOCK = bord.lock
+
+
+  local function do_keyed_door()
+    local z = A.floor_h
+
+    assert(LOCK)
+
+---!!!    local o_tex = outer_tex(S, dir, w_tex)
+---!!!    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex }
+
+    local skin1 = { }
+
+
+    -- FIXME : find it properly
+    local fab_name = "Locked_" .. LOCK.item
+
+    local def
+
+
+    if geom.is_corner(dir) then
+      fab_name = fab_name .. "_diag"
+
+      local def = PREFABS[fab_name]
+      assert(def)
+
+      local DIR_MAP = { [1]=2, [9]=8, [3]=4, [7]=6 }
+      local dir2 = DIR_MAP[dir]
+
+      local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, dir2)
+
+      Fabricate(R, def, T, { skin1 })
+
+    else  -- axis-aligned edge
+
+      local def = PREFABS[fab_name]
+      assert(def)
+
+      local S2 = S
+      local seed_w = 1
+
+      local T = Trans.edge_transform(S.x1, S.y1, S2.x2, S2.y2, z,
+                                     dir, 0, seed_w * 192, def.deep, def.over)
+
+      Fabricate(R, def, T, { skin1 })
+  
+---???    do_door_base(S, dir, z, w_tex, o_tex)
+    end
+  end
+
+
+  local function do_locked_door()
+    assert(LOCK)
+
+    if LOCK.item then
+      do_keyed_door()
+      return
+    end
+
+    error("WTF : switched door")
+
+--[[  TODO
+
+    local z = assert(S.conn and S.conn.conn_h)
+
+    -- FIXME : find it properly
+    local fab_name = "Door_with_bars" --!!! Door_SW_blue
+
+    local def = PREFABS[fab_name]
+    assert(def)
+
+    local o_tex = outer_tex(S, dir, w_tex)
+    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex }
+
+    skin1.lock_tag = LOCK.tag
+
+    local S2 = S
+    local seed_w = 1
+
+    local T = Trans.edge_transform(S.x1, S.y1, S2.x2, S2.y2, z,
+                                   dir, 0, seed_w * 192, def.deep, def.over)
+
+    Fabricate(R, def, T, { skin1 })
+
+    do_door_base(S, dir, z, w_tex, o_tex)
+--]]
+  end
+
 
   ---| build_edge |---
 
@@ -1605,15 +1695,13 @@ function build_edge(A, S, dir)
 
   local same_room = (N.room and N.room == S.room)
 
-  local B_kind = S.border[dir].kind
-
-  if B_kind == "arch" or B_kind == "lock_door" then
+  if bord.kind == "arch" then
     dummy_arch(S, dir)
 
-  elseif B_kind == "lock_door" then
-    dummy_arch(S, dir)  -- FIXME
+  elseif bord.kind == "lock_door" then
+    do_locked_door()
 
-  elseif B_kind == "straddle" then
+  elseif bord.kind == "straddle" then
     -- nothing
 
 --!!!!    elseif A.mode == "hallway" or
