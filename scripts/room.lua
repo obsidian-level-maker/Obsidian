@@ -832,9 +832,9 @@ function Room_determine_spots()
     end
 
     -- set the edges of the area
-
-    -- FIXME
-
+    each E in A.side_edges do
+      gui.spots_draw_line(E.x1, E.y1, E.x2, E.y2, SPOT_LEDGE)
+    end
 
     -- remove decoration entities
     R:spots_do_decor(A.floor_h)
@@ -1640,6 +1640,30 @@ function build_edge(A, S, dir)
   end
 
 
+  local function add_edge_line()
+    local x1, y1 = S.x1, S.y1
+    local x2, y2 = S.x2, S.y2
+
+    if dir == 2 then y2 = y1 end
+    if dir == 8 then y1 = y2 end
+
+    if dir == 4 then x2 = x1 end
+    if dir == 6 then x1 = x2 end
+
+    if dir == 3 or dir == 7 then
+      -- no change necessary
+    end
+
+    if dir == 1 or dir == 9 then
+      y1, y2 = y2, y1
+    end
+
+    local E = { x1=x1, y1=y1, x2=x2, y2=y2 }
+
+    table.insert(A.side_edges, E)
+  end
+
+
   ---| build_edge |---
 
   local N = S:diag_neighbor(dir, "NODIR")
@@ -1651,6 +1675,9 @@ function build_edge(A, S, dir)
 
   -- same area ?   nothing needed
   if N.area == S.area then return end
+
+
+  add_edge_line()
 
 
   local same_room = (N.room and N.room == S.room)
@@ -1735,6 +1762,10 @@ if A.room then tag = A.room.id end
   Trans.brush(f_brush)
   Trans.brush(c_brush)
 
+
+  table.insert(A.floor_brushes, f_brush)
+
+
   if S.room and S.room.purpose == "START" and
      not LEVEL.has_player
   then
@@ -1755,6 +1786,9 @@ end
 
 
 function build_area(A)
+  A.floor_brushes = {}
+  A.side_edges = {}
+
   each S in A.half_seeds do
     dummy_sector(A, S)
   end
