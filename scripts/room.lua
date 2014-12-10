@@ -575,6 +575,8 @@ function Room_reckon_doors()
       B.conn = C
       B.lock = C.lock
 
+      C.is_door = true
+
       -- FIXME: smells like a hack!!
       if B.lock.switch and string.sub(B.lock.switch, 1, 4) == "bar_" then
         B.kind = "bars"
@@ -595,6 +597,7 @@ function Room_reckon_doors()
       -- TODO: if both rooms are outdoor, make a ''secret fence''
 
       B.kind = "secret_door"
+      C.is_door = true
 
       -- mark the first seed so it can have the secret special
       C.S2.mark_secret = true
@@ -633,6 +636,7 @@ do return end
 
     if rand.odds(prob) then
       B.kind = "door"
+      C.is_door = true
 
       if rand.odds(30) then
         C.fresh_floor = true
@@ -1499,7 +1503,13 @@ function Weird_floor_heights()
         assert(C.A1)
         assert(C.A1.room == R)
         assert(C.A1.floor_h)
-        visit_room(C.R2, C.A1.floor_h + 8, C.A2)
+
+        local next_f = C.A1.floor_h
+        if not C.is_door then
+          next_f = next_f - 8
+        end
+
+        visit_room(C.R2, next_f, C.A2)
       end
     end
   end
