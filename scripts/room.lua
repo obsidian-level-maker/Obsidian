@@ -1766,18 +1766,9 @@ if A.room then tag = A.room.id end
   Trans.brush(c_brush)
 
 
+  -- remember floor brush for the spot logic
   table.insert(A.floor_brushes, f_brush)
 
-
-  if S.room and S.room.purpose == "START" and
-     not LEVEL.has_player
-  then
-    local mx, my = S:mid_point()
-
-    Trans.entity("player1", mx, my, A.floor_h)
-
-    LEVEL.has_player = true
-  end
 
   -- walls
 

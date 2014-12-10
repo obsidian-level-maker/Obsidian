@@ -754,8 +754,8 @@ function Layout_build_importants()
       S.no_floor = true
       S.raising_start = true
       R.has_raising_start = true
-    else
 --]]
+    else
 
       content_start_pad(spot, dir)
     end
