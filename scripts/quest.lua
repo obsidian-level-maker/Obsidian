@@ -1084,7 +1084,7 @@ function Quest_create_zones()
       if C.lock then continue end
       if C.kind == "teleporter" then continue end
 
-      if C.R1.is_hallway or C.R2.is_hallway then continue end
+      if C.R1.is_hallway then continue end
 
       -- start room, key room, branch-off room
       if C.trav_1.rooms < 3 then continue end 
