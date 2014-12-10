@@ -294,25 +294,6 @@ function ROOM_CLASS.furthest_dist_from_entry(R)
 end
 
 
-function ROOM_CLASS.spots_do_edges(R)
-  for side = 2,8,2 do
-    local x1, y1, x2, y2 = R:get_bbox()
-
-    if geom.is_vert(side) then
-      x1 = x1 - 200 ; x2 = x2 + 200
-    else
-      y1 = y1 - 200 ; y2 = y2 + 200
-    end
-
-    if side == 2 then y2 = y1 ; y1 = y1 - 200 end
-    if side == 8 then y1 = y2 ; y2 = y2 + 200 end
-    if side == 4 then x2 = x1 ; x1 = x1 - 200 end
-    if side == 6 then x1 = x2 ; x2 = x2 + 200 end
-
-    gui.spots_fill_box(x1, y1, x2, y2, SPOT_LEDGE)
-  end
-end
-
 
 function ROOM_CLASS.add_decor(R, name, x, y, z)
   local info = GAME.ENTITIES[name]
@@ -805,85 +786,61 @@ function Room_determine_spots()
   
   -- Algorithm:
   --
-  -- For each floor of each room:
+  -- For each area of each room:
   --
-  --   1. initialize grid to be CLEAR, to represent the current floor.
-  --      the floor itself is never set or cleared, as polygon drawing
-  --      always fills any pixel touched by the polygon, leading to
-  --      making somewhat-too-big areas
-  --  
-  --   2. kill the sides of the room
+  --   1. initialize grid to be LEDGE.
   --
-  --   3. kill all seeds not part of the current floor
+  --   2. CLEAR the polygons for area's floor.  This will produce areas
+  --      which are somewhat too large.
   --
-  --   4. use the CSG code to kill any blocking brushes 
+  --   3. use draw_line to set edges of area to LEDGE again, fixing the
+  --      "too large" problem of the above step.
+  --
+  --   4. use the CSG code to kill any blocking brushes.
+  --      This step creates the WALL cells.
   --
 
-  local function clear_chunk(K)
-    local S1 = SEEDS[K.sx1][K.sy1]
-    local S2 = SEEDS[K.sx2][K.sy2]
 
-    gui.spots_fill_box(S1.x1, S1.y1, S2.x2, S2.y2, SPOT_CLEAR)
-  end
+  local function area_get_bbox(A)
+    local first_S = A.half_seeds[1]
 
+    local BB_X1, BB_Y1 = first_S, first_S
+    local BB_X2, BB_Y2 = first_S, first_S
 
-  local function solidify_seed(S)
-    gui.spots_fill_box(S.x1, S.y1, S.x2, S.y2, SPOT_LEDGE)
-  end
+    each S in A.half_seeds do
+      if S.sx < BB_X1.sx then BB_X1 = S end
+      if S.sy < BB_Y1.sy then BB_Y1 = S end
 
-
-  local function try_solidify_seed(S, floor)
-    for i = 1,9 do
-      local K = S.chunk[i]
-
-      if not K then break; end
-
-      if K.kind == "floor" and K.floor == floor then
-        return -- found the floor, so leave it alone
-      end
+      if S.sx > BB_X2.sx then BB_X2 = S end
+      if S.sy > BB_Y2.sy then BB_Y2 = S end
     end
 
-    -- that floor is not here
-    solidify_seed(S)
+    return BB_X1.x1, BB_Y1.y1, BB_X2.x2, BB_Y2.y2
   end
 
 
-  local function spots_for_floor(R, floor)
+  local function spots_for_area(R, A)
     -- get bbox of room
-    local rx1, ry1, rx2, ry2 = R:get_bbox()
+    local rx1, ry1, rx2, ry2 = area_get_bbox(A)
 
-    -- initialize grid to "clear"
-    gui.spots_begin(rx1 - 48, ry1 - 48, rx2 + 48, ry2 + 48,
-                    floor.floor_h, SPOT_CLEAR)
+    -- initialize grid to "ledge"
+    gui.spots_begin(rx1 - 48, ry1 - 48, rx2 + 48, ry2 + 48, A.floor_h, SPOT_LEDGE)
 
-    -- handle edges of room
-    R:spots_do_edges()
-
-    -- any seeds which _DONT_ belong to this floor, solidify them
-    for sx = R.sx1, R.sx2 do
-    for sy = R.sy1, R.sy2 do
-      local S = SEEDS[sx][sy]
-
-      -- this check handles sub-rooms
-      if S.room != R then
-        solidify_seed(S)
-        continue
-      end
-
-      if S.content == "bridge" then
-        solidify_seed(S)
-        continue
-      end
-
-      try_solidify_seed(S, floor)
+    -- clear polygons making up the floor
+    each brush in A.floor_brushes do
+      gui.spots_fill_poly(brush, SPOT_CLEAR)
     end
-    end
+
+    -- set the edges of the area
+
+    -- FIXME
+
 
     -- remove decoration entities
-    R:spots_do_decor(floor.floor_h)
+    R:spots_do_decor(A.floor_h)
 
     -- remove walls and blockers (using nearby brushes)
-    gui.spots_apply_brushes();
+    gui.spots_apply_brushes()
 
     -- add the spots to the room
 
@@ -903,22 +860,16 @@ function Room_determine_spots()
       table.insert(R.mon_spots, spot)
     end
 
-    gui.spots_end();
+    gui.spots_end()
   end
 
 
   local function spots_in_room(R)
-    -- special code for caves 
-    if R.kind == "cave" then
-      Cave_determine_spots(R)
-      return
-    end
-
     if R.kind == "stairwell" then return end
     if R.kind == "smallexit" then return end
 
-    each vhr,floor in R.floors do
-      spots_for_floor(R, floor)
+    each A in R.areas do
+      spots_for_area(R, A)
     end
   end
 
@@ -1900,5 +1851,7 @@ function Weird_build_rooms()
   end
 
   Layout_build_importants()
+
+  Room_determine_spots()
 end
 
