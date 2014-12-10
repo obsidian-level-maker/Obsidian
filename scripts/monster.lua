@@ -2679,9 +2679,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     if R.purpose == "KEY" or R.purpose == "EXIT" or R.final_battle then
       -- the wotsit placement code will have set this
       if R.guard_spot then
-        local mx, my = R.guard_spot:mid_point()
-
-        return { x=mx, y=my }
+        return R.guard_spot
       end
     end
 

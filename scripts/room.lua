@@ -861,6 +861,9 @@ function Room_determine_spots()
     end
 
     gui.spots_end()
+
+--- DEBUG:
+--- stderrf("AREA_%d has %d mon spots, %d item spots\n", A.id, #mon_spots, #item_spots)
   end
 
 

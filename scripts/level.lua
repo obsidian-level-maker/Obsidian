@@ -766,8 +766,8 @@ function Levels_build_it()
   Weird_build_rooms()
   if gui.abort() then return "abort" end
 
---!!!!  Monster_make_battles()
---!!!!  if gui.abort() then return "abort" end
+  Monster_make_battles()
+  if gui.abort() then return "abort" end
 
   return "ok"
 end
@@ -911,7 +911,7 @@ function Levels_make_all()
 
 
 -- FIXME: !!!!!!  fixed seed for testing weird stuff
-OB_CONFIG.seed = 225
+OB_CONFIG.seed = 221
 
 
   gui.rand_seed(OB_CONFIG.seed + 1)
