@@ -466,8 +466,8 @@ function Weird_group_into_rooms()
   end
 
 
-  local function area_is_tiny(A)
-    return A.svolume < 6
+  local function svol_is_tiny(svolume)
+    return svolume < 6
   end
 
 
@@ -502,7 +502,7 @@ function Weird_group_into_rooms()
       if A.mode != "normal" then continue end
 
       -- very small rooms are handled specially (later on)
-      if area_is_tiny(A) then A.is_tiny = true ; continue end
+      if svol_is_tiny(A.svolume) then A.is_tiny = true ; continue end
 
       table.insert(usable_areas, A)
 
@@ -514,15 +514,19 @@ function Weird_group_into_rooms()
 
 
   local function merge_temp_rooms(T1, T2)
+    assert(not T1.is_dead)
+    assert(not T2.is_dead)
+
     if T1.id > T2.id then
       T1, T2 = T2, T1
     end
 
+    T1.size = T1.size + T2.size
+    T2.size = 0
+
     each A in LEVEL.areas do
       if A.temp_room == T2 then
         A.temp_room = T1
-
-        T1.size = T1.size + A.svolume
       end
     end
 
@@ -537,14 +541,26 @@ function Weird_group_into_rooms()
     assert(A1.temp_room != A2.temp_room)
 
     -- check size constraints
-    -- [ relaxed for tiny rooms ]
+
+    local new_size = A1.temp_room.size + A2.temp_room.size
+
     if not A1.is_tiny then
       local max_size = math.min(A1.max_room_size, A2.max_room_size)
 
-      if A1.temp_room.size + A2.temp_room.size > max_size then
+      if new_size > max_size then
         return false
       end
     end
+
+    if A1.is_tiny and A2.is_tiny then
+      -- only merge two tiny rooms if combined size is large enough
+      if svol_is_tiny(new_size) then return false end
+
+      -- forget our tinyness  [ prevents A2 from being killed later on ]
+      A1.is_tiny = nil
+      A2.is_tiny = nil
+    end
+
 
     -- FIXME : check for "robust" border (# of shared edges)
 
@@ -599,21 +615,21 @@ function Weird_group_into_rooms()
 
 
   local function handle_tiny_areas()
-    local list = {}
-
+    -- do this first, allowing two tiny areas to merge together
     each A in LEVEL.areas do
       if A.is_tiny then
-        table.insert(list, A)
         A.temp_room = new_temp_room(A)
       end
     end
 
-    each A in list do
-      -- if it cannot merge into a neighbor room, kill it (turn into VOID)
-      -- [ typically this only happens when surrounded by a hallway ]
-      if not try_merge_a_neighbor(A, "do_all") then
-        A.mode = "void"
-        A.temp_room = nil
+    each A in LEVEL.areas do
+      if A.is_tiny then
+        -- if it cannot merge into a neighbor room, kill it (turn into VOID)
+        -- [ typically this only happens when surrounded by a hallway ]
+        if not try_merge_a_neighbor(A, "do_all") then
+          A.mode = "void"
+          A.temp_room = nil
+        end
       end
     end
   end
