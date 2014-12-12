@@ -108,6 +108,7 @@ require "prefab"
 require "wad_fab"
 
 require "weird"
+require "area"
 require "layout"
 require "room"
 

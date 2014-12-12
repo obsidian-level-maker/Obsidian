@@ -18,3 +18,729 @@
 --
 ------------------------------------------------------------------------
 
+
+-- class AREA
+--[[
+    id : number
+
+    mode : keyword  -- "normal", "hallway", "water",
+                    -- "void", "scenic", "cage"
+
+    kind : keyword  -- "building", "courtyard",
+                    -- "cave", "landscape"
+
+    is_outdoor : bool
+
+    is_boundary   -- true for areas outside the boundary line
+
+    half_seeds : list(SEED)
+
+    svolume : number   -- number of seeds (0.5 for diagonals)
+
+    neighbors : list(AREA)
+
+    room : ROOM
+
+    
+    inner_points : list(SEED)  -- points are stored as seeds
+                               -- (refer to bottom-left coordinate)
+
+    sky_group : table   -- outdoor areas which directly touch will belong
+                        -- to the same sky_group (unless a solid wall is
+                        -- enforced, e.g. between zones).
+--]]
+
+
+function Weird_create_areas()
+  --
+  -- Converts the point grid into areas and seeds.
+  --
+
+  local function try_set_border(S, dir, kind)
+    if kind then
+      S.border[dir].kind = kind
+    end
+  end
+
+
+  local function convert_to_seeds()
+    for gx = 1, GRID_W - 1 do
+    for gy = 1, GRID_H - 1 do
+      local S = SEEDS[gx][gy]
+
+      local P1 = GRID[gx][gy]
+      local P2 = GRID[gx][gy + 1]
+      local P3 = GRID[gx + 1][gy]
+
+      local diag_edge = P1.edge[9] or P2.edge[3]
+
+      if diag_edge then
+        S:split(sel(P1.edge[9], 3, 1))
+
+        local S2 = S.top
+
+        -- check borders
+
+        if S.diagonal == 3 then
+          try_set_border(S,  7, diag_edge)
+          try_set_border(S2, 3, diag_edge)
+        else
+          try_set_border(S,  9, diag_edge)
+          try_set_border(S2, 1, diag_edge)
+        end
+
+        local T2, T4, T6, T8
+
+        T2 = S ; T8 = S2
+        T4 = S ; T6 = S2
+
+        if S.diagonal == 3 then
+          T4, T6 = T6, T4
+        end
+
+        try_set_border(T4, 4, P1.edge[8])
+        try_set_border(T6, 6, P3.edge[8])
+                                                 
+        try_set_border(T2, 2, P1.edge[6])
+        try_set_border(T8, 8, P2.edge[6])
+
+      else
+        -- normal square seed
+
+        try_set_border(S, 4, P1.edge[8])
+        try_set_border(S, 6, P3.edge[8])
+                                                
+        try_set_border(S, 2, P1.edge[6])
+        try_set_border(S, 8, P2.edge[6])
+      end
+
+    end -- gx, gy
+    end
+  end
+
+
+  local function assign_area_numbers()
+    local area_num = 1
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      local S = SEEDS[sx][sy]
+
+      S.area_num = area_num
+
+      if S.top then S.top.area_num = area_num + 1 end
+
+      area_num = area_num + 2
+    end -- sx, sy
+    end
+  end
+
+
+  local function flood_check_pair(S, dir)
+    if not S then return end
+
+    -- blocked by an edge, cannot flood across it
+    if S.border[dir].kind then return end
+
+    local N = S:diag_neighbor(dir)
+
+    if not N then return end
+
+    -- already the same?
+    if S.area_num == N.area_num then return end
+
+    local new_num = math.min(S.area_num, N.area_num)
+
+    S.area_num = new_num
+    N.area_num = new_num
+
+    did_change = true
+  end
+
+
+  local function flood_fill_pass()
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      local S  = SEEDS[sx][sy]
+      local S2 = S.top
+
+      each dir in geom.ALL_DIRS do
+        flood_check_pair(S,  dir)
+        flood_check_pair(S2, dir)
+      end
+    end
+    end
+  end
+
+
+  local function area_for_number(num)
+    local area = LEVEL.temp_area_map[num]
+
+    if not area then
+      area =
+      {
+        mode = "normal"  -- may become "void" or "scenic" later
+
+        id = Plan_alloc_id("weird_area")
+
+        half_seeds = {}
+        neighbors  = {}
+        inner_points = {}
+      }
+
+      LEVEL.temp_area_map[num] = area
+
+      table.insert(LEVEL.areas, area)
+    end
+
+    return area
+  end
+
+
+  local function flood_fill_areas()
+    gui.printf("flood_fill_areas....\n")
+
+    assign_area_numbers()
+
+    repeat
+gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
+      did_change = false
+      flood_fill_pass()
+    until not did_change
+  end
+
+
+  local function check_squarify_seeds()
+    -- detects when a diagonal seed has same area on each half
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      local S  = SEEDS[sx][sy]
+
+      if S.diagonal and S.top.area_num == S.area_num then
+        S:join_halves()
+      end
+    end
+    end
+  end
+
+
+  local function set_area(S)
+    S.area = area_for_number(S.area_num)
+
+    table.insert(S.area.half_seeds, S)
+  end
+
+
+  local function area_pair_str(A1, A2)
+    if A1.id > A2.id then
+      A1, A2 = A2, A1
+    end
+
+    return string.format("%d_%d", A1.id, A2.id)
+  end
+
+
+  local function try_add_neighbors(A1, A2, nb_map)
+    local str = area_pair_str(A1, A2)
+
+    -- already seen this pair?
+    if nb_map[str] then return end
+
+--    assert(not table.has_elem(A1.neighbors, A2))
+--    assert(not table.has_elem(A2.neighbors, A1))
+
+    table.insert(A1.neighbors, A2)
+    table.insert(A2.neighbors, A1)
+
+    nb_map[str] = 1
+  end
+
+
+  local function find_area_neighbors()
+    local nb_map = {}
+
+    each A in LEVEL.areas do
+      each S in A.half_seeds do
+        each dir in geom.ALL_DIRS do
+          local N = S:diag_neighbor(dir)
+
+          if N and N.area and N.area != A then
+            try_add_neighbors(A, N.area, nb_map)
+          end
+        end
+      end
+    end
+  end
+
+
+  local function create_the_areas()
+    flood_fill_areas()
+
+    check_squarify_seeds()
+
+    LEVEL.temp_area_map = {}
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      local S  = SEEDS[sx][sy]
+      local S2 = S.top
+
+      set_area(S)
+
+      if S2 then set_area(S2) end
+    end
+    end
+
+    LEVEL.temp_area_map = nil
+
+    find_area_neighbors()
+  end
+
+
+  local function flood_inner_areas(A)
+    A.is_inner = true
+
+    each S in A.half_seeds do
+    each dir in geom.ALL_DIRS do
+      local N = S:diag_neighbor(dir)
+
+      if not (N and N.area) then continue end
+
+      if N.area.is_inner then continue end
+
+      if S.border[dir].kind == "boundary" then continue end
+
+      flood_inner_areas(N.area)
+    end
+    end
+  end
+
+
+  local function mark_boundary_areas()
+    -- mark areas that lie outside of the boundary outline.
+    
+    -- middle seed will be normal (non-boundary)
+    local mx = int(SEED_W / 2)
+    local my = int(SEED_H / 2)
+
+    local S1 = SEEDS[mx][my]
+
+    flood_inner_areas(assert(S1.area))
+
+    -- bottom left seed will be boundary
+    local S2 = SEEDS[1][1]
+
+    if S2.area.is_inner then
+      error("mark_boundary_areas failed")
+    end
+
+    each area in LEVEL.areas do
+      if not area.is_inner then
+        area.mode = "scenic"
+        area.is_boundary = true
+      end
+    end
+  end
+
+
+  ---| Weird_create_areas |---
+
+  convert_to_seeds()
+
+  create_the_areas()
+
+  mark_boundary_areas()
+end
+
+
+
+function volume_of_area(A)
+    local volume = 0
+
+    each S in A.half_seeds do
+      if S.diagonal then
+        volume = volume + 0.5
+      else
+        volume = volume + 1
+      end
+    end
+
+    return volume
+end
+
+
+
+function Weird_analyse_areas()
+  --
+  -- See how much open space is in each area, etc...
+  --
+
+  local function collect_inner_points(A)
+    each S in A.half_seeds do
+      -- point is outside of area
+      if S.diagonal == 9 then continue end
+
+      -- point is part of boundary, skip it 
+      if S.diagonal == 3 or S.diagonal == 7 then continue end
+
+      local NA = S:diag_neighbor(4)
+      local NB = S:diag_neighbor(2)
+
+      if not (NA and NA.area == A) then continue end
+      if not (NB and NB.area == A) then continue end
+
+      local NC = NA:diag_neighbor(2)
+      local ND = NB:diag_neighbor(4)
+
+      if not (NC and NC.area == A) then continue end
+
+      if ND != NC then continue end
+
+      -- OK --
+      table.insert(A.inner_points, S)
+    end
+  end
+
+
+  ---| Weird_analyse_areas |---
+
+  each A in LEVEL.areas do
+    collect_inner_points(A)
+
+    A.svolume = volume_of_area(A)
+
+    A.openness = #A.inner_points / A.svolume
+  end
+end
+
+
+
+function Weird_group_into_rooms()
+  --
+  -- This actually creates the rooms by grouping a bunch of areas together.
+  --
+
+  local usable_areas
+
+
+  local function collect_seeds(R)
+    local sx1, sx2 = 999, -999
+    local sy1, sy2 = 999, -999
+
+    local function update(x, y)
+      sx1 = math.min(sx1, x)
+      sy1 = math.min(sy1, y)
+      sx2 = math.max(sx2, x)
+      sy2 = math.max(sy2, y)
+    end
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      local S  = SEEDS[sx][sy]
+      local S2 = S.top
+    
+      if S.area and S.area.room == R then
+        S.room = R
+        table.insert(R.half_seeds, S)
+        update(sx, sy)
+      end
+
+      if S2 and S2.area and S2.area.room == R then
+        S2.room = R
+        table.insert(R.half_seeds, S2)
+        update(sx, sy)
+      end
+    end
+    end
+
+    if sx1 > sx2 then
+      error("Room with no seeds!")
+    end
+
+    R.sx1 = sx1 ; R.sx2 = sx2
+    R.sy1 = sy1 ; R.sy2 = sy2
+
+    R.sw = R.sx2 - R.sx1 + 1
+    R.sh = R.sy2 - R.sy1 + 1
+  end
+
+
+  local function area_is_tiny(A)
+    return A.svolume < 6
+  end
+
+
+  local function new_temp_room(A)
+    return { id=A.id, size=A.svolume }
+  end
+
+
+  local function rand_max_room_size()
+    -- this value is mainly what controls whether two compatible areas can be
+    -- merged into a single room.
+
+-- do return 9999 end  --!!!!!!
+
+    local SIZES =
+    {
+      [96]  = 40,
+      [64]  = 30,
+      [32]  = 20,
+      [16]  =  5
+    }
+
+    return rand.key_by_probs(SIZES)
+  end
+
+
+  local function collect_usable_areas()
+    usable_areas = {}
+
+    each A in LEVEL.areas do
+      -- hallways are handled later
+      if A.mode != "normal" then continue end
+
+      -- very small rooms are handled specially (later on)
+      if area_is_tiny(A) then A.is_tiny = true ; continue end
+
+      table.insert(usable_areas, A)
+
+      A.temp_room = new_temp_room(A)
+
+      A.max_room_size = rand_max_room_size()
+    end
+  end
+
+
+  local function merge_temp_rooms(T1, T2)
+    if T1.id > T2.id then
+      T1, T2 = T2, T1
+    end
+
+    each A in LEVEL.areas do
+      if A.temp_room == T2 then
+        A.temp_room = T1
+
+        T1.size = T1.size + A.svolume
+      end
+    end
+
+    T2.is_dead = true
+  end
+
+
+  local function try_merge_two_areas(A1, A2)
+    assert(A1.temp_room)
+    assert(A2.temp_room)
+
+    assert(A1.temp_room != A2.temp_room)
+
+---##    -- check areas are compatible
+---##    -- [ relaxed for tiny rooms ]
+---##    if not A1.is_tiny then
+---##      if A1.kind != A2.kind then
+---##        return false
+---##      end
+---##    end
+
+    -- check size constraints
+    -- [ relaxed for tiny rooms ]
+    if not A1.is_tiny then
+      local max_size = math.min(A1.max_room_size, A2.max_room_size)
+
+      if A1.temp_room.size + A2.temp_room.size > max_size then
+        return false
+      end
+    end
+
+    -- FIXME : check for "robust" border (# of shared edges)
+
+    -- OK --
+
+    merge_temp_rooms(A1.temp_room, A2.temp_room)
+
+---##    if A1.is_tiny then
+---##      A1.kind = A2.kind
+---##
+---##      A1.is_outdoor = A2.is_outdoor
+---##      A1.is_natural = A2.is_natural
+---##    end
+
+    return true
+  end
+
+
+  local function try_merge_a_neighbor(A)
+    local poss = {}
+
+    each N in A.neighbors do
+      if N.temp_room and N.temp_room != A.temp_room then
+        table.insert(poss, N)
+      end
+    end
+
+    local N2 = rand.pick(poss)
+
+    if N2 then
+      return try_merge_two_areas(A, N2)
+    end
+
+    return false
+  end
+
+
+  local function iterate_merges()
+    local num_loop = #usable_areas
+
+    for loop = 1, num_loop do
+      rand.shuffle(usable_areas)
+
+      each A in usable_areas do
+        if rand.odds(50) then
+          try_merge_a_neighbor(A)
+        end
+      end
+    end
+  end
+
+
+  local function handle_tiny_areas()
+    local list = {}
+
+    each A in LEVEL.areas do
+      if A.is_tiny then
+        table.insert(list, A)
+        A.temp_room = new_temp_room(A)
+      end
+    end
+
+    each A in list do
+      for loop = 1,10 do
+        if try_merge_a_neighbor(A) then
+          break;
+        end
+      end
+    end
+  end
+
+
+  local function handle_hallways()
+    each A in LEVEL.areas do
+      if A.mode == "hallway" then
+        assert(not A.temp_room)
+        A.temp_room = new_temp_room(A)
+      end
+    end
+  end
+
+
+  local function room_from_area(A, T)
+    local ROOM = ROOM_CLASS.new()
+
+    if A.mode == "hallway" then
+      ROOM.is_hallway = true
+      ROOM.kind = "hallway"
+    end
+
+    ROOM.svolume = T.size
+    ROOM.total_inner_points = 0
+
+    return ROOM
+  end
+
+
+  local function room_add_area(R, A)
+    A.room = R
+
+    table.insert(R.areas, A)
+
+    R.total_inner_points = R.total_inner_points + #A.inner_points
+  end
+
+
+  local function create_rooms()
+    -- all "roomish" areas should now have a 'temp_room' table
+
+    each A in LEVEL.areas do
+      local T = A.temp_room
+
+      if not T then continue end
+
+      assert(not T.is_dead)
+
+      if not T.room then
+        T.room = room_from_area(A, T)
+      end
+
+      room_add_area(T.room, A)
+    end
+  end
+
+
+  ---| Weird_group_into_rooms |---
+
+  collect_usable_areas()
+
+  for main_loop = 1, 10 do
+    iterate_merges()
+  end
+
+  handle_tiny_areas()
+  handle_hallways()
+
+  create_rooms()
+
+  each R in LEVEL.rooms do
+    collect_seeds(R)
+  end
+end
+
+
+
+function Weird_create_rooms()
+
+  gui.printf("\n--==| Planning WEIRD Rooms |==--\n\n")
+
+  assert(LEVEL.ep_along)
+
+  LEVEL.areas = {}
+  LEVEL.rooms = {}
+  LEVEL.conns = {}
+
+  LEVEL.scenic_rooms = {}
+  LEVEL.map_borders  = {}
+
+  LEVEL.free_tag  = 1
+  LEVEL.free_mark = 1
+  LEVEL.ids = {}
+
+  Plan_choose_liquid()
+  Plan_choose_darkness()
+
+
+--TODO  Weird_determine_size()
+
+  Seed_init(GRID_W - 1, GRID_H - 1, DEPOT_SIZE)
+
+
+  Weird_generate()
+  Weird_create_areas()
+
+  Weird_analyse_areas()
+
+  Weird_void_some_areas()
+  Weird_assign_hallways()
+
+  Weird_group_into_rooms()
+  Weird_choose_area_kinds()
+
+
+  gui.printf("Seed Map:\n")
+  Seed_dump_rooms()
+
+  each R in LEVEL.rooms do
+    gui.printf("Final %s   size: %dx%d\n", R:tostr(), R.sw, R.sh)
+  end
+end
+
