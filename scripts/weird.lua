@@ -19,11 +19,11 @@
 ------------------------------------------------------------------------
 
 
-
-ALLOW_CLOSED_SQUARES = true
-
 -- lower this to make larger areas
-T_BRANCH_PROB = 55
+T_BRANCH_PROB = 65
+
+-- if true, allow creation of single-seed squares shapes
+ALLOW_CLOSED_SQUARES = true
 
 
 -- class POINT
