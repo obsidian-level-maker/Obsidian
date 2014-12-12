@@ -801,24 +801,6 @@ function Room_determine_spots()
   --
 
 
-  local function area_get_bbox(A)
-    local first_S = A.half_seeds[1]
-
-    local BB_X1, BB_Y1 = first_S, first_S
-    local BB_X2, BB_Y2 = first_S, first_S
-
-    each S in A.half_seeds do
-      if S.sx < BB_X1.sx then BB_X1 = S end
-      if S.sy < BB_Y1.sy then BB_Y1 = S end
-
-      if S.sx > BB_X2.sx then BB_X2 = S end
-      if S.sy > BB_Y2.sy then BB_Y2 = S end
-    end
-
-    return BB_X1.x1, BB_Y1.y1, BB_X2.x2, BB_Y2.y2
-  end
-
-
   local function spots_for_area(R, A)
     -- get bbox of room
     local rx1, ry1, rx2, ry2 = area_get_bbox(A)
