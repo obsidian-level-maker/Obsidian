@@ -536,14 +536,6 @@ function Weird_group_into_rooms()
 
     assert(A1.temp_room != A2.temp_room)
 
----##    -- check areas are compatible
----##    -- [ relaxed for tiny rooms ]
----##    if not A1.is_tiny then
----##      if A1.kind != A2.kind then
----##        return false
----##      end
----##    end
-
     -- check size constraints
     -- [ relaxed for tiny rooms ]
     if not A1.is_tiny then
@@ -560,18 +552,11 @@ function Weird_group_into_rooms()
 
     merge_temp_rooms(A1.temp_room, A2.temp_room)
 
----##    if A1.is_tiny then
----##      A1.kind = A2.kind
----##
----##      A1.is_outdoor = A2.is_outdoor
----##      A1.is_natural = A2.is_natural
----##    end
-
     return true
   end
 
 
-  local function try_merge_a_neighbor(A)
+  local function try_merge_a_neighbor(A, do_all)
     local poss = {}
 
     each N in A.neighbors do
@@ -580,10 +565,18 @@ function Weird_group_into_rooms()
       end
     end
 
-    local N2 = rand.pick(poss)
+    if table.empty(poss) then
+      return false
+    end
 
-    if N2 then
-      return try_merge_two_areas(A, N2)
+    rand.shuffle(poss)
+
+    for i = 1, sel(do_all, #poss, 1) do
+      local N2 = rand.pick(poss)
+
+      if try_merge_two_areas(A, N2) then
+        return true
+      end
     end
 
     return false
@@ -597,7 +590,7 @@ function Weird_group_into_rooms()
       rand.shuffle(usable_areas)
 
       each A in usable_areas do
-        if rand.odds(50) then
+        if rand.odds(35) then
           try_merge_a_neighbor(A)
         end
       end
@@ -616,10 +609,11 @@ function Weird_group_into_rooms()
     end
 
     each A in list do
-      for loop = 1,10 do
-        if try_merge_a_neighbor(A) then
-          break;
-        end
+      -- if it cannot merge into a neighbor room, kill it (turn into VOID)
+      -- [ typically this only happens when surrounded by a hallway ]
+      if not try_merge_a_neighbor(A, "do_all") then
+        A.mode = "void"
+        A.temp_room = nil
       end
     end
   end
@@ -682,7 +676,7 @@ function Weird_group_into_rooms()
 
   collect_usable_areas()
 
-  for main_loop = 1, 10 do
+  for main_loop = 1, 30 do
     iterate_merges()
   end
 
