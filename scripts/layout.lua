@@ -911,7 +911,7 @@ function Layout_outer_borders()
     -- FIXME : hard-coded for bottom-right corner
 
     if BB_X2.sx < SEED_W / 2 then return false end
-    if BB_Y2.sy < SEED_H / 2 then return false end
+    if BB_Y1.sy > SEED_H / 2 then return false end
 
     return true
   end
@@ -953,7 +953,7 @@ function Layout_outer_borders()
     end
 
     if table.empty(room.areas) then
-      return  -- nothing happening dude
+      return  -- nothing happening, dude
     end
 
     neighbor_min_max(room)
@@ -963,6 +963,7 @@ function Layout_outer_borders()
     each A in room.areas do
       A.kind = "water"
       A.is_outdoor = true
+      A.floor_h = room.floor_h
     end
   end
 

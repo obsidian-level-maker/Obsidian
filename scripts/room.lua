@@ -1666,6 +1666,8 @@ function build_edge(A, S, dir)
   -- same area ?   nothing needed
   if N.area == S.area then return end
 
+  local NA = N.area
+
 
   add_edge_line()
 
@@ -1684,6 +1686,13 @@ function build_edge(A, S, dir)
 --!!!!    elseif A.mode == "hallway" or
 --!!!!        (rand.odds(80) and (A.kind == "building" or A.kind == "cave"))
 --!!!!    then
+  
+  elseif A.mode == "scenic" and A.is_outdoor then
+    -- nothing
+
+  elseif A.is_outdoor and NA and NA.mode == "scenic" and NA.kind == "water" then
+    -- nothing
+
   elseif not same_room then
     dummy_fence_or_wall(S, dir, A.wall_mat)
     
@@ -1818,7 +1827,11 @@ function dummy_properties(A)
       A.floor_mat = "CRACKLE2"
     end
 
-    if A.mode == "scenic" then
+    if A.mode == "scenic" and A.kind == "water" then
+      assert(A.floor_h)
+      A.floor_mat = "FWATER1"
+
+    elseif A.mode == "scenic" then
       A.floor_mat = "LAVA1"
       A.floor_h   = -64
 
