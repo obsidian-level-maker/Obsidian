@@ -890,3 +890,27 @@ function Layout_build_importants()
   end
 end
 
+
+------------------------------------------------------------------------
+
+
+function Layout_outer_borders()
+  --
+  -- Handles the "scenic" stuff outside of the normal map.
+  -- For example: a watery "sea" around at one corner of the map.
+  --
+  -- This mainly sets up area information (and creates "scenic rooms").
+  -- The actual brushwork is done by normal area-building code.
+  --
+
+
+  local function test_watery_corner()
+    -- TODO
+  end
+
+
+  ---| Layout_outer_borders |---
+
+  test_watery_corner()
+end
+

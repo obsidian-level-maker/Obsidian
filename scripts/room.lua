@@ -1873,6 +1873,8 @@ function Weird_build_rooms()
 
   Weird_floor_heights()
 
+  Layout_outer_borders()
+
   each R in LEVEL.rooms do
     Layout_place_importants(R)
   end
