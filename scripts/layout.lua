@@ -903,9 +903,67 @@ function Layout_outer_borders()
   -- The actual brushwork is done by normal area-building code.
   --
 
+  local function match_area(A)
+    if not A.is_boundary then return false end
+
+    local BB_X1, BB_Y1, BB_X2, BB_Y2 = area_get_seed_bbox(A)
+
+    -- FIXME : hard-coded for bottom-right corner
+
+    if BB_X2.sx < SEED_W / 2 then return false end
+    if BB_Y2.sy < SEED_H / 2 then return false end
+
+    return true
+  end
+
+  
+  local function neighbor_min_max(R)
+    local min_h
+    local max_h
+
+    each A in R.areas do
+      each N in A.neighbors do
+        if N.room and N.floor_h then
+          min_h = math.min(N.floor_h, min_h or  9999)
+          max_h = math.max(N.floor_h, max_h or -9999)
+        end
+      end
+    end
+
+    assert(min_h)
+
+    R.nb_min_h = min_h
+    R.nb_max_h = max_h
+  end
+
 
   local function test_watery_corner()
-    -- TODO
+    -- TODO : should this be a real room object?
+    local room = 
+    {
+      kind = "scenic"
+      is_outdoor = true
+      areas = {}
+    }
+
+    each A in LEVEL.areas do
+      if match_area(A) then
+        table.insert(room.areas, A)
+      end
+    end
+
+    if table.empty(room.areas) then
+      return  -- nothing happening dude
+    end
+
+    neighbor_min_max(room)
+    
+    room.floor_h = room.nb_min_h - 32
+
+    each A in room.areas do
+      A.kind = "water"
+      A.is_outdoor = true
+    end
   end
 
 
