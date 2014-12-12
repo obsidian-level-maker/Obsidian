@@ -1065,6 +1065,11 @@ function Weird_assign_hallways()
     -- need at least two normal neighbors
     if num_neighbor_with_mode(A, "normal") < 2 then return -1 end
 
+    -- often use very small areas
+    if A.svolume <= 2.0 then
+      return gui.random() * 10
+    end
+
     local score = (1.0 - A.openness) * 10
 
     score = score + A.svolume / 4
