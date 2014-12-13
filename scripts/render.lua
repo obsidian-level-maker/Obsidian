@@ -19,6 +19,28 @@
 ------------------------------------------------------------------------
 
 
+function edge_get_rail(S, dir)
+  local N = S:diag_neighbor(dir, "NODIR")
+
+  assert(N != "NODIR")
+
+  if not (N and N.area) then return nil end
+
+  local bord = S.border[dir]
+
+  if bord.kind == "rail" then return bord end
+
+  if bord.kind != nil then return nil end
+
+  local junc = Junction_lookup(S.area, N.area)
+  assert(junc)
+
+  if junc.kind == "rail" then return junc end
+
+  return nil
+end
+
+
 function edge_wall(S, dir, mat)
 
 --[[ DEBUG CRUD
@@ -304,7 +326,7 @@ function Render_edge(A, S, dir)
   end
 
 
-  ---| build_edge |---
+  ---| Render_edge |---
 
   local N = S:diag_neighbor(dir, "NODIR")
 
@@ -323,13 +345,28 @@ function Render_edge(A, S, dir)
   -- same area ?   nothing needed
   if N.area == S.area then return end
 
-  local NA = N.area
+  local NA = assert(N.area)
+
+  local junc = Junction_lookup(A, NA)
+  assert(junc)
 
 
   add_edge_line()
 
 
   local same_room = (N.room and N.room == S.room)
+
+
+  if bord.kind == nil then
+    bord = junc
+  end
+
+  if bord.kind == nil or bord.kind == "nothing" or bord.kind == "straddle" then
+    return
+  end
+
+
+stderrf("bord_kind '%s'\n", tostring(bord.kind))
 
   if bord.kind == "arch" then
     dummy_arch(S, dir)
@@ -396,10 +433,10 @@ function dummy_sector(A, S)
   end
 
 
-  if A.mode == "void" then
+  if A.mode == "void" or (A.mode == "scenic" and not A.is_outdoor) then
     local w_brush = bare_brush
 
-    brushlib.set_mat(w_brush, "BLAKWAL1")
+    brushlib.set_mat(w_brush, A.wall_mat)
 
     Trans.brush(w_brush)
     return
@@ -462,6 +499,14 @@ end
 
 
 function dummy_properties(A)
+
+  if A.mode == "void" then
+    A.wall_mat = "BLAKWAL1"
+    A.floor_mat = A.wall_mat
+    return
+  end
+
+
     if not A.floor_h then
       A.floor_h = -7
     end
@@ -496,9 +541,9 @@ function dummy_properties(A)
       assert(A.floor_h)
       A.floor_mat = "FWATER1"
 
-    elseif A.mode == "scenic" then
-      A.floor_mat = "LAVA1"
-      A.floor_h   = -64
+---    elseif A.mode == "scenic" then
+---      A.floor_mat = "LAVA1"
+---      A.floor_h   = -64
 
     elseif A.mode == "hallway" then
       A.floor_mat = "FLAT5_1"
@@ -508,12 +553,8 @@ function dummy_properties(A)
       if not A.is_outdoor then
         A.ceil_h = A.floor_h + 72
       end
-
-    elseif A.mode == "water" then
-      A.floor_h = -8
-      A.floor_mat = "FWATER1"
-
     end
+
 
     if A.is_outdoor then
       A.ceil_mat = "_SKY"
@@ -828,5 +869,4 @@ function Render_importants()
     end
   end
 end
-
 
