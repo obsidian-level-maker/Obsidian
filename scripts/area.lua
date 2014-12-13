@@ -780,3 +780,66 @@ function Weird_create_rooms()
   end
 end
 
+
+
+function Area_spread_zones()
+  --
+  -- Associates every area with a zone (including scenic and VOID areas)
+  --
+
+  local function are_we_done()
+    each A in LEVEL.areas do
+      if not A.zone then return false end
+    end
+
+    return true
+  end
+
+
+  local function prepare_pass()
+    each A in LEVEL.areas do
+      if A.room then
+        A.zone = assert(A.room.zone)
+      end
+    end
+  end
+
+
+  local function grow_pass(loop)
+    local list = table.copy(LEVEL.areas)
+
+    rand.shuffle(list)
+
+    each A in list do
+      if not A.zone then
+        for loop = 1, 10 do
+          local N = rand.pick(A.neighbors)
+          assert(N)
+
+          -- on first loop, require neighbor to be a real room
+          -- [ to prevent run-ons ]
+          if loop == 1 and not N.room then continue end
+
+          if N.zone then A.zone = N.zone ; break; end
+        end
+      end
+    end
+  end
+
+
+  ---| Area_spread_zones |---
+
+  prepare_pass()
+
+  for loop = 1, 999 do
+    grow_pass()
+
+    if are_we_done(loop) then
+stderrf("Area_spread_zones: finished at loop %d\n", loop)
+      return
+    end
+  end
+
+  error("Area_spread_zones failed.")
+end
+

@@ -2035,7 +2035,11 @@ function Quest_make_quests()
 ---!!!  Connect_reserved_rooms()
 
   Quest_order_by_visit()
-  Quest_zones_for_scenics()
+
+---PROBABLY NOT NEEDED:
+--- Quest_zones_for_scenics()
+
+  Area_spread_zones()
 
   Quest_choose_themes()
   Quest_select_textures()
