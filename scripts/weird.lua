@@ -760,8 +760,7 @@ function Weird_generate()
 
   find_staircases()
 
-  Weird_save_svg()
+---DEBUG:
+---  Weird_save_svg()
 end
-
-
 
