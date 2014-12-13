@@ -501,10 +501,13 @@ function dummy_properties(A)
       A.floor_h   = -64
 
     elseif A.mode == "hallway" then
-      A.ceil_h = A.floor_h + 72
       A.floor_mat = "FLAT5_1"
       A.wall_mat  = "WOOD1"
       A.ceil_mat  = "WOOD1"
+
+      if not A.is_outdoor then
+        A.ceil_h = A.floor_h + 72
+      end
 
     elseif A.mode == "water" then
       A.floor_h = -8
@@ -514,7 +517,6 @@ function dummy_properties(A)
 
     if A.is_outdoor then
       A.ceil_mat = "_SKY"
-      A.ceil_h   = 512
     end
 
     A.wall_mat = A.wall_mat or A.floor_mat

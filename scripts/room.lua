@@ -445,7 +445,13 @@ function Room_create_sky_groups()
   --
 
   local function new_sky_group()
-    return { id = Plan_alloc_id("sky_group") }
+    local group =
+    {
+      id = Plan_alloc_id("sky_group")
+      add_h = rand.pick({ 144, 176, 208 })
+    }
+    table.insert(LEVEL.sky_groups, group)
+    return group
   end
 
 
@@ -461,8 +467,10 @@ function Room_create_sky_groups()
 
   ---| Room_create_sky_groups |---
 
-  -- this is area based, will handle VOID and HALLWAYs too
-  -- (sky may potentially be used there, e.g. if VOID becomes an outdoor cage)
+  -- this is area based, will handle VOID and HALLWAYs too (as sky may
+  -- potentially be used there, e.g. if VOID becomes an outdoor cage)
+
+  LEVEL.sky_groups = {}
 
   each A in LEVEL.areas do
     if A.is_outdoor and not A.sky_group then
@@ -1455,9 +1463,29 @@ function Weird_floor_heights()
   end
 
 
+
+
   ---| Weird_floor_heights |---
 
   visit_room(LEVEL.start_room)
+end
+
+
+
+function Room_update_sky_groups()
+  each A in LEVEL.areas do
+    if A.floor_h and A.sky_group then
+      local sky_h = A.floor_h + A.sky_group.add_h
+
+      A.sky_group.h = math.max(sky_h, A.sky_group.h or 0)
+    end
+  end
+
+  each A in LEVEL.areas do
+    if A.floor_h and A.sky_group then
+      A.ceil_h = A.sky_group.h
+    end
+  end
 end
 
 
@@ -1476,6 +1504,8 @@ function Weird_build_rooms()
   Weird_floor_heights()
 
   Layout_outer_borders()
+
+  Room_update_sky_groups()
 
   each R in LEVEL.rooms do
     Layout_place_importants(R)
