@@ -163,9 +163,6 @@ function Connect_seed_pair(S, T, dir)
   assert(S.room and S.room.kind != "scenic")
   assert(T.room and T.room.kind != "scenic")
 
---!!!!??  assert(not S.conn and not S.conn_dir)
---!!!!??  assert(not T.conn and not T.conn_dir)
-
   -- create connection object
 
   local CONN = CONN_CLASS.new("normal", S.room, T.room, dir)
@@ -178,9 +175,6 @@ function Connect_seed_pair(S, T, dir)
 
   S.conn = CONN
   T.conn = CONN
-
-  S.conn_dir = dir
-  T.conn_dir = 10-dir
 
   table.insert(S.room.conns, CONN)
   table.insert(T.room.conns, CONN)

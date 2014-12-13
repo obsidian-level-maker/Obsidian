@@ -519,16 +519,15 @@ function Room_reckon_doors()
 
     local S = C.S1
     local N = C.S2
+    local dir = C.dir
 
-    assert(S.conn_dir)
-    assert(N.conn_dir)
-
-    local B  = S.border[S.conn_dir]
-    local B2 = N.border[N.conn_dir]
+    local B  = S.border[dir]
+    local B2 = N.border[10 - dir]
 
     if B.kind != "arch" then
       S, N  = N, S
       B, B2 = B2, B
+      dir = 10 - dir
     end
 
     assert(B.kind == "arch")
@@ -542,12 +541,12 @@ function Room_reckon_doors()
       -- swap borders
       S, N = N, S
 
-      S.border[S.conn_dir] = B
-      N.border[N.conn_dir] = B2
+      S.border[     dir] = B
+      N.border[10 - dir] = B2
     end
 
-    S.thick[S.conn_dir] = 40
-    N.thick[N.conn_dir] = 40
+    S.thick[     dir] = 40
+    N.thick[10 - dir] = 40
 
     -- locked door?
 
