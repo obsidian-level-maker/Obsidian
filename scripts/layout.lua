@@ -660,6 +660,18 @@ function Layout_outer_borders()
   end
 
 
+  local function set_junctions(A)
+    each N in A.neighbors do
+      if N.room and N.is_outdoor then
+        local junc = Junction_lookup(A, N)
+        assert(junc)
+
+        junc.kind = "rail"
+      end
+    end
+  end
+
+
   local function test_watery_corner(corner)
     -- TODO : should this be a real room object?
     local room = 
@@ -692,6 +704,8 @@ function Layout_outer_borders()
       A.kind = "water"
       A.is_outdoor = true
       A.floor_h = room.floor_h
+
+      set_junctions(A)
     end
   end
 
@@ -726,6 +740,8 @@ function Layout_outer_borders()
   if rand.odds(15) then
     test_watery_corner("all")
   else
+    -- TODO : pick best corners [maximum # of outdoor rooms]
+
     test_watery_corner(1)
 
     if rand.odds(35) then
