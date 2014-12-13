@@ -610,15 +610,33 @@ function Layout_outer_borders()
   -- The actual brushwork is done by normal area-building code.
   --
 
-  local function match_area(A)
+  local SEED_MX = SEED_W / 2
+  local SEED_MY = SEED_H / 2
+
+
+  local function match_area(A, corner)
     if not A.is_boundary then return false end
+
+    if corner == "all" then return true end
 
     local BB_X1, BB_Y1, BB_X2, BB_Y2 = area_get_seed_bbox(A)
 
-    -- FIXME : hard-coded for bottom-right corner
+    local sx1 = BB_X1.sx
+    local sy1 = BB_Y1.sy
+    local sx2 = BB_X2.sx
+    local sy2 = BB_Y2.sy
 
-    if BB_X2.sx < SEED_W / 2 then return false end
-    if BB_Y1.sy > SEED_H / 2 then return false end
+    if corner == 1 or corner == 7 then
+      if sx1 > SEED_MX then return false end
+    else
+      if sx2 < SEED_MX then return false end
+    end
+
+    if corner == 1 or corner == 3 then
+      if sy1 > SEED_MX then return false end
+    else
+      if sy2 < SEED_MX then return false end
+    end
 
     return true
   end
@@ -637,14 +655,12 @@ function Layout_outer_borders()
       end
     end
 
-    assert(min_h)
-
     R.nb_min_h = min_h
     R.nb_max_h = max_h
   end
 
 
-  local function test_watery_corner()
+  local function test_watery_corner(corner)
     -- TODO : should this be a real room object?
     local room = 
     {
@@ -654,7 +670,7 @@ function Layout_outer_borders()
     }
 
     each A in LEVEL.areas do
-      if match_area(A) then
+      if match_area(A, corner) then
         table.insert(room.areas, A)
       end
     end
@@ -664,7 +680,12 @@ function Layout_outer_borders()
     end
 
     neighbor_min_max(room)
-    
+
+    -- this only possible if a LOT of void areas
+    if not room.nb_min_h then
+      return
+    end
+
     room.floor_h = room.nb_min_h - 32
 
     each A in room.areas do
@@ -702,7 +723,15 @@ function Layout_outer_borders()
     end
   end
 
-  test_watery_corner()
+  if rand.odds(15) then
+    test_watery_corner("all")
+  else
+    test_watery_corner(1)
+
+    if rand.odds(35) then
+      test_watery_corner(9)
+    end
+  end
 
   assign_sky_edges()
 end
