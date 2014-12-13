@@ -21,13 +21,13 @@
 
 function edge_wall(S, dir, mat)
 
+--[[ DEBUG CRUD
 local m_idx = (S.area.id % 8) + 1
 local m_tab = {"NUKAGE1", "FWATER1", "STARTAN3", "FLAT1", "FLAT10", "COMPSPAN", "MARBLE1", "ROCK1"}
-
 mat = m_tab[m_idx]
 assert(mat)
-
---- if S.room and (S.room.id % 3 == 1) then return end
+--## if S.room and (S.room.id % 3 == 1) then return end
+--]]
 
 
   local TK = 16
@@ -351,8 +351,16 @@ function Render_edge(A, S, dir)
     -- nothing
 
   elseif not same_room then
-    edge_wall(S, dir, A.wall_mat)
-    
+    local mat = A.wall_mat
+
+    if A.is_outdoor and not NA.is_outdoor then
+      mat = NA.wall_mat
+    end
+
+    assert(mat)
+
+    edge_wall(S, dir, mat)
+
   else
 --!!!      straddle_fence_or_wall(S, dir, A.wall_mat, A.floor_h + 8)
   end
@@ -511,6 +519,8 @@ function dummy_properties(A)
 
     A.wall_mat = A.wall_mat or A.floor_mat
     A.ceil_mat = A.ceil_mat or A.wall_mat
+
+    assert(A.wall_mat)
 end
 
 
@@ -518,7 +528,9 @@ end
 function Render_all_areas()
   each A in LEVEL.areas do
     dummy_properties(A)
+  end
 
+  each A in LEVEL.areas do
     Render_area(A)
   end
 end
