@@ -142,11 +142,11 @@ function SEED_CLASS.join_halves(S)
   local S2 = S.top
 
   for dir = 2,8,2 do
-    S.border[dir].kind = S.border[dir].kind or S2.border[dir].kind
+    S.border[dir].edge_kind = S.border[dir].edge_kind or S2.border[dir].edge_kind
   end
 
   each dir in geom.CORNERS do
-    S.border[dir].kind = nil
+    S.border[dir].edge_kind = nil
   end
 
   S.diagonal = nil

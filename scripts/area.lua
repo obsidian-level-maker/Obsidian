@@ -155,7 +155,7 @@ function Weird_create_areas()
 
   local function try_set_border(S, dir, kind)
     if kind then
-      S.border[dir].kind = kind
+      S.border[dir].edge_kind = kind
     end
   end
 
@@ -237,7 +237,7 @@ function Weird_create_areas()
     if not S then return end
 
     -- blocked by an edge, cannot flood across it
-    if S.border[dir].kind then return end
+    if S.border[dir].edge_kind then return end
 
     local N = S:diag_neighbor(dir)
 
@@ -406,7 +406,7 @@ gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
 
       if N.area.is_inner then continue end
 
-      if S.border[dir].kind == "boundary" then continue end
+      if S.border[dir].edge_kind == "boundary" then continue end
 
       flood_inner_areas(N.area)
     end
