@@ -19,13 +19,82 @@
 ------------------------------------------------------------------------
 
 
-function dummy_fence_or_wall(S, dir, mat, fence_h)
+function edge_wall(S, dir, mat)
+
+local m_idx = (S.area.id % 8) + 1
+local m_tab = {"NUKAGE1", "FWATER1", "STARTAN3", "FLAT1", "FLAT10", "COMPSPAN", "MARBLE1", "ROCK1"}
+
+mat = m_tab[m_idx]
+assert(mat)
+
+--- if S.room and (S.room.id % 3 == 1) then return end
+
+
   local TK = 16
 
-  local x1 = S.x1
-  local y1 = S.y1
-  local x2 = S.x2
-  local y2 = S.y2
+  local x1, y1 = S.x1, S.y1
+  local x2, y2 = S.x2, S.y2
+
+  if dir == 2 then y2 = y1 + TK end
+  if dir == 8 then y1 = y2 - TK end
+
+  if dir == 4 then x2 = x1 + TK end
+  if dir == 6 then x1 = x2 - TK end
+
+
+  local brush
+
+  if dir == 2 or dir == 4 or dir == 6 or dir == 8 then
+    brush = brushlib.quad(x1, y1, x2, y2)
+
+  elseif dir == 1 then
+    brush =
+    {
+      { x=x1,      y=y2      }
+      { x=x2,      y=y1      }
+      { x=x2,      y=y1 + TK }
+      { x=x1 + TK, y=y2      }
+    }
+  elseif dir == 9 then
+    brush =
+    {
+      { x=x1,      y=y2      }
+      { x=x1,      y=y2 - TK }
+      { x=x2 - TK, y=y1      }
+      { x=x2,      y=y1      }
+    }
+  elseif dir == 3 then
+    brush =
+    {
+      { x=x1,      y=y1 }
+      { x=x2,      y=y2 }
+      { x=x2 - TK, y=y2 }
+      { x=x1,      y=y1 + TK }
+    }
+  elseif dir == 7 then
+    brush =
+    {
+      { x=x1,      y=y1 }
+      { x=x1 + TK, y=y1 }
+      { x=x2,      y=y2 - TK }
+      { x=x2,      y=y2 }
+    }
+  else
+    error("edge_wall : bad dir")
+  end
+
+  brushlib.set_mat(brush, mat, mat)
+
+  Trans.brush(brush)
+end
+
+
+
+function straddle_fence_or_wall(S, dir, mat, fence_h)
+  local TK = 16
+
+  local x1, y1 = S.x1, S.y1
+  local x2, y2 = S.x2, S.y2
 
   if dir == 2 then y2 = y1 end
   if dir == 8 then y1 = y2 end
@@ -70,6 +139,7 @@ function dummy_fence_or_wall(S, dir, mat, fence_h)
 
   Trans.brush(brush)
 end
+
 
 
 function dummy_arch(S, dir)
@@ -124,7 +194,7 @@ function Render_edge(A, S, dir)
   end
 
 
-  local function edge_keyed_door()
+  local function straddle_keyed_door()
     local z = A.floor_h
 
     assert(LOCK)
@@ -172,11 +242,11 @@ function Render_edge(A, S, dir)
   end
 
 
-  local function edge_locked_door()
+  local function straddle_locked_door()
     assert(LOCK)
 
     if LOCK.item then
-      edge_keyed_door()
+      straddle_keyed_door()
       return
     end
 
@@ -265,7 +335,7 @@ function Render_edge(A, S, dir)
     dummy_arch(S, dir)
 
   elseif bord.kind == "lock_door" then
-    edge_locked_door()
+    straddle_locked_door()
 
   elseif bord.kind == "straddle" then
     -- nothing
@@ -281,10 +351,10 @@ function Render_edge(A, S, dir)
     -- nothing
 
   elseif not same_room then
-    dummy_fence_or_wall(S, dir, A.wall_mat)
+    edge_wall(S, dir, A.wall_mat)
     
   else
---!!!      dummy_fence_or_wall(S, dir, A.wall_mat, A.floor_h + 8)
+--!!!      straddle_fence_or_wall(S, dir, A.wall_mat, A.floor_h + 8)
   end
 end
 
