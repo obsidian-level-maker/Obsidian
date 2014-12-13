@@ -111,6 +111,7 @@ require "weird"
 require "area"
 require "layout"
 require "room"
+require "render"
 
 require "fight"
 require "monster"
