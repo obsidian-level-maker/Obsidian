@@ -20,11 +20,14 @@
 
 
 function edge_get_rail(S, dir)
+  assert(S.area)
+
   local N = S:diag_neighbor(dir, "NODIR")
 
   assert(N != "NODIR")
 
   if not (N and N.area) then return nil end
+  if N.area == S.area then return nil end
 
   local bord = S.border[dir]
 
@@ -366,8 +369,6 @@ function Render_edge(A, S, dir)
   end
 
 
-stderrf("bord_kind '%s'\n", tostring(bord.kind))
-
   if bord.kind == "arch" then
     dummy_arch(S, dir)
 
@@ -414,19 +415,23 @@ function dummy_sector(A, S)
 
   local bare_brush =
   {
-    { x=PS.x1, y=PS.y1 }
-    { x=PS.x2, y=PS.y1 }
-    { x=PS.x2, y=PS.y2 }
-    { x=PS.x1, y=PS.y2 }
+    { x=PS.x1, y=PS.y1, __dir=2 }
+    { x=PS.x2, y=PS.y1, __dir=6 }
+    { x=PS.x2, y=PS.y2, __dir=8 }
+    { x=PS.x1, y=PS.y2, __dir=4 }
   }
 
   if S.diagonal == 3 then
+    bare_brush[3].__dir = 7
     table.remove(bare_brush, 4)
   elseif S.diagonal == 7 then
+    bare_brush[1].__dir = 3
     table.remove(bare_brush, 2)
   elseif S.diagonal == 1 then
+    bare_brush[2].__dir = 9
     table.remove(bare_brush, 3)
   elseif S.diagonal == 9 then
+    bare_brush[4].__dir = 1
     table.remove(bare_brush, 1)
   elseif S.diagonal then
     error("Invalid diagonal seed!")
@@ -453,6 +458,20 @@ if A.room then tag = A.room.id end
 
   local f_brush = table.deep_copy(bare_brush)
   local c_brush = bare_brush
+
+
+  -- handle railings [ must be done here ]
+  each C in f_brush do
+    local info = edge_get_rail(S, C.__dir)
+    if info then
+      C.rail = assert(info.rail_mat)
+      C.v1 = 0
+      C.back_rail = C.rail
+      C.back_v1 = 0
+      C.blocked = info.blocked
+    end
+  end
+
 
   table.insert(f_brush, { t=A.floor_h, tag=tag })
   table.insert(c_brush, { b=A. ceil_h, light=light })

@@ -667,6 +667,8 @@ function Layout_outer_borders()
         assert(junc)
 
         junc.kind = "rail"
+        junc.rail_mat = "MIDBARS3"
+        junc.blocked  = true
       end
     end
   end
@@ -742,10 +744,10 @@ function Layout_outer_borders()
   else
     -- TODO : pick best corners [maximum # of outdoor rooms]
 
-    test_watery_corner(1)
+    test_watery_corner(3)
 
     if rand.odds(35) then
-      test_watery_corner(9)
+      test_watery_corner(7)
     end
   end
 
