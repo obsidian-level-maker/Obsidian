@@ -1463,8 +1463,6 @@ function Weird_floor_heights()
   end
 
 
-
-
   ---| Weird_floor_heights |---
 
   visit_room(LEVEL.start_room)
@@ -1497,19 +1495,19 @@ function Weird_build_rooms()
   
   gui.printf("\n---=====  Build WEIRD rooms =====---\n\n")
 
-
-  Room_create_sky_groups()
   Room_reckon_doors()
 
   Weird_floor_heights()
 
   Layout_outer_borders()
 
-  Room_update_sky_groups()
+  Room_create_sky_groups()
 
   each R in LEVEL.rooms do
     Layout_place_importants(R)
   end
+
+  Room_update_sky_groups()
 
   Render_all_areas()
   Render_importants()
