@@ -889,11 +889,10 @@ function Area_spread_zones()
 
   prepare_pass()
 
-  for loop = 1, 999 do
+  for loop = 1, 99 do
     grow_pass()
 
     if are_we_done(loop) then
-stderrf("Area_spread_zones: finished at loop %d\n", loop)
       return
     end
   end
