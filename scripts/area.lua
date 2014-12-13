@@ -76,6 +76,77 @@ function area_get_bbox(A)
 end
 
 
+function volume_of_area(A)
+    local volume = 0
+
+    each S in A.half_seeds do
+      if S.diagonal then
+        volume = volume + 0.5
+      else
+        volume = volume + 1
+      end
+    end
+
+    return volume
+end
+
+
+------------------------------------------------------------------------
+
+
+-- class JUNCTION
+--[[
+    --
+    -- A "junction" is information about how two touching areas interact.
+    -- For example: could be solid wall, fence, or even nothing at all.
+    -- Specifies default border kind (can be overridden in each seed).
+    --
+
+    A1 : AREA
+    A2 : AREA
+
+    kind : keyword   -- unset means it has not been decided yet.
+                     -- can be: "nothing", "wall", "fence", "window",
+                     --         "rail", "steps", "liquid_arch",
+                     --         "lowering_wall", etc...
+
+--]]
+
+
+function Junction_lookup(A1, A2, create_it)
+  -- returns NIL when areas do not touch, or A1 == A2
+
+  if A1 == A2 then return nil end
+
+  local low_id  = math.min(A1.id, A2.id)
+  local high_id = math.max(A1.id, A2.id)
+
+  local index = tostring(low_id) .. "_" .. tostring(high_id)
+
+  if create_it then
+    if not LEVEL.area_junctions[index] then
+      LEVEL.area_junctions[index] = { A1=A1, A2=A2 }
+    end
+  end
+
+  return LEVEL.area_junctions[index]
+end
+
+
+
+function Junction_init()
+  LEVEL.area_junctions = {}
+
+  each A in LEVEL.areas do
+    each N in A.neighbors do
+      Junction_lookup(A, N, "create_it")
+    end
+  end
+end
+
+
+------------------------------------------------------------------------
+
 
 function Weird_create_areas()
   --
@@ -381,22 +452,6 @@ end
 
 
 
-function volume_of_area(A)
-    local volume = 0
-
-    each S in A.half_seeds do
-      if S.diagonal then
-        volume = volume + 0.5
-      else
-        volume = volume + 1
-      end
-    end
-
-    return volume
-end
-
-
-
 function Weird_analyse_areas()
   --
   -- See how much open space is in each area, etc...
@@ -439,6 +494,7 @@ function Weird_analyse_areas()
     A.openness = #A.inner_points / A.svolume
   end
 end
+
 
 
 
@@ -764,6 +820,8 @@ function Weird_create_rooms()
   Weird_create_areas()
 
   Weird_analyse_areas()
+
+  Junction_init()
 
   Weird_void_some_areas()
   Weird_assign_hallways()
