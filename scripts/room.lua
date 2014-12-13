@@ -1482,8 +1482,7 @@ function Weird_build_rooms()
   end
 
   Render_all_areas()
-
-  Layout_build_importants()
+  Render_importants()
 
   Room_determine_spots()
 end
