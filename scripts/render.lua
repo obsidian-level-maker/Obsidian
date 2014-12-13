@@ -112,6 +112,10 @@ function Render_edge(A, S, dir)
 
     local brush = brushlib.quad(x1, y1, x2, y2)
 
+    each C in brush do
+      C.flags = DOOM_LINE_FLAGS.draw_never
+    end
+
     table.insert(brush, { b=floor_h + 16, delta_z = -16 })
 
     brushlib.set_mat(brush, "_SKY", "_SKY")
