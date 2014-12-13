@@ -92,13 +92,35 @@ end
 
 
 
-function build_edge(A, S, dir)
+function Render_edge(A, S, dir)
 
   local bord = S.border[dir]
   local LOCK = bord.lock
 
 
-  local function do_keyed_door()
+  local function edge_simple_sky(floor_h)
+    assert(not geom.is_corner(dir))
+
+    local x1, y1 = S.x1, S.y1
+    local x2, y2 = S.x2, S.y2
+
+    if dir == 2 then y2 = y1 + 8 end
+    if dir == 8 then y1 = y2 - 8 end
+
+    if dir == 4 then x2 = x1 + 8 end
+    if dir == 6 then x1 = x2 - 8 end
+
+    local brush = brushlib.quad(x1, y1, x2, y2)
+
+    table.insert(brush, { b=floor_h + 16, delta_z = -16 })
+
+    brushlib.set_mat(brush, "_SKY", "_SKY")
+
+    Trans.brush(brush)
+  end
+
+
+  local function edge_keyed_door()
     local z = A.floor_h
 
     assert(LOCK)
@@ -146,11 +168,11 @@ function build_edge(A, S, dir)
   end
 
 
-  local function do_locked_door()
+  local function edge_locked_door()
     assert(LOCK)
 
     if LOCK.item then
-      do_keyed_door()
+      edge_keyed_door()
       return
     end
 
@@ -214,8 +236,15 @@ function build_edge(A, S, dir)
 
   if N == "NODIR" then return end
 
-  -- edge of map  :  FIXME
-  if not (N and N.area) then return end
+  -- edge of map
+  if not (N and N.area) then
+    if bord.kind == "sky_edge" and A.floor_h then
+      edge_simple_sky(A.floor_h)
+    end
+
+    return
+  end
+
 
   -- same area ?   nothing needed
   if N.area == S.area then return end
@@ -232,7 +261,7 @@ function build_edge(A, S, dir)
     dummy_arch(S, dir)
 
   elseif bord.kind == "lock_door" then
-    do_locked_door()
+    edge_locked_door()
 
   elseif bord.kind == "straddle" then
     -- nothing
@@ -323,7 +352,7 @@ if A.room then tag = A.room.id end
   -- walls
 
   each dir in geom.ALL_DIRS do
-    build_edge(A, S, dir)
+    Render_edge(A, S, dir)
   end
 end
 
@@ -426,8 +455,7 @@ end
 
 function Render_importants()
 
-  -- the current room
-  local R
+  local R  -- the current room
 
 
   local function player_dir(spot)

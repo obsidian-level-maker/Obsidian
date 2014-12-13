@@ -675,8 +675,35 @@ function Layout_outer_borders()
   end
 
 
+  function assign_sky_edges()
+    each A in LEVEL.areas do
+      if not A.is_outdoor then continue end
+
+      each S in A.half_seeds do
+        for dir = 2,8,2 do
+          local N = S:diag_neighbor(dir, "NODIR")
+
+          if N == nil then
+            S.border[dir].kind = "sky_edge"
+          end
+        end
+      end
+    end
+  end
+
+
   ---| Layout_outer_borders |---
 
+  -- currently have no other outdoorsy borders (except the watery bits)
+  -- [ TODO : review this later ! ]
+  each A in LEVEL.areas do
+    if A.is_boundary then
+      A.is_outdoor = nil
+    end
+  end
+
   test_watery_corner()
+
+  assign_sky_edges()
 end
 
