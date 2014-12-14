@@ -512,7 +512,7 @@ function Weird_analyse_areas()
        LEVEL.area_corners[cx][cy] = {}
     end
 
-    table.insert(LEVEL.area_corners[cx][cy], A)
+    table.add_unique(LEVEL.area_corners[cx][cy], A)
   end
 
 
