@@ -499,6 +499,38 @@ function Weird_analyse_areas()
   end
 
 
+  local function add_area_corner(A, S, corner)
+    local cx = S.sx
+    local cy = S.sy
+
+    if corner == 3 or corner == 9 then cx = cx + 1 end
+    if corner == 7 or corner == 9 then cy = cy + 1 end
+
+    assert(table.valid_pos(LEVEL.area_corners, cx, cy))
+
+    if LEVEL.area_corners[cx][cy] == nil then
+       LEVEL.area_corners[cx][cy] = {}
+    end
+
+    table.insert(LEVEL.area_corners[cx][cy], A)
+  end
+
+
+  local function find_areas_touching_corners()
+    LEVEL.area_corners = table.array_2D(SEED_W + 1, SEED_H + 1)
+
+    each A in LEVEL.areas do
+      each S in A.half_seeds do
+        each dir in geom.CORNERS do
+          if S.diagonal and S.diagonal == (10 - dir) then continue end
+
+          add_area_corner(A, S, dir)
+        end
+      end
+    end
+  end
+
+
   ---| Weird_analyse_areas |---
 
   each A in LEVEL.areas do
@@ -508,6 +540,8 @@ function Weird_analyse_areas()
 
     A.openness = #A.inner_points / A.svolume
   end
+
+  find_areas_touching_corners()
 end
 
 
