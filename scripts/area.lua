@@ -142,6 +142,21 @@ function Junction_init()
       Junction_lookup(A, N, "create_it")
     end
   end
+
+  -- store junction in SEED.border[] for handy access
+
+  each A in LEVEL.areas do
+    each S in A.half_seeds do
+      each dir in geom.ALL_DIRS do
+        local N = S:diag_neighbor(dir)
+
+        if not (N and N.area) then continue end
+        if N.area == S.area then continue end
+
+        S.border[dir].junction = Junction_lookup(A, N.area)
+      end
+    end
+  end
 end
 
 
