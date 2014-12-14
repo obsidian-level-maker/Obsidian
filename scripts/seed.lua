@@ -97,6 +97,9 @@ class CHUNK
 SEED_W = 0
 SEED_H = 0
 
+BASE_X = 0
+BASE_Y = 0
+
 
 SEED_CLASS = {}
 

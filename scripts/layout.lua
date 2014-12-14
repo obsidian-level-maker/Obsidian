@@ -613,6 +613,8 @@ function Layout_outer_borders()
   local SEED_MX = SEED_W / 2
   local SEED_MY = SEED_H / 2
 
+  local post_h
+
 
   local function match_area(A, corner)
     if not A.is_boundary then return false end
@@ -668,8 +670,90 @@ function Layout_outer_borders()
 
         junc.kind = "rail"
         junc.rail_mat = "MIDBARS3"
+        junc.post_h   = 84
         junc.blocked  = true
       end
+    end
+  end
+
+
+  local function need_fencepost(tab)
+    --
+    -- need a fence post where :
+    --   1. three or more areas meet (w/ different heights)
+    --   2. all the areas are outdoor
+    --   3. one of the junctions is "rail"
+    --   4. none of the junctions are "wall"
+    --
+
+    if #tab < 3 then return false end
+
+    post_h = nil
+
+    local heights = {}
+
+    each A in tab do
+      if not A.is_outdoor then return false end
+      if not A.floor_h then return false end
+
+      table.add_unique(heights, A.floor_h)
+
+      each B in tab do
+        local junc = Junction_lookup(A, B)
+        if junc then
+          if junc.kind == "wall" then return false end
+          if junc.kind == "rail" then post_h = assert(junc.post_h) end
+        end
+      end
+    end
+
+    if #heights < 3 then return false end
+
+    return (post_h != nil)
+  end
+
+
+  local function fencepost_base_z(tab)
+    local z
+
+    each A in tab do
+      z = math.max(A.floor_h, z or -9999)
+    end
+
+    return z
+  end
+
+
+  local function corner_coord(cx, cy)  -- FIXME : move into seed.lua?
+    local x = BASE_X + (cx-1) * SEED_SIZE
+    local y = BASE_Y + (cy-1) * SEED_SIZE
+
+    return x, y
+  end
+
+
+  local function check_needed_fenceposts(water_room)
+
+    for cx = 1, LEVEL.area_corners.w do
+    for cy = 1, LEVEL.area_corners.h do
+      local tab = LEVEL.area_corners[cx][cy]
+
+      if not tab then continue end
+
+      if need_fencepost(tab) then
+        -- simply build it now
+
+        local mx, my = corner_coord(cx, cy)
+        local top_h  = fencepost_base_z(tab) + post_h
+        
+        local brush  = brushlib.quad(mx - 12, my - 12, mx + 12, my + 12)
+
+        brushlib.add_top(brush, top_h)
+        brushlib.set_mat(brush, "METAL", "METAL")
+
+        Trans.brush(brush)
+      end
+    end
     end
   end
 
@@ -703,16 +787,20 @@ function Layout_outer_borders()
     room.floor_h = room.nb_min_h - 32
 
     each A in room.areas do
+      A.scenic_room = room
+
       A.kind = "water"
       A.is_outdoor = true
       A.floor_h = room.floor_h
 
       set_junctions(A)
     end
+
+    check_needed_fenceposts(room)
   end
 
 
-  function assign_sky_edges()
+  local function assign_sky_edges()
     each A in LEVEL.areas do
       if not A.is_outdoor then continue end
 
