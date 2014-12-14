@@ -1111,6 +1111,8 @@ end
 
 function Weird_choose_area_kinds()
 
+  local resolve_outdoor_prob
+
 
   local function kind_for_small_area(A)
     rand.shuffle(A.neighbors)
@@ -1208,7 +1210,7 @@ function Weird_choose_area_kinds()
 
   local function already_set(A, what)
     if what == "outdoor" then return A.is_outdoor end
-    if what == "natural" then return A.is_natural end
+    if what == "cave"    then return A.is_cave end
 
     error("internal error: unknown area what: " .. tostring(what))
   end
@@ -1216,7 +1218,7 @@ function Weird_choose_area_kinds()
 
   local function set_area(L, A, what)
     if what == "outdoor" then A.is_outdoor = true end
-    if what == "natural" then A.is_natural = true end
+    if what == "cave"    then A.is_cave    = true end
 
     table.insert(L.areas, A)
 
@@ -1316,21 +1318,38 @@ gui.printf("spread_kind '%s' : starts=%d  quota=%d\n", what, start_num, seed_quo
   end
 
 
-  local function convert_to_proper_kinds()
-    -- converts 'is_outdoor' / 'is_natural' fields to a kind value
+  local function resolve_conflicts()
+    each R in LEVEL.rooms do
+      local A1 = R.areas[1]
+
+      if A1.is_outdoor and A1.is_cave then
+        if rand.odds(resolve_outdoor_prob) then
+          each A in R.areas do A.is_cave = nil end
+        else
+          each A in R.areas do A.is_outdoor = nil end
+        end
+      end
+    end
+
+    -- for scenic areas, cave always overrides
+    -- [ seems better than having a messy mixture of the two ]
 
     each A in LEVEL.areas do
-      local out_str = sel(A.is_outdoor, "o", "")  
-      local nat_str = sel(A.is_natural, "n", "")  
+      if A.is_outdoor and A.is_cave then
+        A.is_outdoor = nil
+      end
+    end
+  end
 
-      local str = out_str .. nat_str
 
-      if str == "on" then
-        A.kind = "landscape"
-      elseif str == "o" then
-        A.kind = "courtyard"
-      elseif str == "n" then
+  local function convert_to_proper_kinds()
+    -- converts 'is_outdoor' / 'is_cave' fields to a kind value
+
+    each A in LEVEL.areas do
+      if A.is_cave then
         A.kind = "cave"
+      elseif A.is_outdoor then
+        A.kind = rand.sel(50, "landscape", "courtyard")
       else
         A.kind = "building"
       end
@@ -1342,22 +1361,28 @@ gui.printf("spread_kind '%s' : starts=%d  quota=%d\n", what, start_num, seed_quo
 
   local total_seeds = SEED_W * SEED_H
 
-  local out_quota = style_sel("outdoors", 0, 10, 25, 50, 120)
-  local nat_quota = style_sel("naturals", 0, 10, 25, 50, 120)
+  local out_quota = style_sel("outdoors", 0, 10, 25, 50, 200)
+  local cav_quota = style_sel("cave",     0, 10, 25, 50, 200)
+
+  -- if rooms become both cave + outdoor, use this chance to pick one
+  resolve_outdoor_prob = 50
+  if out_quota < cav_quota then resolve_outdoor_prob = 25 end
+  if out_quota > cav_quota then resolve_outdoor_prob = 75 end
 
   out_quota = total_seeds * out_quota / 100
-  nat_quota = total_seeds * nat_quota / 100
+  cav_quota = total_seeds * cav_quota / 125  -- a bit less
 
   local out_starts = starts_from_quota(out_quota)
-  local nat_starts = starts_from_quota(nat_quota)
+  local cav_starts = starts_from_quota(cav_quota)
 
   if rand.odds(65) then
     out_starts = out_starts + 1
   end
 
   spread_kind("outdoor", out_starts, out_quota)
-  spread_kind("natural", nat_starts, nat_quota)
+  spread_kind("cave",    cav_starts, cav_quota)
 
+  resolve_conflicts()
   convert_to_proper_kinds()
 
 --???  fixup_small_areas()

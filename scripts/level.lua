@@ -729,10 +729,6 @@ function Levels_do_styles()
     end
   end
 
-  -- FIXME : temp workaround, need to rename "caves"
-  STYLE.naturals = STYLE.caves
-  STYLE.caves    = nil
-
   -- if level needs a secret exit, make lots of secrets
   -- (this is not strictly necessary, more an aesthetic choice)
   if LEVEL.secret_exit then
