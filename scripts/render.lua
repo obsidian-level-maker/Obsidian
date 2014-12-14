@@ -68,129 +68,6 @@ function edge_get_rail(S, dir)
 end
 
 
-function edge_wall(S, dir, mat)
-
---[[ DEBUG CRUD
-local m_idx = (S.area.id % 8) + 1
-local m_tab = {"NUKAGE1", "FWATER1", "STARTAN3", "FLAT1", "FLAT10", "COMPSPAN", "MARBLE1", "ROCK1"}
-mat = m_tab[m_idx]
-assert(mat)
---## if S.room and (S.room.id % 3 == 1) then return end
---]]
-
-
-  local TK = 16
-
-  local x1, y1 = S.x1, S.y1
-  local x2, y2 = S.x2, S.y2
-
-  if dir == 2 then y2 = y1 + TK end
-  if dir == 8 then y1 = y2 - TK end
-
-  if dir == 4 then x2 = x1 + TK end
-  if dir == 6 then x1 = x2 - TK end
-
-
-  local brush
-
-  if dir == 2 or dir == 4 or dir == 6 or dir == 8 then
-    brush = brushlib.quad(x1, y1, x2, y2)
-
-  elseif dir == 1 then
-    brush =
-    {
-      { x=x1,      y=y2      }
-      { x=x2,      y=y1      }
-      { x=x2,      y=y1 + TK }
-      { x=x1 + TK, y=y2      }
-    }
-  elseif dir == 9 then
-    brush =
-    {
-      { x=x1,      y=y2      }
-      { x=x1,      y=y2 - TK }
-      { x=x2 - TK, y=y1      }
-      { x=x2,      y=y1      }
-    }
-  elseif dir == 3 then
-    brush =
-    {
-      { x=x1,      y=y1 }
-      { x=x2,      y=y2 }
-      { x=x2 - TK, y=y2 }
-      { x=x1,      y=y1 + TK }
-    }
-  elseif dir == 7 then
-    brush =
-    {
-      { x=x1,      y=y1 }
-      { x=x1 + TK, y=y1 }
-      { x=x2,      y=y2 - TK }
-      { x=x2,      y=y2 }
-    }
-  else
-    error("edge_wall : bad dir")
-  end
-
-  brushlib.set_mat(brush, mat, mat)
-
-  Trans.brush(brush)
-end
-
-
-
-function straddle_fence_or_wall(S, dir, mat, fence_h)
-  local TK = 16
-
-  local x1, y1 = S.x1, S.y1
-  local x2, y2 = S.x2, S.y2
-
-  if dir == 2 then y2 = y1 end
-  if dir == 8 then y1 = y2 end
-
-  if dir == 4 then x2 = x1 end
-  if dir == 6 then x1 = x2 end
-
-  local brush
-
-  if dir == 2 or dir == 4 or dir == 6 or dir == 8 then
-    brush = brushlib.quad(x1 - TK, y1 - TK, x2 + TK, y2 + TK)
-
-  elseif dir == 3 or dir == 7 then
-    brush =
-    {
-      { x=x1 - TK, y=y1 + TK }
-      { x=x1 - TK, y=y1 - TK }
-      { x=x1 + TK, y=y1 - TK }
-
-      { x=x2 + TK, y=y2 - TK }
-      { x=x2 + TK, y=y2 + TK }
-      { x=x2 - TK, y=y2 + TK }
-    }
-  else
-    brush =
-    {
-      { x=x2 - TK, y=y1 - TK }
-      { x=x2 + TK, y=y1 - TK }
-      { x=x2 + TK, y=y1 + TK }
-
-      { x=x1 + TK, y=y2 + TK }
-      { x=x1 - TK, y=y2 + TK }
-      { x=x1 - TK, y=y2 - TK }
-    }
-  end
-
-  if fence_h then
-    table.insert(brush, { t=fence_h })
-  end
-
-  brushlib.set_mat(brush, mat, mat)
-
-  Trans.brush(brush)
-end
-
-
-
 function dummy_arch(S, dir)
   local mx, my = S:mid_point()
 
@@ -219,6 +96,66 @@ function Render_edge(A, S, dir)
   local NA  -- neighbor area
 
 
+  local function edge_wall(S, dir, mat)
+    local TK = 16
+
+    local x1, y1 = S.x1, S.y1
+    local x2, y2 = S.x2, S.y2
+
+    if dir == 2 then y2 = y1 + TK end
+    if dir == 8 then y1 = y2 - TK end
+
+    if dir == 4 then x2 = x1 + TK end
+    if dir == 6 then x1 = x2 - TK end
+
+
+    local brush
+
+    if dir == 2 or dir == 4 or dir == 6 or dir == 8 then
+      brush = brushlib.quad(x1, y1, x2, y2)
+
+    elseif dir == 1 then
+      brush =
+      {
+        { x=x1,      y=y2      }
+        { x=x2,      y=y1      }
+        { x=x2,      y=y1 + TK }
+        { x=x1 + TK, y=y2      }
+      }
+    elseif dir == 9 then
+      brush =
+      {
+        { x=x1,      y=y2      }
+        { x=x1,      y=y2 - TK }
+        { x=x2 - TK, y=y1      }
+        { x=x2,      y=y1      }
+      }
+    elseif dir == 3 then
+      brush =
+      {
+        { x=x1,      y=y1 }
+        { x=x2,      y=y2 }
+        { x=x2 - TK, y=y2 }
+        { x=x1,      y=y1 + TK }
+      }
+    elseif dir == 7 then
+      brush =
+      {
+        { x=x1,      y=y1 }
+        { x=x1 + TK, y=y1 }
+        { x=x2,      y=y2 - TK }
+        { x=x2,      y=y2 }
+      }
+    else
+      error("edge_wall : bad dir")
+    end
+
+    brushlib.set_mat(brush, mat, mat)
+
+    Trans.brush(brush)
+  end
+
+
   local function edge_simple_sky(floor_h)
     assert(not geom.is_corner(dir))
 
@@ -240,6 +177,57 @@ function Render_edge(A, S, dir)
     table.insert(brush, { b=floor_h + 16, delta_z = -16 })
 
     brushlib.set_mat(brush, "_SKY", "_SKY")
+
+    Trans.brush(brush)
+  end
+
+
+  local function straddle_fence(S, dir, mat, fence_h)
+    local TK = 16
+
+    local x1, y1 = S.x1, S.y1
+    local x2, y2 = S.x2, S.y2
+
+    if dir == 2 then y2 = y1 end
+    if dir == 8 then y1 = y2 end
+
+    if dir == 4 then x2 = x1 end
+    if dir == 6 then x1 = x2 end
+
+    local brush
+
+    if dir == 2 or dir == 4 or dir == 6 or dir == 8 then
+      brush = brushlib.quad(x1 - TK, y1 - TK, x2 + TK, y2 + TK)
+
+    elseif dir == 3 or dir == 7 then
+      brush =
+      {
+        { x=x1 - TK, y=y1 + TK }
+        { x=x1 - TK, y=y1 - TK }
+        { x=x1 + TK, y=y1 - TK }
+
+        { x=x2 + TK, y=y2 - TK }
+        { x=x2 + TK, y=y2 + TK }
+        { x=x2 - TK, y=y2 + TK }
+      }
+    else
+      brush =
+      {
+        { x=x2 - TK, y=y1 - TK }
+        { x=x2 + TK, y=y1 - TK }
+        { x=x2 + TK, y=y1 + TK }
+
+        { x=x1 + TK, y=y2 + TK }
+        { x=x1 - TK, y=y2 + TK }
+        { x=x1 - TK, y=y2 - TK }
+      }
+    end
+
+    if fence_h then
+      table.insert(brush, { t=fence_h })
+    end
+
+    brushlib.set_mat(brush, mat, mat)
 
     Trans.brush(brush)
   end
@@ -399,7 +387,7 @@ end
 
 
 
-function dummy_sector(A, S)
+function Render_seed(A, S)
   assert(S.area == A)
 
   -- get parent seed
@@ -494,7 +482,7 @@ function Render_area(A)
   A.side_edges = {}
 
   each S in A.half_seeds do
-    dummy_sector(A, S)
+    Render_seed(A, S)
   end
 
 -- TEST CRUD !!! 
@@ -535,7 +523,7 @@ function dummy_properties(A)
   if A.kind == "building" then
     A.wall_mat  = "STARTAN3"
     A.floor_mat = "FLOOR4_8"
-    A.facade_mat = "COMPSPAN" --!!!!FIXME  A.zone.facade_mat
+    A.facade_mat = "STONE3" --!!!!FIXME  A.zone.facade_mat
 
   elseif A.kind == "courtyard" then
     A.floor_mat = "BROWN1"
@@ -549,7 +537,7 @@ function dummy_properties(A)
     A.facade_mat = A.wall_mat
 
   else
-    A.floor_mat = "CRACKLE2"
+    A.floor_mat = "_ERROR"
   end
 
   if A.mode == "scenic" and A.kind == "water" then
@@ -566,7 +554,7 @@ function dummy_properties(A)
     A.ceil_mat  = "WOOD1"
 
     if not A.is_outdoor then
-    A.facade_mat = "COMPSPAN" --!!!!FIXME  A.zone.facade_mat
+    A.facade_mat = "STONE3" --!!!!FIXME  A.zone.facade_mat
     end
 
     if not A.is_outdoor then
