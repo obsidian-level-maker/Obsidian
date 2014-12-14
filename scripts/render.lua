@@ -20,21 +20,27 @@
 
 
 function calc_wall_mat(A1, A2)
- 
-  -- FIXME
-
-  if not A2 then
+  if not A1 then
+    return "_ERROR"
   end
 
-  return A1.wall_mat
+  if not A1.is_outdoor then
+    return assert(A1.wall_mat)
+  end
+
+  if not A2 or A2.is_outdoor then
+    return assert(LEVEL.fence_mat)
+  end
+ 
+  return assert(A2.facade_mat)
 end
 
 
 function calc_straddle_mat(A1, A2)
+  local mat1 = calc_wall_mat(A1, A2)
+  local mat2 = calc_wall_mat(A2, A1)
 
-  -- FIXME
-  
-  return A1.wall_mat, A2.wall_mat
+  return mat1, mat2
 end
 
 
@@ -210,6 +216,8 @@ function Render_edge(A, S, dir)
   local bord = S.border[dir]
   local LOCK = bord.lock
 
+  local NA  -- neighbor area
+
 
   local function edge_simple_sky(floor_h)
     assert(not geom.is_corner(dir))
@@ -245,7 +253,9 @@ function Render_edge(A, S, dir)
 ---!!!    local o_tex = outer_tex(S, dir, w_tex)
 ---!!!    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex }
 
-    local skin1 = { }
+    local inner_mat, outer_mat = calc_straddle_mat(A, NA)
+
+    local skin1 = { wall=inner_mat, outer=outer_mat }
 
 
     -- FIXME : find it properly
@@ -355,7 +365,7 @@ function Render_edge(A, S, dir)
 
 
   -- same area?  nothing needed
-  local NA = N and N.area
+  NA = N and N.area
 
   if NA and NA == A then return end
 
@@ -372,6 +382,7 @@ function Render_edge(A, S, dir)
     return
   
   elseif bord.kind == "wall" then
+    assert(A)
     edge_wall(S, dir, calc_wall_mat(A, NA))
 
   elseif bord.kind == "sky_edge" and A.floor_h then
@@ -504,6 +515,7 @@ function dummy_properties(A)
   if A.mode == "void" then
     A.wall_mat = "BLAKWAL1"
     A.floor_mat = A.wall_mat
+    A.facade_mat = "COMPSPAN" --!!!!FIXME  A.zone.facade_mat
     return
   end
 
@@ -523,6 +535,7 @@ function dummy_properties(A)
   if A.kind == "building" then
     A.wall_mat  = "STARTAN3"
     A.floor_mat = "FLOOR4_8"
+    A.facade_mat = "COMPSPAN" --!!!!FIXME  A.zone.facade_mat
 
   elseif A.kind == "courtyard" then
     A.floor_mat = "BROWN1"
@@ -533,6 +546,7 @@ function dummy_properties(A)
   elseif A.kind == "cave" then
     A.wall_mat  = "ASHWALL4"
     A.floor_mat = "RROCK04"
+    A.facade_mat = A.wall_mat
 
   else
     A.floor_mat = "CRACKLE2"
@@ -552,7 +566,11 @@ function dummy_properties(A)
     A.ceil_mat  = "WOOD1"
 
     if not A.is_outdoor then
-      A.ceil_h = A.floor_h + 72
+    A.facade_mat = "COMPSPAN" --!!!!FIXME  A.zone.facade_mat
+    end
+
+    if not A.is_outdoor then
+      A.ceil_h = A.floor_h + 80
     end
   end
 
