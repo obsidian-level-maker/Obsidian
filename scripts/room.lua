@@ -675,8 +675,65 @@ end
 
 
 
+function Room_border_up()
+
+  local function visit_area_pair(junc, A1, A2)
+    assert(A1 != A2)
+
+    -- already decided?
+    if junc.kind then return end
+
+    -- void --
+
+    if A1.mode == "void" or A2.mode == "void" then
+      junc.kind = "wall"
+      return
+    end
+
+    if A2.room and not A1.room then
+      A1, A2 = A2, A1
+    end
+
+    -- scenic to scenic --
+
+    if not A1.room then
+      -- nothing needed if both building or both outdoor
+      if A1.is_outdoor == A2.is_outdoor then return end
+
+      junc.kind = "wall"
+      return
+    end
+
+    -- room to scenic --
+
+    if not A2.room then
+      -- FIXME
+      junc.kind = "wall"
+      return
+    end
+
+    -- room to room --
+
+    if A1.room == A2.room then
+      -- nothing absolutely needed if same room
+      -- FIXME : too simplistic!
+      return
+    end
+
+    -- FIXME
+
+    junc.kind = "wall"
+    return
+  end
 
 
+  ---| Room_border_up |---
+
+  each _,junc in LEVEL.area_junctions do
+    visit_area_pair(junc, junc.A1, junc.A2)
+  end
+
+end
 
 
 
@@ -1533,6 +1590,8 @@ function Weird_build_rooms()
   end
 
   Room_update_sky_groups()
+
+  Room_border_up()
 
   Render_all_areas()
   Render_importants()
