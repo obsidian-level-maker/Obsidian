@@ -19,6 +19,25 @@
 ------------------------------------------------------------------------
 
 
+function calc_wall_mat(A1, A2)
+ 
+  -- FIXME
+
+  if not A2 then
+  end
+
+  return A1.wall_mat
+end
+
+
+function calc_straddle_mat(A1, A2)
+
+  -- FIXME
+  
+  return A1.wall_mat, A2.wall_mat
+end
+
+
 function edge_get_rail(S, dir)
   assert(S.area)
 
@@ -35,8 +54,7 @@ function edge_get_rail(S, dir)
 
   if bord.kind != nil then return nil end
 
-  local junc = Junction_lookup(S.area, N.area)
-  assert(junc)
+  local junc = assert(bord.junction)
 
   if junc.kind == "rail" then return junc end
 
@@ -335,72 +353,36 @@ function Render_edge(A, S, dir)
 
   if N == "NODIR" then return end
 
-  -- edge of map
-  if not (N and N.area) then
-    if bord.kind == "sky_edge" and A.floor_h then
-      edge_simple_sky(A.floor_h)
-    end
 
-    return
-  end
+  -- same area?  nothing needed
+  local NA = N and N.area
 
-
-  -- same area ?   nothing needed
-  if N.area == S.area then return end
-
-  local NA = assert(N.area)
-
-  local junc = Junction_lookup(A, NA)
-  assert(junc)
+  if NA and NA == A then return end
 
 
   add_edge_line()
 
 
-  local same_room = (N.room and N.room == S.room)
-
-
   if bord.kind == nil then
-    bord = junc
+    bord = bord.junction
   end
 
-  if bord.kind == nil or bord.kind == "nothing" or bord.kind == "straddle" then
+
+  if not bord or bord.kind == nil or bord.kind == "nothing" or bord.kind == "straddle" then
     return
-  end
+  
+  elseif bord.kind == "wall" then
+    edge_wall(S, dir, calc_wall_mat(A, NA))
 
+  elseif bord.kind == "sky_edge" and A.floor_h then
+    edge_simple_sky(A.floor_h)
 
-  if bord.kind == "arch" then
+  elseif bord.kind == "arch" then
     dummy_arch(S, dir)
 
   elseif bord.kind == "lock_door" then
     straddle_locked_door()
 
-  elseif bord.kind == "straddle" then
-    -- nothing
-
---!!!!    elseif A.mode == "hallway" or
---!!!!        (rand.odds(80) and (A.kind == "building" or A.kind == "cave"))
---!!!!    then
-  
-  elseif A.mode == "scenic" and A.is_outdoor then
-    -- nothing
-
-  elseif A.is_outdoor and NA and NA.mode == "scenic" and NA.kind == "water" then
-    -- nothing
-
-  elseif not same_room then
-    local mat = A.wall_mat
-
-    if A.is_outdoor and not NA.is_outdoor then
-      mat = NA.wall_mat
-    end
-
-    assert(mat)
-
-    edge_wall(S, dir, mat)
-
-  else
---!!!      straddle_fence_or_wall(S, dir, A.wall_mat, A.floor_h + 8)
   end
 end
 
@@ -526,63 +508,65 @@ function dummy_properties(A)
   end
 
 
-    if not A.floor_h then
-      A.floor_h = -7
-    end
+  if not A.floor_h then
+    A.floor_h = -7
+  end
 
-    if not A.ceil_h then
-      A.ceil_h = A.floor_h + 200
-    end
+  if not A.ceil_h then
+    A.ceil_h = A.floor_h + 200
+  end
 
 --DEBUG
 ---##  A.kind = "building"
 ---##  if A.mode != "scenic" then A.mode = "normal" end
 
-    if A.kind == "building" then
-      A.wall_mat  = "STARTAN3"
-      A.floor_mat = "FLOOR4_8"
+  if A.kind == "building" then
+    A.wall_mat  = "STARTAN3"
+    A.floor_mat = "FLOOR4_8"
 
-    elseif A.kind == "courtyard" then
-      A.floor_mat = "BROWN1"
+  elseif A.kind == "courtyard" then
+    A.floor_mat = "BROWN1"
 
-    elseif A.kind == "landscape" then
-      A.floor_mat = "RROCK19"
+  elseif A.kind == "landscape" then
+    A.floor_mat = "RROCK19"
 
-    elseif A.kind == "cave" then
-      A.wall_mat  = "ASHWALL4"
-      A.floor_mat = "RROCK04"
+  elseif A.kind == "cave" then
+    A.wall_mat  = "ASHWALL4"
+    A.floor_mat = "RROCK04"
 
-    else
-      A.floor_mat = "CRACKLE2"
-    end
+  else
+    A.floor_mat = "CRACKLE2"
+  end
 
-    if A.mode == "scenic" and A.kind == "water" then
-      assert(A.floor_h)
-      A.floor_mat = "FWATER1"
+  if A.mode == "scenic" and A.kind == "water" then
+    assert(A.floor_h)
+    A.floor_mat = "FWATER1"
 
 ---    elseif A.mode == "scenic" then
 ---      A.floor_mat = "LAVA1"
 ---      A.floor_h   = -64
 
-    elseif A.mode == "hallway" then
-      A.floor_mat = "FLAT5_1"
-      A.wall_mat  = "WOOD1"
-      A.ceil_mat  = "WOOD1"
+  elseif A.mode == "hallway" then
+    A.floor_mat = "FLAT5_1"
+    A.wall_mat  = "WOOD1"
+    A.ceil_mat  = "WOOD1"
 
-      if not A.is_outdoor then
-        A.ceil_h = A.floor_h + 72
-      end
+    if not A.is_outdoor then
+      A.ceil_h = A.floor_h + 72
     end
+  end
 
 
-    if A.is_outdoor then
-      A.ceil_mat = "_SKY"
-    end
+  if A.is_outdoor then
+    A.ceil_mat = "_SKY"
+  end
 
-    A.wall_mat = A.wall_mat or A.floor_mat
-    A.ceil_mat = A.ceil_mat or A.wall_mat
+  A.wall_mat = A.wall_mat or A.floor_mat
+  A.ceil_mat = A.ceil_mat or A.wall_mat
 
-    assert(A.wall_mat)
+  A.facade_mat = A.facade_mat or A.wall_mat
+
+  assert(A.wall_mat)
 end
 
 
