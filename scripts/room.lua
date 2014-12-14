@@ -1361,8 +1361,8 @@ gui.printf("spread_kind '%s' : starts=%d  quota=%d\n", what, start_num, seed_quo
 
   local total_seeds = SEED_W * SEED_H
 
-  local out_quota = style_sel("outdoors", 0, 10, 25, 50, 200)
-  local cav_quota = style_sel("cave",     0, 10, 25, 50, 200)
+  local out_quota = style_sel("outdoors", 0, 6, 30, 70)
+  local cav_quota = style_sel("cave",     0, 6, 30, 70)
 
   -- if rooms become both cave + outdoor, use this chance to pick one
   resolve_outdoor_prob = 50
