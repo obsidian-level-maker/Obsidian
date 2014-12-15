@@ -233,6 +233,40 @@ function Render_edge(A, S, dir)
   end
 
 
+  local function calc_step_A_mode(S, dir)
+    local junc = S.border[dir].junction
+    if not junc or junc.kind != "steps" then return "narrow" end
+
+    local N, T
+    local bord
+
+    if geom.is_straight(dir) then
+      N = S:diag_neighbor(geom.LEFT[dir])
+      if not (N and N.area == S.area) or N.diagonal then return "" end
+
+      T = N:diag_neighbor(10 - dir)
+      if not (T and T.area == S.area) or T.diagonal then return "" end
+
+      bord = T.border[geom.RIGHT[dir]]
+      if bord.junction == junc then return "wide" end
+
+      return "xx"
+
+    else  -- corner
+
+      local dir2 = geom.ROTATE[5][dir]
+
+      N = S:diag_neighbor(dir2)
+      if not (N and N.area == S.area) or N.diagonal then return "" end
+
+      T = N:diag_neighbor(geom.RIGHT[dir2])
+      if not (N and N.area == S.area) then return "" end
+
+      return "wide"
+    end
+  end
+
+
   local function make_step_brush(S, dir, a_mode, b_mode, TK)
     -- define points A and B
 
@@ -319,9 +353,10 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     if diff_h > 32 then num_steps = 2 end
     if diff_h > 64 then num_steps = 3 end
 
-    -- FIXME
-    local a_mode = ""
-    local b_mode = ""
+    -- determine A and B modes
+    local a_mode = calc_step_A_mode(S, dir)
+
+    local b_mode = ""  -- FIXME
 
     for i = 1, num_steps do
       local z = steps_z1 + i * diff_h / (num_steps + 1)
