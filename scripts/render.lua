@@ -242,11 +242,11 @@ function Render_edge(A, S, dir)
     if dir == 4 then bx = ax end
     if dir == 6 then ax = bx ; ay,by = by,ay end
 
-    if dir == 3 or dir == 7 then
+    if dir == 1 or dir == 9 then
       ax,bx = bx,ax
     end
 
-    if dir == 1 or dir == 3 then
+    if dir == 3 or dir == 9 then
       ax,bx = bx,ax
       ay,by = by,ay
     end
@@ -263,10 +263,22 @@ function Render_edge(A, S, dir)
       adx, bdx = 1, 1
     elseif dir == 6 then
       adx, bdx = -1, -1
+
+    elseif dir == 1 then
+      ady = 1 ; bdx = 1
+    elseif dir == 9 then
+      ady = -1 ; bdx = -1
+    elseif dir == 3 then
+      adx = -1 ; bdy = 1
+    elseif dir == 7 then
+      adx = 1 ; bdy = -1
     else
-      error("WTF corner")
+      error("bad dir in make_step_brush")
     end
 
+stderrf("dir = %d\n", dir)
+stderrf("A = (%d %d)  B = (%d %d)\n", ax - S.x1, ay - S.y1, bx - S.x1, by - S.y1)
+stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     
     local brush =
     {
@@ -292,7 +304,7 @@ function Render_edge(A, S, dir)
 num_steps = 3
 thick = 48
 
-if geom.is_corner(dir) then return end --FIXME !!!!!
+-- if not geom.is_corner(dir) then return end --FIXME !!!!!
 
     -- FIXME
     local a_mode = "boundary"
