@@ -233,6 +233,53 @@ function Render_edge(A, S, dir)
   end
 
 
+  local function make_step_brush(S, dir, a_mode, b_mode, TK)
+    local ax, ay = S.x1, S.y1
+    local bx, by = S.x2, S.y2
+
+    if dir == 2 then by = ay ; ax,bx = bx,ax end
+    if dir == 8 then ay = by end
+    if dir == 4 then bx = ax end
+    if dir == 6 then ax = bx ; ay,by = by,ay end
+
+    if dir == 3 or dir == 7 then
+      ax,bx = bx,ax
+    end
+
+    if dir == 1 or dir == 3 then
+      ax,bx = bx,ax
+      ay,by = by,ay
+    end
+
+
+    local adx, ady = 0, 0
+    local bdx, bdy = 0, 0
+
+    if dir == 8 then
+      ady, bdy = -1, -1
+    elseif dir == 2 then
+      ady, bdy = 1, 1
+    elseif dir == 4 then
+      adx, bdx = 1, 1
+    elseif dir == 6 then
+      adx, bdx = -1, -1
+    else
+      error("WTF corner")
+    end
+
+    
+    local brush =
+    {
+      { x = bx, y = by }
+      { x = ax, y = ay }
+      { x = ax + adx * TK, y = ay + ady * TK } 
+      { x = bx + bdx * TK, y = by + bdy * TK } 
+    }
+
+    return brush
+  end
+
+
   local function edge_steps(S, dir, mat, steps_z1, steps_z2, thick)
     local diff_h = steps_z2 - steps_z1
     assert(diff_h > 8)
@@ -242,12 +289,26 @@ function Render_edge(A, S, dir)
 
     if diff_h > 32 then num_steps = 2 end
     if diff_h > 64 then num_steps = 3 end
+num_steps = 3
+thick = 48
+
+if geom.is_corner(dir) then return end --FIXME !!!!!
+
+    -- FIXME
+    local a_mode = "boundary"
+    local b_mode = "boundary"
 
     for i = 1, num_steps do
       local z = steps_z1 + i * diff_h / (num_steps + 1)
       local TK = thick * (num_steps + 1 - i) / num_steps
 
-      straddle_fence(S, dir, mat, z, TK)
+      local brush = make_step_brush(S, dir, a_mode, b_mode, TK)
+
+      table.insert(brush, { t=z })
+
+      brushlib.set_mat(brush, mat, mat)
+
+      Trans.brush(brush)
     end
   end
 
