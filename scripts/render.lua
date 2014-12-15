@@ -234,6 +234,8 @@ function Render_edge(A, S, dir)
 
 
   local function make_step_brush(S, dir, a_mode, b_mode, TK)
+    -- define points A and B
+
     local ax, ay = S.x1, S.y1
     local bx, by = S.x2, S.y2
 
@@ -251,47 +253,50 @@ function Render_edge(A, S, dir)
       ay,by = by,ay
     end
 
+    -- compute vectors of points A and B
 
     local adx, ady = 0, 0
     local bdx, bdy = 0, 0
 
     if dir == 8 then
       ady, bdy = -1, -1
-      if a_mode != "boundary" then adx = -1 end
-      if b_mode != "boundary" then bdx =  1 end
+      if a_mode == "narrow" then adx =  0.5 elseif a_mode == "wide" then adx = -1 end
+      if b_mode == "narrow" then bdx = -0.5 elseif b_mode == "wide" then bdx =  1 end
     elseif dir == 2 then
       ady, bdy = 1, 1
-      if a_mode != "boundary" then adx =  1 end
-      if b_mode != "boundary" then bdx = -1 end
+      if a_mode == "narrow" then adx = -0.5 elseif a_mode == "wide" then adx =  1 end
+      if b_mode == "narrow" then bdx =  0.5 elseif b_mode == "wide" then bdx = -1 end
     elseif dir == 4 then
       adx, bdx = 1, 1
-      if a_mode != "boundary" then ady = -1 end
-      if b_mode != "boundary" then bdy =  1 end
+      if a_mode == "narrow" then ady =  0.5 elseif a_mode == "wide" then ady = -1 end
+      if b_mode == "narrow" then bdy = -0.5 elseif b_mode == "wide" then bdy =  1 end
     elseif dir == 6 then
       adx, bdx = -1, -1
-      if a_mode != "boundary" then ady =  1 end
-      if b_mode != "boundary" then bdy = -1 end
+      if a_mode == "narrow" then ady = -0.5 elseif a_mode == "wide" then ady =  1 end
+      if b_mode == "narrow" then bdy =  0.5 elseif b_mode == "wide" then bdy = -1 end
 
     elseif dir == 1 then
-      if a_mode == "boundary" then ady = 1 else adx = 1 end
-      if b_mode == "boundary" then bdx = 1 else bdy = 1 end
+      if a_mode != "wide" then ady = 1 else adx = 1 end
+      if b_mode != "wide" then bdx = 1 else bdy = 1 end
     elseif dir == 9 then
-      if a_mode == "boundary" then ady = -1 else adx = -1 end
-      if b_mode == "boundary" then bdx = -1 else bdy = -1 end
+      if a_mode != "wide" then ady = -1 else adx = -1 end
+      if b_mode != "wide" then bdx = -1 else bdy = -1 end
     elseif dir == 3 then
-      if a_mode == "boundary" then adx = -1 else ady =  1 end
-      if b_mode == "boundary" then bdy =  1 else bdx = -1 end
+      if a_mode != "wide" then adx = -1 else ady =  1 end
+      if b_mode != "wide" then bdy =  1 else bdx = -1 end
     elseif dir == 7 then
-      if a_mode == "boundary" then adx =  1 else ady = -1 end
-      if b_mode == "boundary" then bdy = -1 else bdx =  1 end
+      if a_mode != "wide" then adx =  1 else ady = -1 end
+      if b_mode != "wide" then bdy = -1 else bdx =  1 end
     else
       error("bad dir in make_step_brush")
     end
 
+--[[ HANDY DEBUG
 stderrf("dir = %d\n", dir)
 stderrf("A = (%d %d)  B = (%d %d)\n", ax - S.x1, ay - S.y1, bx - S.x1, by - S.y1)
 stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
-    
+--]] 
+
     local brush =
     {
       { x = bx, y = by }
@@ -313,14 +318,10 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
     if diff_h > 32 then num_steps = 2 end
     if diff_h > 64 then num_steps = 3 end
-num_steps = 3
-thick = 48
-
--- if geom.is_corner(dir) then return end --FIXME !!!!!
 
     -- FIXME
-    local a_mode = "off"
-    local b_mode = "off"
+    local a_mode = ""
+    local b_mode = ""
 
     for i = 1, num_steps do
       local z = steps_z1 + i * diff_h / (num_steps + 1)
