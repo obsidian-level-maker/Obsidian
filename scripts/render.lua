@@ -242,10 +242,10 @@ function Render_edge(A, S, dir)
 
     if geom.is_straight(dir) then
       N = S:diag_neighbor(geom.LEFT[dir])
-      if not (N and N.area == S.area) or N.diagonal then return "" end
+      if not (N and N.area == S.area) then return "" end
 
-      T = N:diag_neighbor(10 - dir)
-      if not (T and T.area == S.area) or T.diagonal then return "" end
+      T = N:diag_neighbor(dir)
+      if not (T and T.area == S.area) then return "" end
 
       bord = T.border[geom.RIGHT[dir]]
       if bord.junction == junc then return "wide" end
@@ -257,9 +257,43 @@ function Render_edge(A, S, dir)
       local dir2 = geom.ROTATE[5][dir]
 
       N = S:diag_neighbor(dir2)
-      if not (N and N.area == S.area) or N.diagonal then return "" end
+      if not (N and N.area == S.area) then return "" end
 
       T = N:diag_neighbor(geom.RIGHT[dir2])
+      if not (N and N.area == S.area) then return "" end
+
+      return "wide"
+    end
+  end
+
+
+  local function calc_step_B_mode(S, dir)
+    local junc = S.border[dir].junction
+    if not junc or junc.kind != "steps" then return "narrow" end
+
+    local N, T
+    local bord
+
+    if geom.is_straight(dir) then
+      N = S:diag_neighbor(geom.RIGHT[dir])
+      if not (N and N.area == S.area) then return "" end
+
+      T = N:diag_neighbor(dir)
+      if not (T and T.area == S.area) then return "" end
+
+      bord = T.border[geom.LEFT[dir]]
+      if bord.junction == junc then return "wide" end
+
+      return "xx"
+
+    else  -- corner
+
+      local dir2 = geom.ROTATE[3][dir]
+
+      N = S:diag_neighbor(dir2)
+      if not (N and N.area == S.area) then return "" end
+
+      T = N:diag_neighbor(geom.LEFT[dir2])
       if not (N and N.area == S.area) then return "" end
 
       return "wide"
@@ -355,8 +389,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
     -- determine A and B modes
     local a_mode = calc_step_A_mode(S, dir)
-
-    local b_mode = ""  -- FIXME
+    local b_mode = calc_step_B_mode(S, dir)
 
     for i = 1, num_steps do
       local z = steps_z1 + i * diff_h / (num_steps + 1)
@@ -580,7 +613,7 @@ function Render_seed(A, S)
 
 
 local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
-if A.room then tag = A.room.id end
+tag = A.id --??? if A.room then tag = A.room.id end
 
 
   local f_brush = table.deep_copy(bare_brush)
