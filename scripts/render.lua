@@ -257,21 +257,33 @@ function Render_edge(A, S, dir)
 
     if dir == 8 then
       ady, bdy = -1, -1
+      if a_mode != "boundary" then adx = -1 end
+      if b_mode != "boundary" then bdx =  1 end
     elseif dir == 2 then
       ady, bdy = 1, 1
+      if a_mode != "boundary" then adx =  1 end
+      if b_mode != "boundary" then bdx = -1 end
     elseif dir == 4 then
       adx, bdx = 1, 1
+      if a_mode != "boundary" then ady = -1 end
+      if b_mode != "boundary" then bdy =  1 end
     elseif dir == 6 then
       adx, bdx = -1, -1
+      if a_mode != "boundary" then ady =  1 end
+      if b_mode != "boundary" then bdy = -1 end
 
     elseif dir == 1 then
-      ady = 1 ; bdx = 1
+      if a_mode == "boundary" then ady = 1 else adx = 1 end
+      if b_mode == "boundary" then bdx = 1 else bdy = 1 end
     elseif dir == 9 then
-      ady = -1 ; bdx = -1
+      if a_mode == "boundary" then ady = -1 else adx = -1 end
+      if b_mode == "boundary" then bdx = -1 else bdy = -1 end
     elseif dir == 3 then
-      adx = -1 ; bdy = 1
+      if a_mode == "boundary" then adx = -1 else ady =  1 end
+      if b_mode == "boundary" then bdy =  1 else bdx = -1 end
     elseif dir == 7 then
-      adx = 1 ; bdy = -1
+      if a_mode == "boundary" then adx =  1 else ady = -1 end
+      if b_mode == "boundary" then bdy = -1 else bdx =  1 end
     else
       error("bad dir in make_step_brush")
     end
@@ -304,11 +316,11 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 num_steps = 3
 thick = 48
 
--- if not geom.is_corner(dir) then return end --FIXME !!!!!
+-- if geom.is_corner(dir) then return end --FIXME !!!!!
 
     -- FIXME
-    local a_mode = "boundary"
-    local b_mode = "boundary"
+    local a_mode = "off"
+    local b_mode = "off"
 
     for i = 1, num_steps do
       local z = steps_z1 + i * diff_h / (num_steps + 1)
