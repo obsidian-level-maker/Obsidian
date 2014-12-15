@@ -553,7 +553,9 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     straddle_fence(S, dir, assert(bord.fence_mat), assert(bord.fence_top_z))
 
   elseif bord.kind == "steps" then
-    edge_steps(S, dir, bord.steps_mat, bord.steps_z1, bord.steps_z2, bord.steps_thick or 48)
+    if NA.floor_h > A.floor_h then
+      edge_steps(S, dir, bord.steps_mat, bord.steps_z1, bord.steps_z2, bord.steps_thick or 48)
+    end
 
   elseif bord.kind == "arch" then
     dummy_arch(S, dir)
