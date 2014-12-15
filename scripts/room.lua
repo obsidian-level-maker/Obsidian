@@ -717,6 +717,17 @@ function Room_border_up()
     if A1.room == A2.room then
       -- nothing absolutely needed if same room
       -- FIXME : too simplistic!
+
+-- STEP TEST
+local z1 = math.min(A1.floor_h, A2.floor_h)
+local z2 = math.max(A1.floor_h, A2.floor_h)
+if (z2 - z1) >= 16 and (z2 - z1) <= 72 then
+  junc.kind = "steps"
+  junc.steps_mat = "FLAT1"
+  junc.steps_z1  = z1
+  junc.steps_z2  = z2
+end
+
       return
     end
 
@@ -1471,9 +1482,9 @@ function Weird_floor_heights()
 
   local function pick_delta_h(min_d, max_d, up_chance)
     if rand.odds(up_chance) then
-      return max_d + 24
+      return max_d + 48
     else
-      return min_d - 24
+      return min_d - 48
     end
   end
 

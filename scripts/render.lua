@@ -233,21 +233,29 @@ function Render_edge(A, S, dir)
   end
 
 
+  local function seed_touches_junc(S, junc)
+    each dir in geom.ALL_DIRS do
+      if S.border[dir].junction == junc then return true end
+    end
+
+    return false
+  end
+
+
   local function calc_step_A_mode(S, dir)
     local junc = S.border[dir].junction
     if not junc or junc.kind != "steps" then return "narrow" end
 
-    local N, T
-    local bord
+    local N, bord
 
     if geom.is_straight(dir) then
       N = S:diag_neighbor(geom.LEFT[dir])
       if not (N and N.area == S.area) then return "" end
 
-      T = N:diag_neighbor(dir)
-      if not (T and T.area == S.area) then return "" end
+      N = N:diag_neighbor(dir)
+      if not (N and N.area == S.area) then return "" end
 
-      bord = T.border[geom.RIGHT[dir]]
+      bord = N.border[geom.RIGHT[dir]]
       if bord.junction == junc then return "wide" end
 
       return "xx"
@@ -255,14 +263,22 @@ function Render_edge(A, S, dir)
     else  -- corner
 
       local dir2 = geom.ROTATE[5][dir]
+      local dir3 = geom.RIGHT[dir2]
 
       N = S:diag_neighbor(dir2)
       if not (N and N.area == S.area) then return "" end
 
-      T = N:diag_neighbor(geom.RIGHT[dir2])
+      N = N:diag_neighbor(dir3)
       if not (N and N.area == S.area) then return "" end
 
-      return "wide"
+      if seed_touches_junc(N, junc) then return "wide" end
+
+      N = N:diag_neighbor(10 - dir2)
+      if not (N and N.area == S.area) then return "" end
+
+      if seed_touches_junc(N, junc) then return "wide" end
+
+      return "xx"
     end
   end
 
@@ -271,17 +287,16 @@ function Render_edge(A, S, dir)
     local junc = S.border[dir].junction
     if not junc or junc.kind != "steps" then return "narrow" end
 
-    local N, T
-    local bord
+    local N, bord
 
     if geom.is_straight(dir) then
       N = S:diag_neighbor(geom.RIGHT[dir])
       if not (N and N.area == S.area) then return "" end
 
-      T = N:diag_neighbor(dir)
-      if not (T and T.area == S.area) then return "" end
+      N = N:diag_neighbor(dir)
+      if not (N and N.area == S.area) then return "" end
 
-      bord = T.border[geom.LEFT[dir]]
+      bord = N.border[geom.LEFT[dir]]
       if bord.junction == junc then return "wide" end
 
       return "xx"
@@ -289,12 +304,20 @@ function Render_edge(A, S, dir)
     else  -- corner
 
       local dir2 = geom.ROTATE[3][dir]
+      local dir3 = geom.LEFT[dir2]
 
       N = S:diag_neighbor(dir2)
       if not (N and N.area == S.area) then return "" end
 
-      T = N:diag_neighbor(geom.LEFT[dir2])
+      N = N:diag_neighbor(dir3)
       if not (N and N.area == S.area) then return "" end
+
+      if seed_touches_junc(N, junc) then return "wide" end
+
+      N = N:diag_neighbor(10 - dir2)
+      if not (N and N.area == S.area) then return "" end
+
+      if seed_touches_junc(N, junc) then return "wide" end
 
       return "wide"
     end
@@ -615,7 +638,7 @@ function Render_seed(A, S)
 
 
 local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
-tag = A.id --??? if A.room then tag = A.room.id end
+--tag = (S.sx*100+S.sy) --??? if A.room then tag = A.room.id end
 
 
   local f_brush = table.deep_copy(bare_brush)
