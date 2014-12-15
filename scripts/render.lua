@@ -182,8 +182,10 @@ function Render_edge(A, S, dir)
   end
 
 
-  local function straddle_fence(S, dir, mat, fence_h)
-    local TK = 16
+  local function straddle_fence(S, dir, mat, fence_top_z, TK)
+    assert(fence_top_z)
+
+    if not TK then TK = 16 end
 
     local x1, y1 = S.x1, S.y1
     local x2, y2 = S.x2, S.y2
@@ -223,13 +225,16 @@ function Render_edge(A, S, dir)
       }
     end
 
-    if fence_h then
-      table.insert(brush, { t=fence_h })
-    end
+    table.insert(brush, { t=fence_top_z })
 
     brushlib.set_mat(brush, mat, mat)
 
     Trans.brush(brush)
+  end
+
+
+  local function straddle_steps(S, dir, mat, steps_z1, steps_z2)
+    -- FIXME
   end
 
 
@@ -375,6 +380,12 @@ function Render_edge(A, S, dir)
 
   elseif bord.kind == "sky_edge" and A.floor_h then
     edge_simple_sky(A.floor_h)
+
+  elseif bord.kind == "fence" then
+    straddle_fence(S, dir, assert(bord.fence_mat), assert(bord.fence_top_z))
+
+  elseif bord.kind == "steps" then
+    straddle_steps(S, dir, bord.steps_mat, bord.steps_z1, bord.steps_z2)
 
   elseif bord.kind == "arch" then
     dummy_arch(S, dir)

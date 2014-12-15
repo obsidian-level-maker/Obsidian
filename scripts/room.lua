@@ -720,6 +720,15 @@ function Room_border_up()
       return
     end
 
+    -- outdoor to outdoor
+    if A1.is_outdoor and A2.is_outdoor then
+      -- TODO : force solid between zones (sometimes)
+      junc.kind = "fence"
+      junc.fence_mat = LEVEL.fence_mat
+      junc.fence_top_z = math.max(A1.floor_h, A2.floor_h) + 32
+      return
+    end
+
     -- FIXME
 
     junc.kind = "wall"
