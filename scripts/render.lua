@@ -233,8 +233,22 @@ function Render_edge(A, S, dir)
   end
 
 
-  local function straddle_steps(S, dir, mat, steps_z1, steps_z2)
-    -- FIXME
+  local function edge_steps(S, dir, mat, steps_z1, steps_z2, thick)
+    local diff_h = steps_z2 - steps_z1
+    assert(diff_h > 8)
+    assert(diff_h <= 96)
+
+    local num_steps = 1
+
+    if diff_h > 32 then num_steps = 2 end
+    if diff_h > 64 then num_steps = 3 end
+
+    for i = 1, num_steps do
+      local z = steps_z1 + i * diff_h / (num_steps + 1)
+      local TK = thick * (num_steps + 1 - i) / num_steps
+
+      straddle_fence(S, dir, mat, z, TK)
+    end
   end
 
 
@@ -385,7 +399,7 @@ function Render_edge(A, S, dir)
     straddle_fence(S, dir, assert(bord.fence_mat), assert(bord.fence_top_z))
 
   elseif bord.kind == "steps" then
-    straddle_steps(S, dir, bord.steps_mat, bord.steps_z1, bord.steps_z2)
+    edge_steps(S, dir, bord.steps_mat, bord.steps_z1, bord.steps_z2, bord.steps_thick or 48)
 
   elseif bord.kind == "arch" then
     dummy_arch(S, dir)
