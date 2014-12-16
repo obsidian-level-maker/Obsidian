@@ -95,6 +95,8 @@ function Render_edge(A, S, dir)
 
   local NA  -- neighbor area
 
+  local DIAG_DIR_MAP = { [1]=2, [9]=8, [3]=6, [7]=4 }
+
 
   local function edge_wall(mat)
     local TK = 16
@@ -464,8 +466,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
       local def = PREFABS[fab_name]
       assert(def)
 
-      local DIR_MAP = { [1]=2, [9]=8, [3]=4, [7]=6 }
-      local dir2 = DIR_MAP[dir]
+      local dir2 = DIAG_DIR_MAP[dir]
 
       local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, dir2)
 
@@ -527,8 +528,46 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   end
 
 
-  local function straddle_window(S)
-    -- FIXME
+  local function straddle_window()
+    -- FIXME: window_z1 in JUNC/BORD
+    local z = math.max(A.floor_h, NA.floor_h)
+
+    local inner_mat, outer_mat = calc_straddle_mat(A, NA)
+
+    local skin1 = { wall=inner_mat, outer=outer_mat }
+
+
+    -- FIXME : find it properly
+    local fab_name = "Window_wide"
+
+    local def
+
+
+    if geom.is_corner(dir) then
+      fab_name = fab_name .. "_diag"
+
+      local def = PREFABS[fab_name]
+      assert(def)
+
+      local dir2 = DIAG_DIR_MAP[dir]
+
+      local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, dir2)
+
+      Fabricate(R, def, T, { skin1 })
+
+    else  -- axis-aligned edge
+
+      local def = PREFABS[fab_name]
+      assert(def)
+
+      local S2 = S
+      local seed_w = 1
+
+      local T = Trans.edge_transform(S.x1, S.y1, S2.x2, S2.y2, z,
+                                     dir, 0, seed_w * 192, def.deep, def.over)
+
+      Fabricate(R, def, T, { skin1 })
+    end
   end
 
 

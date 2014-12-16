@@ -708,7 +708,7 @@ function Room_border_up()
 
     if not A2.room then
       -- FIXME
-      junc.kind = "wall"
+      junc.kind = "window"
       return
     end
 
@@ -724,8 +724,6 @@ local z2 = math.max(A1.floor_h, A2.floor_h)
 if (z2 - z1) >= 16 and (z2 - z1) <= 72 then
   junc.kind = "steps"
   junc.steps_mat = "FLAT1"
-  junc.steps_z1  = z1
-  junc.steps_z2  = z2
 end
 
       return
@@ -742,7 +740,7 @@ end
 
     -- FIXME
 
-    junc.kind = "wall"
+    junc.kind = "window"
     return
   end
 
