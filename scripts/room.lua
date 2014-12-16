@@ -1249,11 +1249,13 @@ function Weird_choose_area_kinds()
 
 
   local function starts_from_quota(seed_quota)
-    local rough_size = 90 * rand.skew(1.0, 0.4)
+    if rand.odds(25) then return 1 end
+
+    local rough_size = 200 * rand.skew(1.0, 0.4)
 
     local num = rand.int(seed_quota / rough_size)
 
-    return math.min(num, 1)
+    return math.clamp(1, num, 4)
   end
 
 
@@ -1439,7 +1441,7 @@ gui.printf("spread_kind '%s' : starts=%d  quota=%d\n", what, start_num, seed_quo
   local total_seeds = SEED_W * SEED_H
 
   local out_quota = style_sel("outdoors", 0, 6, 30, 70)
-  local cav_quota = style_sel("cave",     0, 6, 30, 70)
+  local cav_quota = style_sel("caves",    0, 6, 30, 70)
 
   -- if rooms become both cave + outdoor, use this chance to pick one
   resolve_outdoor_prob = 50
@@ -1452,9 +1454,12 @@ gui.printf("spread_kind '%s' : starts=%d  quota=%d\n", what, start_num, seed_quo
   local out_starts = starts_from_quota(out_quota)
   local cav_starts = starts_from_quota(cav_quota)
 
-  if rand.odds(65) then
+  if rand.odds(50) then
     out_starts = out_starts + 1
   end
+
+---DEBUG:
+--- stderrf("%d outdoor for %d | %d cave for %d\n", out_starts, out_quota, cav_starts, cav_quota)
 
   spread_kind("outdoor", out_starts, out_quota)
   spread_kind("cave",    cav_starts, cav_quota)
