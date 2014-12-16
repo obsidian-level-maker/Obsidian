@@ -839,6 +839,13 @@ function Layout_outer_borders()
     end
   end
 
+  -- part B of "no other outdoorsy borders"
+  each A in LEVEL.areas do
+    if A.is_boundary and not A.is_outdoor then
+      A.mode = "void"
+    end
+  end
+
   assign_sky_edges()
 end
 
