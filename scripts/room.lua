@@ -1190,6 +1190,8 @@ function Weird_choose_area_kinds()
 
   local resolve_outdoor_prob
 
+  local POSITIONS = { 1,3,7,9, 5, 2,4,6,8 }
+
 
   local function kind_for_small_area(A)
     rand.shuffle(A.neighbors)
@@ -1344,13 +1346,6 @@ gui.printf("spread_kind '%s' : starts=%d  quota=%d\n", what, start_num, seed_quo
 
     local list = {}
 
-    local POSITIONS =
-    {
-      [5] = 50,
-      [1] = 70, [3] = 70, [7] = 70, [9] = 70,
-      [2] = 10, [4] = 10, [6] = 10, [8] = 10
-    }
-
     for i = 1, start_num do
       local quota = seed_quota / start_num
       quota = quota * rand.skew(1.0, 0.5)
@@ -1358,8 +1353,9 @@ gui.printf("spread_kind '%s' : starts=%d  quota=%d\n", what, start_num, seed_quo
       list[i] = { quota=quota, areas={} }
 
       -- pick start area
-      local pos = rand.key_by_probs(POSITIONS)
-      POSITIONS[pos] = nil
+      assert(not table.empty(POSITIONS))
+
+      local pos = table.remove(POSITIONS, 1)
 
       local A = area_for_position(pos)
       assert(A)
@@ -1458,8 +1454,17 @@ gui.printf("spread_kind '%s' : starts=%d  quota=%d\n", what, start_num, seed_quo
     out_starts = out_starts + 1
   end
 
----DEBUG:
---- stderrf("%d outdoor for %d | %d cave for %d\n", out_starts, out_quota, cav_starts, cav_quota)
+  gui.printf("Outdoor starts: %d (quota %d)\n", out_starts, out_quota)
+  gui.printf("Cave starts: %d (quota %d)\n",    cav_starts, cav_quota)
+
+  assert(out_starts + cav_starts <= 9)
+
+  -- with small # of starts, use less positions (which are further apart)
+  if out_starts + cav_starts <= 5 then
+    POSITIONS = { 1,3,7,9, 5 }
+  end
+
+  rand.shuffle(POSITIONS)
 
   spread_kind("outdoor", out_starts, out_quota)
   spread_kind("cave",    cav_starts, cav_quota)
