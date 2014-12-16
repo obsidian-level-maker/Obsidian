@@ -1323,14 +1323,25 @@ function Weird_choose_area_kinds()
     -- collect possible neighbors
     local poss = {}
 
+    local emerg_poss = {}
+
     each A in L.areas do
       each N in A.neighbors do
         if not already_set(N, what) then
-          -- could use 'add_unique' here, but this favors common neighbors
-          -- (which should make these groups more "clumpy" -- what we want)
-          table.insert(poss, N)
+          -- try to avoid conflicts  [this assumes outdoors are done first]
+          if what == "cave" and N.is_outdoor then
+            table.insert(emerg_poss, N)
+          else
+            -- could use 'add_unique' here, but this favors common neighbors
+            -- (which should make these groups more "clumpy" -- what we want)
+            table.insert(poss, N)
+          end
         end
       end
+    end
+
+    if table.empty(poss) then
+      poss = emerg_poss
     end
 
     -- poss may be empty (returns nil)
