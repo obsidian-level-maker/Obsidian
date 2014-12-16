@@ -1630,9 +1630,8 @@ function Weird_build_rooms()
     Layout_place_importants(R)
   end
 
-  Room_update_sky_groups()
-
   Room_border_up()
+  Room_update_sky_groups()
 
   Render_all_areas()
   Render_importants()
