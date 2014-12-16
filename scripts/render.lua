@@ -90,13 +90,13 @@ end
 
 function Render_edge(A, S, dir)
 
-  local bord = S.border[dir]
-  local LOCK = bord.lock
+  local info = S.border[dir]
+  local LOCK = info.lock
 
   local NA  -- neighbor area
 
 
-  local function edge_wall(S, dir, mat)
+  local function edge_wall(mat)
     local TK = 16
 
     local x1, y1 = S.x1, S.y1
@@ -157,6 +157,8 @@ function Render_edge(A, S, dir)
 
 
   local function edge_simple_sky(floor_h)
+    local floor_h = assert(A.floor_h)
+
     assert(not geom.is_corner(dir))
 
     local x1, y1 = S.x1, S.y1
@@ -182,10 +184,10 @@ function Render_edge(A, S, dir)
   end
 
 
-  local function straddle_fence(S, dir, mat, fence_top_z, TK)
-    assert(fence_top_z)
-
-    if not TK then TK = 16 end
+  local function straddle_fence()
+    local mat = assert(info.fence_mat)
+    local top_z = assert(info.fence_top_z)
+    local TK = info.fence_thick or 16
 
     local x1, y1 = S.x1, S.y1
     local x2, y2 = S.x2, S.y2
@@ -225,7 +227,7 @@ function Render_edge(A, S, dir)
       }
     end
 
-    table.insert(brush, { t=fence_top_z })
+    table.insert(brush, { t=top_z })
 
     brushlib.set_mat(brush, mat, mat)
 
@@ -400,7 +402,15 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   end
 
 
-  local function edge_steps(S, dir, mat, steps_z1, steps_z2, thick)
+  local function edge_steps()
+    local mat = assert(info.steps_mat)
+    local steps_z1 =  A.floor_h
+    local steps_z2 = NA.floor_h
+    local thick = info.steps_thick or 48
+
+    -- wrong side?
+    if steps_z2 < steps_z1 then return end
+
     local diff_h = steps_z2 - steps_z1
     assert(diff_h > 8)
     assert(diff_h <= 96)
@@ -517,6 +527,11 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   end
 
 
+  local function straddle_window(S)
+    -- FIXME
+  end
+
+
   local function add_edge_line()
     local x1, y1 = S.x1, S.y1
     local x2, y2 = S.x2, S.y2
@@ -557,34 +572,36 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   add_edge_line()
 
 
-  if bord.kind == nil then
-    bord = bord.junction
+  -- border[] entry overrides, junction is the fallback
+  if info.kind == nil then
+    info = info.junction
   end
 
 
-  if not bord or bord.kind == nil or bord.kind == "nothing" or bord.kind == "straddle" then
+  if not info or info.kind == nil or info.kind == "nothing" or info.kind == "straddle" then
     return
   
-  elseif bord.kind == "wall" then
+  elseif info.kind == "wall" then
     assert(A)
-    edge_wall(S, dir, calc_wall_mat(A, NA))
+    edge_wall(calc_wall_mat(A, NA))
 
-  elseif bord.kind == "sky_edge" and A.floor_h then
-    edge_simple_sky(A.floor_h)
+  elseif info.kind == "sky_edge" and A.floor_h then
+    edge_simple_sky()
 
-  elseif bord.kind == "fence" then
-    straddle_fence(S, dir, assert(bord.fence_mat), assert(bord.fence_top_z))
+  elseif info.kind == "fence" then
+    straddle_fence()
 
-  elseif bord.kind == "steps" then
-    if NA.floor_h > A.floor_h then
-      edge_steps(S, dir, bord.steps_mat, bord.steps_z1, bord.steps_z2, bord.steps_thick or 48)
-    end
+  elseif info.kind == "steps" then
+    edge_steps()
 
-  elseif bord.kind == "arch" then
+  elseif info.kind == "arch" then
     dummy_arch(S, dir)
 
-  elseif bord.kind == "lock_door" then
+  elseif info.kind == "lock_door" then
     straddle_locked_door()
+
+  elseif info.kind == "window" then
+    straddle_window()
 
   end
 end
