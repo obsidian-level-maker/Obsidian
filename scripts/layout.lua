@@ -733,7 +733,6 @@ function Layout_outer_borders()
 
 
   local function check_needed_fenceposts(water_room)
-
     for cx = 1, LEVEL.area_corners.w do
     for cy = 1, LEVEL.area_corners.h do
       local tab = LEVEL.area_corners[cx][cy]
@@ -758,8 +757,43 @@ function Layout_outer_borders()
   end
 
 
+  local function set_as_water(A, water_room)
+    A.scenic_room = water_room
+
+    A.mode = "scenic"
+    A.kind = "water"
+
+    A.is_outdoor = true
+    A.is_boundary = true
+
+    A.floor_h = water_room.floor_h
+  end
+
+
+  local function touches_water(A)
+    each N in A.neighbors do
+      if N.is_boundary and N.is_water and N.zone == A.zone then
+        return true
+      end
+    end
+  end
+
+
+  local function swallow_voids(water_room)
+    -- void areas touching the watery border may become part of it
+
+    each A in LEVEL.areas do
+      if A.mode == "void" and not A.is_boundary then
+        if touches_water(A) and rand.odds(60) then
+          table.insert(water_room.areas, A)
+        end
+      end
+    end
+  end
+
+
   local function test_watery_corner(corner)
-    -- TODO : should this be a real room object?
+    -- TODO : should this be a real room object?  [nah...]
     local room = 
     {
       kind = "scenic"
@@ -770,12 +804,15 @@ function Layout_outer_borders()
     each A in LEVEL.areas do
       if match_area(A, corner) then
         table.insert(room.areas, A)
+        A.is_water = true
       end
     end
 
     if table.empty(room.areas) then
       return  -- nothing happening, dude
     end
+
+    swallow_voids(room)
 
     neighbor_min_max(room)
 
@@ -787,12 +824,10 @@ function Layout_outer_borders()
     room.floor_h = room.nb_min_h - 32
 
     each A in room.areas do
-      A.scenic_room = room
+      set_as_water(A, room)
+    end
 
-      A.kind = "water"
-      A.is_outdoor = true
-      A.floor_h = room.floor_h
-
+    each A in room.areas do
       set_junctions(A)
     end
 
