@@ -677,74 +677,6 @@ function Layout_outer_borders()
   end
 
 
-  local function need_fencepost(corner)
-    --
-    -- need a fence post where :
-    --   1. three or more areas meet (w/ different heights)
-    --   2. all the areas are outdoor
-    --   3. one of the junctions is "rail"
-    --   4. none of the junctions are "wall"
-    --
-
-    if #corner.areas < 3 then return false end
-
-    post_h = nil
-
-    local heights = {}
-
-    each A in corner.areas do
-      if not A.is_outdoor then return false end
-      if not A.floor_h then return false end
-
-      table.add_unique(heights, A.floor_h)
-
-      each B in corner.areas do
-        local junc = Junction_lookup(A, B)
-        if junc then
-          if junc.kind == "wall" then return false end
-          if junc.kind == "rail" then post_h = assert(junc.post_h) end
-        end
-      end
-    end
-
-    if #heights < 3 then return false end
-
-    return (post_h != nil)
-  end
-
-
-  local function fencepost_base_z(corner)
-    local z
-
-    each A in corner.areas do
-      z = math.max(A.floor_h, z or -9999)
-    end
-
-    return z
-  end
-
-
-  local function check_needed_fenceposts()
-    for cx = 1, LEVEL.area_corners.w do
-    for cy = 1, LEVEL.area_corners.h do
-      local corner = LEVEL.area_corners[cx][cy]
-
-      if need_fencepost(corner) then
-        -- simply build it now
-
-        local mx, my = corner.x, corner.y
-        local top_h  = fencepost_base_z(corner) + post_h
-        
-        local brush  = brushlib.quad(mx - 12, my - 12, mx + 12, my + 12)
-
-        brushlib.add_top(brush, top_h)
-        brushlib.set_mat(brush, "METAL", "METAL")
-
-        Trans.brush(brush)
-      end
-    end
-    end
-  end
 
 
   local function set_as_water(A, water_room)
@@ -869,9 +801,85 @@ function Layout_outer_borders()
     end
   end
 
-  -- TODO : do this elsewhere (e.g. Layout_handle_corners)
-  check_needed_fenceposts()
-
   assign_sky_edges()
+end
+
+
+
+function Layout_handle_corners()
+
+  local function need_fencepost(corner)
+    --
+    -- need a fence post where :
+    --   1. three or more areas meet (w/ different heights)
+    --   2. all the areas are outdoor
+    --   3. one of the junctions is "rail"
+    --   4. none of the junctions are "wall"
+    --
+
+    if #corner.areas < 3 then return false end
+
+    post_h = nil
+
+    local heights = {}
+
+    each A in corner.areas do
+      if not A.is_outdoor then return false end
+      if not A.floor_h then return false end
+
+      table.add_unique(heights, A.floor_h)
+
+      each B in corner.areas do
+        local junc = Junction_lookup(A, B)
+        if junc then
+          if junc.kind == "wall" then return false end
+          if junc.kind == "rail" then post_h = assert(junc.post_h) end
+        end
+      end
+    end
+
+    if #heights < 3 then return false end
+
+    return (post_h != nil)
+  end
+
+
+  local function fencepost_base_z(corner)
+    local z
+
+    each A in corner.areas do
+      z = math.max(A.floor_h, z or -9999)
+    end
+
+    return z
+  end
+
+
+  local function check_needed_fenceposts()
+    for cx = 1, LEVEL.area_corners.w do
+    for cy = 1, LEVEL.area_corners.h do
+      local corner = LEVEL.area_corners[cx][cy]
+
+      if need_fencepost(corner) then
+        -- simply build it now
+
+        local mx, my = corner.x, corner.y
+        local top_h  = fencepost_base_z(corner) + post_h
+        
+        local brush  = brushlib.quad(mx - 12, my - 12, mx + 12, my + 12)
+
+        brushlib.add_top(brush, top_h)
+        brushlib.set_mat(brush, "METAL", "METAL")
+
+        Trans.brush(brush)
+      end
+    end
+    end
+  end
+  
+
+  ---| Layout_handle_corners |---
+
+  check_needed_fenceposts()
 end
 

@@ -1646,6 +1646,8 @@ function Weird_build_rooms()
   Room_border_up()
   Room_update_sky_groups()
 
+  Layout_handle_corners()
+
   Render_all_areas()
   Render_importants()
 
