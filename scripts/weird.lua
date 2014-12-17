@@ -20,7 +20,7 @@
 
 
 -- lower this to make larger areas
-T_BRANCH_PROB = 65
+T_BRANCH_PROB = 77
 
 -- if true, allow creation of single-seed squares shapes
 ALLOW_CLOSED_SQUARES = true
@@ -59,7 +59,9 @@ function Weird_save_svg()
   -- grid size
   local SIZE = 14
 
-  local fp = io.open("_weird.svg", "w")
+  local filename = "weird_" .. LEVEL.name .. ".svg"
+
+  local fp = io.open(filename, "w")
 
   if not fp then error("Cannot create file") end
 
