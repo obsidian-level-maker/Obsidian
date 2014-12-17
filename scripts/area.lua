@@ -217,6 +217,8 @@ function Corner_init()
   end
   end
 
+  -- find touching areas
+
   each A in LEVEL.areas do
     each S in A.half_seeds do
       each dir in geom.CORNERS do
@@ -227,6 +229,24 @@ function Corner_init()
         table.add_unique(corner.areas, A)
       end
     end
+  end
+
+  -- collect the junctions
+
+  for cx = 1, LEVEL.area_corners.w do
+  for cy = 1, LEVEL.area_corners.h do
+    local corner = LEVEL.area_corners[cx][cy]
+
+    for i = 1, #corner.areas do
+    for k = i + 1, #corner.areas do
+      local junc = Junction_lookup(corner.areas[i], corner.areas[k])
+
+      if junc then
+        table.add_unique(corner.junctions, junc)
+      end
+    end
+    end
+  end
   end
 end
 
@@ -908,8 +928,8 @@ function Weird_create_rooms()
 
   Weird_analyse_areas()
 
-    Corner_init()
   Junction_init()
+    Corner_init()
 
   Weird_void_some_areas()
   Weird_assign_hallways()
