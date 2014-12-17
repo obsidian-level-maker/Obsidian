@@ -876,10 +876,43 @@ function Layout_handle_corners()
     end
     end
   end
+
+
+  local function need_pillar_at(corner)
+    if corner.kind == "pillar" then return true end
+
+    each junc in corner.junctions do
+      if junc.kind  == "pillar" then return true end
+      if junc.kind2 == "pillar" then return true end
+    end
+
+    return false
+  end
+
+
+  local function check_pillars()
+    for cx = 1, LEVEL.area_corners.w do
+    for cy = 1, LEVEL.area_corners.h do
+      local corner = LEVEL.area_corners[cx][cy]
+
+      if need_pillar_at(corner) then
+        local mx, my = corner.x, corner.y
+        
+        local brush  = brushlib.quad(mx - 12, my - 12, mx + 12, my + 12)
+
+        brushlib.set_mat(brush, "METAL", "METAL")
+
+        Trans.brush(brush)
+      end
+    end
+    end
+  end
   
 
   ---| Layout_handle_corners |---
 
   check_needed_fenceposts()
+
+  check_pillars()
 end
 

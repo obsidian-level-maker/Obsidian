@@ -738,6 +738,10 @@ local z2 = math.max(A1.floor_h, A2.floor_h)
 if (z2 - z1) >= 16 and (z2 - z1) <= 72 then
   junc.kind = "steps"
   junc.steps_mat = "FLAT1"
+
+  if not A1.is_outdoor then
+    junc.kind2 = "pillar"
+  end
 end
 
       return
