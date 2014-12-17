@@ -677,7 +677,7 @@ function Layout_outer_borders()
   end
 
 
-  local function need_fencepost(tab)
+  local function need_fencepost(corner)
     --
     -- need a fence post where :
     --   1. three or more areas meet (w/ different heights)
@@ -686,19 +686,19 @@ function Layout_outer_borders()
     --   4. none of the junctions are "wall"
     --
 
-    if #tab < 3 then return false end
+    if #corner.areas < 3 then return false end
 
     post_h = nil
 
     local heights = {}
 
-    each A in tab do
+    each A in corner.areas do
       if not A.is_outdoor then return false end
       if not A.floor_h then return false end
 
       table.add_unique(heights, A.floor_h)
 
-      each B in tab do
+      each B in corner.areas do
         local junc = Junction_lookup(A, B)
         if junc then
           if junc.kind == "wall" then return false end
@@ -713,10 +713,10 @@ function Layout_outer_borders()
   end
 
 
-  local function fencepost_base_z(tab)
+  local function fencepost_base_z(corner)
     local z
 
-    each A in tab do
+    each A in corner.areas do
       z = math.max(A.floor_h, z or -9999)
     end
 
@@ -724,26 +724,16 @@ function Layout_outer_borders()
   end
 
 
-  local function corner_coord(cx, cy)  -- FIXME : move into seed.lua?
-    local x = BASE_X + (cx-1) * SEED_SIZE
-    local y = BASE_Y + (cy-1) * SEED_SIZE
-
-    return x, y
-  end
-
-
   local function check_needed_fenceposts(water_room)
     for cx = 1, LEVEL.area_corners.w do
     for cy = 1, LEVEL.area_corners.h do
-      local tab = LEVEL.area_corners[cx][cy]
+      local corner = LEVEL.area_corners[cx][cy]
 
-      if not tab then continue end
-
-      if need_fencepost(tab) then
+      if need_fencepost(corner) then
         -- simply build it now
 
-        local mx, my = corner_coord(cx, cy)
-        local top_h  = fencepost_base_z(tab) + post_h
+        local mx, my = Corner_coord(cx, cy)
+        local top_h  = fencepost_base_z(corner) + post_h
         
         local brush  = brushlib.quad(mx - 12, my - 12, mx + 12, my + 12)
 

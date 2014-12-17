@@ -56,6 +56,7 @@ class SEED
                      -- "wotsit", "pillar"
 
   border[DIR] : BORDER
+  corner[DIR] : CORNER
 
   thick[DIR]  -- thickness of each border
 
@@ -79,8 +80,7 @@ class BORDER
           "wall", "facade", "window", "fence",
           "arch", "door", "locked_door", "secret_door"
 
-  other : SEED  -- seed we are connected to, or nil 
-
+  [ see also : JUNCTION in area.lua ]
 }
 
 
@@ -160,6 +160,7 @@ function SEED_CLASS.join_halves(S)
   S2.diagonal = "dead"
 
   S2.border = nil
+  S2.corner = nil
   S2.area = nil
   S2.room = nil
 end
@@ -334,6 +335,7 @@ function Seed_create(sx, sy, x1, y1)
 
     thick  = {}
     border = {}
+    corner = {}
     chunk  = {}
   }
 
@@ -344,6 +346,7 @@ function Seed_create(sx, sy, x1, y1)
 
   each dir in geom.ALL_DIRS do
     S.border[dir] = {}
+    S.corner[dir] = {}
     S.thick [dir] = 16
   end
 
