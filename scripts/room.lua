@@ -680,8 +680,18 @@ function Room_border_up()
   local function visit_area_pair(junc, A1, A2)
     assert(A1 != A2)
 
-    -- already decided?
+
+    -- zones : gotta keep 'em separated
+
+    if A1.zone != A2.zone then
+      junc.kind = "wall"
+      return
+    end
+
+
+    -- already decided?  [ outdoor borders ]
     if junc.kind then return end
+
 
     -- void --
 
@@ -713,7 +723,7 @@ function Room_border_up()
     end
 
     -- room to room --
-
+ 
     if A1.room == A2.room then
       -- nothing absolutely needed if same room
       -- FIXME : too simplistic!
@@ -729,6 +739,7 @@ end
       return
     end
 
+
     -- outdoor to outdoor
     if A1.is_outdoor and A2.is_outdoor then
       -- TODO : force solid between zones (sometimes)
@@ -740,7 +751,7 @@ end
 
     -- FIXME
 
-    junc.kind = "window"
+    junc.kind = "window"  --!!!! TEST CRUD
     return
   end
 
