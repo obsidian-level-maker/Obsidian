@@ -170,6 +170,10 @@ end
     -- every seed.  More specific information will be in the seed itself.
     --
 
+    cx, cy  -- corner coordinate
+
+    x, y   -- map coordinate
+
     areas : list(AREA)
 
     junctions : list(JUNCTION)
@@ -184,8 +188,8 @@ function Corner_lookup(S, dir, create_it)
   local cx = S.sx
   local cy = S.sy
 
-  if corner == 3 or corner == 9 then cx = cx + 1 end
-  if corner == 7 or corner == 9 then cy = cy + 1 end
+  if dir == 3 or dir == 9 then cx = cx + 1 end
+  if dir == 7 or dir == 9 then cy = cy + 1 end
 
   assert(table.valid_pos(LEVEL.area_corners, cx, cy))
 
@@ -201,7 +205,15 @@ function Corner_init()
 
   for cx = 1, LEVEL.area_corners.w do
   for cy = 1, LEVEL.area_corners.h do
-    LEVEL.area_corners[cx][cy] = { areas={}, junctions={} }
+    local CORNER =
+    {
+      cx = cx, cy = cy
+      x = BASE_X + (cx-1) * SEED_SIZE
+      y = BASE_Y + (cy-1) * SEED_SIZE
+      areas={}, junctions={}
+    }
+
+    LEVEL.area_corners[cx][cy] = CORNER
   end
   end
 
@@ -218,14 +230,6 @@ function Corner_init()
   end
 end
 
-
-
-function Corner_coord(cx, cy)
-  local x = BASE_X + (cx-1) * SEED_SIZE
-  local y = BASE_Y + (cy-1) * SEED_SIZE
-
-  return x, y
-end
 
 
 ------------------------------------------------------------------------

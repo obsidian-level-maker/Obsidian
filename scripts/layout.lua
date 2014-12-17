@@ -724,7 +724,7 @@ function Layout_outer_borders()
   end
 
 
-  local function check_needed_fenceposts(water_room)
+  local function check_needed_fenceposts()
     for cx = 1, LEVEL.area_corners.w do
     for cy = 1, LEVEL.area_corners.h do
       local corner = LEVEL.area_corners[cx][cy]
@@ -732,7 +732,7 @@ function Layout_outer_borders()
       if need_fencepost(corner) then
         -- simply build it now
 
-        local mx, my = Corner_coord(cx, cy)
+        local mx, my = corner.x, corner.y
         local top_h  = fencepost_base_z(corner) + post_h
         
         local brush  = brushlib.quad(mx - 12, my - 12, mx + 12, my + 12)
@@ -820,8 +820,6 @@ function Layout_outer_borders()
     each A in room.areas do
       set_junctions(A)
     end
-
-    check_needed_fenceposts(room)
   end
 
 
@@ -870,6 +868,9 @@ function Layout_outer_borders()
       A.mode = "void"
     end
   end
+
+  -- TODO : do this elsewhere (e.g. Layout_handle_corners)
+  check_needed_fenceposts()
 
   assign_sky_edges()
 end
