@@ -747,6 +747,73 @@ function Weird_generate()
   end
 
 
+  local function add_rectangle(px, py, pw, ph)
+    local px2 = px + pw - 1
+    local py2 = py + ph - 1
+
+    for a = 1, pw - 1 do
+      add_edge(px + a - 1, py,  6)
+      add_edge(px + a - 1, py2, 6)
+    end
+
+    for b = 1, ph - 1 do
+      add_edge(px,  py + b - 1, 8)
+      add_edge(px2, py + b - 1, 8)
+    end
+  end
+
+
+  local function is_rect_clear(px, py, pw, ph)
+    for x = px, px + pw - 1 do
+    for y = py, py + ph - 1 do
+      local P = GRID[x][y]
+
+      if P.num_edges > 0 then return false end
+    end
+    end
+
+    return true
+  end
+
+
+  local function place_for_prefab(pw, ph)
+    local poss = {}
+
+    for px = 4, GRID_W - pw - 3 do
+    for py = 4, GRID_H - ph - 3 do
+      if is_rect_clear(px, py, pw, ph) then
+        table.insert(poss, { px=px, py=py })
+      end
+    end
+    end
+
+    return rand.pick(poss)
+  end
+
+
+  local function prefabrications()
+    LEVEL.prefab_areas = {}
+
+    local max_num = int(SEED_W / 6) * int(SEED_H / 6)
+
+    for loop = 1, max_num do
+      local pw = rand.irange(3, 5)
+      local ph = rand.irange(3, 5)
+      
+      local pos = place_for_prefab(pw, ph)
+
+      if pos then
+        pos.pw = pw
+        pos.ph = ph
+
+        table.insert(LEVEL.prefab_areas, pos)
+
+        add_rectangle(pos.px, pos.py, pw, ph)
+      end
+    end
+  end
+
+
   ---| Weird_generate |---
 
   create_points()
@@ -754,8 +821,14 @@ function Weird_generate()
   -- boundary also serves as a place to spawn edges from
   install_boundary_shape()
 
+  if false then
+    prefabrications()
+  end
+
   for pass = 1, 4 do
     add_lotsa_edges(2 / pass)
+
+    -- TODO : clear 'dead' flag ??
   end
 
   mirror_stuff()
