@@ -1011,8 +1011,6 @@ function Weird_connect_stuff()
     local R1 = S.room
     local R2 = N.room
 
-    if not R2 then return -1 end
-
     assert(R1.c_group)
     assert(R2.c_group)
 
