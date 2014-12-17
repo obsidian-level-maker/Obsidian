@@ -457,6 +457,10 @@ function Room_create_sky_groups()
 
   local function spread_group(A)
     each N in A.neighbors do
+      -- limit sky groups to same zone
+      -- [ assumes zones are strictly segregated ]
+      if N.zone != A.zone then continue end
+
       if N.is_outdoor and not N.sky_group then
         N.sky_group = A.sky_group
         spread_group(N)
