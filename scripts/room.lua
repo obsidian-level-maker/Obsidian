@@ -735,7 +735,7 @@ function Room_border_up()
 -- STEP TEST
 local z1 = math.min(A1.floor_h, A2.floor_h)
 local z2 = math.max(A1.floor_h, A2.floor_h)
-if (z2 - z1) >= 16 and (z2 - z1) <= 72 then
+if (z2 - z1) >  65 and (z2 - z1) <= 72 then
   junc.kind = "steps"
   junc.steps_mat = "FLAT1"
 
@@ -1520,9 +1520,9 @@ function Weird_floor_heights()
 
   local function pick_delta_h(min_d, max_d, up_chance)
     if rand.odds(up_chance) then
-      return max_d + 48
+      return max_d + 16
     else
-      return min_d - 48
+      return min_d - 16
     end
   end
 
