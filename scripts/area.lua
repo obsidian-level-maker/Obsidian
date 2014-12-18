@@ -656,7 +656,7 @@ function Weird_group_into_rooms()
 
 
   local function svol_is_tiny(svolume)
-    return svolume < 6
+    return svolume < 8
   end
 
 
@@ -673,10 +673,10 @@ function Weird_group_into_rooms()
 
     local SIZES =
     {
-      [96]  = 40,
-      [64]  = 30,
-      [32]  = 20,
-      [16]  =  5
+      [95]  =  5,
+      [45]  = 20,
+      [25]  = 70,
+      [15]  =  5
     }
 
     return rand.key_by_probs(SIZES)
