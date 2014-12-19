@@ -598,6 +598,33 @@ function Weird_generate()
   end
 
 
+  local function check_rotational_boundary(edges)
+    -- for rotationally mirrored maps, check if boundary will survive mirroring
+
+    local mid_gx = (GRID_W + 1) / 2
+    local mid_gy = (GRID_H + 1) / 2
+
+    local y1, y2
+
+    each P in edges do
+      if P.x == mid_gx then
+        if not y1 then
+          y1 = P.y
+        else
+          y2 = P.y
+        end
+      end
+    end
+
+    assert(y1 and y2)
+
+    y1 = math.abs(mid_gy - y1)
+    y2 = math.abs(mid_gy - y2)
+    
+    return y1 == y2
+  end
+
+
   local function create_boundary_shape()
     -- keep this number of points free at map edge (never allow boundary there)
     LEVEL.edge_margin = EDGE_SIZE
@@ -626,6 +653,10 @@ function Weird_generate()
       -- TODO : a way to "steer" edges which get near the finish point
       --        OR : keep going around until we hit a visited point
       return nil
+    end
+
+    if OB_CONFIG.mode == "ctf" and not check_rotational_boundary(bp.edges) then
+      return nil  -- try again
     end
 
     return bp.edges
@@ -734,6 +765,45 @@ function Weird_generate()
   end
 
 
+  local function mirror_rotationally()
+    assert((GRID_W % 2) == 1)
+
+    local mid_gx = (GRID_W + 1) / 2
+    local mid_gy = (GRID_H + 1) / 2
+
+    local HALF_DIRS = { 3,6,9 }
+
+    -- this fills the right half, mirroring (and inverting) the left half
+
+    for gx = 1, mid_gx do
+    for gy = 1, GRID_H do
+      local P = GRID[gx][gy]
+      local N = GRID[mid_gx + (mid_gx - gx)][mid_gy + (mid_gy - gy)]
+
+      local dir_list = sel(gx == mid_gx, HALF_DIRS, geom.ALL_DIRS)
+
+      if gx == mid_gx then
+        if P.edge[2] then remove_edge(P.gx, P.gy, 2) end
+        if P.edge[8] then remove_edge(P.gx, P.gy, 8) end
+      end
+
+      each dir in dir_list do
+        if N.edge[dir] then
+          remove_edge(N.gx, N.gy, dir)
+        end
+      end
+
+      each dir in dir_list do
+        local dir2 = 10 - dir
+        if P.edge[dir2] then
+          add_edge(N.gx, N.gy, dir, P.edge[dir2])
+        end
+      end
+    end
+    end
+  end
+
+
   local function mirror_stuff()
     if false then
       mirror_vertically()
@@ -741,6 +811,10 @@ function Weird_generate()
 
     if false then
       mirror_horizontally()
+    end
+
+    if OB_CONFIG.mode == "ctf" then
+      mirror_rotationally()
     end
 
     remove_dead_ends()
