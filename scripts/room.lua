@@ -1150,7 +1150,7 @@ function Weird_assign_hallways()
 
     -- often use very small areas
     if A.svolume <= 2.0 then
-      return gui.random() * 10
+      return gui.random() * 30
     end
 
     local score = (1.0 - A.openness) * 10
