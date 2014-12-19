@@ -821,18 +821,29 @@ function Weird_generate()
   end
 
 
-  local function add_rectangle(px, py, pw, ph)
+  local function add_rectangle(px, py, pw, ph, no_subdivide)
     local px2 = px + pw - 1
     local py2 = py + ph - 1
 
-    for a = 1, pw - 1 do
-      add_edge(px + a - 1, py,  6)
-      add_edge(px + a - 1, py2, 6)
+    for a = 0, pw - 2 do
+      add_edge(px + a, py,  6)
+      add_edge(px + a, py2, 6)
     end
 
-    for b = 1, ph - 1 do
-      add_edge(px,  py + b - 1, 8)
-      add_edge(px2, py + b - 1, 8)
+    for b = 0, ph - 2 do
+      add_edge(px,  py + b, 8)
+      add_edge(px2, py + b, 8)
+    end
+
+    -- this only allows edges to connect at the corners
+    if no_subdivide then
+      for a = 0, pw - 1 do
+      for b = 0, ph - 1 do
+        if not ((a==0 or a==(pw-1)) and (b==0 or b==(ph-1))) then
+          GRID[px + a][py + b].dead = "very"
+        end
+      end
+      end
     end
   end
 
@@ -868,12 +879,13 @@ function Weird_generate()
   local function prefabrications()
     LEVEL.prefab_areas = {}
 
-    local max_num = int(SEED_W / 6) * int(SEED_H / 6)
+    local max_num = rand.irange(1, 4)
 
     for loop = 1, max_num do
-      local pw = rand.irange(3, 5)
-      local ph = rand.irange(3, 5)
-      
+      -- size is # of grid points, so 2x2 is smallest possible square
+      local pw = 3  -- rand.irange(4, 6)
+      local ph = 3  -- rand.irange(4, 6)
+
       local pos = place_for_prefab(pw, ph)
 
       if pos then
@@ -882,7 +894,7 @@ function Weird_generate()
 
         table.insert(LEVEL.prefab_areas, pos)
 
-        add_rectangle(pos.px, pos.py, pw, ph)
+        add_rectangle(pos.px, pos.py, pw, ph, "no_subdivide")
       end
     end
   end
@@ -895,9 +907,7 @@ function Weird_generate()
   -- boundary also serves as a place to spawn edges from
   install_boundary_shape()
 
-  if false then
-    prefabrications()
-  end
+  prefabrications()
 
   for pass = 1, 4 do
     add_lotsa_edges(2 / pass)
