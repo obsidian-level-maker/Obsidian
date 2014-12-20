@@ -281,7 +281,7 @@ private:
 
 			// NOTE: it's possible the widget (w) has been deleted by now
 
-			button_line = false;
+			button_line = NULL;
 		}
 	}
 };
