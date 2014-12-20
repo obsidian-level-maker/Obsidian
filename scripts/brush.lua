@@ -901,6 +901,19 @@ function brushlib.bbox(brush)
 end
 
 
+function brushlib.xy_coord(brush, x, y, props)
+  local C = { x=x, y=y }
+
+  if props then
+    table.merge(C, props)
+  end
+
+  table.insert(brush, C)
+
+  return C
+end
+
+
 function brushlib.add_top(brush, z, mat)
   -- Note: assumes brush has no top already!
 
