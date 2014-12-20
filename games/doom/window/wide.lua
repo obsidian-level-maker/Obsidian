@@ -39,3 +39,29 @@ PREFABS.Window_wide_tall =
   prob = 90
 }
 
+
+----------------------------------------
+--   DIAGONAL VERSIONS
+----------------------------------------
+
+PREFABS.Window_wide_diag =
+{
+  file   = "window/wide_dg.wad"
+  where  = "diagonal"
+
+  bound_z1 = 0
+  bound_z2 = 112
+}
+
+
+PREFABS.Window_wide_tall_diag =
+{
+  file   = "window/wide_dg.wad"
+  where  = "diagonal"
+
+  bound_z1 = 0
+  bound_z2 = 112
+
+  z_fit = { 64, 88 }
+}
+
