@@ -94,7 +94,12 @@ function MUSIC_SWAP.get_levels(self)
   each _,src in epi_list do
     local dest = table.copy(src)
     
-    rand.shuffle(dest)
+    -- this shuffle algorithm ensures first entry is never the same
+    -- [ I really get sick of hearing D_RUNNIN.... ]
+    for i = 1, (#dest-2) do
+      local k = rand.irange(i + 1, #dest)
+      dest[i], dest[k] = dest[k], dest[i]
+    end
 
     for i = 1, #src do
       text = text .. src[i] .. " = " .. dest[i] .. "\n"
