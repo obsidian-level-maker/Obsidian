@@ -1991,7 +1991,7 @@ int Q1_add_mapmodel(lua_State *L)
 
 	// create model reference (for entity)
 	char ref_name[32];
-	sprintf(ref_name, "*%u", qk_all_mapmodels.size());
+	sprintf(ref_name, "*%lu", qk_all_mapmodels.size());
 
 	lua_pushstring(L, ref_name);
 	return 1;

@@ -2995,7 +2995,8 @@ void CSG_DOOM_Write()
 
 	DM_CreateLinedefs();
 	DM_MergeColinearLines();
-	DM_RoundCorners();
+
+///???	DM_RoundCorners();
 	DM_AlignTextures();
 
 	DM_ExtraFloorNeighbors();

@@ -42,45 +42,43 @@
 Lighting Model
 --------------
 
-1. indoor rooms have a fairly low default lighting, lower still
-   for low areas of the room (under periphs).  for outdoor rooms,
-   when the ceiling is SKY then use the 'sky_shade' value.
+1. for indoor (non-sky) areas, default light level is given by the
+   'indoor_light' value.
 
-2. liquid areas and ceiling lights supply extra 'light' values.
+2. an AMBIENT light brush provides a different default for those areas.
 
-3. (NOT DONE YET) light brushes can be used to light up areas of
-   non-cave rooms.
+3. under a SKY brush, default light level is the 'sky_bright' value.
+   when a SHADOW light brush is present, the 'sky_shade' value is used
+   instead.  [ SHADOW brushes have no other effect than this ]
 
-4. outdoor rooms do a sky test -- cast a ray from floor to see if a
-   sky brush is hit -- if hit, use the 'sky_bright' value.
+4. every normal LIGHT brush in an area will test against the above
+   value and the MAXIMUM value will be applied.
 
-5. in caves, certain entities (torches) are used as light sources,
-   and we trace rays to see what nearby cells should be lit by them
-   (less light for further distances).
+5. any floor or non-sky ceiling brush can supply a 'light' property in
+   its top/bottom face.  It is equivalent to having a LIGHT brush there
+   with the specified value.  [ liquid areas often use this ]
+
+TODO : handle lighting effects 
+
+TODO : handle 3D floors properly [ move 'shade' field to gap_c ?? ]
 
 */
 
-#define MIN_SHADE  112
-
+int indoor_light;
 
 int sky_bright;
 int sky_shade;
-
-#define SKY_SHADE_FACTOR  2.0
 
 
 static int current_region_group;
 
 
+#if 0  // NOT USED, BUT POTENTIALLY USEFUL
+
 struct outdoor_box_t
 {
 	int x1, y1, x2, y2;
 };
-
-
-static std::vector< csg_entity_c *> cave_lights;
-
-static std::vector< outdoor_box_t > outdoor_boxes;
 
 
 static void SHADE_CollectBoxes()
@@ -114,107 +112,8 @@ static void SHADE_CollectBoxes()
 		outdoor_boxes.push_back(box);
 	}
 }
-
-
-static inline bool SHADE_IsPointOutdoor(int x, int y)
-{
-	for (unsigned int k = 0 ; k < outdoor_boxes.size() ; k++)
-	{
-		const outdoor_box_t& box = outdoor_boxes[k];
-
-		if (box.x1 <= x && x <= box.x2 &&
-			box.y1 <= y && y <= box.y2)
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
-
-static void SHADE_CollectLights()
-{
-	int face_count = 0;
-	int sky_count  = 0;
-	int ent_count  = 0;
-
-	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
-	{
-		region_c * R = all_regions[i];
-
-		// closed regions never provide light
-		if (R->isClosed())
-			continue;
-
-		csg_brush_c *B = R->gaps.front()->bottom;
-		csg_brush_c *T = R->gaps.back()->top;
-
-		csg_property_set_c *f_face = &B->t.face;
-		csg_property_set_c *c_face = &T->b.face;
-
-		R->f_light = f_face->getInt("light");
-		R->c_light = c_face->getInt("light");
-
-		if (R->f_light > 0)
-		{
-			R->f_factor = f_face->getDouble("factor", 1.0);
-			face_count++;
-		}
-
-		if (R->c_light > 0)
-		{
-			R->c_factor = c_face->getDouble("factor", 1.0);
-			face_count++;
-		}
-
-		// sky brushes are lit automatically
-		if (! R->c_light && T->bkind == BKIND_Sky && sky_shade > 0)
-		{
-			R->c_light  = sky_shade;
-			R->c_factor = SKY_SHADE_FACTOR;
-			sky_count++;
-		}
-
-		// scan entities : choose one with largest level
-
-		// ignore when under a day-time sky
-		if (T->bkind == BKIND_Sky && sky_shade > 0)
-			continue;
-
-		for (unsigned int k = 0 ; k < R->entities.size() ; k++)
-		{
-			csg_entity_c *E = R->entities[k];
-
-			if (E->props.getInt("cave_light", 0) > 0)
-				cave_lights.push_back(E);
-
-			int e_light = E->props.getInt("light", 0);
-
-			if (e_light <= 0)
-				continue;
-
-			float e_factor = E->props.getDouble("factor", 1.0);
-
-			if (e_light > R->e_light ||
-				(e_light == R->e_light && e_factor > R->e_factor))
-			{
-				R->e_light  = e_light;
-				R->e_factor = e_factor;
-			}
-
-			ent_count++;
-		}
-
-#if 0  // debug
-		fprintf(stderr, "region %p lights: %3d / %3d / %3d\n",
-				R, R->f_light, R->c_light, R->e_light);
 #endif
-	}
 
-	LogPrintf("Found %d light entities, %d lit faces, %d sky faces\n",
-			ent_count, face_count, sky_count);
-}
 
 
 static int SHADE_CalcRegionGroup(region_c *R)
@@ -241,24 +140,15 @@ static int SHADE_CalcRegionGroup(region_c *R)
 	if (tag)
 		return base + atoi(tag);
 
-	/* otherwise combine regions with same floor brush */
+	/* otherwise keep separate */
 
 	int xor_val = 0;
 
-	if (T->bkind == BKIND_Sky)  // separate sky sectors
+	if (T->bkind == BKIND_Sky)  // separate sky sectors  [ why?? ]
 		xor_val = 0x77777777;
-
-	tag = f_face->getStr("_shade_tag");
-	if (tag)
-		return atoi(tag) ^ xor_val;
 
 	int result = current_region_group;
 	current_region_group++;
-
-	char buffer[64];
-	sprintf(buffer, "%d", result);
-
-	f_face->Add("_shade_tag", buffer);
 
 	return result ^ xor_val;
 }
@@ -319,265 +209,215 @@ static void SHADE_MergeResults()
 }
 
 
-static int SHADE_CheckSkyLeaf(region_c *leaf,
-                              float x1, float y1, float z1,
-                              float x2, float y2, float z2)
+#if 0  // OLD STUFF -- POTENTIALLY USEFUL
+
+static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
+                               csg_property_set_c *f_face,
+                               csg_property_set_c *c_face)
 {
-	// check if ray intersects this region (in 2D)
-	// [logic is basically the same as csg_brush_c::IntersectRay]
+  S->light = R->shade;
 
-	for (unsigned int k = 0 ; k < leaf->snags.size() ; k++)
-	{
-		snag_c *snag = leaf->snags[k];
+  S->light = CLAMP(96, S->light, 255);
 
-		double a = -PerpDist(x1,y1, snag->x1,snag->y1, snag->x2,snag->y2);
-		double b = -PerpDist(x2,y2, snag->x1,snag->y1, snag->x2,snag->y2);
 
-		int a_side = (fabs(a) < 0.1) ? 0 : (a < 0) ? -1 : +1;
-		int b_side = (fabs(b) < 0.1) ? 0 : (b < 0) ? -1 : +1;
+  // TODO effects !!
 
-		// ray is completely outside the region?
-		if (a_side > 0 && b_side > 0)
-			return false;
 
-		// ray is completely inside it?
-		if (a_side <= 0 && b_side <= 0)
-			continue;
+  // final light value for the sector is the 'ambient' lighting
+  // in a room PLUS the greatest additive light brush MINUS the
+  // greatest subtractive (shadow) brush.
 
-		// ray touches the edge?
-		if (a_side == 0 && b_side > 0)
-		{
-			x2 = x1; y2 = y1; z2 = z1;
-			continue;
-		}
-		else if (b_side == 0 && a_side > 0)
-		{
-			x1 = x2; y1 = y2; z1 = z2;
-			continue;
-		}
+  // ambient default (FIXME: make non-sky default 128)
+  S->light = (S->misc_flags & SEC_IS_SKY) ? 192 : 144;
 
-		// clip the ray
+  int max_add = 0;
+  int max_sub = 0;
 
-		double frac = a / (double)(a - b);
+  int effect = 0;
+  int delta  = 0;
 
-		if (a > 0)
-		{
-			// start of ray lies on outside of region, move it to edge
-			x1 = x1 + (x2 - x1) * frac;
-			y1 = y1 + (y2 - y1) * frac;
-			z1 = z1 + (z2 - z1) * frac;
-		}
-		else
-		{
-			// end of ray lies on outside of region, move it to edge
-			x2 = x1 + (x2 - x1) * frac;
-			y2 = y1 + (y2 - y1) * frac;
-			z2 = z1 + (z2 - z1) * frac;
-		}
-	}
+  // Doom 64 TC support : colored sectors
+  // this value is a sector type, and has lowest priority
+  int color = -1;
 
-	// at here, the clipped ray lies inside the region
+  for (unsigned int i = 0 ; i < R->brushes.size() ; i++)
+  {
+    csg_brush_c *B = R->brushes[i];
 
-	if (z1 > z2)
-		std::swap(z1, z2);
+    if (B->bkind != BKIND_Light)
+      continue;
 
-	for (unsigned int k = 0 ; k < leaf->brushes.size() ; k++)
-	{
-		csg_brush_c *B = leaf->brushes[k];
+    if (B->t.z < S->f_h+1 || B->b.z > S->c_h-1)
+      continue;
 
-		if (z1 > B->t.z + 0.2) continue;
-		if (z2 < B->b.z - 0.2) continue;
+    int ambient = B->props.getInt("ambient");
 
-		if (B->bkind == BKIND_Sky)
-			return +1;
-		else
-			return -1;
-	}
+    int add = B->props.getInt("add");
+    int sub = B->props.getInt("sub");
 
-	if (leaf->gaps.size() == 0)
-		return -1;
+    if (ambient > 0)
+    {
+      S->light = ambient;
+    }
 
-	return 0;  // hit nothing
+    {
+      int c = B->props.getInt("color");
+
+      if (c >= 0)
+        color = c;
+    }
+
+    max_sub = MAX(max_sub, sub);
+
+    // this logic means that the highest 'add' brush can also supply
+    // a lighting effect (a sector special) and delta difference.
+
+    if (add > max_add)
+    {
+      max_add = add;
+      effect = delta = 0;  // clear previous fx
+    }
+
+    if (add > 0 && add >= max_add)
+    {
+      int val = B->props.getInt("effect");
+
+      if (val > 0)
+      {
+        effect = val;
+        delta  = B->props.getInt("delta");
+      }
+    }
+  }
+
+  // check faces too (keywords have a 'light_' prefix here)
+  for (unsigned int f = 0 ; f < 2 ; f++)
+  {
+    csg_property_set_c *P = (f == 0) ? f_face : c_face;
+
+    int add = P->getInt("light_add");
+    int sub = P->getInt("light_sub");
+
+    max_sub = MAX(max_sub, sub);
+
+    if (add > max_add)
+    {
+      max_add = add;
+      effect = delta = 0;  // clear previous fx
+    }
+
+    if (add > 0 && add >= max_add)
+    {
+      int val = P->getInt("light_effect");
+
+      if (val > 0)
+      {
+        effect = val;
+        delta  = P->getInt("light_delta");
+      }
+    }
+
+    int c = P->getInt("light_color", -1);
+
+    if (c >= 0)
+      color = c;
+  }
+
+  // an existing sector special overrides the lighting effect
+  if (S->special > 0)
+    effect = color = 0;
+
+  // additive component
+  S->light += max_add;
+
+  // subtractive component (shadow), but don't disturb the FX
+  if (effect == 0)
+    S->light -= max_sub;
+
+  S->light = CLAMP(80, S->light, 255);
+
+  // hack to force complete darkness
+  if (effect == 0 && max_sub >= 255)
+    S->light = 0;
+
+  if (effect > 0)
+  {
+    S->special = effect;
+    
+    if (delta)
+      S->light2 = CLAMP(1, S->light + delta, 255);
+  }
+  else if (color > 0)
+  {
+    S->special = color;
+  }
 }
+#endif
 
 
-/* returns:
- *   -1 : hit solid brush
- *    0 : hit nothing at all
- *   +1 : hit sky brush
- */
-static int SHADE_RecursiveSkyCheck(bsp_node_c *node, region_c *leaf,
-                                   float x1, float y1, float z1,
-                                   float x2, float y2, float z2)
+static void SHADE_VisitRegion(region_c *R)
 {
-	while (node)
-	{
-		double a = PerpDist(x1,y1, node->x1,node->y1, node->x2,node->y2);
-		double b = PerpDist(x2,y2, node->x1,node->y1, node->x2,node->y2);
-
-		int a_side = (fabs(a) < 0.1) ? 0 : (a < 0) ? -1 : +1;
-		int b_side = (fabs(b) < 0.1) ? 0 : (b < 0) ? -1 : +1;
-
-		if (a_side == b_side && a_side != 0)
-		{
-			// traverse down a single side of the node
-
-			if (a_side < 0)
-			{
-				leaf = node->back_leaf;
-				node = node->back_node;
-			}
-			else
-			{
-				leaf = node->front_leaf;
-				node = node->front_node;
-			}
-
-			continue;
-		}
-
-		int front, back;
-
-		if (a_side == 0 && b_side == 0)
-		{
-			// ray is (more-or-less) co-linear with partition line,
-			// hence try both sides with unmodified ray coordinates.
-
-			front = SHADE_RecursiveSkyCheck(node->front_node, node->front_leaf, x1, y1, z1, x2, y2, z2);
-
-//			if (front != 0)
-//				return front;
-
-			back = SHADE_RecursiveSkyCheck(node-> back_node, node-> back_leaf, x1, y1, z1, x2, y2, z2);
-
-			if (front < 0 || back < 0)
-				return -1;
-
-			if (front > 0 || back > 0)
-				return +1;
-
-			return 0;
-		}
-
-		// compute intersection point
-
-		double frac = a / (double)(a - b);
-
-		float mx = x1 + (x2 - x1) * frac;
-		float my = y1 + (y2 - y1) * frac;
-		float mz = z1 + (z2 - z1) * frac;
-
-		// traverse down the side containing the start point
-
-		if (a_side < 0)
-			front = SHADE_RecursiveSkyCheck(node-> back_node, node-> back_leaf, x1, y1, z1, mx, my, mz);
-		else
-			front = SHADE_RecursiveSkyCheck(node->front_node, node->front_leaf, x1, y1, z1, mx, my, mz);
-
-		if (front != 0)
-			return front;
-
-		// traverse down the side containing the end point
-
-		if (a_side < 0)
-			back = SHADE_RecursiveSkyCheck(node->front_node, node->front_leaf, mx, my, mz, x2, y2, z2);
-		else
-			back = SHADE_RecursiveSkyCheck(node-> back_node, node-> back_leaf, mx, my, mz, x2, y2, z2);
-
-		return back;
-	}
-
-	if (! leaf || leaf->degenerate)
-		return 0;
-
-	return SHADE_CheckSkyLeaf(leaf, x1, y1, z1, x2, y2, z2);
-}
-
-
-static bool SHADE_CastRayTowardSky(region_c *R, float x1, float y1)
-{
-	// starting Z
 	csg_brush_c *B = R->gaps.front()->bottom;
+	csg_brush_c *T = R->gaps. back()->top;
 
-	float z1 = B->t.z + 1.2;
+	int ambient = -1;	// Unset
+	int light   = -1;
+	bool shadow = false;
 
-	// end point
-	float x2 = x1 + 1024;
-	float y2 = y1 + 2048;
-	float z2 = z1 + 2560;
+	// process light brushes
 
-	int vis = SHADE_RecursiveSkyCheck(bsp_root, NULL, x1, y1, z1, x2, y2, z2);
-
-	return (vis == 1);
-}
-
-
-static bool SHADE_CanRegionSeeSun(region_c *R)
-{
-	unsigned int k;
-
-	if (R->gaps.empty() || R->degenerate)
-		return false;
-	
-	// limit to outdoor areas
-	if (! SHADE_IsPointOutdoor(R->mid_x, R->mid_y))
-		return false;
-
-	// just test the middle point for smallish brushes
-	if (R->rw < 30 && R->rh < 30)
-		return SHADE_CastRayTowardSky(R, R->mid_x, R->mid_y);
-
-	// otherwise test several points inside the region, and
-	// require them all to succeed.
-	for (k = 0 ; k < R->snags.size() ; k++)
+	for (unsigned int i = 0 ; i < R->brushes.size() ; i++)
 	{
-		snag_c *snag = R->snags[k];
+		csg_brush_c *LB = R->brushes[i];
 
-		double sx = snag->x1;
-		double sy = snag->y1;
+		if (LB->bkind != BKIND_Light)
+			continue;
 
-		double x = sx * 0.7 + R->mid_x * 0.3;
-		double y = sy * 0.7 + R->mid_y * 0.3;
+		if (LB->t.z < B->t.z+1 || LB->b.z > T->b.z-1)
+			continue;
 
-		if (! SHADE_CastRayTowardSky(R, x, y))
-			return false;
+		int new_ambient = LB->props.getInt("ambient");
+
+		if (ambient < 0 && new_ambient > 0)
+			ambient = new_ambient;
+
+		int new_light = LB->props.getInt("light");
+
+		light = MAX(light, new_light);
+
+		if (LB->props.getInt("shadow") > 0)
+			shadow = true;
 	}
 
-	return true;
-}
+	// check brush faces
 
-
-static void SHADE_SunLight()
-{
-	if (sky_bright <= MIN_SHADE)
-		return;
-
-	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+	for (unsigned int pass = 0 ; pass < 2 ; pass++)
 	{
-		region_c *R = all_regions[i];
+		csg_property_set_c *P = (pass == 0) ? &B->t.face : &T->b.face;
 
-		if (R->index < 0)
-			break;
+		int new_light = P->getInt("light");
 
-		if (SHADE_CanRegionSeeSun(R))
-		{
-			// use a lower light for non-sky regions
-			// (since it will affect the ceiling surface too)
-			csg_brush_c *T = R->gaps.back()->top;
-
-			int light = (T->bkind == BKIND_Sky) ? sky_bright : sky_shade;
-
-			R->f_light = MAX(R->f_light, light);
-		}
+		light = MAX(light, new_light);
 	}
+
+	// combine
+
+	if (T->bkind == BKIND_Sky)
+		ambient = shadow ? sky_shade : sky_bright;
+
+	if (ambient < 0)
+		ambient = indoor_light;
+
+	R->shade = CLAMP(0, MAX(ambient, light), 255);
 }
 
 
-void SHADE_CaveLighting()
+static void SHADE_LightWorld()
 {
-	/* collect cavey regions */
+	bool no_light = (ArgvFind(0, "nolight") >= 0);
 
-	std::vector< region_c * > regions;
+	if (no_light)
+		LogPrintf("LIGHTING DISABLED (-nolight specified)\n");
 
 	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
 	{
@@ -586,99 +426,13 @@ void SHADE_CaveLighting()
 		if (R->gaps.empty())
 			continue;
 
-		csg_brush_c *B = R->gaps.front()->bottom;
-
-		if (! B->t.face.getInt("cavelit"))
-			continue;
-
-		regions.push_back(R);
-	}
-
-	/* iterate over all cavey light sources */
-
-	for (unsigned int k = 0 ; k < cave_lights.size() ; k++)
-	{
-		csg_entity_c *E = cave_lights[k];
-
-		double x1 = E->x;
-		double y1 = E->y;
-		double z1 = E->z + 64.0;
-
-		int brightness = E->props.getInt("cave_light", 0);
-
-		for (unsigned int i = 0 ; i < regions.size() ; i++)
+		if (no_light)
 		{
-			region_c *R = regions[i];
-
-			double x2 = R->mid_x;
-			double y2 = R->mid_y;
-
-			// basic distance check
-			if (fabs(x1 - x2) > 800 || fabs(y1 - y2) > 800)
-				continue;
-
-			// more complex distance check
-			double dist = ComputeDist(x1, y1, x2, y2);
-
-			int level = brightness - (int)(dist / 100.0) * 16;
-
-			if (level <= MIN_SHADE)
-				continue;
-
-			csg_brush_c *B = R->gaps.front()->bottom;
-
-			double z2 = B->t.z + 84.0;
-
-			// line of sight blocked?
-			if (CSG_TraceRay(x1,y1,z1, x2,y2,z2, "v"))
-				continue;
-
-			R->e_light = MAX(R->e_light, level);
-		}
-	}
-}
-
-
-void SHADE_BlandLighting()
-{
-	int min_shade = MIN_SHADE;
-
-	if (ArgvFind(0, "nolight") >= 0)
-	{
-		LogPrintf("SKIPPING SUN / CAVE LIGHTS (-nolight specified)\n");
-		min_shade = 144;
-	}
-	else
-	{
-		SHADE_SunLight();
-
-		Main_Ticker();
-
-		SHADE_CaveLighting();
-
-		Main_Ticker();
-	}
-
-	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
-	{
-		region_c *R = all_regions[i];
-
-		if (R->gaps.empty())
+			R->shade = 192;
 			continue;
+		}
 
-		csg_brush_c *T = R->gaps.back()->top;
-		csg_brush_c *B = R->gaps.front()->bottom;
-
-		int base = MAX(R->c_light, MAX(R->f_light, R->e_light));
-
-		int height = I_ROUND(T->b.z - B->t.z);
-
-		if (B->t.face.getInt("cavelit"))
-			R->shade = MAX(base, min_shade);
-		else if (T->bkind == BKIND_Sky)
-			R->shade = MAX(sky_shade, MAX(R->f_light, min_shade));
-		else
-			R->shade = MAX(base, (height <= 160) ? 128 : 144);
+		SHADE_VisitRegion(R);
 	} 
 }
 
@@ -687,17 +441,9 @@ void CSG_Shade()
 {
 	LogPrintf("Lighting level...\n");
 
-	cave_lights.clear();
-	outdoor_boxes.clear();
-
-	SHADE_CollectBoxes();
-	SHADE_CollectLights();
 	SHADE_GroupRegions();
-	SHADE_BlandLighting();
+	SHADE_LightWorld();
 	SHADE_MergeResults();
-
-	cave_lights.clear();
-	outdoor_boxes.clear();
 }
 
 //--- editor settings ---

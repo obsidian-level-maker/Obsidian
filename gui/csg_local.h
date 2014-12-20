@@ -112,9 +112,6 @@ public:
 	// used by DOOM shading code
 	int shade;
 
-	short f_light,  c_light,  e_light;
-	float f_factor, c_factor, e_factor;
-
 public:
 	region_c();
 
