@@ -64,6 +64,8 @@ function Plan_choose_darkness()
     prob = style_sel("darkness", 0, 10, 30, 90)
   end
 
+  LEVEL.indoor_light = 144
+
   if rand.odds(prob) then
     gui.printf("Darkness falls across the land...\n\n")
 

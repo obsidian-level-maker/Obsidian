@@ -887,8 +887,9 @@ function Levels_make_level(LEV)
 
   Levels_invoke_hook("end_level")
 
-  if LEVEL.sky_bright then gui.property("sky_bright", LEVEL.sky_bright) end
-  if LEVEL.sky_shade  then gui.property("sky_shade",  LEVEL.sky_shade)  end
+  if LEVEL.indoor_light then gui.property("indoor_light", LEVEL.indoor_light) end
+  if LEVEL.sky_bright   then gui.property("sky_bright", LEVEL.sky_bright) end
+  if LEVEL.sky_shade    then gui.property("sky_shade",  LEVEL.sky_shade)  end
 
   gui.end_level()
 
