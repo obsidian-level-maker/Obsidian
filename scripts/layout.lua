@@ -929,7 +929,7 @@ function Layout_outdoor_shadows()
 
     if not NA.is_outdoor or NA.mode == "void" then return end
 
-    local dx = 128
+    local dx = 64
     local dy = 128
 
     local brush
@@ -960,6 +960,15 @@ function Layout_outdoor_shadows()
         { x = S.x1 - dx, y = S.y2 - dy }
         { x = S.x2 - dx, y = S.y1 - dy }
         { x = S.x2     , y = S.y1      }
+      }
+    elseif dir == 3 then
+      brush =
+      {
+        { m = "light", shadow=1 }
+        { x = S.x1     , y = S.y1      }
+        { x = S.x1 - dx, y = S.y1 - dy }
+        { x = S.x2 - dx, y = S.y2 - dy }
+        { x = S.x2     , y = S.y2      }
       }
     else
       -- nothing needed
