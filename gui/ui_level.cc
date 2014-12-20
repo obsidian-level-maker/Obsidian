@@ -237,10 +237,11 @@ const char * UI_Level::outdoor_syms[] =
 	// also used for Caves
 
 	"none",   "NONE",
-	"few",    "Rare",
+	"rare",   "Rare",
+	"less",   "Less",
 	"some",   "Some",
+	"more",   "More",
 	"heaps",  "Heaps",
-	"always", "Always",
 
 	"mixed",  "Mix It Up",
 
