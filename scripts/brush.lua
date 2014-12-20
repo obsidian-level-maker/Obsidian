@@ -232,10 +232,7 @@ end
 
 
 
-function Trans.brush(kind, coords)
-  if not coords then
-    kind, coords = "solid", kind
-  end
+function Trans.brush(coords)
 
   -- FIXME: mirroring
 
@@ -255,8 +252,6 @@ function Trans.brush(kind, coords)
       C.slope = Trans.apply_slope(C.slope)
     end
   end
-
-  table.insert(coords, 1, { m=kind })
 
   brushlib.collect_flags(coords)
 
@@ -422,14 +417,15 @@ end
 function Trans.solid_quad(x1, y1, x2, y2, mat)
   local brush = brushlib.quad(x1, y1, x2, y2)
   brushlib.set_mat(brush, mat, mat)
-  Trans.brush("solid", brush)
+  Trans.brush(brush)
 end
 
 
 function Trans.sky_quad(x1, y1, x2, y2, sky_h)
   local brush = brushlib.quad(x1, y1, x2, y2, sky_h)
   brushlib.set_mat(brush, "_SKY", "_SKY")
-  Trans.brush("sky", brush)
+  table.insert(brush, 1, { m="sky" })
+  Trans.brush(brush)
 end
 
 
