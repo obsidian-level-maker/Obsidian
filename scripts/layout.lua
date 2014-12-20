@@ -923,12 +923,14 @@ function Layout_outdoor_shadows()
   local function shadow_from_seed(S, dir)
     local N = S:diag_neighbor(dir)
 
-    if not N then return end
+    if not (N and N.area) then return end
 
-    if not N.is_outdoor or N.mode == "void" then return end
+    local NA = N.area
 
-    local dx = -128
-    local dy = -128
+    if not NA.is_outdoor or NA.mode == "void" then return end
+
+    local dx = 128
+    local dy = 128
 
     local brush
     
@@ -946,8 +948,8 @@ function Layout_outdoor_shadows()
       {
         { m = "light", shadow=1 }
         { x = S.x1     , y = S.y1      }
-        { x = S.x2     , y = S.y2      }
-        { x = S.x2 - dx, y = S.y2 - dy }
+        { x = S.x1     , y = S.y2      }
+        { x = S.x1 - dx, y = S.y2 - dy }
         { x = S.x1 - dx, y = S.y1 - dy }
       }
     elseif dir == 1 then
