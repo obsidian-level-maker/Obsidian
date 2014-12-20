@@ -920,15 +920,30 @@ end
 
 function Layout_outdoor_shadows()
   
-  local function shadow_from_seed(S, dir)
+  local function need_shadow(S, dir)
+    if not S.area then return false end
+
     local N = S:diag_neighbor(dir)
 
-    if not (N and N.area) then return end
+    if not (N and N.area) then return false end
 
+    local SA = S.area
     local NA = N.area
 
-    if not NA.is_outdoor or NA.mode == "void" then return end
+    if SA == NA then return false end
 
+    if not NA.is_outdoor or NA.mode == "void" then return false end
+    if not SA.is_outdoor or SA.mode == "void" then return true end
+
+    local junc = Junction_lookup(SA, NA)
+
+    if junc and junc.kind == "wall" then return true end
+
+    return false
+  end
+ 
+
+  local function shadow_from_seed(S, dir)
     local dx = 64
     local dy = 128
 
@@ -982,9 +997,9 @@ function Layout_outdoor_shadows()
   ---| Layout_outdoor_shadows |---
 
   each A in LEVEL.areas do
-    if not A.is_outdoor or A.mode == "void" then
-      each S in A.half_seeds do
-        each dir in geom.ALL_DIRS do
+    each S in A.half_seeds do
+      each dir in geom.ALL_DIRS do
+        if need_shadow(S, dir) then
           shadow_from_seed(S, dir)
         end
       end
