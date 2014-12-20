@@ -25,7 +25,7 @@ class csg_brush_c;
 
 
 // very high (low) value for uncapped brushes
-#define EXTREME_H  4000
+#define EXTREME_H  32000
 
 // epsilon for height comparisons
 #define Z_EPSILON  0.01
