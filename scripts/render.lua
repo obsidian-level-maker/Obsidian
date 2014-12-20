@@ -695,6 +695,7 @@ function Render_seed(A, S)
 
 local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
 --tag = (S.sx*100+S.sy) --??? if A.room then tag = A.room.id end
+if A.mode == "hallway" then tag = 1 end
 
 
   local f_brush = table.deep_copy(bare_brush)
@@ -1128,7 +1129,7 @@ function Render_importants()
   end
 
 
-  ---| Layout_build_importants |---
+  ---| Render_importants |---
 
   each room in LEVEL.rooms do
     R = room

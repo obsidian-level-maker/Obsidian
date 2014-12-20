@@ -916,3 +916,68 @@ function Layout_handle_corners()
   check_pillars()
 end
 
+
+
+function Layout_outdoor_shadows()
+  
+  local function shadow_from_seed(S, dir)
+    local N = S:diag_neighbor(dir)
+
+    if not N then return end
+
+    if not N.is_outdoor or N.mode == "void" then return end
+
+    local dx = -128
+    local dy = -128
+
+    local brush
+    
+    if dir == 2 then
+      brush =
+      {
+        { m = "light", shadow=1 }
+        { x = S.x1     , y = S.y1      }
+        { x = S.x1 - dx, y = S.y1 - dy }
+        { x = S.x2 - dx, y = S.y1 - dy }
+        { x = S.x2     , y = S.y1      }
+      }
+    elseif dir == 4 then
+      brush =
+      {
+        { m = "light", shadow=1 }
+        { x = S.x1     , y = S.y1      }
+        { x = S.x2     , y = S.y2      }
+        { x = S.x2 - dx, y = S.y2 - dy }
+        { x = S.x1 - dx, y = S.y1 - dy }
+      }
+    elseif dir == 1 then
+      brush =
+      {
+        { m = "light", shadow=1 }
+        { x = S.x1     , y = S.y2      }
+        { x = S.x1 - dx, y = S.y2 - dy }
+        { x = S.x2 - dx, y = S.y1 - dy }
+        { x = S.x2     , y = S.y1      }
+      }
+    else
+      -- nothing needed
+      return
+    end
+
+    raw_add_brush(brush)    
+  end
+
+
+  ---| Layout_outdoor_shadows |---
+
+  each A in LEVEL.areas do
+    if not A.is_outdoor or A.mode == "void" then
+      each S in A.half_seeds do
+        each dir in geom.ALL_DIRS do
+          shadow_from_seed(S, dir)
+        end
+      end
+    end
+  end
+end
+
