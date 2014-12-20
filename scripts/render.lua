@@ -689,8 +689,7 @@ function Render_seed(A, S)
   end
 
 
-  local light = 160
-  if A.ceil_mat == "_SKY" then light = 192 end
+  local light
 
 
 local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
@@ -715,11 +714,16 @@ if A.mode == "hallway" then tag = 1 end
   end
 
 
-  table.insert(f_brush, { t=A.floor_h, tag=tag })
-  table.insert(c_brush, { b=A. ceil_h, light=light })
+  table.insert(f_brush, { t=A.floor_h, light=light, tag=tag })
+  table.insert(c_brush, { b=A. ceil_h })
 
   brushlib.set_mat(f_brush, A.floor_mat, A.floor_mat)
   brushlib.set_mat(c_brush, A. ceil_mat, A. ceil_mat)
+
+  if A.ceil_mat == "_SKY" then
+    -- hmmm, do automatically in set_mat() ???
+    table.insert(c_brush, 1, { m="sky" })
+  end
 
   Trans.brush(f_brush)
   Trans.brush(c_brush)
