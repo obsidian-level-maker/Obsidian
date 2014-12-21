@@ -676,7 +676,7 @@ function Weird_group_into_rooms()
       [95]  =  5,
       [45]  = 20,
       [25]  = 70,
-      [15]  =  5
+      [15]  = 10
     }
 
     return rand.key_by_probs(SIZES)
