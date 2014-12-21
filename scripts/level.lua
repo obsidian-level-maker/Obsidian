@@ -95,27 +95,6 @@ class HUB_LINK
 
 --------------------------------------------------------------]]
 
-require "defs"
-require "util"
-
-require "seed"
-require "connect"
-require "quest"
-
-require "brush"
-require "prefab"
-require "wad_fab"
-
-require "weird"
-require "area"
-require "layout"
-require "room"
-require "render"
-
-require "fight"
-require "monster"
-require "naming"
-
 
 GLOBAL_STYLE_LIST =
 {

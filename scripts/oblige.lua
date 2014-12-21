@@ -20,7 +20,22 @@
 
 require "defs"
 require "util"
+require "brush"
+require "prefab"
 
+require "seed"
+require "weird"
+require "area"
+require "connect"
+
+require "quest"
+require "layout"
+require "render"
+require "room"
+
+require "fight"
+require "monster"
+require "naming"
 require "level"
 
 
