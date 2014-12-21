@@ -163,6 +163,11 @@ function Connect_seed_pair(S, T, dir)
   assert(S.room and S.room.kind != "scenic")
   assert(T.room and T.room.kind != "scenic")
 
+  assert(S.room.kind != "DEAD")
+  assert(T.room.kind != "DEAD")
+
+  assert(S.room != T.room)
+
   -- create connection object
 
   local CONN = CONN_CLASS.new("normal", S.room, T.room, dir)
@@ -904,6 +909,12 @@ function Weird_connect_stuff()
       return -1
     end
 
+    -- never connect onto another hallway
+    -- [ Note : to enable this, must ensure other hallway has been processed already,
+    --          otherwise it can get killed ]
+    if N1.is_hallway then return -1 end
+    if N2.is_hallway then return -1 end
+
     -- TODO : scoring of a hallway pair
     --        e.g. volume % of path through the hallway
 
@@ -919,8 +930,12 @@ function Weird_connect_stuff()
 
     each A in R.areas do
       each N in A.neighbors do
-        if N.room and N.room.c_group != R.c_group then
-          table.add_unique(neighbor_rooms, N.room)
+        local R2 = N.room
+
+        if not R2 or R2 == R then continue end
+
+        if R2.c_group != R.c_group then
+          table.add_unique(neighbor_rooms, R2)
         end
       end
     end
@@ -959,7 +974,7 @@ function Weird_connect_stuff()
     -- we handle all the hallways first, as sometimes it will not be
     -- possible to use a hallway (which requires connecting two previously
     -- unconnected groups) -- these hallways need to be detected early
-    -- and converted to a normal room (or VOID, etc..)
+    -- and merged into a normal room (or turned into VOID).
 
     -- visit from biggest to smallest
     -- (so less chance of needing to kill a large hallway)
@@ -970,8 +985,8 @@ function Weird_connect_stuff()
       R.h_order = R.svolume + gui.random()
     end
 
-    table.sort(visit_list, function(A, B)
-        return A.h_order > B.h_order
+    table.sort(visit_list, function(R1, R2)
+        return R1.h_order > R2.h_order
     end)
 
     each R in visit_list do
