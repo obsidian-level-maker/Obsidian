@@ -128,16 +128,17 @@ function ROOM_CLASS.new()
 end
 
 
-function ROOM_CLASS.str_prefix(R)
-  if R.kind == "hallway" then return "HALLWAY_" end
-  if R.kind == "scenic" then return "SCENIC_" end
-  if R.parent then return "SUB_" end
-  return ""
+function ROOM_CLASS.kind_str(R)
+  if R.kind == "DEAD" then return "!DEAD!" end
+  if R.kind == "hallway" then return "HALLWAY" end
+  if R.kind == "scenic" then return "SCENIC" end
+  if R.parent then return "SUBROOM" end
+  return "ROOM"
 end
 
 
 function ROOM_CLASS.tostr(R)
-  return string.format("%sROOM_%d", R:str_prefix(), R.id)
+  return string.format("%s_%d", R:kind_str(), R.id)
 end
 
 
@@ -154,6 +155,7 @@ function ROOM_CLASS.kill_it(R)
   table.kill_elem(LEVEL.rooms, R)
 
   R.kind = "DEAD"
+  R.is_hallway = nil
 
   R.sx1   = nil
   R.areas = nil
