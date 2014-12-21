@@ -201,6 +201,7 @@ function alloc_id(kind)
 end
 
 
+
 function Levels_clean_up()
   GAME   = {}
   THEME  = {}
@@ -426,6 +427,9 @@ function Levels_setup()
   gui.property("spot_low_h",  PARAM.spot_low_h)
   gui.property("spot_high_h", PARAM.spot_high_h)
 end
+
+
+------------------------------------------------------------------------
 
 
 function Levels_decide_special_kinds()
@@ -753,15 +757,78 @@ function Levels_do_styles()
 end
 
 
-function Levels_build_it()
-  -- does the level have a custom build function?
-  if LEVEL.build_func then
-    LEVEL.build_func()
-    if gui.abort() then return "abort" end
-    return "ok"
+function Levels_choose_liquid()
+  if THEME.liquids and STYLE.liquids != "none" then
+    local name = rand.key_by_probs(THEME.liquids)
+    local liquid = GAME.LIQUIDS[name]
+
+    if not liquid then
+      error("No such liquid: " .. name)
+    end
+
+    gui.printf("Liquid: %s\n\n", name)
+
+    LEVEL.liquid = liquid
+
+     -- setup the special '_LIQUID' material
+    assert(liquid.mat)
+    assert(GAME.MATERIALS[liquid.mat])
+
+    GAME.MATERIALS["_LIQUID"] = GAME.MATERIALS[liquid.mat]
+
+  else
+    -- leave '_LIQUID' unset : it should not be used, but if does then
+    -- the _ERROR texture will appear (like any other unknown material.
+
+    gui.printf("Liquids disabled.\n\n")
+  end
+end
+
+
+function Levels_choose_darkness()
+  local prob = EPISODE.dark_prob or 0
+
+  -- NOTE: this style is only set via the Level Control module
+  if STYLE.darkness then
+    prob = style_sel("darkness", 0, 10, 30, 90)
   end
 
-  -- Weird stuff
+  LEVEL.indoor_light = 144
+
+  if rand.odds(prob) then
+    gui.printf("Darkness falls across the land...\n\n")
+
+    LEVEL.is_dark = true
+    LEVEL.sky_bright = 0
+    LEVEL.sky_shade  = 0
+  else
+    LEVEL.sky_bright = rand.sel(75, 192, 176)
+    LEVEL.sky_shade  = LEVEL.sky_bright - 32
+  end
+end
+
+
+function Levels_plan_stuff()
+  assert(LEVEL.ep_along)
+
+  LEVEL.areas = {}
+  LEVEL.rooms = {}
+  LEVEL.conns = {}
+
+  LEVEL.scenic_rooms = {}
+  LEVEL.map_borders  = {}
+
+  LEVEL.free_tag  = 1
+  LEVEL.free_mark = 1
+  LEVEL.ids = {}
+
+  Levels_choose_liquid()
+  Levels_choose_darkness()
+end
+
+
+function Levels_build_it()
+  Levels_plan_stuff()
 
   Weird_create_rooms()
   if gui.abort() then return "abort" end

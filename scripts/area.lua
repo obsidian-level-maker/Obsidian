@@ -962,22 +962,6 @@ function Weird_create_rooms()
 
   gui.printf("\n--==| Planning WEIRD Rooms |==--\n\n")
 
-  assert(LEVEL.ep_along)
-
-  LEVEL.areas = {}
-  LEVEL.rooms = {}
-  LEVEL.conns = {}
-
-  LEVEL.scenic_rooms = {}
-  LEVEL.map_borders  = {}
-
-  LEVEL.free_tag  = 1
-  LEVEL.free_mark = 1
-  LEVEL.ids = {}
-
-  Plan_choose_liquid()
-  Plan_choose_darkness()
-
 
 --TODO  Weird_determine_size()
 
