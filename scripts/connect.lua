@@ -184,7 +184,7 @@ function Connect_seed_pair(S, T, dir)
   S.border[dir].kind = "arch"
   S.border[dir].conn = CONN
 
-  T.border[10-dir].kind = "straddle"
+  T.border[10-dir].kind = "nothing"
 
   S.thick[dir] = 16
   T.thick[10-dir] = 16

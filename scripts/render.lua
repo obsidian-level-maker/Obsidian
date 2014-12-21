@@ -617,7 +617,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   end
 
 
-  if not info or info.kind == nil or info.kind == "nothing" or info.kind == "straddle" then
+  if not info or info.kind == nil or info.kind == "nothing" then
     return
   
   elseif info.kind == "wall" then

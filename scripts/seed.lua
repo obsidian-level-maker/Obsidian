@@ -76,7 +76,7 @@ class SEED
 class BORDER
 {
   kind  : nil (when not decided yet)
-          "nothing", "straddle",
+          "nothing"
           "wall", "facade", "window", "fence",
           "arch", "door", "locked_door", "secret_door"
 
