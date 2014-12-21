@@ -814,21 +814,23 @@ function Weird_connect_stuff()
 
 
   local function where_can_connect(R1, R2)
-    -- returns a list where two rooms can connect
-    -- each element is: { S=seed, N=seed, dir=dir }
+    -- returns a list where two rooms can connect.
+    -- R1 is always a hallway.
+    -- result is a list containing: { S=seed, N=seed, dir=dir }
 
     local list = {}
 
-    each S in R1.areas[1].half_seeds do
+    each A in R1.areas do
+    each S in A.half_seeds do
     each dir in geom.ALL_DIRS do
-      
       local N = S:diag_neighbor(dir)
 
       if N and N.room == R2 then
         table.insert(list, { S=S, N=N, dir=dir })
       end
 
-    end -- S, dir
+    end -- A, S, dir
+    end
     end
 
     return list
@@ -874,28 +876,9 @@ function Weird_connect_stuff()
   end
 
 
-  local function eval_hallway_conn(R, N)
-    if R.c_group == N.c_group then
-      -- already connected
-      return -1
-    end
-
-    local score = 0
-
-    -- tie break
-    return score + gui.random()
-  end
-
-
-  local function test_hallway_pair(R, N1, N2)
+  local function connect_hallway_pair(R, N1, N2)
     assert(N1.c_group != R.c_group)
     assert(N2.c_group != R.c_group)
-
-    if N2.c_group == N1.c_group then
-      return false
-    end
-
-    -- OK --
 
     local where1 = where_can_connect(R, N1)
     local where2 = where_can_connect(R, N2)
@@ -915,51 +898,60 @@ function Weird_connect_stuff()
   end
 
 
-  local function try_connect_hallway(R)
-    local conn_list = {}
-    local conn_dud  = {}
-
-    conn_dud[R] = true
-
-    each NA in R.areas[1].neighbors do
-      local N = NA.room
-
-      if not N then continue end
-
-      -- seen before
-      if conn_list[N] then continue end
-      if conn_dud [N] then continue end
-
-      local score = eval_hallway_conn(R, N)
-
-      if score < 0 then
-        conn_dud[N] = true
-      else
-        conn_list[N] = score
-      end
+  local function eval_hallway_pair(R, N1, N2)
+    -- two rooms are already connected?
+    if N1.c_group == N2.c_group then
+      return -1
     end
 
-    while table.size(conn_list) >= 2 do
-      local N1 = rand.key_by_probs(conn_list)
-      conn_list[N1] = nil
+    -- TODO : scoring of a hallway pair
+    --        e.g. volume % of path through the hallway
 
-      -- TODO : evaluate all these (conn2)
-      local tab = table.copy(conn_list)
+    local score = 100
 
-      while not table.empty(tab) do
-        local N2 = rand.key_by_probs(tab)
-        tab[N2] = nil
+    -- tie breaker
+    return score + gui.random()
+  end
 
-        if test_hallway_pair(R, N1, N2) then
----       stderrf("hallway %s connected %s / %s\n", R:tostr(), N1:tostr(), N2:tostr())
-          return -- OK --
+
+  local function try_connect_hallway(R)
+    local neighbor_rooms = {}
+
+    each A in R.areas do
+      each N in A.neighbors do
+        if N.room and N.room.c_group != R.c_group then
+          table.add_unique(neighbor_rooms, N.room)
         end
       end
     end
 
-    gui.printf("hallway %s could not connect : killing it\n", R:tostr())
+    -- evaluate each possible pair of neighbors
 
-    kill_hallway(R)
+    local best
+    local best_score = 0
+
+    for i = 1, #neighbor_rooms do
+    for k = i + 1, #neighbor_rooms do
+      local N1 = neighbor_rooms[i]
+      local N2 = neighbor_rooms[k]
+
+      local score = eval_hallway_pair(R, N1, N2)
+
+      if score > best_score then
+        best = { N1=N1, N2=N2 }
+      end
+    end -- i, k
+    end
+
+    -- connect best pair, or kill hallway if none
+
+    if best then
+      connect_hallway_pair(R, best.N1, best.N2)
+    else
+      gui.printf("hallway %s could not connect : killing it\n", R:tostr())
+
+      kill_hallway(R)
+    end
   end
 
 
