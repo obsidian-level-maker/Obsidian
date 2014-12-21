@@ -129,7 +129,7 @@ end
 
 
 function ROOM_CLASS.kind_str(R)
-  if R.kind == "DEAD" then return "!DEAD!" end
+  if R.kind == "DEAD" then return "DEAD_DEAD_DEAD" end
   if R.kind == "hallway" then return "HALLWAY" end
   if R.kind == "scenic" then return "SCENIC" end
   if R.parent then return "SUBROOM" end
@@ -143,6 +143,13 @@ end
 
 
 function ROOM_CLASS.kill_it(R)
+  -- sanity check
+  each C in LEVEL.conns do
+    if C.R1 == R or C.R2 == R then
+      error("Killed a connected room!")
+    end
+  end
+
   each A in R.areas do
     A.mode = "void"
     A.room = nil
