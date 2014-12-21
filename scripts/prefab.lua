@@ -1467,7 +1467,7 @@ function Build.lowering_pedestal(S, z1, skin)
   local mx = int((S.x1+S.x2) / 2)
   local my = int((S.y1+S.y2) / 2)
 
-  local tag = Plan_alloc_id("tag")
+  local tag = alloc_id("tag")
 
   local info = get_mat(skin.wall or skin.floor, skin.floor)
 
@@ -1501,7 +1501,7 @@ function Build.raising_start(S, face_dir, z1, skin)
 
   local sw_info = add_pegging(get_mat(skin.switch_w))
 
-  local tag = Plan_alloc_id("tag")
+  local tag = alloc_id("tag")
 
   for side = 2,8,2 do
     local T, long, deep = get_transform_for_seed_side(S, side, 48)
@@ -1564,7 +1564,7 @@ function Build.popup_trap(S, z, skin, monster)
     Trans.clear()
   end
 
-  info.sec_tag = Plan_alloc_id("tag")
+  info.sec_tag = alloc_id("tag")
 
   local T, long, deep = get_transform_for_seed_center(S)
 

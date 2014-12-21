@@ -1754,7 +1754,7 @@ function Fab_replacements(fab)
     -- if it is not already specified, allocate a new tag
 
     if not fab.fields[k] then
-      fab.fields[k] = Plan_alloc_id("tag")
+      fab.fields[k] = alloc_id("tag")
     end
 
     return fab.fields[k]

@@ -60,7 +60,7 @@ function CONN_CLASS.new(kind, R1, R2, dir)
   local C =
   {
     kind = kind
-    id   = Plan_alloc_id("conn")
+    id   = alloc_id("conn")
     R1   = R1
     R2   = R2
     dir  = dir
@@ -253,8 +253,8 @@ function Connect_teleporters()
     table.insert(R1.conns, C)
     table.insert(R2.conns, C)
 
-    C.tele_tag1 = Plan_alloc_id("tag")
-    C.tele_tag2 = Plan_alloc_id("tag")
+    C.tele_tag1 = alloc_id("tag")
+    C.tele_tag2 = alloc_id("tag")
 
     R1.teleport_conn = C
     R2.teleport_conn = C

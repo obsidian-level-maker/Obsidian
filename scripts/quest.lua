@@ -1039,7 +1039,7 @@ function Quest_create_zones()
   local function new_zone()
     local Z =
     {
-      id = Plan_alloc_id("zone")
+      id = alloc_id("zone")
       rooms = {}
       quests = {}
       themes = {}
@@ -1053,8 +1053,8 @@ function Quest_create_zones()
     local LOCK =
     {
       kind = kind
-      id   = Plan_alloc_id("lock")
-      tag  = Plan_alloc_id("tag")
+      id   = alloc_id("lock")
+      tag  = alloc_id("tag")
     }
     table.insert(LEVEL.locks, LOCK)
     return LOCK
@@ -1400,7 +1400,7 @@ function Quest_divide_zones()
     {
       kind = "SWITCH"
       switch = rand.key_by_probs(THEME.switches)
-      tag = Plan_alloc_id("tag")
+      tag = alloc_id("tag")
     }
 
     if THEME.bars and C.R1.is_outdoor and C.R2.is_outdoor then

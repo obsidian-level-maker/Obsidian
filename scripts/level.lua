@@ -191,6 +191,16 @@ GLOBAL_PARAMETERS =
 }
 
 
+--
+-- utilitity to allocate room numbers, tag numbers, etc...
+--
+function alloc_id(kind)
+  local result = (LEVEL.ids[kind] or 0) + 1
+  LEVEL.ids[kind] = result
+  return result
+end
+
+
 function Levels_clean_up()
   GAME   = {}
   THEME  = {}

@@ -19,14 +19,6 @@
 ------------------------------------------------------------------------
 
 
-function Plan_alloc_id(kind)
-  local result = (LEVEL.ids[kind] or 0) + 1
-  LEVEL.ids[kind] = result
-  return result
-end
-
-
-
 function Plan_choose_liquid()
   if THEME.liquids and STYLE.liquids != "none" then
     local name = rand.key_by_probs(THEME.liquids)

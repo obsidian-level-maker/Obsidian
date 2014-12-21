@@ -1924,7 +1924,7 @@ function Monsters_in_room(R)
   local function calc_min_skill(all_skills)
     if all_skills then return 1 end
 
-    local dither = Plan_alloc_id("mon_dither")
+    local dither = alloc_id("mon_dither")
 
     -- skill 3 (hard) is always added
     -- skill 2 (medium) alternates between 100% and 60% chance

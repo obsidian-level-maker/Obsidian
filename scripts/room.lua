@@ -86,7 +86,7 @@ class FLOOR
 ROOM_CLASS = {}
 
 function ROOM_CLASS.new()
-  local id = Plan_alloc_id("room")
+  local id = alloc_id("room")
 
   local R =
   {
@@ -456,7 +456,7 @@ function Room_create_sky_groups()
   local function new_sky_group()
     local group =
     {
-      id = Plan_alloc_id("sky_group")
+      id = alloc_id("sky_group")
       add_h = rand.pick({ 144, 176, 208 })
     }
     table.insert(LEVEL.sky_groups, group)

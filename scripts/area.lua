@@ -385,7 +385,7 @@ function Weird_create_areas()
       {
         mode = "normal"  -- may become "void" or "scenic" later
 
-        id = Plan_alloc_id("weird_area")
+        id = alloc_id("weird_area")
 
         half_seeds = {}
         neighbors  = {}
@@ -407,7 +407,7 @@ function Weird_create_areas()
     assign_area_numbers()
 
     repeat
-gui.printf("  loop %d\n", Plan_alloc_id("flood_loop"))
+gui.printf("  loop %d\n", alloc_id("flood_loop"))
       did_change = false
       flood_fill_pass()
     until not did_change
