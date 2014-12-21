@@ -816,7 +816,7 @@ stderrf("merging into hallway...\n")
     end
   end
 
-
+  
   local function can_kill_area(A)
     local nb_rooms = {}
 
@@ -869,6 +869,24 @@ stderrf("Killing tiny AREA_%d\n", A.id)
       if A.mode == "hallway" then
         assert(not A.temp_room)
         A.temp_room = new_temp_room(A)
+      end
+    end
+  end
+
+
+  local function merge_touching_hallways()
+    -- ensure any touching hallways always become a single room
+    -- [ this is REQUIRED by the connection logic ]
+
+    each A in LEVEL.areas do
+      if A.mode != "hallway" then continue end
+      assert(A.temp_room)
+
+      each N in A.neighbors do
+        if N.mode == "hallway" and N.temp_room != A.temp_room then
+          stderrf("Merging touching hallways...\n")
+          merge_temp_rooms(A.temp_room, N.temp_room)
+        end
       end
     end
   end
@@ -928,6 +946,8 @@ stderrf("Killing tiny AREA_%d\n", A.id)
   handle_hallways()
 
   handle_tiny_areas()
+
+  merge_touching_hallways()
 
   create_rooms()
 

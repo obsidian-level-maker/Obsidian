@@ -909,11 +909,9 @@ function Weird_connect_stuff()
       return -1
     end
 
-    -- never connect onto another hallway
-    -- [ Note : to enable this, must ensure other hallway has been processed already,
-    --          otherwise it can get killed ]
-    if N1.is_hallway then return -1 end
-    if N2.is_hallway then return -1 end
+    -- hallways should never touch [ enforced in area.lua ]
+    assert(not N1.is_hallway)
+    assert(not N2.is_hallway)
 
     -- TODO : scoring of a hallway pair
     --        e.g. volume % of path through the hallway
