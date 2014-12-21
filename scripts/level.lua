@@ -99,7 +99,6 @@ require "defs"
 require "util"
 
 require "seed"
-require "planner"
 require "connect"
 require "quest"
 
