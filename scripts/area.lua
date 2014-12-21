@@ -723,7 +723,10 @@ function Weird_group_into_rooms()
   end
 
 
-  local function try_merge_two_areas(A1, A2)
+  local function try_merge_two_areas(A1, A2, allow_hallway)
+    -- A1 is source area
+    -- A2 is destination area
+
     assert(A1.temp_room)
     assert(A2.temp_room)
 
@@ -744,24 +747,33 @@ function Weird_group_into_rooms()
     if A1.is_tiny and A2.is_tiny then
       -- only merge two tiny rooms if combined size is large enough
       if svol_is_tiny(new_size) then return false end
-
-      -- forget our tinyness  [ prevents A2 from being killed later on ]
-      A1.is_tiny = nil
-      A2.is_tiny = nil
     end
 
+    -- don't merge into hallways unless tiny_mode == "emergency"
 
-    -- FIXME : check for "robust" border (# of shared edges)
+    if A2.mode == "hallway" then
+      -- FIXME
+      if not allow_hallway then return false end
+
+stderrf("merging into hallway...\n")
+      A1.mode = "hallway" 
+    end
+
+    -- TODO : check for "robust" border (# of shared edges)
 
     -- OK --
 
     merge_temp_rooms(A1.temp_room, A2.temp_room)
 
+    -- forget tinyness
+    A1.is_tiny = nil
+    A2.is_tiny = nil
+
     return true
   end
 
 
-  local function try_merge_a_neighbor(A, do_all)
+  local function try_merge_a_neighbor(A, tiny_mode)
     local poss = {}
 
     each N in A.neighbors do
@@ -776,10 +788,12 @@ function Weird_group_into_rooms()
 
     rand.shuffle(poss)
 
-    for i = 1, sel(do_all, #poss, 1) do
-      local N2 = rand.pick(poss)
+    -- in tiny mode, try all possible neighbors
 
-      if try_merge_two_areas(A, N2) then
+    for i = 1, sel(tiny_mode, #poss, 1) do
+      local N2 = table.remove(poss, 1)
+
+      if try_merge_two_areas(A, N2, tiny_mode == "emergency") then
         return true
       end
     end
@@ -803,6 +817,19 @@ function Weird_group_into_rooms()
   end
 
 
+  local function can_kill_area(A)
+    local nb_rooms = {}
+
+    each N in A.neighbors do
+      if N.temp_room then
+        table.add_unique(nb_rooms, N.temp_room)
+      end
+    end
+
+    return (#nb_rooms < 2)
+  end
+
+
   local function handle_tiny_areas()
     -- do this first, allowing two tiny areas to merge together
     each A in LEVEL.areas do
@@ -811,16 +838,29 @@ function Weird_group_into_rooms()
       end
     end
 
-    each A in LEVEL.areas do
-      if A.is_tiny then
-        -- if it cannot merge into a neighbor room, kill it (turn into VOID)
-        -- [ typically this only happens when surrounded by a hallway ]
-        if not try_merge_a_neighbor(A, "do_all") then
-          A.mode = "void"
-          A.temp_room = nil
+    -- on first pass, try merge area into a normal room.
+    -- on second pass, allow merge into a hallway _OR_ kill the area
+
+    for pass = 1, 2 do
+      each A in LEVEL.areas do
+        if not A.is_tiny then continue end
+
+        if pass == 1 and try_merge_a_neighbor(A, "normal") then
+          -- Ok
         end
-      end
-    end
+
+        if pass == 2 then
+          if can_kill_area(A) then
+stderrf("Killing tiny AREA_%d\n", A.id)
+            A.mode = "void"
+            A.temp_room = nil
+          elseif not try_merge_a_neighbor(A, "emergency") then
+            error("Failed to merge a tiny area")
+          end
+        end
+
+      end -- A
+    end -- pass
   end
 
 
@@ -885,8 +925,9 @@ function Weird_group_into_rooms()
     iterate_merges()
   end
 
-  handle_tiny_areas()
   handle_hallways()
+
+  handle_tiny_areas()
 
   create_rooms()
 
