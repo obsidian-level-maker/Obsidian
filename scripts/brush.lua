@@ -423,8 +423,8 @@ end
 
 function Trans.sky_quad(x1, y1, x2, y2, sky_h)
   local brush = brushlib.quad(x1, y1, x2, y2, sky_h)
+  brhshlib.set_kind(brush, "sky")
   brushlib.set_mat(brush, "_SKY", "_SKY")
-  table.insert(brush, 1, { m="sky" })
   Trans.brush(brush)
 end
 
@@ -894,6 +894,25 @@ function brushlib.bbox(brush)
   assert(y1 < y2)
 
   return x1,y1, x2,y2
+end
+
+
+function brushlib.set_kind(brush, kind, props)
+  -- remove any existing kind
+  for i = 1, #brush do
+    if brush[i].m then
+      table.remove(brush, i)
+      break;
+    end
+  end
+
+  local C = { m=kind }
+
+  if props then
+    table.merge(C, props)
+  end
+
+  table.insert(brush, 1, C)
 end
 
 

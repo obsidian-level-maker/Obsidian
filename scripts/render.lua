@@ -721,8 +721,7 @@ if A.mode == "hallway" then tag = 1 end
   brushlib.set_mat(c_brush, A. ceil_mat, A. ceil_mat)
 
   if A.ceil_mat == "_SKY" then
-    -- hmmm, do automatically in set_mat() ???
-    table.insert(c_brush, 1, { m="sky" })
+    brushlib.set_kind(c_brush, "sky")
   end
 
   Trans.brush(f_brush)
