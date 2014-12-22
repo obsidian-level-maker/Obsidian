@@ -49,9 +49,20 @@
                         -- to the same sky_group (unless a solid wall is
                         -- enforced, e.g. between zones).
 
+    -- an edge loop is a sequence of half-seed sides, going counter-clockwise.
+    -- the first loop is always the outer boundary of the area.
+    edge_loops : list(list(EDGE))
+
     stairwells : list(STAIRWELL)  -- possible stairwell usages (for a hallway)
 
     is_stairwell : STAIRWELL
+--]]
+
+
+--class EDGE
+--[[
+    S : seed
+    dir : dir
 --]]
 
 
@@ -606,10 +617,73 @@ function Weird_analyse_areas()
   end
 
 
+  local function trace_to_next_edge(A, S, dir, mode)
+    -- FIXME
+  end
+
+
+  local function trace_edge_loop(A, S, dir, mode)
+    -- mode is either "outer" or "inner"
+
+    local loop = {}
+
+    local orig_S   = S
+    local orig_dir = dir
+
+    repeat
+      table.insert(loop, { S=S, dir=dir })
+
+      if #loop > 9999 then
+        error("Excessive looping when tracing AREA_" .. tostring(A.id))
+      end
+
+      S, dir = trace_to_next_edge(A, S, dir, mode)
+
+    until S == orig_S and dir == orig_dir
+
+    -- all done
+    table.insert(A.edge_loops, loop)
+  end
+
+
+  local function create_edge_loops(A)
+    A.edge_loops = {}
+
+    -- find a start seed : vertically lowest
+    local low_S
+
+    each S in A.half_seeds do
+      if not low_S or S.sy < low_S.sy then
+        low_S = S
+      end
+    end
+
+    -- must be an edge in directions 1, 2 or 3
+
+    for dir = 1,3 do
+      local N = S:diag_neighbor(dir)
+
+      if N then
+        assert(N.area != A)
+        trace_edge_loop(A, S, dir, "outer")
+        break;
+      end
+    end
+
+    if not A.edge_loops[1] then
+      error("Failed to trace edge loop of AREA_" .. tostring(A.id))
+    end
+
+    -- FIXME : inner loops
+  end
+
+
   ---| Weird_analyse_areas |---
 
   each A in LEVEL.areas do
     collect_inner_points(A)
+
+    create_edge_loops(A)
 
     A.svolume = volume_of_area(A)
 
