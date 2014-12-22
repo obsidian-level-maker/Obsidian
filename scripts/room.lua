@@ -1,4 +1,4 @@
-------------------------------------------------------------------------
+
 --  ROOM MANAGEMENT
 ------------------------------------------------------------------------
 --
@@ -1191,6 +1191,73 @@ STAIRWELL_SHAPES =
   L2 = { dirs={ 11, 2, 2, 6, 8, 19, 6, 8, 4, 4 }, fallback=1 }
   L3 = { dirs={ 1, 12, 2, 6, 8, 9, 6, 8, 4, 14 }, fallback=1 }
 }
+
+
+function Test_stairwell_shapes()
+  --
+  -- check all the shapes are actually closed and have two exits
+  --
+
+  local function test_shape(name, shape)
+    local px = 9
+    local py = 9
+
+    local exits = {}
+
+    each dir in shape.dirs do
+      local is_wide = (dir >= 20)
+      local is_exit = (dir >= 10)
+
+      local d2 = dir % 10
+
+      if d2 == 0 or d2 == 5 or dir >= 30 then
+        error("Bad direction in shape " .. name)
+      end
+
+      if is_exit then
+        table.insert(exits, d2)
+      end
+
+      local dx, dy = geom.delta(geom.LEFT[d2])
+
+      if is_wide then
+        dx = dx * 2
+        dy = dy * 2
+      end
+
+      px = px + dx
+      py = py + dy
+    end
+
+    -- check final position
+
+    if px != 9 or py != 9 then
+      error("Unclosed shape : " .. name)
+    end
+
+    -- check exits
+
+    if #exits != 2 then
+      error("Bad exits in shape " .. name)
+    end
+
+    if exits[1] == exits[2] then
+      error("180 degree found in shape " .. name)
+    end
+
+    -- OK --
+  end
+
+  
+  each name,shape in STAIRWELL_SHAPES do
+    if not shape.dirs then
+      error("Missing dirs in shape " .. name)
+    end
+
+    test_shape(name, shape)
+  end
+end
+
 
 
 function Weird_assign_hallways()
