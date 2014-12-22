@@ -1319,10 +1319,104 @@ function Weird_assign_hallways()
   end
 
 
+  local function calc_shape_len(shape)
+    local count = 0
+
+    each dir in shape.dirs do
+      if dir >= 20 then
+        count = count + 2
+      else
+        count = count + 1
+      end
+    end
+
+    return count
+  end
+
+
+  local function mirror_stairwell(shape)
+    if not shape.mirror_dirs then
+      shape.mirror_dirs = {}
+
+      each dir in shape.dirs do
+        local base = int(dir / 10) * 10
+        table.insert(shape.mirror_dirs, 1, base + geom.MIRROR_X[dir % 10])
+      end
+    end
+
+    return shape.mirror_dirs
+  end
+
+
+  local function compare_transformed_shape(A, A_edges, shape, ofs, mir, rot)
+    local src_dirs
+
+    if mir == 1 then
+      src_dirs = mirror_stairwell(shape)
+    else
+      src_dirs = shape.dirs
+    end
+
+    local A_idx = 1 + ofs
+    assert(A_idx <= #A_edges)
+
+    each dir in src_dirs do
+      local is_wide = (dir >= 20)
+      local is_exit = (dir >= 10)
+
+      -- TODO : support WIDE exit/entry
+      if is_wide then return false end
+
+      -- FIXME : remember exit spot
+
+      local rot_dir = geom.ROTATE[rot][dir % 10]
+
+      if rot_dir != A_edges[A_idx].dir then
+        return false -- NO --
+      end
+
+      A_idx = A_idx + 1
+      if A_idx > #A_edges then A_idx = 1 end
+    end
+
+    -- YES --
+
+stderrf("AREA_%d matched shape %s (ofs:%d mir:%d rot:%d)\n", A.id, shape.name, ofs, mir, rot)
+ 
+    -- FIXME : store into A.stairwells
+
+    return true
+  end
+
+
+  local function test_stairwell_shape(A, shape)
+    local outer_edges = A.edge_loops[1]
+
+    -- quick reject : check number of edges
+    if #outer_edges != calc_shape_len(shape) then
+      return
+    end
+
+stderrf("trying %s in AREA_%d...\n", shape.name, A.id)
+
+    for ofs = 0, #outer_edges - 1 do
+    for mir = 0, 1 do
+    for rot = 0, 6, 2 do
+      compare_transformed_shape(A, outer_edges, shape, ofs, mir, rot)
+    end
+    end
+    end
+  end
+
+
   local function detect_stairwells(A)
     A.stairwells = {}
 
-    -- FIXME
+    each name, shape in STAIRWELL_SHAPES do
+      shape.name = name
+
+      test_stairwell_shape(A, shape)
+    end
   end
 
 
