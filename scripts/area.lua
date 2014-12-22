@@ -48,7 +48,22 @@
     sky_group : table   -- outdoor areas which directly touch will belong
                         -- to the same sky_group (unless a solid wall is
                         -- enforced, e.g. between zones).
+
+    stairwells : list(STAIRWELL)  -- possible stairwell usages (for a hallway)
+
+    is_stairwell : STAIRWELL
 --]]
+
+
+--class STAIRWELL
+--[[
+    S1 : seed
+    S2 : seed
+
+    dir1 : DIR
+    dir2 : DIR
+--]]
+
 
 
 function area_get_seed_bbox(A)

@@ -65,18 +65,6 @@ class ROOM
   floor_h, ceil_h : number
 
   c_group : number    -- connection group (used for Connect logic)
-
-}
-
-
-class FLOOR
-{
-  vhr : number  -- virtual height (1..9)
-
-  floor_h
-  floor_tex
-
-  conns : list(CONN)   -- all the connections which join this floor
 }
 
 
@@ -1122,6 +1110,70 @@ end
 
 
 
+STAIRWELL_SHAPES =
+{
+  --
+  -- each shape is a list of directions
+  -- direction has 10 added for the entry/exit of the stairwell (20 for DOUBLE width)
+  -- we only store a single rotation [ but need mirrored variants ]
+  --
+  -- fallback shapes are ones which don't make good use of the space
+  -- [ we auto-detect 1x1 curve and 1x2 straight fallbacks ]
+  --
+
+  -- single seed
+  { dirs={ 12,  6, 18,  4 } }
+  { dirs={ 12, 16,  8,  4 } }
+  { dirs={ 12,  6,  8, 14 } }
+
+  -- two seeds
+  { dirs={ 12, 6, 6, 18, 4, 4 } }
+  { dirs={ 22, 6, 28, 4 } }
+
+  -- 2x2 box
+  { dirs={ 12, 2, 6, 16, 8, 8,  4, 4 } }
+  { dirs={ 12, 2, 6, 6,  8, 8, 14, 4 } }
+
+  { dirs={ 22,  6, 6, 28, 4, 4 } }
+  { dirs={ 22, 26, 8,  8, 4, 4 } }
+  { dirs={ 22,  6, 6,  8, 8, 24 } }
+
+  { dirs={ 22, 6, 16, 8, 8,  4, 4 } }  -- fat to thin
+  { dirs={ 22, 6,  6, 8, 8, 14, 4 } }  -- 
+
+  -- diamond box
+  { dirs={ 11,  3, 19,  7 } }
+  { dirs={ 11, 13,  9,  7 } }
+  { dirs={ 11,  3,  9, 17 } }
+
+  -- other 2x2 seed shapes
+  
+  { dirs={  1, 12,  6,  9, 17 } }
+  { dirs={  1,  2, 16,  9, 17 } }
+  { dirs={ 11,  2,  6, 19,  7 }, fallback=1 }
+
+  { dirs={  1, 12, 6,  9, 8, 14 } }
+  { dirs={ 11,  2, 6, 19, 8,  4 }, fallback=1 }
+
+  { dirs={ 12,  2, 6, 19,  7, 4 } }
+  { dirs={  2, 12, 6,  9, 17, 4 } }
+
+  { dirs={ 22, 6, 19, 7, 4 } } -- fat to thin
+  { dirs={ 22, 6, 9, 17, 4 } } --
+
+  { dirs={ 12,  2,  6, 19,  8,  4,  4 } }
+  { dirs={  2,  2,  6, 19,  8,  4, 14 } }
+  { dirs={  2,  2, 16,  9, 18,  4,  4 } }
+  { dirs={  2, 12,  6,  9,  8, 14,  4 } }
+
+  { dirs={ 22, 6, 19, 8, 4, 4 } }  -- fat to thin
+  { dirs={ 2, 2, 6, 19, 8, 24 } }  --
+
+  -- FIXME : 2x3 and 3x3 seeds
+}
+
+
+
 function Weird_assign_hallways()
   -- pick some areas to become hallways
   -- [ does not actually connect them here ]
@@ -1151,7 +1203,6 @@ function Weird_assign_hallways()
     if A.openness > 0.4 then return -1 end
 
     -- don't touch an existing hallway
-    -- [ TODO : relax this when style == "heaps" ]
     if num_neighbor_with_mode(A, "hallway") > 0 then return -1 end
 
     -- need at least two normal neighbors
@@ -1191,6 +1242,13 @@ function Weird_assign_hallways()
   end
 
 
+  local function detect_stairwells(A)
+    A.stairwells = {}
+
+    -- FIXME
+  end
+
+
   ---| Weird_assign_hallways |---
 
   local quota = walkable_svolume() * 0.3
@@ -1205,6 +1263,8 @@ function Weird_assign_hallways()
     if not A then break; end
 
     A.mode = "hallway"
+
+    detect_stairwells(A)
 
     quota = quota - A.svolume
   end
