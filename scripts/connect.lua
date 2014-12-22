@@ -157,6 +157,9 @@ end
 
 
 function Connect_seed_pair(S, T, dir)
+  if not T then
+    T = S:diag_neighbor(dir)
+  end
 
 -- stderrf("Connect_seed_pair: %s dir:%d\n", S:tostr(), dir)
 
@@ -923,6 +926,74 @@ function Weird_connect_stuff()
   end
 
 
+  local function try_specific_stairwell(R, A, well)
+    local outer_edges = A.edge_loops[1]
+
+    local E1 = outer_edges[well.edge1]
+    local E2 = outer_edges[well.edge2]
+
+    assert(E1 and E2)
+    assert(E1 !=  E2)
+
+    -- TODO : handle WIDE edges
+
+    local N1 = E1.S:diag_neighbor(E1.dir)
+    local N2 = E2.S:diag_neighbor(E2.dir)
+
+    if not (N1 and N1.area and N1.area.room) then return false end
+    if not (N2 and N2.area and N2.area.room) then return false end
+
+    N1 = N1.area.room
+    N2 = N2.area.room
+
+    assert(N1 != R)
+    assert(N2 != R)
+
+    -- this also handles N1 == N2
+    if N1.c_group == N2.c_group then return false end
+
+    --- OK !! ---
+
+stderrf("\n****** %s is now a stairwell *****\n\n", R:tostr())
+
+    R.kind = "stairwell"
+
+    A.is_stairwell = well
+
+    Connect_merge_groups(R.c_group, N1.c_group)
+    Connect_merge_groups(R.c_group, N2.c_group)
+
+    Connect_seed_pair(E1.S, nil, E1.dir)
+    Connect_seed_pair(E2.S, nil, E2.dir)
+
+    return true
+  end
+
+
+  local function try_make_a_stairwell(R)
+    -- if two or more areas were merged, cannot make a stairwell
+    if #R.areas > 1 then return false end
+
+    local A = R.areas[1]
+
+    rand.shuffle(A.stairwells)
+
+    -- ignore "fallback" stairwells on first pass
+    for pass = 1, 2 do
+      each well in A.stairwells do
+        if pass == 1 and well.info.fallback then continue end 
+        if pass == 2 and not well.info.fallback then continue end 
+
+        if try_specific_stairwell(R, A, well) then
+          return true -- SUCCESS
+        end
+      end
+    end
+
+    return false
+  end
+
+
   local function try_connect_hallway(R)
     local neighbor_rooms = {}
 
@@ -989,7 +1060,9 @@ function Weird_connect_stuff()
 
     each R in visit_list do
       if R.is_hallway then
-        try_connect_hallway(R)
+        if not try_make_a_stairwell(R) then
+          try_connect_hallway(R)
+        end
       end
     end
   end
