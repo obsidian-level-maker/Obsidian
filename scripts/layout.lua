@@ -1014,21 +1014,12 @@ function Layout_build_stairwell(A)
   local R = A.room
 
 
-  local function intersect_normals(C, N)
-    local ax1 = C.x
-    local ay1 = C.y
-    local ax2 = ax1 + C.norm_x
-    local ay2 = ay1 + C.norm_y
-
-    local bx1 = N.x
-    local by1 = N.y
-    local bx2 = bx1 + N.norm_x
-    local by2 = by1 + N.norm_y
-
+  -- FIXME : move to utilities, error if parallel lines
+  local function intersect_lines(ax1,ay1, ax2,ay2,  bx1,by1,bx2,by2)
     local k1 = geom.perp_dist(bx1, by1, ax1,ay1,ax2,ay2)
     local k2 = geom.perp_dist(bx2, by2, ax1,ay1,ax2,ay2)
 
-    -- the parallel test in calling func ensures that (k1 - k2) can
+    -- calling func must ensure BLAH... that (k1 - k2) can
     -- never be zero (or extremely close to zero) here.
 
     local d = k1 / (k1 - k2)
@@ -1073,31 +1064,69 @@ function Layout_build_stairwell(A)
 
   local lx1,ly1, rx1,ry1 = edge_vector(edge1.S, edge1.dir)
 
+  local L1 = { x=lx1, y=ly1 }
+  local R1 = { x=rx1, y=ry1 }
+
   -- ending coords
 
   local rx2,ry2, lx2,ly2 = edge_vector(edge2.S, edge2.dir)
+
+  local L2 = { x=lx2, y=ly2 }
+  local R2 = { x=rx2, y=ry2 }
 
   -- normals (facing inward here)
   local nx1, ny1 = geom.unit_vector(geom.delta(10 - edge1.dir))
   local nx2, ny2 = geom.unit_vector(geom.delta(10 - edge2.dir))
 
 
-if A.id == 178 then
+if A.id == 104 then
 stderrf("BUILDING @ AREA_%d....\n", A.id)
 stderrf("  edge1 : %s dir:%d\n", edge1.S:tostr(), edge1.dir)
 stderrf("  edge2 : %s dir:%d\n", edge2.S:tostr(), edge2.dir)
 stderrf("  left  = (%d %d) --> (%d %d)\n", lx1,ly1, lx2,ly2)
 stderrf("  right = (%d %d) --> (%d %d)\n", rx1,ry1, rx2,ry2)
+stderrf("  start normal = (%1.3f %1.3f)\n", nx1, ny1)
+stderrf("  end normal = (%1.3f %1.3f)\n", nx2, ny2)
+end
+
+
+if well.info.straight then return end --!!!!
+
+
+  -- control points
+
+  local lx3, ly3
+  local rx3, ry3
+
+  lx3, ly3 = intersect_lines(lx1, ly1, lx1 + nx1, ly1 + ny1,
+                             lx2, ly2, lx2 + nx2, ly2 + ny2)
+
+  rx3, ry3 = intersect_lines(rx1, ry1, rx1 + nx1, ry1 + ny1,
+                             rx2, ry2, rx2 + nx2, ry2 + ny2)
+
+  local L3 = { x=lx3, y=ly3 }
+  local R3 = { x=rx3, y=ry3 }
+
+if A.id == 104 then
+stderrf("L3 =\n%s\n\n", table.tostr(L3))
+stderrf("R3 =\n%s\n\n", table.tostr(R3))
 end
 
 
   -- TEST CRUD
   for i = 0,30 do
+    -- LINEAR
+    --[[
     local lx = lx1 + (lx2 - lx1) * i / 30
     local ly = ly1 + (ly2 - ly1) * i / 30
 
     local rx = rx1 + (rx2 - rx1) * i / 30
     local ry = ry1 + (ry2 - ry1) * i / 30
+    --]]
+
+    -- CURVED
+    local lx, ly = geom.bezier_coord(L1, L3, L2, i / 30)
+    local rx, ry = geom.bezier_coord(R1, R3, R2, i / 30)
 
     Trans.entity("candle", lx, ly, A.floor_h)
     Trans.entity("potion", rx, ry, A.floor_h)
