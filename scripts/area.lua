@@ -617,8 +617,34 @@ function Weird_analyse_areas()
   end
 
 
+  local function check_is_edge(A, S, dir)
+    local N = S:diag_neighbor(dir, "NODIR")
+
+    if N == "NODIR" then return false end
+
+    if N == nil then return true end
+
+    return (N.area != A)
+  end
+
+
   local function trace_to_next_edge(A, S, dir, mode)
-    -- FIXME
+    dir = geom.ROTATE[5][dir]
+
+    for pass = 1, 8 do
+      if check_is_edge(A, S, dir) then
+        return S, dir
+      end
+
+      if geom.is_straight(dir) then
+        local N = S:diag_neighbor(dir)
+        assert(N and N.area and N.area == A)
+      end
+
+      dir = geom.RIGHT_45[dir]
+    end
+
+    error("Failed to trace next edge at seed corner")
   end
 
 
@@ -661,17 +687,14 @@ function Weird_analyse_areas()
     -- must be an edge in directions 1, 2 or 3
 
     for dir = 1,3 do
-      local N = S:diag_neighbor(dir)
-
-      if N then
-        assert(N.area != A)
+      if check_is_edge(A, S, dir) then
         trace_edge_loop(A, S, dir, "outer")
         break;
       end
     end
 
     if not A.edge_loops[1] then
-      error("Failed to trace edge loop of AREA_" .. tostring(A.id))
+      error("Failed to trace outer loop of AREA_" .. tostring(A.id))
     end
 
     -- FIXME : inner loops
