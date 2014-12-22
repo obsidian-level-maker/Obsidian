@@ -1131,12 +1131,11 @@ STAIRWELL_SHAPES =
 
   -- 2x2 box
   C1 = { dirs={ 12, 2, 6, 16, 8, 8,  4, 4 } }
-  C2 = { dirs={ 12, 2, 6, 6,  8, 8, 14, 4 } }
 
-  C3 = { dirs={ 22,  6, 6, 28, 4, 4 }, straight=1 }
-  C4 = { dirs={ 22, 26, 8,  8, 4, 4 } }
+  C2 = { dirs={ 22,  6, 6, 28, 4, 4 }, straight=1 }
+  C3 = { dirs={ 22, 26, 8,  8, 4, 4 } }
 
-  C5 = { dirs={ 22, 6, 16, 8, 8,  4, 4 } }  -- fat to thin
+  C4 = { dirs={ 22, 6, 16, 8, 8,  4, 4 } }  -- fat to thin
 
   -- diamond box
   D1 = { dirs={ 11,  3, 19,  7 }, straight=1 }
