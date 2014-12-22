@@ -1120,75 +1120,66 @@ STAIRWELL_SHAPES =
   -- fallback shapes are ones which don't make good use of the space
   -- [ we auto-detect 1x1 curve and 1x2 straight fallbacks ]
   --
-  -- TODO : remove the mirrored variants here
-  --
 
   -- single seed
-  A1 = { dirs={ 12,  6, 18,  4 } }
+  A1 = { dirs={ 12,  6, 18,  4 }, straight=1 }
   A2 = { dirs={ 12, 16,  8,  4 } }
-  A3 = { dirs={ 12,  6,  8, 14 } }
 
   -- two seeds
-  B1 = { dirs={ 12, 6, 6, 18, 4, 4 } }
-  B2 = { dirs={ 22, 6, 28, 4 } }
+  B1 = { dirs={ 12, 6, 6, 18, 4, 4 }, straight=1 }
+  B2 = { dirs={ 22, 6, 28, 4 }, straight=1 }
 
   -- 2x2 box
   C1 = { dirs={ 12, 2, 6, 16, 8, 8,  4, 4 } }
   C2 = { dirs={ 12, 2, 6, 6,  8, 8, 14, 4 } }
 
-  C4 = { dirs={ 22,  6, 6, 28, 4, 4 } }
-  C5 = { dirs={ 22, 26, 8,  8, 4, 4 } }
-  C6 = { dirs={ 22,  6, 6,  8, 8, 24 } }
+  C3 = { dirs={ 22,  6, 6, 28, 4, 4 }, straight=1 }
+  C4 = { dirs={ 22, 26, 8,  8, 4, 4 } }
 
-  C7 = { dirs={ 22, 6, 16, 8, 8,  4, 4 } }  -- fat to thin
-  C8 = { dirs={ 22, 6,  6, 8, 8, 14, 4 } }  -- 
+  C5 = { dirs={ 22, 6, 16, 8, 8,  4, 4 } }  -- fat to thin
 
   -- diamond box
-  D1 = { dirs={ 11,  3, 19,  7 } }
+  D1 = { dirs={ 11,  3, 19,  7 }, straight=1 }
   D2 = { dirs={ 11, 13,  9,  7 } }
-  D3 = { dirs={ 11,  3,  9, 17 } }
 
   -- other 2x2 seed shapes
   
   E1 = { dirs={  1, 12,  6,  9, 17 } }
   E2 = { dirs={  1,  2, 16,  9, 17 } }
-  E3 = { dirs={ 11,  2,  6, 19,  7 }, fallback=1 }
+  E3 = { dirs={ 11,  2,  6, 19,  7 }, fallback=1, straight=1 }
 
   F1 = { dirs={  1, 12, 6,  9, 8, 14 } }
-  F2 = { dirs={ 11,  2, 6, 19, 8,  4 }, fallback=1 }
+  F2 = { dirs={ 11,  2, 6, 19, 8,  4 }, fallback=1, straight=1 }
 
   G1 = { dirs={ 12,  2, 6, 19,  7, 4 } }
-  G2 = { dirs={  2, 12, 6,  9, 17, 4 } }
-
-  G3 = { dirs={ 22, 6, 19, 7, 4 } } -- fat to thin
-  G4 = { dirs={ 22, 6, 9, 17, 4 } } --
+  G2 = { dirs={ 22, 6, 19, 7, 4 } } -- fat to thin
 
   H1 = { dirs={ 12,  2,  6, 19,  8,  4,  4 } }
-  H2 = { dirs={  2,  2,  6, 19,  8,  4, 14 } }
-  H3 = { dirs={  2,  2, 16,  9, 18,  4,  4 } }
-  H4 = { dirs={  2, 12,  6,  9,  8, 14,  4 } }
+  H2 = { dirs={  2,  2, 16,  9, 18,  4,  4 } }
+  H3 = { dirs={  2, 12,  6,  9,  8, 14,  4 } }
 
-  H5 = { dirs={ 22, 6, 19, 8, 4, 4 } }  -- fat to thin
-  H6 = { dirs={ 2, 2, 6, 19, 8, 24 } }  --
+  H4 = { dirs={ 22, 6, 19, 8, 4, 4 } }  -- fat to thin
+  H5 = { dirs={ 2, 2, 6, 19, 8, 24 } }  --
 
   -- larger (2x3 and 3x3) shapes
 
   I1 = { dirs={ 1, 2, 2, 16, 8, 9, 17 } }
-  I2 = { dirs={ 11, 2, 2, 6, 8, 19, 7 }, fallback=1 }
+  I2 = { dirs={ 11, 2, 2, 6, 8, 19, 7 }, fallback=1, straight=1 }
   I3 = { dirs={ 1, 12, 2, 6, 8, 9, 17 }, fallback=1 }
 
   J1 = { dirs={ 1, 2, 2, 16, 8, 9, 18, 4 } }
-  J2 = { dirs={ 11, 2, 2, 6, 8, 19, 8, 4 }, fallback=1 }
+  J2 = { dirs={ 11, 2, 2, 6, 8, 19, 8, 4 }, fallback=1, straight=1 }
   J3 = { dirs={ 1, 12, 2, 6, 8, 9, 8, 14 }, fallback=1 }
 
   K1 = { dirs={ 1, 2, 2, 16, 9, 8, 18, 4 } }
   K2 = { dirs={ 1, 22, 6, 9, 8, 8, 14 } }
-  K3 = { dirs={ 1, 12, 2, 6, 9, 8, 8, 14 }, fallback=1 }
-  K4 = { dirs={ 1, 12, 2, 6, 19, 8, 8, 4 }, fallback=1 }
-  K6 = { dirs={ 11, 2, 2, 6, 19, 8, 8, 4 }, fallback=1 }
+  K3 = { dirs={ 11, 2, 2, 6, 19, 8, 8, 4 }, straight=1 }
+
+  K4 = { dirs={ 1, 12, 2, 6, 9, 8, 8, 14 }, fallback=1 }
+  K5 = { dirs={ 1, 12, 2, 6, 19, 8, 8, 4 }, fallback=1 }
 
   L1 = { dirs={ 1, 2, 2, 16, 8, 9, 6, 18, 4, 4 } }
-  L2 = { dirs={ 11, 2, 2, 6, 8, 19, 6, 8, 4, 4 }, fallback=1 }
+  L2 = { dirs={ 11, 2, 2, 6, 8, 19, 6, 8, 4, 4 }, fallback=1, straight=1 }
   L3 = { dirs={ 1, 12, 2, 6, 8, 9, 6, 8, 4, 14 }, fallback=1 }
 }
 
