@@ -1009,7 +1009,10 @@ end
 
 
 
-function Layout_build_stairwell(R)
+function Layout_build_stairwell(A)
+
+  local R = A.room
+
 
   local function intersect_normals(C, N)
     local ax1 = C.x
@@ -1037,8 +1040,67 @@ function Layout_build_stairwell(R)
   end
 
 
+  local function edge_vector(S, dir)
+    -- TODO : make SEED method, use in render.lua in add_edge_line()
+
+    local x1, y1 = S.x1, S.y1
+    local x2, y2 = S.x2, S.y2
+
+    if dir == 2 then return x1,y1, x2,y1 end
+    if dir == 8 then return x2,y2, x1,y2 end
+
+    if dir == 4 then return x1,y2, x1,y1 end
+    if dir == 6 then return x2,y1, x2,y2 end
+
+    if dir == 1 then return x1,y2, x2,y1 end
+    if dir == 3 then return x1,y1, x2,y2 end
+
+    if dir == 7 then return x2,y2, x1,y1 end
+    if dir == 9 then return x2,y1, x1,y2 end
+
+    error ("edge_vector: bad dir")
+  end
+
+
   ---| Layout_build_stairwell |---
 
-  -- TODO
+  local well = A.is_stairwell
+
+  local edge1 = A.edge_loops[1][well.edge1]
+  local edge2 = A.edge_loops[1][well.edge2]
+
+  -- starting coords [ L for left side, R for right side ]
+
+  local lx1,ly1, rx1,ry1 = edge_vector(edge1.S, edge1.dir)
+
+  -- ending coords
+
+  local rx2,ry2, lx2,ly2 = edge_vector(edge2.S, edge2.dir)
+
+  -- normals (facing inward here)
+  local nx1, ny1 = geom.unit_vector(geom.delta(10 - edge1.dir))
+  local nx2, ny2 = geom.unit_vector(geom.delta(10 - edge2.dir))
+
+
+if A.id == 178 then
+stderrf("BUILDING @ AREA_%d....\n", A.id)
+stderrf("  edge1 : %s dir:%d\n", edge1.S:tostr(), edge1.dir)
+stderrf("  edge2 : %s dir:%d\n", edge2.S:tostr(), edge2.dir)
+stderrf("  left  = (%d %d) --> (%d %d)\n", lx1,ly1, lx2,ly2)
+stderrf("  right = (%d %d) --> (%d %d)\n", rx1,ry1, rx2,ry2)
+end
+
+
+  -- TEST CRUD
+  for i = 0,30 do
+    local lx = lx1 + (lx2 - lx1) * i / 30
+    local ly = ly1 + (ly2 - ly1) * i / 30
+
+    local rx = rx1 + (rx2 - rx1) * i / 30
+    local ry = ry1 + (ry2 - ry1) * i / 30
+
+    Trans.entity("candle", lx, ly, A.floor_h)
+    Trans.entity("potion", rx, ry, A.floor_h)
+  end
 end
 
