@@ -1007,3 +1007,38 @@ function Layout_outdoor_shadows()
   end
 end
 
+
+
+function Layout_build_stairwell(R)
+
+  local function intersect_normals(C, N)
+    local ax1 = C.x
+    local ay1 = C.y
+    local ax2 = ax1 + C.norm_x
+    local ay2 = ay1 + C.norm_y
+
+    local bx1 = N.x
+    local by1 = N.y
+    local bx2 = bx1 + N.norm_x
+    local by2 = by1 + N.norm_y
+
+    local k1 = geom.perp_dist(bx1, by1, ax1,ay1,ax2,ay2)
+    local k2 = geom.perp_dist(bx2, by2, ax1,ay1,ax2,ay2)
+
+    -- the parallel test in calling func ensures that (k1 - k2) can
+    -- never be zero (or extremely close to zero) here.
+
+    local d = k1 / (k1 - k2)
+
+    local ix = bx1 + d * (bx2 - bx1)
+    local iy = by1 + d * (by2 - by1)
+
+    return ix, iy
+  end
+
+
+  ---| Layout_build_stairwell |---
+
+  -- TODO
+end
+
