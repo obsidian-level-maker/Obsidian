@@ -637,8 +637,8 @@ function Weird_analyse_areas()
       end
 
       if geom.is_straight(dir) then
-        local N = S:diag_neighbor(dir)
-        assert(N and N.area and N.area == A)
+        S = S:diag_neighbor(dir)
+        assert(S and S.area and S.area == A)
       end
 
       dir = geom.RIGHT_45[dir]
@@ -684,11 +684,13 @@ function Weird_analyse_areas()
       end
     end
 
+    assert(low_S)
+
     -- must be an edge in directions 1, 2 or 3
 
     for dir = 1,3 do
-      if check_is_edge(A, S, dir) then
-        trace_edge_loop(A, S, dir, "outer")
+      if check_is_edge(A, low_S, dir) then
+        trace_edge_loop(A, low_S, dir, "outer")
         break;
       end
     end
