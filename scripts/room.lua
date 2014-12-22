@@ -1360,6 +1360,9 @@ function Weird_assign_hallways()
     local A_idx = 1 + ofs
     assert(A_idx <= #A_edges)
 
+    local exits = {}
+    local wides = {}
+
     each dir in src_dirs do
       local is_wide = (dir >= 20)
       local is_exit = (dir >= 10)
@@ -1367,7 +1370,11 @@ function Weird_assign_hallways()
       -- TODO : support WIDE exit/entry
       if is_wide then return false end
 
-      -- FIXME : remember exit spot
+      -- remember exit spot
+      if is_exit then
+        table.insert(exits, A_idx)
+        table.insert(wides, is_wide)
+      end
 
       local rot_dir = geom.ROTATE[rot][dir % 10]
 
@@ -1381,9 +1388,22 @@ function Weird_assign_hallways()
 
     -- YES --
 
-stderrf("AREA_%d matched shape %s (ofs:%d mir:%d rot:%d)\n", A.id, shape.name, ofs, mir, rot)
+---DEBUG:
+--- stderrf("AREA_%d matched shape %s (ofs:%d mir:%d rot:%d)\n", A.id, shape.name, ofs, mir, rot)
  
-    -- FIXME : store into A.stairwells
+    -- store into list of possible stairwells
+
+    assert(#exits == 2)
+
+    local WELL =
+    {
+      edge1 = exits[1]
+      edge2 = exits[2]
+
+      info = shape
+    }
+
+    table.insert(A.stairwells, WELL)
 
     return true
   end
@@ -1396,8 +1416,6 @@ stderrf("AREA_%d matched shape %s (ofs:%d mir:%d rot:%d)\n", A.id, shape.name, o
     if #outer_edges != calc_shape_len(shape) then
       return
     end
-
-stderrf("trying %s in AREA_%d...\n", shape.name, A.id)
 
     for ofs = 0, #outer_edges - 1 do
     for mir = 0, 1 do

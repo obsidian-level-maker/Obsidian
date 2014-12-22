@@ -68,11 +68,13 @@
 
 --class STAIRWELL
 --[[
-    S1 : seed
-    S2 : seed
+    edge1  -- index into outer edge loop
+    edge2
 
-    dir1 : DIR
-    dir2 : DIR
+    wide1 : bool   -- when true, next edge is used as well
+    wide2 : bool
+
+    info : STAIRWELL_SHAPE
 --]]
 
 
@@ -869,7 +871,6 @@ function Weird_group_into_rooms()
       -- FIXME
       if not allow_hallway then return false end
 
-stderrf("merging into hallway...\n")
       A1.mode = "hallway" 
     end
 
