@@ -1150,7 +1150,7 @@ STAIRWELL_SHAPES =
   F1 = { dirs={  1, 12, 6,  9, 8, 14 }, steps=6 }
   F2 = { dirs={ 11,  2, 6, 19, 8,  4 }, steps=4, fallback=1, straight=1 }
 
-  G1 = { dirs={ 12,  2, 6, 19,  7, 4 }, steps=6 }
+  G1 = { dirs={ 12,  2, 6, 19,  7, 4 }, steps=6, scx=0.4, scy=0.5 }
   G2 = { dirs={ 22, 6, 19, 7, 4 }, steps=6 } -- fat to thin
 
   H1 = { dirs={ 12,  2,  6, 19,  8,  4,  4 }, steps=6 }
@@ -1167,7 +1167,7 @@ STAIRWELL_SHAPES =
   I3 = { dirs={ 1, 12, 2, 6, 8, 9, 17 }, steps=6, fallback=1 }
   I4 = { dirs={ 11, 2, 2, 6, 8, 9, 17 }, steps=6, fallback=1 } 
 
-  J1 = { dirs={ 1, 2, 2, 16, 8, 9, 18, 4 }, steps=6 }
+  J1 = { dirs={ 1, 2, 2, 16, 8, 9, 18, 4 }, steps=6, scx=1.6, scy=0.5 }
   J2 = { dirs={ 11, 2, 2, 6, 8, 19, 8, 4 }, steps=4, fallback=1, straight=1 }
   J3 = { dirs={ 1, 12, 2, 6, 8, 9, 8, 14 }, steps=6, fallback=1 }
 
