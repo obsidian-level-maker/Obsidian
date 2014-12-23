@@ -1850,7 +1850,7 @@ function Weird_floor_heights()
 
         local next_f = C.A1.floor_h
         if not C.is_door then
-          next_f = next_f - 8
+          next_f = next_f  ---???  - 8
         end
 
         visit_room(C.R2, next_f, C.A2)

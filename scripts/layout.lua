@@ -1172,24 +1172,6 @@ function Layout_build_stairwell(A)
   local R3 = { x=rx3, y=ry3 }
 
 
-  -- actually build something --
-
-
--- TEST STUFF
--- [[
-do
-  for i = 0,30 do
-    local lx, ly = geom.bezier_coord(L1, L3, L2, i / 30)
-    local rx, ry = geom.bezier_coord(R1, R3, R2, i / 30)
-
-    Trans.entity("candle", lx, ly, A.floor_h)
-    Trans.entity("potion", rx, ry, A.floor_h)
-  end
-
-return end
---]]
-
-
   local num_steps = well.info.steps 
   assert(num_steps)
 
@@ -1202,7 +1184,8 @@ return end
     local rx, ry = geom.bezier_coord(R1, R3, R2, i / num_steps)
 
     L0_points[i] = { x=lx, y=ly }
-    R0_points[i] = { x=lx, y=ly }
+    R0_points[i] = { x=rx, y=ry }
+--stderrf("%d/%d ---> L (%d %d)  |  R (%d %d)\n", i,num_steps, lx,
   end
 
   -- compute wall and stair points (coming in from the boundary)
@@ -1221,6 +1204,104 @@ return end
 
     L1_points[i] = L1 ; R1_points[i] = R1
     L2_points[i] = L2 ; R2_points[i] = R2
+  end
+
+
+  -- actually build something --
+
+
+-- HANDY TEST STUFF
+--[[
+do
+  for i = 0,30 do
+    local lx, ly = geom.bezier_coord(L1, L3, L2, i / 30)
+    local rx, ry = geom.bezier_coord(R1, R3, R2, i / 30)
+
+    Trans.entity("candle", lx, ly, A.floor_h)
+    Trans.entity("potion", rx, ry, A.floor_h)
+  end
+
+return end
+--]]
+
+
+  local cur_z = A.floor_h
+
+  local stair_diff_h = 12
+
+  local step_mat = Mat_lookup("STEP1")
+
+
+  for i = 0, num_steps - 1 do
+    local k = i + 1
+
+    -- step floor
+
+    cur_z = cur_z + stair_diff_h
+
+    local f_brush =
+    {
+      { x = L2_points[i].x, y = L2_points[i].y }
+      { x = R2_points[i].x, y = R2_points[i].y }
+      { x = R2_points[k].x, y = R2_points[k].y }
+      { x = L2_points[k].x, y = L2_points[k].y }
+    }
+
+    brushlib.add_top(f_brush, cur_z)
+
+    brushlib.set_mat(f_brush, "CEIL5_2", "CEIL5_2")
+
+    f_brush[1].tex = step_mat.t
+    f_brush[1].v1  = 0
+    f_brush[1].u1  = 0
+
+    Trans.brush(f_brush)
+
+
+    -- step ceiling
+
+    local c_brush =
+    {
+      { x = L2_points[i].x, y = L2_points[i].y }
+      { x = R2_points[i].x, y = R2_points[i].y }
+      { x = R2_points[k].x, y = R2_points[k].y }
+      { x = L2_points[k].x, y = L2_points[k].y }
+    }
+
+    brushlib.add_bottom(c_brush, cur_z + 128)
+
+    brushlib.set_mat(c_brush, "FLAT1", "FLAT1")
+
+    Trans.brush(c_brush)
+
+
+    -- left wall
+
+    local l_brush =
+    {
+      { x = L1_points[i].x, y = L1_points[i].y }
+      { x = L2_points[i].x, y = L2_points[i].y }
+      { x = L2_points[k].x, y = L2_points[k].y }
+      { x = L1_points[k].x, y = L1_points[k].y }
+    }
+
+    brushlib.set_mat(l_brush, "GRAY7")
+
+    Trans.brush(l_brush)
+
+    -- right wall
+
+    local r_brush =
+    {
+      { x = R2_points[i].x, y = R2_points[i].y }
+      { x = R1_points[i].x, y = R1_points[i].y }
+      { x = R1_points[k].x, y = R1_points[k].y }
+      { x = R2_points[k].x, y = R2_points[k].y }
+    }
+
+    brushlib.set_mat(r_brush, "GRAY7")
+
+    Trans.brush(r_brush)
   end
 end
 
