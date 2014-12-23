@@ -1143,10 +1143,9 @@ STAIRWELL_SHAPES =
 
   -- other 2x2 seed shapes
   
-  E1 = { dirs={  1, 12,  6,  9, 17 }, steps=6 }
-  E2 = { dirs={  1,  2, 16,  9, 17 }, steps=6, scx=0.4, scy=0.5 }
-  E3 = { dirs={ 11,  2,  6, 19,  7 }, steps=4, fallback=1, straight=1 }
-  E4 = { dirs={ 11,  2,  6,  9, 17 }, steps=4 }
+  E1 = { dirs={  1, 12,  6,  9, 17 }, steps=6, scx=0.4, scy=0.5 }
+  E2 = { dirs={ 11,  2,  6, 19,  7 }, steps=4, fallback=1, straight=1 }
+  E3 = { dirs={ 11,  2,  6,  9, 17 }, steps=4 }
 
   F1 = { dirs={  1, 12, 6,  9, 8, 14 }, steps=6 }
   F2 = { dirs={ 11,  2, 6, 19, 8,  4 }, steps=4, fallback=1, straight=1 }
