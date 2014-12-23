@@ -2638,13 +2638,18 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     if R.no_monsters then return false end
 
-    assert(not R.scenic)
+    if R.kind == "stairwell" then return false end
+
+    -- gameplay_tweaks module
+    if LEVEL.quiet_start and R.purpose == "START" then
+      return false
+    end
 
 ---???    if R.kind == "hallway" and #R.sections == 1 then
 ---???      return rand.odds(50)
 ---???    end
 
-    return true
+    return true  -- OK --
   end
 
 
