@@ -1036,6 +1036,23 @@ function Layout_build_stairwell(A)
   end
 
 
+  local function control_coord(cx, cy,
+                               sc_x1, sc_y1, sc_x2, sc_y2,
+                               lc_x1, lc_y1, lc_x2, lc_y2)
+
+    sc_x1 = sc_x1 + (sc_x2 - sc_x1) * cy
+    sc_y1 = sc_y1 + (sc_y2 - sc_y1) * cy
+
+    lc_x1 = lc_x1 + (lc_x2 - lc_x1) * cy
+    lc_y1 = lc_y1 + (lc_y2 - lc_y1) * cy
+
+    local x = sc_x1 + (lc_x1 - sc_x1) * cx
+    local y = sc_y1 + (lc_y1 - sc_y1) * cx
+
+    return x, y
+  end
+
+
   ---| Layout_build_stairwell |---
 
   local well = A.is_stairwell
@@ -1098,6 +1115,44 @@ end
                                       rx2, ry2, rx2 + nx2, ry2 + ny2)
     end
   end
+
+
+  -- ability to override control points
+  -- [ needed by certain shapes, e.g. I1 ]
+  -- s = short side, l = long side
+
+  local short_side = "L"
+  local sc_x1, sc_y1, sc_x2, sc_y2 = lx1,ly1, lx2,ly2
+  local lc_x1, lc_y1, lc_x2, lc_y2 = rx1,ry1, rx2,ry2
+
+  if geom.dist(lx1,ly1,lx2,ly2) > geom.dist(rx1,ry1,rx2,ry2) then
+    short_side = "R"
+    sc_x1, sc_y1, sc_x2, sc_y2 = rx1,ry1, rx2,ry2
+    lc_x1, lc_y1, lc_x2, lc_y2 = lx1,ly1, lx2,ly2
+  end
+
+  if well.info.scx then
+    local x, y = control_coord(well.info.scx, well.info.scy,
+                               sc_x1, sc_y1, sc_x2, sc_y2,
+                               lc_x1, lc_y1, lc_x2, lc_y2)
+    if short_side == "L" then
+      lx3, ly3 = x, y
+    else
+      rx3, ry3 = x, y
+    end
+  end
+
+  if well.info.lcx then
+    local x, y = control_coord(well.info.lcx, well.info.lcy,
+                               sc_x1, sc_y1, sc_x2, sc_y2,
+                               lc_x1, lc_y1, lc_x2, lc_y2)
+    if short_side != "L" then
+      lx3, ly3 = x, y
+    else
+      rx3, ry3 = x, y
+    end
+  end
+
 
   local L3 = { x=lx3, y=ly3 }
   local R3 = { x=rx3, y=ry3 }

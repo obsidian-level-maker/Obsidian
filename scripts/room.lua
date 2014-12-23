@@ -1163,7 +1163,7 @@ STAIRWELL_SHAPES =
 
   -- larger (2x3 and 3x3) shapes
 
-  I1 = { dirs={ 1, 2, 2, 16, 8, 9, 17 }, steps=6 }
+  I1 = { dirs={ 1, 2, 2, 16, 8, 9, 17 }, steps=6, scx=0.85, scy=0.35 }
   I2 = { dirs={ 11, 2, 2, 6, 8, 19, 7 }, steps=4, fallback=1, straight=1 }
   I3 = { dirs={ 1, 12, 2, 6, 8, 9, 17 }, steps=6, fallback=1 }
   I4 = { dirs={ 11, 2, 2, 6, 8, 9, 17 }, steps=6, fallback=1 } 
