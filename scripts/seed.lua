@@ -288,14 +288,18 @@ function SEED_CLASS.midstr(S)
 end
 
 
-function SEED_CLASS.edge_coord(S, side)
-  -- FIXME !!!  borked for half-seeds
+function SEED_CLASS.edge_coord(S, dir)
+  -- assumes 'dir' is a valid direction
+
   local mx, my = S:mid_point()
-  local dx, dy = geom.delta(side)
 
-  mx = mx + dx * (SEED_SIZE / 2)
-  my = my + dy * (SEED_SIZE / 2)
+  if dir == 2 then return mx, S.y1 end
+  if dir == 8 then return mx, S.y2 end
 
+  if dir == 4 then return S.x1, my end
+  if dir == 6 then return S.x2, my end
+
+  -- diagonal edge
   return mx, my
 end
 
