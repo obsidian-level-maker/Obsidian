@@ -1120,6 +1120,10 @@ STAIRWELL_SHAPES =
   -- fallback shapes are ones which don't make good use of the space
   -- [ we auto-detect 1x1 curve and 1x2 straight fallbacks ]
   --
+  -- scx,scy and lcx,lcy are coordinates to override control points
+  -- (on "short" and "long" side, respectively).  the four lines which
+  -- join the bezier start/end points form the coordinate space.
+  --
 
   -- single seed
   A1 = { dirs={ 12,  6, 18,  4 }, steps=4, straight=1 }

@@ -961,8 +961,8 @@ function Weird_connect_stuff()
     Connect_merge_groups(R.c_group, N1.c_group)
     Connect_merge_groups(R.c_group, N2.c_group)
 
-    Connect_seed_pair(E1.S, nil, E1.dir)
-    Connect_seed_pair(E2.S, nil, E2.dir)
+    E1.conn = Connect_seed_pair(E1.S, nil, E1.dir)
+    E2.conn = Connect_seed_pair(E2.S, nil, E2.dir)
 
     return true
   end
