@@ -1090,22 +1090,35 @@ stderrf("  end normal = (%1.3f %1.3f)\n", nx2, ny2)
 end
 
 
-if well.info.straight then return end --!!!!
-
-
   -- control points
 
   local lx3, ly3
   local rx3, ry3
 
-  lx3, ly3 = intersect_lines(lx1, ly1, lx1 + nx1, ly1 + ny1,
-                             lx2, ly2, lx2 + nx2, ly2 + ny2)
+  if well.info.straight then
+    lx3, ly3 = (lx1 + lx2) / 2, (ly1 + ly2) / 2
+    rx3, ry3 = (rx1 + rx2) / 2, (ry1 + ry2) / 2
 
-  rx3, ry3 = intersect_lines(rx1, ry1, rx1 + nx1, ry1 + ny1,
-                             rx2, ry2, rx2 + nx2, ry2 + ny2)
+  else
+    -- with same shapes, one side stays at same coordinate
+    if geom.dist(lx1, ly1, lx2, ly2) < 1 then
+      lx3, ly3 = lx1, ly1
+    else
+      lx3, ly3 = intersect_lines(lx1, ly1, lx1 + nx1, ly1 + ny1,
+                                 lx2, ly2, lx2 + nx2, ly2 + ny2)
+    end
+
+    if geom.dist(rx1, ry1, rx2, ry2) < 1 then
+      rx3, ry3 = rx1, ry1
+    else
+      rx3, ry3 = intersect_lines(rx1, ry1, rx1 + nx1, ry1 + ny1,
+                                 rx2, ry2, rx2 + nx2, ry2 + ny2)
+    end
+  end
 
   local L3 = { x=lx3, y=ly3 }
   local R3 = { x=rx3, y=ry3 }
+
 
 if A.id == 104 then
 stderrf("L3 =\n%s\n\n", table.tostr(L3))
@@ -1115,16 +1128,6 @@ end
 
   -- TEST CRUD
   for i = 0,30 do
-    -- LINEAR
-    --[[
-    local lx = lx1 + (lx2 - lx1) * i / 30
-    local ly = ly1 + (ly2 - ly1) * i / 30
-
-    local rx = rx1 + (rx2 - rx1) * i / 30
-    local ry = ry1 + (ry2 - ry1) * i / 30
-    --]]
-
-    -- CURVED
     local lx, ly = geom.bezier_coord(L1, L3, L2, i / 30)
     local rx, ry = geom.bezier_coord(R1, R3, R2, i / 30)
 
