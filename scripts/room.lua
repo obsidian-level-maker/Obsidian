@@ -1146,6 +1146,7 @@ STAIRWELL_SHAPES =
   E1 = { dirs={  1, 12,  6,  9, 17 } }
   E2 = { dirs={  1,  2, 16,  9, 17 } }
   E3 = { dirs={ 11,  2,  6, 19,  7 }, fallback=1, straight=1 }
+  E4 = { dirs={ 11,  2,  6,  9, 17 } }
 
   F1 = { dirs={  1, 12, 6,  9, 8, 14 } }
   F2 = { dirs={ 11,  2, 6, 19, 8,  4 }, fallback=1, straight=1 }
@@ -1165,6 +1166,7 @@ STAIRWELL_SHAPES =
   I1 = { dirs={ 1, 2, 2, 16, 8, 9, 17 } }
   I2 = { dirs={ 11, 2, 2, 6, 8, 19, 7 }, fallback=1, straight=1 }
   I3 = { dirs={ 1, 12, 2, 6, 8, 9, 17 }, fallback=1 }
+  I4 = [ dirs={ 11, 2, 2, 6, 8, 9, 17 }, fallback=1 } 
 
   J1 = { dirs={ 1, 2, 2, 16, 8, 9, 18, 4 } }
   J2 = { dirs={ 11, 2, 2, 6, 8, 19, 8, 4 }, fallback=1, straight=1 }
