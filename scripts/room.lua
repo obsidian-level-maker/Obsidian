@@ -1765,7 +1765,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Weird_floor_heights()
+function Room_floor_heights()
 
   local function fix_up_seeds(A)
     each S in A.half_seeds do
@@ -1830,6 +1830,34 @@ function Weird_floor_heights()
   end
 
 
+  local function process_stairwell(R)
+    local A = R.areas[1]
+    local well = A.is_stairwell
+
+    local num_steps = well.info.steps
+
+    -- if we have a locked door, keep it flat
+    if R:has_any_lock() or (not well.info.straight and rand.odds(10)) then
+      R.stair_diff_h = 0
+    else
+      -- TODO : logic to decide Z direction
+      local z_dir = rand.sel(70, 1, -1)
+
+      local diff_h = rand.sel(50, 8, 12)
+      if rand.odds(10) then diff_h = 16 end
+
+      R.stair_diff_h = z_dir * diff_h
+    end
+
+    -- with this logic, last step is same height as next room
+
+    R.exit_h = R.entry_h + num_steps * R.stair_diff_h
+
+    A.floor_h = math.min(R.entry_h, R.exit_h)
+    A.ceil_h  = A.floor_h + 192  -- dummy
+  end
+
+
   local function visit_room(R, entry_h, entry_area)
     if entry_area then
       assert(entry_area.room == R)
@@ -1839,7 +1867,13 @@ function Weird_floor_heights()
       entry_h = rand.irange(0, 4) * 64
     end
 
-    process_room(R, entry_h, entry_area)
+    R.entry_h = entry_h
+
+    if R.kind == "stairwell" then
+      process_stairwell(R)
+    else
+      process_room(R, entry_h, entry_area)
+    end
 
     -- recurse to neighbors
     each C in R.conns do
@@ -1848,10 +1882,7 @@ function Weird_floor_heights()
         assert(C.A1.room == R)
         assert(C.A1.floor_h)
 
-        local next_f = C.A1.floor_h
-        if not C.is_door then
-          next_f = next_f  ---???  - 8
-        end
+        local next_f = R.exit_h or C.A1.floor_h
 
         visit_room(C.R2, next_f, C.A2)
       end
@@ -1859,7 +1890,7 @@ function Weird_floor_heights()
   end
 
 
-  ---| Weird_floor_heights |---
+  ---| Room_floor_heights |---
 
   visit_room(LEVEL.start_room)
 end
@@ -1893,7 +1924,7 @@ function Weird_build_rooms()
 
   Room_reckon_doors()
 
-  Weird_floor_heights()
+  Room_floor_heights()
 
   Layout_outer_borders()
 

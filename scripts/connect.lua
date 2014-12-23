@@ -954,8 +954,6 @@ function Weird_connect_stuff()
 
     --- OK !! ---
 
-stderrf("\n****** %s is now a stairwell (%s) *****\n", R:tostr(), well.info.name)
-
     R.kind = "stairwell"
 
     A.is_stairwell = well

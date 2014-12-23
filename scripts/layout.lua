@@ -337,6 +337,10 @@ function Layout_place_importants(R)
 
   ---| Layout_place_importants |---
 
+  if R.kind == "stairwell" then
+    return
+  end
+
   collect_wotsit_spots()
 
 ---???  Layout_compute_wall_dists(R)
@@ -1225,9 +1229,9 @@ return end
 --]]
 
 
-  local cur_z = A.floor_h
+  local cur_z = R.entry_h
 
-  local stair_diff_h = 12
+  local stair_diff_h = R.stair_diff_h
 
   local step_mat = Mat_lookup("STEP1")
 

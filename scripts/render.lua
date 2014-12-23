@@ -742,6 +742,12 @@ end
 
 
 function Render_area(A)
+  -- stairwells are special little butterflies...
+  if A.is_stairwell then
+    Layout_build_stairwell(A)
+    return
+  end
+
   A.floor_brushes = {}
   A.side_edges = {}
 
