@@ -1178,9 +1178,7 @@ STAIRWELL_SHAPES =
   K4 = { dirs={ 1, 12, 2, 6, 9, 8, 8, 14 }, steps=6, fallback=1 }
   K5 = { dirs={ 1, 12, 2, 6, 19, 8, 8, 4 }, steps=6, fallback=1 }
 
-  L1 = { dirs={ 1, 2, 2, 16, 8, 9, 6, 18, 4, 4 }, steps=8 }
-  L2 = { dirs={ 11, 2, 2, 6, 8, 19, 6, 8, 4, 4 }, steps=4, fallback=1, straight=1 }
-  L3 = { dirs={ 1, 12, 2, 6, 8, 9, 6, 8, 4, 14 }, steps=6, fallback=1 }
+  -- any larger shapes are very rare (not worth supporting)
 }
 
 
