@@ -1091,11 +1091,12 @@ function Weird_create_rooms()
   Junction_init()
     Corner_init()
 
-  Weird_void_some_areas()
-  Weird_assign_hallways()
+  Room_void_some_areas()
+  Room_assign_hallways()
 
   Weird_group_into_rooms()
-  Weird_choose_area_kinds()
+
+  Room_choose_area_kinds()
 
 
   gui.printf("Seed Map:\n")

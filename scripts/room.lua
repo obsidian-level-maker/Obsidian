@@ -1014,7 +1014,7 @@ end
 
 
 
-function Weird_void_some_areas()
+function Room_void_some_areas()
   local largest
 
   local visit_list
@@ -1084,7 +1084,7 @@ function Weird_void_some_areas()
   end
 
 
-  ---| Weird_void_some_areas |---
+  ---| Room_void_some_areas |---
 
   -- have a quota
   local quota = walkable_svolume() * 0.2
@@ -1253,7 +1253,7 @@ end
 
 
 
-function Weird_assign_hallways()
+function Room_assign_hallways()
   -- pick some areas to become hallways
   -- [ does not actually connect them here ]
 
@@ -1440,7 +1440,7 @@ function Weird_assign_hallways()
   end
 
 
-  ---| Weird_assign_hallways |---
+  ---| Room_assign_hallways |---
 
   local quota = walkable_svolume() * 0.3
 
@@ -1463,7 +1463,7 @@ end
 
 
 
-function Weird_choose_area_kinds()
+function Room_choose_area_kinds()
 
   local resolve_outdoor_prob
 
@@ -1720,7 +1720,7 @@ gui.printf("spread_kind '%s' : starts=%d  quota=%d\n", what, start_num, seed_quo
   end
 
 
-  ---| Weird_choose_area_kinds |---
+  ---| Room_choose_area_kinds |---
 
   local total_seeds = SEED_W * SEED_H
 
