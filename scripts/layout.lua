@@ -1053,6 +1053,26 @@ function Layout_build_stairwell(A)
   end
 
 
+  local function calc_inner_line(L, l_dist, R, r_dist)
+    -- vector from L --> R
+    dx, dy = geom.unit_vector(R.x - L.x, R.y - L.y)
+
+    local LI =
+    {
+      x = L.x + l_dist * dx
+      y = L.y + l_dist * dy
+    }
+
+    local RI =
+    {
+      x = R.x - r_dist * dx
+      y = R.y - r_dist * dy
+    }
+
+    return LI, RI
+  end
+
+
   ---| Layout_build_stairwell |---
 
   local well = A.is_stairwell
@@ -1079,30 +1099,23 @@ function Layout_build_stairwell(A)
   local nx2, ny2 = geom.unit_vector(geom.delta(10 - edge2.dir))
 
 
-if A.id == 104 then
-stderrf("BUILDING @ AREA_%d....\n", A.id)
-stderrf("  edge1 : %s dir:%d\n", edge1.S:tostr(), edge1.dir)
-stderrf("  edge2 : %s dir:%d\n", edge2.S:tostr(), edge2.dir)
-stderrf("  left  = (%d %d) --> (%d %d)\n", lx1,ly1, lx2,ly2)
-stderrf("  right = (%d %d) --> (%d %d)\n", rx1,ry1, rx2,ry2)
-stderrf("  start normal = (%1.3f %1.3f)\n", nx1, ny1)
-stderrf("  end normal = (%1.3f %1.3f)\n", nx2, ny2)
-end
-
-
   -- control points
 
   local lx3, ly3
   local rx3, ry3
+
+  local l_pivot
+  local r_pivot
 
   if well.info.straight then
     lx3, ly3 = (lx1 + lx2) / 2, (ly1 + ly2) / 2
     rx3, ry3 = (rx1 + rx2) / 2, (ry1 + ry2) / 2
 
   else
-    -- with same shapes, one side stays at same coordinate
+    -- with same shapes, one side stays at same coordinate ("pivot")
     if geom.dist(lx1, ly1, lx2, ly2) < 1 then
       lx3, ly3 = lx1, ly1
+      l_pivot  = true
     else
       lx3, ly3 = geom.intersect_lines(lx1, ly1, lx1 + nx1, ly1 + ny1,
                                       lx2, ly2, lx2 + nx2, ly2 + ny2)
@@ -1110,6 +1123,7 @@ end
 
     if geom.dist(rx1, ry1, rx2, ry2) < 1 then
       rx3, ry3 = rx1, ry1
+      r_pivot  = true
     else
       rx3, ry3 = geom.intersect_lines(rx1, ry1, rx1 + nx1, ry1 + ny1,
                                       rx2, ry2, rx2 + nx2, ry2 + ny2)
@@ -1158,19 +1172,55 @@ end
   local R3 = { x=rx3, y=ry3 }
 
 
-if A.id == 104 then
-stderrf("L3 =\n%s\n\n", table.tostr(L3))
-stderrf("R3 =\n%s\n\n", table.tostr(R3))
-end
+  -- actually build something --
 
 
-  -- TEST CRUD
+-- TEST STUFF
+-- [[
+do
   for i = 0,30 do
     local lx, ly = geom.bezier_coord(L1, L3, L2, i / 30)
     local rx, ry = geom.bezier_coord(R1, R3, R2, i / 30)
 
     Trans.entity("candle", lx, ly, A.floor_h)
     Trans.entity("potion", rx, ry, A.floor_h)
+  end
+
+return end
+--]]
+
+
+  local num_steps = well.info.steps 
+  assert(num_steps)
+
+  -- collect bounding points (one more than num_steps)
+  local L0_points = {}
+  local R0_points = {}
+
+  for i = 0, num_steps do
+    local lx, ly = geom.bezier_coord(L1, L3, L2, i / num_steps)
+    local rx, ry = geom.bezier_coord(R1, R3, R2, i / num_steps)
+
+    L0_points[i] = { x=lx, y=ly }
+    R0_points[i] = { x=lx, y=ly }
+  end
+
+  -- compute wall and stair points (coming in from the boundary)
+  local L1_points = {}
+  local L2_points = {}
+
+  local R1_points = {}
+  local R2_points = {}
+
+  for i = 0, num_steps do
+    local L1, R1 = calc_inner_line(L0_points[i], sel(l_pivot, 48, 16),
+                                   R0_points[i], sel(r_pivot, 48, 16))
+
+    local L2, R2 = calc_inner_line(L0_points[i], sel(l_pivot, 64, 24),
+                                   R0_points[i], sel(r_pivot, 64, 24))
+
+    L1_points[i] = L1 ; R1_points[i] = R1
+    L2_points[i] = L2 ; R2_points[i] = R2
   end
 end
 
