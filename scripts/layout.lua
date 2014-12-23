@@ -1245,13 +1245,18 @@ return end
 
   local step_mat = Mat_lookup("STEP1")
 
+  local f_st_idx = sel(stair_diff_h < 0, 3, 1)
+
+
+  if stair_diff_h > 0 then
+    cur_z = cur_z + stair_diff_h
+  end
+
 
   for i = 0, num_steps - 1 do
     local k = i + 1
 
     -- step floor
-
-    cur_z = cur_z + stair_diff_h
 
     local f_brush =
     {
@@ -1263,11 +1268,11 @@ return end
 
     brushlib.add_top(f_brush, cur_z)
 
-    brushlib.set_mat(f_brush, "CEIL5_2", "CEIL5_2")
+    brushlib.set_mat(f_brush, "CEIL5_1", "CEIL5_1")
 
-    f_brush[1].tex = step_mat.t
-    f_brush[1].v1  = 0
-    f_brush[1].u1  = 0
+    f_brush[f_st_idx].tex = step_mat.t
+    f_brush[f_st_idx].v1  = 0
+    f_brush[f_st_idx].u1  = 0
 
     Trans.brush(f_brush)
 
@@ -1316,6 +1321,9 @@ return end
     brushlib.set_mat(r_brush, "GRAY7")
 
     Trans.brush(r_brush)
+
+    -- bump height
+    cur_z = cur_z + stair_diff_h
   end
 end
 

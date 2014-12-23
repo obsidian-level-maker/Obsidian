@@ -756,7 +756,7 @@ end
 
     -- FIXME
 
-    junc.kind = "window"  --!!!! TEST CRUD
+    junc.kind = "wall"
     return
   end
 
