@@ -26,14 +26,14 @@ GAMEPLAY_TWEAKS.YES_NO =
 }
 
 
-function GAMEPLAY_TWEAKS.begin_level(self)
+function GAMEPLAY_TWEAKS.setup(self)
   for name,opt in pairs(self.options) do
     local value = self.options[name].value
 
     if value == "no" or value == "none" then
       -- ignore it
     else
-      LEVEL[name] = value
+      PARAM[name] = value
     end
   end
 end
@@ -45,7 +45,7 @@ OB_MODULES["gameplay_tweaks"] =
 
   hooks =
   {
-    begin_level = GAMEPLAY_TWEAKS.begin_level
+    setup = GAMEPLAY_TWEAKS.setup
   }
 
   options =
