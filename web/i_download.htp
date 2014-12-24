@@ -39,16 +39,16 @@ All previous releases are available from SourceForge:
 All Files</a>
 
 
-<h3>SVN REPOSITORY</h3>
+<h3>GIT REPOSITORY</h3>
 
-The SVN repository is the place where the most up-to-date code
-is stored.  SVN is an abbreviation of Subversion, which
-is the software used to manage a collection of source code files
+The Git repository is the place where the most up-to-date code
+is stored.  Git is a version control system, i.e. software
+used to manage a collection of source code files
 over the internet.
 <p>
 
 The following link lets you browse the source code:
-<a href="http://sourceforge.net/p/oblige/code/HEAD/tree/trunk/">
+<a href="https://sourceforge.net/p/oblige/code2/ref/master/">
 Browse Code</a>
 
 <p>
