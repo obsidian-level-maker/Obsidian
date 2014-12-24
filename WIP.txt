@@ -3,124 +3,23 @@ WORK IN PROGRESS
 ================
 
 
-Recursive Patterns :
--  pure patterns : have two basic kinds (I and P) and ensure
-   not much overlap in the sizes which can use them
-   (in particular : I pattern should be tall and narrow)
-
--  figure out how symmetry works with recursive patterns
-
--  support "huge" patterns : these specify a size string which
-   automatically expands to fill the w/h of room
-
-   x_big_size = "626"  ---> 939 in a 21 seed wide room
-
-   [ '1' never expands, '2' sometimes becomes '3' (rarely: '4')
-     '3' can become '4' or '5' or '6'
-     '4' and above will expand to as big as necessary ]
-   
--  new pattern char '?' which means "don't care" / "filler"
-   the chunk (usually) becomes same as a nearby sub-area cell
-   if installed on a conn (etc), transmit "must_walk" to neighbor
-
--  when stair goes INTO a sub-area, it means all its floors
-   should have HIGHER vhr than any in the outer pattern
-   (or LOWER vhr than any in outer pattern)
-
-   --> stair_mode field, can be "up", "down", "flat", "random"
-
-   if stair into sub-area would hit multiple floors, then
-   pick _LOW_ one when stair goes up, and _HIGH_ one when
-   stair goes down.
-
-   disallow stairs FROM a sub-area (e.g. "aa>..")
-
--  patterns which mix normal floors and sub-areas are problematic,
-   since the normal floor may be separated into 2+ distinct areas,
-   hence need either:
-   (a) explicit stairs
-   (b) _OR_ more analysis code to detect the separate regions of
-       each floor (meh)
-   (c) _OR_ disallow having separate areas (need analysis code to
-       validate them)
-
-IDEA: recurse = "onion" patterns, and we try a small quota of
-      there BEFORE all other patterns.
-
-IDEA: fence patterns (place a fence between two sub-areas and/or
-      between a normal area <-> sub-area)
-      _OR_ pick a certain floor to be "fenced"
-
-+  divide non-rectangular rooms (currently only parent rooms)
-   into rectangles and use same "intra connection" logic as for
-   pure recursive patterns.
-
-   --> thereby create chunks for ALL non-cave rooms
+>>> use PARAM for game_tweaks module
 
 
-3D Floors:
-!!  fix lighting
-
-+  SEED.k_top  :  number of chunks in chunk[]
-
-+  light from above can "go right through"
-
--  next to room with liquid -- odd gap is possible
-
-+  in patterns, specify number of 3D components (default to 1)
-   and include them all in the 'structure' field.
-
-   For example:
-
-      layers = 4
-
-      structure =
-      {
-        "...",  "111",  "2>3",  "   "
-        "1<.",  "  v",  "2  ",  "  3"
-        "2..",  "  2",  "22 ",  "333"
-      }
-
-      AND HENCE : _structure becomes a three dimensional array
+FAQ : vanilla DOOM not supported
 
 
-Chunks:
-!!  completely decide what a chunk is, and how much representation
-    cunrrently in seeds should to be moved into chunks.
-    e.g. all 'S.floor_h' be replaced with 'S.chunk[1].floor.h' ??
-
--  give lower chunk (if two) a ceil_h
-
--  CHUNK_CLASS ?   put in seed.lua
-
--  CHUNK.content (not SEED.content)
-
--  link chunks together
-
--  split big chunks: 4 = 2/2  5 = 2/1/2 or 1/3/1  6 = 2/2/2  (etc)
-   (maintain symmetry if chunk straddles middle of room)
-
--  split any chunks which contain TWO importants or conns
-   (detect if horiz or vertical, and where)
-
--  often merge 1x2 or 2x2 seeds with exact same floors (and no stairs etc)
-   into a single chunk  --  try 2x2 before 1x2 / 2x1
++  game_tweaks "Kept Weapons" option
 
 
-Layout rework:
-+  get curved stairs working again
-
-+  get diagonals working again
-
--  sometimes make a floor use same material as top (not room wall)
+Q/ use CC-BY-3 or 4 for all prefabs / images / prebuilt maps
 
 
-Junking:
--  caves: sometimes junk a side or two
-   - only at edge of map (?)
-   - 1 or 2 seeds deep
+Wrong texturing when pillar (underneath a 3D bridge) intersects
 
--  normal junking : upto 2 seeds at edge of map
+
+-  sometimes make a floor (its side) use same material as top (not room wall)
+
 
 
 Closets and Traps:
@@ -135,23 +34,8 @@ Closets and Traps:
 Doors
 -  Door_with_bars : use it
 +  make a dark-metal switch for Door_with_bars
--  make a two seed wide door prefab
+
 -  support wide doors [normal / locked]
 -  make wide prefab with a switch in it [normal door]
 -  texturing on door prefabs (for HELL, URBAN themes)
-
-
-
-MISCELLANEA
-===========
-
-
-RAIL ISSUE : cannot control offsets on BACK SIDE of a brush vert
---->  test new logic....
-
-Wrong texturing when pillar (underneath a 3D bridge) intersects
-
-Review spot handling in Cave code
-
-rocky_exit : switch can be stretched
 
