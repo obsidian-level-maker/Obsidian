@@ -40,6 +40,24 @@ For other games please try version 4.28)
 
 <h3>NEWS</h3>
 
+<div class="newsdate">24-Dec-2014:</div>
+<blockquote class="news">
+
+I have been working on a new method of generating maps,
+using an algorithm for generating "weird" shapes which are then
+used for the rooms, hallways and scenic areas of the level.
+This work will become the next major version of OBLIGE, namely V7,
+although it is going to take a long while before it gets into a
+truly usable state.
+
+<p>
+Merry Christmas everyone!
+
+</blockquote>
+
+<hr style="clear: right;">
+
+
 <div class="newsdate">11-Jul-2014:</div>
 <blockquote class="news">
 
