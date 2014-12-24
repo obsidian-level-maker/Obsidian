@@ -79,7 +79,7 @@ function ROOM_CLASS.new()
   local R =
   {
     id = id
-    kind = "building"
+    kind = "UNSET"
     num_windows = 0
     total_inner_points = 0
 
@@ -671,6 +671,106 @@ do return end
 
   each C in LEVEL.conns do
     visit_conn(C)
+  end
+end
+
+
+
+function Room_detect_porches(R)
+  --
+  -- A "porch" is typically an area of an outdoor room that neighbors a
+  -- building and will be given a solid low ceiling and some pillars to
+  -- hold it up, and a floor higher than any nearby areas of the room.
+  --
+  -- It can also be used indoors (what previous code called a "periph").
+  --
+  -- Another use case is an outdoor hallway which is mostly surrounded
+  -- by outdoor areas, and is higher than those areas.
+  --
+
+  
+  local function detect_hallway_porch()
+    if #R.areas > 1 then return false end
+
+    local HA = R.areas[1]
+
+if HA.id == 108 then stderrf("detect_hallway_porch...... @ %s\n", R:tostr()) end
+
+    each edge in HA.edge_loops[1] do
+      local N = edge.S:diag_neighbor(edge.dir)
+
+      if not (N and N.area) then
+stderrf("  WTF???\n")
+      return false end
+
+      local A2 = N.area
+
+      if A2.mode == "scenic" then
+        -- ok
+        continue
+      end
+
+      local R2 = A2.room
+      assert(R2 != R)
+
+      if not R2 then
+if HA.id == 108 then stderrf(">> VOID\n") end
+        -- no void, thanks
+        return false
+      end
+
+      -- require same zone
+      if R2.zone != R.zone then
+if HA.id == 108 then stderrf(">> ZONE\n") end
+        return false
+      end
+
+      -- TODO : if hallway is large, allow a few edges
+      if not R2.is_outdoor then
+if HA.id == 108 then stderrf(">> INDOOR (%s, %s)\n", R2:tostr(), N:tostr())
+stderrf("R2 = \n%s\n", table.tostr(R2, 3))
+end
+         return false
+      end
+
+      -- floor check
+      if HA.floor_h + 48 < A2.floor_h then
+if HA.id == 108 then stderrf(">> FLOOR\n") end
+        return false
+      end
+    end
+
+    HA.is_porch = true
+
+stderrf("!!!!  %s is now a PORCH\n", R:tostr())
+    
+    return true
+  end
+
+
+  local function detect_outdoor_porch()
+    -- TODO
+  end
+
+
+  local function detect_indoor_porch()
+    -- TODO
+  end
+
+
+  ---| Room_detect_porches |---
+
+  if R.kind == "stairwell" then
+    -- never
+
+  elseif R.kind == "hallway" then
+    detect_hallway_porch()
+
+  elseif R.is_outdoor then
+    detect_outdoor_porch()
+
+  else
+    detect_indoor_porch()
   end
 end
 
@@ -1717,6 +1817,18 @@ gui.printf("spread_kind '%s' : starts=%d  quota=%d\n", what, start_num, seed_quo
         A.kind = "building"
       end
     end
+
+    -- assign to rooms now
+
+    each R in LEVEL.rooms do
+      local A = R.areas[1]
+
+      R.is_outdoor = A.is_outdoor
+
+      if R.kind == "UNSET" then
+        R.kind = sel(A.is_outdoor, "outdoor", A.kind)
+      end
+    end   
   end
 
 
@@ -1873,6 +1985,10 @@ function Room_floor_heights()
 
     R.entry_h = entry_h
 
+    if R.kind != "hallway" then
+      Room_detect_porches(R)
+    end
+
     if R.kind == "stairwell" then
       process_stairwell(R)
     else
@@ -1897,6 +2013,13 @@ function Room_floor_heights()
   ---| Room_floor_heights |---
 
   visit_room(LEVEL.start_room)
+
+  -- do hallway porches when all heights are known [ Hmmmm... ]
+  each R in LEVEL.rooms do
+    if R.kind == "hallway" then
+      Room_detect_porches(R)
+    end
+  end
 end
 
 
@@ -1927,7 +2050,6 @@ function Weird_build_rooms()
   gui.printf("\n---=====  Build WEIRD rooms =====---\n\n")
 
   Room_reckon_doors()
-
   Room_floor_heights()
 
   Layout_outer_borders()
