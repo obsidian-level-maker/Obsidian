@@ -728,7 +728,6 @@ if HA.id == 108 then stderrf(">> ZONE\n") end
       -- TODO : if hallway is large, allow a few edges
       if not R2.is_outdoor then
 if HA.id == 108 then stderrf(">> INDOOR (%s, %s)\n", R2:tostr(), N:tostr())
-stderrf("R2 = \n%s\n", table.tostr(R2, 3))
 end
          return false
       end
@@ -829,6 +828,11 @@ function Room_border_up()
       -- nothing absolutely needed if same room
       -- FIXME : too simplistic!
 
+      if A1.is_porch or A2.is_porch then
+        junc.kind = "pillar"
+        return
+      end
+
 -- STEP TEST
 local z1 = math.min(A1.floor_h, A2.floor_h)
 local z2 = math.max(A1.floor_h, A2.floor_h)
@@ -851,6 +855,11 @@ end
       junc.kind = "fence"
       junc.fence_mat = LEVEL.fence_mat
       junc.fence_top_z = math.max(A1.floor_h, A2.floor_h) + 32
+
+      if A1.is_porch or A2.is_porch then
+        junc.kind2 = "pillar"
+      end
+
       return
     end
 

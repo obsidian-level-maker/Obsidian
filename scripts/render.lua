@@ -827,13 +827,15 @@ function dummy_properties(A)
     A.facade_mat = "STONE3" --!!!!FIXME  A.zone.facade_mat
     end
 
-    if not A.is_outdoor then
+    if A.is_porch then
+      A.ceil_h = A.floor_h + 128
+    elseif not A.is_outdoor then
       A.ceil_h = A.floor_h + 80
     end
   end
 
 
-  if A.is_outdoor then
+  if A.is_outdoor and not A.is_porch then
     A.ceil_mat = "_SKY"
   end
 
