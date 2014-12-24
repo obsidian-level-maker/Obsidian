@@ -688,20 +688,29 @@ function Room_detect_porches(R)
   -- by outdoor areas, and is higher than those areas.
   --
 
-  
+  local best_A
+  local best_score
+
+
+  local function set_as_porch(A)
+    A.is_porch = true
+
+    A.sky_group = nil
+
+    -- Note : keeping 'is_outdoor' on the area
+  end
+
+
   local function detect_hallway_porch()
+    -- keep it simple, ignore merged hallways
     if #R.areas > 1 then return false end
 
     local HA = R.areas[1]
 
-if HA.id == 108 then stderrf("detect_hallway_porch...... @ %s\n", R:tostr()) end
-
     each edge in HA.edge_loops[1] do
       local N = edge.S:diag_neighbor(edge.dir)
 
-      if not (N and N.area) then
-stderrf("  WTF???\n")
-      return false end
+      if not (N and N.area) then return false end
 
       local A2 = N.area
 
@@ -714,46 +723,72 @@ stderrf("  WTF???\n")
       assert(R2 != R)
 
       if not R2 then
-if HA.id == 108 then stderrf(">> VOID\n") end
         -- no void, thanks
         return false
       end
 
-      -- require same zone
+      -- same zone?
       if R2.zone != R.zone then
-if HA.id == 108 then stderrf(">> ZONE\n") end
-        return false
+        -- ok
+        continue
       end
 
       -- TODO : if hallway is large, allow a few edges
       if not R2.is_outdoor then
-if HA.id == 108 then stderrf(">> INDOOR (%s, %s)\n", R2:tostr(), N:tostr())
-end
          return false
       end
 
       -- floor check
-      if HA.floor_h + 48 < A2.floor_h then
-if HA.id == 108 then stderrf(">> FLOOR\n") end
+      if HA.floor_h + 64 < A2.floor_h then
         return false
       end
     end
 
-    HA.is_porch = true
-
 stderrf("!!!!  %s is now a PORCH\n", R:tostr())
+
+    set_as_porch(HA)
     
     return true
   end
 
 
-  local function detect_outdoor_porch()
-    -- TODO
+  local function eval_porch(A, mode)
+    -- mode is either "indoor" or "outdoor"
+
+    -- size check : never too much of room
+    if A.svolume > R.svolume / 2 then return -1 end
+
+    -- shape check : we want high twistiness, low openness
+    if A.openness > 0.3 then return -1 end
+
+    -- FIXME.....
+    
+    local score = 100 + A.svolume - A.openness * 100
+
+    -- tie break
+    return score + gui.random()
   end
 
 
-  local function detect_indoor_porch()
-    -- TODO
+  local function detect_normal_porch(mode)
+    -- only one per room, so pick best
+    best_A = nil
+    best_score = 0
+
+    each A in R.areas do
+      local score = eval_porch(A, "indoor")
+
+      if score > best_score then
+        best_A = A
+        best_score = score
+      end
+    end
+
+    if best_A then
+      set_as_porch(best_A)
+
+stderrf("@@@@@  %s is now a PORCH\n", R:tostr())
+    end
   end
 
 
@@ -766,10 +801,10 @@ stderrf("!!!!  %s is now a PORCH\n", R:tostr())
     detect_hallway_porch()
 
   elseif R.is_outdoor then
-    detect_outdoor_porch()
+    detect_normal_porch("outdoor")
 
   else
-    detect_indoor_porch()
+    detect_normal_porch("indoor")
   end
 end
 

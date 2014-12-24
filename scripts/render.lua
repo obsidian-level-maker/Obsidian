@@ -782,7 +782,10 @@ function dummy_properties(A)
     A.floor_h = -7
   end
 
-  if not A.ceil_h then
+  if A.is_porch then
+    A.ceil_h = A.floor_h + 144
+
+  elseif not A.ceil_h then
     A.ceil_h = A.floor_h + 200
   end
 
