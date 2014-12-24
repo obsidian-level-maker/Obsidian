@@ -2641,7 +2641,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     if R.kind == "stairwell" then return false end
 
     -- gameplay_tweaks module
-    if LEVEL.quiet_start and R.purpose == "START" then
+    if PARAM.quiet_start and R.purpose == "START" then
       return false
     end
 
