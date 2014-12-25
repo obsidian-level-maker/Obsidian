@@ -87,7 +87,7 @@ DOOM.MATERIALS =
 
   -- special materials --
 
-  _ERROR = { t="METAL",    f="CEIL5_2" }
+  _ERROR = { t="CRACKLE2", f="RROCK01" }
   _SKY   = { t="CEMENT3",  f="F_SKY1" }
 
 
