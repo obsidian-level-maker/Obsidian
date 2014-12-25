@@ -132,13 +132,18 @@ function read_text_file(filename)
   return lines
 end
 
-function style_sel(name, v_none, v_few, v_some, v_heaps, v_all)
+function style_sel(name, v_none, v_few, v_some, v_heaps)
   local keyword = STYLE[name]
 
   if keyword == "none"   then return v_none  end
   if keyword == "few"    then return v_few   end
   if keyword == "heaps"  then return v_heaps end
-  if keyword == "always" then return v_all or v_heaps end
+
+  if keyword == "less"   then return (v_few   + v_some) / 2 end
+  if keyword == "more"   then return (v_heaps + v_some) / 2 end
+
+  -- compatibility ONLY
+  if keyword == "always"  then return v_heaps end
 
   return v_some
 end
@@ -638,6 +643,20 @@ function geom.dist(x1,y1, x2,y2)
   return math.sqrt((x1-x2) * (x1-x2) + (y1-y2) * (y1-y2))
 end
 
+function geom.unit_vector(dx, dy)
+  local len = math.sqrt(dx * dx + dy * dy)
+
+  if len > 0.000001 then
+    dx = dx / len
+    dy = dy / len
+  else
+    dx = 0
+    dy = 0
+  end
+
+  return dx, dy
+end
+
 function geom.perp_dist(x, y, sx,sy, ex,ey)
   x = x - sx ; ex = ex - sx
   y = y - sy ; ey = ey - sy
@@ -663,6 +682,27 @@ function geom.along_dist(x, y, sx,sy, ex,ey)
 
   return (x * ex + y * ey) / len;
 end
+
+function geom.intersect_lines(ax1,ay1, ax2,ay2,  bx1,by1,bx2,by2)
+  -- calling function must ensure lines are NOT parallel.
+  -- if one of the lines tend to be very short, pass them as 'B' parameter
+  -- and the longer one as 'A' parameter.
+
+  local k1 = geom.perp_dist(bx1, by1, ax1,ay1,ax2,ay2)
+  local k2 = geom.perp_dist(bx2, by2, ax1,ay1,ax2,ay2)
+
+  if math.abs(k1 - k2) < 0.01 then
+    error("intersect_lines: lines are parallel!")
+  end
+
+  local d = k1 / (k1 - k2)
+
+  local ix = bx1 + d * (bx2 - bx1)
+  local iy = by1 + d * (by2 - by1)
+
+  return ix, iy
+end
+
 
 function geom.delta(dir)
   if dir == 1 then return -1, -1 end
@@ -696,6 +736,10 @@ end
 
 function geom.is_corner(dir)
   return (dir == 1) or (dir == 3) or (dir == 7) or (dir == 9)
+end
+
+function geom.is_straight(dir)
+  return (dir == 2) or (dir == 4) or (dir == 6) or (dir == 8)
 end
 
 function geom.vert_sel(dir, V, H)
@@ -984,6 +1028,63 @@ function geom.categorize_links(dir2, dir4, dir6, dir8)
     return 'P', rand.dir()
 
   end
+end
+
+
+--===| Bezier curve functions |===--
+
+function geom.bezier_coord(S, C, E, t)
+  -- S = start point
+  -- C = control point
+  -- E = end point
+
+  -- t ranges from 0.0 to 1.0
+
+  local ks = (1 - t) * (1 - t)
+  local kc = 2 * (1 - t) * t
+  local ke = t * t
+
+  local x = S.x * ks + C.x * kc + E.x * ke
+  local y = S.y * ks + C.y * kc + E.y * ke
+
+  return x, y
+end
+
+function geom.bezier_tangent(S, C, E, t)
+  -- these are just the derivatives of the equations in bezier_coord()
+  local ks = -1 + t
+  local kc = 1 - 2 * t
+  local ke = t
+
+  local tan_x = S.x * ks + C.x * kc + E.x * ke
+  local tan_y = S.y * ks + C.y * kc + E.y * ke
+
+  return geom.unit_vector(tan_x, tan_y)
+end
+
+function geom.bezier_length(S, C, E, divisions)
+  -- this is APPROXIMATE!  (and always less than the real length).
+  -- the higher 'divisions' is, the more accurate the result, but the
+  -- longer it takes to compute.
+
+  if not divisions then
+    divisions = 64
+  end
+
+  local length = 0
+
+  local cx, cy = S.x, S.y
+  local nx, ny
+
+  for div = 1, divisions do
+    nx, ny = geom.bezier_coord(S, C, E, div / divisions)
+
+    length = length + geom.dist(cx, cy, nx, ny)
+
+    cx, cy = nx, ny
+  end
+  
+  return length
 end
 
 
