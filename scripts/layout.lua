@@ -1014,23 +1014,6 @@ function Layout_build_stairwell(A)
   local R = A.room
 
 
-  -- FIXME : move to utilities, error if parallel lines
-  local function intersect_lines(ax1,ay1, ax2,ay2,  bx1,by1,bx2,by2)
-    local k1 = geom.perp_dist(bx1, by1, ax1,ay1,ax2,ay2)
-    local k2 = geom.perp_dist(bx2, by2, ax1,ay1,ax2,ay2)
-
-    -- calling func must ensure BLAH... that (k1 - k2) can
-    -- never be zero (or extremely close to zero) here.
-
-    local d = k1 / (k1 - k2)
-
-    local ix = bx1 + d * (bx2 - bx1)
-    local iy = by1 + d * (by2 - by1)
-
-    return ix, iy
-  end
-
-
   local function edge_vector(S, dir)
     -- TODO : make SEED method, use in render.lua in add_edge_line()
 
@@ -1104,15 +1087,15 @@ end
     if geom.dist(lx1, ly1, lx2, ly2) < 1 then
       lx3, ly3 = lx1, ly1
     else
-      lx3, ly3 = intersect_lines(lx1, ly1, lx1 + nx1, ly1 + ny1,
-                                 lx2, ly2, lx2 + nx2, ly2 + ny2)
+      lx3, ly3 = geom.intersect_lines(lx1, ly1, lx1 + nx1, ly1 + ny1,
+                                      lx2, ly2, lx2 + nx2, ly2 + ny2)
     end
 
     if geom.dist(rx1, ry1, rx2, ry2) < 1 then
       rx3, ry3 = rx1, ry1
     else
-      rx3, ry3 = intersect_lines(rx1, ry1, rx1 + nx1, ry1 + ny1,
-                                 rx2, ry2, rx2 + nx2, ry2 + ny2)
+      rx3, ry3 = geom.intersect_lines(rx1, ry1, rx1 + nx1, ry1 + ny1,
+                                      rx2, ry2, rx2 + nx2, ry2 + ny2)
     end
   end
 
