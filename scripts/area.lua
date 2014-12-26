@@ -96,6 +96,32 @@
 --]]
 
 
+AREA_CLASS = {}
+
+
+function AREA_CLASS.new(mode)
+  local A =
+  {
+    id   = alloc_id("area")
+    mode = mode
+
+    half_seeds = {}
+    neighbors  = {}
+    inner_points = {}
+  }
+
+  table.set_class(A, AREA_CLASS)
+
+  table.insert(LEVEL.areas, A)
+
+  return A
+end
+
+
+function AREA_CLASS.tostr(A)
+  return string.format("AREA_%d", A.id)
+end
+
 
 function area_get_seed_bbox(A)
   local first_S = A.half_seeds[1]
@@ -427,20 +453,10 @@ function Weird_create_areas()
     local area = LEVEL.temp_area_map[num]
 
     if not area then
-      area =
-      {
-        mode = "normal"  -- may become "void" or "scenic" later
-
-        id = alloc_id("weird_area")
-
-        half_seeds = {}
-        neighbors  = {}
-        inner_points = {}
-      }
+      -- this mode can become "void" or "scenic" later
+      area = AREA_CLASS.new("normal")
 
       LEVEL.temp_area_map[num] = area
-
-      table.insert(LEVEL.areas, area)
     end
 
     return area
