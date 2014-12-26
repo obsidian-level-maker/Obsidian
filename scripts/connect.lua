@@ -153,11 +153,12 @@ end
 
 
 function Connect_seed_pair(S, T, dir)
+--- stderrf("Connect_seed_pair: %s dir:%d\n", S:tostr(), dir)
+
   if not T then
     T = S:diag_neighbor(dir)
   end
 
--- stderrf("Connect_seed_pair: %s dir:%d\n", S:tostr(), dir)
   assert(S.area and T.area)
 
   assert(S.room and S.room.kind != "scenic")
@@ -176,8 +177,8 @@ function Connect_seed_pair(S, T, dir)
   S.conn = CONN
   T.conn = CONN
 
-  table.insert(S.room.conns, CONN)
-  table.insert(T.room.conns, CONN)
+  table.insert(CONN.A1.conns, CONN)
+  table.insert(CONN.A2.conns, CONN)
 
   -- setup border info
 
@@ -412,8 +413,9 @@ function Connect_natural_flow()
 
   recursive_flow(LEVEL.start_area, 1, {})
 
-  table.sort(LEVEL.rooms,
-      function(A, B) return A.visit_id < B.visit_id end)
+  table.sort(LEVEL.rooms, function(R1, R2)
+      return R1.visit_id < R2.visit_id
+  end)
 end
 
 
@@ -859,12 +861,16 @@ function Weird_connect_stuff()
       local loc1 = rand.pick(where1)
       local loc2 = rand.pick(where2)
 
-      local mx1, my1 = loc1.S:mid_point()
-      local mx2, my2 = loc2.S:mid_point()
+      local mx1, my1 = loc1.S:edge_coord(loc1.dir)
+      local mx2, my2 = loc2.S:edge_coord(loc2.dir)
 
       local dist = geom.dist(mx1, my1, mx2, my2)
 
-      dist = dist + gui.random()
+      dist = dist + gui.random() * 96
+
+      if where1.S != where2.S then
+        dist = dist + 256
+      end
 
       if not best_dist or dist > best_dist then
         best_dist = dist
@@ -885,8 +891,12 @@ function Weird_connect_stuff()
 
 
   local function connect_hallway_pair(R, N1, N2)
-    assert(N1.c_group != R.c_group)
-    assert(N2.c_group != R.c_group)
+    local  r_group =  R.areas[1].conn_group
+    local n1_group = N1.areas[1].conn_group
+    local n2_group = N2.areas[1].conn_group
+
+    assert(n1_group != r_group)
+    assert(n2_group != r_group)
 
     local where1 = where_can_connect(R, N1)
     local where2 = where_can_connect(R, N2)
@@ -896,8 +906,8 @@ function Weird_connect_stuff()
 
     local loc1, loc2 = pick_hallway_conn_spots(R, where1, where2)
 
-    Connect_merge_groups(R.c_group, N1.c_group)
-    Connect_merge_groups(R.c_group, N2.c_group)
+    Connect_merge_groups(r_group, n1_group)
+    Connect_merge_groups(r_group, n2_group)
 
     Connect_seed_pair(loc1.S, loc1.N, loc1.dir)
     Connect_seed_pair(loc2.S, loc2.N, loc2.dir)
@@ -908,7 +918,7 @@ function Weird_connect_stuff()
 
   local function eval_hallway_pair(R, N1, N2)
     -- two rooms are already connected?
-    if N1.c_group == N2.c_group then
+    if N1.areas[1].conn_group == N2.areas[1].conn_group then
       return -1
     end
 
@@ -943,14 +953,14 @@ function Weird_connect_stuff()
     if not (N1 and N1.area and N1.area.room) then return false end
     if not (N2 and N2.area and N2.area.room) then return false end
 
-    N1 = N1.area.room
-    N2 = N2.area.room
+    N1 = N1.area
+    N2 = N2.area
 
-    assert(N1 != R)
-    assert(N2 != R)
+    assert(N1.room != R)
+    assert(N2.room != R)
 
     -- this also handles N1 == N2
-    if N1.c_group == N2.c_group then return false end
+    if N1.conn_group == N2.conn_group then return false end
 
     --- OK !! ---
 
@@ -958,8 +968,10 @@ function Weird_connect_stuff()
 
     A.is_stairwell = well
 
-    Connect_merge_groups(R.c_group, N1.c_group)
-    Connect_merge_groups(R.c_group, N2.c_group)
+    local hall_group = R.areas[1].conn_group
+
+    Connect_merge_groups(hall_group, N1.conn_group)
+    Connect_merge_groups(hall_group, N2.conn_group)
 
     E1.conn = Connect_seed_pair(E1.S, nil, E1.dir)
     E2.conn = Connect_seed_pair(E2.S, nil, E2.dir)
@@ -1001,7 +1013,7 @@ function Weird_connect_stuff()
 
         if not R2 or R2 == R then continue end
 
-        if R2.c_group != R.c_group then
+        if A.conn_group != N.conn_group then
           table.add_unique(neighbor_rooms, R2)
         end
       end
@@ -1043,24 +1055,27 @@ function Weird_connect_stuff()
     -- unconnected groups) -- these hallways need to be detected early
     -- and merged into a normal room (or turned into VOID).
 
+    local hall_list = {}
+
     -- visit from biggest to smallest
     -- (so less chance of needing to kill a large hallway)
-    local visit_list = table.copy(LEVEL.rooms)
 
-    -- randomize size (tie breaker)
-    each R in visit_list do
-      R.h_order = R.svolume + gui.random()
+    each R in LEVEL.rooms do
+      if R.is_hallway then
+        R.h_order = R.svolume + gui.random()  -- tie breaker
+        table.insert(hall_list, R)
+      end
     end
 
-    table.sort(visit_list, function(R1, R2)
+    table.sort(hall_list, function(R1, R2)
         return R1.h_order > R2.h_order
     end)
 
-    each R in visit_list do
-      if R.is_hallway then
-        if not try_make_a_stairwell(R) then
-          try_connect_hallway(R)
-        end
+    each R in hall_list do
+      if try_make_a_stairwell(R) then
+        -- OK
+      else
+        try_connect_hallway(R)
       end
     end
   end
@@ -1097,6 +1112,9 @@ function Weird_connect_stuff()
     -- connection is possible, evaluate it --
 
     local score = 1
+
+    local R1 = A1.room
+    local R2 = A2.room
 
     -- we done hallways already, no more please
     if R1.is_hallway and R2.is_hallway then
@@ -1157,6 +1175,17 @@ function Weird_connect_stuff()
     local A1 = assert(best_S.area)
     local A2 = assert(N.area)
 
+    -- cannot have three connections in a stairwell
+    -- FIXME : check stairwells at end
+    if A1.is_stairwell then
+      A1.is_stairwell = nil
+      A1.room.kind = "hallway"
+    end
+    if A2.is_stairwell then
+      A2.is_stairwell = nil
+      A2.room.kind = "hallway"
+    end
+
     Connect_merge_groups(A1.conn_group, A2.conn_group)
 
     Connect_seed_pair(best_S, N, best_dir)
@@ -1216,6 +1245,9 @@ function Weird_connect_stuff()
     each A in R.areas do
       each N in A.neighbors do
         if N.room != R then continue end
+
+        -- only try each pair ONCE
+        if N.id > A.id then continue end
 
         if A.conn_group != N.conn_group then
           local score = 1 + gui.random()
