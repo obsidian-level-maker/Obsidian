@@ -1184,7 +1184,27 @@ function Weird_connect_stuff()
 
 
   local function pick_internal_seed(R, A1, A2)
-    -- FIXME
+    local DIRS = table.copy(geom.ALL_DIRS)
+
+    if #A1.half_seeds > #A2.half_seeds then
+      A1, A2 = A2, A1
+    end
+
+    local seed_list = rand.shuffle(table.copy(A1.half_seeds))
+
+    each S in seed_list do
+      rand.shuffle(DIRS)
+
+      each dir in DIRS do
+        local N = S:diag_neighbor(dir)
+
+        if N and N.area == A2 then
+          return S, dir, N
+        end
+      end
+    end
+
+    error("pick_internal_seed failed.")
   end
 
 
@@ -1213,14 +1233,17 @@ function Weird_connect_stuff()
       error("Failed to internally connect " .. R:tostr())
     end
 
-    pick_internal_seed(R, A1, A2)
+
+    local S, dir = pick_internal_seed(R, best_A1, best_A2)
+
+    Connect_merge_groups(A1.conn_group, A2.conn_group)
+
+    Connect_seed_pair(S, nil, dir)
   end
 
 
   local function internal_connections(R)
-    --
     -- connect the areas inside each room (including hallways)
-    --
 
     while not check_internally_connected(R) do
       make_an_internal_connection()   
