@@ -29,12 +29,9 @@ class CONN
 
   id : number  -- debugging aid
 
-  -- The two rooms are the vital (compulsory) information,
+  -- The two areas are the vital (compulsory) information,
   -- especially for the quest system.  For teleporters the seed
   -- info will be absent (and area info done when pads are placed)
-
-  R1 : source ROOM
-  R2 : destination ROOM
 
   A1 : source AREA
   A2 : destination AREA
@@ -56,13 +53,13 @@ class CONN
 CONN_CLASS = {}
 
 
-function CONN_CLASS.new(kind, R1, R2, dir)
+function CONN_CLASS.new(kind, A1, A2, dir)
   local C =
   {
     kind = kind
     id   = alloc_id("conn")
-    R1   = R1
-    R2   = R2
+    A1   = A1
+    A2   = A2
     dir  = dir
   }
 
@@ -87,7 +84,6 @@ end
 
 
 function CONN_CLASS.swap(C)
-  C.R1, C.R2 = C.R2, C.R1
   C.A1, C.A2 = C.A2, C.A1
   C.S1, C.S2 = C.S2, C.S1
 
@@ -97,17 +93,17 @@ function CONN_CLASS.swap(C)
 end
 
 
-function CONN_CLASS.neighbor(C, R)
-  if R == C.R1 then
-    return C.R2
+function CONN_CLASS.neighbor(C, A)
+  if A == C.A1 then
+    return C.A2
   else
-    return C.R1
+    return C.A1
   end
 end
 
 
-function CONN_CLASS.get_seed(C, R)
-  if R == C.R1 then
+function CONN_CLASS.get_seed(C, A)
+  if A == C.A1 then
     return C.S1
   else
     return C.S2
@@ -115,10 +111,10 @@ function CONN_CLASS.get_seed(C, R)
 end
 
 
-function CONN_CLASS.get_dir(C, R)
+function CONN_CLASS.get_dir(C, A)
   if not C.dir then return nil end
 
-  if R == C.R1 then
+  if A == C.A1 then
     return C.dir
   else
     return 10 - C.dir
@@ -148,9 +144,9 @@ end
 function Connect_merge_groups(id1, id2)
   if id1 > id2 then id1,id2 = id2,id1 end
 
-  each R in LEVEL.rooms do
-    if R.c_group == id2 then
-      R.c_group = id1
+  each A in LEVEL.areas do
+    if A.conn_group == id2 then
+       A.conn_group = id1
     end
   end
 end
@@ -162,6 +158,7 @@ function Connect_seed_pair(S, T, dir)
   end
 
 -- stderrf("Connect_seed_pair: %s dir:%d\n", S:tostr(), dir)
+  assert(S.area and T.area)
 
   assert(S.room and S.room.kind != "scenic")
   assert(T.room and T.room.kind != "scenic")
@@ -169,14 +166,9 @@ function Connect_seed_pair(S, T, dir)
   assert(S.room.kind != "DEAD")
   assert(T.room.kind != "DEAD")
 
-  assert(S.room != T.room)
-
   -- create connection object
 
-  local CONN = CONN_CLASS.new("normal", S.room, T.room, dir)
-
-  CONN.A1 = assert(S.area)
-  CONN.A2 = assert(T.area)
+  local CONN = CONN_CLASS.new("normal", S.area, T.area, dir)
 
   CONN.S1 = S
   CONN.S2 = T
@@ -238,29 +230,33 @@ function Connect_teleporters()
 
 
   local function connect_is_possible(R1, R2, mode)
-    if R1.c_group == R2.c_group then return false end
+    -- FIXME : use areas !!!
+    if A1.conn_group == A2.conn_group then return false end
 
     return true
   end
 
 
   local function add_teleporter(R1, R2)
+    -- FIXME : use areas !!!
+    error("add_teleporter : is broken dude")
+
     gui.debugf("Teleporter connection: %s -- >%s\n", R1:tostr(), R2:tostr())
 
-    Connect_merge_groups(R1.c_group, R2.c_group)
+    Connect_merge_groups(A1.conn_group, A2.conn_group)
 
-    local C = CONN_CLASS.new("teleporter", R1, R2)
+    local C = CONN_CLASS.new("teleporter", A1, A2)
 
     -- area fields are set when pads are placed in room
 
-    table.insert(R1.conns, C)
-    table.insert(R2.conns, C)
+    table.insert(A1.conns, C)
+    table.insert(A2.conns, C)
 
     C.tele_tag1 = alloc_id("tag")
     C.tele_tag2 = alloc_id("tag")
 
-    R1.teleport_conn = C
-    R2.teleport_conn = C
+    A1.teleport_conn = C
+    A2.teleport_conn = C
   end
 
 
@@ -1067,11 +1063,13 @@ function Weird_connect_stuff()
 
 
   local function check_all_connected()
-    local first_R = LEVEL.rooms[1]
+    local first = LEVEL.rooms[1].areas[1]
 
     each R in LEVEL.rooms do
-      if R.c_group != first_R.c_group then
-        return false
+      each A in R.areas do
+        if A.conn_group != first.conn_group then
+          return false
+        end
       end
     end
 
@@ -1084,13 +1082,13 @@ function Weird_connect_stuff()
 
     if not (N and N.room) then return -1 end
 
-    local R1 = S.room
-    local R2 = N.room
+    local A1 = S.area
+    local A2 = N.area
 
-    assert(R1.c_group)
-    assert(R2.c_group)
+    assert(A1.conn_group)
+    assert(A2.conn_group)
 
-    if R1.c_group == R2.c_group then return -2 end
+    if A1.conn_group == A2.conn_group then return -2 end
 
     -- connection is possible, evaluate it --
 
@@ -1152,10 +1150,10 @@ function Weird_connect_stuff()
 
     local N = best_S:diag_neighbor(best_dir)
 
-    local R1 = assert(best_S.room)
-    local R2 = assert(N.room)
+    local A1 = assert(best_S.area)
+    local A2 = assert(N.area)
 
-    Connect_merge_groups(R1.c_group, R2.c_group)
+    Connect_merge_groups(A1.conn_group, A2.conn_group)
 
     Connect_seed_pair(best_S, N, best_dir)
   end
@@ -1168,15 +1166,25 @@ function Weird_connect_stuff()
   end
 
 
+  local function internal_connections()
+    --
+    -- connect the areas inside each room (including hallways)
+    --
+
+    -- FIXME !!!!!!!!
+  end
+
+
+
   ---| Weird_connect_stuff |---
 
-  LEVEL.area_matrix = {}
-
-  -- give each room a conn_group 
-  each R in LEVEL.rooms do
-    R.c_group = _index
-    R.teleports = {}
+  -- give each area of each room a conn_group 
+  each A in LEVEL.areas do
+    A.conn_group = A.id
+    A.teleports = {}
   end
+
+  internal_connections()
 
   handle_hallways()
 

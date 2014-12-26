@@ -1,4 +1,4 @@
-
+------------------------------------------------------------------------
 --  ROOM MANAGEMENT
 ------------------------------------------------------------------------
 --
@@ -38,8 +38,6 @@ class ROOM
   //////////////////////
 
 
-  conns : list(CONN)  -- connections with neighbor rooms
-  entry_conn : CONN
 
   branch_kind : keyword
 
@@ -60,11 +58,7 @@ class ROOM
   purpose : keyword   -- usually NIL, can be "EXIT" etc... (FIXME)
   purpose_lock : LOCK
 
-  teleport_conn : CONN  -- if exists, the teleporter connection to/from this room
-
   floor_h, ceil_h : number
-
-  c_group : number    -- connection group (used for Connect logic)
 }
 
 
@@ -86,7 +80,6 @@ function ROOM_CLASS.new()
     areas = {}
     half_seeds = {}
 
-    conns = {}
     sections = {}
     weapons = {}
     items = {}
@@ -133,7 +126,7 @@ end
 function ROOM_CLASS.kill_it(R)
   -- sanity check
   each C in LEVEL.conns do
-    if C.R1 == R or C.R2 == R then
+    if C.A1.room == R or C.A2.room == R then
       error("Killed a connected room!")
     end
   end
@@ -141,6 +134,7 @@ function ROOM_CLASS.kill_it(R)
   each A in R.areas do
     A.mode = "void"
     A.room = nil
+    A.conns = nil
 
     each S in A.half_seeds do
       S.room = nil
@@ -154,7 +148,6 @@ function ROOM_CLASS.kill_it(R)
 
   R.sx1   = nil
   R.areas = nil
-  R.conns = nil
 end
 
 
@@ -173,35 +166,40 @@ function ROOM_CLASS.get_bbox(R)
 end
 
 
-function ROOM_CLASS.has_lock(R, lock)
-  each C in R.conns do
-    if C.lock == lock then return true end
-  end
-  return false
-end
+---## function ROOM_CLASS.has_lock(R, lock)
+---##   each C in R.conns do
+---##     if C.lock == lock then return true end
+---##   end
+---##   return false
+---## end
 
 
 function ROOM_CLASS.has_any_lock(R)
-  each C in R.conns do
+  each A in R.areas do
+  each C in A.conns do
     if C.lock then return true end
   end
-  return false
-end
-
-
-function ROOM_CLASS.has_lock_kind(R, kind)
-  each C in R.conns do
-    if C.lock and C.lock.kind == kind then return true end
   end
   return false
 end
+
+
+---## function ROOM_CLASS.has_lock_kind(R, kind)
+---##   each C in R.conns do
+---##     if C.lock and C.lock.kind == kind then return true end
+---##   end
+---##   return false
+---## end
 
 
 function ROOM_CLASS.has_sky_neighbor(R)
-  each C in R.conns do
-    local N = C:neighbor(R)
-    if N.is_outdoor then return true end
+  each A in R.areas do
+  each C in A.conns do
+    local N = C:neighbor(A)
+    if N.is_outdoor and N.mode != "void" then return true end
   end
+  end
+
   return false
 end
 
@@ -213,46 +211,46 @@ function ROOM_CLASS.valid_T(R, x, y)
 end
 
 
-function ROOM_CLASS.get_exits(R)
-  local exits = {}
-
-  each C in R.conns do
-    if C.R1 == R and not (C.kind == "double_R" or C.kind == "closet") then
-      table.insert(exits, C)
-    end
-  end
-
-  return exits
-end
-
-
-function ROOM_CLASS.conn_area(R)
-  local lx, ly = 999,999
-  local hx, hy = 0,0
-
-  each C in R.conns do
-    if C.kind == "teleporter" then continue end
-    local S = C:get_seed(R)
-    lx = math.min(lx, S.sx)
-    ly = math.min(ly, S.sy)
-    hx = math.max(hx, S.sx)
-    hy = math.max(hy, S.sy)
-  end
-
-  assert(lx <= hx and ly <= hy)
-
-  return lx,ly, hx,hy
-end
+---??? function ROOM_CLASS.get_exits(R)
+---???   local exits = {}
+---??? 
+---???   each C in R.conns do
+---???     if C.R1 == R and not (C.kind == "double_R" or C.kind == "closet") then
+---???       table.insert(exits, C)
+---???     end
+---???   end
+---??? 
+---???   return exits
+---??? end
 
 
-function ROOM_CLASS.is_near_exit(R)
-  if R.purpose == "EXIT" then return true end
-  each C in R.conns do
-    local N = C:neighbor(R)
-    if N.purpose == "EXIT" then return true end
-  end
-  return false
-end
+---??? function ROOM_CLASS.conn_area(R)
+---???   local lx, ly = 999,999
+---???   local hx, hy = 0,0
+---??? 
+---???   each C in R.conns do
+---???     if C.kind == "teleporter" then continue end
+---???     local S = C:get_seed(R)
+---???     lx = math.min(lx, S.sx)
+---???     ly = math.min(ly, S.sy)
+---???     hx = math.max(hx, S.sx)
+---???     hy = math.max(hy, S.sy)
+---???   end
+---??? 
+---???   assert(lx <= hx and ly <= hy)
+---??? 
+---???   return lx,ly, hx,hy
+---??? end
+
+
+---??? function ROOM_CLASS.is_near_exit(R)
+---???   if R.purpose == "EXIT" then return true end
+---???   each C in R.conns do
+---???     local N = C:neighbor(R)
+---???     if N.purpose == "EXIT" then return true end
+---???   end
+---???   return false
+---??? end
 
 
 function ROOM_CLASS.furthest_dist_from_entry(R)

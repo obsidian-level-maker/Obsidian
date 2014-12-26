@@ -34,12 +34,12 @@ class LEVEL
 
   epi_along : float  -- how far along the episode, 0.0 -> 1.0
 
-  rooms   : list(ROOM) 
-  scenics : list(ROOM) 
-  halls   : list(HALLWAY)
-
+  areas   : list(AREA)
+  rooms   : list(ROOM)
   conns   : list(CONN)
+
   quests  : list(QUEST)
+  zones   : list(ZONE)
   locks   : list(LOCK)
 
   liquid : table  -- the main liquid in the level (can be nil)

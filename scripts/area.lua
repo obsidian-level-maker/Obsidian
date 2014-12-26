@@ -21,6 +21,8 @@
 
 -- class AREA
 --[[
+    --- kind of area ---
+
     id : number
 
     mode : keyword  -- "normal", "hallway", "water",
@@ -33,15 +35,33 @@
 
     is_boundary   -- true for areas outside the boundary line
 
+    room : ROOM
+
+
+    --- geometry of area ---
+
     half_seeds : list(SEED)
 
     svolume : number   -- number of seeds (0.5 for diagonals)
 
     neighbors : list(AREA)
 
-    room : ROOM
+    -- an edge loop is a sequence of half-seed sides, going counter-clockwise.
+    -- the first loop is always the outer boundary of the area.
+    edge_loops : list(list(EDGE))
+
+
+    --- connection stuff ---
+
+    conns : list(CONN)  -- connections with neighbor rooms
+
+    entry_conn : CONN
+
+    teleport_conn : CONN  -- if exists, the teleporter connection to/from this room
 
     
+    --- other stuff ---
+
     inner_points : list(SEED)  -- points are stored as seeds
                                -- (refer to bottom-left coordinate)
 
@@ -49,13 +69,11 @@
                         -- to the same sky_group (unless a solid wall is
                         -- enforced, e.g. between zones).
 
-    -- an edge loop is a sequence of half-seed sides, going counter-clockwise.
-    -- the first loop is always the outer boundary of the area.
-    edge_loops : list(list(EDGE))
-
     stairwells : list(STAIRWELL)  -- possible stairwell usages (for a hallway)
 
     is_stairwell : STAIRWELL
+
+    conn_group : number   -- connection group (used for Connect logic)
 --]]
 
 

@@ -2659,6 +2659,9 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
 
   local function guard_spot_for_conn(C)
+--!!!! FIXME
+do return nil end
+
     local S = C:get_seed(R)
 
     if not S then return nil end  -- teleporter
@@ -2675,7 +2678,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- in a pseudo-exit room, need to guard the door to real exit.
     -- we skip teleporters here, the code further down will handle it.
     if R.final_battle and R.purpose != "EXIT" then
-      each C in R.conns do
+      each A in R.areas do
+      each C in A.conns do
         if C.kind == "teleporter" then continue end
 
         local nb = C:neighbor(R)
@@ -2683,6 +2687,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
         if nb.purpose == "EXIT" then
           return guard_spot_for_conn(C)
         end
+      end -- A, C
       end
     end
 
