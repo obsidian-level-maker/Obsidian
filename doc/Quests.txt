@@ -1,0 +1,55 @@
+
+QUESTS
+======
+
+A "quest" is a group of connected rooms, having one or more "targets"
+(rooms the player needs to visit, typically containing an important goal
+like getting a key or exiting the level).  The exit from a quest is
+always a target.
+
+A quest also contains an entry room (only exception is that the start
+room of the level may not be decided until after all the quests have
+been made -- so during this phase, the first quest will be without any
+starting room).
+
+Any quest can potentially be divided into two quests, by locking one of
+the connections between two of its rooms and adding the solution(s) to
+some unused leaf room(s) in the first half.  The solution room(s) and
+exit of first half become targets of that half.
+
+One important requirement for dividing a quest is that the second
+half contains at least one of the original targets (especially a
+solution target).  We also require that the first half contains the
+entry room of the original quest (if any).
+
+This system can handle a door which requires multiple keys to open
+it, or a staircase which is only fully traversible when multiple
+switches have been pressed.  We simply add the extra keys as targets
+of the first half of the divided quest.  [ We also need to check
+that the first half has enough unused leaf rooms ]
+
+
+
+ZONES
+=====
+
+A "zone" is a group of quests.  Main point of zones is to subdivide the
+whole map into a few distinct regions (typically three or four, but
+possibly just one).
+
+Zones are usually separated by KEYED doors, and each zone is also meant
+to have a distinctive look, e.g. each one has a different facade for
+buildings, different room and hallway themes, even a different monster
+palette.
+
+
+
+CYCLES
+======
+
+A "cycle" is an alternative path between two rooms of the map.
+These alternative paths are created after all the quests / zones have
+been decided, because cycles can only be made between two rooms of the
+same quest.
+
+
