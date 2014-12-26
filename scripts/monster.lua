@@ -315,6 +315,11 @@ function Monsters_init()
     if not info.id then
       error(string.format("Monster '%s' lacks an id field", name))
     end
+
+    -- default probability
+    if not info.prob then
+      info.prob = 50
+    end
   end
 
   if not EPISODE.seen_guards then
@@ -446,7 +451,9 @@ function Monsters_global_palette()
   
   -- skip monsters that are too strong for this map
   each name,info in GAME.MONSTERS do
-    if info.prob  and info.prob > 0 and
+
+
+    if info.prob > 0 and
        info.level and info.level <= LEVEL.max_level and
        Monsters_check_theme(info)
     then
@@ -476,7 +483,7 @@ function Monsters_zone_palettes()
   local function prob_for_guard(mon)
     local info = GAME.MONSTERS[mon]
 
-    if (info.prob or 0) <= 0 then return 0 end
+    if info.prob <= 0 then return 0 end
 
     -- ignore theme-specific monsters (SS NAZI)
     if info.theme then return 0 end
@@ -1618,8 +1625,6 @@ function Monsters_in_room(R)
     local info = GAME.MONSTERS[mon]
     local prob = info.prob
 
-    prob = prob or 0
-
     if not LEVEL.global_pal[mon] then
       return 0
     end
@@ -1770,7 +1775,7 @@ function Monsters_in_room(R)
     local list = {}
 
     each mon,info in GAME.MONSTERS do
-      local prob = info.crazy_prob or info.prob or 0
+      local prob = info.crazy_prob or info.prob
 
       if not LEVEL.global_pal[mon] then prob = 0 end
 
