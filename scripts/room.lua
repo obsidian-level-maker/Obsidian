@@ -195,6 +195,7 @@ end
 function ROOM_CLASS.has_sky_neighbor(R)
   each A in R.areas do
   each C in A.conns do
+    if C.A1.room == C.A2.room then continue end
     local N = C:neighbor(A)
     if N.is_outdoor and N.mode != "void" then return true end
   end
@@ -211,17 +212,21 @@ function ROOM_CLASS.valid_T(R, x, y)
 end
 
 
----??? function ROOM_CLASS.get_exits(R)
----???   local exits = {}
----??? 
----???   each C in R.conns do
----???     if C.R1 == R and not (C.kind == "double_R" or C.kind == "closet") then
----???       table.insert(exits, C)
----???     end
----???   end
----??? 
----???   return exits
----??? end
+function ROOM_CLASS.get_exits(R)
+  local exits = {}
+
+  each A in R.areas do
+  each C in A.conns do
+    if C.A1 == A and C.A2.room != R and
+       not (C.kind == "double_R" or C.kind == "closet")
+    then
+      table.insert(exits, C)
+    end
+  end
+  end
+
+  return exits
+end
 
 
 ---??? function ROOM_CLASS.conn_area(R)
@@ -2038,16 +2043,18 @@ function Room_floor_heights()
     end
 
     -- recurse to neighbors
-    each C in R.conns do
-      if C.R1 == R then
+    each A in R.areas do
+    each C in A.conns do
+      if C.A1.room == R and C.A2.room != R then
         assert(C.A1)
         assert(C.A1.room == R)
         assert(C.A1.floor_h)
 
         local next_f = R.exit_h or C.A1.floor_h
 
-        visit_room(C.R2, next_f, C.A2)
+        visit_room(C.A2.room, next_f, C.A2)
       end
+    end
     end
   end
 

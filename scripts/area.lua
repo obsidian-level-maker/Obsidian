@@ -105,6 +105,7 @@ function AREA_CLASS.new(mode)
     id   = alloc_id("area")
     mode = mode
 
+    conns = {}
     half_seeds = {}
     neighbors  = {}
     inner_points = {}

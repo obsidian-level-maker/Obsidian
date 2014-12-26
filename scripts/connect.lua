@@ -411,7 +411,7 @@ function Connect_natural_flow()
 
   ---| Connect_natural_flow |---
 
-  recursive_flow(LEVEL.start_area, 1, {})
+  recursive_flow(LEVEL.start_area, {})
 
   table.sort(LEVEL.rooms, function(R1, R2)
       return R1.visit_id < R2.visit_id
@@ -1132,9 +1132,9 @@ function Weird_connect_stuff()
 
     -- TODO : more stuff, e.g. dist from existing conns
 
-    -- prefer not making big hubs
-    local conn_max = math.max(#R1.conns, #R2.conns, 8)
-    score = score + (8 - conn_max) * 5
+--FIXME    -- prefer not making big hubs
+--FIXME    local conn_max = math.max(#R1.conns, #R2.conns, 8)
+--FIXME    score = score + (8 - conn_max) * 5
 
     -- tie breaker
     return score + 12 * gui.random()
@@ -1265,8 +1265,12 @@ function Weird_connect_stuff()
       error("Failed to internally connect " .. R:tostr())
     end
 
+    -- OK --
 
-    local S, dir = pick_internal_seed(R, best_A1, best_A2)
+    local A1 = best_A1
+    local A2 = best_A2
+
+    local S, dir = pick_internal_seed(R, A1, A2)
 
     Connect_merge_groups(A1.conn_group, A2.conn_group)
 
@@ -1278,7 +1282,7 @@ function Weird_connect_stuff()
     -- connect the areas inside each room (including hallways)
 
     while not check_internally_connected(R) do
-      make_an_internal_connection()   
+      make_an_internal_connection(R)
     end
   end
 

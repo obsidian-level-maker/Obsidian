@@ -121,6 +121,12 @@ function Quest_compute_tvols(same_zone)
     -- given room R, including itself, but excluding connections
     -- that have been "locked" or already seen.
 
+-- FIXME !!!!
+do
+return { rooms=rand.pick({1,2,3}), volume=rand.irange(1, 50) }
+end
+
+
     local rooms    = 1
     local volume   = assert(R.svolume)
 
@@ -158,7 +164,7 @@ function Quest_get_zone_exits(R)
   local exits = {}
 
   each C in R:get_exits() do
-    if C.R2.zone == R.zone then
+    if C.A2.room.zone == R.zone then
       table.insert(exits, C)
     end
   end
@@ -209,7 +215,7 @@ function Quest_dump_zone_flow(Z)
         indents[#indents] = false
       end
 
-      flow(C.R2, indents, C)
+      flow(C.A2.room, indents, C)
     end
   end
 
@@ -225,7 +231,7 @@ end
 
 
 
-function Quest_find_path_to_room(src, dest)
+function OLD__Quest_find_path_to_room(src, dest)
   local seen_rooms = {}
 
   local function recurse(R)
@@ -797,13 +803,15 @@ function Quest_nice_items()
 
     score = score - 16 * (#R.weapons + #R.items)
 
-    score = score - 1.4 * #R.conns
+--!!!??    score = score - 1.4 * #R.conns
 
+--[[ FIXME
     each C in R.conns do
       if C.kind == "teleporter" then
         score = score - 10 ; break
       end
     end
+--]]
 
     -- tie breaker
     return score + rand.skew() * 5.0
@@ -1084,7 +1092,10 @@ function Quest_create_zones()
       if C.lock then continue end
       if C.kind == "teleporter" then continue end
 
-      if C.R1.is_hallway then continue end
+      if C.A1.room.is_hallway then continue end
+
+      -- for zones, must be room-to-room [ TODO : non-zone quests ]
+      if C.A1.room == C.A2.room then continue end
 
       -- start room, key room, branch-off room
       if C.trav_1.rooms < 3 then continue end 
@@ -1106,16 +1117,16 @@ function Quest_create_zones()
   end
 
 
-  local function assign_new_zone(R, Z1, Z2, seen_conns)
-    assert(R.zone == Z1)
+  local function assign_new_zone(A, Z1, Z2, seen_conns)
+---???    assert(R.zone == Z1)
 
-    R.zone = Z2
+    A.room.zone = Z2
 
-    each C in R.conns do
+    each C in A.conns do
       if not C.lock and not seen_conns[C] then
         seen_conns[C] = true
 
-        assign_new_zone(C:neighbor(R), Z1, Z2, seen_conns)
+        assign_new_zone(C:neighbor(A), Z1, Z2, seen_conns)
       end
     end
   end
@@ -1133,19 +1144,19 @@ function Quest_create_zones()
     C.lock = LOCK
     LOCK.conn = C
 
-    local Z = assert(C.R1.zone)
+    local Z = assert(C.A1.room.zone)
 
-    gui.debugf("splitting ZONE_%d at %s\n", Z.id, C.R1:tostr())
+    gui.debugf("splitting ZONE_%d at %s\n", Z.id, C.A1.room:tostr())
 
 
     local Z2 = new_zone()
 
-    Z2.start = C.R2
+    Z2.start_area = C.A2
 
     -- insert new zone, it must be AFTER current zone
     table.add_after(LEVEL.zones, Z, Z2)
 
-    assign_new_zone(Z2.start, Z, Z2, {})
+    assign_new_zone(Z2.start_area, Z, Z2, {})
 
     -- new zone gets the previous lock to solve.
     -- current zone must solve _this_ lock.
@@ -1206,7 +1217,7 @@ function Quest_create_zones()
 
       if not R.entry_conn then return end
 
-      local prev_R = R.entry_conn.R1
+      local prev_R = R.entry_conn.A1.room
 
       if prev_R.zone != R.zone then return end
 
@@ -1222,11 +1233,13 @@ function Quest_create_zones()
 
     Z.start.must_visit = true
 
+--[[ FIXME ?
     each C in LEVEL.conns do
       if C.R1.zone == Z and C.R2.zone != Z then
         mark_room_and_ancestors(C.R1)
       end
     end
+--]]
   end
 
 
@@ -1242,12 +1255,12 @@ function Quest_create_zones()
 
     assert(Z.solution.conn)
 
-    local R = Z.solution.conn.R1
+    local R = Z.solution.conn.A1.room
 
     if R.zone != Z then return end
 
     each C in R:get_exits() do
-      if C.R2.zone == Z then return nil end
+      if C.A2.room.zone == Z then return nil end
     end
 
     R.is_exit_leaf = true
@@ -1257,6 +1270,9 @@ function Quest_create_zones()
 
 
   local function has_teleporter_exit(R)
+
+do return false end --!!!!
+
     each C in R.conns do
       if C.R1 == R and C.kind == "teleporter" then
         return true
@@ -1302,6 +1318,8 @@ function Quest_create_zones()
     -- which it locks.  We do that by finding a branch which leads
     -- to a zone exit leaf, and marking it as best candidate for a
     -- free exit.
+
+do return end  --- UGH
 
     local LE = find_zone_exit_leaf(Z)
 
@@ -1403,11 +1421,11 @@ function Quest_divide_zones()
       tag = alloc_id("tag")
     }
 
-    if THEME.bars and C.R1.is_outdoor and C.R2.is_outdoor then
+    if THEME.bars and C.A1.room.is_outdoor and C.A2.room.is_outdoor then
       LOCK.switch = rand.key_by_probs(THEME.bars)
     end
 
-    gui.debugf("locking conn to %s (SWITCH)\n", C.R2:tostr())
+    gui.debugf("locking conn to %s (SWITCH)\n", C.A2.room:tostr())
 
     C.lock = LOCK
     LOCK.conn = C
@@ -1599,7 +1617,7 @@ do return false end --!!!!!!
   end
 
 
-  local function boring_flow(R, quest, need_solution)
+  local function boring_flow(A, quest, need_solution)
     -- no locks will be added in this sub-tree of the zone
 
     R.quest = quest
@@ -1626,10 +1644,10 @@ do return false end --!!!!!!
     rand.shuffle(exits)
 
     each C in exits do
-      if should_make_secret(C) then
+      if should_make_secret(C) and false then --- UGH!!
         secret_flow(C.R2)
       else
-        boring_flow(C.R2, quest, false)
+        boring_flow(C.A2, quest, false)
         normal_exits = normal_exits + 1
       end
     end
@@ -1735,14 +1753,14 @@ do return false end --!!!!!!
 ---???    if THEME.switches and STYLE.switches != "none" then
 ---???      quest_flow(Q.start, Q)
 ---???    else
-      boring_flow(Q.start, Q, "need_solution")
+      boring_flow(Q.start_area, Q, "need_solution")
 ---???    end
 
-    -- make room after a keyed door often be a breather
-    if Z.id >= 2 and not Z.start.purpose and rand.odds(70) then
-      Z.start.cool_down = true
-      gui.debugf("Cooling down @ %s\n", Z.start:tostr())
-    end
+--!!!!    -- make room after a keyed door often be a breather
+--!!!!    if Z.id >= 2 and not Z.start.purpose and rand.odds(70) then
+--!!!!      Z.start.cool_down = true
+--!!!!      gui.debugf("Cooling down @ %s\n", Z.start:tostr())
+--!!!!    end
   end
 end
 
