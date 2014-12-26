@@ -1067,11 +1067,11 @@ function Weird_connect_stuff()
 
 
   local function check_all_connected()
-    local first = LEVEL.rooms[1].areas[1]
+    local first = LEVEL.rooms[1].areas[1].conn_group
 
     each R in LEVEL.rooms do
       each A in R.areas do
-        if A.conn_group != first.conn_group then
+        if A.conn_group != first then
           return false
         end
       end
@@ -1170,14 +1170,62 @@ function Weird_connect_stuff()
   end
 
 
-  local function internal_connections()
+  local function check_internally_connected(R)
+    local first = R.areas[1].conn_group
+
+    each A in R.areas do
+      if A.conn_group != first then
+        return false
+      end
+    end
+
+    return true
+  end
+
+
+  local function pick_internal_seed(R, A1, A2)
+    -- FIXME
+  end
+
+
+  local function make_an_internal_connection(R)
+    local best_A1
+    local best_A2
+    local best_score = 0
+
+    each A in R.areas do
+      each N in A.neighbors do
+        if N.room != R then continue end
+
+        if A.conn_group != N.conn_group then
+          local score = 1 + gui.random()
+
+          if score > best_score then
+            best_A1 = A
+            best_A2 = N
+            best_score = score
+          end
+        end
+      end
+    end
+
+    if not best_A1 then
+      error("Failed to internally connect " .. R:tostr())
+    end
+
+    pick_internal_seed(R, A1, A2)
+  end
+
+
+  local function internal_connections(R)
     --
     -- connect the areas inside each room (including hallways)
     --
 
-    -- FIXME !!!!!!!!
+    while not check_internally_connected(R) do
+      make_an_internal_connection()   
+    end
   end
-
 
 
   ---| Weird_connect_stuff |---
@@ -1188,7 +1236,9 @@ function Weird_connect_stuff()
     A.teleports = {}
   end
 
-  internal_connections()
+  each R in LEVEL.rooms do
+    internal_connections(R)
+  end
 
   handle_hallways()
 
