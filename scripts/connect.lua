@@ -363,6 +363,7 @@ function Connect_start_room()
   gui.printf("Start room: %s\n", room:tostr())
 
   LEVEL.start_room = room
+  LEVEL.start_area = room.areas[1]  -- FIXME
 
   room.purpose = "START"
 
@@ -376,29 +377,32 @@ function Connect_natural_flow()
   -- flow of the level, i.e. player always walks from src --> dest
   -- (except when backtracking).
   --
+  -- The LEVEL.rooms list is also updated to be in visit order.
+  --
 
-  local function recursive_flow(R, visited)
-    assert(R.kind != "scenic")
+  local function recursive_flow(A, seen)
+--- stderrf("natural_flow @ AREA_%s\n", A.id)
 
-  --- stderrf("natural_flow @ %s\n", R:tostr())
+    assert(A.room)
 
-    visited[R] = true
+    if not A.room.visit_id then
+      A.room.visit_id = alloc_id("visit_id")
+    end
 
-    if R.kind == "closet" then return end
+    seen[A] = true
 
-    -- add back into the level list
-    table.insert(LEVEL.rooms, R)
+---???    if A.mode == "closet" then return end
 
-    each C in R.conns do
-      if R == C.R2 and not visited[C.R1] then
+    each C in A.conns do
+      if A == C.A2 and not seen[C.A1] then
         C:swap()
       end
 
-      if R == C.R1 and not visited[C.R2] then
-        C.R2.entry_conn = C
+      if A == C.A1 and not seen[C.A2] then
+        C.A2.entry_conn = C
 
         -- recursively handle adjacent room
-        recursive_flow(C.R2, visited)
+        recursive_flow(C.A2, seen)
       end
     end
   end
@@ -406,11 +410,11 @@ function Connect_natural_flow()
 
   ---| Connect_natural_flow |---
 
-  LEVEL.rooms = {}
+  recursive_flow(LEVEL.start_area, 1, {})
 
-  recursive_flow(LEVEL.start_room, {})
+  table.sort(LEVEL.rooms,
+      function(A, B) return A.visit_id < B.visit_id end)
 end
-
 
 
 ----------------------------------------------------------------
