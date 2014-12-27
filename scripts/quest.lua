@@ -354,19 +354,24 @@ function Quest_try_divide(Q2, goals)
     local before = collect_areas(C.A1, "before", {})
     local  after = collect_areas(C.A2, "after",  {})
 
+    -- entry of original quest MUST be in first half
+    if Q2.entry then
+      if not before[Q2.entry.id] then return -1 end
+    end
+
     local targ_val = check_targets(after)
 
-    if targ_val < 1 then return -1 end
+    if targ_val < 2 then return -2 end
 
     -- FIXME : in "MINOR" mode check areas not rooms
 
     local leafs = unused_rooms_in_set(before)
 
-    if #leafs < #goals then return -1 end
+    if #leafs < #goals then return -3 end
 
     -- FIXME more tests
 
-    local score = targ_val * 100
+    local score = 100
 
     -- tie breaker
     return score + gui.random()
