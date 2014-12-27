@@ -64,7 +64,7 @@ DOOM.WEAPONS =
   berserk =
   {
     id = 2023
-    level = 3
+    level = 2
     pref = 10
     add_prob = 5
     mp_prob = 2
