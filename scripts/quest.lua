@@ -28,7 +28,7 @@
 
 ???    kind : keyword  -- "major", "minor"  [ "secret" ?? ]
 
-    areas : list(AREA)
+    areas[id] : AREA
 
     entry : CONN
 
@@ -216,7 +216,7 @@ function Quest_create_initial_quest()
 
   each A in LEVEL.areas do
     if A.room then
-      table.insert(Q.areas, A)
+      Q.areas[A.id] = A
     end
   end
 
@@ -251,7 +251,118 @@ function Quest_try_divide(Q2, targets)
   -- quest (Q1) is modified appropriately.  Otherwise returns NIL.
   --
 
-  -- FIXME
+  local function same_quest(C)
+    return Q2.areas[C.A1.id] and Q2.areas[C.A2.id]
+  end
+
+
+  local function collect_areas(A, mode, areas)
+    -- mode is either "before" or "after"
+
+    areas[A.id] = A
+
+    each C in A.conns do
+      local next_A = sel(mode == "before", C.A1, C.A2)
+
+      if next_A != A and same_quest(C) then
+        collect_areas(next_A, mode, areas)
+      end
+    end
+
+    return areas
+  end
+
+
+  local function area_exits_in_set(A, areas)
+    local count = 0
+
+    each C in A.conns do
+      local N = C:neighbor(A)
+
+      if areas[N.id] then count = count + 1
+    end
+
+    assert(count > 0)
+
+    return count
+  end
+
+
+  local function room_exits_in_set(R, areas)
+    local count = 0
+
+    each A in R.areas do
+    each C in A.conns do
+      if C.A1.room == C.A2.room then continue end
+
+      local N = C:neighbor(A)
+
+      if areas[N.id] then count = count + 1
+    end
+    end
+
+    -- FIXME: in MINOR mode we might only be doing a single room
+    assert(count > 0)
+
+    return count
+  end
+
+
+  local function unused_leafs_in_set(areas)
+    
+
+    each id, A in areas do
+      
+    end
+  end
+
+
+  local function eval_split_possibility(C)
+    -- 'C' is the conn we would lock
+  
+    local before = collect_areas(C.A1, "before", {})
+    local  after = collect_areas(C.A2, "after",  {})
+
+    return -1
+  end
+
+
+  local function find_best_split()
+    local best_conn
+    local best_score = 0
+
+    each C in LEVEL.conns do
+      -- TODO : only skip non-room connections if doing major quest
+      if C.A1.room == C.A2.room then continue end
+
+      if same_quest(C) then
+        local score = eval_split_possibility(C)
+
+        if score > best_score then
+          best_conn  = C
+          best_score = score
+        end
+      end
+    end
+
+    return best_conn
+  end
+
+
+  local function perform_split(C)
+    -- FIXME
+  end
+
+
+  ---| Quest_try_divide |---
+
+  local conn = find_best_split()
+
+  if not conn then
+    return nil
+  end
+
+  return perform_split(conn)
 end
 
 
