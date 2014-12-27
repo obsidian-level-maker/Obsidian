@@ -18,76 +18,69 @@
 --
 ------------------------------------------------------------------------
 
---[[ *** CLASS INFORMATION ***
+--|
+--| See doc/Quests.txt for an overview of the quest system
+--|
 
-class ZONE
-{
-  -- A zone is a group of quests forming a large part of the level.
-  -- The whole level might be a single zone.  Zones are generally
-  -- connected via KEYED doors, whereas all the puzzles inside a
-  -- zone are SWITCHED doors.
-  --
-  -- Zones are also meant to have a distinctive look, e.g. each one
-  -- has a difference facade for buildings, different room and hallway
-  -- themes (etc), even a different monster palette.
-  --
+--class QUEST
+--[[
+    id, name   -- debugging aids
 
-  id : number  -- debugging aid
+    kind : keyword  -- "major", "minor"  [ "secret" ?? ]
 
-  rooms : list(ROOM)
+    areas : list(AREA)
 
-  start : ROOM  -- first room in the zone
+    entry : CONN
 
-  solution  : LOCK  -- the key (etc) which this zone must solve
+    targets : list(TARGET)
 
-  quests : list(QUEST)
+    unused_leafs : list(AREA)
 
-  themes[kind] : ZONE_THEME
-}
+    zone : ZONE
+
+???    storage_leafs : list(ROOM)
+???     secret_leafs : list(ROOM)
+
+--]]
 
 
-class QUEST
-{
-  -- A quest is a group of rooms with a particular purpose at the
-  -- end (the last room of the quest) -- often a switch to gain
-  -- access to a new quest, or a key to gain access to a new zone.
-  --
-  -- The final quest (in the final zone) always leads to a room
-  -- with an exit switch -- the end of the current map.
-  --
-  -- Quests and Zones are similar ideas, the main difference is
-  -- their scope (zones are large and contain one or more quests).
+--class ZONE
+--[[
+    -- A zone is group of quests.
+    -- Each zone is meant to be distinctive (visually and game-play).
 
-  id : number  -- debugging aid
+    id, name   -- debugging aids
 
-  kind : keyword  -- "normal", "secret"
-
-  zone : ZONE
-
-  rooms : list(ROOM)
-
-  start : ROOM
-
-  target : ROOM  -- room containing the solution
-
-  storage_leafs : list(ROOM)
-   secret_leafs : list(ROOM)
-}
+    quests : list(QUEST)   -- entry into zone is in quests[1]
 
 
-class LOCK
-{
-  kind : keyword  -- "KEY" or "SWITCH" or "EXIT"
+    -- FIXME : more stuff  e.g. building_mat, cave_mat, monster palette !!!
+--]]
 
-  switch : string  -- the type of key or switch
-  key    : string  --
 
-  conn : CONN     -- connection between two rooms (and two quests)
-                  -- which is locked (keyed door, lowering bars, etc)
-                  -- Not used for EXITs.
+--class TARGET
+--[[
+    kind : keyword  -- "door" or "solution"
 
-  tag : number    -- tag number to use for a switched door
-}
+    area : AREA
+
+    lock : LOCK
+--]]
+
+
+--class LOCK
+--[[
+    kind : keyword  -- "KEY" or "SWITCH" or "EXIT"
+
+    switch : string  -- the type of key or switch
+    key    : string  --
+
+    conn : CONN     -- connection between two rooms (and two quests)
+                    -- which is locked (keyed door, lowering bars, etc)
+                    -- Not used for EXITs.
+
+    tag : number    -- tag number to use for a switched door
+--]]
 
 
 --------------------------------------------------------------]]
@@ -98,20 +91,33 @@ function Quest_new(start)
 
   local QUEST =
   {
-    kind  = "normal"
     id = id
-    start = start
-    zone  = start.zone
-    rooms = {}
-    storage_leafs = {}
-    secret_leafs = {}
+    name  = "QUEST_" .. id
+    areas = {}
+    targets = {}
   }
 
   table.insert(LEVEL.quests, QUEST)
-  table.insert(QUEST.zone.quests, QUEST)
 
   return QUEST
 end
+
+
+function Zone_new()
+  local id = 1 + #LEVEL.zones
+
+  local ZONE =
+  {
+    id = id
+    name = "ZONE_" .. id
+    quests = {}
+  }
+
+  table.insert(LEVEL.zones, ZONE)
+
+  return ZONE
+end
+
 
 
 function Quest_compute_tvols(same_zone)
@@ -159,7 +165,7 @@ end
 end
 
 
-function Quest_get_zone_exits(R)
+function OLD__Quest_get_zone_exits(R)
   -- filter out exits which leave the zone
   local exits = {}
 
@@ -173,7 +179,7 @@ function Quest_get_zone_exits(R)
 end
 
 
-function Quest_dump_zone_flow(Z)
+function OLD__Quest_dump_zone_flow(Z)
 
   function flow(R, indents, conn)
     assert(R)
@@ -1044,19 +1050,6 @@ end
 
 function Quest_create_zones()
 
-  local function new_zone()
-    local Z =
-    {
-      id = alloc_id("zone")
-      rooms = {}
-      quests = {}
-      themes = {}
-    }
-
-    return Z
-  end
-
-
   local function new_lock(kind)
     local LOCK =
     {
@@ -1817,39 +1810,6 @@ end
 
 
 
-function Quest_zones_for_scenics()
-  local total = #LEVEL.scenic_rooms
-  local scenic_list = table.copy(LEVEL.scenic_rooms)
-
-  local function grow_pass()
-    rand.shuffle(scenic_list)
-
-    each R in scenic_list do
-      if R.zone then continue end
-
-      each N in R.neighbors do
-        if N.zone then
-          R.zone = N.zone
-          total = total - 1
-          break;
-        end
-      end
-    end
-  end
-
-  for loop = 1,100 do
-    if total == 0 then
-      return
-    end
-
-    grow_pass()
-  end
-
-  error("Failed to assign zones to scenic rooms")
-end
-
-
-
 function Quest_choose_themes()
   --
   --  FIXME: describe this...
@@ -2046,16 +2006,17 @@ function Quest_make_quests()
   LEVEL.quests = {}
   LEVEL.locks  = {}
 
-  Quest_create_zones()
-  Quest_divide_zones()
-  Quest_final_battle()
+  Quest_create_initial_quest()
+  Quest_add_exits()
+
+  Quest_add_major_quests()
+  Quest_add_minor_quests()
+
+---???  Quest_final_battle()
 
 ---!!!  Connect_reserved_rooms()
 
   Quest_order_by_visit()
-
----PROBABLY NOT NEEDED:
---- Quest_zones_for_scenics()
 
   Area_spread_zones()
 
@@ -2069,6 +2030,6 @@ function Quest_make_quests()
     Quest_add_weapons()
   end
 
-  Quest_nice_items()
+--!!!!  Quest_nice_items()
 end
 
