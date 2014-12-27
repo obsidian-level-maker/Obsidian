@@ -64,7 +64,7 @@ DOOM.WEAPONS =
   berserk =
   {
     id = 2023
-    level = 5
+    level = 3
     pref = 10
     add_prob = 5
     mp_prob = 2
@@ -84,22 +84,6 @@ DOOM.WEAPONS =
     per = 1
   }
 
-  chain =
-  {
-    id = 2002
-    level = 1
-    pref = 60
-    add_prob = 35
-    start_prob = 15
-    attack = "hitscan"
-    rate = 8.5
-    damage = 10
-    ammo = "bullet"
-    per = 1
-    give = { {ammo="bullet",count=20} }
-    bonus_ammo = 50
-  }
-
   shotty =
   {
     id = 2001
@@ -117,10 +101,26 @@ DOOM.WEAPONS =
     bonus_ammo = 8
   }
 
+  chain =
+  {
+    id = 2002
+    level = 2
+    pref = 60
+    add_prob = 35
+    start_prob = 15
+    attack = "hitscan"
+    rate = 8.5
+    damage = 10
+    ammo = "bullet"
+    per = 1
+    give = { {ammo="bullet",count=20} }
+    bonus_ammo = 50
+  }
+
   launch =
   {
     id = 2003
-    level = 3
+    level = 4
     pref = 30
     add_prob = 25
     attack = "missile"
@@ -156,9 +156,9 @@ DOOM.WEAPONS =
     add_prob = 20
     mp_prob = 6
     attack = "missile"
-    rate = 0.65  -- tweaked value, normally 0.8
-    damage = 300
-    splash = {70,70,70,70, 70,70,70,70, 70,70,70,70}
+    rate = 0.8
+    damage = 200  -- tweaked value
+    splash = {100,100,100,100, 100,100,100,100 }
     ammo = "cell"
     per = 40
     give = { {ammo="cell",count=40} }
@@ -172,7 +172,7 @@ DOOM2.WEAPONS =
   super =
   {
     id = 82
-    level = 4
+    level = 3
     pref = 50
     add_prob = 20
     start_prob = 40
