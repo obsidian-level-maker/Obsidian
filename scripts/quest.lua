@@ -26,7 +26,7 @@
 --[[
     id, name   -- debugging aids
 
-    kind : keyword  -- "major", "minor"  [ "secret" ?? ]
+???    kind : keyword  -- "major", "minor"  [ "secret" ?? ]
 
     areas : list(AREA)
 
@@ -60,7 +60,7 @@
 
 --class TARGET
 --[[
-    kind : keyword  -- "door" or "solution"
+    kind : keyword  -- "door" or "goal"
 
     area : AREA
 
@@ -163,6 +163,109 @@ end
     C.trav_2 = travel_volume(C.R2, { [C]=true })
   end
 end
+
+
+
+function Quest_create_initial_quest()
+  --
+  -- Turns the whole map into a single Quest object, and pick an exit room
+  -- as the target of the quest.
+  --
+  -- This quest can be divided later on into major and minor quests.
+  --
+
+  local function eval_exit_room(R)
+    if R.is_hallway then return -1 end
+    if R.purpose    then return -1 end
+
+    return R.svolume + gui.random() * 5
+  end
+
+
+  local function pick_exit_room()
+    --
+    -- We want a large room for the exit, so can have a big battle with
+    -- one or more boss-like monsters.
+    --
+    local best
+    local best_score = 0
+
+    each R in LEVEL.rooms do
+      local score = eval_exit_room(R)
+
+      if score > best_score then
+        best = R
+        best_score = score
+      end
+    end
+
+    if not best then
+      error("Unable to pick exit room!")
+    end
+
+    best.purpose = "EXIT"
+
+    return best
+  end
+
+
+  ---| Quest_create_initial_quest |---
+
+
+  local Q = Quest_new()
+
+  each A in LEVEL.areas do
+    if A.room then
+      table.insert(Q.areas, A)
+    end
+  end
+
+  local R = pick_exit_room()
+
+  gui.printf("Exit room: %s\n", R:tostr())
+
+  LEVEL.exit_room = R
+
+  local TARGET =
+  {
+    kind = "goal"
+
+    sub_kind = "EXIT"
+
+    room = R
+    area = R.areas[1]
+  }
+
+  table.insert(Q.targets, TARGET)
+
+  -- TODO : secret exit
+end
+
+
+function Quest_try_divide(Q2, targets)
+  --
+  -- Attempt to subdivide the given quest into two, where 'target' param
+  -- becomes one of the targets of the first half.
+  --
+  -- If successful, returns the first half quest (Q1), and the original
+  -- quest (Q1) is modified appropriately.  Otherwise returns NIL.
+  --
+
+  -- FIXME
+end
+
+
+function Quest_add_major_quests()
+  -- FIXME !!!!
+end
+
+
+function Quest_add_minor_quests()
+  -- TODO
+end
+
+
+------------------------------------------------------------------------
 
 
 function OLD__Quest_get_zone_exits(R)
@@ -2007,7 +2110,6 @@ function Quest_make_quests()
   LEVEL.locks  = {}
 
   Quest_create_initial_quest()
-  Quest_add_exits()
 
   Quest_add_major_quests()
   Quest_add_minor_quests()
