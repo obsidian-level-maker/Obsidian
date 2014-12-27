@@ -243,19 +243,29 @@ function Quest_create_initial_quest()
 end
 
 
-function Quest_try_divide(Q2, goals)
+function Quest_eval_divide_at_conn(C, info)
   --
-  -- Attempt to subdivide the given quest into two.
+  -- Evaluate whether we can divide a quest at the given connection.
   --
-  -- If successful, returns the first half quest (Q1), containing the
-  -- given goals as targets (assigned to leaf rooms / areas), and the
-  -- original quest (Q1) is modified appropriately.
+  -- The 'info' table contains the current best division (if any),
+  -- and contains the following fields:
   --
-  -- Returns NIL if not possible.
+  --    mode      : either "minor" or "MAJOR"
+  --    num_goals : number of goals to solve lock (usually 1)
   --
+  --    score  :  best current score  (must be initialised to zero)
+  --
+  --    conn    :  the best connection  [ NIL if none yet ]
+  --    before  :  area set before best connection
+  --    after   :  area set after best connection
+  --    leafs   :  list of rooms / areas to place goals (#leafs >= num_goals)
+  -- 
+
+  local quest  -- current quest
+
 
   local function same_quest(C)
-    return Q2.areas[C.A1.id] and Q2.areas[C.A2.id]
+    return C.A1.quest == C.A2.quest
   end
 
 
@@ -352,26 +362,10 @@ function Quest_try_divide(Q2, goals)
   end
 
 
-  local function eval_split_possibility(C)
-    -- 'C' is the conn we would lock
-  
-    local before = collect_areas(C.A1, "before", {})
-    local  after = collect_areas(C.A2, "after",  {})
-
-    -- entry of original quest MUST be in first half
-    if Q2.entry then
-      if not before[Q2.entry.id] then return -1 end
-    end
-
+  local function eval_split_possibility(C, before, after)
     local targ_val = check_targets(after)
 
     if targ_val < 2 then return -2 end
-
-    -- FIXME : in "MINOR" mode check areas not rooms
-
-    local leafs = unused_rooms_in_set(before)
-
-    if #leafs < #goals then return -3 end
 
     -- FIXME more tests
 
@@ -380,6 +374,60 @@ function Quest_try_divide(Q2, goals)
     -- tie breaker
     return score + gui.random()
   end
+
+
+  ---| Quest_eval_divide_at_conn |---
+
+  -- connection must be same quest
+  if C.A1.quest != C.A2.quest then
+    return
+  end
+
+  -- no locking end of hallways in MAJOR mode
+  if info.mode == "MAJOR" and C.A2.room.is_hallway then
+    return
+  end
+
+  quest = C.A1.quest
+
+  -- collect areas before / after the connection
+  local before = collect_areas(C.A1, "before", {})
+  local  after = collect_areas(C.A2, "after",  {})
+
+  -- entry of quest MUST be in first half
+  if quest.entry then
+    if not before[quest.entry.id] then return end
+  end
+
+  -- FIXME : target check !!!!!
+
+  -- FIXME : in "MINOR" mode check areas not rooms
+  local leafs = unused_rooms_in_set(before)
+
+  if #leafs < info.num_goals then return end
+
+  local score = eval_split_possibility(C, before, after)
+
+  if score > info.score then
+    info.conn   = C
+    info.score  = score
+    info.before = before
+    info.after  = after
+    info.leafs  = leafs
+  end
+end
+
+
+function Quest_try_divide(Q2, goals)
+  --
+  -- Attempt to subdivide the given quest into two.
+  --
+  -- If successful, returns the first half quest (Q1), containing the
+  -- given goals as targets (assigned to leaf rooms / areas), and the
+  -- original quest (Q1) is modified appropriately.
+  --
+  -- Returns NIL if not possible.
+  --
 
 
   local function find_best_split()
