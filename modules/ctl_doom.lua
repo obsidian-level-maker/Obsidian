@@ -70,6 +70,7 @@ function CTL_DOOM.monster_setup(self)
 
       if M.prob > 40 then
         M.level = 1
+        M.min_weapon = 1
       end
     end
   end -- for opt
