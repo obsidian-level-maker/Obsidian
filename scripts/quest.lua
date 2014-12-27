@@ -311,13 +311,17 @@ function Quest_try_divide(Q2, goals)
   end
 
 
-  local function unused_rooms_in_set(areas)
+  local function unused_rooms_in_set(C, areas)
     local leafs = {}
 
     -- Note : we visit the same room multiple times (not worth optimising)
 
     each id, A in areas do
       local R = A.room
+
+      -- skip the room immediately next to the proposed connection
+      -- FIXME area check in "MINOR" mode
+      if C.A1.room == R or C.A2.room == R then continue end
 
       if room_exits_in_set(R, areas) == 1 then
         table.add_unique(leafs, R)
