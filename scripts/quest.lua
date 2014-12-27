@@ -60,9 +60,10 @@
 
 --class TARGET
 --[[
-    kind : keyword  -- "door" or "goal"
+    kind : keyword  -- "exit" or "goal"
 
-    area : AREA
+    room : AREA   -- used for MAJOR quests
+    area : AREA   -- used for MINOR quests
 
     lock : LOCK
 --]]
@@ -70,7 +71,7 @@
 
 --class LOCK
 --[[
-    kind : keyword  -- "KEY" or "SWITCH" or "EXIT"
+    kind : keyword  -- "KEY" or "SWITCH" or "LEVEL_EXIT"
 
     switch : string  -- the type of key or switch
     key    : string  --
@@ -242,13 +243,15 @@ function Quest_create_initial_quest()
 end
 
 
-function Quest_try_divide(Q2, targets)
+function Quest_try_divide(Q2, goals)
   --
-  -- Attempt to subdivide the given quest into two, where 'target' param
-  -- becomes one of the targets of the first half.
+  -- Attempt to subdivide the given quest into two.
   --
-  -- If successful, returns the first half quest (Q1), and the original
-  -- quest (Q1) is modified appropriately.  Otherwise returns NIL.
+  -- If successful, returns the first half quest (Q1), containing the
+  -- given goals as targets (assigned to leaf rooms / areas), and the
+  -- original quest (Q1) is modified appropriately.
+  --
+  -- Returns NIL if not possible.
   --
 
   local function same_quest(C)
@@ -308,12 +311,40 @@ function Quest_try_divide(Q2, targets)
   end
 
 
-  local function unused_leafs_in_set(areas)
-    
+  local function unused_rooms_in_set(areas)
+    local leafs = {}
+
+    -- Note : we visit the same room multiple times (not worth optimising)
 
     each id, A in areas do
-      
+      local R = A.room
+
+      if room_exits_in_set(R, areas) == 1 then
+        table.add_unique(leafs, R)
+      end
     end
+
+    return leafs
+  end
+
+
+  local function check_targets(areas)
+    -- returns 0 if no targets in the area set [ NO GOOD ]
+    --         1 if a non-goal target is in the set [ USABLE ]
+    --         2 if a goal target is in the set [ BEST ]
+
+    local has_non_goal = false
+
+    each target in Q2.targets do
+      if (target.room and areas[target.room.areas[1].id]) or
+         (target.area and areas[target.area.id])
+      then
+        if target.kind == "goal" then return 2 end
+        has_non_goal = true
+      end
+    end
+
+    return sel(has_non_goal, 1, 0)
   end
 
 
@@ -323,7 +354,22 @@ function Quest_try_divide(Q2, targets)
     local before = collect_areas(C.A1, "before", {})
     local  after = collect_areas(C.A2, "after",  {})
 
-    return -1
+    local targ_val = check_targets(after)
+
+    if targ_val < 1 then return -1 end
+
+    -- FIXME : in "MINOR" mode check areas not rooms
+
+    local leafs = unused_rooms_in_set(before)
+
+    if #leafs < #goals then return -1 end
+
+    -- FIXME more tests
+
+    local score = targ_val * 100
+
+    -- tie breaker
+    return score + gui.random()
   end
 
 
@@ -2222,7 +2268,9 @@ function Quest_make_quests()
 
   Quest_create_initial_quest()
 
+  -- this also creates the zones
   Quest_add_major_quests()
+
   Quest_add_minor_quests()
 
 ---???  Quest_final_battle()
