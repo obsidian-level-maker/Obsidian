@@ -531,14 +531,16 @@ function Quest_add_major_quests()
 
   ---| Quest_add_major_quests |---
 
-  -- TODO divide initial quest
+  -- TODO
 
-  Quest_group_into_zones()
 end
 
 
 
 function Quest_add_minor_quests()
+  
+  ---| Quest_add_minor_quests |---
+
   -- TODO
 end
 
@@ -655,47 +657,62 @@ end
 
 
 
+function Quest_start_room()
+
+  -- FIXME !!!!
+end
+
+
+
 function Quest_order_by_visit()
-  -- put all rooms in the level into the order the player will most
+  --
+  -- Put all rooms in the level into the order the player will most
   -- likely visit them.  When there are choices or secrets, then the
   -- order chosen here will be quite arbitrary.
+  --
 
-  local function sort_room_list(list)
-    table.sort(list, function(A,B) return A.lev_along < B.lev_along end)
+  local cur_along   = 1
+  local total_rooms = #LEVEL.rooms
+
+
+  local function visit_room(R, quest)
+    assert(R.quest == quest)
+    assert(not R.lev_along)
+
+    R.lev_along = cur_along / total_rooms
+
+    cur_along = cur_along + 1
+
+    each A in R.areas do
+    each C in A.conns do
+      if C.A1 != A then continue end
+
+      if C.A2.quest != quest then continue end
+
+      if C.A2.room == R then continue end
+
+      visit_room(C.A2.room, quest)
+    end
+    end
   end
 
 
   ---| Quest_order_by_visit |---
 
-  each Z in LEVEL.zones do
-    local Z_len   = 1 / #LEVEL.zones
-    local Z_along = (_index - 1) * Z_len
+  each Q in LEVEL.quests do
+    assert(Q.entry)
 
-    Z.along = Z_along
-
-    each Q in Z.quests do
-      local Q_len   = 1 / #Z.quests
-      local Q_along = (_index - 1) * Q_len
-
-      each R in Q.rooms do
-        local R_len   = 1 / #Q.rooms
-        local R_along = _index * R_len
-
-        R.lev_along = Z_along + Z_len * (Q_along + Q_len * R_along)
-      end
-
-      sort_room_list(Q.rooms)
-    end
-
-    sort_room_list(Z.rooms)
+    visit_room(Q.entry.room, Q)
   end
 
-  sort_room_list(LEVEL.rooms)
+  -- sort the rooms
+  table.sort(LEVEL.rooms, function(A,B) return A.lev_along < B.lev_along end)
 
   gui.debugf("Room Visit Order:\n")
+
   each R in LEVEL.rooms do
-    gui.debugf("  %1.3f : ZONE_%d  QUEST_%d  %s\n",
-               R.lev_along, R.zone.id, R.quest.id, R:tostr())
+    gui.debugf("  %1.3f : %s  %s  %s\n",
+               R.lev_along, R:tostr(), R.quest.name, R.zone.name)
   end
 end
 
@@ -2389,16 +2406,18 @@ function Quest_make_quests()
 
   Quest_create_initial_quest()
 
-  -- this also creates the zones
   Quest_add_major_quests()
+
+  Quest_start_room()
+
+  Quest_group_into_zones()
+  Quest_order_by_visit()
 
   Quest_add_minor_quests()
 
 ---???  Quest_final_battle()
 
 ---!!!  Connect_reserved_rooms()
-
-  Quest_order_by_visit()
 
   Area_spread_zones()
 
