@@ -659,7 +659,46 @@ end
 
 function Quest_start_room()
 
-  -- FIXME !!!!
+  local function eval_start_room(R)
+    local score = 100
+
+    -- FIXME : eval_start_room  !!!
+
+    -- tie breaker
+    return score + gui.random()
+  end
+
+
+  ---| Quest_start_room |---
+
+  local best
+  local best_score = 0
+
+  local seen_rooms = {}
+
+  each id, A in LEVEL.quests[1] do
+    local R = A.room
+
+    if seen_rooms[R] then continue end
+
+    seen_rooms[R] = 1
+
+    local score = eval_start_room(R)
+
+    if score > best_score then
+      best = R
+      best_score = score
+    end
+  end
+
+  if not best then
+    error("Could not find a usable start room")
+  end
+
+  LEVEL.start_room = R
+  LEVEL.start_area = R.areas[1]  -- TODO
+
+  LEVEL.quests[1].entry = LEVEL.start_area
 end
 
 
