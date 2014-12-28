@@ -50,15 +50,10 @@ class ROOM
   sw, sh, svolume     -- /
 
   zone  : ZONE
-  quest : QUEST
-
-  tx1, ty1, tx2, ty2  -- \ non-junk seed range
-  tw, th              -- /
 
   purpose : keyword   -- usually NIL, can be "EXIT" etc... (FIXME)
   purpose_lock : LOCK
 
-  floor_h, ceil_h : number
 }
 
 

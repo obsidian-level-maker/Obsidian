@@ -36,7 +36,7 @@
 
     targets : list(TARGET)
 
-    unused_leafs : list(AREA)
+---???    unused_leafs : list(AREA)
 
     zone : ZONE
 
@@ -89,7 +89,7 @@
 --------------------------------------------------------------]]
 
 
-function Quest_new(start)
+function Quest_new(precede_Q)
   local id = 1 + #LEVEL.quests
 
   local QUEST =
@@ -101,7 +101,11 @@ function Quest_new(start)
     svolume = 0
   }
 
-  table.insert(LEVEL.quests, QUEST)
+  if precede_Q then
+    table.add_before(LEVEL.quests, precede_Q, QUEST)
+  else
+    table.insert(LEVEL.quests, QUEST)
+  end
 
   return QUEST
 end
@@ -121,6 +125,18 @@ function Zone_new()
   table.insert(LEVEL.zones, ZONE)
 
   return ZONE
+end
+
+
+
+function size_of_area_set(areas)
+  local total = 0
+
+  each id, A in areas do
+    total = total + A.svolume
+  end
+
+  return total
 end
 
 
@@ -223,6 +239,8 @@ function Quest_create_initial_quest()
     if A.room then
       Q.areas[A.id] = A
       Q.svolume = Q.svolume + A.svolume
+
+      A.quest = Q
     end
   end
 
@@ -432,11 +450,57 @@ function Quest_eval_divide_at_conn(C, info)
 end
 
 
-function Quest_perform_split(info)
+function Quest_perform_division(info)
+
+  local function assign_quest(Q)
+    each id, A in Q.areas do
+      A.quest = Q
+    end
+  end
+
+
+  local function transfer_existing_targets(Q1, Q2)
+    for i = #Q2.targets, 1, -1 do
+      local targ = Q2.targets[i]
+
+      if (targ.room and targ.room.areas[1].quest == Q1) or
+         (targ.area and targ.area.quest == Q1)
+      then
+        table.insert(Q1.targets, table.remove(Q2.targets, i))
+      end
+    end
+  end
+
+
+  local function add_new_targets(Q1)
+    -- FIXME !!!!
+  end
+
+
+  ---| Quest_perform_division |---
+
   local Q2 = assert(info.quest)
 
-  -- FIXME
+  -- new quest is the first half (is added before Q2 in LEVEL.quests)
+
+  local Q1 = Quest_new(Q2)
+
+  Q2.entry = info.conn.A2
+
+  Q1.areas = info.before
+  Q2.areas = info.after
+
+  Q1.svolume = size_of_area_set(Q1.areas)
+  Q2.svolume = size_of_area_set(Q2.areas)
+
+  assign_quest(Q1)
+  assign_quest(Q2)
+
+  transfer_existing_targets(Q1, Q2)
+
+  add_new_targets(Q1)
 end
+
 
 
 function Quest_try_divide(Q2, goals)
