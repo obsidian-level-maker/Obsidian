@@ -30,6 +30,8 @@
 
     areas[id] : AREA
 
+    svolume   : total svolume of all areas
+
     entry : CONN
 
     targets : list(TARGET)
@@ -96,6 +98,7 @@ function Quest_new(start)
     name  = "QUEST_" .. id
     areas = {}
     targets = {}
+    svolume = 0
   }
 
   table.insert(LEVEL.quests, QUEST)
@@ -112,6 +115,7 @@ function Zone_new()
     id = id
     name = "ZONE_" .. id
     quests = {}
+    svolume = 0
   }
 
   table.insert(LEVEL.zones, ZONE)
@@ -218,6 +222,7 @@ function Quest_create_initial_quest()
   each A in LEVEL.areas do
     if A.room then
       Q.areas[A.id] = A
+      Q.svolume = Q.svolume + A.svolume
     end
   end
 
@@ -251,11 +256,12 @@ function Quest_eval_divide_at_conn(C, info)
   -- and contains the following fields:
   --
   --    mode      : either "minor" or "MAJOR"
-  --    num_goals : number of goals to solve lock (usually 1)
+  --    num_goals : number of goals to solve the lock (usually 1)
   --
-  --    score  :  best current score  (must be initialised to zero)
+  --    score   :  best current score  (must be initialised to zero)
   --
   --    conn    :  the best connection  [ NIL if none yet ]
+  --    quest   :  the quest to divide
   --    before  :  area set before best connection
   --    after   :  area set after best connection
   --    leafs   :  list of rooms / areas to place goals (#leafs >= num_goals)
@@ -292,7 +298,7 @@ function Quest_eval_divide_at_conn(C, info)
     each C in A.conns do
       local N = C:neighbor(A)
 
-      if areas[N.id] then count = count + 1
+      if areas[N.id] then count = count + 1 end
     end
 
     assert(count > 0)
@@ -310,7 +316,7 @@ function Quest_eval_divide_at_conn(C, info)
 
       local N = C:neighbor(A)
 
-      if areas[N.id] then count = count + 1
+      if areas[N.id] then count = count + 1 end
     end
     end
 
@@ -363,13 +369,14 @@ function Quest_eval_divide_at_conn(C, info)
 
 
   local function eval_split_possibility(C, before, after)
-    local targ_val = check_targets(after)
+    -- FIXME evaluate stuff !!
 
-    if targ_val < 2 then return -2 end
+    local score = 200
 
-    -- FIXME more tests
-
-    local score = 100
+    -- 
+    if C.A2.room.is_hallway then
+      score = score - 100
+    end
 
     -- tie breaker
     return score + gui.random()
@@ -383,8 +390,13 @@ function Quest_eval_divide_at_conn(C, info)
     return
   end
 
+  -- zones must not divide a room in half
+  if info.mode == "MAJOR" and C.A1.room == C.A2.room then
+    return
+  end
+
   -- no locking end of hallways in MAJOR mode
-  if info.mode == "MAJOR" and C.A2.room.is_hallway then
+  if info.mode == "MAJOR" and C.A1.room.is_hallway then
     return
   end
 
@@ -399,7 +411,8 @@ function Quest_eval_divide_at_conn(C, info)
     if not before[quest.entry.id] then return end
   end
 
-  -- FIXME : target check !!!!!
+  -- one existing target MUST be in second half
+  if check_targets(after) < 2 then return end
 
   -- FIXME : in "MINOR" mode check areas not rooms
   local leafs = unused_rooms_in_set(before)
@@ -410,11 +423,19 @@ function Quest_eval_divide_at_conn(C, info)
 
   if score > info.score then
     info.conn   = C
+    info.quest  = quest
     info.score  = score
     info.before = before
     info.after  = after
     info.leafs  = leafs
   end
+end
+
+
+function Quest_perform_split(info)
+  local Q2 = assert(info.quest)
+
+  -- FIXME
 end
 
 
@@ -469,9 +490,52 @@ function Quest_try_divide(Q2, goals)
 end
 
 
-function Quest_add_major_quests()
-  -- FIXME !!!!
+
+function Quest_group_into_zones()
+
+  -- Note : assumes quests are in a visit order
+
+
+  local function assign_zone(Q, zone)
+    Q.zone = cur_zone
+
+    table.insert(cur_zone.quests, Q)
+
+    cur_zone.svolume = cur_zone.svolume + Q.svolume
+    
+    each id, A in Q.areas do
+      A.zone = zone
+      A.room.zone = zone
+    end
+  end
+
+
+  ---| Quest_group_into_zones |---
+
+  local rough_size = rand.pick({ 200, 250, 300 })  -- TODO: REVIEW
+
+  local cur_zone = Zone_new()
+
+  each Q in LEVEL.quests do
+    if cur_zone.svolume >= rough_size then
+      cur_zone = Zone_new()
+    end
+
+    assign_zone(Q, cur_zone)
+  end
 end
+
+
+
+function Quest_add_major_quests()
+
+  ---| Quest_add_major_quests |---
+
+  -- TODO divide initial quest
+
+  Quest_group_into_zones()
+end
+
 
 
 function Quest_add_minor_quests()
@@ -2319,8 +2383,8 @@ function Quest_make_quests()
     error("Level only has one room! (2 or more are needed)")
   end
 
-  LEVEL.zones  = {}
   LEVEL.quests = {}
+  LEVEL.zones  = {}
   LEVEL.locks  = {}
 
   Quest_create_initial_quest()
