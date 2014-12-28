@@ -274,7 +274,8 @@ function Quest_eval_divide_at_conn(C, info)
   -- and contains the following fields:
   --
   --    mode      : either "minor" or "MAJOR"
-  --    num_goals : number of goals to solve the lock (usually 1)
+  --    lock_kind : the lock to place on the connection
+  --    num_goals : goals used to solve the lock (usually 1)
   --
   --    score   :  best current score  (must be initialised to zero)
   --
@@ -499,58 +500,59 @@ function Quest_perform_division(info)
   transfer_existing_targets(Q1, Q2)
 
   add_new_targets(Q1)
+
+  -- FIXME : actually lock the connection !!!
 end
 
 
 
-function Quest_try_divide(Q2, goals)
-  --
-  -- Attempt to subdivide the given quest into two.
-  --
-  -- If successful, returns the first half quest (Q1), containing the
-  -- given goals as targets (assigned to leaf rooms / areas), and the
-  -- original quest (Q1) is modified appropriately.
-  --
-  -- Returns NIL if not possible.
-  --
+function Quest_try_divide(mode)
+  local info =
+  {
+    mode = mode
+    lock_kind = "Foo"
+    num_goals = 1
+
+    score = 0
+  }
+
+  each C in LEVEL.conns do
+    Quest_eval_divide_at_conn(C, info)
+  end
+
+  if not info.conn then
+    return false
+  end
+
+  Quest_perform_division(info)
+  return true
+end
 
 
-  local function find_best_split()
-    local best_conn
-    local best_score = 0
 
-    each C in LEVEL.conns do
-      -- TODO : only skip non-room connections if doing major quest
-      if C.A1.room == C.A2.room then continue end
+function Quest_add_major_quests()
 
-      if same_quest(C) then
-        local score = eval_split_possibility(C)
+  ---| Quest_add_major_quests |---
 
-        if score > best_score then
-          best_conn  = C
-          best_score = score
-        end
-      end
+  local map_svolume = LEVEL.quests[1].svolume
+
+  local want_splits = 3  -- three keys  ( FIXME : base it on map_svolume )
+
+  for i = 1, want_splits do
+    if not Quest_try_divide("MAJOR") then
+      break;
     end
-
-    return best_conn
   end
 
-
-  local function perform_split(C)
-    -- FIXME
-  end
+end
 
 
-  ---| Quest_try_divide |---
 
-  local conn = find_best_split()
+function Quest_add_minor_quests()
+  
+  ---| Quest_add_minor_quests |---
 
-  if not conn then
-    return nil
-  end
-
-  return perform_split(conn)
+  -- TODO
 end
 
 
@@ -589,24 +591,6 @@ function Quest_group_into_zones()
   end
 end
 
-
-
-function Quest_add_major_quests()
-
-  ---| Quest_add_major_quests |---
-
-  -- TODO
-
-end
-
-
-
-function Quest_add_minor_quests()
-  
-  ---| Quest_add_minor_quests |---
-
-  -- TODO
-end
 
 
 ------------------------------------------------------------------------
