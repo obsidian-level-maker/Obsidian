@@ -112,11 +112,12 @@ DOOM.MONSTERS =
     id = 3002
     r = 30
     h = 56 
-    level = 1
+    level = 2
     prob = 60
     health = 150
     damage = 2
     attack = "melee"
+    min_weapon = 1
     weap_prefs = { launch=0.3 }
     room_size = "any"
   }
@@ -134,6 +135,7 @@ DOOM.MONSTERS =
     attack = "melee"
     invis = true
     outdoor_factor = 3.0
+    min_weapon = 1
     weap_prefs = { launch=0.1 }
     species = "demon"
     room_size = "any"
@@ -150,6 +152,7 @@ DOOM.MONSTERS =
     damage = 5
     attack = "missile"
     density = 0.5
+    min_weapon = 1
     float = true
     room_size = "large"
   }
@@ -222,6 +225,7 @@ DOOM2.MONSTERS =
     damage = 15
     attack = "hitscan"
     give = { {weapon="chain"}, {ammo="bullet",count=10} }
+    min_weapon = 1
     species = "zombie"
     room_size = "large"
     infights = true
@@ -237,6 +241,7 @@ DOOM2.MONSTERS =
     health = 300
     damage = 15
     attack = "missile"
+    min_weapon = 1
     density = 0.6
     room_size = "any"
   }
@@ -252,6 +257,7 @@ DOOM2.MONSTERS =
     health = 500
     damage = 10
     attack = "missile"
+    min_weapon = 1
     density = 0.7
     species = "baron"
     room_size = "medium"
@@ -282,6 +288,7 @@ DOOM2.MONSTERS =
     health = 500
     damage = 15
     attack = "missile"
+    min_weapon = 1
     density = 0.7
     room_size = "medium"
   }
