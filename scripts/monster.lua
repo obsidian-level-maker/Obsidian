@@ -747,6 +747,11 @@ function Player_weapon_palettes()
 
 
   local function add_weapons_from_zone(Z, list)
+
+--!!!!!!!
+do return end
+
+
     each R in Z.rooms do
       each name in R.weapons do
         list[name] = 1
@@ -955,12 +960,15 @@ function Monsters_distribute_stats()
     end
 
     -- add storage rooms
+    -- FIXME !!!!
+--[[
     if room.quest.storage_rooms then
       each R in room.quest.storage_rooms do
         local ratio = rand.irange(3,7) / 2.0
         table.insert(list, { room=R, ratio=ratio })
       end
     end
+--]]
 
     return list
   end
@@ -1372,10 +1380,8 @@ function Monsters_do_pickups()
 
   gui.debugf("--- Monsters_do_pickups ---\n")
 
-  each Z in LEVEL.zones do
-    each R in Z.rooms do
-      pickups_in_room(R)
-    end
+  each R in LEVEL.rooms do
+    pickups_in_room(R)
   end
 end
 
@@ -1503,7 +1509,7 @@ function Monsters_in_room(R)
     -- less in secrets (usually much less)
     if R.kind == "SECRET_EXIT" then
       qty = qty / 1.6
-    elseif R.quest.kind == "secret" then
+    elseif R.is_secret then
       qty = qty / rand.pick { 2, 3, 4, 9 }
     end
 
@@ -1683,7 +1689,7 @@ function Monsters_in_room(R)
     prob = prob * calc_strength_factor(info)
 
     -- weaker monsters in secrets
-    if R.quest.kind == "secret" then
+    if R.is_secret then
       prob = prob / (info.level or 1)
     end
 
@@ -1811,7 +1817,7 @@ function Monsters_in_room(R)
       end
 
       -- weaker monsters in secrets
-      if R.quest.kind == "secret" then
+      if R.is_secret then
         prob = prob / (info.level or 1)
       end
 

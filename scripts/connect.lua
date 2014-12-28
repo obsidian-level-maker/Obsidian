@@ -316,7 +316,9 @@ function Connect_teleporters()
 end
 
 
-function Connect_start_room()
+function OLD__Connect_start_room()
+
+error("Connect_start_room")
 
   local function eval_start(R)
     -- already has a purpose? (e.g. secret exit room)
@@ -372,7 +374,7 @@ function Connect_start_room()
 end
 
 
-function Connect_natural_flow()
+function OLD__Connect_natural_flow()
   --
   -- Update connections so that 'src' and 'dest' follow the natural
   -- flow of the level, i.e. player always walks from src --> dest
@@ -984,6 +986,9 @@ function Weird_connect_stuff()
     -- if two or more areas were merged, cannot make a stairwell
     if #R.areas > 1 then return false end
 
+--!!!!!! STAIRWELLS  FIXME
+do return false end
+
     local A = R.areas[1]
 
     rand.shuffle(A.stairwells)
@@ -1243,6 +1248,7 @@ function Weird_connect_stuff()
     local best_score = 0
 
     each A in R.areas do
+assert(A.room == R)
       each N in A.neighbors do
         if N.room != R then continue end
 
@@ -1305,7 +1311,6 @@ function Weird_connect_stuff()
 
   handle_the_rest()  
 
-  Connect_start_room()
-  Connect_natural_flow()
+--????  Connect_natural_flow()
 end
 

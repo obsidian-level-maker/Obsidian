@@ -591,6 +591,10 @@ function Quest_start_room()
 
   local R = best_R
 
+  gui.printf("Start room: %s\n", R:tostr())
+
+  R.purpose = "START"
+
   LEVEL.start_room = R
   LEVEL.start_area = R.areas[1]  -- TODO
 
@@ -606,17 +610,34 @@ function Quest_order_by_visit()
   -- order chosen here will be quite arbitrary.
   --
 
+
+-- DEBUG CRUD....
+--[[
+each A in LEVEL.areas do
+  if not A.room then continue end
+  stderrf("%s in %s (%s)\n", A:tostr(), A.room:tostr(), (A.quest and A.quest.name) or "NO_QUEST")
+  stderrf("{\n")
+  each C in A.conns do
+    stderrf("  %s : (%s in %s) <---> (%s in %s)\n", C:tostr(),
+            C.A1:tostr(), C.A1.room:tostr(),
+            C.A2:tostr(), C.A2.room:tostr())
+  end
+  stderrf("}\n")
+end
+--]]
+
+
+
+
   local cur_along   = 1
   local total_rooms = #LEVEL.rooms
 
 
 local via_conn_name = "-"
 
-
+  
   local function visit_room(R, quest)
 stderrf("visit_room %s (via %s)\n", R:tostr(), via_conn_name)
-    assert(not R.lev_along)
-
     R.lev_along = cur_along / total_rooms
 
     cur_along = cur_along + 1
@@ -625,15 +646,19 @@ stderrf("visit_room %s (via %s)\n", R:tostr(), via_conn_name)
     each C in A.conns do
       assert(A.quest == quest)
 
-      if C.A1 != A then continue end
+      if not (C.A1 == A or C.A2 == A) then continue end
 
-      if C.A2.quest != quest then continue end
+      local A2 = C:neighbor(A)
 
-      if C.A2.room == R then continue end
+      if A2.quest != quest then continue end
+
+      if A2.room == R then continue end
 
 via_conn_name = C:tostr()
 
-      visit_room(C.A2.room, quest)
+      if not A2.room.lev_along then
+        visit_room(A2.room, quest)
+      end
     end
     end
   end
@@ -647,6 +672,14 @@ via_conn_name = C:tostr()
     visit_room(Q.entry.room, Q)
   end
 
+-- sanity check
+each R in LEVEL.rooms do
+  if not R.lev_along then
+    error("Room not visited: " .. R:tostr())
+  end
+end
+
+
   -- sort the rooms
   table.sort(LEVEL.rooms, function(A,B) return A.lev_along < B.lev_along end)
 
@@ -654,7 +687,7 @@ via_conn_name = C:tostr()
 
   each R in LEVEL.rooms do
     gui.debugf("  %1.3f : %s  %s  %s\n",
-               R.lev_along, R:tostr(), R.quest.name, R.zone.name)
+               R.lev_along, R:tostr(), R.areas[1].quest.name, R.zone.name)
   end
 end
 
@@ -1659,7 +1692,7 @@ function Quest_make_quests()
   if PARAM.hexen_weapons then
     Quest_do_hexen_weapons()
   else
-    Quest_add_weapons()
+--!!!!!!    Quest_add_weapons()
   end
 
 --!!!!  Quest_nice_items()
