@@ -445,6 +445,8 @@ function Room_create_sky_groups()
       id = alloc_id("sky_group")
       add_h = rand.pick({ 144, 176, 208 })
     }
+    if rand.odds(5) then group.add_h = 288 end
+
     table.insert(LEVEL.sky_groups, group)
     return group
   end
