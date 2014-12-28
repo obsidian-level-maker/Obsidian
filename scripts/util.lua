@@ -199,6 +199,17 @@ function table.add_unique(t, v)
   end
 end
 
+function table.add_before(t, oldie, newbie)
+  for idx = 1, #t do
+    if t[idx] == oldie then
+      table.insert(t, idx, newbie)
+      return
+    end
+  end
+
+  error("table.add_before: oldie not found")
+end
+
 function table.add_after(t, oldie, newbie)
   for idx = 1, #t do
     if t[idx] == oldie then
