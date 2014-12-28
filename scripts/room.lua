@@ -207,7 +207,7 @@ function ROOM_CLASS.valid_T(R, x, y)
 end
 
 
-function ROOM_CLASS.get_exits(R)
+function ROOM_CLASS.OLD__get_exits(R)
   local exits = {}
 
   each A in R.areas do
@@ -2040,15 +2040,18 @@ function Room_floor_heights()
     -- recurse to neighbors
     each A in R.areas do
     each C in A.conns do
-      if C.A1.room == R and C.A2.room != R then
-        assert(C.A1)
-        assert(C.A1.room == R)
-        assert(C.A1.floor_h)
+      local A2 = C:neighbor(A)
 
-        local next_f = R.exit_h or C.A1.floor_h
+      if A2.room == R then continue end
 
-        visit_room(C.A2.room, next_f, C.A2)
-      end
+      -- already visited it?
+      if A2.room.entry_h then continue end
+
+      assert(A.floor_h)
+
+      local next_f = R.exit_h or A.floor_h
+
+      visit_room(A2.room, next_f, A2)
     end
     end
   end
