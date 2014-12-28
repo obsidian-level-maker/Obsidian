@@ -517,11 +517,11 @@ function Quest_group_into_zones()
 
 
   local function assign_zone(Q, zone)
-    Q.zone = cur_zone
+    Q.zone = zone
 
-    table.insert(cur_zone.quests, Q)
+    table.insert(zone.quests, Q)
 
-    cur_zone.svolume = cur_zone.svolume + Q.svolume
+    zone.svolume = zone.svolume + Q.svolume
     
     each id, A in Q.areas do
       A.zone = zone
@@ -546,7 +546,6 @@ function Quest_group_into_zones()
 end
 
 
-
 ------------------------------------------------------------------------
 
 
@@ -564,12 +563,12 @@ function Quest_start_room()
 
   ---| Quest_start_room |---
 
-  local best
+  local best_R
   local best_score = 0
 
   local seen_rooms = {}
 
-  each id, A in LEVEL.quests[1] do
+  each id, A in LEVEL.quests[1].areas do
     local R = A.room
 
     if seen_rooms[R] then continue end
@@ -579,14 +578,18 @@ function Quest_start_room()
     local score = eval_start_room(R)
 
     if score > best_score then
-      best = R
+      best_R = R
       best_score = score
     end
   end
 
-  if not best then
+  if not best_R then
     error("Could not find a usable start room")
   end
+
+  -- OK --
+
+  local R = best_R
 
   LEVEL.start_room = R
   LEVEL.start_area = R.areas[1]  -- TODO
@@ -607,8 +610,11 @@ function Quest_order_by_visit()
   local total_rooms = #LEVEL.rooms
 
 
+local via_conn_name = "-"
+
+
   local function visit_room(R, quest)
-    assert(R.quest == quest)
+stderrf("visit_room %s (via %s)\n", R:tostr(), via_conn_name)
     assert(not R.lev_along)
 
     R.lev_along = cur_along / total_rooms
@@ -617,11 +623,15 @@ function Quest_order_by_visit()
 
     each A in R.areas do
     each C in A.conns do
+      assert(A.quest == quest)
+
       if C.A1 != A then continue end
 
       if C.A2.quest != quest then continue end
 
       if C.A2.room == R then continue end
+
+via_conn_name = C:tostr()
 
       visit_room(C.A2.room, quest)
     end
@@ -1627,7 +1637,7 @@ function Quest_make_quests()
 
   Quest_create_initial_quest()
 
-  Quest_add_major_quests()
+--!!!!!!  Quest_add_major_quests()
 
   Quest_start_room()
 
