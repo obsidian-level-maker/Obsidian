@@ -333,7 +333,7 @@ end
 ----------------------------------------------------------------
 
 
-function Connect_reserved_rooms()
+function OLD__Connect_reserved_rooms()
   --
   -- This handled reserved rooms, which have been ignored so far.
   -- If the level requires a secret exit, one will be used for it.
@@ -471,131 +471,6 @@ function Connect_reserved_rooms()
   end
 
 
-  local function eval_conn_for_alt_start(R, S, dir, N)
-    local R2 = N.room
-
-    if R2.kind == "scenic"   then return end
-    if R2.kind == "reserved" then return end
-
-    if N.conn then return end
-
-    -- other room must be belong to the very first quest
-    if R2.quest != LEVEL.start_room.quest then return end
-
-    local score = 50
-
-    if R2 == LEVEL.start_room then
-      score = 30
-    elseif R2.purpose then
-      score = 40
-    end
-
-    -- prefer smaller rooms
-    score = score - math.sqrt(R.svolume) * 2
-
-    -- TODO: check if this doorway would be near another one
-
-    -- tie-breaker
-    score = score + gui.random() * 5
-
-    if score > best.score then
-      best.score = score
-      best.R = R
-      best.S = S
-      best.dir = dir
-    end
-  end
-
-
-  local function evaluate_alt_start(R)
-    for sx = R.sx1, R.sx2 do
-    for sy = R.sy1, R.sy2 do
-      for dir = 2,8,2 do
-
-        local S = SEEDS[sx][sy]
-
-        if S.room != R then continue end
-
-        local N = S:neighbor(dir)
-
-        if (N and N.room and N.room != R) then
-          eval_conn_for_alt_start(R, S, dir, N)
-        end
-
-      end -- dir
-    end -- sx, sy
-    end
-  end
-
-
-  local function make_alternate_start()
-    local R = best.R
-    local S = best.S
-
-    gui.debugf("Alternate Start room @ %s (%d %d)\n", R:tostr(), R.sx1, R.sy1)
-
-    LEVEL.alt_start = R
-
-    change_room_kind(R, "kill_it")
-
-    R.purpose = "START"
-
-
-    -- actually connect the rooms
-    local T = S:neighbor(best.dir)
-
-    R.entry_conn = Connect_seed_pair(T, S, 10 - best.dir)
-
-
-    -- link room into the level
-    R.quest = T.room.quest
-    R.zone  = T.room.zone
-
-    -- place on end of room lists (ensuring it is laid out AFTER
-    -- the room it connects to).
-    table.insert(R.quest.rooms, R)
-    table.insert(R. zone.rooms, R)
-
-
-    -- partition players between the two rooms.  Since Co-op is often
-    -- played by two people, have a large tendency to place 'player1'
-    -- and 'player2' in different rooms.
-
-    local set1, set2
-
-    if rand.odds(10) then
-      set1 = { "player1", "player2", "player5", "player6" }
-      set2 = { "player3", "player4", "player7", "player8" } 
-    elseif rand.odds(50) then
-      set1 = { "player1", "player3", "player5", "player7" }
-      set2 = { "player2", "player4", "player6", "player8" } 
-    else
-      set1 = { "player1", "player4", "player6", "player7" }
-      set2 = { "player2", "player3", "player5", "player8" } 
-    end
-
-    if rand.odds(50) then
-      set1, set2 = set2, set1
-    end
-
-    LEVEL.start_room.player_set = set1
-    LEVEL.alt_start .player_set = set2
-  end
-
-
-  local function find_alternate_start()
-    best = { score=-1 }
-
-    each R in LEVEL.reserved_rooms do
-      evaluate_alt_start(R)
-    end
-
-    if best.R then
-      make_alternate_start()
-    end
-  end
-
-
   local function eval_conn_for_other(R, S, dir, N)
     local R2 = N.room
 
@@ -714,10 +589,6 @@ function Connect_reserved_rooms()
   if LEVEL.secret_exit then
     pick_secret_exit()
     make_secret_exit()
-  end
-
-  if OB_CONFIG.mode == "coop" then
-    find_alternate_start()
   end
 
   each R in LEVEL.reserved_rooms do

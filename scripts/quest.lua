@@ -567,9 +567,9 @@ function Quest_start_room()
     end
 
     -- really really don't want to see a goal (like a key)
-    if not R.purpose then
+    if R.purpose then
       if alt_mode then return -1 end
-
+    else
       score = score + 1000
     end
 
