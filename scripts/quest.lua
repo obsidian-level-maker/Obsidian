@@ -552,7 +552,7 @@ end
 function Quest_start_room()
 
   local function eval_start_room(R)
-    local score = 10
+    local score = 1
 
     -- never in a stairwell
     if R.kind == "stairwell" then
@@ -571,8 +571,17 @@ function Quest_start_room()
       score = score + 1000
     end
 
+    -- not too big !!
+    if R.svolume < 25 then score = score + 20 end
+    if R.svolume < 50 then score = score + 10 end
+
+    -- prefer no teleporter
+    if not R:has_teleporter() then score = score + 7 end
+
+    -- TODO: prefer a place for start closet
+
     -- tie breaker
-    return score + gui.random()
+    return score + gui.random() * 4
   end
 
 
