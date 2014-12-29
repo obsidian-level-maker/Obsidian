@@ -552,9 +552,24 @@ end
 function Quest_start_room()
 
   local function eval_start_room(R)
-    local score = 100
+    local score = 10
 
-    -- FIXME : eval_start_room  !!!
+    -- never in a stairwell
+    if R.kind == "stairwell" then
+      return -1
+    end
+
+    -- never in a hallway
+    -- TODO : occasionally allow it -- but require a void area nearby
+    --        which we can use for a start closet
+    if R.is_hallway then
+      return -1
+    end
+
+    -- really really don't want to see a goal (like a key)
+    if not R.purpose then
+      score = score + 1000
+    end
 
     -- tie breaker
     return score + gui.random()
@@ -581,14 +596,10 @@ function Quest_start_room()
   local best_R
   local best_score = 0
 
-  local seen_rooms = {}
+  local first_quest = LEVEL.quests[1]
 
-  each id, A in LEVEL.quests[1].areas do
-    local R = A.room
-
-    if seen_rooms[R] then continue end
-
-    seen_rooms[R] = 1
+  each R in LEVEL.rooms do
+    if R.areas[1].quest != first_quest then continue end
 
     local score = eval_start_room(R)
 
