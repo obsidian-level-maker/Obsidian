@@ -1027,12 +1027,15 @@ function Render_importants()
 
 
   local function content_exit(spot)
-    local def = PREFABS["Exit_switch"]
+    local fab_name = "Exit_switch"
+    if R.purpose == "SECRET_EXIT" then fab_name = "Exit_pillar_secret" end
+
+    local def = PREFABS[fab_name]
     assert(def)
 
     local skin1 = { }
 
-    if R.purpose == "SECRET_EXIT" then skin1.special = 51 end
+---???    if R.purpose == "SECRET_EXIT" then skin1.special = 51 end
 
     local dir = spot.dir or 2
 
