@@ -388,53 +388,6 @@ error("Connect_start_room")
 end
 
 
-function OLD__Connect_natural_flow()
-  --
-  -- Update connections so that 'src' and 'dest' follow the natural
-  -- flow of the level, i.e. player always walks from src --> dest
-  -- (except when backtracking).
-  --
-  -- The LEVEL.rooms list is also updated to be in visit order.
-  --
-
-  local function recursive_flow(A, seen)
---- stderrf("natural_flow @ AREA_%s\n", A.id)
-
-    assert(A.room)
-
-    if not A.room.visit_id then
-      A.room.visit_id = alloc_id("visit_id")
-    end
-
-    seen[A] = true
-
----???    if A.mode == "closet" then return end
-
-    each C in A.conns do
-      if A == C.A2 and not seen[C.A1] then
-        C:swap()
-      end
-
-      if A == C.A1 and not seen[C.A2] then
-        C.A2.entry_conn = C
-
-        -- recursively handle adjacent room
-        recursive_flow(C.A2, seen)
-      end
-    end
-  end
-
-
-  ---| Connect_natural_flow |---
-
-  recursive_flow(LEVEL.start_area, {})
-
-  table.sort(LEVEL.rooms, function(R1, R2)
-      return R1.visit_id < R2.visit_id
-  end)
-end
-
-
 ----------------------------------------------------------------
 
 
@@ -1322,7 +1275,5 @@ assert(A.room == R)
   --TODO teleporters
 
   handle_the_rest()  
-
---????  Connect_natural_flow()
 end
 
