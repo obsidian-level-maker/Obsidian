@@ -149,15 +149,20 @@ function Quest_create_initial_quest()
   -- This quest can be divided later on into major and minor quests.
   --
 
-  local function eval_exit_room(R)
+  local function eval_exit_room(R, secret_mode)
     if R.is_hallway then return -1 end
-    if R.purpose    then return -1 end
+    if R.purpose    then return -2 end
+
+stderrf("Eval exit %s : conns:%d svolume:%d\n", R:tostr(), R:total_conns(), R.svolume)
+
+    -- must be a leaf room
+    if R:total_conns() > 1 then return -3 end
 
     return R.svolume + gui.random() * 5
   end
 
 
-  local function pick_exit_room()
+  local function pick_exit_room(secret_mode)
     --
     -- We want a large room for the exit, so can have a big battle with
     -- one or more boss-like monsters.
@@ -174,13 +179,40 @@ function Quest_create_initial_quest()
       end
     end
 
-    if not best then
+    return best
+  end
+
+
+  local function add_normal_exit(quest)
+    local R = pick_exit_room()
+
+    if not R then
       error("Unable to pick exit room!")
     end
 
-    best.purpose = "EXIT"
+    gui.printf("Exit room: %s\n", R:tostr())
 
-    return best
+    R.purpose = "EXIT"
+
+    LEVEL.exit_room = R
+
+    -- create the target for the quest
+    local TARGET =
+    {
+      kind = "goal"
+
+      sub_kind = "EXIT"
+
+      room = R
+      area = R.areas[1]
+    }
+
+    table.insert(quest.targets, TARGET)
+  end
+
+
+  local function add_secret_exit()
+    -- TODO
   end
 
 
@@ -198,25 +230,9 @@ function Quest_create_initial_quest()
     end
   end
 
-  local R = pick_exit_room()
+  add_normal_exit(Q)
 
-  gui.printf("Exit room: %s\n", R:tostr())
-
-  LEVEL.exit_room = R
-
-  local TARGET =
-  {
-    kind = "goal"
-
-    sub_kind = "EXIT"
-
-    room = R
-    area = R.areas[1]
-  }
-
-  table.insert(Q.targets, TARGET)
-
-  -- TODO : secret exit
+  add_secret_exit()
 end
 
 
