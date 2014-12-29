@@ -151,12 +151,16 @@ function Quest_create_initial_quest()
 
   local function eval_exit_room(R, secret_mode)
     if R.is_hallway then return -1 end
-    if R.purpose    then return -2 end
+    if R.purpose    then return -1 end
 
 stderrf("Eval exit %s : conns:%d svolume:%d\n", R:tostr(), R:total_conns(), R.svolume)
 
     -- must be a leaf room
-    if R:total_conns() > 1 then return -3 end
+    if R:total_conns() > 1 then return -1 end
+
+    -- cannot teleport into a secret exit
+    -- [ TODO : support this, a secret teleporter closet somewhere ]
+    if secret_mode and R:has_teleporter() then return -1 end
 
     return R.svolume + gui.random() * 5
   end
@@ -211,13 +215,61 @@ stderrf("Eval exit %s : conns:%d svolume:%d\n", R:tostr(), R:total_conns(), R.sv
   end
 
 
+  local function get_entry_conn(R, skip_room)
+    each A in R.areas do
+    each C in A.conns do
+      if C.A1.room == C.A2.room then continue end
+
+      if C.A1.room == skip_room or C.A2.room == skip_room then continue end
+
+      return C
+    end
+    end
+
+    error("Cannot find entry conn for secret exit")
+  end
+
+
   local function add_secret_exit()
-    -- TODO
+    -- check if needed ?
+    if not LEVEL.secret_exit then
+      return
+    end
+
+    local R = pick_exit_room("secret_mode")
+
+    if not R then
+      gui.printf("WARNING : no room for secret exit!\n")
+      return
+    end
+
+    -- OK --
+
+    gui.printf("Secret Exit: %s\n", R:tostr())
+
+    R.purpose = "SECRET_EXIT"
+    R.is_secret = true
+
+    -- if connected to a hallway or stairwell, make it secret too
+
+    local C = get_entry_conn(R)
+    assert(C)
+
+    local N = sel(C.A1.room == R, C.A2.room, C.A1.room)
+
+    if N.is_hallway and N:total_conns() <= 2 then
+      N.is_secret = true
+
+      C = get_entry_conn(N, R)
+      assert(C)
+    end
+
+    -- mark connection to get a secret door
+    C.kind = "secret"
   end
 
 
   ---| Quest_create_initial_quest |---
-
 
   local Q = Quest_new()
 
