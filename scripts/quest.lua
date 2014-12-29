@@ -551,7 +551,7 @@ end
 
 function Quest_start_room()
 
-  local function eval_start_room(R)
+  local function eval_start_room(R, alt_mode)
     local score = 1
 
     -- never in a stairwell
@@ -568,6 +568,8 @@ function Quest_start_room()
 
     -- really really don't want to see a goal (like a key)
     if not R.purpose then
+      if alt_mode then return -1 end
+
       score = score + 1000
     end
 
@@ -585,7 +587,7 @@ function Quest_start_room()
   end
 
 
-  local function pick_best_start(coop_mode)
+  local function pick_best_start(alt_mode)
     local best_R
     local best_score = 0
 
@@ -594,7 +596,7 @@ function Quest_start_room()
     each R in LEVEL.rooms do
       if R.areas[1].quest != first_quest then continue end
 
-      local score = eval_start_room(R)
+      local score = eval_start_room(R, alt_mode)
 
       if score > best_score then
         best_R = R
@@ -624,8 +626,55 @@ function Quest_start_room()
   end
 
 
-  local function find_alternative_start()
-    -- TODO
+  local function partition_coop_players()
+    --
+    -- partition players between the two rooms.  Since Co-op is often
+    -- played by two people, have a large tendency to place 'player1'
+    -- and 'player2' in different rooms.
+    --
+
+    local set1, set2
+
+    if rand.odds(10) then
+      set1 = { "player1", "player2", "player5", "player6" }
+      set2 = { "player3", "player4", "player7", "player8" } 
+    elseif rand.odds(50) then
+      set1 = { "player1", "player3", "player5", "player7" }
+      set2 = { "player2", "player4", "player6", "player8" } 
+    else
+      set1 = { "player1", "player4", "player6", "player7" }
+      set2 = { "player2", "player3", "player5", "player8" } 
+    end
+
+    if rand.odds(50) then
+      set1, set2 = set2, set1
+    end
+
+    LEVEL.start_room.player_set = set1
+    LEVEL.alt_start .player_set = set2
+  end
+
+
+  local function find_alternate_start()
+    -- only for Co-operative games
+    if OB_CONFIG.mode != "coop" then return end
+
+    -- disabled by gameplay_tweaks module?
+    if PARAM.start_together then return end
+
+    local R = pick_best_start("alt_mode")
+
+    if not R then return end
+
+    -- OK --
+
+    gui.printf("Alternate Start room: %s\n", R:tostr())
+
+    R.purpose = "START"
+
+    LEVEL.alt_start = R
+
+    partition_coop_players()
   end
 
 
@@ -648,9 +697,7 @@ function Quest_start_room()
 
   add_normal_start()
 
-  if OB_CONFIG.mode == "coop" then
-    find_alternate_start()
-  end
+  find_alternate_start()
 
   do_entry_conns(LEVEL.start_area, nil, {})
 end

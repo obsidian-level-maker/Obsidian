@@ -50,8 +50,9 @@ OB_MODULES["gameplay_tweaks"] =
 
   options =
   {
-    kept_weapons  = { label="Kept Weapons",   choices=GAMEPLAY_TWEAKS.YES_NO }
-    quiet_start   = { label="Quiet Start",    choices=GAMEPLAY_TWEAKS.YES_NO }
+    kept_weapons   = { label="Kept Weapons",   choices=GAMEPLAY_TWEAKS.YES_NO }
+    quiet_start    = { label="Quiet Start",    choices=GAMEPLAY_TWEAKS.YES_NO }
+    start_together = { label="Start Together", choices=GAMEPLAY_TWEAKS.YES_NO }
   }
 }
 
