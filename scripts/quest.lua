@@ -585,6 +585,50 @@ function Quest_start_room()
   end
 
 
+  local function pick_best_start(coop_mode)
+    local best_R
+    local best_score = 0
+
+    local first_quest = LEVEL.quests[1]
+
+    each R in LEVEL.rooms do
+      if R.areas[1].quest != first_quest then continue end
+
+      local score = eval_start_room(R)
+
+      if score > best_score then
+        best_R = R
+        best_score = score
+      end
+    end
+
+    return best_R
+  end
+
+
+  local function add_normal_start()
+    local R = pick_best_start()
+
+    if not R then
+      error("Could not find a usable start room")
+    end
+
+    gui.printf("Start room: %s\n", R:tostr())
+
+    R.purpose = "START"
+
+    LEVEL.start_room = R
+    LEVEL.start_area = R.areas[1]  -- TODO
+
+    LEVEL.quests[1].entry = LEVEL.start_area
+  end
+
+
+  local function find_alternative_start()
+    -- TODO
+  end
+
+
   local function do_entry_conns(A, entry_conn, seen)
     A.entry_conn = entry_conn
 
@@ -602,38 +646,11 @@ function Quest_start_room()
 
   ---| Quest_start_room |---
 
-  local best_R
-  local best_score = 0
+  add_normal_start()
 
-  local first_quest = LEVEL.quests[1]
-
-  each R in LEVEL.rooms do
-    if R.areas[1].quest != first_quest then continue end
-
-    local score = eval_start_room(R)
-
-    if score > best_score then
-      best_R = R
-      best_score = score
-    end
+  if OB_CONFIG.mode == "coop" then
+    find_alternate_start()
   end
-
-  if not best_R then
-    error("Could not find a usable start room")
-  end
-
-  -- OK --
-
-  local R = best_R
-
-  gui.printf("Start room: %s\n", R:tostr())
-
-  R.purpose = "START"
-
-  LEVEL.start_room = R
-  LEVEL.start_area = R.areas[1]  -- TODO
-
-  LEVEL.quests[1].entry = LEVEL.start_area
 
   do_entry_conns(LEVEL.start_area, nil, {})
 end
