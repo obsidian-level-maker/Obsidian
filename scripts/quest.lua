@@ -561,6 +561,21 @@ function Quest_start_room()
   end
 
 
+  local function do_entry_conns(A, entry_conn, seen)
+    A.entry_conn = entry_conn
+
+    seen[A] = 1
+
+    each C in A.conns do
+      local A2 = C:neighbor(A)
+
+      if not seen[A2] then
+        do_entry_conns(A2, C, seen)
+      end
+    end
+  end
+
+
   ---| Quest_start_room |---
 
   local best_R
@@ -599,6 +614,8 @@ function Quest_start_room()
   LEVEL.start_area = R.areas[1]  -- TODO
 
   LEVEL.quests[1].entry = LEVEL.start_area
+
+  do_entry_conns(LEVEL.start_area, nil, {})
 end
 
 
