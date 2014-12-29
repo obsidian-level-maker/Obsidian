@@ -141,12 +141,20 @@ end
 
 
 
-function Connect_merge_groups(id1, id2)
-  if id1 > id2 then id1,id2 = id2,id1 end
+function Connect_merge_groups(A1, A2)
+  local gr1 = A1.conn_group
+  local gr2 = A2.conn_group
+
+--- stderrf("merge_groups %d <--> %d\n", gr1, gr2)
+
+  assert(gr1 and gr2)
+  assert(gr1 != gr2)
+
+  if gr1 > gr2 then gr1,gr2 = gr2,gr1 end
 
   each A in LEVEL.areas do
-    if A.conn_group == id2 then
-       A.conn_group = id1
+    if A.conn_group == gr2 then
+       A.conn_group = gr1
     end
   end
 end
@@ -160,6 +168,12 @@ function Connect_seed_pair(S, T, dir)
   end
 
   assert(S.area and T.area)
+
+--[[
+stderrf("  AREA_%d (group %d) <---> AREA_%d (group %d)\n",
+S.area.id, S.area.conn_group,
+T.area.id, T.area.conn_group)
+--]]
 
   assert(S.room and S.room.kind != "scenic")
   assert(T.room and T.room.kind != "scenic")
@@ -244,7 +258,7 @@ function Connect_teleporters()
 
     gui.debugf("Teleporter connection: %s -- >%s\n", R1:tostr(), R2:tostr())
 
-    Connect_merge_groups(A1.conn_group, A2.conn_group)
+    Connect_merge_groups(A1, A2)
 
     local C = CONN_CLASS.new("teleporter", A1, A2)
 
@@ -908,11 +922,11 @@ function Weird_connect_stuff()
 
     local loc1, loc2 = pick_hallway_conn_spots(R, where1, where2)
 
-    Connect_merge_groups(r_group, n1_group)
-    Connect_merge_groups(r_group, n2_group)
-
     Connect_seed_pair(loc1.S, loc1.N, loc1.dir)
     Connect_seed_pair(loc2.S, loc2.N, loc2.dir)
+
+    Connect_merge_groups(R.areas[1], N1.areas[1])
+    Connect_merge_groups(R.areas[1], N2.areas[1])
 
     return true
   end
@@ -970,13 +984,10 @@ function Weird_connect_stuff()
 
     A.is_stairwell = well
 
-    local hall_group = R.areas[1].conn_group
-
-    Connect_merge_groups(hall_group, N1.conn_group)
-    Connect_merge_groups(hall_group, N2.conn_group)
-
-    E1.conn = Connect_seed_pair(E1.S, nil, E1.dir)
     E2.conn = Connect_seed_pair(E2.S, nil, E2.dir)
+
+    Connect_merge_groups(R.areas[1], N1)
+    Connect_merge_groups(R.areas[1], N2)
 
     return true
   end
@@ -1191,9 +1202,9 @@ do return false end
       A2.room.kind = "hallway"
     end
 
-    Connect_merge_groups(A1.conn_group, A2.conn_group)
-
     Connect_seed_pair(best_S, N, best_dir)
+
+    Connect_merge_groups(A1, A2)
   end
 
 
@@ -1278,9 +1289,9 @@ assert(A.room == R)
 
     local S, dir = pick_internal_seed(R, A1, A2)
 
-    Connect_merge_groups(A1.conn_group, A2.conn_group)
-
     Connect_seed_pair(S, nil, dir)
+
+    Connect_merge_groups(A1, A2)
   end
 
 
