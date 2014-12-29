@@ -200,6 +200,32 @@ function ROOM_CLASS.has_sky_neighbor(R)
 end
 
 
+function ROOM_CLASS.has_teleporter(R)
+  each A in R.areas do
+    each C in A.conns do
+      if C.kind == "teleporter" then return true end
+    end
+  end
+
+  return false
+end
+
+
+function ROOM_CLASS.total_conns(R)
+  local count = 0
+
+  each A in R.areas do
+    each C in A.conns do
+      if C.A1.room != C.A2.room then
+        count = count + 1
+      end
+    end
+  end
+
+  return count
+end
+
+
 function ROOM_CLASS.valid_T(R, x, y)
   if x < R.tx1 or x > R.tx2 then return false end
   if y < R.ty1 or y > R.ty2 then return false end
