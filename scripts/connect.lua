@@ -708,13 +708,18 @@ function Weird_connect_stuff()
     assert(not N1.is_hallway)
     assert(not N2.is_hallway)
 
-    -- TODO : scoring of a hallway pair
-    --        e.g. volume % of path through the hallway
+    -- TODO : volume % of path through hallway
 
-    local score = 100
+    local score = 200
+
+    local conn_max = math.max(N1:total_conns(), N2:total_conns())
+
+    if conn_max >= 4 then score = score - 100 end
+    if conn_max >= 3 then score = score - 50 end
+    if conn_max >= 2 then score = score - 10  end
 
     -- tie breaker
-    return score + gui.random()
+    return score + gui.random() * 12
   end
 
 
@@ -894,18 +899,18 @@ A.is_outdoor = false
 
     -- connection is possible, evaluate it --
 
-    local score = 1
-
     local R1 = A1.room
     local R2 = A2.room
 
+    local score
+
     -- we done hallways already, no more please
     if R1.is_hallway and R2.is_hallway then
-      -- score = 1
+      score =  200
     elseif R1.is_hallway or R2.is_hallway then
-      score = 1000
+      score = 1200
     else
-      score = 2000
+      score = 2200
     end
 
     -- try not to have more than one connection in a seed
@@ -913,14 +918,16 @@ A.is_outdoor = false
       score = score + 500
     end
 
-    -- TODO : more stuff, e.g. dist from existing conns
+    -- TODO : dist from existing room conns
 
---FIXME    -- prefer not making big hubs
---FIXME    local conn_max = math.max(#R1.conns, #R2.conns, 8)
---FIXME    score = score + (8 - conn_max) * 5
+    local conn_max = math.max(R1:total_conns(), R2:total_conns())
+
+    if conn_max >= 4 then score = score - 100 end
+    if conn_max >= 3 then score = score - 50 end
+    if conn_max >= 2 then score = score - 10  end
 
     -- tie breaker
-    return score + 12 * gui.random()
+    return score + 15 * gui.random()
   end
 
 
