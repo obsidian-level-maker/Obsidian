@@ -939,7 +939,7 @@ function Layout_outdoor_shadows()
     if SA == NA then return false end
 
     if not NA.is_outdoor or NA.mode == "void" then return false end
-    if not SA.is_outdoor or SA.mode == "void" then return true end
+    if not SA.is_outdoor or SA.mode == "void" or SA.is_porch then return true end
 
     local junc = Junction_lookup(SA, NA)
 
