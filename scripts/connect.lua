@@ -984,6 +984,10 @@ function Weird_connect_stuff()
 
     A.is_stairwell = well
 
+--FIXME : support outdoor stairwells
+A.is_outdoor = false
+
+    E1.conn = Connect_seed_pair(E1.S, nil, E1.dir)
     E2.conn = Connect_seed_pair(E2.S, nil, E2.dir)
 
     Connect_merge_groups(R.areas[1], N1)
@@ -996,9 +1000,6 @@ function Weird_connect_stuff()
   local function try_make_a_stairwell(R)
     -- if two or more areas were merged, cannot make a stairwell
     if #R.areas > 1 then return false end
-
---!!!!!! STAIRWELLS  FIXME
-do return false end
 
     local A = R.areas[1]
 

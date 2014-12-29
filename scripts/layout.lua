@@ -1087,9 +1087,9 @@ function Layout_build_stairwell(A)
   local edge2 = A.edge_loops[1][well.edge2]
 
   -- swap edges if entering from wrong side
-  if A.room.entry_conn == edge1.conn then
+  if A.entry_conn == edge1.conn then
     -- OK
-  elseif A.room.entry_conn == edge2.conn then
+  elseif A.entry_conn == edge2.conn then
     edge1, edge2 = edge2, edge1
   else
     error("bad entry_conn in stairwell??")
