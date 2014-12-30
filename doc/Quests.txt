@@ -2,10 +2,10 @@
 QUESTS
 ======
 
-A "quest" is a group of connected rooms, having one or more "targets"
-(rooms the player needs to visit, typically containing an important goal
-like getting a key or exiting the level).  The exit from a quest is
-always a target.
+A "quest" is a group of connected rooms, having one or more "goals"
+which are places the player needs to visit, typically containing an
+important object like a key or switch, but the exit from a quest is
+also a goal.
 
 A quest also contains an entry room (only exception is that the start
 room of the level may not be decided until after all the quests have
@@ -13,18 +13,18 @@ been made -- so during this phase, the first quest will be without any
 starting room).
 
 Any quest can potentially be divided into two quests, by locking one of
-the connections between two of its rooms and adding the solution(s) to
-some unused leaf room(s) in the first half.  The solution room(s) and
-exit of first half become targets of that half.
+the connections between two of its rooms and adding the solution to an
+unused leaf room in the first half.  Both the solution room and the exit
+of the first half become goals of that half.
 
 One important requirement for dividing a quest is that the second
-half contains at least one of the original targets (especially a
-solution target).  We also require that the first half contains the
-entry room of the original quest (if any).
+half contains at least one of the original goals (especially a
+solution).  We also require that the first half contains the entry
+room of the original quest (if any).
 
 This system can handle a door which requires multiple keys to open
 it, or a staircase which is only fully traversible when multiple
-switches have been pressed.  We simply add the extra keys as targets
+switches have been pressed.  We simply add the extra keys as goals
 of the first half of the divided quest.  [ We also need to check
 that the first half has enough unused leaf rooms ]
 
