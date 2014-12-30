@@ -53,7 +53,7 @@
 
     id, name   -- debugging aids
 
-    quests : list(QUEST)   -- entry into zone is in quests[1]
+    quests : list(QUEST)
 
 
     -- FIXME : more stuff  e.g. building_mat, cave_mat, monster palette !!!
@@ -90,7 +90,7 @@
 --------------------------------------------------------------]]
 
 
-function Quest_new(precede_Q)
+function Quest_new()
   local id = 1 + #LEVEL.quests
 
   local QUEST =
@@ -102,11 +102,7 @@ function Quest_new(precede_Q)
     svolume = 0
   }
 
-  if precede_Q then
-    table.add_before(LEVEL.quests, precede_Q, QUEST)
-  else
-    table.insert(LEVEL.quests, QUEST)
-  end
+  table.insert(LEVEL.quests, QUEST)
 
   return QUEST
 end
@@ -302,8 +298,8 @@ function Quest_eval_divide_at_conn(C, info)
   --    score   :  best current score  (must be initialised to zero)
   --
   --    conn    :  the best connection  [ NIL if none yet ]
-  --    side    :  side on connection of second half (1 or 2)
   --    quest   :  the quest to divide
+  --    kept_goal :  the goal which remains in second half
   --
   --    before  :  area set of first half
   --    after   :  area set of second half
@@ -391,18 +387,18 @@ function Quest_eval_divide_at_conn(C, info)
   end
 
 
-  local function has_solution_goal(areas)
+  local function find_goal_to_keep(areas)
     each goal in quest.goals do
       if goal.kind != "solution" then continue end
 
       if (goal.room and areas[goal.room.areas[1].id]) or
          (goal.area and areas[goal.area.id])
       then
-        return true
+        return goal
       end
     end
 
-    return false
+    return nil
   end
 
 
@@ -457,9 +453,18 @@ stderrf("    (entry in second half)\n")
   end
 
   -- one existing goal MUST be in second half
-  if not has_solution_goal(after) then
+  local kept_goal = find_goal_to_keep(after)
+  if not kept_goal then
+    before, after = after, before
+    kept_goal = find_goal_to_keep(after)
+  end
+
+  assert(kept_goal)
+--[[
+  if not kept_goal then
 stderrf("    (no solution in second half)\n")
   return end
+--]]
 
   -- FIXME : in "MINOR" mode check areas not rooms
   local leafs = unused_rooms_in_set(before)
@@ -516,7 +521,7 @@ function Quest_perform_division(info)
 
   -- new quest is the first half (is added before Q2 in LEVEL.quests)
 
-  local Q1 = Quest_new(Q2)
+  local Q1 = Quest_new()
 
   Q2.entry = info.conn.A2
 
@@ -538,7 +543,7 @@ end
 
 
 
-function Quest_try_divide(mode, goals)
+function Quest_scan_all_conns(mode, goals)
   local info =
   {
     mode = mode
@@ -548,7 +553,7 @@ function Quest_try_divide(mode, goals)
     score = 0
   }
 
-stderrf("Quest_try_divide.....\n")
+stderrf("Quest_scan_all_conns.....\n")
 
   each C in LEVEL.conns do
     Quest_eval_divide_at_conn(C, info)
@@ -623,7 +628,7 @@ function Quest_add_major_quests()
     -- nothing possible when no more goals
     if not goal then break; end
     
-    if not Quest_try_divide("MAJOR", { goal }) then
+    if not Quest_scan_all_conns("MAJOR", { goal }) then
       break;
     end
   end
@@ -680,6 +685,22 @@ end
 
 function Quest_start_room()
 
+  local start_quest
+
+
+  local function find_start_quest()
+    -- will be the quest without a current 'entry' area
+    each Q in LEVEL.quests do
+      if not Q.entry then
+        start_quest = Q
+        return
+      end
+    end
+
+    error("Failed to find starting quest")
+  end
+
+
   local function eval_start_room(R, alt_mode)
     local score = 1
 
@@ -720,10 +741,8 @@ function Quest_start_room()
     local best_R
     local best_score = 0
 
-    local first_quest = LEVEL.quests[1]
-
     each R in LEVEL.rooms do
-      if R.areas[1].quest != first_quest then continue end
+      if R.areas[1].quest != start_quest then continue end
 
       local score = eval_start_room(R, alt_mode)
 
@@ -751,7 +770,7 @@ function Quest_start_room()
     LEVEL.start_room = R
     LEVEL.start_area = R.areas[1]  -- TODO
 
-    LEVEL.quests[1].entry = LEVEL.start_area
+    start_quests.entry = LEVEL.start_area
   end
 
 
@@ -823,6 +842,8 @@ function Quest_start_room()
 
 
   ---| Quest_start_room |---
+
+  find_start_quest()
 
   add_normal_start()
 
