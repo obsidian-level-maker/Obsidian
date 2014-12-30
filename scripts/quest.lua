@@ -64,26 +64,26 @@
 --[[
     kind : keyword  -- "exit" or "solution"
 
+    solution : keyword  --  "KEY" or "SWITCH"  (NIL for exit goals)
+
+    item : keyword  -- name of key or switch
+
+    lock : LOCK   -- lock which this solves  (NIL for exit goals)
+
+    -- where the goal is
     room : AREA   -- used for MAJOR quests
     area : AREA   -- used for MINOR quests
 
----???    lock : LOCK
-
+    tag : number    -- tag number to use for a switched door
 --]]
 
 
 --class LOCK
 --[[
-    kind : keyword  -- "KEY" or "SWITCH" or "LEVEL_EXIT"
+    goals : list(GOAL)  -- the goal(s) which solve the lock
 
-    switch : string  -- the type of key or switch
-    key    : string  --
-
-    conn : CONN     -- connection between two rooms (and two quests)
+    conn : CONN     -- connection which is locked
                     -- which is locked (keyed door, lowering bars, etc)
-                    -- Not used for EXITs.
-
-    tag : number    -- tag number to use for a switched door
 --]]
 
 
