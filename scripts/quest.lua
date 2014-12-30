@@ -34,7 +34,7 @@
 
     entry : CONN
 
-    targets : list(TARGET)
+    goals : list(GOAL)
 
 ---???    unused_leafs : list(AREA)
 
@@ -60,14 +60,15 @@
 --]]
 
 
---class TARGET
+--class GOAL
 --[[
-    kind : keyword  -- "exit" or "goal"
+    kind : keyword  -- "exit" or "solution"
 
     room : AREA   -- used for MAJOR quests
     area : AREA   -- used for MINOR quests
 
-    lock : LOCK
+---???    lock : LOCK
+
 --]]
 
 
@@ -97,7 +98,7 @@ function Quest_new(precede_Q)
     id = id
     name  = "QUEST_" .. id
     areas = {}
-    targets = {}
+    goals = {}
     svolume = 0
   }
 
@@ -144,7 +145,7 @@ end
 function Quest_create_initial_quest()
   --
   -- Turns the whole map into a single Quest object, and pick an exit room
-  -- as the target of the quest.
+  -- as the goal of the quest.
   --
   -- This quest can be divided later on into major and minor quests.
   --
@@ -200,8 +201,8 @@ stderrf("Eval exit %s : conns:%d svolume:%d\n", R:tostr(), R:total_conns(), R.sv
 
     LEVEL.exit_room = R
 
-    -- create the target for the quest
-    local TARGET =
+    -- create the goal for the entire map
+    local GOAL =
     {
       kind = "goal"
 
@@ -211,7 +212,7 @@ stderrf("Eval exit %s : conns:%d svolume:%d\n", R:tostr(), R:total_conns(), R.sv
       area = R.areas[1]
     }
 
-    table.insert(quest.targets, TARGET)
+    table.insert(quest.goals, GOAL)
   end
 
 
@@ -389,23 +390,18 @@ function Quest_eval_divide_at_conn(C, info)
   end
 
 
-  local function check_targets(areas)
-    -- returns 0 if no targets in the area set [ NO GOOD ]
-    --         1 if a non-goal target is in the set [ USABLE ]
-    --         2 if a goal target is in the set [ BEST ]
+  local function has_solution_goal(areas)
+    each goal in Q2.goals do
+      if goal.kind != "solution" then continue end
 
-    local has_non_goal = false
-
-    each target in Q2.targets do
-      if (target.room and areas[target.room.areas[1].id]) or
-         (target.area and areas[target.area.id])
+      if (goal.room and areas[goal.room.areas[1].id]) or
+         (goal.area and areas[goal.area.id])
       then
-        if target.kind == "goal" then return 2 end
-        has_non_goal = true
+        return true
       end
     end
 
-    return sel(has_non_goal, 1, 0)
+    return false
   end
 
 
@@ -452,8 +448,8 @@ function Quest_eval_divide_at_conn(C, info)
     if not before[quest.entry.id] then return end
   end
 
-  -- one existing target MUST be in second half
-  if check_targets(after) < 2 then return end
+  -- one existing goal MUST be in second half
+  if not has_solution_goal(after) then return end
 
   -- FIXME : in "MINOR" mode check areas not rooms
   local leafs = unused_rooms_in_set(before)
@@ -482,20 +478,20 @@ function Quest_perform_division(info)
   end
 
 
-  local function transfer_existing_targets(Q1, Q2)
-    for i = #Q2.targets, 1, -1 do
-      local targ = Q2.targets[i]
+  local function transfer_existing_goals(Q1, Q2)
+    for i = #Q2.goals, 1, -1 do
+      local targ = Q2.goals[i]
 
       if (targ.room and targ.room.areas[1].quest == Q1) or
          (targ.area and targ.area.quest == Q1)
       then
-        table.insert(Q1.targets, table.remove(Q2.targets, i))
+        table.insert(Q1.goals, table.remove(Q2.goals, i))
       end
     end
   end
 
 
-  local function add_new_targets(Q1)
+  local function add_new_goals(Q1)
     -- FIXME !!!!
   end
 
@@ -519,9 +515,9 @@ function Quest_perform_division(info)
   assign_quest(Q1)
   assign_quest(Q2)
 
-  transfer_existing_targets(Q1, Q2)
+  transfer_existing_goals(Q1, Q2)
 
-  add_new_targets(Q1)
+  add_new_goals(Q1)
 
   -- FIXME : actually lock the connection !!!
 end
@@ -532,7 +528,7 @@ function Quest_try_divide(mode)
   local info =
   {
     mode = mode
-    lock_kind = "Foo"
+    lock_kind = "key"
     num_goals = 1
 
     score = 0
@@ -558,7 +554,7 @@ function Quest_add_major_quests()
 
   local map_svolume = LEVEL.quests[1].svolume
 
-  local want_splits = 3  -- three keys  ( FIXME : base it on map_svolume )
+  local want_splits = 1  -- three keys  ( FIXME : base it on map_svolume )
 
   for i = 1, want_splits do
     if not Quest_try_divide("MAJOR") then
