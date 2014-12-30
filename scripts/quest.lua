@@ -64,7 +64,7 @@
 --[[
     kind : keyword  -- "exit" or "solution"
 
-    solution : keyword  --  "KEY" or "SWITCH"  (NIL for exit goals)
+    solution : keyword  --  "KEY" or "SWITCH" or "LEVEL_EXIT"  (NIL for exit goals)
 
     item : keyword  -- name of key or switch
 
@@ -204,9 +204,8 @@ stderrf("Eval exit %s : conns:%d svolume:%d\n", R:tostr(), R:total_conns(), R.sv
     -- create the goal for the entire map
     local GOAL =
     {
-      kind = "goal"
-
-      sub_kind = "EXIT"
+      kind = "solution"
+      solution = "LEVEL_EXIT"
 
       room = R
       area = R.areas[1]
@@ -303,9 +302,11 @@ function Quest_eval_divide_at_conn(C, info)
   --    score   :  best current score  (must be initialised to zero)
   --
   --    conn    :  the best connection  [ NIL if none yet ]
+  --    side    :  side on connection of second half (1 or 2)
   --    quest   :  the quest to divide
-  --    before  :  area set before best connection
-  --    after   :  area set after best connection
+  --
+  --    before  :  area set of first half
+  --    after   :  area set of second half
   --    leafs   :  list of rooms / areas to place goals (#leafs >= num_goals)
   -- 
 
@@ -369,7 +370,7 @@ function Quest_eval_divide_at_conn(C, info)
   end
 
 
-  local function unused_rooms_in_set(C, areas)
+  local function unused_rooms_in_set(areas)
     local leafs = {}
 
     -- Note : we visit the same room multiple times (not worth optimising)
@@ -391,7 +392,7 @@ function Quest_eval_divide_at_conn(C, info)
 
 
   local function has_solution_goal(areas)
-    each goal in Q2.goals do
+    each goal in quest.goals do
       if goal.kind != "solution" then continue end
 
       if (goal.room and areas[goal.room.areas[1].id]) or
@@ -424,18 +425,21 @@ function Quest_eval_divide_at_conn(C, info)
 
   -- connection must be same quest
   if C.A1.quest != C.A2.quest then
+stderrf("    (not same quest)\n")
     return
   end
 
   -- zones must not divide a room in half
   if info.mode == "MAJOR" and C.A1.room == C.A2.room then
+stderrf("    (same room)\n")
     return
   end
 
-  -- no locking end of hallways in MAJOR mode
-  if info.mode == "MAJOR" and C.A1.room.is_hallway then
-    return
-  end
+-- FIXME : HOW TO FIX?  (we won't know which end of hallway is entry or exit)
+--!!!!  -- no locking end of hallways in MAJOR mode
+--!!!!  if info.mode == "MAJOR" and C.A1.room.is_hallway then
+--!!!!    return
+--!!!!  end
 
   quest = C.A1.quest
 
@@ -445,18 +449,28 @@ function Quest_eval_divide_at_conn(C, info)
 
   -- entry of quest MUST be in first half
   if quest.entry then
-    if not before[quest.entry.id] then return end
+    if not before[quest.entry.id] then
+
+assert(after[quest.entry.id])
+stderrf("    (entry in second half)\n")
+    return end
   end
 
   -- one existing goal MUST be in second half
-  if not has_solution_goal(after) then return end
+  if not has_solution_goal(after) then
+stderrf("    (no solution in second half)\n")
+  return end
 
   -- FIXME : in "MINOR" mode check areas not rooms
   local leafs = unused_rooms_in_set(before)
 
-  if #leafs < info.num_goals then return end
+  if #leafs < info.num_goals then
+stderrf("    (not enough leafs : %d < %d\n", #leafs, info.num_goals)
+  return end
 
   local score = eval_split_possibility(C, before, after)
+
+stderrf("  possible @ %s : score %1.2f\n", C:tostr(), score)
 
   if score > info.score then
     info.conn   = C
@@ -534,13 +548,19 @@ function Quest_try_divide(mode, goals)
     score = 0
   }
 
+stderrf("Quest_try_divide.....\n")
+
   each C in LEVEL.conns do
     Quest_eval_divide_at_conn(C, info)
   end
 
   if not info.conn then
+stderrf("---> NOTHING POSSIBLE\n")
     return false
   end
+
+  gui.printf("Dividing %s @ %s (%s -- %s)\n", info.quest.name,
+             C:tostr(), C.A1.room:tostr(), C.A2.room:tostr())
 
   Quest_perform_division(info)
   return true
@@ -557,14 +577,15 @@ function Quest_add_major_quests()
   local function collect_major_goals()
     LEVEL.major_goals = {}
 
-    local key_list = table.copy(LEVEL.usable_keys or THEME.keys or {}) 
+    local key_tab = table.copy(LEVEL.usable_keys or THEME.keys or {}) 
 
-    each name in key_list do
+    each name,prob in key_tab do
       local GOAL =
       {
         kind = "solution"
         solution = "KEY"
         item = name
+        prob = prob
       }
       table.insert(LEVEL.major_goals, GOAL)
     end
@@ -846,7 +867,7 @@ local via_conn_name = "-"
 
   
   local function visit_room(R, quest)
-stderrf("visit_room %s (via %s)\n", R:tostr(), via_conn_name)
+--- stderrf("visit_room %s (via %s)\n", R:tostr(), via_conn_name)
     R.lev_along = cur_along / total_rooms
 
     cur_along = cur_along + 1
@@ -881,13 +902,12 @@ via_conn_name = C:tostr()
     visit_room(Q.entry.room, Q)
   end
 
--- sanity check
-each R in LEVEL.rooms do
-  if not R.lev_along then
-    error("Room not visited: " .. R:tostr())
+  -- sanity check
+  each R in LEVEL.rooms do
+    if not R.lev_along then
+      error("Room not visited: " .. R:tostr())
+    end
   end
-end
-
 
   -- sort the rooms
   table.sort(LEVEL.rooms, function(A,B) return A.lev_along < B.lev_along end)
