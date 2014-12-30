@@ -847,6 +847,11 @@ function dummy_properties(A)
 
   A.facade_mat = A.facade_mat or A.wall_mat
 
+  --DEBUG FOR SECRETS
+  if A.room and A.room.is_secret then
+  A.floor_mat = "REDWALL"
+  end
+
   assert(A.wall_mat)
 end
 
