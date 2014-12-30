@@ -1846,8 +1846,6 @@ function Quest_make_quests()
 
 ---???  Quest_final_battle()
 
----!!!  Connect_reserved_rooms()
-
   Area_spread_zones()
 
   Quest_choose_themes()
