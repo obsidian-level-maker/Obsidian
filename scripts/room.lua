@@ -121,7 +121,9 @@ end
 function ROOM_CLASS.kill_it(R)
   -- sanity check
   each C in LEVEL.conns do
-    if C.A1.room == R or C.A2.room == R then
+    if (C.A1.room == R and C.A2.room != R) or
+       (C.A2.room == R and C.A1.room != R)
+    then
       error("Killed a connected room!")
     end
   end
@@ -129,11 +131,16 @@ function ROOM_CLASS.kill_it(R)
   each A in R.areas do
     A.mode = "void"
     A.room = nil
-    A.conns = nil
 
     each S in A.half_seeds do
       S.room = nil
     end
+
+    each C in A.conns do
+      table.kill_elem(LEVEL.conns, C)
+    end
+
+    A.conns = nil
   end
 
   table.kill_elem(LEVEL.rooms, R)
