@@ -1138,15 +1138,15 @@ function Render_importants()
   end
 
 
-  local function build_goal(G)
-    if G.content_kind == "WEAPON" then
-      content_weapon(G)
-    elseif G.content_kind == "ITEM" then
-      content_item(G)
-    elseif G.content_kind == "TELEPORTER" then
-      content_teleporter(G)
+  local function build_important(spot)
+    if spot.content_kind == "WEAPON" then
+      content_weapon(spot)
+    elseif spot.content_kind == "ITEM" then
+      content_item(spot)
+    elseif spot.content_kind == "TELEPORTER" then
+      content_teleporter(spot)
     else
-      content_purpose(G)
+      content_purpose(spot)
     end
   end
 
@@ -1156,8 +1156,8 @@ function Render_importants()
   each room in LEVEL.rooms do
     R = room
 
-    each goal in R.goals do
-      build_goal(goal)
+    each spot in R.importants do
+      build_important(spot)
     end
   end
 end

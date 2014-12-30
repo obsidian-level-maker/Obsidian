@@ -104,11 +104,11 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
   end
 
 
-  local function nearest_goal(spot)
+  local function nearest_important(spot)
     local dist
 
-    each goal in R.goals do
-      local d = geom.dist(goal.x, goal.y, spot.x, spot.y) / SEED_SIZE
+    each imp in R.importants do
+      local d = geom.dist(imp.x, imp.y, spot.x, spot.y) / SEED_SIZE
 
       -- tie breaker
       d = d + gui.random() / 1024
@@ -126,15 +126,15 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
     -- Factors we take into account:
     --   1. distance from walls
     --   2. distance from entrance / exits
-    --   3. distance from other goals
+    --   3. distance from importants
     --   4. rank value from prefab
 
     local wall_dist = assert(spot.wall_dist)
     local conn_dist = nearest_conn(spot) or 20
-    local goal_dist = nearest_goal(spot) or 20
+    local  imp_dist = nearest_important(spot) or 20
 
-    -- combine conn_dist and goal_dist
-    local score = math.min(goal_dist, conn_dist * 1.5)
+    -- combine conn_dist and imp_dist
+    local score = math.min(imp_dist, conn_dist * 1.5)
 
     -- now combine with wall_dist.
     -- in caves we need the spot to be away from the edges of the room
@@ -172,8 +172,8 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
 
 --[[
 if R.id == 6 then
-stderrf("  (%2d %2d) : wall:%1.1f conn:%1.1f goal:%1.1f --> score:%1.2f\n",
-    sx, sy, wall_dist, conn_dist, goal_dist, score)
+stderrf("  (%2d %2d) : wall:%1.1f conn:%1.1f imp:%1.1f --> score:%1.2f\n",
+    sx, sy, wall_dist, conn_dist,  imp_dist, score)
 end
 --]]
     return score
@@ -221,7 +221,7 @@ end
 
   spot.content_kind = kind
   
-  table.insert(R.goals, spot)
+  table.insert(R.importants, spot)
 
 
   local x1 = spot.x - 96

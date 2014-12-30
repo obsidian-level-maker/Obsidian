@@ -82,10 +82,10 @@ function ROOM_CLASS.new()
     mon_spots  = {}
     item_spots = {}
     big_spots  = {}
-    goal_spots = {}
     cage_spots = {}
+    important_spots = {}
 
-    goals   = {}
+    importants = {}
     closets = {}
     chunks  = {}
     floors  = {}
@@ -962,22 +962,19 @@ function Room_distribute_spots(R, list)
       table.insert(R.cage_spots, spot)
     elseif spot.kind == "pickup" or spot.kind == "big_item" then
       table.insert(R.item_spots, spot)
-    elseif spot.kind == "goal" then
-      if R.kind == "hallway" then
-        error("Goal spot used in hallway prefab")
-      end
-      table.insert(R.goal_spots, spot)
+    elseif spot.kind == "important" then
+      table.insert(R.important_spots, spot)
     else
       table.insert(R.mon_spots, spot)
     end
   end
 
-  -- 1. when no big item spots, convert goal spots
+  -- 1. when no big item spots, convert important spots
   -- 2. when no small item spots, convert monster spots
 
   each spot in list do
 
-    if not seen["big_item"] and spot.kind == "goal" then
+    if not seen["big_item"] and spot.kind == "important" then
       local new_spot = table.copy(spot)
       new_spot.kind = "big_item"
       table.insert(R.item_spots, new_spot)
