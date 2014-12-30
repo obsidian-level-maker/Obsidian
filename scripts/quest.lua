@@ -524,12 +524,12 @@ end
 
 
 
-function Quest_try_divide(mode)
+function Quest_try_divide(mode, goals)
   local info =
   {
     mode = mode
-    lock_kind = "key"
-    num_goals = 1
+    goals = goals
+    num_goals = #goals
 
     score = 0
   }
@@ -549,19 +549,63 @@ end
 
 
 function Quest_add_major_quests()
+  --
+  -- Divides the map into major quests, typically requiring a key to
+  -- progress between the quests.
+  --
+
+  local function collect_major_goals()
+    LEVEL.major_goals = {}
+
+    local key_list = table.copy(LEVEL.usable_keys or THEME.keys or {}) 
+
+    each name in key_list do
+      local GOAL =
+      {
+        kind = "solution"
+        solution = "KEY"
+        item = name
+      }
+      table.insert(LEVEL.major_goals, GOAL)
+    end
+
+    -- TODO : switches
+  end
+
+
+  local function pick_goal()
+    if table.empty(LEVEL.major_goals) then
+      return nil
+    end
+
+    local prob_tab = {}
+
+    each G in LEVEL.major_goals do
+      prob_tab[_index] = G.prob or 50
+    end
+
+    local idx = rand.index_by_probs(prob_tab)
+
+    return table.remove(LEVEL.major_goals, idx)
+  end
+
 
   ---| Quest_add_major_quests |---
 
-  local map_svolume = LEVEL.quests[1].svolume
+  collect_major_goals()
 
-  local want_splits = 1  -- three keys  ( FIXME : base it on map_svolume )
+  local want_splits = 1  -- FIXME : base it on # of unused leaf rooms
 
   for i = 1, want_splits do
-    if not Quest_try_divide("MAJOR") then
+    local goal = pick_goal()
+
+    -- nothing possible when no more goals
+    if not goal then break; end
+    
+    if not Quest_try_divide("MAJOR", { goal }) then
       break;
     end
   end
-
 end
 
 
@@ -1835,14 +1879,12 @@ function Quest_make_quests()
 
   Quest_create_initial_quest()
 
---!!!!!!  Quest_add_major_quests()
+  Quest_add_major_quests()
 
   Quest_start_room()
 
   Quest_group_into_zones()
   Quest_order_by_visit()
-
-  Quest_add_minor_quests()
 
 ---???  Quest_final_battle()
 
@@ -1857,6 +1899,8 @@ function Quest_make_quests()
   else
 --!!!!!!    Quest_add_weapons()
   end
+
+  Quest_add_minor_quests()
 
 --!!!!  Quest_nice_items()
 end
