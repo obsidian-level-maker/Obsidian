@@ -2027,7 +2027,7 @@ function Room_floor_heights()
     local num_steps = well.info.steps
 
     -- if we have a locked door, keep it flat
-    if R:has_any_lock() or (not well.info.straight and rand.odds(10)) then
+    if R:has_any_lock() then
       R.stair_diff_h = 0
     else
       -- TODO : logic to decide Z direction
