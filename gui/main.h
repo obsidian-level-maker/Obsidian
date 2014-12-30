@@ -23,8 +23,8 @@
 
 #define OBLIGE_TITLE  "OBLIGE Level Maker"
 
-#define OBLIGE_VERSION  "7.03"
-#define OBLIGE_HEX_VER  0x703
+#define OBLIGE_VERSION  "7.04"
+#define OBLIGE_HEX_VER  0x704
 
 
 #define CONFIG_FILENAME   "CONFIG.txt"
@@ -68,6 +68,8 @@ extern bool fast_lighting;
 void Main_FatalError(const char *msg, ...);
 void Main_ProgStatus(const char *msg, ...);
 bool Main_BackupFile(const char *filename, const char *ext);
+
+void Main_SetSeed(u32_t val);
 void Main_Ticker();
 
 

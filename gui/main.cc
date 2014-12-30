@@ -53,6 +53,8 @@ int screen_h;
 
 int main_action;
 
+bool need_new_seed;
+
 bool batch_mode = false;
 
 const char *batch_output_file = NULL;
@@ -451,10 +453,8 @@ int Main_key_handler(int event)
 }
 
 
-static void Main_NewSeed()
+static u32_t Main_CalcNewSeed()
 {
-	char buffer[64];
-
 	u32_t val = (u32_t)time(NULL);
 
 	// only use 31 bits (to allow adding values without overflow)
@@ -468,7 +468,15 @@ static void Main_NewSeed()
 		flipped = (flipped << 1) | !! (val & (1 << ((i * 5) % 31)));
 	}
 
-	sprintf(buffer, "%d", flipped);
+	return val;
+}
+
+
+void Main_SetSeed(u32_t val)
+{
+	char buffer[64];
+
+	sprintf(buffer, "%u", val);
 
 	ob_set_config("seed", buffer);
 }
@@ -576,11 +584,15 @@ bool Build_Cool_Shit()
 		main_win->Locked(false);
 	}
 
+	need_new_seed = true;
+
 	if (main_action == MAIN_CANCEL)
 	{
 		main_action = 0;
 
 		Main_ProgStatus("Cancelled");
+
+		need_new_seed = false;
 	}
 
 	// don't need game object anymore
@@ -682,7 +694,7 @@ int main(int argc, char **argv)
 
 		Batch_Defaults();
 
-		Main_NewSeed();
+		Main_SetSeed(Main_CalcNewSeed());
 
 		// batch mode never reads/writes the normal config file.
 		// but we can load settings from a explicitly specified file...
@@ -705,6 +717,8 @@ int main(int argc, char **argv)
 
 
 	/* ---- normal GUI mode ---- */
+
+	need_new_seed = true;
 
 //???	Default_Location();
 
@@ -773,7 +787,8 @@ int main(int argc, char **argv)
 			{
 				main_action = 0;
 
-				Main_NewSeed();
+				if (need_new_seed)
+					Main_SetSeed(Main_CalcNewSeed());
 
 				// save config in case everything blows up
 				Cookie_Save(config_file);
