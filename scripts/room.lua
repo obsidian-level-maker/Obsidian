@@ -1910,16 +1910,19 @@ gui.printf("spread_kind '%s' : starts=%d  quota=%d\n", what, start_num, seed_quo
 
   local total_seeds = SEED_W * SEED_H
 
-  local out_quota = style_sel("outdoors", 0, 6, 30, 70)
-  local cav_quota = style_sel("caves",    0, 6, 30, 70)
+  -- skip = probability to not use it on this level (at all)
 
-  -- if rooms become both cave + outdoor, use this chance to pick one
-  resolve_outdoor_prob = 50
-  if out_quota < cav_quota then resolve_outdoor_prob = 25 end
-  if out_quota > cav_quota then resolve_outdoor_prob = 75 end
+  local out_skip = style_sel("outdoors", 100, 50,  0, 0)
+  local cav_skip = style_sel("caves",    100, 75, 25, 0)
+
+  local out_quota = style_sel("outdoors", 0, 18, 30, 70)
+  local cav_quota = style_sel("caves",    0, 40, 50, 70)
 
   out_quota = total_seeds * out_quota / 100
-  cav_quota = total_seeds * cav_quota / 125  -- a bit less
+  cav_quota = total_seeds * cav_quota / 100
+
+  if rand.odds(out_skip) then out_quota = 0 end
+  if rand.odds(cav_skip) then cav_quota = 0 end
 
   local out_starts = starts_from_quota(out_quota)
   local cav_starts = starts_from_quota(cav_quota)
@@ -1928,10 +1931,19 @@ gui.printf("spread_kind '%s' : starts=%d  quota=%d\n", what, start_num, seed_quo
     out_starts = out_starts + 1
   end
 
-  gui.printf("Outdoor starts: %d (quota %d)\n", out_starts, out_quota)
-  gui.printf("Cave starts: %d (quota %d)\n",    cav_starts, cav_quota)
+  gui.printf("Outdoor starts: %d (quota %d, skip %d%%)\n", out_starts, out_quota, out_skip)
+  gui.printf("Cave starts: %d (quota %d, skip %d%%)\n",    cav_starts, cav_quota, cav_skip)
 
   assert(out_starts + cav_starts <= 9)
+
+  -- if rooms become both cave + outdoor, use this chance to pick one
+  resolve_outdoor_prob = 50
+
+  local out_comp = style_sel("outdoors", 0, 1, 2, 3)
+  local cav_comp = style_sel("caves",    0, 1, 2, 3)
+
+  if out_comp > cav_comp then resolve_outdoor_prob = 75 end
+  if out_comp < cav_comp then resolve_outdoor_prob = 25 end
 
   -- with small # of starts, use less positions (which are further apart)
   if out_starts + cav_starts <= 5 then
