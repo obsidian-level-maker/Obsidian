@@ -163,7 +163,7 @@ function Connect_seed_pair(S, T, dir)
 --- stderrf("Connect_seed_pair: %s dir:%d\n", S:tostr(), dir)
 
   if not T then
-    T = S:diag_neighbor(dir)
+    T = S:neighbor(dir)
   end
 
   assert(S.area and T.area)
@@ -345,7 +345,7 @@ function Weird_connect_stuff()
     each A in R1.areas do
     each S in A.half_seeds do
     each dir in geom.ALL_DIRS do
-      local N = S:diag_neighbor(dir)
+      local N = S:neighbor(dir)
 
       if N and N.room == R2 then
         table.insert(list, { S=S, N=N, dir=dir })
@@ -464,8 +464,8 @@ function Weird_connect_stuff()
 
     -- TODO : handle WIDE edges
 
-    local N1 = E1.S:diag_neighbor(E1.dir)
-    local N2 = E2.S:diag_neighbor(E2.dir)
+    local N1 = E1.S:neighbor(E1.dir)
+    local N2 = E2.S:neighbor(E2.dir)
 
     if not (N1 and N1.area and N1.area.room) then return false end
     if not (N2 and N2.area and N2.area.room) then return false end
@@ -615,7 +615,7 @@ A.is_outdoor = false
 
 
   local function eval_normal_conn(S, dir)
-    local N = S:diag_neighbor(dir)
+    local N = S:neighbor(dir)
 
     if not (N and N.room) then return -1 end
 
@@ -690,7 +690,7 @@ A.is_outdoor = false
       error("Unable to find place for connection!")
     end
 
-    local N = best_S:diag_neighbor(best_dir)
+    local N = best_S:neighbor(best_dir)
 
     local A1 = assert(best_S.area)
     local A2 = assert(N.area)
@@ -745,7 +745,7 @@ A.is_outdoor = false
       rand.shuffle(DIRS)
 
       each dir in DIRS do
-        local N = S:diag_neighbor(dir)
+        local N = S:neighbor(dir)
 
         if N and N.area == A2 then
           return S, dir, N

@@ -187,7 +187,7 @@ end
 --
 -- Returns NIL for edge of map (like the raw_neighbor method).
 --
-function SEED_CLASS.diag_neighbor(S, dir, nodir)
+function SEED_CLASS.neighbor(S, dir, nodir)
   local N
 
   -- handle square seeds
@@ -246,7 +246,7 @@ end
 
 
 function SEED_CLASS.same_room(S, dir)
-  local N = S:diag_neighbor(dir)
+  local N = S:neighbor(dir)
 
   return N and (N.room == S.room)
 end

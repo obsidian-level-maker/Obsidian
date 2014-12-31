@@ -729,7 +729,7 @@ function Room_detect_porches(R)
     local HA = R.areas[1]
 
     each edge in HA.edge_loops[1] do
-      local N = edge.S:diag_neighbor(edge.dir)
+      local N = edge.S:neighbor(edge.dir)
 
       if not (N and N.area) then return false end
 

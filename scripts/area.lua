@@ -221,7 +221,7 @@ function Junction_init()
   each A in LEVEL.areas do
     each S in A.half_seeds do
       each dir in geom.ALL_DIRS do
-        local N = S:diag_neighbor(dir)
+        local N = S:neighbor(dir)
 
         if not (N and N.area) then continue end
         if N.area == S.area then continue end
@@ -419,7 +419,7 @@ function Weird_create_areas()
     -- blocked by an edge, cannot flood across it
     if S.border[dir].edge_kind then return end
 
-    local N = S:diag_neighbor(dir)
+    local N = S:neighbor(dir)
 
     if not N then return end
 
@@ -530,7 +530,7 @@ gui.printf("  loop %d\n", alloc_id("flood_loop"))
     each A in LEVEL.areas do
       each S in A.half_seeds do
         each dir in geom.ALL_DIRS do
-          local N = S:diag_neighbor(dir)
+          local N = S:neighbor(dir)
 
           if N and N.area and N.area != A then
             try_add_neighbors(A, N.area, nb_map)
@@ -570,7 +570,7 @@ gui.printf("  loop %d\n", alloc_id("flood_loop"))
 
     each S in A.half_seeds do
     each dir in geom.ALL_DIRS do
-      local N = S:diag_neighbor(dir)
+      local N = S:neighbor(dir)
 
       if not (N and N.area) then continue end
 
@@ -635,14 +635,14 @@ function Weird_analyse_areas()
       -- point is part of boundary, skip it 
       if S.diagonal == 3 or S.diagonal == 7 then continue end
 
-      local NA = S:diag_neighbor(4)
-      local NB = S:diag_neighbor(2)
+      local NA = S:neighbor(4)
+      local NB = S:neighbor(2)
 
       if not (NA and NA.area == A) then continue end
       if not (NB and NB.area == A) then continue end
 
-      local NC = NA:diag_neighbor(2)
-      local ND = NB:diag_neighbor(4)
+      local NC = NA:neighbor(2)
+      local ND = NB:neighbor(4)
 
       if not (NC and NC.area == A) then continue end
 
@@ -655,7 +655,7 @@ function Weird_analyse_areas()
 
 
   local function check_is_edge(A, S, dir)
-    local N = S:diag_neighbor(dir, "NODIR")
+    local N = S:neighbor(dir, "NODIR")
 
     if N == "NODIR" then return false end
 
@@ -674,7 +674,7 @@ function Weird_analyse_areas()
       end
 
       if geom.is_straight(dir) then
-        S = S:diag_neighbor(dir)
+        S = S:neighbor(dir)
         assert(S and S.area and S.area == A)
       end
 

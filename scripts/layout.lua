@@ -767,7 +767,7 @@ function Layout_outer_borders()
 
       each S in A.half_seeds do
         for dir = 2,8,2 do
-          local N = S:diag_neighbor(dir, "NODIR")
+          local N = S:neighbor(dir, "NODIR")
 
           if N == nil then
             S.border[dir].kind = "sky_edge"
@@ -929,7 +929,7 @@ function Layout_outdoor_shadows()
   local function need_shadow(S, dir)
     if not S.area then return false end
 
-    local N = S:diag_neighbor(dir)
+    local N = S:neighbor(dir)
 
     if not (N and N.area) then return false end
 

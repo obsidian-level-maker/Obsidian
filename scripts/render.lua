@@ -47,7 +47,7 @@ end
 function edge_get_rail(S, dir)
   assert(S.area)
 
-  local N = S:diag_neighbor(dir, "NODIR")
+  local N = S:neighbor(dir, "NODIR")
 
   assert(N != "NODIR")
 
@@ -253,10 +253,10 @@ function Render_edge(A, S, dir)
     local N, bord
 
     if geom.is_straight(dir) then
-      N = S:diag_neighbor(geom.LEFT[dir])
+      N = S:neighbor(geom.LEFT[dir])
       if not (N and N.area == S.area) then return "" end
 
-      N = N:diag_neighbor(dir)
+      N = N:neighbor(dir)
       if not (N and N.area == S.area) then return "" end
 
       bord = N.border[geom.RIGHT[dir]]
@@ -269,15 +269,15 @@ function Render_edge(A, S, dir)
       local dir2 = geom.ROTATE[5][dir]
       local dir3 = geom.RIGHT[dir2]
 
-      N = S:diag_neighbor(dir2)
+      N = S:neighbor(dir2)
       if not (N and N.area == S.area) then return "" end
 
-      N = N:diag_neighbor(dir3)
+      N = N:neighbor(dir3)
       if not (N and N.area == S.area) then return "" end
 
       if seed_touches_junc(N, junc) then return "wide" end
 
-      N = N:diag_neighbor(10 - dir2)
+      N = N:neighbor(10 - dir2)
       if not (N and N.area == S.area) then return "" end
 
       if seed_touches_junc(N, junc) then return "wide" end
@@ -294,10 +294,10 @@ function Render_edge(A, S, dir)
     local N, bord
 
     if geom.is_straight(dir) then
-      N = S:diag_neighbor(geom.RIGHT[dir])
+      N = S:neighbor(geom.RIGHT[dir])
       if not (N and N.area == S.area) then return "" end
 
-      N = N:diag_neighbor(dir)
+      N = N:neighbor(dir)
       if not (N and N.area == S.area) then return "" end
 
       bord = N.border[geom.LEFT[dir]]
@@ -310,15 +310,15 @@ function Render_edge(A, S, dir)
       local dir2 = geom.ROTATE[3][dir]
       local dir3 = geom.LEFT[dir2]
 
-      N = S:diag_neighbor(dir2)
+      N = S:neighbor(dir2)
       if not (N and N.area == S.area) then return "" end
 
-      N = N:diag_neighbor(dir3)
+      N = N:neighbor(dir3)
       if not (N and N.area == S.area) then return "" end
 
       if seed_touches_junc(N, junc) then return "wide" end
 
-      N = N:diag_neighbor(10 - dir2)
+      N = N:neighbor(10 - dir2)
       if not (N and N.area == S.area) then return "" end
 
       if seed_touches_junc(N, junc) then return "wide" end
@@ -597,7 +597,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
   ---| Render_edge |---
 
-  local N = S:diag_neighbor(dir, "NODIR")
+  local N = S:neighbor(dir, "NODIR")
 
   if N == "NODIR" then return end
 
