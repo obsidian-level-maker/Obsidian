@@ -22,6 +22,12 @@
 
 class SEED
 {
+  --
+  -- A "seed" is a square or triangle-shaped half-square on the map,
+  -- used for many space allocation tasks.  The corners exist on a
+  -- regular grid (currently spaced at 192 units on each axis).
+  --
+
   sx, sy  -- location in seed map
 
   diagonal : DIR  -- if non-nil, then seed is split into two halves.
