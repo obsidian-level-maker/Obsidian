@@ -167,22 +167,25 @@ end
 
 
 -- NOTE: this is "raw" and does not handle diagonal seeds
-function SEED_CLASS.neighbor(S, dir, dist)
+function SEED_CLASS.raw_neighbor(S, dir, dist)
   local nx, ny = geom.nudge(S.sx, S.sy, dir, dist)
+
   if nx < 1 or nx > SEED_W or ny < 1 or ny > SEED_H then
     return nil
   end
+
   return SEEDS[nx][ny]
 end
 
 
 --
--- for WEIRD experiment : for a diagonal seed, 'S' should be one particular
--- half ('top' or 'bottom'), and the result 'N' will also be a certain half.
+-- This method handles diagonal seeds.  'S' should be one particular half
+-- ('top' or 'bottom'), and the result 'N' will also be a certain half.
 --
--- returns 'nodir' parameter when 'dir' makes no sense
+-- Returns 'nodir' parameter when 'dir' makes no sense
 -- (i.e. for square seed, only 2/4/6/8, and for a diagonal, only 3 dirs).
--- returns NIL for edge of map (as normal neighbor method).
+--
+-- Returns NIL for edge of map (like the raw_neighbor method).
 --
 function SEED_CLASS.diag_neighbor(S, dir, nodir)
   local N
@@ -194,7 +197,7 @@ function SEED_CLASS.diag_neighbor(S, dir, nodir)
       return nodir
     end
 
-    N = S:neighbor(dir)
+    N = S:raw_neighbor(dir)
 
     if N then
       if dir == 2 and N.diagonal then return N.top end
@@ -209,23 +212,23 @@ function SEED_CLASS.diag_neighbor(S, dir, nodir)
   -- handle diagonal seeds
 
   if (S.diagonal == 7 or S.diagonal == 9) and dir == 8 then
-    return S:neighbor(dir)
+    return S:raw_neighbor(dir)
   end
   
   if (S.diagonal == 1 or S.diagonal == 3) and dir == 2 then
-    N = S:neighbor(dir)
+    N = S:raw_neighbor(dir)
     if N and N.diagonal then return N.top end
     return N
   end
 
   if (S.diagonal == 1 or S.diagonal == 7) and dir == 4 then
-    N = S:neighbor(dir)
+    N = S:raw_neighbor(dir)
     if N and N.diagonal == 1 then return N.top end
     return N
   end
   
   if (S.diagonal == 3 or S.diagonal == 9) and dir == 6 then
-    N = S:neighbor(dir)
+    N = S:raw_neighbor(dir)
     if N and N.diagonal == 3 then return N.top end
     return N
   end
