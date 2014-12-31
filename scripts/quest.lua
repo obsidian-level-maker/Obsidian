@@ -403,6 +403,8 @@ function Quest_eval_divide_at_conn(C, goal, info)
     each id, A in areas do
       local R = A.room
 
+      if R.is_secret then continue end
+
       -- skip the room immediately next to the proposed connection
       -- FIXME area check in "MINOR" mode
       if C.A1.room == R or C.A2.room == R then continue end
@@ -508,6 +510,9 @@ stderrf("  possible @ %s : score %1.2f\n", C:tostr(), score)
 
     info.before = before
     info.after  = after
+    info.before_A = before_A
+    info.after_A  = after_A
+
     info.leafs  = leafs
   end
 end
@@ -518,6 +523,17 @@ function Quest_perform_division(info)
   -- Splits the current quest (info.quest) into two, adding the new quest
   -- into the quest binary tree.  Also locks the connection.
   --
+
+  local function create_lock()
+    local LOCK =
+    {
+      goals = info.new_goals
+      conn  = info.conn
+    }
+
+    return LOCK
+  end
+
 
   local function replace_with_node(Q, new_node)
     if not Q.parent_node then
@@ -560,20 +576,57 @@ function Quest_perform_division(info)
   end
 
 
-  local function add_new_goals(Q1)
-    -- FIXME !!!!
+  local function pick_room_for_goal(Q1)
+    -- TODO : evaluate each leaf room
+
+    assert(not table.empty(info.leafs))
+
+    return table.remove(info.leafs, 1)
+  end
+
+
+  local function place_new_goals(Q1)
+    rand.shuffle(info.leafs)
+
+    each goal in info.new_goals do
+      local R = pick_room_for_goal(Q1)
+
+      goal.room = R
+      goal.area = R.areas[1]
+
+      table.insert(Q1.goals, goal)
+    end
   end
 
 
   ---| Quest_perform_division |---
 
+  -- create the node
+  local node = QuestNode_new()
+
   local Q2 = assert(info.quest)
 
-  -- new quest is the first half (is added before Q2 in LEVEL.quests)
+  -- create the new quest
+  -- (for the first half, existing quest becomes second half)
 
   local Q1 = Quest_new()
 
-  Q2.entry = info.conn.A2
+
+  -- link quests into node heirarchy
+
+  node.before = Q1
+  node.after  = Q2
+  node.conn   = info.conn
+
+  replace_with_node(Q2, node)
+
+  Q1.parent_node = node
+  Q2.parent_node = node
+
+
+  -- setup quests, transfer stuff
+
+  Q2.entry = assert(info.after_A)
 
   Q1.areas = info.before
   Q2.areas = info.after
@@ -581,14 +634,24 @@ function Quest_perform_division(info)
   Q1.svolume = size_of_area_set(Q1.areas)
   Q2.svolume = size_of_area_set(Q2.areas)
 
+  -- do this before assigning new 'quest' fields
+  transfer_existing_goals(Q1, Q2)
+
   assign_quest(Q1)
   assign_quest(Q2)
 
-  transfer_existing_goals(Q1, Q2)
 
-  add_new_goals(Q1)
+  -- lock the connection
+  local LOCK = create_lock()
 
-  -- FIXME : actually lock the connection !!!
+  info.conn.lock = LOCK
+
+
+  -- finally, add the new goals to the first quest
+  place_new_goals(Q1)
+
+  assert(not table.empty(Q1.goals))
+  assert(not table.empty(Q2.goals))
 end
 
 
@@ -612,6 +675,7 @@ stderrf("Quest_scan_all_conns.....\n")
     end
   end
 
+  -- nothing possible?
   if not info.conn then
 stderrf("---> NOTHING POSSIBLE\n")
     return false
@@ -1001,6 +1065,8 @@ function Quest_order_by_visit()
   do_entry_conns(LEVEL.start_area, nil, {})
 end
 
+
+------------------------------------------------------------------------
 
 
 function Quest_add_weapons()
@@ -1976,7 +2042,6 @@ function Quest_make_quests()
 
   LEVEL.quests = {}
   LEVEL.zones  = {}
-  LEVEL.locks  = {}
 
   Quest_create_initial_quest()
 
