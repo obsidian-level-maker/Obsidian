@@ -73,7 +73,6 @@
 
     quests : list(QUEST)
 
-
     -- FIXME : more stuff  e.g. building_mat, cave_mat, monster palette !!!
 --]]
 
@@ -343,17 +342,21 @@ function Quest_eval_divide_at_conn(C, goal, info)
   end
 
 
-  local function collect_areas(A, mode, areas)
-    -- mode is either "before" or "after"
-
+  local function collect_areas(A, areas)
     areas[A.id] = A
 
-    each C in A.conns do
-      local next_A = sel(mode == "before", C.A1, C.A2)
+    each C2 in A.conns do
+      -- never pass through connection we are examining
+      if C2 == C then continue end
 
-      if next_A != A and same_quest(C) then
-        collect_areas(next_A, mode, areas)
-      end
+      if not same_quest(C2) then continue end
+
+      local A2 = C2:neighbor(A)
+
+      -- already seen?
+      if areas[A2.id] then continue end
+
+      collect_areas(A2, areas)
     end
 
     return areas
@@ -446,6 +449,9 @@ function Quest_eval_divide_at_conn(C, goal, info)
 
   ---| Quest_eval_divide_at_conn |---
 
+stderrf("  goal: %s/%s @ %s / %s\n", goal.kind or "???", goal.item or "???",
+goal.room:tostr(), goal.area:tostr())
+
   -- connection must be same quest
   if C.A1.quest != C.A2.quest then
 stderrf("    (not same quest)\n")
@@ -461,8 +467,14 @@ stderrf("    (same room)\n")
   end
 
   -- collect areas on each side of the connection
-  local before = collect_areas(C.A1, "before", {})
-  local  after = collect_areas(C.A2, "after",  {})
+  local before = collect_areas(C.A1, {})
+  local  after = collect_areas(C.A2, {})
+
+stderrf("BEFORE =\n  ")
+each id,_ in before do stderrf("%d ", id) end stderrf("\n\n")
+stderrf("AFTER =\n  ")
+each id,_ in after do stderrf("%d ", id) end stderrf("\n\n")
+
 
   local before_A = C.A1
   local  after_A = C.A2
