@@ -309,22 +309,6 @@ function SEED_CLASS.in_use(S)
 end
 
 
-function SEED_CLASS.need_lake_fence(S, dir)
-  --| need a lake fence at:
-  --| (1) very edge of map
-  --| (2) border to a different outdoor room
-  if S.conn or S.content then return false end
-
-  local N = S:neighbor(dir)
-  if not N or N.free then return true end
-  if not N.room then return true end
-
-  if S.room == N.room then return false end
-
-  return N.room.is_outdoor
-end
-
-
 ----------------------------------------------------------------------
 
 
