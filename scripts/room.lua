@@ -1644,7 +1644,7 @@ function Room_choose_area_kinds()
   local POSITIONS = { 1,3,7,9, 5, 2,4,6,8 }
 
 
-  local function kind_for_small_area(A)
+  local function kind_for_small_area__OLD(A)
     rand.shuffle(A.neighbors)
 
     each N in A.neighbors do
@@ -1659,31 +1659,6 @@ function Room_choose_area_kinds()
     end
 
     return false
-  end
-
-
-  local function OLD__pick_kind_for_area(A, prev)
-    local tab = table.copy(KIND_TAB)
-
-    -- small areas : prefer same as a neighbor
-    if A.svolume < 8 then
-      if kind_for_small_area(A) then return end
-
-    else
-    -- for large areas, choose different kind than previous one
-
-      if A.svolume >= 8 and prev and prev.kind then
-        tab[prev.kind] = nil
-      end
-    end
-
-    A.kind = rand.key_by_probs(tab)
-
-    if A.mode != "hallway" then
-      if A.kind == "courtyard" or A.kind == "landscape" then
-        A.is_outdoor = true
-      end
-    end
   end
 
 
@@ -1777,18 +1752,21 @@ function Room_choose_area_kinds()
     local emerg_poss = {}
 
     each A in L.areas do
-      each N in A.neighbors do
-        if not already_set(N, what) then
-          -- try to avoid conflicts  [this assumes outdoors are done first]
-          if what == "cave" and N.is_outdoor then
-            table.insert(emerg_poss, N)
-          else
-            -- could use 'add_unique' here, but this favors common neighbors
-            -- (which should make these groups more "clumpy" -- what we want)
-            table.insert(poss, N)
-          end
-        end
+    each N in A.neighbors do
+      if already_set(N, what) then continue end
+
+      -- quota check (rather lax)
+      if N.svolume > 5 + L.quota * 1.5 then continue end
+
+      -- try to avoid conflicts  [this assumes outdoors are done first]
+      if what == "cave" and N.is_outdoor then
+        table.insert(emerg_poss, N)
+      else
+        -- could use 'add_unique' here, but this favors common neighbors
+        -- (which should make these groups more "clumpy" -- what we want)
+        table.insert(poss, N)
       end
+    end
     end
 
     if table.empty(poss) then
