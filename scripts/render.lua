@@ -693,8 +693,8 @@ function Render_seed(A, S)
 
 
 local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
---tag = (S.sx*100+S.sy) --??? if A.room then tag = A.room.id end
-if A.mode == "hallway" then tag = A.id end
+-- if A.room then tag = A.room.id end
+-- if A.quest and A.quest.id < 2 then tag = 1 end
 
 
   local f_brush = table.deep_copy(bare_brush)
@@ -1062,17 +1062,19 @@ function Render_importants()
     elseif R.purpose == "EXIT" or R.purpose == "SECRET_EXIT" then
       content_exit(spot)
 
-    elseif R.purpose == "KEY" then
-      local LOCK = assert(R.purpose_lock)
-      content_very_big_item(spot, LOCK.item)
+    elseif R.purpose == "GOAL" then
+      local goal = assert(R.purpose_goal)
 
-    elseif R.purpose == "SWITCH" then
+      if goal.kind == "KEY" then
+        content_very_big_item(spot, goal.item)
+      else
 --[[ FIXME: BUILD SWITCHES
       local LOCK = assert(R.purpose_lock)
       local INFO = assert(GAME.SWITCHES[LOCK.switch])
       Build.small_switch(S, dir_for_wotsit(S), z1, INFO.skin, LOCK.tag)
       Trans.entity("light", mx, my, z1+112, { cave_light=176 })
 --]]
+      end
 
     else
       error("unknown purpose: " .. tostring(R.purpose))

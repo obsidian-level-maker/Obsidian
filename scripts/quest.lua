@@ -511,7 +511,7 @@ stderrf("    (not enough leafs : %d < %d\n", #leafs, #info.new_goals)
 
   local score = eval_split_possibility(C, before, after, before_A, after_A)
 
-stderrf("  possible @ %s : score %1.2f\n", C:tostr(), score)
+stderrf("  possible @ %s : score %1.3f\n", C:tostr(), score)
 
   if score > info.score then
     info.score  = score
@@ -597,7 +597,7 @@ function Quest_perform_division(info)
   end
 
 
-  local function place_new_goals(Q1)
+  local function place_new_goals(Q1, LOCK)
     rand.shuffle(info.leafs)
 
     each goal in info.new_goals do
@@ -607,6 +607,9 @@ function Quest_perform_division(info)
       goal.area = R.areas[1]
 
       table.insert(Q1.goals, goal)
+
+      R.purpose = "GOAL"
+      R.purpose_goal = goal
     end
   end
 
@@ -694,7 +697,7 @@ stderrf("---> NOTHING POSSIBLE\n")
   end
 
   gui.printf("Dividing %s @ %s (%s -- %s)\n", info.quest.name,
-             C:tostr(), C.A1.room:tostr(), C.A2.room:tostr())
+             info.conn:tostr(), info.conn.A1.room:tostr(), info.conn.A2.room:tostr())
 
   Quest_perform_division(info)
   return true
@@ -900,7 +903,7 @@ function Quest_start_room()
     LEVEL.start_room = R
     LEVEL.start_area = R.areas[1]  -- TODO
 
-    start_quests.entry = LEVEL.start_area
+    start_quest.entry = LEVEL.start_area
   end
 
 
