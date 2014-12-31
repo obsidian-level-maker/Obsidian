@@ -574,18 +574,6 @@ function Room_reckon_doors()
 
     assert(B.kind == "arch")
 
-    -- ensure when going from outside to inside that the arch/door
-    -- is made using the building combo (NOT the outdoor combo)
-    if B.kind == "arch" and
-       ((S.room.is_outdoor and not N.room.is_outdoor) or
-        (S.room == N.room.parent))
-    then
-      -- swap borders
-      S, N = N, S
-
-      S.border[     dir] = B
-      N.border[10 - dir] = B2
-    end
 
     S.thick[     dir] = 40
     N.thick[10 - dir] = 40
