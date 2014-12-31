@@ -40,9 +40,27 @@
 
     zone : ZONE
 
+    parent_node : QUEST_NODE
+
 ???    storage_leafs : list(ROOM)
 ???     secret_leafs : list(ROOM)
 
+--]]
+
+
+--class QUEST_NODE
+--[[
+    --
+    -- The quests are placed in a binary tree.  The QUEST objects are the
+    -- leaves, and this structure represents the nodes.
+    --
+
+    node_id : number   (distinguishes nodes from quests)
+
+    before  : NODE or QUEST
+    after   : NODE or QUEST
+
+    conn : CONN  -- where the division occurred
 --]]
 
 
@@ -105,6 +123,16 @@ function Quest_new()
   table.insert(LEVEL.quests, QUEST)
 
   return QUEST
+end
+
+
+function QuestNode_new()
+  local NODE =
+  {
+    node_id = alloc_id("quest_node")
+  }
+
+  return NODE
 end
 
 
@@ -268,6 +296,9 @@ stderrf("Eval exit %s : conns:%d svolume:%d\n", R:tostr(), R:total_conns(), R.sv
   ---| Quest_create_initial_quest |---
 
   local Q = Quest_new()
+
+  -- this quest becomes head of the quest tree
+  LEVEL.quest_root = Q
 
   each A in LEVEL.areas do
     if A.room then
@@ -489,6 +520,31 @@ end
 
 
 function Quest_perform_division(info)
+  --
+  -- Splits the current quest (info.quest) into two, adding the new quest
+  -- into the quest binary tree.  Also locks the connection.
+  --
+
+  local function replace_with_node(Q, new_node)
+    if not Q.parent_node then
+      assert(LEVEL.quest_root == Q)
+      LEVEL.quest_root = new_node
+      return
+    end
+
+    if Q.parent_node.before == Q then
+       Q.parent_node.before = new_node
+      return
+    end
+
+    if Q.parent_node.after == Q then
+       Q.parent_node.after = new_node
+      return
+    end
+
+    error("Bad parent_node in quest")
+  end
+
 
   local function assign_quest(Q)
     each id, A in Q.areas do
