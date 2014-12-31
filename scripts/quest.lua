@@ -311,26 +311,28 @@ stderrf("Eval exit %s : conns:%d svolume:%d\n", R:tostr(), R:total_conns(), R.sv
 end
 
 
-function Quest_eval_divide_at_conn(C, info)
+function Quest_eval_divide_at_conn(C, goal, info)
   --
-  -- Evaluate whether we can divide a quest at the given connection.
+  -- Evaluate whether we can divide a quest at the given connection,
+  -- locking up the given goal.
   --
   -- The 'info' table contains the current best division (if any),
-  -- and contains the following fields:
+  -- and contains the following input fields:
   --
   --    mode      : either "minor" or "MAJOR"
   --    lock_kind : the lock to place on the connection
-  --    num_goals : goals used to solve the lock (usually 1)
+  --    new_goals : goals used to solve the lock (usually 1)
+  --
+  -- and the following output fields:
   --
   --    score   :  best current score  (must be initialised to zero)
-  --
   --    conn    :  the best connection  [ NIL if none yet ]
+  --    goal    :  the goal to lock up
   --    quest   :  the quest to divide
-  --    kept_goal :  the goal which remains in second half
   --
   --    before  :  area set of first half
   --    after   :  area set of second half
-  --    leafs   :  list of rooms / areas to place goals (#leafs >= num_goals)
+  --    leafs   :  list of rooms / areas to place goals (#leafs >= #new_goals)
   -- 
 
   local quest  -- current quest
@@ -414,27 +416,25 @@ function Quest_eval_divide_at_conn(C, info)
   end
 
 
-  local function find_goal_to_keep(areas)
-    each goal in quest.goals do
-      if (goal.room and areas[goal.room.areas[1].id]) or
-         (goal.area and areas[goal.area.id])
-      then
-        return goal
-      end
+  local function check_has_goal(areas)
+    if (goal.room and areas[goal.room.areas[1].id]) or
+       (goal.area and areas[goal.area.id])
+    then
+      return true
     end
 
-    return nil
+    return false
   end
 
 
-  local function eval_split_possibility(C, before, after)
-    -- FIXME evaluate stuff !!
-
+  local function eval_split_possibility(C, before, after, before_A, after_A)
     local score = 200
 
-    -- 
-    if C.A2.room.is_hallway then
-      score = score - 100
+    -- FIXME evaluate stuff !!
+
+    -- prefer not to enter a hallway from a locked door
+    if after_A.is_hallway then
+      score = score - 50
     end
 
     -- tie breaker
@@ -450,62 +450,62 @@ stderrf("    (not same quest)\n")
     return
   end
 
+  quest = C.A1.quest
+
   -- zones must not divide a room in half
   if info.mode == "MAJOR" and C.A1.room == C.A2.room then
 stderrf("    (same room)\n")
     return
   end
 
--- FIXME : HOW TO FIX?  (we won't know which end of hallway is entry or exit)
---!!!!  -- no locking end of hallways in MAJOR mode
---!!!!  if info.mode == "MAJOR" and C.A1.room.is_hallway then
---!!!!    return
---!!!!  end
-
-  quest = C.A1.quest
-
-  -- collect areas before / after the connection
+  -- collect areas on each side of the connection
   local before = collect_areas(C.A1, "before", {})
   local  after = collect_areas(C.A2, "after",  {})
+
+  local before_A = C.A1
+  local  after_A = C.A2
+
+  if check_has_goal(after) then
+    -- OK
+  elseif check_has_goal(before) then
+    before, after = after, before
+    before_A, after_A = after_A, before_A
+  else
+    error("Cannot find goal inside quest")
+  end
 
   -- entry of quest MUST be in first half
   if quest.entry then
     if not before[quest.entry.id] then
-
 assert(after[quest.entry.id])
 stderrf("    (entry in second half)\n")
     return end
   end
 
-  -- one existing goal MUST be in second half
-  local kept_goal = find_goal_to_keep(after)
-  if not kept_goal then
-    before, after = after, before
-    kept_goal = find_goal_to_keep(after)
+  -- no locking end of hallways in MAJOR mode
+  if info.mode == "MAJOR" and before_A.room.is_hallway then
+stderrf("    (end of hallway)\n")
+    return
   end
-
-  assert(kept_goal)
---[[
-  if not kept_goal then
-stderrf("    (no solution in second half)\n")
-  return end
---]]
 
   -- FIXME : in "MINOR" mode check areas not rooms
   local leafs = unused_rooms_in_set(before)
 
-  if #leafs < info.num_goals then
-stderrf("    (not enough leafs : %d < %d\n", #leafs, info.num_goals)
+  if #leafs < #info.new_goals then
+stderrf("    (not enough leafs : %d < %d\n", #leafs, #info.new_goals)
   return end
 
-  local score = eval_split_possibility(C, before, after)
+  local score = eval_split_possibility(C, before, after, before_A, after_A)
 
 stderrf("  possible @ %s : score %1.2f\n", C:tostr(), score)
 
   if score > info.score then
-    info.conn   = C
-    info.quest  = quest
     info.score  = score
+
+    info.conn   = C
+    info.goal   = goal
+    info.quest  = quest
+
     info.before = before
     info.after  = after
     info.leafs  = leafs
@@ -597,16 +597,19 @@ function Quest_scan_all_conns(mode, goals)
   local info =
   {
     mode = mode
-    goals = goals
-    num_goals = #goals
-
+    new_goals = goals
     score = 0
   }
 
 stderrf("Quest_scan_all_conns.....\n")
 
   each C in LEVEL.conns do
-    Quest_eval_divide_at_conn(C, info)
+    -- must be same quest on each side
+    if C.A1.quest != C.A2.quest then continue end
+
+    each goal in C.A1.quest.goals do
+      Quest_eval_divide_at_conn(C, goal, info)
+    end
   end
 
   if not info.conn then
