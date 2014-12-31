@@ -939,8 +939,23 @@ end
   local cur_along   = 1
   local total_rooms = #LEVEL.rooms
 
+  local quest_along = 1
+
 
 local via_conn_name = "-"
+
+
+  local function visit_quest_node(Q)
+    if Q.node_id then
+      visit_quest_node(Q.before)
+      visit_quest_node(Q.after)
+      return
+    end
+
+    Q.lev_along = quest_along / #LEVEL.quests
+
+    quest_along = quest_along + 1
+  end
 
   
   local function visit_room(R, quest)
@@ -972,6 +987,13 @@ via_conn_name = C:tostr()
 
 
   ---| Quest_order_by_visit |---
+
+  visit_quest_node(LEVEL.quest_root)
+
+  -- sort the quests
+  table.sort(LEVEL.quests, function(A, B)
+      return A.lev_along < B.lev_along end)
+
 
   each Q in LEVEL.quests do
     assert(Q.entry)
