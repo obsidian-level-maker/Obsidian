@@ -1890,7 +1890,7 @@ gui.printf("spread_kind '%s' : starts=%d  quota=%d\n", what, start_num, seed_quo
 
   -- skip = probability to not use it on this level (at all)
 
-  local out_skip = style_sel("outdoors", 100, 50,  0, 0)
+  local out_skip = style_sel("outdoors", 100, 40,  0, 0)
   local cav_skip = style_sel("caves",    100, 75, 25, 0)
 
   local out_quota = style_sel("outdoors", 0, 18, 30, 70)
