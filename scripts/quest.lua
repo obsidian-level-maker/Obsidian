@@ -733,6 +733,8 @@ function Quest_group_into_zones()
 
     assign_zone(Q, cur_zone)
   end
+
+  Area_spread_zones()
 end
 
 
@@ -882,21 +884,6 @@ function Quest_start_room()
   end
 
 
-  local function do_entry_conns(A, entry_conn, seen)
-    A.entry_conn = entry_conn
-
-    seen[A] = 1
-
-    each C in A.conns do
-      local A2 = C:neighbor(A)
-
-      if not seen[A2] then
-        do_entry_conns(A2, C, seen)
-      end
-    end
-  end
-
-
   ---| Quest_start_room |---
 
   find_start_quest()
@@ -904,8 +891,6 @@ function Quest_start_room()
   add_normal_start()
 
   find_alternate_start()
-
-  do_entry_conns(LEVEL.start_area, nil, {})
 end
 
 
@@ -917,32 +902,8 @@ function Quest_order_by_visit()
   -- order chosen here will be quite arbitrary.
   --
 
-
--- DEBUG CRUD....
---[[
-each A in LEVEL.areas do
-  if not A.room then continue end
-  stderrf("%s in %s (%s)\n", A:tostr(), A.room:tostr(), (A.quest and A.quest.name) or "NO_QUEST")
-  stderrf("{\n")
-  each C in A.conns do
-    stderrf("  %s : (%s in %s) <---> (%s in %s)\n", C:tostr(),
-            C.A1:tostr(), C.A1.room:tostr(),
-            C.A2:tostr(), C.A2.room:tostr())
-  end
-  stderrf("}\n")
-end
---]]
-
-
-
-
-  local cur_along   = 1
-  local total_rooms = #LEVEL.rooms
-
+  local room_along  = 1
   local quest_along = 1
-
-
-local via_conn_name = "-"
 
 
   local function visit_quest_node(Q)
@@ -958,11 +919,11 @@ local via_conn_name = "-"
   end
 
   
-  local function visit_room(R, quest)
+  local function visit_room(R, quest, via_conn_name)
 --- stderrf("visit_room %s (via %s)\n", R:tostr(), via_conn_name)
-    R.lev_along = cur_along / total_rooms
+    R.lev_along = room_along / #LEVEL.rooms
 
-    cur_along = cur_along + 1
+    room_along = room_along + 1
 
     each A in R.areas do
     each C in A.conns do
@@ -976,12 +937,35 @@ local via_conn_name = "-"
 
       if A2.room == R then continue end
 
-via_conn_name = C:tostr()
-
       if not A2.room.lev_along then
-        visit_room(A2.room, quest)
+        visit_room(A2.room, quest, C:tostr())
       end
     end
+    end
+  end
+
+
+  local function dump_room_order()
+    gui.debugf("Room Visit Order:\n")
+
+    each R in LEVEL.rooms do
+      gui.debugf("  %1.3f : %s  %s  %s\n",
+                 R.lev_along, R:tostr(), R.areas[1].quest.name, R.zone.name)
+    end
+  end
+
+
+  local function do_entry_conns(A, entry_conn, seen)
+    A.entry_conn = entry_conn
+
+    seen[A] = 1
+
+    each C in A.conns do
+      local A2 = C:neighbor(A)
+
+      if not seen[A2] then
+        do_entry_conns(A2, C, seen)
+      end
     end
   end
 
@@ -990,14 +974,18 @@ via_conn_name = C:tostr()
 
   visit_quest_node(LEVEL.quest_root)
 
+  -- sanity check
+  each Q in LEVEL.quests do
+    assert(Q.lev_along)
+  end
+
   -- sort the quests
   table.sort(LEVEL.quests, function(A, B)
       return A.lev_along < B.lev_along end)
 
-
+  -- visit each quest, and recurse through it only
   each Q in LEVEL.quests do
     assert(Q.entry)
-
     visit_room(Q.entry.room, Q)
   end
 
@@ -1009,14 +997,12 @@ via_conn_name = C:tostr()
   end
 
   -- sort the rooms
-  table.sort(LEVEL.rooms, function(A,B) return A.lev_along < B.lev_along end)
+  table.sort(LEVEL.rooms, function(A,B)
+      return A.lev_along < B.lev_along end)
 
-  gui.debugf("Room Visit Order:\n")
+  dump_room_order()
 
-  each R in LEVEL.rooms do
-    gui.debugf("  %1.3f : %s  %s  %s\n",
-               R.lev_along, R:tostr(), R.areas[1].quest.name, R.zone.name)
-  end
+  do_entry_conns(LEVEL.start_area, nil, {})
 end
 
 
@@ -1999,15 +1985,12 @@ function Quest_make_quests()
   Quest_create_initial_quest()
 
   Quest_add_major_quests()
+  Quest_group_into_zones()
 
   Quest_start_room()
-
-  Quest_group_into_zones()
   Quest_order_by_visit()
 
 ---???  Quest_final_battle()
-
-  Area_spread_zones()
 
   Quest_choose_themes()
   Quest_select_textures()
