@@ -453,7 +453,7 @@ int Main_key_handler(int event)
 }
 
 
-static u32_t Main_CalcNewSeed()
+u32_t Main_CalcNewSeed()
 {
 	u32_t val = (u32_t)time(NULL);
 
@@ -479,6 +479,8 @@ void Main_SetSeed(u32_t val)
 	sprintf(buffer, "%u", val);
 
 	ob_set_config("seed", buffer);
+
+	need_new_seed = false;
 }
 
 
@@ -584,15 +586,15 @@ bool Build_Cool_Shit()
 		main_win->Locked(false);
 	}
 
-	need_new_seed = true;
-
 	if (main_action == MAIN_CANCEL)
 	{
 		main_action = 0;
 
 		Main_ProgStatus("Cancelled");
-
-		need_new_seed = false;
+	}
+	else
+	{
+		need_new_seed = true;
 	}
 
 	// don't need game object anymore
@@ -788,7 +790,9 @@ int main(int argc, char **argv)
 				main_action = 0;
 
 				if (need_new_seed)
+				{
 					Main_SetSeed(Main_CalcNewSeed());
+				}
 
 				// save config in case everything blows up
 				Cookie_Save(config_file);

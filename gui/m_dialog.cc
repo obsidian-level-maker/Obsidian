@@ -280,5 +280,28 @@ const char * DLG_OutputFilename(const char *ext)
 	return StringDup(filename);
 }
 
+
+//----------------------------------------------------------------------
+
+
+void DLG_EditSeed(void)
+{
+	const char * buf = fl_input("New Seed Number:");
+
+	// cancelled?
+	if (! buf)
+		return;
+	
+	// nothing entered?
+	if (buf[0] == 0)
+		return;
+
+	// TODO: check for a valid number
+
+	u32_t val = (u32_t) atol(buf);
+
+	Main_SetSeed(val);
+}
+
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab
