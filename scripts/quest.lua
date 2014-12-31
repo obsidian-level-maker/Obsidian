@@ -80,9 +80,7 @@
 
 --class GOAL
 --[[
-    kind : keyword  -- "exit" or "solution"
-
-    solution : keyword  --  "KEY" or "SWITCH" or "LEVEL_EXIT"  (NIL for exit goals)
+    kind : keyword  --  "KEY" or "SWITCH" or "LEVEL_EXIT"  (NIL for exit goals)
 
     item : keyword  -- name of key or switch
 
@@ -100,8 +98,7 @@
 --[[
     goals : list(GOAL)  -- the goal(s) which solve the lock
 
-    conn : CONN     -- connection which is locked
-                    -- which is locked (keyed door, lowering bars, etc)
+    conn : CONN         -- connection which is locked
 --]]
 
 
@@ -228,8 +225,7 @@ stderrf("Eval exit %s : conns:%d svolume:%d\n", R:tostr(), R:total_conns(), R.sv
     -- create the goal for the entire map
     local GOAL =
     {
-      kind = "solution"
-      solution = "LEVEL_EXIT"
+      kind = "LEVEL_EXIT"
 
       room = R
       area = R.areas[1]
@@ -420,8 +416,6 @@ function Quest_eval_divide_at_conn(C, info)
 
   local function find_goal_to_keep(areas)
     each goal in quest.goals do
-      if goal.kind != "solution" then continue end
-
       if (goal.room and areas[goal.room.areas[1].id]) or
          (goal.area and areas[goal.area.id])
       then
@@ -643,8 +637,7 @@ function Quest_add_major_quests()
     each name,prob in key_tab do
       local GOAL =
       {
-        kind = "solution"
-        solution = "KEY"
+        kind = "KEY"
         item = name
         prob = prob
       }

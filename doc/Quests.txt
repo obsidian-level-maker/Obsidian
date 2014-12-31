@@ -4,8 +4,8 @@ QUESTS
 
 A "quest" is a group of connected rooms, having one or more "goals"
 which are places the player needs to visit, typically containing an
-important object like a key or switch, but the exit from a quest is
-also a goal.
+important object like a key or switch (including something that
+exits the map).
 
 A quest also contains an entry room (only exception is that the start
 room of the level may not be decided until after all the quests have
@@ -14,13 +14,12 @@ starting room).
 
 Any quest can potentially be divided into two quests, by locking one of
 the connections between two of its rooms and adding the solution to an
-unused leaf room in the first half.  Both the solution room and the exit
-of the first half become goals of that half.
+unused leaf room in the first half.  That solution room becomes a goal
+of the first half.
 
-One important requirement for dividing a quest is that the second
-half contains at least one of the original goals (especially a
-solution).  We also require that the first half contains the entry
-room of the original quest (if any).
+One important requirement for dividing a quest is that the second half
+contains at least one of the original goals.  We also require that the
+first half contains the entry room of the original quest (if any).
 
 This system can handle a door which requires multiple keys to open
 it, or a staircase which is only fully traversible when multiple
