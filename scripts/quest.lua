@@ -806,7 +806,7 @@ function Quest_group_into_zones()
 
   ---| Quest_group_into_zones |---
 
-  local rough_size = rand.pick({ 200, 250, 300 })  -- TODO: REVIEW
+  local rough_size = 150  ---!!!  FIXME: REVIEW
 
   local cur_zone = Zone_new()
 
@@ -1031,12 +1031,21 @@ function Quest_order_by_visit()
   end
 
 
+  local function dump_quests()
+    gui.printf("Quest list:\n")
+
+    each Q in LEVEL.quests do
+      gui.printf("  %s : svolume:%d\n", Q.name, Q.svolume)
+    end
+  end
+
+
   local function dump_room_order()
     gui.debugf("Room Visit Order:\n")
 
     each R in LEVEL.rooms do
-      gui.debugf("  %1.3f : %s  %s  %s\n",
-                 R.lev_along, R:tostr(), R.areas[1].quest.name, R.zone.name)
+      gui.debugf("  %1.3f : %s  %s\n",
+                 R.lev_along, R:tostr(), R.areas[1].quest.name)
     end
   end
 
@@ -1068,6 +1077,9 @@ function Quest_order_by_visit()
   -- sort the quests
   table.sort(LEVEL.quests, function(A, B)
       return A.lev_along < B.lev_along end)
+
+  dump_quests()
+
 
   -- visit each quest, and recurse through it only
   each Q in LEVEL.quests do
@@ -2072,10 +2084,12 @@ function Quest_make_quests()
   Quest_create_initial_quest()
 
   Quest_add_major_quests()
-  Quest_group_into_zones()
 
   Quest_start_room()
   Quest_order_by_visit()
+
+  -- this must be after quests have been ordered
+  Quest_group_into_zones()
 
 ---???  Quest_final_battle()
 
