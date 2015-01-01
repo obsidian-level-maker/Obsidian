@@ -319,8 +319,9 @@ const char * UI_Play::monster_syms[] =
 	"heaps",  "Hordes",
 	"nuts",   "Nuts!",
 
-	"prog",   "Progressive",
-	"mixed",  "Mix It Up",
+	"prog",     "Progressive",
+	"epi",      "Epi Prog",
+	"mixed",    "Mix It Up",
 
 	NULL, NULL
 };
