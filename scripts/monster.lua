@@ -392,7 +392,22 @@ end
 
 
 function Monsters_max_level()
-  local max_level = 10 * (LEVEL.mon_along or 0.5) + 1
+  local mon_along = LEVEL.game_along
+
+  if LEVEL.is_secret then
+    -- secret levels are easier
+    mon_along = rand.skew(0.4, 0.25)
+
+  elseif OB_CONFIG.length == "single" then
+    -- for single level, use skew to occasionally make extremes
+    mon_along = rand.skew(0.5, 0.35)
+
+  elseif OB_CONFIG.length == "game" then
+    -- reach peak strength after about 75% of the full game
+    mon_along = math.min(1.0, mon_along / 0.75)
+  end
+
+  local max_level = 1 + 11 * mon_along
 
   LEVEL.weap_level = max_level
 
