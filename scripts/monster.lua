@@ -347,8 +347,12 @@ function Monsters_init()
   local low_k  = MONSTER_KIND_TAB.scarce
   local high_k = MONSTER_KIND_TAB.heaps
 
-  LEVEL.prog_mons_qty  = low_q + LEVEL.ep_along * (high_q - low_q)
-  LEVEL.prog_mons_kind = low_k + LEVEL.ep_along * (high_k - low_k)
+  -- progressive and episode-progressive values
+  LEVEL.game_mons_qty  = low_q + LEVEL.game_along * (high_q - low_q)
+  LEVEL.game_mons_kind = low_k + LEVEL.game_along * (high_k - low_k)
+
+  LEVEL.epi_mons_qty  = low_q + LEVEL.ep_along * (high_q - low_q)
+  LEVEL.epi_mons_kind = low_k + LEVEL.ep_along * (high_k - low_k)
 
   -- build replacement table --
 
@@ -1511,7 +1515,10 @@ function Monsters_in_room(R)
       qty = rand.pick { 8,14,25,45 }
 
     elseif OB_CONFIG.mons == "prog" then
-      qty = LEVEL.prog_mons_qty
+      qty = LEVEL.game_mons_qty
+
+    elseif OB_CONFIG.mons == "epi" then
+      qty = LEVEL.epi_mons_qty
 
     else
       qty = MONSTER_QUANTITIES[OB_CONFIG.mons]
@@ -1520,6 +1527,8 @@ function Monsters_in_room(R)
       -- tend to have more monsters in later rooms and levels
       qty = qty * (3 + R.lev_along + LEVEL.ep_along) / 5
     end
+
+    assert(qty)
 
     -- less in secrets (usually much less)
     if R.kind == "SECRET_EXIT" then
@@ -1773,7 +1782,10 @@ function Monsters_in_room(R)
       base_num = rand.range(MONSTER_KIND_TAB.scarce, MONSTER_KIND_TAB.heaps)
 
     elseif OB_CONFIG.mons == "prog" then
-      base_num = LEVEL.prog_mons_kind
+      base_num = LEVEL.game_mons_kind
+
+    elseif OB_CONFIG.mons == "epi" then
+      base_num = LEVEL.epi_mons_kind
 
     else
       base_num = MONSTER_KIND_TAB[OB_CONFIG.mons]
