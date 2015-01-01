@@ -1108,19 +1108,85 @@ end
 
 
 
+function Area_determine_map_size()
+  --
+  -- Determines size of map (Width x Height) in grid points, based on the
+  -- user's settings and how far along in the episode or game we are.
+  --
+
+  local ob_size = OB_CONFIG.size
+
+  -- there is no real "progression" when making a single level.
+  -- hence use mixed mode instead.
+  if OB_CONFIG.length == "single" then
+    if ob_size == "prog" or ob_size == "epi" then
+      ob_size = "mixed"
+    end
+  end
+
+  -- Mix It Up --
+
+  if ob_size == "mixed" then
+    local SIZES = { 21,23,25, 29,33,37, 41,43,49 }
+
+    local W = rand.pick(SIZES)
+    local H = rand.pick(SIZES)
+
+    -- prefer the map to be wider than it is tall
+    if W < H then W, H = H, W end
+
+    return W, H
+  end
+
+  -- Progressive --
+
+  if ob_size == "prog" or ob_size == "epi" then
+    local along = LEVEL.game_along
+
+    if ob_size == "epi" then along = LEVEL.ep_along end
+
+    local n = int(1 + along * 8.9)
+
+    if n < 1 then n = 1 end
+    if n > 9 then n = 9 end
+
+    -- somewhat on the small size
+    local SIZES = { 25,27,29, 31,33,35, 37,39,41 }
+
+    local W = SIZES[n]
+    
+    return W, W - 4
+  end
+
+  -- Named sizes --
+
+  local SIZES = { small=25, regular=35, large=45, extreme=61 }
+
+  local W = SIZES[ob_size]
+
+  if not W then
+    error("Unknown size keyword: " .. tostring(ob_size))
+  end
+
+  return W, W - 4
+end
+
+
+
 function Weird_create_rooms()
 
   gui.printf("\n--==| Planning WEIRD Rooms |==--\n\n")
 
+  local W, H = Area_determine_map_size()
 
---TODO  Weird_determine_size()
-
-  Seed_init(GRID_W - 1, GRID_H - 1, DEPOT_SIZE)
+  gui.printf("Map size: %dx%d grid points", W, H)
 
 
-  Weird_generate()
+  Seed_init(W - 1, H - 1, DEPOT_SIZE)
+
+  Weird_generate(W, H)
+
   Weird_create_areas()
-
   Weird_analyse_areas()
 
   Junction_init()

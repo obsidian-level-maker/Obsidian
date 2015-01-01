@@ -45,8 +45,8 @@ ALLOW_CLOSED_SQUARES = true
 
 GRID = {}
 
-GRID_W = 37
-GRID_H = 37
+GRID_W = 0
+GRID_H = 0
 
 
 function Weird_save_svg()
@@ -132,7 +132,7 @@ end
 
 
 
-function Weird_generate()
+function Weird_generate(point_W, point_H)
   --
   -- Generates weird shapes in the point grid --> GRID[][]
   --
@@ -140,6 +140,13 @@ function Weird_generate()
   local did_change
 
   local function create_points()
+    if (point_W % 2) == 0 or (point_H % 2) == 0 then
+      error("Weird_generate : size WxH must be odd numbers")
+    end
+
+    GRID_W = point_W
+    GRID_H = point_H
+
     GRID = table.array_2D(GRID_W, GRID_H)
 
     for gx = 1, GRID_W do
