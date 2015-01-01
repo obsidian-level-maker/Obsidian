@@ -455,7 +455,11 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
 
     -- FIXME : find it properly
-    local fab_name = "Locked_" .. LOCK.item
+    local fab_name = "Locked_" .. LOCK.goals[1].item
+
+    if #LOCK.goals == 3 then
+      fab_name = "Locked_ks_all"
+    end
 
     local def
 
@@ -493,7 +497,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   local function straddle_locked_door()
     assert(LOCK)
 
-    if LOCK.item then
+    if LOCK.goals[1].kind == "KEY" then
       straddle_keyed_door()
       return
     end
