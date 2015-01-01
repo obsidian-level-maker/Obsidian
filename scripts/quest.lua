@@ -172,7 +172,7 @@ function Quest_create_initial_quest()
 
   local function eval_exit_room(R, secret_mode)
     if R.is_hallway then return -1 end
-    if R.purpose    then return -1 end
+    if R.is_exit    then return -1 end
 
 stderrf("Eval exit %s : conns:%d svolume:%d\n", R:tostr(), R:total_conns(), R.svolume)
 
@@ -217,7 +217,6 @@ stderrf("Eval exit %s : conns:%d svolume:%d\n", R:tostr(), R:total_conns(), R.sv
 
     gui.printf("Exit room: %s\n", R:tostr())
 
-    R.purpose = "EXIT"
     R.is_exit = true
 
     LEVEL.exit_room = R
@@ -231,6 +230,7 @@ stderrf("Eval exit %s : conns:%d svolume:%d\n", R:tostr(), R:total_conns(), R.sv
       area = R.areas[1]
     }
 
+    table.insert(R.goals, GOAL)
     table.insert(quest.goals, GOAL)
   end
 
@@ -267,7 +267,13 @@ stderrf("Eval exit %s : conns:%d svolume:%d\n", R:tostr(), R:total_conns(), R.sv
 
     gui.printf("Secret Exit: %s\n", R:tostr())
 
-    R.purpose = "SECRET_EXIT"
+    local GOAL =
+    {
+      kind = "SECRET_EXIT"
+    }
+
+    table.insert(R.goals, GOAL)
+
     R.is_secret = true
     R.is_exit = true
 
@@ -608,10 +614,8 @@ function Quest_perform_division(info)
       goal.room = R
       goal.area = R.areas[1]
 
+      table.insert( R.goals, goal)
       table.insert(Q1.goals, goal)
-
-      R.purpose = "GOAL"
-      R.purpose_goal = goal
     end
   end
 
@@ -863,7 +867,7 @@ function Quest_start_room()
     end
 
     -- really really don't want to see a goal (like a key)
-    if R.purpose then
+    if #R.goals > 0 then
       if alt_mode then return -1 end
     else
       score = score + 1000
@@ -911,7 +915,13 @@ function Quest_start_room()
 
     gui.printf("Start room: %s\n", R:tostr())
 
-    R.purpose = "START"
+    local GOAL =
+    {
+      kind = "START"
+    }
+
+    table.insert(R.goals, GOAL)
+
     R.is_start = true
 
     LEVEL.start_room = R
@@ -965,7 +975,14 @@ function Quest_start_room()
 
     gui.printf("Alternate Start room: %s\n", R:tostr())
 
-    R.purpose = "START"
+    local goal =
+    {
+      kind = "START"
+      alt_start = true
+    }
+
+    table.insert(R.goals, GOAL)
+
     R.is_start = true
 
     LEVEL.alt_start = R
@@ -1272,10 +1289,10 @@ function Quest_add_weapons()
       score = score + sel(is_new, 40, 10)
     end
 
-    -- if there is a purpose or another weapon, adjust the size
-    if R.purpose then score = score / 5 end
+    -- if there is a goal or another weapon, adjust the size
+    if #R.goals   > 0 then score = score / 5 end
     if #R.weapons > 0 then score = score / 10 end
-    if R.kind == "hallway" then score = score / 20 end
+    if R.is_hallway   then score = score / 20 end
 
     return score
   end
@@ -1595,7 +1612,7 @@ function Quest_nice_items()
     if R.is_secret then return -1 end
     if R.is_start  then return -1 end
 
-    if R.purpose    then score = score - 8 end
+    if #R.goals > 0 then score = score - 8 end
     if R.is_storage then score = score - 30 end
 
     score = score - 16 * (#R.weapons + #R.items)
