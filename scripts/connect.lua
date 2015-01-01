@@ -159,7 +159,7 @@ function Connect_merge_groups(A1, A2)
 end
 
 
-function Connect_seed_pair(S, T, dir)
+function Connect_seed_pair(S, T, dir, reverse)
 --- stderrf("Connect_seed_pair: %s dir:%d\n", S:tostr(), dir)
 
   if not T then
@@ -167,6 +167,12 @@ function Connect_seed_pair(S, T, dir)
   end
 
   assert(S.area and T.area)
+
+  -- this used for stairwells, to ensure the other room builds the arch or door
+  if reverse then
+    S, T = T, S
+    dir  = 10 - dir
+  end
 
 --[[
 stderrf("  AREA_%d (group %d) <---> AREA_%d (group %d)\n",
@@ -488,8 +494,8 @@ function Weird_connect_stuff()
 --FIXME : support outdoor stairwells
 A.is_outdoor = false
 
-    E1.conn = Connect_seed_pair(E1.S, nil, E1.dir)
-    E2.conn = Connect_seed_pair(E2.S, nil, E2.dir)
+    E1.conn = Connect_seed_pair(E1.S, nil, E1.dir, "reverse")
+    E2.conn = Connect_seed_pair(E2.S, nil, E2.dir, "reverse")
 
     Connect_merge_groups(R.areas[1], N1)
     Connect_merge_groups(R.areas[1], N2)
