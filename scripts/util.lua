@@ -139,8 +139,9 @@ function style_sel(name, v_none, v_few, v_some, v_heaps)
   if keyword == "few"    then return v_few   end
   if keyword == "heaps"  then return v_heaps end
 
-  if keyword == "less"   then return (v_few   + v_some) / 2 end
-  if keyword == "more"   then return (v_heaps + v_some) / 2 end
+  if keyword == "rare"   then return (v_none + v_few) / 2 end
+  if keyword == "less"   then return (v_few  + v_some) / 2 end
+  if keyword == "more"   then return (v_some + v_heaps) / 2 end
 
   -- compatibility ONLY
   if keyword == "always"  then return v_heaps end
