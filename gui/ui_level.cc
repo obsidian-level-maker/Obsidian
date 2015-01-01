@@ -180,7 +180,7 @@ void UI_Level::Defaults()
 {
 	// Note: theme handled by LUA code (ob_init)
 
-	ParseValue("size",     "prog");
+	ParseValue("size",     "epi_prog");
 	ParseValue("outdoors", "mixed");
 	ParseValue("caves",    "mixed");
 }
@@ -219,14 +219,14 @@ bool UI_Level::ParseValue(const char *key, const char *value)
 
 const char * UI_Level::size_syms[] =
 {
-	"tiny",    "Tiny",
 	"small",   "Small",
 	"regular", "Regular",
 	"large",   "Large",
 	"extreme", "Extreme",
 
-	"prog",    "Progressive",
-	"mixed",   "Mix It Up",
+	"prog",     "Progressive",
+	"epi_prog", "Epi Prog",
+	"mixed",    "Mix It Up",
 
 	NULL, NULL
 };
