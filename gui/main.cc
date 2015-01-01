@@ -494,7 +494,7 @@ static void Batch_Defaults()
 	ob_set_config("length", "single");
 
 	// Level Architecture
-	ob_set_config("size",     "epi");
+	ob_set_config("size",     "prog");
 	ob_set_config("outdoors", "mixed");
 	ob_set_config("caves",    "mixed");
 
