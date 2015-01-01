@@ -2094,11 +2094,6 @@ function Quest_make_quests()
 
   Monsters_max_level()
 
-  -- need at least a START room and an EXIT room
----???  if #LEVEL.rooms < 2 then
----???    error("Level only has one room! (2 or more are needed)")
----???  end
-
   LEVEL.quests = {}
   LEVEL.zones  = {}
 
