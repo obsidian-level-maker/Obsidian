@@ -23,8 +23,11 @@ LEVEL_CONTROL.CHOICES =
 {
   "mixed",  "Mix It Up",
   "none",   "NONE",
+  "rare",   "Rare"
   "few",    "Few",
+  "less",   "Less",
   "some",   "Some",
+  "more",   "More",
   "heaps",  "Heaps",
 }
 
