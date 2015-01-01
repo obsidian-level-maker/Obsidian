@@ -251,7 +251,12 @@ function Layout_place_importants(R)
   local function add_goal(goal)
     local spot = Layout_spot_for_wotsit(R, goal.kind)
 
-    R.guard_spot = spot
+    spot.item = goal.item
+    spot.tag  = goal.tag
+
+    if goal.kind != "START" then
+      R.guard_spot = spot
+    end
   end
 
 

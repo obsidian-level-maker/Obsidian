@@ -1058,18 +1058,12 @@ function Render_importants()
   end
 
 
-  local function content_goal(spot)
-    local goal = assert(spot.goal)
-
-    if goal.kind == "KEY" then
-      content_very_big_item(spot, goal.item)
-    else
+  local function content_switch(spot)
 --[[ FIXME: BUILD SWITCHES
       local INFO = assert(GAME.SWITCHES[LOCK.switch])
       Build.small_switch(S, dir_for_wotsit(S), z1, INFO.skin, LOCK.tag)
       Trans.entity("light", mx, my, z1+112, { cave_light=176 })
 --]]
-    end
   end
 
 
@@ -1134,16 +1128,25 @@ function Render_importants()
   local function build_important(spot)
     if spot.content_kind == "START" then
       content_start(spot)
-    elseif spot.content_kind == "EXIT" then
+
+    elseif spot.content_kind == "LEVEL_EXIT" then
       content_exit(spot)
+
     elseif spot.content_kind == "SECRET_EXIT" then
       content_exit(spot, "secret_exit")
-    elseif spot.content_kind == "GOAL" then
-      content_goal(spot)
+
+    elseif spot.content_kind == "KEY" then
+      content_very_big_item(spot, assert(spot.item))
+
+    elseif spot.content_kind == "SWITCH" then
+      content_switch(spot)
+
     elseif spot.content_kind == "WEAPON" then
       content_weapon(spot)
+
     elseif spot.content_kind == "ITEM" then
       content_item(spot)
+
     elseif spot.content_kind == "TELEPORTER" then
       content_teleporter(spot)
     else
