@@ -795,6 +795,15 @@ function Quest_group_into_zones()
   end
 
 
+  local function dump_zones()
+    gui.printf("Zone list:\n")
+
+    each Z in LEVEL.zones do
+      gui.printf("  %s : quests:%d svolume:%d\n", Z.name, #Z.quests, Z.svolume)
+    end
+  end
+
+
   ---| Quest_group_into_zones |---
 
   local rough_size = rand.pick({ 200, 250, 300 })  -- TODO: REVIEW
@@ -808,6 +817,8 @@ function Quest_group_into_zones()
 
     assign_zone(Q, cur_zone)
   end
+
+  dump_zones()
 
   Area_spread_zones()
 end
