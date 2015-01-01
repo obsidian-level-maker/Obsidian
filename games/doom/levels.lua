@@ -93,8 +93,8 @@ function DOOM2.get_levels()
 
   local MAP_NUM = MAP_LEN_TAB[OB_CONFIG.length] or 1
 
-  gotcha_map = rand.pick{17,18,19}
-  gallow_map = rand.pick{24,25,26}
+  gotcha_map = rand.pick({ 17,18,19 })
+  gallow_map = rand.pick({ 24,25,26 })
 
   local EP_NUM = 1
   if MAP_NUM > 11 then EP_NUM = 2 end
@@ -120,8 +120,10 @@ function DOOM2.get_levels()
     local ep_index
     local ep_along
 
+    local game_along = map / MAP_NUM
+
     if map > 30 then
-      ep_index = 3 ; ep_along = 0.35
+      ep_index = 3 ; ep_along = 0.5 ; game_along = 0.5
     elseif map > 20 then
       ep_index = 3 ; ep_along = (map - 20) / 10
     elseif map > 11 then
@@ -131,12 +133,15 @@ function DOOM2.get_levels()
     end
 
     if OB_CONFIG.length == "single" then
-      ep_along = rand.pick{ 0.2, 0.3, 0.4, 0.6, 0.8 }
+      game_along = rand.pick({ 0.2, 0.3, 0.4, 0.7 })
+      ep_along = game_along
+
     elseif OB_CONFIG.length == "few" then
-      ep_along = map / MAP_NUM
+      ep_along = game_along
     end
 
-    assert(ep_along <= 1)
+    assert(ep_along <= 1.0)
+    assert(game_along <= 1.0)
 
     local EPI = GAME.episodes[ep_index]
     assert(EPI)
@@ -149,6 +154,7 @@ function DOOM2.get_levels()
       patch = string.format("CWILV%02d", map-1)
 
       ep_along = ep_along
+      game_along = game_along
     }
 
     table.insert( EPI.levels, LEV)
@@ -156,20 +162,11 @@ function DOOM2.get_levels()
 
     LEV.secret_exit = GAME.SECRET_EXITS[LEV.name]
 
-    if OB_CONFIG.length == "single" then
-      LEV.mon_along = ep_along
-    else
-      -- difficulty ramps up over whole wad
-      LEV.mon_along = map * 1.4 / math.min(MAP_NUM, 20)
-    end
-
     -- secret levels
     if map == 31 or map == 32 then
       LEV.theme_name = "wolf"
       LEV.name_class = "URBAN"
       LEV.is_secret = true
-      -- secret levels are easy
-      LEV.mon_along = 0.35
     end
 
     if map == 23 then
@@ -342,10 +339,8 @@ function DOOM1.get_levels()
         name  = string.format("E%dM%d",   ep_index,   map)
         patch = string.format("WILV%d%d", ep_index-1, map-1)
 
-         ep_along = ep_along
-        mon_along = ep_along + (ep_index-1) / math.max(3, EP_NUM)
-
-        secret_kind = (map == 9) and "plain"
+        ep_along = ep_along
+        game_along = ep_along + (ep_index-1) / EP_NUM
       }
 
       table.insert( EPI.levels, LEV)
