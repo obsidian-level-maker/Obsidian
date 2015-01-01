@@ -120,7 +120,7 @@ GLOBAL_STYLE_LIST =
   cycles      = { none=50, some=50, heaps=50 }
   crossovers  = { none=40 } --!!!! , some=40, heaps=40 }
 
-  mon_variety = { some=90, heaps=4 }
+  mon_variety = { some=50 }
   teleporters = { none=60, few=30, some=30, heaps=5 }
   switches    = { none=5, few=50, some=50, heaps=10 }
   doors       = { none=5, few=50, some=30, heaps=5 }
