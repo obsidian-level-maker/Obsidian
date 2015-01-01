@@ -1773,12 +1773,10 @@ function Monsters_in_room(R)
   local function number_of_kinds()
     local base_num
 
-    if not R.cool_down then
-      if STYLE.mon_variety == "heaps" or rand.odds(5) then return 9 end
-      if STYLE.mon_variety != "some"  or rand.odds(1) then return 1 end
-    end
+    if R.kind == "hallway" then
+      base_num = rand.range(2, 3)
 
-    if OB_CONFIG.mons == "mixed" then
+    elseif OB_CONFIG.mons == "mixed" then
       base_num = rand.range(MONSTER_KIND_TAB.scarce, MONSTER_KIND_TAB.heaps)
 
     elseif OB_CONFIG.mons == "prog" then
@@ -1791,11 +1789,10 @@ function Monsters_in_room(R)
       base_num = MONSTER_KIND_TAB[OB_CONFIG.mons]
     end
 
-    assert(base_num)
+    -- apply 'mon_variety' style
+    local variety_factor = style_sel("mon_variety", 0, 0.5, 1.0, 2.4)
 
-    if R.kind == "hallway" then
-      return rand.index_by_probs { 20, 40, 60 }
-    end
+    base_num = base_num * variety_factor
 
     -- adjust the base number to account for room size
     local size = math.sqrt(R.svolume)
