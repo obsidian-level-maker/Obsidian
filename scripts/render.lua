@@ -1004,6 +1004,11 @@ function Render_importants()
   local function content_start(spot)
     local dir = player_dir(spot)
 
+---???    if OB_CONFIG.game == "quake" then
+---???      local skin = { floor="SLIP2", wall="SLIPSIDE" }
+---???
+---???      Build.quake_exit_pad(S, z1 + 16, skin, LEVEL.next_map)
+
     if R.player_set then
       content_coop_pair(spot, dir)
 
@@ -1035,16 +1040,15 @@ function Render_importants()
   end
 
 
-  local function content_exit(spot)
+  local function content_exit(spot, secret_exit)
     local fab_name = "Exit_switch"
-    if R.purpose == "SECRET_EXIT" then fab_name = "Exit_pillar_secret" end
+
+    if secret_exit then fab_name = "Exit_pillar_secret" end
 
     local def = PREFABS[fab_name]
     assert(def)
 
     local skin1 = { }
-
----???    if R.purpose == "SECRET_EXIT" then skin1.special = 51 end
 
     local dir = spot.dir or 2
 
@@ -1054,34 +1058,17 @@ function Render_importants()
   end
 
 
-  local function content_purpose(spot)
-    if R.purpose == "START" then
-      content_start(spot)
+  local function content_goal(spot)
+    local goal = assert(spot.goal)
 
----???    elseif R.purpose == "EXIT" and OB_CONFIG.game == "quake" then
----???      local skin = { floor="SLIP2", wall="SLIPSIDE" }
----???
----???      Build.quake_exit_pad(S, z1 + 16, skin, LEVEL.next_map)
-
-    elseif R.purpose == "EXIT" or R.purpose == "SECRET_EXIT" then
-      content_exit(spot)
-
-    elseif R.purpose == "GOAL" then
-      local goal = assert(R.purpose_goal)
-
-      if goal.kind == "KEY" then
-        content_very_big_item(spot, goal.item)
-      else
+    if goal.kind == "KEY" then
+      content_very_big_item(spot, goal.item)
+    else
 --[[ FIXME: BUILD SWITCHES
-      local LOCK = assert(R.purpose_lock)
       local INFO = assert(GAME.SWITCHES[LOCK.switch])
       Build.small_switch(S, dir_for_wotsit(S), z1, INFO.skin, LOCK.tag)
       Trans.entity("light", mx, my, z1+112, { cave_light=176 })
 --]]
-      end
-
-    else
-      error("unknown purpose: " .. tostring(R.purpose))
     end
   end
 
@@ -1089,7 +1076,7 @@ function Render_importants()
   local function content_weapon(spot)
     local weapon = assert(spot.content_item)
 
-    if R.purpose == "START" or R.is_hallway then
+    if R.is_start or R.is_hallway then
       -- bare item
       Trans.entity(weapon, spot.x, spot.y, spot.z)
     else
@@ -1103,7 +1090,7 @@ function Render_importants()
   local function content_item(spot)
     local item = assert(spot.content_item)
 
-    if R.purpose == "START" or R.is_hallway then
+    if R.is_start or R.is_hallway then
       -- bare item
       Trans.entity(item, spot.x, spot.y, spot.z)
     else
@@ -1145,14 +1132,22 @@ function Render_importants()
 
 
   local function build_important(spot)
-    if spot.content_kind == "WEAPON" then
+    if spot.content_kind == "START" then
+      content_start(spot)
+    elseif spot.content_kind == "EXIT" then
+      content_exit(spot)
+    elseif spot.content_kind == "SECRET_EXIT" then
+      content_exit(spot, "secret_exit")
+    elseif spot.content_kind == "GOAL" then
+      content_goal(spot)
+    elseif spot.content_kind == "WEAPON" then
       content_weapon(spot)
     elseif spot.content_kind == "ITEM" then
       content_item(spot)
     elseif spot.content_kind == "TELEPORTER" then
       content_teleporter(spot)
     else
-      content_purpose(spot)
+      error("unknown important: " .. tostring(spot.content_kind))
     end
   end
 

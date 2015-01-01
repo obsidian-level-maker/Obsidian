@@ -248,8 +248,8 @@ end
 
 function Layout_place_importants(R)
 
-  local function add_purpose()
-    local spot = Layout_spot_for_wotsit(R, R.purpose)
+  local function add_goal(goal)
+    local spot = Layout_spot_for_wotsit(R, goal.kind)
 
     R.guard_spot = spot
   end
@@ -353,8 +353,8 @@ function Layout_place_importants(R)
     R.cave_placement = true
   end
 
-  if R.purpose then
-    add_purpose()
+  each goal in R.goals do
+    add_goal(goal)
   end
 
   if R.teleport_conn then
@@ -562,7 +562,7 @@ function Layout_add_cages(R)
   ---| Layout_add_cages |---
 
   -- never add cages to a start room
-  if R.purpose == "START" then return end
+  if R.is_start then return end
 
   -- or rarely in secrets
   if R.quest.kind == "secret" and rand.odds(90) then return end

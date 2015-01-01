@@ -51,9 +51,6 @@ class ROOM
 
   zone  : ZONE
 
-  purpose : keyword   -- usually NIL, can be "EXIT" etc... (FIXME)
-  purpose_lock : LOCK
-
 }
 
 
@@ -85,6 +82,7 @@ function ROOM_CLASS.new()
     cage_spots = {}
     important_spots = {}
 
+    goals = {}
     importants = {}
     closets = {}
     chunks  = {}

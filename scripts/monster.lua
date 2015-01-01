@@ -1209,7 +1209,7 @@ function Monsters_do_pickups()
       then
         item_tab[name] = prob
 
-        if R.purpose == "START" and info.start_prob then
+        if R.is_start and info.start_prob then
           item_tab[name] = info.start_prob
         end
       end
@@ -1248,7 +1248,7 @@ function Monsters_do_pickups()
     local bonus = 0
 
     -- more stuff in start room
-    if R.purpose == "START" then
+    if R.is_start then
       if stat == "health" then
         bonus = 20
       end
@@ -1534,7 +1534,7 @@ function Monsters_in_room(R)
       qty = qty * 0.7
 
     -- more in KEY rooms (extra boost in small rooms)
-    elseif R.purpose == "KEY" or R.purpose == "SWITCH" then
+    elseif #R.goals > 0 then
       qty = qty * 1.4
 
       if R.svolume <= 16 then qty = qty * 1.2 end
@@ -1697,7 +1697,7 @@ function Monsters_in_room(R)
     -- level check (harder monsters occur in later rooms)
     assert(info.level)
 
-    if not (R.purpose or R.final_battle) then
+    if not (#R.goals > 0 or R.final_battle) then
       local max_level = LEVEL.max_level * (0.5 + R.lev_along / 2)
       if max_level < 2 then max_level = 2 end
 
@@ -2672,7 +2672,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     if R.kind == "stairwell" then return false end
 
     -- gameplay_tweaks module
-    if PARAM.quiet_start and R.purpose == "START" then
+    if PARAM.quiet_start and R.is_start then
       return false
     end
 
@@ -2703,21 +2703,21 @@ do return nil end
 
     -- in a pseudo-exit room, need to guard the door to real exit.
     -- we skip teleporters here, the code further down will handle it.
-    if R.final_battle and R.purpose != "EXIT" then
+    if R.final_battle and not R.is_exit then
       each A in R.areas do
       each C in A.conns do
         if C.kind == "teleporter" then continue end
 
-        local nb = C:neighbor(R)
+        local nb = C:neighbor(A)
 
-        if nb.purpose == "EXIT" then
+        if nb.room.is_exit then
           return guard_spot_for_conn(C)
         end
       end -- A, C
       end
     end
 
-    if R.purpose == "KEY" or R.purpose == "EXIT" or R.final_battle then
+    if R.purpose == "KEY" or R.is_exit or R.final_battle then
       -- the wotsit placement code will have set this
       if R.guard_spot then
         return R.guard_spot

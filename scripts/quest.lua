@@ -218,6 +218,7 @@ stderrf("Eval exit %s : conns:%d svolume:%d\n", R:tostr(), R:total_conns(), R.sv
     gui.printf("Exit room: %s\n", R:tostr())
 
     R.purpose = "EXIT"
+    R.is_exit = true
 
     LEVEL.exit_room = R
 
@@ -268,6 +269,7 @@ stderrf("Eval exit %s : conns:%d svolume:%d\n", R:tostr(), R:total_conns(), R.sv
 
     R.purpose = "SECRET_EXIT"
     R.is_secret = true
+    R.is_exit = true
 
     -- if connected to a hallway or stairwell, make it secret too
 
@@ -910,6 +912,7 @@ function Quest_start_room()
     gui.printf("Start room: %s\n", R:tostr())
 
     R.purpose = "START"
+    R.is_start = true
 
     LEVEL.start_room = R
     LEVEL.start_area = R.areas[1]  -- TODO
@@ -963,6 +966,7 @@ function Quest_start_room()
     gui.printf("Alternate Start room: %s\n", R:tostr())
 
     R.purpose = "START"
+    R.is_start = true
 
     LEVEL.alt_start = R
 
@@ -1246,7 +1250,7 @@ function Quest_add_weapons()
     if R.quest.kind == "secret" then return -100 end
 
     -- putting weapons in the exit room is a tad silly
-    if R.purpose == "EXIT" then return -60 end
+    if R.is_exit then return -60 end
 
     -- too many weapons already? (very unlikely to occur)
     if #R.weapons >= 2 then return -30 end
@@ -1254,7 +1258,7 @@ function Quest_add_weapons()
     -- basic fitness of the room is the size
     local score = R.svolume
 
-    if is_start and not is_new and R.purpose == "START" then
+    if is_start and not is_new and R.is_start then
       return rand.pick { 20, 120, 220 }
     end
 
@@ -1589,7 +1593,7 @@ function Quest_nice_items()
 
     -- never in secrets or the starting room
     if R.is_secret then return -1 end
-    if R.purpose == "START" then return -1 end
+    if R.is_start  then return -1 end
 
     if R.purpose    then score = score - 8 end
     if R.is_storage then score = score - 30 end
@@ -1679,7 +1683,7 @@ function Quest_nice_items()
     each R in rooms do
       local tab
 
-      if R.purpose == "START" then
+      if R.is_start then
         tab = start_tab
       else
         tab = normal_tab
@@ -1854,7 +1858,7 @@ function Quest_final_battle()
 
   local prev = E.entry_conn:neighbor(E)
 
-  if prev.purpose == "START" then return end
+  if prev.is_start then return end
 
   -- a locked connection means the player must do other stuff first
   -- (find a key or switch) -- hence other room would not be _THE_
@@ -2074,9 +2078,9 @@ function Quest_make_quests()
   Monsters_max_level()
 
   -- need at least a START room and an EXIT room
-  if #LEVEL.rooms < 2 then
-    error("Level only has one room! (2 or more are needed)")
-  end
+---???  if #LEVEL.rooms < 2 then
+---???    error("Level only has one room! (2 or more are needed)")
+---???  end
 
   LEVEL.quests = {}
   LEVEL.zones  = {}
