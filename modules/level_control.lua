@@ -64,7 +64,6 @@ OB_MODULES["level_control"] =
     mon_variety = { label="Monster Variety",choices=LEVEL_CONTROL.CHOICES }
     pictures    = { label="Pictures",       choices=LEVEL_CONTROL.CHOICES }
     pillars     = { label="Pillars",        choices=LEVEL_CONTROL.CHOICES }
-    scenics     = { label="Scenic Rooms",   choices=LEVEL_CONTROL.CHOICES }
     secrets     = { label="Secrets",        choices=LEVEL_CONTROL.CHOICES }
 
     steepness   = { label="Steepness",      choices=LEVEL_CONTROL.CHOICES }
@@ -77,6 +76,7 @@ OB_MODULES["level_control"] =
 --  closets     = { label="Closets",        choices=LEVEL_CONTROL.CHOICES }
 --  ex_floors   = { label="3D Floors",      choices=LEVEL_CONTROL.CHOICES }
 --  lakes       = { label="Lakes",          choices=LEVEL_CONTROL.CHOICES }
+--  scenics     = { label="Scenic Rooms",   choices=LEVEL_CONTROL.CHOICES }
 --  sub_rooms   = { label="Sub-Rooms",      choices=LEVEL_CONTROL.CHOICES }
 --  traps       = { label="Traps",          choices=LEVEL_CONTROL.CHOICES }
 
