@@ -1059,7 +1059,9 @@ function Room_determine_spots()
   --
 
 
-  local function spots_for_area(R, A)
+  local function spots_for_area(R, A, mode)
+    -- the 'mode' is normally NIL, can also be "cage"
+
     -- get bbox of room
     local rx1, ry1, rx2, ry2 = area_get_bbox(A)
 
@@ -1092,12 +1094,20 @@ function Room_determine_spots()
 
 --  stderrf("mon_spots @ %s floor:%d : %d\n", R:tostr(), f_h, #mon_spots)
 
-    each spot in item_spots do
-      table.insert(R.item_spots, spot)
-    end
+    if mode == "cage" then
+      each spot in mon_spots do
+        table.insert(R.cage_spots, spot)
+      end
 
-    each spot in mon_spots do
-      table.insert(R.mon_spots, spot)
+    else -- normal mode
+
+      each spot in item_spots do
+        table.insert(R.item_spots, spot)
+      end
+
+      each spot in mon_spots do
+        table.insert(R.mon_spots, spot)
+      end
     end
 
     gui.spots_end()
@@ -1123,6 +1133,15 @@ function Room_determine_spots()
     spots_in_room(R)
 
     R:exclude_monsters()
+  end
+
+  -- handle cages and traps
+
+  each A in LEVEL.areas do
+    if A.mode == "cage" then
+      local R = assert(A.face_room)
+      spots_for_area(R, A, "cage")
+    end
   end
 end
 

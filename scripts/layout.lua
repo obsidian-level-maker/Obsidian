@@ -489,6 +489,7 @@ function Layout_scenic(R)
 end
 
 
+
 function Layout_add_cages()
   local  junk_list = {}
   local other_list = {}
@@ -615,6 +616,11 @@ stderrf("Making cage in %s\n", A:tostr())
       if N.zone != A.zone then continue end
 
       if N.room then
+        -- TODO : pick room with biggest boundary
+        if not A.face_room then
+          A.face_room = N.room
+        end
+
         A.floor_h = math.max(N.floor_h, A.floor_h or -9999)
 
         local junc = Junction_lookup(A, N)
