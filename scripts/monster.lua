@@ -1694,11 +1694,11 @@ function Monsters_in_room(R)
 
     assert(low > 0)
 
-    if OB_CONFIG.strength == "weak"   then return low end
-    if OB_CONFIG.strength == "tough"  then return high end
+    if OB_CONFIG.strength == "weak"   then return low  ^ 1.5 end
+    if OB_CONFIG.strength == "tough"  then return high ^ 1.5 end
 
-    if OB_CONFIG.strength == "lower"  then return low  ^ 0.35 end
-    if OB_CONFIG.strength == "higher" then return high ^ 0.35 end
+    if OB_CONFIG.strength == "lower"  then return low  ^ 0.5 end
+    if OB_CONFIG.strength == "higher" then return high ^ 0.5 end
 
     return 1.0
   end
