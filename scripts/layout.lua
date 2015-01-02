@@ -564,18 +564,54 @@ function Layout_add_cages()
   end
 
 
+  local function eval_area_for_cage(A)
+    -- must be VOID
+    if A.mode != "void" then return -1 end
+
+    if A.svolume > 6 then return -1 end
+
+    -- must touch a room (but not START room)
+    local touch_a_room = false
+
+    each N in A.neighbors do
+      if N.room and not N.room.is_start then
+        touch_a_room = true
+      end
+    end
+
+    if not touch_a_room then return -1 end
+
+    return 100  -- OK --
+  end
+
+
   local function collect_big_cages()
     -- find all void areas that could be turned into a large cage
 
+    local list = {}
+    local svolume = 0
+
     each A in LEVEL.areas do
-      -- FIXME
+      if eval_area_for_cage(A) > 0 then
+        table.insert(list, A)
+        svolume = svolume + A.svolume
+      end
     end
+
+    return list, svolume
+  end
+
+
+  local function make_cage(A)
+stderrf("Making cage in %s\n", A:tostr())
+
+    -- FIXME
   end
 
 
   ---| Layout_add_cages |---
 
-  local quantity  = style_sel("cages", 0, 10, 30, 90)
+  local quota     = style_sel("cages", 0, 10, 30, 90)
   local skip_prob = style_sel("cages", 100, 40, 20, 0)
 
   if rand.odds(skip_prob) then
@@ -583,13 +619,31 @@ function Layout_add_cages()
     return
   end
 
-  gui.printf("Cages: quantity = %d%%\n", quantity)
+  gui.printf("Cages: quota = %d%%\n", quota)
 
 
-  local areas, big_vol = collect_big_cages()
+  local areas, svolume = collect_big_cages()
+
+  quota = int(svolume * quota * rand.range(1.0, 1.2))
+
+quota = 999 --!!!!
+
+  rand.shuffle(areas)
+
+  each A in areas do
+    if quota < 1 then break; end
+
+    if A.svolume <= quota then
+      make_cage(A)
+
+      quota = quota - A.svolume
+    end
+  end
 
 do return end
 
+
+--[[ OLD LOGIC, MAY BE USEFUL
 
   -- never add cages to a start room
   if R.is_start then return end
@@ -631,6 +685,8 @@ do return end
   end
 
   convert_list(list, limited)
+--]]
+
 end
 
 
