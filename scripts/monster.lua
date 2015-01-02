@@ -412,18 +412,26 @@ function Monsters_max_level()
     mon_along = math.min(1.0, mon_along / 0.75)
   end
 
-  local max_level = 1 + 11 * mon_along
+  assert(mon_along >= 0)
 
-  if OB_CONFIG.strength == "tough" or
-     OB_CONFIG.strength == "crazy"
-  then
-    max_level = max_level * 1.6
+  if OB_CONFIG.strength == "crazy" then
+    mon_along = 1.2
+  else
+    local FACTORS = { weak=1.7, lower=1.3, medium=1.0, higher=0.8, tough=0.6 }
 
-  elseif OB_CONFIG.strength == "weak" then
-    max_level = max_level / 1.3
+    local factor = FACTORS[OB_CONFIG.strength]
+    assert(factor)
+
+    mon_along = mon_along ^ factor
+
+    if OB_CONFIG.strength == "higher" or
+       OB_CONFIG.strength == "tough"
+    then
+      mon_along = mon_along + 0.1
+    end
   end
 
-  if max_level < 1 then max_level = 1 end
+  local max_level = 1 + 9 * mon_along
 
   LEVEL.max_level = max_level
 
@@ -448,7 +456,7 @@ function Monsters_max_level()
     weap_along = weap_along ^ 0.8 + 0.2
   end
 
-  LEVEL.weapon_level = 1 + 10 * weap_along
+  LEVEL.weapon_level = 1 + 9 * weap_along
 
   gui.printf("Weapon max level: %1.1f\n", LEVEL.weapon_level)
 end
