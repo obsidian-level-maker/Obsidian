@@ -92,27 +92,3 @@ SPOT_LOW_CEIL = 1
 SPOT_WALL     = 2
 SPOT_LEDGE    = 3
 
-
--- monster amounts and toughness
-MONSTER_QUANTITIES =
-{
-  scarce=9, less=18, normal=27, more=40, heaps=60
-}
-
-COOP_MON_FACTOR = 1.5
-
-MONSTER_MAX_TIME   = { weak=12,  medium=18,  tough=24 }
-MONSTER_MAX_DAMAGE = { weak=80,  medium=200, tough=360 }
-MONSTER_LOW_DAMAGE = { weak=0.1, medium=1.0, tough=4 }
-
-MON_VARIATION_LOW  = 0.5
-MON_VARIATION_HIGH = 1.5
-
-HEALTH_AMMO_ADJUSTS =
-{
-  none=0, scarce=0.4, less=0.7, normal=1.0, more=1.5, heaps=2.5
-}
-
-COOP_HEALTH_FACTOR = 1.3
-COOP_AMMO_FACTOR   = 1.6
-
