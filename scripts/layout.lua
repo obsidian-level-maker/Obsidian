@@ -489,7 +489,7 @@ function Layout_scenic(R)
 end
 
 
-function Layout_add_cages(R)
+function Layout_add_cages()
   local  junk_list = {}
   local other_list = {}
 
@@ -564,7 +564,32 @@ function Layout_add_cages(R)
   end
 
 
+  local function collect_big_cages()
+    -- find all void areas that could be turned into a large cage
+
+    each A in LEVEL.areas do
+      -- FIXME
+    end
+  end
+
+
   ---| Layout_add_cages |---
+
+  local quantity  = style_sel("cages", 0, 10, 30, 90)
+  local skip_prob = style_sel("cages", 100, 40, 20, 0)
+
+  if rand.odds(skip_prob) then
+    gui.printf("Cages: skipped for level (by style).\n")
+    return
+  end
+
+  gui.printf("Cages: quantity = %d%%\n", quantity)
+
+
+  local areas, big_vol = collect_big_cages()
+
+do return end
+
 
   -- never add cages to a start room
   if R.is_start then return end

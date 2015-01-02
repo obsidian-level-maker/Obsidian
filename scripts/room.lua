@@ -2107,9 +2107,10 @@ function Weird_build_rooms()
   Room_reckon_doors()
   Room_floor_heights()
 
-  Layout_outer_borders()
-
   Room_create_sky_groups()
+
+  Layout_add_cages()
+  Layout_outer_borders()
 
   each R in LEVEL.rooms do
     Layout_place_importants(R)
