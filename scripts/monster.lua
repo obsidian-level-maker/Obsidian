@@ -395,6 +395,7 @@ function Monsters_init()
 end
 
 
+
 function Monsters_max_level()
   local mon_along = LEVEL.game_along
 
@@ -413,8 +414,6 @@ function Monsters_max_level()
 
   local max_level = 1 + 11 * mon_along
 
-  LEVEL.weap_level = max_level
-
   if OB_CONFIG.strength == "tough" or
      OB_CONFIG.strength == "crazy"
   then
@@ -428,8 +427,34 @@ function Monsters_max_level()
 
   LEVEL.max_level = max_level
 
-  gui.printf("Monster max_level: %1.1f\n", max_level)
+  gui.printf("Monster max_level: %1.1f\n", LEVEL.max_level)
+
+
+  --- Weapon level ---
+
+  local weap_along = LEVEL.game_along
+
+  -- allow everything in a single level, or the "Mixed" choice
+  if OB_CONFIG.length == "single" or OB_CONFIG.weapons == "mixed" then
+    weap_along = 1.0
+
+  elseif OB_CONFIG.length == "game" then
+    -- reach peak sooner in a full game (after about an episode)
+    weap_along = math.min(1.0, weap_along * 3.0)
+  end
+
+  -- small adjustment for the 'Weapons' setting
+  if OB_CONFIG.weapons == "more" then
+    weap_along = weap_along ^ 0.8 + 0.1
+  elseif OB_CONFIG.weapons == "less" then
+    weap_along = weap_along ^ 1.2
+  end
+
+  LEVEL.weapon_level = 1 + 10 * weap_along
+
+  gui.printf("Weapon max level: %1.1f\n", LEVEL.weapon_level)
 end
+
 
 
 function Monsters_pick_single_for_level()
@@ -458,6 +483,7 @@ function Monsters_pick_single_for_level()
 end
 
 
+
 function Monsters_check_theme(info)
   -- if no theme specified, usable in all themes
   if not info.theme then return true end
@@ -469,6 +495,7 @@ function Monsters_check_theme(info)
 
   return info.theme == LEVEL.theme_name
 end
+
 
 
 function Monsters_global_palette()
