@@ -89,7 +89,7 @@ SKTAG_MONS.MONSTERS =
     damage = 120
     attack = "missile"
     density = 0.2
-    never_promote = true
+    nasty = true
   }
 
   abaddon =

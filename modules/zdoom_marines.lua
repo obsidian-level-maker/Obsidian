@@ -26,7 +26,7 @@ ZDOOM_MARINE.MONSTERS =
   -- to keep too much health from spawning in the map.  May need more tweaking.
 
   -- Marines of all types (well, except the fist) are extremely dangerous,
-  -- hence the low probabilities and never_promote.
+  -- hence the low probabilities, low densities and nasty flag.
   -- We want them all to be rare.
 
   marine_fist =
@@ -35,11 +35,10 @@ ZDOOM_MARINE.MONSTERS =
     r = 16
     h = 56 
     prob = 1
-    skip_prob = 200
     health = 100
     damage = 4
     attack = "melee"
-    never_promote = true
+    nasty = true
     density = 0.2
   }
 
@@ -49,11 +48,10 @@ ZDOOM_MARINE.MONSTERS =
     r = 16
     h = 56 
     prob = 6
-    skip_prob = 100
     health = 100
     damage = 40
     attack = "melee"
-    never_promote = true
+    nasty = true
     density = 0.2
   }
 
@@ -63,11 +61,10 @@ ZDOOM_MARINE.MONSTERS =
     r = 16
     h = 56 
     prob = 4
-    skip_prob = 100
     health = 100
     damage = 15
     attack = "melee"
-    never_promote = true
+    nasty = true
     density = 0.2
   }
 
@@ -77,11 +74,10 @@ ZDOOM_MARINE.MONSTERS =
     r = 16
     h = 56 
     prob = 12
-    skip_prob = 100
     health = 100
     damage = 8
     attack = "hitscan"
-    never_promote = true
+    nasty = true
     density = 0.5
   }
 
@@ -91,11 +87,10 @@ ZDOOM_MARINE.MONSTERS =
     r = 16
     h = 56 
     prob = 4
-    skip_prob = 100
     health = 100
     damage = 10
     attack = "hitscan"
-    never_promote = true
+    nasty = true
     density = 0.4
   }
 
@@ -105,11 +100,10 @@ ZDOOM_MARINE.MONSTERS =
     r = 16
     h = 56 
     prob = 6
-    skip_prob = 100
     health = 100
     damage = 65
     attack = "hitscan"
-    never_promote = true
+    nasty = true
     density = 0.3
   }
 
@@ -119,11 +113,10 @@ ZDOOM_MARINE.MONSTERS =
     r = 16
     h = 56 
     prob = 6
-    skip_prob = 100
     health = 100
     damage = 50
     attack = "hitscan"
-    never_promote = true
+    nasty = true
     density = 0.3
   }
 
@@ -134,11 +127,10 @@ ZDOOM_MARINE.MONSTERS =
     h = 56 
     prob = 4
     crazy_prob = 10
-    skip_prob = 100
     health = 100
     damage = 100
     attack = "missile"
-    never_promote = true
+    nasty = true
     density = 0.2
   }
 
@@ -149,11 +141,10 @@ ZDOOM_MARINE.MONSTERS =
     h = 56 
     prob = 4
     crazy_prob = 6
-    skip_prob = 100
     health = 100
     damage = 70
     attack = "missile"
-    never_promote = true
+    nasty = true
     density = 0.2
   }
 
@@ -163,11 +154,10 @@ ZDOOM_MARINE.MONSTERS =
     r = 16
     h = 56 
     prob = 2
-    skip_prob = 200
     health = 100
     damage = 100
     attack = "hitscan"
-    never_promote = true
+    nasty = true
     density = 0.1
   }
 
@@ -177,11 +167,10 @@ ZDOOM_MARINE.MONSTERS =
     r = 16
     h = 56 
     prob = 2
-    skip_prob = 250
     health = 100
     damage = 100
     attack = "missile"
-    never_promote = true
+    nasty = true
     density = 0.1
   }
 }
@@ -211,15 +200,10 @@ function ZDOOM_MARINE.setup(self)
 
   for name,_ in pairs(ZDOOM_MARINE.MONSTERS) do
     local M = GAME.MONSTERS[name]
+
     if M and factor then
       M.prob = M.prob * factor
       M.crazy_prob = (M.crazy_prob or M.prob) * factor
-
-      if OB_CONFIG.strength == "weak" then
-        M.skip_prob = M.skip_prob * 2
-      elseif OB_CONFIG.strength == "tough" then
-        M.skip_prob = M.skip_prob * 0.75
-      end
     end
   end
 end
@@ -296,8 +280,8 @@ function ZDOOM_MARINE.control_setup(self)
       M.prob = prob
       M.crazy_prob = prob
 
-      if prob >  50 then M.density = 0.5 ; M.skip_prob = 30 end
-      if prob > 150 then M.skip_prob = 0 end
+      if prob >  50 then M.density = 0.5 end
+      if prob > 150 then M.density = 1.0 end
     end
   end -- for opt
 end
@@ -326,7 +310,7 @@ OB_MODULES["zdoom_marine_control"] =
     marine_rocket    = { label="Rocket Marine",      choices=ZDOOM_MARINE.CTL_CHOICES }
     marine_plasma    = { label="Plasma Marine",      choices=ZDOOM_MARINE.CTL_CHOICES }
     marine_rail      = { label="Railgun Marine",     choices=ZDOOM_MARINE.CTL_CHOICES }
-    marine_bfg       = { label="BFG 9000 Marine",    choices=ZDOOM_MARINE.CTL_CHOICES }
+    marine_bfg       = { label="BFG Marine",         choices=ZDOOM_MARINE.CTL_CHOICES }
   }
 }
 
