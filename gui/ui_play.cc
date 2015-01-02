@@ -330,7 +330,9 @@ const char * UI_Play::monster_syms[] =
 const char * UI_Play::strength_syms[] =
 {
 	"weak",   "Weak",
+	"lower",  "Lower",
 	"medium", "Medium",
+	"higher", "Higher",
 	"tough",  "Tough",
 	"crazy",  "Crazy",
 
