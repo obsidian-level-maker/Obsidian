@@ -29,7 +29,6 @@ STEALTH.MONSTERS =
     id = 9061
     r = 20
     h = 56 
-
     replaces = "zombie"
     replace_prob = 30
     crazy_prob = 5
@@ -37,8 +36,8 @@ STEALTH.MONSTERS =
     damage = 4
     attack = "hitscan"
     give = { {ammo="bullet",count=5} }
-    invis = true
     density = 1.5
+    invis = true
   }
 
   stealth_shooter =
@@ -95,9 +94,9 @@ STEALTH.MONSTERS =
     health = 400
     damage = 35
     attack = "missile"
-    invis = true
-    float = true
     density = 0.5
+    float = true
+    invis = true
   }
 
   stealth_baron =
@@ -111,8 +110,8 @@ STEALTH.MONSTERS =
     health = 1000
     damage = 45
     attack = "missile"
-    invis = true
     density = 0.5
+    invis = true
   }
   
   stealth_gunner =
@@ -138,12 +137,11 @@ STEALTH.MONSTERS =
     replaces = "revenant"
     replace_prob = 30
     crazy_prob = 40
-    skip_prob = 90
     health = 300
     damage = 70
     attack = "missile"
-    invis = true
     density = 0.6
+    invis = true
   }
 
   stealth_knight =
@@ -154,12 +152,11 @@ STEALTH.MONSTERS =
     replaces = "knight"
     replace_prob = 25
     crazy_prob = 11
-    skip_prob = 75
     health = 500
     damage = 45
     attack = "missile"
-    invis = true
     density = 0.7
+    invis = true
   }
 
   stealth_mancubus =
@@ -173,8 +170,8 @@ STEALTH.MONSTERS =
     health = 600
     damage = 70
     attack = "missile"
-    invis = true
     density = 0.6
+    invis = true
   }
 
   stealth_arach =
@@ -188,8 +185,8 @@ STEALTH.MONSTERS =
     health = 500
     damage = 70
     attack = "missile"
-    invis = true
     density = 0.8
+    invis = true
   }
 
   stealth_vile =
@@ -200,12 +197,11 @@ STEALTH.MONSTERS =
     replaces = "vile"
     replace_prob = 10
     crazy_prob = 5
-    skip_prob = 100
     health = 700
     damage = 40
     attack = "hitscan"
     density = 0.2
-    never_promote = true
+    nasty = true
     invis = true
   }
 }
@@ -328,8 +324,7 @@ function STEALTH.control_setup(self)
       M.prob = prob
       M.crazy_prob = prob
 
-      if prob >  80 then M.density = 1.0 ; M.skip_prob = 30 end
-      if prob > 180 then M.skip_prob = 0 end
+      if prob > 80 then M.density = 1.0 end
     end
   end -- for opt
 end
@@ -348,19 +343,19 @@ OB_MODULES["stealth_mon_control"] =
 
   options =
   {
-    stealth_zombie   = { label="Stealth Zombieman",     choices=STEALTH.CONTROL_CHOICES }
-    stealth_shooter  = { label="Stealth Shotgunner",    choices=STEALTH.CONTROL_CHOICES }
-    stealth_imp      = { label="Stealth Imp",           choices=STEALTH.CONTROL_CHOICES }
-    stealth_demon    = { label="Stealth Demon",         choices=STEALTH.CONTROL_CHOICES }
-    stealth_caco     = { label="Stealth Cacodemon",     choices=STEALTH.CONTROL_CHOICES }
-    stealth_baron    = { label="Stealth Baron",         choices=STEALTH.CONTROL_CHOICES }
+    stealth_zombie   = { label="Zombieman",     choices=STEALTH.CONTROL_CHOICES }
+    stealth_shooter  = { label="Shotgunner",    choices=STEALTH.CONTROL_CHOICES }
+    stealth_imp      = { label="Imp",           choices=STEALTH.CONTROL_CHOICES }
+    stealth_demon    = { label="Demon",         choices=STEALTH.CONTROL_CHOICES }
+    stealth_caco     = { label="Cacodemon",     choices=STEALTH.CONTROL_CHOICES }
+    stealth_baron    = { label="Baron",         choices=STEALTH.CONTROL_CHOICES }
 
-    stealth_gunner   = { label="Stealth Chaingunner",   choices=STEALTH.CONTROL_CHOICES }
-    stealth_knight   = { label="Stealth Hell Knight",   choices=STEALTH.CONTROL_CHOICES }
-    stealth_revenant = { label="Stealth Revenant",      choices=STEALTH.CONTROL_CHOICES }
-    stealth_mancubus = { label="Stealth Mancubus",      choices=STEALTH.CONTROL_CHOICES }
-    stealth_arach    = { label="Stealth Arachnotron",   choices=STEALTH.CONTROL_CHOICES }
-    stealth_vile     = { label="Stealth Archvile",      choices=STEALTH.CONTROL_CHOICES }
+    stealth_gunner   = { label="Chaingunner",   choices=STEALTH.CONTROL_CHOICES }
+    stealth_knight   = { label="Hell Knight",   choices=STEALTH.CONTROL_CHOICES }
+    stealth_revenant = { label="Revenant",      choices=STEALTH.CONTROL_CHOICES }
+    stealth_mancubus = { label="Mancubus",      choices=STEALTH.CONTROL_CHOICES }
+    stealth_arach    = { label="Arachnotron",   choices=STEALTH.CONTROL_CHOICES }
+    stealth_vile     = { label="Archvile",      choices=STEALTH.CONTROL_CHOICES }
   }
 }
 
