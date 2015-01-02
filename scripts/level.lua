@@ -678,6 +678,7 @@ function Levels_choose_themes()
 end
 
 
+
 function Levels_episode_names()
   each EPI in GAME.episodes do
     -- only generate names for used episodes
@@ -686,6 +687,7 @@ function Levels_episode_names()
     EPI.description = Naming_grab_one("EPISODE")
   end
 end
+
 
 
 function Levels_do_styles()
@@ -735,32 +737,47 @@ function Levels_do_styles()
 end
 
 
+
 function Levels_choose_liquid()
-  if THEME.liquids and STYLE.liquids != "none" then
-    local name = rand.key_by_probs(THEME.liquids)
-    local liquid = GAME.LIQUIDS[name]
+  if not THEME.liquids then
+    gui.printf("Liquid: disabled by theme.\n\n")
+    LEVEL.liquid_usage = 0
+    return
+  end
 
-    if not liquid then
-      error("No such liquid: " .. name)
-    end
+  local usage     = style_sel("liquids", 0, 20, 40, 90)
+  local skip_prob = style_sel("liquids", 100, 30, 10, 0)
 
-    gui.printf("Liquid: %s\n\n", name)
-
-    LEVEL.liquid = liquid
-
-     -- setup the special '_LIQUID' material
-    assert(liquid.mat)
-    assert(GAME.MATERIALS[liquid.mat])
-
-    GAME.MATERIALS["_LIQUID"] = GAME.MATERIALS[liquid.mat]
-
-  else
+  if rand.odds(skip_prob) then
     -- leave '_LIQUID' unset : it should not be used, but if does then
     -- the _ERROR texture will appear (like any other unknown material.
-
-    gui.printf("Liquids disabled.\n\n")
+    gui.printf("Liquid: skipped for level (by style).\n\n")
+    LEVEL.liquid_usage = 0
+    return
   end
+
+  -- allow liquids, but control how much we use
+  LEVEL.liquid_usage = usage
+  
+  -- pick the liquid to use
+  local name = rand.key_by_probs(THEME.liquids)
+  local liquid = GAME.LIQUIDS[name]
+
+  if not liquid then
+    error("No such liquid: " .. name)
+  end
+
+  LEVEL.liquid = liquid
+
+  gui.printf("Liquid: %s (usage %d%%)\n\n", name, LEVEL.liquid_usage)
+
+  -- setup the special '_LIQUID' material
+  assert(liquid.mat)
+  assert(GAME.MATERIALS[liquid.mat])
+
+  GAME.MATERIALS["_LIQUID"] = GAME.MATERIALS[liquid.mat]
 end
+
 
 
 function Levels_choose_darkness()
@@ -772,6 +789,8 @@ function Levels_choose_darkness()
   end
 
   LEVEL.indoor_light = 144
+  LEVEL.sky_bright   = rand.sel(75, 192, 176)
+  LEVEL.sky_shade    = LEVEL.sky_bright - 32
 
   if rand.odds(prob) then
     gui.printf("Darkness falls across the land...\n\n")
@@ -779,9 +798,6 @@ function Levels_choose_darkness()
     LEVEL.is_dark = true
     LEVEL.sky_bright = 0
     LEVEL.sky_shade  = 0
-  else
-    LEVEL.sky_bright = rand.sel(75, 192, 176)
-    LEVEL.sky_shade  = LEVEL.sky_bright - 32
   end
 end
 
