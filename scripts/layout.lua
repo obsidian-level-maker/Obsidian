@@ -574,6 +574,8 @@ function Layout_add_cages()
     local touch_a_room = false
 
     each N in A.neighbors do
+      if N.zone != A.zone then continue end
+
       if N.room and not N.room.is_start then
         touch_a_room = true
       end
@@ -605,7 +607,28 @@ function Layout_add_cages()
   local function make_cage(A)
 stderrf("Making cage in %s\n", A:tostr())
 
-    -- FIXME
+    A.mode = "cage"
+
+    -- determine height and set junctions
+
+    each N in A.neighbors do
+      if N.zone != A.zone then continue end
+
+      if N.room then
+        A.floor_h = math.max(N.floor_h, A.floor_h or -9999)
+
+        local junc = Junction_lookup(A, N)
+
+        junc.kind = "rail"
+        junc.rail_mat = "MIDBARS3"
+        junc.post_h   = 84
+        junc.blocked  = true
+      end
+    end
+
+    assert(A.floor_h)
+
+    A.floor_h = A.floor_h + 40
   end
 
 
