@@ -349,7 +349,7 @@ function Weird_connect_stuff()
     local list = {}
 
     each A in R1.areas do
-    each S in A.half_seeds do
+    each S in A.seeds do
     each dir in geom.ALL_DIRS do
       local N = S:neighbor(dir)
 
@@ -675,7 +675,7 @@ A.is_outdoor = false
     each A in LEVEL.areas do
       if not A.room then continue end
 
-      each S in A.half_seeds do
+      each S in A.seeds do
 
         -- only need to try half the directions
         for dir = 6, 9 do
@@ -741,11 +741,11 @@ A.is_outdoor = false
   local function pick_internal_seed(R, A1, A2)
     local DIRS = table.copy(geom.ALL_DIRS)
 
-    if #A1.half_seeds > #A2.half_seeds then
+    if #A1.seeds > #A2.seeds then
       A1, A2 = A2, A1
     end
 
-    local seed_list = rand.shuffle(table.copy(A1.half_seeds))
+    local seed_list = rand.shuffle(table.copy(A1.seeds))
 
     each S in seed_list do
       rand.shuffle(DIRS)

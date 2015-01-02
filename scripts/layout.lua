@@ -318,7 +318,7 @@ function Layout_place_importants(R)
     -- emergency spots are the middle of whole (square) seeds
     R.emergency_wotsits = {}
 
-    each S in R.half_seeds do
+    each S in R.seeds do
       if S.conn then continue end
       if not S.diagonal then
         local mx, my = S:mid_point()
@@ -331,7 +331,7 @@ function Layout_place_importants(R)
     -- dire emergency spots are inside diagonal seeds
     R.dire_wotsits = {}
 
-    each S in R.half_seeds do
+    each S in R.seeds do
       if S.diagonal or S.conn then
         local mx, my = S:mid_point()
         local wall_dist = rand.range(0.2, 0.3)
@@ -770,7 +770,7 @@ function Layout_outer_borders()
     each A in LEVEL.areas do
       if not A.is_outdoor then continue end
 
-      each S in A.half_seeds do
+      each S in A.seeds do
         for dir = 2,8,2 do
           local N = S:neighbor(dir, "NODIR")
 
@@ -1008,7 +1008,7 @@ function Layout_outdoor_shadows()
   ---| Layout_outdoor_shadows |---
 
   each A in LEVEL.areas do
-    each S in A.half_seeds do
+    each S in A.seeds do
       each dir in geom.ALL_DIRS do
         if need_shadow(S, dir) then
           shadow_from_seed(S, dir)

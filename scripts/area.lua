@@ -40,7 +40,7 @@
 
     --- geometry of area ---
 
-    half_seeds : list(SEED)
+    seeds : list(SEED)
 
     svolume : number   -- number of seeds (0.5 for diagonals)
 
@@ -106,7 +106,7 @@ function AREA_CLASS.new(mode)
     mode = mode
 
     conns = {}
-    half_seeds = {}
+    seeds = {}
     neighbors  = {}
     inner_points = {}
   }
@@ -125,12 +125,12 @@ end
 
 
 function area_get_seed_bbox(A)
-  local first_S = A.half_seeds[1]
+  local first_S = A.seeds[1]
 
   local BB_X1, BB_Y1 = first_S, first_S
   local BB_X2, BB_Y2 = first_S, first_S
 
-  each S in A.half_seeds do
+  each S in A.seeds do
     if S.sx < BB_X1.sx then BB_X1 = S end
     if S.sy < BB_Y1.sy then BB_Y1 = S end
 
@@ -152,7 +152,7 @@ end
 function volume_of_area(A)
     local volume = 0
 
-    each S in A.half_seeds do
+    each S in A.seeds do
       if S.diagonal then
         volume = volume + 0.5
       else
@@ -219,7 +219,7 @@ function Junction_init()
   -- store junction in SEED.border[] for handy access
 
   each A in LEVEL.areas do
-    each S in A.half_seeds do
+    each S in A.seeds do
       each dir in geom.ALL_DIRS do
         local N = S:neighbor(dir)
 
@@ -293,7 +293,7 @@ function Corner_init()
   -- find touching areas
 
   each A in LEVEL.areas do
-    each S in A.half_seeds do
+    each S in A.seeds do
       each dir in geom.CORNERS do
         if S.diagonal and S.diagonal == (10 - dir) then continue end
 
@@ -495,7 +495,7 @@ gui.printf("  loop %d\n", alloc_id("flood_loop"))
   local function set_area(S)
     S.area = area_for_number(S.area_num)
 
-    table.insert(S.area.half_seeds, S)
+    table.insert(S.area.seeds, S)
   end
 
 
@@ -528,7 +528,7 @@ gui.printf("  loop %d\n", alloc_id("flood_loop"))
     local nb_map = {}
 
     each A in LEVEL.areas do
-      each S in A.half_seeds do
+      each S in A.seeds do
         each dir in geom.ALL_DIRS do
           local N = S:neighbor(dir)
 
@@ -568,7 +568,7 @@ gui.printf("  loop %d\n", alloc_id("flood_loop"))
   local function flood_inner_areas(A)
     A.is_inner = true
 
-    each S in A.half_seeds do
+    each S in A.seeds do
     each dir in geom.ALL_DIRS do
       local N = S:neighbor(dir)
 
@@ -628,7 +628,7 @@ function Weird_analyse_areas()
   --
 
   local function collect_inner_points(A)
-    each S in A.half_seeds do
+    each S in A.seeds do
       -- point is outside of area
       if S.diagonal == 9 then continue end
 
@@ -715,7 +715,7 @@ function Weird_analyse_areas()
     -- find a start seed : vertically lowest
     local low_S
 
-    each S in A.half_seeds do
+    each S in A.seeds do
       if not low_S or S.sy < low_S.sy then
         low_S = S
       end
@@ -782,13 +782,13 @@ function Weird_group_into_rooms()
     
       if S.area and S.area.room == R then
         S.room = R
-        table.insert(R.half_seeds, S)
+        table.insert(R.seeds, S)
         update(sx, sy)
       end
 
       if S2 and S2.area and S2.area.room == R then
         S2.room = R
-        table.insert(R.half_seeds, S2)
+        table.insert(R.seeds, S2)
         update(sx, sy)
       end
     end

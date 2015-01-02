@@ -755,7 +755,7 @@ function Render_area(A)
   A.floor_brushes = {}
   A.side_edges = {}
 
-  each S in A.half_seeds do
+  each S in A.seeds do
     Render_seed(A, S)
   end
 

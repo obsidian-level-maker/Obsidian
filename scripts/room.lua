@@ -32,7 +32,7 @@ class ROOM
 
   areas = list(AREA)
 
-  half_seeds = list(SEED)
+  seeds = list(SEED)
 
 
   //////////////////////
@@ -70,7 +70,7 @@ function ROOM_CLASS.new()
     total_inner_points = 0
 
     areas = {}
-    half_seeds = {}
+    seeds = {}
 
     sections = {}
     weapons = {}
@@ -130,7 +130,7 @@ function ROOM_CLASS.kill_it(R)
     A.mode = "void"
     A.room = nil
 
-    each S in A.half_seeds do
+    each S in A.seeds do
       S.room = nil
     end
 
@@ -1934,7 +1934,7 @@ end
 function Room_floor_heights()
 
   local function fix_up_seeds(A)
-    each S in A.half_seeds do
+    each S in A.seeds do
       S.floor_h = A.floor_h
     end
   end
