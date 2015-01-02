@@ -445,9 +445,7 @@ function Monsters_max_level()
 
   -- small adjustment for the 'Weapons' setting
   if OB_CONFIG.weapons == "more" then
-    weap_along = weap_along ^ 0.8 + 0.1
-  elseif OB_CONFIG.weapons == "less" then
-    weap_along = weap_along ^ 1.2
+    weap_along = weap_along ^ 0.8 + 0.2
   end
 
   LEVEL.weapon_level = 1 + 10 * weap_along
