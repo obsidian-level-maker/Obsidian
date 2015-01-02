@@ -89,8 +89,6 @@ COOP_MON_FACTOR = 1.35
 COOP_HEALTH_FACTOR = 1.3
 COOP_AMMO_FACTOR   = 1.6
 
-MONSTER_MAX_TIME = { weak=6, medium=9, tough=12 }
-
 
 -- Doom flags
 DOOM_FLAGS =
@@ -408,8 +406,8 @@ function Monsters_max_level()
     mon_along = rand.skew(0.5, 0.35)
 
   elseif OB_CONFIG.length == "game" then
-    -- reach peak strength after about 75% of the full game
-    mon_along = math.min(1.0, mon_along / 0.75)
+    -- reach peak strength after about 70% of the full game
+    mon_along = math.min(1.0, mon_along / 0.70)
   end
 
   assert(mon_along >= 0)
@@ -1526,14 +1524,14 @@ function Monsters_in_room(R)
       time = time * PARAM.time_factor
     end
 
-    local max_time = MONSTER_MAX_TIME[OB_CONFIG.strength] or 9
+    local max_time = 10 -- seconds
 
     if time > max_time*2 then
-      return 1 / 4
+      return 0.25
     elseif time > max_time then
-      return 1 / 2
+      return 0.5
     else
-      return 1
+      return 1.0
     end
   end
 
@@ -1688,15 +1686,21 @@ function Monsters_in_room(R)
   local function calc_strength_factor(info)
     local factor = (info.level or 1)
 
-    if OB_CONFIG.strength == "weak" then
-      return 2 / (1 + factor)
+    -- weaker monsters in secrets
+    if R.is_secret then return 1 / factor end
 
-    elseif OB_CONFIG.strength == "tough" then
-      return (factor + 1) / 8
+    local low  = (10 - factor) / 9
+    local high = factor / 9
 
-    else
-      return 1
-    end
+    assert(low > 0)
+
+    if OB_CONFIG.strength == "weak"   then return low end
+    if OB_CONFIG.strength == "tough"  then return high end
+
+    if OB_CONFIG.strength == "lower"  then return low  ^ 0.35 end
+    if OB_CONFIG.strength == "higher" then return high ^ 0.35 end
+
+    return 1.0
   end
 
 
@@ -1744,11 +1748,6 @@ function Monsters_in_room(R)
 
     -- apply user's Strength setting
     prob = prob * calc_strength_factor(info)
-
-    -- weaker monsters in secrets
-    if R.is_secret then
-      prob = prob / (info.level or 1)
-    end
 
 
     -- level check (harder monsters occur in later rooms)
