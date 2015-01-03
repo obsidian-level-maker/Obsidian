@@ -719,6 +719,12 @@ do return end
 end
 
 
+
+function Layout_update_cages()
+  -- TODO
+end
+
+
 ------------------------------------------------------------------------
 
 

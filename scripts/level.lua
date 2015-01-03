@@ -141,7 +141,7 @@ GLOBAL_STYLE_LIST =
   steepness  = { few=20, some=60, heaps=10 }
 
   symmetry   = { none=10, few=40, some=60, heaps=10 }
-  cages      = { none=30, few=20, some=20, heaps=10 }
+  cages      = { none=20, few=20, some=20, heaps=10 }
   fences     = { none=30, few=30, some=10 }
   crates     = { none=20, some=40, heaps=10 }
 
