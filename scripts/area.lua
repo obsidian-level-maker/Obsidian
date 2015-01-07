@@ -142,6 +142,19 @@ function area_get_seed_bbox(A)
 end
 
 
+function AREA_CLASS.get_ctf_peer(A)
+  local S = A.seeds[1]
+  local N = S.ctf_peer
+
+  if not N then return nil end
+  assert(N.area)
+
+  if N.area == A then return nil end
+
+  return N.area
+end
+
+
 function area_get_bbox(A)
   local BB_X1, BB_Y1, BB_X2, BB_Y2 = area_get_seed_bbox(A)
 
@@ -740,6 +753,75 @@ function Weird_analyse_areas()
   end
 
 
+  local function spread_CTF_team(A1, list)
+    -- already visited?
+    if A1.team then return end
+
+    local A2 = A1:get_ctf_peer()
+
+    assert(A2)
+    assert(not A2.team)
+
+    A1.team = "blue"
+    A2.team = "red"
+
+    A1.sister  = A2
+    A2.brother = A1
+
+    each N in A1.neighbors do
+      if not N.team then
+        table.insert(list, N)
+      end
+    end
+  end
+
+
+  local function find_CTF_peers()
+    --
+    -- setup 'brother' and 'sister' relationship between mirrored areas
+    --
+
+    -- find a peered area to start with
+    -- (also marks all the unpeered areas as team "neutral")
+    local start
+
+    each A in LEVEL.areas do
+      local A2 = A:get_ctf_peer()
+
+      if not A2 then
+        A.team = "neutral"
+      elseif not A.is_boundary and A.svolume >= 6 then
+        start = A
+      end
+    end
+
+    if not start then
+      -- oh crap, FIXME (but how ??)
+      error("CTF failure, no separate areas")
+    end
+
+    -- This spreading logic tries to keep teamed areas contiguous
+    -- (i.e. PREVENT pockets of one color surrounded by the other color).
+
+    local list = { start }
+
+    while not table.empty(list) do
+      local A1 = table.remove(list, 1)
+
+      spread_CTF_team(A1, list)
+    end
+
+    -- handle any unreachable areas
+    each A in LEVEL.areas do
+      if not A.team then
+        A.team = "neutral"
+      end
+    end
+
+    -- TODO : grow neutral area [ upto a quota ]
+  end
+
+
   ---| Weird_analyse_areas |---
 
   each A in LEVEL.areas do
@@ -750,6 +832,12 @@ function Weird_analyse_areas()
     A.svolume = volume_of_area(A)
 
     A.openness = #A.inner_points / A.svolume
+  end
+
+  if OB_CONFIG.mode == "ctf" then
+    Seed_setup_CTF()
+
+    find_CTF_peers()
   end
 end
 
@@ -1192,8 +1280,8 @@ function Weird_create_rooms()
   Junction_init()
     Corner_init()
 
-  Room_void_some_areas()
-  Room_assign_hallways()
+--!!!  Room_void_some_areas()
+--!!!  Room_assign_hallways()
 
   Weird_group_into_rooms()
 
