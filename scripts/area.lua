@@ -1287,7 +1287,7 @@ function Weird_create_rooms()
   Junction_init()
     Corner_init()
 
---!!!  Room_void_some_areas()
+  Room_void_some_areas()
 --!!!  Room_assign_hallways()
 
   Weird_group_into_rooms()

@@ -1153,6 +1153,9 @@ function walkable_svolume()
   local vol = 0
 
   each A in LEVEL.areas do
+    -- in CTF mode, don't count the mirrored parts
+    if A.brother then continue end
+
     if A.mode == "normal" then
       vol = vol + A.svolume
     end
@@ -1228,6 +1231,9 @@ function Room_void_some_areas()
     
     A.mode = "void"
 
+    -- in CTF maps, must void the mirrored area too
+    if A.sister then A.sister.mode = "void" end
+
     -- we flood first starting from the largest area (which is never void)
     local start = largest
     assert(start.mode == "normal")
@@ -1242,6 +1248,8 @@ function Room_void_some_areas()
     end
 
     A.mode = "normal"
+    if A.sister then A.sister.mode = "normal" end
+
     return false
   end
 
@@ -1253,6 +1261,8 @@ function Room_void_some_areas()
       if A.no_void then continue end
 
       if A.mode != "normal" then continue end
+
+      if A.brother then continue end  -- CTF check
 
       if A.svolume > 20 then continue end
 
@@ -1272,6 +1282,9 @@ function Room_void_some_areas()
   largest = largest_area()
 
   largest.no_void = true
+
+  if largest.sister  then largest.sister .no_void = true end
+  if largest.brother then largest.brother.no_void = true end
 
   -- visit areas in random order
   visit_list = table.copy(LEVEL.areas)
