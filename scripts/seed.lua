@@ -479,23 +479,59 @@ function Seed_from_coord(x, y)
 end
 
 
+function Seed_setup_CTF()
+
+  local function mirror(S, N)
+    if S != N then
+      S.ctf_peer = N
+      N.ctf_peer = S
+    end
+  end
+
+  local mid_SW = int((SEED_W + 1) / 2)
+
+  for sx = 1, mid_SW do
+  for sy = 1, SEED_H do
+    local nx = SEED_W + 1 - sx
+    local ny = SEED_H + 1 - sy
+
+    local S = SEEDS[sx][sy]
+    local N = SEEDS[nx][ny]
+
+    if S.diagonal then
+      assert(N.diagonal)
+
+      mirror(S, N.top)
+      mirror(S.top, N)
+    else
+      mirror(S, N)
+    end
+  end
+  end
+end
+
+
 function Seed_dump_rooms()
   local function seed_to_char(S)
     if not S then return "!" end
     if S.free then return "!" end
-    if not S.room then return "#" end
-    if S.diagonal == 1 then return "/" end
-    if S.diagonal == 3 then return "\\" end
 
-    if S.room.kind == "scenic"   then return "=" end
-    if S.room.kind == "reserved" then return "*" end
+    local R = S.room or (S.top and S.top.room)
 
-    if S.room.kind == "cave" then
-      local n = 1 + ((S.room.id - 1) % 26)
+    if not R then return " " end
+
+    if S.diagonal == 1 then return "\\" end
+    if S.diagonal == 3 then return "/" end
+
+    if R.kind == "scenic"   then return "=" end
+    if R.kind == "reserved" then return "*" end
+
+    if R.is_outdoor then
+      local n = 1 + ((R.id - 1) % 26)
       return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
     end
 
-    local n = 1 + ((S.room.id - 1) % 26)
+    local n = 1 + ((R.id - 1) % 26)
     return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
   end
 
