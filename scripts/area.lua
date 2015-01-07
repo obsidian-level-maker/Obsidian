@@ -812,13 +812,20 @@ function Weird_analyse_areas()
     end
 
     -- handle any unreachable areas
-    each A in LEVEL.areas do
-      if not A.team then
-        A.team = "neutral"
+    each A1 in LEVEL.areas do
+      if not A1.team then
+        local A2 = A1:get_ctf_peer()
+        assert(A2)
+
+        A1.team = "neutral"
+        A2.team = "neutral"
+
+        A1.sister  = A2
+        A2.brother = A1
       end
     end
 
-    -- TODO : grow neutral area [ upto a quota ]
+    -- TODO : add/grow neutral area [ upto a quota ]
   end
 
 
