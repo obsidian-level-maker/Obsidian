@@ -768,6 +768,8 @@ function Weird_analyse_areas()
     A1.sister  = A2
     A2.brother = A1
 
+stderrf("peering CTF: brother %s <--> %s sister\n", A1:tostr(), A2:tostr())
+
     each N in A1.neighbors do
       if not N.team then
         table.insert(list, N)
@@ -1288,7 +1290,7 @@ function Weird_create_rooms()
     Corner_init()
 
   Room_void_some_areas()
---!!!  Room_assign_hallways()
+  Room_assign_hallways()
 
   Weird_group_into_rooms()
 

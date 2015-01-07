@@ -1473,8 +1473,14 @@ function Room_assign_hallways()
     -- too open?
     if A.openness > 0.4 then return -1 end
 
+    -- CTF: ignore mirrored areas
+    if A.brother then return -1 end
+
     -- don't touch an existing hallway
     if num_neighbor_with_mode(A, "hallway") > 0 then return -1 end
+
+    -- CTF: don't allow two mirrored areas which touch
+    if A.sister and table.has_elem(A.neighbors, A.sister) then return -1 end
 
     -- need at least two normal neighbors
     if num_neighbor_with_mode(A, "normal") < 2 then return -1 end
@@ -1622,8 +1628,6 @@ function Room_assign_hallways()
 
 
   local function detect_stairwells(A)
-    A.stairwells = {}
-
     each name, shape in STAIRWELL_SHAPES do
       shape.name = name
 
@@ -1640,12 +1644,21 @@ function Room_assign_hallways()
 
   largest.no_hallway = true
 
+  if largest.sister  then largest.sister .no_hallway = true end
+  if largest.brother then largest.brother.no_hallway = true end
+
   while quota > 0 do
     local A = pick_area_to_hall_up()
 
     if not A then break; end
 
     A.mode = "hallway"
+    A.stairwells = {}
+
+    if A.sister then
+      A.sister.mode = "hallway"
+      A.sister.stairwells = {}
+    end
 
     detect_stairwells(A)
 
