@@ -67,6 +67,7 @@ function Multiplayer_flag_rooms()
     local GOAL =
     {
       kind = "FLAG"
+      item = "ctf_" .. team .. "_flag"
       team = team
     }
 

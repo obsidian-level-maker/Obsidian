@@ -1093,6 +1093,13 @@ function Render_importants()
   end
 
 
+  local function content_flag(spot)
+    -- TODO : prefab for flag base
+
+    content_big_item(spot, assert(spot.item))
+  end
+
+
   local function content_teleporter(spot)
     -- FIXME !!!!  content_teleporter
 
@@ -1146,6 +1153,9 @@ function Render_importants()
 
     elseif spot.content_kind == "ITEM" then
       content_item(spot)
+
+    elseif spot.content_kind == "FLAG" then
+      content_flag(spot)
 
     elseif spot.content_kind == "TELEPORTER" then
       content_teleporter(spot)
