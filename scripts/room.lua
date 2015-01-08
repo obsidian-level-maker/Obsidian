@@ -1473,8 +1473,12 @@ function Room_assign_hallways()
     -- too open?
     if A.openness > 0.4 then return -1 end
 
-    -- CTF: ignore mirrored areas
+    -- CTF: ignore the mirrored half of the map
     if A.brother then return -1 end
+
+    -- CTF: never use a non-peered area
+    -- (because it is a pain to ensure the connection points are mirrored)
+    if A.no_ctf_peer then return -1 end
 
     -- don't touch an existing hallway
     if num_neighbor_with_mode(A, "hallway") > 0 then return -1 end
