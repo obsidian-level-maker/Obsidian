@@ -545,6 +545,7 @@ A.is_outdoor = false
 
     -- FIXME !!!
     if OB_CONFIG.mode == "ctf" then return false end
+    if OB_CONFIG.mode == "dm"  then return false end
 
     local A = R.areas[1]
 
