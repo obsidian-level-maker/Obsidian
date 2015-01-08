@@ -835,6 +835,9 @@ function Weird_group_into_rooms()
   --
   -- This actually creates the rooms by grouping a bunch of areas together.
   --
+  -- In CTF mode, we ignore the mirrored half of the map until the rooms
+  -- are actually created, at which point we create two peered rooms.
+  --
 
   local usable_areas
 
@@ -1141,27 +1144,15 @@ stderrf("Killing tiny AREA_%d\n", A.id)
   end
 
 
-  local function room_from_area(A, T)
+  local function room_from_area(A)
     local ROOM = ROOM_CLASS.new()
 
     if A.mode == "hallway" then
-      ROOM.is_hallway = true
       ROOM.kind = "hallway"
+      ROOM.is_hallway = true
     end
 
-    ROOM.svolume = T.size
-    ROOM.total_inner_points = 0
-
     return ROOM
-  end
-
-
-  local function room_add_area(R, A)
-    A.room = R
-
-    table.insert(R.areas, A)
-
-    R.total_inner_points = R.total_inner_points + #A.inner_points
   end
 
 
@@ -1169,17 +1160,32 @@ stderrf("Killing tiny AREA_%d\n", A.id)
     -- all "roomish" areas should now have a 'temp_room' table
 
     each A in LEVEL.areas do
-      local T = A.temp_room
+      local temp = A.temp_room
 
-      if not T then continue end
+      if not temp then continue end
+      assert(not temp.is_dead)
 
-      assert(not T.is_dead)
+      if not temp.R1 then
+        temp.R1 = room_from_area(A)
 
-      if not T.room then
-        T.room = room_from_area(A, T)
+        -- CTF: create mirrored room now
+        if A.sister then
+          assert(not A.sister.room)
+          temp.R2 = room_from_area(A.sister, temp)
+
+          -- peer the rooms
+          temp.R1.sister  = temp.R2
+          temp.R2.brother = temp.R1
+
+          stderrf("Peering rooms: brother %s <--> %s sister\n", temp.R1:tostr(), temp.R2:tostr())
+        end
       end
 
-      room_add_area(T.room, A)
+      temp.R1:add_area(A)
+
+      if A.sister then
+        temp.R2:add_area(A.sister)
+      end
     end
   end
 

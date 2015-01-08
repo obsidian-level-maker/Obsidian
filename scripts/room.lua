@@ -66,8 +66,9 @@ function ROOM_CLASS.new()
   {
     id = id
     kind = "UNSET"
-    num_windows = 0
+    svolume = 0
     total_inner_points = 0
+    num_windows = 0
 
     areas = {}
     seeds = {}
@@ -113,6 +114,16 @@ end
 
 function ROOM_CLASS.tostr(R)
   return string.format("%s_%d", R:kind_str(), R.id)
+end
+
+
+function ROOM_CLASS.add_area(R, A)
+  A.room = R
+
+  table.insert(R.areas, A)
+
+  R.svolume = R.svolume + A.svolume
+  R.total_inner_points = R.total_inner_points + #A.inner_points
 end
 
 
