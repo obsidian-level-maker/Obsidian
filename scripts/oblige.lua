@@ -29,6 +29,7 @@ require "area"
 require "connect"
 
 require "quest"
+require "dm_ctf"
 require "layout"
 require "render"
 require "room"
