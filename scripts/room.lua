@@ -1480,10 +1480,14 @@ function Room_assign_hallways()
     -- (because it is a pain to ensure the connection points are mirrored)
     if A.no_ctf_peer then return -1 end
 
-    -- don't touch an existing hallway
+    -- never touch an existing hallway
     if num_neighbor_with_mode(A, "hallway") > 0 then return -1 end
 
-    -- CTF: don't allow two mirrored areas which touch
+    if A.sister then
+      if num_neighbor_with_mode(A.sister, "hallway") > 0 then return -1 end
+    end
+
+    -- CTF: prevent a mirrored hallway from touching its peer
     if A.sister and table.has_elem(A.neighbors, A.sister) then return -1 end
 
     -- need at least two normal neighbors
@@ -1502,7 +1506,7 @@ function Room_assign_hallways()
   end
 
 
-  local function pick_area_to_hall_up()
+  local function pick_area_for_hallway()
     local best
     local best_score = 0
 
@@ -1652,7 +1656,7 @@ function Room_assign_hallways()
   if largest.brother then largest.brother.no_hallway = true end
 
   while quota > 0 do
-    local A = pick_area_to_hall_up()
+    local A = pick_area_for_hallway()
 
     if not A then break; end
 
