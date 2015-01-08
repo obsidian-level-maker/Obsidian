@@ -753,26 +753,29 @@ function Weird_analyse_areas()
   end
 
 
-  local function spread_CTF_team(A1, list)
-    -- already visited?
-    if A1.team then return end
+  local function spread_CTF_team(A1, visit_list)
+    if not A1.team then
+      local A2 = A1:get_ctf_peer()
 
-    local A2 = A1:get_ctf_peer()
+      if not A2 then
+        A1.team = "neutral"
+        A1.no_ctf_peer = true
+      else
+        assert(not A2.team)
 
-    assert(A2)
-    assert(not A2.team)
+        A1.team = "blue"
+        A2.team = "red"
 
-    A1.team = "blue"
-    A2.team = "red"
+        A1.sister  = A2
+        A2.brother = A1
 
-    A1.sister  = A2
-    A2.brother = A1
-
-stderrf("peering CTF: brother %s <--> %s sister\n", A1:tostr(), A2:tostr())
+        stderrf("peering CTF: brother %s <--> %s sister\n", A1:tostr(), A2:tostr())
+      end
+    end
 
     each N in A1.neighbors do
       if not N.team then
-        table.insert(list, N)
+        table.insert(visit_list, N)
       end
     end
   end
@@ -780,54 +783,29 @@ stderrf("peering CTF: brother %s <--> %s sister\n", A1:tostr(), A2:tostr())
 
   local function find_CTF_peers()
     --
-    -- setup 'brother' and 'sister' relationship between mirrored areas
+    -- Setup 'brother' and 'sister' relationship between mirrored areas
     --
 
-    -- find a peered area to start with
-    -- (also marks all the unpeered areas as team "neutral")
-    local start
-
-    each A in LEVEL.areas do
-      local A2 = A:get_ctf_peer()
-
-      if not A2 then
-        A.team = "neutral"
-      elseif not A.is_boundary and A.svolume >= 6 then
-        start = A
-      end
-    end
-
-    if not start then
-      -- oh crap, FIXME (but how ??)
-      error("CTF failure, no separate areas")
-    end
-
+    -- Do a flood fill through the level.
     -- This spreading logic tries to keep teamed areas contiguous
     -- (i.e. PREVENT pockets of one color surrounded by the other color).
 
-    local list = { start }
+    -- begin at first area (usually at bottom left, but it doesn't matter)
 
-    while not table.empty(list) do
-      local A1 = table.remove(list, 1)
+    local visit_list = { LEVEL.areas[1] }
 
-      spread_CTF_team(A1, list)
+    while not table.empty(visit_list) do
+      local A1 = table.remove(visit_list, 1)
+
+      spread_CTF_team(A1, visit_list)
     end
 
-    -- handle any unreachable areas
-    each A1 in LEVEL.areas do
-      if not A1.team then
-        local A2 = A1:get_ctf_peer()
-        assert(A2)
-
-        A1.team = "neutral"
-        A2.team = "neutral"
-
-        A1.sister  = A2
-        A2.brother = A1
-      end
+    -- sanity check
+    each A in LEVEL.areas do
+      assert(A.team)
     end
 
-    -- TODO : add/grow neutral area [ upto a quota ]
+    -- TODO : add/grow the central neutral area [ upto a quota ]
   end
 
 
