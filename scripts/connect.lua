@@ -676,12 +676,6 @@ A.is_outdoor = false
 
     if A1.conn_group == A2.conn_group then return -2 end
 
-    if A1.sister then
-      local A2_peer = A2.sister or A2.brother
-      assert(A2_peer)
-      assert(A1.conn_group != A2.conn_group)
-    end
-
     -- connection is possible, evaluate it --
 
     local R1 = A1.room
