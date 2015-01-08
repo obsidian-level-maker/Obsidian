@@ -160,16 +160,20 @@ end
 
 
 
-function Connect_raw_seed_pair(S, T, dir, reverse)
+function Connect_raw_seed_pair(S, T, dir, reverse, allow_same_id)
 --- stderrf("Connect_seed_pair: %s dir:%d\n", S:tostr(), dir)
-
-  if not T then
-    T = S:neighbor(dir)
-  end
 
   assert(S.area and T.area)
 
-  Connect_merge_groups(S.area, T.area)
+  local same_id = (S.area.conn_group == T.area.conn_group)
+
+  if same_id then
+    if not allow_same_id then
+      error("Connect to same conn_group")
+    end
+  else
+    Connect_merge_groups(S.area, T.area)
+  end
 
   -- this used for stairwells, to ensure the other room builds the arch or door
   if reverse then
@@ -202,6 +206,11 @@ T.area.id, T.area.conn_group)
   table.insert(CONN.A1.conns, CONN)
   table.insert(CONN.A2.conns, CONN)
 
+  -- if areas have same group, mark connection as a Cycle
+  if same_id then
+    CONN.is_cycle = true
+  end
+
   -- setup border info
 
   S.border[dir].kind = "arch"
@@ -217,16 +226,24 @@ end
 
 
 function Connect_seed_pair(S, T, dir, reverse)
+  if not T then
+    T = S:neighbor(dir)
+  end
+
   local conn1 = Connect_raw_seed_pair(S, T, dir, reverse)
   local conn2
 
   -- handle CTF maps
-  if S.area.sister then
-    local S2 = S.ctf_peer
-    assert(S2.area == S.area.sister)
-    assert(not S2.area.sister)
+  -- Note: sometimes the mirrored connection will connect to the same group,
+  --       that is OK and unvoidable -- conn2 will be marked as a cycle.
+  
+  if S.area.sister or S.area.brother or
+     T.area.sister or T.area.brother
+  then
+    local S2 = assert(S.ctf_peer)
+    local T2 = assert(T.ctf_peer)
 
-    conn2 = Connect_raw_seed_pair(S2, nil, 10 - dir, reverse)
+    conn2 = Connect_raw_seed_pair(S2, T2, 10 - dir, reverse, "allow_same_id")
 
     -- peer the connections
     conn1.sister  = conn2
@@ -590,6 +607,10 @@ A.is_outdoor = false
       gui.printf("hallway %s could not connect : killing it\n", R:tostr())
 
       kill_hallway(R)
+
+      if R.sister then
+        kill_hallway(R.sister)
+      end
     end
   end
 
@@ -604,9 +625,10 @@ A.is_outdoor = false
 
     -- visit from biggest to smallest
     -- (so less chance of needing to kill a large hallway)
+    -- for CTF maps, we only visit one half of a peered area pair
 
     each R in LEVEL.rooms do
-      if R.is_hallway then
+      if R.is_hallway and not R.brother then
         R.h_order = R.svolume + gui.random()  -- tie breaker
         table.insert(hall_list, R)
       end
@@ -654,6 +676,12 @@ A.is_outdoor = false
 
     if A1.conn_group == A2.conn_group then return -2 end
 
+    if A1.sister then
+      local A2_peer = A2.sister or A2.brother
+      assert(A2_peer)
+      assert(A1.conn_group != A2.conn_group)
+    end
+
     -- connection is possible, evaluate it --
 
     local R1 = A1.room
@@ -693,12 +721,12 @@ A.is_outdoor = false
     local best_dir
     local best_score = 0
 
-    each A in LEVEL.areas do
-      if not A.room then continue end
-
-      each S in A.seeds do
+    each R in LEVEL.rooms do
+    each A in R.areas do
+    each S in A.seeds do
 
         -- only need to try half the directions
+        -- [ hence in CTF maps must try the mirrored rooms too ]
         for dir = 6, 9 do
           local score = eval_normal_conn(S, dir)
 
@@ -708,7 +736,9 @@ A.is_outdoor = false
             best_score = score
           end
         end
-      end 
+
+    end  -- R, A, S
+    end 
     end
 
     -- perform the connection --
@@ -836,9 +866,11 @@ A.is_outdoor = false
 
   ---| Weird_connect_stuff |---
 
-  -- give each area of each room a conn_group 
+  -- give each area of each room a conn_group
   each A in LEVEL.areas do
-    A.conn_group = A.id
+    if A.room then
+      A.conn_group = A.id
+    end
     A.teleports = {}
   end
 
