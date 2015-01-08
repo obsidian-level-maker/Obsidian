@@ -999,7 +999,7 @@ function Weird_group_into_rooms()
     -- in CTF mode, ensure team is consistent in a room
     if A1.is_tiny then
       A1.team = A2.team
-      if A1.sister then A1.sister.team = A1.team end
+      if A1.sister then A1.sister.team = A2.sister.team end
     end
 
     -- forget tinyness
