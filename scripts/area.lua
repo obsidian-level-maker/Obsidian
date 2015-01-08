@@ -916,6 +916,9 @@ function Weird_group_into_rooms()
       -- hallways are handled later
       if A.mode != "normal" then continue end
 
+      -- in CTF maps, handle the mirrored half of map later on
+      if A.brother then continue end
+
       -- very small rooms are handled specially (later on)
       if svol_is_tiny(A.svolume) then A.is_tiny = true ; continue end
 
@@ -990,6 +993,12 @@ function Weird_group_into_rooms()
 
     merge_temp_rooms(A1.temp_room, A2.temp_room)
 
+    -- in CTF mode, ensure team is consistent in a room
+    if A1.is_tiny then
+      A1.team = A2.team
+      if A1.sister then A1.sister.team = A1.team end
+    end
+
     -- forget tinyness
     A1.is_tiny = nil
     A2.is_tiny = nil
@@ -1002,6 +1011,16 @@ function Weird_group_into_rooms()
     local poss = {}
 
     each N in A.neighbors do
+      -- CTF: never merge a peered room into a non-peered room
+      if A.no_ctf_peer != N.no_ctf_peer then
+        continue
+      end
+
+      -- CTF: avoid merging different teams [relaxed for tiny rooms]
+      if not tiny_mode and A.team and A.team != N.team then
+        continue
+      end
+
       if N.temp_room and N.temp_room != A.temp_room then
         table.insert(poss, N)
       end
@@ -1079,6 +1098,9 @@ function Weird_group_into_rooms()
 stderrf("Killing tiny AREA_%d\n", A.id)
             A.mode = "void"
             A.temp_room = nil
+
+            if A.sister then A.sister.mode = "void" end
+
           elseif not try_merge_a_neighbor(A, "emergency") then
             error("Failed to merge a tiny area")
           end
@@ -1091,7 +1113,7 @@ stderrf("Killing tiny AREA_%d\n", A.id)
 
   local function handle_hallways()
     each A in LEVEL.areas do
-      if A.mode == "hallway" then
+      if A.mode == "hallway" and not A.brother then
         assert(not A.temp_room)
         A.temp_room = new_temp_room(A)
       end
@@ -1104,11 +1126,13 @@ stderrf("Killing tiny AREA_%d\n", A.id)
     -- [ this is REQUIRED by the connection logic ]
 
     each A in LEVEL.areas do
-      if A.mode != "hallway" then continue end
+      if not (A.mode == "hallway" and not A.brother) then continue end
       assert(A.temp_room)
 
       each N in A.neighbors do
-        if N.mode == "hallway" and N.temp_room != A.temp_room then
+        if (N.mode == "hallway" and not N.brother) and
+          N.temp_room != A.temp_room
+        then
           stderrf("Merging touching hallways...\n")
           merge_temp_rooms(A.temp_room, N.temp_room)
         end
@@ -1168,6 +1192,7 @@ stderrf("Killing tiny AREA_%d\n", A.id)
     iterate_merges()
   end
 
+  -- must do hallways before tiny areas
   handle_hallways()
 
   handle_tiny_areas()
