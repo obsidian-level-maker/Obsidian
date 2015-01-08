@@ -39,6 +39,12 @@ end
 
 
 
+function Multiplayer_add_items()
+  -- TODO
+end
+
+
+
 function Multiplayer_setup_level()
 
   Multiplayer_create_zones()

@@ -2877,6 +2877,7 @@ function Monster_make_battles()
   if OB_CONFIG.mode == "dm" or
      OB_CONFIG.mode == "ctf"
   then
+    Multiplayer_add_items()
     return
   end
 
