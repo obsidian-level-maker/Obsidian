@@ -159,7 +159,8 @@ function Connect_merge_groups(A1, A2)
 end
 
 
-function Connect_seed_pair(S, T, dir, reverse)
+
+function Connect_raw_seed_pair(S, T, dir, reverse)
 --- stderrf("Connect_seed_pair: %s dir:%d\n", S:tostr(), dir)
 
   if not T then
@@ -167,6 +168,8 @@ function Connect_seed_pair(S, T, dir, reverse)
   end
 
   assert(S.area and T.area)
+
+  Connect_merge_groups(S.area, T.area)
 
   -- this used for stairwells, to ensure the other room builds the arch or door
   if reverse then
@@ -210,6 +213,27 @@ T.area.id, T.area.conn_group)
   T.thick[10-dir] = 16
 
   return CONN
+end
+
+
+function Connect_seed_pair(S, T, dir, reverse)
+  local conn1 = Connect_raw_seed_pair(S, T, dir, reverse)
+  local conn2
+
+  -- handle CTF maps
+  if S.area.sister then
+    local S2 = S.ctf_peer
+    assert(S2.area == S.area.sister)
+    assert(not S2.area.sister)
+
+    conn2 = Connect_raw_seed_pair(S2, nil, 10 - dir, reverse)
+
+    -- peer the connections
+    conn1.sister  = conn2
+    conn2.brother = conn1
+  end
+
+  return conn1, conn2
 end
 
 
@@ -427,9 +451,6 @@ function Weird_connect_stuff()
     Connect_seed_pair(loc1.S, loc1.N, loc1.dir)
     Connect_seed_pair(loc2.S, loc2.N, loc2.dir)
 
-    Connect_merge_groups(R.areas[1], N1.areas[1])
-    Connect_merge_groups(R.areas[1], N2.areas[1])
-
     return true
   end
 
@@ -497,9 +518,6 @@ A.is_outdoor = false
     E1.conn = Connect_seed_pair(E1.S, nil, E1.dir, "reverse")
     E2.conn = Connect_seed_pair(E2.S, nil, E2.dir, "reverse")
 
-    Connect_merge_groups(R.areas[1], N1)
-    Connect_merge_groups(R.areas[1], N2)
-
     return true
   end
 
@@ -507,6 +525,9 @@ A.is_outdoor = false
   local function try_make_a_stairwell(R)
     -- if two or more areas were merged, cannot make a stairwell
     if #R.areas > 1 then return false end
+
+    -- FIXME !!!
+    if OB_CONFIG.mode == "ctf" then return false end
 
     local A = R.areas[1]
 
@@ -713,8 +734,6 @@ A.is_outdoor = false
     end
 
     Connect_seed_pair(best_S, N, best_dir)
-
-    Connect_merge_groups(A1, A2)
   end
 
 
@@ -769,7 +788,6 @@ A.is_outdoor = false
     local best_score = 0
 
     each A in R.areas do
-assert(A.room == R)
       each N in A.neighbors do
         if N.room != R then continue end
 
@@ -800,8 +818,6 @@ assert(A.room == R)
     local S, dir = pick_internal_seed(R, A1, A2)
 
     Connect_seed_pair(S, nil, dir)
-
-    Connect_merge_groups(A1, A2)
   end
 
 
@@ -810,6 +826,10 @@ assert(A.room == R)
 
     while not check_internally_connected(R) do
       make_an_internal_connection(R)
+    end
+
+    if R.sister then
+      assert(check_internally_connected(R.sister))
     end
   end
 
@@ -823,7 +843,9 @@ assert(A.room == R)
   end
 
   each R in LEVEL.rooms do
-    internal_connections(R)
+    if not R.brother then
+      internal_connections(R)
+    end
   end
 
   handle_hallways()
