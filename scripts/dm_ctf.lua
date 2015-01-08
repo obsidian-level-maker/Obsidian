@@ -39,6 +39,79 @@ end
 
 
 
+function Multiplayer_flag_rooms()
+  --
+  -- pick the flag rooms for CTF mode
+  --
+
+  local function eval_flag_room(R)
+    -- never in a hallway
+    if R.is_hallway then return -1 end
+
+    local score = 300
+
+    -- too big?
+    if R.svolume > 20 then score = score - 100 end
+
+    -- too small?
+    if R.svolume < 6 then score = score - 200 end
+
+    -- tie breaker
+    return score + gui.random()
+  end
+
+
+  local function setup_room(R, team)
+    R.is_flag_room = true
+
+    local GOAL =
+    {
+      kind = "FLAG"
+      team = team
+    }
+
+    table.insert(R.goals, GOAL)
+  end
+
+
+  ---| Multiplayer_flag_rooms |---
+
+  local best
+  local best_score = 0
+
+  each R in LEVEL.rooms do
+
+    local A1 = R.areas[1]
+
+    if not (A1.team == "blue" and R.sister) then continue end
+
+    local score = eval_flag_room(R)
+
+stderrf("trying %s : team:%s sister:%s --> %1.2f\n",
+R:tostr(), A1.team or "???", tostring(R.sister), score)
+
+    if score > best_score then
+      best = R
+      best_score = score
+    end
+  end
+
+  if not best then
+    error("CTF failure, no usable room for the flag")
+  end
+
+  setup_room(best, "blue")
+  setup_room(best.sister, "red")
+
+  LEVEL.blue_base = best
+  LEVEL. red_base = best.sister
+
+  gui.printf("CTF Blue Flag @ %s\n", LEVEL.blue_base:tostr())
+  gui.printf("CTF Red  Flag @ %s\n", LEVEL. red_base:tostr())
+end
+
+
+
 function Multiplayer_add_items()
   -- TODO
 end
@@ -52,7 +125,9 @@ function Multiplayer_setup_level()
   Quest_choose_themes()
   Quest_select_textures()
 
-  -- FIXME : flag rooms for CTF
+  if OB_CONFIG.mode == "ctf" then
+    Multiplayer_flag_rooms()
+  end
 
   -- FIXME : player starts
 

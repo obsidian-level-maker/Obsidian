@@ -2191,7 +2191,9 @@ next_f = next_f - 24
 
   ---| Room_floor_heights |---
 
-  visit_room(LEVEL.start_room or LEVEL.rooms[1])
+  local first = LEVEL.start_room or LEVEL.blue_base or LEVEL.rooms[1]
+
+  visit_room(first)
 
   -- do hallway porches when all heights are known [ Hmmmm... ]
   each R in LEVEL.rooms do
