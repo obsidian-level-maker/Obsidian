@@ -607,12 +607,7 @@ function Room_reckon_doors()
 
     -- secret door ?
 
-    local quest1 = S.room.quest
-    local quest2 = N.room.quest
-
-    if quest1 != quest2 and 
-       (quest1.kind == "secret" or quest2.kind == "secret")
-    then
+    if S.room.is_secret != N.room.is_secret then
       -- TODO: if both rooms are outdoor, make a ''secret fence''
 
       B.kind = "secret_door"
@@ -628,13 +623,6 @@ function Room_reckon_doors()
     if (S.room.is_outdoor and N.room.is_outdoor) and
        (rand.odds(90) or STYLE.fences == "none")
     then
-      B.kind  = "nothing"
-      B2.kind = "nothing"
-      return
-    end
-
-    -- don't need archways where two hallways connect
-    if S.room.hallway and N.room.hallway then
       B.kind  = "nothing"
       B2.kind = "nothing"
       return
@@ -914,9 +902,15 @@ end
     end
 
 
+--!!!!!!  DEBUG FOR CTF MAPS
+junc.kind = "fence"
+junc.fence_mat = LEVEL.fence_mat
+junc.fence_top_z = 32
+do return end
+
+
     -- outdoor to outdoor
     if A1.is_outdoor and A2.is_outdoor then
-      -- TODO : force solid between zones (sometimes)
       junc.kind = "fence"
       junc.fence_mat = LEVEL.fence_mat
       junc.fence_top_z = math.max(A1.floor_h, A2.floor_h) + 32
@@ -2035,18 +2029,36 @@ end
 
 function Room_floor_heights()
 
-  local function fix_up_seeds(A)
+  -- the 'entry_h' field of rooms also serves as a "visited already" flag
+
+
+  local function raw_set_floor(A, floor_h)
+    A.floor_h = floor_h
+
     each S in A.seeds do
       S.floor_h = A.floor_h
     end
   end
 
 
+  local function set_floor(A, floor_h)
+    raw_set_floor(A, floor_h)
+
+    -- floor heights are mirrored in CTF mode
+    local A2 = A.sister or A.brother
+
+    if A2 then
+      assert(not A2.floor_h)
+      raw_set_floor(A2, floor_h)
+    end
+  end
+
+
   local function pick_delta_h(min_d, max_d, up_chance)
     if rand.odds(up_chance) then
-      return max_d + 16
+      return max_d + 8
     else
-      return min_d - 16
+      return min_d - 8
     end
   end
 
@@ -2075,13 +2087,13 @@ function Room_floor_heights()
   end
 
 
-  local function process_room(R, entry_h, entry_area)
+  local function process_room(R, entry_area)
     local start_area = rand.pick(R.areas)
 
     local up_chance = rand.pick({ 10, 50, 90 })
 
     -- recursively flow delta heights from a random starting area
-    -- TODO : remember the "path" through the areas
+    -- FIXME : use the conns, Luke!
     area_assign_delta(start_area, up_chance)
 
     local adjust_h = 0
@@ -2091,9 +2103,7 @@ function Room_floor_heights()
       -- check each area got a delta_h
       assert(A.delta_h)
 
-      A.floor_h = entry_h + A.delta_h - adjust_h
-
-      fix_up_seeds(A)
+      set_floor(A, R.entry_h + A.delta_h - adjust_h)
     end
   end
 
@@ -2127,6 +2137,9 @@ function Room_floor_heights()
 
 
   local function visit_room(R, entry_h, entry_area)
+    -- get peered room (for CTF mode)
+    local R2 = R.sister or R.brother
+
     if entry_area then
       assert(entry_area.room == R)
     end
@@ -2137,6 +2150,10 @@ function Room_floor_heights()
 
     R.entry_h = entry_h
 
+    if R2 then
+      R2.entry_h = entry_h
+    end
+
     if R.kind != "hallway" then
       Room_detect_porches(R)
     end
@@ -2144,12 +2161,14 @@ function Room_floor_heights()
     if R.kind == "stairwell" then
       process_stairwell(R)
     else
-      process_room(R, entry_h, entry_area)
+      process_room(R, entry_area)
     end
 
     -- recurse to neighbors
     each A in R.areas do
     each C in A.conns do
+      if C.is_cycle then continue end
+
       local A2 = C:neighbor(A)
 
       if A2.room == R then continue end
@@ -2161,6 +2180,9 @@ function Room_floor_heights()
 
       local next_f = R.exit_h or A.floor_h
 
+--!!!!!!
+next_f = next_f - 24
+
       visit_room(A2.room, next_f, A2)
     end
     end
@@ -2169,10 +2191,13 @@ function Room_floor_heights()
 
   ---| Room_floor_heights |---
 
-  visit_room(LEVEL.start_room)
+  visit_room(LEVEL.start_room or LEVEL.rooms[1])
 
   -- do hallway porches when all heights are known [ Hmmmm... ]
   each R in LEVEL.rooms do
+    -- sanity check : all rooms were visited
+    assert(R.entry_h)
+
     if R.kind == "hallway" then
       Room_detect_porches(R)
     end
