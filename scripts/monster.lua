@@ -1012,8 +1012,8 @@ function Monsters_distribute_stats()
     -- add storage rooms
     -- FIXME !!!!
 --[[
-    if room.quest.storage_rooms then
-      each R in room.quest.storage_rooms do
+    if room.zone.storage_rooms then
+      each R in room.zone.storage_rooms do
         local ratio = rand.irange(3,7) / 2.0
         table.insert(list, { room=R, ratio=ratio })
       end
