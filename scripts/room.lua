@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2014 Andrew Apted
+--  Copyright (C) 2006-2015 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -1714,6 +1714,9 @@ function Room_choose_area_kinds()
   local function starts_from_quota(seed_quota)
     if rand.odds(25) then return 1 end
 
+    -- in CTF mode everything is mirrored, so only need one start
+    if OB_CONFIG.mode == "ctf" then return 1 end
+
     local rough_size = 200 * rand.skew(1.0, 0.4)
 
     local num = rand.int(seed_quota / rough_size)
@@ -1758,13 +1761,31 @@ function Room_choose_area_kinds()
   end
 
 
-  local function set_area(L, A, what)
+  local function raw_set_kind(L, A, what)
     if what == "outdoor" then A.is_outdoor = true end
     if what == "cave"    then A.is_cave    = true end
 
+    L.quota = L.quota - A.svolume
+  end
+
+
+  local function raw_clear_kind(A, what)
+    if what == "outdoor" then A.is_outdoor = nil end
+    if what == "cave"    then A.is_cave    = nil end
+  end
+
+
+  local function set_area(L, A, what)
+    raw_set_kind(L, A, what)
+
     table.insert(L.areas, A)
 
-    L.quota = L.quota - A.svolume
+    -- CTF mirroring
+    local A2 = A.sister or A.brother
+
+    if A2 then
+      raw_set_kind(L, A2, what)
+    end
   end
 
 
@@ -1868,15 +1889,29 @@ gui.printf("spread_kind '%s' : starts=%d  quota=%d\n", what, start_num, seed_quo
   end
 
 
+  local function clear_kind_in_room(R, what)
+    each A in R.areas do
+      raw_clear_kind(A, what)
+
+      if A.sister then
+        raw_clear_kind(A.sister, what)
+      end
+    end
+  end
+
+
   local function resolve_conflicts()
     each R in LEVEL.rooms do
       local A1 = R.areas[1]
 
+      -- CTF: only need to handle one of the mirrored rooms
+      if A1.brother then continue end
+
       if A1.is_outdoor and A1.is_cave then
         if rand.odds(resolve_outdoor_prob) then
-          each A in R.areas do A.is_cave = nil end
+          clear_kind_in_room(R, "cave")
         else
-          each A in R.areas do A.is_outdoor = nil end
+          clear_kind_in_room(R, "outdoor")
         end
       end
     end
@@ -1900,6 +1935,9 @@ gui.printf("spread_kind '%s' : starts=%d  quota=%d\n", what, start_num, seed_quo
         A.kind = "cave"
       elseif A.is_outdoor then
         A.kind = rand.sel(50, "landscape", "courtyard")
+
+        local A2 = A.sister or A.brother
+        if A2 then A2.kind = A.kind end
       else
         A.kind = "building"
       end
