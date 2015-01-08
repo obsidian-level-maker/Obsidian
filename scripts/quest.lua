@@ -2097,6 +2097,15 @@ function Quest_make_quests()
   LEVEL.quests = {}
   LEVEL.zones  = {}
 
+  -- special handlign for Deathmatch and Capture-The-Flag
+
+  if OB_CONFIG.mode == "dm" or
+     OB_CONFIG.mode == "ctf"
+  then
+    Multiplayer_setup_level()
+    return
+  end
+
   Quest_create_initial_quest()
 
   Quest_add_major_quests()

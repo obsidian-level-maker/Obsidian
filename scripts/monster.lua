@@ -2874,6 +2874,12 @@ function Monster_make_battles()
 
   gui.prog_step("Mons")
 
+  if OB_CONFIG.mode == "dm" or
+     OB_CONFIG.mode == "ctf"
+  then
+    return
+  end
+
   Player_init()
 
   Monsters_init()

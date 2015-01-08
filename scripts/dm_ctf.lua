@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
---  DEATHMATCH and CAPTURE THE FLAG
+--  DEATH-MATCH / CAPTURE THE FLAG
 ------------------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -19,4 +19,37 @@
 ------------------------------------------------------------------------
 
 
+function Multiplayer_create_zones()
+  --
+  -- In competitive multiplayer maps we only need a single zone.
+  --
+
+  local Z = Zone_new()
+
+  each R in LEVEL.rooms do
+    R.zone = Z
+
+    each A in R.areas do
+      A.zone = Z
+    end
+  end
+
+  Area_spread_zones()
+end
+
+
+
+function Multiplayer_setup_level()
+
+  Multiplayer_create_zones()
+
+  Quest_choose_themes()
+  Quest_select_textures()
+
+  -- FIXME : flag rooms for CTF
+
+  -- FIXME : player starts
+
+  -- FIXME : weapons
+end
 
