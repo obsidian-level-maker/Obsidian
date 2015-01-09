@@ -3,19 +3,10 @@ WORK IN PROGRESS
 ================
 
 
->>> use PARAM for game_tweaks module
-
-
-FAQ : vanilla DOOM not supported
-
-
 +  game_tweaks "Kept Weapons" option
 
 
 Q/ use CC-BY-3 or 4 for all prefabs / images / prebuilt maps
-
-
-Wrong texturing when pillar (underneath a 3D bridge) intersects
 
 
 -  sometimes make a floor (its side) use same material as top (not room wall)

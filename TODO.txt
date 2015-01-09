@@ -13,8 +13,6 @@ ______________________________________________________________________
 
 *  add in more scenery: trees, computers etc
 
-*  fix lighting with 3D floors
-
 
 ______________________________________________________________________
 
@@ -47,6 +45,8 @@ ______________________________________________________________________
   V6 STUFF
 ----------------------------------------------
 
+
++  fix lighting with 3D floors
 
 +  a secret exit may not be possible due to reserved room
    becoming surrounded by scenic rooms (from connection logic).
@@ -89,10 +89,6 @@ ______________________________________________________________________
 
 -  wad-fab: "outside bbox" pieces via sector type #987
 
-
-3D Floors:
-+  thick support beam intersects with 3D floor => wrong side texture
-   [ CSG issue ]
 
 -  proper handling of windows (eval each combo of floors)
 
@@ -569,12 +565,12 @@ Name generator:
   GUI and C++ CODE
 ----------------------------------------------
 
++  CSG issue: support beam intersects with 3D floor => wrong side texture
+
 +  rename m_spots.cc --> csg_spots, tidy up duplications
 
 -  use fl_utf8.h functions (fl_fopen, etc) for file handling
    [ BUT : glBSP, ajpoly, etc.... would need to use them too ]
-
--  use OpenMP to speed up lighting stuff (etc ?)
 
 -  option to save log to same base filename (TEST.wad + TEST.log)
 
