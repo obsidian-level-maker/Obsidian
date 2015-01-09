@@ -6,6 +6,80 @@ WORK IN PROGRESS
 +  game_tweaks "Kept Weapons" option
 
 
+(a) Support min_weapon and weap_needed for GUARD monsters
+(b) Support them in fight simulator [ i.e. what ammo to use ]
+
+
+Quest Rework
+------------
+
++  compute size of before and after, use to score the division
+
+
+Connect: areas NOT rooms
+------------------------
+
+-  get_previous_locs  (monster.lua)
+
+
+
+Monster defs : min weapon level needed [esp. for Vile/Bosses ]
+-  player weapon in three states : no have / getting / have it
+   ("getting" applies to whole zone)
+   when "getting" it, allow monster but reduce prob/density
+   (allow monster for guard)
+
+
+Porches :
+  -  a low solid ceiling with posts at seed corners
+
+  -  not too big, not too much inner space (same criterion as hallways)
+
+  -  used indoors or outdoors
+
+  -  can convert an outdoor hallway if mostly surrounded by outdoors
+     (and no higher floors).  can use railing here instead of posts
+
+  -  otherwise outdoor usage should have building on a side, sky on the
+     other side [ scan the edge loop, want two contiguous groups ]
+
+  -  floor MUST be >= nearby floors (ignoring void / walled junctions)
+     [ do it via floor-heights algorithm)
+
+  -  strong preference for areas with a connection, esp. a locked one
+
+
+SORT OUT : where 'facade_mat' is stored, how is accessed
+  - basically, each indoor room (cave or building) has a facade_mat
+    (defaulting to ZONE.building_facade or ZONE.cave_mat)
+
+  - for outdoor<-->outdoor, use the fence texture (ZONE.fence_mat)
+
+  - for void, use area 'kind'
+
+
+
+implement "arch" junction / prefab
+
+
+
+Fake fences:
+  -  height is consistent across the zone
+     (e.g. half way between average area floor_h and sky_group.h)
+     don't make in an area if height of fence would be < 64
+
+  -  texture is consistent across the zone
+     (pick randomly a la fence_mat, allow to be same as fence_mat)
+
+  -  location: between 1 and 3 seeds (no angle > 180 between them)
+     and solid walls on each side and angle on each side <= 135
+
+  -  stretch goal : if void behind seed(s), have a transition prefab
+     (i.e. showing solid wall above the fence)
+     if sky much higher, occasionally stick a cage monster there
+
+
+
 Q/ use CC-BY-3 or 4 for all prefabs / images / prebuilt maps
 
 
@@ -29,4 +103,22 @@ Doors
 -  support wide doors [normal / locked]
 -  make wide prefab with a switch in it [normal door]
 -  texturing on door prefabs (for HELL, URBAN themes)
+
+
+
+CTF and DM
+----------
+
+-  Cycles !
+   -  also: don't kill long hallways, allow to connect to same room
+      [ OR : place a teleporter at the end ]
+
+-  Weapons / Big items
+   -  decide mix of weapons and big items
+   -  place big stuff as far apart as possible
+   -  big item is often the focus point of an area/room
+
+-  Player starts!
+   -  less travelled areas (with cover e.g. near a wall)
+   -  near a weapon
 
