@@ -1288,6 +1288,11 @@ function Weird_create_rooms()
 
   local W, H = Area_determine_map_size()
 
+  -- smaller maps for Deathmatch mode
+  if OB_CONFIG.mode == "dm" then
+    W = H
+  end
+
   gui.printf("Map size: %dx%d grid points\n", W, H)
 
 
