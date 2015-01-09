@@ -37,6 +37,8 @@ OB_MODULES["no_prebuilt_doom"] =
 
   game = { doom1=1, doom2=1 }
 
+  tooltip = "Disables the use of human-made maps, except for boss maps (like E1M8 or MAP30) which have special requirements"
+
   tables =
   {
     NO_PREBUILT_DOOM

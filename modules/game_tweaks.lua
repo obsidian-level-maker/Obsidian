@@ -50,9 +50,26 @@ OB_MODULES["gameplay_tweaks"] =
 
   options =
   {
-    kept_weapons   = { label="Kept Weapons",   choices=GAMEPLAY_TWEAKS.YES_NO }
-    quiet_start    = { label="Quiet Start",    choices=GAMEPLAY_TWEAKS.YES_NO }
-    start_together = { label="Start Together", choices=GAMEPLAY_TWEAKS.YES_NO }
+    keep_weapons =
+    {
+      label="Keep Weapons"
+      choices=GAMEPLAY_TWEAKS.YES_NO
+      tooltip="Assumes the player keeps weapons from previous maps (and will add ammo for them, even if this map does not contain those weapons)"
+    }
+
+    quiet_start =
+    {
+      label="Quiet Start"
+      choices=GAMEPLAY_TWEAKS.YES_NO
+      tooltip="Never add any monsters into the start room"
+    }
+
+    start_together =
+    {
+      label="Start Together"
+      choices=GAMEPLAY_TWEAKS.YES_NO
+      tooltip="For Co-operative games, this makes sure all players start in the same room (i.e. it disables the separated start rooms)"
+    }
   }
 }
 

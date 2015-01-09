@@ -55,22 +55,22 @@ OB_MODULES["level_control"] =
   options =
   {
     cages       = { label="Cages",          choices=LEVEL_CONTROL.CHOICES }
-    crates      = { label="Crates",         choices=LEVEL_CONTROL.CHOICES }
     darkness    = { label="Dark Outdoors",  choices=LEVEL_CONTROL.CHOICES }
     doors       = { label="Doors",          choices=LEVEL_CONTROL.CHOICES }
     hallways    = { label="Hallways",       choices=LEVEL_CONTROL.CHOICES }
     liquids     = { label="Liquids",        choices=LEVEL_CONTROL.CHOICES }
 
-    mon_variety = { label="Monster Variety",choices=LEVEL_CONTROL.CHOICES }
+    mon_variety = { label="Monster Variety",choices=LEVEL_CONTROL.CHOICES, tooltip="Setting this to NONE will make each level use a single monster type" }
     pictures    = { label="Pictures",       choices=LEVEL_CONTROL.CHOICES }
-    pillars     = { label="Pillars",        choices=LEVEL_CONTROL.CHOICES }
     secrets     = { label="Secrets",        choices=LEVEL_CONTROL.CHOICES }
 
-    steepness   = { label="Steepness",      choices=LEVEL_CONTROL.CHOICES }
     switches    = { label="Switched Doors", choices=LEVEL_CONTROL.CHOICES }
-    symmetry    = { label="Symmetry",       choices=LEVEL_CONTROL.CHOICES }
     teleporters = { label="Teleporters",    choices=LEVEL_CONTROL.CHOICES }
     windows     = { label="Windows",        choices=LEVEL_CONTROL.CHOICES }
+
+--  crates      = { label="Crates",         choices=LEVEL_CONTROL.CHOICES }
+--  pillars     = { label="Pillars",        choices=LEVEL_CONTROL.CHOICES }
+--  steepness   = { label="Steepness",      choices=LEVEL_CONTROL.CHOICES }
 
 --  big_rooms   = { label="Big Rooms",      choices=LEVEL_CONTROL.CHOICES }
 --  closets     = { label="Closets",        choices=LEVEL_CONTROL.CHOICES }
@@ -86,6 +86,7 @@ OB_MODULES["level_control"] =
 --  crossovers  = { label="Cross-Overs",    choices=LEVEL_CONTROL.CHOICES }
 --  cycles      = { label="Multiple Paths", choices=LEVEL_CONTROL.CHOICES }
 --  street_mode = { label="Street Mode",    choices=LEVEL_CONTROL.CHOICES }
+--  symmetry    = { label="Symmetry",       choices=LEVEL_CONTROL.CHOICES }
   }
 }
 
