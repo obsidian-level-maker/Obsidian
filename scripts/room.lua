@@ -902,11 +902,13 @@ end
     end
 
 
+--[[
 --!!!!!!  DEBUG FOR CTF MAPS
 junc.kind = "fence"
 junc.fence_mat = LEVEL.fence_mat
 junc.fence_top_z = 32
 do return end
+--]]
 
 
     -- outdoor to outdoor
@@ -1260,6 +1262,10 @@ function Room_void_some_areas()
 
 
   local function pick_area_to_void()
+    local too_big = 15
+
+    if OB_CONFIG.mode == "dm" then too_big = 5 end
+
     while not table.empty(visit_list) do
       local A = table.remove(visit_list, 1)
 
@@ -1269,7 +1275,7 @@ function Room_void_some_areas()
 
       if A.brother then continue end  -- CTF check
 
-      if A.svolume > 20 then continue end
+      if A.svolume >= too_big then continue end
 
       if can_void_area(A) then return A end
     end
@@ -1282,6 +1288,8 @@ function Room_void_some_areas()
 
   -- have a quota
   local quota = walkable_svolume() * 0.2
+
+  if OB_CONFIG.mode == "dm" then quota = quota / 2 end
   
   -- the largest area can never become VOID
   largest = largest_area()
