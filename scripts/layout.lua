@@ -640,6 +640,11 @@ stderrf("Making cage in %s\n", A:tostr())
 
   ---| Layout_add_cages |---
 
+  -- never in DM or CTF maps
+  if OB_CONFIG.mode == "dm" or OB_CONFIG.mode == "ctf" then
+    return
+  end
+
   local quota     = style_sel("cages", 0, 10, 30, 90)
   local skip_prob = style_sel("cages", 100, 40, 20, 0)
 
