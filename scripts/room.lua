@@ -2108,35 +2108,53 @@ function Room_floor_heights()
   end
 
 
-  local function process_stairwell(R)
+  local function process_stairwell(R, prev_room)
     local A = R.areas[1]
     local well = A.is_stairwell
 
     local num_steps = well.info.steps
 
+    local diff_h
+
     -- if we have a locked door, keep it flat
     if R:has_any_lock() then
-      R.stair_diff_h = 0
+      diff_h = 0
     else
-      -- TODO : logic to decide Z direction
+      -- TODO : better logic to decide Z direction
       local z_dir = rand.sel(70, 1, -1)
 
-      local diff_h = rand.sel(50, 8, 12)
+      diff_h = rand.sel(50, 8, 12)
       if rand.odds(10) then diff_h = 16 end
 
-      R.stair_diff_h = z_dir * diff_h
+      diff_h = diff_h * z_dir
     end
 
     -- with this logic, last step is same height as next room
-
-    R.exit_h = R.entry_h + num_steps * R.stair_diff_h
+    R.exit_h = R.entry_h + num_steps * diff_h
 
     A.floor_h = math.min(R.entry_h, R.exit_h)
     A.ceil_h  = A.floor_h + 192  -- dummy
+
+    -- update the STAIRWELL information
+
+    well.start_z    = R.entry_h
+    well.num_steps  = num_steps
+    well.diff_h     = diff_h
+
+    assert(prev_room)
+
+    if prev_room == well.room1 then
+      -- OK
+    elseif prev_room == well.room2 then
+      well.edge1, well.edge2 = well.edge2, well.edge1
+      well.wide1, well.wide2 = well.wide2, well.wide1
+    else
+      error("Bad stairwell (no match for prev_room)")
+    end
   end
 
 
-  local function visit_room(R, entry_h, entry_area)
+  local function visit_room(R, entry_h, entry_area, prev_room)
     -- get peered room (for CTF mode)
     local R2 = R.sister or R.brother
 
@@ -2159,7 +2177,7 @@ function Room_floor_heights()
     end
 
     if R.kind == "stairwell" then
-      process_stairwell(R)
+      process_stairwell(R, prev_room)
     else
       process_room(R, entry_area)
     end
@@ -2180,10 +2198,7 @@ function Room_floor_heights()
 
       local next_f = R.exit_h or A.floor_h
 
---!!!!!!
-next_f = next_f - 24
-
-      visit_room(A2.room, next_f, A2)
+      visit_room(A2.room, next_f, A2, R)
     end
     end
   end

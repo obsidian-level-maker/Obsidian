@@ -89,6 +89,9 @@
     edge1  -- index into outer edge loop
     edge2
 
+    room1 : ROOM   -- rooms which connect at edge1 and edge2
+    room2 : ROOM   --
+
     wide1 : bool   -- when true, next edge is used as well
     wide2 : bool
 

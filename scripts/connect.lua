@@ -532,8 +532,11 @@ function Weird_connect_stuff()
 --FIXME : support outdoor stairwells
 A.is_outdoor = false
 
-    E1.conn = Connect_seed_pair(E1.S, nil, E1.dir, "reverse")
-    E2.conn = Connect_seed_pair(E2.S, nil, E2.dir, "reverse")
+    well.room1 = N1.room
+    well.room2 = N2.room
+
+    Connect_seed_pair(E1.S, nil, E1.dir, "reverse")
+    Connect_seed_pair(E2.S, nil, E2.dir, "reverse")
 
     return true
   end

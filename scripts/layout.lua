@@ -1207,15 +1207,6 @@ function Layout_build_stairwell(A)
   local edge1 = A.edge_loops[1][well.edge1]
   local edge2 = A.edge_loops[1][well.edge2]
 
-  -- swap edges if entering from wrong side
-  if A.entry_conn == edge1.conn then
-    -- OK
-  elseif A.entry_conn == edge2.conn then
-    edge1, edge2 = edge2, edge1
-  else
-    error("bad entry_conn in stairwell??")
-  end
-
 
   -- starting coords [ L for left side, R for right side ]
 
@@ -1309,7 +1300,7 @@ function Layout_build_stairwell(A)
   local R3 = { x=rx3, y=ry3 }
 
 
-  local num_steps = well.info.steps 
+  local num_steps = well.num_steps 
   assert(num_steps)
 
   -- collect bounding points (one more than num_steps)
@@ -1362,9 +1353,9 @@ return end
 --]]
 
 
-  local cur_z = R.entry_h
+  local cur_z = well.start_z
 
-  local stair_diff_h = R.stair_diff_h
+  local stair_diff_h = well.diff_h
 
   local step_mat = Mat_lookup("STEP1")
 
