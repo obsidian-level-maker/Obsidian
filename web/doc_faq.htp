@@ -100,6 +100,36 @@ only very basic.
 </div>
 
 
+<div id="vanilla" class="faq_Q">
+Q/ Why isn't the original game engine ("vanilla" DOOM) supported?
+</div>
+
+<div class="faq_A">
+The original game binaries, like DOOM.EXE and DOOM2.EXE and also the Win95
+version of DOOM, have various limitations.  There are two limitations which
+prevent being supported by OBLIGE:
+
+<p>
+1. Visplane Overflows: when too many "visplanes" are drawn, the game
+suddenly exits to DOS with an error message.  This is very harsh on the
+person playing.  It is not possible for OBLIGE to guarantee that the
+number of visplanes stays under the limit at all times (except to make
+extremely dull maps).
+
+<p>
+2. Save Game Overflow: when a map has too many things (entities) in it
+and the player tries to save the game, it exits to DOS with an error
+message.  It would be difficult to ensure the number of things stays
+under the limit (e.g. removing monsters or pickup items would compromise
+the gameplay of the map).
+
+<p>
+<i>(Note: the above also applies to Chocolate-DOOM, which intentionally
+keeps those limitations in place)</i>
+
+</div>
+
+
 <div id="seed" class="faq_Q">
 Q/ Why was the Seed setting removed?
 </div>
