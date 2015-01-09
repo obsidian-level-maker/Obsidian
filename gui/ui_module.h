@@ -34,10 +34,10 @@ private:
 	std::map<std::string, UI_RChoice *> choice_map;
 
 public:
-	UI_Module(int x, int y, int w, int h, const char *id, const char *label);
+	UI_Module(int x, int y, int w, int h, const char *id, const char *label, const char *tip);
 	virtual ~UI_Module();
 
-	void AddOption(const char *option, const char *label);
+	void AddOption(const char *option, const char *label, const char *tip);
 
 	void OptionPair(const char *option, const char *id, const char *label);
 
@@ -77,13 +77,13 @@ public:
 	virtual ~UI_CustomMods();
 
 public:
-	void AddModule(const char *id, const char *label);
+	void AddModule(const char *id, const char *label, const char *tip);
 
 	bool ShowOrHide(const char *id, bool new_shown);
 
 	void ChangeValue(const char *id, bool enable);
 
-	void AddOption (const char *module, const char *option, const char *label);
+	void AddOption (const char *module, const char *option, const char *label, const char *tip);
 
 	void OptionPair(const char *module, const char *option,
 			const char *id, const char *label);

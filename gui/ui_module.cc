@@ -49,23 +49,24 @@ public:
 
 
 UI_Module::UI_Module(int x, int y, int w, int h,
-                     const char *id, const char *label) :
+					 const char *id, const char *label,
+					 const char *tip) :
 	Fl_Group(x, y, w, h),
 	id_name(id),
 	choice_map()
 {
-	end(); // cancel begin() in Fl_Group constructor
-
-	resizable(NULL);
-
 	box(FL_THIN_UP_BOX);
 
 	if (! alternate_look)
 		color(BUILD_BG, BUILD_BG);
 
 	mod_button = new Fl_Check_Button(x + kf_w(6), y + kf_h(4), w - kf_w(12), kf_h(24), label);
+	if (tip)
+		mod_button->tooltip(tip);
 
-	add(mod_button);
+	end();
+
+	resizable(NULL);
 
 	hide();
 }
@@ -83,7 +84,7 @@ typedef struct
 opt_callback_data_t;
 
 
-void UI_Module::AddOption(const char *opt, const char *label)
+void UI_Module::AddOption(const char *opt, const char *label, const char *tip)
 {
 	int nw = kf_w(112);
 	int nh = kf_h(30);
@@ -100,6 +101,10 @@ void UI_Module::AddOption(const char *opt, const char *label)
 	UI_RChoice *rch = new UI_RChoice(nx, ny, nw, kf_h(24), new_label);
 	rch->align(FL_ALIGN_LEFT);
 	rch->selection_color(MY_PURPLE);
+
+	if (! tip)
+		tip = "";
+	rch->tooltip(tip);
 
 	opt_callback_data_t *cb_data = new opt_callback_data_t;
 	cb_data->M = this;
@@ -256,9 +261,9 @@ UI_CustomMods::~UI_CustomMods()
 { }
 
 
-void UI_CustomMods::AddModule(const char *id, const char *label)
+void UI_CustomMods::AddModule(const char *id, const char *label, const char *tip)
 {
-	UI_Module *M = new UI_Module(mx, my, mw-4, kf_h(34), id, label);
+	UI_Module *M = new UI_Module(mx, my, mw-4, kf_h(34), id, label, tip);
 
 	M->mod_button->callback(callback_ModEnable, M);
 
@@ -272,7 +277,7 @@ void UI_CustomMods::AddModule(const char *id, const char *label)
 
 
 void UI_CustomMods::AddOption(const char *module, const char *option,
-							  const char *label)
+							  const char *label, const char *tip)
 {
 	UI_Module *M = FindID(module);
 
@@ -283,7 +288,7 @@ void UI_CustomMods::AddOption(const char *module, const char *option,
 		return;
 	}
 
-	M->AddOption(option, label);
+	M->AddOption(option, label, tip);
 
 	PositionAll();
 

@@ -201,13 +201,14 @@ int gui_locate_data(lua_State *L)
 }
 
 
-// LUA: add_button (what, id, label)
+// LUA: add_button (what, id, label, tooltip)
 //
 int gui_add_button(lua_State *L)
 {
 	const char *what  = luaL_checkstring(L,1);
 	const char *id    = luaL_checkstring(L,2);
 	const char *label = luaL_checkstring(L,3);
+	const char *tip   = luaL_optstring  (L,4, NULL);
 
 	SYS_ASSERT(what && id && label);
 
@@ -230,7 +231,7 @@ int gui_add_button(lua_State *L)
 		main_win->level_box->theme->AddPair(id, label);
 
 	else if (StringCaseCmp(what, "module") == 0)
-		main_win->mod_box->AddModule(id, label);
+		main_win->mod_box->AddModule(id, label, tip);
 
 	else
 		Main_FatalError("add_button: unknown what value '%s'\n", what);
@@ -238,29 +239,20 @@ int gui_add_button(lua_State *L)
 	return 0;
 }
 
-// LUA: add_mod_option (module, option, [id,] label)
+// LUA: add_mod_option (module, option, id, label, tooltip)
 //
-// When the 'id' string is omitted, it indicates mere creation of
+// When the 'id' string is NIL, it indicates mere creation of
 // a new button widget for the module.  OTHERWISE we are adding a
 // choice to the existing button (a la add_button).
 //
 int gui_add_mod_option(lua_State *L)
 {
-	int nargs = lua_gettop(L);
-
 	const char *module = luaL_checkstring(L,1);
 	const char *option = luaL_checkstring(L,2);
 
-	const char *id    = NULL;
-	const char *label = NULL;
-
-	if (nargs >= 4)
-	{
-		id    = luaL_checkstring(L,3);
-		label = luaL_checkstring(L,4);
-	}
-	else
-		label = luaL_checkstring(L,3);
+	const char *id     = luaL_optstring  (L,3, NULL);
+	const char *label  = luaL_checkstring(L,4);
+	const char *tip    = luaL_optstring  (L,5, NULL);
 
 	SYS_ASSERT(module && option);
 
@@ -272,7 +264,7 @@ int gui_add_mod_option(lua_State *L)
 		Main_FatalError("Script problem: gui.add_mod_option called late.\n");
 
 	if (! id)
-		main_win->mod_box->AddOption(module, option, label);
+		main_win->mod_box->AddOption(module, option, label, tip);
 	else
 		main_win->mod_box->OptionPair(module, option, id, label);
 

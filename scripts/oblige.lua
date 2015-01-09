@@ -654,7 +654,7 @@ function ob_init()
     table.sort(list, button_sorter)
 
     each def in list do
-      gui.add_button(what, def.name, def.label)
+      gui.add_button(what, def.name, def.label, def.tooltip)
 
       if what == "game" then
         gui.show_button(what, def.name, true)
@@ -684,7 +684,7 @@ function ob_init()
           assert(opt.label)
           assert(opt.choices)
 
-          gui.add_mod_option(mod.name, opt.name, opt.label)
+          gui.add_mod_option(mod.name, opt.name, nil, opt.label, opt.tooltip)
 
           opt.value = opt.default or opt.choices[1]
 
