@@ -1238,6 +1238,10 @@ function Area_determine_map_size()
   if ob_size == "mixed" then
     local SIZES = { 21,23,25, 29,33,37, 41,43,49 }
 
+    if OB_CONFIG.mode == "dm" then
+      SIZES = { 21,23,25, 29,33,39 }
+    end
+
     local W = rand.pick(SIZES)
     local H = rand.pick(SIZES)
 
@@ -1259,15 +1263,27 @@ function Area_determine_map_size()
     if n < 1 then n = 1 end
     if n > 9 then n = 9 end
 
-    -- somewhat on the small size
     local SIZES = { 25,27,29, 31,33,35, 37,39,41 }
 
     local W = SIZES[n]
-    
-    return W, W - 4
+    local H = W - 4
+
+    -- not so big in Deathmatch mode
+    if OB_CONFIG.mode == "dm" then return H, H - 2 end
+
+    return W, H
   end
 
   -- Named sizes --
+
+  -- smaller maps for Deathmatch mode
+  if OB_CONFIG.mode == "dm" then
+    local SIZES = { small=21, regular=27, large=35, extreme=51 }
+
+    local W = SIZES[ob_size]
+
+    return W, W
+  end
 
   local SIZES = { small=25, regular=35, large=45, extreme=61 }
 
@@ -1287,11 +1303,6 @@ function Weird_create_rooms()
   gui.printf("\n--==| Planning WEIRD Rooms |==--\n\n")
 
   local W, H = Area_determine_map_size()
-
-  -- smaller maps for Deathmatch mode
-  if OB_CONFIG.mode == "dm" then
-    W = H
-  end
 
   gui.printf("Map size: %dx%d grid points\n", W, H)
 
