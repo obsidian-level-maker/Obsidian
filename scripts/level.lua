@@ -81,6 +81,9 @@ class EPISODE
                      -- on any level in the hub (cannot use them again)
 
   hub_links : list(HUB_LINK)  -- all hub links
+
+  seen_weapons : table   -- all weapons picked up so far
+                         -- the table is indexed by weapon name
 }
 
 
@@ -1006,6 +1009,8 @@ function Levels_make_all()
 
   each EPI in GAME.episodes do
     EPISODE = EPI
+
+    EPISODE.seen_weapons = {}
 
     each LEV in EPI.levels do
       LEV.allowances = {}
