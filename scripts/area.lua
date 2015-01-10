@@ -23,7 +23,7 @@
 --[[
     --- kind of area ---
 
-    id : number
+    id, name  -- debugging info
 
     mode : keyword  -- "normal", "hallway", "water",
                     -- "void", "scenic", "cage"
@@ -113,6 +113,8 @@ function AREA_CLASS.new(mode)
     neighbors  = {}
     inner_points = {}
   }
+
+  A.name = "AREA_" .. A.id
 
   table.set_class(A, AREA_CLASS)
 
@@ -772,7 +774,7 @@ function Weird_analyse_areas()
         A1.sister  = A2
         A2.brother = A1
 
-        stderrf("peering CTF: brother %s <--> %s sister\n", A1:tostr(), A2:tostr())
+        stderrf("peering CTF: brother %s <--> %s sister\n", A1.name, A2.name)
       end
     end
 

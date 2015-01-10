@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2014 Andrew Apted
+--  Copyright (C) 2006-2015 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -32,7 +32,7 @@
 
     svolume   : total svolume of all areas
 
-    entry : CONN
+    entry : AREA
 
     goals : list(GOAL)
 
@@ -416,6 +416,10 @@ function Quest_eval_divide_at_conn(C, goal, info)
 
       if R.is_secret then continue end
 
+      if R.is_hallway then continue end
+
+      if quest.entry and quest.entry.room == R then continue end
+
       -- skip the room immediately next to the proposed connection
       -- FIXME area check in "MINOR" mode
       if C.A1.room == R or C.A2.room == R then continue end
@@ -596,10 +600,34 @@ function Quest_perform_division(info)
   end
 
 
+  local function eval_goal_room(Q1, R)
+    local score = 100
+
+    -- FIXME : compute travel distance from entry (if exists)
+
+    -- tie breaker
+    return score + gui.random()
+  end
+
+
   local function pick_room_for_goal(Q1)
     -- TODO : evaluate each leaf room
+    --        especially: far away from Q1.entry
 
     assert(not table.empty(info.leafs))
+
+--[[
+    local best
+    local best_score = 0
+
+    each R in info.leafs do
+      local score = eval_goal_room(Q1, R)
+      if score > best_score then
+        best = R
+        best_score = score
+      end
+    end
+--]]
 
     return table.remove(info.leafs, 1)
   end
@@ -608,9 +636,12 @@ function Quest_perform_division(info)
   local function place_new_goals(Q1, LOCK)
     rand.shuffle(info.leafs)
 
+stderrf("PLACING NEW GOALS:\n")
+
     each goal in info.new_goals do
       local R = pick_room_for_goal(Q1)
 
+stderrf("  %s/%s @ %s\n", goal.kind, goal.item or "-", R:tostr())
       goal.room = R
       goal.area = R.areas[1]
 
@@ -647,6 +678,7 @@ function Quest_perform_division(info)
 
   -- setup quests, transfer stuff
 
+  Q1.entry = Q2.entry
   Q2.entry = assert(info.after_A)
 
   Q1.areas = info.before
@@ -705,6 +737,9 @@ stderrf("---> NOTHING POSSIBLE\n")
   gui.printf("Dividing %s @ %s (%s -- %s)\n", info.quest.name,
              info.conn:tostr(), info.conn.A1.room:tostr(), info.conn.A2.room:tostr())
 
+gui.debugf("   VIA: %s\n", info.new_goals[1].item or "???")
+gui.debugf("   Entry: %s\n", (info.quest.entry and info.quest.entry:tostr()) or "--")
+
   Quest_perform_division(info)
   return true
 end
@@ -760,6 +795,7 @@ function Quest_add_major_quests()
       prob = 70
     end
 
+do return false end
     if not rand.odds(prob) then return false end
 
     local K1 = table.remove(LEVEL.major_goals, 1)
@@ -777,7 +813,7 @@ function Quest_add_major_quests()
   collect_major_goals()
 
   -- FIXME : base it on # of unused leaf rooms
-  local want_splits = 1
+  local want_splits = 4
 
   if add_triple_key_door() then
     want_splits = 0 ---!!! rand.sel(50, 1, 0)
@@ -1016,6 +1052,10 @@ function Quest_start_room()
 
 
   ---| Quest_start_room |---
+
+each Q in LEVEL.quests do
+stderrf("|||  %s : entry : %s\n", Q.name, tostring(Q.entry))
+end
 
   find_start_quest()
 
