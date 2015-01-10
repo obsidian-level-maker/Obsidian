@@ -305,7 +305,7 @@ end
 
 function Player_has_min_weapon(min_weapon)
   each name,info in GAME.WEAPONS do
-    if (info.min_weapon or 0) >= min_weapon then
+    if (info.level or 0) >= min_weapon then
       if Player_has_weapon({ [name]=1 }) then
         return true
       end
