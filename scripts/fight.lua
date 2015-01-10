@@ -159,8 +159,11 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
   end
 
 
-  local function calc_monster_threat(info)
-    local threat = info.health + info.damage * 7
+  local function calc_monster_threat(M)
+    local threat = M.info.health + M.info.damage * 7
+
+    -- caged monsters pose less of a threat
+    if M.is_cage and not M.info.nasty then threat = threat / 3 end
 
     return threat + gui.random() * 20  -- tie breaker
   end
@@ -170,13 +173,12 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
 
   stats.health = stats.health or 0
 
-  each name,info in monsters do
-    local MON =
-    {
-      info   = info
-      health = info.health
-      threat  = calc_monster_threat(info)
-    }
+  each M in monsters do
+    local MON = table.copy(M)
+
+    MON.health = MON.info.health
+    MON.threat = calc_monster_threat(MON)
+
     table.insert(active_mons, MON)
   end
 
