@@ -251,6 +251,8 @@ function Layout_place_importants(R)
   local function add_goal(goal)
     local spot = Layout_spot_for_wotsit(R, goal.kind)
 
+-- stderrf("Layout_place_importants: goal '%s' @ %s\n", goal.kind, R:tostr())
+
     spot.item = goal.item
     spot.tag  = goal.tag
 
