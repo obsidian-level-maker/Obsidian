@@ -799,8 +799,8 @@ function Levels_choose_darkness()
     gui.printf("Darkness falls across the land...\n\n")
 
     LEVEL.is_dark = true
-    LEVEL.sky_bright = 0
-    LEVEL.sky_shade  = 0
+    LEVEL.sky_bright = 128
+    LEVEL.sky_shade  = 128
   end
 end
 
