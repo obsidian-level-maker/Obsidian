@@ -458,7 +458,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     local fab_name = "Locked_" .. LOCK.goals[1].item
 
     if #LOCK.goals == 3 then
-      fab_name = "Locked_ks_all"
+      fab_name = "Locked_ks_ALL"
     end
 
     local def

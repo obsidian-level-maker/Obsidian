@@ -753,18 +753,42 @@ function Quest_add_major_quests()
   end
 
 
+  local function add_triple_key_door()
+    local prob = 35
+
+    if OB_CONFIG.mode == "coop" then
+      prob = 70
+    end
+
+    if not rand.odds(prob) then return false end
+
+    local K1 = table.remove(LEVEL.major_goals, 1)
+    local K2 = table.remove(LEVEL.major_goals, 1)
+    local K3 = table.remove(LEVEL.major_goals, 1)
+
+    if not K3 then return false end
+
+    return Quest_scan_all_conns("MAJOR", { K1,K2,K3 })
+  end
+
+
   ---| Quest_add_major_quests |---
 
   collect_major_goals()
 
-  local want_splits = 1  -- FIXME : base it on # of unused leaf rooms
+  -- FIXME : base it on # of unused leaf rooms
+  local want_splits = 1
+
+  if add_triple_key_door() then
+    want_splits = 0 ---!!! rand.sel(50, 1, 0)
+  end
 
   for i = 1, want_splits do
     local goal = pick_goal()
 
     -- nothing possible when no more goals
     if not goal then break; end
-    
+
     if not Quest_scan_all_conns("MAJOR", { goal }) then
       break;
     end
