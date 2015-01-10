@@ -147,9 +147,11 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
     -- teleporters should never be underneath a 3D floor, because
     -- player will unexpected activate it while on the floor above,
     -- and because the sector tag is needed by the teleporter.
+--[[ FIXME
     if kind == "TELEPORTER" and spot.chunk[2] then
       score = score - 10
     end
+--]]
 
     -- apply the skill bits from prefab
     if spot.rank then
@@ -262,15 +264,10 @@ function Layout_place_importants(R)
   end
 
 
-  local function add_teleporter()
+  local function add_teleporter(conn)
     local spot = Layout_spot_for_wotsit(R, "TELEPORTER")
 
-    -- sometimes guard it, but only for out-going teleporters
-    if not R.guard_spot and (R.teleport_conn.R1 == R) and
-       rand.odds(60)
-    then
-      R.guard_spot = spot
-    end
+    spot.conn = conn
   end
 
 
@@ -364,8 +361,8 @@ function Layout_place_importants(R)
     add_goal(goal)
   end
 
-  if R.teleport_conn then
-    add_teleporter()
+  each tel in R.teleporters do
+    add_teleporter(tel)
   end
 
   each name in R.weapons do

@@ -258,20 +258,20 @@ end
 function Connect_teleporters()
   
   local function eval_room(R)
-    -- can only have one teleporter per room
-    if R.teleport_conn then return -1 end
+    -- never in hallways
+    if R.is_hallway then return -1 end
 
-    -- never in a secret exit room
-    if R.purpose == "SECRET_EXIT" then return -1 end
+    -- can only have one teleporter per room
+    -- TODO : relax this to one per area [ but require a big room ]
+    if R:has_teleporter() then return -1 end
 
     -- score based on size, ignore if too small
-    if R.sw < 3 or R.sh < 3 or R.svolume < 8 then return -1 end
+    if R.svolume < 10 then return -1 end
 
-    local v = math.sqrt(R.svolume)
+    local score = 100
 
-    local score = 10 - math.abs(v - 5.5)
-
-    return score + 2.1 * gui.random() ^ 2
+    -- tie breaker
+    return score + gui.random()
   end
 
 
@@ -281,8 +281,8 @@ function Connect_teleporters()
     each R in LEVEL.rooms do
       local score = eval_room(R)
 
-      if score >= 0 then
-        table.insert(list, { R=R, score=score })
+      if score > 0 then
+        table.insert(list, { R=R, A=rand.pick(R.areas), score=score })
       end
     end
 
@@ -290,34 +290,37 @@ function Connect_teleporters()
   end
 
 
-  local function connect_is_possible(R1, R2, mode)
-    -- FIXME : use areas !!!
-    if A1.conn_group == A2.conn_group then return false end
+  local function connect_is_possible(loc1, loc2)
+    local A1 = loc1.A
+    local A2 = loc2.A
 
-    return true
+    if A1.room == A2.room then
+      return false
+    end
+
+    return (A1.conn_group != A2.conn_group)
   end
 
 
-  local function add_teleporter(R1, R2)
-    -- FIXME : use areas !!!
-    error("add_teleporter : is broken dude")
+  local function add_teleporter(loc1, loc2)
+    local A1 = loc1.A
+    local A2 = loc2.A
 
-    gui.debugf("Teleporter connection: %s -- >%s\n", R1:tostr(), R2:tostr())
+    gui.debugf("Teleporter connection: %s -- >%s\n", A1.name, A2.name)
 
     Connect_merge_groups(A1, A2)
 
     local C = CONN_CLASS.new("teleporter", A1, A2)
 
-    -- area fields are set when pads are placed in room
-
     table.insert(A1.conns, C)
     table.insert(A2.conns, C)
 
+    -- setup tag information
     C.tele_tag1 = alloc_id("tag")
     C.tele_tag2 = alloc_id("tag")
 
-    A1.teleport_conn = C
-    A2.teleport_conn = C
+    table.insert(A1.room.teleporters, C)
+    table.insert(A2.room.teleporters, C)
   end
 
 
@@ -328,17 +331,16 @@ function Connect_teleporters()
     table.sort(loc_list, function(A, B) return A.score > B.score end)
 
     -- need at least a source and a destination
-    while #loc_list >= 2 do
+    -- [we try all possible combinations of rooms)
 
-      local R1 = loc_list[1].R
-      table.remove(loc_list, 1)
+gui.debugf("Teleport locs: %d\n", #loc_list)
+    while #loc_list >= 2 do
+      local loc1 = table.remove(loc_list, 1)
 
       -- try to find a room we can connect to
-      each loc in loc_list do
-        local R2 = loc.R
-
-        if connect_is_possible(R1, R2, "teleporter") then
-          add_teleporter(R1, R2)
+      each loc2 in loc_list do
+        if connect_is_possible(loc1, loc2) then
+          add_teleporter(loc1, loc2)
           return true
         end
       end
@@ -352,26 +354,27 @@ function Connect_teleporters()
 
   -- check if game / theme supports them
   if not PARAM.teleporters or
-     STYLE.teleporters == "none"
+     OB_CONFIG.mode == "ctf"  -- TODO: support in CTF maps
   then
-    gui.printf("Teleporter quota: NONE\n", quota)
+    gui.printf("Teleporters: not supported\n", quota)
     return
   end
 
   -- determine number to make
-  local quota = style_sel("teleporters", 0, 1, 2, 3.7)
+  local skip_prob = style_sel("teleporters", 100, 50, 25, 0)
+  local quota     = style_sel("teleporters", 0, 0.5, 1.0, 2.5)
 
-  quota = quota * SEED_W / 16
-  quota = quota + rand.skew() * 1.7
+  if rand.odds(skip_prob) then
+    gui.printf("Teleporters: skipped by style\n")
+    return
+  end
 
-  quota = int(quota) -- round down
+  quota = quota * SEED_W / rand.irange(15, 25)
 
-  gui.printf("Teleporter quota: %d\n", quota)
+  gui.printf("Teleporters: %d (%1.2f)\n", int(quota), quota)
 
-  for i = 1,quota do
-    if not try_add_teleporter() then
-      break;
-    end
+  for i = 1, quota do
+    try_add_teleporter()
   end
 end
 
@@ -868,7 +871,6 @@ A.is_outdoor = false
     if A.room then
       A.conn_group = A.id
     end
-    A.teleports = {}
   end
 
   each R in LEVEL.rooms do
@@ -879,7 +881,7 @@ A.is_outdoor = false
 
   handle_hallways()
 
-  --TODO teleporters
+  Connect_teleporters()
 
   handle_the_rest()  
 end

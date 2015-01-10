@@ -57,8 +57,6 @@
 
     entry_conn : CONN
 
-    teleport_conn : CONN  -- if exists, the teleporter connection to/from this room
-
     
     --- other stuff ---
 

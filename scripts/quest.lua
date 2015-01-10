@@ -470,6 +470,9 @@ stderrf("    (not same quest)\n")
     return
   end
 
+  -- cannot lock teleporter connections
+  if C.kind == "teleporter" then return end
+
   quest = C.A1.quest
 
   -- zones must not divide a room in half
@@ -482,11 +485,12 @@ stderrf("    (same room)\n")
   local before = collect_areas(C.A1, {})
   local  after = collect_areas(C.A2, {})
 
+--[[
 stderrf("BEFORE =\n  ")
 each id,_ in before do stderrf("%d ", id) end stderrf("\n\n")
 stderrf("AFTER =\n  ")
 each id,_ in after do stderrf("%d ", id) end stderrf("\n\n")
-
+--]]
 
   local before_A = C.A1
   local  after_A = C.A2

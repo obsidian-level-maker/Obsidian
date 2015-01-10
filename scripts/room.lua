@@ -85,7 +85,9 @@ function ROOM_CLASS.new()
 
     goals = {}
     importants = {}
+    teleporters = {}
     closets = {}
+
     chunks  = {}
     floors  = {}
     decor   = {}

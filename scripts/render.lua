@@ -1101,17 +1101,14 @@ function Render_importants()
 
 
   local function content_teleporter(spot)
-    -- FIXME !!!!  content_teleporter
-
-    local C = R.teleport_conn
-    assert(C)
+    local C = assert(spot.conn)
 
     local def = PREFABS["Teleporter1"]
     assert(def)
 
     local skin1 = {}
 
-    if C.R1 == R then
+    if C.A1.room == R then
       skin1. in_tag = C.tele_tag2
       skin1.out_tag = C.tele_tag1
     else
@@ -1122,11 +1119,9 @@ function Render_importants()
     skin1. in_target = string.format("tele%d", skin1. in_tag)
     skin1.out_target = string.format("tele%d", skin1.out_tag)
 
-    local mx, my = S:mid_point()
-    local spot_dir = 10 - dir_for_wotsit(S)
-    local z = assert(S.floor_h)
+    local spot_dir = 2  --!!! FIXME  10 - dir_for_wotsit(S)
 
-    local T = Trans.spot_transform(mx, my, z, spot_dir)
+    local T = Trans.spot_transform(spot.x, spot.y, spot.z, spot_dir)
 
     Fabricate(R, def, T, { skin1 })
   end
