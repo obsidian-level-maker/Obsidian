@@ -28,7 +28,6 @@
 Inputs:
    monsters   : list of monsters that the player must kill
    weapons    : list of weapons that player can use
-   weap_prefs : weapon preference table (can be empty)
 
 Output:
    stats : health that player needs to survive the battle +
@@ -71,7 +70,7 @@ Notes:
 ----------------------------------------------------------------]]
 
 
-function Fight_Simulator(monsters, weapons, weap_prefs, stats)
+function Fight_Simulator(monsters, weapons, stats)
 
   local active_mons = {}
 
@@ -92,24 +91,27 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
     assert(first_mon)
 
     -- determine probability for each weapon
-    local probs = {}
+    local prob_tab = {}
 
     each W in weapons do
-      local pref = W.pref * (weap_prefs[W.name] or 1)
+      local prob = W.info.pref
+
+      prob = prob * (W.factor or 1)
 
       -- handle monster-based weapon preferences
       if first_mon.weap_prefs then
-        pref = pref * (first_mon.weap_prefs[W.name] or 1)
+        prob = prob * (first_mon.weap_prefs[W.name] or 1)
       end
 
-      table.insert(probs, pref)
+      table.insert(prob_tab, prob)
     end
 
-    assert(#probs == #weapons)
+    assert(#prob_tab == #weapons)
 
-    local index = rand.index_by_probs(probs)
+    local index = rand.index_by_probs(prob_tab)
+    local W     = assert(weapons[index])
 
-    return assert(weapons[index])
+    return W.info
   end
 
 

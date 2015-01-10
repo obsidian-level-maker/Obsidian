@@ -2600,7 +2600,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   local function make_empty_stats()
     local stats = {}
 
-    for CL,_ in pairs(GAME.PLAYER_MODEL) do
+    each CL,_ in GAME.PLAYER_MODEL do
       stats[CL] = {}
     end
 
@@ -2613,8 +2613,11 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     each name,_ in hmodel.weapons do
       local info = assert(GAME.WEAPONS[name])
+
+      local factor = R.zone.weap_palette[name]
+
       if info.pref then
-        table.insert(list, info)
+        table.insert(list, { info=info, factor=factor })
       end
     end
 
@@ -2684,11 +2687,11 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     gui.debugf("Fight Simulator @ %s  class: %s\n", R:tostr(), CL)
 
     gui.debugf("weapons = \n")
-    each info in weap_list do
-      gui.debugf("  %s\n", info.name)
+    each W in weap_list do
+      gui.debugf("  %s\n", W.info.name)
     end
 
-    Fight_Simulator(mon_list, weap_list, R.zone.weap_palette, stats)
+    Fight_Simulator(mon_list, weap_list, stats)
 
 --  gui.debugf("raw result = \n%s\n", table.tostr(stats,1))
 
