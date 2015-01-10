@@ -975,7 +975,7 @@ function Quest_start_room()
 
     gui.printf("Alternate Start room: %s\n", R:tostr())
 
-    local goal =
+    local GOAL =
     {
       kind = "START"
       alt_start = true
