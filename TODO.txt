@@ -474,6 +474,10 @@ IDEA: "weak texturing" (especially on floors) which will try to
    read a directory.
 
 
++  "parallel stairs"  (they run parallel to line between two floors)
+
+-  in Co-op mode (DM, CTF too), prefer stairs over lifts
+
 -  exit via teleporter pad or holes in floor
 
 -  raising bridges (activate by a switch)
