@@ -178,7 +178,7 @@ bool Options_Save(const char *filename)
 	LogPrintf("Saving Options...\n");
 
 	fprintf(option_fp, "-- OPTIONS FILE : OBLIGE %s\n", OBLIGE_VERSION); 
-	fprintf(option_fp, "-- " OBLIGE_TITLE " (C) 2006-2014 Andrew Apted\n");
+	fprintf(option_fp, "-- " OBLIGE_TITLE " (C) 2006-2015 Andrew Apted\n");
 	fprintf(option_fp, "-- http://oblige.sourceforge.net/\n\n");
 
 	fprintf(option_fp, "alternate_look = %d\n", alternate_look ? 1 : 0);

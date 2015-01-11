@@ -88,7 +88,7 @@ const char *UI_About::Text =
 	"OBLIGE is a random level generator\n"
 	"for classic FPS games like DOOM\n"
 	"\n"
-	"Copyright (C) 2006-2014 Andrew Apted, et al\n"
+	"Copyright (C) 2006-2015 Andrew Apted, et al\n"
 	"\n"
 	"This program is free software, and may be\n"
 	"distributed and modified under the terms of\n"

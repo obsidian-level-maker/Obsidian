@@ -276,7 +276,7 @@ bool Cookie_Save(const char *filename)
 
 	// header...
 	fprintf(cookie_fp, "-- CONFIG FILE : OBLIGE %s\n", OBLIGE_VERSION); 
-	fprintf(cookie_fp, "-- " OBLIGE_TITLE " (C) 2006-2014 Andrew Apted\n");
+	fprintf(cookie_fp, "-- " OBLIGE_TITLE " (C) 2006-2015 Andrew Apted\n");
 	fprintf(cookie_fp, "-- http://oblige.sourceforge.net/\n\n");
 
 	// settings...
