@@ -507,6 +507,14 @@ Secrets:
 -  fix battle simulator to ignore stuff got in secrets
    (push state onto stack, pop afterwards).
 
++  timed powerups are best in closet secrets
+
++  support big (room or room+hallway) secret coming off a
+   closet secret.  [ but never the other way around ]
+
+-  a secret that provides little more than another way for the
+   player to travel (esp. a shortcut back from a goal room)
+
 
 Co-op IDEA:
 -  "checkpoint" areas that players pass through, with loads of
