@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008-2014 Andrew Apted
+--  Copyright (C) 2008-2015 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -23,6 +23,8 @@ function calc_wall_mat(A1, A2)
   if not A1 then
     return "_ERROR"
   end
+
+if A2.mode == "void" then return "COMPSPAN" end
 
   if not A1.is_outdoor then
     return assert(A1.wall_mat)
@@ -448,6 +450,18 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
 ---!!!    local o_tex = outer_tex(S, dir, w_tex)
 ---!!!    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex }
+
+    -- ensure it faces the correct direction
+    if LOCK.conn.A1 != A then
+      assert(LOCK.conn.A2 == A)
+
+      if not geom.is_corner(dir) then
+        S = S:neighbor(dir)
+      end
+
+      dir = 10 - dir
+    end
+
 
     local inner_mat, outer_mat = calc_straddle_mat(A, NA)
 

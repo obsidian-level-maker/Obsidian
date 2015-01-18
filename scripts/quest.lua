@@ -703,6 +703,12 @@ stderrf("  %s/%s @ %s\n", goal.kind, goal.item or "-", R:tostr())
 
   info.conn.lock = LOCK
 
+  if info.conn.A1 != info.before_A then
+    assert(info.conn.A2 == info.before_A)
+
+    info.conn:swap()
+  end
+
 
   -- finally, add the new goals to the first quest
   place_new_goals(Q1)
@@ -799,7 +805,8 @@ function Quest_add_major_quests()
       prob = 70
     end
 
-do return false end
+do prob=100 end
+
     if not rand.odds(prob) then return false end
 
     local K1 = table.remove(LEVEL.major_goals, 1)
