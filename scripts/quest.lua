@@ -883,7 +883,10 @@ function Quest_group_into_zones()
 
   ---| Quest_group_into_zones |---
 
-  local rough_size = 150  ---!!!  FIXME: REVIEW
+  -- this is deliberately quite low, since we generally want each major
+  -- quest to become a single zone, and only merge them when a quest is
+  -- very small.
+  local rough_size = 100
 
   local cur_zone = Zone_new()
 
