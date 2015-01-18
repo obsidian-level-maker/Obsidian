@@ -371,6 +371,17 @@ function Quest_eval_divide_at_conn(C, goal, info)
   end
 
 
+  local function size_of_area_set(areas)
+    local total = 0
+
+    each _, A in areas do
+      total = total + A.svolume
+    end
+
+    return total
+  end
+
+
   local function area_exits_in_set(A, areas)
     local count = 0
 
@@ -445,13 +456,27 @@ function Quest_eval_divide_at_conn(C, goal, info)
 
 
   local function eval_split_possibility(C, before, after, before_A, after_A)
+    local before_size = size_of_area_set(before)
+    local  after_size = size_of_area_set(after)
+
     local score = 200
 
-    -- FIXME evaluate stuff !!
+    -- strongly prefer not to enter a hallway from a locked door
+    if after_A.room.is_hallway then
+      score = score - 100
+    end
 
-    -- prefer not to enter a hallway from a locked door
-    if after_A.is_hallway then
-      score = score - 50
+    -- try to avoid very unbalanced splits
+
+    local   min_size = math.min(before_size, after_size)
+    local total_size = before_size + after_size
+
+    local frac = min_size / total_size
+
+    if frac < 0.166 then
+      score = score - 20
+    elseif frac < 0.333 then
+      score = score - 10
     end
 
     -- tie breaker
@@ -527,7 +552,7 @@ stderrf("    (not enough leafs : %d < %d\n", #leafs, #info.new_goals)
 
   local score = eval_split_possibility(C, before, after, before_A, after_A)
 
-stderrf("  possible @ %s : score %1.3f\n", C:tostr(), score)
+stderrf("  possible @ %s : score %1.1f\n", C:tostr(), score)
 
   if score > info.score then
     info.score  = score
@@ -805,7 +830,7 @@ function Quest_add_major_quests()
       prob = 70
     end
 
-do prob=100 end
+do prob=0 end
 
     if not rand.odds(prob) then return false end
 
