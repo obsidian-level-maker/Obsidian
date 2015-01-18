@@ -10,8 +10,8 @@ PREFABS.Locked_kc_ALL =
 
   x_fit  = "frame"
   long   = 192
-  deep   = 64
-  over   = 64
+  deep   = 68
+  over   = 72
 }
 
 
@@ -23,8 +23,8 @@ PREFABS.Locked_ks_ALL =
 
   x_fit  = "frame"
   long   = 192
-  deep   = 64
-  over   = 64
+  deep   = 68
+  over   = 72
 
   tex_DOORRED  = "DOORRED2"
   tex_DOORYEL  = "DOORYEL2"
