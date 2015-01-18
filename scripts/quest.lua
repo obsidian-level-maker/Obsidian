@@ -2195,7 +2195,7 @@ function Quest_make_quests()
 
   gui.printf("\n--==| Make Quests |==--\n\n")
 
-  Monsters_max_level()
+  Monster_prepare()
 
   LEVEL.quests = {}
   LEVEL.zones  = {}

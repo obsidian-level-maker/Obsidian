@@ -319,7 +319,7 @@ end
 ----------------------------------------------------------------
 
 
-function Monsters_init()
+function Monster_init()
   table.name_up(GAME.MONSTERS)
   table.name_up(GAME.WEAPONS)
   table.name_up(GAME.PICKUPS)
@@ -396,7 +396,7 @@ end
 
 
 
-function Monsters_max_level()
+function Monster_max_level()
   local mon_along = LEVEL.game_along
 
   if LEVEL.is_secret then
@@ -539,6 +539,21 @@ function Monsters_global_palette()
   gui.debugf("Monster global palette:\n%s\n", table.tostr(LEVEL.global_pal))
 
   gui.printf("\n")
+end
+
+
+
+function Monster_prepare()
+ 
+  ---| Monster_prepare |---
+
+  if OB_CONFIG.mode == "dm" or OB_CONFIG.mode == "ctf" then
+    return
+  end
+
+  Monster_max_level()
+
+  Monster_init()
 end
 
 
@@ -2897,7 +2912,6 @@ function Monster_make_battles()
 
   Player_init()
 
-  Monsters_init()
   Monsters_global_palette()
   Monsters_zone_palettes()
 
