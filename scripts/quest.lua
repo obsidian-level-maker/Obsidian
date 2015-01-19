@@ -676,6 +676,11 @@ stderrf("  %s/%s @ %s\n", goal.kind, goal.item or "-", R:tostr())
 
       table.insert( R.goals, goal)
       table.insert(Q1.goals, goal)
+
+      -- for switched doors we need a tag value
+      if goal.kind == "SWITCH" then
+        goal.tag = alloc_id("tag")
+      end
     end
   end
 
@@ -844,9 +849,27 @@ do prob=0 end
   end
 
 
+  local function test_remote_door()
+    local GOAL =
+    {
+      kind = "SWITCH"
+      item = "sw_blue"
+    }
+
+    Quest_scan_all_conns("MAJOR", { GOAL })
+  end
+
+
   ---| Quest_add_major_quests |---
 
   collect_major_goals()
+
+do
+test_remote_door()
+test_remote_door()
+test_remote_door()
+return
+end
 
   -- FIXME : base it on # of unused leaf rooms
   local want_splits = 4

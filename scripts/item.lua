@@ -105,11 +105,9 @@ function Item_distribute_stats()
   end
 
 
-  ---| Monsters_distribute_stats |---
+  ---| Item_distribute_stats |---
 
   -- Note: we don't distribute to or from hallways
-
-  gui.debugf("--- Monsters_distribute_stats ---\n")
 
   each R in LEVEL.rooms do
     if R.is_storage then continue end

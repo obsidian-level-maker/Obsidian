@@ -448,8 +448,6 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
     assert(LOCK)
 
----!!!    local o_tex = outer_tex(S, dir, w_tex)
----!!!    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex }
 
     -- ensure it faces the correct direction
     if LOCK.conn.A1 != A then
@@ -466,6 +464,10 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     local inner_mat, outer_mat = calc_straddle_mat(A, NA)
 
     local skin1 = { wall=inner_mat, outer=outer_mat }
+
+    if LOCK.goals[1].kind == "SWITCH" then
+      skin1.lock_tag = assert(LOCK.goals[1].tag)
+    end
 
 
     -- FIXME : find it properly
@@ -511,7 +513,9 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   local function straddle_locked_door()
     assert(LOCK)
 
-    if LOCK.goals[1].kind == "KEY" then
+    if LOCK.goals[1].kind == "KEY" or
+       LOCK.goals[1].kind == "SWITCH"
+    then
       straddle_keyed_door()
       return
     end
@@ -1073,11 +1077,19 @@ function Render_importants()
 
 
   local function content_switch(spot)
---[[ FIXME: BUILD SWITCHES
-      local INFO = assert(GAME.SWITCHES[LOCK.switch])
-      Build.small_switch(S, dir_for_wotsit(S), z1, INFO.skin, LOCK.tag)
-      Trans.entity("light", mx, my, z1+112, { cave_light=176 })
---]]
+    -- TODO: find it properly
+    local fab_name = "Switch_small_blue"  ---  .. LOCK.goals[1].item
+
+    local def = PREFABS[fab_name]
+    assert(def)
+
+    local skin1 = { item=item }
+
+    skin1.lock_tag = assert(spot.tag)
+
+    local T = Trans.spot_transform(spot.x, spot.y, spot.z, spot.dir)
+
+    Fabricate(R, def, T, { skin1 })
   end
 
 
