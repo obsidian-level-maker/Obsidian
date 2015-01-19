@@ -326,6 +326,9 @@ DOOM.MATERIALS =
   CONS1_5  = { f="CONS1_5", t="COMPWERD" }
   CONS1_7  = { f="CONS1_7", t="COMPWERD" }
 
+  CRATOP1  = { f="CRATOP1", t="CRATE2" }
+  CRATOP2  = { f="CRATOP2", t="CRATE1" }
+
   DEM1_1   = { f="DEM1_1", t="MARBLE1" }
   DEM1_2   = { f="DEM1_2", t="MARBLE1" }
   DEM1_3   = { f="DEM1_3", t="MARBLE1" }
