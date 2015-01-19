@@ -2,7 +2,7 @@
 -- Switched doors
 --
 
-PREFABS.Door_SW_blue =
+PREFABS.Switched_blue =
 {
   file   = "door/sw_door.wad"
   where  = "edge"
@@ -13,6 +13,20 @@ PREFABS.Door_SW_blue =
   long   = 192
   deep   = 16
   over   = 16
+
+  tag_1  = "?lock_tag"
+}
+
+
+----------------------------------------
+--   DIAGONAL VERSIONS
+----------------------------------------
+
+PREFABS.Switched_blue_diag =
+{
+  file   = "door/sw_door_dg.wad"
+  where  = "diagonal"
+  switch = "sw_blue"
 
   tag_1  = "?lock_tag"
 }
