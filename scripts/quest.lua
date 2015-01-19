@@ -429,6 +429,9 @@ function Quest_eval_divide_at_conn(C, goal, info)
 
       if R.is_hallway then continue end
 
+      -- some goals already?
+      if #R.goals > 0 then continue end
+
       if quest.entry and quest.entry.room == R then continue end
 
       -- skip the room immediately next to the proposed connection
@@ -721,11 +724,11 @@ stderrf("  %s/%s @ %s\n", goal.kind, goal.item or "-", R:tostr())
   Q1.svolume = size_of_area_set(Q1.areas)
   Q2.svolume = size_of_area_set(Q2.areas)
 
-  -- do this before assigning new 'quest' fields
-  transfer_existing_goals(Q1, Q2)
-
   assign_quest(Q1)
   assign_quest(Q2)
+
+  -- do this AFTER assigning new 'quest' fields
+  transfer_existing_goals(Q1, Q2)
 
 
   -- lock the connection
@@ -835,7 +838,7 @@ function Quest_add_major_quests()
       prob = 70
     end
 
-do prob=0 end
+do prob=100 end
 
     if not rand.odds(prob) then return false end
 
@@ -864,18 +867,14 @@ do prob=0 end
 
   collect_major_goals()
 
-do
-test_remote_door()
-test_remote_door()
-test_remote_door()
-return
-end
-
   -- FIXME : base it on # of unused leaf rooms
   local want_splits = 4
 
   if add_triple_key_door() then
     want_splits = 0 ---!!! rand.sel(50, 1, 0)
+
+test_remote_door()
+test_remote_door()
   end
 
   for i = 1, want_splits do
