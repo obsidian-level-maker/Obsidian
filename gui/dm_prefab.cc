@@ -21,7 +21,7 @@
 //  A.P.I
 //  =====
 //  
-//  wadfab_load(name)
+//  wadfab_load(name, map)
 //  --> no result, raises error on failure
 //  
 //  wadfab_free()
@@ -125,6 +125,7 @@ int wadfab_free(lua_State *L)
 int wadfab_load(lua_State *L)
 {
 	const char *name = luaL_checkstring(L, 1);
+	const char *map  = luaL_checkstring(L, 2);
 
 	char filename[PATH_MAX];
 
@@ -138,7 +139,7 @@ int wadfab_load(lua_State *L)
 	if (! ajpoly::LoadWAD(filename))
 		return luaL_error(L, "wadfab_load: %s", ajpoly::GetError());
 
-	if (! ajpoly::OpenMap("*" /* first one */))
+	if (! ajpoly::OpenMap(map))
 		return luaL_error(L, "wadfab_load: %s", ajpoly::GetError());
 
 	if (! ajpoly::Polygonate(true /* require_border */))

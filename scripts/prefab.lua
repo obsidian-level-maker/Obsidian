@@ -1416,7 +1416,8 @@ function Fab_load_wad(def)
     create_it()
 
     -- load the map structures into memory
-    gui.wadfab_load(def.file)
+    -- [ if map is not specified, use "*" to load the first one ]
+    gui.wadfab_load(def.file, def.map or "*")
 
     for thing_idx = 0,999 do
       local E = gui.wadfab_get_thing(thing_idx)
