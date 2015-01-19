@@ -50,7 +50,7 @@ PREFABS.Window_wide_tall =
 
 PREFABS.Window_wide_diag =
 {
-  file   = "window/wide_dg.wad"
+  file   = "window/wide.wad"
   map    = "MAP02"
 
   where  = "diagonal"
@@ -62,7 +62,7 @@ PREFABS.Window_wide_diag =
 
 PREFABS.Window_wide_tall_diag =
 {
-  file   = "window/wide_dg.wad"
+  file   = "window/wide.wad"
   map    = "MAP02"
 
   where  = "diagonal"

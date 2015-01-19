@@ -42,7 +42,7 @@ PREFABS.Locked_ks_ALL =
 
 PREFABS.Locked_kc_ALL_diag =
 {
-  file   = "door/three_key_dg.wad"
+  file   = "door/three_key.wad"
   map    = "MAP02"
 
   where  = "diagonal"
@@ -52,7 +52,7 @@ PREFABS.Locked_kc_ALL_diag =
 
 PREFABS.Locked_ks_ALL_diag =
 {
-  file   = "door/three_key_dg.wad"
+  file   = "door/three_key.wad"
   map    = "MAP02"
 
   where  = "diagonal"

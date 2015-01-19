@@ -48,7 +48,7 @@ PREFABS.Window_narrow_tall =
 
 PREFABS.Window_narrow_diag =
 {
-  file   = "window/narrow_dg.wad"
+  file   = "window/narrow.wad"
   map    = "MAP02"
   where  = "diagonal"
 
@@ -59,7 +59,7 @@ PREFABS.Window_narrow_diag =
 
 PREFABS.Window_narrow_tall_diag =
 {
-  file   = "window/narrow_dg.wad"
+  file   = "window/narrow.wad"
   map    = "MAP02"
   where  = "diagonal"
 

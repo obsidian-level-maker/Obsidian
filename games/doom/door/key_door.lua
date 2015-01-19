@@ -132,7 +132,7 @@ PREFABS.Locked_ks_red =
 
 PREFABS.Locked_kc_blue_diag =
 {
-  file   = "door/key_door_dg.wad"
+  file   = "door/key_door.wad"
   map    = "MAP02"
 
   where  = "diagonal"
@@ -148,7 +148,7 @@ PREFABS.Locked_kc_blue_diag =
 
 PREFABS.Locked_kc_yellow_diag =
 {
-  file   = "door/key_door_dg.wad"
+  file   = "door/key_door.wad"
   map    = "MAP02"
 
   where  = "diagonal"
@@ -164,7 +164,7 @@ PREFABS.Locked_kc_yellow_diag =
 
 PREFABS.Locked_kc_red_diag =
 {
-  file   = "door/key_door_dg.wad"
+  file   = "door/key_door.wad"
   map    = "MAP02"
 
   where  = "diagonal"
@@ -179,7 +179,7 @@ PREFABS.Locked_kc_red_diag =
 
 PREFABS.Locked_ks_blue_diag =
 {
-  file   = "door/key_door_dg.wad"
+  file   = "door/key_door.wad"
   map    = "MAP02"
 
   where  = "diagonal"
@@ -195,7 +195,7 @@ PREFABS.Locked_ks_blue_diag =
 
 PREFABS.Locked_ks_yellow_diag =
 {
-  file   = "door/key_door_dg.wad"
+  file   = "door/key_door.wad"
   map    = "MAP02"
 
   where  = "diagonal"
@@ -211,7 +211,7 @@ PREFABS.Locked_ks_yellow_diag =
 
 PREFABS.Locked_ks_red_diag =
 {
-  file   = "door/key_door_dg.wad"
+  file   = "door/key_door.wad"
   map    = "MAP02"
 
   where  = "diagonal"
