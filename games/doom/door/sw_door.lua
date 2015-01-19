@@ -5,6 +5,8 @@
 PREFABS.Locked_sw_blue =
 {
   file   = "door/sw_door.wad"
+  map    = "MAP01"
+
   where  = "edge"
   switch = "sw_blue"
 
@@ -24,7 +26,9 @@ PREFABS.Locked_sw_blue =
 
 PREFABS.Locked_sw_blue_diag =
 {
-  file   = "door/sw_door_dg.wad"
+  file   = "door/sw_door.wad"
+  map    = "MAP02"
+
   where  = "diagonal"
   switch = "sw_blue"
 
