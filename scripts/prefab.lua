@@ -1071,11 +1071,6 @@ function Fab_load_wad(def)
       if side.x_offset and side.x_offset != 0 then
         C2.u1 = side.x_offset
         if C2.u1 == 1 then C2.u1 = 0 end
-
-        -- adjust X offset for split edges
-        if C.along then
-          C2.u1 = C2.u1 + C.along
-        end
       end
 
       if side.y_offset and side.y_offset != 0 then
@@ -1284,8 +1279,6 @@ function Fab_load_wad(def)
 
     local x_offset = side.x_offset
     local y_offset = side.y_offset
-
-    if C.along then x_offset = x_offset + C.along end
 
     C[prefix .. "u1"] = x_offset
     C[prefix .. "v1"] = y_offset
@@ -1551,7 +1544,7 @@ function Fab_collect_fields(fab)
   --
   -- Find all the prefab fields with special prefixes (like tex_)
   -- used for replacing textures (etc) in a prefab, and collect
-  -- collect them into a table.
+  -- them into a table.
   --
 
   local function match_prefix(name)
@@ -1562,6 +1555,8 @@ function Fab_collect_fields(fab)
     if string.match(name, "^line_")   then return true end
     if string.match(name, "^sector_") then return true end
     if string.match(name, "^tag_")    then return true end
+
+    if string.match(name, "^offset_") then return true end
 
     return false
   end
@@ -1805,6 +1800,15 @@ function Fab_replacements(fab)
   end
 
 
+  local function fixup_x_offsets(C)
+    -- adjust X offset for split edges
+
+    if C.u1 and C.along then
+      C.u1 = C.u1 + C.along
+    end
+  end
+
+
   ---| Fab_replacements |---
 
   each B in fab.brushes do
@@ -1814,15 +1818,21 @@ function Fab_replacements(fab)
 
       if C.tag then C.tag = check_tag(C.tag) end
 
+      if C.u1      then C.u1      = check("offset", C.u1) end
+      if C.v1      then C.v1      = check("offset", C.v1) end
+      if C.back_u1 then C.back_u1 = check("offset", C.back_u1) end
+      if C.back_v1 then C.back_v1 = check("offset", C.back_v1) end
+
       -- do textures last (may add e.g. special for liquids)
       if C.tex and C.x     then C.tex = check_tex (sanitize(C.tex)) end
       if C.tex and not C.x then C.tex = check_flat(sanitize(C.tex), C) end
 
       if C.x and C.rail then C.rail = check_tex(sanitize(C.rail)) end
       if C.x and C.back_rail then C.back_rail = check_tex(sanitize(C.back_rail)) end
+
+      fixup_x_offsets(C)
     end
   end
-
 
   each E in fab.entities do
     check_props(E)
