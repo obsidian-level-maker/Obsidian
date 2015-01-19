@@ -5,6 +5,8 @@
 PREFABS.Window_wide =
 {
   file   = "window/wide.wad"
+  map    = "MAP01"
+
   where  = "edge"
 
   long   = 192
@@ -25,6 +27,8 @@ PREFABS.Window_wide =
 PREFABS.Window_wide_tall =
 {
   file   = "window/wide.wad"
+  map    = "MAP01"
+
   where  = "edge"
 
   long   = 192
@@ -47,6 +51,8 @@ PREFABS.Window_wide_tall =
 PREFABS.Window_wide_diag =
 {
   file   = "window/wide_dg.wad"
+  map    = "MAP02"
+
   where  = "diagonal"
 
   bound_z1 = 0
@@ -57,6 +63,8 @@ PREFABS.Window_wide_diag =
 PREFABS.Window_wide_tall_diag =
 {
   file   = "window/wide_dg.wad"
+  map    = "MAP02"
+
   where  = "diagonal"
 
   bound_z1 = 0

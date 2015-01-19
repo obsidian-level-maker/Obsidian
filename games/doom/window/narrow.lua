@@ -5,7 +5,9 @@
 PREFABS.Window_narrow =
 {
   file   = "window/narrow.wad"
+  map    = "MAP01"
   where  = "edge"
+
   long   = 192
   deep   = 16
   over   = 16
@@ -24,7 +26,9 @@ PREFABS.Window_narrow =
 PREFABS.Window_narrow_tall =
 {
   file   = "window/narrow.wad"
+  map    = "MAP01"
   where  = "edge"
+
   long   = 192
   deep   = 16
   over   = 16
@@ -45,6 +49,7 @@ PREFABS.Window_narrow_tall =
 PREFABS.Window_narrow_diag =
 {
   file   = "window/narrow_dg.wad"
+  map    = "MAP02"
   where  = "diagonal"
 
   bound_z1 = 0
@@ -55,6 +60,7 @@ PREFABS.Window_narrow_diag =
 PREFABS.Window_narrow_tall_diag =
 {
   file   = "window/narrow_dg.wad"
+  map    = "MAP02"
   where  = "diagonal"
 
   bound_z1 = 0
