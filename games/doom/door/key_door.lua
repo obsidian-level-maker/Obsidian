@@ -5,6 +5,8 @@
 PREFABS.Locked_kc_blue =
 {
   file   = "door/key_door.wad"
+  map    = "MAP01"
+
   where  = "edge"
   key    = "kc_blue"
 
@@ -24,6 +26,8 @@ PREFABS.Locked_kc_blue =
 PREFABS.Locked_kc_yellow =
 {
   file   = "door/key_door.wad"
+  map    = "MAP01"
+
   where  = "edge"
   key    = "kc_yellow"
 
@@ -43,6 +47,8 @@ PREFABS.Locked_kc_yellow =
 PREFABS.Locked_kc_red =
 {
   file   = "door/key_door.wad"
+  map    = "MAP01"
+
   where  = "edge"
   key    = "kc_red"
 
@@ -61,6 +67,8 @@ PREFABS.Locked_kc_red =
 PREFABS.Locked_ks_blue =
 {
   file   = "door/key_door.wad"
+  map    = "MAP01"
+
   where  = "edge"
   key    = "ks_blue"
 
@@ -80,6 +88,8 @@ PREFABS.Locked_ks_blue =
 PREFABS.Locked_ks_yellow =
 {
   file   = "door/key_door.wad"
+  map    = "MAP01"
+
   where  = "edge"
   key    = "ks_yellow"
 
@@ -99,6 +109,8 @@ PREFABS.Locked_ks_yellow =
 PREFABS.Locked_ks_red =
 {
   file   = "door/key_door.wad"
+  map    = "MAP01"
+
   where  = "edge"
   key    = "ks_red"
 
@@ -121,6 +133,8 @@ PREFABS.Locked_ks_red =
 PREFABS.Locked_kc_blue_diag =
 {
   file   = "door/key_door_dg.wad"
+  map    = "MAP02"
+
   where  = "diagonal"
   key    = "kc_blue"
 
@@ -135,6 +149,8 @@ PREFABS.Locked_kc_blue_diag =
 PREFABS.Locked_kc_yellow_diag =
 {
   file   = "door/key_door_dg.wad"
+  map    = "MAP02"
+
   where  = "diagonal"
   key    = "kc_yellow"
 
@@ -149,6 +165,8 @@ PREFABS.Locked_kc_yellow_diag =
 PREFABS.Locked_kc_red_diag =
 {
   file   = "door/key_door_dg.wad"
+  map    = "MAP02"
+
   where  = "diagonal"
   key    = "kc_red"
 
@@ -162,6 +180,8 @@ PREFABS.Locked_kc_red_diag =
 PREFABS.Locked_ks_blue_diag =
 {
   file   = "door/key_door_dg.wad"
+  map    = "MAP02"
+
   where  = "diagonal"
   key    = "ks_blue"
 
@@ -176,6 +196,8 @@ PREFABS.Locked_ks_blue_diag =
 PREFABS.Locked_ks_yellow_diag =
 {
   file   = "door/key_door_dg.wad"
+  map    = "MAP02"
+
   where  = "diagonal"
   key    = "ks_yellow"
 
@@ -190,6 +212,8 @@ PREFABS.Locked_ks_yellow_diag =
 PREFABS.Locked_ks_red_diag =
 {
   file   = "door/key_door_dg.wad"
+  map    = "MAP02"
+
   where  = "diagonal"
   key    = "ks_red"
 

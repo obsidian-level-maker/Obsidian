@@ -5,6 +5,8 @@
 PREFABS.Locked_kc_ALL =
 {
   file   = "door/three_key.wad"
+  map    = "MAP01"
+
   where  = "edge"
   key    = "kc_ALL"
 
@@ -18,6 +20,8 @@ PREFABS.Locked_kc_ALL =
 PREFABS.Locked_ks_ALL =
 {
   file   = "door/three_key.wad"
+  map    = "MAP01"
+
   where  = "edge"
   key    = "ks_ALL"
 
@@ -39,6 +43,8 @@ PREFABS.Locked_ks_ALL =
 PREFABS.Locked_kc_ALL_diag =
 {
   file   = "door/three_key_dg.wad"
+  map    = "MAP02"
+
   where  = "diagonal"
   key    = "kc_ALL"
 }
@@ -47,6 +53,8 @@ PREFABS.Locked_kc_ALL_diag =
 PREFABS.Locked_ks_ALL_diag =
 {
   file   = "door/three_key_dg.wad"
+  map    = "MAP02"
+
   where  = "diagonal"
   key    = "ks_ALL"
 
