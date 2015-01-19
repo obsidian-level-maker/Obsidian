@@ -2,7 +2,7 @@
 -- Switched doors
 --
 
-PREFABS.Switched_blue =
+PREFABS.Remote_blue =
 {
   file   = "door/sw_door.wad"
   where  = "edge"
@@ -22,7 +22,7 @@ PREFABS.Switched_blue =
 --   DIAGONAL VERSIONS
 ----------------------------------------
 
-PREFABS.Switched_blue_diag =
+PREFABS.Remote_blue_diag =
 {
   file   = "door/sw_door_dg.wad"
   where  = "diagonal"
