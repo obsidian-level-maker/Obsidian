@@ -1285,7 +1285,7 @@ function Area_determine_map_size()
     return W, W
   end
 
-  local SIZES = { small=25, regular=35, large=45, extreme=61 }
+  local SIZES = { small=27, regular=35, large=45, extreme=61 }
 
   local W = SIZES[ob_size]
 
