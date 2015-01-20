@@ -151,6 +151,20 @@ function Zone_new()
 end
 
 
+function Goal_new(kind)
+  local id = alloc_id("goal")
+
+  local GOAL =
+  {
+    id = id
+    name = "GOAL_" .. (kind or "XX") .. "_" .. id
+    kind = kind
+  }
+
+  return GOAL
+end
+
+
 
 function size_of_area_set(areas)
   local total = 0
@@ -224,13 +238,10 @@ stderrf("Eval exit %s : conns:%d svolume:%d\n", R:tostr(), R:total_conns(), R.sv
     LEVEL.exit_room = R
 
     -- create the goal for the entire map
-    local GOAL =
-    {
-      kind = "LEVEL_EXIT"
+    local GOAL = Goal_new("LEVEL_EXIT")
 
-      room = R
-      area = R.areas[1]
-    }
+    GOAL.room = R
+    GOAL.area = R.areas[1]
 
     table.insert(R.goals, GOAL)
     table.insert(quest.goals, GOAL)
@@ -269,10 +280,7 @@ stderrf("Eval exit %s : conns:%d svolume:%d\n", R:tostr(), R:total_conns(), R.sv
 
     gui.printf("Secret Exit: %s\n", R:tostr())
 
-    local GOAL =
-    {
-      kind = "SECRET_EXIT"
-    }
+    local GOAL = Goal_new("SECRET_EXIT")
 
     table.insert(R.goals, GOAL)
 
@@ -531,6 +539,8 @@ each id,_ in after do stderrf("%d ", id) end stderrf("\n\n")
     before, after = after, before
     before_A, after_A = after_A, before_A
   else
+stderrf("\nThis quest: %s\n", quest.name)
+stderrf("\nGoal kind '%s' in %s @ %s\n", goal.kind or "??", goal.room:tostr(), goal.area.quest.name)
     error("Cannot find goal inside quest")
   end
 
@@ -622,12 +632,14 @@ function Quest_perform_division(info)
 
 
   local function transfer_existing_goals(Q1, Q2)
+stderrf("transfer_existing_goals:\n")
     for i = #Q2.goals, 1, -1 do
       local targ = Q2.goals[i]
 
       if (targ.room and targ.room.areas[1].quest == Q1) or
          (targ.area and targ.area.quest == Q1)
       then
+stderrf("   %s\n", targ.name)
         table.insert(Q1.goals, table.remove(Q2.goals, i))
       end
     end
@@ -803,12 +815,10 @@ function Quest_add_major_quests()
     local key_tab = LEVEL.usable_keys or THEME.keys or {} 
 
     each name,_ in key_tab do
-      local GOAL =
-      {
-        kind = "KEY"
-        item = name
-        prob = 100
-      }
+      local GOAL = Goal_new("KEY")
+
+      GOAL.item = name
+      GOAL.prob = 100
 
       table.insert(list, GOAL)
     end
@@ -830,13 +840,11 @@ function Quest_add_major_quests()
 
     for loop = 1, dup_num do
       each name,_ in switch_tab do
-        local GOAL =
-        {
-          kind = "SWITCH"
-          item = name
-          special = 103
-          prob = 25
-        }
+        local GOAL = Goal_new("SWITCH")
+
+        GOAL.item = name
+        GOAL.special = 103  -- open door
+        GOAL.prob = 25
 
         table.insert(list, GOAL)
       end
@@ -888,20 +896,15 @@ function Quest_add_major_quests()
     if not rand.odds(prob) then return false end
 
     -- FIXME : this is VERY dependent on the sw_pair.wad prefab
-    local GOAL1 =
-    {
-      kind = "SWITCH"
-      item = "sw_blue"
-      special = 103
-    }
+    local GOAL1 = Goal_new("SWITCH")
+    local GOAL2 = Goal_new("SWITCH")
 
-    local GOAL2 =
-    {
-      kind = "SWITCH"
-      item = "sw_blue"
-      same_tag = true
-      special = 23
-    }
+    GOAL1.item = "sw_blue"
+    GOAL1.special = 103
+
+    GOAL2.item = "sw_blue"
+    GOAL2.special = 23
+    GOAL2.same_tag = true
 
     return Quest_scan_all_conns("MAJOR", { GOAL1, GOAL2 })
   end
@@ -1085,10 +1088,7 @@ function Quest_start_room()
 
     gui.printf("Start room: %s\n", R:tostr())
 
-    local GOAL =
-    {
-      kind = "START"
-    }
+    local GOAL = Goal_new("START")
 
     table.insert(R.goals, GOAL)
 
@@ -1145,11 +1145,9 @@ function Quest_start_room()
 
     gui.printf("Alternate Start room: %s\n", R:tostr())
 
-    local GOAL =
-    {
-      kind = "START"
-      alt_start = true
-    }
+    local GOAL = Goal_new("START")
+
+    GOAL.alt_start = true
 
     table.insert(R.goals, GOAL)
 
