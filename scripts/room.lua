@@ -850,7 +850,9 @@ function Room_border_up()
 
     -- void --
 
-    if A1.mode == "void" or A2.mode == "void" then
+    if A1.mode == "void" or A2.mode == "void" or
+       A1.mode == "trap" or A2.mode == "trap"
+    then
       junc.kind = "wall"
       return
     end
@@ -1147,7 +1149,7 @@ function Room_determine_spots()
   -- handle cages and traps
 
   each A in LEVEL.areas do
-    if A.mode == "cage" then
+    if A.mode == "cage" or A.mode == "trap" then
       local R = assert(A.face_room)
       spots_for_area(R, A, "cage")
     end

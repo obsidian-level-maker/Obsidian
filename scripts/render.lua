@@ -174,6 +174,11 @@ function Render_edge(A, S, dir)
 
     local brush = raw_wall_brush()
 
+    -- don't want to reveal trap on automap
+    each C in brush do
+      C.draw_secret = true
+    end
+
     table.insert(brush, { b=A.floor_h + 2, delta_z=-2, tag=info.trigger_tag })
 
     brushlib.set_mat(brush, mat, mat)
