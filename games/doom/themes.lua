@@ -660,7 +660,6 @@ DOOM2.THEMES =
     steps = { step1=50, step3=50, step4=50 }
     lifts = { platform=10, rusty=50, spine=30 }
     big_pillars = { big_red=50, sloppy=20, sloppy2=20, }
-    switches = { sw_skin=50, sw_vine=50, sw_wood=50 }
   }
 
 
@@ -996,7 +995,6 @@ DOOM2.THEMES =
     exits = { demon_pillar2=20, demon_pillar3=20, stone_pillar=30 }
     steps = { step6=50, }
     lifts = { shiny=20, platform=20, rusty=50 }
-    switches = { sw_wood=50, sw_blue=50, sw_hot=50 }
     big_pillars = { big_slad=30, big_wood6=30, big_garg=60 }
   }
 
@@ -1506,7 +1504,6 @@ TNT.THEMES =
     ---!!!  TEMPORARY V3 STUFF  !!!---
 
     exits = { demon_pillar2=20, demon_pillar3=20, stone_pillar=40 }
-    switches = { sw_wood=80, sw_blue=30, sw_hot=50 }
     big_pillars = { big_slad=30, big_wood6=30, big_garg=60 }
   }
 
