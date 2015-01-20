@@ -100,7 +100,7 @@ function Render_edge(A, S, dir)
   local DIAG_DIR_MAP = { [1]=2, [9]=8, [3]=6, [7]=4 }
 
 
-  local function edge_wall(mat)
+  local function raw_wall_brush()
     local TK = 16
 
     local x1, y1 = S.x1, S.y1
@@ -113,46 +113,68 @@ function Render_edge(A, S, dir)
     if dir == 6 then x1 = x2 - TK end
 
 
-    local brush
-
     if dir == 2 or dir == 4 or dir == 6 or dir == 8 then
-      brush = brushlib.quad(x1, y1, x2, y2)
+      return brushlib.quad(x1, y1, x2, y2)
 
     elseif dir == 1 then
-      brush =
+      return
       {
         { x=x1,      y=y2      }
         { x=x2,      y=y1      }
         { x=x2,      y=y1 + TK }
         { x=x1 + TK, y=y2      }
       }
+
     elseif dir == 9 then
-      brush =
+      return
       {
         { x=x1,      y=y2      }
         { x=x1,      y=y2 - TK }
         { x=x2 - TK, y=y1      }
         { x=x2,      y=y1      }
       }
+
     elseif dir == 3 then
-      brush =
+      return
       {
         { x=x1,      y=y1 }
         { x=x2,      y=y2 }
         { x=x2 - TK, y=y2 }
         { x=x1,      y=y1 + TK }
       }
+
     elseif dir == 7 then
-      brush =
+      return
       {
         { x=x1,      y=y1 }
         { x=x1 + TK, y=y1 }
         { x=x2,      y=y2 - TK }
         { x=x2,      y=y2 }
       }
+
     else
       error("edge_wall : bad dir")
     end
+  end
+
+
+  local function edge_wall(mat)
+    local brush = raw_wall_brush()
+
+    brushlib.set_mat(brush, mat, mat)
+
+    Trans.brush(brush)
+  end
+
+
+  local function edge_trap_wall(mat)
+    if NA.mode != "trap" then return end
+
+    assert(info.trigger_tag)
+
+    local brush = raw_wall_brush()
+
+    table.insert(brush, { b=A.floor_h + 2, delta_z=-2, tag=info.trigger_tag })
 
     brushlib.set_mat(brush, mat, mat)
 
@@ -609,6 +631,9 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   elseif info.kind == "wall" then
     assert(A)
     edge_wall(calc_wall_mat(A, NA))
+
+  elseif info.kind == "trap_wall" then
+    edge_trap_wall(calc_wall_mat(A, NA))
 
   elseif info.kind == "sky_edge" and A.floor_h then
     edge_simple_sky()
