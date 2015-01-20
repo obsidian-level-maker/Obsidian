@@ -2,7 +2,7 @@
 -- Small switch
 --
 
-PREFABS.Switch_small_blue =
+PREFABS.Switch_small_sw_blue =
 {
   file   = "switch/small.wad"
   where  = "middle"
