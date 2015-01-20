@@ -476,7 +476,8 @@ IDEA: "weak texturing" (especially on floors) which will try to
 
 +  "parallel stairs"  (they run parallel to line between two floors)
 
--  in Co-op mode (DM, CTF too), prefer stairs over lifts
++  in Co-op mode (DM, CTF too), prefer stairs over lifts, and
+   lifts would ideally have a switch nearby to lower (instead of WR lines)
 
 -  exit via teleporter pad or holes in floor
 
@@ -512,8 +513,13 @@ Secrets:
 +  support big (room or room+hallway) secret coming off a
    closet secret.  [ but never the other way around ]
 
+-  prefer lots of small items over one or two big items
+
 -  a secret that provides little more than another way for the
    player to travel (esp. a shortcut back from a goal room)
+
+-  a secret balcony can be good -- player will see item and
+   wonder how to get it
 
 
 Co-op IDEA:
