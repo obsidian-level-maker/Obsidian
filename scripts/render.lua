@@ -1184,6 +1184,27 @@ function Render_importants()
   end
 
 
+  local function build_trigger(spot)
+---    if not spot.trigger_tag then return end
+
+    local r = spot.trigger_r or 64
+
+    local special = spot.trigger_special or 103
+    local tag     = spot.trigger_tag or 1
+
+    local brush = brushlib.quad(spot.x - r, spot.y - r, spot.x + r, spot.y + r)
+
+    each C in brush do
+      C.special = special
+      C.tag     = tag
+    end
+
+    brushlib.set_kind(brush, "trigger")
+
+    Trans.brush(brush)
+  end
+
+
   ---| Render_importants |---
 
   each room in LEVEL.rooms do
@@ -1191,6 +1212,7 @@ function Render_importants()
 
     each spot in R.importants do
       build_important(spot)
+      build_trigger(spot)
     end
   end
 end
