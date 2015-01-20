@@ -30,7 +30,7 @@ cp -av modules/*.* $dest/modules
 mkdir $dest/gui
 cp -av gui/*.[chr]* $dest/gui
 cp -av gui/*.ico $dest/gui
-cp -av Makefile.* $dest/
+cp -av Makefile* $dest/
 
 mkdir $dest/lua_src
 cp -av lua_src/*.[chr]* $dest/lua_src
