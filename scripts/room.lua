@@ -2263,16 +2263,18 @@ function Weird_build_rooms()
   Room_reckon_doors()
   Room_floor_heights()
 
-  Layout_add_cages()
-  Layout_outer_borders()
-
-  Room_create_sky_groups()
-
-  Layout_update_cages()
-
+  -- place importants -- adding traps need to know where they are
   each R in LEVEL.rooms do
     Layout_place_importants(R)
   end
+
+  Layout_add_cages()
+  Layout_outer_borders()
+
+  -- this must be done _after_ cages and outdoor borders
+  Room_create_sky_groups()
+
+  Layout_update_cages()
 
   Room_border_up()
   Room_update_sky_groups()
