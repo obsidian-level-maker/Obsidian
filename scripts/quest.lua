@@ -799,60 +799,82 @@ function Quest_add_major_quests()
   -- progress between the quests.
   --
 
-  local function collect_major_goals()
-    LEVEL.major_goals = {}
+  local function collect_key_goals(list)
+    local key_tab = LEVEL.usable_keys or THEME.keys or {} 
 
-    local key_tab = table.copy(LEVEL.usable_keys or THEME.keys or {}) 
-
-    each name,prob in key_tab do
+    each name,_ in key_tab do
       local GOAL =
       {
         kind = "KEY"
         item = name
-        prob = prob
+        prob = 100
       }
-      table.insert(LEVEL.major_goals, GOAL)
-    end
 
-    -- TODO : switches
+      table.insert(list, GOAL)
+    end
   end
 
 
-  local function pick_goal()
-    if table.empty(LEVEL.major_goals) then
+  local function collect_switch_goals(list)
+    local switch_tab = LEVEL.usable_keys or THEME.keys or {} 
+
+    -- we want at least three kinds, so duplicate some if necessary
+    local dup_num
+    if table.size(switch_tab) == 1 then
+      dup_num = 3
+    elseif table.size(switch_tab) == 2 then
+      dup_num = 2
+    else
+      dup_num = 1
+    end
+
+    for loop = 1, dup_num do
+      each name,_ in switch_tab do
+        local GOAL =
+        {
+          kind = "SWITCH"
+          item = name
+          special = 103
+          prob = 25
+        }
+
+        table.insert(list, GOAL)
+      end
+    end
+  end
+
+
+  local function pick_goal(list)
+    if table.empty(list) then
       return nil
     end
 
     local prob_tab = {}
 
-    each G in LEVEL.major_goals do
-      prob_tab[_index] = G.prob or 50
+    each G in list do
+      prob_tab[_index] = assert(G.prob)
     end
 
     local idx = rand.index_by_probs(prob_tab)
 
-    return table.remove(LEVEL.major_goals, idx)
+    return table.remove(list, idx)
   end
 
 
-  local function add_triple_key_door()
+  local function add_triple_key_door(keys)
+    if #keys < 3 then return false end
+
     local prob = 35
 
     if OB_CONFIG.mode == "coop" then
-      prob = 70
+      prob = 65
     end
-
-do prob=0 end
 
     if not rand.odds(prob) then return false end
 
-    local K1 = table.remove(LEVEL.major_goals, 1)
-    local K2 = table.remove(LEVEL.major_goals, 1)
-    local K3 = table.remove(LEVEL.major_goals, 1)
+    rand.shuffle(keys)
 
-    if not K3 then return false end
-
-    return Quest_scan_all_conns("MAJOR", { K1,K2,K3 })
+    return Quest_scan_all_conns("MAJOR", { keys[1], keys[2], keys[3] })
   end
 
 
@@ -860,66 +882,59 @@ do prob=0 end
     local prob = 35
 
     if OB_CONFIG.mode == "coop" then
-      prob = 70
+      prob = 65
     end
-
-do prob=100 end
 
     if not rand.odds(prob) then return false end
 
-    local GOAL1 =
-    {
-      kind = "SWITCH"
-      special = 103
-    }
-
     -- FIXME : this is VERY dependent on the sw_pair.wad prefab
-    local GOAL2 =
-    {
-      kind = "SWITCH"
-      same_tag = true
-      special = 23
-    }
-
-    return Quest_scan_all_conns("MAJOR", { GOAL1,GOAL2 })
-  end
-
-
-  local function add_remote_door()
-    local GOAL =
+    local GOAL1 =
     {
       kind = "SWITCH"
       item = "sw_blue"
       special = 103
     }
 
-    Quest_scan_all_conns("MAJOR", { GOAL })
+    local GOAL2 =
+    {
+      kind = "SWITCH"
+      item = "sw_blue"
+      same_tag = true
+      special = 23
+    }
+
+    return Quest_scan_all_conns("MAJOR", { GOAL1, GOAL2 })
   end
 
 
   ---| Quest_add_major_quests |---
 
-  collect_major_goals()
+  local goal_list = {}
+
+  collect_key_goals(goal_list)
 
   -- FIXME : base it on # of unused leaf rooms
   local want_splits = 4
 
-  if add_double_switch_door() then
-    want_splits = 0 ---!!! rand.sel(50, 1, 0)
+  if want_splits > 0 and add_triple_key_door(goal_list) then
+    want_splits = want_splits - 1
   end
 
---add_remote_door()
---add_remote_door()
+  if want_splits > 0 and add_double_switch_door() then
+    want_splits = want_splits - 1
+  end
+
+  -- grab the switch goals now (after the triple-key door attempt)
+  collect_switch_goals(goal_list)
+
+  -- create "simple" quests -- a single key or switch locks the door
 
   for i = 1, want_splits do
-    local goal = pick_goal()
+    local goal = pick_goal(goal_list)
 
-    -- nothing possible when no more goals
     if not goal then break; end
 
-    if not Quest_scan_all_conns("MAJOR", { goal }) then
-      break;
-    end
+    Quest_scan_all_conns("MAJOR", { goal })
   end
 end
 
