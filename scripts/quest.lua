@@ -190,8 +190,6 @@ function Quest_create_initial_quest()
     if R.is_hallway then return -1 end
     if R.is_exit    then return -1 end
 
-stderrf("Eval exit %s : conns:%d svolume:%d\n", R:tostr(), R:total_conns(), R.svolume)
-
     -- must be a leaf room
     if R:total_conns() > 1 then return -1 end
 
@@ -499,12 +497,11 @@ function Quest_eval_divide_at_conn(C, goal, info)
 
   ---| Quest_eval_divide_at_conn |---
 
-stderrf("  goal: %s/%s @ %s / %s\n", goal.kind or "???", goal.item or "???",
-goal.room:tostr(), goal.area:tostr())
+gui.debugf("  goal: %s/%s @ %s / %s\n", goal.kind or "???", goal.item or "???",
+goal.room:tostr(), goal.area.quest.name)
 
   -- connection must be same quest
   if C.A1.quest != C.A2.quest then
-stderrf("    (not same quest)\n")
     return
   end
 
@@ -512,10 +509,10 @@ stderrf("    (not same quest)\n")
   if C.kind == "teleporter" then return end
 
   quest = C.A1.quest
+gui.debugf("  quest : %s\n", quest.name)
 
   -- zones must not divide a room in half
   if info.mode == "MAJOR" and C.A1.room == C.A2.room then
-stderrf("    (same room)\n")
     return
   end
 
@@ -539,8 +536,6 @@ each id,_ in after do stderrf("%d ", id) end stderrf("\n\n")
     before, after = after, before
     before_A, after_A = after_A, before_A
   else
-stderrf("\nThis quest: %s\n", quest.name)
-stderrf("\nGoal kind '%s' in %s @ %s\n", goal.kind or "??", goal.room:tostr(), goal.area.quest.name)
     error("Cannot find goal inside quest")
   end
 
@@ -548,26 +543,22 @@ stderrf("\nGoal kind '%s' in %s @ %s\n", goal.kind or "??", goal.room:tostr(), g
   if quest.entry then
     if not before[quest.entry.id] then
 assert(after[quest.entry.id])
-stderrf("    (entry in second half)\n")
     return end
   end
 
   -- no locking end of hallways in MAJOR mode
   if info.mode == "MAJOR" and before_A.room.is_hallway then
-stderrf("    (end of hallway)\n")
     return
   end
 
   -- FIXME : in "MINOR" mode check areas not rooms
   local leafs = unused_rooms_in_set(before)
 
-  if #leafs < #info.new_goals then
-stderrf("    (not enough leafs : %d < %d\n", #leafs, #info.new_goals)
-  return end
+  if #leafs < #info.new_goals then return end
 
   local score = eval_split_possibility(C, before, after, before_A, after_A)
 
-stderrf("  possible @ %s : score %1.1f\n", C:tostr(), score)
+gui.debugf("--> possible @ %s : score %1.1f\n", C:tostr(), score)
 
   if score > info.score then
     info.score  = score
@@ -632,14 +623,14 @@ function Quest_perform_division(info)
 
 
   local function transfer_existing_goals(Q1, Q2)
-stderrf("transfer_existing_goals:\n")
+gui.debugf("transfer_existing_goals:\n")
     for i = #Q2.goals, 1, -1 do
       local targ = Q2.goals[i]
 
       if (targ.room and targ.room.areas[1].quest == Q1) or
          (targ.area and targ.area.quest == Q1)
       then
-stderrf("   %s\n", targ.name)
+gui.debugf("   %s\n", targ.name)
         table.insert(Q1.goals, table.remove(Q2.goals, i))
       end
     end
@@ -682,12 +673,12 @@ stderrf("   %s\n", targ.name)
   local function place_new_goals(Q1, LOCK)
     rand.shuffle(info.leafs)
 
-stderrf("PLACING NEW GOALS:\n")
+gui.debugf("PLACING NEW GOALS:\n")
 
     each goal in info.new_goals do
       local R = pick_room_for_goal(Q1)
 
-stderrf("  %s/%s @ %s\n", goal.kind, goal.item or "-", R:tostr())
+gui.debugf("  %s @ %s in %s\n", goal.name, R:tostr(), Q1.name)
       goal.room = R
       goal.area = R.areas[1]
 
@@ -715,6 +706,8 @@ stderrf("  %s/%s @ %s\n", goal.kind, goal.item or "-", R:tostr())
   -- (for the first half, existing quest becomes second half)
 
   local Q1 = Quest_new()
+
+gui.debugf("Dividing %s,  first half is %s\n", Q2.name, Q1.name)
 
 
   -- link quests into node heirarchy
@@ -768,15 +761,15 @@ end
 
 
 
-function Quest_scan_all_conns(mode, goals)
+function Quest_scan_all_conns(mode, new_goals)
   local info =
   {
     mode = mode
-    new_goals = goals
+    new_goals = new_goals
     score = 0
   }
 
-stderrf("Quest_scan_all_conns.....\n")
+gui.debugf("Quest_scan_all_conns.....\n")
 
   each C in LEVEL.conns do
     -- must be same quest on each side
@@ -796,7 +789,7 @@ stderrf("---> NOTHING POSSIBLE\n")
   gui.printf("Dividing %s @ %s (%s -- %s)\n", info.quest.name,
              info.conn:tostr(), info.conn.A1.room:tostr(), info.conn.A2.room:tostr())
 
-gui.debugf("   VIA: %s\n", info.new_goals[1].item or "???")
+gui.debugf("   VIA: %s (x%d)\n", info.new_goals[1].item or "???", #info.new_goals)
 gui.debugf("   Entry: %s\n", (info.quest.entry and info.quest.entry:tostr()) or "--")
 
   Quest_perform_division(info)
@@ -826,7 +819,7 @@ function Quest_add_major_quests()
 
 
   local function collect_switch_goals(list)
-    local switch_tab = LEVEL.usable_keys or THEME.keys or {} 
+    local switch_tab = THEME.switches or {} 
 
     -- we want at least three kinds, so duplicate some if necessary
     local dup_num
@@ -869,8 +862,8 @@ function Quest_add_major_quests()
   end
 
 
-  local function add_triple_key_door(keys)
-    if #keys < 3 then return false end
+  local function add_triple_key_door(key_list)
+    if #key_list < 3 then return false end
 
     local prob = 35
 
@@ -880,9 +873,17 @@ function Quest_add_major_quests()
 
     if not rand.odds(prob) then return false end
 
-    rand.shuffle(keys)
+    rand.shuffle(key_list)
 
-    return Quest_scan_all_conns("MAJOR", { keys[1], keys[2], keys[3] })
+    local K1 = table.remove(key_list, 1)
+    local K2 = table.remove(key_list, 1)
+    local K3 = table.remove(key_list, 1)
+
+gui.debugf("key_list NOW:\n%s\n", table.tostr(key_list))
+    assert(K1 and K2 and K3)
+    assert(K3.kind == "KEY")
+
+    return Quest_scan_all_conns("MAJOR", { K1, K2, K3 })
   end
 
 
@@ -915,6 +916,7 @@ function Quest_add_major_quests()
   local goal_list = {}
 
   collect_key_goals(goal_list)
+gui.debugf("first goal_list:\n%s\n", table.tostr(goal_list,2))
 
   -- FIXME : base it on # of unused leaf rooms
   local want_splits = 4
@@ -930,10 +932,14 @@ function Quest_add_major_quests()
   -- grab the switch goals now (after the triple-key door attempt)
   collect_switch_goals(goal_list)
 
+gui.debugf("goal_list NOW:\n%s\n", table.tostr(goal_list,2))
+
   -- create "simple" quests -- a single key or switch locks the door
 
   for i = 1, want_splits do
     local goal = pick_goal(goal_list)
+
+gui.debugf("picked goal =\n%s\n", table.tostr(goal))
 
     if not goal then break; end
 
