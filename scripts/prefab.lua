@@ -1776,7 +1776,7 @@ function Fab_replacements(fab)
         return assert(info.id)
       end
 
-      -- show a warning, but silently non-standard players
+      -- show a warning (but silently ignore non-standard players)
       if not string.match(name, "^player") then
         gui.printf("\nLACKING ENTITY : %s\n\n", name)
       end
@@ -1828,7 +1828,7 @@ function Fab_replacements(fab)
       if C.tex and C.x     then C.tex = check_tex (sanitize(C.tex)) end
       if C.tex and not C.x then C.tex = check_flat(sanitize(C.tex), C) end
 
-      if C.x and C.rail then C.rail = check_tex(sanitize(C.rail)) end
+      if C.x and C.rail      then C.rail      = check_tex(sanitize(C.rail)) end
       if C.x and C.back_rail then C.back_rail = check_tex(sanitize(C.back_rail)) end
 
       fixup_x_offsets(C)
