@@ -916,10 +916,14 @@ gui.debugf("key_list NOW:\n%s\n", table.tostr(key_list))
   local goal_list = {}
 
   collect_key_goals(goal_list)
-gui.debugf("first goal_list:\n%s\n", table.tostr(goal_list,2))
 
-  -- FIXME : base it on # of unused leaf rooms
-  local want_splits = 4
+  -- compute number of splits to try -- based on # of rooms
+  local want_splits = #LEVEL.rooms / 12
+
+  want_splits = int(want_splits + 2.0 * gui.random() ^ 2)
+  want_splits = math.clamp(0, want_splits, 6)
+
+  -- first try the special stuff : triple-key door (etc)
 
   if want_splits > 0 and add_triple_key_door(goal_list) then
     want_splits = want_splits - 1
@@ -932,14 +936,10 @@ gui.debugf("first goal_list:\n%s\n", table.tostr(goal_list,2))
   -- grab the switch goals now (after the triple-key door attempt)
   collect_switch_goals(goal_list)
 
-gui.debugf("goal_list NOW:\n%s\n", table.tostr(goal_list,2))
-
-  -- create "simple" quests -- a single key or switch locks the door
+  -- now create "simple" quests -- single key or switch locks the door
 
   for i = 1, want_splits do
     local goal = pick_goal(goal_list)
-
-gui.debugf("picked goal =\n%s\n", table.tostr(goal))
 
     if not goal then break; end
 
