@@ -443,7 +443,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   end
 
 
-  local function straddle_keyed_door()
+  local function straddle_locked_door()
     local z = A.floor_h
 
     assert(LOCK)
@@ -471,10 +471,14 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
 
     -- FIXME : find it properly
-    local fab_name = "Locked_" .. LOCK.goals[1].item
+    local fab_name
 
-    if #LOCK.goals == 3 then
+    if #LOCK.goals == 2 then
+      fab_name = "Locked_double"
+    elseif #LOCK.goals == 3 then
       fab_name = "Locked_ks_ALL"
+    else
+      fab_name = "Locked_" .. LOCK.goals[1].item
     end
 
     local def
@@ -507,46 +511,6 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   
 ---???    do_door_base(S, dir, z, w_tex, o_tex)
     end
-  end
-
-
-  local function straddle_locked_door()
-    assert(LOCK)
-
-    if LOCK.goals[1].kind == "KEY" or
-       LOCK.goals[1].kind == "SWITCH"
-    then
-      straddle_keyed_door()
-      return
-    end
-
-    error("WTF : switched door")
-
---[[  TODO
-
-    local z = assert(S.conn and S.conn.conn_h)
-
-    -- FIXME : find it properly
-    local fab_name = "Door_with_bars" --!!! Door_SW_blue
-
-    local def = PREFABS[fab_name]
-    assert(def)
-
-    local o_tex = outer_tex(S, dir, w_tex)
-    local skin1 = { wall=w_tex, floor=f_tex, outer=o_tex }
-
-    skin1.lock_tag = LOCK.tag
-
-    local S2 = S
-    local seed_w = 1
-
-    local T = Trans.edge_transform(S.x1, S.y1, S2.x2, S2.y2, z,
-                                   dir, 0, seed_w * 192, def.deep, def.over)
-
-    Fabricate(R, def, T, { skin1 })
-
-    do_door_base(S, dir, z, w_tex, o_tex)
---]]
   end
 
 
@@ -1078,14 +1042,18 @@ function Render_importants()
 
   local function content_switch(spot)
     -- TODO: find it properly
-    local fab_name = "Switch_small_blue"  ---  .. LOCK.goals[1].item
+    local fab_name = "Switch_small_sw_blue"  ---  .. LOCK.goals[1].item
 
     local def = PREFABS[fab_name]
     assert(def)
 
-    local skin1 = { item=item }
+    local skin1 = { }
 
-    skin1.lock_tag = assert(spot.tag)
+    skin1.lock_tag = assert(spot.goal.tag)
+
+    if spot.goal.special then
+      skin1.special = spot.goal.special
+    end
 
     local T = Trans.spot_transform(spot.x, spot.y, spot.z, spot.dir)
 

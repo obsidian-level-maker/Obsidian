@@ -256,7 +256,7 @@ function Layout_place_importants(R)
 -- stderrf("Layout_place_importants: goal '%s' @ %s\n", goal.kind, R:tostr())
 
     spot.item = goal.item
-    spot.tag  = goal.tag
+    spot.goal = goal
 
     if goal.kind != "START" then
       R.guard_spot = spot

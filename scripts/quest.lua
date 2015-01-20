@@ -83,6 +83,8 @@
 
     item : keyword  -- name of key or switch
 
+    special : number  -- linedef special for switches
+
     lock : LOCK   -- lock which this solves  (NIL for exit goals)
 
     -- where the goal is
@@ -681,7 +683,9 @@ stderrf("  %s/%s @ %s\n", goal.kind, goal.item or "-", R:tostr())
       table.insert(Q1.goals, goal)
 
       -- for switched doors we need a tag value
-      if goal.kind == "SWITCH" then
+      if goal.same_tag then
+        goal.tag = assert(info.new_goals[1].tag)
+      elseif goal.kind == "SWITCH" then
         goal.tag = alloc_id("tag")
       end
     end
@@ -838,7 +842,7 @@ function Quest_add_major_quests()
       prob = 70
     end
 
-do prob=100 end
+do prob=0 end
 
     if not rand.odds(prob) then return false end
 
@@ -852,11 +856,41 @@ do prob=100 end
   end
 
 
-  local function test_remote_door()
+  local function add_double_switch_door()
+    local prob = 35
+
+    if OB_CONFIG.mode == "coop" then
+      prob = 70
+    end
+
+do prob=100 end
+
+    if not rand.odds(prob) then return false end
+
+    local GOAL1 =
+    {
+      kind = "SWITCH"
+      special = 103
+    }
+
+    -- FIXME : this is VERY dependent on the sw_pair.wad prefab
+    local GOAL2 =
+    {
+      kind = "SWITCH"
+      same_tag = true
+      special = 23
+    }
+
+    return Quest_scan_all_conns("MAJOR", { GOAL1,GOAL2 })
+  end
+
+
+  local function add_remote_door()
     local GOAL =
     {
       kind = "SWITCH"
       item = "sw_blue"
+      special = 103
     }
 
     Quest_scan_all_conns("MAJOR", { GOAL })
@@ -870,12 +904,12 @@ do prob=100 end
   -- FIXME : base it on # of unused leaf rooms
   local want_splits = 4
 
-  if add_triple_key_door() then
+  if add_double_switch_door() then
     want_splits = 0 ---!!! rand.sel(50, 1, 0)
-
-test_remote_door()
-test_remote_door()
   end
+
+--add_remote_door()
+--add_remote_door()
 
   for i = 1, want_splits do
     local goal = pick_goal()
