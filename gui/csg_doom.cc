@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2014 Andrew Apted
+//  Copyright (C) 2006-2015 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -69,10 +69,13 @@ double light_dist_factor = 800.0;
 
 
 // fake linedef special for lower-unpegging
-#define LIN_FAKE_UNPEGGED  991
+#define LIN_FAKE_UNPEGGED	991
 
 // fake sector special to merge sector with lowest neighbor floor
-#define SEC_GRAB_NB_FLOOR  993
+#define SEC_GRAB_NB_FLOOR	993
+
+// fake sector special for teleporting monster closets
+#define SEC_DEPOT_PEER		988
 
 
 class extrafloor_c
@@ -2599,6 +2602,8 @@ static void EXFL_SpreadTag(doom_sector_c *S, int tag)
 
 static void DM_ProcessExtraFloors()
 {
+	DM_ExtraFloorNeighbors();
+
 	int tag = 10001;
 
 	for (unsigned int i = 0 ; i < dm_sectors.size() ; i++)
@@ -2707,6 +2712,62 @@ static void DM_ProcessLightFX()
 			new_sec->c_tex = dummy_plane_tex.c_str();
 
 			Dummy_New(new_sec, S);
+		}
+	}
+}
+
+
+static doom_sector_c * DM_FindDepotPeer()
+{
+	// this is very hacky -- we find the sector containing 'player1' entity.
+	// [ TODO: have a special entity kind, associate it with depot ]
+
+	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+	{
+		region_c *R = all_regions[i];
+
+		if (R->index < 0)
+			continue;
+
+		doom_sector_c *S = dm_sectors[R->index];
+
+		for (unsigned int k = 0 ; k < R->entities.size() ; k++)
+		{
+			csg_entity_c *E = R->entities[k];
+
+			int type = atoi(E->id.c_str());
+
+			if (type == 1)
+				return S;
+		}
+	}
+
+	LogPrintf("WARNING: cannot find sector peer for monster depot.\n");
+	return NULL;
+}
+
+
+static void DM_ProcessDepots()
+{
+	// Monster depots need to peer with a real sector so that sound
+	// can travel into them and wake up the monsters.  We achieve that
+	// using a dummy sector to "connect" the sectors.
+
+	for (unsigned int i = 0 ; i < dm_sectors.size() ; i++)
+	{
+		doom_sector_c *S = dm_sectors[i];
+
+		if (S->unused)
+			continue;
+
+		if (S->special == SEC_DEPOT_PEER)
+		{
+			S->special = 0;
+
+			doom_sector_c *peer = DM_FindDepotPeer();
+
+			if (peer)
+				Dummy_New(S, peer);
 		}
 	}
 }
@@ -3004,9 +3065,9 @@ void CSG_DOOM_Write()
 ///???	DM_RoundCorners();
 	DM_AlignTextures();
 
-	DM_ExtraFloorNeighbors();
 	DM_ProcessExtraFloors();
 	DM_ProcessLightFX();
+	DM_ProcessDepots();
 
 	DM_CreateDummies();
 
