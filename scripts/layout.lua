@@ -619,23 +619,31 @@ stderrf("Making trap in %s\n", A:tostr())
     A.zone  = parent_A.zone
     A.is_boundary = false
 
+    -- if facing room is outdoor, make trap have a ceiling
+    -- (better than walls going all the way up to the sky)
+    if parent_A.is_outdoor then
+      A.is_outdoor = nil
+    end
+
     -- make monsters in trap look at spot
     A.mon_focus = spot
 
-    local TRIGGER =
-    {
-      r = 64
-      special = 2
-      tag = alloc_id("tag")
-    }
+    if not spot.trigger then
+      local TRIGGER =
+      {
+        r = 64
+        special = 2
+        tag = alloc_id("tag")
+      }
+
+      -- the trigger brush is done by Render_importants()
+      spot.trigger = TRIGGER
+    end
 
     local junc = Junction_lookup(A, parent_A)
     
     junc.kind = "trap_wall"
-    junc.trigger = TRIGGER
-
-    -- the trigger brush is done in Render_importants()
-    spot.trigger = TRIGGER
+    junc.trigger = spot.trigger
   end
 
 

@@ -854,6 +854,11 @@ function dummy_properties(A)
   end
 
 
+  if A.mode == "trap" and not A.is_outdoor then
+    A.ceil_h = A.floor_h + 144
+  end
+
+
   if A.is_outdoor and not A.is_porch then
     A.ceil_mat = "_SKY"
   end
