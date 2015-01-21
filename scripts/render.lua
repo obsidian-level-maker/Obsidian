@@ -1072,7 +1072,7 @@ function Render_importants()
 
   local function content_switch(spot)
     -- TODO: find it properly
-    local fab_name = "Switch_small_sw_blue"  ---  .. LOCK.goals[1].item
+    local fab_name = "Switch_small_" .. spot.goal.item
 
     local def = PREFABS[fab_name]
     assert(def)

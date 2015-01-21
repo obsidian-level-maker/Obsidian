@@ -160,7 +160,7 @@ DOOM2.THEMES =
       kc_yellow = 50
     }
 
-    switches = { sw_blue=50 }
+    switches = { sw_blue=50, sw_red=50 }
 
     cave_torches =
     {

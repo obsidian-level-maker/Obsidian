@@ -900,10 +900,10 @@ gui.debugf("key_list NOW:\n%s\n", table.tostr(key_list))
     local GOAL1 = Goal_new("SWITCH")
     local GOAL2 = Goal_new("SWITCH")
 
-    GOAL1.item = "sw_blue"
+    GOAL1.item = "sw_metal"
     GOAL1.special = 103
 
-    GOAL2.item = "sw_blue"
+    GOAL2.item = "sw_metal"
     GOAL2.special = 23
     GOAL2.same_tag = true
 
