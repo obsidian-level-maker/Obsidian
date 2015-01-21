@@ -400,6 +400,8 @@ function Levels_setup()
   table.name_up(GAME.ROOMS)
   table.name_up(GAME.THEMES)
 
+  table.expand_copies(PREFABS)
+
 
   if PARAM.sub_format then
     gui.property("sub_format", PARAM.sub_format)
