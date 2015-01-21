@@ -1307,7 +1307,7 @@ function Weird_create_rooms()
   gui.printf("Map size: %dx%d grid points\n", W, H)
 
 
-  Seed_init(W - 1, H - 1, DEPOT_SIZE)
+  Seed_init(W - 1, H - 1)
 
   Weird_generate(W, H)
 

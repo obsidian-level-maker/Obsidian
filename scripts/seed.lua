@@ -353,7 +353,7 @@ function Seed_create(sx, sy, x1, y1)
 end
 
 
-function Seed_init(map_W, map_H, depot_H)
+function Seed_init(map_W, map_H)
   gui.printf("Seed_init: %dx%d  Depot: %dx%d\n", map_W, map_H, map_W, depot_H)
 
   -- setup globals 
@@ -383,21 +383,11 @@ function Seed_init(map_W, map_H, depot_H)
   end -- x,y
   end
 
-  -- create depot area [ for teleport-in monsters ]
+  -- init depot allocation [ for teleport-in monsters ]
 
-  DEPOT_SEEDS = table.array_2D(map_W, depot_H)
-
-  for sx = 1, DEPOT_SEEDS.w do
-  for sy = 1, DEPOT_SEEDS.h do
-    local x1 = BASE_X + (sx-1) * SEED_SIZE
-    local y1 = BASE_Y + (SEED_H + sy) * SEED_SIZE
-
-    local S = Seed_create(sx, sy, x1, y1)
-    S.kind = "depot"
-
-    DEPOT_SEEDS[sx][sy] = S
-  end -- x,y
-  end
+  LEVEL.depot_x = BASE_X
+  LEVEL.depot_y = BASE_Y + SEED_H * SEED_SIZE
+  LEVEL.depot_free = int(SEED_W / 2)
 end
 
 
@@ -476,6 +466,24 @@ function Seed_from_coord(x, y)
   sy = math.clamp(1, sy, SEED_H)
 
   return SEEDS[sx][sy]
+end
+
+
+function Seed_alloc_depot()
+  -- returns NIL if no more are possible
+
+  if LEVEL.depot_free <= 0 then
+    return nil
+  end
+
+  LEVEL.depot_free = LEVEL.depot_free - 1
+
+  local x = LEVEL.depot_x
+  local y = LEVEL.depot_y
+
+  LEVEL.depot_x = LEVEL.depot_x + 2 * SEED_SIZE
+
+  return x, y
 end
 
 

@@ -192,7 +192,6 @@ function Levels_clean_up()
   LEVEL  = nil
   EPISODE = nil
   SEEDS  = nil
-  DEPOT_SEEDS = nil
 
   collectgarbage("collect")
 end
@@ -202,7 +201,6 @@ function Levels_between_clean()
   LEVEL    = nil
   SEEDS    = nil
   SECTIONS = nil
-  DEPOT_SEEDS = nil
 
   collectgarbage("collect")
 end
