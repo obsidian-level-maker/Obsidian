@@ -310,7 +310,7 @@ function Layout_place_importants(R)
         -- FIXME : wall_dist
         local wall_dist = rand.range(0.5, 2.5)
         local z = assert(S.floor_h)
-        table.insert(R.normal_wotsits, { x=S.x1 + 32, y=S.y1 + 32, z=z, wall_dist=wall_dist })
+        table.insert(R.normal_wotsits, { x=S.x1 + 32, y=S.y1 + 32, z=z, wall_dist=wall_dist, area=A })
       end
     end
 
@@ -323,7 +323,7 @@ function Layout_place_importants(R)
         local mx, my = S:mid_point()
         local wall_dist = rand.range(0.4, 0.5)
         local z = assert(S.area and S.area.floor_h)
-        table.insert(R.emergency_wotsits, { x=mx, y=my, z=z, wall_dist=wall_dist })
+        table.insert(R.emergency_wotsits, { x=mx, y=my, z=z, wall_dist=wall_dist, area=S.area })
       end
     end
 
@@ -335,7 +335,7 @@ function Layout_place_importants(R)
         local mx, my = S:mid_point()
         local wall_dist = rand.range(0.2, 0.3)
         local z = assert(S.area and S.area.floor_h)
-        table.insert(R.dire_wotsits, { x=mx, y=my, z=z, wall_dist=wall_dist })
+        table.insert(R.dire_wotsits, { x=mx, y=my, z=z, wall_dist=wall_dist, area=S.area })
       end
     end
   end
@@ -606,6 +606,73 @@ function Layout_traps_and_cages()
   end
 
 
+
+  local function make_trap(A, parent_A, spot)
+stderrf("Making trap in %s\n", A:tostr())
+
+    A.mode = "trap"
+
+    A.floor_h = parent_A.floor_h
+    A.kind    = parent_A.kind
+
+    local TRIGGER =
+    {
+      r = 64
+      special = 103
+      tag = alloc_id("tag")
+    }
+
+    local junc = Junction_lookup(A, parent_A)
+    
+    junc.kind = "trap_wall"
+    junc.trigger = TRIGGER
+
+    -- the trigger brush is done in Render_importants()
+    spot.trigger = TRIGGER
+  end
+
+
+  local function try_trapify_important(R, spot)
+    if not
+       (spot.content_kind == "KEY"    or spot.content_kind == "SWITCH" or
+        spot.content_kind == "WEAPON" or spot.content_kind == "ITEM")
+    then
+      return false
+    end
+
+    -- less chance for mere items
+
+    if (spot.content_kind == "WEAPON" or spot.content_kind == "ITEM") and
+       rand.odds(50 * 0) then
+      return false
+    end
+
+    -- FIXME
+  end
+
+
+  local function add_traps()
+    local make_prob = style_sel("traps", 0, 20, 40, 80)
+   
+make_prob = 100  --!!!!! TEST
+
+    if make_prob == 0 then
+      gui.printf("Traps: skipped for level (by style).\n")
+      return
+    end
+
+    local areas = collect_big_cages()
+
+    each room in LEVEL.rooms do
+      each spot in R.importants do
+        if rand.odds(make_prob) then
+          try_trapify_important(R, spot)
+        end
+      end
+    end
+  end
+
+
   local function make_cage(A)
 stderrf("Making cage in %s\n", A:tostr())
 
@@ -636,45 +703,6 @@ stderrf("Making cage in %s\n", A:tostr())
     assert(A.floor_h)
 
     A.floor_h = A.floor_h + 40
-  end
-
-
-  local function try_trapify_important(R, spot)
-    if not
-       (spot.content_kind == "KEY"    or spot.content_kind == "SWITCH" or
-        spot.content_kind == "WEAPON" or spot.content_kind == "ITEM")
-    then
-      return false
-    end
-
-    -- less chance for keys and switches
-
-    if (spot.content_kind == "WEAPON" or spot.content_kind == "ITEM") and
-       rand.odds(50) then
-      return false
-    end
-
-    -- FIXME
-  end
-
-
-  local function add_traps()
-    local make_prob = style_sel("traps", 0, 20, 40, 80)
-    
-    if make_prob == 0 then
-      gui.printf("Traps: skipped for level (by style).\n")
-      return
-    end
-
-    local areas = collect_big_cages()
-
-    each room in LEVEL.rooms do
-      each spot in R.importants do
-        if rand.odds(make_prob) then
-          try_trapify_important(R, spot)
-        end
-      end
-    end
   end
 
 

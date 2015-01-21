@@ -170,7 +170,7 @@ function Render_edge(A, S, dir)
   local function edge_trap_wall(mat)
     if NA.mode != "trap" then return end
 
-    assert(info.trigger_tag)
+    assert(info.trigger)
 
     local brush = raw_wall_brush()
 
@@ -179,7 +179,7 @@ function Render_edge(A, S, dir)
       C.draw_secret = true
     end
 
-    table.insert(brush, { b=A.floor_h + 2, delta_z=-2, tag=info.trigger_tag })
+    table.insert(brush, { b=A.floor_h + 2, delta_z=-2, tag=info.trigger.tag })
 
     brushlib.set_mat(brush, mat, mat)
 
@@ -1185,12 +1185,10 @@ function Render_importants()
 
 
   local function build_trigger(spot)
----    if not spot.trigger_tag then return end
+    local r = spot.trigger.r
 
-    local r = spot.trigger_r or 64
-
-    local special = spot.trigger_special or 103
-    local tag     = spot.trigger_tag or 1
+    local special = assert(spot.trigger.special)
+    local tag     = assert(spot.trigger.tag)
 
     local brush = brushlib.quad(spot.x - r, spot.y - r, spot.x + r, spot.y + r)
 
@@ -1212,7 +1210,10 @@ function Render_importants()
 
     each spot in R.importants do
       build_important(spot)
-      build_trigger(spot)
+
+      if spot.trigger then
+        build_trigger(spot)
+      end
     end
   end
 end
