@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008-2014 Andrew Apted
+--  Copyright (C) 2008-2015 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -354,7 +354,7 @@ end
 
 
 function Seed_init(map_W, map_H)
-  gui.printf("Seed_init: %dx%d  Depot: %dx%d\n", map_W, map_H, map_W, depot_H)
+  gui.printf("Seed_init: %dx%d\n", map_W, map_H)
 
   -- setup globals 
   SEED_W = map_W

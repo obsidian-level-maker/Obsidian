@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2013-2014 Andrew Apted
+--  Copyright (C) 2013-2015 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -1869,6 +1869,8 @@ end
 
 
 function Fabricate(room, def, T, skins)
+  -- room can be NIL
+
   if not def.file then
     error("Old-style prefab skin used")
   end
