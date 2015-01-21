@@ -612,13 +612,16 @@ stderrf("Making trap in %s\n", A:tostr())
 
     A.mode = "trap"
 
-    A.floor_h = parent_A.floor_h
-    A.kind    = parent_A.kind
+    A.floor_h   = parent_A.floor_h
+    A.face_room = parent_A.room
+
+    A.kind  = parent_A.kind
+    A.zone  = parent_A.zone
 
     local TRIGGER =
     {
       r = 64
-      special = 103
+      special = 2
       tag = alloc_id("tag")
     }
 
@@ -632,7 +635,7 @@ stderrf("Making trap in %s\n", A:tostr())
   end
 
 
-  local function try_trapify_important(R, spot)
+  local function try_trapify_important(spot, areas)
     if not
        (spot.content_kind == "KEY"    or spot.content_kind == "SWITCH" or
         spot.content_kind == "WEAPON" or spot.content_kind == "ITEM")
@@ -641,13 +644,33 @@ stderrf("Making trap in %s\n", A:tostr())
     end
 
     -- less chance for mere items
-
     if (spot.content_kind == "WEAPON" or spot.content_kind == "ITEM") and
        rand.odds(50 * 0) then
       return false
     end
 
-    -- FIXME
+    local A = assert(spot.area)
+    local R = assert(A.room)
+
+    -- never in secrets
+    if R.is_secret then return end
+
+--!!!!    -- never in a start room
+--!!!!    if R.is_start then return end
+
+    -- check for a usable trap area neighboring the spot area
+    -- TODO : this is too restrictive
+
+    local prob = 100
+
+    each N in A.neighbors do
+      if table.has_elem(areas, N) and rand.odds(prob) then
+        make_trap(N, A, spot)
+        table.kill_elem(areas, N)
+      end
+
+      --FIXME prob = prob / 2
+    end
   end
 
 
@@ -663,10 +686,12 @@ make_prob = 100  --!!!!! TEST
 
     local areas = collect_big_cages()
 
-    each room in LEVEL.rooms do
+    -- FIXME : visit importants in random order
+
+    each R in LEVEL.rooms do
       each spot in R.importants do
         if rand.odds(make_prob) then
-          try_trapify_important(R, spot)
+          try_trapify_important(spot, areas)
         end
       end
     end
@@ -743,7 +768,7 @@ stderrf("Making cage in %s\n", A:tostr())
 
   add_traps()
 
-  add_cages()
+--!!!! FIXME  add_cages()
 
 
 do return end
