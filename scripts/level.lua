@@ -108,7 +108,7 @@ GLOBAL_STYLE_LIST =
 
   -- things that affect the whole level
 
-  traps      = { few=20, some=60, heaps=30 }
+  traps      = { few=20, some=80, heaps=20 }
   secrets    = { few=20, some=50, heaps=10 }
   hallways   = { few=60, some=30, heaps=10 }
   liquids    = { few=30, some=50, heaps=10 }

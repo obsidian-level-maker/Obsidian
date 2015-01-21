@@ -2268,7 +2268,7 @@ function Weird_build_rooms()
     Layout_place_importants(R)
   end
 
-  Layout_add_cages()
+  Layout_traps_and_cages()
   Layout_outer_borders()
 
   -- this must be done _after_ cages and outdoor borders

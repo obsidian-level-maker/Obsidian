@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2014 Andrew Apted
+--  Copyright (C) 2006-2015 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -489,7 +489,7 @@ end
 
 
 
-function Layout_add_cages()
+function Layout_traps_and_cages()
   local  junk_list = {}
   local other_list = {}
 
@@ -600,6 +600,8 @@ function Layout_add_cages()
       end
     end
 
+    rand.shuffle(list)
+
     return list, svolume
   end
 
@@ -637,49 +639,89 @@ stderrf("Making cage in %s\n", A:tostr())
   end
 
 
-  ---| Layout_add_cages |---
+  local function try_trapify_important(R, spot)
+    if not
+       (spot.content_kind == "KEY"    or spot.content_kind == "SWITCH" or
+        spot.content_kind == "WEAPON" or spot.content_kind == "ITEM")
+    then
+      return false
+    end
+
+    -- less chance for keys and switches
+
+    if (spot.content_kind == "WEAPON" or spot.content_kind == "ITEM") and
+       rand.odds(50) then
+      return false
+    end
+
+    -- FIXME
+  end
+
+
+  local function add_traps()
+    local make_prob = style_sel("traps", 0, 20, 40, 80)
+    
+    if make_prob == 0 then
+      gui.printf("Traps: skipped for level (by style).\n")
+      return
+    end
+
+    local areas = collect_big_cages()
+
+    each room in LEVEL.rooms do
+      each spot in R.importants do
+        if rand.odds(make_prob) then
+          try_trapify_important(R, spot)
+        end
+      end
+    end
+  end
+
+
+  local function add_cages()
+    local quota     = style_sel("cages", 0, 10, 30, 90)
+    local skip_prob = style_sel("cages", 100, 40, 20, 0)
+
+    if rand.odds(skip_prob) then
+      gui.printf("Cages: skipped for level (by style).\n")
+      return
+    end
+
+    gui.printf("Cages: quota = %d%%\n", quota)
+
+
+    local areas, svolume = collect_big_cages()
+
+    quota = int(svolume * quota * rand.range(1.0, 1.2))
+
+    each A in areas do
+      if quota < 1 then break; end
+
+      if A.svolume <= quota then
+        make_cage(A)
+
+        quota = quota - A.svolume
+      end
+    end
+  end
+
+
+  ---| Layout_traps_and_cages |---
 
   -- never in DM or CTF maps
   if OB_CONFIG.mode == "dm" or OB_CONFIG.mode == "ctf" then
     return
   end
 
-  local quota     = style_sel("cages", 0, 10, 30, 90)
-  local skip_prob = style_sel("cages", 100, 40, 20, 0)
+  add_traps()
 
-  if rand.odds(skip_prob) then
-    gui.printf("Cages: skipped for level (by style).\n")
-    return
-  end
+  add_cages()
 
-  gui.printf("Cages: quota = %d%%\n", quota)
-
-
-  local areas, svolume = collect_big_cages()
-
-  quota = int(svolume * quota * rand.range(1.0, 1.2))
-
-quota = 999 --!!!!
-
-  rand.shuffle(areas)
-
-  each A in areas do
-    if quota < 1 then break; end
-
-    if A.svolume <= quota then
-      make_cage(A)
-
-      quota = quota - A.svolume
-    end
-  end
 
 do return end
 
 
 --[[ OLD LOGIC, MAY BE USEFUL
-
-  -- never add cages to a start room
-  if R.is_start then return end
 
   -- or rarely in secrets
   if R.quest.kind == "secret" and rand.odds(90) then return end
