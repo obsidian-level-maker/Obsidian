@@ -1568,7 +1568,7 @@ function Monsters_in_room(R)
     local ang = geom.calc_angle(nx - x, ny - y)
 
     -- randomize a bit
-    ang = ang + 60 * rand.skew()
+    ang = ang + 50 * rand.skew()
 
     return quantize_angle(ang)
   end
@@ -1588,11 +1588,11 @@ function Monsters_in_room(R)
       focus = spot.face
     end
 
-    if R.force_mon_angle then
+    if R.force_mon_angle and not spot.face then
       return R.force_mon_angle
     end
 
-    if rand.odds(R.random_face_prob) and not away then
+    if rand.odds(R.random_face_prob) and not away and not spot.face then
       focus = nil
     end
 

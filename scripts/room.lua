@@ -1105,6 +1105,13 @@ function Room_determine_spots()
 
 --  stderrf("mon_spots @ %s floor:%d : %d\n", R:tostr(), f_h, #mon_spots)
 
+    -- this is mainly for traps
+    if A.mon_focus then
+      each spot in mon_spots do
+        spot.face = A.mon_focus
+      end
+    end
+
     if mode == "cage" then
       each spot in mon_spots do
         table.insert(R.cage_spots, spot)

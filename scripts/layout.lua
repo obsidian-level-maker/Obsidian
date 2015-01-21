@@ -619,6 +619,9 @@ stderrf("Making trap in %s\n", A:tostr())
     A.zone  = parent_A.zone
     A.is_boundary = false
 
+    -- make monsters in trap look at spot
+    A.mon_focus = spot
+
     local TRIGGER =
     {
       r = 64
