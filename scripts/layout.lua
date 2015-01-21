@@ -565,8 +565,8 @@ function Layout_traps_and_cages()
 
 
   local function eval_area_for_cage(A)
-    -- must be VOID
-    if A.mode != "void" then return -1 end
+    -- must be VOID or SCENIC
+    if not (A.mode == "void" or A.mode == "scenic") then return -1 end
 
     if A.svolume > 6 then return -1 end
 
@@ -617,6 +617,7 @@ stderrf("Making trap in %s\n", A:tostr())
 
     A.kind  = parent_A.kind
     A.zone  = parent_A.zone
+    A.is_boundary = false
 
     local TRIGGER =
     {
