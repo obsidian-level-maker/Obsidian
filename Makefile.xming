@@ -7,19 +7,20 @@
 
 PROGRAM=Oblige.exe
 
-MINGW=i586-mingw32msvc-
+CROSS=i686-w64-mingw32-
 
-CXX=$(MINGW)g++
+CXX=$(CROSS)g++
 
 LIB_LOC=lib_win32
 OBJ_DIR=obj_win32
 
 FLTK_DIR=$(LIB_LOC)/fltk-1.3.2
-ZLIB_DIR=$(LIB_LOC)/zlib-1.2.6
+ZLIB_DIR=$(LIB_LOC)/zlib-1.2.8
 
-OPTIMISE=-O2
+OPTIMISE=-O2 -fno-strict-aliasing
 
-# operating system choices: UNIX WIN32
+STRIP_FLAGS=--strip-unneeded
+
 OS=WIN32
 
 
@@ -32,7 +33,7 @@ FLTK_LIBS=$(FLTK_DIR)/mingw/lib/libfltk_images.a \
 ZLIB_FLAGS=-I$(ZLIB_DIR)
 ZLIB_LIBS=$(ZLIB_DIR)/libz.a
 
-CXXFLAGS=$(OPTIMISE) -Wall -fno-strict-aliasing -D$(OS) \
+CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) \
          -Ilua_src -Iglbsp_src -Iajpoly_src \
 	 $(FLTK_FLAGS) $(ZLIB_FLAGS)
 
@@ -199,10 +200,10 @@ $(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(AJPOLY_OBJS)
 	$(CXX) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 stripped: $(PROGRAM)
-	$(MINGW)strip --strip-unneeded $(PROGRAM)
+	$(CROSS)strip $(STRIP_FLAGS) $(PROGRAM)
 
 $(OBJ_DIR)/oblige_res.o: gui/oblige.rc
-	$(MINGW)windres $^ -o $@
+	$(CROSS)windres $^ -o $@
 
 .PHONY: all clean stripped
 
