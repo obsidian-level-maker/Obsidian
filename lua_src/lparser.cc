@@ -671,44 +671,13 @@ static void funcargs (LexState *ls, expdesc *f) {
 */
 
 
-static void ifexpr (LexState *ls, expdesc *v) {
-  /* ifexpr -> cond ? expr , expr */
-  FuncState *fs = ls->fs;
-  int condexit;
-  int escapelist = NO_JUMP;
-  int reg;
-
-  luaX_next(ls);				/* skip '?' */
-  if (v->k == VNIL) v->k = VFALSE;  /* `falses' are all equal here */
-  luaK_goiftrue(ls->fs, v);
-  condexit = v->f;
-
-  expr(ls, v);					/* eval TRUE part */
-  reg = luaK_exp2anyreg(fs, v);			/* set result to reg. */
-  luaK_concat(fs, &escapelist, luaK_jump(fs));
-  luaK_patchtohere(fs, condexit);
-
-  checknext(ls, ';');
-  expr(ls, v);					/* eval FALSE part */
-  luaK_exp2reg(fs, v, reg);			/* set result to reg. */
-  luaK_patchtohere(fs, escapelist);
-}
-
-
 static void prefixexp (LexState *ls, expdesc *v) {
-  /* prefixexp -> NAME | '(' expr | ifexpr ')' */
+  /* prefixexp -> NAME | '(' expr ')' */
   switch (ls->t.token) {
     case '(': {
       int line = ls->linenumber;
       luaX_next(ls);
       expr(ls, v);
-      // -AJA- 2011/04/16:
-      // support a ternary operator in the form: (X ? Y ; Z)
-      // based on Ryota Hirose's 2010/09/14 patch.
-      // CURRENTLY DISABLED : can corrupt local variables
-
-      // if (ls->t.token == '?')
-      //   ifexpr(ls, v);
       check_match(ls, ')', '(', line);
       luaK_dischargevars(ls->fs, v);
       return;
