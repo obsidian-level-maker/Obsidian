@@ -611,6 +611,18 @@ function Layout_traps_and_cages()
   end
 
 
+  local function try_teleportation_trap(spot)
+    local A = assert(spot.area)
+    local R = assert(A.room)
+
+    -- we will need several places for teleport destinations
+    if R.total_inner_points < 5 then return false end
+
+    -- FIXME....
+
+    return false
+  end
+
 
   local function make_trap(A, parent_A, spot)
 stderrf("Making trap in %s\n", A:tostr())
@@ -672,22 +684,37 @@ stderrf("Making trap in %s\n", A:tostr())
     -- never in secrets
     if R.is_secret then return end
 
---!!!!    -- never in a start room
---!!!!    if R.is_start then return end
+    -- never in a start room
+    if R.is_start then return end
 
     -- check for a usable trap area neighboring the spot area
     -- TODO : this is too restrictive
 
-    local prob = 100
+    if rand.odds(10) and try_teleportation_trap(spot) then
+      return true
+    end
 
-    each N in A.neighbors do
+    local prob = 100
+    local count = 0
+
+    local neighbors = rand.shuffle(table.copy(A.neighbors))
+
+    each N in neighbors do
       if table.has_elem(areas, N) and rand.odds(prob) then
         make_trap(N, A, spot)
-        table.kill_elem(areas, N)
-      end
 
-      --FIXME prob = prob / 2
+        table.kill_elem(areas, N)
+        count = count + 1
+
+        prob = prob / 2
+      end
     end
+
+    if count == 0 and rand.odds(50) then
+      return try_teleportation_trap(spot)
+    end
+
+    return (count > 0)
   end
 
 
