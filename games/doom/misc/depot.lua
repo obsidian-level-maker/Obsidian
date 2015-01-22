@@ -8,7 +8,7 @@ PREFABS.Depot =
   where = "depot"
 
   seed_w = 2
-  seed_h = 3
+  seed_h = 4
 
   tag_9 = "?trigger_tag"
 
