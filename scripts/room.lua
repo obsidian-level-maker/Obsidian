@@ -87,7 +87,6 @@ function ROOM_CLASS.new()
     goals = {}
     importants = {}
     teleporters = {}
-    mon_teleports = {}
 
     closets = {}
     chunks  = {}    -- NOT USED

@@ -878,12 +878,12 @@ end
 
 
 
-function Render_depot(info)
+function Render_depot(depot)
   -- dest_R is the room which gets the trap spots
-  local dest_R = info.room
+  local dest_R = assert(depot.room)
 
-  local x1 = info.x1
-  local y1 = info.y1
+  local x1 = depot.x1
+  local y1 = depot.y1
 
   local z = assert(LEVEL.player1_z)
 
@@ -899,20 +899,12 @@ function Render_depot(info)
     wall = "COMPSPAN"
   }
 
-  -- FIXME : use info.skin
+  assert(depot.skin)
 
-  local skin2 =
-  {
-    trigger_tag = 707
-
-    out_tag1 = 123
-    out_tag2 = 234
-    out_tag3 = 345
-  }
 
   local T = Trans.box_transform(x1, y1, x2, y2, z, 2)
 
-  Fabricate(dest_R, def, T, { skin1, skin2 })
+  Fabricate(dest_R, def, T, { skin1, depot.skin })
 end
 
 
@@ -1199,6 +1191,40 @@ function Render_importants()
   end
 
 
+  local function content_mon_teleport(spot)
+    -- creates a small sector with a tag and teleportman entity
+
+    -- ignore unused spots [ can validly happen ]
+    if not spot.tag then return end
+
+    local r = 16
+
+    local brush = brushlib.quad(spot.x - r, spot.y - r, spot.x + r, spot.y + r)
+
+    local A = assert(spot.area)
+
+    -- make it higher to ensure it doesn't get eaten by the floor brush
+    -- (use delta_z to lower to real height)
+
+    local top =
+    {
+      t = A.floor_h + 1
+      delta_z = -1
+      tag = assert(spot.tag)
+    }
+
+    table.insert(brush, top)
+
+--!!!! texture
+    brushlib.set_mat(brush, A.floor_mat, "REDWALL" or A.floor_mat)
+
+    Trans.brush(brush)
+
+    -- add teleport entity
+    Trans.entity("teleport_spot", spot.x, spot.y, top.t + 1)
+  end
+
+
   local function build_important(spot)
     if spot.content_kind == "START" then
       content_start(spot)
@@ -1226,6 +1252,9 @@ function Render_importants()
 
     elseif spot.content_kind == "TELEPORTER" then
       content_teleporter(spot)
+
+    elseif spot.content_kind == "MON_TELEPORT" then
+      content_mon_teleport(spot)
     else
       error("unknown important: " .. tostring(spot.content_kind))
     end

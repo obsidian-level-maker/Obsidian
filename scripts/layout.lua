@@ -644,12 +644,14 @@ stderrf("**** Making teleportation trap in %s\n", A:tostr())
 
     each dest in dests do
       dest.tag = alloc_id("tag")
+
+---###  table.insert(R.mon_teleports, dest)
     end
 
     local TRIGGER =
     {
       r = 64
-      special = 108  -- W1 : open door fast
+      special = 109  -- W1 : open and stay /fast
       tag = alloc_id("tag")
     }
 
@@ -661,9 +663,9 @@ stderrf("**** Making teleportation trap in %s\n", A:tostr())
     {
       trigger_tag = TRIGGER.tag
 
-      out_tag1 = dest[1].tag
-      out_tag2 = dest[2].tag
-      out_tag3 = dest[1].tag  -- not a typo
+      out_tag1 = dests[1].tag
+      out_tag2 = dests[2].tag
+      out_tag3 = dests[1].tag  -- not a typo
     }
 
     if dests[3] then
@@ -672,10 +674,11 @@ stderrf("**** Making teleportation trap in %s\n", A:tostr())
 
     local DEPOT =
     {
+      room = R
       x1 = x1
       y1 = y1
-
       skin = skin
+      trigger = spot.trigger
     }
 
     table.insert(LEVEL.depots, DEPOT)
