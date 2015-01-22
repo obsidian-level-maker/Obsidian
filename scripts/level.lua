@@ -808,16 +808,15 @@ end
 function Levels_plan_stuff()
   assert(LEVEL.ep_along)
 
+  LEVEL.ids = {}
+
   LEVEL.areas = {}
   LEVEL.rooms = {}
   LEVEL.conns = {}
 
   LEVEL.scenic_rooms = {}
   LEVEL.map_borders  = {}
-
-  LEVEL.free_tag  = 1
-  LEVEL.free_mark = 1
-  LEVEL.ids = {}
+  LEVEL.depots = {}
 
   Levels_choose_liquid()
   Levels_choose_darkness()

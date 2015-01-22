@@ -878,6 +878,50 @@ end
 
 
 
+function Render_depot(info)
+  -- dest_R is the room which gets the trap spots
+  local dest_R = info.room
+
+  -- HMMM, do this earlier
+  local x1, y1 = Seed_alloc_depot()
+
+  if not x1 then
+    gui.printf("Warning: out of depot space\n")
+    return
+  end
+
+  local z = assert(LEVEL.player1_z)
+
+
+  local def = PREFABS["Depot"]
+  assert(def)
+
+  local x2 = x1 + def.seed_w * SEED_SIZE
+  local y2 = y1 + def.seed_h * SEED_SIZE
+
+  local skin1 =
+  {
+    wall = "COMPSPAN"
+  }
+
+  -- FIXME : use info.skin
+
+  local skin2 =
+  {
+    trigger_tag = 707
+
+    out_tag1 = 123
+    out_tag2 = 234
+    out_tag3 = 345
+  }
+
+  local T = Trans.box_transform(x1, y1, x2, y2, z, 2)
+
+  Fabricate(dest_R, def, T, { skin1, skin2 })
+end
+
+
+
 function Render_all_areas()
   each A in LEVEL.areas do
     dummy_properties(A)
@@ -885,6 +929,10 @@ function Render_all_areas()
 
   each A in LEVEL.areas do
     Render_area(A)
+  end
+
+  each depot in LEVEL.depots do
+    Render_depot(depot)
   end
 end
 
