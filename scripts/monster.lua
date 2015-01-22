@@ -1631,7 +1631,9 @@ function Monsters_in_room(R)
   end
 
 
-  local function place_monster(mon, spot, x, y, z, all_skills, is_cage)
+  local function place_monster(mon, spot, x, y, z, all_skills, mode)
+    -- mode is usually NIL, can be "cage" or "trap"
+
     local info = GAME.MONSTERS[mon]
 
     -- handle replacements
@@ -1640,13 +1642,13 @@ function Monsters_in_room(R)
       info = assert(GAME.MONSTERS[mon])
     end
 
-    table.insert(R.monster_list, { info=info, is_cage=is_cage })
+    table.insert(R.monster_list, { info=info, is_cage=(mode == "cage") })
 
     -- decide deafness and where to look
     local deaf, focus
 
     -- monsters in traps are never deaf (esp. monster depots)
-    if is_cage then
+    if mode then
       deaf = false
     elseif spot.ambush then
       deaf  = rand.odds(95)
@@ -1663,7 +1665,7 @@ function Monsters_in_room(R)
 
     local angle
 
-    if (is_cage or R.kind == "hallway") and spot.angle then
+    if (mode or R.kind == "hallway") and spot.angle then
       angle = spot.angle
     else
       angle = monster_angle(spot, x, y, z, focus)
@@ -2080,7 +2082,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   end
 
 
-  local function fill_cage_area(mon, spot)
+  local function fill_cage_area(mon, what, spot)
     local info = assert(GAME.MONSTERS[mon])
 
     -- determine maximum number that will fit
@@ -2124,7 +2126,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       local all_skills = (i == 1)
       local loc = list[i]
 
-      place_monster(mon, spot, loc.x, loc.y, loc.z, all_skills, "cage")
+      place_monster(mon, spot, loc.x, loc.y, loc.z, all_skills, what)
     end
   end
 
@@ -2147,7 +2149,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       local mon = decide_cage_monster(spot, what, palette, used_mons)
 
       if mon then
-        fill_cage_area(mon, spot, qty)
+        fill_cage_area(mon, what, spot)
         used_mons[mon] = 1
       end
     end
