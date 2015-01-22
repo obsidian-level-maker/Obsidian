@@ -82,7 +82,7 @@ function ROOM_CLASS.new()
     big_spots  = {}
     cage_spots = {}
     trap_spots = {}
-    important_spots = {}
+    important_spots = {}   -- NOT USED ATM
 
     goals = {}
     importants = {}
@@ -1074,7 +1074,7 @@ function Room_determine_spots()
 
 
   local function spots_for_area(R, A, mode)
-    -- the 'mode' is normally NIL, can also be "cage"
+    -- the 'mode' is normally NIL, can also be "cage" or "trap"
 
     -- get bbox of room
     local rx1, ry1, rx2, ry2 = area_get_bbox(A)
@@ -1116,19 +1116,15 @@ function Room_determine_spots()
     end
 
     if mode == "cage" then
-      each spot in mon_spots do
-        table.insert(R.cage_spots, spot)
-      end
+      table.append(R.cage_spots, mon_spots)
 
-    else -- normal mode
+    elseif mode == "trap" then
+      table.append(R.trap_spots, mon_spots)
+      table.append(R.item_spots, item_spots)
 
-      each spot in item_spots do
-        table.insert(R.item_spots, spot)
-      end
-
-      each spot in mon_spots do
-        table.insert(R.mon_spots, spot)
-      end
+    else
+      table.append(R.mon_spots,  mon_spots)
+      table.append(R.item_spots, item_spots)
     end
 
     gui.spots_end()
@@ -1161,7 +1157,7 @@ function Room_determine_spots()
   each A in LEVEL.areas do
     if A.mode == "cage" or A.mode == "trap" then
       local R = assert(A.face_room)
-      spots_for_area(R, A, "cage")
+      spots_for_area(R, A, A.mode)
     end
   end
 end
