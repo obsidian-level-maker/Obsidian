@@ -882,13 +882,8 @@ function Render_depot(info)
   -- dest_R is the room which gets the trap spots
   local dest_R = info.room
 
-  -- HMMM, do this earlier
-  local x1, y1 = Seed_alloc_depot()
-
-  if not x1 then
-    gui.printf("Warning: out of depot space\n")
-    return
-  end
+  local x1 = info.x1
+  local y1 = info.y1
 
   local z = assert(LEVEL.player1_z)
 

@@ -87,15 +87,16 @@ function ROOM_CLASS.new()
     goals = {}
     importants = {}
     teleporters = {}
-    closets = {}
+    mon_teleports = {}
 
-    chunks  = {}
-    floors  = {}
+    closets = {}
+    chunks  = {}    -- NOT USED
+    floors  = {}    -- NOT USED
     decor   = {}
 
     sky_rects = {}
     exclusions = {}
-    neighbors = {}
+    neighbors = {}  -- USED???
 
     hazard_health = 0
   }
