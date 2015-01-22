@@ -3,23 +3,14 @@ WORK IN PROGRESS
 ================
 
 
-+  game_tweaks "Kept Weapons" option
-
-
-(a) Support min_weapon and weap_needed for GUARD monsters
-(b) Support them in fight simulator [ i.e. what ammo to use ]
-
-
 Quest Rework
 ------------
 
-+  compute size of before and after, use to score the division
++  add weapons !
 
++  add nice items
 
-Connect: areas NOT rooms
-------------------------
-
--  get_previous_locs  (monster.lua)
+-  support secrets
 
 
 
@@ -28,6 +19,21 @@ Monster defs : min weapon level needed [esp. for Vile/Bosses ]
    ("getting" applies to whole zone)
    when "getting" it, allow monster but reduce prob/density
    (allow monster for guard)
+
+(a) Support min_weapon and weap_needed for GUARD monsters
+
+
+Items:
+-  rework distribution logic
+   ( get_previous_locs is broken atm)
+
+
+
+Traps....
+-  second pass : traps ON WAY BACK to the ...
+
+-  make more traps over a episode/game
+
 
 
 Porches :
@@ -87,19 +93,7 @@ Q/ use CC-BY-3 or 4 for all prefabs / images / prebuilt maps
 
 
 
-Closets and Traps:
--  can use unused seeds [inside map area]
--  can use junked parts of a room
--  can use a SOLID seed in a pattern (c.f. cage code)
-
--  can steal part of a nearby scenic, but require all three sides
-   (and two diagonals) to remain part of scenic room
-
-
 Doors
--  Door_with_bars : use it
-+  make a dark-metal switch for Door_with_bars
-
 -  support wide doors [normal / locked]
 -  make wide prefab with a switch in it [normal door]
 -  texturing on door prefabs (for HELL, URBAN themes)
