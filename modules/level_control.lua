@@ -3,7 +3,7 @@
 ------------------------------------------------------------------------
 --
 --  Copyright (C) 2009      Enhas
---  Copyright (C) 2009-2014 Andrew Apted
+--  Copyright (C) 2009-2015 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -66,6 +66,7 @@ OB_MODULES["level_control"] =
 
     switches    = { label="Switched Doors", choices=LEVEL_CONTROL.CHOICES }
     teleporters = { label="Teleporters",    choices=LEVEL_CONTROL.CHOICES }
+    traps       = { label="Traps",          choices=LEVEL_CONTROL.CHOICES }
     windows     = { label="Windows",        choices=LEVEL_CONTROL.CHOICES }
 
 --  crates      = { label="Crates",         choices=LEVEL_CONTROL.CHOICES }
@@ -78,7 +79,6 @@ OB_MODULES["level_control"] =
 --  lakes       = { label="Lakes",          choices=LEVEL_CONTROL.CHOICES }
 --  scenics     = { label="Scenic Rooms",   choices=LEVEL_CONTROL.CHOICES }
 --  sub_rooms   = { label="Sub-Rooms",      choices=LEVEL_CONTROL.CHOICES }
---  traps       = { label="Traps",          choices=LEVEL_CONTROL.CHOICES }
 
 --  barrels     = { label="Barrels",        choices=LEVEL_CONTROL.CHOICES }
 --  bridges     = { label="3D Bridges",     choices=LEVEL_CONTROL.CHOICES }
