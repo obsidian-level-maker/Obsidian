@@ -2134,10 +2134,10 @@ function Room_floor_heights()
 
     local diff_h
 
-    -- if we have a locked door, keep it flat
-    if R:has_any_lock() then
-      diff_h = 0
-    else
+    -- stairwells are never locked [ they are "downgraded" in quest code ]
+    assert(not R:has_any_lock())
+
+    do
       -- TODO : better logic to decide Z direction
       local z_dir = rand.sel(70, 1, -1)
 

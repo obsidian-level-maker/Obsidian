@@ -695,6 +695,27 @@ gui.debugf("  %s @ %s in %s\n", goal.name, R:tostr(), Q1.name)
   end
 
 
+  local function downgrade_stairwell(A)
+    A.room.kind = "building"
+
+    A.is_stairwell = nil
+
+    if A.sister then
+      downgrade_stairwell(A)
+    end
+  end
+
+
+  local function check_special_rooms()
+    -- we don't want stairwells to be locked
+
+    local C = info.conn
+
+    if C.A1.is_stairwell then downgrade_stairwell(C.A1) end
+    if C.A2.is_stairwell then downgrade_stairwell(C.A2) end
+  end
+
+
   ---| Quest_perform_division |---
 
   -- create the node
@@ -750,6 +771,8 @@ gui.debugf("Dividing %s,  first half is %s\n", Q2.name, Q1.name)
 
     info.conn:swap()
   end
+
+  check_special_rooms()
 
 
   -- finally, add the new goals to the first quest
