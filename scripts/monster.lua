@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008-2014 Andrew Apted
+--  Copyright (C) 2008-2015 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -2134,12 +2134,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     -- FIXME : determine this
     local num_kinds = 3
 
-    local palette
-    if what == "trap" then
-      palette = trap_palette(num_kinds)
-    else
-      palette = cage_palette(num_kinds)
-    end
+    local palette = cage_palette(what, num_kinds)
 
     local qty = calc_quantity()  -- FIXME: not used
 
