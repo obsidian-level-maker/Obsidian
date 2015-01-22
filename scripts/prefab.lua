@@ -1377,6 +1377,10 @@ function Fab_load_wad(def)
 
     if spot_info.kind == "monster" and bit.band(E.flags or 0, MTF_Ambush) != 0 then
       B[1].spot_kind = "cage"
+
+      if def.where == "depot" or def.is_trap then
+        B[1].spot_kind = "trap"
+      end
     end
 
     local r = spot_info.r

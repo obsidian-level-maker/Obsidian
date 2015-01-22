@@ -840,7 +840,9 @@ function Layout_update_cages()
   -- TODO
 
 
-  local function test_depot()
+  local function test_depot(dest_R)
+    -- dest_R is the room which gets the trap spots
+
     local x1, y1 = Seed_alloc_depot()
 
     if not x1 then
@@ -870,11 +872,11 @@ function Layout_update_cages()
 
     local T = Trans.box_transform(x1, y1, x2, y2, z, 2)
 
-    Fabricate(nil, def, T, { skin })
+    Fabricate(dest_R, def, T, { skin })
   end
 
 
-  test_depot()
+  test_depot(LEVEL.rooms[1])
 end
 
 

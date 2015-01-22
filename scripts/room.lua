@@ -963,8 +963,10 @@ function Room_distribute_spots(R, list)
   each spot in list do
     seen[spot.kind] = 1
 
-    if spot.kind == "cage" or spot.kind == "trap" then
+    if spot.kind == "cage" then
       table.insert(R.cage_spots, spot)
+    elseif spot.kind == "trap" then
+      table.insert(R.trap_spots, spot)
     elseif spot.kind == "pickup" or spot.kind == "big_item" then
       table.insert(R.item_spots, spot)
     elseif spot.kind == "important" then
