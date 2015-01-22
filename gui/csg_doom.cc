@@ -677,6 +677,11 @@ public:
 		if (! ColinearWith(B))
 			return false;
 
+		// must have matching special, tag and flags
+		if (B->special != special) return false;
+		if (B->tag     != tag)     return false;
+		if (B->flags   != flags)   return false;
+
 		// this flip malarkey is to ensure that B's start == A's end,
 		// which greatly simplifies the offset tests.
 
