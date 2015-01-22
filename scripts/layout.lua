@@ -261,6 +261,11 @@ function Layout_place_importants(R)
     if goal.kind != "START" then
       R.guard_spot = spot
     end
+
+    -- remember floor height of players (needed by monster depots)
+    if goal.kind == "START" and not goal.alt_start then
+      LEVEL.player1_z = spot.area.floor_h
+    end
   end
 
 
@@ -843,13 +848,14 @@ function Layout_update_cages()
       return
     end
 
+    local z = assert(LEVEL.player1_z)
+
+
     local def = PREFABS["Depot"]
     assert(def)
 
     local x2 = x1 + def.seed_w * SEED_SIZE
     local y2 = y1 + def.seed_h * SEED_SIZE
-
-    local floor_h = 57
 
     local skin =
     {
@@ -862,15 +868,13 @@ function Layout_update_cages()
       wall = "COMPSPAN"
     }
 
-    local T = Trans.box_transform(x1, y1, x2, y2, floor_h, 2)
+    local T = Trans.box_transform(x1, y1, x2, y2, z, 2)
 
     Fabricate(nil, def, T, { skin })
   end
 
 
-  for i = 1, SEED_W do
-    test_depot()
-  end
+  test_depot()
 end
 
 

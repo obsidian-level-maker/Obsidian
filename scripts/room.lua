@@ -81,6 +81,7 @@ function ROOM_CLASS.new()
     item_spots = {}
     big_spots  = {}
     cage_spots = {}
+    trap_spots = {}
     important_spots = {}
 
     goals = {}
@@ -2270,7 +2271,8 @@ function Weird_build_rooms()
   Room_reckon_doors()
   Room_floor_heights()
 
-  -- place importants -- adding traps need to know where they are
+  -- place importants -- done early as traps need to know where they are.
+  -- it also sets LEVEL.player1_z -- needed for monster depots.
   each R in LEVEL.rooms do
     Layout_place_importants(R)
   end
