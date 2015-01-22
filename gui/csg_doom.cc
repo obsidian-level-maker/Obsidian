@@ -2260,7 +2260,7 @@ public:
 
 	/// construction ///
 
-	doom_sidedef_c * MakeSidedef(int what, int index)
+	doom_sidedef_c * MakeSidedef(int what, int other_what, int index)
 	{
 		if (what == 0)
 			return NULL;
@@ -2288,6 +2288,10 @@ public:
 			SD->mid   = dummy_wall_tex;
 			SD->lower = dummy_wall_tex;
 		}
+
+		// on two-sided line, don't set railing
+		if (other_what > 0)
+			SD->mid = std::string("-");
 
 		SD->x_offset = 0;
 		SD->y_offset = 0;
@@ -2344,8 +2348,8 @@ public:
 
 		L->flags |= MLF_BlockAll | MLF_DontDraw;
 
-		L->front = MakeSidedef(front, index);
-		L->back  = MakeSidedef(back,  index);
+		L->front = MakeSidedef(front, back,  index);
+		L->back  = MakeSidedef(back,  front, index);
 
 		SYS_ASSERT(L->front);
 	}
