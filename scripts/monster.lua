@@ -2007,7 +2007,38 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   end
 
 
-  local function decide_cage_monster(spot, room_pal, used_mons)
+  local function cage_palette(what, num_kinds)
+    -- what is either "cage" or "trap"
+
+    local list = {}
+
+    each mon,info in GAME.MONSTERS do
+      local prob = prob_for_mon(mon)
+
+      if what == "cage" then prob = prob * (info.cage_factor or 1) end
+      if what == "trap" then prob = prob * (info.trap_factor or 1) end
+
+      if prob > 0 then
+        list[mon] = prob
+      end
+    end
+
+    local palette = {}
+
+    for i = 1,num_kinds do
+      if table.empty(list) then break; end
+
+      local mon = rand.key_by_probs(list)
+      palette[mon] = list[mon]
+
+      list[mon] = nil
+    end
+
+    return palette
+  end
+
+
+  local function decide_cage_monster(spot, what, room_pal, used_mons)
     -- Note: this function is used for traps too
 
     -- FIXME: decide cage_palette EARLIER (before laying out the room)
@@ -2095,19 +2126,30 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   end
 
 
-  local function fill_cages(spot_list, room_pal)
-    if table.empty(R.cage_spots) then return end
+  local function fill_cages(spot_list, what)
+    -- used for traps too!
 
-    local qty = calc_quantity()
+    if table.empty(spot_list) then return end
+
+    -- FIXME : determine this
+    local num_kinds = 3
+
+    local palette
+    if what == "trap" then
+      palette = trap_palette(num_kinds)
+    else
+      palette = cage_palette(num_kinds)
+    end
+
+    local qty = calc_quantity()  -- FIXME: not used
 
     local used_mons = {}
 
     each spot in spot_list do
-      local mon = decide_cage_monster(spot, room_pal, used_mons)
+      local mon = decide_cage_monster(spot, what, palette, used_mons)
 
       if mon then
         fill_cage_area(mon, spot, qty)
-
         used_mons[mon] = 1
       end
     end
@@ -2195,9 +2237,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       fill_monster_map(palette, barrel_chance)
     end
 
-    if not table.empty(palette) then
-      fill_cages(R.cage_spots, palette)
-    end
+    fill_cages(R.cage_spots, "cage", palette)
+    fill_cages(R.trap_spots, "trap", palette)
   end
 
 
