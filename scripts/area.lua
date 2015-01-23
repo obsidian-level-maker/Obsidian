@@ -1080,6 +1080,17 @@ function Weird_group_into_rooms()
   end
 
 
+  local function kill_tiny_area(A)
+    gui.debugf("Killing tiny AREA_%d\n", A.id)
+
+    A.mode = "void"
+    A.temp_room = nil
+    A.is_tiny = nil
+
+    if A.sister then A.sister.mode = "void" end
+  end
+
+
   local function handle_tiny_areas()
     -- do this first, allowing two tiny areas to merge together
     each A in LEVEL.areas do
@@ -1101,13 +1112,7 @@ function Weird_group_into_rooms()
 
         if pass == 2 then
           if can_kill_area(A) then
-            gui.debugf("Killing tiny AREA_%d\n", A.id)
-
-            A.mode = "void"
-            A.temp_room = nil
-
-            if A.sister then A.sister.mode = "void" end
-
+            kill_tiny_area(A)
           elseif not try_merge_a_neighbor(A, "emergency") then
             error("Failed to merge a tiny area")
           end
