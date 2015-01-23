@@ -383,11 +383,21 @@ function Seed_init(map_W, map_H)
   end -- x,y
   end
 
-  -- init depot allocation [ for teleport-in monsters ]
+  -- init depot locations [ for teleport-in monsters ]
 
-  LEVEL.depot_x = BASE_X
-  LEVEL.depot_y = BASE_Y + SEED_H * SEED_SIZE
-  LEVEL.depot_free = int(SEED_W / 2)
+  LEVEL.depot_locs = {}
+
+  local depot_x = BASE_X
+  local depot_y = BASE_Y + SEED_H * SEED_SIZE
+
+  for row = 0, 1 do
+  for col = 0, int(SEED_W / 2) - 1 do
+    local x = depot_x + col * 2 * SEED_SIZE
+    local y = depot_y + row * 4 * SEED_SIZE
+
+    table.insert(LEVEL.depot_locs, { x=x, y=y })
+  end
+  end
 end
 
 
@@ -472,18 +482,13 @@ end
 function Seed_alloc_depot()
   -- returns NIL if no more are possible
 
-  if LEVEL.depot_free <= 0 then
-    return nil
+  if table.empty(LEVEL.depot_locs) then
+    return nil, nil
   end
 
-  LEVEL.depot_free = LEVEL.depot_free - 1
+  local loc = table.remove(LEVEL.depot_locs, 1)
 
-  local x = LEVEL.depot_x
-  local y = LEVEL.depot_y
-
-  LEVEL.depot_x = LEVEL.depot_x + 2 * SEED_SIZE
-
-  return x, y
+  return loc.x, loc.y
 end
 
 
