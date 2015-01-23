@@ -1971,7 +1971,7 @@ function Quest_big_secrets()
     if R:has_teleporter() then return -1 end
 
     -- smaller is better (don't waste large rooms)
-    return 100 - math.min(R.svolume,99) + gui.random() * 5
+    return 200 - math.min(R.svolume,99) + gui.random() * 5
   end
 
 
@@ -1987,6 +1987,18 @@ function Quest_big_secrets()
     end
 
     return list
+  end
+
+
+  local function pick_room(list)
+    -- TODO (a) use score !
+    --      (b) a preference for secrets in different zones
+
+    assert(not table.empty(list))
+
+    rand.shuffle(list)
+
+    return table.remove(list, 1)
   end
 
 
@@ -2010,10 +2022,19 @@ function Quest_big_secrets()
     quota = rand.int(first + rest * (poss_count - 1))
   end
 
-  gui.debugf("Secrets: %d (from %d possible)\n",
-             quota, first + rest * (poss_count - 1), poss_count)
+  quota = math.clamp(0, quota, poss_count)
 
-  -- TODO
+  gui.debugf("Secrets: %d (from %d possible)\n", quota, poss_count)
+
+  -- create them now
+
+  for i = 1, quota do
+    local R = pick_room(poss_list)
+
+    Quest_make_room_secret(R)
+
+    gui.debugf("Secret room in %s\n", R:tostr())
+  end
 end
 
 
