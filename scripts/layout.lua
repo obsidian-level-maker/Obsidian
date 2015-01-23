@@ -640,7 +640,7 @@ function Layout_traps_and_cages()
 
     -- OK --
 
-stderrf("**** Making teleportation trap in %s\n", A:tostr())
+    gui.debugf("Making teleportation trap in %s\n", A:tostr())
 
     each dest in dests do
       dest.tag = alloc_id("tag")
@@ -688,7 +688,7 @@ stderrf("**** Making teleportation trap in %s\n", A:tostr())
 
 
   local function make_trap(A, parent_A, spot)
-stderrf("Making trap in %s\n", A:tostr())
+    gui.debugf("Making big trap in %s\n", A:tostr())
 
     A.mode = "trap"
 
@@ -807,7 +807,7 @@ make_prob = 100  --!!!!! TEST
 
 
   local function make_cage(A)
-stderrf("Making cage in %s\n", A:tostr())
+    gui.debugf("Making big cage in %s\n", A:tostr())
 
     A.mode = "cage"
 

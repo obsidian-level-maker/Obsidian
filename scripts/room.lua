@@ -765,7 +765,7 @@ function Room_detect_porches(R)
       end
     end
 
-stderrf("!!!!  %s is now a PORCH\n", R:tostr())
+    gui.debugf("Hallway %s is now a PORCH\n", R:tostr())
 
     set_as_porch(HA)
     
