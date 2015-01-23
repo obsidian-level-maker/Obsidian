@@ -1215,8 +1215,7 @@ function Render_importants()
 
     table.insert(brush, top)
 
---!!!! texture
-    brushlib.set_mat(brush, A.floor_mat, "REDWALL" or A.floor_mat)
+    brushlib.set_mat(brush, A.floor_mat, A.floor_mat)
 
     Trans.brush(brush)
 
