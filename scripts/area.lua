@@ -969,7 +969,7 @@ function Weird_group_into_rooms()
   end
 
 
-  local function try_merge_two_areas(A1, A2, allow_hallway)
+  local function try_merge_two_areas(A1, A2)
     -- A1 is source area
     -- A2 is destination area
 
@@ -995,16 +995,10 @@ function Weird_group_into_rooms()
       if svol_is_tiny(new_size) then return false end
     end
 
-    -- don't merge into hallways unless tiny_mode == "emergency"
-
+    -- never merge into hallways
     if A2.mode == "hallway" then
-      -- FIXME
-      if not allow_hallway then return false end
-
-      A1.mode = "hallway" 
+      return false
     end
-
-    -- TODO : check for "robust" border (# of shared edges)
 
     -- OK --
 
@@ -1028,6 +1022,10 @@ function Weird_group_into_rooms()
     local poss = {}
 
     each N in A.neighbors do
+      if not N.temp_room then continue end
+
+      if N.temp_room == A.temp_room then continue end
+
       -- CTF: never merge a peered room into a non-peered room
       if A.no_ctf_peer != N.no_ctf_peer then
         continue
@@ -1038,9 +1036,7 @@ function Weird_group_into_rooms()
         continue
       end
 
-      if N.temp_room and N.temp_room != A.temp_room then
-        table.insert(poss, N)
-      end
+      table.insert(poss, N)
     end
 
     if table.empty(poss) then
@@ -1054,7 +1050,7 @@ function Weird_group_into_rooms()
     for i = 1, sel(tiny_mode, #poss, 1) do
       local N2 = table.remove(poss, 1)
 
-      if try_merge_two_areas(A, N2, tiny_mode == "emergency") then
+      if try_merge_two_areas(A, N2) then
         return true
       end
     end
@@ -1099,6 +1095,8 @@ function Weird_group_into_rooms()
 
     if A.sister then A.sister.mode = "void" end
 
+    A.temp_room.is_dead = true
+
     A.is_tiny = nil
     A.temp_room = nil
 
@@ -1131,7 +1129,7 @@ function Weird_group_into_rooms()
 
     each A in LEVEL.areas do
       if A.is_tiny then
-        try_merge_a_neighbor(A, "normal") 
+        try_merge_a_neighbor(A, "tiny_mode") 
       end
     end
 
