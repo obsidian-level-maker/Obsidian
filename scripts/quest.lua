@@ -194,7 +194,7 @@ function Quest_create_initial_quest()
     if R:total_conns() > 1 then return -1 end
 
     -- cannot teleport into a secret exit
-    -- [ TODO : support this, a secret teleporter closet somewhere ]
+    -- [ WISH : support this, a secret teleporter closet somewhere ]
     if secret_mode and R:has_teleporter() then return -1 end
 
     return R.svolume + gui.random() * 5
@@ -278,29 +278,13 @@ function Quest_create_initial_quest()
 
     gui.printf("Secret Exit: %s\n", R:tostr())
 
+    R.is_exit = true
+
+    Quest_make_room_secret(R)
+
     local GOAL = Goal_new("SECRET_EXIT")
 
     table.insert(R.goals, GOAL)
-
-    R.is_secret = true
-    R.is_exit = true
-
-    -- if connected to a hallway or stairwell, make it secret too
-
-    local C = get_entry_conn(R)
-    assert(C)
-
-    local N = sel(C.A1.room == R, C.A2.room, C.A1.room)
-
-    if N.is_hallway and N:total_conns() <= 2 then
-      N.is_secret = true
-
-      C = get_entry_conn(N, R)
-      assert(C)
-    end
-
-    -- mark connection to get a secret door
-    C.kind = "secret"
   end
 
 
@@ -1948,10 +1932,53 @@ end
 
 
 
+function Quest_make_room_secret(R)
+  R.is_secret = true
+
+  -- if connected to a hallway or stairwell, make it secret too
+  -- [ hallways with two or more other rooms are not changed ]
+
+  local C = get_entry_conn(R)
+  assert(C)
+
+  local H = sel(C.A1.room == R, C.A2.room, C.A1.room)
+
+  if not H.is_hallway then return end
+  if H:total_conns() > 2 then return end
+
+  H.is_secret = true
+
+  -- downgrade a stairwell
+  if H.kind == "stairwell" then
+    H.kind = "building"
+    H.areas[1].is_stairwell = nil
+  end
+
+  -- mark connection to get a secret door
+  C = get_entry_conn(N, R)
+  assert(C)
+
+  C.kind = "secret"
+end
+
+
+
+function Quest_big_secrets()
+  --
+  -- Finds unused leaf rooms and turns some of them into secrets.
+  -- These are "big" secrets, but we also create small ("closet") secrets
+  -- elsewhere (ONLY PLANNED ATM).
+  --
+end
+
+
+
 function Quest_final_battle()
+  --
   -- Generally the last battle of the map is in the EXIT room.
   -- however the previous room will often be a better place, so
   -- look for that here.  [ Idea for this by flyingdeath ]
+  --
 
   -- CURRENTLY DISABLED  (TODO)
 
