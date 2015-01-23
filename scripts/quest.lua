@@ -1948,6 +1948,59 @@ end
 
 
 
+function Quest_final_battle()
+  -- Generally the last battle of the map is in the EXIT room.
+  -- however the previous room will often be a better place, so
+  -- look for that here.  [ Idea for this by flyingdeath ]
+
+  -- CURRENTLY DISABLED  (TODO)
+
+  ---| Quest_final_battle |---
+
+  local E = assert(LEVEL.exit_room)
+
+  gui.printf("Exit room: %s\n", E:tostr())
+
+  -- will clear this if we choose a different room
+  E.final_battle = true
+
+  -- check previous room...
+  assert(E.entry_conn)
+
+  local prev = E.entry_conn:neighbor(E)
+
+  if prev.is_start then return end
+
+  -- a locked connection means the player must do other stuff first
+  -- (find a key or switch) -- hence other room would not be _THE_
+  -- final battle.
+  if E.entry_conn.lock then return end
+
+  if prev.svolume > (E.svolume * 1.4 + 2) then
+    -- always pick previous room if significantly bigger
+
+  elseif E.svolume > (prev.svolume * 1.4 + 2) then
+    -- never pick if significantly smaller
+    return
+
+  else
+    -- rooms are roughly similar sizes
+    if rand.odds(25) then return end
+  end
+
+  -- OK --
+
+  E.final_battle = false
+  E.cool_down = true
+
+  prev.final_battle = true
+  prev.cool_down = false
+
+  gui.printf("Final Battle in %s\n", prev:tostr())
+end
+
+
+
 function Quest_select_textures()
 
   local function setup_cave_theme(R)
@@ -2053,57 +2106,6 @@ function Quest_select_textures()
   each R in LEVEL.scenic_rooms do
     setup_theme(R)
   end
-end
-
-
-
-function Quest_final_battle()
-  -- Generally the last battle of the map is in the EXIT room.
-  -- however the previous room will often be a better place, so
-  -- look for that here.  [ Idea for this by flyingdeath ]
-
-  ---| Quest_final_battle |---
-
-  local E = assert(LEVEL.exit_room)
-
-  gui.printf("Exit room: %s\n", E:tostr())
-
-  -- will clear this if we choose a different room
-  E.final_battle = true
-
-  -- check previous room...
-  assert(E.entry_conn)
-
-  local prev = E.entry_conn:neighbor(E)
-
-  if prev.is_start then return end
-
-  -- a locked connection means the player must do other stuff first
-  -- (find a key or switch) -- hence other room would not be _THE_
-  -- final battle.
-  if E.entry_conn.lock then return end
-
-  if prev.svolume > (E.svolume * 1.4 + 2) then
-    -- always pick previous room if significantly bigger
-
-  elseif E.svolume > (prev.svolume * 1.4 + 2) then
-    -- never pick if significantly smaller
-    return
-
-  else
-    -- rooms are roughly similar sizes
-    if rand.odds(25) then return end
-  end
-
-  -- OK --
-
-  E.final_battle = false
-  E.cool_down = true
-
-  prev.final_battle = true
-  prev.cool_down = false
-
-  gui.printf("Final Battle in %s\n", prev:tostr())
 end
 
 
