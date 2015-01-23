@@ -1408,6 +1408,63 @@ function Layout_build_stairwell(A)
   end
 
 
+  local function make_archway(P0, P1, P2, P3, dir, arch_h)
+    local TK = 16
+
+    if geom.is_corner(dir) then
+      TK = 11
+    end
+
+    local nx, ny = geom.delta(dir)
+
+    nx = nx * TK
+    ny = ny * TK
+
+    -- left part
+
+    local l_brush =
+    {
+      { x = P0.x,      y = P0.y }
+      { x = P0.x + nx, y = P0.y + ny }
+      { x = P1.x + nx, y = P1.y + ny }
+      { x = P1.x,      y = P1.y }
+    }
+
+    brushlib.set_mat(l_brush, "COMPBLUE")
+
+    Trans.brush(l_brush)
+
+    -- middle part
+
+    local m_brush =
+    {
+      { x = P1.x,      y = P1.y }
+      { x = P1.x + nx, y = P1.y + ny }
+      { x = P2.x + nx, y = P2.y + ny }
+      { x = P2.x,      y = P2.y }
+    }
+
+    brushlib.add_bottom(m_brush, arch_h)
+    brushlib.set_mat(m_brush, "REDWALL", "REDWALL")
+
+    Trans.brush(m_brush)
+
+    -- right part
+
+    local r_brush =
+    {
+      { x = P2.x,      y = P2.y }
+      { x = P2.x + nx, y = P2.y + ny }
+      { x = P3.x + nx, y = P3.y + ny }
+      { x = P3.x,      y = P3.y }
+    }
+
+    brushlib.set_mat(r_brush, "SFALL1")
+
+    Trans.brush(r_brush)
+  end
+
+
   ---| Layout_build_stairwell |---
 
   local well = A.is_stairwell
@@ -1543,6 +1600,9 @@ function Layout_build_stairwell(A)
   end
 
 
+  -- TODO : local floor_hs = {}  ceil_hs = {}
+
+
   -- actually build something --
 
 
@@ -1564,6 +1624,7 @@ return end
   local cur_z = well.start_z
 
   local stair_diff_h = well.diff_h
+  local headroom     = 128
 
   local step_mat = Mat_lookup("STEP1")
 
@@ -1578,6 +1639,8 @@ return end
   for i = 0, num_steps - 1 do
     local k = i + 1
 
+    local z = cur_z + i * stair_diff_h
+
     -- step floor
 
     local f_brush =
@@ -1588,7 +1651,7 @@ return end
       { x = L2_points[k].x, y = L2_points[k].y }
     }
 
-    brushlib.add_top(f_brush, cur_z)
+    brushlib.add_top(f_brush, z)
 
     brushlib.set_mat(f_brush, "CEIL5_1", "CEIL5_1")
 
@@ -1609,7 +1672,7 @@ return end
       { x = L2_points[k].x, y = L2_points[k].y }
     }
 
-    brushlib.add_bottom(c_brush, cur_z + 128)
+    brushlib.add_bottom(c_brush, z + headroom)
 
     brushlib.set_mat(c_brush, "FLAT1", "FLAT1")
 
@@ -1643,9 +1706,18 @@ return end
     brushlib.set_mat(r_brush, "GRAY7")
 
     Trans.brush(r_brush)
+  end
 
-    -- bump height
-    cur_z = cur_z + stair_diff_h
+
+  -- archways (done with code to align nicely with stairwell walls)
+  if true then
+    local E = num_steps
+
+    local arch_h1 = cur_z + headroom + math.abs(stair_diff_h)
+    local arch_h2 = arch_h1 + (num_steps - 1) * stair_diff_h
+
+    make_archway(L0_points[0], L2_points[0], R2_points[0], R0_points[0], edge1.dir, arch_h1)
+    make_archway(R0_points[E], R2_points[E], L2_points[E], L0_points[E], edge2.dir, arch_h2)
   end
 end
 
