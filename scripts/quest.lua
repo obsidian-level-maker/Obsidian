@@ -2001,7 +2001,7 @@ function Quest_big_secrets()
   local poss_count = #poss_list
 
   -- quantities : use first possible secret + using the rest
-  local first = style_sel("secrets", 0, 0.50, 0.75, 0.95)
+  local first = style_sel("secrets", 0, 0.40, 0.70, 0.90)
   local  rest = style_sel("secrets", 0, 0.25, 0.50, 0.75)
 
   local quota = 0
@@ -2010,7 +2010,7 @@ function Quest_big_secrets()
     quota = rand.int(first + rest * (poss_count - 1))
   end
 
-  stderrf   ("Secrets: %d (from %1.2f / %d possible)\n",
+  gui.debugf("Secrets: %d (from %d possible)\n",
              quota, first + rest * (poss_count - 1), poss_count)
 
   -- TODO
