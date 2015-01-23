@@ -165,6 +165,17 @@ function area_get_bbox(A)
 end
 
 
+function AREA_CLASS.make_hallway(A)
+  A.mode = "hallway"
+  A.stairwells = {}
+
+  if A.sister then
+    A.sister.mode = "hallway"
+    A.sister.stairwells = {}
+  end
+end
+
+
 function volume_of_area(A)
     local volume = 0
 
@@ -1067,7 +1078,9 @@ function Weird_group_into_rooms()
   end
 
   
-  local function can_kill_area(A)
+  local function try_kill_tiny_area(A)
+    -- not possible when area has more than two roomy neighbors
+    -- (since this area may be a bridge between two halves of the map)
     local nb_rooms = {}
 
     each N in A.neighbors do
@@ -1076,21 +1089,36 @@ function Weird_group_into_rooms()
       end
     end
 
-    return (#nb_rooms < 2)
-  end
+    if #nb_rooms >= 2 then
+      return false
+    end
 
-
-  local function kill_tiny_area(A)
     gui.debugf("Killing tiny AREA_%d\n", A.id)
 
     A.mode = "void"
-    A.temp_room = nil
-    A.is_tiny = nil
 
     if A.sister then A.sister.mode = "void" end
+
+    A.is_tiny = nil
+    A.temp_room = nil
+
+    return true
   end
 
 
+  local function tiny_into_hallway(A)
+    A:make_hallway()
+
+    if A.sister then
+      A.sister:make_hallway()
+    end
+
+    -- we keep the 'temp_room'
+
+    A.is_tiny = nil
+  end
+
+  
   local function handle_tiny_areas()
     -- do this first, allowing two tiny areas to merge together
     each A in LEVEL.areas do
@@ -1099,27 +1127,29 @@ function Weird_group_into_rooms()
       end
     end
 
-    -- on first pass, try merge area into a normal room.
-    -- on second pass, allow merge into a hallway _OR_ kill the area
+    -- first pass : try merge area into a normal room.
 
-    for pass = 1, 2 do
-      each A in LEVEL.areas do
-        if not A.is_tiny then continue end
+    each A in LEVEL.areas do
+      if A.is_tiny then
+        try_merge_a_neighbor(A, "normal") 
+      end
+    end
 
-        if pass == 1 and try_merge_a_neighbor(A, "normal") then
-          -- Ok
-        end
+    -- second pass : try to kill it
 
-        if pass == 2 then
-          if can_kill_area(A) then
-            kill_tiny_area(A)
-          elseif not try_merge_a_neighbor(A, "emergency") then
-            error("Failed to merge a tiny area")
-          end
-        end
+    each A in LEVEL.areas do
+      if A.is_tiny then
+        try_kill_tiny_area(A)
+      end
+    end
 
-      end -- A
-    end -- pass
+    -- final pass : turn it into a hallway
+
+    each A in LEVEL.areas do
+      if A.is_tiny then
+        tiny_into_hallway(A)
+      end
+    end
   end
 
 
@@ -1145,7 +1175,7 @@ function Weird_group_into_rooms()
         if (N.mode == "hallway" and not N.brother) and
           N.temp_room != A.temp_room
         then
-          stderrf("Merging touching hallways...\n")
+          gui.debugf("Merging touching hallways...\n")
           merge_temp_rooms(A.temp_room, N.temp_room)
         end
       end

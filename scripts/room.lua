@@ -1702,13 +1702,7 @@ function Room_assign_hallways()
 
     if not A then break; end
 
-    A.mode = "hallway"
-    A.stairwells = {}
-
-    if A.sister then
-      A.sister.mode = "hallway"
-      A.sister.stairwells = {}
-    end
+    A:make_hallway()
 
     detect_stairwells(A)
 
