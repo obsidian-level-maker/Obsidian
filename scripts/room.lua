@@ -245,6 +245,25 @@ function ROOM_CLASS.total_conns(R)
 end
 
 
+function secret_entry_conn(R, skip_room)
+  -- find entry connection for a potential secret room
+  -- skip_room is usually NIL
+
+  each A in R.areas do
+  each C in A.conns do
+    if C.A1.room != C.A2.room and
+       C.A1.room != skip_room and
+       C.A2.room != skip_room
+    then
+      return C
+    end
+  end
+  end
+
+  error("Cannot find entry conn for secret room")
+end
+
+
 function ROOM_CLASS.valid_T(R, x, y)
   if x < R.tx1 or x > R.tx2 then return false end
   if y < R.ty1 or y > R.ty2 then return false end

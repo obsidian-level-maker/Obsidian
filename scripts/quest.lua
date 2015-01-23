@@ -197,6 +197,11 @@ function Quest_create_initial_quest()
     -- [ WISH : support this, a secret teleporter closet somewhere ]
     if secret_mode and R:has_teleporter() then return -1 end
 
+    -- don't waste big rooms on a secret exit
+    if secret_mode then
+      return 100 - math.min(R.svolume,99) + gui.random()
+    end
+
     return R.svolume + gui.random() * 5
   end
 
@@ -243,21 +248,6 @@ function Quest_create_initial_quest()
 
     table.insert(R.goals, GOAL)
     table.insert(quest.goals, GOAL)
-  end
-
-
-  local function get_entry_conn(R, skip_room)
-    each A in R.areas do
-    each C in A.conns do
-      if C.A1.room == C.A2.room then continue end
-
-      if C.A1.room == skip_room or C.A2.room == skip_room then continue end
-
-      return C
-    end
-    end
-
-    error("Cannot find entry conn for secret exit")
   end
 
 
@@ -789,7 +779,7 @@ gui.debugf("Quest_scan_all_conns.....\n")
 
   -- nothing possible?
   if not info.conn then
-stderrf("---> NOTHING POSSIBLE\n")
+gui.debugf("---> NOTHING POSSIBLE\n")
     return false
   end
 
@@ -1173,10 +1163,6 @@ function Quest_start_room()
 
 
   ---| Quest_start_room |---
-
-each Q in LEVEL.quests do
-stderrf("|||  %s : entry : %s\n", Q.name, tostring(Q.entry))
-end
 
   find_start_quest()
 
@@ -1938,7 +1924,7 @@ function Quest_make_room_secret(R)
   -- if connected to a hallway or stairwell, make it secret too
   -- [ hallways with two or more other rooms are not changed ]
 
-  local C = get_entry_conn(R)
+  local C = secret_entry_conn(R)
   assert(C)
 
   local H = sel(C.A1.room == R, C.A2.room, C.A1.room)
@@ -1955,7 +1941,7 @@ function Quest_make_room_secret(R)
   end
 
   -- mark connection to get a secret door
-  C = get_entry_conn(N, R)
+  C = secret_entry_conn(H, R)
   assert(C)
 
   C.kind = "secret"
@@ -1969,6 +1955,65 @@ function Quest_big_secrets()
   -- These are "big" secrets, but we also create small ("closet") secrets
   -- elsewhere (ONLY PLANNED ATM).
   --
+
+  local function eval_secret_room(R)
+    if R.is_hallway then return -1 end
+    if R.is_start   then return -1 end
+    if R.is_exit    then return -1 end
+
+    if #R.goals > 0 then return -1 end
+
+    -- must be a leaf room
+    if R:total_conns() > 1 then return -1 end
+
+    -- cannot teleport into a secret exit
+    -- [ WISH : support this, a secret teleporter closet somewhere ]
+    if R:has_teleporter() then return -1 end
+
+    -- smaller is better (don't waste large rooms)
+    return 100 - math.min(R.svolume,99) + gui.random() * 5
+  end
+
+
+  local function collect_possible_secrets()
+    local list = {}
+
+    each R in LEVEL.rooms do
+      local score = eval_secret_room(R)
+
+      if score > 0 then
+        table.insert(list, R)
+      end
+    end
+
+    return list
+  end
+
+
+  ---| Quest_big_secrets |---
+
+  if STYLE.secrets == "none" then
+    gui.printf("Secrets: NONE (by style)\n")
+    return
+  end
+
+  local poss_list = collect_possible_secrets()
+  local poss_count = #poss_list
+
+  -- quantities : use first possible secret + using the rest
+  local first = style_sel("secrets", 0, 0.50, 0.75, 0.95)
+  local  rest = style_sel("secrets", 0, 0.25, 0.50, 0.75)
+
+  local quota = 0
+
+  if poss_count >= 1 then
+    quota = rand.int(first + rest * (poss_count - 1))
+  end
+
+  stderrf   ("Secrets: %d (from %1.2f / %d possible)\n",
+             quota, first + rest * (poss_count - 1), poss_count)
+
+  -- TODO
 end
 
 
@@ -2348,8 +2393,7 @@ function Quest_make_quests()
 
 ---???  Quest_final_battle()
 
-  Quest_choose_themes()
-  Quest_select_textures()
+  Quest_big_secrets()
 
   -- special weapon handling for HEXEN and HEXEN II
   if PARAM.hexen_weapons then
@@ -2361,5 +2405,8 @@ function Quest_make_quests()
   Quest_add_minor_quests()
 
 --!!!!  Quest_nice_items()
+
+  Quest_choose_themes()
+  Quest_select_textures()
 end
 
