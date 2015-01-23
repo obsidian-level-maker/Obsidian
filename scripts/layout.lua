@@ -1408,7 +1408,17 @@ function Layout_build_stairwell(A)
   end
 
 
-  local function make_archway(P0, P1, P2, P3, dir, arch_h)
+  local function calc_arch_mat(edge)
+    local N = edge.S:neighbor(edge.dir)
+
+    assert(N)
+    assert(N.area != A)
+
+    return calc_wall_mat(N.area, A)
+  end
+
+
+  local function make_archway(P0, P1, P2, P3, dir, mat, arch_h)
     local TK = 16
 
     if geom.is_corner(dir) then
@@ -1430,7 +1440,7 @@ function Layout_build_stairwell(A)
       { x = P1.x,      y = P1.y }
     }
 
-    brushlib.set_mat(l_brush, "COMPBLUE")
+    brushlib.set_mat(l_brush, mat)
 
     Trans.brush(l_brush)
 
@@ -1445,7 +1455,7 @@ function Layout_build_stairwell(A)
     }
 
     brushlib.add_bottom(m_brush, arch_h)
-    brushlib.set_mat(m_brush, "REDWALL", "REDWALL")
+    brushlib.set_mat(m_brush, mat, mat)
 
     Trans.brush(m_brush)
 
@@ -1459,7 +1469,7 @@ function Layout_build_stairwell(A)
       { x = P3.x,      y = P3.y }
     }
 
-    brushlib.set_mat(r_brush, "SFALL1")
+    brushlib.set_mat(r_brush, mat)
 
     Trans.brush(r_brush)
   end
@@ -1713,11 +1723,17 @@ return end
   if true then
     local E = num_steps
 
-    local arch_h1 = cur_z + headroom + math.abs(stair_diff_h)
-    local arch_h2 = arch_h1 + (num_steps - 1) * stair_diff_h
+    local arch_h1 = cur_z + headroom + (0) * stair_diff_h
+    local arch_h2 = cur_z + headroom + (num_steps-1) * stair_diff_h
 
-    make_archway(L0_points[0], L2_points[0], R2_points[0], R0_points[0], edge1.dir, arch_h1)
-    make_archway(R0_points[E], R2_points[E], L2_points[E], L0_points[E], edge2.dir, arch_h2)
+    local mat1 = calc_arch_mat(edge1)
+    local mat2 = calc_arch_mat(edge2)
+
+    make_archway(L0_points[0], L2_points[0], R2_points[0], R0_points[0],
+                 edge1.dir, mat1, arch_h1)
+
+    make_archway(R0_points[E], R2_points[E], L2_points[E], L0_points[E],
+                 edge2.dir, mat2, arch_h2)
   end
 end
 
