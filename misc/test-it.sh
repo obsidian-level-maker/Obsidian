@@ -32,8 +32,8 @@ index=$(($RANDOM % 5))
 def_engine=${ENGINES[$index]}
 
 declare -a SIZES
-SIZES=("prog" "mixed" "tiny" "small" "regular" "large")
-index=$(($RANDOM % 6))
+SIZES=("prog" "mixed" "small" "regular" "large")
+index=$(($RANDOM % 5))
 def_size=${SIZES[$index]}
 
 declare -a THEMES
