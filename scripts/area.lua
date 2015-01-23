@@ -1101,7 +1101,8 @@ function Weird_group_into_rooms()
 
         if pass == 2 then
           if can_kill_area(A) then
-stderrf("Killing tiny AREA_%d\n", A.id)
+            gui.debugf("Killing tiny AREA_%d\n", A.id)
+
             A.mode = "void"
             A.temp_room = nil
 

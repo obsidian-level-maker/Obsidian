@@ -808,7 +808,7 @@ function Room_detect_porches(R)
     if best_A then
       set_as_porch(best_A)
 
-stderrf("@@@@@  %s is now a PORCH\n", R:tostr())
+      gui.debugf("Made %s into a PORCH\n", best_A.name)
     end
   end
 
