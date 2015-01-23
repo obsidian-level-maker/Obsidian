@@ -475,6 +475,8 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
     assert(LOCK)
 
+    local inner_mat, outer_mat = calc_straddle_mat(A, NA)
+
 
     -- ensure it faces the correct direction
     if LOCK.conn.A1 != A then
@@ -485,10 +487,10 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
       end
 
       dir = 10 - dir
+
+      inner_mat, outer_mat = outer_mat, inner_mat
     end
 
-
-    local inner_mat, outer_mat = calc_straddle_mat(A, NA)
 
     local skin1 = { wall=inner_mat, outer=outer_mat }
 
