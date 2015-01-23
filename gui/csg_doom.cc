@@ -2759,11 +2759,23 @@ static doom_sector_c * DM_FindDepotPeer()
 }
 
 
+static void DM_ConvertSectorToOther(doom_sector_c *src, doom_sector_c *dest)
+{
+	for (unsigned int i = 0 ; i < dm_sidedefs.size() ; i++)
+	{
+		doom_sidedef_c *SD = dm_sidedefs[i];
+
+		if (SD->sector == src)
+			SD->sector = dest;
+	}
+}
+
+
 static void DM_ProcessDepots()
 {
 	// Monster depots need to peer with a real sector so that sound
 	// can travel into them and wake up the monsters.  We achieve that
-	// using a dummy sector to "connect" the sectors.
+	// by converting a small sector in the depot to BE the peer sector.
 
 	for (unsigned int i = 0 ; i < dm_sectors.size() ; i++)
 	{
@@ -2779,7 +2791,7 @@ static void DM_ProcessDepots()
 			doom_sector_c *peer = DM_FindDepotPeer();
 
 			if (peer)
-				Dummy_New(S, peer);
+				DM_ConvertSectorToOther(S, peer);
 		}
 	}
 }
