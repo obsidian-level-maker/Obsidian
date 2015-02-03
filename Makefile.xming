@@ -37,7 +37,7 @@ CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) \
          -Ilua_src -Iglbsp_src -Iajpoly_src \
 	 $(FLTK_FLAGS) $(ZLIB_FLAGS)
 
-LDFLAGS=
+LDFLAGS=-static-libgcc -static-libstdc++
 
 LIBS=-lm $(FLTK_LIBS) $(ZLIB_LIBS) \
      -mwindows -lcomdlg32 -lole32 -luuid -lgdi32 \
