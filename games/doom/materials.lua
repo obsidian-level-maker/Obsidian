@@ -437,8 +437,6 @@ DOOM.MATERIALS =
 
   O_BLACK  = { t="CEMENT5",  f="O_BLACK",  sane=1 }
 
-  O_PARROT = { t="ZZWOLF4",  f="CEIL5_2" }
-
 
   -- Missing stuff:
   --   CEMENT#  : used by OBLIGE for various logos

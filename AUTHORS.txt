@@ -19,6 +19,7 @@ Chris Pisarczyk (Glaice)
   - DOOM 2 boss maps (e.g. "dead simple" one)
   - DOOM 1/2 theming
   - Egypt theme for TNT Evilution
+  - an OBLIGE logo image
   - additions to name generator
   - lots of useful feedback
   - general encouragement and support
