@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2014 Andrew Apted
+//  Copyright (C) 2006-2015 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -330,9 +330,9 @@ const char * UI_Play::monster_syms[] =
 const char * UI_Play::strength_syms[] =
 {
 	"weak",   "Weak",
-	"lower",  "Lower",
-	"medium", "Medium",
-	"higher", "Higher",
+	"lower",  "Easier",
+	"medium", "Normal",
+	"higher", "Harder",
 	"tough",  "Tough",
 	"crazy",  "Crazy",
 
