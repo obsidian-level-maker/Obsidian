@@ -53,7 +53,7 @@
 </block>
 
 <block IndexForums>
-  <a href="http://oblige.sourceforge.net/forum/">Forum</a>
+  <a href="http://oblige.sourceforge.net/forum/index.php">Forum</a>
 </block>
 
 
