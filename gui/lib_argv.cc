@@ -56,7 +56,7 @@ void ArgvInit(int argc, const char **argv)
 		const char *cur = argv[i];
 		SYS_NULL_CHECK(cur);
 
-#ifdef MACOSX
+#ifdef __APPLE__
 		// ignore MacOS X rubbish
 		if (strncmp(cur, "-psn", 4) == 0)
 			continue;

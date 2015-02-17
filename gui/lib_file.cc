@@ -36,7 +36,7 @@
 #include <sys/types.h>
 #endif
 
-#ifdef MACOSX
+#ifdef __APPLE__
 #include <sys/param.h>
 #include <mach-o/dyld.h> // _NSGetExecutablePath
 #endif
@@ -253,7 +253,7 @@ bool FileRename(const char *old_name, const char *new_name)
 #ifdef WIN32
 	return (::MoveFile(old_name, new_name) != 0);
 
-#else // UNIX or MACOSX
+#else // UNIX or MacOSX
 
 	return (rename(old_name, new_name) == 0);
 #endif
@@ -265,7 +265,7 @@ bool FileDelete(const char *filename)
 #ifdef WIN32
 	return (::DeleteFile(filename) != 0);
 
-#else // UNIX or MACOSX
+#else // UNIX or MacOSX
 
 	return (remove(filename) == 0);
 #endif
@@ -277,7 +277,7 @@ bool FileChangeDir(const char *dir_name)
 #ifdef WIN32
 	return (::SetCurrentDirectory(dir_name) != 0);
 
-#else // UNIX or MACOSX
+#else // UNIX or MacOSX
 
 	return (chdir(dir_name) == 0);
 #endif
@@ -289,7 +289,7 @@ bool FileMakeDir(const char *dir_name)
 #ifdef WIN32
 	return (::CreateDirectory(dir_name, NULL) != 0);
 
-#else // UNIX or MACOSX
+#else // UNIX or MacOSX
 
 	return (mkdir(dir_name, 0775) == 0);
 #endif
@@ -365,7 +365,7 @@ bool PathIsDirectory(const char *path)
 
 	return result;
 
-#else // UNIX or MACOSX
+#else // UNIX or MacOSX
 
 	struct stat finfo;
 
@@ -656,7 +656,7 @@ const char *GetExecutablePath(const char *argv0)
 	StringFree(path);
 #endif
 
-#ifdef MACOSX
+#ifdef __APPLE__
 	/*
 	   from http://www.hmug.org/man/3/NSModule.html
 
@@ -686,7 +686,7 @@ const char *GetExecutablePath(const char *argv0)
 	// fallback method: use argv[0]
 	path = StringDup(argv0);
 
-#ifdef MACOSX
+#ifdef __APPLE__
 	// FIXME: check if _inside_ the .app folder
 #endif
 
