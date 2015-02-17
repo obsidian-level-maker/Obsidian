@@ -10,8 +10,6 @@ Quest Rework
 
 +  add nice items
 
--  support secrets
-
 
 
 Monster defs : min weapon level needed [esp. for Vile/Bosses ]
@@ -29,10 +27,15 @@ Items:
 
 
 
+Secrets....
+!!  make the secret door (or fence, etc)
+
+
+
 Traps....
 -  second pass : traps ON WAY BACK to the ...
 
--  make more traps over a episode/game
++  make more traps over a episode/game
 
 
 
