@@ -171,6 +171,12 @@ from SLIGE (by David Chess) or from any other random level
 generator.
 
 <p>
+OBLIGE uses a modified version of the Lua 5.1.5 scripting
+language, which is Copyright 1994-2012 Lua.org, PUC-Rio, which
+is under a permissive "MIT" license.  The original version can
+be found here: <a href="http://www.lua.org/">www.lua.org</a>
+
+<p>
 Part of the cave algorithm used in OBLIGE was described by Jim Babcock
 in his article: "Cellular Automata Method for Generating
 Random Cave-Like Levels".
@@ -181,8 +187,8 @@ with code by Richard J. Wagner (15 May 2003 / rjwagner@writeme.com)
 based on code by Makoto Matsumoto, Takuji Nishimura, and Shawn Cokus.
 
 <p>
-OBLIGE uses the FLTK widget library :
-(<a href="http://www.fltk.org">http://www.fltk.org</a>)
+OBLIGE uses the FLTK widget library:
+<a href="http://www.fltk.org">www.fltk.org</a>
 
 
 <h3>COPYRIGHT / LICENSE</h3>
