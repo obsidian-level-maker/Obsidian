@@ -140,7 +140,7 @@ LUA_OBJS=\
 	$(OBJ_DIR)/lua/loadlib.o   \
 	$(OBJ_DIR)/lua/linit.o
 
-LUA_CXXFLAGS=$(OPTIMISE) -Wall -DLUA_ANSI
+LUA_CXXFLAGS=$(OPTIMISE) -Wall -DLUA_ANSI -DLUA_USE_MKSTEMP
 
 $(OBJ_DIR)/lua/%.o: lua_src/%.cc
 	$(CXX) $(LUA_CXXFLAGS) -o $@ -c $<
