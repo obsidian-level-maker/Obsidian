@@ -143,17 +143,17 @@ static void CreateDummyMip(qLump_c *lump, const char *name, int pix1, int pix2)
 	lump->Append(&mm_tex, sizeof(mm_tex));
 
 
-	u8_t pixels[2] = { pix1, pix2 };
+	u8_t pixels[2] = { (u8_t)pix1, (u8_t)pix2 };
 
 	size = 64;
 
 	for (int i = 0 ; i < MIP_LEVELS ; i++)
 	{
 		for (int y = 0 ; y < size ; y++)
-			for (int x = 0 ; x < size ; x++)
-			{
-				lump->Append(pixels + (((x^y) & (size/4)) ? 1 : 0), 1);
-			}
+		for (int x = 0 ; x < size ; x++)
+		{
+			lump->Append(pixels + (((x^y) & (size/4)) ? 1 : 0), 1);
+		}
 
 		size /= 2;
 	}
