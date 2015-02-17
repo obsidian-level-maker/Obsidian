@@ -298,7 +298,7 @@ int Main_DetermineScaling()
 
 void Main_SetupFLTK()
 {
-	Fl::visual(FL_RGB);
+	Fl::visual(FL_DOUBLE | FL_RGB);
 
 	if (! alternate_look)
 	{
