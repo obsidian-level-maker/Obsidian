@@ -8,7 +8,7 @@ fi
 
 echo "Creating the source package for Oblige..."
 
-dest=PACK-SRC
+dest="Oblige-X.XX-source"
 
 mkdir $dest
 
@@ -63,6 +63,7 @@ mkdir $dest/obj_win32/ajpoly
 #
 #  Game data
 #
+# FIXME !!!!
 svn export games $dest/games
 
 #
@@ -94,6 +95,5 @@ cp -av doc/*.* $dest/doc
 # all done
 #
 echo "------------------------------------"
-echo "mv PACK-SRC Oblige-X.XX-source"
 echo "zip -l -r oblige-XXX-source.zip Oblige-X.XX-source"
 

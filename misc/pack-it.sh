@@ -27,7 +27,7 @@ fi
 
 echo "Creating a $mode package for Oblige..."
 
-dest=PACK-RAT
+dest="Oblige-X.XX"
 
 mkdir $dest
 
@@ -46,6 +46,7 @@ cp -av modules/*.* $dest/modules
 #
 #  Game data
 #
+# FIXME !!!!
 svn export games $dest/games
 
 #
@@ -92,7 +93,6 @@ cp -av AUTHORS.txt $dest
 # all done
 #
 echo "------------------------------------"
-echo "mv PACK-RAT Oblige-X.XX"
 echo "zip -l -r oblige-XXX-win.zip Oblige-X.XX"
 echo ""
 
