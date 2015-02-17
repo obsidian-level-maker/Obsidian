@@ -70,6 +70,12 @@ SORT OUT : where 'facade_mat' is stored, how is accessed
 
 implement "arch" junction / prefab
 
+area/room with key/exit/etc are good for windows
+
+if area floor is >= all neighbors, sometimes mark as "want rail" (instead of fence)
+
+Courtyard floor should be > Landscape floor.
+
 
 
 Fake fences:
