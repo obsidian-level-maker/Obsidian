@@ -355,6 +355,22 @@ end
 ------------------------------------------------------------------------
 
 
+function Area_squarify_seeds()
+  Seed_squarify()
+
+  -- update areas for merged seeds
+
+  each A in LEVEL.areas do
+    for i = #A.seeds, 1, -1 do
+      if A.seeds[i].kind == "dead" then
+        table.remove(A.seeds, i)
+      end
+    end
+  end
+end
+
+
+
 function Weird_create_areas()
   --
   -- Converts the point grid into areas and seeds.
@@ -481,7 +497,7 @@ function Weird_create_areas()
     local area = LEVEL.temp_area_map[num]
 
     if not area then
-      -- this mode can become "void" or "scenic" later
+      -- the mode can become "void" or "scenic" later
       area = AREA_CLASS.new("normal")
 
       LEVEL.temp_area_map[num] = area
@@ -501,21 +517,6 @@ gui.printf("  loop %d\n", alloc_id("flood_loop"))
       did_change = false
       flood_fill_pass()
     until not did_change
-  end
-
-
-  local function check_squarify_seeds()
-    -- detects when a diagonal seed has same area on each half
-
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_H do
-      local S  = SEEDS[sx][sy]
-
-      if S.diagonal and S.top.area_num == S.area_num then
-        S:join_halves()
-      end
-    end
-    end
   end
 
 
@@ -571,8 +572,6 @@ gui.printf("  loop %d\n", alloc_id("flood_loop"))
   local function create_the_areas()
     flood_fill_areas()
 
-    check_squarify_seeds()
-
     LEVEL.temp_area_map = {}
 
     for sx = 1, SEED_W do
@@ -587,6 +586,8 @@ gui.printf("  loop %d\n", alloc_id("flood_loop"))
     end
 
     LEVEL.temp_area_map = nil
+
+    Area_squarify_seeds()
 
     find_area_neighbors()
   end
