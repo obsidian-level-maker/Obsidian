@@ -25,6 +25,7 @@ require "prefab"
 
 require "seed"
 require "weird"
+require "shape"
 require "area"
 require "connect"
 
