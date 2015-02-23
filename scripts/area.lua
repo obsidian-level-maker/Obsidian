@@ -609,7 +609,7 @@ function Area_analyse_areas()
   end
 
 
-  ---| Weird_analyse_areas |---
+  ---| Area_analyse_areas |---
 
   Area_calc_volumes()
 
@@ -631,7 +631,7 @@ end
 
 
 
-function Weird_group_into_rooms()
+function Area_group_into_rooms()
   --
   -- This actually creates the rooms by grouping a bunch of areas together.
   --
@@ -1013,7 +1013,7 @@ function Weird_group_into_rooms()
   end
 
 
-  ---| Weird_group_into_rooms |---
+  ---| Area_group_into_rooms |---
 
   collect_usable_areas()
 
@@ -1118,7 +1118,7 @@ end
 
 
 
-function Weird_create_rooms()
+function Area_create_rooms()
 
   gui.printf("\n--==| Planning WEIRD Rooms |==--\n\n")
 
@@ -1129,10 +1129,12 @@ function Weird_create_rooms()
 
   Seed_init(W - 1, H - 1)
 
-  Shape_create_areas()
-
---  Weird_generate(W, H)
---  Weird_create_areas()
+  if OB_CONFIG.mode == "ctf" then
+    Weird_generate(W, H)
+    Weird_create_areas()
+  else
+    Shape_create_areas()
+  end
 
   Area_analyse_areas()
 
@@ -1142,7 +1144,7 @@ function Weird_create_rooms()
   Room_void_some_areas()
   Room_assign_hallways()
 
-  Weird_group_into_rooms()
+  Area_group_into_rooms()
 
   Room_choose_area_kinds()
 
