@@ -148,7 +148,7 @@ function Shape_fill_gaps()
   local temp_areas = {}
 
   local MIN_SIZE = 4
-  local MAX_SIZE = MIN_SIZE * 3
+  local MAX_SIZE = MIN_SIZE * 4
 
 
   local function new_temp_area(first_S)
@@ -227,7 +227,10 @@ function Shape_fill_gaps()
       score = 2
     end
 
-    return score + gui.random()    
+    -- a preference to merging across diagonals
+    local power = sel(geom.is_corner(dir), 1, 2)
+
+    return score + gui.random() ^ power
   end
 
 
