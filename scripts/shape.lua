@@ -221,6 +221,8 @@ function Shape_fill_gaps()
   local function eval_merge(A1, A2, dir)
     local score = 1
 
+---###if rand.odds(88) then return 9 + gui.random() end
+
     if A2.svolume < MIN_SIZE then
       score = 3
     elseif A1.svolume + A2.svolume <= MAX_SIZE then
@@ -293,7 +295,7 @@ function Shape_fill_gaps()
     each T in temp_areas do
       local area = AREA_CLASS.new("normal")
 
-      area.is_filler = true
+      area.prefer_mode = "void"
 
       area.seeds = T.seeds
 
@@ -320,7 +322,7 @@ end
 
 
 
-function Shape_do_boundary()
+function Shape_assign_boundary()
 
   local function area_touches_edge(A)
     each S in A.seeds do
@@ -345,7 +347,44 @@ function Shape_do_boundary()
   end
 
 
-  ---| Shape_do_boundary |---
+  local function surr_grow_pass(seen)
+    local old_seen = table.copy(seen)
+
+    each A,_ in old_seen do
+      each N in A.neighbors do
+        if N.is_inner then
+          seen[N] = true
+        end
+      end
+    end
+  end
+
+
+  local function check_for_surrounded_areas()
+    -- look for areas which have become surrounded by boundary areas
+    -- (this is probably very rare, but nonetheless we should handle it).
+
+    local largest = Area_largest_area()
+
+    local seen = {} ; seen[largest] = true
+
+    for loop = 1,100 do
+      surr_grow_pass(seen)
+    end
+
+    each A in LEVEL.areas do
+      if A.is_inner and not seen[A] then
+        gui.printf("HERE IS ONE DUDE! : %s", A.name)
+
+        A.is_inner = false
+        A.is_boundary = true
+        A.mode = "scenic"
+      end
+    end
+  end
+
+
+  ---| Shape_assign_boundary |---
 
   each A in LEVEL.areas do
     if not area_touches_edge(A) and area_is_inside_box(A) then
@@ -355,6 +394,8 @@ function Shape_do_boundary()
       A.is_boundary = true
     end
   end
+
+  check_for_surrounded_areas()
 end
 
 
@@ -369,9 +410,10 @@ function Shape_create_areas()
 
   Shape_fill_gaps()
 
+  Area_calc_volumes()
   Area_find_neighbors()
 
-  Shape_do_boundary()
+  Shape_assign_boundary()
 
   Shape_save_svg()
 end
