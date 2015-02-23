@@ -293,7 +293,17 @@ end
 
 function Shape_do_boundary()
 
-  local function is_area_inside(A)
+  local function area_touches_edge(A)
+    each S in A.seeds do
+      if S.sx == 1 or S.sx == SEED_W then return true end
+      if S.sy == 1 or S.sy == SEED_H then return true end
+    end
+
+    return false
+  end
+
+
+  local function area_is_inside_box(A)
     local sx1 = LEVEL.boundary_margin
     local sx2 = SEED_W + 1 - LEVEL.boundary_margin
 
@@ -317,15 +327,15 @@ function Shape_do_boundary()
   local map_size = SEED_W + SEED_H
 
   if map_size < 52 then
-    LEVEL.boundary_margin = 3
-  elseif map_size < 72 then
     LEVEL.boundary_margin = 4
-  else
+  elseif map_size < 72 then
     LEVEL.boundary_margin = 5
+  else
+    LEVEL.boundary_margin = 6
   end
 
   each A in LEVEL.areas do
-    if is_area_inside(A) then
+    if not area_touches_edge(A) and area_is_inside_box(A) then
       A.is_inner = true
     else
       A.mode = "scenic"
