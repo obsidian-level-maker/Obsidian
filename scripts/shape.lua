@@ -39,14 +39,14 @@ function Shape_fill_gaps()
   local function new_temp_area(first_S)
     local TEMP =
     {
-      size = 0
+      svolume = 0
       seeds = { first_S }
     }
 
     if first_S.diagonal then
-      TEMP.size = 0.5
+      TEMP.svolume = 0.5
     else
-      TEMP.size = 1.0
+      TEMP.svolume = 1.0
     end
 
     table.insert(temp_areas, TEMP)
@@ -77,11 +77,11 @@ function Shape_fill_gaps()
   local function perform_merge(A1, A2)
     -- merges A2 into A1 (killing A1)
 
-    if A2.size > A1.size then
+    if A2.svolume > A1.svolume then
       A1, A2 = A2, A1
     end
 
-    A1.size = A1.size + A2.size
+    A1.svolume = A1.svolume + A2.svolume
 
     table.append(A1.seeds, A2.seeds)
 
@@ -98,7 +98,7 @@ function Shape_fill_gaps()
 
     -- mark A2 as dead
     A2.is_dead = true
-    A2.size  = nil
+    A2.svolume = nil
     A2.seeds = nil
   end
 
@@ -106,7 +106,7 @@ function Shape_fill_gaps()
   local function eval_merge(A1, A2, dir)
     local score = 1
 
-    if A1.size + A2.size <= MAX_SIZE then
+    if A1.svolume + A2.svolume <= MAX_SIZE then
       score = 2
     end
 
@@ -160,7 +160,7 @@ function Shape_fill_gaps()
     each A1 in temp_areas do
       if A1.is_dead then continue end
 
-      if A1.size < MIN_SIZE then
+      if A1.svolume < MIN_SIZE then
         try_merge_an_area(A1)
       end
     end
@@ -170,7 +170,13 @@ function Shape_fill_gaps()
 
 
   local function make_real_areas()
-    -- FIXME
+    each T in temp_areas do
+      local area = AREA_CLASS.new("normal")
+
+      area.is_filler = true
+
+      area.seeds = T.seeds
+    end
   end
 
 
@@ -191,14 +197,22 @@ end
 
 function Shape_do_boundary()
 
-  local function check_area(A)
+  local function is_area_inside(A)
     local sx1 = LEVEL.boundary_margin
     local sx2 = SEED_W + 1 - LEVEL.boundary_margin
 
     local sy1 = LEVEL.boundary_margin
     local sy2 = SEED_H + 1 - LEVEL.boundary_margin
 
-    -- TODO
+    each S in A.seeds do
+      if sx1 < S.sx and S.sx < sx2 and
+         sy1 < S.sy and S.sy < sy2
+      then
+        return true
+      end
+    end
+
+    return false
   end
 
 
@@ -215,7 +229,10 @@ function Shape_do_boundary()
   end
 
   each A in LEVEL.areas do
-    if not check_area(A) then
+    if is_area_inside(A) then
+      A.is_inner = true
+    else
+      A.mode = "scenic"
       A.is_boundary = true
     end
   end
