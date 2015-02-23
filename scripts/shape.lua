@@ -110,6 +110,30 @@ end
 
 
 
+function Shape_prepare()
+  --
+  -- decide boundary rectangle, etc...
+  --
+
+  local map_size = (SEED_W + SEED_H) / 2
+
+  if map_size < 26 then
+    LEVEL.boundary_margin = 4
+  elseif map_size < 36 then
+    LEVEL.boundary_margin = 5
+  else
+    LEVEL.boundary_margin = 6
+  end
+
+  LEVEL.boundary_sx1 = LEVEL.boundary_margin
+  LEVEL.boundary_sx2 = SEED_W + 1 - LEVEL.boundary_margin
+
+  LEVEL.boundary_sy1 = LEVEL.boundary_margin
+  LEVEL.boundary_sy2 = SEED_H + 1 - LEVEL.boundary_margin
+end
+
+
+
 
 function Shape_fill_gaps()
   --
@@ -306,15 +330,9 @@ function Shape_do_boundary()
 
 
   local function area_is_inside_box(A)
-    local sx1 = LEVEL.boundary_margin
-    local sx2 = SEED_W + 1 - LEVEL.boundary_margin
-
-    local sy1 = LEVEL.boundary_margin
-    local sy2 = SEED_H + 1 - LEVEL.boundary_margin
-
     each S in A.seeds do
-      if sx1 < S.sx and S.sx < sx2 and
-         sy1 < S.sy and S.sy < sy2
+      if LEVEL.boundary_sx1 < S.sx and S.sx < LEVEL.boundary_sx2 and
+         LEVEL.boundary_sy1 < S.sy and S.sy < LEVEL.boundary_sy2
       then
         return true
       end
@@ -325,16 +343,6 @@ function Shape_do_boundary()
 
 
   ---| Shape_do_boundary |---
-
-  local map_size = SEED_W + SEED_H
-
-  if map_size < 52 then
-    LEVEL.boundary_margin = 4
-  elseif map_size < 72 then
-    LEVEL.boundary_margin = 5
-  else
-    LEVEL.boundary_margin = 6
-  end
 
   each A in LEVEL.areas do
     if not area_touches_edge(A) and area_is_inside_box(A) then
@@ -349,6 +357,8 @@ end
 
 
 function Shape_create_areas()
+
+  Shape_prepare()
 
 -- TODO : Shape_add_shapes()
 
