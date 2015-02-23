@@ -123,8 +123,8 @@ function Shape_fill_gaps()
 
   local temp_areas = {}
 
-  local MIN_SIZE = 5
-  local MAX_SIZE = 15
+  local MIN_SIZE = 4
+  local MAX_SIZE = MIN_SIZE * 3
 
 
   local function new_temp_area(first_S)
@@ -197,7 +197,9 @@ function Shape_fill_gaps()
   local function eval_merge(A1, A2, dir)
     local score = 1
 
-    if A1.svolume + A2.svolume <= MAX_SIZE then
+    if A2.svolume < MIN_SIZE then
+      score = 3
+    elseif A1.svolume + A2.svolume <= MAX_SIZE then
       score = 2
     end
 
