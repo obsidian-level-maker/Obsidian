@@ -19,6 +19,80 @@
 ------------------------------------------------------------------------
 
 
+SHAPES =
+{
+ 
+-- Generic ones, mainly for stairwells
+
+-- IDEA : merge 'STAIRWELL_SHAPES' into here?
+
+
+GENERIC_1x2 =
+{
+  prob = 30
+
+  structure =
+  {
+    "aa"
+  }
+}
+
+
+GENERIC_1x3 =
+{
+  prob = 10
+
+  structure =
+  {
+    "aaa"
+  }
+}
+
+
+GENERIC_2x2 =
+{
+  prob = 100
+
+  initial_prob = 10
+
+  structure =
+  {
+    "aa"
+    "aa"
+  }
+}
+
+
+GENERIC_2x2_diamond =
+{
+  prob = 100
+
+  initial_prob = 10
+
+  structure =
+  {
+    "/%"
+    "%/"
+  }
+
+  diagonals =
+  {
+    ".a", "a."
+    ".a", "a."
+  }
+}
+
+
+-- Rooms
+
+
+-- Hallways
+
+
+}
+
+
+
 function Shape_save_svg()
 
   -- grid size
@@ -132,6 +206,17 @@ function Shape_prepare()
   LEVEL.boundary_sy2 = SEED_H + 1 - LEVEL.boundary_margin
 end
 
+
+
+function Shape_add_shapes()
+  --
+  -- Picks shapes from the SHAPES table and tries to place them on
+  -- the map.
+  --
+  -- Firstly we place a few "initial" shapes in fairly fixed locations,
+  -- then subsequent shapes will extend onto the existing ones.
+  --
+end
 
 
 
@@ -404,9 +489,7 @@ function Shape_create_areas()
 
   Shape_prepare()
 
--- TODO : Shape_add_shapes()
-
--- TODO : Shape_make_hallways()
+  Shape_add_shapes()
 
   Shape_fill_gaps()
 
