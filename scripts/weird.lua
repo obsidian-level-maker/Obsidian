@@ -930,3 +930,242 @@ function Weird_generate(point_W, point_H)
 ---  Weird_save_svg()
 end
 
+
+
+------------------------------------------------------------------------
+
+
+function Weird_create_areas()
+  --
+  -- Converts the point grid into areas and seeds.
+  --
+
+  local function try_set_border(S, dir, kind)
+    if kind then
+      S.border[dir].edge_kind = kind
+    end
+  end
+
+
+  local function convert_to_seeds()
+    for gx = 1, GRID_W - 1 do
+    for gy = 1, GRID_H - 1 do
+      local S = SEEDS[gx][gy]
+
+      local P1 = GRID[gx][gy]
+      local P2 = GRID[gx][gy + 1]
+      local P3 = GRID[gx + 1][gy]
+
+      local diag_edge = P1.edge[9] or P2.edge[3]
+
+      if diag_edge then
+        S:split(sel(P1.edge[9], 3, 1))
+
+        local S2 = S.top
+
+        -- check borders
+
+        if S.diagonal == 3 then
+          try_set_border(S,  7, diag_edge)
+          try_set_border(S2, 3, diag_edge)
+        else
+          try_set_border(S,  9, diag_edge)
+          try_set_border(S2, 1, diag_edge)
+        end
+
+        local T2, T4, T6, T8
+
+        T2 = S ; T8 = S2
+        T4 = S ; T6 = S2
+
+        if S.diagonal == 3 then
+          T4, T6 = T6, T4
+        end
+
+        try_set_border(T4, 4, P1.edge[8])
+        try_set_border(T6, 6, P3.edge[8])
+                                                 
+        try_set_border(T2, 2, P1.edge[6])
+        try_set_border(T8, 8, P2.edge[6])
+
+      else
+        -- normal square seed
+
+        try_set_border(S, 4, P1.edge[8])
+        try_set_border(S, 6, P3.edge[8])
+                                                
+        try_set_border(S, 2, P1.edge[6])
+        try_set_border(S, 8, P2.edge[6])
+      end
+
+    end -- gx, gy
+    end
+  end
+
+
+  local function assign_area_numbers()
+    local area_num = 1
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      local S = SEEDS[sx][sy]
+
+      S.area_num = area_num
+
+      if S.top then S.top.area_num = area_num + 1 end
+
+      area_num = area_num + 2
+    end -- sx, sy
+    end
+  end
+
+
+  local function flood_check_pair(S, dir)
+    if not S then return end
+
+    -- blocked by an edge, cannot flood across it
+    if S.border[dir].edge_kind then return end
+
+    local N = S:neighbor(dir)
+
+    if not N then return end
+
+    -- already the same?
+    if S.area_num == N.area_num then return end
+
+    local new_num = math.min(S.area_num, N.area_num)
+
+    S.area_num = new_num
+    N.area_num = new_num
+
+    did_change = true
+  end
+
+
+  local function flood_fill_pass()
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      local S  = SEEDS[sx][sy]
+      local S2 = S.top
+
+      each dir in geom.ALL_DIRS do
+        flood_check_pair(S,  dir)
+        flood_check_pair(S2, dir)
+      end
+    end
+    end
+  end
+
+
+  local function area_for_number(num)
+    local area = LEVEL.temp_area_map[num]
+
+    if not area then
+      -- the mode can become "void" or "scenic" later
+      area = AREA_CLASS.new("normal")
+
+      LEVEL.temp_area_map[num] = area
+    end
+
+    return area
+  end
+
+
+  local function flood_fill_areas()
+    gui.printf("flood_fill_areas....\n")
+
+    assign_area_numbers()
+
+    repeat
+gui.printf("  loop %d\n", alloc_id("flood_loop"))
+      did_change = false
+      flood_fill_pass()
+    until not did_change
+  end
+
+
+  local function set_area(S)
+    S.area = area_for_number(S.area_num)
+
+    table.insert(S.area.seeds, S)
+  end
+
+
+  local function create_the_areas()
+    flood_fill_areas()
+
+    LEVEL.temp_area_map = {}
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      local S  = SEEDS[sx][sy]
+      local S2 = S.top
+
+      set_area(S)
+
+      if S2 then set_area(S2) end
+    end
+    end
+
+    LEVEL.temp_area_map = nil
+
+    Area_squarify_seeds()
+    Area_find_neighbors()
+  end
+
+
+  local function flood_inner_areas(A)
+    A.is_inner = true
+
+    each S in A.seeds do
+    each dir in geom.ALL_DIRS do
+      local N = S:neighbor(dir)
+
+      if not (N and N.area) then continue end
+
+      if N.area.is_inner then continue end
+
+      if S.border[dir].edge_kind == "boundary" then continue end
+
+      flood_inner_areas(N.area)
+    end
+    end
+  end
+
+
+  local function mark_boundary_areas()
+    -- mark areas that lie outside of the boundary outline.
+    
+    -- middle seed will be normal (non-boundary)
+    local mx = int(SEED_W / 2)
+    local my = int(SEED_H / 2)
+
+    local S1 = SEEDS[mx][my]
+
+    flood_inner_areas(assert(S1.area))
+
+    -- bottom left seed will be boundary
+    local S2 = SEEDS[1][1]
+
+    if S2.area.is_inner then
+      error("mark_boundary_areas failed")
+    end
+
+    each area in LEVEL.areas do
+      if not area.is_inner then
+        area.mode = "scenic"
+        area.is_boundary = true
+      end
+    end
+  end
+
+
+  ---| Weird_create_areas |---
+
+  convert_to_seeds()
+
+  create_the_areas()
+
+  mark_boundary_areas()
+end
+
