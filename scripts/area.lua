@@ -647,7 +647,7 @@ end
 
 
 
-function Weird_analyse_areas()
+function Area_analyse_areas()
   --
   -- See how much open space is in each area, etc...
   --
@@ -1341,10 +1341,12 @@ function Weird_create_rooms()
 
   Seed_init(W - 1, H - 1)
 
-  Weird_generate(W, H)
+  Shape_create_areas()
 
-  Weird_create_areas()
-  Weird_analyse_areas()
+--  Weird_generate(W, H)
+--  Weird_create_areas()
+
+  Area_analyse_areas()
 
   Junction_init()
     Corner_init()

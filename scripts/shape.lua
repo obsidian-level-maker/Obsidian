@@ -33,7 +33,7 @@ function Shape_save_svg()
   end
 
   local function visit_seed(A1, S1, dir)
-    local S2 = S:neighbor(dir)
+    local S2 = S1:neighbor(dir)
 
     if not (S2 and S2.area) then return end
 
@@ -41,8 +41,8 @@ function Shape_save_svg()
 
     if A2 == A1 then return end
 
-    local color = "00f"
-    if A1.is_boundary != A2.is_boundary then color = "0f0" end
+    local color = "#00f"
+    if A1.is_boundary != A2.is_boundary then color = "#0f0" end
 
     local sx1, sy1 = S1.sx, S1.sy
     local sx2, sy2 = sx1 + 1, sy1 + 1
@@ -75,6 +75,7 @@ function Shape_save_svg()
   if not fp then error("Cannot create file") end
 
   -- header
+  fp:write('<?xml version="1.0" encoding="UTF-8" standalone="no"?>')
   fp:write('<svg xmlns="http://www.w3.org/2000/svg" version="1.1">\n')
 
   -- grid
@@ -230,7 +231,7 @@ function Shape_fill_gaps()
     end
 
     if best_A2 then
-      perform_merge(A1, A2)
+      perform_merge(A1, best_A2)
     end
   end
 
@@ -266,6 +267,11 @@ function Shape_fill_gaps()
       area.is_filler = true
 
       area.seeds = T.seeds
+
+      -- install into seeds
+      each S in area.seeds do
+        S.area = area
+      end
     end
   end
 
