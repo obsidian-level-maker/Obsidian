@@ -371,6 +371,46 @@ end
 
 
 
+function Area_find_neighbors()
+
+  local function try_pair_up(A1, A2, nb_map)
+    if A1.id > A2.id then
+      A1, A2 = A2, A1
+    end
+
+    local str = string.format("%d_%d", A1.id, A2.id)
+
+    -- already seen this pair?
+    if nb_map[str] then return end
+
+--    assert(not table.has_elem(A1.neighbors, A2))
+--    assert(not table.has_elem(A2.neighbors, A1))
+
+    table.insert(A1.neighbors, A2)
+    table.insert(A2.neighbors, A1)
+
+    nb_map[str] = 1
+  end
+
+  ---| Area_find_neighbors |---
+
+  local nb_map = {}
+
+  each A in LEVEL.areas do
+  each S in A.seeds do
+  each dir in geom.ALL_DIRS do
+    local N = S:neighbor(dir)
+
+    if N and N.area and N.area != A then
+      try_pair_up(A, N.area, nb_map)
+    end
+  end
+  end
+  end
+end
+
+
+
 function Weird_create_areas()
   --
   -- Converts the point grid into areas and seeds.
@@ -527,48 +567,6 @@ gui.printf("  loop %d\n", alloc_id("flood_loop"))
   end
 
 
-  local function area_pair_str(A1, A2)
-    if A1.id > A2.id then
-      A1, A2 = A2, A1
-    end
-
-    return string.format("%d_%d", A1.id, A2.id)
-  end
-
-
-  local function try_add_neighbors(A1, A2, nb_map)
-    local str = area_pair_str(A1, A2)
-
-    -- already seen this pair?
-    if nb_map[str] then return end
-
---    assert(not table.has_elem(A1.neighbors, A2))
---    assert(not table.has_elem(A2.neighbors, A1))
-
-    table.insert(A1.neighbors, A2)
-    table.insert(A2.neighbors, A1)
-
-    nb_map[str] = 1
-  end
-
-
-  local function find_area_neighbors()
-    local nb_map = {}
-
-    each A in LEVEL.areas do
-      each S in A.seeds do
-        each dir in geom.ALL_DIRS do
-          local N = S:neighbor(dir)
-
-          if N and N.area and N.area != A then
-            try_add_neighbors(A, N.area, nb_map)
-          end
-        end
-      end
-    end
-  end
-
-
   local function create_the_areas()
     flood_fill_areas()
 
@@ -588,8 +586,7 @@ gui.printf("  loop %d\n", alloc_id("flood_loop"))
     LEVEL.temp_area_map = nil
 
     Area_squarify_seeds()
-
-    find_area_neighbors()
+    Area_find_neighbors()
   end
 
 

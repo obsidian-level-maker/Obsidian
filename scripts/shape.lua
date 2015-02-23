@@ -169,6 +169,11 @@ function Shape_fill_gaps()
   end
 
 
+  local function make_real_areas()
+    -- FIXME
+  end
+
+
   ---| Shape_fill_gaps |---
 
   create_temp_areas()
@@ -176,6 +181,8 @@ function Shape_fill_gaps()
   for loop = 1,30 do
     merge_temp_areas()
   end
+
+  make_real_areas()
 end
 
 
@@ -187,5 +194,8 @@ function Shape_create_areas()
 -- TODO : Shape_make_hallways()
 
   Shape_fill_gaps()
+
+  Area_squarify_seeds()
+  Area_find_neighbors()
 end
 
