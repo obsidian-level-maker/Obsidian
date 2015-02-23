@@ -1214,23 +1214,6 @@ function sort_areas_by_volume()
 end
 
 
-function largest_area()
-  local best
-
-  each A in LEVEL.areas do
-    if A.mode == "normal" then
-      if not best or (A.svolume > best.svolume) then
-        best = A
-      end
-    end
-  end
-
-  assert(best)
-
-  return best
-end
-
-
 
 function Room_void_some_areas()
   local largest
@@ -1321,7 +1304,7 @@ function Room_void_some_areas()
   if OB_CONFIG.mode == "dm" then quota = quota / 2 end
   
   -- the largest area can never become VOID
-  largest = largest_area()
+  largest = Area_largest_area()
 
   largest.no_void = true
 
@@ -1690,7 +1673,7 @@ function Room_assign_hallways()
 
   local quota = walkable_svolume() * 0.3
 
-  local largest = largest_area()
+  local largest = Area_largest_area()
 
   largest.no_hallway = true
 

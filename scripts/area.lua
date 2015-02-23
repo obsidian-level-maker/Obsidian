@@ -176,18 +176,18 @@ function AREA_CLASS.make_hallway(A)
 end
 
 
-function volume_of_area(A)
-    local volume = 0
+function AREA_CLASS.calc_volume(A)
+  local volume = 0
 
-    each S in A.seeds do
-      if S.diagonal then
-        volume = volume + 0.5
-      else
-        volume = volume + 1
-      end
+  each S in A.seeds do
+    if S.diagonal then
+      volume = volume + 0.5
+    else
+      volume = volume + 1
     end
+  end
 
-    return volume
+  return volume
 end
 
 
@@ -371,6 +371,14 @@ end
 
 
 
+function Area_calc_volumes()
+  each A in LEVEL.areas do
+    A.svolume = A:calc_volume()
+  end
+end
+
+
+
 function Area_find_neighbors()
 
   local function try_pair_up(A1, A2, nb_map)
@@ -407,6 +415,22 @@ function Area_find_neighbors()
   end
   end
   end
+end
+
+
+
+function Area_largest_area()
+  local best
+
+  each A in LEVEL.areas do
+    if A.mode == "normal" then
+      if not best or (A.svolume > best.svolume) then
+        best = A
+      end
+    end
+  end
+
+  return assert(best)
 end
 
 
@@ -823,12 +847,12 @@ function Area_analyse_areas()
 
   ---| Weird_analyse_areas |---
 
+  Area_calc_volumes()
+
   each A in LEVEL.areas do
     collect_inner_points(A)
 
     create_edge_loops(A)
-
-    A.svolume = volume_of_area(A)
 
     A.openness = #A.inner_points / A.svolume
   end
