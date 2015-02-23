@@ -19,6 +19,96 @@
 ------------------------------------------------------------------------
 
 
+function Shape_save_svg()
+
+  -- grid size
+  local SIZE = 14
+
+  local fp
+
+
+  local function wr_line(fp, x1, y1, x2, y2, color, width)
+    fp:write(string.format('<line x1="%d" y1="%d" x2="%d" y2="%d" stroke="%s" stroke-width="%d" />\n',
+             x1, y1, x2, y2, color, width or 1))
+  end
+
+  local function visit_seed(A1, S1, dir)
+    local S2 = S:neighbor(dir)
+
+    if not (S2 and S2.area) then return end
+
+    local A2 = S2.area
+
+    if A2 == A1 then return end
+
+    local color = "00f"
+    if A1.is_boundary != A2.is_boundary then color = "0f0" end
+
+    local sx1, sy1 = S1.sx, S1.sy
+    local sx2, sy2 = sx1 + 1, sy1 + 1
+
+    if dir == 3 or dir == 7 then
+      -- no change
+
+    elseif dir == 1 or dir == 9 then
+      sy1, sy2 = sy2, sy1
+
+    elseif dir == 2 then sy2 = sy1
+    elseif dir == 8 then sy1 = sy2
+    elseif dir == 4 then sx2 = sx1
+    elseif dir == 6 then sx1 = sx2
+    else
+      error("uhhh what")
+    end
+
+    wr_line(fp, (sx1 - 1) * SIZE, (sy1 - 1) * SIZE,
+                (sx2 - 1) * SIZE, (sy2 - 1) * SIZE, color, 2)
+  end
+
+
+  ---| Shape_save_svg |---
+
+  local filename = "shape_" .. LEVEL.name .. ".svg"
+
+  fp = io.open(filename, "w")
+
+  if not fp then error("Cannot create file") end
+
+  -- header
+  fp:write('<svg xmlns="http://www.w3.org/2000/svg" version="1.1">\n')
+
+  -- grid
+  local min_x = 1 * SIZE
+  local min_y = 1 * SIZE
+
+  local max_x = SEED_W * SIZE
+  local max_y = SEED_H * SIZE
+
+  for x = 1, SEED_W do
+    wr_line(fp, x * SIZE, SIZE, x * SIZE, max_y, "#bbb")
+  end
+
+  for y = 1, SEED_H do
+    wr_line(fp, SIZE, y * SIZE, max_x, y * SIZE, "#bbb")
+  end
+
+  -- edges
+  each A in LEVEL.areas do
+  each S in A.seeds do
+  each dir in geom.ALL_DIRS do
+    visit_seed(A, S, dir)
+  end
+  end
+  end
+  
+  -- end
+  fp:write('</svg>\n')
+
+  fp:close()
+end
+
+
+
 
 function Shape_fill_gaps()
   --
@@ -251,5 +341,7 @@ function Shape_create_areas()
   Area_find_neighbors()
 
   Shape_do_boundary()
+
+  Shape_save_svg()
 end
 
