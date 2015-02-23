@@ -183,6 +183,42 @@ function Shape_fill_gaps()
   end
 
   make_real_areas()
+
+  Area_squarify_seeds()
+end
+
+
+
+function Shape_do_boundary()
+
+  local function check_area(A)
+    local sx1 = LEVEL.boundary_margin
+    local sx2 = SEED_W + 1 - LEVEL.boundary_margin
+
+    local sy1 = LEVEL.boundary_margin
+    local sy2 = SEED_H + 1 - LEVEL.boundary_margin
+
+    -- TODO
+  end
+
+
+  ---| Shape_do_boundary |---
+
+  local map_size = SEED_W + SEED_H
+
+  if map_size < 52 then
+    LEVEL.boundary_margin = 3
+  elseif map_size < 72 then
+    LEVEL.boundary_margin = 4
+  else
+    LEVEL.boundary_margin = 5
+  end
+
+  each A in LEVEL.areas do
+    if not check_area(A) then
+      A.is_boundary = true
+    end
+  end
 end
 
 
@@ -195,7 +231,8 @@ function Shape_create_areas()
 
   Shape_fill_gaps()
 
-  Area_squarify_seeds()
   Area_find_neighbors()
+
+  Shape_do_boundary()
 end
 
