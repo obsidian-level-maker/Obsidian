@@ -769,8 +769,8 @@ function Shape_fill_gaps()
       local S = SEEDS[sx][sy]
       local S2 = S.top
 
-      if S .temp_area == A2 then S .temp_area = A1 end
-      if S2.temp_area == A2 then S2.temp_area = A1 end
+      if S  and S .temp_area == A2 then S .temp_area = A1 end
+      if S2 and S2.temp_area == A2 then S2.temp_area = A1 end
     end
     end
 
