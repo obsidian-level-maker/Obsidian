@@ -32,7 +32,7 @@ GENERIC_1x2 =
 
   structure =
   {
-    "aa"
+    "11"
   }
 }
 
@@ -43,7 +43,7 @@ GENERIC_1x3 =
 
   structure =
   {
-    "aaa"
+    "111"
   }
 }
 
@@ -56,8 +56,8 @@ GENERIC_2x2 =
 
   structure =
   {
-    "aa"
-    "aa"
+    "11"
+    "11"
   }
 }
 
@@ -76,8 +76,8 @@ GENERIC_2x2_diamond =
 
   diagonals =
   {
-    ".a", "a."
-    ".a", "a."
+    ".1", "1."
+    ".1", "1."
   }
 }
 
@@ -94,15 +94,15 @@ ROOM_O_3x3 =
 
   structure =
   {
-    "/a%"
-    "aaa"
-    "%a/"
+    "/1%"
+    "111"
+    "%1/"
   }
 
   diagonals =
   {
-    ".a", "a."
-    ".a", "a."
+    ".1", "1."
+    ".1", "1."
   }
 }
 
@@ -114,15 +114,15 @@ ROOM_O_4x3 =
 
   structure =
   {
-    "/aa%"
-    "aaaa"
-    "%aa/"
+    "/11%"
+    "1111"
+    "%11/"
   }
 
   diagonals =
   {
-    ".a", "a."
-    ".a", "a."
+    ".1", "1."
+    ".1", "1."
   }
 }
 
@@ -139,14 +139,14 @@ HALL_L_3x3_rounded =
 
   structure =
   {
-    "a.."
-    "a%."
-    "%aa"
+    "1.."
+    "1%."
+    "%11"
   }
 
   diagonals =
   {
-    "a.", ".a"
+    "1.", ".1"
   }
 }
 
@@ -250,9 +250,79 @@ end
 function Shape_preprocess_patterns()
 
 
+  local function parse_element(ch)
+    
+    if ch == '.' then return { kind="empty" } end
+
+    if ch == '1' then return { kind="area", area=1 } end
+    if ch == '2' then return { kind="area", area=2 } end
+    if ch == '3' then return { kind="area", area=3 } end
+    if ch == '4' then return { kind="area", area=4 } end
+    if ch == '5' then return { kind="area", area=5 } end
+    if ch == '6' then return { kind="area", area=6 } end
+    if ch == '7' then return { kind="area", area=7 } end
+    if ch == '8' then return { kind="area", area=8 } end
+    if ch == '9' then return { kind="area", area=9 } end
+
+    error("Shape_parse_char: unknown symbol: " .. tostring(ch))
+  end
+
+
+  local function parse_char(ch, diag_list)
+    -- FIXME  
+  end
+
+
+  local function convert_structure(def, structure)
+    local W = #structure[1]
+    local H = #structure
+
+    local diag_list
+    
+    if def.diagonals then
+      diag_list = table.copy(def.diagonals)
+    end
+
+    local grid = table.array_2D(W, H)
+
+    for x = 1, W do
+    for y = 1, H do
+      local line = structure[y]
+
+      if #line != W then
+        error("Malformed structure in shape: " .. def.name)
+      end
+
+      local ch = string.sub(line, x, x)
+
+      -- textural representation must be inverted
+      local gy = H + 1 - y
+
+      grid[x][gy] = parse_char(ch, diag_list)
+    end -- x, y
+    end
+
+    local INFO =
+    {
+      grid = grid
+    }
+
+    return INFO
+  end
+
+
   ---| Shape_preprocess_patterns |---
 
-  -- FIXME
+  table.name_up(SHAPES)
+
+  table.expand_copies(SHAPES)
+
+  each name,def in SHAPES do
+    def.elements = {}
+    def.processed = {}
+
+    def.processed[1] = convert_structure(def, def.structure)
+  end
 end
 
 
