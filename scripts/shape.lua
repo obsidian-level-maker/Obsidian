@@ -401,8 +401,58 @@ function Shape_add_shapes()
   --
 
   
-  local function try_add_shape_RAW(def, sx, sy, rot)
-    -- TODO
+  local function create_areas_for_shape(def)
+    local area_map = {}
+
+    for i = 1, #def.areas do
+      local area = AREA_CLASS.new("normal")
+
+      if def.mode == "hallway" then
+        area.prefer_mode = "hallway"
+      else
+        area.prefer_mode = "room"
+      end
+
+      area_map[i] = area
+    end
+  end
+
+
+  local function test_or_install_element(def, elem, sx, sy, rot, install_it)
+    -- FIXME
+
+  end
+
+
+  local function try_add_shape_RAW(def, sx, sy, rot, install_it)
+    local info = def.processed[1]
+
+    local W = info.grid.w
+    local H = info.grid.h
+
+    local area_map
+
+    if install_it then
+      area_map = create_areas_for_shape(def)
+    end
+
+    for px = 1, W do
+    for py = 1, H do
+      local elem = info.grid[px][py]
+      assert(elem)
+
+      if elem.kind == "empty" then continue end
+
+      local res = test_or_install_element(def, elem, sx, sy, rot, install_it)
+
+      if not install_it and res then
+        -- can place this element here
+        return true
+      end
+    end -- px, py
+    end
+
+    return false
   end
 
 
@@ -416,7 +466,7 @@ function Shape_add_shapes()
 
       for x = x1, x2 do
       for y = y1, y2 do
-        -- only edges of the box
+        -- only need to visit the sides of the bbox
         if not (x == x1 or x == x2 or y == y1 or y == y2) then
           continue
         end
