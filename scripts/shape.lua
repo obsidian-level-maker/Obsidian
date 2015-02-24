@@ -249,21 +249,41 @@ end
 
 function Shape_preprocess_patterns()
 
+  local cur_def
 
-  local function parse_element(ch)
+
+  local function add_element(E)
+    if E.kind != "area" then return end
+
+    if cur_def.area_list[E.area] then return end
+
+    cur_def.area_list[E.area] = { area=E.area }
+  end
+
+
+  local function do_parse_element(ch)
     if ch == '.' then return { kind="empty" } end
 
     if ch == '1' then return { kind="area", area=1 } end
     if ch == '2' then return { kind="area", area=2 } end
     if ch == '3' then return { kind="area", area=3 } end
     if ch == '4' then return { kind="area", area=4 } end
+
     if ch == '5' then return { kind="area", area=5 } end
     if ch == '6' then return { kind="area", area=6 } end
     if ch == '7' then return { kind="area", area=7 } end
     if ch == '8' then return { kind="area", area=8 } end
-    if ch == '9' then return { kind="area", area=9 } end
 
     error("Shape_parse_char: unknown symbol: " .. tostring(ch))
+  end
+
+
+  local function parse_element(ch)
+    local E = do_parse_element(ch)
+
+    add_element(E)
+
+    return E
   end
 
 
@@ -334,7 +354,9 @@ function Shape_preprocess_patterns()
   table.expand_copies(SHAPES)
 
   each name,def in SHAPES do
-    def.elements = {}
+    cur_def = def
+
+    def.area_list = {}
     def.processed = {}
 
     def.processed[1] = convert_structure(def, def.structure)
