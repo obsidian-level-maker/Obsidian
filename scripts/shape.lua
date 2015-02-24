@@ -22,10 +22,9 @@
 SHAPES =
 {
  
+--
 -- Generic ones, mainly for stairwells
-
--- IDEA : merge 'STAIRWELL_SHAPES' into here?
-
+--
 
 GENERIC_1x2 =
 {
@@ -83,12 +82,76 @@ GENERIC_2x2_diamond =
 }
 
 
+--
 -- Rooms
+--
+
+ROOM_O_3x3 =
+{
+  prob = 100
+
+  initial_prob = 100
+
+  structure =
+  {
+    "/a%"
+    "aaa"
+    "%a/"
+  }
+
+  diagonals =
+  {
+    ".a", "a."
+    ".a", "a."
+  }
+}
+
+ROOM_O_4x3 =
+{
+  prob = 80
+
+  initial_prob = 80
+
+  structure =
+  {
+    "/aa%"
+    "aaaa"
+    "%aa/"
+  }
+
+  diagonals =
+  {
+    ".a", "a."
+    ".a", "a."
+  }
+}
 
 
+--
 -- Hallways
+--
+
+HALL_L_3x3_rounded =
+{
+  mode = "hallway"
+
+  prob = 25
+
+  structure =
+  {
+    "a.."
+    "a%."
+    "%aa"
+  }
+
+  diagonals =
+  {
+    "a.", ".a"
+  }
+}
 
 
+-- end of SHAPES
 }
 
 
