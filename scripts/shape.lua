@@ -279,6 +279,79 @@ function Shape_add_shapes()
   -- Firstly we place a few "initial" shapes in fairly fixed locations,
   -- then subsequent shapes will extend onto the existing ones.
   --
+
+  
+  local function try_add_shape_RAW(def, sx, sy, rot)
+    -- TODO
+  end
+
+
+  local function try_add_shape(def, sx, sy)
+    -- TODO
+  end
+
+
+  local function add_shape_from_list(tab, sx, sy, required)
+    for loop = 1, sel(required, 2000, 5) do
+      local name = rand.key_by_probs(tab)
+      local def  = assert(SHAPES[name])
+
+      if try_add_shape(def, sx, sy) then
+        return true
+      end
+    end
+
+    if required then
+      error("Failed to add an required shape")
+    end
+
+    return false
+  end
+
+
+  local function collect_usable_shapes(reqs)
+    local tab = {}
+  end
+
+
+  local function loc_to_seed(loc)
+    -- loc is 1 .. 9 (like number on the numeric keypad)
+
+    local dx, dy = geom.delta(loc)
+
+    dx = 0.5 + dx * 0.3
+    dy = 0.5 + dy * 0.3
+
+    local sx = rand.int(SEED_W * dx)
+    local sy = rand.int(SEED_H * dy)
+
+    return sx, sy
+  end
+
+
+  local function add_initial_shapes()
+    local shape_tab = collect_usable_shapes({ initial=1 })
+
+    local LOCS = { 1,2,3, 4,5,6, 7,8,9 }
+
+    -- on small maps, have less initial locations
+    if SEED_W < 32 then
+      LOCS = { 1,3,5,7,9 }
+    end
+
+    rand.shuffle(LOCS)
+
+    each loc in LOCS do
+      local sx, sy = loc_to_seed(loc)
+
+      add_shape_from_list(shape_tab, sx, sy, "required")  
+    end
+  end
+
+
+  ---| Shape_add_shapes |---
+
+  add_initial_shapes()
 end
 
 
