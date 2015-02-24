@@ -86,6 +86,20 @@ GENERIC_2x2_diamond =
 -- Rooms
 --
 
+ROOM_RECT_3x3 =
+{
+  prob = 50
+
+  initial_prob = 50
+
+  structure =
+  {
+    "111"
+    "111"
+    "111"
+  }
+}
+
 ROOM_O_3x3 =
 {
   prob = 100
@@ -140,8 +154,8 @@ HALL_L_3x3_rounded =
   structure =
   {
     "1.."
-    "1%."
-    "%11"
+    "1.."  -- FIXME
+    "111"
   }
 
   diagonals =
@@ -398,11 +412,13 @@ function Shape_add_shapes()
   -- shapes onto it.
   --
 
+  local area_map
+
   
   local function create_areas_for_shape(def)
-    local area_map = {}
+    area_map = {}
 
-    for i = 1, #def.areas do
+    for i = 1, #def.area_list do
       local area = AREA_CLASS.new("normal")
 
       if def.mode == "hallway" then
@@ -434,27 +450,61 @@ function Shape_add_shapes()
 
 
   local function test_or_install_element(info, elem, T, px, py, install_it)
-    -- FIXME
+    if elem.kind == "empty" then return true end
 
+    local sx, sy = transform_coord(info, T, px, py)
+
+    -- never allow shapes to touch edge of map
+    if sx <= 1 or sx >= (SEED_W - 1) then return false end
+    if sy <= 1 or sy >= (SEED_H - 1) then return false end
+
+    local S = SEEDS[sx][sy]
+
+    if elem.kind == "diagonal" then
+    
+      -- FIXME !!!  [ FIXME for diagonals ]
+      return false
+    
+    else  -- full square seed
+
+      -- used?
+      if S.diagonal then return false end
+      if S.area     then return false end
+
+      if install_it then
+        if elem.kind != "area" then
+          error("Unknown element kind in shape")
+        end
+
+        local A = area_map[elem.area]
+        assert(A)
+
+        S.area = A
+        table.insert(A.seeds, S)
+      end
+
+      return true
+    end
   end
 
 
   local function try_add_shape_RAW(info, T, install_it)
+
+if install_it then
+stderrf("Installing shape '%s' @ (%d %d)\n", info.def.name, T.x, T.y)
+end
+
     local W = info.grid.w
     local H = info.grid.h
 
-    local area_map
-
     if install_it then
-      area_map = create_areas_for_shape(def)
+      create_areas_for_shape(info.def)
     end
 
     for px = 1, W do
     for py = 1, H do
       local elem = info.grid[px][py]
       assert(elem)
-
-      if elem.kind == "empty" then continue end
 
       local res = test_or_install_element(info, elem, T, px, py, install_it)
 
@@ -486,9 +536,16 @@ function Shape_add_shapes()
           continue
         end
 
+        local best_T
+
         for transpose = 0, 1 do
         for mirror_x  = 0, 1 do
         for mirror_y  = 0, 1 do
+          local score = gui.random()
+
+          -- early out
+          if best_T and score < best_T.score then continue end
+
           local T =
           {
             x = x
@@ -496,14 +553,19 @@ function Shape_add_shapes()
             transpose = (transpose > 0)
             mirror_x  = (mirror_x > 0)
             mirror_y  = (mirror_y > 0)
+            score     = score
           }
 
           if try_add_shape_RAW(info, T) then
-             try_add_shape_RAW(info, T, "install_it")
-            return true  -- OK
+            best_T = T
           end
         end -- transpose, mirror_x, mirror_y
         end
+        end
+
+        if best_T then
+          try_add_shape_RAW(info, best_T, "install_it")
+          return true  -- OK
         end
 
       end  -- x, y
@@ -903,6 +965,8 @@ function Shape_create_areas()
 
   Shape_add_shapes()
 
+Shape_save_svg()
+
   Shape_fill_gaps()
 
   Area_calc_volumes()
@@ -910,6 +974,5 @@ function Shape_create_areas()
 
   Shape_assign_boundary()
 
-  Shape_save_svg()
 end
 
