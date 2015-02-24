@@ -826,10 +826,10 @@ end
 function Levels_build_it()
   Levels_plan_stuff()
 
-  Weird_create_rooms()
+  Area_create_rooms()
   if gui.abort() then return "abort" end
 
-  Weird_connect_stuff()
+  Connect_stuff()
 
   Quest_make_quests()
   if gui.abort() then return "abort" end

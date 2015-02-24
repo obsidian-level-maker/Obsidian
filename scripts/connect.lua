@@ -382,7 +382,7 @@ end
 ----------------------------------------------------------------
 
 
-function Weird_connect_stuff()
+function Connect_stuff()
 
 
   local function where_can_connect(R1, R2)
