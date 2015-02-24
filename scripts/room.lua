@@ -2257,10 +2257,9 @@ end
 ------------------------------------------------------------------------
 
 
-
-function Weird_build_rooms()
+function Room_build_all()
   
-  gui.printf("\n---=====  Build WEIRD rooms =====---\n\n")
+  gui.printf("\n---=====  Build Rooms =====---\n\n")
 
   Room_reckon_doors()
   Room_floor_heights()

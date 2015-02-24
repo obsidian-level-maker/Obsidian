@@ -864,7 +864,7 @@ A.is_outdoor = false
   end
 
 
-  ---| Weird_connect_stuff |---
+  ---| Connect_stuff |---
 
   -- give each area of each room a conn_group
   each A in LEVEL.areas do

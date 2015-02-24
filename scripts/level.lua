@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2014 Andrew Apted
+--  Copyright (C) 2006-2015 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -834,7 +834,7 @@ function Levels_build_it()
   Quest_make_quests()
   if gui.abort() then return "abort" end
 
-  Weird_build_rooms()
+  Room_build_all()
   if gui.abort() then return "abort" end
 
   Monster_make_battles()
