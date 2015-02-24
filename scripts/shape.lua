@@ -340,6 +340,7 @@ function Shape_preprocess_patterns()
 
     local INFO =
     {
+      def  = def
       grid = grid
     }
 
@@ -393,11 +394,8 @@ end
 
 function Shape_add_shapes()
   --
-  -- Picks shapes from the SHAPES table and tries to place them on
-  -- the map.
-  --
-  -- Firstly we place a few "initial" shapes in fairly fixed locations,
-  -- then subsequent shapes will extend onto the existing ones.
+  -- Builds the bulk of the traversible map by placing predefined
+  -- shapes onto it.
   --
 
   
@@ -418,15 +416,30 @@ function Shape_add_shapes()
   end
 
 
-  local function test_or_install_element(def, elem, sx, sy, rot, install_it)
+  local function transform_coord(info, T, px, py)
+    if T.mirror_x then px = info.grid.w + 1 - px end
+    if T.mirror_y then py = info.grid.h + 1 - py end
+
+    if T.transpose then px, py = py, px end
+
+    local sx = T.x + (px - 1)
+    local sy = T.y + (py - 1)
+
+    return sx, sy
+  end
+
+
+  local function transform_diagonal(info, ...)
+  end
+
+
+  local function test_or_install_element(info, elem, T, px, py, install_it)
     -- FIXME
 
   end
 
 
-  local function try_add_shape_RAW(def, sx, sy, rot, install_it)
-    local info = def.processed[1]
-
+  local function try_add_shape_RAW(info, T, install_it)
     local W = info.grid.w
     local H = info.grid.h
 
@@ -443,20 +456,22 @@ function Shape_add_shapes()
 
       if elem.kind == "empty" then continue end
 
-      local res = test_or_install_element(def, elem, sx, sy, rot, install_it)
+      local res = test_or_install_element(info, elem, T, px, py, install_it)
 
-      if not install_it and res then
-        -- can place this element here
-        return true
+      if not install_it and not res then
+        -- cannot place this shape here (something in the way)
+        return false
       end
     end -- px, py
     end
 
-    return false
+    return true
   end
 
 
   local function try_add_shape(def, sx, sy)
+    local info = def.processed[1]
+
     for dist = 0, 9 do
       local x1 = math.clamp(3, sx - dist, SEED_W - 4)
       local x2 = math.clamp(3, sx + dist, SEED_W - 4)
@@ -471,11 +486,26 @@ function Shape_add_shapes()
           continue
         end
 
-        for rot = 0, 7 do
-          if try_add_shape_RAW(def, x, y, rot) then
+        for transpose = 0, 1 do
+        for mirror_x  = 0, 1 do
+        for mirror_y  = 0, 1 do
+          local T =
+          {
+            x = x
+            y = y
+            transpose = (transpose > 0)
+            mirror_x  = (mirror_x > 0)
+            mirror_y  = (mirror_y > 0)
+          }
+
+          if try_add_shape_RAW(info, T) then
+             try_add_shape_RAW(info, T, "install_it")
             return true  -- OK
           end
+        end -- transpose, mirror_x, mirror_y
         end
+        end
+
       end  -- x, y
       end
     end -- dist
