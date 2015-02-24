@@ -251,7 +251,6 @@ function Shape_preprocess_patterns()
 
 
   local function parse_element(ch)
-    
     if ch == '.' then return { kind="empty" } end
 
     if ch == '1' then return { kind="area", area=1 } end
@@ -269,7 +268,24 @@ function Shape_preprocess_patterns()
 
 
   local function parse_char(ch, diag_list)
-    -- FIXME  
+    -- handle diagonal seeds
+    if ch == '/' or ch == '%' then
+      local D = table.remove(diag_list, 1)
+      if not D then
+        error("Shape_parse_char: not enough diagonals")
+      end
+
+      local L = parse_element(string.sub(D, 1, 1))
+      local R = parse_element(string.sub(D, 2, 2))
+
+      local diagonal = sel(ch == '/', 3, 1)
+
+      if ch == '/' then L,R = R,L end
+
+      return { kind="diagonal", diagonal=diagonal, bottom=L, top=R }
+    end
+
+    return parse_element(ch)
   end
 
 
