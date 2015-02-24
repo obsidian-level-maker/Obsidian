@@ -435,8 +435,8 @@ function Shape_add_shapes()
   end
 
 
-  local function add_shape_from_list(tab, sx, sy, required)
-    for loop = 1, sel(required, 2000, 5) do
+  local function add_shape_from_list(tab, sx, sy, attempts)
+    for loop = 1, attempts do
       local name = rand.key_by_probs(tab)
       local def  = assert(SHAPES[name])
 
@@ -445,16 +445,32 @@ function Shape_add_shapes()
       end
     end
 
-    if required then
-      error("Failed to add an required shape")
-    end
-
     return false
   end
 
 
-  local function collect_usable_shapes(reqs)
+  local function collect_usable_shapes(mode)
+    -- mode can be "initial", "hallway" or "normal"
+
     local tab = {}
+
+    each name, def in SHAPES do
+      local prob = def.prob or 50
+
+      if (mode == "hallway") != (def.mode == "hallway") then
+        continue
+      end
+
+      if mode == "initial" then
+        prob = def.initial_prob or 0
+      end
+
+      if prob > 0 then
+        tab[name] = prob
+      end
+    end
+
+    return tab
   end
 
 
@@ -474,7 +490,7 @@ function Shape_add_shapes()
 
 
   local function add_initial_shapes()
-    local initial_tab = collect_usable_shapes({ initial=1 })
+    local initial_tab = collect_usable_shapes("initial")
 
     local LOCS = { 1,2,3, 4,5,6, 7,8,9 }
 
@@ -486,13 +502,13 @@ function Shape_add_shapes()
     each loc in rand.shuffle(LOCS) do
       local sx, sy = loc_to_seed(loc)
 
-      add_shape_from_list(initial_tab, sx, sy, "required")  
+      add_shape_from_list(initial_tab, sx, sy, 10)  
     end
   end
 
 
   local function add_hallways()
-    local hallway_tab = collect_usable_shapes({ hallway=1 })
+    local hallway_tab = collect_usable_shapes("hallway")
 
     local LOCS = { 1,2,3, 4,5,6, 7,8,9 }
 
@@ -505,14 +521,14 @@ function Shape_add_shapes()
     each loc in rand.shuffle(LOCS) do
       if rand.odds(prob) then
         local sx, sy = loc_to_seed(loc)
-        add_shape_from_list(hallway_tab, sx, sy)
+        add_shape_from_list(hallway_tab, sx, sy, 2)
       end
     end
   end
 
 
   local function add_rooms()
-    local room_tab = collect_usable_shapes({ room=1 })
+    local room_tab = collect_usable_shapes("normal")
 
     local count = int(SEED_W * SEED_H / 30)
 
@@ -520,7 +536,7 @@ function Shape_add_shapes()
       local sx = rand.irange(LEVEL.boundary_sx1, LEVEL.boundary_sx2)
       local sy = rand.irange(LEVEL.boundary_sy1, LEVEL.boundary_sy2)
 
-      add_shape_from_list(room_tab, sx, sy)
+      add_shape_from_list(room_tab, sx, sy, 1)
     end
   end
 
