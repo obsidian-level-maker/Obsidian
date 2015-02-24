@@ -86,7 +86,7 @@ GENERIC_2x2_diamond =
 -- Rooms
 --
 
-ROOM_RECT_3x3 =
+ROOM_RECT_4x2 =
 {
   prob = 50
 
@@ -94,9 +94,8 @@ ROOM_RECT_3x3 =
 
   structure =
   {
-    "111"
-    "111"
-    "111"
+    "1111"
+    "1111"
   }
 }
 
@@ -184,16 +183,19 @@ function Shape_save_svg()
   end
 
   local function visit_seed(A1, S1, dir)
-    local S2 = S1:neighbor(dir)
+    local S2 = S1:neighbor(dir, "NODIR")
 
-    if not (S2 and S2.area) then return end
+    if S2 == "NODIR" then return end
 
-    local A2 = S2.area
+    local A2 = S2 and S2.area
 
-    if A2 == A1 then return end
+    if A1 == A2 then return end
+
+    -- only draw the edge once
+    if A2 and A2.id < A1.id then return end
 
     local color = "#00f"
-    if A1.is_boundary != A2.is_boundary then color = "#0f0" end
+    if A2 and A1.is_boundary != A2.is_boundary then color = "#0f0" end
 
     local sx1, sy1 = S1.sx, S1.sy
     local sx2, sy2 = sx1 + 1, sy1 + 1
@@ -468,8 +470,8 @@ function Shape_add_shapes()
     else  -- full square seed
 
       -- used?
-      if S.diagonal then return false end
       if S.area     then return false end
+      if S.diagonal then return false end
 
       if install_it then
         if elem.kind != "area" then
@@ -478,6 +480,8 @@ function Shape_add_shapes()
 
         local A = area_map[elem.area]
         assert(A)
+
+        assert(S.area == nil)
 
         S.area = A
         table.insert(A.seeds, S)
