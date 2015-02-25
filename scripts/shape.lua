@@ -28,7 +28,7 @@ SHAPES =
 
 GENERIC_1x2 =
 {
-  prob = 30
+  prob = 10
 
   structure =
   {
@@ -50,7 +50,7 @@ GENERIC_1x3 =
 
 GENERIC_2x2 =
 {
-  prob = 100
+  prob = 50
 
   initial_prob = 10
 
@@ -64,7 +64,7 @@ GENERIC_2x2 =
 
 GENERIC_2x2_diamond =
 {
-  prob = 100
+  prob = 30
 
   initial_prob = 10
 
@@ -198,7 +198,14 @@ function Shape_save_svg()
     if A2 and A2.id < A1.id then return end
 
     local color = "#00f"
-    if A2 and A1.is_boundary != A2.is_boundary then color = "#0f0" end
+
+    if A1.prefer_mode == "hallway" or (A2 and A2.prefer_mode == "hallway") then
+      color = "#f00"
+    elseif A2 and A1.is_boundary != A2.is_boundary then
+      color = "#0f0"
+    elseif A1.prefer_mode == "void" and (A2 and A2.prefer_mode == "void") then
+      color = "#0ff"
+    end
 
     local sx1, sy1 = S1.sx, S1.sy
     local sx2, sy2 = sx1 + 1, sy1 + 1
@@ -507,10 +514,6 @@ function Shape_add_shapes()
 
       local dir, E1, E2 = transform_diagonal(T, elem.diagonal, elem.bottom, elem.top)
 
---- if mode == "install" then
---- stderrf("transform_diagonal: dir = %d\nE1 =\n%s\nE2 =\n%s\n", dir, table.tostr(E1), table.tostr(E2))
---- end
-
       -- mismatched diagonal?
       if S.diagonal and not (S.diagonal == dir or S.diagonal == (10-dir)) then
         return false
@@ -523,7 +526,6 @@ function Shape_add_shapes()
         if mode == "test" then return true end
 
         -- need to split the seed to install this element
-stderrf("SPLIT @ %s  diag=%d  pat: (%d %d)\n", S:tostr(), math.min(dir, 10 - dir), px, py)
         S:split(math.min(dir, 10 - dir))
       end
 
@@ -537,7 +539,6 @@ stderrf("SPLIT @ %s  diag=%d  pat: (%d %d)\n", S:tostr(), math.min(dir, 10 - dir
           if S1.area then return false end
 
           if mode == "install" then
-stderrf("INSTALL DIAG %s  diag=%d  pat: (%d %d)\n", S1:tostr(), dir, px, py)
         install_half_seed(S1, E1)
           end
 
@@ -558,7 +559,6 @@ stderrf("INSTALL DIAG %s  diag=%d  pat: (%d %d)\n", S1:tostr(), dir, px, py)
       if S.diagonal then return false end
 
       if mode == "install" then
-stderrf("INSTALL FULL @ %s  pat: (%d %d)\n", S:tostr(), px, py)
         install_half_seed(S, elem)
       end
 
@@ -588,7 +588,8 @@ stderrf("INSTALL FULL @ %s  pat: (%d %d)\n", S:tostr(), px, py)
 
   local function try_add_shape_RAW(info, T, mode)
     assert(mode)
--- debug
+
+-- DEBUG
 if mode == "install" then
 stderrf("Installing shape '%s' @ (%d %d)\n", info.def.name, T.x, T.y)
 end
@@ -764,7 +765,7 @@ end
       LOCS = { 2,4,5,6,8 }
     end
 
-    local prob = 50
+    local prob = 99
 
     each loc in rand.shuffle(LOCS) do
       if rand.odds(prob) then
