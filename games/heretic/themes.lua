@@ -345,3 +345,21 @@ HERETIC.LEVEL_THEMES =
 }
 
 
+------------------------------------------------------------------------
+
+
+OB_THEMES["heretic_urban"] =
+{
+  label = "Urban"
+  name_theme = "URBAN"
+  mixed_prob = 50
+}
+
+
+OB_THEMES["heretic_castle"] =
+{
+  label = "Castle"
+  name_theme = "GOTHIC"
+  mixed_prob = 50
+}
+
