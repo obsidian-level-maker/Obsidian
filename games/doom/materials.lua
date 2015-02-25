@@ -68,6 +68,8 @@ DOOM.SKIN_DEFAULTS =
 }
 
 
+--------------------------------------------------
+
 DOOM.LIQUIDS =
 {
   water  = { mat="FWATER1", light=156, special=5,  damage=10 }
