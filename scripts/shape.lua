@@ -468,7 +468,22 @@ function Shape_add_shapes()
   end
 
 
-  local function test_or_install_element(info, elem, T, px, py, install_it)
+  local function install_half_seed(S, elem)
+    if elem.kind != "area" then
+      error("Unknown element kind in shape")
+    end
+
+    local A = area_map[elem.area]
+    assert(A)
+
+    assert(S.area == nil)
+
+    S.area = A
+    table.insert(A.seeds, S)
+  end
+
+
+  local function test_or_install_element(info, elem, T, px, py, mode)
     if elem.kind == "empty" then return true end
 
     local sx, sy = transform_coord(info, T, px, py)
@@ -489,28 +504,51 @@ function Shape_add_shapes()
       -- whole seed is used?
       if (not S.diagonal) and S.area then return false end
 
-    
-      -- FIXME !!!  [ FIXME for diagonals ]
-      return false
-    
-    else  -- full square seed
+      local dir, B, T = transform_diagonal(elem.diagonal, elem.bottom, elem.top)
+
+      -- mismatched diagonal?
+      if S.diagonal and not (S.diagonal == dir or S.diagonal == (10-dir)) then
+        return false
+      end
+
+      -- seed on map is a full square?
+      if not S.diagonal then
+        if S.area then return false end
+
+        if mode == "test" then return true end
+
+        -- need to split the seed to install this element
+        S:split(math.min(dir, 10 - dir))
+      end
+
+      local S1 = S
+      local S2 = S
+
+      for pass = 1, 2 do
+        if B.kind == "empty" then continue end
+
+        if S.area then return false end
+
+        if mode == "install" then
+          install_half_seed(S, B)
+        end
+
+        -- swap for other side
+        dir = 10 - dir
+        B,  T  = T,  B
+        S1, S2 = S2, S1
+      end
+
+      return true
+
+    else  --- full square seed ---
 
       -- used?
       if S.area     then return false end
       if S.diagonal then return false end
 
-      if install_it then
-        if elem.kind != "area" then
-          error("Unknown element kind in shape")
-        end
-
-        local A = area_map[elem.area]
-        assert(A)
-
-        assert(S.area == nil)
-
-        S.area = A
-        table.insert(A.seeds, S)
+      if mode == "install" then
+        install_half_seed(S, elem)
       end
 
       return true
@@ -537,16 +575,16 @@ function Shape_add_shapes()
   end
 
 
-  local function try_add_shape_RAW(info, T, install_it)
-
-if install_it then
+  local function try_add_shape_RAW(info, T, mode)
+-- debug
+if mode == "install" then
 stderrf("Installing shape '%s' @ (%d %d)\n", info.def.name, T.x, T.y)
 end
 
     local W = info.grid.w
     local H = info.grid.h
 
-    if install_it then
+    if mode == "install" then
       create_areas_for_shape(info.def)
     end
 
@@ -555,9 +593,9 @@ end
       local elem = info.grid[px][py]
       assert(elem)
 
-      local res = test_or_install_element(info, elem, T, px, py, install_it)
+      local res = test_or_install_element(info, elem, T, px, py, mode)
 
-      if not install_it and not res then
+      if mode == "test" and not res then
         -- cannot place this shape here (something in the way)
         return false
       end
@@ -565,7 +603,7 @@ end
     end
 
     -- hallways : mark seeds to prevent touching another hallway
-    if install_it and info.def.mode == "hallway" then
+    if mode == "install" and info.def.mode == "hallway" then
       mark_hallway(info, T)
     end
 
@@ -618,7 +656,7 @@ end
         end
 
         if best_T then
-          try_add_shape_RAW(info, best_T, "install_it")
+          try_add_shape_RAW(info, best_T, "install")
           return true  -- OK
         end
 
