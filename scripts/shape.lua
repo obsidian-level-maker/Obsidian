@@ -121,9 +121,9 @@ ROOM_O_3x3 =
 
 ROOM_O_4x3 =
 {
-  prob = 80
+  prob = 1000  --!!!
 
-  initial_prob = 80
+  initial_prob = 200
 
   structure =
   {
@@ -153,13 +153,14 @@ HALL_L_3x3_rounded =
   structure =
   {
     "1.."
-    "1.."  -- FIXME
-    "111"
+    "1%."
+    "%11"
   }
 
   diagonals =
   {
-    "1.", ".1"
+    "1."
+    ".1"
   }
 }
 
@@ -174,12 +175,14 @@ function Shape_save_svg()
   -- grid size
   local SIZE = 14
 
+  local TOP  = (SEED_H + 1) * SIZE
+
   local fp
 
 
   local function wr_line(fp, x1, y1, x2, y2, color, width)
     fp:write(string.format('<line x1="%d" y1="%d" x2="%d" y2="%d" stroke="%s" stroke-width="%d" />\n',
-             x1, y1, x2, y2, color, width or 1))
+             x1, TOP - y1, x2, TOP - y2, color, width or 1))
   end
 
   local function visit_seed(A1, S1, dir)
@@ -316,9 +319,7 @@ function Shape_preprocess_patterns()
 
       local diagonal = sel(ch == '/', 3, 1)
 
-      if ch == '/' then L,R = R,L end
-
-      return { kind="diagonal", diagonal=diagonal, bottom=L, top=R }
+      return { kind="diagonal", diagonal=diagonal, bottom=R, top=L }
     end
 
     return parse_element(ch)
@@ -447,7 +448,7 @@ function Shape_add_shapes()
   end
 
 
-  local function transform_diagonal(T, dir, top, bottom)
+  local function transform_diagonal(T, dir, bottom, top)
     if T.mirror_x then
       dir = geom.MIRROR_X[dir]
     end
@@ -464,7 +465,7 @@ function Shape_add_shapes()
       end
     end
 
-    return dir, top, bottom
+    return dir, bottom, top
   end
 
 
@@ -504,7 +505,11 @@ function Shape_add_shapes()
       -- whole seed is used?
       if (not S.diagonal) and S.area then return false end
 
-      local dir, B, T = transform_diagonal(elem.diagonal, elem.bottom, elem.top)
+      local dir, E1, E2 = transform_diagonal(T, elem.diagonal, elem.bottom, elem.top)
+
+--- if mode == "install" then
+--- stderrf("transform_diagonal: dir = %d\nE1 =\n%s\nE2 =\n%s\n", dir, table.tostr(E1), table.tostr(E2))
+--- end
 
       -- mismatched diagonal?
       if S.diagonal and not (S.diagonal == dir or S.diagonal == (10-dir)) then
@@ -518,24 +523,32 @@ function Shape_add_shapes()
         if mode == "test" then return true end
 
         -- need to split the seed to install this element
+stderrf("SPLIT @ %s  diag=%d  pat: (%d %d)\n", S:tostr(), math.min(dir, 10 - dir), px, py)
         S:split(math.min(dir, 10 - dir))
       end
 
       local S1 = S
-      local S2 = S
+      local S2 = S.top
 
       for pass = 1, 2 do
-        if B.kind == "empty" then continue end
 
-        if S.area then return false end
+stderrf("Pass %d : E1.kind = %s\n", pass, tostring(E1.kind))
 
-        if mode == "install" then
-          install_half_seed(S, B)
+        if E1.kind != "empty" then
+
+          -- used?
+          if S1.area then return false end
+
+          if mode == "install" then
+stderrf("INSTALL DIAG %s  diag=%d  pat: (%d %d)\n", S1:tostr(), dir, px, py)
+        install_half_seed(S1, E1)
+          end
+
         end
 
         -- swap for other side
         dir = 10 - dir
-        B,  T  = T,  B
+        E1, E2 = E2, E1
         S1, S2 = S2, S1
       end
 
@@ -548,6 +561,7 @@ function Shape_add_shapes()
       if S.diagonal then return false end
 
       if mode == "install" then
+stderrf("INSTALL FULL @ %s  pat: (%d %d)\n", S:tostr(), px, py)
         install_half_seed(S, elem)
       end
 
@@ -576,6 +590,7 @@ function Shape_add_shapes()
 
 
   local function try_add_shape_RAW(info, T, mode)
+    assert(mode)
 -- debug
 if mode == "install" then
 stderrf("Installing shape '%s' @ (%d %d)\n", info.def.name, T.x, T.y)
@@ -648,7 +663,7 @@ end
             score     = score
           }
 
-          if try_add_shape_RAW(info, T) then
+          if try_add_shape_RAW(info, T, "test") then
             best_T = T
           end
         end -- transpose, mirror_x, mirror_y
@@ -1057,8 +1072,6 @@ function Shape_create_areas()
 
   Shape_add_shapes()
 
-Shape_save_svg()
-
   Shape_fill_gaps()
 
   Area_calc_volumes()
@@ -1066,5 +1079,6 @@ Shape_save_svg()
 
   Shape_assign_boundary()
 
+Shape_save_svg()
 end
 
