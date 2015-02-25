@@ -101,7 +101,7 @@ ROOM_RECT_4x2 =
 
 ROOM_O_3x3 =
 {
-  prob = 100
+  prob = 200
 
   initial_prob = 100
 
@@ -121,7 +121,7 @@ ROOM_O_3x3 =
 
 ROOM_O_4x3 =
 {
-  prob = 1000  --!!!
+  prob = 100  --!!!
 
   initial_prob = 200
 
@@ -531,9 +531,6 @@ stderrf("SPLIT @ %s  diag=%d  pat: (%d %d)\n", S:tostr(), math.min(dir, 10 - dir
       local S2 = S.top
 
       for pass = 1, 2 do
-
-stderrf("Pass %d : E1.kind = %s\n", pass, tostring(E1.kind))
-
         if E1.kind != "empty" then
 
           -- used?
@@ -626,10 +623,10 @@ end
   end
 
 
-  local function try_add_shape(def, sx, sy)
+  local function try_add_shape(def, sx, sy, DIST)
     local info = def.processed[1]
 
-    for dist = 0, 9 do
+    for dist = 0, DIST do
       local x1 = math.clamp(3, sx - dist, SEED_W - 4)
       local x2 = math.clamp(3, sx + dist, SEED_W - 4)
 
@@ -684,12 +681,14 @@ end
   end
 
 
-  local function add_shape_from_list(tab, sx, sy, attempts)
+  local function add_shape_from_list(tab, sx, sy, attempts, DIST)
+    DIST = DIST or 5
+
     for loop = 1, attempts do
       local name = rand.key_by_probs(tab)
       local def  = assert(SHAPES[name])
 
-      if try_add_shape(def, sx, sy) then
+      if try_add_shape(def, sx, sy, DIST) then
         return true
       end
     end
@@ -751,7 +750,7 @@ end
     each loc in rand.shuffle(LOCS) do
       local sx, sy = loc_to_seed(loc)
 
-      add_shape_from_list(initial_tab, sx, sy, 10)  
+      add_shape_from_list(initial_tab, sx, sy, 10)
     end
   end
 
@@ -770,7 +769,7 @@ end
     each loc in rand.shuffle(LOCS) do
       if rand.odds(prob) then
         local sx, sy = loc_to_seed(loc)
-        add_shape_from_list(hallway_tab, sx, sy, 2)
+        add_shape_from_list(hallway_tab, sx, sy, 3, 10)
       end
     end
   end
