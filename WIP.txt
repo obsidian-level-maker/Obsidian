@@ -3,6 +3,21 @@ WORK IN PROGRESS
 ================
 
 
+Shape system:
++  make more shapes, ones with multiple areas
+
+-  have 'area_info' (or so) in a SHAPE definition, merge those values
+   into the actual created AREA object
+
+
+
+Heretic :
++  move other stuff --> 'old_fabs.lua'
+
+-  rework theme definitions
+
+
+
 Quest Rework
 ------------
 
