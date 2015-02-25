@@ -447,7 +447,24 @@ function Shape_add_shapes()
   end
 
 
-  local function transform_diagonal(info, ...)
+  local function transform_diagonal(T, dir, top, bottom)
+    if T.mirror_x then
+      dir = geom.MIRROR_X[dir]
+    end
+
+    if T.mirror_y then
+      dir = geom.MIRROR_Y[dir]
+      top, bottom = bottom, top
+    end
+
+    if T.transpose then
+      if dir == 3 or dir == 7 then
+        dir = 10 - dir
+        top, bottom = bottom, top
+      end
+    end
+
+    return dir, top, bottom
   end
 
 
@@ -468,6 +485,10 @@ function Shape_add_shapes()
     end
 
     if elem.kind == "diagonal" then
+
+      -- whole seed is used?
+      if (not S.diagonal) and S.area then return false end
+
     
       -- FIXME !!!  [ FIXME for diagonals ]
       return false
@@ -500,6 +521,9 @@ function Shape_add_shapes()
   local function mark_hallway(info, T)
     local W = info.grid.w
     local H = info.grid.h
+
+    -- mark two extra seeds around bbox of shape
+    -- [ allow space for making a room in-between ]
 
     for px = -1, W + 2 do
     for py = -1, H + 2 do
