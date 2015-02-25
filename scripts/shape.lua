@@ -462,6 +462,11 @@ function Shape_add_shapes()
 
     local S = SEEDS[sx][sy]
 
+    -- hallway test : prevent them touching
+    if info.def.mode == "hallway" and S.no_hall then
+      return false
+    end
+
     if elem.kind == "diagonal" then
     
       -- FIXME !!!  [ FIXME for diagonals ]
@@ -492,6 +497,22 @@ function Shape_add_shapes()
   end
 
 
+  local function mark_hallway(info, T)
+    local W = info.grid.w
+    local H = info.grid.h
+
+    for px = -1, W + 2 do
+    for py = -1, H + 2 do
+      local sx, sy = transform_coord(info, T, px, py)
+
+      if Seed_valid(sx, sy) then
+        SEEDS[sx][sy].no_hall = true
+      end
+    end -- px, py
+    end
+  end
+
+
   local function try_add_shape_RAW(info, T, install_it)
 
 if install_it then
@@ -517,6 +538,11 @@ end
         return false
       end
     end -- px, py
+    end
+
+    -- hallways : mark seeds to prevent touching another hallway
+    if install_it and info.def.mode == "hallway" then
+      mark_hallway(info, T)
     end
 
     return true
@@ -676,7 +702,7 @@ end
   local function add_rooms()
     local room_tab = collect_usable_shapes("normal")
 
-    local count = int(SEED_W * SEED_H / 30)
+    local count = int(SEED_W * SEED_H / 10)
 
     for i = 1, count do
       local sx = rand.irange(LEVEL.boundary_sx1, LEVEL.boundary_sx2)
