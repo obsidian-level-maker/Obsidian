@@ -475,19 +475,21 @@ function Levels_choose_themes()
 
     local info = assert(OB_THEMES[name])
 
-    LEV.theme_name = name
+    -- remove the game prefix
+    local base = string.match(name, "/\([%w_]*\)") or name
 
-    if not LEV.name_class then
-      LEV.name_class = assert(info.name_class)
-    end
+    LEV.theme_name = base
 
-    LEV.theme = GAME.THEMES[name .. "_DEFAULTS"]
+    LEV.theme = GAME.THEMES[base .. "_DEFAULTS"]
 
     if not LEV.theme then
-      error("Unknown theme : " .. name)
+      error("Unknown theme : " .. base)
     end
 
-    gui.printf("Theme for level %s = %s\n", LEV.name, name)
+    -- this is optional (may be nil)
+    LEV.name_class = LEV.name_class or info.name_class
+
+    gui.printf("Theme for level %s = %s\n", LEV.name, LEV.theme_name)
   end
 
 
