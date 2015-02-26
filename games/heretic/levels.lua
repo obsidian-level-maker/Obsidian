@@ -61,6 +61,11 @@ HERETIC.EPISODES =
 }
 
 
+HERETIC.PREBUILT_LEVELS =
+{
+}
+
+
 ------------------------------------------------------------
 
 function HERETIC.get_levels()
