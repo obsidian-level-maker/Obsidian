@@ -92,6 +92,8 @@ HERETIC.THEMES =
 
   urban_House1 =
   {
+    kind = "building"
+
     walls =
     {
       CTYSTCI2 = 20
@@ -115,6 +117,8 @@ HERETIC.THEMES =
 
   urban_House2 =
   {
+    kind = "building"
+
     walls =
     {
       CTYSTUC4 = 50
@@ -137,6 +141,8 @@ HERETIC.THEMES =
 
   urban_Stone =
   {
+    kind = "building"
+
     walls =
     {
       GRSTNPB = 50
@@ -160,6 +166,8 @@ HERETIC.THEMES =
 
   urban_Wood =
   {
+    kind = "building"
+
     walls =
     {
       WOODWL = 50
@@ -184,6 +192,8 @@ HERETIC.THEMES =
 
   urban_Cave =
   {
+    kind = "cave"
+
     naturals =
     {
       LOOSERCK=20, LAVA1=20, BRWNRCKS=20
@@ -193,6 +203,8 @@ HERETIC.THEMES =
 
   urban_Outdoors =
   {
+    kind = "outdoors"
+
     floors =
     {
       FLOOR00=20, FLOOR27=30, FLOOR18=50,
@@ -228,6 +240,8 @@ HERETIC.THEMES =
 
   castle_Green =
   {
+    kind = "building"
+
     walls =
     {
       GRNBLOK1 = 50
@@ -252,6 +266,8 @@ HERETIC.THEMES =
 
   castle_Gray =
   {
+    kind = "building"
+
     walls =
     {
       CSTLRCK  = 50
@@ -275,6 +291,8 @@ HERETIC.THEMES =
 
   castle_Orange =
   {
+    kind = "building"
+
     walls =
     {
       SQPEB2   = 50
@@ -298,6 +316,8 @@ HERETIC.THEMES =
 
   castle_Hallway =
   {
+    kind = "hallway"
+
     walls =
     {
       GRSTNPB  = 60
@@ -324,6 +344,8 @@ HERETIC.THEMES =
 
   castle_Cave =
   {
+    kind = "cave"
+
     naturals =
     {
       LOOSERCK=20, LAVA1=20, BRWNRCKS=20
@@ -333,6 +355,8 @@ HERETIC.THEMES =
 
   castle_Outdoors =
   {
+    kind = "outdoors"
+
     floors =
     {
       FLOOR00=20, FLOOR27=30, FLOOR18=50,
