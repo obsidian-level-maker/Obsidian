@@ -18,6 +18,15 @@ HERETIC.NAMES =
 }
 
 
+HERETIC.ROOMS =
+{
+  GENERIC =
+  {
+    environment = "any"
+  }
+}
+
+
 HERETIC.THEMES =
 {
   DEFAULTS =
