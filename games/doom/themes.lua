@@ -122,33 +122,6 @@ DOOM.ROOMS =
 }
 
 
-DOOM2.TEX_GROUPS =
-{
-  STARTAN_group =
-  {
-    STARTAN3 = 60
-    STARG3 = 40
-    STARG2 = 10
-  }
-
-  MARBLE_group =
-  {
-    MARBLE1 = 20
-    MARBLE2 = 50
-    MARBLE3 = 50
-  }
-
-  WOOD_group =
-  {
-    WOOD1 = 50
-    WOOD3 = 30
-    WOOD5 = 30
-    WOOD12 = 30
-    WOODVERT = 10
-  }
-}
-
-
 DOOM2.THEMES =
 {
   DEFAULTS =
