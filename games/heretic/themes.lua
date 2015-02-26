@@ -18,77 +18,70 @@ HERETIC.NAMES =
 }
 
 
--- FIXME : NEED MAJOR WORK HERE (Heretic Themes) !!!!
-
-HERETIC.THEME_DEFAULTS =
+HERETIC.THEMES =
 {
-  starts = { Start_basic = 20, Start_Closet = 90 }
-
-  exits = { Exit_Pillar = 10, Exit_Closet = 90 }
-
-  pedestals = { Pedestal_1 = 50 }
-
-  stairs = { Stair_Up1 = 50, Stair_Down1 = 50,
-             Lift_Up1 = 2, Lift_Down1 = 2 }
-
-  -- according to Borsuk, locked doors should always appear in the
-  -- following order: Yellow ==> Green ==> Blue.
-  keys = { k_yellow=9000, k_green=90, k_blue=1 }
-
-  switches = { sw_metal=50 }
-
-  switch_fabs = { Switch_1=50 }
-
-  locked_doors = { Locked_yellow=50, Locked_green=50, Locked_blue=50,
-                   Door_SW_1=50 }
-
-  teleporters = { Teleporter1=50 }
-
-
-  steps = { step1=50 }
-
-  doors = { d_wood=50, d_demon=15 }
-
-  logos = { Pic_Carve=50, Pic_Pill=15 }
-
-  pictures =
+  DEFAULTS =
   {
-    Pic_Banner5 = 30
-    Pic_Banner7 = 30
-    Pic_Mosaic5 = 5
+    -- Note: there is no way to control the order which keys are used
 
-    Pic_GrinSkull = 50
-    Pic_Saint = 60
-    Pic_Eagle = 40
+    keys =
+    {
+      k_yellow = 70
+      k_green  = 50
+      k_blue   = 30
+    }
+
+    switches =
+    {
+      sw_metal = 50
+    }
+
+    fences =
+    {
+      BRWNRCKS = 20
+    }
   }
 
-  hallway_groups = { hall_basic = 50 }
 
-  mini_halls = { Hall_Basic_I = 50 }
+  generic_Stairwell =
+  {
+    kind = "stairwell"
 
-  sky_halls = { sky_hall = 50 }
+    walls =
+    {
+      BROWN1  = 50
+      GRAY1   = 50
+      STARGR1 = 50
+      METAL1  = 20
+    }
 
---FIXME TEMP STUFF
-  cave_walls = { BRWNRCKS=10, LAVA1=20, LOOSERCK=20,
-                 RCKSNMUD=20, ROOTWALL=30,
-               }
-
-  landscape_walls = { BRWNRCKS=10, LAVA1=20, LOOSERCK=20,
-                      RCKSNMUD=20, ROOTWALL=10,
-                    }
-
-  periph_pillar_mat = "WOODWL",
-  beam_mat = "WOODWL",
-  track_mat = "METL2",
-  pedestal_mat = "FLAT500",
-}
+    floors =
+    {
+      FLAT1 = 30
+      FLOOR7_1 = 50
+    }
+  }
 
 
-HERETIC.ROOM_THEMES =
-{
-  ---- URBAN THEME -----------------
+  ---- URBAN THEME ---------------------------------
 
-  Urban_house1 =
+  urban_DEFAULTS =
+  {
+    liquids =
+    {
+      water  = 50
+      sludge = 15
+      lava   = 5
+    }
+
+    facades =
+    {
+      GRSTNPB = 50
+    }
+  }
+
+
+  urban_House1 =
   {
     walls =
     {
@@ -110,7 +103,8 @@ HERETIC.ROOM_THEMES =
     }
   }
 
-  Urban_house2 =
+
+  urban_House2 =
   {
     walls =
     {
@@ -131,7 +125,8 @@ HERETIC.ROOM_THEMES =
     }
   }
 
-  Urban_stone =
+
+  urban_Stone =
   {
     walls =
     {
@@ -153,7 +148,8 @@ HERETIC.ROOM_THEMES =
     }
   }
 
-  Urban_wood =
+
+  urban_Wood =
   {
     walls =
     {
@@ -177,9 +173,51 @@ HERETIC.ROOM_THEMES =
   }
 
 
-  ---- CASTLE THEME -----------------
+  urban_Cave =
+  {
+    naturals =
+    {
+      LOOSERCK=20, LAVA1=20, BRWNRCKS=20
+    }
+  }
 
-  Castle_green =
+
+  urban_Outdoors =
+  {
+    floors =
+    {
+      FLOOR00=20, FLOOR27=30, FLOOR18=50,
+      FLAT522=10, FLAT523=20,
+    }
+
+    naturals =
+    {
+      FLOOR17=50, FLAT509=20, FLAT510=20,
+      FLAT513=20, FLAT516=35, 
+    }
+  }
+
+
+  ---- CASTLE THEME --------------------------------
+
+  castle_DEFAULTS =
+  {
+    liquids =
+    {
+      lava   = 50
+      magma  = 20
+      sludge = 5
+    }
+
+    facades =
+    {
+      CSTLRCK  = 50
+      GRNBLOK1 = 30
+    }
+  }
+
+
+  castle_Green =
   {
     walls =
     {
@@ -202,7 +240,8 @@ HERETIC.ROOM_THEMES =
     }
   }
 
-  Castle_gray =
+
+  castle_Gray =
   {
     walls =
     {
@@ -224,7 +263,8 @@ HERETIC.ROOM_THEMES =
     }
   }
 
-  Castle_orange =
+
+  castle_Orange =
   {
     walls =
     {
@@ -246,7 +286,8 @@ HERETIC.ROOM_THEMES =
     }
   }
 
-  Castle_hallway =
+
+  castle_Hallway =
   {
     walls =
     {
@@ -270,10 +311,9 @@ HERETIC.ROOM_THEMES =
   }
 
 
+  -- TODO : these are same as urban theme, differentiate them!
 
-  ---- OTHER STUFF ------------------
-
-  Cave_generic =
+  castle_Cave =
   {
     naturals =
     {
@@ -282,7 +322,7 @@ HERETIC.ROOM_THEMES =
   }
 
 
-  Outdoors_generic =
+  castle_Outdoors =
   {
     floors =
     {
@@ -299,56 +339,10 @@ HERETIC.ROOM_THEMES =
 }
 
 
-HERETIC.LEVEL_THEMES =
-{
-  heretic_urban1 =
-  {
-    prob = 50
-
-    liquids = { water=50, sludge=15, lava=4 }
-
-    buildings = { Urban_house1=30, Urban_house2=30,
-                  Urban_wood=30, Urban_stone=50
-                }
-
-    hallways = { Castle_hallway=50 }  -- FIXME
-
-    caves = { Cave_generic=50 }
-
-    outdoors = { Outdoors_generic=50 }
-
-    --TODO: more stuff
-
-  }  -- CITY1
-
-
-  heretic_castle1 =
-  {
-    prob = 50
-
-    liquids = { lava=50, magma=20, sludge=3 }
-
-    buildings = { Castle_green=50, Castle_gray=50,
-                  Castle_orange=50
-                }
-
-    hallways = { Castle_hallway=50 }
-
-    caves = { Cave_generic=50 }
-
-    outdoors = { Outdoors_generic=50 }
-
-    -- hallways = { blah }
-
-    --TODO: more stuff
-  }
-}
-
-
 ------------------------------------------------------------------------
 
 
-OB_THEMES["heretic_urban"] =
+OB_THEMES["heretic/urban"] =
 {
   label = "Urban"
   name_theme = "URBAN"
@@ -356,7 +350,7 @@ OB_THEMES["heretic_urban"] =
 }
 
 
-OB_THEMES["heretic_castle"] =
+OB_THEMES["heretic/castle"] =
 {
   label = "Castle"
   name_theme = "GOTHIC"
