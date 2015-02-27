@@ -1351,7 +1351,7 @@ DOOM2.THEMES =
 --------------------------------------------------------------------
 
 
-OB_THEMES["tech"] =
+OB_THEMES["doom/tech"] =
 {
   label = "Tech"
   priority = 18
@@ -1360,7 +1360,7 @@ OB_THEMES["tech"] =
 }
 
 
-OB_THEMES["hell"] =
+OB_THEMES["doom/hell"] =
 {
   label = "Hell"
   priority = 14
@@ -1369,7 +1369,7 @@ OB_THEMES["hell"] =
 }
 
 
-OB_THEMES["urban"] =
+OB_THEMES["doom/urban"] =
 {
   label = "Urban"
   priority = 16
@@ -1379,7 +1379,7 @@ OB_THEMES["urban"] =
 }
 
 
-OB_THEMES["mostly_tech"] =
+OB_THEMES["doom/mostly_tech"] =
 {
   label = "Mostly Tech"
   priority = 8
@@ -1387,7 +1387,7 @@ OB_THEMES["mostly_tech"] =
 }
 
 
-OB_THEMES["mostly_urban"] =
+OB_THEMES["doom/mostly_urban"] =
 {
   label = "Mostly Urban"
   priority = 4
@@ -1396,7 +1396,7 @@ OB_THEMES["mostly_urban"] =
 }
 
 
-OB_THEMES["mostly_hell"] =
+OB_THEMES["doom/mostly_hell"] =
 {
   label = "Mostly Hell"
   priority = 6
@@ -1404,7 +1404,7 @@ OB_THEMES["mostly_hell"] =
 }
 
 
-OB_THEMES["wolf"] =
+OB_THEMES["doom/wolf"] =
 {
   label = "Wolfenstein"
   priority = 2
@@ -1602,7 +1602,7 @@ TNT.THEMES =
 }
 
 
-OB_THEMES["egypt"] =
+OB_THEMES["doom/egypt"] =
 {
   -- TNT Evilution theme
 
@@ -3000,7 +3000,7 @@ DOOM1.THEMES =
 }
 
 
-OB_THEMES["deimos"] =
+OB_THEMES["doom/deimos"] =
 {
   label = "Deimos"
   priority = 16
@@ -3010,7 +3010,7 @@ OB_THEMES["deimos"] =
 }
 
 
-OB_THEMES["flesh"] =
+OB_THEMES["doom/flesh"] =
 {
   label = "Thy Flesh"
   priority = 12
