@@ -1137,7 +1137,7 @@ stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S:tostr(),
       return true, a, b, c, d, e
     end
 
-    if dir == 888 then
+    if dir == 8 then
       local a = T1
       local b = T2
 
@@ -1147,7 +1147,7 @@ stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S:tostr(),
       local Ne = S :neighbor(sel(S.diagonal == 1, 4, 6))
 
       local a2 = Na and Na.temp_area
-      local c  = Nd and Nc.temp_area
+      local c  = Nc and Nc.temp_area
       local d  = Nd and Nd.temp_area
       local e  = Ne and Ne.temp_area
 
