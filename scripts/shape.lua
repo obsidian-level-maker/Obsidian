@@ -999,7 +999,7 @@ function Shape_fill_gaps()
 
 
   local function perform_merge(A1, A2)
-    -- merges A2 into A1 (killing A1)
+    -- merges A2 into A1 (killing A2)
 
     if A2.svolume > A1.svolume then
       A1, A2 = A2, A1
@@ -1218,6 +1218,32 @@ stderrf("\n********  FLIPPED @ %s\n", S1:tostr())
   end
 
 
+  local function smooth_at_seed(S1, a, b)
+    local S2 = S1.top
+
+    if math.min(a.svolume, b.svolume) < MIN_SIZE + 2 then
+      perform_merge(a, b)
+      return
+    end
+
+    -- FIXME
+  end
+
+
+  local function try_smooth_at_seed(S)
+    for dir = 2,8,2 do
+      local res, a, b, c, d, e = detect_sharp_poker(S, dir)
+
+      if res then
+        smooth_at_seed(S, a, b)
+        return true
+      end
+    end
+
+    return false
+  end
+
+
   local function smoothen_out_pokers()
     -- first pass : detect diagonals we can flip --
     
@@ -1229,6 +1255,15 @@ stderrf("\n********  FLIPPED @ %s\n", S1:tostr())
 
     -- second pass : handle the rest --
 
+    for pass = 1, 3 do
+      for sx = 1, SEED_W do
+      for sy = 1, SEED_H do
+        try_smooth_at_seed(SEEDS[sx][sy])
+      end
+      end
+    end
+
+    prune_dead_areas()
   end
 
 
