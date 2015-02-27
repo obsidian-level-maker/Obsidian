@@ -52,8 +52,6 @@ GENERIC_2x2 =
 {
   prob = 50
 
-  initial_prob = 10
-
   structure =
   {
     "11"
@@ -65,8 +63,6 @@ GENERIC_2x2 =
 GENERIC_2x2_diamond =
 {
   prob = 30
-
-  initial_prob = 10
 
   structure =
   {
@@ -86,10 +82,34 @@ GENERIC_2x2_diamond =
 -- Rooms
 --
 
+ROOM_RECT_3x2 =
+{
+  prob = 50
+  initial_prob = 50
+
+  structure =
+  {
+    "111"
+    "111"
+  }
+}
+
+ROOM_RECT_3x3 =
+{
+  prob = 50
+  initial_prob = 50
+
+  structure =
+  {
+    "111"
+    "111"
+    "111"
+  }
+}
+
 ROOM_RECT_4x2 =
 {
   prob = 50
-
   initial_prob = 50
 
   structure =
@@ -101,9 +121,8 @@ ROOM_RECT_4x2 =
 
 ROOM_O_3x3 =
 {
-  prob = 200
-
-  initial_prob = 100
+  prob = 50
+  initial_prob = 50
 
   structure =
   {
@@ -121,9 +140,8 @@ ROOM_O_3x3 =
 
 ROOM_O_4x3 =
 {
-  prob = 100  --!!!
-
-  initial_prob = 200
+  prob = 50
+  initial_prob = 50
 
   structure =
   {
@@ -139,9 +157,53 @@ ROOM_O_4x3 =
   }
 }
 
+ROOM_OL_4x4 =
+{
+  prob = 10
+  initial_prob = 100
+
+  structure =
+  {
+    "/1%2"
+    "1112"
+    "%1/2"
+    "222/"
+  }
+
+  diagonals =
+  {
+    ".1", "1."
+    ".1", "12"
+    "2."
+  }
+}
+
+ROOM_OU_4x5 =
+{
+  prob = 10
+  initial_prob = 100
+
+  structure =
+  {
+    "222%"
+    "/1%2"
+    "1112"
+    "%1/2"
+    "222/"
+  }
+
+  diagonals =
+  {
+    "2.",
+    "21", "12"
+    "21", "12"
+    "2."
+  }
+}
+
 ROOM_DONUT_6x6 =
 {
-  initial_prob = 100
+  initial_prob = 4
 
   structure =
   {
@@ -167,10 +229,30 @@ ROOM_DONUT_6x6 =
 -- Hallways
 --
 
+HALL_I_4x1 =
+{
+  prob = 25
+
+  structure =
+  {
+    "1111"
+  }
+}
+
+HALL_L_3x3 =
+{
+  prob = 25
+
+  structure =
+  {
+    "1.."
+    "1.."
+    "111"
+  }
+}
+
 HALL_L_3x3_rounded =
 {
-  mode = "hallway"
-
   prob = 25
 
   structure =
@@ -184,6 +266,37 @@ HALL_L_3x3_rounded =
   {
     "1."
     ".1"
+  }
+}
+
+HALL_L_5x3 =
+{
+  prob = 25
+
+  structure =
+  {
+    "111.."
+    "..1.."
+    "..111"
+  }
+}
+
+HALL_S_6x3 =
+{
+  prob = 25
+
+  structure =
+  {
+    ".../11"
+    "..//.."
+    "11/..."
+  }
+
+  diagonals =
+  {
+    ".1"
+    ".1", "1."
+    "1."
   }
 }
 
@@ -205,7 +318,7 @@ function Shape_save_svg()
 
   local function wr_line(fp, x1, y1, x2, y2, color, width)
     fp:write(string.format('<line x1="%d" y1="%d" x2="%d" y2="%d" stroke="%s" stroke-width="%d" />\n',
-             x1, TOP - y1, x2, TOP - y2, color, width or 1))
+             10 + x1, TOP - y1, 10 + x2, TOP - y2, color, width or 1))
   end
 
   local function visit_seed(A1, S1, dir)
@@ -227,7 +340,9 @@ function Shape_save_svg()
     elseif A2 and A1.is_boundary != A2.is_boundary then
       color = "#0f0"
     elseif A1.prefer_mode == "void" and (A2 and A2.prefer_mode == "void") then
-      color = "#0ff"
+      color = "#000"
+    elseif not A2 then
+      color = "#000"
     end
 
     local sx1, sy1 = S1.sx, S1.sy
@@ -408,6 +523,10 @@ function Shape_preprocess_patterns()
     def.processed = {}
 
     def.processed[1] = convert_structure(def, def.structure)
+
+    if string.match(name, "HALL") then
+      def.mode = "hallway"
+    end
   end
 end
 
@@ -666,9 +785,9 @@ end
 
         local best_T
 
-        for transpose = 0, 1 do
-        for mirror_x  = 0, 1 do
-        for mirror_y  = 0, 1 do
+        for transpose = 0, 0 do
+        for mirror_x  = 0, 0 do
+        for mirror_y  = 0, 0 do
           local score = gui.random()
 
           -- early out
@@ -727,7 +846,7 @@ end
     local tab = {}
 
     each name, def in SHAPES do
-      local prob = def.prob or 50
+      local prob = def.prob or 0
 
       if (mode == "hallway") != (def.mode == "hallway") then
         continue
@@ -802,7 +921,7 @@ end
   local function add_rooms()
     local room_tab = collect_usable_shapes("normal")
 
-    local count = int(SEED_W * SEED_H / 10)
+    local count = int(SEED_W * SEED_H / 40)
 
     for i = 1, count do
       local sx = rand.irange(LEVEL.boundary_sx1, LEVEL.boundary_sx2)
@@ -918,10 +1037,10 @@ function Shape_fill_gaps()
       score = 2
     end
 
-    -- a preference to merging across diagonals
-    local power = sel(geom.is_corner(dir), 1, 2)
+--???    -- a preference to merging across diagonals
+--???    local power = 1 sel(geom.is_corner(dir), 1, 2)
 
-    return score + gui.random() ^ power
+    return score + gui.random()
   end
 
 
