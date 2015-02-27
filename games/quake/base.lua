@@ -78,7 +78,7 @@ OB_GAMES["quake"] =
 {
   label = "Quake"
 
-  format = "doom"
+  format = "quake"
 
   tables =
   {
