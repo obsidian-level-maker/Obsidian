@@ -28,73 +28,73 @@ QUAKE.ROOMS =
 }
 
 
-QUAKE.THEME_DEFAULTS =
-{
-  starts = { Start_basic = 50 }
-
-  exits = { Exit_basic = 50 }
-
-  stairs = { Stair_Up1 = 50, Stair_Down1 = 50,
-              Lift_Up1 =  3,  Lift_Down1 =  3 }
-
-  pedestals = { Pedestal_tech = 50 }
-
-  keys = { k_silver=60, k_gold=20 }
-
-  switches = { sw_foo=50 }
-
-  switch_fabs = { Switch_floor1 = 50 }
-
-  locked_doors =
-  {
-    Locked_silver = 50
-    Locked_gold = 50
-    Locked_silver_wide = 900
-    Locked_gold_wide = 900
-
-    Door_SW_1 = 50
-  }
-
-  arches = { Arch1 = 50 }
-
-  doors = { Door_plain = 50 }
-
-  teleporters = { Teleporter1 = 50 }
-
-  hallway_groups = { basic = 50 }
-
-  mini_halls = { Hall_Basic_I = 50 }
-
-  sky_halls = { skier = 50 }
-
-  big_junctions =
-  {
-    Junc_Octo = 50
-  }
-
-  logos = { Pic_Carve = 50, Pic_Bolt = 100 }
-
-
-
-  windows = { Window1 = 50 }
-
-  fences = { Fence1 = 50 }
-
-  fat_cages = { Fat_Cage_W_Bars = 50 }
-
-  indoor_fabs = { TechLamp = 50, RoundPillar = 50 }
-
-  --------- OLD CRUD --------> > >
-
-  tele_dest_mat = "COP3_4",
-}
-
-
-
 QUAKE.THEMES =
 {
-  Base_generic =
+  DEFAULTS =
   {
+    keys =
+    {
+      k_silver = 60
+      k_gold   = 20
+    }
+
+    switches =
+    {
+      sw_metal = 50
+    }
+
+    fences =
+    {
+      ROCK5_2 = 50
+    }
+  }
+
+
+  generic_Stairwell =
+  {
+    kind = "stairwell"
+
+    walls =
+    {
+      BRICKA2_1 = 30
+    }
+
+    floors =
+    {
+      WOODFLR1_5 = 50
+    }
+  }
+
+
+  ----- TECH BASE ----------------------------------
+
+  tech_DEFAULTS =
+  {
+    worldtype = 2
+
+    skies =
+    {
+      sky4 = 80
+      sky1 = 20
+    }
+
+    liquids =
+    {
+      slime0 = 25
+      slime  = 50
+    }
+
+    facades =
+    {
+      TECH14_2 = 50
+    }
+  }
+
+
+  tech_Room =
+  {
+    kind = "building"
+
     walls =
     {
       TECH06_1=50, TECH08_2=50, TECH09_3=50, TECH08_1=50,
@@ -120,7 +120,63 @@ QUAKE.THEMES =
   }
 
 
-  Castle_generic =
+  -- TODO : these are duplicate of castle ones -- make them distinct
+
+  tech_Cave =
+  {
+    naturals =
+    {
+      ROCK1_2=10, ROCK5_2=40, ROCK3_8=20,
+      WALL11_2=10, GROUND1_6=10, GROUND1_7=10,
+      GRAVE01_3=10, WSWAMP1_2=20, 
+    }
+  }
+
+
+  tech_Outdoors =
+  {
+    floors =
+    {
+      CITY4_6=30, CITY6_7=30, 
+      CITY4_5=30, CITY4_8=30, CITY6_8=30,
+      WALL14_6=20, CITY4_1=30, CITY4_2=30, CITY4_7=30,
+    }
+
+    naturals =
+    {
+      GROUND1_2=50, GROUND1_5=50, GROUND1_6=20,
+      GROUND1_7=30, GROUND1_8=20,
+      ROCK3_7=50, ROCK3_8=50, ROCK4_2=50,
+      VINE1_2=50, 
+    }
+  }
+
+
+  ----- CASTLE ----------------------------------
+
+  castle_DEFAULTS =
+  {
+    worldtype = 0
+
+    skies =
+    {
+      sky1 = 80
+      sky4 = 20
+    }
+
+    liquids =
+    {
+      lava1 = 50
+    }
+
+    facades =
+    {
+      BRICKA2_4 = 50
+    }
+  }
+
+
+  castle_Room =
   {
     walls =
     {
@@ -153,7 +209,7 @@ QUAKE.THEMES =
   }
 
 
-  Cave_generic =
+  castle_Cave =
   {
     naturals =
     {
@@ -164,7 +220,7 @@ QUAKE.THEMES =
   }
 
 
-  Outdoors_generic =
+  castle_Outdoors =
   {
     floors =
     {
@@ -184,91 +240,17 @@ QUAKE.THEMES =
 }
 
 
-QUAKE.LEVEL_THEMES =
-{
-  quake_base1 =
-  {
-    prob = 50
-
-    worldtype = 2
-
-    skies = { sky1=20, sky4=80 }
-
-    liquids = { slime0=25, slime=50 }
-
-    buildings = { Base_generic=50 }
-
-    -- hallways = { blah }
-
-    caves = { Cave_generic=50 }
-
-    outdoors = { Outdoors_generic=50 }
-
-    pictures =
-    {
-      Pic_Computer1 = 40
-      Pic_Computer2 = 40
-      Pic_Light07 = 70
-      Pic_Light03 = 20
-    }
-
-
-    -- TODO: lots more stuff...
-  }
-
-
-  quake_castle1 =
-  {
-    prob = 50
-
-    worldtype = 0
-
-    skies = { sky1=80, sky4=20 }
-
-    liquids = { lava1=50 }
-
-    buildings = { Castle_generic=50 }
-
-    -- hallways = { blah }
-
-    caves = { Cave_generic=50 }
-
-    outdoors = { Outdoors_generic=50 }
-
-    mini_halls = { MiniHall_Arch1 = 50 }
-
-    pedestals = { Pedestal_gothic=50 }
-
-    pictures =
-    {
-      Pic_StainGlass  = 60
-      Pic_StainGlass2 = 10
-      Pic_WoodCarve = 10
-      Pic_Window3 = 30
-
-      Pic_Demon = 20
-      Pic_DemonLit = 20
-      Pic_BloodyHead = 20
-      Pic_YellowLight3 = 20
-      Pic_CrossLight = 20
-    }
-
-
-    -- TODO: lots more stuff...
-  }
-}
-
-
 ------------------------------------------------------------------------
 
 
-OB_THEMES["quake/base"] =
+OB_THEMES["quake/tech"] =
 {
-  label = "Base"
+  label = "Tech"
   for_games = { quake=1 }
   name_theme = "TECH"
   mixed_prob = 50
 }
+
 
 OB_THEMES["quake/castle"] =
 {
