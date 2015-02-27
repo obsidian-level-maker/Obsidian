@@ -201,6 +201,18 @@ ROOM_OU_4x5 =
   }
 }
 
+ROOM_PLUS_3x3 =
+{
+  prob = 25
+
+  structure =
+  {
+    ".1."
+    "111"
+    ".1."
+  }
+}
+
 ROOM_DONUT_6x6 =
 {
   initial_prob = 4
@@ -266,6 +278,18 @@ HALL_L_3x3_rounded =
   {
     "1."
     ".1"
+  }
+}
+
+HALL_T_3x3 =
+{
+  prob = 25
+
+  structure =
+  {
+    "111"
+    ".1."
+    ".1."
   }
 }
 
