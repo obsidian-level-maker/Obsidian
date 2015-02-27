@@ -340,9 +340,9 @@ function Shape_save_svg()
     elseif A2 and A1.is_boundary != A2.is_boundary then
       color = "#0f0"
     elseif A1.prefer_mode == "void" and (A2 and A2.prefer_mode == "void") then
-      color = "#000"
+      color = "#666"
     elseif not A2 then
-      color = "#000"
+      color = "#666"
     end
 
     local sx1, sy1 = S1.sx, S1.sy
@@ -733,7 +733,7 @@ function Shape_add_shapes()
 
 -- DEBUG
 if mode == "install" then
-stderrf("Installing shape '%s' @ (%d %d)\n", info.def.name, T.x, T.y)
+--stderrf("Installing shape '%s' @ (%d %d)\n", info.def.name, T.x, T.y)
 end
 
     local W = info.grid.w
@@ -962,6 +962,7 @@ function Shape_fill_gaps()
   local function new_temp_area(first_S)
     local TEMP =
     {
+      id = alloc_id("temp_area")
       svolume = 0
       seeds = { first_S }
     }
@@ -1100,7 +1101,7 @@ function Shape_fill_gaps()
 
 
   local function detect_sharp_poker(S, dir)
-    -- returns boolean.
+    -- returns true or false.
     -- when true, also returns 'a', 'b', 'c', 'd' areas
 
     if not S.diagonal then return false end
@@ -1117,9 +1118,9 @@ function Shape_fill_gaps()
       local a = T2
       local b = T1
 
-      local N2 = S:neighbor(2)
-      local N8 = S:neighbor(8)
-      local N4 = S:neighbor(sel(S.diagonal == 1, 4, 6))
+      local N2 = S :neighbor(2)
+      local N8 = S2:neighbor(8)
+      local N4 = S :neighbor(sel(S.diagonal == 1, 4, 6))
 
       local a2 = N2 and N2.temp_area
       local c  = N8 and N8.temp_area
@@ -1127,14 +1128,18 @@ function Shape_fill_gaps()
 
       if a2 != a then return false end
 
+stderrf("a/b/a @ %s : %d %d / %d %d\n", S:tostr(),
+(a and a.id) or -1, (b and b.id) or -1,
+(c and c.id) or -1, (d and d.id) or -1)
+
       return true, a, b, c, d
     end
 
-    if dir == 8 then
+    if dir == 99 then
       local a = T1
       local b = T2
 
-      local N2 = S2:neighbor(2)
+      local N2 = S :neighbor(2)
       local N8 = S2:neighbor(8)
       local N6 = S2:neighbor(sel(S.diagonal == 1, 6, 4))
 
@@ -1154,13 +1159,33 @@ do return false end
   end
 
 
+  local function flip_at_seed(S1)
+    local S2 = S1.top
+
+    S1.diagonal = geom.MIRROR_X[S1.diagonal]
+    S2.diagonal = geom.MIRROR_X[S2.diagonal]
+
+    local T1 = S1.temp_area
+    local T2 = S2.temp_area
+
+    S1.temp_area = T2
+    S2.temp_area = T1
+
+    table.kill_elem(T1.seeds, S1)
+    table.kill_elem(T2.seeds, S2)
+
+    table.insert(T1.seeds, S2)
+    table.insert(T2.seeds, S1)
+  end
+
+
   local function try_flip_at_seed(S)
     for dir = 2,8,2 do
       local res, a, b, c, d = detect_sharp_poker(S, dir)
 
-      if res and c == a then
-stderrf("\nFLIPPED @ %s\n\n", S:tostr())
-        S.diagonal = geom.MIRROR_X(S.diagonal)
+      if res and c == b then
+        flip_at_seed(S)
+stderrf("\n\n********  FLIPPED @ %s\n\n", S:tostr())
         return true
       end
     end
