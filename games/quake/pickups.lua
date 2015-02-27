@@ -33,38 +33,6 @@ QUAKE.PICKUPS =
     give = { {health=25} }
   }
 
-  mega =
-  {
-    id = "item_health"
-    spawnflags = 2
-    prob = 3
-    big_item = true
-    give = { {health=70} }  -- gives 100 but it rots aways
-  }
-
-  -- ARMOR --
-
-  green_armor =
-  {
-    id = "item_armor1"
-    prob = 9
-    give = { {health=30} }
-  }
-
-  yellow_armor =
-  {
-    id = "item_armor2"
-    prob = 3
-    give = { {health=90} }
-  }
-
-  red_armor =
-  {
-    id = "item_armorInv"
-    prob = 1
-    give = { {health=160} }
-  }
-
   -- AMMO --
 
   shell_20 =
@@ -130,5 +98,48 @@ QUAKE.PICKUPS =
     prob = 20
     give = { {ammo="cell",count=12} }
   }
+}
+
+
+----------------------------------------------------
+
+
+QUAKE.NICE_ITEMS =
+{
+  mega =
+  {
+    id = "item_health"
+    spawnflags = 2
+    add_prob = 3
+    big_item = true
+    give = { {health=70} }  -- gives 100 but it rots aways
+  }
+
+  -- ARMOR --
+
+  green_armor =
+  {
+    id = "item_armor1"
+    add_prob = 9
+    give = { {health=30} }
+  }
+
+  yellow_armor =
+  {
+    id = "item_armor2"
+    add_prob = 3
+    give = { {health=90} }
+  }
+
+  red_armor =
+  {
+    id = "item_armorInv"
+    add_prob = 1
+    give = { {health=160} }
+  }
+
+  -- POWERUPS --
+
+  -- FIXME : quake powerups
 }
 

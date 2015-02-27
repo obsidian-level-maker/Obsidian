@@ -62,6 +62,8 @@ QUAKE.PARAMETERS =
   -- the on-screen space for the name is much less.
   max_name_length = 20
 
+  skip_monsters = { 20,30 }
+
   time_factor   = 1.0
   damage_factor = 1.0
   ammo_factor   = 1.0
