@@ -1243,14 +1243,26 @@ stderrf("\n********  FLIPPED @ %s\n", S1:tostr())
 
 
   local function smooth_at_seed(S1, a, b)
-    local S2 = S1.top
-
+    -- need to merge areas if close to minimum size
     if math.min(a.svolume, b.svolume) < MIN_SIZE + 2 then
       perform_merge(a, b)
       return
     end
 
-    -- FIXME
+    local S2 = S1.top
+
+    if S1.temp_area != b then
+      S1, S2 = S2, S1
+    end
+
+    assert(S1.temp_area == b)
+    assert(S2.temp_area == a)
+
+    -- we remove 'b' from the seed (give ownership to 'a')
+    S1.temp_area = a
+
+    table.kill_elem(b.seeds, S1)
+    table.insert(a.seeds, S1)
   end
 
 
