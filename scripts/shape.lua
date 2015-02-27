@@ -1118,38 +1118,42 @@ function Shape_fill_gaps()
       local a = T2
       local b = T1
 
-      local N2 = S :neighbor(2)
-      local N8 = S2:neighbor(8)
-      local N4 = S :neighbor(sel(S.diagonal == 1, 4, 6))
+      local Na = S :neighbor(2)
+      local Nc = S2:neighbor(8)
+      local Nd = S :neighbor(sel(S.diagonal == 1, 4, 6))
+      local Ne = S2:neighbor(sel(S.diagonal == 1, 6, 4))
 
-      local a2 = N2 and N2.temp_area
-      local c  = N8 and N8.temp_area
-      local d  = N4 and N4.temp_area
+      local a2 = Na and Na.temp_area
+      local c  = Nc and Nc.temp_area
+      local d  = Nd and Nd.temp_area
+      local e  = Ne and Ne.temp_area
 
       if a2 != a then return false end
 
-stderrf("a/b/a @ %s : %d %d / %d %d\n", S:tostr(),
+stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S:tostr(),
 (a and a.id) or -1, (b and b.id) or -1,
-(c and c.id) or -1, (d and d.id) or -1)
+(c and c.id) or -1, (d and d.id) or -1, (e and e.id) or -1)
 
-      return true, a, b, c, d
+      return true, a, b, c, d, e
     end
 
-    if dir == 99 then
+    if dir == 888 then
       local a = T1
       local b = T2
 
-      local N2 = S :neighbor(2)
-      local N8 = S2:neighbor(8)
-      local N6 = S2:neighbor(sel(S.diagonal == 1, 6, 4))
+      local Na = S2:neighbor(8)
+      local Nc = S :neighbor(2)
+      local Nd = S2:neighbor(sel(S.diagonal == 1, 6, 4))
+      local Ne = S :neighbor(sel(S.diagonal == 1, 4, 6))
 
-      local a2 = N8 and N8.temp_area
-      local c  = N2 and N2.temp_area
-      local d  = N6 and N6.temp_area
+      local a2 = Na and Na.temp_area
+      local c  = Nd and Nc.temp_area
+      local d  = Nd and Nd.temp_area
+      local e  = Ne and Ne.temp_area
 
       if a2 != a then return false end
 
-      return true, a, b, c, d
+      return true, a, b, c, d, e
     end
 
 --!!!!!! FIXME
@@ -1176,16 +1180,17 @@ do return false end
 
     table.insert(T1.seeds, S2)
     table.insert(T2.seeds, S1)
+
+stderrf("\n\n********  FLIPPED @ %s\n\n", S1:tostr())
   end
 
 
   local function try_flip_at_seed(S)
     for dir = 2,8,2 do
-      local res, a, b, c, d = detect_sharp_poker(S, dir)
+      local res, a, b, c, d, e = detect_sharp_poker(S, dir)
 
-      if res and c == b then
+      if res and b == d and a == e and c != a then
         flip_at_seed(S)
-stderrf("\n\n********  FLIPPED @ %s\n\n", S:tostr())
         return true
       end
     end
