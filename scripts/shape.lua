@@ -1111,77 +1111,96 @@ function Shape_fill_gaps()
     local T1 = S .temp_area
     local T2 = S2.temp_area
 
+    local a, b, c, d, e, a2
+    local Na, Nc, Nd, Ne
+
     if not (T1 and T2) then return false end
     if T1 == T2 then return false end
 
+
     if dir == 2 then
-      local a = T2
-      local b = T1
+      a = T2
+      b = T1
 
-      local Na = S :neighbor(2)
-      local Nc = S2:neighbor(8)
-      local Nd = S :neighbor(sel(S.diagonal == 1, 4, 6))
-      local Ne = S2:neighbor(sel(S.diagonal == 1, 6, 4))
+      Na = S :neighbor(2)
+      Nc = S2:neighbor(8)
+      Nd = S :neighbor(sel(S.diagonal == 1, 4, 6))
+      Ne = S2:neighbor(sel(S.diagonal == 1, 6, 4))
+    
+    elseif dir == 8 then
 
-      local a2 = Na and Na.temp_area
-      local c  = Nc and Nc.temp_area
-      local d  = Nd and Nd.temp_area
-      local e  = Ne and Ne.temp_area
+      a = T1
+      b = T2
 
-      if a2 != a then return false end
+      Na = S2:neighbor(8)
+      Nc = S :neighbor(2)
+      Nd = S2:neighbor(sel(S.diagonal == 1, 6, 4))
+      Ne = S :neighbor(sel(S.diagonal == 1, 4, 6))
 
+    elseif dir == 4 then
+
+      a = sel(S.diagonal == 1, T2, T1)
+      b = sel(S.diagonal == 1, T1, T2)
+
+      Na = sel(S.diagonal == 1, S:neighbor(4), S2:neighbor(4))
+      Nc = sel(S.diagonal == 1, S2:neighbor(6), S:neighbor(6))
+      Nd = sel(S.diagonal == 1, S:neighbor(2), S2:neighbor(6))
+      Ne = sel(S.diagonal == 1, S2:neighbor(8), S:neighbor(2))
+
+    elseif dir == 6 then
+
+      a = sel(S.diagonal == 1, T1, T2)
+      b = sel(S.diagonal == 1, T2, T1)
+
+      Na = sel(S.diagonal == 1, S2:neighbor(6), S:neighbor(6))
+      Nc = sel(S.diagonal == 1, S:neighbor(4), S2:neighbor(4))
+      Nd = sel(S.diagonal == 1, S2:neighbor(8), S:neighbor(2))
+      Ne = sel(S.diagonal == 1, S:neighbor(2), S2:neighbor(6))
+
+    else
+
+      error("Unknown dir in detect_sharp_poker")
+    end
+
+
+    a2 = Na and Na.temp_area
+    c  = Nc and Nc.temp_area
+    d  = Nd and Nd.temp_area
+    e  = Ne and Ne.temp_area
+
+--[[ DEBUG
 stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S:tostr(),
 (a and a.id) or -1, (b and b.id) or -1,
 (c and c.id) or -1, (d and d.id) or -1, (e and e.id) or -1)
+--]]
 
-      return true, a, b, c, d, e
-    end
+    if a2 != a then return false end
 
-    if dir == 8 then
-      local a = T1
-      local b = T2
-
-      local Na = S2:neighbor(8)
-      local Nc = S :neighbor(2)
-      local Nd = S2:neighbor(sel(S.diagonal == 1, 6, 4))
-      local Ne = S :neighbor(sel(S.diagonal == 1, 4, 6))
-
-      local a2 = Na and Na.temp_area
-      local c  = Nc and Nc.temp_area
-      local d  = Nd and Nd.temp_area
-      local e  = Ne and Ne.temp_area
-
-      if a2 != a then return false end
-
-      return true, a, b, c, d, e
-    end
-
---!!!!!! FIXME
-do return false end
-
-    error("Unknown dir in detect_sharp_poker")
+    return true, a, b, c, d, e
   end
 
 
-  local function flip_at_seed(S1)
+  local function flip_at_seed(S1, dir)
     local S2 = S1.top
 
     S1.diagonal = geom.MIRROR_X[S1.diagonal]
     S2.diagonal = geom.MIRROR_X[S2.diagonal]
 
-    local T1 = S1.temp_area
-    local T2 = S2.temp_area
+    if geom.is_vert(dir) then
+      local T1 = S1.temp_area
+      local T2 = S2.temp_area
 
-    S1.temp_area = T2
-    S2.temp_area = T1
+      S1.temp_area = T2
+      S2.temp_area = T1
 
-    table.kill_elem(T1.seeds, S1)
-    table.kill_elem(T2.seeds, S2)
+      table.kill_elem(T1.seeds, S1)
+      table.kill_elem(T2.seeds, S2)
 
-    table.insert(T1.seeds, S2)
-    table.insert(T2.seeds, S1)
+      table.insert(T1.seeds, S2)
+      table.insert(T2.seeds, S1)
+    end
 
-stderrf("\n\n********  FLIPPED @ %s\n\n", S1:tostr())
+stderrf("\n********  FLIPPED @ %s\n", S1:tostr())
   end
 
 
@@ -1190,7 +1209,7 @@ stderrf("\n\n********  FLIPPED @ %s\n\n", S1:tostr())
       local res, a, b, c, d, e = detect_sharp_poker(S, dir)
 
       if res and b == d and a == e and c != a then
-        flip_at_seed(S)
+        flip_at_seed(S, dir)
         return true
       end
     end
