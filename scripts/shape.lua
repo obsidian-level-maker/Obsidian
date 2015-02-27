@@ -138,6 +138,20 @@ ROOM_O_3x3 =
   }
 }
 
+ROOM_L_4x4 =
+{
+  prob = 50
+  initial_prob = 50
+
+  structure =
+  {
+    "11.."
+    "11.."
+    "1111"
+    "1111"
+  }
+}
+
 ROOM_O_4x3 =
 {
   prob = 50
@@ -175,6 +189,18 @@ ROOM_OL_4x4 =
     ".1", "1."
     ".1", "12"
     "2."
+  }
+}
+
+ROOM_U_5x3 =
+{
+  initial_prob = 20
+
+  structure =
+  {
+    "12.21"
+    "12221"
+    "11111"
   }
 }
 
