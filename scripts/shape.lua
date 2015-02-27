@@ -1099,6 +1099,90 @@ function Shape_fill_gaps()
   end
 
 
+  local function detect_sharp_poker(S, dir)
+    -- returns boolean.
+    -- when true, also returns 'a', 'b', 'c', 'd' areas
+
+    if not S.diagonal then return false end
+
+    local S2 = assert(S.top)
+
+    local T1 = S .temp_area
+    local T2 = S2.temp_area
+
+    if not (T1 and T2) then return false end
+    if T1 == T2 then return false end
+
+    if dir == 2 then
+      local a = T2
+      local b = T1
+
+      local N2 = S:neighbor(2)
+      local N8 = S:neighbor(8)
+      local N4 = S:neighbor(sel(S.diagonal == 1, 4, 6))
+
+      local a2 = N2 and N2.temp_area
+      local c  = N8 and N8.temp_area
+      local d  = N4 and N4.temp_area
+
+      if a2 != a then return false end
+
+      return true, a, b, c, d
+    end
+
+    if dir == 8 then
+      local a = T1
+      local b = T2
+
+      local N2 = S2:neighbor(2)
+      local N8 = S2:neighbor(8)
+      local N6 = S2:neighbor(sel(S.diagonal == 1, 6, 4))
+
+      local a2 = N8 and N8.temp_area
+      local c  = N2 and N2.temp_area
+      local d  = N6 and N6.temp_area
+
+      if a2 != a then return false end
+
+      return true, a, b, c, d
+    end
+
+--!!!!!! FIXME
+do return false end
+
+    error("Unknown dir in detect_sharp_poker")
+  end
+
+
+  local function try_flip_at_seed(S)
+    for dir = 2,8,2 do
+      local res, a, b, c, d = detect_sharp_poker(S, dir)
+
+      if res and c == a then
+stderrf("\nFLIPPED @ %s\n\n", S:tostr())
+        S.diagonal = geom.MIRROR_X(S.diagonal)
+        return true
+      end
+    end
+
+    return false
+  end
+
+
+  local function smoothen_out_pokers()
+    -- first pass : detect diagonals we can flip --
+    
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      try_flip_at_seed(SEEDS[sx][sy])
+    end
+    end
+
+    -- second pass : handle the rest --
+
+  end
+
+
   local function make_real_areas()
     each T in temp_areas do
       local area = AREA_CLASS.new("normal")
@@ -1119,9 +1203,11 @@ function Shape_fill_gaps()
 
   create_temp_areas()
 
-  for loop = 1,30 do
+  for loop = 1,20 do
     merge_temp_areas()
   end
+
+  smoothen_out_pokers()
 
   make_real_areas()
 
