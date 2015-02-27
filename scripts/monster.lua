@@ -686,7 +686,7 @@ function Monsters_zone_palettes()
     -- the indices represent: none | less | some | more
     local quants = {}
 
-    local skip_perc = rand.pick(PARAM.skip_monsters)
+    local skip_perc = rand.pick(PARAM.skip_monsters or { 25 })
 
     -- skip less monsters in small early maps
     if #LEVEL.zones == 1 and LEVEL.max_level < 5 then
