@@ -2,7 +2,7 @@
 --  QUAKE THEMES
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2006-2012 Andrew Apted
+--  Copyright (C) 2006-2015 Andrew Apted
 --  Copyright (C)      2011 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -61,7 +61,28 @@ QUAKE.THEMES =
 
     floors =
     {
+      WOOD1_1 = 50
+    }
+  }
+
+
+  generic_Hallway =
+  {
+    kind = "hallway"
+
+    walls =
+    {
+      WOOD1_5 = 30
+    }
+
+    floors =
+    {
       WOODFLR1_5 = 50
+    }
+
+    ceilings =
+    {
+      WOODFLR1_4 = 50
     }
   }
 
@@ -124,6 +145,8 @@ QUAKE.THEMES =
 
   tech_Cave =
   {
+    kind = "cave"
+
     naturals =
     {
       ROCK1_2=10, ROCK5_2=40, ROCK3_8=20,
@@ -135,6 +158,8 @@ QUAKE.THEMES =
 
   tech_Outdoors =
   {
+    kind = "outdoors"
+
     floors =
     {
       CITY4_6=30, CITY6_7=30, 
@@ -178,6 +203,8 @@ QUAKE.THEMES =
 
   castle_Room =
   {
+    kind = "building"
+
     walls =
     {
       BRICKA2_4=30, CITY5_4=30, WALL14_5=30, CITY1_4=30, METAL4_4=20, METALT1_1=15,
@@ -211,6 +238,8 @@ QUAKE.THEMES =
 
   castle_Cave =
   {
+    kind = "cave"
+
     naturals =
     {
       ROCK1_2=10, ROCK5_2=40, ROCK3_8=20,
@@ -222,6 +251,8 @@ QUAKE.THEMES =
 
   castle_Outdoors =
   {
+    kind = "outdoors"
+
     floors =
     {
       CITY4_6=30, CITY6_7=30, 
