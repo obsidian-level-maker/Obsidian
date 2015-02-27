@@ -58,16 +58,12 @@ HERETIC.THEMES =
 
     walls =
     {
-      BROWN1  = 50
-      GRAY1   = 50
-      STARGR1 = 50
-      METAL1  = 20
+      WOODWL = 50
     }
 
     floors =
     {
-      FLAT1 = 30
-      FLOOR7_1 = 50
+      FLOOR03 = 30
     }
   }
 
