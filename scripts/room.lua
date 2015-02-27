@@ -2254,6 +2254,33 @@ function Room_update_sky_groups()
 end
 
 
+
+function Room_add_sun()
+  -- game check
+  if not GAME.ENTITIES["sun"] then return end
+
+  local sun_r = 25000
+  local sun_h = 40000
+
+  -- nine lights in the sky, one is "the sun" and the rest provide
+  -- ambient light (to keep outdoor areas from getting too dark).
+
+  for i = 1,8 do
+    local angle = i * 45 - 22.5
+
+    local x = math.sin(angle * math.pi / 180.0) * sun_r
+    local y = math.cos(angle * math.pi / 180.0) * sun_r
+
+    local level = sel(i == 1, 32, 6)
+
+    Trans.entity("sun", x, y, sun_h, { light=level })
+  end
+
+  Trans.entity("sun", 0, 0, sun_h, { light=12 })
+end
+
+
+
 ------------------------------------------------------------------------
 
 
@@ -2288,5 +2315,8 @@ function Room_build_all()
   Render_importants()
 
   Room_determine_spots()
+
+  Room_add_sun()
+  -- TODO intermission camera
 end
 
