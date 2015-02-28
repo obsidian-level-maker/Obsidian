@@ -278,6 +278,9 @@ Outdoor Idioms:
 Theme System:
 -  IDEA: fairly rare "mix in" themes, e.g. Egypt for TNT
 
+-  IDEA: a 'subs' table -- used to substitute a chosen texture with
+   another (randomly picked) one.
+
 -  "Mostly Original" theme
 
 +  proper themes for QUAKE
