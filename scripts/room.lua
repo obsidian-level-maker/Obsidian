@@ -2265,18 +2265,21 @@ function Room_add_sun()
   -- nine lights in the sky, one is "the sun" and the rest provide
   -- ambient light (to keep outdoor areas from getting too dark).
 
-  for i = 1,8 do
-    local angle = i * 45 - 22.5
+  local dim = 4
+  local bright = 40
+
+  for i = 1,10 do
+    local angle = i * 36 - 18
 
     local x = math.sin(angle * math.pi / 180.0) * sun_r
     local y = math.cos(angle * math.pi / 180.0) * sun_r
 
-    local level = sel(i == 1, 32, 6)
+    local level = sel(i == 2, bright, dim)
 
     Trans.entity("sun", x, y, sun_h, { light=level })
   end
 
-  Trans.entity("sun", 0, 0, sun_h, { light=12 })
+  Trans.entity("sun", 0, 0, sun_h, { light=dim })
 end
 
 
