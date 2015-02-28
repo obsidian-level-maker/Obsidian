@@ -1153,7 +1153,7 @@ function Area_create_rooms()
   Seed_dump_rooms()
 
   each R in LEVEL.rooms do
-    gui.printf("Final %s   size: %dx%d\n", R:tostr(), R.sw, R.sh)
+    gui.debugf("Final %s   size: %dx%d\n", R:tostr(), R.sw, R.sh)
   end
 end
 
