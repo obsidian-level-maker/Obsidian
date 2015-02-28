@@ -12,10 +12,21 @@
 --
 ------------------------------------------------------------------------
 
--- FIXME : QUAKE.PREFAB_DEFAULTS
+QUAKE.PREFAB_DEFAULTS =
+{
+  -- FIXME : QUAKE.PREFAB_DEFAULTS
+
+  thing_1 = "player1"
+  thing_2 = "player2"
+  thing_3 = "player3"
+  thing_4 = "player4"
+}
 
 
--- FIXME : QUAKE.SKIN_DEFAULTS
+QUAKE.SKIN_DEFAULTS =
+{
+  -- FIXME : QUAKE.SKIN_DEFAULTS
+}
 
 
 ----------------------------------------------------
