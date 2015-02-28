@@ -908,10 +908,6 @@ function Levels_make_level(LEV)
     table.merge_missing(THEME, GAME.THEMES.DEFAULTS)
   end
 
-  --!!!! FIXME: BIG HACK !!!!
-  table.merge_missing(THEME, V3_THEME_DEFAULTS)
-
-
   gui.rand_seed(LEVEL.seed + 0)
 
 

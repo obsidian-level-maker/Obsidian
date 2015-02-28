@@ -38,7 +38,6 @@ GROUPS = {}
 
 ------------------------------------------------------------
 
-
 require "params"
 
 require "entities"
@@ -48,11 +47,8 @@ require "weapons"
 
 require "materials"
 require "themes"
-require "v3_skins"
-
 require "levels"
 require "resources"
-
 
 ------------------------------------------------------------
 
