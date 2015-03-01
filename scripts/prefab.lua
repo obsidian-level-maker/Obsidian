@@ -103,6 +103,18 @@ WADFAB_DELTA_12  = 997
 
 
 
+function Fab_lookup(name)
+  local def = PREFABS[name]
+
+  if not def then
+    error("Unknown prefab: " .. tostring(name))
+  end
+
+  return def
+end
+
+
+
 function Fab_expansion_groups(list, axis_name, fit_size, pf_size)
   local extra = fit_size - pf_size
 

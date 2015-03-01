@@ -516,8 +516,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     if geom.is_corner(dir) then
       fab_name = fab_name .. "_diag"
 
-      local def = PREFABS[fab_name]
-      assert(def)
+      local def = Fab_lookup(fab_name)
 
       local dir2 = DIAG_DIR_MAP[dir]
 
@@ -527,8 +526,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
     else  -- axis-aligned edge
 
-      local def = PREFABS[fab_name]
-      assert(def)
+      local def = Fab_lookup(fab_name)
 
       local S2 = S
       local seed_w = 1
@@ -561,8 +559,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     if geom.is_corner(dir) then
       fab_name = fab_name .. "_diag"
 
-      local def = PREFABS[fab_name]
-      assert(def)
+      local def = Fab_lookup(fab_name)
 
       local dir2 = DIAG_DIR_MAP[dir]
 
@@ -572,8 +569,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
     else  -- axis-aligned edge
 
-      local def = PREFABS[fab_name]
-      assert(def)
+      local def = Fab_lookup(fab_name)
 
       local S2 = S
       local seed_w = 1
@@ -890,8 +886,7 @@ function Render_depot(depot)
   local z = assert(LEVEL.player1_z)
 
 
-  local def = PREFABS["Depot"]
-  assert(def)
+  local def = Fab_lookup("Depot")
 
   local x2 = x1 + def.seed_w * SEED_SIZE
   local y2 = y1 + def.seed_h * SEED_SIZE
@@ -965,8 +960,7 @@ function Render_importants()
       fab_name = "Item_podium"
     end
 
-    local def = PREFABS[fab_name]
-    assert(def)
+    local def = Fab_lookup(fab_name)
 
     local skin1 = { item=item }
 
@@ -1020,8 +1014,7 @@ function Render_importants()
 
 
   local function content_start_pad(spot, dir)
-    local def = PREFABS["Start_basic"]
-    assert(def)
+    local def = Fab_lookup("Start_basic")
 
     local T = Trans.spot_transform(spot.x, spot.y, spot.z, 10 - dir)
 
@@ -1099,8 +1092,7 @@ function Render_importants()
 
     if secret_exit then fab_name = "Exit_pillar_secret" end
 
-    local def = PREFABS[fab_name]
-    assert(def)
+    local def = Fab_lookup(fab_name)
 
     local skin1 = { }
 
@@ -1116,8 +1108,7 @@ function Render_importants()
     -- TODO: find it properly
     local fab_name = "Switch_small_" .. spot.goal.item
 
-    local def = PREFABS[fab_name]
-    assert(def)
+    local def = Fab_lookup(fab_name)
 
     local skin1 = { }
 
@@ -1169,8 +1160,7 @@ function Render_importants()
   local function content_teleporter(spot)
     local C = assert(spot.conn)
 
-    local def = PREFABS["Teleporter1"]
-    assert(def)
+    local def = Fab_lookup("Teleporter1")
 
     local skin1 = {}
 
