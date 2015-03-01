@@ -25,7 +25,7 @@ DOOM2.EPISODES =
   {
     ep_index = 1
 
-    theme = "tech"
+    theme = "doom/tech"
     sky_patch = "RSKY1"
     dark_prob = 10
   }
@@ -34,7 +34,7 @@ DOOM2.EPISODES =
   {
     ep_index = 2
 
-    theme = "urban"
+    theme = "doom/urban"
     sky_patch = "RSKY2"
     dark_prob = 40
   }
@@ -43,7 +43,7 @@ DOOM2.EPISODES =
   {
     ep_index = 3
 
-    theme = "hell"
+    theme = "doom/hell"
     sky_patch = "RSKY3"
     dark_prob = 10
   }
@@ -212,7 +212,7 @@ DOOM1.EPISODES =
   {
     ep_index = 1
 
-    theme = "tech"
+    theme = "doom/tech"
     sky_patch = "SKY1"
     dark_prob = 10
 
@@ -224,7 +224,7 @@ DOOM1.EPISODES =
   {
     ep_index = 2
 
-    theme = "deimos"
+    theme = "doom/deimos"
     sky_patch = "SKY2"
     dark_prob = 40
 
@@ -236,7 +236,7 @@ DOOM1.EPISODES =
   {
     ep_index = 3
 
-    theme = "hell"
+    theme = "doom/hell"
     sky_patch = "SKY3"
     dark_prob = 10
 
@@ -248,7 +248,7 @@ DOOM1.EPISODES =
   {
     ep_index = 4
 
-    theme = "flesh"
+    theme = "doom/flesh"
     sky_patch = "SKY4"
     dark_prob = 10
 
@@ -377,7 +377,7 @@ TNT.EPISODES =
 {
   episode1 =
   {
-    theme = "tech"
+    theme = "doom/tech"
     sky_patch  = "DOEDAY"
     sky_patch2 = "DONDAY"
     sky_patch3 = "DOWDAY"
@@ -387,7 +387,7 @@ TNT.EPISODES =
 
   episode2 =
   {
-    theme = "urban"
+    theme = "doom/urban"
     sky_patch  = "DOENITE"
     sky_patch2 = "DONNITE"
     sky_patch3 = "DOWNITE"
@@ -397,7 +397,7 @@ TNT.EPISODES =
 
   episode3 =
   {
-    theme = "hell"
+    theme = "doom/hell"
     sky_patch  = "DOEHELL"
     sky_patch2 = "DONHELL"
     sky_patch3 = "DOWHELL"
@@ -411,14 +411,14 @@ PLUTONIA.EPISODES =
 {
   episode1 =
   {
-    theme = "tech"
+    theme = "doom/tech"
     sky_patch  = "SKY1"
     dark_prob = 10
   }
 
   episode2 =
   {
-    theme = "urban"
+    theme = "doom/urban"
     sky_patch  = "SKY2A"
     sky_patch2 = "SKY2B"
     sky_patch3 = "SKY2C"
@@ -428,7 +428,7 @@ PLUTONIA.EPISODES =
 
   episode3 =
   {
-    theme = "hell"
+    theme = "doom/hell"
     sky_patch  = "SKY3A"
     sky_patch2 = "SKY3B"
     dark_prob = 40
