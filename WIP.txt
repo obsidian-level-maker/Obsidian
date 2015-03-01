@@ -3,18 +3,28 @@ WORK IN PROGRESS
 ================
 
 
-Shape system:
-+  make more shapes, ones with multiple areas
+Prefab System
+(a) move games/doom/XXX folders to prefabs/doom/XXX __and__ common/XXX
 
+(b) load PREFABS using loadfile() in the Lua scripts
+    [ need a gui.scan_dir function ]
+
+    also: load all game(s) via Lua scripts
+
+(c) use special texture/flat names + thing numbers (81xx)
+    e.g. _WALL, _OUTER, _FLOOR, _CEIL, _LIQUID
+
+(d) make a resource wad with textures/flats for them
+
+
+
+Shape system:
 -  have 'area_info' (or so) in a SHAPE definition, merge those values
    into the actual created AREA object
 
++  Connection system : use 'good_conn' when present
 
-
-Heretic :
-+  move other stuff --> 'old_fabs.lua'
-
--  rework theme definitions
++  Connection system : try hard to avoid a conn in a sharp diagonal
 
 
 
