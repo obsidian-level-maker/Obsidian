@@ -514,6 +514,10 @@ function Shape_preprocess_patterns()
 
       local diagonal = sel(ch == '/', 3, 1)
 
+      if ch == '%' then
+        L, R = R, L
+      end
+
       return { kind="diagonal", diagonal=diagonal, bottom=R, top=L }
     end
 
@@ -533,8 +537,9 @@ function Shape_preprocess_patterns()
 
     local grid = table.array_2D(W, H)
 
-    for x = 1, W do
+    -- must iterate line by line, then across each line
     for y = 1, H do
+    for x = 1, W do
       local line = structure[y]
 
       if #line != W then
@@ -835,9 +840,9 @@ end
 
         local best_T
 
-        for transpose = 0, 0 do
-        for mirror_x  = 0, 0 do
-        for mirror_y  = 0, 0 do
+        for transpose = 0, 1 do
+        for mirror_x  = 0, 1 do
+        for mirror_y  = 0, 1 do
           local score = gui.random()
 
           -- early out
@@ -1452,6 +1457,7 @@ function Shape_create_areas()
 
   Shape_assign_boundary()
 
----  Shape_save_svg()
+Shape_save_svg()
+
 end
 
