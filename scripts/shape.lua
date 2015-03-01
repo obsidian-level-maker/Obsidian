@@ -237,6 +237,14 @@ ROOM_PLUS_3x3 =
     "111"
     ".1."
   }
+
+  good_conns =
+  {
+    { x=2, y=1, dir=2 }
+    { x=1, y=2, dir=4 }
+    { x=3, y=2, dir=6 }
+    { x=2, y=3, dir=8 }
+  }
 }
 
 ROOM_DONUT_6x6 =
@@ -287,6 +295,12 @@ HALL_L_3x3 =
     "1.."
     "111"
   }
+
+  good_conns =
+  {
+    { x=1, y=3, dir=8 }
+    { x=3, y=1, dir=6 }
+  }
 }
 
 HALL_L_3x3_rounded =
@@ -305,6 +319,12 @@ HALL_L_3x3_rounded =
     "1."
     ".1"
   }
+
+  good_conns =
+  {
+    { x=1, y=3, dir=8 }
+    { x=3, y=1, dir=6 }
+  }
 }
 
 HALL_T_3x3 =
@@ -317,9 +337,16 @@ HALL_T_3x3 =
     ".1."
     ".1."
   }
+
+  good_conns =
+  {
+    { x=1, y=3, dir=4 }
+    { x=3, y=3, dir=4 }
+    { x=2, y=1, dir=2 }
+  }
 }
 
-HALL_L_5x3 =
+HALL_Z_5x3 =
 {
   prob = 25
 
@@ -328,6 +355,12 @@ HALL_L_5x3 =
     "111.."
     "..1.."
     "..111"
+  }
+
+  good_conns =
+  {
+    { x=1, y=3, dir=4 }
+    { x=5, y=1, dir=6 }
   }
 }
 
@@ -347,6 +380,12 @@ HALL_S_6x3 =
     ".1"
     ".1", "1."
     "1."
+  }
+
+  good_conns =
+  {
+    { x=1, y=1, dir=4 }
+    { x=6, y=1, dir=6 }
   }
 }
 
@@ -565,6 +604,28 @@ function Shape_preprocess_patterns()
   end
 
 
+  local function add_connections(def)
+    local grid = def.processed[1].grid
+
+    each conn in def.good_conns do
+      local x = conn.x
+      local y = conn.y
+
+      if not (x and x >= 1 and x <= grid.w) or
+         not (y and y >= 1 and y <= grid.h)
+      then
+        error("Bad connection coord in shape: " .. def.name)
+      end
+
+      if grid[x][y].kind == "diagonal" then
+        error("Ambiguous conn coord in shape (on a diagonal)")
+      end
+
+      grid[x][y].good_conn = { dir=conn.dir }
+    end
+  end
+
+
   ---| Shape_preprocess_patterns |---
 
   table.name_up(SHAPES)
@@ -578,6 +639,10 @@ function Shape_preprocess_patterns()
     def.processed = {}
 
     def.processed[1] = convert_structure(def, def.structure)
+
+    if def.good_conns then
+      add_connections(def, def.processed[1].grid)
+    end
 
     if string.match(name, "HALL") then
       def.mode = "hallway"
@@ -685,6 +750,9 @@ function Shape_add_shapes()
 
     S.area = A
     table.insert(A.seeds, S)
+
+    -- this is usually nil
+    S.good_conn = elem.good_conn
   end
 
 
