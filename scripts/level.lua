@@ -473,7 +473,11 @@ function Levels_choose_themes()
     end
 
 
-    local info = assert(OB_THEMES[name])
+    local info = OB_THEMES[name]
+
+    if not info then
+      error("Internal error : unknown OB_THEME: " .. tostring(name))
+    end
 
     -- remove the game prefix
     local base = string.match(name, "/\([%w_]*\)") or name
@@ -677,6 +681,7 @@ function Levels_choose_themes()
   -- single episode is different : have a few small batches
   if OB_CONFIG.length == "episode" then
     batched_episodic_themes(episode_list)
+    return
   end
 
   set_themes_by_episode(episode_list)
