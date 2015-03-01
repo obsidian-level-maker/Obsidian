@@ -237,7 +237,14 @@ HEXEN.NAMES =
   }
 }
 
---------------------------------------------------
+
+HEXEN.ROOMS =
+{
+  GENERIC =
+  {
+    environment = "any"
+  }
+}
 
 
 HEXEN.THEMES =
