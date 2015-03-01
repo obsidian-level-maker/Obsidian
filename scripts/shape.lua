@@ -1317,8 +1317,6 @@ stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S:tostr(),
       table.insert(T1.seeds, S2)
       table.insert(T2.seeds, S1)
     end
-
-stderrf("\n********  FLIPPED @ %s\n", S1:tostr())
   end
 
 

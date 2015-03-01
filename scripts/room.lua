@@ -1546,12 +1546,10 @@ function Room_assign_hallways()
     -- compute score (the less "open" the better)
     local score = 10 + (1.0 - A.openness) * 10
 
-    if A.prefer_mode then
-      if A.prefer_mode == "hallway" then
-        score = score + 3.5
-      else
-        score = score - 3.5
-      end
+    if A.prefer_mode == "hallway" then
+      score = score + 3.5
+    elseif A.prefer_mode == "room" then
+      score = score - 3.5
     end
 
     -- tie breaker
@@ -1707,7 +1705,7 @@ function Room_assign_hallways()
 
   ---| Room_assign_hallways |---
 
-  local quota = walkable_svolume() * 0.3
+  local quota = walkable_svolume() * 0.25
 
   local largest = Area_largest_area()
 
