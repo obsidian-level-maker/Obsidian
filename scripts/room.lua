@@ -1215,7 +1215,12 @@ end
 
 
 
-function Room_void_some_areas()
+function Room_assign_voids()
+  --
+  -- Void areas are useful, the "unused" space can become closets, cages
+  -- or even just something decorative.
+  --
+
   local largest
 
   local visit_list
@@ -1261,7 +1266,7 @@ function Room_void_some_areas()
 
     local result = check_visited(visited)
 
-    -- leave it void if check succeeded
+    -- leave as void if check succeeded
     if result then
       return true
     end
@@ -1273,22 +1278,43 @@ function Room_void_some_areas()
   end
 
 
-  local function pick_area_to_void()
-    local too_big = 15
+  local function eval_void(A)
+    if A.no_void then return -1 end
 
+    if A.mode != "normal" then return -1 end
+
+    -- CTF check (only visit areas in first half)
+    if A.brother then return -1 end
+
+    -- size check
+    local too_big = 15
     if OB_CONFIG.mode == "dm" then too_big = 5 end
 
+    if A.svolume >= too_big then return -1 end
+
+    -- compute score (smaller is better)
+    local score = 10 - A.svolume / 3.0
+
+    if A.prefer_mode then
+      if A.prefer_mode == "void" then
+        score = score + 2.5
+      else
+        score = score - 2.5
+      end
+    end
+
+    if rand.odds(5) then score = score * 2 end
+
+    -- tie breaker
+    return score + gui.random()
+  end
+
+
+  local function pick_area_to_void()
     while not table.empty(visit_list) do
       local A = table.remove(visit_list, 1)
 
-      if A.no_void then continue end
-
-      if A.mode != "normal" then continue end
-
-      if A.brother then continue end  -- CTF check
-
-      if A.svolume >= too_big then continue end
-
+      -- this test is expensive, so do it here where usage is limited
       if can_void_area(A) then return A end
     end
 
@@ -1296,7 +1322,7 @@ function Room_void_some_areas()
   end
 
 
-  ---| Room_void_some_areas |---
+  ---| Room_assign_voids |---
 
   -- have a quota
   local quota = walkable_svolume() * 0.2
@@ -1311,10 +1337,15 @@ function Room_void_some_areas()
   if largest.sister  then largest.sister .no_void = true end
   if largest.brother then largest.brother.no_void = true end
 
-  -- visit areas in random order
+  -- evaluate each area, sort from best to worst
   visit_list = table.copy(LEVEL.areas)
 
-  rand.shuffle(visit_list)
+  each A in visit_list do
+    A.void_score = eval_void(A)
+  end
+
+  table.sort(visit_list,
+      function(A, B) return A.void_score > B.void_score end)
 
   while quota > 0 do
     local A = pick_area_to_void()

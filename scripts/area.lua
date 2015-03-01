@@ -1141,7 +1141,7 @@ function Area_create_rooms()
   Junction_init()
     Corner_init()
 
-  Room_void_some_areas()
+  Room_assign_voids()
   Room_assign_hallways()
 
   Area_group_into_rooms()
