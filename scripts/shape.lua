@@ -1153,16 +1153,11 @@ function Shape_fill_gaps()
   local function eval_merge(A1, A2, dir)
     local score = 1
 
----###if rand.odds(88) then return 9 + gui.random() end
-
     if A2.svolume < MIN_SIZE then
       score = 3
     elseif A1.svolume + A2.svolume <= MAX_SIZE then
       score = 2
     end
-
---???    -- a preference to merging across diagonals
---???    local power = 1 sel(geom.is_corner(dir), 1, 2)
 
     return score + gui.random()
   end

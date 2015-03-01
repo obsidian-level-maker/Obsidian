@@ -1120,7 +1120,7 @@ end
 
 function Area_create_rooms()
 
-  gui.printf("\n--==| Planning WEIRD Rooms |==--\n\n")
+  gui.printf("\n--==| Planning Rooms |==--\n\n")
 
   local W, H = Area_determine_map_size()
 
