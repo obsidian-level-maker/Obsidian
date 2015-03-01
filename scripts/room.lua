@@ -1338,10 +1338,15 @@ function Room_assign_voids()
   if largest.brother then largest.brother.no_void = true end
 
   -- evaluate each area, sort from best to worst
-  visit_list = table.copy(LEVEL.areas)
+  visit_list = {}
 
-  each A in visit_list do
-    A.void_score = eval_void(A)
+  each A in LEVEL.areas do
+    local score = eval_void(A)
+
+    if score > 0 then
+      A.void_score = score
+      table.insert(visit_list, A)
+    end
   end
 
   table.sort(visit_list,
@@ -1505,6 +1510,8 @@ function Room_assign_hallways()
   -- pick some areas to become hallways
   -- [ does not actually connect them here ]
 
+  local visit_list
+
 
   local function num_neighbor_with_mode(A, mode)
     local count = 0
@@ -1536,50 +1543,48 @@ function Room_assign_hallways()
     -- (because it is a pain to ensure the connection points are mirrored)
     if A.no_ctf_peer then return -1 end
 
-    -- never touch an existing hallway
-    if num_neighbor_with_mode(A, "hallway") > 0 then return -1 end
+    -- compute score (the less "open" the better)
+    local score = 10 + (1.0 - A.openness) * 10
 
-    if A.sister then
-      if num_neighbor_with_mode(A.sister, "hallway") > 0 then return -1 end
+    if A.prefer_mode then
+      if A.prefer_mode == "hallway" then
+        score = score + 3.5
+      else
+        score = score - 3.5
+      end
     end
 
-    -- CTF: prevent a mirrored hallway from touching its peer
-    if A.sister and table.has_elem(A.neighbors, A.sister) then return -1 end
-
-    -- need at least two normal neighbors
-    if num_neighbor_with_mode(A, "normal") < 2 then return -1 end
-
-    -- often use very small areas
-    if A.svolume <= 2.0 then
-      return gui.random() * 30
-    end
-
-    local score = (1.0 - A.openness) * 10
-
-    score = score + A.svolume / 4
-
+    -- tie breaker
     return score + gui.random()
   end
 
 
-  local function pick_area_for_hallway()
-    local best
-    local best_score = 0
+  local function check_hallway_possible(A)
+    -- need at least two normal neighbors
+    if num_neighbor_with_mode(A, "normal") < 2 then return false end
 
-    each A in LEVEL.areas do
-      local score = eval_hallway(A)
+      -- never touch an existing hallway
+    if num_neighbor_with_mode(A, "hallway") > 0 then return false end
 
-      if score < 0 then
-        A.no_hallway = true
-      end
-
-      if score > best_score then
-        best = A
-        best_score = score
-      end
+    if A.sister then
+      if num_neighbor_with_mode(A.sister, "hallway") > 0 then return false end
     end
 
-    return best
+    -- CTF: prevent a mirrored hallway from touching its peer
+    if A.sister and table.has_elem(A.neighbors, A.sister) then return false end
+
+    return true
+  end
+
+
+  local function pick_area_for_hallway()
+    while not table.empty(visit_list) do
+      local A = table.remove(visit_list, 1)
+
+      if check_hallway_possible(A) then return A end
+    end
+
+    return nil  -- nothing else possible
   end
 
 
@@ -1710,6 +1715,21 @@ function Room_assign_hallways()
 
   if largest.sister  then largest.sister .no_hallway = true end
   if largest.brother then largest.brother.no_hallway = true end
+
+  -- evaluate each area, sort from best to worst
+  visit_list = {}
+
+  each A in LEVEL.areas do
+    local score = eval_hallway(A)
+
+    if score > 0 then
+      A.hall_score = score
+      table.insert(visit_list, A)
+    end
+  end
+
+  table.sort(visit_list,
+      function(A, B) return A.hall_score > B.hall_score end)
 
   while quota > 0 do
     local A = pick_area_for_hallway()
