@@ -79,6 +79,7 @@ OB_GAMES["quake"] =
   label = "Quake"
 
   format = "quake"
+  game_dir = "quake"
 
   tables =
   {

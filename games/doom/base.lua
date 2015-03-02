@@ -69,6 +69,7 @@ OB_GAMES["doom2"] =
   priority = 99  -- keep at top
 
   format = "doom"
+  game_dir = "doom"
 
   tables =
   {
@@ -91,6 +92,7 @@ OB_GAMES["doom1"] =
   priority = 98  -- keep at second spot
 
   format = "doom"
+  game_dir = "doom"
 
   tables =
   {

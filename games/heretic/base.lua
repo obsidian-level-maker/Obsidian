@@ -62,6 +62,7 @@ OB_GAMES["heretic"] =
   label = "Heretic"
 
   format = "doom"
+  game_dir = "heretic"
 
   tables =
   {

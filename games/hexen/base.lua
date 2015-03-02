@@ -41,8 +41,6 @@ require "resources"
 
 HEXEN.PARAMETERS =
 {
-  sub_format = "hexen"
-
   -- special logic for Hexen weapon system
   hexen_weapons = true
 
@@ -66,9 +64,11 @@ OB_GAMES["hexen"] =
 {
   label = "Hexen"
 
-  -- hexen format is a minor variation on the Doom format 
-  -- which is enabled by the 'sub_format' PARAMETER.
+  -- Hexen map format is a minor variation on the DOOM format 
   format = "doom"
+  sub_format = "hexen"
+
+  game_dir = "hexen"
 
   tables =
   {
