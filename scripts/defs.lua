@@ -25,7 +25,9 @@ STYLE  = {}
 LEVEL  = {}
 THEME  = {}
 SEEDS  = {}
+
 EPISODE = {}
+PREFABS = {}
 
 
 -- a place for unfinished stuff

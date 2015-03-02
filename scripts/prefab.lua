@@ -103,6 +103,54 @@ WADFAB_DELTA_12  = 997
 
 
 
+function Fab_load_all_definitions()
+
+  local function load_from_subdir(main_dir, subdir)
+  end
+
+
+  local function visit_dir(name)
+    local dir = gui.get_install_dir .. "/prefabs/" .. name
+
+    local subdirs = gui.scan_directory(dir, "DIRS")
+
+    if not subdirs then
+      if name == "common" then
+        error("Failed to load prefabs for: " .. name)
+      else
+        gui.printf("Failed to load prefabs for '%s'\n", name)
+        return
+      end
+    end
+
+    each sub in subdirs do
+      load_from_subdir(dir, sub)
+    end
+
+    -- give each loaded definition a 'dir_name' field.
+    -- [ we assume previous defs also got it, hence this will only set
+    --   the dir_name in the definitions just loaded ]
+
+    each def in PREFABS do
+      if not def.dir_name then
+        def.dir_name = dir
+      end
+    end
+  end
+
+
+  ---| Fab_load_all_definitions |---
+
+  PREFABS = {}
+
+  visit_dir("common")
+  visit_dir(assert(GAME.game_dir))
+
+  table.expand_copies(PREFABS)
+end
+
+
+
 function Fab_lookup(name)
   local def = PREFABS[name]
 

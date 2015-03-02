@@ -189,9 +189,10 @@ function Levels_clean_up()
   PARAM  = {}
   STYLE  = {}
 
-  LEVEL  = nil
+  LEVEL   = nil
   EPISODE = nil
-  SEEDS  = nil
+  PREFABS = nil
+  SEEDS   = nil
 
   collectgarbage("collect")
 end
@@ -392,6 +393,11 @@ function Levels_setup()
   table.merge_missing(PARAM, GLOBAL_PARAMETERS)
 
 
+  -- load all the prefab definitions
+
+  Fab_load_all_definitions()
+
+
   gui.rand_seed(OB_CONFIG.seed + 0)
 
   Levels_invoke_hook("setup")
@@ -399,8 +405,6 @@ function Levels_setup()
 
   table.name_up(GAME.ROOMS)
   table.name_up(GAME.THEMES)
-
-  table.expand_copies(PREFABS)
 
 
   if GAME.sub_format then
