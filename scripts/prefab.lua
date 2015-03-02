@@ -106,11 +106,29 @@ WADFAB_DELTA_12  = 997
 function Fab_load_all_definitions()
 
   local function load_from_subdir(main_dir, subdir)
+    OB_GAME_DIR = main_dir .. "/" .. subdir
+
+    local list, err = gui.scan_directory(OB_GAME_DIR, "*.lua")
+
+    if list == nil then
+      gui.printf("Failed to scan prefab directory '%s'\n", subdir)
+
+    else
+      each filename in list do
+        gui.debugf("Loading %s/%s\n", subdir, filename)
+
+        ob_require(filename)
+      end
+    end
+
+    OB_GAME_DIR = nil
   end
 
 
   local function visit_dir(name)
-    local dir = gui.get_install_dir .. "/prefabs/" .. name
+    local dir = gui.get_install_dir() .. "/prefabs/" .. name
+
+    gui.printf("Loading prefabs from: [%s]\n", dir)
 
     local subdirs = gui.scan_directory(dir, "DIRS")
 
@@ -131,7 +149,7 @@ function Fab_load_all_definitions()
     -- [ we assume previous defs also got it, hence this will only set
     --   the dir_name in the definitions just loaded ]
 
-    each def in PREFABS do
+    each name,def in PREFABS do
       if not def.dir_name then
         def.dir_name = dir
       end
@@ -1479,9 +1497,11 @@ function Fab_load_wad(def)
   function load_it()
     create_it()
 
+    local filename = assert(def.dir_name) .. "/" .. def.file
+
     -- load the map structures into memory
     -- [ if map is not specified, use "*" to load the first one ]
-    gui.wadfab_load(def.file, def.map or "*")
+    gui.wadfab_load(filename, def.map or "*")
 
     for thing_idx = 0,999 do
       local E = gui.wadfab_get_thing(thing_idx)
