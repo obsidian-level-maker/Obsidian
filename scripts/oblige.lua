@@ -601,7 +601,12 @@ function ob_require(filename)
   assert(OB_GAME_DIR)
 stderrf("@@@@ ob_require %s [ %s ]\n", filename, OB_GAME_DIR)
 
-  filename = OB_GAME_DIR .. "/" .. filename .. ".lua"
+  -- add extension if missing
+  if string.match(filename, "%.") == nil then
+    filename = filename .. ".lua"
+  end
+
+  filename = OB_GAME_DIR .. "/" .. filename
 
   local func, err = loadfile(filename)
 
@@ -614,13 +619,38 @@ end
 
 
 
-function ob_load_game(game)
-  -- the 'game' parameter must be a subdirectory of the "games/" folder
+function ob_load_game(name)
+  -- the 'name' parameter must be a subdirectory of the "games/" folder
   
   -- FIXME : TEST ONLY !!!!
-  OB_GAME_DIR = "./games/" .. game
+  OB_GAME_DIR = "./games/" .. name
 
   ob_require("base")
+
+  OB_GAME_DIR = nil
+end
+
+
+function ob_load_all_games()
+  -- FIXME : scan directory....
+  ob_load_game("doom")
+  ob_load_game("heretic")
+end
+
+
+function ob_load_all_engines()
+  OB_GAME_DIR = "./engines"
+
+---  ob_require(name)
+
+  OB_GAME_DIR = nil
+end
+
+
+function ob_load_all_modules()
+  OB_GAME_DIR = "./engines"
+
+---  ob_require(name)
 
   OB_GAME_DIR = nil
 end
@@ -648,8 +678,9 @@ function ob_init()
 
   -- load definitions for all games
 
-  ob_load_game("doom")
-  ob_load_game("heretic")
+  ob_load_all_games()
+  ob_load_all_engines()
+  ob_load_all_modules()
 
 
   table.name_up(OB_GAMES)
