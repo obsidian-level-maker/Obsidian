@@ -632,25 +632,58 @@ end
 
 
 function ob_load_all_games()
-  -- FIXME : scan directory....
-  ob_load_game("doom")
-  ob_load_game("heretic")
+gui.printf("@@@ install_dir = '%s'\n", gui.get_install_dir())
+
+
+  local dir = "./games"  -- FIXME
+
+  local list = gui.scan_directory(dir, "DIRS")
+
+  if not list then
+    error("Failed to scan 'games' directory")
+  end
+
+  each subdir in list do
+    ob_load_game(subdir)
+  end
+
+  if table.empty(OB_GAMES) then
+    error("Failed to load any games at all")
+  end
 end
 
 
 function ob_load_all_engines()
   OB_GAME_DIR = "./engines"
 
----  ob_require(name)
+  local list = gui.scan_directory(OB_GAME_DIR, "*.lua")
+
+  if not list then
+    gui.printf("FAILED: scan 'engines' directory\n")
+
+  else
+    each filename in list do
+      ob_require(filename)
+    end
+  end
 
   OB_GAME_DIR = nil
 end
 
 
 function ob_load_all_modules()
-  OB_GAME_DIR = "./engines"
+  OB_GAME_DIR = "./modules"
 
----  ob_require(name)
+  local list = gui.scan_directory(OB_GAME_DIR, "*.lua")
+
+  if not list then
+    gui.printf("FAILED: scan 'modules' directory\n")
+
+  else
+    each filename in list do
+      ob_require(filename)
+    end
+  end
 
   OB_GAME_DIR = nil
 end
