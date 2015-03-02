@@ -124,17 +124,11 @@ int wadfab_free(lua_State *L)
 
 int wadfab_load(lua_State *L)
 {
-	const char *name = luaL_checkstring(L, 1);
-	const char *map  = luaL_checkstring(L, 2);
-
-	char filename[PATH_MAX];
-
-	SYS_ASSERT(game_dir);
-
-	sprintf(filename, "%s/%s", game_dir, name);
+	const char *filename = luaL_checkstring(L, 1);
+	const char *map      = luaL_checkstring(L, 2);
 
 	if (! FileExists(filename))
-		return luaL_error(L, "wadfab_load: no such file: %s", name);
+		return luaL_error(L, "wadfab_load: no such file: %s", filename);
 
 	if (! ajpoly::LoadWAD(filename))
 		return luaL_error(L, "wadfab_load: %s", ajpoly::GetError());
