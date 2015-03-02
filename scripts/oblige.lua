@@ -597,9 +597,7 @@ end
 
 
 function ob_require(filename)
-
   assert(OB_GAME_DIR)
-stderrf("@@@@ ob_require %s [ %s ]\n", filename, OB_GAME_DIR)
 
   -- add extension if missing
   if string.match(filename, "%.") == nil then
@@ -619,11 +617,10 @@ end
 
 
 
-function ob_load_game(name)
-  -- the 'name' parameter must be a subdirectory of the "games/" folder
+function ob_load_game(dir, game)
+  -- 'game' parameter must be a sub-directory of the games/ folder
   
-  -- FIXME : TEST ONLY !!!!
-  OB_GAME_DIR = "./games/" .. name
+  OB_GAME_DIR = dir .. "/" .. game
 
   ob_require("base")
 
@@ -632,10 +629,7 @@ end
 
 
 function ob_load_all_games()
-gui.printf("@@@ install_dir = '%s'\n", gui.get_install_dir())
-
-
-  local dir = "./games"  -- FIXME
+  local dir = gui.get_install_dir() .. "/games"
 
   local list = gui.scan_directory(dir, "DIRS")
 
@@ -643,8 +637,8 @@ gui.printf("@@@ install_dir = '%s'\n", gui.get_install_dir())
     error("Failed to scan 'games' directory")
   end
 
-  each subdir in list do
-    ob_load_game(subdir)
+  each game in list do
+    ob_load_game(dir, game)
   end
 
   if table.empty(OB_GAMES) then
@@ -654,7 +648,7 @@ end
 
 
 function ob_load_all_engines()
-  OB_GAME_DIR = "./engines"
+  OB_GAME_DIR = gui.get_install_dir() .. "/engines"
 
   local list = gui.scan_directory(OB_GAME_DIR, "*.lua")
 
@@ -672,7 +666,7 @@ end
 
 
 function ob_load_all_modules()
-  OB_GAME_DIR = "./modules"
+  OB_GAME_DIR = gui.get_install_dir() .. "/modules"
 
   local list = gui.scan_directory(OB_GAME_DIR, "*.lua")
 
