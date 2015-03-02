@@ -637,9 +637,12 @@ function ob_load_all_games()
     error("Failed to scan 'games' directory")
   end
 
-  each game in list do
-    ob_load_game(dir, game)
-  end
+  -- FIXME !!!
+  --
+  -- each game in list do
+  --  ob_load_game(dir, game)
+  --end
+  ob_load_game(dir, "doom")
 
   if table.empty(OB_GAMES) then
     error("Failed to load any games at all")
