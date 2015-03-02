@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2014 Andrew Apted
+--  Copyright (C) 2006-2015 Andrew Apted
 --  Copyright (C) 2011,2014 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -27,13 +27,6 @@ DOOM2 = { }  --
 TNT      = { }
 PLUTONIA = { }
 FREEDOOM = { }
-
-
--- prefab stuff
-
-PREFABS = {}
-
-GROUPS = {}
 
 
 ------------------------------------------------------------
