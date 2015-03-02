@@ -38,17 +38,17 @@ GROUPS = {}
 
 ------------------------------------------------------------
 
-require "params"
+ob_require("params")
 
-require "entities"
-require "monsters"
-require "pickups"
-require "weapons"
+ob_require("entities")
+ob_require("monsters")
+ob_require("pickups")
+ob_require("weapons")
 
-require "materials"
-require "themes"
-require "levels"
-require "resources"
+ob_require("materials")
+ob_require("themes")
+ob_require("levels")
+ob_require("resources")
 
 ------------------------------------------------------------
 
