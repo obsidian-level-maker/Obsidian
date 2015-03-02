@@ -87,10 +87,11 @@ PREFABS.Border_dropoff_item =
 -- Group information
 --
 
+--[[
 GROUPS.border_dropoff =
 {
   kind = "border"
 
   fence_boost = 12
 }
-
+--]]

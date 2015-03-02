@@ -77,8 +77,9 @@ PREFABS.Border_rocky_item =
 -- Group information
 --
 
+--[[
 GROUPS.border_rocky =
 {
   kind = "border"
 }
-
+--]]
