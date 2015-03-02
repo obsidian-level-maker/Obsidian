@@ -276,8 +276,10 @@ function Levels_add_game()
       child.hooks = table.merge_missing(child.hooks or {}, def.hooks)
     end
 
-    if def.format then
-      GAME.format = def.format
+    each keyword in { "format", "sub_format", "game_dir" } do
+      if def[keyword] != nil then
+        GAME[keyword] = def[keyword]
+      end
     end
 
     return def
@@ -401,8 +403,8 @@ function Levels_setup()
   table.expand_copies(PREFABS)
 
 
-  if PARAM.sub_format then
-    gui.property("sub_format", PARAM.sub_format)
+  if GAME.sub_format then
+    gui.property("sub_format", GAME.sub_format)
   end
 
   gui.property("spot_low_h",  PARAM.spot_low_h)
