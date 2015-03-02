@@ -182,6 +182,15 @@ int gui_set_colormap(lua_State *L)
 }
 
 
+// LUA: get_install_dir() --> string
+//
+int gui_get_install_dir(lua_State *L)
+{
+	lua_pushstring(L, install_dir);
+	return 1;
+}
+
+
 // LUA: locate_data(filename) --> string
 //
 int gui_locate_data(lua_State *L)
@@ -197,6 +206,60 @@ int gui_locate_data(lua_State *L)
 	}
 
 	lua_pushstring(L, full_name);
+	return 1;
+}
+
+
+// LUA: scan_subdirs(dir) --> list
+//
+int gui_scan_subdirs(lua_State *L)
+{
+	const char *dir_name = luaL_checkstring(L, 1);
+
+	std::vector<std::string> list;
+
+	int count = ScanDir_GetSubDirs(dir_name, list);
+
+	if (count < 0)
+	{
+		lua_pushnil(L);
+		lua_pushstring(L, "No such directory");
+		return 2;
+	}
+
+	// FIXME
+
+	return 1;
+}
+
+
+// LUA: scan_matchfiles(dir, match) --> list
+//
+// Note: match currently must be of the form "*.xxx"
+//
+int gui_scan_matchfiles(lua_State *L)
+{
+	const char *dir_name = luaL_checkstring(L, 1);
+	const char *match    = luaL_checkstring(L, 2);
+
+	if (match[0] != '*' || match[1] != '.' || !isalnum(match[2]))
+	{
+		return luaL_argerror(L, 2, "unsupported match expression");
+	}
+
+	std::vector<std::string> list;
+
+	int count = ScanDir_MatchingFiles(dir_name, match + 2, list);
+
+	if (count < 0)
+	{
+		lua_pushnil(L);
+		lua_pushstring(L, "No such directory");
+		return 2;
+	}
+
+	// FIXME
+
 	return 1;
 }
 
@@ -556,9 +619,7 @@ static const luaL_Reg gui_script_funcs[] =
 	{ "raw_console_print", gui_raw_console_print },
 
 	{ "config_line",    gui_config_line },
-	{ "mkdir",          gui_mkdir },
 	{ "set_colormap",   gui_set_colormap },
-	{ "locate_data",    gui_locate_data },
 
 	{ "add_button",     gui_add_button },
 	{ "add_mod_option", gui_add_mod_option },
@@ -572,6 +633,13 @@ static const luaL_Reg gui_script_funcs[] =
 	{ "abort",       gui_abort },
 	{ "rand_seed",   gui_rand_seed },
 	{ "random",      gui_random },
+
+	// file/directory functions
+	{ "get_install_dir", gui_get_install_dir },
+	{ "locate_data",     gui_locate_data },
+	{ "mkdir",           gui_mkdir },
+	{ "scan_subdirs",    gui_scan_subdirs },
+	{ "scan_matchfiles", gui_scan_matchfiles },
 
 	// CSG functions
 	{ "begin_level", CSG_begin_level },
