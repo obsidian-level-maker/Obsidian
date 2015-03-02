@@ -1007,13 +1007,14 @@ void Script_Open(const char *game_name)
 
 	LogPrintf("DONE.\n\n");
 
+	has_loaded = true;
+
 
 	// ob_init() will load all the game-specific scripts (etc)
 
 	if (! Script_CallFunc("ob_init"))
 		Main_FatalError("The ob_init script failed.\n");
 
-	has_loaded = true;
 	has_added_buttons = true;
 }
 
