@@ -948,25 +948,26 @@ void Script_Open(const char *game_name)
 
 	LogPrintf("DONE.\n\n");
 
+
+	// FIXME : do this in ob_init()
 	Script_LoadSubDir("engines");
 	Script_LoadSubDir("modules");
 
 
-	// load game-specific scripts
+	// ob_init will load all the game-specific scripts (etc)
 
-	const char *game_path = StringPrintf("%s/?.lua", game_dir);
-
-	Script_SetScriptPath(LUA_ST, game_path);
-
-	Script_Require("base");
-
-	Script_LoadSkins();
-
-	has_loaded = true;
+///---	const char *game_path = StringPrintf("%s/?.lua", game_dir);
+///---
+///---	Script_SetScriptPath(LUA_ST, game_path);
+///---
+///---	Script_Require("base");
+///---
+///---	Script_LoadSkins();
 
 	if (! Script_CallFunc("ob_init"))
 		Main_FatalError("The ob_init script failed.\n");
 
+	has_loaded = true;
 	has_added_buttons = true;
 }
 

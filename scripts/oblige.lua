@@ -114,6 +114,7 @@ function ob_traceback(msg)
 end
 
 
+
 -- replace the standard 'print' function
 print = function(...)
   local args = { ... }
@@ -125,6 +126,7 @@ print = function(...)
 
   gui.printf("%s\n", line)
 end
+
 
 
 function ob_ref_table(op, t)
@@ -152,6 +154,7 @@ function ob_ref_table(op, t)
 
   error("ob_ref_table: unknown op: " .. tostring(op))
 end
+
 
 
 function ob_console_dump(info, ...)
@@ -256,6 +259,7 @@ function ob_console_dump(info, ...)
 end
 
 
+
 function ob_match_word_or_table(tab, conf)
   if type(tab) == "table" then
     return tab[conf] and tab[conf] > 0
@@ -263,6 +267,7 @@ function ob_match_word_or_table(tab, conf)
     return tab == conf
   end
 end
+
 
 
 function ob_match_conf(T)
@@ -320,6 +325,7 @@ function ob_match_conf(T)
 end
 
 
+
 function ob_update_engines()
   local need_new = false
 
@@ -338,6 +344,7 @@ function ob_update_engines()
     gui.change_button("engine", OB_CONFIG.engine)
   end
 end
+
 
 
 function ob_update_themes()
@@ -373,6 +380,7 @@ function ob_update_themes()
 end
 
 
+
 function ob_update_modules()
   -- modules may depend on other modules, hence we may need
   -- to repeat this multiple times until all the dependencies
@@ -397,11 +405,13 @@ function ob_update_modules()
 end
 
 
+
 function ob_update_all()
   ob_update_engines()
   ob_update_modules()
   ob_update_themes()
 end
+
 
 
 function ob_defs_conflict(def1, def2)
@@ -474,6 +484,7 @@ function ob_set_mod_option(name, option, value)
 end
 
 
+
 function ob_set_config(name, value)
   -- See the document 'doc/Config_Flow.txt' for a good
   -- description of the flow of configuration values
@@ -525,6 +536,7 @@ function ob_set_config(name, value)
     gui.change_button(name, OB_CONFIG[name])
   end
 end
+
 
 
 function ob_read_all_config(print_to_log)
@@ -583,6 +595,38 @@ function ob_read_all_config(print_to_log)
 end
 
 
+
+function ob_require(filename)
+
+  assert(OB_GAME_DIR)
+stderrf("@@@@ ob_require %s [ %s ]\n", filename, OB_GAME_DIR)
+
+  filename = OB_GAME_DIR .. "/" .. filename .. ".lua"
+
+  local func, err = loadfile(filename)
+
+  if func == nil then
+    error("Could not load script: " .. filename .. " (" .. err .. ")")
+  end
+
+  func()
+end
+
+
+
+function ob_load_game(game)
+  -- the 'game' parameter must be a subdirectory of the "games/" folder
+  
+  -- FIXME : TEST ONLY !!!!
+  OB_GAME_DIR = "./games/" .. game
+
+  ob_require("base")
+
+  OB_GAME_DIR = nil
+end
+
+
+
 function ob_init()
 
   -- the missing print functions
@@ -600,6 +644,13 @@ function ob_init()
 
 
   gui.printf("~~ Oblige Lua initialization begun ~~\n")
+
+
+  -- load definitions for all games
+
+  ob_load_game("doom")
+  ob_load_game("heretic")
+
 
   table.name_up(OB_GAMES)
   table.name_up(OB_THEMES)
@@ -728,6 +779,7 @@ function ob_init()
 end
 
 
+
 function ob_game_format()
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
@@ -742,6 +794,7 @@ function ob_game_format()
 
   return assert(game.format)
 end
+
 
 
 function ob_build_cool_shit()
