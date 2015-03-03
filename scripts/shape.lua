@@ -50,7 +50,7 @@ GENERIC_1x3 =
 
 GENERIC_2x2 =
 {
-  prob = 50
+  prob = 100
 
   structure =
   {
@@ -96,8 +96,8 @@ ROOM_RECT_3x2 =
 
 ROOM_RECT_3x3 =
 {
-  prob = 50
-  initial_prob = 50
+  prob = 100
+  initial_prob = 100
 
   structure =
   {
@@ -204,10 +204,22 @@ ROOM_U_5x3 =
   }
 }
 
+ROOM_U_5x3_B =
+{
+  initial_prob = 30
+
+  structure =
+  {
+    ".222."
+    "12221"
+    "11111"
+  }
+}
+
 ROOM_OU_4x5 =
 {
   prob = 10
-  initial_prob = 100
+  initial_prob = 50
 
   structure =
   {
@@ -221,8 +233,8 @@ ROOM_OU_4x5 =
   diagonals =
   {
     "2.",
-    "21", "12"
-    "21", "12"
+    ".1", "12"
+    ".1", "12"
     "2."
   }
 }
@@ -277,7 +289,7 @@ ROOM_DONUT_6x6 =
 
 HALL_I_4x1 =
 {
-  prob = 25
+  prob = 20
 
   structure =
   {
@@ -300,6 +312,25 @@ HALL_L_3x3 =
   {
     { x=1, y=3, dir=8 }
     { x=3, y=1, dir=6 }
+  }
+}
+
+HALL_L_4x4 =
+{
+  prob = 10
+
+  structure =
+  {
+    "1..."
+    "1..."
+    "1..."
+    "1111"
+  }
+
+  good_conns =
+  {
+    { x=1, y=4, dir=8 }
+    { x=4, y=1, dir=6 }
   }
 }
 
@@ -386,6 +417,30 @@ HALL_S_6x3 =
   {
     { x=1, y=1, dir=4 }
     { x=6, y=1, dir=6 }
+  }
+}
+
+HALL_U_5x3_rounded =
+{
+  prob = 25
+
+  structure =
+  {
+    "1...1"
+    "%%.//"
+    ".%1/."
+  }
+
+  diagonals =
+  {
+    ".1", "1.", ".1", "1."
+    ".1", "1."
+  }
+
+  good_conns =
+  {
+    { x=1, y=3, dir=8 }
+    { x=5, y=3, dir=8 }
   }
 }
 
@@ -1518,6 +1573,6 @@ function Shape_create_areas()
 
   Shape_assign_boundary()
 
---- Shape_save_svg()
+    Shape_save_svg()
 end
 
