@@ -1,10 +1,28 @@
-#------------------------------------------------------------------------
-#  Eureka definition for OBLIGE prefabs
-#------------------------------------------------------------------------
+#----------------------------------------#
+#  Eureka definition for OBLIGE prefabs  #
+#----------------------------------------#
+
+#--- TEXTURES and FLATS ---
+
+texturegroup o "Oblige Fab"
+
+texture o _NOTHING
+texture o _WALL
+texture o _OUTER
+texture o _FLOOR
+texture o _CEIL
+texture o _LIQUID
+
+flat o _NOTHING
+flat o _WALL
+flat o _OUTER
+flat o _FLOOR
+flat o _CEIL
+flat o _LIQUID
 
 #--- LINE SPECIALS ---
 
-linegroup o "OBLIGE"
+linegroup o "Oblige Fab"
 
 line 991 o "-- OBL: Lower Unpeg"
 
@@ -17,8 +35,7 @@ sector 996 "OBL: Door"
 
 #--- THING TYPES ---
 
-thinggroup o 8F8 "OBLIGE Mon"
-thinggroup q F8F "OBLIGE Other"
+thinggroup o 8F8 "Oblige Fab"
 
 thing 3004 o - 20 NULL "OBL: Monster r20"
 
