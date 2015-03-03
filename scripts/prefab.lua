@@ -72,6 +72,39 @@ CSG_BRUSHES =
 WADFAB_ENTITIES =
 {
   -- monster spots
+
+  [8102] = { kind="monster", r= 20 }
+  [8103] = { kind="monster", r= 32 }
+  [8104] = { kind="monster", r= 48 }
+  [8106] = { kind="monster", r= 64 }
+  [8108] = { kind="monster", r=128 }
+
+  [8112] = { kind="flyer", r= 20 }
+  [8113] = { kind="flyer", r= 32 }
+  [8114] = { kind="flyer", r= 48 }
+  [8116] = { kind="flyer", r= 64 }
+  [8118] = { kind="flyer", r=128 }
+
+  [8122] = { kind="caged", r= 20 }
+  [8123] = { kind="caged", r= 32 }
+  [8124] = { kind="caged", r= 48 }
+  [8126] = { kind="caged", r= 64 }
+  [8128] = { kind="caged", r=128 }
+
+  -- special spots
+
+  [8151] = { kind="pickup",    r=16 }
+  [8152] = { kind="big_item",  r=16 }
+  [8160] = { kind="important", r=64 }
+
+  -- lighting
+
+  [8181] = { kind="light" }
+
+
+---- Compatibility cruft (REMOVE EVENTUALLY) ----
+
+  -- monster spots
   
   [3004] = { kind="monster",  r=20  }  -- zombieman
   [3002] = { kind="monster",  r=32  }  -- demon
