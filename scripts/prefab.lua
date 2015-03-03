@@ -21,6 +21,17 @@
 
 GLOBAL_PREFAB_DEFAULTS =
 {
+   tex__WALL  = "?wall"
+  flat__WALL  = "?wall"
+
+   tex__OUTER = "?outer"
+  flat__OUTER = "?outer"
+
+   tex__FLOOR = "?floor"
+  flat__FLOOR = "?floor"
+
+   tex__CEIL  = "?ceil"
+  flat__CEIL  = "?ceil"
 }
 
 
@@ -1243,8 +1254,8 @@ function Fab_load_wad(def)
     
     -- skip making a brush when the flat is FWATER4
     -- TODO : make texture controllable via GAME defs
-    if pass == 1 and S.floor_tex == "FWATER4" then return end
-    if pass == 2 and S. ceil_tex == "FWATER4" then return end
+    if pass == 1 and (S.floor_tex == "FWATER4" or S.floor_tex == "_NOTHING") then return end
+    if pass == 2 and (S. ceil_tex == "FWATER4" or S.ceil_tex  == "_NOTHING") then return end
 
     local B =
     {
