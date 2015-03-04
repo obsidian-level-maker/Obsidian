@@ -880,7 +880,7 @@ static void Script_Require(const char *name)
 }
 
 
-static void Script_LoadFile(const char *filename)
+void Script_LoadFile(const char *filename)
 {
 	int status = luaL_loadfile(LUA_ST, filename);
 
@@ -893,81 +893,6 @@ static void Script_LoadFile(const char *filename)
 
 		Main_FatalError("Unable to load script '%s'\n%s",
 				fl_filename_name(filename), msg);
-	}
-}
-
-
-static bool Script_LoadAllFromDir(const char *path, const char *ext)
-{
-	// load all scripts (files which match "*.lua") from a
-	// sub-directory.
-
-	LogPrintf("Loading scripts from: [%s]\n", path);
-
-	std::vector<std::string> file_list;
-
-	int count = ScanDir_MatchingFiles(path, ext, file_list);
-
-	if (count < 0)
-	{
-		LogPrintf("  --> No such directory.\n\n");
-		return false;
-	}
-
-	DebugPrintf("Scanned %d entries in sub-directory.\n", count);
-
-	for (unsigned int i = 0 ; i < file_list.size() ; i++)
-	{
-		const char *base_name = file_list[i].c_str();
-
-		LogPrintf("Loading %d/%d : %s\n", i+1, file_list.size(), base_name);
-
-		const char *full_name = StringPrintf("%s/%s", path, base_name);
-
-		// load it !!
-		Script_LoadFile(full_name);
-
-		StringFree(full_name);
-	}
-
-	if (file_list.size() > 0)
-		LogPrintf("DONE.\n\n");
-
-	return true;  // OK
-}
-
-
-static void Script_LoadSubDir(const char *subdir)
-{
-	const char *path = StringPrintf("%s/%s", install_dir, subdir);
-
-	Script_LoadAllFromDir(path, "lua");
-
-	StringFree(path);
-}
-
-
-void Script_LoadSkins(void)
-{
-	std::vector<std::string> subdir_list;
-
-	int count = ScanDir_GetSubDirs(game_dir, subdir_list);
-
-	if (count < 0)
-		Main_FatalError("Failed to scan prefab directory\n(error code %d)\n", count);
-
-	if (count == 0)
-		Main_FatalError("Missing prefab folders?!?\n");
-
-	// visit each folder and load the skin files
-
-	for (unsigned int i = 0 ; i < subdir_list.size() ; i++)
-	{
-		const char *subdir = StringPrintf("%s/%s", game_dir, subdir_list[i].c_str());
-
-		Script_LoadAllFromDir(subdir, "lua");
-
-		StringFree(subdir);
 	}
 }
 
