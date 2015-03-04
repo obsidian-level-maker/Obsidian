@@ -34,6 +34,8 @@ class ROOM
 
   seeds = list(SEED)
 
+  ext_conns = list(CONNS)   -- connections which go "external" to another room
+
 
   //////////////////////
 
@@ -227,6 +229,19 @@ function ROOM_CLASS.has_teleporter(R)
   end
 
   return false
+end
+
+
+function ROOM_CLASS.collect_ext_conns(R)
+  R.ext_conns = {}
+
+  each A in R.areas do
+    each C in A.conns do
+      if C.A1.room != C.A2.room then
+        table.insert(R.ext_conns, C)
+      end
+    end
+  end
 end
 
 
