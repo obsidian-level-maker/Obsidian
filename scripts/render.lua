@@ -661,6 +661,111 @@ end
 
 
 
+function Render_sink_part(A, S, where, sink)
+ 
+  -- FIXME TEMP STUFF
+
+  if where != "floor" then return end
+
+  sink =
+  {
+    mat = "FWATER1"
+    dz  = 8
+  }
+
+
+  local function check_inner_point(sx, sy)
+    if not Seed_valid(sx, sy) then return false end
+    local X = SEEDS[sx][sy]
+    return X.is_inner_point
+  end
+
+
+  local function corner_coord(C)
+    local x, y = S.x1, S.y1
+
+    if C == 3 or C == 9 then x = S.x2 end
+    if C == 7 or C == 9 then y = S.y2 end
+
+    return x, y
+  end
+
+
+  local function do_triangle(A, C, B, away)
+    -- A, B, C are corner numbers
+    -- C is the corner either near or away from where the sink goes
+    -- the brush formed by A->C->B should be valid (anti-clockwise)
+
+    local cx, cy = corner_coord(C)
+    local ax, ay = corner_coord(A)
+    local bx, by = corner_coord(B)
+
+    local ax2, ay2 = (ax + cx) / 2, (ay + cy) / 2
+    local bx2, by2 = (bx + cx) / 2, (ay + cy) / 2
+
+    local k1 = 0.416
+    local k2 = 1 - k1
+
+    if away then k1, k2 = k2, k1 end
+
+    local ax3, ay3 = ax * k1 + cx * k2, ay * k1 + cy * k2
+    local bx3, by3 = bx * k1 + cx * k2, by * k1 + cy * k2
+
+    -- FIXME
+  end
+
+
+  -- categorize corners
+  local p1 = check_inner_point(S.sx    , S.sy)
+  local p3 = check_inner_point(S.sx + 1, S.sy)
+  local p7 = check_inner_point(S.sx    , S.sy + 1)
+  local p9 = check_inner_point(S.sx + 1, S.sy + 1)
+
+
+  if S.diagonal then
+    -- FIXME
+
+  else
+
+    local p_val = sel(p1,1,0) + sel(p3,2,0) + sel(p7,4,0) + sel(p9,8,0)
+
+    -- nothing open
+    if p_val == 0 then return end
+
+    -- all corners open
+    if p_val == 15 then
+      
+      -- FIXME : do_whole_square
+    end
+
+    -- one open
+
+    
+
+    -- two open, two closed
+
+    if p_val == 3  then do_triangle(7,1,9, false) ; do_triangle(3,9,1, true)  end
+    if p_val == 12 then do_triangle(7,1,9, true)  ; do_triangle(3,9,1, false) end
+
+    if p_val == 5  then do_triangle(1,3,7, true)  ; do_triangle(9,7,3, false) end
+    if p_val == 10 then do_triangle(1,3,7, false) ; do_triangle(9,7,3, true)  end
+
+    if p_val ==  9 then do_triangle(7,1,3, true)  ; do_triangle(3,9,7, true)  end
+    if p_val ==  6 then do_triangle(9,7,1, true)  ; do_triangle(1,3,9, true)  end
+    
+    -- three open
+
+    if p_val == 14 then do_triangle(7,1,9, true) ; do_triangle(9,1,3, true)   end
+    if p_val == 13 then do_triangle(1,3,7, true) ; do_triangle(7,3,9, true)   end
+
+    if p_val == 11 then do_triangle(3,7,1, true) ; do_triangle(9,7,3, true)   end
+    if p_val ==  7 then do_triangle(1,9,7, true) ; do_triangle(3,9,1, true)   end
+
+  end
+end
+
+
+
 function Render_seed(A, S)
   assert(S.area == A)
 
@@ -742,6 +847,10 @@ local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
 
   Trans.brush(f_brush)
   Trans.brush(c_brush)
+
+
+  if A.floor_sink then Render_sink_part(A, S, "floor", A.floor_sink) end
+  if A. ceil_sink then Render_sink_part(A, S,  "ceil", A. ceil_sink) end
 
 
   -- remember floor brush for the spot logic

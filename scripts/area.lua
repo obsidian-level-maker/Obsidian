@@ -463,6 +463,8 @@ function Area_analyse_areas()
 
       -- OK --
       table.insert(A.inner_points, S)
+
+      S.is_inner_point = true
     end
   end
 

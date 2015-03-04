@@ -1650,6 +1650,6 @@ function Shape_create_areas()
 
   Shape_assign_boundary()
 
-    Shape_save_svg()
+--- Shape_save_svg()
 end
 
