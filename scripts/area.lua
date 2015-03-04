@@ -1245,21 +1245,33 @@ function Area_prune_hallways()
     -- using the Dijkstra pathing algorithm here, we don't need A* since
     -- our hallways are fairly small.
 
-    S1.dij_dist = 0
+    local unvisited = table.copy(H.seeds)
 
-    local unvisited = {}
+    assert(table.has_elem(unvisited, S1))
+    assert(table.has_elem(unvisited, S2))
+
+    -- initialize : source has dist of 0, everything else has infinity
+    local INFINITY = 9e9
+
+    S1.dij_dist = 0
 
     each S in H.seeds do
       if S != S1 then
-        S1.dij_dist = 9e9
-        table.insert(unvisited, S)
+        S1.dij_dist = INFINITY
       end
     end
 
     while not table.empty(unvisited) do
+      -- current node := unvisited node with smallest dist
       local S = get_min_dist_node(unvisited)
+
+      -- reached the target?
+      if S == S2 then break; end
+
+      -- current node will never be processed again
       table.kill_elem(unvisited, S)
 
+      -- visit each neighbor of S which has not been visited yet
       each dir in geom.ALL_DIRS do
         local N = S:neighbor(dir)
 
@@ -1269,11 +1281,36 @@ function Area_prune_hallways()
 
         local new_dist = S.dij_dist + calc_dist(S, N)
 
-        if new_dist < N.dist then
-          -- FIXME
+        if new_dist < N.dij_dist then
+          N.dij_dist = new_dist
+          N.dij_prev = S
         end
       end
     end
+
+    if not S2.dij_prev then
+      error("dijkstra_search : failed to reach target")
+    end
+
+    -- reconstruct path 
+    local path = {}
+
+    repeat
+      assert(not table.has_elem(path, S2))
+      table.insert(path, 1, S2)
+
+      S2 = S2.dij_prev
+    until S2 == nil
+
+    assert(table.has_elem(path, S1))
+
+    -- tidy up for future runs...
+    each S in H.seeds do
+      S.dij_dist = nil
+      S.dij_prev = nil
+    end
+
+    return path
   end
 
 
