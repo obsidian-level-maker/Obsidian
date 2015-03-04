@@ -1335,6 +1335,44 @@ function Area_prune_hallways()
   end
 
 
+  local function try_fix_diagonal(H, S)
+    local L_dir = geom.LEFT_45 [S.diagonal]
+    local R_dir = geom.RIGHT_45[S.diagonal]
+
+    local NL = S:neighbor(L_dir)
+    local NR = S:neighbor(R_dir)
+
+    if not (NL and NL.room == H and not NL.not_path) then return end
+    if not (NR and NR.room == H and not NR.not_path) then return end
+
+    local T_dir = geom.RIGHT[L_dir]
+    local U_dir = geom.LEFT [R_dir]
+
+    local T = NL:neighbor(T_dir)
+    local U = NR:neighbor(U_dir)
+
+    if T != U then return end
+
+    if not (T and T.room == H and not T.not_path) then return end
+
+    -- OK --
+    S.not_path = nil
+  end
+
+
+  local function fixup_diagonals(H)
+    -- Often there is a two diagonals opposite each other (meeting at a
+    -- vertex) and only of them is becomes "on the path", the other becomes
+    -- solid and it ruins some predefined shapes.  So fix them here.
+
+    each S in H.seeds do
+      if S.not_path and S.diagonal then
+        try_fix_diagonal(H, S)      
+      end
+    end
+  end
+
+
   local function prune_hallway(H)
     assert(H.ext_conns)
 
@@ -1364,6 +1402,8 @@ function Area_prune_hallways()
         S.not_path = nil
       end
     end
+
+    fixup_diagonals(H)
   end
 
 
