@@ -1219,3 +1219,64 @@ function Area_spread_zones()
   error("Area_spread_zones failed.")
 end
 
+
+
+function Area_prune_hallways()
+  --
+  -- In each hallway area (except stairwells), find the shortest path
+  -- between the two (or more) connections and mark them as "on_path".
+  --
+  -- Other parts of the hallway will be rendered solid (for indoor halls)
+  -- abd could potentially be used for closets (etc).
+  --
+
+
+  local function calc_dist(S, N)
+    -- FIXME
+  end
+
+
+  local function get_min_dist_node(list)
+    -- FIXME
+  end
+
+
+  local function dijkstra_search(H, S1, S2)
+    -- using the Dijkstra pathing algorithm here, we don't need A* since
+    -- our hallways are fairly small.
+
+    S1.dij_dist = 0
+
+    local unvisited = {}
+
+    each S in H.seeds do
+      if S != S1 then
+        S1.dij_dist = 9e9
+        table.insert(unvisited, S)
+      end
+    end
+
+    while not table.empty(unvisited) do
+      local S = get_min_dist_node(unvisited)
+      table.kill_elem(unvisited, S)
+
+      each dir in geom.ALL_DIRS do
+        local N = S:neighbor(dir)
+
+        if not (N and N.area == H) then continue end
+
+        if not table.has_elem(unvisited, N) then continue end
+
+        local new_dist = S.dij_dist + calc_dist(S, N)
+
+        if new_dist < N.dist then
+          -- FIXME
+        end
+      end
+    end
+  end
+
+
+  ---| Area_prune_hallways |---
+end
+
