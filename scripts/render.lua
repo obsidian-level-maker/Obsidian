@@ -693,7 +693,9 @@ function Render_seed(A, S)
   end
 
 
-  if A.mode == "void" or (A.mode == "scenic" and not A.is_outdoor) then
+  if A.mode == "void" or (A.mode == "scenic" and not A.is_outdoor)
+or S.not_path
+  then
     local w_brush = bare_brush
 
     brushlib.set_mat(w_brush, A.wall_mat)

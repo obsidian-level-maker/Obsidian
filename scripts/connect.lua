@@ -78,7 +78,7 @@ end
 
 function CONN_CLASS.roomstr(C)
   return string.format("CONN_%d [%s:%s --> %s]", C.id, C.kind,
-         C.R1:tostr(), C.R2:tostr())
+         C.R1:tostr(), C.R2:tostr())  -- broken!
 end
 
 
@@ -122,7 +122,7 @@ end
 
 
 function CONN_CLASS.set_where(C, R, floor)
-  if R == C.R1 then
+  if R == C.R1 then  -- broken
     C.where1 = floor
   else
     C.where2 = floor
@@ -131,7 +131,7 @@ end
 
 
 function CONN_CLASS.get_where(C, R)
-  if R == C.R1 then
+  if R == C.R1 then  -- broken
     return C.where1
   else
     return C.where2

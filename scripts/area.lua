@@ -1276,9 +1276,9 @@ function Area_prune_hallways()
     -- initialize : source has dist of 0, everything else has infinity
     S1.dij_dist = 0
 
-    each S in H.seeds do
+    each S in unvisited do
       if S != S1 then
-        S1.dij_dist = INFINITY
+        S.dij_dist = INFINITY
       end
     end
 
@@ -1296,7 +1296,7 @@ function Area_prune_hallways()
       each dir in geom.ALL_DIRS do
         local N = S:neighbor(dir)
 
-        if not (N and N.area == H) then continue end
+        if not (N and N.room == H) then continue end
 
         if not table.has_elem(unvisited, N) then continue end
 
@@ -1336,7 +1336,34 @@ function Area_prune_hallways()
 
 
   local function prune_hallway(H)
-    -- FIXME
+    assert(H.ext_conns)
+
+    -- hallways always have at least two connections
+    assert(#H.ext_conns >= 2)
+
+    each S in H.seeds do
+      S.not_path = true
+    end
+
+    -- find a path between each pair of connections
+    -- [ we don't need to try every possible pair ]
+
+    for i = 1, #H.ext_conns - 1 do
+      local C1 = H.ext_conns[i]
+      local C2 = H.ext_conns[i + 1]
+
+      local S1 = sel(C1.A1.room == H, C1.S1, C1.S2)
+      local S2 = sel(C2.A1.room == H, C2.S1, C2.S2)
+
+      assert(S1 and S1.room == H)
+      assert(S2 and S2.room == H)
+
+      local path = dijkstra_search(H, S1, S2)
+
+      each S in path do
+        S.not_path = nil
+      end
+    end
   end
 
 
