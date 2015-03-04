@@ -2340,6 +2340,8 @@ function Room_build_all()
   
   gui.printf("\n---=====  Build Rooms =====---\n\n")
 
+  Area_prune_hallways()
+
   Room_reckon_doors()
   Room_floor_heights()
 

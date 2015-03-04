@@ -1230,14 +1230,37 @@ function Area_prune_hallways()
   -- abd could potentially be used for closets (etc).
   --
 
+  local INFINITY = 9e9
+
 
   local function calc_dist(S, N)
-    -- FIXME
+    local sx, sy = S:mid_point()
+    local nx, ny = N:mid_point()
+
+    return geom.dist(sx, sy, nx, ny)
   end
 
 
   local function get_min_dist_node(list)
-    -- FIXME
+    -- Note : we add a tiny bit of randomness to break ties in a consistent way
+
+    local best
+    local best_dist = INFINITY / 2.0
+
+    each S in list do
+      local dist = S.dij_dist + gui.random() / 256.0
+
+      if dist < best_dist then
+        best = S
+        best_dist = dist
+      end
+    end
+
+    if not best then
+      error("dijkstra_search: no nodes with a finite distance")
+    end
+
+    return best
   end
 
 
@@ -1251,8 +1274,6 @@ function Area_prune_hallways()
     assert(table.has_elem(unvisited, S2))
 
     -- initialize : source has dist of 0, everything else has infinity
-    local INFINITY = 9e9
-
     S1.dij_dist = 0
 
     each S in H.seeds do
@@ -1314,6 +1335,17 @@ function Area_prune_hallways()
   end
 
 
+  local function prune_hallway(H)
+    -- FIXME
+  end
+
+
   ---| Area_prune_hallways |---
+
+  each R in LEVEL.rooms do
+    if R.is_hallway and R.kind != "stairwell" then
+      prune_hallway(R)
+    end
+  end
 end
 
