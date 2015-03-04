@@ -691,6 +691,16 @@ function Render_sink_part(A, S, where, sink)
   end
 
 
+  local function do_whole_square()
+    -- FIXME
+  end
+
+
+  local function do_whole_triangle(A, C, B)
+    -- FIXME
+  end
+
+
   local function do_triangle(A, C, B, away)
     -- A, B, C are corner numbers
     -- C is the corner either near or away from where the sink goes
@@ -722,10 +732,60 @@ function Render_sink_part(A, S, where, sink)
   local p9 = check_inner_point(S.sx + 1, S.sy + 1)
 
 
-  if S.diagonal then
-    -- FIXME
+  if S.diagonal == 1 then
+    local p_val = sel(p1,1,0) + sel(p3,2,0) + sel(p7,4,0)
 
-  else
+    if p_val == 7 then do_whole_triangle(1,3,7) end
+
+    if p_val == 1 then do_triangle(7,1,3, true) end
+    if p_val == 2 then do_triangle(1,3,7, true) end
+    if p_val == 4 then do_triangle(3,7,1, true) end
+
+    if p_val == 6 then do_triangle(7,1,3, false) end
+    if p_val == 5 then do_triangle(1,3,7, false) end
+    if p_val == 3 then do_triangle(3,7,1, false) end
+
+  elseif S.diagonal == 3 then
+    local p_val = sel(p1,1,0) + sel(p3,2,0) + sel(p9,4,0)
+
+    if p_val == 7 then do_whole_triangle(1,3,9) end
+
+    if p_val == 1 then do_triangle(9,1,3, true) end
+    if p_val == 2 then do_triangle(1,3,9, true) end
+    if p_val == 4 then do_triangle(3,9,1, true) end
+
+    if p_val == 6 then do_triangle(9,1,3, false) end
+    if p_val == 5 then do_triangle(1,3,9, false) end
+    if p_val == 3 then do_triangle(3,9,1, false) end
+
+  elseif S.diagonal == 7 then
+    local p_val = sel(p9,1,0) + sel(p7,2,0) + sel(p3,4,0)
+
+    if p_val == 7 then do_whole_triangle(9,7,3) end
+
+    if p_val == 1 then do_triangle(3,9,7, true) end
+    if p_val == 2 then do_triangle(9,7,3, true) end
+    if p_val == 4 then do_triangle(7,3,9, true) end
+
+    if p_val == 6 then do_triangle(3,9,7, false) end
+    if p_val == 5 then do_triangle(9,7,3, false) end
+    if p_val == 3 then do_triangle(7,3,9, false) end
+
+  elseif S.diagonal == 9 then
+
+    local p_val = sel(p9,1,0) + sel(p7,2,0) + sel(p1,4,0)
+
+    if p_val == 7 then do_whole_triangle(9,7,1) end
+
+    if p_val == 1 then do_triangle(1,9,7, true) end
+    if p_val == 2 then do_triangle(9,7,1, true) end
+    if p_val == 4 then do_triangle(7,1,9, true) end
+
+    if p_val == 6 then do_triangle(1,9,7, false) end
+    if p_val == 5 then do_triangle(9,7,1, false) end
+    if p_val == 3 then do_triangle(7,1,9, false) end
+
+  else  -- Square --
 
     local p_val = sel(p1,1,0) + sel(p3,2,0) + sel(p7,4,0) + sel(p9,8,0)
 
@@ -733,14 +793,15 @@ function Render_sink_part(A, S, where, sink)
     if p_val == 0 then return end
 
     -- all corners open
-    if p_val == 15 then
-      
-      -- FIXME : do_whole_square
-    end
+    if p_val == 15 then do_whole_square() end
 
-    -- one open
+    -- one corner open
 
-    
+    if p_val ==  1 then do_triangle(7,1,9, false) ; do_triangle(9,1,3, false) end
+    if p_val ==  2 then do_triangle(1,3,7, false) ; do_triangle(7,3,9, false) end
+
+    if p_val ==  4 then do_triangle(3,7,1, false) ; do_triangle(9,7,3, false) end
+    if p_val ==  8 then do_triangle(1,9,7, false) ; do_triangle(3,9,1, false) end
 
     -- two open, two closed
 
@@ -753,14 +814,13 @@ function Render_sink_part(A, S, where, sink)
     if p_val ==  9 then do_triangle(7,1,3, true)  ; do_triangle(3,9,7, true)  end
     if p_val ==  6 then do_triangle(9,7,1, true)  ; do_triangle(1,3,9, true)  end
     
-    -- three open
+    -- three corners open
 
-    if p_val == 14 then do_triangle(7,1,9, true) ; do_triangle(9,1,3, true)   end
-    if p_val == 13 then do_triangle(1,3,7, true) ; do_triangle(7,3,9, true)   end
+    if p_val == 14 then do_triangle(7,1,9, true)  ; do_triangle(9,1,3, true)  end
+    if p_val == 13 then do_triangle(1,3,7, true)  ; do_triangle(7,3,9, true)  end
 
-    if p_val == 11 then do_triangle(3,7,1, true) ; do_triangle(9,7,3, true)   end
-    if p_val ==  7 then do_triangle(1,9,7, true) ; do_triangle(3,9,1, true)   end
-
+    if p_val == 11 then do_triangle(3,7,1, true)  ; do_triangle(9,7,3, true)  end
+    if p_val ==  7 then do_triangle(1,9,7, true)  ; do_triangle(3,9,1, true)  end
   end
 end
 
