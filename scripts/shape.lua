@@ -295,6 +295,12 @@ HALL_I_4x1 =
   {
     "1111"
   }
+
+  stair_spots =
+  {
+    { x=2, y=1, dir=6 }
+    { x=3, y=1, dir=6 }
+  }
 }
 
 HALL_L_3x3 =
@@ -312,6 +318,12 @@ HALL_L_3x3 =
   {
     { x=1, y=3, dir=8 }
     { x=3, y=1, dir=6 }
+  }
+
+  stair_spots =
+  {
+    { x=1, y=2, dir=2 }
+    { x=2, y=1, dir=6 }
   }
 }
 
@@ -331,6 +343,12 @@ HALL_L_4x4 =
   {
     { x=1, y=4, dir=8 }
     { x=4, y=1, dir=6 }
+  }
+
+  stair_spots =
+  {
+    { x=1, y=3, dir=2 }
+    { x=2, y=1, dir=6 }
   }
 }
 
@@ -375,6 +393,11 @@ HALL_T_3x3 =
     { x=3, y=3, dir=4 }
     { x=2, y=1, dir=2 }
   }
+
+  stair_spots =
+  {
+    { x=2, y=2, dir=2 }
+  }
 }
 
 HALL_Z_5x3 =
@@ -392,6 +415,13 @@ HALL_Z_5x3 =
   {
     { x=1, y=3, dir=4 }
     { x=5, y=1, dir=6 }
+  }
+
+  stair_spots =
+  {
+    { x=2, y=3, dir=6 }
+    { x=3, y=2, dir=2 }
+    { x=4, y=1, dir=6 }
   }
 }
 
@@ -418,6 +448,12 @@ HALL_S_6x3 =
     { x=1, y=1, dir=4 }
     { x=6, y=1, dir=6 }
   }
+
+  stair_spots =
+  {
+    { x=2, y=1, dir=6 }
+    { x=5, y=3, dir=6 }
+  }
 }
 
 HALL_U_5x3_rounded =
@@ -441,6 +477,11 @@ HALL_U_5x3_rounded =
   {
     { x=1, y=3, dir=8 }
     { x=5, y=3, dir=8 }
+  }
+
+  stair_spots =
+  {
+    { x=3, y=1, dir=6 }
   }
 }
 
