@@ -722,6 +722,28 @@ function Shape_preprocess_patterns()
   end
 
 
+  local function add_stairs(def)
+    local grid = def.processed[1].grid
+
+    each spot in def.stair_spots do
+      local x = spot.x
+      local y = spot.y
+
+      if not (x and x >= 1 and x <= grid.w) or
+         not (y and y >= 1 and y <= grid.h)
+      then
+        error("Bad stair coord in shape: " .. def.name)
+      end
+
+      if grid[x][y].kind == "diagonal" then
+        error("Ambiguous stair coord in shape (on a diagonal)")
+      end
+
+      grid[x][y].good_stair = { dir=spot.dir }
+    end
+  end
+
+
   ---| Shape_preprocess_patterns |---
 
   table.name_up(SHAPES)
@@ -736,9 +758,9 @@ function Shape_preprocess_patterns()
 
     def.processed[1] = convert_structure(def, def.structure)
 
-    if def.good_conns then
-      add_connections(def, def.processed[1].grid)
-    end
+    if def.good_conns then add_connections(def) end
+
+    if def.stair_spots then add_stairs(def) end
 
     if string.match(name, "HALL") then
       def.mode = "hallway"
@@ -813,6 +835,15 @@ function Shape_add_shapes()
   end
 
 
+  local function transform_dir(T, dir)
+    if T.mirror_x  then dir = geom.MIRROR_X[dir]  end
+    if T.mirror_y  then dir = geom.MIRROR_Y[dir]  end
+    if T.transpose then dir = geom.TRANSPOSE[dir] end
+
+    return dir
+  end
+
+
   local function transform_diagonal(T, dir, bottom, top)
     if T.mirror_x then
       dir = geom.MIRROR_X[dir]
@@ -834,7 +865,7 @@ function Shape_add_shapes()
   end
 
 
-  local function install_half_seed(S, elem)
+  local function install_half_seed(T, S, elem)
     if elem.kind != "area" then
       error("Unknown element kind in shape")
     end
@@ -847,8 +878,13 @@ function Shape_add_shapes()
     S.area = A
     table.insert(A.seeds, S)
 
-    -- this is usually nil
-    S.good_conn = elem.good_conn
+    if elem.good_conn then
+      S.good_conn_dir = transform_dir(T, elem.good_conn.dir)
+    end
+
+    if elem.good_stair then
+      S.good_stair_dir = transform_dir(T, elem.good_stair.dir)
+    end
   end
 
 
@@ -900,7 +936,7 @@ function Shape_add_shapes()
           if S1.area then return false end
 
           if mode == "install" then
-        install_half_seed(S1, E1)
+            install_half_seed(T, S1, E1)
           end
 
         end
@@ -920,7 +956,7 @@ function Shape_add_shapes()
       if S.diagonal then return false end
 
       if mode == "install" then
-        install_half_seed(S, elem)
+        install_half_seed(T, S, elem)
       end
 
       return true
