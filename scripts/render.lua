@@ -992,19 +992,6 @@ local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
   Trans.brush(c_brush)
 
 
--- FIXME : TEST ONLY
-if A.room and not A.is_outdoor and A.mode == "normal" then
-A.floor_sink =
-{
-  mat = "FLAT14"
-  dz  = 8
-
---  trim_mat = "METAL"
---  trim_dz  = -8
-}
-end
-
-
   if A.floor_sink then Render_sink_part(A, S, "floor",   A.floor_sink) end
   if A. ceil_sink then Render_sink_part(A, S, "ceiling", A. ceil_sink) end
 
