@@ -667,12 +667,6 @@ function Render_sink_part(A, S, where, sink)
 
   if where != "floor" then return end
 
-  sink =
-  {
-    mat = "FWATER1"
-    dz  = 8
-  }
-
 
   local function check_inner_point(sx, sy)
     if not Seed_valid(sx, sy) then return false end
@@ -693,6 +687,16 @@ function Render_sink_part(A, S, where, sink)
 
   local function apply_brush(brush, is_border)
     -- FIXME
+    if is_border then return end
+
+    brushlib.add_top(brush, A.floor_h + 2)
+
+    local T = brush[#brush]
+    T.delta_z = (2 + sink.dz) * -1
+
+    brushlib.set_mat(brush, sink.mat, sink.mat)
+
+    Trans.brush(brush)
   end
 
 
@@ -968,6 +972,16 @@ local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
 
   Trans.brush(f_brush)
   Trans.brush(c_brush)
+
+
+-- FIXME : TEST ONLY
+if A.mode == "normal" then
+A.floor_sink =
+{
+  mat = "FLAT14"
+  dz  = 8
+}
+end
 
 
   if A.floor_sink then Render_sink_part(A, S, "floor", A.floor_sink) end

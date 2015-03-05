@@ -932,6 +932,8 @@ end
 function brushlib.add_top(brush, z, mat)
   -- Note: assumes brush has no top already!
 
+  -- FIXME : stores 'mat' but should store 'tex'
+
   table.insert(brush, { t=z, mat=mat })
 end
 
