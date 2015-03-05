@@ -802,53 +802,53 @@ function Render_sink_part(A, S, where, sink)
 
     if p_val == 7 then do_whole_triangle(1,3,7) end
 
-    if p_val == 1 then do_triangle(7,1,3, true) end
-    if p_val == 2 then do_triangle(1,3,7, true) end
-    if p_val == 4 then do_triangle(3,7,1, true) end
+    if p_val == 1 then do_triangle(7,1,3, false) end
+    if p_val == 2 then do_triangle(1,3,7, false) end
+    if p_val == 4 then do_triangle(3,7,1, false) end
 
-    if p_val == 6 then do_triangle(7,1,3, false) end
-    if p_val == 5 then do_triangle(1,3,7, false) end
-    if p_val == 3 then do_triangle(3,7,1, false) end
+    if p_val == 6 then do_triangle(7,1,3, true) end
+    if p_val == 5 then do_triangle(1,3,7, true) end
+    if p_val == 3 then do_triangle(3,7,1, true) end
 
   elseif S.diagonal == 3 then
     local p_val = sel(p1,1,0) + sel(p3,2,0) + sel(p9,4,0)
 
     if p_val == 7 then do_whole_triangle(1,3,9) end
 
-    if p_val == 1 then do_triangle(9,1,3, true) end
-    if p_val == 2 then do_triangle(1,3,9, true) end
-    if p_val == 4 then do_triangle(3,9,1, true) end
+    if p_val == 1 then do_triangle(9,1,3, false) end
+    if p_val == 2 then do_triangle(1,3,9, false) end
+    if p_val == 4 then do_triangle(3,9,1, false) end
 
-    if p_val == 6 then do_triangle(9,1,3, false) end
-    if p_val == 5 then do_triangle(1,3,9, false) end
-    if p_val == 3 then do_triangle(3,9,1, false) end
+    if p_val == 6 then do_triangle(9,1,3, true) end
+    if p_val == 5 then do_triangle(1,3,9, true) end
+    if p_val == 3 then do_triangle(3,9,1, true) end
 
-  elseif S.diagonal == 7 then
+  elseif S.diagonal == 9 then
     local p_val = sel(p9,1,0) + sel(p7,2,0) + sel(p3,4,0)
 
     if p_val == 7 then do_whole_triangle(9,7,3) end
 
-    if p_val == 1 then do_triangle(3,9,7, true) end
-    if p_val == 2 then do_triangle(9,7,3, true) end
-    if p_val == 4 then do_triangle(7,3,9, true) end
+    if p_val == 1 then do_triangle(3,9,7, false) end
+    if p_val == 2 then do_triangle(9,7,3, false) end
+    if p_val == 4 then do_triangle(7,3,9, false) end
 
-    if p_val == 6 then do_triangle(3,9,7, false) end
-    if p_val == 5 then do_triangle(9,7,3, false) end
-    if p_val == 3 then do_triangle(7,3,9, false) end
+    if p_val == 6 then do_triangle(3,9,7, true) end
+    if p_val == 5 then do_triangle(9,7,3, true) end
+    if p_val == 3 then do_triangle(7,3,9, true) end
 
-  elseif S.diagonal == 9 then
+  elseif S.diagonal == 7 then
 
     local p_val = sel(p9,1,0) + sel(p7,2,0) + sel(p1,4,0)
 
     if p_val == 7 then do_whole_triangle(9,7,1) end
 
-    if p_val == 1 then do_triangle(1,9,7, true) end
-    if p_val == 2 then do_triangle(9,7,1, true) end
-    if p_val == 4 then do_triangle(7,1,9, true) end
+    if p_val == 1 then do_triangle(1,9,7, false) end
+    if p_val == 2 then do_triangle(9,7,1, false) end
+    if p_val == 4 then do_triangle(7,1,9, false) end
 
-    if p_val == 6 then do_triangle(1,9,7, false) end
-    if p_val == 5 then do_triangle(9,7,1, false) end
-    if p_val == 3 then do_triangle(7,1,9, false) end
+    if p_val == 6 then do_triangle(1,9,7, true) end
+    if p_val == 5 then do_triangle(9,7,1, true) end
+    if p_val == 3 then do_triangle(7,1,9, true) end
 
   else  -- Square --
 
@@ -876,8 +876,8 @@ function Render_sink_part(A, S, where, sink)
     if p_val == 5  then do_triangle(1,3,7, true)  ; do_triangle(9,7,3, false) end
     if p_val == 10 then do_triangle(1,3,7, false) ; do_triangle(9,7,3, true)  end
 
-    if p_val ==  9 then do_triangle(7,1,3, true)  ; do_triangle(3,9,7, true)  end
-    if p_val ==  6 then do_triangle(9,7,1, true)  ; do_triangle(1,3,9, true)  end
+    if p_val ==  9 then do_triangle(7,1,3, false) ; do_triangle(3,9,7, false) end
+    if p_val ==  6 then do_triangle(9,7,1, false) ; do_triangle(1,3,9, false) end
     
     -- three corners open
 
