@@ -691,13 +691,37 @@ function Render_sink_part(A, S, where, sink)
   end
 
 
-  local function do_whole_square()
+  local function apply_brush(brush, is_border)
     -- FIXME
   end
 
 
+  local function do_whole_square()
+    local brush =
+    {
+      { x = S.x1, y = S.y1 }
+      { x = S.x2, y = S.y1 }
+      { x = S.x2, y = S.y2 }
+      { x = S.x1, y = S.y2 }
+    }
+
+    apply_brush(brush)
+  end
+
+
   local function do_whole_triangle(A, C, B)
-    -- FIXME
+    local cx, cy = corner_coord(C)
+    local ax, ay = corner_coord(A)
+    local bx, by = corner_coord(B)
+
+    local brush =
+    {
+      { x = ax, y = ay }
+      { x = cx, y = cy }
+      { x = bx, y = by }
+    }
+
+    apply_brush(brush)
   end
 
 
@@ -713,7 +737,7 @@ function Render_sink_part(A, S, where, sink)
     local ax2, ay2 = (ax + cx) / 2, (ay + cy) / 2
     local bx2, by2 = (bx + cx) / 2, (ay + cy) / 2
 
-    local k1 = 0.416
+    local k1 = 0.41666
     local k2 = 1 - k1
 
     if away then k1, k2 = k2, k1 end
@@ -721,7 +745,44 @@ function Render_sink_part(A, S, where, sink)
     local ax3, ay3 = ax * k1 + cx * k2, ay * k1 + cy * k2
     local bx3, by3 = bx * k1 + cx * k2, by * k1 + cy * k2
 
-    -- FIXME
+    local brush, border
+
+    if away then
+      brush =
+      {
+        { x = ax,  y = ay  }
+        { x = ax3, y = ay3 }
+        { x = bx3, y = by3 }
+        { x = bx,  y = by  }
+      }
+
+      border =
+      {
+        { x = bx2, y = by2 }
+        { x = bx3, y = by3 }
+        { x = ax3, y = ay3 }
+        { x = ax2, y = ay2 }
+      }
+
+    else -- near
+      brush =
+      {
+        { x = ax3, y = ay3 }
+        { x = cx,  y = cy  }
+        { x = bx3, y = by3 }
+      }
+
+      border =
+      {
+        { x = ax2, y = ay2 }
+        { x = ax3, y = ay3 }
+        { x = bx3, y = by3 }
+        { x = bx2, y = by2 }
+      }
+    end
+
+    apply_brush(brush)
+    apply_brush(border, "is_border")
   end
 
 
