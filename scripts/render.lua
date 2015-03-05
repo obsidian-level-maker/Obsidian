@@ -876,8 +876,13 @@ function Render_sink_part(A, S, where, sink)
     if p_val == 5  then do_triangle(1,3,7, true)  ; do_triangle(9,7,3, false) end
     if p_val == 10 then do_triangle(1,3,7, false) ; do_triangle(9,7,3, true)  end
 
-    if p_val ==  9 then do_triangle(7,1,3, false) ; do_triangle(3,9,7, false) end
-    if p_val ==  6 then do_triangle(9,7,1, false) ; do_triangle(1,3,9, false) end
+    -- the "proper" way
+    --if p_val ==  9 then do_triangle(7,1,3, false) ; do_triangle(3,9,7, false) end
+    --if p_val ==  6 then do_triangle(9,7,1, false) ; do_triangle(1,3,9, false) end
+
+    -- the "alternative" way : connects the two sub-areas
+    if p_val ==  6 then do_triangle(7,1,3, true) ; do_triangle(3,9,7, true) end
+    if p_val ==  9 then do_triangle(9,7,1, true) ; do_triangle(1,3,9, true) end
     
     -- three corners open
 
