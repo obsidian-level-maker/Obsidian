@@ -1550,7 +1550,15 @@ function Quest_add_weapons()
 
   -- decide how many weapons to give
 
-  local quota = #LEVEL.zones * rand.range(0.66, 1.33)
+  -- normal quota should give 1-2 in small maps, 2-3 in regular maps, and 3-4
+  -- in large maps (where 4 is rare).
+
+  local lev_size = math.clamp(30, SEED_W + SEED_H, 100)
+
+  local quota = (lev_size - 20) / 25 + gui.random()
+
+  -- more as game progresses
+  quota = quota + LEVEL.game_along
 
   if OB_CONFIG.weapons == "less" then quota = quota / 1.7 end
   if OB_CONFIG.weapons == "more" then quota = quota * 1.7 end
@@ -1560,11 +1568,13 @@ function Quest_add_weapons()
   end
 
   quota = quota * (PARAM.weapon_factor or 1)
-  quota = int(quota + 0.5)
+  quota = int(quota)
 
   if quota < 1 then quota = 1 end
 
   gui.printf("Weapon quota: %d\n", quota)
+
+do return end --!!!!
 
 
   -- decide which weapons to use
@@ -2420,7 +2430,7 @@ function Quest_make_quests()
   if PARAM.hexen_weapons then
     Quest_do_hexen_weapons()
   else
---!!!!!!    Quest_add_weapons()
+    Quest_add_weapons()
   end
 
   Quest_add_minor_quests()
