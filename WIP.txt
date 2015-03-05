@@ -3,30 +3,6 @@ WORK IN PROGRESS
 ================
 
 
-Prefab System
-(a) move games/doom/XXX folders to prefabs/doom/XXX __and__ common/XXX
-
-(b) load PREFABS using loadfile() in the Lua scripts
-    [ need a gui.scan_dir function ]
-
-    also: load all game(s) via Lua scripts
-
-(c) use special texture/flat names + thing numbers (81xx)
-    e.g. _WALL, _OUTER, _FLOOR, _CEIL, _LIQUID
-
-(d) make a resource wad with textures/flats for them
-
-
-
-Shape system:
--  have 'area_info' (or so) in a SHAPE definition, merge those values
-   into the actual created AREA object
-
-+  Connection system : use 'good_conn' when present
-
-+  Connection system : try hard to avoid a conn in a sharp diagonal
-
-
 
 Quest Rework
 ------------
@@ -34,6 +10,50 @@ Quest Rework
 +  add weapons !
 
 +  add nice items
+
+
+
+Connections
+-----------
+
+-  hallway good_conn_dir
+
+-  try to prevent "sharp" connections
+   (if diagonal, want inner point on each side)
+   (if straight, want no diagonal on each side, ESP if other half is diff room / VOID)
+
+
+
+Sinks
+-----
+
++  decide them fairly early, e.g. Room_add_sinks() -- or in layout code
+   
+-  add "light" to ceilings with a light texture
+
+-  detect the "whole seed" part early (easy: all corners are inner points)
+   and [for floors only] give the seed a new floor_h/floor_mat, and honor
+   that floor_h when adding importants or decorative prefabs.
+
+-  monsters: should not straddle the line between normal floor and sink
+   [ draw that line in spot code ] and ideally would have correct 'Z'
+
+-  probably should mark seeds (or whatever) so know where can place
+   decorative prefabs.
+
+
+
+Closets
+-------
+
++  really want to add them _AFTER_ large traps/cages have been
+   added (and after outdoor borders too)
+
+
+
+
+Prefab System
++  transition all prefabs to use new texture/flat names and thing numbers
 
 
 
