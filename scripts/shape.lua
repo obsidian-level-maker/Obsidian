@@ -1162,7 +1162,7 @@ end
       LOCS = { 2,4,5,6,8 }
     end
 
-    local prob = 99
+    local prob = 75
 
     each loc in rand.shuffle(LOCS) do
       if rand.odds(prob) then
