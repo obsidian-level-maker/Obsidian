@@ -665,7 +665,7 @@ function Render_sink_part(A, S, where, sink)
  
   -- FIXME TEMP STUFF
 
-  if where != "floor" then return end
+  if where != "ceiling" then return end
 
 
   local function check_inner_point(sx, sy)
@@ -689,10 +689,16 @@ function Render_sink_part(A, S, where, sink)
     -- FIXME
     if is_border then return end
 
-    brushlib.add_top(brush, A.floor_h + 2)
+    local mul
+
+    if where == "floor" then
+      mul = -1 ; brushlib.add_top(brush, A.floor_h + 2)
+    else
+      mul =  1 ; brushlib.add_bottom(brush, A.ceil_h - 2)
+    end
 
     local T = brush[#brush]
-    T.delta_z = (2 + sink.dz) * -1
+    T.delta_z = (2 + sink.dz) * mul
 
     brushlib.set_mat(brush, sink.mat, sink.mat)
 
@@ -980,17 +986,17 @@ local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
 
 
 -- FIXME : TEST ONLY
-if A.mode == "normal" then
-A.floor_sink =
+if A.room and not A.is_outdoor and A.mode == "normal" then
+A.ceil_sink =
 {
-  mat = "FLAT14"
-  dz  = 8
+  mat = "_SKY"
+  dz  = 24
 }
 end
 
 
-  if A.floor_sink then Render_sink_part(A, S, "floor", A.floor_sink) end
-  if A. ceil_sink then Render_sink_part(A, S,  "ceil", A. ceil_sink) end
+  if A.floor_sink then Render_sink_part(A, S, "floor",   A.floor_sink) end
+  if A. ceil_sink then Render_sink_part(A, S, "ceiling", A. ceil_sink) end
 
 
   -- remember floor brush for the spot logic
