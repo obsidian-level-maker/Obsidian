@@ -1270,6 +1270,8 @@ function Area_prune_hallways()
     -- using the Dijkstra pathing algorithm here, we don't need A* since
     -- our hallways are fairly small.
 
+    if S1 == S2 then return { S1 } end
+
     local unvisited = table.copy(H.seeds)
 
     assert(table.has_elem(unvisited, S1))
