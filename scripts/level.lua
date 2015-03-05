@@ -32,7 +32,8 @@ class LEVEL
 
   episode : EPISODE
 
-  epi_along : float  -- how far along the episode, 0.0 -> 1.0
+    ep_along : float  -- how far along the episode:    0.0 --> 1.0
+  game_along : float  -- how far along the whole game: 0.0 --> 1.0
 
   areas   : list(AREA)
   rooms   : list(ROOM)
