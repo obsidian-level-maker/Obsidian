@@ -73,6 +73,8 @@
 
     quests : list(QUEST)
 
+    rooms : list(ROOM)
+
     -- FIXME : more stuff  e.g. building_mat, cave_mat, monster palette !!!
 --]]
 
@@ -142,6 +144,7 @@ function Zone_new()
     id = id
     name = "ZONE_" .. id
     quests = {}
+    rooms = {}
     svolume = 0
   }
 
@@ -970,6 +973,8 @@ function Quest_group_into_zones()
     each id, A in Q.areas do
       A.zone = zone
       A.room.zone = zone
+
+      table.add_unique(zone.rooms, A.room)
     end
   end
 
@@ -1449,18 +1454,18 @@ function Quest_add_weapons()
   end
 
 
-  local function eval_room_for_weapon(R, is_start, is_new)
+  local function eval_weapon_room(R, is_start, is_new)
     -- never in hallways!
     if R.is_hallway then return -200 end
 
     -- never in secrets!
-    if R.quest.kind == "secret" then return -150 end
-
-    -- alternate starting rooms have special handling
-    if R == LEVEL.alt_start then return -100 end
+    if R.is_secret then return -150 end
 
     -- putting weapons in the exit room is a tad silly
-    if R.is_exit then return -60 end
+    if R.is_exit then return -100 end
+
+    -- alternate starting rooms have special handling
+    if R == LEVEL.alt_start then return -60 end
 
     -- too many weapons already? (very unlikely to occur)
     if #R.weapons >= 2 then return -30 end
@@ -1505,10 +1510,10 @@ function Quest_add_weapons()
     local best_score
 
     each R in Z.rooms do
-      local score = eval_room_for_weapon(R, is_start, is_new)
+      local score = eval_weapon_room(R, is_start, is_new)
 
       -- tie breaker
-      score = score + R.weap_score + gui.random() * 4
+      score = score + gui.random() * 4
 
       if not best_R or score > best_score then
         best_R = R
