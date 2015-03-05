@@ -1450,11 +1450,14 @@ function Quest_add_weapons()
 
 
   local function eval_room_for_weapon(R, is_start, is_new)
-    -- alternate starting rooms have special handling
-    if R == LEVEL.alt_start then return -200 end
+    -- never in hallways!
+    if R.is_hallway then return -200 end
 
     -- never in secrets!
-    if R.quest.kind == "secret" then return -100 end
+    if R.quest.kind == "secret" then return -150 end
+
+    -- alternate starting rooms have special handling
+    if R == LEVEL.alt_start then return -100 end
 
     -- putting weapons in the exit room is a tad silly
     if R.is_exit then return -60 end
@@ -1465,24 +1468,17 @@ function Quest_add_weapons()
     -- basic fitness of the room is the size
     local score = R.svolume
 
-    if is_start and not is_new and R.is_start then
+    if is_start and R.is_start and not is_new then
       return rand.pick { 20, 120, 220 }
     end
 
     -- big bonus for leaf rooms
-    if table.empty(Quest_get_zone_exits(R)) then
+    if #R.ext_conns < 2 then
       score = score + 60
     end
 
-    -- small bonus for storage (bigger for new weapons)
-    if R.is_storage then
-      score = score + sel(is_new, 40, 10)
-    end
-
-    -- if there is a goal or another weapon, adjust the size
-    if #R.goals   > 0 then score = score / 5 end
-    if #R.weapons > 0 then score = score / 10 end
-    if R.is_hallway   then score = score / 20 end
+    -- if there is a goal or another weapon, try to avoid it
+    if #R.goals > 0 or #R.weapons > 0 then score = score / 8 end
 
     return score
   end
@@ -1505,19 +1501,24 @@ function Quest_add_weapons()
     if name == "berserk" then is_new = true end
 
     -- evaluate each room and pick the best
+    local best_R
+    local best_score
+
     each R in Z.rooms do
-      R.weap_score = eval_room_for_weapon(R, is_start, is_new)
+      local score = eval_room_for_weapon(R, is_start, is_new)
 
       -- tie breaker
-      R.weap_score = R.weap_score + gui.random() * 4
+      score = score + R.weap_score + gui.random() * 4
+
+      if not best_R or score > best_score then
+        best_R = R
+        best_score = score
+      end
     end
 
-    local room = table.pick_best(Z.rooms,
-        function(A, B) return A.weap_score > B.weap_score end)
+    table.insert(best_R.weapons, name)
 
-    table.insert(room.weapons, name)
-
-    gui.debugf("|--> %s\n", room:tostr())
+    gui.debugf("|--> %s\n", best_R:tostr())
   end
 
 
