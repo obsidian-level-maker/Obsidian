@@ -663,10 +663,6 @@ end
 
 function Render_sink_part(A, S, where, sink)
  
-  -- FIXME TEMP STUFF
-
-  if where != "ceiling" then return end
-
 
   local function check_inner_point(sx, sy)
     if not Seed_valid(sx, sy) then return false end
@@ -685,10 +681,7 @@ function Render_sink_part(A, S, where, sink)
   end
 
 
-  local function apply_brush(brush, is_border)
-    -- FIXME
-    if is_border then return end
-
+  local function apply_brush(brush, is_trim)
     local mul
 
     if where == "floor" then
@@ -698,9 +691,16 @@ function Render_sink_part(A, S, where, sink)
     end
 
     local T = brush[#brush]
-    T.delta_z = (2 + sink.dz) * mul
 
-    brushlib.set_mat(brush, sink.mat, sink.mat)
+    if is_trim then
+      if not sink.trim_mat then return end
+
+      T.delta_z = (2 + sink.trim_dz) * mul
+      brushlib.set_mat(brush, sink.trim_mat, sink.trim_mat)
+    else
+      T.delta_z = (2 + sink.dz) * mul
+      brushlib.set_mat(brush, sink.mat, sink.mat)
+    end
 
     Trans.brush(brush)
   end
@@ -745,7 +745,7 @@ function Render_sink_part(A, S, where, sink)
     local bx, by = corner_coord(B)
 
     local ax2, ay2 = (ax + cx) / 2, (ay + cy) / 2
-    local bx2, by2 = (bx + cx) / 2, (ay + cy) / 2
+    local bx2, by2 = (bx + cx) / 2, (by + cy) / 2
 
     local k1 = 0.41666
     local k2 = 1 - k1
@@ -755,7 +755,14 @@ function Render_sink_part(A, S, where, sink)
     local ax3, ay3 = ax * k1 + cx * k2, ay * k1 + cy * k2
     local bx3, by3 = bx * k1 + cx * k2, by * k1 + cy * k2
 
-    local brush, border
+--[[ DEBUG
+stderrf("C = (%d %d)\n", cx, cy)
+stderrf("A = (%d %d)  | (%d %d)  | (%d %d)\n", ax,ay, ax2,ay2, ax3,ay3)
+stderrf("B = (%d %d)  | (%d %d)  | (%d %d)\n", bx,by, bx2,by2, bx3,by3)
+stderrf("away = %s\n\n", string.bool(away))
+--]]
+
+    local brush, trim
 
     if away then
       brush =
@@ -766,7 +773,7 @@ function Render_sink_part(A, S, where, sink)
         { x = bx,  y = by  }
       }
 
-      border =
+      trim =
       {
         { x = bx2, y = by2 }
         { x = bx3, y = by3 }
@@ -782,7 +789,7 @@ function Render_sink_part(A, S, where, sink)
         { x = bx3, y = by3 }
       }
 
-      border =
+      trim =
       {
         { x = ax2, y = ay2 }
         { x = ax3, y = ay3 }
@@ -792,7 +799,7 @@ function Render_sink_part(A, S, where, sink)
     end
 
     apply_brush(brush)
-    apply_brush(border, "is_border")
+    apply_brush(trim, "is_trim")
   end
 
 
@@ -987,10 +994,13 @@ local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
 
 -- FIXME : TEST ONLY
 if A.room and not A.is_outdoor and A.mode == "normal" then
-A.ceil_sink =
+A.floor_sink =
 {
-  mat = "_SKY"
-  dz  = 24
+  mat = "FLAT14"
+  dz  = 8
+
+--  trim_mat = "METAL"
+--  trim_dz  = -8
 }
 end
 
