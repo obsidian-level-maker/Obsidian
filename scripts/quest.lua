@@ -1404,21 +1404,40 @@ function Quest_add_weapons()
 
 
   local function num_weapons_for_zones(quota)
+    local num_zones = #LEVEL.zones
+
+    if num_zones == 1 then
+      return { quota }
+    end
+
+
     local counts = {}
 
     for k = 1, #LEVEL.zones do
       counts[k] = 0
     end
 
-    -- first zone always gets a weapon
+    -- first zone always gets a weapon, often two, occasionally three
     counts[1] = 1
-    quota = quota - 1
 
-    for i = 2, 99 do
+    if quota >= 2 and rand.odds((quota - 1) * 40) then
+      counts[1] = 2
+    end
+
+    if quota >= 3 and rand.odds((quota - 2) * 25) then
+      counts[1] = 3
+    end
+
+    quota = quota - counts[1]
+
+
+    -- assign remaining quota to other zones
+
+    for i = 0, 99 do
       if quota <= 0 then break; end
 
-      if rand.odds(60) then
-        local zone_idx = 1 + (i - 1) % #LEVEL.zones
+      if rand.odds(80) then
+        local zone_idx = 2 + (i % (num_zones - 1))
 
         counts[zone_idx] = counts[zone_idx] + 1
 
@@ -1573,8 +1592,6 @@ function Quest_add_weapons()
   if quota < 1 then quota = 1 end
 
   gui.printf("Weapon quota: %d\n", quota)
-
-do return end --!!!!
 
 
   -- decide which weapons to use
