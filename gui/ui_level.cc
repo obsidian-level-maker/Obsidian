@@ -238,6 +238,7 @@ const char * UI_Level::outdoor_syms[] =
 
 	"none",   "NONE",
 	"rare",   "Rare",
+	"few",    "Few",
 	"less",   "Less",
 	"some",   "Some",
 	"more",   "More",
