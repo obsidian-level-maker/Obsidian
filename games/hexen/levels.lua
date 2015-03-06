@@ -127,7 +127,7 @@ function HEXEN.get_levels()
         cluster  = ep_index
 
           ep_along = ep_along
-        game_along = ep_along + (ep_index-1) / EP_NUM
+        game_along = (ep_index - 1 + ep_along) / EP_NUM
 
         sky_light = ep_info.sky_light
 

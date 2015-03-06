@@ -97,7 +97,7 @@ function HERETIC.get_levels()
         name = string.format("E%dM%d", ep_index, map)
 
           ep_along = ep_along
-        game_along = ep_along + (ep_index-1) / EP_NUM
+        game_along = (ep_index - 1 + ep_along) / EP_NUM
       }
 
       table.insert( EPI.levels, LEV)

@@ -95,7 +95,7 @@ function QUAKE.get_levels()
         next_map = string.format("e%dm%d", ep_index, map+1)
 
           ep_along = ep_along
-        game_along = ep_along + (ep_index-1) / EP_NUM
+        game_along = (ep_index - 1 + ep_along) / EP_NUM
       }
 
       table.insert( EPI.levels, LEV)
