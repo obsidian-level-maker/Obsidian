@@ -320,7 +320,7 @@ const char * UI_Play::monster_syms[] =
 	"nuts",   "Nuts!",
 
 	"prog",     "Progressive",
-	"epi",      "Epi Prog",
+	"epi",      "Episodic",
 	"mixed",    "Mix It Up",
 
 	NULL, NULL

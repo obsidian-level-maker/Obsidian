@@ -225,7 +225,7 @@ const char * UI_Level::size_syms[] =
 	"extreme", "Extreme",
 
 	"prog",     "Progressive",
-	"epi",      "Epi Prog",
+	"epi",      "Episodic",
 	"mixed",    "Mix It Up",
 
 	NULL, NULL
