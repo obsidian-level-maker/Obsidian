@@ -340,7 +340,7 @@ function DOOM1.get_levels()
         patch = string.format("WILV%d%d", ep_index-1, map-1)
 
         ep_along = ep_along
-        game_along = ep_along + (ep_index-1) / EP_NUM
+        game_along = (ep_index - 1 + ep_along) / EP_NUM
       }
 
       table.insert( EPI.levels, LEV)
