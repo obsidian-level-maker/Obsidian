@@ -65,7 +65,11 @@ extern bool debug_messages;
 extern bool fast_lighting;
 
 
+#ifdef __GNUC__
+__attribute__((noreturn))
+#endif
 void Main_FatalError(const char *msg, ...);
+
 void Main_ProgStatus(const char *msg, ...);
 bool Main_BackupFile(const char *filename, const char *ext);
 void Main_Ticker();

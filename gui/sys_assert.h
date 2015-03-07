@@ -66,6 +66,9 @@ public:
 
 // -------- the support code -------- 
 
+#ifdef __GNUC__
+__attribute__((noreturn))
+#endif
 void AssertFail(const char *msg, ...);
 // throw an assertion exception with the given message.
 

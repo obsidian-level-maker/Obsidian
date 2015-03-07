@@ -403,6 +403,8 @@ public:
 
 		size--;
 
+		SYS_ASSERT(size < MAX_RECENT);
+
 		for ( ; index < size ; index++)
 			filenames[index] = filenames[index + 1];
 
