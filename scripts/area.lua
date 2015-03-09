@@ -1076,7 +1076,7 @@ function Area_determine_map_size()
   -- Progressive --
 
   if ob_size == "prog" or ob_size == "epi" then
-    local along = LEVEL.game_along
+    local along = LEVEL.game_along ^ 0.66
 
     if ob_size == "epi" then along = LEVEL.ep_along end
 
