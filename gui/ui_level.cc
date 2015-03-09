@@ -180,7 +180,7 @@ void UI_Level::Defaults()
 {
 	// Note: theme handled by LUA code (ob_init)
 
-	ParseValue("size",     "prog");
+	ParseValue("size",     "epi");
 	ParseValue("outdoors", "mixed");
 	ParseValue("caves",    "mixed");
 }
