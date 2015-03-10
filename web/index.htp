@@ -30,7 +30,7 @@ high quality levels which are fun to play.
 
 <h3>CURRENT VERSION</h3>
 
-OBLIGE 6.10 is the current stable version.
+OBLIGE 6.20 is the current stable version.
 
 <p>
 <i>(Note: this version only supports the DOOM games.
@@ -39,6 +39,24 @@ For other games please try version 4.28)
 
 
 <h3>NEWS</h3>
+
+<div class="newsdate">10-Mar-2015:</div>
+<blockquote class="news">
+
+Version 6.20 of OBLIGE has been released.
+
+<p>
+Changes include some basic monster closets,
+diagonal walls were re-implemented,
+a module to disable monsters in the start room,
+finer grained control over many settings,
+an ability to set the random seed,
+plus several bug fixes.
+
+</blockquote>
+
+<hr style="clear: right;">
+
 
 <div class="newsdate">24-Dec-2014:</div>
 <blockquote class="news">
