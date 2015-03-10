@@ -8,7 +8,7 @@
 <div class="submenu">
 <use SubSpacer>
 <use SubWhere where="NEWS">
-<use IndexScreens>
+<!--- use IndexScreens --->
 <use IndexDownload>
 <use IndexForums>
 </div>
