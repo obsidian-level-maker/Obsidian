@@ -2,9 +2,3 @@
 CHANGELOG
 =========
 
-- fixed error when all monsters in Control module are "None"
-
-- fixed map header lumps having size 1 instead of 0
-
-- fixed creating "arch with step" when steepness == NONE
-

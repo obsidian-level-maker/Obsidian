@@ -1,8 +1,8 @@
 
-OBLIGE 6.10-RC1
-===============
+OBLIGE 7.xx
+===========
 
-by Andrew Apted.  July 2014
+by Andrew Apted.  March 2015
 
 
 INTRODUCTION
@@ -14,7 +14,7 @@ INTRODUCTION
   The planned features are:
 
     * high quality levels, e.g. outdoor areas and caves!
-    * easy to use GUI interface (no messing with command lines)
+    * easy to use GUI interface
     * built-in node builder, so the levels are ready to play
     * uses the LUA scripting language for easy customisation
     * DOOM, Heretic, Hexen and Quake support!
@@ -55,7 +55,7 @@ COPYRIGHT and LICENSE
 
   OBLIGE Level Maker
 
-  Copyright (C) 2006-2014 Andrew Apted, et al
+  Copyright (C) 2006-2015 Andrew Apted, et al
 
   OBLIGE is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published
