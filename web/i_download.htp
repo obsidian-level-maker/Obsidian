@@ -18,18 +18,14 @@
 
 <span id="current"></span>
 
-<h3>CURRENT STABLE VERSION : 6.10</h3>
+<h3>CURRENT STABLE VERSION : 6.20</h3>
 
 <b>Windows package</b>:
-<a href="http://sourceforge.net/projects/oblige/files/Oblige/6.10/oblige-610-win.zip">oblige-610-win.zip</a>
-
-<p>
-<b>Debian Linux package</b>:
-<a href="http://sourceforge.net/projects/oblige/files/Oblige/6.10/oblige_6.10-1_i386.deb">oblige_6.10-1_i386.deb</a>
+<a href="http://sourceforge.net/projects/oblige/files/Oblige/6.20/oblige-620-win.zip">oblige-620-win.zip</a>
 
 <p>
 <b>Source code</b>:
-<a href="http://sourceforge.net/projects/oblige/files/Oblige/6.10/oblige-610-source.zip">oblige-610-source.zip</a>
+<a href="http://sourceforge.net/projects/oblige/files/Oblige/6.20/oblige-620-source.zip">oblige-620-source.zip</a>
 
 
 <h3>OLDER VERSIONS</h3>
@@ -47,7 +43,7 @@ used to manage a collection of source code files
 over the internet.
 <p>
 
-The following link lets you browse the source code:
+This link lets you browse the source code:
 <a href="https://sourceforge.net/p/oblige/code2/ref/master/">
 Browse Code</a>
 
@@ -63,7 +59,7 @@ information about OBLIGE.
 OBLIGE Level Maker
 
 <p>
-Copyright (C) 2006-2014 Andrew Apted, et al
+Copyright (C) 2006-2015 Andrew Apted, et al
 
 <p>
 OBLIGE is free software; you can redistribute it and/or
