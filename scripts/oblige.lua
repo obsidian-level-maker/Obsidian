@@ -620,6 +620,9 @@ end
 function ob_load_game(dir, game)
   -- 'game' parameter must be a sub-directory of the games/ folder
   
+  -- ignore the template game -- it is only instructional
+  if game == "template" then return end
+
   OB_GAME_DIR = dir .. "/" .. game
 
   ob_require("base")
