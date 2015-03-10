@@ -54,17 +54,19 @@ a very useful feature which
 has been kept.
 
 <p>
-<b>Oblige V6</b> is the latest version, which aims to
+<b>Oblige V6</b> is the current stable version, which aims to
 meld together the best features of the previous releases.
 My focus has also shifted a bit these days,
 concentrating more on the fun factor of the levels and
 less on the aesthetics.
-There is still so much to do, so I'd better stop yakking and
-resume hacking.... :-)
+
+<p>
+<b>Oblige V7</b> is an experimental version in development.
 
 
 <h3>RELEASE DATES</h3>
 
+<b>Version 6.20</b> : 2015-03-10<br>
 <b>Version 6.10</b> : 2014-07-11<br>
 <b>Version 6.05</b> : 2014-04-30
 
@@ -86,6 +88,40 @@ resume hacking.... :-)
 <b>Version 0.94</b> : 2007-07-05<br>
 <b>Version 0.85</b> : 2007-02-19<br>
 <b>Version 0.81</b> : 2007-01-21 &nbsp; (very first public release)<br>
+
+
+<h3 id="changes620">CHANGES IN 6.20</h3>
+<PRE>
++  added basic monster closets
+
++  re-implemented diagonal walls
+
++  new Gameplay Tweaks module
+   (can prevent monsters in start room, among other things)
+
++  new "Easier" and "Harder" settings for monster strength
+
++  new "Episodic" setting for monster quantity and level size
+
++  finer control over Outdoors, Caves and all level styles
+   with new "Rare", "Less" and "More" settings
+
+!  removed "Always" setting for Caves and Outdoors
+
+-  ability to set the random seed
+-  in co-op mode prefer steep stairs instead of lifts
+-  better monster selection via new 'min_weapon' field
+-  water and blood are no longer damaging
+
+-  fixed error when all monsters in control module are "None"
+-  fixed map header lumps having size 1 instead of 0
+-  fixed creating "arch with step" when steepness == NONE
+-  fixed using key podiums underneath a 3D floor
+</pre>
+
+<p> &nbsp;
+
+<hr>
 
 
 <h3 id="changes610">CHANGES IN 6.10</h3>
