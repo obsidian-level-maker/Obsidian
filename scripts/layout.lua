@@ -599,6 +599,9 @@ function Layout_traps_and_cages()
     local svolume = 0
 
     each A in LEVEL.areas do
+      -- reserved for closets?
+      if A.is_closety then continue end
+
       if eval_area_for_cage(A) > 0 then
         table.insert(list, A)
         svolume = svolume + A.svolume

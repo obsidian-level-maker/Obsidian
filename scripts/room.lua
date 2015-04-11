@@ -1283,6 +1283,12 @@ function Room_assign_voids()
 
     -- leave as void if check succeeded
     if result then
+      -- sometimes reserve void area for closets
+      -- [ never use for big traps or cages ]
+      if rand.odds(25) then
+        A.is_closety = true
+      end
+
       return true
     end
 
