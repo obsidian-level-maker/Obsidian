@@ -41,11 +41,13 @@ DOOM.ENTITIES =
   ks_yellow  = { id=39 }
   ks_blue    = { id=40 }
 
-  --- POWERUPS ---
+  --- POWERUPS (with special requirements) ---
 
   backpack = { id=8 }   -- FIXME: REMOVE
 
   suit = { id=2025 }
+
+  goggles = { id=2045 }
 
 
   --- SCENERY ---

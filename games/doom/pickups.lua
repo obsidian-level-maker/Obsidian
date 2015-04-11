@@ -217,22 +217,15 @@ DOOM.NICE_ITEMS =
     secret_prob = 90
   }
 
-  goggles =
-  {
-    id = 2045
-    kind = "powerup"
-    add_prob = 5
-    secret_prob = 25
-    crazy_prob  = 10
-    time_limit = 120
-  }
-
   --
   -- NOTES:
   --
   -- Radiation suit is not here, since it needs special logic
   -- (namely to create areas with a nukage or lava floor which the
   --  player is forced to cross).
+  --
+  -- Night-vision goggles also needs special logic and hence is
+  -- not here either.
   --
   -- The All-map is for secrets only, hence has no 'add_prob'.
   --
