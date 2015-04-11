@@ -102,7 +102,7 @@ DOOM.MONSTERS =
     damage = 1
     attack = "melee"
     float = true
-    weap_prefs = { launch=0.1 }
+    weap_prefs = { launch=0.3 }
     room_size = "small"
     infights = true
   }
@@ -169,7 +169,6 @@ DOOM.MONSTERS =
     attack = "missile"
     density = 0.35
     min_weapon = 3
-    weap_prefs = { bfg=3.0 }
     room_size = "medium"
   }
 
@@ -306,7 +305,6 @@ DOOM2.MONSTERS =
     density = 0.2
     room_size = "medium"
     min_weapon = 4
-    weap_prefs = { bfg=5.0 }
     nasty = true
   }
 
@@ -324,7 +322,7 @@ DOOM2.MONSTERS =
     density = 0.2
     float = true
     min_weapon = 3
-    weap_prefs = { launch=0.2 }
+    weap_prefs = { launch=0.1 }
     room_size = "large"
     cage_factor = 0  -- never put in cages
     nasty = true
