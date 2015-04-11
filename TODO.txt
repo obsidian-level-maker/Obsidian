@@ -9,6 +9,8 @@ ______________________________________________________________________
 ______________________________________________________________________
 
 
+*  min_weapon for guard monsters
+
 *  support for Traps and free-standing Cages
 
 *  add in more scenery: trees, computers etc
@@ -45,8 +47,15 @@ ______________________________________________________________________
   V7 STUFF
 ----------------------------------------------
 
++  better facing angles for players
+   (switches too, but less important)
+
 +  make "keep_weapons" the default behavior, change the module to
    have "pistol_starts" instead
+
+   Note that "beserk" only lasts a single level.
+
+-  sky generator : better checking of themes (esp. w/ control module)
 
 
 ----------------------------------------------

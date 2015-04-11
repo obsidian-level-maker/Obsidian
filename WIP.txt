@@ -3,14 +3,13 @@ WORK IN PROGRESS
 ================
 
 
-
 Quest Rework
 ------------
 
-+  add weapons !
-
 +  add nice items
 
+
+>>  hallway stairs
 
 
 Connections
