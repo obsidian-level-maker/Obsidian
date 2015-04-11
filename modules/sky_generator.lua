@@ -319,7 +319,7 @@ function SKY_GEN.generate_skies()
 
     local seed = int(gui.random() * 1000000)
 
-    local squish = rand.index_by_probs({ 1, 4, 2 })
+    local squish = 2.0
 
     local is_starry = (_index == starry_ep)
 
