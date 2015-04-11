@@ -169,20 +169,16 @@ function Fab_load_all_definitions()
   end
 
 
-  local function visit_dir(name)
-    local dir = gui.get_install_dir() .. "/prefabs/" .. name
+  local function visit_dir(sub_name)
+    local dir = gui.get_install_dir() .. "/" .. sub_name
 
     gui.printf("Loading prefabs from: [%s]\n", dir)
 
-    local subdirs = gui.scan_directory(dir, "DIRS")
+    local subdirs, err = gui.scan_directory(dir, "DIRS")
 
     if not subdirs then
-      if name == "common" then
-        error("Failed to load prefabs for: " .. name)
-      else
-        gui.printf("Failed to load prefabs for '%s'\n", name)
-        return
-      end
+      gui.printf("Failed to scan that folder [%s]\n", tostring(err))
+      return
     end
 
     each sub in subdirs do
@@ -198,6 +194,8 @@ function Fab_load_all_definitions()
         def.dir_name = dir
       end
     end
+
+    gui.printf("OK\n")
   end
 
 
@@ -205,8 +203,8 @@ function Fab_load_all_definitions()
 
   PREFABS = {}
 
-  visit_dir("common")
-  visit_dir(assert(GAME.game_dir))
+  visit_dir("prefabs")
+  visit_dir("games/" .. assert(GAME.game_dir) .. "/prefabs")
 
   table.expand_copies(PREFABS)
 end
