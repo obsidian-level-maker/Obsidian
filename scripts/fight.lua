@@ -74,8 +74,6 @@ function Fight_Simulator(monsters, weapons, stats)
 
   local active_mons = {}
 
-  local PLAYER_ACCURACY = 0.8
-
 
   local function remove_dead_mon()
     for i = #active_mons,1,-1 do
@@ -143,7 +141,7 @@ function Fight_Simulator(monsters, weapons, stats)
 
 
   local function player_shoot(W)
-    hurt_mon(1, W, W.damage * PLAYER_ACCURACY)
+    hurt_mon(1, W, W.damage)
 
     -- simulate splash damage | shotgun spread
     if W.splash then
