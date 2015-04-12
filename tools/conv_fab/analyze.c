@@ -32,7 +32,6 @@
 #include "analyze.h"
 #include "blockmap.h"
 #include "level.h"
-#include "node.h"
 #include "reject.h"
 #include "seg.h"
 #include "structs.h"

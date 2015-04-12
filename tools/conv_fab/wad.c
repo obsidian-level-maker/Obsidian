@@ -33,7 +33,6 @@
 
 #include "blockmap.h"
 #include "level.h"
-#include "node.h"
 #include "seg.h"
 #include "structs.h"
 #include "util.h"
