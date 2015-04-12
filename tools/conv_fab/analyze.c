@@ -655,13 +655,51 @@ static void Convert_Name(char *buf_8, const char *old_name, const char *new_name
 }
 
 
+static void Convert_TexName(char *buf_8)
+{
+  Convert_Name(buf_8, "COMPBLUE", "_NOTHING");
+  Convert_Name(buf_8, "STARTAN3", "_WALL");
+  Convert_Name(buf_8, "BLAKWAL1", "_OUTER");
+  Convert_Name(buf_8, "SFALL3",   "_LIQUID");
+  Convert_Name(buf_8, "GRAY5",    "_FLOOR");
+  Convert_Name(buf_8, "STARBR2",  "_CEIL");
+}
+
 static void Convert_Textures(void)
 {
+  int i;
+
+  for (i = 0 ; i < num_sidedefs ; i++)
+  {
+    sidedef_t * W = LookupSidedef(i);
+
+    Convert_TexName(W->upper_tex);
+    Convert_TexName(W->lower_tex);
+    Convert_TexName(W->mid_tex);
+  }
 }
 
 
+static void Convert_FlatName(char *buf_8)
+{
+  Convert_Name(buf_8, "FWATER4",  "_NOTHING");
+  Convert_Name(buf_8, "FLOOR5_3", "_WALL");
+  Convert_Name(buf_8, "NUKAGE3",  "_LIQUID");
+  Convert_Name(buf_8, "FLOOR0_6", "_FLOOR");
+  Convert_Name(buf_8, "CEIL3_1",  "_CEIL");
+}
+
 static void Convert_Flats(void)
 {
+  int i;
+
+  for (i = 0 ; i < num_sectors ; i++)
+  {
+    sector_t * S = LookupSector(i);
+
+    Convert_FlatName(S->floor_tex);
+    Convert_FlatName(S->ceil_tex);
+  }
 }
 
 
@@ -685,6 +723,14 @@ static int Convert_ThingNum(int id)
 
 static void Convert_Things(void)
 {
+  int i;
+
+  for (i = 0 ; i < num_things ; i++)
+  {
+    thing_t * T = LookupThing(i);
+
+    T->type = Convert_ThingNum(T->type);
+  }
 }
 
 
