@@ -350,6 +350,7 @@ void GetThings(void)
 
     thing->type = UINT16(raw->type);
     thing->options = UINT16(raw->options);
+    thing->angle = UINT16(raw->angle);
 
     thing->index = i;
   }
@@ -862,6 +863,28 @@ static INLINE_G uint32_g VertexIndex32BitV5(const vertex_t *v)
     return (uint32_g) ((v->index & ~IS_GL_VERTEX) | 0x80000000U);
 
   return (uint32_g) v->index;
+}
+
+void PutThings(void)
+{
+  lump_t *lump = CreateLevelLump("THINGS");
+
+  int i, count;
+
+  for (i=0, count=0; i < num_things; i++)
+  {
+    raw_thing_t raw;
+    thing_t *thing = lev_things[i];
+
+    raw.x = SINT16(thing->x);
+    raw.y = SINT16(thing->y);
+
+    raw.type = UINT16(thing->type);
+    raw.options = UINT16(thing->options);
+    raw.angle = UINT16(thing->angle);
+
+    AppendLevelLump(lump, &raw, sizeof(raw));
+  }
 }
 
 void PutSegs(void)
@@ -1607,6 +1630,7 @@ void SaveLevel(node_t *root_node)
 {
     PutVertices("VERTEXES", FALSE);
     PutSectors();
+    PutThings();
 
     PutSidedefs();
     PutLinedefs();
