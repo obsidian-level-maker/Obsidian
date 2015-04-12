@@ -649,7 +649,7 @@ static void Convert_Name(char *buf_8, const char *old_name, const char *new_name
   {
     buf_8[i] = *new_name;
 
-    if (new_name[i] != 0)
+    if (*new_name)
       new_name++;
   }
 }
