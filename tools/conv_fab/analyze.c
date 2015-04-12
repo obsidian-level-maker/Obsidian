@@ -624,12 +624,63 @@ void PruneSectors(void)
 //----------------------------------------------------------------------
 
 
+static void Convert_Name(char *buf_8, const char *old_name, const char *new_name)
+{
+  int i;
+
+  // check for match
+  for (i = 0 ; i < 8 ; i++)
+  {
+    // terminator in original string?
+    if ((unsigned char) buf_8[i] <= 32)
+    {
+      if (old_name[i] == 0)
+        break;   // MATCH!
+      else
+        return;  // NO MATCH
+    }
+
+    // this handles NUL terminator in 'old_name' too
+    if (toupper(buf_8[i]) != toupper(old_name[i]))
+      return;  // NO MATCH
+  }
+
+  for (i = 0 ; i < 8 ; i++)
+  {
+    buf_8[i] = *new_name;
+
+    if (new_name[i] != 0)
+      new_name++;
+  }
+}
+
+
 static void Convert_Textures(void)
 {
 }
 
+
 static void Convert_Flats(void)
 {
+}
+
+
+static int Convert_ThingNum(int id)
+{
+  switch (id)
+  {
+    case 3004 : return 8102;
+    case 3002 : return 8103;
+    case 3005 : return 8113;
+    case 68   : return 8106;
+    case 7    : return 8108;
+    case 2015 : return 8151;
+    case 2018 : return 8152;
+    case 37   : return 8155;
+    case 34   : return 8181;
+
+    default: return id;
+  }
 }
 
 static void Convert_Things(void)
