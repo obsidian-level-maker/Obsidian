@@ -1617,118 +1617,17 @@ void PutGLChecksum(void)
 //
 void SaveLevel(node_t *root_node)
 {
-  lev_force_v3 = (cur_info->spec_version == 3) ? TRUE : FALSE;
-  lev_force_v5 = (cur_info->spec_version == 5) ? TRUE : FALSE;
-  
-  // Note: RoundOffBspTree will convert the GL vertices in segs to
-  // their normal counterparts (pointer change: use normal_dup).
-
-  if (cur_info->spec_version == 1)
-    RoundOffBspTree(root_node);
-
-  // GL Nodes
-  {
-    if (num_normal_vert > 32767 || num_gl_vert > 32767)
-    {
-      if (cur_info->spec_version < 3)
-      {
-        lev_force_v5 = TRUE;
-        MarkV5Switch(LIMIT_VERTEXES | LIMIT_GL_SEGS);
-      }
-    }
-
-    if (num_segs > 65534)
-    {
-      if (cur_info->spec_version < 3)
-      {
-        lev_force_v5 = TRUE;
-        MarkV5Switch(LIMIT_GL_SSECT | LIMIT_GL_SEGS);
-      }
-    }
-
-    if (num_nodes > 32767)
-    {
-      if (cur_info->spec_version < 5)
-      {
-        lev_force_v5 = TRUE;
-        MarkV5Switch(LIMIT_GL_NODES);
-      }
-    }
-
-    if (cur_info->spec_version == 1)
-      PutVertices("GL_VERT", TRUE);
-    else
-      PutV2Vertices(lev_force_v5);
-
-    if (lev_force_v3 || lev_force_v5)
-      PutV3Segs(lev_force_v5);
-    else
-      PutGLSegs();
-
-    if (lev_force_v3 || lev_force_v5)
-      PutV3Subsecs(lev_force_v5);
-    else
-      PutSubsecs("GL_SSECT", TRUE);
-
-    PutNodes("GL_NODES", TRUE, lev_force_v5, root_node);
-
-    // -JL- Add empty PVS lump
-    CreateGLLump("GL_PVS");
-  }
-
-  if (lev_doing_normal)
-  {
-    if (cur_info->spec_version != 1)
-      RoundOffBspTree(root_node);
- 
-    NormaliseBspTree(root_node);
-
     PutVertices("VERTEXES", FALSE);
     PutSectors();
+
     PutSidedefs();
-
-    if (lev_doing_hexen)
-      PutLinedefsHexen();
-    else
-      PutLinedefs();
+    PutLinedefs();
  
-    if (lev_force_v5)
-    {
-      // don't report a problem when -v5 was explicitly given
-      if (cur_info->spec_version < 5)
-        MarkZDSwitch();
-
-      SaveZDFormat(root_node);
-    }
-    else
-    {
-      PutSegs();
-      PutSubsecs("SSECTORS", FALSE);
-      PutNodes("NODES", FALSE, FALSE, root_node);
-    }
-
-    // -JL- Don't touch blockmap and reject if not doing normal nodes
     PutBlockmap();
+    PutReject();
 
-    if (!cur_info->no_reject || !FindLevelLump("REJECT"))
-      PutReject();
-  }
-
-  // keyword support (v5.0 of the specs)
-  AddGLTextLine("BUILDER", "glBSP " GLBSP_VER);
-  PutGLOptions();
-  {
-    char *time_str = UtilTimeString();
-
-    if (time_str)
-    {
-      AddGLTextLine("TIME", time_str);
-      UtilFree(time_str);
-    }
-  }
-
-  // this must be done _after_ the normal nodes have been built,
-  // so that we use the new VERTEXES lump in the checksum.
-  PutGLChecksum();
+    CreateLevelLump("NODES");
+    CreateLevelLump("SEGS");
+    CreateLevelLump("SSECTORS");
 }
 

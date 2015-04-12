@@ -412,6 +412,8 @@ static void WriteBlockmap(void)
 
   lump_t *lump = CreateLevelLump("BLOCKMAP");
 
+  { return; }
+
   uint16_g null_block[2] = { 0x0000, 0xFFFF };
   uint16_g m_zero = 0x0000;
   uint16_g m_neg1 = 0xFFFF;

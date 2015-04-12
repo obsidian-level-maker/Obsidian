@@ -192,30 +192,10 @@ static void CreateReject(uint8_g *matrix)
 //
 void PutReject(void)
 {
-  int reject_size;
-  uint8_g *matrix;
-  lump_t *lump;
+  CreateLevelLump("REJECT");
 
-  DisplayTicker();
+//  AppendLevelLump(lump, matrix, reject_size);
 
-  InitReject();
-  GroupSectors();
-  
-  reject_size = (num_sectors * num_sectors + 7) / 8;
-  matrix = UtilCalloc(reject_size);
-
-  CreateReject(matrix);
-
-# if DEBUG_REJECT
-  CountGroups();
-# endif
-
-  lump = CreateLevelLump("REJECT");
-
-  AppendLevelLump(lump, matrix, reject_size);
-
-  PrintVerbose("Added simple reject lump\n");
-
-  UtilFree(matrix);
+  PrintVerbose("Added empty reject lump\n");
 }
 
