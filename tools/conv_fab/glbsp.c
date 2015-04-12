@@ -46,14 +46,14 @@ volatile nodebuildcomms_t *cur_comms = NULL;
 const nodebuildinfo_t default_buildinfo =
 {
   NULL,    // filename
-  NULL,    // all_files
+  { NULL, },    // all_files
   0,       // num_files
 
   DEFAULT_FACTOR,  // factor
 
   FALSE,   // no_reject
   FALSE,   // no_progress
-  FALSE,   // quiet
+  TRUE,    // quiet
   FALSE,   // mini_warnings
   FALSE,   // force_hexen
   FALSE,   // pack_sides
@@ -451,24 +451,17 @@ glbsp_ret_e GlbspBuildNodes(const nodebuildinfo_t *info,
   comms->cancelled = FALSE;
 
   // sanity check
-  if (!cur_info->input_file  || cur_info->input_file[0] == 0 ||
-      !cur_info->output_file || cur_info->output_file[0] == 0)
+  if (!cur_info->filename  || cur_info->filename[0] == 0)
   {
-    SetErrorMsg("INTERNAL ERROR: Missing in/out filename !");
+    SetErrorMsg("INTERNAL ERROR: Missing filename !");
     return GLBSP_E_BadArgs;
   }
 
   InitDebug();
   InitEndian();
  
-  if (info->missing_output)
-    PrintMsg("* No output file specified. Using: %s\n\n", info->output_file);
-
-  if (info->same_filenames)
-    PrintMsg("* Output file is same as input file. Using -loadall\n\n");
-
   // opens and reads directory from the input wad
-  ret = ReadWadFile(cur_info->input_file);
+  ret = ReadWadFile(cur_info->filename);
 
   if (ret != GLBSP_E_OK)
   {
@@ -491,7 +484,7 @@ glbsp_ret_e GlbspBuildNodes(const nodebuildinfo_t *info,
   DisplayOpen(DIS_BUILDPROGRESS);
   DisplaySetTitle("glBSP Build Progress");
 
-  file_msg = UtilFormat("File: %s", cur_info->input_file);
+  file_msg = UtilFormat("File: %s", cur_info->filename);
  
   DisplaySetBarText(2, file_msg);
   DisplaySetBarLimit(2, CountLevels() * 10);
@@ -518,17 +511,7 @@ glbsp_ret_e GlbspBuildNodes(const nodebuildinfo_t *info,
   // writes all the lumps to the output wad
   if (ret == GLBSP_E_OK)
   {
-    ret = WriteWadFile(cur_info->output_file);
-
-    // when modifying the original wad, any GWA companion must be deleted
-    if (ret == GLBSP_E_OK && cur_info->same_filenames)
-      DeleteGwaFile(cur_info->output_file);
-
-    PrintMsg("\n");
-    PrintMsg("Total serious warnings: %d\n", cur_comms->total_big_warn);
-    PrintMsg("Total minor warnings: %d\n", cur_comms->total_small_warn);
-
-    ReportFailedLevels();
+    ret = WriteWadFile(cur_info->filename);
   }
 
   // close wads and free memory
