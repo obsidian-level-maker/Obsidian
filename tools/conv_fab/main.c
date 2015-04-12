@@ -42,63 +42,18 @@ static void ShowTitle(void)
 {
   TextPrintMsg(
     "\n"
-    "**** GLBSP Node Builder " GLBSP_VER " (C) 2010 Andrew Apted ****\n\n"
-  );
-}
-
-static void ShowInfo(void)
-{
-  TextPrintMsg(
-    "This GL node builder was originally based on BSP 2.3, which was\n"
-    "created from the basic theory stated in DEU5 (OBJECTS.C)\n"
-    "\n"
-    "Credits should go to :-\n"
-    "  Janis Legzdinsh            for fixing up Hexen support\n"
-    "  Andy Baker & Marc Pullen   for their invaluable help\n"
-    "  Colin Reed & Lee Killough  for creating the original BSP\n"
-    "  Matt Fell                  for the Doom Specs\n"
-    "  Raphael Quinet             for DEU and the original idea\n"
-    "  ... and everyone who helped with the original BSP.\n"
-    "\n");
-
-  TextPrintMsg(
-    "This program is free software, under the terms of the GNU General\n"
-    "Public License, and comes with ABSOLUTELY NO WARRANTY.  See the\n"
-    "accompanying documentation for more details.\n"
-    "\n"
-    "Usage: glbsp [options] input.wad ... [-o output.wad]\n"
-    "Or:    glbsp @arg_file.rsp\n"
-    "\n"
-    "For a list of the available options, type: glbsp -help\n"
+    "----***  CONV_FAB  ***----\n\n"
   );
 }
 
 static void ShowOptions(void)
 {
   TextPrintMsg(
-    "Usage: glbsp [options] input.wad ... [-o output.wad]\n"
+    "Usage: conv_fab [options] *.wad\n"
     "\n"
     "General Options:\n"
-    "  -q  -quiet         Quieter output, no level stats\n"
-    "  -f  -fast          Reuse original nodes to build faster\n"
-    "  -w  -warn          Show extra warning messages\n"
-    "  -n  -normal        Forces the normal nodes to be rebuilt\n"
-    "  -c  -factor ###    Sets the cost assigned to SEG splits\n"
-    "  -p  -pack          Pack sidedefs (remove duplicates)\n"
-    "  -xr -noreject      Don't clobber the REJECT map\n"
+    "  (none yet)\n"
     "\n");
-
-  TextPrintMsg(
-    "Advanced Options:\n"
-    "  -v1 .. -v5         Version of GL-Nodes to use (1,2,3 or 5)\n"
-    "  -m  -mergevert     Merge duplicate vertices\n" 
-    "  -y  -windowfx      Handle the 'One-Sided Window' trick\n"
-    "  -u  -prunesec      Remove unused sectors\n"
-    "  -b  -maxblock ###  Sets the BLOCKMAP truncation limit\n"
-    "  -xn -nonormal      Don't add (if missing) the normal nodes\n"
-    "  -xp -noprog        Don't show progress indicator\n"
-    "  -xu -noprune       Never prune linedefs or sidedefs\n"
-  );
 }
 
 static void ShowDivider(void)
@@ -243,7 +198,7 @@ int main(int argc, char **argv)
   
   if (argc <= 0)
   {
-    ShowInfo();
+    ShowOptions();
     TextShutdown();
     exit(1);
   }
