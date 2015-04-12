@@ -95,7 +95,7 @@ WADFAB_ENTITIES =
 
   [8151] = { kind="pickup",    r=16 }
   [8152] = { kind="big_item",  r=16 }
-  [8160] = { kind="important", r=64 }
+  [8155] = { kind="important", r=64 }
 
   -- lighting
 
