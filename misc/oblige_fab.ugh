@@ -31,8 +31,12 @@ line 991 o "-- OBL: Lower Unpeg"
 
 #--- SECTOR SPECIALS ---
 
-sector 992 "OBL: Moving Floor"
+sector 988 "OBL: Depot Peer"
+sector 992 "OBL: Reachable"
+sector 993 "OBL: Grab Floor"
+sector 995 "OBL: Moving Floor"
 sector 996 "OBL: Door"
+sector 997 "OBL: Delta 12"
 
 
 #--- THING TYPES ---
