@@ -1529,19 +1529,8 @@ void LoadLevel(void)
     if (cur_info->prune_sect)
       PruneSectors();
   }
- 
-  CalculateWallTips();
 
-  if (lev_doing_hexen)
-  {
-    // -JL- Find sectors containing polyobjs
-    DetectPolyobjSectors();
-  }
-
-  DetectOverlappingLines();
-
-  if (cur_info->window_fx)
-    DetectWindowEffects();
+  DoConversions();
 }
 
 //

@@ -37,25 +37,7 @@ void PruneVertices(void);
 void PruneSidedefs(void);
 void PruneSectors(void);
 
-// computes the wall tips for all of the vertices
-void CalculateWallTips(void);
-
-// return a new vertex (with correct wall_tip info) for the split that
-// happens along the given seg at the given location.
-//
-vertex_t *NewVertexFromSplitSeg(seg_t *seg, float_g x, float_g y);
-
-// return a new end vertex to compensate for a seg that would end up
-// being zero-length (after integer rounding).  Doesn't compute the
-// wall_tip info (thus this routine should only be used _after_ node
-// building).
-//
-vertex_t *NewVertexDegenerate(vertex_t *start, vertex_t *end);
-
-// check whether a line with the given delta coordinates and beginning
-// at this vertex is open.  Returns a sector reference if it's open,
-// or NULL if closed (void space or directly along a linedef).
-//
-sector_t * VertexCheckOpen(vertex_t *vert, float_g dx, float_g dy);
+// conv_fab
+void DoConversions(void);
 
 #endif /* __GLBSP_ANALYZE_H__ */
