@@ -12,6 +12,7 @@ texture o _OUTER
 texture o _FLOOR
 texture o _CEIL
 texture o _LIQUID
+texture o _SKY
 
 flat o _NOTHING
 flat o _WALL
@@ -19,6 +20,7 @@ flat o _OUTER
 flat o _FLOOR
 flat o _CEIL
 flat o _LIQUID
+flat o _SKY
 
 #--- LINE SPECIALS ---
 
