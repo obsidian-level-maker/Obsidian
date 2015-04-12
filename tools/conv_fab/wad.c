@@ -403,19 +403,12 @@ static void ProcessDirEntry(lump_t *lump)
     return;
   }
 
-  // mark the lump as 'ignorable' when in GWA mode.
-  if (cur_info->gwa_mode)
-    lump->flags |= LUMP_IGNORE_ME;
-
   // --- LEVEL MARKERS ---
 
   if (CheckLevelName(lump->name))
   {
     /* NOTE !  Level marks can have data (in Hexen anyway) */
-    if (cur_info->load_all)
-      lump->flags |= LUMP_READ_ME;
-    else
-      lump->flags |= LUMP_COPY_ME;
+    lump->flags |= LUMP_READ_ME;
 
     // OK, start a new level
 
@@ -491,11 +484,8 @@ static void ProcessDirEntry(lump_t *lump)
   if (CheckLevelLumpName(lump->name))
     PrintWarn("Level lump '%s' found outside any level\n", lump->name);
 
-  // maybe load data
-  if (cur_info->load_all)
-    lump->flags |= LUMP_READ_ME;
-  else
-    lump->flags |= LUMP_COPY_ME;
+  // load data
+  lump->flags |= LUMP_READ_ME;
 
   // link it in
   lump->next = NULL;
@@ -841,14 +831,7 @@ static void WriteLumpData(lump_t *lump)
 
   if (lump->flags & LUMP_COPY_ME)
   {
-    lump->data = UtilCalloc(lump->length);
-
-    fseek(in_file, lump->start, SEEK_SET);
-
-    len = fread(lump->data, lump->length, 1, in_file);
-
-    if (len != 1)
-      PrintWarn("Trouble reading lump %s to copy\n", lump->name);
+    FatalError("LUMP_COPY_ME!\n");
   }
 
   len = fwrite(lump->data, lump->length, 1, out_file);
@@ -1316,6 +1299,9 @@ glbsp_ret_e ReadWadFile(const char *filename)
 
   DisplayClose();
 
+  fclose(in_file);
+  in_file = NULL;
+
   return GLBSP_E_OK;
 }
 
@@ -1330,9 +1316,6 @@ glbsp_ret_e WriteWadFile(const char *filename)
 
   PrintMsg("\n");
   PrintMsg("Saving WAD as %s\n", filename);
-
-  if (cur_info->gwa_mode)
-    wad.kind = PWAD;
 
   RecomputeDirectory();
 
@@ -1373,6 +1356,11 @@ glbsp_ret_e WriteWadFile(const char *filename)
   if (check1 != wad.num_entries || check2 != wad.num_entries)
     InternalError("Write directory count consistency failure (%d,%d,%d)",
       check1, check2, wad.num_entries);
+
+  fclose(out_file);
+  out_file = NULL;
+
+  CloseWads();
 
   return GLBSP_E_OK;
 }
