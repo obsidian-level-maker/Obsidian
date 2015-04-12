@@ -2,7 +2,7 @@
 --  DOOM MATERIALS
 --------------------------------------------------------------------
 --
---  Copyright (C) 2006-2013 Andrew Apted
+--  Copyright (C) 2006-2015 Andrew Apted
 --  Copyright (C) 2011,2014 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -14,24 +14,6 @@
 
 DOOM.PREFAB_DEFAULTS =
 {
-  -- very common texturing stuff --
-
-   tex_STARTAN3 = "?wall"
-  flat_FLOOR5_3 = "?wall"
-
-  tex_BLAKWAL1  = "?outer"
-
-   tex_GRAY5    = "?floor"
-  flat_FLOOR0_6 = "?floor"
-
-   tex_STARBR2  = "?ceil"
-  flat_CEIL3_1  = "?ceil"
-
-   tex_SFALL3  = "_LIQUID"
-  flat_NUKAGE3 = "_LIQUID"
-
-  -- other stuff
-
   tex_DOORTRAK = "?track"
 
   thing_5 = "?item"
@@ -89,13 +71,13 @@ DOOM.MATERIALS =
 
   -- special materials --
 
-  _ERROR = { t="CRACKLE2", f="RROCK01" }
-  _SKY   = { t="CEMENT3",  f="F_SKY1" }
+  _ERROR   = { t="CRACKLE2", f="RROCK01" }
+  _SKY     = { t="CEMENT3",  f="F_SKY1" }
 
 
   -- general purpose --
 
-  METAL  = { t="METAL",    f="CEIL5_2" }
+  METAL = { t="METAL", f="CEIL5_2" }
 
   SUPPORT2 = { t="SUPPORT2", f="FLAT23" }
   SUPPORT3 = { t="SUPPORT3", f="CEIL5_2" }

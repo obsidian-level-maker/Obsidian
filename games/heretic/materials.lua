@@ -13,10 +13,16 @@
 ------------------------------------------------------------------------
 
 
--- FIXME : HERETIC.PREFAB_DEFAULTS
+HERETIC.PREFAB_DEFAULTS =
+{
+  -- FIXME : HERETIC.PREFAB_DEFAULTS
+}
 
 
--- FIXME : HERETIC.SKIN_DEFAULTS
+HERETIC.SKIN_DEFAULTS =
+{
+  -- FIXME : HERETIC.SKIN_DEFAULTS
+}
 
 
 --------------------------------------------------

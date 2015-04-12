@@ -100,30 +100,6 @@ WADFAB_ENTITIES =
   -- lighting
 
   [8181] = { kind="light" }
-
-
----- Compatibility cruft (REMOVE EVENTUALLY) ----
-
-  -- monster spots
-  
-  [3004] = { kind="monster",  r=20  }  -- zombieman
-  [3002] = { kind="monster",  r=32  }  -- demon
-  [3005] = { kind="flyer",    r=32  }  -- cacodemon
-  [  68] = { kind="monster",  r=64  }  -- arachnotron
-  [   7] = { kind="monster",  r=128 }  -- spider mastermind
-
-  -- item spots
-
-  [2015] = { kind="pickup",   r=16 }  -- armor helmet
-  [2018] = { kind="big_item", r=16 }  -- green armor vest
-
-  -- goal / purpose spot
-
-  [  37] = { kind="important", r=64 }  -- red pillar with skull
-
-  -- lighting
-
-  [  34] = { kind="light" }  -- candle
 }
 
 
@@ -1283,10 +1259,9 @@ function Fab_load_wad(def)
     -- pass: 1 = create a floor brush (or solid wall)
     --       2 = create a ceiling brush
     
-    -- skip making a brush when the flat is FWATER4
-    -- TODO : make texture controllable via GAME defs
-    if pass == 1 and (S.floor_tex == "FWATER4" or S.floor_tex == "_NOTHING") then return end
-    if pass == 2 and (S. ceil_tex == "FWATER4" or S.ceil_tex  == "_NOTHING") then return end
+    -- skip making a brush when the flat is '_NOTHING'
+    if pass == 1 and S.floor_tex == "_NOTHING" then return end
+    if pass == 2 and S.ceil_tex  == "_NOTHING" then return end
 
     local B =
     {
@@ -1338,9 +1313,8 @@ function Fab_load_wad(def)
       end
 
       -- automatically convert to a sky brush
-      if string.match(S.ceil_tex, "^F_SKY") then
+      if C.tex == "_SKY" then
         B[1].m = "sky"
-        C.tex  = "_SKY"
       end
     end
 
