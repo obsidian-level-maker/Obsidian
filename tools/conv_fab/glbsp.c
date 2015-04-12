@@ -45,9 +45,9 @@ volatile nodebuildcomms_t *cur_comms = NULL;
 
 const nodebuildinfo_t default_buildinfo =
 {
-  NULL,    // input_file
-  NULL,    // output_file
-  NULL,    // extra_files
+  NULL,    // filename
+  NULL,    // all_files
+  0,       // num_files
 
   DEFAULT_FACTOR,  // factor
 
@@ -89,37 +89,13 @@ const nodebuildcomms_t default_buildcomms =
 
 /* ----- option parsing ----------------------------- */
 
-#define EXTRA_BLOCK  10  /* includes terminating NULL */
-
-static void AddExtraFile(nodebuildinfo_t *info, const char *str)
+static void AddFileName(nodebuildinfo_t *info, const char *str)
 {
-  int count = 0;
-  int space;
+  if (info->num_files >= 499)
+    FatalError("Too many filenames!\n");
 
-  if (! info->extra_files)
-  {
-    info->extra_files = (const char **)
-        UtilCalloc(EXTRA_BLOCK * sizeof(const char *));
-
-    info->extra_files[0] = str;
-    info->extra_files[1] = NULL;
-
-    return;
-  }
-
-  while (info->extra_files[count])
-    count++;
-
-  space = EXTRA_BLOCK - 1 - (count % EXTRA_BLOCK);
-
-  if (space == 0)
-  {
-    info->extra_files = (const char **) UtilRealloc((void *)info->extra_files,
-        (count + 1 + EXTRA_BLOCK) * sizeof(const char *));
-  }
-
-  info->extra_files[count]   = str;
-  info->extra_files[count+1] = NULL;
+  info->all_files[info->num_files] = str;
+  info->num_files++;
 }
 
 #define HANDLE_BOOLEAN(name, field)  \
@@ -139,9 +115,6 @@ glbsp_ret_e GlbspParseArgs(nodebuildinfo_t *info,
     const char ** argv, int argc)
 {
   const char *opt_str;
-  int num_files = 0;
-  int got_output = FALSE;
-
   cur_comms = comms;
   SetErrorMsg("(Unknown Problem)");
 
@@ -151,31 +124,7 @@ glbsp_ret_e GlbspParseArgs(nodebuildinfo_t *info,
     {
       // --- ORDINARY FILENAME ---
 
-      if (got_output)
-      {
-        SetErrorMsg("Input filenames must precede the -o option");
-        cur_comms = NULL;
-        return GLBSP_E_BadArgs;
-      }
-
-      if (CheckExtension(argv[0], "gwa"))
-      {
-        SetErrorMsg("Input file cannot be GWA (contains nothing to build)");
-        cur_comms = NULL;
-        return GLBSP_E_BadArgs;
-      }
-
-      if (num_files >= 1)
-      {
-        AddExtraFile(info, GlbspStrDup(argv[0]));
-      }
-      else
-      {
-        GlbspFree(info->input_file);
-        info->input_file = GlbspStrDup(argv[0]);
-      }
-
-      num_files++;
+      AddFileName(info, GlbspStrDup(argv[0]));
 
       argv++; argc--;
       continue;
@@ -189,6 +138,7 @@ glbsp_ret_e GlbspParseArgs(nodebuildinfo_t *info,
     if (opt_str[0] == '-')
       opt_str++;
 
+#if 0
     if (UtilStrCaseCmp(opt_str, "o") == 0)
     {
       if (got_output)
@@ -298,6 +248,7 @@ glbsp_ret_e GlbspParseArgs(nodebuildinfo_t *info,
 
     // The -hexen option is only kept for backwards compatibility
     HANDLE_BOOLEAN("hexen", force_hexen)
+#endif
 
     SetErrorMsg("Unknown option: %s", argv[0]);
 
@@ -318,12 +269,13 @@ glbsp_ret_e GlbspCheckInfo(nodebuildinfo_t *info,
   info->same_filenames = FALSE;
   info->missing_output = FALSE;
 
-  if (!info->input_file || info->input_file[0] == 0)
+  if (! info->filename)
   {
-    SetErrorMsg("Missing input filename !");
+    SetErrorMsg("Missing filename !");
     return GLBSP_E_BadArgs;
   }
 
+#if 0
   if (CheckExtension(info->input_file, "gwa"))
   {
     SetErrorMsg("Input file cannot be GWA (contains nothing to build)");
@@ -398,6 +350,7 @@ glbsp_ret_e GlbspCheckInfo(nodebuildinfo_t *info,
     SetErrorMsg("Bad blocklimit value !");
     return GLBSP_E_BadInfoFixed;
   }
+#endif
 
   return GLBSP_E_OK;
 }

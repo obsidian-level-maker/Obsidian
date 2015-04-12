@@ -187,7 +187,7 @@ static void FreeArgumentList(void)
 
 int main(int argc, char **argv)
 {
-  int extra_idx = 0;
+  int idx;
 
   TextStartup();
 
@@ -223,39 +223,12 @@ int main(int argc, char **argv)
         "(Unknown error when parsing args)");
   }
 
-  if (info.extra_files)
+  /* process each file */
+
+  for (idx = 0 ; idx < info.num_files ; idx++)
   {
-    int ext_j;
+    info.filename = info.all_files[idx];
 
-    /* catch this mistake: glbsp in.wad out.wad (forget the -o) */
-
-    if (info.input_file && info.extra_files[0] && ! info.extra_files[1] &&
-        FileExists(info.input_file) && ! FileExists(info.extra_files[0]))
-    {
-      TextFatalError("Error: Cannot find WAD file: %s ("
-          "Maybe you forgot -o)\n", info.extra_files[0]);
-    }
-
-    /* balk NOW if any of the input files doesn't exist */
-
-    if (! FileExists(info.input_file))
-      TextFatalError("Error: Cannot find WAD file: %s\n",
-          info.input_file);
-
-    for (ext_j = 0; info.extra_files[ext_j]; ext_j++)
-    {
-      if (FileExists(info.extra_files[ext_j]))
-        continue;
-
-      TextFatalError("Error: Cannot find WAD file: %s\n",
-          info.extra_files[ext_j]);
-    }
-  }
-
-  /* process each input file */
-
-  for (;;)
-  {
     if (GLBSP_E_OK != GlbspCheckInfo(&info, &comms)) 
     {
       TextFatalError("Error: %s\n", comms.message ? comms.message : 
@@ -271,20 +244,8 @@ int main(int argc, char **argv)
           "(Unknown error during build)");
     }
 
-    /* when there are extra input files, process them too */
-
-    if (! info.extra_files || ! info.extra_files[extra_idx])
-      break;
-
-    ShowDivider();
-
-    GlbspFree(info.input_file);
-    GlbspFree(info.output_file);
-
-    info.input_file  = GlbspStrDup(info.extra_files[extra_idx]);
-    info.output_file = NULL;
-
-    extra_idx++;
+    GlbspFree(info.filename);
+    info.filename = NULL;
   }
 
   TextShutdown();
