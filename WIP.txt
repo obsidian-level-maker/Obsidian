@@ -3,13 +3,34 @@ WORK IN PROGRESS
 ================
 
 
+Prefab System
++  have a number for "THE" item (in a key pedestal, etc)
+   [ _or_ use the big-item number, 8152 ]
+
+-  have a _TRACK material ??
+   [ if so, why not a _PICTURE, _DOOR, _SWITCH etc.... ?? ]
+
+IDEA: have a single thing number for "coop player"
+      [ i.e. treat player entities more abstractly ]
+
+
+
+Closets
+-------
+
++  really want to add them _AFTER_ large traps/cages have been
+   added (and after outdoor borders too)
+
+
+
 Quest Rework
 ------------
 
-+  add nice items
++  add nice items  [ esp. in secrets ]
 
 
 >>  hallway stairs
+
 
 
 Connections
@@ -41,18 +62,6 @@ Sinks
    decorative prefabs.
 
 
-
-Closets
--------
-
-+  really want to add them _AFTER_ large traps/cages have been
-   added (and after outdoor borders too)
-
-
-
-
-Prefab System
-+  transition all prefabs to use new texture/flat names and thing numbers
 
 
 
