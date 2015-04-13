@@ -438,26 +438,29 @@ function Connect_stuff()
     local best_dist
     local best1, best2
 
-    for loop = 1, 20 do
-      local loc1 = rand.pick(where1)
-      local loc2 = rand.pick(where2)
-
+    each loc1 in where1 do
+    each loc2 in where2 do
       local mx1, my1 = loc1.S:edge_coord(loc1.dir)
       local mx2, my2 = loc2.S:edge_coord(loc2.dir)
 
       local dist = geom.dist(mx1, my1, mx2, my2)
 
-      dist = dist + gui.random() * 96
+      dist = dist + gui.random() * 100
 
       if where1.S != where2.S then
-        dist = dist + 256
+        dist = dist + 520
       end
+
+      -- try hard to avoid sharp places
+      dist = dist + (2 - loc1.sharp) * 180
+      dist = dist + (2 - loc2.sharp) * 180
 
       if not best_dist or dist > best_dist then
         best_dist = dist
         best1 = loc1
         best2 = loc2
       end
+    end
     end
 
     assert(best1 and best2)
@@ -503,8 +506,6 @@ function Connect_stuff()
     -- hallways never touch [ enforced in area.lua ]
     assert(not N1.is_hallway)
     assert(not N2.is_hallway)
-
-    -- TODO : volume % of path through hallway
 
     local score = 200
 
