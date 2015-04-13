@@ -336,6 +336,18 @@ function SEED_CLASS.in_use(S)
 end
 
 
+function SEED_CLASS.get_corner(S, dir)
+  -- FIXME
+end
+
+
+function SEED_CLASS.has_inner_point(S, dir)
+  local corner = S:get_corner(dir)
+
+  return corner and corner.is_inner_point
+end
+
+
 ----------------------------------------------------------------------
 
 

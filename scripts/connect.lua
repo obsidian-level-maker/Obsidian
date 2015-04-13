@@ -385,6 +385,24 @@ end
 function Connect_stuff()
 
 
+  local function is_connection_sharp(S, dir)
+    -- sharp connections give player (and monsters) little room to fit
+    -- through the door.
+    -- returns "sharpness" value: 0, 1, or 2
+
+    local N = S:neighbor(dir)
+
+    if geom.is_straight(dir) then
+      return sel(S.diagonal, 1, 0) + sel(N.diagonal, 1, 0)
+    end
+
+    -- diagonal
+
+    return sel(S:has_inner_point(10 - dir), 0, 1) +
+           sel(N:has_inner_point(dir), 0, 1)
+  end
+
+
   local function where_can_connect(R1, R2)
     -- returns a list where two rooms can connect.
     -- R1 is always a hallway.
@@ -398,7 +416,8 @@ function Connect_stuff()
       local N = S:neighbor(dir)
 
       if N and N.room == R2 then
-        table.insert(list, { S=S, N=N, dir=dir })
+        local sharp = is_connection_sharp(S, dir)
+        table.insert(list, { S=S, N=N, dir=dir, sharp=sharp })
       end
 
     end -- A, S, dir
@@ -481,7 +500,7 @@ function Connect_stuff()
       return -1
     end
 
-    -- hallways should never touch [ enforced in area.lua ]
+    -- hallways never touch [ enforced in area.lua ]
     assert(not N1.is_hallway)
     assert(not N2.is_hallway)
 
