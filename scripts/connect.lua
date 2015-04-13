@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2014 Andrew Apted
+--  Copyright (C) 2006-2015 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -403,6 +403,24 @@ function Connect_stuff()
   end
 
 
+  local function is_near_another_conn(S, N)
+    -- returns 0 for OK, 1 for meh, 2 for OMG
+
+    local near_S = 0
+    local near_N = 0
+
+    each dir in geom.ALL_DIRS do
+      local S2 = S:neighbor(dir)
+      local N2 = N:neighbor(dir)
+
+      if S2 and S2.area == S.area and S2.conn then near_S = near_S + 1 end
+      if N2 and N2.area == N.area and N2.conn then near_N = near_N + 1 end
+    end
+
+    return math.min(near_S + near_N, 2)
+  end
+
+
   local function where_can_connect(R1, R2)
     -- returns a list where two rooms can connect.
     -- R1 is always a hallway.
@@ -711,11 +729,11 @@ A.is_outdoor = false
 
     -- we done hallways already, no more please
     if R1.is_hallway and R2.is_hallway then
-      score =  400
+      score =  800
     elseif R1.is_hallway or R2.is_hallway then
-      score = 1400
+      score = 1800
     else
-      score = 2400
+      score = 2800
     end
 
     -- try not to have more than one connection in a seed
@@ -726,7 +744,8 @@ A.is_outdoor = false
     -- try hard to avoid sharp connections
     score = score - is_connection_sharp(S, dir) * 150
 
-    -- TODO : dist from existing room conns
+    -- prefer not being close to another connection
+    score = score - is_near_another_conn(S, N) * 70
 
     local conn_max = math.max(R1:total_conns(), R2:total_conns())
 
