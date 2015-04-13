@@ -62,7 +62,6 @@ class SEED
                      -- "wotsit", "pillar"
 
   border[DIR] : BORDER
-  corner[DIR] : CORNER
 
   thick[DIR]  -- thickness of each border
 
@@ -168,7 +167,6 @@ function SEED_CLASS.join_halves(S)
   S2.diagonal = "dead"
 
   S2.border = nil
-  S2.corner = nil
   S2.area = nil
   S2.room = nil
 end
@@ -337,14 +335,25 @@ end
 
 
 function SEED_CLASS.get_corner(S, dir)
-  -- FIXME
+  -- check for invalid dir (e.g. when looping over all corners)
+  if S.diagonal == (10 - dir) then
+    return nil
+  end
+
+  local cx = S.sx
+  local cy = S.sy
+
+  if dir == 3 or dir == 9 then cx = cx + 1 end
+  if dir == 7 or dir == 9 then cy = cy + 1 end
+
+  return Corner_lookup(cx, cy)
 end
 
 
 function SEED_CLASS.has_inner_point(S, dir)
   local corner = S:get_corner(dir)
 
-  return corner and corner.is_inner_point
+  return corner and corner.inner_point
 end
 
 
@@ -362,7 +371,6 @@ function Seed_create(sx, sy, x1, y1)
 
     thick  = {}
     border = {}
-    corner = {}
     chunk  = {}
   }
 
@@ -373,7 +381,6 @@ function Seed_create(sx, sy, x1, y1)
 
   each dir in geom.ALL_DIRS do
     S.border[dir] = {}
-    S.corner[dir] = {}
     S.thick [dir] = 16
   end
 

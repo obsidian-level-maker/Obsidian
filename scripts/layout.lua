@@ -311,12 +311,12 @@ function Layout_place_importants(R)
     R.normal_wotsits = {}
 
     each A in R.areas do
-      each S in A.inner_points do
-        -- FIXME : wall_dist
-        local wall_dist = rand.range(0.5, 2.5)
-        local z = assert(S.floor_h)
-        table.insert(R.normal_wotsits, { x=S.x1 + 32, y=S.y1 + 32, z=z, wall_dist=wall_dist, area=A })
-      end
+    each corner in A.inner_points do
+      -- FIXME : wall_dist
+      local wall_dist = rand.range(0.5, 2.5)
+     local z = assert(A.floor_h)
+     table.insert(R.normal_wotsits, { x=corner.x + 32, y=corner.y + 32, z=z, wall_dist=wall_dist, area=A })
+    end
     end
 
     -- emergency spots are the middle of whole (square) seeds

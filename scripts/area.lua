@@ -60,8 +60,7 @@
     
     --- other stuff ---
 
-    inner_points : list(SEED)  -- points are stored as seeds
-                               -- (refer to bottom-left coordinate)
+    inner_points : list(CORNER)
 
     sky_group : table   -- outdoor areas which directly touch will belong
                         -- to the same sky_group (unless a solid wall is
@@ -289,13 +288,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Corner_lookup(S, dir, create_it)
-  local cx = S.sx
-  local cy = S.sy
-
-  if dir == 3 or dir == 9 then cx = cx + 1 end
-  if dir == 7 or dir == 9 then cy = cy + 1 end
-
+function Corner_lookup(cx, cy)
   assert(table.valid_pos(LEVEL.area_corners, cx, cy))
 
   local corner = LEVEL.area_corners[cx][cy]
@@ -329,7 +322,7 @@ function Corner_init()
   each dir in geom.CORNERS do
     if S.diagonal and S.diagonal == (10 - dir) then continue end
 
-    local corner = Corner_lookup(S, dir)
+    local corner = S:get_corner(dir)
 
     table.add_unique(corner.areas, A)
   end
@@ -441,38 +434,6 @@ end
 
 
 function Area_analyse_areas()
-  --
-  -- See how much open space is in each area, etc...
-  --
-
-  local function collect_inner_points(A)
-    each S in A.seeds do
-      -- point is outside of area
-      if S.diagonal == 9 then continue end
-
-      -- point is part of boundary, skip it 
-      if S.diagonal == 3 or S.diagonal == 7 then continue end
-
-      local NA = S:neighbor(4)
-      local NB = S:neighbor(2)
-
-      if not (NA and NA.area == A) then continue end
-      if not (NB and NB.area == A) then continue end
-
-      local NC = NA:neighbor(2)
-      local ND = NB:neighbor(4)
-
-      if not (NC and NC.area == A) then continue end
-
-      if ND != NC then continue end
-
-      -- OK --
-      table.insert(A.inner_points, S)
-
-      S.is_inner_point = true
-    end
-  end
-
 
   local function check_is_edge(A, S, dir)
     local N = S:neighbor(dir, "NODIR")
@@ -621,17 +582,61 @@ function Area_analyse_areas()
   Area_calc_volumes()
 
   each A in LEVEL.areas do
-    collect_inner_points(A)
-
     create_edge_loops(A)
-
-    A.openness = #A.inner_points / A.svolume
   end
 
   if OB_CONFIG.mode == "ctf" then
     Seed_setup_CTF()
 
     find_CTF_peers()
+  end
+end
+
+
+
+function Area_find_inner_points()
+
+  local function collect_inner_points(A)
+    -- check bottom-left corner of each seed
+
+    each S in A.seeds do
+      -- point is outside of area
+      if S.diagonal == 9 then continue end
+
+      -- point is part of boundary, skip it 
+      if S.diagonal == 3 or S.diagonal == 7 then continue end
+
+      local NA = S:neighbor(4)
+      local NB = S:neighbor(2)
+
+      if not (NA and NA.area == A) then continue end
+      if not (NB and NB.area == A) then continue end
+
+      local NC = NA:neighbor(2)
+      local ND = NB:neighbor(4)
+
+      if not (NC and NC.area == A) then continue end
+
+      if ND != NC then continue end
+
+      -- OK --
+
+      local corner = Corner_lookup(S.sx, S.sy)
+      assert(corner)
+
+      corner.inner_point = A
+
+      table.insert(A.inner_points, corner)
+    end
+  end
+
+
+  ---| Area_find_inner_points |---
+
+  each A in LEVEL.areas do
+    collect_inner_points(A)
+
+    A.openness = #A.inner_points / A.svolume
   end
 end
 
@@ -1147,6 +1152,8 @@ function Area_create_rooms()
 
   Junction_init()
     Corner_init()
+
+  Area_find_inner_points()
 
   Room_assign_voids()
   Room_assign_hallways()

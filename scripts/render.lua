@@ -664,10 +664,14 @@ end
 function Render_sink_part(A, S, where, sink)
  
 
-  local function check_inner_point(sx, sy)
-    if not Seed_valid(sx, sy) then return false end
-    local X = SEEDS[sx][sy]
-    return X.is_inner_point
+  local function check_inner_point(cx, cy)
+    local corner = Corner_lookup(cx, cy)
+
+    if corner and corner.inner_point then
+      return true
+    else
+      return false
+    end
   end
 
 
@@ -1022,16 +1026,6 @@ function Render_area(A)
   each S in A.seeds do
     Render_seed(A, S)
   end
-
--- TEST CRUD !!! 
---[[
-    if A.mode != "void" then
-      local ent_name = rand.pick({"potion", "stimpack", "helmet", "shells", "rocket", "cells", "allmap"});
-      each P in A.inner_points do
-        Trans.entity(ent_name, P.x1, P.y1, A.floor_h)
-      end
-    end
---]]
 end
 
 
