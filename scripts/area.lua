@@ -97,6 +97,49 @@
 --]]
 
 
+--class JUNCTION
+--[[
+    --
+    -- A "junction" is information about how two touching areas interact.
+    -- For example: could be solid wall, fence, or even nothing at all.
+    --
+    -- Specifies the default border kind, but it can be overridden in each
+    -- seed via the border[] field.
+    --
+
+    A1 : AREA
+    A2 : AREA
+
+    kind : keyword   -- unset means it has not been decided yet.
+                     -- can be: "nothing", "wall", "fence", "window",
+                     --         "rail", "steps", "liquid_arch",
+                     --         "lowering_wall", etc...
+--]]
+
+
+--class CORNER
+--[[
+    --
+    -- Records all the areas and junctions which meet at the corner of
+    -- every seed.  More specific information will be in the seed itself.
+    --
+
+    cx, cy  -- corner coordinate [1..SEED_W+1 / 1..SEED_H+1]
+
+    x, y   -- map coordinate
+
+    areas : list(AREA)
+
+    junctions : list(JUNCTION)
+
+    kind : keyword   -- unset means it has not been decided yet.
+                     -- can be: "post", "pillar"
+
+    inner_point : AREA  -- usually NIL
+
+--]]
+
+
 AREA_CLASS = {}
 
 
@@ -194,25 +237,6 @@ end
 ------------------------------------------------------------------------
 
 
--- class JUNCTION
---[[
-    --
-    -- A "junction" is information about how two touching areas interact.
-    -- For example: could be solid wall, fence, or even nothing at all.
-    -- Specifies default border kind (can be overridden in each seed).
-    --
-
-    A1 : AREA
-    A2 : AREA
-
-    kind : keyword   -- unset means it has not been decided yet.
-                     -- can be: "nothing", "wall", "fence", "window",
-                     --         "rail", "steps", "liquid_arch",
-                     --         "lowering_wall", etc...
-
---]]
-
-
 function Junction_lookup(A1, A2, create_it)
   -- returns NIL when areas do not touch, or A1 == A2
 
@@ -235,53 +259,34 @@ end
 
 
 function Junction_init()
+  -- this is a dictionary, looked up via a string formed from the IDs of
+  -- the two areas.
   LEVEL.area_junctions = {}
 
   each A in LEVEL.areas do
-    each N in A.neighbors do
-      Junction_lookup(A, N, "create_it")
-    end
+  each N in A.neighbors do
+    Junction_lookup(A, N, "create_it")
+  end
   end
 
   -- store junction in SEED.border[] for handy access
 
   each A in LEVEL.areas do
-    each S in A.seeds do
-      each dir in geom.ALL_DIRS do
-        local N = S:neighbor(dir)
+  each S in A.seeds do
+  each dir in geom.ALL_DIRS do
+    local N = S:neighbor(dir)
 
-        if not (N and N.area) then continue end
-        if N.area == S.area then continue end
+    if not (N and N.area) then continue end
+    if N.area == S.area then continue end
 
-        S.border[dir].junction = Junction_lookup(A, N.area)
-      end
-    end
+    S.border[dir].junction = Junction_lookup(A, N.area)
+  end
+  end
   end
 end
 
 
 ------------------------------------------------------------------------
-
-
--- class CORNER
---[[
-    --
-    -- Records all the areas and junctions which meet at the corner of
-    -- every seed.  More specific information will be in the seed itself.
-    --
-
-    cx, cy  -- corner coordinate
-
-    x, y   -- map coordinate
-
-    areas : list(AREA)
-
-    junctions : list(JUNCTION)
-
-    kind : keyword   -- unset means it has not been decided yet.
-                     -- can be: "post", "pillar"
-
---]]
 
 
 function Corner_lookup(S, dir, create_it)
@@ -320,15 +325,15 @@ function Corner_init()
   -- find touching areas
 
   each A in LEVEL.areas do
-    each S in A.seeds do
-      each dir in geom.CORNERS do
-        if S.diagonal and S.diagonal == (10 - dir) then continue end
+  each S in A.seeds do
+  each dir in geom.CORNERS do
+    if S.diagonal and S.diagonal == (10 - dir) then continue end
 
-        local corner = Corner_lookup(S, dir)
+    local corner = Corner_lookup(S, dir)
 
-        table.add_unique(corner.areas, A)
-      end
-    end
+    table.add_unique(corner.areas, A)
+  end
+  end
   end
 
   -- collect the junctions
