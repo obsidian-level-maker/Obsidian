@@ -7,9 +7,6 @@ Prefab System
 +  have a number for "THE" item (in a key pedestal, etc)
    [ _or_ use the big-item number, 8152 ]
 
--  have a _TRACK material ??
-   [ if so, why not a _PICTURE, _DOOR, _SWITCH etc.... ?? ]
-
 IDEA: have a single thing number for "coop player"
       [ i.e. treat player entities more abstractly ]
 
@@ -21,6 +18,10 @@ Closets
 +  really want to add them _AFTER_ large traps/cages have been
    added (and after outdoor borders too)
 
+-  locked switch closet
+
+IDEA : a special number for "THE switch action" (e.g. 888)
+
 
 
 Quest Rework
@@ -30,17 +31,6 @@ Quest Rework
 
 
 >>  hallway stairs
-
-
-
-Connections
------------
-
--  hallway good_conn_dir
-
--  try to prevent "sharp" connections
-   (if diagonal, want inner point on each side)
-   (if straight, want no diagonal on each side, ESP if other half is diff room / VOID)
 
 
 
