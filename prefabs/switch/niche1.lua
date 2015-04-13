@@ -2,7 +2,7 @@
 --  Niche switch w/ candelabras
 --
 
-DOOM.SKINS.Switch_niche1 =
+PREFABS.Switch_niche1 =
 {
   file   = "switch/niche1.wad"
   where  = "closet"

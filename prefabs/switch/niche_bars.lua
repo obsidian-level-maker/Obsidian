@@ -2,7 +2,7 @@
 --  Niche switch, blocked by raising bars
 --
 
-DOOM.SKINS.Switch_niche_bars =
+PREFABS.Switch_niche_bars =
 {
   file   = "switch/niche_bars.wad"
   where  = "closet"
