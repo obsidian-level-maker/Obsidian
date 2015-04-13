@@ -711,11 +711,11 @@ A.is_outdoor = false
 
     -- we done hallways already, no more please
     if R1.is_hallway and R2.is_hallway then
-      score =  200
+      score =  400
     elseif R1.is_hallway or R2.is_hallway then
-      score = 1200
+      score = 1400
     else
-      score = 2200
+      score = 2400
     end
 
     -- try not to have more than one connection in a seed
@@ -723,13 +723,16 @@ A.is_outdoor = false
       score = score + 500
     end
 
+    -- try hard to avoid sharp connections
+    score = score - is_connection_sharp(S, dir) * 150
+
     -- TODO : dist from existing room conns
 
     local conn_max = math.max(R1:total_conns(), R2:total_conns())
 
-    if conn_max >= 4 then score = score - 100 end
-    if conn_max >= 3 then score = score - 50 end
-    if conn_max >= 2 then score = score - 10  end
+    if conn_max >= 4 then score = score - 50 end
+    if conn_max >= 3 then score = score - 30 end
+    if conn_max >= 2 then score = score - 10 end
 
     -- tie breaker
     return score + 15 * gui.random()
