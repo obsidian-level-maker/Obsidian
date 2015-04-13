@@ -13,6 +13,6 @@ DOOM.SKINS.Switch_niche1 =
 
   tag_1 = "?lock_tag"
 
-  line_103 = "?special"
+  line_61 = "?special"
 }
 
