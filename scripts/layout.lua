@@ -1750,14 +1750,54 @@ end
 
 function Layout_create_mountains()
 
-  ---| Layout_create_mountains |---
+  local function add_cell(S, side, A)
+    if S.bottom then S = S.bottom end
 
-  each A in LEVEL.areas do
-    if A.kind == "mountain" then
-      -- TODO
+    local CELL =
+    {
+      area = A
+    }
+
+    if not S.m_cell then
+      S.m_cell = {}
+    end
+
+    S.m_cell[side] = CELL
+
+    return CELL
+  end
+
+
+  local function visit_seed(A, S)
+    if not S.diagonal then
+      for dir = 2,8,2 do
+        add_cell(S, dir, A)
+      end
+    else
+      if S.diagonal == 1 or S.diagonal == 3 then add_cell(S, 2, A) end
+      if S.diagonal == 1 or S.diagonal == 7 then add_cell(S, 4, A) end
+      if S.diagonal == 3 or S.diagonal == 9 then add_cell(S, 6, A) end
+      if S.diagonal == 7 or S.diagonal == 9 then add_cell(S, 8, A) end
     end
   end
+
+
+  local function create_all_cells()
+    each A in LEVEL.areas do
+      if A.kind == "mountain" then
+        each S in A.seeds do
+          visit_seed(A, S)
+        end
+      end
+    end
+  end
+
+
+  ---| Layout_create_mountains |---
+
+  create_all_cells()
 end
+
 
 
 function Layout_build_mountains()
