@@ -105,6 +105,8 @@ class CHUNK
 
 --class CELL
 -- [
+    area : AREA
+
     dist  -- how far away from normal parts of the level
 
     touches_edge : bool
@@ -372,6 +374,30 @@ function SEED_CLASS.has_inner_point(S, dir)
   local corner = S:get_corner(dir)
 
   return corner and corner.inner_point
+end
+
+
+function SEED_CLASS.cell_neighbor(S, cell_side, dir)
+  if S.bottom then S = S.bottom end
+
+  if dir == cell_side then
+    S = S:raw_neighbor(dir)
+    if not (S and S.m_cell) then return nil end
+
+    cell_side = 10 - cell_side
+    local cell = S.m_cell[cell_side]
+
+    return cell, S, cell_side
+  end
+
+  -- neighbor is along a diagonal edge, hence in same seed
+
+  if geom.is_vert (cell_side) and geom.is_vert (dir) then return nil end
+  if geom.is_horiz(cell_side) and geom.is_horiz(dir) then return nil end
+
+  local cell = S.m_cell[dir]
+
+  return cell, S, dir
 end
 
 
