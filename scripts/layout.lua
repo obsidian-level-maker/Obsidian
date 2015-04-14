@@ -1087,7 +1087,11 @@ function Layout_map_borders()
       return
     end
 
-    room.floor_h = room.nb_min_h - 32
+    if MOUNTAINS then
+      room.floor_h = room.nb_max_h + 48
+    else
+      room.floor_h = room.nb_min_h - 32
+    end
 
     each A in room.areas do
       set_as_water(A, room)
@@ -1817,9 +1821,56 @@ function Layout_create_mountains()
   end
 
 
+  local function check_normal_seed(A, S)
+    -- check all the straight edges
+    for dir = 2,8,2 do
+      local N = S:neighbor(dir)
+
+      if not (N and N.m_cell) then continue end
+
+      local cell = N.m_cell[10 - dir]
+
+      if cell then
+        cell.dist = 0 --!!!  cell.floor_h = math.max(cell.floor_h or -9990, assert(cell.area.floor_h))
+      end
+    end
+
+    -- for diagonal seeds, may be some cells in other half
+    if S.diagonal then
+      local PS = S.bottom or S
+
+      if not PS.m_cell then return end
+
+      for dir = 2,8,2 do
+        local cell = PS.m_cell[dir]
+
+        if cell then
+          cell.dist = 0
+        end
+      end
+    end
+  end
+
+
+  local function detect_near_normal()
+    -- detect the cells which touch the normal parts of the level
+    -- (this will have the lowest height).
+
+    each A in LEVEL.areas do
+      if not A.is_boundary then
+        each S in A.seeds do
+          check_normal_seed(A, S)
+        end
+      end
+    end
+  end
+
+
   ---| Layout_create_mountains |---
 
   create_all_cells()
+
+  detect_near_normal()
 end
 
 
@@ -1833,6 +1884,8 @@ function Layout_build_mountains()
 
     local floor_mat = "FLAT10"
     local  ceil_mat = "_SKY"
+
+if cell.dist == 0 then floor_mat = "SFALL1" end
 
     local f_brush = S:brush_for_cell(dir)
 
