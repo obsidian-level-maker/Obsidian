@@ -24,10 +24,6 @@ DOOM  = { }  -- common stuff
 DOOM1 = { }  -- stuff specific to each game
 DOOM2 = { }  --
 
-TNT      = { }
-PLUTONIA = { }
-FREEDOOM = { }
-
 
 ------------------------------------------------------------
 
@@ -42,6 +38,10 @@ ob_require("materials")
 ob_require("themes")
 ob_require("levels")
 ob_require("resources")
+
+ob_require("tnt")
+ob_require("plutonia")
+ob_require("freedoom")
 
 ------------------------------------------------------------
 
@@ -113,44 +113,5 @@ OB_GAMES["ultdoom"] =
   -- no additional tables
 
   -- no additional hooks
-}
-
-
-OB_GAMES["tnt"] =
-{
-  label = "TNT Evilution"
-
-  extends = "doom2"
-
-  tables =
-  {
-    TNT
-  }
-}
-
-
-OB_GAMES["plutonia"] =
-{
-  label = "Plutonia Exp."
-
-  extends = "doom2"
-
-  tables =
-  {
-    PLUTONIA
-  }
-}
-
-
-OB_GAMES["freedoom"] =
-{
-  label = "FreeDoom"
-
-  extends = "doom2"
-
-  tables =
-  {
-    FREEDOOM
-  }
 }
 

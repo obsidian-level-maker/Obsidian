@@ -1,9 +1,8 @@
 --------------------------------------------------------------------
---  TNT Evilution
+--  FreeDOOM (Phase 2)
 --------------------------------------------------------------------
 --
 --  Copyright (C) 2006-2015 Andrew Apted
---  Copyright (C) 2011,2014 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -12,26 +11,20 @@
 --
 --------------------------------------------------------------------
 
-TNT = { }
-
-
-TNT.PARAMETERS =
-{
-  bex_map_prefix = "THUSTR_"
-}
+FREEDOOM = { }
 
 
 --------------------------------------------------------------------
 
-OB_GAMES["tnt"] =
+OB_GAMES["freedoom"] =
 {
-  label = "TNT Evilution"
+  label = "FreeDoom"
 
   extends = "doom2"
 
   tables =
   {
-    TNT
+    FREEDOOM
   }
 }
 

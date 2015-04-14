@@ -11,8 +11,26 @@
 --
 --------------------------------------------------------------------
 
+PLUTONIA = { }
+
+
 PLUTONIA.PARAMETERS =
 {
   bex_map_prefix = "PHUSTR_"
+}
+
+
+--------------------------------------------------------------------
+
+OB_GAMES["plutonia"] =
+{
+  label = "Plutonia Exp."
+
+  extends = "doom2"
+
+  tables =
+  {
+    PLUTONIA
+  }
 }
 
