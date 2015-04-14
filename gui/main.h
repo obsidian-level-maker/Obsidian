@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2014 Andrew Apted
+//  Copyright (C) 2006-2015 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -23,8 +23,8 @@
 
 #define OBLIGE_TITLE  "OBLIGE Level Maker"
 
-#define OBLIGE_VERSION  "7.09"
-#define OBLIGE_HEX_VER  0x709
+#define OBLIGE_VERSION  "7.11"
+#define OBLIGE_HEX_VER  0x711
 
 
 #define CONFIG_FILENAME   "CONFIG.txt"
