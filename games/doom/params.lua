@@ -46,15 +46,3 @@ DOOM2.PARAMETERS =
   skip_monsters = { 20,30,45 }
 }
 
-
-TNT.PARAMETERS =
-{
-  bex_map_prefix = "THUSTR_"
-}
-
-
-PLUTONIA.PARAMETERS =
-{
-  bex_map_prefix = "PHUSTR_"
-}
-
