@@ -3,6 +3,36 @@ WORK IN PROGRESS
 ================
 
 
+Doom 1 :
+   WEAPONS table to remove 'super'
+   NICE_ITEMS to remove 'mega'
+   MONSTERS table to remove DOOM 2 monsters
+
+   duplicated materials:  [ move first one --> x_doom1 ]
+      2 CONS1_1
+      2 CONS1_5
+      2 CONS1_7
+
+      2 FLAT10
+      2 FLAT1_1
+      2 FLAT1_2
+      2 FLAT1_3
+      2 FLAT22
+      2 FLAT5_5
+
+
+
+Mountains
+---------
+
+-  detect cells ADJACENT to normal geometry
+
+-  detect cells ADJACENT to edge of map __or__ edge of zone
+
+-  generally (80% or so) merge cells straddling a seed edge
+
+
+
 Prefab System
 +  have a number for "THE" item (in a key pedestal, etc)
    [ _or_ use the big-item number, 8152 ]
