@@ -112,34 +112,22 @@ function DOOM.make_episode_gfx()
 end
 
 
-function DOOM1.end_level()
+function DOOM.end_level()
   DOOM.make_level_gfx()
 end
 
 
-function DOOM2.end_level()
-  DOOM.make_level_gfx()
-end
-
-
-function DOOM1.all_done()
-  DOOM.make_cool_gfx()
-  DOOM.make_episode_gfx()
-
-  gui.wad_merge_sections("doom_falls.wad");
-  gui.wad_merge_sections("metal_step.wad");
-  gui.wad_merge_sections("short_bars.wad");
-  gui.wad_merge_sections("logos.wad");
-end
-
-
-function DOOM2.all_done()
+function DOOM.all_done()
   DOOM.make_cool_gfx()
 
   gui.wad_merge_sections("doom_falls.wad");
   gui.wad_merge_sections("metal_step.wad");
   gui.wad_merge_sections("vine_dude.wad");
   gui.wad_merge_sections("logos.wad");
+
+  if OB_CONFIG.game == "doom1" or OB_CONFIG.game == "ultdoom" then
+    gui.wad_merge_sections("short_bars.wad");
+  end
 
   if OB_CONFIG.length == "game" then
     gui.wad_merge_sections("freedoom_face.wad");

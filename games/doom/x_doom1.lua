@@ -1675,6 +1675,13 @@ function ULTDOOM.get_levels()
 end
 
 
+function ULTDOOM.setup()
+  -- tweak monster probabilities
+  GAME.MONSTERS["Cyberdemon"].crazy_prob = 5
+  GAME.MONSTERS["Mastermind"].crazy_prob = 12
+end
+
+
 --------------------------------------------------------------------
 
 OB_GAMES["doom1"] =
@@ -1693,10 +1700,11 @@ OB_GAMES["doom1"] =
 
   hooks =
   {
-    setup        = DOOM1.setup
-    get_levels   = DOOM1.get_levels
-    end_level    = DOOM1.end_level
-    all_done     = DOOM1.all_done
+    setup      = ULTDOOM.setup
+    get_levels = ULTDOOM.get_levels
+
+    end_level  = DOOM.end_level
+    all_done   = DOOM.all_done
   }
 }
 

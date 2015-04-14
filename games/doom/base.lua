@@ -39,15 +39,6 @@ ob_require("x_tnt")
 ob_require("x_plutonia")
 ob_require("x_freedoom")
 
-------------------------------------------------------------
-
-
-function DOOM1.setup()
-  -- tweak monster probabilities
-  GAME.MONSTERS["Cyberdemon"].crazy_prob = 5
-  GAME.MONSTERS["Mastermind"].crazy_prob = 12
-end
-
 
 ------------------------------------------------------------
 
@@ -67,47 +58,9 @@ OB_GAMES["doom2"] =
 
   hooks =
   {
-    get_levels = DOOM2.get_levels
-    end_level  = DOOM2.end_level
-    all_done   = DOOM2.all_done
+    get_levels = DOOM.get_levels
+    end_level  = DOOM.end_level
+    all_done   = DOOM.all_done
   }
-}
-
-
-OB_GAMES["doom1"] =
-{
-  label = "Doom 1"
-
-  priority = 98  -- keep at second spot
-
-  format = "doom"
-  game_dir = "doom"
-
-  tables =
-  {
-    DOOM, DOOM1
-  }
-
-  hooks =
-  {
-    setup        = DOOM1.setup
-    get_levels   = DOOM1.get_levels
-    end_level    = DOOM1.end_level
-    all_done     = DOOM1.all_done
-  }
-}
-
-
-OB_GAMES["ultdoom"] =
-{
-  label = "Ultimate Doom"
-
-  extends = "doom1"
-
-  priority = 97  -- keep at third spot
-  
-  -- no additional tables
-
-  -- no additional hooks
 }
 
