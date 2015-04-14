@@ -368,43 +368,6 @@ function DOOM1.get_levels()
 end
 
 
---------------------------------------------------------------------
---  Final DOOM (etc)
---------------------------------------------------------------------
-
-
-TNT.EPISODES =
-{
-  episode1 =
-  {
-    theme = "doom/tech"
-    sky_patch  = "DOEDAY"
-    sky_patch2 = "DONDAY"
-    sky_patch3 = "DOWDAY"
-    sky_patch4 = "DOSDAY"
-    dark_prob = 10
-  }
-
-  episode2 =
-  {
-    theme = "doom/urban"
-    sky_patch  = "DOENITE"
-    sky_patch2 = "DONNITE"
-    sky_patch3 = "DOWNITE"
-    sky_patch4 = "DOSNITE"
-    dark_prob = 80
-  }
-
-  episode3 =
-  {
-    theme = "doom/hell"
-    sky_patch  = "DOEHELL"
-    sky_patch2 = "DONHELL"
-    sky_patch3 = "DOWHELL"
-    sky_patch4 = "DOSHELL"
-    dark_prob = 10
-  }
-}
 
 
 PLUTONIA.EPISODES =
