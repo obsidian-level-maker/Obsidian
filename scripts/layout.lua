@@ -19,6 +19,10 @@
 ------------------------------------------------------------------------
 
 
+-- FIXME
+MOUNTAINS = true
+
+
 function Layout_compute_wall_dists(R)
 
   local function init_dists()
@@ -1141,7 +1145,9 @@ function Layout_map_borders()
     end
   end
 
-  assign_sky_edges()
+  if not MOUNTAINS then
+    assign_sky_edges()
+  end
 
   Layout_create_mountains()
 end
@@ -1784,11 +1790,27 @@ function Layout_create_mountains()
   end
 
 
+  local function mark_edges(A, S)
+    if S.bottom then S = S.bottom end
+
+    for dir = 2,8,2 do
+      local cell = S.m_cell[dir]
+
+      if not cell then continue end
+
+      if not S:raw_neighbor(dir) then
+        cell.touches_edge = true
+      end
+    end
+  end
+
+
   local function create_all_cells()
     each A in LEVEL.areas do
       if A.kind == "mountain" then
         each S in A.seeds do
           visit_seed(A, S)
+          mark_edges(A, S)
         end
       end
     end
@@ -1809,14 +1831,22 @@ function Layout_build_mountains()
 
     if cell == nil then return end
 
+    local floor_mat = "FLAT10"
+    local  ceil_mat = "_SKY"
+
     local f_brush = S:brush_for_cell(dir)
+
+    -- cells at edge are completely solid
+    if cell.touches_edge then
+      brushlib.set_mat(f_brush, floor_mat, floor_mat)
+      Trans.brush(f_brush)
+      return
+    end
+
     local c_brush = table.deep_copy(f_brush)
 
     local floor_h = rand.pick({ 0, 50, 100, 150, 200, 250, 300 })
     local  ceil_h = 999 -- floor_h + 150
-
-    local floor_mat = "FLAT10"
-    local  ceil_mat = "_SKY"
 
     local light, tag
     
