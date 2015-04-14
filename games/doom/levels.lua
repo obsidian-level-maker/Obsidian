@@ -367,34 +367,3 @@ function DOOM1.get_levels()
   end -- for episode
 end
 
-
-
-
-PLUTONIA.EPISODES =
-{
-  episode1 =
-  {
-    theme = "doom/tech"
-    sky_patch  = "SKY1"
-    dark_prob = 10
-  }
-
-  episode2 =
-  {
-    theme = "doom/urban"
-    sky_patch  = "SKY2A"
-    sky_patch2 = "SKY2B"
-    sky_patch3 = "SKY2C"
-    sky_patch4 = "SKY2D"
-    dark_prob = 10
-  }
-
-  episode3 =
-  {
-    theme = "doom/hell"
-    sky_patch  = "SKY3A"
-    sky_patch2 = "SKY3B"
-    dark_prob = 40
-  }
-}
-
