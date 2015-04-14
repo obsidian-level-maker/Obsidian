@@ -377,6 +377,38 @@ function SEED_CLASS.has_inner_point(S, dir)
 end
 
 
+function SEED_CLASS.make_brush(S)
+  -- get parent seed
+  local PS = S.bottom or S
+
+  local brush =
+  {
+    { x=PS.x1, y=PS.y1, __dir=2 }
+    { x=PS.x2, y=PS.y1, __dir=6 }
+    { x=PS.x2, y=PS.y2, __dir=8 }
+    { x=PS.x1, y=PS.y2, __dir=4 }
+  }
+
+  if S.diagonal == 3 then
+    brush[3].__dir = 7
+    table.remove(brush, 4)
+  elseif S.diagonal == 7 then
+    brush[1].__dir = 3
+    table.remove(brush, 2)
+  elseif S.diagonal == 1 then
+    brush[2].__dir = 9
+    table.remove(brush, 3)
+  elseif S.diagonal == 9 then
+    brush[4].__dir = 1
+    table.remove(brush, 1)
+  elseif S.diagonal then
+    error("Invalid diagonal seed!")
+  end
+
+  return brush
+end
+
+
 function SEED_CLASS.cell_neighbor(S, cell_side, dir)
   if S.bottom then S = S.bottom end
 

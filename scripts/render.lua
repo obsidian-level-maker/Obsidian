@@ -916,33 +916,8 @@ end
 function Render_seed(A, S)
   assert(S.area == A)
 
-  -- get parent seed
-  local PS = S
-  if S.bottom then PS = S.bottom end
 
-  local bare_brush =
-  {
-    { x=PS.x1, y=PS.y1, __dir=2 }
-    { x=PS.x2, y=PS.y1, __dir=6 }
-    { x=PS.x2, y=PS.y2, __dir=8 }
-    { x=PS.x1, y=PS.y2, __dir=4 }
-  }
-
-  if S.diagonal == 3 then
-    bare_brush[3].__dir = 7
-    table.remove(bare_brush, 4)
-  elseif S.diagonal == 7 then
-    bare_brush[1].__dir = 3
-    table.remove(bare_brush, 2)
-  elseif S.diagonal == 1 then
-    bare_brush[2].__dir = 9
-    table.remove(bare_brush, 3)
-  elseif S.diagonal == 9 then
-    bare_brush[4].__dir = 1
-    table.remove(bare_brush, 1)
-  elseif S.diagonal then
-    error("Invalid diagonal seed!")
-  end
+  local bare_brush = S:make_brush()
 
 
   if A.mode == "void" or (A.mode == "scenic" and not A.is_outdoor)
