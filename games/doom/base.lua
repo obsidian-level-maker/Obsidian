@@ -19,13 +19,8 @@
 --
 ------------------------------------------------------------------------
 
-DOOM  = { }  -- common stuff
+DOOM = { }
 
-DOOM1 = { }  -- stuff specific to each game
-DOOM2 = { }  --
-
-
-------------------------------------------------------------
 
 ob_require("params")
 
@@ -39,6 +34,7 @@ ob_require("themes")
 ob_require("levels")
 ob_require("resources")
 
+ob_require("x_doom1")
 ob_require("x_tnt")
 ob_require("x_plutonia")
 ob_require("x_freedoom")
