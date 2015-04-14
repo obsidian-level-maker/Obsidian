@@ -1006,15 +1006,17 @@ function Layout_map_borders()
         local junc = Junction_lookup(A, N)
         assert(junc)
 
-        junc.kind = "rail"
-        junc.rail_mat = "MIDBARS3"
-        junc.post_h   = 84
-        junc.blocked  = true
+        if true then
+          junc.kind = "nothing"
+        else
+          junc.kind = "rail"
+          junc.rail_mat = "MIDBARS3"
+          junc.post_h   = 84
+          junc.blocked  = true
+        end
       end
     end
   end
-
-
 
 
   local function set_as_water(A, water_room)
