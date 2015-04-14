@@ -39,9 +39,9 @@ ob_require("themes")
 ob_require("levels")
 ob_require("resources")
 
-ob_require("tnt")
-ob_require("plutonia")
-ob_require("freedoom")
+ob_require("x_tnt")
+ob_require("x_plutonia")
+ob_require("x_freedoom")
 
 ------------------------------------------------------------
 
