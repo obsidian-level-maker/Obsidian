@@ -34,13 +34,8 @@ ob_require("themes")
 ob_require("levels")
 ob_require("resources")
 
-ob_require("x_doom1")
-ob_require("x_tnt")
-ob_require("x_plutonia")
-ob_require("x_freedoom")
 
-
-------------------------------------------------------------
+------------------------------------------------------------------------
 
 OB_GAMES["doom2"] =
 {
@@ -53,7 +48,7 @@ OB_GAMES["doom2"] =
 
   tables =
   {
-    DOOM, DOOM2
+    DOOM
   }
 
   hooks =
@@ -63,4 +58,14 @@ OB_GAMES["doom2"] =
     all_done   = DOOM.all_done
   }
 }
+
+
+------------------------------------------------------------------------
+
+-- pull in the other Doom games...
+
+ob_require("x_doom1")
+ob_require("x_tnt")
+ob_require("x_plutonia")
+ob_require("x_freedoom")
 

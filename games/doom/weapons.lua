@@ -117,6 +117,23 @@ DOOM.WEAPONS =
     bonus_ammo = 50
   }
 
+  super =
+  {
+    id = 82
+    level = 3
+    pref = 50
+    add_prob = 20
+    start_prob = 40
+    attack = "hitscan"
+    rate = 0.6
+    damage = 170
+    splash = { 0,30 }
+    ammo = "shell"
+    per = 2
+    give = { {ammo="shell",count=8} }
+    bonus_ammo = 12
+  }
+
   launch =
   {
     id = 2003
@@ -163,27 +180,6 @@ DOOM.WEAPONS =
     per = 40
     give = { {ammo="cell",count=40} }
     bonus_ammo = 40
-  }
-}
-
-
-DOOM2.WEAPONS =
-{
-  super =
-  {
-    id = 82
-    level = 3
-    pref = 50
-    add_prob = 20
-    start_prob = 40
-    attack = "hitscan"
-    rate = 0.6
-    damage = 170
-    splash = { 0,30 }
-    ammo = "shell"
-    per = 2
-    give = { {ammo="shell",count=8} }
-    bonus_ammo = 12
   }
 }
 

@@ -24,7 +24,7 @@ DOOM.SECRET_EXITS =
 }
 
 
-DOOM2.EPISODES =
+DOOM.EPISODES =
 {
   episode1 =
   {
@@ -55,7 +55,7 @@ DOOM2.EPISODES =
 }
 
 
-DOOM2.PREBUILT_LEVELS =
+DOOM.PREBUILT_LEVELS =
 {
   MAP07 =
   {
@@ -93,7 +93,7 @@ DOOM2.PREBUILT_LEVELS =
 --------------------------------------------------------------------
 
 
-function DOOM2.get_levels()
+function DOOM.get_levels()
   local MAP_LEN_TAB = { few=4, episode=11, game=32 }
 
   local MAP_NUM = MAP_LEN_TAB[OB_CONFIG.length] or 1

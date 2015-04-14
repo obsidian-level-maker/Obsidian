@@ -24,7 +24,7 @@ DOOM.PARAMETERS =
   -- reflect any buffer limits in the DOOM.EXE
   max_name_length = 28
 
-  skip_monsters = { 15,25,35 }
+  skip_monsters = { 20,30,45 }
 
   time_factor    = 1.0
   ammo_factor    = 1.3
@@ -32,17 +32,10 @@ DOOM.PARAMETERS =
   monster_factor = 1.0
 
   bex_map_prefix = "HUSTR_"
-}
 
-
-DOOM2.PARAMETERS =
-{
-  -- these are in addition to the above
-
+  -- meh, get rid of these (find a better way)
   doom2_monsters = true
   doom2_weapons  = true
   doom2_skies    = true  -- RSKY# patches
-
-  skip_monsters = { 20,30,45 }
 }
 

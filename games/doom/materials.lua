@@ -66,7 +66,9 @@ DOOM.LIQUIDS =
 
 DOOM.MATERIALS =
 {
-  --- These materials are common to all DOOM games...
+  ------------------------------------------
+  --- Materials common to all DOOM games ---
+  ------------------------------------------
 
 
   -- special materials --
@@ -430,13 +432,10 @@ DOOM.MATERIALS =
   -- different to the textures, hence renamed the flats as
   -- F_STEP1 and F_STEP2.
 
-}
 
-
-DOOM2.MATERIALS =
-{
-  -- These materials are unique to DOOM II...
-
+  -----------------------------------
+  --- Materials unique to DOOM II ---
+  -----------------------------------
 
   -- walls --
 

@@ -122,7 +122,7 @@ DOOM.ROOMS =
 }
 
 
-DOOM2.THEMES =
+DOOM.THEMES =
 {
   DEFAULTS =
   {

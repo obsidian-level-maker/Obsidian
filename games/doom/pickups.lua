@@ -2,7 +2,7 @@
 --  DOOM PICKUPS
 --------------------------------------------------------------------
 --
---  Copyright (C) 2006-2014 Andrew Apted
+--  Copyright (C) 2006-2015 Andrew Apted
 --  Copyright (C)      2011 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -217,6 +217,17 @@ DOOM.NICE_ITEMS =
     secret_prob = 90
   }
 
+  -- Doom II only --
+
+  mega =
+  {
+    id = 83
+    kind = "health"
+    add_prob = 1
+    secret_prob = 70
+    give = { {health=200} }
+  }
+
   --
   -- NOTES:
   --
@@ -229,18 +240,5 @@ DOOM.NICE_ITEMS =
   --
   -- The All-map is for secrets only, hence has no 'add_prob'.
   --
-}
-
-
-DOOM2.NICE_ITEMS =
-{
-  mega =
-  {
-    id = 83
-    kind = "health"
-    add_prob = 1
-    secret_prob = 70
-    give = { {health=200} }
-  }
 }
 

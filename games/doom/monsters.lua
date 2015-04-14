@@ -208,11 +208,10 @@ DOOM.MONSTERS =
     weap_prefs = { bfg=10.0 }
     room_size = "large"
   }
-}
 
 
-DOOM2.MONSTERS =
-{
+  ---== Doom II only ==---
+
   gunner =
   {
     id = 65
