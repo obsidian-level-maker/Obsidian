@@ -354,11 +354,8 @@ function SEED_CLASS.in_use(S)
 end
 
 
-function SEED_CLASS.get_corner(S, dir)
-  -- check for invalid dir (e.g. when looping over all corners)
-  if S.diagonal == (10 - dir) then
-    return nil
-  end
+function SEED_CLASS.raw_corner(S, dir)
+  -- this method is RAW: it does not care about diagonals
 
   local cx = S.sx
   local cy = S.sy
@@ -367,6 +364,16 @@ function SEED_CLASS.get_corner(S, dir)
   if dir == 7 or dir == 9 then cy = cy + 1 end
 
   return Corner_lookup(cx, cy)
+end
+
+
+function SEED_CLASS.get_corner(S, dir)
+  -- check for invalid dir (e.g. when looping over all corners)
+  if S.diagonal == (10 - dir) then
+    return nil
+  end
+
+  return S:get_raw_corner(dir)
 end
 
 
@@ -430,6 +437,35 @@ function SEED_CLASS.cell_neighbor(S, cell_side, dir)
   local cell = S.m_cell[dir]
 
   return cell, S, dir
+end
+
+
+function SEED_CLASS.brush_for_cell(S, cell_side)
+  if S.bottom then S = S.bottom end
+
+  -- first vertex of brush is at center point
+  local x1 = S.x1 + (SEED_SIZE / 2)
+  local y1 = S.y1 + (SEED_SIZE / 2)
+
+  local corn2 = S:raw_corner(geom.RIGHT_45[cell_side])
+  local corn3 = S:raw_corner(geom. LEFT_45[cell_side])
+
+  assert(corn2 and corn3)
+
+  local x2 = corn2.x + (corn2.delta_x or 0)
+  local y2 = corn2.y + (corn2.delta_y or 0)
+
+  local x3 = corn3.x + (corn3.delta_x or 0)
+  local y3 = corn3.y + (corn3.delta_y or 0)
+
+  local brush =
+  {
+    { x=x1, y=y1 }
+    { x=x2, y=y2 }
+    { x=x3, y=y3 }
+  }
+
+  return brush
 end
 
 
