@@ -25,11 +25,14 @@
 
     id, name  -- debugging info
 
-    mode : keyword  -- "normal", "hallway", "water",
-                    -- "void", "scenic", "cage"
+    mode : keyword  -- "normal", "hallway",
+                    -- "void", "scenic",
+                    -- "cage", "trap"
 
     kind : keyword  -- "building", "courtyard",
                     -- "cave", "landscape"
+                    --
+                    -- For scenic: "water", "mountain"
 
     is_outdoor : bool
 
@@ -136,6 +139,7 @@
 
     inner_point : AREA  -- usually NIL
 
+    delta_x, delta_y    -- usually NIL, used for mountains
 --]]
 
 

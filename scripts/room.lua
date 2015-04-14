@@ -2373,7 +2373,7 @@ function Room_build_all()
   end
 
   Layout_traps_and_cages()
-  Layout_outer_borders()
+  Layout_map_borders()
 
   -- this must be done _after_ cages and outdoor borders
   Room_create_sky_groups()

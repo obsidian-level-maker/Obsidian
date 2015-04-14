@@ -69,12 +69,18 @@ class SEED
 
   mid_x, mid_y  -- mid point coordinate
 
+  floor_h, ceil_h -- floor and ceiling heights
+  f_tex,   c_tex  -- floor and ceiling textures
+
+  m_cell[DIR] : CELL  -- use for mountains (normally NIL)
+                      -- DIR is the side (2/4/6/8)
+                      -- only used in 'bottom' seed
+                      -- cells can be absent (for diagonal seeds)
+
+  -- NOTE: THIS NOT USED ATM
   chunk[1..n] : CHUNK  -- [1] is the ground floor (or liquid), NIL for void (etc)
                        -- [2] is the 3D floor above (usually NIL)
                        -- [3] can be yet another 3D floor, etc...
-
-  floor_h, ceil_h -- floor and ceiling heights
-  f_tex,   c_tex  -- floor and ceiling textures
 }
 
 
@@ -95,6 +101,18 @@ class CHUNK
 
   floor : FLOOR
 }
+
+
+--class CELL
+-- [
+    dist  -- how far away from normal parts of the level
+
+    touches_edge : bool
+
+    floor_h
+    floor_mat
+-- ]
+
 
 --------------------------------------------------------------]]
 

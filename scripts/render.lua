@@ -1020,6 +1020,9 @@ function Render_area(A)
     return
   end
 
+  -- mountains done elsewhere
+  if A.kind == "mountain" then return end
+
   A.floor_brushes = {}
   A.side_edges = {}
 
@@ -1166,6 +1169,8 @@ function Render_all_areas()
   each depot in LEVEL.depots do
     Render_depot(depot)
   end
+
+  Layout_build_mountains()
 end
 
 

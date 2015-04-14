@@ -939,7 +939,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Layout_outer_borders()
+function Layout_map_borders()
   --
   -- Handles the "scenic" stuff outside of the normal map.
   -- For example: a watery "sea" around at one corner of the map.
@@ -1021,7 +1021,7 @@ function Layout_outer_borders()
     A.scenic_room = water_room
 
     A.mode = "scenic"
-    A.kind = "water"
+    A.kind = "mountain"  --!!!! FIXME "water"
 
     A.is_outdoor = true
     A.is_boundary = true
@@ -1110,7 +1110,7 @@ function Layout_outer_borders()
   end
 
 
-  ---| Layout_outer_borders |---
+  ---| Layout_map_borders |---
 
   -- currently have no other outdoorsy borders (except the watery bits)
   -- [ TODO : review this later ! ]
@@ -1140,6 +1140,8 @@ function Layout_outer_borders()
   end
 
   assign_sky_edges()
+
+  Layout_create_mountains()
 end
 
 
@@ -1738,5 +1740,30 @@ return end
     make_archway(R0_points[E], R2_points[E], L2_points[E], L0_points[E],
                  edge2.dir, mat2, arch_h2)
   end
+end
+
+
+------------------------------------------------------------------------
+--   MOUNTAIN CELLS
+------------------------------------------------------------------------
+
+
+function Layout_create_mountains()
+
+  ---| Layout_create_mountains |---
+
+  each A in LEVEL.areas do
+    if A.kind == "mountain" then
+      -- TODO
+    end
+  end
+end
+
+
+function Layout_build_mountains()
+
+  ---| Layout_create_mountains |---
+
+  -- TODO
 end
 
