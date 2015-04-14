@@ -373,7 +373,7 @@ function SEED_CLASS.get_corner(S, dir)
     return nil
   end
 
-  return S:get_raw_corner(dir)
+  return S:raw_corner(dir)
 end
 
 

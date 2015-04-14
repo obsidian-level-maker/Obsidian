@@ -1802,8 +1802,49 @@ end
 
 function Layout_build_mountains()
 
+  local function render_cell(S, dir)
+    local cell = S.m_cell[dir]
+
+    if cell == nil then return end
+
+    local f_brush = S:brush_for_cell(dir)
+    local c_brush = table.deep_copy(f_brush)
+
+    local floor_h = rand.pick({ 0, 50, 100, 150, 200, 250, 300 })
+    local  ceil_h = 999 -- floor_h + 150
+
+    local floor_mat = "FLAT10"
+    local  ceil_mat = "_SKY"
+
+    local light, tag
+    
+    table.insert(f_brush, { t=floor_h, light=light, tag=tag })
+    table.insert(c_brush, { b= ceil_h })
+
+    brushlib.set_mat(f_brush, floor_mat, floor_mat)
+    brushlib.set_mat(c_brush,  ceil_mat,  ceil_mat)
+
+    if ceil_mat == "_SKY" then
+      brushlib.set_kind(c_brush, "sky")
+    end
+
+    Trans.brush(f_brush)
+    Trans.brush(c_brush)
+  end
+
+
   ---| Layout_create_mountains |---
 
-  -- TODO
+  for sx = 1, SEED_W do
+  for sy = 1, SEED_H do
+    local S  = SEEDS[sx][sy]
+
+    if not S.m_cell then continue end
+    
+    for dir = 2,8,2 do
+      render_cell(S, dir)
+    end
+  end
+  end
 end
 
