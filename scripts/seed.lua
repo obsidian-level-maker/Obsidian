@@ -109,6 +109,8 @@ class CHUNK
 
     dist  -- how far away from normal parts of the level
 
+    solid : bool
+
     touches_edge : bool
 
     floor_h

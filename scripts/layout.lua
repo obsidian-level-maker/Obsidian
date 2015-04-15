@@ -1822,7 +1822,7 @@ function Layout_create_mountains()
   end
 
 
-  local function mark_map_edges(A, S)
+  local function mark_map_edges(A, S)  -- NOT NEEDED ATM
     if S.bottom then S = S.bottom end
 
     for dir = 2,8,2 do
@@ -1842,7 +1842,7 @@ function Layout_create_mountains()
       if A.kind == "mountain" then
         each S in A.seeds do
           visit_seed(A, S)
-          mark_map_edges(A, S)
+---##     mark_map_edges(A, S)
         end
       end
     end
@@ -1856,7 +1856,7 @@ function Layout_create_mountains()
       if not nb_cell then continue end
 
       if nb_cell.area.zone != cell.area.zone then
-        cell.touches_edge = "zone"
+        cell.solid = "zone"
       end
     end
   end
@@ -1873,7 +1873,7 @@ function Layout_create_mountains()
   local function check_normal_do_cell(cell, cell_S, A, S)
     -- check for zone boundary
     if cell.area.zone != A.zone then
-      cell.touches_edge = "zone"
+      cell.solid = "zone"
     else
       cell.dist = 0
 
@@ -1924,7 +1924,7 @@ function Layout_create_mountains()
       local nb_cell = S:cell_neighbor(cell_side, dir)
 
       if not nb_cell then continue end
-      if nb_cell.touches_edge then continue end
+      if nb_cell.solid then continue end
 
       if new_dist < (nb_cell.dist or 999) then
         nb_cell.dist = new_dist
@@ -1966,7 +1966,7 @@ function Layout_create_mountains()
 
 
   local function fatten_in_cell(cell, S, cell_side)
-    if cell.touches_edge then return end
+    if cell.solid then return end
 
     local count = 0
 
@@ -1975,17 +1975,18 @@ function Layout_create_mountains()
 
       if not nb_cell then continue end
 
-      if nb_cell.touches_edge then
+      if nb_cell.solid then
         count = count + 1
       end
 
-      if nb_cell.touches_edge == "zone" then
-        cell.touches_edge = "fat"
+      if nb_cell.solid == "zone" then
+        cell.solid = "fat"
       end
     end
 
+    -- this prevents other sharp diagonals
     if count >= 2 then
-      cell.touches_edge = "fat"
+      cell.solid = "fat"
     end
   end
 
@@ -2022,8 +2023,8 @@ function Layout_build_mountains()
 
     local f_brush = S:brush_for_cell(dir)
 
-    -- cells at edge are completely solid
-    if cell.touches_edge then
+    -- cells at edge of zone are completely solid
+    if cell.solid then
       brushlib.set_mat(f_brush, floor_mat, floor_mat)
       Trans.brush(f_brush)
       return
