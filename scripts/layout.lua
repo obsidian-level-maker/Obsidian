@@ -1822,7 +1822,9 @@ function Layout_create_mountains()
   end
 
 
-  local function mark_map_edges(A, S)  -- NOT NEEDED ATM
+  local function mark_map_edges(A, S)
+    -- this marks the _occasional_ edge spot
+
     if S.bottom then S = S.bottom end
 
     for dir = 2,8,2 do
@@ -1830,8 +1832,8 @@ function Layout_create_mountains()
 
       if not cell then continue end
 
-      if not S:raw_neighbor(dir) then
-        cell.touches_edge = "map"
+      if not S:raw_neighbor(dir) and rand.odds(5) then
+        cell.solid = "map"
       end
     end
   end
@@ -1842,7 +1844,7 @@ function Layout_create_mountains()
       if A.kind == "mountain" then
         each S in A.seeds do
           visit_seed(A, S)
----##     mark_map_edges(A, S)
+          mark_map_edges(A, S)
         end
       end
     end
