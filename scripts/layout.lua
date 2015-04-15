@@ -1010,7 +1010,7 @@ function Layout_map_borders()
         local junc = Junction_lookup(A, N)
         assert(junc)
 
-        if true then
+        if MOUNTAINS then
           junc.kind = "nothing"
         else
           junc.kind = "rail"
@@ -1027,7 +1027,12 @@ function Layout_map_borders()
     A.scenic_room = water_room
 
     A.mode = "scenic"
-    A.kind = "mountain"  --!!!! FIXME "water"
+
+    if MOUNTAINS then
+      A.kind = "mountain"
+    else
+      A.kind = "water"
+    end
 
     A.is_outdoor = true
     A.is_boundary = true
@@ -1130,7 +1135,7 @@ function Layout_map_borders()
     end
   end
 
-  if rand.odds(15) then
+  if rand.odds(15 + 90) then --!!!!!!
     test_watery_corner("all")
   else
     -- TODO : pick best corners [maximum # of outdoor rooms]
@@ -1794,7 +1799,7 @@ function Layout_create_mountains()
   end
 
 
-  local function mark_edges(A, S)
+  local function mark_map_edges(A, S)
     if S.bottom then S = S.bottom end
 
     for dir = 2,8,2 do
@@ -1803,7 +1808,7 @@ function Layout_create_mountains()
       if not cell then continue end
 
       if not S:raw_neighbor(dir) then
-        cell.touches_edge = true
+        cell.touches_edge = "map"
       end
     end
   end
@@ -1814,24 +1819,71 @@ function Layout_create_mountains()
       if A.kind == "mountain" then
         each S in A.seeds do
           visit_seed(A, S)
-          mark_edges(A, S)
+          mark_map_edges(A, S)
         end
       end
     end
   end
 
 
+  local function mark_zone_edges_in_cell(cell, S, cell_side)
+    for dir = 2,8,2 do
+      local nb_cell = S:cell_neighbor(cell_side, dir)
+
+      if not nb_cell then continue end
+
+      if nb_cell.area.zone != cell.area.zone then
+        cell.touches_edge = "zone"
+      end
+    end
+  end
+
+
+  local function mark_zone_edges()
+    -- only handles cell <--> cell pairs
+    -- [ cell <--> non-cell cases are handled below ]
+
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      local S = SEEDS[sx][sy]
+
+      if not S.m_cell then continue end
+
+      for dir = 2,8,2 do
+        local cell = S.m_cell[dir]
+
+        if not cell then continue end
+
+        mark_zone_edges_in_cell(cell, S, dir)
+      end
+    
+    end -- sx, sy
+    end
+  end
+
+
+  local function check_normal_do_cell(cell, cell_S, A, S)
+    -- cells which touch a different zone should be solid
+    if cell.area.zone != A.zone then
+stderrf("\n  check_normal_do_cell : ZONE EDGE\n")
+      cell.touches_edge = "zone"
+    else
+      cell.dist = 0 --!!!  cell.floor_h = math.max(cell.floor_h or -9990, assert(cell.area.floor_h))
+    end      
+  end
+
+
   local function check_normal_seed(A, S)
     -- check all the straight edges
     for dir = 2,8,2 do
-      local N = S:neighbor(dir)
+      local N = S:raw_neighbor(dir)
 
       if not (N and N.m_cell) then continue end
 
       local cell = N.m_cell[10 - dir]
 
       if cell then
-        cell.dist = 0 --!!!  cell.floor_h = math.max(cell.floor_h or -9990, assert(cell.area.floor_h))
+        check_normal_do_cell(cell, N, A, S)
       end
     end
 
@@ -1845,7 +1897,7 @@ function Layout_create_mountains()
         local cell = PS.m_cell[dir]
 
         if cell then
-          cell.dist = 0
+          check_normal_do_cell(cell, PS, A, S)
         end
       end
     end
@@ -1869,6 +1921,8 @@ function Layout_create_mountains()
   ---| Layout_create_mountains |---
 
   create_all_cells()
+
+  mark_zone_edges()
 
   detect_near_normal()
 end
