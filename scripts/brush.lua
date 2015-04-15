@@ -506,7 +506,7 @@ function Mat_prepare_trip()
   local m_before = {}
   local m_after  = {}
 
-  for m,def in pairs(GAME.MATERIALS) do
+  each m,def in GAME.MATERIALS do
     if not def.sane and
        not def.rail_h and
        not (string.sub(m,1,1) == "_") and

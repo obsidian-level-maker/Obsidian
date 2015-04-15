@@ -324,7 +324,7 @@ function Monster_init()
   table.name_up(GAME.WEAPONS)
   table.name_up(GAME.PICKUPS)
 
-  for name,info in pairs(GAME.MONSTERS) do
+  each name,info in GAME.MONSTERS do
     if not info.id then
       error(string.format("Monster '%s' lacks an id field", name))
     end
@@ -360,7 +360,7 @@ function Monster_init()
 
   local dead_ones = {}
 
-  for name,info in pairs(GAME.MONSTERS) do
+  each name,info in GAME.MONSTERS do
     local orig = info.replaces
     if orig then
       assert(info.replace_prob)
@@ -389,7 +389,7 @@ function Monster_init()
 
   -- remove a replacement monster if the monster it replaces
   -- does not exist (e.g. stealth_gunner in DOOM 1 mode).
-  for name,_ in pairs(dead_ones) do
+  each name,_ in dead_ones do
     GAME.MONSTERS[name] = nil
   end
 end
@@ -2510,7 +2510,8 @@ end
 
 function Monsters_show_stats()
   local total = 0
-  for _,count in pairs(LEVEL.mon_stats) do
+
+  each _,count in LEVEL.mon_stats do
     total = total + count
   end
 

@@ -134,8 +134,8 @@ function Fight_Simulator(monsters, weapons, stats)
 
 
   local function splash_mons(W, list)
-    for idx,damage in ipairs(list) do
-      hurt_mon(idx, W, damage)
+    each damage in list do
+      hurt_mon(_index, W, damage)
     end
   end
 

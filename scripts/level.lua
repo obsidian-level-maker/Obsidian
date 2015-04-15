@@ -242,7 +242,7 @@ end
 function Levels_merge_table_list(tab_list)
   each GT in tab_list do
     assert(GT)
-    for name,tab in pairs(GT) do
+    each name,tab in GT do
       -- upper-case names should always be tables to copy
       if string.match(name, "^[A-Z]") then
         if type(tab) != "table" then
@@ -323,7 +323,7 @@ function Levels_sort_modules()
 
   -- find all the visible & enabled modules
 
-  for _,mod in pairs(OB_MODULES) do
+  each _,mod in OB_MODULES do
     if mod.enabled and mod.shown then
       table.insert(GAME.modules, mod)
     end
@@ -349,7 +349,7 @@ end
 function Levels_invoke_hook(name, ...)
   -- two passes, for example: setup and setup2
   for pass = 1,2 do
-    for index,mod in ipairs(GAME.modules) do
+    each mod in GAME.modules do
       local func = mod.hooks and mod.hooks[name]
 
       if func then
@@ -382,7 +382,7 @@ function Levels_setup()
 
   -- allow themes to supply sub-theme information
 
-  for name,theme in pairs(OB_THEMES) do
+  each name,theme in OB_THEMES do
     if theme.shown and theme.tables then
       Levels_merge_table_list(theme.tables)
     end
@@ -729,7 +729,7 @@ function Levels_do_styles()
   -- decide the values
   STYLE = {}
 
-  for name,prob_tab in pairs(style_tab) do
+  each name,prob_tab in style_tab do
     STYLE[name] = rand.key_by_probs(prob_tab)
   end
 

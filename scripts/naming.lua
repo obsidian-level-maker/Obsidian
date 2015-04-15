@@ -1809,7 +1809,7 @@ end
 
 
 function namelib.match_parts(word, parts)
-  for p,_ in pairs(parts) do
+  each p,_ in parts do
     for w in string.gmatch(word, "%a+") do
       local low = string.lower(w)
 
@@ -1938,8 +1938,8 @@ function namelib.test()
       gui.rand_seed(set)
       local list = namelib.generate(T, 12, 28)
 
-      for i,name in ipairs(list) do
-        gui.debugf("%s Set %d Name %2d: %s\n", T, set, i, name)
+      each name in list do
+        gui.debugf("%s Set %d Name %2d: %s\n", T, set, _index, name)
       end
 
       gui.debugf("\n");

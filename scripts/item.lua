@@ -249,7 +249,7 @@ function Item_add_pickups()
   local function decide_pickup(R, stat, qty)
     local item_tab = {}
 
-    for name,info in pairs(GAME.PICKUPS) do
+    each name,info in GAME.PICKUPS do
       -- compatibilty crud...
       local prob = info.add_prob or info.prob
 
