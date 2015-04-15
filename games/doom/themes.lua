@@ -12,116 +12,6 @@
 --
 --------------------------------------------------------------------
 
-DOOM.NAMES =
-{
-  -- these tables provide *additional* words to those in naming.lua
-
-  TECH =
-  {
-    lexicon =
-    {
-      a =
-      {
-        Deimos=40
-        Phobos=40
-        Ganymede=20
-        Io=20
-        Europa=20
-        ["Tei Tenga"]=25
-      }
-
-      b =
-      {
-        UAC=30
-      }
-
-      s =
-      {
-        ["UAC Crisis"]=30
-      }
-    }
-  }
-}
-
-
-DOOM.ROOMS =
-{
-  GENERIC =
-  {
-    environment = "any"
-  }
-
-
-  ---- Indoors ----
-
-  COMPUTER =
-  {
-    theme = "tech"
-    prob  = 50
-  }
-
-  STORAGE =
-  {
-    prob  = 50
-  }
-
-  WASTE =
-  {
-    theme = "!hell"
-    style = "liquids"
-    prob  = 50
-  }
-
-  PRISON =
-  {
-    style = "cages"
-    prob  = 50
-  }
-
-  TORTURE =
-  {
-    theme = { hell=1, wolf=0.5, urban=0.2 }
-    prob  = 50
-  }
-
-  CHAPEL =
-  {
-    theme = "hell"
-    prob  = 15
-  }
-
-  LIBRARY =
-  {
-    theme = "urban"
-    prob  = 15
-  }
-
-
-  ---- Outdoors ----
-
-  LAUNCH =
-  {
-    environment = "outdoor"
-    theme = "tech"
-    prob = 10
-  }
-
-  GARDEN =
-  {
-    environment = "outdoor"
-    theme = "urban"
-    prob = 50
-  }
-
-  GRAVEYARD =
-  {
-    environment = "outdoor"
-    theme = { hell=1, urban=0.4 }
-    prob = 20
-  }
-}
-
-
 DOOM.THEMES =
 {
   DEFAULTS =
@@ -1350,6 +1240,119 @@ DOOM.THEMES =
 
 --------------------------------------------------------------------
 
+DOOM.ROOMS =
+{
+  GENERIC =
+  {
+    environment = "any"
+  }
+
+
+  ---- Indoors ----
+
+  COMPUTER =
+  {
+    theme = "tech"
+    prob  = 50
+  }
+
+  STORAGE =
+  {
+    prob  = 50
+  }
+
+  WASTE =
+  {
+    theme = "!hell"
+    style = "liquids"
+    prob  = 50
+  }
+
+  PRISON =
+  {
+    style = "cages"
+    prob  = 50
+  }
+
+  TORTURE =
+  {
+    theme = { hell=1, wolf=0.5, urban=0.2 }
+    prob  = 50
+  }
+
+  CHAPEL =
+  {
+    theme = "hell"
+    prob  = 15
+  }
+
+  LIBRARY =
+  {
+    theme = "urban"
+    prob  = 15
+  }
+
+
+  ---- Outdoors ----
+
+  LAUNCH =
+  {
+    environment = "outdoor"
+    theme = "tech"
+    prob = 10
+  }
+
+  GARDEN =
+  {
+    environment = "outdoor"
+    theme = "urban"
+    prob = 50
+  }
+
+  GRAVEYARD =
+  {
+    environment = "outdoor"
+    theme = { hell=1, urban=0.4 }
+    prob = 20
+  }
+}
+
+
+--------------------------------------------------------------------
+
+DOOM.NAMES =
+{
+  -- these tables provide *additional* words to those in naming.lua
+
+  TECH =
+  {
+    lexicon =
+    {
+      a =
+      {
+        Deimos=40
+        Phobos=40
+        Ganymede=20
+        Io=20
+        Europa=20
+        ["Tei Tenga"]=25
+      }
+
+      b =
+      {
+        UAC=30
+      }
+
+      s =
+      {
+        ["UAC Crisis"]=30
+      }
+    }
+  }
+}
+
+
+--------------------------------------------------------------------
 
 OB_THEMES["doom/tech"] =
 {
