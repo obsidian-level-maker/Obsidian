@@ -107,6 +107,19 @@ ULTDOOM.MATERIALS =
   MFLR8_4  = { f="MFLR8_4",  t="ASHWALL" }
 
 
+  -- flats with different side textures --
+
+  CONS1_1  = { f="CONS1_1", t="COMPWERD" }
+  CONS1_5  = { f="CONS1_5", t="COMPWERD" }
+  CONS1_7  = { f="CONS1_7", t="COMPWERD" }
+
+  FLAT10   = { f="FLAT10", t="BROWNHUG" }
+  FLAT1_1  = { f="FLAT1_1", t="BROWN1" }
+  FLAT1_2  = { f="FLAT1_2", t="BROWN1" }
+  FLAT1_3  = { f="FLAT1_3", t="BROWN1" }
+  FLAT5_5  = { f="FLAT5_5", t="BROWN1" }
+
+
   -- rails --
 
   BRNBIGC  = { t="BRNBIGC",  rail_h=128 }

@@ -268,9 +268,6 @@ DOOM.MATERIALS =
   CEIL5_2  = { f="CEIL5_2", t="METAL" }
 
   COMP01   = { f="COMP01",  t="GRAY1" }
-  CONS1_1  = { f="CONS1_1", t="COMPWERD" }
-  CONS1_5  = { f="CONS1_5", t="COMPWERD" }
-  CONS1_7  = { f="CONS1_7", t="COMPWERD" }
 
   CRATOP1  = { f="CRATOP1", t="CRATE2" }
   CRATOP2  = { f="CRATOP2", t="CRATE1" }
@@ -283,9 +280,6 @@ DOOM.MATERIALS =
   DEM1_6   = { f="DEM1_6", t="MARBLE1" }
 
   FLAT1    = { f="FLAT1",   t="GRAY1" }
-  FLAT1_1  = { f="FLAT1_1", t="BROWN1" }
-  FLAT1_2  = { f="FLAT1_2", t="BROWN1" }
-  FLAT1_3  = { f="FLAT1_3", t="BROWN1" }
   FLAT2    = { f="FLAT2",   t="GRAY1" }
   FLAT3    = { f="FLAT3",   t="GRAY4" }
   FLAT4    = { f="FLAT4",   t="COMPSPAN" }
@@ -295,12 +289,10 @@ DOOM.MATERIALS =
   FLAT5_2  = { f="FLAT5_2", t="WOOD1" }
   FLAT5_3  = { f="FLAT5_3", t="REDWALL" }
   FLAT5_4  = { f="FLAT5_4", t="STONE" }
-  FLAT5_5  = { f="FLAT5_5", t="BROWN1" }
   FLAT5_6  = { f="FLAT5_6", t="CRACKLE4" }
 
   FLAT8    = { f="FLAT8",  t="STARBR2" }
   FLAT9    = { f="FLAT9",  t="GRAY4" }
-  FLAT10   = { f="FLAT10", t="BROWNHUG" } -- better in DOOM2
   FLAT14   = { f="FLAT14", t="COMPBLUE" }
   FLAT17   = { f="FLAT17", t="GRAY1" }
   FLAT18   = { f="FLAT18", t="GRAY1" }
@@ -586,11 +578,10 @@ DOOM.MATERIALS =
   CONS1_5  = { f="CONS1_5", t="GRAY5" }
   CONS1_7  = { f="CONS1_7", t="GRAY5" }
 
+  FLAT10   = { f="FLAT10",   t="ASHWALL4" }
   FLAT1_1  = { f="FLAT1_1",  t="BSTONE2" }
   FLAT1_2  = { f="FLAT1_2",  t="BSTONE2" }
   FLAT1_3  = { f="FLAT1_3",  t="BSTONE2" }
-  FLAT10   = { f="FLAT10",   t="ASHWALL4" }
-  FLAT22   = { f="FLAT22",   t="SILVER2" }
   FLAT5_5  = { f="FLAT5_5",  t="STUCCO" }
   FLAT5_7  = { f="FLAT5_7",  t="ASHWALL2" }
   FLAT5_8  = { f="FLAT5_8",  t="ASHWALL2" }
