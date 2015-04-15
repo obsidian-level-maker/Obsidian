@@ -1093,7 +1093,7 @@ function Layout_map_borders()
     end
 
     if MOUNTAINS then
-      room.floor_h = room.nb_max_h + 48
+      room.floor_h = room.nb_max_h
     else
       room.floor_h = room.nb_min_h - 32
     end
@@ -2018,6 +2018,9 @@ end
 
 function Layout_build_mountains()
 
+  local changes
+
+
   local function render_cell(cell, S, dir)
 
     local floor_mat = "FLAT10"
@@ -2034,10 +2037,8 @@ function Layout_build_mountains()
 
     local c_brush = table.deep_copy(f_brush)
 
-    local floor_h = rand.pick({ 0, 50, 100, 150, 200, 250, 300 })
+    local floor_h = assert(cell.floor_h)
     local  ceil_h = 999 -- floor_h + 150
-
-if cell.dist then floor_h = 300 + cell.dist * 32 else floor_h = -777 end
 
     local light, tag
     
@@ -2056,12 +2057,79 @@ if cell.dist then floor_h = 300 + cell.dist * 32 else floor_h = -777 end
   end
 
 
-  local function determine_heights()
-    -- TODO
+  local function flood_floor_at_cell(cell, S, cell_side)
+    -- already set?
+    if cell.floor_h then return end
+
+    local new_h
+
+    for dir = 2,8,2 do
+      local nb_cell, N = S:cell_neighbor(cell_side, dir)
+
+      if not nb_cell then continue end
+      if not nb_cell.floor_h then continue end
+
+      -- ensure two cells which straddle a seed edge get same height
+      if S != N then
+        new_h = nb_cell.floor_h
+        break;
+      end
+
+      if not new_h or rand.odds(50) then
+        new_h = nb_cell.floor_h + rand.irange(1,19)
+      end
+    end
+
+    if new_h then
+      cell.floor_h = new_h
+      changes = true
+    end
+  end
+
+
+  local function flood_floor_heights()
+    changes = false
+
+    Layout_visit_all_cells(flood_floor_at_cell)
+
+    return changes
+  end
+
+
+  local function determine_floors()
+    -- pick a height for all cells at dist==0
+    -- [ the cell.area.floor_h is a maximal value ]
+
+    Layout_visit_all_cells(
+      function (cell, S, cell_side)
+        if not cell.solid and cell.dist == 0 then
+          cell.floor_h = cell.near_floor_h or assert(cell.area.floor_h)
+          cell.floor_h = cell.floor_h + 48 + rand.pick({ 0, 0, 16, 24, 40 })
+        end
+      end)
+
+    -- build heights through cell network
+
+    for loop = 1, 999 do
+      if not flood_floor_heights() then
+        break;
+      end
+    end
+
+    -- any unset cells must be cut off from everything, so solidify them
+
+    Layout_visit_all_cells(
+      function (cell, S, cell_side)
+        if not cell.solid and not cell.floor_h then
+          cell.solid = true
+        end
+      end)
   end
 
 
   ---| Layout_create_mountains |---
+
+  determine_floors()
 
   Layout_visit_all_cells(render_cell)
 end
