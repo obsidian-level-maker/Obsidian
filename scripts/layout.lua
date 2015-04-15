@@ -1766,6 +1766,9 @@ end
 
 
 function Layout_create_mountains()
+  
+  local changes
+
 
   local function add_cell(S, side, A)
     if S.bottom then S = S.bottom end
@@ -1863,13 +1866,16 @@ function Layout_create_mountains()
 
 
   local function check_normal_do_cell(cell, cell_S, A, S)
-    -- cells which touch a different zone should be solid
+    -- check for zone boundary
     if cell.area.zone != A.zone then
-stderrf("\n  check_normal_do_cell : ZONE EDGE\n")
       cell.touches_edge = "zone"
     else
-      cell.dist = 0 --!!!  cell.floor_h = math.max(cell.floor_h or -9990, assert(cell.area.floor_h))
-    end      
+      cell.dist = 0
+
+      if A.floor_h then
+        cell.near_floor_h = math.max(cell.near_floor_h or -1024, A.floor_h)
+      end
+    end
   end
 
 
@@ -1904,15 +1910,63 @@ stderrf("\n  check_normal_do_cell : ZONE EDGE\n")
   end
 
 
+  local function flood_fill_dist_at_cell(cell, S, cell_side)
+    local new_dist = cell.dist + 1
+
+    for dir = 2,8,2 do
+      local nb_cell = S:cell_neighbor(cell_side, dir)
+
+      if not nb_cell then continue end
+      if nb_cell.touches_edge then continue end
+
+      if new_dist < (nb_cell.dist or 999) then
+        nb_cell.dist = new_dist
+        changes = true
+      end
+    end
+  end
+
+
+  local function flood_fill_dist_pass()
+    changes = false
+    
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      local S = SEEDS[sx][sy]
+
+      if not S.m_cell then continue end
+
+      for dir = 2,8,2 do
+        local cell = S.m_cell[dir]
+
+        if cell and cell.dist then
+          flood_fill_dist_at_cell(cell, S, dir)
+        end
+      end
+    end -- sx, sy
+    end
+
+    return changes
+  end
+
+
   local function detect_near_normal()
     -- detect the cells which touch the normal parts of the level
-    -- (this will have the lowest height).
+    -- (these will have the lowest height).
 
     each A in LEVEL.areas do
       if not A.is_boundary then
         each S in A.seeds do
           check_normal_seed(A, S)
         end
+      end
+    end
+    
+    -- determine a 'dist' for every cell by a flood-fill algorithm
+
+    for loop = 1, 999 do
+      if not flood_fill_dist_pass() then
+        break;
       end
     end
   end
@@ -1990,8 +2044,6 @@ function Layout_build_mountains()
     local floor_mat = "FLAT10"
     local  ceil_mat = "_SKY"
 
-if cell.dist == 0 then floor_mat = "SFALL1" end
-
     local f_brush = S:brush_for_cell(dir)
 
     -- cells at edge are completely solid
@@ -2005,6 +2057,8 @@ if cell.dist == 0 then floor_mat = "SFALL1" end
 
     local floor_h = rand.pick({ 0, 50, 100, 150, 200, 250, 300 })
     local  ceil_h = 999 -- floor_h + 150
+
+if cell.dist then floor_h = cell.dist * 32 else floor_h = -777 end
 
     local light, tag
     
