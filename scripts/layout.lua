@@ -1765,6 +1765,26 @@ end
 ------------------------------------------------------------------------
 
 
+function Layout_visit_all_cells(func)
+  for sx = 1, SEED_W do
+  for sy = 1, SEED_H do
+    local S  = SEEDS[sx][sy]
+
+    if not S.m_cell then continue end
+    
+    for side = 2,8,2 do
+      local cell = S.m_cell[side]
+
+      if cell then
+        func(cell, S, side)
+      end
+    end
+  end
+  end
+end
+
+
+
 function Layout_create_mountains()
   
   local changes
@@ -1846,22 +1866,7 @@ function Layout_create_mountains()
     -- only handles cell <--> cell pairs
     -- [ cell <--> non-cell cases are handled below ]
 
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_H do
-      local S = SEEDS[sx][sy]
-
-      if not S.m_cell then continue end
-
-      for dir = 2,8,2 do
-        local cell = S.m_cell[dir]
-
-        if not cell then continue end
-
-        mark_zone_edges_in_cell(cell, S, dir)
-      end
-    
-    end -- sx, sy
-    end
+    Layout_visit_all_cells(mark_zone_edges_in_cell)
   end
 
 
@@ -1911,6 +1916,8 @@ function Layout_create_mountains()
 
 
   local function flood_fill_dist_at_cell(cell, S, cell_side)
+    if not cell.dist then return end
+
     local new_dist = cell.dist + 1
 
     for dir = 2,8,2 do
@@ -1930,21 +1937,7 @@ function Layout_create_mountains()
   local function flood_fill_dist_pass()
     changes = false
     
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_H do
-      local S = SEEDS[sx][sy]
-
-      if not S.m_cell then continue end
-
-      for dir = 2,8,2 do
-        local cell = S.m_cell[dir]
-
-        if cell and cell.dist then
-          flood_fill_dist_at_cell(cell, S, dir)
-        end
-      end
-    end -- sx, sy
-    end
+    Layout_visit_all_cells(flood_fill_dist_at_cell)
 
     return changes
   end
@@ -2001,23 +1994,9 @@ function Layout_create_mountains()
     -- solidify cells that neighbor a zone-edge cell
     -- [ without this, the zone boundary can meet at sharp points ]
 
-    for pass = 1,8 do
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_H do
-      local S = SEEDS[sx][sy]
-
-      if not S.m_cell then continue end
-
-      for dir = 2,8,2 do
-        local cell = S.m_cell[dir]
-
-        if not cell then continue end
-
-        fatten_in_cell(cell, S, dir)
-      end
-    end -- sx, sy
+    for pass = 1, 5 do
+      Layout_visit_all_cells(fatten_in_cell)
     end
-    end -- pass
   end
 
 
@@ -2036,10 +2015,7 @@ end
 
 function Layout_build_mountains()
 
-  local function render_cell(S, dir)
-    local cell = S.m_cell[dir]
-
-    if cell == nil then return end
+  local function render_cell(cell, S, dir)
 
     local floor_mat = "FLAT10"
     local  ceil_mat = "_SKY"
@@ -2058,7 +2034,7 @@ function Layout_build_mountains()
     local floor_h = rand.pick({ 0, 50, 100, 150, 200, 250, 300 })
     local  ceil_h = 999 -- floor_h + 150
 
-if cell.dist then floor_h = cell.dist * 32 else floor_h = -777 end
+if cell.dist then floor_h = 300 + cell.dist * 32 else floor_h = -777 end
 
     local light, tag
     
@@ -2077,18 +2053,13 @@ if cell.dist then floor_h = cell.dist * 32 else floor_h = -777 end
   end
 
 
+  local function determine_heights()
+    -- TODO
+  end
+
+
   ---| Layout_create_mountains |---
 
-  for sx = 1, SEED_W do
-  for sy = 1, SEED_H do
-    local S  = SEEDS[sx][sy]
-
-    if not S.m_cell then continue end
-    
-    for dir = 2,8,2 do
-      render_cell(S, dir)
-    end
-  end
-  end
+  Layout_visit_all_cells(render_cell)
 end
 
