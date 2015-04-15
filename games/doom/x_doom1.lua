@@ -11,6 +11,16 @@
 --  of the License, or (at your option) any later version.
 --
 --------------------------------------------------------------------
+--
+--  NOTE:
+--    Doom 1 and Ultimate Doom are treated here somewhat like a
+--    mod of Doom 2.  Hence the MONSTERS table here removes all
+--    the Doom 2 monsters (similarly for 'super' weapon etc....)
+--
+--    This is not ideal, but seems better than the previous way
+--    of mixing the two games in each file (DOOM1 vs DOOM2 tables)
+--    which was probably very confusing to most people.
+--
 
 ULTDOOM = { }
 
@@ -130,10 +140,41 @@ ULTDOOM.MATERIALS =
 
 --------------------------------------------------------------------
 
+ULTDOOM.WEAPONS =
+{
+  super = REMOVE_ME
+}
+
+
+ULTDOOM.NICE_ITEMS =
+{
+  mega = REMOVE_ME
+}
+
+
+ULTDOOM.MONSTERS =
+{
+  gunner   = REMOVE_ME
+  revenant = REMOVE_ME
+  knight   = REMOVE_ME
+  mancubus = REMOVE_ME
+  arach    = REMOVE_ME
+  vile     = REMOVE_ME
+  pain     = REMOVE_ME
+  ss_dude  = REMOVE_ME
+}
+
+
+--------------------------------------------------------------------
+
 --Fixed up for future use in V6 -Chris
 
 ULTDOOM.THEMES =
 {
+  -- this field ensures these theme entries REPLACE those of Doom 2.
+  replace_all = true
+
+
   DEFAULTS =
   {
     keys =
