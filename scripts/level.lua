@@ -208,19 +208,6 @@ function Levels_between_clean()
 end
 
 
-function Levels_merge_themes(theme_tab, tab)
-  each name,sub_t in tab do
-    if sub_t == REMOVE_ME then
-      theme_tab[name] = nil
-    elseif not theme_tab[name] then
-      theme_tab[name] = table.deep_copy(sub_t)
-    else
-      table.merge_w_copy(theme_tab[name], sub_t)
-    end
-  end
-end
-
-
 function Levels_merge_tab(name, tab)
   assert(name and tab)
 
@@ -229,13 +216,15 @@ function Levels_merge_tab(name, tab)
     return
   end
 
-  -- special handling for theme tables
-  if name == "THEMES" then
-    Levels_merge_themes(GAME[name], tab)
-    return
+  -- support replacing _everything_
+  -- [ needed mainly for Doom 1 themes ]
+  if tab.replace_all then
+    GAME[name] = {}
   end
 
   table.merge_w_copy(GAME[name], tab)
+
+  GAME[name].replace_all = nil
 end
 
 
@@ -373,18 +362,11 @@ function Levels_setup()
   Levels_add_engine()
 
   -- merge tables from each module
+  -- [ but skip GAME and ENGINE which are already merged ]
 
   each mod in GAME.modules do
-    if mod.tables then
+    if _index > 2 and mod.tables then
       Levels_merge_table_list(mod.tables)
-    end
-  end
-
-  -- allow themes to supply sub-theme information
-
-  each name,theme in OB_THEMES do
-    if theme.shown and theme.tables then
-      Levels_merge_table_list(theme.tables)
     end
   end
 
