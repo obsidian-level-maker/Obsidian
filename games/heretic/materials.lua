@@ -12,21 +12,6 @@
 --
 ------------------------------------------------------------------------
 
-
-HERETIC.PREFAB_DEFAULTS =
-{
-  -- FIXME : HERETIC.PREFAB_DEFAULTS
-}
-
-
-HERETIC.SKIN_DEFAULTS =
-{
-  -- FIXME : HERETIC.SKIN_DEFAULTS
-}
-
-
---------------------------------------------------
-
 HERETIC.LIQUIDS =
 {
   water  = { mat="FLTFLWW1", light=168, special=0 }
@@ -216,5 +201,19 @@ HERETIC.MATERIALS =
   O_PILL   = { t="SKULLSB2", f="O_PILL",  sane=1 }
   O_BOLT   = { t="DOORWOOD", f="O_BOLT",  sane=1 }
   O_CARVE  = { t="CHAINSD",  f="O_CARVE", sane=1 }
+}
+
+
+------------------------------------------------------------------------
+
+HERETIC.PREFAB_DEFAULTS =
+{
+  -- FIXME : HERETIC.PREFAB_DEFAULTS
+}
+
+
+HERETIC.SKIN_DEFAULTS =
+{
+  -- FIXME : HERETIC.SKIN_DEFAULTS
 }
 

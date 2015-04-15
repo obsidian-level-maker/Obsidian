@@ -12,46 +12,6 @@
 --
 --------------------------------------------------------------------
 
-DOOM.PREFAB_DEFAULTS =
-{
-  tex_DOORTRAK = "?track"
-
-  thing_5 = "?item"
-
-  -- this allow players to be remapped or removed
-  -- (e.g. non-standard players can be removed if not supported)
-  thing_1 = "?p1"
-  thing_2 = "?p2"
-  thing_3 = "?p3"
-  thing_4 = "?p4"
-
-  thing_4001 = "?p5"
-  thing_4002 = "?p6"
-  thing_4003 = "?p7"
-  thing_4004 = "?p8"
-}
-
-
-DOOM.SKIN_DEFAULTS =
-{
-  track = "DOORTRAK"
-
-  big_door = "BIGDOOR7"
-
-  p1 = "player1"
-  p2 = "player2"
-  p3 = "player3"
-  p4 = "player4"
-
-  p5 = "player5"
-  p6 = "player6"
-  p7 = "player7"
-  p8 = "player8"
-}
-
-
---------------------------------------------------
-
 DOOM.LIQUIDS =
 {
   water  = { mat="FWATER1", light=156, special=5,  damage=10 }
@@ -692,5 +652,45 @@ DOOM.MATERIALS =
   KFALL5   = { t="BLODRIP1", f="SLIME05", sane=1 }
   SLIME01  = { t="BLODRIP1", f="SLIME01", sane=1 }
   SLIME05  = { t="BLODRIP1", f="SLIME05", sane=1 }
+}
+
+
+--------------------------------------------------
+
+DOOM.PREFAB_DEFAULTS =
+{
+  tex_DOORTRAK = "?track"
+
+  thing_5 = "?item"
+
+  -- this allow players to be remapped or removed
+  -- (e.g. non-standard players can be removed if not supported)
+  thing_1 = "?p1"
+  thing_2 = "?p2"
+  thing_3 = "?p3"
+  thing_4 = "?p4"
+
+  thing_4001 = "?p5"
+  thing_4002 = "?p6"
+  thing_4003 = "?p7"
+  thing_4004 = "?p8"
+}
+
+
+DOOM.SKIN_DEFAULTS =
+{
+  track = "DOORTRAK"
+
+  big_door = "BIGDOOR7"
+
+  p1 = "player1"
+  p2 = "player2"
+  p3 = "player3"
+  p4 = "player4"
+
+  p5 = "player5"
+  p6 = "player6"
+  p7 = "player7"
+  p8 = "player8"
 }
 

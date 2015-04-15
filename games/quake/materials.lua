@@ -12,25 +12,6 @@
 --
 ------------------------------------------------------------------------
 
-QUAKE.PREFAB_DEFAULTS =
-{
-  -- FIXME : QUAKE.PREFAB_DEFAULTS
-
-  thing_1 = "player1"
-  thing_2 = "player2"
-  thing_3 = "player3"
-  thing_4 = "player4"
-}
-
-
-QUAKE.SKIN_DEFAULTS =
-{
-  -- FIXME : QUAKE.SKIN_DEFAULTS
-}
-
-
-----------------------------------------------------
-
 QUAKE.LIQUIDS =
 {
   water  = { mat="L_WATER0", medium="water", light=0, special=0 }
@@ -39,8 +20,6 @@ QUAKE.LIQUIDS =
   lava1  = { mat="L_LAVA1",  medium="lava",  light=1, special=0, damage=99, fireballs=1 }
 }
 
-
-----------------------------------------------------
 
 QUAKE.MATERIALS =
 {
@@ -611,5 +590,24 @@ QUAKE.MATERIALS =
 ---  *04mwat2
 ---  *04water1
 ---  *04water2
+}
+
+
+------------------------------------------------------------------------
+
+QUAKE.PREFAB_DEFAULTS =
+{
+  -- FIXME : QUAKE.PREFAB_DEFAULTS
+
+  thing_1 = "player1"
+  thing_2 = "player2"
+  thing_3 = "player3"
+  thing_4 = "player4"
+}
+
+
+QUAKE.SKIN_DEFAULTS =
+{
+  -- FIXME : QUAKE.SKIN_DEFAULTS
 }
 

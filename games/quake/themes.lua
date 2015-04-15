@@ -13,21 +13,6 @@
 ------------------------------------------------------------------------
 
 
-QUAKE.NAMES =
-{
-  -- TODO
-}
-
-
-QUAKE.ROOMS =
-{
-  GENERIC =
-  {
-    environment = "any"
-  }
-}
-
-
 QUAKE.THEMES =
 {
   DEFAULTS =
@@ -267,6 +252,23 @@ QUAKE.THEMES =
       ROCK3_7=50, ROCK3_8=50, ROCK4_2=50,
       VINE1_2=50, 
     }
+  }
+}
+
+
+------------------------------------------------------------------------
+
+QUAKE.NAMES =
+{
+  -- TODO
+}
+
+
+QUAKE.ROOMS =
+{
+  GENERIC =
+  {
+    environment = "any"
   }
 }
 

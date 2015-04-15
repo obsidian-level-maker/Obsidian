@@ -12,14 +12,6 @@
 --
 ------------------------------------------------------------------------
 
--- FIXME : HERETIC.PREFAB_DEFAULTS
-
-
--- FIXME : HERETIC.SKIN_DEFAULTS
-
-
---------------------------------------------------
-
 HEXEN.LIQUIDS =
 {
   -- Hexen gets damage from the flat (not a sector special)
@@ -449,5 +441,19 @@ HEXEN.MATERIALS =
 
   -- FIXME: TEMP HACK!!
   STNGLS1  = { t="GLASS01",  f="F_081" }
+}
+
+
+------------------------------------------------------------------------
+
+HEXEN.PREFAB_DEFAULTS =
+{
+  -- FIXME : HERETIC.PREFAB_DEFAULTS
+}
+
+
+HEXEN.SKIN_DEFAULTS =
+{
+  -- FIXME : HERETIC.SKIN_DEFAULTS
 }
 

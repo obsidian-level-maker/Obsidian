@@ -12,21 +12,6 @@
 --
 ------------------------------------------------------------------------
 
-HERETIC.NAMES =
-{
-  -- TODO
-}
-
-
-HERETIC.ROOMS =
-{
-  GENERIC =
-  {
-    environment = "any"
-  }
-}
-
-
 HERETIC.THEMES =
 {
   DEFAULTS =
@@ -364,6 +349,23 @@ HERETIC.THEMES =
       FLOOR17=50, FLAT509=20, FLAT510=20,
       FLAT513=20, FLAT516=35, 
     }
+  }
+}
+
+
+------------------------------------------------------------------------
+
+HERETIC.NAMES =
+{
+  -- TODO
+}
+
+
+HERETIC.ROOMS =
+{
+  GENERIC =
+  {
+    environment = "any"
   }
 }
 
