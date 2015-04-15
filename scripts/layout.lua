@@ -1918,13 +1918,64 @@ stderrf("\n  check_normal_do_cell : ZONE EDGE\n")
   end
 
 
+  local function fatten_in_cell(cell, S, cell_side)
+    if cell.touches_edge then return end
+
+    local count = 0
+
+    for dir = 2,8,2 do
+      local nb_cell = S:cell_neighbor(cell_side, dir)
+
+      if not nb_cell then continue end
+
+      if nb_cell.touches_edge then
+        count = count + 1
+      end
+
+      if nb_cell.touches_edge == "zone" then
+        cell.touches_edge = "fat"
+      end
+    end
+
+    if count >= 2 then
+      cell.touches_edge = "fat"
+    end
+  end
+
+
+  local function fatten_zone_edges()
+    -- solidify cells that neighbor a zone-edge cell
+    -- [ without this, the zone boundary can meet at sharp points ]
+
+    for pass = 1,8 do
+    for sx = 1, SEED_W do
+    for sy = 1, SEED_H do
+      local S = SEEDS[sx][sy]
+
+      if not S.m_cell then continue end
+
+      for dir = 2,8,2 do
+        local cell = S.m_cell[dir]
+
+        if not cell then continue end
+
+        fatten_in_cell(cell, S, dir)
+      end
+    end -- sx, sy
+    end
+    end -- pass
+  end
+
+
   ---| Layout_create_mountains |---
 
   create_all_cells()
 
+  detect_near_normal()
+
   mark_zone_edges()
 
-  detect_near_normal()
+  fatten_zone_edges()
 end
 
 
