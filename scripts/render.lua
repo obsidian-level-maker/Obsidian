@@ -187,7 +187,7 @@ function Render_edge(A, S, dir)
   end
 
 
-  local function edge_simple_sky(floor_h)
+  local function edge_inner_sky()
     local floor_h = assert(A.floor_h)
 
     assert(not geom.is_corner(dir))
@@ -212,6 +212,39 @@ function Render_edge(A, S, dir)
     brushlib.set_mat(brush, "_SKY", "_SKY")
 
     Trans.brush(brush)
+  end
+
+
+  local function edge_outer_sky()
+    local floor_h = assert(A.floor_h)
+
+    assert(not geom.is_corner(dir))
+
+    local x1, y1 = S.x1, S.y1
+    local x2, y2 = S.x2, S.y2
+
+    if dir == 2 then y2 = y1 ; y1 = y1 - 8 end
+    if dir == 8 then y1 = y2 ; y2 = y2 + 8 end
+
+    if dir == 4 then x2 = x1 ; x1 = x1 - 8 end
+    if dir == 6 then x1 = x2 ; x2 = x2 + 8 end
+
+    local f_brush = brushlib.quad(x1, y1, x2, y2)
+
+    each C in brush do
+      C.flags = DOOM_LINE_FLAGS.draw_never
+    end
+
+    local c_brush = brushlib.copy(f_brush)
+
+    table.insert(f_brush, { t=floor_h, reachable=true })
+    table.insert(c_brush, { b=floor_h + 16, delta_z = -16 })
+
+    brushlib.set_mat(f_brush, "_SKY", "_SKY")
+    brushlib.set_mat(c_brush, "_SKY", "_SKY")
+
+    Trans.brush(f_brush)
+    Trans.brush(c_brush)
   end
 
 
@@ -639,7 +672,10 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     edge_trap_wall(calc_wall_mat(A, NA))
 
   elseif info.kind == "sky_edge" and A.floor_h then
-    edge_simple_sky()
+    edge_inner_sky()
+
+  elseif info.kind == "sky_outer" and A.floor_h then
+    edge_outer_sky()
 
   elseif info.kind == "fence" then
     straddle_fence()
@@ -940,7 +976,7 @@ local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
 -- if A.quest and A.quest.id < 2 then tag = 1 end
 
 
-  local f_brush = table.deep_copy(bare_brush)
+  local f_brush = brushlib.copy(bare_brush)
   local c_brush = bare_brush
 
 
