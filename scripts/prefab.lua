@@ -1954,15 +1954,11 @@ function Fab_render_sky(fab, room, T)
       error("Prefab with add_sky used without any room")
     end
 
-    if not room.sky_group then
-      error("Prefab with add_sky used in indoor room : " .. tostring(fab.name))
-    end
-
     if not T.bbox then
       error("Prefab with add_sky used in loose transform")
     end
 
-    Trans.sky_quad(T.bbox.x1, T.bbox.y1, T.bbox.x2, T.bbox.y2, room.sky_group.h)
+    Trans.sky_quad(T.bbox.x1, T.bbox.y1, T.bbox.x2, T.bbox.y2, room.zone.sky_h)
   end
 end
 

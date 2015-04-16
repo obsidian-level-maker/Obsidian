@@ -65,10 +65,6 @@
 
     inner_points : list(CORNER)
 
-    sky_group : table   -- outdoor areas which directly touch will belong
-                        -- to the same sky_group (unless a solid wall is
-                        -- enforced, e.g. between zones).
-
     stairwells : list(STAIRWELL)  -- possible stairwell usages (for a hallway)
 
     is_stairwell : STAIRWELL

@@ -518,45 +518,18 @@ function Room_create_sky_groups()
   -- Note: actual sky heights are determined later.
   --
 
-  local function new_sky_group()
-    local group =
-    {
-      id = alloc_id("sky_group")
-      add_h = rand.pick({ 144, 176, 208 })
-    }
-    if rand.odds(5) then group.add_h = 288 end
+  local function new_sky_add_h()
+    if rand.odds(10) then return 320 end
+    if rand.odds(2)  then return 480 end
 
-    table.insert(LEVEL.sky_groups, group)
-    return group
-  end
-
-
-  local function spread_group(A)
-    each N in A.neighbors do
-      -- limit sky groups to same zone
-      -- [ assumes zones are strictly segregated ]
-      if N.zone != A.zone then continue end
-
-      if N.is_outdoor and not N.sky_group then
-        N.sky_group = A.sky_group
-        spread_group(N)
-      end
-    end
+    return rand.pick({ 144, 176, 208 })
   end
 
 
   ---| Room_create_sky_groups |---
 
-  -- this is area based, will handle VOID and HALLWAYs too (as sky may
-  -- potentially be used there, e.g. if VOID becomes an outdoor cage)
-
-  LEVEL.sky_groups = {}
-
-  each A in LEVEL.areas do
-    if A.is_outdoor and not A.sky_group then
-      A.sky_group = new_sky_group()
-      spread_group(A)
-    end
+  each Z in LEVEL.zones do
+    Z.sky_add_h = new_sky_add_h()
   end
 end
 
@@ -749,8 +722,6 @@ function Room_detect_porches(R)
 
   local function set_as_porch(A)
     A.is_porch = true
-
-    A.sky_group = nil
 
     -- Note : keeping 'is_outdoor' on the area
   end
@@ -2309,16 +2280,16 @@ end
 
 function Room_update_sky_groups()
   each A in LEVEL.areas do
-    if A.floor_h and A.sky_group then
-      local sky_h = A.floor_h + A.sky_group.add_h
+    if A.floor_h and A.is_outdoor then
+      local sky_h = A.floor_h + A.zone.sky_add_h
 
-      A.sky_group.h = math.max(sky_h, A.sky_group.h or 0)
+      A.zone.sky_h = math.max(A.zone.sky_h or 0, sky_h)
     end
   end
 
   each A in LEVEL.areas do
-    if A.floor_h and A.sky_group then
-      A.ceil_h = A.sky_group.h
+    if A.floor_h and A.is_outdoor then
+      A.ceil_h = A.zone.sky_h
     end
   end
 end

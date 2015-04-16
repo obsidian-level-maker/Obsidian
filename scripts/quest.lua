@@ -75,6 +75,8 @@
 
     rooms : list(ROOM)
 
+    sky_h : number   -- height of sky for this zone
+
     -- FIXME : more stuff  e.g. building_mat, cave_mat, monster palette !!!
 --]]
 
