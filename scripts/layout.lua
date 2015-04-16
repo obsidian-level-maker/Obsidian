@@ -1904,32 +1904,66 @@ function Layout_create_mountains()
   end
 
 
-  local function check_normal_do_cell(cell, cell_S, A, S)
-    -- check for zone boundary
-    if cell.area.zone != A.zone then
-      cell.solid = "zone"
-    else
-      cell.dist = 0
+  local function fatten_in_cell(cell, S, cell_side)
+    if cell.solid then return end
 
-      if A.floor_h then
-        cell.near_floor_h = math.max(cell.near_floor_h or -1024, A.floor_h)
+    local count = 0
+
+    for dir = 2,8,2 do
+      local nb_cell = S:cell_neighbor(cell_side, dir)
+      if not nb_cell then continue end
+
+      if nb_cell.solid then
+        count = count + 1
       end
+
+      if nb_cell.solid == "zone" then
+        cell.solid = "fat"
+      end
+    end
+
+    -- this prevents sharp diagonals that tend to occur
+    if count >= 2 then
+      cell.solid = "fat"
     end
   end
 
 
-  local function check_normal_seed(A, S)
-    -- check all the straight edges
-    for dir = 2,8,2 do
-      local N = S:raw_neighbor(dir) -- FIXME WRONG !!!
+  local function fatten_solids()
+    -- solidify cells that neighbor a zone-edge cell
+    -- [ without this, the zone boundary can meet at sharp points ]
 
-      if not (N and N.m_cell) then continue end
+    for pass = 1, 4 do
+      Layout_visit_all_cells(fatten_in_cell)
+    end
+  end
+
+
+  local function touches_normal_in_cell(cell, cell_S, A, S)
+    if cell.solid then return end
+
+    cell.dist = 0
+
+    if A.is_boundary then return end
+    if not A.floor_h then return end
+
+    cell.near_floor_h = math.max(cell.near_floor_h or -1024, A.floor_h)
+  end
+
+
+  local function check_touches_at_seed(A, S)
+    -- first, check all the straight edges
+    for dir = 2,8,2 do
+      local N = S:neighbor(dir)
+      if not N then continue end
+
+      N = N.bottom or N
+      if not N.m_cell then continue end
 
       local cell = N.m_cell[10 - dir]
+      if not cell then continue end
 
-      if cell then
-        check_normal_do_cell(cell, N, A, S)
-      end
+      touches_normal_in_cell(cell, N, A, S)
     end
 
     -- for diagonal seeds, may be some cells in other half
@@ -1940,16 +1974,29 @@ function Layout_create_mountains()
 
       for dir = 2,8,2 do
         local cell = PS.m_cell[dir]
+        if not cell then continue end
 
-        if cell then
-          check_normal_do_cell(cell, PS, A, S)
-        end
+        touches_normal_in_cell(cell, PS, A, S)
       end
     end
   end
 
 
-  local function flood_fill_dist_at_cell(cell, S, cell_side)
+  local function check_touches_solid(cell, S, cell_side)
+    if cell.solid then return end
+
+    for dir = 2,8,2 do
+      local nb_cell = S:cell_neighbor(cell_side, dir)
+      if not nb_cell then continue end
+
+      if nb_cell.solid then
+        cell.dist = 0
+      end
+    end
+  end
+
+
+  local function flood_fill_dist_in_cell(cell, S, cell_side)
     if not cell.dist then return end
 
     local new_dist = cell.dist + 1
@@ -1968,79 +2015,42 @@ function Layout_create_mountains()
   end
 
 
-  local function flood_fill_dist_pass()
-    changes = false
-    
-    Layout_visit_all_cells(flood_fill_dist_at_cell)
-
-    return changes
-  end
-
-
-  local function detect_near_normal()
-    -- detect the cells which touch the normal parts of the level
-    -- (these will have the lowest height).
+  local function assign_distances()
+    -- 
+    -- Give the cells which touch the normal parts of the level or a
+    -- solid cell a 'dist' value of zero.  Cells which touch these get
+    -- dist == 1, and so forth...
+    --
 
     each A in LEVEL.areas do
       if not A.is_boundary then
         each S in A.seeds do
-          check_normal_seed(A, S)
+          check_touches_at_seed(A, S)
         end
       end
     end
-    
-    -- determine a 'dist' for every cell by a flood-fill algorithm
+
+    Layout_visit_all_cells(check_touches_solid)
+
+    -- use a flood-fill algorithm to spread distances
 
     for loop = 1, 999 do
-      if not flood_fill_dist_pass() then
-        break;
-      end
+      changes = false
+      Layout_visit_all_cells(flood_fill_dist_in_cell)
+      if not changes then break; end
     end
+  end
 
-    -- any unset cells must be cut off from everything, so solidify them
+
+  local function solidify_unreachables()
+    -- any cells without a 'dist' must be cut off from everything, so solidify them
 
     Layout_visit_all_cells(
       function (cell, S, cell_side)
-        if not cell.dist then
+        if not (cell.dist or cell.solid) then
           cell.solid = "cutoff"
         end
       end)
-  end
-
-
-  local function fatten_in_cell(cell, S, cell_side)
-    if cell.solid then return end
-
-    local count = 0
-
-    for dir = 2,8,2 do
-      local nb_cell = S:cell_neighbor(cell_side, dir)
-
-      if not nb_cell then continue end
-
-      if nb_cell.solid then
-        count = count + 1
-      end
-
-      if nb_cell.solid == "zone" then
-        cell.solid = "fat"
-      end
-    end
-
-    -- this prevents other sharp diagonals
-    if count >= 2 then
-      cell.solid = "fat"
-    end
-  end
-
-
-  local function fatten_solids()
-    -- solidify cells that neighbor a zone-edge cell
-    -- [ without this, the zone boundary can meet at sharp points ]
-
-    for pass = 1, 4 do
-      Layout_visit_all_cells(fatten_in_cell)
-    end
   end
 
 
@@ -2049,10 +2059,10 @@ function Layout_create_mountains()
   create_all_cells()
 
   mark_zone_edges()
-
   fatten_solids()
 
-  detect_near_normal()
+  assign_distances()
+  solidify_unreachables()
 end
 
 
@@ -2098,7 +2108,7 @@ function Layout_build_mountains()
   end
 
 
-  local function flood_floor_at_cell(cell, S, cell_side)
+  local function flood_floor_in_cell(cell, S, cell_side)
     if cell.solid then return end
 
     -- already set?
@@ -2130,15 +2140,6 @@ function Layout_build_mountains()
   end
 
 
-  local function flood_floor_heights()
-    changes = false
-
-    Layout_visit_all_cells(flood_floor_at_cell)
-
-    return changes
-  end
-
-
   local function determine_floors()
     -- pick a height for all cells at dist==0
     -- [ the cell.area.floor_h is a maximal value ]
@@ -2154,11 +2155,10 @@ function Layout_build_mountains()
     -- build heights through cell network
 
     for loop = 1, 999 do
-      if not flood_floor_heights() then
-        break;
-      end
+      changes = false
+      Layout_visit_all_cells(flood_floor_in_cell)
+      if not changes then break; end
     end
-
   end
 
 
