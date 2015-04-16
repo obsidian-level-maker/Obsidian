@@ -2078,11 +2078,11 @@ function Layout_build_mountains()
 
     local c_brush = table.deep_copy(f_brush)
 
-    local floor_h = assert(cell.floor_h)
-    local  ceil_h = 999 -- floor_h + 150
+    local floor_h = 0 -- assert(cell.floor_h)
+    local  ceil_h = assert(cell.sky_h)
 
     local light, tag
-    
+
     table.insert(f_brush, { t=floor_h, light=light, tag=tag })
     table.insert(c_brush, { b= ceil_h })
 
@@ -2095,6 +2095,17 @@ function Layout_build_mountains()
 
     Trans.brush(f_brush)
     Trans.brush(c_brush)
+  end
+
+
+  local function determine_sky_heights()
+    Layout_visit_all_cells(
+      function (cell, S, cell_side)
+        if cell.dist then
+          local d = math.floor(cell.dist / 2)
+          cell.sky_h = cell.area.zone.sky_h + d * 64
+        end
+      end)
   end
 
 
@@ -2152,7 +2163,9 @@ function Layout_build_mountains()
   end
 
 
-  ---| Layout_create_mountains |---
+  ---| Layout_build_mountains |---
+
+  determine_sky_heights()
 
   determine_floors()
 
