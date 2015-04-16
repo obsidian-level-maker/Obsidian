@@ -1822,14 +1822,22 @@ function Layout_create_mountains()
   end
 
 
-  local function mark_map_edges(A, S)
-    -- this marks the _occasional_ edge spot
+  local function create_all_cells()
+    each A in LEVEL.areas do
+      if A.kind == "mountain" then
+        each S in A.seeds do
+          visit_seed(A, S)
+        end
+      end
+    end
+  end
 
+
+  local function mark_map_edges(A, S)  -- NOT USED ATM
     if S.bottom then S = S.bottom end
 
     for dir = 2,8,2 do
       local cell = S.m_cell[dir]
-
       if not cell then continue end
 
       if not S:raw_neighbor(dir) and rand.odds(5) then
@@ -1839,36 +1847,60 @@ function Layout_create_mountains()
   end
 
 
-  local function create_all_cells()
-    each A in LEVEL.areas do
-      if A.kind == "mountain" then
-        each S in A.seeds do
-          visit_seed(A, S)
-          mark_map_edges(A, S)
-        end
-      end
-    end
-  end
-
-
   local function mark_zone_edges_in_cell(cell, S, cell_side)
     for dir = 2,8,2 do
       local nb_cell = S:cell_neighbor(cell_side, dir)
 
-      if not nb_cell then continue end
-
-      if nb_cell.area.zone != cell.area.zone then
+      if nb_cell and nb_cell.area.zone != cell.area.zone then
         cell.solid = "zone"
       end
     end
   end
 
 
-  local function mark_zone_edges()
-    -- only handles cell <--> cell pairs
-    -- [ cell <--> non-cell cases are handled below ]
+  local function mark_zone_edges_near_seed(A, S)
+    -- first, look for a cell in neighboring seeds
+    for dir = 2,8,2 do
+      local N = S:neighbor(dir)
+      if not N then continue end
 
+      N = N.bottom or N
+      if not N.m_cell then continue end
+
+      local cell = N.m_cell[10 - dir]
+
+      if cell and cell.area.zone != A then
+        cell.solid = "zone"
+      end
+    end
+
+    -- second, look for cells in other half of a diagonal seed
+    if S.diagonal then
+      local PS = S.bottom or S
+
+      if not PS.m_cell then return end
+
+      for dir = 2,8,2 do
+        local cell = PS.m_cell[dir]
+
+        if cell and cell.area.zone != A then
+          cell.solid = "zone"
+        end
+      end
+    end
+  end
+
+
+  local function mark_zone_edges()
+    -- this handles the cell<-->cell pairs
     Layout_visit_all_cells(mark_zone_edges_in_cell)
+
+    -- now handle the cell<-->seed pairs
+    each A in LEVEL.areas do
+    each S in A.seeds do
+      mark_zone_edges_near_seed(A, S)
+    end
+    end
   end
 
 
@@ -1889,7 +1921,7 @@ function Layout_create_mountains()
   local function check_normal_seed(A, S)
     -- check all the straight edges
     for dir = 2,8,2 do
-      local N = S:raw_neighbor(dir)
+      local N = S:raw_neighbor(dir) -- FIXME WRONG !!!
 
       if not (N and N.m_cell) then continue end
 
@@ -2002,11 +2034,11 @@ function Layout_create_mountains()
   end
 
 
-  local function fatten_zone_edges()
+  local function fatten_solids()
     -- solidify cells that neighbor a zone-edge cell
     -- [ without this, the zone boundary can meet at sharp points ]
 
-    for pass = 1, 5 do
+    for pass = 1, 4 do
       Layout_visit_all_cells(fatten_in_cell)
     end
   end
@@ -2016,11 +2048,11 @@ function Layout_create_mountains()
 
   create_all_cells()
 
-  detect_near_normal()
-
   mark_zone_edges()
 
-  fatten_zone_edges()
+  fatten_solids()
+
+  detect_near_normal()
 end
 
 
