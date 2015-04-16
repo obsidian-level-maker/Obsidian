@@ -1768,10 +1768,8 @@ end
 function Layout_visit_all_cells(func)
   for sx = 1, SEED_W do
   for sy = 1, SEED_H do
-    local S  = SEEDS[sx][sy]
+    local S = SEEDS[sx][sy]
 
-    if not S.m_cell then continue end
-    
     for side = 2,8,2 do
       local cell = S.m_cell[side]
 
@@ -1779,7 +1777,7 @@ function Layout_visit_all_cells(func)
         func(cell, S, side)
       end
     end
-  end
+  end -- sx, sy
   end
 end
 
@@ -1797,10 +1795,6 @@ function Layout_create_mountains()
     {
       area = A
     }
-
-    if not S.m_cell then
-      S.m_cell = {}
-    end
 
     S.m_cell[side] = CELL
 
@@ -1865,11 +1859,10 @@ function Layout_create_mountains()
       if not N then continue end
 
       N = N.bottom or N
-      if not N.m_cell then continue end
 
       local cell = N.m_cell[10 - dir]
 
-      if cell and cell.area.zone != A then
+      if cell and cell.area.zone != A.zone then
         cell.solid = "zone"
       end
     end
@@ -1878,12 +1871,10 @@ function Layout_create_mountains()
     if S.diagonal then
       local PS = S.bottom or S
 
-      if not PS.m_cell then return end
-
       for dir = 2,8,2 do
         local cell = PS.m_cell[dir]
 
-        if cell and cell.area.zone != A then
+        if cell and cell.area.zone != A.zone then
           cell.solid = "zone"
         end
       end
@@ -1897,9 +1888,11 @@ function Layout_create_mountains()
 
     -- now handle the cell<-->seed pairs
     each A in LEVEL.areas do
-    each S in A.seeds do
-      mark_zone_edges_near_seed(A, S)
-    end
+      if A.kind != "mountain" then
+        each S in A.seeds do
+          mark_zone_edges_near_seed(A, S)
+        end
+      end
     end
   end
 
@@ -1958,7 +1951,6 @@ function Layout_create_mountains()
       if not N then continue end
 
       N = N.bottom or N
-      if not N.m_cell then continue end
 
       local cell = N.m_cell[10 - dir]
       if not cell then continue end
@@ -1969,8 +1961,6 @@ function Layout_create_mountains()
     -- for diagonal seeds, may be some cells in other half
     if S.diagonal then
       local PS = S.bottom or S
-
-      if not PS.m_cell then return end
 
       for dir = 2,8,2 do
         local cell = PS.m_cell[dir]

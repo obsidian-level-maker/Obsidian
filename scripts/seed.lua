@@ -486,6 +486,7 @@ function Seed_create(sx, sy, x1, y1)
     thick  = {}
     border = {}
     chunk  = {}
+    m_cell = {}
   }
 
   S.x2 = S.x1 + SEED_SIZE
