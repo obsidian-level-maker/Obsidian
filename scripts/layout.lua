@@ -1964,6 +1964,15 @@ function Layout_create_mountains()
         break;
       end
     end
+
+    -- any unset cells must be cut off from everything, so solidify them
+
+    Layout_visit_all_cells(
+      function (cell, S, cell_side)
+        if not cell.dist then
+          cell.solid = "cutoff"
+        end
+      end)
   end
 
 
@@ -2058,6 +2067,8 @@ function Layout_build_mountains()
 
 
   local function flood_floor_at_cell(cell, S, cell_side)
+    if cell.solid then return end
+
     -- already set?
     if cell.floor_h then return end
 
@@ -2070,18 +2081,18 @@ function Layout_build_mountains()
       if not nb_cell.floor_h then continue end
 
       -- ensure two cells which straddle a seed edge get same height
-      if S != N then
-        new_h = nb_cell.floor_h
-        break;
-      end
+---##      if S != N then
+---##        new_h = nb_cell.floor_h
+---##        break;
+---##      end
 
       if not new_h or rand.odds(50) then
-        new_h = nb_cell.floor_h + rand.irange(1,19)
+        new_h = nb_cell.floor_h
       end
     end
 
     if new_h then
-      cell.floor_h = new_h
+      cell.floor_h = new_h + rand.pick({ 0, 0, 2, 4 }) * (cell.dist)
       changes = true
     end
   end
@@ -2116,14 +2127,6 @@ function Layout_build_mountains()
       end
     end
 
-    -- any unset cells must be cut off from everything, so solidify them
-
-    Layout_visit_all_cells(
-      function (cell, S, cell_side)
-        if not cell.solid and not cell.floor_h then
-          cell.solid = true
-        end
-      end)
   end
 
 
