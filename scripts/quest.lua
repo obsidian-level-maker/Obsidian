@@ -1672,6 +1672,10 @@ function Quest_nice_items()
 
   local mixed_mul = rand.pick({ 0.3, 1.0, 4.0 })
 
+  local  start_items
+  local normal_items
+
+
   local function adjust_powerup_probs(pal, factor)
     -- apply the "Powerups" setting from the GUI
 
@@ -1777,7 +1781,7 @@ function Quest_nice_items()
   end
 
 
-  local function handle_secret_rooms()
+  local function visit_secret_rooms()
     if table.empty(LEVEL.secret_items) then
       return
     end
@@ -1807,65 +1811,103 @@ function Quest_nice_items()
   end
 
 
-  local function eval_item_room(R)
-    -- never in hallways!
-    if R.is_hallway then return -1 end
+  local function is_unused_leaf(R)
+    if R.is_hallway then return false end
+    if R.is_secret  then return false end
+    if R.is_start   then return false end
 
-    -- secrets are done elsewhere
-    if R.is_secret then return -1 end
+    if R:total_conns("ignore_secrets") >= 2 then return false end
 
-    -- starting rooms are done specially
-    if R.is_start  then return -1 end
+    if #R.goals > 0 then return false end
+    if #R.weapons > 0 then return false end
+
+    return true
+  end
 
 
--- FIXME
+  local function visit_unused_leafs()
+    -- collect all the unused storage leafs
+    -- (there is no need to shuffle them here)
+    local rooms = {}
 
-    -- too many weapons already? (very unlikely to occur)
-    if #R.weapons >= 2 then return -30 end
-
-    -- primary criterion is the room size
-    local score = R.svolume
-
-    if R.is_exit then
-      score = score / 2
+    each R in LEVEL.rooms do
+      if is_unused_leaf(R) then
+        table.insert(rooms, R)
+      end
     end
 
-    -- big bonus for leaf rooms
-    if R:total_conns("ignore_secrets") < 2 then
-      score = score + 60
+    -- add the start room too, sometimes twice
+    table.insert(rooms, 1, LEVEL.start_room)
+
+    if LEVEL.alt_start then
+      table.insert(rooms, 1, LEVEL.alt_start)
+    elseif rand.odds(25) then
+      table.insert(rooms, 1, LEVEL.start_room)
     end
 
-    -- if there is a goal or another weapon, try to avoid it
-    if #R.goals > 0 or #R.weapons > 0 then score = score / 8 end
+    -- choose items for each of these rooms
+    normal_items = normal_palette()
+     start_items =  start_palette()
 
-    return score
+    if OB_CONFIG.strength == "crazy" then
+      normal_items = crazy_palette()
+       start_items = crazy_palette()
+    end
+
+    each R in rooms do
+      local tab
+
+      if R.is_start then
+        tab = start_items
+      else
+        tab = normal_items
+      end
+
+      if table.empty(tab) then continue end
+
+      local item = rand.key_by_probs(tab)
+
+      table.insert(R.items, item)
+      mark_item_seen(item)
+
+      gui.debugf("Nice item '%s' --> %s\n", item, R:tostr())
+    end
+  end
+
+
+  local function calc_extra_quota()
+    local quota = (SEED_W + SEED_H) / rand.pick({ 10, 20, 35, 55, 80 })
+
+    if OB_CONFIG.powers == "none" then return 0 end
+    if OB_CONFIG.powers == "less" then return 0 end
+
+    if OB_CONFIG.powers == "more"  then quota = 1 + quota * 2 end
+    if OB_CONFIG.powers == "mixed" then quota = quota * rand.pick({ 0.5, 1, 2 }) end
+
+    quota = int(quota + 0.7)
+
+    gui.debugf("Extra bonus quota: %d\n", quota)
+
+    return quota
   end
 
 
   local function eval_other_room(R)
+    if R.is_hallway then return -1 end
+    if R.is_secret  then return -1 end
+    if R.is_start   then return -1 end
+
+    -- leafs are already handled
+    if R:total_conns("ignore_secrets") < 2 then return -1 end
+
     -- primary criterion is the room size.
-    -- the final score will often be < 0
+    -- [ the final score will often be negative ]
 
     local score = R.svolume
 
-    -- never in secrets or the starting room
-    if R.is_secret then return -1 end
-    if R.is_start  then return -1 end
-
     if #R.goals > 0 then score = score - 8 end
-    if R.is_storage then score = score - 30 end
 
     score = score - 16 * (#R.weapons + #R.items)
-
---!!!??    score = score - 1.4 * #R.conns
-
---[[ FIXME
-    each C in R.conns do
-      if C.kind == "teleporter" then
-        score = score - 10 ; break
-      end
-    end
---]]
 
     -- tie breaker
     return score + rand.skew() * 5.0
@@ -1889,71 +1931,7 @@ function Quest_nice_items()
   end
 
 
-  local function calc_extra_quota()
-    local quota = (SEED_W + SEED_H) / rand.pick({ 10, 20, 35, 55, 80 })
-
-    if OB_CONFIG.powers == "none" then return 0 end
-    if OB_CONFIG.powers == "less" then return 0 end
-
-    if OB_CONFIG.powers == "more"  then quota = 1 + quota * 2 end
-    if OB_CONFIG.powers == "mixed" then quota = quota * rand.pick({ 0.5, 1, 2 }) end
-
-    quota = int(quota + 0.7)
-
-    gui.debugf("Extra bonus quota: %d\n", quota)
-
-    return quota
-  end
-
-
-  local function handle_normal_rooms()
-    -- collect all unused storage leafs
-    -- (there is no need to shuffle them here)
-    local rooms = {}
-
-    each R in LEVEL.rooms do
-        if #R.weapons == 0 then
-          table.insert(rooms, R)
-        end
-    end
-
-    -- add the start room too, sometimes twice
-    table.insert(rooms, 1, LEVEL.start_room)
-
-    if LEVEL.alt_start then
-      table.insert(rooms, 1, LEVEL.alt_start)
-    elseif rand.odds(25) then
-      table.insert(rooms, 1, LEVEL.start_room)
-    end
-
-    -- choose items for each of these rooms
-    local normal_tab = normal_palette()
-    local  start_tab = start_palette()
-
-    if OB_CONFIG.strength == "crazy" then
-      normal_tab = crazy_palette()
-       start_tab = crazy_palette()
-    end
-
-    each R in rooms do
-      local tab
-
-      if R.is_start then
-        tab = start_tab
-      else
-        tab = normal_tab
-      end
-
-      if table.empty(tab) then continue end
-
-      local item = rand.key_by_probs(tab)
-
-      table.insert(R.items, item)
-      mark_item_seen(item)
-
-      gui.debugf("Nice item '%s' --> %s\n", item, R:tostr())
-    end
-
+  local function visit_other_rooms()
     -- add extra items in a few "ordinary" rooms
     local quota = calc_extra_quota()
 
@@ -1961,9 +1939,9 @@ function Quest_nice_items()
       local R = choose_best_other_room()
       if not R then break; end
 
-      if table.empty(normal_tab) then continue end
+      if table.empty(normal_items) then continue end
 
-      local item = rand.key_by_probs(normal_tab)
+      local item = rand.key_by_probs(normal_items)
 
       table.insert(R.items, item)
       mark_item_seen(item)
@@ -1977,9 +1955,9 @@ function Quest_nice_items()
 
   LEVEL.secret_items = secret_palette()
  
-  handle_secret_rooms()
-
---!!!!  handle_normal_rooms()
+  visit_secret_rooms()
+  visit_unused_leafs()
+  visit_other_rooms()
 end
 
 
