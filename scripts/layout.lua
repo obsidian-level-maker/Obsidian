@@ -1814,26 +1814,27 @@ function Layout_create_mountains()
   end
 
 
-  local function create_all_cells()
-    each A in LEVEL.areas do
-      if A.kind == "mountain" then
-        each S in A.seeds do
-          visit_seed(A, S)
-        end
-      end
-    end
-  end
-
-
-  local function mark_map_edges(A, S)  -- NOT USED ATM
+  local function mark_map_edges(A, S)
     if S.bottom then S = S.bottom end
 
     for dir = 2,8,2 do
       local cell = S.m_cell[dir]
       if not cell then continue end
 
-      if not S:raw_neighbor(dir) and rand.odds(5) then
-        cell.solid = "map"
+      if not S:raw_neighbor(dir) then
+        cell.map_edge_dir = dir
+      end
+    end
+  end
+
+
+  local function create_all_cells()
+    each A in LEVEL.areas do
+      if A.kind == "mountain" then
+        each S in A.seeds do
+          visit_seed(A, S)
+          mark_map_edges(A, S)
+        end
       end
     end
   end
@@ -2065,7 +2066,7 @@ function Layout_build_mountains()
     local  ceil_mat = "_SKY"
 
 if cell.dist and (cell.dist % 2) == 1 then
-floor_mat = "MFLR8_3"
+--floor_mat = "MFLR8_3"
 end
 
     local f_brush = S:brush_for_cell(dir)
@@ -2098,6 +2099,10 @@ end
 
     Trans.brush(f_brush)
     Trans.brush(c_brush)
+
+    if cell.map_edge_dir then
+      Render_outer_sky(S, cell.map_edge_dir, floor_h)
+    end
   end
 
 

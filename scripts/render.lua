@@ -104,7 +104,7 @@ function Render_outer_sky(S, dir, floor_h)
 
   local f_brush = brushlib.quad(x1, y1, x2, y2)
 
-  each C in brush do
+  each C in f_brush do
     C.flags = DOOM_LINE_FLAGS.draw_never
   end
 
