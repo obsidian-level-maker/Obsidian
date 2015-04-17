@@ -1789,8 +1789,8 @@ function Quest_nice_items()
     -- we need to visit them in random order
     local rooms = {}
 
-    each Q in LEVEL.quests do
-      each R in Q.secret_leafs do
+    each R in LEVEL.rooms do
+      if R.is_secret and not R.is_hallway then
         table.insert(rooms, R)
       end
     end
@@ -1803,8 +1803,45 @@ function Quest_nice_items()
       table.insert(R.items, item)
       mark_item_seen(item)
 
+      -- TODO: extra health/ammo in every secret room
+
       gui.debugf("Secret item '%s' --> %s\n", item, R:tostr())
     end
+  end
+
+
+  local function eval_item_room(R)
+    -- never in hallways!
+    if R.is_hallway then return -1 end
+
+    -- secrets are done elsewhere
+    if R.is_secret then return -1 end
+
+    -- starting rooms are done specially
+    if R.is_start  then return -1 end
+
+
+-- FIXME
+
+    -- too many weapons already? (very unlikely to occur)
+    if #R.weapons >= 2 then return -30 end
+
+    -- primary criterion is the room size
+    local score = R.svolume
+
+    if R.is_exit then
+      score = score / 2
+    end
+
+    -- big bonus for leaf rooms
+    if R:total_conns("ignore_secrets") < 2 then
+      score = score + 60
+    end
+
+    -- if there is a goal or another weapon, try to avoid it
+    if #R.goals > 0 or #R.weapons > 0 then score = score / 8 end
+
+    return score
   end
 
 
@@ -1877,12 +1914,10 @@ function Quest_nice_items()
     -- (there is no need to shuffle them here)
     local rooms = {}
 
-    each Q in LEVEL.quests do
-      each R in Q.storage_leafs do
+    each R in LEVEL.rooms do
         if #R.weapons == 0 then
           table.insert(rooms, R)
         end
-      end
     end
 
     -- add the start room too, sometimes twice
@@ -1946,9 +1981,8 @@ function Quest_nice_items()
   LEVEL.secret_items = secret_palette()
  
   handle_secret_rooms()
-  handle_normal_rooms()
 
-  -- TODO: extra health/ammo in every secret room
+--!!!!  handle_normal_rooms()
 end
 
 
@@ -2460,7 +2494,7 @@ function Quest_make_quests()
 
   Quest_add_minor_quests()
 
---!!!!  Quest_nice_items()
+  Quest_nice_items()
 
   Quest_choose_themes()
   Quest_select_textures()
