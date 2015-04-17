@@ -1222,7 +1222,7 @@ function Render_importants()
 
     local def = Fab_lookup(fab_name)
 
-    local skin1 = { item=item }
+    local skin1 = { object=item }
 
     local T = Trans.spot_transform(spot.x, spot.y, spot.z, spot.dir)
 

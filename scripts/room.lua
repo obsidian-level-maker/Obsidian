@@ -965,6 +965,8 @@ end
 function Room_distribute_spots(R, list)
   local seen = {}
 
+  -- TODO : move this into Fab_process_spots()
+
   each spot in list do
     seen[spot.kind] = 1
 
@@ -980,6 +982,8 @@ function Room_distribute_spots(R, list)
       table.insert(R.mon_spots, spot)
     end
   end
+
+  -- FIXME : do this ONCE (perhaps in item.lua) !!!
 
   -- 1. when no big item spots, convert important spots
   -- 2. when no small item spots, convert monster spots

@@ -32,6 +32,8 @@ GLOBAL_PREFAB_DEFAULTS =
 
    tex__CEIL  = "?ceil"
   flat__CEIL  = "?ceil"
+
+  thing_8166  = "?object"
 }
 
 
@@ -44,11 +46,13 @@ GLOBAL_SKIN_DEFAULTS =
   floor = "?wall"
   ceil  = "?floor"
 
+  -- Doom engine stuff
   tag = ""
-  special = ""
-  item = ""
   light = ""
+  special = ""
+  object = ""
 
+  -- Quake engine stuff
   style = ""
   message = ""
   wait = ""
@@ -95,7 +99,7 @@ WADFAB_ENTITIES =
 
   [8151] = { kind="pickup",    r=16 }
   [8152] = { kind="big_item",  r=16 }
-  [8155] = { kind="important", r=64 }
+  [8160] = { kind="important", r=64 }
 
   -- lighting
 
@@ -863,7 +867,7 @@ end
 
 
 
-function Fab_read_spots(fab)
+function Fab_process_spots(fab)
   -- prefab must be rendered (or ready to render)
 
   local function add_spot(list, B)
@@ -879,7 +883,7 @@ function Fab_read_spots(fab)
       end
     else
       -- FIXME: use original brushes (assume quads), break into squares,
-      --        apply the rotated square formula from Trans.apply_spot. 
+      --        apply the rotated square formula from Trans.apply_spot
       error("Unimplemented: cage spots on rotated prefabs")
     end
 
@@ -900,7 +904,7 @@ function Fab_read_spots(fab)
     table.insert(list, SPOT)
   end
 
-  ---| Fab_read_spots |---
+  ---| Fab_process_spots |---
 
   local list = {}
 
@@ -1993,7 +1997,7 @@ function Fabricate(room, def, T, skins)
   Fab_render_sky(fab, room, T)
 
   if room then
-    Room_distribute_spots(room, Fab_read_spots(fab))
+    Room_distribute_spots(room, Fab_process_spots(fab))
   end
 end
 

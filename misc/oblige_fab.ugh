@@ -64,6 +64,7 @@ thing 8128 n - 128 NULL "OBL: Caged 256"
 
 thing 8151 o -  16 NULL "OBL: Small Item"
 thing 8152 o -  16 NULL "OBL: Nice Item"
-thing 8155 o -  64 NULL "OBL: Goal"
-thing 8181 o -  16 NULL "OBL: Light"
+thing 8160 o -  64 NULL "OBL: Goal Spot"
+thing 8166 o -  16 NULL "OBL: Object"
+thing 8181 o -  12 NULL "OBL: Light"
 

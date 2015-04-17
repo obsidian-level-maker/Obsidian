@@ -652,8 +652,6 @@ DOOM.PREFAB_DEFAULTS =
 {
   tex_DOORTRAK = "?track"
 
-  thing_5 = "?item"
-
   -- this allow players to be remapped or removed
   -- (e.g. non-standard players can be removed if not supported)
   thing_1 = "?p1"
