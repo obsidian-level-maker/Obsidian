@@ -2065,9 +2065,9 @@ function Layout_build_mountains()
     local floor_mat = "FLAT10"
     local  ceil_mat = "_SKY"
 
-if cell.dist and (cell.dist % 2) == 1 then
---floor_mat = "MFLR8_3"
-end
+    if cell.dist and cell.dist >= 7 and cell.dist < 15 then
+      floor_mat = "MFLR8_3"
+    end
 
     local f_brush = S:brush_for_cell(dir)
 
@@ -2078,7 +2078,13 @@ end
       return
     end
 
-    local c_brush = table.deep_copy(f_brush)
+    -- mark diagonal parts of cell as invisible
+    if S.m_cell[2] and S.m_cell[4] and S.m_cell[6] and S.m_cell[8] then
+      f_brush[1].draw_never = 1
+      f_brush[3].draw_never = 1
+    end
+
+    local c_brush = brushlib.copy(f_brush)
 
     local floor_h = assert(cell.floor_h)
     local  ceil_h = assert(cell.sky_h)
