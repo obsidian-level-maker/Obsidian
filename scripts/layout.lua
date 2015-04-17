@@ -2038,6 +2038,7 @@ function Layout_create_mountains()
         if not (cell.dist or cell.solid) then
           cell.solid = "cutoff"
         end
+        assert(not (cell.dist and cell.solid))
       end)
   end
 
@@ -2057,12 +2058,15 @@ end
 
 function Layout_build_mountains()
 
-  local changes
-
+  local cur_dist
 
   local function render_cell(cell, S, dir)
     local floor_mat = "FLAT10"
     local  ceil_mat = "_SKY"
+
+if cell.dist and (cell.dist % 2) == 1 then
+floor_mat = "MFLR8_3"
+end
 
     local f_brush = S:brush_for_cell(dir)
 
@@ -2111,13 +2115,43 @@ function Layout_build_mountains()
   end
 
 
-  local function flood_height_in_cell(cell, S, cell_side)
+  local function calc_highest_dist()
+    local max_dist = 0
+
+    Layout_visit_all_cells(
+      function (cell, S, cell_side)
+        if cell.dist and cell.dist > max_dist then
+          max_dist = cell.dist
+        end
+      end)
+
+    return max_dist
+  end
+
+
+  local function floor_height_in_cell(cell, S, cell_side)
     if cell.solid then return end
+    if cell.dist != cur_dist then return end
 
-    -- already set?
-    if cell.floor_h then return end
+    assert(cell.floor_h == nil)
 
-    local new_h
+    -- dist zero sets the initial heights
+    -- (everything else will be some delta from these)
+    if cur_dist == 0 then
+
+      if cell.near_floor_h then
+        cell.floor_h = cell.near_floor_h + 40 + rand.pick({ 0, 0, 16, 24, 40 })
+      else
+        cell.floor_h = cell.sky_h - rand.pick({ 96, 160, 224, 256, 256 })
+      end
+
+      return
+    end
+
+    -- determine minimum and maximum of neighbors
+
+    local min_f =  9999
+    local max_f = -9999
 
     for dir = 2,8,2 do
       local nb_cell, N = S:cell_neighbor(cell_side, dir)
@@ -2125,21 +2159,13 @@ function Layout_build_mountains()
       if not nb_cell then continue end
       if not nb_cell.floor_h then continue end
 
-      -- ensure two cells which straddle a seed edge get same height
----##      if S != N then
----##        new_h = nb_cell.floor_h
----##        break;
----##      end
-
-      if not new_h or rand.odds(50) then
-        new_h = nb_cell.floor_h
-      end
+      min_f = math.min(min_f, nb_cell.floor_h)
+      max_f = math.max(max_f, nb_cell.floor_h)
     end
 
-    if new_h then
-      cell.floor_h = new_h + rand.pick({ 0, 0, 2, 4 }) * (cell.dist)
-      changes = true
-    end
+    -- FIXME : TEST STUFF
+
+    cell.floor_h = rand.sel(50, min_f, max_f)
   end
 
 
@@ -2147,31 +2173,10 @@ function Layout_build_mountains()
     -- pick a height for all cells at dist==0
     -- [ the cell.area.floor_h is a maximal value ]
 
-    Layout_visit_all_cells(
-      function (cell, S, cell_side)
-        if not cell.solid and cell.dist == 0 then
---          cell.floor_h = cell.near_floor_h or assert(cell.area.floor_h)
---         cell.floor_h = cell.floor_h + 48 + rand.pick({ 0, 0, 16, 24, 40 })
-        end
-      end)
+    for dist = 0, calc_highest_dist() do
+      cur_dist = dist
 
-    -- TEST CRUD
-do
-    Layout_visit_all_cells(
-      function (cell, S, cell_side)
-        if cell.dist then
-          cell.floor_h = rand.irange(cell.sky_h - 288, cell.sky_h - 80)
-        end
-      end)
-return
-end
-
-    -- build heights through cell network
-
-    for loop = 1, 999 do
-      changes = false
-      Layout_visit_all_cells(flood_height_in_cell)
-      if not changes then break; end
+      Layout_visit_all_cells(floor_height_in_cell)
     end
   end
 
@@ -2211,7 +2216,7 @@ end
   determine_sky_heights()
   determine_floor_heights()
 
-  merge_heights()
+--!!!!  merge_heights()
 
   render_all_cells()
 end
