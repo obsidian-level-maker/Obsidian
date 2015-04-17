@@ -2082,6 +2082,8 @@ end
     local floor_h = assert(cell.floor_h)
     local  ceil_h = assert(cell.sky_h)
 
+    floor_h = math.min(floor_h, ceil_h - 72)
+
     local light, tag
 
     table.insert(f_brush, { t=floor_h, light=light, tag=tag })
@@ -2163,9 +2165,39 @@ end
       max_f = math.max(max_f, nb_cell.floor_h)
     end
 
-    -- FIXME : TEST STUFF
+    assert(min_f <= max_f)
 
-    cell.floor_h = rand.sel(50, min_f, max_f)
+    -- if difference is large, choose half-way point
+    if (max_f - min_f) >= 128 then
+      cell.floor_h = math.i_mid(min_f, max_f)
+      return
+    end
+
+
+    local base_h = rand.sel(50, min_f, max_f)
+
+    if cell.dist < 2 then
+      cell.floor_h = base_h + rand.sel(75, 0, 16)
+      return
+    end
+
+    local max_delta = int((cell.sky_h - 96 - base_h) / 20)
+    local min_delta = -5
+
+    if cell.dist < 8 then
+      max_delta = int(max_delta / 2)
+      min_delta = -2
+    end
+
+    local delta
+
+    if max_delta <= min_delta then
+      delta = min_delta
+    else
+      delta = rand.irange(min_delta, max_delta)
+    end
+
+    cell.floor_h = base_h + delta * 16
   end
 
 
@@ -2191,16 +2223,25 @@ end
     if not nb_cell then return end
     if not nb_cell.floor_h then return end
 
-    local max_f   = math.max(cell.floor_h, nb_cell.floor_h)
+    local new_h
+
+    if cell.dist < 2 or rand.odds(70) then
+      new_h = math.max(cell.floor_h, nb_cell.floor_h)
+    else
+      new_h = math.min(cell.floor_h, nb_cell.floor_h)
+    end
+
     local min_sky = math.min(cell.sky_h,   nb_cell.sky_h)
 
-    max_f = math.min(max_f, min_sky - 80)
-
-       cell.floor_h = max_f
-    nb_cell.floor_h = max_f
+       cell.floor_h = new_h
+    nb_cell.floor_h = new_h
 
        cell.sky_h = min_sky
     nb_cell.sky_h = min_sky
+
+    -- this is not strict necessary, used for texturing choices
+       cell.dist = math.min(cell.dist, nb_cell.dist)
+    nb_cell.dist = cell.dist
   end
 
 
@@ -2216,7 +2257,7 @@ end
   determine_sky_heights()
   determine_floor_heights()
 
---!!!!  merge_heights()
+  merge_heights()
 
   render_all_cells()
 end
