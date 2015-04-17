@@ -1773,9 +1773,7 @@ function Layout_visit_all_cells(func)
     for side = 2,8,2 do
       local cell = S.m_cell[side]
 
-      if cell then
-        func(cell, S, side)
-      end
+      if cell then func(cell, S, side) end
     end
   end -- sx, sy
   end
@@ -2063,7 +2061,6 @@ function Layout_build_mountains()
 
 
   local function render_cell(cell, S, dir)
-
     local floor_mat = "FLAT10"
     local  ceil_mat = "_SKY"
 
@@ -2078,7 +2075,7 @@ function Layout_build_mountains()
 
     local c_brush = table.deep_copy(f_brush)
 
-    local floor_h = 0 -- assert(cell.floor_h)
+    local floor_h = assert(cell.floor_h)
     local  ceil_h = assert(cell.sky_h)
 
     local light, tag
@@ -2098,6 +2095,11 @@ function Layout_build_mountains()
   end
 
 
+  local function render_all_cells()
+    Layout_visit_all_cells(render_cell)
+  end
+
+
   local function determine_sky_heights()
     Layout_visit_all_cells(
       function (cell, S, cell_side)
@@ -2109,7 +2111,7 @@ function Layout_build_mountains()
   end
 
 
-  local function flood_floor_in_cell(cell, S, cell_side)
+  local function flood_height_in_cell(cell, S, cell_side)
     if cell.solid then return end
 
     -- already set?
@@ -2141,34 +2143,76 @@ function Layout_build_mountains()
   end
 
 
-  local function determine_floors()
+  local function determine_floor_heights()
     -- pick a height for all cells at dist==0
     -- [ the cell.area.floor_h is a maximal value ]
 
     Layout_visit_all_cells(
       function (cell, S, cell_side)
         if not cell.solid and cell.dist == 0 then
-          cell.floor_h = cell.near_floor_h or assert(cell.area.floor_h)
-          cell.floor_h = cell.floor_h + 48 + rand.pick({ 0, 0, 16, 24, 40 })
+--          cell.floor_h = cell.near_floor_h or assert(cell.area.floor_h)
+--         cell.floor_h = cell.floor_h + 48 + rand.pick({ 0, 0, 16, 24, 40 })
         end
       end)
+
+    -- TEST CRUD
+do
+    Layout_visit_all_cells(
+      function (cell, S, cell_side)
+        if cell.dist then
+          cell.floor_h = rand.irange(cell.sky_h - 288, cell.sky_h - 80)
+        end
+      end)
+return
+end
 
     -- build heights through cell network
 
     for loop = 1, 999 do
       changes = false
-      Layout_visit_all_cells(flood_floor_in_cell)
+      Layout_visit_all_cells(flood_height_in_cell)
       if not changes then break; end
     end
+  end
+
+
+  local function merge_heights_in_cell(cell, S, cell_side)
+    if cell_side > 5 then return end
+
+    if not cell.floor_h then return end
+
+    local nb_cell = S:cell_neighbor(cell_side, cell_side)
+
+    if not nb_cell then return end
+    if not nb_cell.floor_h then return end
+
+    local max_f   = math.max(cell.floor_h, nb_cell.floor_h)
+    local min_sky = math.min(cell.sky_h,   nb_cell.sky_h)
+
+    max_f = math.min(max_f, min_sky - 80)
+
+       cell.floor_h = max_f
+    nb_cell.floor_h = max_f
+
+       cell.sky_h = min_sky
+    nb_cell.sky_h = min_sky
+  end
+
+
+  local function merge_heights()
+    -- generally try to merge cells which straddle a seed edge
+
+    Layout_visit_all_cells(merge_heights_in_cell)
   end
 
 
   ---| Layout_build_mountains |---
 
   determine_sky_heights()
+  determine_floor_heights()
 
-  determine_floors()
+  merge_heights()
 
-  Layout_visit_all_cells(render_cell)
+  render_all_cells()
 end
 
