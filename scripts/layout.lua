@@ -2236,7 +2236,7 @@ end
       new_h = math.min(cell.floor_h, nb_cell.floor_h)
     end
 
-    local min_sky = math.min(cell.sky_h,   nb_cell.sky_h)
+    local min_sky = math.min(cell.sky_h, nb_cell.sky_h)
 
        cell.floor_h = new_h
     nb_cell.floor_h = new_h
@@ -2247,6 +2247,13 @@ end
     -- this is not strict necessary, used for texturing choices
        cell.dist = math.min(cell.dist, nb_cell.dist)
     nb_cell.dist = cell.dist
+
+    -- decorative entities
+    if rand.odds(20) then
+      local mx, my = S:raw_edge_coord(cell_side)
+
+      Trans.entity("brown_stub", mx, my, new_h)
+    end
   end
 
 

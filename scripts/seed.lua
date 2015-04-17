@@ -335,6 +335,21 @@ function SEED_CLASS.midstr(S)
 end
 
 
+function SEED_CLASS.raw_edge_coord(S, dir)
+  -- ignores diagonals
+  local mx = S.x1 + SEED_SIZE / 2
+  local my = S.y1 + SEED_SIZE / 2
+
+  if dir == 2 then return mx, S.y1 end
+  if dir == 8 then return mx, S.y2 end
+
+  if dir == 4 then return S.x1, my end
+  if dir == 6 then return S.x2, my end
+
+  error("bad dir to SEED:raw_edge_coord")
+end
+
+
 function SEED_CLASS.edge_coord(S, dir)
   -- assumes 'dir' is a valid direction
 
