@@ -3,26 +3,6 @@ WORK IN PROGRESS
 ================
 
 
-Mountains
----------
-
--  detect cells ADJACENT to normal geometry
-
--  detect cells ADJACENT to edge of map __or__ edge of zone
-
--  generally (80% or so) merge cells straddling a seed edge
-
-
-
-Prefab System
-+  have a number for "THE" item (in a key pedestal, etc)
-   [ _or_ use the big-item number, 8152 ]
-
-IDEA: have a single thing number for "coop player"
-      [ i.e. treat player entities more abstractly ]
-
-
-
 Closets
 -------
 
@@ -150,6 +130,10 @@ Fake fences:
 
 
 Q/ use CC-BY-3 or 4 for all prefabs / images / prebuilt maps
+
+
+IDEA: have a single thing number for "coop player"
+      [ i.e. treat player entities more abstractly ]
 
 
 -  sometimes make a floor (its side) use same material as top (not room wall)
