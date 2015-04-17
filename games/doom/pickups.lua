@@ -197,8 +197,8 @@ DOOM.NICE_ITEMS =
   {
     id = 2023
     kind = "health"  -- treat it like a big health item
-    add_prob = 3
-    secret_prob = 50
+    add_prob = 15
+    secret_prob = 40
     give = { {health=70} }
   }
 
