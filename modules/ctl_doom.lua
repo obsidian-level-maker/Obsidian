@@ -184,8 +184,6 @@ OB_MODULES["doom_weapon_control"] =
 
   options =
   {
-    berserk  = { label="Berserk",          choices=CTL_DOOM.WEAPON_CHOICES }
-    saw      = { label="Saw",              choices=CTL_DOOM.WEAPON_CHOICES }
     shotty   = { label="Shotgun",          choices=CTL_DOOM.WEAPON_CHOICES }
     super    = { label="Super Shotty",     choices=CTL_DOOM.WEAPON_CHOICES }
     chain    = { label="Chaingun",         choices=CTL_DOOM.WEAPON_CHOICES }
