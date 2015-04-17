@@ -1480,7 +1480,7 @@ function Quest_add_weapons()
     end
 
     -- big bonus for leaf rooms
-    if #R.ext_conns < 2 then
+    if R:total_conns("ignore_secrets") < 2 then
       score = score + 60
     end
 

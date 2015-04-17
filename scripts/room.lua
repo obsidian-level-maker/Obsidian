@@ -245,15 +245,19 @@ function ROOM_CLASS.collect_ext_conns(R)
 end
 
 
-function ROOM_CLASS.total_conns(R)
+function ROOM_CLASS.total_conns(R, ignore_secrets)
   local count = 0
 
   each A in R.areas do
-    each C in A.conns do
-      if C.A1.room != C.A2.room then
-        count = count + 1
-      end
+  each C in A.conns do
+    if ignore_secrets and C.kind == "secret" then
+      continue
     end
+
+    if C.A1.room != C.A2.room then
+      count = count + 1
+    end
+  end
   end
 
   return count

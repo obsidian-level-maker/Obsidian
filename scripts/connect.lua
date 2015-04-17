@@ -22,7 +22,7 @@
 
 class CONN
 {
-  kind : keyword  -- "normal", "teleporter", "secret", "closet"
+  kind : keyword  -- "normal", "teleporter", "secret"
 
   lock : LOCK
 
