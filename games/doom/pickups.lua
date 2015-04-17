@@ -131,8 +131,6 @@ DOOM.PICKUPS =
 
   -- NOTES:
   --
-  -- Berserk is handled as a WEAPON instead of a pickup.
-  --
   -- Armor (all types) is modelled as health, because it merely
   -- saves the player's health when you are hit with damage.
   -- The BLUE jacket saves 50% of damage, hence it is roughly
@@ -145,10 +143,6 @@ DOOM.PICKUPS =
 
 DOOM.NICE_ITEMS =
 {
-  --- Note: 'saw' and 'berserk' could have been here, instead of
-  --        being weapons.  But as weapons their quantity can be
-  --        controlled via the Weapon Control module.
-
   -- HEALTH / ARMOR --
 
   green_armor =
@@ -188,6 +182,24 @@ DOOM.NICE_ITEMS =
     add_prob = 40
     start_prob = 80
     secret_prob = 10
+  }
+
+  -- WEAPONS --
+
+  saw =
+  {
+    id = 2005
+    kind = "weapon"
+    secret_prob = 20
+  }
+
+  berserk =
+  {
+    id = 2023
+    kind = "health"  -- treat it like a big health item
+    add_prob = 3
+    secret_prob = 50
+    give = { {health=70} }
   }
 
   -- POWERUP --

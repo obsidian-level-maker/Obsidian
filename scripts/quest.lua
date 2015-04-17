@@ -1504,9 +1504,6 @@ function Quest_add_weapons()
       EPISODE.seen_weapons[name] = 1
     end
 
-    -- berserk only lasts a single level : treat like a new weapon
-    if name == "berserk" then is_new = true end
-
     -- evaluate each room and pick the best
     local best_R
     local best_score
