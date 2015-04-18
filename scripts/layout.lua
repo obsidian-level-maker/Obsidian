@@ -1231,6 +1231,9 @@ function Layout_liquid_stuff()
 
   ---| Layout_liquid_stuff |---
 
+-- DISABLED FOR NOW
+do return end
+
   each R in LEVEL.rooms do
     visit_room(R)
   end
