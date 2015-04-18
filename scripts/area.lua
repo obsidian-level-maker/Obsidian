@@ -233,6 +233,11 @@ function AREA_CLASS.calc_volume(A)
 end
 
 
+function AREA_CLASS.touches(A, N)
+  return table.has_elem(A.neighbors, N)
+end
+
+
 ------------------------------------------------------------------------
 
 

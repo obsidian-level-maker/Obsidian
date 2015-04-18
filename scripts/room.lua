@@ -2342,6 +2342,8 @@ function Room_build_all()
 
   Area_prune_hallways()
 
+  Layout_liquid_stuff()
+
   Room_reckon_doors()
   Room_floor_heights()
 

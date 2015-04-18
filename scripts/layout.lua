@@ -1163,6 +1163,81 @@ end
 
 
 
+function Layout_liquid_stuff()
+
+
+  local function eval_area_pair(A, R, N1, N2)
+    -- check raw usability of neighbor areas
+    for pass = 1,2 do
+      local N = sel(pass == 1, N1, N2)
+
+      if N.room == R then
+        -- TODO
+      else
+        if N.zone != A.zone then return -1 end
+
+        if not (N.mode == "void" and not N.is_closety) then return -1 end
+      end
+    end
+
+    -- the neighbors must not touch each other
+    if N1:touches(N2) then return -1 end
+
+    -- FIXME : proper evaluation
+    return 10 + gui.random()
+  end
+
+
+  local function liquify_area(N, A, R)
+    -- FIXME
+  end
+
+
+  local function try_surround_area(A, R)
+    local best
+
+    -- test each pair of neighbors
+    for i = 2, #A.neighbors do
+    for k = 1, i - 1 do
+      local N1 = A.neighbors[i]
+      local N2 = A.neighbors[k]
+
+      local score = eval_area_pair(A, R, N1, N2)
+      if score < 0 then continue end
+
+      if not best or score > best.score then
+        best = { N1=N1, N2=N2, score=score }
+      end
+    end  -- i, k
+    end
+
+    if not best then
+      return false
+    end
+
+    liquify_area(N1, R, A)
+    liquify_area(N2, R, A)
+  end
+
+
+  local function visit_room(R)
+    each A in R.areas do
+      if try_surround_area(A, R) then
+        return
+      end
+    end
+  end
+
+
+  ---| Layout_liquid_stuff |---
+
+  each R in LEVEL.rooms do
+    visit_room(R)
+  end
+end
+
+
+
 function Layout_handle_corners()
 
   local function need_fencepost(corner)
@@ -1364,6 +1439,11 @@ function Layout_outdoor_shadows()
   end
 end
 
+
+
+------------------------------------------------------------------------
+--   STAIRWELLS
+------------------------------------------------------------------------
 
 
 function Layout_build_stairwell(A)
@@ -2065,7 +2145,7 @@ function Layout_build_mountains()
     local floor_mat = "FLAT10"
     local  ceil_mat = "_SKY"
 
-    if cell.dist and cell.dist >= 7 and cell.dist < 15 then
+    if cell.dist and cell.dist >= 7 then
       floor_mat = "MFLR8_3"
     end
 
