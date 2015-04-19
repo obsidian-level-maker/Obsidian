@@ -1065,7 +1065,7 @@ function Area_create_zones()
     [5] = 250
   }
 
-  local RATES = { 90, 70, 50, 30, 10 }
+  local RATES = { 90, 70, 50, 30, 15 }
 
   local MIN_AREAS = 5
 
@@ -1150,6 +1150,61 @@ function Area_create_zones()
   end
 
 
+  local function grow_all_zones()
+    for loop = 1,9999 do
+      grow_pass()
+      grow_pass()
+      grow_pass()
+
+      if check_finished() then
+        return
+      end
+    end
+
+    error("Failed to grow zones")
+  end
+
+
+  local function merge_zones(old_Z, Z)
+    each A in LEVEL.areas do
+      if A.zone == old_Z then
+         A.zone = Z
+         Z.num_areas = Z.num_areas + 1
+      end
+    end
+
+    old_Z.id = "DEAD"
+    old_Z.name = "DEAD"
+    old_Z.num_areas = -1
+    old_Z.rooms = nil
+  end
+
+
+  local function merge_the_runts()
+    -- handle zones that end up too small
+
+    table.sort(LEVEL.zones,
+        function(Z1, Z2)
+          if Z1.num_areas != Z2.num_areas then
+            return Z1.num_areas > Z2.num_areas
+          else
+            return Z1.id < Z2.id  -- tie breaker
+          end
+        end)
+
+    -- FIXME : if first zone is undersize, merge ALL zones
+
+    for idx = #LEVEL.zones, 2, -1 do
+      local Z = LEVEL.zones[idx]
+
+      if Z.num_areas < MIN_AREAS then
+        merge_zones(Z, LEVEL.zones[idx - 1])
+        table.remove(LEVEL.zones, idx)
+      end
+    end
+  end
+
+
   ---| Area_create_zones |---
 
   rand.shuffle(RATES)
@@ -1165,17 +1220,9 @@ function Area_create_zones()
 
   assert(#zone_list > 0)
 
-  for loop = 1,9999 do
-    grow_pass()
-    grow_pass()
-    grow_pass()
+  grow_all_zones()
 
-    if check_finished() then
-      return
-    end
-  end
-
-  error("Failed to grow zones")
+  merge_the_runts()
 end
 
 
