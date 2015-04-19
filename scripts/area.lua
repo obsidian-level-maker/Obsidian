@@ -1097,7 +1097,7 @@ function Area_create_zones()
       end
     end
 
-    local quota = (count ^ 0.8) / 20
+    local quota = count / 41
 
     quota = rand.int(quota)
     quota = math.clamp(1, quota, 4)
