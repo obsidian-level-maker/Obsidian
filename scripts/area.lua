@@ -1093,10 +1093,53 @@ function Area_create_zones()
   end
 
 
-  local function add_zone()
-    -- FIXME
+  local function set_zone(A, Z)
+    A.zone = Z
 
-    -- Z.grow_rate = table.remove(RATES, 1)
+    Z.num_areas = Z.num_areas + 1
+  end
+
+
+  local function pick_initial_area(loc)
+    for loop = 1, 20 do
+      local sx, sy = Seed_from_loc(loc)
+
+      local A = SEEDS[sx][sy].area
+
+      if not A.zone and not A.is_boundary then
+        return A
+      end
+    end
+
+    -- that failed, pick a random area
+
+stderrf("Could not find free area @ loc=%d\n", loc)
+
+    for loop = 1, 999 do
+      local A = rand.pick(LEVEL.areas)
+
+      if not A.zone and not A.is_boundary then
+        return A
+      end
+    end
+
+    error("Failed to pick initial area of zone")
+  end
+
+
+  local function add_zone()
+    local Z = Zone_new()
+
+    -- pick a growth rate
+    Z.grow_rate = table.remove(RATES, 1)
+
+    -- set an initial area to the zone
+    local loc = rand.key_by_probs(LOCS)
+    LOCS[loc] = nil
+
+    local A = pick_initial_area(loc)
+
+    set_zone(A, Z)
   end
 
 
@@ -1106,13 +1149,6 @@ function Area_create_zones()
     end
 
     return true
-  end
-
-
-  local function set_zone(A, Z)
-    A.zone = Z
-
-    Z.num_areas = Z.num_areas + 1
   end
 
 
@@ -1129,6 +1165,11 @@ function Area_create_zones()
 
   local function grow_a_zone(Z)
     each A in area_list do
+      -- ignore boundaries while zone is undersized
+      if A.is_boundary and Z.num_areas < MIN_AREAS then
+        continue
+      end
+
       if not A.zone and touches_zone(A, Z) then
         set_zone(A, Z)
         return
