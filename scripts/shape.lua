@@ -1120,21 +1120,6 @@ end
   end
 
 
-  local function loc_to_seed(loc)
-    -- loc is 1 .. 9 (like number on the numeric keypad)
-
-    local dx, dy = geom.delta(loc)
-
-    dx = 0.5 + dx * 0.3
-    dy = 0.5 + dy * 0.3
-
-    local sx = rand.int(SEED_W * dx - 1.5)
-    local sy = rand.int(SEED_H * dy - 1.5)
-
-    return sx, sy
-  end
-
-
   local function add_initial_shapes()
     local initial_tab = collect_usable_shapes("initial")
 
@@ -1146,7 +1131,7 @@ end
     end
 
     each loc in rand.shuffle(LOCS) do
-      local sx, sy = loc_to_seed(loc)
+      local sx, sy = Seed_from_loc(loc)
 
       add_shape_from_list(initial_tab, sx, sy, 10)
     end
@@ -1166,7 +1151,7 @@ end
 
     each loc in rand.shuffle(LOCS) do
       if rand.odds(prob) then
-        local sx, sy = loc_to_seed(loc)
+        local sx, sy = Seed_from_loc(loc)
         add_shape_from_list(hallway_tab, sx, sy, 3, 10)
       end
     end

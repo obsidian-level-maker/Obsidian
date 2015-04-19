@@ -646,6 +646,24 @@ function Seed_from_coord(x, y)
 end
 
 
+function Seed_from_loc(loc)
+  -- loc is 1 .. 9 (like number on the numeric keypad)
+
+  local dx, dy = geom.delta(loc)
+
+  dx = 0.5 + dx * 0.3 + rand.irange(-2, 2) / 20
+  dy = 0.5 + dy * 0.3 + rand.irange(-2, 2) / 20
+
+  local sx = rand.int(SEED_W * dx - 1.5)
+  local sy = rand.int(SEED_H * dy - 1.5)
+
+  sx = math.clamp(1, sx, SEED_W)
+  sy = math.clamp(1, sy, SEED_H)
+
+  return sx, sy
+end
+
+
 function Seed_alloc_depot()
   -- returns NIL if no more are possible
 
