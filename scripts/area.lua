@@ -1110,6 +1110,7 @@ function Area_create_zones()
     A.zone = Z
 
     Z.num_areas = Z.num_areas + 1
+    z.svolume   = Z.svolume + A.svolume
   end
 
 

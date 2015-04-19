@@ -986,56 +986,23 @@ end
 
 
 
-function Quest_group_into_zones()  -- OBSOLETE, REMOVE
+function Quest_fixup_zones()
 
-  -- Note : assumes quests are in a visit order
+  each A in LEVEL.areas do
+    local zone = assert(A.zone)
 
-
-  local function assign_zone(Q, zone)
-    Q.zone = zone
-
-    table.insert(zone.quests, Q)
-
-    zone.svolume = zone.svolume + Q.svolume
-    
-    each id, A in Q.areas do
-      A.zone = zone
+    if A.room and not A.room.zone then
       A.room.zone = zone
 
       table.add_unique(zone.rooms, A.room)
     end
-  end
 
+    if A.quest and not A.quest.zone then
+      A.quest.zone = zone
 
-  local function dump_zones()
-    gui.printf("Zone list:\n")
-
-    each Z in LEVEL.zones do
-      gui.printf("  %s : quests:%d svolume:%d\n", Z.name, #Z.quests, Z.svolume)
+      table.insert(zone.quests, A.quest)
     end
   end
-
-
-  ---| Quest_group_into_zones |---
-
-  -- this is deliberately quite low, since we generally want each major
-  -- quest to become a single zone, and only merge them when a quest is
-  -- very small.
-  local rough_size = 100
-
-  local cur_zone = Zone_new()
-
-  each Q in LEVEL.quests do
-    if cur_zone.svolume >= rough_size then
-      cur_zone = Zone_new()
-    end
-
-    assign_zone(Q, cur_zone)
-  end
-
-  dump_zones()
-
-  Area_spread_zones()
 end
 
 
@@ -2474,6 +2441,8 @@ function Quest_make_quests()
   Quest_create_initial_quest()
 
   Quest_add_major_quests()
+
+  Quest_fixup_zones()
 
   Quest_start_room()
   Quest_order_by_visit()
