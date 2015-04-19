@@ -783,7 +783,9 @@ gui.debugf("Quest_scan_all_conns.....\n")
   if #LEVEL.zone_conns > 0 then
     local C = table.remove(LEVEL.zone_conns, 1)
 
-    Quest_eval_divide_at_conn(C, goal, info)
+    each goal in C.A1.quest.goals do
+      Quest_eval_divide_at_conn(C, goal, info)
+    end
 
   else
 

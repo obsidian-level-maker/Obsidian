@@ -1103,6 +1103,8 @@ function Area_create_zones()
     quota = math.clamp(1, quota, 4)
 
     gui.printf("Zone quota: %d\n", quota)
+
+    return quota
   end
 
 
@@ -1110,7 +1112,7 @@ function Area_create_zones()
     A.zone = Z
 
     Z.num_areas = Z.num_areas + 1
-    z.svolume   = Z.svolume + A.svolume
+    Z.svolume   = Z.svolume + A.svolume
   end
 
 
@@ -1395,8 +1397,9 @@ function Area_create_rooms()
 
   Area_create_zones()
 
-  Room_assign_voids()
-  Room_assign_hallways()
+-- FIXME for new zone system (ugh)
+--!!!!  Room_assign_voids()
+--!!!!  Room_assign_hallways()
 
   Area_group_into_rooms()
 

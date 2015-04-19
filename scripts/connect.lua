@@ -212,7 +212,7 @@ T.area.id, T.area.conn_group)
   end
 
   -- zone connection?
-  if A1.zone != A2.zone then
+  if S.area.zone != T.area.zone then
     table.insert(LEVEL.zone_conns, CONN)
   end
 
@@ -703,11 +703,11 @@ A.is_outdoor = false
     local first = LEVEL.rooms[1].areas[1].conn_group
 
     each R in LEVEL.rooms do
-      each A in R.areas do
-        if A.conn_group != first then
-          return false
-        end
+    each A in R.areas do
+      if A.conn_group != first then
+        return false
       end
+    end
     end
 
     return true
@@ -728,8 +728,10 @@ A.is_outdoor = false
     local R1 = A1.room
     local R2 = A2.room
 
+    if A1.conn_group == A2.conn_group then return -3 end
+
     if zone_info then
-      if (A1.zone == zone_info.Z1 and A2.zone == zone_info.Z2) and
+      if (A1.zone == zone_info.Z1 and A2.zone == zone_info.Z2) or
          (A1.zone == zone_info.Z2 and A2.zone == zone_info.Z1)
       then
         -- OK
@@ -745,8 +747,6 @@ A.is_outdoor = false
     else
       if A1.zone != A2.zone then return -2 end
     end
-
-    if A1.conn_group == A2.conn_group then return -3 end
 
     -- connection is possible, evaluate it --
 
@@ -788,6 +788,8 @@ A.is_outdoor = false
     local best_dir
     local best_score = 0
 
+stderrf("add_a_connection...\n")
+
     each R in LEVEL.rooms do
     each A in R.areas do
     each S in A.seeds do
@@ -796,6 +798,8 @@ A.is_outdoor = false
         -- [ hence in CTF maps must try the mirrored rooms too ]
         for dir = 6, 9 do
           local score = eval_normal_conn(S, dir, zone_info)
+
+do stderrf("  try %s:%d --> %d\n", S:tostr(), dir, score) end
 
           if score > best_score then
             best_S = S
@@ -934,34 +938,42 @@ A.is_outdoor = false
   end
 
 
-  local function try_connect_two_zones(Z1, Z2)
+  local function try_connect_zone_pair(Z1, Z2)
     local zone_info = { Z1=Z1, Z2=Z2 }
 
     return add_a_connection(zone_info)
   end
 
 
+  local function connect_two_zones()
+    -- previously connected zones will have same 'conn_group' of their
+    -- areas and hence won't be connected again.
+
+    local zones1 = table.copy(LEVEL.zones)
+    local zones2 = table.copy(LEVEL.zones)
+
+    rand.shuffle(zones1)
+    rand.shuffle(zones2)
+
+    each Z1 in zones1 do
+    each Z2 in zones2 do
+      if Z1 == Z2 then continue end
+
+      if try_connect_zone_pair(Z1, Z2) then
+        return true -- OK
+      end
+    end
+    end
+
+    error("Failed to connect zones")
+  end
+
+
   local function connect_zones()
     LEVEL.zone_conns = {}
 
-    local zone_list = table.copy(LEVEL.zones)
-
-    for i = 1, #zone_list - 1 do
-      rand.shuffle(zone_list)
-
-      local Z1 = table.remove(zone_list, 1)
-      local did_conn = false
-
-      each Z2 in zone_list do
-        if try_connect_two_zones(Z1, Z2) then
-          did_conn = true
-          break;
-        end
-      end
-
-      if not did_conn then
-        error("Failed to connect %s\n", Z1.name)
-      end
+    for i = 2, #LEVEL.zones do
+      connect_two_zones()
     end
   end
 
