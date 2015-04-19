@@ -61,12 +61,10 @@ QUAKE.PARAMETERS =
 
   skip_monsters = { 20,30 }
 
-  time_factor   = 1.0
-  damage_factor = 1.0
-  ammo_factor   = 1.2
-  health_factor = 1.0
-
-  monster_factor = 0.6
+  monster_factor = 0.7
+  health_factor  = 1.0
+  ammo_factor    = 1.0
+  time_factor    = 1.0
 }
 
 ------------------------------------------------------------

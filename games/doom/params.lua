@@ -26,10 +26,10 @@ DOOM.PARAMETERS =
 
   skip_monsters = { 20,30,45 }
 
-  time_factor    = 1.0
-  ammo_factor    = 1.3
-  health_factor  = 0.8
   monster_factor = 1.0
+  health_factor  = 1.0
+  ammo_factor    = 1.0
+  time_factor    = 1.0
 
   bex_map_prefix = "HUSTR_"
 
