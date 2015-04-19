@@ -147,6 +147,7 @@ function Zone_new()
     name = "ZONE_" .. id
     quests = {}
     rooms = {}
+    num_areas = 0
     svolume = 0
   }
 
@@ -960,7 +961,7 @@ end
 
 
 
-function Quest_group_into_zones()
+function Quest_group_into_zones()  -- OBSOLETE, REMOVE
 
   -- Note : assumes quests are in a visit order
 

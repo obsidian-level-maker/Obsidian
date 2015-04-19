@@ -1056,6 +1056,22 @@ end
 
 function Area_create_zones()
 
+  local LOCS =
+  {
+    [1] = 50, [3] = 50, [7] = 50, [9] = 50,
+    [2] = 50, [4] = 50, [6] = 50, [8] = 50,
+
+    -- try to often use the middle area
+    [5] = 250
+  }
+
+  local RATES = { 90, 70, 50, 30, 10 }
+
+  local MIN_AREAS = 5
+
+  local zone_list
+  local area_list
+
 
   local function calc_quota()
     -- quota is based on number of usable areas
@@ -1077,10 +1093,89 @@ function Area_create_zones()
   end
 
 
+  local function add_zone()
+    -- FIXME
+
+    -- Z.grow_rate = table.remove(RATES, 1)
+  end
+
+
+  local function check_finished()
+    each A in area_list do
+      if not A.zone then return false end
+    end
+
+    return true
+  end
+
+
+  local function set_zone(A, Z)
+    A.zone = Z
+
+    Z.num_areas = Z.num_areas + 1
+  end
+
+
+  local function touches_zone(A, Z)
+    each N in A.neighbors do
+      if N.zone == Z then
+        return true
+      end
+    end
+    
+    return false
+  end
+
+
+  local function grow_a_zone(Z)
+    each A in area_list do
+      if not A.zone and touches_zone(A, Z) then
+        set_zone(A, Z)
+        return
+      end
+    end
+  end
+
+
+  local function grow_pass()
+    rand.shuffle(zone_list)
+    rand.shuffle(area_list)
+
+    each Z in zone_list do
+      -- grow at full speed upto minimum size, then grow at slower rates
+      if Z.num_areas < MIN_AREAS or rand.odds(Z.grow_rate) then
+        grow_a_zone(Z)
+      end
+    end
+  end
+
+
   ---| Area_create_zones |---
+
+  rand.shuffle(RATES)
 
   local quota = calc_quota()
 
+  for i = 1, quota do
+    add_zone()  
+  end
+
+  area_list = table.copy(LEVEL.areas)
+  zone_list = table.copy(LEVEL.zones)
+
+  assert(#zone_list > 0)
+
+  for loop = 1,9999 do
+    grow_pass()
+    grow_pass()
+    grow_pass()
+
+    if check_finished() then
+      return
+    end
+  end
+
+  error("Failed to grow zones")
 end
 
 
@@ -1211,7 +1306,7 @@ end
 
 
 
-function Area_spread_zones()
+function Area_spread_zones()  -- OBSOLETE
   --
   -- Associates every area with a zone (including scenic and VOID areas)
   --
