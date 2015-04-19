@@ -211,6 +211,11 @@ T.area.id, T.area.conn_group)
     CONN.is_cycle = true
   end
 
+  -- zone connection?
+  if A1.zone != A2.zone then
+    table.insert(LEVEL.zone_conns, CONN)
+  end
+
   -- setup border info
 
   S.border[dir].kind = "arch"
@@ -937,16 +942,17 @@ A.is_outdoor = false
 
 
   local function connect_zones()
+    LEVEL.zone_conns = {}
+
     local zone_list = table.copy(LEVEL.zones)
-    rand.shuffle(zone_list)
 
     for i = 1, #zone_list - 1 do
-      local Z1 = zone_list[i]
+      rand.shuffle(zone_list)
+
+      local Z1 = table.remove(zone_list, 1)
       local did_conn = false
 
-      for k = i + 1, #zone_list do
-        local Z2 = zone_list[k]
-
+      each Z2 in zone_list do
         if try_connect_two_zones(Z1, Z2) then
           did_conn = true
           break;

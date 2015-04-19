@@ -1264,6 +1264,8 @@ stderrf("** Merging too-small zone %s --> %s\n", old_Z.name, Z.name)
 
   ---| Area_create_zones |---
 
+  LEVEL.zones = {}
+
   rand.shuffle(RATES)
 
   local quota = calc_quota()
@@ -1272,8 +1274,8 @@ stderrf("** Merging too-small zone %s --> %s\n", old_Z.name, Z.name)
     add_zone()  
   end
 
-  area_list = table.copy(LEVEL.areas)
   zone_list = table.copy(LEVEL.zones)
+  area_list = table.copy(LEVEL.areas)
 
   assert(#zone_list > 0)
 
