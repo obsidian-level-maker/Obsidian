@@ -825,7 +825,10 @@ function Area_group_into_rooms()
     local poss = {}
 
     each N in A.neighbors do
+      if A.zone != N.zone then continue end
+
       if not N.temp_room then continue end
+
 
       if N.temp_room == A.temp_room then continue end
 
@@ -879,10 +882,12 @@ function Area_group_into_rooms()
   
   local function try_kill_tiny_area(A)
     -- not possible when area has more than two roomy neighbors
-    -- (since this area may be a bridge between two halves of the map)
+    -- (since this area may be a bridge between two halves of the map/zone)
     local nb_rooms = {}
 
     each N in A.neighbors do
+      if N.zone != A.zone then continue end
+
       if N.temp_room then
         table.add_unique(nb_rooms, N.temp_room)
       end
@@ -973,6 +978,8 @@ function Area_group_into_rooms()
       assert(A.temp_room)
 
       each N in A.neighbors do
+        if N.zone != A.zone then continue end
+
         if (N.mode == "hallway" and not N.brother) and
           N.temp_room != A.temp_room
         then
@@ -1075,6 +1082,10 @@ function Area_create_zones()
 
   local function calc_quota()
     -- quota is based on number of usable areas
+
+    if OB_CONFIG.mode == "ctf" or OB_CONFIG.mode == "dm" then
+      return 1
+    end
 
     local count = 0
 
@@ -1207,6 +1218,9 @@ stderrf("Could not find free area @ loc=%d\n", loc)
 
 
   local function merge_zones(old_Z, Z)
+
+stderrf("** Merging too-small zone %s --> %s\n", old_Z.name, Z.name)
+
     each A in LEVEL.areas do
       if A.zone == old_Z then
          A.zone = Z
