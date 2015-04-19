@@ -433,7 +433,7 @@ function Connect_stuff()
     each dir in geom.ALL_DIRS do
       local N = S:neighbor(dir)
 
-      if N and N.room == R2 then
+      if N and N.room == R2 and N.area.zone == A.zone then
         local sharp = is_connection_sharp(S, dir)
         table.insert(list, { S=S, N=N, dir=dir, sharp=sharp })
       end
@@ -614,15 +614,17 @@ A.is_outdoor = false
     local neighbor_rooms = {}
 
     each A in R.areas do
-      each N in A.neighbors do
-        local R2 = N.room
+    each N in A.neighbors do
+      if N.zone != A.zone then continue end
 
-        if not R2 or R2 == R then continue end
+      local R2 = N.room
 
-        if A.conn_group != N.conn_group then
-          table.add_unique(neighbor_rooms, R2)
-        end
+      if not R2 or R2 == R then continue end
+
+      if A.conn_group != N.conn_group then
+        table.add_unique(neighbor_rooms, R2)
       end
+    end
     end
 
     -- evaluate each possible pair of neighbors
@@ -707,7 +709,7 @@ A.is_outdoor = false
   end
 
 
-  local function eval_normal_conn(S, dir)
+  local function eval_normal_conn(S, dir, zone_info)
     local N = S:neighbor(dir)
 
     if not (N and N.room) then return -1 end
@@ -718,12 +720,30 @@ A.is_outdoor = false
     assert(A1.conn_group)
     assert(A2.conn_group)
 
-    if A1.conn_group == A2.conn_group then return -2 end
-
-    -- connection is possible, evaluate it --
-
     local R1 = A1.room
     local R2 = A2.room
+
+    if zone_info then
+      if (A1.zone == zone_info.Z1 and A2.zone == zone_info.Z2) and
+         (A1.zone == zone_info.Z2 and A2.zone == zone_info.Z1)
+      then
+        -- OK
+      else
+        return -5
+      end
+
+      -- never connect zones via hallways
+      -- [ TODO : relax this eventually ]
+      if R1.is_hallway then return -4 end
+      if R2.is_hallway then return -4 end
+
+    else
+      if A1.zone != A2.zone then return -2 end
+    end
+
+    if A1.conn_group == A2.conn_group then return -3 end
+
+    -- connection is possible, evaluate it --
 
     local score
 
@@ -758,7 +778,7 @@ A.is_outdoor = false
   end
 
 
-  local function add_a_connection()
+  local function add_a_connection(zone_info)
     local best_S
     local best_dir
     local best_score = 0
@@ -770,7 +790,7 @@ A.is_outdoor = false
         -- only need to try half the directions
         -- [ hence in CTF maps must try the mirrored rooms too ]
         for dir = 6, 9 do
-          local score = eval_normal_conn(S, dir)
+          local score = eval_normal_conn(S, dir, zone_info)
 
           if score > best_score then
             best_S = S
@@ -786,6 +806,8 @@ A.is_outdoor = false
     -- perform the connection --
 
     if not best_S then
+      if zone_info then return false end
+
       error("Unable to find place for connection!")
     end
 
@@ -806,6 +828,7 @@ A.is_outdoor = false
     end
 
     Connect_seed_pair(best_S, N, best_dir)
+    return true
   end
 
 
@@ -906,6 +929,37 @@ A.is_outdoor = false
   end
 
 
+  local function try_connect_two_zones(Z1, Z2)
+    local zone_info = { Z1=Z1, Z2=Z2 }
+
+    return add_a_connection(zone_info)
+  end
+
+
+  local function connect_zones()
+    local zone_list = table.copy(LEVEL.zones)
+    rand.shuffle(zone_list)
+
+    for i = 1, #zone_list - 1 do
+      local Z1 = zone_list[i]
+      local did_conn = false
+
+      for k = i + 1, #zone_list do
+        local Z2 = zone_list[k]
+
+        if try_connect_two_zones(Z1, Z2) then
+          did_conn = true
+          break;
+        end
+      end
+
+      if not did_conn then
+        error("Failed to connect %s\n", Z1.name)
+      end
+    end
+  end
+
+
   ---| Connect_stuff |---
 
   -- give each area of each room a conn_group
@@ -920,6 +974,8 @@ A.is_outdoor = false
       internal_connections(R)
     end
   end
+
+  connect_zones()
 
   handle_hallways()
 
