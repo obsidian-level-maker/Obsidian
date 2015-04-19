@@ -945,10 +945,17 @@ do stderrf("  try %s:%d --> %d\n", S:tostr(), dir, score) end
   end
 
 
-  local function connect_two_zones()
-    -- previously connected zones will have same 'conn_group' of their
-    -- areas and hence won't be connected again.
+  local function are_zone_pair_connected(Z1, Z2)
+    each C in LEVEL.zone_conns do
+      if C.A1.zone == Z1 and C.A2.zone == Z2 then return true end
+      if C.A1.zone == Z2 and C.A2.zone == Z1 then return true end
+    end
 
+    return false
+  end
+
+
+  local function connect_two_zones()
     local zones1 = table.copy(LEVEL.zones)
     local zones2 = table.copy(LEVEL.zones)
 
@@ -959,7 +966,10 @@ do stderrf("  try %s:%d --> %d\n", S:tostr(), dir, score) end
     each Z2 in zones2 do
       if Z1 == Z2 then continue end
 
+      if are_zone_pair_connected(Z1, Z2) then continue end
+
       if try_connect_zone_pair(Z1, Z2) then
+stderrf("\n\n CONNECTED TWO ZONES : %s + %s\n\n", Z1.name, Z2.name)
         return true -- OK
       end
     end
