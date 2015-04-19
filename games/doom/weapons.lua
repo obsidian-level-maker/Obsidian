@@ -22,7 +22,7 @@
 -- mp_prob    : chance of being used in a Multi-Player map
 --
 -- rate   : firing rate (shots per second)
--- damage : damage can inflict per shot
+-- damage : damage can inflict per shot (includes inaccuracy)
 -- attack : kind of attack (hitscan | missile | melee)
 -- splash : splash damage done to monsters (1st, 2nd, etc)
 --
@@ -35,8 +35,7 @@
 -- Berserk and Chainsaw are in the NICE_ITEMS table.
 --
 -- Shotgun has a fairly low add_prob, since it is likely the
--- player will have encountered a shotgun zombie and already
--- have that weapon.
+-- player will soon get one from a shotgun zombie.
 --
 
 DOOM.WEAPONS =
@@ -53,7 +52,7 @@ DOOM.WEAPONS =
     pref = 5
     attack = "hitscan"
     rate = 1.8
-    damage = 10
+    damage = 8
     ammo = "bullet"
     per = 1
   }
@@ -67,7 +66,7 @@ DOOM.WEAPONS =
     start_prob = 60
     attack = "hitscan"
     rate = 0.9
-    damage = 70
+    damage = 60
     splash = { 0,10 }
     ammo = "shell"
     per = 1
@@ -84,7 +83,7 @@ DOOM.WEAPONS =
     start_prob = 15
     attack = "hitscan"
     rate = 8.5
-    damage = 10
+    damage = 8
     ammo = "bullet"
     per = 1
     give = { {ammo="bullet",count=20} }
@@ -100,7 +99,7 @@ DOOM.WEAPONS =
     start_prob = 40
     attack = "hitscan"
     rate = 0.6
-    damage = 170
+    damage = 150
     splash = { 0,30 }
     ammo = "shell"
     per = 2
@@ -116,7 +115,7 @@ DOOM.WEAPONS =
     add_prob = 25
     attack = "missile"
     rate = 1.7
-    damage = 80
+    damage = 70
     splash = { 50,20,5 }
     ammo = "rocket"
     per = 1
@@ -132,7 +131,7 @@ DOOM.WEAPONS =
     add_prob = 15
     attack = "missile"
     rate = 11
-    damage = 20
+    damage = 15
     ammo = "cell"
     per = 1
     give = { {ammo="cell",count=40} }
