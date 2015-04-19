@@ -781,6 +781,8 @@ function Area_group_into_rooms()
 
     assert(A1.temp_room != A2.temp_room)
 
+    assert(A1.zone == A2.zone)
+
     -- check size constraints
 
     local new_size = A1.temp_room.size + A2.temp_room.size
