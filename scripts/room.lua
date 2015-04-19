@@ -2276,6 +2276,14 @@ function Room_floor_heights()
   -- do hallway porches when all heights are known [ Hmmmm... ]
   each R in LEVEL.rooms do
     -- sanity check : all rooms were visited
+
+--[[
+if not R.entry_h then
+R.entry_h = -77
+each A in R.areas do A.floor_h = R.entry_h end
+end
+--]]
+
     assert(R.entry_h)
 
     if R.kind == "hallway" then

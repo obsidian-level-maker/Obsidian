@@ -817,6 +817,7 @@ do stderrf("  try %s:%d --> %d\n", S:tostr(), dir, score) end
     if not best_S then
       if zone_info then return false end
 
+---   do return "fubar" end
       error("Unable to find place for connection!")
     end
 
@@ -843,7 +844,7 @@ do stderrf("  try %s:%d --> %d\n", S:tostr(), dir, score) end
 
   local function handle_the_rest()
     while not check_all_connected() do
-      add_a_connection()
+      if add_a_connection() == "fubar" then break; end
     end
   end
 

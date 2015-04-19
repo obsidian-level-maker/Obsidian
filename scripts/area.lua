@@ -1089,13 +1089,7 @@ function Area_create_zones()
       return 1
     end
 
-    local count = 0
-
-    each A in LEVEL.areas do
-      if A.mode == "normal" then
-        count = count + 1
-      end
-    end
+    local count = #area_list
 
     local quota = count / 41
 
@@ -1132,9 +1126,9 @@ function Area_create_zones()
 stderrf("Could not find free area @ loc=%d\n", loc)
 
     for loop = 1, 999 do
-      local A = rand.pick(LEVEL.areas)
+      local A = rand.pick(area_list)
 
-      if not A.zone and not A.is_boundary then
+      if not A.zone then
         return A
       end
     end
@@ -1181,11 +1175,6 @@ stderrf("Could not find free area @ loc=%d\n", loc)
 
   local function grow_a_zone(Z)
     each A in area_list do
-      -- ignore boundaries while zone is undersized
-      if A.is_boundary and Z.num_areas < MIN_AREAS then
-        continue
-      end
-
       if not A.zone and touches_zone(A, Z) then
         set_zone(A, Z)
         return
@@ -1226,7 +1215,7 @@ stderrf("Could not find free area @ loc=%d\n", loc)
 
 stderrf("** Merging too-small zone %s --> %s\n", old_Z.name, Z.name)
 
-    each A in LEVEL.areas do
+    each A in area_list do
       if A.zone == old_Z then
          A.zone = Z
          Z.num_areas = Z.num_areas + 1
@@ -1254,6 +1243,8 @@ stderrf("** Merging too-small zone %s --> %s\n", old_Z.name, Z.name)
 
     -- FIXME : if first zone is undersize, merge ALL zones
 
+    assert(LEVEL.zones[1].num_areas >= MIN_AREAS)
+
     for idx = #LEVEL.zones, 2, -1 do
       local Z = LEVEL.zones[idx]
 
@@ -1265,11 +1256,64 @@ stderrf("** Merging too-small zone %s --> %s\n", old_Z.name, Z.name)
   end
 
 
+  local function border_pass()
+    rand.shuffle(area_list)
+
+    local changes = false
+
+    each B in area_list do
+      if B.zone then continue end
+
+      each N in B.neighbors do
+        if N.zone then
+          B.zone = N.zone
+          changes = true
+        end
+      end
+    end
+  end
+
+
+  local function process_borders()
+    -- collect the border areas
+    area_list = {}
+
+    each A in LEVEL.areas do
+      if not A.zone then
+        assert(A.is_boundary)
+
+        table.insert(area_list, A)
+      end
+    end
+
+    for loop = 1,100 do
+      border_pass()
+    end
+
+    -- handle anything else
+    each A in LEVEL.areas do
+      if not A.zone then
+stderrf("%s slipped through the cracks\n", A.name)
+        A.zone = LEVEL.zones[1]
+      end
+    end
+  end
+
+
   ---| Area_create_zones |---
 
   LEVEL.zones = {}
 
   rand.shuffle(RATES)
+
+  -- collect normal areas
+  area_list = {}
+
+  each A in LEVEL.areas do
+    if A.mode == "normal" then
+      table.insert(area_list, A)
+    end
+  end
 
   local quota = calc_quota()
 
@@ -1278,13 +1322,14 @@ stderrf("** Merging too-small zone %s --> %s\n", old_Z.name, Z.name)
   end
 
   zone_list = table.copy(LEVEL.zones)
-  area_list = table.copy(LEVEL.areas)
 
   assert(#zone_list > 0)
 
   grow_all_zones()
 
   merge_the_runts()
+
+  process_borders()
 end
 
 

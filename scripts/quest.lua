@@ -1283,6 +1283,9 @@ function Quest_order_by_visit()
 
   -- sanity check
   each R in LEVEL.rooms do
+
+-- if not R.lev_along then R.lev_along = 0.5 end
+
     if not R.lev_along then
       error("Room not visited: " .. R:tostr())
     end
