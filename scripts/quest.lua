@@ -414,7 +414,6 @@ function Quest_eval_divide_at_conn(C, goal, info)
       local R = A.room
 
       if R.is_secret then continue end
-
       if R.is_hallway then continue end
 
       -- some goals already?
@@ -765,6 +764,10 @@ end
 
 
 function Quest_scan_all_conns(mode, new_goals)
+
+
+  ---| Quest_scan_all_conns |---
+
   local info =
   {
     mode = mode
@@ -774,14 +777,26 @@ function Quest_scan_all_conns(mode, new_goals)
 
 gui.debugf("Quest_scan_all_conns.....\n")
 
-  each C in LEVEL.conns do
-    -- must be same quest on each side
-    if C.A1.quest != C.A2.quest then continue end
 
-    each goal in C.A1.quest.goals do
-      Quest_eval_divide_at_conn(C, goal, info)
+  -- handle all zone connections before anything else
+
+  if #LEVEL.zone_conns > 0 then
+    local C = table.remove(LEVEL.zone_conns, 1)
+
+    Quest_eval_divide_at_conn(C, goal, info)
+
+  else
+
+    each C in LEVEL.conns do
+      -- must be same quest on each side
+      if C.A1.quest != C.A2.quest then continue end
+
+      each goal in C.A1.quest.goals do
+        Quest_eval_divide_at_conn(C, goal, info)
+      end
     end
   end
+
 
   -- nothing possible?
   if not info.conn then
@@ -916,10 +931,13 @@ gui.debugf("key_list NOW:\n%s\n", table.tostr(key_list))
 
   ---| Quest_add_major_quests |---
 
+  rand.shuffle(LEVEL.zone_conns)
+
   local goal_list = {}
 
   collect_key_goals(goal_list)
 
+--[[
   -- compute number of splits to try -- based on # of rooms
   local want_splits = #LEVEL.rooms / 12
 
@@ -936,17 +954,24 @@ gui.debugf("key_list NOW:\n%s\n", table.tostr(key_list))
     want_splits = want_splits - 1
   end
 
+--]]
+
   -- grab the switch goals now (after the triple-key door attempt)
   collect_switch_goals(goal_list)
 
   -- now create "simple" quests -- single key or switch locks the door
 
-  for i = 1, want_splits do
+  for i = 1, 6 do
     local goal = pick_goal(goal_list)
 
     if not goal then break; end
 
     Quest_scan_all_conns("MAJOR", { goal })
+  end
+
+
+  if #LEVEL.zone_conns > 0 then
+    error("Failed to lock all zone connections")
   end
 end
 
@@ -2436,7 +2461,6 @@ function Quest_make_quests()
   Monster_prepare()
 
   LEVEL.quests = {}
-  LEVEL.zones  = {}
 
   -- special handlign for Deathmatch and Capture-The-Flag
 
@@ -2453,9 +2477,6 @@ function Quest_make_quests()
 
   Quest_start_room()
   Quest_order_by_visit()
-
-  -- this must be after quests have been ordered
-  Quest_group_into_zones()
 
 ---???  Quest_final_battle()
 
