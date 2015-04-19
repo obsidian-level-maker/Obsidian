@@ -1054,6 +1054,37 @@ end
 
 
 
+function Area_create_zones()
+
+
+  local function calc_quota()
+    -- quota is based on number of usable areas
+
+    local count = 0
+
+    each A in LEVEL.areas do
+      if A.mode == "normal" then
+        count = count + 1
+      end
+    end
+
+    local quota = (count ^ 0.8) / 20
+
+    quota = rand.int(quota)
+    quota = math.clamp(1, quota, 4)
+
+    gui.printf("Zone quota: %d\n", quota)
+  end
+
+
+  ---| Area_create_zones |---
+
+  local quota = calc_quota()
+
+end
+
+
+
 function Area_determine_map_size()
   --
   -- Determines size of map (Width x Height) in grid points, based on the
@@ -1159,6 +1190,8 @@ function Area_create_rooms()
     Corner_init()
 
   Area_find_inner_points()
+
+  Area_create_zones()
 
   Room_assign_voids()
   Room_assign_hallways()
