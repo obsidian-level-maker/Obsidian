@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008-2014 Andrew Apted
+--  Copyright (C) 2008-2015 Andrew Apted
 --  Copyright (C) 2008-2009 Jon Vail
 --  Copyright (C)      2009 Enhas
 --  Copyright (C) 2010-2011 Chris Pisarczyk
@@ -1753,6 +1753,99 @@ namelib.NAMES =
     }
   }
   -- end of 'EPISODE' theme
+
+
+  --------------------------------------------------
+
+  TITLE =
+  {
+    patterns =
+    {
+      -- <adj> <place>  e.g. dark dimension
+      ["%a %p"] = 40
+
+      -- <adj> <thing>  e.g. eternal gore
+      ["%a %t"] = 40
+
+      -- <place> of <desc>  e.g. city of souls
+      ["%p of %d"] = 30
+
+-- IDEAS:
+-- curse of X
+-- X reborn/revisited/reloaded/redux/  |  return to X  back to X
+-- <adj> <game> [II]  e.g. fantastic doom
+-- X island
+-- X forever
+-- X: genesis
+-- X: the Y-ing   (reckon,awaken,etc)
+
+      ["beyond the %p"] = 2
+    }
+
+    lexicon =
+    {
+      a =
+      {
+        Dark = 20
+        Menacing = 20
+        Cold = 20
+        Savage = 20
+        Deathly = 20
+        Strange = 10
+
+        Monstrous = 10
+        Demonic = 10
+        Infested = 10
+        Doomed = 5
+        Hateful = 5
+        Forsaken = 15
+        Evil = 10
+      }
+
+      p =
+      {
+        Citadel = 15
+        City = 15
+        Ghetto = 15
+        Towers = 15
+        Kingdom = 7
+
+        World = 10
+        Planet = 5
+        Realm = 10
+        Shores = 30
+        Land = 10
+        Fields = 15
+
+        Crypt = 5
+        Dungeons = 10
+        Underworld = 10
+        Dimension = 20
+
+        Facility = 5
+        Complex = 10
+        Domain = 10
+        House = 5
+      }
+
+      d =
+      {
+        Death = 20
+        Blood = 20
+        Hell = 10
+        Fury = 10
+        Slime = 5
+        Horror = 5
+
+        Pain = 20
+        Terror = 20
+        Fear = 20
+        Flames = 20
+        Doom = 10
+      }
+    }
+  }
+  -- end of 'TITLE' theme
 }
 
 
