@@ -47,6 +47,9 @@ static int sky_H;
 static int sky_final_W;
 
 
+#define MAX_POST_LEN	128
+
+
 #define CUR_PIXEL(py)  (pixels[((py) % H) * W])
 
 static void AddPost(qLump_c *lump, int y, int len,
@@ -103,7 +106,7 @@ qLump_c * DM_CreatePatch(int new_W, int new_H, int ofs_X, int ofs_Y,
 
 			int len = 1;
 
-			while ((y+len) < new_H && len < 240 &&
+			while ((y+len) < new_H && len < MAX_POST_LEN &&
 					! (trans_p >= 0 && CUR_PIXEL(y+len) == trans_p))
 			{
 				len++;
