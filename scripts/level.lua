@@ -679,11 +679,18 @@ end
 
 
 function Levels_episode_names()
+  -- game name
+  GAME.title = Naming_grab_one("TITLE")
+
+  gui.printf("Game title: %s\n\n", GAME.title)
+
   each EPI in GAME.episodes do
     -- only generate names for used episodes
     if table.empty(EPI.levels) then continue end
 
     EPI.description = Naming_grab_one("EPISODE")
+
+    gui.printf("Episode %d title: %s\n\n", _index, EPI.description)
   end
 end
 
