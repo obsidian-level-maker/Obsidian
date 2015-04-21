@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2013 Andrew Apted
+//  Copyright (C) 2006-2015 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -31,6 +31,8 @@
 
 #include "csg_main.h"
 #include "csg_local.h"
+
+#include "g_doom.h"		// for MLF_DontDraw
 
 
 double QUANTIZE_GRID;
@@ -2141,6 +2143,21 @@ void CSG_BSP_Free()
 
 //------------------------------------------------------------------------
 
+static bool CheckSnagNoDraw(snag_c *S)
+{
+	for (unsigned int k = 0 ; k < S->sides.size() ; k++)
+	{
+		brush_vert_c *BV = S->sides[k];
+
+		int flags = BV->face.getInt("flags");
+
+		if (flags & MLF_DontDraw)
+			return true;
+	}
+
+	return false;
+}
+
 
 static void AddMiniMapLine(region_c *R, snag_c *S)
 {
@@ -2204,6 +2221,9 @@ void CSG_MakeMiniMap(void)
 		for (unsigned int k = 0 ; k < R->snags.size() ; k++)
 		{
 			snag_c *S = R->snags[k];
+
+			if (CheckSnagNoDraw(S))
+				continue;
 
 			AddMiniMapLine(R, S);
 		}
