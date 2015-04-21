@@ -1765,7 +1765,7 @@ namelib.NAMES =
       ["%a %p"] = 40
 
       -- <adj> <thing>  e.g. eternal gore
-      ["%a %t"] = 40
+      ["%a %d"] = 40
 
       -- <place> of <desc>  e.g. city of souls
       ["%p of %d"] = 30
