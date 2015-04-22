@@ -2353,12 +2353,40 @@ function Layout_build_mountains()
   end
 
 
+  local function can_move_corner(corner)
+    each A in corner.areas do
+      if A.kind != "mountain" then return false end
+    end
+
+    return true
+  end
+
+
+  local function jiggle_corners()
+    -- move the corners of seeds by a random delta.
+    -- cannot move if at edge of map, or touches a normal part of level.
+
+    for cx = 2, LEVEL.area_corners.w - 1 do
+    for cy = 2, LEVEL.area_corners.h - 1 do
+      local corner = LEVEL.area_corners[cx][cy]
+
+      if can_move_corner(corner) then
+        corner.delta_x = rand.irange(-1, 1) * 64
+        corner.delta_y = rand.irange(-1, 1) * 64
+      end
+    end
+    end
+  end
+
+
   ---| Layout_build_mountains |---
 
   determine_sky_heights()
   determine_floor_heights()
 
   merge_heights()
+
+  jiggle_corners()
 
   render_all_cells()
 end
