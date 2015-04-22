@@ -1389,9 +1389,39 @@ int DM_title_write(lua_State *L)
 
 int DM_title_set_palette(lua_State *L)
 {
-	// LUA: title_write(pal_table)
+	// LUA: title_set_palette(pal_table)
 
-	// FIXME
+	int stack_idx = 1;
+
+	if (! lua_istable(L, stack_idx))
+		luaL_argerror(L, 1, "bad palette (not a table)");
+
+	for (int c = 0 ; c < 256 ; c++)
+	{
+		lua_pushinteger(L, 1);
+		lua_gettable(L, stack_idx);
+
+		lua_pushinteger(L, 2);
+		lua_gettable(L, stack_idx);
+
+		lua_pushinteger(L, 3);
+		lua_gettable(L, stack_idx);
+
+		if (! lua_isnumber(L, -3) ||
+			! lua_isnumber(L, -2) ||
+			! lua_isnumber(L, -1))
+		{
+			luaL_error(L, "bad palette");
+		}
+
+		int r = lua_tointeger(L, -3);
+		int g = lua_tointeger(L, -2);
+		int b = lua_tointeger(L, -1);
+
+		lua_pop(L, 3);
+
+		title_palette[c] = RGB_MAKE(r, g, b);
+	}
 
 	return 0;
 }
@@ -1422,6 +1452,33 @@ int DM_title_draw_rect(lua_State *L)
 	{
 		title_pix[y * title_W + x] = col;
 	}
+
+	return 0;
+}
+
+
+int DM_title_draw_line(lua_State *L)
+{
+	// LUA: title_draw_line(x1, y1, x2, y2, col)
+
+	int x1 = luaL_checkint(L, 1);
+	int y1 = luaL_checkint(L, 2);
+	int x2 = luaL_checkint(L, 3);
+	int y2 = luaL_checkint(L, 4);
+
+	rgb_color_t col = Grab_Color(L, 5);
+
+	// FIXME
+
+	return 0;
+}
+
+
+int DM_title_load_image(lua_State *L)
+{
+	// LUA: title_load_image(filename, x, y, [w, h])
+
+	// TODO
 
 	return 0;
 }
