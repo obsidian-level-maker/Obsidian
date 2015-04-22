@@ -980,11 +980,29 @@ stderrf("\n\n CONNECTED TWO ZONES : %s + %s\n\n", Z1.name, Z2.name)
   end
 
 
+  local function num_conns_to_zone(Z)
+    local count = 0
+
+    each C in LEVEL.zone_conns do
+      if (C.A1.zone == Z) or (C.A2.zone == Z) then
+        count = count + 1
+      end
+    end
+
+    return count
+  end
+
+
   local function connect_zones()
     LEVEL.zone_conns = {}
 
     for i = 2, #LEVEL.zones do
       connect_two_zones()
+    end
+
+    -- mark which conns are leafs
+    each Z in LEVEL.zones do
+      Z.is_leaf = (num_conns_to_zone(Z) < 2)
     end
   end
 

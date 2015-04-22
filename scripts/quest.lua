@@ -77,6 +77,8 @@
 
     sky_h : number   -- height of sky for this zone
 
+    is_leaf : bool   -- true if no more than 1 conn to another zone
+
     -- FIXME : more stuff  e.g. building_mat, cave_mat, monster palette !!!
 --]]
 
@@ -198,6 +200,10 @@ function Quest_create_initial_quest()
 
     -- must be a leaf room
     if R:total_conns() > 1 then return -1 end
+
+    -- must be a leaf zone too
+    -- (otherwise will fail to lock all the zone connections)
+    if not R.areas[1].zone.is_leaf then return -1 end
 
     -- cannot teleport into a secret exit
     -- [ WISH : support this, a secret teleporter closet somewhere ]
