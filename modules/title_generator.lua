@@ -173,8 +173,7 @@ TITLE_GEN.letter_shapes =
   ["T"] =
   {
     lines = { 311, 327,  311, 87, -1,-1,
-    lines = { 211, 87,  411, 87, -1,-1,
-
+      211, 87,  411, 87, -1,-1,
       0, 0 }
   }
 
@@ -216,6 +215,7 @@ TITLE_GEN.letter_shapes =
       0, 0 }
   }
 }
+
 
 
 function TITLE_GEN.generate_title()
