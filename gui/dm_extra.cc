@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2008-2009 Andrew Apted
+//  Copyright (C) 2008-2015 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -1205,6 +1205,169 @@ int DM_wad_read_text_lump(lua_State *L)
 	}
 
 	return 1;
+}
+
+
+//------------------------------------------------------------------------
+
+typedef unsigned int rgb_color_t;
+
+#define RGB_MAKE(r, g, b)	(((r) << 24) | ((g) << 16) | ((b) << 8))
+
+#define RGB_RED(col)	((col >> 24) & 255)
+#define RGB_GREEN(col)	((col >> 16) & 255)
+#define RGB_BLUE(col)	((col >>  8) & 255)
+
+//
+// Utility function to parse a "color" value.
+//
+// We accept two formats:
+//   - a string : "#RGB" or "#RRGGBB"   -- like in HTML or CSS
+//   - a table  : { red, green, blue }  -- values are 0..255
+//
+static rgb_color_t Grab_Color(lua_State *L, int stack_idx)
+{
+	if (lua_isstring(L, stack_idx))
+	{
+		const char *name = lua_tostring(L, stack_idx);
+
+		if (name[0] != '#')
+			luaL_error(L, "bad color string (missing #)");
+
+		int raw_hex = strtol(name + 1, NULL, 16);
+		int r, g, b;
+
+		if (strlen(name) == 4)
+		{
+			r = ((raw_hex >> 8) & 0x0f) * 17;
+			g = ((raw_hex >> 4) & 0x0f) * 17;
+			b = ((raw_hex     ) & 0x0f) * 17;
+		}
+		else if (strlen(name) == 7)
+		{
+			r = (raw_hex >> 16) & 0xff;
+			g = (raw_hex >>  8) & 0xff;
+			b = (raw_hex      ) & 0xff;
+		}
+		else
+			luaL_error(L, "bad color string");
+
+		return RGB_MAKE(r, g, b);
+	}
+
+	if (lua_istable(L, stack_idx))
+	{
+		int r, g, b;
+
+		lua_pushinteger(L, 1);
+		lua_gettable(L, stack_idx);
+
+		lua_pushinteger(L, 2);
+		lua_gettable(L, stack_idx);
+
+		lua_pushinteger(L, 3);
+		lua_gettable(L, stack_idx);
+
+		if (! lua_isnumber(L, -3) ||
+			! lua_isnumber(L, -2) ||
+			! lua_isnumber(L, -1))
+		{
+			luaL_error(L, "bad color table");
+		}
+
+		r = lua_tointeger(L, -3);
+		g = lua_tointeger(L, -2);
+		b = lua_tointeger(L, -1);
+
+		lua_pop(L, 3);
+
+		return RGB_MAKE(r, g, b);
+	}
+
+	luaL_error(L, "bad color value (not a string or table)");
+	return FL_BLACK; /* NOT REACHED */
+}
+
+
+//------------------------------------------------------------------------
+//   TITLE DRAWING
+//------------------------------------------------------------------------
+
+static int title_W;
+static int title_H;
+
+static rgb_color_t * title_pix;
+
+
+int DM_title_create(lua_State *L)
+{
+	// LUA: title_create(width, height, bg)
+
+	int W  = luaL_checkint(L, 1);
+	int H  = luaL_checkint(L, 2);
+
+	rgb_color_t bg = Grab_Color(L, 3);
+
+	if (W < 16 || W > 1024)
+		return luaL_argerror(L, 1, "bad width");
+
+	if (H < 16 || H > 256)
+		return luaL_argerror(L, 2, "bad height");
+
+	if (title_pix)
+		delete[] title_pix;
+
+	title_pix = new rgb_color_t[W * H];
+
+	return 0;
+}
+
+
+int DM_title_write(lua_State *L)
+{
+	// LUA: title_write(patch, palette)
+
+	const char *patch = luaL_checkstring(L, 1);
+
+	// FIXME
+/*
+	qLump_c *lump = DM_CreatePatch(title_W, title_H, 0, 0,
+			conv_pixels, title_W, title_H);
+
+	DM_AddSectionLump('P', patch, lump);
+*/
+
+	return 0;
+}
+
+
+int DM_title_draw_rect(lua_State *L)
+{
+	// LUA: title_draw_rect(x, y, w, h, col)
+
+	int x1 = luaL_checkint(L, 1);
+	int y1 = luaL_checkint(L, 2);
+	int x2 = x1 + luaL_checkint(L, 3);
+	int y2 = y1 + luaL_checkint(L, 4);
+
+	rgb_color_t col = Grab_Color(L, 5);
+
+	SYS_ASSERT(title_pix);
+
+	// clip box to pixel rectangle
+	x1 = MAX(x1, 0);
+	y1 = MAX(y1, 0);
+
+	x2 = MIN(x2, title_W);
+	y2 = MIN(y2, title_H);
+
+	for (int y = y1 ; y < y2 ; y++)
+	for (int x = x1 ; x < x2 ; x++)
+	{
+		title_pix[y * title_W + x] = col;
+	}
+
+	return 0;
 }
 
 //--- editor settings ---
