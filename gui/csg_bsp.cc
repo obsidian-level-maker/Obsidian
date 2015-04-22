@@ -2222,7 +2222,9 @@ void CSG_MakeMiniMap(void)
 		{
 			snag_c *S = R->snags[k];
 
-			if (CheckSnagNoDraw(S))
+			if (CheckSnagNoDraw(S) ||
+				// need to check the partner snag too
+				(S->partner && CheckSnagNoDraw(S->partner)))
 				continue;
 
 			AddMiniMapLine(R, S);
