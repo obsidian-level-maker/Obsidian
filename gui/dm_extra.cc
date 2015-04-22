@@ -1289,6 +1289,35 @@ static rgb_color_t Grab_Color(lua_State *L, int stack_idx)
 }
 
 
+static byte PaletteLookup(rgb_color_t col, const rgb_color_t *palette)
+{
+	int r = RGB_RED(col);
+	int g = RGB_GREEN(col);
+	int b = RGB_BLUE(col);
+
+	int best = 0;
+	int best_dist = (1 << 30);
+
+	// ignore the very last color
+	for (int c = 0 ; c < 255 ; c++)
+	{
+		int dr = r - RGB_RED(palette[c]);
+		int dg = g - RGB_GREEN(palette[c]);
+		int db = b - RGB_BLUE(palette[c]);
+
+		int dist = dr*dr + dg*dg + db*db;
+
+		if (dist < best_dist)
+		{
+			best = c;
+			best_dist = dist;
+		}
+	}
+
+	return best;
+}
+
+
 //------------------------------------------------------------------------
 //   TITLE DRAWING
 //------------------------------------------------------------------------
@@ -1298,13 +1327,15 @@ static int title_H;
 
 static rgb_color_t * title_pix;
 
+static rgb_color_t title_palette[256];
+
 
 int DM_title_create(lua_State *L)
 {
 	// LUA: title_create(width, height, bg)
 
-	int W  = luaL_checkint(L, 1);
-	int H  = luaL_checkint(L, 2);
+	int W = luaL_checkint(L, 1);
+	int H = luaL_checkint(L, 2);
 
 	rgb_color_t bg = Grab_Color(L, 3);
 
@@ -1319,23 +1350,48 @@ int DM_title_create(lua_State *L)
 
 	title_pix = new rgb_color_t[W * H];
 
+	for (int i = 0 ; i < W*H ; i++)
+	{
+		title_pix[i] = bg;
+	}
+
 	return 0;
 }
 
 
 int DM_title_write(lua_State *L)
 {
-	// LUA: title_write(patch, palette)
+	// LUA: title_write(lumpname)
 
-	const char *patch = luaL_checkstring(L, 1);
+	const char *lumpname = luaL_checkstring(L, 1);
+
+	SYS_ASSERT(title_pix);
+
+	// convert image to the palette  [ this is very slow! ]
+
+	byte *conv_pixels = new byte[title_W * title_H];
+
+	for (int i = 0 ; i < title_W * title_H ; i++)
+	{
+		conv_pixels[i] = PaletteLookup(title_pix[i], title_palette);
+	}
+
+	qLump_c *lump = DM_CreatePatch(title_W, title_H, 0, 0, conv_pixels, title_W, title_H);
+
+	DM_WriteLump(lumpname, lump);
+
+	delete lump;
+	delete conv_pixels;
+
+	return 0;
+}
+
+
+int DM_title_set_palette(lua_State *L)
+{
+	// LUA: title_write(pal_table)
 
 	// FIXME
-/*
-	qLump_c *lump = DM_CreatePatch(title_W, title_H, 0, 0,
-			conv_pixels, title_W, title_H);
-
-	DM_AddSectionLump('P', patch, lump);
-*/
 
 	return 0;
 }
