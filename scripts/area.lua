@@ -422,10 +422,14 @@ end
 
 
 
-function Area_largest_area()
+function Area_largest_area(zone)
+  -- Note : zone can be omitted to give largest area of map 
+
   local best
 
   each A in LEVEL.areas do
+    if zone and A.zone != zone then continue end
+
     if A.mode == "normal" then
       if not best or (A.svolume > best.svolume) then
         best = A
@@ -1005,7 +1009,7 @@ function Area_group_into_rooms()
   end
 
 
-  local function create_rooms()
+  local function make_the_rooms()
     -- all "roomish" areas should now have a 'temp_room' table
 
     each A in LEVEL.areas do
@@ -1054,7 +1058,7 @@ function Area_group_into_rooms()
 
   merge_touching_hallways()
 
-  create_rooms()
+  make_the_rooms()
 
   each R in LEVEL.rooms do
     collect_seeds(R)
@@ -1417,7 +1421,7 @@ end
 
 function Area_create_rooms()
 
-  gui.printf("\n--==| Planning Rooms |==--\n\n")
+  gui.printf("\n--==| Creating Rooms |==--\n\n")
 
   local W, H = Area_determine_map_size()
 
@@ -1443,6 +1447,7 @@ function Area_create_rooms()
   Area_create_zones()
 
 -- FIXME for new zone system (ugh)
+
 --!!!!  Room_assign_voids()
 --!!!!  Room_assign_hallways()
 
