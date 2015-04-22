@@ -778,35 +778,49 @@ function Quest_scan_all_conns(mode, new_goals)
 gui.debugf("Quest_scan_all_conns.....\n")
 
 
+  local conn_list = LEVEL.conns
+  local is_zoney  = false
+
   -- handle all zone connections before anything else
 
   if #LEVEL.zone_conns > 0 then
-    local C = table.remove(LEVEL.zone_conns, 1)
+    conn_list = LEVEL.zone_conns
+    is_zoney  = true
+gui.debugf("  is_zoney!")
+  end
 
-    assert(C.A1.quest == C.A2.quest)
+
+  each C in conn_list do
+    -- must be same quest on each side
+    if C.A1.quest != C.A2.quest then continue end
 
     each goal in C.A1.quest.goals do
       Quest_eval_divide_at_conn(C, goal, info)
-    end
-
-  else
-
-    each C in LEVEL.conns do
-      -- must be same quest on each side
-      if C.A1.quest != C.A2.quest then continue end
-
-      each goal in C.A1.quest.goals do
-        Quest_eval_divide_at_conn(C, goal, info)
-      end
     end
   end
 
 
   -- nothing possible?
   if not info.conn then
+
+    -- if doing zones, then we failed to lock between two zones.
+    -- we can live with that though, but try no more zone conns.
+    if is_zoney then
+      LEVEL.zone_conns = {}
+    end
+
 gui.debugf("---> NOTHING POSSIBLE\n")
     return false
   end
+
+
+  -- for zone connections, must remove it from the global list
+  if is_zoney then
+    if not table.kill_elem(LEVEL.zone_conns, info.conn) then
+      error("WTF: chosen conn not in zone_conns")
+    end
+  end
+
 
   gui.printf("Dividing %s @ %s (%s -- %s)\n", info.quest.name,
              info.conn:tostr(), info.conn.A1.room:tostr(), info.conn.A2.room:tostr())
@@ -971,11 +985,6 @@ gui.debugf("key_list NOW:\n%s\n", table.tostr(key_list))
     if not goal then break; end
 
     Quest_scan_all_conns("MAJOR", { goal })
-  end
-
-
-  if #LEVEL.zone_conns > 0 then
-    error("Failed to lock all zone connections")
   end
 end
 
