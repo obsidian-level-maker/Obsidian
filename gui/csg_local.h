@@ -75,6 +75,9 @@ public:
 	// on both sides.  CSG_SortBrushes() must have been called already.
 	bool SameSides() const;
 
+	// also for minimap
+	bool IsTwoSided() const;
+
 	void TransferSides(snag_c *other);
 
 	void RemoveSide(int index);

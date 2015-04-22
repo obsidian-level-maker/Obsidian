@@ -258,6 +258,14 @@ brush_vert_c * snag_c::FindBrushVert(const csg_brush_c *B)
 }
 
 
+bool snag_c::IsTwoSided() const
+{
+	region_c *N = partner ? partner->region : NULL;
+
+	return (N && N->gaps.size() > 0);
+}
+
+
 //------------------------------------------------------------------------
 
 region_c::region_c() :
@@ -2143,7 +2151,7 @@ void CSG_BSP_Free()
 
 //------------------------------------------------------------------------
 
-static bool CheckSnagNoDraw(snag_c *S)
+static bool MiniMap_CheckNoDraw(snag_c *S)
 {
 	for (unsigned int k = 0 ; k < S->sides.size() ; k++)
 	{
@@ -2159,7 +2167,7 @@ static bool CheckSnagNoDraw(snag_c *S)
 }
 
 
-static void AddMiniMapLine(region_c *R, snag_c *S)
+static void MiniMap_AddLine(region_c *R, snag_c *S, bool two_sided)
 {
 	int map_W = main_win->build_box->mini_map->GetWidth();
 	int map_H = main_win->build_box->mini_map->GetHeight();
@@ -2178,7 +2186,7 @@ static void AddMiniMapLine(region_c *R, snag_c *S)
 
 	region_c *N = S->partner ? S->partner->region : NULL;
 
-	if (N && N->gaps.size() > 0)  // two sided?
+	if (two_sided)
 	{
 		// only draw partnered snags ONCE
 		if (S->partner && S->partner < S)
@@ -2193,12 +2201,42 @@ static void AddMiniMapLine(region_c *R, snag_c *S)
 		if (fabs(f1 - f2) < 0.1 && fabs(c1 - c2) < 0.1)
 			return;
 
-		r = 96;
-		g = 160;
-		b = 224;
+		if (MIN(c1, c2) - MAX(f1, f2) >= 56)
+		{
+			r = 96;
+			g = 160;
+			b = 224;
+		}
 	}
 
 	main_win->build_box->mini_map->DrawLine(x1,y1, x2,y2, r,g,b);
+}
+
+
+static void MiniMap_VisitAll(bool two_sided)
+{
+	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+	{
+		region_c *R = all_regions[i];
+
+		if (R->gaps.empty())
+			continue;
+
+		for (unsigned int k = 0 ; k < R->snags.size() ; k++)
+		{
+			snag_c *S = R->snags[k];
+
+			if (two_sided != S->IsTwoSided())
+				continue;
+
+			if (MiniMap_CheckNoDraw(S) ||
+				// need to check the partner snag too
+				(S->partner && MiniMap_CheckNoDraw(S->partner)))
+				continue;
+
+			MiniMap_AddLine(R, S, two_sided);
+		}
+	}
 }
 
 
@@ -2211,25 +2249,9 @@ void CSG_MakeMiniMap(void)
 
 	main_win->build_box->mini_map->MapBegin();
 
-	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
-	{
-		region_c *R = all_regions[i];
-
-		if (R->gaps.empty())
-			continue;
-
-		for (unsigned int k = 0 ; k < R->snags.size() ; k++)
-		{
-			snag_c *S = R->snags[k];
-
-			if (CheckSnagNoDraw(S) ||
-				// need to check the partner snag too
-				(S->partner && CheckSnagNoDraw(S->partner)))
-				continue;
-
-			AddMiniMapLine(R, S);
-		}
-	}
+	// draw all two-sided lines before all the one-sided ones
+	MiniMap_VisitAll(true);
+	MiniMap_VisitAll(false);
 
 	main_win->build_box->mini_map->MapFinish();
 }
