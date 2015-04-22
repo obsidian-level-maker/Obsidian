@@ -788,7 +788,7 @@ A.is_outdoor = false
     local best_dir
     local best_score = 0
 
-stderrf("add_a_connection...\n")
+-- stderrf("add_a_connection...\n")
 
     each R in LEVEL.rooms do
     each A in R.areas do
@@ -799,7 +799,7 @@ stderrf("add_a_connection...\n")
         for dir = 6, 9 do
           local score = eval_normal_conn(S, dir, zone_info)
 
-do stderrf("  try %s:%d --> %d\n", S:tostr(), dir, score) end
+-- do stderrf("  try %s:%d --> %d\n", S:tostr(), dir, score) end
 
           if score > best_score then
             best_S = S
