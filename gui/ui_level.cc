@@ -105,6 +105,8 @@ UI_Level::UI_Level(int X, int Y, int W, int H, const char *label) :
 	caves->selection_color(MY_GREEN);
 	caves->callback(callback_Caves, this);
 
+caves->hide();
+
 	setup_Caves();
 
 	add(caves);
