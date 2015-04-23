@@ -1427,18 +1427,14 @@ int DM_title_set_palette(lua_State *L)
 }
 
 
-int DM_title_draw_rect(lua_State *L)
+static void TitleDrawBox(int x, int y, int w, int h, rgb_color_t col)
 {
-	// LUA: title_draw_rect(x, y, w, h, col)
+	int x1 = x;
+	int y1 = y;
+	int x2 = x + w;
+	int y2 = y + h;
 
-	int x1 = luaL_checkint(L, 1);
-	int y1 = luaL_checkint(L, 2);
-	int x2 = x1 + luaL_checkint(L, 3);
-	int y2 = y1 + luaL_checkint(L, 4);
-
-	rgb_color_t col = Grab_Color(L, 5);
-
-	SYS_ASSERT(title_pix);
+	// TODO : if w == -2. draw a diagonal line instead
 
 	// clip box to pixel rectangle
 	x1 = MAX(x1, 0);
@@ -1447,19 +1443,224 @@ int DM_title_draw_rect(lua_State *L)
 	x2 = MIN(x2, title_W);
 	y2 = MIN(y2, title_H);
 
+	if (x1 > x2 || y1 > y2)
+		return;
+
 	for (int y = y1 ; y < y2 ; y++)
 	for (int x = x1 ; x < x2 ; x++)
 	{
 		title_pix[y * title_W + x] = col;
 	}
+}
 
+
+enum title_outcodes_e
+{
+	O_TOP    = 1,
+	O_BOTTOM = 2,
+	O_LEFT   = 4,
+	O_RIGHT  = 8,
+};
+
+static int CalcOutcode(int x, int y)
+{
+	return
+		((y < 0)        ? O_BOTTOM : 0) |
+		((y >= title_H) ? O_TOP    : 0) |
+		((x < 0)        ? O_LEFT   : 0) |
+		((x >= title_W) ? O_RIGHT  : 0);
+}
+
+
+static void TitleDrawLine(int x1, int y1, int x2, int y2, rgb_color_t col, int box_w, int box_h)
+{
+	x1 -= box_w / 2;  y1 -= box_h / 2;
+	x2 -= box_w / 2;  y2 -= box_h / 2;
+
+	int out1 = CalcOutcode(x1, y1);
+	int out2 = CalcOutcode(x2, y2);
+
+	if (out1 & out2)
+		return;
+
+	// handle simple (but common) cases of horiz/vert lines
+
+	if (y1 == y2)
+	{
+		if (x1 > x2)
+		{
+			int tmp = x1; x1 = x2; x2 = tmp;
+		}
+
+		x1 = MAX(0, x1);
+		x2 = MIN(title_W-1, x2);
+
+		for (; x1 <= x2; x1++)
+			TitleDrawBox(x1, y1, box_w, box_h, col);
+
+		return;
+	}
+
+	if (x1 == x2)
+	{
+		if (y1 > y2)
+		{
+			int tmp = y1; y1 = y2; y2 = tmp;
+		}
+
+		y1 = MAX(0, y1);
+		y2 = MIN(title_H-1, y2);
+
+		for (; y1 <= y2; y1++)
+			TitleDrawBox(x1, y1, box_w, box_h, col);
+
+		return;
+	}
+
+
+	// clip diagonal line to the map
+	// (this is the Cohen-Sutherland clipping algorithm)
+
+	while (out1 | out2)
+	{
+		// may be partially inside box, find an outside point
+		int outside = (out1 ? out1 : out2);
+
+		int dx = x2 - x1;
+		int dy = y2 - y1;
+
+		// this almost certainly cannot happen, but for the sake of
+		// robustness we check anyway (just in case)
+		if (dx == 0 && dy == 0)
+			return;
+
+		int new_x, new_y;
+
+		// clip to each side
+		if (outside & O_BOTTOM)
+		{
+			new_y = 0;
+			new_x = x1 + dx * (new_y - y1) / dy;
+		}
+		else if (outside & O_TOP)
+		{
+			new_y = title_H-1;
+			new_x = x1 + dx * (new_y - y1) / dy;
+		}
+		else if (outside & O_LEFT)
+		{
+			new_x = 0;
+			new_y = y1 + dy * (new_x - x1) / dx;
+		}
+		else
+		{
+			SYS_ASSERT(outside & O_RIGHT);
+
+			new_x = title_W-1;
+			new_y = y1 + dy * (new_x - x1) / dx;
+		}
+
+		if (out1)
+		{
+			x1 = new_x;
+			y1 = new_y;
+
+			out1 = CalcOutcode(x1, y1);
+		}
+		else
+		{
+			SYS_ASSERT(out2);
+
+			x2 = new_x;
+			y2 = new_y;
+
+			out2 = CalcOutcode(x2, y2);
+		}
+
+		if (out1 & out2)
+			return;
+	}
+
+
+	// this is the Bresenham line drawing algorithm
+	// (based on code from am_map.c in the GPL DOOM source)
+
+	int dx = x2 - x1;
+	int dy = y2 - y1;
+
+	int ax = 2 * (dx < 0 ? -dx : dx);
+	int ay = 2 * (dy < 0 ? -dy : dy);
+
+	int sx = dx < 0 ? -1 : 1;
+	int sy = dy < 0 ? -1 : 1;
+
+	int x = x1;
+	int y = y1;
+
+	if (ax > ay)  // horizontal stepping
+	{
+		int d = ay - ax/2;
+
+		TitleDrawBox(x, y, box_w, box_h, col);
+
+		while (x != x2)
+		{
+			if (d>=0)
+			{
+				y += sy;
+				d -= ax;
+			}
+
+			x += sx;
+			d += ay;
+
+			TitleDrawBox(x, y, box_w, box_h, col);
+		}
+	}
+	else   // vertical stepping
+	{
+		int d = ax - ay/2;
+
+		TitleDrawBox(x, y, box_w, box_h, col);
+
+		while (y != y2)
+		{
+			if (d >= 0)
+			{
+				x += sx;
+				d -= ay;
+			}
+
+			y += sy;
+			d += ax;
+
+			TitleDrawBox(x, y, box_w, box_h, col);
+		}
+	}
+}
+
+
+int DM_title_draw_rect(lua_State *L)
+{
+	// LUA: title_draw_rect(x, y, w, h, col)
+
+	int x = luaL_checkint(L, 1);
+	int y = luaL_checkint(L, 2);
+	int w = luaL_checkint(L, 3);
+	int h = luaL_checkint(L, 4);
+
+	rgb_color_t col = Grab_Color(L, 5);
+
+	SYS_ASSERT(title_pix);
+
+	TitleDrawBox(x, y, w, h, col);
 	return 0;
 }
 
 
 int DM_title_draw_line(lua_State *L)
 {
-	// LUA: title_draw_line(x1, y1, x2, y2, col)
+	// LUA: title_draw_line(x1, y1, x2, y2, col, box_w, box_h)
 
 	int x1 = luaL_checkint(L, 1);
 	int y1 = luaL_checkint(L, 2);
@@ -1468,8 +1669,10 @@ int DM_title_draw_line(lua_State *L)
 
 	rgb_color_t col = Grab_Color(L, 5);
 
-	// FIXME
+	int box_w = luaL_optint(L, 6, 1);
+	int box_h = luaL_optint(L, 7, 1);
 
+	TitleDrawLine(x1, y1, x2, y2, col, box_w, box_h);
 	return 0;
 }
 
