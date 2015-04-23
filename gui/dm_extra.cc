@@ -1398,13 +1398,13 @@ int DM_title_set_palette(lua_State *L)
 
 	for (int c = 0 ; c < 256 ; c++)
 	{
-		lua_pushinteger(L, 1);
+		lua_pushinteger(L, c*3 + 1);
 		lua_gettable(L, stack_idx);
 
-		lua_pushinteger(L, 2);
+		lua_pushinteger(L, c*3 + 2);
 		lua_gettable(L, stack_idx);
 
-		lua_pushinteger(L, 3);
+		lua_pushinteger(L, c*3 + 3);
 		lua_gettable(L, stack_idx);
 
 		if (! lua_isnumber(L, -3) ||
