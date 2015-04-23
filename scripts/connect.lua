@@ -394,11 +394,28 @@ function Connect_zones_prelim()
   -- (in the Connect_stuff function).
   --
 
-  local function eval_zone_pair(A1, A2)
+  local function eval_zone_pair(junc)
     -- 1. want the longest perimeter
     -- 2. want to avoid areas already used from zone conns
 
-    -- FIXME
+    local A1 = junc.A1
+    local A2 = junc.A2
+
+    if A1.is_boundary then return -1 end
+    if A2.is_boundary then return -1 end
+
+    local score = 2000
+
+    if A1.has_zone_conn and A2.has_zone_conn then
+      score = 1000
+    elseif A1.has_zone_conn or A2.has_zone_conn then
+      score = 10
+    end
+
+    score = score + junc.perimeter * 10
+
+    -- tie breaker
+    return score + gui.random()
   end
 
 
@@ -409,6 +426,27 @@ function Connect_zones_prelim()
     end
 
     return false
+  end
+
+
+  local function make_the_fake_conn(junc)
+    local FAKE_CONN =
+    {
+      kind = "fake"
+
+      A1 = junc.A1
+      A2 = junc.A2
+    }
+
+--!!!!    table.insert(LEVEL.zone_conns, FAKE_CONN)
+
+    junc.A1.has_zone_conn = true
+    junc.A2.has_zone_conn = true
+
+    local Z1 = junc.A1.zone
+    local Z2 = junc.A2.zone
+
+stderrf("\n\n PRELIM CONNECT : %s %s <--> %s %s\n\n", Z1.name, junc.A1.name, junc.A2.name, Z2.name)
   end
 
 
@@ -426,7 +464,7 @@ function Connect_zones_prelim()
 
       if are_zone_pair_connected(Z1, Z2) then continue end
 
-      local score = eval_zone_pair(A1, A2)
+      local score = eval_zone_pair(junc)
 
       if score > best_score then
         best = junc
@@ -438,7 +476,7 @@ function Connect_zones_prelim()
       error("Failed to connect zones")
     end
 
-    -- FIXME
+    make_the_fake_conn(best)
   end
 
 
@@ -1055,7 +1093,6 @@ A.is_outdoor = false
       if are_zone_pair_connected(Z1, Z2) then continue end
 
       if try_connect_zone_pair(Z1, Z2) then
-stderrf("\n\n CONNECTED TWO ZONES : %s + %s\n\n", Z1.name, Z2.name)
         return true -- OK
       end
     end

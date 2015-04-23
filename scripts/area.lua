@@ -1462,6 +1462,9 @@ function Area_create_rooms()
 
   Area_create_zones()
 
+  -- it is essential to pick areas where zones connect
+  Connect_zones_prelim()
+
 -- FIXME for new zone system (ugh)
 
 --!!!!  Room_assign_voids()
