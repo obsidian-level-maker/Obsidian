@@ -107,8 +107,8 @@ TITLE_GEN.letter_shapes =
 
   ["J"] =
   {
-    lines = { 270, 87,   350, 87, -1,-1,
-      312, 87,   312, 325,  304, 367,  290, 384,  369, 391,  243, 391,  270, 87,   350, 87, -1,-1,
+    lines = { 270, 87,  350, 87, -1,-1,
+      312, 87,   312, 261,  304, 303,  290, 320,  269, 327,  243, 327, -1,-1,
       0, 0 }
   }
 
@@ -191,7 +191,7 @@ TITLE_GEN.letter_shapes =
 
   ["W"] =
   {
-    lines = { 170, 87,  231, 327,  241, 327,  303, 87, 311, 87,  369, 327, 379, 327,  441, 87, -1,-1,
+    lines = { 170, 87,  231, 327,  241, 327,  303, 187, 311, 187,  369, 327, 379, 327,  441, 87, -1,-1,
       0, 0 }
   }
 
@@ -218,6 +218,30 @@ TITLE_GEN.letter_shapes =
 
 
 
+function TITLE_GEN.draw_char(ch, ofs_x, col)
+  local info = TITLE_GEN.letter_shapes[ch]
+
+  if not info then return end
+
+  for i = 0, #info.lines - 1, 2 do
+    local x1 = info.lines[i + 1]
+    local y1 = info.lines[i + 2]
+    local x2 = info.lines[i + 3]
+    local y2 = info.lines[i + 4]
+
+    if not x1 or not x2 then break; end
+
+stderrf("LINE : (%d %d) .. (%d %d)\n", x1,y1, x2,y2)
+
+    if x1 < 1 or x2 < 1 then continue end
+
+local div = 20
+    gui.title_draw_line(x1/div + ofs_x, y1/div, x2/div + ofs_x, y2/div, col, 1, 2)
+  end
+end
+
+
+
 function TITLE_GEN.generate_title()
   assert(GAME.title)
   assert(GAME.PALETTES)
@@ -233,6 +257,23 @@ function TITLE_GEN.generate_title()
   gui.title_create(320, 200, "#00b")
 
   gui.title_set_palette(GAME.PALETTES.normal)
+
+for i = -80,400 do
+  local x = i + 20
+  local y = 0
+  local x2 = i - 20
+  local y2 = 200
+
+  local ity = math.clamp(0, (i - 40) / 240, 1) * 255
+  local col = { ity, ity, ity }
+
+  gui.title_draw_line(x, y, x2, y2, col, 2, 2)
+end
+
+for i = 0, 26 do
+  TITLE_GEN.draw_char(string.char(65 + i), i * 12, "#080")
+end
+
 
   -- TODO
 
