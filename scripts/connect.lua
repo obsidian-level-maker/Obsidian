@@ -387,6 +387,91 @@ end
 ----------------------------------------------------------------
 
 
+function Connect_zones_prelim()
+  --
+  -- Decide roughly where two zones will connect (in terms of areas).
+  -- This is called early, and the actual connections are made later
+  -- (in the Connect_stuff function).
+  --
+
+  local function eval_zone_pair(A1, A2)
+    -- 1. want the longest perimeter
+    -- 2. want to avoid areas already used from zone conns
+
+    -- FIXME
+  end
+
+
+  local function are_zone_pair_connected(Z1, Z2)
+    each C in LEVEL.zone_conns do
+      if C.A1.zone == Z1 and C.A2.zone == Z2 then return true end
+      if C.A1.zone == Z2 and C.A2.zone == Z1 then return true end
+    end
+
+    return false
+  end
+
+
+  local function connect_two_zones()
+    local best
+    local best_score = 0
+
+    each _,junc in LEVEL.area_junctions do
+      local Z1 = junc.A1.zone
+      local Z2 = junc.A2.zone
+
+      assert(Z1 and Z2)
+
+      if Z1 == Z2 then continue end
+
+      if are_zone_pair_connected(Z1, Z2) then continue end
+
+      local score = eval_zone_pair(A1, A2)
+
+      if score > best_score then
+        best = junc
+        best_score = score
+      end
+    end
+
+    if not best then
+      error("Failed to connect zones")
+    end
+
+    -- FIXME
+  end
+
+
+  local function num_conns_to_zone(Z)
+    local count = 0
+
+    each C in LEVEL.zone_conns do
+      if (C.A1.zone == Z) or (C.A2.zone == Z) then
+        count = count + 1
+      end
+    end
+
+    return count
+  end
+
+
+  ---| Connect_zones_prelim |---
+
+  -- these will be "fake" conns until the zones are really connected
+  LEVEL.zone_conns = {}
+
+  for i = 2, #LEVEL.zones do
+    connect_two_zones()
+  end
+
+  -- mark which zones are leafs
+  each Z in LEVEL.zones do
+    Z.is_leaf = (num_conns_to_zone(Z) < 2)
+  end
+end
+
+
+
 function Connect_stuff()
 
 
@@ -980,29 +1065,11 @@ stderrf("\n\n CONNECTED TWO ZONES : %s + %s\n\n", Z1.name, Z2.name)
   end
 
 
-  local function num_conns_to_zone(Z)
-    local count = 0
-
-    each C in LEVEL.zone_conns do
-      if (C.A1.zone == Z) or (C.A2.zone == Z) then
-        count = count + 1
-      end
-    end
-
-    return count
-  end
-
-
   local function connect_zones()
     LEVEL.zone_conns = {}
 
     for i = 2, #LEVEL.zones do
       connect_two_zones()
-    end
-
-    -- mark which conns are leafs
-    each Z in LEVEL.zones do
-      Z.is_leaf = (num_conns_to_zone(Z) < 2)
     end
   end
 
