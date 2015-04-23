@@ -438,7 +438,7 @@ function Connect_zones_prelim()
       A2 = junc.A2
     }
 
---!!!!    table.insert(LEVEL.zone_conns, FAKE_CONN)
+    table.insert(LEVEL.zone_conns, FAKE_CONN)
 
     junc.A1.has_zone_conn = true
     junc.A2.has_zone_conn = true
@@ -837,7 +837,7 @@ A.is_outdoor = false
   end
 
 
-  local function eval_normal_conn(S, dir, zone_info)
+  local function eval_normal_conn(S, dir, is_zone)
     local N = S:neighbor(dir)
 
     if not (N and N.room) then return -1 end
@@ -853,20 +853,8 @@ A.is_outdoor = false
 
     if A1.conn_group == A2.conn_group then return -3 end
 
-    if zone_info then
-      if (A1.zone == zone_info.Z1 and A2.zone == zone_info.Z2) or
-         (A1.zone == zone_info.Z2 and A2.zone == zone_info.Z1)
-      then
-        -- OK
-      else
-        return -5
-      end
-
-      -- never connect zones via hallways
-      -- [ TODO : relax this eventually ]
-      if R1.is_hallway then return -4 end
-      if R2.is_hallway then return -4 end
-
+    if is_zone then
+      assert(A1.zone != A2.zone)
     else
       if A1.zone != A2.zone then return -2 end
     end
@@ -906,7 +894,7 @@ A.is_outdoor = false
   end
 
 
-  local function add_a_connection(zone_info)
+  local function add_a_connection()
     local best_S
     local best_dir
     local best_score = 0
@@ -920,7 +908,7 @@ A.is_outdoor = false
         -- only need to try half the directions
         -- [ hence in CTF maps must try the mirrored rooms too ]
         for dir = 6, 9 do
-          local score = eval_normal_conn(S, dir, zone_info)
+          local score = eval_normal_conn(S, dir)
 
 -- do stderrf("  try %s:%d --> %d\n", S:tostr(), dir, score) end
 
@@ -938,7 +926,6 @@ A.is_outdoor = false
     -- perform the connection --
 
     if not best_S then
-      if zone_info then return false end
 
 ---   do return "fubar" end
       error("Unable to find place for connection!")
@@ -1016,22 +1003,22 @@ A.is_outdoor = false
     local best_score = 0
 
     each A in R.areas do
-      each N in A.neighbors do
-        if N.room != R then continue end
+    each N in A.neighbors do
+      if N.room != R then continue end
 
-        -- only try each pair ONCE
-        if N.id > A.id then continue end
+      -- only try each pair ONCE
+      if N.id > A.id then continue end
 
-        if A.conn_group != N.conn_group then
-          local score = 1 + gui.random()
+      if A.conn_group != N.conn_group then
+        local score = 1 + gui.random()
 
-          if score > best_score then
-            best_A1 = A
-            best_A2 = N
-            best_score = score
-          end
+        if score > best_score then
+          best_A1 = A
+          best_A2 = N
+          best_score = score
         end
       end
+    end -- A, N
     end
 
     if not best_A1 then
@@ -1062,51 +1049,52 @@ A.is_outdoor = false
   end
 
 
-  local function try_connect_zone_pair(Z1, Z2)
-    local zone_info = { Z1=Z1, Z2=Z2 }
+  local function add_a_zone_connection(A1, A2)
+    local best_S
+    local best_dir
+    local best_score = 0
 
-    return add_a_connection(zone_info)
-  end
+-- stderrf("add_a_zone_connection...\n")
 
+    each S in A1.seeds do
+    each dir in geom.ALL_DIRS do
+      local N = S:neighbor(dir)
 
-  local function are_zone_pair_connected(Z1, Z2)
-    each C in LEVEL.zone_conns do
-      if C.A1.zone == Z1 and C.A2.zone == Z2 then return true end
-      if C.A1.zone == Z2 and C.A2.zone == Z1 then return true end
-    end
+      if not (N and N.area == A2) then continue end
 
-    return false
-  end
+      local score = eval_normal_conn(S, dir, "is_zone")
 
+-- do stderrf("  try %s:%d --> %d\n", S:tostr(), dir, score) end
 
-  local function connect_two_zones()
-    local zones1 = table.copy(LEVEL.zones)
-    local zones2 = table.copy(LEVEL.zones)
-
-    rand.shuffle(zones1)
-    rand.shuffle(zones2)
-
-    each Z1 in zones1 do
-    each Z2 in zones2 do
-      if Z1 == Z2 then continue end
-
-      if are_zone_pair_connected(Z1, Z2) then continue end
-
-      if try_connect_zone_pair(Z1, Z2) then
-        return true -- OK
+      if score > best_score then
+        best_S = S
+        best_dir = dir
+        best_score = score
       end
-    end
+
+    end  -- S, dir
+    end 
+
+    -- perform the connection --
+
+    if not best_S then
+      error("Unable to find place for zone connection!")
     end
 
-    error("Failed to connect zones")
+    local N = best_S:neighbor(best_dir)
+
+    Connect_seed_pair(best_S, N, best_dir)
   end
 
 
   local function connect_zones()
+    -- we replace the fake connections with real ones
+    local fake_conns = LEVEL.zone_conns
+
     LEVEL.zone_conns = {}
 
-    for i = 2, #LEVEL.zones do
-      connect_two_zones()
+    each F in fake_conns do
+      add_a_zone_connection(F.A1, F.A2)
     end
   end
 
