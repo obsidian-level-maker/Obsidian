@@ -591,6 +591,13 @@ extern int DM_fsky_add_stars(lua_State *L);
 extern int DM_fsky_add_clouds(lua_State *L);
 extern int DM_fsky_add_hills(lua_State *L);
 
+extern int DM_title_create(lua_State *L);
+extern int DM_title_write(lua_State *L);
+extern int DM_title_set_palette(lua_State *L);
+extern int DM_title_draw_rect(lua_State *L);
+extern int DM_title_draw_line(lua_State *L);
+extern int DM_title_load_image(lua_State *L);
+
 extern int wadfab_load(lua_State *L);
 extern int wadfab_free(lua_State *L);
 extern int wadfab_get_polygon(lua_State *L);
@@ -663,6 +670,13 @@ static const luaL_Reg gui_script_funcs[] =
 	{ "fsky_add_stars",   DM_fsky_add_stars },
 	{ "fsky_add_clouds",  DM_fsky_add_clouds },
 	{ "fsky_add_hills",   DM_fsky_add_hills },
+
+	{ "title_create",      DM_title_create },
+	{ "title_write",       DM_title_write },
+	{ "title_set_palette", DM_title_set_palette },
+	{ "title_draw_rect",   DM_title_draw_rect },
+	{ "title_draw_line",   DM_title_draw_line },
+	{ "title_load_image",  DM_title_load_image },
 
 	{ "wadfab_load",         wadfab_load },
 	{ "wadfab_free",         wadfab_free },
