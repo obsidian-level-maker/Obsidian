@@ -1348,6 +1348,9 @@ int DM_title_create(lua_State *L)
 	if (title_pix)
 		delete[] title_pix;
 
+	title_W = W;
+	title_H = H;
+
 	title_pix = new rgb_color_t[W * H];
 
 	for (int i = 0 ; i < W*H ; i++)
