@@ -112,6 +112,9 @@
                      -- can be: "nothing", "wall", "fence", "window",
                      --         "rail", "steps", "liquid_arch",
                      --         "lowering_wall", etc...
+
+    perimeter    -- a measure of length of the border between the areas
+                 -- (in units of seed-edges)
 --]]
 
 
@@ -253,7 +256,7 @@ function Junction_lookup(A1, A2, create_it)
 
   if create_it then
     if not LEVEL.area_junctions[index] then
-      LEVEL.area_junctions[index] = { A1=A1, A2=A2 }
+      LEVEL.area_junctions[index] = { A1=A1, A2=A2, perimeter=0 }
     end
   end
 
@@ -273,7 +276,8 @@ function Junction_init()
   end
   end
 
-  -- store junction in SEED.border[] for handy access
+  -- store junction in SEED.border[] for handy access.
+  -- also compute the perimeter of each junction.
 
   each A in LEVEL.areas do
   each S in A.seeds do
@@ -283,10 +287,22 @@ function Junction_init()
     if not (N and N.area) then continue end
     if N.area == S.area then continue end
 
-    S.border[dir].junction = Junction_lookup(A, N.area)
+    local junc = Junction_lookup(A, N.area)
+
+    S.border[dir].junction = junc
+
+    if dir < 5 then
+      junc.perimeter = junc.perimeter + 1
+    end
   end
   end
   end
+
+--[[ DEBUG
+  each name,J in LEVEL.area_junctions do
+    gui.printf("Junc %s : perimeter %d\n", name, J.perimeter)
+  end
+--]]
 end
 
 
