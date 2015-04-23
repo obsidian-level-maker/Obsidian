@@ -1429,14 +1429,31 @@ int DM_title_set_palette(lua_State *L)
 
 static void TitleDrawBox(int x, int y, int w, int h, rgb_color_t col)
 {
+	// width -1 and -2 are special : draw a diagonal line
+	if (w == -1 || w == -2)
+	{
+		int dx = (w == -2) ? -1 : 1;
+
+		if (w == -2) x += h - 1;
+
+		for (int i = 0 ; i < h ; i++, y++, x += dx)
+		{
+			if (x >= 0 && x-1 < title_W && y >= 0 && y < title_H)
+			{
+				title_pix[y * title_W + x]     = col;
+				title_pix[y * title_W + x + 1] = col;
+			}
+		}
+
+		return;
+	}
+
+	// clip the box
 	int x1 = x;
 	int y1 = y;
 	int x2 = x + w;
 	int y2 = y + h;
 
-	// TODO : if w == -2. draw a diagonal line instead
-
-	// clip box to pixel rectangle
 	x1 = MAX(x1, 0);
 	y1 = MAX(y1, 0);
 
