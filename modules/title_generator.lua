@@ -220,13 +220,23 @@ TITLE_GEN.letter_shapes =
 
 function TITLE_GEN.generate_title()
   assert(GAME.title)
+  assert(GAME.PALETTES)
+  assert(GAME.PALETTES.normal)
 
   -- don't bother for a single map
+--[[
   if OB_CONFIG.length == "single" then
     return
   end
+--]]
+
+  gui.title_create(320, 200, "#00b")
+
+  gui.title_set_palette(GAME.PALETTES.normal)
 
   -- TODO
+
+  gui.title_write("TITLEPIC")
 end
 
 
