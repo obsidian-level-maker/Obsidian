@@ -1106,7 +1106,7 @@ A.is_outdoor = false
       add_a_zone_connection(F.A1, F.A2)
     end
 
-    if #LEVEL.conns != #fake_conns then
+    if #LEVEL.zone_conns != #fake_conns then
       error("Zone conn mismatch!")
     end
   end
@@ -1117,7 +1117,7 @@ A.is_outdoor = false
   -- give each area of each room a conn_group
   each A in LEVEL.areas do
     if A.room then
-      A.conn_group = A.id
+      A.conn_group = assert(A.id)
     end
   end
 
