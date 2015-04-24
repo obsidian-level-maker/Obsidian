@@ -1471,7 +1471,7 @@ function Area_create_rooms()
 
 -- FIXME for new zone system (ugh)
 
---!!!!  Room_assign_voids()
+  Room_assign_voids()
 --!!!!  Room_assign_hallways()
 
   Area_group_into_rooms()

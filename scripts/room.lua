@@ -1322,42 +1322,53 @@ function Room_assign_voids()
   end
 
 
-  ---| Room_assign_voids |---
+  local function handle_zone(Z)
+    local quota = Z.num_areas / 5 + rand.range(0, 2.5)
 
-  -- have a quota
-  local quota = walkable_svolume() * 0.2
+    if OB_CONFIG.mode == "dm" or rand.odds(10) then
+      quota = quota * 0.65
+    end
+ 
+    -- the largest area can never become VOID
+    largest = Area_largest_area(Z)
 
-  if OB_CONFIG.mode == "dm" then quota = quota / 2 end
-  
-  -- the largest area can never become VOID
-  largest = Area_largest_area()
+    largest.no_void = true
 
-  largest.no_void = true
+    if largest.sister  then largest.sister .no_void = true end
+    if largest.brother then largest.brother.no_void = true end
 
-  if largest.sister  then largest.sister .no_void = true end
-  if largest.brother then largest.brother.no_void = true end
+    -- evaluate each area, sort from best to worst
+    visit_list = {}
 
-  -- evaluate each area, sort from best to worst
-  visit_list = {}
+    each A in LEVEL.areas do
+      if A.zone != Z then continue end
 
-  each A in LEVEL.areas do
-    local score = eval_void(A)
+      -- this also skips areas with a zone connection
+      if A.no_void then continue end
 
-    if score > 0 then
-      A.void_score = score
-      table.insert(visit_list, A)
+      local score = eval_void(A)
+
+      if score > 0 then
+        A.void_score = score
+        table.insert(visit_list, A)
+      end
+    end
+
+    table.sort(visit_list,
+        function(A, B) return A.void_score > B.void_score end)
+
+    for i = 1, quota do
+      if not pick_area_to_void() then
+        break;
+      end
     end
   end
 
-  table.sort(visit_list,
-      function(A, B) return A.void_score > B.void_score end)
 
-  while quota > 0 do
-    local A = pick_area_to_void()
+  ---| Room_assign_voids |---
 
-    if not A then break; end
-
-    quota = quota - A.svolume
+  each Z in LEVEL.zones do
+    handle_zone(Z)
   end
 end
 

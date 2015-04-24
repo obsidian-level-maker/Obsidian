@@ -430,23 +430,29 @@ function Connect_zones_prelim()
 
 
   local function make_the_fake_conn(junc)
+    local A1 = junc.A1
+    local A2 = junc.A2
+
     local FAKE_CONN =
     {
       kind = "fake"
 
-      A1 = junc.A1
-      A2 = junc.A2
+      A1 = A1
+      A2 = A2
     }
 
     table.insert(LEVEL.zone_conns, FAKE_CONN)
 
-    junc.A1.has_zone_conn = true
-    junc.A2.has_zone_conn = true
+    A1.has_zone_conn = true
+    A2.has_zone_conn = true
 
-    local Z1 = junc.A1.zone
-    local Z2 = junc.A2.zone
+    A1.no_void = true
+    A2.no_void = true
 
-stderrf("\n\n PRELIM CONNECT : %s %s <--> %s %s\n\n", Z1.name, junc.A1.name, junc.A2.name, Z2.name)
+    local Z1 = A1.zone
+    local Z2 = A2.zone
+
+stderrf("\n\n PRELIM CONNECT : %s %s <--> %s %s\n\n", Z1.name, A1.name, A2.name, Z2.name)
   end
 
 
