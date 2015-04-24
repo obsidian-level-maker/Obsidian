@@ -1235,6 +1235,8 @@ stderrf("Could not find free area @ loc=%d\n", loc)
 
 stderrf("** Merging too-small zone %s --> %s\n", old_Z.name, Z.name)
 
+    Z.svolume = Z.svolume + old_Z.svolume
+
     each A in area_list do
       if A.zone == old_Z then
          A.zone = Z
@@ -1246,6 +1248,7 @@ stderrf("** Merging too-small zone %s --> %s\n", old_Z.name, Z.name)
     old_Z.name = "DEAD"
     old_Z.num_areas = -1
     old_Z.rooms = nil
+    old_Z.svolume = nil
   end
 
 
@@ -1296,6 +1299,7 @@ stderrf("** Merging too-small zone %s --> %s\n", old_Z.name, Z.name)
 
   local function process_borders()
     -- collect the border areas
+    -- NOTE : svolume of zone does not include border areas
     area_list = {}
 
     each A in LEVEL.areas do

@@ -79,6 +79,8 @@
 
     is_leaf : bool   -- true if no more than 1 conn to another zone
 
+    svolume     -- total size of zone (excl. border areas)
+
     -- FIXME : more stuff  e.g. building_mat, cave_mat, monster palette !!!
 --]]
 
