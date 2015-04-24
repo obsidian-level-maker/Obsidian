@@ -695,6 +695,9 @@ function Connect_stuff()
     assert(N1.room != R)
     assert(N2.room != R)
 
+    if N1.zone != A.zone then return false end
+    if N2.zone != A.zone then return false end
+
     -- this also handles N1 == N2
     if N1.conn_group == N2.conn_group then return false end
 
@@ -1101,6 +1104,10 @@ A.is_outdoor = false
 
     each F in fake_conns do
       add_a_zone_connection(F.A1, F.A2)
+    end
+
+    if #LEVEL.conns != #fake_conns then
+      error("Zone conn mismatch!")
     end
   end
 
