@@ -1224,6 +1224,8 @@ function Room_assign_voids()
     visited[A.id] = true
 
     each N in A.neighbors do
+      if N.zone != A.zone then continue end
+
       if N.mode == "normal" and not visited[N.id] then
         flood_fill(N, visited)
       end
@@ -1235,6 +1237,8 @@ function Room_assign_voids()
 
   local function check_visited(visited)
     each A in LEVEL.areas do
+      if A.zone != largest.zone then continue end
+
       if A.mode == "normal" then
         if not visited[A.id] then return false end
       end
@@ -1245,25 +1249,20 @@ function Room_assign_voids()
 
 
   local function can_void_area(A)
-    -- make sure than if 'A' is voided, all other areas remain reachable
+    -- this checks that if 'A' is voided, all other areas remain reachable
     
     A.mode = "void"
 
     -- in CTF maps, must void the mirrored area too
     if A.sister then A.sister.mode = "void" end
 
-    -- we flood first starting from the largest area (which is never void)
-    local start = largest
-    assert(start.mode == "normal")
-
-    local visited = flood_fill(start, {})
-
-    local result = check_visited(visited)
+    -- we flood fill starting from a known, never-void area
+    local visited = flood_fill(largest, {})
 
     -- leave as void if check succeeded
-    if result then
+    if check_visited(visited) then
       -- sometimes reserve void area for closets
-      -- [ never use for big traps or cages ]
+      -- [ i.e. never use it for big traps or cages ]
       if rand.odds(25) then
         A.is_closety = true
       end
@@ -1279,8 +1278,6 @@ function Room_assign_voids()
 
 
   local function eval_void(A)
-    if A.no_void then return -1 end
-
     if A.mode != "normal" then return -1 end
 
     -- CTF check (only visit areas in first half)
@@ -1326,7 +1323,7 @@ function Room_assign_voids()
     local quota = Z.num_areas / 5 + rand.range(0, 2.5)
 
     if OB_CONFIG.mode == "dm" or rand.odds(10) then
-      quota = quota * 0.65
+      quota = quota * 0.7
     end
  
     -- the largest area can never become VOID
