@@ -903,6 +903,8 @@ function Area_group_into_rooms()
 
   
   local function try_kill_tiny_area(A)
+    if A.has_zone_conn then return false end
+
     -- not possible when area has more than two roomy neighbors
     -- (since this area may be a bridge between two halves of the map/zone)
     local nb_rooms = {}
@@ -935,6 +937,8 @@ function Area_group_into_rooms()
 
 
   local function tiny_into_hallway(A)
+    if A.has_zone_conn then return false end
+
     A:make_hallway()
 
     if A.sister then
