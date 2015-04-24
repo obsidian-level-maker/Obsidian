@@ -1469,10 +1469,8 @@ function Area_create_rooms()
   -- it is essential to pick areas where zones connect
   Connect_zones_prelim()
 
--- FIXME for new zone system (ugh)
-
   Room_assign_voids()
---!!!!  Room_assign_hallways()
+  Room_assign_hallways()
 
   Area_group_into_rooms()
 

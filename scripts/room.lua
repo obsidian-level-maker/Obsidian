@@ -1320,7 +1320,7 @@ function Room_assign_voids()
 
 
   local function handle_zone(Z)
-    local quota = Z.num_areas / 5 + rand.range(0, 2.5)
+    local quota = Z.num_areas / 6 + rand.range(0, 2.5)
 
     if OB_CONFIG.mode == "dm" or rand.odds(10) then
       quota = quota * 0.7
@@ -1533,8 +1533,6 @@ function Room_assign_hallways()
 
 
   local function eval_hallway(A)
-    if A.no_hallway then return -1 end
-
     -- ignore scenic or void areas
     if A.mode != "normal" then return -1 end
 
@@ -1711,42 +1709,52 @@ function Room_assign_hallways()
   end
 
 
-  ---| Room_assign_hallways |---
+  local function handle_zone(Z)
+    local quota = Z.num_areas / 8 + rand.range(0, 2.5)
 
-  local quota = walkable_svolume() * 0.25
+    -- TODO : adjust quota for hallway style
 
-  local largest = Area_largest_area()
+    local largest = Area_largest_area(Z)
 
-  largest.no_hallway = true
+    largest.no_hallway = true
 
-  if largest.sister  then largest.sister .no_hallway = true end
-  if largest.brother then largest.brother.no_hallway = true end
+    if largest.sister  then largest.sister .no_hallway = true end
+    if largest.brother then largest.brother.no_hallway = true end
 
-  -- evaluate each area, sort from best to worst
-  visit_list = {}
+    -- evaluate each area, sort from best to worst
+    visit_list = {}
 
-  each A in LEVEL.areas do
-    local score = eval_hallway(A)
+    each A in LEVEL.areas do
+      if A.zone != Z  then continue end
+      if A.no_hallway then continue end
 
-    if score > 0 then
-      A.hall_score = score
-      table.insert(visit_list, A)
+      local score = eval_hallway(A)
+
+      if score > 0 then
+        A.hall_score = score
+        table.insert(visit_list, A)
+      end
+    end
+
+    table.sort(visit_list,
+        function(A, B) return A.hall_score > B.hall_score end)
+
+    for i = 1, quota do
+      local A = pick_area_for_hallway()
+      if not A then break; end
+
+stderrf("\n%s is now a HALLWAY, yay :)\n", A.name)
+      A:make_hallway()
+
+      detect_stairwells(A)
     end
   end
 
-  table.sort(visit_list,
-      function(A, B) return A.hall_score > B.hall_score end)
 
-  while quota > 0 do
-    local A = pick_area_for_hallway()
+  ---| Room_assign_hallways |---
 
-    if not A then break; end
-
-    A:make_hallway()
-
-    detect_stairwells(A)
-
-    quota = quota - A.svolume
+  each Z in LEVEL.zones do
+    handle_zone(Z)
   end
 end
 
