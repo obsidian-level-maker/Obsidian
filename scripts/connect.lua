@@ -446,8 +446,8 @@ function Connect_zones_prelim()
     A1.has_zone_conn = true
     A2.has_zone_conn = true
 
-    A1.no_void = true
-    A2.no_void = true
+    A1.no_void = true ; A1.no_hallway = true
+    A2.no_void = true ; A2.no_hallway = true
 
     local Z1 = A1.zone
     local Z2 = A2.zone
