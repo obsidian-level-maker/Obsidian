@@ -542,6 +542,20 @@ local div = 10
 
     gui.title_draw_line(x1, y1, x2, y2, style.color, style.bw, style.bh)
   end
+
+end
+
+
+function TITLE_GEN.draw_string(str, trans, style)
+  local old_tx = trans.tx
+
+  for i = 1, #str do
+    local ch = string.sub(str, i, i)
+
+    TITLE_GEN.draw_char(ch, trans, style)
+  end
+
+  trans.tx = old_tx
 end
 
 
