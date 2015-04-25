@@ -218,7 +218,7 @@ TITLE_GEN.letter_shapes =
 
 
 
-function TITLE_GEN.draw_char(ch, ofs_x, col)
+function TITLE_GEN.draw_char(ch, trans, style)
   local info = TITLE_GEN.letter_shapes[ch]
 
   if not info then return end
@@ -235,8 +235,14 @@ stderrf("LINE : (%d %d) .. (%d %d)\n", x1,y1, x2,y2)
 
     if x1 < 1 or x2 < 1 then continue end
 
-local div = 20
-    gui.title_draw_line(x1/div + ofs_x, y1/div, x2/div + ofs_x, y2/div, col, 1, 2)
+local div = 10
+
+    x1 = trans.x + x1 / div
+    y1 = trans.y + y1 / div
+    x2 = trans.x + x2 / div
+    y2 = trans.y + y2 / div
+
+    gui.title_draw_line(x1, y1, x2, y2, style.color, style.bw, style.bh)
   end
 end
 
@@ -270,8 +276,20 @@ for i = -80,400 do
   gui.title_draw_line(x, y, x2, y2, col, 2, 2)
 end
 
-for i = 0, 26 do
-  TITLE_GEN.draw_char(string.char(65 + i), i * 12, "#080")
+local trans = { x=0, y=100 }
+for pass = 1, 3 do
+  local style
+  if pass == 1 then
+    style = { color="#200", bw=6, bh=5 }
+  elseif pass == 2 then
+    style = { color="#500", bw=4, bh=3 }
+  else
+    style = { color="#a00", bw=2, bh=1 }
+  end
+for i = 0, 10 do
+  trans.x = 0 + i * 24
+  TITLE_GEN.draw_char(string.char(65 + i), trans, style)
+end
 end
 
 
