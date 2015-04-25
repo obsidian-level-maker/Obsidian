@@ -1113,12 +1113,10 @@ function Area_create_zones()
       return 1
     end
 
-    local count = #area_list
+    local quota = #area_list / 42
 
-    local quota = count / 41
-
-    quota = rand.int(quota)
-    quota = math.clamp(1, quota, 4)
+    quota = int(quota + rand.range(0, 1.6))
+    quota = math.clamp(1, quota, 5)
 
     gui.printf("Zone quota: %d\n", quota)
 
