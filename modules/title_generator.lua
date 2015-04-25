@@ -218,6 +218,69 @@ TITLE_GEN.letter_shapes =
 
 
 
+function process_one_letter(name, info)
+  gui.printf("  [\"%s\"] = \n", name)
+  gui.printf("  {\n")
+
+  local SIZE = (327 - 87)
+
+  -- determine width --
+
+  local x_min =  9999
+  local x_max = -9999
+
+  for i = 1, #info.lines, 2 do
+    local x = info.lines[i]
+
+    if x < 1 then continue end
+
+    x_min = math.min(x_min, x)
+    x_max = math.max(x_max, x)
+  end
+
+  local width = (x_max - x_min) / SIZE
+
+  local pad = 0.05
+
+  gui.printf("    width = %1.4f\n", width + pad * 2)
+
+  -- translate and scale lines --
+
+  gui.printf("    points =\n")
+  gui.printf("    {\n")
+
+  for i = 1, #info.lines, 2 do
+    local x = info.lines[i]
+    local y = info.lines[i + 1]
+
+    if x == 0 then continue end
+
+    if x > 0 then
+    end
+
+    gui.printf("      { x=%1.5f, y=%1.5f }\n", x, y);
+  end
+
+  gui.printf("    }\n")
+  gui.printf("  }\n")
+end
+
+
+
+function process_letters()
+  local keys = table.keys(TITLE_GEN.letter_shapes)
+  table.sort(keys)
+
+  each name in keys do
+    local info = TITLE_GEN.letter_shapes[name]
+    assert(info)
+
+    process_letters(name, info)
+  end
+end
+
+
+
 function TITLE_GEN.draw_char(ch, trans, style)
   local info = TITLE_GEN.letter_shapes[ch]
 
@@ -259,6 +322,11 @@ function TITLE_GEN.generate_title()
     return
   end
 --]]
+
+
+process_letters()
+do return end
+
 
   gui.title_create(320, 200, "#00b")
 
