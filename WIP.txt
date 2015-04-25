@@ -3,12 +3,6 @@ WORK IN PROGRESS
 ================
 
 
-Zones
------
-
--  add HALLWAYS
-
-
 
 Closets
 -------
