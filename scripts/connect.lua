@@ -394,6 +394,15 @@ function Connect_zones_prelim()
   -- (in the Connect_stuff function).
   --
 
+  local function merge_zone_groups(old_Z, new_Z)
+    each Z in LEVEL.zones do
+      if Z.map_group == old_Z.map_group then
+         Z.map_group = new_Z.map_group
+      end
+    end
+  end
+
+
   local function eval_zone_pair(junc)
     -- 1. want the longest perimeter
     -- 2. want to avoid areas already used from zone conns
@@ -416,16 +425,6 @@ function Connect_zones_prelim()
 
     -- tie breaker
     return score + gui.random()
-  end
-
-
-  local function are_zone_pair_connected(Z1, Z2)
-    each C in LEVEL.zone_conns do
-      if C.A1.zone == Z1 and C.A2.zone == Z2 then return true end
-      if C.A1.zone == Z2 and C.A2.zone == Z1 then return true end
-    end
-
-    return false
   end
 
 
@@ -466,9 +465,8 @@ stderrf("\n\n PRELIM CONNECT : %s %s <--> %s %s\n\n", Z1.name, A1.name, A2.name,
 
       assert(Z1 and Z2)
 
-      if Z1 == Z2 then continue end
-
-      if are_zone_pair_connected(Z1, Z2) then continue end
+      -- already connected?  [ this handles Z1 == Z2 too ]
+      if Z1.map_group == Z2.map_group then continue end
 
       local score = eval_zone_pair(junc)
 
@@ -481,6 +479,8 @@ stderrf("\n\n PRELIM CONNECT : %s %s <--> %s %s\n\n", Z1.name, A1.name, A2.name,
     if not best then
       error("Failed to connect zones")
     end
+
+    merge_zone_groups(best.A1.zone, best.A2.zone)
 
     make_the_fake_conn(best)
   end
@@ -503,6 +503,10 @@ stderrf("\n\n PRELIM CONNECT : %s %s <--> %s %s\n\n", Z1.name, A1.name, A2.name,
 
   -- these will be "fake" conns until the zones are really connected
   LEVEL.zone_conns = {}
+
+  each Z in LEVEL.zones do
+    Z.map_group = _index
+  end
 
   for i = 2, #LEVEL.zones do
     connect_two_zones()

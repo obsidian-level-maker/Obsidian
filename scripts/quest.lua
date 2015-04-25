@@ -82,6 +82,8 @@
     num_areas   -- total # of non-border areas in the zone
     svolume     -- total size of zone (excl. border areas)
 
+    map_group : number   -- used when connecting zones
+
     -- FIXME : more stuff  e.g. building_mat, cave_mat, monster palette !!!
 --]]
 
