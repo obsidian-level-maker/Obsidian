@@ -240,9 +240,7 @@ function process_one_letter(name, info)
 
   local width = (x_max - x_min) / SIZE
 
-  local pad = 0.05
-
-  gui.printf("    width = %1.4f\n", width + pad * 2)
+  gui.printf("    width = %1.4f\n", width)
 
   -- translate and scale lines --
 
@@ -255,14 +253,24 @@ function process_one_letter(name, info)
 
     if x == 0 then continue end
 
-    if x > 0 then
+    if x < 0 then
+      if info.lines[i + 2] and info.lines[i+2] > 0 then
+        gui.printf("      {}\n")
+      end
+      continue
     end
+
+    x = (x - x_min) / SIZE
+    y = (y -    87) / SIZE
+
+    y = 1.0 - y  -- distance up from base-line
 
     gui.printf("      { x=%1.5f, y=%1.5f }\n", x, y);
   end
 
   gui.printf("    }\n")
   gui.printf("  }\n")
+  gui.printf("\n")
 end
 
 
@@ -271,12 +279,17 @@ function process_letters()
   local keys = table.keys(TITLE_GEN.letter_shapes)
   table.sort(keys)
 
+  gui.printf("TITLE_GEN.letter_shapes =\n")
+  gui.printf("{\n")
+
   each name in keys do
     local info = TITLE_GEN.letter_shapes[name]
     assert(info)
 
-    process_letters(name, info)
+    process_one_letter(name, info)
   end
+
+  gui.printf("}\n")
 end
 
 
