@@ -868,11 +868,11 @@ function Quest_add_major_quests()
   local function collect_switch_goals(list)
     local switch_tab = THEME.switches or {} 
 
-    -- we want at least three kinds, so duplicate some if necessary
+    -- we want at least four kinds, so duplicate some if necessary
     local dup_num
-    if table.size(switch_tab) == 1 then
-      dup_num = 3
-    elseif table.size(switch_tab) == 2 then
+    if table.size(switch_tab) < 2 then
+      dup_num = 4
+    elseif table.size(switch_tab) < 4 then
       dup_num = 2
     else
       dup_num = 1
@@ -926,7 +926,6 @@ function Quest_add_major_quests()
     local K2 = table.remove(key_list, 1)
     local K3 = table.remove(key_list, 1)
 
-gui.debugf("key_list NOW:\n%s\n", table.tostr(key_list))
     assert(K1 and K2 and K3)
     assert(K3.kind == "KEY")
 
@@ -935,7 +934,7 @@ gui.debugf("key_list NOW:\n%s\n", table.tostr(key_list))
 
 
   local function add_double_switch_door()
-    local prob = 35
+    local prob = 25
 
     if OB_CONFIG.mode == "coop" then
       prob = 65
@@ -960,39 +959,49 @@ gui.debugf("key_list NOW:\n%s\n", table.tostr(key_list))
 
   ---| Quest_add_major_quests |---
 
-  rand.shuffle(LEVEL.zone_conns)
+  -- use keys to lock zone connections
 
   local goal_list = {}
 
   collect_key_goals(goal_list)
 
---[[
-  -- compute number of splits to try -- based on # of rooms
-  local want_splits = #LEVEL.rooms / 12
-
-  want_splits = int(want_splits + 2.0 * gui.random() ^ 2)
-  want_splits = math.clamp(0, want_splits, 6)
-
-  -- first try the special stuff : triple-key door (etc)
-
-  if want_splits > 0 and add_triple_key_door(goal_list) then
-    want_splits = want_splits - 1
+  if #LEVEL.zone_conns > 0 then
+    add_triple_key_door(goal_list)
   end
 
-  if want_splits > 0 and add_double_switch_door() then
-    want_splits = want_splits - 1
+  for i = 1, 10 do
+    if table.empty(LEVEL.zone_conns) then break; end
+
+    local goal = pick_goal(goal_list)
+    if not goal then break; end
+
+    Quest_scan_all_conns("MAJOR", { goal })
   end
 
---]]
 
-  -- grab the switch goals now (after the triple-key door attempt)
+  -- use remote doors to divide zones
+  -- [ but keys possible too, if any left over ]
+
   collect_switch_goals(goal_list)
 
-  -- now create "simple" quests -- single key or switch locks the door
+  -- number of splits to try is based on # of rooms
+  local want_splits = #LEVEL.rooms / 16 - #LEVEL.quests
 
-  for i = 1, 6 do
+  want_splits = int(want_splits + 2.0 * gui.random() ^ 2)
+
+  if want_splits > 0 then
+    if add_double_switch_door() then
+      want_splits = want_splits - 1
+    end
+  end
+
+  -- try to lock all the zones  [ it is not essential though ]
+  if want_splits < #LEVEL.zone_conns then
+    want_splits = #LEVEL.zone_conns
+  end
+
+  for i = 1, want_splits do
     local goal = pick_goal(goal_list)
-
     if not goal then break; end
 
     Quest_scan_all_conns("MAJOR", { goal })
