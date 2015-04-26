@@ -17,9 +17,6 @@ PREFABS.Locked_small_kc_blue =
 
   tex_DOORRED  = "DOORBLU"
   line_33 = 32
-
-  tex_BIGDOOR2 = "?big_door"
-  flat_FLAT23  = "?big_door"
 }
 
 
@@ -38,9 +35,6 @@ PREFABS.Locked_small_kc_yellow =
 
   tex_DOORRED  = "DOORYEL"
   line_33 = 34
-
-  tex_BIGDOOR2 = "?big_door"
-  flat_FLAT23  = "?big_door"
 }
 
 
@@ -59,8 +53,6 @@ PREFABS.Locked_small_kc_red =
 
   -- prefab has DOORRED texture and line special #33
 
-  tex_BIGDOOR2 = "?big_door"
-  flat_FLAT23  = "?big_door"
 }
 
 
@@ -79,9 +71,6 @@ PREFABS.Locked_small_ks_blue =
 
   tex_DOORRED  = "DOORBLU2"
   line_33 = 32
-
-  tex_BIGDOOR2 = "?big_door"
-  flat_FLAT23  = "?big_door"
 }
 
 
@@ -100,9 +89,6 @@ PREFABS.Locked_small_ks_yellow =
 
   tex_DOORRED  = "DOORYEL2"
   line_33 = 34
-
-  tex_BIGDOOR2 = "?big_door"
-  flat_FLAT23  = "?big_door"
 }
 
 
@@ -120,9 +106,6 @@ PREFABS.Locked_small_ks_red =
   over   = 32
 
   tex_DOORRED  = "DOORRED2"
-
-  tex_BIGDOOR2 = "?big_door"
-  flat_FLAT23  = "?big_door"
 }
 
 
@@ -140,9 +123,6 @@ PREFABS.Locked_small_kc_blue_diag =
 
   tex_DOORRED  = "DOORBLU"
   line_33 = 32
-
-  tex_BIGDOOR2 = "?big_door"
-  flat_FLAT23  = "?big_door"
 }
 
 
@@ -156,9 +136,6 @@ PREFABS.Locked_small_kc_yellow_diag =
 
   tex_DOORRED  = "DOORYEL"
   line_33 = 34
-
-  tex_BIGDOOR2 = "?big_door"
-  flat_FLAT23  = "?big_door"
 }
 
 
@@ -172,8 +149,6 @@ PREFABS.Locked_small_kc_red_diag =
 
   -- prefab has DOORRED texture and line special #33
 
-  tex_BIGDOOR2 = "?big_door"
-  flat_FLAT23  = "?big_door"
 }
 
 
@@ -187,9 +162,6 @@ PREFABS.Locked_small_ks_blue_diag =
 
   tex_DOORRED  = "DOORBLU2"
   line_33 = 32
-
-  tex_BIGDOOR2 = "?big_door"
-  flat_FLAT23  = "?big_door"
 }
 
 
@@ -203,9 +175,6 @@ PREFABS.Locked_small_ks_yellow_diag =
 
   tex_DOORRED  = "DOORYEL2"
   line_33 = 34
-
-  tex_BIGDOOR2 = "?big_door"
-  flat_FLAT23  = "?big_door"
 }
 
 
@@ -218,8 +187,5 @@ PREFABS.Locked_small_ks_red_diag =
   key    = "ks_red"
 
   tex_DOORRED  = "DOORRED2"
-
-  tex_BIGDOOR2 = "?big_door"
-  flat_FLAT23  = "?big_door"
 }
 
