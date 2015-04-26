@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2014 Andrew Apted
+--  Copyright (C) 2006-2015 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -1074,6 +1074,48 @@ function brushlib.is_quad(brush)
   end
 
   return true
+end
+
+
+function brushlib.reverse(brush)
+  -- need this when mirroring across a single axis (X or Y).
+  -- the given brush is modified (by shifting XY coordinates around).
+
+  -- Note: does not actually do the mirroring (we assume Trans.apply_xy already did it)
+
+  local xy_coords = {}
+
+  each C in brush do
+    if C.x then
+      table.insert(xy_coords, { idx=_index, x=C.x, y=C.y })
+    end
+  end
+
+  if #xy_coords < 2 then return end
+
+  -- first, shift actual coordinate values into next table
+
+  for i = 1, #xy_coords do
+    local k = i + 1
+    if k > #xy_coords then k = 1 end
+
+    local C = brush[xy_coords[i].idx]
+
+    C.x = xy_coords[k].x
+    C.y = xy_coords[k].y
+  end
+
+  -- second, actually reverse the coord tables
+
+  for i = 1, int(#xy_coords / 2) do
+    local k = #xy_coords + 1 - i
+
+    local C1 = brush[xy_coords[i].idx]
+    local C2 = brush[xy_coords[k].idx]
+
+    brush[xy_coords[i].idx] = C2
+    brush[xy_coords[k].idx] = C1
+  end
 end
 
 
