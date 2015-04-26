@@ -1743,7 +1743,6 @@ function Room_assign_hallways()
       local A = pick_area_for_hallway()
       if not A then break; end
 
-stderrf("\n%s is now a HALLWAY, yay :)\n", A.name)
       A:make_hallway()
 
       detect_stairwells(A)

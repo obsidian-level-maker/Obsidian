@@ -451,7 +451,7 @@ function Connect_zones_prelim()
     local Z1 = A1.zone
     local Z2 = A2.zone
 
-stderrf("\n\n PRELIM CONNECT : %s %s <--> %s %s\n\n", Z1.name, A1.name, A2.name, Z2.name)
+-- stderrf("\n\n PRELIM CONNECT : %s %s <--> %s %s\n\n", Z1.name, A1.name, A2.name, Z2.name)
   end
 
 
