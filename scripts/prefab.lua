@@ -431,6 +431,10 @@ function Fab_transform_XY(fab, T)
 
       if C.angle then C.angle = Trans.apply_angle(C.angle) end
     end
+
+    if sel(T.mirror_x, 1, 0) != sel(T.mirror_y, 1, 0) then
+      brushlib.reverse(brush)
+    end
   end
 
   
