@@ -992,7 +992,7 @@ local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
   end
 
 
-  local f_h = S.floor_h or A.floor_h
+  local f_h = S.hall_h or S.floor_h or A.floor_h
   local c_h = S. ceil_h or A. ceil_h
 
 

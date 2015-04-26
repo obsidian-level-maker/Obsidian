@@ -385,7 +385,7 @@ end
 
 
 
-function Layout_set_floor_minmax(R)
+function Layout_set_floor_minmax(R)  -- NOT USED ATM
   local min_h =  9e9
   local max_h = -9e9
 

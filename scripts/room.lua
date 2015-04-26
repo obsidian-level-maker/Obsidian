@@ -2250,13 +2250,13 @@ stderrf("  next_dir : %d\n", dir)
 
     local S, S_dir
 
-    if conn.A2.room == R then
+    if conn.A1.room == R then
       S = conn.S1
-      S_dir = conn.dir
-    else
-      assert(conn.A1.room == R)
-      S = conn.S2
       S_dir = 10 - conn.dir
+    else
+      assert(conn.A2.room == R)
+      S = conn.S2
+      S_dir = conn.dir
     end
 
     assert(S)
@@ -2272,18 +2272,20 @@ stderrf("  next_dir : %d\n", dir)
 
     -- transfer heights to neighbors
     each C in R.areas[1].conns do
-      if conn.A2.room == R then
-        S = conn.S1
-        S_dir = conn.dir
+      local N
+
+      if C.A1.room == C.A2.room then continue end
+
+      if C.A1.room == R then
+        S = C.S1
+        N = C.S2
       else
-        assert(conn.A1.room == R)
-        S = conn.S2
-        S_dir = 10 - conn.dir
+        assert(C.A2.room == R)
+        S = C.S2
+        N = C.S1
       end
 
-      local N = S:neighbor(S_dir)
-
-      if not N.entry_h then
+      if not N.area.room.entry_h then
 stderrf("next_f @ %s --> %s\n", N.area.room:tostr(), tostring(S.hall_h))
         N.area.room.next_f = assert(S.hall_h)
       end
