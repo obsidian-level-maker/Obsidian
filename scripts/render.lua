@@ -538,6 +538,8 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
       fab_name = "Locked_double"
     elseif #LOCK.goals == 3 then
       fab_name = "Locked_ks_ALL"
+    elseif string.sub(LOCK.goals[1].item, 1, 2) == "ks" then
+      fab_name = "Locked_small_" .. LOCK.goals[1].item
     else
       fab_name = "Locked_" .. LOCK.goals[1].item
     end
@@ -968,7 +970,8 @@ or S.not_path
 
 
 local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
--- if A.room then tag = A.room.id end
+-- tag = A.id
+-- if A.conn_group then tag = 1000 * A.zone.id + A.conn_group end
 -- if A.quest and A.quest.id < 2 then tag = 1 end
 
 
@@ -1009,10 +1012,11 @@ local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
 
   -- remember floor brush for the spot logic
   table.insert(A.floor_brushes, f_brush)
+end
 
 
-  -- walls
 
+function Render_walls(A, S)
   each dir in geom.ALL_DIRS do
     Render_edge(A, S, dir)
   end
@@ -1035,6 +1039,7 @@ function Render_area(A)
 
   each S in A.seeds do
     Render_seed(A, S)
+    Render_walls(A, S)
   end
 end
 
@@ -1126,8 +1131,17 @@ function dummy_properties(A)
 
   --DEBUG FOR SECRETS
   if A.room and A.room.is_secret then
-  A.floor_mat = "REDWALL"
+---  A.floor_mat = "REDWALL"
   end
+
+--[[ ZONE TESTING
+if A.mode != "hallway" then
+if A.zone.id == 1 then A.floor_mat = "FWATER1" end
+if A.zone.id == 2 then A.floor_mat = "NUKAGE1" end
+if A.zone.id == 3 then A.floor_mat = "LAVA1" end
+if A.zone.id == 4 then A.floor_mat = "CEIL5_2" end
+end
+--]]
 
   assert(A.wall_mat)
 end
