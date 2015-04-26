@@ -259,79 +259,6 @@ function Trans.brush(coords)
 end
 
 
-function Trans.old_brush(info, coords, z1, z2)
----???  if type(info) != "table" then
----???    info = get_mat(info)
----???  end
-
-  -- check mirroring
-  local reverse_it = false
-
-  if Trans.TRANSFORM.mirror_x then reverse_it = not reverse_it end
-  if Trans.TRANSFORM.mirror_y then reverse_it = not reverse_it end
-
-  -- apply transform
-  coords = table.deep_copy(coords)
-
-  each C in coords do
-    C.x, C.y = Trans.apply_xy(C.x, C.y)
-
-    if C.w_face then
-      C.face = C.w_face ; C.w_face = nil
-    elseif info.w_face then
-      C.face = info.w_face
-    end
-  end
-
-  if reverse_it then
-    -- make sure side properties (w_face, line_kind, etc)
-    -- are associated with the correct vertex....
-    local x1 = coords[1].x
-    local y1 = coords[1].y
-
-    for i = 1, #coords-1 do
-      coords[i].x = coords[i+1].x
-      coords[i].y = coords[i+1].y
-    end
-
-    coords[#coords].x = x1
-    coords[#coords].y = y1
-
-    table.reverse(coords)
-  end
-
-  if z2 < EXTREME_H - 1 then
-    table.insert(coords, { t=z2, face=info.t_face })
-
-    coords[#coords].special = info.sec_kind
-    coords[#coords].tag     = info.sec_tag
-  end
-
-  if z1 > -EXTREME_H + 1 then
-    table.insert(coords, { b=z1, face=info.b_face })
-
-    if info.delta_z then
-      coords[#coords].delta_z = info.delta_z
-    end
-
-    coords[#coords].special = info.sec_kind
-    coords[#coords].tag     = info.sec_tag
-  end
-
-
-  -- TODO !!!  transform slope coords (z1 or z2 == table)
-
--- gui.printf("coords=\n%s\n", table.tostr(coords,4))
-
-  local kind = info.kind or "solid"
-
-  table.insert(coords, 1, { m=kind, mover=info.peg })
-
-  brushlib.collect_flags(coords)
-
-  raw_add_brush(coords)
-end
-
 
 function Trans.entity(name, x, y, z, props)
   assert(name)
@@ -406,11 +333,6 @@ function Trans.rect_coords(x1, y1, x2, y2)
     { x=x1, y=y2 },
     { x=x1, y=y1 },
   }
-end
-
-
-function Trans.old_quad(info, x1,y1, x2,y2, z1,z2)
-  Trans.old_brush(info, Trans.rect_coords(x1,y1, x2,y2), z1,z2)
 end
 
 
