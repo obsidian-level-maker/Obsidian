@@ -12,7 +12,7 @@ PREFABS.Locked_small_kc_blue =
 
   x_fit  = "frame"
   long   = 192
-  deep   = 48
+  deep   = 32
   over   = 32
 
   tex_DOORRED  = "DOORBLU"
@@ -30,7 +30,7 @@ PREFABS.Locked_small_kc_yellow =
 
   x_fit  = "frame"
   long   = 192
-  deep   = 48
+  deep   = 32
   over   = 32
 
   tex_DOORRED  = "DOORYEL"
@@ -48,7 +48,7 @@ PREFABS.Locked_small_kc_red =
 
   x_fit  = "frame"
   long   = 192
-  deep   = 48
+  deep   = 32
   over   = 32
 
   -- prefab has DOORRED texture and line special #33
@@ -66,7 +66,7 @@ PREFABS.Locked_small_ks_blue =
 
   x_fit  = "frame"
   long   = 192
-  deep   = 48
+  deep   = 32
   over   = 32
 
   tex_DOORRED  = "DOORBLU2"
@@ -84,7 +84,7 @@ PREFABS.Locked_small_ks_yellow =
 
   x_fit  = "frame"
   long   = 192
-  deep   = 48
+  deep   = 32
   over   = 32
 
   tex_DOORRED  = "DOORYEL2"
@@ -102,7 +102,7 @@ PREFABS.Locked_small_ks_red =
 
   x_fit  = "frame"
   long   = 192
-  deep   = 48
+  deep   = 32
   over   = 32
 
   tex_DOORRED  = "DOORRED2"
