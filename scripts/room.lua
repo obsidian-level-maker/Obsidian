@@ -2187,6 +2187,9 @@ function Room_floor_heights()
 
 
   local function flow_through_hallway(R, S, enter_dir, floor_h)
+
+stderrf("flow_through_hallway @ %s : %s\n", S:tostr(), R:tostr())
+
     S.hall_h = floor_h
     S.hall_visited = true
 
@@ -2210,16 +2213,13 @@ function Room_floor_heights()
         continue
       end
 
+stderrf("  next_dir : %d\n", dir)
       table.insert(next_dirs, dir)
     end
 
     -- all done?
     if table.empty(next_dirs) then
-      -- check all parts got a height
-      each S in R.areas[1].seeds do
-        if S.not_path then continue end
-        assert(S.hall_h)
-      end
+      return
     end
     
     -- branching?
@@ -2264,7 +2264,30 @@ function Room_floor_heights()
 
     flow_through_hallway(R, S, S_dir, R.entry_h)
 
-    -- FIXME : transfer heights to neighbors !!!
+    -- check all parts got a height
+    each S in R.areas[1].seeds do
+      if S.not_path then continue end
+      assert(S.hall_h)
+    end
+
+    -- transfer heights to neighbors
+    each C in R.areas[1].conns do
+      if conn.A2.room == R then
+        S = conn.S1
+        S_dir = conn.dir
+      else
+        assert(conn.A1.room == R)
+        S = conn.S2
+        S_dir = 10 - conn.dir
+      end
+
+      local N = S:neighbor(S_dir)
+
+      if not N.entry_h then
+stderrf("next_f @ %s --> %s\n", N.area.room:tostr(), tostring(S.hall_h))
+        N.area.room.next_f = assert(S.hall_h)
+      end
+    end
 
     set_floor(R.areas[1], R.max_hall_h)
   end
