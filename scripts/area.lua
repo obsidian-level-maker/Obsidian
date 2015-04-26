@@ -1693,6 +1693,7 @@ function Area_prune_hallways()
 
     -- OK --
     S.not_path = nil
+    S.fixed_diagonal = true
   end
 
 

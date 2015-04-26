@@ -2186,6 +2186,90 @@ function Room_floor_heights()
   end
 
 
+  local function flow_through_hallway(R, S, enter_dir, floor_h)
+    S.hall_h = floor_h
+    S.hall_visited = true
+
+    R.max_hall_h = math.max(R.max_hall_h, floor_h)
+
+    -- collect where we can go next
+    local next_dirs = {}
+
+    each dir in geom.ALL_DIRS do
+      local N = S:neighbor(dir)
+      
+      if not (N and N.area) then continue end
+      if N.area.room != R then continue end
+
+      if N.not_path then continue end
+      if N.hall_visited then continue end
+
+      -- Note: this assume fixed diagonals never branch elsewhere
+      if N.fixed_diagonal then
+        N.hall_h = floor_h
+        continue
+      end
+
+      table.insert(next_dirs, dir)
+    end
+
+    -- all done?
+    if table.empty(next_dirs) then
+      -- check all parts got a height
+      each S in R.areas[1].seeds do
+        if S.not_path then continue end
+        assert(S.hall_h)
+      end
+    end
+    
+    -- branching?
+    if #next_dirs > 1 then
+      each dir in next_dirs do
+        flow_through_hallway(R, S:neighbor(dir), dir, floor_h)
+      end
+
+      return
+    end
+
+    -- just one direction
+    local dir = next_dirs[1]
+
+    if not S.diagonal then
+      -- FIXME : determine shape, pick piece kind
+      S.floor_mat = "REDWALL"
+
+      floor_h = floor_h + 24
+    end
+
+    return flow_through_hallway(R, S:neighbor(dir), dir, floor_h)
+  end
+
+
+  local function process_hallway(R, conn)
+    R.max_hall_h = R.entry_h
+
+    local S, S_dir
+
+    if conn.A2.room == R then
+      S = conn.S1
+      S_dir = conn.dir
+    else
+      assert(conn.A1.room == R)
+      S = conn.S2
+      S_dir = 10 - conn.dir
+    end
+
+    assert(S)
+    assert(S_dir)
+
+    flow_through_hallway(R, S, S_dir, R.entry_h)
+
+    -- FIXME : transfer heights to neighbors !!!
+
+    set_floor(R.areas[1], R.max_hall_h)
+  end
+
+
   local function process_stairwell(R, prev_room)
     local A = R.areas[1]
     local well = A.is_stairwell
@@ -2232,7 +2316,7 @@ function Room_floor_heights()
   end
 
 
-  local function visit_room(R, entry_h, entry_area, prev_room)
+  local function visit_room(R, entry_h, entry_area, prev_room, via_conn)
     -- get peered room (for CTF mode)
     local R2 = R.sister or R.brother
 
@@ -2240,6 +2324,7 @@ function Room_floor_heights()
       assert(entry_area.room == R)
     end
 
+    -- handle start rooms and teleported-into rooms
     if not entry_h then
       entry_h = rand.irange(0, 4) * 64
     end
@@ -2256,6 +2341,8 @@ function Room_floor_heights()
 
     if R.kind == "stairwell" then
       process_stairwell(R, prev_room)
+    elseif R.kind == "hallway" and #R.areas == 1 and via_conn then
+      process_hallway(R, via_conn)
     else
       process_room(R, entry_area)
     end
@@ -2276,7 +2363,10 @@ function Room_floor_heights()
 
       local next_f = R.exit_h or A.floor_h
 
-      visit_room(A2.room, next_f, A2, R)
+      -- hallway crud (FIXME : HACKY)
+      if A2.room.next_f then next_f = A2.room.next_f end
+
+      visit_room(A2.room, next_f, A2, R, C)
     end
     end
   end
@@ -2286,6 +2376,7 @@ function Room_floor_heights()
 
   local first = LEVEL.start_room or LEVEL.blue_base or LEVEL.rooms[1]
 
+  -- recursively visit all rooms
   visit_room(first)
 
   -- do hallway porches when all heights are known [ Hmmmm... ]

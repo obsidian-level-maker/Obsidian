@@ -992,13 +992,23 @@ local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
   end
 
 
-  table.insert(f_brush, { t=A.floor_h, light=light, tag=tag })
-  table.insert(c_brush, { b=A. ceil_h })
+  local f_h = S.floor_h or A.floor_h
+  local c_h = S. ceil_h or A. ceil_h
 
-  brushlib.set_mat(f_brush, A.floor_mat, A.floor_mat)
-  brushlib.set_mat(c_brush, A. ceil_mat, A. ceil_mat)
 
-  if A.ceil_mat == "_SKY" then
+  table.insert(f_brush, { t=f_h, light=light, tag=tag })
+  table.insert(c_brush, { b=c_h })
+
+  local f_mat = S.floor_mat or A.floor_mat
+  local c_mat = S. ceil_mat or A. ceil_mat
+
+  local f_side = S.floor_side or S.floor_mat or A.floor_side or f_mat
+  local c_side = S. ceil_side or S. ceil_mat or A. ceil_side or c_mat
+
+  brushlib.set_mat(f_brush, f_side, f_mat)
+  brushlib.set_mat(c_brush, c_side, c_mat)
+
+  if c_mat == "_SKY" then
     brushlib.set_kind(c_brush, "sky")
   end
 
