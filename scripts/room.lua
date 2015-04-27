@@ -2190,6 +2190,33 @@ function Room_floor_heights()
   end
 
 
+  local function categorize_hall_shape(S, enter_dir, leave_dir, z_dir, z_step)
+    local info =
+    {
+      enter_dir = enter_dir
+      z_dir = z_dir
+      z_step = z_step
+    }
+
+    if leave_dir == enter_dir then
+      info.shape = "I"
+
+    elseif leave_dir == geom.LEFT[enter_dir] then
+      info.shape = "C"
+      info.mirror = false
+
+    elseif leave_dir == geom.RIGHT[enter_dir] then
+      info.shape = "C"
+      info.mirror = true
+
+    else
+      error("weird hallway dirs")
+    end
+
+    return info
+  end
+
+
   local function flow_through_hallway(R, S, enter_dir, floor_h)
 
 -- stderrf("flow_through_hallway @ %s : %s\n", S:tostr(), R:tostr())
@@ -2261,6 +2288,8 @@ stderrf("\nBRANCHED !!!!\n")
       S.floor_mat = "REDWALL"
 
       floor_h = floor_h + 24
+
+      S.hall_shape = categorize_hall_shape(S, enter_dir, dir, 1, "small")
     end
 
     if #next_dirs > 0 then
