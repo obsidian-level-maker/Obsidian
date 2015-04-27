@@ -971,7 +971,7 @@ or S.not_path
 
 local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
 -- tag = A.id
--- if A.conn_group then tag = 1000 * A.zone.id + A.conn_group end
+-- if A.conn_group then tag = A.conn_group end
 -- if A.quest and A.quest.id < 2 then tag = 1 end
 
 

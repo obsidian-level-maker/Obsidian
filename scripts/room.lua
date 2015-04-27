@@ -773,7 +773,7 @@ function Room_detect_porches(R)
       end
 
       -- floor check
-      if HA.floor_h + 64 < A2.floor_h then
+      if HA.floor_h + 64 < (A2.floor_h or 0) then
         return false
       end
     end
@@ -2418,7 +2418,7 @@ stderrf("next_f @ %s --> %s\n", N.area.room:tostr(), tostring(S.hall_h))
   each R in LEVEL.rooms do
     -- sanity check : all rooms were visited
 
---[[
+--[[ "fubar" debug stuff
 if not R.entry_h then
 R.entry_h = -77
 each A in R.areas do A.floor_h = R.entry_h end
