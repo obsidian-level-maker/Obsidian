@@ -395,9 +395,17 @@ function Connect_zones_prelim()
   --
 
   local function merge_zone_groups(old_Z, new_Z)
+    local gr1 = old_Z.map_group
+    local gr2 = new_Z.map_group
+
+--- stderrf("merge_zone_groups %d <--> %d\n", gr1, gr2)
+
+    assert(gr1 and gr2)
+    assert(gr1 != gr2)
+
     each Z in LEVEL.zones do
-      if Z.map_group == old_Z.map_group then
-         Z.map_group = new_Z.map_group
+      if Z.map_group == gr1 then
+         Z.map_group = gr2
       end
     end
   end
@@ -451,7 +459,7 @@ function Connect_zones_prelim()
     local Z1 = A1.zone
     local Z2 = A2.zone
 
--- stderrf("\n\n PRELIM CONNECT : %s %s <--> %s %s\n\n", Z1.name, A1.name, A2.name, Z2.name)
+--- stderrf("\n\n PRELIM CONNECT : %s %s <--> %s %s\n\n", Z1.name, A1.name, A2.name, Z2.name)
   end
 
 
