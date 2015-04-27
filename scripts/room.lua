@@ -148,6 +148,10 @@ function ROOM_CLASS.kill_it(R)
 
     each S in A.seeds do
       S.room = nil
+
+      each dir in geom.ALL_DIRS do
+        if S.border[dir] then S.border[dir].kind = "nothing" end
+      end
     end
 
     each C in A.conns do
@@ -2188,7 +2192,7 @@ function Room_floor_heights()
 
   local function flow_through_hallway(R, S, enter_dir, floor_h)
 
-stderrf("flow_through_hallway @ %s : %s\n", S:tostr(), R:tostr())
+-- stderrf("flow_through_hallway @ %s : %s\n", S:tostr(), R:tostr())
 
     S.hall_h = floor_h
     S.hall_visited = true
@@ -2197,6 +2201,8 @@ stderrf("flow_through_hallway @ %s : %s\n", S:tostr(), R:tostr())
 
     -- collect where we can go next
     local next_dirs = {}
+
+    local saw_fixed = false
 
     each dir in geom.ALL_DIRS do
       local N = S:neighbor(dir)
@@ -2209,11 +2215,14 @@ stderrf("flow_through_hallway @ %s : %s\n", S:tostr(), R:tostr())
 
       -- Note: this assume fixed diagonals never branch elsewhere
       if N.fixed_diagonal then
-        N.hall_h = floor_h
+        if not N.hall_h then
+          N.hall_h = floor_h
+        end
+
+        saw_fixed = true
         continue
       end
 
-stderrf("  next_dir : %d\n", dir)
       table.insert(next_dirs, dir)
     end
 
@@ -2224,6 +2233,7 @@ stderrf("  next_dir : %d\n", dir)
     
     -- branching?
     if #next_dirs > 1 then
+stderrf("\nBRANCHED !!!!\n")
       each dir in next_dirs do
         flow_through_hallway(R, S:neighbor(dir), dir, floor_h)
       end
@@ -2234,7 +2244,7 @@ stderrf("  next_dir : %d\n", dir)
     -- just one direction
     local dir = next_dirs[1]
 
-    if not S.diagonal then
+    if not S.diagonal and not saw_fixed then
       -- FIXME : determine shape, pick piece kind
       S.floor_mat = "REDWALL"
 
