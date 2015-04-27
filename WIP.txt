@@ -3,6 +3,18 @@ WORK IN PROGRESS
 ================
 
 
+Hallways
+--------
+
++  categorize dirs
+
+-  choose at start : big up, small up, flat, small down, big down
+   ( big should be rare, e.g. 1/10 of small )
+   ( pick preferred direction per zone )
+
++  can use "floor_h" in seeds, OR must use hall_h ?
+
+
 
 Closets
 -------
