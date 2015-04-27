@@ -222,6 +222,7 @@ T.area.id, T.area.conn_group)
   S.border[dir].conn = CONN
 
   T.border[10-dir].kind = "nothing"
+  T.border[10-dir].conn = CONN
 
   S.thick[dir] = 16
   T.thick[10-dir] = 16

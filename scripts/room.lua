@@ -2199,8 +2199,9 @@ function Room_floor_heights()
 
     R.max_hall_h = math.max(R.max_hall_h, floor_h)
 
-    -- collect where we can go next
+    -- collect where we can go next + where can exit
     local next_dirs = {}
+    local exit_dirs = {}
 
     local saw_fixed = false
 
@@ -2208,7 +2209,13 @@ function Room_floor_heights()
       local N = S:neighbor(dir)
       
       if not (N and N.area) then continue end
-      if N.area.room != R then continue end
+
+      if N.area.room != R then
+        if S.border[dir].conn and not N.area.room.entry_h then
+          table.insert(exit_dirs, dir)
+        end
+        continue
+      end
 
       if N.not_path then continue end
       if N.hall_visited then continue end
@@ -2227,12 +2234,14 @@ function Room_floor_heights()
     end
 
     -- all done?
-    if table.empty(next_dirs) then
+    local total = #next_dirs + #exit_dirs
+
+    if total == 0 then
       return
     end
     
     -- branching?
-    if #next_dirs > 1 then
+    if total > 1 then
 stderrf("\nBRANCHED !!!!\n")
       each dir in next_dirs do
         flow_through_hallway(R, S:neighbor(dir), dir, floor_h)
@@ -2241,8 +2250,11 @@ stderrf("\nBRANCHED !!!!\n")
       return
     end
 
-    -- just one direction
-    local dir = next_dirs[1]
+    -- a single direction --
+
+    local dir = next_dirs[1] or exit_dirs[1]
+
+    -- FIXME : check for "door" (if dir is exit_dir)
 
     if not S.diagonal and not saw_fixed then
       -- FIXME : determine shape, pick piece kind
@@ -2251,7 +2263,9 @@ stderrf("\nBRANCHED !!!!\n")
       floor_h = floor_h + 24
     end
 
-    return flow_through_hallway(R, S:neighbor(dir), dir, floor_h)
+    if #next_dirs > 0 then
+      return flow_through_hallway(R, S:neighbor(dir), dir, floor_h)
+    end
   end
 
 
