@@ -2193,7 +2193,7 @@ function Room_floor_heights()
   local function categorize_hall_shape(S, enter_dir, leave_dir, z_dir, z_step)
     local info =
     {
-      enter_dir = enter_dir
+      dir = enter_dir
       z_dir = z_dir
       z_step = z_step
     }
@@ -2211,6 +2211,20 @@ function Room_floor_heights()
 
     else
       error("weird hallway dirs")
+    end
+
+    if z_dir < 0 then
+      if info.shape == "I" then
+        info.dir = 10 - info.dir
+      else
+        if info.mirror then
+          info.dir = geom.RIGHT[info.dir]
+        else
+          info.dir = geom.LEFT[info.dir]
+        end
+
+        info.mirror = not info.mirror
+      end
     end
 
     return info
