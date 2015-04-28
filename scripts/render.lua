@@ -1057,6 +1057,8 @@ function Render_hallway(A, S)
     local z = S.hall_h + S.hall_piece.z_offset
     local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, S.hall_piece.dir)
 
+    if S.hall_piece.mirror then T.mirror_x = 96 end
+
     Fabricate(A.room, def, T, { skin })
 
   else
@@ -1070,6 +1072,8 @@ function Render_hallway(A, S)
 
     local z = S.hall_h + S.hall_piece.z_offset + 96
     local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, S.hall_piece.dir)
+
+    if S.hall_piece.mirror then T.mirror_x = 96 end
 
     Fabricate(A.room, def, T, { skin })
   else
