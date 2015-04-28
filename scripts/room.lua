@@ -2195,7 +2195,7 @@ function Room_floor_heights()
     {
       dir = enter_dir
       z_dir = z_dir
-      z_step = z_step
+      z_offset = 0
     }
 
     if leave_dir == enter_dir then
@@ -2225,6 +2225,8 @@ function Room_floor_heights()
 
         info.mirror = not info.mirror
       end
+
+      info.z_offset = -z_step
     end
 
     return info

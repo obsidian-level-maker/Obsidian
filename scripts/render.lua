@@ -947,36 +947,30 @@ end
 
 
 
-function Render_seed(A, S)
-  assert(S.area == A)
+function Render_void(A, S)
+  -- used for VOID areas and prefabs occupying whole seed
+
+  local w_brush = S:make_brush()
+
+  brushlib.set_mat(w_brush, A.wall_mat)
+
+  Trans.brush(w_brush)
+end
 
 
-  local bare_brush = S:make_brush()
 
+function Render_floor(A, S)
+  local f_brush = S:make_brush()
 
-  if A.mode == "void" or (A.mode == "scenic" and not A.is_outdoor)
-or S.not_path
-  then
-    local w_brush = bare_brush
+  local f_h = S.hall_h or S.floor_h or A.floor_h
 
-    brushlib.set_mat(w_brush, A.wall_mat)
+  local f_mat = S.floor_mat or A.floor_mat
+  local f_side = S.floor_side or S.floor_mat or A.floor_side or f_mat
 
-    Trans.brush(w_brush)
-    return
-  end
-
-
-  local light
-
-
-local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
+  local tag = S.tag
 -- tag = A.id
 -- if A.conn_group then tag = A.conn_group end
 -- if A.quest and A.quest.id < 2 then tag = 1 end
-
-
-  local f_brush = brushlib.copy(bare_brush)
-  local c_brush = bare_brush
 
 
   -- handle railings [ must be done here ]
@@ -992,36 +986,61 @@ local tag  ---##  = sel(A.ceil_mat == "_SKY", 1, 0)
   end
 
 
-  local f_h = S.hall_h or S.floor_h or A.floor_h
-  local c_h = S. ceil_h or A. ceil_h
-
-
-  table.insert(f_brush, { t=f_h, light=light, tag=tag })
-  table.insert(c_brush, { b=c_h })
-
-  local f_mat = S.floor_mat or A.floor_mat
-  local c_mat = S. ceil_mat or A. ceil_mat
-
-  local f_side = S.floor_side or S.floor_mat or A.floor_side or f_mat
-  local c_side = S. ceil_side or S. ceil_mat or A. ceil_side or c_mat
+  table.insert(f_brush, { t=f_h, light=S.light, tag=tag })
 
   brushlib.set_mat(f_brush, f_side, f_mat)
+
+  Trans.brush(f_brush)
+
+  -- remember floor brush for the spot logic
+  table.insert(A.floor_brushes, f_brush)
+
+  if A.floor_sink then
+    Render_sink_part(A, S, "floor",   A.floor_sink)
+  end
+end
+
+
+
+function Render_ceil(A, S)
+  local c_h = S.ceil_h or A.ceil_h
+
+  local c_mat  = S.ceil_mat  or A.ceil_mat
+  local c_side = S.ceil_side or S.ceil_mat or A.ceil_side or c_mat
+
+  local c_brush = S:make_brush()
+
+  table.insert(c_brush, { b=c_h })
+
   brushlib.set_mat(c_brush, c_side, c_mat)
 
   if c_mat == "_SKY" then
     brushlib.set_kind(c_brush, "sky")
   end
 
-  Trans.brush(f_brush)
   Trans.brush(c_brush)
 
+  if A.ceil_sink then
+    Render_sink_part(A, S, "ceiling", A.ceil_sink)
+  end
+end
 
-  if A.floor_sink then Render_sink_part(A, S, "floor",   A.floor_sink) end
-  if A. ceil_sink then Render_sink_part(A, S, "ceiling", A. ceil_sink) end
 
 
-  -- remember floor brush for the spot logic
-  table.insert(A.floor_brushes, f_brush)
+function Render_seed(A, S)
+  assert(S.area == A)
+
+
+  if A.mode == "void" or (A.mode == "scenic" and not A.is_outdoor)
+    or S.not_path
+  then
+    Render_void(A, S)
+    return
+  end
+
+
+  Render_floor(A, S)
+  Render_ceil (A, S)
 end
 
 
