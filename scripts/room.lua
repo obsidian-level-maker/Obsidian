@@ -942,6 +942,15 @@ do return end
       return
     end
 
+
+--[[
+if A1.mode == "hallway" or A2.mode == "hallway" then
+  junc.kind = "nothing"
+  return
+end
+--]]
+
+
     -- FIXME
 
     junc.kind = "wall"
@@ -2194,6 +2203,8 @@ function Room_floor_heights()
     local info =
     {
       dir = enter_dir
+      delta_h = sel(z_size == "big", 48, 24)
+
       z_dir = z_dir
       z_size = z_size
       z_offset = 0
@@ -2227,7 +2238,7 @@ function Room_floor_heights()
         info.mirror = not info.mirror
       end
 
-      info.z_offset = - sel(z_size == "big", 40, 24)
+      info.z_offset = - info.delta_h
     end
 
     return info
@@ -2304,9 +2315,9 @@ stderrf("\nBRANCHED !!!!\n")
       -- FIXME : determine shape, pick piece kind
       S.floor_mat = "REDWALL"
 
-      floor_h = floor_h + 24
-
       S.hall_piece = categorize_hall_shape(S, enter_dir, dir, 1, "small")
+
+      floor_h = floor_h + S.hall_piece.delta_h
     end
 
     if #next_dirs > 0 then
