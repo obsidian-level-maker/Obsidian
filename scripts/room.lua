@@ -2315,7 +2315,7 @@ stderrf("\nBRANCHED !!!!\n")
       -- FIXME : determine shape, pick piece kind
       S.floor_mat = "REDWALL"
 
-      S.hall_piece = categorize_hall_shape(S, enter_dir, dir, -1, "small")
+      S.hall_piece = categorize_hall_shape(S, enter_dir, dir, 1, "small")
 
       floor_h = floor_h + S.hall_piece.delta_h * S.hall_piece.z_dir
     end
@@ -2367,8 +2367,9 @@ stderrf("\nBRANCHED !!!!\n")
       end
 
       if not N.area.room.entry_h then
-stderrf("next_f @ %s --> %s\n", N.area.room:tostr(), tostring(S.hall_h))
-        N.area.room.next_f = assert(S.hall_h)
+        local next_f = assert(S.hall_h)
+        if S.hall_piece then next_f = next_f + S.hall_piece.delta_h * S.hall_piece.z_dir end
+        N.area.room.next_f = next_f
       end
     end
 
