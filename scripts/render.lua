@@ -1555,6 +1555,11 @@ function Render_importants()
 
     local brush = brushlib.quad(spot.x - r, spot.y - r, spot.x + r, spot.y + r)
 
+    -- mark as "no draw"
+    each C in brush do
+      C.draw_never = 1
+    end
+
     local A = assert(spot.area)
 
     -- make it higher to ensure it doesn't get eaten by the floor brush
