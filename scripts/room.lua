@@ -2230,9 +2230,9 @@ function Room_floor_heights()
         info.dir = 10 - info.dir
       else
         if info.mirror then
-          info.dir = geom.RIGHT[info.dir]
-        else
           info.dir = geom.LEFT[info.dir]
+        else
+          info.dir = geom.RIGHT[info.dir]
         end
 
         info.mirror = not info.mirror
@@ -2315,9 +2315,9 @@ stderrf("\nBRANCHED !!!!\n")
       -- FIXME : determine shape, pick piece kind
       S.floor_mat = "REDWALL"
 
-      S.hall_piece = categorize_hall_shape(S, enter_dir, dir, 1, "small")
+      S.hall_piece = categorize_hall_shape(S, enter_dir, dir, -1, "small")
 
-      floor_h = floor_h + S.hall_piece.delta_h
+      floor_h = floor_h + S.hall_piece.delta_h * S.hall_piece.z_dir
     end
 
     if #next_dirs > 0 then
