@@ -2190,11 +2190,12 @@ function Room_floor_heights()
   end
 
 
-  local function categorize_hall_shape(S, enter_dir, leave_dir, z_dir, z_step)
+  local function categorize_hall_shape(S, enter_dir, leave_dir, z_dir, z_size)
     local info =
     {
       dir = enter_dir
       z_dir = z_dir
+      z_size = z_size
       z_offset = 0
     }
 
@@ -2226,7 +2227,7 @@ function Room_floor_heights()
         info.mirror = not info.mirror
       end
 
-      info.z_offset = -z_step
+      info.z_offset = - sel(z_size == "big", 40, 24)
     end
 
     return info
@@ -2305,7 +2306,7 @@ stderrf("\nBRANCHED !!!!\n")
 
       floor_h = floor_h + 24
 
-      S.hall_shape = categorize_hall_shape(S, enter_dir, dir, 1, "small")
+      S.hall_piece = categorize_hall_shape(S, enter_dir, dir, 1, "small")
     end
 
     if #next_dirs > 0 then

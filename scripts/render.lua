@@ -1002,7 +1002,7 @@ end
 
 
 
-function Render_ceil(A, S)
+function Render_ceiling(A, S)
   local c_h = S.ceil_h or A.ceil_h
 
   local c_mat  = S.ceil_mat  or A.ceil_mat
@@ -1027,20 +1027,75 @@ end
 
 
 
+function Render_hallway(A, S)
+  if S.not_path then
+    Render_void(A, S)
+    return
+  end
+
+  -- determine common part of prefab name
+  local fab_common
+
+  if S.hall_piece then
+    if S.hall_piece.shape == "I" then
+      fab_common = "stair_"
+    else
+      fab_common = "curve_"
+    end
+
+    -- append "big" or "small"
+    fab_common = fab_common .. S.hall_piece.z_size
+  end
+
+  local skin = {}
+
+
+  if S.hall_piece then
+    local fab_name = "Hall_f_" .. fab_common
+    local def = Fab_lookup(fab_name)
+
+    local z = S.hall_h + S.hall_piece.z_offset
+    local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, S.hall_piece.dir)
+
+    Fabricate(A.room, def, T, { skin })
+
+  else
+    Render_floor(A, S)
+  end
+
+
+  if S.hall_piece and not A.is_outdoor then
+    local fab_name = "Hall_c_" .. fab_common
+    local def = Fab_lookup(fab_name)
+
+    local z = S.hall_h + S.hall_piece.z_offset + 96
+    local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, S.hall_piece.dir)
+
+    Fabricate(A.room, def, T, { skin })
+  else
+    Render_ceiling(A, S)
+  end
+end
+
+
 function Render_seed(A, S)
   assert(S.area == A)
 
 
-  if A.mode == "void" or (A.mode == "scenic" and not A.is_outdoor)
-    or S.not_path
-  then
+  if A.mode == "hallway" then
+    Render_hallway(A, S)
+    return
+  end
+
+
+  if A.mode == "void" or (A.mode == "scenic" and not A.is_outdoor) then
     Render_void(A, S)
     return
   end
 
 
-  Render_floor(A, S)
-  Render_ceil (A, S)
+  Render_floor  (A, S)
+  Render_ceiling(A, S)
 end
 
 
