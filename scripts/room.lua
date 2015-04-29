@@ -2317,6 +2317,8 @@ stderrf("\nBRANCHED !!!!\n")
       S.hall_piece = categorize_hall_shape(S, enter_dir, dir, 1, "small")
 
       floor_h = floor_h + S.hall_piece.delta_h * S.hall_piece.z_dir
+
+      R.max_hall_h = math.max(R.max_hall_h, floor_h)
     end
 
     if #next_dirs > 0 then
