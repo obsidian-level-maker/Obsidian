@@ -1487,7 +1487,7 @@ function Render_importants()
   local function content_weapon(spot)
     local weapon = assert(spot.content_item)
 
-    if R.is_start or R.is_hallway then
+    if R.is_start or R.kind == "hallway" then
       -- bare item
       Trans.entity(weapon, spot.x, spot.y, spot.z)
     else
@@ -1501,7 +1501,7 @@ function Render_importants()
   local function content_item(spot)
     local item = assert(spot.content_item)
 
-    if R.is_start or R.is_hallway then
+    if R.is_start or R.kind == "hallway" then
       -- bare item
       Trans.entity(item, spot.x, spot.y, spot.z)
     else

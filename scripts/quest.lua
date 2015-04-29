@@ -200,8 +200,10 @@ function Quest_create_initial_quest()
   --
 
   local function eval_exit_room(R, secret_mode)
-    if R.is_hallway then return -1 end
-    if R.is_exit    then return -1 end
+    if R.kind == "hallway"   then return -1 end
+    if R.kind == "stairwell" then return -1 end
+
+    if R.is_exit then return -1 end
 
     -- must be a leaf room
     if R:total_conns() > 1 then return -1 end
@@ -425,7 +427,9 @@ function Quest_eval_divide_at_conn(C, goal, info)
       local R = A.room
 
       if R.is_secret then continue end
-      if R.is_hallway then continue end
+
+      if R.kind == "hallway"   then continue end
+      if R.kind == "stairwell" then continue end
 
       -- some goals already?
       if #R.goals > 0 then continue end
@@ -460,10 +464,12 @@ function Quest_eval_divide_at_conn(C, goal, info)
     local before_size = size_of_area_set(before)
     local  after_size = size_of_area_set(after)
 
-    local score = 200
+    local score = 300
 
     -- strongly prefer not to enter a hallway from a locked door
-    if after_A.room.is_hallway then
+    if after_A.room.kind == "stairwell" then
+      score = score - 200
+    elseif after_A.room.kind == "hallway" then
       score = score - 100
     end
 
@@ -537,7 +543,8 @@ assert(after[quest.entry.id])
   end
 
   -- no locking end of hallways in MAJOR mode
-  if info.mode == "MAJOR" and before_A.room.is_hallway then
+  if info.mode == "MAJOR" and
+     (before_A.room.kind == "hallway" or before_A.room.kind == "stairwell") then
     return
   end
 
@@ -1074,9 +1081,9 @@ function Quest_start_room()
     end
 
     -- never in a hallway
-    -- TODO : occasionally allow it -- but require a void area nearby
+    -- TODO : occasionally allow it -- but require a closety void area nearby
     --        which we can use for a start closet
-    if R.is_hallway then
+    if R.kind == "hallway" then
       return -1
     end
 
@@ -1494,7 +1501,8 @@ function Quest_add_weapons()
 
   local function eval_weapon_room(R, is_start, is_new)
     -- never in hallways!
-    if R.is_hallway then return -200 end
+    if R.kind == "stairwell" then return -250 end
+    if R.kind == "hallway"   then return -200 end
 
     -- never in secrets!
     if R.is_secret then return -150 end
@@ -1827,7 +1835,7 @@ function Quest_nice_items()
     local rooms = {}
 
     each R in LEVEL.rooms do
-      if R.is_secret and not R.is_hallway then
+      if R.is_secret and R.kind != "hallway" then
         table.insert(rooms, R)
       end
     end
@@ -1848,7 +1856,9 @@ function Quest_nice_items()
 
 
   local function is_unused_leaf(R)
-    if R.is_hallway then return false end
+    if R.kind == "hallway"   then return false end
+    if R.kind == "stairwell" then return false end
+
     if R.is_secret  then return false end
     if R.is_start   then return false end
 
@@ -1929,7 +1939,9 @@ function Quest_nice_items()
 
 
   local function eval_other_room(R)
-    if R.is_hallway then return -1 end
+    if R.kind == "hallway"   then return -1 end
+    if R.kind == "stairwell" then return -1 end
+
     if R.is_secret  then return -1 end
     if R.is_start   then return -1 end
 
@@ -2001,29 +2013,31 @@ end
 function Quest_make_room_secret(R)
   R.is_secret = true
 
-  -- if connected to a hallway or stairwell, make it secret too
-  -- [ hallways with two or more other rooms are not changed ]
-
   local C = secret_entry_conn(R)
   assert(C)
 
+  -- if connected to a hallway or stairwell, make it secret too
+  -- [ hallways with two or more other rooms are not changed ]
+
   local H = sel(C.A1.room == R, C.A2.room, C.A1.room)
 
-  if not H.is_hallway then return end
-  if H:total_conns() > 2 then return end
+  if (H.kind == "hallway" or H.kind == "stairwell") and
+     H:total_conns() <= 2
+  then
 
-  H.is_secret = true
+    H.is_secret = true
 
-  -- downgrade a stairwell
-  if H.kind == "stairwell" then
-    H.kind = "building"
-    H.areas[1].is_stairwell = nil
+    -- downgrade a stairwell
+    if H.kind == "stairwell" then
+      H.kind = "hallway"
+      H.areas[1].is_stairwell = nil
+    end
+
+    C = secret_entry_conn(H, R)
+    assert(C)
   end
 
   -- mark connection to get a secret door
-  C = secret_entry_conn(H, R)
-  assert(C)
-
   C.kind = "secret"
 end
 
@@ -2037,7 +2051,9 @@ function Quest_big_secrets()
   --
 
   local function eval_secret_room(R)
-    if R.is_hallway then return -1 end
+    if R.kind == "hallway"   then return -1 end
+    if R.kind == "stairwell" then return -1 end
+
     if R.is_start   then return -1 end
     if R.is_exit    then return -1 end
 

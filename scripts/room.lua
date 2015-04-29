@@ -18,42 +18,46 @@
 --
 ------------------------------------------------------------------------
 
---[[ *** CLASS INFORMATION ***
+--class ROOM
+--[[
+    kind : keyword  -- "building" (layout-able room)
+                    -- "outdoor", "cave"
+                    -- "hallway", "stairwell"
+                    -- "scenic" (unvisitable room)
 
-class ROOM
-{
-  kind : keyword  -- "building" (layout-able room)
-                  -- "outdoor", "cave"
-                  -- "hallway", "stairwell"
-                  -- "scenic" (unvisitable room)
-
-  is_outdoor : bool  -- true for outdoor rooms / caves
+    is_outdoor : bool  -- true for outdoor rooms / caves
 
 
-  areas = list(AREA)
+    areas = list(AREA)
 
-  seeds = list(SEED)
+    seeds = list(SEED)
 
-  ext_conns = list(CONNS)   -- connections which go "external" to another room
-
-
-  //////////////////////
+    ext_conns = list(CONNS)   -- connections which go "external" to another room
 
 
+    //////////////////////
 
-  branch_kind : keyword
 
-  hallway : HALLWAY_INFO   -- for hallways and stairwells
+    branch_kind : keyword
 
-  symmetry : keyword   -- symmetry of room, or NIL
-                       -- keywords are "x", "y", "xy"
+    hallway : HALLWAY_INFO   -- for hallways only
 
-  sx1, sy1, sx2, sy2  -- \ Seed range
-  sw, sh, svolume     -- /
+    symmetry : keyword   -- symmetry of room, or NIL
+                         -- keywords are "x", "y", "xy"
 
-  zone  : ZONE
+    sx1, sy1, sx2, sy2  -- \ Seed range
+    sw, sh, svolume     -- /
 
-}
+    zone  : ZONE
+
+--]]
+
+
+--class HALLWAY_INFO
+--[[
+    height : number   -- space between floor and ceiling
+
+--]]
 
 
 --------------------------------------------------------------]]
@@ -111,6 +115,7 @@ end
 function ROOM_CLASS.kind_str(R)
   if R.kind == "DEAD" then return "DEAD_DEAD_DEAD" end
   if R.kind == "hallway" then return "HALLWAY" end
+  if R.kind == "stairwell" then return "STAIRWELL" end
   if R.kind == "scenic" then return "SCENIC" end
   if R.parent then return "SUBROOM" end
   return "ROOM"
@@ -164,7 +169,7 @@ function ROOM_CLASS.kill_it(R)
   table.kill_elem(LEVEL.rooms, R)
 
   R.kind = "DEAD"
-  R.is_hallway = nil
+  R.hallway = nil
 
   R.sx1   = nil
   R.areas = nil
@@ -2443,7 +2448,7 @@ stderrf("\nBRANCHED !!!!\n")
       R2.entry_h = entry_h
     end
 
-    if R.kind != "hallway" then
+    if not (R.kind == "hallway" or R.kind == "stairwell") then
       Room_detect_porches(R)
     end
 

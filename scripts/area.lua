@@ -1022,7 +1022,7 @@ function Area_group_into_rooms()
 
     if A.mode == "hallway" then
       ROOM.kind = "hallway"
-      ROOM.is_hallway = true
+      ROOM.hallway = { }
     end
 
     return ROOM
@@ -1747,7 +1747,7 @@ function Area_prune_hallways()
   ---| Area_prune_hallways |---
 
   each R in LEVEL.rooms do
-    if R.is_hallway and R.kind != "stairwell" then
+    if R.kind == "hallway" then
       prune_hallway(R)
     end
   end

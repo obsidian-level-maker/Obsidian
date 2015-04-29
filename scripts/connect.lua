@@ -265,7 +265,8 @@ function Connect_teleporters()
   
   local function eval_room(R)
     -- never in hallways
-    if R.is_hallway then return -1 end
+    if R.kind == "hallway"   then return -1 end
+    if R.kind == "stairwell" then return -1 end
 
     -- can only have one teleporter per room
     -- TODO : relax this to one per area [ but require a big room ]
@@ -669,8 +670,8 @@ function Connect_stuff()
     end
 
     -- hallways never touch [ enforced in area.lua ]
-    assert(not N1.is_hallway)
-    assert(not N2.is_hallway)
+    assert(N1.kind != "hallway")
+    assert(N2.kind != "hallway")
 
     local score = 200
 
@@ -720,8 +721,8 @@ function Connect_stuff()
 
     A.is_stairwell = well
 
---FIXME : support outdoor stairwells
-A.is_outdoor = false
+    --TODO : support outdoor stairwells
+    A.is_outdoor = false
 
     well.room1 = N1.room
     well.room2 = N2.room
@@ -824,7 +825,7 @@ A.is_outdoor = false
     -- for CTF maps, we only visit one half of a peered area pair
 
     each R in LEVEL.rooms do
-      if R.is_hallway and not R.brother then
+      if R.kind == "hallway" and not R.brother then
         R.h_order = R.svolume + gui.random()  -- tie breaker
         table.insert(hall_list, R)
       end
@@ -886,9 +887,12 @@ A.is_outdoor = false
     local score
 
     -- we done hallways already, no more please
-    if R1.is_hallway and R2.is_hallway then
+    local hall_1 = (R1.kind == "hallway" or R1.kind == "stairwell")
+    local hall_2 = (R2.kind == "hallway" or R2.kind == "stairwell")
+
+    if hall_1 and hall_2 then
       score =  800
-    elseif R1.is_hallway or R2.is_hallway then
+    elseif hall_1 or hall_2 then
       score = 1800
     else
       score = 2800
