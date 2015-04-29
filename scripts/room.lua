@@ -527,10 +527,9 @@ function Room_create_sky_groups()
   --
 
   local function new_sky_add_h()
-    if rand.odds(10) then return 320 end
-    if rand.odds(2)  then return 480 end
+    if rand.odds(2)  then return 320 end
 
-    return rand.pick({ 144, 176, 208 })
+    return rand.pick({ 144, 160, 176, 192, 208 })
   end
 
 
@@ -2508,13 +2507,40 @@ end
 
 
 function Room_update_sky_groups()
-  each A in LEVEL.areas do
-    if A.floor_h and A.is_outdoor then
-      local sky_h = A.floor_h + A.zone.sky_add_h
 
-      A.zone.sky_h = math.max(A.zone.sky_h or 0, sky_h)
+  local function do_area(A)
+    local sky_h = A.floor_h + A.zone.sky_add_h
+
+    A.zone.sky_h = math.max(A.zone.sky_h or -9999, sky_h)
+  end
+
+
+  ---| Room_update_sky_groups |---
+
+  each A in LEVEL.areas do
+    -- visit all normal, outdoor areas
+    if A.floor_h and A.is_outdoor and not A.is_boundary then
+      do_area(A)
+
+      -- include nearby buildings in same zone
+      -- [ TODO : perhaps limit to where areas share a window or doorway ]
+      each N in A.neighbors do
+        if N.zone == A.zone and N.floor_h and not N.is_outdoor and not N.is_boundary then
+          do_area(N)
+        end
+      end
     end
   end
+  
+  -- ensure every zone gets a sky_h
+  each Z in LEVEL.zones do
+    if not Z.sky_h then
+      Z.sky_h = 0
+      Z.no_outdoors = true
+    end
+  end
+
+  -- transfer final results into areas
 
   each A in LEVEL.areas do
     if A.floor_h and A.is_outdoor then
