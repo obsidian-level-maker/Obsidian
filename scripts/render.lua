@@ -1049,6 +1049,8 @@ function Render_hallway(A, S)
 
   local skin = {}
 
+--- if A.room.hallway.parent then skin.floor = "FLAT14" end
+
 
   if S.hall_piece then
     local fab_name = "Hall_f_" .. fab_common
@@ -1190,6 +1192,10 @@ function dummy_properties(A)
     A.floor_mat = "FLAT5_1"
     A.wall_mat  = "WOOD1"
     A.ceil_mat  = "WOOD1"
+
+--- if A.room.hallway.parent then
+--- A.floor_mat = "FLAT14"
+--- end
 
     if not A.is_outdoor then
     A.facade_mat = "STONE3" --!!!!FIXME  A.zone.facade_mat

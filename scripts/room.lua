@@ -933,6 +933,25 @@ do return end
 --]]
 
 
+    -- blended hallways --
+
+    if A1.mode == "hallway" and
+       A1.room.hallway.parent and
+       A1.room.hallway.parent == A2.room
+    then
+      junc.kind = "nothing"
+      return
+    end
+
+    if A2.mode == "hallway" and
+       A2.room.hallway.parent and
+       A2.room.hallway.parent == A1.room
+    then
+      junc.kind = "nothing"
+      return
+    end
+
+
     -- outdoor to outdoor
     if A1.is_outdoor and A2.is_outdoor then
       junc.kind = "fence"
@@ -945,14 +964,6 @@ do return end
 
       return
     end
-
-
---[[
-if A1.mode == "hallway" or A2.mode == "hallway" then
-  junc.kind = "nothing"
-  return
-end
---]]
 
 
     -- FIXME
@@ -2410,9 +2421,12 @@ function Room_floor_heights()
 
     set_floor(R.areas[1], R.max_hall_h)
 
-    -- check if can make hallway "part" of one of connecting rooms
+    -- check if can make hallway "blend" into one of connecting rooms
 
-    if R.hallway.touch_R1 >= 2 and (R.hallway.touch_R1 - 1) / #R.hallway.path > 0.52 then
+    if R.quest == R.hallway.R1.quest and
+       R.hallway.touch_R1 >= 2 and
+       (R.hallway.touch_R1 - 1) / #R.hallway.path > 0.52
+    then
 stderrf("\nMAKING HALLWAY BLEND INTO PARENT ROOM\n\n")
       R.hallway.parent = R.hallway.R1
     end
