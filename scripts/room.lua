@@ -2253,6 +2253,8 @@ function Room_floor_heights()
 
 -- stderrf("flow_through_hallway @ %s : %s\n", S:tostr(), R:tostr())
 
+    table.insert(R.hallway.path, S)
+
     S.hall_h = floor_h
     S.hall_visited = true
 
@@ -2270,6 +2272,9 @@ function Room_floor_heights()
       if not (N and N.area) then continue end
 
       if N.area.room != R then
+        if N.area.room == R.hallway.R1 then R.hallway.touch_R1 = R.hallway.touch_R1 + 1 end
+        if N.area.room == R.hallway.R2 then R.hallway.touch_R2 = R.hallway.touch_R2 + 1 end
+
         if S.border[dir].conn and not N.area.room.entry_h then
           table.insert(exit_dirs, dir)
         end
@@ -2301,7 +2306,8 @@ function Room_floor_heights()
     
     -- branching?
     if total > 1 then
-stderrf("\nBRANCHED !!!!\n")
+      R.hallway.branched = true
+
       each dir in next_dirs do
         flow_through_hallway(R, S:neighbor(dir), dir, floor_h)
       end
@@ -2332,22 +2338,45 @@ stderrf("\nBRANCHED !!!!\n")
   end
 
 
+  local function hallway_other_end(R, entry_R)
+    -- if the hallway has multiple exits, then one is picked arbitrarily
+
+    each C in R.ext_conns do
+      local R2 = sel(C.A1.room == R, C.A2.room, C.A1.room)
+
+      if R2 != entry_R then return R2 end
+    end
+
+    error("hallway error : cannot find other end")
+  end
+
+
   local function process_hallway(R, conn)
     R.max_hall_h = R.entry_h
 
     local S, S_dir
+    local from_A
 
     if conn.A1.room == R then
       S = conn.S1
       S_dir = 10 - conn.dir
+      from_A = conn.A2
     else
       assert(conn.A2.room == R)
       S = conn.S2
       S_dir = conn.dir
+      from_A = conn.A1
     end
 
     assert(S)
     assert(S_dir)
+
+    R.hallway.path = {}
+    R.hallway.R1   = from_A.room
+    R.hallway.R2   = hallway_other_end(R, from_A.room)
+
+    R.hallway.touch_R1 = 0
+    R.hallway.touch_R2 = 0
 
     flow_through_hallway(R, S, S_dir, R.entry_h)
 
@@ -2380,6 +2409,13 @@ stderrf("\nBRANCHED !!!!\n")
     end
 
     set_floor(R.areas[1], R.max_hall_h)
+
+    -- check if can make hallway "part" of one of connecting rooms
+
+    if R.hallway.touch_R1 >= 2 and (R.hallway.touch_R1 - 1) / #R.hallway.path > 0.52 then
+stderrf("\nMAKING HALLWAY BLEND INTO PARENT ROOM\n\n")
+      R.hallway.parent = R.hallway.R1
+    end
   end
 
 
