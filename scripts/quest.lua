@@ -969,7 +969,9 @@ function Quest_add_major_quests()
   collect_key_goals(goal_list)
 
   if #LEVEL.zone_conns > 0 then
-    add_triple_key_door(goal_list)
+    if add_triple_key_door(goal_list) then
+      LEVEL.has_triple_key = true
+    end
   end
 
   for i = 1, 10 do
@@ -992,7 +994,7 @@ function Quest_add_major_quests()
 
   want_splits = int(want_splits + 2.0 * gui.random() ^ 2)
 
-  if want_splits > 0 or true then
+  if want_splits > 0 and not LEVEL.has_triple_key then
     if add_double_switch_door() then
       want_splits = want_splits - 1
     end
