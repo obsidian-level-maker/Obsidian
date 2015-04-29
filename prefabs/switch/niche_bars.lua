@@ -13,7 +13,5 @@ PREFABS.Switch_niche_bars =
 
   tag_1 = "?lock_tag"
   tag_2 = "?bars_tag"
-
-  line_61 = "?special"
 }
 

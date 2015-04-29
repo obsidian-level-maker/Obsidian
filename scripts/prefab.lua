@@ -34,6 +34,8 @@ GLOBAL_PREFAB_DEFAULTS =
   flat__CEIL  = "?ceil"
 
   thing_8166  = "?object"
+
+  line_888    = "?action"
 }
 
 
@@ -49,7 +51,7 @@ GLOBAL_SKIN_DEFAULTS =
   -- Doom engine stuff
   tag = ""
   light = ""
-  special = ""
+  action = ""
   object = ""
 
   -- Quake engine stuff

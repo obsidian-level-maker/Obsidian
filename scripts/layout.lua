@@ -658,7 +658,7 @@ function Layout_traps_and_cages()
     local TRIGGER =
     {
       r = 64
-      special = 109  -- W1 : open and stay /fast
+      action = 109  -- W1 : open and stay /fast
       tag = alloc_id("tag")
     }
 
@@ -719,7 +719,7 @@ function Layout_traps_and_cages()
       local TRIGGER =
       {
         r = 64
-        special = 2
+        action = 2
         tag = alloc_id("tag")
       }
 

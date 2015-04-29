@@ -883,7 +883,7 @@ function Quest_add_major_quests()
         local GOAL = Goal_new("SWITCH")
 
         GOAL.item = name
-        GOAL.special = 103  -- open door
+        GOAL.action = 103  -- open door
         GOAL.prob = 25
 
         table.insert(list, GOAL)
@@ -947,10 +947,10 @@ function Quest_add_major_quests()
     local GOAL2 = Goal_new("SWITCH")
 
     GOAL1.item = "sw_metal"
-    GOAL1.special = 103
+    GOAL1.action = 103
 
     GOAL2.item = "sw_metal"
-    GOAL2.special = 23
+    GOAL2.action = 23
     GOAL2.same_tag = true
 
     return Quest_scan_all_conns("MAJOR", { GOAL1, GOAL2 })

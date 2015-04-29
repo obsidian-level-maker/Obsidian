@@ -1476,9 +1476,7 @@ function Render_importants()
 
     skin1.lock_tag = assert(spot.goal.tag)
 
-    if spot.goal.special then
-      skin1.special = spot.goal.special
-    end
+    skin1.action = spot.goal.action  -- can be NIL
 
     local T = Trans.spot_transform(spot.x, spot.y, spot.z, spot.dir)
 
@@ -1622,13 +1620,13 @@ function Render_importants()
   local function build_trigger(spot)
     local r = spot.trigger.r
 
-    local special = assert(spot.trigger.special)
-    local tag     = assert(spot.trigger.tag)
+    local action = assert(spot.trigger.action)
+    local tag    = assert(spot.trigger.tag)
 
     local brush = brushlib.quad(spot.x - r, spot.y - r, spot.x + r, spot.y + r)
 
     each C in brush do
-      C.special = special
+      C.special = action
       C.tag     = tag
     end
 

@@ -9,8 +9,6 @@ PREFABS.Switch_small_sw_blue =
   switch = "sw_blue"
 
   tag_1 = "?lock_tag"
-
-  line_103 = "?special"
 }
 
 
