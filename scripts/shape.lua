@@ -748,7 +748,7 @@ function Shape_preprocess_patterns()
 
   table.name_up(SHAPES)
 
-  table.expand_copies(SHAPES)
+  table.expand_templates(SHAPES)
 
   each name,def in SHAPES do
     cur_def = def

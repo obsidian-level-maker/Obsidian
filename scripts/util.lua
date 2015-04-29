@@ -444,35 +444,20 @@ function table.index_up(t)
   end
 end
 
-function table.expand_copies(t)
-
-  local function expand_it(name, sub)
-    if not sub.copy then return end
-
-    if sub.__expanding then
-      error("Cyclic copy ref in: " .. name)
-    end
-
-    local orig = t[sub.copy]
-    if not orig then
-      error("Unknown copy ref: " .. tostring(sub.copy) .. " in: " .. name)
-    end
-
-    sub.__expanding = true
-
-    -- recursively expand the original
-    expand_it(sub.copy, orig)
-
-    table.merge_missing(sub, orig)
-
-    sub.__expanding = nil
-    sub.copy = nil
-  end
-
-  --| expand_copies |--
-
+function table.expand_templates(t)
   for name,sub in pairs(t) do
-    expand_it(name, sub)
+    if sub.template then
+      local orig = t[sub.template]
+
+      if not orig then
+        error("Missing template: " .. tostring(sub.template) .. " in: " .. name)
+      end
+
+      table.merge_missing(sub, orig)
+
+      -- can safely remove the template name now
+      sub.template = nil
+    end
   end
 end
 

@@ -1149,7 +1149,7 @@ function Area_create_zones()
 
     -- that failed, pick a random area
 
-stderrf("Could not find free area @ loc=%d\n", loc)
+-- stderrf("Could not find free area @ loc=%d\n", loc)
 
     for loop = 1, 999 do
       local A = rand.pick(area_list)

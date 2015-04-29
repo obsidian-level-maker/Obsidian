@@ -188,7 +188,7 @@ function Fab_load_all_definitions()
   visit_dir("prefabs")
   visit_dir("games/" .. assert(GAME.game_dir) .. "/prefabs")
 
-  table.expand_copies(PREFABS)
+  table.expand_templates(PREFABS)
 end
 
 

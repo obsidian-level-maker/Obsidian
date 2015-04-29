@@ -2,14 +2,12 @@
 -- Switched doors
 --
 
-PREFABS.Locked_sw_blue =
+PREFABS.Template_locked_door =
 {
   file   = "door/sw_door.wad"
   map    = "MAP01"
 
   where  = "edge"
-  switch = "sw_blue"
-
   x_fit  = "frame"
 
   long   = 192
@@ -19,22 +17,36 @@ PREFABS.Locked_sw_blue =
   tag_1  = "?lock_tag"
 }
 
-PREFABS.Locked_sw_blue_diag =
+PREFABS.Template_locked_door_diag =
 {
   file   = "door/sw_door.wad"
   map    = "MAP02"
 
   where  = "diagonal"
-  switch = "sw_blue"
 
   tag_1  = "?lock_tag"
 }
 
+--------------------------------------------------
+
+PREFABS.Locked_sw_blue =
+{
+  template = "Template_locked_door"
+
+  switch = "sw_blue"
+}
+
+PREFABS.Locked_sw_blue_diag =
+{
+  template = "Template_locked_door_diag"
+
+  switch = "sw_blue"
+}
 
 
 PREFABS.Locked_sw_red =
 {
-  copy = "Locked_sw_blue"
+  template = "Template_locked_door"
 
   switch = "sw_red"
 
@@ -44,7 +56,7 @@ PREFABS.Locked_sw_red =
 
 PREFABS.Locked_sw_red_diag =
 {
-  copy = "Locked_sw_blue_diag"
+  template = "Template_locked_door_diag"
 
   switch = "sw_red"
 
@@ -53,10 +65,9 @@ PREFABS.Locked_sw_red_diag =
 }
 
 
-
 PREFABS.Locked_sw_ash =
 {
-  copy = "Locked_sw_blue"
+  template = "Template_locked_door"
 
   switch = "sw_ash"
 
@@ -66,7 +77,7 @@ PREFABS.Locked_sw_ash =
 
 PREFABS.Locked_sw_ash_diag =
 {
-  copy = "Locked_sw_blue_diag"
+  template = "Template_locked_door_diag"
 
   switch = "sw_ash"
 
@@ -75,10 +86,9 @@ PREFABS.Locked_sw_ash_diag =
 }
 
 
-
 PREFABS.Locked_sw_snake =
 {
-  copy = "Locked_sw_blue"
+  template = "Template_locked_door"
 
   switch = "sw_snake"
 
@@ -88,7 +98,7 @@ PREFABS.Locked_sw_snake =
 
 PREFABS.Locked_sw_snake_diag =
 {
-  copy = "Locked_sw_blue_diag"
+  template = "Template_locked_door_diag"
 
   switch = "sw_snake"
 
