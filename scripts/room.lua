@@ -2429,6 +2429,11 @@ function Room_floor_heights()
     then
 stderrf("\nMAKING HALLWAY BLEND INTO PARENT ROOM\n\n")
       R.hallway.parent = R.hallway.R1
+
+      R.is_outdoor = R.hallway.parent.is_outdoor
+      each A in R.areas do
+        A.is_outdoor = R.is_outdoor
+      end
     end
   end
 
