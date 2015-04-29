@@ -16,8 +16,8 @@ PREFABS.Locked_double =
 
   tag_1  = "?lock_tag"
 
-  switch1_action = 23
-  switch2_action = 103
+  action1 = 23
+  action2 = 103
 }
 
 
@@ -29,7 +29,7 @@ PREFABS.Locked_double_diag =
 
   tag_1  = "?lock_tag"
 
-  switch1_action = 23
-  switch2_action = 103
+  action1 = 23
+  action2 = 103
 }
 

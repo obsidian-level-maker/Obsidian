@@ -942,15 +942,18 @@ function Quest_add_major_quests()
 
     if not rand.odds(prob) then return false end
 
-    -- FIXME : this is VERY dependent on the sw_pair.wad prefab
+    -- this is VERY dependent on the sw_pair.wad prefab
+    local fab_def = PREFABS["Locked_double"]
+    assert(fab_def)
+
     local GOAL1 = Goal_new("SWITCH")
     local GOAL2 = Goal_new("SWITCH")
 
     GOAL1.item = "sw_metal"
-    GOAL1.action = 103
+    GOAL1.action = fab_def.action1
 
     GOAL2.item = "sw_metal"
-    GOAL2.action = 23
+    GOAL2.action = fab_def.action2
     GOAL2.same_tag = true
 
     return Quest_scan_all_conns("MAJOR", { GOAL1, GOAL2 })
@@ -989,7 +992,7 @@ function Quest_add_major_quests()
 
   want_splits = int(want_splits + 2.0 * gui.random() ^ 2)
 
-  if want_splits > 0 then
+  if want_splits > 0 or true then
     if add_double_switch_door() then
       want_splits = want_splits - 1
     end
