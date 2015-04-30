@@ -2329,13 +2329,10 @@ function Room_floor_heights()
 
     local dir = next_dirs[1] or exit_dirs[1]
 
-    -- FIXME : check for "door" (if dir is exit_dir)
+    -- FIXME : check for "door" (entry or exit)
 
     if not S.diagonal and not saw_fixed then
-      -- FIXME : determine shape, pick piece kind
-      S.floor_mat = "REDWALL"
-
-      S.hall_piece = categorize_hall_shape(S, enter_dir, dir, 1, "small")
+      S.hall_piece = categorize_hall_shape(S, enter_dir, dir, R.hallway.z_dir, R.hallway.z_size)
 
       floor_h = floor_h + S.hall_piece.delta_h * S.hall_piece.z_dir
 
@@ -2451,11 +2448,11 @@ function Room_floor_heights()
     R.hallway.touch_R2 = 0
 
 
-    if #R.areas > 1 then
+    if #R.areas > 1 or rand.odds(10) then
       -- our flow logic cannot handle multiple areas [ which is not common ]
       -- hence these cases become a single flat hallway
 
-      each A in R do
+      each A in R.areas do
         A.floor_h = R.entry_h
 
         if not A.is_outdoor then
@@ -2467,7 +2464,15 @@ function Room_floor_heights()
     end
 
 
-    -- FIXME : pick z_dir (etc)
+    -- decide vertical direction and steepness
+
+    R.hallway.z_dir  = rand.sel(R.zone.hall_up_prob, 1, -1)
+    R.hallway.z_size = rand.sel(3, "big", "small")
+
+    if R.hallway.z_size == "big" then
+      -- steep stairs need a bit more headroom
+      R.height = R.height + 24
+    end
 
 
     flow_through_hallway(R, S, S_dir, R.entry_h)
@@ -2615,6 +2620,11 @@ function Room_floor_heights()
 
 
   ---| Room_floor_heights |---
+
+  -- give each zone a preferred hallway z_dir
+  each Z in LEVEL.zones do
+    Z.hall_up_prob = rand.sel(70, 80, 20)
+  end
 
   local first = LEVEL.start_room or LEVEL.blue_base or LEVEL.rooms[1]
 
