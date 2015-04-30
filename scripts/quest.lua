@@ -919,10 +919,10 @@ function Quest_add_major_quests()
   local function add_triple_key_door(key_list)
     if #key_list < 3 then return false end
 
-    local prob = 35
+    local prob = 25
 
     if OB_CONFIG.mode == "coop" then
-      prob = 65
+      prob = 50
     end
 
     if not rand.odds(prob) then return false end
@@ -944,7 +944,7 @@ function Quest_add_major_quests()
     local prob = 25
 
     if OB_CONFIG.mode == "coop" then
-      prob = 65
+      prob = 50
     end
 
     if not rand.odds(prob) then return false end
