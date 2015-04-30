@@ -1693,6 +1693,7 @@ function Area_prune_hallways()
 
     -- OK --
     S.not_path = nil
+    S.kind = nil
     S.fixed_diagonal = true
   end
 
@@ -1718,6 +1719,7 @@ function Area_prune_hallways()
 
     each S in H.seeds do
       S.not_path = true
+      S.kind = "void"
     end
 
     -- find a path between each pair of connections
@@ -1737,6 +1739,7 @@ function Area_prune_hallways()
 
       each S in path do
         S.not_path = nil
+        S.kind = nil
       end
     end
 

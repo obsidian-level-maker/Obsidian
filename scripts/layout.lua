@@ -1365,10 +1365,10 @@ function Layout_outdoor_shadows()
     local SA = S.area
     local NA = N.area
 
-    if SA == NA then return false end
+    if N.kind == "void" or not NA.is_outdoor or NA.mode == "void" or NA.is_porch then return false end
+    if S.kind == "void" or not SA.is_outdoor or SA.mode == "void" or SA.is_porch then return true end
 
-    if not NA.is_outdoor or NA.mode == "void" then return false end
-    if not SA.is_outdoor or SA.mode == "void" or SA.is_porch then return true end
+    if SA == NA then return false end
 
     local junc = Junction_lookup(SA, NA)
 

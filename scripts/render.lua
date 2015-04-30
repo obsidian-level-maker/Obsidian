@@ -952,7 +952,7 @@ function Render_void(A, S)
 
   local w_brush = S:make_brush()
 
-  brushlib.set_mat(w_brush, A.wall_mat)
+  brushlib.set_mat(w_brush, "NUKAGE1") -- A.wall_mat)
 
   Trans.brush(w_brush)
 end
@@ -1028,11 +1028,6 @@ end
 
 
 function Render_hallway(A, S)
-  if S.not_path then
-    Render_void(A, S)
-    return
-  end
-
   local R = A.room
 
   -- determine common part of prefab name
@@ -1086,21 +1081,21 @@ function Render_hallway(A, S)
 end
 
 
+
 function Render_seed(A, S)
   assert(S.area == A)
 
+  -- FIXME : closets
+
+  if S.kind == "void" or A.mode == "void" then
+    Render_void(A, S)
+    return
+  end
 
   if A.mode == "hallway" then
     Render_hallway(A, S)
     return
   end
-
-
-  if A.mode == "void" or (A.mode == "scenic" and not A.is_outdoor) then
-    Render_void(A, S)
-    return
-  end
-
 
   Render_floor  (A, S)
   Render_ceiling(A, S)
