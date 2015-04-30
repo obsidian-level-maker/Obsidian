@@ -962,7 +962,7 @@ end
 function Render_floor(A, S)
   local f_brush = S:make_brush()
 
-  local f_h = S.hall_h or S.floor_h or A.floor_h
+  local f_h = S.floor_h or A.floor_h
 
   local f_mat = S.floor_mat or A.floor_mat
   local f_side = S.floor_side or S.floor_mat or A.floor_side or f_mat
@@ -1033,6 +1033,8 @@ function Render_hallway(A, S)
     return
   end
 
+  local R = A.room
+
   -- determine common part of prefab name
   local fab_common
 
@@ -1056,7 +1058,7 @@ function Render_hallway(A, S)
     local fab_name = "Hall_f_" .. fab_common
     local def = Fab_lookup(fab_name)
 
-    local z = S.hall_h + S.hall_piece.z_offset
+    local z = S.floor_h + S.hall_piece.z_offset
     local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, S.hall_piece.dir)
 
     if S.hall_piece.mirror then T.mirror_x = 96 end
@@ -1068,11 +1070,11 @@ function Render_hallway(A, S)
   end
 
 
-  if S.hall_piece and not A.is_outdoor then
+  if S.hall_piece and not A.is_outdoor and not R.hallway.parent then
     local fab_name = "Hall_c_" .. fab_common
     local def = Fab_lookup(fab_name)
 
-    local z = S.hall_h + S.hall_piece.z_offset + 96
+    local z = S.ceil_h + S.hall_piece.z_offset
     local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, S.hall_piece.dir)
 
     if S.hall_piece.mirror then T.mirror_x = 96 end
@@ -1201,7 +1203,9 @@ function dummy_properties(A)
     A.facade_mat = "STONE3" --!!!!FIXME  A.zone.facade_mat
     end
 
-    if A.is_porch then
+    if A.ceil_h then
+      -- done already
+    elseif A.is_porch then
       A.ceil_h = A.floor_h + 128
     elseif not A.is_outdoor then
       A.ceil_h = A.floor_h + 80

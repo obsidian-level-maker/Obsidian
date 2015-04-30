@@ -2140,10 +2140,6 @@ function Room_floor_heights()
 
   local function raw_set_floor(A, floor_h)
     A.floor_h = floor_h
-
-    each S in A.seeds do
-      S.floor_h = A.floor_h
-    end
   end
 
 
@@ -2266,7 +2262,7 @@ function Room_floor_heights()
 
     table.insert(R.hallway.path, S)
 
-    S.hall_h = floor_h
+    S.floor_h = floor_h
     S.hall_visited = true
 
     R.hallway.max_h = math.max(R.hallway.max_h, floor_h)
@@ -2298,8 +2294,8 @@ function Room_floor_heights()
 
       -- Note: this assume fixed diagonals never branch elsewhere
       if N.fixed_diagonal then
-        if not N.hall_h then
-          N.hall_h = floor_h
+        if not N.floor_h then
+          N.floor_h = floor_h
         end
 
         saw_fixed = true
@@ -2399,6 +2395,24 @@ stderrf("\nMAKING HALLWAY BLEND INTO PARENT ROOM\n\n")
   end
 
 
+  local function do_hallway_ceiling(R)
+    if R.is_outdoor then
+      -- will be zone.sky_h
+      return
+    end
+
+    R.areas[1].ceil_h = R.areas[1].floor_h + R.hallway.height
+
+    each S in R.hallway.path do
+      if R.hallway.parent then
+        S.ceil_h = R.areas[1].ceil_h
+      else
+        S.ceil_h = S.floor_h + R.hallway.height
+      end
+    end
+  end
+
+
   local function process_hallway(R, conn)
     R.hallway.max_h = R.entry_h
     R.hallway.min_h = R.entry_h
@@ -2420,6 +2434,8 @@ stderrf("\nMAKING HALLWAY BLEND INTO PARENT ROOM\n\n")
     assert(S)
     assert(S_dir)
 
+    R.hallway.height = 96
+
     R.hallway.path = {}
     R.hallway.R1   = from_A.room
     R.hallway.R2   = hallway_other_end(R, from_A.room)
@@ -2432,7 +2448,7 @@ stderrf("\nMAKING HALLWAY BLEND INTO PARENT ROOM\n\n")
     -- check all parts got a height
     each S in R.areas[1].seeds do
       if S.not_path then continue end
-      assert(S.hall_h)
+      assert(S.floor_h)
     end
 
     -- transfer heights to neighbors
@@ -2451,7 +2467,7 @@ stderrf("\nMAKING HALLWAY BLEND INTO PARENT ROOM\n\n")
       end
 
       if not N.area.room.entry_h then
-        local next_f = assert(S.hall_h)
+        local next_f = assert(S.floor_h)
         if S.hall_piece then next_f = next_f + S.hall_piece.delta_h * S.hall_piece.z_dir end
         N.area.room.next_f = next_f
       end
@@ -2461,9 +2477,11 @@ stderrf("\nMAKING HALLWAY BLEND INTO PARENT ROOM\n\n")
     set_floor(R.areas[1], R.hallway.max_h)
 
     -- check if can make hallway "blend" into one of connecting rooms
-
     try_blend_hallway(R, 1)
     try_blend_hallway(R, 2)
+
+    -- set ceiling heights
+    do_hallway_ceiling(R)
   end
 
 
@@ -2590,7 +2608,7 @@ end
     assert(R.entry_h)
 
     if R.kind == "hallway" then
-      Room_detect_porches(R)
+--!!!!      Room_detect_porches(R)
     end
   end
 end
