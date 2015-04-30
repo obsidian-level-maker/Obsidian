@@ -3,16 +3,8 @@ WORK IN PROGRESS
 ================
 
 
-Hallways
---------
-
-+  categorize dirs
-
--  choose at start : big up, small up, flat, small down, big down
-   ( big should be rare, e.g. 1/10 of small )
-   ( pick preferred direction per zone )
-
-+  can use "floor_h" in seeds, OR must use hall_h ?
+review switched quests
+[ may need to try divide a quest when # of unused leafs is large ]
 
 
 
@@ -23,12 +15,6 @@ Closets
    added (and after outdoor borders too)
 
 -  locked switch closet
-
-IDEA : a special number for "THE switch action" (e.g. 888)
-
-
-
->>  hallway stairs
 
 
 
@@ -173,6 +159,8 @@ IDEA: have a single thing number for "coop player"
 
 -  sometimes make a floor (its side) use same material as top (not room wall)
 
+
+REQUEST:  mix it up option for the quiet start setting.
 
 
 Doors
