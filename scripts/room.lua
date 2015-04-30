@@ -2269,7 +2269,8 @@ function Room_floor_heights()
     S.hall_h = floor_h
     S.hall_visited = true
 
-    R.max_hall_h = math.max(R.max_hall_h, floor_h)
+    R.hallway.max_h = math.max(R.hallway.max_h, floor_h)
+    R.hallway.min_h = math.min(R.hallway.min_h, floor_h)
 
     -- collect where we can go next + where can exit
     local next_dirs = {}
@@ -2340,7 +2341,8 @@ function Room_floor_heights()
 
       floor_h = floor_h + S.hall_piece.delta_h * S.hall_piece.z_dir
 
-      R.max_hall_h = math.max(R.max_hall_h, floor_h)
+      R.hallway.max_h = math.max(R.hallway.max_h, floor_h)
+      R.hallway.min_h = math.min(R.hallway.min_h, floor_h)
     end
 
     if #next_dirs > 0 then
@@ -2363,7 +2365,8 @@ function Room_floor_heights()
 
 
   local function process_hallway(R, conn)
-    R.max_hall_h = R.entry_h
+    R.hallway.max_h = R.entry_h
+    R.hallway.min_h = R.entry_h
 
     local S, S_dir
     local from_A
@@ -2419,7 +2422,8 @@ function Room_floor_heights()
       end
     end
 
-    set_floor(R.areas[1], R.max_hall_h)
+    -- use highest floor for "the" floor_h (so that fences are high enough)
+    set_floor(R.areas[1], R.hallway.max_h)
 
     -- check if can make hallway "blend" into one of connecting rooms
 
