@@ -2365,14 +2365,13 @@ function Room_floor_heights()
   local function try_blend_hallway(R, which)
     -- which is either 1 or 2 (entry or exit)
 
-    if R.hallway.z_dir == 0 then return end
-    if R.hallway.no_blend   then return end
+    if R.hallway.no_blend then return end
 
     -- already blended?
     if R.hallway.parent then return end
 
     -- random chance
-    if not rand.sel(which == 1, 75, 25) then return end
+    if not rand.odds(sel(which == 1, 75, 25)) then return end
 
     local parent  = sel(which == 1, R.hallway.R1, R.hallway.R2)
     local touches = sel(which == 1, R.hallway.touch_R1, R.hallway.touch_R2)
@@ -2387,8 +2386,6 @@ function Room_floor_heights()
     if (touches - 1) / #R.hallway.path < 0.48 then return end
 
     -- OK --
-
-stderrf("\nMAKING HALLWAY BLEND INTO PARENT ROOM\n\n")
 
     R.hallway.parent = parent
 
@@ -2420,6 +2417,9 @@ stderrf("\nMAKING HALLWAY BLEND INTO PARENT ROOM\n\n")
 
 
   local function process_hallway(R, conn)
+    -- Note: this would be a problem if player starts could exist in a hallway
+    assert(conn)
+
     R.hallway.max_h = R.entry_h
     R.hallway.min_h = R.entry_h
 
@@ -2444,11 +2444,31 @@ stderrf("\nMAKING HALLWAY BLEND INTO PARENT ROOM\n\n")
 
     R.hallway.path = {}
 
-    R.hallway.R1   = from_A.room
-    R.hallway.R2   = hallway_other_end(R, from_A.room)
+    R.hallway.R1 = from_A.room
+    R.hallway.R2 = hallway_other_end(R, from_A.room)
 
     R.hallway.touch_R1 = 0
     R.hallway.touch_R2 = 0
+
+
+    if #R.areas > 1 then
+      -- our flow logic cannot handle multiple areas [ which is not common ]
+      -- hence these cases become a single flat hallway
+
+      each A in R do
+        A.floor_h = R.entry_h
+
+        if not A.is_outdoor then
+          A.ceil_h = A.floor_h + R.hallway.height
+        end
+      end
+
+      return
+    end
+
+
+    -- FIXME : pick z_dir (etc)
+
 
     flow_through_hallway(R, S, S_dir, R.entry_h)
 
@@ -2563,8 +2583,8 @@ stderrf("\nMAKING HALLWAY BLEND INTO PARENT ROOM\n\n")
 
     if R.kind == "stairwell" then
       process_stairwell(R, prev_room)
-    elseif R.kind == "hallway" and #R.areas == 1 and via_conn then
-      process_hallway(R, via_conn)
+    elseif R.kind == "hallway" then
+      process_hallway(R, via_conn, entry_h)
     else
       process_room(R, entry_area)
     end
