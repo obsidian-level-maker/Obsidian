@@ -2295,7 +2295,9 @@ function Room_floor_heights()
       -- Note: this assume fixed diagonals never branch elsewhere
       if N.fixed_diagonal then
         if not N.floor_h then
+          table.insert(R.hallway.path, N)  -- needed for ceilings
           N.floor_h = floor_h
+          N.hall_visited = true
         end
 
         saw_fixed = true
@@ -2437,6 +2439,7 @@ stderrf("\nMAKING HALLWAY BLEND INTO PARENT ROOM\n\n")
     R.hallway.height = 96
 
     R.hallway.path = {}
+
     R.hallway.R1   = from_A.room
     R.hallway.R2   = hallway_other_end(R, from_A.room)
 
