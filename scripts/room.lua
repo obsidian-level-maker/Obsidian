@@ -2364,6 +2364,41 @@ function Room_floor_heights()
   end
 
 
+  local function try_blend_hallway(R, which)
+    -- which is either 1 or 2 (entry or exit)
+
+    if R.hallway.no_blend then return end
+
+    -- already blended?
+    if R.hallway.parent then return end
+
+    local parent  = sel(which == 1, R.hallway.R1, R.hallway.R2)
+    local touches = sel(which == 1, R.hallway.touch_R1, R.hallway.touch_R2)
+
+    -- FIXME : check for a door  [ via junction ]
+
+    -- different quest? (hence locked door)
+    if R.quest != parent.quest then return end
+
+    -- enough joinage?
+    if touches < 3 then return end
+    if (touches - 1) / #R.hallway.path < 0.48 then return end
+
+    -- OK --
+
+stderrf("\nMAKING HALLWAY BLEND INTO PARENT ROOM\n\n")
+
+    R.hallway.parent = parent
+
+    -- copy some parent properties, especially outdoors-ness
+    R.is_outdoor = R.hallway.parent.is_outdoor
+
+    each A in R.areas do
+      A.is_outdoor = R.is_outdoor
+    end
+  end
+
+
   local function process_hallway(R, conn)
     R.hallway.max_h = R.entry_h
     R.hallway.min_h = R.entry_h
@@ -2427,18 +2462,8 @@ function Room_floor_heights()
 
     -- check if can make hallway "blend" into one of connecting rooms
 
-    if R.quest == R.hallway.R1.quest and
-       R.hallway.touch_R1 >= 2 and
-       (R.hallway.touch_R1 - 1) / #R.hallway.path > 0.52
-    then
-stderrf("\nMAKING HALLWAY BLEND INTO PARENT ROOM\n\n")
-      R.hallway.parent = R.hallway.R1
-
-      R.is_outdoor = R.hallway.parent.is_outdoor
-      each A in R.areas do
-        A.is_outdoor = R.is_outdoor
-      end
-    end
+    try_blend_hallway(R, 1)
+    try_blend_hallway(R, 2)
   end
 
 
