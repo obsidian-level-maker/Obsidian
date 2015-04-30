@@ -952,7 +952,7 @@ function Render_void(A, S)
 
   local w_brush = S:make_brush()
 
-  brushlib.set_mat(w_brush, "NUKAGE1") -- A.wall_mat)
+  brushlib.set_mat(w_brush, A.wall_mat)
 
   Trans.brush(w_brush)
 end

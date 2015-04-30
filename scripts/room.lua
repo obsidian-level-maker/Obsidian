@@ -2365,10 +2365,14 @@ function Room_floor_heights()
   local function try_blend_hallway(R, which)
     -- which is either 1 or 2 (entry or exit)
 
-    if R.hallway.no_blend then return end
+    if R.hallway.z_dir == 0 then return end
+    if R.hallway.no_blend   then return end
 
     -- already blended?
     if R.hallway.parent then return end
+
+    -- random chance
+    if not rand.sel(which == 1, 75, 25) then return end
 
     local parent  = sel(which == 1, R.hallway.R1, R.hallway.R2)
     local touches = sel(which == 1, R.hallway.touch_R1, R.hallway.touch_R2)
