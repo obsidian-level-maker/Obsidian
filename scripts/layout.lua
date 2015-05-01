@@ -2144,11 +2144,14 @@ function Layout_build_mountains()
 
   local cur_dist
 
+  local low_mode = false
+
+
   local function render_cell(cell, S, dir)
-    local floor_mat = "FLAT10"
+    local floor_mat = sel(low_mode, "GRASS1", "FLAT10")
     local  ceil_mat = "_SKY"
 
-    if cell.dist and cell.dist >= 7 then
+    if not low_mode and cell.dist and cell.dist >= 9 then
       floor_mat = "MFLR8_3"
     end
 
@@ -2235,10 +2238,12 @@ function Layout_build_mountains()
     -- (everything else will be some delta from these)
     if cur_dist == 0 then
 
-      if cell.near_floor_h then
-        cell.floor_h = cell.near_floor_h + 40 + rand.pick({ 0, 0, 16, 24, 40 })
-      else
+      if not cell.near_floor_h then
         cell.floor_h = cell.sky_h - rand.pick({ 96, 160, 224, 256, 256 })
+      elseif low_mode then
+        cell.floor_h = cell.near_floor_h + rand.pick({ 32, 32, 40 })
+      else
+        cell.floor_h = cell.near_floor_h + rand.pick({ 40, 40, 56, 64, 80 })
       end
 
       return
@@ -2268,6 +2273,21 @@ function Layout_build_mountains()
     end
 
 
+    -- produce low hills / gentle sloping plains
+
+    if low_mode then
+      if min_f < max_f or rand.odds(40) then
+        cell.floor_h = max_f
+      else
+        cell.floor_h = max_f + sel(cell.dist > 7, 32, 16)
+      end
+
+      return
+    end
+
+
+    -- produce high mountains
+
     local base_h = rand.sel(50, min_f, max_f)
 
     if cell.dist < 2 then
@@ -2276,7 +2296,7 @@ function Layout_build_mountains()
     end
 
     local max_delta = int((cell.sky_h - 96 - base_h) / 20)
-    local min_delta = -5
+    local min_delta = -4
 
     if cell.dist < 8 then
       max_delta = int(max_delta / 2)
@@ -2341,7 +2361,7 @@ function Layout_build_mountains()
     if rand.odds(20) then
       local mx, my = S:raw_edge_coord(cell_side)
 
-      Trans.entity("brown_stub", mx, my, new_h)
+      Trans.entity("burnt_tree", mx, my, new_h)
     end
   end
 
