@@ -2448,7 +2448,9 @@ function Room_floor_heights()
     R.hallway.touch_R2 = 0
 
 
-    if #R.areas > 1 or rand.odds(10) then
+    local flat_prob = sel(R.is_outdoor, 5, 20)
+
+    if #R.areas > 1 or rand.odds(flat_prob) then
       -- our flow logic cannot handle multiple areas [ which is not common ]
       -- hence these cases become a single flat hallway
 
