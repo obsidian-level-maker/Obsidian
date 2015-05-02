@@ -1905,6 +1905,8 @@ function Layout_create_mountains()
       if not cell then continue end
 
       if not S:raw_neighbor(dir) then
+        cell.map_edge = 0  -- !!!! FIXME : depends on mode (esp. "water")
+
         cell.map_edge_dir = dir
       end
     end
@@ -1995,6 +1997,10 @@ function Layout_create_mountains()
       if nb_cell.solid == "zone" then
         cell.solid = "fat"
       end
+
+      if not cell.map_edge and nb_cell.map_edge == 0 then
+        cell.map_edge = 1
+      end
     end
 
     -- this prevents sharp diagonals that tend to occur
@@ -2022,7 +2028,8 @@ function Layout_create_mountains()
     if A.is_boundary then return end
     if not A.floor_h then return end
 
-    cell.near_floor_h = math.max(cell.near_floor_h or -1024, A.floor_h)
+    cell.near_min_f = math.min(cell.near_min_f or  2000, A.floor_h)
+    cell.near_max_f = math.max(cell.near_max_f or -2000, A.floor_h)
   end
 
 
@@ -2078,6 +2085,9 @@ function Layout_create_mountains()
 
       if not nb_cell then continue end
       if nb_cell.solid then continue end
+
+      -- map edges are different and don't get a dist
+      if nb_cell.map_edge then continue end
 
       if new_dist < (nb_cell.dist or 999) then
         nb_cell.dist = new_dist
@@ -2151,9 +2161,11 @@ function Layout_build_mountains()
     local floor_mat = sel(low_mode, "GRASS1", "FLAT10")
     local  ceil_mat = "_SKY"
 
-    if not low_mode and cell.dist and cell.dist >= 9 then
-      floor_mat = "MFLR8_3"
-    end
+--!!!!    if not low_mode and cell.dist and cell.dist >= 9 then
+
+if true and cell.map_edge then
+floor_mat = "MFLR8_3"
+end
 
     local f_brush = S:brush_for_cell(dir)
 
@@ -2234,16 +2246,17 @@ function Layout_build_mountains()
 
     assert(cell.floor_h == nil)
 
+
     -- dist zero sets the initial heights
     -- (everything else will be some delta from these)
     if cur_dist == 0 then
 
-      if not cell.near_floor_h then
+      if not cell.near_max_f then
         cell.floor_h = cell.sky_h - rand.pick({ 96, 160, 224, 256, 256 })
       elseif low_mode then
-        cell.floor_h = cell.near_floor_h + rand.pick({ 32, 32, 40 })
+        cell.floor_h = cell.near_max_f + rand.pick({ 32, 32, 40 })
       else
-        cell.floor_h = cell.near_floor_h + rand.pick({ 40, 40, 56, 64, 80 })
+        cell.floor_h = cell.near_max_f + rand.pick({ 40, 40, 56, 64, 80 })
       end
 
       return
@@ -2286,16 +2299,20 @@ function Layout_build_mountains()
     end
 
 
+--!!!!!
+do cell.floor_h = min_f + 4 ; return end
+
+
     -- produce high mountains
 
-    local base_h = rand.sel(50, min_f, max_f)
+    local base_f = rand.sel(50, min_f, max_f)
 
     if cell.dist < 2 then
-      cell.floor_h = base_h + rand.sel(75, 0, 16)
+      cell.floor_h = base_f + rand.sel(75, 0, 16)
       return
     end
 
-    local max_delta = int((cell.sky_h - 96 - base_h) / 20)
+    local max_delta = int((cell.sky_h - 96 - base_f) / 20)
     local min_delta = -4
 
     if cell.dist < 8 then
@@ -2311,12 +2328,19 @@ function Layout_build_mountains()
       delta = rand.irange(min_delta, max_delta)
     end
 
-    cell.floor_h = base_h + delta * 16
+    cell.floor_h = base_f + delta * 16
+  end
+
+
+  local function floor_height_for_edge_cell(cell, S, cell_side)
+    if cell.map_edge then
+      cell.floor_h = 128  -- FIXME
+    end
   end
 
 
   local function determine_floor_heights()
-    -- pick a height for all cells at dist==0
+    -- pick a height for all cells at dist 0, dist 1, etc...
     -- [ the cell.area.floor_h is a maximal value ]
 
     for dist = 0, calc_highest_dist() do
@@ -2324,6 +2348,8 @@ function Layout_build_mountains()
 
       Layout_visit_all_cells(floor_height_in_cell)
     end
+
+    Layout_visit_all_cells(floor_height_for_edge_cell)
   end
 
 
@@ -2331,11 +2357,13 @@ function Layout_build_mountains()
     if cell_side > 5 then return end
 
     if not cell.floor_h then return end
+    if cell.map_edge then return end
 
     local nb_cell = S:cell_neighbor(cell_side, cell_side)
 
     if not nb_cell then return end
     if not nb_cell.floor_h then return end
+    if nb_cell.map_edge then return end
 
     local new_h
 
