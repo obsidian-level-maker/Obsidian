@@ -862,6 +862,7 @@ function Room_border_up()
         junc.kind = "wall"
       end
 
+      junc.kind = "nothing"
       return
     end
 

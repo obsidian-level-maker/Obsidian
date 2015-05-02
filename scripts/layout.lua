@@ -976,7 +976,12 @@ function Layout_map_borders()
         local junc = Junction_lookup(A, N)
         assert(junc)
 
-        if A.kind == "water" then
+        if A.kind == "water" and N.room.kind == "hallway" then
+          junc.kind = "fence"
+          junc.fence_mat = LEVEL.fence_mat
+          junc.fence_top_z = N.room.hallway.max_h + 32
+
+        elseif A.kind == "water" then
           junc.kind = "rail"
           junc.rail_mat = "MIDBARS3"
           junc.post_h   = 84
