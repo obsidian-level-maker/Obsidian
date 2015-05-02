@@ -2143,7 +2143,7 @@ end
       function (cell, S, cell_side)
         if cell.dist then
           local d = math.floor(cell.dist / 2)
-          if Z.border_info.kind == "water" then d = 8 end
+          if Z.border_info.kind == "water" and d > 0 then d = 8 end
           cell.sky_h = cell.area.zone.sky_h + d * 64
         end
       end)
