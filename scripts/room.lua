@@ -2473,7 +2473,7 @@ function Room_floor_heights()
 
     if R.hallway.z_size == "big" then
       -- steep stairs need a bit more headroom
-      R.height = R.height + 24
+      R.hallway.height = R.hallway.height + 24
     end
 
 
