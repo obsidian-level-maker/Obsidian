@@ -1035,7 +1035,7 @@ function Layout_map_borders()
     if not Z.border_info.nb_min_f then
       Z.border_info.kind = "void"
     else
-      Z.border_info.kind = rand.sel(100, "water", "mountain")
+      Z.border_info.kind = rand.sel(0, "water", "mountain")
     end
 
     each A in Z.border_info.areas do
@@ -1054,7 +1054,7 @@ function Layout_map_borders()
 
   ---| Layout_map_borders |---
 
-  LEVEL.hill_mode = rand.sel(75, "high", "low")
+  LEVEL.hill_mode = rand.sel(0, "high", "low")
 
   -- FIXME: LEVEL.cliff_mat, LEVEL.hill_mat
 
@@ -1945,14 +1945,15 @@ function Layout_process_mountains(Z)
 
 
   local function touches_normal_in_cell(cell, cell_S, A, S)
-    -- see what normal (traversible) parts of level touch this cell, and
-    -- update minimum and maximum floor heights.
+    -- called when a normal (traversible) part of the level touches the
+    -- given cell, and updates minimum and maximum nearby floor heights.
 
     if cell.solid then return end
 
     cell.dist = 0
 
-    if A.is_boundary then return end
+    assert(not A.is_boundary)
+
     if not A.floor_h then return end
 
     cell.near_min_f = math.min(cell.near_min_f or  2000, A.floor_h)
@@ -1965,7 +1966,6 @@ function Layout_process_mountains(Z)
     for dir = 2,8,2 do
       local N = S:neighbor(dir)
       if not N then continue end
-      if N.zone != A.zone then continue end
 
       N = N.bottom or N
 
@@ -2243,7 +2243,7 @@ end
 
     -- produce high mountains
 
-    local base_f = rand.sel(50, min_f, max_f)
+    local base_f = rand.sel(70, min_f, max_f)
 
     if cell.dist < 2 then
       cell.floor_h = base_f + rand.sel(75, 0, 16)
@@ -2336,7 +2336,7 @@ end
   local function merge_heights()
     -- generally try to merge cells which straddle a seed edge
 
-    if Z.border_info.kind == "mountains" then
+    if Z.border_info.kind == "mountain" then
       Layout_visit_all_cells(Z, merge_heights_in_cell)
     end
   end
