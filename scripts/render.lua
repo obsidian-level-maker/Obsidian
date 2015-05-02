@@ -577,7 +577,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
   local function straddle_window()
     -- FIXME: window_z1 in JUNC/BORD
-    local z = math.max(A.floor_h, NA.floor_h)
+    local z = math.max(A.floor_h or 0, NA.floor_h or 0)
 
     local inner_mat, outer_mat = calc_straddle_mat(A, NA)
 
@@ -1092,6 +1092,11 @@ function Render_seed(A, S)
     return
   end
 
+  -- scenic done elsewhere (in Layout_build_mountains)
+  if A.mode == "scenic" then
+    return
+  end
+
   if A.mode == "hallway" then
     Render_hallway(A, S)
     return
@@ -1118,9 +1123,6 @@ function Render_area(A)
     return
   end
 
-  -- mountains done elsewhere
-  if A.kind == "mountain" then return end
-
   A.floor_brushes = {}
   A.side_edges = {}
 
@@ -1138,6 +1140,10 @@ function dummy_properties(A)
     A.wall_mat = "BLAKWAL1"
     A.floor_mat = A.wall_mat
     A.facade_mat = "COMPSPAN" --!!!!FIXME  A.zone.facade_mat
+    return
+  end
+
+  if A.mode == "scenic" then
     return
   end
 
@@ -1177,15 +1183,7 @@ function dummy_properties(A)
     A.floor_mat = "_ERROR"
   end
 
-  if A.mode == "scenic" and A.kind == "water" then
-    assert(A.floor_h)
-    A.floor_mat = "FWATER1"
-
----    elseif A.mode == "scenic" then
----      A.floor_mat = "LAVA1"
----      A.floor_h   = -64
-
-  elseif A.mode == "hallway" then
+  if A.mode == "hallway" then
     A.floor_mat = "FLAT5_1"
     A.wall_mat  = "WOOD1"
     A.ceil_mat  = "WOOD1"

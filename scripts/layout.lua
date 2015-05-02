@@ -949,24 +949,24 @@ function Layout_map_borders()
   --
 
   local function neighbor_min_max(Z)
-    local min_h
-    local max_h
+    local min_f
+    local max_f
 
     each A in Z.border_info.areas do
     each N in A.neighbors do
       if N.zone != Z then continue end
 
       if N.room and N.floor_h then
-        min_h = math.min(N.floor_h, min_h or  EXTREME_H)
-        max_h = math.max(N.floor_h, max_h or -EXTREME_H)
+        min_f = math.min(N.floor_h, min_f or  EXTREME_H)
+        max_f = math.max(N.floor_h, max_f or -EXTREME_H)
       end
     end
     end
 
     -- possible for min_h and max_h to be NIL here
 
-    Z.border_info.nb_min_h = min_h
-    Z.border_info.nb_max_h = max_h
+    Z.border_info.nb_min_f = min_f
+    Z.border_info.nb_max_f = max_f
   end
 
 
@@ -976,12 +976,13 @@ function Layout_map_borders()
         local junc = Junction_lookup(A, N)
         assert(junc)
 
-        if Z.border_info.kind == "water" then
+        if A.kind == "water" then
           junc.kind = "rail"
           junc.rail_mat = "MIDBARS3"
           junc.post_h   = 84
           junc.blocked  = true
-        else
+
+        elseif A.mode == "scenic" then
           junc.kind = "nothing"
         end
       end
@@ -1027,10 +1028,11 @@ function Layout_map_borders()
     Z.border_info = {}
 
     collect_border_areas(Z)
+
     neighbor_min_max(Z)
 
     -- this only possible if a LOT of void areas
-    if not Z.border_info.nb_min_h then
+    if not Z.border_info.nb_min_f then
       Z.border_info.kind = "void"
     else
       Z.border_info.kind = rand.sel(100, "water", "mountain")
@@ -1823,6 +1825,8 @@ function Layout_create_mountains(Z)
     each A in Z.border_info.areas do
       if A.mode != "scenic" then continue end
 
+      A.is_outdoor = true
+
       each S in A.seeds do
         visit_seed(A, S)
         mark_map_edges(A, S)
@@ -2082,7 +2086,9 @@ function Layout_build_mountains(Z)
     local floor_mat = sel(LEVEL.hill_mode == "low", "GRASS1", "FLAT10")
     local  ceil_mat = "_SKY"
 
---!!!!    if not low_mode and cell.dist and cell.dist >= 9 then
+    if cell.area.kind == "water" then floor_mat = "FWATER1" end
+
+--!!!!    if LEVEL.hill_mode == "high" and cell.dist and cell.dist >= 9 then
 
 if true and cell.cliff then
 floor_mat = "MFLR8_3"
@@ -2112,6 +2118,7 @@ end
 
     local light, tag
 
+
     table.insert(f_brush, { t=floor_h, light=light, tag=tag })
     table.insert(c_brush, { b= ceil_h })
 
@@ -2131,16 +2138,12 @@ end
   end
 
 
-  local function render_all_cells()
-    Layout_visit_all_cells(Z, render_cell)
-  end
-
-
   local function determine_sky_heights()
     Layout_visit_all_cells(Z,
       function (cell, S, cell_side)
         if cell.dist then
           local d = math.floor(cell.dist / 2)
+          if Z.border_info.kind == "water" then d = 8 end
           cell.sky_h = cell.area.zone.sky_h + d * 64
         end
       end)
@@ -2170,6 +2173,11 @@ end
     assert(cell.floor_h == nil)
 
 
+    if Z.border_info.kind == "water" then
+      cell.floor_h = Z.border_info.nb_min_f - 32
+      return
+    end
+
     -- dist zero sets the initial heights
     -- (everything else will be some delta from these)
     if cur_dist == 0 then
@@ -2196,10 +2204,10 @@ end
       if not nb_cell then continue end
       if nb_cell.area.zone != Z then continue end
 
-      if not nb_cell.floor_h then continue end
-
-      min_f = math.min(min_f, nb_cell.floor_h)
-      max_f = math.max(max_f, nb_cell.floor_h)
+      if nb_cell.floor_h then
+        min_f = math.min(min_f, nb_cell.floor_h)
+        max_f = math.max(max_f, nb_cell.floor_h)
+      end
     end
 
 
@@ -2228,10 +2236,6 @@ end
 
       return
     end
-
-
---!!!!!
-do cell.floor_h = min_f + 4 ; return end
 
 
     -- produce high mountains
@@ -2263,16 +2267,15 @@ do cell.floor_h = min_f + 4 ; return end
   end
 
 
-  local function floor_height_for_edge_cell(cell, S, cell_side)
+  local function floor_height_for_cliff(cell, S, cell_side)
     if cell.cliff then
-      cell.floor_h = 128  -- FIXME
+      cell.floor_h = Z.border_info.nb_max_f + 96
     end
   end
 
 
   local function determine_floor_heights()
     -- pick a height for all cells at dist 0, dist 1, etc...
-    -- [ the cell.area.floor_h is a maximal value ]
 
     for dist = 0, calc_highest_dist() do
       cur_dist = dist
@@ -2280,7 +2283,7 @@ do cell.floor_h = min_f + 4 ; return end
       Layout_visit_all_cells(Z, floor_height_in_cell)
     end
 
-    Layout_visit_all_cells(Z, floor_height_for_edge_cell)
+    Layout_visit_all_cells(Z, floor_height_for_cliff)
   end
 
 
@@ -2330,22 +2333,29 @@ do cell.floor_h = min_f + 4 ; return end
   local function merge_heights()
     -- generally try to merge cells which straddle a seed edge
 
-    Layout_visit_all_cells(Z, merge_heights_in_cell)
+    if Z.border_info.kind == "mountains" then
+      Layout_visit_all_cells(Z, merge_heights_in_cell)
+    end
   end
 
 
   local function can_move_corner(corner)
     each A in corner.areas do
-      if A.kind != "mountain" then return false end
+      if A.mode != "scenic" then return false end
     end
 
     return true
   end
 
 
-  local function jiggle_corners()
+  local function jiggle_all_corners()
     -- move the corners of seeds by a random delta.
     -- cannot move if at edge of map, or touches a normal part of level.
+
+    -- do this once (over the whole map)
+    if LEVEL.jiggled then return end
+
+    LEVEL.jiggled = true
 
     for cx = 2, LEVEL.area_corners.w - 1 do
     for cy = 2, LEVEL.area_corners.h - 1 do
@@ -2362,13 +2372,14 @@ do cell.floor_h = min_f + 4 ; return end
 
   ---| Layout_build_mountains |---
 
+  jiggle_all_corners()
+
   determine_sky_heights()
   determine_floor_heights()
 
   merge_heights()
 
-  jiggle_corners()
-
-  render_all_cells()
+  -- render all the cells
+  Layout_visit_all_cells(Z, render_cell)
 end
 
