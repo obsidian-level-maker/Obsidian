@@ -1035,7 +1035,7 @@ function Layout_map_borders()
     if not Z.border_info.nb_min_f then
       Z.border_info.kind = "void"
     else
-      Z.border_info.kind = rand.sel(0, "water", "mountain")
+      Z.border_info.kind = rand.sel(70, "mountain", "water")
     end
 
     each A in Z.border_info.areas do
@@ -1054,7 +1054,7 @@ function Layout_map_borders()
 
   ---| Layout_map_borders |---
 
-  LEVEL.hill_mode = rand.sel(0, "high", "low")
+  LEVEL.hill_mode = rand.sel(70, "high", "low")
 
   -- FIXME: LEVEL.cliff_mat, LEVEL.hill_mat
 
