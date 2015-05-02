@@ -860,9 +860,10 @@ function Room_border_up()
     if A2 == "map_edge" then
       if A1.room or A1.mode == "cage" or A1.mode == "trap" then
         junc.kind = "wall"
+      else
+        junc.kind = "nothing"
       end
 
-      junc.kind = "nothing"
       return
     end
 
