@@ -1284,7 +1284,9 @@ function Render_all_areas()
     Render_depot(depot)
   end
 
-  Layout_build_mountains()
+  each Z in LEVEL.zones do
+    Layout_build_mountains(Z)
+  end
 end
 
 

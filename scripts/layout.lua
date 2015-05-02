@@ -958,7 +958,7 @@ function Layout_map_borders()
   local post_h
 
 
-  local function match_area(A, corner)
+  local function match_area__OLD(A, corner)
     if not A.is_boundary then return false end
 
     if corner == "all" then return true end
@@ -986,21 +986,25 @@ function Layout_map_borders()
   end
 
   
-  local function neighbor_min_max(R)
+  local function neighbor_min_max(Z)
     local min_h
     local max_h
 
-    each A in R.areas do
-      each N in A.neighbors do
-        if N.room and N.floor_h then
-          min_h = math.min(N.floor_h, min_h or  9999)
-          max_h = math.max(N.floor_h, max_h or -9999)
-        end
+    each A in Z.border_info.areas do
+    each N in A.neighbors do
+      if N.zone != Z then continue end
+
+      if N.room and N.floor_h then
+        min_h = math.min(N.floor_h, min_h or  EXTREME_H)
+        max_h = math.max(N.floor_h, max_h or -EXTREME_H)
       end
     end
+    end
 
-    R.nb_min_h = min_h
-    R.nb_max_h = max_h
+    -- possible for min_h and max_h to be NIL here
+
+    Z.border_info.nb_min_h = min_h
+    Z.border_info.nb_max_h = max_h
   end
 
 
@@ -1108,7 +1112,7 @@ function Layout_map_borders()
   end
 
 
-  local function assign_sky_edges()
+  local function assign_sky_edges__OLD()
     each A in LEVEL.areas do
       if not A.is_outdoor then continue end
 
@@ -1125,40 +1129,40 @@ function Layout_map_borders()
   end
 
 
+  local function collect_border_areas(Z)
+    Z.border_info.areas = {}
+
+    each A in LEVEL.areas do
+      if A.zone == Z then
+        table.insert(Z.border_info.areas, A)
+      end
+    end
+  end
+
+
+  local function setup_zone(Z)
+    Z.border_info = {}
+
+    collect_border_areas(Z)
+    neighbor_min_max(Z)
+
+    Z.border_info.mode = rand.sel(50, "liquid", "mountain")
+
+    Layout_create_mountains(Z)
+  end
+
+
   ---| Layout_map_borders |---
 
-  -- currently have no other outdoorsy borders (except the watery bits)
-  -- [ TODO : review this later ! ]
-  each A in LEVEL.areas do
-    if A.is_boundary then
-      A.is_outdoor = nil
-    end
+  LEVEL.hill_mode = rand.sel(75, "high", "low")
+
+  each Z in LEVEL.zones do
+    setup_zone(Z)
   end
 
-  if rand.odds(15 + 90) then --!!!!!!
-    test_watery_corner("all")
-  else
-    -- TODO : pick best corners [maximum # of outdoor rooms]
-
-    test_watery_corner(3)
-
-    if rand.odds(35) then
-      test_watery_corner(7)
-    end
+  each Z in LEVEL.zones do
+    Layout_process_mountains(Z)
   end
-
-  -- part B of "no other outdoorsy borders"
-  each A in LEVEL.areas do
-    if A.is_boundary and not A.is_outdoor then
-      A.mode = "void"
-    end
-  end
-
-  if not MOUNTAINS then
-    assign_sky_edges()
-  end
-
-  Layout_create_mountains()
 end
 
 
@@ -1848,7 +1852,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Layout_visit_all_cells(func)
+function Layout_visit_all_cells(zone, func)
   for sx = 1, SEED_W do
   for sy = 1, SEED_H do
     local S = SEEDS[sx][sy]
@@ -1856,7 +1860,9 @@ function Layout_visit_all_cells(func)
     for side = 2,8,2 do
       local cell = S.m_cell[side]
 
-      if cell then func(cell, S, side) end
+      if cell and cell.area.zone == zone then
+        func(cell, S, side)
+      end
     end
   end -- sx, sy
   end
@@ -1864,10 +1870,8 @@ end
 
 
 
-function Layout_create_mountains()
+function Layout_create_mountains(Z)
   
-  local changes
-
 
   local function add_cell(S, side, A)
     if S.bottom then S = S.bottom end
@@ -1905,7 +1909,9 @@ function Layout_create_mountains()
       if not cell then continue end
 
       if not S:raw_neighbor(dir) then
-        cell.map_edge = 0  -- !!!! FIXME : depends on mode (esp. "water")
+        if Z.border_info.mode == "water" then
+          cell.map_edge = 0
+        end
 
         cell.map_edge_dir = dir
       end
@@ -1914,15 +1920,27 @@ function Layout_create_mountains()
 
 
   local function create_all_cells()
-    each A in LEVEL.areas do
-      if A.kind == "mountain" then
-        each S in A.seeds do
-          visit_seed(A, S)
-          mark_map_edges(A, S)
-        end
+    each A in Z.border_info.areas do
+      if A.mode != Z.border_info.mode then continue end
+
+      each S in A.seeds do
+        visit_seed(A, S)
+        mark_map_edges(A, S)
       end
     end
   end
+
+
+  ---| Layout_create_mountains |---
+
+  create_all_cells()
+end
+
+
+
+function Layout_process_mountains(Z)
+
+  local changes
 
 
   local function mark_zone_edges_in_cell(cell, S, cell_side)
@@ -1968,7 +1986,7 @@ function Layout_create_mountains()
 
   local function mark_zone_edges()
     -- this handles the cell<-->cell pairs
-    Layout_visit_all_cells(mark_zone_edges_in_cell)
+    Layout_visit_all_cells(Z, mark_zone_edges_in_cell)
 
     -- now handle the cell<-->seed pairs
     each A in LEVEL.areas do
@@ -1988,7 +2006,9 @@ function Layout_create_mountains()
 
     for dir = 2,8,2 do
       local nb_cell = S:cell_neighbor(cell_side, dir)
+
       if not nb_cell then continue end
+      if nb_cell.area.zone != Z then continue end
 
       if nb_cell.solid then
         count = count + 1
@@ -2015,7 +2035,7 @@ function Layout_create_mountains()
     -- [ without this, the zone boundary can meet at sharp points ]
 
     for pass = 1, 4 do
-      Layout_visit_all_cells(fatten_in_cell)
+      Layout_visit_all_cells(Z, fatten_in_cell)
     end
   end
 
@@ -2066,7 +2086,9 @@ function Layout_create_mountains()
 
     for dir = 2,8,2 do
       local nb_cell = S:cell_neighbor(cell_side, dir)
+
       if not nb_cell then continue end
+      if nb_cell.area.zone != Z then continue end
 
       if nb_cell.solid then
         cell.dist = 0
@@ -2084,6 +2106,7 @@ function Layout_create_mountains()
       local nb_cell = S:cell_neighbor(cell_side, dir)
 
       if not nb_cell then continue end
+      if nb_cell.area.zone != Z then continue end
       if nb_cell.solid then continue end
 
       if new_dist < (nb_cell.dist or 999) then
@@ -2109,13 +2132,13 @@ function Layout_create_mountains()
       end
     end
 
-    Layout_visit_all_cells(check_touches_solid)
+    Layout_visit_all_cells(Z, check_touches_solid)
 
     -- use a flood-fill algorithm to spread distances
 
     for loop = 1, 999 do
       changes = false
-      Layout_visit_all_cells(flood_fill_dist_in_cell)
+      Layout_visit_all_cells(Z, flood_fill_dist_in_cell)
       if not changes then break; end
     end
   end
@@ -2124,7 +2147,7 @@ function Layout_create_mountains()
   local function solidify_unreachables()
     -- any cells without a 'dist' must be cut off from everything, so solidify them
 
-    Layout_visit_all_cells(
+    Layout_visit_all_cells(Z,
       function (cell, S, cell_side)
         if not (cell.dist or cell.solid) then
           cell.solid = "cutoff"
@@ -2134,9 +2157,7 @@ function Layout_create_mountains()
   end
 
 
-  ---| Layout_create_mountains |---
-
-  create_all_cells()
+  ---| Layout_process_mountains |---
 
   mark_zone_edges()
   fatten_solids()
@@ -2147,15 +2168,13 @@ end
 
 
 
-function Layout_build_mountains()
+function Layout_build_mountains(Z)
 
   local cur_dist
 
-  local low_mode = false
-
 
   local function render_cell(cell, S, dir)
-    local floor_mat = sel(low_mode, "GRASS1", "FLAT10")
+    local floor_mat = sel(LEVEL.hill_mode == "low", "GRASS1", "FLAT10")
     local  ceil_mat = "_SKY"
 
 --!!!!    if not low_mode and cell.dist and cell.dist >= 9 then
@@ -2208,12 +2227,12 @@ end
 
 
   local function render_all_cells()
-    Layout_visit_all_cells(render_cell)
+    Layout_visit_all_cells(Z, render_cell)
   end
 
 
   local function determine_sky_heights()
-    Layout_visit_all_cells(
+    Layout_visit_all_cells(Z,
       function (cell, S, cell_side)
         if cell.dist then
           local d = math.floor(cell.dist / 2)
@@ -2226,7 +2245,7 @@ end
   local function calc_highest_dist()
     local max_dist = 0
 
-    Layout_visit_all_cells(
+    Layout_visit_all_cells(Z,
       function (cell, S, cell_side)
         if cell.dist and cell.dist > max_dist then
           max_dist = cell.dist
@@ -2252,7 +2271,7 @@ end
 
       if not cell.near_max_f then
         cell.floor_h = cell.sky_h - rand.pick({ 96, 160, 224, 256, 256 })
-      elseif low_mode then
+      elseif LEVEL.hill_mode == "low" then
         cell.floor_h = cell.near_max_f + rand.pick({ 32, 32, 40 })
       else
         cell.floor_h = cell.near_max_f + rand.pick({ 40, 40, 56, 64, 80 })
@@ -2270,6 +2289,8 @@ end
       local nb_cell, N = S:cell_neighbor(cell_side, dir)
 
       if not nb_cell then continue end
+      if nb_cell.area.zone != Z then continue end
+
       if not nb_cell.floor_h then continue end
 
       min_f = math.min(min_f, nb_cell.floor_h)
@@ -2293,7 +2314,7 @@ end
 
     -- produce low hills / gentle sloping plains
 
-    if low_mode then
+    if LEVEL.hill_mode == "low" then
       if min_f < max_f or rand.odds(40) then
         cell.floor_h = max_f
       else
@@ -2351,10 +2372,10 @@ do cell.floor_h = min_f + 4 ; return end
     for dist = 0, calc_highest_dist() do
       cur_dist = dist
 
-      Layout_visit_all_cells(floor_height_in_cell)
+      Layout_visit_all_cells(Z, floor_height_in_cell)
     end
 
-    Layout_visit_all_cells(floor_height_for_edge_cell)
+    Layout_visit_all_cells(Z, floor_height_for_edge_cell)
   end
 
 
@@ -2367,6 +2388,8 @@ do cell.floor_h = min_f + 4 ; return end
     local nb_cell = S:cell_neighbor(cell_side, cell_side)
 
     if not nb_cell then return end
+    if nb_cell.area.zone != Z then return end
+
     if not nb_cell.floor_h then return end
     if nb_cell.map_edge then return end
 
@@ -2402,7 +2425,7 @@ do cell.floor_h = min_f + 4 ; return end
   local function merge_heights()
     -- generally try to merge cells which straddle a seed edge
 
-    Layout_visit_all_cells(merge_heights_in_cell)
+    Layout_visit_all_cells(Z, merge_heights_in_cell)
   end
 
 
