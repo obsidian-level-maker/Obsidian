@@ -19,10 +19,6 @@
 ------------------------------------------------------------------------
 
 
--- FIXME
-MOUNTAINS = true
-
-
 function Layout_compute_wall_dists(R)
 
   local function init_dists()
@@ -1037,7 +1033,7 @@ function Layout_map_borders()
     if not Z.border_info.nb_min_h then
       Z.border_info.kind = "void"
     else
-      Z.border_info.kind = rand.sel(50, "water", "mountain")
+      Z.border_info.kind = rand.sel(100, "water", "mountain")
     end
 
     each A in Z.border_info.areas do
@@ -1945,6 +1941,9 @@ function Layout_process_mountains(Z)
 
 
   local function touches_normal_in_cell(cell, cell_S, A, S)
+    -- see what normal (traversible) parts of level touch this cell, and
+    -- update minimum and maximum floor heights.
+
     if cell.solid then return end
 
     cell.dist = 0
@@ -1962,6 +1961,7 @@ function Layout_process_mountains(Z)
     for dir = 2,8,2 do
       local N = S:neighbor(dir)
       if not N then continue end
+      if N.zone != A.zone then continue end
 
       N = N.bottom or N
 
@@ -1972,7 +1972,7 @@ function Layout_process_mountains(Z)
     end
 
     -- for diagonal seeds, may be some cells in other half
-    if S.diagonal then
+    if S.diagonal and S.area.zone == Z then
       local PS = S.bottom or S
 
       for dir = 2,8,2 do
@@ -1992,7 +1992,8 @@ function Layout_process_mountains(Z)
       local nb_cell = S:cell_neighbor(cell_side, dir)
 
       if not nb_cell then continue end
-      if nb_cell.area.zone != Z then continue end
+
+      -- allow touching other zones here (probably makes no difference)
 
       if nb_cell.solid then
         cell.dist = 0
@@ -2029,10 +2030,11 @@ function Layout_process_mountains(Z)
     --
 
     each A in LEVEL.areas do
-      if not A.is_boundary then
-        each S in A.seeds do
-          check_touches_at_seed(A, S)
-        end
+      if A.zone != Z then continue end
+      if A.is_boundary then continue end
+
+      each S in A.seeds do
+        check_touches_at_seed(A, S)
       end
     end
 
@@ -2064,11 +2066,8 @@ function Layout_process_mountains(Z)
   ---| Layout_process_mountains |---
 
   mark_zone_edges()
-
   fatten_solids()
-
   assign_distances()
-
   solidify_unreachables()
 end
 
