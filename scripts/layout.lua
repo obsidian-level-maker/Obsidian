@@ -2086,9 +2086,6 @@ function Layout_create_mountains()
       if not nb_cell then continue end
       if nb_cell.solid then continue end
 
-      -- map edges are different and don't get a dist
-      if nb_cell.map_edge then continue end
-
       if new_dist < (nb_cell.dist or 999) then
         nb_cell.dist = new_dist
         changes = true
@@ -2242,6 +2239,8 @@ end
 
   local function floor_height_in_cell(cell, S, cell_side)
     if cell.solid then return end
+    if cell.map_edge then return end
+
     if cell.dist != cur_dist then return end
 
     assert(cell.floor_h == nil)
@@ -2277,7 +2276,13 @@ end
       max_f = math.max(max_f, nb_cell.floor_h)
     end
 
-    assert(min_f <= max_f)
+
+    if min_f > max_f then
+      -- cell must be cut-off by map-edge cells
+      cell.map_edge = 2
+      return
+    end
+
 
     -- if difference is large, choose half-way point
     if (max_f - min_f) >= 128 then
