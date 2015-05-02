@@ -18,34 +18,6 @@ Closets
 
 
 
-Map Borders
------------
-
-++  have different things in each zone [ upto two ]
-
-++  Plains (flat or gently sloping)
-    have trees, occasional big rock
-
-+  Canyon : sides 2/8 of map have tall cliffs, sides 4/6 are short/water
-
-+  Water : have a cliff at edge of map  [ or at dist >= 3 or so ]
-
--  Mountains : add some largish flat areas (away from map and away from edges)
-               with a lot more of the scenic object (or a different one)
-
--  Mountains : make larger groups at further distances
-
--  inverse mountain?  i.e. like level is sitting on top of one
-
--  Water : have some islands
-
--  mixing Mountains + Water or Plains + Water
-   (the water forms small lakes or a river, touching the normal map)
-
--  Water : waterfalls from nearby mountains or the far away cliff
-
-
-
 Sinks
 -----
 
@@ -62,8 +34,6 @@ Sinks
 
 -  probably should mark seeds (or whatever) so know where can place
    decorative prefabs.
-
-
 
 
 

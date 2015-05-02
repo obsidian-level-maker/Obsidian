@@ -9,6 +9,8 @@ ______________________________________________________________________
 ______________________________________________________________________
 
 
+*  support for non-ASCII characters in filenames
+
 *  min_weapon for guard monsters
 
 *  support for Traps and free-standing Cages
@@ -56,6 +58,19 @@ ______________________________________________________________________
    Note that "beserk" only lasts a single level.
 
 -  sky generator : better checking of themes (esp. w/ control module)
+
+
+Map Borders:
+-  Water : have some islands
+
+-  Water : waterfalls in the far away cliff
+
+-  Low hills : make occasional big rock
+
+-  Mountains : add some largish flat areas (away from map and away from edges)
+               with a lot more of the scenic object (or a different one)
+
+-  mountains : larger groups at further distances (needs a good rethink)
 
 
 ----------------------------------------------
