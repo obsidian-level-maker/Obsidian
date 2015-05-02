@@ -1548,9 +1548,11 @@ end
 function Shape_assign_boundary()
 
   local function area_touches_edge(A)
+    -- this also prevents a single seed gap between area and edge of map
+
     each S in A.seeds do
-      if S.sx == 1 or S.sx == SEED_W then return true end
-      if S.sy == 1 or S.sy == SEED_H then return true end
+      if S.sx <= 2 or S.sx >= SEED_W-1 then return true end
+      if S.sy <= 2 or S.sy >= SEED_H-1 then return true end
     end
 
     return false
@@ -1599,9 +1601,10 @@ function Shape_assign_boundary()
       if A.is_inner and not seen[A] then
         gui.printf("HERE IS ONE DUDE! : %s", A.name)
 
+        A.mode = "scenic"
+
         A.is_inner = false
         A.is_boundary = true
-        A.mode = "scenic"
       end
     end
   end
