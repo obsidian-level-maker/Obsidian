@@ -952,40 +952,6 @@ function Layout_map_borders()
   -- The actual brushwork is done by normal area-building code.
   --
 
-  local SEED_MX = SEED_W / 2
-  local SEED_MY = SEED_H / 2
-
-  local post_h
-
-
-  local function match_area__OLD(A, corner)
-    if not A.is_boundary then return false end
-
-    if corner == "all" then return true end
-
-    local BB_X1, BB_Y1, BB_X2, BB_Y2 = area_get_seed_bbox(A)
-
-    local sx1 = BB_X1.sx
-    local sy1 = BB_Y1.sy
-    local sx2 = BB_X2.sx
-    local sy2 = BB_Y2.sy
-
-    if corner == 1 or corner == 7 then
-      if sx1 > SEED_MX then return false end
-    else
-      if sx2 < SEED_MX then return false end
-    end
-
-    if corner == 1 or corner == 3 then
-      if sy1 > SEED_MX then return false end
-    else
-      if sy2 < SEED_MX then return false end
-    end
-
-    return true
-  end
-
-  
   local function neighbor_min_max(Z)
     local min_h
     local max_h
@@ -1014,34 +980,16 @@ function Layout_map_borders()
         local junc = Junction_lookup(A, N)
         assert(junc)
 
-        if MOUNTAINS then
-          junc.kind = "nothing"
-        else
+        if Z.border_info.kind == "water" then
           junc.kind = "rail"
           junc.rail_mat = "MIDBARS3"
           junc.post_h   = 84
           junc.blocked  = true
+        else
+          junc.kind = "nothing"
         end
       end
     end
-  end
-
-
-  local function set_as_water(A, water_room)
-    A.scenic_room = water_room
-
-    A.mode = "scenic"
-
-    if MOUNTAINS then
-      A.kind = "mountain"
-    else
-      A.kind = "water"
-    end
-
-    A.is_outdoor = true
-    A.is_boundary = true
-
-    A.floor_h = water_room.floor_h
   end
 
 
@@ -1054,6 +1002,7 @@ function Layout_map_borders()
   end
 
 
+  -- TODO : get this working again
   local function swallow_voids(water_room)
     -- void areas touching the watery border may become part of it
 
@@ -1061,68 +1010,6 @@ function Layout_map_borders()
       if A.mode == "void" and not A.is_boundary then
         if touches_water(A) and rand.odds(60) then
           table.insert(water_room.areas, A)
-        end
-      end
-    end
-  end
-
-
-  local function test_watery_corner(corner)
-    -- TODO : should this be a real room object?  [nah...]
-    local room = 
-    {
-      kind = "scenic"
-      is_outdoor = true
-      areas = {}
-    }
-
-    each A in LEVEL.areas do
-      if match_area(A, corner) then
-        table.insert(room.areas, A)
-        A.is_water = true
-      end
-    end
-
-    if table.empty(room.areas) then
-      return  -- nothing happening, dude
-    end
-
-    swallow_voids(room)
-
-    neighbor_min_max(room)
-
-    -- this only possible if a LOT of void areas
-    if not room.nb_min_h then
-      return
-    end
-
-    if MOUNTAINS then
-      room.floor_h = room.nb_max_h
-    else
-      room.floor_h = room.nb_min_h - 32
-    end
-
-    each A in room.areas do
-      set_as_water(A, room)
-    end
-
-    each A in room.areas do
-      set_junctions(A)
-    end
-  end
-
-
-  local function assign_sky_edges__OLD()
-    each A in LEVEL.areas do
-      if not A.is_outdoor then continue end
-
-      each S in A.seeds do
-        for dir = 2,8,2 do
-          local N = S:neighbor(dir, "NODIR")
-
-          if N == nil then
-            S.border[dir].kind = "sky_edge"
-          end
         end
       end
     end
@@ -1146,9 +1033,24 @@ function Layout_map_borders()
     collect_border_areas(Z)
     neighbor_min_max(Z)
 
-    Z.border_info.mode = rand.sel(50, "liquid", "mountain")
+    -- this only possible if a LOT of void areas
+    if not Z.border_info.nb_min_h then
+      Z.border_info.kind = "void"
+    else
+      Z.border_info.kind = rand.sel(50, "water", "mountain")
+    end
 
-    Layout_create_mountains(Z)
+    each A in Z.border_info.areas do
+      if A.mode == "scenic" then
+        if Z.border_info.kind == "void" then
+          A.mode = "void"
+        else
+          A.kind = Z.border_info.kind
+
+          set_junctions(A)
+        end
+      end
+    end
   end
 
 
@@ -1156,8 +1058,11 @@ function Layout_map_borders()
 
   LEVEL.hill_mode = rand.sel(75, "high", "low")
 
+  -- FIXME: LEVEL.cliff_mat, LEVEL.hill_mat
+
   each Z in LEVEL.zones do
     setup_zone(Z)
+    Layout_create_mountains(Z)
   end
 
   each Z in LEVEL.zones do
@@ -1871,7 +1776,6 @@ end
 
 
 function Layout_create_mountains(Z)
-  
 
   local function add_cell(S, side, A)
     if S.bottom then S = S.bottom end
@@ -1909,11 +1813,11 @@ function Layout_create_mountains(Z)
       if not cell then continue end
 
       if not S:raw_neighbor(dir) then
-        if Z.border_info.mode == "water" then
-          cell.map_edge = 0
-        end
-
         cell.map_edge_dir = dir
+
+        if Z.border_info.kind == "water" then
+          cell.cliff = 0
+        end
       end
     end
   end
@@ -1921,7 +1825,7 @@ function Layout_create_mountains(Z)
 
   local function create_all_cells()
     each A in Z.border_info.areas do
-      if A.mode != Z.border_info.mode then continue end
+      if A.mode != "scenic" then continue end
 
       each S in A.seeds do
         visit_seed(A, S)
@@ -1989,8 +1893,8 @@ function Layout_process_mountains(Z)
     Layout_visit_all_cells(Z, mark_zone_edges_in_cell)
 
     -- now handle the cell<-->seed pairs
-    each A in LEVEL.areas do
-      if A.kind != "mountain" then
+    each A in Z.border_info.areas do
+      if A.mode == "scenic" then
         each S in A.seeds do
           mark_zone_edges_near_seed(A, S)
         end
@@ -2018,8 +1922,8 @@ function Layout_process_mountains(Z)
         cell.solid = "fat"
       end
 
-      if not cell.map_edge and nb_cell.map_edge == 0 then
-        cell.map_edge = 1
+      if not cell.cliff and nb_cell.cliff == 0 then
+        cell.cliff = 1
       end
     end
 
@@ -2160,9 +2064,11 @@ function Layout_process_mountains(Z)
   ---| Layout_process_mountains |---
 
   mark_zone_edges()
+
   fatten_solids()
 
   assign_distances()
+
   solidify_unreachables()
 end
 
@@ -2179,7 +2085,7 @@ function Layout_build_mountains(Z)
 
 --!!!!    if not low_mode and cell.dist and cell.dist >= 9 then
 
-if true and cell.map_edge then
+if true and cell.cliff then
 floor_mat = "MFLR8_3"
 end
 
@@ -2258,7 +2164,7 @@ end
 
   local function floor_height_in_cell(cell, S, cell_side)
     if cell.solid then return end
-    if cell.map_edge then return end
+    if cell.cliff then return end
 
     if cell.dist != cur_dist then return end
 
@@ -2300,7 +2206,7 @@ end
 
     if min_f > max_f then
       -- cell must be cut-off by map-edge cells
-      cell.map_edge = 2
+      cell.cliff = 2
       return
     end
 
@@ -2359,7 +2265,7 @@ do cell.floor_h = min_f + 4 ; return end
 
 
   local function floor_height_for_edge_cell(cell, S, cell_side)
-    if cell.map_edge then
+    if cell.cliff then
       cell.floor_h = 128  -- FIXME
     end
   end
@@ -2383,7 +2289,7 @@ do cell.floor_h = min_f + 4 ; return end
     if cell_side > 5 then return end
 
     if not cell.floor_h then return end
-    if cell.map_edge then return end
+    if cell.cliff then return end
 
     local nb_cell = S:cell_neighbor(cell_side, cell_side)
 
@@ -2391,7 +2297,7 @@ do cell.floor_h = min_f + 4 ; return end
     if nb_cell.area.zone != Z then return end
 
     if not nb_cell.floor_h then return end
-    if nb_cell.map_edge then return end
+    if nb_cell.cliff then return end
 
     local new_h
 
