@@ -1972,6 +1972,8 @@ function Layout_process_mountains(Z)
       local cell = N.m_cell[10 - dir]
       if not cell then continue end
 
+      if cell.area.zone != Z then continue end
+
       touches_normal_in_cell(cell, N, A, S)
     end
 
@@ -1982,6 +1984,7 @@ function Layout_process_mountains(Z)
       for dir = 2,8,2 do
         local cell = PS.m_cell[dir]
         if not cell then continue end
+        if cell.area.zone != Z then continue end
 
         touches_normal_in_cell(cell, PS, A, S)
       end
