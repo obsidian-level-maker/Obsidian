@@ -854,6 +854,18 @@ function Room_border_up()
     assert(A1 != A2)
 
 
+    -- handle edge of map
+    -- [ normal rooms generally don't touch the edge ]
+
+    if A2 == "map_edge" then
+      if A1.room or A1.mode == "cage" or A1.mode == "trap" then
+        junc.kind = "wall"
+      end
+
+      return
+    end
+
+
     -- zones : gotta keep 'em separated
 
     if A1.zone != A2.zone then

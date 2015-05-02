@@ -470,6 +470,8 @@ function Connect_zones_prelim()
     local best_score = 0
 
     each _,junc in LEVEL.area_junctions do
+      if junc.A2 == "map_edge" then continue end
+
       local Z1 = junc.A1.zone
       local Z2 = junc.A2.zone
 

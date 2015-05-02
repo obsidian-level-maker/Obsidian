@@ -245,14 +245,24 @@ end
 
 
 function Junction_lookup(A1, A2, create_it)
+  -- one area can be the special keyword "map_edge"
+
   -- returns NIL when areas do not touch, or A1 == A2
 
   if A1 == A2 then return nil end
 
-  local low_id  = math.min(A1.id, A2.id)
-  local high_id = math.max(A1.id, A2.id)
+  if A1 == "map_edge" then A1, A2 = A2, A1 end
 
-  local index = tostring(low_id) .. "_" .. tostring(high_id)
+  local index
+
+  if A2 == "map_edge" then
+    index = tostring(A1.id) .. "_map_edge"
+  else
+    local low_id  = math.min(A1.id, A2.id)
+    local high_id = math.max(A1.id, A2.id)
+
+    index = tostring(low_id) .. "_" .. tostring(high_id)
+  end
 
   if create_it then
     if not LEVEL.area_junctions[index] then
@@ -282,9 +292,22 @@ function Junction_init()
   each A in LEVEL.areas do
   each S in A.seeds do
   each dir in geom.ALL_DIRS do
-    local N = S:neighbor(dir)
+    local N = S:neighbor(dir, "NODIR")
 
-    if not (N and N.area) then continue end
+    if N == "NODIR" then continue end
+
+    -- edge of map?
+    if not N then
+      local junc = Junction_lookup(A, "map_edge", "create_it")
+
+      S.border[dir].junction = junc
+
+      junc.perimeter = junc.perimeter + 1
+      continue
+    end
+
+    assert(N.area)
+
     if N.area == S.area then continue end
 
     local junc = Junction_lookup(A, N.area)

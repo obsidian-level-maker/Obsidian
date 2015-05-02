@@ -24,7 +24,7 @@ function calc_wall_mat(A1, A2)
     return "_ERROR"
   end
 
-if A2.mode == "void" then return "COMPSPAN" end
+if A2 and A2.mode == "void" then return "COMPSPAN" end
 
   if not A1.is_outdoor then
     return assert(A1.wall_mat)
