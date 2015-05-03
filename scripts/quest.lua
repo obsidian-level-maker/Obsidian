@@ -461,6 +461,7 @@ goal.room:tostr(), goal.room.quest.name)
   if C.kind == "teleporter" then return end
 
   quest = C.A1.room.quest
+
 gui.debugf("  quest : %s\n", quest.name)
 
   -- must not divide a room in half
@@ -518,14 +519,12 @@ gui.debugf("--> possible @ %s : score %1.1f\n", C:tostr(), score)
     info.conn   = C
     info.goal   = goal
     info.quest  = quest
+    info.leafs  = leafs
 
     info.before   = before
     info.before_R = before_R
-
     info.after    = after
     info.after_R  = after_R
-
-    info.leafs  = leafs
   end
 end
 
@@ -734,7 +733,8 @@ end
 
 
 
-function Quest_scan_all_conns(new_goals)
+function Quest_scan_all_conns(new_goals, do_quest)
+  -- do_quest can be NIL, or a particular quest to try dividing
 
   gui.debugf("Quest_scan_all_conns.....\n")
 
@@ -752,13 +752,14 @@ function Quest_scan_all_conns(new_goals)
   if #LEVEL.zone_conns > 0 then
     conn_list = LEVEL.zone_conns
     is_zoney  = true
-gui.debugf("  is_zoney!")
   end
 
 
   each C in conn_list do
     local quest = C.A1.room.quest
     assert(quest)
+
+    if do_quest and quest != do_quest then continue end
 
     -- must be same quest on each side
     if C.A2.room.quest != quest then continue end
@@ -806,6 +807,19 @@ function Quest_add_major_quests()
   -- Divides the map into major quests, typically requiring a key to
   -- progress between the quests.
   --
+
+  local function count_unused_leafs(quest)
+    local unused = 0
+
+    each id, R in quest.rooms do
+      if R:is_unused_leaf() then
+        unused = unused + 1
+      end
+    end
+
+    return unused
+  end
+
 
   local function collect_key_goals(list)
     local key_tab = LEVEL.usable_keys or THEME.keys or {} 
@@ -889,11 +903,11 @@ function Quest_add_major_quests()
   end
 
 
-  local function add_double_switch_door()
-    local prob = 25
+  local function add_double_switch_door(quest)
+    local prob = 35
 
     if OB_CONFIG.mode == "coop" then
-      prob = 50
+      prob = 75
     end
 
     if not rand.odds(prob) then return false end
@@ -912,7 +926,45 @@ function Quest_add_major_quests()
     GOAL2.action = fab_def.action2
     GOAL2.same_tag = true
 
-    return Quest_scan_all_conns({ GOAL1, GOAL2 })
+    return Quest_scan_all_conns({ GOAL1, GOAL2 }, quest)
+  end
+
+  
+  local function lock_up_zones(goal_list)
+    for i = 1, 99 do
+      if table.empty(LEVEL.zone_conns) then return end
+
+      local goal = pick_goal(goal_list)
+      if not goal then return end
+
+      Quest_scan_all_conns({ goal })
+    end
+
+    error("Infinite loop in lock_up_zones")
+  end
+
+
+  local function lock_up_a_quest(quest, goal_list)
+    local unused = count_unused_leafs(quest)
+
+    if unused >= 3 and add_double_switch_door(quest) then
+      unused = unused - 2
+    end
+
+    -- number of switch quest to try
+    -- (have some random variation)
+    if rand.odds(25) then unused = unused - 1 end
+    if rand.odds(20) then unused = unused + 1 end
+    if rand.odds(20) then unused = unused + 1 end
+
+    unused = int(unused / 2)
+
+    for i = 1, unused do
+      local goal = pick_goal(goal_list)
+      if not goal then break; end
+
+      Quest_scan_all_conns({ goal }, quest)
+    end
   end
 
 
@@ -930,61 +982,14 @@ function Quest_add_major_quests()
     end
   end
 
-  for i = 1, 10 do
-    if table.empty(LEVEL.zone_conns) then break; end
-
-    local goal = pick_goal(goal_list)
-    if not goal then break; end
-
-    Quest_scan_all_conns({ goal })
-  end
+  lock_up_zones(goal_list)
 
 
--- ANALYSIS STUFF
-gui.printf("QUEST ANALYSIS:\n")
-each Q in LEVEL.quests do
-  local rooms = {}
-  each id, R in Q.rooms do
-    table.add_unique(rooms, R)
-  end
-  local unused = 0
-  each R in rooms do
-    if R:is_unused_leaf() then unused = unused + 1 end
-  end
-  local goal = Q.goals[1]
-  gui.printf("  %s (%s %s) : %d rooms, %d unused leafs\n",
-      Q.name, tostring(goal.kind), tostring(goal.item),
-      #rooms, unused)
-end
-
-
-  -- use remote doors to divide zones
-  -- [ but keys possible too, if any left over ]
+  -- lock remaining zone connections with switches
 
   collect_switch_goals(goal_list)
 
-  -- number of splits to try is based on # of rooms
-  local want_splits = #LEVEL.rooms / 16 - #LEVEL.quests
-
-  want_splits = int(want_splits + 2.0 * gui.random() ^ 2)
-
-  if want_splits > 0 and not LEVEL.has_triple_key then
-    if add_double_switch_door() then
-      want_splits = want_splits - 1
-    end
-  end
-
-  -- try to lock all the zones  [ it is not essential though ]
-  if want_splits < #LEVEL.zone_conns then
-    want_splits = #LEVEL.zone_conns
-  end
-
-  for i = 1, want_splits do
-    local goal = pick_goal(goal_list)
-    if not goal then break; end
-
-    Quest_scan_all_conns({ goal })
-  end
+  lock_up_zones(goal_list)
 end
 
 
