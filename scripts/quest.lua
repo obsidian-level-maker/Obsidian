@@ -83,7 +83,7 @@
 
 --class GOAL
 --[[
-    kind : keyword  --  "KEY" or "SWITCH" or "LEVEL_EXIT"  (NIL for exit goals)
+    kind : keyword  --  "KEY" or "SWITCH" or "LEVEL_EXIT"
 
     item : keyword  -- name of key or switch
 
@@ -254,7 +254,6 @@ function Quest_create_initial_quest()
     local GOAL = Goal_new("LEVEL_EXIT")
 
     GOAL.room = R
-    GOAL.area = R.areas[1]
 
     table.insert(R.goals, GOAL)
     table.insert(quest.goals, GOAL)
@@ -313,7 +312,7 @@ end
 function Quest_eval_divide_at_conn(C, goal, info)
   --
   -- Evaluate whether we can divide a quest at the given connection,
-  -- locking up the given goal.
+  -- locking up the given goal (which already exists in the quest).
   --
   -- The 'info' table contains the current best division (if any),
   -- and contains the following input fields:
@@ -330,7 +329,7 @@ function Quest_eval_divide_at_conn(C, goal, info)
   --
   --    before  :  area set of first half
   --    after   :  area set of second half
-  --    leafs   :  list of rooms / areas to place goals (#leafs >= #new_goals)
+  --    leafs   :  list of rooms place goals (#leafs >= #new_goals)
   -- 
 
   local quest  -- current quest
@@ -438,9 +437,7 @@ function Quest_eval_divide_at_conn(C, goal, info)
 
 
   local function check_has_goal(areas)
-    if (goal.room and areas[goal.room.areas[1].id]) or
-       (goal.area and areas[goal.area.id])
-    then
+    if goal.room and areas[goal.room.areas[1].id] then
       return true
     end
 
@@ -482,12 +479,10 @@ function Quest_eval_divide_at_conn(C, goal, info)
   ---| Quest_eval_divide_at_conn |---
 
 gui.debugf("  goal: %s/%s @ %s / %s\n", goal.kind or "???", goal.item or "???",
-goal.room:tostr(), goal.area.quest.name)
+goal.room:tostr(), goal.room.areas[1].quest.name)
 
-  -- connection must be same quest
-  if C.A1.quest != C.A2.quest then
-    return
-  end
+  -- must be same quest (caller guarantees this)
+  assert(C.A1.quest == C.A2.quest)
 
   -- cannot lock teleporter connections
   if C.kind == "teleporter" then return end
@@ -610,9 +605,7 @@ gui.debugf("transfer_existing_goals:\n")
     for i = #Q2.goals, 1, -1 do
       local targ = Q2.goals[i]
 
-      if (targ.room and targ.room.areas[1].quest == Q1) or
-         (targ.area and targ.area.quest == Q1)
-      then
+      if targ.room and targ.room.areas[1].quest == Q1 then
 gui.debugf("   %s\n", targ.name)
         table.insert(Q1.goals, table.remove(Q2.goals, i))
       end
@@ -663,7 +656,6 @@ gui.debugf("PLACING NEW GOALS:\n")
 
 gui.debugf("  %s @ %s in %s\n", goal.name, R:tostr(), Q1.name)
       goal.room = R
-      goal.area = R.areas[1]
 
       table.insert( R.goals, goal)
       table.insert(Q1.goals, goal)
@@ -769,17 +761,13 @@ end
 
 function Quest_scan_all_conns(new_goals)
 
-
-  ---| Quest_scan_all_conns |---
+  gui.debugf("Quest_scan_all_conns.....\n")
 
   local info =
   {
     new_goals = new_goals
     score = 0
   }
-
-gui.debugf("Quest_scan_all_conns.....\n")
-
 
   local conn_list = LEVEL.conns
   local is_zoney  = false
@@ -819,9 +807,7 @@ gui.debugf("---> NOTHING POSSIBLE\n")
 
   -- for zone connections, must remove it from the global list
   if is_zoney then
-    if not table.kill_elem(LEVEL.zone_conns, info.conn) then
-      error("WTF: chosen conn not in zone_conns")
-    end
+    assert(table.kill_elem(LEVEL.zone_conns, info.conn))
   end
 
 
