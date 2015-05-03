@@ -944,25 +944,37 @@ function Quest_add_major_quests()
   end
 
 
+  local function lock_up_double_doors()
+    local list = table.copy(LEVEL.quests)
+
+    each Q in list do
+      if count_unused_leafs(Q) >= 3 then
+        add_double_switch_door(Q)
+      end
+    end
+  end
+
+
+  -- index by unused :  1   2   3    4
+  local LOCK_PROBS = { 10, 60, 90, 100 }
+
+
   local function lock_up_a_quest(quest, goal_list)
     local unused = count_unused_leafs(quest)
 
-    if unused >= 3 and add_double_switch_door(quest) then
-      unused = unused - 2
+    if quest.no_more_locks then return end
+
+    if unused < 1 then return end
+    if unused > 4 then unused = 4 end
+
+    if not rand.odds(LOCK_PROBS[unused]) then
+      quest.no_more_locks = true
+      return
     end
 
-    -- number of switch quest to try
-    -- (have some random variation)
-    if rand.odds(25) then unused = unused - 1 end
-    if rand.odds(20) then unused = unused + 1 end
-    if rand.odds(20) then unused = unused + 1 end
+    local goal = pick_goal(goal_list)
 
-    unused = int(unused / 2)
-
-    for i = 1, unused do
-      local goal = pick_goal(goal_list)
-      if not goal then break; end
-
+    if goal then
       Quest_scan_all_conns({ goal }, quest)
     end
   end
@@ -990,6 +1002,20 @@ function Quest_add_major_quests()
   collect_switch_goals(goal_list)
 
   lock_up_zones(goal_list)
+
+
+  -- divide the zones further using switch quests
+  -- [ though can use any left over keys ]
+
+  lock_up_double_doors()
+
+  for pass = 1, 4 do
+    local list = table.copy(LEVEL.quests)
+
+    each Q in list do
+      lock_up_a_quest(Q, goal_list, pass)
+    end
+  end
 end
 
 
