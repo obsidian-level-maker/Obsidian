@@ -273,6 +273,22 @@ function ROOM_CLASS.total_conns(R, ignore_secrets)
 end
 
 
+function ROOM_CLASS.is_unused_leaf(R)
+  if R.kind == "hallway"   then return false end
+  if R.kind == "stairwell" then return false end
+
+  if R.is_secret  then return false end
+  if R.is_start   then return false end
+
+  if R:total_conns("ignore_secrets") >= 2 then return false end
+
+  if #R.goals > 0 then return false end
+  if #R.weapons > 0 then return false end
+
+  return true
+end
+
+
 function secret_entry_conn(R, skip_room)
   -- find entry connection for a potential secret room
   -- skip_room is usually NIL

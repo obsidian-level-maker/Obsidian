@@ -36,14 +36,9 @@
 
     goals : list(GOAL)
 
----???    unused_leafs : list(AREA)
-
     zone : ZONE
 
     parent_node : QUEST_NODE
-
-???    storage_leafs : list(ROOM)
-???     secret_leafs : list(ROOM)
 
 --]]
 
@@ -1855,29 +1850,13 @@ function Quest_nice_items()
   end
 
 
-  local function is_unused_leaf(R)
-    if R.kind == "hallway"   then return false end
-    if R.kind == "stairwell" then return false end
-
-    if R.is_secret  then return false end
-    if R.is_start   then return false end
-
-    if R:total_conns("ignore_secrets") >= 2 then return false end
-
-    if #R.goals > 0 then return false end
-    if #R.weapons > 0 then return false end
-
-    return true
-  end
-
-
   local function visit_unused_leafs()
     -- collect all the unused storage leafs
     -- (there is no need to shuffle them here)
     local rooms = {}
 
     each R in LEVEL.rooms do
-      if is_unused_leaf(R) then
+      if R:is_unused_leaf() then
         table.insert(rooms, R)
       end
     end
