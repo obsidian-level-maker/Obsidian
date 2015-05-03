@@ -32,24 +32,21 @@
 
     seeds = list(SEED)
 
+    sx1, sy1, sx2, sy2  -- \ Seed range
+    sw, sh, svolume     -- /
+
+
     ext_conns = list(CONNS)   -- connections which go "external" to another room
 
+    quest : QUEST
 
-    //////////////////////
+    zone : ZONE
 
-
-    branch_kind : keyword
 
     hallway : HALLWAY_INFO   -- for hallways only
 
     symmetry : keyword   -- symmetry of room, or NIL
                          -- keywords are "x", "y", "xy"
-
-    sx1, sy1, sx2, sy2  -- \ Seed range
-    sw, sh, svolume     -- /
-
-    zone  : ZONE
-
 --]]
 
 

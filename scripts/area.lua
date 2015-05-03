@@ -40,6 +40,8 @@
 
     room : ROOM
 
+    zone : ZONE
+
 
     --- geometry of area ---
 
@@ -60,7 +62,7 @@
 
     entry_conn : CONN
 
-    
+
     --- other stuff ---
 
     inner_points : list(CORNER)

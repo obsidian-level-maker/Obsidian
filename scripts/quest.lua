@@ -294,12 +294,12 @@ function Quest_create_initial_quest()
   -- this quest becomes head of the quest tree
   LEVEL.quest_root = Q
 
-  each A in LEVEL.areas do
-    if A.room then
+  each R in LEVEL.rooms do
+    R.quest = Q
+
+    each A in R.areas do
       Q.areas[A.id] = A
       Q.svolume = Q.svolume + A.svolume
-
-      A.quest = Q
     end
   end
 
@@ -336,7 +336,7 @@ function Quest_eval_divide_at_conn(C, goal, info)
 
 
   local function same_quest(C)
-    return C.A1.quest == C.A2.quest
+    return C.A1.room.quest == C.A2.room.quest
   end
 
 
@@ -479,15 +479,15 @@ function Quest_eval_divide_at_conn(C, goal, info)
   ---| Quest_eval_divide_at_conn |---
 
 gui.debugf("  goal: %s/%s @ %s / %s\n", goal.kind or "???", goal.item or "???",
-goal.room:tostr(), goal.room.areas[1].quest.name)
+goal.room:tostr(), goal.room.quest.name)
 
   -- must be same quest (caller guarantees this)
-  assert(C.A1.quest == C.A2.quest)
+  assert(C.A1.room.quest == C.A2.room.quest)
 
   -- cannot lock teleporter connections
   if C.kind == "teleporter" then return end
 
-  quest = C.A1.quest
+  quest = C.A1.room.quest
 gui.debugf("  quest : %s\n", quest.name)
 
   -- must not divide a room in half
@@ -595,7 +595,7 @@ function Quest_perform_division(info)
 
   local function assign_quest(Q)
     each id, A in Q.areas do
-      A.quest = Q
+      A.room.quest = Q
     end
   end
 
@@ -605,7 +605,7 @@ gui.debugf("transfer_existing_goals:\n")
     for i = #Q2.goals, 1, -1 do
       local targ = Q2.goals[i]
 
-      if targ.room and targ.room.areas[1].quest == Q1 then
+      if targ.room and targ.room.quest == Q1 then
 gui.debugf("   %s\n", targ.name)
         table.insert(Q1.goals, table.remove(Q2.goals, i))
       end
@@ -782,10 +782,13 @@ gui.debugf("  is_zoney!")
 
 
   each C in conn_list do
-    -- must be same quest on each side
-    if C.A1.quest != C.A2.quest then continue end
+    local quest = C.A1.room.quest
+    assert(quest)
 
-    each goal in C.A1.quest.goals do
+    -- must be same quest on each side
+    if C.A2.room.quest != quest then continue end
+
+    each goal in quest.goals do
       Quest_eval_divide_at_conn(C, goal, info)
     end
   end
@@ -1014,7 +1017,6 @@ end
 
 
 function Quest_fixup_zones()
-
   each A in LEVEL.areas do
     local zone = assert(A.zone)
 
@@ -1024,10 +1026,10 @@ function Quest_fixup_zones()
       table.add_unique(zone.rooms, A.room)
     end
 
-    if A.quest and not A.quest.zone then
-      A.quest.zone = zone
+    if A.room and A.room.quest and not A.room.quest.zone then
+      A.room.quest.zone = zone
 
-      table.insert(zone.quests, A.quest)
+      table.insert(zone.quests, A.room.quest)
     end
   end
 end
@@ -1095,7 +1097,7 @@ function Quest_start_room()
     local best_score = 0
 
     each R in LEVEL.rooms do
-      if R.areas[1].quest != start_quest then continue end
+      if R.quest != start_quest then continue end
 
       local score = eval_start_room(R, alt_mode)
 
@@ -1230,17 +1232,16 @@ function Quest_order_by_visit()
 
     room_along = room_along + 1
 
+    assert(R.quest == quest)
+
     each A in R.areas do
     each C in A.conns do
-      assert(A.quest == quest)
-
       if not (C.A1 == A or C.A2 == A) then continue end
 
       local A2 = C:neighbor(A)
 
-      if A2.quest != quest then continue end
-
       if A2.room == R then continue end
+      if A2.room.quest != quest then continue end
 
       if not A2.room.lev_along then
         visit_room(A2.room, quest, C:tostr())
@@ -1264,7 +1265,7 @@ function Quest_order_by_visit()
 
     each R in LEVEL.rooms do
       gui.debugf("  %1.3f : %s  %s\n",
-                 R.lev_along, R:tostr(), R.areas[1].quest.name)
+                 R.lev_along, R:tostr(), R.quest.name)
     end
   end
 
