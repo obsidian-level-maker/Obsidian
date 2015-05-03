@@ -26,9 +26,9 @@
 --[[
     id, name   -- debugging aids
 
-    areas[id] : AREA
+    rooms[id] : ROOM
 
-    svolume   : total svolume of all areas
+    svolume   : total svolume of all rooms
 
     entry : ROOM
 
@@ -115,7 +115,7 @@ function Quest_new()
   {
     id = id
     name  = "QUEST_" .. id
-    areas = {}
+    rooms = {}
     goals = {}
     svolume = 0
   }
@@ -170,11 +170,11 @@ end
 
 
 
-function size_of_area_set(areas)
+function size_of_room_set(rooms)
   local total = 0
 
-  each id, A in areas do
-    total = total + A.svolume
+  each id, R in rooms do
+    total = total + R.svolume
   end
 
   return total
@@ -297,10 +297,8 @@ function Quest_create_initial_quest()
   each R in LEVEL.rooms do
     R.quest = Q
 
-    each A in R.areas do
-      Q.areas[A.id] = A
-      Q.svolume = Q.svolume + A.svolume
-    end
+    Q.rooms[R.id] = R
+    Q.svolume = Q.svolume + R.svolume
   end
 
   add_normal_exit(Q)
@@ -327,8 +325,8 @@ function Quest_eval_divide_at_conn(C, goal, info)
   --    goal    :  the goal to lock up
   --    quest   :  the quest to divide
   --
-  --    before  :  area set of first half
-  --    after   :  area set of second half
+  --    before  :  room set of first half
+  --    after   :  room set of second half
   --    leafs   :  list of rooms place goals (#leafs >= #new_goals)
   -- 
 
@@ -340,54 +338,33 @@ function Quest_eval_divide_at_conn(C, goal, info)
   end
 
 
-  local function collect_areas(A, areas)
-    areas[A.id] = A
+  local function collect_rooms(R, list)
+    list[R.id] = R
 
-    each C2 in A.conns do
+    each C2 in R.ext_conns do
       -- never pass through connection we are examining
       if C2 == C then continue end
 
       if not same_quest(C2) then continue end
 
-      local A2 = C2:neighbor(A)
+      local R2
+      if C2.A1.room == R then
+        R2 = C2.A2.room
+      else
+        R2 = C2.A1.room
+      end
 
       -- already seen?
-      if areas[A2.id] then continue end
+      if list[R2.id] then continue end
 
-      collect_areas(A2, areas)
+      collect_rooms(R2, list)
     end
 
-    return areas
+    return list
   end
 
 
-  local function size_of_area_set(areas)
-    local total = 0
-
-    each _, A in areas do
-      total = total + A.svolume
-    end
-
-    return total
-  end
-
-
-  local function area_exits_in_set(A, areas)
-    local count = 0
-
-    each C in A.conns do
-      local N = C:neighbor(A)
-
-      if areas[N.id] then count = count + 1 end
-    end
-
-    assert(count > 0)
-
-    return count
-  end
-
-
-  local function room_exits_in_set(R, areas)
+  local function room_exits_in_set(R, rooms)
     local count = 0
 
     each A in R.areas do
@@ -396,7 +373,7 @@ function Quest_eval_divide_at_conn(C, goal, info)
 
       local N = C:neighbor(A)
 
-      if areas[N.id] then count = count + 1 end
+      if rooms[N.room.id] then count = count + 1 end
     end
     end
 
@@ -406,14 +383,10 @@ function Quest_eval_divide_at_conn(C, goal, info)
   end
 
 
-  local function unused_rooms_in_set(areas)
+  local function unused_rooms_in_set(rooms)
     local leafs = {}
 
-    -- Note : we visit the same room multiple times (not worth optimising)
-
-    each id, A in areas do
-      local R = A.room
-
+    each id, R in rooms do
       if R.is_secret then continue end
 
       if R.kind == "hallway"   then continue end
@@ -427,7 +400,7 @@ function Quest_eval_divide_at_conn(C, goal, info)
       -- skip the room immediately next to the proposed connection
       if C.A1.room == R or C.A2.room == R then continue end
 
-      if room_exits_in_set(R, areas) == 1 then
+      if room_exits_in_set(R, rooms) == 1 then
         table.add_unique(leafs, R)
       end
     end
@@ -436,8 +409,8 @@ function Quest_eval_divide_at_conn(C, goal, info)
   end
 
 
-  local function check_has_goal(areas)
-    if goal.room and areas[goal.room.areas[1].id] then
+  local function check_has_goal(rooms)
+    if goal.room and rooms[goal.room.id] then
       return true
     end
 
@@ -446,8 +419,8 @@ function Quest_eval_divide_at_conn(C, goal, info)
 
 
   local function eval_split_possibility(C, before, after, before_R, after_R)
-    local before_size = size_of_area_set(before)
-    local  after_size = size_of_area_set(after)
+    local before_size = size_of_room_set(before)
+    local  after_size = size_of_room_set(after)
 
     local score = 300
 
@@ -495,9 +468,9 @@ gui.debugf("  quest : %s\n", quest.name)
     return
   end
 
-  -- collect areas on each side of the connection
-  local before = collect_areas(C.A1, {})
-  local  after = collect_areas(C.A2, {})
+  -- collect rooms on each side of the connection
+  local before = collect_rooms(C.A1.room, {})
+  local  after = collect_rooms(C.A2.room, {})
 
 --[[
 stderrf("BEFORE =\n  ")
@@ -520,9 +493,10 @@ each id,_ in after do stderrf("%d ", id) end stderrf("\n\n")
 
   -- entry of quest MUST be in first half
   if quest.entry then
-    if not before[quest.entry.areas[1].id] then
-assert(after[quest.entry.areas[1].id])
-    return end
+    if not before[quest.entry.id] then
+      assert(after[quest.entry.id])
+      return
+    end
   end
 
   -- no locking end of hallways
@@ -595,8 +569,8 @@ function Quest_perform_division(info)
 
 
   local function assign_quest(Q)
-    each id, A in Q.areas do
-      A.room.quest = Q
+    each id, R in Q.rooms do
+      R.quest = Q
     end
   end
 
@@ -724,11 +698,11 @@ gui.debugf("Dividing %s,  first half is %s\n", Q2.name, Q1.name)
   Q1.entry = Q2.entry
   Q2.entry = info.after_R
 
-  Q1.areas = info.before
-  Q2.areas = info.after
+  Q1.rooms = info.before
+  Q2.rooms = info.after
 
-  Q1.svolume = size_of_area_set(Q1.areas)
-  Q2.svolume = size_of_area_set(Q2.areas)
+  Q1.svolume = size_of_room_set(Q1.rooms)
+  Q2.svolume = size_of_room_set(Q2.rooms)
 
   assign_quest(Q1)
   assign_quest(Q2)
@@ -970,10 +944,8 @@ function Quest_add_major_quests()
 gui.printf("QUEST ANALYSIS:\n")
 each Q in LEVEL.quests do
   local rooms = {}
-  each id, A in Q.areas do
-    if A.room then
-      table.add_unique(rooms, A.room)
-    end
+  each id, R in Q.rooms do
+    table.add_unique(rooms, R)
   end
   local unused = 0
   each R in rooms do
