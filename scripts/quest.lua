@@ -30,7 +30,7 @@
 
     svolume   : total svolume of all areas
 
-    entry : AREA
+    entry : ROOM
 
     goals : list(GOAL)
 
@@ -422,7 +422,7 @@ function Quest_eval_divide_at_conn(C, goal, info)
       -- some goals already?
       if #R.goals > 0 then continue end
 
-      if quest.entry and quest.entry.room == R then continue end
+      if quest.entry and quest.entry == R then continue end
 
       -- skip the room immediately next to the proposed connection
       if C.A1.room == R or C.A2.room == R then continue end
@@ -445,16 +445,16 @@ function Quest_eval_divide_at_conn(C, goal, info)
   end
 
 
-  local function eval_split_possibility(C, before, after, before_A, after_A)
+  local function eval_split_possibility(C, before, after, before_R, after_R)
     local before_size = size_of_area_set(before)
     local  after_size = size_of_area_set(after)
 
     local score = 300
 
     -- strongly prefer not to enter a hallway from a locked door
-    if after_A.room.kind == "stairwell" then
+    if after_R.kind == "stairwell" then
       score = score - 200
-    elseif after_A.room.kind == "hallway" then
+    elseif after_R.kind == "hallway" then
       score = score - 100
     end
 
@@ -506,27 +506,27 @@ stderrf("AFTER =\n  ")
 each id,_ in after do stderrf("%d ", id) end stderrf("\n\n")
 --]]
 
-  local before_A = C.A1
-  local  after_A = C.A2
+  local before_R = C.A1.room
+  local  after_R = C.A2.room
 
   if check_has_goal(after) then
     -- OK
   elseif check_has_goal(before) then
     before, after = after, before
-    before_A, after_A = after_A, before_A
+    before_R, after_R = after_R, before_R
   else
     error("Cannot find goal inside quest")
   end
 
   -- entry of quest MUST be in first half
   if quest.entry then
-    if not before[quest.entry.id] then
-assert(after[quest.entry.id])
+    if not before[quest.entry.areas[1].id] then
+assert(after[quest.entry.areas[1].id])
     return end
   end
 
   -- no locking end of hallways
-  if before_A.room.kind == "hallway" or before_A.room.kind == "stairwell" then
+  if before_R.kind == "hallway" or before_R.kind == "stairwell" then
     return
   end
 
@@ -534,7 +534,7 @@ assert(after[quest.entry.id])
 
   if #leafs < #info.new_goals then return end
 
-  local score = eval_split_possibility(C, before, after, before_A, after_A)
+  local score = eval_split_possibility(C, before, after, before_R, after_R)
 
 gui.debugf("--> possible @ %s : score %1.1f\n", C:tostr(), score)
 
@@ -545,10 +545,11 @@ gui.debugf("--> possible @ %s : score %1.1f\n", C:tostr(), score)
     info.goal   = goal
     info.quest  = quest
 
-    info.before = before
-    info.after  = after
-    info.before_A = before_A
-    info.after_A  = after_A
+    info.before   = before
+    info.before_R = before_R
+
+    info.after    = after
+    info.after_R  = after_R
 
     info.leafs  = leafs
   end
@@ -557,8 +558,8 @@ end
 
 function Quest_perform_division(info)
   --
-  -- Splits the current quest (info.quest) into two, adding the new quest
-  -- into the quest binary tree.  Also locks the connection.
+  -- Splits the current quest into two, adding the new quest into the
+  -- binary tree.  Also locks the connection.
   --
 
   local function create_lock()
@@ -721,7 +722,7 @@ gui.debugf("Dividing %s,  first half is %s\n", Q2.name, Q1.name)
   -- setup quests, transfer stuff
 
   Q1.entry = Q2.entry
-  Q2.entry = assert(info.after_A)
+  Q2.entry = info.after_R
 
   Q1.areas = info.before
   Q2.areas = info.after
@@ -741,8 +742,8 @@ gui.debugf("Dividing %s,  first half is %s\n", Q2.name, Q1.name)
 
   info.conn.lock = LOCK
 
-  if info.conn.A1 != info.before_A then
-    assert(info.conn.A2 == info.before_A)
+  if info.conn.A1.room != info.before_R then
+    assert(info.conn.A2.room == info.before_R)
 
     info.conn:swap()
   end
@@ -1129,7 +1130,7 @@ function Quest_start_room()
     LEVEL.start_room = R
     LEVEL.start_area = R.areas[1]  -- TODO
 
-    start_quest.entry = LEVEL.start_area
+    start_quest.entry = LEVEL.start_room
   end
 
 
@@ -1304,7 +1305,7 @@ function Quest_order_by_visit()
   -- visit each quest, and recurse through it only
   each Q in LEVEL.quests do
     assert(Q.entry)
-    visit_room(Q.entry.room, Q)
+    visit_room(Q.entry, Q)
   end
 
   -- sanity check
