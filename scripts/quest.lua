@@ -26,8 +26,6 @@
 --[[
     id, name   -- debugging aids
 
-???    kind : keyword  -- "major", "minor"  [ "secret" ?? ]
-
     areas[id] : AREA
 
     svolume   : total svolume of all areas
@@ -93,11 +91,9 @@
 
     lock : LOCK   -- lock which this solves  (NIL for exit goals)
 
-    -- where the goal is
-    room : AREA   -- used for MAJOR quests
-    area : AREA   -- used for MINOR quests
+    room : AREA   -- where the goal is
 
-    tag : number    -- tag number to use for a switched door
+    tag : number  -- tag number to use for a switched door
 --]]
 
 
@@ -322,7 +318,6 @@ function Quest_eval_divide_at_conn(C, goal, info)
   -- The 'info' table contains the current best division (if any),
   -- and contains the following input fields:
   --
-  --    mode      : either "minor" or "MAJOR"
   --    lock_kind : the lock to place on the connection
   --    new_goals : goals used to solve the lock (usually 1)
   --
@@ -406,7 +401,6 @@ function Quest_eval_divide_at_conn(C, goal, info)
     end
     end
 
-    -- FIXME: in MINOR mode we might only be doing a single room
     assert(count > 0)
 
     return count
@@ -432,7 +426,6 @@ function Quest_eval_divide_at_conn(C, goal, info)
       if quest.entry and quest.entry.room == R then continue end
 
       -- skip the room immediately next to the proposed connection
-      -- FIXME area check in "MINOR" mode
       if C.A1.room == R or C.A2.room == R then continue end
 
       if room_exits_in_set(R, areas) == 1 then
@@ -502,8 +495,8 @@ goal.room:tostr(), goal.area.quest.name)
   quest = C.A1.quest
 gui.debugf("  quest : %s\n", quest.name)
 
-  -- zones must not divide a room in half
-  if info.mode == "MAJOR" and C.A1.room == C.A2.room then
+  -- must not divide a room in half
+  if C.A1.room == C.A2.room then
     return
   end
 
@@ -537,13 +530,11 @@ assert(after[quest.entry.id])
     return end
   end
 
-  -- no locking end of hallways in MAJOR mode
-  if info.mode == "MAJOR" and
-     (before_A.room.kind == "hallway" or before_A.room.kind == "stairwell") then
+  -- no locking end of hallways
+  if before_A.room.kind == "hallway" or before_A.room.kind == "stairwell" then
     return
   end
 
-  -- FIXME : in "MINOR" mode check areas not rooms
   local leafs = unused_rooms_in_set(before)
 
   if #leafs < #info.new_goals then return end
@@ -776,14 +767,13 @@ end
 
 
 
-function Quest_scan_all_conns(mode, new_goals)
+function Quest_scan_all_conns(new_goals)
 
 
   ---| Quest_scan_all_conns |---
 
   local info =
   {
-    mode = mode
     new_goals = new_goals
     score = 0
   }
@@ -931,7 +921,7 @@ function Quest_add_major_quests()
     assert(K1 and K2 and K3)
     assert(K3.kind == "KEY")
 
-    return Quest_scan_all_conns("MAJOR", { K1, K2, K3 })
+    return Quest_scan_all_conns({ K1, K2, K3 })
   end
 
 
@@ -958,7 +948,7 @@ function Quest_add_major_quests()
     GOAL2.action = fab_def.action2
     GOAL2.same_tag = true
 
-    return Quest_scan_all_conns("MAJOR", { GOAL1, GOAL2 })
+    return Quest_scan_all_conns({ GOAL1, GOAL2 })
   end
 
 
@@ -982,7 +972,7 @@ function Quest_add_major_quests()
     local goal = pick_goal(goal_list)
     if not goal then break; end
 
-    Quest_scan_all_conns("MAJOR", { goal })
+    Quest_scan_all_conns({ goal })
   end
 
 
@@ -1031,17 +1021,8 @@ end
     local goal = pick_goal(goal_list)
     if not goal then break; end
 
-    Quest_scan_all_conns("MAJOR", { goal })
+    Quest_scan_all_conns({ goal })
   end
-end
-
-
-
-function Quest_add_minor_quests()
-  
-  ---| Quest_add_minor_quests |---
-
-  -- TODO
 end
 
 
@@ -2515,8 +2496,6 @@ function Quest_make_quests()
   else
     Quest_add_weapons()
   end
-
-  Quest_add_minor_quests()
 
   Quest_nice_items()
 
