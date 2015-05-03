@@ -986,6 +986,26 @@ function Quest_add_major_quests()
   end
 
 
+-- ANALYSIS STUFF
+gui.printf("QUEST ANALYSIS:\n")
+each Q in LEVEL.quests do
+  local rooms = {}
+  each id, A in Q.areas do
+    if A.room then
+      table.add_unique(rooms, A.room)
+    end
+  end
+  local unused = 0
+  each R in rooms do
+    if R:is_unused_leaf() then unused = unused + 1 end
+  end
+  local goal = Q.goals[1]
+  gui.printf("  %s (%s %s) : %d rooms, %d unused leafs\n",
+      Q.name, tostring(goal.kind), tostring(goal.item),
+      #rooms, unused)
+end
+
+
   -- use remote doors to divide zones
   -- [ but keys possible too, if any left over ]
 
