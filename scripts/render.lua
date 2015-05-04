@@ -1207,7 +1207,7 @@ function dummy_properties(A)
 
 
   if A.mode == "pool" then
-    A.floor_mat = "FWATER1" --!!!! "_LIQUID"
+    A.floor_mat = "_LIQUID"
     A.wall_mat  = "ASHWALL7"
   end
 

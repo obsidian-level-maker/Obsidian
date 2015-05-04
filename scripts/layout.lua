@@ -494,6 +494,31 @@ end
 
 
 
+function Layout_choose_face_room(A)
+  -- used for big cages and liquid pools (converted from void)
+
+  local best
+  local best_score = 0
+
+  each N in A.neighbors do
+    if N.zone != A.zone then continue end
+    if not N.floor_h then continue end
+
+    local junc = Junction_lookup(A, N)
+
+    local score = junc.perimeter + 2.2 * gui.random() ^ 2
+
+    if score > best_score then
+      best = N.room
+      best_score = score
+    end
+  end
+
+  return best
+end
+
+
+
 function Layout_traps_and_cages()
   local  junk_list = {}
   local other_list = {}
@@ -815,17 +840,15 @@ make_prob = 100  --!!!!! TEST
 
     A.mode = "cage"
 
+    A.face_room = Layout_choose_face_room(A)
+    assert(A.face_room)
+
     -- determine height and set junctions
 
     each N in A.neighbors do
       if N.zone != A.zone then continue end
 
       if N.room then
-        -- TODO : pick room with biggest boundary
-        if not A.face_room then
-          A.face_room = N.room
-        end
-
         A.floor_h = math.max(N.floor_h, A.floor_h or -EXTREME_H)
 
         local junc = Junction_lookup(A, N)
@@ -1080,35 +1103,53 @@ function Layout_liquid_stuff()
 
 
   local function try_pool_in_area(A)
-    -- random chance
+    -- random chance  (FIXME !!)
     if rand.odds(1) then return end
 
-    -- ensure large enough  [ very large is OK ]
+    -- ensure large enough  [ very large is OK too ]
     if A.svolume < 2.0 then return end
 
-    -- see what rooms we touch
+    -- choose facing room (might be NIL)
+    local face_room = Layout_choose_face_room(A)
+    if not face_room then return end
+
+    -- OK --
+
+    A.mode = "pool"
+    A.face_room = face_room
+
+    -- determine floor height
     local min_f
 
     each N in A.neighbors do
-      if N.room and N.floor_h then
+      if N.room == face_room and N.floor_h then
         min_f = math.min(N.floor_h, min_f or EXTREME_H)
       end
     end
 
-    if min_f == nil then return end
+    if face_room.kind == "hallway" and face_room.hallway.min_h then
+      min_f = math.min(min_f, face_room.hallway.min_h)
+    end
 
-    -- OK
-
-    A.mode = "pool"
-    A.floor_h = min_f - 24
+    A.floor_h = min_f - 16
   end
 
 
   ---| Layout_liquid_stuff |---
 
+  if LEVEL.liquid_usage == 0 then return end
+
   each A in LEVEL.areas do
     if A.mode == "void" and not A.closety then
       try_pool_in_area(A)
+    end
+  end
+
+  -- do junctions in second pass (to handle two touching pools)
+
+  each A in LEVEL.areas do
+    if A.mode == "pool" then
+      -- FIXME
     end
   end
 end
