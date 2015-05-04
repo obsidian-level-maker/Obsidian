@@ -724,13 +724,13 @@ function Layout_traps_and_cages()
     gui.debugf("Making big trap in %s\n", A:tostr())
 
     A.mode = "trap"
+    A.is_boundary = false
 
     A.floor_h   = parent_A.floor_h
     A.face_room = parent_A.room
 
     A.kind  = parent_A.kind
     A.zone  = parent_A.zone
-    A.is_boundary = false
 
     -- if facing room is outdoor, make trap have a ceiling
     -- (better than walls going all the way up to the sky)
@@ -843,6 +843,7 @@ make_prob = 100  --!!!!! TEST
     gui.debugf("Making big cage in %s\n", A:tostr())
 
     A.mode = "cage"
+    A.is_boundary = nil
 
     A.face_room = Layout_choose_face_room(A)
     assert(A.face_room)
@@ -1129,6 +1130,7 @@ function Layout_liquid_stuff()
 
     A.face_rooms = { face_room }
     A.is_outdoor = face_room.is_outdoor
+    A.is_boundary = nil
 
     -- determine floor height
     local min_f
@@ -1223,7 +1225,8 @@ function Layout_liquid_stuff()
 
     -- use railing to with nearby room with higher floor
 
-    if N.room and N.is_outdoor and N.mode != "hallway" and
+    if N.room and N.is_outdoor and A.is_outdoor and
+       N.mode != "hallway" and
        N.floor_h and N.floor_h > A.floor_h
     then
       junc.kind = "rail"
@@ -1233,7 +1236,16 @@ function Layout_liquid_stuff()
       return
     end
 
-    -- FIXME : map borders (mountain or lake)
+    -- near a map border ?
+
+    if N.is_boundary then
+      -- mountains will prevent travel
+      if A.zone.border_info.kind != "water" then
+        junc.kind = "nothing"
+        return
+      end
+    end
+
 
     -- FIXME : fences !!!
 
