@@ -572,6 +572,7 @@ function Layout_traps_and_cages()
   local function eval_area_for_cage(A)
     -- must be VOID or SCENIC
     if not (A.mode == "void" or A.mode == "scenic") then return -1 end
+    if A.closety then return -1 end
 
     if A.svolume > 6 then return -1 end
 
@@ -825,7 +826,7 @@ make_prob = 100  --!!!!! TEST
           A.face_room = N.room
         end
 
-        A.floor_h = math.max(N.floor_h, A.floor_h or -9999)
+        A.floor_h = math.max(N.floor_h, A.floor_h or -EXTREME_H)
 
         local junc = Junction_lookup(A, N)
 
@@ -1078,76 +1079,37 @@ end
 function Layout_liquid_stuff()
 
 
-  local function eval_area_pair(A, R, N1, N2)
-    -- check raw usability of neighbor areas
-    for pass = 1,2 do
-      local N = sel(pass == 1, N1, N2)
+  local function try_pool_in_area(A)
+    -- random chance
+    if rand.odds(1) then return end
 
-      if N.room == R then
-        -- TODO
-      else
-        if N.zone != A.zone then return -1 end
+    -- ensure large enough  [ very large is OK ]
+    if A.svolume < 2.0 then return end
 
-        if not (N.mode == "void" and not N.is_closety) then return -1 end
+    -- see what rooms we touch
+    local min_f
+
+    each N in A.neighbors do
+      if N.room and N.floor_h then
+        min_f = math.min(N.floor_h, min_f or EXTREME_H)
       end
     end
 
-    -- the neighbors must not touch each other
-    if N1:touches(N2) then return -1 end
+    if min_f == nil then return end
 
-    -- FIXME : proper evaluation
-    return 10 + gui.random()
-  end
+    -- OK
 
-
-  local function liquify_area(N, A, R)
-    -- FIXME
-  end
-
-
-  local function try_surround_area(A, R)
-    local best
-
-    -- test each pair of neighbors
-    for i = 2, #A.neighbors do
-    for k = 1, i - 1 do
-      local N1 = A.neighbors[i]
-      local N2 = A.neighbors[k]
-
-      local score = eval_area_pair(A, R, N1, N2)
-      if score < 0 then continue end
-
-      if not best or score > best.score then
-        best = { N1=N1, N2=N2, score=score }
-      end
-    end  -- i, k
-    end
-
-    if not best then
-      return false
-    end
-
-    liquify_area(N1, R, A)
-    liquify_area(N2, R, A)
-  end
-
-
-  local function visit_room(R)
-    each A in R.areas do
-      if try_surround_area(A, R) then
-        return
-      end
-    end
+    A.mode = "pool"
+    A.floor_h = min_f - 24
   end
 
 
   ---| Layout_liquid_stuff |---
 
--- DISABLED FOR NOW
-do return end
-
-  each R in LEVEL.rooms do
-    visit_room(R)
+  each A in LEVEL.areas do
+    if A.mode == "void" and not A.closety then
+      try_pool_in_area(A)
+    end
   end
 end
 

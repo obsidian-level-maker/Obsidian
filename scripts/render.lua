@@ -1206,6 +1206,12 @@ function dummy_properties(A)
   end
 
 
+  if A.mode == "pool" then
+    A.floor_mat = "FWATER1" --!!!! "_LIQUID"
+    A.wall_mat  = "ASHWALL7"
+  end
+
+
   if A.mode == "trap" and not A.is_outdoor then
     A.ceil_h = A.floor_h + 144
   end

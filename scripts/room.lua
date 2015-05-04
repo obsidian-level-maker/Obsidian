@@ -871,7 +871,7 @@ function Room_border_up()
     -- [ normal rooms generally don't touch the edge ]
 
     if A2 == "map_edge" then
-      if A1.room or A1.mode == "cage" or A1.mode == "trap" then
+      if A1.room or A1.mode == "cage" or A1.mode == "trap" or A1.mode == "pool" then
         junc.kind = "wall"
       else
         junc.kind = "nothing"
@@ -917,6 +917,11 @@ function Room_border_up()
     end
 
     -- room to scenic --
+
+    if A2.mode == "pool" then
+      junc.kind = "nothing"
+      return
+    end
 
     if not A2.room then
       -- FIXME
@@ -2764,8 +2769,6 @@ function Room_build_all()
 
   Area_prune_hallways()
 
-  Layout_liquid_stuff()
-
   Room_reckon_doors()
   Room_floor_heights()
 
@@ -2776,6 +2779,7 @@ function Room_build_all()
   end
 
   Layout_traps_and_cages()
+  Layout_liquid_stuff()
   Layout_map_borders()
 
   -- this must be done _after_ cages and outdoor borders
