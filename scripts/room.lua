@@ -918,11 +918,6 @@ function Room_border_up()
 
     -- room to scenic --
 
-    if A2.mode == "pool" then
-      junc.kind = "nothing"
-      return
-    end
-
     if not A2.room then
       -- FIXME
       junc.kind = "window"

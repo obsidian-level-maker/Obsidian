@@ -1118,6 +1118,8 @@ function Layout_liquid_stuff()
     A.mode = "pool"
     A.face_room = face_room
 
+    A.is_outdoor = face_room.is_outdoor
+
     -- determine floor height
     local min_f
 
@@ -1135,6 +1137,48 @@ function Layout_liquid_stuff()
   end
 
 
+  local function do_pool_junction(A, N)
+    if N.zone != A.zone then return end
+
+    local junc = Junction_lookup(A, N)
+
+    -- same room as facing one?
+
+    local R1 = A.face_room
+
+    if N.room == R1 then
+      junc.kind = "nothing"
+      return
+    end
+
+    -- handle pool <--> pool
+
+    if N.mode == "pool" then
+      local R2 = N.face_room
+
+      if R1.quest == R2.quest then
+        junc.kind = "nothing"
+
+        local min_f = math.min(A.floor_h, N.floor_h)
+
+        A.floor_h = min_f
+        N.floor_h = min_f
+
+        return
+      end
+
+    end
+
+
+    if N.room and N.room.is_outdoor and N.kind != "hallway" then
+      junc.kind = "rail"
+      junc.rail_mat = "MIDBARS3"
+      junc.post_h   = 84
+      junc.blocked  = true
+    end
+  end
+
+
   ---| Layout_liquid_stuff |---
 
   if LEVEL.liquid_usage == 0 then return end
@@ -1148,9 +1192,11 @@ function Layout_liquid_stuff()
   -- do junctions in second pass (to handle two touching pools)
 
   each A in LEVEL.areas do
+  each N in A.neighbors do
     if A.mode == "pool" then
-      -- FIXME
+      do_pool_junction(A, N)
     end
+  end
   end
 end
 
