@@ -2489,6 +2489,7 @@ function Room_floor_heights()
         end
       end
 
+      R.hallway.flat = true
       return
     end
 

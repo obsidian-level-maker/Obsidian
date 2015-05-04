@@ -508,6 +508,10 @@ function Layout_choose_face_room(A)
 
     local score = junc.perimeter + 2.2 * gui.random() ^ 2
 
+    if N.mode == "hallway" then
+      score = score / 10
+    end
+
     if score > best_score then
       best = N.room
       best_score = score
@@ -1112,6 +1116,11 @@ function Layout_liquid_stuff()
     -- choose facing room (might be NIL)
     local face_room = Layout_choose_face_room(A)
     if not face_room then return end
+
+    -- if it is a hallway, it must be flat
+    if face_room.kind == "hallway" and not face_room.hallway.flat then
+      return
+    end
 
     -- OK --
 
