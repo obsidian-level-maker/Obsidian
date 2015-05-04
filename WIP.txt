@@ -3,9 +3,8 @@ WORK IN PROGRESS
 ================
 
 
-review switched quests
-[ may need to try divide a quest when # of unused leafs is large ]
 
+BUG: door height on hallways  [ plus want no hall_shape there ]
 
 
 Closets
@@ -13,8 +12,6 @@ Closets
 
 +  really want to add them _AFTER_ large traps/cages have been
    added (and after outdoor borders too)
-
--  locked switch closet
 
 
 
@@ -65,23 +62,20 @@ Traps....
 
 
 Porches :
-  -  a low solid ceiling with posts at seed corners
++  one per room
 
-  -  not too big, not too much inner space (same criterion as hallways)
++  fix missing posts (where touch edge of map)
 
-  -  used indoors or outdoors
++  floor MUST be >= nearby floors (ignoring void / walled junctions)
+   [ do it via floor-heights algorithm)
 
-  -  can convert an outdoor hallway if mostly surrounded by outdoors
-     (and no higher floors).  can use railing here instead of posts
+-  experiment with railings instead of posts (want #conns >= 2)
 
-  -  otherwise outdoor usage should have building on a side, sky on the
-     other side [ scan the edge loop, want two contiguous groups ]
+-  indoors or dark outdoors : light fittings
 
-  -  floor MUST be >= nearby floors (ignoring void / walled junctions)
-     [ do it via floor-heights algorithm)
 
-  -  strong preference for areas with a connection, esp. a locked one
 
+Texturing:
 
 SORT OUT : where 'facade_mat' is stored, how is accessed
   - basically, each indoor room (cave or building) has a facade_mat
@@ -90,6 +84,8 @@ SORT OUT : where 'facade_mat' is stored, how is accessed
   - for outdoor<-->outdoor, use the fence texture (ZONE.fence_mat)
 
   - for void, use area 'kind'
+
+-  texturing on door prefabs (for HELL, URBAN themes)
 
 
 
@@ -103,23 +99,6 @@ Courtyard floor should be > Landscape floor.
 
 
 
-Fake fences:
-  -  height is consistent across the zone
-     (e.g. half way between average area floor_h and sky_group.h)
-     don't make in an area if height of fence would be < 64
-
-  -  texture is consistent across the zone
-     (pick randomly a la fence_mat, allow to be same as fence_mat)
-
-  -  location: between 1 and 3 seeds (no angle > 180 between them)
-     and solid walls on each side and angle on each side <= 135
-
-  -  stretch goal : if void behind seed(s), have a transition prefab
-     (i.e. showing solid wall above the fence)
-     if sky much higher, occasionally stick a cage monster there
-
-
-
 Q/ use CC-BY-3 or 4 for all prefabs / images / prebuilt maps
 
 
@@ -127,32 +106,9 @@ IDEA: have a single thing number for "coop player"
       [ i.e. treat player entities more abstractly ]
 
 
--  sometimes make a floor (its side) use same material as top (not room wall)
+-  sometimes make a floor side use same material as top (not room wall)
 
 
 REQUEST:  mix it up option for the quiet start setting.
 
-
-Doors
--  support wide doors [normal / locked]
--  make wide prefab with a switch in it [normal door]
--  texturing on door prefabs (for HELL, URBAN themes)
-
-
-
-CTF and DM
-----------
-
--  Cycles !
-   -  also: don't kill long hallways, allow to connect to same room
-      [ OR : place a teleporter at the end ]
-
--  Weapons / Big items
-   -  decide mix of weapons and big items
-   -  place big stuff as far apart as possible
-   -  big item is often the focus point of an area/room
-
--  Player starts!
-   -  less travelled areas (with cover e.g. near a wall)
-   -  near a weapon
 

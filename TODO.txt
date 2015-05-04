@@ -9,7 +9,7 @@ ______________________________________________________________________
 ______________________________________________________________________
 
 
-*  support for non-ASCII characters in filenames
+*  better i18n support (esp. non-ASCII characters in filenames)
 
 *  min_weapon for guard monsters
 
@@ -55,9 +55,32 @@ ______________________________________________________________________
 +  make "keep_weapons" the default behavior, change the module to
    have "pistol_starts" instead
 
-   Note that "beserk" only lasts a single level.
-
 -  sky generator : better checking of themes (esp. w/ control module)
+
+-  the locked switch closet
+
+
+Fake fences:
+-  a wall built out of floor brush and sky brush (delta_z for no gap)
+
+-  perhaps best place is on a zone boundary
+
+-  placement: between 1 and 3 seeds (no angle > 180 between them)
+   and solid walls on each side and angle on each side < 180
+   (limit to one area, use edge loops to detect)
+
+   do it after (or part of) Room_border_up
+
+-  pick a single height for each zone
+   (e.g. half way between average floor_h and sky_h)
+   don't make in an area if height of fence would be < 64
+   don't make too tall either
+
+-  pick a single texture for each zone
+
+-  stretch goal : if void behind seed(s), have a transition prefab
+   (i.e. showing solid wall above the fence)
+   if sky much higher, occasionally stick a cage monster there
 
 
 Map Borders:
@@ -71,6 +94,28 @@ Map Borders:
                with a lot more of the scenic object (or a different one)
 
 -  mountains : larger groups at further distances (needs a good rethink)
+
+
+Doors:
+-  support wide doors [normal / locked]
+-  make wide prefab with a switch in it [normal door]
+
+
+CTF and DM
+----------
+
+-  Cycles !
+   -  also: don't kill long hallways, allow to connect to same room
+      [ OR : place a teleporter at the end ]
+
+-  Weapons / Big items
+   -  decide mix of weapons and big items
+   -  place big stuff as far apart as possible
+   -  big item is often the focus point of an area/room
+
+-  Player starts!
+   -  less travelled areas (with cover e.g. near a wall)
+   -  near a weapon
 
 
 ----------------------------------------------
@@ -147,11 +192,6 @@ Bridges:
 ----------------------------------------------
   LEVEL STUFF
 ----------------------------------------------
-
-
-"onion" layouting :
-   patterns which do something to one (or more) sides of a room
-   and recurse for the remaining part.
 
 
 -  review Dante's ideas : doc/DANTE.txt
