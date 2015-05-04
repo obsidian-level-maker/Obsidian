@@ -1116,8 +1116,9 @@ function Layout_liquid_stuff()
     -- OK --
 
     A.mode = "pool"
-    A.face_room = face_room
+    A.pool_id = alloc_id("pool")
 
+    A.face_rooms = { face_room }
     A.is_outdoor = face_room.is_outdoor
 
     -- determine floor height
@@ -1137,16 +1138,67 @@ function Layout_liquid_stuff()
   end
 
 
+  local function merge_pool_groups(gr1, gr2, floor_h)
+    assert(gr1 and gr2)
+    assert(gr1 != gr2)
+
+    if gr1 > gr2 then gr1,gr2 = gr2,gr1 end
+
+    each A in LEVEL.areas do
+      if A.pool_id == gr2 then
+         A.pool_id = gr1
+      end
+
+      if A.pool_id == gr1 then
+        A.floor_h = floor_h
+      end
+    end
+  end
+
+
+  local function try_merge_pools(A, N)
+    if A.zone != N.zone then return end
+
+    -- already done?
+    if A.pool_id == N.pool_id then return end
+
+    local R1 = A.face_rooms[1]
+    local R2 = N.face_rooms[1]
+
+    -- must be same quest
+    if R1.quest != R2.quest then return end
+
+    -- must be same outdoors-ness
+    if A.is_outdoor != N.is_outdoor then return end
+
+    -- OK --
+
+    local new_floor_h = math.min(A.floor_h, N.floor_h)
+
+    merge_pool_groups(A.pool_id, N.pool_id, new_floor_h)
+
+    table.append(A.face_rooms, N.face_rooms)
+    N.face_rooms = A.face_rooms
+  end
+
+
+  local function faces_room(A, room)
+    each R in A.face_rooms do
+      if R == room then return true end
+    end
+
+    return false
+  end
+
+
   local function do_pool_junction(A, N)
     if N.zone != A.zone then return end
 
     local junc = Junction_lookup(A, N)
 
-    -- same room as facing one?
+    -- room which faces into the pool?
 
-    local R1 = A.face_room
-
-    if N.room == R1 then
+    if N.room and faces_room(A, N.room) then
       junc.kind = "nothing"
       return
     end
@@ -1154,28 +1206,29 @@ function Layout_liquid_stuff()
     -- handle pool <--> pool
 
     if N.mode == "pool" then
-      local R2 = N.face_room
-
-      if R1.quest == R2.quest then
+      if N.pool_id == A.pool_id then
         junc.kind = "nothing"
-
-        local min_f = math.min(A.floor_h, N.floor_h)
-
-        A.floor_h = min_f
-        N.floor_h = min_f
-
         return
       end
-
     end
 
+    -- use railing to with nearby room with higher floor
 
-    if N.room and N.room.is_outdoor and N.kind != "hallway" then
+    if N.room and N.is_outdoor and N.mode != "hallway" and
+       N.floor_h and N.floor_h > A.floor_h
+    then
       junc.kind = "rail"
       junc.rail_mat = "MIDBARS3"
       junc.post_h   = 84
       junc.blocked  = true
+      return
     end
+
+    -- FIXME : map borders (mountain or lake)
+
+    -- FIXME : fences !!!
+
+    junc.kind = "wall"
   end
 
 
@@ -1189,7 +1242,17 @@ function Layout_liquid_stuff()
     end
   end
 
-  -- do junctions in second pass (to handle two touching pools)
+  -- merge pools where possible
+
+  each A in LEVEL.areas do
+  each N in A.neighbors do
+    if A.mode == "pool" and N.mode == "pool" then
+      try_merge_pools(A, N)
+    end
+  end
+  end
+
+  -- do junctions now (to handle two touching pools)
 
   each A in LEVEL.areas do
   each N in A.neighbors do

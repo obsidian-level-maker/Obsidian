@@ -2774,8 +2774,8 @@ function Room_build_all()
   end
 
   Layout_traps_and_cages()
-  Layout_liquid_stuff()
   Layout_map_borders()
+  Layout_liquid_stuff()
 
   -- this must be done _after_ cages and outdoor borders
   Room_create_sky_groups()
