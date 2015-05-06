@@ -304,27 +304,6 @@ function Trans.entity(name, x, y, z, props)
 end
 
 
-function Trans.quad(x1,y1, x2,y2, z1,z2, kind, w_face, p_face)
-  if not w_face then
-    -- convenient form: only a material name was given
-    kind, w_face, p_face = Mat_normal(kind)
-  end
-
-  local coords =
-  {
-    { x=x1, y=y1, face=w_face },
-    { x=x2, y=y1, face=w_face },
-    { x=x2, y=y2, face=w_face },
-    { x=x1, y=y2, face=w_face },
-  }
-
-  if z1 then table.insert(coords, { b=z1, face=p_face }) end
-  if z2 then table.insert(coords, { t=z2, face=p_face }) end
-
-  Trans.brush(kind, coords)
-end
-
-
 function Trans.rect_coords(x1, y1, x2, y2)
   return
   {
@@ -465,98 +444,6 @@ function Mat_lookup(name)
   return mat
 end
 
-
-function get_mat(wall, floor, ceil)
-  if not wall then wall = "_ERROR" end
-
-  local w_mat = Mat_lookup(wall)
-
-  local f_mat = w_mat
-  if floor then
-    f_mat = Mat_lookup(floor)
-  end
-
-  local c_mat = f_mat
-  if ceil then
-    c_mat = Mat_lookup(ceil)
-  end
-
-  return
-  {
-    w_face = { tex=w_mat.t },
-    t_face = { tex=f_mat.f or f_mat.t },
-    b_face = { tex=c_mat.f or c_mat.t },
-  }
-end
-
-
-function Mat_normal(wall, floor)
-  if not wall then wall = "_ERROR" end
-
-  local w_mat = Mat_lookup(wall)
-
-  local f_mat = w_mat
-  if floor then
-    f_mat = Mat_lookup(floor)
-  end
-
-  return "solid", { tex=w_mat.t }, { tex=f_mat.f or f_mat.t }
-end
-
-
-function get_sky()
-  local mat = assert(GAME.MATERIALS["_SKY"])
-
-  return
-  {
-    kind = "sky"
-    w_face = { tex=mat.t }
-    t_face = { tex=mat.f or mat.t }
-    b_face = { tex=mat.f or mat.t }
-  }
-end
-
-
-function get_fake_sky()
-  local mat = assert(GAME.MATERIALS["_SKY"])
-
-  local light
-  if not LEVEL.is_dark then
-    light = LEVEL.sky_bright - 8
-  end
-
-  return
-  {
-    w_face = { tex=mat.t }
-    t_face = { tex=mat.f or mat.t }
-    b_face = { tex=mat.f or mat.t, light=light }
-  }
-end
-
-
-function get_liquid(is_outdoor)
-  assert(LEVEL.liquid)
-  local mat = get_mat(LEVEL.liquid.mat)
-
-  if not is_outdoor or LEVEL.is_dark then
-    mat.t_face.light = LEVEL.liquid.light
-    mat.b_face.light = LEVEL.liquid.light
-  end
-
-  mat.t_face.special = LEVEL.liquid.special
-  mat.b_face.special = LEVEL.liquid.special
-
-  return mat
-end
-
-
-function add_pegging(info, x_offset, y_offset, peg)
-  info.w_face.x_offset = x_offset or 0
-  info.w_face.y_offset = y_offset or 0
-  info.peg = peg or 1
-
-  return info
-end
 
 
 function get_transform_for_seed_side(S, side, thick)
