@@ -2257,6 +2257,17 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   end
 
 
+  local function is_weapon_upgraded(name, list)
+    each W in list do
+      if W.info.upgrades == name then
+        return true
+      end
+    end
+
+    return false
+  end
+
+
   local function collect_weapons(hmodel)
     local list = {}
     local seen = {}
@@ -2286,6 +2297,14 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     if #list == 0 then
       error("No usable weapons???")
+    end
+
+    -- remove "upgraded" weapons (e.g. supershotgun > shotgun)
+
+    for i = #list, 1, -1 do
+      if is_weapon_upgraded(list[i].info.name, list) then
+        table.remove(list, i)
+      end
     end
 
     return list
