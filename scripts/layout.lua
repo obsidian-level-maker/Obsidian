@@ -790,7 +790,7 @@ make_prob = 100  --!!!!! TEST
       if N.zone != A.zone then continue end
 
       if N.room then
-        A.floor_h = math.max(N.floor_h, A.floor_h or -EXTREME_H)
+        A.floor_h = math.N_max(N.floor_h, A.floor_h)
 
         local junc = Junction_lookup(A, N)
 
@@ -922,8 +922,8 @@ function Layout_map_borders()
       if N.zone != Z then continue end
 
       if N.room and N.floor_h then
-        min_f = math.min(N.floor_h, min_f or  EXTREME_H)
-        max_f = math.max(N.floor_h, max_f or -EXTREME_H)
+        min_f = math.N_min(N.floor_h, min_f)
+        max_f = math.N_max(N.floor_h, max_f)
       end
     end
     end
@@ -1073,12 +1073,14 @@ function Layout_liquid_stuff()
 
     each N in A.neighbors do
       if N.room == face_room and N.floor_h then
-        min_f = math.min(N.floor_h, min_f or EXTREME_H)
+        min_f = math.N_min(N.floor_h, min_f)
       end
     end
 
+    assert(min_f)
+
     if face_room.kind == "hallway" and face_room.hallway.min_h then
-      min_f = math.min(min_f, face_room.hallway.min_h)
+      min_f = math.N_min(min_f, face_room.hallway.min_h)
     end
 
     A.floor_h = min_f - 16
@@ -1264,7 +1266,7 @@ function Layout_handle_corners()
     local z
 
     each A in corner.areas do
-      z = math.max(A.floor_h, z or -9999)
+      z = math.N_max(A.floor_h, z)
     end
 
     return z
@@ -2030,8 +2032,8 @@ function Layout_process_mountains(Z)
 
     if not A.floor_h then return end
 
-    cell.near_min_f = math.min(cell.near_min_f or  2000, A.floor_h)
-    cell.near_max_f = math.max(cell.near_max_f or -2000, A.floor_h)
+    cell.near_min_f = math.N_min(cell.near_min_f, A.floor_h)
+    cell.near_max_f = math.N_max(cell.near_max_f, A.floor_h)
   end
 
 
@@ -2272,8 +2274,8 @@ end
 
     -- determine minimum and maximum of neighbors
 
-    local min_f =  9999
-    local max_f = -9999
+    local min_f
+    local max_f
 
     for dir = 2,8,2 do
       local nb_cell, N = S:cell_neighbor(cell_side, dir)
@@ -2282,13 +2284,13 @@ end
       if nb_cell.area.zone != Z then continue end
 
       if nb_cell.floor_h then
-        min_f = math.min(min_f, nb_cell.floor_h)
-        max_f = math.max(max_f, nb_cell.floor_h)
+        min_f = math.N_min(min_f, nb_cell.floor_h)
+        max_f = math.N_max(max_f, nb_cell.floor_h)
       end
     end
 
 
-    if min_f > max_f then
+    if not min_f then
       -- cell must be cut-off by map-edge cells
       cell.cliff = 2
       return

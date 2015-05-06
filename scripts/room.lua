@@ -2197,8 +2197,8 @@ function Room_floor_heights()
 
     each N in A.neighbors do
       if N.room == A.room and N.delta_h then
-        min_d = math.min(N.delta_h, min_d or  9999)
-        max_d = math.max(N.delta_h, max_d or -9999)
+        min_d = math.N_min(N.delta_h, min_d)
+        max_d = math.N_max(N.delta_h, max_d)
       end
     end
 
@@ -2687,7 +2687,7 @@ function Room_update_sky_groups()
   local function do_area(A)
     local sky_h = A.floor_h + A.zone.sky_add_h
 
-    A.zone.sky_h = math.max(A.zone.sky_h or -9999, sky_h)
+    A.zone.sky_h = math.N_max(A.zone.sky_h, sky_h)
   end
 
 
