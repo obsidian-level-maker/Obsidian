@@ -955,8 +955,10 @@ function Layout_map_borders()
     -- this only possible if a LOT of void areas
     if not Z.border_info.nb_min_f then
       Z.border_info.kind = "void"
+    elseif LEVEL.liquid and rand.odds(40) then
+      Z.border_info.kind = "water"
     else
-      Z.border_info.kind = rand.sel(70, "mountain", "water")
+      Z.border_info.kind = "mountain"
     end
 
     each A in Z.border_info.areas do
@@ -2116,7 +2118,7 @@ function Layout_build_mountains(Z)
     local floor_mat = sel(LEVEL.hill_mode == "low", "GRASS1", "FLAT10")
     local  ceil_mat = "_SKY"
 
-    if cell.area.kind == "water" then floor_mat = "FWATER1" end
+    if cell.area.kind == "water" then floor_mat = "_LIQUID" end
 
 --!!!!    if LEVEL.hill_mode == "high" and cell.dist and cell.dist >= 9 then
 
