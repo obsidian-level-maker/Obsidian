@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2014 Andrew Apted
+--  Copyright (C) 2006-2015 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -25,16 +25,21 @@
  BATTLE SIMULATION
 ===================
 
-Inputs:
-   monsters   : list of monsters that the player must kill
-   weapons    : list of weapons that player can use
+Input
+-----
+   monsters : list of monsters that the player must kill
+              { info=MONSTER_INFO, is_cage=false }
 
-Output:
+   weapons : list of weapons that player can use
+             { info=WEAPON_INFO, factor=1.0 }
+
+Output
+------
    stats : health that player needs to survive the battle +
            ammo quantities required by the player
 
-Notes:
-------
+Notes
+-----
 
 *  Health result is stored in the 'stats' table.  All the
    values are >= 0 and can be partial (like 3.62 rockets).
