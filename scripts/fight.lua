@@ -150,7 +150,7 @@ function Fight_Simulator(monsters, weapons, stats)
 
     -- simulate splash damage | shotgun spread
     if info.splash then
-      for i = 1, #list do
+      for i = 1, #info.splash do
         hurt_mon(i, W, info.splash[i])
       end
     end
