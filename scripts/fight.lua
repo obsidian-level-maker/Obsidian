@@ -79,6 +79,8 @@ function Fight_Simulator(monsters, weapons, stats)
 
   local active_mons = {}
 
+  local DEFAULT_ACCURACY = 70
+
 
   local function remove_dead_mon()
     for i = #active_mons,1,-1 do
@@ -103,7 +105,7 @@ function Fight_Simulator(monsters, weapons, stats)
 
       -- handle monster-based weapon preferences
       if first_mon.weap_prefs then
-        prob = prob * (first_mon.weap_prefs[W.name] or 1)
+        prob = prob * (first_mon.weap_prefs[W.info.name] or 1)
       end
 
       -- handle 'weap_needed' and 'min_weapon' fields of a monster
@@ -121,7 +123,7 @@ function Fight_Simulator(monsters, weapons, stats)
     local index = rand.index_by_probs(prob_tab)
     local W     = assert(weapons[index])
 
-    return W.info
+    return W
   end
 
 
@@ -130,35 +132,35 @@ function Fight_Simulator(monsters, weapons, stats)
 
     if not M then return end
 
-    if M.info.immunity and M.info.immunity[W.name] then
-      damage = damage * (1 - M.info.immunity[W.name])
+    -- apply the weapon accuracy, or use default
+    damage = damage * (W.info.accuracy or DEFAULT_ACCURACY) / 100
+
+    if M.info.immunity and M.info.immunity[W.info.name] then
+      damage = damage * (1 - M.info.immunity[W.info.name])
     end
 
     M.health = M.health - damage
   end
 
 
-  local function splash_mons(W, list)
-    each damage in list do
-      hurt_mon(_index, W, damage)
-    end
-  end
-
-
   local function player_shoot(W)
-    hurt_mon(1, W, W.damage)
+    local info = W.info
+
+    hurt_mon(1, W, info.damage)
 
     -- simulate splash damage | shotgun spread
-    if W.splash then
-      splash_mons(W, W.splash)
+    if info.splash then
+      for i = 1, #list do
+        hurt_mon(i, W, info.splash[i])
+      end
     end
 
     -- update ammo counter
-    if W.ammo then
-      stats[W.ammo] = (stats[W.ammo] or 0) + (W.per or 1)
+    if info.ammo then
+      stats[info.ammo] = (stats[info.ammo] or 0) + (info.per or 1)
     end
 
-    return 1 / W.rate
+    return 1 / info.rate
   end
 
 
@@ -207,7 +209,7 @@ function Fight_Simulator(monsters, weapons, stats)
   while #active_mons > 0 do
     local W = select_weapon()
 
-    local shots = int(rand.range(2.0, 8.0) * W.rate + 0.5)
+    local shots = int(rand.range(2.0, 8.0) * W.info.rate + 0.5)
 
     if shots < 2  then shots = 2  end
     if shots > 30 then shots = 30 end
