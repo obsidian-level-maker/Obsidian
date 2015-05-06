@@ -100,6 +100,22 @@ function math.quadratic(x, limit)
   return x * (limit * 2 - x) / limit
 end
 
+-- versions of min() and max() which accept NIL
+
+function math.N_min(A, B)
+  if A == nil then return B end
+  if B == nil then return A end
+  if B < A then return B end
+  return A
+end
+
+function math.N_max(A, B)
+  if A == nil then return B end
+  if B == nil then return A end
+  if B > A then return B end
+  return A
+end
+
 
 function string.bool(n)
   if n == nil   then return "nil"   end
