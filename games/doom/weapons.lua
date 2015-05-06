@@ -2,7 +2,7 @@
 --  DOOM WEAPONS
 --------------------------------------------------------------------
 --
---  Copyright (C) 2006-2013 Andrew Apted
+--  Copyright (C) 2006-2015 Andrew Apted
 --  Copyright (C)      2011 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ DOOM.WEAPONS =
     pref = 2
     attack = "hitscan"
     rate = 1.8
-    damage = 8
+    damage = 10
     ammo = "bullet"
     per = 1
   }
@@ -70,7 +70,7 @@ DOOM.WEAPONS =
     start_prob = 60
     attack = "hitscan"
     rate = 0.9
-    damage = 60
+    damage = 70
     splash = { 0,10 }
     ammo = "shell"
     per = 1
@@ -88,7 +88,7 @@ DOOM.WEAPONS =
     start_prob = 15
     attack = "hitscan"
     rate = 8.5
-    damage = 8
+    damage = 10
     ammo = "bullet"
     per = 1
     give = { {ammo="bullet",count=20} }
@@ -105,9 +105,9 @@ DOOM.WEAPONS =
     start_prob = 40
     attack = "hitscan"
     rate = 0.6
-    damage = 150
+    damage = 200
     -- use splash to simulate hitting a second monster
-    splash = { 0,30 }
+    splash = { 0,30,10 }
     ammo = "shell"
     per = 2
     give = { {ammo="shell",count=8} }
@@ -139,7 +139,7 @@ DOOM.WEAPONS =
     add_prob = 15
     attack = "missile"
     rate = 11
-    damage = 15
+    damage = 23
     ammo = "cell"
     per = 1
     give = { {ammo="cell",count=40} }
