@@ -336,21 +336,6 @@ function Trans.rect_coords(x1, y1, x2, y2)
 end
 
 
-function Trans.solid_quad(x1, y1, x2, y2, mat)
-  local brush = brushlib.quad(x1, y1, x2, y2)
-  brushlib.set_mat(brush, mat, mat)
-  Trans.brush(brush)
-end
-
-
-function Trans.sky_quad(x1, y1, x2, y2, sky_h)
-  local brush = brushlib.quad(x1, y1, x2, y2, sky_h)
-  brhshlib.set_kind(brush, "sky")
-  brushlib.set_mat(brush, "_SKY", "_SKY")
-  Trans.brush(brush)
-end
-
-
 function Trans.spot_transform(x, y, z, dir)
   local ANGS = { [2]=0, [8]=180, [4]=270, [6]=90 }
 
@@ -906,6 +891,21 @@ function brushlib.set_mat(brush, wall, flat)
   if flat then
     flat = Mat_lookup(flat)
     flat = assert(flat.f or flat.t)
+
+    -- handle the _LIQUID and _SKY materials
+
+    if flat == "_LIQUID" and LEVEL.liquid then
+      each C in brush do
+        if C.b or C.t then
+          C.special = C.special or LEVEL.liquid.special
+          C.light   = C.light   or LEVEL.liquid.light
+        end
+      end
+    end
+
+    if flat == "_SKY" then
+      brushlib.set_kind(brush, "sky")
+    end
   end
 
   brushlib.set_tex(brush, wall, flat)
@@ -955,33 +955,12 @@ function brushlib.collect_flags(coords)
 end
 
 
-function brushlib.mark_sky(brush)
-  brushlib.set_mat(brush, "_SKY", "_SKY")
-
-  table.insert(brush, 1, { m="sky" })
-end
-
-
 function brushlib.has_sky(brush)
   each C in brush do
     if C.mat == "_SKY" then return true end
   end
 
   return false
-end
-
-
-function brushlib.mark_liquid(brush)
-  assert(LEVEL.liquid)
-
-  brushlib.set_mat(brush, "_LIQUID", "_LIQUID")
-
-  each C in brush do
-    if C.b or C.t then
-      C.special = LEVEL.liquid.special
-      C.light   = LEVEL.liquid.light
-    end
-  end
 end
 
 

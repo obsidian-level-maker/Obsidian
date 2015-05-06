@@ -1845,7 +1845,6 @@ function Fab_replacements(fab)
     if val == "_LIQUID" and LEVEL.liquid then
       C.special = C.special or LEVEL.liquid.special
       C.light   = LEVEL.liquid.light
-      C.factor = 1.0
     end
 
     local mat = Mat_lookup(val)
@@ -1968,7 +1967,9 @@ function Fab_render_sky(fab, room, T)
       error("Prefab with add_sky used in loose transform")
     end
 
-    Trans.sky_quad(T.bbox.x1, T.bbox.y1, T.bbox.x2, T.bbox.y2, room.zone.sky_h)
+    local brush = brushlib.quad(T.bbox.x1, T.bbox.y1, T.bbox.x2, T.bbox.y2, room.zone.sky_h)
+    brushlib.set_mat(brush, "_SKY", "_SKY")
+    Trans.brush(brush)
   end
 end
 
