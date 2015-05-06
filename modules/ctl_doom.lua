@@ -94,7 +94,7 @@ OB_MODULES["doom_mon_control"] =
     zombie   = { label="Zombieman",      choices=CTL_DOOM.MON_CHOICES }
     shooter  = { label="Shotgun Guy",    choices=CTL_DOOM.MON_CHOICES }
     gunner   = { label="Chaingunner",    choices=CTL_DOOM.MON_CHOICES }
-    ss_dude  = { label="SS Nazi",        choices=CTL_DOOM.MON_CHOICES }
+    ss_nazi  = { label="SS Nazi",        choices=CTL_DOOM.MON_CHOICES }
     imp      = { label="Imp",            choices=CTL_DOOM.MON_CHOICES }
 
     skull    = { label="Lost Soul",      choices=CTL_DOOM.MON_CHOICES }

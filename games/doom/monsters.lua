@@ -328,7 +328,7 @@ DOOM.MONSTERS =
   }
 
   -- NOTE: not generated in normal levels
-  ss_dude =
+  ss_nazi =
   {
     id = 84
     r = 20

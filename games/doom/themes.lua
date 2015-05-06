@@ -1099,7 +1099,7 @@ DOOM.THEMES =
 
     monster_prefs =
     {
-      ss_dude = 100
+      ss_nazi = 100
       zombie  = 20
       shooter = 20
       demon   = 20  -- kinda like a dog

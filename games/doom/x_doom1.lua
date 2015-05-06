@@ -174,7 +174,7 @@ ULTDOOM.MONSTERS =
   arach    = REMOVE_ME
   vile     = REMOVE_ME
   pain     = REMOVE_ME
-  ss_dude  = REMOVE_ME
+  ss_nazi  = REMOVE_ME
 }
 
 
