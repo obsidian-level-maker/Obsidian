@@ -2204,10 +2204,6 @@ end
     brushlib.set_mat(f_brush, floor_mat, floor_mat)
     brushlib.set_mat(c_brush,  ceil_mat,  ceil_mat)
 
-    if ceil_mat == "_SKY" then
-      brushlib.set_kind(c_brush, "sky")
-    end
-
     Trans.brush(f_brush)
     Trans.brush(c_brush)
 

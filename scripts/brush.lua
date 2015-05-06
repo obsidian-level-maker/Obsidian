@@ -889,9 +889,6 @@ function brushlib.set_mat(brush, wall, flat)
   end
 
   if flat then
-    flat = Mat_lookup(flat)
-    flat = assert(flat.f or flat.t)
-
     -- handle the _LIQUID and _SKY materials
 
     if flat == "_LIQUID" and LEVEL.liquid then
@@ -906,6 +903,9 @@ function brushlib.set_mat(brush, wall, flat)
     if flat == "_SKY" then
       brushlib.set_kind(brush, "sky")
     end
+
+    flat = Mat_lookup(flat)
+    flat = assert(flat.f or flat.t)
   end
 
   brushlib.set_tex(brush, wall, flat)

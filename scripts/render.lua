@@ -1014,10 +1014,6 @@ function Render_ceiling(A, S)
 
   brushlib.set_mat(c_brush, c_side, c_mat)
 
-  if c_mat == "_SKY" then
-    brushlib.set_kind(c_brush, "sky")
-  end
-
   Trans.brush(c_brush)
 
   if A.ceil_sink then
