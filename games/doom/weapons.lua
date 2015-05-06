@@ -21,14 +21,18 @@
 -- start_prob : chance of appearing in start room
 -- mp_prob    : chance of being used in a Multi-Player map
 --
--- rate   : firing rate (shots per second)
--- damage : damage can inflict per shot (includes inaccuracy)
--- attack : kind of attack (hitscan | missile | melee)
--- splash : splash damage done to monsters (1st, 2nd, etc)
+-- upgrades   : when present, always prefer this weapon over named one
+--              (e.g. always use chaingun instead of the pistol)
 --
--- ammo  : ammo type [absent for no ammo weapons]
--- per   : ammo per shot
--- give  : ammo given when weapon is picked up
+-- rate     : firing rate (shots per second)
+-- accuracy : percentage that a good player will actually hit something
+-- damage   : damage can inflict per shot (maximum possible)
+-- splash   : splash damage done to monsters (1st, 2nd, etc)
+--
+-- attack : kind of attack (hitscan | missile | melee)
+-- ammo   : ammo type [absent for no ammo weapons]
+-- per    : ammo per shot
+-- give   : ammo given when weapon is picked up
 --
 -- NOTES:
 --
@@ -49,7 +53,7 @@ DOOM.WEAPONS =
 
   pistol =
   {
-    pref = 5
+    pref = 2
     attack = "hitscan"
     rate = 1.8
     damage = 8
@@ -61,8 +65,8 @@ DOOM.WEAPONS =
   {
     id = 2001
     level = 1
-    pref = 70
-    add_prob = 10
+    pref = 40
+    add_prob = 5
     start_prob = 60
     attack = "hitscan"
     rate = 0.9
@@ -79,6 +83,7 @@ DOOM.WEAPONS =
     id = 2002
     level = 2
     pref = 60
+    upgrades = "pistol"
     add_prob = 35
     start_prob = 15
     attack = "hitscan"
@@ -94,7 +99,8 @@ DOOM.WEAPONS =
   {
     id = 82
     level = 3
-    pref = 50
+    pref = 40
+    upgrades = "shotty"
     add_prob = 20
     start_prob = 40
     attack = "hitscan"
@@ -112,11 +118,11 @@ DOOM.WEAPONS =
   {
     id = 2003
     level = 4
-    pref = 30
+    pref = 40
     add_prob = 25
     attack = "missile"
     rate = 1.7
-    accuracy = 0.75
+    accuracy = 75
     damage = 80
     splash = { 60,45,30,15 }
     ammo = "rocket"
@@ -129,7 +135,7 @@ DOOM.WEAPONS =
   {
     id = 2004
     level = 5
-    pref = 30
+    pref = 60
     add_prob = 15
     attack = "missile"
     rate = 11
@@ -144,12 +150,12 @@ DOOM.WEAPONS =
   {
     id = 2006
     level = 7
-    pref = 15
+    pref = 10
     add_prob = 20
     mp_prob = 6
     attack = "missile"
     rate = 0.8
-    accuracy = 0.90
+    accuracy = 90
     damage = 400
     splash = { 70,70,70,70,70, 70,70,70,70,70 }
     ammo = "cell"
