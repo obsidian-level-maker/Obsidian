@@ -2,7 +2,7 @@
 --  DOOM MONSTERS
 --------------------------------------------------------------------
 --
---  Copyright (C) 2006-2013 Andrew Apted
+--  Copyright (C) 2006-2015 Andrew Apted
 --  Copyright (C)      2011 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 -- crazy_prob : probability for "Crazy" strength setting
 --
 -- health : hit points of monster
--- damage : total damage inflicted on player (on average)
+-- damage : total damage inflicted on player (average * accuracy)
 -- attack : kind of attack (hitscan | missile | melee)
 -- density : how many too use (e.g. 0.5 = half the normal amount)
 --
@@ -54,7 +54,7 @@ DOOM.MONSTERS =
     level = 1
     prob = 50
     health = 20
-    damage = 1
+    damage = 1.5
     attack = "hitscan"
     give = { {ammo="bullet",count=5} }
     density = 1.5
@@ -70,7 +70,7 @@ DOOM.MONSTERS =
     level = 2
     prob = 80
     health = 30
-    damage = 8
+    damage = 4.0
     attack = "hitscan"
     give = { {weapon="shotty"}, {ammo="shell",count=4} }
     species = "zombie"
@@ -86,7 +86,7 @@ DOOM.MONSTERS =
     level = 1
     prob = 95
     health = 60
-    damage = 3
+    damage = 1.5
     attack = "missile"
     room_size = "small"
   }
@@ -99,7 +99,7 @@ DOOM.MONSTERS =
     level = 3
     prob = 25
     health = 100
-    damage = 1
+    damage = 3.7
     attack = "melee"
     float = true
     weap_prefs = { launch=0.3 }
@@ -115,7 +115,7 @@ DOOM.MONSTERS =
     level = 2
     prob = 60
     health = 150
-    damage = 2
+    damage = 0.5
     attack = "melee"
     min_weapon = 1
     weap_prefs = { launch=0.3 }
@@ -131,7 +131,7 @@ DOOM.MONSTERS =
     replace_prob = 25
     crazy_prob = 21
     health = 150
-    damage = 3
+    damage = 1.0
     attack = "melee"
     invis = true
     outdoor_factor = 3.0
@@ -220,7 +220,7 @@ DOOM.MONSTERS =
     level = 3
     prob = 30
     health = 70
-    damage = 15
+    damage = 7.5
     attack = "hitscan"
     give = { {weapon="chain"}, {ammo="bullet",count=10} }
     min_weapon = 1
@@ -315,8 +315,8 @@ DOOM.MONSTERS =
     level = 6
     prob = 12
     crazy_prob = 15
-    health = 800  -- 400 + skulls
-    damage = 20
+    health = 900  -- 400 + 5 skulls
+    damage = 20   -- about 5 skulls
     attack = "missile"
     density = 0.2
     float = true
