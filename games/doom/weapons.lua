@@ -100,6 +100,7 @@ DOOM.WEAPONS =
     attack = "hitscan"
     rate = 0.6
     damage = 150
+    -- use splash to simulate hitting a second monster
     splash = { 0,30 }
     ammo = "shell"
     per = 2
@@ -115,8 +116,9 @@ DOOM.WEAPONS =
     add_prob = 25
     attack = "missile"
     rate = 1.7
-    damage = 70
-    splash = { 50,20,5 }
+    accuracy = 0.75
+    damage = 80
+    splash = { 60,45,30,15 }
     ammo = "rocket"
     per = 1
     give = { {ammo="rocket",count=2} }
@@ -147,8 +149,9 @@ DOOM.WEAPONS =
     mp_prob = 6
     attack = "missile"
     rate = 0.8
-    damage = 200  -- tweaked value
-    splash = {100,100,100,100, 100,100,100,100 }
+    accuracy = 0.90
+    damage = 400
+    splash = { 70,70,70,70,70, 70,70,70,70,70 }
     ammo = "cell"
     per = 40
     give = { {ammo="cell",count=40} }
