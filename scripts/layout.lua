@@ -381,55 +381,6 @@ end
 
 
 
-function Layout_scenic(R)
-  local min_floor = 1000
-
-  if not LEVEL.liquid then
-    R.main_tex = R.zone.facade_mat
-  end
-
-  for x = R.sx1,R.sx2 do
-  for y = R.sy1,R.sy2 do
-    local S = SEEDS[x][y]
-    
-    if S.room != R then continue end
-
-    S.kind = sel(LEVEL.liquid, "liquid", "void")
-
-    for side = 2,8,2 do
-      local N = S:neighbor(side)
-      if N and N.room and N.floor_h then
-        min_floor = math.min(min_floor, N.floor_h)
-      end
-    end
-  end -- x,y
-  end
-
-  if min_floor < 999 then
-    local h1 = rand.irange(1,6)
-    local h2 = rand.irange(1,6)
-
-    R.liquid_h = min_floor - (h1 + h2) * 16
-  else
-    R.liquid_h = 0
-  end
-
-  R.floor_max_h = R.liquid_h
-  R.floor_min_h = R.liquid_h
-  R.floor_h     = R.liquid_h
-
-  for x = R.sx1, R.sx2 do
-  for y = R.sy1, R.sy2 do
-    local S = SEEDS[x][y]
-    if S.room == R and S.kind == "liquid" then
-      S.floor_h = R.liquid_h
-    end
-  end -- for x, y
-  end
-end
-
-
-
 function Layout_choose_face_room(A)
   -- used for big cages and liquid pools (converted from void)
 
