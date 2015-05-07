@@ -16,7 +16,7 @@
 -- ===============
 --
 -- prob       : general probability of being used
--- crazy_prob : probability for "Crazy" strength setting
+-- crazy_prob : probability for "Crazy" setting (default is 50)
 --
 -- health : hit points of monster
 -- damage : total damage inflicted on player (average * accuracy)
@@ -41,7 +41,7 @@
 --
 -- Similarly the Pain Elemental attack is not a real missile
 -- but actually a Lost Soul.  It spawns at least three (when
--- killed), hence the health is set to 700 instead of 400.
+-- killed), and often more, hence the health is much higher.
 --
 
 DOOM.MONSTERS =
@@ -129,7 +129,7 @@ DOOM.MONSTERS =
     h = 56 
     replaces = "demon"
     replace_prob = 35
-    crazy_prob = 21
+    crazy_prob = 25
     health = 150
     damage = 1.0
     attack = "melee"
@@ -164,6 +164,7 @@ DOOM.MONSTERS =
     h = 64 
     level = 7
     prob = 6.4
+    crazy_prob = 20
     health = 1000
     damage = 8.5
     attack = "missile"
@@ -182,7 +183,7 @@ DOOM.MONSTERS =
     h = 110
     level = 9
     prob = 1.6
-    crazy_prob = 12
+    crazy_prob = 10
     health = 4000
     damage = 160
     attack = "missile"
@@ -199,7 +200,7 @@ DOOM.MONSTERS =
     h = 100
     level = 9
     prob = 1.0
-    crazy_prob = 18
+    crazy_prob = 10
     health = 3000
     damage = 120
     attack = "hitscan"
@@ -251,7 +252,6 @@ DOOM.MONSTERS =
     h = 64 
     level = 5
     prob = 26
-    crazy_prob = 40
     health = 500
     damage = 7.3
     attack = "missile"
@@ -298,6 +298,7 @@ DOOM.MONSTERS =
     h = 56 
     level = 7
     prob = 5
+    crazy_prob = 15
     health = 700
     damage = 20.5
     attack = "hitscan"
@@ -336,7 +337,7 @@ DOOM.MONSTERS =
     level = 1
     theme = "wolf"
     prob = 40
-    crazy_prob = 7
+    crazy_prob = 2
     health = 50
     damage = 2.8
     attack = "hitscan"

@@ -1465,7 +1465,7 @@ function Monsters_in_room(R)
     local list = {}
 
     each mon,info in GAME.MONSTERS do
-      local prob = info.crazy_prob or info.prob
+      local prob = info.crazy_prob or 50
 
       if not LEVEL.global_pal[mon] then prob = 0 end
 
