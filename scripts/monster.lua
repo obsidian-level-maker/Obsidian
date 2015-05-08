@@ -79,9 +79,15 @@ MONSTER_KIND_TAB =
   scarce=2, less=3, normal=4, more=4.5, heaps=6, nuts=6
 }
 
-HEALTH_AMMO_ADJUSTS =
+-- multiple of the bare minimum needed to complete the level
+HEALTH_ADJUSTS =
 {
-  none=0, scarce=0.4, less=0.7, normal=1.0, more=1.5, heaps=2.5,
+  none=0, scarce=0.8, less=1.4, normal=2.1, more=3.2, heaps=6.0
+}
+
+AMMO_ADJUSTS =
+{
+  none=0, scarce=0.7, less=1.0, normal=1.6, more=2.6, heaps=5.2
 }
 
 
@@ -2325,16 +2331,16 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   local function user_adjust_result(stats)
     -- apply the user's health/ammo adjustments here
 
-    local heal_mul = HEALTH_AMMO_ADJUSTS[OB_CONFIG.health]
-    local ammo_mul = HEALTH_AMMO_ADJUSTS[OB_CONFIG.ammo]
+    local heal_mul = HEALTH_ADJUSTS[OB_CONFIG.health]
+    local ammo_mul =   AMMO_ADJUSTS[OB_CONFIG.ammo]
 
     heal_mul = heal_mul * (PARAM.health_factor or 1)
     ammo_mul = ammo_mul * (PARAM.ammo_factor or 1)
 
-    -- also when 'keep weapons' gameplay tweak is on, give less ammo in later maps
-    if true or PARAM.keep_weapons then
+    -- give less ammo in later maps (to counter the build-up over an episode)
+    if not PARAM.pistol_starts then
       local along = math.clamp(0, LEVEL.ep_along - 0.2, 0.8)
-      local factor = 1.0 - along * 0.5
+      local factor = 1.0 - along * 0.25
 
       ammo_mul = ammo_mul * factor
     end
