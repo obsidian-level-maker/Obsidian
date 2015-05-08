@@ -37,9 +37,6 @@
 --
 -- Berserk and Chainsaw are in the NICE_ITEMS table.
 --
--- Shotgun has a fairly low add_prob, since it is likely the
--- player will soon get one from a shotgun zombie.
---
 
 DOOM.WEAPONS =
 {
@@ -66,7 +63,7 @@ DOOM.WEAPONS =
     id = 2001
     level = 1
     pref = 40
-    add_prob = 5
+    add_prob = 40
     attack = "hitscan"
     rate = 0.9
     accuracy = 65
@@ -84,7 +81,7 @@ DOOM.WEAPONS =
     level = 2
     pref = 60
     upgrades = "pistol"
-    add_prob = 35
+    add_prob = 40
     attack = "hitscan"
     rate = 8.5
     accuracy = 52
@@ -101,7 +98,7 @@ DOOM.WEAPONS =
     level = 3
     pref = 40
     upgrades = "shotty"
-    add_prob = 20
+    add_prob = 70
     attack = "hitscan"
     rate = 0.6
     accuracy = 65
@@ -119,7 +116,7 @@ DOOM.WEAPONS =
     id = 2003
     level = 4
     pref = 40
-    add_prob = 25
+    add_prob = 65
     attack = "missile"
     rate = 1.7
     accuracy = 78
@@ -136,7 +133,7 @@ DOOM.WEAPONS =
     id = 2004
     level = 5
     pref = 60
-    add_prob = 15
+    add_prob = 50
     attack = "missile"
     rate = 11
     accuracy = 65
