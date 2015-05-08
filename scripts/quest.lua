@@ -1354,10 +1354,8 @@ function Quest_add_weapons()
 
     -- for crazy monsters mode, player may need a bigger weapon
     if is_start and OB_CONFIG.strength != "crazy" then
-      if info.start_prob then
-        prob = info.start_prob
-      else
-        prob = prob / level
+      if level <= 2 then
+        prob = prob * 3
       end
     end
 
@@ -1567,7 +1565,7 @@ function Quest_add_weapons()
     local tab = {}
 
     each name,info in GAME.WEAPONS do
-      local prob = info.start_prob or info.add_prob
+      local prob = info.add_prob
 
       if prob and info.level and info.level <= 2 then
         tab[name] = prob

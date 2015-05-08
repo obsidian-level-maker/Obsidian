@@ -18,8 +18,7 @@
 --
 -- pref       : usage preference [absent = never]
 -- add_prob   : probabiliiy of adding into level [absent = never]
--- start_prob : chance of appearing in start room
--- mp_prob    : chance of being used in a Multi-Player map
+-- dm_prob    : chance of being used in a Death-Match map
 --
 -- upgrades   : when present, always prefer this weapon over named one
 --              (e.g. always use chaingun instead of the pistol)
@@ -68,7 +67,6 @@ DOOM.WEAPONS =
     level = 1
     pref = 40
     add_prob = 5
-    start_prob = 60
     attack = "hitscan"
     rate = 0.9
     accuracy = 65
@@ -87,7 +85,6 @@ DOOM.WEAPONS =
     pref = 60
     upgrades = "pistol"
     add_prob = 35
-    start_prob = 15
     attack = "hitscan"
     rate = 8.5
     accuracy = 52
@@ -105,7 +102,6 @@ DOOM.WEAPONS =
     pref = 40
     upgrades = "shotty"
     add_prob = 20
-    start_prob = 40
     attack = "hitscan"
     rate = 0.6
     accuracy = 65
@@ -157,7 +153,7 @@ DOOM.WEAPONS =
     level = 7
     pref = 10
     add_prob = 20
-    mp_prob = 6
+    dm_prob = 6
     attack = "missile"
     rate = 0.8
     accuracy = 87
