@@ -1,4 +1,4 @@
-----------------------------------------------------------------
+---------------------------------------------------------------
 --  MODULE: Doom Control
 ----------------------------------------------------------------
 --
@@ -164,7 +164,6 @@ function CTL_DOOM.weapon_setup(self)
 
       -- loosen some of the normal restrictions
       W.level = 1
-      W.start_prob = nil
     end
   end -- for opt
 end

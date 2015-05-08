@@ -252,10 +252,6 @@ function SKTAG_MONS.setup(self)
     local W = GAME.WEAPONS[name]
     if W and factor then
       W.add_prob = math.max(4, W.add_prob)   * factor
-
-      if W.start_prob then
-        W.start_prob = math.max(4, W.start_prob) * factor
-      end
     end
   end
 end
@@ -382,7 +378,6 @@ function SKTAG_MONS.weap_control_setup(self)
       
       -- allow it to appear as often as the user wants
       W.level = 1
-      W.start_prob = nil
     end
   end -- for opt
 end

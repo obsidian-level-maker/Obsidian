@@ -162,7 +162,6 @@ function CTL_QUAKE2.weapon_setup(self)
 
       -- loosen some of the normal restrictions
       W.level = 1
-      W.start_prob = nil
     end
   end -- for opt
 end
