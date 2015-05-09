@@ -3,8 +3,30 @@ WORK IN PROGRESS
 ================
 
 
+Weapon count: not just based on # of zone, more about 'game_along'
+
+
+IDEA: 'level' field for NICE_ITEMS -- especially invulnerability which
+      seems to appear quite late in TNT and Plutonia
+
 
 BUG: door height on hallways  [ plus want no hall_shape there ]
+
+
+Map borders
+-----------
+
++  fix sky height next to certain walls  (very tall, looks bad)
+
+-  in "water" kind, fix using liquid for some solid cells
+
+
+
+Liquid pools
+------------
+
++  fences instead of "wall" (c.f. Room_border_up)
+
 
 
 Closets
@@ -88,6 +110,8 @@ SORT OUT : where 'facade_mat' is stored, how is accessed
 -  texturing on door prefabs (for HELL, URBAN themes)
 
 
+
+lowering bars between outdoor rooms
 
 implement "arch" junction / prefab
 
