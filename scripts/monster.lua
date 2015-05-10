@@ -82,12 +82,12 @@ MONSTER_KIND_TAB =
 -- multiple of the bare minimum needed to complete the level
 HEALTH_ADJUSTS =
 {
-  none=0, scarce=0.8, less=1.4, normal=2.1, more=3.2, heaps=6.0
+  none=0, scarce=0.40, less=0.64, normal=1.00, more=1.50, heaps=2.50
 }
 
 AMMO_ADJUSTS =
 {
-  none=0, scarce=0.7, less=1.0, normal=1.6, more=2.6, heaps=5.2
+  none=0, scarce=0.60, less=0.78, normal=1.00, more=1.35, heaps=2.00
 }
 
 
