@@ -181,7 +181,7 @@ function Fight_Simulator(monsters, weapons, stats)
 
 
   local function calc_monster_threat(M)
-    local threat = M.info.health + M.info.damage * 7
+    local threat = M.info.health + M.info.damage * 27
 
     -- caged monsters pose less of a threat
     if M.is_cage and not M.info.nasty then threat = threat / 3 end
