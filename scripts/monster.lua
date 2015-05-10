@@ -79,7 +79,6 @@ MONSTER_KIND_TAB =
   scarce=2, less=3, normal=4, more=4.5, heaps=6, nuts=6
 }
 
--- multiple of the bare minimum needed to complete the level
 HEALTH_ADJUSTS =
 {
   none=0, scarce=0.40, less=0.64, normal=1.00, more=1.50, heaps=2.50
@@ -87,13 +86,13 @@ HEALTH_ADJUSTS =
 
 AMMO_ADJUSTS =
 {
-  none=0, scarce=0.60, less=0.78, normal=1.00, more=1.35, heaps=2.00
+  none=0, scarce=0.70, less=0.90, normal=1.15, more=1.50, heaps=2.15
 }
 
 
-COOP_MON_FACTOR = 1.35
-COOP_HEALTH_FACTOR = 1.3
-COOP_AMMO_FACTOR   = 1.6
+COOP_MON_FACTOR    = 1.35
+COOP_HEALTH_FACTOR = 1.35
+COOP_AMMO_FACTOR   = 1.35
 
 
 -- Doom flags

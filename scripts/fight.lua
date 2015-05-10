@@ -69,7 +69,9 @@ Notes
    missile attacks), and that melee monsters can only hurt
    you when they are first (at most second) in the list.
 
-*  Infighting between monsters is not modelled.
+*  Infighting between monsters is modelled very simplistically,
+   as a small reduction to the health of every monsters.  See
+   the comment below regarding the INFIGHT_FACTOR value.
 
 
 ----------------------------------------------------------------]]
@@ -80,6 +82,11 @@ function Fight_Simulator(monsters, weapons, stats)
   local active_mons = {}
 
   local DEFAULT_ACCURACY = 70
+
+  -- in general, 5% to 15% of monster damage is not directly from a
+  -- player (from a fired weapon or the fist or chainsaw), but from
+  -- other monsters, crushers and being telefragged.
+  local INFIGHT_FACTOR = 0.92
 
 
   local function remove_dead_mon()
@@ -190,7 +197,7 @@ function Fight_Simulator(monsters, weapons, stats)
   each M in monsters do
     local MON = table.copy(M)
 
-    MON.health = MON.info.health
+    MON.health = MON.info.health * INFIGHT_FACTOR
     MON.threat = calc_monster_threat(MON)
 
     table.insert(active_mons, MON)
