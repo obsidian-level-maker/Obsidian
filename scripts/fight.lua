@@ -33,41 +33,43 @@ Input
    weapons : list of weapons that player can use
              { info=WEAPON_INFO, factor=1.0 }
 
+
 Output
 ------
    stats : health that player needs to survive the battle +
            ammo quantities required by the player
 
+
 Notes
 -----
 
-*  Health result is stored in the 'stats' table.  All the
-   values are >= 0 and can be partial (like 3.62 rockets).
+*  Results are all >= 0 and can be partial (like 3.62 rockets).
 
-*  Armor is not directly modelled.  Instead you can assume
-   that some percentage of the returned 'health' would have
-   been saved if the player was wearing armor.
+*  Health result is stored in the 'stats' table (as "health").
 
-*  Powerups are not modelled.  The assumption here is that
-   any powerups on the level are bonuses for the player
-   and not a core part of gameplay.  It could be handled
-   by being stingy on health/ammo in the room containing
-   the powerup (and subsequent rooms).
+*  Monsters are "fought" one by one in the given list, sorted
+   from the strongest to the weakest (an order similar to how the
+   player would tackle them).
 
-*  Monsters are "fought" one by one in the given list,
-   sorted from most threatening to least threatening
-   (which is likely how the real player would tackle them).
-   Your weapons can damage other monsters though, including
-   such things as rocket splash, shotgun spread, the BFG
-   etc...
+   Your weapons can damage other monsters though, via such things
+   as rocket splash, BFG spray, and shotgun spread.
+   
+*  Weapons are "fired" in short rounds.  Each round the weapon is
+   chosen based on their intrinsic 'pref' value (and modified by a
+   'factor' value if present), as well as other things like the
+   'weap_prefs' of the current monster.  The weapon's damage is
+   used to decrease the monster's health, recording the ammo usage.
+   Dead monsters get removed from the list.
 
-   All of the monsters are fighting the player.  They are
-   assumed to be linearly spread out (first one is closest
-   and last one is far away), 2D layouts are not modelled.
-   Further away monsters do less damage, we also assume
-   that closer monsters get in the way (especially for
-   missile attacks), and that melee monsters can only hurt
-   you when they are first (at most second) in the list.
+*  Armor is not modelled here.  Instead you can assume that some
+   percentage of the returned "health" would have been saved if
+   the player was wearing armor.
+
+*  Powerups like Invulnerability or Berserk are not modelled.
+   Invulnerability could be handled by detecting which monsters
+   (often bosses) to be fought and then simply omitting them
+   from the simulation.  Other powerups are considered to be
+   bonuses for the player.
 
 *  Infighting between monsters is modelled very simplistically,
    as a small reduction to the health of every monsters.  See
@@ -181,12 +183,13 @@ function Fight_Simulator(monsters, weapons, stats)
 
 
   local function calc_monster_threat(M)
-    local threat = M.info.health + M.info.damage * 27
+    -- caged monsters pose less of a threat -- do them last
+    if M.is_cage then
+      return gui.random()
+    end
 
-    -- caged monsters pose less of a threat
-    if M.is_cage and not M.info.nasty then threat = threat / 3 end
-
-    return threat + gui.random() * 20  -- tie breaker
+    -- add a tie breaker
+    return M.info.health + gui.random()
   end
 
 
@@ -205,7 +208,7 @@ function Fight_Simulator(monsters, weapons, stats)
 
   -- put toughest monster first, weakest last.
   table.sort(active_mons,
-      function(A,B) return A.threat > B.threat end)
+      function(A, B) return A.threat > B.threat end)
 
   -- compute health needed by player
   each M in active_mons do
