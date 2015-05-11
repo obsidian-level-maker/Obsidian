@@ -19,8 +19,195 @@
 ------------------------------------------------------------------------
 
 
+HEALTH_FACTORS =
+{
+  none=0, scarce=0.40, less=0.64, normal=1.00, more=1.50, heaps=2.50
+}
+
+AMMO_FACTORS =
+{
+  none=0, scarce=0.70, less=0.90, normal=1.15, more=1.50, heaps=2.15
+}
+
+
+COOP_HEALTH_FACTOR = 1.35
+COOP_AMMO_FACTOR   = 1.35
+
+
 function Item_simulate_battles()
-  -- TODO
+  
+  local R  -- current room
+
+
+  local function make_empty_stats()
+    local stats = {}
+
+    each CL,_ in GAME.PLAYER_MODEL do
+      stats[CL] = {}
+    end
+
+    return stats
+  end
+
+
+  local function user_adjust_result(stats)
+    -- apply the user's health/ammo adjustments here
+
+    local heal_mul = HEALTH_FACTORS[OB_CONFIG.health]
+    local ammo_mul =   AMMO_FACTORS[OB_CONFIG.ammo]
+
+    heal_mul = heal_mul * (PARAM.health_factor or 1)
+    ammo_mul = ammo_mul * (PARAM.ammo_factor or 1)
+
+    -- give less ammo in later maps (to counter the build-up over an episode)
+    if not PARAM.pistol_starts then
+      local along = math.clamp(0, LEVEL.ep_along - 0.2, 0.8)
+      local factor = 1.0 - along * 0.25
+
+      ammo_mul = ammo_mul * factor
+    end
+
+    if OB_CONFIG.mode == "coop" then
+      heal_mul = heal_mul * COOP_HEALTH_FACTOR
+      ammo_mul = ammo_mul * COOP_AMMO_FACTOR
+    end
+
+    each name,qty in stats do
+      if name == "health" then
+        stats[name] = qty * heal_mul
+      else
+        stats[name] = qty * ammo_mul
+      end
+    end
+  end
+
+
+  local function subtract_stuff_we_have(stats, hmodel)
+    each name,have_qty in hmodel.stats do
+      local need_qty = stats[name] or 0
+      if have_qty > 0 and need_qty > 0 then
+        local min_q = math.min(have_qty, need_qty)
+
+               stats[name] =        stats[name] - min_q
+        hmodel.stats[name] = hmodel.stats[name] - min_q
+      end
+    end
+  end
+
+
+  local function give_monster_drops(hmodel, mon_list)
+    each M in mon_list do
+      if M.is_cage then continue end
+
+      if M.info.give then
+        Player_give_stuff(hmodel, M.info.give)
+      end
+    end
+  end
+
+
+  local function is_weapon_upgraded(name, list)
+    each W in list do
+      if W.info.upgrades == name then
+        return true
+      end
+    end
+
+    return false
+  end
+
+
+  local function collect_weapons(hmodel)
+    local list = {}
+    local seen = {}
+
+    each name,_ in hmodel.weapons do
+      local info = assert(GAME.WEAPONS[name])
+
+      local factor = R.zone.weap_palette[name]
+
+      if info.pref then
+        table.insert(list, { info=info, factor=factor })
+        seen[name] = true
+      end
+    end
+
+    -- gameplay_tweaks : assume weapons from previous levels
+    if PARAM.keep_weapons then
+      each name,_ in EPISODE.seen_weapons do
+      if not seen[name] then
+        local info = assert(GAME.WEAPONS[name])
+        assert(info.pref)
+
+        table.insert(list, { info=info, factor=0.5 })
+      end
+      end
+    end
+
+    if #list == 0 then
+      error("No usable weapons???")
+    end
+
+    -- remove "upgraded" weapons (e.g. supershotgun > shotgun)
+
+    for i = #list, 1, -1 do
+      if is_weapon_upgraded(list[i].info.name, list) then
+        table.remove(list, i)
+      end
+    end
+
+    return list
+  end
+
+
+  local function battle_for_class(CL, hmodel)
+    local mon_list = R.monster_list
+
+    local weap_list = collect_weapons(hmodel)
+
+    local stats = R.fight_stats[CL]
+
+    gui.debugf("Fight Simulator @ %s  class: %s\n", R:tostr(), CL)
+
+    gui.debugf("weapons = \n")
+    each W in weap_list do
+      gui.debugf("  %s\n", W.info.name)
+    end
+
+    Fight_Simulator(mon_list, weap_list, stats)
+
+--  gui.debugf("raw result = \n%s\n", table.tostr(stats,1))
+
+    user_adjust_result(stats)
+
+--  gui.debugf("adjusted result = \n%s\n", table.tostr(stats,1))
+
+    give_monster_drops(hmodel, mon_list)
+
+    subtract_stuff_we_have(stats, hmodel)
+  end
+
+
+  local function sim_battle(room)
+    R = room
+
+    assert(R.monster_list)
+
+    R.fight_stats = make_empty_stats()
+
+    if #R.monster_list >= 1 then
+      each CL,hmodel in LEVEL.hmodels do
+        battle_for_class(CL, hmodel)
+      end
+    end
+  end
+
+
+  ---| Item_simulate_battles |---
+
+  each room in LEVEL.rooms do
+    sim_battle(room)
+  end
 end
 
 
@@ -357,17 +544,19 @@ function Item_add_pickups()
   local function select_pickups(R, item_list, stat, qty, hmodel)
     assert(qty >= 0)
 
-    local held_qty = hmodel.stats[stat] or 0
+    if hmodel.stats[stat] == nil then
+       hmodel.stats[stat] = 0
+    end
 
     local actual_qty = 0
 
     -- when the player is already holding more than required, simply
     -- reduce the hmodel (don't place any items).
-    if held_qty >= qty then
-      hmodel.stats[stat] = held_qty - qty
+    if hmodel.stats[stat] >= qty then
+      hmodel.stats[stat] = hmodel.stats[stat] - qty
     else
+      actual_qty = qty - hmodel.stats[stat]
       hmodel.stats[stat] = 0
-      actual_qty = qty - held_qty
     end
 
     -- bonus stuff : this is _not_ applied to the hmodel
@@ -435,6 +624,8 @@ function Item_add_pickups()
   ---| Item_add_pickups |---
 
   gui.printf("\n--==| Item Pickups |==--\n\n")
+
+  Item_simulate_battles()
 
   Item_distribute_stats()
 
