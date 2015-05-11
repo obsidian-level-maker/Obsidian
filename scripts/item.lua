@@ -34,6 +34,51 @@ COOP_HEALTH_FACTOR = 1.35
 COOP_AMMO_FACTOR   = 1.35
 
 
+-- Doom flags
+DOOM_FLAGS =
+{
+  EASY    = 1
+  MEDIUM  = 2
+  HARD    = 4
+  DEAF    = 8
+}
+
+-- Hexen thing flags
+HEXEN_FLAGS =
+{
+  FIGHTER = 32
+  CLERIC  = 64
+  MAGE    = 128
+
+  DM      = 1024
+}
+
+-- Quake flags
+QUAKE_FLAGS =
+{
+  DEAF       = 1
+
+  NOT_EASY   = 256
+  NOT_MEDIUM = 512
+  NOT_HARD   = 1024
+  NOT_DM     = 2048
+}
+
+-- Hexen2 flags  [NOT USED YET]
+HEXEN2_FLAGS =
+{
+  NOT_PALADIN  = 256
+  NOT_CLERIC   = 512
+  NOT_NECRO    = 1024
+  NOT_ASSASSIN = 2048
+
+  NOT_EASY     = 4096
+  NOT_MEDIUM   = 8192
+  NOT_HARD     = 16384
+  NOT_DM       = 32768
+}
+
+
 function Player_init()
   LEVEL.hmodels = table.deep_copy(GAME.PLAYER_MODEL)
 
