@@ -79,12 +79,12 @@ MONSTER_KIND_TAB =
   scarce=2, less=3, normal=4, more=4.5, heaps=6, nuts=6
 }
 
-HEALTH_ADJUSTS =
+HEALTH_FACTORS =
 {
   none=0, scarce=0.40, less=0.64, normal=1.00, more=1.50, heaps=2.50
 }
 
-AMMO_ADJUSTS =
+AMMO_FACTORS =
 {
   none=0, scarce=0.70, less=0.90, normal=1.15, more=1.50, heaps=2.15
 }
@@ -2330,8 +2330,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
   local function user_adjust_result(stats)
     -- apply the user's health/ammo adjustments here
 
-    local heal_mul = HEALTH_ADJUSTS[OB_CONFIG.health]
-    local ammo_mul =   AMMO_ADJUSTS[OB_CONFIG.ammo]
+    local heal_mul = HEALTH_FACTORS[OB_CONFIG.health]
+    local ammo_mul =   AMMO_FACTORS[OB_CONFIG.ammo]
 
     heal_mul = heal_mul * (PARAM.health_factor or 1)
     ammo_mul = ammo_mul * (PARAM.ammo_factor or 1)
