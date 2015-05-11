@@ -2593,12 +2593,5 @@ function Monster_make_battles()
   end
 
   Monsters_show_stats()
-
-  -- Once all monsters have been chosen and all battles
-  -- (including cages and traps) have been simulated, then
-  -- we can decide what pickups to add (the easy part) and
-  -- _where_ to place them (the hard part).
-
-  Item_add_pickups()
 end
 

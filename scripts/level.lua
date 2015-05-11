@@ -830,18 +830,22 @@ function Levels_build_it()
   Levels_plan_stuff()
 
   Area_create_rooms()
-  if gui.abort() then return "abort" end
+    if gui.abort() then return "abort" end
 
   Connect_stuff()
+    if gui.abort() then return "abort" end
 
   Quest_make_quests()
-  if gui.abort() then return "abort" end
+    if gui.abort() then return "abort" end
 
   Room_build_all()
-  if gui.abort() then return "abort" end
+    if gui.abort() then return "abort" end
 
   Monster_make_battles()
-  if gui.abort() then return "abort" end
+    if gui.abort() then return "abort" end
+
+  Item_add_pickups()
+    if gui.abort() then return "abort" end
 
   return "ok"
 end

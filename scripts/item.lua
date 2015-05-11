@@ -128,6 +128,12 @@ end
 
 
 function Item_add_pickups()
+  --
+  -- Once all monsters have been chosen and all battles have been
+  -- simulated (including cages and traps), then we can decide *what*
+  -- pickups to add (the easy part) and *where* to place them (the
+  -- hard part).
+  --
 
   local function grab_a_big_spot(R)
     local result = table.pick_best(R.big_spots,
@@ -428,7 +434,7 @@ function Item_add_pickups()
 
   ---| Item_add_pickups |---
 
-  gui.debugf("--- Item_add_pickups ---\n")
+  gui.printf("\n--==| Item Pickups |==--\n\n")
 
   Item_distribute_stats()
 
