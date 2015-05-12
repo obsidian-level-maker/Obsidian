@@ -71,7 +71,7 @@ evolves about same rate IN TERMS OF # MONSTERS ADDED.
 
 MONSTER_QUANTITIES =
 {
-  scarce=4, less=8, normal=12, more=20, heaps=30, nuts=100
+  scarce=4, less=8, normal=12, more=20, heaps=32, nuts=100
 }
 
 MONSTER_KIND_TAB =
@@ -766,7 +766,7 @@ function Monsters_in_room(R)
       qty = LEVEL.quantity
 
     elseif OB_CONFIG.mons == "mixed" then
-      qty = rand.pick { 8,14,25,40 }
+      qty = rand.pick { 4,8,12,20,32 }
 
     elseif OB_CONFIG.mons == "prog" then
       qty = LEVEL.game_mons_qty
