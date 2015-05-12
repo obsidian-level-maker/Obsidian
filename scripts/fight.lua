@@ -173,6 +173,40 @@ function Fight_Simulator(monsters, weapons, stats)
   end
 
 
+  local function can_infight(info1, info2)
+    -- returns true if the first monster can hurt the second
+
+    local species1 = info1.species or info1.name
+    local species2 = info2.species or info2.name
+
+    if species1 == species2 then
+      return info1.infights
+    end
+
+    -- support an infighting table
+    local sheet = GAME.INFIGHT_SHEET
+    local result
+
+    -- have a reasonable default
+    if sheet then
+      result = sheet.paired[species1 .. "__" .. species2]
+      if result != nil then return result end
+
+      -- try the pair reversed (assumes X__Y and Y__X are equivalent)
+      result = sheet.paired[species2 .. "__" .. species1]
+      if result != nil then return result end
+
+      result = sheet.defaults[species1]
+      if result != nil then return result end
+
+      result = sheet.defaults["ALL"]
+      if result != nil then return result end
+    end
+
+    return true
+  end
+
+
   local function fixup_hexen_mana()
     if stats.dual_mana then
       stats.blue_mana  = (stats.blue_mana  or 0) + stats.dual_mana
