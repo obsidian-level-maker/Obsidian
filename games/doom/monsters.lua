@@ -28,6 +28,8 @@
 --
 -- min_weapon : level of weapon required for monster to appear
 -- weap_prefs : weapon preferences table (usage by player)
+-- disloyal   : can hurt a member of same species
+-- infight_damage : damage inflicted on one (or more) other monsters
 --
 -- NOTES
 -- =====
@@ -60,6 +62,7 @@ DOOM.MONSTERS =
     density = 1.5
     room_size = "small"
     infights = true
+    infight_damage = 1.9
   }
 
   shooter =
@@ -76,6 +79,7 @@ DOOM.MONSTERS =
     species = "zombie"
     room_size = "small"
     infights = true
+    infight_damage = 6.1
   }
 
   imp =
@@ -89,6 +93,7 @@ DOOM.MONSTERS =
     damage = 1.3
     attack = "missile"
     room_size = "small"
+    infight_damage = 4.0
   }
 
   skull =
@@ -105,6 +110,7 @@ DOOM.MONSTERS =
     weap_prefs = { launch=0.3 }
     room_size = "small"
     infights = true
+    infight_damage = 2.1
   }
 
   demon =
@@ -120,6 +126,7 @@ DOOM.MONSTERS =
     min_weapon = 1
     weap_prefs = { launch=0.3 }
     room_size = "any"
+    infight_damage = 3.5
   }
 
   spectre =
@@ -139,6 +146,7 @@ DOOM.MONSTERS =
     weap_prefs = { launch=0.1 }
     species = "demon"
     room_size = "any"
+    infight_damage = 2.5
   }
 
   caco =
@@ -155,6 +163,7 @@ DOOM.MONSTERS =
     min_weapon = 1
     float = true
     room_size = "large"
+    infight_damage = 21
   }
 
   baron =
@@ -171,6 +180,7 @@ DOOM.MONSTERS =
     density = 0.35
     min_weapon = 3
     room_size = "medium"
+    infight_damage = 40
   }
 
 
@@ -191,6 +201,7 @@ DOOM.MONSTERS =
     min_weapon = 4
     weap_prefs = { bfg=10.0 }
     room_size = "medium"
+    infight_damage = 1600
   }
 
   Mastermind =
@@ -208,6 +219,7 @@ DOOM.MONSTERS =
     min_weapon = 5
     weap_prefs = { bfg=10.0 }
     room_size = "large"
+    infight_damage = 700
   }
 
 
@@ -228,6 +240,7 @@ DOOM.MONSTERS =
     species = "zombie"
     room_size = "large"
     infights = true
+    infight_damage = 15
   }
 
   revenant =
@@ -243,6 +256,7 @@ DOOM.MONSTERS =
     min_weapon = 1
     density = 0.6
     room_size = "any"
+    infight_damage = 20
   }
 
   knight =
@@ -259,6 +273,7 @@ DOOM.MONSTERS =
     density = 0.7
     species = "baron"
     room_size = "medium"
+    infight_damage = 36
   }
 
   mancubus =
@@ -274,6 +289,7 @@ DOOM.MONSTERS =
     density = 0.5
     min_weapon = 3
     room_size = "large"
+    infight_damage = 70
   }
 
   arach =
@@ -289,6 +305,7 @@ DOOM.MONSTERS =
     min_weapon = 1
     density = 0.7
     room_size = "medium"
+    infight_damage = 62
   }
 
   vile =
@@ -306,6 +323,7 @@ DOOM.MONSTERS =
     room_size = "medium"
     min_weapon = 4
     nasty = true
+    infight_damage = 18
   }
 
   pain =
@@ -326,6 +344,7 @@ DOOM.MONSTERS =
     room_size = "large"
     cage_factor = 0  -- never put in cages
     nasty = true
+    infight_damage = 4.5 -- guess
   }
 
   -- NOTE: not generated in normal levels
@@ -343,6 +362,7 @@ DOOM.MONSTERS =
     attack = "hitscan"
     give = { {ammo="bullet",count=5} }
     density = 1.5
+    infight_damage = 6.0
   }
 }
 
