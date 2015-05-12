@@ -1860,8 +1860,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       fill_monster_map(palette, barrel_chance)
     end
 
-    fill_cages(R.cage_spots, "cage", palette)
-    fill_cages(R.trap_spots, "trap", palette)
+    fill_cages(R.cage_spots, "cage")
+    fill_cages(R.trap_spots, "trap")
   end
 
 
