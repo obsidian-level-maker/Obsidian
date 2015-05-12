@@ -232,7 +232,7 @@ function Fight_Simulator(monsters, weapons, stats)
 
     each P in others do
       -- damage is weighted, bigger monsters get a bigger share
-      local factor = M.info.health / total_weight
+      local factor = P.info.health / total_weight
 
       P.health = P.health - damage * factor
     end
