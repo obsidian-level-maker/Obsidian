@@ -255,7 +255,7 @@ function Fight_Simulator(monsters, weapons, stats)
   each M in monsters do
     local MON = table.copy(M)
 
-    MON.health = MON.info.health * INFIGHT_FACTOR
+    MON.health = MON.info.health
     MON.order  = MON.info.health + gui.random()
 
     table.insert(active_mons, MON)
