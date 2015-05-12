@@ -26,7 +26,7 @@ HEALTH_FACTORS =
 
 AMMO_FACTORS =
 {
-  none=0, scarce=0.70, less=0.90, normal=1.15, more=1.50, heaps=2.15
+  none=0, scarce=0.60, less=0.80, normal=1.00, more=1.30, heaps=1.85
 }
 
 
