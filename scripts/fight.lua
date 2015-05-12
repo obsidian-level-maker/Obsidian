@@ -182,17 +182,6 @@ function Fight_Simulator(monsters, weapons, stats)
   end
 
 
-  local function calc_monster_threat(M)
-    -- caged monsters pose less of a threat -- do them last
-    if M.is_cage then
-      return gui.random()
-    end
-
-    -- add a tie breaker
-    return M.info.health + gui.random()
-  end
-
-
   ---==| Fight_Simulator |==---
 
   stats.health = stats.health or 0
@@ -201,14 +190,14 @@ function Fight_Simulator(monsters, weapons, stats)
     local MON = table.copy(M)
 
     MON.health = MON.info.health * INFIGHT_FACTOR
-    MON.threat = calc_monster_threat(MON)
+    MON.order  = MON.info.health + gui.random()
 
     table.insert(active_mons, MON)
   end
 
   -- put toughest monster first, weakest last.
   table.sort(active_mons,
-      function(A, B) return A.threat > B.threat end)
+      function(A, B) return A.order > B.order end)
 
   -- compute health needed by player
   each M in active_mons do
