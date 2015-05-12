@@ -61,7 +61,7 @@ DOOM.MONSTERS =
     give = { {ammo="bullet",count=5} }
     density = 1.5
     room_size = "small"
-    infights = true
+    disloyal = true
     infight_damage = 1.9
   }
 
@@ -78,7 +78,7 @@ DOOM.MONSTERS =
     give = { {weapon="shotty"}, {ammo="shell",count=4} }
     species = "zombie"
     room_size = "small"
-    infights = true
+    disloyal = true
     infight_damage = 6.1
   }
 
@@ -109,7 +109,7 @@ DOOM.MONSTERS =
     float = true
     weap_prefs = { launch=0.3 }
     room_size = "small"
-    infights = true
+    disloyal = true
     infight_damage = 2.1
   }
 
@@ -239,7 +239,7 @@ DOOM.MONSTERS =
     min_weapon = 1
     species = "zombie"
     room_size = "large"
-    infights = true
+    disloyal = true
     infight_damage = 15
   }
 
