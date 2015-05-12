@@ -71,9 +71,10 @@ Notes
    from the simulation.  Other powerups are considered to be
    bonuses for the player.
 
-*  Infighting between monsters is modelled very simplistically,
-   as a small reduction to the health of every monsters.  See
-   the comment below regarding the INFIGHT_FACTOR value.
+*  Infighting between monsters is modelled via 'infight_damage'
+   field of each monster.  Those values were determined from
+   demo analysis and represent an average amount of damage which
+   each monster of that kind inflicts on other monsters.
 
 
 ----------------------------------------------------------------]]
@@ -85,10 +86,7 @@ function Fight_Simulator(monsters, weapons, stats)
 
   local DEFAULT_ACCURACY = 70
 
-  -- in general, 5% to 15% of monster damage is not directly from a
-  -- player (from a fired weapon or the fist or chainsaw), but from
-  -- other monsters, crushers and being telefragged.
-  local INFIGHT_FACTOR = 0.92
+  local DEFAULT_INFIGHT_DAMAGE = 7
 
 
   local function remove_dead_mon()
@@ -168,8 +166,6 @@ function Fight_Simulator(monsters, weapons, stats)
     if info.ammo then
       stats[info.ammo] = (stats[info.ammo] or 0) + (info.per or 1)
     end
-
-    return 1 / info.rate
   end
 
 
@@ -180,7 +176,7 @@ function Fight_Simulator(monsters, weapons, stats)
     local species2 = info2.species or info2.name
 
     if species1 == species2 then
-      return info1.infights
+      return info1.disloyal
     end
 
     -- support an infighting table
@@ -204,6 +200,42 @@ function Fight_Simulator(monsters, weapons, stats)
     end
 
     return true
+  end
+
+
+  local function monster_infight(M)
+    -- Note: we don't check if monsters "die" here, not needed
+
+    -- collect all other monsters which can be fought
+    local others = {}
+
+    local total_weight = 0
+
+    each P in active_mons do
+      if P == M then continue end
+
+      if can_infight(M.info, P.info) then
+        table.insert(others, P)
+        total_weight = total_weight + P.info.health
+      end
+    end
+
+    -- nothing else to fight with?
+    if table.empty(others) then
+      return
+    end
+
+    assert(total_weight > 0)
+
+    -- distribute the 'infight_damage' value
+    local damage = M.info.infight_damage or DEFAULT_INFIGHT_DAMAGE
+
+    each P in others do
+      -- damage is weighted, bigger monsters get a bigger share
+      local factor = M.info.health / total_weight
+
+      P.health = P.health - damage * factor
+    end
   end
 
 
@@ -238,6 +270,15 @@ function Fight_Simulator(monsters, weapons, stats)
     stats.health = stats.health + M.info.damage
   end
  
+  -- simulate infighting
+  -- [ done *after* computing player health, as the damage values are based
+  --   on demo analysis and implicitly contain an infighing factor ]
+  each M in active_mons do
+    monster_infight(M)
+  end
+
+  remove_dead_mon()
+
   -- run simulation until all monsters are dead
   while #active_mons > 0 do
     local W = select_weapon()
@@ -249,7 +290,6 @@ function Fight_Simulator(monsters, weapons, stats)
 
     for loop = 1, shots do
       player_shoot(W)
-
       remove_dead_mon()
     end
   end
