@@ -240,7 +240,7 @@ DOOM.MONSTERS =
     species = "zombie"
     room_size = "large"
     disloyal = true
-    infight_damage = 15
+    infight_damage = 25
   }
 
   revenant =
