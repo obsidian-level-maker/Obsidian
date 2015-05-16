@@ -283,15 +283,8 @@ function Fight_Simulator(monsters, weapons, stats)
   while #active_mons > 0 do
     local W = select_weapon()
 
-    local shots = int(rand.range(2.0, 8.0) * W.info.rate + 0.5)
-
-    if shots < 2  then shots = 2  end
-    if shots > 30 then shots = 30 end
-
-    for loop = 1, shots do
-      player_shoot(W)
-      remove_dead_mon()
-    end
+    player_shoot(W)
+    remove_dead_mon()
   end
 
   fixup_hexen_mana()

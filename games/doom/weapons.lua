@@ -49,7 +49,7 @@ DOOM.WEAPONS =
 
   pistol =
   {
-    pref = 2
+    pref = 1
     attack = "hitscan"
     rate = 1.8
     accuracy = 75
@@ -79,7 +79,7 @@ DOOM.WEAPONS =
   {
     id = 2002
     level = 2
-    pref = 60
+    pref = 70
     upgrades = "pistol"
     add_prob = 40
     attack = "hitscan"
@@ -115,7 +115,7 @@ DOOM.WEAPONS =
   {
     id = 2003
     level = 4
-    pref = 40
+    pref = 30
     add_prob = 65
     attack = "missile"
     rate = 1.7
@@ -132,7 +132,7 @@ DOOM.WEAPONS =
   {
     id = 2004
     level = 5
-    pref = 60
+    pref = 80
     add_prob = 50
     attack = "missile"
     rate = 11
@@ -148,7 +148,7 @@ DOOM.WEAPONS =
   {
     id = 2006
     level = 7
-    pref = 10
+    pref = 7
     add_prob = 20
     dm_prob = 6
     attack = "missile"
