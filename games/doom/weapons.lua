@@ -103,8 +103,8 @@ DOOM.WEAPONS =
     rate = 0.6
     accuracy = 65
     damage = 150
-    -- use splash to simulate hitting a second monster
-    splash = { 0,40,20 }
+    -- use splash to simulate hitting a second monster (etc)
+    splash = { 40,20,10 }
     ammo = "shell"
     per = 2
     give = { {ammo="shell",count=8} }
