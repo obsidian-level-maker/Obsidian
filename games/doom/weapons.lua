@@ -155,7 +155,7 @@ DOOM.WEAPONS =
     rate = 0.8
     accuracy = 80
     damage = 640
-    splash = { 120,120,120,120, 60,60,60,60 }
+    splash = { 150,150,150,150, 80,80,80,80 }
     ammo = "cell"
     per = 40
     give = { {ammo="cell",count=40} }
