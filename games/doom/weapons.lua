@@ -68,7 +68,7 @@ DOOM.WEAPONS =
     rate = 0.9
     accuracy = 65
     damage = 70
-    splash = { 0,10 }
+    splash = { 15 }
     ammo = "shell"
     per = 1
     give = { {ammo="shell",count=8} }
