@@ -120,8 +120,8 @@ DOOM.WEAPONS =
     attack = "missile"
     rate = 1.7
     accuracy = 80
-    damage = 80
-    splash = { 60,45,30,15 }
+    damage = 170
+    splash = { 65,20,5 }
     ammo = "rocket"
     per = 1
     give = { {ammo="rocket",count=2} }
