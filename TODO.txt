@@ -196,6 +196,13 @@ Bridges:
 
 -  review Dante's ideas : doc/DANTE.txt
 
++  Dante's "Head Start" idea
+   -  give player stuff at start of each map
+      (often weapons that "keep weapons" would assume you have)
+
+   -  a button / module to control how much stuff
+      (perhaps replacing "Powerups" setting in GUI)
+
 
 Closets:
 !!  get them working again
