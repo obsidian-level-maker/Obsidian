@@ -86,7 +86,7 @@ function Fight_Simulator(monsters, weapons, stats)
 
   local DEFAULT_ACCURACY = 70
 
-  local DEFAULT_INFIGHT_DAMAGE = 7
+  local DEFAULT_INFIGHT_DAMAGE = 20
 
 
   local function remove_dead_mon()
@@ -229,6 +229,9 @@ function Fight_Simulator(monsters, weapons, stats)
 
     -- distribute the 'infight_damage' value
     local damage = M.info.infight_damage or DEFAULT_INFIGHT_DAMAGE
+
+    -- bump up the damage (higher than demo analysis, but seems necessary)
+    damage = damage * 1.5
 
     each P in others do
       -- damage is weighted, bigger monsters get a bigger share
