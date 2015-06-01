@@ -182,6 +182,8 @@ DOOM.NICE_ITEMS =
     add_prob = 40
     start_prob = 80
     secret_prob = 10
+    give = { {ammo="bullet",count=10 }, {ammo="shell", count=4 },
+             {ammo="cell",  count=20 }, {ammo="rocket",count=1 } }
   }
 
   -- WEAPONS --
