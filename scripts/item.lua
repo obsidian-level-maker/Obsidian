@@ -125,14 +125,28 @@ end
 
 
 function Player_give_room_stuff(R)
-  if R.weapons and not PARAM.hexen_weapons then
+  if not PARAM.hexen_weapons then
     each name in R.weapons do
       Player_give_weapon(name)
       local weap = GAME.WEAPONS[name]
       if weap and weap.give then
-        Player_give_stuff(LEVEL.hmodels.doomguy, weap.give)
+        each CL,hmodel in LEVEL.hmodels do
+          Player_give_stuff(hmodel, weap.give)
+        end
       end
       EPISODE.seen_weapons[name] = 1
+    end
+  end
+
+  -- take nice items into account too (except for secrets)
+  if not R.is_secrets then
+    each name in R.items do
+      local info = GAME.NICE_ITEMS[name] or GAME.PICKUPS[name]
+      if info and info.give then
+        each CL,hmodel in LEVEL.hmodels do
+          Player_give_stuff(hmodel, info.give)
+        end
+      end
     end
   end
 end
