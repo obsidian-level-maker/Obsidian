@@ -542,7 +542,7 @@ function Item_simulate_battles()
 
     local weap_list = collect_weapons(hmodel)
 
-    local stats = R.fight_stats[CL]
+    local stats = R.item_stats[CL]
 
     gui.debugf("Fight Simulator @ %s  class: %s\n", R:tostr(), CL)
 
@@ -570,7 +570,7 @@ function Item_simulate_battles()
 
     assert(R.monster_list)
 
-    R.fight_stats = make_empty_stats()
+    R.item_stats = make_empty_stats()
 
     if #R.monster_list >= 1 then
       each CL,hmodel in LEVEL.hmodels do
@@ -591,13 +591,13 @@ end
 
 function Item_distribute_stats()
   --|
-  --| this distributes the fight statistics (which represent how much
-  --| health and ammo the player needs) into earlier rooms and storage
-  --| rooms in the same zone.
+  --| This distributes the item statistics (how much health and ammo to
+  --| give the player needs) into earlier rooms and also storage rooms
+  --| in the same zone.
   --|
 
-  -- health mainly stays in same room (a reward for killing the monsters)
-  -- ammo mainly goes back, to prepare player for the fight
+  -- health mainly stays in same room (a reward for killing the monsters).
+  -- ammo mainly goes back, to prepare player for the fight.
   local health_factor = 0.25
   local ammo_factor   = 0.65
 
@@ -632,8 +632,8 @@ function Item_distribute_stats()
 
 
   local function distribute(R, N, ratio)
-    each CL,R_stats in R.fight_stats do
-      local N_stats = N.fight_stats[CL]
+    each CL,R_stats in R.item_stats do
+      local N_stats = N.item_stats[CL]
 
       each stat,count in R_stats do
         if count <= 0 then continue end
@@ -676,15 +676,15 @@ function Item_distribute_stats()
   each R in LEVEL.rooms do
     if R.is_storage then continue end
 
-    if R.fight_stats then
+    if R.item_stats then
       distribute_to_list(R, get_previous_locs(R))
     end
   end
 
   each R in LEVEL.rooms do
-    if R.fight_stats then
+    if R.item_stats then
       gui.debugf("final result @ %s = \n%s\n", R:tostr(),
-                 table.tostr(R.fight_stats, 2))
+                 table.tostr(R.item_stats, 2))
     end
   end
 end
@@ -963,7 +963,7 @@ function Item_add_pickups()
       return
     end
 
-    local stats = R.fight_stats[CL]
+    local stats = R.item_stats[CL]
     local item_list = {}
 
     each stat,qty in stats do
