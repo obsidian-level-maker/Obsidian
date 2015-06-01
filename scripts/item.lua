@@ -691,12 +691,11 @@ end
 
 
 
-function Item_add_pickups()
+function Item_pickups_in_room(R)
   --
-  -- Once all monsters have been chosen and all battles have been
-  -- simulated (including cages and traps), then we can decide *what*
-  -- pickups to add (the easy part) and *where* to place them (the
-  -- hard part).
+  -- Once all monsters have been placed and all battles simulated
+  -- (including cages and traps), then we can decide *what* pickups to add
+  -- (the easy part) and *where* to place them (the hard part).
   --
 
   local function grab_a_big_spot(R)
@@ -958,7 +957,7 @@ function Item_add_pickups()
   end
 
 
-  local function pickups_for_hmodel(R, CL, hmodel)
+  local function pickups_for_class(R, CL, hmodel)
     if table.empty(GAME.PICKUPS) then
       return
     end
@@ -989,16 +988,18 @@ function Item_add_pickups()
   end
 
 
-  local function pickups_in_room(R)
-    R.item_spots = Monsters_split_spots(R.item_spots, 25)
+  ---| Item_pickups_in_room |---
 
-    each CL,hmodel in LEVEL.hmodels do
-      pickups_for_hmodel(R, CL, hmodel)
-    end
+  R.item_spots = Monsters_split_spots(R.item_spots, 25)
+
+  each CL,hmodel in LEVEL.hmodels do
+    pickups_for_class(R, CL, hmodel)
   end
+end
 
 
-  ---| Item_add_pickups |---
+
+function Item_add_pickups()
 
   gui.printf("\n--==| Item Pickups |==--\n\n")
 
@@ -1007,7 +1008,7 @@ function Item_add_pickups()
   Item_distribute_stats()
 
   each R in LEVEL.rooms do
-    pickups_in_room(R)
+    Item_pickups_in_room(R)
   end
 end
 
