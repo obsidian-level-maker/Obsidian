@@ -691,12 +691,17 @@ end
 
 
 
-function Item_pickups_in_room(R)
+function Item_pickups_for_class(CL)
   --
   -- Once all monsters have been placed and all battles simulated
   -- (including cages and traps), then we can decide *what* pickups to add
   -- (the easy part) and *where* to place them (the hard part).
   --
+
+  -- this accumulates excess stats
+  -- e.g. if wanted health == 20 and we give a medikit, add 5 to excess["health"]
+  local excess
+
 
   local function grab_a_big_spot(R)
     local result = table.pick_best(R.big_spots,
@@ -781,7 +786,7 @@ function Item_pickups_in_room(R)
   end
 
 
-  local function place_item_list(R, item_list, CL)
+  local function place_item_list(R, item_list)
     each pair in item_list do
       local item  = pair.item
       local count = pair.count
@@ -917,33 +922,30 @@ function Item_pickups_in_room(R)
   end
 
 
-  local function select_pickups(R, item_list, stat, qty, hmodel)
+  local function select_pickups(R, item_list, stat, qty)
     assert(qty >= 0)
 
-    if hmodel.stats[stat] == nil then
-       hmodel.stats[stat] = 0
+    if excess[stat] == nil then
+       excess[stat] = 0
     end
 
-    local actual_qty = 0
+    -- bonus stuff (e.g. ammo accompanying a weapon item)
+    qty = qty + bonus_for_room(R, stat);
 
-    -- when the player is already holding more than required, simply
-    -- reduce the hmodel (don't place any items).
-    if hmodel.stats[stat] >= qty then
-      hmodel.stats[stat] = hmodel.stats[stat] - qty
-    else
-      actual_qty = qty - hmodel.stats[stat]
-      hmodel.stats[stat] = 0
+    if excess[stat] >= qty then
+      -- excess ate it all, no pickups will be added for this stat
+      excess[stat] = excess[stat] - qty
+      return
     end
 
-    -- bonus stuff : this is _not_ applied to the hmodel
-    -- (otherwise future rooms would get less of it).
-    actual_qty = actual_qty + bonus_for_room(R, stat)
+    qty = qty - excess[stat]
+    assert(qty > 0)
 
-    local excess = do_select_pickups(R, item_list, stat, actual_qty)
+    local excess_qty = do_select_pickups(R, item_list, stat, qty)
 
     -- there will usually be a small excess amount, since items come
-    -- in discrete quantities.  accumulate it into the hmodel...
-    hmodel.stats[stat] = hmodel.stats[stat] + excess
+    -- in discrete quantities.  accumulate it now.
+    excess[stat] = excess[stat] + excess_qty
   end
 
 
@@ -957,7 +959,7 @@ function Item_pickups_in_room(R)
   end
 
 
-  local function pickups_for_class(R, CL, hmodel)
+  local function pickups_in_room(R)
     if table.empty(GAME.PICKUPS) then
       return
     end
@@ -966,8 +968,7 @@ function Item_pickups_in_room(R)
     local item_list = {}
 
     each stat,qty in stats do
-      -- this updates the hmodel too
-      select_pickups(R, item_list, stat, qty, hmodel)
+      select_pickups(R, item_list, stat, qty)
 
       gui.debugf("Item list for %s:%1.1f [%s] @ %s\n", stat,qty, CL, R:tostr())
 
@@ -984,16 +985,16 @@ function Item_pickups_in_room(R)
     -- also: place large clusters before small ones
     table.sort(item_list, compare_items)
 
-    place_item_list(R, item_list, CL)
+    place_item_list(R, item_list)
   end
 
 
-  ---| Item_pickups_in_room |---
+  ---| Item_pickups_for_class |---
 
-  R.item_spots = Monsters_split_spots(R.item_spots, 25)
+  excess = {}
 
-  each CL,hmodel in LEVEL.hmodels do
-    pickups_for_class(R, CL, hmodel)
+  each R in LEVEL.rooms do
+    pickups_in_room(R)
   end
 end
 
@@ -1007,8 +1008,13 @@ function Item_add_pickups()
 
   Item_distribute_stats()
 
+  -- ensure item spots are fairly small
   each R in LEVEL.rooms do
-    Item_pickups_in_room(R)
+    R.item_spots = Monsters_split_spots(R.item_spots, 25)
+  end
+
+  each CL,_ in LEVEL.hmodels do
+    Item_pickups_for_class(CL)
   end
 end
 
