@@ -26,6 +26,8 @@
 
 #include "main.h"
 
+#include <FL/fl_utf8.h>
+
 
 static int dialog_result;
 
@@ -257,7 +259,16 @@ const char * DLG_OutputFilename(const char *ext)
 
 	static char filename[FL_PATH_MAX + 16];
 
+#ifdef WIN32
+	// workaround for accented characters in a username
+	// [ real solution is yet to be determined..... ]
+
+	const char *_srcname = chooser.filename();
+
+	fl_utf8toa(_srcname, strlen(_srcname), filename, sizeof(filename));
+#else
 	strcpy(filename, chooser.filename());
+#endif
 
 	// add extension is missing
 	char *pos = (char *)fl_filename_ext(filename);
@@ -267,7 +278,7 @@ const char * DLG_OutputFilename(const char *ext)
 		strcat(filename, ext);
 
 		// check if exists, ask for confirmation
-		FILE *fp = fl_fopen(filename, "rb");
+		FILE *fp = fopen(filename, "rb");
 		if (fp)
 		{
 			fclose(fp);
