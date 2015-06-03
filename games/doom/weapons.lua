@@ -148,7 +148,8 @@ DOOM.WEAPONS =
   {
     id = 2006
     level = 7
-    pref = 7
+    pref = 25
+    upgrades = "plasma"
     add_prob = 20
     dm_prob = 6
     attack = "missile"
