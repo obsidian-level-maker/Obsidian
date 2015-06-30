@@ -798,6 +798,8 @@ function Levels_choose_darkness()
   LEVEL.sky_bright   = rand.sel(75, 192, 176)
   LEVEL.sky_shade    = LEVEL.sky_bright - 32
 
+do return end --!!!!!! FIXME
+
   if rand.odds(prob) then
     gui.printf("Darkness falls across the land...\n\n")
 
