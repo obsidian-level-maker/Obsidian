@@ -33,7 +33,7 @@ if A2 and A2.mode == "void" then return "COMPSPAN" end
   if not A2 or A2.is_outdoor then
     return assert(LEVEL.fence_mat)
   end
- 
+
   return assert(A2.facade_mat)
 end
 
@@ -67,25 +67,6 @@ function edge_get_rail(S, dir)
   if junc.kind == "rail" then return junc end
 
   return nil
-end
-
-
-function dummy_arch(S, dir)
-  local mx, my = S:mid_point()
-
-  if dir == 2 then my = int((my + S.y1 * 7) / 8) end
-  if dir == 8 then my = int((my + S.y2 * 7) / 8) end
-  if dir == 4 then mx = int((mx + S.x1 * 7) / 8) end
-  if dir == 6 then mx = int((mx + S.x2 * 7) / 8) end
-
---[[ FIXME
-  if dir == 1 then mx = mx - 40 ; my = my - 40 end
-  if dir == 3 then mx = mx + 40 ; my = my - 40 end
-  if dir == 7 then mx = mx - 40 ; my = my + 40 end
-  if dir == 9 then mx = mx + 40 ; my = my + 40 end
---]]
-
-  Trans.entity("candle", mx, my, assert(S.area.floor_h))
 end
 
 
@@ -457,8 +438,8 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     {
       { x = bx, y = by }
       { x = ax, y = ay }
-      { x = ax + adx * TK, y = ay + ady * TK } 
-      { x = bx + bdx * TK, y = by + bdy * TK } 
+      { x = ax + adx * TK, y = ay + ady * TK }
+      { x = bx + bdx * TK, y = by + bdy * TK }
     }
 
     return brush
@@ -498,6 +479,49 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
       brushlib.set_mat(brush, mat, mat)
 
       Trans.brush(brush)
+    end
+  end
+
+
+  local function straddle_arch()
+    local z = A.floor_h
+
+    local inner_mat, outer_mat = calc_straddle_mat(A, NA)
+
+
+    local skin1 = { wall=inner_mat, outer=outer_mat }
+
+
+    -- FIXME : find it properly
+    local fab_name = "Arch_plain"
+
+    local def
+
+
+    if geom.is_corner(dir) then
+      fab_name = fab_name .. "_diag"
+
+      local def = Fab_lookup(fab_name)
+
+      local dir2 = DIAG_DIR_MAP[dir]
+
+      local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, dir2)
+
+      Fabricate(R, def, T, { skin1 })
+
+    else  -- axis-aligned edge
+
+      local def = Fab_lookup(fab_name)
+
+      local S2 = S
+      local seed_w = 1
+
+      local T = Trans.edge_transform(S.x1, S.y1, S2.x2, S2.y2, z,
+                                     dir, 0, seed_w * 192, def.deep, def.over)
+
+      Fabricate(R, def, T, { skin1 })
+
+---???    do_door_base(S, dir, z, w_tex, o_tex)
     end
   end
 
@@ -569,7 +593,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
                                      dir, 0, seed_w * 192, def.deep, def.over)
 
       Fabricate(R, def, T, { skin1 })
-  
+
 ---???    do_door_base(S, dir, z, w_tex, o_tex)
     end
   end
@@ -664,7 +688,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
   if not info or info.kind == nil or info.kind == "nothing" then
     return
-  
+
   elseif info.kind == "wall" then
     assert(A)
     edge_wall(calc_wall_mat(A, NA))
@@ -675,14 +699,14 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   elseif info.kind == "sky_edge" and A.floor_h then
     edge_inner_sky()
 
-  elseif info.kind == "fence" then
-    straddle_fence()
-
   elseif info.kind == "steps" then
     edge_steps()
 
+  elseif info.kind == "fence" then
+    straddle_fence()
+
   elseif info.kind == "arch" then
-    dummy_arch(S, dir)
+    straddle_arch(S, dir)
 
   elseif info.kind == "lock_door" then
     straddle_locked_door()
