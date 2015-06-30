@@ -9,13 +9,17 @@ ______________________________________________________________________
 ______________________________________________________________________
 
 
-*  better i18n support (esp. non-ASCII characters in filenames)
+*  update documentation for current GUI interface
 
 *  min_weapon for guard monsters
+
+*  better system to vary "pacing" of monsters
 
 *  support for Traps and free-standing Cages
 
 *  add in more scenery: trees, computers etc
+
+*  better i18n support (esp. non-ASCII characters in filenames)
 
 
 ______________________________________________________________________
@@ -58,6 +62,9 @@ ______________________________________________________________________
 -  sky generator : better checking of themes (esp. w/ control module)
 
 -  the locked switch closet
+
+IDEA : an adjustment (of health) for "environment" of a battle
+       (esp. indoor caves and dark outdoors, more likely to get hurt by mons)
 
 
 Fake fences:
