@@ -1,10 +1,10 @@
 --
--- Archway with an actual arch
+-- Archway with a curved arch
 --
 
-PREFABS.Arch_archy =
+PREFABS.Arch_curved =
 {
-  file   = "door/archy_arch.wad"
+  file   = "door/arch_curved.wad"
   where  = "edge"
   long   = 192
   deep   = 16
