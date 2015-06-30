@@ -62,6 +62,7 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/lib_util.o  \
 	$(OBJ_DIR)/lib_grp.o   \
 	$(OBJ_DIR)/lib_pak.o   \
+	$(OBJ_DIR)/lib_tga.o   \
 	$(OBJ_DIR)/lib_wad.o   \
 	$(OBJ_DIR)/lib_zip.o   \
 	$(OBJ_DIR)/sys_assert.o \
