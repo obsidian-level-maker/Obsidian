@@ -24,6 +24,7 @@
 #include "hdr_ui.h"
 
 #include "lib_file.h"
+#include "lib_tga.h"
 #include "lib_util.h"
 #include "lib_wad.h"
 
@@ -1210,14 +1211,6 @@ int DM_wad_read_text_lump(lua_State *L)
 
 //------------------------------------------------------------------------
 
-typedef unsigned int rgb_color_t;
-
-#define RGB_MAKE(r, g, b)	(((r) << 24) | ((g) << 16) | ((b) << 8))
-
-#define RGB_RED(col)	((col >> 24) & 255)
-#define RGB_GREEN(col)	((col >> 16) & 255)
-#define RGB_BLUE(col)	((col >>  8) & 255)
-
 //
 // Utility function to parse a "color" value.
 //
@@ -1252,7 +1245,7 @@ static rgb_color_t Grab_Color(lua_State *L, int stack_idx)
 		else
 			luaL_error(L, "bad color string");
 
-		return RGB_MAKE(r, g, b);
+		return MAKE_RGBA(r, g, b, 255);
 	}
 
 	if (lua_istable(L, stack_idx))
@@ -1281,7 +1274,7 @@ static rgb_color_t Grab_Color(lua_State *L, int stack_idx)
 
 		lua_pop(L, 3);
 
-		return RGB_MAKE(r, g, b);
+		return MAKE_RGBA(r, g, b, 255);
 	}
 
 	luaL_error(L, "bad color value (not a string or table)");
@@ -1423,7 +1416,7 @@ int DM_title_set_palette(lua_State *L)
 
 		lua_pop(L, 3);
 
-		title_palette[c] = RGB_MAKE(r, g, b);
+		title_palette[c] = MAKE_RGBA(r, g, b, 255);
 	}
 
 	return 0;
