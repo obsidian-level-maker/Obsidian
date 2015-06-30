@@ -4,7 +4,7 @@
 
 PREFABS.Door_manual_small =
 {
-  file   = "door/key_small.wad"
+  file   = "door/manual_small.wad"
   map    = "MAP01"
   where  = "edge"
 
@@ -18,7 +18,7 @@ PREFABS.Door_manual_small =
 
 PREFABS.Door_manual_small_diag =
 {
-  file   = "door/key_small.wad"
+  file   = "door/manual_small.wad"
   map    = "MAP02"
   where  = "diagonal"
 
