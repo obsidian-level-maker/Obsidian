@@ -562,8 +562,8 @@ end
 
 function Room_reckon_doors()
 
-  local  indoor_prob = style_sel("doors", 0, 10, 30,  90)
-  local outdoor_prob = style_sel("doors", 0, 30, 90, 100)
+  local  indoor_prob = style_sel("doors", 0, 20, 40,  80)
+  local outdoor_prob = style_sel("doors", 0, 50, 92, 100)
 
   local woody = rand.odds(25)
 
@@ -683,8 +683,20 @@ function Room_reckon_doors()
     end
 
 
---!!!!!!1 DISABLED NORMAL DOORS (etc) FOR NOW
-do return end
+    -- special archways for caves
+    local R1 = S.room
+    local R2 = N.room
+
+    if R2.kind == "cave" and not R2.is_outdoor then
+      R1, R2 = R2, R1
+    end
+
+    if R1.kind == "cave" and not R1.is_outdoor then
+      if R2.kind != "building" then
+        B.fab_name = sel(woody, "Arch_woody", "Arch_viney")
+        return
+      end
+    end
 
 
     -- apply the random check
@@ -707,21 +719,7 @@ do return end
     end
 
 
-    -- special archways for caves
-    local R1 = S.room
-    local R2 = N.room
-
-    if R2.kind == "cave" and not R2.is_outdoor then
-      R1, R2 = R2, R1
-    end
-
-    if R1.kind == "cave" and not R1.is_outdoor then
-      if R2.kind != "building" then
-        B.fab_name = sel(woody, "Arch_woody", "Arch_viney")
-        return
-      end
-    end
-
+--[[
     -- support arches which have a step in them
     if (S.room.is_outdoor != N.room.is_outdoor) or rand.odds(50) then
       if THEME.archy_arches then return end
@@ -736,6 +734,7 @@ do return end
         C.fresh_floor = true
       end
     end
+--]]
   end
 
 

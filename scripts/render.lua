@@ -483,19 +483,23 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   end
 
 
-  local function straddle_arch()
+  local function straddle_door()
     local z = A.floor_h
 
     local inner_mat, outer_mat = calc_straddle_mat(A, NA)
 
-
+    local def
     local skin1 = { wall=inner_mat, outer=outer_mat }
 
 
     -- FIXME : find it properly
-    local fab_name = "Arch_plain"
+    local fab_name
 
-    local def
+    if info.kind == "arch" then
+      fab_name = "Arch_plain"
+    else
+      fab_name = "Door_manual_big"
+    end
 
 
     if geom.is_corner(dir) then
@@ -705,8 +709,8 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   elseif info.kind == "fence" then
     straddle_fence()
 
-  elseif info.kind == "arch" then
-    straddle_arch(S, dir)
+  elseif info.kind == "arch" or info.kind == "door" then
+    straddle_door(S, dir)
 
   elseif info.kind == "lock_door" then
     straddle_locked_door()
