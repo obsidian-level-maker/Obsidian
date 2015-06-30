@@ -570,7 +570,7 @@ function Room_reckon_doors()
 
   local DEFAULT_PROBS = {}
 
-  local function door_chance(R1, R2)
+  local function door_chance(R1, R2)  -- NOTE : NOT USED ATM
     local door_probs = THEME.door_probs or
                        GAME.door_probs or
                        DEFAULT_PROBS
@@ -652,6 +652,15 @@ function Room_reckon_doors()
       C.S2.mark_secret = true
       return
     end
+
+
+    -- same room?
+    if C.A1.room == C.A2.room then
+      B.kind  = "nothing"
+      B2.kind = "nothing"
+      return
+    end
+
 
     -- don't need anything between two outdoor rooms
     -- [ the style check prevents silly "free standing" arches ]
