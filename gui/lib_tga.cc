@@ -30,6 +30,21 @@
 #include "lib_file.h"
 
 
+tga_image_c::tga_image_c(int W, int H) :
+	width(W), height(H),
+	opacity(OPAC_UNKNOWN)
+{
+	pixels = new rgb_color_t[W * H];
+}
+
+
+tga_image_c::~tga_image_c()
+{
+	delete[] pixels;
+	pixels = NULL;
+}
+
+
 typedef struct
 {
 	u8_t	id_length, colormap_type, image_type;
@@ -41,21 +56,19 @@ typedef struct
 } targa_header_t;
 
 
-static bool LoadTGA (image_t * img, const char *name, imagetype_e type)
+tga_image_c * TGA_LoadImage (const char *path)
 {
 // load the file
 
-	byte  * buffer;
-	byte  * buf_p;
-	byte  * buf_end;
+	int length;
 
-	int length = FS_LoadFile (name, (void **)&buffer);
+	byte * buffer = FileLoad(path, &length);
 
 	if (! buffer)
-		return false;
+		return NULL;
 
-	buf_p   = buffer;
-	buf_end = buffer + length;
+	byte * buf_p   = buffer;
+///	byte * buf_end = buffer + length;
 
 
 // decode the TGA header
@@ -66,38 +79,46 @@ static bool LoadTGA (image_t * img, const char *name, imagetype_e type)
 	targa_header.colormap_type = *buf_p++;
 	targa_header.image_type = *buf_p++;
 	
-	targa_header.colormap_index = LittleShort ( *((short *)buf_p) );
-	buf_p+=2;
-	targa_header.colormap_length = LittleShort ( *((short *)buf_p) );
-	buf_p+=2;
+	targa_header.colormap_index = (buf_p[0]) | (buf_p[1] << 8);
+	buf_p += 2;
+	targa_header.colormap_length = (buf_p[0]) | (buf_p[1] << 8);
+	buf_p += 2;
 	targa_header.colormap_size = *buf_p++;
-	targa_header.x_origin = LittleShort ( *((short *)buf_p) );
-	buf_p+=2;
-	targa_header.y_origin = LittleShort ( *((short *)buf_p) );
-	buf_p+=2;
-	targa_header.width = LittleShort ( *((short *)buf_p) );
-	buf_p+=2;
-	targa_header.height = LittleShort ( *((short *)buf_p) );
-	buf_p+=2;
+	targa_header.x_origin = (buf_p[0]) | (buf_p[1] << 8);
+	buf_p += 2;
+	targa_header.y_origin = (buf_p[0]) | (buf_p[1] << 8);
+	buf_p += 2;
+	targa_header.width = (buf_p[0]) | (buf_p[1] << 8);
+	buf_p += 2;
+	targa_header.height = (buf_p[0]) | (buf_p[1] << 8);
+	buf_p += 2;
 	targa_header.pixel_size = *buf_p++;
 	targa_header.attributes = *buf_p++;
 
 	if (targa_header.image_type != 2 &&
 		targa_header.image_type != 10) 
-		Sys_Error ("Bad tga file: Only type 2 and 10 images supported\n");
+	{
+		Main_FatalError("Bad tga file: Only type 2 and 10 images supported\n");
+	}
 
 	if (targa_header.colormap_type !=0 ||
 	    (targa_header.pixel_size != 24 && targa_header.pixel_size != 32))
-		Sys_Error ("Bad tga file: only 24 or 32 bit images supported (no colormaps)\n");
+	{
+		Main_FatalError("Bad tga file: only 24 or 32 bit images supported (no colormaps)\n");
+	}
 
 
 	int width  = targa_header.width;
 	int height = targa_header.height;
 
+	if (width == 0 || height == 0)
+		Main_FatalError("Bad tga file: width or height is zero\n");
+
+
+	tga_image_c * img = new tga_image_c(width, height);
+
 	img->width  = width;
 	img->height = height;
-
-	img->rgb[0] = new rgb32_t [img->width * img->height];
 
 	bool is_masked  = false;  // opacity testing
 	bool is_complex = false;  // 
@@ -105,8 +126,8 @@ static bool LoadTGA (image_t * img, const char *name, imagetype_e type)
 
 // decode the pixel stream
 
-	rgb32_t	*dest = img->rgb[0];
-	rgb32_t	*p;
+	rgb_color_t	*dest = img->pixels;
+	rgb_color_t	*p;
 
 	if (targa_header.id_length != 0)
 		buf_p += targa_header.id_length;  // skip TARGA image comment
@@ -128,7 +149,7 @@ static bool LoadTGA (image_t * img, const char *name, imagetype_e type)
 							green = *buf_p++;
 							red = *buf_p++;
 
-							*p++ = MAKE_RGB(red, green, blue);
+							*p++ = MAKE_RGBA(red, green, blue, 255);
 							break;
 
 					case 32:
@@ -220,7 +241,7 @@ static bool LoadTGA (image_t * img, const char *name, imagetype_e type)
 									green = *buf_p++;
 									red = *buf_p++;
 
-									*p++ = MAKE_RGB(red, green, blue);
+									*p++ = MAKE_RGBA(red, green, blue, 255);
 									break;
 
 							case 32:
@@ -260,12 +281,12 @@ static bool LoadTGA (image_t * img, const char *name, imagetype_e type)
 		}
 	}
 
-	FS_FreeFile (buffer);
+	FileFree(buffer);
 
 	img->opacity =	is_complex ? OPAC_Complex :
 					is_masked  ? OPAC_Masked  : OPAC_Solid;
 
-	return true;
+	return img;
 }
 
 
