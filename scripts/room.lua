@@ -662,6 +662,16 @@ function Room_reckon_doors()
     end
 
 
+    -- stairwells do their own thing
+    if C.A1.room.kind == "stairwell" or
+       C.A2.room.kind == "stairwell"
+    then
+      B.kind  = "nothing"
+      B2.kind = "nothing"
+      return
+    end
+
+
     -- don't need anything between two outdoor rooms
     -- [ the style check prevents silly "free standing" arches ]
     if (S.room.is_outdoor and N.room.is_outdoor) and
