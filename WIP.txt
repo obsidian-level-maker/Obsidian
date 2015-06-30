@@ -3,18 +3,44 @@ WORK IN PROGRESS
 ================
 
 
-Weapon count: not just based on # of zone, more about 'game_along'
+Nice items : generally less (esp. armor -- one per zone)
 
 
-IDEA: 'level' field for NICE_ITEMS -- especially invulnerability which
-      seems to appear quite late in TNT and Plutonia
+Weapon choice :
+
+!!!  when game_along >= 0.3, then ALWAYS have at least one "big" weapon
+     and have before the last zone (or if one zone, before last quest)
+
+     and when game_along >= 0.5, GENERALLY have at least two big weapons,
+     and OFTEN have all three.
+
+     ALWAYS have at least one "small" weapon
+
+
+Weapon count: base it both on size of level and 'game_along' value
+              (e.g. on regular, have 2 at start and 4/5 by end)
+
+
+
++ 'level' field for NICE_ITEMS -- especially invulnerability which
+   seems to appear quite late in TNT and Plutonia
+   (also megasphere, at least for secrets, kinda too much on early levels)
+
 
 
 BUG: door height on hallways  [ plus want no hall_shape there ]
 
 
+
++  weapon palettes : not varied enough
+
+
+
 Map borders
 -----------
+
+++  merge cells into largish groups (esp. based on 'dist')
+    [ sound familiar?  V6 cave 'AREA' system! ]
 
 +  fix sky height next to certain walls  (very tall, looks bad)
 
@@ -110,7 +136,6 @@ SORT OUT : where 'facade_mat' is stored, how is accessed
 -  texturing on door prefabs (for HELL, URBAN themes)
 
 
-
 lowering bars between outdoor rooms
 
 implement "arch" junction / prefab
@@ -120,7 +145,6 @@ area/room with key/exit/etc are good for windows
 if area floor is >= all neighbors, sometimes mark as "want rail" (instead of fence)
 
 Courtyard floor should be > Landscape floor.
-
 
 
 Q/ use CC-BY-3 or 4 for all prefabs / images / prebuilt maps

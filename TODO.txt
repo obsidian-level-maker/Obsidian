@@ -67,6 +67,16 @@ IDEA : an adjustment (of health) for "environment" of a battle
        (esp. indoor caves and dark outdoors, more likely to get hurt by mons)
 
 
+Monster flag IDEAS
+------------------
+
+-  sniper mode (mainly in a cage, or far from entrance yet visible?)
+
+-  middle of large open space  (never ambushy)
+
+-  deafness chance (rare, few, some, more, heaps)
+
+
 Fake fences:
 -  a wall built out of floor brush and sky brush (delta_z for no gap)
 
