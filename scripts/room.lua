@@ -631,6 +631,9 @@ function Room_reckon_doors()
 
       C.is_door = true
 
+      S.has_door = true
+      N.has_door = true
+
       -- FIXME: smells like a hack!!
       if B.lock.switch and string.sub(B.lock.switch, 1, 4) == "bar_" then
         B.kind = "bars"
@@ -647,6 +650,9 @@ function Room_reckon_doors()
 
       B.kind = "secret_door"
       C.is_door = true
+
+      S.has_door = true
+      N.has_door = true
 
       -- mark the first seed so it can have the secret special
       C.S2.mark_secret = true
@@ -707,9 +713,14 @@ function Room_reckon_doors()
       prob = outdoor_prob
     end
 
+prob = 100
+
     if rand.odds(prob) then
       B.kind = "door"
       C.is_door = true
+
+      S.has_door = true
+      N.has_door = true
 
       if rand.odds(30) then
         C.fresh_floor = true
@@ -2374,9 +2385,7 @@ function Room_floor_heights()
 
     local dir = next_dirs[1] or exit_dirs[1]
 
-    -- FIXME : check for "door" (entry or exit)
-
-    if not S.diagonal and not saw_fixed then
+    if not S.diagonal and not saw_fixed and not S.has_door then
       S.hall_piece = categorize_hall_shape(S, enter_dir, dir, R.hallway.z_dir, R.hallway.z_size)
 
       floor_h = floor_h + S.hall_piece.delta_h * S.hall_piece.z_dir
