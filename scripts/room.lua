@@ -2427,10 +2427,15 @@ function Room_floor_heights()
     local parent  = sel(which == 1, R.hallway.R1, R.hallway.R2)
     local touches = sel(which == 1, R.hallway.touch_R1, R.hallway.touch_R2)
 
-    -- FIXME : check for a door  [ via junction ]
-
     -- different quest? (hence locked door)
     if R.quest != parent.quest then return end
+
+    -- connects via a door?
+    each C in R.ext_conns do
+      if C.A1.room == parent or C.A2.room == parent then
+        if C.is_door then return end
+      end
+    end
 
     -- enough joinage?
     if touches < 3 then return end
