@@ -152,7 +152,7 @@ function ROOM_CLASS.kill_it(R)
       S.room = nil
 
       each dir in geom.ALL_DIRS do
-        if S.border[dir] then S.border[dir].kind = "nothing" end
+        if S.border[dir] then S.border[dir].kind = nil end
       end
     end
 
