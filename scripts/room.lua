@@ -2431,6 +2431,9 @@ function Room_floor_heights()
     -- already blended?
     if R.hallway.parent then return end
 
+    -- check height difference
+    if R.hallway.max_h - R.hallway.min_h < 32 then return end
+
     -- random chance
     if not rand.odds(sel(which == 1, 75, 25)) then return end
 
