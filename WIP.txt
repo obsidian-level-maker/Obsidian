@@ -3,6 +3,7 @@ WORK IN PROGRESS
 ================
 
 
+
 Nice items : generally less (esp. armor -- one per zone)
 
 
@@ -25,33 +26,6 @@ Weapon count: base it both on size of level and 'game_along' value
 + 'level' field for NICE_ITEMS -- especially invulnerability which
    seems to appear quite late in TNT and Plutonia
    (also megasphere, at least for secrets, kinda too much on early levels)
-
-
-
-BUG: door height on hallways  [ plus want no hall_shape there ]
-
-
-
-+  weapon palettes : not varied enough
-
-
-
-Map borders
------------
-
-++  merge cells into largish groups (esp. based on 'dist')
-    [ sound familiar?  V6 cave 'AREA' system! ]
-
-+  fix sky height next to certain walls  (very tall, looks bad)
-
--  in "water" kind, fix using liquid for some solid cells
-
-
-
-Liquid pools
-------------
-
-+  fences instead of "wall" (c.f. Room_border_up)
 
 
 
@@ -91,24 +65,6 @@ Monster defs : min weapon level needed [esp. for Vile/Bosses ]
 (a) Support min_weapon and weap_needed for GUARD monsters
 
 
-Items:
--  rework distribution logic
-   ( get_previous_locs is broken atm)
-
-
-
-Secrets....
-!!  make the secret door (or fence, etc)
-
-
-
-Traps....
--  second pass : traps ON WAY BACK to the ...
-
-+  make more traps over a episode/game
-
-
-
 Porches :
 +  one per room
 
@@ -134,29 +90,5 @@ SORT OUT : where 'facade_mat' is stored, how is accessed
   - for void, use area 'kind'
 
 -  texturing on door prefabs (for HELL, URBAN themes)
-
-
-lowering bars between outdoor rooms
-
-implement "arch" junction / prefab
-
-area/room with key/exit/etc are good for windows
-
-if area floor is >= all neighbors, sometimes mark as "want rail" (instead of fence)
-
-Courtyard floor should be > Landscape floor.
-
-
-Q/ use CC-BY-3 or 4 for all prefabs / images / prebuilt maps
-
-
-IDEA: have a single thing number for "coop player"
-      [ i.e. treat player entities more abstractly ]
-
-
--  sometimes make a floor side use same material as top (not room wall)
-
-
-REQUEST:  mix it up option for the quiet start setting.
 
 

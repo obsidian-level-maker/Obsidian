@@ -63,8 +63,13 @@ ______________________________________________________________________
 
 -  the locked switch closet
 
+REQUEST:  mix it up option for the quiet start setting.
+
 IDEA : an adjustment (of health) for "environment" of a battle
        (esp. indoor caves and dark outdoors, more likely to get hurt by mons)
+
+IDEA: have a single thing number for "coop player"
+      [ i.e. treat player entities more abstractly ]
 
 
 Monster flag IDEAS
@@ -75,6 +80,52 @@ Monster flag IDEAS
 -  middle of large open space  (never ambushy)
 
 -  deafness chance (rare, few, some, more, heaps)
+
+
+Various:
+-  lowering bars between outdoor rooms
+
+-  sometimes make a floor side use same material as top (not room wall)
+
+-  area/room with key/exit/etc are good for windows
+
+-  if area floor is >= all neighbors, sometimes mark as "want rail" (instead of fence)
+
+-  Courtyard floor should be > Landscape floor.
+
++  weapon palettes : not varied enough
+
+
+Items:
+-  rework distribution logic
+   ( get_previous_locs is broken atm)
+
+
+Secrets....
+!!  make the secret door (or fence, etc)
+
+
+Traps....
+-  second pass : traps ON WAY BACK to the ...
+
++  make more traps over a episode/game
+
+
+Map borders
+-----------
+
+++  merge cells into largish groups (esp. based on 'dist')
+    [ sound familiar?  V6 cave 'AREA' system! ]
+
++  fix sky height next to certain walls  (very tall, looks bad)
+
+-  in "water" kind, fix using liquid for some solid cells
+
+
+Liquid pools
+------------
+
++  fences instead of "wall" (c.f. Room_border_up)
 
 
 Fake fences:
