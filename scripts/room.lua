@@ -713,8 +713,6 @@ function Room_reckon_doors()
       prob = outdoor_prob
     end
 
-prob = 100
-
     if rand.odds(prob) then
       B.kind = "door"
       C.is_door = true
@@ -2413,6 +2411,18 @@ function Room_floor_heights()
   end
 
 
+  local function kill_hallway_arch(conn)
+    local S1 = conn.S1
+    local S2 = conn.S2
+
+    local B1 = S1.border[conn.dir]
+    local B2 = S2.border[10 - conn.dir]
+
+    if B1.kind == "arch" or B1.kind == "door" then B1.kind = "nothing" end
+    if B2.kind == "arch" or B2.kind == "door" then B2.kind = "nothing" end
+  end
+
+
   local function try_blend_hallway(R, which)
     -- which is either 1 or 2 (entry or exit)
 
@@ -2430,10 +2440,12 @@ function Room_floor_heights()
     -- different quest? (hence locked door)
     if R.quest != parent.quest then return end
 
-    -- connects via a door?
+    -- find the connection
+    local conn
+
     each C in R.ext_conns do
       if C.A1.room == parent or C.A2.room == parent then
-        if C.is_door then return end
+        conn = C
       end
     end
 
@@ -2443,6 +2455,8 @@ function Room_floor_heights()
 
     -- OK --
 
+    assert(conn)
+
     R.hallway.parent = parent
 
     -- copy some parent properties, especially outdoors-ness
@@ -2451,6 +2465,8 @@ function Room_floor_heights()
     each A in R.areas do
       A.is_outdoor = R.is_outdoor
     end
+
+    kill_hallway_arch(conn)
   end
 
 
