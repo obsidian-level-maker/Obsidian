@@ -486,6 +486,8 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   local function straddle_door()
     local z = A.floor_h
 
+    if info.conn then z = assert(info.conn.door_h) end
+
     local inner_mat, outer_mat = calc_straddle_mat(A, NA)
 
     local def
@@ -532,6 +534,8 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
   local function straddle_locked_door()
     local z = A.floor_h
+
+    if info.conn then z = assert(info.conn.door_h) end
 
     assert(LOCK)
 

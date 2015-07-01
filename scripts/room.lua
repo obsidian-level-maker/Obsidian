@@ -2656,6 +2656,10 @@ function Room_floor_heights()
 
     R.entry_h = entry_h
 
+    if via_conn then
+      via_conn.door_h = entry_h
+    end
+
     if R2 then
       R2.entry_h = entry_h
     end
