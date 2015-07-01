@@ -1129,7 +1129,7 @@ function Layout_liquid_stuff()
 
     -- near a map border ?
 
-    if N.is_boundary then
+    if N.is_boundary and not A.face_rooms[1].is_outdoor then
       -- mountains will prevent travel
       if A.zone.border_info.kind != "water" then
         junc.kind = "nothing"
