@@ -187,7 +187,7 @@ ZDOOM_MARINE.FACTORS =
 {
   scarce = 0.4
   plenty = 1.0
-  heaps  = 5.0
+  heaps  = 2.5
 }
 
 
