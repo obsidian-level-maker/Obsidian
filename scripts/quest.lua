@@ -1882,65 +1882,20 @@ function Quest_nice_items()
   end
 
 
-  local function visit_unused_leafs()
-    -- collect all the unused storage leafs
-    -- (there is no need to shuffle them here)
-    local rooms = {}
-
-    each R in LEVEL.rooms do
-      if R:is_unused_leaf() then
-        table.insert(rooms, R)
-      end
-    end
-
-    -- choose items for each of these rooms
-    normal_items = normal_palette()
-
-    if OB_CONFIG.strength == "crazy" then
-      normal_items = crazy_palette()
-       start_items = crazy_palette()
-    end
-
-    each R in rooms do
-      local tab
-
-        tab = normal_items
-
-      if table.empty(tab) then continue end
-
-      local item = rand.key_by_probs(tab)
-
-      table.insert(R.items, item)
-      mark_item_seen(item)
-
-      gui.debugf("Nice item '%s' --> %s\n", item, R:tostr())
-    end
-  end
-
-
-  local function calc_extra_quota()
-    local quota = (SEED_W + SEED_H) / rand.pick({ 10, 20, 35, 55, 80 })
-
-    if OB_CONFIG.powers == "none" then return 0 end
-    if OB_CONFIG.powers == "less" then return 0 end
-
-    if OB_CONFIG.powers == "more"  then quota = 1 + quota * 2 end
-    if OB_CONFIG.powers == "mixed" then quota = quota * rand.pick({ 0.5, 1, 2 }) end
-
-    quota = int(quota + 0.7)
-
-    gui.debugf("Extra bonus quota: %d\n", quota)
-
-    return quota
-  end
-
-
   local function eval_other_room(R)
-    if R.kind == "hallway"   then return -1 end
-    if R.kind == "stairwell" then return -1 end
+    -- FIXME !!!!
 
     if R.is_secret  then return -1 end
     if R.is_start   then return -1 end
+    if R.is_exit    then return -1 end
+
+    if R:is_unused_leaf() then
+      if #R.items > 0 then return -1 end
+      return 999
+    end
+
+    if R.kind == "hallway"   then return -1 end
+    if R.kind == "stairwell" then return -1 end
 
     -- leafs are already handled
     if R:total_conns("ignore_secrets") < 2 then return -1 end
@@ -1959,54 +1914,39 @@ function Quest_nice_items()
   end
 
 
-  local function choose_best_other_room()
-    local best_R
-    local best_score
+  local function collect_other_rooms()
+    local list = {}
 
     each R in LEVEL.rooms do
       local score = eval_other_room(R)
 
-      if score > (best_score or 0) then
-        best_R = R
-        best_score = score
+      if score > 0 then
+        R.nice_item_score = score
+
+        table.insert(list, R)
       end
     end
 
-    return best_R  -- may be NIL
+    -- sort them (best first)
+    table.sort(list, function(A, B) return A.nice_item_score > B.nice_item_score end)
+
+    return list
   end
 
 
-  local function visit_other_rooms__OLD()
-    -- add extra items in a few "ordinary" rooms
-    local quota = calc_extra_quota()
-
+  local function visit_other_rooms(locs, normal_items)
     for i = 1, quota do
-      local R = choose_best_other_room()
-      if not R then break; end
+      if table.empty(locs) then break; end
 
-      if table.empty(normal_items) then continue end
+      local R = table.remove(locs)
 
       local item = rand.key_by_probs(normal_items)
 
       table.insert(R.items, item)
       mark_item_seen(item)
 
-      gui.debugf("Extra item '%s' --> %s\n", item, R:tostr())
+      gui.debugf("Nice item '%s' --> %s\n", item, R:tostr())
     end
-  end
-
-
-  local function collect_other_rooms()
-    local list = {}
-
-    -- FIXME
-
-    return list
-  end
-
-
-  local function visit_other_room(R, normal_items)
-    -- FIXME
   end
 
 
@@ -2054,13 +1994,8 @@ stderrf("Item quota : %1.2f\n", quota)
 
   local locs = collect_other_rooms()
 
-  for i = 1, quota do
-    if table.empty(locs) then break; end
+  visit_other_rooms(locs, normal_items)
 
-    local R = table.remove(locs)
-
-    visit_other_room(R, normal_items)
-  end
 
   -- mark all remaining unused leafs as STORAGE rooms
   find_storage_rooms()
