@@ -425,10 +425,8 @@ end
 ------------------------------------------------------------------------
 
 
-function Item_simulate_battles()
+function Item_simulate_battle(R)
   
-  local R  -- current room
-
 
   local function make_empty_stats()
     local stats = {}
@@ -579,8 +577,7 @@ function Item_simulate_battles()
   end
 
 
-  local function sim_battle(room)
-    R = room
+  ---| Item_simulate_battle |---
 
     assert(R.monster_list)
 
@@ -591,14 +588,6 @@ function Item_simulate_battles()
         battle_for_class(CL, hmodel)
       end
     end
-  end
-
-
-  ---| Item_simulate_battles |---
-
-  each room in LEVEL.rooms do
-    sim_battle(room)
-  end
 end
 
 
@@ -1017,8 +1006,6 @@ end
 function Item_add_pickups()
 
   gui.printf("\n--==| Item Pickups |==--\n\n")
-
-  Item_simulate_battles()
 
   Item_distribute_stats()
 

@@ -2042,6 +2042,7 @@ function Monster_make_battles()
     Player_give_room_stuff(R)
     Monsters_collect_big_spots(R)
     Monsters_in_room(R)
+    Item_simulate_battle(R)
   end
 
   Monsters_show_stats()
