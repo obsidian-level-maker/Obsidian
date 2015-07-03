@@ -4,28 +4,17 @@ WORK IN PROGRESS
 
 
 
-Nice items : generally less (esp. armor -- one per zone)
-
-
-Weapon choice :
-
-!!!  when game_along >= 0.3, then ALWAYS have at least one "big" weapon
-     and have before the last zone (or if one zone, before last quest)
-
-     and when game_along >= 0.5, GENERALLY have at least two big weapons,
-     and OFTEN have all three.
-
-     ALWAYS have at least one "small" weapon
-
-
-Weapon count: base it both on size of level and 'game_along' value
-              (e.g. on regular, have 2 at start and 4/5 by end)
-
+>>>  finish new logic for nice items
+     [ allow "other" rooms to sometimes beat a "leaf" room, but rarely ]
 
 
 + 'level' field for NICE_ITEMS -- especially invulnerability which
    seems to appear quite late in TNT and Plutonia
    (also megasphere, at least for secrets, kinda too much on early levels)
+
+
+Weapon count: base it both on size of level and 'game_along' value
+              (e.g. on regular, have 2 at start and 4/5 by end)
 
 
 

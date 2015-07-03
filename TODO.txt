@@ -53,6 +53,8 @@ ______________________________________________________________________
   V7 STUFF
 ----------------------------------------------
 
++  rename OB_CONFIG.powers --> OB_CONFIG.items
+
 +  better facing angles for players
    (switches too, but less important)
 
@@ -94,11 +96,6 @@ Various:
 -  Courtyard floor should be > Landscape floor.
 
 +  weapon palettes : not varied enough
-
-
-Items:
--  rework distribution logic
-   ( get_previous_locs is broken atm)
 
 
 Secrets....
@@ -167,6 +164,16 @@ Map Borders:
 Doors:
 -  support wide doors [normal / locked]
 -  make wide prefab with a switch in it [normal door]
+
+
+Weapon choice :
++  when game_along >= 0.3, then ALWAYS have at least one "big" weapon
+   and have before the last zone (or if one zone, before last quest)
+
+   and when game_along >= 0.5, GENERALLY have at least two big weapons,
+   and OFTEN have all three.
+
+   ALWAYS have at least one "small" weapon
 
 
 CTF and DM
