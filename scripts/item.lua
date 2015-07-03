@@ -626,34 +626,39 @@ function Item_distribute_stats()
 
   -- health mainly stays in same room (a reward for killing the monsters).
   -- ammo mainly goes back, to prepare player for the fight.
-  local health_factor = 0.25
-  local ammo_factor   = 0.65
+  local HEALTH_FACTOR  = 0.20
+  local AMMO_FACTOR    = 0.65
+  local STORAGE_FACTOR = 0.30
 
-  local function get_previous_locs(room)
+
+  local function get_other_locs(R)
     local list = {}
 
-    -- find previous rooms
-    local R = room
+    -- visit previous rooms
+    local N = R
+    local ratio = 1.0
 
-    while R.entry_conn do
-      R = R.entry_conn:neighbor(R)
+    while N.entry_conn do
+      N = N.entry_conn:neighbor(N)
 
-      if R.kind != "hallway" then
-        local ratio = rand.irange(3,7) / (2.0 ^ #list)
-        table.insert(list, { room=R, ratio=ratio })
-      end
+      -- do not cross zones
+      if N.zone != R.zone then break; end
+
+      if N.kind == "hallway"   then continue end
+      if N.kind == "stairwell" then continue end
+
+      table.insert(list, { room=R, ratio=ratio })
+
+      ratio = ratio * 0.5
     end
 
     -- add storage rooms
-    -- FIXME !!!!
---[[
-    if room.zone.storage_rooms then
-      each R in room.zone.storage_rooms do
-        local ratio = rand.irange(3,7) / 2.0
-        table.insert(list, { room=R, ratio=ratio })
+    if R.zone.storage_rooms then
+      each N in R.zone.storage_rooms do
+        ratio = rand.pick({ 0.25, 0.5, 0.75 })
+        table.insert(list, { room=R, ratio=ratio, is_storage=true })
       end
     end
---]]
 
     return list
   end
@@ -663,28 +668,37 @@ function Item_distribute_stats()
     each CL,R_stats in R.item_stats do
       local N_stats = N.item_stats[CL]
 
-      each stat,count in R_stats do
-        if count <= 0 then continue end
+      each stat,qty in R_stats do
+        if qty <= 0 then continue end
 
-        local value
+        local value = qty * ratio
 
-        if stat == "health" then
-          value = count * health_factor * ratio
+        if N.is_storage then
+          value = value * STORAGE_FACTOR
+        elseif stat == "health" then
+          value = value * HEALTH_FACTOR
         else 
-          value = count * ammo_factor * ratio
+          value = value * AMMO_FACTOR
         end
 
         N_stats[stat] = (N_stats[stat] or 0) + value
         R_stats[stat] =  R_stats[stat]       - value
 
-        gui.debugf("Distributing %s:%1.1f [%s]  %s --> %s\n",
-                   stat, value,  CL, R:tostr(), N:tostr())
+---     gui.debugf("Distributing %s:%1.1f [%s]  %s --> %s\n",
+---                stat, value,  CL, R:tostr(), N:tostr())
       end
     end
   end
 
 
-  local function distribute_to_list(R, list)
+  local function distribute_from_room(R)
+    -- skip storage rooms
+    if R.is_storage then return end
+
+    -- no stats?
+    if not R.item_stats then return end
+
+    local list  = get_other_locs(R)  -- may be empty
     local total = 0
 
     each loc in list do
@@ -697,24 +711,25 @@ function Item_distribute_stats()
   end
 
 
+  local function dump_results()
+    each R in LEVEL.rooms do
+      if R.item_stats then
+        gui.debugf("final result @ %s = \n%s\n", R:tostr(),
+                   table.tostr(R.item_stats, 2))
+      end
+    end
+  end
+
+
   ---| Item_distribute_stats |---
 
-  -- Note: we don't distribute to or from hallways
+  -- Note: we don't distribute to hallways
 
   each R in LEVEL.rooms do
-    if R.is_storage then continue end
-
-    if R.item_stats then
-      distribute_to_list(R, get_previous_locs(R))
-    end
+    distribute_from_room(R)
   end
 
-  each R in LEVEL.rooms do
-    if R.item_stats then
-      gui.debugf("final result @ %s = \n%s\n", R:tostr(),
-                 table.tostr(R.item_stats, 2))
-    end
-  end
+---  dump_results
 end
 
 
