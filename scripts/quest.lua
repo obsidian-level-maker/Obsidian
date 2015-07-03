@@ -1864,15 +1864,11 @@ function Quest_nice_items()
       table.insert(rooms, 1, LEVEL.alt_start)
     end
 
-    -- apply Powerups setting
+    -- apply Items setting
     local quota = 1
 
-    -- FIXME : this treats Powerups setting as affecting all nice items [ rename setting ?? ]
-    if rand.odds(style_sel("powers", 100, 60, 25, 0)) then
-      return
-    elseif rand.odds(style_sel("powers", 0, 1, 10, 50)) then
-      quota = 2
-    end
+    if OB_CONFIG.powers == "less" and rand.odds(50) then return end
+    if OB_CONFIG.powers == "more" and rand.odds(50) then quota = 2 end
 
     for loop = 1, quota do
       -- add the same item into each start room
@@ -2002,7 +1998,26 @@ function Quest_nice_items()
   end
 
 
+  local function find_storage_rooms()
+    each R in LEVEL.rooms do
+      if R.kind == "hallway" then continue end
+
+      if R:is_unused_leaf() or
+         (R.is_secret and #R.items == 0)
+      then
+        table.insert(R.zone.storage_rooms, R)
+        R.is_storage = true
+      end
+    end
+  end
+
+
   ---| Quest_nice_items |---
+
+  if OB_CONFIG.powers == "none" then
+    find_storage_rooms()
+    return
+  end
 
   -- secret rooms ALWAYS get a nice item
   visit_secret_rooms()
@@ -2010,12 +2025,16 @@ function Quest_nice_items()
   -- start rooms usually get one (occasionally two)
   visit_start_rooms()
 
+  -- everything else uses a quota...
+
+
   -- FIXME QUOTA SYSTEM
 
   visit_unused_leafs()
   visit_other_rooms()
 
-  -- FIXME mark all other leafs as STORAGE rooms
+  -- mark all remaining unused leafs as STORAGE rooms
+  find_storage_rooms()
 end
 
 
