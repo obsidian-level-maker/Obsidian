@@ -981,6 +981,8 @@ function Item_pickups_for_class(CL)
       return
     end
 
+    -- TODO: extra health/ammo in every secret room
+
     qty = qty - excess[stat]
     assert(qty > 0)
 

@@ -77,6 +77,8 @@
 
     map_group : number   -- used when connecting zones
 
+    storage_rooms : list(ROOM)   -- places to put some health/ammo
+
     -- FIXME : more stuff  e.g. building_mat, cave_mat, monster palette !!!
 --]]
 
@@ -147,6 +149,7 @@ function Zone_new()
     rooms = {}
     num_areas = 0
     svolume = 0
+    storage_rooms = {}
   }
 
   table.insert(LEVEL.zones, ZONE)
@@ -1704,7 +1707,10 @@ function Quest_nice_items()
   local  start_items
   local normal_items
 
+  local num_secret_rooms
 
+
+  -- FIXME : WTF?  [ if all probs get multiplied by same value, no effect! ]
   local function adjust_powerup_probs(pal, factor)
     -- apply the "Powerups" setting from the GUI
 
@@ -1811,6 +1817,8 @@ function Quest_nice_items()
 
 
   local function visit_secret_rooms()
+    LEVEL.secret_items = secret_palette()
+ 
     if table.empty(LEVEL.secret_items) then
       return
     end
@@ -1825,6 +1833,8 @@ function Quest_nice_items()
       end
     end
 
+    num_secret_rooms = #rooms
+
     rand.shuffle(rooms)
 
     each R in rooms do
@@ -1833,9 +1843,47 @@ function Quest_nice_items()
       table.insert(R.items, item)
       mark_item_seen(item)
 
-      -- TODO: extra health/ammo in every secret room
-
       gui.debugf("Secret item '%s' --> %s\n", item, R:tostr())
+    end
+  end
+
+
+  local function visit_start_rooms()
+    local start_items = start_palette()
+
+    if table.empty(start_items) then
+      return
+    end
+
+    -- collect start rooms
+    local rooms = {}
+
+    table.insert(rooms, 1, LEVEL.start_room)
+
+    if LEVEL.alt_start then
+      table.insert(rooms, 1, LEVEL.alt_start)
+    end
+
+    -- apply Powerups setting
+    local quota = 1
+
+    -- FIXME : this treats Powerups setting as affecting all nice items [ rename setting ?? ]
+    if rand.odds(style_sel("powers", 100, 60, 25, 0)) then
+      return
+    elseif rand.odds(style_sel("powers", 0, 1, 10, 50)) then
+      quota = 2
+    end
+
+    for loop = 1, quota do
+      -- add the same item into each start room
+      local item = rand.key_by_probs(start_items)
+
+      each R in rooms do
+        table.insert(R.items, item)
+        mark_item_seen(item)
+
+        gui.debugf("Start item '%s' --> %s\n", item, R:tostr())
+      end
     end
   end
 
@@ -1851,18 +1899,8 @@ function Quest_nice_items()
       end
     end
 
-    -- add the start room too, sometimes twice
-    table.insert(rooms, 1, LEVEL.start_room)
-
-    if LEVEL.alt_start then
-      table.insert(rooms, 1, LEVEL.alt_start)
-    elseif rand.odds(25) then
-      table.insert(rooms, 1, LEVEL.start_room)
-    end
-
     -- choose items for each of these rooms
     normal_items = normal_palette()
-     start_items =  start_palette()
 
     if OB_CONFIG.strength == "crazy" then
       normal_items = crazy_palette()
@@ -1872,11 +1910,7 @@ function Quest_nice_items()
     each R in rooms do
       local tab
 
-      if R.is_start then
-        tab = start_items
-      else
         tab = normal_items
-      end
 
       if table.empty(tab) then continue end
 
@@ -1970,11 +2004,18 @@ function Quest_nice_items()
 
   ---| Quest_nice_items |---
 
-  LEVEL.secret_items = secret_palette()
- 
+  -- secret rooms ALWAYS get a nice item
   visit_secret_rooms()
+
+  -- start rooms usually get one (occasionally two)
+  visit_start_rooms()
+
+  -- FIXME QUOTA SYSTEM
+
   visit_unused_leafs()
   visit_other_rooms()
+
+  -- FIXME mark all other leafs as STORAGE rooms
 end
 
 
