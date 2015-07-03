@@ -1702,16 +1702,7 @@ function Quest_nice_items()
   -- and (rarely) in normal rooms.
   --
 
-  local mixed_mul = rand.pick({ 0.3, 1.0, 4.0 })
-
-  local  start_items
-  local normal_items
-
-  local num_secret_rooms
-
-
-  -- FIXME : WTF?  [ if all probs get multiplied by same value, no effect! ]
-  local function adjust_powerup_probs(pal, factor)
+  local function adjust_powerup_probs(pal, factor)  -- NOT USED ATM
     -- apply the "Powerups" setting from the GUI
 
     if not factor then factor = 5 end
@@ -1743,7 +1734,7 @@ function Quest_nice_items()
       end
     end
 
-    adjust_powerup_probs(pal)
+---##    adjust_powerup_probs(pal)
 
     return pal
   end
@@ -1758,7 +1749,7 @@ function Quest_nice_items()
       end
     end
 
-    adjust_powerup_probs(pal)
+---##    adjust_powerup_probs(pal)
 
     return pal
   end
@@ -1794,7 +1785,7 @@ function Quest_nice_items()
       pal[name] = info.crazy_prob or 50
     end
 
-    adjust_powerup_probs(pal)
+---##    adjust_powerup_probs(pal)
 
     return pal
   end
@@ -1833,11 +1824,18 @@ function Quest_nice_items()
       end
     end
 
-    num_secret_rooms = #rooms
-
     rand.shuffle(rooms)
 
-    each R in rooms do
+    -- do not give too many
+    local quota = 3
+    if OB_CONFIG.powers == "less" then quota = rand.sel(65, 1, 2) end
+    if OB_CONFIG.powers == "more" then quota = #rooms end
+
+    for i = 1, quota do
+      if table.empty(rooms) then break; end
+
+      local R = table.remove(rooms, 1)
+
       local item = rand.key_by_probs(LEVEL.secret_items)
 
       table.insert(R.items, item)
@@ -1978,7 +1976,7 @@ function Quest_nice_items()
   end
 
 
-  local function visit_other_rooms()
+  local function visit_other_rooms__OLD()
     -- add extra items in a few "ordinary" rooms
     local quota = calc_extra_quota()
 
@@ -1998,13 +1996,25 @@ function Quest_nice_items()
   end
 
 
+  local function collect_other_rooms()
+    local list = {}
+
+    -- FIXME
+
+    return list
+  end
+
+
+  local function visit_other_room(R, normal_items)
+    -- FIXME
+  end
+
+
   local function find_storage_rooms()
     each R in LEVEL.rooms do
       if R.kind == "hallway" then continue end
 
-      if R:is_unused_leaf() or
-         (R.is_secret and #R.items == 0)
-      then
+      if R:is_unused_leaf() and #R.items == 0 then
         table.insert(R.zone.storage_rooms, R)
         R.is_storage = true
       end
@@ -2019,7 +2029,6 @@ function Quest_nice_items()
     return
   end
 
-  -- secret rooms ALWAYS get a nice item
   visit_secret_rooms()
 
   -- start rooms usually get one (occasionally two)
@@ -2027,11 +2036,31 @@ function Quest_nice_items()
 
   -- everything else uses a quota...
 
+  local quota = (SEED_W + SEED_H) / rand.pick({ 15, 25, 45 })
 
-  -- FIXME QUOTA SYSTEM
+  if OB_CONFIG.powers == "less"  then quota = quota / 2.0 end
+  if OB_CONFIG.powers == "more"  then quota = quota * 2.0 end
+  if OB_CONFIG.powers == "mixed" then quota = quota * rand.pick({ 0.5, 1.0, 2.0 }) end
 
-  visit_unused_leafs()
-  visit_other_rooms()
+stderrf("Item quota : %1.2f\n", quota)
+
+  quota = rand.int(quota)
+
+  local normal_items = normal_palette()
+
+  if OB_CONFIG.strength == "crazy" then
+    normal_items = crazy_palette()
+  end
+
+  local locs = collect_other_rooms()
+
+  for i = 1, quota do
+    if table.empty(locs) then break; end
+
+    local R = table.remove(locs)
+
+    visit_other_room(R, normal_items)
+  end
 
   -- mark all remaining unused leafs as STORAGE rooms
   find_storage_rooms()
