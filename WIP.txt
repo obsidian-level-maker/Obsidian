@@ -4,10 +4,6 @@ WORK IN PROGRESS
 
 
 
->>>  finish new logic for nice items
-     [ allow "other" rooms to sometimes beat a "leaf" room, but rarely ]
-
-
 + 'level' field for NICE_ITEMS -- especially invulnerability which
    seems to appear quite late in TNT and Plutonia
    (also megasphere, at least for secrets, kinda too much on early levels)

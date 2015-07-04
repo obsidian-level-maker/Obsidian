@@ -1883,15 +1883,15 @@ function Quest_nice_items()
 
 
   local function eval_other_room(R)
-    -- FIXME !!!!
-
     if R.is_secret  then return -1 end
     if R.is_start   then return -1 end
     if R.is_exit    then return -1 end
 
+    -- unused leaf rooms take priority
     if R:is_unused_leaf() then
       if #R.items > 0 then return -1 end
-      return 999
+
+      return 100 + R.svolume + gui.random() * 20
     end
 
     if R.kind == "hallway"   then return -1 end
@@ -1900,17 +1900,22 @@ function Quest_nice_items()
     -- leafs are already handled
     if R:total_conns("ignore_secrets") < 2 then return -1 end
 
+    -- promote the occasional non-leaf room (if large enough)
+    if rand.odds(10) and R.svolume >= 25 then
+      return rand.range(120, 160)
+    end
+
     -- primary criterion is the room size.
-    -- [ the final score will often be negative ]
+
+    if R.svolume < 10 then return -1 end
 
     local score = R.svolume
 
-    if #R.goals > 0 then score = score - 8 end
-
-    score = score - 16 * (#R.weapons + #R.items)
+    if #R.goals   > 0 then score = score / 2 end
+    if #R.weapons > 0 then score = score / 2 end
 
     -- tie breaker
-    return score + rand.skew() * 5.0
+    return score + gui.random() * 4
   end
 
 
@@ -1929,6 +1934,13 @@ function Quest_nice_items()
 
     -- sort them (best first)
     table.sort(list, function(A, B) return A.nice_item_score > B.nice_item_score end)
+
+--[[ DEBUG
+stderrf("Other rooms:\n")
+each LOC in list do
+stderrf("  %1.2f = %s  unused_leaf = %s\n", LOC.nice_item_score, LOC:tostr(), string.bool(LOC:is_unused_leaf()))
+end
+--]]
 
     return list
   end
@@ -1965,6 +1977,7 @@ function Quest_nice_items()
   ---| Quest_nice_items |---
 
   if OB_CONFIG.items == "none" then
+    gui.printf("Nice items : disabled (user setting).\n")
     find_storage_rooms()
     return
   end
@@ -1982,9 +1995,10 @@ function Quest_nice_items()
   if OB_CONFIG.items == "more"  then quota = quota * 2.0 end
   if OB_CONFIG.items == "mixed" then quota = quota * rand.pick({ 0.5, 1.0, 2.0 }) end
 
-stderrf("Item quota : %1.2f\n", quota)
-
   quota = rand.int(quota)
+
+  gui.printf("Item quota : %1.2f\n", quota)
+
 
   local normal_items = normal_palette()
 

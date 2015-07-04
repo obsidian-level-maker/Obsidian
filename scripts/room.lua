@@ -279,7 +279,7 @@ function ROOM_CLASS.is_unused_leaf(R)
 
   if R:total_conns("ignore_secrets") >= 2 then return false end
 
-  if #R.goals > 0 then return false end
+  if #R.goals   > 0 then return false end
   if #R.weapons > 0 then return false end
 
   return true
