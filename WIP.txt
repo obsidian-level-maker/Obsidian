@@ -4,14 +4,8 @@ WORK IN PROGRESS
 
 
 
-+ 'level' field for NICE_ITEMS -- especially invulnerability which
-   seems to appear quite late in TNT and Plutonia
-   (also megasphere, at least for secrets, kinda too much on early levels)
-
-
 Weapon count: base it both on size of level and 'game_along' value
               (e.g. on regular, have 2 at start and 4/5 by end)
-
 
 
 Closets

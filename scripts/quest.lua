@@ -1702,6 +1702,9 @@ function Quest_nice_items()
   -- and (rarely) in normal rooms.
   --
 
+  local max_level
+
+
   local function adjust_powerup_probs(pal, factor)  -- NOT USED ATM
     -- apply the "Powerups" setting from the GUI
 
@@ -1729,6 +1732,10 @@ function Quest_nice_items()
     local pal = {}
 
     each name,info in GAME.NICE_ITEMS do
+      if (info.level or 1) > max_level then
+        continue
+      end
+
       if info.secret_prob then
         pal[name] = info.secret_prob
       end
@@ -1744,6 +1751,10 @@ function Quest_nice_items()
     local pal = {}
 
     each name,info in GAME.NICE_ITEMS do
+      if (info.level or 1) > max_level then
+        continue
+      end
+
       if info.add_prob then
         pal[name] = info.add_prob
       end
@@ -1761,6 +1772,10 @@ function Quest_nice_items()
     -- Note: no powerups in start room
 
     each name,info in GAME.NICE_ITEMS do
+      if (info.level or 1) > max_level then
+        continue
+      end
+
       if info.kind == "powerup" then
         continue
       end
@@ -1981,6 +1996,8 @@ end
     find_storage_rooms()
     return
   end
+
+  max_level = 1 + LEVEL.ep_along * 9
 
   visit_secret_rooms()
 

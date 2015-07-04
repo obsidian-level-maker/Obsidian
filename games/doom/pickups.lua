@@ -39,7 +39,7 @@ DOOM.PICKUPS =
     id = 2012
     kind = "health"
     rank = 2
-    add_prob = 100
+    add_prob = 120
     give = { {health=25} }
   }
 
@@ -70,7 +70,7 @@ DOOM.PICKUPS =
     id = 2048
     kind = "ammo"
     rank = 2
-    add_prob = 40
+    add_prob = 50
     give = { {ammo="bullet",count=50} }
   }
 
@@ -210,7 +210,7 @@ DOOM.NICE_ITEMS =
   {
     id = 2024
     kind = "powerup"
-    add_prob = 5
+    add_prob = 6
     secret_prob = 70
     time_limit = 100
   }
@@ -219,7 +219,8 @@ DOOM.NICE_ITEMS =
   {
     id = 2022
     kind = "powerup"
-    add_prob = 1
+    level = 6
+    add_prob = 2
     secret_prob = 110
     time_limit = 30
   }
@@ -237,7 +238,8 @@ DOOM.NICE_ITEMS =
   {
     id = 83
     kind = "health"
-    add_prob = 1
+    level = 4
+    add_prob = 2
     secret_prob = 70
     give = { {health=200} }
   }
