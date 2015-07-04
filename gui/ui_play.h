@@ -29,7 +29,7 @@ public: // private:
 	UI_RChoice *strength;
 
 	UI_RChoice *weaps;
-	UI_RChoice *powers;
+	UI_RChoice *items;
 
 	UI_RChoice *health;
 	UI_RChoice *ammo;
@@ -55,7 +55,7 @@ private:
 	void setup_Monsters();
 	void setup_Strength();
 	void setup_Weapons ();
-	void setup_Powers  ();
+	void setup_Items   ();
 	void setup_Health  ();
 	void setup_Ammo    ();
 
@@ -64,13 +64,13 @@ private:
 	static void callback_Monsters(Fl_Widget *, void*);
 	static void callback_Strength(Fl_Widget *, void*);
 	static void callback_Weapons (Fl_Widget *, void*);
-	static void callback_Powers  (Fl_Widget *, void*);
+	static void callback_Items   (Fl_Widget *, void*);
 	static void callback_Health  (Fl_Widget *, void*);
 	static void callback_Ammo    (Fl_Widget *, void*);
 
 	static const char * monster_syms[];
 	static const char * strength_syms[];
-	static const char * power_syms[];
+	static const char * item_syms[];
 	static const char * health_syms[];
 };
 

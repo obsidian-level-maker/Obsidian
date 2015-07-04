@@ -1828,8 +1828,8 @@ function Quest_nice_items()
 
     -- do not give too many
     local quota = 3
-    if OB_CONFIG.powers == "less" then quota = rand.sel(65, 1, 2) end
-    if OB_CONFIG.powers == "more" then quota = #rooms end
+    if OB_CONFIG.items == "less" then quota = rand.sel(65, 1, 2) end
+    if OB_CONFIG.items == "more" then quota = #rooms end
 
     for i = 1, quota do
       if table.empty(rooms) then break; end
@@ -1865,8 +1865,8 @@ function Quest_nice_items()
     -- apply Items setting
     local quota = 1
 
-    if OB_CONFIG.powers == "less" and rand.odds(50) then return end
-    if OB_CONFIG.powers == "more" and rand.odds(50) then quota = 2 end
+    if OB_CONFIG.items == "less" and rand.odds(50) then return end
+    if OB_CONFIG.items == "more" and rand.odds(50) then quota = 2 end
 
     for loop = 1, quota do
       -- add the same item into each start room
@@ -1964,7 +1964,7 @@ function Quest_nice_items()
 
   ---| Quest_nice_items |---
 
-  if OB_CONFIG.powers == "none" then
+  if OB_CONFIG.items == "none" then
     find_storage_rooms()
     return
   end
@@ -1978,9 +1978,9 @@ function Quest_nice_items()
 
   local quota = (SEED_W + SEED_H) / rand.pick({ 15, 25, 45 })
 
-  if OB_CONFIG.powers == "less"  then quota = quota / 2.0 end
-  if OB_CONFIG.powers == "more"  then quota = quota * 2.0 end
-  if OB_CONFIG.powers == "mixed" then quota = quota * rand.pick({ 0.5, 1.0, 2.0 }) end
+  if OB_CONFIG.items == "less"  then quota = quota / 2.0 end
+  if OB_CONFIG.items == "more"  then quota = quota * 2.0 end
+  if OB_CONFIG.items == "mixed" then quota = quota * rand.pick({ 0.5, 1.0, 2.0 }) end
 
 stderrf("Item quota : %1.2f\n", quota)
 
