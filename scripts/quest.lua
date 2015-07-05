@@ -1614,7 +1614,7 @@ function Quest_add_weapons()
   local quota = (lev_size - 20) / 25 + gui.random()
 
   -- more as game progresses
-  quota = quota + LEVEL.game_along
+  quota = quota + LEVEL.game_along * 2.0
 
   if OB_CONFIG.weapons == "less" then quota = quota / 1.7 end
   if OB_CONFIG.weapons == "more" then quota = quota * 1.7 end
