@@ -333,11 +333,12 @@ function Monsters_set_watchmen()
   --
 
   local function weapons_in_zone()
-
+    -- FIXME !!!
+    return {}
   end
 
 
-  local function prob_for_guard(mon)
+  local function prob_for_guard(mon, have_weaps)
     local info = GAME.MONSTERS[mon]
 
     if info.prob <= 0 then return 0 end
@@ -369,31 +370,57 @@ function Monsters_set_watchmen()
   end
 
 
-  local function pick_guard_for_zone(Z)
-    each mon,_ in GAME.MONSTERS do
-      local prob = prob_for_guard(mon)
+  local function pick_guard_for_zone(Z, base_pal)
+    local tab = {}
+
+    local have_weaps = weapons_in_zone(Z)
+
+    each mon,_ in base_pal do
+      local prob = prob_for_guard(mon, have_weaps)
 
       if prob > 0 then
         tab[mon] = prob
       end
     end
 
-    -- TODO : try to not reuse same monster
+    if table.empty(tab) then
+      return "NONE"
+    end
 
-    -- FIXME !!!!!
-    return "imp";
+    return rand.key_by_probs(tab)
   end
 
 
   local function pick_guard_list()
-    -- FIXME go backwards...
-    each Z in LEVEL.zones do
-      local mon = pick_guard_for_zone(Z)
+    local base_pal = {}
 
-      local info = GAME.MONSTERS[mon]
-
-      table.insert(list, { mon=mon, tough=info.damage + gui.random() / 10 })
+    each name,prob in LEVEL.global_pal do
+      base_pal[name] = 1
     end
+
+    local list = {}
+
+    -- go backwards, freely pick last monster but earlier monsters must
+    -- avoid using the same monster as a later one.
+
+    for i = #LEVEL.zones, 1, -1 do
+      local Z = LEVEL.zones[i]
+
+      local mon = pick_guard_for_zone(Z, base_pal)
+
+      local tough = -99
+
+      if mon != "NONE" then
+        base_pal[mon] = nil  -- never pick it again
+
+        local info = GAME.MONSTERS[mon]
+        tough = info.damage
+      end
+
+      table.insert(list, 1, { mon=mon, tough=tough + gui.random() })
+    end
+
+    return list
   end
 
 
@@ -409,6 +436,8 @@ function Monsters_set_watchmen()
         return (B[i].tough > A[i].tough)
       end
     end 
+
+    return false
   end
 
 
@@ -430,6 +459,8 @@ function Monsters_set_watchmen()
 
   for i = 1, num_zones do
     local Z = LEVEL.zones[i]
+
+    if list[i].mon == "NONE" then continue end
 
     Z.guard_mon = list[i].mon
 
