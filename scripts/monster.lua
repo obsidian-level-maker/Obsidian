@@ -323,8 +323,20 @@ end
 
 
 
-function Monsters_zone_palettes()
-  
+function Monsters_set_watchmen()
+  --
+  -- Select guard monsters for each zone.
+  --
+  -- Since the types of monsters usable in each zone depends on the weapons
+  -- available in the zone, we generate numerous lists and pick the list
+  -- that has the toughest monsters at the end.
+  --
+
+  local function weapons_in_zone()
+
+  end
+
+
   local function prob_for_guard(mon)
     local info = GAME.MONSTERS[mon]
 
@@ -357,14 +369,7 @@ function Monsters_zone_palettes()
   end
 
 
-  local function decide_guard_monsters()
-    local tab = {}
-
-    if STYLE.mon_variety == "none" then
-      tab[LEVEL.single_mon] = 50
-      return
-    end
-
+  local function pick_guard_for_zone(Z)
     each mon,_ in GAME.MONSTERS do
       local prob = prob_for_guard(mon)
 
@@ -373,43 +378,73 @@ function Monsters_zone_palettes()
       end
     end
 
-    gui.debugf("Possible guard monsters:\n%s\n", table.tostr(tab))
+    -- TODO : try to not reuse same monster
 
-    if table.empty(tab) then return end
+    -- FIXME !!!!!
+    return "imp";
+  end
 
 
-    local list = {}
-    local num_zones = #LEVEL.zones
-
-    for i = 1, num_zones do
-      local mon = rand.key_by_probs(tab)
-      tab[mon] = tab[mon] / 100  -- try hard not to choose again
+  local function pick_guard_list()
+    -- FIXME go backwards...
+    each Z in LEVEL.zones do
+      local mon = pick_guard_for_zone(Z)
 
       local info = GAME.MONSTERS[mon]
 
       table.insert(list, { mon=mon, tough=info.damage + gui.random() / 10 })
     end
+  end
 
 
-    if LEVEL.max_level < 10 then
-      table.sort(list,
-          function (A, B) return A.tough < B.tough end)
-    end
+  local function is_guard_list_better(A, B)
+    -- returns true if B > A
 
-    for i = 1, num_zones do
-      local Z = LEVEL.zones[i]
+    assert(#A == #B)
 
-      Z.guard_mon = list[i].mon
+    -- want last monster to be toughest, second last to be second toughest, etc...
 
-      if not EPISODE.seen_guards[Z.guard_mon] then
-        EPISODE.seen_guards[Z.guard_mon] = 1
-        Z.guard_is_new = true
+    for i = #A, 1, -1 do
+      if A[i].mon != B[i].mon then
+        return (B[i].tough > A[i].tough)
       end
+    end 
+  end
 
-      gui.debugf("Guard monster for ZONE_%s --> %s\n", Z.id, Z.guard_mon)
+
+  ---| Monsters_set_watchmen |---
+   
+  if STYLE.mon_variety == "none" then
+    return
+  end
+
+  local list = pick_guard_list()
+
+  for loop = 1,20 do
+    local new_list = pick_guard_list()
+
+    if is_guard_list_better(list, new_list) then
+      list = new_list
     end
   end
 
+  for i = 1, num_zones do
+    local Z = LEVEL.zones[i]
+
+    Z.guard_mon = list[i].mon
+
+    if not EPISODE.seen_guards[Z.guard_mon] then
+      EPISODE.seen_guards[Z.guard_mon] = 1
+      Z.guard_is_new = true
+    end
+
+    gui.debugf("Guard monster for ZONE_%s --> %s\n", Z.id, Z.guard_mon)
+  end
+end
+
+
+
+function Monsters_zone_palettes()
 
   local function palettes_are_same(A, B)
     if table.size(A) != table.size(B) then
@@ -436,8 +471,6 @@ function Monsters_zone_palettes()
       if qty <= 0 then continue end
 
       local info = assert(GAME.MONSTERS[mon])
-
----???  local toughness = info.health + info.damage * 7
 
       total = total + info.damage * qty
     end
@@ -527,8 +560,6 @@ function Monsters_zone_palettes()
 
 
   ---| Monsters_zone_palettes |---
-
-  decide_guard_monsters()
 
   local zone_pals = {}
 
@@ -2029,11 +2060,12 @@ function Monster_make_battles()
 
   Player_init()
 
-  Monsters_global_palette()
-  Monsters_zone_palettes()
-
   Player_give_map_stuff()
   Player_weapon_palettes()
+
+  Monsters_global_palette()
+  Monsters_set_watchmen()
+  Monsters_zone_palettes()
 
   -- Rooms have been sorted into a visitation order, so we just
   -- insert some monsters into each one and simulate each battle.
