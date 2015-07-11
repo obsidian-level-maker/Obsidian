@@ -302,6 +302,32 @@ function Player_has_min_weapon(min_weapon)
 end
 
 
+
+function Player_find_initial_weapons()
+  -- find with weapons the player always owns
+  local list = {}
+
+  each CL,hmodel in LEVEL.hmodels do
+    each name,_ in hmodel.weapons do
+      list[name] = 1
+    end
+  end
+
+  return list
+end
+
+
+
+function Player_find_zone_weapons(Z, list)
+  each R in Z.rooms do
+    each name in R.weapons do
+      list[name] = 1
+    end
+  end
+end
+
+
+
 function Player_weapon_palettes()
 
   local Middle  = 1.00
@@ -309,34 +335,6 @@ function Player_weapon_palettes()
   local Highest = 4.80
   local Low     = 0.44
   local Lowest  = 0.21
-
-
-  local function initial_weapons()
-    -- find with weapons the player always owns
-    local list = {}
-
-    each CL,hmodel in LEVEL.hmodels do
-      each name,_ in hmodel.weapons do
-        list[name] = 1
-      end
-    end
-
-    return list
-  end
-
-
-  local function add_weapons_from_zone(Z, list)
-
---!!!!!!!
-do return end
-
-
-    each R in Z.rooms do
-      each name in R.weapons do
-        list[name] = 1
-      end
-    end
-  end
 
 
   local function insert_multiple(list, count, what)
@@ -437,7 +435,7 @@ do return end
   local got_weaps = {}
 
   each Z in LEVEL.zones do
-    add_weapons_from_zone(Z, got_weaps)
+    Player_find_zone_weapons(Z, got_weaps)
 
     Z.weap_palette = gen_palette(got_weaps)
 
