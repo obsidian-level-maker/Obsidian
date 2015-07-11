@@ -4,15 +4,15 @@ WORK IN PROGRESS
 
 
 
-Weapon count: base it both on size of level and 'game_along' value
-              (e.g. on regular, have 2 at start and 4/5 by end)
-
-
 Closets
 -------
 
 +  really want to add them _AFTER_ large traps/cages have been
    added (and after outdoor borders too)
+
+
+
+Secrets (incl. closets) : support not-nice mode (i.e. AMMO and/or HEALTH)
 
 
 
@@ -33,15 +33,6 @@ Sinks
 -  probably should mark seeds (or whatever) so know where can place
    decorative prefabs.
 
-
-
-Monster defs : min weapon level needed [esp. for Vile/Bosses ]
--  player weapon in three states : no have / getting / have it
-   ("getting" applies to whole zone)
-   when "getting" it, allow monster but reduce prob/density
-   (allow monster for guard)
-
-(a) Support min_weapon and weap_needed for GUARD monsters
 
 
 Porches :
