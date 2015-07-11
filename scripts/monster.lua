@@ -489,17 +489,16 @@ function Monsters_set_watchmen()
 
   -- pick a list of monsters
   local list = pick_guard_list()
-dump_guard_list("orig list:", list);
 
-  for loop = 1,20 do
+  for loop = 1,100 do
     local new_list = pick_guard_list()
 
     if is_guard_list_better(list, new_list) then
       list = new_list
-dump_guard_list("new  list:", new_list);
     end
   end
-dump_guard_list("best list:", list);
+
+-- dump_guard_list("best list:", list);
 
   for i = 1, #LEVEL.zones do
     local Z = LEVEL.zones[i]
