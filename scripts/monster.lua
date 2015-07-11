@@ -329,27 +329,31 @@ function Monsters_set_watchmen()
   --
   -- Since the types of monsters usable in each zone depends on the weapons
   -- available in the zone, we generate numerous lists and pick the list
-  -- that has the toughest monsters at the end.
+  -- that has the toughest monster(s) at the end.
   --
 
   local palette
-  local have_weaps
+  local got_weaps
 
 
-  local function initial_weapons()
-    -- FIXME !!!
-    return {}
+  local function has_min_weapon(level)
+    each name,_ in got_weaps do
+      local info = GAME.WEAPONS[name]
+      if info and (info.level or 0) >= level then
+        return true
+      end
+    end
+
+    return false
   end
 
 
-  local function add_weapons_in_zone(Z)
-    each R in Z.rooms do
-      if R.weapons then
-        each name in R.weapons do
-          have_weaps[name] = 1
-        end
-      end
+  local function has_needed_weapon(weaps)
+    each name,_ in weaps do
+      if got_weaps[name] then return true end
     end
+
+    return false
   end
 
 
@@ -358,7 +362,13 @@ function Monsters_set_watchmen()
 
     if info.prob <= 0 then return 0 end
 
-    -- FIXME !!!!  support min_weapon and weap_needed
+    if info.min_weapon and not has_min_weapon(info.min_weapon) then
+      return 0
+    end
+
+    if info.weap_needed and not has_needed_weapon(info.weap_needed) then
+      return 0
+    end
 
     -- ignore theme-specific monsters (SS NAZI)
     if info.theme then return 0 end
@@ -411,7 +421,7 @@ function Monsters_set_watchmen()
       palette[name] = 1
     end
 
-    have_weaps = initial_weapons()
+    got_weaps = Player_find_initial_weapons()
 
     local list = {}
 
@@ -421,7 +431,7 @@ function Monsters_set_watchmen()
     for i = #LEVEL.zones, 1, -1 do
       local Z = LEVEL.zones[i]
 
-      add_weapons_in_zone(Z)
+      Player_find_zone_weapons(Z, got_weaps)
 
       local mon = pick_guard_for_zone(Z)
 
