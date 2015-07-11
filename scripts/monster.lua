@@ -332,13 +332,28 @@ function Monsters_set_watchmen()
   -- that has the toughest monsters at the end.
   --
 
-  local function weapons_in_zone()
+  local palette
+  local have_weaps
+
+
+  local function initial_weapons()
     -- FIXME !!!
     return {}
   end
 
 
-  local function prob_for_guard(mon, have_weaps)
+  local function add_weapons_in_zone(Z)
+    each R in Z.rooms do
+      if R.weapons then
+        each name in R.weapons do
+          have_weaps[name] = 1
+        end
+      end
+    end
+  end
+
+
+  local function prob_for_guard(mon)
     local info = GAME.MONSTERS[mon]
 
     if info.prob <= 0 then return 0 end
@@ -370,13 +385,11 @@ function Monsters_set_watchmen()
   end
 
 
-  local function pick_guard_for_zone(Z, base_pal)
+  local function pick_guard_for_zone(Z)
     local tab = {}
 
-    local have_weaps = weapons_in_zone(Z)
-
-    each mon,_ in base_pal do
-      local prob = prob_for_guard(mon, have_weaps)
+    each mon,_ in palette do
+      local prob = prob_for_guard(mon)
 
       if prob > 0 then
         tab[mon] = prob
@@ -392,11 +405,13 @@ function Monsters_set_watchmen()
 
 
   local function pick_guard_list()
-    local base_pal = {}
+    palette = {}
 
     each name,prob in LEVEL.global_pal do
-      base_pal[name] = 1
+      palette[name] = 1
     end
+
+    have_weaps = initial_weapons()
 
     local list = {}
 
@@ -406,12 +421,14 @@ function Monsters_set_watchmen()
     for i = #LEVEL.zones, 1, -1 do
       local Z = LEVEL.zones[i]
 
-      local mon = pick_guard_for_zone(Z, base_pal)
+      add_weapons_in_zone(Z)
+
+      local mon = pick_guard_for_zone(Z)
 
       local tough = -99
 
       if mon != "NONE" then
-        base_pal[mon] = nil  -- never pick it again
+        palette[mon] = nil  -- never pick it again
 
         local info = GAME.MONSTERS[mon]
         tough = info.damage
@@ -441,23 +458,40 @@ function Monsters_set_watchmen()
   end
 
 
+  local function dump_guard_list(prefix, list)
+    local line = prefix .. " { ";
+
+    each M in list do
+      line = line .. M.mon .. " ";
+    end
+
+    line = line .. "}";
+
+    gui.printf("%s\n", line)
+  end
+
+
   ---| Monsters_set_watchmen |---
    
   if STYLE.mon_variety == "none" then
     return
   end
 
+  -- pick a list of monsters
   local list = pick_guard_list()
+dump_guard_list("orig list:", list);
 
   for loop = 1,20 do
     local new_list = pick_guard_list()
 
     if is_guard_list_better(list, new_list) then
       list = new_list
+dump_guard_list("new  list:", new_list);
     end
   end
+dump_guard_list("best list:", list);
 
-  for i = 1, num_zones do
+  for i = 1, #LEVEL.zones do
     local Z = LEVEL.zones[i]
 
     if list[i].mon == "NONE" then continue end
