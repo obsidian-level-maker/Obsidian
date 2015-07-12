@@ -2844,6 +2844,8 @@ function Room_build_all()
   Layout_handle_corners()
   Layout_outdoor_shadows()
 
+  Render_set_all_properties()
+
   Render_all_areas()
   Render_importants()
 

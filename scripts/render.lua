@@ -1194,10 +1194,6 @@ end
 
 function Render_all_areas()
   each A in LEVEL.areas do
-    dummy_properties(A)
-  end
-
-  each A in LEVEL.areas do
     Render_area(A)
   end
 
@@ -1326,6 +1322,9 @@ end
 
 
 function Render_set_all_properties()
+  each A in LEVEL.areas do
+    Render_properties_for_area(A)
+  end
 end
 
 
