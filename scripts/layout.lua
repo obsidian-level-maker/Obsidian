@@ -1677,7 +1677,7 @@ return end
   local stair_diff_h = well.diff_h
   local headroom     = 128
 
-  local step_mat = Mat_lookup("STEP1")
+  local step_mat = Mat_lookup_tex("STEP1")
 
   local f_st_idx = sel(stair_diff_h < 0, 3, 1)
 

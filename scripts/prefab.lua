@@ -1828,7 +1828,7 @@ function Fab_replacements(fab)
       val = fab.fields[k]
     end
 
-    local mat = Mat_lookup(val)
+    local mat = Mat_lookup_tex(val)
 
     return assert(mat.t)
   end
@@ -1847,7 +1847,7 @@ function Fab_replacements(fab)
       C.light   = LEVEL.liquid.light
     end
 
-    local mat = Mat_lookup(val)
+    local mat = Mat_lookup_flat(val)
 
     return assert(mat.f or mat.t)
   end

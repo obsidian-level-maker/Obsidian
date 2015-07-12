@@ -386,8 +386,10 @@ end
 ------------------------------------------------------------------------
 
 
-function Mat_lookup(name)
-  if not name then name = "_ERROR" end
+function Mat_lookup_tex(name)
+  if not name or name == "" or name == "-" then
+    name = "_ERROR"
+  end
 
   local mat = GAME.MATERIALS[name]
 
@@ -403,9 +405,34 @@ function Mat_lookup(name)
 
   if not mat then
     gui.printf("\nLACKING MATERIAL : %s\n\n", name)
-    mat = assert(GAME.MATERIALS["_ERROR"])
 
-    -- prevent further messages
+    -- prevent further messages (create a new material)
+    local src_mat = assert(GAME.MATERIALS["_DEFAULT"])
+
+    mat = { t=name, f=src_mat.f }
+
+    GAME.MATERIALS[name] = mat
+  end
+
+  return mat
+end
+
+
+function Mat_lookup_flat(name)
+  if not name or name == "" or name == "-" then
+    name = "_ERROR"
+  end
+
+  local mat = GAME.MATERIALS[name]
+
+  if not mat then
+    gui.printf("\nLACKING MATERIAL : %s\n\n", name)
+    
+    -- prevent further messages (create a new material)
+    local src_mat = assert(GAME.MATERIALS["_DEFAULT"])
+
+    mat = { f=name, t=src_mat.t }
+
     GAME.MATERIALS[name] = mat
   end
 
@@ -641,7 +668,7 @@ end
 
 function brushlib.set_mat(brush, wall, flat)
   if wall then
-    wall = Mat_lookup(wall)
+    wall = Mat_lookup_tex(wall)
     wall = assert(wall.t)
   end
 
@@ -661,7 +688,7 @@ function brushlib.set_mat(brush, wall, flat)
       brushlib.set_kind(brush, "sky")
     end
 
-    flat = Mat_lookup(flat)
+    flat = Mat_lookup_flat(flat)
     flat = assert(flat.f or flat.t)
   end
 
