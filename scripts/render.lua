@@ -1162,7 +1162,59 @@ end
 
 
 
-function dummy_properties(A)
+function Render_depot(depot)
+  -- dest_R is the room which gets the trap spots
+  local dest_R = assert(depot.room)
+
+  local x1 = depot.x1
+  local y1 = depot.y1
+
+  local z = assert(LEVEL.player1_z)
+
+
+  local def = Fab_lookup("Depot")
+
+  local x2 = x1 + def.seed_w * SEED_SIZE
+  local y2 = y1 + def.seed_h * SEED_SIZE
+
+  local skin1 =
+  {
+    wall = "COMPSPAN"
+  }
+
+  assert(depot.skin)
+
+
+  local T = Trans.box_transform(x1, y1, x2, y2, z, 2)
+
+  Fabricate(dest_R, def, T, { skin1, depot.skin })
+end
+
+
+
+function Render_all_areas()
+  each A in LEVEL.areas do
+    dummy_properties(A)
+  end
+
+  each A in LEVEL.areas do
+    Render_area(A)
+  end
+
+  each depot in LEVEL.depots do
+    Render_depot(depot)
+  end
+
+  each Z in LEVEL.zones do
+    Layout_build_mountains(Z)
+  end
+end
+
+
+------------------------------------------------------------------------
+
+
+function Render_properties_for_area(A)
 
   if A.mode == "void" then
     A.wall_mat = "BLAKWAL1"
@@ -1273,53 +1325,9 @@ end
 
 
 
-function Render_depot(depot)
-  -- dest_R is the room which gets the trap spots
-  local dest_R = assert(depot.room)
-
-  local x1 = depot.x1
-  local y1 = depot.y1
-
-  local z = assert(LEVEL.player1_z)
-
-
-  local def = Fab_lookup("Depot")
-
-  local x2 = x1 + def.seed_w * SEED_SIZE
-  local y2 = y1 + def.seed_h * SEED_SIZE
-
-  local skin1 =
-  {
-    wall = "COMPSPAN"
-  }
-
-  assert(depot.skin)
-
-
-  local T = Trans.box_transform(x1, y1, x2, y2, z, 2)
-
-  Fabricate(dest_R, def, T, { skin1, depot.skin })
+function Render_set_all_properties()
 end
 
-
-
-function Render_all_areas()
-  each A in LEVEL.areas do
-    dummy_properties(A)
-  end
-
-  each A in LEVEL.areas do
-    Render_area(A)
-  end
-
-  each depot in LEVEL.depots do
-    Render_depot(depot)
-  end
-
-  each Z in LEVEL.zones do
-    Layout_build_mountains(Z)
-  end
-end
 
 
 ------------------------------------------------------------------------
