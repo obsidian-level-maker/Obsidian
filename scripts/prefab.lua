@@ -1828,6 +1828,10 @@ function Fab_replacements(fab)
       val = fab.fields[k]
     end
 
+    if val == "_NOTHING" then
+      val = "_DEFAULT"
+    end
+
     local mat = Mat_lookup_tex(val)
 
     return assert(mat.t)
