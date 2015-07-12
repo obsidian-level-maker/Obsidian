@@ -1212,14 +1212,23 @@ end
 
 function Render_properties_for_area(A)
 
-  if A.mode == "void" then
-    A.wall_mat = "BLAKWAL1"
-    A.floor_mat = A.wall_mat
-    A.facade_mat = "COMPSPAN" --!!!!FIXME  A.zone.facade_mat
+  if A.mode == "scenic" then
     return
   end
 
-  if A.mode == "scenic" then
+
+  local R = A.room
+  if not R then R = A.face_room end
+
+if not R then
+  A.mode = "void"
+end
+
+
+  if A.mode == "void" then
+    A.wall_mat = "COMPSPAN"
+    A.floor_mat = A.wall_mat
+    A.facade_mat = A.zone.facade_mat
     return
   end
 
@@ -1235,14 +1244,14 @@ function Render_properties_for_area(A)
     A.ceil_h = A.floor_h + 200
   end
 
---DEBUG
----##  A.kind = "building"
----##  if A.mode != "scenic" then A.mode = "normal" end
 
   if A.kind == "building" then
-    A.wall_mat  = "STARTAN3"
-    A.floor_mat = "FLOOR4_8"
-    A.facade_mat = "STONE3" --!!!!FIXME  A.zone.facade_mat
+    A.wall_mat  = assert(R.main_tex)
+
+    A.floor_mat = rand.key_by_probs(R.theme.ceilings)
+    A.ceil_mat  = rand.key_by_probs(R.theme.ceilings)
+
+    A.facade_mat = A.zone.facade_mat
 
   elseif A.kind == "courtyard" then
     A.floor_mat = "BROWN1"
@@ -1269,7 +1278,7 @@ function Render_properties_for_area(A)
 --- end
 
     if not A.is_outdoor then
-    A.facade_mat = "STONE3" --!!!!FIXME  A.zone.facade_mat
+      A.facade_mat = A.zone.facade_mat
     end
 
     if A.ceil_h then
