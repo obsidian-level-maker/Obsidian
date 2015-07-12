@@ -3,16 +3,12 @@ WORK IN PROGRESS
 ================
 
 
-
 Closets
 -------
 
 +  really want to add them _AFTER_ large traps/cages have been
    added (and after outdoor borders too)
 
-
-
-Secrets (incl. closets) : support not-nice mode (i.e. AMMO and/or HEALTH)
 
 
 

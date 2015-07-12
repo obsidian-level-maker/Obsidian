@@ -1714,7 +1714,7 @@ function Quest_nice_items()
       if info.kind != "powerup" then continue end
 
       if not pal[name] then continue end
-
+--[[
       if OB_CONFIG.powers == "none" then
         pal[name] = nil
       elseif OB_CONFIG.powers == "less" then
@@ -1724,6 +1724,7 @@ function Quest_nice_items()
       elseif OB_CONFIG.powers == "mixed" then
         pal[name] = pal[name] * mixed_mul
       end
+--]]
     end
   end
 

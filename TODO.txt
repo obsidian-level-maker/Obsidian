@@ -51,8 +51,6 @@ ______________________________________________________________________
   V7 STUFF
 ----------------------------------------------
 
-+  rename OB_CONFIG.powers --> OB_CONFIG.items
-
 +  better facing angles for players
    (switches too, but less important)
 
@@ -62,6 +60,9 @@ ______________________________________________________________________
 -  sky generator : better checking of themes (esp. w/ control module)
 
 -  the locked switch closet
+
+-  Secrets (incl. closets) : support not-nice mode (i.e. AMMO and/or HEALTH)
+
 
 REQUEST:  mix it up option for the quiet start setting.
 
