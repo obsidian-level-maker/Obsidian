@@ -26,8 +26,9 @@ HERETIC.MATERIALS =
 {
   -- special materials --
 
-  _ERROR = { t="WOODWL",  f="FLOOR10" }
-  _SKY   = { t="CHAINSD", f="F_SKY1"  }
+  _ERROR   = { t="WOODWL",  f="FLOOR10" }
+  _DEFAULT = { t="GRSTNPB", f="FLOOR03" }
+  _SKY     = { t="CHAINSD", f="F_SKY1"  }
 
   -- general purpose --
 

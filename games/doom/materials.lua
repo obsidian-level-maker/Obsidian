@@ -34,6 +34,7 @@ DOOM.MATERIALS =
   -- special materials --
 
   _ERROR   = { t="CRACKLE2", f="RROCK01" }
+  _DEFAULT = { t="GRAY1",    f="FLAT1" }
   _SKY     = { t="CEMENT3",  f="F_SKY1" }
 
 

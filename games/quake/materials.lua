@@ -24,8 +24,9 @@ QUAKE.LIQUIDS =
 QUAKE.MATERIALS =
 {
   -- special materials --
-  _ERROR = { t="metal1_1" }  -- METAL1_1
-  _SKY   = { t="sky4" }
+  _ERROR   = { t="metal1_1" }  -- METAL1_1
+  _DEFAULT = { t="wwall1_1" }
+  _SKY     = { t="sky4" }
 
   ADOOR01_2  = { t="adoor01_2" }
   ADOOR02_2  = { t="adoor02_2" }
