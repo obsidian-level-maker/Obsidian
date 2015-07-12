@@ -248,37 +248,6 @@ SKY_GEN.themes =
       DARKBROWN_HILLS = 20
     }
   }
-
-
-  psycho =
-  {
-    clouds =
-    {
-      PURPLE_CLOUDS  = 90
-      YELLOW_CLOUDS  = 70
-      HELLISH_CLOUDS = 20
-      RAINBOW_CLOUDS = 10
-
-      GREEN_CLOUDS = 70
-      BLUE_CLOUDS  = 70
-      WHITE_CLOUDS = 30
-      GREY_CLOUDS  = 30
-    }
-
-    hills =
-    {
-      BLUE_CLOUDS = 50
-      GREEN_HILLS = 50
-      RAINBOW_CLOUDS = 50
-      PURPLE_CLOUDS = 30
-      YELLOW_CLOUDS = 30
-      ORANGE_CLOUDS = 30
-      WHITE_CLOUDS = 30
-      HELLISH_CLOUDS = 20
-    }
-
-    -- no dark_hills
-  }
 }
 
 
@@ -332,9 +301,6 @@ function SKY_GEN.generate_skies()
       else
         theme_name = "urban"
       end
-
-    elseif OB_CONFIG.theme == "psycho" then
-      theme_name = "psycho"
     end
 
     local theme = all_themes[theme_name]

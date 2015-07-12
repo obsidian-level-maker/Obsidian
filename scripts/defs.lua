@@ -69,12 +69,6 @@ OB_THEMES["jumble"] =
   priority = -90
 }
 
-OB_THEMES["psycho"] =
-{
-  label = "Psychedelic"
-  priority = -99  -- bottom most
-}
-
 
 -- important constants
 

@@ -449,19 +449,6 @@ function Levels_choose_themes()
       name = LEV.theme_name
     end
 
-    -- special handling for Psychedelic theme
-    if name == "psycho" then
-      LEV.psychedelic = true
-
-      if not LEV.name_class and ((LEV.index % 2) == 1) then
-        LEV.name_class = "PSYCHO"
-      end
-
-      -- pick a real theme to use
-      name = rand.key_by_probs(theme_tab)
-    end
-
-
     local info = OB_THEMES[name]
 
     if not info then
@@ -736,10 +723,6 @@ function Levels_do_styles()
   end
 
   SKY_H = rand.sel(5, 768, 512)
-
-  if LEVEL.psychedelic then
-    Mat_prepare_trip()
-  end
 end
 
 

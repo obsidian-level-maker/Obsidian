@@ -386,40 +386,8 @@ end
 ------------------------------------------------------------------------
 
 
-function Mat_prepare_trip()
-
-  -- build the psychedelic mapping
-  local m_before = {}
-  local m_after  = {}
-
-  each m,def in GAME.MATERIALS do
-    if not def.sane and
-       not def.rail_h and
-       not (string.sub(m,1,1) == "_") and
-       not (string.sub(m,1,2) == "SW") and
-       not (string.sub(m,1,3) == "BUT")
-    then
-      table.insert(m_before, m)
-      table.insert(m_after,  m)
-    end
-  end
-
-  rand.shuffle(m_after)
-
-  LEVEL.psycho_map = {}
-
-  for i = 1,#m_before do
-    LEVEL.psycho_map[m_before[i]] = m_after[i]
-  end
-end
-
-
 function Mat_lookup(name)
   if not name then name = "_ERROR" end
-
-  if LEVEL.psychedelic and LEVEL.psycho_map[name] then
-    name = LEVEL.psycho_map[name]
-  end
 
   local mat = GAME.MATERIALS[name]
 
