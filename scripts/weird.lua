@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2014 Andrew Apted
+--  Copyright (C) 2014-2015 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -20,7 +20,7 @@
 
 
 -- lower this to make larger areas
-T_BRANCH_PROB = 75
+T_BRANCH_PROB = 85
 
 -- if true, allow creation of single-seed squares shapes
 ALLOW_CLOSED_SQUARES = true
