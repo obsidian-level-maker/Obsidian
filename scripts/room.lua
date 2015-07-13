@@ -839,6 +839,9 @@ function Room_detect_porches(R)
     -- shape check : we want high twistiness, low openness
     if A.openness > 0.3 then return -1 end
 
+    -- should not be surrounded by another area
+    if #A.neighbors < 2 then return -1 end
+
     -- FIXME.....
     
     local score = 100 + A.svolume - A.openness * 100
