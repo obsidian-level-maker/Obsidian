@@ -536,12 +536,10 @@ end
 ------------------------------------------------------------------------
 
 
-function Room_create_sky_groups()
+function Room_prepare_skies()
   --
-  -- This makes sure that any two outdoor rooms which touch will belong
-  -- to the same 'sky_group' and hence get the same sky height.
-  --
-  -- Note: actual sky heights are determined later.
+  -- Each zone gets a rough sky height (dist from floors).
+  -- The final sky height of each zone is determined later.
   --
 
   local function new_sky_add_h()
@@ -551,7 +549,7 @@ function Room_create_sky_groups()
   end
 
 
-  ---| Room_create_sky_groups |---
+  ---| Room_prepare_skies |---
 
   each Z in LEVEL.zones do
     Z.sky_add_h = new_sky_add_h()
@@ -2740,7 +2738,7 @@ end
 
 
 
-function Room_update_sky_groups()
+function Room_set_sky_heights()
 
   local function do_area(A)
     local sky_h = A.floor_h + A.zone.sky_add_h
@@ -2749,7 +2747,7 @@ function Room_update_sky_groups()
   end
 
 
-  ---| Room_update_sky_groups |---
+  ---| Room_set_sky_heights |---
 
   each A in LEVEL.areas do
     -- visit all normal, outdoor areas
@@ -2825,6 +2823,7 @@ function Room_build_all()
 
   Room_reckon_doors()
   Room_floor_heights()
+  Room_prepare_skies()
 
   -- place importants -- done early as traps need to know where they are.
   -- it also sets LEVEL.player1_z -- needed for monster depots.
@@ -2833,17 +2832,14 @@ function Room_build_all()
   end
 
   Layout_traps_and_cages()
-  Layout_map_borders()
+  Layout_create_scenic_borders()
   Layout_liquid_stuff()
-
-  -- this must be done _after_ cages and outdoor borders
-  Room_create_sky_groups()
-
   Layout_update_cages()
 
   Room_border_up()
-  Room_update_sky_groups()
+  Room_set_sky_heights()
 
+  Layout_finish_scenic_borders()
   Layout_handle_corners()
   Layout_outdoor_shadows()
 

@@ -1003,6 +1003,7 @@ function Render_floor(A, S)
 -- tag = A.id
 -- if A.conn_group then tag = A.conn_group end
 -- if A.quest and A.quest.id < 2 then tag = 1 end
+if A.is_boundary then tag = 1000 + A.id end
 
 
   -- handle railings [ must be done here ]
@@ -1120,10 +1121,10 @@ function Render_seed(A, S)
     return
   end
 
-  -- scenic done elsewhere (in Layout_build_mountains)
-  if A.mode == "scenic" then
-    return
-  end
+---###  -- scenic done elsewhere (in Layout_build_mountains)
+---###  if A.mode == "scenic" then
+---###    return
+---###  end
 
   if A.mode == "hallway" then
     Render_hallway(A, S)
@@ -1201,9 +1202,9 @@ function Render_all_areas()
     Render_depot(depot)
   end
 
-  each Z in LEVEL.zones do
-    Layout_build_mountains(Z)
-  end
+---###  each Z in LEVEL.zones do
+---###    Layout_build_mountains(Z)
+---###  end
 end
 
 
@@ -1212,6 +1213,7 @@ end
 
 function Render_properties_for_area(A)
 
+  -- scenic borders done elsewhere...
   if A.mode == "scenic" then
     return
   end

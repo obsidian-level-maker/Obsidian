@@ -993,6 +993,140 @@ end
 
 
 
+function Layout_create_scenic_borders()
+  --
+  -- Handles the "scenic" stuff outside of the normal map.
+  -- For example: a watery "sea" around at one corner of the map.
+  --
+  -- This mainly sets up area information (and creates "scenic rooms").
+  -- The actual brushwork is done by normal area-building code.
+  --
+
+  local function neighbor_min_max(Z)
+    local min_f
+    local max_f
+
+    each A in Z.border_info.areas do
+    each N in A.neighbors do
+      if N.zone != Z then continue end
+
+      if N.room and N.floor_h then
+        min_f = math.N_min(N.floor_h, min_f)
+        max_f = math.N_max(N.floor_h, max_f)
+      end
+    end
+    end
+
+    -- possible for min_h and max_h to be NIL here
+
+    Z.border_info.nb_min_f = min_f
+    Z.border_info.nb_max_f = max_f
+  end
+
+
+  local function collect_border_areas(Z)
+    Z.border_info.areas = {}
+
+    each A in LEVEL.areas do
+      if A.zone == Z then
+        table.insert(Z.border_info.areas, A)
+      end
+    end
+  end
+
+
+  local function set_junctions(A)
+    each N in A.neighbors do
+      if N.room and N.is_outdoor then
+        local junc = Junction_lookup(A, N)
+        assert(junc)
+
+        if A.kind == "water" and N.room.kind == "hallway" then
+          junc.kind = "fence"
+          junc.fence_mat = LEVEL.fence_mat
+          junc.fence_top_z = N.room.hallway.max_h + 32
+
+        elseif A.kind == "water" then
+          junc.kind = "rail"
+          junc.rail_mat = "MIDBARS3"
+          junc.post_h   = 84
+          junc.blocked  = true
+
+        elseif A.mode == "scenic" then
+          junc.kind = "nothing"
+        end
+      end
+    end
+  end
+
+
+  local function setup_zone(Z)
+    Z.border_info = {}
+
+    collect_border_areas(Z)
+
+    neighbor_min_max(Z)
+
+    -- this only possible if a LOT of void areas
+    if not Z.border_info.nb_min_f then
+      Z.border_info.kind = "void"
+    elseif LEVEL.liquid and rand.odds(40) then
+      Z.border_info.kind = "water"
+    else
+      Z.border_info.kind = "mountain"
+    end
+
+    each A in Z.border_info.areas do
+      if A.mode == "scenic" then
+        if Z.border_info.kind == "void" then
+          A.mode = "void"
+        else
+          A.kind = Z.border_info.kind
+
+          set_junctions(A)
+        end
+      end
+    end
+  end
+
+
+  ---| Layout_create_scenic_borders |---
+   
+  LEVEL.hill_mode = rand.sel(70, "high", "low")
+
+  each Z in LEVEL.zones do
+    setup_zone(Z)
+  end
+
+end
+
+
+
+function Layout_finish_scenic_borders()
+
+  local function temp_properties(A)
+    A.floor_h = 100
+    A.ceil_h  = 500
+
+    A.wall_mat  = "FLAT10"
+    A.floor_mat = "FLAT10"
+    A.ceil_mat  = "FLAT10"
+
+    A.facade_mat = "REDWALL"
+  end
+
+
+  ---| Layout_finish_scenic_borders |---
+
+  each A in LEVEL.areas do
+    if A.is_boundary then
+      temp_properties(A)
+    end
+  end
+end
+
+
+
 function Layout_liquid_stuff()
 
 
