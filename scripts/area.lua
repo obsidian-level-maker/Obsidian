@@ -403,33 +403,64 @@ function Area_split_map_edges()
   --
   -- This splits border areas which touch *both* the inner map and the
   -- outer of the level into two (new area contains the edge seeds).
+  -- Touching at a corner is included here.
   --
   -- Note : the split pieces may be non-contiguous
   --
+
+  local function touches_edge(S, side)
+    if side == 2 then return S.sy <= 1 end
+    if side == 8 then return S.sy >= SEED_H end
+
+    if side == 4 then return S.sx <= 1 end
+    if side == 6 then return S.sx >= SEED_W end
+
+    error("internal error: bad side")
+  end
+
+
+  local function touches_inner(S)
+    each dir in geom.ALL_DIRS do
+      local N = S:neighbor(dir)
+      if N and N.area and not N.area.is_boundary then
+        return true
+      end
+    end
+
+    -- TODO: check seed at each valid corner
+
+    return false
+  end
+
 
   local function try_split(A, side)
     local  edge_touchers = {}
     local inner_touchers = {}
 
     each S in A.seeds do
-      if S:touches_edge () then table.insert( edge_touchers, S) end
-      if S:touches_inner() then table.insert(inner_touchers, S) end
+      if touches_edge (S, side) then table.insert( edge_touchers, S) end
+      if touches_inner(S)       then table.insert(inner_touchers, S) end
     end
 
     if # edge_touchers > 0 then A.touches_edge  = true end
     if #inner_touchers > 0 then A.touches_inner = true end
 
+    if not (A.touches_edge and A.touches_inner) then
+      return
+    end
+
     -- OK, need to split it
 
     stderrf("splitting %s (%d edge, %d inner)\n", A.name, #edge_touchers, #inner_touchers)
 
-    local new_area = AREA_CLASS.new(A.mode)
+    local new_area = AREA_CLASS.new("scenic")
 
     new_area.seeds = edge_touchers
-    new_area.is_edge_split = true
     new_area.touches_edge  = true
+    new_area.was_split = true
 
     A.touches_edge = false
+    A.was_split = true
 
     -- remove seeds from original area
     each S in edge_touchers do
@@ -449,6 +480,9 @@ function Area_split_map_edges()
       end
     end
   end
+
+  -- recompute the neighbors
+  Area_find_neighbors()
 end
 
 
@@ -501,6 +535,13 @@ function Area_find_neighbors()
   ---| Area_find_neighbors |---
 
   local nb_map = {}
+
+  -- clear previous stuff
+  each A in LEVEL.areas do
+    if not table.empty(A.neighbors) then
+      A.neighbors = {}
+    end
+  end
 
   each A in LEVEL.areas do
   each S in A.seeds do
@@ -598,7 +639,7 @@ function Area_analyse_areas()
     A.edge_loops = {}
 
     -- edge splits can be non-contiguous, so skip them here
-    if A.is_edge_split then return end
+    if A.was_split then return end
 
     -- find a start seed : vertically lowest
     local low_S
