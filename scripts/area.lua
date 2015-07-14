@@ -456,14 +456,16 @@ function Area_split_map_edges()
     local new_area = AREA_CLASS.new("scenic")
 
     new_area.seeds = edge_touchers
+    new_area.is_boundary = true
     new_area.touches_edge  = true
     new_area.was_split = true
 
     A.touches_edge = false
     A.was_split = true
 
-    -- remove seeds from original area
-    each S in edge_touchers do
+    -- re-assign 'area' in seeds, remove them from original area
+    each S in new_area.seeds do
+      S.area = new_area
       table.kill_elem(A.seeds, S)
     end
   end
