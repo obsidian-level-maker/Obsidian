@@ -399,6 +399,60 @@ end
 ------------------------------------------------------------------------
 
 
+function Area_split_map_edges()
+  --
+  -- This splits border areas which touch *both* the inner map and the
+  -- outer of the level into two (new area contains the edge seeds).
+  --
+  -- Note : the split pieces may be non-contiguous
+  --
+
+  local function try_split(A, side)
+    local  edge_touchers = {}
+    local inner_touchers = {}
+
+    each S in A.seeds do
+      if S:touches_edge () then table.insert( edge_touchers, S) end
+      if S:touches_inner() then table.insert(inner_touchers, S) end
+    end
+
+    if # edge_touchers > 0 then A.touches_edge  = true end
+    if #inner_touchers > 0 then A.touches_inner = true end
+
+    -- OK, need to split it
+
+    stderrf("splitting %s (%d edge, %d inner)\n", A.name, #edge_touchers, #inner_touchers)
+
+    local new_area = AREA_CLASS.new(A.mode)
+
+    new_area.seeds = edge_touchers
+    new_area.is_edge_split = true
+    new_area.touches_edge  = true
+
+    A.touches_edge = false
+
+    -- remove seeds from original area
+    each S in edge_touchers do
+      table.kill_elem(A.seeds, S)
+    end
+  end
+
+
+  ---| Area_split_map_edges |---
+
+  for side = 2,8,2 do
+    for i = 1, #LEVEL.areas do
+      local A = LEVEL.areas[i]
+
+      if A.is_boundary then
+        try_split(A, side)
+      end
+    end
+  end
+end
+
+
+
 function Area_squarify_seeds()
   Seed_squarify()
 
@@ -542,6 +596,9 @@ function Area_analyse_areas()
 
   local function create_edge_loops(A)
     A.edge_loops = {}
+
+    -- edge splits can be non-contiguous, so skip them here
+    if A.is_edge_split then return end
 
     -- find a start seed : vertically lowest
     local low_S
@@ -1488,6 +1545,7 @@ function Area_create_rooms()
     Shape_create_areas()
   end
 
+  Area_split_map_edges()
   Area_analyse_areas()
 
   Junction_init()
