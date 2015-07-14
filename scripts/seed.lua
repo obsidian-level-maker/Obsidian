@@ -111,8 +111,6 @@ class CHUNK
 
     solid : bool
 
-    touches_edge : bool
-
     floor_h
     floor_mat
 -- ]

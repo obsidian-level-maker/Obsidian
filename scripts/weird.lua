@@ -1108,9 +1108,6 @@ gui.printf("  loop %d\n", alloc_id("flood_loop"))
     end
 
     LEVEL.temp_area_map = nil
-
-    Area_squarify_seeds()
-    Area_find_neighbors()
   end
 
 
@@ -1165,6 +1162,9 @@ gui.printf("  loop %d\n", alloc_id("flood_loop"))
   convert_to_seeds()
 
   create_the_areas()
+
+  Area_squarify_seeds()
+  Area_find_neighbors()
 
   mark_boundary_areas()
 end

@@ -1539,8 +1539,6 @@ stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S:tostr(),
   smoothen_out_pokers()
 
   make_real_areas()
-
-  Area_squarify_seeds()
 end
 
 
@@ -1632,6 +1630,8 @@ function Shape_create_areas()
   Shape_add_shapes()
 
   Shape_fill_gaps()
+
+  Area_squarify_seeds()
 
   Area_calc_volumes()
   Area_find_neighbors()
