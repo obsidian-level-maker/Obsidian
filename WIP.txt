@@ -3,6 +3,55 @@ WORK IN PROGRESS
 ================
 
 
+
+Scenic Borders
+--------------
+
++  where an outdoor border area touches X, need a low-sky half-seed brush
+   AND LIMIT floor of whole area to be < zone.sky_h
+
+   (a) X can be:
+       - solid wall (either in normal map or bordery parts, e.g. zone wall)
+       - window
+       - a porch
+       - a roofed cage
+       - a "ceiling-y" prefab
+
+   [ we only know about the walls in FINISH_SCENIC_BORDERS ]
+
+   (b) half-seed brush logic similar to SINKs -- ideally use same code
+
++  proper algorithm for heights
+   (avoid same height of two neighboring areas)
+
+   -  areas touching edge of map need floor_h >= zone's max floor
+
+-  proper texturing (use cliff_mat at edge_of_map)
+
+-  get WATER mode working again
+
+
+
+Texturing
+---------
+
+SORT OUT : where 'facade_mat' is stored, how is accessed
+  - basically, each indoor room (cave or building) has a facade_mat
+    (defaulting to ZONE.building_facade or ZONE.cave_mat)
+
+  DONE: for outdoor<-->outdoor, use the fence texture (ZONE.fence_mat)
+
+  ??? for void, use area 'kind'
+
++  textures for outdoor floors
+   [ Q/ still differentiate between "courtyard" and "natural" ? ]
+
++  hallways
+
+-  texturing on door prefabs (for HELL, URBAN themes)
+
+
+
 Closets
 -------
 
@@ -43,18 +92,5 @@ Porches :
 
 -  indoors or dark outdoors : light fittings
 
-
-
-Texturing:
-
-SORT OUT : where 'facade_mat' is stored, how is accessed
-  - basically, each indoor room (cave or building) has a facade_mat
-    (defaulting to ZONE.building_facade or ZONE.cave_mat)
-
-  - for outdoor<-->outdoor, use the fence texture (ZONE.fence_mat)
-
-  - for void, use area 'kind'
-
--  texturing on door prefabs (for HELL, URBAN themes)
 
 
