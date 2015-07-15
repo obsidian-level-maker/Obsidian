@@ -1126,18 +1126,36 @@ function Layout_finish_scenic_borders()
     local max_f = max_neighbor_floor(A)
 
     if not max_f then
-      max_f = A.zone.scenic_sky_h - rand.pick({ 160, 224, 400 })
+      max_f = A.zone.scenic_sky_h - rand.pick({ 16, 160, 192, 224, 400 })
     end
 
-    A.floor_h = max_f + 64;
     A.ceil_h  = A.zone.scenic_sky_h
+
+    A.floor_h = math.min(max_f + 64, A.ceil_h - 32)
 
     A.wall_mat  = "SFALL1"
 
     A.floor_mat = "FLAT10"
-    A.ceil_mat  = "FLAT10"
+    A.ceil_mat  = "_SKY"
 
     A.facade_mat = "FWATER1"
+  end
+
+
+  local function do_outer_skies(A)
+    if A.kind == "void" then return end
+
+    if not A.floor_h then return end
+
+    each S in A.seeds do
+      for dir = 2,8,2 do
+        if S:neighbor(dir, "NODIR") == "NODIR" then continue end
+
+        if not S:raw_neighbor(dir) then
+          Render_outer_sky(S, dir, A.floor_h)
+        end
+      end
+    end
   end
 
 
@@ -1151,6 +1169,7 @@ function Layout_finish_scenic_borders()
   each A in LEVEL.areas do
     if A.is_boundary then
       temp_properties(A)
+      do_outer_skies(A)
     end
   end
 end
