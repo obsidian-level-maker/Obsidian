@@ -1447,6 +1447,8 @@ function Room_assign_voids()
 
   ---| Room_assign_voids |---
 
+do return end --!!!!!!
+
   each Z in LEVEL.zones do
     handle_zone(Z)
   end
