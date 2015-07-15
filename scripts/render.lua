@@ -24,22 +24,23 @@ function calc_wall_mat(A1, A2)
     return "_ERROR"
   end
 
--- FIXME
+-- FIXME : DEBUG STUFF
 if A2 and A2.mode == "void" then return "COMPSPAN" end
-
-  if not A2 or A1.zone != A2.zone then
-    return LEVEL.zone_fence_mat
-  end
 
   if not A1.is_outdoor then
     return assert(A1.wall_mat)
   end
 
-  if not A2 or A2.is_outdoor then
-    return assert(A1.zone.fence_mat)
+  if A2 and not A2.is_outdoor then
+    return A2.facade_mat
   end
 
-  return assert(A2.facade_mat)
+  if not A2 or A1.zone != A2.zone then
+    return LEVEL.zone_fence_mat
+  end
+
+  -- both A1 and A2 are outdoor
+  return assert(A1.zone.fence_mat)
 end
 
 
