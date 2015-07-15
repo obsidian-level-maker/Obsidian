@@ -451,7 +451,7 @@ function Area_split_map_edges()
 
     -- OK, need to split it
 
-    stderrf("splitting %s (%d edge, %d inner)\n", A.name, #edge_touchers, #inner_touchers)
+--- stderrf("splitting %s (%d edge, %d inner)\n", A.name, #edge_touchers, #inner_touchers)
 
     local new_area = AREA_CLASS.new("scenic")
 

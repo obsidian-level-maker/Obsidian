@@ -855,7 +855,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Layout_map_borders()
+function Layout_map_borders__OLD()
   --
   -- Handles the "scenic" stuff outside of the normal map.
   -- For example: a watery "sea" around at one corner of the map.
@@ -1028,7 +1028,7 @@ function Layout_create_scenic_borders()
     Z.border_info.areas = {}
 
     each A in LEVEL.areas do
-      if A.zone == Z then
+      if A.is_boundary and A.zone == Z then
         table.insert(Z.border_info.areas, A)
       end
     end
@@ -1052,7 +1052,7 @@ function Layout_create_scenic_borders()
           junc.post_h   = 84
           junc.blocked  = true
 
-        elseif A.mode == "scenic" then
+        elseif A.kind != "void" then
           junc.kind = "nothing"
         end
       end
@@ -1070,23 +1070,24 @@ function Layout_create_scenic_borders()
     -- this only possible if a LOT of void areas
     if not Z.border_info.nb_min_f then
       Z.border_info.kind = "void"
-    elseif LEVEL.liquid and rand.odds(40) then
+    elseif LEVEL.liquid and rand.odds(40 - 40) then  --!!! FIXME
       Z.border_info.kind = "water"
     else
       Z.border_info.kind = "mountain"
     end
 
-    each A in Z.border_info.areas do
-      if A.mode == "scenic" then
-        if Z.border_info.kind == "void" then
-          A.mode = "void"
-        else
-          A.kind = Z.border_info.kind
-          A.is_outdoor = true
+    Z.hill_mat = "FLAT10"
 
-          set_junctions(A)
-        end
+    each A in Z.border_info.areas do
+      A.kind = Z.border_info.kind
+      
+      if A.kind != "void" then
+        A.is_outdoor = true
       end
+    end
+
+    each A in Z.border_info.areas do
+      set_junctions(A)
     end
   end
 
@@ -1098,7 +1099,6 @@ function Layout_create_scenic_borders()
   each Z in LEVEL.zones do
     setup_zone(Z)
   end
-
 end
 
 

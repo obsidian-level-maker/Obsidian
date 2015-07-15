@@ -2238,8 +2238,6 @@ function Quest_select_textures()
 
 
   local function setup_theme(R)
-    R.facade = assert(R.zone.facade_mat)
-
     if R.kind == "cave" then
       setup_cave_theme(R)
     else
@@ -2283,6 +2281,8 @@ function Quest_select_textures()
 
 
   LEVEL.zone_fence_mat = "REDWALL"  -- FIXME
+
+  LEVEL.cliff_mat = "FIREBLU1"  -- FIXME
 
 
   each Z in LEVEL.zones do
