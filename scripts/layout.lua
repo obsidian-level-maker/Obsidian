@@ -894,7 +894,7 @@ function Layout_map_borders()
 
         if A.kind == "water" and N.room.kind == "hallway" then
           junc.kind = "fence"
-          junc.fence_mat = LEVEL.fence_mat
+          junc.fence_mat = A.zone.fence_mat
           junc.fence_top_z = N.room.hallway.max_h + 32
 
         elseif A.kind == "water" then
@@ -1043,7 +1043,7 @@ function Layout_create_scenic_borders()
 
         if A.kind == "water" and N.room.kind == "hallway" then
           junc.kind = "fence"
-          junc.fence_mat = LEVEL.fence_mat
+          junc.fence_mat = A.zone.fence_mat
           junc.fence_top_z = N.room.hallway.max_h + 32
 
         elseif A.kind == "water" then
@@ -1082,6 +1082,7 @@ function Layout_create_scenic_borders()
           A.mode = "void"
         else
           A.kind = Z.border_info.kind
+          A.is_outdoor = true
 
           set_junctions(A)
         end
@@ -1106,13 +1107,14 @@ function Layout_finish_scenic_borders()
 
   local function temp_properties(A)
     A.floor_h = 100
-    A.ceil_h  = 500
+    A.ceil_h  = 700
 
-    A.wall_mat  = "FLAT10"
+    A.wall_mat  = "SFALL1"
+
     A.floor_mat = "FLAT10"
     A.ceil_mat  = "FLAT10"
 
-    A.facade_mat = "REDWALL"
+    A.facade_mat = "FWATER1"
   end
 
 

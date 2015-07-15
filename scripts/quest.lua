@@ -2282,9 +2282,7 @@ function Quest_select_textures()
   gui.debugf("cave_volume : %d\n", cave_volume)
 
 
-  if THEME.fences then
-    LEVEL.fence_mat = rand.key_by_probs(THEME.fences)
-  end
+  LEVEL.zone_fence_mat = "REDWALL"  -- FIXME
 
 
   each Z in LEVEL.zones do
@@ -2307,6 +2305,10 @@ function Quest_select_textures()
       Z.hall_tex   = rand.key_by_probs(theme.walls)
       Z.hall_floor = rand.key_by_probs(theme.floors)
       Z.hall_ceil  = rand.key_by_probs(theme.ceilings)
+    end
+
+    if THEME.fences then
+      Z.fence_mat = rand.key_by_probs(THEME.fences)
     end
 
     Z.corner_mats = Z.building_theme.corners or THEME.corners

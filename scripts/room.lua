@@ -982,7 +982,7 @@ end
 --[[
 --!!!!!!  DEBUG FOR CTF MAPS
 junc.kind = "fence"
-junc.fence_mat = LEVEL.fence_mat
+junc.fence_mat = A1.zone.fence_mat
 junc.fence_top_z = 32
 do return end
 --]]
@@ -1010,7 +1010,7 @@ do return end
     -- outdoor to outdoor
     if A1.is_outdoor and A2.is_outdoor then
       junc.kind = "fence"
-      junc.fence_mat = LEVEL.fence_mat
+      junc.fence_mat = A1.zone.fence_mat
       junc.fence_top_z = math.max(A1.floor_h, A2.floor_h) + 32
 
       if A1.is_porch or A2.is_porch then
