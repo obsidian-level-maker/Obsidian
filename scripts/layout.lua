@@ -1105,9 +1105,32 @@ end
 
 function Layout_finish_scenic_borders()
 
+  local function max_neighbor_floor(A)
+    local max_f
+
+    each N in A.neighbors do
+      if N.is_boundary then continue end
+      if N.zone != A.zone then continue end
+      if not N.is_outdoor then continue end  -- TODO check for window junctions?
+
+      if N.room and N.floor_h then
+        max_f = math.N_max(N.floor_h, max_f)
+      end
+    end
+
+    return max_f
+  end
+
+
   local function temp_properties(A)
-    A.floor_h = 100
-    A.ceil_h  = 700
+    local max_f = max_neighbor_floor(A)
+
+    if not max_f then
+      max_f = A.zone.scenic_sky_h - rand.pick({ 160, 224, 400 })
+    end
+
+    A.floor_h = max_f + 64;
+    A.ceil_h  = A.zone.scenic_sky_h
 
     A.wall_mat  = "SFALL1"
 
@@ -1119,6 +1142,11 @@ function Layout_finish_scenic_borders()
 
 
   ---| Layout_finish_scenic_borders |---
+
+  each Z in LEVEL.zones do
+    local add_h = rand.pick({ 128,256,384 })
+    Z.scenic_sky_h = Z.sky_h + add_h
+  end
 
   each A in LEVEL.areas do
     if A.is_boundary then
