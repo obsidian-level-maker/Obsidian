@@ -39,8 +39,8 @@ HALL_I_1x1 =
 
   conns =
   {
-    A = { x=1, y=1, dir=2 }
-    B = { x=1, y=1, dir=8 }
+    a = { x=1, y=1, dir=2 }
+    b = { x=1, y=1, dir=8 }
   }
 }
 
@@ -57,8 +57,8 @@ HALL_I_2x1 =
 
   conns =
   {
-    A = { x=1, y=1, dir=2, w=2 }
-    B = { x=1, y=1, dir=8, w=2 }
+    a = { x=1, y=1, dir=2, w=2 }
+    b = { x=1, y=1, dir=8, w=2 }
   }
 }
 --]]
@@ -84,9 +84,9 @@ HALL_U_5x3_rounded =
 
   conns =
   {
-    A = { x=1, y=3, dir=8 }
-    B = { x=5, y=3, dir=8 }
-    C = { x=5, y=3, dir=8 }
+    a = { x=1, y=3, dir=8 }
+    b = { x=5, y=3, dir=8 }
+    c = { x=5, y=3, dir=8 }
   }
 
   conn_
@@ -102,7 +102,7 @@ HALL_U_5x3_rounded =
 
 ROOM_RECT_3x2 =
 {
-  prob = 50
+  prob = 40
 
   structure =
   {
@@ -112,11 +112,21 @@ ROOM_RECT_3x2 =
 
   conns =
   {
-    A = { x=2, y=3, dir=2 }
-    B = { x=1, y=3, dir=8 }
-    C = { x=3, y=3, dir=8 }
---  D = { x=1, y=3, dir=4 }
---  E = { x=3, y=3, dir=6 }
+    a = { x=2, y=1, dir=2 }
+    b = { x=1, y=2, dir=8 }
+    c = { x=3, y=2, dir=8 }
+    d = { x=1, y=2, dir=4 }
+    e = { x=3, y=2, dir=6 }
+    f = { x=2, y=2, dir=8 }
+  }
+
+  conn_sets =
+  {
+    "a:bc"
+    "a:bcd"
+    "a:de"
+    "a:def"
+--  "bc:a"
   }
 }
 
