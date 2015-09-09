@@ -19,6 +19,77 @@
 ------------------------------------------------------------------------
 
 
+--class SPROUT
+--[[
+    S    : SEED  -- where to join onto
+    dir  : DIR   --
+
+    room : ROOM  -- the room to join onto
+
+    rank         -- rank number
+--]]
+
+
+function Sprout_new(S, dir, room, rank)
+  local P =
+  {
+    S = S
+    dir = dir
+    room = room
+    rank = rank
+  }
+
+  table.insert(LEVEL.sprouts, P)
+
+  return P
+end
+
+
+function Sprout_pick_next()
+  if table.empty(LEVEL.sprouts) then
+    return nil
+  end
+
+  local best
+  local best_score = 0
+
+  each P in LEVEL.sprouts do
+    local score = P.rank * 10
+    if P.room.kind == "hallway" then
+      score = score - 5
+    end
+
+    score = score + gui.random()
+
+    if score > best_score then
+      best = P
+      best_score = score
+    end
+  end
+
+  assert(best)
+
+  -- remove it from global list
+  table.kill_elem(LEVEL.sprouts, P)
+
+  return P
+end
+
+
+function Sprout_kill_room(R)
+  for i = #LEVEL.sprouts, 1, -1 do
+    local P = LEVEL.sprouts[i]
+
+    if P.room == R then
+      table.remove(LEVEL.sprouts, i)
+      P.S = nil ; P.dir = nil
+    end   
+  end
+end
+
+
+------------------------------------------------------------------------
+
 old__SHAPES__old =
 {
  
@@ -1635,6 +1706,8 @@ end
 
 
 function Grower_create_areas()
+  LEVEL.sprouts = {}
+
   Grower_prepare()
 
   Grower_grow_hub("is_first")

@@ -638,7 +638,8 @@ function Connect_stuff()
 
 
   local function kill_hallway(R)
-    R:kill_it()
+    error("kill_hallway called !!")
+    --!!! R:kill_it()
   end
 
 
