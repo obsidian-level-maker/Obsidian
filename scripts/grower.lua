@@ -491,7 +491,7 @@ HALL_U_5x3_rounded =
 
 
 
-function Shape_save_svg()
+function Grower_save_svg()
 
   -- grid size
   local SIZE = 14
@@ -552,7 +552,7 @@ function Shape_save_svg()
   end
 
 
-  ---| Shape_save_svg |---
+  ---| Grower_save_svg |---
 
   local filename = "shape_" .. LEVEL.name .. ".svg"
 
@@ -596,7 +596,7 @@ end
 
 
 
-function Shape_preprocess_patterns()
+function Grower_preprocess_patterns()
 
   local cur_def
 
@@ -623,7 +623,7 @@ function Shape_preprocess_patterns()
     if ch == '7' then return { kind="area", area=7 } end
     if ch == '8' then return { kind="area", area=8 } end
 
-    error("Shape_parse_char: unknown symbol: " .. tostring(ch))
+    error("Grower_parse_char: unknown symbol: " .. tostring(ch))
   end
 
 
@@ -641,7 +641,7 @@ function Shape_preprocess_patterns()
     if ch == '/' or ch == '%' then
       local D = table.remove(diag_list, 1)
       if not D then
-        error("Shape_parse_char: not enough diagonals")
+        error("Grower_parse_char: not enough diagonals")
       end
 
       local L = parse_element(string.sub(D, 1, 1))
@@ -744,7 +744,7 @@ function Shape_preprocess_patterns()
   end
 
 
-  ---| Shape_preprocess_patterns |---
+  ---| Grower_preprocess_patterns |---
 
   table.name_up(TILES)
 
@@ -770,7 +770,7 @@ end
 
 
 
-function Shape_prepare()
+function Grower_prepare()
   --
   -- decide boundary rectangle, etc...
   --
@@ -791,12 +791,12 @@ function Shape_prepare()
   LEVEL.boundary_sy1 = LEVEL.boundary_margin
   LEVEL.boundary_sy2 = SEED_H + 1 - LEVEL.boundary_margin
 
-  Shape_preprocess_patterns()
+  Grower_preprocess_patterns()
 end
 
 
 
-function Shape_add_shapes()
+function Grower_add_shapes()
   --
   -- Builds the bulk of the traversible map by placing predefined
   -- shapes onto it.
@@ -1172,7 +1172,7 @@ end
   end
 
 
-  ---| Shape_add_shapes |---
+  ---| Grower_add_shapes |---
 
   add_initial_shapes()
 
@@ -1183,7 +1183,7 @@ end
 
 
 
-function Shape_fill_gaps()
+function Grower_fill_gaps()
   --
   -- Creates areas from all currently unused seeds (ones which have not
   -- received a shape yet).
@@ -1528,7 +1528,7 @@ stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S:tostr(),
   end
 
 
-  ---| Shape_fill_gaps |---
+  ---| Grower_fill_gaps |---
 
   create_temp_areas()
 
@@ -1543,7 +1543,7 @@ end
 
 
 
-function Shape_assign_boundary()
+function Grower_assign_boundary()
 
   local function area_touches_edge(A)
     -- this also prevents a single seed gap between area and edge of map
@@ -1608,7 +1608,7 @@ function Shape_assign_boundary()
   end
 
 
-  ---| Shape_assign_boundary |---
+  ---| Grower_assign_boundary |---
 
   each A in LEVEL.areas do
     if not area_touches_edge(A) and area_is_inside_box(A) then
@@ -1624,20 +1624,20 @@ end
 
 
 
-function Shape_create_areas()
-  Shape_prepare()
+function Grower_create_areas()
+  Grower_prepare()
 
-  Shape_add_shapes()
+  Grower_add_shapes()
 
-  Shape_fill_gaps()
+  Grower_fill_gaps()
 
   Area_squarify_seeds()
 
   Area_calc_volumes()
   Area_find_neighbors()
 
-  Shape_assign_boundary()
+  Grower_assign_boundary()
 
---- Shape_save_svg()
+--- Grower_save_svg()
 end
 

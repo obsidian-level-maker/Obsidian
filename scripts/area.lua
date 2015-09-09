@@ -1585,7 +1585,7 @@ function Area_create_rooms()
     Weird_generate(W, H)
     Weird_create_areas()
   else
-    Shape_create_areas()
+    Grower_create_areas()
   end
 
   Area_split_map_edges()
