@@ -45,6 +45,25 @@ HALL_I_1x1 =
 }
 
 
+HALL_I_1x3 =
+{
+  prob = 10
+
+  structure =
+  {
+    "1"
+    "1"
+    "1"
+  }
+
+  conns =
+  {
+    a = { x=1, y=1, dir=2 }
+    b = { x=1, y=3, dir=8 }
+  }
+}
+
+
 --[[
 HALL_I_2x1 =
 {
@@ -140,7 +159,7 @@ ROOM_RECT_3x2 =
 --[[
 HUB_DONUT_1 =
 {
-  prob = 100
+  prob = 1000
 
   structure =
   {
