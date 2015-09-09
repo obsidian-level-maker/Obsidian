@@ -144,26 +144,13 @@ function ROOM_CLASS.kill_it(R)
     end
   end
 
+  table.kill_elem(LEVEL.rooms, R)
+
   each A in R.areas do
-    A.mode = "void"
-    A.room = nil
-
-    each S in A.seeds do
-      S.room = nil
-
-      each dir in geom.ALL_DIRS do
-        if S.border[dir] then S.border[dir].kind = nil end
-      end
-    end
-
-    each C in A.conns do
-      table.kill_elem(LEVEL.conns, C)
-    end
-
-    A.conns = nil
+    A:kill_it()
   end
 
-  table.kill_elem(LEVEL.rooms, R)
+  R.areas = nil
 
   R.kind = "DEAD"
   R.hallway = nil

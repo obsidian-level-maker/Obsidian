@@ -169,6 +169,38 @@ function AREA_CLASS.new(mode)
 end
 
 
+function AREA_CLASS.kill_it(A)
+  --
+  -- NOTE : this can only be called fairly early, e.g. before all the
+  --        neighbor lists and junctions are created.
+  --
+
+  table.kill_elem(LEVEL.areas, A)
+
+  A.id   = -1
+  A.name = "DEAD_AREA"
+
+  A.mode = "DEAD"
+  A.kind = "DEAD"
+  A.room = nil
+
+  each S in A.seeds do
+    S.room = nil
+    S.area = nil
+
+    each dir in geom.ALL_DIRS do
+      if S.border[dir] then S.border[dir].kind = nil end
+    end
+  end
+
+  each C in A.conns do
+    table.kill_elem(LEVEL.conns, C)
+  end
+
+  A.conns = nil
+end
+
+
 function AREA_CLASS.tostr(A)
   return string.format("AREA_%d", A.id)
 end
