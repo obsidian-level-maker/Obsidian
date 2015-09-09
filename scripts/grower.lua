@@ -746,11 +746,11 @@ function Shape_preprocess_patterns()
 
   ---| Shape_preprocess_patterns |---
 
-  table.name_up(SHAPES)
+  table.name_up(TILES)
 
-  table.expand_templates(SHAPES)
+  table.expand_templates(TILES)
 
-  each name,def in SHAPES do
+  each name,def in TILES do
     cur_def = def
 
     def.area_list = {}
@@ -1084,7 +1084,7 @@ end
 
     for loop = 1, attempts do
       local name = rand.key_by_probs(tab)
-      local def  = assert(SHAPES[name])
+      local def  = assert(TILES[name])
 
       if try_add_shape(def, sx, sy, DIST) then
         return true
@@ -1100,7 +1100,7 @@ end
 
     local tab = {}
 
-    each name, def in SHAPES do
+    each name, def in TILES do
       local prob = def.prob or 0
 
       if (mode == "hallway") != (def.mode == "hallway") then
