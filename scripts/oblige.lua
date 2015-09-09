@@ -25,7 +25,7 @@ require "prefab"
 
 require "seed"
 require "weird"
-require "shapes"
+require "tiles"
 require "grower"
 require "area"
 require "connect"
