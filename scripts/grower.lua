@@ -520,7 +520,8 @@ function Grower_save_svg()
 
     local color = "#00f"
 
-    if A1.prefer_mode == "hallway" or (A2 and A2.prefer_mode == "hallway") then
+--    if A1.prefer_mode == "hallway" or (A2 and A2.prefer_mode == "hallway") then
+    if A1.room and A2.room and A1.room != A2.room then
       color = "#f00"
     elseif A2 and A1.is_boundary != A2.is_boundary then
       color = "#0f0"
@@ -796,7 +797,7 @@ end
 
 
 
-function Grower_add_shapes()
+function Grower_grow_hub(is_first)
   --
   -- Builds the bulk of the traversible map by placing predefined
   -- shapes onto it.
@@ -1172,7 +1173,7 @@ end
   end
 
 
-  ---| Grower_add_shapes |---
+  ---| Grower_grow_hub |---
 
   add_initial_shapes()
 
@@ -1596,7 +1597,7 @@ function Grower_assign_boundary()
     end
 
     each A in LEVEL.areas do
-      if A.is_inner and not seen[A] then
+      if A.is_inner and not A.room and not seen[A] then
         gui.printf("HERE IS ONE DUDE! : %s", A.name)
 
         A.mode = "scenic"
@@ -1613,7 +1614,16 @@ function Grower_assign_boundary()
   each A in LEVEL.areas do
     if not area_touches_edge(A) and area_is_inside_box(A) then
       A.is_inner = true
-    else
+      if A.room then
+        each A2 in A.room.areas do
+          A2.is_inner = true
+        end
+      end
+    end
+  end
+
+  each A in LEVEL.areas do
+    if not A.is_inner then
       A.mode = "scenic"
       A.is_boundary = true
     end
@@ -1627,7 +1637,7 @@ end
 function Grower_create_areas()
   Grower_prepare()
 
-  Grower_add_shapes()
+  Grower_grow_hub("is_first")
 
   Grower_fill_gaps()
 
