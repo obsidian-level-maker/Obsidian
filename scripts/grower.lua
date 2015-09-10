@@ -886,8 +886,7 @@ end
 
 function Grower_grow_hub(is_first)
   --
-  -- Builds the bulk of the traversible map by placing predefined
-  -- shapes onto it.
+  --  FIXME DESCRIPTION | ALGORITHM
   --
 
   local area_map
@@ -1695,13 +1694,34 @@ function Grower_assign_boundary()
   end
 
 
+  local function mark_inners()
+    each A in LEVEL.areas do
+      if A.room then
+        A.is_inner = true
+
+      elseif area_is_inside_box(A) and not area_touches_edge(A) then
+        A.is_inner = true
+      end
+    end
+
+    each A in LEVEL.areas do
+      if not A.is_inner then
+        A.mode = "scenic"
+        A.is_boundary = true
+      end
+    end
+  end
+
+
   local function check_for_surrounded_areas()
-    -- look for areas which have become surrounded by boundary areas
-    -- (this is probably very rare, but nonetheless we should handle it).
+    -- look for "inner" areas which have become surrounded by boundary areas
+    -- [ this is fairly rare, but nonetheless we should handle it. ]
 
-    local start_A = LEVEL.rooms[1].areas[1]
+    local seen = {}
 
-    local seen = {} ; seen[start_A] = true
+    each A in LEVEL.areas do
+      if A.room then seen[A] = true end
+    end
 
     for loop = 1,100 do
       surr_grow_pass(seen)
@@ -1712,9 +1732,8 @@ function Grower_assign_boundary()
         gui.printf("HERE IS ONE DUDE! : %s", A.name)
 
         A.mode = "scenic"
-
-        A.is_inner = false
         A.is_boundary = true
+        A.is_inner = false
       end
     end
   end
@@ -1722,23 +1741,7 @@ function Grower_assign_boundary()
 
   ---| Grower_assign_boundary |---
 
-  each A in LEVEL.areas do
-    if not area_touches_edge(A) and area_is_inside_box(A) then
-      A.is_inner = true
-      if A.room then
-        each A2 in A.room.areas do
-          A2.is_inner = true
-        end
-      end
-    end
-  end
-
-  each A in LEVEL.areas do
-    if not A.is_inner then
-      A.mode = "scenic"
-      A.is_boundary = true
-    end
-  end
+  mark_inners()
 
   check_for_surrounded_areas()
 end
