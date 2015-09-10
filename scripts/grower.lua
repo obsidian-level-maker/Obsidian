@@ -626,7 +626,7 @@ function Grower_save_svg()
 
   ---| Grower_save_svg |---
 
-  local filename = "shape_" .. LEVEL.name .. ".svg"
+  local filename = "grow_s" .. OB_CONFIG.seed .. "_" .. LEVEL.name .. ".svg"
 
   fp = io.open(filename, "w")
 
@@ -853,11 +853,11 @@ function Grower_prepare()
   local map_size = (SEED_W + SEED_H) / 2
 
   if map_size < 26 then
-    LEVEL.boundary_margin = 4
+    LEVEL.boundary_margin = 3
   elseif map_size < 36 then
-    LEVEL.boundary_margin = 5
+    LEVEL.boundary_margin = 4
   else
-    LEVEL.boundary_margin = 6
+    LEVEL.boundary_margin = 5
   end
 
   LEVEL.boundary_sx1 = LEVEL.boundary_margin
@@ -866,7 +866,7 @@ function Grower_prepare()
   LEVEL.boundary_sy1 = LEVEL.boundary_margin
   LEVEL.boundary_sy2 = SEED_H + 1 - LEVEL.boundary_margin
 
-  Grower_preprocess_patterns()
+  Grower_preprocess_tiles()
 end
 
 
@@ -1108,10 +1108,10 @@ end
 
       for x = x1, x2 do
       for y = y1, y2 do
-        -- only need to visit the sides of the bbox
-        if not (x == x1 or x == x2 or y == y1 or y == y2) then
-          continue
-        end
+--??        -- only need to visit the sides of the bbox
+--??        if not (x == x1 or x == x2 or y == y1 or y == y2) then
+--??          continue
+--??        end
 
         local best_T
 
@@ -1170,8 +1170,8 @@ end
   end
 
 
-  local function collect_usable_shapes(mode)
-    -- mode can be "initial", "hallway" or "normal"
+  local function collect_usable_tiles(mode)
+    -- mode can be "initial" or "room" or "
 
     local tab = {}
 
@@ -1195,21 +1195,49 @@ end
   end
 
 
-  local function add_initial_shapes()
-    local initial_tab = collect_usable_shapes("initial")
-
-    local LOCS = { 1,2,3, 4,5,6, 7,8,9 }
-
-    -- on small maps, have less initial locations
-    if SEED_W < 32 then
-      LOCS = { 1,3,5,7,9 }
+  local function biggest_free_rectangle()
+    if is_first then
+      return LEVEL.boundary_sx1 + 1, LEVEL.boundary_sy1 + 1,
+             LEVEL.boundary_sx2 - 1, LEVEL.boundary_sy2 - 1
     end
 
-    each loc in rand.shuffle(LOCS) do
-      local sx, sy = Seed_from_loc(loc)
+    error("biggest_free_rectangle: not implemented!")
+  end
 
-      add_shape_from_list(initial_tab, sx, sy, 10)
+
+  local function add_initial_hub()
+    local tab = {}
+
+    each name, def in TILES do
+      if def.mode == "hallway" then continue end
+
+      local prob = def.prob or 0
+      if prob > 0 then
+        tab[name] = prob
+      end
     end
+
+    assert(not table.empty(tab))
+
+    local sx1, sy1, sx2, sy2 = biggest_free_rectangle()
+
+    local sx = math.i_mid(sx1, sx2 - 2) - 2
+    local sy = math.i_mid(sy1, sy2 - 2) - 2
+
+    while not table.empty(tab) do
+      local name = rand.key_by_probs(tab)
+      local def  = assert(TILES[name])
+
+      tab[name] = nil
+
+      if try_add_shape(def, sx, sy, 2) then
+        return
+      end
+
+      -- try another one...
+    end
+
+    error("Failed to add initial hub.")
   end
 
 
@@ -1249,11 +1277,11 @@ end
 
   ---| Grower_grow_hub |---
 
-  add_initial_shapes()
+  add_initial_hub()
 
-  add_hallways()
+  -- FIXME : reset of algorithm
 
-  add_rooms()
+  -- FIXME : if not is_first then connect_to_previous_hub() end
 end
 
 
@@ -1589,9 +1617,7 @@ stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S:tostr(),
 
   local function make_real_areas()
     each T in temp_areas do
-      local area = AREA_CLASS.new("normal")
-
-      area.prefer_mode = "void"
+      local area = AREA_CLASS.new("void")
 
       area.seeds = T.seeds
 
@@ -1708,7 +1734,7 @@ end
 
 
 
-function Grower_create_areas()
+function Grower_create_rooms()
   LEVEL.sprouts = {}
 
   Grower_prepare()
@@ -1724,6 +1750,6 @@ function Grower_create_areas()
 
   Grower_assign_boundary()
 
---- Grower_save_svg()
+  Grower_save_svg()
 end
 

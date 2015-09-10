@@ -1623,12 +1623,12 @@ function Area_create_rooms()
 
   Seed_init(W - 1, H - 1)
 
-  if OB_CONFIG.mode == "ctf" or true then
-    Weird_generate(W, H)
-    Weird_create_areas()
-  else
-    Grower_create_areas()
-  end
+--##  if OB_CONFIG.mode == "ctf" or true then
+--##    Weird_generate(W, H)
+--##    Weird_create_areas()
+--##  else
+  Grower_create_rooms()
+--##  end
 
 ---???  Area_split_map_edges()
 
