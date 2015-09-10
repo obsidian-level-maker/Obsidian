@@ -70,6 +70,18 @@ function CONN_CLASS.new(kind, A1, A2, dir)
 end
 
 
+function CONN_CLASS.kill_it(C)
+  table.remove(LEVEL.conns, C)
+
+  C.kind = "DEAD"
+  C.id   = -1
+
+  C.A1  = nil ; C.S1 = nil
+  C.A2  = nil ; C.S2 = nil
+  C.dir = nil
+end
+
+
 function CONN_CLASS.tostr(C)
   return string.format("CONN_%d [%s%s]", C.id, C.kind,
          sel(C.is_cycle, "/cycle", ""))
