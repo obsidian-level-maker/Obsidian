@@ -83,7 +83,7 @@ function Sprout_kill_room(R)
     if P.room == R then
       table.remove(LEVEL.sprouts, i)
       P.S = nil ; P.dir = nil
-    end   
+    end
   end
 end
 
@@ -660,7 +660,7 @@ function Grower_save_svg()
   end
   end
   end
-  
+
   -- end
   fp:write('</svg>\n')
 
@@ -738,7 +738,7 @@ function Grower_preprocess_tiles()
     local H = #structure
 
     local diag_list
-    
+
     if def.diagonals then
       diag_list = table.copy(def.diagonals)
     end
@@ -891,7 +891,7 @@ function Grower_grow_hub(is_first)
 
   local area_map
 
-  
+
   local function create_areas_for_tile(def, R)
     area_map = {}
 
@@ -1474,7 +1474,7 @@ function Grower_fill_gaps()
       Nc = S2:neighbor(8)
       Nd = S :neighbor(sel(S.diagonal == 1, 4, 6))
       Ne = S2:neighbor(sel(S.diagonal == 1, 6, 4))
-    
+
     elseif dir == 8 then
 
       a = T1
@@ -1604,7 +1604,7 @@ stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S:tostr(),
 
   local function smoothen_out_pokers()
     -- first pass : detect diagonals we can flip --
-    
+
     for sx = 1, SEED_W do
     for sy = 1, SEED_H do
       try_flip_at_seed(SEEDS[sx][sy])
@@ -1655,6 +1655,26 @@ end
 
 
 function Grower_assign_boundary()
+  --
+  -- ALGORITHM:
+  --   1. all the existing room areas are marked as "inner"
+  --
+  --   2. mark some non-room areas which touch a room as "inner"
+  --
+  --   3. visit each non-inner area:
+  --      (a) flood-fill to find all joined non-inner areas
+  --      (b) if this group touches edge of map, mark as boundary,
+  --          otherwise mark as "inner"
+  --
+
+  local function area_touches_a_room(A)
+    each N in A.neighbors do
+      if N.room then return true end
+    end
+
+    return false
+  end
+
 
   local function area_touches_edge(A)
     -- this also prevents a single seed gap between area and edge of map
@@ -1681,59 +1701,50 @@ function Grower_assign_boundary()
   end
 
 
-  local function surr_grow_pass(seen)
-    local old_seen = table.copy(seen)
-
-    each A,_ in old_seen do
-      each N in A.neighbors do
-        if N.is_inner then
-          seen[N] = true
-        end
-      end
-    end
-  end
-
-
-  local function mark_inners()
+  local function mark_room_inners()
     each A in LEVEL.areas do
       if A.room then
         A.is_inner = true
-
-      elseif area_is_inside_box(A) and not area_touches_edge(A) then
-        A.is_inner = true
-      end
-    end
-
-    each A in LEVEL.areas do
-      if not A.is_inner then
-        A.mode = "scenic"
-        A.is_boundary = true
       end
     end
   end
 
 
-  local function check_for_surrounded_areas()
-    -- look for "inner" areas which have become surrounded by boundary areas
-    -- [ this is fairly rare, but nonetheless we should handle it. ]
-
-    local seen = {}
+  local function mark_other_inners()
+    local prob = 30
 
     each A in LEVEL.areas do
-      if A.room then seen[A] = true end
+      if not A.room and
+         rand.odds(prob) and
+         touches_a_room(A) and
+         area_is_inside_box(A) and
+         not area_touches_edge(A)
+      then
+        A.is_inner = true
+      end
     end
+  end
 
-    for loop = 1,100 do
-      surr_grow_pass(seen)
+
+  local function mark_outer_recursive(A)
+    assert(not A.room)
+
+    A.is_boundary = true
+    A.mode = "scenic"
+
+    -- recursively handle neighbors
+    each N in A.neighbors() do
+      if not (N.is_inner or N.is_boundary) then
+        mark_outer_recursive(N)
+      end
     end
+  end
 
+
+  local function floodfill_outers()
     each A in LEVEL.areas do
-      if A.is_inner and not A.room and not seen[A] then
-        gui.printf("HERE IS ONE DUDE! : %s", A.name)
-
-        A.mode = "scenic"
-        A.is_boundary = true
-        A.is_inner = false
+      if not (A.is_inner or A.is_boundary) and area_touches_edge(A) then
+        mark_outer_recursive(A)
       end
     end
   end
@@ -1741,9 +1752,11 @@ function Grower_assign_boundary()
 
   ---| Grower_assign_boundary |---
 
-  mark_inners()
+  mark_room_inners()
 
-  check_for_surrounded_areas()
+  mark_other_inners()
+
+  floodfill_outers()
 end
 
 
