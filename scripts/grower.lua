@@ -838,6 +838,8 @@ function Grower_preprocess_tiles()
 
     if string.match(name, "HALL_") then def.mode = "hallway" end
     if string.match(name, "HUB_")  then def.mode = "hub" end
+
+    if not def.mode then def.mode = "room" end
   end
 end
 
