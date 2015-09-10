@@ -668,7 +668,7 @@ end
 
 
 
-function Grower_preprocess_patterns()
+function Grower_preprocess_tiles()
 
   local cur_def
 
@@ -689,11 +689,11 @@ function Grower_preprocess_patterns()
     if ch == '2' then return { kind="area", area=2 } end
     if ch == '3' then return { kind="area", area=3 } end
     if ch == '4' then return { kind="area", area=4 } end
-
     if ch == '5' then return { kind="area", area=5 } end
     if ch == '6' then return { kind="area", area=6 } end
     if ch == '7' then return { kind="area", area=7 } end
     if ch == '8' then return { kind="area", area=8 } end
+    if ch == '9' then return { kind="area", area=9 } end
 
     error("Grower_parse_char: unknown symbol: " .. tostring(ch))
   end
@@ -750,7 +750,7 @@ function Grower_preprocess_patterns()
       local line = structure[y]
 
       if #line != W then
-        error("Malformed structure in shape: " .. def.name)
+        error("Malformed structure in tile: " .. def.name)
       end
 
       local ch = string.sub(line, x, x)
@@ -772,24 +772,26 @@ function Grower_preprocess_patterns()
   end
 
 
-  local function add_connections(def)
+  local function check_connections(def)
     local grid = def.processed[1].grid
 
-    each conn in def.good_conns do
+    if not def.conns then
+      error("Missing connections in tile: " .. def.name)
+    end
+
+    each letter,conn in def.conns do
       local x = conn.x
       local y = conn.y
 
       if not (x and x >= 1 and x <= grid.w) or
          not (y and y >= 1 and y <= grid.h)
       then
-        error("Bad connection coord in shape: " .. def.name)
+        error("Bad connection coord in tile: " .. def.name)
       end
 
       if grid[x][y].kind == "diagonal" then
-        error("Ambiguous conn coord in shape (on a diagonal)")
+        error("Ambiguous conn coord (on a diagonal) in tile: " .. def.name)
       end
-
-      grid[x][y].good_conn = { dir=conn.dir }
     end
   end
 
@@ -804,11 +806,11 @@ function Grower_preprocess_patterns()
       if not (x and x >= 1 and x <= grid.w) or
          not (y and y >= 1 and y <= grid.h)
       then
-        error("Bad stair coord in shape: " .. def.name)
+        error("Bad stair coord in tile: " .. def.name)
       end
 
       if grid[x][y].kind == "diagonal" then
-        error("Ambiguous stair coord in shape (on a diagonal)")
+        error("Ambiguous stair coord (on a diagonal) in tile: " .. def.name)
       end
 
       grid[x][y].good_stair = { dir=spot.dir }
@@ -816,7 +818,7 @@ function Grower_preprocess_patterns()
   end
 
 
-  ---| Grower_preprocess_patterns |---
+  ---| Grower_preprocess_tiles |---
 
   table.name_up(TILES)
 
@@ -830,13 +832,12 @@ function Grower_preprocess_patterns()
 
     def.processed[1] = convert_structure(def, def.structure)
 
-    if def.good_conns then add_connections(def) end
+    check_connections(def)
 
     if def.stair_spots then add_stairs(def) end
 
-    if string.match(name, "HALL") then
-      def.mode = "hallway"
-    end
+    if string.match(name, "HALL_") then def.mode = "hallway" end
+    if string.match(name, "HUB_")  then def.mode = "hub" end
   end
 end
 
