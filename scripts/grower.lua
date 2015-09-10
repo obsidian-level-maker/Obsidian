@@ -1053,38 +1053,47 @@ function Grower_grow_hub(is_first)
   end
 
 
-  local function mark_hallway__OLD(info, T)
-    local W = info.grid.w
-    local H = info.grid.h
-
-    -- mark two extra seeds around bbox of shape
-    -- [ allow space for making a room in-between ]
-
-    for px = -1, W + 2 do
-    for py = -1, H + 2 do
-      local sx, sy = transform_coord(info, T, px, py)
-
-      if Seed_valid(sx, sy) then
-        SEEDS[sx][sy].no_hall = true
-      end
-    end -- px, py
-    end
-  end
-
-
   local function add_new_sprouts(info, T, initial_hub)
-    
     -- FIXME
   end
 
 
-  local function try_add_tile_RAW(info, T, ROOM, initial_hub)
+  local function create_room(def)
+    local ROOM = ROOM_CLASS.new()
+
+    if def.mode == "hallway" then
+      ROOM.kind = "hallway"
+      ROOM.hallway = { }
+    end
+
+    create_areas_for_tile(def, ROOM)
+
+    return ROOM
+  end
+
+
+  local function check_sprout_blocked(P)
+    local N = P.S:neighbor(P.dir)
+
+    if not N then return true end
+
+    if N.area then return true end
+
+    if N.sx <= LEVEL.boundary_sx1 or N.sx >= LEVEL.boundary_sx2 then return true end
+    if N.sy <= LEVEL.boundary_sy1 or N.sy >= LEVEL.boundary_sy2 then return true end
+
+    return false  -- not blocked
+  end
+
+
+  local function try_add_tile_RAW(P, info, T, ROOM, initial_hub)
     -- when 'ROOM' is not nil, we are installing the tile
 
--- DEBUG
+--[[ DEBUG
 if ROOM then
---stderrf("Installing shape '%s' @ (%d %d)\n", info.def.name, T.x, T.y)
+  stderrf("Installing tile '%s' @ (%d %d) dir:%d\n", info.def.name, P.sx, P.sy, P.dir)
 end
+--]]
 
     local W = info.grid.w
     local H = info.grid.h
@@ -1115,20 +1124,6 @@ end
 ---##    end
 
     return true
-  end
-
-
-  local function create_room(def)
-    local ROOM = ROOM_CLASS.new()
-
-    if def.mode == "hallway" then
-      ROOM.kind = "hallway"
-      ROOM.hallway = { }
-    end
-
-    create_areas_for_tile(def, ROOM)
-
-    return ROOM
   end
 
 
@@ -1173,46 +1168,6 @@ end
   end
 
 
-  -- OLD !!
-  local function add_shape_from_list(tab, sx, sy, attempts, DIST)
-    DIST = DIST or 5
-
-    for loop = 1, attempts do
-      local name = rand.key_by_probs(tab)
-      local def  = assert(TILES[name])
-
-      if try_add_tile(def, sx, sy, DIST) then
-        return true
-      end
-    end
-
-    return false
-  end
-
-
-  local function collect_usable_tiles(mode)  -- needed ???
-    local tab = {}
-
-    each name, def in TILES do
-      local prob = def.prob or 0
-
-      if (mode == "hallway") != (def.mode == "hallway") then
-        continue
-      end
-
-      if mode == "initial" then
-        prob = def.initial_prob or 0
-      end
-
-      if prob > 0 then
-        tab[name] = prob
-      end
-    end
-
-    return tab
-  end
-
-
   local function biggest_free_rectangle()
     if is_first then
       return LEVEL.boundary_sx1 + 1, LEVEL.boundary_sy1 + 1,
@@ -1239,11 +1194,13 @@ end
 
     local sx1, sy1, sx2, sy2 = biggest_free_rectangle()
 
+    local sx  = math.i_mid(sx1, sx2) - 1
+    local sy  = math.i_mid(sy1, sy2) - 2
+
     -- create a fake sprout
     local P =
     {
-      sx  = math.i_mid(sx1, sx2) - 1
-      sy  = math.i_mid(sy1, sy2) - 2
+      S = SEEDS[sx][sy]
       dir = 8
       initial_hub = true
     }
@@ -1302,6 +1259,16 @@ end
   end
 
 
+  local function remove_dud_hallways()
+    -- FIXME
+  end
+
+
+  local function connect_to_previous_hub()
+    -- FIXME
+  end
+
+
   ---| Grower_grow_hub |---
 
   add_initial_hub()
@@ -1309,16 +1276,20 @@ end
   while true do
     local sprout = Sprout_pick_next()
 
+    -- no more sprouts?
     if not sprout then break; end
 
-    -- FIXME: if check_sprout_blocked(sprout) then continue end
+    if not check_sprout_blocked(sprout) then
+      add_room(sprout)
+    end
+  end
 
-    add_room(sprout)
- end
-
-  -- FIXME : rest of algorithm
-
-  -- FIXME : if not is_first then connect_to_previous_hub() end
+  -- ensure a second (etc) hub-growth is connected to a previous one
+  -- [ this is mainly so we can mark the level boundary, and we need
+  --   a fully connected room set for that ]
+  if not is_first then
+    connect_to_previous_hub()
+  end
 end
 
 
