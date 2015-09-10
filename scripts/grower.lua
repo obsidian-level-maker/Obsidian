@@ -779,6 +779,8 @@ function Grower_preprocess_tiles()
       error("Missing connections in tile: " .. def.name)
     end
 
+    local default_set = ""
+
     each letter,conn in def.conns do
       local x = conn.x
       local y = conn.y
@@ -792,6 +794,12 @@ function Grower_preprocess_tiles()
       if grid[x][y].kind == "diagonal" then
         error("Ambiguous conn coord (on a diagonal) in tile: " .. def.name)
       end
+
+      default_set = default_set .. letter
+    end
+
+    if not def.conn_sets then
+      def.conn_sets = { default_set }
     end
   end
 
