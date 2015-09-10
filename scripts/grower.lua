@@ -589,17 +589,18 @@ function Grower_save_svg()
     -- only draw the edge once
     if A2 and A2.id < A1.id then return end
 
-    local color = "#00f"
+    local color = "#666"
 
---    if A1.prefer_mode == "hallway" or (A2 and A2.prefer_mode == "hallway") then
-    if A1.room != (A2 and A2.room) then
+    if not A2 then
+      -- no change
+    elseif (A1.room and A1.room.initial_hub) or (A2.room and A2.room.initial_hub) then
       color = "#f00"
-    elseif A2 and A1.is_boundary != A2.is_boundary then
-      color = "#0f0"
-    elseif A1.prefer_mode == "void" and (A2 and A2.prefer_mode == "void") then
-      color = "#666"
-    elseif not A2 then
-      color = "#666"
+    elseif A1.is_boundary != A2.is_boundary then
+      color = "#0a0"
+    elseif (A1.room and A1.room.hallway) or (A2.room and A2.room.hallway) then
+      color = "#c74"
+    elseif A1.room or A2.room then
+      color = "#00f"
     end
 
     local sx1, sy1 = S1.sx, S1.sy
@@ -1159,7 +1160,9 @@ end
         end
 
         if best_T then
-          try_add_tile_RAW(info, best_T, create_room(def))
+          local R = create_room(def)
+          R.initial_hub = P.initial_hub
+          try_add_tile_RAW(info, best_T, R)
           return true  -- OK
         end
 
@@ -1748,6 +1751,8 @@ function Grower_create_rooms()
   Grower_prepare()
 
   Grower_grow_hub("is_first")
+
+  -- FIXME : for i = 1, 5 do Grower_grow_hub() end
 
   Grower_fill_gaps()
 
