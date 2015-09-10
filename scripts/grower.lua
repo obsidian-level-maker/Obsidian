@@ -1072,7 +1072,13 @@ function Grower_grow_hub(is_first)
   end
 
 
-  local function try_add_tile_RAW(info, T, ROOM)
+  local function add_new_sprouts(info, T, initial_hub)
+    
+    -- FIXME
+  end
+
+
+  local function try_add_tile_RAW(info, T, ROOM, initial_hub)
     -- when 'ROOM' is not nil, we are installing the tile
 
 -- DEBUG
@@ -1094,7 +1100,13 @@ end
         -- cannot place this shape here (something in the way)
         return false
       end
+
+      assert(res)
     end -- px, py
+    end
+
+    if ROOM then
+      add_new_sprouts(info, T, initial_hub)
     end
 
 ---##    -- hallways : mark seeds to prevent touching another hallway
@@ -1120,22 +1132,9 @@ end
   end
 
 
-  local function try_add_tile(def, sx, sy, DIST)
+  local function try_add_tile(P, def, conn_set)
+
     local info = def.processed[1]
-
-    for dist = 0, DIST do
-      local x1 = math.clamp(3, sx - dist, SEED_W - 4)
-      local x2 = math.clamp(3, sx + dist, SEED_W - 4)
-
-      local y1 = math.clamp(3, sy - dist, SEED_H - 4)
-      local y2 = math.clamp(3, sy + dist, SEED_H - 4)
-
-      for x = x1, x2 do
-      for y = y1, y2 do
-        -- only need to visit the sides of the DIST bbox
-        if not (x == x1 or x == x2 or y == y1 or y == y2) then
-          continue
-        end
 
         local best_T
 
@@ -1169,15 +1168,12 @@ end
           return true  -- OK
         end
 
-      end  -- x, y
-      end
-    end -- dist
-
     -- failed
     return false
   end
 
 
+  -- OLD !!
   local function add_shape_from_list(tab, sx, sy, attempts, DIST)
     DIST = DIST or 5
 
@@ -1194,9 +1190,7 @@ end
   end
 
 
-  local function collect_usable_tiles(mode)
-    -- mode can be "initial" or "room" or "
-
+  local function collect_usable_tiles(mode)  -- needed ???
     local tab = {}
 
     each name, def in TILES do
@@ -1245,8 +1239,14 @@ end
 
     local sx1, sy1, sx2, sy2 = biggest_free_rectangle()
 
-    local sx = math.i_mid(sx1, sx2) - 1
-    local sy = math.i_mid(sy1, sy2) - 1
+    -- create a fake sprout
+    local P =
+    {
+      sx  = math.i_mid(sx1, sx2) - 1
+      sy  = math.i_mid(sy1, sy2) - 2
+      dir = 8
+      initial_hub = true
+    }
 
     while not table.empty(tab) do
       local name = rand.key_by_probs(tab)
@@ -1254,7 +1254,9 @@ end
 
       tab[name] = nil
 
-      if try_add_tile(def, sx, sy, 2) then
+      local conn_set = rand.pick(def.conn_sets)
+
+      if try_add_tile(P, def) then
         return
       end
 
@@ -1265,37 +1267,38 @@ end
   end
 
 
-  local function add_hallways()
-    local hallway_tab = collect_usable_shapes("hallway")
+  local function add_room(P)
+    -- P is a sprout
 
-    local LOCS = { 1,2,3, 4,5,6, 7,8,9 }
+    local tab = {}
 
-    if SEED_W < 32 then
-      LOCS = { 2,4,5,6,8 }
-    end
+    each name, def in TILES do
+      if def.mode == "hub" then continue end
 
-    local prob = 75
+      -- don't connect two hallway tiles
+      if P.room.kind == "hallway" and def.mode == "hallway" then continue end
 
-    each loc in rand.shuffle(LOCS) do
-      if rand.odds(prob) then
-        local sx, sy = Seed_from_loc(loc)
-        add_shape_from_list(hallway_tab, sx, sy, 3, 10)
+      local prob = def.prob or 0
+
+      if prob > 0 then
+        tab[name] = prob
       end
     end
-  end
 
+    while not table.empty(tab) do
+      local name = rand.key_by_probs(tab)
+      local def  = assert(TILES[name])
 
-  local function add_rooms()
-    local room_tab = collect_usable_shapes("normal")
+      tab[name] = nil
 
-    local count = int(SEED_W * SEED_H / 40)
+      if try_add_tile(P, def) then
+        return
+      end
 
-    for i = 1, count do
-      local sx = rand.irange(LEVEL.boundary_sx1, LEVEL.boundary_sx2)
-      local sy = rand.irange(LEVEL.boundary_sy1, LEVEL.boundary_sy2)
-
-      add_shape_from_list(room_tab, sx, sy, 1)
+      -- try another one...
     end
+
+    -- was not possible, that's OK
   end
 
 
@@ -1303,7 +1306,17 @@ end
 
   add_initial_hub()
 
-  -- FIXME : reset of algorithm
+  while true do
+    local sprout = Sprout_pick_next()
+
+    if not sprout then break; end
+
+    -- FIXME: if check_sprout_blocked(sprout) then continue end
+
+    add_room(sprout)
+ end
+
+  -- FIXME : rest of algorithm
 
   -- FIXME : if not is_first then connect_to_previous_hub() end
 end
