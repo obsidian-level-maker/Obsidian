@@ -775,7 +775,7 @@ function Grower_preprocess_tiles()
   local function check_connections(def)
     local grid = def.processed[1].grid
 
-    if not def.conns then
+    if not def.conns or table.size(def.conns) < 2 then
       error("Missing connections in tile: " .. def.name)
     end
 
@@ -795,7 +795,11 @@ function Grower_preprocess_tiles()
         error("Ambiguous conn coord (on a diagonal) in tile: " .. def.name)
       end
 
-      default_set = default_set .. letter
+      if default_set == "" then
+        default_set = letter .. ":"
+      else
+        default_set = default_set .. letter
+      end
     end
 
     if not def.conn_sets then
