@@ -592,7 +592,7 @@ function Grower_save_svg()
     local color = "#00f"
 
 --    if A1.prefer_mode == "hallway" or (A2 and A2.prefer_mode == "hallway") then
-    if A1.room and A2.room and A1.room != A2.room then
+    if A1.room != (A2 and A2.room) then
       color = "#f00"
     elseif A2 and A1.is_boundary != A2.is_boundary then
       color = "#0f0"
@@ -853,11 +853,11 @@ function Grower_prepare()
   local map_size = (SEED_W + SEED_H) / 2
 
   if map_size < 26 then
-    LEVEL.boundary_margin = 3
-  elseif map_size < 36 then
     LEVEL.boundary_margin = 4
-  else
+  elseif map_size < 36 then
     LEVEL.boundary_margin = 5
+  else
+    LEVEL.boundary_margin = 6
   end
 
   LEVEL.boundary_sx1 = LEVEL.boundary_margin
@@ -880,19 +880,21 @@ function Grower_grow_hub(is_first)
   local area_map
 
   
-  local function create_areas_for_shape(def)
+  local function create_areas_for_tile(def, R)
     area_map = {}
 
     for i = 1, #def.area_list do
-      local area = AREA_CLASS.new("normal")
+      local A = AREA_CLASS.new("normal")
 
       if def.mode == "hallway" then
-        area.prefer_mode = "hallway"
-      else
-        area.prefer_mode = "room"
+        A.mode = def.mode
       end
 
-      area_map[i] = area
+      area_map[i] = A
+
+      A.svolume = A:calc_volume()
+
+      R:add_area(A)
     end
   end
 
@@ -951,6 +953,7 @@ function Grower_grow_hub(is_first)
     assert(S.area == nil)
 
     S.area = A
+    S.room = A.room
     table.insert(A.seeds, S)
 
     if elem.good_conn then
@@ -963,12 +966,12 @@ function Grower_grow_hub(is_first)
   end
 
 
-  local function test_or_install_element(info, elem, T, px, py, mode)
+  local function test_or_install_element(info, elem, T, px, py, ROOM)
     if elem.kind == "empty" then return true end
 
     local sx, sy = transform_coord(info, T, px, py)
 
-    -- never allow shapes to touch edge of map
+    -- never allow tiles to touch edge of map
     if sx <= 1 or sx >= (SEED_W - 1) then return false end
     if sy <= 1 or sy >= (SEED_H - 1) then return false end
 
@@ -995,7 +998,7 @@ function Grower_grow_hub(is_first)
       if not S.diagonal then
         if S.area then return false end
 
-        if mode == "test" then return true end
+        if not ROOM then return true end
 
         -- need to split the seed to install this element
         S:split(math.min(dir, 10 - dir))
@@ -1010,10 +1013,9 @@ function Grower_grow_hub(is_first)
           -- used?
           if S1.area then return false end
 
-          if mode == "install" then
+          if ROOM then
             install_half_seed(T, S1, E1)
           end
-
         end
 
         -- swap for other side
@@ -1030,7 +1032,7 @@ function Grower_grow_hub(is_first)
       if S.area     then return false end
       if S.diagonal then return false end
 
-      if mode == "install" then
+      if ROOM then
         install_half_seed(T, S, elem)
       end
 
@@ -1039,7 +1041,7 @@ function Grower_grow_hub(is_first)
   end
 
 
-  local function mark_hallway(info, T)
+  local function mark_hallway__OLD(info, T)
     local W = info.grid.w
     local H = info.grid.h
 
@@ -1058,45 +1060,55 @@ function Grower_grow_hub(is_first)
   end
 
 
-  local function try_add_shape_RAW(info, T, mode)
-    assert(mode)
+  local function try_add_tile_RAW(info, T, ROOM)
+    -- when 'ROOM' is not nil, we are installing the tile
 
 -- DEBUG
-if mode == "install" then
+if ROOM then
 --stderrf("Installing shape '%s' @ (%d %d)\n", info.def.name, T.x, T.y)
 end
 
     local W = info.grid.w
     local H = info.grid.h
 
-    if mode == "install" then
-      create_areas_for_shape(info.def)
-    end
-
     for px = 1, W do
     for py = 1, H do
       local elem = info.grid[px][py]
       assert(elem)
 
-      local res = test_or_install_element(info, elem, T, px, py, mode)
+      local res = test_or_install_element(info, elem, T, px, py, ROOM)
 
-      if mode == "test" and not res then
+      if not ROOM and not res then
         -- cannot place this shape here (something in the way)
         return false
       end
     end -- px, py
     end
 
-    -- hallways : mark seeds to prevent touching another hallway
-    if mode == "install" and info.def.mode == "hallway" then
-      mark_hallway(info, T)
-    end
+---##    -- hallways : mark seeds to prevent touching another hallway
+---##    if mode == "install" and info.def.mode == "hallway" then
+---##      mark_hallway(info, T)
+---##    end
 
     return true
   end
 
 
-  local function try_add_shape(def, sx, sy, DIST)
+  local function create_room(def)
+    local ROOM = ROOM_CLASS.new()
+
+    if def.mode == "hallway" then
+      ROOM.kind = "hallway"
+      ROOM.hallway = { }
+    end
+
+    create_areas_for_tile(def, ROOM)
+
+    return ROOM
+  end
+
+
+  local function try_add_tile(def, sx, sy, DIST)
     local info = def.processed[1]
 
     for dist = 0, DIST do
@@ -1108,10 +1120,10 @@ end
 
       for x = x1, x2 do
       for y = y1, y2 do
---??        -- only need to visit the sides of the bbox
---??        if not (x == x1 or x == x2 or y == y1 or y == y2) then
---??          continue
---??        end
+        -- only need to visit the sides of the DIST bbox
+        if not (x == x1 or x == x2 or y == y1 or y == y2) then
+          continue
+        end
 
         local best_T
 
@@ -1133,7 +1145,7 @@ end
             score     = score
           }
 
-          if try_add_shape_RAW(info, T, "test") then
+          if try_add_tile_RAW(info, T) then
             best_T = T
           end
         end -- transpose, mirror_x, mirror_y
@@ -1141,7 +1153,7 @@ end
         end
 
         if best_T then
-          try_add_shape_RAW(info, best_T, "install")
+          try_add_tile_RAW(info, best_T, create_room(def))
           return true  -- OK
         end
 
@@ -1161,7 +1173,7 @@ end
       local name = rand.key_by_probs(tab)
       local def  = assert(TILES[name])
 
-      if try_add_shape(def, sx, sy, DIST) then
+      if try_add_tile(def, sx, sy, DIST) then
         return true
       end
     end
@@ -1221,8 +1233,8 @@ end
 
     local sx1, sy1, sx2, sy2 = biggest_free_rectangle()
 
-    local sx = math.i_mid(sx1, sx2 - 2) - 2
-    local sy = math.i_mid(sy1, sy2 - 2) - 2
+    local sx = math.i_mid(sx1, sx2) - 1
+    local sy = math.i_mid(sy1, sy2) - 1
 
     while not table.empty(tab) do
       local name = rand.key_by_probs(tab)
@@ -1230,7 +1242,7 @@ end
 
       tab[name] = nil
 
-      if try_add_shape(def, sx, sy, 2) then
+      if try_add_tile(def, sx, sy, 2) then
         return
       end
 
@@ -1688,9 +1700,9 @@ function Grower_assign_boundary()
     -- look for areas which have become surrounded by boundary areas
     -- (this is probably very rare, but nonetheless we should handle it).
 
-    local largest = Area_largest_area()
+    local start_A = LEVEL.rooms[1].areas[1]
 
-    local seen = {} ; seen[largest] = true
+    local seen = {} ; seen[start_A] = true
 
     for loop = 1,100 do
       surr_grow_pass(seen)
