@@ -954,6 +954,38 @@ function Grower_grow_hub(is_first)
   end
 
 
+  local function calc_transform(P, def, entry_conn, do_mirror)
+    -- create a transform which positions the tile so that entry_conn
+    -- mates up with the sprout 'P'.
+
+    local T = {}
+
+    if not geom.is_parallel(P.dir, entry_conn.dir) then
+      T.transpose = true
+    end
+
+    if P.dir == transform_dir(T, entry_conn.dir) then
+      if geom.is_vert(entry_conn.dir) then
+        T.mirror_y = true
+      else
+        T.mirror_x = true
+      end
+    end
+
+    if do_mirror then
+      if geom.is_vert(entry_conn.dir) then
+        T.mirror_x = true
+      else
+        T.mirror_y = true
+      end
+    end
+
+    -- now transpose and mirroring is setup, compute the position
+
+    -- TODO
+  end
+
+
   local function install_half_seed(T, S, elem)
     if elem.kind != "area" then
       error("Unknown element kind in shape")
