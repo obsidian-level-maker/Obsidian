@@ -891,6 +891,9 @@ function Grower_grow_hub(is_first)
 
   local area_map
 
+  local cur_def
+  local cur_grid
+
 
   local function create_areas_for_tile(def, R)
     area_map = {}
@@ -911,9 +914,9 @@ function Grower_grow_hub(is_first)
   end
 
 
-  local function transform_coord(info, T, px, py)
-    if T.mirror_x then px = info.grid.w + 1 - px end
-    if T.mirror_y then py = info.grid.h + 1 - py end
+  local function transform_coord(T, px, py)
+    if T.mirror_x then px = cur_grid.w + 1 - px end
+    if T.mirror_y then py = cur_grid.h + 1 - py end
 
     if T.transpose then px, py = py, px end
 
@@ -988,9 +991,7 @@ function Grower_grow_hub(is_first)
     T.x = 0
     T.y = 0
 
-    -- FIXME : info
-
-    local dx, dy = transform_coord(info, T, entry_conn.x, entry_conn.y)
+    local dx, dy = transform_coord(T, entry_conn.x, entry_conn.y)
 
     T.x = PN.sx - dx
     T.y = PN.sy - dy
@@ -1023,10 +1024,10 @@ function Grower_grow_hub(is_first)
   end
 
 
-  local function test_or_install_element(info, elem, T, px, py, ROOM)
+  local function test_or_install_element(elem, T, px, py, ROOM)
     if elem.kind == "empty" then return true end
 
-    local sx, sy = transform_coord(info, T, px, py)
+    local sx, sy = transform_coord(T, px, py)
 
     -- never allow tiles to touch edge of map
     if sx <= 1 or sx >= (SEED_W - 1) then return false end
@@ -1035,7 +1036,7 @@ function Grower_grow_hub(is_first)
     local S = SEEDS[sx][sy]
 
     -- hallway test : prevent them touching
-    if info.def.mode == "hallway" and S.no_hall then
+    if cur_def.mode == "hallway" and S.no_hall then
       return false
     end
 
@@ -1112,8 +1113,8 @@ function Grower_grow_hub(is_first)
       local conn = def.conns[letter]
       if not conn then error("Bad letter in conn_set in " .. def.name) end
 
-      local sx, sy = transform_coord(info, T, conn.x, conn.y)
-      local dir    = transform_dir  (info, T, conn.dir)
+      local sx, sy = transform_coord(T, conn.x, conn.y)
+      local dir    = transform_dir  (T, conn.dir)
 
       assert(Seed_valid(sx, sy))
       local S = SEEDS[sx][sy]
@@ -1153,24 +1154,24 @@ function Grower_grow_hub(is_first)
   end
 
 
-  local function try_add_tile_RAW(P, info, T, ROOM, initial_hub)
+  local function try_add_tile_RAW(P, T, ROOM, initial_hub)
     -- when 'ROOM' is not nil, we are installing the tile
 
 --[[ DEBUG
 if ROOM then
-  stderrf("Installing tile '%s' @ (%d %d) dir:%d\n", info.def.name, P.sx, P.sy, P.dir)
+  stderrf("Installing tile '%s' @ (%d %d) dir:%d\n", cur_def.name, P.sx, P.sy, P.dir)
 end
 --]]
 
-    local W = info.grid.w
-    local H = info.grid.h
+    local W = cur_grid.w
+    local H = cur_grid.h
 
     for px = 1, W do
     for py = 1, H do
-      local elem = info.grid[px][py]
+      local elem = cur_grid[px][py]
       assert(elem)
 
-      local res = test_or_install_element(info, elem, T, px, py, ROOM)
+      local res = test_or_install_element(elem, T, px, py, ROOM)
 
       if not ROOM and not res then
         -- cannot place this shape here (something in the way)
@@ -1182,13 +1183,8 @@ end
     end
 
     if ROOM then
-      add_new_sprouts(info, T, initial_hub)
+      add_new_sprouts(T, initial_hub)
     end
-
----##    -- hallways : mark seeds to prevent touching another hallway
----##    if mode == "install" and info.def.mode == "hallway" then
----##      mark_hallway(info, T)
----##    end
 
     return true
   end
@@ -1196,7 +1192,8 @@ end
 
   local function try_add_tile(P, def, conn_set)
 
-    local info = def.processed[1]
+    cur_def  = def
+    cur_grid = def.processed[1]
 
         local best_T
 
@@ -1218,7 +1215,7 @@ end
             score     = score
           }
 
-          if try_add_tile_RAW(info, T) then
+          if try_add_tile_RAW(T) then
             best_T = T
           end
         end -- transpose, mirror_x, mirror_y
@@ -1228,7 +1225,7 @@ end
         if best_T then
           local R = create_room(def)
           R.initial_hub = P.initial_hub
-          try_add_tile_RAW(info, best_T, R)
+          try_add_tile_RAW(best_T, R)
           return true  -- OK
         end
 
@@ -1352,6 +1349,8 @@ end
       add_room(sprout)
     end
   end
+
+  remove_dud_hallways()
 
   -- ensure a second (etc) hub-growth is connected to a previous one
   -- [ this is mainly so we can mark the level boundary, and we need
