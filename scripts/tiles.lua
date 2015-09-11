@@ -30,7 +30,7 @@ TILES =
 
 HALL_I_1x1 =
 {
-  prob = 10
+  prob = 40
 
   structure =
   {
@@ -47,7 +47,7 @@ HALL_I_1x1 =
 
 HALL_I_1x3 =
 {
-  prob = 10
+  prob = 20
 
   structure =
   {
