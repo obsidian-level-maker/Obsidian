@@ -593,10 +593,10 @@ function Grower_save_svg()
 
     if not A2 then
       -- no change
+    elseif A1.is_boundary != A2.is_boundary then
+      color = "#0f0"
     elseif (A1.room and A1.room.initial_hub) or (A2.room and A2.room.initial_hub) then
       color = "#f00"
---!!!!    elseif A1.is_boundary != A2.is_boundary then
---!!!!      color = "#0f0"
     elseif (A1.room and A1.room.hallway) or (A2.room and A2.room.hallway) then
       color = "#fb0"
     elseif A1.room or A2.room then
@@ -1334,7 +1334,7 @@ stderrf("Failed\n")
     -- no more sprouts?
     if not sprout then break; end
 
-if #LEVEL.rooms >= 6 then break; end
+-- if #LEVEL.rooms >= 30 then break; end
 
     if not check_sprout_blocked(sprout) then
       add_room(sprout)

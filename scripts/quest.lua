@@ -752,10 +752,10 @@ function Quest_scan_all_conns(new_goals, do_quest)
 
   -- handle all zone connections before anything else
 
-  if #LEVEL.zone_conns > 0 then
-    conn_list = LEVEL.zone_conns
-    is_zoney  = true
-  end
+---??  if #LEVEL.zone_conns > 0 then
+---??    conn_list = LEVEL.zone_conns
+---??    is_zoney  = true
+---??  end
 
 
   each C in conn_list do
@@ -991,20 +991,20 @@ function Quest_add_major_quests()
 
   collect_key_goals(goal_list)
 
-  if #LEVEL.zone_conns > 0 then
-    if add_triple_key_door(goal_list) then
-      LEVEL.has_triple_key = true
-    end
-  end
+---!!  if #LEVEL.zone_conns > 0 then
+---!!    if add_triple_key_door(goal_list) then
+---!!      LEVEL.has_triple_key = true
+---!!    end
+---!!  end
 
-  lock_up_zones(goal_list)
+---!!  lock_up_zones(goal_list)
 
 
   -- lock remaining zone connections with switches
 
   collect_switch_goals(goal_list)
 
-  lock_up_zones(goal_list)
+---!!!  lock_up_zones(goal_list)
 
 
   -- divide the zones further using switch quests

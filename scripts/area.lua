@@ -1531,6 +1531,34 @@ end
 
 
 
+function Area_create_zones2()
+  --
+  -- TEMP CRUD for Grower system !!
+  --
+
+  local function set_zone(A, Z)
+    A.zone = Z
+
+    Z.num_areas = Z.num_areas + 1
+    Z.svolume   = Z.svolume + A.svolume
+  end
+
+  LEVEL.zones = {}
+
+  local Z = Zone_new()
+
+  Z.is_leaf = true
+
+  each A in LEVEL.areas do
+    set_zone(A, Z)
+  end
+
+  each R in LEVEL.rooms do
+    R.zone = Z
+  end
+end
+
+
 function Area_determine_map_size()
   --
   -- Determines size of map (Width x Height) in grid points, based on the
@@ -1639,10 +1667,10 @@ function Area_create_rooms()
 
   Area_find_inner_points()
 
-  Area_create_zones()
+  Area_create_zones2()
 
-  -- it is essential to pick areas where zones connect
-  Connect_zones_prelim()
+---##  -- it is essential to pick areas where zones connect
+---##  Connect_zones_prelim()
 
 ---##  Room_assign_voids()
 
