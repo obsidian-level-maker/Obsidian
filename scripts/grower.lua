@@ -1099,7 +1099,7 @@ function Grower_grow_hub(is_first)
   end
 
 
-  local function add_new_sprouts(def, T, conn_set, initial_hub)
+  local function add_new_sprouts(T, conn_set, room, initial_hub)
     -- only keep entry conn for an initial hub
     if not initial_hub then
       conn_set = string.match(conn_set, ":(%w*)")
@@ -1110,8 +1110,8 @@ function Grower_grow_hub(is_first)
       local letter = string.sub(conn_set, i, i)
       if letter == ':' then continue end
 
-      local conn = def.conns[letter]
-      if not conn then error("Bad letter in conn_set in " .. def.name) end
+      local conn = cur_def.conns[letter]
+      if not conn then error("Bad letter in conn_set in " .. cur_def.name) end
 
       local sx, sy = transform_coord(T, conn.x, conn.y)
       local dir    = transform_dir  (T, conn.dir)
@@ -1119,9 +1119,8 @@ function Grower_grow_hub(is_first)
       assert(Seed_valid(sx, sy))
       local S = SEEDS[sx][sy]
 
-      -- FIXME current_room
       -- FIXME rank
-      Sprout_new(S, dir, current_room, rand.irange(2,6))
+      Sprout_new(S, dir, room, rand.irange(2,6))
     end
   end
 
@@ -1154,7 +1153,7 @@ function Grower_grow_hub(is_first)
   end
 
 
-  local function try_add_tile_RAW(P, T, ROOM, initial_hub)
+  local function try_add_tile_RAW(P, T, ROOM)
     -- when 'ROOM' is not nil, we are installing the tile
 
 --[[ DEBUG
@@ -1182,54 +1181,31 @@ end
     end -- px, py
     end
 
-    if ROOM then
-      add_new_sprouts(T, initial_hub)
-    end
-
     return true
   end
 
 
   local function try_add_tile(P, def, conn_set)
-
     cur_def  = def
     cur_grid = def.processed[1]
 
-        local best_T
+    local entry_letter = string.sub(conn_set, 1, 1)
+    local entry_conn   = def.conns[entry_letter]
+    if not entry_conn then error("Bad letter in conn_set in " .. def.name) end
 
-        for transpose = 0, 1 do
-        for mirror_x  = 0, 1 do
-        for mirror_y  = 0, 1 do
-          local score = gui.random()
+    local T = calc_transform(P, def, entry_conn, false)
 
-          -- early out
-          if best_T and score < best_T.score then continue end
+    if try_add_tile_RAW(P, T, nil) then
 
-          local T =
-          {
-            x = x
-            y = y
-            transpose = (transpose > 0)
-            mirror_x  = (mirror_x > 0)
-            mirror_y  = (mirror_y > 0)
-            score     = score
-          }
+      local ROOM = create_room(def)
+      ROOM.initial_hub = P.initial_hub
 
-          if try_add_tile_RAW(T) then
-            best_T = T
-          end
-        end -- transpose, mirror_x, mirror_y
-        end
-        end
+      try_add_tile_RAW(P, T, ROOM)
+      add_new_sprouts(T, conn_set, ROOM, P.initial_hub)
 
-        if best_T then
-          local R = create_room(def)
-          R.initial_hub = P.initial_hub
-          try_add_tile_RAW(best_T, R)
-          return true  -- OK
-        end
+      return true  -- OK
+    end
 
-    -- failed
     return false
   end
 
@@ -1280,13 +1256,17 @@ end
       local conn_set = rand.pick(def.conn_sets)
 
       if try_add_tile(P, def) then
-        return
+        return true
       end
 
       -- try another one...
     end
 
-    error("Failed to add initial hub.")
+    if is_first then
+      error("Failed to add very first hub.")
+    end
+
+    return false
   end
 
 
@@ -1314,7 +1294,9 @@ end
 
       tab[name] = nil
 
-      if try_add_tile(P, def) then
+      local conn_set = rand.pick(def.conn_sets)
+
+      if try_add_tile(P, def, conn_set) then
         return
       end
 
@@ -1337,7 +1319,9 @@ end
 
   ---| Grower_grow_hub |---
 
-  add_initial_hub()
+  if not add_initial_hub() then
+    return
+  end
 
   while true do
     local sprout = Sprout_pick_next()
