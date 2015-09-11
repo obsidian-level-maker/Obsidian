@@ -982,7 +982,20 @@ function Grower_grow_hub(is_first)
 
     -- now transpose and mirroring is setup, compute the position
 
-    -- TODO
+    local PN = P.S:neighbor(P.dir)
+    assert(PN)
+
+    T.x = 0
+    T.y = 0
+
+    -- FIXME : info
+
+    local dx, dy = transform_coord(info, T, entry_conn.x, entry_conn.y)
+
+    T.x = PN.sx - dx
+    T.y = PN.sy - dy
+
+    return T
   end
 
 
