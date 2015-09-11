@@ -70,9 +70,9 @@ function Sprout_pick_next()
   assert(best)
 
   -- remove it from global list
-  table.kill_elem(LEVEL.sprouts, P)
+  table.kill_elem(LEVEL.sprouts, best)
 
-  return P
+  return best
 end
 
 
@@ -589,16 +589,16 @@ function Grower_save_svg()
     -- only draw the edge once
     if A2 and A2.id < A1.id then return end
 
-    local color = "#666"
+    local color = "#777"
 
     if not A2 then
       -- no change
     elseif (A1.room and A1.room.initial_hub) or (A2.room and A2.room.initial_hub) then
       color = "#f00"
-    elseif A1.is_boundary != A2.is_boundary then
-      color = "#0a0"
+--!!!!    elseif A1.is_boundary != A2.is_boundary then
+--!!!!      color = "#0f0"
     elseif (A1.room and A1.room.hallway) or (A2.room and A2.room.hallway) then
-      color = "#c74"
+      color = "#fb0"
     elseif A1.room or A2.room then
       color = "#00f"
     end
@@ -1100,6 +1100,7 @@ function Grower_grow_hub(is_first)
 
 
   local function add_new_sprouts(T, conn_set, room, initial_hub)
+
     -- only keep entry conn for an initial hub
     if not initial_hub then
       conn_set = string.match(conn_set, ":(%w*)")
@@ -1187,7 +1188,9 @@ end
 
   local function try_add_tile(P, def, conn_set)
     cur_def  = def
-    cur_grid = def.processed[1]
+    cur_grid = def.processed[1].grid
+
+stderrf("try_add_tile '%s'  @ %s dir:%d\n", def.name, P.S:tostr(), P.dir)
 
     local entry_letter = string.sub(conn_set, 1, 1)
     local entry_conn   = def.conns[entry_letter]
@@ -1203,9 +1206,11 @@ end
       try_add_tile_RAW(P, T, ROOM)
       add_new_sprouts(T, conn_set, ROOM, P.initial_hub)
 
+stderrf("SUCCESS !!!!!\n")
       return true  -- OK
     end
 
+stderrf("Failed\n")
     return false
   end
 
@@ -1255,7 +1260,7 @@ end
 
       local conn_set = rand.pick(def.conn_sets)
 
-      if try_add_tile(P, def) then
+      if try_add_tile(P, def, conn_set) then
         return true
       end
 
@@ -1328,6 +1333,8 @@ end
 
     -- no more sprouts?
     if not sprout then break; end
+
+if #LEVEL.rooms >= 6 then break; end
 
     if not check_sprout_blocked(sprout) then
       add_room(sprout)
@@ -1761,12 +1768,12 @@ function Grower_assign_boundary()
 
 
   local function mark_other_inners()
-    local prob = 30
+    local prob = 0 --!!!! FIXME
 
     each A in LEVEL.areas do
       if not A.room and
          rand.odds(prob) and
-         touches_a_room(A) and
+         area_touches_a_room(A) and
          area_is_inside_box(A) and
          not area_touches_edge(A)
       then
@@ -1783,7 +1790,7 @@ function Grower_assign_boundary()
     A.mode = "scenic"
 
     -- recursively handle neighbors
-    each N in A.neighbors() do
+    each N in A.neighbors do
       if not (N.is_inner or N.is_boundary) then
         mark_outer_recursive(N)
       end
