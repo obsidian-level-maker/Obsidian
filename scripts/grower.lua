@@ -1098,8 +1098,30 @@ function Grower_grow_hub(is_first)
   end
 
 
-  local function add_new_sprouts(info, T, initial_hub)
-    -- FIXME
+  local function add_new_sprouts(def, T, conn_set, initial_hub)
+    -- only keep entry conn for an initial hub
+    if not initial_hub then
+      conn_set = string.match(conn_set, ":(%w*)")
+      assert(conn_set and conn_set != "")
+    end
+
+    for i = 1, #conn_set do
+      local letter = string.sub(conn_set, i, i)
+      if letter == ':' then continue end
+
+      local conn = def.conns[letter]
+      if not conn then error("Bad letter in conn_set in " .. def.name) end
+
+      local sx, sy = transform_coord(info, T, conn.x, conn.y)
+      local dir    = transform_dir  (info, T, conn.dir)
+
+      assert(Seed_valid(sx, sy))
+      local S = SEEDS[sx][sy]
+
+      -- FIXME current_room
+      -- FIXME rank
+      Sprout_new(S, dir, current_room, rand.irange(2,6))
+    end
   end
 
 
