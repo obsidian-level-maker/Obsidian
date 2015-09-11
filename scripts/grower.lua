@@ -896,9 +896,6 @@ function Grower_grow_hub(is_first)
 
   local new_room_num = 0
 
-  -- we don't make real connections until AFTER hub is finished
-  local prelim_conns = {}
-
 
   local function create_areas_for_tile(def, R)
     area_map = {}
@@ -909,6 +906,8 @@ function Grower_grow_hub(is_first)
       if def.mode == "hallway" then
         A.mode = def.mode
       end
+
+---## A.conn_group = assert(A.id)
 
       area_map[i] = A
 
@@ -1193,6 +1192,22 @@ end
   end
 
 
+  local function prelim_connect(R1, P, R2)
+    R1.prelim_conn_num = R1.prelim_conn_num + 1
+    R2.prelim_conn_num = R2.prelim_conn_num + 1
+
+    local PC =
+    {
+      R1 = R1
+      R2 = R2
+       S = P.S
+       dir = P.dir
+    }
+
+    table.insert(LEVEL.prelim_conns, P)
+  end
+
+
   local function try_add_tile(P, def, conn_set)
     cur_def  = def
     cur_grid = def.processed[1].grid
@@ -1210,10 +1225,11 @@ stderrf("try_add_tile '%s'  @ %s dir:%d\n", def.name, P.S:tostr(), P.dir)
       local ROOM = create_room(def)
       ROOM.initial_hub = P.initial_hub
 
-      ROOM.prelim_conn_num = sel(P.initial_hub, 0, 1)
+      ROOM.prelim_conn_num = 0
 
       if P.room then
-        P.room.prelim_conn_num = P.room.prelim_conn_num + 1
+        assert(not P.initial_hub)
+        prelim_connect(P.room, P, ROOM)
       end
 
       try_add_tile_RAW(P, T, ROOM)
@@ -1383,7 +1399,6 @@ stderrf("Failed\n")
     connect_to_previous_hub()
   end
 
-  realize_connections()
 end
 
 
@@ -1855,6 +1870,9 @@ end
 
 function Grower_create_rooms()
   LEVEL.sprouts = {}
+
+  -- we don't make real connections until later (Connect_stuff2)
+  LEVEL.prelim_conns = {}
 
   Grower_prepare()
 
