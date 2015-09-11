@@ -1552,6 +1552,11 @@ function Quest_add_weapons()
       end
     end
 
+    if not best_R then
+      gui.printf("WARNING : no room for weapon '%s'\n", name)
+      return
+    end
+
     table.insert(best_R.weapons, name)
 
     gui.debugf("|--> %s\n", best_R:tostr())
@@ -2026,7 +2031,8 @@ end
 
   local locs = collect_other_rooms()
 
-  visit_other_rooms(locs, normal_items)
+--WTF   no 'quota' value FIXME
+--!!!!  visit_other_rooms(locs, normal_items)
 
 
   -- mark all remaining unused leafs as STORAGE rooms

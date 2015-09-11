@@ -1192,7 +1192,7 @@ end
   end
 
 
-  local function prelim_connect(R1, P, R2)
+  local function add_prelim_connect(R1, P, R2)
     R1.prelim_conn_num = R1.prelim_conn_num + 1
     R2.prelim_conn_num = R2.prelim_conn_num + 1
 
@@ -1200,11 +1200,11 @@ end
     {
       R1 = R1
       R2 = R2
-       S = P.S
-       dir = P.dir
+      S  = P.S
+      dir = P.dir
     }
 
-    table.insert(LEVEL.prelim_conns, P)
+    table.insert(LEVEL.prelim_conns, PC)
   end
 
 
@@ -1229,7 +1229,7 @@ stderrf("try_add_tile '%s'  @ %s dir:%d\n", def.name, P.S:tostr(), P.dir)
 
       if P.room then
         assert(not P.initial_hub)
-        prelim_connect(P.room, P, ROOM)
+        add_prelim_connect(P.room, P, ROOM)
       end
 
       try_add_tile_RAW(P, T, ROOM)
@@ -1342,6 +1342,15 @@ stderrf("Failed\n")
 
 
   local function kill_hallway(R)
+    -- kill any preliminary connections too
+    for i = #LEVEL.prelim_conns, 1, -1 do
+      local PC = LEVEL.prelim_conns[i]
+
+      if PC.R1 == R or PC.R2 == R then
+        table.remove(LEVEL.prelim_conns, i)
+      end
+    end
+
     R:kill_it()
   end
 
@@ -1361,13 +1370,6 @@ stderrf("Failed\n")
 
   local function connect_to_previous_hub()
     -- FIXME
-  end
-
-
-  local function realize_connections()
-    each PC in prelim_conns do
-      -- FIXME
-    end
   end
 
 
@@ -1871,7 +1873,7 @@ end
 function Grower_create_rooms()
   LEVEL.sprouts = {}
 
-  -- we don't make real connections until later (Connect_stuff2)
+  -- we don't make real connections until later (Connect_stuff)
   LEVEL.prelim_conns = {}
 
   Grower_prepare()

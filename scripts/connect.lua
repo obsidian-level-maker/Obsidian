@@ -156,8 +156,6 @@ function Connect_merge_groups(A1, A2)
   local gr1 = A1.conn_group
   local gr2 = A2.conn_group
 
---- stderrf("merge_groups %d <--> %d\n", gr1, gr2)
-
   assert(gr1 and gr2)
   assert(gr1 != gr2)
 
@@ -1144,6 +1142,15 @@ function Connect_stuff()
   end
 
 
+  local function connect_grown_rooms()
+    -- turn the preliminary connections into real ones
+
+    each PC in LEVEL.prelim_conns do
+      Connect_seed_pair(PC.S, nil, PC.dir)
+    end
+  end
+
+
   ---| Connect_stuff |---
 
   -- give each area of each room a conn_group
@@ -1159,6 +1166,9 @@ function Connect_stuff()
     end
   end
 
+  connect_grown_rooms()
+
+--[[
   connect_zones()
 
   handle_hallways()
@@ -1166,6 +1176,7 @@ function Connect_stuff()
   Connect_teleporters()
 
   handle_the_rest()  
+--]]
 
   each R in LEVEL.rooms do
     R:collect_ext_conns()
