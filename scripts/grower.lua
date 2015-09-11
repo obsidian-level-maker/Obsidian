@@ -894,6 +894,11 @@ function Grower_grow_hub(is_first)
   local cur_def
   local cur_grid
 
+  local new_room_num = 0
+
+  -- we don't make real connections until AFTER hub is finished
+  local prelim_conns = {}
+
 
   local function create_areas_for_tile(def, R)
     area_map = {}
@@ -1134,6 +1139,8 @@ function Grower_grow_hub(is_first)
       ROOM.hallway = { }
     end
 
+    new_room_num = new_room_num + 1
+
     create_areas_for_tile(def, ROOM)
 
     return ROOM
@@ -1202,6 +1209,12 @@ stderrf("try_add_tile '%s'  @ %s dir:%d\n", def.name, P.S:tostr(), P.dir)
 
       local ROOM = create_room(def)
       ROOM.initial_hub = P.initial_hub
+
+      ROOM.prelim_conn_num = sel(P.initial_hub, 0, 1)
+
+      if P.room then
+        P.room.prelim_conn_num = P.room.prelim_conn_num + 1
+      end
 
       try_add_tile_RAW(P, T, ROOM)
       add_new_sprouts(T, conn_set, ROOM, P.initial_hub)
@@ -1312,13 +1325,33 @@ stderrf("Failed\n")
   end
 
 
+  local function kill_hallway(R)
+    R:kill_it()
+  end
+
+
   local function remove_dud_hallways()
-    -- FIXME
+    for i = #LEVEL.rooms, 1, -1 do
+      local R = LEVEL.rooms[i]
+
+      if R.kind != "hallway" then continue end
+
+      if R.prelim_conn_num >= 2 then continue end
+
+      kill_hallway(R)
+    end
   end
 
 
   local function connect_to_previous_hub()
     -- FIXME
+  end
+
+
+  local function realize_connections()
+    each PC in prelim_conns do
+      -- FIXME
+    end
   end
 
 
@@ -1349,6 +1382,8 @@ stderrf("Failed\n")
   if not is_first then
     connect_to_previous_hub()
   end
+
+  realize_connections()
 end
 
 
