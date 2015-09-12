@@ -850,7 +850,6 @@ function Grower_preprocess_tiles()
     if def.stair_spots then add_stairs(def) end
 
     if string.match(name, "HALL_") then def.mode = "hallway" end
-    if string.match(name, "HUB_")  then def.mode = "hub" end
 
     if not def.mode then def.mode = "room" end
   end
@@ -1260,7 +1259,7 @@ stderrf("Failed\n")
     each name, def in TILES do
       if def.mode == "hallway" then continue end
 
-      local prob = def.prob or 0
+      local prob = def.start_prob or def.prob or 0
       if prob > 0 then
         tab[name] = prob
       end
@@ -1310,8 +1309,6 @@ stderrf("Failed\n")
     local tab = {}
 
     each name, def in TILES do
-      if def.mode == "hub" then continue end
-
       -- don't connect two hallway tiles
       if P.room.kind == "hallway" and def.mode == "hallway" then continue end
 

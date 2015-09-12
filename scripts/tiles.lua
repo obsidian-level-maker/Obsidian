@@ -152,13 +152,13 @@ ROOM_RECT_3x2 =
 
 --------------------------------
 --
---  Large Hubs
+--  Party Starters
 --
 --------------------------------
 
-HUB_O_3x3 =
+START_O_3x3 =
 {
-  prob = 1000
+  start_prob = 1000
 
   structure =
   {
@@ -184,7 +184,7 @@ HUB_O_3x3 =
 
 
 --[[
-HUB_DONUT_1 =
+START_DONUT_1 =
 {
   prob = 1000
 
