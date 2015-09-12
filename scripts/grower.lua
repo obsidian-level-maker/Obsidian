@@ -883,9 +883,25 @@ end
 
 
 
-function Grower_grow_hub(is_first)
+function Grower_grow_trunk(is_first)
   --
-  --  FIXME DESCRIPTION | ALGORITHM
+  --  This builds a whole "trunk", a group of connected rooms.
+  --  The map will consist of one or more of these trunks.
+  --  [ Note: each new trunk is connected to a previous one ]
+  --
+  --  ALGORITHM:  (pretty standard)
+  --
+  --    1. start by adding a "Hub" room near center of map
+  --    2. create N "sprouts" from its connections
+  --    3. now add a room to a previous sprout
+  --    4. each new room also adds its sprouts
+  --    5. repeat from step 3 until all sprouts are used or blocked
+  --    6. remove dud hallways (ones with only a single conn)
+  --
+  --  When picking a sprout to add onto, preference is given to ones
+  --  created earlier, so the trunk grows slowly outward and has quite
+  --  a few 3+ branches, rather than having "stalks" or rooms with only
+  --  two connections (in and out).
   --
 
   local area_map
@@ -1370,7 +1386,7 @@ stderrf("Failed\n")
   end
 
 
-  ---| Grower_grow_hub |---
+  ---| Grower_grow_trunk |---
 
   if not add_initial_hub() then
     return
@@ -1875,9 +1891,9 @@ function Grower_create_rooms()
 
   Grower_prepare()
 
-  Grower_grow_hub("is_first")
+  Grower_grow_trunk("is_first")
 
-  -- FIXME : for i = 1, 5 do Grower_grow_hub() end
+  -- FIXME : for i = 1, 5 do Grower_grow_trunk() end
 
   Grower_fill_gaps()
 
