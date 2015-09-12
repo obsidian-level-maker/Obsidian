@@ -3,31 +3,22 @@ WORK IN PROGRESS
 ================
 
 
-Basic Grow Algorithm
---------------------
+Grower:
+-------
 
-1. start with a single "Hub" tile at a spot near center of map.
-   there will be N potential "sprouts" from it, of rank 1.
++  support 'long' connections
 
-2. try to connect a tile to a sprout of lowest rank
-   [ TODO: support multi-sprout connections ]
+-  don't make another trunk if original too small
+   (just add some random sprouts)
 
-3. the new tile generates new sprouts, the rank is +1 of previous tile
-   for rooms, but same rank for hallway tiles.
+   BUT: sometimes deliberately make 2+ trunks
+        (for teleporters)
+        be nice to create a big river between them
 
-4. sprouts from hallways TRUMP sprouts from non-hallways if rank is same
-   [ generally want to add a hallway THEN immediately add a room to it ]
 
-5. continue this process until all sprouts are used or marked unusable.
+!!  weapon adding broken ?
 
-6. remove any hallways with only a single attached room.
-
-7. if overall level is too small, begin a new hub in the largest
-   unused rectangle and repeat the above building process.
-
-   if teleporters are allowed, connect the two distinct room-sets
-   using them, otherwise create a hallway to join them [ unless two
-   rooms touch ]
+!!  guard monsters broken ?
 
 
 
