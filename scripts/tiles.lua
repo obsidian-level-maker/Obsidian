@@ -142,10 +142,9 @@ ROOM_RECT_3x2 =
   conn_sets =
   {
     "a:bc"
-    "a:bcd"
+    "a:bcf"
     "a:de"
     "a:def"
---  "bc:a"
   }
 }
 
