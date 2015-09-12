@@ -26,17 +26,17 @@
 
     room : ROOM  -- the room to join onto
 
-    rank         -- rank number
+    initial_hub  -- if set, this is a fake sprout to grow a hub onto
 --]]
 
 
-function Sprout_new(S, dir, room, rank)
+function Sprout_new(S, dir, long, room)
   local P =
   {
     S = S
     dir = dir
+    long = long
     room = room
-    rank = rank
   }
 
   table.insert(LEVEL.sprouts, P)
@@ -51,17 +51,15 @@ function Sprout_pick_next()
   end
 
   local best
-  local best_score = 0
+  local best_score = 9e9
 
   each P in LEVEL.sprouts do
-    local score = P.rank * 10
-    if P.room.kind == "hallway" then
-      score = score - 5
-    end
+    local score = 0
+    if P.room then score = P.room.grow_rank end
 
     score = score + gui.random()
 
-    if score > best_score then
+    if score < best_score then
       best = P
       best_score = score
     end
@@ -1139,18 +1137,26 @@ function Grower_grow_trunk(is_first)
       assert(Seed_valid(sx, sy))
       local S = SEEDS[sx][sy]
 
-      -- FIXME rank
-      Sprout_new(S, dir, room, rand.irange(2,6))
+assert(room)
+      Sprout_new(S, dir, conn.long or 1, room)
     end
   end
 
 
-  local function create_room(def)
+  local function create_room(def, prev_room)
     local ROOM = ROOM_CLASS.new()
 
     if def.mode == "hallway" then
       ROOM.kind = "hallway"
       ROOM.hallway = { }
+    end
+
+    if prev_room and def.mode == "hallway" then
+      ROOM.grow_rank = prev_room.grow_rank
+    elseif prev_room then
+      ROOM.grow_rank = prev_room.grow_rank + 1
+    else
+      ROOM.grow_rank = 1
     end
 
     new_room_num = new_room_num + 1
@@ -1237,7 +1243,7 @@ stderrf("try_add_tile '%s'  @ %s dir:%d\n", def.name, P.S:tostr(), P.dir)
 
     if try_add_tile_RAW(P, T, nil) then
 
-      local ROOM = create_room(def)
+      local ROOM = create_room(def, P.room)
       ROOM.initial_hub = P.initial_hub
 
       ROOM.prelim_conn_num = 0
@@ -1398,7 +1404,7 @@ stderrf("Failed\n")
     -- no more sprouts?
     if not sprout then break; end
 
--- if #LEVEL.rooms >= 30 then break; end
+--  if #LEVEL.rooms >= 20 then break; end
 
     if not check_sprout_blocked(sprout) then
       add_room(sprout)
