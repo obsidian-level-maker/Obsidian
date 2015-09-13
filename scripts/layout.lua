@@ -1177,8 +1177,8 @@ function Layout_liquid_stuff()
 
 
   local function try_pool_in_area(A)
-    -- random chance  (FIXME !!)
-    if rand.odds(1) then return end
+    -- random chance
+    if rand.odds(30) then return end
 
     -- ensure large enough  [ very large is OK too ]
     if A.svolume < 2.0 then return end
