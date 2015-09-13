@@ -657,7 +657,7 @@ function Layout_traps_and_cages()
 
     -- less chance for mere items
     if (spot.content_kind == "WEAPON" or spot.content_kind == "ITEM") and
-       rand.odds(50 * 0) then
+       rand.odds(5) then
       return false
     end
 
@@ -1178,7 +1178,7 @@ function Layout_liquid_stuff()
 
   local function try_pool_in_area(A)
     -- random chance
-    if rand.odds(30) then return end
+    if rand.odds(60) then return end
 
     -- ensure large enough  [ very large is OK too ]
     if A.svolume < 2.0 then return end
@@ -1198,6 +1198,7 @@ function Layout_liquid_stuff()
     A.pool_id = alloc_id("pool")
 
     A.face_rooms = { face_room }
+    A.face_room  = face_room
     A.is_outdoor = face_room.is_outdoor
     A.is_boundary = nil
 
