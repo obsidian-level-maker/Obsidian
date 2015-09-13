@@ -673,8 +673,7 @@ function Layout_traps_and_cages()
     -- check for a usable trap area neighboring the spot area
     -- TODO : this is too restrictive
 
---!!!! FIXME odds
-    if rand.odds(10+90) and try_teleportation_trap(spot) then
+    if rand.odds(10) and try_teleportation_trap(spot) then
       return true
     end
 
@@ -703,10 +702,8 @@ function Layout_traps_and_cages()
 
 
   local function add_traps()
-    local make_prob = style_sel("traps", 0, 20, 40, 80)
+    local make_prob = style_sel("traps", 0, 20, 40, 85)
    
-make_prob = 100  --!!!!! TEST
-
     if make_prob == 0 then
       gui.printf("Traps: skipped for level (by style).\n")
       return
@@ -729,11 +726,11 @@ make_prob = 100  --!!!!! TEST
   local function make_cage(A)
     gui.debugf("Making big cage in %s\n", A:tostr())
 
+    A.face_room = Layout_choose_face_room(A)
+    if not A.face_room then return end
+
     A.mode = "cage"
     A.is_boundary = nil
-
-    A.face_room = Layout_choose_face_room(A)
-    assert(A.face_room)
 
     -- determine height and set junctions
 
@@ -795,7 +792,7 @@ make_prob = 100  --!!!!! TEST
 
   add_traps()
 
---!!!! FIXME  add_cages()
+  add_cages()
 
 
 do return end
