@@ -24,8 +24,7 @@ function calc_wall_mat(A1, A2)
     return "_ERROR"
   end
 
--- FIXME : DEBUG STUFF
-if A2 and A2.mode == "void" then return "COMPSPAN" end
+  if A2 and A2.mode == "void" then A2 = nil end
 
   if not A1.is_outdoor then
     return assert(A1.wall_mat)
@@ -1122,8 +1121,13 @@ function Render_seed(A, S)
 
   -- FIXME : closets
 
-  if S.kind == "void" or A.mode == "void" then
+  if S.kind == "void" then
     Render_void(A, S)
+    return
+  end
+
+  if A.mode == "void" then
+--stderrf("Void area: %s @ %s\n", A.name, A.seeds[1]:tostr())
     return
   end
 
@@ -1234,9 +1238,9 @@ end
 
 
   if A.mode == "void" then
-    A.wall_mat = "COMPSPAN"
-    A.floor_mat = A.wall_mat
     A.facade_mat = A.zone.facade_mat
+    A.wall_mat   = A.facade_mat
+    A.floor_mat  = A.wall_mat
     return
   end
 
