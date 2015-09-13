@@ -1123,7 +1123,7 @@ function Layout_finish_scenic_borders()
     local max_f = max_neighbor_floor(A)
 
     if not max_f then
-      max_f = A.zone.scenic_sky_h - rand.pick({ 16, 160, 192, 224, 400 })
+      max_f = A.zone.scenic_sky_h - rand.pick({ 16, 160, 192, 224, 400 }) / 2
     end
 
     A.ceil_h  = A.zone.scenic_sky_h
@@ -1160,7 +1160,7 @@ function Layout_finish_scenic_borders()
 
   each Z in LEVEL.zones do
     local add_h = rand.pick({ 128,256,384 })
-    Z.scenic_sky_h = Z.sky_h + add_h
+    Z.scenic_sky_h = Z.sky_h ---!!! + add_h
   end
 
   each A in LEVEL.areas do
