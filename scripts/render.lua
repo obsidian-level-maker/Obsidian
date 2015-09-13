@@ -1256,8 +1256,13 @@ end
   if A.kind == "building" then
     A.wall_mat  = assert(R.main_tex)
 
-    A.floor_mat = rand.key_by_probs(R.theme.ceilings)
-    A.ceil_mat  = rand.key_by_probs(R.theme.ceilings)
+    if R.theme and R.theme.floors then
+      A.floor_mat = rand.key_by_probs(R.theme.floors)
+    end
+
+    if R.theme and R.theme.ceilings then
+      A.ceil_mat  = rand.key_by_probs(R.theme.ceilings)
+    end
 
     A.facade_mat = A.zone.facade_mat
 
