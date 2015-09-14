@@ -960,20 +960,16 @@ function Room_border_up()
 
       if A1.is_porch or A2.is_porch then
         junc.kind = "pillar"
-        return
       end
 
 -- STEP TEST
-local z1 = math.min(A1.floor_h, A2.floor_h)
-local z2 = math.max(A1.floor_h, A2.floor_h)
-if (z2 - z1) >  65 and (z2 - z1) <= 72 then
-  junc.kind = "steps"
-  junc.steps_mat = "FLAT1"
-
-  if not A1.is_outdoor then
-    junc.kind2 = "pillar"
-  end
-end
+      local z1 = math.min(A1.floor_h, A2.floor_h)
+      local z2 = math.max(A1.floor_h, A2.floor_h)
+      if (z2 - z1) >  24 and (z2 - z1) <= 72 then
+        junc.kind2 = junc.kind
+        junc.kind = "steps"
+        junc.steps_mat = "FLAT1"
+      end
 
       return
     end
@@ -2213,34 +2209,31 @@ function Room_floor_heights()
   end
 
 
-  local function pick_delta_h(min_d, max_d, up_chance)
+  local function pick_delta_h(from_h, up_chance)
+    local h = 12
+    if rand.odds(30) then h = 24
+      if rand.odds(60) then h = 48
+        if rand.odds(20) then h = 72 end
+      end
+    end
+
     if rand.odds(up_chance) then
-      return max_d + 8
+      return from_h + h
     else
-      return min_d - 8
+      return from_h - h
     end
   end
 
 
-  local function area_assign_delta(A, up_chance)
-    local min_d, max_d
+  local function area_assign_delta(A, up_chance, cur_delta_h)
 
-    each N in A.neighbors do
-      if N.room == A.room and N.delta_h then
-        min_d = math.N_min(N.delta_h, min_d)
-        max_d = math.N_max(N.delta_h, max_d)
-      end
-    end
+    A.delta_h = cur_delta_h
 
-    if not min_d then
-      A.delta_h = 0
-    else
-      A.delta_h = pick_delta_h(min_d, max_d, up_chance)
-    end
+    each C in A.conns do
+      local A2 = C:neighbor(A)
 
-    each N in A.neighbors do
-      if N.room == A.room and not N.delta_h then
-        area_assign_delta(N, up_chance)
+      if A2.room == A.room and not A2.delta_h then
+        area_assign_delta(A2, up_chance, pick_delta_h(cur_delta_h, up_chance))      
       end
     end
   end
@@ -2252,8 +2245,8 @@ function Room_floor_heights()
     local up_chance = rand.pick({ 10, 50, 90 })
 
     -- recursively flow delta heights from a random starting area
-    -- FIXME : use the conns, Luke!
-    area_assign_delta(start_area, up_chance)
+    local cur_delta_h = rand.irange(-4, 4) * 32
+    area_assign_delta(start_area, up_chance, cur_delta_h)
 
     local adjust_h = 0
     if entry_area then adjust_h = entry_area.delta_h end
