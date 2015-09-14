@@ -2211,9 +2211,9 @@ function Room_floor_heights()
 
   local function pick_delta_h(from_h, up_chance)
     local h = 12
-    if rand.odds(30) then h = 24
-      if rand.odds(60) then h = 48
-        if rand.odds(20) then h = 72 end
+    if rand.odds(33) then h = 24
+      if rand.odds(75) then h = 40
+        if rand.odds(33) then h = 64 end
       end
     end
 
