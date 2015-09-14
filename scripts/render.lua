@@ -1253,7 +1253,7 @@ end
     A.ceil_h = A.floor_h + 144
 
   elseif not A.ceil_h then
-    A.ceil_h = A.floor_h + 200
+    A.ceil_h = A.floor_h + rand.pick({ 128, 192,192,192, 256,320 })
   end
 
 
