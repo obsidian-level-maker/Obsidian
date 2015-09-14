@@ -734,7 +734,7 @@ function Levels_choose_liquid()
     return
   end
 
-  local usage     = style_sel("liquids", 0, 20, 40, 90)
+  local usage     = style_sel("liquids", 0, 25, 50, 90)
   local skip_prob = style_sel("liquids", 100, 30, 10, 0)
 
   if rand.odds(skip_prob) then
