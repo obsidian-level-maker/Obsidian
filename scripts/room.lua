@@ -947,8 +947,7 @@ function Room_border_up()
     -- room to scenic --
 
     if not A2.room then
-      -- FIXME
-      junc.kind = "window"
+      junc.kind = "wall"  -- FIXME "window"
       return
     end
 
@@ -1013,6 +1012,27 @@ do return end
         junc.kind2 = "pillar"
       end
 
+      return
+    end
+
+
+    -- window test [ make A1 be the indoor room ]
+    if A1.is_outdoor and not A2.is_outdoor then
+       A1, A2 = A2, A1
+    end
+
+    if not A1.is_outdoor and (A2.is_outdoor or rand.odds(100)) and
+       A1.room and A2.room and
+       A1.mode != "hallway" and A2.mode != "hallway" and
+       A1.room.kind != "stairwell" and A2.room.kind != "stairwell" and
+       A1.floor_h and A2.floor_h and
+       A1.floor_h >= A2.floor_h and
+       (A2.is_outdoor or A1.floor_h < A2.floor_h + 200)
+    then
+      junc.kind = "window"
+      if A2.is_outdoor then
+        A2.window_h = A1.floor_h + 128
+      end
       return
     end
 
@@ -2739,6 +2759,10 @@ function Room_set_sky_heights()
     local sky_h = A.floor_h + A.zone.sky_add_h
 
     A.zone.sky_h = math.N_max(A.zone.sky_h, sky_h)
+
+    if A.window_top_h then
+      A.zone.sky_h = math.max(A.zone.sky_h, A.window_h)
+    end
   end
 
 
