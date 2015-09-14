@@ -1017,17 +1017,20 @@ do return end
 
 
     -- window test [ make A1 be the indoor room ]
+    local win_prob = style_sel("windows", 0, 15, 35, 75)
+
     if A1.is_outdoor and not A2.is_outdoor then
        A1, A2 = A2, A1
     end
 
-    if not A1.is_outdoor and (A2.is_outdoor or rand.odds(100)) and
+    if not A1.is_outdoor and (A2.is_outdoor or rand.odds(30)) and
        A1.room and A2.room and
        A1.mode != "hallway" and A2.mode != "hallway" and
        A1.room.kind != "stairwell" and A2.room.kind != "stairwell" and
        A1.floor_h and A2.floor_h and
        A1.floor_h >= A2.floor_h and
-       (A2.is_outdoor or A1.floor_h < A2.floor_h + 200)
+       (A2.is_outdoor or A1.floor_h < A2.floor_h + 200) and
+       rand.odds(win_prob)
     then
       junc.kind = "window"
       if A2.is_outdoor then
