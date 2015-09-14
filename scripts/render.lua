@@ -1008,7 +1008,7 @@ function Render_floor(A, S)
 -- tag = A.id
 -- if A.conn_group then tag = A.conn_group end
 -- if A.quest and A.quest.id < 2 then tag = 1 end
-if A.is_boundary then tag = 1000 + A.id end
+-- if A.is_boundary then tag = 1000 + A.id end
 
 
   -- handle railings [ must be done here ]

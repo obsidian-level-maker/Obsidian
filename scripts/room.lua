@@ -660,8 +660,8 @@ function Room_reckon_doors()
 
     -- same room?
     if C.A1.room == C.A2.room then
-      B.kind  = "nothing"
-      B2.kind = "nothing"
+      B.kind  = nil
+      B2.kind = nil
       return
     end
 
