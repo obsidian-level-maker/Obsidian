@@ -2495,6 +2495,9 @@ function Room_floor_heights()
   local function do_hallway_ceiling(R)
     if R.is_outdoor then
       -- will be zone.sky_h
+
+      -- FIXME: workaround for odd bug [ outdoors non-sync? ]
+      R.areas[1].is_outdoor = true
       return
     end
 
