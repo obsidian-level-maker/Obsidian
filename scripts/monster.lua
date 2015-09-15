@@ -1889,6 +1889,8 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     if not R.zone.guard_mon then return end
 
+-- stderrf("add_guarding_monsters '%s' @ %s\n", R.zone.guard_mon, R:tostr())
+
     -- convert coordinate into a fake spot  [no z coords!]
     local guard_spot =
     {
@@ -2025,11 +2027,13 @@ do return nil end
       end
     end
 
-    if R.purpose == "KEY" or R.is_exit or R.final_battle then
+    if R.guard_spot and R.guard_spot.goal and
+       (R.guard_spot.goal.kind == "KEY" or
+        R.guard_spot.goal.kind == "EXIT" or
+        R.is_exit or R.final_battle)
+    then
       -- the wotsit placement code will have set this
-      if R.guard_spot then
-        return R.guard_spot
-      end
+      return R.guard_spot
     end
 
   --[[  FUTURE
