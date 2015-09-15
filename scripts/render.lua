@@ -1290,9 +1290,11 @@ end
     A.wall_mat  = "WOOD1"
     A.ceil_mat  = "WOOD1"
 
---- if A.room.hallway.parent then
---- A.floor_mat = "FLAT14"
---- end
+    -- TEMP CRUD to match 'hall_piece' texture usage
+    if A.room and A.room.skin and A.room.skin.wall then
+      A.floor_mat = A.room.skin.wall
+      A. ceil_mat = A.room.skin.wall
+    end
 
     if not A.is_outdoor then
       A.facade_mat = A.zone.facade_mat
