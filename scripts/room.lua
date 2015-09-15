@@ -2904,7 +2904,7 @@ function Room_pool_hacks()
 
   if not LEVEL.liquid then return end
 
-  local prob = style_sel("liquids", 0, 20, 50, 100);
+  local prob = style_sel("liquids", 0, 20, 45, 90);
 
   if prob == 0 then return end
 
