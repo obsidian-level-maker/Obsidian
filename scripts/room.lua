@@ -2726,6 +2726,15 @@ function Room_floor_heights()
   end
 
 
+  function fix_pool_hacks(R)
+    each A in R.areas do
+      if A.pool_hack then
+        A.floor_h = A.neighbors[1].floor_h - 16
+      end
+    end
+  end
+
+
   ---| Room_floor_heights |---
 
   -- give each zone a preferred hallway z_dir
@@ -2750,6 +2759,8 @@ end
 --]]
 
     assert(R.entry_h)
+
+    fix_pool_hacks(R)
 
     if R.kind == "hallway" then
 --!!!!      Room_detect_porches(R)
@@ -2836,6 +2847,27 @@ function Room_add_sun()
 end
 
 
+function Room_pool_hacks()
+  if not LEVEL.liquid then return end
+
+  local prob = style_sel("liquids", 0, 20, 50, 100);
+
+  if prob == 0 then return end
+
+  each A in LEVEL.areas do
+    if not A.room then continue end
+
+    if #A.room.areas < 2 then continue end
+    if #A.neighbors >= 2 then continue end
+
+    if A.svolume < 2.0 then continue end
+
+    if rand.odds(prob) then
+      A.pool_hack = true
+    end
+  end
+end
+
 
 ------------------------------------------------------------------------
 
@@ -2847,6 +2879,7 @@ function Room_build_all()
   Area_prune_hallways()
 
   Room_reckon_doors()
+  Room_pool_hacks()
   Room_floor_heights()
   Room_prepare_skies()
 

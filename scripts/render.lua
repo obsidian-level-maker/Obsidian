@@ -1310,7 +1310,7 @@ end
   end
 
 
-  if A.mode == "pool" then
+  if A.mode == "pool" or A.pool_hack then
     A.floor_mat = "_LIQUID"
 --    A.wall_mat  = "ASHWALL7"
   end
