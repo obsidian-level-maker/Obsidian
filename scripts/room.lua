@@ -1008,6 +1008,10 @@ do return end
       junc.fence_mat = A1.zone.fence_mat
       junc.fence_top_z = math.max(A1.floor_h, A2.floor_h) + 32
 
+      if A1.pool_hack or A2.pool_hack then
+        junc.fence_top_z = junc.fence_top_z + 16
+      end
+
       if A1.is_porch or A2.is_porch then
         junc.kind2 = "pillar"
       end
@@ -2727,9 +2731,18 @@ function Room_floor_heights()
 
 
   function fix_pool_hacks(R)
+    local function pool_height(A)
+      each N in A.neighbors do
+        if N.room == R then
+          return N.floor_h - 16
+        end
+      end
+      error("fix_pool_hacks failed")
+    end
+
     each A in R.areas do
       if A.pool_hack then
-        A.floor_h = A.neighbors[1].floor_h - 16
+        A.floor_h = pool_height(A)
       end
     end
   end
@@ -2848,6 +2861,47 @@ end
 
 
 function Room_pool_hacks()
+
+  local function similar_room(A1, A2)
+    local R1 = A1.room
+    local R2 = A2.room
+
+    if R1 == R2 then return true end
+
+    return false
+  end
+
+
+  local function can_become_pool(A)
+    if not A.room then return false end
+
+    -- room is too simple?
+    if #A.room.areas < 2 then return false end
+
+    -- too small?
+    if A.svolume < 2 then return false end
+
+    -- external connection?
+    each C in A.conns do
+      if (C.A1.room != A.room) or (C.A2.room != A.room) then
+        return false
+      end
+    end
+
+    -- check number of "roomy" neighbors
+    local count = 0
+
+    each N in A.neighbors do
+      if N.room and similar_room(A, N) then
+        count = count + 1
+      end
+    end
+
+    return (count < 2)
+  end
+
+  ---| Room_pool_hacks |---
+
   if not LEVEL.liquid then return end
 
   local prob = style_sel("liquids", 0, 20, 50, 100);
@@ -2857,12 +2911,7 @@ function Room_pool_hacks()
   each A in LEVEL.areas do
     if not A.room then continue end
 
-    if #A.room.areas < 2 then continue end
-    if #A.neighbors >= 2 then continue end
-
-    if A.svolume < 2.0 then continue end
-
-    if rand.odds(prob) then
+    if can_become_pool(A) and rand.odds(prob) then
       A.pool_hack = true
     end
   end
