@@ -504,6 +504,8 @@ DOOM.THEMES =
     base_skin =
     {
       big_door = "BIGDOOR7"
+
+      grass = "ASHWALL2"
     }
 
     monster_prefs =

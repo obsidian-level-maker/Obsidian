@@ -1275,6 +1275,9 @@ end
 
   elseif A.kind == "landscape" then
     A.floor_mat = "RROCK19"
+    if THEME.base_skin and THEME.base_skin.grass then
+      A.floor_mat = THEME.base_skin.grass
+    end
 
   elseif A.kind == "cave" then
     A.wall_mat  = "ASHWALL4"
