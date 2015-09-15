@@ -1428,8 +1428,8 @@ function Room_assign_voids()
   local function handle_zone(Z)
     local quota = Z.num_areas / 6 + rand.range(0, 2.5)
 
-    if OB_CONFIG.mode == "dm" or rand.odds(10) then
-      quota = quota * 0.7
+    if OB_CONFIG.mode == "dm" or rand.odds(30) then
+      quota = quota * 0.5
     end
  
     -- the largest area can never become VOID
@@ -1469,8 +1469,6 @@ function Room_assign_voids()
 
 
   ---| Room_assign_voids |---
-
-do return end --!!!!!!
 
   each Z in LEVEL.zones do
     handle_zone(Z)
