@@ -169,7 +169,7 @@ function DOOM.get_levels()
 
     -- secret levels
     if map == 31 or map == 32 then
-      LEV.theme_name = "wolf"
+      LEV.theme_name = "doom/wolf"
       LEV.name_class = "URBAN"
       LEV.is_secret = true
     end

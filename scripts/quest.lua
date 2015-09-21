@@ -2286,9 +2286,9 @@ function Quest_select_textures()
   gui.debugf("cave_volume : %d\n", cave_volume)
 
 
-  LEVEL.zone_fence_mat = "REDWALL"  -- FIXME
+  LEVEL.zone_fence_mat = rand.pick({"BIGBRIK1", "BIGBRIK2", "STONE5", "STONE7", "BROWNGRN"})
 
-  LEVEL.cliff_mat = "FIREBLU1"  -- FIXME
+  LEVEL.cliff_mat = "ASHWALL7"  -- FIXME
 
 
   each Z in LEVEL.zones do

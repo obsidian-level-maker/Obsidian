@@ -25,6 +25,19 @@ mkdir $dest/modules
 cp -av modules/*.* $dest/modules
 
 #
+#  Game data
+#
+mkdir $dest/games
+
+mkdir $dest/games/doom
+cp -av games/doom/*.* $dest/games/doom
+
+#
+#  Prefabs
+#
+cp -av prefabs $dest/prefabs
+
+#
 #  Source code
 #
 mkdir $dest/gui
@@ -59,12 +72,6 @@ mkdir $dest/obj_win32
 mkdir $dest/obj_win32/lua
 mkdir $dest/obj_win32/glbsp
 mkdir $dest/obj_win32/ajpoly
-
-#
-#  Game data
-#
-# FIXME !!!!
-svn export games $dest/games
 
 #
 #  Data files

@@ -22,7 +22,7 @@ base="test_${seed}"
 def_length=game
 
 declare -a GAMES
-GAMES=("doom1" "doom2" "freedoom" "ultdoom" "tnt" "plutonia")
+GAMES=("doom2" "doom2" "freedoom" "tnt" "tnt" "plutonia")
 index=$(($RANDOM % 6))
 def_game=${GAMES[$index]}
 

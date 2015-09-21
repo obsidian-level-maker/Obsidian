@@ -657,7 +657,7 @@ function Layout_traps_and_cages()
 
     -- less chance for mere items
     if (spot.content_kind == "WEAPON" or spot.content_kind == "ITEM") and
-       rand.odds(50 * 0) then
+       rand.odds(5) then
       return false
     end
 
@@ -673,8 +673,7 @@ function Layout_traps_and_cages()
     -- check for a usable trap area neighboring the spot area
     -- TODO : this is too restrictive
 
---!!!! FIXME odds
-    if rand.odds(10+90) and try_teleportation_trap(spot) then
+    if rand.odds(10) and try_teleportation_trap(spot) then
       return true
     end
 
@@ -703,10 +702,8 @@ function Layout_traps_and_cages()
 
 
   local function add_traps()
-    local make_prob = style_sel("traps", 0, 20, 40, 80)
+    local make_prob = style_sel("traps", 0, 20, 40, 85)
    
-make_prob = 100  --!!!!! TEST
-
     if make_prob == 0 then
       gui.printf("Traps: skipped for level (by style).\n")
       return
@@ -729,11 +726,11 @@ make_prob = 100  --!!!!! TEST
   local function make_cage(A)
     gui.debugf("Making big cage in %s\n", A:tostr())
 
+    A.face_room = Layout_choose_face_room(A)
+    if not A.face_room then return end
+
     A.mode = "cage"
     A.is_boundary = nil
-
-    A.face_room = Layout_choose_face_room(A)
-    assert(A.face_room)
 
     -- determine height and set junctions
 
@@ -795,7 +792,7 @@ make_prob = 100  --!!!!! TEST
 
   add_traps()
 
---!!!! FIXME  add_cages()
+  add_cages()
 
 
 do return end
@@ -1126,7 +1123,7 @@ function Layout_finish_scenic_borders()
     local max_f = max_neighbor_floor(A)
 
     if not max_f then
-      max_f = A.zone.scenic_sky_h - rand.pick({ 16, 160, 192, 224, 400 })
+      max_f = A.zone.scenic_sky_h - rand.pick({ 16, 160, 192, 224, 400 }) / 2
     end
 
     A.ceil_h  = A.zone.scenic_sky_h
@@ -1163,7 +1160,7 @@ function Layout_finish_scenic_borders()
 
   each Z in LEVEL.zones do
     local add_h = rand.pick({ 128,256,384 })
-    Z.scenic_sky_h = Z.sky_h + add_h
+    Z.scenic_sky_h = Z.sky_h ---!!! + add_h
   end
 
   each A in LEVEL.areas do
@@ -1180,8 +1177,8 @@ function Layout_liquid_stuff()
 
 
   local function try_pool_in_area(A)
-    -- random chance  (FIXME !!)
-    if rand.odds(1) then return end
+    -- random chance
+    if rand.odds(60) then return end
 
     -- ensure large enough  [ very large is OK too ]
     if A.svolume < 2.0 then return end
@@ -1201,6 +1198,7 @@ function Layout_liquid_stuff()
     A.pool_id = alloc_id("pool")
 
     A.face_rooms = { face_room }
+    A.face_room  = face_room
     A.is_outdoor = face_room.is_outdoor
     A.is_boundary = nil
 

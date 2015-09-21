@@ -1,8 +1,15 @@
 
-OBLIGE 7.xx
-===========
+OBLIGE 7.17-WEIRD
+=================
 
-by Andrew Apted.  March 2015
+by Andrew Apted.  September 2015
+
+
+** PREFACE **
+
+This package is just a SNAPSHOT or "Work In Progress" of
+current Oblige development.  This it NOT a proper release and
+is only intended for testing or for curiosity.
 
 
 INTRODUCTION

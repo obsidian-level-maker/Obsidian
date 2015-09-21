@@ -46,8 +46,15 @@ cp -av modules/*.* $dest/modules
 #
 #  Game data
 #
-# FIXME !!!!
-svn export games $dest/games
+mkdir $dest/games
+
+mkdir $dest/games/doom
+cp -av games/doom/*.* $dest/games/doom
+
+#
+#  Prefabs
+#
+cp -av prefabs $dest/prefabs
 
 #
 #  Data files

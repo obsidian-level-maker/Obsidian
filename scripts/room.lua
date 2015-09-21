@@ -647,8 +647,8 @@ function Room_reckon_doors()
 
     -- same room?
     if C.A1.room == C.A2.room then
-      B.kind  = "nothing"
-      B2.kind = "nothing"
+      B.kind  = nil
+      B2.kind = nil
       return
     end
 
@@ -934,8 +934,7 @@ function Room_border_up()
     -- room to scenic --
 
     if not A2.room then
-      -- FIXME
-      junc.kind = "window"
+      junc.kind = "wall"  -- FIXME "window"
       return
     end
 
@@ -947,20 +946,16 @@ function Room_border_up()
 
       if A1.is_porch or A2.is_porch then
         junc.kind = "pillar"
-        return
       end
 
 -- STEP TEST
-local z1 = math.min(A1.floor_h, A2.floor_h)
-local z2 = math.max(A1.floor_h, A2.floor_h)
-if (z2 - z1) >  65 and (z2 - z1) <= 72 then
-  junc.kind = "steps"
-  junc.steps_mat = "FLAT1"
-
-  if not A1.is_outdoor then
-    junc.kind2 = "pillar"
-  end
-end
+      local z1 = math.min(A1.floor_h, A2.floor_h)
+      local z2 = math.max(A1.floor_h, A2.floor_h)
+      if (z2 - z1) >  24 and (z2 - z1) <= 72 then
+        junc.kind2 = junc.kind
+        junc.kind = "steps"
+        junc.steps_mat = "FLAT1"
+      end
 
       return
     end
@@ -1000,10 +995,38 @@ do return end
       junc.fence_mat = A1.zone.fence_mat
       junc.fence_top_z = math.max(A1.floor_h, A2.floor_h) + 32
 
+      if A1.pool_hack or A2.pool_hack then
+        junc.fence_top_z = junc.fence_top_z + 16
+      end
+
       if A1.is_porch or A2.is_porch then
         junc.kind2 = "pillar"
       end
 
+      return
+    end
+
+
+    -- window test [ make A1 be the indoor room ]
+    local win_prob = style_sel("windows", 0, 15, 35, 75)
+
+    if A1.is_outdoor and not A2.is_outdoor then
+       A1, A2 = A2, A1
+    end
+
+    if not A1.is_outdoor and (A2.is_outdoor or rand.odds(30)) and
+       A1.room and A2.room and
+       A1.mode != "hallway" and A2.mode != "hallway" and
+       A1.room.kind != "stairwell" and A2.room.kind != "stairwell" and
+       A1.floor_h and A2.floor_h and
+       A1.floor_h >= A2.floor_h and
+       (A2.is_outdoor or A1.floor_h < A2.floor_h + 200) and
+       rand.odds(win_prob)
+    then
+      junc.kind = "window"
+      if A2.is_outdoor then
+        A2.window_h = A1.floor_h + 128
+      end
       return
     end
 
@@ -1392,8 +1415,8 @@ function Room_assign_voids()
   local function handle_zone(Z)
     local quota = Z.num_areas / 6 + rand.range(0, 2.5)
 
-    if OB_CONFIG.mode == "dm" or rand.odds(10) then
-      quota = quota * 0.7
+    if OB_CONFIG.mode == "dm" or rand.odds(30) then
+      quota = quota * 0.5
     end
  
     -- the largest area can never become VOID
@@ -1433,8 +1456,6 @@ function Room_assign_voids()
 
 
   ---| Room_assign_voids |---
-
-do return end --!!!!!!
 
   each Z in LEVEL.zones do
     handle_zone(Z)
@@ -2200,34 +2221,31 @@ function Room_floor_heights()
   end
 
 
-  local function pick_delta_h(min_d, max_d, up_chance)
+  local function pick_delta_h(from_h, up_chance)
+    local h = 12
+    if rand.odds(33) then h = 24
+      if rand.odds(75) then h = 40
+        if rand.odds(33) then h = 64 end
+      end
+    end
+
     if rand.odds(up_chance) then
-      return max_d + 8
+      return from_h + h
     else
-      return min_d - 8
+      return from_h - h
     end
   end
 
 
-  local function area_assign_delta(A, up_chance)
-    local min_d, max_d
+  local function area_assign_delta(A, up_chance, cur_delta_h)
 
-    each N in A.neighbors do
-      if N.room == A.room and N.delta_h then
-        min_d = math.N_min(N.delta_h, min_d)
-        max_d = math.N_max(N.delta_h, max_d)
-      end
-    end
+    A.delta_h = cur_delta_h
 
-    if not min_d then
-      A.delta_h = 0
-    else
-      A.delta_h = pick_delta_h(min_d, max_d, up_chance)
-    end
+    each C in A.conns do
+      local A2 = C:neighbor(A)
 
-    each N in A.neighbors do
-      if N.room == A.room and not N.delta_h then
-        area_assign_delta(N, up_chance)
+      if A2.room == A.room and not A2.delta_h then
+        area_assign_delta(A2, up_chance, pick_delta_h(cur_delta_h, up_chance))      
       end
     end
   end
@@ -2239,8 +2257,8 @@ function Room_floor_heights()
     local up_chance = rand.pick({ 10, 50, 90 })
 
     -- recursively flow delta heights from a random starting area
-    -- FIXME : use the conns, Luke!
-    area_assign_delta(start_area, up_chance)
+    local cur_delta_h = rand.irange(-4, 4) * 32
+    area_assign_delta(start_area, up_chance, cur_delta_h)
 
     local adjust_h = 0
     if entry_area then adjust_h = entry_area.delta_h end
@@ -2466,6 +2484,9 @@ function Room_floor_heights()
   local function do_hallway_ceiling(R)
     if R.is_outdoor then
       -- will be zone.sky_h
+
+      -- FIXME: workaround for odd bug [ outdoors non-sync? ]
+      R.areas[1].is_outdoor = true
       return
     end
 
@@ -2694,6 +2715,24 @@ function Room_floor_heights()
   end
 
 
+  function fix_pool_hacks(R)
+    local function pool_height(A)
+      each N in A.neighbors do
+        if N.room == R then
+          return N.floor_h - 16
+        end
+      end
+      error("fix_pool_hacks failed")
+    end
+
+    each A in R.areas do
+      if A.pool_hack then
+        A.floor_h = pool_height(A)
+      end
+    end
+  end
+
+
   ---| Room_floor_heights |---
 
   -- give each zone a preferred hallway z_dir
@@ -2719,6 +2758,8 @@ end
 
     assert(R.entry_h)
 
+    fix_pool_hacks(R)
+
     if R.kind == "hallway" then
 --!!!!      Room_detect_porches(R)
     end
@@ -2733,6 +2774,10 @@ function Room_set_sky_heights()
     local sky_h = A.floor_h + A.zone.sky_add_h
 
     A.zone.sky_h = math.N_max(A.zone.sky_h, sky_h)
+
+    if A.window_top_h then
+      A.zone.sky_h = math.max(A.zone.sky_h, A.window_h)
+    end
   end
 
 
@@ -2800,6 +2845,63 @@ function Room_add_sun()
 end
 
 
+function Room_pool_hacks()
+
+  local function similar_room(A1, A2)
+    local R1 = A1.room
+    local R2 = A2.room
+
+    if R1 == R2 then return true end
+
+    return false
+  end
+
+
+  local function can_become_pool(A)
+    if not A.room then return false end
+
+    -- room is too simple?
+    if #A.room.areas < 2 then return false end
+
+    -- too small?
+    if A.svolume < 2 then return false end
+
+    -- external connection?
+    each C in A.conns do
+      if (C.A1.room != A.room) or (C.A2.room != A.room) then
+        return false
+      end
+    end
+
+    -- check number of "roomy" neighbors
+    local count = 0
+
+    each N in A.neighbors do
+      if N.room and similar_room(A, N) then
+        count = count + 1
+      end
+    end
+
+    return (count < 2)
+  end
+
+  ---| Room_pool_hacks |---
+
+  if not LEVEL.liquid then return end
+
+  local prob = style_sel("liquids", 0, 20, 45, 90);
+
+  if prob == 0 then return end
+
+  each A in LEVEL.areas do
+    if not A.room then continue end
+
+    if can_become_pool(A) and rand.odds(prob) then
+      A.pool_hack = true
+    end
+  end
+end
+
 
 ------------------------------------------------------------------------
 
@@ -2811,6 +2913,7 @@ function Room_build_all()
   Area_prune_hallways()
 
   Room_reckon_doors()
+  Room_pool_hacks()
   Room_floor_heights()
   Room_prepare_skies()
 

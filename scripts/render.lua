@@ -24,8 +24,7 @@ function calc_wall_mat(A1, A2)
     return "_ERROR"
   end
 
--- FIXME : DEBUG STUFF
-if A2 and A2.mode == "void" then return "COMPSPAN" end
+  if A2 and A2.mode == "void" then A2 = nil end
 
   if not A1.is_outdoor then
     return assert(A1.wall_mat)
@@ -1009,7 +1008,7 @@ function Render_floor(A, S)
 -- tag = A.id
 -- if A.conn_group then tag = A.conn_group end
 -- if A.quest and A.quest.id < 2 then tag = 1 end
-if A.is_boundary then tag = 1000 + A.id end
+-- if A.is_boundary then tag = 1000 + A.id end
 
 
   -- handle railings [ must be done here ]
@@ -1122,8 +1121,13 @@ function Render_seed(A, S)
 
   -- FIXME : closets
 
-  if S.kind == "void" or A.mode == "void" then
+  if S.kind == "void" then
     Render_void(A, S)
+    return
+  end
+
+  if A.mode == "void" then
+--stderrf("Void area: %s @ %s\n", A.name, A.seeds[1]:tostr())
     return
   end
 
@@ -1234,9 +1238,9 @@ end
 
 
   if A.mode == "void" then
-    A.wall_mat = "COMPSPAN"
-    A.floor_mat = A.wall_mat
     A.facade_mat = A.zone.facade_mat
+    A.wall_mat   = A.facade_mat
+    A.floor_mat  = A.wall_mat
     return
   end
 
@@ -1249,15 +1253,20 @@ end
     A.ceil_h = A.floor_h + 144
 
   elseif not A.ceil_h then
-    A.ceil_h = A.floor_h + 200
+    A.ceil_h = A.floor_h + rand.pick({ 128, 192,192,192, 256,320 })
   end
 
 
   if A.kind == "building" then
     A.wall_mat  = assert(R.main_tex)
 
-    A.floor_mat = rand.key_by_probs(R.theme.ceilings)
-    A.ceil_mat  = rand.key_by_probs(R.theme.ceilings)
+    if R.theme and R.theme.floors then
+      A.floor_mat = rand.key_by_probs(R.theme.floors)
+    end
+
+    if R.theme and R.theme.ceilings then
+      A.ceil_mat  = rand.key_by_probs(R.theme.ceilings)
+    end
 
     A.facade_mat = A.zone.facade_mat
 
@@ -1266,6 +1275,9 @@ end
 
   elseif A.kind == "landscape" then
     A.floor_mat = "RROCK19"
+    if THEME.base_skin and THEME.base_skin.grass then
+      A.floor_mat = THEME.base_skin.grass
+    end
 
   elseif A.kind == "cave" then
     A.wall_mat  = "ASHWALL4"
@@ -1281,9 +1293,11 @@ end
     A.wall_mat  = "WOOD1"
     A.ceil_mat  = "WOOD1"
 
---- if A.room.hallway.parent then
---- A.floor_mat = "FLAT14"
---- end
+    -- TEMP CRUD to match 'hall_piece' texture usage
+    if A.room and A.room.skin and A.room.skin.wall then
+      A.floor_mat = A.room.skin.wall
+      A. ceil_mat = A.room.skin.wall
+    end
 
     if not A.is_outdoor then
       A.facade_mat = A.zone.facade_mat
@@ -1299,7 +1313,7 @@ end
   end
 
 
-  if A.mode == "pool" then
+  if A.mode == "pool" or A.pool_hack then
     A.floor_mat = "_LIQUID"
 --    A.wall_mat  = "ASHWALL7"
   end

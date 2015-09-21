@@ -1738,7 +1738,7 @@ end
 
 --------------------------------------------------------------------
 
-OB_GAMES["doom1"] =
+UNFINISHED["doom1"] =
 {
   label = "Doom 1"
 
@@ -1763,7 +1763,7 @@ OB_GAMES["doom1"] =
 }
 
 
-OB_GAMES["ultdoom"] =
+UNFINISHED["ultdoom"] =
 {
   label = "Ultimate Doom"
 

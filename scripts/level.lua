@@ -125,7 +125,7 @@ GLOBAL_STYLE_LIST =
   crossovers  = { none=40 } --!!!! , some=40, heaps=40 }
 
   mon_variety = { some=50 }
-  teleporters = { none=60 } --!!!! , few=30, some=30, heaps=5 }
+  teleporters = { few=30, some=30, heaps=10 }
   switches    = { none=5, few=50, some=50, heaps=10 }
   doors       = { none=5, few=50, some=30, heaps=5 }
 
@@ -734,7 +734,7 @@ function Levels_choose_liquid()
     return
   end
 
-  local usage     = style_sel("liquids", 0, 20, 40, 90)
+  local usage     = style_sel("liquids", 0, 25, 50, 90)
   local skip_prob = style_sel("liquids", 100, 30, 10, 0)
 
   if rand.odds(skip_prob) then
@@ -780,8 +780,6 @@ function Levels_choose_darkness()
   LEVEL.indoor_light = 144
   LEVEL.sky_bright   = rand.sel(75, 192, 176)
   LEVEL.sky_shade    = LEVEL.sky_bright - 32
-
-do return end --!!!!!! FIXME
 
   if rand.odds(prob) then
     gui.printf("Darkness falls across the land...\n\n")
