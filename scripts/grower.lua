@@ -21,8 +21,18 @@
 
 --class SPROUT
 --[[
-    S    : SEED  -- where to join onto
-    dir  : DIR   --
+    S    : SEED     -- where to join onto
+    dir  : DIR      --
+
+    long  : number  -- width of connection (in seeds)
+
+    split : number  -- usually nil, when set there are two gaps at each
+                    -- side of connection and 'split' is width of the gaps
+                    -- (require split * 2 + 1 <= long)
+
+    mode : keyword  -- usually "normal".
+                    -- can be "extend" to make existing room bigger
+                    -- (instead of create a new room)
 
     room : ROOM  -- the room to join onto
 
@@ -30,12 +40,14 @@
 --]]
 
 
-function Sprout_new(S, dir, long, room)
+function Sprout_new(S, dir, conn, room)
   local P =
   {
     S = S
     dir = dir
-    long = long
+    long = conn.w or 1
+    mode = conn.mode or "normal"
+    split = conn.split
     room = room
   }
 
@@ -847,7 +859,8 @@ function Grower_preprocess_tiles()
 
     if def.stair_spots then add_stairs(def) end
 
-    if string.match(name, "HALL_") then def.mode = "hallway" end
+    if string.match(name, "HALL_")   then def.mode = "hallway" end
+    if string.match(name, "EXTEND_") then def.mode = "extend" end
 
     if not def.mode then def.mode = "room" end
   end
@@ -1138,7 +1151,7 @@ function Grower_grow_trunk(is_first)
       local S = SEEDS[sx][sy]
 
 assert(room)
-      Sprout_new(S, dir, conn.w or 1, room)
+      Sprout_new(S, dir, conn, room)
     end
   end
 
@@ -1235,6 +1248,18 @@ end
   end
 
 
+  local function match_a_conn(P, def, conn)
+    if (conn.w or 1) != P.long then return false end
+
+    -- TODO: maybe relax this
+    if conn.split != P.split then return false end
+
+    if P.mode == "extend" and def.mode != "extend" then return false end
+
+    return true
+  end
+
+
   local function pick_matching_conn_set(P, def)
     local poss = {}
 
@@ -1244,7 +1269,7 @@ end
 
       if not conn then error("Bad letter in conn_set in " .. def.name) end
 
-      if (conn.w or 1) == P.long then
+      if match_a_conn(P, def, conn) then
         table.insert(poss)
       end
     end
@@ -1332,6 +1357,8 @@ stderrf("Failed\n")
     {
       S = SEEDS[sx][sy]
       dir = 8
+      long = 2  -- FIXME
+      mode = "normal"
       initial_hub = true
     }
 
