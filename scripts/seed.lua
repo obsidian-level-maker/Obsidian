@@ -662,6 +662,14 @@ function Seed_from_loc(loc)
 end
 
 
+function Seed_over_boundary(N)
+  if N.sx <= LEVEL.boundary_sx1 or N.sx >= LEVEL.boundary_sx2 then return true end
+  if N.sy <= LEVEL.boundary_sy1 or N.sy >= LEVEL.boundary_sy2 then return true end
+
+  return false
+end
+
+
 function Seed_alloc_depot()
   -- returns NIL if no more are possible
 

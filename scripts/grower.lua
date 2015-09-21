@@ -1138,7 +1138,7 @@ function Grower_grow_trunk(is_first)
       local S = SEEDS[sx][sy]
 
 assert(room)
-      Sprout_new(S, dir, conn.long or 1, room)
+      Sprout_new(S, dir, conn.w or 1, room)
     end
   end
 
@@ -1168,14 +1168,20 @@ assert(room)
 
 
   local function check_sprout_blocked(P)
-    local N = P.S:neighbor(P.dir)
+    local along_dir = geom.RIGHT[P.dir]
 
-    if not N then return true end
+    local S = P.S
 
-    if N.area then return true end
+    for i = 1, P.long do
+      local N = S:neighbor(P.dir)
 
-    if N.sx <= LEVEL.boundary_sx1 or N.sx >= LEVEL.boundary_sx2 then return true end
-    if N.sy <= LEVEL.boundary_sy1 or N.sy >= LEVEL.boundary_sy2 then return true end
+      if not N  then return true end
+      if N.area then return true end
+
+      if Seed_over_boundary(N) then return true end
+
+      S = S:neighbor(along_dir)
+    end
 
     return false  -- not blocked
   end
