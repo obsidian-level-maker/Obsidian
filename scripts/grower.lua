@@ -1235,15 +1235,42 @@ end
   end
 
 
+  local function pick_matching_conn_set(P, def)
+    local poss = {}
+
+    each cs in def.conn_sets do
+      local letter = string.sub(cs, 1, 1)
+      local conn = assert(def.conns[letter])
+
+      if not conn then error("Bad letter in conn_set in " .. def.name) end
+
+      if (conn.w or 1) == P.long then
+        table.insert(poss)
+      end
+    end
+
+    if table.empty(poss) then return nil end
+
+    return rand.pick(poss)
+  end
+
+
   local function try_add_tile(P, def, conn_set)
+stderrf("try_add_tile '%s'  @ %s dir:%d\n", def.name, P.S:tostr(), P.dir)
+
+    local conn_set = pick_matching_conn_set(P, def.conn_sets)
+
+    -- no possible connections?
+    if not conn_set then
+stderrf("  No matching entry conn (long=%d)\n", P.long)
+      return false
+    end
+
     cur_def  = def
     cur_grid = def.processed[1].grid
 
-stderrf("try_add_tile '%s'  @ %s dir:%d\n", def.name, P.S:tostr(), P.dir)
-
     local entry_letter = string.sub(conn_set, 1, 1)
     local entry_conn   = def.conns[entry_letter]
-    if not entry_conn then error("Bad letter in conn_set in " .. def.name) end
 
     local T = calc_transform(P, def, entry_conn, false)
 
@@ -1314,9 +1341,7 @@ stderrf("Failed\n")
 
       tab[name] = nil
 
-      local conn_set = rand.pick(def.conn_sets)
-
-      if try_add_tile(P, def, conn_set) then
+      if try_add_tile(P, def) then
         return true
       end
 
@@ -1353,9 +1378,7 @@ stderrf("Failed\n")
 
       tab[name] = nil
 
-      local conn_set = rand.pick(def.conn_sets)
-
-      if try_add_tile(P, def, conn_set) then
+      if try_add_tile(P, def) then
         return
       end
 
