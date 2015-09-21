@@ -68,7 +68,7 @@ HALL_I_1x3 =
 
 HALL_I_2x1 =
 {
-  prob = 10
+  prob = 50
 
   structure =
   {

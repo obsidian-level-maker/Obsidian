@@ -1270,7 +1270,7 @@ end
       if not conn then error("Bad letter in conn_set in " .. def.name) end
 
       if match_a_conn(P, def, conn) then
-        table.insert(poss)
+        table.insert(poss, cs)
       end
     end
 
@@ -1283,7 +1283,7 @@ end
   local function try_add_tile(P, def, conn_set)
 stderrf("try_add_tile '%s'  @ %s dir:%d\n", def.name, P.S:tostr(), P.dir)
 
-    local conn_set = pick_matching_conn_set(P, def.conn_sets)
+    local conn_set = pick_matching_conn_set(P, def)
 
     -- no possible connections?
     if not conn_set then
