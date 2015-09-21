@@ -28,6 +28,7 @@ TILES =
 --
 --------------------------------
 
+--[[
 HALL_I_1x1 =
 {
   prob = 40
@@ -62,9 +63,9 @@ HALL_I_1x3 =
     b = { x=1, y=3, dir=8 }
   }
 }
+--]]
 
 
---[[
 HALL_I_2x1 =
 {
   prob = 10
@@ -76,11 +77,10 @@ HALL_I_2x1 =
 
   conns =
   {
-    a = { x=1, y=1, dir=2, w=2 }
-    b = { x=1, y=1, dir=8, w=2 }
+    a = { x=2, y=1, w=2, dir=2 }
+    b = { x=1, y=1, w=2, dir=8 }
   }
 }
---]]
 
 
 --[[
@@ -137,14 +137,25 @@ ROOM_RECT_3x2 =
     d = { x=1, y=2, dir=4 }
     e = { x=3, y=2, dir=6 }
     f = { x=2, y=2, dir=8 }
+
+    -- FIXME : test crud
+    g = { x=2, y=1, w=2, dir=2 }
+    h = { x=2, y=2, w=2, dir=8 }
+    k = { x=1, y=1, w=2, dir=4 }
+    m = { x=3, y=2, w=2, dir=6 }
   }
 
   conn_sets =
   {
+--[[
     "a:bc"
     "a:bcf"
     "a:de"
     "a:def"
+--]]
+    "g:h"
+    "g:km"
+    "g:hkm"
   }
 }
 
@@ -155,6 +166,7 @@ ROOM_RECT_3x2 =
 --
 --------------------------------
 
+--[[
 START_O_3x3 =
 {
   start_prob = 1000
@@ -178,6 +190,35 @@ START_O_3x3 =
     b = { x=1, y=2, dir=4 }
     c = { x=3, y=2, dir=6 }
     d = { x=2, y=3, dir=8 }
+  }
+}
+--]]
+
+
+START_O_4x4 =
+{
+  start_prob = 1000
+
+  structure =
+  {
+    "/11%"
+    "1111"
+    "1111"
+    "%11/"
+  }
+
+  diagonals =
+  {
+    ".1", "1."
+    ".1", "1."
+  }
+
+  conns =
+  {
+    a = { x=3, y=1, w=2, dir=2 }
+    b = { x=1, y=2, w=2, dir=4 }
+    c = { x=4, y=3, w=2, dir=6 }
+    d = { x=2, y=4, w=2, dir=8 }
   }
 }
 
