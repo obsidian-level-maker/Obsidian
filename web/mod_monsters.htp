@@ -148,7 +148,7 @@ The default value is '1'.
 where 1.0 is normal, higher values produce more monsters,
 and lower values produce less monsters.
 For particularly nasty monsters, like the Archvile in DOOM, low
-numbers like 0.2 are good for ensuring there are used sparingly
+numbers like 0.2 are good for ensuring they are used sparingly
 in a room.
 </blockquote>
 
