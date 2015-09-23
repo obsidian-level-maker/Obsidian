@@ -84,6 +84,34 @@ HALL_I_2x1 =
 
 
 --[[
+HALL_DIAG_I3 =
+{
+  prob = 50
+
+  structure =
+  {
+    "./%"
+    "/1/"
+    "%/."
+  }
+
+  diagonals =
+  {
+    ".1", "1."
+    ".1", "1."
+    ".1", "1."
+  }
+
+  conns =
+  {
+    a = { x=1, y=1, dir=1 }
+    b = { x=3, y=3, dir=9 }
+  }
+}
+--]]
+
+
+--[[
 HALL_U_5x3_rounded =
 {
   prob = 25
