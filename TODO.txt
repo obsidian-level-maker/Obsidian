@@ -582,6 +582,8 @@ Mazes:
   MISCELLANEOUS
 ----------------------------------------------
 
++  a "layout only" module as a tool for mappers
+
 +  when traversibility in a room is poor (exit near entrance),
    make the exit into a switched door and put a switch at other
    end of room.
