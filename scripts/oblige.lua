@@ -24,7 +24,6 @@ require "brush"
 require "prefab"
 
 require "seed"
-require "weird"
 require "tiles"
 require "grower"
 require "area"
