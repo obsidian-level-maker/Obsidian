@@ -177,6 +177,7 @@ function size_of_room_set(rooms)
   local total = 0
 
   each id, R in rooms do
+stderrf("%s .svolume = %d\n", R:tostr(), R.svolume)
     total = total + R.svolume
   end
 
@@ -201,10 +202,6 @@ function Quest_create_initial_quest()
 
     -- must be a leaf room
     if R:total_conns() > 1 then return -1 end
-
-    -- must be a leaf zone too
-    -- (otherwise will fail to lock all the zone connections)
-    if not R.areas[1].zone.is_leaf then return -1 end
 
     -- cannot teleport into a secret exit
     -- [ WISH : support this, a secret teleporter closet somewhere ]
@@ -748,7 +745,6 @@ function Quest_scan_all_conns(new_goals, do_quest)
   }
 
   local conn_list = LEVEL.conns
-  local is_zoney  = false
 
   -- handle all zone connections before anything else
 
@@ -776,20 +772,8 @@ function Quest_scan_all_conns(new_goals, do_quest)
   -- nothing possible?
   if not info.conn then
 
-    -- if doing zones, then we failed to lock between two zones.
-    -- we can live with that though, but try no more zone conns.
-    if is_zoney then
-      LEVEL.zone_conns = {}
-    end
-
 gui.debugf("---> NOTHING POSSIBLE\n")
     return false
-  end
-
-
-  -- for zone connections, must remove it from the global list
-  if is_zoney then
-    assert(table.kill_elem(LEVEL.zone_conns, info.conn))
   end
 
 
@@ -933,20 +917,6 @@ function Quest_add_major_quests()
   end
 
   
-  local function lock_up_zones(goal_list)
-    for i = 1, 99 do
-      if table.empty(LEVEL.zone_conns) then return end
-
-      local goal = pick_goal(goal_list)
-      if not goal then return end
-
-      Quest_scan_all_conns({ goal })
-    end
-
-    error("Infinite loop in lock_up_zones")
-  end
-
-
   local function lock_up_double_doors()
     local list = table.copy(LEVEL.quests)
 
@@ -997,14 +967,10 @@ function Quest_add_major_quests()
 ---!!    end
 ---!!  end
 
----!!  lock_up_zones(goal_list)
-
 
   -- lock remaining zone connections with switches
 
   collect_switch_goals(goal_list)
-
----!!!  lock_up_zones(goal_list)
 
 
   -- divide the zones further using switch quests
@@ -1019,11 +985,73 @@ function Quest_add_major_quests()
       lock_up_a_quest(Q, goal_list, pass)
     end
   end
+
+each Q in LEVEL.quests do
+Q.svolume = size_of_room_set(Q.rooms)
+end
+
 end
 
 
 
-function Quest_fixup_zones()
+function Quest_group_into_zones()
+
+  -- Note : assumes quests are in a visit order
+
+
+  local function assign_zone(Q, zone)
+    Q.zone = zone
+
+    table.insert(zone.quests, Q)
+
+    zone.svolume = zone.svolume + Q.svolume
+    
+    each id, R in Q.rooms do
+      R.zone = zone
+
+      table.add_unique(zone.rooms, R)
+
+      each A in R.areas do
+        A.zone = zone
+      end
+    end
+  end
+
+
+  local function dump_zones()
+    gui.printf("Zone list:\n")
+
+    each Z in LEVEL.zones do
+      gui.printf("  %s : quests:%d svolume:%d\n", Z.name, #Z.quests, Z.svolume)
+    end
+  end
+
+
+  ---| Quest_group_into_zones |---
+
+  -- this is deliberately quite low, since we generally want each major
+  -- quest to become a single zone, and only merge them when a quest is
+  -- very small.
+  local rough_size = 100
+
+  local cur_zone = Zone_new()
+
+  each Q in LEVEL.quests do
+    if cur_zone.svolume >= rough_size then
+      cur_zone = Zone_new()
+    end
+
+    assign_zone(Q, cur_zone)
+  end
+
+  dump_zones()
+
+  Area_spread_zones()
+end
+
+
+
+function Quest_fixup_zones__OLD()
   each A in LEVEL.areas do
     local zone = assert(A.zone)
 
@@ -2520,6 +2548,7 @@ function Quest_make_quests()
   Monster_prepare()
 
   LEVEL.quests = {}
+  LEVEL.zones  = {}
 
   -- special handlign for Deathmatch and Capture-The-Flag
 
@@ -2534,10 +2563,11 @@ function Quest_make_quests()
 
   Quest_add_major_quests()
 
-  Quest_fixup_zones()
-
   Quest_start_room()
   Quest_order_by_visit()
+
+  -- this must be after quests have been ordered
+  Quest_group_into_zones()
 
 ---???  Quest_final_battle()
 
