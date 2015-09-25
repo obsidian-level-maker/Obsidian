@@ -696,6 +696,8 @@ function Grower_preprocess_tiles()
   local function do_parse_element(ch)
     if ch == '.' then return { kind="empty" } end
 
+    if ch == '?' then return { kind="fluff" } end
+
     if ch == '1' then return { kind="area", area=1 } end
     if ch == '2' then return { kind="area", area=2 } end
     if ch == '3' then return { kind="area", area=3 } end
@@ -922,6 +924,7 @@ function Grower_grow_trunk(is_first)
 
   local cur_def
   local cur_grid
+  local cur_room
 
   local new_room_num = 0
 
@@ -1034,6 +1037,13 @@ function Grower_grow_trunk(is_first)
 
 
   local function install_half_seed(T, S, elem)
+    if elem.kind == "fluff" then
+stderrf("Installing fluff.....\n")
+      S.fluff_room = assert(cur_room)
+      return
+    end
+
+
     if elem.kind != "area" then
       error("Unknown element kind in shape")
     end
@@ -1047,9 +1057,9 @@ function Grower_grow_trunk(is_first)
     S.room = A.room
     table.insert(A.seeds, S)
 
-    if elem.good_conn then
-      S.good_conn_dir = transform_dir(T, elem.good_conn.dir)
-    end
+---## if elem.good_conn then
+---##   S.good_conn_dir = transform_dir(T, elem.good_conn.dir)
+---## end
 
     if elem.good_stair then
       S.good_stair_dir = transform_dir(T, elem.good_stair.dir)
@@ -1302,27 +1312,32 @@ stderrf("  No matching entry conn (long=%d)\n", P.long)
 
     local T = calc_transform(P, def, entry_conn, false)
 
-    if try_add_tile_RAW(P, T, nil) then
-
-      local ROOM = create_room(def, P.room)
-      ROOM.initial_hub = P.initial_hub
-
-      ROOM.prelim_conn_num = 0
-
-      if P.room then
-        assert(not P.initial_hub)
-        add_prelim_connect(P.room, P, ROOM)
-      end
-
-      try_add_tile_RAW(P, T, ROOM)
-      add_new_sprouts(T, conn_set, ROOM, P.initial_hub)
-
-stderrf("SUCCESS !!!!!\n")
-      return true  -- OK
+    if not try_add_tile_RAW(P, T, nil) then
+stderrf("Failed\n")
+      return false
     end
 
-stderrf("Failed\n")
-    return false
+    -- tile can be added, so create the room
+
+    local ROOM = create_room(def, P.room)
+    ROOM.initial_hub = P.initial_hub
+
+    ROOM.prelim_conn_num = 0
+
+    cur_room = ROOM
+
+    if P.room then
+      assert(not P.initial_hub)
+      add_prelim_connect(P.room, P, ROOM)
+    end
+
+    -- install into seeds
+    try_add_tile_RAW(P, T, ROOM)
+
+    add_new_sprouts(T, conn_set, ROOM, P.initial_hub)
+
+stderrf("SUCCESS !!!!!\n")
+    return true  -- OK
   end
 
 
@@ -1463,7 +1478,7 @@ stderrf("Failed\n")
     -- no more sprouts?
     if not sprout then break; end
 
---  if #LEVEL.rooms >= 20 then break; end
+    if #LEVEL.rooms >= 10 then break; end
 
     if not check_sprout_blocked(sprout) then
       add_room(sprout)
@@ -1492,6 +1507,7 @@ function Grower_fill_gaps()
   -- and randomly merge them until size of all temp_areas has reached a
   -- certain threshhold.
   --
+--!!!!  also does fluff
 
   local temp_areas = {}
 
@@ -1506,6 +1522,10 @@ function Grower_fill_gaps()
       svolume = 0
       seeds = { first_S }
     }
+
+    if first_S.fluff_room then
+      TEMP.room = first_S.fluff_room
+    end
 
     if first_S.diagonal then
       TEMP.svolume = 0.5
@@ -1545,6 +1565,10 @@ function Grower_fill_gaps()
       A1, A2 = A2, A1
     end
 
+    if A2.room and not A1.room then
+      A1, A2 = A2, A1
+    end
+
     A1.svolume = A1.svolume + A2.svolume
 
     table.append(A1.seeds, A2.seeds)
@@ -1569,6 +1593,11 @@ function Grower_fill_gaps()
 
   local function eval_merge(A1, A2, dir)
     local score = 1
+
+    -- never merge fluffy areas from different rooms
+    if A1.room and A2.room then
+      if A1.room != A2.room then return -1 end
+    end
 
     if A2.svolume < MIN_SIZE then
       score = 3
@@ -1651,6 +1680,9 @@ function Grower_fill_gaps()
 
     if not (T1 and T2) then return false end
     if T1 == T2 then return false end
+
+    -- FIXME : REVIEW THIS
+    if T1.room != T2.room then return false end
 
 
     if dir == 2 then
@@ -1818,9 +1850,18 @@ stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S:tostr(),
 
       area.seeds = T.seeds
 
+      if T.room then
+        area.mode = "normal"
+
+area.svolume = 0  -- FIXME
+
+        T.room:add_area(area)
+      end
+
       -- install into seeds
       each S in area.seeds do
         S.area = area
+        S.room = T.room
       end
     end
   end

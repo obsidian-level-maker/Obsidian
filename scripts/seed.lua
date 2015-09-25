@@ -153,6 +153,7 @@ function SEED_CLASS.split(S, diagonal)
   S2.x2 = S.x2 ; S2.y2 = S.y2
 
   S2.edge_of_map = S.edge_of_map
+  S2.fluff_room  = S.fluff_room
 
   -- link fake seed with real one
   S.top = S2 ; S2.bottom = S
