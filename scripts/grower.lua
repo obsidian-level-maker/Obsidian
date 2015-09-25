@@ -937,7 +937,7 @@ function Grower_grow_trunk(is_first)
 
       area_map[i] = A
 
-      A.svolume = A:calc_volume()
+      A.svolume = 0  -- unknown here
 
       R:add_area(A)
     end

@@ -177,7 +177,6 @@ function size_of_room_set(rooms)
   local total = 0
 
   each id, R in rooms do
-stderrf("%s .svolume = %d\n", R:tostr(), R.svolume)
     total = total + R.svolume
   end
 

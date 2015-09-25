@@ -538,8 +538,17 @@ end
 
 
 function Area_calc_volumes()
+  -- compute room volume too!
+  each R in LEVEL.rooms do
+    R.svolume = 0
+  end
+
   each A in LEVEL.areas do
     A.svolume = A:calc_volume()
+
+    if A.room then
+      A.room.svolume = A.room.svolume + A.svolume
+    end
   end
 end
 
