@@ -862,6 +862,9 @@ function Grower_preprocess_tiles()
     if string.match(name, "HALL_")   then def.mode = "hallway" end
     if string.match(name, "EXTEND_") then def.mode = "extend" end
 
+    if string.match(name, "OUTDOOR_") then def.environment = "outdoor" end
+    if string.match(name, "CAVE_")    then def.environment = "cave" end
+
     if not def.mode then def.mode = "room" end
   end
 end
@@ -1966,6 +1969,6 @@ function Grower_create_rooms()
 
   Grower_assign_boundary()
 
-  Grower_save_svg()
+    Grower_save_svg()
 end
 
