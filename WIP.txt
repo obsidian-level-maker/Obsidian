@@ -6,19 +6,19 @@ WORK IN PROGRESS
 Grower:
 -------
 
-+  support 'long' connections
+>>>  support 'long' connections
+     -  the connection themselves are currently not "long"
 
--  don't make another trunk if original too small
-   (just add some random sprouts)
+-  if first trunk is too small, add some random sprouts and
+   continue building
 
    BUT: sometimes deliberately make 2+ trunks
         (for teleporters)
         be nice to create a big river between them
 
+-  IDEA: remember 'blocked' sprouts -- may be good spots for cycles
 
-!!  weapon adding broken ?
-
-!!  guard monsters broken ?
+LATER:  support short diagonal connections (dir == 1/3/5/7)
 
 
 
