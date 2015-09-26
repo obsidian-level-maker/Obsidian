@@ -798,7 +798,10 @@ function Grower_preprocess_tiles()
 
     local default_set = ""
 
-    each letter,conn in def.conns do
+    local all_letters = table.keys_sorted(def.conns)
+
+    each letter in all_letters do
+      local conn = def.conns[letter]
       conn.long = conn.w or 1
 
       local x = conn.x
@@ -1003,29 +1006,37 @@ function Grower_grow_trunk(is_first)
     -- create a transform which positions the tile so that entry_conn
     -- mates up with the sprout 'P'.
 
-    local T = {}
+    local T = { rotate=0 }
 
     -- only HORIZONTAL mirroring is supported
     if do_mirror then
+      assert(geom.is_vert(entry_conn.dir))
       T.mirror = true
     end
 
-    if geom.is_parallel(P.dir, entry_conn.dir) then
-      if P.dir == entry_conn.dir then
+    local entry_dir = transform_dir(T, entry_conn.dir)
+
+    if geom.is_parallel(P.dir, entry_dir) then
+      if P.dir == entry_dir then
         T.rotate = 4
       else
         T.rotate = 0
       end
     
     else  -- perpendicular
-      if P.dir == geom.RIGHT[entry_conn.dir] then
-        T.rotate = 2
-      else
+      if P.dir == geom.RIGHT[entry_dir] then
         T.rotate = 6
+      else
+        T.rotate = 2
       end
     end
 
-    assert(transform_dir(T, P.dir) == 10 - entry_conn.dir)
+stderrf("  calc transform for %s...\n", def.name)
+stderrf("    rotate:%d  mirror:%s  \n", tostring(T.rotate), tostring(T.mirror))
+stderrf("    entry_conn.dir:%d  transformed --> %d  sprout.dir:%d\n",
+entry_conn.dir, transform_dir(T, entry_conn.dir), P.dir)
+
+    assert(transform_dir(T, entry_conn.dir) == 10 - P.dir)
 
     -- now transpose and mirroring is setup, compute the position
 
@@ -1044,8 +1055,6 @@ function Grower_grow_trunk(is_first)
       conn_x, conn_y = geom.nudge(conn_x, conn_y, geom.RIGHT[entry_conn.dir], entry_conn.long - 1)
     end
  
-stderrf("  calc transform for %s...\n", def.name)
-stderrf("    rotate:%d  mirror:%s  \n", tostring(T.rotate), tostring(T.mirror))
 stderrf("    adjusted entry_conn: (%d %d)\n", conn_x, conn_y)
 
     local dx, dy = transform_coord(T, conn_x, conn_y)
@@ -1182,6 +1191,11 @@ stderrf("Installing fluff.....\n")
 
       local sx, sy = transform_coord(T, conn.x, conn.y)
       local dir    = transform_dir  (T, conn.dir)
+
+      -- fix position for mirrored tiles
+      if T.mirror then
+        sx, sy = geom.nudge(sx, sy, geom.LEFT[dir], conn.long - 1)
+      end
 
 stderrf("  adding sprout at (%d %d) dir:%d\n", sx, sy, dir)
 
@@ -1335,7 +1349,7 @@ stderrf("  No matching entry conn (long=%d)\n", P.long)
     local entry_letter = string.sub(conn_set, 1, 1)
     local entry_conn   = def.conns[entry_letter]
 
-    local T = calc_transform(P, def, entry_conn, true)
+    local T = calc_transform(P, def, entry_conn, false)
 
     if not try_add_tile_RAW(P, T, nil) then
 stderrf("Failed\n")
