@@ -603,13 +603,17 @@ function Grower_save_svg()
 
     if not A2 then
       -- no change
-    elseif A1.is_boundary != A2.is_boundary then
+    elseif (A1.is_boundary != A2.is_boundary) then
+      color = "#00f"
+    elseif (A1.room == A2.room) and (A1.room or A2.room) then
       color = "#0f0"
+    elseif A1.room == A2.room then
+      -- no change
     elseif (A1.room and A1.room.initial_hub) or (A2.room and A2.room.initial_hub) then
       color = "#f00"
     elseif (A1.room and A1.room.hallway) or (A2.room and A2.room.hallway) then
       color = "#fb0"
-    elseif A1.room or A2.room then
+    else
       color = "#00f"
     end
 
