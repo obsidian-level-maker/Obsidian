@@ -45,7 +45,7 @@ function Sprout_new(S, dir, conn, room)
   {
     S = S
     dir = dir
-    long = conn.w or 1
+    long = conn.w
     mode = conn.mode or "normal"
     split = conn.split
     room = room
@@ -603,8 +603,8 @@ function Grower_save_svg()
 
     if not A2 then
       -- no change
-    elseif (A1.is_boundary != A2.is_boundary) then
-      color = "#00f"
+--  elseif (A1.is_boundary != A2.is_boundary) then
+--    color = "#f0f"
     elseif (A1.room == A2.room) and (A1.room or A2.room) then
       color = "#0f0"
     elseif A1.room == A2.room then
@@ -799,6 +799,8 @@ function Grower_preprocess_tiles()
     local default_set = ""
 
     each letter,conn in def.conns do
+      conn.long = conn.w or 1
+
       local x = conn.x
       local y = conn.y
 
@@ -1031,7 +1033,13 @@ function Grower_grow_trunk(is_first)
     T.x = 0
     T.y = 0
 
-    local dx, dy = transform_coord(T, entry_conn.x, entry_conn.y)
+    local conn_x = entry_conn.x
+    local conn_y = entry_conn.y
+
+    if entry_conn.dir == 2 then conn_x = conn_x - (entry_conn.long - 1) end
+    if entry_conn.dir == 6 then conn_y = conn_y - (entry_conn.long - 1) end
+
+    local dx, dy = transform_coord(T, conn_x, conn_y)
 
     T.x = PN.sx - dx
     T.y = PN.sy - dy
@@ -1164,6 +1172,8 @@ stderrf("Installing fluff.....\n")
       local sx, sy = transform_coord(T, conn.x, conn.y)
       local dir    = transform_dir  (T, conn.dir)
 
+stderrf("  adding sprout at (%d %d) dir:%d\n", sx, sy, dir)
+
       assert(Seed_valid(sx, sy))
       local S = SEEDS[sx][sy]
 
@@ -1266,7 +1276,7 @@ end
 
 
   local function match_a_conn(P, def, conn)
-    if (conn.w or 1) != P.long then return false end
+    if conn.long != P.long then return false end
 
     -- TODO: maybe relax this
     if conn.split != P.split then return false end
@@ -1320,6 +1330,14 @@ stderrf("  No matching entry conn (long=%d)\n", P.long)
 stderrf("Failed\n")
       return false
     end
+
+
+local ax,ay = transform_coord(T, 1, 1)
+local bx,by = transform_coord(T, cur_grid.w, cur_grid.h)
+stderrf("  installing tile over (%d %d) .. (%d %d)\n",
+math.min(ax,bx), math.min(ay,by),
+math.max(ax,bx), math.max(ay,by))
+
 
     -- tile can be added, so create the room
 
@@ -1482,14 +1500,14 @@ stderrf("SUCCESS !!!!!\n")
     -- no more sprouts?
     if not sprout then break; end
 
-    if #LEVEL.rooms >= 10 then break; end
+    if #LEVEL.rooms >= 20 then break; end
 
     if not check_sprout_blocked(sprout) then
       add_room(sprout)
     end
   end
 
-  remove_dud_hallways()
+--!!!!!  remove_dud_hallways()
 
   -- ensure a second (etc) hub-growth is connected to a previous one
   -- [ this is mainly so we can mark the level boundary, and we need
