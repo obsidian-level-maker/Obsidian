@@ -957,43 +957,43 @@ function Grower_grow_trunk(is_first)
 
 
   local function transform_coord(T, px, py)
-    if T.mirror_x then px = cur_grid.w + 1 - px end
-    if T.mirror_y then py = cur_grid.h + 1 - py end
+    px = px - 1
+    py = py - 1
 
-    if T.transpose then px, py = py, px end
+    if T.mirror then px = cur_grid.w - px end
 
-    local sx = T.x + (px - 1)
-    local sy = T.y + (py - 1)
+    if T.rotate == 4 then
+      px, py = -px, -py
+    elseif T.rotate == 2 then
+      px, py = py, -px
+    elseif T.rotate == 6 then
+      px, py = -py, px
+    end
 
-    return sx, sy
+    return T.x + px, T.y + py
   end
 
 
   local function transform_dir(T, dir)
-    if T.mirror_x  then dir = geom.MIRROR_X[dir]  end
-    if T.mirror_y  then dir = geom.MIRROR_Y[dir]  end
-    if T.transpose then dir = geom.TRANSPOSE[dir] end
+    if T.mirror then dir = geom.MIRROR_X[dir]  end
 
-    return dir
+    return geom.ROTATE[T.rotate][dir]
   end
 
 
   local function transform_diagonal(T, dir, bottom, top)
-    if T.mirror_x then
+    if T.mirror then
       dir = geom.MIRROR_X[dir]
     end
 
-    if T.mirror_y then
-      dir = geom.MIRROR_Y[dir]
+    if (T.rotate == 4) or
+       (T.rotate == 2 and (dir == 1 or dir == 9)) or
+       (T.rotate == 6 and (dir == 3 or dir == 7))
+    then
       top, bottom = bottom, top
     end
 
-    if T.transpose then
-      if dir == 3 or dir == 7 then
-        dir = 10 - dir
-        top, bottom = bottom, top
-      end
-    end
+    dir = geom.ROTATE[T.rotate][dir]
 
     return dir, bottom, top
   end
@@ -1005,25 +1005,27 @@ function Grower_grow_trunk(is_first)
 
     local T = {}
 
-    if not geom.is_parallel(P.dir, entry_conn.dir) then
-      T.transpose = true
-    end
-
-    if P.dir == transform_dir(T, entry_conn.dir) then
-      if geom.is_vert(entry_conn.dir) then
-        T.mirror_y = true
-      else
-        T.mirror_x = true
-      end
-    end
-
+    -- only HORIZONTAL mirroring is supported
     if do_mirror then
-      if geom.is_vert(entry_conn.dir) then
-        T.mirror_x = true
+      T.mirror = true
+    end
+
+    if geom.is_parallel(P.dir, entry_conn.dir) then
+      if P.dir == entry_conn.dir then
+        T.rotate = 4
       else
-        T.mirror_y = true
+        T.rotate = 0
+      end
+    
+    else  -- perpendicular
+      if P.dir == geom.RIGHT[entry_conn.dir] then
+        T.rotate = 2
+      else
+        T.rotate = 6
       end
     end
+
+    assert(transform_dir(T, P.dir) == 10 - entry_conn.dir)
 
     -- now transpose and mirroring is setup, compute the position
 
@@ -1036,13 +1038,22 @@ function Grower_grow_trunk(is_first)
     local conn_x = entry_conn.x
     local conn_y = entry_conn.y
 
-    if entry_conn.dir == 2 then conn_x = conn_x - (entry_conn.long - 1) end
-    if entry_conn.dir == 6 then conn_y = conn_y - (entry_conn.long - 1) end
+    -- to make the entry conn match up, choose the "right" most seed
+    -- [ except when actually mirrored ]
+    if not T.mirror then
+      conn_x, conn_y = geom.nudge(conn_x, conn_y, geom.RIGHT[entry_conn.dir], entry_conn.long - 1)
+    end
+ 
+stderrf("  calc transform for %s...\n", def.name)
+stderrf("    rotate:%d  mirror:%s  \n", tostring(T.rotate), tostring(T.mirror))
+stderrf("    adjusted entry_conn: (%d %d)\n", conn_x, conn_y)
 
     local dx, dy = transform_coord(T, conn_x, conn_y)
 
     T.x = PN.sx - dx
     T.y = PN.sy - dy
+
+stderrf("    delta: (%d %d) ----> add pos (%d %d)\n", dx, dy, T.x, T.y)
 
     return T
   end
@@ -1324,7 +1335,7 @@ stderrf("  No matching entry conn (long=%d)\n", P.long)
     local entry_letter = string.sub(conn_set, 1, 1)
     local entry_conn   = def.conns[entry_letter]
 
-    local T = calc_transform(P, def, entry_conn, false)
+    local T = calc_transform(P, def, entry_conn, true)
 
     if not try_add_tile_RAW(P, T, nil) then
 stderrf("Failed\n")
@@ -1501,6 +1512,10 @@ stderrf("SUCCESS !!!!!\n")
     if not sprout then break; end
 
     if #LEVEL.rooms >= 20 then break; end
+
+if check_sprout_blocked(sprout) then
+stderrf("Sprout BLOCKED @ %s dir:%d\n", sprout.S:tostr(), sprout.dir)
+end
 
     if not check_sprout_blocked(sprout) then
       add_room(sprout)
