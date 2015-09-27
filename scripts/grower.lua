@@ -1055,8 +1055,12 @@ entry_conn.dir, transform_dir(T, entry_conn.dir), P.dir)
 
     -- now transpose and mirroring is setup, compute the position
 
-    local PN = P.S:neighbor(P.dir)
-    assert(PN)
+    local PN = P.S
+
+    if not geom.is_corner(P.dir) then
+      PN = PN:neighbor(P.dir)
+      assert(PN)
+    end
 
     T.x = 0
     T.y = 0
@@ -1066,7 +1070,7 @@ entry_conn.dir, transform_dir(T, entry_conn.dir), P.dir)
 
     -- to make the entry conn match up, choose the "right" most seed
     -- [ except when actually mirrored ]
-    if not T.mirror then
+    if entry_conn.long >= 2 and not T.mirror then
       conn_x, conn_y = geom.nudge(conn_x, conn_y, geom.RIGHT[entry_conn.dir], entry_conn.long - 1)
     end
  
@@ -1447,6 +1451,8 @@ sy = 5
       mode = "normal"
       initial_hub = true
     }
+
+P.S:split(1) -- TEMP !!
 
     while not table.empty(tab) do
       local name = rand.key_by_probs(tab)
