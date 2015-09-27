@@ -1606,10 +1606,10 @@ function Area_prune_hallways()
 
 
   local function prune_hallway(H)
-    assert(H.ext_conns)
+    assert(H.conns)
 
     -- hallways always have at least two connections
-    assert(#H.ext_conns >= 2)
+    assert(#H.conns >= 2)
 
     each S in H.seeds do
       S.not_path = true
@@ -1619,9 +1619,9 @@ function Area_prune_hallways()
     -- find a path between each pair of connections
     -- [ we don't need to try every possible pair ]
 
-    for i = 1, #H.ext_conns - 1 do
-      local C1 = H.ext_conns[i]
-      local C2 = H.ext_conns[i + 1]
+    for i = 1, #H.conns - 1 do
+      local C1 = H.conns[i]
+      local C2 = H.conns[i + 1]
 
       local S1 = sel(C1.A1.room == H, C1.S1, C1.S2)
       local S2 = sel(C2.A1.room == H, C2.S1, C2.S2)

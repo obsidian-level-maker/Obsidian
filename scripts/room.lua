@@ -221,21 +221,6 @@ function ROOM_CLASS.has_teleporter(R)
 end
 
 
---[[
-function ROOM_CLASS.collect_ext_conns(R)
-  R.ext_conns = {}
-
-  each A in R.areas do
-    each C in A.conns do
-      if C.A1.room != C.A2.room then
-        table.insert(R.ext_conns, C)
-      end
-    end
-  end
-end
---]]
-
-
 function ROOM_CLASS.total_conns(R, ignore_secrets)
   local count = 0
 
@@ -2154,7 +2139,7 @@ function Room_floor_heights()
   local function hallway_other_end(R, entry_R)
     -- if the hallway has multiple exits, then one is picked arbitrarily
 
-    each C in R.ext_conns do
+    each C in R.conns do
       local R2 = sel(C.A1.room == R, C.A2.room, C.A1.room)
 
       if R2 != entry_R then return R2 end
@@ -2199,7 +2184,7 @@ function Room_floor_heights()
     -- find the connection
     local conn
 
-    each C in R.ext_conns do
+    each C in R.conns do
       if C.A1.room == parent or C.A2.room == parent then
         conn = C
       end

@@ -340,7 +340,7 @@ function Quest_eval_divide_at_conn(C, goal, info)
   local function collect_rooms(R, list)
     list[R.id] = R
 
-    each C2 in R.ext_conns do
+    each C2 in R.conns do
       -- never pass through connection we are examining
       if C2 == C then continue end
 

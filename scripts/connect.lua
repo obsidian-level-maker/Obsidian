@@ -987,8 +987,5 @@ function Connect_stuff()
   handle_the_rest()  
 --]]
 
-  each R in LEVEL.rooms do
-    R:collect_ext_conns()
-  end
 end
 
