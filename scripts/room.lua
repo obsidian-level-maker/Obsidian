@@ -37,7 +37,7 @@
     sw, sh, svolume     -- /
 
 
-    ext_conns = list(CONNS)   -- connections which go "external" to another room
+    conns = list(CONNS)   -- connections to other rooms
 
     quest : QUEST
 
@@ -76,6 +76,7 @@ function ROOM_CLASS.new()
 
     areas = {}
     seeds = {}
+    conns = {}
 
     sections = {}
     weapons = {}
@@ -185,10 +186,8 @@ end
 
 
 function ROOM_CLASS.has_any_lock(R)
-  each A in R.areas do
-  each C in A.conns do
+  each C in R.conns do
     if C.lock then return true end
-  end
   end
   return false
 end
@@ -203,12 +202,10 @@ end
 
 
 function ROOM_CLASS.has_sky_neighbor(R)
-  each A in R.areas do
-  each C in A.conns do
+  each C in R.conns do
     if C.A1.room == C.A2.room then continue end
     local N = C:neighbor(A)
     if N.is_outdoor and N.mode != "void" then return true end
-  end
   end
 
   return false
@@ -216,16 +213,15 @@ end
 
 
 function ROOM_CLASS.has_teleporter(R)
-  each A in R.areas do
-    each C in A.conns do
-      if C.kind == "teleporter" then return true end
-    end
+  each C in R.conns do
+    if C.kind == "teleporter" then return true end
   end
 
   return false
 end
 
 
+--[[
 function ROOM_CLASS.collect_ext_conns(R)
   R.ext_conns = {}
 
@@ -237,21 +233,18 @@ function ROOM_CLASS.collect_ext_conns(R)
     end
   end
 end
+--]]
 
 
 function ROOM_CLASS.total_conns(R, ignore_secrets)
   local count = 0
 
-  each A in R.areas do
-  each C in A.conns do
+  each C in R.conns do
     if ignore_secrets and C.kind == "secret" then
       continue
     end
 
-    if C.A1.room != C.A2.room then
-      count = count + 1
-    end
-  end
+    count = count + 1
   end
 
   return count
@@ -278,15 +271,13 @@ function secret_entry_conn(R, skip_room)
   -- find entry connection for a potential secret room
   -- skip_room is usually NIL
 
-  each A in R.areas do
-  each C in A.conns do
+  each C in R.conns do
     if C.A1.room != C.A2.room and
        C.A1.room != skip_room and
        C.A2.room != skip_room
     then
       return C
     end
-  end
   end
 
   error("Cannot find entry conn for secret room")
@@ -303,14 +294,12 @@ end
 function ROOM_CLASS.OLD__get_exits(R)
   local exits = {}
 
-  each A in R.areas do
-  each C in A.conns do
+  each C in R.conns do
     if C.A1 == A and C.A2.room != R and
        not (C.kind == "double_R" or C.kind == "closet")
     then
       table.insert(exits, C)
     end
-  end
   end
 
   return exits
@@ -2333,7 +2322,7 @@ function Room_floor_heights()
     end
 
     -- transfer heights to neighbors
-    each C in R.areas[1].conns do
+    each C in R.conns do
       local N
 
       if C.A1.room == C.A2.room then continue end
@@ -2448,8 +2437,7 @@ function Room_floor_heights()
     end
 
     -- recurse to neighbors
-    each A in R.areas do
-    each C in A.conns do
+    each C in R.conns do
       if C.is_cycle then continue end
 
       local A2 = C:neighbor(A)
@@ -2467,7 +2455,6 @@ function Room_floor_heights()
       if A2.room.next_f then next_f = A2.room.next_f end
 
       visit_room(A2.room, next_f, A2, R, C)
-    end
     end
   end
 
@@ -2624,10 +2611,8 @@ function Room_pool_hacks()
     if A.svolume < 2 then return false end
 
     -- external connection?
-    each C in A.conns do
-      if (C.A1.room != A.room) or (C.A2.room != A.room) then
-        return false
-      end
+    each C in R.conns do
+      if C.A1 == A or C.A2 == A then return false end
     end
 
     -- check number of "roomy" neighbors

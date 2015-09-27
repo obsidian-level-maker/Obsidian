@@ -2014,8 +2014,7 @@ do return nil end
     -- in a pseudo-exit room, need to guard the door to real exit.
     -- we skip teleporters here, the code further down will handle it.
     if R.final_battle and not R.is_exit then
-      each A in R.areas do
-      each C in A.conns do
+      each C in R.conns do
         if C.kind == "teleporter" then continue end
 
         local nb = C:neighbor(A)
@@ -2023,7 +2022,6 @@ do return nil end
         if nb.room.is_exit then
           return guard_spot_for_conn(C)
         end
-      end -- A, C
       end
     end
 

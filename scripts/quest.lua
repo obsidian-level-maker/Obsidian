@@ -366,14 +366,12 @@ function Quest_eval_divide_at_conn(C, goal, info)
   local function room_exits_in_set(R, rooms)
     local count = 0
 
-    each A in R.areas do
-    each C in A.conns do
-      if C.A1.room == C.A2.room then continue end
+    each C in R.conns do
+---##      if C.A1.room == C.A2.room then continue end
 
       local N = C:neighbor(A)
 
       if rooms[N.room.id] then count = count + 1 end
-    end
     end
 
     assert(count > 0)
@@ -1248,8 +1246,7 @@ function Quest_order_by_visit()
 
     assert(R.quest == quest)
 
-    each A in R.areas do
-    each C in A.conns do
+    each C in R.conns do
       if not (C.A1 == A or C.A2 == A) then continue end
 
       local A2 = C:neighbor(A)
@@ -1260,7 +1257,6 @@ function Quest_order_by_visit()
       if not A2.room.lev_along then
         visit_room(A2.room, quest, C:tostr())
       end
-    end
     end
   end
 
@@ -1285,11 +1281,11 @@ function Quest_order_by_visit()
 
 
   local function do_entry_conns(A, entry_conn, seen)
-    A.entry_conn = entry_conn
+    A.room.entry_conn = entry_conn
 
     seen[A] = 1
 
-    each C in A.conns do
+    each C in A.room.conns do
       local A2 = C:neighbor(A)
 
       if not seen[A2] then

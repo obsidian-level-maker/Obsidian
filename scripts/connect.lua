@@ -61,6 +61,8 @@ function CONN_CLASS.new(kind, A1, A2, dir)
     id   = alloc_id("conn")
     A1   = A1
     A2   = A2
+    R1   = A1.room
+    R2   = A2.room
     dir  = dir
   }
 
@@ -215,8 +217,12 @@ T.area.id, T.area.conn_group)
   S.conn = CONN
   T.conn = CONN
 
-  table.insert(CONN.A1.conns, CONN)
-  table.insert(CONN.A2.conns, CONN)
+assert(CONN.R1)
+assert(CONN.R2)
+assert(CONN.R1 != CONN.R2)
+
+  table.insert(CONN.R1.conns, CONN)
+  table.insert(CONN.R2.conns, CONN)
 
   -- if areas have same group, mark connection as a Cycle
   if same_id then
@@ -331,8 +337,8 @@ function Connect_teleporters()
 
     local C = CONN_CLASS.new("teleporter", A1, A2)
 
-    table.insert(A1.conns, C)
-    table.insert(A2.conns, C)
+    table.insert(A1.room.conns, C)
+    table.insert(A2.room.conns, C)
 
     -- setup tag information
     C.tele_tag1 = alloc_id("tag")
@@ -965,11 +971,11 @@ function Connect_stuff()
     end
   end
 
-  each R in LEVEL.rooms do
-    if not R.brother then
-      internal_connections(R)
-    end
-  end
+---##  each R in LEVEL.rooms do
+---##    if not R.brother then
+---##      internal_connections(R)
+---##    end
+---##  end
 
   connect_grown_rooms()
 

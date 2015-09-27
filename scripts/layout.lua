@@ -81,8 +81,7 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
   local function nearest_conn(spot)
     local dist
 
-    each A in R.areas do
-    each C in A.conns do
+    each C in R.conns do
       if C.kind == "normal" or C.kind == "closet" then
         local S = C:get_seed(A)
         local dir = sel(C.R1 == R, C.dir, 10 - C.dir)
@@ -97,7 +96,6 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
           dist = d
         end
       end
-    end
     end
 
     return dist

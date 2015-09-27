@@ -58,9 +58,9 @@
 
     --- connection stuff ---
 
-    conns : list(CONN)  -- connections with neighbor rooms
+---##    conns : list(CONN)  -- connections with neighbor rooms
 
-    entry_conn : CONN
+---##    entry_conn : CONN
 
 
     --- other stuff ---
@@ -192,9 +192,9 @@ function AREA_CLASS.kill_it(A)
     end
   end
 
-  each C in A.conns do
-    table.kill_elem(LEVEL.conns, C)
-  end
+---##  each C in A.conns do
+---##    table.kill_elem(LEVEL.conns, C)
+---##  end
 
   A.conns = nil
 end
