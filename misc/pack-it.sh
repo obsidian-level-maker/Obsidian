@@ -60,7 +60,7 @@ cp -av prefabs $dest/prefabs
 #  Data files
 #
 mkdir $dest/data
-mkdir $dest/modules/data
+mkdir $dest/addons
 
 cp -av data/*.lmp $dest/data || true
 cp -av data/*.wad $dest/data || true
