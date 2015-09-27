@@ -71,7 +71,7 @@
 
     is_stairwell : STAIRWELL
 
-    conn_group : number   -- connection group (used for Connect logic)
+    conn_group : number   -- used to connect areas inside a room
 --]]
 
 

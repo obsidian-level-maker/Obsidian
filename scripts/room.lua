@@ -1971,10 +1971,20 @@ function Room_floor_heights()
 
     A.delta_h = cur_delta_h
 
-    each C in A.conns do
-      local A2 = C:neighbor(A)
+    each IC in A.room.area_conns do
+      local A2
 
-      if A2.room == A.room and not A2.delta_h then
+      if IC.A1 == A then
+        A2 = IC.A2
+      elseif IC.A2 == A then
+        A2 = IC.A1
+      else
+        continue  -- not connected to area 'A'
+      end
+
+      assert(A2.room == A.room)
+
+      if not A2.delta_h then
         area_assign_delta(A2, up_chance, pick_delta_h(cur_delta_h, up_chance))      
       end
     end
@@ -1988,6 +1998,7 @@ function Room_floor_heights()
 
     -- recursively flow delta heights from a random starting area
     local cur_delta_h = rand.irange(-4, 4) * 32
+
     area_assign_delta(start_area, up_chance, cur_delta_h)
 
     local adjust_h = 0
