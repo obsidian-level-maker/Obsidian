@@ -53,7 +53,7 @@
 
     -- an edge loop is a sequence of half-seed sides, going counter-clockwise.
     -- the first loop is always the outer boundary of the area.
-    edge_loops : list(list(EDGE))
+    edge_loops : list(list(AREA_EDGE))
 
 
     --- connection stuff ---
@@ -75,7 +75,7 @@
 --]]
 
 
---class EDGE
+--class AREA_EDGE
 --[[
     S : seed
     dir : dir
@@ -103,8 +103,7 @@
     -- A "junction" is information about how two touching areas interact.
     -- For example: could be solid wall, fence, or even nothing at all.
     --
-    -- Specifies the default border kind, but it can be overridden in each
-    -- seed via the border[] field.
+    -- The junction kind can be overridden by the EDGE structure.
     --
 
     A1 : AREA
@@ -124,19 +123,19 @@
 --[[
     --
     -- Records all the areas and junctions which meet at the corner of
-    -- every seed.  More specific information will be in the seed itself.
+    -- every seed.
     --
+
+    kind : keyword   -- NIL for nothing, otherwise can be:
+                     -- "post" (thin), "pillar" (fat)
 
     cx, cy  -- corner coordinate [1..SEED_W+1 / 1..SEED_H+1]
 
-    x, y   -- map coordinate
+    x, y    -- map coordinate
 
     areas : list(AREA)
 
     junctions : list(JUNCTION)
-
-    kind : keyword   -- unset means it has not been decided yet.
-                     -- can be: "post", "pillar"
 
     inner_point : AREA  -- usually NIL
 

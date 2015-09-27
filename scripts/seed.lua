@@ -18,118 +18,117 @@
 --
 ------------------------------------------------------------------------
 
---[[ *** CLASS INFORMATION ***
 
-class SEED
-{
-  --
-  -- A "seed" is a square or triangle-shaped half-square on the map,
-  -- used for many space allocation tasks.  The corners exist on a
-  -- regular grid (currently spaced at 192 units on each axis).
-  --
+--class SEED
+--[[
+    --
+    -- A "seed" is a square or triangle-shaped half-square on the map,
+    -- used for many space allocation tasks.  The corners exist on a
+    -- regular grid (currently spaced at 192 units on each axis).
+    --
 
-  sx, sy  -- location in seed map
+    sx, sy  -- location in seed map
 
-  diagonal : DIR  -- if non-nil, then seed is split into two halves.
-                  -- DIR is the corner associated with the triangle
-                  -- (and the direction *away* from the diagonal line)
+    diagonal : DIR  -- if non-nil, then seed is split into two halves.
+                    -- DIR is the corner associated with the triangle
+                    -- (and the direction *away* from the diagonal line)
 
-                     +---+   +---+
-                     |\ 9|   |7 /|
-                     | \ |   | / |
-                     |1 \|   |/ 3|
-                     +---+   +---+
+                       +---+   +---+
+                       |\ 9|   |7 /|
+                       | \ |   | / |
+                       |1 \|   |/ 3|
+                       +---+   +---+
 
-  top : SEED   -- if seed is split by a diagonal, then this refers to the
-               -- information for the TOP half (i.e. the half occupying the
-               -- top edge), and the main seed contains the BOTTOM half.
+    top : SEED   -- if seed is split by a diagonal, then this refers to the
+                 -- information for the TOP half (i.e. the half occupying the
+                 -- top edge), and the main seed contains the BOTTOM half.
 
-  bottom : SEED   -- used in 'top' seed to refer to the other half.
-
-
-  ////////////////////////
-
-  area : AREA
-
-  room : ROOM
-
-  kind : keyword  -- main usage of seed:
-                  -- "walk", "void", "diagonal",
-                  -- "stair", "curve_stair", "tall_stair",
-                  -- "liquid"
-
-  content : keyword  -- normally nil, but can be:
-                     -- "wotsit", "pillar"
-
-  border[DIR] : BORDER
-
-  thick[DIR]  -- thickness of each border
-
-  x1, y1, x2, y2  -- 2D map coordinates
-
-  mid_x, mid_y  -- mid point coordinate
-
-  floor_h, ceil_h -- floor and ceiling heights
-  f_tex,   c_tex  -- floor and ceiling textures
-
-  m_cell[DIR] : CELL  -- use for mountains (normally NIL)
-                      -- DIR is the side (2/4/6/8)
-                      -- only used in 'bottom' seed
-                      -- cells can be absent (for diagonal seeds)
-
-  -- NOTE: THIS NOT USED ATM
-  chunk[1..n] : CHUNK  -- [1] is the ground floor (or liquid), NIL for void (etc)
-                       -- [2] is the 3D floor above (usually NIL)
-                       -- [3] can be yet another 3D floor, etc...
-}
+    bottom : SEED   -- used in 'top' seed to refer to the other half.
 
 
-class EDGE
-{
-  --
-  -- An "edge" is the side of a seed (or a row of seeds).
-  --
-  -- Primary use is for connections between a room and another room or
-  -- hallway.  Also used for windows and wide walls / pictures.
-  --
-  -- Not used between areas of the same room.
-  --
-  -- Edges are one-sided.  For connections there will be two edges
-  -- back-to-back which refer to each other via the 'peer' field.
-  --
+    ////////////////////////
 
-  kind : keyword  -- "conn", "window", "wall"  [TODO]
+    area : AREA
 
-  S : SEED        -- first seed (the "left-most" one when facing the edge)
+    room : ROOM
 
-  dir : DIR       -- which side of the seed(s)
+    kind : keyword  -- main usage of seed:
+                    -- "walk", "void", "diagonal",
+                    -- "stair", "curve_stair", "tall_stair",
+                    -- "liquid"
 
-  long : number   -- width of edge (in seeds)
+    content : keyword  -- normally nil, but can be:
+                       -- "wotsit", "pillar"
+
+    border[DIR] : BORDER
+
+    thick[DIR]  -- thickness of each border
+
+    x1, y1, x2, y2  -- 2D map coordinates
+
+    mid_x, mid_y  -- mid point coordinate
+
+    floor_h, ceil_h -- floor and ceiling heights
+    f_tex,   c_tex  -- floor and ceiling textures
+
+    m_cell[DIR] : CELL  -- use for mountains (normally NIL)
+                        -- DIR is the side (2/4/6/8)
+                        -- only used in 'bottom' seed
+                        -- cells can be absent (for diagonal seeds)
+
+    -- NOTE: THIS NOT USED ATM
+    chunk[1..n] : CHUNK  -- [1] is the ground floor (or liquid), NIL for void (etc)
+                         -- [2] is the 3D floor above (usually NIL)
+                         -- [3] can be yet another 3D floor, etc...
+--]]
 
 
-  area : AREA
+--class EDGE
+--[[
+    --
+    -- An "edge" is the side of a seed (or a row of seeds).
+    --
+    -- Primary use is for connections between a room and another room or
+    -- hallway.  Also used for windows and wide walls / pictures.
+    --
+    -- Not used between areas of the same room.
+    --
+    -- Edges are one-sided.  For connections there will be two edges
+    -- back-to-back which refer to each other via the 'peer' field.
+    --
 
-  conn : CONN
+    kind : keyword  -- "conn", "window", "wall"  [TODO]
 
-  peer : EDGE  -- for connections and windows, the edge on other side
+    S : SEED        -- first seed (the "left-most" one when facing the edge)
 
+    dir : DIR       -- which side of the seed(s)
 
-  floor_h  -- floor height (set during room layouting)
-
-  door_kind : keyword   -- can be NIL, or "door" or "arch"
-}
+    long : number   -- width of edge (in seeds)
 
 
-class CHUNK
-{
-  kind : keyword  -- "floor", "liquid", "void" (etc)
+    area : AREA
 
-  floor : FLOOR
-}
+    conn : CONN
+
+    peer : EDGE  -- for connections and windows, the edge on other side
+
+
+    floor_h  -- floor height (set during room layouting)
+
+    door_kind : keyword   -- can be NIL, or "door" or "arch"
+--]]
+
+
+--class CHUNK
+--[[
+    kind : keyword  -- "floor", "liquid", "void" (etc)
+
+    floor : FLOOR
+--]]
 
 
 --class CELL
--- [
+--[[
     area : AREA
 
     dist  -- how far away from normal parts of the level
@@ -138,7 +137,7 @@ class CHUNK
 
     floor_h
     floor_mat
--- ]
+--]]
 
 
 --------------------------------------------------------------]]
