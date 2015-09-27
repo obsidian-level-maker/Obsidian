@@ -105,7 +105,7 @@ HALL_2x2 =
 
 HALL_DIAG_I3 =
 {
-  prob = 50
+  prob = 4099
 
   structure =
   {

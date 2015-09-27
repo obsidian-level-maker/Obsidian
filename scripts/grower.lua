@@ -45,7 +45,7 @@ function Sprout_new(S, dir, conn, room)
   {
     S = S
     dir = dir
-    long = conn.w
+    long = conn.long
     mode = conn.mode or "normal"
     split = conn.split
     room = room
@@ -1221,6 +1221,12 @@ stderrf("  adding sprout at (%d %d) dir:%d\n", sx, sy, dir)
       assert(Seed_valid(sx, sy))
       local S = SEEDS[sx][sy]
 
+      -- handle diagonals [ pick 'bottom' or 'top' part ]
+      if dir == 1 or dir == 3 then
+        assert(S.diagonal)
+        S = assert(S.top)
+      end
+
 assert(room)
       Sprout_new(S, dir, conn, room)
     end
@@ -1255,6 +1261,8 @@ assert(room)
     local along_dir = geom.RIGHT[P.dir]
 
     local S = P.S
+
+    -- this *justs* works for diagonal conns, but not LONG ones
 
     for i = 1, P.long do
       local N = S:neighbor(P.dir)
@@ -1371,6 +1379,7 @@ stderrf("  No matching entry conn (long=%d)\n", P.long)
     local entry_letter = string.sub(conn_set, 1, 1)
     local entry_conn   = def.conns[entry_letter]
 
+    -- only try mirror if geom.is_vert(entry_conn.dir)
     local T = calc_transform(P, def, entry_conn, false)
 
     if not try_add_tile_RAW(P, T, nil) then
@@ -1438,9 +1447,6 @@ stderrf("SUCCESS !!!!!\n")
 
     local sx  = math.i_mid(sx1, sx2) - 1
     local sy  = math.i_mid(sy1, sy2) - 2
-
-sx = 5
-sy = 5
 
     -- create a fake sprout
     local P =
@@ -1552,7 +1558,7 @@ P.S:split(1) -- TEMP !!
     -- no more sprouts?
     if not sprout then break; end
 
-    if #LEVEL.rooms >= 1 then break; end
+--  if #LEVEL.rooms >= 10 then break; end
 
 if check_sprout_blocked(sprout) then
 stderrf("Sprout BLOCKED @ %s dir:%d\n", sprout.S:tostr(), sprout.dir)
@@ -1563,7 +1569,7 @@ end
     end
   end
 
---!!!!!  remove_dud_hallways()
+  remove_dud_hallways()
 
   -- ensure a second (etc) hub-growth is connected to a previous one
   -- [ this is mainly so we can mark the level boundary, and we need
