@@ -1049,26 +1049,6 @@ function Quest_group_into_zones()
 end
 
 
-
-function Quest_fixup_zones__OLD()
-  each A in LEVEL.areas do
-    local zone = assert(A.zone)
-
-    if A.room and not A.room.zone then
-      A.room.zone = zone
-
-      table.add_unique(zone.rooms, A.room)
-    end
-
-    if A.room and A.room.quest and not A.room.quest.zone then
-      A.room.quest.zone = zone
-
-      table.insert(zone.quests, A.room.quest)
-    end
-  end
-end
-
-
 ------------------------------------------------------------------------
 
 
