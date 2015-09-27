@@ -156,7 +156,7 @@ end
 
 
 
-function Connect_merge_groups(A1, A2)
+function Connect_merge_groups(A1, A2)  -- FIXME : only used for internal conns now
   local gr1 = A1.conn_group
   local gr2 = A2.conn_group
 
@@ -179,15 +179,15 @@ function Connect_raw_seed_pair(S, T, dir, reverse, allow_same_id)
 
   assert(S.area and T.area)
 
-  local same_id = (S.area.conn_group == T.area.conn_group)
-
-  if same_id then
-    if not allow_same_id then
-      error("Connect to same conn_group")
-    end
-  else
-    Connect_merge_groups(S.area, T.area)
-  end
+---##  local same_id = (S.area.conn_group == T.area.conn_group)
+---##
+---##  if same_id then
+---##    if not allow_same_id then
+---##      error("Connect to same conn_group")
+---##    end
+---##  else
+---##    Connect_merge_groups(S.area, T.area)
+---##  end
 
   -- this used for stairwells, to ensure the other room builds the arch or door
   if reverse then
@@ -323,6 +323,7 @@ function Connect_teleporters()
       return false
     end
 
+-- FIXME
     return (A1.conn_group != A2.conn_group)
   end
 
@@ -518,7 +519,7 @@ function Connect_stuff()
   end
 
 
-  local function connect_hallway_pair(R, N1, N2)
+  local function connect_hallway_pair(R, N1, N2) -- OLD
     local  r_group =  R.areas[1].conn_group
     local n1_group = N1.areas[1].conn_group
     local n2_group = N2.areas[1].conn_group
@@ -541,7 +542,7 @@ function Connect_stuff()
   end
 
 
-  local function eval_hallway_pair(R, N1, N2)
+  local function eval_hallway_pair(R, N1, N2)  -- OLD
     -- two rooms are already connected?
     if N1.areas[1].conn_group == N2.areas[1].conn_group then
       return -1
@@ -639,7 +640,7 @@ function Connect_stuff()
   end
 
 
-  local function try_connect_hallway(R)
+  local function try_connect_hallway(R) --OLD
     local neighbor_rooms = {}
 
     each A in R.areas do
@@ -723,7 +724,7 @@ function Connect_stuff()
   end
 
 
-  local function check_all_connected()
+  local function check_all_connected()  -- OLD
     local first = LEVEL.rooms[1].areas[1].conn_group
 
     each R in LEVEL.rooms do
@@ -856,7 +857,7 @@ function Connect_stuff()
   end
 
 
-  local function handle_the_rest()
+  local function handle_the_rest()  -- OLD
     while not check_all_connected() do
       if add_a_connection() == "fubar" then break; end
     end
@@ -936,12 +937,25 @@ function Connect_stuff()
 
     local S, dir = pick_internal_seed(R, A1, A2)
 
-    Connect_seed_pair(S, nil, dir)
+    local AREA_CONN =
+    {
+      A1 = A1, A2 = A2
+      S1 = S,  S2 = S:neighbor(dir)
+      dir = dir
+    }
+
+    table.insert(R.area_conns, AREA_CONN)
   end
 
 
   local function internal_connections(R)
     -- connect the areas inside each room (including hallways)
+
+    R.area_conns = {}
+
+    each A in R.areas do
+      A.conn_group = assert(A.id)
+    end
 
     while not check_internally_connected(R) do
       make_an_internal_connection(R)
@@ -964,18 +978,11 @@ function Connect_stuff()
 
   ---| Connect_stuff |---
 
-  -- give each area of each room a conn_group
-  each A in LEVEL.areas do
-    if A.room then
-      A.conn_group = assert(A.id)
+  each R in LEVEL.rooms do
+    if not R.brother then
+      internal_connections(R)
     end
   end
-
----##  each R in LEVEL.rooms do
----##    if not R.brother then
----##      internal_connections(R)
----##    end
----##  end
 
   connect_grown_rooms()
 
