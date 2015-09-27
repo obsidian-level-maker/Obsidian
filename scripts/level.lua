@@ -18,86 +18,82 @@
 --
 ------------------------------------------------------------------------
 
---[[ *** CLASS INFORMATION ***
 
-class LEVEL
-{
-  -- FIXME: check this
+--class LEVEL
+--[[
+    -- FIXME: check this
 
-  name : string  -- engine name for this level, e.g. MAP01
+    name : string  -- engine name for this level, e.g. MAP01
 
-  description : string  -- level name or title (optional)
+    description : string  -- level name or title (optional)
 
-  kind  -- keyword: "NORMAL", "BOSS", "SECRET"
+    kind  -- keyword: "NORMAL", "BOSS", "SECRET"
 
-  episode : EPISODE
+    episode : EPISODE
 
-    ep_along : float  -- how far along the episode:    0.0 --> 1.0
-  game_along : float  -- how far along the whole game: 0.0 --> 1.0
+      ep_along : float  -- how far along the episode:    0.0 --> 1.0
+    game_along : float  -- how far along the whole game: 0.0 --> 1.0
 
-  areas   : list(AREA)
-  rooms   : list(ROOM)
-  conns   : list(CONN)
+    areas   : list(AREA)
+    rooms   : list(ROOM)
+    conns   : list(CONN)
 
-  quests  : list(QUEST)
-  zones   : list(ZONE)
-  locks   : list(LOCK)
+    quests  : list(QUEST)
+    zones   : list(ZONE)
+    locks   : list(LOCK)
 
-  liquid : table  -- the main liquid in the level (can be nil)
+    liquid : table  -- the main liquid in the level (can be nil)
 
-  is_dark : bool  -- true if outdoor rooms will be dark
+    is_dark : bool  -- true if outdoor rooms will be dark
 
-  start_room : ROOM  -- the starting room
-   exit_room : ROOM  -- the exit room
+    start_room : ROOM  -- the starting room
+     exit_room : ROOM  -- the exit room
 
-  best_conn : table  -- stores the best current connection
-                     -- (only used while connecting rooms)
+    best_conn : table  -- stores the best current connection
+                       -- (only used while connecting rooms)
 
-  special : keyword  -- normally nil
-                     -- can be: "street", "surround", "wagon"
+    special : keyword  -- normally nil
+                       -- can be: "street", "surround", "wagon"
 
-  hub_links : list(HUB_LINK)  -- hub links which _leave_ this level
+    hub_links : list(HUB_LINK)  -- hub links which _leave_ this level
 
-  hub_key    : name   -- goal of this level must be this key
-  hub_weapon : name   -- weapon to place on this level
-  hub_piece  : name   -- weapon PIECE for this level
+    hub_key    : name   -- goal of this level must be this key
+    hub_weapon : name   -- weapon to place on this level
+    hub_piece  : name   -- weapon PIECE for this level
 
-  assume_weapons : table  -- weapons we got in a previous level
+    assume_weapons : table  -- weapons we got in a previous level
 
-  usable_keys : prob table  -- if present, can only use these keys
+    usable_keys : prob table  -- if present, can only use these keys
 
-  ids : table  -- used for allocating tag numbers (etc)
+    ids : table  -- used for allocating tag numbers (etc)
 
-  -- TODO: lots of other fields : document important ones
-}
-
-
-class EPISODE
-{
-  levels : list(LEVEL)
-
-  is_hub : boolean  -- 'true' if this episode is a hub
-
-  used_keys : table  -- for hubs, remember keys which have been used
-                     -- on any level in the hub (cannot use them again)
-
-  hub_links : list(HUB_LINK)  -- all hub links
-
-  seen_weapons : table   -- all weapons picked up so far
-                         -- the table is indexed by weapon name
-}
+    -- TODO: lots of other fields : document important ones
+--]]
 
 
-class HUB_LINK
-{
-  kind : keyword  -- "chain" or "branch"
+--class EPISODE
+--[[
+    levels : list(LEVEL)
 
-  src  : LEVEL
-  dest : LEVEL
-}
+    is_hub : boolean  -- 'true' if this episode is a hub
+
+    used_keys : table  -- for hubs, remember keys which have been used
+                       -- on any level in the hub (cannot use them again)
+
+    hub_links : list(HUB_LINK)  -- all hub links
+
+    seen_weapons : table   -- all weapons picked up so far
+                           -- the table is indexed by weapon name
+--]]
 
 
---------------------------------------------------------------]]
+--class HUB_LINK
+--[[
+    kind : keyword  -- "chain" or "branch"
+
+    src  : LEVEL
+    dest : LEVEL
+--]]
 
 
 GLOBAL_STYLE_LIST =

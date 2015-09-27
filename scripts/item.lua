@@ -19,29 +19,25 @@
 ------------------------------------------------------------------------
 
 
---[[ *** CLASS INFORMATION ***
+--class HMODEL
+--[[
+    --
+    -- This represents the weapons, health and ammo that a player has at
+    -- a particular time.  When each room is visited, Player_give_room_stuff()
+    -- updates the hmodel for the items in the room.  When placing items, we
+    -- exclude stuff that the player already has.
+    --
+    -- There is one 'HMODEL' for each player class (in HEXEN there are three
+    -- player classes).  So LEVEL.hmodels is indexed by the class name.
+    --
+    -- The GAME.PLAYER_MODEL table contains the initial model, especially the
+    -- weapons that a player always holds.
+    --
 
-class HMODEL
-{
-  --
-  -- This represents the weapons, health and ammo that a player has at
-  -- a particular time.  When each room is visited, Player_give_room_stuff()
-  -- updates the hmodel for the items in the room.  When placing items, we
-  -- exclude stuff that the player already has.
-  --
-  -- There is one 'HMODEL' for each player class (in HEXEN there are three
-  -- player classes).  So LEVEL.hmodels is indexed by the class name.
-  --
-  -- The GAME.PLAYER_MODEL table contains the initial model, especially the
-  -- weapons that a player always holds.
-  --
+    weapons : table   -- what weapons the player has
 
-  weapons : table   -- what weapons the player has
-
-  stats   : table   -- what health and ammo the player has
-}
-
---------------------------------------------------------------]]
+    stats   : table   -- what health and ammo the player has
+--]]
 
 
 HEALTH_FACTORS =

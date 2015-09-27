@@ -18,35 +18,37 @@
 --
 ------------------------------------------------------------------------
 
---[[ *** CLASS INFORMATION ***
 
-class CONN
-{
-  kind : keyword  -- "normal", "teleporter", "secret"
+--class CONN
+--[[
+    kind : keyword  -- "normal", "teleporter", "secret"
 
-  lock : LOCK
+    lock : LOCK
 
-  id : number  -- debugging aid
+    id : number  -- debugging aid
 
-  -- The two areas are the vital (compulsory) information,
-  -- especially for the quest system.  For teleporters the seed
-  -- info will be absent (and area info done when pads are placed)
+    -- The two areas are the vital (compulsory) information,
+    -- especially for the quest system.  For teleporters the edge
+    -- info will be absent (and area info done when pads are placed)
 
-  A1 : source AREA
-  A2 : destination AREA
+    A1 : source AREA
+    A2 : destination AREA
 
-  S1 : source SEED
-  S2 : destination SEED
+FIXME:  R1, R2 : ROOM
 
-  dir    : direction 2/4/6/8 (from S1 to S2)
+    E1 : source EDGE
+    E2 : destination EDGE
 
-  door_h : floor height for doors straddling the connection
+---##    S1 : source SEED
+---##    S2 : destination SEED
 
-  where1  : usually NIL, otherwise a FLOOR object
-  where2  :
-}
+    dir    : direction 2/4/6/8 (from S1 to S2)
 
---------------------------------------------------------------]]
+    door_h : floor height for doors straddling the connection
+
+    where1  : usually NIL, otherwise a FLOOR object
+    where2  :
+--]]
 
 
 CONN_CLASS = {}
