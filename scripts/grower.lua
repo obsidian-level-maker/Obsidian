@@ -804,7 +804,9 @@ function Grower_preprocess_tiles()
       local conn = def.conns[letter]
       conn.long = conn.w or 1
 
-      if conn.long >= 2 and geom.is_corner(conn.dir) then
+      local is_diag = geom.is_corner(conn.dir)
+
+      if is_diag and conn.long >= 2 then
         error("Long diagonals not supported, tile: " .. def.name)
       end
 
@@ -818,7 +820,16 @@ function Grower_preprocess_tiles()
       end
 
       if grid[x][y].kind == "diagonal" then
-        error("Ambiguous conn coord (on a diagonal) in tile: " .. def.name)
+        if not is_diag then
+          error("Straight conn on a diagonal seed, tile: " .. def.name)
+        elseif not geom.is_parallel(conn.dir, grid[x][y].diagonal) then
+          error("Diagonal conn mismatches seed, tile: " .. def.name)
+        end
+
+      else -- full seed
+        if is_diag then
+          error("Diagonal conn not on a diagonal seed, tile: " .. def.name)
+        end
       end
 
       if default_set == "" then
@@ -1424,12 +1435,15 @@ stderrf("SUCCESS !!!!!\n")
     local sx  = math.i_mid(sx1, sx2) - 1
     local sy  = math.i_mid(sy1, sy2) - 2
 
+sx = 5
+sy = 5
+
     -- create a fake sprout
     local P =
     {
       S = SEEDS[sx][sy]
-      dir = 8
-      long = 2  -- FIXME
+      dir = 9
+      long = 1  -- FIXME
       mode = "normal"
       initial_hub = true
     }
@@ -1532,7 +1546,7 @@ stderrf("SUCCESS !!!!!\n")
     -- no more sprouts?
     if not sprout then break; end
 
-    if #LEVEL.rooms >= 20 then break; end
+    if #LEVEL.rooms >= 1 then break; end
 
 if check_sprout_blocked(sprout) then
 stderrf("Sprout BLOCKED @ %s dir:%d\n", sprout.S:tostr(), sprout.dir)
