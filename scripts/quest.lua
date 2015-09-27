@@ -332,8 +332,8 @@ function Quest_eval_divide_at_conn(C, goal, info)
   local quest  -- current quest
 
 
-  local function same_quest(C)
-    return C.A1.room.quest == C.A2.room.quest
+  local function same_quest(C2)
+    return C2.R1.quest == C2.R2.quest
   end
 
 
@@ -741,24 +741,15 @@ function Quest_scan_all_conns(new_goals, do_quest)
     score = 0
   }
 
-  local conn_list = LEVEL.conns
 
-  -- handle all zone connections before anything else
-
----??  if #LEVEL.zone_conns > 0 then
----??    conn_list = LEVEL.zone_conns
----??    is_zoney  = true
----??  end
-
-
-  each C in conn_list do
-    local quest = C.A1.room.quest
+  each C in LEVEL.conns do
+    local quest = C.R1.quest
     assert(quest)
 
     if do_quest and quest != do_quest then continue end
 
     -- must be same quest on each side
-    if C.A2.room.quest != quest then continue end
+    if C.R2.quest != quest then continue end
 
     each goal in quest.goals do
       Quest_eval_divide_at_conn(C, goal, info)
@@ -1239,7 +1230,7 @@ function Quest_order_by_visit()
 
   
   local function visit_room(R, quest, via_conn_name)
---- stderrf("visit_room %s (via %s)\n", R:tostr(), via_conn_name)
+stderrf("visit_room %s (via %s) for %s\n", R:tostr(), via_conn_name or "???", quest.name or "???")
     R.lev_along = room_along / #LEVEL.rooms
 
     room_along = room_along + 1
@@ -1247,15 +1238,16 @@ function Quest_order_by_visit()
     assert(R.quest == quest)
 
     each C in R.conns do
-      if not (C.A1 == A or C.A2 == A) then continue end
+stderrf("  conn '%s'  %s <--> %s\n", C:tostr(), C.R1:tostr(), C.R2:tostr())
+      assert(C.R1)
 
-      local A2 = C:neighbor(A)
+      local R2
+      if C.R1 == R then R2 = C.R2 else R2 = C.R1 end
 
-      if A2.room == R then continue end
-      if A2.room.quest != quest then continue end
+      if R2.quest != quest then continue end
 
-      if not A2.room.lev_along then
-        visit_room(A2.room, quest, C:tostr())
+      if not R2.lev_along then
+        visit_room(R2, quest, C:tostr())
       end
     end
   end
@@ -1280,16 +1272,17 @@ function Quest_order_by_visit()
   end
 
 
-  local function do_entry_conns(A, entry_conn, seen)
-    A.room.entry_conn = entry_conn
+  local function do_entry_conns(R, entry_conn, seen)
+    R.entry_conn = entry_conn
 
-    seen[A] = 1
+    seen[R] = 1
 
-    each C in A.room.conns do
-      local A2 = C:neighbor(A)
+    each C in R.conns do
+      local R2
+      if C.R1 == R then R2 = C.R2 else R2 = C.R1 end
 
-      if not seen[A2] then
-        do_entry_conns(A2, C, seen)
+      if not seen[R2] then
+        do_entry_conns(R2, C, seen)
       end
     end
   end
@@ -1335,7 +1328,7 @@ if not R.lev_along then R.lev_along = 0.5 end
 
   dump_room_order()
 
-  do_entry_conns(LEVEL.start_area, nil, {})
+  do_entry_conns(LEVEL.start_room, nil, {})
 end
 
 

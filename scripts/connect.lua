@@ -175,7 +175,7 @@ end
 
 
 function Connect_raw_seed_pair(S, T, dir, reverse, allow_same_id)
---- stderrf("Connect_seed_pair: %s dir:%d\n", S:tostr(), dir)
+stderrf("Connect_seed_pair: %s dir:%d  %s --> %s\n", S:tostr(), dir, S.room:tostr(), T.room:tostr())
 
   assert(S.area and T.area)
 
@@ -334,7 +334,7 @@ function Connect_teleporters()
 
     gui.debugf("Teleporter connection: %s -- >%s\n", A1.name, A2.name)
 
-    Connect_merge_groups(A1, A2)
+---##  Connect_merge_groups(A1, A2)
 
     local C = CONN_CLASS.new("teleporter", A1, A2)
 
@@ -945,6 +945,8 @@ function Connect_stuff()
     }
 
     table.insert(R.area_conns, AREA_CONN)
+
+    Connect_merge_groups(A1, A2)
   end
 
 
@@ -978,11 +980,15 @@ function Connect_stuff()
 
   ---| Connect_stuff |---
 
+stderrf("\n---| Connect_stuff |---\n")
+
   each R in LEVEL.rooms do
     if not R.brother then
       internal_connections(R)
     end
   end
+
+stderrf("\nOK\n")
 
   connect_grown_rooms()
 

@@ -2436,21 +2436,22 @@ function Room_floor_heights()
     each C in R.conns do
       if C.is_cycle then continue end
 
-      local A2 = C:neighbor(A)
-
-      if A2.room == R then continue end
+      local R2, A2, A1
+      if C.R1 == R then R2 = C.R2 else R2 = C.R1 end
+      if C.R1 == R then A2 = C.A2 else A2 = C.A1 end
+      if C.R1 == R then A1 = C.A1 else A1 = C.A2 end
 
       -- already visited it?
-      if A2.room.entry_h then continue end
+      if R2.entry_h then continue end
 
-      assert(A.floor_h)
+      assert(A1.floor_h)
 
-      local next_f = R.exit_h or A.floor_h
+      local next_f = R.exit_h or A1.floor_h
 
       -- hallway crud (FIXME : HACKY)
-      if A2.room.next_f then next_f = A2.room.next_f end
+      if R2.next_f then next_f = R2.next_f end
 
-      visit_room(A2.room, next_f, A2, R, C)
+      visit_room(R2, next_f, A2, R, C)
     end
   end
 
@@ -2607,7 +2608,7 @@ function Room_pool_hacks()
     if A.svolume < 2 then return false end
 
     -- external connection?
-    each C in R.conns do
+    each C in A.room.conns do
       if C.A1 == A or C.A2 == A then return false end
     end
 
