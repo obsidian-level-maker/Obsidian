@@ -84,14 +84,39 @@ class SEED
 }
 
 
-class BORDER
+class EDGE
 {
-  kind  : nil (when not decided yet)
-          "nothing"
-          "wall", "facade", "window", "fence",
-          "arch", "door", "locked_door", "secret_door"
+  --
+  -- An "edge" is the side of a seed (or a row of seeds).
+  --
+  -- Primary use is for connections between a room and another room or
+  -- hallway.  Also used for windows and wide walls / pictures.
+  --
+  -- Not used between areas of the same room.
+  --
+  -- Edges are one-sided.  For connections there will be two edges
+  -- back-to-back which refer to each other via the 'peer' field.
+  --
 
-  [ see also : JUNCTION in area.lua ]
+  kind : keyword  -- "conn", "window", "wall"  [TODO]
+
+  S : SEED        -- first seed (the "left-most" one when facing the edge)
+
+  dir : DIR       -- which side of the seed(s)
+
+  long : number   -- width of edge (in seeds)
+
+
+  area : AREA
+
+  conn : CONN
+
+  peer : EDGE  -- for connections and windows, the edge on other side
+
+
+  floor_h  -- floor height (set during room layouting)
+
+  door_kind : keyword   -- can be NIL, or "door" or "arch"
 }
 
 

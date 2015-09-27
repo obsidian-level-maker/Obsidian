@@ -966,7 +966,7 @@ function Fab_size_check(skin, long, deep)
 end
 
 
-function Fab_parse_edges(skin)
+function Fab_parse_edges__OLD(skin)
   --| convert the 'north', 'east' (etc) fields of a skin into
   --| a list of portals in a 2D array.
   
