@@ -804,6 +804,10 @@ function Grower_preprocess_tiles()
       local conn = def.conns[letter]
       conn.long = conn.w or 1
 
+      if conn.long >= 2 and geom.is_corner(conn.dir) then
+        error("Long diagonals not supported, tile: " .. def.name)
+      end
+
       local x = conn.x
       local y = conn.y
 
@@ -1302,6 +1306,9 @@ end
 
   local function match_a_conn(P, def, conn)
     if conn.long != P.long then return false end
+
+    -- cannot connect axis-aligned edges with diagonal edges
+    if geom.is_corner(P.dir) != geom.is_corner(conn.dir) then return false end
 
     -- TODO: maybe relax this
     if conn.split != P.split then return false end
