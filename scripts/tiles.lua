@@ -83,6 +83,26 @@ HALL_I_2x1 =
 }
 
 
+HALL_2x2 =
+{
+  prob = 100
+
+  structure =
+  {
+    "11"
+    "11"
+  }
+
+  conns =
+  {
+    a = { x=2, y=1, w=2, dir=2 }
+    b = { x=1, y=2, w=2, dir=8 }
+
+    -- FIXME : c and d
+  }
+}
+
+
 --[[
 HALL_DIAG_I3 =
 {
@@ -154,6 +174,7 @@ HALL_U_5x3_rounded =
 --
 --------------------------------
 
+--[[
 OUTDOOR_GENERIC_6x6 =
 {
   prob = 100
@@ -173,7 +194,7 @@ OUTDOOR_GENERIC_6x6 =
     a = { x=4, y=1, w=2, dir=2 }
     b = { x=1, y=3, w=2, dir=4 }
     c = { x=6, y=4, w=2, dir=6 }
-    d = { x=4, y=6, w=2, dir=8 }
+    d = { x=3, y=6, w=2, dir=8 }
   }
 
   conn_sets =
@@ -183,6 +204,7 @@ OUTDOOR_GENERIC_6x6 =
     "a:bcd"
   }
 }
+--]]
 
 
 --------------------------------
