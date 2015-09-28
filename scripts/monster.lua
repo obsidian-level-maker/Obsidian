@@ -2017,9 +2017,9 @@ do return nil end
       each C in R.conns do
         if C.kind == "teleporter" then continue end
 
-        local nb = C:neighbor(A)
+        local nb = C:other_room(R)
 
-        if nb.room.is_exit then
+        if nb.is_exit then
           return guard_spot_for_conn(C)
         end
       end

@@ -31,10 +31,11 @@
     -- especially for the quest system.  For teleporters the edge
     -- info will be absent (and area info done when pads are placed)
 
+    R1 : source ROOM
+    R2 : destination ROOM
+
     A1 : source AREA
     A2 : destination AREA
-
-FIXME:  R1, R2 : ROOM
 
     E1 : source EDGE
     E2 : destination EDGE
@@ -59,10 +60,10 @@ function CONN_CLASS.new(kind, A1, A2, dir)
   {
     kind = kind
     id   = alloc_id("conn")
-    A1   = A1
-    A2   = A2
     R1   = A1.room
     R2   = A2.room
+    A1   = A1
+    A2   = A2
     dir  = dir
   }
 
@@ -108,11 +109,20 @@ function CONN_CLASS.swap(C)
 end
 
 
-function CONN_CLASS.neighbor(C, A)
+function CONN_CLASS.other_area(C, A)
   if A == C.A1 then
     return C.A2
   else
     return C.A1
+  end
+end
+
+
+function CONN_CLASS.other_room(C, R)
+  if R == C.R1 then
+    return C.R2
+  else
+    return C.R1
   end
 end
 

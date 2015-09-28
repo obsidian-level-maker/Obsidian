@@ -204,7 +204,7 @@ end
 function ROOM_CLASS.has_sky_neighbor(R)
   each C in R.conns do
     if C.A1.room == C.A2.room then continue end
-    local N = C:neighbor(A)
+    local N = C:other_room(A)
     if N.is_outdoor and N.mode != "void" then return true end
   end
 
@@ -313,7 +313,7 @@ end
 ---??? function ROOM_CLASS.is_near_exit(R)
 ---???   if R.purpose == "EXIT" then return true end
 ---???   each C in R.conns do
----???     local N = C:neighbor(R)
+---???     local N = C:other_room(R)
 ---???     if N.purpose == "EXIT" then return true end
 ---???   end
 ---???   return false
@@ -1971,15 +1971,15 @@ function Room_floor_heights()
 
     A.delta_h = cur_delta_h
 
-    each IC in A.room.area_conns do
+    each C in A.room.area_conns do
       local A2
 
-      if IC.A1 == A then
-        A2 = IC.A2
-      elseif IC.A2 == A then
-        A2 = IC.A1
+      if C.A1 == A then
+        A2 = C.A2
+      elseif C.A2 == A then
+        A2 = C.A1
       else
-        continue  -- not connected to area 'A'
+        continue  -- not connected to this area
       end
 
       assert(A2.room == A.room)

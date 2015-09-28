@@ -633,7 +633,7 @@ function Item_distribute_stats()
     local ratio = 1.0
 
     while N.entry_conn do
-      N = N.entry_conn:neighbor(N)
+      N = N.entry_conn:other_room(N)
 
       -- do not cross zones
       if N.zone != R.zone then break; end

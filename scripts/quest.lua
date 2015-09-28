@@ -367,11 +367,9 @@ function Quest_eval_divide_at_conn(C, goal, info)
     local count = 0
 
     each C in R.conns do
----##      if C.A1.room == C.A2.room then continue end
+      local R2 = C:other_room(R)
 
-      local N = C:neighbor(A)
-
-      if rooms[N.room.id] then count = count + 1 end
+      if rooms[R2.id] then count = count + 1 end
     end
 
     assert(count > 0)
@@ -1241,8 +1239,7 @@ stderrf("visit_room %s (via %s) for %s\n", R:tostr(), via_conn_name or "???", qu
 stderrf("  conn '%s'  %s <--> %s\n", C:tostr(), C.R1:tostr(), C.R2:tostr())
       assert(C.R1)
 
-      local R2
-      if C.R1 == R then R2 = C.R2 else R2 = C.R1 end
+      local R2 = C:other_room(R)
 
       if R2.quest != quest then continue end
 
@@ -1278,8 +1275,7 @@ stderrf("  conn '%s'  %s <--> %s\n", C:tostr(), C.R1:tostr(), C.R2:tostr())
     seen[R] = 1
 
     each C in R.conns do
-      local R2
-      if C.R1 == R then R2 = C.R2 else R2 = C.R1 end
+      local R2 = C:other_room(R)
 
       if not seen[R2] then
         do_entry_conns(R2, C, seen)
@@ -2183,7 +2179,7 @@ function Quest_final_battle()
   -- check previous room...
   assert(E.entry_conn)
 
-  local prev = E.entry_conn:neighbor(E)
+  local prev = E.entry_conn:other_room(E)
 
   if prev.is_start then return end
 
