@@ -301,6 +301,48 @@ ROOM_RECT_3x2 =
 }
 
 
+ROOM_L_AA =
+{
+  prob = 777
+
+  structure =
+  {
+    "11111"
+    "12222"
+    "12..."
+    "12..."
+  }
+
+  conns =
+  {
+    a = { x=1, y=1, dir=2 }
+    b = { x=2, y=1, dir=2 }
+
+    c = { x=5, y=4, dir=6 }
+    d = { x=5, y=3, dir=6 }
+
+    e = { x=3, y=4, dir=8 }
+    f = { x=1, y=2, w=2, dir=4 }
+  }
+
+  conn_sets =
+  {
+    "a:c"
+    "a:d"
+    "a:de"
+
+    "b:c"
+    "b:d"
+    "b:de"
+
+    "f:ed"
+    "f:edb"
+    "d:ef"
+    "d:bef"
+  }
+}
+
+
 --------------------------------
 --
 --  Party Starters
