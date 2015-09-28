@@ -46,13 +46,21 @@ namelib.NAMES =
         -- these from flyingdeath
         ["Enter the"]=10
         ["Welcome to the"]=10
+        ["Escape the"]=10
         ["Flight from the"]=5 
-        ["Escape from the"]=5 
         ["Journey to the"]=10
-        ["Assault on the"]=10
+        ["Assault on the"]=15
         ["Death Awaits in the"]=5
         ["Oh God not another"]=5
         ["Yet Another"]=5
+
+        ["Attack the"]=20
+        ["Destroy the"]=20
+        ["Shut Down the"]=15
+        ["Patrol the"]=15
+        ["Secure the"]=15
+        ["Clear this"]=5
+        ["Defend this"]=10
       }
     }
 
@@ -67,7 +75,8 @@ namelib.NAMES =
       e = 3    -- evil being: Satan (etc)
 
       t = 1    -- article: The XX
-      v = 50   -- phrase before a noun: Curse of the XX
+      v = 20   -- phrase before a noun: Curse of the XX
+      r = 40
 
       s = 1000  -- single complete names
     }
@@ -89,9 +98,13 @@ namelib.NAMES =
       ["%t %b %n"]    = 17
       ["%t %a %b %n"] = 5
 
-      ["%v %n"]    = 12
-      ["%v %a %n"] = 12
-      ["%v %b %n"] = 12
+      ["%v %n"]    = 24
+      ["%v %a %n"] = 24
+      ["%v %b %n"] = 24
+
+      ["%r the %n"] = 12
+      ["%r the %a %n"] = 12
+      ["%r the %b %n"] = 12
 
       ["%s"] = 16
     }
@@ -101,6 +114,16 @@ namelib.NAMES =
       t =
       {
         The=50
+      }
+
+      r =
+      {
+        Find = 10
+        Activate = 10
+        Reactivate = 20
+        Deactivate = 20
+        ["Turn on"] = 5
+        ["Turn off"] = 5
       }
 
       a =
@@ -427,8 +450,8 @@ namelib.NAMES =
       ["%e's %a %n"]    = 8
       ["%e's %n of %h"] = 6
 
-      ["%v %n"]    = 10
-      ["%v %a %n"] = 10
+      ["%v %n"]    = 25
+      ["%v %a %n"] = 25
 
       ["%s"] = 14
     }
@@ -890,8 +913,8 @@ namelib.NAMES =
       ["%t %n of %h"] = 12
       ["%a %n of %h"] = 7
 
-      ["%v %n"]    = 10
-      ["%v %a %n"] = 10
+      ["%v %n"]    = 25
+      ["%v %a %n"] = 25
 
       ["%s"] = 12
     }
