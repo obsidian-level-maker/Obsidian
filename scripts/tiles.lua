@@ -43,6 +43,7 @@ HALL_I_1x1 =
     a = { x=1, y=1, dir=2 }
     b = { x=1, y=1, dir=8 }
   }
+
 }
 
 
@@ -97,8 +98,21 @@ HALL_2x2 =
   {
     a = { x=2, y=1, w=2, dir=2 }
     b = { x=1, y=2, w=2, dir=8 }
+    c = { x=1, y=1, w=2, dir=4 }
 
-    -- FIXME : c and d
+    e = { x=1, y=1, dir=2 }
+    f = { x=2, y=2, dir=6 }
+  }
+
+  conn_sets =
+  {
+    "a:b"
+    "a:c"
+  }
+
+  stairwells =
+  {
+    "e:f"
   }
 }
 
