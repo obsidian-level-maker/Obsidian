@@ -1459,7 +1459,7 @@ stderrf("SUCCESS !!!!!\n")
     {
       S = SEEDS[sx][sy]
       dir = 8
-      long = 2  -- FIXME
+      long = rand.sel(50, 2, 1)
       mode = "normal"
       initial_hub = true
     }
