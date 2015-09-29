@@ -651,6 +651,51 @@ function Seed_block_valid_and_free(x1,y1, x2,y2)
 end
 
 
+function Seed_create_edge(S, dir, long, kind)
+  -- Note: 'S' must be the left-most seed of the edge
+
+  local EDGE =
+  {
+    S = S
+    dir = dir
+    long = long
+    kind = kind
+  }
+
+  for i = 1, long do
+    if S.edge[dir] then
+      error("Seed already has an EDGE")
+    end
+
+    S.edge[dir] = EDGE
+
+    S = S:raw_neighbor(geom.RIGHT[dir])
+  end
+
+  return EDGE
+end
+
+
+function Seed_create_edge_pair(S, dir, long, kind)
+  local E1 = Seed_create_edge(S, dir, long, kind)
+
+  local N = S:neighbor(dir)
+  assert(N)
+
+  if long > 1 then
+    N = N:neighbor(geom.RIGHT[dir], long - 1)
+    assert(N)
+  end
+
+  local E2 = Seed_create_edge(N, 10-dir, long, kind)
+
+  E1.peer = E2
+  E2.peer = E1
+
+  return E1, E2
+end
+
+
 function Seed_coord_range(sx1, sy1, sx2, sy2)
   assert(Seed_valid(sx1, sy1))
   assert(Seed_valid(sx2, sy2))
