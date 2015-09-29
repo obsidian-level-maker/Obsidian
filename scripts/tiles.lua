@@ -288,12 +288,11 @@ ROOM_RECT_3x2 =
 
   conn_sets =
   {
---[[
     "a:bc"
     "a:bcf"
     "a:de"
     "a:def"
---]]
+
     "g:h"
     "g:km"
     "g:hkm"
@@ -303,7 +302,7 @@ ROOM_RECT_3x2 =
 
 ROOM_L_AA =
 {
-  prob = 777
+  prob = 177
 
   structure =
   {
@@ -343,6 +342,55 @@ ROOM_L_AA =
 }
 
 
+ROOM_L_6x6 =
+{
+  prob = 277
+  start_prob = 299
+
+  structure =
+  {
+    "%22222"
+    "1%2222"
+    "11%222"
+    "111..."
+    "111..."
+    "111..."
+  }
+
+  diagonals =
+  {
+    "12"
+    "12"
+    "12"
+  }
+
+  conns =
+  {
+    a = { x=2, y=1, dir=2 }
+    b = { x=6, y=5, dir=6 }
+
+    c = { x=3, y=1, w=3, dir=2 }
+    d = { x=6, y=6, w=3, dir=6 }
+
+    e = { x=3, y=6, w=2, dir=8 }
+    f = { x=1, y=3, w=2, dir=4 }
+  }
+
+  conn_sets =
+  {
+    "a:b"
+    "a:d"
+    "a:de"
+
+    "b:c"
+    "b:d"
+    "b:de"
+
+    "c:d"
+  }
+}
+
+
 --------------------------------
 --
 --  Party Starters
@@ -351,8 +399,8 @@ ROOM_L_AA =
 
 START_O_3x3 =
 {
-  start_prob = 100
   prob = 400
+  start_prob = 100
 
   structure =
   {
@@ -393,8 +441,8 @@ START_O_3x3 =
 
 START_O_4x4 =
 {
+  prob = 40
   start_prob = 500
-  prob = 50
 
   structure =
   {
