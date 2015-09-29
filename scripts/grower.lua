@@ -725,12 +725,16 @@ function Grower_preprocess_tiles()
   end
 
 
-  local function parse_char(ch, diag_list)
+  local function parse_char(ch, diag_list, def)
     -- handle diagonal seeds
     if ch == '/' or ch == '%' then
+      if not diag_list then
+        error("Grower_parse_char: missing diagonals in: " .. def.name)
+      end
+
       local D = table.remove(diag_list, 1)
       if not D then
-        error("Grower_parse_char: not enough diagonals")
+        error("Grower_parse_char: not enough diagonals in: " .. def.name)
       end
 
       local L = parse_element(string.sub(D, 1, 1))
@@ -775,7 +779,7 @@ function Grower_preprocess_tiles()
       -- textural representation must be inverted
       local gy = H + 1 - y
 
-      grid[x][gy] = parse_char(ch, diag_list)
+      grid[x][gy] = parse_char(ch, diag_list, def)
     end -- x, y
     end
 
@@ -1273,6 +1277,8 @@ assert(room)
       if Seed_over_boundary(N) then return true end
 
       S = S:neighbor(along_dir)
+
+      if geom.is_straight(along_dir) and not S then return true end
     end
 
     return false  -- not blocked
@@ -1452,13 +1458,11 @@ stderrf("SUCCESS !!!!!\n")
     local P =
     {
       S = SEEDS[sx][sy]
-      dir = 9
-      long = 1  -- FIXME
+      dir = 8
+      long = 2  -- FIXME
       mode = "normal"
       initial_hub = true
     }
-
-P.S:split(1) -- TEMP !!
 
     while not table.empty(tab) do
       local name = rand.key_by_probs(tab)
