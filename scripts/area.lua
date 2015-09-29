@@ -51,6 +51,8 @@
 
     neighbors : list(AREA)
 
+    edges : list(EDGE)
+
     -- an edge loop is a sequence of half-seed sides, going counter-clockwise.
     -- the first loop is always the outer boundary of the area.
     edge_loops : list(list(AREA_EDGE))
@@ -155,6 +157,7 @@ function AREA_CLASS.new(mode)
     conns = {}
     seeds = {}
     neighbors  = {}
+    edges = {}
     inner_points = {}
   }
 

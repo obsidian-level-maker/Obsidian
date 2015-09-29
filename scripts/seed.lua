@@ -52,13 +52,17 @@
 
     room : ROOM
 
+    edge[DIR] : EDGE   -- set when an EDGE object exists at this seed
+                       -- Note: it may be several seeds wide
+
+
     kind : keyword  -- main usage of seed:
-                    -- "walk", "void", "diagonal",
-                    -- "stair", "curve_stair", "tall_stair",
-                    -- "liquid"
+                    --   "walk", "void", "diagonal",
+                    --   "stair", "curve_stair", "tall_stair",
+                    --   "liquid"
 
     content : keyword  -- normally nil, but can be:
-                       -- "wotsit", "pillar"
+                       --   "wotsit", "pillar"
 
     border[DIR] : BORDER
 
@@ -522,6 +526,7 @@ function Seed_create(sx, sy, x1, y1)
     y1 = y1
 
     thick  = {}
+    edge   = {}
     border = {}
     chunk  = {}
     m_cell = {}
