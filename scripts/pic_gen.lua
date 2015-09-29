@@ -1,6 +1,8 @@
-----------------------------------------------------------------
---  MODULE: title-pic generator
-----------------------------------------------------------------
+------------------------------------------------------------------------
+--  Title-pic generator
+------------------------------------------------------------------------
+--
+--  Oblige Level Maker
 --
 --  Copyright (C) 2015 Andrew Apted
 --
@@ -14,14 +16,14 @@
 --  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 --  GNU General Public License for more details.
 --
-----------------------------------------------------------------
-
-TITLE_GEN = { }
+------------------------------------------------------------------------
 
 
+--
 -- The shapes of these characters are based on the DejaVu TTF font.
+--
 
-TITLE_GEN.letter_shapes =
+TITLE_LETTER_SHAPES =
 {
   ["'"] = 
   {
@@ -516,8 +518,8 @@ TITLE_GEN.letter_shapes =
 
 
 
-function TITLE_GEN.draw_char(ch, trans, style)
-  local info = TITLE_GEN.letter_shapes[ch]
+function Title_draw_char(ch, trans, style)
+  local info = TITLE_LETTER_SHAPES[ch]
 
   if not info then return end
 
@@ -546,13 +548,13 @@ local div = 10
 end
 
 
-function TITLE_GEN.draw_string(str, trans, style)
+function Title_draw_string(str, trans, style)
   local old_tx = trans.tx
 
   for i = 1, #str do
     local ch = string.sub(str, i, i)
 
-    TITLE_GEN.draw_char(ch, trans, style)
+    Title_draw_char(ch, trans, style)
   end
 
   trans.tx = old_tx
@@ -560,17 +562,10 @@ end
 
 
 
-function TITLE_GEN.generate_title()
+function Title_generate()
   assert(GAME.title)
   assert(GAME.PALETTES)
   assert(GAME.PALETTES.normal)
-
-  -- don't bother for a single map
---[[
-  if OB_CONFIG.length == "single" then
-    return
-  end
---]]
 
 
 do return end
@@ -604,7 +599,7 @@ for pass = 1, 3 do
   end
 for i = 0, 10 do
   trans.x = 0 + i * 24
-  TITLE_GEN.draw_char(string.char(65 + i), trans, style)
+  Title_draw_char(string.char(65 + i), trans, style)
 end
 end
 
@@ -613,19 +608,4 @@ end
 
   gui.title_write("TITLEPIC")
 end
-
-
-----------------------------------------------------------------
-
-OB_MODULES["title_generator"] =
-{
-  label = "Title Generator"
-
-  game = { doom1=1, doom2=1 }
-
-  hooks =
-  {
-    all_done = TITLE_GEN.generate_title
-  }
-}
 

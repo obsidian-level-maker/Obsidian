@@ -39,6 +39,7 @@ require "fight"
 require "monster"
 require "item"
 require "naming"
+require "pic_gen"
 require "level"
 
 
