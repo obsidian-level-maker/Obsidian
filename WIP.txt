@@ -3,17 +3,48 @@ WORK IN PROGRESS
 ================
 
 
->>>  quests has broken something
+Room Kinds
+----------
 
++  better tracking of "last_room" which IGNORES HALLWAYS
+
+??  pick first (before selecting tiles)
+    -  support 'environment' in tiles
+
+-  logic for hallways? [take the connected rooms into account?]
+
+
+Misc
+----
+
+Quests : start room should be _far_ from exit room/quest door
+
+exit_room : can pick large room with TWO conns but one leads to a small leaf
+            [ small leaf is ACTUAL exit, large room is "final battle" ]
 
 sometimes no archway/door ???
 
 
-Quests : start room should be _far_ from exit room/quest door
+WHY force one conn as entry?
+Maybe this:
+  if conn_set has a ":", THE single letter before it MUST be entry
+  if conn_set has a "/", ALL letters after it MUST be exits
+
+
+often incorporate a nearby RANDOM area into a room
+[ allow more ROOM-->ROOM interaction ]
 
 
 Grower:
 -------
+
+!!  check if map is undersized, add more sprouts
+
+-  if a hallway with 2+ exits fails to connect both, then remove first
+   room AND the hallway
+
+-  when a dud hallway is removed, try again on same sprout
+   [ especially if map is undersized ]
 
 >>>  support 'long' connections
      -  the connection themselves are currently not "long"
