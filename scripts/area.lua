@@ -1377,8 +1377,6 @@ function Area_create_rooms()
 
   Area_collect_seeds()
 
-  Room_choose_area_kinds()
-
 
   gui.printf("Seed Map:\n")
   Seed_dump_rooms()

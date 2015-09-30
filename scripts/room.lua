@@ -1594,7 +1594,9 @@ function Room_choose_kind(R, last_R)
   --    few   is about 20%
   --    some  is about 35%
   --    heaps is about 75%
-  if last_R.is_outdoor then
+  if not last_R then
+    out_prob = style_sel("outdoors", 0, 20, 35, 75)
+  elseif last_R.is_outdoor then
     out_prob = style_sel("outdoors", 0,  5, 10, 60)
   else
     out_prob = style_sel("outdoors", 0, 25, 50, 90)
@@ -1615,7 +1617,7 @@ function Room_choose_kind(R, last_R)
 end
 
 
-function Room_choose_area_kinds()
+function Room_choose_area_kinds__OLD()  -- UNUSED, REMOVE
 
   local resolve_outdoor_prob
 

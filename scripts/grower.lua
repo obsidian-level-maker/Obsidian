@@ -1421,6 +1421,10 @@ math.max(ax,bx), math.max(ay,by))
     add_new_sprouts(T, conn_set, ROOM, P.initial_hub)
 
 stderrf("SUCCESS !!!!!\n")
+
+    -- decide kind of room (building, outdoors, cave)
+    Room_choose_kind(ROOM, P.room)
+
     return true  -- OK
   end
 
