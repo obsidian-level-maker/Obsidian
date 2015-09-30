@@ -1616,6 +1616,48 @@ function Room_choose_kind(R, last_R)
 end
 
 
+
+function Room_create_cave_grid()
+  --
+  -- We divide the map into a large 3x3 grid of cells.
+  -- Each cell is either "cavey" or non-cavey.
+  -- Rooms which TOUCH a cavey sections become actual caves
+  -- (that part is done in Room_choose_kind).
+  --
+
+
+  --| Room_create_cave_grid |--
+
+  LEVEL.cave_grid_sx1 = int(SEED_W * 0.30)
+  LEVEL.cave_grid_sx2 = int(SEED_W * 0.70)
+
+  LEVEL.cave_grid_sy1 = int(SEED_H * 0.30)
+  LEVEL.cave_grid_sy2 = int(SEED_H * 0.70)
+
+  LEVEL.cave_grid = table.array_2D(3, 3)
+
+
+  -- determine # of cells to become cavey
+
+  local cave_skip  = style_sel("caves", 100, 50, 25, 0)
+
+  if rand.odds(cave_skip) then
+    gui.printf("Cave quota: skipped for level.\n")
+    return
+  end
+
+  local cave_low   = style_sel("caves", 0, 1.1, 2.4, 4.4)
+  local cave_high  = style_sel("caves", 0, 3.3, 4.8, 9.2)
+
+  local cave_qty   = int(rand.range(cave_low, cave_high))
+
+  gui.printf("Cave quota: %d sections (%d%% of map).\n", cave_qty, int(cave_qty * 100 / 9))
+
+  -- FIXME
+end
+
+
+
 function Room_choose_area_kinds__OLD()  -- UNUSED, REMOVE
 
   local resolve_outdoor_prob

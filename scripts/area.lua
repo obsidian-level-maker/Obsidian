@@ -1358,6 +1358,8 @@ function Area_create_rooms()
 
   Seed_init(W - 1, H - 1)
 
+  Room_create_cave_grid()
+
   Grower_create_rooms()
 
 ---???  Area_split_map_edges()
