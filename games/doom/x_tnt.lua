@@ -333,8 +333,10 @@ TNT.THEMES =
 
     naturals =
     {
-      CAVERN6 = 50
-      CAVERN7 = 50
+-- these do not tile well vertically
+--    CAVERN6 = 50
+--    CAVERN7 = 50
+
       ALTAQUA = 50
 
       ROCK4 = 30
