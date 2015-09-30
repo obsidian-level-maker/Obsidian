@@ -1257,7 +1257,7 @@ end
   end
 
 
-  if A.kind == "building" then
+  if R then ---???  A.kind == "building" then
     A.wall_mat  = assert(R.main_tex)
 
     if R.theme and R.theme.floors then
