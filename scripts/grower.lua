@@ -982,7 +982,8 @@ function Grower_grow_trunk(is_first)
     px = px - 1
     py = py - 1
 
-    if T.mirror then px = cur_grid.w - px end
+    if T.mirror == "x" then px = cur_grid.w - px end
+    if T.mirror == "y" then py = cur_grid.h - py end
 
     if T.rotate == 4 then
       px, py = -px, -py
@@ -997,15 +998,21 @@ function Grower_grow_trunk(is_first)
 
 
   local function transform_dir(T, dir)
-    if T.mirror then dir = geom.MIRROR_X[dir]  end
+    if T.mirror == "x" then dir = geom.MIRROR_X[dir]  end
+    if T.mirror == "y" then dir = geom.MIRROR_Y[dir]  end
 
     return geom.ROTATE[T.rotate][dir]
   end
 
 
   local function transform_diagonal(T, dir, bottom, top)
-    if T.mirror then
+    if T.mirror == "x" then
       dir = geom.MIRROR_X[dir]
+    end
+
+    if T.mirror == "y" then
+      dir = geom.MIRROR_Y[dir]
+      top, bottom = bottom, top
     end
 
     if (T.rotate == 4) or
@@ -1027,10 +1034,9 @@ function Grower_grow_trunk(is_first)
 
     local T = { rotate=0 }
 
-    -- only HORIZONTAL mirroring is supported
-    if do_mirror then
-      assert(geom.is_vert(entry_conn.dir))
-      T.mirror = true
+    -- support mirroring
+    if do_mirror and geom.is_straight(entry_conn.dir) then
+      T.mirror = geom.vert_sel(entry_conn.dir, "x", "y")
     end
 
     local entry_dir = transform_dir(T, entry_conn.dir)
