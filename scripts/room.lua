@@ -1587,9 +1587,7 @@ function Room_choose_kind(R, last_R)
 
   -- FIXME: HALLWAYS !!!
 
-  -- TODO : caves
-  -- [ but do it differently, place rectangles at map corners,
-  --   also a chance of skipping them completely for a map ]
+  -- TODO : caves  [check the cave_grid]
 
   local out_prob
 
@@ -1619,11 +1617,25 @@ end
 
 function Room_create_cave_grid()
   --
-  -- We divide the map into a large 3x3 grid of cells.
-  -- Each cell is either "cavey" or non-cavey.
-  -- Rooms which TOUCH a cavey sections become actual caves
-  -- (that part is done in Room_choose_kind).
+  -- We divide the map into a large 3x3 grid.
+  -- Each section is either "cavey" or non-cavey.
+  -- Rooms which TOUCH a cavey section become actual caves.
   --
+
+  local function set_a_cave_section()
+    -- this try to avoid the middle section
+    local COORDS = { 6, 1, 6 }
+
+    for loop = 1,100 do
+      local cx = rand.key_by_probs(COORDS)
+      local cy = rand.key_by_probs(COORDS)
+
+      if not LEVEL.cave_grid[cx][cy] then
+        LEVEL.cave_grid[cx][cy] = true
+        return
+      end
+    end
+  end
 
 
   --| Room_create_cave_grid |--
@@ -1646,14 +1658,16 @@ function Room_create_cave_grid()
     return
   end
 
-  local cave_low   = style_sel("caves", 0, 1.1, 2.4, 4.4)
-  local cave_high  = style_sel("caves", 0, 3.3, 4.8, 9.2)
+  local cave_low   = style_sel("caves", 0, 1.2, 2.4, 4.4)
+  local cave_high  = style_sel("caves", 0, 3.2, 4.8, 9.2)
 
   local cave_qty   = int(rand.range(cave_low, cave_high))
 
   gui.printf("Cave quota: %d sections (%d%% of map).\n", cave_qty, int(cave_qty * 100 / 9))
 
-  -- FIXME
+  for i = 1, cave_qty do
+    set_a_cave_section()
+  end
 end
 
 
