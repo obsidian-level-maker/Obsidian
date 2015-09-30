@@ -1371,14 +1371,11 @@ function Area_create_rooms()
 
   Area_find_inner_points()
 
----##  -- it is essential to pick areas where zones connect
----##  Connect_zones_prelim()
-
 ---??  Room_assign_voids()
 
----##  Area_group_into_rooms()
-
   Area_collect_seeds()
+
+  Connect_areas_in_rooms()
 
 
   gui.printf("Seed Map:\n")

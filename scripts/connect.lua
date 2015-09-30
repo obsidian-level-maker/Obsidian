@@ -169,7 +169,7 @@ end
 
 
 
-function Connect_merge_groups(A1, A2)  -- FIXME : only used for internal conns now
+function Connect_merge_groups(A1, A2)  -- NOTE : only used for internal conns now
   local gr1 = A1.conn_group
   local gr2 = A2.conn_group
 
@@ -877,6 +877,37 @@ function Connect_stuff()
   end
 
 
+
+  local function connect_grown_rooms()
+    -- turn the preliminary connections into real ones
+
+    each PC in LEVEL.prelim_conns do
+      Connect_seed_pair(PC.S, nil, PC.dir)
+    end
+  end
+
+
+  ---| Connect_stuff |---
+
+stderrf("\n---| Connect_stuff |---\n")
+
+
+  connect_grown_rooms()
+
+--[[
+  handle_hallways()
+
+  Connect_teleporters()
+
+  handle_the_rest()  
+--]]
+
+end
+
+
+
+function Connect_areas_in_rooms()
+
   local function check_internally_connected(R)
     local first = R.areas[1].conn_group
 
@@ -982,36 +1013,13 @@ function Connect_stuff()
   end
 
 
-  local function connect_grown_rooms()
-    -- turn the preliminary connections into real ones
-
-    each PC in LEVEL.prelim_conns do
-      Connect_seed_pair(PC.S, nil, PC.dir)
-    end
-  end
-
-
-  ---| Connect_stuff |---
-
-stderrf("\n---| Connect_stuff |---\n")
+  ---| Connect_areas_in_rooms |---
 
   each R in LEVEL.rooms do
     if not R.brother then
       internal_connections(R)
     end
   end
-
-stderrf("\nOK\n")
-
-  connect_grown_rooms()
-
---[[
-  handle_hallways()
-
-  Connect_teleporters()
-
-  handle_the_rest()  
---]]
-
 end
+
 
