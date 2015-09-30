@@ -1583,6 +1583,49 @@ end
 
 
 
+function calc_cave_section(sx, sy)
+  local cx = 2
+  local cy = 2
+
+  if sx <= LEVEL.cave_grid_sx1 then cx = 1 end
+  if sx >= LEVEL.cave_grid_sx2 then cx = 3 end
+
+  if sy <= LEVEL.cave_grid_sy1 then cx = 1 end
+  if sy >= LEVEL.cave_grid_sy2 then cy = 3 end
+
+  return cx, cy
+end
+
+
+function touches_cave_section(sx1, sy1, sx2, sy2)
+  local cx1, cy1 = calc_cave_section(sx1, sy1)
+  local cx2, cy2 = calc_cave_section(sx2, sy2)
+
+  for x = cx1, cx2 do
+  for y = cy1, cy2 do
+    if LEVEL.cave_grid[x][y] then return true end
+  end
+  end
+
+  return false
+end
+
+
+
+function Room_set_kind(R, kind, is_outdoor, is_cave)
+  R.kind = "normal"
+
+  R.is_outdoor = is_outdoor
+  R.is_cave    = is_cave
+
+  each A in R.areas do
+    A.mode = "room"
+    A.is_outdoor = R.is_outdoor
+  end
+end
+
+
+
 function Room_choose_kind(R, last_R)
 
   -- FIXME: HALLWAYS !!!
@@ -1603,14 +1646,10 @@ function Room_choose_kind(R, last_R)
     out_prob = style_sel("outdoors", 0, 25, 50, 90)
   end
 
-  R.is_outdoor = rand.odds(out_prob)
+  local is_outdoor = rand.odds(out_prob)
+  local is_cave = false
 
-  R.kind = "normal"
-
-  each A in R.areas do
-    A.mode = "room"
-    A.is_outdoor = R.is_outdoor
-  end
+  Room_set_kind(R, "normal", is_outdoor, is_cave)
 end
 
 
