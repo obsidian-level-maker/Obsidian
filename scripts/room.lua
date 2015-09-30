@@ -21,12 +21,13 @@
 
 --class ROOM
 --[[
-    kind : keyword  -- "building" (layout-able room)
-                    -- "outdoor", "cave"
+    kind : keyword  -- "normal" (layoutable room, can place items)
                     -- "hallway", "stairwell"
                     -- "scenic" (unvisitable room)
 
     is_outdoor : bool  -- true for outdoor rooms / caves
+
+    is_cave    : bool  -- true for caves (indoor or outdoor)
 
 
     areas = list(AREA)
@@ -1584,6 +1585,8 @@ end
 
 function Room_choose_kind(R, last_R)
 
+  -- FIXME: HALLWAYS !!!
+
   -- TODO : caves
   -- [ but do it differently, place rectangles at map corners,
   --   also a chance of skipping them completely for a map ]
@@ -1604,14 +1607,10 @@ function Room_choose_kind(R, last_R)
 
   R.is_outdoor = rand.odds(out_prob)
 
-  if R.is_outdoor then
-    R.kind = "outdoor"
-  else
-    R.kind = "building"
-  end
+  R.kind = "normal"
 
   each A in R.areas do
-    A.kind = "bormal"
+    A.mode = "room"
     A.is_outdoor = R.is_outdoor
   end
 end

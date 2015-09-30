@@ -1945,7 +1945,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       palette = room_palette()
     end
 
-    local barrel_chance = sel(R.kind == "building", 15, 2)
+    local barrel_chance = sel(R.is_outdoor, 2, 15)
 --!!    if R.natural then barrel_chance = 3 end
 --!!    if R.hallway then barrel_chance = 5 end
 

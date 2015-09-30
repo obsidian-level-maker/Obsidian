@@ -25,18 +25,19 @@
 
     id, name  -- debugging info
 
-    mode : keyword  -- "normal", "hallway",
-                    -- "void", "scenic",
+    mode : keyword  -- "room"  (traversible part of a normal room)
+                    -- "hallway" (used for stairwells too)
+                    -- "void"
+                    -- "scenic"
                     -- "cage", "trap"
+                    -- "pool"
 
-    kind : keyword  -- "building", "courtyard",
-                    -- "cave", "landscape"
-                    --
-                    -- For scenic: "water", "mountain"
+    scenic_kind : keyword  -- "water", "mountain"
 
-    is_outdoor : bool
+    is_outdoor    -- true if outdoors (sky ceiling)
 
     is_boundary   -- true for areas outside the boundary line
+
 
     room : ROOM
 
@@ -433,7 +434,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Area_split_map_edges()
+function Area_split_map_edges__OLD()
   --
   -- This splits border areas which touch *both* the inner map and the
   -- outer of the level into two (new area contains the edge seeds).

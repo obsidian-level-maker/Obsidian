@@ -640,7 +640,7 @@ gui.debugf("  %s @ %s in %s\n", goal.name, R:tostr(), Q1.name)
 
 
   local function downgrade_stairwell(A)
-    A.room.kind = "building"
+    A.room.kind = "hallway"
 
     A.is_stairwell = nil
 
