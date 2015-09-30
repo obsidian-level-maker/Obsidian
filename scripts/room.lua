@@ -1582,6 +1582,39 @@ end
 
 
 
+function Room_choose_kind(R, last_R)
+
+  -- TODO : caves
+  -- [ but do it differently, place rectangles at map corners,
+  --   also a chance of skipping them completely for a map ]
+
+  local out_prob
+
+  -- these probs carefully chosen so that:
+  --    few   is about 20%
+  --    some  is about 35%
+  --    heaps is about 75%
+  if last_R.is_outdoor then
+    out_prob = style_sel("outdoors", 0,  5, 10, 60)
+  else
+    out_prob = style_sel("outdoors", 0, 25, 50, 90)
+  end
+
+  R.is_outdoor = rand.odds(out_prob)
+
+  if R.is_outdoor then
+    R.kind = "outdoor"
+  else
+    R.kind = "building"
+  end
+
+  each A in R.areas do
+    A.kind = "bormal"
+    A.is_outdoor = R.is_outdoor
+  end
+end
+
+
 function Room_choose_area_kinds()
 
   local resolve_outdoor_prob
