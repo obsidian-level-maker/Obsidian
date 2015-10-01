@@ -48,7 +48,25 @@ HALL_I_1x1 =
 --]]
 
 
-HALL_I_1x3 =
+HALL_1x2 =
+{
+  prob = 10
+
+  structure =
+  {
+    "1"
+    "1"
+  }
+
+  conns =
+  {
+    a = { x=1, y=1, dir=2 }
+    b = { x=1, y=2, dir=8 }
+  }
+}
+
+
+HALL_1x3 =
 {
   prob = 10
 
@@ -67,7 +85,7 @@ HALL_I_1x3 =
 }
 
 
-HALL_I_2x1 =
+HALL_2x1 =
 {
   prob = 50
 
@@ -84,9 +102,9 @@ HALL_I_2x1 =
 }
 
 
-HALL_I_3x1 =
+HALL_3x1 =
 {
-  prob = 1200
+  prob = 1
 
   structure =
   {
@@ -97,6 +115,23 @@ HALL_I_3x1 =
   {
     a = { x=3, y=1, w=3, dir=2 }
     b = { x=1, y=1, w=3, dir=8 }
+  }
+}
+
+
+HALL_3x1_split =
+{
+  prob = 3200
+
+  structure =
+  {
+    "1.1"
+  }
+
+  conns =
+  {
+    a = { x=3, y=1, w=3, dir=2, split=1 }
+    b = { x=1, y=1, w=3, dir=8, split=1 }
   }
 }
 
@@ -386,8 +421,8 @@ ROOM_L_6x6 =
     a = { x=2, y=1, dir=2 }
     b = { x=6, y=5, dir=6 }
 
-    c = { x=3, y=1, w=3, dir=2 }
-    d = { x=6, y=6, w=3, dir=6 }
+    c = { x=3, y=1, w=3, dir=2, split=1 }  -- FIXME
+    d = { x=6, y=6, w=3, dir=6, split=1 }
 
     e = { x=3, y=6, w=2, dir=8 }
     f = { x=1, y=3, w=2, dir=4 }
@@ -395,15 +430,17 @@ ROOM_L_6x6 =
 
   conn_sets =
   {
-    "a:b"
+--!!!    "a:b"
     "a:d"
-    "a:de"
+--!!!    "a:de"
 
-    "b:c"
-    "b:d"
-    "b:de"
+--!!!    "b:c"
+--!!!    "b:d"
+--!!!    "b:de"
 
     "c:d"
+
+    "e:c"
   }
 }
 
