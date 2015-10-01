@@ -26,8 +26,8 @@
 
     long  : number  -- width of connection (in seeds)
 
-    split : number  -- usually nil, when set there are two gaps at each
-                    -- side of connection and 'split' is width of the gaps
+    split : number  -- when not NIL, there are two gaps at each side
+                    -- of connection and 'split' is width of the gaps
                     -- (require split * 2 + 1 <= long)
 
     mode : keyword  -- usually "normal".
