@@ -162,7 +162,9 @@ stderrf("Connecting... %s <--> %s\n", P.R1:tostr(), P.R2:tostr())
 
   local C = CONN_CLASS.new("normal", P.R1, P.R2)
 
-  local E1, E2 = Seed_create_edge_pair(P.S, P.dir, P.long, "conn")
+  local E1, E2 = Seed_create_edge_pair(P.S, P.dir, P.long, "nothing")
+
+  E1.kind = "arch"
 
   C.E1 = E1
   C.E2 = E2

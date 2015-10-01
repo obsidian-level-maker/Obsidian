@@ -707,10 +707,6 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   end
 
 
--- FIXME: TEST CRUD!!!
-if edge.kind == "conn" then return end
-
-
   if not edge or edge.kind == nil or edge.kind == "nothing" then
     return
 
