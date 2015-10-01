@@ -3,6 +3,9 @@ WORK IN PROGRESS
 ================
 
 
+>>>  Render_edge  for new EDGE structure
+
+
 Room Kinds
 ----------
 
@@ -33,6 +36,7 @@ Maybe this:
 
 often incorporate a nearby RANDOM area into a room
 [ allow more ROOM-->ROOM interaction ]
+-  indoor/cave rooms can swallow areas which touch edge of map
 
 
 Grower:
@@ -40,11 +44,19 @@ Grower:
 
 !!  check if map is undersized, add more sprouts
 
--  if a hallway with 2+ exits fails to connect both, then remove first
++  split connections
+   [ a random chance of breaking into two sprouts ]
+
+IDEA : associate all non-room areas with a nearby room
+       [ if the room is outdoor, so are the areas ]
+
+?? if a hallway with 2+ exits fails to connect both, then remove first
    room AND the hallway
 
 -  when a dud hallway is removed, try again on same sprout
    [ especially if map is undersized ]
+
+-  support 'symmetry' style for tiles
 
 >>>  support 'long' connections
      -  the connection themselves are currently not "long"
@@ -57,6 +69,20 @@ Grower:
         be nice to create a big river between them
 
 -  IDEA: remember 'blocked' sprouts -- may be good spots for cycles
+
+-  when a large room touches/cross the boundary rect, allow it to be a LEAF
+
+
+-  CTF : start with a tile designed for CTF mode, placed in middle of map,
+         and when adding a room/hall then also add its sister room
+         [ if sister fails, kill the brother ]
+
+
+Teleporter IDEA : grow one large trunk, then pick a hallway to remove
+
+
+IDEA : a "vis-zone" or "vis-divider" -- independent of theme-zones.
+ALSO : "mon-zone" for monster/weapon palette changes
 
 
 
