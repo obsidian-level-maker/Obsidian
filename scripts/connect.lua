@@ -34,14 +34,11 @@
     R1 : source ROOM
     R2 : destination ROOM
 
-    A1 : source AREA
-    A2 : destination AREA
-
     E1 : source EDGE
     E2 : destination EDGE
 
----##    S1 : source SEED
----##    S2 : destination SEED
+    A1 : source AREA
+    A2 : destination AREA
 
     dir    : direction 2/4/6/8 (from S1 to S2)
 
@@ -55,15 +52,13 @@
 CONN_CLASS = {}
 
 
-function CONN_CLASS.new(kind, A1, A2, dir)
+function CONN_CLASS.new(kind, R1, R2, dir)
   local C =
   {
     kind = kind
     id   = alloc_id("conn")
-    R1   = A1.room
-    R2   = A2.room
-    A1   = A1
-    A2   = A2
+    R1   = R1
+    R2   = R2
     dir  = dir
   }
 
@@ -168,6 +163,8 @@ function CONN_CLASS.get_where(C, R)
 end
 
 
+------------------------------------------------------------------------
+
 
 function Connect_merge_groups(A1, A2)  -- NOTE : only used for internal conns now
   local gr1 = A1.conn_group
@@ -187,112 +184,27 @@ end
 
 
 
-function Connect_raw_seed_pair(S, T, dir, reverse, allow_same_id)
-stderrf("Connect_seed_pair: %s dir:%d  %s --> %s\n", S:tostr(), dir, S.room:tostr(), T.room:tostr())
+function Connect_through_sprout(P)
+  local C = CONN_CLASS.new("normal", P.R1, P.R2)
 
-  assert(S.area and T.area)
+  local E1, E2 = Seed_create_edge_pair(P.S, P.dir, P.long, "conn")
 
----##  local same_id = (S.area.conn_group == T.area.conn_group)
----##
----##  if same_id then
----##    if not allow_same_id then
----##      error("Connect to same conn_group")
----##    end
----##  else
----##    Connect_merge_groups(S.area, T.area)
----##  end
+  C.E1 = E1
+  C.E2 = E2
 
-  -- this used for stairwells, to ensure the other room builds the arch or door
-  if reverse then
-    S, T = T, S
-    dir  = 10 - dir
-  end
+  local S1 = P.S
+  local S2 = P.S:neighbor(P.dir)
+  assert(S2)
 
---[[
-stderrf("  AREA_%d (group %d) <---> AREA_%d (group %d)\n",
-S.area.id, S.area.conn_group,
-T.area.id, T.area.conn_group)
---]]
-
-  assert(S.room and S.room.kind != "scenic")
-  assert(T.room and T.room.kind != "scenic")
-
-  assert(S.room.kind != "DEAD")
-  assert(T.room.kind != "DEAD")
-
-  -- create connection object
-
-  local CONN = CONN_CLASS.new("normal", S.area, T.area, dir)
-
-  CONN.S1 = S
-  CONN.S2 = T
-
-  S.conn = CONN
-  T.conn = CONN
-
-assert(CONN.R1)
-assert(CONN.R2)
-assert(CONN.R1 != CONN.R2)
-
-  table.insert(CONN.R1.conns, CONN)
-  table.insert(CONN.R2.conns, CONN)
-
-  -- if areas have same group, mark connection as a Cycle
-  if same_id then
-    CONN.is_cycle = true
-  end
-
-  -- zone connection?
-  if S.area.zone != T.area.zone then
-    table.insert(LEVEL.zone_conns, CONN)
-  end
-
-  -- setup border info
-
-  S.border[dir].kind = "arch"
-  S.border[dir].conn = CONN
-
-  T.border[10-dir].kind = "nothing"
-  T.border[10-dir].conn = CONN
-
-  S.thick[dir] = 16
-  T.thick[10-dir] = 16
-
-  return CONN
-end
-
-
-function Connect_seed_pair(S, T, dir, reverse)
-  if not T then
-    T = S:neighbor(dir)
-  end
-
-  local conn1 = Connect_raw_seed_pair(S, T, dir, reverse)
-  local conn2
-
-  -- handle CTF maps
-  -- Note: sometimes the mirrored connection will connect to the same group,
-  --       that is OK and unvoidable -- conn2 will be marked as a cycle.
-  
-  if S.area.sister or S.area.brother or
-     T.area.sister or T.area.brother
-  then
-    local S2 = assert(S.ctf_peer)
-    local T2 = assert(T.ctf_peer)
-
-    conn2 = Connect_raw_seed_pair(S2, T2, 10 - dir, reverse, "allow_same_id")
-
-    -- peer the connections
-    conn1.sister  = conn2
-    conn2.brother = conn1
-  end
-
-  return conn1, conn2
+  C.A1 = assert(S1.area)
+  C.A2 = assert(S2.area)
 end
 
 
 
 function Connect_teleporters()
+
+  -- FIXME : COMPLETELY BROKEN!!!  FIX FOR 'TRUNKS' FROM GROWER
   
   local function eval_room(R)
     -- never in hallways
@@ -881,8 +793,8 @@ function Connect_stuff()
   local function connect_grown_rooms()
     -- turn the preliminary connections into real ones
 
-    each PC in LEVEL.prelim_conns do
-      Connect_seed_pair(PC.S, nil, PC.dir)
+    each P in LEVEL.prelim_conns do
+      Connect_through_sprout(P)
     end
   end
 
