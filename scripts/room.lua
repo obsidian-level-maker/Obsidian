@@ -1635,15 +1635,15 @@ function Room_choose_kind(R, last_R)
   local out_prob
 
   -- these probs carefully chosen so that:
-  --    few   is about 20%
-  --    some  is about 35%
-  --    heaps is about 75%
+  --    few   is about 17%
+  --    some  is about 32%
+  --    heaps is about 70%
   if not last_R then
-    out_prob = style_sel("outdoors", 0, 20, 35, 75)
+    out_prob = style_sel("outdoors", 0, 17, 32, 70)
   elseif last_R.is_outdoor then
-    out_prob = style_sel("outdoors", 0,  5, 10, 60)
+    out_prob = style_sel("outdoors", 0,  5, 20, 60)
   else
-    out_prob = style_sel("outdoors", 0, 25, 50, 90)
+    out_prob = style_sel("outdoors", 0, 20, 37, 90)
   end
 
   local is_outdoor = rand.odds(out_prob)
