@@ -1323,19 +1323,17 @@ end
   end
 
 
-  local function add_prelim_connect(R1, P, R2)
+  local function add_prelim_connect(P, R2)
+    -- modify the current sprout
+    local R1 = P.room
+
     R1.prelim_conn_num = R1.prelim_conn_num + 1
     R2.prelim_conn_num = R2.prelim_conn_num + 1
 
-    local PC =
-    {
-      R1 = R1
-      R2 = R2
-      S  = P.S
-      dir = P.dir
-    }
+    P.R1 = R1
+    P.R2 = R2
 
-    table.insert(LEVEL.prelim_conns, PC)
+    table.insert(LEVEL.prelim_conns, P)
   end
 
 
@@ -1418,7 +1416,7 @@ math.max(ax,bx), math.max(ay,by))
 
     if P.room then
       assert(not P.initial_hub)
-      add_prelim_connect(P.room, P, ROOM)
+      add_prelim_connect(P, ROOM)
     end
 
     -- install into seeds
