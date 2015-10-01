@@ -84,6 +84,23 @@ HALL_I_2x1 =
 }
 
 
+HALL_I_3x1 =
+{
+  prob = 1200
+
+  structure =
+  {
+    "111"
+  }
+
+  conns =
+  {
+    a = { x=3, y=1, w=3, dir=2 }
+    b = { x=1, y=1, w=3, dir=8 }
+  }
+}
+
+
 HALL_2x2 =
 {
   prob = 100
