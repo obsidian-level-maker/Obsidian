@@ -679,7 +679,7 @@ function Seed_create_edge_pair(S, dir, long, kind)
   assert(N)
 
   if long > 1 then
-    N = N:neighbor(geom.RIGHT[dir], long - 1)
+    N = N:raw_neighbor(geom.RIGHT[dir], long - 1)
     assert(N)
   end
 
