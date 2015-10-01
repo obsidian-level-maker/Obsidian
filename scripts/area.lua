@@ -190,15 +190,7 @@ function AREA_CLASS.kill_it(A)
   each S in A.seeds do
     S.room = nil
     S.area = nil
-
-    each dir in geom.ALL_DIRS do
-      if S.border[dir] then S.border[dir].kind = nil end
-    end
   end
-
----##  each C in A.conns do
----##    table.kill_elem(LEVEL.conns, C)
----##  end
 
   A.conns = nil
 end
@@ -323,8 +315,7 @@ function Junction_init()
   end
   end
 
-  -- store junction in SEED.border[] for handy access.
-  -- also compute the perimeter of each junction.
+  -- compute the perimeter of each junction.
 
   each A in LEVEL.areas do
   each S in A.seeds do
@@ -337,7 +328,7 @@ function Junction_init()
     if not N then
       local junc = Junction_lookup(A, "map_edge", "create_it")
 
-      S.border[dir].junction = junc
+---##      S.border[dir].junction = junc
 
       junc.perimeter = junc.perimeter + 1
       continue
@@ -349,7 +340,7 @@ function Junction_init()
 
     local junc = Junction_lookup(A, N.area)
 
-    S.border[dir].junction = junc
+---##    S.border[dir].junction = junc
 
     if dir < 5 then
       junc.perimeter = junc.perimeter + 1

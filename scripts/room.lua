@@ -568,7 +568,7 @@ function Room_reckon_doors()
     local N = C.S2
     local dir = C.dir
 
-    local B  = S.border[dir]
+    local B  = S.border[dir]  -- FIXME
     local B2 = N.border[10 - dir]
 
     if B.kind != "arch" then
@@ -1871,6 +1871,7 @@ function Room_floor_heights()
         if N.area.room == R.hallway.R1 then R.hallway.touch_R1 = R.hallway.touch_R1 + 1 end
         if N.area.room == R.hallway.R2 then R.hallway.touch_R2 = R.hallway.touch_R2 + 1 end
 
+        -- FIXME
         if S.border[dir].conn and not N.area.room.entry_h then
           table.insert(exit_dirs, dir)
         end
@@ -1949,6 +1950,7 @@ function Room_floor_heights()
     local S1 = conn.S1
     local S2 = conn.S2
 
+    -- FIXME??
     local B1 = S1.border[conn.dir]
     local B2 = S2.border[10 - conn.dir]
 

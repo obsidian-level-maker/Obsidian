@@ -64,10 +64,6 @@
     content : keyword  -- normally nil, but can be:
                        --   "wotsit", "pillar"
 
-    border[DIR] : BORDER
-
-    thick[DIR]  -- thickness of each border
-
     x1, y1, x2, y2  -- 2D map coordinates
 
     mid_x, mid_y  -- mid point coordinate

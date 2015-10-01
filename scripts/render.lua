@@ -61,13 +61,15 @@ function edge_get_rail(S, dir)
   if not (N and N.area) then return nil end
   if N.area == S.area then return nil end
 
+--[[
   local bord = S.border[dir]
 
   if bord.kind == "rail" then return bord end
 
   if bord.kind != nil then return nil end
+--]]
 
-  local junc = assert(bord.junction)
+  local junc = Junction_lookup(S.area, N.area)
 
   if junc.kind == "rail" then return junc end
 
@@ -285,8 +287,9 @@ function Render_edge(A, S, dir)
 
 
   local function seed_touches_junc(S, junc)
+    -- FIXME
     each dir in geom.ALL_DIRS do
-      if S.border[dir].junction == junc then return true end
+--    if S.border[dir].junction == junc then return true end
     end
 
     return false
@@ -294,6 +297,9 @@ function Render_edge(A, S, dir)
 
 
   local function calc_step_A_mode(S, dir)
+--FIXME
+do return "narrow" end
+
     local junc = S.border[dir].junction
     if not junc or junc.kind != "steps" then return "narrow" end
 
@@ -335,6 +341,9 @@ function Render_edge(A, S, dir)
 
 
   local function calc_step_B_mode(S, dir)
+--FIXME
+do return "narrow" end
+
     local junc = S.border[dir].junction
     if not junc or junc.kind != "steps" then return "narrow" end
 
@@ -1223,7 +1232,7 @@ end
 
 function Render_properties_for_area(A)
 
-  -- scenic borders done elsewhere...
+  -- scenic parts done elsewhere...
   if A.mode == "scenic" then
     return
   end
