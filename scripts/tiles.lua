@@ -125,8 +125,10 @@ HALL_3x1_split =
 
   structure =
   {
-    "1.1"
+    "1.2"
   }
+
+  symmetry = "x"
 
   conns =
   {
