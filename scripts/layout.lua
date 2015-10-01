@@ -81,8 +81,11 @@ function Layout_spot_for_wotsit(R, kind, none_OK)
   local function nearest_conn(spot)
     local dist
 
+do return 10 end
+
     each C in R.conns do
       if C.kind == "normal" or C.kind == "closet" then
+        -- FIXME: use the EDGE, luke
         local S = C:get_seed(A)
         local dir = sel(C.R1 == R, C.dir, 10 - C.dir)
 

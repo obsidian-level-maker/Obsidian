@@ -1995,16 +1995,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
 
   local function guard_spot_for_conn(C)
---!!!! FIXME
-do return nil end
-
-    local S = C:get_seed(R)
-
-    if not S then return nil end  -- teleporter
-
-    local mx, my = S:mid_point()
-
-    return { x=mx, y=my }
+    --!!!! FIXME use the EDGE, luke
   end
 
 

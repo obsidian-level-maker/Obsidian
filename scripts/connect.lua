@@ -40,8 +40,6 @@
     A1 : source AREA
     A2 : destination AREA
 
-    dir    : direction 2/4/6/8 (from S1 to S2)
-
     door_h : floor height for doors straddling the connection
 
     where1  : usually NIL, otherwise a FLOOR object
@@ -76,8 +74,8 @@ function CONN_CLASS.kill_it(C)
   C.kind = "DEAD"
   C.id   = -1
 
-  C.A1  = nil ; C.S1 = nil
-  C.A2  = nil ; C.S2 = nil
+  C.R1  = nil ; C.A1 = nil
+  C.R2  = nil ; C.A2 = nil
   C.dir = nil
 end
 
@@ -97,13 +95,7 @@ end
 function CONN_CLASS.swap(C)
   C.R1, C.R2 = C.R2, C.R1
   C.A1, C.A2 = C.A2, C.A1
-
   C.E1, C.E2 = C.E2, C.E1
-  C.S1, C.S2 = C.S2, C.S1
-
-  if C.dir then
-    C.dir = 10 - C.dir
-  end
 end
 
 
@@ -121,26 +113,6 @@ function CONN_CLASS.other_room(C, R)
     return C.R2
   else
     return C.R1
-  end
-end
-
-
-function CONN_CLASS.get_seed(C, A)
-  if A == C.A1 then
-    return C.S1
-  else
-    return C.S2
-  end
-end
-
-
-function CONN_CLASS.get_dir(C, A)
-  if not C.dir then return nil end
-
-  if A == C.A1 then
-    return C.dir
-  else
-    return 10 - C.dir
   end
 end
 
@@ -185,6 +157,9 @@ end
 
 
 function Connect_through_sprout(P)
+
+stderrf("Connecting... %s <--> %s\n", P.R1:tostr(), P.R2:tostr())
+
   local C = CONN_CLASS.new("normal", P.R1, P.R2)
 
   local E1, E2 = Seed_create_edge_pair(P.S, P.dir, P.long, "conn")
@@ -198,6 +173,9 @@ function Connect_through_sprout(P)
 
   C.A1 = assert(S1.area)
   C.A2 = assert(S2.area)
+
+  table.insert(C.R1.conns, C)
+  table.insert(C.R2.conns, C)
 end
 
 
@@ -801,7 +779,7 @@ function Connect_stuff()
 
   ---| Connect_stuff |---
 
-stderrf("\n---| Connect_stuff |---\n")
+  gui.printf("\n---| Connect_stuff |---\n")
 
 
   connect_grown_rooms()

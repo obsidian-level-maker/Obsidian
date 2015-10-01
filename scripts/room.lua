@@ -2108,6 +2108,8 @@ function Room_floor_heights()
 
       if C.A1.room == C.A2.room then continue end
 
+      error("this is broken...")
+
       if C.A1.room == R then
         S = C.S1
         N = C.S2
@@ -2436,7 +2438,8 @@ function Room_build_all()
 
   Area_prune_hallways()
 
-  Room_reckon_doors()
+--FIXME  Room_reckon_doors()
+
   Room_pool_hacks()
   Room_floor_heights()
   Room_prepare_skies()

@@ -943,6 +943,7 @@ function Quest_add_major_quests()
 
   -- use keys to lock zone connections
 
+--[[
   local goal_list = {}
 
   collect_key_goals(goal_list)
@@ -971,6 +972,7 @@ function Quest_add_major_quests()
       lock_up_a_quest(Q, goal_list, pass)
     end
   end
+--]]
 
 each Q in LEVEL.quests do
 Q.svolume = size_of_room_set(Q.rooms)
