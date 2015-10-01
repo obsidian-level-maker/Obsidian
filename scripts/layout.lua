@@ -1135,8 +1135,6 @@ function Layout_finish_scenic_borders()
 
     A.floor_mat = "FLAT10"
     A.ceil_mat  = "_SKY"
-
-    A.facade_mat = "FWATER1"
   end
 
 

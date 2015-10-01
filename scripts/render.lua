@@ -30,16 +30,7 @@ function calc_wall_mat(A1, A2)
     return assert(A1.wall_mat)
   end
 
-  if A2 and not A2.is_outdoor then
-    return A2.facade_mat
-  end
-
-  if not A2 or A1.zone != A2.zone then
-    return LEVEL.zone_fence_mat
-  end
-
-  -- both A1 and A2 are outdoor
-  return assert(A1.zone.fence_mat)
+  return A1.zone.facade_mat
 end
 
 
@@ -1246,8 +1237,7 @@ end
 
 
   if A.mode == "void" then
-    A.facade_mat = A.zone.facade_mat
-    A.wall_mat   = A.facade_mat
+    A.wall_mat   = A.zone.facade_mat
     A.floor_mat  = A.wall_mat
     return
   end
@@ -1276,8 +1266,6 @@ end
       A.ceil_mat  = rand.key_by_probs(R.theme.ceilings)
     end
 
-    A.facade_mat = A.zone.facade_mat
-
   elseif A.kind == "courtyard" then
     A.floor_mat = "BROWN1"
 
@@ -1290,7 +1278,6 @@ end
   elseif A.kind == "cave" then
     A.wall_mat  = "ASHWALL4"
     A.floor_mat = "RROCK04"
-    A.facade_mat = A.wall_mat
 
   else
     A.floor_mat = "_ERROR"
@@ -1305,10 +1292,6 @@ end
     if A.room and A.room.skin and A.room.skin.wall then
       A.floor_mat = A.room.skin.wall
       A. ceil_mat = A.room.skin.wall
-    end
-
-    if not A.is_outdoor then
-      A.facade_mat = A.zone.facade_mat
     end
 
     if A.ceil_h then
@@ -1338,8 +1321,6 @@ end
 
   A.wall_mat = A.wall_mat or A.floor_mat
   A.ceil_mat = A.ceil_mat or A.wall_mat
-
-  A.facade_mat = A.facade_mat or A.wall_mat
 
   --DEBUG FOR SECRETS
   if A.room and A.room.is_secret then
