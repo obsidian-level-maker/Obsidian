@@ -590,7 +590,7 @@ function Title_draw_char(T, ch)
   end
 
   -- return new X coordinate for next character
-  return T.x + w * info.width * 1.35
+  return T.x + w * info.width * 1.45
 end
 
 
@@ -650,7 +650,7 @@ function Title_generate()
 
   OB_TITLE_DIR = gui.get_install_dir() .. "/data/titles"
 
-  gui.title_load_image(0, 0, OB_TITLE_DIR .. "/space1.tga")
+  gui.title_load_image(0, 0, OB_TITLE_DIR .. "/space2.tga")
 
 
   local T = { x=10, y=100 }
@@ -665,13 +665,16 @@ function Title_generate()
 
   T =
   {
-    x = 20
-    y = 192
-    w = 10
-    h = 8
+    x = 10
+    y = 190
+    w = 9
+    h = 7
   }
 
-  Title_draw_string2(T, credit, "#060", 3, "#0f0", 1)
+  Title_draw_string2(T, credit, "#666", 3, "#ccc", 1)
+
+
+  gui.title_load_image(282, 162, OB_TITLE_DIR .. "/logo1.tga")
 
 
   gui.title_write("TITLEPIC")
