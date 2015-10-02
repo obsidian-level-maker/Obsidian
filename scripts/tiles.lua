@@ -123,9 +123,10 @@ HALL_3x1_split =
 {
   prob = 3200
 
+  -- NOTE : non-contiguous areas are normally not allowed, this is a special case
   structure =
   {
-    "1.2"
+    "1.1"
   }
 
   symmetry = "x"

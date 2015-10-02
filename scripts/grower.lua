@@ -802,11 +802,10 @@ function Grower_preprocess_tiles()
 
     local default_set = ""
 
-    local all_letters = table.keys_sorted(def.conns)
-
-    each letter in all_letters do
-      local conn = def.conns[letter]
+    each letter,conn in def.conns do
       conn.long = conn.w or 1
+
+      default_set = default_set .. letter
 
       local is_diag = geom.is_corner(conn.dir)
 
@@ -834,12 +833,6 @@ function Grower_preprocess_tiles()
         if is_diag then
           error("Diagonal conn not on a diagonal seed, tile: " .. def.name)
         end
-      end
-
-      if default_set == "" then
-        default_set = letter .. ":"
-      else
-        default_set = default_set .. letter
       end
     end
 
@@ -1204,16 +1197,11 @@ stderrf("Installing fluff.....\n")
 
 
   local function add_new_sprouts(T, conn_set, room, initial_hub)
-
-    -- only keep entry conn for an initial hub
-    if not initial_hub then
-      conn_set = string.match(conn_set, ":(%w*)")
-      assert(conn_set and conn_set != "")
-    end
-
     for i = 1, #conn_set do
       local letter = string.sub(conn_set, i, i)
+
       if letter == ':' then continue end
+      if letter == T.input then continue end
 
       local conn = cur_def.conns[letter]
       if not conn then error("Bad letter in conn_set in " .. cur_def.name) end
@@ -1356,29 +1344,39 @@ end
     local poss = {}
 
     each cs in def.conn_sets do
-      local letter = string.sub(cs, 1, 1)
-      local conn = assert(def.conns[letter])
+      -- try all the inputs, i.e. all letters before a ':'
+      -- [ if no colon, ALL letters can be inputs ]
+      for i = 1, #cs do
+        local letter = string.sub(cs, i, i)
 
-      if not conn then error("Bad letter in conn_set in " .. def.name) end
+        if letter == ':' then break; end
 
-      if match_a_conn(P, def, conn) then
-        table.insert(poss, cs)
+        local conn = assert(def.conns[letter])
+
+        if not conn then error("Bad letter in conn_set in " .. def.name) end
+
+        if match_a_conn(P, def, conn) then
+          table.insert(poss, { input=letter, cs=cs })
+        end
       end
     end
 
+    -- nothing possible?
     if table.empty(poss) then return nil end
 
-    return rand.pick(poss)
+    poss = rand.pick(poss)
+
+    return poss.input, poss.cs
   end
 
 
   local function try_add_tile(P, def, conn_set)
 stderrf("try_add_tile '%s'  @ %s dir:%d\n", def.name, P.S:tostr(), P.dir)
 
-    local conn_set = pick_matching_conn_set(P, def)
+    local input, conn_set = pick_matching_conn_set(P, def)
 
     -- no possible connections?
-    if not conn_set then
+    if not input then
 stderrf("  No matching entry conn (long=%d)\n", P.long)
       return false
     end
@@ -1386,17 +1384,19 @@ stderrf("  No matching entry conn (long=%d)\n", P.long)
     cur_def  = def
     cur_grid = def.processed[1].grid
 
-    local entry_letter = string.sub(conn_set, 1, 1)
-    local entry_conn   = def.conns[entry_letter]
+    local entry_conn = def.conns[input]
 
-    -- only try mirror if geom.is_vert(entry_conn.dir)
-    local T = calc_transform(P, def, entry_conn, false)
+    local T = calc_transform(P, def, entry_conn, rand.odds(50))
+
+    -- on initial hub, allow sprout input to be an exit
+    if not P.initial_hub then
+      T.input = input
+    end
 
     if not try_add_tile_RAW(P, T, nil) then
 stderrf("Failed\n")
       return false
     end
-
 
 local ax,ay = transform_coord(T, 1, 1)
 local bx,by = transform_coord(T, cur_grid.w, cur_grid.h)
