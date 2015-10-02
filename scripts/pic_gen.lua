@@ -517,8 +517,27 @@ TITLE_LETTER_SHAPES =
 }
 
 
+------------------------------------------------------------------------
 
-function Title_draw_char(ch, trans, style)
+
+--struct TRANSFORM
+--[[
+    x, y    -- coord where next character will be drawn
+            -- y is the baseline
+
+    new_x   -- x coord where next character should be drawn
+
+    w, h    -- size of characters
+
+    color   -- color to draw the characters
+
+    bw, bh  -- thickness of drawn strokes
+
+    nodraw  -- no drawing is done (for measuring width)
+--]]
+
+
+function Title_draw_char(ch, T, style)
   local info = TITLE_LETTER_SHAPES[ch]
 
   if not info then return end
@@ -536,29 +555,31 @@ function Title_draw_char(ch, trans, style)
     y1 = 1.0 - y1
     y2 = 1.0 - y2
 
-local size = 40
+    x1 = T.x + x1 * size
+    y1 = T.y + y1 * size
+    x2 = T.x + x2 * size
+    y2 = T.y + y2 * size
 
-    x1 = trans.x + x1 * size
-    y1 = trans.y + y1 * size
-    x2 = trans.x + x2 * size
-    y2 = trans.y + y2 * size
-
-    gui.title_draw_line(x1, y1, x2, y2, style.color, style.bw, style.bh)
+    if not T.nodraw then
+      gui.title_draw_line(x1, y1, x2, y2, T.color, T.bw, T.bh)
+    end
   end
 
 end
 
 
-function Title_draw_string(str, trans, style)
-  local old_tx = trans.tx
+function Title_draw_string(str, T, style)
+  local old_tx = T.tx
 
   for i = 1, #str do
     local ch = string.sub(str, i, i)
 
-    Title_draw_char(ch, trans, style)
+    Title_draw_char(ch, T, style)
   end
 
-  trans.tx = old_tx
+  local new_tx = T.x
+
+  T.tx = old_tx
 end
 
 
@@ -575,25 +596,20 @@ function Title_generate()
 
   OB_TITLE_DIR = gui.get_install_dir() .. "/data/titles"
 
-  gui.title_load_image(0, 0, OB_TITLE_DIR .. "/space2.tga")
+  gui.title_load_image(0, 0, OB_TITLE_DIR .. "/space1.tga")
 
 
-local trans = { x=0, y=100 }
+  local T = { x=0, y=100 }
 
 for pass = 1, 3 do
   local style
   if pass == 1 then
-    style = { color="#200", bw=6, bh=5 }
+    style = { color="#000", bw=6, bh=5 }
   elseif pass == 2 then
-    style = { color="#500", bw=4, bh=3 }
+    style = { color="#777", bw=4, bh=3 }
   else
-    style = { color="#a00", bw=2, bh=1 }
+    style = { color="#f00", bw=2, bh=1 }
   end
-
-for i = 0, 20 do
-  trans.x = 30 + i * 34
-  Title_draw_char(string.char(65 + i), trans, style)
-end
 
 end
 
