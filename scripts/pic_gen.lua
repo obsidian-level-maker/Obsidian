@@ -523,24 +523,25 @@ function Title_draw_char(ch, trans, style)
 
   if not info then return end
 
-  for i = 0, #info.lines - 1, 2 do
-    local x1 = info.lines[i + 1]
-    local y1 = info.lines[i + 2]
-    local x2 = info.lines[i + 3]
-    local y2 = info.lines[i + 4]
+  for i = 1, #info.points - 1 do
+    local x1 = info.points[i].x
+    local y1 = info.points[i].y
 
-    if not x1 or not x2 then break; end
+    local x2 = info.points[i + 1].x
+    local y2 = info.points[i + 1].y
 
-stderrf("LINE : (%d %d) .. (%d %d)\n", x1,y1, x2,y2)
+    if not x1 or not x2 then continue end
 
-    if x1 < 1 or x2 < 1 then continue end
+    -- fix for inverted letters
+    y1 = 1.0 - y1
+    y2 = 1.0 - y2
 
-local div = 10
+local size = 40
 
-    x1 = trans.x + x1 / div
-    y1 = trans.y + y1 / div
-    x2 = trans.x + x2 / div
-    y2 = trans.y + y2 / div
+    x1 = trans.x + x1 * size
+    y1 = trans.y + y1 * size
+    x2 = trans.x + x2 * size
+    y2 = trans.y + y2 * size
 
     gui.title_draw_line(x1, y1, x2, y2, style.color, style.bw, style.bh)
   end
@@ -567,27 +568,18 @@ function Title_generate()
   assert(GAME.PALETTES)
   assert(GAME.PALETTES.normal)
 
-
-do return end
-
-
-  gui.title_create(320, 200, "#00b")
+  gui.title_create(320, 200, "#000")
 
   gui.title_set_palette(GAME.PALETTES.normal)
 
-for i = -80,400 do
-  local x = i + 20
-  local y = 0
-  local x2 = i - 20
-  local y2 = 200
 
-  local ity = math.clamp(0, (i - 40) / 240, 1) * 255
-  local col = { ity, ity, ity }
+  OB_TITLE_DIR = gui.get_install_dir() .. "/data/titles"
 
-  gui.title_draw_line(x, y, x2, y2, col, 2, 2)
-end
+  gui.title_load_image(0, 0, OB_TITLE_DIR .. "/space2.tga")
+
 
 local trans = { x=0, y=100 }
+
 for pass = 1, 3 do
   local style
   if pass == 1 then
@@ -597,12 +589,13 @@ for pass = 1, 3 do
   else
     style = { color="#a00", bw=2, bh=1 }
   end
-for i = 0, 10 do
-  trans.x = 0 + i * 24
+
+for i = 0, 20 do
+  trans.x = 30 + i * 34
   Title_draw_char(string.char(65 + i), trans, style)
 end
-end
 
+end
 
   -- TODO
 
