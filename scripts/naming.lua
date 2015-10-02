@@ -417,7 +417,6 @@ namelib.NAMES =
         ["No Time To Waste"]=10
         ["No Way Through"]=10
         ["Nothing Works"]=10
-        ["Out of Time"]=10
         ["Quantum Distortion"]=10
         ["System Overload"]=10
         ["Tech Center"]=10
@@ -644,7 +643,6 @@ namelib.NAMES =
         ["Addicted to Sin"]=10
         ["All is Lost"]=10
         ["Alone Walking"]=10
-        ["And The Dead Shall Rise"]=10
         ["Ankle Deep in Blood"]=10
         ["Angelus Mortis"]=10
         ["Ashes to Ashes"]=10
@@ -879,7 +877,6 @@ namelib.NAMES =
         ["Gore Soup"]=10
         ["Kill Thy Neighbor"]=10
         ["Murderous Intent"]=10
-        ["No Salvation"]=10
         ["No Sanctuary"]=10
         ["Out for Revenge"]=10
         ["Rampage!"]=10
@@ -1102,7 +1099,6 @@ namelib.NAMES =
         ["Dark City"]=10
         ["Dark Horizon"]=10
         ["Darkened Waters"]=10
-        ["Days of Rage"]=10
         ["Dead End"]=10
         ["Deadfall"]=10
         ["Deadlock"]=10
@@ -1118,7 +1114,6 @@ namelib.NAMES =
         ["Eight Floors Above"]=10
         ["Endoomed"]=10
         ["Enter Combat"]=10
-        ["Everlasting Bloodshed"]=10
         ["Evil or Dead"]=10
         ["Fading to Black"]=10
         ["Fallen into Shadows"]=10
@@ -1669,7 +1664,52 @@ namelib.NAMES =
       }
     }
   }
-  -- end of 'TITLE' theme
+
+
+  SUB_TITLE =
+  {
+    patterns =
+    {
+      ["%s"] = 50
+    }
+
+    lexicon =
+    {
+      -- sequels
+      ["II"]  = 80
+      ["III"] = 60
+      ["IV"]  = 20
+      ["VI"]  = 10
+      ["XII"] = 10
+
+      ["Redux"] = 40
+      ["Revisited"] = 20
+      ["Evil Reborn"] = 20
+      ["The Reckoning"] = 40
+      ["The Struggle Continues"] = 20
+      ["The Endless Fight"] = 20
+      ["Everlasting Bloodshed"] = 20
+
+      -- prequels
+      ["Genesis"] = 40
+      ["The Awakening"] = 40
+      ["Evil Arises"] = 20
+      ["The Dead Shall Rise"] = 20
+      ["Where It All Began"] = 10
+
+      -- describe the place
+      ["The Evil Within"] = 20
+      ["What Lurks Beneath"] = 20
+      ["A God-forsaken Place"] = 20
+
+      -- miscellaneous
+      ["Final Hour"] = 20
+      ["Out of Time"] = 20
+      ["Days of Rage"] = 20
+      ["No Salvation"] = 20
+      ["A Fight for Survival"] = 20
+    }
+  }
 }
 
 
