@@ -54,16 +54,26 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  [":"] =
+  ["."] =
   {
-    width = 0.0833
+    width = 0.2000
     points =
     {
-      { x=0.00000, y=0.48750 }
-      { x=0.08333, y=0.48750 }
+      { x=0.10000, y=0.0 }
+      { x=0.10000, y=0.0 }
+    }
+  }
+
+  [":"] =
+  {
+    width = 0.2000
+    points =
+    {
+      { x=0.10000, y=0.68750 }
+      { x=0.10000, y=0.68750 }
       {}
-      { x=0.00000, y=0.23750 }
-      { x=0.08333, y=0.48750 }
+      { x=0.10000, y=0.13750 }
+      { x=0.10000, y=0.13750 }
     }
   }
 
@@ -637,7 +647,6 @@ function Title_measure_string(T, str)
 end
 
 
-
 function Title_generate()
   assert(GAME.title)
   assert(GAME.PALETTES)
@@ -661,7 +670,16 @@ function Title_generate()
   Title_draw_string2(T, GAME.title, "#f00", 5, "#ff0", 3)
 
 
-  local credit = "Proudly bought to you by OBLIGE"
+  local CREDIT_LINES =
+  {
+--  "Proudly bought to you by OBLIGE"
+--  "Another great OBLIGE production"
+--  "From the foundries of OBLIGE"
+    "Copyright: OBLIGE Level Maker"
+  }
+
+
+  local credit = rand.pick(CREDIT_LINES)
 
   T =
   {
