@@ -1323,6 +1323,10 @@ static rgb_color_t * title_pix;
 static rgb_color_t title_palette[256];
 
 
+static tga_image_c * title_last_tga;
+static const char  * title_last_filename;
+
+
 int DM_title_create(lua_State *L)
 {
 	// LUA: title_create(width, height, bg)
@@ -1653,6 +1657,33 @@ static void TitleDrawLine(int x1, int y1, int x2, int y2, rgb_color_t col, int b
 }
 
 
+static void TitleDrawImage(int x, int y, tga_image_c *img)
+{
+	// Note: only supports basic masking (alpha 0 or 255)
+
+	// Note 2: clipping is not optimized
+
+	for (int dy = 0 ; dy < img->height ; dy++, y++)
+	{
+		if (y < 0) continue;
+		if (y >= title_H) break;
+
+		for (int dx = 0 ; dx < img->width ; dx++)
+		{
+			int nx = x + dx;
+
+			if (nx < 0) continue;
+			if (nx >= title_W) break;
+
+			rgb_color_t pix = img->pixels[dy * img->width + dx];
+
+			if (RGB_ALPHA(pix) & 128)
+				title_pix[y * title_W + x] = img->pixels[dy * img->width + dx];
+		}
+	}
+}
+
+
 int DM_title_draw_rect(lua_State *L)
 {
 	// LUA: title_draw_rect(x, y, w, h, col)
@@ -1692,9 +1723,30 @@ int DM_title_draw_line(lua_State *L)
 
 int DM_title_load_image(lua_State *L)
 {
-	// LUA: title_load_image(filename, x, y, [w, h])
+	const char *filename = luaL_checkstring(L, 1);
 
-	// TODO
+	int x = luaL_checkint(L, 2);
+	int y = luaL_checkint(L, 3);
+
+	// keep the last image cached in memory
+	if (! (title_last_filename && strcmp(title_last_filename, filename) == 0))
+	{
+		if (title_last_tga)
+		{
+			delete title_last_tga;
+			StringFree(title_last_filename);
+			title_last_filename = NULL;
+		}
+
+		title_last_tga = TGA_LoadImage(filename);
+
+		if (! title_last_tga)
+			luaL_error(L, "title_load_image: no such file: %s", filename);
+
+		title_last_filename = StringDup(filename);
+	}
+
+	TitleDrawImage(x, y, title_last_tga);
 
 	return 0;
 }
