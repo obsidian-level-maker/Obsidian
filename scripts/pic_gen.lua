@@ -21,10 +21,17 @@
 
 --
 -- The shapes of these characters are based on the DejaVu TTF font.
+-- Only contains uppercase letters and a few punctuation symbols.
 --
 
 TITLE_LETTER_SHAPES =
 {
+  [" "] = 
+  {
+    width = 0.5000
+    points = { }
+  }
+
   ["'"] = 
   {
     width = 0.0833
@@ -525,8 +532,6 @@ TITLE_LETTER_SHAPES =
     x, y    -- coord where next character will be drawn
             -- y is the baseline
 
-    new_x   -- x coord where next character should be drawn
-
     w, h    -- size of characters
 
     color   -- color to draw the characters
@@ -534,13 +539,35 @@ TITLE_LETTER_SHAPES =
     bw, bh  -- thickness of drawn strokes
 
     nodraw  -- no drawing is done (for measuring width)
+
+    new_x   -- position after Title_draw_string()
 --]]
 
 
-function Title_draw_char(ch, T, style)
+function Title_draw_char(T, ch)
+  -- we draw lowercase characters as smaller uppercase ones
+  local w = T.w
+  local h = T.h
+
+  if string.match(ch, "[a-z]") then
+    w = w * 0.8
+    h = h * 0.7
+    ch = string.upper(ch)
+  end
+
+
   local info = TITLE_LETTER_SHAPES[ch]
 
-  if not info then return end
+  if not info then return T.x end
+
+  local bx = T.x
+  local by = T.y
+  
+  -- center each letter horizontally
+  bx = bx - (info.width * w * 0.5)
+
+
+  -- draw the lines --
 
   for i = 1, #info.points - 1 do
     local x1 = info.points[i].x
@@ -551,35 +578,46 @@ function Title_draw_char(ch, T, style)
 
     if not x1 or not x2 then continue end
 
-    -- fix for inverted letters
-    y1 = 1.0 - y1
-    y2 = 1.0 - y2
+    x1 = T.x + x1 * w
+    x2 = T.x + x2 * w
 
-    x1 = T.x + x1 * size
-    y1 = T.y + y1 * size
-    x2 = T.x + x2 * size
-    y2 = T.y + y2 * size
+    y1 = T.y - y1 * h
+    y2 = T.y - y2 * h
 
     if not T.nodraw then
       gui.title_draw_line(x1, y1, x2, y2, T.color, T.bw, T.bh)
     end
   end
 
+  -- return new X coordinate for next character
+  return T.x + w * info.width * 1.35
 end
 
 
-function Title_draw_string(str, T, style)
-  local old_tx = T.tx
+
+function Title_draw_string(T, str)
+  local old_x = T.x
 
   for i = 1, #str do
     local ch = string.sub(str, i, i)
 
-    Title_draw_char(ch, T, style)
+    T.x = Title_draw_char(T, ch)
   end
 
-  local new_tx = T.x
+  T.new_x = T.x
+  T.x     = old_x
+end
 
-  T.tx = old_tx
+
+
+function Title_measure_string(T, str)
+  T.nodraw = true
+  Title_draw_string(T, str)
+  T.nodraw = false
+
+  local width = T.new_x - T.x
+
+  return width
 end
 
 
@@ -599,7 +637,23 @@ function Title_generate()
   gui.title_load_image(0, 0, OB_TITLE_DIR .. "/space1.tga")
 
 
-  local T = { x=0, y=100 }
+  local T = { x=30, y=100 }
+
+  T.color = "#f00"
+  T.bw = 6
+  T.bh = 5
+
+  T.w = 30
+  T.h = 50
+
+  Title_draw_string(T, "Oblige Rocks")
+
+  T.color = "#ff0"
+  T.bw = 3
+  T.bh = 2
+
+  Title_draw_string(T, "Oblige Rocks")
+
 
 for pass = 1, 3 do
   local style
@@ -610,7 +664,6 @@ for pass = 1, 3 do
   else
     style = { color="#f00", bw=2, bh=1 }
   end
-
 end
 
   -- TODO

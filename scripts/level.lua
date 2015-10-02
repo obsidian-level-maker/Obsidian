@@ -987,6 +987,8 @@ function Levels_make_all()
 
   Levels_episode_names()
 
+  Title_generate()
+
 
   each EPI in GAME.episodes do
     EPISODE = EPI
