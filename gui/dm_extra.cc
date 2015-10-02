@@ -576,7 +576,7 @@ static int FontIndexForChar(char ch)
 		case '\\':
 		case '/': return 44;
 
-				  // does not exist
+		// does not exist
 		default: return -1;
 	}
 }
@@ -599,19 +599,19 @@ static void BlastFontChar(int index, int x, int y,
 	SYS_ASSERT(0 <= y && y+fh <= H);
 
 
-	for (int dy = 0; dy < fh; dy++)
-		for (int dx = 0; dx < fw; dx++)
-		{
-			byte pix = font->data[(fy+dy)*font->width + (fx+dx)];
+	for (int dy = 0 ; dy < fh ; dy++)
+	for (int dx = 0 ; dx < fw ; dx++)
+	{
+		byte pix = font->data[(fy+dy)*font->width + (fx+dx)];
 
-			if (pix < thresh)
-				continue;
+		if (pix < thresh)
+			continue;
 
-			// map pixel
-			pix = map->colors[map->size * (pix-thresh) / (256-thresh)];
+		// map pixel
+		pix = map->colors[map->size * (pix-thresh) / (256-thresh)];
 
-			pixels[(y+dy)*W + (x+dx)] = pix;
-		}
+		pixels[(y+dy)*W + (x+dx)] = pix;
+	}
 }
 
 
@@ -1678,7 +1678,7 @@ static void TitleDrawImage(int x, int y, tga_image_c *img)
 			rgb_color_t pix = img->pixels[dy * img->width + dx];
 
 			if (RGB_ALPHA(pix) & 128)
-				title_pix[y * title_W + x] = img->pixels[dy * img->width + dx];
+				title_pix[y * title_W + nx] = pix;
 		}
 	}
 }
@@ -1723,10 +1723,12 @@ int DM_title_draw_line(lua_State *L)
 
 int DM_title_load_image(lua_State *L)
 {
-	const char *filename = luaL_checkstring(L, 1);
+	// LUA: title_load_image(x, y, filename)
 
-	int x = luaL_checkint(L, 2);
-	int y = luaL_checkint(L, 3);
+	int x = luaL_checkint(L, 1);
+	int y = luaL_checkint(L, 2);
+
+	const char *filename = luaL_checkstring(L, 3);
 
 	// keep the last image cached in memory
 	if (! (title_last_filename && strcmp(title_last_filename, filename) == 0))
