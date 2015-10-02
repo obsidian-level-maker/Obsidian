@@ -26,13 +26,13 @@
 
 TITLE_LETTER_SHAPES =
 {
-  [" "] = 
+  [" "] =
   {
     width = 0.5000
     points = { }
   }
 
-  ["'"] = 
+  ["'"] =
   {
     width = 0.0833
     points =
@@ -44,7 +44,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["-"] = 
+  ["-"] =
   {
     width = 0.3375
     points =
@@ -54,7 +54,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  [":"] = 
+  [":"] =
   {
     width = 0.0833
     points =
@@ -67,7 +67,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["A"] = 
+  ["A"] =
   {
     width = 0.8083
     points =
@@ -81,7 +81,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["B"] = 
+  ["B"] =
   {
     width = 0.5958
     points =
@@ -108,7 +108,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["C"] = 
+  ["C"] =
   {
     width = 0.7542
     points =
@@ -128,7 +128,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["D"] = 
+  ["D"] =
   {
     width = 0.7458
     points =
@@ -148,7 +148,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["E"] = 
+  ["E"] =
   {
     width = 0.5500
     points =
@@ -163,7 +163,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["F"] = 
+  ["F"] =
   {
     width = 0.4792
     points =
@@ -177,7 +177,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["G"] = 
+  ["G"] =
   {
     width = 0.7833
     points =
@@ -200,7 +200,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["H"] = 
+  ["H"] =
   {
     width = 0.6667
     points =
@@ -216,7 +216,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["I"] = 
+  ["I"] =
   {
     width = 0.3333
     points =
@@ -232,7 +232,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["J"] = 
+  ["J"] =
   {
     width = 0.4458
     points =
@@ -249,7 +249,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["K"] = 
+  ["K"] =
   {
     width = 0.5917
     points =
@@ -263,7 +263,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["L"] = 
+  ["L"] =
   {
     width = 0.5292
     points =
@@ -274,7 +274,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["M"] = 
+  ["M"] =
   {
     width = 0.7167
     points =
@@ -289,7 +289,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["N"] = 
+  ["N"] =
   {
     width = 0.6042
     points =
@@ -303,7 +303,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["O"] = 
+  ["O"] =
   {
     width = 0.8250
     points =
@@ -328,7 +328,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["P"] = 
+  ["P"] =
   {
     width = 0.5417
     points =
@@ -346,7 +346,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["Q"] = 
+  ["Q"] =
   {
     width = 0.8250
     points =
@@ -374,7 +374,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["R"] = 
+  ["R"] =
   {
     width = 0.6000
     points =
@@ -397,7 +397,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["S"] = 
+  ["S"] =
   {
     width = 0.6208
     points =
@@ -421,7 +421,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["T"] = 
+  ["T"] =
   {
     width = 0.8333
     points =
@@ -434,7 +434,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["U"] = 
+  ["U"] =
   {
     width = 0.6625
     points =
@@ -453,7 +453,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["V"] = 
+  ["V"] =
   {
     width = 0.8208
     points =
@@ -465,7 +465,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["W"] = 
+  ["W"] =
   {
     width = 1.1292
     points =
@@ -481,7 +481,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["X"] = 
+  ["X"] =
   {
     width = 0.7250
     points =
@@ -494,7 +494,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["Y"] = 
+  ["Y"] =
   {
     width = 0.7125
     points =
@@ -508,7 +508,7 @@ TITLE_LETTER_SHAPES =
     }
   }
 
-  ["Z"] = 
+  ["Z"] =
   {
     width = 0.8292
     points =
@@ -562,7 +562,7 @@ function Title_draw_char(T, ch)
 
   local bx = T.x
   local by = T.y
-  
+
   -- center each letter horizontally
   bx = bx - (info.width * w * 0.5)
 
@@ -610,6 +610,22 @@ end
 
 
 
+function Title_draw_string2(T, str, color1, bw1, color2, bw2)
+  T.color = color1
+  T.bw    = bw1
+  T.bh    = bw1
+
+  Title_draw_string(T, str)
+
+  T.color = color2
+  T.bw    = bw2
+  T.bh    = bw2
+
+  Title_draw_string(T, str)
+end
+
+
+
 function Title_measure_string(T, str)
   T.nodraw = true
   Title_draw_string(T, str)
@@ -637,36 +653,26 @@ function Title_generate()
   gui.title_load_image(0, 0, OB_TITLE_DIR .. "/space1.tga")
 
 
-  local T = { x=30, y=100 }
-
-  T.color = "#f00"
-  T.bw = 6
-  T.bh = 5
+  local T = { x=10, y=100 }
 
   T.w = 30
-  T.h = 50
+  T.h = 40
 
-  Title_draw_string(T, "Oblige Rocks")
-
-  T.color = "#ff0"
-  T.bw = 3
-  T.bh = 2
-
-  Title_draw_string(T, "Oblige Rocks")
+  Title_draw_string2(T, GAME.title, "#f00", 5, "#ff0", 3)
 
 
-for pass = 1, 3 do
-  local style
-  if pass == 1 then
-    style = { color="#000", bw=6, bh=5 }
-  elseif pass == 2 then
-    style = { color="#777", bw=4, bh=3 }
-  else
-    style = { color="#f00", bw=2, bh=1 }
-  end
-end
+  local credit = "Proudly bought to you by OBLIGE"
 
-  -- TODO
+  T =
+  {
+    x = 20
+    y = 192
+    w = 10
+    h = 8
+  }
+
+  Title_draw_string2(T, credit, "#060", 3, "#0f0", 1)
+
 
   gui.title_write("TITLEPIC")
 end
