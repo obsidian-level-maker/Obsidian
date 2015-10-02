@@ -1168,7 +1168,6 @@ namelib.NAMES =
         ["Polygraph"]=10
         ["Pinciple of War"]=10
         ["Pitch Black"]=10
-        ["Point of No Return"] = 10
         ["Primetime Killing"]=10
         ["Punctured"]=10
         ["Quietus"]=10
@@ -1539,12 +1538,10 @@ namelib.NAMES =
         ["Vengeance Denied"] = 10
         ["Where the Devils Spawn"] = 10
 
-        ["Evil Unleashed"] = 10
         ["The Lost Base"] = 10
         ["Hell's Playground"] = 10
         ["Crimson Reprieve"] = 10
         ["Souls of the Damned"] = 10
-        ["Dawn of Eternity"] = 10
         ["In the Face of Armageddon"] = 10
         ["Highway to Hell"] = 10
         ["Time to Bleed"] = 10
@@ -1684,6 +1681,7 @@ namelib.NAMES =
 
       ["Redux"] = 40
       ["Revisited"] = 20
+      ["Reloaded"] = 10
       ["Evil Reborn"] = 20
       ["The Reckoning"] = 40
       ["The Struggle Continues"] = 20
@@ -1693,7 +1691,7 @@ namelib.NAMES =
       -- prequels
       ["Genesis"] = 40
       ["The Awakening"] = 40
-      ["Evil Arises"] = 20
+      ["Evil Unleashed"] = 20
       ["The Dead Shall Rise"] = 20
       ["Where It All Began"] = 10
 
@@ -1701,13 +1699,20 @@ namelib.NAMES =
       ["The Evil Within"] = 20
       ["What Lurks Beneath"] = 20
       ["A God-forsaken Place"] = 20
+      ["A Land In Turmoil"] = 20
+      ["A World Of Horror"] = 20
+      ["The Point Of No Return"] = 10
+      ["Gateway To Hell"] = 10
 
       -- miscellaneous
       ["Final Hour"] = 20
       ["Out of Time"] = 20
       ["Days of Rage"] = 20
       ["No Salvation"] = 20
-      ["A Fight for Survival"] = 20
+      ["A Fight For Survival"] = 20
+      ["A Thirst For Vengeance"] = 20
+      ["Seasons Of Terror"] = 20
+      ["Dawn Of Eternity"] = 20
     }
   }
 }
