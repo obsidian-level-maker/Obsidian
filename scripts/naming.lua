@@ -1672,6 +1672,7 @@ namelib.NAMES =
         Hate = 10
         Desire = 10
         Magic = 15
+        Heroes = 5
       }
     }
   }
