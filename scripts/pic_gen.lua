@@ -632,6 +632,21 @@ end
 
 
 
+function Title_measure_char(ch, w, spacing)
+  if string.match(ch, "[a-z]") then
+    w = w * 0.8
+    ch = string.upper(ch)
+  end
+
+  local info = TITLE_LETTER_SHAPES[ch]
+
+  if not info then return 0 end
+
+  return w * (info.width + (spacing or 0.3))
+end
+
+
+
 function Title_draw_string(T, text)
   T.along = 0
 
@@ -644,12 +659,14 @@ end
 
 
 
-function Title_measure_string(T, text)
-  T.nodraw = true
-  Title_draw_string(T, text)
-  T.nodraw = false
+function Title_measure_string(text, w, spacing)
+  local width = 0
 
-  local width = T.along
+  for i = 1, #text do
+    local ch = string.sub(text, i, i)
+
+    width = width + Title_measure_char(ch, w, spacing)
+  end
 
   return width
 end
