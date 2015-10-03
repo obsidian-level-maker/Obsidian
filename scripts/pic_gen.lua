@@ -557,8 +557,6 @@ TITLE_LETTER_SHAPES =
     bw, bh  -- thickness of drawn strokes
 
     spacing -- optional field, adds onto the info.width field
-
-    nodraw  -- no drawing is done (for measuring width)
 --]]
 
 
@@ -621,9 +619,7 @@ function Title_draw_char(T, ch)
     x1 = T.along + x1 * w ; y1 = y1 * h
     x2 = T.along + x2 * w ; y2 = y2 * h
 
-    if not T.nodraw then
-      Title_make_stroke(T, x1,y1, x2,y2)
-    end
+    Title_make_stroke(T, x1,y1, x2,y2)
   end
 
   -- advance horizontally for next character
