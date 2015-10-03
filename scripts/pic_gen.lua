@@ -672,10 +672,12 @@ function Title_generate()
 
   local CREDIT_LINES =
   {
---  "Proudly bought to you by OBLIGE"
---  "Another great OBLIGE production"
---  "From the foundries of OBLIGE"
-    "Copyright: OBLIGE Level Maker"
+    "Proudly bought to you by OBLIGE"
+    "Another great OBLIGE production"
+    "From the foundries of OBLIGE"
+    "Copyright MMXV: OBLIGE Level Maker"
+    "A new fun-packed wad by OBLIGE"
+    "Revel in the OBLIGE experience"
   }
 
 
