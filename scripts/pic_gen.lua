@@ -554,6 +554,24 @@ TITLE_LETTER_SHAPES =
 --]]
 
 
+function Title_parse_style(T, style)
+  --
+  -- style is 3 hex digits, a '/', followed by two thickness digits
+  --
+  local color_str = string.match("^(\w\w\w)", style)
+  local box_str   = string.match("/(\w\w)", style)
+
+  if not color_str or box_str then
+    error("Title-gen: bad style string: " .. style)
+  end
+
+  T.color = "#" .. color_str
+
+  T.bw = 0 + string.sub(box_str, 1, 1)
+  T.bh = 0 + string.sub(box_str, 2, 2)
+end
+
+
 function Title_draw_char(T, ch)
   -- we draw lowercase characters as smaller uppercase ones
   local w = T.w
@@ -599,8 +617,8 @@ function Title_draw_char(T, ch)
     end
   end
 
-  -- return new X coordinate for next character
-  return T.x + w * info.width * 1.45
+  -- set new X coordinate for next character
+  T.x = T.x + w * info.width * (T.spacing or 1.4)
 end
 
 
@@ -611,7 +629,7 @@ function Title_draw_string(T, str)
   for i = 1, #str do
     local ch = string.sub(str, i, i)
 
-    T.x = Title_draw_char(T, ch)
+    Title_draw_char(T, ch)
   end
 
   T.new_x = T.x
@@ -691,7 +709,7 @@ function Title_generate()
     h = 7
   }
 
-  Title_draw_string2(T, credit, "#666", 3, "#ccc", 1)
+  Title_draw_string2(T, credit, "#333", 3, "#ccc", 1)
 
 
   gui.title_load_image(282, 162, OB_TITLE_DIR .. "/logo1.tga")
