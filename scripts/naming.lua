@@ -1574,10 +1574,6 @@ namelib.NAMES =
 
   TITLE =
   {
--- IDEAS:
--- curse of X
--- X forever
-
     patterns =
     {
       -- <adj> <place>  e.g. dark dimension
@@ -1599,16 +1595,16 @@ namelib.NAMES =
         Dark = 20
         Menacing = 20
         Cold = 10
-        Savage = 20
+        Savage = 30
         Deathly = 20
         Strange = 10
 
+        Evil = 50
         Monstrous = 15
         Demonic = 15
         Infested = 15
         Doomed = 10
         Forsaken = 10
-        Evil = 20
 
         Morbid = 20
         Lonely = 10
