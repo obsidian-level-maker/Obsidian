@@ -539,8 +539,13 @@ TITLE_LETTER_SHAPES =
 
 --struct TRANSFORM
 --[[
-    x, y    -- coord where next character will be drawn
-            -- y is the baseline
+    x, y    -- reference coord for transform function
+            -- e.g. x is left coord, y is the baseline
+
+    func    -- function(T, x, y) to transform a coord
+
+    curved  -- true if lines will be bent (become curved), which
+            -- means we need to split them into small segments
 
     along   -- current horizontal position when drawing a string
             -- starts at 0
@@ -557,11 +562,28 @@ TITLE_LETTER_SHAPES =
 --]]
 
 
-function Title_make_stroke(T, x1,y1, x2,y2)
+function Title_get_normal_transform(x, y, w, h)
+  local T =
+  {
+    x = x
+    y = y
+    w = w
+    h = h
+  }
 
   -- simplest transform: a pure translation
-  x1 = x1 + T.x ; y1 = T.y - y1
-  x2 = x2 + T.x ; y2 = T.y - y2
+  T.func = function(T, x, y)
+    return T.x + x, T.y - y
+  end
+
+  return T
+end
+
+
+
+function Title_make_stroke(T, x1,y1, x2,y2)
+  x1, y1 = T.func(T, x1, y1)
+  x2, y2 = T.func(T, x2, y2)
 
   gui.title_draw_line(x1, y1, x2, y2, T.color, T.bw, T.bh)
 end
@@ -688,13 +710,7 @@ end
 function Title_add_main_title(sub_type)
   -- the 'sub_type' can be "none", "version", "phrase"
 
-  local T =
-  {
-    x = 10
-    y = 100
-    w = 30
-    h = 40
-  }
+  local T = Title_get_normal_transform(0, 100, 30, 40)
 
   Title_styled_string(T, GAME.title, {"f00:55", "ff0:33"} )
 end
@@ -720,13 +736,7 @@ function Title_add_credit()
 
   local credit = rand.pick(CREDIT_LINES)
 
-  local T =
-  {
-    x = 10
-    y = 192
-    w = 9
-    h = 8
-  }
+  local T = Title_get_normal_transform(10, 192, 9, 8)
 
   Title_styled_string(T, credit, {"333:33", "bbb:11"} )
 
