@@ -548,28 +548,12 @@ TITLE_LETTER_SHAPES =
 
     bw, bh  -- thickness of drawn strokes
 
+    spacing -- optional field, multiplier of 'w' for spacing
+
     nodraw  -- no drawing is done (for measuring width)
 
     new_x   -- position after Title_draw_string()
 --]]
-
-
-function Title_parse_style(T, style)
-  --
-  -- style is 3 hex digits, a '/', followed by two thickness digits
-  --
-  local color_str = string.match("^(\w\w\w)", style)
-  local box_str   = string.match("/(\w\w)", style)
-
-  if not color_str or box_str then
-    error("Title-gen: bad style string: " .. style)
-  end
-
-  T.color = "#" .. color_str
-
-  T.bw = 0 + string.sub(box_str, 1, 1)
-  T.bh = 0 + string.sub(box_str, 2, 2)
-end
 
 
 function Title_draw_char(T, ch)
@@ -623,11 +607,11 @@ end
 
 
 
-function Title_draw_string(T, str)
+function Title_draw_string(T, text)
   local old_x = T.x
 
-  for i = 1, #str do
-    local ch = string.sub(str, i, i)
+  for i = 1, #text do
+    local ch = string.sub(text, i, i)
 
     Title_draw_char(T, ch)
   end
@@ -638,31 +622,46 @@ end
 
 
 
-function Title_draw_string2(T, str, color1, bw1, color2, bw2)
-  T.color = color1
-  T.bw    = bw1
-  T.bh    = bw1
-
-  Title_draw_string(T, str)
-
-  T.color = color2
-  T.bw    = bw2
-  T.bh    = bw2
-
-  Title_draw_string(T, str)
-end
-
-
-
-function Title_measure_string(T, str)
+function Title_measure_string(T, text)
   T.nodraw = true
-  Title_draw_string(T, str)
+  Title_draw_string(T, text)
   T.nodraw = false
 
   local width = T.new_x - T.x
 
   return width
 end
+
+
+
+function Title_parse_style(T, style)
+  --
+  -- style is 3 hex digits, a ':', then two thickness digits
+  --
+  local color_str = string.match(style, "(%w%w%w):")
+  local box_str   = string.match(style, ":(%w%w)")
+
+  if color_str == nil or box_str == nil then
+    error("Title-gen: bad style string: " .. style)
+  end
+
+  T.color = "#" .. color_str
+
+  T.bw = 0 + string.sub(box_str, 1, 1)
+  T.bh = 0 + string.sub(box_str, 2, 2)
+end
+
+
+
+function Title_styled_string(T, text, styles)
+  each style in styles do
+    Title_parse_style(T, style)
+    Title_draw_string(T, text)
+  end
+end
+
+
+------------------------------------------------------------------------
 
 
 function Title_generate()
@@ -685,7 +684,7 @@ function Title_generate()
   T.w = 30
   T.h = 40
 
-  Title_draw_string2(T, GAME.title, "#f00", 5, "#ff0", 3)
+  Title_styled_string(T, GAME.title, {"f00:55", "ff0:33"} )
 
 
   local CREDIT_LINES =
@@ -709,7 +708,7 @@ function Title_generate()
     h = 7
   }
 
-  Title_draw_string2(T, credit, "#333", 3, "#ccc", 1)
+  Title_styled_string(T, credit, {"333:33", "ccc:11"} )
 
 
   gui.title_load_image(282, 162, OB_TITLE_DIR .. "/logo1.tga")
