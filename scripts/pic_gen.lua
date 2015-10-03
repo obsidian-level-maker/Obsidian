@@ -719,6 +719,9 @@ function Title_add_background()
     landscape1 = 20
     landscape2 = 20
     landscape3 = 50
+
+    frozen = 25
+    wiztower = 50
   }
 
   local name = rand.key_by_probs(BACKGROUNDS)
