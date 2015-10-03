@@ -663,9 +663,11 @@ end
 
 function Levels_episode_names()
   -- game name
-  GAME.title = Naming_grab_one("TITLE")
+  GAME.title     = Naming_grab_one("TITLE")
+  GAME.sub_title = Naming_grab_one("SUB_TITLE")
 
   gui.printf("Game title: %s\n\n", GAME.title)
+  gui.printf("Game sub-title: %s\n\n", GAME.sub_title)
 
   each EPI in GAME.episodes do
     -- only generate names for used episodes
