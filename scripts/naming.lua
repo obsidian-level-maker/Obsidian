@@ -1574,6 +1574,10 @@ namelib.NAMES =
 
   TITLE =
   {
+-- IDEAS:
+-- curse of X
+-- X forever
+
     patterns =
     {
       -- <adj> <place>  e.g. dark dimension
@@ -1583,18 +1587,9 @@ namelib.NAMES =
       ["%a %d"] = 40
 
       -- <place> of <desc>  e.g. city of souls
-      ["%p of %d"] = 30
+      ["%p of %d"] = 40
 
--- IDEAS:
--- curse of X
--- X reborn/revisited/reloaded/redux/  |  return to X  back to X
--- <adj> <game> [II]  e.g. fantastic doom
--- X island
--- X forever
--- X: genesis
--- X: the Y-ing   (reckon,awaken,etc)
-
-      ["beyond the %p"] = 2
+      ["Beyond the %p"] = 2
     }
 
     lexicon =
@@ -1603,44 +1598,62 @@ namelib.NAMES =
       {
         Dark = 20
         Menacing = 20
-        Cold = 20
+        Cold = 10
         Savage = 20
         Deathly = 20
         Strange = 10
 
-        Monstrous = 10
-        Demonic = 10
-        Infested = 10
-        Doomed = 5
-        Hateful = 5
-        Forsaken = 15
-        Evil = 10
+        Monstrous = 15
+        Demonic = 15
+        Infested = 15
+        Doomed = 10
+        Forsaken = 10
+        Evil = 20
+
+        Morbid = 20
+        Lonely = 10
+        Weird = 10
+        Endless = 20
+        Gory = 10
+
+        Fatal = 10
+        Lost  = 10
+        Fetid = 5
+        Cursed = 10
+        Cruel = 10
       }
 
       p =
       {
         Citadel = 15
-        City = 15
+        City = 20
         Ghetto = 15
         Towers = 15
-        Kingdom = 7
+        Kingdom = 10
 
         World = 10
         Planet = 5
         Realm = 10
-        Shores = 30
+        Shores = 20
         Land = 10
         Fields = 15
 
-        Crypt = 5
+        Crypt = 10
         Dungeons = 10
         Underworld = 10
         Dimension = 20
 
-        Facility = 5
+        Bases = 10
+        Facility = 10
         Complex = 10
         Domain = 10
-        House = 5
+        House = 10
+
+        Island = 10
+        Mazes = 5
+        Cult = 10
+        Ruins = 10
+        Caverns = 10
       }
 
       d =
@@ -1657,6 +1670,12 @@ namelib.NAMES =
         Fear = 20
         Flames = 20
         Doom = 10
+
+        Dreams = 20
+        Souls = 10
+        Hate = 10
+        Desire = 10
+        Magic = 15
       }
     }
   }
@@ -1671,59 +1690,65 @@ namelib.NAMES =
 
     lexicon =
     {
-      -- sequels
-      ["II"]  = 100
-      ["III"] = 100
-      ["IV"]  = 40
-      ["VI"]  = 10
-      ["XII"] = 10
+      s =
+      {
+        -- sequels
+        ["II"]  = 100
+        ["III"] = 100
+        ["IV"]  = 40
+        ["VI"]  = 10
+        ["XII"] = 10
 
-      ["Redux"] = 20
-      ["Resurrection"] = 30
-      ["Revisited"] = 10
-      ["Reloaded"] = 10
-      ["Evil Reborn"] = 20
+        ["Second Edition"] = 20
+        ["REDUX"] = 20
+        ["Revisited"] = 10
+        ["Reloaded"] = 10
+        ["Evil Is Reborn"] = 20
 
-      ["The Reckoning"] = 40
-      ["The Struggle Continues"] = 20
-      ["The Endless Fight"] = 20
-      ["The Demons Are Back"] = 20
-      ["Everlasting Bloodshed"] = 20
+        ["A New Generation"] = 40
+        ["The Resurrection"] = 30
+        ["The Reckoning"] = 40
+        ["The Struggle Continues"] = 20
+        ["The Endless Fight"] = 20
+        ["The Demons Are Back"] = 20
+        ["Everlasting Bloodshed"] = 20
 
-      -- prequels
-      ["Genesis"] = 40
-      ["The Awakening"] = 40
-      ["Evil Unleashed"] = 20
-      ["The Dead Shall Rise"] = 20
-      ["Where It All Began"] = 20
-      ["Dawn Of Eternity"] = 20
-      ["The Invasion Begins"] = 20
-      ["The Prophecy Unfolds"] = 20
+        -- prequels
+        ["Genesis"] = 40
+        ["The Awakening"] = 40
+        ["Evil Unleashed"] = 20
+        ["The Dead Shall Rise"] = 20
+        ["Where It All Began"] = 20
+        ["Dawn Of Eternity"] = 20
+        ["The Invasion Begins"] = 20
+        ["The Prophecy Unfolds"] = 20
 
-      -- describe the place
-      ["The Evil Within"] = 20
-      ["What Lurks Beneath"] = 20
-      ["A God-forsaken Place"] = 20
-      ["A Land In Turmoil"] = 20
-      ["An All-Pervasive Horror"] = 20
-      ["The Point Of No Return"] = 20
-      ["Gateway To Hell"] = 20
-      ["Where the Devils Spawn"] = 20
+        -- describe the place
+        ["The Evil Within"] = 20
+        ["What Lurks Beneath"] = 20
+        ["A God-forsaken Place"] = 20
+        ["A Land In Turmoil"] = 20
+        ["An All-Pervasive Horror"] = 20
+        ["The Point Of No Return"] = 20
+        ["Gateway To Hell"] = 20
+        ["Where the Devils Spawn"] = 20
 
-      -- miscellaneous
-      ["Final Hour"] = 20
-      ["Out Of Time"] = 20
-      ["Days Of Rage"] = 20
-      ["No Salvation"] = 20
-      ["A Fight For Survival"] = 20
-      ["A Thirst For Vengeance"] = 20
-      ["Seasons Of Terror"] = 20
+        -- miscellaneous
+        ["Final Hour"] = 20
+        ["Out Of Time"] = 20
+        ["Days Of Rage"] = 20
+        ["No Salvation"] = 20
+        ["A Fight For Survival"] = 20
+        ["A Thirst For Vengeance"] = 20
+        ["A Season Of Vile Things"] = 20
 
-      ["The Brink Of Disaster"] = 20
-      ["The Apocalypse Has Come"] = 20
-      ["Nowhere Is Safe"] = 20
-      ["The Seeds Of War"] = 20
-      ["The Will To Survive"] = 20
+        ["On The Brink Of Disaster"] = 20
+        ["The Apocalypse Has Come"] = 20
+        ["Nobody Is Safe"] = 10
+        ["Nowhere Is Safe"] = 10
+        ["The Seeds Of War"] = 20
+        ["The Will To Survive"] = 20
+      }
     }
   }
   -- end of 'TITLE' and 'SUB_TITLE' themes
