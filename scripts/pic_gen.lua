@@ -705,12 +705,20 @@ OB_TITLE_DIR = ""
 function Title_add_background()
   local BACKGROUNDS =
   {
-    space1 = 50
+    space1 = 15
     space2 = 50
+    space3 = 50
+    space4 = 50
 
     hell_1 = 50
+    hell_2 = 50
+    hell_3 = 50
 
     cave1  = 50
+
+    landscape1 = 20
+    landscape2 = 20
+    landscape3 = 50
   }
 
   local name = rand.key_by_probs(BACKGROUNDS)
