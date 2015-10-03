@@ -1698,13 +1698,14 @@ namelib.NAMES =
       ["Where It All Began"] = 20
       ["Dawn Of Eternity"] = 20
       ["The Invasion Begins"] = 20
+      ["The Prophecy Unfolds"] = 20
 
       -- describe the place
       ["The Evil Within"] = 20
       ["What Lurks Beneath"] = 20
       ["A God-forsaken Place"] = 20
       ["A Land In Turmoil"] = 20
-      ["A World Of Horror"] = 20
+      ["An All-Pervasive Horror"] = 20
       ["The Point Of No Return"] = 20
       ["Gateway To Hell"] = 20
       ["Where the Devils Spawn"] = 20
