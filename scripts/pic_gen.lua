@@ -548,7 +548,7 @@ TITLE_LETTER_SHAPES =
 
     bw, bh  -- thickness of drawn strokes
 
-    spacing -- optional field, multiplier of 'w' for spacing
+    spacing -- optional field, adds onto the info.width field
 
     nodraw  -- no drawing is done (for measuring width)
 
@@ -570,13 +570,10 @@ function Title_draw_char(T, ch)
 
   local info = TITLE_LETTER_SHAPES[ch]
 
-  if not info then return T.x end
+  if not info then return end
 
   local bx = T.x
   local by = T.y
-
-  -- center each letter horizontally
-  bx = bx - (info.width * w * 0.5)
 
 
   -- draw the lines --
@@ -602,7 +599,7 @@ function Title_draw_char(T, ch)
   end
 
   -- set new X coordinate for next character
-  T.x = T.x + w * info.width * (T.spacing or 1.4)
+  T.x = T.x + w * (info.width + (T.spacing or 0.3))
 end
 
 
@@ -703,12 +700,12 @@ function Title_generate()
   T =
   {
     x = 10
-    y = 190
+    y = 192
     w = 9
-    h = 7
+    h = 8
   }
 
-  Title_styled_string(T, credit, {"333:33", "ccc:11"} )
+  Title_styled_string(T, credit, {"333:33", "bbb:11"} )
 
 
   gui.title_load_image(282, 162, OB_TITLE_DIR .. "/logo1.tga")
