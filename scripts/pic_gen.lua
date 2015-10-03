@@ -542,6 +542,9 @@ TITLE_LETTER_SHAPES =
     x, y    -- coord where next character will be drawn
             -- y is the baseline
 
+    along   -- current horizontal position when drawing a string
+            -- starts at 0
+
     w, h    -- size of characters
 
     color   -- color to draw the characters
@@ -551,9 +554,18 @@ TITLE_LETTER_SHAPES =
     spacing -- optional field, adds onto the info.width field
 
     nodraw  -- no drawing is done (for measuring width)
-
-    new_x   -- position after Title_draw_string()
 --]]
+
+
+function Title_make_stroke(T, x1,y1, x2,y2)
+
+  -- simplest transform: a pure translation
+  x1 = x1 + T.x ; y1 = T.y - y1
+  x2 = x2 + T.x ; y2 = T.y - y2
+
+  gui.title_draw_line(x1, y1, x2, y2, T.color, T.bw, T.bh)
+end
+
 
 
 function Title_draw_char(T, ch)
@@ -572,9 +584,6 @@ function Title_draw_char(T, ch)
 
   if not info then return end
 
-  local bx = T.x
-  local by = T.y
-
 
   -- draw the lines --
 
@@ -587,34 +596,28 @@ function Title_draw_char(T, ch)
 
     if not x1 or not x2 then continue end
 
-    x1 = T.x + x1 * w
-    x2 = T.x + x2 * w
-
-    y1 = T.y - y1 * h
-    y2 = T.y - y2 * h
+    x1 = T.along + x1 * w ; y1 = y1 * h
+    x2 = T.along + x2 * w ; y2 = y2 * h
 
     if not T.nodraw then
-      gui.title_draw_line(x1, y1, x2, y2, T.color, T.bw, T.bh)
+      Title_make_stroke(T, x1,y1, x2,y2)
     end
   end
 
-  -- set new X coordinate for next character
-  T.x = T.x + w * (info.width + (T.spacing or 0.3))
+  -- advance horizontally for next character
+  T.along = T.along + w * (info.width + (T.spacing or 0.3))
 end
 
 
 
 function Title_draw_string(T, text)
-  local old_x = T.x
+  T.along = 0
 
   for i = 1, #text do
     local ch = string.sub(text, i, i)
 
     Title_draw_char(T, ch)
   end
-
-  T.new_x = T.x
-  T.x     = old_x
 end
 
 
@@ -624,7 +627,7 @@ function Title_measure_string(T, text)
   Title_draw_string(T, text)
   T.nodraw = false
 
-  local width = T.new_x - T.x
+  local width = T.along
 
   return width
 end
