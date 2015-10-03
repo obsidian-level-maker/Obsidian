@@ -1536,7 +1536,6 @@ namelib.NAMES =
         ["Pulse of Depravity"] = 10
         ["Say Thy Prayers!"] = 10
         ["Vengeance Denied"] = 10
-        ["Where the Devils Spawn"] = 10
 
         ["The Lost Base"] = 10
         ["Hell's Playground"] = 10
@@ -1673,19 +1672,22 @@ namelib.NAMES =
     lexicon =
     {
       -- sequels
-      ["II"]  = 80
-      ["III"] = 60
-      ["IV"]  = 20
+      ["II"]  = 100
+      ["III"] = 100
+      ["IV"]  = 40
       ["VI"]  = 10
       ["XII"] = 10
 
-      ["Redux"] = 40
-      ["Revisited"] = 20
+      ["Redux"] = 20
+      ["Resurrection"] = 30
+      ["Revisited"] = 10
       ["Reloaded"] = 10
       ["Evil Reborn"] = 20
+
       ["The Reckoning"] = 40
       ["The Struggle Continues"] = 20
       ["The Endless Fight"] = 20
+      ["The Demons Are Back"] = 20
       ["Everlasting Bloodshed"] = 20
 
       -- prequels
@@ -1693,7 +1695,9 @@ namelib.NAMES =
       ["The Awakening"] = 40
       ["Evil Unleashed"] = 20
       ["The Dead Shall Rise"] = 20
-      ["Where It All Began"] = 10
+      ["Where It All Began"] = 20
+      ["Dawn Of Eternity"] = 20
+      ["The Invasion Begins"] = 20
 
       -- describe the place
       ["The Evil Within"] = 20
@@ -1701,20 +1705,27 @@ namelib.NAMES =
       ["A God-forsaken Place"] = 20
       ["A Land In Turmoil"] = 20
       ["A World Of Horror"] = 20
-      ["The Point Of No Return"] = 10
-      ["Gateway To Hell"] = 10
+      ["The Point Of No Return"] = 20
+      ["Gateway To Hell"] = 20
+      ["Where the Devils Spawn"] = 20
 
       -- miscellaneous
       ["Final Hour"] = 20
-      ["Out of Time"] = 20
-      ["Days of Rage"] = 20
+      ["Out Of Time"] = 20
+      ["Days Of Rage"] = 20
       ["No Salvation"] = 20
       ["A Fight For Survival"] = 20
       ["A Thirst For Vengeance"] = 20
       ["Seasons Of Terror"] = 20
-      ["Dawn Of Eternity"] = 20
+
+      ["The Brink Of Disaster"] = 20
+      ["The Apocalypse Has Come"] = 20
+      ["Nowhere Is Safe"] = 20
+      ["The Seeds Of War"] = 20
+      ["The Will To Survive"] = 20
     }
   }
+  -- end of 'TITLE' and 'SUB_TITLE' themes
 }
 
 
