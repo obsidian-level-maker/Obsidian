@@ -664,6 +664,77 @@ end
 ------------------------------------------------------------------------
 
 
+OB_TITLE_DIR = ""
+
+
+function Title_add_background()
+  local BACKGROUNDS =
+  {
+    space1 = 50
+    space2 = 50
+
+    hell_1 = 50
+
+    cave1  = 50
+  }
+
+  local name = rand.key_by_probs(BACKGROUNDS)
+
+  gui.title_load_image(0, 0, OB_TITLE_DIR .. "/" .. name .. ".tga")
+end
+
+
+
+function Title_add_main_title(sub_type)
+  -- the 'sub_type' can be "none", "version", "phrase"
+
+  local T =
+  {
+    x = 10
+    y = 100
+    w = 30
+    h = 40
+  }
+
+  Title_styled_string(T, GAME.title, {"f00:55", "ff0:33"} )
+end
+
+
+
+function Title_add_sub_title()
+  -- TODO
+end
+
+
+
+function Title_add_credit()
+  local CREDIT_LINES =
+  {
+    "Proudly bought to you by OBLIGE"
+    "Another great OBLIGE production"
+    "From the foundries of OBLIGE"
+    "Copyright MMXV: OBLIGE Level Maker"
+    "A new fun-packed wad by OBLIGE"
+    "Revel in the OBLIGE experience"
+  }
+
+  local credit = rand.pick(CREDIT_LINES)
+
+  local T =
+  {
+    x = 10
+    y = 192
+    w = 9
+    h = 8
+  }
+
+  Title_styled_string(T, credit, {"333:33", "bbb:11"} )
+
+  gui.title_load_image(282, 162, OB_TITLE_DIR .. "/logo1.tga")
+end
+
+
+
 function Title_generate()
   assert(GAME.title)
   assert(GAME.PALETTES)
@@ -676,43 +747,10 @@ function Title_generate()
 
   OB_TITLE_DIR = gui.get_install_dir() .. "/data/titles"
 
-  gui.title_load_image(0, 0, OB_TITLE_DIR .. "/space2.tga")
-
-
-  local T = { x=10, y=100 }
-
-  T.w = 30
-  T.h = 40
-
-  Title_styled_string(T, GAME.title, {"f00:55", "ff0:33"} )
-
-
-  local CREDIT_LINES =
-  {
-    "Proudly bought to you by OBLIGE"
-    "Another great OBLIGE production"
-    "From the foundries of OBLIGE"
-    "Copyright MMXV: OBLIGE Level Maker"
-    "A new fun-packed wad by OBLIGE"
-    "Revel in the OBLIGE experience"
-  }
-
-
-  local credit = rand.pick(CREDIT_LINES)
-
-  T =
-  {
-    x = 10
-    y = 192
-    w = 9
-    h = 8
-  }
-
-  Title_styled_string(T, credit, {"333:33", "bbb:11"} )
-
-
-  gui.title_load_image(282, 162, OB_TITLE_DIR .. "/logo1.tga")
-
+  Title_add_background()
+  Title_add_credit()
+  Title_add_main_title("none")
+  Title_add_sub_title()
 
   gui.title_write("TITLEPIC")
 end
