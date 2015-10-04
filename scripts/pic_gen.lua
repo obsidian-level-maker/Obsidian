@@ -705,7 +705,7 @@ OB_TITLE_DIR = ""
 function Title_add_background()
   local BACKGROUNDS =
   {
-    space1 = 15
+    space1 = 10
     space2 = 50
     space3 = 50
     space4 = 50
@@ -714,14 +714,19 @@ function Title_add_background()
     hell_2 = 50
     hell_3 = 50
 
-    cave1  = 50
+    city1 = 50
+    cave1 = 50
 
     landscape1 = 20
     landscape2 = 20
     landscape3 = 50
 
-    frozen = 25
+    frozen = 20
     wiztower = 50
+    swamp = 10
+    necro = 20
+    crowprin = 10
+    darknight = 10
   }
 
   local name = rand.key_by_probs(BACKGROUNDS)
@@ -734,7 +739,7 @@ end
 function Title_add_main_title(sub_type)
   -- the 'sub_type' can be "none", "version", "phrase"
 
-  local T = Title_get_normal_transform(0, 100, 30, 40)
+  local T = Title_get_normal_transform(40, 100, 25, 30)
 
   Title_styled_string(T, GAME.title, {"f00:55", "ff0:33"} )
 end
