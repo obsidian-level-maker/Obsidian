@@ -741,8 +741,8 @@ end
 
 
 
-function Title_add_main_title(sub_type)
-  -- the 'sub_type' can be "none", "version", "phrase"
+function Title_add_main_title()
+  -- TODO improve this
 
   local T = Title_get_normal_transform(40, 100, 25, 30)
 
@@ -768,11 +768,21 @@ function Title_add_credit()
     "Revel in the OBLIGE experience"
   }
 
+  local CREDIT_STYLES =
+  {
+    {"333:33", "bbb:11"}
+    {"321:33", "db4:11"}
+    {"030:33", "4c4:11"}
+    {"004:33", "88f:11"}
+    {"000:33", "d77:11"}
+  }
+
   local credit = rand.pick(CREDIT_LINES)
+  local styles = rand.pick(CREDIT_STYLES)
 
-  local T = Title_get_normal_transform(10, 192, 9, 8)
+  local T = Title_get_normal_transform(10, 192, 9, 7)
 
-  Title_styled_string(T, credit, {"333:33", "bbb:11"} )
+  Title_styled_string(T, credit, styles)
 
   gui.title_load_image(282, 162, OB_TITLE_DIR .. "/logo1.tga")
 end
@@ -784,16 +794,19 @@ function Title_generate()
   assert(GAME.PALETTES)
   assert(GAME.PALETTES.normal)
 
+  OB_TITLE_DIR = gui.get_install_dir() .. "/data/titles"
+
+
   gui.title_create(320, 200, "#000")
 
   gui.title_set_palette(GAME.PALETTES.normal)
 
+  GAME.have_sub_title = rand.odds(66)
 
-  OB_TITLE_DIR = gui.get_install_dir() .. "/data/titles"
 
   Title_add_background()
   Title_add_credit()
-  Title_add_main_title("none")
+  Title_add_main_title()
   Title_add_sub_title()
 
   gui.title_write("TITLEPIC")
