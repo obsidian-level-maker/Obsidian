@@ -80,6 +80,19 @@ ideas for improvements (etc), both in email and on the forums.
 Your input has been greatly appreciated!
 
 
+TITLE ARTWORK:
+
+city1.tga: by Sergei Churbanov, under CC-BY 3.0 license.
+
+city3.tga: by Emil Persson, under CC-BY 3.0 license.
+
+crowprin.tga: by dogchicken (user on OGA), under CC-BY 3.0 license.
+
+necro.tga: by kirill777 (user on OGA), under CC-BY 3.0 license.
+
+(All other title artwork is under CC0 license / public domain)
+
+
 NOTES:
 
 OBLIGE was written from scratch. It does not contain any code
