@@ -706,25 +706,30 @@ function Title_add_background()
   local BACKGROUNDS =
   {
     space1 = 10
-    space2 = 50
-    space3 = 50
-    space4 = 50
+    space2 = 40
+    space3 = 40
+    space4 = 40
 
-    hell_1 = 50
-    hell_2 = 50
-    hell_3 = 50
+    hell_1 = 40
+    hell_2 = 40
+    hell_3 = 40
 
-    city1 = 50
-    cave1 = 50
+    city1 = 40
+    city2 = 20
+    city3 = 40
+
+    cave1 = 40
 
     landscape1 = 20
     landscape2 = 20
-    landscape3 = 50
+    landscape3 = 40
 
-    frozen = 20
-    wiztower = 50
-    swamp = 10
+    frozen1 = 20
+    frozen2 = 40
+
+    wiztower = 40
     necro = 20
+    swamp = 10
     crowprin = 10
     darknight = 10
   }
