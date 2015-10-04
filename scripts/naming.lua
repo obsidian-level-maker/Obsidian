@@ -1690,14 +1690,14 @@ namelib.NAMES =
       s =
       {
         -- sequels
-        ["II"]  = 100
-        ["III"] = 100
+        ["II"]  = 80
+        ["III"] = 80
         ["IV"]  = 40
         ["VI"]  = 10
         ["XII"] = 10
 
         ["Second Edition"] = 20
-        ["REDUX"] = 20
+        ["REDUX"] = 10
         ["Revisited"] = 10
         ["Reloaded"] = 10
         ["Evil Is Reborn"] = 20
