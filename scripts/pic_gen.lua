@@ -741,18 +741,57 @@ end
 
 
 
-function Title_add_main_title()
+function Title_add_title_and_sub()
   -- TODO improve this
 
-  local T = Title_get_normal_transform(40, 100, 25, 30)
 
-  Title_styled_string(T, GAME.title, {"f00:55", "ff0:33"} )
-end
+  -- determine what kind of sub-title we will draw (if any)
+  local sub_title_mode = "none"
+
+  if rand.odds(66) then
+    sub_title_mode = "phrase"
+
+    if #GAME.sub_title <= 5 and string.upper(GAME.sub_title) == GAME.sub_title then
+      sub_title_mode = "version"
+    end
+  end
 
 
 
-function Title_add_sub_title()
-  -- TODO
+  local TITLE_STYLES =
+  {
+--  { "f00:55", "ff0:33" }
+--  { "ff0:55", "f00:33" }
+
+--  { "ccc:77", "000:55" }
+
+    {
+      styles  = { "999:77", "000:55" }
+      version = { "000:77", "bbb:44" }
+
+      spacing = 0.45
+    }
+
+--[[
+    {
+      styles  = { "f0f:77", "007:55" }
+      version = { "ff6:77", "707:55" }
+
+      spacing = 0.4
+    }
+--]]
+  }
+
+  local info = rand.pick(TITLE_STYLES)
+
+  local width = Title_measure_string(GAME.title, 30, info.spacing)
+
+
+  local T = Title_get_normal_transform(10, 100, 20, 45)
+
+  if info.spacing then T.spacing = info.spacing end
+
+  Title_styled_string(T, GAME.title, info.styles)
 end
 
 
@@ -760,12 +799,12 @@ end
 function Title_add_credit()
   local CREDIT_LINES =
   {
-    "Proudly bought to you by OBLIGE"
-    "Another great OBLIGE production"
-    "Fresh from the studios of OBLIGE"
-    "Copyright MMXV: OBLIGE Level Maker"
-    "A new fun-packed wad by OBLIGE"
-    "Revel in the OBLIGE experience"
+    "proudly bought to you by OBLIGE"
+    "another great OBLIGE production"
+    "fresh from the studios of OBLIGE"
+    "copyright MMXV: OBLIGE Level Maker"
+    "a new fun-packed wad by OBLIGE"
+    "revel in the OBLIGE experience"
   }
 
   local CREDIT_STYLES =
@@ -801,13 +840,10 @@ function Title_generate()
 
   gui.title_set_palette(GAME.PALETTES.normal)
 
-  GAME.have_sub_title = rand.odds(66)
-
 
   Title_add_background()
   Title_add_credit()
-  Title_add_main_title()
-  Title_add_sub_title()
+  Title_add_title_and_sub()
 
   gui.title_write("TITLEPIC")
 end
