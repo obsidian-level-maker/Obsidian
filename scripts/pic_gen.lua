@@ -780,7 +780,7 @@ function Title_add_credit()
   local credit = rand.pick(CREDIT_LINES)
   local styles = rand.pick(CREDIT_STYLES)
 
-  local T = Title_get_normal_transform(10, 192, 9, 7)
+  local T = Title_get_normal_transform(6, 196, 9, 7)
 
   Title_styled_string(T, credit, styles)
 
