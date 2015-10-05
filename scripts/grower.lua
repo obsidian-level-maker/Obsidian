@@ -1049,10 +1049,12 @@ function Grower_grow_trunk(is_first)
       end
     end
 
+--[[ DEBUG
 stderrf("  calc transform for %s...\n", def.name)
 stderrf("    rotate:%d  mirror:%s  \n", tostring(T.rotate), tostring(T.mirror))
 stderrf("    entry_conn.dir:%d  transformed --> %d  sprout.dir:%d\n",
 entry_conn.dir, transform_dir(T, entry_conn.dir), P.dir)
+--]]
 
     assert(transform_dir(T, entry_conn.dir) == 10 - P.dir)
 
@@ -1077,14 +1079,14 @@ entry_conn.dir, transform_dir(T, entry_conn.dir), P.dir)
       conn_x, conn_y = geom.nudge(conn_x, conn_y, geom.RIGHT[entry_conn.dir], entry_conn.long - 1)
     end
  
-stderrf("    adjusted entry_conn: (%d %d)\n", conn_x, conn_y)
+--stderrf("    adjusted entry_conn: (%d %d)\n", conn_x, conn_y)
 
     local dx, dy = transform_coord(T, conn_x, conn_y)
 
     T.x = PN.sx - dx
     T.y = PN.sy - dy
 
-stderrf("    delta: (%d %d) ----> add pos (%d %d)\n", dx, dy, T.x, T.y)
+--stderrf("    delta: (%d %d) ----> add pos (%d %d)\n", dx, dy, T.x, T.y)
 
     return T
   end
@@ -1092,7 +1094,7 @@ stderrf("    delta: (%d %d) ----> add pos (%d %d)\n", dx, dy, T.x, T.y)
 
   local function install_half_seed(T, S, elem)
     if elem.kind == "fluff" then
-stderrf("Installing fluff.....\n")
+--stderrf("Installing fluff.....\n")
       S.fluff_room = assert(cur_room)
       return
     end
@@ -1214,7 +1216,7 @@ stderrf("Installing fluff.....\n")
         sx, sy = geom.nudge(sx, sy, geom.LEFT[dir], conn.long - 1)
       end
 
-stderrf("  adding sprout at (%d %d) dir:%d\n", sx, sy, dir)
+--stderrf("  adding sprout at (%d %d) dir:%d\n", sx, sy, dir)
 
       assert(Seed_valid(sx, sy))
       local S = SEEDS[sx][sy]
@@ -1371,13 +1373,13 @@ end
 
 
   local function try_add_tile(P, def, conn_set)
-stderrf("try_add_tile '%s'  @ %s dir:%d\n", def.name, P.S:tostr(), P.dir)
+--stderrf("try_add_tile '%s'  @ %s dir:%d\n", def.name, P.S:tostr(), P.dir)
 
     local input, conn_set = pick_matching_conn_set(P, def)
 
     -- no possible connections?
     if not input then
-stderrf("  No matching entry conn (long=%d)\n", P.long)
+--stderrf("  No matching entry conn (long=%d)\n", P.long)
       return false
     end
 
@@ -1394,16 +1396,17 @@ stderrf("  No matching entry conn (long=%d)\n", P.long)
     end
 
     if not try_add_tile_RAW(P, T, nil) then
-stderrf("Failed\n")
+--stderrf("Failed\n")
       return false
     end
 
+--[[ DEBUG
 local ax,ay = transform_coord(T, 1, 1)
 local bx,by = transform_coord(T, cur_grid.w, cur_grid.h)
 stderrf("  installing tile over (%d %d) .. (%d %d)\n",
 math.min(ax,bx), math.min(ay,by),
 math.max(ax,bx), math.max(ay,by))
-
+--]]
 
     -- tile can be added, so create the room
 
@@ -1424,7 +1427,7 @@ math.max(ax,bx), math.max(ay,by))
 
     add_new_sprouts(T, conn_set, ROOM, P.initial_hub)
 
-stderrf("SUCCESS !!!!!\n")
+--stderrf("SUCCESS !!!!!\n")
 
     -- decide kind of room (building, outdoors, cave)
     Room_choose_kind(ROOM, P.room)
@@ -1573,7 +1576,7 @@ stderrf("SUCCESS !!!!!\n")
 --  if #LEVEL.rooms >= 10 then break; end
 
 if check_sprout_blocked(sprout) then
-stderrf("Sprout BLOCKED @ %s dir:%d\n", sprout.S:tostr(), sprout.dir)
+--stderrf("Sprout BLOCKED @ %s dir:%d\n", sprout.S:tostr(), sprout.dir)
 end
 
     if not check_sprout_blocked(sprout) then

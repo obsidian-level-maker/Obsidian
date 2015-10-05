@@ -1228,7 +1228,7 @@ function Quest_order_by_visit()
 
   
   local function visit_room(R, quest, via_conn_name)
-stderrf("visit_room %s (via %s) for %s\n", R:tostr(), via_conn_name or "???", quest.name or "???")
+--stderrf("visit_room %s (via %s) for %s\n", R:tostr(), via_conn_name or "???", quest.name or "???")
     R.lev_along = room_along / #LEVEL.rooms
 
     room_along = room_along + 1
@@ -1236,7 +1236,7 @@ stderrf("visit_room %s (via %s) for %s\n", R:tostr(), via_conn_name or "???", qu
     assert(R.quest == quest)
 
     each C in R.conns do
-stderrf("  conn '%s'  %s <--> %s\n", C:tostr(), C.R1:tostr(), C.R2:tostr())
+--stderrf("  conn '%s'  %s <--> %s\n", C:tostr(), C.R1:tostr(), C.R2:tostr())
       assert(C.R1)
 
       local R2 = C:other_room(R)

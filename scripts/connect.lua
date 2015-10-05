@@ -158,7 +158,7 @@ end
 
 function Connect_through_sprout(P)
 
-stderrf("Connecting... %s <--> %s\n", P.R1:tostr(), P.R2:tostr())
+--stderrf("Connecting... %s <--> %s\n", P.R1:tostr(), P.R2:tostr())
 
   local C = CONN_CLASS.new("normal", P.R1, P.R2)
 
