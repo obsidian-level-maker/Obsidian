@@ -1698,7 +1698,7 @@ namelib.NAMES =
         ["VI"]  = 10
         ["XII"] = 10
 
-        ["REDUX"] = 10
+        ["R E D U X"] = 10
         ["Revisited"] = 10
         ["Reloaded"] = 10
         ["Special Edition"] = 10
@@ -1711,10 +1711,10 @@ namelib.NAMES =
         ["The Struggle Continues..."] = 20
         ["The Endless Fight"] = 20
         ["The Demons Are Back"] = 20
-        ["Everlasting Bloodshed"] = 20
+        ["Battle Everlasting"] = 20
 
         -- prequels
-        ["Genesis"] = 40
+        ["G E N E S I S"] = 40
         ["The Awakening"] = 40
         ["Evil Unleashed"] = 20
         ["The Dead Shall Rise"] = 20
@@ -1728,25 +1728,23 @@ namelib.NAMES =
         ["What Lurks Beneath"] = 20
         ["A God-forsaken Place"] = 20
         ["A Land In Turmoil"] = 20
-        ["An All-Pervasive Horror"] = 20
-        ["The Point Of No Return"] = 20
-        ["Gateway To Hell"] = 20
-        ["Where the Devils Spawn"] = 20
+        ["Point Of No Return"] = 20
+        ["Gateway to Hell"] = 20
+        ["Where Devils Spawn"] = 20
 
         -- miscellaneous
-        ["Final Hour"] = 20
+        ["The Final Hour"] = 20
         ["Out Of Time"] = 20
         ["Days Of Rage"] = 20
         ["No Salvation"] = 20
-        ["A Fight For Survival"] = 20
-        ["A Thirst For Vengeance"] = 20
-        ["A Season Of Vile Things"] = 20
+        ["A Fight for Survival"] = 20
+        ["Thirst for Vengeance"] = 20
 
-        ["On The Brink Of Disaster"] = 20
+        ["The Brink of Disaster"] = 20
         ["The Apocalypse Has Come"] = 20
         ["Nobody Is Safe"] = 10
         ["Nowhere Is Safe"] = 10
-        ["The Seeds Of War"] = 20
+        ["The Seeds of War"] = 20
         ["The Will To Survive"] = 20
       }
     }
