@@ -700,7 +700,7 @@ end
 function Title_styled_string_centered(T, text, styles)
   local width = Title_measure_string(text, T.w, T.spacing)
 
-  T.x = int((320 - width) * 0.5)
+  T.x = int((320 - width) * 0.5) + 4
 
   Title_styled_string(T, text, styles)
 end
@@ -737,7 +737,7 @@ function Title_add_background()
     hell_3 = 40
 
     city1 = 40
-    city2 = 20
+    city2 = 10
     city3 = 40
 
     cave1 = 40
@@ -775,7 +775,6 @@ function Title_split_into_lines()
   local words = {}
 
   for w in string.gmatch(GAME.title, "%w+") do
-stderrf("TITLE WORD : [%s]\n", w)
     table.insert(words, w)
   end
 
@@ -788,12 +787,12 @@ stderrf("TITLE WORD : [%s]\n", w)
   -- no choice?
   if #words < 2 then return GAME.title end
 
-  local single_prob = 35
+  local single_prob = 40
 
-  if #GAME.title <= 12 then single_prob = 80 end
-  if #GAME.title >= 20 then single_prob = 10 end
+  if #GAME.title <= 11 then single_prob = 75 end
+  if #GAME.title >= 17 then single_prob = 10 end
 
---!!!!! FIXME  if rand.odds(single_prob) then return GAME.title end
+  if rand.odds(single_prob) then return GAME.title end
 
   -- multiple lines
   if words[3] then
@@ -806,8 +805,6 @@ end
 
 
 function Title_add_title_and_sub()
-  -- TODO improve this
-
 
   -- determine what kind of sub-title we will draw (if any)
   local sub_title_mode = "none"
@@ -838,21 +835,12 @@ function Title_add_title_and_sub()
 --[[
     {
       styles = { "f0f:77", "007:55" }
-      akt    = { "ff6:77", "707:55" }
+      alt    = { "ff6:77", "707:55" }
 
       spacing = 0.4
     }
 --]]
   }
-
-  local SUB_STYLES =
-  {
-    {
-      alt = { "300:44", "f00:22" }
-      spacing = 0.3
-    }
-  }
-
 
   local info = rand.pick(TITLE_STYLES)
 
@@ -860,27 +848,22 @@ function Title_add_title_and_sub()
   -- determine if we have one or two main lines
   local line1, line2, mid_line = Title_split_into_lines()
 
-stderrf("line1 = %s\n", tostring(line1))
-stderrf("line2 = %s\n", tostring(line2))
-stderrf("mid   = %s\n", tostring(mid_line))
 
-  local title_y = 80
+  local title_y = 95
 
-  if line2 then title_y = title_y - 20 end
+  if line2 then title_y = title_y - 35 end
   if sub_title_mode == "none" then title_y = title_y + 10 end
 
 
-  -- chooise font sizes for the main lines
+  -- choose font sizes for the main lines
   local w1, w2
 
   if not line2 then
-    w1 = Title_widest_size_to_fit(line1, 316, 50, info.spacing)
+    w1 = Title_widest_size_to_fit(line1, 312, 50, info.spacing)
     w2 = w1
   else
     w1 = Title_widest_size_to_fit(line1, 246, 50, info.spacing)
     w2 = Title_widest_size_to_fit(line2, 216, 50, info.spacing)
-
-stderrf("Widths: %d / %d\n", w1, w2)
 
     if false then
       w1 = math.min(w1, w2)
@@ -889,7 +872,14 @@ stderrf("Widths: %d / %d\n", w1, w2)
   end
 
 
-  local T = Title_get_normal_transform(0, title_y, w1, 40)
+  local hh = 40
+
+  if line2 and mid_line then hh = 30 end
+
+
+  -- draw the main title lines
+
+  local T = Title_get_normal_transform(0, title_y, w1, hh)
 
   if info.spacing then T.spacing = info.spacing end
 
@@ -899,7 +889,7 @@ stderrf("Widths: %d / %d\n", w1, w2)
   if mid_line then
     T.w = math.min(w1, w2) * 0.7
     T.h = T.h * 0.7
-    T.y = T.y + 26
+    T.y = title_y + 26
 
     Title_styled_string_centered(T, mid_line, info.alt)
   end
@@ -908,27 +898,44 @@ stderrf("Widths: %d / %d\n", w1, w2)
     title_y = title_y + 60
 
     T.w = w2
-    T.h = 40
+    T.h = hh
     T.y = title_y
 
     Title_styled_string_centered(T, line2, info.styles)
   end
 
 
-  -- the subtitle --
+  -- draw the sub-title
 
   if sub_title_mode == "none" then return end
 
-  T.y = 160 -- title_y
+  local SUB_STYLES =
+  {
+    {
+      alt = { "300:44", "f00:22" }
+      spacing = 0.3
+    }
+  }
+
+  T.y = 160
+
+  if not line2 then T.y = T.y - 25 end
 
   if sub_title_mode == "version" then
     -- often use the same style
-    if rand.odds(50*0) then
+    if rand.odds(35) then
       info = rand.pick(TITLE_STYLES)
     end
 
     T.w = math.min(w1, w2)
-    T.h = T.w * 0.7
+    T.h = T.w
+
+    if line2 then
+      T.h = T.h * 0.7
+    else
+      T.w = T.w * 1.5
+    end
+
     T.y = T.y + 10
 
   else  -- a phrase
