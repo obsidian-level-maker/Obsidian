@@ -1626,6 +1626,7 @@ namelib.NAMES =
         Ghetto = 15
         Towers = 15
         Kingdom = 10
+        Temple = 15
 
         World = 10
         Planet = 5
@@ -1633,6 +1634,7 @@ namelib.NAMES =
         Shores = 20
         Land = 10
         Fields = 15
+        Valley = 10
 
         Crypt = 10
         Dungeons = 10
@@ -1696,16 +1698,17 @@ namelib.NAMES =
         ["VI"]  = 10
         ["XII"] = 10
 
-        ["Second Edition"] = 20
         ["REDUX"] = 10
         ["Revisited"] = 10
         ["Reloaded"] = 10
-        ["Evil Is Reborn"] = 20
+        ["Special Edition"] = 10
 
         ["A New Generation"] = 40
         ["The Resurrection"] = 30
         ["The Reckoning"] = 40
-        ["The Struggle Continues"] = 20
+        ["Evil Is Reborn"] = 20
+
+        ["The Struggle Continues..."] = 20
         ["The Endless Fight"] = 20
         ["The Demons Are Back"] = 20
         ["Everlasting Bloodshed"] = 20
