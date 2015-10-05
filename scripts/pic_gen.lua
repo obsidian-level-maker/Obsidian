@@ -812,7 +812,7 @@ function Title_add_title_and_sub()
   -- determine what kind of sub-title we will draw (if any)
   local sub_title_mode = "none"
 
-  if rand.odds(66) then
+  if rand.odds(66 * 2) then
     sub_title_mode = "phrase"
 
     if #GAME.sub_title <= 5 and string.upper(GAME.sub_title) == GAME.sub_title then
@@ -845,6 +845,15 @@ function Title_add_title_and_sub()
 --]]
   }
 
+  local SUB_STYLES =
+  {
+    {
+      alt = { "300:44", "f00:22" }
+      spacing = 0.3
+    }
+  }
+
+
   local info = rand.pick(TITLE_STYLES)
 
 
@@ -855,7 +864,7 @@ stderrf("line1 = %s\n", tostring(line1))
 stderrf("line2 = %s\n", tostring(line2))
 stderrf("mid   = %s\n", tostring(mid_line))
 
-  local title_y = rand.pick({80, 100, 120})
+  local title_y = rand.pick({70, 70})
 
   if line2 then title_y = title_y - 20 end
   if sub_title_mode == "none" then title_y = title_y + 10 end
@@ -888,8 +897,14 @@ stderrf("Widths: %d / %d\n", w1, w2)
   Title_styled_string_centered(T, line1, info.styles)
 
   if line2 then
+    if mid_line then
+      title_y = title_y + 60
+    else
+      title_y = title_y + 50
+    end
+
     T.w = w2
-    T.y = T.y + 60
+    T.y = title_y
 
     Title_styled_string_centered(T, line2, info.styles)
   end
@@ -901,6 +916,33 @@ stderrf("Widths: %d / %d\n", w1, w2)
 
     Title_styled_string_centered(T, mid_line, info.alt)
   end
+
+
+  -- the subtitle --
+
+  if sub_title_mode == "none" then return end
+
+  T.y = 150 -- title_y
+
+  if sub_title_mode == "version" then
+    -- often use the same style
+    if rand.odds(50*0) then
+      info = rand.pick(TITLE_STYLES)
+    end
+
+    T.w = math.max(w1, w2)
+    T.h = T.w
+
+  else  -- a phrase
+
+    info = rand.pick(SUB_STYLES)
+
+    T.w = 12
+    T.h = 16
+  end
+
+
+  Title_styled_string_centered(T, GAME.sub_title, info.alt)
 end
 
 
