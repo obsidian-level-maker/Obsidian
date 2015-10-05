@@ -864,7 +864,7 @@ stderrf("line1 = %s\n", tostring(line1))
 stderrf("line2 = %s\n", tostring(line2))
 stderrf("mid   = %s\n", tostring(mid_line))
 
-  local title_y = rand.pick({70, 70})
+  local title_y = 80
 
   if line2 then title_y = title_y - 20 end
   if sub_title_mode == "none" then title_y = title_y + 10 end
@@ -874,11 +874,11 @@ stderrf("mid   = %s\n", tostring(mid_line))
   local w1, w2
 
   if not line2 then
-    w1 = Title_widest_size_to_fit(line1, 316, 40, info.spacing)
+    w1 = Title_widest_size_to_fit(line1, 316, 50, info.spacing)
     w2 = w1
   else
-    w1 = Title_widest_size_to_fit(line1, 236, 40, info.spacing)
-    w2 = Title_widest_size_to_fit(line2, 236, 40, info.spacing)
+    w1 = Title_widest_size_to_fit(line1, 246, 50, info.spacing)
+    w2 = Title_widest_size_to_fit(line2, 216, 50, info.spacing)
 
 stderrf("Widths: %d / %d\n", w1, w2)
 
@@ -896,6 +896,14 @@ stderrf("Widths: %d / %d\n", w1, w2)
 
   Title_styled_string_centered(T, line1, info.styles)
 
+  if mid_line then
+    T.w = math.min(w1, w2) * 0.7
+    T.h = T.h * 0.7
+    T.y = T.y + 30
+
+    Title_styled_string_centered(T, mid_line, info.alt)
+  end
+
   if line2 then
     if mid_line then
       title_y = title_y + 60
@@ -909,20 +917,12 @@ stderrf("Widths: %d / %d\n", w1, w2)
     Title_styled_string_centered(T, line2, info.styles)
   end
 
-  if mid_line then
-    T.w = math.min(w1, w2) * 0.7
-    T.h = T.h * 0.7
-    T.y = T.y - 30
-
-    Title_styled_string_centered(T, mid_line, info.alt)
-  end
-
 
   -- the subtitle --
 
   if sub_title_mode == "none" then return end
 
-  T.y = 150 -- title_y
+  T.y = 160 -- title_y
 
   if sub_title_mode == "version" then
     -- often use the same style
