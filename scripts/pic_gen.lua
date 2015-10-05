@@ -696,6 +696,18 @@ function Title_styled_string(T, text, styles)
 end
 
 
+
+function Title_widest_size_to_fit(text, box_w, max_w, spacing)
+  for w = max_w, 11, -1 do
+    if Title_measure_string(text, w, spacing) <= box_w then
+      return w
+    end
+  end
+
+  return 10
+end
+
+
 ------------------------------------------------------------------------
 
 
