@@ -697,6 +697,16 @@ end
 
 
 
+function Title_styled_string_centered(T, text, styles)
+  local width = Title_measure_string(text, T.w, T.spacing)
+
+  T.x = int((320 - width) * 0.5)
+
+  Title_styled_string(T, text, styles)
+end
+
+
+
 function Title_widest_size_to_fit(text, box_w, max_w, spacing)
   for w = max_w, 11, -1 do
     if Title_measure_string(text, w, spacing) <= box_w then
@@ -786,7 +796,11 @@ stderrf("TITLE WORD : [%s]\n", w)
 --!!!!! FIXME  if rand.odds(single_prob) then return GAME.title end
 
   -- multiple lines
-  return words[1], words[2], words[3]
+  if words[3] then
+    return words[1], words[3], words[2]
+  else
+    return words[1], words[2]
+  end
 end
 
 
@@ -815,16 +829,16 @@ function Title_add_title_and_sub()
 --  { "ccc:77", "000:55" }
 
     {
-      styles  = { "999:77", "000:55" }
-      version = { "000:77", "bbb:44" }
+      styles = { "999:77", "000:55" }
+      alt    = { "000:77", "bbb:44" }
 
       spacing = 0.45
     }
 
 --[[
     {
-      styles  = { "f0f:77", "007:55" }
-      version = { "ff6:77", "707:55" }
+      styles = { "f0f:77", "007:55" }
+      akt    = { "ff6:77", "707:55" }
 
       spacing = 0.4
     }
@@ -836,6 +850,10 @@ function Title_add_title_and_sub()
 
   -- determine if we have one or two main lines
   local line1, line2, mid_line = Title_split_into_lines()
+
+stderrf("line1 = %s\n", tostring(line1))
+stderrf("line2 = %s\n", tostring(line2))
+stderrf("mid   = %s\n", tostring(mid_line))
 
   local title_y = rand.pick({80, 100, 120})
 
@@ -862,14 +880,27 @@ stderrf("Widths: %d / %d\n", w1, w2)
   end
 
 
-  local width = Title_measure_string(GAME.title, 30, info.spacing)
-
-
-  local T = Title_get_normal_transform(10, 100, 20, 45)
+  local T = Title_get_normal_transform(0, title_y, w1, 40)
 
   if info.spacing then T.spacing = info.spacing end
 
-  Title_styled_string(T, GAME.title, info.styles)
+
+  Title_styled_string_centered(T, line1, info.styles)
+
+  if line2 then
+    T.w = w2
+    T.y = T.y + 60
+
+    Title_styled_string_centered(T, line2, info.styles)
+  end
+
+  if mid_line then
+    T.w = math.min(w1, w2) * 0.7
+    T.h = T.h * 0.7
+    T.y = T.y - 30
+
+    Title_styled_string_centered(T, mid_line, info.alt)
+  end
 end
 
 
