@@ -741,6 +741,43 @@ end
 
 
 
+function Title_split_into_lines()
+  --
+  -- Determines whether to use one or two main lines for the title.
+  -- It will depend on the length of the title (somewhat).
+  -- Return can be:
+  --   (a) a single string -- use it on a single line
+  --   (b) two or three words -- first two are main lines, third is the
+  --       little "of", "in", etc.. to be placed in-between
+  --
+  local words = {}
+
+  for w in string.gmatch(GAME.title, "%w+") do
+stderrf("TITLE WORD : [%s]\n", w)
+    table.insert(words, w)
+  end
+
+  -- handle titles like "X of the Y"
+  if #words >= 4 then
+    words[2] = words[2] .. " " .. words[3]
+    words[3] = words[4]
+  end
+
+  -- no choice?
+  if #words < 2 then return GAME.title end
+
+  local single_prob = 50
+  if #GAME.title <= 12 then single_prob = 80 end
+  if #GAME.title >= 20 then single_prob = 10 end
+
+  if rand.odds(single_prob) then return GAME.title end
+
+  -- multiple lines
+  return words[1], words[2], words[3]
+end
+
+
+
 function Title_add_title_and_sub()
   -- TODO improve this
 
