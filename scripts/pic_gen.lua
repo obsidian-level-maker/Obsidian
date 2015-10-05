@@ -778,11 +778,12 @@ stderrf("TITLE WORD : [%s]\n", w)
   -- no choice?
   if #words < 2 then return GAME.title end
 
-  local single_prob = 50
+  local single_prob = 35
+
   if #GAME.title <= 12 then single_prob = 80 end
   if #GAME.title >= 20 then single_prob = 10 end
 
-  if rand.odds(single_prob) then return GAME.title end
+--!!!!! FIXME  if rand.odds(single_prob) then return GAME.title end
 
   -- multiple lines
   return words[1], words[2], words[3]
@@ -804,7 +805,6 @@ function Title_add_title_and_sub()
       sub_title_mode = "version"
     end
   end
-
 
 
   local TITLE_STYLES =
@@ -832,6 +832,35 @@ function Title_add_title_and_sub()
   }
 
   local info = rand.pick(TITLE_STYLES)
+
+
+  -- determine if we have one or two main lines
+  local line1, line2, mid_line = Title_split_into_lines()
+
+  local title_y = rand.pick({80, 100, 120})
+
+  if line2 then title_y = title_y - 20 end
+  if sub_title_mode == "none" then title_y = title_y + 10 end
+
+
+  -- chooise font sizes for the main lines
+  local w1, w2
+
+  if not line2 then
+    w1 = Title_widest_size_to_fit(line1, 316, 40, info.spacing)
+    w2 = w1
+  else
+    w1 = Title_widest_size_to_fit(line1, 236, 40, info.spacing)
+    w2 = Title_widest_size_to_fit(line2, 236, 40, info.spacing)
+
+stderrf("Widths: %d / %d\n", w1, w2)
+
+    if false then
+      w1 = math.min(w1, w2)
+      w2 = w1
+    end
+  end
+
 
   local width = Title_measure_string(GAME.title, 30, info.spacing)
 
