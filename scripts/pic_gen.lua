@@ -809,7 +809,7 @@ function Title_add_title_and_sub()
   -- determine what kind of sub-title we will draw (if any)
   local sub_title_mode = "none"
 
-  if rand.odds(60) then
+  if rand.odds(67) then
     sub_title_mode = "phrase"
 
     if #GAME.sub_title <= 4 and string.upper(GAME.sub_title) == GAME.sub_title then
