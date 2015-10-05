@@ -63,6 +63,9 @@ ______________________________________________________________________
 
 -  Secrets (incl. closets) : support not-nice mode (i.e. AMMO and/or HEALTH)
 
+BUG: when "Switched Doors" set to NONE, can still make them because
+     there may be more zones than (# of keys + 1).
+
 
 REQUEST:  mix it up option for the quiet start setting.
 
