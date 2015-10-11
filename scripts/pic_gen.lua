@@ -820,11 +820,6 @@ function Title_add_title_and_sub()
 
   local TITLE_STYLES =
   {
---  { "f00:55", "ff0:33" }
---  { "ff0:55", "f00:33" }
-
---  { "ccc:77", "000:55" }
-
     {
       styles = { "999:77", "000:55" }
       alt    = { "000:77", "bbb:33" }
@@ -832,14 +827,19 @@ function Title_add_title_and_sub()
       spacing = 0.45
     }
 
---[[
     {
-      styles = { "f0f:77", "007:55" }
-      alt    = { "ff6:77", "707:55" }
+      styles = { "ff0:77", "730:55" }
+      alt    = { "730:77", "ff0:33" }
 
-      spacing = 0.4
+      spacing = 0.45
     }
---]]
+
+    {
+      styles = { "00f:77", "aaf:33" }
+      alt    = { "aaf:77", "00a:55" }
+
+      spacing = 0.45
+    }
   }
 
   local info = rand.pick(TITLE_STYLES)
@@ -883,15 +883,22 @@ function Title_add_title_and_sub()
 
   if info.spacing then T.spacing = info.spacing end
 
+  local style1 = info.styles
+  local style2 = info.alt
 
-  Title_styled_string_centered(T, line1, info.styles)
+  if rand.odds(30*0) and sub_title_mode != "version" then
+    style1, style2 = style2, style1
+  end
+
+
+  Title_styled_string_centered(T, line1, style1)
 
   if mid_line then
     T.w = math.min(w1, w2) * 0.7
     T.h = T.h * 0.7
     T.y = title_y + 26
 
-    Title_styled_string_centered(T, mid_line, info.alt)
+    Title_styled_string_centered(T, mid_line, style2)
   end
 
   if line2 then
@@ -901,7 +908,7 @@ function Title_add_title_and_sub()
     T.h = hh
     T.y = title_y
 
-    Title_styled_string_centered(T, line2, info.styles)
+    Title_styled_string_centered(T, line2, style1)
   end
 
 
