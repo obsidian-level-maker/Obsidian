@@ -1025,6 +1025,10 @@ function Title_generate()
 
 
   Title_add_background()
+
+  gui.title_write("INTERPIC")
+
+
   Title_add_credit()
   Title_add_title_and_sub()
 
