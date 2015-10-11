@@ -392,6 +392,7 @@ end
 OB_MODULES["sky_generator"] =
 {
   label = "Sky Generator (DOOM)"
+  priority = 85
 
   game = { doom1=1, doom2=1 }
 
