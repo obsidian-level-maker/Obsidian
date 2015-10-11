@@ -1400,6 +1400,8 @@ end
       return false
     end
 
+    -- tile can be added, so create the room
+
 --[[ DEBUG
 local ax,ay = transform_coord(T, 1, 1)
 local bx,by = transform_coord(T, cur_grid.w, cur_grid.h)
@@ -1407,8 +1409,6 @@ stderrf("  installing tile over (%d %d) .. (%d %d)\n",
 math.min(ax,bx), math.min(ay,by),
 math.max(ax,bx), math.max(ay,by))
 --]]
-
-    -- tile can be added, so create the room
 
     local ROOM = create_room(def, P.room)
     ROOM.initial_hub = P.initial_hub
@@ -1420,6 +1420,7 @@ math.max(ax,bx), math.max(ay,by))
     if P.room then
       assert(not P.initial_hub)
       add_prelim_connect(P, ROOM)
+      ROOM.grow_parent = P.room
     end
 
     -- install into seeds
@@ -1981,6 +1982,27 @@ end
 
 
 
+function Grower_determine_coverage()
+  local count = 0
+  local total = 0
+
+  for sx = LEVEL.boundary_sx1 + 1, LEVEL.boundary_sx2 - 1 do
+  for sy = LEVEL.boundary_sy1 + 1, LEVEL.boundary_sy2 - 1 do
+    total = total + 1
+
+    local S = SEEDS[sx][sy]
+
+    if S.area or S.diagonal then
+      count = count + 1
+    end
+  end
+  end
+
+  return count / total
+end
+
+
+
 function Grower_assign_boundary()
   --
   -- ALGORITHM:
@@ -2099,6 +2121,8 @@ function Grower_create_rooms()
   Grower_grow_trunk("is_first")
 
   -- FIXME : for i = 1, 5 do Grower_grow_trunk() end
+
+stderrf("%d rooms, coverage: %1.1f%%\n", #LEVEL.rooms, Grower_determine_coverage() * 100)
 
   Grower_fill_gaps()
 
