@@ -913,7 +913,27 @@ function Title_add_title_and_sub()
   {
     {
       alt = { "300:44", "f00:22" }
+      spacing = 0.4
+    }
+    {
+      alt = { "242:44", "6c6:22" }
       spacing = 0.3
+    }
+    {
+      alt = {"300:44", "f94:22"}
+      spacing = 0.3
+    }
+    {
+      alt = {"00c:44", "005:22"}
+      spacing = 0.4
+    }
+    {
+      alt = {"431:44", "a86:22"}
+      spacing = 0.3
+    }
+    {
+      alt = {"707:44", "f0f:22"}
+      spacing = 0.5
     }
   }
 
@@ -965,7 +985,7 @@ function Title_add_credit()
 
   local CREDIT_STYLES =
   {
-    {"333:33", "bbb:11"}
+    {"333:33", "aaa:11"}
     {"321:33", "db4:11"}
     {"030:33", "4c4:11"}
     {"004:33", "88f:11"}
