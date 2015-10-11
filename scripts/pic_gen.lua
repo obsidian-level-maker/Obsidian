@@ -737,7 +737,7 @@ function Title_add_background()
     hell_3 = 40
 
     city1 = 40
-    city2 = 10
+    city2 = 5
     city3 = 40
 
     cave1 = 40
