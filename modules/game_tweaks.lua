@@ -1,8 +1,8 @@
 ------------------------------------------------------------------------
---  MODULE: Gameplay Tweaks
+--  MODULE: Extra Settings
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2014 Andrew Apted
+--  Copyright (C) 2014-2015 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -16,17 +16,17 @@
 --
 ------------------------------------------------------------------------
 
-GAMEPLAY_TWEAKS = {}
+EXTRA_SETTINGS = {}
 
 
-GAMEPLAY_TWEAKS.YES_NO =
+EXTRA_SETTINGS.YES_NO =
 {
   "no",  "No"
   "yes", "Yes"
 }
 
 
-function GAMEPLAY_TWEAKS.setup(self)
+function EXTRA_SETTINGS.setup(self)
   for name,opt in pairs(self.options) do
     local value = self.options[name].value
 
@@ -39,13 +39,14 @@ function GAMEPLAY_TWEAKS.setup(self)
 end
 
 
-OB_MODULES["gameplay_tweaks"] =
+OB_MODULES["extra_settings"] =
 {
-  label = "Gameplay Tweaks"
+  label = "Extra Settings"
+  priority = 90
 
   hooks =
   {
-    setup = GAMEPLAY_TWEAKS.setup
+    setup = EXTRA_SETTINGS.setup
   }
 
   options =
@@ -53,21 +54,21 @@ OB_MODULES["gameplay_tweaks"] =
     keep_weapons =
     {
       label="Keep Weapons"
-      choices=GAMEPLAY_TWEAKS.YES_NO
+      choices=EXTRA_SETTINGS.YES_NO
       tooltip="Assumes the player keeps weapons from previous maps (and will add ammo for them, even if this map does not contain those weapons)"
     }
 
     quiet_start =
     {
       label="Quiet Start"
-      choices=GAMEPLAY_TWEAKS.YES_NO
+      choices=EXTRA_SETTINGS.YES_NO
       tooltip="Never add any monsters into the start room"
     }
 
     start_together =
     {
       label="Start Together"
-      choices=GAMEPLAY_TWEAKS.YES_NO
+      choices=EXTRA_SETTINGS.YES_NO
       tooltip="For Co-operative games, this makes sure all players start in the same room (i.e. it disables the separated start rooms)"
     }
   }
