@@ -885,8 +885,9 @@ function Grower_preprocess_tiles()
     if string.match(name, "HALL_")   then def.mode = "hallway" end
     if string.match(name, "EXTEND_") then def.mode = "extend" end
 
-    if string.match(name, "OUTDOOR_") then def.environment = "outdoor" end
-    if string.match(name, "CAVE_")    then def.environment = "cave" end
+    if string.match(name, "BUILDING_") then def.environment = "building" end
+    if string.match(name, "OUTDOOR_")  then def.environment = "outdoor" end
+    if string.match(name, "CAVE_")     then def.environment = "cave" end
 
     if not def.mode then def.mode = "room" end
   end
@@ -1372,8 +1373,28 @@ end
   end
 
 
+  local function check_environment(P, def)
+    -- very strict check for caves
+    if P.is_cave then
+      return (def.environment == "cave")
+    end
+
+    if def.environment then
+      local env = sel(P.is_outdoor, "outdoor", "building")
+
+      return (def.environment == env)
+    end
+
+    return true
+  end
+
+
   local function try_add_tile(P, def, conn_set)
 --stderrf("try_add_tile '%s'  @ %s dir:%d\n", def.name, P.S:tostr(), P.dir)
+
+    if not check_environment(P, def) then
+      return false
+    end
 
     local input, conn_set = pick_matching_conn_set(P, def)
 
