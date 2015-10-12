@@ -1281,7 +1281,7 @@ assert(room)
   end
 
 
-  local function try_add_tile_RAW(P, T, ROOM)
+  local function test_or_install_tile(P, T, ROOM)
     -- when 'ROOM' is not nil, we are installing the tile
 
 --[[ DEBUG
@@ -1395,7 +1395,7 @@ end
       T.input = input
     end
 
-    if not try_add_tile_RAW(P, T, nil) then
+    if not test_or_install_tile(P, T, nil) then
 --stderrf("Failed\n")
       return false
     end
@@ -1424,7 +1424,7 @@ math.max(ax,bx), math.max(ay,by))
     end
 
     -- install into seeds
-    try_add_tile_RAW(P, T, ROOM)
+    test_or_install_tile(P, T, ROOM)
 
     add_new_sprouts(T, conn_set, ROOM, P.initial_hub)
 
@@ -1434,6 +1434,26 @@ math.max(ax,bx), math.max(ay,by))
     Room_choose_kind(ROOM, P.room)
 
     return true  -- OK
+  end
+
+
+  local function try_add_new_room(P, tab)
+    -- FIXME : pick room kind (outdoor / cave)
+
+    while not table.empty(tab) do
+      local name = rand.key_by_probs(tab)
+      local def  = assert(TILES[name])
+
+      tab[name] = nil
+
+      if try_add_tile(P, def) then
+        return true
+      end
+
+      -- try another one...
+    end
+
+    return false
   end
 
 
@@ -1476,17 +1496,8 @@ math.max(ax,bx), math.max(ay,by))
       initial_hub = true
     }
 
-    while not table.empty(tab) do
-      local name = rand.key_by_probs(tab)
-      local def  = assert(TILES[name])
-
-      tab[name] = nil
-
-      if try_add_tile(P, def) then
-        return true
-      end
-
-      -- try another one...
+    if try_add_new_room(P, tab) then
+      return true
     end
 
     if is_first then
@@ -1513,20 +1524,12 @@ math.max(ax,bx), math.max(ay,by))
       end
     end
 
-    while not table.empty(tab) do
-      local name = rand.key_by_probs(tab)
-      local def  = assert(TILES[name])
-
-      tab[name] = nil
-
-      if try_add_tile(P, def) then
-        return
-      end
-
-      -- try another one...
+    if try_add_new_room(P, tab) then
+      return true
     end
 
     -- was not possible, that's OK
+    return false
   end
 
 
