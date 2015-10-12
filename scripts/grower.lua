@@ -1415,6 +1415,9 @@ math.max(ax,bx), math.max(ay,by))
 
     ROOM.prelim_conn_num = 0
 
+    -- FIXME : use "hallway" for hallways !!!
+    Room_set_kind(ROOM, "normal", P.is_outdoor, P.is_cave)
+
     cur_room = ROOM
 
     if P.room then
@@ -1430,15 +1433,16 @@ math.max(ax,bx), math.max(ay,by))
 
 --stderrf("SUCCESS !!!!!\n")
 
-    -- decide kind of room (building, outdoors, cave)
-    Room_choose_kind(ROOM, P.room)
-
     return true  -- OK
   end
 
 
   local function try_add_new_room(P, tab)
-    -- FIXME : pick room kind (outdoor / cave)
+    -- pick room kind (outdoor / cave)
+    local is_outdoor, is_cave = Room_choose_kind_NEW(P, P.room)
+
+    P.is_outdoor = is_outdoor
+    P.is_cave    = is_cave
 
     while not table.empty(tab) do
       local name = rand.key_by_probs(tab)
@@ -1572,20 +1576,19 @@ math.max(ax,bx), math.max(ay,by))
   end
 
   while true do
-    local sprout = Sprout_pick_next()
+    local P = Sprout_pick_next()
 
     -- no more sprouts?
-    if not sprout then break; end
+    if not P then break; end
 
 --  if #LEVEL.rooms >= 10 then break; end
 
-if check_sprout_blocked(sprout) then
---stderrf("Sprout BLOCKED @ %s dir:%d\n", sprout.S:tostr(), sprout.dir)
-end
-
-    if not check_sprout_blocked(sprout) then
-      add_room(sprout)
+    if check_sprout_blocked(P) then
+    --stderrf("Sprout BLOCKED @ %s dir:%d\n", P.S:tostr(), P.dir)
+      continue
     end
+
+    add_room(P)
   end
 
   remove_dud_hallways()

@@ -1613,7 +1613,7 @@ end
 
 
 function Room_set_kind(R, kind, is_outdoor, is_cave)
-  R.kind = "normal"
+  R.kind = kind
 
   R.is_outdoor = is_outdoor
   R.is_cave    = is_cave
@@ -1626,35 +1626,11 @@ end
 
 
 
-function Room_choose_kind(R, last_R)
-
-  -- FIXME: HALLWAYS !!!
-
-  -- TODO : caves  [check the cave_grid]
-
-  local out_prob
-
-  -- these probs carefully chosen so that:
-  --    few   is about 17%
-  --    some  is about 32%
-  --    heaps is about 70%
-  if not last_R then
-    out_prob = style_sel("outdoors", 0, 17, 32, 70)
-  elseif last_R.is_outdoor then
-    out_prob = style_sel("outdoors", 0,  5, 20, 60)
-  else
-    out_prob = style_sel("outdoors", 0, 20, 37, 90)
+function Room_choose_kind_NEW(P, last_R)
+  if last_R and last_R.kind == "hallway" then
+    last_R = last_R.grow_parent
   end
 
-  local is_outdoor = rand.odds(out_prob)
-  local is_cave = false
-
-  Room_set_kind(R, "normal", is_outdoor, is_cave)
-end
-
-
-
-function Room_choose_kind_NEW(P, last_R)
   -- these outdoor probs carefully chosen so that:
   --    few   is about 18%
   --    some  is about 35%
