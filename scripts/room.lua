@@ -1654,6 +1654,43 @@ end
 
 
 
+function Room_choose_kind_NEW(P, last_R)
+  -- these outdoor probs carefully chosen so that:
+  --    few   is about 18%
+  --    some  is about 35%
+  --    heaps is about 75%
+  local out_prob
+
+  if not last_R then
+    out_prob = style_sel("outdoors", 0, 18, 35, 75)
+  elseif last_R.is_outdoor then
+    out_prob = style_sel("outdoors", 0, 10, 25, 70)
+  else
+    out_prob = style_sel("outdoors", 0, 20, 40, 90)
+  end
+
+  local is_outdoor = rand.odds(out_prob)
+
+  -- compute a bbox from the sprout (roughly where next room will be)
+  -- and check it against cave grid
+  local S = P.S
+
+  local fx, fy = geom.nudge(S.sx, S.sy, P.dir, 4)
+  local rx, ry = geom.nudge(S.sx, S.sy, geom.RIGHT[P.dir], P.long + 2)
+  local lx, ly = geom.nudge(S.sx, S.sy, geom. LEFT[P.dir], 2)
+
+  local sx1 = math.min(fx, lx, rx)
+  local sy1 = math.min(fy, ly, ry)
+  local sx2 = math.max(fx, lx, rx)
+  local sy2 = math.max(fy, ly, ry)
+
+  local is_cave = touches_cave_section(sx1, sy1, sx2, sy2)
+
+  return is_outdoor, is_cave
+end
+
+
+
 function Room_create_cave_grid()
   --
   -- We divide the map into a large 3x3 grid.
