@@ -921,6 +921,28 @@ end
 
 
 
+function Grower_determine_coverage()
+  local count = 0
+  local total = 0
+
+  for sx = LEVEL.boundary_sx1 + 1, LEVEL.boundary_sx2 - 1 do
+  for sy = LEVEL.boundary_sy1 + 1, LEVEL.boundary_sy2 - 1 do
+    total = total + 1
+
+    local S = SEEDS[sx][sy]
+
+    if S.area or S.diagonal then
+      count = count + 1
+    end
+  end
+  end
+
+stderrf("coverage: %1.2f\n", count / total)
+  return count / total
+end
+
+
+
 function Grower_grow_trunk(is_first)
   --
   --  This builds a whole "trunk", a group of connected rooms.
@@ -2023,27 +2045,6 @@ area.svolume = 0  -- FIXME
   smoothen_out_pokers()
 
   make_real_areas()
-end
-
-
-
-function Grower_determine_coverage()
-  local count = 0
-  local total = 0
-
-  for sx = LEVEL.boundary_sx1 + 1, LEVEL.boundary_sx2 - 1 do
-  for sy = LEVEL.boundary_sy1 + 1, LEVEL.boundary_sy2 - 1 do
-    total = total + 1
-
-    local S = SEEDS[sx][sy]
-
-    if S.area or S.diagonal then
-      count = count + 1
-    end
-  end
-  end
-
-  return count / total
 end
 
 
