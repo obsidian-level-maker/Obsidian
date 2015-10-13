@@ -1590,26 +1590,44 @@ math.max(ax,bx), math.max(ay,by))
   end
 
 
+  local function visit_all_sprouts()
+    while true do
+      local P = Sprout_pick_next()
+
+      -- no more sprouts?
+      if not P then return end
+
+  --  if #LEVEL.rooms >= 10 then break; end
+
+      if check_sprout_blocked(P) then
+      --stderrf("Sprout BLOCKED @ %s dir:%d\n", P.S:tostr(), P.dir)
+        continue
+      end
+
+      add_room(P)
+    end
+  end
+
+
+  local function emergency_sprouts()
+    -- TODO
+  end
+
+
   ---| Grower_grow_trunk |---
 
   if not add_initial_hub() then
     return
   end
 
-  while true do
-    local P = Sprout_pick_next()
+  local MIN_COVERAGE = 0.4
 
-    -- no more sprouts?
-    if not P then break; end
+  for loop = 1, 10 do
+    visit_all_sprouts()
 
---  if #LEVEL.rooms >= 10 then break; end
+    if Grower_determine_coverage() >= MIN_COVERAGE then break; end
 
-    if check_sprout_blocked(P) then
-    --stderrf("Sprout BLOCKED @ %s dir:%d\n", P.S:tostr(), P.dir)
-      continue
-    end
-
-    add_room(P)
+    emergency_sprouts()
   end
 
   remove_dud_hallways()
@@ -2146,10 +2164,6 @@ function Grower_create_rooms()
   Grower_prepare()
 
   Grower_grow_trunk("is_first")
-
-  -- FIXME : for i = 1, 5 do Grower_grow_trunk() end
-
-stderrf("%d rooms, coverage: %1.1f%%\n", #LEVEL.rooms, Grower_determine_coverage() * 100)
 
   Grower_fill_gaps()
 
