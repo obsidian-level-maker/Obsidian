@@ -41,6 +41,8 @@
 
 
 function Sprout_new(S, dir, conn, room)
+  assert(room)
+
   local P =
   {
     S = S
@@ -84,9 +86,11 @@ function Sprout_pick_next()
   local best_score = 9e9
 
   each P in LEVEL.sprouts do
-    local score = 1
+    local score = 0
 
-    if P.room and not P.is_emergency then
+    if P.is_emergency then
+      score = 1000
+    elseif P.room then
       score = P.room.grow_rank
     end
 
@@ -1331,7 +1335,6 @@ entry_conn.dir, transform_dir(T, entry_conn.dir), P.dir)
         S = assert(S.top)
       end
 
-assert(room)
       Sprout_new(S, dir, conn, room)
     end
   end
