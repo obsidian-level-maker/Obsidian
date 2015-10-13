@@ -1616,6 +1616,7 @@ namelib.NAMES =
         Lost  = 10
         Fetid = 5
         Cursed = 10
+        Haunted = 10
         Cruel = 10
       }
 
