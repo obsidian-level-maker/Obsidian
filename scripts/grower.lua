@@ -58,6 +58,7 @@ end
 
 
 function Sprout_emergency_new(S, dir, room)
+-- stderrf("emergency sprout @ %s dir:%d\n", S:tostr(), dir)
   local P =
   {
     S = S
@@ -979,6 +980,7 @@ function Grower_emergency_sprouts()
 
     local score = 1
 
+--stderrf("eval_spot : potential @ %s dir:%d\n", S:tostr(), dir)
     return score + gui.random()
   end
 
@@ -1014,7 +1016,7 @@ function Grower_emergency_sprouts()
 
   -- pick a spot from every normal area of every room
   each A in LEVEL.areas do
-    if A.room and A.mode == "normal" then
+    if A.room and A.mode == "room" then
       scan_area(A)
     end
   end
@@ -1056,7 +1058,7 @@ function Grower_grow_trunk(is_first)
     area_map = {}
 
     for i = 1, #def.area_list do
-      local A = AREA_CLASS.new("normal")
+      local A = AREA_CLASS.new("TEMP")
 
       if def.mode == "hallway" then
         A.mode = def.mode
@@ -2094,7 +2096,7 @@ stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S:tostr(),
       area.seeds = T.seeds
 
       if T.room then
-        area.mode = "normal"
+        area.mode = "room"
 
 area.svolume = 0  -- FIXME
 
