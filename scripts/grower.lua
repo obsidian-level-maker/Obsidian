@@ -57,6 +57,23 @@ function Sprout_new(S, dir, conn, room)
 end
 
 
+function Sprout_emergency_new(S, dir, room)
+  local P =
+  {
+    S = S
+    dir = dir
+    long = 1
+    mode = "normal"
+    room = room
+    is_emergency = true
+  }
+
+  table.insert(LEVEL.sprouts, P)
+
+  return P
+end
+
+
 function Sprout_pick_next()
   if table.empty(LEVEL.sprouts) then
     return nil
@@ -66,8 +83,11 @@ function Sprout_pick_next()
   local best_score = 9e9
 
   each P in LEVEL.sprouts do
-    local score = 0
-    if P.room then score = P.room.grow_rank end
+    local score = 1
+
+    if P.room and not P.is_emergency then
+      score = P.room.grow_rank
+    end
 
     score = score + gui.random()
 
@@ -943,6 +963,65 @@ end
 
 
 
+function Grower_emergency_sprouts()
+
+  local function eval_spot(A, S, dir)
+    -- tried this spot before?
+    if S.emergency_sprout then return -1 end
+
+    local N = S:neighbor(dir)
+
+    if not N then return -2 end
+
+    if N.area then return -3 end
+
+    -- TODO : CHECK MORE STUFF
+
+    local score = 1
+
+    return score + gui.random()
+  end
+
+
+  local function scan_area(A)
+    local best_S
+    local best_dir
+    local best_score = 0
+
+    each S in A.seeds do
+    each dir in geom.ALL_DIRS do
+      local score = eval_spot(A, S, dir)
+
+      if score > best_score then
+        best_S = S
+        best_dir = dir
+        best_score = score
+      end
+    end
+    end
+
+    if not best_S then return end
+
+    -- create a sprout
+    Sprout_emergency_new(best_S, best_dir, A.room)
+
+    -- do not try this seed again
+    best_S.emergency_sprout = true
+  end
+
+
+  --| Grower_emergency_sprouts |--
+
+  -- pick a spot from every normal area of every room
+  each A in LEVEL.areas do
+    if A.room and A.mode == "normal" then
+      scan_area(A)
+    end
+  end
+end
+
+
+
 function Grower_grow_trunk(is_first)
   --
   --  This builds a whole "trunk", a group of connected rooms.
@@ -1631,11 +1710,6 @@ math.max(ax,bx), math.max(ay,by))
   end
 
 
-  local function emergency_sprouts()
-    -- TODO
-  end
-
-
   ---| Grower_grow_trunk |---
 
   if not add_initial_hub() then
@@ -1644,12 +1718,14 @@ math.max(ax,bx), math.max(ay,by))
 
   local MIN_COVERAGE = 0.4
 
-  for loop = 1, 10 do
+  for loop = 1, 4 do
     visit_all_sprouts()
 
-    if Grower_determine_coverage() >= MIN_COVERAGE then break; end
+    if Grower_determine_coverage() >= MIN_COVERAGE then
+      break;
+    end
 
-    emergency_sprouts()
+    Grower_emergency_sprouts()
   end
 
   remove_dud_hallways()
