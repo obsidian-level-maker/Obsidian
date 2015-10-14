@@ -6,15 +6,26 @@ WORK IN PROGRESS
 >>>  Render_edge  for new EDGE structure
 
 
-??  Redefine 'split' as a wide conn which sometimes becomes TWO
+IDEA: create BOSS maps using the grower system
+      -  start with a special kind of hub
+         [ it could depend on the actual map ]
+      -  extend it with compatible tiles
+      -  maybe finish off with some gap-filled areas
+
 
 
 Room Kinds
 ----------
 
--  support 'environment' in tiles ("cave", "outdoor", "building")
+-  logic for hallways [take the connected rooms into account]
 
--  logic for hallways? [take the connected rooms into account?]
+   -  if one side is cave, hallway might be cave, never otherwise
+
+   -  if one side is outdoor, hallway might be outdoor, rarely otherwise
+
+      B + B : 10% outdoor,  0% porch
+      B + O : 20% outdoor, 10% porch 
+      O + O : 40% outdoor, 20% porch
 
 
 Misc
@@ -36,10 +47,7 @@ sometimes incorporate a nearby RANDOM area into a room
 Grower:
 -------
 
-!!  check if map is undersized, add more sprouts
-
-+  split connections
-   [ a random chance of breaking into two sprouts ]
++  split connections : a small chance of breaking into two sprouts
 
 IDEA : associate all non-room areas with a nearby room
        [ if the room is outdoor, so are the areas ]
