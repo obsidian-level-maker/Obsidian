@@ -28,10 +28,9 @@ TILES =
 --
 --------------------------------
 
---[[
 HALL_I_1x1 =
 {
-  prob = 40
+  prob = 5
 
   structure =
   {
@@ -43,14 +42,12 @@ HALL_I_1x1 =
     a = { x=1, y=1, dir=2 }
     b = { x=1, y=1, dir=8 }
   }
-
 }
---]]
 
 
 HALL_1x2 =
 {
-  prob = 10
+  prob = 30
 
   structure =
   {
@@ -121,7 +118,7 @@ HALL_3x1 =
 
 HALL_3x1_split =
 {
-  prob = 3200
+  prob = 320
 
   -- NOTE : non-contiguous areas are normally not allowed, this is a special case
   structure =
@@ -172,6 +169,98 @@ HALL_2x2 =
 }
 
 
+HALL_DIAG_1 =
+{
+  prob = 200
+
+  structure =
+  {
+    "/%"
+    "%/"
+  }
+
+  diagonals =
+  {
+    ".1", "1."
+    ".1", "1."
+  }
+
+  conns =
+  {
+    a = { x=1, y=1, dir=1 }
+    b = { x=2, y=1, dir=3 }
+    c = { x=1, y=2, dir=7 }
+    d = { x=2, y=2, dir=9 }
+  }
+
+  conn_sets =
+  {
+    "a:b"
+    "a:c"
+    "a:d"
+    "a:bc"
+  }
+}
+
+
+HALL_DIAG_2 =
+{
+  prob = 100
+
+  structure =
+  {
+    "./%"
+    "/1/"
+    "%/."
+  }
+
+  diagonals =
+  {
+    ".1", "1."
+    ".1", "1."
+    ".1", "1."
+  }
+
+  conns =
+  {
+    a = { x=1, y=1, dir=1 }
+    b = { x=3, y=3, dir=9 }
+  }
+}
+
+
+HALL_DIAG_Y_4x4 =
+{
+  prob = 100
+
+  structure =
+  {
+    ".1.."
+    ".1.."
+    "/111"
+    "%/.."
+  }
+
+  diagonals =
+  {
+    ".1",
+    ".1", "1."
+  }
+
+  conns =
+  {
+    a = { x=1, y=1, dir=1 }
+    b = { x=2, y=4, dir=8 }
+    c = { x=4, y=2, dir=6 }
+  }
+
+  conn_sets =
+  {
+    "abc"
+  }
+}
+
+
 HALL_U_5x3_a =
 {
   prob = 300
@@ -204,70 +293,138 @@ HALL_U_5x3_a =
 }
 
 
-HALL_DIAG_I3 =
-{
-  prob = 200
-
-  structure =
-  {
-    "./%"
-    "/1/"
-    "%/."
-  }
-
-  diagonals =
-  {
-    ".1", "1."
-    ".1", "1."
-    ".1", "1."
-  }
-
-  conns =
-  {
-    a = { x=1, y=1, dir=1 }
-    b = { x=3, y=3, dir=9 }
-  }
-}
-
-
-HALL_DIAG_Y_4x4 =
-{
-  prob = 200
-
-  structure =
-  {
-    ".1.."
-    ".1.."
-    "/111"
-    "%/.."
-  }
-
-  diagonals =
-  {
-    ".1",
-    ".1", "1."
-  }
-
-  conns =
-  {
-    a = { x=1, y=1, dir=1 }
-    b = { x=2, y=4, dir=8 }
-    c = { x=4, y=2, dir=6 }
-  }
-
-  conn_sets =
-  {
-    "a:bc"
-  }
-}
-
-
-
 --------------------------------
 --
 --  Generic Caves
 --
 --------------------------------
+
+CAVE_5x5 =
+{
+  prob = 100
+  start_prob = 100
+
+  structure =
+  {
+    "11111"
+    "11111"
+    "11111"
+    "11111"
+    "11111"
+  }
+
+  conns =
+  {
+    a = { x=3, y=1, dir=2 }
+    b = { x=1, y=4, dir=4 }
+    c = { x=4, y=5, dir=8 }
+    d = { x=5, y=3, dir=6 }
+  }
+}
+
+
+CAVE_9x5 =
+{
+  prob = 100
+
+  structure =
+  {
+    "111111111"
+    "111111111"
+    "111111111"
+    "111111111"
+    "111111111"
+  }
+
+  conns =
+  {
+    a = { x=5, y=1, dir=2 }
+    b = { x=1, y=2, dir=4 }
+    c = { x=9, y=4, dir=6 }
+    d = { x=3, y=5, dir=8 }
+    e = { x=7, y=5, dir=8 }
+  }
+}
+
+
+CAVE_L_9x9 =
+{
+  prob = 300
+  start_prob = 200
+
+  structure =
+  {
+    "111111111"
+    "111111111"
+    "111111111"
+    "111111111"
+    "111111111"
+    "11111...."
+    "11111...."
+    "11111...."
+    "11111...."
+  }
+
+  conns =
+  {
+    a = { x=3, y=1, dir=2 }
+    b = { x=1, y=7, dir=4 }
+    c = { x=7, y=9, dir=8 }
+    d = { x=9, y=7, dir=6 }
+
+    f = { x=1, y=3, dir=4 }
+    g = { x=3, y=9, dir=8 }
+  }
+
+  conn_sets =
+  {
+    "abcdfg"
+    "a:bd"
+    "a:cd"
+    "a:bcd"
+  }
+}
+
+
+CAVE_9x9 =
+{
+  prob = 200
+  start_prob = 100
+
+  structure =
+  {
+    "111111111"
+    "111111111"
+    "111111111"
+    "111111111"
+    "111111111"
+    "111111111"
+    "111111111"
+    "111111111"
+    "111111111"
+  }
+
+  conns =
+  {
+    a = { x=3, y=1, dir=2 }
+    b = { x=1, y=7, dir=4 }
+    c = { x=7, y=9, dir=8 }
+    d = { x=9, y=3, dir=6 }
+
+    e = { x=7, y=1, dir=2 }
+    f = { x=1, y=3, dir=4 }
+    g = { x=3, y=9, dir=8 }
+    h = { x=9, y=7, dir=6 }
+  }
+
+  conn_sets =
+  {
+    "a:bcd"
+    "a:cgd"
+    "a:cgh"
+    "a:bdh"
+  }
+}
 
 
 --------------------------------
