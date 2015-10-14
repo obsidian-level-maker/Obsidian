@@ -648,7 +648,7 @@ end
 
 
 function Seed_create_edge(S, dir, long, kind)
-  -- Note: 'S' must be the left-most seed of the edge
+  -- Note: 'S' must be the left-most seed of a long edge
 
   local EDGE =
   {
@@ -658,6 +658,7 @@ function Seed_create_edge(S, dir, long, kind)
     kind = kind
   }
 
+  -- add it into each seed
   for i = 1, long do
     if S.edge[dir] then
       error("Seed already has an EDGE")
@@ -666,6 +667,12 @@ function Seed_create_edge(S, dir, long, kind)
     S.edge[dir] = EDGE
 
     S = S:raw_neighbor(geom.RIGHT[dir])
+  end
+
+  -- add it to area list
+  if true then
+    local A = assert(S.area)
+    table.insert(A.edges, EDGE)
   end
 
   return EDGE
