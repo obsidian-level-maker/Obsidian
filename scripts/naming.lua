@@ -43,6 +43,8 @@ namelib.NAMES =
     {
       v =
       {
+        ["Curse of the"]=10
+
         -- these from flyingdeath
         ["Enter the"]=10
         ["Welcome to the"]=10
@@ -53,7 +55,25 @@ namelib.NAMES =
         ["Death Awaits in the"]=5
         ["Oh God not another"]=5
         ["Yet Another"]=5
+        ["Just Another"]=5
+        ["Hell in the"]=5
 
+        -- these by Chris
+        ["Fear the"]=10
+        ["Dodge the"]=10
+        ["Beware the"]=10
+        ["Escape the"]=10
+        ["Bane of the"]=10
+        ["Scourge of the"]=10
+        ["Ordeal of the"]=10
+        ["Calamity in the"]=10
+        ["Misdeed by the"]=10
+        ["Dread the"]=10
+        ["Shun the"]=10
+        ["Plague of the"]=10
+        ["Pain from the"]=10
+
+        -- command-like prefixes, some by Dante
         ["Attack the"]=20
         ["Destroy the"]=20
         ["Shut Down the"]=15
@@ -194,7 +214,7 @@ namelib.NAMES =
         Training=5, Treatment=5, Shipment=5,
         Cooling=5, Coolant=5, Administration=5,
         Distribution=5, Trafficking=5, Singularity=3,
-        Programming=5, Security=5, Staging=5, 
+        Programming=5, Security=5, Staging=5, Comms=5,
 
         -- descriptive
         Main=20, Provisional=3,
@@ -221,7 +241,7 @@ namelib.NAMES =
         Radioactivity=5, Sludge=3, Particle=3,
         Cadmium=3, Halogen=3, Toxicity=3, Mercury=3,
         Data=10, CPU=5, Freight=5, Wares=3, Phosphine=3,
-        Petrochemical=3, Tesla=5, Bromine=3,
+        Petrochemical=3, Tesla=5, Bromine=3, Quantum=5,
 
         Computer=10, Composite=15, Synthetic=5,
         Electronics=5, Electrical=5, Diffusion=3,
@@ -237,11 +257,11 @@ namelib.NAMES =
         -- specific places
         Generator=12, Plant=15, Base=30,
         Warehouse=10, Depot=10, Storage=5,
-        Lab=15, Laboratory=5,
+        Lab=15, Laboratory=5, Depositry=3,
         Station=20, Reactor=10, Tower=5,
-        Refinery=15, Factory=10,
+        Refinery=15, Factory=10, Storehouse=5,
         Gateway=10, Hangar=5, Outpost=10,
-        Tunnels=10, Bunker=7, Facility=10,
+        Tunnels=10, Bunker=7, Facility=10, Workshop=7,
         Gateway=5, Point=2, Turbine=3,
 
         Beacon=3, Satellite=10, Pillbox=1,
@@ -261,7 +281,7 @@ namelib.NAMES =
         Infrastructure=5, Annex=5,
         Dock=3, Bay=3, Tributary=5,
         Channel=5, Chamber=5, Quarters=5,
-        Relay=5, Section=3, Post=3, 
+        Relay=5, Section=3, Post=3, Dilemma=3,
         Situation=2, Crisis=2, Emergency=2,
 
         -- weird ones
@@ -269,7 +289,7 @@ namelib.NAMES =
         Anomaly=10, Portal=7, Apparatus=10,
         System=15, Project=2, Forge=10,
         Dimension=3, Paradox=3, Vortex=5,
-        Enigma=5, Artifact=1,
+        Enigma=5, Artifact=1, Quagmire=1,
       }
 
       s =
@@ -480,7 +500,8 @@ namelib.NAMES =
       {
         -- size
         Monumental=5, Colossal=10, Sprawling=5, Massive=5,
-        Small=3, Endless=10, Gigantic=5, Mighty=5,
+        Small=3, Endless=10, Gigantic=5, Mighty=5, Enormous=5,
+        Giant=3, Great=3, Elephantine=3,
 
         -- location
         Underground=10, Subterranean=5,
@@ -513,6 +534,7 @@ namelib.NAMES =
         Haunted=10, Ghostly=15, Ghastly=5,
         Heathen=3, Rat_infested=5, Necromancers=5,
         Baron=5, Cyberdemon=5, Slime=5, Knights=7,
+        Kings=5, Royal=5, Magma=5,
 
         -- descriptive
         Evil=30, Unholy=20, Wicked=15, Cruel=10,
@@ -601,37 +623,51 @@ namelib.NAMES =
 
         ["the Antichrist"]=10
         ["the Acolyte"]=10
+        ["the Ancient"]=10
         ["the Apostates"]=10
         ["the Beast"]=10
         ["the Behemoth"]=10
+        ["the Baneful"]=10
         ["the Betrayers"]=10
+        ["the Bleeding"]=10
+        ["the Corrupt"]=10
         ["the Damned"]=10
+        ["the Decayed"]=10
         ["the Dead"]=10
+        ["the Defiled"]=10
         ["the Denizens"]=10
+        ["the Destroyer"]=10
+        ["the Dishonored"]=10
         ["the Disobedient"]=10
+        ["the Dissolute"]=10
         ["the Emissary"]=10
         ["the Forgotten"]=10
+        ["the Foul"]=10
         ["the Forsaken"]=10
+        ["the Knavish"]=10
         ["the Minions"]=10
         ["the Missionary"]=10
         ["the Necromancer"]=10
+        ["the Nefarious"]=10
         ["the Neophyte"]=10
+        ["the Oracle"]=10
         ["the Possessed"]=10
         ["the Priest"]=10
         ["the Prophets"]=10
+        ["the Putrid"]=10
+        ["the Rotten"]=10
+        ["the Saints"]=10
+        ["the Seer"]=10
         ["the Sick"]=10
         ["the Sinner"]=10
+        ["the Tainted"]=10
         ["the Undead"]=10
         ["the Unheard"]=10
         ["the Unknown"]=10
         ["the Unmaker"]=10
         ["the Vicar"]=10
-      }
-
-      v =
-      {
-        ["Curse of the"]=10
-        ["Fear the"]=10
+        ["the Witches"]=10
+        ["the Zealots"]=10
       }
 
       s =
