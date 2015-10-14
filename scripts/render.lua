@@ -104,6 +104,7 @@ end
 function Render_edge(E)
 
   local A = E.area
+  local dir = assert(E.dir)
 
 
   local NA = {}  -- FIXME : all usages of this here are INCORRECT
@@ -517,6 +518,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
       local dir2 = DIAG_DIR_MAP[dir]
 
+      local S = E.S
       local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, dir2)
 
       Fabricate(R, def, T, { skin1 })
@@ -588,6 +590,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
       local dir2 = DIAG_DIR_MAP[dir]
 
+      local S = E.S
       local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, dir2)
 
       Fabricate(R, def, T, { skin1 })
@@ -627,6 +630,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
       local dir2 = DIAG_DIR_MAP[dir]
 
+      local S = E.S
       local T = Trans.box_transform(S.x1, S.y1, S.x2, S.y2, z, dir2)
 
       Fabricate(R, def, T, { skin1 })
