@@ -1692,11 +1692,11 @@ function Room_create_cave_grid()
 
   --| Room_create_cave_grid |--
 
-  LEVEL.cave_grid_sx1 = int(SEED_W * 0.30)
-  LEVEL.cave_grid_sx2 = int(SEED_W * 0.70)
+  LEVEL.cave_grid_sx1 = int(SEED_W * 0.35)
+  LEVEL.cave_grid_sx2 = int(SEED_W * 0.65)
 
-  LEVEL.cave_grid_sy1 = int(SEED_H * 0.30)
-  LEVEL.cave_grid_sy2 = int(SEED_H * 0.70)
+  LEVEL.cave_grid_sy1 = int(SEED_H * 0.35)
+  LEVEL.cave_grid_sy2 = int(SEED_H * 0.65)
 
   LEVEL.cave_grid = table.array_2D(3, 3)
 
