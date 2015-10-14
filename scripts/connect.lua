@@ -40,6 +40,8 @@
     A1 : source AREA
     A2 : destination AREA
 
+    F1, F2 : EDGE  -- for "split" connections, the other side
+
     door_h : floor height for doors straddling the connection
 
     where1  : usually NIL, otherwise a FLOOR object
@@ -94,8 +96,15 @@ end
 
 function CONN_CLASS.swap(C)
   C.R1, C.R2 = C.R2, C.R1
-  C.A1, C.A2 = C.A2, C.A1
   C.E1, C.E2 = C.E2, C.E1
+  C.F1, C.F2 = C.F2, C.F1
+  C.A1, C.A2 = C.A2, C.A1
+
+  -- for split conns, keep E1 on left, F1 on right
+  if C.F1 then
+    C.E1, C.F1 = C.F1, C.E1
+    C.E2, C.F2 = C.F2, C.E2
+  end
 end
 
 
@@ -162,22 +171,40 @@ function Connect_through_sprout(P)
 
   local C = CONN_CLASS.new("normal", P.R1, P.R2)
 
-  local E1, E2 = Seed_create_edge_pair(P.S, P.dir, P.long, "nothing")
+  table.insert(C.R1.conns, C)
+  table.insert(C.R2.conns, C)
+
+
+  local S1   = P.S
+  local long = P.long
+
+  if P.split then long = P.split end
+
+
+  local E1, E2 = Seed_create_edge_pair(S1, P.dir, long, "nothing")
 
   E1.kind = "arch"
 
   C.E1 = E1
   C.E2 = E2
 
-  local S1 = P.S
-  local S2 = P.S:neighbor(P.dir)
-  assert(S2)
+  C.A1 = assert(E1.S.area)
+  C.A2 = assert(E2.S.area)
 
-  C.A1 = assert(S1.area)
-  C.A2 = assert(S2.area)
 
-  table.insert(C.R1.conns, C)
-  table.insert(C.R2.conns, C)
+  -- handle split connections
+  if P.split then
+    assert(not S1.diagonal)
+    local S2 = S1:raw_neighbor(geom.RIGHT[P.dir], P.long - P.split)
+    assert(not S2.diagonal)
+
+    local F1, F2 = Seed_create_edge_pair(S2, P.dir, long, "nothing")
+
+    F1.kind = "arch"
+
+    C.F1 = F1
+    C.F2 = F2
+  end
 end
 
 

@@ -1440,7 +1440,6 @@ end
     -- cannot connect axis-aligned edges with diagonal edges
     if geom.is_corner(P.dir) != geom.is_corner(conn.dir) then return false end
 
-    -- TODO: maybe relax this
     if conn.split != P.split then return false end
 
     if P.mode == "extend" and def.mode != "extend" then return false end
