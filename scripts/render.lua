@@ -525,11 +525,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
       local def = Fab_lookup(fab_name)
 
-      local S2 = S
-      local seed_w = 1
-
-      local T = Trans.edge_transform(S.x1, S.y1, S2.x2, S2.y2, z,
-                                     dir, 0, seed_w * 192, def.deep, def.over)
+      local T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over)
 
       Fabricate(R, def, T, { skin1 })
 
@@ -600,11 +596,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
       local def = Fab_lookup(fab_name)
 
-      local S2 = S
-      local seed_w = 1
-
-      local T = Trans.edge_transform(S.x1, S.y1, S2.x2, S2.y2, z,
-                                     dir, 0, seed_w * 192, def.deep, def.over)
+      local T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over)
 
       Fabricate(R, def, T, { skin1 })
 
@@ -643,11 +635,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
       local def = Fab_lookup(fab_name)
 
-      local S2 = S
-      local seed_w = 1
-
-      local T = Trans.edge_transform(S.x1, S.y1, S2.x2, S2.y2, z,
-                                     dir, 0, seed_w * 192, def.deep, def.over)
+      local T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over)
 
       Fabricate(R, def, T, { skin1 })
     end
@@ -733,12 +721,14 @@ function Render_fake_edge(A, S, dir)
   if N == "NODIR" then return end
 
   -- same area?  nothing needed
-  if N.area and N.area == A then return end
+  if N and N.area == A then return end
+
+  local junc
 
   -- find the junction (N.area may be NIL)
   local junc
   
-  if N.area then
+  if N and N.area then
     junc = Junction_lookup(A, N.area)
   else
     junc = Junction_lookup(A, "map_edge")

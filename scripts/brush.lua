@@ -359,18 +359,30 @@ function Trans.box_transform(x1, y1, x2, y2, z, dir)
 end
 
 
-function Trans.edge_transform(x1,y1, x2,y2, z, side, long1, long2, deep, over)
-  if side == 4 then x2 = x1 + deep ; x1 = x1 - over end
-  if side == 6 then x1 = x2 - deep ; x2 = x2 + over end
-  if side == 2 then y2 = y1 + deep ; y1 = y1 - over end
-  if side == 8 then y1 = y2 - deep ; y2 = y2 + over end
+function Trans.edge_transform(E, z, ofs_L, ofs_R, deep, over)
+  local x1 = E.S.x1
+  local y1 = E.S.y1
+  local x2 = E.S.x2
+  local y2 = E.S.y2
 
-  if side == 2 then x1 = x2 - long2 ; x2 = x2 - long1 end
-  if side == 8 then x2 = x1 + long2 ; x1 = x1 + long1 end
-  if side == 4 then y2 = y1 + long2 ; y1 = y1 + long1 end
-  if side == 6 then y1 = y2 - long2 ; y2 = y2 - long1 end
+  if E.long > 1 then
+    if E.dir == 8 then x2 = x2 + (E.long - 1) * SEED_SIZE end
+    if E.dir == 2 then x1 = x1 - (E.long - 1) * SEED_SIZE end
+    if E.dir == 4 then y2 = y2 + (E.long - 1) * SEED_SIZE end
+    if E.dir == 6 then y1 = y1 - (E.long - 1) * SEED_SIZE end
+  end
 
-  return Trans.box_transform(x1,y1, x2,y2, z, side)
+  if E.dir == 4 then x2 = x1 + deep ; x1 = x1 - over end
+  if E.dir == 6 then x1 = x2 - deep ; x2 = x2 + over end
+  if E.dir == 2 then y2 = y1 + deep ; y1 = y1 - over end
+  if E.dir == 8 then y1 = y2 - deep ; y2 = y2 + over end
+
+  if E.dir == 8 then x1 = x1 + ofs_L ; x2 = x2 - ofs_R end
+  if E.dir == 2 then x2 = x2 - ofs_L ; x1 = x1 + ofs_R end
+  if E.dir == 4 then y1 = y1 + ofs_L ; y2 = y2 - ofs_R end
+  if E.dir == 6 then y2 = y2 - ofs_L ; y1 = y1 + ofs_R end
+
+  return Trans.box_transform(x1,y1, x2,y2, z, E.dir)
 end
 
 
