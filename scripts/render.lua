@@ -27,7 +27,7 @@ function calc_wall_mat(A1, A2)
   if A2 and A2.mode == "void" then A2 = nil end
 
   if not A1.is_outdoor then
-    return assert(A1.wall_mat)
+    return assert(A1.wall_mat or "REDWALL")  --!!!!
   end
 
   return A1.zone.facade_mat
@@ -101,11 +101,13 @@ end
 
 
 
-function Render_edge(A, S, dir)
+function Render_edge(E)
 
-  local edge = S.edge[dir] or {}
+  local A = E.area
 
-  local NA  -- neighbor area
+
+  local NA = {}  -- FIXME : all usages of this here are INCORRECT
+
 
   local DIAG_DIR_MAP = { [1]=2, [9]=8, [3]=6, [7]=4 }
 
@@ -180,7 +182,7 @@ function Render_edge(A, S, dir)
   local function edge_trap_wall(mat)
     if NA.mode != "trap" then return end
 
-    assert(edge.trigger)
+    assert(E.trigger)
 
     local brush = raw_wall_brush()
 
@@ -189,7 +191,7 @@ function Render_edge(A, S, dir)
       C.draw_secret = true
     end
 
-    table.insert(brush, { b=A.floor_h + 2, delta_z=-2, tag=edge.trigger.tag })
+    table.insert(brush, { b=A.floor_h + 2, delta_z=-2, tag=E.trigger.tag })
 
     brushlib.set_mat(brush, mat, mat)
 
@@ -226,9 +228,9 @@ function Render_edge(A, S, dir)
 
 
   local function straddle_fence()
-    local mat = assert(edge.fence_mat)
-    local top_z = assert(edge.fence_top_z)
-    local TK = edge.fence_thick or 16
+    local mat = assert(E.fence_mat)
+    local top_z = assert(E.fence_top_z)
+    local TK = E.fence_thick or 16
 
     local x1, y1 = S.x1, S.y1
     local x2, y2 = S.x2, S.y2
@@ -451,10 +453,10 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
 
   local function edge_steps()
-    local mat = assert(edge.steps_mat)
+    local mat = assert(E.steps_mat)
     local steps_z1 =  A.floor_h
     local steps_z2 = NA.floor_h
-    local thick = edge.steps_thick or 48
+    local thick = E.steps_thick or 48
 
     -- wrong side?
     if steps_z2 < steps_z1 then return end
@@ -490,7 +492,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   local function straddle_door()
     local z = A.floor_h
 
-    if edge.conn then z = assert(edge.conn.door_h) end
+    if E.conn then z = assert(E.conn.door_h) end
 
     local inner_mat, outer_mat = calc_straddle_mat(A, NA)
 
@@ -501,7 +503,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     -- FIXME : find it properly
     local fab_name
 
-    if edge.kind == "arch" then
+    if E.kind == "arch" then
       fab_name = "Arch_plain"
     else
       fab_name = "Door_manual_big"
@@ -539,9 +541,9 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   local function straddle_locked_door()
     local z = A.floor_h
 
-    if edge.conn then z = assert(edge.conn.door_h) end
+    if E.conn then z = assert(E.conn.door_h) end
 
-    local LOCK = assert(edge.lock)
+    local LOCK = assert(E.lock)
 
     local inner_mat, outer_mat = calc_straddle_mat(A, NA)
 
@@ -670,63 +672,90 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
       y1, y2 = y2, y1
     end
 
-    local E = { x1=x1, y1=y1, x2=x2, y2=y2 }
+    local meh = { x1=x1, y1=y1, x2=x2, y2=y2 }
 
-    table.insert(A.side_edges, E)
+    table.insert(A.side_edges, meh)
   end
 
 
   ---| Render_edge |---
 
+  assert(E)
+  assert(E.kind)
+
+
+  -- FIXME: !!!  does not support long edges
+--  add_edge_line()
+
+
+  if E.kind == "nothing" then
+    return
+
+  elseif E.kind == "wall" then
+    assert(A)
+    edge_wall(calc_wall_mat(A, NA))
+
+  elseif E.kind == "trap_wall" then
+    edge_trap_wall(calc_wall_mat(A, NA))
+
+  elseif E.kind == "sky_edge" and A.floor_h then
+    edge_inner_sky()
+
+  elseif E.kind == "steps" then
+    edge_steps()
+
+  elseif E.kind == "fence" then
+    straddle_fence()
+
+  elseif E.kind == "arch" or E.kind == "door" then
+    straddle_door(S, dir)
+
+  elseif E.kind == "lock_door" then
+    straddle_locked_door()
+
+  elseif E.kind == "window" then
+    straddle_window()
+
+  else
+    error("Unknown edge kind: " .. tostring(E.kind))
+  end
+end
+
+
+
+function Render_fake_edge(A, S, dir)
+
+  -- proper edges are done in Render_edge()
+  if S.edge[dir] then return end
+
   local N = S:neighbor(dir, "NODIR")
 
   if N == "NODIR" then return end
 
-
   -- same area?  nothing needed
-  NA = N and N.area
+  if N.area and N.area == A then return end
 
-  if NA and NA == A then return end
-
-
-  add_edge_line()
-
-
-  -- edge[] is main one, junction is the fallback
-  if edge.kind == nil and NA then
-    edge = Junction_lookup(A, NA)
+  -- find the junction (N.area may be NIL)
+  local junc
+  
+  if N.area then
+    junc = Junction_lookup(A, N.area)
+  else
+    junc = Junction_lookup(A, "map_edge")
   end
 
+  if not junc or junc.kind == nil then return end
 
-  if not edge or edge.kind == nil or edge.kind == "nothing" then
-    return
+  local E =
+  {
+    kind = junc.kind
+    S    = S
+    dir  = dir
+    long = 1
+    area = A
+  }
 
-  elseif edge.kind == "wall" then
-    assert(A)
-    edge_wall(calc_wall_mat(A, NA))
-
-  elseif edge.kind == "trap_wall" then
-    edge_trap_wall(calc_wall_mat(A, NA))
-
-  elseif edge.kind == "sky_edge" and A.floor_h then
-    edge_inner_sky()
-
-  elseif edge.kind == "steps" then
-    edge_steps()
-
-  elseif edge.kind == "fence" then
-    straddle_fence()
-
-  elseif edge.kind == "arch" or edge.kind == "door" then
-    straddle_door(S, dir)
-
-  elseif edge.kind == "lock_door" then
-    straddle_locked_door()
-
-  elseif edge.kind == "window" then
-    straddle_window()
-
-  end
+--!!!  Render_edge(E, dir)
 end
 
 
@@ -1146,14 +1175,6 @@ end
 
 
 
-function Render_walls(A, S)
-  each dir in geom.ALL_DIRS do
-    Render_edge(A, S, dir)
-  end
-end
-
-
-
 function Render_area(A)
   -- stairwells are special little butterflies...
   if A.is_stairwell then
@@ -1164,9 +1185,16 @@ function Render_area(A)
   A.floor_brushes = {}
   A.side_edges = {}
 
+  each E in A.edges do
+    Render_edge(E)
+  end
+
   each S in A.seeds do
     Render_seed(A, S)
-    Render_walls(A, S)
+
+    each dir in geom.ALL_DIRS do
+      Render_fake_edge(A, S, dir)
+    end
   end
 end
 

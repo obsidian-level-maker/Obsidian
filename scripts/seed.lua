@@ -656,6 +656,7 @@ function Seed_create_edge(S, dir, long, kind)
     dir = dir
     long = long
     kind = kind
+    area = S.area
   }
 
   -- add it into each seed
