@@ -728,9 +728,9 @@ function Title_add_background()
   local BACKGROUNDS =
   {
     space1 = 10
-    space2 = 40
-    space3 = 40
-    space4 = 40
+    space2 = 30
+    space3 = 30
+    space4 = 30
 
     hell_1 = 40
     hell_2 = 40
