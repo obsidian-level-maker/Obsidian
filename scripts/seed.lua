@@ -700,6 +700,36 @@ function Seed_create_edge_pair(S, dir, long, kind)
 end
 
 
+function Edge_get_line(E)
+  -- returns coordinates of left point edge --> right point
+
+  local x1, y1 = E.S.x1, E.S.y1
+  local x2, y2 = E.S.x2, E.S.y2
+
+  if E.dir == 8 then y1 = y2 end
+  if E.dir == 2 then y2 = y1 end
+  if E.dir == 4 then x2 = x1 end
+  if E.dir == 6 then x1 = x2 end
+
+  if E.dir == 2 then
+    x1, x2 = x2, x1
+  end
+
+  if E.dir == 6 or E.dir == 1 or E.dir == 9 then
+    y1, y2 = y2, y1
+  end
+
+  if E.long > 1 then
+    if E.dir == 8 then x2 = x2 + (E.long - 1) * SEED_SIZE end
+    if E.dir == 2 then x1 = x1 - (E.long - 1) * SEED_SIZE end
+    if E.dir == 4 then y2 = y2 + (E.long - 1) * SEED_SIZE end
+    if E.dir == 6 then y1 = y1 - (E.long - 1) * SEED_SIZE end
+  end
+
+  return x1, y1, x2, y2
+end
+
+
 function Seed_coord_range(sx1, sy1, sx2, sy2)
   assert(Seed_valid(sx1, sy1))
   assert(Seed_valid(sx2, sy2))
