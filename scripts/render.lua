@@ -715,9 +715,9 @@ end
 
 
 
-function Render_fake_edge(A, S, dir)
+function Render_junction(A, S, dir)
 
-  -- proper edges are done in Render_edge()
+  -- proper EDGE objects are handled elsewhere
   if S.edge[dir] then return end
 
   local N = S:neighbor(dir, "NODIR")
@@ -1187,7 +1187,7 @@ function Render_area(A)
     Render_seed(A, S)
 
     each dir in geom.ALL_DIRS do
-      Render_fake_edge(A, S, dir)
+      Render_junction(A, S, dir)
     end
   end
 end
