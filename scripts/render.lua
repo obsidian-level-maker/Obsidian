@@ -646,38 +646,14 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   end
 
 
-  local function add_edge_line()
-    local x1, y1 = S.x1, S.y1
-    local x2, y2 = S.x2, S.y2
-
-    if dir == 2 then y2 = y1 end
-    if dir == 8 then y1 = y2 end
-
-    if dir == 4 then x2 = x1 end
-    if dir == 6 then x1 = x2 end
-
-    if dir == 3 or dir == 7 then
-      -- no change necessary
-    end
-
-    if dir == 1 or dir == 9 then
-      y1, y2 = y2, y1
-    end
-
-    local meh = { x1=x1, y1=y1, x2=x2, y2=y2 }
-
-    table.insert(A.side_edges, meh)
-  end
-
-
   ---| Render_edge |---
 
   assert(E)
   assert(E.kind)
 
 
-  -- FIXME: !!!  does not support long edges
---  add_edge_line()
+  -- mark this boundary for spot finding code
+  table.insert(A.side_edges, Edge_get_line(E))
 
 
   if E.kind == "nothing" then
@@ -1180,6 +1156,7 @@ function Render_area(A)
   A.side_edges = {}
 
   each E in A.edges do
+    assert(E.area == A)
     Render_edge(E)
   end
 
