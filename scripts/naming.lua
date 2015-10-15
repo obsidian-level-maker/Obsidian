@@ -922,7 +922,6 @@ namelib.NAMES =
         ["Slice 'em Twice!"]=10
         ["Sorrowful Faction"]=10
         ["Taste the Blade"]=10
-        ["Thou Art Doomed!"]=10
         ["Traces of Evil"]=10
         ["Twists and Turns"]=10
         ["Welcome to the Coalface"]=10
@@ -1479,11 +1478,14 @@ namelib.NAMES =
         Cold = 20
         Savage = 20
         Deathly = 20
+        Corrupted = 10
+        Unholy = 10
         Strange = 10
 
         Monstrous = 10
         Demonic = 10
         Infested = 10
+        Haunted = 5
         Doomed = 5
         Hateful = 5
         Forsaken = 15
@@ -1514,18 +1516,22 @@ namelib.NAMES =
         Slime = 10
         Nukage = 10
         Mush = 5
+        Ash = 5
         Filth = 10
+        Viscera = 10
 
         Destruction = 10
         Horror = 20
         Monsters = 10
         Zombies = 10
+        Demons = 10
 
         Pain = 10
+        Agony = 10
         Terror = 10
         Fear = 10
         Flames = 10
-        Despair = 5
+        Despair = 10
         Doom = 5
       }
 
@@ -1588,6 +1594,36 @@ namelib.NAMES =
         ["Security Breach"] = 10
         ["Arena From Hell"] = 10
 
+        -- these by Chris (mostly)
+        ["Radio Silence"] = 10
+        ["Liquidation"] = 10
+        ["Return to Hell"] = 10
+        ["A Chilling Discovery"] = 10
+        ["Human Stagnation"] = 10
+        ["Thou Art Doomed"] = 10
+        ["Fathomless Abyss"] = 10
+        ["Insecurity"] = 10
+        ["Pathos 666"] = 10
+        ["Toxic Grievance"] = 10
+        ["Hell's Injustice"] = 10
+        ["Gate to Nowhere"] = 10
+        ["Of Horns And Blood"] = 10
+        ["Disadvantaged"] = 10
+        ["Silent Hell"] = 10
+        ["Ghosts of Tei Tenga"] = 10
+        ["End of Everything"] = 10
+        ["Ashes And Plasma"] = 10
+        ["A New Kind of Army"] = 10
+        ["Post-Human Paradox"] = 10
+        ["Neverending Twilight"] = 10
+        ["Tower of Limbs"] = 10
+        ["Burial in Space"] = 10
+        ["The Sons of Mars"] = 10
+        ["Parallel Absolution"] = 10
+        ["A Clockwork Death"] = 10
+        ["Dolor Extremus"] = 10
+        ["Spiritus Malus"] = 10
+
         -- homages to DOOM 1 Episodes
         ["Explosion"] = 3
         ["Enter the Flames"] = 3
@@ -1638,7 +1674,7 @@ namelib.NAMES =
         Evil = 50
         Monstrous = 15
         Demonic = 15
-        Infested = 15
+        Infested = 10
         Doomed = 10
         Forsaken = 10
 
@@ -1654,6 +1690,9 @@ namelib.NAMES =
         Cursed = 10
         Haunted = 10
         Cruel = 10
+
+        Hallowed = 5
+        Unholy = 10
       }
 
       p =
@@ -1697,10 +1736,11 @@ namelib.NAMES =
         Blood = 20
         Hell = 10
         Fury = 10
+        Horror = 10
         Slime = 5
-        Horror = 5
 
-        Pain = 20
+        Pain = 10
+        Agony = 20
         Terror = 20
         Fear = 20
         Flames = 20
