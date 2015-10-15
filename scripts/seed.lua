@@ -672,7 +672,7 @@ function Seed_create_edge(S, dir, long, kind)
 
   -- add it to area list
   if true then
-    local A = assert(S.area)
+    local A = assert(EDGE.area)
     table.insert(A.edges, EDGE)
   end
 
@@ -726,7 +726,7 @@ function Edge_get_line(E)
     if E.dir == 6 then y1 = y1 - (E.long - 1) * SEED_SIZE end
   end
 
-  return x1, y1, x2, y2
+  return { x1=x1, y1=y1, x2=x2, y2=y2 }
 end
 
 
