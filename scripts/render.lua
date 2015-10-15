@@ -19,29 +19,6 @@
 ------------------------------------------------------------------------
 
 
-function calc_wall_mat(A1, A2)
-  if not A1 then
-    return "_ERROR"
-  end
-
-  if A2 and A2.mode == "void" then A2 = nil end
-
-  if not A1.is_outdoor then
-    return assert(A1.wall_mat or "REDWALL")  --!!!!
-  end
-
-  return A1.zone.facade_mat
-end
-
-
-function calc_straddle_mat(A1, A2)
-  local mat1 = calc_wall_mat(A1, A2)
-  local mat2 = calc_wall_mat(A2, A1)
-
-  return mat1, mat2
-end
-
-
 function edge_get_rail(S, dir)
   assert(S.area)
 
@@ -491,11 +468,15 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
 
   local function straddle_door()
+    assert(E.peer)
+    assert(E.peer.area)
+
     local z = A.floor_h
 
     if E.conn then z = assert(E.conn.door_h) end
 
-    local inner_mat, outer_mat = calc_straddle_mat(A, NA)
+    local inner_mat = assert(A.wall_mat)
+    local outer_mat = assert(E.peer.area.wall_mat)
 
     local def
     local skin1 = { wall=inner_mat, outer=outer_mat }
@@ -537,13 +518,17 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
 
   local function straddle_locked_door()
+    assert(E.peer)
+    assert(E.peer.area)
+
     local z = A.floor_h
 
     if E.conn then z = assert(E.conn.door_h) end
 
     local LOCK = assert(E.lock)
 
-    local inner_mat, outer_mat = calc_straddle_mat(A, NA)
+    local inner_mat = assert(A.wall_mat)
+    local outer_mat = assert(E.peer.area.wall_mat)
 
 
     -- ensure it faces the correct direction
@@ -609,10 +594,13 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
 
   local function straddle_window()
+    assert(E.peer and E.peer.area)
+
     -- FIXME: window_z1 in JUNC/BORD
     local z = math.max(A.floor_h or 0, NA.floor_h or 0)
 
-    local inner_mat, outer_mat = calc_straddle_mat(A, NA)
+    local inner_mat = assert(A.wall_mat)
+    local outer_mat = assert(E.peer.area.wall_mat)
 
     local skin1 = { wall=inner_mat, outer=outer_mat }
 
@@ -660,11 +648,12 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     return
 
   elseif E.kind == "wall" then
-    assert(A)
-    edge_wall(calc_wall_mat(A, NA))
+    local mat = assert(E.wall_mat or A.wall_mat)
+    edge_wall(mat)
 
   elseif E.kind == "trap_wall" then
-    edge_trap_wall(calc_wall_mat(A, NA))
+    local mat = assert(E.wall_mat or A.wall_mat)
+    edge_trap_wall(mat)
 
   elseif E.kind == "sky_edge" and A.floor_h then
     edge_inner_sky()
@@ -1255,7 +1244,7 @@ end
 
 
   if R then ---???  A.kind == "building" then
-    A.wall_mat  = assert(R.main_tex)
+    A.wall_mat = assert(R.main_tex)
 
     if R.theme and R.theme.floors then
       A.floor_mat = rand.key_by_probs(R.theme.floors)
@@ -1314,9 +1303,15 @@ end
   end
 
 
+  if A.is_outdoor then
+    A.wall_mat = assert(A.zone.facade_mat)
+  end
+
+
   if A.is_outdoor and not A.is_porch then
     A.ceil_mat = "_SKY"
   end
+
 
   A.wall_mat = A.wall_mat or A.floor_mat
   A.ceil_mat = A.ceil_mat or A.wall_mat
