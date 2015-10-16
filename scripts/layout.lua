@@ -887,30 +887,6 @@ function Layout_map_borders__OLD()
   end
 
 
-  local function set_junctions(A)
-    each N in A.neighbors do
-      if N.room and N.is_outdoor then
-        local junc = Junction_lookup(A, N)
-        assert(junc)
-
-        if A.kind == "water" and N.room.kind == "hallway" then
-          junc.kind = "fence"
-          junc.fence_mat = A.zone.fence_mat
-          junc.fence_top_z = N.room.hallway.max_h + 32
-
-        elseif A.kind == "water" then
-          junc.kind = "rail"
-          junc.rail_mat = "MIDBARS3"
-          junc.post_h   = 84
-          junc.blocked  = true
-
-        elseif A.mode == "scenic" then
-          junc.kind = "nothing"
-        end
-      end
-    end
-  end
-
 
   local function touches_water(A)
     each N in A.neighbors do
@@ -1058,7 +1034,7 @@ function Layout_create_scenic_borders()
           junc.blocked  = true
 --]]
         elseif A.kind != "void" then
---??????          junc.kind = "nothing"
+          junc.keep_empty = true
         end
       end
     end
@@ -1288,7 +1264,7 @@ function Layout_liquid_stuff()
     -- room which faces into the pool?
 
     if N.room and faces_room(A, N.room) then
---??????      junc.kind = "nothing"
+      junc.keep_empty = true
       return
     end
 
@@ -1296,7 +1272,7 @@ function Layout_liquid_stuff()
 
     if N.mode == "pool" then
       if N.pool_id == A.pool_id then
-        junc.kind = "nothing"
+        junc.keep_empty = true
         return
       end
     end
@@ -1319,7 +1295,7 @@ function Layout_liquid_stuff()
     if N.is_boundary and A.face_rooms[1].is_outdoor then
       -- mountains will prevent travel
       if A.zone.border_info.kind != "water" then
-        junc.kind = "nothing"
+        junc.keep_empty = true
         return
       end
     end

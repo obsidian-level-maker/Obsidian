@@ -884,7 +884,9 @@ function Room_border_up()
 
 
     -- already decided?  [ outdoor borders ]
-    if junc.kind then return end
+    if junc.keep_empty then return end
+
+    if junc.E1 then return end
 
 
     -- void --

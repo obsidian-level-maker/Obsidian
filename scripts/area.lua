@@ -114,14 +114,12 @@
 
     -- these are "pseudo edges" which will be used to render the junction.
     -- they do not contain position info (S and dir).
+    -- by default these are absent, which means "do nothing".
     -- E2 is not used (NIL) for map edges.
     E1 : EDGE
     E2 : EDGE
 
-    kind : keyword   -- unset means it has not been decided yet.
-                     -- can be: "nothing", "wall", "fence", "window",
-                     --         "rail", "steps", "liquid_arch",
-                     --         "lowering_wall", etc...
+    keep_empty   -- true if junction should stay as "nothing"
 
     perimeter    -- a measure of length of the border between the areas
                  -- (in units of seed-edges)
