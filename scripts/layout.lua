@@ -643,8 +643,8 @@ function Layout_traps_and_cages()
 
     local junc = Junction_lookup(A, parent_A)
     
-    junc.kind = "trap_wall"
-    junc.trigger = spot.trigger
+--!!!!!! FIXME    junc.kind = "trap_wall"
+--!!!!!! FIXME    junc.trigger = spot.trigger
   end
 
 
@@ -743,10 +743,13 @@ function Layout_traps_and_cages()
 
         local junc = Junction_lookup(A, N)
 
+--!!!!!! FIXME
+--[[
         junc.kind = "rail"
         junc.rail_mat = "MIDBARS3"
         junc.post_h   = 84
         junc.blocked  = true
+--]]
       end
     end
 
@@ -973,7 +976,7 @@ function Layout_map_borders__OLD()
   end
 
 
-  ---| Layout_map_borders |---
+  ---| Layout_map_borders__OLD |---
 
   LEVEL.hill_mode = rand.sel(70, "high", "low")
 
@@ -1040,18 +1043,22 @@ function Layout_create_scenic_borders()
         assert(junc)
 
         if A.kind == "water" and N.room.kind == "hallway" then
+--!!!!!! FIXME
+--[[
           junc.kind = "fence"
           junc.fence_mat = A.zone.fence_mat
           junc.fence_top_z = N.room.hallway.max_h + 32
-
+--]]
         elseif A.kind == "water" then
+--!!!!!! FIXME
+--[[
           junc.kind = "rail"
           junc.rail_mat = "MIDBARS3"
           junc.post_h   = 84
           junc.blocked  = true
-
+--]]
         elseif A.kind != "void" then
-          junc.kind = "nothing"
+--??????          junc.kind = "nothing"
         end
       end
     end
@@ -1281,7 +1288,7 @@ function Layout_liquid_stuff()
     -- room which faces into the pool?
 
     if N.room and faces_room(A, N.room) then
-      junc.kind = "nothing"
+--??????      junc.kind = "nothing"
       return
     end
 
@@ -1488,7 +1495,7 @@ function Layout_outdoor_shadows()
 
     local junc = Junction_lookup(SA, NA)
 
-    if junc and junc.kind == "wall" then return true end
+--??????    if junc and junc.kind == "wall" then return true end
 
     return false
   end

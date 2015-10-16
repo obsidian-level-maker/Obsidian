@@ -106,11 +106,17 @@
     -- A "junction" is information about how two touching areas interact.
     -- For example: could be solid wall, fence, or even nothing at all.
     --
-    -- The junction kind can be overridden by the EDGE structure.
+    -- The junction kind can be overridden by a specific EDGE object.
     --
 
     A1 : AREA
-    A2 : AREA
+    A2 : AREA   -- can be special value "map_edge"
+
+    -- these are "pseudo edges" which will be used to render the junction.
+    -- they do not contain position info (S and dir).
+    -- E2 is not used (NIL) for map edges.
+    E1 : EDGE
+    E2 : EDGE
 
     kind : keyword   -- unset means it has not been decided yet.
                      -- can be: "nothing", "wall", "fence", "window",
@@ -320,6 +326,7 @@ function Junction_init()
   each A in LEVEL.areas do
   each S in A.seeds do
   each dir in geom.ALL_DIRS do
+
     local N = S:neighbor(dir, "NODIR")
 
     if N == "NODIR" then continue end
@@ -327,8 +334,6 @@ function Junction_init()
     -- edge of map?
     if not N then
       local junc = Junction_lookup(A, "map_edge", "create_it")
-
----##      S.border[dir].junction = junc
 
       junc.perimeter = junc.perimeter + 1
       continue
@@ -340,12 +345,11 @@ function Junction_init()
 
     local junc = Junction_lookup(A, N.area)
 
----##    S.border[dir].junction = junc
-
     if dir < 5 then
       junc.perimeter = junc.perimeter + 1
     end
-  end
+
+  end -- A, S, dir
   end
   end
 
@@ -377,10 +381,12 @@ function Corner_init()
   for cy = 1, LEVEL.area_corners.h do
     local CORNER =
     {
-      cx = cx, cy = cy
+      cx = cx
+      cy = cy
       x = BASE_X + (cx-1) * SEED_SIZE
       y = BASE_Y + (cy-1) * SEED_SIZE
-      areas={}, junctions={}
+      areas = {}
+      junctions = {}
     }
 
     LEVEL.area_corners[cx][cy] = CORNER
@@ -392,12 +398,14 @@ function Corner_init()
   each A in LEVEL.areas do
   each S in A.seeds do
   each dir in geom.CORNERS do
+
     if S.diagonal and S.diagonal == (10 - dir) then continue end
 
     local corner = S:get_corner(dir)
 
     table.add_unique(corner.areas, A)
-  end
+
+  end  -- A, S, dir
   end
   end
 

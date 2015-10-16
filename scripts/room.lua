@@ -854,12 +854,15 @@ end
 
 function Room_border_up()
 
-  local function visit_area_pair(junc, A1, A2)
+  local function visit_junction(junc)
+    local A1 = junc.A1
+    local A2 = junc.A2
+
     assert(A1 != A2)
 
 
     -- handle edge of map
-    -- [ normal rooms generally don't touch the edge ]
+    -- [ normal rooms should not touch the edge ]
 
     if A2 == "map_edge" then
       if A1.room or A1.mode == "cage" or A1.mode == "trap" or A1.mode == "pool" then
@@ -1017,7 +1020,7 @@ do return end
   ---| Room_border_up |---
 
   each _,junc in LEVEL.area_junctions do
-    visit_area_pair(junc, junc.A1, junc.A2)
+    visit_junction(junc)
   end
 
 end

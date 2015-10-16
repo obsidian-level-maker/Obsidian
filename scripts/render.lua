@@ -158,8 +158,6 @@ function Render_edge(E)
 
 
   local function edge_trap_wall(mat)
-    if NA.mode != "trap" then return end
-
     assert(E.trigger)
 
     local brush = raw_wall_brush()
@@ -596,7 +594,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
   local function straddle_window()
     assert(E.peer and E.peer.area)
 
-    -- FIXME: window_z1 in JUNC/BORD
+    -- FIXME: window_z1 in JUNC/EDGE
     local z = math.max(A.floor_h or 0, NA.floor_h or 0)
 
     local inner_mat = assert(A.wall_mat)
@@ -703,18 +701,22 @@ function Render_junction(A, S, dir)
     junc = Junction_lookup(A, "map_edge")
   end
 
-  if not junc or junc.kind == nil then return end
+  if not junc then return end
 
-  local E =
-  {
-    kind = junc.kind
-    S    = S
-    dir  = dir
-    long = 1
-    area = A
-  }
+  for pass = 1, 2 do
+    local E = sel(pass == 1, junc.E1, junc.E2)
 
---!!!  Render_edge(E, dir)
+    if E then
+      E.S    = S
+      E.dir  = dir
+      E.long = 1
+
+      Render_edge(E)
+    end
+
+    S   = S:neighbor(dir)
+    dir = 10 - dir
+  end
 end
 
 
