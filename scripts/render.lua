@@ -81,7 +81,7 @@ end
 
 function Render_edge(E)
 
-  local A = E.area
+  local A   = assert(E.area)
   local dir = assert(E.dir)
 
 
@@ -92,6 +92,8 @@ function Render_edge(E)
 
 
   local function raw_wall_brush()
+    local S = E.S
+
     local TK = 16
 
     local x1, y1 = S.x1, S.y1
@@ -205,6 +207,8 @@ function Render_edge(E)
 
 
   local function straddle_fence()
+    local S = E.S
+
     local mat = assert(E.fence_mat)
     local top_z = assert(E.fence_top_z)
     local TK = E.fence_thick or 16
@@ -715,8 +719,10 @@ function Render_junction(A, S, dir)
       Render_edge(E)
     end
 
-    S   = S:neighbor(dir)
-    dir = 10 - dir
+    if pass == 1 then
+      S   = S:neighbor(dir)
+      dir = 10 - dir
+    end
   end
 end
 
@@ -1143,9 +1149,6 @@ function Render_area(A)
     Layout_build_stairwell(A)
     return
   end
-
-  A.floor_brushes = {}
-  A.side_edges = {}
 
   each E in A.edges do
     assert(E.area == A)

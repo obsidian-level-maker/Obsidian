@@ -866,6 +866,7 @@ function simple_wall_edge(A)
   {
     kind = "wall"
     wall_mat = simple_wall_mat(A)
+    area = A
   }
 end
 
@@ -874,8 +875,9 @@ function simple_fence_edge(A, top_z)
   return
   {
     kind = "fence"
-    fence_mat = assert(A1.zone.fence_mat)
+    fence_mat = assert(A.zone.fence_mat)
     fence_top_z = top_z
+    area = A
   }
 end
 
@@ -883,6 +885,9 @@ end
 function Junction_make_wall(junc)
   junc.E1 = simple_wall_edge(junc.A1)
   junc.E2 = simple_wall_edge(junc.A2)
+
+  junc.E1.peer = junc.E2
+  junc.E2.peer = junc.E1
 end
 
 
@@ -897,6 +902,9 @@ function Junction_make_fence(junc)
 
   junc.E1 = simple_fence_edge(junc.A1, top_z)
   junc.E2 = simple_fence_edge(junc.A2, top_z)
+
+  junc.E1.peer = junc.E2
+  junc.E2.peer = junc.E1
 end
 
 

@@ -163,7 +163,10 @@ function AREA_CLASS.new(mode)
     seeds = {}
     neighbors  = {}
     edges = {}
+
     inner_points = {}
+    floor_brushes = {}
+    side_edges = {}
   }
 
   A.name = "AREA_" .. A.id
