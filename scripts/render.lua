@@ -695,8 +695,6 @@ function Render_junction(A, S, dir)
   -- same area?  nothing needed
   if N and N.area == A then return end
 
-  local junc
-
   -- find the junction (N.area may be NIL)
   local junc
   
@@ -707,9 +705,16 @@ function Render_junction(A, S, dir)
   end
 
   if not junc then return end
+  if not junc.E1 then return end
 
   for pass = 1, 2 do
-    local E = sel(pass == 1, junc.E1, junc.E2)
+    local E
+
+    if (junc.E1.area == A) == (pass == 1) then
+      E = junc.E1
+    else
+      E = junc.E2
+    end
 
     if E then
       E.S    = S

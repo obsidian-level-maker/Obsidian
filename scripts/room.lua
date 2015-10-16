@@ -885,9 +885,6 @@ end
 function Junction_make_wall(junc)
   junc.E1 = simple_wall_edge(junc.A1)
   junc.E2 = simple_wall_edge(junc.A2)
-
-  junc.E1.peer = junc.E2
-  junc.E2.peer = junc.E1
 end
 
 
@@ -901,7 +898,7 @@ function Junction_make_fence(junc)
   end
 
   junc.E1 = simple_fence_edge(junc.A1, top_z)
-  junc.E2 = simple_fence_edge(junc.A2, top_z)
+  junc.E2 = { kind="nothing", area=junc.A2 }
 
   junc.E1.peer = junc.E2
   junc.E2.peer = junc.E1
