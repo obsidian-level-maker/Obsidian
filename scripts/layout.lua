@@ -1283,10 +1283,13 @@ function Layout_liquid_stuff()
        N.mode != "hallway" and
        N.floor_h and N.floor_h > A.floor_h
     then
+--!!!!!! FIXME
+--[[
       junc.kind = "rail"
       junc.rail_mat = "MIDBARS3"
       junc.post_h   = 84
       junc.blocked  = true
+--]]
       return
     end
 
@@ -1303,11 +1306,13 @@ function Layout_liquid_stuff()
 
     -- FIXME : fences !!!
 
-    junc.kind = "wall"
+--!!!!!!    junc.kind = "wall"
   end
 
 
   ---| Layout_liquid_stuff |---
+
+do return end  -- very broken atm
 
   if LEVEL.liquid_usage == 0 then return end
 
@@ -1453,7 +1458,14 @@ end
 
 
 function Layout_outdoor_shadows()
-  
+
+  local function is_wallish(edge_kind)
+    if edge_kind == "wall" then return true end
+
+    return false
+  end
+
+
   local function need_shadow(S, dir)
     if not S.area then return false end
 
@@ -1469,9 +1481,12 @@ function Layout_outdoor_shadows()
 
     if SA == NA then return false end
 
+    -- FIXME : check for real EDGE objects
+
     local junc = Junction_lookup(SA, NA)
 
---??????    if junc and junc.kind == "wall" then return true end
+    if junc and junc.E1 and is_wallish(junc.E1.kind) then return true end
+    if junc and junc.E2 and is_wallish(junc.E2.kind) then return true end
 
     return false
   end

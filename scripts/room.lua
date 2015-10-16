@@ -852,6 +852,55 @@ end
 
 
 
+function simple_wall_mat(A)
+  if A.room and not A.room.is_outdoor then
+    return assert(A.room.main_tex)
+  end
+
+  return assert(A.zone.facade_mat)
+end
+
+
+function simple_wall_edge(A)
+  return
+  {
+    kind = "wall"
+    wall_mat = simple_wall_mat(A)
+  }
+end
+
+
+function simple_fence_edge(A, top_z)
+  return
+  {
+    kind = "fence"
+    fence_mat = assert(A1.zone.fence_mat)
+    fence_top_z = top_z
+  }
+end
+
+
+function Junction_make_wall(junc)
+  junc.E1 = simple_wall_edge(junc.A1)
+  junc.E2 = simple_wall_edge(junc.A2)
+end
+
+
+function Junction_make_fence(junc)
+  -- FIXME : use max floor of each room (if any)
+
+  local top_z = math.max(junc.A1.floor_h, junc.A2.floor_h) + 32
+
+  if junc.A1.pool_hack or junc.A2.pool_hack then
+    top_z = top_z + 16
+  end
+
+  junc.E1 = simple_fence_edge(junc.A1, top_z)
+  junc.E2 = simple_fence_edge(junc.A2, top_z)
+end
+
+
+
 function Room_border_up()
 
   local function visit_junction(junc)
@@ -866,9 +915,8 @@ function Room_border_up()
 
     if A2 == "map_edge" then
       if A1.room or A1.mode == "cage" or A1.mode == "trap" or A1.mode == "pool" then
-        junc.kind = "wall"
-      else
-        junc.kind = "nothing"
+        junc.E1 = simple_wall_edge(A1)
+        junc.E2 = nil
       end
 
       return
@@ -878,14 +926,13 @@ function Room_border_up()
     -- zones : gotta keep 'em separated
 
     if A1.zone != A2.zone then
-      junc.kind = "wall"
+      Junction_make_wall(junc)
       return
     end
 
 
     -- already decided?  [ outdoor borders ]
     if junc.keep_empty then return end
-
     if junc.E1 then return end
 
 
@@ -894,7 +941,7 @@ function Room_border_up()
     if A1.mode == "void" or A2.mode == "void" or
        A1.mode == "trap" or A2.mode == "trap"
     then
-      junc.kind = "wall"
+      Junction_make_wall(junc)
       return
     end
 
@@ -908,14 +955,15 @@ function Room_border_up()
       -- nothing needed if both building or both outdoor
       if A1.is_outdoor == A2.is_outdoor then return end
 
-      junc.kind = "wall"
+      Junction_make_wall(junc)
       return
     end
 
     -- room to scenic --
 
     if not A2.room then
-      junc.kind = "wall"  -- FIXME "window"
+      -- TODO Sometimes make windows?  [ probably do elsewhere... ]
+      Junction_make_wall(junc)
       return
     end
 
@@ -926,16 +974,19 @@ function Room_border_up()
       -- FIXME : too simplistic!
 
       if A1.is_porch or A2.is_porch then
-        junc.kind = "pillar"
+---??????  junc.kind = "pillar"
       end
 
 -- STEP TEST
       local z1 = math.min(A1.floor_h, A2.floor_h)
       local z2 = math.max(A1.floor_h, A2.floor_h)
       if (z2 - z1) >  24 and (z2 - z1) <= 72 then
+--!!!!!! FIXME
+--[[
         junc.kind2 = junc.kind
         junc.kind = "steps"
         junc.steps_mat = "FLAT1"
+--]]
       end
 
       return
@@ -957,7 +1008,7 @@ do return end
        A1.room.hallway.parent and
        A1.room.hallway.parent == A2.room
     then
-      junc.kind = "nothing"
+      junc.keep_empty = true
       return
     end
 
@@ -965,23 +1016,17 @@ do return end
        A2.room.hallway.parent and
        A2.room.hallway.parent == A1.room
     then
-      junc.kind = "nothing"
+      junc.keep_empty = true
       return
     end
 
 
     -- outdoor to outdoor
     if A1.is_outdoor and A2.is_outdoor then
-      junc.kind = "fence"
-      junc.fence_mat = A1.zone.fence_mat
-      junc.fence_top_z = math.max(A1.floor_h, A2.floor_h) + 32
-
-      if A1.pool_hack or A2.pool_hack then
-        junc.fence_top_z = junc.fence_top_z + 16
-      end
+      Junction_make_fence(junc)
 
       if A1.is_porch or A2.is_porch then
-        junc.kind2 = "pillar"
+--??????  junc.kind2 = "pillar"
       end
 
       return
@@ -989,6 +1034,7 @@ do return end
 
 
     -- window test [ make A1 be the indoor room ]
+--[[
     local win_prob = style_sel("windows", 0, 15, 35, 75)
 
     if A1.is_outdoor and not A2.is_outdoor then
@@ -1010,12 +1056,12 @@ do return end
       end
       return
     end
+--]]
 
 
-    -- FIXME
+    -- when in doubt, block it out!
 
-    junc.kind = "wall"
-    return
+    Junction_make_wall(junc)
   end
 
 

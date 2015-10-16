@@ -39,6 +39,7 @@ function edge_get_rail(S, dir)
 
   local junc = Junction_lookup(S.area, N.area)
 
+--!!!! FIXME
   if junc.kind == "rail" then return junc end
 
   return nil
