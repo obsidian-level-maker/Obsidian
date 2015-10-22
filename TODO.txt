@@ -33,10 +33,8 @@ ______________________________________________________________________
 +  Heretic support
 
 +  Quake support
-   -  ability to load .map files
-   -  ability to scale, rotate, mirror them
-   -  ability to replace textures and entities
-   -  build maps with external tools, bundle them for each OS
+   -  bring back lua-based prefabs
+   -  incorporate standard build tools (but keep VIS system)
 
 -  Hexen support
 
@@ -57,6 +55,8 @@ ______________________________________________________________________
 +  make "keep_weapons" the default behavior, change the module to
    have "pistol_starts" instead
 
++  have a "slow pace weapons" extra setting (idea by flyingdeath)
+
 -  sky generator : better checking of themes (esp. w/ control module)
 
 -  the locked switch closet
@@ -74,6 +74,24 @@ IDEA : an adjustment (of health) for "environment" of a battle
 
 IDEA: have a single thing number for "coop player"
       [ i.e. treat player entities more abstractly ]
+
+
+Sinks
+-----
+
++  decide them fairly early, e.g. Room_add_sinks() -- or in layout code
+   
+-  add "light" to ceilings with a light texture
+
+-  detect the "whole seed" part early (easy: all corners are inner points)
+   and [for floors only] give the seed a new floor_h/floor_mat, and honor
+   that floor_h when adding importants or decorative prefabs.
+
+-  monsters: should not straddle the line between normal floor and sink
+   [ draw that line in spot code ] and ideally would have correct 'Z'
+
+-  probably should mark seeds (or whatever) so know where can place
+   decorative prefabs.
 
 
 Monster flag IDEAS
