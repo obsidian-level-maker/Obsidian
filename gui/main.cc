@@ -701,7 +701,8 @@ int main(int argc, char **argv)
 		// batch mode never reads/writes the normal config file.
 		// but we can load settings from a explicitly specified file...
 		if (load_file)
-			Cookie_Load(load_file);
+			if (! Cookie_Load(load_file))
+				Main_FatalError("No such config file: %s\n", load_file);
 
 		Cookie_ParseArguments();
 
@@ -737,10 +738,14 @@ int main(int argc, char **argv)
 	main_win->play_box ->Defaults();
 
 	// load config after creating window (will set widget values)
-	Cookie_Load(config_file);
+	if (! Cookie_Load(config_file))
+	{
+		LogPrintf("Missing config file -- using defaults.\n\n");
+	}
 
 	if (load_file)
-		Cookie_Load(load_file);
+		if (! Cookie_Load(load_file))
+			Main_FatalError("No such config file: %s\n", load_file);
 
 	Cookie_ParseArguments();
 

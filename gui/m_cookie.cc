@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2014 Andrew Apted
+//  Copyright (C) 2006-2015 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -207,12 +207,9 @@ bool Cookie_Load(const char *filename)
 	cookie_fp = fopen(filename, "r");
 
 	if (! cookie_fp)
-	{
-		LogPrintf("Missing Config file -- using defaults.\n\n");
 		return false;
-	}
 
-	LogPrintf("Loading Config...\n");
+	LogPrintf("Loading config file: %s\n", filename);
 
 	// simple line-by-line parser
 	char buffer[MSG_BUF_LEN];
@@ -231,7 +228,6 @@ bool Cookie_Load(const char *filename)
 		LogPrintf("DONE.\n\n");
 
 	fclose(cookie_fp);
-
 	return true;
 }
 
@@ -254,7 +250,6 @@ bool Cookie_LoadString(const char *str)
 	}
 
 	LogPrintf("DONE.\n\n");
-
 	return true;
 }
 
@@ -272,7 +267,7 @@ bool Cookie_Save(const char *filename)
 		return false;
 	}
 
-	LogPrintf("Saving Config...\n");
+	LogPrintf("Saving config file...\n");
 
 	// header...
 	fprintf(cookie_fp, "-- CONFIG FILE : OBLIGE %s\n", OBLIGE_VERSION); 
@@ -292,7 +287,6 @@ bool Cookie_Save(const char *filename)
 	LogPrintf("DONE.\n\n");
 
 	fclose(cookie_fp);
-
 	return true;
 }
 
