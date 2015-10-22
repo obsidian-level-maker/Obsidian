@@ -86,6 +86,7 @@ static void ShowInfo()
 		"     --home     <dir>     Home directory\n"
 		"     --install  <dir>     Installation directory\n"
 		"     --config   <file>    Config file to use\n"
+		"     --options  <file>    Options file to use\n"
 		"\n"
 		"  -b --batch    <output>  Batch mode (no GUI)\n"
 		"  -l --load     <file>    Load settings from a file\n"
@@ -228,7 +229,7 @@ void Determine_InstallDir(const char *argv0)
 }
 
 
-void Determine_ConfigFile(const char *argv0)
+void Determine_ConfigFile()
 {
 	int conf_arg = ArgvFind(0, "config");
 
@@ -241,10 +242,32 @@ void Determine_ConfigFile(const char *argv0)
 		}
 
 		config_file = StringDup(arg_list[conf_arg + 1]);
-		return;
 	}
+	else
+	{
+		config_file = StringPrintf("%s/%s", home_dir, CONFIG_FILENAME);
+	}
+}
 
-	config_file = StringPrintf("%s/%s", home_dir, CONFIG_FILENAME);
+
+void Determine_OptionsFile()
+{
+	int optf_arg = ArgvFind(0, "options");
+
+	if (optf_arg >= 0)
+	{
+		if (optf_arg+1 >= arg_count || ArgvIsOption(optf_arg+1))
+		{
+			fprintf(stderr, "OBLIGE ERROR: missing path for --options\n");
+			exit(9);
+		}
+
+		options_file = StringDup(arg_list[optf_arg + 1]);
+	}
+	else
+	{
+		options_file = StringPrintf("%s/%s", home_dir, OPTIONS_FILENAME);
+	}
 }
 
 
@@ -635,9 +658,9 @@ int main(int argc, char **argv)
 
 	Determine_WorkingPath(argv[0]);
 	Determine_InstallDir(argv[0]);
-	Determine_ConfigFile(argv[0]);
 
-	options_file = StringPrintf("%s/%s", home_dir, OPTIONS_FILENAME);
+	Determine_ConfigFile();
+	Determine_OptionsFile();
 
 
 	LogInit(batch_mode ? NULL : LOG_FILENAME);

@@ -142,7 +142,7 @@ bool Options_Load(const char *filename)
 		return false;
 	}
 
-	LogPrintf("Loading Options...\n");
+	LogPrintf("Loading options file: %s\n", filename);
 
 	// simple line-by-line parser
 	char buffer[MSG_BUF_LEN];
@@ -175,7 +175,7 @@ bool Options_Save(const char *filename)
 		return false;
 	}
 
-	LogPrintf("Saving Options...\n");
+	LogPrintf("Saving options file...\n");
 
 	fprintf(option_fp, "-- OPTIONS FILE : OBLIGE %s\n", OBLIGE_VERSION); 
 	fprintf(option_fp, "-- " OBLIGE_TITLE " (C) 2006-2015 Andrew Apted\n");
