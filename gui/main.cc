@@ -288,8 +288,13 @@ void Determine_LoggingFile()
 
 		logging_file = StringDup(arg_list[logf_arg + 1]);
 
-		// FIXME: test we can create it
-		// Main_FatalError("Cannot create log file: %s\n", 
+		// test that it can be created
+		FILE * fp = fopen(logging_file, "w");
+
+		if (! fp)
+			Main_FatalError("Cannot create log file: %s\n", logging_file);
+
+		fclose(fp);
 	}
 	else if (! batch_mode)
 	{
