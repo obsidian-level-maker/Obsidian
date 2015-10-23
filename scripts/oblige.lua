@@ -626,6 +626,7 @@ function ob_load_game(dir, game)
 
   OB_GAME_DIR = dir .. "/" .. game
 
+  gui.debugf("  %s\n", game)
   ob_require("base")
 
   OB_GAME_DIR = nil
@@ -634,6 +635,8 @@ end
 
 function ob_load_all_games()
   local dir = gui.get_install_dir() .. "/games"
+
+  gui.printf("Loading all games...\n")
 
   local list = gui.scan_directory(dir, "DIRS")
 
@@ -657,6 +660,8 @@ end
 function ob_load_all_engines()
   OB_GAME_DIR = gui.get_install_dir() .. "/engines"
 
+  gui.printf("Loading all engines...\n")
+
   local list = gui.scan_directory(OB_GAME_DIR, "*.lua")
 
   if not list then
@@ -664,6 +669,7 @@ function ob_load_all_engines()
 
   else
     each filename in list do
+      gui.debugf("  %s\n", filename)
       ob_require(filename)
     end
   end
@@ -675,6 +681,8 @@ end
 function ob_load_all_modules()
   OB_GAME_DIR = gui.get_install_dir() .. "/modules"
 
+  gui.printf("Loading all modules...\n")
+
   local list = gui.scan_directory(OB_GAME_DIR, "*.lua")
 
   if not list then
@@ -682,6 +690,7 @@ function ob_load_all_modules()
 
   else
     each filename in list do
+      gui.debugf("  %s\n", filename)
       ob_require(filename)
     end
   end
@@ -707,7 +716,7 @@ function ob_init()
   end
 
 
-  gui.printf("~~ Oblige Lua initialization begun ~~\n")
+  gui.printf("~~ Oblige Lua initialization begun ~~\n\n")
 
 
   -- load definitions for all games
