@@ -34,7 +34,8 @@ ______________________________________________________________________
 
 +  Quake support
    -  bring back lua-based prefabs
-   -  incorporate standard build tools (but keep VIS system)
+   -  incorporate id method to build collision hulls
+   -  support slopes
 
 -  Hexen support
 
@@ -768,10 +769,6 @@ Name generator:
 
 -  use fl_utf8.h functions (fl_fopen, etc) for file handling
    [ BUT : glBSP, ajpoly, etc.... would need to use them too ]
-
--  option to save log to same base filename (TEST.wad + TEST.log)
-
--  ability to specify log file: --log option
 
 Console:
   -  display lists better
