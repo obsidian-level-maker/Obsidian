@@ -43,7 +43,7 @@ std::string dummy_wall_tex;
 std::string dummy_plane_tex;
 
 
-// m_spots.cc
+// csg_spots.cc
 #define SPOT_LOW_CEIL  1
 #define SPOT_WALL      2
 #define SPOT_LEDGE     3
