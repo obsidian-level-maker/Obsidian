@@ -273,6 +273,11 @@ XC =
   P_NORMAL = 16
   P_FAST   = 32
   P_TURBO  = 64
+
+  KEY_NONE   = 0
+  KEY_RED    = 129
+  KEY_BLUE   = 130
+  KEY_YELLOW = 131
 }
 
 -- translation from DOOM specials
@@ -303,15 +308,15 @@ XLAT =
   [ 23] = { act="S",  name="Floor_LowerToLowest", (tag, XC.F_SLOW) }
   [ 24] = { act="G",  name="Floor_RaiseToLowestCeiling", (tag, XC.F_SLOW) }
   [ 25] = { act="W",  name="Ceiling_CrushAndRaiseA", (tag, XC.C_SLOW, XC.C_SLOW, 10) }
-  [ 26] = { act="SR", name="Door_LockedRaise", (0, XC.D_SLOW, XC.DOORWAIT, BCard+CardIsSkull, tag) }
-  [ 27] = { act="SR", name="Door_LockedRaise", (0, XC.D_SLOW, XC.DOORWAIT, YCard+CardIsSkull, tag) }
-  [ 28] = { act="SR", name="Door_LockedRaise", (0, XC.D_SLOW, XC.DOORWAIT, RCard+CardIsSkull, tag) }
+  [ 26] = { act="SR", name="Door_LockedRaise", (0, XC.D_SLOW, XC.DOORWAIT, XC.KEY_BLUE, tag) }
+  [ 27] = { act="SR", name="Door_LockedRaise", (0, XC.D_SLOW, XC.DOORWAIT, XC.KEY_YELLOW, tag) }
+  [ 28] = { act="SR", name="Door_LockedRaise", (0, XC.D_SLOW, XC.DOORWAIT, XC.KEY_RED, tag) }
   [ 29] = { act="S",  name="Door_Raise", (tag, XC.D_SLOW, XC.DOORWAIT) }
   [ 30] = { act="W",  name="Floor_RaiseByTexture", (tag, XC.F_SLOW) }
   [ 31] = { act="S",  name="Door_Open", (0, XC.D_SLOW, tag) }
-  [ 32] = { act="Sm", name="Door_LockedRaise", (0, XC.D_SLOW, 0, BCard+CardIsSkull, tag) }
-  [ 33] = { act="Sm", name="Door_LockedRaise", (0, XC.D_SLOW, 0, RCard+CardIsSkull, tag) }
-  [ 34] = { act="Sm", name="Door_LockedRaise", (0, XC.D_SLOW, 0, YCard+CardIsSkull, tag) }
+  [ 32] = { act="Sm", name="Door_LockedRaise", (0, XC.D_SLOW, 0, XC.KEY_BLUE, tag) }
+  [ 33] = { act="Sm", name="Door_LockedRaise", (0, XC.D_SLOW, 0, XC.KEY_RED, tag) }
+  [ 34] = { act="Sm", name="Door_LockedRaise", (0, XC.D_SLOW, 0, XC.KEY_YELLOW, tag) }
   [ 35] = { act="W",  name="Light_ChangeToValue", (tag, 35) }
   [ 36] = { act="W",  name="Floor_LowerToHighest", (tag, XC.F_FAST, 136) }
   [ 37] = { act="W",  name="Floor_LowerToLowestTxTy", (tag, XC.F_SLOW) }
@@ -376,7 +381,7 @@ XLAT =
   [ 96] = { act="WR", name="Floor_RaiseByTexture", (tag, XC.F_SLOW) }
   [ 97] = { act="WRm",name="Teleport", (0, tag) }
   [ 98] = { act="WR", name="Floor_LowerToHighest", (tag, XC.F_FAST, 136) }
-  [ 99] = { act="SR", name="Door_LockedRaise", (tag, XC.D_FAST, 0, BCard+CardIsSkull) }
+  [ 99] = { act="SR", name="Door_LockedRaise", (tag, XC.D_FAST, 0, XC.KEY_BLUE) }
   [100] = { act="W",  name="Stairs_BuildUpDoom", (tag, XC.ST_TURBO, 16, 0, 0) }
   [101] = { act="S",  name="Floor_RaiseToLowestCeiling", (tag, XC.F_SLOW) }
   [102] = { act="S",  name="Floor_LowerToHighest", (tag, XC.F_SLOW, 128) }
@@ -410,11 +415,11 @@ XLAT =
   [130] = { act="W",  name="Floor_RaiseToNearest", (tag, XC.F_FAST) }
   [131] = { act="S",  name="Floor_RaiseToNearest", (tag, XC.F_FAST) }
   [132] = { act="SR", name="Floor_RaiseToNearest", (tag, XC.F_FAST) }
-  [133] = { act="S",  name="Door_LockedRaise", (tag, XC.D_FAST, 0, BCard+CardIsSkull) }
-  [134] = { act="SR", name="Door_LockedRaise", (tag, XC.D_FAST, 0, RCard+CardIsSkull) }
-  [135] = { act="S",  name="Door_LockedRaise", (tag, XC.D_FAST, 0, RCard+CardIsSkull) }
-  [136] = { act="SR", name="Door_LockedRaise", (tag, XC.D_FAST, 0, YCard+CardIsSkull) }
-  [137] = { act="S",  name="Door_LockedRaise", (tag, XC.D_FAST, 0, YCard+CardIsSkull) }
+  [133] = { act="S",  name="Door_LockedRaise", (tag, XC.D_FAST, 0, XC.KEY_BLUE) }
+  [134] = { act="SR", name="Door_LockedRaise", (tag, XC.D_FAST, 0, XC.KEY_RED) }
+  [135] = { act="S",  name="Door_LockedRaise", (tag, XC.D_FAST, 0, XC.KEY_RED) }
+  [136] = { act="SR", name="Door_LockedRaise", (tag, XC.D_FAST, 0, XC.KEY_YELLOW) }
+  [137] = { act="S",  name="Door_LockedRaise", (tag, XC.D_FAST, 0, XC.KEY_YELLOW) }
   [138] = { act="SR", name="Light_ChangeToValue", (tag, 255) }
   [139] = { act="SR", name="Light_ChangeToValue", (tag, 35) }
   [140] = { act="S",  name="Floor_RaiseByValueTimes8", (tag, XC.F_SLOW, 64) }
