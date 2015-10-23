@@ -765,8 +765,6 @@ Name generator:
 
 +  CSG issue: support beam intersects with 3D floor => wrong side texture
 
-+  rename m_spots.cc --> csg_spots, tidy up duplications
-
 -  use fl_utf8.h functions (fl_fopen, etc) for file handling
    [ BUT : glBSP, ajpoly, etc.... would need to use them too ]
 
