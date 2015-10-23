@@ -269,6 +269,7 @@ XC =
   ST_FAST   = 16
   ST_TURBO  = 32
  
+  P_CRAWL  = 4
   P_SLOW   = 8
   P_NORMAL = 16
   P_FAST   = 32
@@ -283,354 +284,354 @@ XC =
 -- translation from DOOM specials
 XLAT =
 {
-  [  1] = { act="SRm",name="Door_Raise", (0, XC.D_SLOW, XC.DOORWAIT, tag) }
-  [  2] = { act="W",  name="Door_Open", (tag, XC.D_SLOW) }
-  [  3] = { act="W",  name="Door_Close", (tag, XC.D_SLOW) }
-  [  4] = { act="Wm", name="Door_Raise", (tag, XC.D_SLOW, XC.DOORWAIT) }
-  [  5] = { act="W",  name="Floor_RaiseToLowestCeiling", (tag, XC.F_SLOW) }
-  [  6] = { act="W",  name="Ceiling_CrushAndRaiseA", (tag, XC.C_NORMAL, XC.C_NORMAL, 10) }
-  [  7] = { act="S",  name="Stairs_BuildUpDoom", (tag, XC.ST_SLOW, 8) }
-  [  8] = { act="W",  name="Stairs_BuildUpDoom", (tag, XC.ST_SLOW, 8) }
-  [  9] = { act="S",  name="Floor_Donut", (tag, XC.DONUTSPEED, XC.DONUTSPEED) }
-  [ 10] = { act="Wm", name="Plat_DownWaitUpStayLip", (tag, XC.P_FAST, XC.PLATWAIT, 0) }
-  [ 11] = { act="S",  name="Exit_Normal", (0) }
-  [ 12] = { act="W",  name="Light_MaxNeighbor", (tag) }
-  [ 13] = { act="W",  name="Light_ChangeToValue", (tag, 255) }
-  [ 14] = { act="S",  name="Plat_UpByValueStayTx", (tag, XC.P_SLOW/2, 4) }
-  [ 15] = { act="S",  name="Plat_UpByValueStayTx", (tag, XC.P_SLOW/2, 3) }
-  [ 16] = { act="W",  name="Door_CloseWaitOpen", (tag, XC.D_SLOW, 240) }
-  [ 17] = { act="W",  name="Light_StrobeDoom", (tag, 5, 35) }
-  [ 18] = { act="S",  name="Floor_RaiseToNearest", (tag, XC.F_SLOW) }
-  [ 19] = { act="W",  name="Floor_LowerToHighest", (tag, XC.F_SLOW, 128) }
-  [ 20] = { act="S",  name="Plat_RaiseAndStayTx0", (tag, XC.P_SLOW/2) }
-  [ 21] = { act="S",  name="Plat_DownWaitUpStayLip", (tag, XC.P_FAST, XC.PLATWAIT) }
-  [ 22] = { act="W",  name="Plat_RaiseAndStayTx0", (tag, XC.P_SLOW/2) }
-  [ 23] = { act="S",  name="Floor_LowerToLowest", (tag, XC.F_SLOW) }
-  [ 24] = { act="G",  name="Floor_RaiseToLowestCeiling", (tag, XC.F_SLOW) }
-  [ 25] = { act="W",  name="Ceiling_CrushAndRaiseA", (tag, XC.C_SLOW, XC.C_SLOW, 10) }
-  [ 26] = { act="SR", name="Door_LockedRaise", (0, XC.D_SLOW, XC.DOORWAIT, XC.KEY_BLUE, tag) }
-  [ 27] = { act="SR", name="Door_LockedRaise", (0, XC.D_SLOW, XC.DOORWAIT, XC.KEY_YELLOW, tag) }
-  [ 28] = { act="SR", name="Door_LockedRaise", (0, XC.D_SLOW, XC.DOORWAIT, XC.KEY_RED, tag) }
-  [ 29] = { act="S",  name="Door_Raise", (tag, XC.D_SLOW, XC.DOORWAIT) }
-  [ 30] = { act="W",  name="Floor_RaiseByTexture", (tag, XC.F_SLOW) }
-  [ 31] = { act="S",  name="Door_Open", (0, XC.D_SLOW, tag) }
-  [ 32] = { act="Sm", name="Door_LockedRaise", (0, XC.D_SLOW, 0, XC.KEY_BLUE, tag) }
-  [ 33] = { act="Sm", name="Door_LockedRaise", (0, XC.D_SLOW, 0, XC.KEY_RED, tag) }
-  [ 34] = { act="Sm", name="Door_LockedRaise", (0, XC.D_SLOW, 0, XC.KEY_YELLOW, tag) }
-  [ 35] = { act="W",  name="Light_ChangeToValue", (tag, 35) }
-  [ 36] = { act="W",  name="Floor_LowerToHighest", (tag, XC.F_FAST, 136) }
-  [ 37] = { act="W",  name="Floor_LowerToLowestTxTy", (tag, XC.F_SLOW) }
-  [ 38] = { act="W",  name="Floor_LowerToLowest", (tag, XC.F_SLOW) }
-  [ 39] = { act="Wm", name="Teleport", (0, tag) }
-  [ 40] = { act="W",  name="Generic_Ceiling", (tag, XC.C_SLOW, 0, 1, 8) }
-  [ 41] = { act="S",  name="Ceiling_LowerToFloor", (tag, XC.C_SLOW) }
-  [ 42] = { act="SR", name="Door_Close", (tag, XC.D_SLOW) }
-  [ 43] = { act="SR", name="Ceiling_LowerToFloor", (tag, XC.C_SLOW) }
-  [ 44] = { act="W",  name="Ceiling_LowerAndCrush", (tag, XC.C_SLOW, 0, 2) }
-  [ 45] = { act="SR", name="Floor_LowerToHighest", (tag, XC.F_SLOW, 128) }
-  [ 46] = { act="GRm",name="Door_Open", (tag, XC.D_SLOW) }
-  [ 47] = { act="G",  name="Plat_RaiseAndStayTx0", (tag, XC.P_SLOW/2) }
-  [ 48] = { act="",   name="Scroll_Texture_Left", (XC.SCROLLSPEED) }
-  [ 49] = { act="S",  name="Ceiling_CrushAndRaiseDist", (tag, 8, XC.C_SLOW, 10) }
-  [ 50] = { act="S",  name="Door_Close", (tag, XC.D_SLOW) }
-  [ 51] = { act="S",  name="Exit_Secret", (0) }
-  [ 52] = { act="W",  name="Exit_Normal", (0) }
-  [ 53] = { act="W",  name="Plat_PerpetualRaiseLip", (tag, XC.P_SLOW, XC.PLATWAIT, 0) }
-  [ 54] = { act="W",  name="Plat_Stop", (tag) }
-  [ 55] = { act="S",  name="Floor_RaiseAndCrushDoom", (tag, XC.F_SLOW, 10, 2) }
-  [ 56] = { act="W",  name="Floor_RaiseAndCrushDoom", (tag, XC.F_SLOW, 10, 2) }
-  [ 57] = { act="W",  name="Ceiling_CrushStop", (tag) }
-  [ 58] = { act="W",  name="Floor_RaiseByValue", (tag, XC.F_SLOW, 24) }
-  [ 59] = { act="W",  name="Floor_RaiseByValueTxTy", (tag, XC.F_SLOW, 24) }
-  [ 60] = { act="SR", name="Floor_LowerToLowest", (tag, XC.F_SLOW) }
-  [ 61] = { act="SR", name="Door_Open", (tag, XC.D_SLOW) }
-  [ 62] = { act="SR", name="Plat_DownWaitUpStayLip", (tag, XC.P_FAST, XC.PLATWAIT, 0) }
-  [ 63] = { act="SR", name="Door_Raise", (tag, XC.D_SLOW, XC.DOORWAIT) }
-  [ 64] = { act="SR", name="Floor_RaiseToLowestCeiling", (tag, XC.F_SLOW) }
-  [ 65] = { act="SR", name="Floor_RaiseAndCrushDoom", (tag, XC.F_SLOW, 10, 2) }
-  [ 66] = { act="SR", name="Plat_UpByValueStayTx", (tag, XC.P_SLOW/2, 3) }
-  [ 67] = { act="SR", name="Plat_UpByValueStayTx", (tag, XC.P_SLOW/2, 4) }
-  [ 68] = { act="SR", name="Plat_RaiseAndStayTx0", (tag, XC.P_SLOW/2) }
-  [ 69] = { act="SR", name="Floor_RaiseToNearest", (tag, XC.F_SLOW) }
-  [ 70] = { act="SR", name="Floor_LowerToHighest", (tag, XC.F_FAST, 136) }
-  [ 71] = { act="S",  name="Floor_LowerToHighest", (tag, XC.F_FAST, 136) }
-  [ 72] = { act="WR", name="Ceiling_LowerAndCrush", (tag, XC.C_SLOW, 0, 2) }
-  [ 73] = { act="WR", name="Ceiling_CrushAndRaiseA", (tag, XC.C_SLOW, XC.C_SLOW, 10) }
-  [ 74] = { act="WR", name="Ceiling_CrushStop", (tag) }
-  [ 75] = { act="WR", name="Door_Close", (tag, XC.D_SLOW) }
-  [ 76] = { act="WR", name="Door_CloseWaitOpen", (tag, XC.D_SLOW, 240) }
-  [ 77] = { act="WR", name="Ceiling_CrushAndRaiseA", (tag, XC.C_NORMAL, XC.C_NORMAL, 10) }
-  [ 78] = { act="SR", name="Floor_TransferNumeric", (tag)  }
-  [ 79] = { act="WR", name="Light_ChangeToValue", (tag, 35) }
-  [ 80] = { act="WR", name="Light_MaxNeighbor", (tag) }
-  [ 81] = { act="WR", name="Light_ChangeToValue", (tag, 255) }
-  [ 82] = { act="WR", name="Floor_LowerToLowest", (tag, XC.F_SLOW) }
-  [ 83] = { act="WR", name="Floor_LowerToHighest", (tag, XC.F_SLOW, 128) }
-  [ 84] = { act="WR", name="Floor_LowerToLowestTxTy", (tag, XC.F_SLOW) }
-  [ 85] = { act="",   name="Scroll_Texture_Right", (XC.SCROLLSPEED) }
-  [ 86] = { act="WR", name="Door_Open", (tag, XC.D_SLOW) }
-  [ 87] = { act="WR", name="Plat_PerpetualRaiseLip", (tag, XC.P_SLOW, XC.PLATWAIT, 0) }
-  [ 88] = { act="WRm",name="Plat_DownWaitUpStayLip", (tag, XC.P_FAST, XC.PLATWAIT, 0) }
-  [ 89] = { act="WR", name="Plat_Stop", (tag) }
-  [ 90] = { act="WR", name="Door_Raise", (tag, XC.D_SLOW, XC.DOORWAIT) }
-  [ 91] = { act="WR", name="Floor_RaiseToLowestCeiling", (tag, XC.F_SLOW) }
-  [ 92] = { act="WR", name="Floor_RaiseByValue", (tag, XC.F_SLOW, 24) }
-  [ 93] = { act="WR", name="Floor_RaiseByValueTxTy", (tag, XC.F_SLOW, 24) }
-  [ 94] = { act="WR", name="Floor_RaiseAndCrushDoom", (tag, XC.F_SLOW, 10, 2) }
-  [ 95] = { act="WR", name="Plat_RaiseAndStayTx0", (tag, XC.P_SLOW/2) }
-  [ 96] = { act="WR", name="Floor_RaiseByTexture", (tag, XC.F_SLOW) }
-  [ 97] = { act="WRm",name="Teleport", (0, tag) }
-  [ 98] = { act="WR", name="Floor_LowerToHighest", (tag, XC.F_FAST, 136) }
-  [ 99] = { act="SR", name="Door_LockedRaise", (tag, XC.D_FAST, 0, XC.KEY_BLUE) }
-  [100] = { act="W",  name="Stairs_BuildUpDoom", (tag, XC.ST_TURBO, 16, 0, 0) }
-  [101] = { act="S",  name="Floor_RaiseToLowestCeiling", (tag, XC.F_SLOW) }
-  [102] = { act="S",  name="Floor_LowerToHighest", (tag, XC.F_SLOW, 128) }
-  [103] = { act="S",  name="Door_Open", (tag, XC.D_SLOW) }
-  [104] = { act="W",  name="Light_MinNeighbor", (tag) }
-  [105] = { act="WR", name="Door_Raise", (tag, XC.D_FAST, XC.DOORWAIT) }
-  [106] = { act="WR", name="Door_Open", (tag, XC.D_FAST) }
-  [107] = { act="WR", name="Door_Close", (tag, XC.D_FAST) }
-  [108] = { act="W",  name="Door_Raise", (tag, XC.D_FAST, XC.DOORWAIT) }
-  [109] = { act="W",  name="Door_Open", (tag, XC.D_FAST) }
-  [110] = { act="W",  name="Door_Close", (tag, XC.D_FAST) }
-  [111] = { act="S",  name="Door_Raise", (tag, XC.D_FAST, XC.DOORWAIT) }
-  [112] = { act="S",  name="Door_Open", (tag, XC.D_FAST) }
-  [113] = { act="S",  name="Door_Close", (tag, XC.D_FAST) }
-  [114] = { act="SR", name="Door_Raise", (tag, XC.D_FAST, XC.DOORWAIT) }
-  [115] = { act="SR", name="Door_Open", (tag, XC.D_FAST) }
-  [116] = { act="SR", name="Door_Close", (tag, XC.D_FAST) }
-  [117] = { act="SR", name="Door_Raise", (0, XC.D_FAST, XC.DOORWAIT, tag) }
-  [118] = { act="S",  name="Door_Open", (0, XC.D_FAST, tag) }
-  [119] = { act="W",  name="Floor_RaiseToNearest", (tag, XC.F_SLOW) }
-  [120] = { act="WR", name="Plat_DownWaitUpStayLip", (tag, XC.P_TURBO, XC.PLATWAIT, 0) }
-  [121] = { act="W",  name="Plat_DownWaitUpStayLip", (tag, XC.P_TURBO, XC.PLATWAIT, 0) }
-  [122] = { act="S",  name="Plat_DownWaitUpStayLip", (tag, XC.P_TURBO, XC.PLATWAIT, 0) }
-  [123] = { act="SR", name="Plat_DownWaitUpStayLip", (tag, XC.P_TURBO, XC.PLATWAIT, 0) }
-  [124] = { act="W",  name="Exit_Secret", (0) }
-  [125] = { act="n",  name="Teleport", (0, tag) }
-  [126] = { act="Rn", name="Teleport", (0, tag) }
-  [127] = { act="S",  name="Stairs_BuildUpDoom", (tag, XC.ST_TURBO, 16, 0, 0) }
-  [128] = { act="WR", name="Floor_RaiseToNearest", (tag, XC.F_SLOW) }
-  [129] = { act="WR", name="Floor_RaiseToNearest", (tag, XC.F_FAST) }
-  [130] = { act="W",  name="Floor_RaiseToNearest", (tag, XC.F_FAST) }
-  [131] = { act="S",  name="Floor_RaiseToNearest", (tag, XC.F_FAST) }
-  [132] = { act="SR", name="Floor_RaiseToNearest", (tag, XC.F_FAST) }
-  [133] = { act="S",  name="Door_LockedRaise", (tag, XC.D_FAST, 0, XC.KEY_BLUE) }
-  [134] = { act="SR", name="Door_LockedRaise", (tag, XC.D_FAST, 0, XC.KEY_RED) }
-  [135] = { act="S",  name="Door_LockedRaise", (tag, XC.D_FAST, 0, XC.KEY_RED) }
-  [136] = { act="SR", name="Door_LockedRaise", (tag, XC.D_FAST, 0, XC.KEY_YELLOW) }
-  [137] = { act="S",  name="Door_LockedRaise", (tag, XC.D_FAST, 0, XC.KEY_YELLOW) }
-  [138] = { act="SR", name="Light_ChangeToValue", (tag, 255) }
-  [139] = { act="SR", name="Light_ChangeToValue", (tag, 35) }
-  [140] = { act="S",  name="Floor_RaiseByValueTimes8", (tag, XC.F_SLOW, 64) }
-  [141] = { act="W",  name="Ceiling_CrushAndRaiseSilentA", (tag, XC.C_SLOW, XC.C_SLOW, 10) }
-  [142] = { act="W",  name="Floor_RaiseByValueTimes8", (tag, XC.F_SLOW, 64) }
-  [143] = { act="W",  name="Plat_UpByValueStayTx", (tag, XC.P_SLOW/2, 3) }
-  [144] = { act="W",  name="Plat_UpByValueStayTx", (tag, XC.P_SLOW/2, 4) }
-  [145] = { act="W",  name="Ceiling_LowerToFloor", (tag, XC.C_SLOW) }
-  [146] = { act="W",  name="Floor_Donut", (tag, XC.DONUTSPEED, XC.DONUTSPEED) }
-  [147] = { act="WR", name="Floor_RaiseByValueTimes8", (tag, XC.F_SLOW, 64) }
-  [148] = { act="WR", name="Plat_UpByValueStayTx", (tag, XC.P_SLOW/2, 3) }
-  [149] = { act="WR", name="Plat_UpByValueStayTx", (tag, XC.P_SLOW/2, 4) }
-  [150] = { act="WR", name="Ceiling_CrushAndRaiseSilentA", (tag, XC.C_SLOW, XC.C_SLOW, 10) }
-  [151] = { act="WR", name="FloorAndCeiling_LowerRaise", (tag, XC.F_SLOW, XC.C_SLOW) }
-  [152] = { act="WR", name="Ceiling_LowerToFloor", (tag, XC.C_SLOW) }
-  [153] = { act="W",  name="Floor_TransferTrigger", (tag) }
-  [154] = { act="WR", name="Floor_TransferTrigger", (tag) }
-  [155] = { act="WR", name="Floor_Donut", (tag, XC.DONUTSPEED, XC.DONUTSPEED) }
-  [156] = { act="WR", name="Light_StrobeDoom", (tag, 5, 35) }
-  [157] = { act="WR", name="Light_MinNeighbor", (tag) }
-  [158] = { act="S",  name="Floor_RaiseByTexture", (tag, XC.F_SLOW) }
-  [159] = { act="S",  name="Floor_LowerToLowestTxTy", (tag, XC.F_SLOW) }
-  [160] = { act="S",  name="Floor_RaiseByValueTxTy", (tag, XC.F_SLOW, 24) }
-  [161] = { act="S",  name="Floor_RaiseByValue", (tag, XC.F_SLOW, 24) }
-  [162] = { act="S",  name="Plat_PerpetualRaiseLip", (tag, XC.P_SLOW, XC.PLATWAIT, 0) }
-  [163] = { act="S",  name="Plat_Stop", (tag) }
-  [164] = { act="S",  name="Ceiling_CrushAndRaiseA", (tag, XC.C_NORMAL, XC.C_NORMAL, 10) }
-  [165] = { act="S",  name="Ceiling_CrushAndRaiseSilentA", (tag, XC.C_SLOW, XC.C_SLOW, 10) }
-  [166] = { act="S",  name="FloorAndCeiling_LowerRaise", (tag, XC.F_SLOW, XC.C_SLOW, 1998) }
-  [167] = { act="S",  name="Ceiling_LowerAndCrush", (tag, XC.C_SLOW, 0, 2) }
-  [168] = { act="S",  name="Ceiling_CrushStop", (tag) }
-  [169] = { act="S",  name="Light_MaxNeighbor", (tag) }
-  [170] = { act="S",  name="Light_ChangeToValue", (tag, 35) }
-  [171] = { act="S",  name="Light_ChangeToValue", (tag, 255) }
-  [172] = { act="S",  name="Light_StrobeDoom", (tag, 5, 35) }
-  [173] = { act="S",  name="Light_MinNeighbor", (tag) }
-  [174] = { act="Sm", name="Teleport", (0, tag) }
-  [175] = { act="S",  name="Door_CloseWaitOpen", (tag, XC.D_SLOW, 240) }
-  [176] = { act="SR", name="Floor_RaiseByTexture", (tag, XC.F_SLOW) }
-  [177] = { act="SR", name="Floor_LowerToLowestTxTy", (tag, XC.F_SLOW) }
-  [178] = { act="SR", name="Floor_RaiseByValueTimes8", (tag, XC.F_SLOW, 64) }
-  [179] = { act="SR", name="Floor_RaiseByValueTxTy", (tag, XC.F_SLOW, 24) }
-  [180] = { act="SR", name="Floor_RaiseByValue", (tag, XC.F_SLOW, 24) }
-  [181] = { act="SR", name="Plat_PerpetualRaiseLip", (tag, XC.P_SLOW, XC.PLATWAIT, 0) }
-  [182] = { act="SR", name="Plat_Stop", (tag) }
-  [183] = { act="SR", name="Ceiling_CrushAndRaiseA", (tag, XC.C_NORMAL, XC.C_NORMAL, 10) }
-  [184] = { act="SR", name="Ceiling_CrushAndRaiseA", (tag, XC.C_SLOW, XC.C_SLOW, 10) }
-  [185] = { act="SR", name="Ceiling_CrushAndRaiseSilentA", (tag, XC.C_SLOW, XC.C_SLOW, 10) }
-  [186] = { act="SR", name="FloorAndCeiling_LowerRaise", (tag, XC.F_SLOW, XC.C_SLOW, 1998) }
-  [187] = { act="SR", name="Ceiling_LowerAndCrush", (tag, XC.C_SLOW, 0, 2) }
-  [188] = { act="SR", name="Ceiling_CrushStop", (tag) }
-  [189] = { act="S",  name="Floor_TransferTrigger", (tag) }
-  [190] = { act="SR", name="Floor_TransferTrigger", (tag) }
-  [191] = { act="SR", name="Floor_Donut", (tag, XC.DONUTSPEED, XC.DONUTSPEED) }
-  [192] = { act="SR", name="Light_MaxNeighbor", (tag) }
-  [193] = { act="SR", name="Light_StrobeDoom", (tag, 5, 35) }
-  [194] = { act="SR", name="Light_MinNeighbor", (tag) }
-  [195] = { act="SRm",name="Teleport", (0, tag) }
-  [196] = { act="SR", name="Door_CloseWaitOpen", (tag, XC.D_SLOW, 240) }
-  [197] = { act="G",  name="Exit_Normal", (0) }
-  [198] = { act="G",  name="Exit_Secret", (0) }
-  [199] = { act="W",  name="Ceiling_LowerToLowest", (tag, XC.C_SLOW) }
-  [200] = { act="W",  name="Ceiling_LowerToHighestFloor", (tag, XC.C_SLOW) }
-  [201] = { act="WR", name="Ceiling_LowerToLowest", (tag, XC.C_SLOW) }
-  [202] = { act="WR", name="Ceiling_LowerToHighestFloor", (tag, XC.C_SLOW) }
-  [203] = { act="S",  name="Ceiling_LowerToLowest", (tag, XC.C_SLOW) }
-  [204] = { act="S",  name="Ceiling_LowerToHighestFloor", (tag, XC.C_SLOW) }
-  [205] = { act="SR", name="Ceiling_LowerToLowest", (tag, XC.C_SLOW) }
-  [206] = { act="SR", name="Ceiling_LowerToHighestFloor", (tag, XC.C_SLOW) }
-  [207] = { act="Wm", name="Teleport_NoFog", (0, 0, tag, 1) }
-  [208] = { act="WRm",name="Teleport_NoFog", (0, 0, tag, 1) }
-  [209] = { act="Sm", name="Teleport_NoFog", (0, 0, tag, 1) }
-  [210] = { act="SRm",name="Teleport_NoFog", (0, 0, tag, 1) }
-  [211] = { act="SR", name="Plat_ToggleCeiling", (tag) }
-  [212] = { act="WR", name="Plat_ToggleCeiling", (tag) }
-  [213] = { act="",   name="Transfer_FloorLight", (tag) }
-  [214] = { act="",   name="Scroll_Ceiling", (tag, 6, 0, 0, 0) }
-  [215] = { act="",   name="Scroll_Floor", (tag, 6, 0, 0, 0) }
-  [216] = { act="",   name="Scroll_Floor", (tag, 6, 1, 0, 0) }
-  [217] = { act="",   name="Scroll_Floor", (tag, 6, 2, 0, 0) }
-  [218] = { act="",   name="Scroll_Texture_Model", (lineid, 2) }
-  [219] = { act="W",  name="Floor_LowerToNearest", (tag, XC.F_SLOW) }
-  [220] = { act="WR", name="Floor_LowerToNearest", (tag, XC.F_SLOW) }
-  [221] = { act="S",  name="Floor_LowerToNearest", (tag, XC.F_SLOW) }
-  [222] = { act="SR", name="Floor_LowerToNearest", (tag, XC.F_SLOW) }
-  [223] = { act="",   name="Sector_SetFriction", (tag, 0) }
-  [224] = { act="",   name="Sector_SetWind", (tag, 0, 0, 1) }
-  [225] = { act="",   name="Sector_SetCurrent", (tag, 0, 0, 1) }
-  [226] = { act="",   name="PointPush_SetForce", (tag, 0, 0, 1) }
-  [227] = { act="W",  name="Elevator_RaiseToNearest", (tag, XC.ELEVATORSPEED) }
-  [228] = { act="WR", name="Elevator_RaiseToNearest", (tag, XC.ELEVATORSPEED) }
-  [229] = { act="S",  name="Elevator_RaiseToNearest", (tag, XC.ELEVATORSPEED) }
-  [230] = { act="SR", name="Elevator_RaiseToNearest", (tag, XC.ELEVATORSPEED) }
-  [231] = { act="W",  name="Elevator_LowerToNearest", (tag, XC.ELEVATORSPEED) }
-  [232] = { act="WR", name="Elevator_LowerToNearest", (tag, XC.ELEVATORSPEED) }
-  [233] = { act="S",  name="Elevator_LowerToNearest", (tag, XC.ELEVATORSPEED) }
-  [234] = { act="SR", name="Elevator_LowerToNearest", (tag, XC.ELEVATORSPEED) }
-  [235] = { act="W",  name="Elevator_MoveToFloor", (tag, XC.ELEVATORSPEED) }
-  [236] = { act="WR", name="Elevator_MoveToFloor", (tag, XC.ELEVATORSPEED) }
-  [237] = { act="S",  name="Elevator_MoveToFloor", (tag, XC.ELEVATORSPEED) }
-  [238] = { act="SR", name="Elevator_MoveToFloor", (tag, XC.ELEVATORSPEED) }
-  [239] = { act="W",  name="Floor_TransferNumeric", (tag) }
-  [240] = { act="WR", name="Floor_TransferNumeric", (tag) }
-  [241] = { act="S",  name="Floor_TransferNumeric", (tag) }
-  [242] = { act="",   name="Transfer_Heights", (tag) }
-  [243] = { act="Wm", name="Teleport_Line", (tag, tag, 0) }
-  [244] = { act="WRm",name="Teleport_Line", (tag, tag, 0) }
-  [245] = { act="",   name="Scroll_Ceiling", (tag, 5, 0, 0, 0) }
-  [246] = { act="",   name="Scroll_Floor", (tag, 5, 0, 0, 0) }
-  [247] = { act="",   name="Scroll_Floor", (tag, 5, 1, 0, 0) }
-  [248] = { act="",   name="Scroll_Floor", (tag, 5, 2, 0, 0) }
-  [249] = { act="",   name="Scroll_Texture_Model", (lineid, 1) }
-  [250] = { act="",   name="Scroll_Ceiling", (tag, 4, 0, 0, 0) }
-  [251] = { act="",   name="Scroll_Floor", (tag, 4, 0, 0, 0) }
-  [252] = { act="",   name="Scroll_Floor", (tag, 4, 1, 0, 0) }
-  [253] = { act="",   name="Scroll_Floor", (tag, 4, 2, 0, 0) }
-  [254] = { act="",   name="Scroll_Texture_Model", (lineid, 0) }
-  [255] = { act="",   name="Scroll_Texture_Offsets", () }
-  [256] = { act="WR", name="Stairs_BuildUpDoom", (tag, XC.ST_SLOW, 8, 0, 0) }
-  [257] = { act="WR", name="Stairs_BuildUpDoom", (tag, XC.ST_TURBO, 16, 0, 0) }
-  [258] = { act="SR", name="Stairs_BuildUpDoom", (tag, XC.ST_SLOW, 8, 0, 0) }
-  [259] = { act="SR", name="Stairs_BuildUpDoom", (tag, XC.ST_TURBO, 16, 0, 0) }
-  [260] = { act="",   name="TranslucentLine", (lineid, 168)  }
-  [261] = { act="",   name="Transfer_CeilingLight", (tag) }
-  [262] = { act="Wm", name="Teleport_Line", (tag, tag, 1) }
-  [263] = { act="WRm",name="Teleport_Line", (tag, tag, 1) }
-  [264] = { act="n",  name="Teleport_Line", (tag, tag, 1) }
-  [265] = { act="Rn", name="Teleport_Line", (tag, tag, 1) }
-  [266] = { act="n",  name="Teleport_Line", (tag, tag, 0) }
-  [267] = { act="Rn", name="Teleport_Line", (tag, tag, 0) }
-  [268] = { act="n",  name="Teleport_NoFog", (0, 0, tag, 1) }
-  [269] = { act="Rn", name="Teleport_NoFog", (0, 0, tag, 1) }
-  [270] = { act="WR", name="XC.FS_Execute", (tag) }
-  [271] = { act="",   name="Static_Init", (tag, XC.INIT_SKY, 0) }
-  [272] = { act="",   name="Static_Init", (tag, XC.INIT_SKY, 1) }
-  [273] = { act="WR", name="XC.FS_Execute", (tag, 1) }
-  [274] = { act="W",  name="XC.FS_Execute", (tag) }
-  [275] = { act="W",  name="XC.FS_Execute", (tag, 1) }
-  [276] = { act="SR", name="XC.FS_Execute", (tag) }
-  [277] = { act="S",  name="XC.FS_Execute", (tag) }
-  [278] = { act="GR", name="XC.FS_Execute", (tag) }
-  [279] = { act="G",  name="XC.FS_Execute", (tag) }
-  [280] = { act="",   name="Transfer_Heights", (tag, 12) }
-  [281] = { act="",   name="Sector_Set3DFloor", (tag, 1, 0, 255) }
-  [282] = { act="",   name="Static_Init", (tag, 1) }
-  [284] = { act="",   name="TranslucentLine", (lineid, 128, 0) }
-  [285] = { act="",   name="TranslucentLine", (lineid, 192, 0) }
-  [286] = { act="",   name="TranslucentLine", (lineid, 48, 0) }
-  [287] = { act="",   name="TranslucentLine", (lineid, 128, 1) }
-  [288] = { act="",   name="TranslucentLine", (lineid, 255, 0) }
-  [289] = { act="",   name="Sector_Set3DFloor", (tag, 1, 1, 255) }
-  [300] = { act="",   name="Sector_Set3DFloor", (tag, 1, 1, 127) }
-  [301] = { act="",   name="Sector_Set3DFloor", (tag, 2, 2, 127) }
-  [302] = { act="",   name="Sector_Set3DFloor", (tag, 3, 6, 127) }
-  [303] = { act="",   name="Sector_Set3DFloor", (tag, 3) }
-  [304] = { act="",   name="Sector_Set3DFloor", (tag, 2, 2, 255) }
-  [305] = { act="",   name="Sector_Set3DFloor", (tag, 3, 2) }
-  [306] = { act="",   name="Sector_Set3DFloor", (tag, 1) }
-  [332] = { act="",   name="Sector_Set3DFloor", (tag, 4) }
-  [333] = { act="",   name="Static_Init", (tag, XC.INIT_GRAVITY) }
-  [334] = { act="",   name="Static_Init", (tag, XC.INIT_COLOR) }
-  [335] = { act="",   name="Static_Init", (tag, XC.INIT_DAMAGE) }
-  [336] = { act="",   name="Line_Mirror", () }
-  [337] = { act="",   name="Line_Horizon", () }
-  [338] = { act="W",  name="Floor_Waggle", (tag, 24, 32, 0, 0) }
-  [339] = { act="W",  name="Floor_Waggle", (tag, 12, 32, 0, 0) }
-  [340] = { act="",   name="Plane_Align", (1, 0)  }
-  [341] = { act="",   name="Plane_Align", (0, 1)  }
-  [342] = { act="",   name="Plane_Align", (1, 1)  }
-  [343] = { act="",   name="Plane_Align", (2, 0)  }
-  [344] = { act="",   name="Plane_Align", (0, 2)  }
-  [345] = { act="",   name="Plane_Align", (2, 2)  }
-  [346] = { act="",   name="Plane_Align", (2, 1)  }
-  [347] = { act="",   name="Plane_Align", (1, 2)  }
-  [348] = { act="W",  name="Autosave", () }
-  [349] = { act="S",  name="Autosave", () }
-  [350] = { act="",   name="Transfer_Heights", (tag, 2)  }
-  [351] = { act="",   name="Transfer_Heights", (tag, 6)  }
-  [352] = { act="",   name="Sector_CopyScroller", (tag, 1)  }
-  [353] = { act="",   name="Sector_CopyScroller", (tag, 2)  }
-  [354] = { act="",   name="Sector_CopyScroller", (tag, 6)  }
-  [400] = { act="",   name="Sector_Set3DFloor", (tag, 1, 0, 255) }
-  [401] = { act="",   name="Sector_Set3DFloor", (tag, 1, 16, 255) }
-  [402] = { act="",   name="Sector_Set3DFloor", (tag, 1, 32, 255) }
-  [403] = { act="",   name="Sector_Set3DFloor", (tag, 2, 2, 255) }
-  [404] = { act="",   name="Sector_Set3DFloor", (tag, 2, 2, 204) }
-  [405] = { act="",   name="Sector_Set3DFloor", (tag, 2, 2, 153) }
-  [406] = { act="",   name="Sector_Set3DFloor", (tag, 2, 2, 102) }
-  [407] = { act="",   name="Sector_Set3DFloor", (tag, 2, 2, 51) }
-  [408] = { act="",   name="Sector_Set3DFloor", (tag, 2, 2) }
-  [413] = { act="",   name="Sector_Set3DFloor", (tag, 1, 8, 255) }
-  [414] = { act="",   name="Sector_Set3DFloor", (tag, 1, 8, 204) }
-  [415] = { act="",   name="Sector_Set3DFloor", (tag, 1, 8, 153) }
-  [416] = { act="",   name="Sector_Set3DFloor", (tag, 1, 8, 102) }
-  [417] = { act="",   name="Sector_Set3DFloor", (tag, 1, 8, 51) }
-  [409] = { act="",   name="TranslucentLine", (lineid, 204)  }
-  [410] = { act="",   name="TranslucentLine", (lineid, 153)  }
-  [411] = { act="",   name="TranslucentLine", (lineid, 101)  }
-  [412] = { act="",   name="TranslucentLine", (lineid, 50)  }
-  [422] = { act="",   name="Scroll_Texture_Right", (XC.SCROLLSPEED) }
-  [423] = { act="",   name="Scroll_Texture_Up", (XC.SCROLLSPEED) }
-  [424] = { act="",   name="Scroll_Texture_Down", (XC.SCROLLSPEED) }
-  [425] = { act="",   name="Scroll_Texture_Both", (0, XC.SCROLLSPEED, 0, 0, XC.SCROLLSPEED) }
-  [426] = { act="",   name="Scroll_Texture_Both", (0, XC.SCROLLSPEED, 0, XC.SCROLLSPEED, 0) }
-  [427] = { act="",   name="Scroll_Texture_Both", (0, 0, XC.SCROLLSPEED, 0, XC.SCROLLSPEED) }
-  [428] = { act="",   name="Scroll_Texture_Both", (0, 0, XC.SCROLLSPEED, XC.SCROLLSPEED, 0) }
-  [434] = { act="S",  name="Floor_RaiseByValue", (tag, XC.F_SLOW, 2) }
-  [435] = { act="SR", name="Floor_RaiseByValue", (tag, XC.F_SLOW, 2) }
-  [436] = { act="W",  name="Floor_RaiseByValue", (tag, XC.F_SLOW, 2) }
-  [437] = { act="WR", name="Floor_RaiseByValue", (tag, XC.F_SLOW, 2) }
-  [438] = { act="G",  name="Floor_RaiseByValue", (tag, XC.F_SLOW, 2) }
-  [439] = { act="GR", name="Floor_RaiseByValue", (tag, XC.F_SLOW, 2) }
+  [  1] = { act="SRm",name="Door_Raise", arg1=0, arg2=XC.D_SLOW, arg3=XC.DOORWAIT, arg4="tag" }
+  [  2] = { act="W",  name="Door_Open", arg1="tag", arg2=XC.D_SLOW }
+  [  3] = { act="W",  name="Door_Close", arg1="tag", arg2=XC.D_SLOW }
+  [  4] = { act="Wm", name="Door_Raise", arg1="tag", arg2=XC.D_SLOW, arg3=XC.DOORWAIT }
+  [  5] = { act="W",  name="Floor_RaiseToLowestCeiling", arg1="tag", arg2=XC.F_SLOW }
+  [  6] = { act="W",  name="Ceiling_CrushAndRaiseA", arg1="tag", arg2=XC.C_NORMAL, arg3=XC.C_NORMAL, arg4=10 }
+  [  7] = { act="S",  name="Stairs_BuildUpDoom", arg1="tag", arg2=XC.ST_SLOW, arg3=8 }
+  [  8] = { act="W",  name="Stairs_BuildUpDoom", arg1="tag", arg2=XC.ST_SLOW, arg3=8 }
+  [  9] = { act="S",  name="Floor_Donut", arg1="tag", arg2=XC.DONUTSPEED, arg3=XC.DONUTSPEED }
+  [ 10] = { act="Wm", name="Plat_DownWaitUpStayLip", arg1="tag", arg2=XC.P_FAST, arg3=XC.PLATWAIT }
+  [ 11] = { act="S",  name="Exit_Normal" }
+  [ 12] = { act="W",  name="Light_MaxNeighbor", arg1="tag" }
+  [ 13] = { act="W",  name="Light_ChangeToValue", arg1="tag", arg2=255 }
+  [ 14] = { act="S",  name="Plat_UpByValueStayTx", arg1="tag", arg2=XC.P_CRAWL, arg3=4 }
+  [ 15] = { act="S",  name="Plat_UpByValueStayTx", arg1="tag", arg2=XC.P_CRAWL, arg3=3 }
+  [ 16] = { act="W",  name="Door_CloseWaitOpen", arg1="tag", arg2=XC.D_SLOW, arg3=240 }
+  [ 17] = { act="W",  name="Light_StrobeDoom", arg1="tag", arg2=5, arg3=35 }
+  [ 18] = { act="S",  name="Floor_RaiseToNearest", arg1="tag", arg2=XC.F_SLOW }
+  [ 19] = { act="W",  name="Floor_LowerToHighest", arg1="tag", arg2=XC.F_SLOW, arg3=128 }
+  [ 20] = { act="S",  name="Plat_RaiseAndStayTx0", arg1="tag", arg2=XC.P_CRAWL }
+  [ 21] = { act="S",  name="Plat_DownWaitUpStayLip", arg1="tag", arg2=XC.P_FAST, arg3=XC.PLATWAIT }
+  [ 22] = { act="W",  name="Plat_RaiseAndStayTx0", arg1="tag", arg2=XC.P_CRAWL }
+  [ 23] = { act="S",  name="Floor_LowerToLowest", arg1="tag", arg2=XC.F_SLOW }
+  [ 24] = { act="G",  name="Floor_RaiseToLowestCeiling", arg1="tag", arg2=XC.F_SLOW }
+  [ 25] = { act="W",  name="Ceiling_CrushAndRaiseA", arg1="tag", arg2=XC.C_SLOW, arg3=XC.C_SLOW, arg4=10 }
+  [ 26] = { act="SR", name="Door_LockedRaise", arg1=0, arg2=XC.D_SLOW, arg3=XC.DOORWAIT, arg4=XC.KEY_BLUE, arg5="tag" }
+  [ 27] = { act="SR", name="Door_LockedRaise", arg1=0, arg2=XC.D_SLOW, arg3=XC.DOORWAIT, arg4=XC.KEY_YELLOW, arg5="tag" }
+  [ 28] = { act="SR", name="Door_LockedRaise", arg1=0, arg2=XC.D_SLOW, arg3=XC.DOORWAIT, arg4=XC.KEY_RED, arg5="tag" }
+  [ 29] = { act="S",  name="Door_Raise", arg1="tag", arg2=XC.D_SLOW, arg3=XC.DOORWAIT }
+  [ 30] = { act="W",  name="Floor_RaiseByTexture", arg1="tag", arg2=XC.F_SLOW }
+  [ 31] = { act="S",  name="Door_Open", arg1=0, arg2=XC.D_SLOW, arg3="tag" }
+  [ 32] = { act="Sm", name="Door_LockedRaise", arg1=0, arg2=XC.D_SLOW, arg3=0, arg4=XC.KEY_BLUE, arg5="tag" }
+  [ 33] = { act="Sm", name="Door_LockedRaise", arg1=0, arg2=XC.D_SLOW, arg3=0, arg4=XC.KEY_RED, arg5="tag" }
+  [ 34] = { act="Sm", name="Door_LockedRaise", arg1=0, arg2=XC.D_SLOW, arg3=0, arg4=XC.KEY_YELLOW, arg5="tag" }
+  [ 35] = { act="W",  name="Light_ChangeToValue", arg1="tag", arg2=35 }
+  [ 36] = { act="W",  name="Floor_LowerToHighest", arg1="tag", arg2=XC.F_FAST, arg3=136 }
+  [ 37] = { act="W",  name="Floor_LowerToLowestTxTy", arg1="tag", arg2=XC.F_SLOW }
+  [ 38] = { act="W",  name="Floor_LowerToLowest", arg1="tag", arg2=XC.F_SLOW }
+  [ 39] = { act="Wm", name="Teleport", arg1=0, arg2="tag" }
+  [ 40] = { act="W",  name="Generic_Ceiling", arg1="tag", arg2=XC.C_SLOW, arg3=0, arg4=1, arg5=8 }
+  [ 41] = { act="S",  name="Ceiling_LowerToFloor", arg1="tag", arg2=XC.C_SLOW }
+  [ 42] = { act="SR", name="Door_Close", arg1="tag", arg2=XC.D_SLOW }
+  [ 43] = { act="SR", name="Ceiling_LowerToFloor", arg1="tag", arg2=XC.C_SLOW }
+  [ 44] = { act="W",  name="Ceiling_LowerAndCrush", arg1="tag", arg2=XC.C_SLOW, arg3=0, arg4=2 }
+  [ 45] = { act="SR", name="Floor_LowerToHighest", arg1="tag", arg2=XC.F_SLOW, arg3=128 }
+  [ 46] = { act="GRm",name="Door_Open", arg1="tag", arg2=XC.D_SLOW }
+  [ 47] = { act="G",  name="Plat_RaiseAndStayTx0", arg1="tag", arg2=XC.P_CRAWL }
+  [ 48] = { act="",   name="Scroll_Texture_Left", arg1=XC.SCROLLSPEED }
+  [ 49] = { act="S",  name="Ceiling_CrushAndRaiseDist", arg1="tag", arg2=8, arg3=XC.C_SLOW, arg4=10 }
+  [ 50] = { act="S",  name="Door_Close", arg1="tag", arg2=XC.D_SLOW }
+  [ 51] = { act="S",  name="Exit_Secret" }
+  [ 52] = { act="W",  name="Exit_Normal" }
+  [ 53] = { act="W",  name="Plat_PerpetualRaiseLip", arg1="tag", arg2=XC.P_SLOW, arg3=XC.PLATWAIT }
+  [ 54] = { act="W",  name="Plat_Stop", arg1="tag" }
+  [ 55] = { act="S",  name="Floor_RaiseAndCrushDoom", arg1="tag", arg2=XC.F_SLOW, arg3=10, arg4=2 }
+  [ 56] = { act="W",  name="Floor_RaiseAndCrushDoom", arg1="tag", arg2=XC.F_SLOW, arg3=10, arg4=2 }
+  [ 57] = { act="W",  name="Ceiling_CrushStop", arg1="tag" }
+  [ 58] = { act="W",  name="Floor_RaiseByValue", arg1="tag", arg2=XC.F_SLOW, arg3=24 }
+  [ 59] = { act="W",  name="Floor_RaiseByValueTxTy", arg1="tag", arg2=XC.F_SLOW, arg3=24 }
+  [ 60] = { act="SR", name="Floor_LowerToLowest", arg1="tag", arg2=XC.F_SLOW }
+  [ 61] = { act="SR", name="Door_Open", arg1="tag", arg2=XC.D_SLOW }
+  [ 62] = { act="SR", name="Plat_DownWaitUpStayLip", arg1="tag", arg2=XC.P_FAST, arg3=XC.PLATWAIT }
+  [ 63] = { act="SR", name="Door_Raise", arg1="tag", arg2=XC.D_SLOW, arg3=XC.DOORWAIT }
+  [ 64] = { act="SR", name="Floor_RaiseToLowestCeiling", arg1="tag", arg2=XC.F_SLOW }
+  [ 65] = { act="SR", name="Floor_RaiseAndCrushDoom", arg1="tag", arg2=XC.F_SLOW, arg3=10, arg4=2 }
+  [ 66] = { act="SR", name="Plat_UpByValueStayTx", arg1="tag", arg2=XC.P_CRAWL, arg3=3 }
+  [ 67] = { act="SR", name="Plat_UpByValueStayTx", arg1="tag", arg2=XC.P_CRAWL, arg3=4 }
+  [ 68] = { act="SR", name="Plat_RaiseAndStayTx0", arg1="tag", arg2=XC.P_CRAWL }
+  [ 69] = { act="SR", name="Floor_RaiseToNearest", arg1="tag", arg2=XC.F_SLOW }
+  [ 70] = { act="SR", name="Floor_LowerToHighest", arg1="tag", arg2=XC.F_FAST, arg3=136 }
+  [ 71] = { act="S",  name="Floor_LowerToHighest", arg1="tag", arg2=XC.F_FAST, arg3=136 }
+  [ 72] = { act="WR", name="Ceiling_LowerAndCrush", arg1="tag", arg2=XC.C_SLOW, arg3=0, arg4=2 }
+  [ 73] = { act="WR", name="Ceiling_CrushAndRaiseA", arg1="tag", arg2=XC.C_SLOW, arg3=XC.C_SLOW, arg4=10 }
+  [ 74] = { act="WR", name="Ceiling_CrushStop", arg1="tag" }
+  [ 75] = { act="WR", name="Door_Close", arg1="tag", arg2=XC.D_SLOW }
+  [ 76] = { act="WR", name="Door_CloseWaitOpen", arg1="tag", arg2=XC.D_SLOW, arg3=240 }
+  [ 77] = { act="WR", name="Ceiling_CrushAndRaiseA", arg1="tag", arg2=XC.C_NORMAL, arg3=XC.C_NORMAL, arg4=10 }
+  [ 78] = { act="SR", name="Floor_TransferNumeric", arg1="tag" }
+  [ 79] = { act="WR", name="Light_ChangeToValue", arg1="tag", arg2=35 }
+  [ 80] = { act="WR", name="Light_MaxNeighbor", arg1="tag" }
+  [ 81] = { act="WR", name="Light_ChangeToValue", arg1="tag", arg2=255 }
+  [ 82] = { act="WR", name="Floor_LowerToLowest", arg1="tag", arg2=XC.F_SLOW }
+  [ 83] = { act="WR", name="Floor_LowerToHighest", arg1="tag", arg2=XC.F_SLOW, arg3=128 }
+  [ 84] = { act="WR", name="Floor_LowerToLowestTxTy", arg1="tag", arg2=XC.F_SLOW }
+  [ 85] = { act="",   name="Scroll_Texture_Right", arg1=XC.SCROLLSPEED }
+  [ 86] = { act="WR", name="Door_Open", arg1="tag", arg2=XC.D_SLOW }
+  [ 87] = { act="WR", name="Plat_PerpetualRaiseLip", arg1="tag", arg2=XC.P_SLOW, arg3=XC.PLATWAIT }
+  [ 88] = { act="WRm",name="Plat_DownWaitUpStayLip", arg1="tag", arg2=XC.P_FAST, arg3=XC.PLATWAIT }
+  [ 89] = { act="WR", name="Plat_Stop", arg1="tag" }
+  [ 90] = { act="WR", name="Door_Raise", arg1="tag", arg2=XC.D_SLOW, arg3=XC.DOORWAIT }
+  [ 91] = { act="WR", name="Floor_RaiseToLowestCeiling", arg1="tag", arg2=XC.F_SLOW }
+  [ 92] = { act="WR", name="Floor_RaiseByValue", arg1="tag", arg2=XC.F_SLOW, arg3=24 }
+  [ 93] = { act="WR", name="Floor_RaiseByValueTxTy", arg1="tag", arg2=XC.F_SLOW, arg3=24 }
+  [ 94] = { act="WR", name="Floor_RaiseAndCrushDoom", arg1="tag", arg2=XC.F_SLOW, arg3=10, arg4=2 }
+  [ 95] = { act="WR", name="Plat_RaiseAndStayTx0", arg1="tag", arg2=XC.P_CRAWL }
+  [ 96] = { act="WR", name="Floor_RaiseByTexture", arg1="tag", arg2=XC.F_SLOW }
+  [ 97] = { act="WRm",name="Teleport", arg1=0, arg2="tag" }
+  [ 98] = { act="WR", name="Floor_LowerToHighest", arg1="tag", arg2=XC.F_FAST, arg3=136 }
+  [ 99] = { act="SR", name="Door_LockedRaise", arg1="tag", arg2=XC.D_FAST, arg3=0, arg4=XC.KEY_BLUE }
+  [100] = { act="W",  name="Stairs_BuildUpDoom", arg1="tag", arg2=XC.ST_TURBO, arg3=16 }
+  [101] = { act="S",  name="Floor_RaiseToLowestCeiling", arg1="tag", arg2=XC.F_SLOW }
+  [102] = { act="S",  name="Floor_LowerToHighest", arg1="tag", arg2=XC.F_SLOW, arg3=128 }
+  [103] = { act="S",  name="Door_Open", arg1="tag", arg2=XC.D_SLOW }
+  [104] = { act="W",  name="Light_MinNeighbor", arg1="tag" }
+  [105] = { act="WR", name="Door_Raise", arg1="tag", arg2=XC.D_FAST, arg3=XC.DOORWAIT }
+  [106] = { act="WR", name="Door_Open", arg1="tag", arg2=XC.D_FAST }
+  [107] = { act="WR", name="Door_Close", arg1="tag", arg2=XC.D_FAST }
+  [108] = { act="W",  name="Door_Raise", arg1="tag", arg2=XC.D_FAST, arg3=XC.DOORWAIT }
+  [109] = { act="W",  name="Door_Open", arg1="tag", arg2=XC.D_FAST }
+  [110] = { act="W",  name="Door_Close", arg1="tag", arg2=XC.D_FAST }
+  [111] = { act="S",  name="Door_Raise", arg1="tag", arg2=XC.D_FAST, arg3=XC.DOORWAIT }
+  [112] = { act="S",  name="Door_Open", arg1="tag", arg2=XC.D_FAST }
+  [113] = { act="S",  name="Door_Close", arg1="tag", arg2=XC.D_FAST }
+  [114] = { act="SR", name="Door_Raise", arg1="tag", arg2=XC.D_FAST, arg3=XC.DOORWAIT }
+  [115] = { act="SR", name="Door_Open", arg1="tag", arg2=XC.D_FAST }
+  [116] = { act="SR", name="Door_Close", arg1="tag", arg2=XC.D_FAST }
+  [117] = { act="SR", name="Door_Raise", arg1=0, arg2=XC.D_FAST, arg3=XC.DOORWAIT, arg4="tag" }
+  [118] = { act="S",  name="Door_Open", arg1=0, arg2=XC.D_FAST, arg3="tag" }
+  [119] = { act="W",  name="Floor_RaiseToNearest", arg1="tag", arg2=XC.F_SLOW }
+  [120] = { act="WR", name="Plat_DownWaitUpStayLip", arg1="tag", arg2=XC.P_TURBO, arg3=XC.PLATWAIT }
+  [121] = { act="W",  name="Plat_DownWaitUpStayLip", arg1="tag", arg2=XC.P_TURBO, arg3=XC.PLATWAIT }
+  [122] = { act="S",  name="Plat_DownWaitUpStayLip", arg1="tag", arg2=XC.P_TURBO, arg3=XC.PLATWAIT }
+  [123] = { act="SR", name="Plat_DownWaitUpStayLip", arg1="tag", arg2=XC.P_TURBO, arg3=XC.PLATWAIT }
+  [124] = { act="W",  name="Exit_Secret" }
+  [125] = { act="n",  name="Teleport", arg1=0, arg2="tag" }
+  [126] = { act="Rn", name="Teleport", arg1=0, arg2="tag" }
+  [127] = { act="S",  name="Stairs_BuildUpDoom", arg1="tag", arg2=XC.ST_TURBO, arg3=16 }
+  [128] = { act="WR", name="Floor_RaiseToNearest", arg1="tag", arg2=XC.F_SLOW }
+  [129] = { act="WR", name="Floor_RaiseToNearest", arg1="tag", arg2=XC.F_FAST }
+  [130] = { act="W",  name="Floor_RaiseToNearest", arg1="tag", arg2=XC.F_FAST }
+  [131] = { act="S",  name="Floor_RaiseToNearest", arg1="tag", arg2=XC.F_FAST }
+  [132] = { act="SR", name="Floor_RaiseToNearest", arg1="tag", arg2=XC.F_FAST }
+  [133] = { act="S",  name="Door_LockedRaise", arg1="tag", arg2=XC.D_FAST, arg3=0, arg4=XC.KEY_BLUE }
+  [134] = { act="SR", name="Door_LockedRaise", arg1="tag", arg2=XC.D_FAST, arg3=0, arg4=XC.KEY_RED }
+  [135] = { act="S",  name="Door_LockedRaise", arg1="tag", arg2=XC.D_FAST, arg3=0, arg4=XC.KEY_RED }
+  [136] = { act="SR", name="Door_LockedRaise", arg1="tag", arg2=XC.D_FAST, arg3=0, arg4=XC.KEY_YELLOW }
+  [137] = { act="S",  name="Door_LockedRaise", arg1="tag", arg2=XC.D_FAST, arg3=0, arg4=XC.KEY_YELLOW }
+  [138] = { act="SR", name="Light_ChangeToValue", arg1="tag", arg2=255 }
+  [139] = { act="SR", name="Light_ChangeToValue", arg1="tag", arg2=35 }
+  [140] = { act="S",  name="Floor_RaiseByValueTimes8", arg1="tag", arg2=XC.F_SLOW, arg3=64 }
+  [141] = { act="W",  name="Ceiling_CrushAndRaiseSilentA", arg1="tag", arg2=XC.C_SLOW, arg3=XC.C_SLOW, arg4=10 }
+  [142] = { act="W",  name="Floor_RaiseByValueTimes8", arg1="tag", arg2=XC.F_SLOW, arg3=64 }
+  [143] = { act="W",  name="Plat_UpByValueStayTx", arg1="tag", arg2=XC.P_CRAWL, arg3=3 }
+  [144] = { act="W",  name="Plat_UpByValueStayTx", arg1="tag", arg2=XC.P_CRAWL, arg3=4 }
+  [145] = { act="W",  name="Ceiling_LowerToFloor", arg1="tag", arg2=XC.C_SLOW }
+  [146] = { act="W",  name="Floor_Donut", arg1="tag", arg2=XC.DONUTSPEED, arg3=XC.DONUTSPEED }
+  [147] = { act="WR", name="Floor_RaiseByValueTimes8", arg1="tag", arg2=XC.F_SLOW, arg3=64 }
+  [148] = { act="WR", name="Plat_UpByValueStayTx", arg1="tag", arg2=XC.P_CRAWL, arg3=3 }
+  [149] = { act="WR", name="Plat_UpByValueStayTx", arg1="tag", arg2=XC.P_CRAWL, arg3=4 }
+  [150] = { act="WR", name="Ceiling_CrushAndRaiseSilentA", arg1="tag", arg2=XC.C_SLOW, arg3=XC.C_SLOW, arg4=10 }
+  [151] = { act="WR", name="FloorAndCeiling_LowerRaise", arg1="tag", arg2=XC.F_SLOW, arg3=XC.C_SLOW }
+  [152] = { act="WR", name="Ceiling_LowerToFloor", arg1="tag", arg2=XC.C_SLOW }
+  [153] = { act="W",  name="Floor_TransferTrigger", arg1="tag" }
+  [154] = { act="WR", name="Floor_TransferTrigger", arg1="tag" }
+  [155] = { act="WR", name="Floor_Donut", arg1="tag", arg2=XC.DONUTSPEED, arg3=XC.DONUTSPEED }
+  [156] = { act="WR", name="Light_StrobeDoom", arg1="tag", arg2=5, arg3=35 }
+  [157] = { act="WR", name="Light_MinNeighbor", arg1="tag" }
+  [158] = { act="S",  name="Floor_RaiseByTexture", arg1="tag", arg2=XC.F_SLOW }
+  [159] = { act="S",  name="Floor_LowerToLowestTxTy", arg1="tag", arg2=XC.F_SLOW }
+  [160] = { act="S",  name="Floor_RaiseByValueTxTy", arg1="tag", arg2=XC.F_SLOW, arg3=24 }
+  [161] = { act="S",  name="Floor_RaiseByValue", arg1="tag", arg2=XC.F_SLOW, arg3=24 }
+  [162] = { act="S",  name="Plat_PerpetualRaiseLip", arg1="tag", arg2=XC.P_SLOW, arg3=XC.PLATWAIT }
+  [163] = { act="S",  name="Plat_Stop", arg1="tag" }
+  [164] = { act="S",  name="Ceiling_CrushAndRaiseA", arg1="tag", arg2=XC.C_NORMAL, arg3=XC.C_NORMAL, arg4=10 }
+  [165] = { act="S",  name="Ceiling_CrushAndRaiseSilentA", arg1="tag", arg2=XC.C_SLOW, arg3=XC.C_SLOW, arg4=10 }
+  [166] = { act="S",  name="FloorAndCeiling_LowerRaise", arg1="tag", arg2=XC.F_SLOW, arg3=XC.C_SLOW, arg4=1998 }
+  [167] = { act="S",  name="Ceiling_LowerAndCrush", arg1="tag", arg2=XC.C_SLOW, arg3=0, arg4=2 }
+  [168] = { act="S",  name="Ceiling_CrushStop", arg1="tag" }
+  [169] = { act="S",  name="Light_MaxNeighbor", arg1="tag" }
+  [170] = { act="S",  name="Light_ChangeToValue", arg1="tag", arg2=35 }
+  [171] = { act="S",  name="Light_ChangeToValue", arg1="tag", arg2=255 }
+  [172] = { act="S",  name="Light_StrobeDoom", arg1="tag", arg2=5, arg3=35 }
+  [173] = { act="S",  name="Light_MinNeighbor", arg1="tag" }
+  [174] = { act="Sm", name="Teleport", arg1=0, arg2="tag" }
+  [175] = { act="S",  name="Door_CloseWaitOpen", arg1="tag", arg2=XC.D_SLOW, arg3=240 }
+  [176] = { act="SR", name="Floor_RaiseByTexture", arg1="tag", arg2=XC.F_SLOW }
+  [177] = { act="SR", name="Floor_LowerToLowestTxTy", arg1="tag", arg2=XC.F_SLOW }
+  [178] = { act="SR", name="Floor_RaiseByValueTimes8", arg1="tag", arg2=XC.F_SLOW, arg3=64 }
+  [179] = { act="SR", name="Floor_RaiseByValueTxTy", arg1="tag", arg2=XC.F_SLOW, arg3=24 }
+  [180] = { act="SR", name="Floor_RaiseByValue", arg1="tag", arg2=XC.F_SLOW, arg3=24 }
+  [181] = { act="SR", name="Plat_PerpetualRaiseLip", arg1="tag", arg2=XC.P_SLOW, arg3=XC.PLATWAIT }
+  [182] = { act="SR", name="Plat_Stop", arg1="tag" }
+  [183] = { act="SR", name="Ceiling_CrushAndRaiseA", arg1="tag", arg2=XC.C_NORMAL, arg3=XC.C_NORMAL, arg4=10 }
+  [184] = { act="SR", name="Ceiling_CrushAndRaiseA", arg1="tag", arg2=XC.C_SLOW, arg3=XC.C_SLOW, arg4=10 }
+  [185] = { act="SR", name="Ceiling_CrushAndRaiseSilentA", arg1="tag", arg2=XC.C_SLOW, arg3=XC.C_SLOW, arg4=10 }
+  [186] = { act="SR", name="FloorAndCeiling_LowerRaise", arg1="tag", arg2=XC.F_SLOW, arg3=XC.C_SLOW, arg4=1998 }
+  [187] = { act="SR", name="Ceiling_LowerAndCrush", arg1="tag", arg2=XC.C_SLOW, arg3=0, arg4=2 }
+  [188] = { act="SR", name="Ceiling_CrushStop", arg1="tag" }
+  [189] = { act="S",  name="Floor_TransferTrigger", arg1="tag" }
+  [190] = { act="SR", name="Floor_TransferTrigger", arg1="tag" }
+  [191] = { act="SR", name="Floor_Donut", arg1="tag", arg2=XC.DONUTSPEED, arg3=XC.DONUTSPEED }
+  [192] = { act="SR", name="Light_MaxNeighbor", arg1="tag" }
+  [193] = { act="SR", name="Light_StrobeDoom", arg1="tag", arg2=5, arg3=35 }
+  [194] = { act="SR", name="Light_MinNeighbor", arg1="tag" }
+  [195] = { act="SRm",name="Teleport", arg1=0, arg2="tag" }
+  [196] = { act="SR", name="Door_CloseWaitOpen", arg1="tag", arg2=XC.D_SLOW, arg3=240 }
+  [197] = { act="G",  name="Exit_Normal" }
+  [198] = { act="G",  name="Exit_Secret" }
+  [199] = { act="W",  name="Ceiling_LowerToLowest", arg1="tag", arg2=XC.C_SLOW }
+  [200] = { act="W",  name="Ceiling_LowerToHighestFloor", arg1="tag", arg2=XC.C_SLOW }
+  [201] = { act="WR", name="Ceiling_LowerToLowest", arg1="tag", arg2=XC.C_SLOW }
+  [202] = { act="WR", name="Ceiling_LowerToHighestFloor", arg1="tag", arg2=XC.C_SLOW }
+  [203] = { act="S",  name="Ceiling_LowerToLowest", arg1="tag", arg2=XC.C_SLOW }
+  [204] = { act="S",  name="Ceiling_LowerToHighestFloor", arg1="tag", arg2=XC.C_SLOW }
+  [205] = { act="SR", name="Ceiling_LowerToLowest", arg1="tag", arg2=XC.C_SLOW }
+  [206] = { act="SR", name="Ceiling_LowerToHighestFloor", arg1="tag", arg2=XC.C_SLOW }
+  [207] = { act="Wm", name="Teleport_NoFog", arg1=0, arg2=0, arg3="tag", arg4=1 }
+  [208] = { act="WRm",name="Teleport_NoFog", arg1=0, arg2=0, arg3="tag", arg4=1 }
+  [209] = { act="Sm", name="Teleport_NoFog", arg1=0, arg2=0, arg3="tag", arg4=1 }
+  [210] = { act="SRm",name="Teleport_NoFog", arg1=0, arg2=0, arg3="tag", arg4=1 }
+  [211] = { act="SR", name="Plat_ToggleCeiling", arg1="tag" }
+  [212] = { act="WR", name="Plat_ToggleCeiling", arg1="tag" }
+  [213] = { act="",   name="Transfer_FloorLight", arg1="tag" }
+  [214] = { act="",   name="Scroll_Ceiling", arg1="tag", arg2=6 }
+  [215] = { act="",   name="Scroll_Floor", arg1="tag", arg2=6 }
+  [216] = { act="",   name="Scroll_Floor", arg1="tag", arg2=6, arg3=1 }
+  [217] = { act="",   name="Scroll_Floor", arg1="tag", arg2=6, arg3=2 }
+  [218] = { act="",   name="Scroll_Texture_Model", arg1="lineid", arg2=2 }
+  [219] = { act="W",  name="Floor_LowerToNearest", arg1="tag", arg2=XC.F_SLOW }
+  [220] = { act="WR", name="Floor_LowerToNearest", arg1="tag", arg2=XC.F_SLOW }
+  [221] = { act="S",  name="Floor_LowerToNearest", arg1="tag", arg2=XC.F_SLOW }
+  [222] = { act="SR", name="Floor_LowerToNearest", arg1="tag", arg2=XC.F_SLOW }
+  [223] = { act="",   name="Sector_SetFriction", arg1="tag" }
+  [224] = { act="",   name="Sector_SetWind", arg1="tag", arg2=0, arg3=0, arg4=1 }
+  [225] = { act="",   name="Sector_SetCurrent", arg1="tag", arg2=0, arg3=0, arg4=1 }
+  [226] = { act="",   name="PointPush_SetForce", arg1="tag", arg2=0, arg3=0, arg4=1 }
+  [227] = { act="W",  name="Elevator_RaiseToNearest", arg1="tag", arg2=XC.ELEVATORSPEED }
+  [228] = { act="WR", name="Elevator_RaiseToNearest", arg1="tag", arg2=XC.ELEVATORSPEED }
+  [229] = { act="S",  name="Elevator_RaiseToNearest", arg1="tag", arg2=XC.ELEVATORSPEED }
+  [230] = { act="SR", name="Elevator_RaiseToNearest", arg1="tag", arg2=XC.ELEVATORSPEED }
+  [231] = { act="W",  name="Elevator_LowerToNearest", arg1="tag", arg2=XC.ELEVATORSPEED }
+  [232] = { act="WR", name="Elevator_LowerToNearest", arg1="tag", arg2=XC.ELEVATORSPEED }
+  [233] = { act="S",  name="Elevator_LowerToNearest", arg1="tag", arg2=XC.ELEVATORSPEED }
+  [234] = { act="SR", name="Elevator_LowerToNearest", arg1="tag", arg2=XC.ELEVATORSPEED }
+  [235] = { act="W",  name="Elevator_MoveToFloor", arg1="tag", arg2=XC.ELEVATORSPEED }
+  [236] = { act="WR", name="Elevator_MoveToFloor", arg1="tag", arg2=XC.ELEVATORSPEED }
+  [237] = { act="S",  name="Elevator_MoveToFloor", arg1="tag", arg2=XC.ELEVATORSPEED }
+  [238] = { act="SR", name="Elevator_MoveToFloor", arg1="tag", arg2=XC.ELEVATORSPEED }
+  [239] = { act="W",  name="Floor_TransferNumeric", arg1="tag" }
+  [240] = { act="WR", name="Floor_TransferNumeric", arg1="tag" }
+  [241] = { act="S",  name="Floor_TransferNumeric", arg1="tag" }
+  [242] = { act="",   name="Transfer_Heights", arg1="tag" }
+  [243] = { act="Wm", name="Teleport_Line", arg1="tag", arg2="tag2" }
+  [244] = { act="WRm",name="Teleport_Line", arg1="tag", arg2="tag2" }
+  [245] = { act="",   name="Scroll_Ceiling", arg1="tag", arg2=5 }
+  [246] = { act="",   name="Scroll_Floor", arg1="tag", arg2=5 }
+  [247] = { act="",   name="Scroll_Floor", arg1="tag", arg2=5, arg3=1 }
+  [248] = { act="",   name="Scroll_Floor", arg1="tag", arg2=5, arg3=2 }
+  [249] = { act="",   name="Scroll_Texture_Model", arg1="lineid", arg2=1 }
+  [250] = { act="",   name="Scroll_Ceiling", arg1="tag", arg2=4 }
+  [251] = { act="",   name="Scroll_Floor", arg1="tag", arg2=4 }
+  [252] = { act="",   name="Scroll_Floor", arg1="tag", arg2=4, arg3=1 }
+  [253] = { act="",   name="Scroll_Floor", arg1="tag", arg2=4, arg3=2 }
+  [254] = { act="",   name="Scroll_Texture_Model", arg1="lineid" }
+  [255] = { act="",   name="Scroll_Texture_Offsets" }
+  [256] = { act="WR", name="Stairs_BuildUpDoom", arg1="tag", arg2=XC.ST_SLOW, arg3=8 }
+  [257] = { act="WR", name="Stairs_BuildUpDoom", arg1="tag", arg2=XC.ST_TURBO, arg3=16 }
+  [258] = { act="SR", name="Stairs_BuildUpDoom", arg1="tag", arg2=XC.ST_SLOW, arg3=8 }
+  [259] = { act="SR", name="Stairs_BuildUpDoom", arg1="tag", arg2=XC.ST_TURBO, arg3=16 }
+  [260] = { act="",   name="TranslucentLine", arg1="lineid", arg2=168 }
+  [261] = { act="",   name="Transfer_CeilingLight", arg1="tag" }
+  [262] = { act="Wm", name="Teleport_Line", arg1="tag", arg2="tag2", arg3=1 }
+  [263] = { act="WRm",name="Teleport_Line", arg1="tag", arg2="tag2", arg3=1 }
+  [264] = { act="n",  name="Teleport_Line", arg1="tag", arg2="tag2", arg3=1 }
+  [265] = { act="Rn", name="Teleport_Line", arg1="tag", arg2="tag2", arg3=1 }
+  [266] = { act="n",  name="Teleport_Line", arg1="tag", arg2="tag2" }
+  [267] = { act="Rn", name="Teleport_Line", arg1="tag", arg2="tag2" }
+  [268] = { act="n",  name="Teleport_NoFog", arg1=0, arg2=0, arg3="tag", arg4=1 }
+  [269] = { act="Rn", name="Teleport_NoFog", arg1=0, arg2=0, arg3="tag", arg4=1 }
+  [270] = { act="WR", name="XC.FS_Execute", arg1="tag" }
+  [271] = { act="",   name="Static_Init", arg1="tag", arg2=XC.INIT_SKY }
+  [272] = { act="",   name="Static_Init", arg1="tag", arg2=XC.INIT_SKY, arg3=1 }
+  [273] = { act="WR", name="XC.FS_Execute", arg1="tag", arg2=1 }
+  [274] = { act="W",  name="XC.FS_Execute", arg1="tag" }
+  [275] = { act="W",  name="XC.FS_Execute", arg1="tag", arg2=1 }
+  [276] = { act="SR", name="XC.FS_Execute", arg1="tag" }
+  [277] = { act="S",  name="XC.FS_Execute", arg1="tag" }
+  [278] = { act="GR", name="XC.FS_Execute", arg1="tag" }
+  [279] = { act="G",  name="XC.FS_Execute", arg1="tag" }
+  [280] = { act="",   name="Transfer_Heights", arg1="tag", arg2=12 }
+  [281] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=1, arg3=0, arg4=255 }
+  [282] = { act="",   name="Static_Init", arg1="tag", arg2=1 }
+  [284] = { act="",   name="TranslucentLine", arg1="lineid", arg2=128 }
+  [285] = { act="",   name="TranslucentLine", arg1="lineid", arg2=192 }
+  [286] = { act="",   name="TranslucentLine", arg1="lineid", arg2=48 }
+  [287] = { act="",   name="TranslucentLine", arg1="lineid", arg2=128, arg3=1 }
+  [288] = { act="",   name="TranslucentLine", arg1="lineid", arg2=255 }
+  [289] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=1, arg3=1, arg4=255 }
+  [300] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=1, arg3=1, arg4=127 }
+  [301] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=2, arg3=2, arg4=127 }
+  [302] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=3, arg3=6, arg4=127 }
+  [303] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=3 }
+  [304] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=2, arg3=2, arg4=255 }
+  [305] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=3, arg3=2 }
+  [306] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=1 }
+  [332] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=4 }
+  [333] = { act="",   name="Static_Init", arg1="tag", arg2=XC.INIT_GRAVITY }
+  [334] = { act="",   name="Static_Init", arg1="tag", arg2=XC.INIT_COLOR }
+  [335] = { act="",   name="Static_Init", arg1="tag", arg2=XC.INIT_DAMAGE }
+  [336] = { act="",   name="Line_Mirror" }
+  [337] = { act="",   name="Line_Horizon" }
+  [338] = { act="W",  name="Floor_Waggle", arg1="tag", arg2=24, arg3=32 }
+  [339] = { act="W",  name="Floor_Waggle", arg1="tag", arg2=12, arg3=32 }
+  [340] = { act="",   name="Plane_Align", arg1=1 }
+  [341] = { act="",   name="Plane_Align", arg1=0, arg2=1 }
+  [342] = { act="",   name="Plane_Align", arg1=1, arg2=1 }
+  [343] = { act="",   name="Plane_Align", arg1=2 }
+  [344] = { act="",   name="Plane_Align", arg1=0, arg2=2 }
+  [345] = { act="",   name="Plane_Align", arg1=2, arg2=2 }
+  [346] = { act="",   name="Plane_Align", arg1=2, arg2=1 }
+  [347] = { act="",   name="Plane_Align", arg1=1, arg2=2 }
+  [348] = { act="W",  name="Autosave" }
+  [349] = { act="S",  name="Autosave" }
+  [350] = { act="",   name="Transfer_Heights", arg1="tag", arg2=2 }
+  [351] = { act="",   name="Transfer_Heights", arg1="tag", arg2=6 }
+  [352] = { act="",   name="Sector_CopyScroller", arg1="tag", arg2=1 }
+  [353] = { act="",   name="Sector_CopyScroller", arg1="tag", arg2=2 }
+  [354] = { act="",   name="Sector_CopyScroller", arg1="tag", arg2=6 }
+  [400] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=1, arg3=0, arg4=255 }
+  [401] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=1, arg3=16, arg4=255 }
+  [402] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=1, arg3=32, arg4=255 }
+  [403] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=2, arg3=2, arg4=255 }
+  [404] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=2, arg3=2, arg4=204 }
+  [405] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=2, arg3=2, arg4=153 }
+  [406] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=2, arg3=2, arg4=102 }
+  [407] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=2, arg3=2, arg4=51 }
+  [408] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=2, arg3=2 }
+  [413] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=1, arg3=8, arg4=255 }
+  [414] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=1, arg3=8, arg4=204 }
+  [415] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=1, arg3=8, arg4=153 }
+  [416] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=1, arg3=8, arg4=102 }
+  [417] = { act="",   name="Sector_Set3DFloor", arg1="tag", arg2=1, arg3=8, arg4=51 }
+  [409] = { act="",   name="TranslucentLine", arg1="lineid", arg2=204 }
+  [410] = { act="",   name="TranslucentLine", arg1="lineid", arg2=153 }
+  [411] = { act="",   name="TranslucentLine", arg1="lineid", arg2=101 }
+  [412] = { act="",   name="TranslucentLine", arg1="lineid", arg2=50 }
+  [422] = { act="",   name="Scroll_Texture_Right", arg1=XC.SCROLLSPEED }
+  [423] = { act="",   name="Scroll_Texture_Up", arg1=XC.SCROLLSPEED }
+  [424] = { act="",   name="Scroll_Texture_Down", arg1=XC.SCROLLSPEED }
+  [425] = { act="",   name="Scroll_Texture_Both", arg1=0, arg2=XC.SCROLLSPEED, arg3=0, arg4=0, arg5=XC.SCROLLSPEED }
+  [426] = { act="",   name="Scroll_Texture_Both", arg1=0, arg2=XC.SCROLLSPEED, arg3=0, arg4=XC.SCROLLSPEED }
+  [427] = { act="",   name="Scroll_Texture_Both", arg1=0, arg2=0, arg3=XC.SCROLLSPEED, arg4=0, arg5=XC.SCROLLSPEED }
+  [428] = { act="",   name="Scroll_Texture_Both", arg1=0, arg2=0, arg3=XC.SCROLLSPEED, arg4=XC.SCROLLSPEED }
+  [434] = { act="S",  name="Floor_RaiseByValue", arg1="tag", arg2=XC.F_SLOW, arg3=2 }
+  [435] = { act="SR", name="Floor_RaiseByValue", arg1="tag", arg2=XC.F_SLOW, arg3=2 }
+  [436] = { act="W",  name="Floor_RaiseByValue", arg1="tag", arg2=XC.F_SLOW, arg3=2 }
+  [437] = { act="WR", name="Floor_RaiseByValue", arg1="tag", arg2=XC.F_SLOW, arg3=2 }
+  [438] = { act="G",  name="Floor_RaiseByValue", arg1="tag", arg2=XC.F_SLOW, arg3=2 }
+  [439] = { act="GR", name="Floor_RaiseByValue", arg1="tag", arg2=XC.F_SLOW, arg3=2 }
 }
 
