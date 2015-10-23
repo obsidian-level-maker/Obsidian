@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2015 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -21,7 +21,7 @@
 #ifndef __SYS_DEBUG_H__
 #define __SYS_DEBUG_H__
 
-void LogInit(const char *filename);  // NULL for none
+bool LogInit(const char *filename);  // NULL for none
 void LogClose(void);
 
 void LogEnableDebug(bool enable);

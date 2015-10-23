@@ -47,6 +47,7 @@ const char *game_dir    = NULL;
 
 const char *config_file  = NULL;
 const char *options_file = NULL;
+const char *logging_file = NULL;
 
 int screen_w;
 int screen_h;
@@ -85,8 +86,10 @@ static void ShowInfo()
 		"Available options:\n"
 		"     --home     <dir>     Home directory\n"
 		"     --install  <dir>     Installation directory\n"
+		"\n"
 		"     --config   <file>    Config file to use\n"
 		"     --options  <file>    Options file to use\n"
+		"     --log      <file>    Log file to create\n"
 		"\n"
 		"  -b --batch    <output>  Batch mode (no GUI)\n"
 		"  -l --load     <file>    Load settings from a file\n"
@@ -267,6 +270,34 @@ void Determine_OptionsFile()
 	else
 	{
 		options_file = StringPrintf("%s/%s", home_dir, OPTIONS_FILENAME);
+	}
+}
+
+
+void Determine_LoggingFile()
+{
+	int logf_arg = ArgvFind(0, "log");
+
+	if (logf_arg >= 0)
+	{
+		if (logf_arg+1 >= arg_count || ArgvIsOption(logf_arg+1))
+		{
+			fprintf(stderr, "OBLIGE ERROR: missing path for --log\n");
+			exit(9);
+		}
+
+		logging_file = StringDup(arg_list[logf_arg + 1]);
+
+		// FIXME: test we can create it
+		// Main_FatalError("Cannot create log file: %s\n", 
+	}
+	else if (! batch_mode)
+	{
+		logging_file = StringPrintf("%s/%s", home_dir, LOG_FILENAME);
+	}
+	else
+	{
+		logging_file = NULL;
 	}
 }
 
@@ -661,9 +692,10 @@ int main(int argc, char **argv)
 
 	Determine_ConfigFile();
 	Determine_OptionsFile();
+	Determine_LoggingFile();
 
 
-	LogInit(batch_mode ? NULL : LOG_FILENAME);
+	LogInit(logging_file);
 
 	if (batch_mode || ArgvFind('t', "terminal") >= 0)
 		LogEnableTerminal(true);

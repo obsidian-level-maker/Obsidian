@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2015 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -32,18 +32,19 @@ static bool debugging = false;
 static bool terminal  = false;
 
 
-void LogInit(const char *filename)
+bool LogInit(const char *filename)
 {
 	if (filename)
 	{
-		const char *path = StringPrintf("%s/%s", home_dir, filename);
+		log_file = fopen(filename, "w");
 
-		log_file = fopen(path, "w");
-
-		StringFree(path);
+		if (! log_file)
+			return false;
 	}
 
 	LogPrintf("====== START OF OBLIGE LOGS ======\n");
+
+	return true;
 }
 
 

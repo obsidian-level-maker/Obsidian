@@ -38,6 +38,7 @@ extern const char *game_dir;
 
 extern const char *data_path;
 extern const char *options_file;
+extern const char *logging_file;
 
 extern bool batch_mode;
 
