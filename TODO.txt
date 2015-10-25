@@ -58,6 +58,8 @@ ______________________________________________________________________
 
 +  have a "slow pace weapons" extra setting (idea by flyingdeath)
 
+-  grower : unused (or failed hall) sprouts can be good closet spots
+
 -  sky generator : better checking of themes (esp. w/ control module)
 
 -  the locked switch closet
@@ -67,6 +69,17 @@ ______________________________________________________________________
 BUG: when "Switched Doors" set to NONE, can still make them because
      there may be more zones than (# of keys + 1).
 
+IDEA : a "vis-zone" or "vis-divider" -- independent of theme-zones.
+ALSO : "mon-zone" for monster/weapon palette changes
+
+
+-  pick Exit room: allow picking a large room with two conns but one
+   leading to a small leaf (which becomes the ACTUAL exit) and large
+   room is the "final battle".
+
+-  sometimes incorporate a nearby RANDOM area into a room
+
+Teleporter IDEA : grow one large trunk, then pick a hallway (or room) to remove
 
 REQUEST:  mix it up option for the quiet start setting.
 
@@ -75,6 +88,38 @@ IDEA : an adjustment (of health) for "environment" of a battle
 
 IDEA: have a single thing number for "coop player"
       [ i.e. treat player entities more abstractly ]
+
+-  CTF : start with a tile designed for CTF mode, placed in middle of map,
+         and when adding a room/hall then also add its sister room
+         [ if sister fails, kill the brother ]
+
+
+
+Scenic Borders
+--------------
+
++  where an outdoor border area touches X, need a low-sky half-seed brush
+   AND LIMIT floor of whole area to be < zone.sky_h
+
+   (a) X can be:
+       - solid wall (either in normal map or bordery parts, e.g. zone wall)
+       - window
+       - a porch
+       - a roofed cage
+       - a "ceiling-y" prefab
+
+   [ we only know about the walls in FINISH_SCENIC_BORDERS ]
+
+   (b) half-seed brush logic similar to SINKs -- ideally use same code
+
++  proper algorithm for heights
+   (avoid same height of two neighboring areas)
+
+   -  areas touching edge of map need floor_h >= zone's max floor
+
+-  proper texturing (use cliff_mat at edge_of_map)
+
+-  get WATER mode working again
 
 
 Sinks

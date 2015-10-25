@@ -6,6 +6,8 @@ WORK IN PROGRESS
 Edge Stuff
 ----------
 
++  store EDGEs in each CORNER object
+
 -  make proper EDGE objects for Windows
    ( since want to support wide ones )
 
@@ -22,118 +24,31 @@ Edge Stuff
 
 
 
-Room Kinds
-----------
-
--  logic for hallways [take the connected rooms into account]
-
-   -  if one side is cave, hallway might be cave, never otherwise
-
-   -  if one side is outdoor, hallway might be outdoor, rarely otherwise
-
-      B + B : 10% outdoor,  0% porch
-      B + O : 20% outdoor, 10% porch 
-      O + O : 40% outdoor, 20% porch
-
-
-Misc
-----
+Quests
+------
 
 Quests : start room should be _far_ from exit room/quest door
 
-exit_room : can pick large room with TWO conns but one leads to a small leaf
-            [ small leaf is ACTUAL exit, large room is "final battle" ]
-
-sometimes no archway/door ???
-
-
-sometimes incorporate a nearby RANDOM area into a room
-[ allow more ROOM-->ROOM interaction ]
--  indoor/cave rooms can swallow areas which touch edge of map
 
 
 Grower:
 -------
 
-NO:  split connections : a small chance of breaking into two sprouts
-     (just have more conns and conn-sets)
-
-IDEA : associate all non-room areas with a nearby room
-       [ if the room is outdoor, so are the areas ]
-
-?? if a hallway with 2+ exits fails to connect both, then remove first
-   room AND the hallway
-
--  when a dud hallway is removed, try again on same sprout
++  when a dud hallway is removed, try again on same sprout
    [ especially if map is undersized ]
 
--  support 'symmetry' style for tiles
-
--  if first trunk is too small, add some random sprouts and
-   continue building
-
-   BUT: sometimes deliberately make 2+ trunks
-        (for teleporters)
-        be nice to create a big river between them
+   --> store sprouts in ROOM
 
 -  IDEA: remember 'blocked' sprouts -- may be good spots for cycles
 
 -  when a large room touches/cross the boundary rect, allow it to be a LEAF
 
 
--  CTF : start with a tile designed for CTF mode, placed in middle of map,
-         and when adding a room/hall then also add its sister room
-         [ if sister fails, kill the brother ]
-
-
-Teleporter IDEA : grow one large trunk, then pick a hallway (or room) to remove
-
-
-IDEA : a "vis-zone" or "vis-divider" -- independent of theme-zones.
-ALSO : "mon-zone" for monster/weapon palette changes
-
-
-
-Scenic Borders
---------------
-
-+  where an outdoor border area touches X, need a low-sky half-seed brush
-   AND LIMIT floor of whole area to be < zone.sky_h
-
-   (a) X can be:
-       - solid wall (either in normal map or bordery parts, e.g. zone wall)
-       - window
-       - a porch
-       - a roofed cage
-       - a "ceiling-y" prefab
-
-   [ we only know about the walls in FINISH_SCENIC_BORDERS ]
-
-   (b) half-seed brush logic similar to SINKs -- ideally use same code
-
-+  proper algorithm for heights
-   (avoid same height of two neighboring areas)
-
-   -  areas touching edge of map need floor_h >= zone's max floor
-
--  proper texturing (use cliff_mat at edge_of_map)
-
--  get WATER mode working again
-
-
 
 Texturing
 ---------
 
-SORT OUT : where 'facade_mat' is stored, how is accessed
-  - basically, each indoor room (cave or building) has a facade_mat
-    (defaulting to ZONE.building_facade or ZONE.cave_mat)
-
-  DONE: for outdoor<-->outdoor, use the fence texture (ZONE.fence_mat)
-
-  ??? for void, use area 'kind'
-
-+  textures for outdoor floors
++  texture choice for outdoor floors
    [ Q/ still differentiate between "courtyard" and "natural" ? ]
 
 +  hallways
@@ -150,13 +65,15 @@ Closets
 
 
 
+Porches
+-------
 
-Porches :
+!! fix missing posts
+   [ need to check if a WALL or wall-like edge touches a corner ]
+
 +  one per room
 
-+  fix missing posts (where touch edge of map)
-
-+  floor MUST be >= nearby floors (ignoring void / walled junctions)
++  floor MUST be >= nearby floors in room
    [ do it via floor-heights algorithm)
 
 -  experiment with railings instead of posts (want #conns >= 2)
