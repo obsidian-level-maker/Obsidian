@@ -33,7 +33,9 @@
 #include "main.h"
 #include "m_lua.h"
 
-#include "twister.h"
+
+#define AJ_RANDOM_IMPLEMENTATION
+#include "aj_random.h"
 
 
 static lua_State *LUA_ST;
@@ -48,8 +50,8 @@ static std::vector<std::string> * conf_line_buffer;
 extern bool debug_onto_console;
 
 
-// random number generator (Mersenne Twister)
-static MT_rand_c GUI_RNG(0);
+// random number generator
+static aj_Random_c GUI_RNG;
 
 // color maps
 color_mapping_t color_mappings[MAX_COLOR_MAPS];
@@ -486,7 +488,7 @@ int gui_rand_seed(lua_State *L)
 //
 int gui_random(lua_State *L)
 {
-	lua_Number value = GUI_RNG.Rand_fp();
+	lua_Number value = GUI_RNG.Double();
 
 	lua_pushnumber(L, value);
 	return 1;

@@ -182,11 +182,6 @@ in his article: "Cellular Automata Method for Generating
 Random Cave-Like Levels".
 
 <p>
-The random number generator used by OBLIGE is the Mersenne Twister,
-with code by Richard J. Wagner (15 May 2003 / rjwagner@writeme.com)
-based on code by Makoto Matsumoto, Takuji Nishimura, and Shawn Cokus.
-
-<p>
 OBLIGE uses the FLTK widget library:
 <a href="http://www.fltk.org">www.fltk.org</a>
 

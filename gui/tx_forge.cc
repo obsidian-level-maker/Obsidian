@@ -37,15 +37,15 @@
 #include "headers.h"
 
 #include "lib_util.h"
-#include "main.h"
+#include "aj_random.h"
 
-#include "twister.h"
+#include "main.h"
 #include "tx_forge.h"
 
 
 /* Definition for obtaining random numbers. */
 
-static MT_rand_c ss_twist(0);
+static aj_Random_c ss_twist;
 
 
 /* Definitions used to address real and imaginary parts in a two-dimensional
@@ -192,14 +192,14 @@ static double rand_gauss(void)
 	double sum = 0.0;
 
 	for (int i = 0; i < NRAND; i++)
-		sum += (ss_twist.Rand() & 0xFFFF);
+		sum += (ss_twist.Int() & 0xFFFF);
 
 	return sum * gauss_mul - gauss_add;
 }
 
 static double rand_phase(void)
 {
-	return 2 * M_PI * ss_twist.Rand_fp();
+	return 2 * M_PI * ss_twist.Double();
 }
 
 

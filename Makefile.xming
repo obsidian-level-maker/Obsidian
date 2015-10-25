@@ -94,7 +94,6 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/vis_buffer.o \
 	$(OBJ_DIR)/vis_occlude.o \
 	\
-	$(OBJ_DIR)/twister.o   \
 	$(OBJ_DIR)/tx_forge.o  \
 	$(OBJ_DIR)/tx_skies.o  \
 	$(OBJ_DIR)/ui_build.o  \

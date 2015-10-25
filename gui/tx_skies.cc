@@ -21,10 +21,11 @@
 #include "headers.h"
 
 #include "lib_util.h"
+#include "aj_random.h"
+
 #include "main.h"
 #include "m_lua.h"
 
-#include "twister.h"
 #include "tx_forge.h"
 #include "tx_skies.h"
 
@@ -113,7 +114,9 @@ void SKY_AddStars(int seed, byte *pixels, int W, int H,
 	SYS_ASSERT(powscale > 0);
 	SYS_ASSERT(thresh < 0.99);
 
-	MT_rand_c twist(seed);
+	aj_Random_c twist;
+
+	twist.Seed(seed);
 
 	for (int y = 0; y < H; y++)
 	{
@@ -122,9 +125,9 @@ void SKY_AddStars(int seed, byte *pixels, int W, int H,
 
 		while (dest < d_end)
 		{
-			double v  = twist.Rand_fp();
-			v *= twist.Rand_fp();
-			v *= twist.Rand_fp();
+			double v  = twist.Double();
+			v *= twist.Double();
+			v *= twist.Double();
 
 			v = pow(v, powscale);
 
@@ -160,7 +163,9 @@ void SKY_AddHills(int seed, byte *pixels, int W, int H,
 
 	max_h = max_h - min_h;
 
-	MT_rand_c twist(seed ^ 1);
+	aj_Random_c twist;
+
+	twist.Seed(seed ^ 0x1234567);
 
 
 	// draw a column of pixels for every point on the height map.
@@ -192,7 +197,7 @@ void SKY_AddHills(int seed, byte *pixels, int W, int H,
 
 			for (int y = high_span; y < span; y++)
 			{
-				float i2 = ity - 0.3 * twist.Rand_fp();
+				float i2 = ity - 0.3 * twist.Double();
 
 				int idx = (int)(i2 * map->size);
 
@@ -219,7 +224,9 @@ void SKY_AddBuilding(int seed, byte *pixels, int W, int H,
 
 	win_prob = win_prob * 65535 / 100;
 
-	MT_rand_c bu_twist(seed);
+	aj_Random_c bu_twist;
+
+	bu_twist.Seed(seed);
 
 	int x, y;
 
@@ -254,7 +261,7 @@ void SKY_AddBuilding(int seed, byte *pixels, int W, int H,
 			{
 				byte fg = colors[1];
 
-				if (((int)bu_twist.Rand() & 0xFFFF) > win_prob)
+				if (((int)bu_twist.Int() & 0xFFFF) > win_prob)
 					fg = (numcol >= 3) ? colors[2] : bg;
 
 				for (int dx = 0; dx < win_w; dx++)

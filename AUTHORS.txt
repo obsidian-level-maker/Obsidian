@@ -107,9 +107,5 @@ Part of the cave algorithm used in OBLIGE was described by Jim
 Babcock in his article: "Cellular Automata Method for Generating
 Random Cave-Like Levels".
 
-The random number generator used by OBLIGE is the Mersenne Twister,
-with code by Richard J. Wagner / 15 May 2003 / rjwagner@writeme.com
-based on code by Makoto Matsumoto, Takuji Nishimura, and Shawn Cokus.
-
 OBLIGE uses the FLTK widget library (http://www.fltk.org)
 
