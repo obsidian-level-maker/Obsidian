@@ -138,6 +138,8 @@ end
 
 
 function ROOM_CLASS.kill_it(R)
+  gui.debugf("Killing %s\n", R:tostr())
+
   -- sanity check
   each C in LEVEL.conns do
     if (C.A1.room == R and C.A2.room != R) or
@@ -150,6 +152,7 @@ function ROOM_CLASS.kill_it(R)
   table.kill_elem(LEVEL.rooms, R)
 
   each A in R.areas do
+    gui.debugf("   kill %s\n", A.name)
     A:kill_it()
   end
 

@@ -950,19 +950,23 @@ function Grower_determine_coverage()
   local count = 0
   local total = 0
 
+gui.debugf("Grower_determine_coverage...\n")
   for sx = LEVEL.boundary_sx1 + 1, LEVEL.boundary_sx2 - 1 do
   for sy = LEVEL.boundary_sy1 + 1, LEVEL.boundary_sy2 - 1 do
     total = total + 1
 
     local S = SEEDS[sx][sy]
 
-    if S.area or S.diagonal then
+    if S.room or (S.top and S.top.room) then
+local RR = S.room or (S.top and S.top.room) 
+local AA = S.area or (S.top and S.top.area) 
+gui.debugf("  %s : %s / %s\n", S:tostr(), RR:tostr(), (AA and AA.name) or "-noarea-")
       count = count + 1
     end
   end
   end
 
-stderrf("coverage: %1.2f\n", count / total)
+stderrf("coverage: %1.2f (%d seeds / %d)\n", count / total, count, total)
   return count / total
 end
 
@@ -1217,6 +1221,8 @@ entry_conn.dir, transform_dir(T, entry_conn.dir), P.dir)
 
     assert(S.area == nil)
 
+gui.debugf("  %s\n", S:tostr())
+
     S.area = A
     S.room = A.room
     table.insert(A.seeds, S)
@@ -1403,6 +1409,10 @@ end
 
     local W = cur_grid.w
     local H = cur_grid.h
+
+if ROOM then
+gui.debugf("test_or_install_element... %s\n", ROOM:tostr())
+end
 
     for px = 1, W do
     for py = 1, H do
@@ -1669,7 +1679,27 @@ math.max(ax,bx), math.max(ay,by))
   end
 
 
-  local function kill_hallway(R)
+  local function collect_full_branches(R)
+    -- find all rooms that branch off the given room, including that room
+    -- and future branches but not including the parent of 'R'.
+
+    local list = { R }
+
+    for i = 1, 999 do
+      if i > #list then break; end
+
+      each R2 in LEVEL.rooms do
+        if R2.grow_parent == list[i] and not table.has_elem(list, R2) then
+          table.insert(list, R2)
+        end
+      end
+    end
+
+    return list
+  end
+
+
+  local function kill_room(R)
     -- kill any preliminary connections too
     for i = #LEVEL.prelim_conns, 1, -1 do
       local PC = LEVEL.prelim_conns[i]
@@ -1683,16 +1713,39 @@ math.max(ax,bx), math.max(ay,by))
   end
 
 
-  local function remove_dud_hallways()
-    for i = #LEVEL.rooms, 1, -1 do
-      local R = LEVEL.rooms[i]
+  local function check_hallway_network_is_dud(R)
+    local branches = collect_full_branches(R)
 
-      if R.kind != "hallway" then continue end
-
-      if R.prelim_conn_num < 2 then -- (R.grow_exits + 1) then
-        kill_hallway(R)
-      end
+    if R.prelim_conn_num >= (R.grow_exits + 1) then
+      return false
     end
+
+    -- kill the whole network
+    each N in branches do
+      kill_room(N)
+    end
+
+    return true
+  end
+
+
+  local function remove_dud_hallways()
+    local changed
+
+    repeat
+      changed = false
+
+      for i = #LEVEL.rooms, 1, -1 do
+        local R = LEVEL.rooms[i]
+
+        if R.kind != "hallway" then continue end
+
+        if check_hallway_network_is_dud(R) then
+          changed = true
+        end
+      end
+
+    until not changed
   end
 
 
@@ -1728,8 +1781,10 @@ math.max(ax,bx), math.max(ay,by))
 
   local MIN_COVERAGE = 0.4
 
-  for loop = 1, 4 do
+  for loop = 1, 10 do
     visit_all_sprouts()
+
+    remove_dud_hallways()
 
     if Grower_determine_coverage() >= MIN_COVERAGE then
       break;
@@ -1738,7 +1793,6 @@ math.max(ax,bx), math.max(ay,by))
     Grower_emergency_sprouts()
   end
 
-  remove_dud_hallways()
 
   -- ensure a second (etc) hub-growth is connected to a previous one
   -- [ this is mainly so we can mark the level boundary, and we need

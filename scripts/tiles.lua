@@ -263,7 +263,7 @@ HALL_DIAG_Y_4x4 =
 
 HALL_U_5x3_a =
 {
-  prob = 300
+  prob = 400
 
   structure =
   {
@@ -287,8 +287,8 @@ HALL_U_5x3_a =
 
   conn_sets =
   {
-    "a:b"
---  "a:bc"
+--  "a:b"
+    "a:bc"
   }
 }
 
