@@ -1644,6 +1644,9 @@ function Area_prune_hallways()
 
   ---| Area_prune_hallways |---
 
+-- currently not needed (hallways are never random shaped)
+do return end
+
   each R in LEVEL.rooms do
     if R.kind == "hallway" then
       prune_hallway(R)

@@ -666,7 +666,7 @@ function Grower_save_svg()
 
   ---| Grower_save_svg |---
 
-  local filename = "grow_s" .. OB_CONFIG.seed .. "_" .. LEVEL.name .. ".svg"
+  local filename = "grow_" .. OB_CONFIG.seed .. "_" .. LEVEL.name .. ".svg"
 
   fp = io.open(filename, "w")
 
@@ -1306,7 +1306,9 @@ entry_conn.dir, transform_dir(T, entry_conn.dir), P.dir)
   end
 
 
-  local function add_new_sprouts(T, conn_set, room, initial_hub)
+  local function add_new_sprouts(T, conn_set, R, initial_hub)
+    R.grow_exits = 0
+
     for i = 1, #conn_set do
       local letter = string.sub(conn_set, i, i)
 
@@ -1335,7 +1337,9 @@ entry_conn.dir, transform_dir(T, entry_conn.dir), P.dir)
         S = assert(S.top)
       end
 
-      Sprout_new(S, dir, conn, room)
+      Sprout_new(S, dir, conn, R)
+
+      R.grow_exits = R.grow_exits + 1
     end
   end
 
@@ -1542,7 +1546,9 @@ math.max(ax,bx), math.max(ay,by))
     ROOM.prelim_conn_num = 0
 
     -- FIXME : use "hallway" for hallways !!!
-    Room_set_kind(ROOM, "normal", P.is_outdoor, P.is_cave)
+    local kind = "normal"
+    if def.mode == "hallway" then kind = "hallway" end
+    Room_set_kind(ROOM, kind, P.is_outdoor, P.is_cave)
 
     cur_room = ROOM
 
@@ -1683,9 +1689,9 @@ math.max(ax,bx), math.max(ay,by))
 
       if R.kind != "hallway" then continue end
 
-      if R.prelim_conn_num >= 2 then continue end
-
-      kill_hallway(R)
+      if R.prelim_conn_num < 2 then -- (R.grow_exits + 1) then
+        kill_hallway(R)
+      end
     end
   end
 

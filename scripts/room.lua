@@ -2284,7 +2284,7 @@ function Room_floor_heights()
 
     if R.kind == "stairwell" then
       process_stairwell(R, prev_room)
-    elseif R.kind == "hallway" then
+    elseif R.kind == "RANDOM_hallway" then  -- not used ATM
       process_hallway(R, via_conn, entry_h)
     else
       process_room(R, entry_area)
