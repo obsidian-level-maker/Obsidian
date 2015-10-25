@@ -1786,6 +1786,8 @@ math.max(ax,bx), math.max(ay,by))
 
     remove_dud_hallways()
 
+    Area_squarify_seeds()
+
     if Grower_determine_coverage() >= MIN_COVERAGE then
       break;
     end
@@ -2309,6 +2311,8 @@ function Grower_create_rooms()
   Grower_fill_gaps()
 
   Area_squarify_seeds()
+
+  -- Grower_hallway_kinds()
 
   Area_calc_volumes()
   Area_find_neighbors()
