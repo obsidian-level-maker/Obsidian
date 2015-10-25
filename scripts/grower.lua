@@ -1581,7 +1581,7 @@ math.max(ax,bx), math.max(ay,by))
 
   local function try_add_new_room(P, tab)
     -- pick room kind (outdoor / cave)
-    local is_outdoor, is_cave = Room_choose_kind_NEW(P, P.room)
+    local is_outdoor, is_cave = Room_choose_kind(P, P.room)
 
     P.is_outdoor = is_outdoor
     P.is_cave    = is_cave
@@ -1842,7 +1842,27 @@ function Grower_hallway_kinds()
 
 
   local function visit_hall(H)
-    --
+    local R1, R2 = get_room_pair(H)
+
+    local is_outdoor
+    local is_cave
+
+    if (R1.is_cave and R2.is_cave  and rand.odds(90)) or
+       ((R1.is_cave or R2.is_cave) and rand.odds(60))
+    then
+      is_cave = true
+    end
+
+    if (R1.is_outdoor and R2.is_outdoor and rand.odds(50)) or
+       ((R1.is_outdoor or R2.is_outdoor) and rand.odds(25)) or
+       (H.svolume >= 3 and rand.odds(5))
+    then
+      is_outdoor = true
+    end 
+
+-- stderrf("Hallway kind @ %s --> %s %s\n", H:tostr(), sel(is_outdoor, "OUT", "-"), sel(is_cave, "CAVE", "-"))
+
+    Room_set_kind(H, "hallway", is_outdoor, is_cave)
   end
 
 

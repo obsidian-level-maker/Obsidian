@@ -1685,7 +1685,7 @@ end
 
 
 
-function Room_choose_kind_NEW(P, last_R)
+function Room_choose_kind(P, last_R)
   if last_R and last_R.kind == "hallway" then
     last_R = last_R.grow_parent
   end
@@ -2102,7 +2102,7 @@ function Room_floor_heights()
   end
 
 
-  local function process_hallway(R, conn)
+  local function process_RANDOM_hallway(R, conn)
     -- Note: this would be a problem if player starts could exist in a hallway
     assert(conn)
 
@@ -2288,7 +2288,7 @@ function Room_floor_heights()
     if R.kind == "stairwell" then
       process_stairwell(R, prev_room)
     elseif R.kind == "RANDOM_hallway" then  -- not used ATM
-      process_hallway(R, via_conn, entry_h)
+      process_RANDOM_hallway(R, via_conn, entry_h)
     else
       process_room(R, entry_area)
     end
