@@ -1362,7 +1362,7 @@ OB_THEMES["doom/tech"] =
   label = "Tech"
   priority = 18
   name_class = "TECH"
-  mixed_prob = 60
+  mixed_prob = 80
 }
 
 
@@ -1371,7 +1371,7 @@ OB_THEMES["doom/hell"] =
   label = "Hell"
   priority = 14
   name_class = "GOTHIC"
-  mixed_prob = 50
+  mixed_prob = 40
 }
 
 
