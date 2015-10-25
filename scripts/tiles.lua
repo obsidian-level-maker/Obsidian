@@ -433,10 +433,92 @@ CAVE_9x9 =
 --
 --------------------------------
 
---[[
-OUTDOOR_GENERIC_6x6 =
+OUTDOOR_L_5x5 =
 {
-  prob = 100
+  prob = 10099
+
+  structure =
+  {
+    "?????"
+    "?????"
+    "???.."
+    "??..."
+    "??..."
+  }
+
+  conns =
+  {
+    a = { x=2, y=1, w=1, dir=2 }
+    b = { x=5, y=4, w=1, dir=6 }
+    c = { x=4, y=5, w=1, dir=8 }
+
+    e = { x=2, y=1, w=2, dir=2 }
+    f = { x=5, y=5, w=2, dir=6 }
+    g = { x=4, y=5, w=2, dir=8 }
+  }
+
+  conn_sets =
+  {
+    "a:b"
+    "a:c"
+    "a:f"
+    "a:g"
+
+    "e:b"
+    "e:c"
+    "e:f"
+    "e:g"
+  }
+}
+
+OUTDOOR_T_6x6 =
+{
+  prob = 10099
+
+  structure =
+  {
+    "??????"
+    "??????"
+    ".????."
+    ".????."
+    "..??.."
+    "..??.."
+  }
+
+  conns =
+  {
+    a = { x=3, y=1, w=1, dir=2 }
+    b = { x=1, y=5, w=1, dir=4 }
+    c = { x=6, y=5, w=1, dir=6 }
+    d = { x=2, y=6, w=1, dir=8 }
+    z = { x=5, y=6, w=1, dir=8 }
+
+    e = { x=4, y=1, w=2, dir=2 }
+    f = { x=1, y=5, w=2, dir=4 }
+    g = { x=6, y=6, w=2, dir=6 }
+    h = { x=1, y=6, w=2, dir=8 }
+    k = { x=5, y=6, w=2, dir=8 }
+  }
+
+  conn_sets =
+  {
+    "a:bc"
+    "a:fg"
+    "a:dz"
+    "a:fz"
+    "a:hk"
+
+    "e:bc"
+    "e:fg"
+    "e:dz"
+    "e:dg"
+    "e:hk"
+  }
+}
+
+OUTDOOR_P_6x6 =
+{
+  prob = 10099
 
   structure =
   {
@@ -450,21 +532,24 @@ OUTDOOR_GENERIC_6x6 =
 
   conns =
   {
-    a = { x=4, y=1, w=2, dir=2 }
-    b = { x=1, y=3, w=2, dir=4 }
-    c = { x=6, y=4, w=2, dir=6 }
-    d = { x=3, y=6, w=2, dir=8 }
+    a = { x=4, y=1, w=1, dir=2 }
+    b = { x=1, y=3, w=1, dir=4 }
+    c = { x=6, y=3, w=1, dir=6 }
+    d = { x=3, y=6, w=1, dir=8 }
+
+    e = { x=4, y=1, w=2, dir=2 }
+    f = { x=1, y=3, w=2, dir=4 }
+    g = { x=6, y=4, w=2, dir=6 }
+    h = { x=3, y=6, w=2, dir=8 }
   }
 
   conn_sets =
   {
-    "a:bc"
-    "a:bd"
     "a:bcd"
+    "e:bch"
+    "e:fgh"
   }
 }
---]]
-
 
 --------------------------------
 --
