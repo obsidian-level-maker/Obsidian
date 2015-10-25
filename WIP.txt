@@ -6,7 +6,7 @@ WORK IN PROGRESS
 Edge Stuff
 ----------
 
-+  make proper EDGE objects for Windows
+-  make proper EDGE objects for Windows
    ( since want to support wide ones )
 
 -  make "fake" EDGE objects for other junction kinds
@@ -19,14 +19,6 @@ Edge Stuff
    -  steps
 
 -  rails
-
-
-
-IDEA: create BOSS maps using the grower system
-      -  start with a special kind of hub
-         [ it could depend on the actual map, e.g. MAP07 vs MAP30 ]
-      -  extend it with compatible tiles
-      -  maybe incorporate some gap-filled areas
 
 
 
@@ -63,7 +55,8 @@ sometimes incorporate a nearby RANDOM area into a room
 Grower:
 -------
 
-+  split connections : a small chance of breaking into two sprouts
+NO:  split connections : a small chance of breaking into two sprouts
+     (just have more conns and conn-sets)
 
 IDEA : associate all non-room areas with a nearby room
        [ if the room is outdoor, so are the areas ]
@@ -93,7 +86,7 @@ IDEA : associate all non-room areas with a nearby room
          [ if sister fails, kill the brother ]
 
 
-Teleporter IDEA : grow one large trunk, then pick a hallway to remove
+Teleporter IDEA : grow one large trunk, then pick a hallway (or room) to remove
 
 
 IDEA : a "vis-zone" or "vis-divider" -- independent of theme-zones.

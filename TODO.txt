@@ -722,6 +722,12 @@ Name generator:
 +  generate the Boss maps (don't use prebuilt)
    -  controlled via a module
 
+   IDEA: create BOSS maps using the grower system
+         -  start with a special kind of hub
+            [ it could depend on the actual map, e.g. MAP07 vs MAP30 ]
+         -  extend it with compatible tiles
+         -  maybe incorporate some gap-filled areas
+
 +  generate random music (incorporate SoundHelix ?)
 
 -  make Oblige easier to mod
