@@ -392,6 +392,16 @@ function Levels_setup()
 
   gui.property("spot_low_h",  PARAM.spot_low_h)
   gui.property("spot_high_h", PARAM.spot_high_h)
+
+
+  -- backwards compatibility
+  if OB_CONFIG.length == "full" then
+     OB_CONFIG.length = "game"
+  end
+
+  if OB_CONFIG.size == "tiny" then
+     OB_CONFIG.size = "small"
+  end
 end
 
 
