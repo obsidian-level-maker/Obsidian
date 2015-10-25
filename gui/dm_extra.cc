@@ -1228,7 +1228,7 @@ static rgb_color_t Grab_Color(lua_State *L, int stack_idx)
 			luaL_error(L, "bad color string (missing #)");
 
 		int raw_hex = strtol(name + 1, NULL, 16);
-		int r, g, b;
+		int r=0, g=0, b=0;
 
 		if (strlen(name) == 4)
 		{

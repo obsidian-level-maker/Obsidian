@@ -174,7 +174,7 @@ tga_image_c * TGA_LoadImage (const char *path)
 	}
 	else if (targa_header.image_type == 10)   // Runlength encoded RGB images
 	{
-		byte red, green, blue, alphabyte;
+		byte red=0, green=0, blue=0, alphabyte=0;
 		byte packetHeader, packetSize;
 
 		for (int y=height-1 ; y >= 0 ; y--)
