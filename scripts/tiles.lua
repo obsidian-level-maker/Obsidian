@@ -724,3 +724,80 @@ START_DONUT_1 =
 -- end of TILES
 }
 
+
+------------------------------------------------------------------------
+--  EXPERIMENT : produce levels like 0.85
+------------------------------------------------------------------------
+
+TILES_085 =
+{
+
+TEMPLATE_3x3 =
+{
+  prob = 100
+  start_prob = 100
+
+  structure =
+  {
+    "111"
+    "111"
+    "111"
+  }
+
+  conns =
+  {
+    a = { x=2, y=1, dir=2 }
+    b = { x=1, y=2, dir=4 }
+    c = { x=3, y=2, dir=6 }
+    d = { x=2, y=3, dir=8 }
+
+    e = { x=3, y=1, w=3, split=1, dir=2 }
+    f = { x=3, y=1, w=3, dir=2 }
+  }
+
+  conn_sets =
+  {
+    "ab"
+    "ac"
+    "abc"
+    "ad"
+    "abcd"
+
+    "ab"
+    "ac"
+    "abc"
+    "ad"
+    "abcd"
+
+    "ed"
+    "ebd"
+    "ecd"
+    "ebcd"
+
+    "fd"
+    "fbd"
+    "fcd"
+    "fbcd"
+
+    "ef"
+    "efb"
+    "efc"
+  }
+}
+
+
+ROOM_3x3_B =
+{
+  template = "TEMPLATE_3x3"
+
+  structure =
+  {
+    "111"
+    "1.1"
+    "111"
+  }
+}
+
+-- end of TILES
+}
+
