@@ -1807,6 +1807,56 @@ end
 
 
 
+function Grower_hallway_kinds()
+  --
+  -- Determines kind (building, outdoor, etc) of hallways.
+  -- Actually called by quest code after room visit order has been
+  -- established.
+  --
+  -- Result is based on two connecting rooms.  For example:
+  --    cave + cave --> cave (usually)
+  --    building + building -> building
+  --
+
+  local function get_room_pair(H)
+    local R1, R2
+
+    -- always use room at the entrance
+    assert(H.entry_conn)
+    R1 = H.entry_conn:other_room(H)
+
+    -- if more than one exit, randomly pick it
+    local conns2 = table.copy(H.conns)
+    rand.shuffle(conns2)
+    
+    if conns2[1] == H.entry_conn then
+      table.remove(conns2, 1)
+    end
+
+    assert(conns2[1])
+
+    R2 = conns2[1]:other_room(H)
+
+    return R1, R2
+  end
+
+
+  local function visit_hall(H)
+    --
+  end
+
+
+  ---| Grower_hallway_kinds |---
+
+  each H in LEVEL.rooms do
+    if H.kind == "hallway" then
+      visit_hall(H)
+    end
+  end
+end
+
+
+
 function Grower_fill_gaps()
   --
   -- Creates areas from all currently unused seeds (ones which have not
@@ -2311,8 +2361,6 @@ function Grower_create_rooms()
   Grower_fill_gaps()
 
   Area_squarify_seeds()
-
-  -- Grower_hallway_kinds()
 
   Area_calc_volumes()
   Area_find_neighbors()

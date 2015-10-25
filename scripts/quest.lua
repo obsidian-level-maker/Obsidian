@@ -2533,6 +2533,8 @@ function Quest_make_quests()
   -- this must be after quests have been ordered
   Quest_group_into_zones()
 
+  Grower_hallway_kinds()
+
 ---???  Quest_final_battle()
 
   Quest_big_secrets()
