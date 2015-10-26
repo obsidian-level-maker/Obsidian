@@ -1898,20 +1898,22 @@ function Grower_fill_gaps()
   local MAX_SIZE = MIN_SIZE * 4
 
 
-  local function new_temp_area(first_S)
+  local function new_temp_area(S)
     local TEMP =
     {
       id = alloc_id("temp_area")
       svolume = 0
-      seeds = { first_S }
+      seeds = { S }
     }
 
-    if first_S.fluff_room then
-      TEMP.room = first_S.fluff_room
-assert(TEMP.room.kind != "DEAD")
+    if S.fluff_room then
+      TEMP.room = S.fluff_room
+
+      -- no longer need 'fluff_room' field
+      S.fluff_room = nil
     end
 
-    if first_S.diagonal then
+    if S.diagonal then
       TEMP.svolume = 0.5
     else
       TEMP.svolume = 1.0
@@ -1919,8 +1921,8 @@ assert(TEMP.room.kind != "DEAD")
 
     -- check if touches very edge of map
     -- [ it might only touch at a corner, that is OK ]
-    if first_S.sx <= 1 or first_S.sx >= SEED_W or
-       first_S.sy <= 1 or first_S.sy >= SEED_H
+    if S.sx <= 1 or S.sx >= SEED_W or
+       S.sy <= 1 or S.sy >= SEED_H
     then
       TEMP.touches_edge = true
     end
@@ -2275,7 +2277,7 @@ area.svolume = 0  -- FIXME
     merge_temp_areas()
   end
 
--- smoothen_out_pokers()
+  smoothen_out_pokers()
 
   make_real_areas()
 end
