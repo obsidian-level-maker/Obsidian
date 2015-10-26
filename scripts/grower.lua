@@ -1917,6 +1917,14 @@ assert(TEMP.room.kind != "DEAD")
       TEMP.svolume = 1.0
     end
 
+    -- check if touches very edge of map
+    -- [ it might only touch at a corner, that is OK ]
+    if first_S.sx <= 1 or first_S.sx >= SEED_W or
+       first_S.sy <= 1 or first_S.sy >= SEED_H
+    then
+      TEMP.touches_edge = true
+    end
+
     table.insert(temp_areas, TEMP)
 
     return TEMP
@@ -1953,6 +1961,10 @@ assert(TEMP.room.kind != "DEAD")
       A1, A2 = A2, A1
     end
 
+    if A2.touches_edge then
+       A1.touches_edge = true
+    end
+
     A1.svolume = A1.svolume + A2.svolume
 
     table.append(A1.seeds, A2.seeds)
@@ -1982,6 +1994,10 @@ assert(TEMP.room.kind != "DEAD")
     if A1.room and A2.room then
       if A1.room != A2.room then return -1 end
     end
+
+    -- never allow fluffy areas to touch edge of map
+    if A1.room and A2.touches_edge then return -2 end
+    if A2.room and A1.touches_edge then return -2 end
 
     if A2.svolume < MIN_SIZE then
       score = 3
