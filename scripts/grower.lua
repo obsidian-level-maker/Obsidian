@@ -963,6 +963,9 @@ local AA = S.area or (S.top and S.top.area)
 gui.debugf("  %s : %s / %s\n", S:tostr(), RR:tostr(), (AA and AA.name) or "-noarea-")
       count = count + 1
     end
+    if S.fluff_room then
+      count = count + 1.5
+    end
   end
   end
 
@@ -982,7 +985,7 @@ function Grower_emergency_sprouts()
 
     if not N then return -2 end
 
-    if N.area then return -3 end
+    if N.area or N.fluff_room then return -3 end
 
     -- TODO : CHECK MORE STUFF
 
@@ -1256,7 +1259,7 @@ gui.debugf("  %s\n", S:tostr())
     if elem.kind == "diagonal" then
 
       -- whole seed is used?
-      if (not S.diagonal) and S.area then return false end
+      if (not S.diagonal) and (S.area or S.fluff_room) then return false end
 
       local dir, E1, E2 = transform_diagonal(T, elem.diagonal, elem.bottom, elem.top)
 
@@ -1267,7 +1270,7 @@ gui.debugf("  %s\n", S:tostr())
 
       -- seed on map is a full square?
       if not S.diagonal then
-        if S.area then return false end
+        if S.area or S.fluff_room then return false end
 
         if not ROOM then return true end
 
@@ -1282,7 +1285,7 @@ gui.debugf("  %s\n", S:tostr())
         if E1.kind != "empty" then
 
           -- used?
-          if S1.area then return false end
+          if S1.area or S1.fluff_room then return false end
 
           if ROOM then
             install_half_seed(T, S1, E1)
@@ -1302,6 +1305,7 @@ gui.debugf("  %s\n", S:tostr())
       -- used?
       if S.area     then return false end
       if S.diagonal then return false end
+      if S.fluff_room then return false end
 
       if ROOM then
         install_half_seed(T, S, elem)
@@ -1385,7 +1389,7 @@ gui.debugf("  %s\n", S:tostr())
       local N = S:neighbor(P.dir)
 
       if not N  then return true end
-      if N.area then return true end
+      if N.area or N.fluff_room then return true end
 
       if Seed_over_boundary(N) then return true end
 
@@ -1904,6 +1908,7 @@ function Grower_fill_gaps()
 
     if first_S.fluff_room then
       TEMP.room = first_S.fluff_room
+assert(TEMP.room.kind != "DEAD")
     end
 
     if first_S.diagonal then
@@ -2254,7 +2259,7 @@ area.svolume = 0  -- FIXME
     merge_temp_areas()
   end
 
-  smoothen_out_pokers()
+-- smoothen_out_pokers()
 
   make_real_areas()
 end
@@ -2387,6 +2392,6 @@ function Grower_create_rooms()
 
   Grower_assign_boundary()
 
---  Grower_save_svg()
+  Grower_save_svg()
 end
 

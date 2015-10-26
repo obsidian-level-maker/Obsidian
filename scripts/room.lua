@@ -128,12 +128,32 @@ end
 
 
 function ROOM_CLASS.add_area(R, A)
+  assert(R.kind != "DEAD")
+
   A.room = R
 
   table.insert(R.areas, A)
 
   R.svolume = R.svolume + A.svolume
   R.total_inner_points = R.total_inner_points + #A.inner_points
+end
+
+
+function ROOM_CLASS.kill_fluff(R)
+  for sx = 1, SEED_W do
+  for sy = 1, SEED_H do
+  for part = 1, 2 do
+    local S = SEEDS[sx][sy]
+    if part == 2 then S = S.top end
+    if not S then continue end
+
+    if S.fluff_room == R then
+       S.fluff_room = nil
+    end
+
+  end -- part, sx, sy
+  end
+  end
 end
 
 
@@ -163,6 +183,8 @@ function ROOM_CLASS.kill_it(R)
 
   R.sx1   = nil
   R.areas = nil
+
+  R:kill_fluff()
 end
 
 

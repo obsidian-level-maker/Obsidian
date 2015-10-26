@@ -461,13 +461,13 @@ OUTDOOR_L_5x5 =
   {
     "a:b"
     "a:c"
-    "a:f"
-    "a:g"
+--  "a:f"
+--  "a:g"
 
-    "e:b"
-    "e:c"
-    "e:f"
-    "e:g"
+--  "e:b"
+--  "e:c"
+--  "e:f"
+--  "e:g"
   }
 }
 
@@ -503,16 +503,16 @@ OUTDOOR_T_6x6 =
   conn_sets =
   {
     "a:bc"
-    "a:fg"
+--  "a:fg"
     "a:dz"
-    "a:fz"
-    "a:hk"
+--  "a:fz"
+--  "a:hk"
 
-    "e:bc"
-    "e:fg"
-    "e:dz"
-    "e:dg"
-    "e:hk"
+--  "e:bc"
+--  "e:fg"
+--  "e:dz"
+--  "e:dg"
+--  "e:hk"
   }
 }
 
@@ -546,10 +546,11 @@ OUTDOOR_P_6x6 =
   conn_sets =
   {
     "a:bcd"
-    "e:bch"
-    "e:fgh"
+--  "e:bch"
+--  "e:fgh"
   }
 }
+
 
 --------------------------------
 --
