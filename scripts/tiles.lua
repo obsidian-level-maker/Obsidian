@@ -229,6 +229,31 @@ HALL_DIAG_2 =
 }
 
 
+HALL_DIAG_STRAIGHT =
+{
+  prob = 200
+
+  structure =
+  {
+    ".1"
+    "/1"
+    "%/"
+  }
+
+  diagonals =
+  {
+    ".1",
+    ".1", "1."
+  }
+
+  conns =
+  {
+    a = { x=1, y=1, dir=1 }
+    b = { x=2, y=3, dir=8 }
+  }
+}
+
+
 HALL_DIAG_Y_4x4 =
 {
   prob = 100
@@ -733,7 +758,7 @@ ROOM_4x3_A =
 
 ROOM_L_AA =
 {
-  prob = 177
+  prob = 120
 
   structure =
   {
@@ -775,8 +800,8 @@ ROOM_L_AA =
 
 ROOM_L_6x6 =
 {
-  prob = 277
-  start_prob = 299
+  prob = 60
+  start_prob = 60
 
   structure =
   {
