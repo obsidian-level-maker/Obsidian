@@ -60,6 +60,9 @@ ______________________________________________________________________
 
 -  grower : unused (or failed hall) sprouts can be good closet spots
 
+-  grower : remove all "fluff" stuff, use different way to create
+   more organic room shapes.
+
 -  sky generator : better checking of themes (esp. w/ control module)
 
 -  the locked switch closet

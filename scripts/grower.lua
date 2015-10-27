@@ -1209,8 +1209,9 @@ entry_conn.dir, transform_dir(T, entry_conn.dir), P.dir)
 
   local function install_half_seed(T, S, elem)
     if elem.kind == "fluff" then
+      error("Tiles with fluff are not supported.")
 --stderrf("Installing fluff.....\n")
-      S.fluff_room = assert(cur_room)
+--    S.fluff_room = assert(cur_room)
       return
     end
 
