@@ -734,6 +734,50 @@ ROOM_L_6x6 =
 }
 
 
+ROOM_U_6x4 =
+{
+  prob = 4000
+
+  structure =
+  {
+    "11..11"
+    "11..11"
+    "111111"
+    "%1111/"
+  }
+
+  diagonals =
+  {
+    ".1", "1."
+  }
+
+  conns =
+  {
+    a = { x=4, y=1, w=2, dir=4 }
+    b = { x=3, y=2, w=2, dir=8 }
+    c = { x=1, y=3, w=2, dir=4 }
+    d = { x=6, y=4, w=2, dir=6 }
+
+    e = { x=1, y=4, dir=4 }
+    f = { x=6, y=4, dir=6 }
+
+    g = { x=1, y=4, w=2, dir=8 }
+    h = { x=5, y=4, w=2, dir=8 }
+  }
+
+  conn_sets =
+  {
+    "acd"
+    "agh"
+    "aef"
+
+    "bcd"
+    "bgh"
+    "bef"
+  }
+}
+
+
 --------------------------------
 --
 --  Party Starters
