@@ -600,6 +600,47 @@ ROOM_RECT_3x2 =
 }
 
 
+ROOM_4x3_A =
+{
+  prob = 1000
+
+  structure =
+  {
+    "1221"
+    "1221"
+    "1111"
+  }
+
+  conns =
+  {
+    a = { x=1, y=1, dir=4 }
+    b = { x=1, y=3, dir=4 }
+    c = { x=3, y=1, dir=6 }
+    d = { x=3, y=3, dir=6 }
+
+    m = { x=1, y=2, dir=4 }
+    n = { x=3, y=2, dir=6 }
+
+    e = { x=3, y=1, w=2, dir=2 }
+    f = { x=2, y=3, w=2, dir=8 }
+    g = { x=1, y=2, w=2, dir=4 }
+    h = { x=4, y=3, w=2, dir=6 }
+  }
+
+  conn_sets =
+  {
+    "bd"
+
+    "e:f"
+    "e:bd"
+    "e:mnf"
+
+    "f:ac"
+    "f:mn"
+  }
+}
+
+
 ROOM_L_AA =
 {
   prob = 177
