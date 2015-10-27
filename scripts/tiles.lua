@@ -261,9 +261,56 @@ HALL_DIAG_Y_4x4 =
 }
 
 
+HALL_T_3x3 =
+{
+  prob = 300
+
+  structure =
+  {
+    "111"
+    ".1."
+    ".1."
+  }
+
+  conns =
+  {
+    a = { x=2, y=1, dir=2 }
+    b = { x=1, y=3, dir=4 }
+    c = { x=3, y=3, dir=6 }
+  }
+}
+
+
+HALL_T_5x2 =
+{
+  prob = 300
+
+  structure =
+  {
+    "11111"
+    "..1.."
+  }
+
+  conns =
+  {
+    a = { x=3, y=1, dir=2 }
+    b = { x=1, y=2, dir=4 }
+    c = { x=5, y=2, dir=6 }
+    d = { x=1, y=2, dir=8 }
+    e = { x=5, y=2, dir=8 }
+  }
+
+  conn_sets =
+  {
+    "abc"
+    "ade"
+  }
+}
+
+
 HALL_U_5x3_a =
 {
-  prob = 400
+  prob = 300
 
   structure =
   {
@@ -289,6 +336,49 @@ HALL_U_5x3_a =
   {
 --  "a:b"
     "a:bc"
+  }
+}
+
+
+HALL_P_5x3 =
+{
+  prob = 300
+
+  structure =
+  {
+    "..1.."
+    "11111"
+    "..1.."
+  }
+
+  conns =
+  {
+    a = { x=3, y=1, dir=2 }
+    b = { x=3, y=3, dir=8 }
+    c = { x=1, y=2, dir=4 }
+    d = { x=5, y=2, dir=6 }
+  }
+}
+
+
+HALL_ODD_5x4 =
+{
+  prob = 300
+
+  structure =
+  {
+    "..1.."
+    "..111"
+    "111.."
+    "..1.."
+  }
+
+  conns =
+  {
+    a = { x=3, y=1, dir=2 }
+    b = { x=3, y=4, dir=8 }
+    c = { x=1, y=2, dir=4 }
+    d = { x=5, y=3, dir=6 }
   }
 }
 
@@ -602,7 +692,7 @@ ROOM_RECT_3x2 =
 
 ROOM_4x3_A =
 {
-  prob = 1000
+  prob = 200
 
   structure =
   {
@@ -736,7 +826,7 @@ ROOM_L_6x6 =
 
 ROOM_U_6x4 =
 {
-  prob = 4000
+  prob = 400
 
   structure =
   {
@@ -786,7 +876,7 @@ ROOM_U_6x4 =
 
 START_O_3x3 =
 {
-  prob = 400
+  prob = 20
   start_prob = 100
 
   structure =
