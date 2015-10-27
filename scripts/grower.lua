@@ -1784,7 +1784,7 @@ math.max(ax,bx), math.max(ay,by))
     return
   end
 
-  local MIN_COVERAGE = 0.4
+  local MIN_COVERAGE = 0.5
 
   for loop = 1, 10 do
     visit_all_sprouts()
