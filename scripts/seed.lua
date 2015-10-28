@@ -153,7 +153,7 @@ BASE_Y = 0
 SEED_CLASS = {}
 
 function SEED_CLASS.tostr(S)
-  return string.format("SEED [%d,%d]", S.sx, S.sy)
+return assert(S.name)
 end
 
 
@@ -178,6 +178,9 @@ function SEED_CLASS.split(S, diagonal)
 
   S2.edge_of_map = S.edge_of_map
   S2.fluff_room  = S.fluff_room
+
+  S .name = string.format("SEED [%d,%d,B]", S.sx, S.sy)
+  S2.name = string.format("SEED [%d,%d,T]", S.sx, S.sy)
 
   -- link fake seed with real one
   S.top = S2 ; S2.bottom = S
@@ -208,6 +211,7 @@ function SEED_CLASS.join_halves(S)
   S:calc_mid_point()
 
   -- kill the other half
+  S2.name = "DEAD_SEED"
   S2.kind = "dead"
   S2.diagonal = "dead"
 
@@ -520,6 +524,8 @@ function Seed_create(sx, sy, x1, y1)
 
     x1 = x1
     y1 = y1
+
+    name = string.format("SEED [%d,%d]", sx, sy)
 
     thick  = {}
     edge   = {}

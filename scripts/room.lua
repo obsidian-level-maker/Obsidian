@@ -71,6 +71,8 @@ function ROOM_CLASS.new()
   {
     id = id
     kind = "UNSET"
+    name = string.format("ROOM_%d", id)
+
     svolume = 0
     total_inner_points = 0
     num_windows = 0
@@ -112,18 +114,8 @@ function ROOM_CLASS.new()
 end
 
 
-function ROOM_CLASS.kind_str(R)
-  if R.kind == "DEAD" then return "DEAD_DEAD_DEAD" end
-  if R.kind == "hallway" then return "HALLWAY" end
-  if R.kind == "stairwell" then return "STAIRWELL" end
-  if R.kind == "scenic" then return "SCENIC" end
-  if R.parent then return "SUBROOM" end
-  return "ROOM"
-end
-
-
 function ROOM_CLASS.tostr(R)
-  return string.format("%s_%d", R:kind_str(), R.id)
+  return assert(R.name)
 end
 
 
@@ -178,6 +170,7 @@ function ROOM_CLASS.kill_it(R)
 
   R.areas = nil
 
+  R.name = "DEAD_ROOM"
   R.kind = "DEAD"
   R.hallway = nil
 
@@ -1695,6 +1688,10 @@ end
 
 function Room_set_kind(R, kind, is_outdoor, is_cave)
   R.kind = kind
+
+  if kind == "hallway" then
+    R.name = string.format("HALLWAY_%d", R.id)
+  end
 
   R.is_outdoor = is_outdoor
   R.is_cave    = is_cave

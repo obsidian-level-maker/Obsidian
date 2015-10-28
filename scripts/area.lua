@@ -204,7 +204,7 @@ end
 
 
 function AREA_CLASS.tostr(A)
-  return string.format("AREA_%d", A.id)
+  return assert(A.name)
 end
 
 

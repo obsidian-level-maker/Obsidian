@@ -62,6 +62,8 @@ function CONN_CLASS.new(kind, R1, R2, dir)
     dir  = dir
   }
 
+  C.name = string.format("CONN_%d", C.id)
+
   table.set_class(C, CONN_CLASS)
 
   table.insert(LEVEL.conns, C)
@@ -73,6 +75,7 @@ end
 function CONN_CLASS.kill_it(C)
   table.remove(LEVEL.conns, C)
 
+  C.name = "DEAD_CONN"
   C.kind = "DEAD"
   C.id   = -1
 
@@ -83,14 +86,7 @@ end
 
 
 function CONN_CLASS.tostr(C)
-  return string.format("CONN_%d [%s%s]", C.id, C.kind,
-         sel(C.is_cycle, "/cycle", ""))
-end
-
-
-function CONN_CLASS.roomstr(C)
-  return string.format("CONN_%d [%s:%s --> %s]", C.id, C.kind,
-         C.R1:tostr(), C.R2:tostr())  -- broken!
+  return assert(C.name)
 end
 
 
