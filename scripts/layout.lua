@@ -1460,7 +1460,15 @@ end
 function Layout_outdoor_shadows()
 
   local function is_wallish(edge_kind)
-    if edge_kind == "wall" then return true end
+    if edge_kind == "wall" or
+       edge_kind == "trap_wall" or
+       edge_kind == "window" or
+       edge_kind == "arch" or
+       edge_kind == "door" or
+       edge_kind == "locked_door"
+    then
+      return true
+    end
 
     return false
   end
@@ -1481,12 +1489,16 @@ function Layout_outdoor_shadows()
 
     if SA == NA then return false end
 
-    -- FIXME : check for real EDGE objects
+    local E1 = S.edge[dir]
+    local E2 = N.edge[10 - dir]
 
     local junc = Junction_lookup(SA, NA)
 
-    if junc and junc.E1 and is_wallish(junc.E1.kind) then return true end
-    if junc and junc.E2 and is_wallish(junc.E2.kind) then return true end
+    if not E1 then E1 = junc.E1 end
+    if not E2 then E2 = junc.E2 end
+
+    if E1 and is_wallish(E1.kind) then return true end
+    if E2 and is_wallish(E2.kind) then return true end
 
     return false
   end

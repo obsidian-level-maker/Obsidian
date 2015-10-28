@@ -851,7 +851,7 @@ ROOM_L_6x6 =
 
 ROOM_U_6x4 =
 {
-  prob = 200
+  prob = 110
 
   structure =
   {
