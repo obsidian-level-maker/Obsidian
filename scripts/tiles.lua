@@ -756,6 +756,48 @@ ROOM_4x3_A =
 }
 
 
+ROOM_U2_5x3 =
+{
+  prob = 320
+
+  structure =
+  {
+    "12.21"
+    "12221"
+    "11111"
+  }
+
+  conns =
+  {
+    a = { x=3, y=1, dir=2 }
+    b = { x=1, y=2, dir=4 }
+    c = { x=5, y=2, dir=6 }
+    d = { x=2, y=3, dir=8 }
+    e = { x=4, y=3, dir=8 }
+    z = { x=3, y=2, dir=8 }
+
+    f = { x=2, y=3, w=3, dir=8, split=1 }
+    g = { x=2, y=3, w=5, dir=8, split=1 }
+    h = { x=4, y=1, w=3, dir=2, split=1 }
+
+  }
+
+  conn_sets =
+  {
+    "a:bc"
+    "a:bcz"
+    "a:de"
+
+    "af"
+    "afbc"
+    "ag"
+    "ah"
+
+    "f:bc"
+  }
+}
+
+
 ROOM_L_AA =
 {
   prob = 120
