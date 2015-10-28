@@ -528,7 +528,7 @@ function Cave_generate_cave(R)
       cave = map:copy()
 
       if loop >= MAX_LOOP then
-        gui.printf("Failed to generate a usable cave! (%s)\n", R:tostr())
+        gui.printf("Failed to generate a usable cave! (%s)\n", R.name)
 
         -- emergency fallback
         cave:gen_empty()
@@ -2763,7 +2763,7 @@ function Cave_decide_properties(R)
     end
   end
 
-  gui.debugf("Cave properties in %s\n", R:tostr())
+  gui.debugf("Cave properties in %s\n", R.name)
   gui.debugf("    step_mode : %s\n", info.step_mode)
   gui.debugf("  liquid_mode : %s\n", info.liquid_mode)
   gui.debugf("     sky_mode : %s\n", info.sky_mode)

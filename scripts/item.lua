@@ -575,7 +575,7 @@ function Item_simulate_battle(R)
 
     local stats = R.item_stats[CL]
 
-    gui.debugf("Fight Simulator @ %s  class: %s\n", R:tostr(), CL)
+    gui.debugf("Fight Simulator @ %s  class: %s\n", R.name, CL)
 
     gui.debugf("weapons = \n")
     each W in weap_list do
@@ -679,7 +679,7 @@ function Item_distribute_stats()
         R_stats[stat] =  R_stats[stat]       - value
 
 ---     gui.debugf("Distributing %s:%1.1f [%s]  %s --> %s\n",
----                stat, value,  CL, R:tostr(), N:tostr())
+---                stat, value,  CL, R.name, N.name)
       end
     end
   end
@@ -708,7 +708,7 @@ function Item_distribute_stats()
   local function dump_results()
     each R in LEVEL.rooms do
       if R.item_stats then
-        gui.debugf("final result @ %s = \n%s\n", R:tostr(),
+        gui.debugf("final result @ %s = \n%s\n", R.name,
                    table.tostr(R.item_stats, 2))
       end
     end
@@ -1009,7 +1009,7 @@ function Item_pickups_for_class(CL)
     each stat,qty in stats do
       select_pickups(R, item_list, stat, qty)
 
-      gui.debugf("Item list for %s:%1.1f [%s] @ %s\n", stat,qty, CL, R:tostr())
+      gui.debugf("Item list for %s:%1.1f [%s] @ %s\n", stat,qty, CL, R.name)
 
       each pair in item_list do
         local item = pair.item

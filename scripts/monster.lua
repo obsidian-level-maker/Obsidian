@@ -1889,7 +1889,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     if not R.zone.guard_mon then return end
 
--- stderrf("add_guarding_monsters '%s' @ %s\n", R.zone.guard_mon, R:tostr())
+-- stderrf("add_guarding_monsters '%s' @ %s\n", R.zone.guard_mon, R.name)
 
     -- convert coordinate into a fake spot  [no z coords!]
     local guard_spot =
@@ -2076,7 +2076,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
   ---| Monsters_in_room |---
 
-  gui.debugf("Monsters_in_room @ %s\n", R:tostr())
+  gui.debugf("Monsters_in_room @ %s\n", R.name)
 
   prepare_room()
 

@@ -163,7 +163,7 @@ end
 
 function Connect_through_sprout(P)
 
---stderrf("Connecting... %s <--> %s\n", P.R1:tostr(), P.R2:tostr())
+--stderrf("Connecting... %s <--> %s\n", P.R1.name, P.R2.name)
 
   local C = CONN_CLASS.new("normal", P.R1, P.R2)
 
@@ -608,7 +608,7 @@ function Connect_stuff()
     if best then
       connect_hallway_pair(R, best.N1, best.N2)
     else
-      gui.printf("hallway %s could not connect : killing it\n", R:tostr())
+      gui.printf("hallway %s could not connect : killing it\n", R.name)
 
       kill_hallway(R)
 
@@ -743,7 +743,7 @@ function Connect_stuff()
         for dir = 6, 9 do
           local score = eval_normal_conn(S, dir)
 
--- do stderrf("  try %s:%d --> %d\n", S:tostr(), dir, score) end
+-- do stderrf("  try %s:%d --> %d\n", S.name, dir, score) end
 
           if score > best_score then
             best_S = S
@@ -886,7 +886,7 @@ function Connect_areas_in_rooms()
     end
 
     if not best_A1 then
-      error("Failed to internally connect " .. R:tostr())
+      error("Failed to internally connect " .. R.name)
     end
 
     -- OK --

@@ -60,7 +60,7 @@ end
 
 
 function Sprout_emergency_new(S, dir, room)
--- stderrf("emergency sprout @ %s dir:%d\n", S:tostr(), dir)
+-- stderrf("emergency sprout @ %s dir:%d\n", S.name, dir)
   local P =
   {
     S = S
@@ -960,7 +960,7 @@ gui.debugf("Grower_determine_coverage...\n")
     if S.room or (S.top and S.top.room) then
 local RR = S.room or (S.top and S.top.room) 
 local AA = S.area or (S.top and S.top.area) 
-gui.debugf("  %s : %s / %s\n", S:tostr(), RR:tostr(), (AA and AA.name) or "-noarea-")
+gui.debugf("  %s : %s / %s\n", S.name, RR.name, (AA and AA.name) or "-noarea-")
       count = count + 1
     end
     if S.fluff_room then
@@ -991,7 +991,7 @@ function Grower_emergency_sprouts()
 
     local score = 1
 
---stderrf("eval_spot : potential @ %s dir:%d\n", S:tostr(), dir)
+--stderrf("eval_spot : potential @ %s dir:%d\n", S.name, dir)
     return score + gui.random()
   end
 
@@ -1225,7 +1225,7 @@ entry_conn.dir, transform_dir(T, entry_conn.dir), P.dir)
 
     assert(S.area == nil)
 
-gui.debugf("  %s\n", S:tostr())
+gui.debugf("  %s\n", S.name)
 
     S.area = A
     S.room = A.room
@@ -1416,7 +1416,7 @@ end
     local H = cur_grid.h
 
 if ROOM then
-gui.debugf("test_or_install_element... %s\n", ROOM:tostr())
+gui.debugf("test_or_install_element... %s\n", ROOM.name)
 end
 
     for px = 1, W do
@@ -1514,7 +1514,7 @@ end
 
 
   local function try_add_tile(P, def, conn_set)
---stderrf("try_add_tile '%s'  @ %s dir:%d\n", def.name, P.S:tostr(), P.dir)
+--stderrf("try_add_tile '%s'  @ %s dir:%d\n", def.name, P.S.name, P.dir)
 
     if not check_environment(P, def) then
       return false
@@ -1769,7 +1769,7 @@ math.max(ax,bx), math.max(ay,by))
   --  if #LEVEL.rooms >= 10 then break; end
 
       if check_sprout_blocked(P) then
-      --stderrf("Sprout BLOCKED @ %s dir:%d\n", P.S:tostr(), P.dir)
+      --stderrf("Sprout BLOCKED @ %s dir:%d\n", P.S.name, P.dir)
         continue
       end
 
@@ -1865,7 +1865,7 @@ function Grower_hallway_kinds()
       is_outdoor = true
     end 
 
--- stderrf("Hallway kind @ %s --> %s %s\n", H:tostr(), sel(is_outdoor, "OUT", "-"), sel(is_cave, "CAVE", "-"))
+-- stderrf("Hallway kind @ %s --> %s %s\n", H.name, sel(is_outdoor, "OUT", "-"), sel(is_cave, "CAVE", "-"))
 
     Room_set_kind(H, "hallway", is_outdoor, is_cave)
   end
@@ -2139,7 +2139,7 @@ function Grower_fill_gaps()
     e  = Ne and Ne.temp_area
 
 --[[ DEBUG
-stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S:tostr(),
+stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S.name,
 (a and a.id) or -1, (b and b.id) or -1,
 (c and c.id) or -1, (d and d.id) or -1, (e and e.id) or -1)
 --]]

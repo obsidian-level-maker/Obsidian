@@ -1180,7 +1180,7 @@ function Area_group_into_rooms()
           temp.R1.sister  = temp.R2
           temp.R2.brother = temp.R1
 
-          stderrf("Peering rooms: brother %s <--> %s sister\n", temp.R1:tostr(), temp.R2:tostr())
+          stderrf("Peering rooms: brother %s <--> %s sister\n", temp.R1.name, temp.R2.name)
         end
       end
 
@@ -1382,7 +1382,7 @@ function Area_create_rooms()
   Seed_dump_rooms()
 
   each R in LEVEL.rooms do
-    gui.debugf("Final %s   size: %dx%d\n", R:tostr(), R.sw, R.sh)
+    gui.debugf("Final %s   size: %dx%d\n", R.name, R.sw, R.sh)
   end
 end
 

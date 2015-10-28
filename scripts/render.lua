@@ -1128,7 +1128,7 @@ function Render_seed(A, S)
   end
 
   if A.mode == "void" then
---stderrf("Void area: %s @ %s\n", A.name, A.seeds[1]:tostr())
+--stderrf("Void area: %s @ %s\n", A.name, A.seeds[1].name)
     return
   end
 

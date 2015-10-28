@@ -150,7 +150,7 @@ end
 
 
 function ROOM_CLASS.kill_it(R)
-  gui.debugf("Killing %s\n", R:tostr())
+  gui.debugf("Killing %s\n", R.name)
 
   -- sanity check
   each C in LEVEL.conns do
@@ -801,7 +801,7 @@ function Room_detect_porches(R)
       end
     end
 
-    gui.debugf("Hallway %s is now a PORCH\n", R:tostr())
+    gui.debugf("Hallway %s is now a PORCH\n", R.name)
 
     set_as_porch(HA)
     
@@ -1262,7 +1262,7 @@ function Room_determine_spots()
     gui.spots_get_items(item_spots)
     gui.spots_get_mons(mon_spots)
 
---  stderrf("mon_spots @ %s floor:%d : %d\n", R:tostr(), f_h, #mon_spots)
+--  stderrf("mon_spots @ %s floor:%d : %d\n", R.name, f_h, #mon_spots)
 
     -- this is mainly for traps
     if A.mon_focus then
@@ -1937,7 +1937,7 @@ function Room_floor_heights()
 
   local function flow_through_hallway(R, S, enter_dir, floor_h)
 
--- stderrf("flow_through_hallway @ %s : %s\n", S:tostr(), R:tostr())
+-- stderrf("flow_through_hallway @ %s : %s\n", S.name, R.name)
 
     table.insert(R.hallway.path, S)
 

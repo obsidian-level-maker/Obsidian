@@ -194,7 +194,7 @@ end
   
   if table.empty(list) then
     if none_OK then return nil end
---- stderrf("FUCKED UP IN %s\n", R:tostr())
+--- stderrf("FUCKED UP IN %s\n", R.name)
 ---    do return { x=0, y=0, z=0, wall_dist=0} end
     error("No usable spots in room!")
   end
@@ -254,7 +254,7 @@ function Layout_place_importants(R)
   local function add_goal(goal)
     local spot = Layout_spot_for_wotsit(R, goal.kind)
 
--- stderrf("Layout_place_importants: goal '%s' @ %s\n", goal.kind, R:tostr())
+-- stderrf("Layout_place_importants: goal '%s' @ %s\n", goal.kind, R.name)
 
     spot.item = goal.item
     spot.goal = goal
@@ -561,7 +561,7 @@ function Layout_traps_and_cages()
 
     -- OK --
 
-    gui.debugf("Making teleportation trap in %s\n", A:tostr())
+    gui.debugf("Making teleportation trap in %s\n", A.name)
 
     each dest in dests do
       dest.tag = alloc_id("tag")
@@ -609,7 +609,7 @@ function Layout_traps_and_cages()
 
 
   local function make_trap(A, parent_A, spot)
-    gui.debugf("Making big trap in %s\n", A:tostr())
+    gui.debugf("Making big trap in %s\n", A.name)
 
     A.mode = "trap"
     A.is_boundary = false
@@ -725,7 +725,7 @@ function Layout_traps_and_cages()
 
 
   local function make_cage(A)
-    gui.debugf("Making big cage in %s\n", A:tostr())
+    gui.debugf("Making big cage in %s\n", A.name)
 
     A.face_room = Layout_choose_face_room(A)
     if not A.face_room then return end

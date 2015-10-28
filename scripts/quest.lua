@@ -243,7 +243,7 @@ function Quest_create_initial_quest()
       error("Unable to pick exit room!")
     end
 
-    gui.printf("Exit room: %s\n", R:tostr())
+    gui.printf("Exit room: %s\n", R.name)
 
     R.is_exit = true
 
@@ -274,7 +274,7 @@ function Quest_create_initial_quest()
 
     -- OK --
 
-    gui.printf("Secret Exit: %s\n", R:tostr())
+    gui.printf("Secret Exit: %s\n", R.name)
 
     R.is_exit = true
 
@@ -447,7 +447,7 @@ function Quest_eval_divide_at_conn(C, goal, info)
   ---| Quest_eval_divide_at_conn |---
 
 gui.debugf("  goal: %s/%s @ %s / %s\n", goal.kind or "???", goal.item or "???",
-goal.room:tostr(), goal.room.quest.name)
+goal.room.name, goal.room.quest.name)
 
   -- must be same quest (caller guarantees this)
   assert(C.A1.room.quest == C.A2.room.quest)
@@ -506,7 +506,7 @@ each id,_ in after do stderrf("%d ", id) end stderrf("\n\n")
 
   local score = eval_split_possibility(C, before, after, before_R, after_R)
 
-gui.debugf("--> possible @ %s : score %1.1f\n", C:tostr(), score)
+gui.debugf("--> possible @ %s : score %1.1f\n", C.name, score)
 
   if score > info.score then
     info.score  = score
@@ -623,7 +623,7 @@ gui.debugf("PLACING NEW GOALS:\n")
     each goal in info.new_goals do
       local R = pick_room_for_goal(Q1)
 
-gui.debugf("  %s @ %s in %s\n", goal.name, R:tostr(), Q1.name)
+gui.debugf("  %s @ %s in %s\n", goal.name, R.name, Q1.name)
       goal.room = R
 
       table.insert( R.goals, goal)
@@ -764,10 +764,10 @@ gui.debugf("---> NOTHING POSSIBLE\n")
 
 
   gui.printf("Dividing %s @ %s (%s -- %s)\n", info.quest.name,
-             info.conn:tostr(), info.conn.A1.room:tostr(), info.conn.A2.room:tostr())
+             info.conn.name, info.conn.A1.room.name, info.conn.A2.room.name)
 
 gui.debugf("   VIA: %s (x%d)\n", info.new_goals[1].item or "???", #info.new_goals)
-gui.debugf("   Entry: %s\n", (info.quest.entry and info.quest.entry:tostr()) or "--")
+gui.debugf("   Entry: %s\n", (info.quest.entry and info.quest.entry.name) or "--")
 
   Quest_perform_division(info)
   return true
@@ -1119,7 +1119,7 @@ function Quest_start_room()
       error("Could not find a usable start room")
     end
 
-    gui.printf("Start room: %s\n", R:tostr())
+    gui.printf("Start room: %s\n", R.name)
 
     local GOAL = Goal_new("START")
 
@@ -1176,7 +1176,7 @@ function Quest_start_room()
 
     -- OK --
 
-    gui.printf("Alternate Start room: %s\n", R:tostr())
+    gui.printf("Alternate Start room: %s\n", R.name)
 
     local GOAL = Goal_new("START")
 
@@ -1228,7 +1228,7 @@ function Quest_order_by_visit()
 
   
   local function visit_room(R, quest, via_conn_name)
---stderrf("visit_room %s (via %s) for %s\n", R:tostr(), via_conn_name or "???", quest.name or "???")
+--stderrf("visit_room %s (via %s) for %s\n", R.name, via_conn_name or "???", quest.name or "???")
     R.lev_along = room_along / #LEVEL.rooms
 
     room_along = room_along + 1
@@ -1236,7 +1236,7 @@ function Quest_order_by_visit()
     assert(R.quest == quest)
 
     each C in R.conns do
---stderrf("  conn '%s'  %s <--> %s\n", C:tostr(), C.R1:tostr(), C.R2:tostr())
+--stderrf("  conn '%s'  %s <--> %s\n", C.name, C.R1.name, C.R2.name)
       assert(C.R1)
 
       local R2 = C:other_room(R)
@@ -1244,7 +1244,7 @@ function Quest_order_by_visit()
       if R2.quest != quest then continue end
 
       if not R2.lev_along then
-        visit_room(R2, quest, C:tostr())
+        visit_room(R2, quest, C.name)
       end
     end
   end
@@ -1264,7 +1264,7 @@ function Quest_order_by_visit()
 
     each R in LEVEL.rooms do
       gui.debugf("  %1.3f : %s  %s\n",
-                 R.lev_along, R:tostr(), R.quest.name)
+                 R.lev_along, R.name, R.quest.name)
     end
   end
 
@@ -1314,7 +1314,7 @@ if not R.lev_along then R.lev_along = 0.5 end
 --]]
 
     if not R.lev_along then
-      error("Room not visited: " .. R:tostr())
+      error("Room not visited: " .. R.name)
     end
   end
 
@@ -1551,7 +1551,7 @@ function Quest_add_weapons()
 
     table.insert(best_R.weapons, name)
 
-    gui.debugf("|--> %s\n", best_R:tostr())
+    gui.debugf("|--> %s\n", best_R.name)
   end
 
 
@@ -1854,7 +1854,7 @@ function Quest_nice_items()
       table.insert(R.items, item)
       mark_item_seen(item)
 
-      gui.debugf("Secret item '%s' --> %s\n", item, R:tostr())
+      gui.debugf("Secret item '%s' --> %s\n", item, R.name)
     end
   end
 
@@ -1889,7 +1889,7 @@ function Quest_nice_items()
         table.insert(R.items, item)
         mark_item_seen(item)
 
-        gui.debugf("Start item '%s' --> %s\n", item, R:tostr())
+        gui.debugf("Start item '%s' --> %s\n", item, R.name)
       end
     end
   end
@@ -1951,7 +1951,7 @@ function Quest_nice_items()
 --[[ DEBUG
 stderrf("Other rooms:\n")
 each LOC in list do
-stderrf("  %1.2f = %s  unused_leaf = %s\n", LOC.nice_item_score, LOC:tostr(), string.bool(LOC:is_unused_leaf()))
+stderrf("  %1.2f = %s  unused_leaf = %s\n", LOC.nice_item_score, LOC.name, string.bool(LOC:is_unused_leaf()))
 end
 --]]
 
@@ -1970,7 +1970,7 @@ end
       table.insert(R.items, item)
       mark_item_seen(item)
 
-      gui.debugf("Nice item '%s' --> %s\n", item, R:tostr())
+      gui.debugf("Nice item '%s' --> %s\n", item, R.name)
     end
   end
 
@@ -2152,7 +2152,7 @@ function Quest_big_secrets()
 
     Quest_make_room_secret(R)
 
-    gui.debugf("Secret room in %s\n", R:tostr())
+    gui.debugf("Secret room in %s\n", R.name)
   end
 end
 
@@ -2171,7 +2171,7 @@ function Quest_final_battle()
 
   local E = assert(LEVEL.exit_room)
 
-  gui.printf("Exit room: %s\n", E:tostr())
+  gui.printf("Exit room: %s\n", E.name)
 
   -- will clear this if we choose a different room
   E.final_battle = true
@@ -2208,7 +2208,7 @@ function Quest_final_battle()
   prev.final_battle = true
   prev.cool_down = false
 
-  gui.printf("Final Battle in %s\n", prev:tostr())
+  gui.printf("Final Battle in %s\n", prev.name)
 end
 
 

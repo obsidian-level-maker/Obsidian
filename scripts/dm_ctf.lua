@@ -90,7 +90,7 @@ function Multiplayer_flag_rooms()
     local score = eval_flag_room(R)
 
 stderrf("trying %s : team:%s sister:%s --> %1.2f\n",
-R:tostr(), A1.team or "???", tostring(R.sister), score)
+R.name, A1.team or "???", tostring(R.sister), score)
 
     if score > best_score then
       best = R
@@ -108,8 +108,8 @@ R:tostr(), A1.team or "???", tostring(R.sister), score)
   LEVEL.blue_base = best
   LEVEL. red_base = best.sister
 
-  gui.printf("CTF Blue Flag @ %s\n", LEVEL.blue_base:tostr())
-  gui.printf("CTF Red  Flag @ %s\n", LEVEL. red_base:tostr())
+  gui.printf("CTF Blue Flag @ %s\n", LEVEL.blue_base.name)
+  gui.printf("CTF Red  Flag @ %s\n", LEVEL. red_base.name)
 end
 
 
