@@ -144,6 +144,8 @@
 
     junctions : list(JUNCTION)
 
+    edges : list(EDGE)
+
     inner_point : AREA  -- usually NIL
 
     delta_x, delta_y    -- usually NIL, used for mountains
@@ -388,6 +390,7 @@ function Corner_init()
       y = BASE_Y + (cy-1) * SEED_SIZE
       areas = {}
       junctions = {}
+      edges = {}
     }
 
     LEVEL.area_corners[cx][cy] = CORNER
@@ -426,6 +429,29 @@ function Corner_init()
     end
     end
   end
+  end
+end
+
+
+
+function Corner_add_edge(E)
+  -- compute the "left most" corner coord
+  local cx = E.S.sx
+  local cy = E.S.sy
+
+  if E.dir == 2 or E.dir == 6 or E.dir == 1 or E.dir == 3 then cx = cx + 1 end
+  if E.dir == 8 or E.dir == 6 or E.dir == 9 or E.dir == 3 then cy = cy + 1 end
+
+  -- compute delta and # of corners to visit
+  local dx, dy = geom.delta(geom.RIGHT[E.dir])
+
+  for i = 1, E.long + 1 do
+    local corner = Corner_lookup(cx, cy)
+
+    table.insert(corner.edges, E)
+
+    cx = cx + dx
+    cy = cy + dy
   end
 end
 

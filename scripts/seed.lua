@@ -682,6 +682,9 @@ function Seed_create_edge(S, dir, long, kind)
     table.insert(A.edges, EDGE)
   end
 
+  -- add it to corners
+  Corner_add_edge(EDGE)
+
   return EDGE
 end
 
