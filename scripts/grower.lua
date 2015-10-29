@@ -1247,7 +1247,7 @@ math.max(ax,bx), math.max(ay,by))
   end
 
 
-  local function check_hallway_network_is_dud(R)
+  local function check_network_is_dud(R)
     local branches = collect_full_branches(R)
 
     if R.prelim_conn_num >= (R.grow_exits + 1) then
@@ -1272,9 +1272,10 @@ math.max(ax,bx), math.max(ay,by))
       for i = #LEVEL.rooms, 1, -1 do
         local R = LEVEL.rooms[i]
 
+        -- TODO : allow room tiles too (if specified in tile def)
         if R.kind != "hallway" then continue end
 
-        if check_hallway_network_is_dud(R) then
+        if check_network_is_dud(R) then
           changed = true
         end
       end
@@ -1350,8 +1351,11 @@ function Grower_organic_room(P)
 
 
   local function raw_blocked(S)
-    if S.area and S.area != cur_area then
-      return true
+    if S.area then return true end
+
+    if S.temp_area then
+      if not cur_area then return true end
+      if S.temp_area != cur_area then return true end
     end
 
     return false
@@ -1409,7 +1413,7 @@ function Grower_organic_room(P)
 
 
   local function check_enough_room()
-    cur_area = "DUMMY"
+    cur_area = nil
 
     local sx1 = P.S.sx
     local sy1 = P.S.sy
