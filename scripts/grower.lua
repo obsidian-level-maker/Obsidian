@@ -1355,7 +1355,7 @@ function Grower_organic_room(P)
 
   local function set_seed(S, A)
     S.temp_area = A
-    table.insert(A.seeds, S)
+--    table.insert(A.seeds, S)
   end
 
 
@@ -1397,7 +1397,7 @@ function Grower_organic_room(P)
     table.insert(prevs, S)
 
     if S.diagonal then
-      -- require seeds on each straight side to be free
+      -- require seeds on each straight side to be usable
       each dir in geom.SIDES do
         local N = S:neighbor(dir)
         if N and not table.has_elem(prevs, N) then
@@ -1406,7 +1406,7 @@ function Grower_organic_room(P)
         end
       end
 
-      -- if is_sharp_poker(S) then return false end
+      if is_sharp_poker(S) then return false end
     end
 
     return true
@@ -1428,6 +1428,77 @@ function Grower_organic_room(P)
     if not (NY and seed_usable(NY)) then return false end
 
     return true
+  end
+
+
+  local function add_to_list(S, corner, list)
+    -- already there?
+    each loc in list do
+      if loc.S == S and loc.corner == corner then
+        return
+      end
+
+      -- upgrade diagonal to full seed
+      if loc.S == S then
+        loc.corner = nil
+        return
+      end
+    end
+
+    table.insert(list, { S=S, corner=corner })
+  end
+
+
+  local function get_group(S, corner, list)
+    local is_first = (not list)
+
+    if is_first and corner then
+      assert(can_make_diagonal(S, corner))
+    end
+
+    if not list then list = {} end
+
+    add_to_list(S, corner, list)
+
+    if corner == nil then return end
+
+    local x_dir = sel(corner == 1 or corner == 7, 4, 6)
+    local y_dir = sel(corner == 1 or corner == 3, 2, 8)
+
+    for pass = 1, 2 do
+      local dir = sel(pass >= 2, y_dir, x_dir)
+
+      local N = S:neighbor(dir)
+
+      if is_first then
+        assert(N)
+        assert(seed_usable(N))
+      end
+
+      -- pick a new corner which shares an edge with previous one
+      local corn_A = 3
+      local corn_B = 1
+
+      if dir == 6 or dir == 2 then corn_A = 7 end
+      if dir == 6 or dir == 8 then corn_B = 9 end
+
+      if not can_make_diagonal(N, corn_A) then corn_A = nil end
+      if not can_make_diagonal(N, corn_B) then corn_B = nil end
+
+      -- pick new type of corner [ often none ]
+      local new_corn = nil
+
+      if (corn_A or corn_B) and rand.odds(66) then
+        if corn_A and corn_B then
+          new_corn = rand.sel(50, corn_A, corn_B)
+        else
+          new_corn = corn_A or corn_B
+        end
+      end
+
+      -- recursively flow into next seed
+      get_group(N, new_corn, list)
+    end
   end
 
 
