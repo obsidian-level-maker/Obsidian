@@ -1341,6 +1341,60 @@ end
 
 
 
+function Grower_organic_room(P)
+  --
+  -- Creates a few areas "organically", growing them seed-by-seed
+  -- (using rules similar to the old "weird" shape generator).
+  --
+
+
+  local function seed_usable(S, prevs)
+    if S.area then return false end
+
+    if Seed_over_boundary(S) then return false end
+
+    if not prevs then prevs = {} end
+    table.insert(prevs, S)
+
+    if not S.diagonal then return true end
+
+    each dir in geom.SIDES do
+      local N = S:neighbor(dir)
+      if N and not table.has_elem(prevs, N) then
+        -- recursive call
+        if not seed_usable(N, prevs) then return false end
+      end
+    end
+    
+    -- FIXME!!!! check for a sharp poker
+
+    return true
+  end
+
+
+  local function can_make_diagonal(S, corner)
+    assert(not S.area)
+
+    if S.diagonal then return false end
+
+    local x_dir = sel(corner == 1 or corner == 7, 4, 6)
+    local y_dir = sel(corner == 1 or corner == 3, 2, 8)
+
+    local NX = S:neighbor(x_dir)
+    local NY = S:neighbor(y_dir)
+
+    if not (NX and seed_usable(NX)) then return false end
+    if not (NY and seed_usable(NY)) then return false end
+
+    return true
+  end
+
+
+  ---| Grower_organic_room |---
+end
+
+
+
 function Grower_hallway_kinds()
   --
   -- Determines kind (building, outdoor, etc) of hallways.

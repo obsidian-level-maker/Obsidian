@@ -393,11 +393,6 @@ function SEED_CLASS.edge_coord(S, dir)
 end
 
 
-function SEED_CLASS.in_use(S)
-  return S.room or S.closet or S.map_border
-end
-
-
 function SEED_CLASS.raw_corner(S, dir)
   -- this method is RAW: it does not care about diagonals
 
