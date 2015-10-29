@@ -1355,7 +1355,7 @@ function Grower_organic_room(P)
 
   local function set_seed(S, A)
     S.temp_area = A
---    table.insert(A.seeds, S)
+    table.insert(A.seeds, S)
   end
 
 
@@ -1438,10 +1438,10 @@ function Grower_organic_room(P)
         return
       end
 
-      -- upgrade diagonal to full seed
+      -- upgrade a diagonal to full seed
       if loc.S == S then
         loc.corner = nil
-        return
+        return "upgrade"
       end
     end
 
@@ -1450,6 +1450,10 @@ function Grower_organic_room(P)
 
 
   local function get_group(S, corner, list)
+    assert(seed_usable(S))
+
+-- FIXME: THIS NOT CORRECT when S is already a diagonal
+
     local is_first = (not list)
 
     if is_first and corner then
@@ -1458,9 +1462,12 @@ function Grower_organic_room(P)
 
     if not list then list = {} end
 
-    add_to_list(S, corner, list)
+    local res = add_to_list(S, corner, list)
 
-    if corner == nil then return end
+    -- if it's a full seed, nothing more to do
+    if corner == nil or res == "upgrade" then
+      return list
+    end
 
     local x_dir = sel(corner == 1 or corner == 7, 4, 6)
     local y_dir = sel(corner == 1 or corner == 3, 2, 8)
@@ -1470,7 +1477,7 @@ function Grower_organic_room(P)
 
       local N = S:neighbor(dir)
 
-      if is_first then
+      if true then
         assert(N)
         assert(seed_usable(N))
       end
@@ -1498,6 +1505,24 @@ function Grower_organic_room(P)
 
       -- recursively flow into next seed
       get_group(N, new_corn, list)
+    end
+
+    return list
+  end
+
+
+  local function apply_group(list)
+    each loc in list do
+      local S = loc.S
+
+      if loc.corner then
+        local diagonal = math.min(loc.corner, 10 - loc.corner)
+        S:split(diagonal)
+
+        if diagonal > 5 then S = S.top end
+      end
+
+      set_seed(S, cur_area)
     end
   end
 
@@ -1551,17 +1576,7 @@ function Grower_organic_room(P)
 
     local S = P.S:neighbor(P.dir)
 
-    set_seed(S, A)
-
-    if geom.is_corner(P.dir) then
-      -- FIXME: not sufficient !!!
-      each dir in geom.SIDES do
-        local N = S:neighbor(dir)
-        if N then
-          set_seed(N, A)
-        end
-      end
-    end
+    apply_group(get_group(S))
   end
 
 
@@ -1572,14 +1587,20 @@ function Grower_organic_room(P)
 
 
   local function grow_an_area()
+    -- create a new temporary area
     cur_area =
     {
       id = alloc_id("organic_area")
       seeds = {}
       must_edge = {}
+      want_vol = rand.pick({ 3,6,9 })
     }
 
     cur_area.name = string.format("ORGANIC_%d", cur_area.id)
+
+    if rand.odds(3) then
+      cur_area.want_vol = cur_area.want_vol + 9
+    end
 
     if table.empty(temp_area_list) then
       seed_spot_from_sprout(cur_area)
