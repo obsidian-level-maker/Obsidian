@@ -487,8 +487,8 @@ gui.debugf("Grower_determine_coverage...\n")
     local S = SEEDS[sx][sy]
 
     if S.room or (S.top and S.top.room) then
-local RR = S.room or (S.top and S.top.room) 
-local AA = S.area or (S.top and S.top.area) 
+local RR = S.room or (S.top and S.top.room)
+local AA = S.area or (S.top and S.top.area)
 gui.debugf("  %s : %s / %s\n", S.name, RR.name, (AA and AA.name) or "-noarea-")
       count = count + 1
     end
@@ -684,7 +684,7 @@ function Grower_grow_trunk(is_first)
       else
         T.rotate = 0
       end
-    
+
     else  -- perpendicular
       if P.dir == geom.RIGHT[entry_dir] then
         T.rotate = 6
@@ -722,7 +722,7 @@ entry_conn.dir, transform_dir(T, entry_conn.dir), P.dir)
     if entry_conn.long >= 2 and not T.mirror then
       conn_x, conn_y = geom.nudge(conn_x, conn_y, geom.RIGHT[entry_conn.dir], entry_conn.long - 1)
     end
- 
+
 --stderrf("    adjusted entry_conn: (%d %d)\n", conn_x, conn_y)
 
     local dx, dy = transform_coord(T, conn_x, conn_y)
@@ -1375,7 +1375,7 @@ function Grower_organic_room(P)
         if not seed_usable(N, prevs) then return false end
       end
     end
-    
+
     -- FIXME!!!! check for a sharp poker
     local block_count = 0
     each dir in geom.ALL_DIRS do
@@ -1408,7 +1408,60 @@ function Grower_organic_room(P)
   end
 
 
+  local function check_enough_room()
+    cur_area = "DUMMY"
+
+    local sx1 = P.S.sx
+    local sy1 = P.S.sy
+    local sx2 = sx1
+    local sy2 = sy1
+
+    local dx, dy = geom.delta(P.dir)
+
+    if geom.is_corner(P.dir) then
+      -- diagonal : check 3x3 seeds, the sprout is one corner
+
+      if dx > 0 then sx2 = sx2 + 2 else sx1 = sx1 - 2 end
+      if dy > 0 then sy2 = sy2 + 2 else sy1 = sy1 - 2 end
+
+    else
+      -- straight : check 3x3 seed just beyond the sprout
+
+      sx1 = sx1 - 1 + 2 * dx
+      sy1 = sy1 - 1 + 2 * dy
+
+      sx2 = sx1 + 2
+      sy2 = sy1 + 2
+    end
+
+    for x = sx1, sx2 do
+    for y = sy1, sy2 do
+      if not Seed_valid(x, y) then return false end
+      if Seed_over_boundary(x, y) then return false end
+
+      local S = SEEDS[x][y]
+
+      -- ignore the sprout (for diagonals)
+      if S == P.S then continue end
+
+      if raw_blocked(S) or S.diagonal then return false end
+    end
+    end
+
+    return true -- OK
+  end
+
+
   ---| Grower_organic_room |---
+
+  -- FIXME : remove this limitation
+  if P.long > 1 then return false end
+
+  if not check_enough_room() then return false end
+
+  -- TODO
+
+  return true
 end
 
 
@@ -1434,7 +1487,7 @@ function Grower_hallway_kinds()
     -- if more than one exit, randomly pick it
     local conns2 = table.copy(H.conns)
     rand.shuffle(conns2)
-    
+
     if conns2[1] == H.entry_conn then
       table.remove(conns2, 1)
     end
@@ -1464,7 +1517,7 @@ function Grower_hallway_kinds()
        (H.svolume >= 3 and rand.odds(5))
     then
       is_outdoor = true
-    end 
+    end
 
 -- stderrf("Hallway kind @ %s --> %s %s\n", H.name, sel(is_outdoor, "OUT", "-"), sel(is_cave, "CAVE", "-"))
 
