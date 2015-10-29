@@ -3,10 +3,15 @@ WORK IN PROGRESS
 ================
 
 
+>>>  organic room growing
+
+
+IDEA : do gap-fill AFTER quests done and *closets* are placed
+       [ otherwise closets can split areas into two separate parts ]
+
+
 Edge Stuff
 ----------
-
-+  store EDGEs in each CORNER object
 
 -  make proper EDGE objects for Windows
    ( since want to support wide ones )
@@ -60,8 +65,8 @@ Texturing
 Closets
 -------
 
-+  really want to add them _AFTER_ large traps/cages have been
-   added (and after outdoor borders too)
+???  really want to add them _AFTER_ large traps/cages have been added
+     (and after outdoor borders too)
 
 
 
