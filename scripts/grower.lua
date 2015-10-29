@@ -1346,10 +1346,20 @@ function Grower_organic_room(P)
   -- Creates a few areas "organically", growing them seed-by-seed
   -- (using rules similar to the old "weird" shape generator).
   --
+  local cur_area
+
+
+  local function raw_blocked(S)
+    if S.area and S.area != cur_area then
+      return true
+    end
+
+    return false
+  end
 
 
   local function seed_usable(S, prevs)
-    if S.area then return false end
+    if raw_blocked(S) then return false end
 
     if Seed_over_boundary(S) then return false end
 
@@ -1367,13 +1377,21 @@ function Grower_organic_room(P)
     end
     
     -- FIXME!!!! check for a sharp poker
+    local block_count = 0
+    each dir in geom.ALL_DIRS do
+      local N = S:neighbor(dir)
+      if N and raw_blocked(N) then
+        block_count = block_count + 1
+      end
+    end
+    -- if block_count >= 2 then return false end
 
     return true
   end
 
 
   local function can_make_diagonal(S, corner)
-    assert(not S.area)
+    assert(not raw_blocked(S))
 
     if S.diagonal then return false end
 
