@@ -892,12 +892,12 @@ gui.debugf("  %s\n", S.name)
       ROOM.hallway = { }
     end
 
-    if prev_room and def.mode == "hallway" then
-      ROOM.grow_rank = prev_room.grow_rank
-    elseif prev_room then
-      ROOM.grow_rank = prev_room.grow_rank + 1
-    else
+    if not prev_room then
       ROOM.grow_rank = 1
+    elseif def.mode == "hallway" then
+      ROOM.grow_rank = prev_room.grow_rank
+    else
+      ROOM.grow_rank = prev_room.grow_rank + 1
     end
 
     new_room_num = new_room_num + 1
@@ -1347,7 +1347,16 @@ function Grower_organic_room(P)
   -- Creates a few areas "organically", growing them seed-by-seed
   -- (using rules similar to the old "weird" shape generator).
   --
+  local cur_room
   local cur_area
+
+  local temp_area_list = {}
+
+
+  local function set_seed(S, A)
+    S.temp_area = A
+    table.insert(A.seeds, S)
+  end
 
 
   local function raw_blocked(S)
@@ -1358,37 +1367,47 @@ function Grower_organic_room(P)
       if S.temp_area != cur_area then return true end
     end
 
+    if S.sx <= 1 or S.sx >= SEED_W then return true end
+    if S.sy <= 1 or S.sy >= SEED_H then return true end
+
     return false
   end
 
 
-  local function seed_usable(S, prevs)
-    if raw_blocked(S) then return false end
-
-    if Seed_over_boundary(S) then return false end
-
-    if not prevs then prevs = {} end
-    table.insert(prevs, S)
-
-    if not S.diagonal then return true end
-
-    each dir in geom.SIDES do
-      local N = S:neighbor(dir)
-      if N and not table.has_elem(prevs, N) then
-        -- recursive call
-        if not seed_usable(N, prevs) then return false end
-      end
-    end
-
-    -- FIXME!!!! check for a sharp poker
+  local function is_sharp_poker(S)
     local block_count = 0
+
     each dir in geom.ALL_DIRS do
       local N = S:neighbor(dir)
       if N and raw_blocked(N) then
         block_count = block_count + 1
       end
     end
-    -- if block_count >= 2 then return false end
+
+    return block_count >= 2
+  end
+
+
+  local function seed_usable(S, prevs)
+    if raw_blocked(S) then return false end
+
+---###  if Seed_over_boundary(S) then return false end
+
+    if not prevs then prevs = {} end
+    table.insert(prevs, S)
+
+    if S.diagonal then
+      -- require seeds on each straight side to be free
+      each dir in geom.SIDES do
+        local N = S:neighbor(dir)
+        if N and not table.has_elem(prevs, N) then
+          -- recursive call
+          if not seed_usable(N, prevs) then return false end
+        end
+      end
+
+      -- if is_sharp_poker(S) then return false end
+    end
 
     return true
   end
@@ -1456,6 +1475,51 @@ function Grower_organic_room(P)
   end
 
 
+  local function seed_spot_from_sprout(A)
+    -- TODO : support P.long > 1
+
+    local S = P.S:neighbor(P.dir)
+
+    set_seed(S, A)
+
+    if geom.is_corner(P.dir) then
+      -- FIXME: not sufficient !!!
+      each dir in geom.SIDES do
+        local N = S:neighbor(dir)
+        if N then
+          set_seed(N, A)
+        end
+      end
+    end
+  end
+
+
+  local function seed_spot_off_existing_area(A)
+    -- FIXME  
+    error("seed_spot_off_existing_area: not yet impl")
+  end
+
+
+  local function grow_an_area()
+    cur_area =
+    {
+      id = alloc_id("organic_area")
+      seeds = {}
+      must_edge = {}
+    }
+
+    cur_area.name = string.format("ORGANIC_%d", cur_area.id)
+
+    if table.empty(temp_area_list) then
+      seed_spot_from_sprout(cur_area)
+    else
+      seed_spot_off_existing_area(cur_area)
+    end
+
+    -- TODO
+  end
+
+
   ---| Grower_organic_room |---
 
   -- FIXME : remove this limitation
@@ -1463,7 +1527,12 @@ function Grower_organic_room(P)
 
   if not check_enough_room() then return false end
 
-  -- TODO
+  -- create room now
+  cur_room = ROOM_CLASS.new()
+
+---  while cur_room.svolume < 21 do
+    grow_an_area()
+---  end
 
   return true
 end
