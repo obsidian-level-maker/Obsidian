@@ -217,15 +217,17 @@ namelib.NAMES =
         Programming=5, Security=5, Staging=5, Comms=5,
 
         -- descriptive
-        Main=20, Provisional=3,
-        Planetary=3, Interstellar=7, Entrance=10, Lunar=10,
-        Alpha=10, Beta=5, Gamma=10,
-        Delta=10, Omega=5, Sigma=3,
-        Epsilon=3, Zeta=3, Lambda=3,
+        Main=20, Entrance=10, Provisional=3,
+        Planetary=3, Interstellar=7, Lunar=10,
         Atlas=3, Promethus=2, Cronus=3, 
         Hyperion=2, Icarus=2, Echo=2,
         Morpheus=2, Eos=2, Orion=2,
-        Tiephron=2,
+        Tiephron=2, Psion=3,
+
+        Alpha=10, Beta=5, Gamma=10,
+        Delta=10, Omega=5, Sigma=5,
+        Epsilon=3, Zeta=5, Lambda=3,
+        Theta=5, Omicron=3, Tau=3,
 
         -- materials / substances
         Power=20, Energy=15, Cargo=10,
