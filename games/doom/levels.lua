@@ -30,7 +30,7 @@ DOOM.EPISODES =
   {
     ep_index = 1
 
-    theme = "doom/tech"
+    theme = "tech"
     sky_patch = "RSKY1"
     dark_prob = 10
   }
@@ -39,7 +39,7 @@ DOOM.EPISODES =
   {
     ep_index = 2
 
-    theme = "doom/urban"
+    theme = "urban"
     sky_patch = "RSKY2"
     dark_prob = 40
   }
@@ -48,7 +48,7 @@ DOOM.EPISODES =
   {
     ep_index = 3
 
-    theme = "doom/hell"
+    theme = "hell"
     sky_patch = "RSKY3"
     dark_prob = 10
   }
@@ -169,7 +169,7 @@ function DOOM.get_levels()
 
     -- secret levels
     if map == 31 or map == 32 then
-      LEV.theme_name = "doom/wolf"
+      LEV.theme_name = "wolf"
       LEV.name_class = "URBAN"
       LEV.is_secret = true
     end

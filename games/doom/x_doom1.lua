@@ -1573,7 +1573,7 @@ ULTDOOM.EPISODES =
   {
     ep_index = 1
 
-    theme = "doom/tech"
+    theme = "tech"
     sky_patch = "SKY1"
     dark_prob = 10
 
@@ -1585,7 +1585,7 @@ ULTDOOM.EPISODES =
   {
     ep_index = 2
 
-    theme = "doom/deimos"
+    theme = "deimos"
     sky_patch = "SKY2"
     dark_prob = 40
 
@@ -1597,7 +1597,7 @@ ULTDOOM.EPISODES =
   {
     ep_index = 3
 
-    theme = "doom/hell"
+    theme = "hell"
     sky_patch = "SKY3"
     dark_prob = 10
 
@@ -1609,7 +1609,7 @@ ULTDOOM.EPISODES =
   {
     ep_index = 4
 
-    theme = "doom/flesh"
+    theme = "flesh"
     sky_patch = "SKY4"
     dark_prob = 10
 
@@ -1779,7 +1779,7 @@ UNFINISHED["ultdoom"] =
 
 --------------------------------------------------------------------
 
-OB_THEMES["doom/deimos"] =
+OB_THEMES["deimos"] =
 {
   label = "Deimos"
   priority = 16
@@ -1789,7 +1789,7 @@ OB_THEMES["doom/deimos"] =
 }
 
 
-OB_THEMES["doom/flesh"] =
+OB_THEMES["flesh"] =
 {
   label = "Thy Flesh"
   priority = 12

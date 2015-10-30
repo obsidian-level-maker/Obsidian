@@ -55,7 +55,7 @@ HERETIC.THEMES =
 
   ---- URBAN THEME ---------------------------------
 
-  urban_DEFAULTS =
+  h_urban_DEFAULTS =
   {
     liquids =
     {
@@ -71,7 +71,7 @@ HERETIC.THEMES =
   }
 
 
-  urban_House1 =
+  h_urban_House1 =
   {
     kind = "building"
 
@@ -96,7 +96,7 @@ HERETIC.THEMES =
   }
 
 
-  urban_House2 =
+  h_urban_House2 =
   {
     kind = "building"
 
@@ -120,7 +120,7 @@ HERETIC.THEMES =
   }
 
 
-  urban_Stone =
+  h_urban_Stone =
   {
     kind = "building"
 
@@ -145,7 +145,7 @@ HERETIC.THEMES =
   }
 
 
-  urban_Wood =
+  h_urban_Wood =
   {
     kind = "building"
 
@@ -171,7 +171,7 @@ HERETIC.THEMES =
   }
 
 
-  urban_Cave =
+  h_urban_Cave =
   {
     kind = "cave"
 
@@ -182,7 +182,7 @@ HERETIC.THEMES =
   }
 
 
-  urban_Outdoors =
+  h_urban_Outdoors =
   {
     kind = "outdoors"
 
@@ -202,7 +202,7 @@ HERETIC.THEMES =
 
   ---- CASTLE THEME --------------------------------
 
-  castle_DEFAULTS =
+  h_castle_DEFAULTS =
   {
     liquids =
     {
@@ -219,7 +219,7 @@ HERETIC.THEMES =
   }
 
 
-  castle_Green =
+  h_castle_Green =
   {
     kind = "building"
 
@@ -245,7 +245,7 @@ HERETIC.THEMES =
   }
 
 
-  castle_Gray =
+  h_castle_Gray =
   {
     kind = "building"
 
@@ -270,7 +270,7 @@ HERETIC.THEMES =
   }
 
 
-  castle_Orange =
+  h_castle_Orange =
   {
     kind = "building"
 
@@ -295,7 +295,7 @@ HERETIC.THEMES =
   }
 
 
-  castle_Hallway =
+  h_castle_Hallway =
   {
     kind = "hallway"
 
@@ -323,7 +323,7 @@ HERETIC.THEMES =
 
   -- TODO : these are same as urban theme, differentiate them!
 
-  castle_Cave =
+  h_castle_Cave =
   {
     kind = "cave"
 
@@ -334,7 +334,7 @@ HERETIC.THEMES =
   }
 
 
-  castle_Outdoors =
+  h_castle_Outdoors =
   {
     kind = "outdoors"
 
@@ -373,7 +373,7 @@ HERETIC.ROOMS =
 ------------------------------------------------------------------------
 
 
-OB_THEMES["heretic/urban"] =
+OB_THEMES["h_urban"] =
 {
   label = "Urban"
   name_theme = "URBAN"
@@ -381,7 +381,7 @@ OB_THEMES["heretic/urban"] =
 }
 
 
-OB_THEMES["heretic/castle"] =
+OB_THEMES["h_castle"] =
 {
   label = "Castle"
   name_theme = "GOTHIC"

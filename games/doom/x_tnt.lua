@@ -354,7 +354,7 @@ TNT.EPISODES =
 {
   episode1 =
   {
-    theme = "doom/tech"
+    theme = "tech"
     sky_patch  = "DOEDAY"
     sky_patch2 = "DONDAY"
     sky_patch3 = "DOWDAY"
@@ -364,7 +364,7 @@ TNT.EPISODES =
 
   episode2 =
   {
-    theme = "doom/urban"
+    theme = "urban"
     sky_patch  = "DOENITE"
     sky_patch2 = "DONNITE"
     sky_patch3 = "DOWNITE"
@@ -374,7 +374,7 @@ TNT.EPISODES =
 
   episode3 =
   {
-    theme = "doom/hell"
+    theme = "hell"
     sky_patch  = "DOEHELL"
     sky_patch2 = "DONHELL"
     sky_patch3 = "DOWHELL"
@@ -399,7 +399,7 @@ OB_GAMES["tnt"] =
 }
 
 
-OB_THEMES["doom/egypt"] =
+OB_THEMES["egypt"] =
 {
   -- TNT Evilution theme
 

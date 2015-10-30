@@ -2698,49 +2698,49 @@ HEXEN.NAMES =
 
 --------------------------------------------------
 
-OB_THEMES["hexen/dungeon"] =
+OB_THEMES["x_dungeon"] =
 {
   label = "Dungeon"
   name_theme = "GOTHIC"
   mixed_prob = 50
 }
 
-OB_THEMES["hexen/element"] =
+OB_THEMES["x_element"] =
 {
   label = "Elemental"
   name_theme = "GOTHIC"
   mixed_prob = 50
 }
 
-OB_THEMES["hexen/wild"] =
+OB_THEMES["x_wild"] =
 {
   label = "Wilderness"
   name_theme = "GOTHIC"
   mixed_prob = 50
 }
 
-OB_THEMES["hexen/cave"] =
+OB_THEMES["x_cave"] =
 {
   label = "Cave"
   name_theme = "GOTHIC"
   mixed_prob = 20
 }
 
-OB_THEMES["hexen/ice"] =
+OB_THEMES["x_ice"] =
 {
   label = "Ice"
   name_theme = "GOTHIC"
   mixed_prob = 10
 }
 
-OB_THEMES["hexen/swamp"] =
+OB_THEMES["x_swamp"] =
 {
   label = "Swamp"
   name_theme = "GOTHIC"
   mixed_prob = 20
 }
 
-OB_THEMES["hexen/village"] =
+OB_THEMES["x_village"] =
 {
   label = "Village"
   name_theme = "URBAN"

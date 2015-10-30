@@ -461,15 +461,12 @@ function Levels_choose_themes()
       error("Internal error : unknown OB_THEME: " .. tostring(name))
     end
 
-    -- remove the game prefix
-    local base = string.match(name, "/\([%w_]*\)") or name
+    LEV.theme_name = name
 
-    LEV.theme_name = base
-
-    LEV.theme = GAME.THEMES[base .. "_DEFAULTS"]
+    LEV.theme = GAME.THEMES[name .. "_DEFAULTS"]
 
     if not LEV.theme then
-      error("Unknown theme : " .. base)
+      error("Unknown theme : " .. name)
     end
 
     -- this is optional (may be nil)

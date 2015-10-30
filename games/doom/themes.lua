@@ -1357,7 +1357,7 @@ DOOM.NAMES =
 
 --------------------------------------------------------------------
 
-OB_THEMES["doom/tech"] =
+OB_THEMES["tech"] =
 {
   label = "Tech"
   priority = 18
@@ -1366,7 +1366,7 @@ OB_THEMES["doom/tech"] =
 }
 
 
-OB_THEMES["doom/hell"] =
+OB_THEMES["hell"] =
 {
   label = "Hell"
   priority = 14
@@ -1375,7 +1375,7 @@ OB_THEMES["doom/hell"] =
 }
 
 
-OB_THEMES["doom/urban"] =
+OB_THEMES["urban"] =
 {
   label = "Urban"
   priority = 16
@@ -1385,7 +1385,7 @@ OB_THEMES["doom/urban"] =
 }
 
 
-OB_THEMES["doom/mostly_tech"] =
+OB_THEMES["mostly_tech"] =
 {
   label = "Mostly Tech"
   priority = 8
@@ -1393,7 +1393,7 @@ OB_THEMES["doom/mostly_tech"] =
 }
 
 
-OB_THEMES["doom/mostly_urban"] =
+OB_THEMES["mostly_urban"] =
 {
   label = "Mostly Urban"
   priority = 4
@@ -1402,7 +1402,7 @@ OB_THEMES["doom/mostly_urban"] =
 }
 
 
-OB_THEMES["doom/mostly_hell"] =
+OB_THEMES["mostly_hell"] =
 {
   label = "Mostly Hell"
   priority = 6
@@ -1410,7 +1410,7 @@ OB_THEMES["doom/mostly_hell"] =
 }
 
 
-OB_THEMES["doom/wolf"] =
+OB_THEMES["wolf"] =
 {
   label = "Wolfenstein"
   priority = 2

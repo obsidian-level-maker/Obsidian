@@ -74,7 +74,7 @@ QUAKE.THEMES =
 
   ----- TECH BASE ----------------------------------
 
-  tech_DEFAULTS =
+  q1_tech_DEFAULTS =
   {
     worldtype = 2
 
@@ -97,7 +97,7 @@ QUAKE.THEMES =
   }
 
 
-  tech_Room =
+  q1_tech_Room =
   {
     kind = "building"
 
@@ -128,7 +128,7 @@ QUAKE.THEMES =
 
   -- TODO : these are duplicate of castle ones -- make them distinct
 
-  tech_Cave =
+  q1_tech_Cave =
   {
     kind = "cave"
 
@@ -141,7 +141,7 @@ QUAKE.THEMES =
   }
 
 
-  tech_Outdoors =
+  q1_tech_Outdoors =
   {
     kind = "outdoors"
 
@@ -164,7 +164,7 @@ QUAKE.THEMES =
 
   ----- CASTLE ----------------------------------
 
-  castle_DEFAULTS =
+  q1_castle_DEFAULTS =
   {
     worldtype = 0
 
@@ -186,7 +186,7 @@ QUAKE.THEMES =
   }
 
 
-  castle_Room =
+  q1_castle_Room =
   {
     kind = "building"
 
@@ -221,7 +221,7 @@ QUAKE.THEMES =
   }
 
 
-  castle_Cave =
+  q1_castle_Cave =
   {
     kind = "cave"
 
@@ -234,7 +234,7 @@ QUAKE.THEMES =
   }
 
 
-  castle_Outdoors =
+  q1_castle_Outdoors =
   {
     kind = "outdoors"
 
@@ -276,7 +276,7 @@ QUAKE.ROOMS =
 ------------------------------------------------------------------------
 
 
-OB_THEMES["quake/tech"] =
+OB_THEMES["q1_tech"] =
 {
   label = "Tech"
   for_games = { quake=1 }
@@ -285,7 +285,7 @@ OB_THEMES["quake/tech"] =
 }
 
 
-OB_THEMES["quake/castle"] =
+OB_THEMES["q1_castle"] =
 {
   label = "Castle"
   for_games = { quake=1 }
