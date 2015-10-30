@@ -286,6 +286,25 @@ function Quest_create_initial_quest()
   end
 
 
+  local function compute_dists_to_exit(R, cur_dist)
+    R.dist_to_exit = cur_dist
+
+    each C in R.conns do
+      local R2 = C:other_room(R)
+
+      local step = 1.0
+
+      if R.kind == "hallway" or R2.kind == "hallway" then
+        step = 0.5
+      end
+
+      if not R2.dist_to_exit then
+        compute_dists_to_exit(R2, cur_dist + step)
+      end
+    end
+  end
+
+
   ---| Quest_create_initial_quest |---
 
   local Q = Quest_new()
@@ -301,8 +320,9 @@ function Quest_create_initial_quest()
   end
 
   add_normal_exit(Q)
-
   add_secret_exit()
+
+  compute_dists_to_exit(LEVEL.exit_room, 0)
 end
 
 
@@ -2525,7 +2545,7 @@ function Quest_make_quests()
 
   Quest_create_initial_quest()
 
-  Quest_add_major_quests()
+--!!!!  Quest_add_major_quests()
 
   Quest_start_room()
   Quest_order_by_visit()
