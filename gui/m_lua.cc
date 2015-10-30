@@ -477,9 +477,25 @@ int gui_abort(lua_State *L)
 //
 int gui_rand_seed(lua_State *L)
 {
-	int the_seed = luaL_checkint(L, 1) & 0x7FFFFFFF;
+	double the_seed = luaL_checknumber(L, 1);
 
-	GUI_RNG.Seed(the_seed);
+	if (the_seed < 0)
+		the_seed = - the_seed;
+
+	double A = fmod(the_seed, 1073741824.0);
+	the_seed = (the_seed - A) / 1073741824.0;
+
+	double B = fmod(the_seed, 1073741824.0);
+	the_seed = (the_seed - B) / 1073741824.0;
+
+	// s1 and s2 are the most important
+	// s3 and s4 are much less significant
+	uint32_t s1 = (uint32_t)A & 0x55555555;
+	uint32_t s2 = (uint32_t)A & 0x2AAAAAAA;
+	uint32_t s3 = (uint32_t)B ^ s1;
+	uint32_t s4 = s2 >> 11;
+
+	GUI_RNG.FullSeed(s1, s2, s3, s4);
 
 	return 0;
 }
