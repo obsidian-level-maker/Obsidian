@@ -1100,16 +1100,16 @@ function Quest_start_room()
     end
 
     -- not too big !!
-    if R.svolume < 25 then score = score + 20 end
-    if R.svolume < 50 then score = score + 10 end
+    if R.svolume < 30 then score = score + 200 end
 
     -- prefer no teleporter
     if not R:has_teleporter() then score = score + 7 end
 
-    -- TODO: prefer a place for start closet
+    -- far away from first locked door (or exit room)
+    score = score + R.dist_to_exit
 
     -- tie breaker
-    return score + gui.random() * 4
+    return score + gui.random() * 2
   end
 
 
