@@ -233,7 +233,7 @@ void aj_rand_FullSeed(aj_rand_t *R, uint32_t s1, uint32_t s2,
 	R->y = s1;
 
 	if (R->y == 0)
-		R->y = 1;
+		R->y = 0x1337beef;
 
 	R->z = s2;
 	R->w = s3;
