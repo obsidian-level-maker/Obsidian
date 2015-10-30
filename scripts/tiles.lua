@@ -777,7 +777,7 @@ ROOM_U2_5x3 =
     z = { x=3, y=2, dir=8 }
 
     f = { x=2, y=3, w=3, dir=8, split=1 }
-    g = { x=2, y=3, w=5, dir=8, split=1 }
+    g = { x=1, y=3, w=5, dir=8, split=1 }
     h = { x=4, y=1, w=3, dir=2, split=1 }
 
   }
