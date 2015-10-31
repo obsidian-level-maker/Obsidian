@@ -70,11 +70,13 @@ mkdir $dest/obj_linux
 mkdir $dest/obj_linux/lua
 mkdir $dest/obj_linux/glbsp
 mkdir $dest/obj_linux/ajpoly
+mkdir $dest/obj_linux/physfs
 
 mkdir $dest/obj_win32
 mkdir $dest/obj_win32/lua
 mkdir $dest/obj_win32/glbsp
 mkdir $dest/obj_win32/ajpoly
+mkdir $dest/obj_win32/physfs
 
 #
 #  Data files
