@@ -70,6 +70,10 @@ OB_THEMES["jumble"] =
 }
 
 
+-- this function is now deprecated
+require = function() error("require() is deprecated") end
+
+
 -- important constants
 
 SEED_SIZE = 192
