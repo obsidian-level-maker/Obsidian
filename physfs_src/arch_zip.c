@@ -17,7 +17,7 @@
 #include <time.h>
 #endif
 #include "physfs.h"
-#include "zlib.h"
+#include <zlib.h>
 
 #define __PHYSICSFS_INTERNAL__
 #include "internal.h"
