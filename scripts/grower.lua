@@ -1627,11 +1627,16 @@ function Grower_organic_room(P)
 
 
   local function seed_spot_from_sprout(A)
-    -- TODO : support P.long > 1
-
     local S = P.S:neighbor(P.dir)
 
-    apply_group(get_group(S))
+    for i = 1, P.long do
+      assert(not S.diagonal)
+      assert(not S.temp_area)
+
+      apply_group(get_group(S))
+
+      S = S:raw_neighbor(geom.RIGHT[P.dir])
+    end
   end
 
 
