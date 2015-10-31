@@ -22,17 +22,17 @@
 DOOM = { }
 
 
-ob_require("params")
+gui.import("params")
 
-ob_require("entities")
-ob_require("monsters")
-ob_require("pickups")
-ob_require("weapons")
+gui.import("entities")
+gui.import("monsters")
+gui.import("pickups")
+gui.import("weapons")
 
-ob_require("materials")
-ob_require("themes")
-ob_require("levels")
-ob_require("resources")
+gui.import("materials")
+gui.import("themes")
+gui.import("levels")
+gui.import("resources")
 
 
 ------------------------------------------------------------------------
@@ -64,8 +64,8 @@ OB_GAMES["doom2"] =
 
 -- pull in the other Doom games...
 
-ob_require("x_doom1")
-ob_require("x_tnt")
-ob_require("x_plutonia")
-ob_require("x_freedoom")
+gui.import("x_doom1")
+gui.import("x_tnt")
+gui.import("x_plutonia")
+gui.import("x_freedoom")
 

@@ -24,15 +24,15 @@ QUAKE = { }
 
 ------------------------------------------------------------
 
-ob_require("entities")
-ob_require("monsters")
-ob_require("pickups")
-ob_require("weapons")
+gui.import("entities")
+gui.import("monsters")
+gui.import("pickups")
+gui.import("weapons")
 
-ob_require("materials")
-ob_require("themes")
-ob_require("levels")
-ob_require("resources")
+gui.import("materials")
+gui.import("themes")
+gui.import("levels")
+gui.import("resources")
 
 ------------------------------------------------------------
 

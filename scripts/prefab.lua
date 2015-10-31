@@ -132,9 +132,9 @@ WADFAB_DELTA_12  = 997
 function Fab_load_all_definitions()
 
   local function load_from_subdir(main_dir, subdir)
-    OB_REQUIRE_DIR = main_dir .. "/" .. subdir
+    OB_IMPORT_DIR = main_dir .. "/" .. subdir
 
-    local list, err = gui.scan_directory(OB_REQUIRE_DIR, "*.lua")
+    local list, err = gui.scan_directory(OB_IMPORT_DIR, "*.lua")
 
     if list == nil then
       gui.printf("Failed to scan prefab directory '%s'\n", subdir)
@@ -143,11 +143,11 @@ function Fab_load_all_definitions()
       each filename in list do
         gui.debugf("Loading %s/%s\n", subdir, filename)
 
-        ob_require(filename)
+        gui.import(filename)
       end
     end
 
-    OB_REQUIRE_DIR = nil
+    OB_IMPORT_DIR = nil
   end
 
 

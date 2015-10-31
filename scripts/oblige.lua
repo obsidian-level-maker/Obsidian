@@ -18,29 +18,51 @@
 --
 ------------------------------------------------------------------------
 
-require "defs"
-require "util"
-require "brush"
-require "prefab"
+OB_IMPORT_DIR = gui.get_install_dir() .. "/scripts"
 
-require "seed"
-require "tiles"
-require "grower"
-require "area"
-require "connect"
+gui.import = function(filename)
+  assert(OB_IMPORT_DIR)
 
-require "quest"
-require "dm_ctf"
-require "layout"
-require "render"
-require "room"
+  -- add extension if missing
+  if string.match(filename, "%.") == nil then
+    filename = filename .. ".lua"
+  end
 
-require "fight"
-require "monster"
-require "item"
-require "naming"
-require "pic_gen"
-require "level"
+  filename = OB_IMPORT_DIR .. "/" .. filename
+
+  local func, err = loadfile(filename)
+
+  if func == nil then
+    error("Could not load script: " .. filename .. " (" .. err .. ")")
+  end
+
+  func()
+end
+
+
+gui.import("defs")
+gui.import("util")
+gui.import("brush")
+gui.import("prefab")
+
+gui.import("seed")
+gui.import("tiles")
+gui.import("grower")
+gui.import("area")
+gui.import("connect")
+
+gui.import("quest")
+gui.import("dm_ctf")
+gui.import("layout")
+gui.import("render")
+gui.import("room")
+
+gui.import("fight")
+gui.import("monster")
+gui.import("item")
+gui.import("naming")
+gui.import("pic_gen")
+gui.import("level")
 
 
 function ob_traceback(msg)
@@ -597,39 +619,18 @@ end
 
 
 
-function ob_require(filename)
-  assert(OB_REQUIRE_DIR)
-
-  -- add extension if missing
-  if string.match(filename, "%.") == nil then
-    filename = filename .. ".lua"
-  end
-
-  filename = OB_REQUIRE_DIR .. "/" .. filename
-
-  local func, err = loadfile(filename)
-
-  if func == nil then
-    error("Could not load script: " .. filename .. " (" .. err .. ")")
-  end
-
-  func()
-end
-
-
-
 function ob_load_game(dir, game)
   -- 'game' parameter must be a sub-directory of the games/ folder
   
   -- ignore the template game -- it is only instructional
   if game == "template" then return end
 
-  OB_REQUIRE_DIR = dir .. "/" .. game
+  OB_IMPORT_DIR = dir .. "/" .. game
 
   gui.debugf("  %s\n", game)
-  ob_require("base")
+  gui.import("base")
 
-  OB_REQUIRE_DIR = nil
+  OB_IMPORT_DIR = nil
 end
 
 
@@ -659,11 +660,11 @@ end
 
 
 function ob_load_all_engines()
-  OB_REQUIRE_DIR = gui.get_install_dir() .. "/engines"
+  OB_IMPORT_DIR = gui.get_install_dir() .. "/engines"
 
   gui.printf("Loading all engines...\n")
 
-  local list = gui.scan_directory(OB_REQUIRE_DIR, "*.lua")
+  local list = gui.scan_directory(OB_IMPORT_DIR, "*.lua")
 
   if not list then
     gui.printf("FAILED: scan 'engines' directory\n")
@@ -671,20 +672,20 @@ function ob_load_all_engines()
   else
     each filename in list do
       gui.debugf("  %s\n", filename)
-      ob_require(filename)
+      gui.import(filename)
     end
   end
 
-  OB_REQUIRE_DIR = nil
+  OB_IMPORT_DIR = nil
 end
 
 
 function ob_load_all_modules()
-  OB_REQUIRE_DIR = gui.get_install_dir() .. "/modules"
+  OB_IMPORT_DIR = gui.get_install_dir() .. "/modules"
 
   gui.printf("Loading all modules...\n")
 
-  local list = gui.scan_directory(OB_REQUIRE_DIR, "*.lua")
+  local list = gui.scan_directory(OB_IMPORT_DIR, "*.lua")
 
   if not list then
     gui.printf("FAILED: scan 'modules' directory\n")
@@ -692,11 +693,11 @@ function ob_load_all_modules()
   else
     each filename in list do
       gui.debugf("  %s\n", filename)
-      ob_require(filename)
+      gui.import(filename)
     end
   end
 
-  OB_REQUIRE_DIR = nil
+  OB_IMPORT_DIR = nil
 end
 
 
