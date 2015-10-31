@@ -598,14 +598,14 @@ end
 
 
 function ob_require(filename)
-  assert(OB_GAME_DIR)
+  assert(OB_REQUIRE_DIR)
 
   -- add extension if missing
   if string.match(filename, "%.") == nil then
     filename = filename .. ".lua"
   end
 
-  filename = OB_GAME_DIR .. "/" .. filename
+  filename = OB_REQUIRE_DIR .. "/" .. filename
 
   local func, err = loadfile(filename)
 
@@ -624,12 +624,12 @@ function ob_load_game(dir, game)
   -- ignore the template game -- it is only instructional
   if game == "template" then return end
 
-  OB_GAME_DIR = dir .. "/" .. game
+  OB_REQUIRE_DIR = dir .. "/" .. game
 
   gui.debugf("  %s\n", game)
   ob_require("base")
 
-  OB_GAME_DIR = nil
+  OB_REQUIRE_DIR = nil
 end
 
 
@@ -659,11 +659,11 @@ end
 
 
 function ob_load_all_engines()
-  OB_GAME_DIR = gui.get_install_dir() .. "/engines"
+  OB_REQUIRE_DIR = gui.get_install_dir() .. "/engines"
 
   gui.printf("Loading all engines...\n")
 
-  local list = gui.scan_directory(OB_GAME_DIR, "*.lua")
+  local list = gui.scan_directory(OB_REQUIRE_DIR, "*.lua")
 
   if not list then
     gui.printf("FAILED: scan 'engines' directory\n")
@@ -675,16 +675,16 @@ function ob_load_all_engines()
     end
   end
 
-  OB_GAME_DIR = nil
+  OB_REQUIRE_DIR = nil
 end
 
 
 function ob_load_all_modules()
-  OB_GAME_DIR = gui.get_install_dir() .. "/modules"
+  OB_REQUIRE_DIR = gui.get_install_dir() .. "/modules"
 
   gui.printf("Loading all modules...\n")
 
-  local list = gui.scan_directory(OB_GAME_DIR, "*.lua")
+  local list = gui.scan_directory(OB_REQUIRE_DIR, "*.lua")
 
   if not list then
     gui.printf("FAILED: scan 'modules' directory\n")
@@ -696,7 +696,7 @@ function ob_load_all_modules()
     end
   end
 
-  OB_GAME_DIR = nil
+  OB_REQUIRE_DIR = nil
 end
 
 

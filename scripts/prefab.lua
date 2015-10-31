@@ -132,9 +132,9 @@ WADFAB_DELTA_12  = 997
 function Fab_load_all_definitions()
 
   local function load_from_subdir(main_dir, subdir)
-    OB_GAME_DIR = main_dir .. "/" .. subdir
+    OB_REQUIRE_DIR = main_dir .. "/" .. subdir
 
-    local list, err = gui.scan_directory(OB_GAME_DIR, "*.lua")
+    local list, err = gui.scan_directory(OB_REQUIRE_DIR, "*.lua")
 
     if list == nil then
       gui.printf("Failed to scan prefab directory '%s'\n", subdir)
@@ -147,7 +147,7 @@ function Fab_load_all_definitions()
       end
     end
 
-    OB_GAME_DIR = nil
+    OB_REQUIRE_DIR = nil
   end
 
 
