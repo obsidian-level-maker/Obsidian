@@ -1570,6 +1570,18 @@ function Grower_organic_room(P)
 
       sx2 = sx1 + 2
       sy2 = sy1 + 2
+
+      if P.long >= 2 then
+        local extra = int(P.long / 2)
+
+        if geom.is_vert(P.dir) then
+          sx1 = sx1 - extra
+          sx2 = sx2 + extra
+        else
+          sy1 = sy1 - extra
+          sy2 = sy2 + extra
+        end
+      end
     end
 
     for x = sx1, sx2 do
