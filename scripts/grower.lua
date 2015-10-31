@@ -1391,8 +1391,6 @@ function Grower_organic_room(P)
   local function seed_usable(S, prevs)
     if raw_blocked(S) then return false end
 
----###  if Seed_over_boundary(S) then return false end
-
     if not prevs then prevs = {} end
     table.insert(prevs, S)
 
@@ -1435,7 +1433,7 @@ function Grower_organic_room(P)
     -- already there?
     each loc in list do
       if loc.S == S and loc.corner == corner then
-        return
+        return "seen"
       end
 
       -- upgrade a diagonal to full seed
@@ -1450,9 +1448,15 @@ function Grower_organic_room(P)
 
 
   local function get_group(S, corner, list)
-    assert(seed_usable(S))
+    -- Note: 'corner' parameter is only set when we are going to split
+    -- a full seed and use just that corner.  When just using an existing
+    -- diagonal seed, 'corner' must be NIL.
 
--- FIXME: THIS NOT CORRECT when S is already a diagonal
+    if corner then
+      assert(not S.diagonal)
+    end
+
+    assert(seed_usable(S))
 
     local is_first = (not list)
 
@@ -1460,17 +1464,44 @@ function Grower_organic_room(P)
       assert(can_make_diagonal(S, corner))
     end
 
+
     if not list then list = {} end
 
-    local res = add_to_list(S, corner, list)
-
-    -- if it's a full seed, nothing more to do
-    if corner == nil or res == "upgrade" then
+    -- if already there, or upgraded, then nothing more to do
+    if add_to_list(S, corner, list) then
       return list
     end
 
-    local x_dir = sel(corner == 1 or corner == 7, 4, 6)
-    local y_dir = sel(corner == 1 or corner == 3, 2, 8)
+
+    -- determine which directions to check
+    local x_dir
+    local y_dir
+    
+    if corner then
+      x_dir = sel(corner == 1 or corner == 7, 4, 6)
+      y_dir = sel(corner == 1 or corner == 3, 2, 8)
+
+    elseif S.diagonal then
+      each dir in geom.SIDES do
+        local N = S:neighbor(dir)
+
+        if not N then continue end
+
+        if geom.is_horiz(dir) then
+          x_dir = dir
+        else
+          y_dir = dir
+        end
+      end
+
+      assert(x_dir)
+      assert(y_dir)
+
+    else
+      -- a full seed, nothing more to do
+      return
+    end
+
 
     for pass = 1, 2 do
       local dir = sel(pass >= 2, y_dir, x_dir)
@@ -1481,6 +1512,8 @@ function Grower_organic_room(P)
         assert(N)
         assert(seed_usable(N))
       end
+
+      -- FIXME : WRONG FOR S.DIAGONAL CASE !!!
 
       -- pick a new corner which shares an edge with previous one
       local corn_A = 3
