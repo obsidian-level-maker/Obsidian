@@ -93,7 +93,7 @@ static char *codepageToUtf8Heap(const char *cpstr)
         if (retval == NULL)
             __PHYSFS_setError(ERR_OUT_OF_MEMORY);
         else
-            PHYSFS_utf8FromUcs2(wbuf, retval, len * 4);
+            PHYSFS_utf8FromUcs2((PHYSFS_uint16 *) wbuf, retval, len * 4);
         __PHYSFS_smallFree(wbuf);
     } /* if */
     return(retval);
@@ -288,17 +288,20 @@ static int findApiSymbols(void)
     /* Apparently Win9x HAS the Unicode entry points, they just don't WORK. */
     /*  ...so don't look them up unless we're on NT+. (see osHasUnicode.) */
 
-    dll = libUserEnv = LoadLibraryA("userenv.dll");
+    dll = LoadLibraryA("userenv.dll");
+    libUserEnv = (HANDLE) dll;
     if (dll != NULL)
         LOOKUP_NOFALLBACK(GetUserProfileDirectoryW, osHasUnicode);
 
     /* !!! FIXME: what do they call advapi32.dll on Win64? */
-    dll = libAdvApi32 = LoadLibraryA("advapi32.dll");
+    dll = LoadLibraryA("advapi32.dll");
+    libAdvApi32 = (HANDLE) dll;
     if (dll != NULL)
         LOOKUP(GetUserNameW, osHasUnicode);
 
     /* !!! FIXME: what do they call kernel32.dll on Win64? */
-    dll = libKernel32 = LoadLibraryA("kernel32.dll");
+    dll = LoadLibraryA("kernel32.dll");
+    libKernel32 = (HANDLE)dll;
     if (dll != NULL)
     {
         LOOKUP_NOFALLBACK(GetFileAttributesExA, 1);
@@ -974,7 +977,7 @@ int __PHYSFS_platformDeinit(void)
     {
         const HANDLE lib = *(libs[i]);
         if (lib)
-            FreeLibrary(lib);
+            FreeLibrary((HMODULE)lib);
         *(libs[i]) = NULL;
     } /* for */
 
