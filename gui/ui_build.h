@@ -76,7 +76,6 @@ private:
 	static void menu_do_options(Fl_Widget *, void*);
 	static void menu_do_edit_seed(Fl_Widget *, void*);
 	static void menu_do_manage_config(Fl_Widget *, void*);
-	static void menu_do_console(Fl_Widget *, void*);
 };
 
 #endif /* __UI_BUILD_H__ */

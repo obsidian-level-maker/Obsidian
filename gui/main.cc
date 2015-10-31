@@ -834,11 +834,6 @@ int main(int argc, char **argv)
 	main_win->build_box->mini_map->EmptyMap();
 
 
-	ConPrintf("All Globals: @b2table:e:0:0@\n\n");
-
-	ConPrintf("READY\n");
-
-
 	try
 	{
 		// run the GUI until the user quits

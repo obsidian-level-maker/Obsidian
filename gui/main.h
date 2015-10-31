@@ -86,10 +86,7 @@ const char * DLG_OutputFilename(const char *ext);
 void DLG_AboutText(void);
 void DLG_OptionsEditor(void);
 void DLG_ManageConfig(void);
-void DLG_ToggleConsole(void);
 void DLG_EditSeed(void);
-
-void ConPrintf(const char *str, ...);
 
 
 class game_interface_c

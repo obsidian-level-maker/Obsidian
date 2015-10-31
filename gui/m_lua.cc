@@ -68,8 +68,6 @@ int gui_raw_log_print(lua_State *L)
 		const char *res = luaL_checkstring(L,1);
 		SYS_ASSERT(res);
 
-		ConPrintf("%s", res);
-
 		// strip off colorizations
 		if (res[0] == '@' && isdigit(res[1]))
 			res += 2;
@@ -91,9 +89,6 @@ int gui_raw_debug_print(lua_State *L)
 		const char *res = luaL_checkstring(L,1);
 		SYS_ASSERT(res);
 
-		if (debug_onto_console)
-			ConPrintf("%s", res);
-
 		DebugPrintf("%s", res);
 	}
 
@@ -104,15 +99,7 @@ int gui_raw_debug_print(lua_State *L)
 //
 int gui_raw_console_print(lua_State *L)
 {
-	int nargs = lua_gettop(L);
-
-	if (nargs >= 1)
-	{
-		const char *res = luaL_checkstring(L,1);
-		SYS_ASSERT(res);
-
-		ConPrintf("%s", res);
-	}
+	// REMOVED
 
 	return 0;
 }
@@ -825,7 +812,6 @@ static bool Script_CallFunc(const char *func_name, int nresult = 0, const char *
 
 		// this will appear in the log file too
 
-		ConPrintf("\nScript Error: @1%s\n", err_msg);
 		DLG_ShowError("Script Error: %s", err_msg);
 
 		lua_pop(LUA_ST, 2);  // ob_traceback, message
@@ -839,6 +825,7 @@ static bool Script_CallFunc(const char *func_name, int nresult = 0, const char *
 }
 
 
+/* UNUSED
 bool Script_RunString(const char *str, ...)
 {
 	static char buffer[MSG_BUF_LEN];
@@ -881,7 +868,6 @@ bool Script_RunString(const char *str, ...)
 		else
 			err_msg = msg;
 
-		ConPrintf("\nScript Error: @1%s\n", err_msg);
 		LogPrintf("\nScript Error: %s\n", err_msg);
 
 		lua_pop(LUA_ST, 2);  // ob_traceback, message
@@ -891,6 +877,7 @@ bool Script_RunString(const char *str, ...)
 	lua_pop(LUA_ST, 1);  // ob_traceback
 	return true;
 }
+*/
 
 
 static void Script_Require(const char *name)
