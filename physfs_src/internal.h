@@ -33,9 +33,9 @@
 #include <alloca.h>
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// #ifdef __cplusplus
+// extern "C" {
+// #endif
 
 #ifdef __GNUC__
 #define PHYSFS_MINIMUM_GCC_VERSION(major, minor) \
@@ -1486,9 +1486,9 @@ void __PHYSFS_platformReleaseMutex(void *mutex);
  */
 int __PHYSFS_platformSetDefaultAllocator(PHYSFS_Allocator *a);
 
-#ifdef __cplusplus
-}
-#endif
+// #ifdef __cplusplus
+// }
+// #endif
 
 #endif
 

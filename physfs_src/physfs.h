@@ -219,9 +219,9 @@
 // andrewj: added this (for convenience)
 #define PHYSFS_SUPPORTS_ZIP  1
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// #ifdef __cplusplus
+// extern "C" {
+// #endif
 
 #ifndef DOXYGEN_SHOULD_IGNORE_THIS
 #if (defined _MSC_VER)
@@ -2388,9 +2388,9 @@ __EXPORT__ void PHYSFS_utf8FromLatin1(const char *src, char *dst,
 /* Everything above this line is part of the PhysicsFS 2.0 API. */
 
 
-#ifdef __cplusplus
-}
-#endif
+// #ifdef __cplusplus
+// }
+// #endif
 
 #endif  /* !defined _INCLUDE_PHYSFS_H_ */
 
