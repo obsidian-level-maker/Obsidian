@@ -7,8 +7,6 @@
  *   by Gilles Vollant.
  */
 
-#if (defined PHYSFS_SUPPORTS_ZIP)
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -225,7 +223,7 @@ static PHYSFS_sint64 ZIP_read(fvoid *opaque, void *buf,
 
     else
     {
-        finfo->stream.next_out = buf;
+        finfo->stream.next_out = (Bytef*) buf;
         finfo->stream.avail_out = objSize * objCount;
 
         while (retval < maxread)
@@ -399,7 +397,7 @@ static PHYSFS_sint64 zip_find_end_of_central_dir(void *in, PHYSFS_sint64 *len)
      *  and call it a corrupted zipfile.
      */
 
-    if (sizeof (buf) < filelen)
+    if ((PHYSFS_sint64)sizeof (buf) < filelen)
     {
         filepos = filelen - sizeof (buf);
         maxread = sizeof (buf);
@@ -1208,7 +1206,7 @@ static PHYSFS_sint32 zip_find_start_of_dir(ZIPinfo *info, const char *path,
 static void doEnumCallback(PHYSFS_EnumFilesCallback cb, void *callbackdata,
                            const char *odir, const char *str, PHYSFS_sint32 ln)
 {
-    char *newstr = __PHYSFS_smallAlloc(ln + 1);
+    char *newstr = (char *)__PHYSFS_smallAlloc(ln + 1);
     if (newstr == NULL)
         return;
 
@@ -1465,8 +1463,6 @@ const PHYSFS_Archiver __PHYSFS_Archiver_ZIP =
     ZIP_fileLength,         /* fileLength() method     */
     ZIP_fileClose           /* fileClose() method      */
 };
-
-#endif  /* defined PHYSFS_SUPPORTS_ZIP */
 
 /* end of zip.c ... */
 
