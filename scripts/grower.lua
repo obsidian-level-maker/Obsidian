@@ -1501,8 +1501,6 @@ function Grower_organic_room(P)
         assert(seed_usable(N))
       end
 
-      -- FIXME : WRONG FOR S.DIAGONAL CASE !!!
-
       -- pick a new corner which shares an edge with previous one
       local corn_A = 3
       local corn_B = 1
@@ -1516,7 +1514,7 @@ function Grower_organic_room(P)
       -- pick new type of corner [ often none ]
       local new_corn = nil
 
-      if (corn_A or corn_B) and rand.odds(66) then
+      if (corn_A or corn_B) and rand.odds(66*0) then  --!!!!! FIXME
         if corn_A and corn_B then
           new_corn = rand.sel(50, corn_A, corn_B)
         else
