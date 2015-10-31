@@ -649,6 +649,7 @@ function ob_load_all_games()
   -- each game in list do
   --  ob_load_game(dir, game)
   --end
+  -- TODO support OB_CONFIG.onlygame
   ob_load_game(dir, "doom")
 
   if table.empty(OB_GAMES) then
