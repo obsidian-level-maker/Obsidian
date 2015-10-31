@@ -929,14 +929,9 @@ void Script_LoadFile(const char *filename)
 }
 
 
-void Script_Open(const char *game_name)
+void Script_Open()
 {
-	// set the 'game_dir' global var
-
-	game_dir = StringPrintf("%s/games/%s", install_dir, game_name);
-
 	LogPrintf("\n--- OPENING LUA VM ---\n\n");
-	LogPrintf("game_dir: %s\n\n", game_dir);
 
 
 	// create Lua state
@@ -982,8 +977,6 @@ void Script_Close()
 		lua_close(LUA_ST);
 
 	LUA_ST = NULL;
-
-	game_dir = NULL;
 
 	LogPrintf("\n--- CLOSED LUA VM ---\n\n");
 }
