@@ -50,10 +50,13 @@ cp -av lua_src/*.[chr]* $dest/lua_src
 cp -av lua_src/COPY* $dest/lua_src
 
 mkdir $dest/glbsp_src
-cp -av glbsp_src/*.[chr]* $dest/glbsp_src
+cp -av glbsp_src/*.[chrt]* $dest/glbsp_src
 
 mkdir $dest/ajpoly_src
-cp -av ajpoly_src/*.[chr]* $dest/ajpoly_src
+cp -av ajpoly_src/*.[chrt]* $dest/ajpoly_src
+
+mkdir $dest/physfs_src
+cp -av physfs_src/*.[chrt]* $dest/physfs_src
 
 mkdir $dest/tools
 mkdir $dest/tools/qsavetex
