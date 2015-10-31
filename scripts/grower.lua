@@ -564,6 +564,30 @@ end
 
 
 
+function Grower_make_areas(temp_areas)
+  each T in temp_areas do
+    local area = AREA_CLASS.new("void")
+
+    area.seeds = T.seeds
+
+    if T.room then
+      area.mode = "room"
+
+      area.svolume = 0  -- FIXME: can be used too early
+
+      T.room:add_area(area)
+    end
+
+    -- install into seeds
+    each S in area.seeds do
+      S.area = area
+      S.room = T.room
+    end
+  end
+end
+
+
+
 function Grower_grow_trunk(is_first)
   --
   --  This builds a whole "trunk", a group of connected rooms.
@@ -1374,6 +1398,62 @@ function Grower_organic_room(P)
   end
 
 
+  local function check_enough_room()
+    cur_area = nil
+
+    local sx1 = P.S.sx
+    local sy1 = P.S.sy
+    local sx2 = sx1
+    local sy2 = sy1
+
+    local dx, dy = geom.delta(P.dir)
+
+    if geom.is_corner(P.dir) then
+      -- diagonal : check 3x3 seeds, the sprout is one corner
+
+      if dx > 0 then sx2 = sx2 + 2 else sx1 = sx1 - 2 end
+      if dy > 0 then sy2 = sy2 + 2 else sy1 = sy1 - 2 end
+
+    else
+      -- straight : check 3x3 seed just beyond the sprout
+
+      sx1 = sx1 - 1 + 2 * dx
+      sy1 = sy1 - 1 + 2 * dy
+
+      sx2 = sx1 + 2
+      sy2 = sy1 + 2
+
+      if P.long >= 2 then
+        local extra = int(P.long / 2)
+
+        if geom.is_vert(P.dir) then
+          sx1 = sx1 - extra
+          sx2 = sx2 + extra
+        else
+          sy1 = sy1 - extra
+          sy2 = sy2 + extra
+        end
+      end
+    end
+
+    for x = sx1, sx2 do
+    for y = sy1, sy2 do
+      if not Seed_valid(x, y) then return false end
+      if Seed_over_boundary(x, y) then return false end
+
+      local S = SEEDS[x][y]
+
+      -- ignore the sprout (for diagonals)
+      if S == P.S then continue end
+
+      if raw_blocked(S) or S.diagonal then return false end
+    end
+    end
+
+    return true -- OK
+  end
+
+
   local function is_sharp_poker(S)
     local block_count = 0
 
@@ -1546,62 +1626,6 @@ function Grower_organic_room(P)
   end
 
 
-  local function check_enough_room()
-    cur_area = nil
-
-    local sx1 = P.S.sx
-    local sy1 = P.S.sy
-    local sx2 = sx1
-    local sy2 = sy1
-
-    local dx, dy = geom.delta(P.dir)
-
-    if geom.is_corner(P.dir) then
-      -- diagonal : check 3x3 seeds, the sprout is one corner
-
-      if dx > 0 then sx2 = sx2 + 2 else sx1 = sx1 - 2 end
-      if dy > 0 then sy2 = sy2 + 2 else sy1 = sy1 - 2 end
-
-    else
-      -- straight : check 3x3 seed just beyond the sprout
-
-      sx1 = sx1 - 1 + 2 * dx
-      sy1 = sy1 - 1 + 2 * dy
-
-      sx2 = sx1 + 2
-      sy2 = sy1 + 2
-
-      if P.long >= 2 then
-        local extra = int(P.long / 2)
-
-        if geom.is_vert(P.dir) then
-          sx1 = sx1 - extra
-          sx2 = sx2 + extra
-        else
-          sy1 = sy1 - extra
-          sy2 = sy2 + extra
-        end
-      end
-    end
-
-    for x = sx1, sx2 do
-    for y = sy1, sy2 do
-      if not Seed_valid(x, y) then return false end
-      if Seed_over_boundary(x, y) then return false end
-
-      local S = SEEDS[x][y]
-
-      -- ignore the sprout (for diagonals)
-      if S == P.S then continue end
-
-      if raw_blocked(S) or S.diagonal then return false end
-    end
-    end
-
-    return true -- OK
-  end
-
-
   local function seed_spot_from_sprout(A)
     -- TODO : support P.long > 1
 
@@ -1625,6 +1649,7 @@ function Grower_organic_room(P)
       seeds = {}
       must_edge = {}
       want_vol = rand.pick({ 3,6,9 })
+      room = cur_room
     }
 
     cur_area.name = string.format("ORGANIC_%d", cur_area.id)
@@ -2097,29 +2122,6 @@ stderrf("a/b/a @ %s : %d %d / %d %d %d\n", S.name,
   end
 
 
-  local function make_real_areas()
-    each T in temp_areas do
-      local area = AREA_CLASS.new("void")
-
-      area.seeds = T.seeds
-
-      if T.room then
-        area.mode = "room"
-
-area.svolume = 0  -- FIXME
-
-        T.room:add_area(area)
-      end
-
-      -- install into seeds
-      each S in area.seeds do
-        S.area = area
-        S.room = T.room
-      end
-    end
-  end
-
-
   ---| Grower_fill_gaps |---
 
   create_temp_areas()
@@ -2130,7 +2132,7 @@ area.svolume = 0  -- FIXME
 
   smoothen_out_pokers()
 
-  make_real_areas()
+  Grower_make_areas(temp_areas)
 end
 
 
