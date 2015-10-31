@@ -87,7 +87,7 @@ static void *DIR_openArchive(const char *name, int forWriting)
     BAIL_IF_MACRO(!DIR_isArchive(name, forWriting),
                     ERR_UNSUPPORTED_ARCHIVE, 0);
 
-    retval = allocator.Malloc(namelen + seplen + 1);
+    retval = (char *) allocator.Malloc(namelen + seplen + 1);
     BAIL_IF_MACRO(retval == NULL, ERR_OUT_OF_MEMORY, NULL);
 
         /* make sure there's a dir separator at the end of the string */

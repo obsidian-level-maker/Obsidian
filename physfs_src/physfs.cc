@@ -661,7 +661,7 @@ static char *calculateBaseDir(const char *argv0)
 {
     char *retval = NULL;
     const char *dirsep = NULL;
-    char *ptr = NULL;
+    const char *ptr = NULL;
 
     /* Give the platform layer first shot at this. */
     retval = __PHYSFS_platformCalcBaseDir(argv0);
@@ -679,7 +679,7 @@ static char *calculateBaseDir(const char *argv0)
         ptr = strstr(argv0, dirsep);
         if (ptr != NULL)
         {
-            char *p = ptr;
+            const char *p = ptr;
             while (p != NULL)
             {
                 ptr = p;
@@ -1438,7 +1438,7 @@ const char *PHYSFS_getRealDir(const char *_fname)
 
     BAIL_IF_MACRO(_fname == NULL, ERR_INVALID_ARGUMENT, NULL);
     len = strlen(_fname) + 1;
-    fname = __PHYSFS_smallAlloc(len);
+    fname = (char *)__PHYSFS_smallAlloc(len);
     BAIL_IF_MACRO(fname == NULL, ERR_OUT_OF_MEMORY, NULL);
     if (sanitizePlatformIndependentPath(_fname, fname))
     {

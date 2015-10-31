@@ -246,7 +246,7 @@ char *__PHYSFS_platformCalcBaseDir(const char *argv0)
         const unsigned long long pid = (unsigned long long) getpid();
         char path[64];
         const int rc = (int) snprintf(path,sizeof(path),"/proc/%llu/exe",pid);
-        if ( (rc > 0) && (rc < sizeof(path)) )
+        if ( (rc > 0) && (rc < (int)sizeof(path)) )
             retval = readSymLink(path);
     } /* if */
 
