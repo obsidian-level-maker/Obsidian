@@ -218,6 +218,7 @@
 
 // andrewj: added this (for convenience)
 #define PHYSFS_SUPPORTS_ZIP  1
+#define PHYSFS_NO_CDROM_SUPPORT  1
 
 // #ifdef __cplusplus
 // extern "C" {
