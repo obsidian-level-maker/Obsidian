@@ -2298,8 +2298,6 @@ function Quest_select_textures()
   gui.debugf("cave_volume : %d\n", cave_volume)
 
 
-  LEVEL.zone_fence_mat = rand.pick({"BIGBRIK1", "BIGBRIK2", "STONE5", "STONE7", "BROWNGRN"})
-
   LEVEL.cliff_mat = "ASHWALL7"  -- FIXME
 
 
@@ -2325,9 +2323,9 @@ function Quest_select_textures()
       Z.hall_ceil  = rand.key_by_probs(theme.ceilings)
     end
 
-    if THEME.fences then
-      Z.fence_mat = rand.key_by_probs(THEME.fences)
-    end
+    assert(THEME.fences)
+
+    Z.fence_mat = rand.key_by_probs(THEME.fences)
 
     Z.corner_mats = Z.building_theme.corners or THEME.corners
   end
@@ -2350,11 +2348,13 @@ function Quest_choose_themes()
   --
 
   local function match_level_theme(name)
-    local kind = string.match(name, "([%w]+)_")
+    if string.match(name, "^generic") or
+       string.match(name, "^" .. LEVEL.theme_name .. "_")
+    then
+      return true
+    end
 
-    if string.match(name, "DEFAULT") then return false end
-
-    return (kind == LEVEL.theme_name) or (kind == "generic")
+    return false
   end
 
 
