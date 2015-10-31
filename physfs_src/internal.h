@@ -1486,6 +1486,11 @@ void __PHYSFS_platformReleaseMutex(void *mutex);
  */
 int __PHYSFS_platformSetDefaultAllocator(PHYSFS_Allocator *a);
 
+// andrewj: declare these here in a header (to fix linking problem)
+extern const PHYSFS_ArchiveInfo  __PHYSFS_ArchiveInfo_ZIP;
+extern const PHYSFS_Archiver     __PHYSFS_Archiver_ZIP;
+extern const PHYSFS_Archiver     __PHYSFS_Archiver_DIR;
+
 // #ifdef __cplusplus
 // }
 // #endif
