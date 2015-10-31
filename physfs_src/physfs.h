@@ -216,6 +216,9 @@
 #ifndef _INCLUDE_PHYSFS_H_
 #define _INCLUDE_PHYSFS_H_
 
+// andrewj: added this (for convenience)
+#define PHYSFS_SUPPORTS_ZIP  1
+
 #ifdef __cplusplus
 extern "C" {
 #endif
