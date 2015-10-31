@@ -1482,20 +1482,8 @@ function Grower_organic_room(P)
       y_dir = sel(corner == 1 or corner == 3, 2, 8)
 
     elseif S.diagonal then
-      each dir in geom.SIDES do
-        local N = S:neighbor(dir)
-
-        if not N then continue end
-
-        if geom.is_horiz(dir) then
-          x_dir = dir
-        else
-          y_dir = dir
-        end
-      end
-
-      assert(x_dir)
-      assert(y_dir)
+      x_dir = sel(S:neighbor(6, "NODIR") == "NODIR", 4, 6)
+      y_dir = sel(S:neighbor(8, "NODIR") == "NODIR", 2, 8)
 
     else
       -- a full seed, nothing more to do
