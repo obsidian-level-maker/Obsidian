@@ -1374,7 +1374,7 @@ function Grower_organic_room(P)
   local cur_room
   local cur_area
 
-  local temp_area_list = {}
+  local temp_areas = {}
 
 
   local function set_seed(S, A)
@@ -1658,7 +1658,7 @@ function Grower_organic_room(P)
       cur_area.want_vol = cur_area.want_vol + 9
     end
 
-    if table.empty(temp_area_list) then
+    if table.empty(temp_areas) then
       seed_spot_from_sprout(cur_area)
     else
       seed_spot_off_existing_area(cur_area)
@@ -1681,6 +1681,8 @@ function Grower_organic_room(P)
 ---  while cur_room.svolume < 21 do
     grow_an_area()
 ---  end
+
+  Grower_make_areas(temp_areas)
 
   return true
 end
