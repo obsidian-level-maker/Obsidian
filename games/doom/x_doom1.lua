@@ -243,7 +243,7 @@ ULTDOOM.THEMES =
 
 ------ EPISODE 1 : Tech Bases ----------------------
 
-  tech_DEFAULTS =
+  tech =
   {
     liquids =
     {
@@ -409,8 +409,8 @@ ULTDOOM.THEMES =
 
   tech_Shiny =
   {
-    prob = 10
     kind = "building"
+    prob = 10
 
     walls =
     {
@@ -435,8 +435,8 @@ ULTDOOM.THEMES =
 
   tech_Gray =
   {
-    prob = 20
     kind = "building"
+    prob = 20
 
     walls =
     {
@@ -562,7 +562,7 @@ ULTDOOM.THEMES =
 
   -- Deimos theme by Chris Pisarczyk
 
-  deimos_DEFAULTS =
+  deimos =
   {
     liquids =
     {
@@ -725,8 +725,8 @@ ULTDOOM.THEMES =
 
   deimos_Lab =
   {
-    prob = 10
     kind = "building"
+    prob = 10
 
     walls =
     {
@@ -916,7 +916,7 @@ ULTDOOM.THEMES =
 
 ----- EPISODE 3 : Hell ---------------------------
 
-  hell_DEFAULTS =
+  hell =
   {
     --  Water is seen in a few locations in episode 3 -Chris
 
@@ -968,8 +968,8 @@ ULTDOOM.THEMES =
 
   hell_Marble =
   {
-    prob = 90
     kind = "building"
+    prob = 90
 
     walls =
     {
@@ -1023,8 +1023,8 @@ ULTDOOM.THEMES =
 
   hell_Wood =
   {
-    prob = 20
     kind = "building"
+    prob = 20
 
     walls =
     {
@@ -1051,8 +1051,8 @@ ULTDOOM.THEMES =
 
   hell_Skin =
   {
-    prob = 20
     kind = "building"
+    prob = 20
 
     walls =
     {
@@ -1088,8 +1088,8 @@ ULTDOOM.THEMES =
 
   hell_Hot =
   {
-    prob = 60
     kind = "building"
+    prob = 60
 
     walls =
     {
@@ -1275,7 +1275,7 @@ ULTDOOM.THEMES =
   -- Thy Flesh Consumed by Chris Pisarczyk
   -- Basically a modified version of doom_hell1 to match id's E4 better
 
-  flesh_DEFAULTS =
+  flesh =
   {
     liquids =
     {
@@ -1326,8 +1326,8 @@ ULTDOOM.THEMES =
 
   flesh_Room =
   {
-    prob = 90
     kind = "building"
+    prob = 90
 
     walls =
     {
@@ -1384,8 +1384,8 @@ ULTDOOM.THEMES =
 
   flesh_Wood =
   {
-    prob = 50
     kind = "building"
+    prob = 50
 
     walls =
     {
@@ -1419,8 +1419,8 @@ ULTDOOM.THEMES =
 
   flesh_Marble =
   {
-    prob = 30
     kind = "building"
+    prob = 30
 
     walls =
     {

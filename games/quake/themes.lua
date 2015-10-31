@@ -74,7 +74,7 @@ QUAKE.THEMES =
 
   ----- TECH BASE ----------------------------------
 
-  q1_tech_DEFAULTS =
+  q1_tech =
   {
     worldtype = 2
 
@@ -164,7 +164,7 @@ QUAKE.THEMES =
 
   ----- CASTLE ----------------------------------
 
-  q1_castle_DEFAULTS =
+  q1_castle =
   {
     worldtype = 0
 
@@ -221,19 +221,6 @@ QUAKE.THEMES =
   }
 
 
-  q1_castle_Cave =
-  {
-    kind = "cave"
-
-    naturals =
-    {
-      ROCK1_2=10, ROCK5_2=40, ROCK3_8=20,
-      WALL11_2=10, GROUND1_6=10, GROUND1_7=10,
-      GRAVE01_3=10, WSWAMP1_2=20, 
-    }
-  }
-
-
   q1_castle_Outdoors =
   {
     kind = "outdoors"
@@ -251,6 +238,19 @@ QUAKE.THEMES =
       GROUND1_7=30, GROUND1_8=20,
       ROCK3_7=50, ROCK3_8=50, ROCK4_2=50,
       VINE1_2=50, 
+    }
+  }
+
+
+  q1_castle_Cave =
+  {
+    kind = "cave"
+
+    naturals =
+    {
+      ROCK1_2=10, ROCK5_2=40, ROCK3_8=20,
+      WALL11_2=10, GROUND1_6=10, GROUND1_7=10,
+      GRAVE01_3=10, WSWAMP1_2=20, 
     }
   }
 }

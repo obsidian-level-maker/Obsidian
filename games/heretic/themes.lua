@@ -2,7 +2,7 @@
 --  HERETIC THEMES
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2006-2012 Andrew Apted
+--  Copyright (C) 2006-2015 Andrew Apted
 --  Copyright (C)      2008 Sam Trenholme
 --
 --  This program is free software; you can redistribute it and/or
@@ -55,7 +55,7 @@ HERETIC.THEMES =
 
   ---- URBAN THEME ---------------------------------
 
-  h_urban_DEFAULTS =
+  h_urban =
   {
     liquids =
     {
@@ -202,7 +202,7 @@ HERETIC.THEMES =
 
   ---- CASTLE THEME --------------------------------
 
-  h_castle_DEFAULTS =
+  h_castle =
   {
     liquids =
     {

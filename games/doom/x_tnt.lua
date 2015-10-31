@@ -168,7 +168,7 @@ TNT.MATERIALS =
 
 TNT.THEMES =
 {
-  egypt_DEFAULTS =
+  egypt =
   {
     liquids =
     {

@@ -463,7 +463,7 @@ function Levels_choose_themes()
 
     LEV.theme_name = name
 
-    LEV.theme = GAME.THEMES[name .. "_DEFAULTS"]
+    LEV.theme = GAME.THEMES[name]
 
     if not LEV.theme then
       error("Unknown theme : " .. name)

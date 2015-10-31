@@ -2,7 +2,7 @@
 --  DOOM THEMES
 --------------------------------------------------------------------
 --
---  Copyright (C) 2006-2014 Andrew Apted
+--  Copyright (C) 2006-2015 Andrew Apted
 --  Copyright (C) 2011,2014 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
@@ -51,6 +51,8 @@ DOOM.THEMES =
   }
 
 
+-----  GENERIC STUFF  ------------------------------
+
   generic_Stairwell =
   {
     kind = "stairwell"
@@ -71,9 +73,9 @@ DOOM.THEMES =
   }
 
 
------  TECH BASE  --------------------------------
+-----  TECH BASES  --------------------------------
 
-  tech_DEFAULTS =
+  tech =
   {
     liquids =
     {
@@ -167,8 +169,8 @@ DOOM.THEMES =
 
   tech_Startan =
   {
-    prob = 50
     kind = "building"
+    prob = 50
 
     walls =
     {
@@ -220,10 +222,9 @@ DOOM.THEMES =
 
   fixme_tech_Stargray =
   {
+--- kind = "building"
     rarity = "minor"
-
-    prob = 50
-    kind = "building"
+--- prob = 50
 
     walls =
     {
@@ -292,8 +293,8 @@ DOOM.THEMES =
 
   tech_Metal =
   {
-    prob = 50
     kind = "building"
+    prob = 50
 
     walls =
     {
@@ -329,8 +330,8 @@ DOOM.THEMES =
 
   tech_Gray =
   {
-    prob = 25
     kind = "building"
+    prob = 25
 
     walls =
     {
@@ -473,7 +474,7 @@ DOOM.THEMES =
 ----- HELL / GOTHIC -----------------------------
 
 
-  hell_DEFAULTS =
+  hell =
   {
     liquids =
     {
@@ -531,8 +532,8 @@ DOOM.THEMES =
 
   hell_Marble =
   {
-    prob = 100
     kind = "building"
+    prob = 100
 
     walls =
     {
@@ -566,8 +567,8 @@ DOOM.THEMES =
 
   hell_Hotbrick =
   {
-    prob = 100
     kind = "building"
+    prob = 100
 
     walls =
     {
@@ -601,8 +602,8 @@ DOOM.THEMES =
   -- Hmmm, probably better as a 'speciality' theme...
   hell_Viney =
   {
-    prob = 20
     kind = "building"
+    prob = 20
 
     walls =
     {
@@ -630,8 +631,8 @@ DOOM.THEMES =
 
   hell_Stone =
   {
-    prob = 50
     kind = "building"
+    prob = 50
 
     walls =
     {
@@ -656,8 +657,8 @@ DOOM.THEMES =
   -- TODO: this also probably better as 'speciality' theme
   hell_Wood =
   {
-    prob = 40
     kind = "building"
+    prob = 40
 
     walls =
     {
@@ -687,8 +688,8 @@ DOOM.THEMES =
 
   hell_Skin =
   {
-    prob = 20
     kind = "building"
+    prob = 20
 
     walls =
     {
@@ -812,7 +813,7 @@ DOOM.THEMES =
 ----  URBAN / CITY / EARTH  -----------------------
 
 
-  urban_DEFAULTS =
+  urban =
   {
     liquids =
     {
@@ -1086,7 +1087,7 @@ DOOM.THEMES =
 ----  Wolfenstein 3D Secret Levels  ------------
 
 
-  wolf_DEFAULTS =
+  wolf =
   {
     prob = 10
 
