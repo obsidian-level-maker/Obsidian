@@ -69,7 +69,7 @@ static char *unicodeToUtf8Heap(const WCHAR *w_str)
     {
         void *ptr = NULL;
         const PHYSFS_uint64 len = (wStrLen(w_str) * 4) + 1;
-        retval = allocator.Malloc(len);
+        retval = (char *)allocator.Malloc(len);
         BAIL_IF_MACRO(retval == NULL, ERR_OUT_OF_MEMORY, NULL);
         PHYSFS_utf8FromUcs2((const PHYSFS_uint16 *) w_str, retval, len);
         ptr = allocator.Realloc(retval, strlen(retval) + 1); /* shrink. */
@@ -146,7 +146,7 @@ static HANDLE (WINAPI *pCreateFileW)
 static BOOL WINAPI fallbackGetUserNameW(LPWSTR buf, LPDWORD len)
 {
     const DWORD cplen = *len;
-    char *cpstr = __PHYSFS_smallAlloc(cplen);
+    char *cpstr = (char *)__PHYSFS_smallAlloc(cplen);
     BOOL retval = GetUserNameA(cpstr, len);
     if (buf != NULL)
         MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, cpstr, cplen, buf, *len);
