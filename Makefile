@@ -34,7 +34,7 @@ FLTK_CONFIG=fltk-config
 FLTK_FLAGS=$(shell $(FLTK_CONFIG) --cflags)
 FLTK_LIBS=$(shell $(FLTK_CONFIG) --use-images --ldflags)
 
-CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Iglbsp_src -Iajpoly_src $(FLTK_FLAGS)
+CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Iglbsp_src -Iajpoly_src -Iphysfs_src $(FLTK_FLAGS)
 LDFLAGS=-L/usr/X11R6/lib
 LIBS=-lm -lz $(FLTK_LIBS)
 
@@ -179,11 +179,28 @@ $(OBJ_DIR)/ajpoly/%.o: ajpoly_src/%.cc
 	$(CXX) $(AJPOLY_CXXFLAGS) -o $@ -c $< 
 
 
+#----- PhysFS Objects ---------------------------------------------
+
+PHYSFS_OBJS= \
+	$(OBJ_DIR)/physfs/byteorder.o  \
+	$(OBJ_DIR)/physfs/physfs.o  \
+	$(OBJ_DIR)/physfs/unicode.o  \
+	$(OBJ_DIR)/physfs/arch_dir.o   \
+	$(OBJ_DIR)/physfs/arch_zip.o   \
+	$(OBJ_DIR)/physfs/sys_unix.o   \
+	$(OBJ_DIR)/physfs/sys_posix.o
+
+PHYSFS_CXXFLAGS=$(OPTIMISE) -Wall
+
+$(OBJ_DIR)/physfs/%.o: physfs_src/%.cc
+	$(CXX) $(PHYSFS_CXXFLAGS) -o $@ -c $< 
+
+
 #----- Targets ----------------------------------------------------
 
 all: $(PROGRAM)
 
-$(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(AJPOLY_OBJS)
+$(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(AJPOLY_OBJS) $(PHYSFS_OBJS)
 	$(CXX) -Wl,--warn-common $^ -o $@ $(LDFLAGS) $(LIBS)
 
 clean:
@@ -191,6 +208,7 @@ clean:
 	rm -f $(OBJ_DIR)/lua/*.o
 	rm -f $(OBJ_DIR)/glbsp/*.o
 	rm -f $(OBJ_DIR)/ajpoly/*.o
+	rm -f $(OBJ_DIR)/physfs/*.o
 
 halfclean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS

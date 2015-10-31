@@ -34,7 +34,7 @@ ZLIB_FLAGS=-I$(ZLIB_DIR)
 ZLIB_LIBS=$(ZLIB_DIR)/libz.a
 
 CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) \
-         -Ilua_src -Iglbsp_src -Iajpoly_src \
+         -Ilua_src -Iglbsp_src -Iajpoly_src -Iphysfs_src \
 	 $(FLTK_FLAGS) $(ZLIB_FLAGS)
 
 LDFLAGS=-static-libgcc -static-libstdc++
@@ -185,6 +185,22 @@ $(OBJ_DIR)/ajpoly/%.o: ajpoly_src/%.cc
 	$(CXX) $(AJPOLY_CXXFLAGS) -o $@ -c $< 
 
 
+#----- PhysFS Objects ---------------------------------------------
+
+PHYSFS_OBJS= \
+	$(OBJ_DIR)/physfs/byteorder.o  \
+	$(OBJ_DIR)/physfs/physfs.o  \
+	$(OBJ_DIR)/physfs/unicode.o  \
+	$(OBJ_DIR)/physfs/arch_dir.o   \
+	$(OBJ_DIR)/physfs/arch_zip.o   \
+	$(OBJ_DIR)/physfs/sys_win.o
+
+PHYSFS_CXXFLAGS=$(OPTIMISE) -Wall $(ZLIB_FLAGS)
+
+$(OBJ_DIR)/physfs/%.o: physfs_src/%.cc
+	$(CXX) $(PHYSFS_CXXFLAGS) -o $@ -c $< 
+
+
 #----- Targets ----------------------------------------------------
 
 all: $(PROGRAM)
@@ -194,8 +210,9 @@ clean:
 	rm -f $(OBJ_DIR)/lua/*.o
 	rm -f $(OBJ_DIR)/glbsp/*.o
 	rm -f $(OBJ_DIR)/ajpoly/*.o
+	rm -f $(OBJ_DIR)/physfs/*.o
 
-$(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(AJPOLY_OBJS)
+$(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS) $(AJPOLY_OBJS) $(PHYSFS_OBJS)
 	$(CXX) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 stripped: $(PROGRAM)
