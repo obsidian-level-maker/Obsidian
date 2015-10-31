@@ -47,7 +47,10 @@ static bool has_added_buttons = false;
 
 static std::vector<std::string> * conf_line_buffer;
 
-extern bool debug_onto_console;
+static const char *import_dir;
+
+void Script_Load(const char *name);
+
 
 
 // random number generator
@@ -166,6 +169,38 @@ int gui_set_colormap(lua_State *L)
 
 		lua_pop(L, 1);
 	}
+
+	return 0;
+}
+
+
+// LUA: import(script_name)
+//
+int gui_import(lua_State *L)
+{
+	if (! import_dir or ! import_dir[0])
+	{
+		return luaL_error(L, "gui.import: no directory set!");
+	}
+
+	const char *script_name = luaL_checkstring(L, 1);
+
+	Script_Load(script_name);
+
+	return 0;
+}
+
+
+// LUA: set_import_dir(dir_name)
+//
+int gui_set_import_dir(lua_State *L)
+{
+	const char *dir_name = luaL_checkstring(L, 1);
+
+	if (import_dir)
+		StringFree(import_dir);
+
+	import_dir = StringDup(dir_name);
 
 	return 0;
 }
@@ -639,6 +674,8 @@ static const luaL_Reg gui_script_funcs[] =
 	{ "random",      gui_random },
 
 	// file & directory functions
+	{ "import",          gui_import },
+	{ "set_import_dir",  gui_set_import_dir },
 	{ "get_install_dir", gui_get_install_dir },
 	{ "locate_data",     gui_locate_data },
 	{ "mkdir",           gui_mkdir },
@@ -749,23 +786,6 @@ static int p_init_lua(lua_State *L)
 	lua_gc(L, LUA_GCRESTART, 0);
 
 	return 0;
-}
-
-
-static void Script_SetScriptPath(lua_State *L, const char *path)
-{
-	LogPrintf("script_path: [%s]\n", path);
-
-	lua_getglobal(L, "package");
-
-	if (lua_type(L, -1) == LUA_TNIL)
-		Main_FatalError("Script problem: no 'package' module!");
-
-	lua_pushstring(L, path);
-
-	lua_setfield(L, -2, "path");
-
-	lua_pop(L, 1);
 }
 
 
@@ -880,27 +900,21 @@ bool Script_RunString(const char *str, ...)
 */
 
 
-static void Script_Require(const char *name)
+void Script_Load(const char *script_name)
 {
-	char require_text[128];
-	sprintf(require_text, "require '%s'", name);
+	SYS_ASSERT(import_dir);
+	SYS_ASSERT(import_dir[0]);
 
-	int status = luaL_loadstring(LUA_ST, require_text);
-
-	if (status == 0)
-		status = lua_pcall(LUA_ST, 0, 0, 0);
-
-	if (status != 0)
+	// add extension if missing
+	if (! HasExtension(script_name))
 	{
-		const char *msg = lua_tolstring(LUA_ST, -1, NULL);
-
-		Main_FatalError("Unable to load script '%s.lua'\n%s", name, msg);
+		script_name = ReplaceExtension(script_name, "lua");
 	}
-}
 
+	char *filename = StringPrintf("%s/%s/%s", install_dir, import_dir, script_name);
 
-void Script_LoadFile(const char *filename)
-{
+	// DebugPrintf("  loading script: '%s'\n", filename);
+
 	int status = luaL_loadfile(LUA_ST, filename);
 
 	if (status == 0)
@@ -910,9 +924,10 @@ void Script_LoadFile(const char *filename)
 	{
 		const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-		Main_FatalError("Unable to load script '%s'\n%s",
-				fl_filename_name(filename), msg);
+		Main_FatalError("Unable to load script '%s/%s'\n%s", import_dir, script_name, msg);
 	}
+
+	StringFree(filename);
 }
 
 
@@ -938,18 +953,16 @@ void Script_Open()
 
 	LogPrintf("Loading main script: oblige.lua\n");
 
-	const char *script_path = StringPrintf("%s/scripts/?.lua", install_dir);
+	import_dir = StringDup("scripts");
 
-	Script_SetScriptPath(LUA_ST, script_path);
-
-	Script_Require("oblige");
-
-	LogPrintf("DONE.\n\n");
+	Script_Load("oblige.lua");
 
 	has_loaded = true;
+	LogPrintf("DONE.\n\n");
 
 
-	// ob_init() will load all the game-specific scripts (etc)
+	// ob_init() will load all the game-specific scripts, engine scripts, and
+	// module scripts.
 
 	if (! Script_CallFunc("ob_init"))
 		Main_FatalError("The ob_init script failed.\n");

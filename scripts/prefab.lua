@@ -131,28 +131,29 @@ WADFAB_DELTA_12  = 997
 
 function Fab_load_all_definitions()
 
-  local function load_from_subdir(main_dir, subdir)
-    OB_IMPORT_DIR = main_dir .. "/" .. subdir
+  local function load_from_subdir(main_dir, top_level, sub)
+    local dir = main_dir .. "/" .. sub
+    local list, err = gui.scan_directory(dir, "*.lua")
 
-    local list, err = gui.scan_directory(OB_IMPORT_DIR, "*.lua")
+    gui.set_import_dir(top_level .. "/" .. sub)
 
     if list == nil then
-      gui.printf("Failed to scan prefab directory '%s'\n", subdir)
+      gui.printf("Failed to scan prefab directory '%s'\n", sub)
 
     else
       each filename in list do
-        gui.debugf("Loading %s/%s\n", subdir, filename)
+        gui.debugf("Loading %s/%s\n", sub, filename)
 
         gui.import(filename)
       end
     end
 
-    OB_IMPORT_DIR = nil
+    gui.set_import_dir("")
   end
 
 
-  local function visit_dir(sub_name)
-    local dir = gui.get_install_dir() .. "/" .. sub_name
+  local function visit_dir(top_level)
+    local dir = gui.get_install_dir() .. "/" .. top_level
 
     gui.printf("Loading prefabs from: [%s]\n", dir)
 
@@ -164,7 +165,7 @@ function Fab_load_all_definitions()
     end
 
     each sub in subdirs do
-      load_from_subdir(dir, sub)
+      load_from_subdir(dir, top_level, sub)
     end
 
     -- give each loaded definition a 'dir_name' field.
@@ -186,7 +187,7 @@ function Fab_load_all_definitions()
   PREFABS = {}
 
   visit_dir("prefabs")
-  visit_dir("games/" .. assert(GAME.game_dir) .. "/prefabs")
+-- visit_dir("games/" .. assert(GAME.game_dir) .. "/prefabs")
 
   table.expand_templates(PREFABS)
 end

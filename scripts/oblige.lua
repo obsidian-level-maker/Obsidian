@@ -18,28 +18,6 @@
 --
 ------------------------------------------------------------------------
 
-OB_IMPORT_DIR = gui.get_install_dir() .. "/scripts"
-
-gui.import = function(filename)
-  assert(OB_IMPORT_DIR)
-
-  -- add extension if missing
-  if string.match(filename, "%.") == nil then
-    filename = filename .. ".lua"
-  end
-
-  filename = OB_IMPORT_DIR .. "/" .. filename
-
-  local func, err = loadfile(filename)
-
-  if func == nil then
-    error("Could not load script: " .. filename .. " (" .. err .. ")")
-  end
-
-  func()
-end
-
-
 gui.import("defs")
 gui.import("util")
 gui.import("brush")
@@ -625,20 +603,21 @@ function ob_load_game(dir, game)
   -- ignore the template game -- it is only instructional
   if game == "template" then return end
 
-  OB_IMPORT_DIR = dir .. "/" .. game
-
   gui.debugf("  %s\n", game)
+
+  gui.set_import_dir("games/" .. game)
+
+  -- the base script will import even more script files
   gui.import("base")
 
-  OB_IMPORT_DIR = nil
+  gui.set_import_dir("")
 end
 
 
 function ob_load_all_games()
-  local dir = gui.get_install_dir() .. "/games"
-
   gui.printf("Loading all games...\n")
 
+  local dir  = gui.get_install_dir() .. "/games"
   local list = gui.scan_directory(dir, "DIRS")
 
   if not list then
@@ -660,11 +639,12 @@ end
 
 
 function ob_load_all_engines()
-  OB_IMPORT_DIR = gui.get_install_dir() .. "/engines"
-
   gui.printf("Loading all engines...\n")
 
-  local list = gui.scan_directory(OB_IMPORT_DIR, "*.lua")
+  gui.set_import_dir("engines")
+
+  local dir  = gui.get_install_dir() .. "/engines"
+  local list = gui.scan_directory(dir, "*.lua")
 
   if not list then
     gui.printf("FAILED: scan 'engines' directory\n")
@@ -676,16 +656,17 @@ function ob_load_all_engines()
     end
   end
 
-  OB_IMPORT_DIR = nil
+  gui.set_import_dir("")
 end
 
 
 function ob_load_all_modules()
-  OB_IMPORT_DIR = gui.get_install_dir() .. "/modules"
-
   gui.printf("Loading all modules...\n")
 
-  local list = gui.scan_directory(OB_IMPORT_DIR, "*.lua")
+  gui.set_import_dir("modules")
+
+  local dir  = gui.get_install_dir() .. "/modules"
+  local list = gui.scan_directory(dir, "*.lua")
 
   if not list then
     gui.printf("FAILED: scan 'modules' directory\n")
@@ -697,7 +678,7 @@ function ob_load_all_modules()
     end
   end
 
-  OB_IMPORT_DIR = nil
+  gui.set_import_dir("")
 end
 
 
