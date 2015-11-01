@@ -32,14 +32,62 @@
 
 //----------------------------------------------------------------------
 
+class UI_Addon : public Fl_Group
+{
+public:
+	std::string id_name;
+
+	Fl_Check_Button *button;  
+
+public:
+	UI_Addon(int x, int y, int w, int h, const char *id, const char *label, const char *tip) :
+		Fl_Group(x, y, w, h),
+		id_name(id)
+	{
+		box(FL_THIN_UP_BOX);
+
+		if (! alternate_look)
+			color(BUILD_BG, BUILD_BG);
+
+		button = new Fl_Check_Button(x + kf_w(6), y + kf_h(4), w - kf_w(12), kf_h(24), label);
+		if (tip)
+			button->tooltip(tip);
+
+		end();
+
+		resizable(NULL);
+	}
+
+	virtual ~UI_Addon()
+	{ }
+
+	int CalcHeight() const
+	{
+		return kf_h(34);
+	}
+};
+
+
+//----------------------------------------------------------------------
+
 
 class UI_AddonsWin : public Fl_Window
 {
 public:
 	bool want_quit;
 
-private:
-	// TODO  stuff
+	Fl_Group *pack;
+
+	Fl_Scrollbar *sbar;
+
+	// area occupied by addon list
+	int mx, my, mw, mh;
+
+	// number of pixels "lost" above the top
+	int offset_y;
+
+	// total height of all shown addons
+	int total_h;
 
 public:
 	UI_AddonsWin(int W, int H, const char *label = NULL);
@@ -59,6 +107,16 @@ public:
 	int handle(int event);
 
 private:
+	void PositionAll(UI_Addon *focus = NULL)
+	{
+		// FIXME
+	}
+
+	static void callback_Scroll(Fl_Widget *w, void *data)
+	{
+		// FIXME
+	}
+
 	static void callback_Quit(Fl_Widget *w, void *data)
 	{
 		UI_AddonsWin *that = (UI_AddonsWin *)data;
@@ -88,13 +146,22 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label) :
 		color(BUILD_BG, BUILD_BG);
 
 
-	int y_step = kf_h(6);
-	int pad    = kf_w(6);
+	int pad = kf_w(6);
+
+	int dh = kf_h(60);
+
+
+	// area for addons list
+	mx = 0;
+	my = 0;
+	mw = W - Fl::scrollbar_size();
+	mh = H - dh;
+
+	offset_y = 0;
+	total_h  = 0;
 
 
 	//----------------
-
-	int dh = kf_h(60);
 
 	Fl_Group *darkish = new Fl_Group(0, H - dh, W, dh);
 	darkish->end();
