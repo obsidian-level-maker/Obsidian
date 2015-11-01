@@ -793,6 +793,7 @@ function Grower_organic_room(P)
       return list
     end
 
+stderrf("checking x/y dirs : %d / %d\n", x_dir, y_dir)
 
     for pass = 1, 2 do
       local dir = sel(pass >= 2, y_dir, x_dir)
@@ -806,10 +807,10 @@ function Grower_organic_room(P)
 
       -- pick a new corner which shares an edge with previous one
       local corn_A = 3
-      local corn_B = 1
+      local corn_B = 9
 
       if dir == 6 or dir == 2 then corn_A = 7 end
-      if dir == 6 or dir == 8 then corn_B = 9 end
+      if dir == 6 or dir == 8 then corn_B = 1 end
 
       if not can_make_diagonal(N, corn_A) then corn_A = nil end
       if not can_make_diagonal(N, corn_B) then corn_B = nil end
@@ -817,7 +818,7 @@ function Grower_organic_room(P)
       -- pick new type of corner [ often none ]
       local new_corn = nil
 
-      if (corn_A or corn_B) and rand.odds(66*2) then  --!!!!! FIXME
+      if (corn_A or corn_B) and rand.odds(66*0) then  --!!!!! FIXME
         if corn_A and corn_B then
           new_corn = rand.sel(50, corn_A, corn_B)
         else
@@ -841,7 +842,7 @@ function Grower_organic_room(P)
         local diagonal = math.min(loc.corner, 10 - loc.corner)
         S:split(diagonal)
 
-        if diagonal > 5 then S = S.top end
+        if loc.corner > 5 then S = S.top end
       end
 
       set_seed(S, cur_area)
@@ -877,10 +878,10 @@ function Grower_organic_room(P)
 
     if S.temp_area == cur_area and not N.diagonal and rand.odds(50*2) then
       local corn_A = 3
-      local corn_B = 1
+      local corn_B = 9
 
       if dir == 6 or dir == 2 then corn_A = 7 end
-      if dir == 6 or dir == 8 then corn_B = 9 end
+      if dir == 6 or dir == 8 then corn_B = 1 end
 
       if not can_make_diagonal(N, corn_A) then corn_A = nil end
       if not can_make_diagonal(N, corn_B) then corn_B = nil end
@@ -892,7 +893,7 @@ function Grower_organic_room(P)
       end
     end
 
-corner=nil
+stderrf("making corner at %s / %d\n", N.name, corner)
     apply_group(get_group(N, corner))
 
     return true
