@@ -161,6 +161,15 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label) :
 	total_h  = 0;
 
 
+	sbar = new Fl_Scrollbar(mx+mw, my, Fl::scrollbar_size(), mh);
+	sbar->callback(callback_Scroll, this);
+
+	if (! alternate_look)
+		sbar->color(FL_DARK3+1, FL_DARK3+1);
+
+	add(sbar);
+
+
 	//----------------
 
 	Fl_Group *darkish = new Fl_Group(0, H - dh, W, dh);
