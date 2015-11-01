@@ -37,7 +37,7 @@ class UI_Addon : public Fl_Group
 public:
 	std::string id_name;
 
-	Fl_Check_Button *button;  
+	Fl_Check_Button *button;
 
 public:
 	UI_Addon(int x, int y, int w, int h, const char *id, const char *label, const char *tip) :
@@ -133,17 +133,15 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label) :
 	Fl_Window(W, H, label),
 	want_quit(false)
 {
-	// cancel Fl_Group's automatic add crap
-	end();
+	callback(callback_Quit, this);
 
 	// non-resizable
 	size_range(W, H, W, H);
-	callback(callback_Quit, this);
 
-	box(FL_THIN_UP_BOX);
+	box(FL_NO_BOX);
 
-	if (! alternate_look)
-		color(BUILD_BG, BUILD_BG);
+///--	if (! alternate_look)
+///--		color(BUILD_BG, BUILD_BG);
 
 
 	int pad = kf_w(6);
@@ -167,18 +165,28 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label) :
 	if (! alternate_look)
 		sbar->color(FL_DARK3+1, FL_DARK3+1);
 
-	add(sbar);
+
+	pack = new Fl_Group(mx, my, mw, mh, "\n\n\n\nList of Addons");
+	pack->clip_children(1);
+	pack->end();
+
+	pack->align(FL_ALIGN_INSIDE);
+	pack->labeltype(FL_NORMAL_LABEL);
+	pack->labelsize(FL_NORMAL_SIZE * 3 / 2);
+
+///--	if (alternate_look)
+///--		pack->labelcolor(FL_DARK1);
+
+	pack->box(FL_FLAT_BOX);
+	pack->color(FL_DARK1);
+	pack->resizable(NULL);
 
 
 	//----------------
 
 	Fl_Group *darkish = new Fl_Group(0, H - dh, W, dh);
-	darkish->end();
 	darkish->box(FL_FLAT_BOX);
-	if (! alternate_look)
-		darkish->color(BUILD_BG, BUILD_BG);
-
-	add(darkish);
+	darkish->color(BUILD_BG, BUILD_BG);
 
 
 	// finally add the buttons
@@ -187,13 +195,18 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label) :
 	int bx = bw;
 	int by = H - dh/2 - bh/2;
 
-	Fl_Button *apply_but = new Fl_Button(W-bx-bw, by, bw, bh, "Apply");
+	Fl_Button *apply_but = new Fl_Button(W-bx-bw, by, bw, bh, "Close");
 	apply_but->callback(callback_Quit, this);
-	darkish->add(apply_but);
 
-	Fl_Button *cancel_but = new Fl_Button(bx, by, bw, bh, "Cancel");
-	cancel_but->callback(callback_Quit, this);
-	darkish->add(cancel_but);
+///--- Fl_Button *cancel_but = new Fl_Button(bx, by, bw, bh, "Cancel");
+///--- cancel_but->callback(callback_Quit, this);
+
+	darkish->end();
+
+
+	end();
+
+	resizable(NULL);
 }
 
 
