@@ -810,11 +810,12 @@ stderrf("(there or upgraded)\n")
 stderrf("checking dir : %d\n", dir)
 
       local N = S:neighbor(dir)
+      assert(N)
 
-      if true then
-        assert(N)
-        assert(seed_usable(N))
-      end
+      -- allow same area as current one, but DO NOT recurse
+      if N.temp_area == cur_area then continue end
+
+      assert(seed_usable(N))
 
       -- pick a new corner which shares an edge with previous one
       local corn_A = 3
@@ -905,7 +906,7 @@ stderrf("(done)\n")
       end
     end
 
-stderrf("get_group w corner at %s / %d\n", N.name, corner)
+stderrf("try_spot_off_area at %s / %d\n", N.name, corner)
     apply_group(get_group(N, corner))
 
     return true
