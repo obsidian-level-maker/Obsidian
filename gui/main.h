@@ -43,6 +43,8 @@ extern bool batch_mode;
 
 extern const char *batch_output_file;
 
+extern const char *addon_file;
+
 
 // this records the user action, e.g. Cancel or Quit buttons
 typedef enum

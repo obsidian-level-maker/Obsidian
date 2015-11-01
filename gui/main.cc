@@ -55,12 +55,16 @@ int main_action;
 
 bool need_new_seed;
 
+
 bool batch_mode = false;
 
 const char *batch_output_file = NULL;
 
+const char *addon_file = NULL;
+
+// options
+int  window_size = 0;  // AUTO
 bool alternate_look = false;
-int  window_size = 0;  // Auto
 bool create_backups = true;
 bool debug_messages = false;
 bool fast_lighting = false;
@@ -91,6 +95,7 @@ static void ShowInfo()
 		"     --log      <file>    Log file to create\n"
 		"\n"
 		"  -b --batch    <output>  Batch mode (no GUI)\n"
+		"  -a --addon    <name>    Addon to use\n"
 		"  -l --load     <file>    Load settings from a file\n"
 		"  -k --keep               Keep SEED from loaded settings\n"
 		"\n"
@@ -727,6 +732,26 @@ int main(int argc, char **argv)
 		debug_messages = true;
 
 	LogEnableDebug(debug_messages);
+
+
+	int addon_arg = ArgvFind('a', "addon");
+	if (addon_arg >= 0)
+	{
+		if (addon_arg+1 >= arg_count || ArgvIsOption(addon_arg+1))
+		{
+			fprintf(stderr, "OBLIGE ERROR: missing filename for --addon\n");
+			exit(9);
+		}
+
+		addon_file = arg_list[addon_arg+1];
+	}
+
+	if (addon_file)
+	{
+		// FIXME
+		LogPrintf("Loading addon: %s\n\n", addon_file);
+	}
+
 
 	if (! batch_mode)
 	{
