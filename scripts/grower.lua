@@ -1626,12 +1626,14 @@ function Grower_organic_room(P)
   end
 
 
-  local function seed_spot_from_sprout(A)
+  local function spot_from_sprout(A)
     local S = P.S:neighbor(P.dir)
 
     for i = 1, P.long do
       assert(not S.diagonal)
       assert(not S.temp_area)
+
+      assert(seed_usable(S))
 
       apply_group(get_group(S))
 
@@ -1640,9 +1642,11 @@ function Grower_organic_room(P)
   end
 
 
-  local function seed_spot_off_existing_area(A)
+  local function spot_off_existing_area(A)
+    -- when A is NIL then allow ANY temp_area in the current room
+
     -- FIXME  
-    error("seed_spot_off_existing_area: not yet impl")
+    error("spot_off_existing_area: not yet impl")
   end
 
 
@@ -1654,6 +1658,8 @@ function Grower_organic_room(P)
       seeds = {}
       must_edge = {}
       want_vol = rand.pick({ 3,6,9 })
+      min_vol  = 3
+      svolume  = 0
       room = cur_room
     }
 
@@ -1664,28 +1670,42 @@ function Grower_organic_room(P)
     end
 
     if table.empty(temp_areas) then
-      seed_spot_from_sprout(cur_area)
+      spot_from_sprout(cur_area)
     else
-      seed_spot_off_existing_area(cur_area)
+      spot_off_existing_area(nil)
     end
 
-    -- TODO
+    for loop = 1,100 do
+      if cur_area.svolume >= want_vol then break; end
+
+      spot_off_existing_area(cur_area)
+    end
   end
 
 
   ---| Grower_organic_room |---
 
-  -- FIXME : remove this limitation
+  -- FIXME : remove this limitation  [ nothing stopping now... ]
   if P.long > 1 then return false end
 
   if not check_enough_room() then return false end
 
-  -- create room now
+  -- create room --
+
   cur_room = ROOM_CLASS.new()
 
----  while cur_room.svolume < 21 do
+  cur_room.want_vol = 121
+
+---for loop = 1, 50 do
+---  if cur_room.svolume >= cur.want_vol then break; end
+
     grow_an_area()
----  end
+---end
+
+  -- FIXME : merge undersized areas
+
+  -- FIXME : create sprouts too
+  -- [ for testing can rely on emergency sprouts... ]
 
   Grower_make_areas(temp_areas)
 
