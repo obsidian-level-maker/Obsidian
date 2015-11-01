@@ -661,9 +661,10 @@ function Grower_organic_room(P)
     for x = sx1, sx2 do
     for y = sy1, sy2 do
       if not Seed_valid(x, y) then return false end
-      if Seed_over_boundary(x, y) then return false end
 
       local S = SEEDS[x][y]
+
+      if Seed_over_boundary(S) then return false end
 
       -- ignore the sprout (for diagonals)
       if S == P.S then continue end
@@ -789,7 +790,7 @@ function Grower_organic_room(P)
 
     else
       -- a full seed, nothing more to do
-      return
+      return list
     end
 
 
@@ -961,6 +962,8 @@ function Grower_organic_room(P)
 
     local cur_area_as_list = { cur_area }
 
+do return end --!!!!!!
+
     for loop = 1,100 do
       if cur_area.svolume >= want_vol then break; end
 
@@ -972,9 +975,6 @@ function Grower_organic_room(P)
 
 
   ---| Grower_organic_room |---
-
-  -- FIXME : remove this limitation  [ nothing stopping now... ]
-  if P.long > 1 then return false end
 
   if not check_enough_room() then return false end
 
@@ -1559,6 +1559,13 @@ math.max(ax,bx), math.max(ay,by))
     P.is_outdoor = is_outdoor
     P.is_cave    = is_cave
 
+if Grower_organic_room(P) then
+ return true
+end
+stderrf("\n\n******* Waaaaaaahhhhh *****\n\n")
+do return false end
+
+
     while not table.empty(tab) do
       local name = rand.key_by_probs(tab)
       local def  = assert(TILES[name])
@@ -1610,7 +1617,7 @@ math.max(ax,bx), math.max(ay,by))
     {
       S = SEEDS[sx][sy]
       dir = 8
-      long = rand.sel(50, 2, 1)
+      long = 1 --!!!!!!  rand.sel(50, 2, 1)
       mode = "normal"
       initial_hub = true
     }
@@ -1752,6 +1759,8 @@ math.max(ax,bx), math.max(ay,by))
   if not add_initial_hub() then
     return
   end
+
+do return end --!!!!!!
 
   local MIN_COVERAGE = 0.5
 
@@ -2348,6 +2357,9 @@ function Grower_create_rooms()
 
   Grower_grow_trunk("is_first")
 
+  Grower_save_svg()
+
+
   Grower_fill_gaps()
 
   Area_squarify_seeds()
@@ -2357,6 +2369,5 @@ function Grower_create_rooms()
 
   Grower_assign_boundary()
 
---  Grower_save_svg()
 end
 
