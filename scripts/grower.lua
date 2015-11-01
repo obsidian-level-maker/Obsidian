@@ -1366,418 +1366,418 @@ end
 
 
 
-function Grower_organic_room(P)
-  --
-  -- Creates a few areas "organically", growing them seed-by-seed
-  -- (using rules similar to the old "weird" shape generator).
-  --
-  local cur_room
-  local cur_area
-
-  local temp_areas = {}
-
-
-  local function set_seed(S, A)
-    S.temp_area = A
-    table.insert(A.seeds, S)
-  end
-
-
-  local function raw_blocked(S)
-    if S.area then return true end
-
-    if S.temp_area then
-      if not cur_area then return true end
-      if S.temp_area != cur_area then return true end
-    end
-
-    if S.sx <= 1 or S.sx >= SEED_W then return true end
-    if S.sy <= 1 or S.sy >= SEED_H then return true end
-
-    return false
-  end
-
-
-  local function check_enough_room()
-    cur_area = nil
-
-    local sx1 = P.S.sx
-    local sy1 = P.S.sy
-    local sx2 = sx1
-    local sy2 = sy1
-
-    local dx, dy = geom.delta(P.dir)
-
-    if geom.is_corner(P.dir) then
-      -- diagonal : check 3x3 seeds, the sprout is one corner
-
-      if dx > 0 then sx2 = sx2 + 2 else sx1 = sx1 - 2 end
-      if dy > 0 then sy2 = sy2 + 2 else sy1 = sy1 - 2 end
-
-    else
-      -- straight : check 3x3 seed just beyond the sprout
-
-      sx1 = sx1 - 1 + 2 * dx
-      sy1 = sy1 - 1 + 2 * dy
-
-      sx2 = sx1 + 2
-      sy2 = sy1 + 2
-
-      if P.long >= 2 then
-        local extra = int(P.long / 2)
-
-        if geom.is_vert(P.dir) then
-          sx1 = sx1 - extra
-          sx2 = sx2 + extra
-        else
-          sy1 = sy1 - extra
-          sy2 = sy2 + extra
-        end
-      end
-    end
-
-    for x = sx1, sx2 do
-    for y = sy1, sy2 do
-      if not Seed_valid(x, y) then return false end
-      if Seed_over_boundary(x, y) then return false end
-
-      local S = SEEDS[x][y]
-
-      -- ignore the sprout (for diagonals)
-      if S == P.S then continue end
-
-      if raw_blocked(S) or S.diagonal then return false end
-    end
-    end
-
-    return true -- OK
-  end
-
-
-  local function is_sharp_poker(S)
-    local block_count = 0
-
-    each dir in geom.ALL_DIRS do
-      local N = S:neighbor(dir)
-      if N and raw_blocked(N) then
-        block_count = block_count + 1
-      end
-    end
-
-    return block_count >= 2
-  end
-
-
-  local function seed_usable(S, prevs)
-    if raw_blocked(S) then return false end
-
-    if not prevs then prevs = {} end
-    table.insert(prevs, S)
-
-    if S.diagonal then
-      -- require seeds on each straight side to be usable
-      each dir in geom.SIDES do
-        local N = S:neighbor(dir)
-        if N and not table.has_elem(prevs, N) then
-          -- recursive call
-          if not seed_usable(N, prevs) then return false end
-        end
-      end
-
-      if is_sharp_poker(S) then return false end
-    end
-
-    return true
-  end
-
-
-  local function can_make_diagonal(S, corner)
-    assert(not raw_blocked(S))
-
-    if S.diagonal then return false end
-
-    local x_dir = sel(corner == 1 or corner == 7, 4, 6)
-    local y_dir = sel(corner == 1 or corner == 3, 2, 8)
-
-    local NX = S:neighbor(x_dir)
-    local NY = S:neighbor(y_dir)
-
-    if not (NX and seed_usable(NX)) then return false end
-    if not (NY and seed_usable(NY)) then return false end
-
-    return true
-  end
-
-
-  local function add_to_list(S, corner, list)
-    -- already there?
-    each loc in list do
-      if loc.S == S and loc.corner == corner then
-        return "seen"
-      end
-
-      -- upgrade a diagonal to full seed
-      if loc.S == S then
-        loc.corner = nil
-        return "upgrade"
-      end
-    end
-
-    table.insert(list, { S=S, corner=corner })
-  end
-
-
-  local function get_group(S, corner, list)
-    -- Note: 'corner' parameter is only set when we are going to split
-    -- a full seed and use just that corner.  When just using an existing
-    -- diagonal seed, 'corner' must be NIL.
-
-    if corner then
-      assert(not S.diagonal)
-    end
-
-    assert(seed_usable(S))
-
-    local is_first = (not list)
-
-    if is_first and corner then
-      assert(can_make_diagonal(S, corner))
-    end
-
-
-    if not list then list = {} end
-
-    -- if already there, or upgraded, then nothing more to do
-    if add_to_list(S, corner, list) then
-      return list
-    end
-
-
-    -- determine which directions to check
-    local x_dir
-    local y_dir
-    
-    if corner then
-      x_dir = sel(corner == 1 or corner == 7, 4, 6)
-      y_dir = sel(corner == 1 or corner == 3, 2, 8)
-
-    elseif S.diagonal then
-      x_dir = sel(S:neighbor(6, "NODIR") == "NODIR", 4, 6)
-      y_dir = sel(S:neighbor(8, "NODIR") == "NODIR", 2, 8)
-
-    else
-      -- a full seed, nothing more to do
-      return
-    end
-
-
-    for pass = 1, 2 do
-      local dir = sel(pass >= 2, y_dir, x_dir)
-
-      local N = S:neighbor(dir)
-
-      if true then
-        assert(N)
-        assert(seed_usable(N))
-      end
-
-      -- pick a new corner which shares an edge with previous one
-      local corn_A = 3
-      local corn_B = 1
-
-      if dir == 6 or dir == 2 then corn_A = 7 end
-      if dir == 6 or dir == 8 then corn_B = 9 end
-
-      if not can_make_diagonal(N, corn_A) then corn_A = nil end
-      if not can_make_diagonal(N, corn_B) then corn_B = nil end
-
-      -- pick new type of corner [ often none ]
-      local new_corn = nil
-
-      if (corn_A or corn_B) and rand.odds(66*2) then  --!!!!! FIXME
-        if corn_A and corn_B then
-          new_corn = rand.sel(50, corn_A, corn_B)
-        else
-          new_corn = corn_A or corn_B
-        end
-      end
-
-      -- recursively flow into next seed
-      get_group(N, new_corn, list)
-    end
-
-    return list
-  end
-
-
-  local function apply_group(list)
-    each loc in list do
-      local S = loc.S
-
-      if loc.corner then
-        local diagonal = math.min(loc.corner, 10 - loc.corner)
-        S:split(diagonal)
-
-        if diagonal > 5 then S = S.top end
-      end
-
-      set_seed(S, cur_area)
-    end
-  end
-
-
-  local function spot_from_sprout(A)
-    local S = P.S:neighbor(P.dir)
-
-    for i = 1, P.long do
-      assert(not S.diagonal)
-      assert(not S.temp_area)
-
-      assert(seed_usable(S))
-
-      apply_group(get_group(S))
-
-      S = S:raw_neighbor(geom.RIGHT[P.dir])
-    end
-  end
-
-
-  local function try_spot_off_area(S, dir)
-    local N = loc.S:neighbor(loc.dir)
-
-    if not seed_usable(N) then
-      return false
-    end
-
-    -- when coming off same area, sometimes make a diagonal
-    local corner
-
-    if S.temp_area == cur_area and not N.diagonal and rand.odds(50*2) then
-      local corn_A = 3
-      local corn_B = 1
-
-      if dir == 6 or dir == 2 then corn_A = 7 end
-      if dir == 6 or dir == 8 then corn_B = 9 end
-
-      if not can_make_diagonal(N, corn_A) then corn_A = nil end
-      if not can_make_diagonal(N, corn_B) then corn_B = nil end
-
-      if corn_A and corn_B then
-        corner = rand.sel(50, corn_A, corn_B)
-      else
-        corner = corn_A or corn_B
-      end
-    end
-
-    apply_group(get_group(S, corner))
-    
-    return true
-  end
-
-
-  local function spot_off_existing_area(visit_list)
-    -- when A is NIL then allow ANY temp_area in the current room
-
-    local visit_list = temp_areas
-    if A then visit_list = { A } end
-
-    -- collect potentially usable spots
-    local try_list = {}
-
-    each T in visit_list do
-    each S in T.seeds do
-    each dir in geom.ALL_DIRS do
-      local N = S:neighbor(dir)
-
-      if N and not raw_blocked(N) then
-        assert(S.temp_area == T)
-        table.insert(try_list, { S=S, dir=dir })
-      end
-    end
-    end
-    end
-
-    rand.shuffle(try_list)
-
-    each loc in try_list do
-      if try_spot_off_area(loc.S, loc.dir) then
-        return true -- OK
-      end
-    end
-
-    -- nothing worked, that is OK too
-    return false
-  end
-
-
-  local function grow_an_area(from_sprout)
-    -- create a new temporary area
-    cur_area =
-    {
-      id = alloc_id("organic_area")
-      room = cur_room
-      seeds = {}
-      svolume = 0
-      --??? must_edge = {}
-      min_vol = 3
-      want_vol = rand.pick({ 3,6,9 })
-    }
-
-    cur_area.name = string.format("ORGANIC_%d", cur_area.id)
-
-    if rand.odds(3) then
-      cur_area.want_vol = cur_area.want_vol + 9
-    end
-
-    table.insert(temp_areas, cur_area)
-
-    if from_sprout then
-      spot_from_sprout(cur_area)
-    else
-      spot_off_existing_area(temp_areas)
-    end
-
-    local cur_area_as_list = { cur_area }
-
-    for loop = 1,100 do
-      if cur_area.svolume >= want_vol then break; end
-
-      if not spot_off_existing_area(cur_area_as_list) then
-        break;  -- nothing was possible
-      end
-    end
-  end
-
-
-  ---| Grower_organic_room |---
-
-  -- FIXME : remove this limitation  [ nothing stopping now... ]
-  if P.long > 1 then return false end
-
-  if not check_enough_room() then return false end
-
-  -- create room --
-
-  cur_room = ROOM_CLASS.new()
-
-  cur_room.want_vol = 321
-
-  grow_an_area("from_sprout")
-
---for loop = 1, 50 do
---  if cur_room.svolume >= cur.want_vol then break; end
---  grow_an_area()
---end
-
-  -- FIXME : merge undersized areas
-
-  -- FIXME : create sprouts too
-  -- [ for testing can rely on emergency sprouts... ]
-
-  Grower_make_areas(temp_areas)
-
-  return true
-end
+|function Grower_organic_room(P)
+|  --
+|  -- Creates a few areas "organically", growing them seed-by-seed
+|  -- (using rules similar to the old "weird" shape generator).
+|  --
+|  local cur_room
+|  local cur_area
+|
+|  local temp_areas = {}
+|
+|
+|  local function set_seed(S, A)
+|    S.temp_area = A
+|    table.insert(A.seeds, S)
+|  end
+|
+|
+|  local function raw_blocked(S)
+|    if S.area then return true end
+|
+|    if S.temp_area then
+|      if not cur_area then return true end
+|      if S.temp_area != cur_area then return true end
+|    end
+|
+|    if S.sx <= 1 or S.sx >= SEED_W then return true end
+|    if S.sy <= 1 or S.sy >= SEED_H then return true end
+|
+|    return false
+|  end
+|
+|
+|  local function check_enough_room()
+|    cur_area = nil
+|
+|    local sx1 = P.S.sx
+|    local sy1 = P.S.sy
+|    local sx2 = sx1
+|    local sy2 = sy1
+|
+|    local dx, dy = geom.delta(P.dir)
+|
+|    if geom.is_corner(P.dir) then
+|      -- diagonal : check 3x3 seeds, the sprout is one corner
+|
+|      if dx > 0 then sx2 = sx2 + 2 else sx1 = sx1 - 2 end
+|      if dy > 0 then sy2 = sy2 + 2 else sy1 = sy1 - 2 end
+|
+|    else
+|      -- straight : check 3x3 seed just beyond the sprout
+|
+|      sx1 = sx1 - 1 + 2 * dx
+|      sy1 = sy1 - 1 + 2 * dy
+|
+|      sx2 = sx1 + 2
+|      sy2 = sy1 + 2
+|
+|      if P.long >= 2 then
+|        local extra = int(P.long / 2)
+|
+|        if geom.is_vert(P.dir) then
+|          sx1 = sx1 - extra
+|          sx2 = sx2 + extra
+|        else
+|          sy1 = sy1 - extra
+|          sy2 = sy2 + extra
+|        end
+|      end
+|    end
+|
+|    for x = sx1, sx2 do
+|    for y = sy1, sy2 do
+|      if not Seed_valid(x, y) then return false end
+|      if Seed_over_boundary(x, y) then return false end
+|
+|      local S = SEEDS[x][y]
+|
+|      -- ignore the sprout (for diagonals)
+|      if S == P.S then continue end
+|
+|      if raw_blocked(S) or S.diagonal then return false end
+|    end
+|    end
+|
+|    return true -- OK
+|  end
+|
+|
+|  local function is_sharp_poker(S)
+|    local block_count = 0
+|
+|    each dir in geom.ALL_DIRS do
+|      local N = S:neighbor(dir)
+|      if N and raw_blocked(N) then
+|        block_count = block_count + 1
+|      end
+|    end
+|
+|    return block_count >= 2
+|  end
+|
+|
+|  local function seed_usable(S, prevs)
+|    if raw_blocked(S) then return false end
+|
+|    if not prevs then prevs = {} end
+|    table.insert(prevs, S)
+|
+|    if S.diagonal then
+|      -- require seeds on each straight side to be usable
+|      each dir in geom.SIDES do
+|        local N = S:neighbor(dir)
+|        if N and not table.has_elem(prevs, N) then
+|          -- recursive call
+|          if not seed_usable(N, prevs) then return false end
+|        end
+|      end
+|
+|      if is_sharp_poker(S) then return false end
+|    end
+|
+|    return true
+|  end
+|
+|
+|  local function can_make_diagonal(S, corner)
+|    assert(not raw_blocked(S))
+|
+|    if S.diagonal then return false end
+|
+|    local x_dir = sel(corner == 1 or corner == 7, 4, 6)
+|    local y_dir = sel(corner == 1 or corner == 3, 2, 8)
+|
+|    local NX = S:neighbor(x_dir)
+|    local NY = S:neighbor(y_dir)
+|
+|    if not (NX and seed_usable(NX)) then return false end
+|    if not (NY and seed_usable(NY)) then return false end
+|
+|    return true
+|  end
+|
+|
+|  local function add_to_list(S, corner, list)
+|    -- already there?
+|    each loc in list do
+|      if loc.S == S and loc.corner == corner then
+|        return "seen"
+|      end
+|
+|      -- upgrade a diagonal to full seed
+|      if loc.S == S then
+|        loc.corner = nil
+|        return "upgrade"
+|      end
+|    end
+|
+|    table.insert(list, { S=S, corner=corner })
+|  end
+|
+|
+|  local function get_group(S, corner, list)
+|    -- Note: 'corner' parameter is only set when we are going to split
+|    -- a full seed and use just that corner.  When just using an existing
+|    -- diagonal seed, 'corner' must be NIL.
+|
+|    if corner then
+|      assert(not S.diagonal)
+|    end
+|
+|    assert(seed_usable(S))
+|
+|    local is_first = (not list)
+|
+|    if is_first and corner then
+|      assert(can_make_diagonal(S, corner))
+|    end
+|
+|
+|    if not list then list = {} end
+|
+|    -- if already there, or upgraded, then nothing more to do
+|    if add_to_list(S, corner, list) then
+|      return list
+|    end
+|
+|
+|    -- determine which directions to check
+|    local x_dir
+|    local y_dir
+|
+|    if corner then
+|      x_dir = sel(corner == 1 or corner == 7, 4, 6)
+|      y_dir = sel(corner == 1 or corner == 3, 2, 8)
+|
+|    elseif S.diagonal then
+|      x_dir = sel(S:neighbor(6, "NODIR") == "NODIR", 4, 6)
+|      y_dir = sel(S:neighbor(8, "NODIR") == "NODIR", 2, 8)
+|
+|    else
+|      -- a full seed, nothing more to do
+|      return
+|    end
+|
+|
+|    for pass = 1, 2 do
+|      local dir = sel(pass >= 2, y_dir, x_dir)
+|
+|      local N = S:neighbor(dir)
+|
+|      if true then
+|        assert(N)
+|        assert(seed_usable(N))
+|      end
+|
+|      -- pick a new corner which shares an edge with previous one
+|      local corn_A = 3
+|      local corn_B = 1
+|
+|      if dir == 6 or dir == 2 then corn_A = 7 end
+|      if dir == 6 or dir == 8 then corn_B = 9 end
+|
+|      if not can_make_diagonal(N, corn_A) then corn_A = nil end
+|      if not can_make_diagonal(N, corn_B) then corn_B = nil end
+|
+|      -- pick new type of corner [ often none ]
+|      local new_corn = nil
+|
+|      if (corn_A or corn_B) and rand.odds(66*2) then  --!!!!! FIXME
+|        if corn_A and corn_B then
+|          new_corn = rand.sel(50, corn_A, corn_B)
+|        else
+|          new_corn = corn_A or corn_B
+|        end
+|      end
+|
+|      -- recursively flow into next seed
+|      get_group(N, new_corn, list)
+|    end
+|
+|    return list
+|  end
+|
+|
+|  local function apply_group(list)
+|    each loc in list do
+|      local S = loc.S
+|
+|      if loc.corner then
+|        local diagonal = math.min(loc.corner, 10 - loc.corner)
+|        S:split(diagonal)
+|
+|        if diagonal > 5 then S = S.top end
+|      end
+|
+|      set_seed(S, cur_area)
+|    end
+|  end
+|
+|
+|  local function spot_from_sprout(A)
+|    local S = P.S:neighbor(P.dir)
+|
+|    for i = 1, P.long do
+|      assert(not S.diagonal)
+|      assert(not S.temp_area)
+|
+|      assert(seed_usable(S))
+|
+|      apply_group(get_group(S))
+|
+|      S = S:raw_neighbor(geom.RIGHT[P.dir])
+|    end
+|  end
+|
+|
+|  local function try_spot_off_area(S, dir)
+|    local N = loc.S:neighbor(loc.dir)
+|
+|    if not seed_usable(N) then
+|      return false
+|    end
+|
+|    -- when coming off same area, sometimes make a diagonal
+|    local corner
+|
+|    if S.temp_area == cur_area and not N.diagonal and rand.odds(50*2) then
+|      local corn_A = 3
+|      local corn_B = 1
+|
+|      if dir == 6 or dir == 2 then corn_A = 7 end
+|      if dir == 6 or dir == 8 then corn_B = 9 end
+|
+|      if not can_make_diagonal(N, corn_A) then corn_A = nil end
+|      if not can_make_diagonal(N, corn_B) then corn_B = nil end
+|
+|      if corn_A and corn_B then
+|        corner = rand.sel(50, corn_A, corn_B)
+|      else
+|        corner = corn_A or corn_B
+|      end
+|    end
+|
+|    apply_group(get_group(S, corner))
+|
+|    return true
+|  end
+|
+|
+|  local function spot_off_existing_area(visit_list)
+|    -- when A is NIL then allow ANY temp_area in the current room
+|
+|    local visit_list = temp_areas
+|    if A then visit_list = { A } end
+|
+|    -- collect potentially usable spots
+|    local try_list = {}
+|
+|    each T in visit_list do
+|    each S in T.seeds do
+|    each dir in geom.ALL_DIRS do
+|      local N = S:neighbor(dir)
+|
+|      if N and not raw_blocked(N) then
+|        assert(S.temp_area == T)
+|        table.insert(try_list, { S=S, dir=dir })
+|      end
+|    end
+|    end
+|    end
+|
+|    rand.shuffle(try_list)
+|
+|    each loc in try_list do
+|      if try_spot_off_area(loc.S, loc.dir) then
+|        return true -- OK
+|      end
+|    end
+|
+|    -- nothing worked, that is OK too
+|    return false
+|  end
+|
+|
+|  local function grow_an_area(from_sprout)
+|    -- create a new temporary area
+|    cur_area =
+|    {
+|      id = alloc_id("organic_area")
+|      room = cur_room
+|      seeds = {}
+|      svolume = 0
+|      --??? must_edge = {}
+|      min_vol = 3
+|      want_vol = 5 --!!!!  rand.pick({ 3,6,9 })
+|    }
+|
+|    cur_area.name = string.format("ORGANIC_%d", cur_area.id)
+|
+|    if rand.odds(3) then
+|      cur_area.want_vol = cur_area.want_vol + 9
+|    end
+|
+|    table.insert(temp_areas, cur_area)
+|
+|    if from_sprout then
+|      spot_from_sprout(cur_area)
+|    else
+|      spot_off_existing_area(temp_areas)
+|    end
+|
+|    local cur_area_as_list = { cur_area }
+|
+|    for loop = 1,100 do
+|      if cur_area.svolume >= want_vol then break; end
+|
+|      if not spot_off_existing_area(cur_area_as_list) then
+|        break;  -- nothing was possible
+|      end
+|    end
+|  end
+|
+|
+|  ---| Grower_organic_room |---
+|
+|  -- FIXME : remove this limitation  [ nothing stopping now... ]
+|  if P.long > 1 then return false end
+|
+|  if not check_enough_room() then return false end
+|
+|  -- create room --
+|
+|  cur_room = ROOM_CLASS.new()
+|
+|  cur_room.want_vol = 321
+|
+|  grow_an_area("from_sprout")
+|
+|--for loop = 1, 50 do
+|--  if cur_room.svolume >= cur.want_vol then break; end
+|--  grow_an_area()
+|--end
+|
+|  -- FIXME : merge undersized areas
+|
+|  -- FIXME : create sprouts too
+|  -- [ for time being we can rely on emergency sprouts... ]
+|
+|  Grower_make_areas(temp_areas)
+|
+|  return true
+|end
 
 
 
