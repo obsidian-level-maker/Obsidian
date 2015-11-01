@@ -37,7 +37,11 @@ static void Parse_Option(const char *name, const char *value)
 		return;
 	}
 
-	if (StringCaseCmp(name, "alternate_look") == 0)
+	if (StringCaseCmp(name, "addon") == 0)
+	{
+		addon_file = StringDup(value);
+	}
+	else if (StringCaseCmp(name, "alternate_look") == 0)
 	{
 		alternate_look = atoi(value) ? true : false;
 	}
@@ -180,6 +184,9 @@ bool Options_Save(const char *filename)
 	fprintf(option_fp, "-- OPTIONS FILE : OBLIGE %s\n", OBLIGE_VERSION); 
 	fprintf(option_fp, "-- " OBLIGE_TITLE " (C) 2006-2015 Andrew Apted\n");
 	fprintf(option_fp, "-- http://oblige.sourceforge.net/\n\n");
+
+	if (addon_file)
+		fprintf(option_fp, "addon = %s\n\n", addon_file);
 
 	fprintf(option_fp, "alternate_look = %d\n", alternate_look ? 1 : 0);
 	fprintf(option_fp, "window_size    = %d\n", window_size);

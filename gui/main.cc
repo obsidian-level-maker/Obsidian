@@ -899,6 +899,10 @@ int main(int argc, char **argv)
 	}
 
 
+	LogPrintf("\nQuit......\n\n");
+
+	Options_Save(options_file);
+
 	Main_Shutdown(false);
 
 	return 0;
