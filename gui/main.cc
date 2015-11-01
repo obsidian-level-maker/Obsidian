@@ -734,6 +734,7 @@ int main(int argc, char **argv)
 	LogEnableDebug(debug_messages);
 
 
+	// must do this *after* loading the options file
 	int addon_arg = ArgvFind('a', "addon");
 	if (addon_arg >= 0)
 	{
@@ -744,6 +745,9 @@ int main(int argc, char **argv)
 		}
 
 		addon_file = arg_list[addon_arg+1];
+
+		if (StringCaseCmp(addon_file, "none") == 0)
+			addon_file = NULL;
 	}
 
 	if (addon_file)
