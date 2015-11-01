@@ -323,7 +323,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 
 	opt_win_size = new Fl_Choice(145 + KF * 40, cy, kf_w(120), kf_h(24), "Window Size: ");
 	opt_win_size->align(FL_ALIGN_LEFT);
-	opt_win_size->add("Auto|Tiny|Small|Medium|Large|Huge");
+	opt_win_size->add("AUTO|Tiny|Small|Medium|Large|Huge");
 	opt_win_size->callback(callback_WinSize, this);
 	opt_win_size->value(window_size);
 

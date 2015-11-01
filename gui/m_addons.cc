@@ -105,15 +105,19 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label) :
 	add(darkish);
 
 
-	// finally add an "Close" button
+	// finally add the buttons
 	int bw = kf_w(60);
 	int bh = kf_h(30);
-	int bx = W - kf_w(40) - bw;
+	int bx = bw;
 	int by = H - dh/2 - bh/2;
 
-	Fl_Button *button = new Fl_Button(bx, by, bw, bh, "Apply");
-	button->callback(callback_Quit, this);
-	darkish->add(button);
+	Fl_Button *apply_but = new Fl_Button(W-bx-bw, by, bw, bh, "Apply");
+	apply_but->callback(callback_Quit, this);
+	darkish->add(apply_but);
+
+	Fl_Button *cancel_but = new Fl_Button(bx, by, bw, bh, "Cancel");
+	cancel_but->callback(callback_Quit, this);
+	darkish->add(cancel_but);
 }
 
 
