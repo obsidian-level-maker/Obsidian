@@ -866,7 +866,7 @@ function Grower_organic_room(P)
 
 
   local function try_spot_off_area(S, dir)
-    local N = loc.S:neighbor(loc.dir)
+    local N = S:neighbor(dir)
 
     if not seed_usable(N) then
       return false
@@ -892,18 +892,14 @@ function Grower_organic_room(P)
       end
     end
 
-    apply_group(get_group(S, corner))
+corner=nil
+    apply_group(get_group(N, corner))
 
     return true
   end
 
 
   local function spot_off_existing_area(visit_list)
-    -- when A is NIL then allow ANY temp_area in the current room
-
-    local visit_list = temp_areas
-    if A then visit_list = { A } end
-
     -- collect potentially usable spots
     local try_list = {}
 
@@ -924,6 +920,7 @@ function Grower_organic_room(P)
 
     each loc in try_list do
       if try_spot_off_area(loc.S, loc.dir) then
+stderrf("SUCCESS with spot: %s dir:%d\n", loc.S.name, loc.dir)
         return true -- OK
       end
     end
@@ -961,6 +958,8 @@ function Grower_organic_room(P)
     end
 
     local cur_area_as_list = { cur_area }
+
+spot_off_existing_area(cur_area_as_list)
 
 do return end --!!!!!!
 
