@@ -178,7 +178,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label) :
 ///--		pack->labelcolor(FL_DARK1);
 
 	pack->box(FL_FLAT_BOX);
-	pack->color(FL_DARK1);
+	pack->color(FL_DARK2);
 	pack->resizable(NULL);
 
 
