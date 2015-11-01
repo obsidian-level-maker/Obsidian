@@ -1594,7 +1594,7 @@ function Grower_organic_room(P)
       -- pick new type of corner [ often none ]
       local new_corn = nil
 
-      if (corn_A or corn_B) and rand.odds(66*0) then  --!!!!! FIXME
+      if (corn_A or corn_B) and rand.odds(66*2) then  --!!!!! FIXME
         if corn_A and corn_B then
           new_corn = rand.sel(50, corn_A, corn_B)
         else
@@ -1649,7 +1649,29 @@ function Grower_organic_room(P)
       return false
     end
 
-    -- FIXME
+    -- when coming off same area, sometimes make a diagonal
+    local corner
+
+    if S.temp_area == cur_area and not N.diagonal and rand.odds(50*2) then
+      local corn_A = 3
+      local corn_B = 1
+
+      if dir == 6 or dir == 2 then corn_A = 7 end
+      if dir == 6 or dir == 8 then corn_B = 9 end
+
+      if not can_make_diagonal(N, corn_A) then corn_A = nil end
+      if not can_make_diagonal(N, corn_B) then corn_B = nil end
+
+      if corn_A and corn_B then
+        corner = rand.sel(50, corn_A, corn_B)
+      else
+        corner = corn_A or corn_B
+      end
+    end
+
+    apply_group(get_group(S, corner))
+    
+    return true
   end
 
 
