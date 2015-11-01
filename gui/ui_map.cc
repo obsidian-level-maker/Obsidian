@@ -81,6 +81,7 @@ void UI_MiniMap::MapClear()
 
 		if ((px % 10) == 5 || (py % 10) == 5)
 		{
+			// if (have_an_addon) pix[1] = 144; else
 			pix[2] = 176;
 		}
 	}

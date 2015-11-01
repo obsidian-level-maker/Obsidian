@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2014 Andrew Apted
+//  Copyright (C) 2006-2015 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -74,6 +74,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) :
 
 	misc_menu->add("About",            FL_F+1, menu_do_about);
 	misc_menu->add("Options",          FL_F+4, menu_do_options);
+	misc_menu->add("Addons",           FL_F+3, menu_do_addons);
 	misc_menu->add("Set Seed",         FL_F+5, menu_do_edit_seed);
 	misc_menu->add("Manage Config   ", FL_F+9, menu_do_manage_config);
 
@@ -372,6 +373,11 @@ void UI_Build::menu_do_about(Fl_Widget *w, void *data)
 void UI_Build::menu_do_options(Fl_Widget *w, void *data)
 {
 	DLG_OptionsEditor();
+}
+
+void UI_Build::menu_do_addons(Fl_Widget *w, void *data)
+{
+	DLG_SelectAddons();
 }
 
 void UI_Build::menu_do_edit_seed(Fl_Widget *w, void *data)

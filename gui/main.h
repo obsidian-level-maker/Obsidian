@@ -87,6 +87,7 @@ void DLG_AboutText(void);
 void DLG_OptionsEditor(void);
 void DLG_ManageConfig(void);
 void DLG_EditSeed(void);
+void DLG_SelectAddons(void);
 
 
 class game_interface_c

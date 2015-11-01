@@ -43,6 +43,7 @@ LIBS=-lm -lz $(FLTK_LIBS)
 
 OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/m_about.o  \
+	$(OBJ_DIR)/m_addons.o  \
 	$(OBJ_DIR)/m_cookie.o  \
 	$(OBJ_DIR)/m_dialog.o  \
 	$(OBJ_DIR)/m_lua.o     \
