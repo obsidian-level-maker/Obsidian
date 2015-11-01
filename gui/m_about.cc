@@ -168,8 +168,7 @@ UI_About::UI_About(int W, int H, const char *label) :
 	Fl_Group *darkish = new Fl_Group(0, cy, W, H - cy);
 	darkish->end();
 	darkish->box(FL_FLAT_BOX);
-	if (! alternate_look)
-		darkish->color(BUILD_BG, BUILD_BG);
+	darkish->color(BUILD_BG, BUILD_BG);
 
 	add(darkish);
 

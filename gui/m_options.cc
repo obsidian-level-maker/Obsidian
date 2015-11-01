@@ -416,8 +416,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	Fl_Group *darkish = new Fl_Group(0, H - dh, W, dh);
 	darkish->end();
 	darkish->box(FL_FLAT_BOX);
-	if (! alternate_look)
-		darkish->color(BUILD_BG, BUILD_BG);
+	darkish->color(BUILD_BG, BUILD_BG);
 
 	add(darkish);
 
@@ -433,6 +432,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 	darkish->add(button);
 
 
+	// restart needed warning
 	heading = new Fl_Box(FL_NO_BOX, x()+pad, H - dh - kf_h(30), W-pad*2, kf_h(14), "Note: some options require a restart.");
 	heading->align(FL_ALIGN_INSIDE);
 	heading->labelsize(small_font_size);
