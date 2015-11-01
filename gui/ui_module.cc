@@ -31,23 +31,6 @@
 #define MY_PURPLE  fl_rgb_color(208,0,208)
 
 
-class My_ClipGroup : public Fl_Group
-{
-public:
-	My_ClipGroup(int X, int Y, int W, int H, const char *L = NULL) :
-		Fl_Group(X, Y, W, H, L)
-	{
-		clip_children(1);
-	}
-
-	virtual ~My_ClipGroup()
-	{ }
-};
-
-
-//-----------------------------------------------------------------
-
-
 UI_Module::UI_Module(int x, int y, int w, int h,
 					 const char *id, const char *label,
 					 const char *tip) :
@@ -239,7 +222,8 @@ UI_CustomMods::UI_CustomMods(int x, int y, int w, int h, const char *label) :
 	add(sbar);
 
 
-	mod_pack = new My_ClipGroup(mx, my, mw, mh, "\n\n\n\nCustom Modules");
+	mod_pack = new Fl_Group(mx, my, mw, mh, "\n\n\n\nCustom Modules");
+	mod_pack->clip_children(1);
 	mod_pack->end();
 
 	mod_pack->align(FL_ALIGN_INSIDE);
