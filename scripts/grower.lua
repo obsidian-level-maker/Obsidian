@@ -1653,7 +1653,7 @@ function Grower_organic_room(P)
   end
 
 
-  local function spot_off_existing_area(A)
+  local function spot_off_existing_area(visit_list)
     -- when A is NIL then allow ANY temp_area in the current room
 
     local visit_list = temp_areas
@@ -1688,17 +1688,17 @@ function Grower_organic_room(P)
   end
 
 
-  local function grow_an_area()
+  local function grow_an_area(from_sprout)
     -- create a new temporary area
     cur_area =
     {
       id = alloc_id("organic_area")
-      seeds = {}
-      must_edge = {}
-      want_vol = rand.pick({ 3,6,9 })
-      min_vol  = 3
-      svolume  = 0
       room = cur_room
+      seeds = {}
+      svolume = 0
+      --??? must_edge = {}
+      min_vol = 3
+      want_vol = rand.pick({ 3,6,9 })
     }
 
     cur_area.name = string.format("ORGANIC_%d", cur_area.id)
@@ -1707,16 +1707,20 @@ function Grower_organic_room(P)
       cur_area.want_vol = cur_area.want_vol + 9
     end
 
-    if table.empty(temp_areas) then
+    table.insert(temp_areas, cur_area)
+
+    if from_sprout then
       spot_from_sprout(cur_area)
     else
-      spot_off_existing_area(nil)
+      spot_off_existing_area(temp_areas)
     end
+
+    local cur_area_as_list = { cur_area }
 
     for loop = 1,100 do
       if cur_area.svolume >= want_vol then break; end
 
-      if not spot_off_existing_area(cur_area) then
+      if not spot_off_existing_area(cur_area_as_list) then
         break;  -- nothing was possible
       end
     end
@@ -1734,13 +1738,14 @@ function Grower_organic_room(P)
 
   cur_room = ROOM_CLASS.new()
 
-  cur_room.want_vol = 121
+  cur_room.want_vol = 321
 
----for loop = 1, 50 do
----  if cur_room.svolume >= cur.want_vol then break; end
+  grow_an_area("from_sprout")
 
-    grow_an_area()
----end
+--for loop = 1, 50 do
+--  if cur_room.svolume >= cur.want_vol then break; end
+--  grow_an_area()
+--end
 
   -- FIXME : merge undersized areas
 
