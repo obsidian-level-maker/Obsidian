@@ -176,9 +176,9 @@ UI_About::UI_About(int W, int H, const char *label) :
 
 	int bw = kf_w(60);
 	int bh = kf_h(30);
-	int by = H - kf_h(10) - bh;
+	int by = H - (H - cy + bh)/2;
 
-	Fl_Button *button = new Fl_Button(W/2 - bw/2, by, bw, bh, "OK");
+	Fl_Button *button = new Fl_Button(W - bw*2, by, bw, bh, "OK");
 	button->callback(callback_Quit, this);
 	darkish->add(button);
 }
