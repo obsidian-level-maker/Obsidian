@@ -607,11 +607,7 @@ function Grower_organic_room(P)
 
   local function raw_blocked(S)
     if S.area then return true end
-
-    if S.temp_area then
-      if not cur_area then return true end
-      if S.temp_area != cur_area then return true end
-    end
+    if S.temp_area then return true end
 
     if S.sx <= 1 or S.sx >= SEED_W then return true end
     if S.sy <= 1 or S.sy >= SEED_H then return true end
@@ -692,6 +688,8 @@ function Grower_organic_room(P)
 
 
   local function seed_usable(S, prevs)
+    assert(cur_area)
+
     if raw_blocked(S) then return false end
 
     if not prevs then prevs = {} end
@@ -701,10 +699,15 @@ function Grower_organic_room(P)
       -- require seeds on each straight side to be usable
       each dir in geom.SIDES do
         local N = S:neighbor(dir)
-        if N and not table.has_elem(prevs, N) then
-          -- recursive call
-          if not seed_usable(N, prevs) then return false end
-        end
+        if not N then continue end
+
+        -- allow neighbor to have current area, but DO NOT recurse
+        if N.temp_area == cur_area then continue end
+
+        if table.has_elem(prevs, N) then continue end
+
+        -- recursive call
+        if not seed_usable(N, prevs) then return false end
       end
 
       if is_sharp_poker(S) then return false end
@@ -725,8 +728,10 @@ function Grower_organic_room(P)
     local NX = S:neighbor(x_dir)
     local NY = S:neighbor(y_dir)
 
-    if not (NX and seed_usable(NX)) then return false end
-    if not (NY and seed_usable(NY)) then return false end
+    if not NX or not NY then return false end
+
+    if not (NX.temp_area == cur_area or seed_usable(NX)) then return false end
+    if not (NY.temp_area == cur_area or seed_usable(NY)) then return false end
 
     return true
   end
@@ -755,6 +760,7 @@ function Grower_organic_room(P)
     -- a full seed and use just that corner.  When just using an existing
     -- diagonal seed, 'corner' must be NIL.
 
+stderrf("get_group @ %s corner:%s\n", S.name, tostring(corner))
     if corner then
       assert(not S.diagonal)
     end
@@ -772,6 +778,7 @@ function Grower_organic_room(P)
 
     -- if already there, or upgraded, then nothing more to do
     if add_to_list(S, corner, list) then
+stderrf("(there or upgraded)\n")
       return list
     end
 
@@ -790,13 +797,17 @@ function Grower_organic_room(P)
 
     else
       -- a full seed, nothing more to do
+      stderrf("(full seed)\n")
       return list
     end
 
-stderrf("checking x/y dirs : %d / %d\n", x_dir, y_dir)
+    if rand.odds(50*0) then --!!!!
+      x_dir, y_dir = y_dir, x_dir
+    end
 
     for pass = 1, 2 do
       local dir = sel(pass >= 2, y_dir, x_dir)
+stderrf("checking dir : %d\n", dir)
 
       local N = S:neighbor(dir)
 
@@ -818,7 +829,7 @@ stderrf("checking x/y dirs : %d / %d\n", x_dir, y_dir)
       -- pick new type of corner [ often none ]
       local new_corn = nil
 
-      if (corn_A or corn_B) and rand.odds(66*0) then  --!!!!! FIXME
+      if (corn_A or corn_B) and rand.odds(66*2) then  --!!!!! FIXME
         if corn_A and corn_B then
           new_corn = rand.sel(50, corn_A, corn_B)
         else
@@ -830,6 +841,7 @@ stderrf("checking x/y dirs : %d / %d\n", x_dir, y_dir)
       get_group(N, new_corn, list)
     end
 
+stderrf("(done)\n")
     return list
   end
 
@@ -893,7 +905,7 @@ stderrf("checking x/y dirs : %d / %d\n", x_dir, y_dir)
       end
     end
 
-stderrf("making corner at %s / %d\n", N.name, corner)
+stderrf("get_group w corner at %s / %d\n", N.name, corner)
     apply_group(get_group(N, corner))
 
     return true
