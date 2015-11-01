@@ -1642,11 +1642,49 @@ function Grower_organic_room(P)
   end
 
 
+  local function try_spot_off_area(S, dir)
+    local N = loc.S:neighbor(loc.dir)
+
+    if not seed_usable(N) then
+      return false
+    end
+
+    -- FIXME
+  end
+
+
   local function spot_off_existing_area(A)
     -- when A is NIL then allow ANY temp_area in the current room
 
-    -- FIXME  
-    error("spot_off_existing_area: not yet impl")
+    local visit_list = temp_areas
+    if A then visit_list = { A } end
+
+    -- collect potentially usable spots
+    local try_list = {}
+
+    each T in visit_list do
+    each S in T.seeds do
+    each dir in geom.ALL_DIRS do
+      local N = S:neighbor(dir)
+
+      if N and not raw_blocked(N) then
+        assert(S.temp_area == T)
+        table.insert(try_list, { S=S, dir=dir })
+      end
+    end
+    end
+    end
+
+    rand.shuffle(try_list)
+
+    each loc in try_list do
+      if try_spot_off_area(loc.S, loc.dir) then
+        return true -- OK
+      end
+    end
+
+    -- nothing worked, that is OK too
+    return false
   end
 
 
@@ -1678,7 +1716,9 @@ function Grower_organic_room(P)
     for loop = 1,100 do
       if cur_area.svolume >= want_vol then break; end
 
-      spot_off_existing_area(cur_area)
+      if not spot_off_existing_area(cur_area) then
+        break;  -- nothing was possible
+      end
     end
   end
 
