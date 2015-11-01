@@ -755,10 +755,11 @@ function Grower_organic_room(P)
   end
 
 
-  local function get_group(S, corner, list)
+  local function get_group(S, corner, list, from_dir)
     -- Note: 'corner' parameter is only set when we are going to split
     -- a full seed and use just that corner.  When just using an existing
     -- diagonal seed, 'corner' must be NIL.
+    -- 'from_dir' only set when called recursively.
 
 stderrf("get_group @ %s corner:%s\n", S.name, tostring(corner))
     if corner then
@@ -766,6 +767,8 @@ stderrf("get_group @ %s corner:%s\n", S.name, tostring(corner))
     end
 
     assert(seed_usable(S))
+
+    if from_dir then assert(list) end
 
     local is_first = (not list)
 
@@ -815,6 +818,9 @@ stderrf("checking dir : %d\n", dir)
       -- allow same area as current one, but DO NOT recurse
       if N.temp_area == cur_area then continue end
 
+      -- no need to recursive if going back to where we just were
+      if from_dir and (10 - dir) == from_dir then continue end
+
       assert(seed_usable(N))
 
       -- pick a new corner which shares an edge with previous one
@@ -839,7 +845,7 @@ stderrf("checking dir : %d\n", dir)
       end
 
       -- recursively flow into next seed
-      get_group(N, new_corn, list)
+      get_group(N, new_corn, list, dir)
     end
 
 stderrf("(done)\n")
