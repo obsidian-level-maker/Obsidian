@@ -160,6 +160,7 @@ function AREA_CLASS.new(mode)
   {
     id   = alloc_id("area")
     mode = mode
+    svolume = 0
 
     conns = {}
     seeds = {}

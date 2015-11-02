@@ -827,6 +827,7 @@ function Grower_organic_room(P)
     -- 'from_dir' only set when called recursively.
 
 stderrf("get_group @ %s corner:%s\n", S.name, tostring(corner))
+
     if corner then
       assert(not S.diagonal)
     end
@@ -1120,17 +1121,13 @@ function Grower_grow_trunk(is_first)
     area_map = {}
 
     for i = 1, #def.area_list do
-      local A = AREA_CLASS.new("TEMP")
+      local A = AREA_CLASS.new("room")
 
       if def.mode == "hallway" then
         A.mode = def.mode
       end
 
----## A.conn_group = assert(A.id)
-
       area_map[i] = A
-
-      A.svolume = 0  -- unknown here
 
       R:add_area(A)
     end
@@ -1569,6 +1566,7 @@ math.max(ax,bx), math.max(ay,by))
 --]]
 
     local ROOM = Grower_add_room(P, def.mode == "hallway")
+    assert(ROOM)
     
     cur_room = ROOM
 
