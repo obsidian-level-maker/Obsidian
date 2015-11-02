@@ -573,7 +573,7 @@ function Grower_make_areas(temp_areas)
     if T.room then
       area.mode = "room"
 
-      area.svolume = 0  -- FIXME: can be used too early
+      area.svolume = T.svolume or 0  -- FIXME: can be used too early
 
       T.room:add_area(area)
     end
@@ -602,6 +602,7 @@ function Grower_organic_room(P)
   local function set_seed(S, A)
     S.temp_area = A
     table.insert(A.seeds, S)
+    A.svolume = A.svolume + sel(S.diagonal, 0.5, 1.0)
   end
 
 
@@ -912,7 +913,7 @@ stderrf("(done)\n")
       end
     end
 
-stderrf("try_spot_off_area at %s / %d\n", N.name, corner)
+stderrf("try_spot_off_area at %s / %s\n", N.name, tostring(corner))
     apply_group(get_group(N, corner))
 
     return true
@@ -960,7 +961,7 @@ stderrf("SUCCESS with spot: %s dir:%d\n", loc.S.name, loc.dir)
       svolume = 0
       --??? must_edge = {}
       min_vol = 3
-      want_vol = 5 --!!!!  rand.pick({ 3,6,9 })
+      want_vol = 100 --!!!!  rand.pick({ 3,6,9 })
     }
 
     cur_area.name = string.format("ORGANIC_%d", cur_area.id)
@@ -979,12 +980,8 @@ stderrf("SUCCESS with spot: %s dir:%d\n", loc.S.name, loc.dir)
 
     local cur_area_as_list = { cur_area }
 
-spot_off_existing_area(cur_area_as_list)
-
-do return end --!!!!!!
-
     for loop = 1,100 do
-      if cur_area.svolume >= want_vol then break; end
+      if cur_area.svolume >= cur_area.want_vol then break; end
 
       if not spot_off_existing_area(cur_area_as_list) then
         break;  -- nothing was possible
