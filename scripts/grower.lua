@@ -617,7 +617,7 @@ function Grower_organic_room(P)
 
   local temp_areas = {}
 
-  local DIAG_PROB = 75
+  local DIAG_PROB = 40
 
 
   local function set_seed(S, A)
@@ -1024,7 +1024,7 @@ stderrf("SUCCESS with spot: %s dir:%d\n", loc.S.name, loc.dir)
 
   cur_room = ROOM_CLASS.new()
 
-  cur_room.want_vol = 21
+  cur_room.want_vol = 31
 
   grow_an_area("from_sprout")
 
