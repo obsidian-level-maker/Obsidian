@@ -598,6 +598,8 @@ function Grower_organic_room(P)
 
   local temp_areas = {}
 
+  local DIAG_PROB = 75
+
 
   local function set_seed(S, A)
 assert(S.sx > 1)
@@ -839,7 +841,7 @@ stderrf("checking dir : %d\n", dir)
       -- pick new type of corner [ often none ]
       local new_corn = nil
 
-      if (corn_A or corn_B) and rand.odds(66*2) then  --!!!!! FIXME
+      if (corn_A or corn_B) and rand.odds(DIAG_PROB) then
         if corn_A and corn_B then
           new_corn = rand.sel(50, corn_A, corn_B)
         else
@@ -897,10 +899,10 @@ stderrf("(done)\n")
       return false
     end
 
-    -- when coming off same area, sometimes make a diagonal
+    -- when coming off same area, try to make a diagonal
     local corner
 
-    if S.temp_area == cur_area and not N.diagonal and rand.odds(50*2) then
+    if not N.diagonal and S.temp_area == cur_area and rand.odds(DIAG_PROB) then
       local corn_A = 3
       local corn_B = 9
 
@@ -964,8 +966,8 @@ stderrf("SUCCESS with spot: %s dir:%d\n", loc.S.name, loc.dir)
       seeds = {}
       svolume = 0
       --??? must_edge = {}
-      min_vol = 3
-      want_vol = 0.1 --!!!!  rand.pick({ 3,6,9 })
+      min_vol  = rand.index_by_probs({ 0, 1, 9, 3 })
+      want_vol = rand.index_by_probs({ 3, 7, 9, 5, 3, 1, 1 })
     }
 
     cur_area.name = string.format("ORGANIC_%d", cur_area.id)
